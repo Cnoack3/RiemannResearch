@@ -6,7 +6,6 @@ Authors: Cnoack3
 import RiemannResearch.AlgebraicGeometry.PointFields
 import Mathlib.GroupTheory.Coxeter.Length
 import Mathlib.GroupTheory.Coxeter.Matrix
-import Mathlib.Tactic
 
 /-!
 # Universal fixed locus and splitting fields
@@ -77,10 +76,14 @@ theorem attractingRank_properties
       ∀ w, rank (longestMul w) + rank w =
         positiveRoots + simpleRoots := by
     intro w
-    rw [rank_formula, rank_formula]
-    have hlength := length_duality w
-    have hdescent := rightDescent_duality w
-    omega
+    calc
+      rank (longestMul w) + rank w =
+          (length (longestMul w) + length w) +
+            (rightDescent (longestMul w) + rightDescent w) := by
+              rw [rank_formula, rank_formula]
+              ac_rfl
+      _ = positiveRoots + simpleRoots := by
+        rw [length_duality, rightDescent_duality]
   refine
     { formula := rank_formula
       zero_iff := ?_
@@ -92,15 +95,14 @@ theorem attractingRank_properties
       have hsum : length w + rightDescent w = 0 := by
         rw [← rank_formula w]
         exact hrank
-      have hlength : length w = 0 := by omega
+      have hlength : length w = 0 := (Nat.add_eq_zero_iff.mp hsum).1
       exact (length_zero_iff w).mp hlength
     · intro hw
       subst w
       have hlength : length one = 0 := (length_zero_iff one).mpr rfl
       rw [rank_formula, hlength, rightDescent_one]
   · intro w
-    have hsum := hduality w
-    omega
+    exact Nat.eq_sub_of_add_eq (hduality w)
 
 /-- Mathlib's presented Coxeter group of type E8. -/
 abbrev E8CoxeterGroup : Type := CoxeterMatrix.E₈.Group
@@ -137,7 +139,7 @@ theorem e8AttractingRank_eq_zero_iff (w : E8CoxeterGroup) :
 
 /-- For E8, the complementary attracting ranks sum to 120 + 8 = 128. -/
 theorem e8_total_attracting_rank : 120 + 8 = 128 := by
-  norm_num
+  rfl
 
 /-- Lean-visible conclusions of the universal fixed-locus theorem.
 
