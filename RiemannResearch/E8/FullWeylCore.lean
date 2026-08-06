@@ -44,17 +44,7 @@ center with `Z`; those are not asserted here.
 
 namespace RiemannResearch.E8
 
-/-- Compatibility alias for the former E8-local fixed-point predicate. -/
-abbrev HasNonzeroFixedPoint :=
-  RiemannResearch.GroupTheory.HasNonzeroFixedPoint
-
-/-- Compatibility wrapper for the former E8-local fixed-point theorem. -/
-theorem exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one
-    {p : ℕ} {G V : Type*} [Group G] [AddGroup V]
-    [DistribMulAction G V] [Finite V] [Fact (Nat.Prime p)]
-    (hG : IsPGroup p G) (hcard : ¬ Nat.card V ≡ 1 [MOD p]) :
-    HasNonzeroFixedPoint G V :=
-  RiemannResearch.GroupTheory.exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one hG hcard
+open RiemannResearch.GroupTheory
 
 /-- The primes occurring in the Sylow fixed-field assertion. -/
 def fullWeylPrimes : Finset ℕ := {2, 3, 5, 7}
@@ -131,8 +121,7 @@ theorem quasisimpleCoreOfFullWeylDescent
       ∀ P : Sylow 7 W, Nat.card (V 7 P) = 2 ^ 8)
     (diagonalizable_subgroup_criterion :
       ∀ p ∈ fullWeylPrimes, ∀ P : Sylow p W,
-        RiemannResearch.GroupTheory.HasNonzeroFixedPoint
-          (↥(P : Subgroup W)) (V p P) →
+        HasNonzeroFixedPoint (↥(P : Subgroup W)) (V p P) →
           neutralAtSylowFixedField p P) :
     FullWeylCoreConclusion W Gal Ω
       neutralAtBase neutralAtEvenField neutralAtCentralField
