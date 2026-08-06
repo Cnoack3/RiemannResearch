@@ -15,6 +15,14 @@ from lean_lsp_mcp import main as lean_lsp_main
 from lean_lsp_mcp.server import mcp
 
 
+WORKFLOW_INSTRUCTIONS = """For persistent Lean research, first call workspace_sync when the working tree is clean. Search existing project and Mathlib declarations before constructing a proof. Verify Lean code with the Lean tools, save every successful material proof in the RiemannResearch project unless the user explicitly requests an exploratory-only result, then call workspace_checkpoint with push enabled and report the commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. If the tree is dirty or diverged, stop and explain the conflict. Distinguish informal mathematical arguments from kernel-verified Lean proofs."""
+
+_existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
+mcp._mcp_server.instructions = (
+    WORKFLOW_INSTRUCTIONS + ("\n\n" + _existing_instructions if _existing_instructions else "")
+)
+
+
 PROJECT_ROOT = Path(os.environ["LEAN_WORKSPACE_ROOT"]).expanduser().resolve()
 EXPECTED_REMOTE = os.environ.get(
     "LEAN_WORKSPACE_REMOTE", "https://github.com/Cnoack3/RiemannResearch.git"
@@ -25,6 +33,7 @@ MAX_PATCH_BYTES = 2_000_000
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
     ".gitignore",
+    "AGENTS.md",
     "README.md",
     "RiemannResearch.lean",
     "lakefile.toml",
@@ -321,6 +330,7 @@ def workspace_checkpoint(message: str, push: bool = True) -> dict:
             "lake-manifest.json",
             "lean-toolchain",
             ".gitignore",
+            "AGENTS.md",
         ]
     )
     staged = _run(["git", "diff", "--cached", "--name-only"])
