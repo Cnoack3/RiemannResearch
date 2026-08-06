@@ -16,7 +16,7 @@ from lean_lsp_mcp import main as lean_lsp_main
 from lean_lsp_mcp.server import mcp
 
 
-WORKFLOW_INSTRUCTIONS = """For persistent Lean research, first call workspace_sync when the working tree is clean. Search existing project and Mathlib declarations before constructing a proof. Verify Lean code with the Lean tools, save every successful material proof in the RiemannResearch project unless the user explicitly requests an exploratory-only result, then call workspace_checkpoint with push enabled and report the commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. If the tree is dirty or diverged, inspect and explain the conflict. Never call workspace_reset automatically: first call it without a token to preview, show the preview to the user, obtain explicit permission, and only then call it with the returned confirmation token. Distinguish informal mathematical arguments from kernel-verified Lean proofs."""
+WORKFLOW_INSTRUCTIONS = """For persistent Lean research, first call workspace_sync when the working tree is clean. Search existing project and Mathlib declarations before constructing a proof. Verify Lean code with the Lean tools, save every successful material proof in the RiemannResearch project unless the user explicitly requests an exploratory-only result, then call workspace_checkpoint with push enabled and report the commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. If the tree is dirty or diverged, inspect and explain the conflict. Never call workspace_reset automatically: first call it without a token to preview. If reset_allowed is false, report the protected paths and do not submit the token. Otherwise show the preview to the user, obtain explicit permission, and only then call it with the returned confirmation token. Distinguish informal mathematical arguments from kernel-verified Lean proofs."""
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
 mcp._mcp_server.instructions = (
@@ -42,6 +42,7 @@ ROOT_WRITABLE = {
 ROOT_READABLE = ROOT_WRITABLE | {"lake-manifest.json", "lean-toolchain"}
 WRITABLE_PREFIXES = {"RiemannResearch"}
 WRITABLE_SUFFIXES = {".lean", ".md", ".toml", ".yml", ".yaml", ".json"}
+RESETTABLE_UNTRACKED_ROOT_SUFFIXES = WRITABLE_SUFFIXES | {".txt"}
 
 
 def _run(args: list[str], *, input_text: str | None = None, timeout: int = 60) -> str:
@@ -199,15 +200,37 @@ def _scan_project_lean() -> list[str]:
     return warnings
 
 
-def _resettable_path(raw: str) -> tuple[str, Path]:
+def _resettable_path(raw: str, *, untracked: bool = False) -> tuple[str, Path]:
     """Resolve a path that the fail-safe may restore or remove."""
     try:
         return _relative_path(raw, writable=True)
-    except ValueError:
-        normalized, resolved = _relative_path(raw)
+    except ValueError as original_error:
+        if not raw or "\x00" in raw:
+            raise original_error
+        candidate = Path(raw)
+        if candidate.is_absolute():
+            raise original_error
+        resolved = (PROJECT_ROOT / candidate).resolve(strict=False)
+        try:
+            relative = resolved.relative_to(PROJECT_ROOT)
+        except ValueError:
+            raise original_error
+        if not relative.parts or any(part in DENIED_PARTS for part in relative.parts):
+            raise original_error
+
+        normalized = relative.as_posix()
         if normalized == "lake-manifest.json":
             return normalized, resolved
-        raise
+
+        safe_root_file = (
+            untracked
+            and len(relative.parts) == 1
+            and not relative.name.startswith(".")
+            and resolved.suffix.lower() in RESETTABLE_UNTRACKED_ROOT_SUFFIXES
+        )
+        if safe_root_file:
+            return normalized, resolved
+        raise original_error
 
 
 def _workspace_reset_plan() -> dict:
@@ -237,7 +260,7 @@ def _workspace_reset_plan() -> dict:
 
     for raw in untracked_candidates:
         try:
-            normalized, resolved = _resettable_path(raw)
+            normalized, resolved = _resettable_path(raw, untracked=True)
             if (
                 resolved.is_symlink()
                 or not resolved.is_file()
@@ -417,7 +440,7 @@ def workspace_reset(confirmation_token: str = "") -> dict:
             ]
         )
     for relative in plan["untracked_paths"]:
-        _, resolved = _resettable_path(relative)
+        _, resolved = _resettable_path(relative, untracked=True)
         resolved.unlink()
 
     remaining = _run(["git", "status", "--porcelain"])
