@@ -1,5 +1,7 @@
+import RiemannResearch.AlgebraicGeometry.PointFields
 import RiemannResearch.Basic
 import RiemannResearch.GroupTheory.PGroupFixedPoints
 import RiemannResearch.E8.OmegaEightPlusTwo
 import RiemannResearch.E8.FullWeylCore
+import RiemannResearch.E8.WonderfulFixedLocus
 import RiemannResearch.RH.Basic
