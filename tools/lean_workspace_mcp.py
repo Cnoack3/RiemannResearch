@@ -6,6 +6,7 @@ filesystem operation to one configured Lean project.
 
 from __future__ import annotations
 
+import hashlib
 import os
 import re
 import subprocess
@@ -15,7 +16,7 @@ from lean_lsp_mcp import main as lean_lsp_main
 from lean_lsp_mcp.server import mcp
 
 
-WORKFLOW_INSTRUCTIONS = """For persistent Lean research, first call workspace_sync when the working tree is clean. Search existing project and Mathlib declarations before constructing a proof. Verify Lean code with the Lean tools, save every successful material proof in the RiemannResearch project unless the user explicitly requests an exploratory-only result, then call workspace_checkpoint with push enabled and report the commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. If the tree is dirty or diverged, stop and explain the conflict. Distinguish informal mathematical arguments from kernel-verified Lean proofs."""
+WORKFLOW_INSTRUCTIONS = """For persistent Lean research, first call workspace_sync when the working tree is clean. Search existing project and Mathlib declarations before constructing a proof. Verify Lean code with the Lean tools, save every successful material proof in the RiemannResearch project unless the user explicitly requests an exploratory-only result, then call workspace_checkpoint with push enabled and report the commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. If the tree is dirty or diverged, inspect and explain the conflict. Never call workspace_reset automatically: first call it without a token to preview, show the preview to the user, obtain explicit permission, and only then call it with the returned confirmation token. Distinguish informal mathematical arguments from kernel-verified Lean proofs."""
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
 mcp._mcp_server.instructions = (
@@ -198,6 +199,79 @@ def _scan_project_lean() -> list[str]:
     return warnings
 
 
+def _resettable_path(raw: str) -> tuple[str, Path]:
+    """Resolve a path that the fail-safe may restore or remove."""
+    try:
+        return _relative_path(raw, writable=True)
+    except ValueError:
+        normalized, resolved = _relative_path(raw)
+        if normalized == "lake-manifest.json":
+            return normalized, resolved
+        raise
+
+
+def _workspace_reset_plan() -> dict:
+    """Describe uncommitted changes and bind them to an exact confirmation token."""
+    remote = _validate_origin()
+    status = _run(["git", "status", "--porcelain"])
+    head = _run(["git", "rev-parse", "HEAD"])
+
+    tracked_raw = _run(["git", "diff", "--name-only", "-z", "HEAD", "--"])
+    untracked_raw = _run(
+        ["git", "ls-files", "--others", "--exclude-standard", "-z", "--"]
+    )
+    tracked_candidates = sorted(path for path in tracked_raw.split("\0") if path)
+    untracked_candidates = sorted(path for path in untracked_raw.split("\0") if path)
+
+    tracked: list[str] = []
+    untracked: list[str] = []
+    protected: list[str] = []
+    resolved_untracked: dict[str, Path] = {}
+
+    for raw in tracked_candidates:
+        try:
+            normalized, _ = _resettable_path(raw)
+            tracked.append(normalized)
+        except ValueError:
+            protected.append(raw)
+
+    for raw in untracked_candidates:
+        try:
+            normalized, resolved = _resettable_path(raw)
+            if (
+                resolved.is_symlink()
+                or not resolved.is_file()
+                or resolved.stat().st_size > MAX_PATCH_BYTES
+            ):
+                raise ValueError("Untracked path is not a resettable regular file")
+            untracked.append(normalized)
+            resolved_untracked[normalized] = resolved
+        except (OSError, ValueError):
+            protected.append(raw)
+
+    digest = hashlib.sha256()
+    digest.update(head.encode("utf-8"))
+    digest.update(b"\0")
+    digest.update(status.encode("utf-8"))
+    digest.update(b"\0")
+    digest.update(_run(["git", "diff", "--binary", "HEAD", "--"]).encode("utf-8"))
+    for normalized in untracked:
+        digest.update(b"\0")
+        digest.update(normalized.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(resolved_untracked[normalized].read_bytes())
+
+    return {
+        "remote": remote,
+        "head": head,
+        "status": status.splitlines(),
+        "tracked_paths": tracked,
+        "untracked_paths": untracked,
+        "protected_paths": sorted(set(protected)),
+        "confirmation_token": digest.hexdigest(),
+    }
+
+
 @mcp.tool(
     name="workspace_list_files",
     description="List persistent files in the RiemannResearch project, excluding build and Git internals.",
@@ -274,6 +348,93 @@ def workspace_git_diff() -> dict:
 )
 def workspace_sync() -> dict:
     return _sync_clean_tree()
+
+
+@mcp.tool(
+    name="workspace_reset",
+    description=(
+        "Destructive fail-safe that discards only uncommitted changes in approved "
+        "RiemannResearch paths while preserving every commit and the current branch. "
+        "First call with an empty confirmation_token to preview. Show that preview to "
+        "the user and obtain explicit permission; only then call again with the returned "
+        "token. The token is rejected if another agent changes the workspace."
+    ),
+    annotations={
+        "title": "Reset uncommitted Lean workspace",
+        "readOnlyHint": False,
+        "destructiveHint": True,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    },
+)
+def workspace_reset(confirmation_token: str = "") -> dict:
+    plan = _workspace_reset_plan()
+    if not plan["status"]:
+        return {
+            "reset": False,
+            "clean": True,
+            "message": "Workspace is already clean; nothing was discarded.",
+            "head": plan["head"],
+        }
+
+    if plan["protected_paths"]:
+        return {
+            "reset": False,
+            "clean": False,
+            "reset_allowed": False,
+            "message": "Reset refused because protected paths have uncommitted changes.",
+            **plan,
+        }
+
+    if not confirmation_token:
+        return {
+            "reset": False,
+            "clean": False,
+            "reset_allowed": True,
+            "requires_explicit_user_permission": True,
+            "message": (
+                "Preview only. Show these paths to the user and obtain explicit permission "
+                "before calling workspace_reset again with confirmation_token."
+            ),
+            **plan,
+        }
+
+    if confirmation_token != plan["confirmation_token"]:
+        raise ValueError(
+            "Confirmation token is stale or invalid; preview the reset again and ask the user."
+        )
+
+    if plan["tracked_paths"]:
+        _run(
+            [
+                "git",
+                "restore",
+                "--source=HEAD",
+                "--staged",
+                "--worktree",
+                "--",
+                *plan["tracked_paths"],
+            ]
+        )
+    for relative in plan["untracked_paths"]:
+        _, resolved = _resettable_path(relative)
+        resolved.unlink()
+
+    remaining = _run(["git", "status", "--porcelain"])
+    if remaining:
+        raise RuntimeError(
+            "Reset did not produce a clean workspace; no further cleanup was attempted:\n"
+            + remaining
+        )
+
+    return {
+        "reset": True,
+        "clean": True,
+        "discarded_tracked_paths": plan["tracked_paths"],
+        "discarded_untracked_paths": plan["untracked_paths"],
+        "head": plan["head"],
+        "message": "Uncommitted approved workspace changes were discarded.",
+    }
 
 
 @mcp.tool(
