@@ -109,7 +109,6 @@ def _patch_paths(patch: str) -> list[str]:
         "rename to ",
         "copy from ",
         "copy to ",
-        "new file mode ",
         "old mode ",
         "new mode ",
     )
@@ -119,6 +118,8 @@ def _patch_paths(patch: str) -> list[str]:
     paths: list[str] = []
     saw_header = False
     for line in patch.splitlines():
+        if line.startswith("new file mode ") and line != "new file mode 100644":
+            raise ValueError("Only regular non-executable new files (mode 100644) are allowed")
         if line.startswith("+++ "):
             saw_header = True
             raw = line[4:].split("\t", 1)[0]
