@@ -3,7 +3,10 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
-import Mathlib
+import Mathlib.GroupTheory.Sylow
+import Mathlib.Tactic.NormNum.Prime
+import RiemannResearch.E8.OmegaEightPlusTwo
+import RiemannResearch.GroupTheory.PGroupFixedPoints
 
 /-!
 # The quasisimple core of full-Weyl descent
@@ -28,9 +31,10 @@ No axiom is introduced. Under these named hypotheses, Lean proves parts
 (i)--(iii), the displayed order, noncommutativity of the simple core, and a
 precise version of the final reduction-to-core-descent sentence.
 
-The Sylow fixed-vector step is proved intrinsically. For `p = 7`, orbit
-counting is stronger and shorter than the semisimple-module argument in the
-document: `2 ^ 8 = 256` is not congruent to one modulo seven.
+The Sylow fixed-vector step uses the reusable orbit-counting result in
+`RiemannResearch.GroupTheory.PGroupFixedPoints`. For `p = 7`, orbit counting
+is stronger and shorter than the semisimple-module argument in the document:
+`2 ^ 8 = 256` is not congruent to one modulo seven.
 
 The source theorem's title uses “quasisimple”, while its statement proves that
 the quotient `W⁺ / Z` is simple. Proving that `W⁺` itself is quasisimple
@@ -40,65 +44,23 @@ center with `Z`; those are not asserted here.
 
 namespace RiemannResearch.E8
 
+/-- Compatibility alias for the former E8-local fixed-point predicate. -/
+abbrev HasNonzeroFixedPoint :=
+  RiemannResearch.GroupTheory.HasNonzeroFixedPoint
+
+/-- Compatibility wrapper for the former E8-local fixed-point theorem. -/
+theorem exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one
+    {p : ℕ} {G V : Type*} [Group G] [AddGroup V]
+    [DistribMulAction G V] [Finite V] [Fact (Nat.Prime p)]
+    (hG : IsPGroup p G) (hcard : ¬ Nat.card V ≡ 1 [MOD p]) :
+    HasNonzeroFixedPoint G V :=
+  RiemannResearch.GroupTheory.exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one hG hcard
+
 /-- The primes occurring in the Sylow fixed-field assertion. -/
 def fullWeylPrimes : Finset ℕ := {2, 3, 5, 7}
 
 /-- The primes whose lattice quotient in the document is `L / pL`. -/
 def modularFixedVectorPrimes : Finset ℕ := {2, 3, 5}
-
-/-- A nonzero point fixed by every element of a multiplicative action. -/
-def HasNonzeroFixedPoint (G V : Type*) [Group G] [Zero V] [SMul G V] : Prop :=
-  ∃ v : V, v ≠ 0 ∧ ∀ g : G, g • v = v
-
-/-- Orbit counting for a finite `p`-group action.
-
-If the cardinality of the additive group is not congruent to one modulo `p`,
-its fixed-point set cannot consist only of zero.
--/
-theorem exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one
-    {p : ℕ} {G V : Type*} [Group G] [AddGroup V]
-    [DistribMulAction G V] [Finite V] [Fact (Nat.Prime p)]
-    (hG : IsPGroup p G) (hcard : ¬ Nat.card V ≡ 1 [MOD p]) :
-    HasNonzeroFixedPoint G V := by
-  by_contra hfixed
-  have hsubsingleton : Subsingleton (MulAction.fixedPoints G V) := by
-    constructor
-    intro v w
-    apply Subtype.ext
-    have hv : v.1 = 0 := by
-      by_contra hv0
-      exact hfixed ⟨v.1, hv0, v.2⟩
-    have hw : w.1 = 0 := by
-      by_contra hw0
-      exact hfixed ⟨w.1, hw0, w.2⟩
-    exact hv.trans hw.symm
-  have hnonempty : Nonempty (MulAction.fixedPoints G V) :=
-    ⟨⟨0, by simp⟩⟩
-  have hfixedCard : Nat.card (MulAction.fixedPoints G V) = 1 :=
-    Nat.card_eq_one_iff_unique.mpr ⟨hsubsingleton, hnonempty⟩
-  apply hcard
-  have hmod := hG.card_modEq_card_fixedPoints V
-  rwa [hfixedCard] at hmod
-
-/-- The displayed order of `Ω₈⁺(2)` in decimal form. -/
-theorem omegaEightPlusTwo_order :
-    2 ^ 12 * 3 ^ 5 * 5 ^ 2 * 7 = 174182400 := by
-  norm_num
-
-/-- A simple group of the displayed composite order is nonabelian. -/
-theorem nonabelian_of_isSimpleGroup_of_card_eq_omegaOrder
-    {Ω : Type*} [Group Ω] [Finite Ω]
-    (hsimple : IsSimpleGroup Ω)
-    (hcard : Nat.card Ω = 2 ^ 12 * 3 ^ 5 * 5 ^ 2 * 7) :
-    ∃ a b : Ω, a * b ≠ b * a := by
-  by_contra hnonabelian
-  simp only [not_exists, not_not] at hnonabelian
-  let _ : IsMulCommutative Ω :=
-    ⟨⟨fun a b => hnonabelian a b⟩⟩
-  have hprime : Nat.Prime (Nat.card Ω) :=
-    Group.is_simple_iff_prime_card.mp hsimple
-  rw [hcard] at hprime
-  norm_num at hprime
 
 /-- The Lean-visible conclusions of the quasisimple-core theorem.
 
@@ -169,7 +131,8 @@ theorem quasisimpleCoreOfFullWeylDescent
       ∀ P : Sylow 7 W, Nat.card (V 7 P) = 2 ^ 8)
     (diagonalizable_subgroup_criterion :
       ∀ p ∈ fullWeylPrimes, ∀ P : Sylow p W,
-        HasNonzeroFixedPoint (↥(P : Subgroup W)) (V p P) →
+        RiemannResearch.GroupTheory.HasNonzeroFixedPoint
+          (↥(P : Subgroup W)) (V p P) →
           neutralAtSylowFixedField p P) :
     FullWeylCoreConclusion W Gal Ω
       neutralAtBase neutralAtEvenField neutralAtCentralField
@@ -197,22 +160,22 @@ theorem quasisimpleCoreOfFullWeylDescent
       apply
         exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one P.isPGroup'
       rw [smallPrime_card 2 (by simp [modularFixedVectorPrimes]) P]
-      norm_num
+      norm_num [Nat.ModEq]
     · let _ : Fact (Nat.Prime 3) := ⟨by norm_num⟩
       apply
         exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one P.isPGroup'
       rw [smallPrime_card 3 (by simp [modularFixedVectorPrimes]) P]
-      norm_num
+      norm_num [Nat.ModEq]
     · let _ : Fact (Nat.Prime 5) := ⟨by norm_num⟩
       apply
         exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one P.isPGroup'
       rw [smallPrime_card 5 (by simp [modularFixedVectorPrimes]) P]
-      norm_num
+      norm_num [Nat.ModEq]
     · let _ : Fact (Nat.Prime 7) := ⟨by norm_num⟩
       apply
         exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one P.isPGroup'
       rw [seven_card P]
-      norm_num
+      norm_num [Nat.ModEq]
   · constructor
     · intro hbase _
       exact restriction_preserves_neutrality hbase

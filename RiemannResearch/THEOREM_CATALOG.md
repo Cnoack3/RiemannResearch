@@ -8,9 +8,9 @@ remain authoritative.
 | Declaration | Module | Statement / purpose | Status |
 |---|---|---|---|
 | `sanity_check` | `RiemannResearch.Basic` | Confirms arithmetic tactics and mathlib are available | Kernel checked |
-| `RiemannResearch.E8.exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one` | `RiemannResearch.E8.FullWeylCore` | A finite `p`-group acting additively on finite `V` has a nonzero fixed point when `Nat.card V ≢ 1 [MOD p]` | Kernel checked |
-| `RiemannResearch.E8.omegaEightPlusTwo_order` | `RiemannResearch.E8.FullWeylCore` | `2^12 · 3^5 · 5^2 · 7 = 174182400` | Kernel checked |
-| `RiemannResearch.E8.nonabelian_of_isSimpleGroup_of_card_eq_omegaOrder` | `RiemannResearch.E8.FullWeylCore` | A simple group of order `2^12 · 3^5 · 5^2 · 7` is nonabelian | Kernel checked |
+| `RiemannResearch.GroupTheory.exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one` | `RiemannResearch.GroupTheory.PGroupFixedPoints` | A finite `p`-group acting additively on finite `V` has a nonzero fixed point when `Nat.card V ≢ 1 [MOD p]` | Kernel checked |
+| `RiemannResearch.E8.omegaEightPlusTwo_order` | `RiemannResearch.E8.OmegaEightPlusTwo` | `2^12 · 3^5 · 5^2 · 7 = 174182400` | Kernel checked |
+| `RiemannResearch.E8.nonabelian_of_isSimpleGroup_of_card_eq_omegaOrder` | `RiemannResearch.E8.OmegaEightPlusTwo` | A simple group of order `2^12 · 3^5 · 5^2 · 7` is nonabelian | Kernel checked |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent` | `RiemannResearch.E8.FullWeylCore` | Under explicit Gille, `W⁺/Z ≃ Ω₈⁺(2)`, lattice-cardinality, and marker-criterion hypotheses, proves parts (i)--(iii) and `Neutral(ξ) ↔ (Neutral(ξ_F) → Neutral(ξ_{k⁺}))` | Kernel checked, conditional on named hypotheses |
 | `RiemannResearch.RH.Statement` | `RiemannResearch.RH.Basic` | Stable local name for mathlib's RH proposition | Kernel checked |
 

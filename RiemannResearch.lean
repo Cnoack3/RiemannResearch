@@ -1,3 +1,5 @@
 import RiemannResearch.Basic
+import RiemannResearch.GroupTheory.PGroupFixedPoints
+import RiemannResearch.E8.OmegaEightPlusTwo
 import RiemannResearch.E8.FullWeylCore
 import RiemannResearch.RH.Basic
