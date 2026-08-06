@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 /-
-Copyright (c) 2026 Cnoack3. All rights reserved.
+Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
