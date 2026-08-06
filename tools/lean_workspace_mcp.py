@@ -138,6 +138,38 @@ def _tail(text: str, lines: int = 200) -> str:
     return "\n".join(text.splitlines()[-lines:])
 
 
+def _validate_origin() -> str:
+    remote = _run(["git", "remote", "get-url", "origin"])
+    accepted = {
+        EXPECTED_REMOTE,
+        "git@github.com:Cnoack3/RiemannResearch.git",
+    }
+    if remote not in accepted:
+        raise ValueError(f"Refusing unexpected origin remote: {remote}")
+    branch = _run(["git", "branch", "--show-current"])
+    if branch != "main":
+        raise ValueError(f"Refusing Git operation from unexpected branch: {branch}")
+    return remote
+
+
+def _sync_clean_tree() -> dict:
+    remote = _validate_origin()
+    status = _run(["git", "status", "--porcelain"])
+    if status:
+        raise ValueError("Refusing to synchronize a non-clean working tree:\n" + status)
+    before = _run(["git", "rev-parse", "HEAD"])
+    _run(["git", "fetch", "--prune", "origin", "main"], timeout=300)
+    merge_output = _run(["git", "merge", "--ff-only", "origin/main"], timeout=120)
+    after = _run(["git", "rev-parse", "HEAD"])
+    return {
+        "remote": remote,
+        "before": before,
+        "after": after,
+        "changed": before != after,
+        "output": merge_output,
+    }
+
+
 def _scan_project_lean() -> list[str]:
     warnings: list[str] = []
     patterns = {
@@ -186,10 +218,18 @@ def workspace_read_file(path: str) -> dict:
     ),
 )
 def workspace_apply_patch(patch: str) -> dict:
+    sync = None
+    if not _run(["git", "status", "--porcelain"]):
+        sync = _sync_clean_tree()
     paths = _patch_paths(patch)
     _run(["git", "apply", "--check", "--whitespace=error-all", "-"], input_text=patch)
     _run(["git", "apply", "--whitespace=error-all", "-"], input_text=patch)
-    return {"applied": True, "paths": paths, "status": _run(["git", "status", "--short"])}
+    return {
+        "applied": True,
+        "paths": paths,
+        "synced_before_edit": sync,
+        "status": _run(["git", "status", "--short"]),
+    }
 
 
 @mcp.tool(
@@ -216,6 +256,18 @@ def workspace_git_diff() -> dict:
 
 
 @mcp.tool(
+    name="workspace_sync",
+    description=(
+        "Safely synchronize the clean local main branch from the configured private "
+        "GitHub origin using fetch plus fast-forward-only merge. Never creates merge "
+        "commits, rebases, stashes, force-pushes, or discards local work."
+    ),
+)
+def workspace_sync() -> dict:
+    return _sync_clean_tree()
+
+
+@mcp.tool(
     name="workspace_update_dependencies",
     description=(
         "Run Lake's dependency resolver after an approved lakefile.toml patch. "
@@ -237,7 +289,7 @@ def workspace_update_dependencies(package: str = "") -> dict:
         "push that exact commit to the configured private GitHub main branch."
     ),
 )
-def workspace_checkpoint(message: str, push: bool = False) -> dict:
+def workspace_checkpoint(message: str, push: bool = True) -> dict:
     message = message.strip()
     if not 5 <= len(message) <= 120 or "\n" in message:
         raise ValueError("Commit message must be one line containing 5-120 characters")
@@ -250,6 +302,11 @@ def workspace_checkpoint(message: str, push: bool = False) -> dict:
     warnings = _scan_project_lean()
     if warnings:
         raise ValueError("Lean source audit failed:\n" + "\n".join(warnings[:100]))
+
+    if push:
+        _validate_origin()
+        _run(["git", "fetch", "origin", "main"], timeout=300)
+        _run(["git", "merge-base", "--is-ancestor", "origin/main", "HEAD"])
 
     build_output = _run(["lake", "build"], timeout=3600)
     _run(
@@ -268,19 +325,22 @@ def workspace_checkpoint(message: str, push: bool = False) -> dict:
     )
     staged = _run(["git", "diff", "--cached", "--name-only"])
     if not staged:
-        return {"committed": False, "pushed": False, "message": "No checkpointable changes", "build": _tail(build_output)}
+        pushed = False
+        if push:
+            _run(["git", "push", "origin", "HEAD:main"], timeout=300)
+            pushed = True
+        return {
+            "committed": False,
+            "pushed": pushed,
+            "commit": _run(["git", "rev-parse", "HEAD"]),
+            "message": "No checkpointable changes",
+            "build": _tail(build_output),
+        }
 
     _run(["git", "commit", "-m", message], timeout=120)
     commit = _run(["git", "rev-parse", "HEAD"])
     pushed = False
     if push:
-        remote = _run(["git", "remote", "get-url", "origin"])
-        accepted = {
-            EXPECTED_REMOTE,
-            "git@github.com:Cnoack3/RiemannResearch.git",
-        }
-        if remote not in accepted:
-            raise ValueError(f"Refusing unexpected origin remote: {remote}")
         _run(["git", "push", "origin", "HEAD:main"], timeout=300)
         pushed = True
 
