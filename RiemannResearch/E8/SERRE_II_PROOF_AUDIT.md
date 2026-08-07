@@ -103,8 +103,13 @@ the literal PDF theorem.
 - `GaloisCohomology/GaloisCechComparison.lean` computes all three Čech face
   maps in Galois coordinates, proves coordinate Čech cocycles and gauge classes
   equivalent to discrete nonabelian cocycles and H¹, and constructs the actual
-  singleton fpqc cover. The final Yoneda-section comparison datum is explicit
-  but not yet constructed.
+  singleton fpqc cover. The remaining specialization must transport affine
+  group sections through the chosen overlap isomorphisms.
+- `GaloisCohomology/SingletonCechH1.lean` proves the generic Yoneda step for
+  every presheaf of groups: cochains are sections on the double overlap,
+  cocycles satisfy one equation on the triple overlap, and cohomology is the
+  universal gauge relation. The affine/Galois transport and global torsor
+  classification remain separate inputs.
 - `GaloisCohomology/NonabelianH1.lean` constructs discrete nonabelian
   one-cocycles modulo gauge, their neutral class, subgroup restriction, and
   coefficient pushforward. It proves that both operations preserve neutrality;
@@ -128,11 +133,12 @@ the literal PDF theorem.
   is contained in it. The reverse inclusion, and hence Brown's full
   stable-elements characterization, still needs cohomological transfer and
   Mackey theory.
-- `Logic/PointedKernel.lean` proves that trivial neutral fibers compose. This
-  is the exact pointed-set iteration step for cyclic kernel theorems through a
-  solvable tower; it does not prove the cyclic E8 theorem.
+- `Logic/PointedKernel.lean` proves that trivial neutral fibers compose and
+  iterates them through arbitrary finite dependent towers. This is the exact
+  pointed-set step for cyclic kernel theorems along a solvable composition
+  series; it does not prove the cyclic E8 theorem.
 
-All twenty-six supporting files build in the full project and use no `sorry`
+All twenty-seven supporting files build in the full project and use no `sorry`
 or new axioms.
 
 ## Source-audited advances across manuscript revisions

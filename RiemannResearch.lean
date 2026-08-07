@@ -10,6 +10,7 @@ import RiemannResearch.GaloisCohomology.GaloisCechComparison
 import RiemannResearch.GaloisCohomology.GaloisTensorDecomposition
 import RiemannResearch.GaloisCohomology.GaloisTripleTensorDecomposition
 import RiemannResearch.GaloisCohomology.NonabelianH1
+import RiemannResearch.GaloisCohomology.SingletonCechH1
 import RiemannResearch.GroupCohomology.Conjugation
 import RiemannResearch.GroupCohomology.Restriction
 import RiemannResearch.GroupCohomology.StableElements

@@ -39,4 +39,42 @@ theorem HasTrivialKernel.comp
   intro a
   rw [Function.comp_apply, hg, hf]
 
+universe u
+
+/-- The composite through the first `n` arrows of a dependent tower. -/
+def towerMap {A : Nat → Type u}
+    (step : ∀ n, A n → A (n + 1)) :
+    ∀ n, A 0 → A n
+  | 0 => id
+  | n + 1 => step n ∘ towerMap step n
+
+@[simp]
+theorem towerMap_zero {A : Nat → Type u}
+    (step : ∀ n, A n → A (n + 1)) :
+    towerMap step 0 = id :=
+  rfl
+
+@[simp]
+theorem towerMap_succ {A : Nat → Type u}
+    (step : ∀ n, A n → A (n + 1)) (n : Nat) :
+    towerMap step (n + 1) = step n ∘ towerMap step n :=
+  rfl
+
+/-- Trivial pointed kernels iterate through an arbitrary finite dependent
+tower. This packages the exact logical step used to iterate cyclic
+restriction-kernel theorems along a solvable composition series. -/
+theorem HasTrivialKernel.tower
+    {A : Nat → Type u}
+    (base : ∀ n, A n)
+    (step : ∀ n, A n → A (n + 1))
+    (hstep : ∀ n, HasTrivialKernel (base n) (base (n + 1)) (step n)) :
+    ∀ n, HasTrivialKernel (base 0) (base n) (towerMap step n) := by
+  intro n
+  induction n with
+  | zero =>
+      intro a
+      simp [towerMap]
+  | succ n ih =>
+      exact ih.comp (hstep n)
+
 end RiemannResearch.Logic
