@@ -61,7 +61,7 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Corollary 5.14 | Unverified | Depends on Theorems 5.11 and 5.13. |
 | Theorem 5.16 | Source checked; arithmetic exact in Lean | Totaro's page-21 table supplies the three subsystem stabilizer indices and Gille Corollary 9.3.6 supplies neutralization. The algebraic descent is informal. The exact index products and gcd for 135, 11200, 12096 are checked in SerreIIProgramChecks. |
 | Corollary 5.17 | Exact arithmetic and index implication in Lean; geometry unverified | serreIIProgram_threeSubsystem_bezout and serreIIProgram_threeSubsystem_gcd check the degree calculation; pointFieldIndex_eq_one_of_three_point_degrees proves that actual point fields with those degrees force index one. Their existence still depends on Theorem 5.16. |
-| Theorem 5.19 | Lean conditional with new H1 and Galois-cover foundations | `quasisimpleCoreOfFullWeylDescent` remains conditional. Discrete nonabelian H¹, fixed-cover fpqc Čech H¹ with common refinements, and the finite-Galois square/triple tensor decompositions are kernel checked. The global cover quotient, torsor classification, Čech/discrete cocycle equivalence, and ten E8/group-identification inputs remain open. |
+| Theorem 5.19 | Lean conditional with global fpqc and Galois-coordinate foundations | `quasisimpleCoreOfFullWeylDescent` remains conditional. Discrete nonabelian H¹, global fpqc Čech H¹ across witnessed covers, finite-Galois tensor overlaps, and the coordinate Čech/discrete H¹ equivalence are kernel checked. The explicit Yoneda-section comparison datum for the actual singleton cover, fpqc torsor classification, and ten E8/group-identification inputs remain open. |
 
 ## Section 6
 

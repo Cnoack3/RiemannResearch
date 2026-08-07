@@ -45,6 +45,11 @@ the literal PDF theorem.
 - `GroupTheory/GeneratedFixedPoint.lean` proves that a *single common point*
   fixed by subgroups whose join is the whole group is globally fixed. It does
   not infer a common point from separately nonempty fixed loci.
+- `GroupTheory/GeneratedSubgroupsOfCoprimeIndex.lean` proves that a family of
+  subgroups with gcd-one indices generates the whole group and that nonempty
+  generating families lift through surjective group homomorphisms.
+- `AlgebraicGeometry/PointFieldIndexOne.lean` proves that two coprime or three
+  gcd-one actual finite point-field degrees force point-field index one.
 - `LinearAlgebra/SplitLift.lean` proves that an explicit module section lifts
   every map into the quotient. Over `F₂[H]` this is exactly the equivariant
   lifting step in the generic 120-place valuation packet.
@@ -74,13 +79,14 @@ the literal PDF theorem.
   root admits a base on which all simple-root values are positive.
 - `AlgebraicGeometry/FpqcCechH1.lean` packages affine group schemes and
   witnessed fpqc covers into Mathlib's fixed-cover nonabelian Čech H¹, defines
-  refinement pullback, and proves that it preserves the neutral class. It does
-  not yet classify torsors or take the colimit over all covers.
+  refinement pullback, and proves that it preserves the neutral class.
 - `AlgebraicGeometry/FpqcCoverCommonRefinement.lean` proves that two arbitrary
   indexed witnessed fpqc covers have a witnessed common refinement formed by
-  pairwise fiber products, together with refinement maps to both inputs. This
-  supplies the directedness prerequisite for the global cover quotient; the
-  quotient and its torsor comparison remain to be constructed.
+  pairwise fiber products, together with refinement maps to both inputs.
+- `AlgebraicGeometry/FpqcH1.lean` proves refinement-map independence and forms
+  the global universe-indexed Čech H¹ quotient across witnessed fpqc covers,
+  with refinement invariance and a canonical neutral class. Torsor
+  classification and cross-universe comparison remain open.
 - `GaloisCohomology/GaloisTensorDecomposition.lean` constructs the canonical
   finite-Galois equivalence `L ⊗[K] L ≃ₐ[L] ((L ≃ₐ[K] L) → L)` and proves
   the pure-tensor formula `(x ⊗ y)(σ) = x * σ y`. This is the first
@@ -89,17 +95,26 @@ the literal PDF theorem.
   equivalence on the triple overlap and proves the independent-coordinate
   formula `(x ⊗ (y ⊗ z))(σ,ρ) = x * σ(y) * ρ(z)`, the algebraic identity
   needed to translate the Čech cocycle equation.
+- `GaloisCohomology/GaloisCechComparison.lean` computes all three Čech face
+  maps in Galois coordinates, proves coordinate Čech cocycles and gauge classes
+  equivalent to discrete nonabelian cocycles and H¹, and constructs the actual
+  singleton fpqc cover. The final Yoneda-section comparison datum is explicit
+  but not yet constructed.
 - `GaloisCohomology/NonabelianH1.lean` constructs discrete nonabelian
   one-cocycles modulo gauge, their neutral class, subgroup restriction, and
   coefficient pushforward. It proves that both operations preserve neutrality;
   it does not yet identify these classes with fpqc algebraic-group torsors.
+- `GaloisCohomology/DifferenceCocycle.lean` proves the representation-difference
+  cocycle used in Proposition 6.26 and identifies global and subgroup
+  coboundaries exactly with conjugacy of the corresponding representations.
 - `GroupCohomology/Conjugation.lean` constructs the additive H¹ isomorphism
-  for conjugate subgroups, proves both inverse laws and raw functorial
-  composition, and supplies the group-homomorphism square underlying
-  restriction naturality. It does not assume transfer or the Mackey formula.
+  for conjugate subgroups, proves restriction--conjugation naturality after
+  canonical coefficient transport, and proves that inner conjugation acts
+  trivially on H¹. It does not assume transfer or the Mackey formula.
 - `GroupCohomology/Restriction.lean` packages Mathlib's additive
-  group-cohomology map as (H^1) restriction and proves identity, composition,
-  and nested-subgroup tower laws.
+  group-cohomology map as (H^1) restriction, proves identity and composition,
+  and supplies explicit comparison isomorphisms and tower laws for nested
+  `Rep.res` coefficient objects.
 - `GroupCohomology/StableElements.lean` proves by explicit averaging that
   additive `H^1` of a finite group vanishes when its order is a unit, then
   combines this with inflation--restriction to prove injectivity on `H^1`
@@ -109,8 +124,8 @@ the literal PDF theorem.
   is the exact pointed-set iteration step for cyclic kernel theorems through a
   solvable tower; it does not prove the cyclic E8 theorem.
 
-All twenty supporting files build in the full project and use no `sorry` or
-new axioms.
+All twenty-five supporting files build in the full project and use no `sorry`
+or new axioms.
 
 ## Source-audited advances across manuscript revisions
 

@@ -30,9 +30,9 @@ complete a row.
 | [4] Borovoi--Reichstein--Gille | Power operation used in Warning 5.15 and the exact statement of Proposition B.1(3) | Pointed-set kernel logic in `Logic.PointedKernel` | Context only; nonabelian cohomology operation absent |
 | [5] Brosnan | Motivic Białynicki--Birula decomposition used in Theorem 3.2(ii) | Schemes and algebraic cycles exist in Mathlib | Not started; Chow groups, correspondences, and motives are absent |
 | [6] Bruhat--Tits | Local Serre II endpoint cited in Remark 5.21 | Valued fields exist in Mathlib | Context only; Bruhat--Tits/reductive-group layer absent |
-| [7] Brown | Stable-elements theorem in additive group cohomology, specialized to the Sylow calculation of Theorem 5.7 | `h1Restriction_tower`; finite-group averaging; `h1Restriction_injective_of_normal_finiteIndex` | Kernel foundation for normal finite-index restriction; arbitrary subgroups and image-as-stable-elements still require cohomological transfer, conjugation, and the Mackey formula |
+| [7] Brown | Stable-elements theorem in additive group cohomology, specialized to the Sylow calculation of Theorem 5.7 | Restriction towers and coefficient transports; subgroup conjugation naturality; inner conjugation triviality; finite-group averaging; normal finite-index injectivity | Kernel foundation; the arbitrary-subgroup stable-elements submodule and reverse image characterization still require cohomological transfer and the Mackey formula |
 | [8] Chernousov--Gille--Merkurjev | Integral Rost nilpotence for projective homogeneous varieties | Schemes and algebraic cycles exist | Not started; Chow motives and projective homogeneous varieties absent |
-| [9] Chernousov | The maximal-torus/toral lifting theorem used in Theorem 6.1 | Affine group schemes and fixed-cover Čech (H^1) exist | Not started; quasi-split (E_8), centralizers, and torsor comparison absent |
+| [9] Chernousov | The maximal-torus/toral lifting theorem used in Theorem 6.1 | Affine group schemes, global fpqc Čech (H^1), and finite-Galois coordinate comparison exist | Not started; the explicit Yoneda/torsor bridge, quasi-split (E_8), and centralizers remain absent |
 | [10] Creutz | The particular index-one/no-rational-point surface example in Remark 4.10 | Algebraic schemes exist | Context only |
 | [11] de Jong--He--Starr | Rational-simple-connectedness result delimiting the surface-function-field case | Schemes exist | Context only |
 | [12] De Concini--Springer | Wonderful compactification over the manuscript's characteristic-zero base | Root systems exist | Not started; split semisimple group schemes, orbit strata, and descent absent |
@@ -41,7 +41,7 @@ complete a row.
 | [15] Garibaldi--Semenov | Odd-degree splitting of (E_8)-torsors over the stated fields | Nonabelian discrete (H^1) and neutral-class functoriality | Not started; Rost invariants, cohomological dimension, and algebraic (E_8) absent |
 | [16] GAP/CTblLib/TomLib | Machine-checkable certificates for Theorems 6.9--6.12, Propositions 6.16--6.17 and 6.26, and Corollary 6.28 | Finite arithmetic and abstract Burnside/top-mark kernels | Certificate missing; scripts, database snapshot, row maps, fusions, and raw witnesses are absent |
 | [17] Geldhauser--Petrov | Selected (E_6/P_{1,2,6}) index-one-to-point theorem | None specific | Context only; not an (E_8) proof input |
-| [18] Gille 2001 | Cyclic degree (2,3,5) neutral-kernel theorems, cyclic-prime torus theorem, and toral lifting | `NonabelianH1`, restriction neutrality, pushforward neutrality, and `HasTrivialKernel.comp` | Kernel foundation; algebraic (E_8), tori, Galois comparison, and cd hypotheses remain |
+| [18] Gille 2001 | Cyclic degree (2,3,5) neutral-kernel theorems, cyclic-prime torus theorem, and toral lifting | Discrete and global fpqc nonabelian (H^1), finite-Galois coordinate comparison, restriction neutrality, and `HasTrivialKernel.comp` | Kernel foundation; the explicit Yoneda/torsor bridge, algebraic (E_8), tori, and cd hypotheses remain |
 | [19] Gille LNM 2238 | Corollaries 9.3.6--9.3.7, corrected Lemma 1.6.5 use, and the exact scope of Theorem 8.4.1(2) | Same nonabelian (H^1) and pointed-kernel foundations | Not started at theorem level; requires almost-abelian (E_8), multiplicative-type groups, and (R)-equivalence |
 | [20] Gille errata | Corrected hypotheses/statements integrated into the Lean versions of [19] | Source audit fixes the intended statements | Not started; must be built into [19], not postulated separately |
 | [21] Gille--Lee | Oriented embedding functor as a homogeneous space | Affine group schemes exist | Context only; reductive homogeneous spaces absent |
@@ -60,8 +60,9 @@ complete a row.
 
 ## Shared dependency order
 
-1. Complete discrete and fixed-cover nonabelian (H^1), then prove the
-   finite-Galois/fpqc comparison and torsor classification.
+1. Complete the explicit Yoneda-section comparison for the finite-Galois
+   singleton cover and fpqc torsor classification. Discrete (H^1), the global
+   fpqc Čech quotient, and the coordinate Čech/discrete equivalence now compile.
 2. Build split reductive group schemes, maximal tori/Borels, root data, and the
    split (E_8) group; connect its Weyl group to Mathlib's E8 Coxeter group.
 3. Add cohomological dimension, restriction/corestriction, Rost invariants, and
