@@ -72,6 +72,10 @@
   `agent_workspace_job_status` and wait behind earlier jobs instead of retrying
   the operation. The familiar `lean_build` name is retained but now submits to
   this queue.
+- The MCP process and all Lean/Lake children use at most eight Lean runtime
+  worker threads. `LEAN_WORKSPACE_THREADS` may lower this limit to 1--8 but may
+  not raise it. Queued Lake builds are further capped at four threads;
+  `LEAN_LAKE_BUILD_THREADS` may lower that limit to 1--4.
 - Publish only with `agent_workspace_checkpoint`. Publication is serialized and,
   if `origin/main` advanced, is replayed and built in a clean integration clone
   before a non-force push.
