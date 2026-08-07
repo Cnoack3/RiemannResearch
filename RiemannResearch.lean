@@ -1,6 +1,7 @@
 import RiemannResearch.AlgebraicGeometry.FpqcCechH1
 import RiemannResearch.AlgebraicGeometry.FpqcCoverCommonRefinement
 import RiemannResearch.AlgebraicGeometry.FpqcH1
+import RiemannResearch.AlgebraicGeometry.FpqcTorsor
 import RiemannResearch.AlgebraicGeometry.PointFields
 import RiemannResearch.AlgebraicGeometry.PointFieldIndexOne
 import RiemannResearch.AlgebraicGeometry.PrimePowerIndex
@@ -19,6 +20,7 @@ import RiemannResearch.GroupCohomology.Conjugation
 import RiemannResearch.GroupCohomology.Corestriction
 import RiemannResearch.GroupCohomology.Restriction
 import RiemannResearch.GroupCohomology.StableElements
+import RiemannResearch.LinearAlgebra.QuotientMap
 import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
 import RiemannResearch.Logic.PointedKernel

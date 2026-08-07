@@ -145,8 +145,11 @@ in the supplied artifacts, so their triality types remain unverified.
   pairwise fiber products, together with refinement maps to both inputs.
 - `AlgebraicGeometry/FpqcH1.lean` proves refinement-map independence and forms
   the global universe-indexed Čech H¹ quotient across witnessed fpqc covers,
-  with refinement invariance and a canonical neutral class. Torsor
-  classification and cross-universe comparison remain open.
+  with refinement invariance and a canonical neutral class.
+- `AlgebraicGeometry/FpqcTorsor.lean` defines fpqc torsors as simply
+  transitive group actions with flat, surjective, quasi-compact structure maps
+  and proves the generalized-point criterion for simple transitivity. Effective
+  fpqc descent, torsor classification, and cross-universe comparison remain open.
 - `GaloisCohomology/GaloisTensorDecomposition.lean` constructs the canonical
   finite-Galois equivalence `L ⊗[K] L ≃ₐ[L] ((L ≃ₐ[K] L) → L)` and proves
   the pure-tensor formula `(x ⊗ y)(σ) = x * σ y`. This is the first
@@ -168,8 +171,8 @@ in the supplied artifacts, so their triality types remain unverified.
 - `GaloisCohomology/GaloisCechComparison.lean` computes all three Čech face
   maps in Galois coordinates, proves coordinate Čech cocycles and gauge classes
   equivalent to discrete nonabelian cocycles and H¹, and constructs the actual
-  singleton fpqc cover. The remaining specialization must transport affine
-  group sections through the chosen overlap isomorphisms.
+  singleton fpqc cover. The remaining specialization must prove that the
+  chosen overlap isomorphisms intertwine the three categorical face morphisms.
 - `GaloisCohomology/SingletonCechH1.lean` proves the generic Yoneda step for
   every presheaf of groups: cochains are sections on the double overlap,
   cocycles satisfy one equation on the triple overlap, and cohomology is the
@@ -207,10 +210,13 @@ in the supplied artifacts, so their triality types remain unverified.
   and supplies explicit comparison isomorphisms and tower laws for nested
   `Rep.res` coefficient objects.
 - `GroupCohomology/Corestriction.lean` constructs quotient representatives
-  and their subgroup-valued defects, defines the normal finite-index
-  corestriction cochain, and proves that it sends additive one-cocycles to
-  one-cocycles. Coboundary preservation, descent to H¹, the index identity,
-  and the Mackey formula remain open.
+  and their subgroup-valued defects, defines the normal finite-index additive
+  corestriction, proves preservation of cocycles and coboundaries, and descends
+  it to additive H¹. It also proves the cocycle formula
+  `Cor (Res z) = [G:S] • z + d(potential)` and hence
+  `Cor ∘ Res = [G:S]` on additive H¹. The nonnormal Mackey formula and the
+  reverse stable-elements inclusion remain open. None of these declarations
+  defines a corestriction on nonabelian H¹, which is only a pointed set.
 - `GroupCohomology/StableElements.lean` proves by explicit averaging that
   additive `H^1` of a finite group vanishes when its order is a unit, then
   combines this with inflation--restriction to prove injectivity on `H^1`
@@ -224,8 +230,8 @@ in the supplied artifacts, so their triality types remain unverified.
   pointed-set step for cyclic kernel theorems along a solvable composition
   series; it does not prove the cyclic E8 theorem.
 
-All thirty-four supporting files build in the full project and use no `sorry`
-or new axioms.
+All supporting files build in the full project and use no `sorry` or new
+axioms.
 
 ## Source-audited advances across manuscript revisions
 
@@ -354,6 +360,20 @@ computer-conditional.
 ## Exact remaining gap and scope
 
 No counterexample and no proof of the general E8 case is currently certified.
+The zero-cycle/index theorem supplies index one for the relevant E8 torsors.
+The irreducible remaining proposition is index-one effectivity:
+
+```
+pointFieldIndex isFinite degree (splitsOver ξ) = 1
+  → ξ = FpqcH1.neutral R A.
+```
+
+Under the index-one theorem this proposition is equivalent to E8 Serre II;
+it is not a consequence of triple-overlap bookkeeping, fpqc torsor
+classification, additive H¹ transfer, group-scheme geometry, or motivic
+splitting. A general proof would resolve the still-open coprime-degree
+injectivity question for this case.
+
 The abstract full-Weyl transporter criterion is kernel checked, but the
 assertion that its 135 local `D8` gauges admit simultaneous fixed corrections
 is open and is equivalent to neutrality on the full-Weyl stratum.
