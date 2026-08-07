@@ -33,6 +33,25 @@ already avoids the false step by taking the chamber-normalized rank formula as
 a load-bearing hypothesis. It therefore verifies a corrected implication, not
 the literal PDF theorem.
 
+## Lean found a second problem in the binary-icosahedral audit
+
+For the only row supplied with exact Appendix-A matrices (the Atlas integral
+row `2A5G1-Zr8bB0`), the asserted order-three triality action of
+`H ≃ 2.A4` is false. The eight displayed roots have Gram matrix
+`D4 ⊕ D4`, and each of the generators `w`, `j`, and `r` is an explicit
+product of reflections in those two components. The declarations
+`rootGram_eq_d4d4`, `w_eq_reflections`, `j_eq_reflections`, and
+`r_eq_reflections` in `E8/BinaryIcosahedralAtlas.lean` kernel-check the
+integer-matrix certificates.
+
+Consequently this row has trivial outer action on both D4 factors, not a
+synchronized `C3` action. Its center kernel is the constant
+`μ2 × μ2`, not a cubic norm-one group; the cubic corestriction kernel, Allen
+index, and residual triality-orbit argument do not apply to this row. The
+degree-five `A4 ⊕ A4` side and the final two-gauge factorization problem
+remain. No matrices for the other three reported E8-lattice embeddings occur
+in the supplied artifacts, so their triality types remain unverified.
+
 ## Verified proof kernels
 
 - `GroupTheory/CoprimeRestriction.lean` proves that an element killed by two
@@ -79,6 +98,12 @@ the literal PDF theorem.
   attached 5 August artifact, the binary icosahedral index arithmetic, and the
   A2 chamber-normalization counterexample. It does not construct splitting
   fields or subgroup actions.
+- `E8/BinaryIcosahedralArithmetic.lean` checks the orders and fixed-field
+  degrees `5`, `6`, and `30`, their coprimality, and proves the generic
+  guard that a nontrivial perfect group is nonsolvable.
+- `E8/BinaryIcosahedralAtlas.lean` checks the Appendix-A words and relations,
+  the `D4 ⊕ D4` Gram matrix, and the reflection factorizations proving that
+  the certified `2.A4` action is inner on both D4 components.
 - `LinearAlgebra/RootSystem/AdaptedBase.lean` proves the correct replacement
   for the defective sign-only normalization: a functional regular on every
   root admits a base on which all simple-root values are positive.
@@ -128,6 +153,11 @@ the literal PDF theorem.
 - `GaloisCohomology/DifferenceCocycle.lean` proves the representation-difference
   cocycle used in Proposition 6.26 and identifies global and subgroup
   coboundaries exactly with conjugacy of the corresponding representations.
+- `GaloisCohomology/TwoGaugeDescent.lean` proves the exact nonabelian
+  two-gauge criterion: when two subgroups generate the Galois group, a cocycle
+  with local gauges is a global coboundary exactly when their transition
+  factors through the two fixed-point groups. It deliberately does not assert
+  that the distinguished E8 transition factors.
 - `GroupCohomology/Conjugation.lean` constructs the additive H¹ isomorphism
   for conjugate subgroups, proves restriction--conjugation naturality after
   canonical coefficient transport, and proves that inner conjugation acts
@@ -154,7 +184,7 @@ the literal PDF theorem.
   pointed-set step for cyclic kernel theorems along a solvable composition
   series; it does not prove the cyclic E8 theorem.
 
-All twenty-nine supporting files build in the full project and use no `sorry`
+All thirty-two supporting files build in the full project and use no `sorry`
 or new axioms.
 
 ## Source-audited advances across manuscript revisions
@@ -191,11 +221,11 @@ formalization. The attached artifact's exact status is in the theorem ledger.
    intersection.
 5. The explicit SL(2,5)/A11 construction is a genuine finite nonabelian H1
    countermodel to formal two-gauge gluing. It is not an E8 counterexample.
-6. Conditional on the reported D4-root action, E8 lattice gluing forces
-   diagonal triality and pairs the two degree-eight Allen algebras over the
-   common cubic field. Common Allen index at most two is eliminated by the
-   published trialitarian theorem; only paired indices four and eight remain
-   unexcluded, and their existence is not asserted.
+6. The uniform binary-triality claim is invalid. In the certified Appendix-A
+   row, `H ≃ 2.A4` preserves a `D4 ⊕ D4` subsystem and acts through
+   `W(D4) × W(D4)`, so the outer image is trivial. Trialitarian and Allen
+   invariants may still be relevant to other lattice embeddings, but those
+   rows require separate matrix certificates.
 
 ## Primary-source citation audit
 
@@ -235,23 +265,60 @@ CTblLib, TomLib, and root-action scripts needed for:
 - the subgroup counts `11171 -> 313 -> 303` and all gcd-one orbit assertions;
 - the `303 = 150 + 153 -> 31` perfect-core compression;
 - nonsplitting of all 31 central Weyl lifts; and
-- the binary subsystem-orbit and triality tests.
+- the root-subsystem and triality tests for the three binary lattice
+  embeddings not represented by the certified Appendix-A matrices.
 
-Formal deductions from these data have been checked, but the numerical premises
-must remain conditional until the exact scripts, package versions, row maps,
-fusion witnesses, and raw output are committed and rerun.
+The Appendix-A matrix row has now been reproduced by exact integer computation
+and Lean reflection certificates. The remaining numerical premises must stay
+conditional until the exact scripts, package versions, row maps, fusion
+witnesses, and raw output are committed and rerun.
 
-## Open targets
+## Exact remaining gap and scope
 
-No counterexample and no proof of the E8 case is currently certified. The
-abstract full-Weyl transporter criterion is now kernel checked, but the
+No counterexample and no proof of the general E8 case is currently certified.
+The abstract full-Weyl transporter criterion is kernel checked, but the
 assertion that its 135 local `D8` gauges admit simultaneous fixed corrections
-is open and is equivalent to neutrality on the full-Weyl stratum. The smallest
-conditional finite target is constrained two-gauge factorization for an actual
-`2.A5` Weyl lift. The geometric global target is odd-degree (or index-one)
-effectivity on the E8 twisted Borel variety. The full finite-etale kernel-norm
-statement over all fields in scope is equivalent to E8 Serre II and must not be
-advertised as an independently proved shortcut.
+is open and is equivalent to neutrality on the full-Weyl stratum.
+
+For the bounded binary floor, let `H ≃ 2.A4`, `K ≃ Dic5`,
+`C = H ∩ K ≃ C4`, and let `L5`, `L6`, and `M` be their fixed fields.
+The subgroup calculation gives degrees `5`, `6`, and `30`. Cyclic
+relative E8 vanishing along solvable towers neutralizes the class over `L5`
+and `L6`.
+
+For local gauges `g5` and `g6`, put
+`δ = g5 * g6⁻¹ ∈ G(M)`. The exact unresolved theorem is
+
+```
+ξ = 1  ↔  δ ∈ G(L5) G(L6).
+```
+
+Equivalently, the factorization fiber `Xδ` is the original E8 torsor. It has
+points over extensions of degrees five and six, hence point-field index one,
+but producing an F-point is precisely the unresolved E8 effectivity problem.
+The theorem `isCoboundary_iff_transition_factorization` kernel-checks this
+equivalence at the discrete cocycle level.
+
+The D2E restriction--corestriction identity is exact but tautological at its
+last step: the resulting difference is the original torus class, and asking it
+to lie in the pointed torus kernel is exactly asking that `ξ` be neutral.
+Likewise finite-module cohomology does not remove the same-field Kummer defect
+`κ_{E,120}(α)`; multiplication by 120 on `T(E)` need not be surjective.
+
+Gille, LNM 2238, Theorem 8.4.1(2), is printed with a scope that would kill the
+binary case immediately, since `[E:F] = 120 = 2^3 * 3 * 5`. Its proof,
+however, reduces by induction to cyclic degrees two, three, and five. That
+reduction proves the solvable case but does not cover the perfect nonsolvable
+group `SL2(5)`. The official errata dated 26 May 2026 repairs other inputs
+but not this reduction. Thus the binary case is a literal consequence of the
+printed statement if accepted, but is not independently secured by the proof
+given there.
+
+Finally, solving the binary floor would not settle full split E8 Serre II. The
+reported sieve leaves 31 perfect projective-core classes, with `2.A5` only
+the smallest and no valid reduction of all remaining cores to it. Conversely,
+a point-free distinguished `Xδ` in this row would be a genuine index-one E8
+torsor and hence a full Serre-II counterexample.
 
 ## Checkpoints
 
