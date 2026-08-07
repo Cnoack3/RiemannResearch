@@ -48,6 +48,29 @@
 - Never force-push, rebase, stash, create merge commits, discard local work, or pull into a dirty or diverged tree. Stop and report the condition instead.
 - Treat `workspace_reset` as a destructive fail-safe only. First preview it without a token, show exactly what would be discarded, obtain explicit user permission in the current chat, and only then invoke it with the returned confirmation token. Never run it automatically.
 
+## Isolated agent workspaces
+
+- Start every new ChatGPT Lean task with `agent_workspace_open`; retain its
+  `workspace_token` and use only `agent_workspace_*` persistence tools for that
+  task. Resume an old task by reopening its saved token.
+- Pass absolute paths beneath the returned `project_root` to Lean file,
+  diagnostic, search, and build tools. Do not use relative paths or
+  `lean_run_code` in isolated workspaces.
+- Treat the legacy `workspace_*` tools as migration-only access to the canonical
+  clone for chats that were already active when isolation was introduced.
+- Each agent clone owns its Git working tree and project `.lake/build`. Exact
+  dependency environments are content-addressed and shared read-mostly, so
+  Mathlib artifacts are not rebuilt per agent.
+- Publish only with `agent_workspace_checkpoint`. Publication is serialized and,
+  if `origin/main` advanced, is replayed and built in a clean integration clone
+  before a non-force push.
+- Automatic cleanup may archive only old clean clones whose state is published or
+  unchanged. Dirty trees and unpublished commits are never automatically
+  deleted. Reopening an archived token rehydrates its clone.
+- Lean LSP processes may be evicted after inactivity or client pressure. This is
+  safe: the next absolute-path Lean call starts a new process against the same
+  persistent clone.
+
 ## Module architecture
 
 - Organize modules by mathematical concept or theorem family; do not create one file per theorem.
