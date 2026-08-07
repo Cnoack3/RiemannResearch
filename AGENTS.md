@@ -1,114 +1,82 @@
 # RiemannResearch agent instructions
 
-## Required workflow
+## Mathematical and verification policy
 
-- Treat this repository as the persistent source of truth for Lean research.
-- Synchronize the clean `main` branch from `origin/main` before reading or editing.
-- Search the project and Mathlib for existing declarations before proving a new result.
-- Distinguish informal arguments from Lean kernel-verified proofs, and distinguish
-  kernel-checked implications from unconditional solutions of the motivating
-  research problem. A successful build proves the declaration's exact type; it
-  does not prove any hypotheses appearing as inputs to that declaration.
-- When Lean establishes that a user-supplied claim, inference, assumption, or
-  definition is faulty or materially mismatched, lead the user-facing response
-  with `## Lean found a problem`. State the exact faulty step, decisive Lean
-  evidence or smallest counterexample, and the downstream conclusion that no
-  longer follows. Never bury an established logical error in a summary or
-  side-note.
-- Do not mistake proof-search failure for refutation. A failed tactic, timeout,
-  or unsolved goal is inconclusive unless Lean provides decisive evidence such
-  as a contradiction, counterexample, type mismatch, or failed required
-  condition. Clearly label any corrected theorem as different from the user's
-  original claim.
-- Save successful material proofs in the appropriate `RiemannResearch/` module
-  and update `RiemannResearch/THEOREM_CATALOG.md` when adding a reusable
-  theorem.
-- Classify any theorem that represents a named research result but assumes
-  unresolved domain-specific ingredients as a **conditional research
-  reduction** in the theorem catalog. Do not hide that status behind the phrase
-  “kernel checked.”
-- For every conditional research reduction, maintain an explicit catalog
-  ledger of its substantive propositional hypotheses. Mark each hypothesis
-  `Open` until a project declaration supplies it; when it is discharged,
-  replace `Open` with the fully qualified provider declaration and update the
-  reduction to use that provider when practical.
-- Ordinary variables, structures, typeclass instances, and hypotheses in
-  general-purpose lemmas need not be treated as open research obligations.
-  Track the domain-specific inputs standing between a conditional assembly
-  theorem and its intended unconditional mathematical statement.
-- Do not use `#print axioms` as evidence that a theorem is unconditional:
-  it reports global axioms, not local hypotheses in the theorem's type.
-- Move a result from the conditional section to the established section only
-  after all cataloged research obligations are supplied by checked
-  declarations and the resulting specialized theorem passes the full build.
-- Verify edited files with the Lean tools. Queue full builds with `lean_build`
-  using the exact `project_root`; poll `agent_workspace_job_status` until terminal.
-- Do not introduce `sorry`, `admit`, project-local `axiom` declarations, or `unsafe` declarations.
-- After a successful material change, queue `agent_workspace_checkpoint` with
-  push enabled, poll its returned job ID until it succeeds, and report the
-  published commit SHA. Never resubmit a queued or running job.
-- Never force-push, rebase, stash, create merge commits, discard local work, or pull into a dirty or diverged tree. Stop and report the condition instead.
-- Treat `workspace_reset` as a destructive fail-safe only. First preview it without a token, show exactly what would be discarded, obtain explicit user permission in the current chat, and only then invoke it with the returned confirmation token. Never run it automatically.
+- Treat this repository as the persistent source of truth. A successful Lean
+  check verifies a declaration's exact type, not the truth of hypotheses in
+  that type or an informal interpretation of it.
+- Search declarations with `lean_local_search` before proving anything new.
+  Follow with focused declaration lookup, Loogle, or LeanSearch as needed.
+  Never read all of `RiemannResearch/THEOREM_CATALOG.md` for discovery; it is a
+  human-readable publication and research-obligation ledger.
+- Do not mistake a failed tactic, timeout, or unsolved goal for a refutation.
+  When Lean decisively exposes faulty or mismatched user logic, lead with
+  `## Lean found a problem`, the exact evidence, and the conclusion affected.
+- Never persist `sorry`, `admit`, project-local `axiom`, or `unsafe`
+  declarations.
+- For important assumptions, distinguish ordinary Mathlib foundations from
+  unresolved domain-specific hypotheses. `#print axioms` does not report local
+  hypotheses in a theorem's type.
 
-## Isolated agent workspaces
+## Efficient isolated workflow
 
-- Start every new ChatGPT Lean task with `agent_workspace_open`; retain its
-  `workspace_token` and use only `agent_workspace_*` persistence tools for that
-  task. Resume an old task by reopening its saved token.
-- Pass absolute paths beneath the returned `project_root` to Lean file,
-  diagnostic, search, and build tools. Use `agent_workspace_run_code` for
-  ephemeral snippets; do not use relative paths.
-- The shared canonical `workspace_*` persistence tools are retired. Use the
-  token-scoped `agent_workspace_*` tools exclusively.
-- Each agent clone owns its Git working tree and project `.lake/build`. Exact
-  dependency environments are content-addressed and shared read-mostly, so
-  Mathlib artifacts are not rebuilt per agent.
-- Successful clean builds publish an immutable project-artifact seed keyed by
-  the exact Git commit and dependency environment. Fresh clones copy or reflink
-  that seed into their private `.lake/build`; agents never share a writable
-  project build directory.
-- Full builds, dependency updates, and checkpoints run through one persistent
-  FIFO worker. Submission returns immediately with a job ID. Poll
-  `agent_workspace_job_status` and wait behind earlier jobs instead of retrying
-  the operation. The familiar `lean_build` name is retained but now submits to
-  this queue.
-- The MCP process and all Lean/Lake children use at most eight Lean runtime
-  worker threads. `LEAN_WORKSPACE_THREADS` may lower this limit to 1--8 but may
-  not raise it. Queued Lake builds are further capped at four threads;
-  `LEAN_LAKE_BUILD_THREADS` may lower that limit to 1--4.
-- Publish only with `agent_workspace_checkpoint`. Publication is serialized and,
-  if `origin/main` advanced, is replayed and built in a clean integration clone
-  before a non-force push.
-- Automatic cleanup may archive only old clean clones whose state is published or
-  unchanged. Dirty trees and unpublished commits are never automatically
-  deleted. Before archival or replacement, the clone's registered Lean client is
-  terminated. Reopening an archived token rehydrates its clone.
-- Lean LSP processes are capped at 16 by default (`LEAN_MAX_SHARED_CLIENTS`,
-  allowed range 1--64) and older clients may be evicted under pressure. This is
-  safe: the next absolute-path Lean call starts a new process against the same
-  persistent clone. Workspace retention defaults to 14 days
-  (`LEAN_WORKSPACE_RETENTION_DAYS`, allowed range 7--3650); cleanup skips clones
-  with a registered Lean client or build in progress.
+- Open one isolated workspace per task and retain its token. Reopen that token
+  to resume an archived clone. Old tokens remain resumable after server updates.
+- Pass absolute paths beneath its `project_root` to Lean tools. Use
+  `agent_workspace_run_code` for a coherent ephemeral proof candidate. Inspect
+  goals or diagnostics after failure rather than checking every tactic
+  separately.
+- Read only relevant source ranges. Use targeted diagnostics or verification
+  during development.
+- Long builds, updates, and checkpoints use one FIFO worker. Submit once and
+  poll `agent_workspace_job_status` no sooner than `retry_after_seconds`; never
+  resubmit a pending job.
+- `agent_workspace_checkpoint` performs the final source audit, incremental
+  build, commit, and serialized publication. Do not call `lean_build`
+  immediately before checkpointing.
+- Dependency artifacts are shared read-mostly. Each clone has its own writable
+  project build directory, seeded by exact commit and dependency environment.
+  Lake builds use at most four threads.
+- Automatic cleanup archives only old clean published or unchanged clones.
+  Dirty trees and unpublished commits are retained. Reopening a token restores
+  an archived clone; Lean processes restart on demand.
+
+## Persistence and publication
+
+- Save reusable material results in an appropriate `RiemannResearch/` module.
+  Update `RiemannResearch.lean` when exporting a new module.
+- Update the theorem catalog when a reusable declaration is added, moved, or
+  changes status. Read and edit only the relevant catalog section.
+- Classify a named research result with unresolved substantive hypotheses as a
+  **conditional research reduction**. List each domain-specific obligation as
+  `Open` until a checked provider declaration discharges it. Move the result to
+  the established section only when all obligations are discharged and the
+  specialized theorem passes checkpoint.
+- Publish only through `agent_workspace_checkpoint` with push enabled. Report
+  the published commit after the queued job succeeds.
+- Never force-push, rebase, stash, create merge commits, or discard local work.
+  Reset is a destructive fail-safe: preview the exact plan, obtain explicit
+  permission, then submit its confirmation token.
 
 ## Module architecture
 
-- Organize modules by mathematical concept or theorem family; do not create one file per theorem.
-- Put reusable declarations in the lowest general-purpose namespace whose concepts occur in their statements. Do not leave generic infrastructure trapped in an application-specific namespace.
-- Keep application modules focused on application-specific definitions, hypotheses, and theorem assembly.
-- Split a module when it contains independently reusable concepts. Treat roughly 300--500 lines as a review signal, not a rigid limit.
-- Preserve declaration names during refactors when practical; otherwise provide compatibility aliases or re-export modules.
-- Prefer focused Mathlib imports over `import Mathlib` in persistent library modules.
-- Keep the import graph acyclic and directed from general infrastructure toward specialized applications.
-- Keep `RiemannResearch.lean` as the project export surface and update it whenever adding or moving an exported module.
-- Update `RiemannResearch/THEOREM_CATALOG.md` whenever reusable declarations
-  are added or moved, and whenever a conditional theorem gains, changes, or
-  discharges an open research obligation.
-- Prefer a separate checkpoint for structural refactors and new mathematical results when practical.
+- Organize by mathematical concept or theorem family, not one file per theorem.
+- Put reusable declarations in the lowest general-purpose namespace appearing
+  in their statements; keep application modules focused on assembly.
+- Prefer focused Mathlib imports, keep the import graph acyclic, and preserve
+  declaration names during refactors when practical.
+- Treat 300--500 lines as a review signal for splitting a module, not a rigid
+  limit. Prefer separate checkpoints for structural refactors and new results.
 
-## Project commands
+## Useful commands
 
-- Agent project build: `lean_build` with the exact isolated `project_root`,
-  followed by `agent_workspace_job_status` polling
-- Host diagnostic build: `lake build RiemannResearch --quiet`
-- Verify one file: `lake env lean path/to/File.lean`
-- Search text: `rg "pattern" RiemannResearch`
+- Ephemeral candidate: `agent_workspace_run_code`
+- Declaration discovery: `lean_local_search`, then focused Lean search tools
+- Targeted file verification: `lean_verify` or diagnostics on an absolute path
+- Standalone queued build: `lean_build` only when no checkpoint follows
+- Final acceptance and publication: `agent_workspace_checkpoint`
+
+Local cost telemetry is written as bounded JSON Lines to
+`~/.local/state/lean-agent-workspaces/metrics.jsonl`; it records durations,
+response sizes, queue polling, and cache/build events without proof text or
+workspace tokens.
