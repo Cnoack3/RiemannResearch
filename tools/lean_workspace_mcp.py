@@ -658,13 +658,13 @@ def agent_workspace_sync(workspace_token: str) -> dict:
 
 
 @mcp.tool(
-    name="agent_workspace_update_dependencies",
+    name="agent_workspace_update_deps",
     description=(
         "Update Lake dependencies in one isolated clone, then attach the matching "
         "content-addressed shared dependency environment."
     ),
 )
-def agent_workspace_update_dependencies(
+def agent_workspace_update_deps(
     workspace_token: str, package: str = ""
 ) -> dict:
     return AGENT_WORKSPACES.update_dependencies(workspace_token, package)
