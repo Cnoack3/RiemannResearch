@@ -33,10 +33,11 @@ criterion. Compactification/Borel point fields and indices are unconditional;
 neutrality and torsor-index comparisons explicitly require innerness. It also
 proves the zero-rank and complementary-rank statements from the Coxeter identities.
 
-The source statement says that an arbitrary regular cocharacter can be
-corrected by changing its sign. In rank greater than one this is not generally
-enough to put it in a chosen chamber. This formalization uses the corrected
-boundary: the chamber-normalized rank formula is an explicit hypothesis.
+We use the intended convention that the regular cocharacter is chosen in the
+chamber determined by the fixed Borel. Changing its sign merely selects the
+attracting-rank convention. The explicit rank-formula input below records the
+still-unformalized tangent-weight and fixed-scheme calculation; it is not an
+additional mathematical condition on the chosen cocharacter.
 -/
 
 namespace RiemannResearch.E8
@@ -400,6 +401,11 @@ structure UniversalFixedLocusConclusion
 /-- Conditional formalization of the universal fixed-locus and splitting-field
 theorem.
 
+The regular cocharacter is understood to be chosen in the chamber determined
+by the fixed Borel. Accordingly, `chosen_chamber_rank_formula` names the
+geometric tangent-weight conclusion for that choice, not another condition on
+the cocharacter.
+
 The load-bearing geometric hypotheses have intentionally descriptive names.
 The point-field equivalences, all-extension splitting spectra, indices, and
 Coxeter-rank consequences are proved by Lean.
@@ -437,7 +443,7 @@ theorem universalFixedLocusAndSplittingField
       ∀ L, GeometryIso L (fixedLocusObject L)
           (coproduct L (fun _ => borelObject L)) →
         (hasFixedPoint L ↔ ∃ _ : W, hasBorelPoint L))
-    (rank_formula : ∀ w, rank w = length w + rightDescent w)
+    (chosen_chamber_rank_formula : ∀ w, rank w = length w + rightDescent w)
     (length_zero_iff : ∀ w, length w = 0 ↔ w = one)
     (rightDescent_one : rightDescent one = 0)
     (length_duality :
@@ -470,7 +476,7 @@ theorem universalFixedLocusAndSplittingField
       AttractingRankConclusion W one longestMul rank length rightDescent
         positiveRoots simpleRoots :=
     attractingRank_properties one longestMul rank length rightDescent
-      positiveRoots simpleRoots rank_formula length_zero_iff
+      positiveRoots simpleRoots chosen_chamber_rank_formula length_zero_iff
       rightDescent_one length_duality rightDescent_duality
   have hfixedPoints :
       ∀ L, hasFixedPoint L ↔ ∃ _ : W, hasBorelPoint L :=

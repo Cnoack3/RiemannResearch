@@ -17,24 +17,24 @@ certificate is credited to it.
 For exact external statements, hypotheses, URLs, and the result-to-source map,
 see SERRE_II_2026_08_05_CITATION_AUDIT.md.
 
-## Lean found a problem in the attached artifact
+## Theorem 3.2 chamber convention
 
-Theorem 3.2 chooses an arbitrary regular cocharacter and says that changing
-its sign if necessary gives the chamber-normalized attracting-rank formula.
-This is false in rank greater than one. In type A2, a simple coroot has
-positive-root pairings 2, -1, and 1: it is regular, but neither it nor its
-negative has both simple-root pairings positive. The declaration
-a2Coroot_sign_normalization_counterexample kernel-checks this finite
-counterexample. The theorem must instead choose a cocharacter in the required
-chamber, or conjugate and reindex the fixed components.
+The intended convention is to choose the regular cocharacter in the chamber
+determined by the fixed Borel. Changing its sign then selects which of the
+attracting and repelling Bialynicki--Birula conventions is used.
 
-The 8 August revision separately corrects the scope of part (iii):
+If the sentence is instead read as starting from an arbitrary regular
+cocharacter, the kernel-checked A2 calculation
+`a2Coroot_sign_normalization_counterexample` shows that neither sign need be
+positive on both fixed simple roots. This does not affect the chamber-chosen
+theorem used here.
+
+The 8 August revision also corrects the scope of part (iii):
 compactification points are equivalent to Borel reductions over every field
 extension, whereas Borel reduction detects neutrality only for inner torsors.
 The conditional declaration `universalFixedLocusAndSplittingField` now
-formalizes exactly this distinction. It also avoids the still-false
-cocharacter step by taking the chamber-normalized rank formula as a
-load-bearing hypothesis, so it does not verify that literal sentence.
+formalizes this distinction. Its chosen-chamber rank-formula input records the
+unformalized tangent-weight calculation, not an extra condition on lambda.
 
 ## Lean found a second problem in the binary-icosahedral audit
 
@@ -137,9 +137,9 @@ triality-orbit argument cannot be applied uniformly as printed.
   and the `D4 ⊕ D4` Gram matrix. `E8/BinaryIcosahedralTrialityCounterexample.lean`
   checks the form isometries, inner reflection image, and the nonidentity
   order-three counterexample used in the Proposition 6.17 audit.
-- `LinearAlgebra/RootSystem/AdaptedBase.lean` proves the correct replacement
-  for the defective sign-only normalization: a functional regular on every
-  root admits a base on which all simple-root values are positive.
+- `LinearAlgebra/RootSystem/AdaptedBase.lean` proves the equivalent reindexing
+  convention: a functional regular on every root admits a base on which all
+  simple-root values are positive.
 - `E8/WonderfulFixedLocus.lean` constructs a maximal-length element in every
   finite Coxeter group and proves every reflection is a strict left and right
   inversion, hence every simple generator is a left and right descent. It also
@@ -264,8 +264,8 @@ formalization. The attached artifact's exact status is in the theorem ledger.
    are also exactly the neutralizing fields, and the compactification, Borel,
    and torsor indices agree. The fixed locus consists of Weyl-indexed copies
    of the twisted Borel variety, with attracting rank
-   `length(w) + rightDescent(w)`. The PDF's arbitrary-`lambda` formulation
-   is not included in this repaired statement.
+   `length(w) + rightDescent(w)`. This uses the intended convention that
+   `lambda` was chosen in the chamber determined by the fixed Borel.
 2. More generally, for any split connected semisimple group in characteristic
    zero, index one splits the integral Chow motive of every associated twisted
    flag into the same Tate summands as the split flag. If a torsor has a finite
@@ -328,9 +328,11 @@ rational equivalence. Those are the precise geometric inputs still separating
 the new quotient interface from CGM's Chow-correspondence endomorphism rings.
 
 Evens--Jones supports the wonderful-compactification tangent weights over the
-complex numbers, but not the false sign-only chamber normalization in Theorem
-3.2 and not, by itself, the arbitrary characteristic-zero descent. The Lean
-counterexample and adapted-base theorem give the correct chamber repair.
+complex numbers, but not, by itself, the arbitrary characteristic-zero
+descent. Theorem 3.2 is read with its regular cocharacter chosen in the chamber
+determined by the fixed Borel. The Lean A2 calculation only guards against a
+literal arbitrary-cocharacter reading, while the adapted-base theorem checks
+the equivalent reindexing convention.
 `e8AttractingRank_properties_of_lengthComplement` reduces the remaining
 Coxeter duality package to one explicit E8 length-complement identity. Mathlib
 does not yet supply a finite/longest-element instance for its presented E8

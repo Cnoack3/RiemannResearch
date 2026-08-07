@@ -31,7 +31,7 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Theorem 2.1 | Primary-source checked | Izquierdo--Lucchini Arteche Corollary 4.14, Garibaldi--Semenov (1.1)--(1.2), and Totaro Theorem 0.1 exactly support the three parts; none is formalized here. |
 | Theorem 2.2 | Manuscript deduction from checked sources | The co-p closure and finite-descent argument is coherent; ILA Corollary 4.14 validates the p-special step and no nonabelian Bezout conclusion is drawn. |
 | Proposition 3.1 | Fixed-cover fpqc foundations in Lean; geometry source dependent | Witnessed fpqc covers, refinement pullback, neutral Čech H¹, and pairwise common refinements are kernel checked. The wonderful compactification, orbit geometry, effective descent, and torsor classification remain absent. |
-| Theorem 3.2 | **Revised implication formalized conditionally; cocharacter sentence still defective** | The 8 August revision correctly makes compactification/Borel point equivalence unconditional and restricts Borel/neutrality and torsor-index equivalences to inner torsors; `universalFixedLocusAndSplittingField` now enforces exactly that scope. Changing the sign of an arbitrary regular cocharacter still does not normalize its Weyl chamber in rank greater than one. `a2Coroot_sign_normalization_counterexample` proves the defect, while `regularFunctional_exists_adaptedBase` checks the correct chamber-change replacement. The finite-Coxeter lemmas construct a maximal-length element and `e8AttractingRank_properties_of_lengthComplement` derives the rank conclusions from one E8 length-complement input. The scheme geometry, tangent weights, motive comparison, descent, E8 finiteness/complement theorem, and length-120 calculation remain open inputs. |
+| Theorem 3.2 | **Revised implication and Borel-chamber convention formalized conditionally** | The regular cocharacter is chosen in the chamber determined by the fixed Borel; changing sign selects the attracting convention and imposes no extra rank condition. The 8 August revision makes compactification/Borel point equivalence unconditional and restricts Borel/neutrality and torsor-index equivalences to inner torsors; `universalFixedLocusAndSplittingField` enforces that scope. Its `chosen_chamber_rank_formula` binder records the still-unformalized tangent-weight and fixed-scheme proof, not another condition on the cocharacter. The finite-Coxeter lemmas derive the rank consequences once that formula and the E8 length-complement identity are supplied. The scheme geometry, tangent weights, motive comparison, descent, E8 finiteness/complement theorem, and length-120 calculation remain open inputs. |
 | Corollary 3.3 | Unverified | Depends on Theorems 2.1 and 3.2. |
 | Proposition 4.1 | Manuscript only | The localization calculation CH0(Gm)=0 is not formalized here. |
 | Proposition 4.2 | Source dependent | Uses rationality of the split EVIII space, compactification, and localization. |
@@ -115,12 +115,12 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Question 5.22 | Open full-Weyl toral neutrality question. |
 | Conjecture 6.33 | Open finite-etale kernel norm principle; the product-algebra kernel and componentwise corestriction conventions need formal definitions. |
 
-## Artifact and version defects
+## Artifact conventions and defects
 
-1. Theorem 3.2's sign-only chamber normalization is false, including in the
-   8 August revision. The statement must choose a chamber-normalized
-   cocharacter or conjugate and reindex. The revision does correctly restrict
-   the Borel/neutrality and torsor-index implications to inner torsors.
+1. In Theorem 3.2, the regular cocharacter is chosen in the chamber determined
+   by the fixed Borel; the optional sign selects the attracting convention.
+   The A2 calculation only rules out a literal reading that begins with an
+   arbitrary cocharacter outside that chamber.
 2. Proposition 6.7 contains the literal malformed token qquad where a spacing
    command was intended.
 3. Theorem 6.6's phrase “independent of every choice” is only justified after

@@ -14,17 +14,18 @@ counterexample for the exact packet degrees printed in the 5 August 2026
 manuscript. It deliberately does not infer the existence of the asserted
 splitting fields, subgroup embeddings, or nonabelian descent operations.
 
-The manuscript's Theorem 3.2 chooses an arbitrary regular cocharacter and
-claims that changing its sign if necessary gives the displayed
-length-plus-descent formula. In type A2, the simple coroot has positive-root
-pairings 2, -1, and 1. It is regular, but neither it nor its negative has both
-simple-root pairings positive. Thus sign alone does not normalize a chamber.
+The intended convention in Theorem 3.2 is to choose the regular cocharacter
+in the chamber determined by the fixed Borel; changing its sign then selects
+the attracting convention. The A2 calculation below records why this chamber
+choice matters: if one instead starts with an arbitrary regular cocharacter,
+sign alone need not normalize it. This does not challenge the theorem under
+the chosen-chamber convention.
 -/
 
 namespace RiemannResearch.E8
 
-/-- The A2 positive-root pairings of the simple coroot are nonzero,
-but neither its simple-root signs nor their negatives are all positive. -/
+/-- For a literal arbitrary-cocharacter reading, the A2 positive-root
+pairings are nonzero while neither sign is positive on both simple roots. -/
 theorem a2Coroot_sign_normalization_counterexample :
     (2 : ℤ) ≠ 0 ∧ (-1 : ℤ) ≠ 0 ∧ 2 + (-1 : ℤ) ≠ 0 ∧
       ¬ (((0 : ℤ) < 2 ∧ (0 : ℤ) < -1) ∨

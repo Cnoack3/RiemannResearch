@@ -15,17 +15,19 @@ literature already contains a proof.
 
 Proposition 6.35 is an equivalence with E8 Serre II, not independent evidence.
 
-## B. Statements requiring correction
+## B. Resolved convention and statements requiring correction
 
-1. **Theorem 3.2.** The 8 August revision correctly restricts the
-   Borel/neutrality and torsor-index equivalences to inner torsors, and Lean
-   now reflects that scope. It still says that negating an arbitrary regular
-   cocharacter puts it in the required chamber, which is false in rank greater
-   than one. Choose a dominant/antidominant cocharacter, or Weyl-conjugate and
-   reindex.
-2. **Proposition 6.17.** The universal outer-triality assertion for all twelve
+**Theorem 3.2 convention (resolved).** Choose the regular cocharacter in the
+chamber determined by the fixed Borel; changing its sign only selects the
+attracting convention. Lean now records this interpretation. The rank-formula
+binder represents the tangent-weight proof still to be formalized, not an
+additional hypothesis on the cocharacter.
+
+The remaining statement-level corrections are:
+
+1. **Proposition 6.17.** The universal outer-triality assertion for all twelve
    degree-five `(D4)^2` orbits is false. The numerical orbit count survives.
-3. **Theorem 6.6.** “Independent of every choice” is only established after
+2. **Theorem 6.6.** “Independent of every choice” is only established after
    fixing the flag; changing it needs an explicit conjugacy identification.
 
 ## C. Published-proof layers still to formalize
