@@ -39,9 +39,9 @@ def _bounded_env_int(name: str, default: int, minimum: int, maximum: int) -> int
     try:
         value = int(raw)
     except ValueError as exc:
-        raise ValueError(`${name} must be an integer`) from exc
+        raise ValueError(f"{name} must be an integer") from exc
     if not minimum <= value <= maximum:
-        raise ValueError(`${name} must be between ${minimum} and ${maximum}`)
+        raise ValueError(f"{name} must be between {minimum} and {maximum}")
     return value
 
 
