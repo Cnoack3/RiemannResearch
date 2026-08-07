@@ -12,15 +12,18 @@ import re
 import subprocess
 import time
 from pathlib import Path
+from typing import Literal
 
 from lean_lsp_mcp import main as lean_lsp_main
 from lean_lsp_mcp import client_utils as lean_client_utils
 from lean_lsp_mcp.server import mcp
+from mcp.server.fastmcp import Context
+from pydantic import BaseModel, ConfigDict
 
 from agent_workspaces import AgentWorkspaceManager
 
 
-WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch. Never read the whole theorem catalog for discovery. Test coherent proof candidates with agent_workspace_run_code and use diagnostics after failure instead of checking every tactic separately. Before persistent edits, read AGENTS.md and only relevant source ranges. Use targeted verification during development. A checkpoint performs the final full build, so do not submit lean_build immediately before agent_workspace_checkpoint. Queue a long operation once; poll agent_workspace_job_status no sooner than retry_after_seconds and never resubmit it. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
+WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md and only relevant source ranges. A checkpoint performs the final full build, so do not submit lean_build immediately before agent_workspace_checkpoint. Queue a long operation once; poll agent_workspace_job_status no sooner than retry_after_seconds and never resubmit it. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
 mcp._mcp_server.instructions = (
@@ -656,6 +659,31 @@ def agent_workspace_list_files(
 
 
 @mcp.tool(
+    name="agent_workspace_search_files",
+    description=(
+        "Bounded literal search in approved project text files. Use only when "
+        "declaration search and filename filtering are insufficient."
+    ),
+)
+def agent_workspace_search_files(
+    workspace_token: str,
+    query: str,
+    file_glob: str = "*.lean",
+    limit: int = 20,
+    case_sensitive: bool = False,
+    max_match_chars: int = 500,
+) -> dict:
+    return AGENT_WORKSPACES.search_files(
+        workspace_token,
+        query,
+        file_glob,
+        limit,
+        case_sensitive,
+        max_match_chars,
+    )
+
+
+@mcp.tool(
     name="agent_workspace_read_file",
     description="Read a bounded line range from an approved project file.",
 )
@@ -777,6 +805,100 @@ def agent_workspace_run_code(
     return AGENT_WORKSPACES.run_code(workspace_token, code, timeout_seconds)
 
 
+# Replace the two highest-volume discovery tools with bounded defaults while
+# retaining explicit full-detail modes. Calls still use lean-lsp-mcp's original
+# implementations and validation.
+_original_diagnostics_tool = mcp._tool_manager.get_tool("lean_diagnostic_messages")
+_original_local_search_tool = mcp._tool_manager.get_tool("lean_local_search")
+if _original_diagnostics_tool is None or _original_local_search_tool is None:
+    raise RuntimeError("Pinned lean-lsp-mcp tools are missing")
+_original_diagnostics = _original_diagnostics_tool.fn
+_original_local_search = _original_local_search_tool.fn
+mcp.remove_tool("lean_diagnostic_messages")
+mcp.remove_tool("lean_local_search")
+
+
+class _OpenToolResult(BaseModel):
+    """Preserve structured MCP results while allowing compact/full variants."""
+
+    model_config = ConfigDict(extra="allow")
+
+
+@mcp.tool(
+    name="lean_diagnostic_messages",
+    description="Get bounded Lean diagnostics; set full_details only when compact output is insufficient.",
+    annotations=_original_diagnostics_tool.annotations,
+)
+async def bounded_diagnostic_messages(
+    ctx: Context,
+    file_path: str,
+    start_line: int | None = None,
+    end_line: int | None = None,
+    declaration_name: str | None = None,
+    severity: Literal["error", "warning", "info", "hint"] | None = None,
+    timeout_s: float | None = None,
+    interactive: bool = False,
+    max_items: int = 20,
+    max_message_chars: int = 2000,
+    full_details: bool = False,
+) -> _OpenToolResult:
+    if not 1 <= max_items <= 100:
+        raise ValueError("max_items must be between 1 and 100")
+    if not 200 <= max_message_chars <= 8000:
+        raise ValueError("max_message_chars must be between 200 and 8000")
+    result = await _original_diagnostics(
+        ctx,
+        file_path,
+        start_line,
+        end_line,
+        declaration_name,
+        interactive,
+        timeout_s,
+        severity,
+    )
+    data = result.model_dump() if hasattr(result, "model_dump") else result
+    if interactive or full_details:
+        return _OpenToolResult.model_validate(data)
+    if not isinstance(data, dict) or "items" not in data:
+        return _OpenToolResult.model_validate(data)
+    items = data.get("items") or []
+    compact_items = []
+    for item in items[:max_items]:
+        compact = dict(item)
+        message = str(compact.get("message", ""))
+        compact["message"] = message[:max_message_chars]
+        compact["message_truncated"] = len(message) > max_message_chars
+        compact_items.append(compact)
+    return _OpenToolResult.model_validate({
+        "success": data.get("success", True),
+        "partial": data.get("partial", False),
+        "timed_out": data.get("timed_out", False),
+        "still_elaborating_lines": data.get("still_elaborating_lines"),
+        "failed_dependencies": data.get("failed_dependencies", []),
+        "items": compact_items,
+        "total_items": len(items),
+        "truncated": len(items) > len(compact_items),
+    })
+
+
+@mcp.tool(
+    name="lean_local_search",
+    description="Fast bounded declaration-name search. Batch #check shortlisted names for signatures.",
+    annotations=_original_local_search_tool.annotations,
+)
+async def bounded_local_search(
+    ctx: Context,
+    query: str,
+    limit: int = 8,
+    project_root: str | None = None,
+) -> _OpenToolResult:
+    if not 1 <= limit <= 25:
+        raise ValueError("limit must be between 1 and 25")
+    result = await _original_local_search(ctx, query, limit, project_root)
+    data = result.model_dump() if hasattr(result, "model_dump") else result
+    return _OpenToolResult.model_validate(data)
+
+
 # Keep the model-facing catalog focused. Retired endpoint names and overlapping
 # editor/search helpers are intentionally not advertised.
 for _retired_tool in (
@@ -803,6 +925,16 @@ for _retired_tool in (
     "lean_term_goal",
 ):
     mcp.remove_tool(_retired_tool)
+
+
+# FastMCP derives large response schemas from lean-lsp-mcp's Pydantic models.
+# Advertise only their common top-level object shape. Keeping a non-null schema
+# preserves FastMCP's structured-output conversion and the original output-model
+# validation, while avoiding thousands of repeated catalog characters.
+for _tool in mcp._tool_manager.list_tools():
+    if _tool.fn_metadata.output_schema is not None:
+        _tool.fn_metadata.output_schema = {"type": "object"}
+    _tool.__dict__.pop("output_schema", None)
 
 
 if __name__ == "__main__":
