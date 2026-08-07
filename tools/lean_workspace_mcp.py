@@ -51,6 +51,18 @@ MAX_SHARED_LEAN_CLIENTS = _bounded_env_int(
 WORKSPACE_RETENTION_DAYS = _bounded_env_int(
     "LEAN_WORKSPACE_RETENTION_DAYS", 14, 7, 3650
 )
+LEAN_WORKSPACE_THREADS = _bounded_env_int(
+    "LEAN_WORKSPACE_THREADS", 8, 1, 8
+)
+LEAN_LAKE_BUILD_THREADS = min(
+    _bounded_env_int("LEAN_LAKE_BUILD_THREADS", 4, 1, 4),
+    LEAN_WORKSPACE_THREADS,
+)
+# Cap the Lean runtime task pool inherited by LSP clients and every Lake/Lean
+# child process. The FIFO queue limits heavyweight jobs to one at a time; this
+# separate ceiling prevents that one job from saturating the host.
+os.environ["LEAN_NUM_THREADS"] = str(LEAN_WORKSPACE_THREADS)
+os.environ["LEAN_LAKE_BUILD_THREADS"] = str(LEAN_LAKE_BUILD_THREADS)
 # lean-lsp-mcp 0.29.0 hard-codes this private cap at eight. Pinning that
 # package version in the service makes this narrow override deterministic.
 lean_client_utils._MAX_SHARED_CLIENTS = MAX_SHARED_LEAN_CLIENTS

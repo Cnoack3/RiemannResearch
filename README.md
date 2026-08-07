@@ -41,6 +41,9 @@ request open through a long build. Successful clean builds also publish an
 immutable project-artifact seed keyed by Git commit and dependency environment.
 New isolated clones copy or reflink that seed into their private `.lake/build`,
 preserving per-agent write isolation while avoiding repeated first builds.
+The service caps the general Lean runtime task pool at eight threads and queued
+Lake builds at four. Operators may lower these through `LEAN_WORKSPACE_THREADS`
+(1--8) and `LEAN_LAKE_BUILD_THREADS` (1--4), respectively.
 
 ## Automatic synchronization
 
