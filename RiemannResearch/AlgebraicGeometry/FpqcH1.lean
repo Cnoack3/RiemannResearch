@@ -254,6 +254,32 @@ theorem classOf_neutral {I : Type v} (U : FpqcCover R I) :
       FpqcCover.Refinement.pullbackH1_one,
       FpqcCover.Refinement.pullbackH1_one]⟩
 
+/-- A fixed-cover class is globally neutral exactly when it becomes neutral
+on some witnessed refinement of its cover. -/
+theorem classOf_eq_neutral_iff_exists_refinement
+    {I : Type v} (U : FpqcCover R I) (ξ : FpqcCechH1 R A U) :
+    classOf R A U ξ = neutral R A ↔
+      ∃ (K : Type v) (W : FpqcCover R K) (r : W.Refinement U),
+        r.pullbackH1 ξ = FpqcCechH1.neutral R A W := by
+  constructor
+  · intro h
+    unfold neutral at h
+    rw [classOf_eq_iff] at h
+    rcases h with ⟨K, W, r, s, hrs⟩
+    refine ⟨K, W, r, ?_⟩
+    calc
+      r.pullbackH1 ξ =
+          s.pullbackH1 (FpqcCechH1.neutral R A (trivialCover R)) := hrs
+      _ = FpqcCechH1.neutral R A W :=
+        FpqcCechH1.pullback_neutral R A (trivialCover R) s
+  · rintro ⟨K, W, r, hr⟩
+    calc
+      classOf R A U ξ =
+          classOf R A W (r.pullbackH1 ξ) :=
+        classOf_pullback R A r ξ
+      _ = classOf R A W (FpqcCechH1.neutral R A W) := by rw [hr]
+      _ = neutral R A := classOf_neutral R A W
+
 end FpqcH1
 
 end

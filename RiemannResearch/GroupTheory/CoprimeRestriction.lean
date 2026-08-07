@@ -7,6 +7,7 @@ import Mathlib.Algebra.Group.Hom.Defs
 import Mathlib.Algebra.EuclideanDomain.Int
 import Mathlib.Data.Int.GCD
 import Mathlib.RingTheory.PrincipalIdealDomain
+import RiemannResearch.Logic.PointedKernel
 
 /-!
 # Coprime restriction--corestriction
@@ -77,5 +78,43 @@ theorem eq_zero_of_gcd_one_annihilators
       simpa using hkill i hi
     rw [hd, smul_zero]
   simpa [hbezout] using hz
+
+/-- A finite family of additive restriction maps with gcd-one index formulas
+jointly detects zero. -/
+theorem eq_zero_of_gcd_one_restrictions
+    {ι A : Type*} [AddCommGroup A]
+    (B : ι → Type*) [∀ i, AddCommGroup (B i)]
+    (s : Finset ι) (degree : ι → ℕ)
+    (res : ∀ i, A →+ B i) (cor : ∀ i, B i →+ A)
+    (hindex : ∀ i x, cor i (res i x) = degree i • x)
+    (hgcd : s.gcd (fun i => (degree i : ℤ)) = 1)
+    {x : A} (hres : ∀ i ∈ s, res i x = 0) :
+    x = 0 := by
+  apply eq_zero_of_gcd_one_annihilators s degree hgcd
+  intro i hi
+  rw [← hindex i x, hres i hi, map_zero]
+
+/-- The joint additive restriction map has trivial pointed kernel when its
+restriction--corestriction degrees have gcd one. -/
+theorem hasTrivialKernel_restrictionFamily_of_gcd_one
+    {ι A : Type*} [AddCommGroup A]
+    (B : ι → Type*) [∀ i, AddCommGroup (B i)]
+    (s : Finset ι) (degree : ι → ℕ)
+    (res : ∀ i, A →+ B i) (cor : ∀ i, B i →+ A)
+    (hindex : ∀ i x, cor i (res i x) = degree i • x)
+    (hgcd : s.gcd (fun i => (degree i : ℤ)) = 1) :
+    RiemannResearch.Logic.HasTrivialKernel
+      (0 : A) (fun i : ↥s => (0 : B i.1))
+      (fun x i => res i.1 x) := by
+  intro x
+  constructor
+  · intro hx
+    apply eq_zero_of_gcd_one_restrictions
+      B s degree res cor hindex hgcd
+    intro i hi
+    exact congrFun hx ⟨i, hi⟩
+  · rintro rfl
+    funext i
+    exact map_zero (res i.1)
 
 end RiemannResearch.GroupTheory

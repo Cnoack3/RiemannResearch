@@ -15,6 +15,31 @@ their degrees force the point-field index to equal one.
 
 namespace RiemannResearch.AlgebraicGeometry
 
+/-- A set of natural numbers whose elements collectively avoid every prime
+has set gcd one. -/
+theorem setGcd_eq_one_of_forall_prime_exists_not_dvd
+    {s : Set ℕ}
+    (havoid : ∀ p, p.Prime → ∃ n ∈ s, ¬ p ∣ n) :
+    Nat.setGcd s = 1 := by
+  by_contra hne
+  obtain ⟨p, hp, hpd⟩ := Nat.exists_prime_and_dvd hne
+  obtain ⟨n, hn, hpnd⟩ := havoid p hp
+  exact hpnd ((Nat.dvd_setGcd_iff.mp hpd) n hn)
+
+/-- If, for every prime, some finite point-field degree is not divisible by
+that prime, then the point-field index is one. -/
+theorem pointFieldIndex_eq_one_of_prime_avoidance
+    {Extension : Type*}
+    (isFinite : Extension → Prop) (degree : Extension → ℕ)
+    (hasPoint : Extension → Prop)
+    (havoid : ∀ p, p.Prime →
+      ∃ L, isFinite L ∧ hasPoint L ∧ ¬ p ∣ degree L) :
+    pointFieldIndex isFinite degree hasPoint = 1 := by
+  apply setGcd_eq_one_of_forall_prime_exists_not_dvd
+  intro p hp
+  obtain ⟨L, hfinite, hpoint, hnot⟩ := havoid p hp
+  exact ⟨degree L, ⟨L, ⟨hfinite, hpoint⟩, rfl⟩, hnot⟩
+
 /-- Two coprime finite point-field degrees force the point-field index to be
 one. -/
 theorem pointFieldIndex_eq_one_of_two_point_degrees

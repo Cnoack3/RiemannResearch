@@ -34,7 +34,7 @@ complete a row.
 | [4] Borovoi--Reichstein--Gille | Power operation used in Warning 5.15 and the exact statement of Proposition B.1(3) | Pointed-set kernel logic in `Logic.PointedKernel` | Context only; nonabelian cohomology operation absent |
 | [5] Brosnan | Motivic Białynicki--Birula decomposition used in Theorem 3.2(ii) | Schemes and algebraic cycles exist in Mathlib | Not started; Chow groups, correspondences, and motives are absent |
 | [6] Bruhat--Tits | Local Serre II endpoint cited in Remark 5.21 | Valued fields exist in Mathlib | Context only; Bruhat--Tits/reductive-group layer absent |
-| [7] Brown | Stable-elements theorem in additive group cohomology, specialized to the Sylow calculation of Theorem 5.7 | Restriction towers and coefficient transports; subgroup conjugation naturality; inner conjugation triviality; finite-group averaging; normal finite-index injectivity; stable-elements forward inclusion; explicit normal corestriction from one-cocycles to one-cocycles | Kernel foundation; corestriction must still preserve coboundaries and descend to H¹, after which the index and Mackey formulas and reverse stable-elements inclusion remain |
+| [7] Brown | Stable-elements theorem in additive group cohomology, specialized to the Sylow calculation of Theorem 5.7 | Restriction towers and coefficient transports; conjugation naturality; finite-group averaging; normal finite-index injectivity; stable-elements forward inclusion; quotient-transversal corestriction preserving cocycles and coboundaries; normal finite-index H¹ corestriction; and the restriction--corestriction subgroup-index identity | Kernel foundation; the Mackey formula, reverse stable-elements inclusion, and E8 coefficient instantiation remain |
 | [8] Chernousov--Gille--Merkurjev | Integral Rost nilpotence for projective homogeneous varieties | Schemes and algebraic cycles exist | Not started; Chow motives and projective homogeneous varieties absent |
 | [9] Chernousov | The maximal-torus/toral lifting theorem used in Theorem 6.1 | Affine group schemes, global fpqc Čech (H^1), finite-Galois coordinate comparison, generic singleton-cover Yoneda/gauge equivalence, affine point/face formulas, and represented-group section transport on the scheme-level double and triple overlaps exist | Not started; categorical face compatibility, torsor classification, quasi-split (E_8), and centralizers remain absent |
 | [10] Creutz | The particular index-one/no-rational-point surface example in Remark 4.10 | Algebraic schemes exist | Context only |
@@ -49,7 +49,7 @@ complete a row.
 | [19] Gille LNM 2238 | Corollaries 9.3.6--9.3.7, corrected Lemma 1.6.5 use, and the exact scope of Theorem 8.4.1(2) | Same nonabelian (H^1) and pointed-kernel foundations | Not started at theorem level; requires almost-abelian (E_8), multiplicative-type groups, and (R)-equivalence |
 | [20] Gille errata | Corrected hypotheses/statements integrated into the Lean versions of [19] | Source audit fixes the intended statements | Not started; must be built into [19], not postulated separately |
 | [21] Gille--Lee | Oriented embedding functor as a homogeneous space | Affine group schemes exist | Context only; reductive homogeneous spaces absent |
-| [22] Gille survey | No standalone proof input | None required | Context only |
+| [22] Gille survey | Context and theorem map, not a standalone E8 proof input; its reference [43] identifies Margaux's filtered-limit theorem for nonabelian Čech H¹ | Pointed exactness, twisting/invariant detection, prime-avoidance index one, gcd-one invariant detection, and global-neutrality-after-refinement are kernel checked | Generic consequences formalized; the deep algebraic-group endpoints remain external, and `FpqcH1.filteredColimitEquiv` is a future target |
 | [23] Harari--Szamuely | The exact Poitou--Tate segment for a torus used in Theorem 5.13 | Additive homological algebra exists | Not started; global fields, restricted products, duality, and 1-motives absent |
 | [24] Harbater--Hartmann--Krashen | Equivalence between patching and simultaneous factorization in the cited setting | Fields and linear algebra exist | Context only; patching inverse systems absent |
 | [25] Izquierdo--Lucchini Arteche | Corollary 4.14 at (q=0), transfer/index-one theorem, and the reduction theorem used in 2.1, 2.2, and 7.2 | Point-field gcd infrastructure and the p-special prime-power endpoint implication exist | Not started at citation level; Rost/norm groups, algebraic torsors, and cd hypotheses remain absent |
@@ -62,6 +62,29 @@ complete a row.
 | [32] Totaro | Degree-dividing-2880 splitting theorem and the exact finite (E_8) subgroup/stabilizer table uses | E8 Coxeter/Cartan data and manuscript arithmetic certificates | Kernel foundation only; finite (W(E_8)) realization, algebraic torsors, and splitting-field geometry remain |
 | [33] Thang | Local/global corestriction principle mentioned after Proposition 6.34 | Additive restriction foundations exist | Context only; nonabelian corestriction absent |
 
+## 2010 Gille survey audit
+
+The survey is a routing source, not a proof of the memorandum's general E8
+claim. It explicitly lists type E8 among the remaining cases, records that the
+usual subgroup trick fails for general E8, and warns that the E8 Rost invariant
+can have nontrivial kernel.
+
+The following scope restrictions are now recorded in the Lean API:
+
+- Survey Question 4.1 is a question about nonabelian coprime-degree
+  injectivity. Only its valid additive restriction--corestriction analogue is
+  formalized.
+- Survey Proposition 3.2 assumes `H¹(k,G)=1`; its pointed exactness and
+  twisting deductions are formalized, but using the proposition as an E8
+  vanishing input would be circular.
+- Survey reference [43] is Margaux's filtered-limit theorem for nonabelian
+  Čech H¹. The exact future target is `FpqcH1.filteredColimitEquiv`, followed
+  by finite-stage neutrality descent; survey and memorandum reference numbers
+  must not be identified.
+- In the printed proof of Proposition 6.5, `V → X` must be `V → S`, the
+  appeal to “Theorem 6.2” must be to Theorem 6.3, and Theorem 6.3's Picard map
+  must target the geometric generic fiber.
+
 ## Shared dependency order
 
 1. Complete the explicit Yoneda-section comparison for the finite-Galois
@@ -69,8 +92,9 @@ complete a row.
    fpqc Čech quotient, and the coordinate Čech/discrete equivalence now compile.
 2. Build split reductive group schemes, maximal tori/Borels, root data, and the
    split (E_8) group; connect its Weyl group to Mathlib's E8 Coxeter group.
-3. Add cohomological dimension, restriction/corestriction, Rost invariants, and
-   the cyclic-kernel machinery needed by [18], [19], [15], [25], and [9].
+3. Prove the additive Mackey formula and reverse stable-elements inclusion;
+   then add cohomological dimension, Rost invariants, and the cyclic-kernel
+   machinery needed by [18], [19], [15], [25], and [9].
 4. Independently build finite (W(E_8)) certificate checkers and commit every
    external computation as explicit data checked by Lean's kernel.
 5. Build Chow groups, correspondences, projective homogeneous varieties,

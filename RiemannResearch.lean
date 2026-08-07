@@ -24,6 +24,7 @@ import RiemannResearch.LinearAlgebra.QuotientMap
 import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
 import RiemannResearch.Logic.PointedKernel
+import RiemannResearch.Logic.PointedInvariant
 import RiemannResearch.GroupTheory.CoprimeRestriction
 import RiemannResearch.GroupTheory.BurnsideTopMark
 import RiemannResearch.GroupTheory.CentralExtension
