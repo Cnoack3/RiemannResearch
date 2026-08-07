@@ -37,8 +37,10 @@ import RiemannResearch.GroupTheory.PerfectCore
 import RiemannResearch.GroupTheory.PGroupFixedPoints
 import RiemannResearch.E8.A8NormalizerArithmetic
 import RiemannResearch.E8.A9TrialityArithmetic
+import RiemannResearch.E8.A11BurnsideCertificate
 import RiemannResearch.E8.BinaryIcosahedralArithmetic
 import RiemannResearch.E8.BinaryIcosahedralAtlas
+import RiemannResearch.E8.BinaryIcosahedralTrialityCounterexample
 import RiemannResearch.E8.BinaryIcosahedralSubsystemOrbits
 import RiemannResearch.E8.SylowSevenArithmetic
 import RiemannResearch.E8.WeylIndexPacket

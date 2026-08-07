@@ -35,22 +35,25 @@ the literal PDF theorem.
 
 ## Lean found a second problem in the binary-icosahedral audit
 
-For the only row supplied with exact Appendix-A matrices (the Atlas integral
-row `2A5G1-Zr8bB0`), the asserted order-three triality action of
-`H ≃ 2.A4` is false. The eight displayed roots have Gram matrix
-`D4 ⊕ D4`, and each of the generators `w`, `j`, and `r` is an explicit
-product of reflections in those two components. The declarations
-`rootGram_eq_d4d4`, `w_eq_reflections`, `j_eq_reflections`, and
-`r_eq_reflections` in `E8/BinaryIcosahedralAtlas.lean` kernel-check the
-integer-matrix certificates.
+The universal outer-triality assertion in Proposition 6.17 is false. For the
+exact ATLAS integral matrices `2A5G1-Zr8bB0`, the reconstructed certificate
+checks that `G=<A,B>` is `2.A5`, that `H=<w,j,r>` is the exact order-24
+stabilizer of a degree-five `D4 ⊕ D4` subsystem, and that
+`H ≤ W(D4) × W(D4)`. Lean checks the form isometries, subsystem Gram matrix,
+reflection factorizations, and the nonidentity order-three element
+`r_orderThree_innerD4xD4_counterexample`.
 
-Consequently this row has trivial outer action on both D4 factors, not a
-synchronized `C3` action. Its center kernel is the constant
-`μ2 × μ2`, not a cubic norm-one group; the cubic corestriction kernel, Allen
-index, and residual triality-orbit argument do not apply to this row. The
-degree-five `A4 ⊕ A4` side and the final two-gauge factorization problem
-remain. No matrices for the other three reported E8-lattice embeddings occur
-in the supplied artifacts, so their triality types remain unverified.
+Using the geometrically designated 120-root-pair and 135-singular-vector
+TomLib actions across all nine projective A5 rows narrows the matrix class to
+`{4015,4017}`. Both are manuscript rows and each has exactly one degree-five
+`(D4)^2` orbit. Hence the certified inner orbit is one of those two singleton
+orbits, contradicting the claim that all twelve have an outer action on at
+least one component. The other eleven root actions remain unverified. TomLib
+column geometry remains an explicit external certificate boundary.
+
+The degree-five `A4 ⊕ A4` side and the final two-gauge factorization problem
+remain separate. The trialitarian cubic kernel, Allen index, and residual
+triality-orbit argument cannot be applied uniformly as printed.
 
 ## Verified proof kernels
 
@@ -127,16 +130,20 @@ in the supplied artifacts, so their triality types remain unverified.
 - `E8/BinaryIcosahedralArithmetic.lean` checks the orders and fixed-field
   degrees `5`, `6`, and `30`, their coprimality, and proves the generic
   guard that a nontrivial perfect group is nonsolvable.
-- `E8/BinaryIcosahedralAtlas.lean` checks the Appendix-A words and relations,
-  the `D4 ⊕ D4` Gram matrix, and the reflection factorizations proving that
-  the certified `2.A4` action is inner on both D4 components.
+- `E8/BinaryIcosahedralAtlas.lean` checks the Appendix-A words and relations
+  and the `D4 ⊕ D4` Gram matrix. `E8/BinaryIcosahedralTrialityCounterexample.lean`
+  checks the form isometries, inner reflection image, and the nonidentity
+  order-three counterexample used in the Proposition 6.17 audit.
 - `LinearAlgebra/RootSystem/AdaptedBase.lean` proves the correct replacement
   for the defective sign-only normalization: a functional regular on every
   root admits a base on which all simple-root values are positive.
-- `E8/WonderfulFixedLocus.lean` now proves that a Coxeter
-  length-complement identity exchanges right descents and ascents and derives
-  the complementary descent count, unique-zero statement, and full rank
-  duality from that one identity.
+- `E8/WonderfulFixedLocus.lean` constructs a maximal-length element in every
+  finite Coxeter group and proves every reflection is a strict left and right
+  inversion, hence every simple generator is a left and right descent. It also
+  derives the complementary descent count, unique-zero statement, and full
+  rank duality from one length-complement identity. Mathlib still lacks a
+  `Finite` instance for its presented E8 group, the complement theorem, and
+  the E8 maximal-length calculation `120`.
 - `AlgebraicGeometry/FpqcCechH1.lean` packages affine group schemes and
   witnessed fpqc covers into Mathlib's fixed-cover nonabelian Čech H¹, defines
   refinement pullback, and proves that it preserves the neutral class.
@@ -194,8 +201,10 @@ in the supplied artifacts, so their triality types remain unverified.
   covariance, and triple-overlap composition. In the full-Weyl EVIII
   specialization, existence of the required `E8` corrections remains open.
 - `GaloisCohomology/DifferenceCocycle.lean` proves the representation-difference
-  cocycle used in Proposition 6.26 and identifies global and subgroup
-  coboundaries exactly with conjugacy of the corresponding representations.
+  cocycle used in Proposition 6.26, identifies global and subgroup
+  coboundaries with conjugacy, and proves that two local simultaneous
+  conjugacies plus failure of global conjugacy give a nonneutral H¹ class with
+  two neutral restrictions.
 - `GaloisCohomology/TwoGaugeDescent.lean` proves the exact nonabelian
   two-gauge criterion: when two subgroups generate the Galois group, a cocycle
   with local gauges is a global coboundary exactly when their transition
@@ -266,12 +275,14 @@ formalization. The attached artifact's exact status is in the theorem ledger.
    Their degrees have gcd one, but this does not solve the nonabelian gauge
    intersection.
 5. The explicit SL(2,5)/A11 construction is a genuine finite nonabelian H1
-   countermodel to formal two-gauge gluing. It is not an E8 counterexample.
-6. The uniform binary-triality claim is invalid. In the certified Appendix-A
-   row, `H ≃ 2.A4` preserves a `D4 ⊕ D4` subsystem and acts through
-   `W(D4) × W(D4)`, so the outer image is trivial. Trialitarian and Allen
-   invariants may still be relevant to other lattice embeddings, but those
-   rows require separate matrix certificates.
+   countermodel to formal two-gauge gluing. Its Burnside restriction relation,
+   global orbit mismatch, parity corrections, local even conjugators, and
+   joint A11 image are now reproducible. It is not an E8 counterexample.
+6. The uniform binary-triality claim is invalid. The ATLAS matrix class is
+   narrowed to `{4015,4017}` by the designated root-pair and singular-vector
+   actions; both rows have one degree-five orbit. Its exact stabilizer
+   `H ≃ 2.A4` acts through `W(D4) × W(D4)`, so one of those singleton orbits
+   has trivial outer image. The other eleven root actions remain unverified.
 
 ## Primary-source citation audit
 
@@ -336,6 +347,20 @@ output.
   orbit histograms, the degree-five multiplicities `[5,5,1,1]`, six
   degree-six orbits in every row, and the total of twelve degree-five orbits.
   It does not assert the outer-triality action on either D4 factor.
+- `Certificates/A5_TRIALITY_COUNTERCERTIFICATE.md` contains the exact ATLAS
+  matrices and GAP/TomLib script comparing the designated root-pair and
+  singular-vector actions. It narrows the class to `{4015,4017}`, proves the
+  displayed `2.A4` is the exact degree-five `(D4)^2` stabilizer, and checks
+  that it lies in `W(D4) × W(D4)`. Lean independently checks the matrix
+  counterexample. Thus the universal outer-triality assertion is false.
+- `Certificates/A11_BURNSIDE_GLUING_CERTIFICATE.md` contains the deterministic
+  GAP 4.16/TomLib/CTblLib script and raw output for Proposition 6.26. It checks
+  the rank-10 combined restriction matrix, the Burnside kernel vector, the
+  distinct global orbit packets, odd centralizer corrections, even local
+  simultaneous conjugators, failure of a global conjugator, and joint image
+  A11. `A11BurnsideCertificate.lean` checks the embedded matrices and every
+  printed permutation equation. The GAP row/action identification remains
+  external, and Corollary 6.28's field realization is not formalized.
 - The old 303 row-by-row orbit gcd computation is no longer needed. The Lean
   theorem
   `omegaEightPlusTwo_subsystemOrbitDegree_commonDivisor_eq_one` proves the
@@ -351,11 +376,11 @@ of the eight subsystem-stabilizer columns.
 
 The Appendix-A matrix row remains reproduced by exact integer computation and
 Lean reflection certificates. The subsystem-orbit data for all four projective
-A5 rows are now reproduced by the certificate above, so the finite orbit input
-to Proposition 6.16 and the numerical count of twelve orbits in Proposition
-6.17 are no longer missing. The stronger assertion that an order-three quotient
-acts by outer triality on a D4 factor is not checked and remains
-computer-conditional.
+A5 rows are reproduced, so Proposition 6.16's finite orbit input and the count
+of twelve orbits in Proposition 6.17 are no longer missing. The stronger
+universal outer-triality assertion is false: the ATLAS certificate narrows the
+row to `{4015,4017}`, each with one degree-five orbit, and its exact stabilizer
+acts inner on both factors. The other eleven root actions are not certified.
 
 ## Exact remaining gap and scope
 

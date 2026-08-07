@@ -63,4 +63,34 @@ theorem exists_mem_ker_conjugator
     simpa using hcancel
   · exact (conjugateSubgroupBy_mul_right_iff hr).2 hconj
 
+
+/-- A simultaneous pointwise conjugator can be moved into a homomorphism
+kernel by left multiplication with a centralizer element whose image cancels
+the original conjugator's image.  For the A11 certificate, the homomorphism is
+the sign map and both cancelling elements are odd permutations. -/
+theorem exists_mem_ker_pointwiseConjugator
+    {Γ G A : Type*} [Group Γ] [Group G] [Group A]
+    (φ : G →* A) (ρX ρY : Γ →* G) {g c : G}
+    (hcentral : ∀ σ : Γ, c * ρX σ = ρX σ * c)
+    (hcancel : φ c * φ g = 1)
+    (hconj : ∀ σ : Γ, ρY σ = g⁻¹ * ρX σ * g) :
+    ∃ q : G, q ∈ φ.ker ∧
+      ∀ σ : Γ, ρY σ = q⁻¹ * ρX σ * q := by
+  refine ⟨c * g, ?_, ?_⟩
+  · change φ (c * g) = 1
+    simpa using hcancel
+  · intro σ
+    rw [hconj]
+    have hc : c⁻¹ * ρX σ * c = ρX σ := by
+      calc
+        c⁻¹ * ρX σ * c = c⁻¹ * (ρX σ * c) := by
+          simp only [mul_assoc]
+        _ = c⁻¹ * (c * ρX σ) := by rw [← hcentral σ]
+        _ = ρX σ := by simp
+    calc
+      g⁻¹ * ρX σ * g =
+          g⁻¹ * (c⁻¹ * ρX σ * c) * g := by rw [hc]
+      _ = (c * g)⁻¹ * ρX σ * (c * g) := by
+        simp only [mul_inv_rev, mul_assoc]
+
 end RiemannResearch.GroupTheory

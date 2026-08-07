@@ -15,9 +15,10 @@ degree-six `(A4)^2` orbit, and that the degree-five multiplicities are
 The table-of-marks calculation and the identification of TomLib row 11155
 with the `(D4)^2` action and row 11076 with the `(A4)^2` action are external
 certificate inputs. Lean checks the embedded compressed histograms, their
-full action-degree sums, and all reported small-orbit multiplicities. Neither
-this certificate nor the accompanying Lean file checks the further assertion
-that an order-three quotient acts by outer triality on a `D4` factor.
+full action-degree sums, and all reported small-orbit multiplicities. The
+separate `A5_TRIALITY_COUNTERCERTIFICATE.md` narrows the ATLAS embedding to
+rows 4015/4017 and refutes the universal assertion that every degree-five
+orbit has an outer action on at least one `D4` factor.
 
 ## Wolfram availability
 

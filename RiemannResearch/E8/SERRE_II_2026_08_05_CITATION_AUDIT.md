@@ -57,13 +57,22 @@ earlier labeled results.
 | Theorem 6.1 | [9] Theorem 3.1, [18] Corollary 1(b) and Theorem 11, [32] page 21, and [19] Corollary 9.3.6. |
 | Proposition 6.7 | [18] Theorem 11. |
 | Corollary 6.14 | Corrected [19] Lemma 1.6.5 via [20]. |
-| Propositions 6.16 and 6.17 | [1] classical Serre II plus computation claims attributed only to [16]. |
+| Propositions 6.16 and 6.17 | [1] classical Serre II plus computations attributed to [16]. The reconstructed subsystem certificate validates 6.16's orbit input; the triality countercertificate shows 6.17's universal outer-action claim is false. |
+| Proposition 6.26; Corollary 6.28 | [16] for the finite Burnside-gluing computation. The reconstructed GAP/Lean certificate validates the finite data; Corollary 6.28's field realization is independent and remains unformalized. |
 | Corollary 7.3 | [26] Theorem 4, with the scope qualification above. |
 
-The GAP citation [16] is a software citation, not a computational certificate.
-The PDF does not include the scripts, package database snapshots, row maps,
-fusion witnesses, or raw output required for Theorems 6.9--6.12,
-Propositions 6.16--6.17 and 6.26, or Corollary 6.28.
+The GAP citation [16] is only a software citation: the PDF itself omits
+scripts, package snapshots, row maps, fusion witnesses, and raw output for
+Theorems 6.9--6.12, Propositions 6.16--6.17 and 6.26, and Corollary 6.28.
+
+The repository now supplies independently reconstructed GAP 4.16/TomLib/
+CTblLib scripts and raw output for the O8+(2) sieve, perfect-core lifts,
+projective-A5 subsystem orbits, the Proposition 6.17 triality audit, and
+Proposition 6.26's A11 Burnside-gluing calculation. Their finite data are
+reproducible and selected arrays are checked again by Lean. Geometric TomLib
+column matching remains an external certificate input; the triality audit
+refutes the universal assertion in Proposition 6.17, and Corollary 6.28's
+Riemann-existence and field-theoretic realization remain unformalized.
 
 ## Primary-source manifest
 

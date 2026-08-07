@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import RiemannResearch.AlgebraicGeometry.PointFields
+import Mathlib.GroupTheory.Coxeter.Inversion
 import Mathlib.GroupTheory.Coxeter.Length
 import Mathlib.GroupTheory.Coxeter.Matrix
 
@@ -111,6 +112,64 @@ abbrev E8CoxeterGroup : Type := CoxeterMatrix.E₈.Group
 abbrev e8CoxeterSystem :
     CoxeterSystem CoxeterMatrix.E₈ E8CoxeterGroup :=
   CoxeterMatrix.E₈.toCoxeterSystem
+
+/-- A finite Coxeter group has an element of maximal Coxeter length. -/
+theorem coxeter_exists_maximalLength_of_finite
+    {B W : Type*} [Group W] [Finite W] {M : CoxeterMatrix B}
+    (cs : CoxeterSystem M W) :
+    ∃ w0 : W, ∀ w : W, cs.length w ≤ cs.length w0 := by
+  classical
+  let _ : Fintype W := Fintype.ofFinite W
+  obtain ⟨w0, _, hmax⟩ :=
+    (Finset.univ : Finset W).exists_max_image cs.length
+      Finset.univ_nonempty
+  exact ⟨w0, fun w => hmax w (Finset.mem_univ w)⟩
+
+/-- Every reflection is a strict right inversion of a maximal-length
+element. -/
+theorem coxeter_isRightInversion_of_maximalLength
+    {B W : Type*} [Group W] {M : CoxeterMatrix B}
+    (cs : CoxeterSystem M W) (w0 : W)
+    (hmax : ∀ w : W, cs.length w ≤ cs.length w0)
+    {t : W} (ht : cs.IsReflection t) :
+    cs.IsRightInversion w0 t := by
+  exact ⟨ht, lt_of_le_of_ne (hmax (w0 * t))
+    (CoxeterSystem.IsReflection.length_mul_left_ne ht w0)⟩
+
+/-- Every reflection is a strict left inversion of a maximal-length
+element. -/
+theorem coxeter_isLeftInversion_of_maximalLength
+    {B W : Type*} [Group W] {M : CoxeterMatrix B}
+    (cs : CoxeterSystem M W) (w0 : W)
+    (hmax : ∀ w : W, cs.length w ≤ cs.length w0)
+    {t : W} (ht : cs.IsReflection t) :
+    cs.IsLeftInversion w0 t := by
+  exact ⟨ht, lt_of_le_of_ne (hmax (t * w0))
+    (CoxeterSystem.IsReflection.length_mul_right_ne ht w0)⟩
+
+/-- Every simple generator is a right descent of a maximal-length
+element. -/
+theorem coxeter_isRightDescent_of_maximalLength
+    {B W : Type*} [Group W] {M : CoxeterMatrix B}
+    (cs : CoxeterSystem M W) (w0 : W)
+    (hmax : ∀ w : W, cs.length w ≤ cs.length w0)
+    (i : B) :
+    cs.IsRightDescent w0 i := by
+  exact (cs.isRightInversion_simple_iff_isRightDescent w0 i).mp
+    (coxeter_isRightInversion_of_maximalLength cs w0 hmax
+      (cs.isReflection_simple i))
+
+/-- Every simple generator is a left descent of a maximal-length
+element. -/
+theorem coxeter_isLeftDescent_of_maximalLength
+    {B W : Type*} [Group W] {M : CoxeterMatrix B}
+    (cs : CoxeterSystem M W) (w0 : W)
+    (hmax : ∀ w : W, cs.length w ≤ cs.length w0)
+    (i : B) :
+    cs.IsLeftDescent w0 i := by
+  exact (cs.isLeftInversion_simple_iff_isLeftDescent w0 i).mp
+    (coxeter_isLeftInversion_of_maximalLength cs w0 hmax
+      (cs.isReflection_simple i))
 
 /-- Number of simple right descents in a Coxeter system with finitely many
 simple generators. -/
