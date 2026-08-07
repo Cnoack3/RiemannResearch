@@ -39,10 +39,14 @@ class AgentWorkspaceManager:
         canonical_root: Path,
         remote: str,
         before_replace: Callable[[Path], None] | None = None,
+        retention_days: int = 90,
     ) -> None:
+        if not 30 <= retention_days <= 3650:
+            raise ValueError("Retention must be between 30 and 3650 days")
         self.canonical_root = canonical_root.resolve()
         self.remote = remote
         self.before_replace = before_replace
+        self.retention_days = retention_days
         home = Path(os.environ.get("HOME", "/home/cri_2025")).resolve()
         self.root = Path(
             os.environ.get("LEAN_AGENT_WORKSPACES_ROOT", home / "lean-agent-workspaces")
@@ -219,7 +223,7 @@ class AgentWorkspaceManager:
         return project
 
     def open(self, resume_token: str = "") -> dict:
-        self.cleanup(retention_days=90, dry_run=False)
+        self.cleanup(retention_days=self.retention_days, dry_run=False)
         if resume_token:
             self._meta_path(resume_token)
             with self._lock(self.state / f"{resume_token}.lock"):
