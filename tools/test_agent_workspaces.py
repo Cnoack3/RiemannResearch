@@ -34,7 +34,11 @@ class TestManager(AgentWorkspaceManager):
             )
         try:
             time.sleep(0.2)
-            return {"command": "test-build", "elapsed_seconds": 0}
+            return {
+                "command": "test-build",
+                "elapsed_seconds": 0,
+                "output": "simulated-build-log",
+            }
         finally:
             with self.test_build_guard:
                 self.active_test_builds -= 1
@@ -107,11 +111,21 @@ with tempfile.TemporaryDirectory() as raw:
     assert first["project_root"] != second["project_root"]
     first_token = first["workspace_token"]
     second_token = second["workspace_token"]
+    listed = manager.list_files(first_token, pattern="Basic", limit=1)
+    assert listed["files"] == ["RiemannResearch/Basic.lean"]
+    assert not listed["truncated"]
+    ranged = manager.read_file(
+        first_token, "RiemannResearch/Basic.lean", start_line=1, max_chars=12
+    )
+    assert ranged["content"] == "theorem base"
+    assert ranged["truncated"]
+    assert ranged["total_lines"] == 1
     first_job = manager.submit_build_for_project(first["project_root"])
     duplicate_job = manager.submit_build(first_token)
     second_job = manager.submit_build(second_token)
     assert duplicate_job["existing"]
     assert duplicate_job["job_id"] == first_job["job_id"]
+    assert duplicate_job["retry_after_seconds"] >= 20
     assert second_job["queue_position"] is not None
     try:
         manager.submit_checkpoint(first_token, "Blocked checkpoint")
@@ -132,6 +146,12 @@ with tempfile.TemporaryDirectory() as raw:
         time.sleep(0.01)
     assert first_status["state"] == "succeeded"
     assert second_status["state"] == "succeeded"
+    assert first_status["retry_after_seconds"] == 0
+    assert "output" not in first_status["result"]
+    first_status_with_logs = manager.job_status(
+        first_job["job_id"], include_logs=True
+    )
+    assert first_status_with_logs["result"]["output"] == "simulated-build-log"
     assert manager.max_active_test_builds == 1
     run_ok = manager.run_code(first_token, "theorem scratch : True := by trivial\n")
     assert run_ok["verified"] and "simulated-verified" in run_ok["output"]
@@ -203,5 +223,9 @@ new file mode 100644
     cleanup = manager.cleanup(retention_days=30, dry_run=False)
     assert dirty_root.is_dir()
     assert cleanup["preserved_unpublished"]
+    metrics = manager.metrics_path.read_text()
+    assert '"event":"read_file"' in metrics
+    assert '"event":"job_status"' in metrics
+    assert first_token not in metrics
 
 print("isolated workspace lifecycle ok")
