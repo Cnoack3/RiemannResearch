@@ -1,6 +1,7 @@
 import RiemannResearch.AlgebraicGeometry.FpqcCechH1
 import RiemannResearch.AlgebraicGeometry.FpqcCoverCommonRefinement
 import RiemannResearch.AlgebraicGeometry.PointFields
+import RiemannResearch.AlgebraicGeometry.PointFieldIndexOne
 import RiemannResearch.Basic
 import RiemannResearch.GaloisCohomology.GaloisTensorDecomposition
 import RiemannResearch.GaloisCohomology.GaloisTripleTensorDecomposition
@@ -14,6 +15,7 @@ import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.GroupTheory.CoprimeRestriction
 import RiemannResearch.GroupTheory.BurnsideTopMark
 import RiemannResearch.GroupTheory.GeneratedFixedPoint
+import RiemannResearch.GroupTheory.GeneratedSubgroupsOfCoprimeIndex
 import RiemannResearch.GroupTheory.HalfDifferenceCocycle
 import RiemannResearch.GroupTheory.PGroupFixedPoints
 import RiemannResearch.E8.A8NormalizerArithmetic
