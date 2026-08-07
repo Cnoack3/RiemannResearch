@@ -9,8 +9,9 @@ literature already contains a proof.
 1. **Conjecture 5.1:** odd-degree descent for the wonderful compactification.
 2. **Conjecture 5.2:** odd-degree descent for E8 Borel varieties.
 3. **Conjecture 5.3:** odd-degree descent for EVIII.
-4. **Question 5.22:** full-Weyl toral neutrality and simultaneous fixed
-   corrections.
+4. **Question 5.22:** full-Weyl toral neutrality. After choosing one of the
+   135 D8 gauges as an anchor, the exact remaining transporter input is one
+   E8-valued element satisfying the 135 anchored fixedness conditions.
 5. **Conjecture 6.33:** the diagonal finite-etale kernel norm.
 
 Proposition 6.35 is an equivalence with E8 Serre II, not independent evidence.

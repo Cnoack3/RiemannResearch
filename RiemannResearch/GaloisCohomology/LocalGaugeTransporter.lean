@@ -192,5 +192,44 @@ theorem isCoboundary_iff_exists_fixedGaugeCorrections
     refine ⟨b, ?_⟩
     exact eq_trivial_gauge_of_generating_family a b H hgen hagrees
 
+/-- **Anchored generating-family transporter criterion.**
+
+Choose one local gauge as an anchor. Global neutrality is equivalent to the
+existence of a single element `c₀` such that, for every index `i`, translating
+`c₀` by the transition from `i₀` to `i` is fixed by `H i`.
+
+The condition at `i = i₀` says that `c₀` itself is fixed by `H i₀`. Every
+other correction is then forced to be
+`transition u i i₀ * c₀`; the transition identities make all pairwise
+factorization equations automatic.
+
+For the full-Weyl E₈ application with the 135 `D₈` stabilizers, this reduces
+the unresolved correction system to one anchor element and 135 fixedness
+conditions. It does not assert that such an E₈-valued anchor exists.
+-/
+theorem isCoboundary_iff_exists_anchoredFixedGaugeCorrection
+    (a : NonabelianCocycle Γ G)
+    (H : I → Subgroup Γ) (u : I → G) (i₀ : I)
+    (hgen : (⨆ i, H i) = ⊤)
+    (hlocal : ∀ i, a.IsLocalGauge (H i) (u i)) :
+    a.IsCoboundary ↔
+      ∃ c₀ : G,
+        ∀ i, IsFixedBy (H i) (transition u i i₀ * c₀) := by
+  let _ : Nonempty I := ⟨i₀⟩
+  constructor
+  · intro ha
+    obtain ⟨c, hfixed, htransition⟩ :=
+      (isCoboundary_iff_exists_fixedGaugeCorrections a H u hgen hlocal).mp ha
+    refine ⟨c i₀, ?_⟩
+    intro i
+    rw [htransition i i₀]
+    simpa [transition] using hfixed i
+  · rintro ⟨c₀, hc⟩
+    apply
+      (isCoboundary_iff_exists_fixedGaugeCorrections a H u hgen hlocal).mpr
+    refine ⟨fun i => transition u i i₀ * c₀, hc, ?_⟩
+    intro i j
+    simp [transition, mul_assoc]
+
 end NonabelianCocycle
 end RiemannResearch.GaloisCohomology

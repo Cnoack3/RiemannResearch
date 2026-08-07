@@ -201,8 +201,10 @@ triality-orbit argument cannot be applied uniformly as printed.
   transporter criterion: local gauges on subgroups generating the Galois group
   glue to a global gauge exactly when their transitions factor through
   subgroup-fixed corrections. It also proves overlap fixedness, gauge
-  covariance, and triple-overlap composition. In the full-Weyl EVIII
-  specialization, existence of the required `E8` corrections remains open.
+  covariance, and triple-overlap composition. Its anchored criterion reduces
+  the 135-`D8` system to one element `c₀`: for every stabilizer `H i`,
+  `transition u i i₀ * c₀` must be fixed by `H i`. In the full-Weyl EVIII
+  specialization, existence of this `E8`-valued anchor remains open.
 - `GaloisCohomology/DifferenceCocycle.lean` proves the representation-difference
   cocycle used in Proposition 6.26, identifies global and subgroup
   coboundaries with conjugacy, and proves that two local simultaneous
