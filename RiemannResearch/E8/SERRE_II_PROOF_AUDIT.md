@@ -160,10 +160,11 @@ in the supplied artifacts, so their triality types remain unverified.
   decompositions and proves all three face formulas, including the twisted
   `σ • f(σ⁻¹ρ)` face.
 - `GaloisCohomology/GaloisCechSchemeBridge.lean` identifies the chosen
-  scheme-level double overlap with `Spec (L ⊗[K] L)` and transports sections
-  of the represented affine group to convolution algebra maps on that tensor
-  product. The analogous triple-overlap transport and compatibility with all
-  face maps remain open.
+  scheme-level double and right-associated triple overlaps with the spectra of
+  `L ⊗[K] L` and `L ⊗[K] (L ⊗[K] L)`. It transports represented affine-group
+  sections first to convolution algebra maps and then directly to one- and
+  two-variable Galois-indexed points. Compatibility of the three categorical
+  face morphisms with the checked algebraic face maps remains open.
 - `GaloisCohomology/GaloisCechComparison.lean` computes all three Čech face
   maps in Galois coordinates, proves coordinate Čech cocycles and gauge classes
   equivalent to discrete nonabelian cocycles and H¹, and constructs the actual

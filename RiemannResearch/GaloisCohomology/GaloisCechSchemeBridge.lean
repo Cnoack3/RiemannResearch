@@ -144,6 +144,117 @@ def finiteGaloisDoubleOverlapSectionMulEquiv :
         (finiteGaloisDoubleOverlapIso K L).symm.op)).trans
     (finiteGaloisTensorPointMulEquiv K L A).symm
 
+/-- The chosen right-associated triple product of the finite-Galois covering
+object is canonically the affine spectrum of
+`L ⊗[K] (L ⊗[K] L)`. -/
+def finiteGaloisTripleOverlapIso :
+    ((finiteGaloisCoverObject K L) ⨯
+      ((finiteGaloisCoverObject K L) ⨯
+        (finiteGaloisCoverObject K L))) ≅
+    (AlgebraicGeometry.Spec
+      (CommRingCat.of
+        (TensorProduct K L (TensorProduct K L L)))).asOver
+      (AlgebraicGeometry.Spec (CommRingCat.of K)) := by
+  letI := AlgebraicGeometry.preservesLimitsOfSize_algSpec
+    (R := CommRingCat.of K)
+  change
+    (((finiteGaloisAlgSpec K).obj (finiteGaloisCommAlgObject K L)) ⨯
+      (((finiteGaloisAlgSpec K).obj (finiteGaloisCommAlgObject K L)) ⨯
+        ((finiteGaloisAlgSpec K).obj (finiteGaloisCommAlgObject K L)))) ≅
+      (finiteGaloisAlgSpec K).obj
+        (Opposite.op
+          (CommAlgCat.of K
+            (TensorProduct K L (TensorProduct K L L))))
+  exact
+    (CategoryTheory.Limits.prod.mapIso
+      (Iso.refl _)
+      (finiteGaloisDoubleOverlapIso K L)).trans
+    ((chosenProductTensorIso
+      ((finiteGaloisAlgSpec K).obj (finiteGaloisCommAlgObject K L))
+      ((finiteGaloisAlgSpec K).obj
+        (Opposite.op
+          (CommAlgCat.of K (TensorProduct K L L))))).trans
+      (CartesianMonoidalCategory.prodComparisonIso
+        (finiteGaloisAlgSpec K)
+        (finiteGaloisCommAlgObject K L)
+        (Opposite.op
+          (CommAlgCat.of K (TensorProduct K L L)))).symm)
+
+/-- The value of the represented affine-group presheaf on the explicit
+right-associated tensor-cube overlap is multiplicatively equivalent to
+algebra maps from `A` into `L ⊗[K] (L ⊗[K] L)`. -/
+def finiteGaloisTripleTensorPointMulEquiv :
+    WithConv
+        (A →ₐ[K] TensorProduct K L (TensorProduct K L L)) ≃*
+      (finiteGaloisAffineGroupPresheaf K A).obj
+        (Opposite.op
+          ((AlgebraicGeometry.Spec
+            (CommRingCat.of
+              (TensorProduct K L (TensorProduct K L L)))).asOver
+            (AlgebraicGeometry.Spec (CommRingCat.of K)))) := by
+  letI : Group
+      (((AlgebraicGeometry.Spec
+        (CommRingCat.of
+          (TensorProduct K L (TensorProduct K L L)))).asOver
+        (AlgebraicGeometry.Spec (CommRingCat.of K))) ⟶
+      ((AlgebraicGeometry.Spec (CommRingCat.of A)).asOver
+        (AlgebraicGeometry.Spec (CommRingCat.of K)))) :=
+    ((finiteGaloisAffineGroupPresheaf K A).obj
+      (Opposite.op
+        ((AlgebraicGeometry.Spec
+          (CommRingCat.of
+            (TensorProduct K L (TensorProduct K L L)))).asOver
+          (AlgebraicGeometry.Spec (CommRingCat.of K))))).str
+  change
+    WithConv
+        (A →ₐ[K] TensorProduct K L (TensorProduct K L L)) ≃*
+      (((AlgebraicGeometry.Spec
+        (CommRingCat.of
+          (TensorProduct K L (TensorProduct K L L)))).asOver
+        (AlgebraicGeometry.Spec (CommRingCat.of K))) ⟶
+      ((AlgebraicGeometry.Spec (CommRingCat.of A)).asOver
+        (AlgebraicGeometry.Spec (CommRingCat.of K))))
+  exact AlgebraicGeometry.Spec.mapMulEquiv
+
+/-- Sections on the chosen right-associated triple overlap are
+multiplicatively equivalent to algebra maps into the tensor cube. -/
+def finiteGaloisTripleOverlapSectionMulEquiv :
+    (finiteGaloisAffineGroupPresheaf K A).obj
+      (Opposite.op
+        ((finiteGaloisCoverObject K L) ⨯
+          ((finiteGaloisCoverObject K L) ⨯
+            (finiteGaloisCoverObject K L)))) ≃*
+      WithConv
+        (A →ₐ[K] TensorProduct K L (TensorProduct K L L)) :=
+  (grpIsoToMulEquiv
+      ((finiteGaloisAffineGroupPresheaf K A).mapIso
+        (finiteGaloisTripleOverlapIso K L).symm.op)).trans
+    (finiteGaloisTripleTensorPointMulEquiv K L A).symm
+
+/-- Sections on the chosen double overlap, directly expressed as
+Galois-indexed affine-group points. -/
+def finiteGaloisDoubleOverlapGaloisMulEquiv :
+    (finiteGaloisAffineGroupPresheaf K A).obj
+        (Opposite.op
+          ((finiteGaloisCoverObject K L) ⨯
+            (finiteGaloisCoverObject K L))) ≃*
+      ((L ≃ₐ[K] L) → AffineGaloisPoint K L A) :=
+  (finiteGaloisDoubleOverlapSectionMulEquiv K L A).trans
+    (galoisDoubleOverlapPointMulEquiv K L A)
+
+/-- Sections on the chosen right-associated triple overlap, directly
+expressed as two-variable Galois-indexed affine-group points. -/
+def finiteGaloisTripleOverlapGaloisMulEquiv :
+    (finiteGaloisAffineGroupPresheaf K A).obj
+      (Opposite.op
+        ((finiteGaloisCoverObject K L) ⨯
+          ((finiteGaloisCoverObject K L) ⨯
+            (finiteGaloisCoverObject K L)))) ≃*
+      ((L ≃ₐ[K] L) → (L ≃ₐ[K] L) →
+        AffineGaloisPoint K L A) :=
+  (finiteGaloisTripleOverlapSectionMulEquiv K L A).trans
+    (galoisTripleOverlapPointMulEquiv K L A)
+
 end
 
 end RiemannResearch.GaloisCohomology
