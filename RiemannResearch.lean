@@ -24,9 +24,14 @@ import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
 import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.GroupTheory.CoprimeRestriction
 import RiemannResearch.GroupTheory.BurnsideTopMark
+import RiemannResearch.GroupTheory.CentralExtension
 import RiemannResearch.GroupTheory.GeneratedFixedPoint
 import RiemannResearch.GroupTheory.GeneratedSubgroupsOfCoprimeIndex
 import RiemannResearch.GroupTheory.HalfDifferenceCocycle
+import RiemannResearch.GroupTheory.KernelConjugator
+import RiemannResearch.GroupTheory.ModTwoFixedReduction
+import RiemannResearch.GroupTheory.OrbitDegreeGcd
+import RiemannResearch.GroupTheory.PerfectCore
 import RiemannResearch.GroupTheory.PGroupFixedPoints
 import RiemannResearch.E8.A8NormalizerArithmetic
 import RiemannResearch.E8.A9TrialityArithmetic
@@ -36,6 +41,7 @@ import RiemannResearch.E8.SylowSevenArithmetic
 import RiemannResearch.E8.WeylIndexPacket
 import RiemannResearch.E8.SerreIIProgramChecks
 import RiemannResearch.E8.OmegaEightPlusTwo
+import RiemannResearch.E8.SubgroupSieve
 import RiemannResearch.E8.FullWeylCore
 import RiemannResearch.E8.WonderfulFixedLocus
 import RiemannResearch.RH.Basic
