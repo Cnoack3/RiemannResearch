@@ -282,6 +282,7 @@ class AgentWorkspaceManager:
             "state": meta["state"],
             "base_commit": meta.get("base_commit"),
             "shared_dependency_key": self._dependency_key(project),
+            "retention_days": self.retention_days,
             "usage": (
                 "Pass workspace_token to every agent_workspace_* tool. Pass absolute paths "
                 "under project_root to Lean file tools. Do not use relative paths or lean_run_code."
