@@ -41,7 +41,8 @@
 - Move a result from the conditional section to the established section only
   after all cataloged research obligations are supplied by checked
   declarations and the resulting specialized theorem passes the full build.
-- Verify edited files with the Lean tools and run `lake build` before checkpointing.
+- Verify edited files with the Lean tools and run
+  `lake build RiemannResearch --quiet` before checkpointing.
 - Do not introduce `sorry`, `admit`, project-local `axiom` declarations, or `unsafe` declarations.
 - After a successful material change, checkpoint and push it to `origin/main`; report the commit SHA.
 - Never force-push, rebase, stash, create merge commits, discard local work, or pull into a dirty or diverged tree. Stop and report the condition instead.
@@ -64,6 +65,6 @@
 
 ## Project commands
 
-- Full build: `lake build`
+- Project build: `lake build RiemannResearch --quiet`
 - Verify one file: `lake env lean path/to/File.lean`
 - Search text: `rg "pattern" RiemannResearch`

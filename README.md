@@ -29,14 +29,16 @@ it has been:
 ## Reproducibility
 
 `lean-toolchain`, `lakefile.toml`, and `lake-manifest.json` pin the
-environment. Run `lake build` from the repository root to verify the complete
-library.
+environment. Run `lake build RiemannResearch --quiet` from the repository
+root to verify the project library and its transitive imports. Lake stores
+compiled artifacts under `.lake`; subsequent builds traverse the dependency
+graph but rebuild only stale modules and their affected dependents.
 
 ## Automatic synchronization
 
 On the first edit of a clean working tree, the restricted workspace connector
 fetches `origin/main` and permits only a fast-forward update. A verified
-checkpoint builds the complete project, commits approved files, and pushes the
-resulting commit to the private `main` branch by default. It refuses dirty-tree
+checkpoint incrementally builds the project library, commits approved files,
+and pushes the resulting commit to the private `main` branch by default. It refuses dirty-tree
 pulls, merge commits, rebases, force-pushes, unexpected remotes, and unexpected
 branches.
