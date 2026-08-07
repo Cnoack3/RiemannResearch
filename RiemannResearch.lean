@@ -18,6 +18,7 @@ import RiemannResearch.GaloisCohomology.NonabelianH1
 import RiemannResearch.GaloisCohomology.SingletonCechH1
 import RiemannResearch.GroupCohomology.Conjugation
 import RiemannResearch.GroupCohomology.Corestriction
+import RiemannResearch.GroupCohomology.Mackey
 import RiemannResearch.GroupCohomology.Restriction
 import RiemannResearch.GroupCohomology.StableElements
 import RiemannResearch.LinearAlgebra.QuotientMap
