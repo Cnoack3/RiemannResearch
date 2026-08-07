@@ -10,6 +10,7 @@ import hashlib
 import os
 import re
 import subprocess
+import time
 from pathlib import Path
 
 from lean_lsp_mcp import main as lean_lsp_main
@@ -147,6 +148,20 @@ def _patch_paths(patch: str) -> list[str]:
 
 def _tail(text: str, lines: int = 200) -> str:
     return "\n".join(text.splitlines()[-lines:])
+
+
+def _project_olean_snapshot() -> dict[str, int]:
+    """Record project artifact mtimes without scanning dependency build trees."""
+    artifact_root = PROJECT_ROOT / ".lake" / "build" / "lib" / "lean" / "RiemannResearch"
+    if not artifact_root.is_dir():
+        return {}
+    snapshot: dict[str, int] = {}
+    for path in artifact_root.rglob("*.olean"):
+        try:
+            snapshot[path.relative_to(artifact_root).as_posix()] = path.stat().st_mtime_ns
+        except FileNotFoundError:
+            continue
+    return snapshot
 
 
 def _validate_origin() -> str:
@@ -501,7 +516,27 @@ def workspace_checkpoint(message: str, push: bool = True) -> dict:
         _run(["git", "fetch", "origin", "main"], timeout=300)
         _run(["git", "merge-base", "--is-ancestor", "origin/main", "HEAD"])
 
-    build_output = _run(["lake", "build"], timeout=3600)
+    build_before = _project_olean_snapshot()
+    build_started = time.monotonic()
+    build_output = _run(
+        ["lake", "build", "RiemannResearch", "--quiet"], timeout=3600
+    )
+    build_seconds = round(time.monotonic() - build_started, 3)
+    build_after = _project_olean_snapshot()
+    rebuilt_modules = sorted(
+        name for name, mtime in build_after.items() if build_before.get(name) != mtime
+    )
+    build_metrics = {
+        "command": "lake build RiemannResearch --quiet",
+        "elapsed_seconds": build_seconds,
+        "project_olean_count": len(build_after),
+        "rebuilt_project_olean_count": len(rebuilt_modules),
+        "rebuilt_project_oleans": rebuilt_modules,
+        "incremental_note": (
+            "Lake traverses the transitive task graph but reuses unchanged artifacts "
+            "from .lake; only changed project .olean mtimes are listed here."
+        ),
+    }
     _run(
         [
             "git",
@@ -529,6 +564,7 @@ def workspace_checkpoint(message: str, push: bool = True) -> dict:
             "commit": _run(["git", "rev-parse", "HEAD"]),
             "message": "No checkpointable changes",
             "build": _tail(build_output),
+            "build_metrics": build_metrics,
         }
 
     _run(["git", "commit", "-m", message], timeout=120)
@@ -544,6 +580,7 @@ def workspace_checkpoint(message: str, push: bool = True) -> dict:
         "commit": commit,
         "files": staged.splitlines(),
         "build": _tail(build_output),
+        "build_metrics": build_metrics,
     }
 
 
