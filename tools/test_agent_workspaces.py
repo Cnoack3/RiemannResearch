@@ -65,6 +65,8 @@ with tempfile.TemporaryDirectory() as raw:
     os.environ["LEAN_AGENT_WORKSPACES_STATE"] = str(temp / "state")
     os.environ["LEAN_SHARED_DEPS_ROOT"] = str(temp / "shared")
     os.environ["LEAN_SHARED_PROJECT_BUILDS_ROOT"] = str(temp / "shared-project-builds")
+    os.environ["LEAN_NUM_THREADS"] = "8"
+    os.environ["LEAN_LAKE_BUILD_THREADS"] = "4"
     fake_bin = temp / "bin"
     fake_bin.mkdir()
     fake_lake = fake_bin / "lake"
@@ -83,6 +85,13 @@ with tempfile.TemporaryDirectory() as raw:
         before_replace=lambda path: closed_projects.append(str(path)),
         can_archive=lambda path: str(path) not in active_projects,
     )
+    assert manager.lean_num_threads == 8
+    assert manager.lake_build_threads == 4
+    assert manager._run(
+        ["sh", "-c", 'printf %s "$LEAN_NUM_THREADS"'],
+        cwd=source,
+        lean_num_threads=manager.lake_build_threads,
+    ) == "4"
 
     first = manager.open()
     first_root = Path(first["project_root"])
