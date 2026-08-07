@@ -10,11 +10,13 @@ import fcntl
 import hashlib
 import json
 import os
+import queue
 import re
 import secrets
 import shutil
 import subprocess
 import tempfile
+import threading
 import time
 from contextlib import contextmanager
 from pathlib import Path
@@ -22,6 +24,7 @@ from typing import Callable, Iterator
 
 
 TOKEN_RE = re.compile(r"^ws_[A-Za-z0-9_-]{20,80}$")
+JOB_RE = re.compile(r"^job_[A-Za-z0-9_-]{20,80}$")
 PACKAGE_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_.-]*$")
 MAX_READ_BYTES = 1_000_000
 MAX_PATCH_BYTES = 2_000_000
@@ -59,8 +62,32 @@ class AgentWorkspaceManager:
         self.shared = Path(
             os.environ.get("LEAN_SHARED_DEPS_ROOT", home / ".cache/lean-agent-dependencies")
         ).resolve()
-        for path in (self.root, self.state, self.shared):
+        self.project_cache = Path(
+            os.environ.get(
+                "LEAN_SHARED_PROJECT_BUILDS_ROOT",
+                home / ".cache/lean-agent-project-builds",
+            )
+        ).resolve()
+        self.jobs = self.state / "jobs"
+        try:
+            self.project_cache_keep = int(os.environ.get("LEAN_PROJECT_CACHE_KEEP", "8"))
+        except ValueError as exc:
+            raise ValueError("LEAN_PROJECT_CACHE_KEEP must be an integer") from exc
+        if not 1 <= self.project_cache_keep <= 128:
+            raise ValueError("LEAN_PROJECT_CACHE_KEEP must be between 1 and 128")
+        for path in (self.root, self.state, self.shared, self.project_cache, self.jobs):
             path.mkdir(parents=True, exist_ok=True)
+        self._job_queue: queue.Queue[str] = queue.Queue()
+        self._job_guard = threading.Lock()
+        self._job_local = threading.local()
+        self._active_job: str | None = None
+        self._recover_interrupted_jobs()
+        self._job_worker_thread = threading.Thread(
+            target=self._job_worker,
+            name="lean-workspace-jobs",
+            daemon=True,
+        )
+        self._job_worker_thread.start()
 
     def _run(
         self,
@@ -88,10 +115,10 @@ class AgentWorkspaceManager:
         return output
 
     @contextmanager
-    def _lock(self, path: Path) -> Iterator[None]:
+    def _lock(self, path: Path, *, shared: bool = False) -> Iterator[None]:
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("a+", encoding="utf-8") as handle:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            fcntl.flock(handle.fileno(), fcntl.LOCK_SH if shared else fcntl.LOCK_EX)
             try:
                 yield
             finally:
@@ -124,7 +151,7 @@ class AgentWorkspaceManager:
         if expected.parent.parent != self.root:
             raise RuntimeError("Workspace path escapes the managed root")
 
-    def _clone(self, destination: Path, commit: str | None = None) -> None:
+    def _clone(self, destination: Path, commit: str | None = None) -> dict:
         destination.parent.mkdir(parents=True, exist_ok=True)
         if destination.exists():
             raise RuntimeError(f"Clone destination already exists: {destination}")
@@ -137,7 +164,8 @@ class AgentWorkspaceManager:
         self._run(["git", "config", "user.email", "lean-agent@localhost"], cwd=destination)
         if commit:
             self._run(["git", "checkout", "--detach", commit], cwd=destination)
-        self._attach_dependencies(destination)
+        dependency_key = self._attach_dependencies(destination)
+        return self._restore_project_cache(destination, dependency_key)
 
     def _dependency_key(self, project: Path) -> str:
         digest = hashlib.sha256()
@@ -188,6 +216,119 @@ class AgentWorkspaceManager:
                 local_packages.symlink_to(packages, target_is_directory=True)
         return key
 
+    def _project_cache_dir(self, dependency_key: str, commit: str) -> Path:
+        if not re.fullmatch(r"[0-9a-f]{40}", commit):
+            raise ValueError("Project cache requires a full Git commit SHA")
+        return self.project_cache / dependency_key / commit
+
+    def _copy_build_tree(self, source: Path, destination: Path) -> None:
+        if destination.exists():
+            shutil.rmtree(destination)
+        destination.mkdir(parents=True)
+        result = subprocess.run(
+            ["cp", "--archive", "--reflink=auto", f"{source}/.", str(destination)],
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode:
+            shutil.rmtree(destination, ignore_errors=True)
+            shutil.copytree(source, destination)
+
+    def _restore_project_cache(self, project: Path, dependency_key: str) -> dict:
+        commit = self._run(["git", "rev-parse", "HEAD"], cwd=project)
+        cache = self._project_cache_dir(dependency_key, commit)
+        source = cache / "build"
+        ready = cache / "READY.json"
+        with self._lock(self.project_cache / ".cache.lock", shared=True):
+            if not ready.is_file() or not source.is_dir():
+                return {"restored": False, "commit": commit, "dependency_key": dependency_key}
+            destination = project / ".lake" / "build"
+            temporary = (
+                destination.parent / f".build.restore.{os.getpid()}.{secrets.token_hex(4)}"
+            )
+            try:
+                self._copy_build_tree(source, temporary)
+                if destination.exists():
+                    shutil.rmtree(destination)
+                os.replace(temporary, destination)
+            finally:
+                shutil.rmtree(temporary, ignore_errors=True)
+        return {
+            "restored": True,
+            "commit": commit,
+            "dependency_key": dependency_key,
+            "cache_path": str(cache),
+        }
+
+    def _publish_project_cache(self, project: Path) -> dict:
+        status = self._run(["git", "status", "--porcelain"], cwd=project)
+        if status:
+            return {"published": False, "reason": "workspace source is dirty"}
+        source = project / ".lake" / "build"
+        if not source.is_dir():
+            return {"published": False, "reason": "project build directory is missing"}
+        dependency_key = self._dependency_key(project)
+        commit = self._run(["git", "rev-parse", "HEAD"], cwd=project)
+        cache = self._project_cache_dir(dependency_key, commit)
+        ready = cache / "READY.json"
+        lock = self.project_cache / dependency_key / f".{commit}.lock"
+        with self._lock(lock):
+            if ready.is_file() and (cache / "build").is_dir():
+                return {
+                    "published": False,
+                    "already_present": True,
+                    "commit": commit,
+                    "dependency_key": dependency_key,
+                }
+            temporary = cache.parent / f".{commit}.tmp.{os.getpid()}.{secrets.token_hex(4)}"
+            shutil.rmtree(temporary, ignore_errors=True)
+            temporary.mkdir(parents=True)
+            try:
+                self._copy_build_tree(source, temporary / "build")
+                (temporary / "READY.json").write_text(
+                    json.dumps(
+                        {
+                            "commit": commit,
+                            "dependency_key": dependency_key,
+                            "created_at": time.time(),
+                        },
+                        sort_keys=True,
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                if cache.exists():
+                    shutil.rmtree(cache)
+                os.replace(temporary, cache)
+            finally:
+                shutil.rmtree(temporary, ignore_errors=True)
+        self._prune_project_cache(dependency_key)
+        return {
+            "published": True,
+            "commit": commit,
+            "dependency_key": dependency_key,
+            "cache_path": str(cache),
+        }
+
+    def _prune_project_cache(self, dependency_key: str) -> None:
+        with self._lock(self.project_cache / ".cache.lock"):
+            root = self.project_cache / dependency_key
+            entries = []
+            if not root.is_dir():
+                return
+            for path in root.iterdir():
+                ready = path / "READY.json"
+                if not path.is_dir() or not ready.is_file():
+                    continue
+                try:
+                    created_at = json.loads(ready.read_text(encoding="utf-8"))["created_at"]
+                except (OSError, KeyError, ValueError, TypeError, json.JSONDecodeError):
+                    continue
+                entries.append((float(created_at), path))
+            for _, path in sorted(entries, reverse=True)[self.project_cache_keep :]:
+                shutil.rmtree(path, ignore_errors=True)
+
     def _rehydrate(self, meta: dict) -> Path:
         token = meta["token"]
         project = Path(meta["path"])
@@ -210,7 +351,7 @@ class AgentWorkspaceManager:
                 self.before_replace(project)
             shutil.rmtree(project)
         commit = meta.get("published_commit") or meta.get("archive_commit")
-        self._clone(project, commit=commit)
+        project_cache = self._clone(project, commit=commit)
         if commit:
             self._run(["git", "switch", "-C", "main", commit], cwd=project)
         else:
@@ -220,6 +361,7 @@ class AgentWorkspaceManager:
             base_commit=commit,
             needs_rehydrate=False,
             rehydrated_at=time.time(),
+            project_cache=project_cache,
         )
         self._write_meta(meta)
         return project
@@ -252,9 +394,9 @@ class AgentWorkspaceManager:
                 }
                 self._write_meta(meta)
             with self._lock(self.state / f"{token}.lock"):
-                self._clone(project)
+                project_cache = self._clone(project)
                 head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
-                meta.update(base_commit=head, state="active")
+                meta.update(base_commit=head, state="active", project_cache=project_cache)
                 self._write_meta(meta)
                 resumed = False
         return self.describe(meta, resumed=resumed)
@@ -284,6 +426,7 @@ class AgentWorkspaceManager:
             "state": meta["state"],
             "base_commit": meta.get("base_commit"),
             "shared_dependency_key": self._dependency_key(project),
+            "project_cache": meta.get("project_cache", {"restored": False}),
             "retention_days": self.retention_days,
             "usage": (
                 "Pass workspace_token to every agent_workspace_* tool. Pass absolute paths "
@@ -353,6 +496,7 @@ class AgentWorkspaceManager:
         return sorted(set(paths))
 
     def apply_patch(self, token: str, patch: str) -> dict:
+        self._ensure_workspace_idle(token, "apply a patch")
         _, project = self._get(token)
         paths = self._patch_paths(project, patch)
         self._run(["git", "apply", "--check", "--whitespace=error-all", "-"], cwd=project, input_text=patch)
@@ -378,6 +522,7 @@ class AgentWorkspaceManager:
         }
 
     def sync(self, token: str) -> dict:
+        self._ensure_workspace_idle(token, "synchronize")
         meta, project = self._get(token, rehydrate=False)
         status = self._run(["git", "status", "--porcelain"], cwd=project)
         if status:
@@ -392,6 +537,7 @@ class AgentWorkspaceManager:
         return {"before": head, "after": after, "changed": head != after, "project_root": str(project)}
 
     def update_dependencies(self, token: str, package: str = "") -> dict:
+        self._ensure_workspace_idle(token, "update dependencies")
         if package and not PACKAGE_RE.fullmatch(package):
             raise ValueError("Invalid Lake package name")
         _, project = self._get(token)
@@ -404,6 +550,7 @@ class AgentWorkspaceManager:
         return {"updated": package or "all", "shared_dependency_key": key, "output": output[-12000:]}
 
     def run_code(self, token: str, code: str, timeout_seconds: int = 300) -> dict:
+        self._ensure_workspace_idle(token, "run Lean code")
         if not code.strip():
             raise ValueError("Lean code is empty")
         if len(code.encode("utf-8")) > MAX_PATCH_BYTES:
@@ -455,14 +602,22 @@ class AgentWorkspaceManager:
     def _build(self, project: Path) -> dict:
         started = time.monotonic()
         output = self._run(["lake", "build", "RiemannResearch", "--quiet"], cwd=project, timeout=3600)
-        return {
+        result = {
             "command": "lake build RiemannResearch --quiet",
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "output": "\n".join(output.splitlines()[-200:]),
-            "cache": "shared dependency artifacts; private per-clone .lake/build",
+            "cache": "shared dependencies and commit-keyed seed; private per-clone .lake/build",
         }
+        result["project_cache"] = self._publish_project_cache(project)
+        return result
+
+    def build(self, token: str) -> dict:
+        self._ensure_workspace_idle(token, "build")
+        _, project = self._get(token)
+        return self._build(project)
 
     def checkpoint(self, token: str, message: str, push: bool = True) -> dict:
+        self._ensure_workspace_idle(token, "checkpoint")
         message = message.strip()
         if not 5 <= len(message) <= 120 or "\n" in message:
             raise ValueError("Commit message must be one line containing 5-120 characters")
@@ -480,7 +635,14 @@ class AgentWorkspaceManager:
             self._run(["git", "commit", "-m", message], cwd=project)
         local_head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
         if not push:
-            return {"committed": bool(staged), "pushed": False, "commit": local_head, "build": build}
+            project_cache = self._publish_project_cache(project)
+            return {
+                "committed": bool(staged),
+                "pushed": False,
+                "commit": local_head,
+                "build": build,
+                "project_cache": project_cache,
+            }
 
         with self._lock(self.state / ".publish.lock"):
             self._run(["git", "fetch", "origin", "main"], cwd=project)
@@ -528,6 +690,13 @@ class AgentWorkspaceManager:
                 last_activity=time.time(),
             )
             self._write_meta(meta)
+        if not meta["needs_rehydrate"]:
+            project_cache = self._publish_project_cache(project)
+        else:
+            project_cache = {
+                "published": False,
+                "reason": "integrated commit cache was produced by the clean integration build",
+            }
         return {
             "committed": bool(staged),
             "pushed": True,
@@ -537,9 +706,243 @@ class AgentWorkspaceManager:
             "rehydrate_on_next_workspace_call": meta["needs_rehydrate"],
             "files": staged.splitlines(),
             "build": build,
+            "project_cache": project_cache,
         }
 
+    def _job_path(self, job_id: str) -> Path:
+        if not JOB_RE.fullmatch(job_id):
+            raise ValueError("Invalid job ID")
+        return self.jobs / f"{job_id}.json"
+
+    def _read_job(self, job_id: str) -> dict:
+        path = self._job_path(job_id)
+        if not path.is_file():
+            raise ValueError("Unknown job ID")
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    def _write_job(self, job: dict) -> None:
+        path = self._job_path(job["job_id"])
+        temporary = path.with_suffix(f".tmp.{os.getpid()}.{secrets.token_hex(4)}")
+        temporary.write_text(
+            json.dumps(job, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        os.replace(temporary, path)
+
+    def _recover_interrupted_jobs(self) -> None:
+        for path in self.jobs.glob("job_*.json"):
+            try:
+                job = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError, json.JSONDecodeError):
+                continue
+            if job.get("state") not in {"queued", "running"}:
+                continue
+            job.update(
+                state="interrupted",
+                finished_at=time.time(),
+                error=(
+                    "The MCP service restarted while this job was pending. Inspect workspace "
+                    "and Git status before submitting it again."
+                ),
+            )
+            self._write_job(job)
+
+    def _queue_position(self, job_id: str) -> int | None:
+        with self._job_guard:
+            if self._active_job == job_id:
+                return 0
+            with self._job_queue.mutex:
+                pending = list(self._job_queue.queue)
+            try:
+                return pending.index(job_id) + (1 if self._active_job else 0) + 1
+            except ValueError:
+                job = self._read_job(job_id)
+                return 1 if job.get("state") == "queued" else None
+
+    def _existing_job(self, token: str, kind: str) -> dict | None:
+        for path in self.jobs.glob("job_*.json"):
+            try:
+                job = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError, json.JSONDecodeError):
+                continue
+            if (
+                job.get("workspace_token") == token
+                and job.get("kind") == kind
+                and job.get("state") in {"queued", "running"}
+            ):
+                return job
+        return None
+
+    def _pending_job_for_workspace(self, token: str) -> dict | None:
+        for path in self.jobs.glob("job_*.json"):
+            try:
+                job = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError, json.JSONDecodeError):
+                continue
+            if (
+                job.get("workspace_token") == token
+                and job.get("state") in {"queued", "running"}
+            ):
+                return job
+        return None
+
+    def _ensure_workspace_idle(self, token: str, operation: str) -> None:
+        if getattr(self._job_local, "workspace_token", None) == token:
+            return
+        job = self._pending_job_for_workspace(token)
+        if job is not None:
+            raise RuntimeError(
+                f"Cannot {operation} while job {job['job_id']} is {job['state']}; "
+                "poll agent_workspace_job_status until it is terminal."
+            )
+
+    def _submit_job(self, token: str, kind: str, arguments: dict) -> dict:
+        self._meta_path(token)
+        if not self._meta_path(token).is_file():
+            raise ValueError("Unknown workspace token")
+        with self._job_guard:
+            existing = self._existing_job(token, kind)
+            if existing is not None:
+                job_id = existing["job_id"]
+                return {
+                    "accepted": False,
+                    "existing": True,
+                    "job_id": job_id,
+                    "state": existing["state"],
+                    "queue_position": self._queue_position_unlocked(job_id),
+                    "instruction": "Poll agent_workspace_job_status; do not resubmit.",
+                }
+            pending = self._pending_job_for_workspace(token)
+            if pending is not None:
+                raise RuntimeError(
+                    f"Workspace already has {pending['kind']} job {pending['job_id']} "
+                    f"{pending['state']}; poll it until terminal before submitting {kind}."
+                )
+            job_id = "job_" + secrets.token_urlsafe(24)
+            job = {
+                "job_id": job_id,
+                "workspace_token": token,
+                "kind": kind,
+                "arguments": arguments,
+                "state": "queued",
+                "submitted_at": time.time(),
+            }
+            self._write_job(job)
+            self._job_queue.put(job_id)
+            position = self._queue_position_unlocked(job_id)
+        return {
+            "accepted": True,
+            "job_id": job_id,
+            "state": "queued",
+            "queue_position": position,
+            "instruction": (
+                "Poll agent_workspace_job_status until state is succeeded, failed, or "
+                "interrupted. Do not resubmit while queued or running."
+            ),
+        }
+
+    def _queue_position_unlocked(self, job_id: str) -> int | None:
+        if self._active_job == job_id:
+            return 0
+        with self._job_queue.mutex:
+            pending = list(self._job_queue.queue)
+        try:
+            return pending.index(job_id) + (1 if self._active_job else 0) + 1
+        except ValueError:
+            job = self._read_job(job_id)
+            return 1 if job.get("state") == "queued" else None
+
+    def submit_build(self, token: str) -> dict:
+        return self._submit_job(token, "build", {})
+
+    def submit_build_for_project(self, project_path: str) -> dict:
+        project = Path(project_path).expanduser().resolve()
+        for path in self.state.glob("ws_*.json"):
+            try:
+                meta = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError, json.JSONDecodeError):
+                continue
+            registered = Path(meta.get("path", "")).resolve(strict=False)
+            if registered == project:
+                self._validate_workspace_path(meta["token"], registered)
+                return self.submit_build(meta["token"])
+        raise ValueError(
+            "lean_project_path must be the exact project_root returned by "
+            "agent_workspace_open"
+        )
+
+    def submit_checkpoint(self, token: str, message: str, push: bool = True) -> dict:
+        message = message.strip()
+        if not 5 <= len(message) <= 120 or "\n" in message:
+            raise ValueError("Commit message must be one line containing 5-120 characters")
+        return self._submit_job(token, "checkpoint", {"message": message, "push": push})
+
+    def submit_update_dependencies(self, token: str, package: str = "") -> dict:
+        if package and not PACKAGE_RE.fullmatch(package):
+            raise ValueError("Invalid Lake package name")
+        return self._submit_job(token, "update_dependencies", {"package": package})
+
+    def _execute_job(self, job: dict) -> dict:
+        token = job["workspace_token"]
+        arguments = job["arguments"]
+        self._job_local.workspace_token = token
+        try:
+            if job["kind"] == "build":
+                return self.build(token)
+            if job["kind"] == "checkpoint":
+                return self.checkpoint(token, arguments["message"], arguments["push"])
+            if job["kind"] == "update_dependencies":
+                return self.update_dependencies(token, arguments.get("package", ""))
+            raise RuntimeError(f"Unsupported job kind: {job['kind']}")
+        finally:
+            self._job_local.workspace_token = None
+
+    def _job_worker(self) -> None:
+        while True:
+            job_id = self._job_queue.get()
+            with self._job_guard:
+                self._active_job = job_id
+                job = self._read_job(job_id)
+                job.update(state="running", started_at=time.time())
+                self._write_job(job)
+            try:
+                result = self._execute_job(job)
+            except Exception as exc:
+                job.update(
+                    state="failed",
+                    finished_at=time.time(),
+                    error=f"{type(exc).__name__}: {exc}",
+                )
+            else:
+                job.update(state="succeeded", finished_at=time.time(), result=result)
+            finally:
+                self._write_job(job)
+                with self._job_guard:
+                    self._active_job = None
+                self._job_queue.task_done()
+
+    def job_status(self, job_id: str) -> dict:
+        job = self._read_job(job_id)
+        now = time.time()
+        response = {
+            key: value
+            for key, value in job.items()
+            if key not in {"arguments"}
+        }
+        response["queue_position"] = self._queue_position(job_id)
+        response["elapsed_seconds"] = round(
+            (job.get("finished_at", now) - job.get("started_at", job["submitted_at"])),
+            3,
+        )
+        response["terminal"] = job["state"] in {
+            "succeeded",
+            "failed",
+            "interrupted",
+        }
+        return response
+
     def reset(self, token: str, confirmation_token: str = "") -> dict:
+        self._ensure_workspace_idle(token, "reset")
         meta, project = self._get(token, rehydrate=False)
         status = self._run(["git", "status", "--porcelain"], cwd=project)
         head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
@@ -597,6 +1000,13 @@ class AgentWorkspaceManager:
                 if meta.get("last_activity", 0) >= cutoff or not project.is_dir():
                     continue
                 self._validate_workspace_path(token, project)
+                pending_job = self._pending_job_for_workspace(token)
+                if pending_job is not None:
+                    preserved.append({
+                        "workspace_token": token,
+                        "reason": f"queued or running job {pending_job['job_id']}",
+                    })
+                    continue
                 if self.can_archive is not None and not self.can_archive(project):
                     preserved.append({
                         "workspace_token": token,

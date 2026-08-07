@@ -41,10 +41,12 @@
 - Move a result from the conditional section to the established section only
   after all cataloged research obligations are supplied by checked
   declarations and the resulting specialized theorem passes the full build.
-- Verify edited files with the Lean tools and run
-  `lake build RiemannResearch --quiet` before checkpointing.
+- Verify edited files with the Lean tools. Queue full builds with `lean_build`
+  using the exact `project_root`; poll `agent_workspace_job_status` until terminal.
 - Do not introduce `sorry`, `admit`, project-local `axiom` declarations, or `unsafe` declarations.
-- After a successful material change, checkpoint and push it to `origin/main`; report the commit SHA.
+- After a successful material change, queue `agent_workspace_checkpoint` with
+  push enabled, poll its returned job ID until it succeeds, and report the
+  published commit SHA. Never resubmit a queued or running job.
 - Never force-push, rebase, stash, create merge commits, discard local work, or pull into a dirty or diverged tree. Stop and report the condition instead.
 - Treat `workspace_reset` as a destructive fail-safe only. First preview it without a token, show exactly what would be discarded, obtain explicit user permission in the current chat, and only then invoke it with the returned confirmation token. Never run it automatically.
 
@@ -61,6 +63,15 @@
 - Each agent clone owns its Git working tree and project `.lake/build`. Exact
   dependency environments are content-addressed and shared read-mostly, so
   Mathlib artifacts are not rebuilt per agent.
+- Successful clean builds publish an immutable project-artifact seed keyed by
+  the exact Git commit and dependency environment. Fresh clones copy or reflink
+  that seed into their private `.lake/build`; agents never share a writable
+  project build directory.
+- Full builds, dependency updates, and checkpoints run through one persistent
+  FIFO worker. Submission returns immediately with a job ID. Poll
+  `agent_workspace_job_status` and wait behind earlier jobs instead of retrying
+  the operation. The familiar `lean_build` name is retained but now submits to
+  this queue.
 - Publish only with `agent_workspace_checkpoint`. Publication is serialized and,
   if `origin/main` advanced, is replayed and built in a clean integration clone
   before a non-force push.
@@ -92,6 +103,8 @@
 
 ## Project commands
 
-- Project build: `lake build RiemannResearch --quiet`
+- Agent project build: `lean_build` with the exact isolated `project_root`,
+  followed by `agent_workspace_job_status` polling
+- Host diagnostic build: `lake build RiemannResearch --quiet`
 - Verify one file: `lake env lean path/to/File.lean`
 - Search text: `rg "pattern" RiemannResearch`

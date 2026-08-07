@@ -20,7 +20,7 @@ from lean_lsp_mcp.server import mcp
 from agent_workspaces import AgentWorkspaceManager
 
 
-WORKFLOW_INSTRUCTIONS = """For every new or concurrent Lean task, first call agent_workspace_open without a token and retain its workspace_token and project_root for the life of the chat. Resume an earlier task by calling agent_workspace_open with its saved token. Use only agent_workspace_* persistence tools for that clone. Pass absolute paths beneath project_root to Lean file, diagnostic, search, and build tools; use agent_workspace_run_code for ephemeral snippets and never use relative paths. Search existing project and Mathlib declarations before constructing a proof. Verify Lean code, save every successful material proof unless the user explicitly requests exploration only, then call agent_workspace_checkpoint with push enabled and report its published commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. Treat agent_workspace_reset as a destructive fail-safe: preview it without a confirmation token, show the exact plan, obtain explicit user permission, and only then submit the returned token. The shared canonical workspace_* persistence tools are retired; use agent_workspace_* exclusively. Before substantive work, read and follow the clone's repository-root AGENTS.md. Distinguish informal mathematical arguments from kernel-verified Lean proofs. If Lean decisively invalidates user-supplied logic, lead the response with '## Lean found a problem' and the exact evidence."""
+WORKFLOW_INSTRUCTIONS = """For every new or concurrent Lean task, first call agent_workspace_open without a token and retain its workspace_token and project_root for the life of the chat. Resume an earlier task by calling agent_workspace_open with its saved token. Use only agent_workspace_* persistence tools for that clone. Pass absolute paths beneath project_root to Lean file, diagnostic, search, and build tools; use agent_workspace_run_code for ephemeral snippets and never use relative paths. Search existing project and Mathlib declarations before constructing a proof. Long builds, dependency updates, and checkpoints use a persistent FIFO queue: submit them once, then poll agent_workspace_job_status until the job is terminal; never resubmit a queued or running job. lean_build now queues a build and returns a job ID instead of holding the transport open. Verify Lean code, save every successful material proof unless the user explicitly requests exploration only, then call agent_workspace_checkpoint with push enabled, wait for the job to succeed, and report its published commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. Treat agent_workspace_reset as a destructive fail-safe: preview it without a confirmation token, show the exact plan, obtain explicit user permission, and only then submit the returned token. The shared canonical workspace_* persistence tools are retired; use agent_workspace_* exclusively. Before substantive work, read and follow the clone's repository-root AGENTS.md. Distinguish informal mathematical arguments from kernel-verified Lean proofs. If Lean decisively invalidates user-supplied logic, lead the response with '## Lean found a problem' and the exact evidence."""
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
 mcp._mcp_server.instructions = (
@@ -697,28 +697,70 @@ def agent_workspace_sync(workspace_token: str) -> dict:
 @mcp.tool(
     name="agent_workspace_update_deps",
     description=(
-        "Update Lake dependencies in one isolated clone, then attach the matching "
-        "content-addressed shared dependency environment."
+        "Queue a Lake dependency update and return immediately with a job ID. Poll "
+        "agent_workspace_job_status until the job is terminal."
     ),
 )
 def agent_workspace_update_deps(
     workspace_token: str, package: str = ""
 ) -> dict:
-    return AGENT_WORKSPACES.update_dependencies(workspace_token, package)
+    return AGENT_WORKSPACES.submit_update_dependencies(workspace_token, package)
+
+
+mcp.remove_tool("lean_build")
+
+
+@mcp.tool(
+    name="lean_build",
+    description=(
+        "Queue an incremental build for an isolated agent project and return immediately "
+        "with a job ID. Poll agent_workspace_job_status until terminal. Clean builds and "
+        "dependency-cache downloads are intentionally refused."
+    ),
+)
+def queued_lean_build(
+    lean_project_path: str | None = None,
+    clean: bool = False,
+    fetch_cache: bool = False,
+    output_lines: int = 30,
+) -> dict:
+    if not lean_project_path:
+        raise ValueError(
+            "lean_project_path is required and must equal project_root from "
+            "agent_workspace_open"
+        )
+    if clean:
+        raise ValueError("Queued agent builds do not permit lake clean")
+    if fetch_cache:
+        raise ValueError("Dependencies are already supplied by the shared cache")
+    if not 0 <= output_lines <= 10000:
+        raise ValueError("output_lines must be between 0 and 10000")
+    return AGENT_WORKSPACES.submit_build_for_project(lean_project_path)
 
 
 @mcp.tool(
     name="agent_workspace_checkpoint",
     description=(
-        "Audit and incrementally build one isolated clone, commit its work locally, "
-        "then publish transactionally under a global lock. If main advanced, validate "
-        "a clean integration clone before pushing."
+        "Queue audit, incremental build, commit, and transactional publication for one "
+        "isolated clone. Returns a job ID immediately; poll agent_workspace_job_status "
+        "until terminal and report the published commit only after success."
     ),
 )
 def agent_workspace_checkpoint(
     workspace_token: str, message: str, push: bool = True
 ) -> dict:
-    return AGENT_WORKSPACES.checkpoint(workspace_token, message, push)
+    return AGENT_WORKSPACES.submit_checkpoint(workspace_token, message, push)
+
+
+@mcp.tool(
+    name="agent_workspace_job_status",
+    description=(
+        "Return queue position, elapsed time, and terminal result for a queued Lean "
+        "build, dependency update, or checkpoint. Poll until terminal is true."
+    ),
+)
+def agent_workspace_job_status(job_id: str) -> dict:
+    return AGENT_WORKSPACES.job_status(job_id)
 
 
 @mcp.tool(
@@ -756,8 +798,8 @@ def agent_workspace_run_code(
 
 # The ChatGPT connector currently advertises at most 32 tools. Remove the
 # shared canonical persistence API and pathless/niche upstream tools so the
-# advertised surface is exactly 21 path-aware Lean tools plus 11 isolated
-# workspace tools.
+# advertised surface is exactly 20 path-aware Lean tools plus 12 isolated
+# workspace tools. Long build operations are exposed only through the queue.
 for _retired_tool in (
     "workspace_list_files",
     "workspace_read_file",
@@ -770,6 +812,7 @@ for _retired_tool in (
     "workspace_checkpoint",
     "lean_run_code",
     "lean_get_widget_source",
+    "lean_profile_proof",
 ):
     mcp.remove_tool(_retired_tool)
 

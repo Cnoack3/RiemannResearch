@@ -1,6 +1,8 @@
 import os
 import subprocess
 import tempfile
+import threading
+import time
 from pathlib import Path
 
 from agent_workspaces import AgentWorkspaceManager
@@ -11,6 +13,12 @@ def run(args, cwd):
 
 
 class TestManager(AgentWorkspaceManager):
+    def __init__(self, *args, **kwargs):
+        self.test_build_guard = threading.Lock()
+        self.active_test_builds = 0
+        self.max_active_test_builds = 0
+        super().__init__(*args, **kwargs)
+
     def _attach_dependencies(self, project):
         return "test-deps"
 
@@ -18,7 +26,18 @@ class TestManager(AgentWorkspaceManager):
         return "test-deps"
 
     def _build(self, project):
-        return {"command": "test-build", "elapsed_seconds": 0}
+        with self.test_build_guard:
+            self.active_test_builds += 1
+            self.max_active_test_builds = max(
+                self.max_active_test_builds,
+                self.active_test_builds,
+            )
+        try:
+            time.sleep(0.2)
+            return {"command": "test-build", "elapsed_seconds": 0}
+        finally:
+            with self.test_build_guard:
+                self.active_test_builds -= 1
 
 
 with tempfile.TemporaryDirectory() as raw:
@@ -45,6 +64,7 @@ with tempfile.TemporaryDirectory() as raw:
     os.environ["LEAN_AGENT_WORKSPACES_ROOT"] = str(temp / "workspaces")
     os.environ["LEAN_AGENT_WORKSPACES_STATE"] = str(temp / "state")
     os.environ["LEAN_SHARED_DEPS_ROOT"] = str(temp / "shared")
+    os.environ["LEAN_SHARED_PROJECT_BUILDS_ROOT"] = str(temp / "shared-project-builds")
     fake_bin = temp / "bin"
     fake_bin.mkdir()
     fake_lake = fake_bin / "lake"
@@ -65,10 +85,45 @@ with tempfile.TemporaryDirectory() as raw:
     )
 
     first = manager.open()
+    first_root = Path(first["project_root"])
+    seeded_artifact = first_root / ".lake" / "build" / "lib" / "Seeded.olean"
+    seeded_artifact.parent.mkdir(parents=True)
+    seeded_artifact.write_text("cached-project-artifact\n")
+    cache_result = manager._publish_project_cache(first_root)
+    assert cache_result["published"]
     second = manager.open()
+    assert second["project_cache"]["restored"]
+    restored_artifact = Path(second["project_root"]) / ".lake" / "build" / "lib" / "Seeded.olean"
+    assert restored_artifact.read_text() == "cached-project-artifact\n"
     assert first["project_root"] != second["project_root"]
     first_token = first["workspace_token"]
     second_token = second["workspace_token"]
+    first_job = manager.submit_build_for_project(first["project_root"])
+    duplicate_job = manager.submit_build(first_token)
+    second_job = manager.submit_build(second_token)
+    assert duplicate_job["existing"]
+    assert duplicate_job["job_id"] == first_job["job_id"]
+    assert second_job["queue_position"] is not None
+    try:
+        manager.submit_checkpoint(first_token, "Blocked checkpoint")
+        raise AssertionError("a second job kind was queued for the same workspace")
+    except RuntimeError as exc:
+        assert first_job["job_id"] in str(exc)
+    try:
+        manager.run_code(first_token, "theorem blocked : True := by trivial\n")
+        raise AssertionError("workspace mutation was allowed while a build was queued")
+    except RuntimeError as exc:
+        assert first_job["job_id"] in str(exc)
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        first_status = manager.job_status(first_job["job_id"])
+        second_status = manager.job_status(second_job["job_id"])
+        if first_status["terminal"] and second_status["terminal"]:
+            break
+        time.sleep(0.01)
+    assert first_status["state"] == "succeeded"
+    assert second_status["state"] == "succeeded"
+    assert manager.max_active_test_builds == 1
     run_ok = manager.run_code(first_token, "theorem scratch : True := by trivial\n")
     assert run_ok["verified"] and "simulated-verified" in run_ok["output"]
     run_bad = manager.run_code(first_token, "FAIL\n")
