@@ -80,8 +80,8 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Corollary 6.13 | Unverified | Depends on Theorems 6.11 and 6.12. |
 | Corollary 6.14 | Citation/computation conditional | Depends on Proposition 6.12 and the corrected Gille marker lemma. |
 | Proposition 6.15 | Exact order arithmetic in Lean; group/gauge statement unverified | serreIIProgram_binaryIcosahedral_index_arithmetic checks the displayed orders and indices. The nonsplit lift and descent inputs remain external. |
-| Proposition 6.16 | Computation and citation conditional | Requires missing subsystem-orbit data, classical Serre II, and the lift data of Proposition 6.12. |
-| Proposition 6.17 | Unreproduced computation | The twelve triality tests require the absent root-action script. |
+| Proposition 6.16 | Finite subsystem-orbit input reproduced; theorem still citation conditional | `binaryIcosahedralSubsystemOrbitData_has_small_orbits` checks that every certified projective A5 row has a degree-five (D4)^2 orbit and a degree-six (A4)^2 orbit. The TomLib row/action identification is an external certificate; classical Serre II and the descent argument remain unformalized. |
+| Proposition 6.17 | Numerical orbit count reproduced; outer-triality action unverified | The compressed certificate and `binaryIcosahedral_degreeFiveOrbit_total` check the twelve degree-five orbits. They do not prove that the order-three action on a D4 factor is outer trialitarian. |
 | Proposition 6.19 | Manuscript only | The oriented transporter and bitorsor descent are not formalized. |
 | Proposition 6.21 | Additive restriction and abstract kernel checked | `h1Restriction_tower` instantiates additive (H^1) restriction and its tower law; `eq_zero_of_coprime_restrictions` checks the coprime detection step. Cohomological corestriction and the restriction--corestriction index formula remain unformalized. |
 | Proposition 6.22 | Manuscript only | The Weil-restriction dimension and density argument is not formalized. |

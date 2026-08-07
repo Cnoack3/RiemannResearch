@@ -214,7 +214,7 @@ in the supplied artifacts, so their triality types remain unverified.
   pointed-set step for cyclic kernel theorems along a solvable composition
   series; it does not prove the cyclic E8 theorem.
 
-All thirty-three supporting files build in the full project and use no `sorry`
+All thirty-four supporting files build in the full project and use no `sorry`
 or new axioms.
 
 ## Source-audited advances across manuscript revisions
@@ -310,6 +310,12 @@ output.
   `GroupTheory/ModTwoFixedReduction.lean`; the nonsplitting deduction from a
   perfect lift with nontrivial central kernel is kernel checked in
   `GroupTheory/CentralExtension.lean`.
+- `Certificates/A5_SUBSYSTEM_ORBITS_CERTIFICATE.md` contains the rerunnable
+  table-of-marks script and raw output for the four triality-aligned projective
+  A5 rows. `BinaryIcosahedralSubsystemOrbits.lean` checks the compressed
+  orbit histograms, the degree-five multiplicities `[5,5,1,1]`, six
+  degree-six orbits in every row, and the total of twelve degree-five orbits.
+  It does not assert the outer-triality action on either D4 factor.
 - The old 303 row-by-row orbit gcd computation is no longer needed. The Lean
   theorem
   `omegaEightPlusTwo_subsystemOrbitDegree_commonDivisor_eq_one` proves the
@@ -324,9 +330,11 @@ classification plus source-level matching supplies the geometric identification
 of the eight subsystem-stabilizer columns.
 
 The Appendix-A matrix row remains reproduced by exact integer computation and
-Lean reflection certificates. The separate root-subsystem and triality tests
-for the three binary lattice embeddings not represented by those matrices are
-not exercised by the restored O8+(2) certificates and remain
+Lean reflection certificates. The subsystem-orbit data for all four projective
+A5 rows are now reproduced by the certificate above, so the finite orbit input
+to Proposition 6.16 and the numerical count of twelve orbits in Proposition
+6.17 are no longer missing. The stronger assertion that an order-three quotient
+acts by outer triality on a D4 factor is not checked and remains
 computer-conditional.
 
 ## Exact remaining gap and scope
