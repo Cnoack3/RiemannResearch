@@ -232,6 +232,8 @@ unreproduced computer-assisted claims, see `E8/SERRE_II_PROOF_AUDIT.md`.
 | `RiemannResearch.Motives.isRostNilpotentAt_comp` | `RiemannResearch.Motives.RostNilpotence` | Objectwise Rost-nilpotence composes along additive functors | Kernel checked |
 | `RiemannResearch.Motives.lift_complete_projector_family_of_isRostNilpotentAt` | `RiemannResearch.Motives.RostNilpotence` | A finite complete orthogonal projector family in the image lifts along an additive functor with Rost-nilpotent endomorphism kernel | Kernel checked abstract categorical theorem; no Chow-motive geometry asserted |
 | `RiemannResearch.RH.Statement` | `RiemannResearch.RH.Basic` | Stable local name for mathlib's RH proposition | Kernel checked |
+| `RiemannResearch.E8.finiteEtaleKernelNorm_of_subsingleton_target` | `RiemannResearch.E8.SerreIICompletionTargets` | If the target pointed set is a subsingleton, every finite-etale kernel-norm conclusion is automatic | Kernel checked reverse implication underlying Proposition 6.35 |
+| `RiemannResearch.E8.zmodTwo_diagonalKernelNorm_counterexample` | `RiemannResearch.E8.SerreIICompletionTargets` | Degree-three restriction--corestriction, a two-torsion class, Bezout congruence, and local neutrality do not force diagonal neutrality for an arbitrary pointed classifier | Kernel checked abstract countermodel; explicitly not an E8 counterexample |
 
 ## Conditional research reductions
 
@@ -246,6 +248,7 @@ unconditional proofs of the motivating named theorems.
 | `RiemannResearch.E8.serreII_of_oddDegreePointDescent` | `RiemannResearch.E8.SerreIICompletionTargets` | Odd-degree splitting, an all-extension point/neutrality equivalence, and odd-degree point descent imply neutrality of every candidate class | Kernel checked implication; the E8-specific inputs below remain open |
 | `RiemannResearch.E8.serreII_of_compatibleLocalGauges` | `RiemannResearch.E8.SerreIICompletionTargets` | A common gauge on a generating family makes every selected nonabelian cocycle a global coboundary | Kernel checked implication; existence of the E8 common gauges remains open |
 | `RiemannResearch.E8.serreII_of_diagonalKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | One diagonal toral restriction--corestriction value in the neutral fiber, with the index formulas and a positive Bezout congruence, forces the original toral class to map to the neutral class | Kernel checked implication; the E8 diagonal kernel-norm input remains open |
+| `RiemannResearch.E8.serreII_of_finiteEtaleKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | Componentwise neutrality in a repeated finite-etale product, the product kernel-norm principle, index formulas, and a positive Bezout congruence force the original toral class to map to the neutral class | Kernel checked finite-etale formulation of Proposition 6.34; the E8 product kernel-norm input remains open |
 
 ### Open obligations: `quasisimpleCoreOfFullWeylDescent`
 
@@ -295,14 +298,16 @@ unconditional proofs of the motivating named theorems.
 | `commonGauge` | The prime-local E8 trivialization cosets have a nonempty total intersection for every candidate cocycle | **Open**; this is completion target B |
 | E8 specialization | Identify algebraic E8 torsors with the discrete nonabelian cocycles selected by `Candidate`, and supply the generating prime-local gauges | **Open** |
 
-### Open obligations: `serreII_of_diagonalKernelNorm`
+### Open obligations: diagonal kernel-norm completion targets
 
 | Hypothesis binder | Required mathematical input | Provider / status |
 |---|---|---|
 | `hindex` | Torus-H¹ restriction followed by corestriction is multiplication by the field degree | The abstract additive formula is kernel checked elsewhere; the algebraic torus-H¹ specialization remains **open** |
 | `he` | The selected torus-H¹ class has a positive annihilator | Standard finite-splitting-field input; a project provider remains **open** |
 | `hcoefficient` | Nonnegative multiplicities give total degree congruent to one modulo the annihilator | Arithmetic datum; supplied case-by-case from gcd-one subsystem degrees |
+| `hrestrictedKernel` | Every selected subsystem-field restriction of the toral class maps to the local neutral E8 class | Claimed by the subsystem-field construction; algebraic E8 providers remain **open** |
 | `hkernelNorm` | The single diagonal corestriction value maps to the neutral E8 class | **Open**; this is completion target C |
+| `finiteEtaleKernelNorm` | Componentwise local kernel membership is preserved by corestriction from the repeated finite-etale product | **Open**; this is Conjecture 6.33. The abstract countermodel `zmodTwo_diagonalKernelNorm_counterexample` proves it does not follow from the additive transfer and Bezout data alone. |
 
 ## Planned research areas
 

@@ -15,6 +15,14 @@ literature already contains a proof.
 5. **Conjecture 6.33:** the diagonal finite-etale kernel norm.
 
 Proposition 6.35 is an equivalence with E8 Serre II, not independent evidence.
+Lean now checks its easy reverse direction in
+`finiteEtaleKernelNorm_of_subsingleton_target` and checks the forward
+finite-etale assembly, conditional on Conjecture 6.33, in
+`serreII_of_finiteEtaleKernelNorm`. The conjecture itself remains open.
+Thang's corestriction theorem proves the required kernel principle over local
+and global characteristic-zero fields, not arbitrary fields of cohomological
+dimension at most two. Barquero--Merkurjev's norm principle is tautological for
+centerless E8, and Bhaskhar's injectivity theorem explicitly excludes E8.
 
 ## B. Resolved convention and statements requiring correction
 

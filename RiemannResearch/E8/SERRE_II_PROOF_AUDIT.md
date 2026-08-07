@@ -448,6 +448,18 @@ equivalence at the discrete cocycle level.
 The D2E restriction--corestriction identity is exact but tautological at its
 last step: the resulting difference is the original torus class, and asking it
 to lie in the pointed torus kernel is exactly asking that `ξ` be neutral.
+The same boundary is now kernel checked for the finite-etale formulation.
+`serreII_of_finiteEtaleKernelNorm` proves the repeated-product diagonal
+assembly of Proposition 6.34, while
+`finiteEtaleKernelNorm_of_subsingleton_target` proves the reverse direction
+of Proposition 6.35 once the E8 cohomology target is a subsingleton.
+`zmodTwo_diagonalKernelNorm_counterexample` supplies an abstract model in
+which the restriction--corestriction degree formula, a positive annihilator,
+the Bezout congruence, and local neutral fibers all hold but the diagonal
+corestriction is nonneutral. Thus the missing kernel-norm hypothesis cannot be
+recovered from additive transfer alone. Thang proves it over local/global
+characteristic-zero fields; the cited norm-principle results do not extend it
+to arbitrary cohomological-dimension-two fields in type E8.
 Likewise finite-module cohomology does not remove the same-field Kummer defect
 `κ_{E,120}(α)`; multiplication by 120 on `T(E)` need not be surjective.
 

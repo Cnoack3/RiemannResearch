@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
+import Mathlib.Data.ZMod.Basic
 import RiemannResearch.GaloisCohomology.LocalGaugeTransporter
 import RiemannResearch.GroupTheory.CoprimeRestriction
 
@@ -18,6 +19,11 @@ This module kernel-checks three implication patterns isolated in the
 * the single diagonal kernel-norm value, together with the
   restriction--corestriction degree formula and a positive Bezout congruence,
   proves neutrality.
+
+The finite-etale formulation below makes the last input explicit as a
+componentwise neutral tuple. A concrete `ZMod 2` countermodel shows that the
+additive transfer and Bezout identities alone cannot prove that this tuple's
+corestriction remains in the neutral fiber.
 
 These are conditional assembly theorems. They do not prove odd-degree descent,
 existence of compatible E8 gauges, or the diagonal E8 kernel-norm hypothesis.
@@ -119,5 +125,84 @@ theorem serreII_of_diagonalKernelNorm
       he, smul_zero, add_zero]
   rw [hcorestriction, hmultiple] at hkernelNorm
   exact hkernelNorm
+
+/-- The finite-etale form of completion target C. The product algebra is
+encoded by a finite family of component cohomology groups together with
+nonnegative multiplicities. Componentwise membership in the local neutral
+fibers and the finite-etale kernel-norm principle supply the single diagonal
+hypothesis used by `serreII_of_diagonalKernelNorm`. -/
+theorem serreII_of_finiteEtaleKernelNorm
+    {ι A X : Type*} [AddCommGroup A]
+    (B : ι → Type*) [∀ i, AddCommGroup (B i)]
+    (Y : ι → Type*)
+    (neutral : X) (localNeutral : ∀ i, Y i)
+    (toClass : A → X) (localClass : ∀ i, B i → Y i)
+    (s : Finset ι) (degree multiplicity : ι → ℕ)
+    (res : ∀ i, A →+ B i) (cor : ∀ i, B i →+ A)
+    (hindex : ∀ i x, cor i (res i x) = degree i • x)
+    {a : A} {e q : ℕ}
+    (he : e • a = 0)
+    (hcoefficient :
+      ∑ i ∈ s, multiplicity i * degree i = 1 + q * e)
+    (hrestrictedKernel :
+      ∀ i ∈ s, localClass i (res i a) = localNeutral i)
+    (finiteEtaleKernelNorm :
+      ∀ x : ∀ i, B i,
+        (∀ i ∈ s, localClass i (x i) = localNeutral i) →
+        toClass (∑ i ∈ s, multiplicity i • cor i (x i)) = neutral) :
+    toClass a = neutral := by
+  apply serreII_of_diagonalKernelNorm B neutral toClass s degree multiplicity
+    res cor hindex he hcoefficient
+  apply finiteEtaleKernelNorm (fun i => res i a)
+  exact hrestrictedKernel
+
+/-- The reverse implication in Proposition 6.35 at one base field: if the
+target pointed set is a subsingleton (the Serre-II conclusion), then every
+finite-etale kernel-norm statement is automatic. -/
+theorem finiteEtaleKernelNorm_of_subsingleton_target
+    {ι A X : Type*} [AddCommGroup A] [Subsingleton X]
+    (B : ι → Type*) [∀ i, AddCommGroup (B i)]
+    (Y : ι → Type*)
+    (neutral : X) (localNeutral : ∀ i, Y i)
+    (toClass : A → X) (localClass : ∀ i, B i → Y i)
+    (s : Finset ι) (multiplicity : ι → ℕ)
+    (cor : ∀ i, B i →+ A) :
+    ∀ x : ∀ i, B i,
+      (∀ i ∈ s, localClass i (x i) = localNeutral i) →
+      toClass (∑ i ∈ s, multiplicity i • cor i (x i)) = neutral := by
+  intro x hx
+  exact Subsingleton.elim _ _
+
+/-- The additive restriction--corestriction and Bezout data do not imply the
+diagonal kernel-norm principle. In `ZMod 2`, identity restriction and
+corestriction obey the degree-three formula, the chosen class is killed by
+two, and its restriction lies in a constant local neutral fiber, while its
+corestriction is nonneutral for the identity base classifier.
+
+This is an abstract obstruction, not an E8 counterexample. -/
+theorem zmodTwo_diagonalKernelNorm_counterexample :
+    let A := ZMod 2
+    let res : A →+ A := AddMonoidHom.id A
+    let cor : A →+ A := AddMonoidHom.id A
+    let localClass : A → Unit := fun _ => ()
+    let toClass : A → A := id
+    let a : A := 1
+    (∀ x, cor (res x) = 3 • x) ∧
+      2 • a = 0 ∧
+      3 = 1 + 1 * 2 ∧
+      localClass (res a) = () ∧
+      toClass (cor (res a)) ≠ 0 := by
+  dsimp
+  constructor
+  · intro x
+    rw [show 3 = 1 + 2 by omega, add_nsmul, one_nsmul,
+      CharTwo.two_nsmul, add_zero]
+  constructor
+  · exact CharTwo.two_nsmul 1
+  constructor
+  · norm_num
+  constructor
+  · rfl
+  · norm_num
 
 end RiemannResearch.E8

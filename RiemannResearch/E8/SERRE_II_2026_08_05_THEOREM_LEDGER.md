@@ -91,9 +91,9 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Theorem 6.30 | Abstract projective/lifted generation and common-fixed-point implications in Lean; computation conditional | iSup_eq_top_of_setGcd_indices proves projective generation from gcd-one indices; iSup_comap_eq_top_of_surjective lifts any nonempty generating family through the central quotient; GeneratedFixedPoint.lean proves the common-fixed-point step. The concrete subgroup indices still depend on Theorem 6.10's unreproduced GAP data. |
 | Corollary 6.31 | Unverified | Depends on Theorems 6.10 and 6.30. |
 | Proposition 6.32 | Exact additive Burnside-basis top-mark obstruction in Lean | `not_mem_addSubgroup_closure_of_mark` proves the abstract mark argument, while `BurnsideAdditive.unit_not_mem_span_properTransitiveOrbits` instantiates it in the free abelian group on conjugacy classes of transitive finite orbit types `G/H`. The multiplicative Burnside ring and its comparison with a categorical finite-`G`-set Grothendieck completion remain unformalized. |
-| Proposition 6.34 | Conditional on an open conjecture | The implication uses Conjecture 6.33, Theorems 6.1 and 6.10, and quadratic descent. |
-| Proposition 6.35 | Open-equivalence reformulation | The printed equivalence is not independent progress beyond the unresolved E8 case. |
-| Lemma 6.36 | **Lean exact abstract kernel** | eq_zero_of_gcd_one_annihilators proves the finite Bezout-annihilator argument. Applying it to H1 still requires the stated restriction--corestriction maps and formulas. |
+| Proposition 6.34 | **Finite-etale assembly kernel checked; decisive input open** | `serreII_of_finiteEtaleKernelNorm` formalizes repetitions, componentwise local kernel membership, the product corestriction, and the Bezout step. Conjecture 6.33, the algebraic E8 specialization of Theorems 6.1 and 6.10, and quadratic descent remain open. |
+| Proposition 6.35 | **Reverse implication kernel checked; forward direction remains Proposition 6.34** | `finiteEtaleKernelNorm_of_subsingleton_target` proves that a subsingleton E8-H¹ target makes every product kernel-norm conclusion automatic. Thus the full equivalence is still a reformulation, not independent progress. |
+| Lemma 6.36 | **Lean exact abstract kernel** | `eq_zero_of_gcd_one_annihilators` proves the finite Bezout-annihilator argument, and `h1RestrictionViaCocycles_comp_h1CorestrictionFiniteIndex` supplies abstract additive H¹ restriction--corestriction for arbitrary finite-index subgroups. The algebraic torus-H¹ specialization remains open. |
 
 ## Section 7
 
@@ -113,7 +113,7 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Conjecture 5.2 | Open odd-degree Borel descent. The cited E6 comparison is an index-one-to-point theorem for selected flags, not literally a single-extension odd-degree theorem. |
 | Conjecture 5.3 | Open odd-degree EVIII descent. |
 | Question 5.22 | Open full-Weyl toral neutrality question. |
-| Conjecture 6.33 | Open finite-etale kernel norm principle; the product-algebra kernel and componentwise corestriction conventions need formal definitions. |
+| Conjecture 6.33 | Open finite-etale kernel norm principle. The repeated-product and componentwise conventions are now formalized by `serreII_of_finiteEtaleKernelNorm`; `zmodTwo_diagonalKernelNorm_counterexample` shows that additive transfer, annihilation, Bezout, and local neutrality alone do not prove the principle. |
 
 ## Artifact conventions and defects
 
