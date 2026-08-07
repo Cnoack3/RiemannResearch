@@ -14,7 +14,7 @@ import time
 from pathlib import Path
 
 from lean_lsp_mcp import main as lean_lsp_main
-from lean_lsp_mcp.client_utils import close_shared_client
+from lean_lsp_mcp import client_utils as lean_client_utils
 from lean_lsp_mcp.server import mcp
 
 from agent_workspaces import AgentWorkspaceManager
@@ -32,11 +32,36 @@ PROJECT_ROOT = Path(os.environ["LEAN_WORKSPACE_ROOT"]).expanduser().resolve()
 EXPECTED_REMOTE = os.environ.get(
     "LEAN_WORKSPACE_REMOTE", "https://github.com/Cnoack3/RiemannResearch.git"
 )
+
+
+def _bounded_env_int(name: str, default: int, minimum: int, maximum: int) -> int:
+    raw = os.environ.get(name, str(default))
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise ValueError(`${name} must be an integer`) from exc
+    if not minimum <= value <= maximum:
+        raise ValueError(`${name} must be between ${minimum} and ${maximum}`)
+    return value
+
+
+MAX_SHARED_LEAN_CLIENTS = _bounded_env_int(
+    "LEAN_MAX_SHARED_CLIENTS", 16, 1, 64
+)
+WORKSPACE_RETENTION_DAYS = _bounded_env_int(
+    "LEAN_WORKSPACE_RETENTION_DAYS", 90, 30, 3650
+)
+# lean-lsp-mcp 0.29.0 hard-codes this private cap at eight. Pinning that
+# package version in the service makes this narrow override deterministic.
+lean_client_utils._MAX_SHARED_CLIENTS = MAX_SHARED_LEAN_CLIENTS
 MAX_READ_BYTES = 1_000_000
 MAX_PATCH_BYTES = 2_000_000
 
 AGENT_WORKSPACES = AgentWorkspaceManager(
-    PROJECT_ROOT, EXPECTED_REMOTE, before_replace=close_shared_client
+    PROJECT_ROOT,
+    EXPECTED_REMOTE,
+    before_replace=lean_client_utils.close_shared_client,
+    retention_days=WORKSPACE_RETENTION_DAYS,
 )
 
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
