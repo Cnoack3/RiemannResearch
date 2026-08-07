@@ -307,8 +307,9 @@ The types Geometry and Motive and the relations GeometryIso and MotiveIso are
 abstract interfaces for geometric theories not yet present in Mathlib. Their
 fields state the scheme and motive formulas exactly at that interface.
 
-The final six fields are fully derived statements about point fields, finite
-splitting-degree spectra, and their set-gcd indices.
+The final derived fields compare descent predicates, point fields, finite
+splitting-degree spectra, and their set-gcd indices. Thus the compactification,
+Borel, and neutral-fiber formulations of odd descent are Lean-equivalent.
 -/
 structure UniversalFixedLocusConclusion
     (Extension W : Type*) (one : W) (longestMul : W → W)
@@ -363,6 +364,24 @@ structure UniversalFixedLocusConclusion
   torsor is neutral. -/
   compact_iff_torsor_neutral :
     isInner → ∀ L, hasCompactPoint L ↔ neutral L
+  /-- Compactification-point descent and Borel-point descent are equivalent
+  along every chosen class of extensions. -/
+  compact_point_descent_iff_borel :
+    ∀ base admissible,
+      pointDescentAt base admissible hasCompactPoint ↔
+        pointDescentAt base admissible hasBorelPoint
+  /-- In the inner case, Borel-point descent is exactly descent of torsor
+  neutrality, i.e. injectivity over the neutral fiber. -/
+  borel_point_descent_iff_neutral :
+    isInner → ∀ base admissible,
+      pointDescentAt base admissible hasBorelPoint ↔
+        pointDescentAt base admissible neutral
+  /-- In the inner case, compactification-point descent is exactly descent of
+  torsor neutrality. -/
+  compact_point_descent_iff_neutral :
+    isInner → ∀ base admissible,
+      pointDescentAt base admissible hasCompactPoint ↔
+        pointDescentAt base admissible neutral
   /-- Equality of all point fields for the compactification and Borel variety. -/
   compact_point_fields_eq_borel :
     pointFields hasCompactPoint = pointFields hasBorelPoint
@@ -407,8 +426,8 @@ geometric tangent-weight conclusion for that choice, not another condition on
 the cocharacter.
 
 The load-bearing geometric hypotheses have intentionally descriptive names.
-The point-field equivalences, all-extension splitting spectra, indices, and
-Coxeter-rank consequences are proved by Lean.
+The descent equivalences, point-field equivalences, all-extension splitting
+spectra, indices, and Coxeter-rank consequences are proved by Lean.
 -/
 theorem universalFixedLocusAndSplittingField
     {Extension W : Type*}
@@ -498,6 +517,14 @@ theorem universalFixedLocusAndSplittingField
       compact_iff_borel := hcompactBorel
       borel_iff_torsor_neutral := inner_borelReduction_iff_neutral
       compact_iff_torsor_neutral := hcompactNeutral
+      compact_point_descent_iff_borel := fun base admissible =>
+        pointDescentAt_iff_of_pointwise_iff base admissible hcompactBorel
+      borel_point_descent_iff_neutral := fun hinner base admissible =>
+        pointDescentAt_iff_of_pointwise_iff base admissible
+          (inner_borelReduction_iff_neutral hinner)
+      compact_point_descent_iff_neutral := fun hinner base admissible =>
+        pointDescentAt_iff_of_pointwise_iff base admissible
+          (hcompactNeutral hinner)
       compact_point_fields_eq_borel :=
         pointFields_eq hcompactBorel
       borel_point_fields_eq_neutral := fun hinner =>

@@ -6,6 +6,8 @@ Authors: Cnoack3
 import Mathlib.Data.ZMod.Basic
 import RiemannResearch.GaloisCohomology.LocalGaugeTransporter
 import RiemannResearch.GroupTheory.CoprimeRestriction
+import Mathlib.GroupTheory.Solvable
+import Mathlib.GroupTheory.SpecificGroups.Alternating.Centralizer
 
 /-!
 # Conditional completion targets for the E8 case of Serre II
@@ -58,6 +60,34 @@ theorem serreII_of_oddDegreePointDescent
   apply (point_iff_neutral ξ base).mp
   exact oddPointDescent ξ L hOdd
     ((point_iff_neutral ξ L).mpr hNeutral)
+
+/-- The alternating group on five letters has order sixty. -/
+theorem alternatingGroup_fin_five_card :
+    Fintype.card (alternatingGroup (Fin 5)) = 60 := by
+  rw [card_alternatingGroup, Fintype.card_fin]
+  norm_num [Nat.factorial]
+
+/-- The order of A5 has only the prime support allowed in Gille's printed
+`2^a * 3^b * 5^c` extension-degree hypothesis. -/
+theorem alternatingGroup_fin_five_card_prime_support :
+    Fintype.card (alternatingGroup (Fin 5)) = 2 ^ 2 * 3 * 5 := by
+  rw [alternatingGroup_fin_five_card]
+  norm_num
+
+/-- A5 is not solvable. Consequently, an induction that replaces an arbitrary
+Galois extension of degree `2^a * 3^b * 5^c` by a tower of cyclic extensions
+of prime degrees 2, 3, and 5 does not cover every group allowed by that degree
+hypothesis. This is an obstruction to that proof reduction, not a
+counterexample to the stated cohomological theorem. -/
+theorem alternatingGroup_fin_five_not_solvable :
+    ¬ Group.IsSolvable (alternatingGroup (Fin 5)) := by
+  intro h
+  let _ : Group.IsSolvable (alternatingGroup (Fin 5)) := h
+  have hlt :=
+    Group.IsSolvable.commutator_lt_top_of_nontrivial
+      (alternatingGroup (Fin 5))
+  rw [commutator_alternatingGroup_eq_top (by simp)] at hlt
+  exact lt_irrefl _ hlt
 
 /-- **Completion target B.** Let Candidate select the nonabelian cocycles
 arising in the E8 application. If a generating family of local restrictions

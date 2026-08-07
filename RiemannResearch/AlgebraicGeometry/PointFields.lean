@@ -15,7 +15,8 @@ hasPoint, and the function degree, supply the field-theoretic semantics.
 
 The index is the gcd, via Nat.setGcd, of the degrees of all finite point
 fields. Equality of point predicates therefore gives equality of the complete
-finite degree spectra and of their indices.
+finite degree spectra and of their indices. Pointwise equivalence also
+transports any descent statement along a specified class of extensions.
 -/
 
 namespace RiemannResearch.AlgebraicGeometry
@@ -44,6 +45,26 @@ noncomputable def pointFieldIndex {Extension : Type*}
     (isFinite : Extension → Prop) (degree : Extension → ℕ)
     (hasPoint : Extension → Prop) : ℕ :=
   Nat.setGcd (finitePointDegrees isFinite degree hasPoint)
+
+/-- Descent of rational points from every admissible extension to one fixed
+base extension index. For odd-degree descent, `admissible L` records that
+`L/base` has finite odd degree. -/
+def pointDescentAt {Extension : Type*}
+    (base : Extension) (admissible hasPoint : Extension → Prop) : Prop :=
+  ∀ L, admissible L → hasPoint L → hasPoint base
+
+/-- Pointwise equivalent point predicates have exactly the same descent
+property along any specified class of extensions. -/
+theorem pointDescentAt_iff_of_pointwise_iff {Extension : Type*}
+    (base : Extension) (admissible : Extension → Prop)
+    {X Y : Extension → Prop} (h : ∀ L, X L ↔ Y L) :
+    pointDescentAt base admissible X ↔
+      pointDescentAt base admissible Y := by
+  constructor
+  · intro hX L hL hYL
+    exact (h base).mp (hX L hL ((h L).mpr hYL))
+  · intro hY L hL hXL
+    exact (h base).mpr (hY L hL ((h L).mp hXL))
 
 /-- Pointwise equivalence gives equality of all point fields. -/
 theorem pointFields_eq {Extension : Type*}
