@@ -50,6 +50,9 @@ the literal PDF theorem.
   generating families lift through surjective group homomorphisms.
 - `AlgebraicGeometry/PointFieldIndexOne.lean` proves that two coprime or three
   gcd-one actual finite point-field degrees force point-field index one.
+- `AlgebraicGeometry/PrimePowerIndex.lean` proves that a degree spectrum made
+  of powers of one prime and having gcd one contains degree one, including the
+  corresponding finite point-field existence statement used in Theorem 7.2.
 - `LinearAlgebra/SplitLift.lean` proves that an explicit module section lifts
   every map into the quotient. Over `F₂[H]` this is exactly the equivariant
   lifting step in the generic 120-place valuation packet.
@@ -124,7 +127,7 @@ the literal PDF theorem.
   is the exact pointed-set iteration step for cyclic kernel theorems through a
   solvable tower; it does not prove the cyclic E8 theorem.
 
-All twenty-five supporting files build in the full project and use no `sorry`
+All twenty-six supporting files build in the full project and use no `sorry`
 or new axioms.
 
 ## Source-audited advances across manuscript revisions

@@ -100,7 +100,7 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Result | Current status | Evidence or blocker |
 |---|---|---|
 | Lemma 7.1 | Manuscript only | Requires finite-presentation descent for torsors over filtered field unions. |
-| Theorem 7.2 | Primary-source checked; not Lean-formalized | ILA Corollary 4.14 gives index one; over a p-special field the elementary gcd-of-p-powers argument forces a rational point. |
+| Theorem 7.2 | Prime-power endpoint implication in Lean; ILA theorem unformalized | ILA Corollary 4.14 supplies index one only at the cited-source level. PrimePowerIndex.lean proves that a prime-power point-degree spectrum of index one contains an actual degree-one point field. |
 | Corollary 7.3 | Source checked with wording correction | The endpoint exclusion follows from Theorem 7.2. Merkurjev Theorem 4 preserves its specially constructed quaternion tensor product and associated anisotropic form, not arbitrary pre-chosen examples. |
 | Proposition 7.4 | Manuscript only | The specialization argument for affine torsors over a pure transcendental extension is not formalized. |
 | Proposition 7.5 | Partial abstract kernel only | fixed_of_fixed_on_join_eq_top checks the common-fixed-point implication; the Galois and gauge-coset realization is not formalized. |

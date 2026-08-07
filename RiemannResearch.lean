@@ -3,6 +3,7 @@ import RiemannResearch.AlgebraicGeometry.FpqcCoverCommonRefinement
 import RiemannResearch.AlgebraicGeometry.FpqcH1
 import RiemannResearch.AlgebraicGeometry.PointFields
 import RiemannResearch.AlgebraicGeometry.PointFieldIndexOne
+import RiemannResearch.AlgebraicGeometry.PrimePowerIndex
 import RiemannResearch.Basic
 import RiemannResearch.GaloisCohomology.DifferenceCocycle
 import RiemannResearch.GaloisCohomology.GaloisCechComparison

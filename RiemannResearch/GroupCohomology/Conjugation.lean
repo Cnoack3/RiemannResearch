@@ -324,4 +324,33 @@ theorem h1InnerConjugation_eq_id
     (groupCohomology.H1π_eq_zero_iff (z' - z)).2 hdiff
   rw [map_sub] at hzero
   exact sub_eq_zero.mp hzero
+
+/-- Ambient restriction followed by subgroup conjugation factors through
+inner conjugation of ambient H¹. -/
+theorem h1Restriction_comp_conjugation
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) (H : Subgroup G) (g : G) :
+    h1Restriction A H ≫ h1Conjugation A H g =
+      h1InnerConjugation A g ≫
+        h1Restriction A (conjugateSubgroup H g) := by
+  simp only [h1Restriction, h1RestrictionAlong, h1Conjugation,
+    h1InnerConjugation]
+  rw [← groupCohomology.map_comp, ← groupCohomology.map_comp]
+  apply groupCohomology.map_congr
+  · ext x
+    change (((conjugateEquiv H g).symm x : H) : G) =
+      g⁻¹ * (x : G) * (g⁻¹)⁻¹
+    rw [coe_conjugateEquiv_symm]
+    simp
+  · ext x
+    rfl
+
+/-- Ambient restriction is equivariant for subgroup conjugation. -/
+theorem h1Restriction_conjugation
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) (H : Subgroup G) (g : G) :
+    h1Restriction A H ≫ h1Conjugation A H g =
+      h1Restriction A (conjugateSubgroup H g) := by
+  rw [h1Restriction_comp_conjugation, h1InnerConjugation_eq_id,
+    Category.id_comp]
 end RiemannResearch.GroupCohomology
