@@ -6,6 +6,7 @@ Authors: Cnoack3
 
 import Mathlib.GroupTheory.DoubleCoset
 import RiemannResearch.GroupCohomology.Conjugation
+import RiemannResearch.GroupCohomology.ArbitraryCorestriction
 
 /-!
 # Mackey double-coset geometry
