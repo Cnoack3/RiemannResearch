@@ -49,7 +49,7 @@ MAX_SHARED_LEAN_CLIENTS = _bounded_env_int(
     "LEAN_MAX_SHARED_CLIENTS", 16, 1, 64
 )
 WORKSPACE_RETENTION_DAYS = _bounded_env_int(
-    "LEAN_WORKSPACE_RETENTION_DAYS", 90, 30, 3650
+    "LEAN_WORKSPACE_RETENTION_DAYS", 14, 7, 3650
 )
 # lean-lsp-mcp 0.29.0 hard-codes this private cap at eight. Pinning that
 # package version in the service makes this narrow override deterministic.
@@ -57,10 +57,19 @@ lean_client_utils._MAX_SHARED_CLIENTS = MAX_SHARED_LEAN_CLIENTS
 MAX_READ_BYTES = 1_000_000
 MAX_PATCH_BYTES = 2_000_000
 
+
+def _workspace_can_archive(project: Path) -> bool:
+    key = project.resolve(strict=False)
+    return (
+        key not in lean_client_utils._shared_clients
+        and key not in lean_client_utils._builds_in_progress
+    )
+
 AGENT_WORKSPACES = AgentWorkspaceManager(
     PROJECT_ROOT,
     EXPECTED_REMOTE,
     before_replace=lean_client_utils.close_shared_client,
+    can_archive=_workspace_can_archive,
     retention_days=WORKSPACE_RETENTION_DAYS,
 )
 
