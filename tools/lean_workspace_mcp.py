@@ -19,7 +19,7 @@ from lean_lsp_mcp.server import mcp
 from agent_workspaces import AgentWorkspaceManager
 
 
-WORKFLOW_INSTRUCTIONS = """For every new or concurrent Lean task, first call agent_workspace_open without a token and retain its workspace_token and project_root for the life of the chat. Resume an earlier task by calling agent_workspace_open with its saved token. Use only agent_workspace_* persistence tools for that clone. Pass absolute paths beneath project_root to Lean file, diagnostic, search, and build tools; use agent_workspace_run_code for ephemeral snippets and never use relative paths. Search existing project and Mathlib declarations before constructing a proof. Verify Lean code, save every successful material proof unless the user explicitly requests exploration only, then call agent_workspace_checkpoint with push enabled and report its published commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. Treat agent_workspace_reset as a destructive fail-safe: preview it without a confirmation token, show the exact plan, obtain explicit user permission, and only then submit the returned token. The shared canonical workspace_* persistence tools are retired; use agent_workspace_* exclusively. Before substantive work, read and follow the clone's repository-root AGENTS.md. Distinguish informal mathematical arguments from kernel-verified Lean proofs. If Lean decisively invalidates user-supplied logic, lead the response with '## Lean found a problem' and the exact evidence."""
+WORKFLOW_INSTRUCTIONS = """For every new or concurrent Lean task, first call agent_workspace_open without a token and retain its workspace_token and project_root for the life of the chat. Resume an earlier task by calling agent_workspace_open with its saved token. Use only agent_workspace_* persistence tools for that clone. Pass absolute paths beneath project_root to Lean file, diagnostic, search, and build tools; use agent_workspace_run_code for ephemeral snippets and never use relative paths. Search existing project and Mathlib declarations before constructing a proof. Verify Lean code, save every successful material proof unless the user explicitly requests exploration only, then call agent_workspace_checkpoint with push enabled and report its published commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. Treat agent_workspace_reset as a destructive fail-safe: preview it without a confirmation token, show the exact plan, obtain explicit user permission, and only then submit the returned token. The shared canonical workspace_* persistence tools are compatibility-only and not advertised to new chats; use agent_workspace_* exclusively. Before substantive work, read and follow the clone's repository-root AGENTS.md. Distinguish informal mathematical arguments from kernel-verified Lean proofs. If Lean decisively invalidates user-supplied logic, lead the response with '## Lean found a problem' and the exact evidence."""
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
 mcp._mcp_server.instructions = (
@@ -717,10 +717,12 @@ def agent_workspace_run_code(
     return AGENT_WORKSPACES.run_code(workspace_token, code, timeout_seconds)
 
 
-# The ChatGPT connector currently exposes at most 32 tools. Retire the shared
-# canonical persistence surface after migration, plus pathless/niche upstream
-# tools that cannot be routed safely to an isolated clone.
-for _retired_tool in (
+# The ChatGPT connector currently advertises at most 32 tools. Move the
+# compatibility-only/pathless tools behind the 21 path-aware Lean tools and 11
+# isolated-workspace tools. They remain callable by conversations that cached
+# the legacy schema, but new conversations receive the isolated API.
+_tool_registry = mcp._tool_manager._tools
+for _compatibility_tool in (
     "workspace_list_files",
     "workspace_read_file",
     "workspace_apply_patch",
@@ -733,7 +735,8 @@ for _retired_tool in (
     "lean_run_code",
     "lean_get_widget_source",
 ):
-    mcp.remove_tool(_retired_tool)
+    if _compatibility_tool in _tool_registry:
+        _tool_registry[_compatibility_tool] = _tool_registry.pop(_compatibility_tool)
 
 
 if __name__ == "__main__":
