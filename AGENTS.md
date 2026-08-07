@@ -7,6 +7,9 @@
   that type or an informal interpretation of it.
 - Search declarations with `lean_local_search` before proving anything new.
   Follow with focused declaration lookup, Loogle, or LeanSearch as needed.
+  Batch `#check` for a short list of candidates instead of opening source files
+  merely to learn their signatures. Use bounded `agent_workspace_search_files`
+  only when declaration search and filename filtering are insufficient.
   Never read all of `RiemannResearch/THEOREM_CATALOG.md` for discovery; it is a
   human-readable publication and research-obligation ledger.
 - Do not mistake a failed tactic, timeout, or unsolved goal for a refutation.
@@ -25,9 +28,11 @@
 - Pass absolute paths beneath its `project_root` to Lean tools. Use
   `agent_workspace_run_code` for a coherent ephemeral proof candidate. Inspect
   goals or diagnostics after failure rather than checking every tactic
-  separately.
+  separately. When several local tactic repairs are plausible in an existing
+  file, send 2--5 alternatives together with `lean_multi_attempt`.
 - Read only relevant source ranges. Use targeted diagnostics or verification
-  during development.
+  during development. Diagnostics are compact by default; request full details
+  only when the bounded result omits evidence needed to repair the proof.
 - Long builds, updates, and checkpoints use one FIFO worker. Submit once and
   poll `agent_workspace_job_status` no sooner than `retry_after_seconds`; never
   resubmit a pending job.
