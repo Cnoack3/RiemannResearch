@@ -208,36 +208,42 @@ class AgentWorkspaceManager:
         return project
 
     def open(self, resume_token: str = "") -> dict:
-        with self._lock(self.state / ".registry.lock"):
-            self.cleanup(retention_days=90, dry_run=False, _already_locked=True)
-            if resume_token:
+        self.cleanup(retention_days=90, dry_run=False)
+        if resume_token:
+            self._meta_path(resume_token)
+            with self._lock(self.state / f"{resume_token}.lock"):
                 meta = self._read_meta(resume_token)
                 project = Path(meta["path"])
                 if not project.is_dir() or meta.get("needs_rehydrate"):
                     project = self._rehydrate(meta)
                 resumed = True
-            else:
+                meta["last_activity"] = time.time()
+                self._write_meta(meta)
+        else:
+            with self._lock(self.state / ".registry.lock"):
                 token = "ws_" + secrets.token_urlsafe(24)
                 project = self._workspace_dir(token)
-                self._clone(project)
-                head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
                 meta = {
                     "token": token,
                     "path": str(project),
                     "created_at": time.time(),
                     "last_activity": time.time(),
-                    "base_commit": head,
+                    "base_commit": None,
                     "published_commit": None,
-                    "state": "active",
+                    "state": "provisioning",
                     "needs_rehydrate": False,
                 }
                 self._write_meta(meta)
+            with self._lock(self.state / f"{token}.lock"):
+                self._clone(project)
+                head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
+                meta.update(base_commit=head, state="active")
+                self._write_meta(meta)
                 resumed = False
-            meta["last_activity"] = time.time()
-            self._write_meta(meta)
         return self.describe(meta, resumed=resumed)
 
     def _get(self, token: str, *, rehydrate: bool = True) -> tuple[dict, Path]:
+        self._meta_path(token)
         with self._lock(self.state / f"{token}.lock"):
             meta = self._read_meta(token)
             project = Path(meta["path"])
@@ -452,6 +458,7 @@ class AgentWorkspaceManager:
                         self._run(["git", "fetch", str(project), local_head], cwd=integration)
                         for commit in commits:
                             self._run(["git", "cherry-pick", commit], cwd=integration)
+                        self._attach_dependencies(integration)
                         integrated_build = self._build(integration)
                         self._run(["git", "push", "origin", "HEAD:main"], cwd=integration, timeout=600)
                         published = self._run(["git", "rev-parse", "HEAD"], cwd=integration)
@@ -483,7 +490,27 @@ class AgentWorkspaceManager:
         meta, project = self._get(token, rehydrate=False)
         status = self._run(["git", "status", "--porcelain"], cwd=project)
         head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
-        digest = hashlib.sha256((head + "\0" + status).encode()).hexdigest()
+        tracked_diff = self._run(["git", "diff", "--binary", "HEAD", "--"], cwd=project)
+        untracked = self._run(
+            ["git", "ls-files", "--others", "--exclude-standard"], cwd=project
+        ).splitlines()
+        resolved_untracked = []
+        for raw in untracked:
+            _, path = self._relative(project, raw, writable=True)
+            if (
+                not path.is_file()
+                or path.is_symlink()
+                or path.stat().st_size > MAX_PATCH_BYTES
+            ):
+                raise RuntimeError(f"Reset refused protected untracked path: {raw}")
+            resolved_untracked.append((raw, path))
+        digest_builder = hashlib.sha256((head + "\0" + status + "\0" + tracked_diff).encode())
+        for raw, path in resolved_untracked:
+            digest_builder.update(b"\0")
+            digest_builder.update(raw.encode())
+            digest_builder.update(b"\0")
+            digest_builder.update(path.read_bytes())
+        digest = digest_builder.hexdigest()
         if not status:
             return {"reset": False, "clean": True, "message": "Workspace is already clean"}
         if not confirmation_token:
@@ -497,13 +524,8 @@ class AgentWorkspaceManager:
         if confirmation_token != digest:
             raise ValueError("Confirmation token is stale; preview again")
         self._run(["git", "restore", "--source=HEAD", "--staged", "--worktree", "--", "."], cwd=project)
-        untracked = self._run(["git", "ls-files", "--others", "--exclude-standard"], cwd=project)
-        for raw in untracked.splitlines():
-            _, path = self._relative(project, raw, writable=True)
-            if path.is_file() and not path.is_symlink():
-                path.unlink()
-            else:
-                raise RuntimeError(f"Reset refused protected untracked path: {raw}")
+        for _, path in resolved_untracked:
+            path.unlink()
         meta["last_activity"] = time.time()
         self._write_meta(meta)
         return {"reset": True, "clean": True, "head": head}
