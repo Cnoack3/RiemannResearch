@@ -119,6 +119,12 @@ the literal PDF theorem.
   one-cocycles modulo gauge, their neutral class, subgroup restriction, and
   coefficient pushforward. It proves that both operations preserve neutrality;
   it does not yet identify these classes with fpqc algebraic-group torsors.
+- `GaloisCohomology/LocalGaugeTransporter.lean` proves the exact abstract
+  transporter criterion: local gauges on subgroups generating the Galois group
+  glue to a global gauge exactly when their transitions factor through
+  subgroup-fixed corrections. It also proves overlap fixedness, gauge
+  covariance, and triple-overlap composition. In the full-Weyl EVIII
+  specialization, existence of the required `E8` corrections remains open.
 - `GaloisCohomology/DifferenceCocycle.lean` proves the representation-difference
   cocycle used in Proposition 6.26 and identifies global and subgroup
   coboundaries exactly with conjugacy of the corresponding representations.
@@ -238,11 +244,14 @@ fusion witnesses, and raw output are committed and rerun.
 ## Open targets
 
 No counterexample and no proof of the E8 case is currently certified. The
-smallest conditional finite target is constrained two-gauge factorization for
-an actual `2.A5` Weyl lift. The geometric global target is odd-degree (or
-index-one) effectivity on the E8 twisted Borel variety. The full finite-etale
-kernel-norm statement over all fields in scope is equivalent to E8 Serre II and
-must not be advertised as an independently proved shortcut.
+abstract full-Weyl transporter criterion is now kernel checked, but the
+assertion that its 135 local `D8` gauges admit simultaneous fixed corrections
+is open and is equivalent to neutrality on the full-Weyl stratum. The smallest
+conditional finite target is constrained two-gauge factorization for an actual
+`2.A5` Weyl lift. The geometric global target is odd-degree (or index-one)
+effectivity on the E8 twisted Borel variety. The full finite-etale kernel-norm
+statement over all fields in scope is equivalent to E8 Serre II and must not be
+advertised as an independently proved shortcut.
 
 ## Checkpoints
 
