@@ -14,6 +14,9 @@ question. Notes below also record checks from other revisions of the program;
 packet degrees must therefore be matched to the exact artifact before a Lean
 certificate is credited to it.
 
+For exact external statements, hypotheses, URLs, and the result-to-source map,
+see SERRE_II_2026_08_05_CITATION_AUDIT.md.
+
 ## Lean found a problem in the attached artifact
 
 Theorem 3.2 chooses an arbitrary regular cocharacter and says that changing
@@ -83,9 +86,12 @@ formalization. The attached artifact's exact status is in the theorem ledger.
    degrees 135, 2240, and 48384 and an odd splitting field of degree at most
    135. The geometric proof is informal/source-audited; its numerical
    consequences are kernel checked in E8/WeylIndexPacket.lean.
-1. The one-sided wonderful compactification has the same point fields as the
-   E8 torsor. Its fixed locus consists of Weyl-indexed copies of the twisted
-   Borel variety, with attracting rank `length(w) + rightDescent(w)`.
+1. After choosing a chamber-normalized cocharacter and supplying the
+   characteristic-zero descent, the one-sided wonderful compactification has
+   the same point fields as the E8 torsor. Its fixed locus consists of
+   Weyl-indexed copies of the twisted Borel variety, with attracting rank
+   `length(w) + rightDescent(w)`. The PDF's arbitrary-`lambda` formulation
+   is not included in this repaired statement.
 2. More generally, for any split connected semisimple group in characteristic
    zero, index one splits the integral Chow motive of every associated twisted
    flag into the same Tate summands as the split flag. If a torsor has a finite
@@ -107,19 +113,35 @@ formalization. The attached artifact's exact status is in the theorem ledger.
    published trialitarian theorem; only paired indices four and eight remain
    unexcluded, and their existence is not asserted.
 
-## Citation-dependent input
+## Primary-source citation audit
 
-The broad proper-semisimple normalizer-source theorem is a complete formal
-deduction from the statement attributed to Gille, LNM 2238, Corollary 9.3.6:
-every non-almost-abelian E8 form under the stated separable-cohomological-
-dimension hypotheses is split. The exact text of that corollary was not
-available in the audited artifact or public preview. Every subsystem-envelope
-neutralization using this result remains explicitly conditional until the exact
-source statement and hypotheses are inserted.
+The exact text of Gille, LNM 2238, Corollaries 9.3.6 and 9.3.7 has now been
+checked. Both have the hypotheses used in the memorandum: 2, 3, and 5 are
+invertible and scd_l(k) <= 2 for l = 2, 3, 5. Corollary 9.3.6 says that a
+non-almost-abelian E8 form is split; Corollary 9.3.7 says that an E8 form
+containing a k-subgroup mu_n, n >= 2, is split. Thus the external Gille inputs
+in Theorems 4.3 and 4.5, and in their subsystem and finite-marker descendants,
+are source confirmed. They are still not formalized in Lean.
 
-The half-spin source-image theorem does not depend on this broad input: the
-twist contains a split central `mu_2`, and Gille's separately corroborated
-torsion criterion (Corollary 9.3.7) neutralizes the ambient E8 class.
+The printed LNM Theorem 8.4.1(2) has a separate proof-scope problem: its
+reduction to cyclic layers does not justify nonsolvable A5 or S5 Galois groups.
+The official 26 May 2026 errata repairs characteristic and degree-five inputs
+but not that reduction. This does not infect Corollary 9.3.6: Proposition
+9.3.5 first supplies a solvable splitting extension, and Gille 2001 Theorem 11
+can then be iterated along a composition series.
+
+The motivic citations in Theorem 4.9 are also exact: CGM Theorem 8.2 gives
+integral Rost nilpotence and Sechin--Semenov Lemma 7.8 gives the split-motive
+criterion. The uniform prime-to-p transfer proof of Theorem 4.11 is valid with
+the oriented version of this formalism. Its citation to Semenov Theorem 6.16
+is too broad, however: that theorem's E8 clause treats p=2 and heights at least
+4, not all primes and positive heights.
+
+Evens--Jones supports the wonderful-compactification tangent weights over the
+complex numbers, but not the false sign-only chamber normalization in Theorem
+3.2 and not, by itself, the arbitrary characteristic-zero descent. The Lean
+counterexample and conditional repaired theorem therefore remain the correct
+formal status.
 
 ## Unreproduced computer-assisted input
 
