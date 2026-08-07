@@ -115,10 +115,10 @@ class AgentWorkspaceManager:
         return output
 
     @contextmanager
-    def _lock(self, path: Path) -> Iterator[None]:
+    def _lock(self, path: Path, *, shared: bool = False) -> Iterator[None]:
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("a+", encoding="utf-8") as handle:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            fcntl.flock(handle.fileno(), fcntl.LOCK_SH if shared else fcntl.LOCK_EX)
             try:
                 yield
             finally:
@@ -240,17 +240,20 @@ class AgentWorkspaceManager:
         cache = self._project_cache_dir(dependency_key, commit)
         source = cache / "build"
         ready = cache / "READY.json"
-        if not ready.is_file() or not source.is_dir():
-            return {"restored": False, "commit": commit, "dependency_key": dependency_key}
-        destination = project / ".lake" / "build"
-        temporary = destination.parent / f".build.restore.{os.getpid()}.{secrets.token_hex(4)}"
-        try:
-            self._copy_build_tree(source, temporary)
-            if destination.exists():
-                shutil.rmtree(destination)
-            os.replace(temporary, destination)
-        finally:
-            shutil.rmtree(temporary, ignore_errors=True)
+        with self._lock(self.project_cache / ".cache.lock", shared=True):
+            if not ready.is_file() or not source.is_dir():
+                return {"restored": False, "commit": commit, "dependency_key": dependency_key}
+            destination = project / ".lake" / "build"
+            temporary = (
+                destination.parent / f".build.restore.{os.getpid()}.{secrets.token_hex(4)}"
+            )
+            try:
+                self._copy_build_tree(source, temporary)
+                if destination.exists():
+                    shutil.rmtree(destination)
+                os.replace(temporary, destination)
+            finally:
+                shutil.rmtree(temporary, ignore_errors=True)
         return {
             "restored": True,
             "commit": commit,
@@ -309,21 +312,22 @@ class AgentWorkspaceManager:
         }
 
     def _prune_project_cache(self, dependency_key: str) -> None:
-        root = self.project_cache / dependency_key
-        entries = []
-        if not root.is_dir():
-            return
-        for path in root.iterdir():
-            ready = path / "READY.json"
-            if not path.is_dir() or not ready.is_file():
-                continue
-            try:
-                created_at = json.loads(ready.read_text(encoding="utf-8"))["created_at"]
-            except (OSError, KeyError, ValueError, TypeError, json.JSONDecodeError):
-                continue
-            entries.append((float(created_at), path))
-        for _, path in sorted(entries, reverse=True)[self.project_cache_keep :]:
-            shutil.rmtree(path, ignore_errors=True)
+        with self._lock(self.project_cache / ".cache.lock"):
+            root = self.project_cache / dependency_key
+            entries = []
+            if not root.is_dir():
+                return
+            for path in root.iterdir():
+                ready = path / "READY.json"
+                if not path.is_dir() or not ready.is_file():
+                    continue
+                try:
+                    created_at = json.loads(ready.read_text(encoding="utf-8"))["created_at"]
+                except (OSError, KeyError, ValueError, TypeError, json.JSONDecodeError):
+                    continue
+                entries.append((float(created_at), path))
+            for _, path in sorted(entries, reverse=True)[self.project_cache_keep :]:
+                shutil.rmtree(path, ignore_errors=True)
 
     def _rehydrate(self, meta: dict) -> Path:
         token = meta["token"]
@@ -808,6 +812,12 @@ class AgentWorkspaceManager:
                     "queue_position": self._queue_position_unlocked(job_id),
                     "instruction": "Poll agent_workspace_job_status; do not resubmit.",
                 }
+            pending = self._pending_job_for_workspace(token)
+            if pending is not None:
+                raise RuntimeError(
+                    f"Workspace already has {pending['kind']} job {pending['job_id']} "
+                    f"{pending['state']}; poll it until terminal before submitting {kind}."
+                )
             job_id = "job_" + secrets.token_urlsafe(24)
             job = {
                 "job_id": job_id,
