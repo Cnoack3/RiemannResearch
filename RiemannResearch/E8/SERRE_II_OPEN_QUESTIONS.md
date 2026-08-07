@@ -14,6 +14,15 @@ literature already contains a proof.
    E8-valued element satisfying the 135 anchored fixedness conditions.
 5. **Conjecture 6.33:** the diagonal finite-etale kernel norm.
 
+Lean's `pointDescentAt_iff_of_pointwise_iff`, together with the pointwise
+equivalences assembled in `universalFixedLocusAndSplittingField`, verifies
+that the wonderful, Borel, and neutral-class odd-descent formulations are
+equivalent once their geometric inputs are supplied. It does not prove any
+one of them. The declarations `alternatingGroup_fin_five_card_prime_support`
+and `alternatingGroup_fin_five_not_solvable` certify that A5 satisfies the
+printed `{2,3,5}` prime support but cannot be reached by a solvable cyclic-
+prime tower; hence the displayed induction in the cited source is insufficient.
+
 Proposition 6.35 is an equivalence with E8 Serre II, not independent evidence.
 Lean now checks its easy reverse direction in
 `finiteEtaleKernelNorm_of_subsingleton_target` and checks the forward
