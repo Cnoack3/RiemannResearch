@@ -9,6 +9,17 @@
   kernel-checked implications from unconditional solutions of the motivating
   research problem. A successful build proves the declaration's exact type; it
   does not prove any hypotheses appearing as inputs to that declaration.
+- When Lean establishes that a user-supplied claim, inference, assumption, or
+  definition is faulty or materially mismatched, lead the user-facing response
+  with `## Lean found a problem`. State the exact faulty step, decisive Lean
+  evidence or smallest counterexample, and the downstream conclusion that no
+  longer follows. Never bury an established logical error in a summary or
+  side-note.
+- Do not mistake proof-search failure for refutation. A failed tactic, timeout,
+  or unsolved goal is inconclusive unless Lean provides decisive evidence such
+  as a contradiction, counterexample, type mismatch, or failed required
+  condition. Clearly label any corrected theorem as different from the user's
+  original claim.
 - Save successful material proofs in the appropriate `RiemannResearch/` module
   and update `RiemannResearch/THEOREM_CATALOG.md` when adding a reusable
   theorem.
