@@ -145,3 +145,7 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
    setup used before Theorem 5.6; that sentence needs a direct proof or source.
 10. The E6 comparison near Conjecture 5.2 and the Merkurjev endpoint description
     in Corollary 7.3 both state their cited sources more broadly than warranted.
+
+## Subsequent Lean transfer
+
+- Theorem 2.2 now has the conditional finite-point-field realization `sylowLocalFourFieldSplittingPackage`: it chooses the four displayed fields from explicit Totaro and prime-avoidance inputs, proves their degree gcd is one, and derives point-field index one. Construction of the prime-avoiding fields remains source dependent.
