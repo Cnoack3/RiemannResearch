@@ -178,6 +178,11 @@ in the supplied artifacts, so their triality types remain unverified.
   one-cocycles modulo gauge, their neutral class, subgroup restriction, and
   coefficient pushforward. It proves that both operations preserve neutrality;
   it does not yet identify these classes with fpqc algebraic-group torsors.
+- `E8/FullWeylCore.lean` now specializes the conditional Theorem 5.19
+  assembly to actual discrete nonabelian H¹. The forward restriction-neutrality
+  implication is supplied by the generic checked restriction theorem, not a
+  local hypothesis. The converse quadratic kernel and every E8/group-specific
+  input remain explicit and load-bearing.
 - `GaloisCohomology/LocalGaugeTransporter.lean` proves the exact abstract
   transporter criterion: local gauges on subgroups generating the Galois group
   glue to a global gauge exactly when their transitions factor through

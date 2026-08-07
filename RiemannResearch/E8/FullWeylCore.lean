@@ -6,6 +6,7 @@ Authors: Cnoack3
 import Mathlib.GroupTheory.Sylow
 import Mathlib.Tactic.NormNum.Prime
 import RiemannResearch.E8.OmegaEightPlusTwo
+import RiemannResearch.GaloisCohomology.NonabelianH1
 import RiemannResearch.GroupTheory.PGroupFixedPoints
 
 /-!
@@ -45,6 +46,7 @@ center with `Z`; those are not asserted here.
 namespace RiemannResearch.E8
 
 open RiemannResearch.GroupTheory
+open RiemannResearch.GaloisCohomology
 
 /-- The primes occurring in the Sylow fixed-field assertion. -/
 def fullWeylPrimes : Finset ℕ := {2, 3, 5, 7}
@@ -170,5 +172,70 @@ theorem quasisimpleCoreOfFullWeylDescent
       exact restriction_preserves_neutrality hbase
     · intro hcoreDescent
       exact quadratic_restriction_kernel (hcoreDescent hcentral)
+
+/-- Specialization of `quasisimpleCoreOfFullWeylDescent` in which all
+neutrality predicates are actual neutrality statements in discrete
+nonabelian `H¹`. Restriction from `W` to `Wplus` preserves neutrality by the
+kernel-checked generic restriction map, so that implication is no longer a
+research hypothesis. The converse restriction kernel and the E8-specific
+inputs remain explicit. -/
+theorem quasisimpleCoreOfFullWeylDescent_nonabelianH1
+    {W G Gal EvenQuotient Ω : Type*}
+    [Group W] [Finite W] [Group G] [MulDistribMulAction W G]
+    [Group Gal] [Group EvenQuotient] [Group Ω] [Finite Ω]
+    (ξ : NonabelianH1 W G)
+    (Wplus Z : Subgroup W)
+    (V : (p : ℕ) → Sylow p W → Type*)
+    [∀ (p : ℕ) (P : Sylow p W), AddCommGroup (V p P)]
+    [∀ (p : ℕ) (P : Sylow p W), Finite (V p P)]
+    [∀ (p : ℕ) (P : Sylow p W),
+      DistribMulAction (↥(P : Subgroup W)) (V p P)]
+    (quadratic_restriction_kernel :
+      NonabelianH1.IsNeutral (NonabelianH1.restrict Wplus ξ) →
+        NonabelianH1.IsNeutral ξ)
+    {centralTorusSplitByCyclicQuadratic : Prop}
+    (central_torus_splitting : centralTorusSplitByCyclicQuadratic)
+    (cyclic_prime_torus_kernel :
+      centralTorusSplitByCyclicQuadratic →
+        NonabelianH1.IsNeutral (NonabelianH1.restrict Z ξ))
+    (gal_equiv_evenQuotient : Gal ≃* EvenQuotient)
+    (evenQuotient_equiv_omega : EvenQuotient ≃* Ω)
+    (omega_order :
+      Nat.card Ω = 2 ^ 12 * 3 ^ 5 * 5 ^ 2 * 7)
+    (omega_simple : IsSimpleGroup Ω)
+    (smallPrime_card :
+      ∀ p ∈ modularFixedVectorPrimes, ∀ P : Sylow p W,
+        Nat.card (V p P) = p ^ 8)
+    (seven_card :
+      ∀ P : Sylow 7 W, Nat.card (V 7 P) = 2 ^ 8)
+    (diagonalizable_subgroup_criterion :
+      ∀ p ∈ fullWeylPrimes, ∀ P : Sylow p W,
+        HasNonzeroFixedPoint (↥(P : Subgroup W)) (V p P) →
+          NonabelianH1.IsNeutral
+            (NonabelianH1.restrict (P : Subgroup W) ξ)) :
+    FullWeylCoreConclusion W Gal Ω
+      (NonabelianH1.IsNeutral ξ)
+      (NonabelianH1.IsNeutral (NonabelianH1.restrict Wplus ξ))
+      (NonabelianH1.IsNeutral (NonabelianH1.restrict Z ξ))
+      (fun _ P => NonabelianH1.IsNeutral
+        (NonabelianH1.restrict (P : Subgroup W) ξ)) := by
+  exact quasisimpleCoreOfFullWeylDescent
+    (neutralAtSylowFixedField := fun _ P =>
+      NonabelianH1.IsNeutral
+        (NonabelianH1.restrict (P : Subgroup W) ξ))
+    (V := V)
+    (restriction_preserves_neutrality := fun hξ =>
+      NonabelianH1.restrict_preserves_neutrality Wplus hξ)
+    (quadratic_restriction_kernel := quadratic_restriction_kernel)
+    (central_torus_splitting := central_torus_splitting)
+    (cyclic_prime_torus_kernel := cyclic_prime_torus_kernel)
+    (gal_equiv_evenQuotient := gal_equiv_evenQuotient)
+    (evenQuotient_equiv_omega := evenQuotient_equiv_omega)
+    (omega_order := omega_order)
+    (omega_simple := omega_simple)
+    (smallPrime_card := smallPrime_card)
+    (seven_card := seven_card)
+    (diagonalizable_subgroup_criterion :=
+      diagonalizable_subgroup_criterion)
 
 end RiemannResearch.E8

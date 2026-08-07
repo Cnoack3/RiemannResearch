@@ -167,13 +167,14 @@ unconditional proofs of the motivating named theorems.
 | Declaration | Module | Verified consequence | Status |
 |---|---|---|---|
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent` | `RiemannResearch.E8.FullWeylCore` | From the inputs listed below, proves parts (i)--(iii), nonabelianness of the simple core, and `Neutral(ξ) ↔ (Neutral(ξ_F) → Neutral(ξ_{k⁺}))` | Kernel checked implication; open obligations remain |
+| `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent_nonabelianH1` | `RiemannResearch.E8.FullWeylCore` | Specializes the conditional assembly to actual discrete nonabelian H¹ and proves the forward restriction-neutrality implication rather than assuming it | Kernel checked implication; remaining E8-specific hypotheses are load-bearing |
 | `RiemannResearch.E8.universalFixedLocusAndSplittingField` | `RiemannResearch.E8.WonderfulFixedLocus` | From the inputs listed below, proves the assembled fixed-locus, motivic, point-field, splitting-spectrum, and set-gcd-index conclusions | Kernel checked corrected implication; literal PDF cocharacter normalization fails; open obligations remain |
 
 ### Open obligations: `quasisimpleCoreOfFullWeylDescent`
 
 | Hypothesis binder | Required mathematical input | Provider / status |
 |---|---|---|
-| `restriction_preserves_neutrality` | Restriction from the base field preserves neutrality | Generic discrete nonabelian (H^1) logic is kernel checked by `NonabelianH1.restrict_preserves_neutrality`; the finite-Galois/fpqc torsor comparison and E8 instantiation remain **open** |
+| `restriction_preserves_neutrality` | Restriction from the base field preserves neutrality | Removed by `quasisimpleCoreOfFullWeylDescent_nonabelianH1` for actual discrete nonabelian H¹, using `NonabelianH1.restrict_preserves_neutrality`; the finite-Galois/fpqc torsor comparison and algebraic E8 instantiation remain **open** |
 | `quadratic_restriction_kernel` | Neutrality after the quadratic extension descends to the base | **Open** |
 | `central_torus_splitting` | The relevant central torus is split by the cyclic quadratic extension | **Open** |
 | `cyclic_prime_torus_kernel` | The cyclic-prime torus kernel theorem neutralizes the class over the central field | **Open** |
