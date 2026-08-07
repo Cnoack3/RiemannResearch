@@ -37,6 +37,9 @@ including citation-dependent and unreproduced computer-assisted claims, see
 | `RiemannResearch.GroupTheory.exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one` | `RiemannResearch.GroupTheory.PGroupFixedPoints` | A finite `p`-group acting additively on finite `V` has a nonzero fixed point when `Nat.card V ≢ 1 [MOD p]` | Kernel checked |
 | `RiemannResearch.E8.a8Normalizer_bezout` | `RiemannResearch.E8.A8NormalizerArithmetic` | Verifies the exact identity `-27·15 + 2·35 + 336 = 1` | Kernel checked |
 | `RiemannResearch.E8.eq_zero_of_a8_annihilators` | `RiemannResearch.E8.A8NormalizerArithmetic` | An abelian class killed by the three A8 cover degrees 15, 35, and 336 is zero | Kernel checked |
+| `RiemannResearch.E8.oddHalfSpinResidues_perm` | `RiemannResearch.E8.A9TrialityArithmetic` | One half-spin parity of a nine-cycle gives all eight nonzero residues modulo nine | Kernel checked by finite decision |
+| `RiemannResearch.E8.evenHalfSpinResidues_perm` | `RiemannResearch.E8.A9TrialityArithmetic` | The other parity gives two zero residues and the six primitive ninth-root residues | Kernel checked by finite decision |
+| `RiemannResearch.E8.a9Triality_determinant_order` | `RiemannResearch.E8.A9TrialityArithmetic` | Verifies `Φ₃(1)Φ₉(1)=9` for the fixed-point-free order-nine packet | Kernel checked |
 | `RiemannResearch.E8.trialityPacket_sylowIndex_arithmetic` | `RiemannResearch.E8.SylowSevenArithmetic` | The packet indices 34560, 61440, and 4320 are prime to seven and congruent to one modulo seven | Kernel checked |
 | `RiemannResearch.E8.trialityPacket_normalizer_index_products` | `RiemannResearch.E8.SylowSevenArithmetic` | Verifies the three normalizer-order times index calculations in the triality-packet table | Kernel checked |
 | `RiemannResearch.E8.weylIndexPacket_bezout` | `RiemannResearch.E8.WeylIndexPacket` | Verifies `-73·135 + 26·2240 - 48384 = 1` for the three maximal-rank reduction degrees | Kernel checked |

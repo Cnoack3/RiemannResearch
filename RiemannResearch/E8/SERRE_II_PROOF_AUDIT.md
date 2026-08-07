@@ -32,8 +32,11 @@ Conjecture II has been solved.
   `34560`, `61440`, and `4320`, their displayed prime factorizations,
   their congruence to one modulo seven, and the normalizer-index products.
   It does not identify the packet groups or prove the torsor-splitting claim.
+- `E8/A9TrialityArithmetic.lean` checks both signed half-spin residue lists
+  for the order-nine calculation and verifies `Φ₃(1)Φ₉(1)=9`. It assumes the
+  triality model and does not construct the `A₉` Weyl embedding.
 
-All six files build in the full project and use no `sorry` or new axioms.
+All seven files build in the full project and use no `sorry` or new axioms.
 
 ## Mathematically verified manuscript advances
 
