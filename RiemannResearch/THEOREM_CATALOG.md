@@ -3,6 +3,10 @@
 This catalog is an orientation layer. Lean source files and successful builds
 remain authoritative.
 
+For the theorem-by-theorem mathematical audit of the E8 Serre II manuscript,
+including citation-dependent and unreproduced computer-assisted claims, see
+`E8/SERRE_II_PROOF_AUDIT.md`.
+
 ## Status conventions
 
 - **Kernel checked** means Lean has verified a proof of the declaration's exact
