@@ -45,6 +45,16 @@ with tempfile.TemporaryDirectory() as raw:
     os.environ["LEAN_AGENT_WORKSPACES_ROOT"] = str(temp / "workspaces")
     os.environ["LEAN_AGENT_WORKSPACES_STATE"] = str(temp / "state")
     os.environ["LEAN_SHARED_DEPS_ROOT"] = str(temp / "shared")
+    fake_bin = temp / "bin"
+    fake_bin.mkdir()
+    fake_lake = fake_bin / "lake"
+    fake_lake.write_text(
+        "#!/bin/sh\n"
+        "if grep -q FAIL \"$3\"; then echo simulated-error; exit 1; fi\n"
+        "echo simulated-verified\n"
+    )
+    fake_lake.chmod(0o755)
+    os.environ["PATH"] = str(fake_bin) + os.pathsep + os.environ["PATH"]
     manager = TestManager(source, str(remote))
 
     first = manager.open()
@@ -52,6 +62,11 @@ with tempfile.TemporaryDirectory() as raw:
     assert first["project_root"] != second["project_root"]
     first_token = first["workspace_token"]
     second_token = second["workspace_token"]
+    run_ok = manager.run_code(first_token, "theorem scratch : True := by trivial\n")
+    assert run_ok["verified"] and "simulated-verified" in run_ok["output"]
+    run_bad = manager.run_code(first_token, "FAIL\n")
+    assert not run_bad["verified"] and "simulated-error" in run_bad["output"]
+    assert not list((Path(first["project_root"]) / ".lake" / "agent-scratch").glob("*.lean"))
 
     patch_one = """diff --git a/RiemannResearch/One.lean b/RiemannResearch/One.lean
 new file mode 100644
