@@ -199,6 +199,12 @@ unreproduced computer-assisted claims, see `E8/SERRE_II_PROOF_AUDIT.md`.
 | `RiemannResearch.E8.e8AttractingRank_properties_of_lengthComplement` | `RiemannResearch.E8.WonderfulFixedLocus` | For Mathlib's E8 Coxeter group, the single explicit length-complement input implies all Coxeter-rank conclusions of corrected Theorem 3.2 | Kernel checked conditional Coxeter specialization |
 | `RiemannResearch.E8.e8AttractingRank_eq_zero_iff` | `RiemannResearch.E8.WonderfulFixedLocus` | On Mathlib's E8 Coxeter group, length plus the number of right descents vanishes exactly at the identity | Kernel checked unconditionally |
 | `RiemannResearch.E8.e8_total_attracting_rank` | `RiemannResearch.E8.WonderfulFixedLocus` | Checks the E8 total attracting-rank arithmetic `120 + 8 = 128` | Kernel checked |
+| `RiemannResearch.Motives.isRostNilpotent_comp` | `RiemannResearch.Motives.RostNilpotence` | Elementwise nilpotence of kernels composes through a tower of noncommutative ring maps | Kernel checked |
+| `RiemannResearch.Motives.hasKernelExponent_comp` | `RiemannResearch.Motives.RostNilpotence` | Uniform kernel exponents multiply through a tower | Kernel checked |
+| `RiemannResearch.Motives.lift_idempotent_of_isRostNilpotent` | `RiemannResearch.Motives.RostNilpotence` | A projector in the image of a ring map with elementwise nilpotent kernel lifts to a projector | Kernel checked |
+| `RiemannResearch.Motives.endomorphismMapRingHom` | `RiemannResearch.Motives.RostNilpotence` | An additive functor induces a ring homomorphism on every endomorphism ring | Kernel checked construction |
+| `RiemannResearch.Motives.isRostNilpotentAt_comp` | `RiemannResearch.Motives.RostNilpotence` | Objectwise Rost-nilpotence composes along additive functors | Kernel checked |
+| `RiemannResearch.Motives.lift_complete_projector_family_of_isRostNilpotentAt` | `RiemannResearch.Motives.RostNilpotence` | A finite complete orthogonal projector family in the image lifts along an additive functor with Rost-nilpotent endomorphism kernel | Kernel checked abstract categorical theorem; no Chow-motive geometry asserted |
 | `RiemannResearch.RH.Statement` | `RiemannResearch.RH.Basic` | Stable local name for mathlib's RH proposition | Kernel checked |
 
 ## Conditional research reductions
