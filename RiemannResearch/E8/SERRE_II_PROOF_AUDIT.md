@@ -130,6 +130,11 @@ the literal PDF theorem.
   group-cohomology map as (H^1) restriction, proves identity and composition,
   and supplies explicit comparison isomorphisms and tower laws for nested
   `Rep.res` coefficient objects.
+- `GroupCohomology/Corestriction.lean` constructs quotient representatives
+  and their subgroup-valued defects, defines the normal finite-index
+  corestriction cochain, and proves that it sends additive one-cocycles to
+  one-cocycles. Coboundary preservation, descent to H¹, the index identity,
+  and the Mackey formula remain open.
 - `GroupCohomology/StableElements.lean` proves by explicit averaging that
   additive `H^1` of a finite group vanishes when its order is a unit, then
   combines this with inflation--restriction to prove injectivity on `H^1`
@@ -143,7 +148,7 @@ the literal PDF theorem.
   pointed-set step for cyclic kernel theorems along a solvable composition
   series; it does not prove the cyclic E8 theorem.
 
-All twenty-eight supporting files build in the full project and use no `sorry`
+All twenty-nine supporting files build in the full project and use no `sorry`
 or new axioms.
 
 ## Source-audited advances across manuscript revisions
