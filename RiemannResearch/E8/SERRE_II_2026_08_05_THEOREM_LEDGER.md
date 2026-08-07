@@ -7,6 +7,9 @@ propositions, corollaries, and lemmas; four conjectures; and Question 5.22.
 It records the strongest evidence currently available. It is not a claim that
 the E8 case of Serre's Conjecture II has been solved.
 
+For the declaration-level implementation target attached to every bibliography
+entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
+
 ## Status key
 
 - **Lean exact fragment**: the cited declaration proves the stated arithmetic
@@ -28,7 +31,7 @@ the E8 case of Serre's Conjecture II has been solved.
 | Theorem 2.1 | Primary-source checked | Izquierdo--Lucchini Arteche Corollary 4.14, Garibaldi--Semenov (1.1)--(1.2), and Totaro Theorem 0.1 exactly support the three parts; none is formalized here. |
 | Theorem 2.2 | Manuscript deduction from checked sources | The co-p closure and finite-descent argument is coherent; ILA Corollary 4.14 validates the p-special step and no nonabelian Bezout conclusion is drawn. |
 | Proposition 3.1 | Source dependent | Requires the wonderful compactification, orbit geometry, and fpqc descent absent from Mathlib. |
-| Theorem 3.2 | **Literal statement defective; Lean conditional after correction** | Changing the sign of an arbitrary regular cocharacter does not normalize its Weyl chamber in rank greater than one. Evens--Jones supports the weight calculation only after a chamber choice (and is written over C); the characteristic-zero descent needs a separate argument. See a2Coroot_sign_normalization_counterexample. The corrected assembly universalFixedLocusAndSplittingField has twelve open, load-bearing inputs. |
+| Theorem 3.2 | **Literal statement defective; Lean conditional after correction** | Changing the sign of an arbitrary regular cocharacter does not normalize its Weyl chamber in rank greater than one. `a2Coroot_sign_normalization_counterexample` proves the defect, while `regularFunctional_exists_adaptedBase` kernel-checks the correct chamber-change replacement. Evens--Jones supports the subsequent weight calculation only after this choice (and is written over C); the characteristic-zero fixed-scheme descent and rank formula remain open. |
 | Corollary 3.3 | Unverified | Depends on Theorems 2.1 and 3.2. |
 | Proposition 4.1 | Manuscript only | The localization calculation CH0(Gm)=0 is not formalized here. |
 | Proposition 4.2 | Source dependent | Uses rationality of the split EVIII space, compactification, and localization. |
@@ -46,9 +49,9 @@ the E8 case of Serre's Conjecture II has been solved.
 
 | Result | Current status | Evidence or blocker |
 |---|---|---|
-| Theorem 5.4 | Primary-source checked; not Lean-formalized | Gille 2001 Theorem 11 exactly gives cyclic degree 2, 3, and 5 injectivity under the standing hypotheses; iteration over a solvable normal series is valid. |
+| Theorem 5.4 | Primary-source checked; citation theorem not Lean-formalized | Gille 2001 Theorem 11 exactly gives cyclic degree 2, 3, and 5 injectivity under the standing hypotheses. `HasTrivialKernel.comp` now kernel-checks the pointed-set iteration logic through a solvable tower; the cyclic E8 kernel theorem itself remains external. |
 | Theorem 5.6 | Manuscript only; setup citation incomplete | An explicit finite quadratic-space construction is printed, but the A5 action is not formalized here. Totaro's table indirectly identifies the index-135 D8 stabilizer; it does not itself prove the setup sentence that every nonzero singular mod-2 vector is a toral involution with connected centralizer D8. |
-| Theorem 5.7 | Source inputs checked; manuscript proof | Brown's stable-elements theorem and Gille Corollary 9.3.7 have the required scope; the lattice/linking-form argument is not formalized. |
+| Theorem 5.7 | Partial Brown foundation in Lean; theorem still source dependent | `h1Restriction_injective_of_normal_finiteIndex` proves the normal finite-index restriction-injectivity case by averaging and inflation--restriction. Brown's arbitrary-Sylow stable-elements image theorem still requires cohomological transfer/Mackey theory; Gille Corollary 9.3.7 and the E8 lattice/linking-form instantiation remain unformalized. |
 | Corollary 5.8 | Source-checked consequence; not Lean-formalized | Depends on Theorems 4.3, 5.6, and 5.7. |
 | Theorem 5.9 | Manuscript only | The explicit S5 lattice construction and its mod-p invariant calculation are not formalized. |
 | Corollary 5.10 | Source dependent | Depends on Theorem 5.7 and quadratic cyclic descent. |
@@ -58,7 +61,7 @@ the E8 case of Serre's Conjecture II has been solved.
 | Corollary 5.14 | Unverified | Depends on Theorems 5.11 and 5.13. |
 | Theorem 5.16 | Source checked; arithmetic exact in Lean | Totaro's page-21 table supplies the three subsystem stabilizer indices and Gille Corollary 9.3.6 supplies neutralization. The algebraic descent is informal. The exact index products and gcd for 135, 11200, 12096 are checked in SerreIIProgramChecks. |
 | Corollary 5.17 | Exact arithmetic and additive shadow in Lean; geometry unverified | serreIIProgram_threeSubsystem_bezout and serreIIProgram_threeSubsystem_gcd check the degree calculation. The splitting cycles still depend on Theorem 5.16. |
-| Theorem 5.19 | Lean conditional | quasisimpleCoreOfFullWeylDescent has eleven open, load-bearing E8, Galois, and nonabelian-cohomology inputs. |
+| Theorem 5.19 | Lean conditional with new H1 foundation | `quasisimpleCoreOfFullWeylDescent` remains conditional. Discrete nonabelian (H^1), subgroup restriction, coefficient pushforward, and preservation of neutrality are now kernel checked; the finite-Galois/fpqc comparison and the ten E8/group-identification inputs remain open. |
 
 ## Section 6
 
@@ -80,7 +83,7 @@ the E8 case of Serre's Conjecture II has been solved.
 | Proposition 6.16 | Computation and citation conditional | Requires missing subsystem-orbit data, classical Serre II, and the lift data of Proposition 6.12. |
 | Proposition 6.17 | Unreproduced computation | The twelve triality tests require the absent root-action script. |
 | Proposition 6.19 | Manuscript only | The oriented transporter and bitorsor descent are not formalized. |
-| Proposition 6.21 | Abstract additive kernel checked | eq_zero_of_coprime_restrictions checks the coprime restriction--corestriction core; the group-cohomology instantiation is not formalized. |
+| Proposition 6.21 | Additive restriction and abstract kernel checked | `h1Restriction_tower` instantiates additive (H^1) restriction and its tower law; `eq_zero_of_coprime_restrictions` checks the coprime detection step. Cohomological corestriction and the restriction--corestriction index formula remain unformalized. |
 | Proposition 6.22 | Manuscript only | The Weil-restriction dimension and density argument is not formalized. |
 | Proposition 6.24 | Manuscript only | The Bass--Serre amalgam and Euler-characteristic calculation are not formalized. |
 | Proposition 6.26 | Unreproduced computation | The A11 Burnside relation and even conjugators require an absent GAP certificate. |

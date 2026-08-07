@@ -69,8 +69,38 @@ the literal PDF theorem.
   attached 5 August artifact, the binary icosahedral index arithmetic, and the
   A2 chamber-normalization counterexample. It does not construct splitting
   fields or subgroup actions.
+- `LinearAlgebra/RootSystem/AdaptedBase.lean` proves the correct replacement
+  for the defective sign-only normalization: a functional regular on every
+  root admits a base on which all simple-root values are positive.
+- `GaloisCohomology/GaloisTensorDecomposition.lean` constructs the canonical
+  finite-Galois equivalence `L ⊗[K] L ≃ₐ[L] ((L ≃ₐ[K] L) → L)` and proves
+  the pure-tensor formula `(x ⊗ y)(σ) = x * σ y`. This is the first
+  scheme-overlap prerequisite for comparing Čech and discrete cocycles.
+- `GaloisCohomology/GaloisTripleTensorDecomposition.lean` iterates that
+  equivalence on the triple overlap and proves the independent-coordinate
+  formula `(x ⊗ (y ⊗ z))(σ,ρ) = x * σ(y) * ρ(z)`, the algebraic identity
+  needed to translate the Čech cocycle equation.
+- `GaloisCohomology/NonabelianH1.lean` constructs discrete nonabelian
+  one-cocycles modulo gauge, their neutral class, subgroup restriction, and
+  coefficient pushforward. It proves that both operations preserve neutrality;
+  it does not yet identify these classes with fpqc algebraic-group torsors.
+- `GroupCohomology/Conjugation.lean` constructs the additive H¹ isomorphism
+  for conjugate subgroups, proves both inverse laws and raw functorial
+  composition, and supplies the group-homomorphism square underlying
+  restriction naturality. It does not assume transfer or the Mackey formula.
+- `GroupCohomology/Restriction.lean` packages Mathlib's additive
+  group-cohomology map as (H^1) restriction and proves identity, composition,
+  and nested-subgroup tower laws.
+- `GroupCohomology/StableElements.lean` proves by explicit averaging that
+  additive `H^1` of a finite group vanishes when its order is a unit, then
+  combines this with inflation--restriction to prove injectivity on `H^1`
+  for normal finite-index subgroups of unit index. The arbitrary-subgroup
+  stable-elements theorem still needs cohomological transfer and Mackey theory.
+- `Logic/PointedKernel.lean` proves that trivial neutral fibers compose. This
+  is the exact pointed-set iteration step for cyclic kernel theorems through a
+  solvable tower; it does not prove the cyclic E8 theorem.
 
-All ten supporting files build in the full project and use no `sorry` or
+All eighteen supporting files build in the full project and use no `sorry` or
 new axioms.
 
 ## Source-audited advances across manuscript revisions

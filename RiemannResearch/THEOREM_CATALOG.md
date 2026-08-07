@@ -32,6 +32,17 @@ unreproduced computer-assisted claims, see `E8/SERRE_II_PROOF_AUDIT.md`.
 | `RiemannResearch.AlgebraicGeometry.pointFieldIndex_eq` | `RiemannResearch.AlgebraicGeometry.PointFields` | Pointwise equality of rational-point predicates implies equality of the set-gcd indices of all finite point-field degrees | Kernel checked |
 | `RiemannResearch.AlgebraicGeometry.closedPointIndex_eq_pointFieldIndex` | `RiemannResearch.AlgebraicGeometry.PointFields` | Identifies the traditional closed-point gcd with the splitting-field gcd under the residue-field and closed-image divisibility hypotheses | Kernel checked |
 | `RiemannResearch.AlgebraicGeometry.point_iff_of_fixedLocus_coproduct` | `RiemannResearch.AlgebraicGeometry.PointFields` | A proper-limit map, coproduct fixed locus, and fixed-component inclusion give equality of point fields | Kernel checked |
+| `RiemannResearch.Logic.HasTrivialKernel.comp` | `RiemannResearch.Logic.PointedKernel` | Trivial neutral fibers compose through a tower of pointed maps | Kernel checked |
+| `RiemannResearch.GaloisCohomology.galoisTensorEquiv_tmul_apply` | `RiemannResearch.GaloisCohomology.GaloisTensorDecomposition` | The canonical finite-Galois equivalence `L ⊗[K] L ≃ₐ[L] ((L ≃ₐ[K] L) → L)` evaluates `x ⊗ y` at `σ` as `x * σ y` | Kernel checked |
+| `RiemannResearch.GaloisCohomology.galoisTripleTensorEquiv_tmul_apply` | `RiemannResearch.GaloisCohomology.GaloisTripleTensorDecomposition` | The triple-overlap equivalence evaluates `x ⊗ (y ⊗ z)` at independent `(σ, ρ)` as `x * σ y * ρ z` | Kernel checked |
+| `RiemannResearch.GaloisCohomology.NonabelianH1.classOf_eq_neutral_iff_isCoboundary` | `RiemannResearch.GaloisCohomology.NonabelianH1` | A discrete nonabelian cocycle represents the neutral class exactly when it is a coboundary | Kernel checked |
+| `RiemannResearch.GaloisCohomology.NonabelianH1.restrict_preserves_neutrality` | `RiemannResearch.GaloisCohomology.NonabelianH1` | Restriction of discrete nonabelian first cohomology to a subgroup preserves the neutral class | Kernel checked |
+| `RiemannResearch.GaloisCohomology.NonabelianH1.map_preserves_neutrality` | `RiemannResearch.GaloisCohomology.NonabelianH1` | An equivariant group homomorphism sends neutral nonabelian cohomology classes to neutral classes | Kernel checked |
+| `RiemannResearch.GroupCohomology.h1Conjugation_hom_inv` | `RiemannResearch.GroupCohomology.Conjugation` | Additive H¹ conjugation between a subgroup and its conjugate is an isomorphism, with explicit inverse law | Kernel checked |
+| `RiemannResearch.GroupCohomology.h1Restriction_tower` | `RiemannResearch.GroupCohomology.Restriction` | Additive first-cohomology restriction through nested subgroups equals direct restriction | Kernel checked |
+| `RiemannResearch.GroupCohomology.h1_subsingleton_of_isUnit_fintype_card` | `RiemannResearch.GroupCohomology.StableElements` | Averaging makes additive (H^1) of a finite group trivial when its order is a unit in the coefficient ring | Kernel checked |
+| `RiemannResearch.GroupCohomology.h1Restriction_injective_of_normal_finiteIndex` | `RiemannResearch.GroupCohomology.StableElements` | Restriction to a normal finite-index subgroup is injective when the index is a unit | Kernel checked |
+| `RiemannResearch.LinearAlgebra.regularFunctional_exists_adaptedBase` | `RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase` | A functional nonzero on every root admits a base on whose simple roots it is positive; corrects the PDF's sign-only chamber step | Kernel checked |
 | `RiemannResearch.LinearAlgebra.exists_lift_of_rightInverse` | `RiemannResearch.LinearAlgebra.SplitLift` | A split module quotient lifts every map; over a group algebra this is the equivariant lift used by the valuation packet | Kernel checked |
 | `RiemannResearch.GroupTheory.eq_zero_of_coprime_restrictions` | `RiemannResearch.GroupTheory.CoprimeRestriction` | Two additive restriction maps satisfying coprime restriction--corestriction index formulas jointly detect zero | Kernel checked |
 | `RiemannResearch.GroupTheory.eq_zero_of_gcd_one_annihilators` | `RiemannResearch.GroupTheory.CoprimeRestriction` | A finite family of annihilating natural degrees with integer gcd one detects zero in an additive commutative group; abstract kernel for PDF Lemma 6.36 | Kernel checked |
@@ -88,7 +99,7 @@ unconditional proofs of the motivating named theorems.
 
 | Hypothesis binder | Required mathematical input | Provider / status |
 |---|---|---|
-| `restriction_preserves_neutrality` | Restriction from the base field preserves neutrality | **Open** |
+| `restriction_preserves_neutrality` | Restriction from the base field preserves neutrality | Generic discrete nonabelian (H^1) logic is kernel checked by `NonabelianH1.restrict_preserves_neutrality`; the finite-Galois/fpqc torsor comparison and E8 instantiation remain **open** |
 | `quadratic_restriction_kernel` | Neutrality after the quadratic extension descends to the base | **Open** |
 | `central_torus_splitting` | The relevant central torus is split by the cyclic quadratic extension | **Open** |
 | `cyclic_prime_torus_kernel` | The cyclic-prime torus kernel theorem neutralizes the class over the central field | **Open** |
@@ -106,7 +117,7 @@ unconditional proofs of the motivating named theorems.
 |---|---|---|
 | `fixed_locus_decomposition` | Universal scheme-level decomposition of the fixed locus into twisted Borel components | **Open** |
 | `fixed_locus_on_points` | Point-level consequence of the fixed-locus coproduct | **Open** |
-| `rank_formula` | Chamber-normalized attracting-rank formula | **Open** |
+| `rank_formula` | Chamber-normalized attracting-rank formula | Adapted-chamber existence is kernel checked by `regularFunctional_exists_adaptedBase`; tangent weights, fixed-scheme geometry, and the rank formula remain **open** |
 | `length_zero_iff` | Coxeter length vanishes only at the identity in the supplied model | **Open** |
 | `rightDescent_one` | The identity has no right descents in the supplied model | **Open** |
 | `length_duality` | Complementary Coxeter-length identity | **Open** |
