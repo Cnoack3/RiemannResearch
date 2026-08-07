@@ -315,3 +315,6 @@ unconditional proofs of the motivating named theorems.
 | Noncommutative geometry | C*-algebra representations and commutators |
 | Field with one element | Select and encode a precise F₁ framework |
 | Serre S₂ | Depth-based formulation for rings and schemes |
+| `RiemannResearch.GroupCohomology.corestrictionCochain_mem_cocycles₁` | `RiemannResearch.GroupCohomology.ArbitraryCorestriction` | The explicit left-coset corestriction sends additive one-cocycles to one-cocycles | Kernel checked |
+| `RiemannResearch.GroupCohomology.corestrictionCochain_mem_coboundaries₁` | `RiemannResearch.GroupCohomology.ArbitraryCorestriction` | The same cochain sends coboundaries to coboundaries, so it descends to H¹ | Kernel checked |
+| `RiemannResearch.GroupCohomology.h1RestrictionViaCocycles_comp_h1CorestrictionFiniteIndex` | `RiemannResearch.GroupCohomology.ArbitraryCorestriction` | Restriction followed by arbitrary finite-index corestriction is multiplication by the index on additive H¹ | Kernel checked; additive transfer only |
