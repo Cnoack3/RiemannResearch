@@ -39,13 +39,15 @@ class AgentWorkspaceManager:
         canonical_root: Path,
         remote: str,
         before_replace: Callable[[Path], None] | None = None,
-        retention_days: int = 90,
+        can_archive: Callable[[Path], bool] | None = None,
+        retention_days: int = 14,
     ) -> None:
-        if not 30 <= retention_days <= 3650:
-            raise ValueError("Retention must be between 30 and 3650 days")
+        if not 7 <= retention_days <= 3650:
+            raise ValueError("Retention must be between 7 and 3650 days")
         self.canonical_root = canonical_root.resolve()
         self.remote = remote
         self.before_replace = before_replace
+        self.can_archive = can_archive
         self.retention_days = retention_days
         home = Path(os.environ.get("HOME", "/home/cri_2025")).resolve()
         self.root = Path(
@@ -581,9 +583,9 @@ class AgentWorkspaceManager:
         self._write_meta(meta)
         return {"reset": True, "clean": True, "head": head}
 
-    def cleanup(self, retention_days: int = 90, dry_run: bool = True, _already_locked: bool = False) -> dict:
-        if not 30 <= retention_days <= 3650:
-            raise ValueError("Retention must be between 30 and 3650 days")
+    def cleanup(self, retention_days: int = 14, dry_run: bool = True, _already_locked: bool = False) -> dict:
+        if not 7 <= retention_days <= 3650:
+            raise ValueError("Retention must be between 7 and 3650 days")
         cutoff = time.time() - retention_days * 86400
         archived, preserved = [], []
 
@@ -595,6 +597,12 @@ class AgentWorkspaceManager:
                 if meta.get("last_activity", 0) >= cutoff or not project.is_dir():
                     continue
                 self._validate_workspace_path(token, project)
+                if self.can_archive is not None and not self.can_archive(project):
+                    preserved.append({
+                        "workspace_token": token,
+                        "reason": "active Lean client or build",
+                    })
+                    continue
                 status = self._run(["git", "status", "--porcelain"], cwd=project)
                 head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
                 safe_heads = {meta.get("published_commit"), meta.get("base_commit")}
