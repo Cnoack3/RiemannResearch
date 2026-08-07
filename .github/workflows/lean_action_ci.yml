@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Validate MCP workspace tooling
-        run: python3 -m py_compile tools/lean_workspace_mcp.py tools/agent_workspaces.py
+        run: |\n          python3 -m py_compile tools/lean_workspace_mcp.py tools/agent_workspaces.py\n          python3 tools/test_agent_workspaces.py
       - name: Build the RiemannResearch library
         uses: leanprover/lean-action@v1
         with:
