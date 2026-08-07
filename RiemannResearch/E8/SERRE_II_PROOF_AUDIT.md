@@ -308,6 +308,20 @@ the oriented version of this formalism. Its citation to Semenov Theorem 6.16
 is too broad, however: that theorem's E8 clause treats p=2 and heights at least
 4, not all primes and positive heights.
 
+The Lean bridge now reaches Mathlib's actual integral algebraic-cycle type:
+`IntegralCycleQuotients` constructs quotients by supplied linear relations,
+descends relation-preserving maps, and descends supplied bilinear composition
+on cycles over scheme products, including associativity and diagonal identity
+laws. Given additionally supplied correspondence-ring structures, a geometric
+base-change ring homomorphism, and Rost nilpotence, the same module specializes
+projector and complete-projector-family lifting to those concrete quotient
+carriers. This is not yet a construction of Chow groups or motives. Mathlib
+currently supplies weighted proper pushforward of cycles but not the
+rational-equivalence subgroup, codimension grading, flat pullback, intersection
+product, or the proof that intersection--pushforward composition preserves
+rational equivalence. Those are the precise geometric inputs still separating
+the new quotient interface from CGM's Chow-correspondence endomorphism rings.
+
 Evens--Jones supports the wonderful-compactification tangent weights over the
 complex numbers, but not the false sign-only chamber normalization in Theorem
 3.2 and not, by itself, the arbitrary characteristic-zero descent. The Lean

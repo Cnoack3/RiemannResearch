@@ -27,6 +27,7 @@ import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
 import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.Logic.PointedInvariant
+import RiemannResearch.Motives.IntegralCycleQuotients
 import RiemannResearch.Motives.RostNilpotence
 import RiemannResearch.GroupTheory.CoprimeRestriction
 import RiemannResearch.GroupTheory.BurnsideTopMark
