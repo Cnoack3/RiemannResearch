@@ -148,6 +148,67 @@ noncomputable def e8CartanLinearEquiv :
     (Fin 8 → ℤ) ≃ₗ[ℤ] (Fin 8 → ℤ) :=
   Matrix.toLin'OfInv e8Cartan_mul_inverse e8Cartan_inverse_mul
 
+/-- The E8 Cartan matrix identifies the simple-root lattice with the dual
+simple-coroot lattice. -/
+noncomputable def e8CartanDuality :
+    (Fin 8 → ℤ) ≃ₗ[ℤ] Module.Dual ℤ (Fin 8 → ℤ) :=
+  e8CartanLinearEquiv.symm ≪≫ₗ dotProductEquiv ℤ (Fin 8)
+
+/-- The integral pairing defined by the E8 Cartan matrix is perfect. -/
+theorem e8CartanDuality_isPerfPair :
+    (e8CartanDuality : (Fin 8 → ℤ) →ₗ[ℤ]
+      Module.Dual ℤ (Fin 8 → ℤ)).IsPerfPair :=
+  LinearEquiv.instIsPerfPair e8CartanDuality
+
+/-- The perfect pairing evaluates by multiplying with the E8 Cartan matrix
+and taking the standard dot product. -/
+theorem e8CartanDuality_apply (v w : Fin 8 → ℤ) :
+    e8CartanDuality v w = (CartanMatrix.E₈.mulVec v) ⬝ᵥ w := by
+  change (e8CartanLinearEquiv.symm v) ⬝ᵥ w =
+    (CartanMatrix.E₈.mulVec v) ⬝ᵥ w
+  congr 1
+
+/-- The ith simple root in the integral coordinate lattice. -/
+def e8SimpleRoot (i : Fin 8) : Fin 8 → ℤ := Pi.single i 1
+
+/-- Every coordinate simple root has Cartan self-pairing two. -/
+theorem e8SimpleRoot_pairing_self (i : Fin 8) :
+    e8CartanDuality (e8SimpleRoot i) (e8SimpleRoot i) = 2 := by
+  change (e8CartanLinearEquiv.symm (e8SimpleRoot i)) ⬝ᵥ
+    e8SimpleRoot i = 2
+  have hvec : e8CartanLinearEquiv.symm (e8SimpleRoot i) =
+      CartanMatrix.E₈.mulVec (e8SimpleRoot i) := by
+    funext j
+    exact Matrix.toLin'OfInv_symm_apply
+      e8Cartan_mul_inverse e8Cartan_inverse_mul (e8SimpleRoot i) j
+  rw [hvec]
+  classical
+  simp only [Matrix.mulVec, dotProduct]
+  rw [Finset.sum_eq_single i]
+  · simp [e8SimpleRoot]
+    rw [Finset.sum_eq_single i]
+    · simp [CartanMatrix.E₈_diag]
+    · intro j _ h
+      simp [h]
+    · simp
+  · intro j _ h
+    simp [e8SimpleRoot, h]
+  · simp
+
+/-- The integral simple reflection attached to the `i`th coordinate simple
+root and the perfect E8 Cartan pairing. -/
+noncomputable def e8SimpleReflection (i : Fin 8) :
+    (Fin 8 → ℤ) ≃ₗ[ℤ] (Fin 8 → ℤ) :=
+  Module.reflection (x := e8SimpleRoot i)
+    (f := e8CartanDuality (e8SimpleRoot i))
+    (e8SimpleRoot_pairing_self i)
+
+/-- The concrete E8 simple reflection has the expected root-datum formula. -/
+theorem e8SimpleReflection_apply (i : Fin 8) (v : Fin 8 → ℤ) :
+    e8SimpleReflection i v =
+      v - e8CartanDuality (e8SimpleRoot i) v • e8SimpleRoot i := by
+  exact Module.reflection_apply v (e8SimpleRoot_pairing_self i)
+
 /-- Stable local name for Mathlib's E8 Lie algebra defined by the Serre
 presentation over a commutative ring. -/
 abbrev e8SerreLieAlgebra (R : Type u) [CommRing R] :=
