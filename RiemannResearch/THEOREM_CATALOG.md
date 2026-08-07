@@ -26,6 +26,14 @@ unreproduced computer-assisted claims, see `E8/SERRE_II_PROOF_AUDIT.md`.
 
 | Declaration | Module | Statement / purpose | Status |
 |---|---|---|---|
+| `RiemannResearch.AlgebraicGeometry.affineGroupSchemeObject_hasGroupObject` | `RiemannResearch.AlgebraicGeometry.AffineGroupSchemeBaseChange` | A commutative Hopf algebra represents an affine group object over the spectrum of its base | Kernel checked construction; does not assert smoothness or reductivity |
+| `RiemannResearch.AlgebraicGeometry.affineGroupBaseChangeSchemeObject_hasGroupObject` | `RiemannResearch.AlgebraicGeometry.AffineGroupSchemeBaseChange` | Tensor-product scalar extension of a commutative Hopf algebra again represents an affine group object | Kernel checked construction |
+| `RiemannResearch.E8.BasedE8RootDatum.simpleCartanMatrix_eq_E8` | `RiemannResearch.E8.GroupSchemeFoundation` | A supplied reduced crystallographic root datum with an E8-labelled base has simple-root pairing matrix exactly `CartanMatrix.E₈` | Kernel checked interface theorem; no inhabitant is claimed |
+| `RiemannResearch.E8.e8Cartan_mul_inverse` | `RiemannResearch.E8.GroupSchemeFoundation` | The displayed integral matrix is an exact right inverse of Mathlib's E8 Cartan matrix | Kernel checked finite certificate |
+| `RiemannResearch.E8.e8Cartan_inverse_mul` | `RiemannResearch.E8.GroupSchemeFoundation` | The displayed integral matrix is an exact left inverse of Mathlib's E8 Cartan matrix | Kernel checked finite certificate |
+| `RiemannResearch.E8.e8Cartan_det_isUnit` | `RiemannResearch.E8.GroupSchemeFoundation` | The E8 Cartan determinant is a unit over the integers | Kernel checked consequence |
+| `RiemannResearch.E8.e8CartanLinearEquiv` | `RiemannResearch.E8.GroupSchemeFoundation` | The E8 Cartan matrix defines an integral linear automorphism | Kernel checked construction |
+| `RiemannResearch.E8.e8SerreLieAlgebra_eq_toLieAlgebra` | `RiemannResearch.E8.GroupSchemeFoundation` | Mathlib's E8 Lie algebra is the Serre quotient for the explicit E8 Cartan matrix | Kernel checked definitional equality; not an integration to a group scheme |
 | `sanity_check` | `RiemannResearch.Basic` | Confirms arithmetic tactics and mathlib are available | Kernel checked |
 | `Nat.zero_add_concurrency_b` | `RiemannResearch.Basic` | Zero is a left identity for natural-number addition; isolated publication concurrency check B | Kernel checked |
 | `Nat.add_zero_concurrency_a` | `RiemannResearch.Basic` | Adding zero on the right leaves a natural number unchanged; concurrency branch A verification | Kernel checked |

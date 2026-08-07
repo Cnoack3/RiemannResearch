@@ -1,3 +1,4 @@
+import RiemannResearch.AlgebraicGeometry.AffineGroupSchemeBaseChange
 import RiemannResearch.AlgebraicGeometry.FpqcCechH1
 import RiemannResearch.AlgebraicGeometry.FpqcCoverCommonRefinement
 import RiemannResearch.AlgebraicGeometry.FpqcH1
@@ -51,5 +52,6 @@ import RiemannResearch.E8.SerreIIProgramChecks
 import RiemannResearch.E8.OmegaEightPlusTwo
 import RiemannResearch.E8.SubgroupSieve
 import RiemannResearch.E8.FullWeylCore
+import RiemannResearch.E8.GroupSchemeFoundation
 import RiemannResearch.E8.WonderfulFixedLocus
 import RiemannResearch.RH.Basic

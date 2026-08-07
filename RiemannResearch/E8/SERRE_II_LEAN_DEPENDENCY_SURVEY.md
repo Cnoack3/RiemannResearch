@@ -13,8 +13,10 @@ Current Mathlib already supplies:
 
 - [fpqc and fppf sites](https://leanprover-community.github.io/mathlib4_docs/Mathlib/AlgebraicGeometry/Sites/Fpqc.html),
   including precoverages, stability, and fpqc subcanonicality;
-- [root-system definitions](https://leanprover-community.github.io/mathlib4_docs/Mathlib/LinearAlgebra/RootSystem/Defs.html)
-  and semisimple Lie-algebra construction;
+- [root-datum and root-system definitions](https://leanprover-community.github.io/mathlib4_docs/Mathlib/LinearAlgebra/RootSystem/Defs.html),
+  the explicit E8 Cartan matrix, and the E8 Serre Lie-algebra construction;
+- commutative Hopf algebras, their tensor-product scalar extension, and
+  [the affine group object represented by a Hopf algebra](https://leanprover-community.github.io/mathlib4_docs/Mathlib/AlgebraicGeometry/Group/Affine.html);
 - [basic algebraic cycles](https://leanprover-community.github.io/mathlib4_docs/Mathlib/AlgebraicGeometry/AlgebraicCycle/Basic.html);
 - fixed-cover nonabelian Čech H¹, affine group schemes, and additive group
   cohomology.
@@ -34,6 +36,15 @@ E8, or algebraic-group torsors. Its
 pins Lean `v4.15.0-rc1`, far behind this project's toolchain.
 
 Verdict: do not import.
+
+The project now records the compatible reusable boundary in
+`E8/GroupSchemeFoundation.lean`: an E8-labelled root-datum interface, an
+exact integral inverse certificate for the E8 Cartan matrix, and Mathlib's E8
+Serre Lie algebra.  The generic scheme construction and Hopf-algebra scalar
+extension are packaged in
+`AlgebraicGeometry/AffineGroupSchemeBaseChange.lean`.  These modules do not
+construct an E8 Chevalley coordinate Hopf algebra and therefore do not claim a
+smooth reductive E8 group scheme.
 
 ### Group-cohomology corestriction
 
