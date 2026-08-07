@@ -100,6 +100,11 @@ the literal PDF theorem.
   equivalence on the triple overlap and proves the independent-coordinate
   formula `(x ⊗ (y ⊗ z))(σ,ρ) = x * σ(y) * ρ(z)`, the algebraic identity
   needed to translate the Čech cocycle equation.
+- `GaloisCohomology/GaloisAffineCechCoordinates.lean` transports affine
+  group points through the finite-Galois double and triple tensor
+  decompositions and proves all three face formulas, including the twisted
+  `σ • f(σ⁻¹ρ)` face. Scheme-level transport through chosen pullback
+  isomorphisms remains open.
 - `GaloisCohomology/GaloisCechComparison.lean` computes all three Čech face
   maps in Galois coordinates, proves coordinate Čech cocycles and gauge classes
   equivalent to discrete nonabelian cocycles and H¹, and constructs the actual
@@ -108,8 +113,8 @@ the literal PDF theorem.
 - `GaloisCohomology/SingletonCechH1.lean` proves the generic Yoneda step for
   every presheaf of groups: cochains are sections on the double overlap,
   cocycles satisfy one equation on the triple overlap, and cohomology is the
-  universal gauge relation. The affine/Galois transport and global torsor
-  classification remain separate inputs.
+  universal gauge relation. The final scheme-over-pullback transport and
+  global torsor classification remain separate inputs.
 - `GaloisCohomology/NonabelianH1.lean` constructs discrete nonabelian
   one-cocycles modulo gauge, their neutral class, subgroup restriction, and
   coefficient pushforward. It proves that both operations preserve neutrality;
@@ -138,7 +143,7 @@ the literal PDF theorem.
   pointed-set step for cyclic kernel theorems along a solvable composition
   series; it does not prove the cyclic E8 theorem.
 
-All twenty-seven supporting files build in the full project and use no `sorry`
+All twenty-eight supporting files build in the full project and use no `sorry`
 or new axioms.
 
 ## Source-audited advances across manuscript revisions

@@ -6,6 +6,7 @@ import RiemannResearch.AlgebraicGeometry.PointFieldIndexOne
 import RiemannResearch.AlgebraicGeometry.PrimePowerIndex
 import RiemannResearch.Basic
 import RiemannResearch.GaloisCohomology.DifferenceCocycle
+import RiemannResearch.GaloisCohomology.GaloisAffineCechCoordinates
 import RiemannResearch.GaloisCohomology.GaloisCechComparison
 import RiemannResearch.GaloisCohomology.GaloisTensorDecomposition
 import RiemannResearch.GaloisCohomology.GaloisTripleTensorDecomposition
