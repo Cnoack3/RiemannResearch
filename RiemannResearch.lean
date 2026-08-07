@@ -1,3 +1,5 @@
+import RiemannResearch.AlgebraicGeometry.FpqcCechH1
+import RiemannResearch.AlgebraicGeometry.FpqcCoverCommonRefinement
 import RiemannResearch.AlgebraicGeometry.PointFields
 import RiemannResearch.Basic
 import RiemannResearch.GaloisCohomology.GaloisTensorDecomposition

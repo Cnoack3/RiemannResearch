@@ -72,6 +72,15 @@ the literal PDF theorem.
 - `LinearAlgebra/RootSystem/AdaptedBase.lean` proves the correct replacement
   for the defective sign-only normalization: a functional regular on every
   root admits a base on which all simple-root values are positive.
+- `AlgebraicGeometry/FpqcCechH1.lean` packages affine group schemes and
+  witnessed fpqc covers into Mathlib's fixed-cover nonabelian Čech H¹, defines
+  refinement pullback, and proves that it preserves the neutral class. It does
+  not yet classify torsors or take the colimit over all covers.
+- `AlgebraicGeometry/FpqcCoverCommonRefinement.lean` proves that two arbitrary
+  indexed witnessed fpqc covers have a witnessed common refinement formed by
+  pairwise fiber products, together with refinement maps to both inputs. This
+  supplies the directedness prerequisite for the global cover quotient; the
+  quotient and its torsor comparison remain to be constructed.
 - `GaloisCohomology/GaloisTensorDecomposition.lean` constructs the canonical
   finite-Galois equivalence `L ⊗[K] L ≃ₐ[L] ((L ≃ₐ[K] L) → L)` and proves
   the pure-tensor formula `(x ⊗ y)(σ) = x * σ y`. This is the first
@@ -100,7 +109,7 @@ the literal PDF theorem.
   is the exact pointed-set iteration step for cyclic kernel theorems through a
   solvable tower; it does not prove the cyclic E8 theorem.
 
-All eighteen supporting files build in the full project and use no `sorry` or
+All twenty supporting files build in the full project and use no `sorry` or
 new axioms.
 
 ## Source-audited advances across manuscript revisions

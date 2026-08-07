@@ -30,7 +30,7 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 |---|---|---|
 | Theorem 2.1 | Primary-source checked | Izquierdo--Lucchini Arteche Corollary 4.14, Garibaldi--Semenov (1.1)--(1.2), and Totaro Theorem 0.1 exactly support the three parts; none is formalized here. |
 | Theorem 2.2 | Manuscript deduction from checked sources | The co-p closure and finite-descent argument is coherent; ILA Corollary 4.14 validates the p-special step and no nonabelian Bezout conclusion is drawn. |
-| Proposition 3.1 | Source dependent | Requires the wonderful compactification, orbit geometry, and fpqc descent absent from Mathlib. |
+| Proposition 3.1 | Fixed-cover fpqc foundations in Lean; geometry source dependent | Witnessed fpqc covers, refinement pullback, neutral Čech H¹, and pairwise common refinements are kernel checked. The wonderful compactification, orbit geometry, effective descent, and torsor classification remain absent. |
 | Theorem 3.2 | **Literal statement defective; Lean conditional after correction** | Changing the sign of an arbitrary regular cocharacter does not normalize its Weyl chamber in rank greater than one. `a2Coroot_sign_normalization_counterexample` proves the defect, while `regularFunctional_exists_adaptedBase` kernel-checks the correct chamber-change replacement. Evens--Jones supports the subsequent weight calculation only after this choice (and is written over C); the characteristic-zero fixed-scheme descent and rank formula remain open. |
 | Corollary 3.3 | Unverified | Depends on Theorems 2.1 and 3.2. |
 | Proposition 4.1 | Manuscript only | The localization calculation CH0(Gm)=0 is not formalized here. |
@@ -61,7 +61,7 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Corollary 5.14 | Unverified | Depends on Theorems 5.11 and 5.13. |
 | Theorem 5.16 | Source checked; arithmetic exact in Lean | Totaro's page-21 table supplies the three subsystem stabilizer indices and Gille Corollary 9.3.6 supplies neutralization. The algebraic descent is informal. The exact index products and gcd for 135, 11200, 12096 are checked in SerreIIProgramChecks. |
 | Corollary 5.17 | Exact arithmetic and additive shadow in Lean; geometry unverified | serreIIProgram_threeSubsystem_bezout and serreIIProgram_threeSubsystem_gcd check the degree calculation. The splitting cycles still depend on Theorem 5.16. |
-| Theorem 5.19 | Lean conditional with new H1 foundation | `quasisimpleCoreOfFullWeylDescent` remains conditional. Discrete nonabelian (H^1), subgroup restriction, coefficient pushforward, and preservation of neutrality are now kernel checked; the finite-Galois/fpqc comparison and the ten E8/group-identification inputs remain open. |
+| Theorem 5.19 | Lean conditional with new H1 and Galois-cover foundations | `quasisimpleCoreOfFullWeylDescent` remains conditional. Discrete nonabelian H¹, fixed-cover fpqc Čech H¹ with common refinements, and the finite-Galois square/triple tensor decompositions are kernel checked. The global cover quotient, torsor classification, Čech/discrete cocycle equivalence, and ten E8/group-identification inputs remain open. |
 
 ## Section 6
 
