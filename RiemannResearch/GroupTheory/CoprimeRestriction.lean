@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import Mathlib.Algebra.Group.Hom.Defs
+import Mathlib.Algebra.EuclideanDomain.Int
 import Mathlib.Data.Int.GCD
+import Mathlib.RingTheory.PrincipalIdealDomain
 
 /-!
 # Coprime restriction--corestriction
@@ -34,5 +36,46 @@ theorem eq_zero_of_coprime_restrictions
   constructor
   · rw [← hM x, hxM, map_zero]
   · rw [← hN x, hxN, map_zero]
+
+/-- A finite family of annihilating degrees with gcd one detects zero.
+
+This is the abstract additive core of Lemma 6.36, “Abelian Bezout descent,”
+in the E8 Serre II manuscript. The integer-valued Finset gcd hypothesis
+produces an integral Bezout combination. As in the two-map theorem above,
+the result applies only after restriction--corestriction has supplied the
+displayed annihilator equations in an additive commutative group.
+-/
+theorem eq_zero_of_gcd_one_annihilators
+    {ι A : Type*} [AddCommGroup A]
+    (s : Finset ι) (degree : ι → ℕ)
+    (hgcd : s.gcd (fun i => (degree i : ℤ)) = 1)
+    {x : A} (hkill : ∀ i ∈ s, degree i • x = 0) : x = 0 := by
+  classical
+  obtain ⟨coefficient, hcoefficient⟩ :=
+    Finset.gcd_eq_sum_mul s (fun i => (degree i : ℤ))
+  have hbezout : ∑ i ∈ s, coefficient i * (degree i : ℤ) = 1 := by
+    calc
+      ∑ i ∈ s, coefficient i * (degree i : ℤ) =
+          ∑ i ∈ s, (degree i : ℤ) * coefficient i := by
+            apply Finset.sum_congr rfl
+            intro i hi
+            exact mul_comm _ _
+      _ = s.gcd (fun i => (degree i : ℤ)) := hcoefficient.symm
+      _ = 1 := hgcd
+  let zsmulHom : ℤ →+ A :=
+    { toFun := fun n => n • x
+      map_zero' := zero_zsmul x
+      map_add' := fun m n => add_zsmul x m n }
+  have hz : (∑ i ∈ s, coefficient i * (degree i : ℤ)) • x = 0 := by
+    change zsmulHom (∑ i ∈ s, coefficient i * (degree i : ℤ)) = 0
+    rw [map_sum]
+    apply Finset.sum_eq_zero
+    intro i hi
+    change (coefficient i * (degree i : ℤ)) • x = 0
+    rw [mul_zsmul]
+    have hd : (degree i : ℤ) • x = 0 := by
+      simpa using hkill i hi
+    rw [hd, smul_zero]
+  simpa [hbezout] using hz
 
 end RiemannResearch.GroupTheory
