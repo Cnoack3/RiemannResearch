@@ -18,7 +18,7 @@ import tempfile
 import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Iterator
+from typing import Callable, Iterator
 
 
 TOKEN_RE = re.compile(r"^ws_[A-Za-z0-9_-]{20,80}$")
@@ -34,9 +34,15 @@ WRITABLE_SUFFIXES = {".lean", ".md", ".toml", ".yml", ".yaml", ".json"}
 
 
 class AgentWorkspaceManager:
-    def __init__(self, canonical_root: Path, remote: str) -> None:
+    def __init__(
+        self,
+        canonical_root: Path,
+        remote: str,
+        before_replace: Callable[[Path], None] | None = None,
+    ) -> None:
         self.canonical_root = canonical_root.resolve()
         self.remote = remote
+        self.before_replace = before_replace
         home = Path(os.environ.get("HOME", "/home/cri_2025")).resolve()
         self.root = Path(
             os.environ.get("LEAN_AGENT_WORKSPACES_ROOT", home / "lean-agent-workspaces")
@@ -194,6 +200,8 @@ class AgentWorkspaceManager:
                     "Workspace needs rehydration but contains unpublished work; it was preserved. "
                     "Inspect agent_workspace_git_status."
                 )
+            if self.before_replace is not None:
+                self.before_replace(project)
             shutil.rmtree(project)
         commit = meta.get("published_commit") or meta.get("archive_commit")
         self._clone(project, commit=commit)
@@ -590,6 +598,8 @@ class AgentWorkspaceManager:
                     continue
                 archived.append({"workspace_token": token, "commit": head})
                 if not dry_run:
+                    if self.before_replace is not None:
+                        self.before_replace(project)
                     shutil.rmtree(project)
                     meta.update(
                         state="archived", archive_commit=head, needs_rehydrate=True,
