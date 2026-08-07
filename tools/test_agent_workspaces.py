@@ -56,8 +56,12 @@ with tempfile.TemporaryDirectory() as raw:
     fake_lake.chmod(0o755)
     os.environ["PATH"] = str(fake_bin) + os.pathsep + os.environ["PATH"]
     closed_projects = []
+    active_projects = set()
     manager = TestManager(
-        source, str(remote), before_replace=lambda path: closed_projects.append(str(path))
+        source,
+        str(remote),
+        before_replace=lambda path: closed_projects.append(str(path)),
+        can_archive=lambda path: str(path) not in active_projects,
     )
 
     first = manager.open()
@@ -102,6 +106,14 @@ new file mode 100644
     published_meta["last_activity"] = 0
     manager._write_meta(published_meta)
     published_root = Path(first["project_root"])
+    active_projects.add(str(published_root))
+    active_cleanup = manager.cleanup(retention_days=14, dry_run=False)
+    assert published_root.is_dir()
+    assert any(
+        item["reason"] == "active Lean client or build"
+        for item in active_cleanup["preserved_unpublished"]
+    )
+    active_projects.remove(str(published_root))
     archived = manager.cleanup(retention_days=30, dry_run=False)
     assert not published_root.exists()
     assert archived["archived_or_eligible"]
