@@ -38,6 +38,8 @@ including citation-dependent and unreproduced computer-assisted claims, see
 | `RiemannResearch.E8.weylIndexPacket_gcd` | `RiemannResearch.E8.WeylIndexPacket` | The three packet degrees have gcd one | Kernel checked |
 | `RiemannResearch.E8.exists_odd_of_sum_eq_135` | `RiemannResearch.E8.WeylIndexPacket` | A finite family of degrees summing to 135 contains an odd degree | Kernel checked |
 | `RiemannResearch.E8.eq_zero_of_weylIndexPacket_annihilators` | `RiemannResearch.E8.WeylIndexPacket` | An abelian class killed by 135, 2240, and 48384 is zero | Kernel checked |
+| `RiemannResearch.E8.exists_bounded_weylIndexPacket_residue` | `RiemannResearch.E8.WeylIndexPacket` | Every residue modulo 135 is represented by `2240a+48384b` with `a<27`, `b<5` | Kernel checked by finite decision |
+| `RiemannResearch.E8.weylIndexPacket_residue_bound` | `RiemannResearch.E8.WeylIndexPacket` | The residue representatives are bounded by 251776 | Kernel checked |
 | `RiemannResearch.E8.omegaEightPlusTwo_order` | `RiemannResearch.E8.OmegaEightPlusTwo` | `2^12 · 3^5 · 5^2 · 7 = 174182400` | Kernel checked |
 | `RiemannResearch.E8.nonabelian_of_isSimpleGroup_of_card_eq_omegaOrder` | `RiemannResearch.E8.OmegaEightPlusTwo` | A simple group of order `2^12 · 3^5 · 5^2 · 7` is nonabelian | Kernel checked |
 | `RiemannResearch.E8.attractingRank_properties` | `RiemannResearch.E8.WonderfulFixedLocus` | The length-plus-descent formula and Coxeter complement identities imply unique zero rank and rank duality | Kernel checked |

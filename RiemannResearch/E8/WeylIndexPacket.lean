@@ -52,6 +52,20 @@ theorem exists_odd_of_sum_eq_135 {ι : Type*} [Fintype ι]
   have hne : (135 : ZMod 2) ≠ 0 := by decide
   exact hne hcast
 
+/-- Every residue modulo 135 has a bounded nonnegative representative using
+2240 and 48384. This finite certificate underlies the explicit symmetric-power
+bound in the manuscript. -/
+theorem exists_bounded_weylIndexPacket_residue :
+    ∀ r : Fin 135, ∃ a : Fin 27, ∃ b : Fin 5,
+      (2240 * a.val + 48384 * b.val) % 135 = r.val := by
+  set_option maxRecDepth 100000 in
+    decide
+
+/-- The largest bound produced by the elementary residue construction. -/
+theorem weylIndexPacket_residue_bound :
+    26 * 2240 + 4 * 48384 = 251776 := by
+  norm_num
+
 /-- An element of an abelian group annihilated by the three packet degrees is
 zero. This is only an additive shadow; it says nothing about a pointed
 nonabelian neutral fiber. -/
