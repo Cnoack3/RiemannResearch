@@ -123,8 +123,11 @@ the literal PDF theorem.
 - `GroupCohomology/StableElements.lean` proves by explicit averaging that
   additive `H^1` of a finite group vanishes when its order is a unit, then
   combines this with inflation--restriction to prove injectivity on `H^1`
-  for normal finite-index subgroups of unit index. The arbitrary-subgroup
-  stable-elements theorem still needs cohomological transfer and Mackey theory.
+  for normal finite-index subgroups of unit index. It also defines the
+  stable-elements submodule and proves that the image of ambient restriction
+  is contained in it. The reverse inclusion, and hence Brown's full
+  stable-elements characterization, still needs cohomological transfer and
+  Mackey theory.
 - `Logic/PointedKernel.lean` proves that trivial neutral fibers compose. This
   is the exact pointed-set iteration step for cyclic kernel theorems through a
   solvable tower; it does not prove the cyclic E8 theorem.
