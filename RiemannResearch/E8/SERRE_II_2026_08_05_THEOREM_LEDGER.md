@@ -86,7 +86,7 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Proposition 6.21 | Additive restriction and abstract kernel checked | `h1Restriction_tower` instantiates additive (H^1) restriction and its tower law; `eq_zero_of_coprime_restrictions` checks the coprime detection step. Cohomological corestriction and the restriction--corestriction index formula remain unformalized. |
 | Proposition 6.22 | Manuscript only | The Weil-restriction dimension and density argument is not formalized. |
 | Proposition 6.24 | Manuscript only | The Bass--Serre amalgam and Euler-characteristic calculation are not formalized. |
-| Proposition 6.26 | Unreproduced computation | The A11 Burnside relation and even conjugators require an absent GAP certificate. |
+| Proposition 6.26 | Difference-cocycle and conjugacy logic exact in Lean; computation unreproduced | DifferenceCocycle.lean proves the displayed formula is a nonabelian cocycle and that global or subgroup neutrality is exactly conjugacy of the two representations. The A11 Burnside relation, nonisomorphism, and even local conjugators still require the absent GAP certificate. |
 | Corollary 6.28 | Computation conditional | Depends on Proposition 6.26 before the field-theoretic realization. |
 | Theorem 6.30 | Abstract projective/lifted generation and common-fixed-point implications in Lean; computation conditional | iSup_eq_top_of_setGcd_indices proves projective generation from gcd-one indices; iSup_comap_eq_top_of_surjective lifts any nonempty generating family through the central quotient; GeneratedFixedPoint.lean proves the common-fixed-point step. The concrete subgroup indices still depend on Theorem 6.10's unreproduced GAP data. |
 | Corollary 6.31 | Unverified | Depends on Theorems 6.10 and 6.30. |

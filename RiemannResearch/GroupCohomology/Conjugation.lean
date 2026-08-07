@@ -73,6 +73,13 @@ theorem conjugateSubgroup_mul {G : Type u} [Group G]
   ext x
   simp [mul_assoc]
 
+/-- Conjugation preserves subgroup inclusions. -/
+theorem conjugateSubgroup_mono
+    {G : Type u} [Group G] {K H : Subgroup G}
+    (hKH : K ≤ H) (g : G) :
+    conjugateSubgroup K g ≤ conjugateSubgroup H g :=
+  Subgroup.map_mono hKH
+
 /-- The action of a group element on the coefficient module. -/
 noncomputable def actionLinearEquiv
     {k G : Type u} [CommRing k] [Group G]

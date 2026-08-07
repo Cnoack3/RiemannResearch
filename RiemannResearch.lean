@@ -3,6 +3,7 @@ import RiemannResearch.AlgebraicGeometry.FpqcCoverCommonRefinement
 import RiemannResearch.AlgebraicGeometry.PointFields
 import RiemannResearch.AlgebraicGeometry.PointFieldIndexOne
 import RiemannResearch.Basic
+import RiemannResearch.GaloisCohomology.DifferenceCocycle
 import RiemannResearch.GaloisCohomology.GaloisTensorDecomposition
 import RiemannResearch.GaloisCohomology.GaloisTripleTensorDecomposition
 import RiemannResearch.GaloisCohomology.NonabelianH1

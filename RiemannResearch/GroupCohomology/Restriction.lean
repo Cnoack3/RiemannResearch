@@ -38,6 +38,137 @@ noncomputable def h1Restriction
       groupCohomology.H1 (Rep.res H.subtype A) :=
   h1RestrictionAlong A H.subtype
 
+/- The identity-linear comparison from restriction in two subgroup stages to
+direct restriction. -/
+noncomputable def restrictionComparisonHom
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    Rep.res (Subgroup.inclusion hKH) (Rep.res H.subtype A) ⟶
+      Rep.res K.subtype A :=
+  Rep.ofHom
+    { toLinearMap := LinearMap.id
+      isIntertwining' := by
+        intro x
+        rfl }
+
+/-- The inverse identity-linear comparison from direct restriction to
+restriction in two subgroup stages. -/
+noncomputable def restrictionComparisonInv
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    Rep.res K.subtype A ⟶
+      Rep.res (Subgroup.inclusion hKH) (Rep.res H.subtype A) :=
+  Rep.ofHom
+    { toLinearMap := LinearMap.id
+      isIntertwining' := by
+        intro x
+        rfl }
+
+/-- Iterated and direct subgroup restriction representations are canonically
+isomorphic. -/
+noncomputable def restrictionComparisonIso
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    Rep.res (Subgroup.inclusion hKH) (Rep.res H.subtype A) ≅
+      Rep.res K.subtype A where
+  hom := restrictionComparisonHom A hKH
+  inv := restrictionComparisonInv A hKH
+  hom_inv_id := by
+    ext
+    rfl
+  inv_hom_id := by
+    ext
+    rfl
+
+/-- The H¹ comparison map from iterated to direct subgroup restriction. -/
+noncomputable def h1RestrictionComparison
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    groupCohomology.H1
+        (Rep.res (Subgroup.inclusion hKH) (Rep.res H.subtype A)) ⟶
+      groupCohomology.H1 (Rep.res K.subtype A) :=
+  groupCohomology.map (MonoidHom.id K)
+    (restrictionComparisonHom A hKH) 1
+
+/-- The H¹ comparison between iterated and direct restriction is an
+isomorphism. -/
+noncomputable def h1RestrictionComparisonIso
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    groupCohomology.H1
+        (Rep.res (Subgroup.inclusion hKH) (Rep.res H.subtype A)) ≅
+      groupCohomology.H1 (Rep.res K.subtype A) :=
+  (groupCohomology.functor k K 1).mapIso
+    (restrictionComparisonIso A hKH)
+
+theorem h1RestrictionComparison_eq_iso_hom
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    h1RestrictionComparison A hKH =
+      (h1RestrictionComparisonIso A hKH).hom := by
+  unfold h1RestrictionComparison h1RestrictionComparisonIso
+  rw [← groupCohomology.functor_map]
+  rfl
+
+@[simp]
+theorem h1RestrictionComparison_hom_inv
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    h1RestrictionComparison A hKH ≫
+        (h1RestrictionComparisonIso A hKH).inv = 𝟙 _ := by
+  rw [h1RestrictionComparison_eq_iso_hom]
+  exact (h1RestrictionComparisonIso A hKH).hom_inv_id
+
+@[simp]
+theorem h1RestrictionComparison_inv_hom
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    (h1RestrictionComparisonIso A hKH).inv ≫
+        h1RestrictionComparison A hKH = 𝟙 _ := by
+  rw [h1RestrictionComparison_eq_iso_hom]
+  exact (h1RestrictionComparisonIso A hKH).inv_hom_id
+
+/-- Restriction from H¹(H,A) to H¹(K,A), with the nested/direct
+representation comparison built into its coefficient morphism. -/
+noncomputable def h1RestrictionBetween
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    groupCohomology.H1 (Rep.res H.subtype A) ⟶
+      groupCohomology.H1 (Rep.res K.subtype A) :=
+  groupCohomology.map (Subgroup.inclusion hKH)
+    (restrictionComparisonHom A hKH) 1
+
+/-- Raw restriction followed by the H¹ comparison equals the one-step
+restriction map with comparison built in. -/
+theorem h1RestrictionAlong_comp_comparison
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    h1RestrictionAlong (Rep.res H.subtype A)
+        (Subgroup.inclusion hKH) ≫
+      h1RestrictionComparison A hKH =
+        h1RestrictionBetween A hKH := by
+  simp only [h1RestrictionAlong, h1RestrictionComparison,
+    h1RestrictionBetween]
+  rw [← groupCohomology.map_comp]
+  apply groupCohomology.map_congr
+  · rfl
+  · ext x
+    rfl
+
+/-- Direct restriction to K equals restriction first to H and then the
+comparison-aware restriction from H to K. -/
+theorem h1RestrictionBetween_tower
+    {k G : Type u} [CommRing k] [Group G]
+    (A : Rep k G) {K H : Subgroup G} (hKH : K ≤ H) :
+    h1Restriction A K =
+      h1Restriction A H ≫ h1RestrictionBetween A hKH := by
+  simp only [h1Restriction, h1RestrictionAlong, h1RestrictionBetween]
+  rw [← groupCohomology.map_comp]
+  apply groupCohomology.map_congr
+  · exact (Subgroup.subtype_comp_inclusion hKH).symm
+  · ext x
+    rfl
+
 /-- The `H¹` map associated with identity maps on the group and coefficients
 is the identity. -/
 @[simp]
