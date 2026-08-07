@@ -71,8 +71,9 @@
 - Lean LSP processes are capped at 16 by default (`LEAN_MAX_SHARED_CLIENTS`,
   allowed range 1--64) and older clients may be evicted under pressure. This is
   safe: the next absolute-path Lean call starts a new process against the same
-  persistent clone. Workspace retention defaults to 90 days
-  (`LEAN_WORKSPACE_RETENTION_DAYS`, allowed range 30--3650).
+  persistent clone. Workspace retention defaults to 14 days
+  (`LEAN_WORKSPACE_RETENTION_DAYS`, allowed range 7--3650); cleanup skips clones
+  with a registered Lean client or build in progress.
 
 ## Module architecture
 
