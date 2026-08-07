@@ -22,8 +22,12 @@ Conjecture II has been solved.
   the parity step from total degree 135 to an odd residue degree, and the
   associated additive annihilator theorem. These declarations do not supply
   the geometric fixed-locus or central-reduction inputs.
+- `E8/SylowSevenArithmetic.lean` verifies the three packet indices
+  `34560`, `61440`, and `4320`, their displayed prime factorizations,
+  their congruence to one modulo seven, and the normalizer-index products.
+  It does not identify the packet groups or prove the torsor-splitting claim.
 
-All three files build in the full project and use no `sorry` or new axioms.
+All four files build in the full project and use no `sorry` or new axioms.
 
 ## Mathematically verified manuscript advances
 
