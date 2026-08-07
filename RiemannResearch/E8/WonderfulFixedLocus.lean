@@ -28,8 +28,10 @@ those ingredients through named interfaces:
 
 The theorem does not assume its point-field or index conclusions. Lean derives
 them from the fixed-locus point shadow, the proper orbit limit, inclusion of a
-fixed component, and the Borel-reduction neutrality criterion. It also proves
-the zero-rank and complementary-rank statements from the Coxeter identities.
+fixed component, and, for inner torsors, the Borel-reduction neutrality
+criterion. Compactification/Borel point fields and indices are unconditional;
+neutrality and torsor-index comparisons explicitly require innerness. It also
+proves the zero-rank and complementary-rank statements from the Coxeter identities.
 
 The source statement says that an arbitrary regular cocharacter can be
 corrected by changing its sign. In rank greater than one this is not generally
@@ -330,6 +332,7 @@ structure UniversalFixedLocusConclusion
     (degreeCompact : ∀ L, ChowCompact L →+ ℤ)
     (hasCompactPoint hasFixedPoint hasBorelPoint neutral :
       Extension → Prop)
+    (isInner : Prop)
     (isFinite : Extension → Prop) (extensionDegree : Extension → ℕ) :
     Prop where
   /-- The fixed locus is a coproduct of copies of the twisted Borel variety,
@@ -352,42 +355,46 @@ structure UniversalFixedLocusConclusion
   /-- The compactification and Borel variety have points simultaneously. -/
   compact_iff_borel :
     ∀ L, hasCompactPoint L ↔ hasBorelPoint L
-  /-- A Borel point is equivalent to neutrality of the torsor. -/
+  /-- For an inner torsor, a Borel point is equivalent to neutrality. -/
   borel_iff_torsor_neutral :
-    ∀ L, hasBorelPoint L ↔ neutral L
-  /-- Part (iii): the compactification has a point exactly when the torsor is
-  neutral. -/
+    isInner → ∀ L, hasBorelPoint L ↔ neutral L
+  /-- In the inner case, the compactification has a point exactly when the
+  torsor is neutral. -/
   compact_iff_torsor_neutral :
-    ∀ L, hasCompactPoint L ↔ neutral L
+    isInner → ∀ L, hasCompactPoint L ↔ neutral L
   /-- Equality of all point fields for the compactification and Borel variety. -/
   compact_point_fields_eq_borel :
     pointFields hasCompactPoint = pointFields hasBorelPoint
-  /-- Equality of all point fields for the Borel variety and neutral torsor. -/
+  /-- In the inner case, equality of Borel point fields and splitting fields. -/
   borel_point_fields_eq_neutral :
-    pointFields hasBorelPoint = pointFields neutral
+    isInner → pointFields hasBorelPoint = pointFields neutral
   /-- Equality of finite point fields for the compactification and Borel variety. -/
   compact_finite_point_fields_eq_borel :
     finitePointFields isFinite hasCompactPoint =
       finitePointFields isFinite hasBorelPoint
-  /-- Equality of finite point fields for the Borel variety and neutral torsor. -/
+  /-- In the inner case, equality of finite Borel point and splitting fields. -/
   borel_finite_point_fields_eq_neutral :
-    finitePointFields isFinite hasBorelPoint =
+    isInner → finitePointFields isFinite hasBorelPoint =
       finitePointFields isFinite neutral
   /-- Equality of the complete finite splitting-degree spectra. -/
   compact_point_degrees_eq_borel :
     finitePointDegrees isFinite extensionDegree hasCompactPoint =
       finitePointDegrees isFinite extensionDegree hasBorelPoint
-  /-- Equality of the Borel and torsor finite splitting-degree spectra. -/
+  /-- In the inner case, equality of Borel and torsor splitting degrees. -/
   borel_point_degrees_eq_neutral :
-    finitePointDegrees isFinite extensionDegree hasBorelPoint =
+    isInner → finitePointDegrees isFinite extensionDegree hasBorelPoint =
       finitePointDegrees isFinite extensionDegree neutral
   /-- Equality of the compactification and Borel point-field indices. -/
   compact_index_eq_borel :
     pointFieldIndex isFinite extensionDegree hasCompactPoint =
       pointFieldIndex isFinite extensionDegree hasBorelPoint
-  /-- Equality of the Borel and torsor point-field indices. -/
+  /-- In the inner case, equality of the Borel and torsor indices. -/
   borel_index_eq_torsor :
-    pointFieldIndex isFinite extensionDegree hasBorelPoint =
+    isInner → pointFieldIndex isFinite extensionDegree hasBorelPoint =
+      pointFieldIndex isFinite extensionDegree neutral
+  /-- In the inner case, equality of compactification and torsor indices. -/
+  compact_index_eq_torsor :
+    isInner → pointFieldIndex isFinite extensionDegree hasCompactPoint =
       pointFieldIndex isFinite extensionDegree neutral
 
 /-- Conditional formalization of the universal fixed-locus and splitting-field
@@ -421,6 +428,7 @@ theorem universalFixedLocusAndSplittingField
     (degreeCompact : ∀ L, ChowCompact L →+ ℤ)
     (hasCompactPoint hasFixedPoint hasBorelPoint neutral :
       Extension → Prop)
+    (isInner : Prop)
     (isFinite : Extension → Prop) (extensionDegree : Extension → ℕ)
     (fixed_locus_decomposition :
       ∀ L, GeometryIso L (fixedLocusObject L)
@@ -449,15 +457,15 @@ theorem universalFixedLocusAndSplittingField
     (properLimit : ∀ L, hasCompactPoint L → hasFixedPoint L)
     (fixedComponentInclusion :
       ∀ L, hasBorelPoint L → hasCompactPoint L)
-    (borelReduction_iff_neutral :
-      ∀ L, hasBorelPoint L ↔ neutral L) :
+    (inner_borelReduction_iff_neutral :
+      isInner → ∀ L, hasBorelPoint L ↔ neutral L) :
     UniversalFixedLocusConclusion Extension W one longestMul
       rank length rightDescent positiveRoots simpleRoots
       Geometry fixedLocusObject borelObject coproduct GeometryIso
       Motive compactMotive borelMotive tateTwist directSum MotiveIso
       ChowBorel ChowCompact degreeBorel degreeCompact
       hasCompactPoint hasFixedPoint hasBorelPoint neutral
-      isFinite extensionDegree := by
+      isInner isFinite extensionDegree := by
   have hranks :
       AttractingRankConclusion W one longestMul rank length rightDescent
         positiveRoots simpleRoots :=
@@ -472,34 +480,40 @@ theorem universalFixedLocusAndSplittingField
     point_iff_of_fixedLocus_coproduct hasCompactPoint hasBorelPoint
       hasFixedPoint properLimit hfixedPoints fixedComponentInclusion
   have hcompactNeutral :
-      ∀ L, hasCompactPoint L ↔ neutral L := by
-    intro L
-    exact (hcompactBorel L).trans (borelReduction_iff_neutral L)
+      isInner → ∀ L, hasCompactPoint L ↔ neutral L := by
+    intro hinner L
+    exact (hcompactBorel L).trans
+      (inner_borelReduction_iff_neutral hinner L)
   refine
     { fixed_locus_decomposition := fixed_locus_decomposition
       attracting_ranks := hranks
       motive_decomposition := bialynickiBirula_motive hranks
       chow_zero_degree_compatible := bialynickiBirula_chowZero hranks
       compact_iff_borel := hcompactBorel
-      borel_iff_torsor_neutral := borelReduction_iff_neutral
+      borel_iff_torsor_neutral := inner_borelReduction_iff_neutral
       compact_iff_torsor_neutral := hcompactNeutral
       compact_point_fields_eq_borel :=
         pointFields_eq hcompactBorel
-      borel_point_fields_eq_neutral :=
-        pointFields_eq borelReduction_iff_neutral
+      borel_point_fields_eq_neutral := fun hinner =>
+        pointFields_eq (inner_borelReduction_iff_neutral hinner)
       compact_finite_point_fields_eq_borel :=
         finitePointFields_eq isFinite hcompactBorel
-      borel_finite_point_fields_eq_neutral :=
-        finitePointFields_eq isFinite borelReduction_iff_neutral
+      borel_finite_point_fields_eq_neutral := fun hinner =>
+        finitePointFields_eq isFinite
+          (inner_borelReduction_iff_neutral hinner)
       compact_point_degrees_eq_borel :=
         finitePointDegrees_eq isFinite extensionDegree hcompactBorel
-      borel_point_degrees_eq_neutral :=
+      borel_point_degrees_eq_neutral := fun hinner =>
         finitePointDegrees_eq isFinite extensionDegree
-          borelReduction_iff_neutral
+          (inner_borelReduction_iff_neutral hinner)
       compact_index_eq_borel :=
         pointFieldIndex_eq isFinite extensionDegree hcompactBorel
-      borel_index_eq_torsor :=
+      borel_index_eq_torsor := fun hinner =>
         pointFieldIndex_eq isFinite extensionDegree
-          borelReduction_iff_neutral }
+          (inner_borelReduction_iff_neutral hinner)
+      compact_index_eq_torsor := fun hinner =>
+        (pointFieldIndex_eq isFinite extensionDegree hcompactBorel).trans
+          (pointFieldIndex_eq isFinite extensionDegree
+            (inner_borelReduction_iff_neutral hinner)) }
 
 end RiemannResearch.E8

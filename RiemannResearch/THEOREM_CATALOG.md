@@ -241,7 +241,7 @@ unconditional proofs of the motivating named theorems.
 |---|---|---|---|
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent` | `RiemannResearch.E8.FullWeylCore` | From the inputs listed below, proves parts (i)--(iii), nonabelianness of the simple core, and `Neutral(ξ) ↔ (Neutral(ξ_F) → Neutral(ξ_{k⁺}))` | Kernel checked implication; open obligations remain |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent_nonabelianH1` | `RiemannResearch.E8.FullWeylCore` | Specializes the conditional assembly to actual discrete nonabelian H¹ and proves the forward restriction-neutrality implication rather than assuming it | Kernel checked implication; remaining E8-specific hypotheses are load-bearing |
-| `RiemannResearch.E8.universalFixedLocusAndSplittingField` | `RiemannResearch.E8.WonderfulFixedLocus` | From the inputs listed below, proves the assembled fixed-locus, motivic, point-field, splitting-spectrum, and set-gcd-index conclusions | Kernel checked corrected implication; literal PDF cocharacter normalization fails; open obligations remain |
+| `RiemannResearch.E8.universalFixedLocusAndSplittingField` | `RiemannResearch.E8.WonderfulFixedLocus` | From the inputs listed below, proves the fixed-locus and motivic conclusions, unconditional equality of compactification/Borel point fields and indices, and—only for inner torsors—neutrality and torsor-index comparisons | Kernel checked implication matching the revised scope of Theorem 3.2(iii); the printed sign-only cocharacter normalization still fails |
 | `RiemannResearch.E8.serreII_of_oddDegreePointDescent` | `RiemannResearch.E8.SerreIICompletionTargets` | Odd-degree splitting, an all-extension point/neutrality equivalence, and odd-degree point descent imply neutrality of every candidate class | Kernel checked implication; the E8-specific inputs below remain open |
 | `RiemannResearch.E8.serreII_of_compatibleLocalGauges` | `RiemannResearch.E8.SerreIICompletionTargets` | A common gauge on a generating family makes every selected nonabelian cocycle a global coboundary | Kernel checked implication; existence of the E8 common gauges remains open |
 | `RiemannResearch.E8.serreII_of_diagonalKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | One diagonal toral restriction--corestriction value in the neutral fiber, with the index formulas and a positive Bezout congruence, forces the original toral class to map to the neutral class | Kernel checked implication; the E8 diagonal kernel-norm input remains open |
@@ -277,7 +277,7 @@ unconditional proofs of the motivating named theorems.
 | `bialynickiBirula_chowZero` | Degree-compatible `CH₀` comparison from the zero-rank component | **Open** |
 | `properLimit` | A compactification point specializes to a fixed-locus point | **Open** |
 | `fixedComponentInclusion` | A twisted Borel component point gives a compactification point | **Open** |
-| `borelReduction_iff_neutral` | A Borel reduction is equivalent to neutrality of the torsor | **Open** |
+| `inner_borelReduction_iff_neutral` | For an inner torsor, a Borel reduction is equivalent to neutrality | **Open** |
 
 ### Open obligations: `serreII_of_oddDegreePointDescent`
 

@@ -28,10 +28,13 @@ a2Coroot_sign_normalization_counterexample kernel-checks this finite
 counterexample. The theorem must instead choose a cocharacter in the required
 chamber, or conjugate and reindex the fixed components.
 
-The existing conditional declaration universalFixedLocusAndSplittingField
-already avoids the false step by taking the chamber-normalized rank formula as
-a load-bearing hypothesis. It therefore verifies a corrected implication, not
-the literal PDF theorem.
+The 8 August revision separately corrects the scope of part (iii):
+compactification points are equivalent to Borel reductions over every field
+extension, whereas Borel reduction detects neutrality only for inner torsors.
+The conditional declaration `universalFixedLocusAndSplittingField` now
+formalizes exactly this distinction. It also avoids the still-false
+cocharacter step by taking the chamber-normalized rank formula as a
+load-bearing hypothesis, so it does not verify that literal sentence.
 
 ## Lean found a second problem in the binary-icosahedral audit
 
@@ -257,8 +260,10 @@ formalization. The attached artifact's exact status is in the theorem ledger.
    consequences are kernel checked in E8/WeylIndexPacket.lean.
 1. After choosing a chamber-normalized cocharacter and supplying the
    characteristic-zero descent, the one-sided wonderful compactification has
-   the same point fields as the E8 torsor. Its fixed locus consists of
-   Weyl-indexed copies of the twisted Borel variety, with attracting rank
+   the same point fields as the twisted Borel variety. For inner torsors these
+   are also exactly the neutralizing fields, and the compactification, Borel,
+   and torsor indices agree. The fixed locus consists of Weyl-indexed copies
+   of the twisted Borel variety, with attracting rank
    `length(w) + rightDescent(w)`. The PDF's arbitrary-`lambda` formulation
    is not included in this repaired statement.
 2. More generally, for any split connected semisimple group in characteristic

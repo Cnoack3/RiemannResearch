@@ -31,7 +31,7 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Theorem 2.1 | Primary-source checked | Izquierdo--Lucchini Arteche Corollary 4.14, Garibaldi--Semenov (1.1)--(1.2), and Totaro Theorem 0.1 exactly support the three parts; none is formalized here. |
 | Theorem 2.2 | Manuscript deduction from checked sources | The co-p closure and finite-descent argument is coherent; ILA Corollary 4.14 validates the p-special step and no nonabelian Bezout conclusion is drawn. |
 | Proposition 3.1 | Fixed-cover fpqc foundations in Lean; geometry source dependent | Witnessed fpqc covers, refinement pullback, neutral Čech H¹, and pairwise common refinements are kernel checked. The wonderful compactification, orbit geometry, effective descent, and torsor classification remain absent. |
-| Theorem 3.2 | **Literal statement defective; corrected Coxeter reduction kernel checked** | Changing the sign of an arbitrary regular cocharacter does not normalize its Weyl chamber in rank greater than one. `a2Coroot_sign_normalization_counterexample` proves the defect, while `regularFunctional_exists_adaptedBase` checks the correct chamber-change replacement. The finite-Coxeter lemmas construct a maximal-length element and make every reflection a strict inversion; `e8AttractingRank_properties_of_lengthComplement` derives unique zero rank and all descent/rank dualities from the single E8 length-complement input. Mathlib still lacks a `Finite` instance for its presented E8 Coxeter group, the complement theorem and length-120 calculation, while tangent weights, fixed-scheme geometry, motives, and descent remain open. |
+| Theorem 3.2 | **Revised implication formalized conditionally; cocharacter sentence still defective** | The 8 August revision correctly makes compactification/Borel point equivalence unconditional and restricts Borel/neutrality and torsor-index equivalences to inner torsors; `universalFixedLocusAndSplittingField` now enforces exactly that scope. Changing the sign of an arbitrary regular cocharacter still does not normalize its Weyl chamber in rank greater than one. `a2Coroot_sign_normalization_counterexample` proves the defect, while `regularFunctional_exists_adaptedBase` checks the correct chamber-change replacement. The finite-Coxeter lemmas construct a maximal-length element and `e8AttractingRank_properties_of_lengthComplement` derives the rank conclusions from one E8 length-complement input. The scheme geometry, tangent weights, motive comparison, descent, E8 finiteness/complement theorem, and length-120 calculation remain open inputs. |
 | Corollary 3.3 | Unverified | Depends on Theorems 2.1 and 3.2. |
 | Proposition 4.1 | Manuscript only | The localization calculation CH0(Gm)=0 is not formalized here. |
 | Proposition 4.2 | Source dependent | Uses rationality of the split EVIII space, compactification, and localization. |
@@ -117,9 +117,10 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 
 ## Artifact and version defects
 
-1. Theorem 3.2's sign-only chamber normalization is false. The corrected
-   statement must choose a chamber-normalized cocharacter or conjugate and
-   reindex.
+1. Theorem 3.2's sign-only chamber normalization is false, including in the
+   8 August revision. The statement must choose a chamber-normalized
+   cocharacter or conjugate and reindex. The revision does correctly restrict
+   the Borel/neutrality and torsor-index implications to inner torsors.
 2. Proposition 6.7 contains the literal malformed token qquad where a spacing
    command was intended.
 3. Theorem 6.6's phrase “independent of every choice” is only justified after

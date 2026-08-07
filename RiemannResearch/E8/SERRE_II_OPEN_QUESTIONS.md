@@ -17,9 +17,12 @@ Proposition 6.35 is an equivalence with E8 Serre II, not independent evidence.
 
 ## B. Statements requiring correction
 
-1. **Theorem 3.2.** Negating an arbitrary regular cocharacter does not put it
-   in a prescribed Weyl chamber in rank greater than one. Choose a
-   dominant/antidominant cocharacter, or Weyl-conjugate and reindex.
+1. **Theorem 3.2.** The 8 August revision correctly restricts the
+   Borel/neutrality and torsor-index equivalences to inner torsors, and Lean
+   now reflects that scope. It still says that negating an arbitrary regular
+   cocharacter puts it in the required chamber, which is false in rank greater
+   than one. Choose a dominant/antidominant cocharacter, or Weyl-conjugate and
+   reindex.
 2. **Proposition 6.17.** The universal outer-triality assertion for all twelve
    degree-five `(D4)^2` orbits is false. The numerical orbit count survives.
 3. **Theorem 6.6.** “Independent of every choice” is only established after
