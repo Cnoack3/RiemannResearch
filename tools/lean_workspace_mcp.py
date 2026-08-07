@@ -35,7 +35,9 @@ EXPECTED_REMOTE = os.environ.get(
 MAX_READ_BYTES = 1_000_000
 MAX_PATCH_BYTES = 2_000_000
 
-AGENT_WORKSPACES = AgentWorkspaceManager(\n    PROJECT_ROOT, EXPECTED_REMOTE, before_replace=close_shared_client\n)
+AGENT_WORKSPACES = AgentWorkspaceManager(
+    PROJECT_ROOT, EXPECTED_REMOTE, before_replace=close_shared_client
+)
 
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
