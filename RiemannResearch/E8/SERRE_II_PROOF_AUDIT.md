@@ -15,6 +15,12 @@ Conjecture II has been solved.
 - `GroupTheory/GeneratedFixedPoint.lean` proves that a *single common point*
   fixed by subgroups whose join is the whole group is globally fixed. It does
   not infer a common point from separately nonempty fixed loci.
+- `LinearAlgebra/SplitLift.lean` proves that an explicit module section lifts
+  every map into the quotient. Over `F₂[H]` this is exactly the equivariant
+  lifting step in the generic 120-place valuation packet.
+- `GroupTheory/HalfDifferenceCocycle.lean` verifies the cocycle identity for
+  `a_g=(ell-g·ell)/2` and its restriction at an element acting by minus one.
+  The field-theoretic existence of the required halves remains a separate input.
 - `E8/A8NormalizerArithmetic.lean` verifies
   `-27 * 15 + 2 * 35 + 336 = 1` and the corresponding annihilator theorem.
 - `E8/WeylIndexPacket.lean` verifies the arithmetic of the newly proposed
@@ -27,7 +33,7 @@ Conjecture II has been solved.
   their congruence to one modulo seven, and the normalizer-index products.
   It does not identify the packet groups or prove the torsor-splitting claim.
 
-All four files build in the full project and use no `sorry` or new axioms.
+All six files build in the full project and use no `sorry` or new axioms.
 
 ## Mathematically verified manuscript advances
 

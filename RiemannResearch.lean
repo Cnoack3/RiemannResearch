@@ -1,7 +1,9 @@
 import RiemannResearch.AlgebraicGeometry.PointFields
 import RiemannResearch.Basic
+import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.GroupTheory.CoprimeRestriction
 import RiemannResearch.GroupTheory.GeneratedFixedPoint
+import RiemannResearch.GroupTheory.HalfDifferenceCocycle
 import RiemannResearch.GroupTheory.PGroupFixedPoints
 import RiemannResearch.E8.A8NormalizerArithmetic
 import RiemannResearch.E8.SylowSevenArithmetic
