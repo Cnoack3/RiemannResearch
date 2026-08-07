@@ -110,13 +110,20 @@ class AgentWorkspaceManager:
     def _record_metric(self, event: str, **fields: object) -> None:
         record = {"time": time.time(), "event": event, **fields}
         line = json.dumps(record, separators=(",", ":"), sort_keys=True) + "\n"
-        with self._metrics_guard:
-            if self.metrics_path.is_file() and self.metrics_path.stat().st_size > MAX_METRICS_BYTES:
-                rotated = self.metrics_path.with_suffix(".jsonl.1")
-                rotated.unlink(missing_ok=True)
-                os.replace(self.metrics_path, rotated)
-            with self.metrics_path.open("a", encoding="utf-8") as handle:
-                handle.write(line)
+        try:
+            with self._metrics_guard:
+                if (
+                    self.metrics_path.is_file()
+                    and self.metrics_path.stat().st_size > MAX_METRICS_BYTES
+                ):
+                    rotated = self.metrics_path.with_suffix(".jsonl.1")
+                    rotated.unlink(missing_ok=True)
+                    os.replace(self.metrics_path, rotated)
+                with self.metrics_path.open("a", encoding="utf-8") as handle:
+                    handle.write(line)
+        except OSError:
+            # Observability must never interrupt proof or publication work.
+            pass
 
     @staticmethod
     def _workspace_label(token: str) -> str:
