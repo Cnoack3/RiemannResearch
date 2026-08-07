@@ -543,6 +543,78 @@ class AgentWorkspaceManager:
         )
         return result
 
+    def search_files(
+        self,
+        token: str,
+        query: str,
+        file_glob: str = "*.lean",
+        limit: int = 20,
+        case_sensitive: bool = False,
+        max_match_chars: int = 500,
+    ) -> dict:
+        """Search approved project text files without exposing unrestricted rg."""
+        if not query.strip() or len(query) > 200 or "\n" in query or "\r" in query:
+            raise ValueError("query must be one non-empty line of at most 200 characters")
+        if not file_glob or len(file_glob) > 200:
+            raise ValueError("file_glob must contain 1-200 characters")
+        if not 1 <= limit <= 100:
+            raise ValueError("limit must be between 1 and 100")
+        if not 80 <= max_match_chars <= 1000:
+            raise ValueError("max_match_chars must be between 80 and 1000")
+
+        _, project = self._get(token)
+        listed = self.list_files(token, limit=1000)
+        paths = [path for path in listed["files"] if fnmatch.fnmatch(path, file_glob)]
+        needle = query if case_sensitive else query.casefold()
+        matches: list[dict[str, object]] = []
+        total_matches = 0
+        for relative in paths:
+            normalized, resolved = self._relative(project, relative)
+            if not resolved.is_file() or resolved.stat().st_size > MAX_READ_BYTES:
+                continue
+            try:
+                lines = resolved.read_text(encoding="utf-8").splitlines()
+            except UnicodeDecodeError:
+                continue
+            for line_number, line in enumerate(lines, start=1):
+                haystack = line if case_sensitive else line.casefold()
+                column = haystack.find(needle)
+                if column < 0:
+                    continue
+                total_matches += 1
+                if len(matches) >= limit:
+                    continue
+                start = max(0, column - max_match_chars // 3)
+                end = min(len(line), start + max_match_chars)
+                if end - start < max_match_chars:
+                    start = max(0, end - max_match_chars)
+                excerpt = line[start:end]
+                matches.append({
+                    "path": normalized,
+                    "line": line_number,
+                    "column": column + 1,
+                    "text": ("…" if start else "") + excerpt + ("…" if end < len(line) else ""),
+                    "text_start_column": start + 1,
+                })
+
+        result = {
+            "workspace_token": token,
+            "query": query,
+            "file_glob": file_glob,
+            "case_sensitive": case_sensitive,
+            "matches": matches,
+            "total_matches": total_matches,
+            "truncated": total_matches > len(matches),
+        }
+        self._record_metric(
+            "search_files",
+            workspace=self._workspace_label(token),
+            searched_files=len(paths),
+            total_matches=total_matches,
+            returned=len(matches),
+        )
+        return result
+
     def read_file(
         self,
         token: str,
@@ -938,13 +1010,19 @@ class AgentWorkspaceManager:
             existing = self._existing_job(token, kind)
             if existing is not None:
                 job_id = existing["job_id"]
+                position = self._queue_position_unlocked(job_id)
+                retry_after = (
+                    45
+                    if existing["state"] == "running"
+                    else min(180, 60 + 30 * max((position or 1) - 1, 0))
+                )
                 return {
                     "accepted": False,
                     "existing": True,
                     "job_id": job_id,
                     "state": existing["state"],
-                    "queue_position": self._queue_position_unlocked(job_id),
-                    "retry_after_seconds": 20 if existing["state"] == "running" else 30,
+                    "queue_position": position,
+                    "retry_after_seconds": retry_after,
                     "instruction": "Poll after retry_after_seconds; do not resubmit.",
                 }
             pending = self._pending_job_for_workspace(token)
@@ -977,7 +1055,9 @@ class AgentWorkspaceManager:
             "job_id": job_id,
             "state": "queued",
             "queue_position": position,
-            "retry_after_seconds": 30,
+            "retry_after_seconds": min(
+                180, 60 + 30 * max((position or 1) - 1, 0)
+            ),
             "instruction": (
                 "Poll after retry_after_seconds until terminal. Do not resubmit."
             ),
@@ -1107,11 +1187,17 @@ class AgentWorkspaceManager:
             "failed",
             "interrupted",
         }
-        response["retry_after_seconds"] = (
-            0
-            if response["terminal"]
-            else (20 if job["state"] == "running" else 30)
-        )
+        if response["terminal"]:
+            retry_after = 0
+        elif job["state"] == "running":
+            retry_after = 45
+        else:
+            # Poll less frequently as the job sits farther back in the FIFO.
+            retry_after = min(
+                180,
+                60 + 30 * max((response["queue_position"] or 1) - 1, 0),
+            )
+        response["retry_after_seconds"] = retry_after
         if "result" in response:
             response["result"] = self._compact_result(
                 response["result"], include_logs=include_logs
