@@ -184,7 +184,10 @@ class AgentWorkspaceManager:
             status = self._run(["git", "status", "--porcelain"], cwd=project)
             head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
             safe = not status and head in {
-                meta.get("published_commit"), meta.get("base_commit"), meta.get("archive_commit")
+                meta.get("published_commit"),
+                meta.get("base_commit"),
+                meta.get("archive_commit"),
+                meta.get("source_commit"),
             }
             if not safe:
                 raise RuntimeError(
@@ -470,6 +473,7 @@ class AgentWorkspaceManager:
             meta.update(
                 published_commit=published,
                 base_commit=published,
+                source_commit=local_head,
                 state="published",
                 needs_rehydrate=(published != local_head),
                 last_activity=time.time(),
