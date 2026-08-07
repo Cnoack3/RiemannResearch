@@ -16,8 +16,10 @@ from pathlib import Path
 from lean_lsp_mcp import main as lean_lsp_main
 from lean_lsp_mcp.server import mcp
 
+from agent_workspaces import AgentWorkspaceManager
 
-WORKFLOW_INSTRUCTIONS = """For persistent Lean research, first call workspace_sync when the working tree is clean. Search existing project and Mathlib declarations before constructing a proof. Verify Lean code with the Lean tools, save every successful material proof in the RiemannResearch project unless the user explicitly requests an exploratory-only result, then call workspace_checkpoint with push enabled and report the commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. If the tree is dirty or diverged, inspect and explain the conflict. Never call workspace_reset automatically: first call it without a token to preview. If reset_allowed is false, report the protected paths and do not submit the token. Otherwise show the preview to the user, obtain explicit permission, and only then call it with the returned confirmation token. Before substantive project work, read and follow the repository-root AGENTS.md as the authoritative project policy. Distinguish informal mathematical arguments from kernel-verified Lean proofs."""
+
+WORKFLOW_INSTRUCTIONS = """For concurrent or new Lean research, first call agent_workspace_open without a token and retain the returned workspace_token for the life of the chat. When resuming a prior chat, call agent_workspace_open with its token. Use only agent_workspace_* tools for that clone, and pass absolute paths under its project_root to Lean file tools. Never use relative Lean paths or lean_run_code in an isolated workspace. Legacy workspace_* tools address the canonical clone only and exist solely so already-running chats can finish; do not begin new work there. For persistent Lean research, first call workspace_sync when the working tree is clean. Search existing project and Mathlib declarations before constructing a proof. Verify Lean code with the Lean tools, save every successful material proof in the RiemannResearch project unless the user explicitly requests an exploratory-only result, then call workspace_checkpoint with push enabled and report the commit SHA. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded local work. If the tree is dirty or diverged, inspect and explain the conflict. Never call workspace_reset automatically: first call it without a token to preview. If reset_allowed is false, report the protected paths and do not submit the token. Otherwise show the preview to the user, obtain explicit permission, and only then call it with the returned confirmation token. Before substantive project work, read and follow the repository-root AGENTS.md as the authoritative project policy. Distinguish informal mathematical arguments from kernel-verified Lean proofs."""
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
 mcp._mcp_server.instructions = (
@@ -31,6 +33,8 @@ EXPECTED_REMOTE = os.environ.get(
 )
 MAX_READ_BYTES = 1_000_000
 MAX_PATCH_BYTES = 2_000_000
+
+AGENT_WORKSPACES = AgentWorkspaceManager(PROJECT_ROOT, EXPECTED_REMOTE)
 
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
@@ -582,6 +586,135 @@ def workspace_checkpoint(message: str, push: bool = True) -> dict:
         "build": _tail(build_output),
         "build_metrics": build_metrics,
     }
+
+
+@mcp.tool(
+    name="agent_workspace_open",
+    description=(
+        "Create a fresh independent Git clone for this agent, or resume/recreate the "
+        "clone identified by resume_token. Call this before new Lean research and "
+        "retain the returned workspace_token in the chat."
+    ),
+)
+def agent_workspace_open(resume_token: str = "") -> dict:
+    return AGENT_WORKSPACES.open(resume_token)
+
+
+@mcp.tool(
+    name="agent_workspace_list_files",
+    description="List persistent files in one isolated Lean agent clone.",
+)
+def agent_workspace_list_files(workspace_token: str) -> dict:
+    return AGENT_WORKSPACES.list_files(workspace_token)
+
+
+@mcp.tool(
+    name="agent_workspace_read_file",
+    description=(
+        "Read an approved UTF-8 file in one isolated clone. Returns the absolute path "
+        "to use with Lean diagnostic and proof tools."
+    ),
+)
+def agent_workspace_read_file(workspace_token: str, path: str) -> dict:
+    return AGENT_WORKSPACES.read_file(workspace_token, path)
+
+
+@mcp.tool(
+    name="agent_workspace_apply_patch",
+    description=(
+        "Apply a non-destructive unified patch to approved theorem or documentation "
+        "paths in one isolated clone."
+    ),
+)
+def agent_workspace_apply_patch(workspace_token: str, patch: str) -> dict:
+    return AGENT_WORKSPACES.apply_patch(workspace_token, patch)
+
+
+@mcp.tool(
+    name="agent_workspace_git_status",
+    description="Show status and publication state for one isolated clone.",
+)
+def agent_workspace_git_status(workspace_token: str) -> dict:
+    return AGENT_WORKSPACES.git_status(workspace_token)
+
+
+@mcp.tool(
+    name="agent_workspace_git_diff",
+    description="Show staged and unstaged changes in one isolated clone.",
+)
+def agent_workspace_git_diff(workspace_token: str) -> dict:
+    return AGENT_WORKSPACES.git_diff(workspace_token)
+
+
+@mcp.tool(
+    name="agent_workspace_sync",
+    description=(
+        "Synchronize a clean isolated clone by safely rehydrating it from published "
+        "main. Dirty files and unpublished commits are never discarded."
+    ),
+)
+def agent_workspace_sync(workspace_token: str) -> dict:
+    return AGENT_WORKSPACES.sync(workspace_token)
+
+
+@mcp.tool(
+    name="agent_workspace_update_dependencies",
+    description=(
+        "Update Lake dependencies in one isolated clone, then attach the matching "
+        "content-addressed shared dependency environment."
+    ),
+)
+def agent_workspace_update_dependencies(
+    workspace_token: str, package: str = ""
+) -> dict:
+    return AGENT_WORKSPACES.update_dependencies(workspace_token, package)
+
+
+@mcp.tool(
+    name="agent_workspace_checkpoint",
+    description=(
+        "Audit and incrementally build one isolated clone, commit its work locally, "
+        "then publish transactionally under a global lock. If main advanced, validate "
+        "a clean integration clone before pushing."
+    ),
+)
+def agent_workspace_checkpoint(
+    workspace_token: str, message: str, push: bool = True
+) -> dict:
+    return AGENT_WORKSPACES.checkpoint(workspace_token, message, push)
+
+
+@mcp.tool(
+    name="agent_workspace_reset",
+    description=(
+        "Permission-gated fail-safe for one isolated clone. First call without a token "
+        "to preview, obtain explicit user permission, then submit the exact token."
+    ),
+    annotations={
+        "title": "Reset isolated Lean workspace",
+        "readOnlyHint": False,
+        "destructiveHint": True,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    },
+)
+def agent_workspace_reset(
+    workspace_token: str, confirmation_token: str = ""
+) -> dict:
+    return AGENT_WORKSPACES.reset(workspace_token, confirmation_token)
+
+
+@mcp.tool(
+    name="agent_workspace_cleanup",
+    description=(
+        "Preview or perform eventual cleanup of old clean clones. Dirty trees and "
+        "unpublished commits are always preserved; archived tokens remain resumable."
+    ),
+)
+def agent_workspace_cleanup(
+    retention_days: int = 90, dry_run: bool = True
+) -> dict:
+    return AGENT_WORKSPACES.cleanup(retention_days, dry_run)
 
 
 if __name__ == "__main__":
