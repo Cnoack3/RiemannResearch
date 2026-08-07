@@ -17,6 +17,11 @@ Conjecture II has been solved.
   not infer a common point from separately nonempty fixed loci.
 - `E8/A8NormalizerArithmetic.lean` verifies
   `-27 * 15 + 2 * 35 + 336 = 1` and the corresponding annihilator theorem.
+- `E8/WeylIndexPacket.lean` verifies the arithmetic of the newly proposed
+  maximal-rank reduction packet: `-73 * 135 + 26 * 2240 - 48384 = 1`, gcd one,
+  the parity step from total degree 135 to an odd residue degree, and the
+  associated additive annihilator theorem. These declarations do not supply
+  the geometric fixed-locus or central-reduction inputs.
 
 All three files build in the full project and use no `sorry` or new axioms.
 
