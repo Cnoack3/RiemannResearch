@@ -6,7 +6,7 @@ Authors: Cnoack3
 import Mathlib
 
 /-!
-# Additive top-mark obstruction
+# Additive Burnside group and the top-mark obstruction
 
 This module isolates the algebraic argument behind the Burnside top-mark
 obstruction in Proposition 6.32 of the E8 Serre II memorandum. If an additive
@@ -14,8 +14,12 @@ mark sends a distinguished class to one and every proposed proper-orbit
 generator to zero, that class cannot belong to the additive subgroup generated
 by those orbits.
 
-Instantiating this lemma with the Burnside ring and its top mark still requires
-a concrete Burnside-ring model; the logical obstruction itself is proved here.
+It also supplies the standard transitive-orbit presentation of the additive
+Burnside group of a finite group: the free abelian group on conjugacy classes
+of subgroups. In this presentation the basis vector indexed by `H` represents
+`G/H`, the Burnside unit is `G/G`, and the top mark is evaluation at the
+`G/G` coordinate. This is enough to instantiate the obstruction without
+constructing the multiplicative structure of the Burnside ring.
 -/
 
 namespace RiemannResearch.GroupTheory
@@ -34,5 +38,161 @@ theorem not_mem_addSubgroup_closure_of_mark
   have htopKer : top ∈ mark.ker := hle hmem
   have hzero : mark top = 0 := htopKer
   omega
+
+universe u
+
+noncomputable section
+
+namespace BurnsideAdditive
+
+variable {G : Type u} [Group G]
+
+/-- Conjugacy of subgroups by an inner automorphism. -/
+def SubgroupConjugate (H K : Subgroup G) : Prop :=
+  ∃ g : G, H.map (MulAut.conj g) = K
+
+theorem subgroupConjugate_refl (H : Subgroup G) :
+    SubgroupConjugate H H := by
+  refine ⟨1, ?_⟩
+  rw [show ((MulAut.conj (1 : G) : MulAut G) : G →* G) =
+      MonoidHom.id G by ext x; simp]
+  exact Subgroup.map_id H
+
+theorem subgroupConjugate_symm {H K : Subgroup G}
+    (h : SubgroupConjugate H K) :
+    SubgroupConjugate K H := by
+  rcases h with ⟨g, rfl⟩
+  refine ⟨g⁻¹, ?_⟩
+  rw [Subgroup.map_map]
+  have hc :
+      ((MulAut.conj g⁻¹ : MulAut G) : G →* G).comp
+          ((MulAut.conj g : MulAut G) : G →* G) =
+        MonoidHom.id G := by
+    ext x
+    simp [mul_assoc]
+  rw [hc, Subgroup.map_id]
+
+theorem subgroupConjugate_trans {H K L : Subgroup G}
+    (hHK : SubgroupConjugate H K)
+    (hKL : SubgroupConjugate K L) :
+    SubgroupConjugate H L := by
+  rcases hHK with ⟨g, rfl⟩
+  rcases hKL with ⟨h, rfl⟩
+  refine ⟨h * g, ?_⟩
+  rw [Subgroup.map_map]
+  congr 1
+  ext x
+  simp [mul_assoc]
+
+/-- The setoid of subgroups modulo inner conjugacy. -/
+def subgroupConjugacySetoid (G : Type u) [Group G] :
+    Setoid (Subgroup G) where
+  r := SubgroupConjugate
+  iseqv :=
+    ⟨subgroupConjugate_refl, subgroupConjugate_symm,
+      subgroupConjugate_trans⟩
+
+/-- A transitive orbit type, represented by `G/H` and indexed by the
+conjugacy class of its stabilizer `H`. -/
+def TransitiveOrbitType (G : Type u) [Group G] :=
+  Quotient (subgroupConjugacySetoid G)
+
+/-- The transitive orbit type represented by `G/H`. -/
+def orbitType (H : Subgroup G) : TransitiveOrbitType G :=
+  Quotient.mk (subgroupConjugacySetoid G) H
+
+theorem subgroupConjugate_top_iff (H : Subgroup G) :
+    SubgroupConjugate H ⊤ ↔ H = ⊤ := by
+  constructor
+  · rintro ⟨g, hg⟩
+    let cg : G →* G := (MulAut.conj g : MulAut G)
+    have hsurj : Function.Surjective cg :=
+      (MulAut.conj g).surjective
+    have hinj : Function.Injective cg :=
+      (MulAut.conj g).injective
+    have hm : H.map cg = (⊤ : Subgroup G).map cg := by
+      change H.map (MulAut.conj g) =
+        (⊤ : Subgroup G).map cg
+      rw [hg, Subgroup.map_top_of_surjective cg hsurj]
+    exact (Subgroup.map_injective hinj) hm
+  · rintro rfl
+    exact subgroupConjugate_refl ⊤
+
+/-- A transitive orbit has the same type as the one-point orbit `G/G`
+exactly when its stabilizer is all of `G`. -/
+theorem orbitType_eq_top_iff (H : Subgroup G) :
+    orbitType H = orbitType (⊤ : Subgroup G) ↔ H = ⊤ := by
+  constructor
+  · intro h
+    apply (subgroupConjugate_top_iff H).1
+    exact Quotient.exact h
+  · intro h
+    apply Quotient.sound
+    exact (subgroupConjugate_top_iff H).2 h
+
+/-- The additive Burnside group in its transitive-orbit basis: the free
+abelian group on conjugacy classes of subgroups. For a finite group, these are
+exactly the isomorphism classes of transitive finite `G`-sets. -/
+abbrev Carrier (G : Type u) [Group G] :=
+  TransitiveOrbitType G →₀ ℤ
+
+/-- The basis vector represented by the transitive orbit `G/H`. -/
+def transitiveOrbit (H : Subgroup G) : Carrier G :=
+  Finsupp.single (orbitType H) 1
+
+/-- The one-point orbit `G/G`, which is the multiplicative unit in the full
+Burnside ring. -/
+def unit : Carrier G :=
+  transitiveOrbit (⊤ : Subgroup G)
+
+/-- The top mark, equivalently the coefficient of the one-point orbit in the
+transitive-orbit basis. -/
+def topMark : Carrier G →+ ℤ where
+  toFun x := x (orbitType (⊤ : Subgroup G))
+  map_zero' := rfl
+  map_add' := fun _ _ => rfl
+
+/-- The top mark of the Burnside unit is one. -/
+@[simp] theorem topMark_unit :
+    topMark (unit (G := G)) = 1 := by
+  change
+    (Finsupp.single (orbitType (⊤ : Subgroup G)) (1 : ℤ))
+      (orbitType (⊤ : Subgroup G)) = 1
+  exact Finsupp.single_eq_same
+
+/-- The top mark of a transitive orbit with proper stabilizer is zero. -/
+theorem topMark_transitiveOrbit_of_ne_top
+    (H : Subgroup G) (hH : H ≠ ⊤) :
+    topMark (transitiveOrbit H) = 0 := by
+  have hne :
+      orbitType (⊤ : Subgroup G) ≠ orbitType H := by
+    intro h
+    exact hH ((orbitType_eq_top_iff H).1 h.symm)
+  change (Finsupp.single (orbitType H) (1 : ℤ))
+    (orbitType (⊤ : Subgroup G)) = 0
+  exact Finsupp.single_eq_of_ne hne
+
+/-- Basis vectors corresponding to transitive orbits `G/H` with proper
+stabilizer. -/
+def properTransitiveOrbits : Set (Carrier G) :=
+  {x | ∃ H : Subgroup G, H < ⊤ ∧ x = transitiveOrbit H}
+
+/-- In the additive Burnside group of a finite group, the unit `[G/G]`
+does not lie in the subgroup generated by proper transitive orbits. This is
+the top-mark obstruction used in Proposition 6.32. -/
+theorem unit_not_mem_span_properTransitiveOrbits [Finite G] :
+    unit ∉ AddSubgroup.closure
+      (properTransitiveOrbits (G := G)) := by
+  refine not_mem_addSubgroup_closure_of_mark
+    (topMark (G := G)) (unit (G := G))
+    (properTransitiveOrbits (G := G))
+    (topMark_unit (G := G)) ?_
+  intro x hx
+  rcases hx with ⟨H, hH, rfl⟩
+  exact topMark_transitiveOrbit_of_ne_top (G := G) H hH.ne
+
+end BurnsideAdditive
+
+end
 
 end RiemannResearch.GroupTheory
