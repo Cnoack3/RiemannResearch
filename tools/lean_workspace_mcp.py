@@ -14,6 +14,7 @@ import time
 from pathlib import Path
 
 from lean_lsp_mcp import main as lean_lsp_main
+from lean_lsp_mcp.client_utils import close_shared_client
 from lean_lsp_mcp.server import mcp
 
 from agent_workspaces import AgentWorkspaceManager
@@ -34,7 +35,7 @@ EXPECTED_REMOTE = os.environ.get(
 MAX_READ_BYTES = 1_000_000
 MAX_PATCH_BYTES = 2_000_000
 
-AGENT_WORKSPACES = AgentWorkspaceManager(PROJECT_ROOT, EXPECTED_REMOTE)
+AGENT_WORKSPACES = AgentWorkspaceManager(\n    PROJECT_ROOT, EXPECTED_REMOTE, before_replace=close_shared_client\n)
 
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
