@@ -25,9 +25,11 @@ All three files build in the full project and use no `sorry` or new axioms.
 1. The one-sided wonderful compactification has the same point fields as the
    E8 torsor. Its fixed locus consists of Weyl-indexed copies of the twisted
    Borel variety, with attracting rank `length(w) + rightDescent(w)`.
-2. Index one splits the integral Chow motive of every associated twisted flag
-   into the same Tate summands as the split flag. Prime-to-p splitting gives the
-   analogous statement for positive-height algebraic Morava K-motives.
+2. More generally, for any split connected semisimple group in characteristic
+   zero, index one splits the integral Chow motive of every associated twisted
+   flag into the same Tate summands as the split flag. If a torsor has a finite
+   separable splitting field of degree prime to p, the analogous statement
+   holds for every positive-height free p-local algebraic Morava K-motive.
 3. Every actual A5 subgroup of the E8 Weyl group has a finite toral marker. A
    central-twisted S5 embedding shows that a rational marker need not exist
    before a quadratic base change.
@@ -39,9 +41,10 @@ All three files build in the full project and use no `sorry` or new axioms.
 5. The explicit SL(2,5)/A11 construction is a genuine finite nonabelian H1
    countermodel to formal two-gauge gluing. It is not an E8 counterexample.
 6. Conditional on the reported D4-root action, E8 lattice gluing forces
-   diagonal triality and paired Allen classes. Common Allen index at most two
-   is eliminated by the published trialitarian theorem; only paired indices
-   four and eight remain in that local source.
+   diagonal triality and pairs the two degree-eight Allen algebras over the
+   common cubic field. Common Allen index at most two is eliminated by the
+   published trialitarian theorem; only paired indices four and eight remain
+   unexcluded, and their existence is not asserted.
 
 ## Citation-dependent input
 
