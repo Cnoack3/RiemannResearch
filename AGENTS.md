@@ -68,9 +68,11 @@
   unchanged. Dirty trees and unpublished commits are never automatically
   deleted. Before archival or replacement, the clone's registered Lean client is
   terminated. Reopening an archived token rehydrates its clone.
-- Lean LSP processes may be evicted after inactivity or client pressure. This is
+- Lean LSP processes are capped at 16 by default (`LEAN_MAX_SHARED_CLIENTS`,
+  allowed range 1--64) and older clients may be evicted under pressure. This is
   safe: the next absolute-path Lean call starts a new process against the same
-  persistent clone.
+  persistent clone. Workspace retention defaults to 90 days
+  (`LEAN_WORKSPACE_RETENTION_DAYS`, allowed range 30--3650).
 
 ## Module architecture
 
