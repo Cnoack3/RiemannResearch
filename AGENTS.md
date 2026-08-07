@@ -56,8 +56,9 @@
 - Pass absolute paths beneath the returned `project_root` to Lean file,
   diagnostic, search, and build tools. Use `agent_workspace_run_code` for
   ephemeral snippets; do not use relative paths.
-- The shared canonical `workspace_*` persistence tools are retired. Use the
-  token-scoped `agent_workspace_*` tools exclusively.
+- The shared canonical `workspace_*` persistence tools are hidden compatibility
+  handlers for previously opened chats. New work must use token-scoped
+  `agent_workspace_*` tools exclusively.
 - Each agent clone owns its Git working tree and project `.lake/build`. Exact
   dependency environments are content-addressed and shared read-mostly, so
   Mathlib artifacts are not rebuilt per agent.
