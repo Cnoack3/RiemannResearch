@@ -128,8 +128,12 @@ in the supplied artifacts, so their triality types remain unverified.
 - `GaloisCohomology/GaloisAffineCechCoordinates.lean` transports affine
   group points through the finite-Galois double and triple tensor
   decompositions and proves all three face formulas, including the twisted
-  `σ • f(σ⁻¹ρ)` face. Scheme-level transport through chosen pullback
-  isomorphisms remains open.
+  `σ • f(σ⁻¹ρ)` face.
+- `GaloisCohomology/GaloisCechSchemeBridge.lean` identifies the chosen
+  scheme-level double overlap with `Spec (L ⊗[K] L)` and transports sections
+  of the represented affine group to convolution algebra maps on that tensor
+  product. The analogous triple-overlap transport and compatibility with all
+  face maps remain open.
 - `GaloisCohomology/GaloisCechComparison.lean` computes all three Čech face
   maps in Galois coordinates, proves coordinate Čech cocycles and gauge classes
   equivalent to discrete nonabelian cocycles and H¹, and constructs the actual
@@ -184,7 +188,7 @@ in the supplied artifacts, so their triality types remain unverified.
   pointed-set step for cyclic kernel theorems along a solvable composition
   series; it does not prove the cyclic E8 theorem.
 
-All thirty-two supporting files build in the full project and use no `sorry`
+All thirty-three supporting files build in the full project and use no `sorry`
 or new axioms.
 
 ## Source-audited advances across manuscript revisions
