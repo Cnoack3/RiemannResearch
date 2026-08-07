@@ -105,6 +105,11 @@ with tempfile.TemporaryDirectory() as raw:
     assert duplicate_job["job_id"] == first_job["job_id"]
     assert second_job["queue_position"] is not None
     try:
+        manager.submit_checkpoint(first_token, "Blocked checkpoint")
+        raise AssertionError("a second job kind was queued for the same workspace")
+    except RuntimeError as exc:
+        assert first_job["job_id"] in str(exc)
+    try:
         manager.run_code(first_token, "theorem blocked : True := by trivial\n")
         raise AssertionError("workspace mutation was allowed while a build was queued")
     except RuntimeError as exc:
