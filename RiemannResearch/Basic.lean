@@ -19,4 +19,8 @@ namespace Nat
 theorem zero_add_concurrency_b (n : ℕ) : 0 + n = n := by
   exact Nat.zero_add n
 
+/-- Concurrency branch A: adding zero on the right leaves a natural number unchanged. -/
+theorem add_zero_concurrency_a (n : ℕ) : n + 0 = n := by
+  exact Nat.add_zero n
+
 end Nat
