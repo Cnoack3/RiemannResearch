@@ -133,6 +133,10 @@ in the supplied artifacts, so their triality types remain unverified.
 - `LinearAlgebra/RootSystem/AdaptedBase.lean` proves the correct replacement
   for the defective sign-only normalization: a functional regular on every
   root admits a base on which all simple-root values are positive.
+- `E8/WonderfulFixedLocus.lean` now proves that a Coxeter
+  length-complement identity exchanges right descents and ascents and derives
+  the complementary descent count, unique-zero statement, and full rank
+  duality from that one identity.
 - `AlgebraicGeometry/FpqcCechH1.lean` packages affine group schemes and
   witnessed fpqc covers into Mathlib's fixed-cover nonabelian Čech H¹, defines
   refinement pullback, and proves that it preserves the neutral class.
@@ -284,8 +288,12 @@ is too broad, however: that theorem's E8 clause treats p=2 and heights at least
 Evens--Jones supports the wonderful-compactification tangent weights over the
 complex numbers, but not the false sign-only chamber normalization in Theorem
 3.2 and not, by itself, the arbitrary characteristic-zero descent. The Lean
-counterexample and conditional repaired theorem therefore remain the correct
-formal status.
+counterexample and adapted-base theorem give the correct chamber repair.
+`e8AttractingRank_properties_of_lengthComplement` reduces the remaining
+Coxeter duality package to one explicit E8 length-complement identity. Mathlib
+does not yet supply a finite/longest-element instance for its presented E8
+Coxeter group, and the fixed-scheme, tangent-weight, motive, and descent
+arguments remain conditional.
 
 ## Restored computer-assisted certificates
 

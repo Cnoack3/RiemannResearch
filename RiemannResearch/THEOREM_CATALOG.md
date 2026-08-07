@@ -150,6 +150,11 @@ unreproduced computer-assisted claims, see `E8/SERRE_II_PROOF_AUDIT.md`.
 | `RiemannResearch.E8.omegaEightPlusTwo_order` | `RiemannResearch.E8.OmegaEightPlusTwo` | `2^12 · 3^5 · 5^2 · 7 = 174182400` | Kernel checked |
 | `RiemannResearch.E8.nonabelian_of_isSimpleGroup_of_card_eq_omegaOrder` | `RiemannResearch.E8.OmegaEightPlusTwo` | A simple group of order `2^12 · 3^5 · 5^2 · 7` is nonabelian | Kernel checked |
 | `RiemannResearch.E8.attractingRank_properties` | `RiemannResearch.E8.WonderfulFixedLocus` | The length-plus-descent formula and Coxeter complement identities imply unique zero rank and rank duality | Kernel checked |
+| `RiemannResearch.E8.isRightDescent_longestMul_iff_not` | `RiemannResearch.E8.WonderfulFixedLocus` | A Coxeter length-complement identity exchanges right descents of `w₀w` with right ascents of `w` | Kernel checked |
+| `RiemannResearch.E8.coxeterRightDescentCount_one` | `RiemannResearch.E8.WonderfulFixedLocus` | The identity has zero simple right descents in every finitely generated Coxeter system | Kernel checked |
+| `RiemannResearch.E8.coxeterRightDescentCount_longestMul_add` | `RiemannResearch.E8.WonderfulFixedLocus` | The length-complement identity forces complementary right-descent counts | Kernel checked |
+| `RiemannResearch.E8.coxeterAttractingRank_properties_of_lengthComplement` | `RiemannResearch.E8.WonderfulFixedLocus` | One length-complement identity plus the rank formula gives unique zero rank and full attracting-rank duality | Kernel checked |
+| `RiemannResearch.E8.e8AttractingRank_properties_of_lengthComplement` | `RiemannResearch.E8.WonderfulFixedLocus` | For Mathlib's E8 Coxeter group, the single explicit length-complement input implies all Coxeter-rank conclusions of corrected Theorem 3.2 | Kernel checked conditional Coxeter specialization |
 | `RiemannResearch.E8.e8AttractingRank_eq_zero_iff` | `RiemannResearch.E8.WonderfulFixedLocus` | On Mathlib's E8 Coxeter group, length plus the number of right descents vanishes exactly at the identity | Kernel checked unconditionally |
 | `RiemannResearch.E8.e8_total_attracting_rank` | `RiemannResearch.E8.WonderfulFixedLocus` | Checks the E8 total attracting-rank arithmetic `120 + 8 = 128` | Kernel checked |
 | `RiemannResearch.RH.Statement` | `RiemannResearch.RH.Basic` | Stable local name for mathlib's RH proposition | Kernel checked |
@@ -187,10 +192,10 @@ unconditional proofs of the motivating named theorems.
 | `fixed_locus_decomposition` | Universal scheme-level decomposition of the fixed locus into twisted Borel components | **Open** |
 | `fixed_locus_on_points` | Point-level consequence of the fixed-locus coproduct | **Open** |
 | `rank_formula` | Chamber-normalized attracting-rank formula | Adapted-chamber existence is kernel checked by `regularFunctional_exists_adaptedBase`; tangent weights, fixed-scheme geometry, and the rank formula remain **open** |
-| `length_zero_iff` | Coxeter length vanishes only at the identity in the supplied model | **Open** |
-| `rightDescent_one` | The identity has no right descents in the supplied model | **Open** |
-| `length_duality` | Complementary Coxeter-length identity | **Open** |
-| `rightDescent_duality` | Complementary right-descent identity | **Open** |
+| `length_zero_iff` | Coxeter length vanishes only at the identity in the supplied model | E8 provider: `e8CoxeterSystem.length_eq_zero_iff` |
+| `rightDescent_one` | The identity has no right descents in the supplied model | Provider: `coxeterRightDescentCount_one` |
+| `length_duality` | Complementary Coxeter-length identity | **Open** for Mathlib's presented E8 group: no finiteness/longest-element instance currently supplies the required `w₀` |
+| `rightDescent_duality` | Complementary right-descent identity | Derived from `length_duality` by `coxeterRightDescentCount_longestMul_add`; no independent obligation remains |
 | `bialynickiBirula_motive` | Integral motivic Białynicki–Birula decomposition | **Open** |
 | `bialynickiBirula_chowZero` | Degree-compatible `CH₀` comparison from the zero-rank component | **Open** |
 | `properLimit` | A compactification point specializes to a fixed-locus point | **Open** |

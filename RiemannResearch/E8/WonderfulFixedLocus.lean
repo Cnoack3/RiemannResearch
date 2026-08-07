@@ -112,15 +112,113 @@ abbrev e8CoxeterSystem :
     CoxeterSystem CoxeterMatrix.E₈ E8CoxeterGroup :=
   CoxeterMatrix.E₈.toCoxeterSystem
 
-/-- Number of simple right descents of an element in the E8 Coxeter group. -/
-noncomputable def e8RightDescentCount (w : E8CoxeterGroup) : ℕ := by
+/-- Number of simple right descents in a Coxeter system with finitely many
+simple generators. -/
+noncomputable def coxeterRightDescentCount
+    {B W : Type*} [Fintype B] [Group W] {M : CoxeterMatrix B}
+    (cs : CoxeterSystem M W) (w : W) : ℕ := by
   classical
-  exact (Finset.univ.filter (e8CoxeterSystem.IsRightDescent w)).card
+  exact (Finset.univ.filter (cs.IsRightDescent w)).card
+
+/-- Number of simple right descents of an element in the E8 Coxeter group. -/
+noncomputable def e8RightDescentCount (w : E8CoxeterGroup) : ℕ :=
+  coxeterRightDescentCount e8CoxeterSystem w
 
 /-- The Coxeter-theoretic rank function from the document, defined directly on
 Mathlib's E8 Coxeter group. -/
 noncomputable def e8AttractingRank (w : E8CoxeterGroup) : ℕ :=
   e8CoxeterSystem.length w + e8RightDescentCount w
+
+/-- Left multiplication by an element satisfying the Coxeter
+length-complement identity exchanges right descents and right ascents. -/
+theorem isRightDescent_longestMul_iff_not
+    {B W : Type*} [Group W] {M : CoxeterMatrix B}
+    (cs : CoxeterSystem M W) (w0 : W) (total : ℕ)
+    (hlength : ∀ w, cs.length (w0 * w) + cs.length w = total)
+    (w : W) (i : B) :
+    cs.IsRightDescent (w0 * w) i ↔ ¬ cs.IsRightDescent w i := by
+  rw [cs.isRightDescent_iff, cs.not_isRightDescent_iff]
+  have h := hlength w
+  have h' := hlength (w * cs.simple i)
+  rw [← mul_assoc] at h'
+  constructor
+  · intro hw
+    apply Nat.add_left_cancel (n := cs.length (w0 * w * cs.simple i))
+    calc
+      cs.length (w0 * w * cs.simple i) + cs.length (w * cs.simple i) = total := h'
+      _ = cs.length (w0 * w) + cs.length w := h.symm
+      _ = (cs.length (w0 * w * cs.simple i) + 1) + cs.length w := by rw [hw]
+      _ = cs.length (w0 * w * cs.simple i) + (cs.length w + 1) := by ac_rfl
+  · intro hw
+    apply Nat.add_right_cancel
+    calc
+      (cs.length (w0 * w * cs.simple i) + 1) + cs.length w =
+          cs.length (w0 * w * cs.simple i) + (cs.length w + 1) := by ac_rfl
+      _ = cs.length (w0 * w * cs.simple i) + cs.length (w * cs.simple i) := by rw [hw]
+      _ = total := h'
+      _ = cs.length (w0 * w) + cs.length w := h.symm
+
+/-- The identity element has no simple right descents. -/
+theorem coxeterRightDescentCount_one
+    {B W : Type*} [Fintype B] [Group W] {M : CoxeterMatrix B}
+    (cs : CoxeterSystem M W) :
+    coxeterRightDescentCount cs (1 : W) = 0 := by
+  classical
+  simp [coxeterRightDescentCount, cs.not_isRightDescent_one]
+
+/-- A Coxeter length-complement identity implies the complementary
+right-descent-count identity. -/
+theorem coxeterRightDescentCount_longestMul_add
+    {B W : Type*} [Fintype B] [Group W] {M : CoxeterMatrix B}
+    (cs : CoxeterSystem M W) (w0 : W) (total : ℕ)
+    (hlength : ∀ w, cs.length (w0 * w) + cs.length w = total)
+    (w : W) :
+    coxeterRightDescentCount cs (w0 * w) +
+        coxeterRightDescentCount cs w = Fintype.card B := by
+  classical
+  have hfilter :
+      Finset.univ.filter (cs.IsRightDescent (w0 * w)) =
+        Finset.univ.filter (fun i => ¬ cs.IsRightDescent w i) := by
+    ext i
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    exact isRightDescent_longestMul_iff_not cs w0 total hlength w i
+  rw [coxeterRightDescentCount, coxeterRightDescentCount, hfilter]
+  simpa [Nat.add_comm] using
+    (Finset.card_filter_add_card_filter_not
+      (s := (Finset.univ : Finset B)) (p := cs.IsRightDescent w))
+
+/-- The rank formula and one length-complement identity imply all
+Coxeter-theoretic conclusions needed in corrected Theorem 3.2. -/
+theorem coxeterAttractingRank_properties_of_lengthComplement
+    {B W : Type*} [Fintype B] [Group W] {M : CoxeterMatrix B}
+    (cs : CoxeterSystem M W) (w0 : W) (rank : W → ℕ)
+    (positiveRoots : ℕ)
+    (rank_formula : ∀ w, rank w =
+      cs.length w + coxeterRightDescentCount cs w)
+    (length_complement :
+      ∀ w, cs.length (w0 * w) + cs.length w = positiveRoots) :
+    AttractingRankConclusion W 1 (fun w => w0 * w)
+      rank cs.length (coxeterRightDescentCount cs)
+      positiveRoots (Fintype.card B) := by
+  apply attractingRank_properties
+  · exact rank_formula
+  · intro w
+    exact cs.length_eq_zero_iff
+  · exact coxeterRightDescentCount_one cs
+  · exact length_complement
+  · exact coxeterRightDescentCount_longestMul_add
+      cs w0 positiveRoots length_complement
+
+/-- E8 rank conclusions, conditional only on the currently absent Mathlib
+longest-element length-complement theorem. -/
+theorem e8AttractingRank_properties_of_lengthComplement
+    (w0 : E8CoxeterGroup)
+    (length_complement : ∀ w,
+      e8CoxeterSystem.length (w0 * w) + e8CoxeterSystem.length w = 120) :
+    AttractingRankConclusion E8CoxeterGroup 1 (fun w => w0 * w)
+      e8AttractingRank e8CoxeterSystem.length e8RightDescentCount 120 8 := by
+  exact coxeterAttractingRank_properties_of_lengthComplement
+    e8CoxeterSystem w0 e8AttractingRank 120 (fun _ => rfl) length_complement
 
 /-- The identity is the unique zero of the E8 length-plus-descent rank
 function. This part of the source theorem is proved directly from Mathlib's
@@ -135,7 +233,7 @@ theorem e8AttractingRank_eq_zero_iff (w : E8CoxeterGroup) :
       (Nat.add_eq_zero_iff.mp h').1
   · rintro rfl
     simp [e8AttractingRank, e8RightDescentCount,
-      e8CoxeterSystem.not_isRightDescent_one]
+      coxeterRightDescentCount_one e8CoxeterSystem]
 
 /-- For E8, the complementary attracting ranks sum to 120 + 8 = 128. -/
 theorem e8_total_attracting_rank : 120 + 8 = 128 := by
