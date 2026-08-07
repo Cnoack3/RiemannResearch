@@ -7,6 +7,7 @@ confined to a registered clone and every publication is serialized.
 from __future__ import annotations
 
 import fcntl
+import fnmatch
 import hashlib
 import json
 import os
@@ -28,6 +29,8 @@ JOB_RE = re.compile(r"^job_[A-Za-z0-9_-]{20,80}$")
 PACKAGE_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_.-]*$")
 MAX_READ_BYTES = 1_000_000
 MAX_PATCH_BYTES = 2_000_000
+DEFAULT_READ_CHARS = 20_000
+MAX_METRICS_BYTES = 5_000_000
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
     ".gitignore", "AGENTS.md", "README.md", "RiemannResearch.lean", "lakefile.toml"
@@ -82,6 +85,7 @@ class AgentWorkspaceManager:
             )
         ).resolve()
         self.jobs = self.state / "jobs"
+        self.metrics_path = self.state / "metrics.jsonl"
         try:
             self.project_cache_keep = int(os.environ.get("LEAN_PROJECT_CACHE_KEEP", "8"))
         except ValueError as exc:
@@ -92,6 +96,7 @@ class AgentWorkspaceManager:
             path.mkdir(parents=True, exist_ok=True)
         self._job_queue: queue.Queue[str] = queue.Queue()
         self._job_guard = threading.Lock()
+        self._metrics_guard = threading.Lock()
         self._job_local = threading.local()
         self._active_job: str | None = None
         self._recover_interrupted_jobs()
@@ -102,6 +107,28 @@ class AgentWorkspaceManager:
         )
         self._job_worker_thread.start()
 
+    def _record_metric(self, event: str, **fields: object) -> None:
+        record = {"time": time.time(), "event": event, **fields}
+        line = json.dumps(record, separators=(",", ":"), sort_keys=True) + "\n"
+        try:
+            with self._metrics_guard:
+                if (
+                    self.metrics_path.is_file()
+                    and self.metrics_path.stat().st_size > MAX_METRICS_BYTES
+                ):
+                    rotated = self.metrics_path.with_suffix(".jsonl.1")
+                    rotated.unlink(missing_ok=True)
+                    os.replace(self.metrics_path, rotated)
+                with self.metrics_path.open("a", encoding="utf-8") as handle:
+                    handle.write(line)
+        except OSError:
+            # Observability must never interrupt proof or publication work.
+            pass
+
+    @staticmethod
+    def _workspace_label(token: str) -> str:
+        return hashlib.sha256(token.encode("utf-8")).hexdigest()[:12]
+
     def _run(
         self,
         args: list[str],
@@ -111,6 +138,7 @@ class AgentWorkspaceManager:
         timeout: int = 300,
         lean_num_threads: int | None = None,
     ) -> str:
+        started = time.monotonic()
         result = subprocess.run(
             args,
             cwd=cwd,
@@ -126,9 +154,17 @@ class AgentWorkspaceManager:
             },
         )
         output = (result.stdout + result.stderr).strip()
+        self._record_metric(
+            "command",
+            program=args[0],
+            action=args[1] if len(args) > 1 else "",
+            elapsed_seconds=round(time.monotonic() - started, 3),
+            exit_code=result.returncode,
+            output_chars=len(output),
+        )
         if result.returncode:
             raise RuntimeError(
-                f"Command failed ({result.returncode}): {' '.join(args)}\n{output[-12000:]}"
+                f"Command failed ({result.returncode}): {' '.join(args)}\n{output[-8000:]}"
             )
         return output
 
@@ -470,7 +506,11 @@ class AgentWorkspaceManager:
             raise ValueError(f"Access is not allowed for {normalized}")
         return normalized, resolved
 
-    def list_files(self, token: str) -> dict:
+    def list_files(self, token: str, pattern: str = "", limit: int = 200) -> dict:
+        if len(pattern) > 200:
+            raise ValueError("pattern is too long")
+        if not 1 <= limit <= 1000:
+            raise ValueError("limit must be between 1 and 1000")
         _, project = self._get(token)
         output = self._run(["rg", "--files", "-g", "!.git/**", "-g", "!.lake/**"], cwd=project)
         files = []
@@ -479,19 +519,70 @@ class AgentWorkspaceManager:
                 files.append(self._relative(project, raw)[0])
             except ValueError:
                 pass
-        return {"workspace_token": token, "project_root": str(project), "files": sorted(files)}
+        files = sorted(files)
+        if pattern:
+            lowered = pattern.lower()
+            files = [
+                path for path in files
+                if lowered in path.lower() or fnmatch.fnmatch(path, pattern)
+            ]
+        total = len(files)
+        result = {
+            "workspace_token": token,
+            "project_root": str(project),
+            "pattern": pattern,
+            "files": files[:limit],
+            "total_matches": total,
+            "truncated": total > limit,
+        }
+        self._record_metric(
+            "list_files",
+            workspace=self._workspace_label(token),
+            total_matches=total,
+            returned=min(total, limit),
+        )
+        return result
 
-    def read_file(self, token: str, path: str) -> dict:
+    def read_file(
+        self,
+        token: str,
+        path: str,
+        start_line: int = 1,
+        end_line: int = 0,
+        max_chars: int = DEFAULT_READ_CHARS,
+    ) -> dict:
+        if start_line < 1 or end_line < 0 or (end_line and end_line < start_line):
+            raise ValueError("Use a valid 1-based line range")
+        if not 1 <= max_chars <= 100_000:
+            raise ValueError("max_chars must be between 1 and 100000")
         _, project = self._get(token)
         normalized, resolved = self._relative(project, path)
         if not resolved.is_file() or resolved.stat().st_size > MAX_READ_BYTES:
             raise ValueError("File is missing or too large")
-        return {
+        text = resolved.read_text(encoding="utf-8")
+        lines = text.splitlines(keepends=True)
+        selected = "".join(lines[start_line - 1 : end_line or None])
+        truncated = len(selected) > max_chars
+        content = selected[:max_chars]
+        returned_lines = content.count("\n") + (1 if content and not content.endswith("\n") else 0)
+        result = {
             "workspace_token": token,
             "path": normalized,
             "absolute_path": str(resolved),
-            "content": resolved.read_text(encoding="utf-8"),
+            "content": content,
+            "start_line": start_line,
+            "end_line": start_line + max(returned_lines - 1, 0),
+            "total_lines": len(lines),
+            "truncated": truncated or bool(end_line and end_line < len(lines)),
         }
+        self._record_metric(
+            "read_file",
+            workspace=self._workspace_label(token),
+            path=normalized,
+            returned_chars=len(content),
+            truncated=result["truncated"],
+        )
+        return result
 
     def _patch_paths(self, project: Path, patch: str) -> list[str]:
         if len(patch.encode()) > MAX_PATCH_BYTES:
@@ -527,7 +618,7 @@ class AgentWorkspaceManager:
             "workspace_token": token,
             "state": meta["state"],
             "status": self._run(["git", "status", "--short", "--branch"], cwd=project),
-            "recent_commits": self._run(["git", "log", "-n", "8", "--oneline", "--decorate"], cwd=project),
+            "recent_commits": self._run(["git", "log", "-n", "3", "--oneline", "--decorate"], cwd=project),
             "published_commit": meta.get("published_commit"),
             "needs_rehydrate": meta.get("needs_rehydrate", False),
         }
@@ -580,6 +671,7 @@ class AgentWorkspaceManager:
         scratch.mkdir(parents=True, exist_ok=True)
         path = scratch / f"Run_{secrets.token_hex(12)}.lean"
         path.write_text(code, encoding="utf-8")
+        started = time.monotonic()
         try:
             result = subprocess.run(
                 ["lake", "env", "lean", str(path)],
@@ -591,14 +683,26 @@ class AgentWorkspaceManager:
                 env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
             )
             output = (result.stdout + result.stderr).strip()
-            return {
+            verified = result.returncode == 0
+            output_limit = 4000 if verified else 8000
+            response = {
                 "workspace_token": token,
-                "verified": result.returncode == 0,
+                "verified": verified,
                 "exit_code": result.returncode,
-                "output": output[-12000:],
+                "output": output[-output_limit:],
+                "output_truncated": len(output) > output_limit,
                 "temporary_file_removed": True,
                 "project_root": str(project),
             }
+            self._record_metric(
+                "run_code",
+                workspace=self._workspace_label(token),
+                elapsed_seconds=round(time.monotonic() - started, 3),
+                verified=verified,
+                request_chars=len(code),
+                output_chars=len(response["output"]),
+            )
+            return response
         finally:
             path.unlink(missing_ok=True)
 
@@ -629,10 +733,16 @@ class AgentWorkspaceManager:
             "command": "lake build RiemannResearch --quiet",
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "lean_num_threads": self.lake_build_threads,
-            "output": "\n".join(output.splitlines()[-200:]),
+            "output": "\n".join(output.splitlines()[-20:]),
             "cache": "shared dependencies and commit-keyed seed; private per-clone .lake/build",
         }
         result["project_cache"] = self._publish_project_cache(project)
+        self._record_metric(
+            "build",
+            elapsed_seconds=result["elapsed_seconds"],
+            output_chars=len(result["output"]),
+            cache_published=result["project_cache"].get("published", False),
+        )
         return result
 
     def build(self, token: str) -> dict:
@@ -834,7 +944,8 @@ class AgentWorkspaceManager:
                     "job_id": job_id,
                     "state": existing["state"],
                     "queue_position": self._queue_position_unlocked(job_id),
-                    "instruction": "Poll agent_workspace_job_status; do not resubmit.",
+                    "retry_after_seconds": 20 if existing["state"] == "running" else 30,
+                    "instruction": "Poll after retry_after_seconds; do not resubmit.",
                 }
             pending = self._pending_job_for_workspace(token)
             if pending is not None:
@@ -854,14 +965,21 @@ class AgentWorkspaceManager:
             self._write_job(job)
             self._job_queue.put(job_id)
             position = self._queue_position_unlocked(job_id)
+        self._record_metric(
+            "job_submitted",
+            job_id=job_id,
+            workspace=self._workspace_label(token),
+            kind=kind,
+            queue_position=position,
+        )
         return {
             "accepted": True,
             "job_id": job_id,
             "state": "queued",
             "queue_position": position,
+            "retry_after_seconds": 30,
             "instruction": (
-                "Poll agent_workspace_job_status until state is succeeded, failed, or "
-                "interrupted. Do not resubmit while queued or running."
+                "Poll after retry_after_seconds until terminal. Do not resubmit."
             ),
         }
 
@@ -941,11 +1059,37 @@ class AgentWorkspaceManager:
                 job.update(state="succeeded", finished_at=time.time(), result=result)
             finally:
                 self._write_job(job)
+                self._record_metric(
+                    "job_finished",
+                    job_id=job_id,
+                    kind=job.get("kind"),
+                    state=job.get("state"),
+                    elapsed_seconds=round(
+                        job.get("finished_at", time.time())
+                        - job.get("started_at", job.get("submitted_at", time.time())),
+                        3,
+                    ),
+                )
                 with self._job_guard:
                     self._active_job = None
                 self._job_queue.task_done()
 
-    def job_status(self, job_id: str) -> dict:
+    @staticmethod
+    def _compact_result(value: object, *, include_logs: bool) -> object:
+        if isinstance(value, dict):
+            return {
+                key: AgentWorkspaceManager._compact_result(item, include_logs=include_logs)
+                for key, item in value.items()
+                if include_logs or key != "output"
+            }
+        if isinstance(value, list):
+            return [
+                AgentWorkspaceManager._compact_result(item, include_logs=include_logs)
+                for item in value
+            ]
+        return value
+
+    def job_status(self, job_id: str, include_logs: bool = False) -> dict:
         job = self._read_job(job_id)
         now = time.time()
         response = {
@@ -963,6 +1107,23 @@ class AgentWorkspaceManager:
             "failed",
             "interrupted",
         }
+        response["retry_after_seconds"] = (
+            0
+            if response["terminal"]
+            else (20 if job["state"] == "running" else 30)
+        )
+        if "result" in response:
+            response["result"] = self._compact_result(
+                response["result"], include_logs=include_logs
+            )
+        self._record_metric(
+            "job_status",
+            job_id=job_id,
+            state=job["state"],
+            terminal=response["terminal"],
+            include_logs=include_logs,
+            response_chars=len(json.dumps(response, separators=(",", ":"))),
+        )
         return response
 
     def reset(self, token: str, confirmation_token: str = "") -> dict:
