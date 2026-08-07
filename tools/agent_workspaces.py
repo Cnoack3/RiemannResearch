@@ -52,6 +52,19 @@ class AgentWorkspaceManager:
         self.before_replace = before_replace
         self.can_archive = can_archive
         self.retention_days = retention_days
+        try:
+            self.lean_num_threads = int(os.environ.get("LEAN_NUM_THREADS", "8"))
+        except ValueError as exc:
+            raise ValueError("LEAN_NUM_THREADS must be an integer") from exc
+        if not 1 <= self.lean_num_threads <= 8:
+            raise ValueError("LEAN_NUM_THREADS must be between 1 and 8")
+        try:
+            requested_build_threads = int(os.environ.get("LEAN_LAKE_BUILD_THREADS", "4"))
+        except ValueError as exc:
+            raise ValueError("LEAN_LAKE_BUILD_THREADS must be an integer") from exc
+        if not 1 <= requested_build_threads <= 4:
+            raise ValueError("LEAN_LAKE_BUILD_THREADS must be between 1 and 4")
+        self.lake_build_threads = min(requested_build_threads, self.lean_num_threads)
         home = Path(os.environ.get("HOME", "/home/cri_2025")).resolve()
         self.root = Path(
             os.environ.get("LEAN_AGENT_WORKSPACES_ROOT", home / "lean-agent-workspaces")
@@ -96,6 +109,7 @@ class AgentWorkspaceManager:
         cwd: Path,
         input_text: str | None = None,
         timeout: int = 300,
+        lean_num_threads: int | None = None,
     ) -> str:
         result = subprocess.run(
             args,
@@ -105,7 +119,11 @@ class AgentWorkspaceManager:
             capture_output=True,
             timeout=timeout,
             check=False,
-            env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
+            env={
+                **os.environ,
+                "GIT_TERMINAL_PROMPT": "0",
+                "LEAN_NUM_THREADS": str(lean_num_threads or self.lean_num_threads),
+            },
         )
         output = (result.stdout + result.stderr).strip()
         if result.returncode:
@@ -601,10 +619,16 @@ class AgentWorkspaceManager:
 
     def _build(self, project: Path) -> dict:
         started = time.monotonic()
-        output = self._run(["lake", "build", "RiemannResearch", "--quiet"], cwd=project, timeout=3600)
+        output = self._run(
+            ["lake", "build", "RiemannResearch", "--quiet"],
+            cwd=project,
+            timeout=3600,
+            lean_num_threads=self.lake_build_threads,
+        )
         result = {
             "command": "lake build RiemannResearch --quiet",
             "elapsed_seconds": round(time.monotonic() - started, 3),
+            "lean_num_threads": self.lake_build_threads,
             "output": "\n".join(output.splitlines()[-200:]),
             "cache": "shared dependencies and commit-keyed seed; private per-clone .lake/build",
         }
