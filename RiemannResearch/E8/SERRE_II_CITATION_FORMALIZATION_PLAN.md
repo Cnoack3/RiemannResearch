@@ -2,6 +2,10 @@
 
 Artifact: `serre_ii_e8_program_2026-08-05.pdf` (51 pages).
 
+For the version-compatibility audit of possible external Lean dependencies,
+see `SERRE_II_LEAN_DEPENDENCY_SURVEY.md`. No compatible package currently
+closes one of the high-level citation gaps.
+
 This is the implementation ledger for all 33 bibliography entries. It is
 deliberately stricter than the source audit: a row is complete only when the
 exact result used by the manuscript is represented by a kernel-checked Lean
