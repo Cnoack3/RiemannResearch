@@ -229,6 +229,9 @@ unconditional proofs of the motivating named theorems.
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent` | `RiemannResearch.E8.FullWeylCore` | From the inputs listed below, proves parts (i)--(iii), nonabelianness of the simple core, and `Neutral(ξ) ↔ (Neutral(ξ_F) → Neutral(ξ_{k⁺}))` | Kernel checked implication; open obligations remain |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent_nonabelianH1` | `RiemannResearch.E8.FullWeylCore` | Specializes the conditional assembly to actual discrete nonabelian H¹ and proves the forward restriction-neutrality implication rather than assuming it | Kernel checked implication; remaining E8-specific hypotheses are load-bearing |
 | `RiemannResearch.E8.universalFixedLocusAndSplittingField` | `RiemannResearch.E8.WonderfulFixedLocus` | From the inputs listed below, proves the assembled fixed-locus, motivic, point-field, splitting-spectrum, and set-gcd-index conclusions | Kernel checked corrected implication; literal PDF cocharacter normalization fails; open obligations remain |
+| `RiemannResearch.E8.serreII_of_oddDegreePointDescent` | `RiemannResearch.E8.SerreIICompletionTargets` | Odd-degree splitting, an all-extension point/neutrality equivalence, and odd-degree point descent imply neutrality of every candidate class | Kernel checked implication; the E8-specific inputs below remain open |
+| `RiemannResearch.E8.serreII_of_compatibleLocalGauges` | `RiemannResearch.E8.SerreIICompletionTargets` | A common gauge on a generating family makes every selected nonabelian cocycle a global coboundary | Kernel checked implication; existence of the E8 common gauges remains open |
+| `RiemannResearch.E8.serreII_of_diagonalKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | One diagonal toral restriction--corestriction value in the neutral fiber, with the index formulas and a positive Bezout congruence, forces the original toral class to map to the neutral class | Kernel checked implication; the E8 diagonal kernel-norm input remains open |
 
 ### Open obligations: `quasisimpleCoreOfFullWeylDescent`
 
@@ -262,6 +265,30 @@ unconditional proofs of the motivating named theorems.
 | `properLimit` | A compactification point specializes to a fixed-locus point | **Open** |
 | `fixedComponentInclusion` | A twisted Borel component point gives a compactification point | **Open** |
 | `borelReduction_iff_neutral` | A Borel reduction is equivalent to neutrality of the torsor | **Open** |
+
+### Open obligations: `serreII_of_oddDegreePointDescent`
+
+| Hypothesis binder | Required mathematical input | Provider / status |
+|---|---|---|
+| `oddSplitting` | Every E8 class becomes neutral over a finite odd-degree extension | Published input in the memorandum; a project declaration supplying the algebraic E8 statement remains **open** |
+| `point_iff_neutral` | Points on the chosen Borel, EVIII, or wonderful variety are equivalent to neutrality over every extension | Borel/wonderful abstract providers are fields of `UniversalFixedLocusConclusion`; their algebraic E8 geometric inputs remain **open**. No EVIII project provider exists. |
+| `oddPointDescent` | A point over the odd-degree extension descends to the base | **Open**; this is completion target A |
+
+### Open obligations: `serreII_of_compatibleLocalGauges`
+
+| Hypothesis binder | Required mathematical input | Provider / status |
+|---|---|---|
+| `commonGauge` | The prime-local E8 trivialization cosets have a nonempty total intersection for every candidate cocycle | **Open**; this is completion target B |
+| E8 specialization | Identify algebraic E8 torsors with the discrete nonabelian cocycles selected by `Candidate`, and supply the generating prime-local gauges | **Open** |
+
+### Open obligations: `serreII_of_diagonalKernelNorm`
+
+| Hypothesis binder | Required mathematical input | Provider / status |
+|---|---|---|
+| `hindex` | Torus-H¹ restriction followed by corestriction is multiplication by the field degree | The abstract additive formula is kernel checked elsewhere; the algebraic torus-H¹ specialization remains **open** |
+| `he` | The selected torus-H¹ class has a positive annihilator | Standard finite-splitting-field input; a project provider remains **open** |
+| `hcoefficient` | Nonnegative multiplicities give total degree congruent to one modulo the annihilator | Arithmetic datum; supplied case-by-case from gcd-one subsystem degrees |
+| `hkernelNorm` | The single diagonal corestriction value maps to the neutral E8 class | **Open**; this is completion target C |
 
 ## Planned research areas
 
