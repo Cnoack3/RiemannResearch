@@ -388,6 +388,40 @@ class AgentWorkspaceManager:
         key = self._attach_dependencies(project)
         return {"updated": package or "all", "shared_dependency_key": key, "output": output[-12000:]}
 
+    def run_code(self, token: str, code: str, timeout_seconds: int = 300) -> dict:
+        if not code.strip():
+            raise ValueError("Lean code is empty")
+        if len(code.encode("utf-8")) > MAX_PATCH_BYTES:
+            raise ValueError("Lean code is too large")
+        if not 1 <= timeout_seconds <= 1800:
+            raise ValueError("timeout_seconds must be between 1 and 1800")
+        _, project = self._get(token)
+        scratch = project / ".lake" / "agent-scratch"
+        scratch.mkdir(parents=True, exist_ok=True)
+        path = scratch / f"Run_{secrets.token_hex(12)}.lean"
+        path.write_text(code, encoding="utf-8")
+        try:
+            result = subprocess.run(
+                ["lake", "env", "lean", str(path)],
+                cwd=project,
+                text=True,
+                capture_output=True,
+                timeout=timeout_seconds,
+                check=False,
+                env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
+            )
+            output = (result.stdout + result.stderr).strip()
+            return {
+                "workspace_token": token,
+                "verified": result.returncode == 0,
+                "exit_code": result.returncode,
+                "output": output[-12000:],
+                "temporary_file_removed": True,
+                "project_root": str(project),
+            }
+        finally:
+            path.unlink(missing_ok=True)
+
     def _scan(self, project: Path) -> list[str]:
         warnings = []
         patterns = {
