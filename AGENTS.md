@@ -66,7 +66,8 @@
   before a non-force push.
 - Automatic cleanup may archive only old clean clones whose state is published or
   unchanged. Dirty trees and unpublished commits are never automatically
-  deleted. Reopening an archived token rehydrates its clone.
+  deleted. Before archival or replacement, the clone's registered Lean client is
+  terminated. Reopening an archived token rehydrates its clone.
 - Lean LSP processes may be evicted after inactivity or client pressure. This is
   safe: the next absolute-path Lean call starts a new process against the same
   persistent clone.
