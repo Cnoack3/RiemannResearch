@@ -80,6 +80,32 @@ in the supplied artifacts, so their triality types remain unverified.
 - `GroupTheory/HalfDifferenceCocycle.lean` verifies the cocycle identity for
   `a_g=(ell-g·ell)/2` and its restriction at an element acting by minus one.
   The field-theoretic existence of the required halves remains a separate input.
+- `GroupTheory/OrbitDegreeGcd.lean` proves that if all degrees in three
+  finite orbit partitions share a divisor, then that divisor divides the gcd of
+  the three total cardinalities. Applied to totals 135, 11200, and 12096, this
+  replaces the original 303 row-by-row gcd calculations by one uniform proof.
+- `GroupTheory/PerfectCore.lean` proves that a stable derived-series term is
+  perfect, has solvable quotient, and is contained in every normal subgroup
+  with solvable quotient. It also proves existence of a stable term when the
+  subgroup type is finite.
+- `GroupTheory/KernelConjugator.lean` proves the even-conjugator correction:
+  multiplying a subgroup conjugator on the right by a suitable source-subgroup
+  element preserves the conjugated subgroup while moving the conjugator into a
+  homomorphism kernel.
+- `GroupTheory/CentralExtension.lean` proves that a perfect group cannot
+  admit a group-homomorphic splitting over a nontrivial central kernel. This is
+  the generic deduction applied to the perfect Weyl lifts in the joint
+  certificate.
+- `GroupTheory/ModTwoFixedReduction.lean` proves that for a torsion-free
+  integral lattice with a central negation action, vanishing of the fixed space
+  modulo two forces vanishing at every modulus greater than one. This
+  kernel-checks the all-moduli reduction used by the marker certificate.
+- `E8/SubgroupSieve.lean` records the reconstructed TomLib class data and
+  kernel-checks the 313-to-303 row counts, the 150+153-to-31 perfect-core
+  compression, the 14 distinct core orders, the 31 joint lift rows, and the
+  uniform subsystem-orbit common-divisor theorem. The association of table
+  positions with actual subgroups remains the explicitly documented external
+  certificate boundary.
 - `E8/A8NormalizerArithmetic.lean` verifies
   `-27 * 15 + 2 * 35 + 336 = 1` and the corresponding annihilator theorem.
 - `E8/WeylIndexPacket.lean` verifies the arithmetic of the newly proposed
@@ -261,21 +287,47 @@ complex numbers, but not the false sign-only chamber normalization in Theorem
 counterexample and conditional repaired theorem therefore remain the correct
 formal status.
 
-## Unreproduced computer-assisted input
+## Restored computer-assisted certificates
 
-The manuscript reports, but the supplied artifact does not contain, the GAP,
-CTblLib, TomLib, and root-action scripts needed for:
+The previously omitted exhaustive subgroup-sieve and perfect-core computations
+have now been independently reconstructed, rerun, and committed with their raw
+output.
 
-- the subgroup counts `11171 -> 313 -> 303` and all gcd-one orbit assertions;
-- the `303 = 150 + 153 -> 31` perfect-core compression;
-- nonsplitting of all 31 central Weyl lifts; and
-- the root-subsystem and triality tests for the three binary lattice
-  embeddings not represented by the certified Appendix-A matrices.
+- `Certificates/O8_PLUS_2_SUBGROUP_SIEVE_CERTIFICATE.md` contains the exact
+  GAP script, raw output, compact JSON, package versions, source-data hashes,
+  and the maximal-overgroup argument. It exhausts all 11,171 TomLib classes
+  relative to the eight source-matched stabilizer columns, verifies the three
+  triality-correlated sieves `11171 -> 313 -> 303`, and checks the compression
+  `303 = 150 + 153 -> 31` with 14 distinct core orders. The script does not
+  itself construct the eight E8 root-subsystem actions and derive those TomLib
+  column positions.
+- `Certificates/O8_PLUS_2_COVER_MARKER_CERTIFICATE.md` contains the joint
+  Weyl-cover/module script, raw output, compact JSON, and abstract-type
+  validation. A single shared TomLib identification avoids triality
+  misalignment and verifies that all 31 aligned perfect-core lifts are
+  nonsplit and have zero fixed space on the E8 lattice modulo two. The generic
+  passage from mod-two fixed-freeness to every modulus is kernel checked in
+  `GroupTheory/ModTwoFixedReduction.lean`; the nonsplitting deduction from a
+  perfect lift with nontrivial central kernel is kernel checked in
+  `GroupTheory/CentralExtension.lean`.
+- The old 303 row-by-row orbit gcd computation is no longer needed. The Lean
+  theorem
+  `omegaEightPlusTwo_subsystemOrbitDegree_commonDivisor_eq_one` proves the
+  conclusion uniformly from the three orbit-partition totals 135, 11200, and
+  12096.
 
-The Appendix-A matrix row has now been reproduced by exact integer computation
-and Lean reflection certificates. The remaining numerical premises must stay
-conditional until the exact scripts, package versions, row maps, fusion
-witnesses, and raw output are committed and rerun.
+These statements are now reproducible computer-assisted inputs rather than
+unreproduced premises. Their finite numerical content is still deliberately
+separated from the Lean trust boundary: Lean checks the general deductions and
+the embedded data; GAP/TomLib certifies the table computations; and Totaro's
+classification plus source-level matching supplies the geometric identification
+of the eight subsystem-stabilizer columns.
+
+The Appendix-A matrix row remains reproduced by exact integer computation and
+Lean reflection certificates. The separate root-subsystem and triality tests
+for the three binary lattice embeddings not represented by those matrices are
+not exercised by the restored O8+(2) certificates and remain
+computer-conditional.
 
 ## Exact remaining gap and scope
 
