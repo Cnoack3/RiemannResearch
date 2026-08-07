@@ -28,6 +28,8 @@ remain authoritative.
 | `RiemannResearch.GroupTheory.eq_zero_of_coprime_restrictions` | `RiemannResearch.GroupTheory.CoprimeRestriction` | Two additive restriction maps satisfying coprime restriction--corestriction index formulas jointly detect zero | Kernel checked |
 | `RiemannResearch.GroupTheory.fixed_of_fixed_on_join_eq_top` | `RiemannResearch.GroupTheory.GeneratedFixedPoint` | A common point fixed by two generating subgroups is fixed by the whole group; separate local fixed points are not enough | Kernel checked |
 | `RiemannResearch.GroupTheory.exists_nonzero_fixedPoint_of_isPGroup_of_not_card_modEq_one` | `RiemannResearch.GroupTheory.PGroupFixedPoints` | A finite `p`-group acting additively on finite `V` has a nonzero fixed point when `Nat.card V ≢ 1 [MOD p]` | Kernel checked |
+| `RiemannResearch.E8.a8Normalizer_bezout` | `RiemannResearch.E8.A8NormalizerArithmetic` | Verifies the exact identity `-27·15 + 2·35 + 336 = 1` | Kernel checked |
+| `RiemannResearch.E8.eq_zero_of_a8_annihilators` | `RiemannResearch.E8.A8NormalizerArithmetic` | An abelian class killed by the three A8 cover degrees 15, 35, and 336 is zero | Kernel checked |
 | `RiemannResearch.E8.omegaEightPlusTwo_order` | `RiemannResearch.E8.OmegaEightPlusTwo` | `2^12 · 3^5 · 5^2 · 7 = 174182400` | Kernel checked |
 | `RiemannResearch.E8.nonabelian_of_isSimpleGroup_of_card_eq_omegaOrder` | `RiemannResearch.E8.OmegaEightPlusTwo` | A simple group of order `2^12 · 3^5 · 5^2 · 7` is nonabelian | Kernel checked |
 | `RiemannResearch.E8.attractingRank_properties` | `RiemannResearch.E8.WonderfulFixedLocus` | The length-plus-descent formula and Coxeter complement identities imply unique zero rank and rank duality | Kernel checked |
