@@ -705,16 +705,16 @@ def agent_workspace_reset(
 
 
 @mcp.tool(
-    name="agent_workspace_cleanup",
+    name="agent_workspace_run_code",
     description=(
-        "Preview or perform eventual cleanup of old clean clones. Dirty trees and "
-        "unpublished commits are always preserved; archived tokens remain resumable."
+        "Compile an ephemeral Lean snippet inside one isolated clone and return its "
+        "diagnostics. The temporary file lives under .lake and is always removed."
     ),
 )
-def agent_workspace_cleanup(
-    retention_days: int = 90, dry_run: bool = True
+def agent_workspace_run_code(
+    workspace_token: str, code: str, timeout_seconds: int = 300
 ) -> dict:
-    return AGENT_WORKSPACES.cleanup(retention_days, dry_run)
+    return AGENT_WORKSPACES.run_code(workspace_token, code, timeout_seconds)
 
 
 # The ChatGPT connector currently exposes at most 32 tools. Retire the shared
