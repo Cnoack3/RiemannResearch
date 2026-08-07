@@ -34,6 +34,14 @@ root to verify the project library and its transitive imports. Lake stores
 compiled artifacts under `.lake`; subsequent builds traverse the dependency
 graph but rebuild only stale modules and their affected dependents.
 
+The ChatGPT workspace service serializes heavyweight builds, dependency
+updates, and checkpoints through a FIFO background worker. Tool submissions
+return a job ID immediately, and clients poll status rather than holding an HTTP
+request open through a long build. Successful clean builds also publish an
+immutable project-artifact seed keyed by Git commit and dependency environment.
+New isolated clones copy or reflink that seed into their private `.lake/build`,
+preserving per-agent write isolation while avoiding repeated first builds.
+
 ## Automatic synchronization
 
 On the first edit of a clean working tree, the restricted workspace connector
