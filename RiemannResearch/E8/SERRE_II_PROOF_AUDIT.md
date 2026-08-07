@@ -27,6 +27,14 @@ All three files build in the full project and use no `sorry` or new axioms.
 
 ## Mathematically verified manuscript advances
 
+0. A general fixed-packet lemma is now isolated: if a connected maximal-rank
+   subgroup H has neutral H1-image after every finite extension, the maximal-
+   torus fixed locus in the twisted reduction variety is finite etale of degree
+   [W(G):W(H)], and every one of its residue fields splits the torsor. Applied
+   to D8, A2E6, and A4A4 in E8, this yields effective splitting cycles of
+   degrees 135, 2240, and 48384 and an odd splitting field of degree at most
+   135. The geometric proof is informal/source-audited; its numerical
+   consequences are kernel checked in E8/WeylIndexPacket.lean.
 1. The one-sided wonderful compactification has the same point fields as the
    E8 torsor. Its fixed locus consists of Weyl-indexed copies of the twisted
    Borel variety, with attracting rank `length(w) + rightDescent(w)`.
