@@ -55,7 +55,10 @@ with tempfile.TemporaryDirectory() as raw:
     )
     fake_lake.chmod(0o755)
     os.environ["PATH"] = str(fake_bin) + os.pathsep + os.environ["PATH"]
-    manager = TestManager(source, str(remote))
+    closed_projects = []
+    manager = TestManager(
+        source, str(remote), before_replace=lambda path: closed_projects.append(str(path))
+    )
 
     first = manager.open()
     second = manager.open()
@@ -102,6 +105,7 @@ new file mode 100644
     archived = manager.cleanup(retention_days=30, dry_run=False)
     assert not published_root.exists()
     assert archived["archived_or_eligible"]
+    assert str(published_root) in closed_projects
     assert Path(manager.open(first_token)["project_root"]).is_dir()
 
     dirty = manager.open()
