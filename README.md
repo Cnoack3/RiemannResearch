@@ -24,7 +24,8 @@ it has been:
 - `RiemannResearch/NoncommutativeGeometry/`: C*-algebras and spectral triples
 - `RiemannResearch/F1/`: field-with-one-element constructions
 - `RiemannResearch/AlgebraicGeometry/`: scheme-theoretic foundations
-- `RiemannResearch/THEOREM_CATALOG.md`: human-readable declaration index
+- `RiemannResearch/THEOREM_CATALOG.md`: publication and research-obligation ledger;
+  agents use Lean-aware declaration search instead of loading it for discovery
 
 ## Reproducibility
 
@@ -44,6 +45,12 @@ preserving per-agent write isolation while avoiding repeated first builds.
 The service caps the general Lean runtime task pool at eight threads and queued
 Lake builds at four. Operators may lower these through `LEAN_WORKSPACE_THREADS`
 (1--8) and `LEAN_LAKE_BUILD_THREADS` (1--4), respectively.
+
+Queue responses include `retry_after_seconds`; polling sooner only wastes model
+turns. Successful status responses omit verbose logs unless explicitly
+requested. Bounded operational metrics are written to
+`~/.local/state/lean-agent-workspaces/metrics.jsonl` without proof text or full
+workspace tokens.
 
 ## Automatic synchronization
 
