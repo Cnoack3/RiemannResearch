@@ -114,6 +114,12 @@ with tempfile.TemporaryDirectory() as raw:
     listed = manager.list_files(first_token, pattern="Basic", limit=1)
     assert listed["files"] == ["RiemannResearch/Basic.lean"]
     assert not listed["truncated"]
+    searched = manager.search_files(first_token, "theorem", limit=1)
+    assert searched["matches"][0]["path"] == "RiemannResearch/Basic.lean"
+    assert searched["matches"][0]["line"] == 1
+    assert searched["total_matches"] == 1
+    assert not searched["truncated"]
+    assert manager.search_files(first_token, "THEOREM", case_sensitive=True)["matches"] == []
     ranged = manager.read_file(
         first_token, "RiemannResearch/Basic.lean", start_line=1, max_chars=12
     )
@@ -127,6 +133,10 @@ with tempfile.TemporaryDirectory() as raw:
     assert duplicate_job["job_id"] == first_job["job_id"]
     assert duplicate_job["retry_after_seconds"] >= 20
     assert second_job["queue_position"] is not None
+    queued_status = manager.job_status(second_job["job_id"])
+    assert queued_status["retry_after_seconds"] >= 45
+    if queued_status["state"] == "queued":
+        assert queued_status["retry_after_seconds"] >= 60
     try:
         manager.submit_checkpoint(first_token, "Blocked checkpoint")
         raise AssertionError("a second job kind was queued for the same workspace")
