@@ -33,6 +33,9 @@ unreproduced computer-assisted claims, see `E8/SERRE_II_PROOF_AUDIT.md`.
 
 | Declaration | Module | Statement / purpose | Status |
 |---|---|---|---|
+| `RiemannResearch.AlgebraicGeometry.SerreII.DynkinFamily.classical_or_exceptional` | `RiemannResearch.AlgebraicGeometry.SerreIINonE8` | Every irreducible Dynkin family in the supplied finite interface is classical or exceptional | Kernel checked finite classification |
+| `RiemannResearch.AlgebraicGeometry.SerreII.DynkinFamily.exceptional_iff_e8_or_remainingExceptional` | `RiemannResearch.AlgebraicGeometry.SerreIINonE8` | The exceptional families split into `E8` and the four remaining exceptional types | Kernel checked finite classification |
+| `RiemannResearch.AlgebraicGeometry.SerreII.DynkinFamily.ne_e8_iff_classical_or_remainingExceptional` | `RiemannResearch.AlgebraicGeometry.SerreIINonE8` | A family is not `E8` exactly when it is classical or one of `E6`, `E7`, `F4`, `G2` | Kernel checked finite classification; this does not construct a classifier for algebraic groups |
 | `RiemannResearch.AlgebraicGeometry.affineGroupSchemeObject_hasGroupObject` | `RiemannResearch.AlgebraicGeometry.AffineGroupSchemeBaseChange` | A commutative Hopf algebra represents an affine group object over the spectrum of its base | Kernel checked construction; does not assert smoothness or reductivity |
 | `RiemannResearch.AlgebraicGeometry.affineGroupBaseChangeSchemeObject_hasGroupObject` | `RiemannResearch.AlgebraicGeometry.AffineGroupSchemeBaseChange` | Tensor-product scalar extension of a commutative Hopf algebra again represents an affine group object | Kernel checked construction |
 | `RiemannResearch.E8.BasedE8RootDatum.simpleCartanMatrix_eq_E8` | `RiemannResearch.E8.GroupSchemeFoundation` | A supplied reduced crystallographic root datum with an E8-labelled base has simple-root pairing matrix exactly `CartanMatrix.E₈` | Kernel checked interface theorem; no inhabitant is claimed |
@@ -275,6 +278,7 @@ unconditional proofs of the motivating named theorems.
 
 | Declaration | Module | Verified consequence | Status |
 |---|---|---|---|
+| `RiemannResearch.AlgebraicGeometry.SerreII.conjecture_nonE8_of_family_providers` | `RiemannResearch.AlgebraicGeometry.SerreIINonE8` | Classical, `E6`, `E7`, `F4`, and `G2` fpqc-neutrality providers assemble to the project Serre-II conjecture on the supplied non-`E8` Dynkin-family scope | Kernel checked assembly theorem; the concrete predicates, classifier, and all five providers below remain open in the project |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent` | `RiemannResearch.E8.FullWeylCore` | From the inputs listed below, proves parts (i)--(iii), nonabelianness of the simple core, and `Neutral(ξ) ↔ (Neutral(ξ_F) → Neutral(ξ_{k⁺}))` | Kernel checked implication; open obligations remain |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent_nonabelianH1` | `RiemannResearch.E8.FullWeylCore` | Specializes the conditional assembly to actual discrete nonabelian H¹ and proves the forward restriction-neutrality implication rather than assuming it | Kernel checked implication; remaining E8-specific hypotheses are load-bearing |
 | `RiemannResearch.E8.universalFixedLocusAndSplittingField` | `RiemannResearch.E8.WonderfulFixedLocus` | For a regular cocharacter chosen in the chamber determined by the fixed Borel, the supplied geometric inputs imply the fixed-locus and motivic conclusions, unconditional compactification/Borel point-field and index equality, and—only for inner torsors—neutrality and torsor-index comparisons | Kernel checked implication matching the intended chamber convention and revised scope of Theorem 3.2(iii) |
@@ -284,6 +288,19 @@ unconditional proofs of the motivating named theorems.
 | `RiemannResearch.E8.nonabelianH1_family_subsingleton_of_compatibleLocalGauges` | `RiemannResearch.E8.SerreIICompletionTargets` | Compatible common gauges for every cocycle in every member of a family make each discrete nonabelian H¹ a subsingleton | Kernel checked family-level implication; the fpqc/E8 comparison and E8 common gauges remain open |
 | `RiemannResearch.E8.serreII_of_diagonalKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | One diagonal toral restriction--corestriction value in the neutral fiber, with the index formulas and a positive Bezout congruence, forces the original toral class to map to the neutral class | Kernel checked implication; the E8 diagonal kernel-norm input remains open |
 | `RiemannResearch.E8.serreII_of_finiteEtaleKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | Componentwise neutrality in a repeated finite-etale product, the product kernel-norm principle, index formulas, and a positive Bezout congruence force the original toral class to map to the neutral class | Kernel checked finite-etale formulation of Proposition 6.34; the E8 product kernel-norm input remains open |
+
+### Open obligations: `conjecture_nonE8_of_family_providers`
+
+| Hypothesis binder | Required mathematical input | Provider / status |
+|---|---|---|
+| `IsPerfectFieldCdAtMostTwo` | Intrinsic predicate for perfect fields of cohomological dimension at most two | **Open** as a concrete project predicate; supplied abstractly here |
+| `IsSemisimpleSimplyConnected` | Intrinsic predicate for semisimple simply connected affine group schemes | **Open** as a concrete project predicate; supplied abstractly here |
+| `family` | Correct Dynkin-family classifier for every group scheme in scope | **Open**; the finite codomain is defined, but no algebraic-group classifier is constructed |
+| `classical` | Fpqc Serre-II neutrality for the `A`, `B`, `C`, and `D` series | **Open** in the project; arbitrary trialitarian `D4` is not known uniformly, so this binder is stronger than the current arbitrary-form literature |
+| `e6` | Fpqc Serre-II neutrality for family `E6` | **Open**; the generic arbitrary-form case is not known, while the quasi-split case is published but not formalized here |
+| `e7` | Fpqc Serre-II neutrality for family `E7` | **Open**; the generic arbitrary-form case is not known, while the quasi-split case is published but not formalized here |
+| `f4` | Fpqc Serre-II neutrality for family `F4` | Published mathematics exists for the stated field scope; an algebraic-group/fpqc project provider remains **open** |
+| `g2` | Fpqc Serre-II neutrality for family `G2` | Published mathematics exists for the stated field scope; an algebraic-group/fpqc project provider remains **open** |
 
 ### Open obligations: `quasisimpleCoreOfFullWeylDescent`
 
