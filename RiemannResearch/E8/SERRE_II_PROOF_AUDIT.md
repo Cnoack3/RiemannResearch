@@ -405,6 +405,34 @@ universal outer-triality assertion is false: the ATLAS certificate narrows the
 row to `{4015,4017}`, each with one degree-five orbit, and its exact stabilizer
 acts inner on both factors. The other eleven root actions are not certified.
 
+### Rational-involutions / Weyl-7 audit (27 July 2026 draft)
+
+RationalInvolutionsAudit.lean adds kernel-reduced proofs for every
+self-contained exact certificate transcribed in this checkpoint:
+
+- the 15 by 15 complement-incidence row sums, trace, and Gram identity;
+- all three printed XOR inconsistency certificates;
+- the universal factor-16 determinant formula and its minimizing vector;
+- the Cartan-transporter dimension and equation-count arithmetic;
+- the finite cohomology rank and packet-stabilizer order arithmetic;
+- the complete order-seven action on the 256-vector hyperbolic model,
+  including the 135 singular vectors, two fixed points, nineteen
+  seven-orbits, the 5/5/5/4 sum distribution, and perpendicularity of every
+  balanced orbit;
+- the 15 + 120 atomic partition and both vector-sum certificates;
+- the no-symmetric-nonabelian-norm argument, odd-degree injectivity modulo
+  two, and the affine-kernel-torsor argument for transgression witnesses.
+
+The exhaustive proofs use decide with increased reduction depth, not
+native_decide; theorem source scans therefore show no generated
+compiler-trust axioms. Wolfram Language independently reproduced the
+incidence Gram identity, determinant, and XOR values.
+
+This does not turn the paper's algebraic-group, finite-group identification,
+Galois-cohomology, or packet-compatibility assertions into Lean theorems.
+They remain source-level mathematical inputs or open research obligations;
+none has been hidden behind a project-local axiom, sorry, or admit.
+
 ## Exact remaining gap and scope
 
 No counterexample and no proof of the general E8 case is currently certified.

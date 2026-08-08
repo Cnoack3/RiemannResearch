@@ -53,6 +53,7 @@ import RiemannResearch.E8.WeylIndexPacket
 import RiemannResearch.E8.SerreIIProgramChecks
 import RiemannResearch.E8.SerreIICompletionTargets
 import RiemannResearch.E8.OmegaEightPlusTwo
+import RiemannResearch.E8.RationalInvolutionsAudit
 import RiemannResearch.E8.SubgroupSieve
 import RiemannResearch.E8.FullWeylCore
 import RiemannResearch.E8.GroupSchemeFoundation
