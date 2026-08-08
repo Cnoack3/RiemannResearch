@@ -103,7 +103,7 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 | Theorem 7.2 | Prime-power endpoint implication in Lean; ILA theorem unformalized | ILA Corollary 4.14 supplies index one only at the cited-source level. PrimePowerIndex.lean proves that a prime-power point-degree spectrum of index one contains an actual degree-one point field. |
 | Corollary 7.3 | Source checked with wording correction | The endpoint exclusion follows from Theorem 7.2. Merkurjev Theorem 4 preserves its specially constructed quaternion tensor product and associated anisotropic form, not arbitrary pre-chosen examples. |
 | Proposition 7.4 | Manuscript only | The specialization argument for affine torsors over a pure transcendental extension is not formalized. |
-| Proposition 7.5 | Partial abstract kernel only | fixed_of_fixed_on_join_eq_top checks the common-fixed-point implication; the Galois and gauge-coset realization is not formalized. |
+| Proposition 7.5 and following paragraph | **Criterion partially kernel checked; following generation step false as written** | `fixed_of_fixed_on_join_eq_top` checks the common-fixed-point implication. `quotientGeneration_counterexample` shows that lifts whose images generate a finite presentation quotient need not generate the ambient group. The Galois repair is to include the presentation kernel `N = Gal(k_s/E)` and its known splitting-field coset together with the prime-local lifts. The full Galois/gauge-coset realization is not formalized. |
 
 ## Explicitly open items
 
@@ -145,7 +145,13 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
    setup used before Theorem 5.6; that sentence needs a direct proof or source.
 10. The E6 comparison near Conjecture 5.2 and the Merkurjev endpoint description
     in Corollary 7.3 both state their cited sources more broadly than warranted.
+11. The paragraph after Proposition 7.5 passes from generation of a finite
+    presentation quotient to generation of the full absolute Galois group.
+    This omits the quotient kernel. Include `Gal(k_s/E)` for a finite Galois
+    splitting field `E/k`, together with its trivialization coset, before
+    applying the proposition; Research Target 8.7 must include that coset.
 
 ## Subsequent Lean transfer
 
 - Theorem 2.2 now has the conditional finite-point-field realization `sylowLocalFourFieldSplittingPackage`: it chooses the four displayed fields from explicit Totaro and prime-avoidance inputs, proves their degree gcd is one, and derives point-field index one. Construction of the prime-avoiding fields remains source dependent.
+- Proposition 7.5's omitted-kernel issue now has the finite Lean countermodel `quotientGeneration_counterexample`; it also checks that adjoining the projection kernel repairs generation.

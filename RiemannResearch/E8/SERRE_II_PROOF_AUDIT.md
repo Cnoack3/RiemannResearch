@@ -1,6 +1,6 @@
 # E8 Serre II proof audit
 
-Last audited: 2026-08-07.
+Last audited: 2026-08-08.
 
 This ledger separates proved mathematics from citation-dependent inputs,
 unreproduced finite computations, and open descent targets. It accompanies the
@@ -57,6 +57,23 @@ column geometry remains an explicit external certificate boundary.
 The degree-five `A4 ⊕ A4` side and the final two-gauge factorization problem
 remain separate. The trialitarian cubic kernel, Allen index, and residual
 triality-orbit argument cannot be applied uniformly as printed.
+
+## Lean found an omitted kernel after Proposition 7.5
+
+Proposition 7.5 itself is correct: a single point fixed by closed subgroups
+which topologically generate the absolute Galois group is rational. The next
+paragraph, however, only chooses pro-p lifts whose images generate the finite
+presentation quotient. Those lifts need not generate the full absolute Galois
+group.
+
+`SectionSevenAppendixAudit.lean` gives a finite exact countermodel. The first
+factor of `ZMod 2 × ZMod 3` maps onto the quotient `ZMod 2`, but is a proper
+subgroup of the ambient group. Adjoining the projection kernel `ZMod 3`
+restores generation. In the Galois application, if `E/k` is the finite Galois
+splitting field and `N = Gal(k_s/E)`, Proposition 7.5 must be applied to `N`
+together with the pro-p lifts. The known trivialization over `E` supplies the
+extra fixed-locus coset. Research Target 8.7 must therefore ask for the
+intersection of this splitting-field coset and the prime-local cosets.
 
 ## Verified proof kernels
 
@@ -130,6 +147,9 @@ triality-orbit argument cannot be applied uniformly as printed.
   attached 5 August artifact, the binary icosahedral index arithmetic, and the
   A2 chamber-normalization counterexample. It does not construct splitting
   fields or subgroup actions.
+- `E8/SectionSevenAppendixAudit.lean` checks the printed Section 7 and
+  Appendix arithmetic and supplies the quotient-generation countermodel and
+  kernel-adjoining repair for the paragraph after Proposition 7.5.
 - `E8/BinaryIcosahedralArithmetic.lean` checks the orders and fixed-field
   degrees `5`, `6`, and `30`, their coprimality, and proves the generic
   guard that a nontrivial perfect group is nonsolvable.

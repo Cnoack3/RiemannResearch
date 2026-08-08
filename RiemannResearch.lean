@@ -53,6 +53,7 @@ import RiemannResearch.E8.BinaryIcosahedralSubsystemOrbits
 import RiemannResearch.E8.SylowSevenArithmetic
 import RiemannResearch.E8.WeylIndexPacket
 import RiemannResearch.E8.SerreIIProgramChecks
+import RiemannResearch.E8.SectionSevenAppendixAudit
 import RiemannResearch.E8.SerreIICompletionTargets
 import RiemannResearch.E8.OmegaEightPlusTwo
 import RiemannResearch.E8.RationalInvolutionsAudit
