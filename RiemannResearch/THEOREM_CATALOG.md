@@ -22,6 +22,13 @@ unreproduced computer-assisted claims, see `E8/SERRE_II_PROOF_AUDIT.md`.
   input. Local hypotheses do not appear in `#print axioms`, so a clean axiom
   report alone does not make a result unconditional.
 
+## Open problems
+
+| Declaration | Module | Statement / purpose | Status |
+|---|---|---|---|
+| `RiemannResearch.AlgebraicGeometry.SerreII.Conjecture` | `RiemannResearch.AlgebraicGeometry.SerreIIConjecture` | For every perfect field of cohomological dimension at most two and every semisimple simply connected group, every fpqc H1 class is neutral | **Open problem**; proposition definition only, not asserted as a theorem or axiom |
+| `RiemannResearch.AlgebraicGeometry.SerreII.conjecture_iff_subsingleton` | `RiemannResearch.AlgebraicGeometry.SerreIIConjecture` | Identifies the every-class-neutral formulation with H1 being a subsingleton | Kernel-checked formulation lemma; Serre II remains open |
+
 ## Established local declarations
 
 | Declaration | Module | Statement / purpose | Status |

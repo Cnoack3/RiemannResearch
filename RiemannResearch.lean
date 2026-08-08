@@ -2,6 +2,7 @@ import RiemannResearch.AlgebraicGeometry.AffineGroupSchemeBaseChange
 import RiemannResearch.AlgebraicGeometry.FpqcCechH1
 import RiemannResearch.AlgebraicGeometry.FpqcCoverCommonRefinement
 import RiemannResearch.AlgebraicGeometry.FpqcH1
+import RiemannResearch.AlgebraicGeometry.SerreIIConjecture
 import RiemannResearch.AlgebraicGeometry.FpqcTorsor
 import RiemannResearch.AlgebraicGeometry.PointFields
 import RiemannResearch.AlgebraicGeometry.PointFieldIndexOne
