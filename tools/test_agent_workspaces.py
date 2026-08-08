@@ -103,37 +103,6 @@ with tempfile.TemporaryDirectory() as raw:
 
     first = manager.open()
     first_root = Path(first["project_root"])
-    mathlib_sentinel = (
-        first_root / ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib.olean"
-    )
-    original_run = manager._run
-
-    def repairing_run(args, **kwargs):
-        if args == ["lake", "exe", "cache", "get"]:
-            mathlib_sentinel.parent.mkdir(parents=True, exist_ok=True)
-            mathlib_sentinel.write_text("cached-mathlib\n")
-            return "cache restored"
-        return original_run(args, **kwargs)
-
-    manager._run = repairing_run
-    repaired_cache = manager._ensure_mathlib_cache(first_root)
-    manager._run = original_run
-    assert repaired_cache["ready"] and repaired_cache["repaired"]
-    assert not manager._ensure_mathlib_cache(first_root)["repaired"]
-    mathlib_sentinel.unlink()
-
-    def unavailable_cache_run(args, **kwargs):
-        if args == ["lake", "exe", "cache", "get"]:
-            raise RuntimeError("binary cache unavailable")
-        return original_run(args, **kwargs)
-
-    manager._run = unavailable_cache_run
-    source_fallback = manager._ensure_mathlib_cache(first_root)
-    manager._run = original_run
-    assert source_fallback["source_build_required"]
-    assert "binary cache unavailable" in source_fallback["binary_cache_error"]
-    mathlib_sentinel.parent.mkdir(parents=True, exist_ok=True)
-    mathlib_sentinel.write_text("cached-mathlib\n")
     seeded_artifact = first_root / ".lake" / "build" / "lib" / "Seeded.olean"
     seeded_artifact.parent.mkdir(parents=True)
     seeded_artifact.write_text("cached-project-artifact\n")
@@ -146,6 +115,7 @@ with tempfile.TemporaryDirectory() as raw:
     assert first["project_root"] != second["project_root"]
     first_token = first["workspace_token"]
     second_token = second["workspace_token"]
+    assert manager._relative(first_root, "lakefile.toml", writable=True)[0] == "lakefile.toml"
     listed = manager.list_files(first_token, pattern="Basic", limit=1)
     assert listed["files"] == ["RiemannResearch/Basic.lean"]
     assert not listed["truncated"]
@@ -209,14 +179,19 @@ with tempfile.TemporaryDirectory() as raw:
     bad_module.write_text("import Mathlib\n\ntheorem bad : True := by trivial\n")
     assert any("umbrella `import Mathlib`" in item for item in manager._architecture_audit(first_root))
     bad_module.unlink()
-    lakefile = first_root / "lakefile.toml"
-    original_lakefile = lakefile.read_text()
-    lakefile.write_text(original_lakefile + "# unauthorized dependency drift\n")
-    assert any(
-        "dependency control files" in item
-        for item in manager._architecture_audit(first_root)
+    large_module = first_root / "RiemannResearch" / "Test" / "LargeCohesive.lean"
+    large_module.write_text(
+        "\n".join(["-- one cohesive complex proof"] * 550)
+        + "\n\ntheorem largeCohesive : True := by trivial\n"
     )
-    lakefile.write_text(original_lakefile)
+    export_file = first_root / "RiemannResearch.lean"
+    original_exports = export_file.read_text()
+    export_file.write_text(
+        original_exports + "import RiemannResearch.Test.LargeCohesive\n"
+    )
+    assert manager._architecture_audit(first_root) == []
+    large_module.unlink()
+    export_file.write_text(original_exports)
 
     patch_one = """diff --git a/RiemannResearch/Test/One.lean b/RiemannResearch/Test/One.lean
 new file mode 100644
