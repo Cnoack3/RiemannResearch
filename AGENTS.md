@@ -39,13 +39,14 @@
 - `agent_workspace_checkpoint` performs the source audit, incremental project
   validation, commit, and serialized publication. `lean_build` performs the
   same incremental validation without publication; do not run it immediately
-  before checkpoint. Dependency updates are not exposed to ordinary agents.
+  before checkpoint. After an intentional `lakefile.toml` change, queue
+  `agent_workspace_update_deps` once and wait for it before validation.
 - Dependency artifacts are shared read-mostly. Each clone has its own writable
   project build directory, seeded by exact commit and dependency environment.
-  Lake builds use at most four threads. If the shared Mathlib binary cache is
-  incomplete, the queued build first runs `lake exe cache get`; if binaries are
-  unavailable, one serialized source build fills the shared cache for all later
-  agents using the same dependency key.
+  Lake builds use at most four threads. The dependency environment is keyed by
+  `lean-toolchain`, `lakefile.toml`, and `lake-manifest.json`; Lake fills any
+  genuinely missing artifact during the serialized build, and later agents
+  reuse it through that shared environment.
 - Automatic cleanup archives only old clean published or unchanged clones.
   Dirty trees and unpublished commits are retained. Reopening a token restores
   an archived clone; Lean processes restart on demand.
@@ -79,8 +80,9 @@
   in their statements; keep application modules focused on assembly.
 - Use focused Mathlib or project-module imports; exact `import Mathlib` is
   forbidden in every new or modified module. Keep the import graph acyclic.
-- Split by concept before a file reaches 500 lines. Checkpoint rejects new
-  modules over 500 lines and further growth of existing over-500-line modules.
+- Split by mathematical responsibility, not an arbitrary line count. File size
+  is a review signal; a long file is appropriate when it contains one cohesive
+  complex theorem and its tightly coupled support.
 - Preserve declaration names during refactors when practical. Prefer separate
   checkpoints for structural refactors and new results.
 
@@ -89,6 +91,7 @@
 - Ephemeral candidate: `agent_workspace_run_code`
 - Declaration discovery: `lean_local_search`, then focused Lean search tools
 - Targeted file verification: `lean_verify` or diagnostics on an absolute path
+- Intentional dependency refresh: `agent_workspace_update_deps`
 - Standalone incremental validation: `lean_build` when no checkpoint follows
 - Final acceptance and publication: `agent_workspace_checkpoint`
 
