@@ -209,6 +209,14 @@ with tempfile.TemporaryDirectory() as raw:
     bad_module.write_text("import Mathlib\n\ntheorem bad : True := by trivial\n")
     assert any("umbrella `import Mathlib`" in item for item in manager._architecture_audit(first_root))
     bad_module.unlink()
+    lakefile = first_root / "lakefile.toml"
+    original_lakefile = lakefile.read_text()
+    lakefile.write_text(original_lakefile + "# unauthorized dependency drift\n")
+    assert any(
+        "dependency control files" in item
+        for item in manager._architecture_audit(first_root)
+    )
+    lakefile.write_text(original_lakefile)
 
     patch_one = """diff --git a/RiemannResearch/Test/One.lean b/RiemannResearch/Test/One.lean
 new file mode 100644
