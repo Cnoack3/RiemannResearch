@@ -275,7 +275,7 @@ unconditional proofs of the motivating named theorems.
 
 | Declaration | Module | Verified consequence | Status |
 |---|---|---|---|
-| `RiemannResearch.AlgebraicGeometry.SerreII.NonE8.serreII_of_periodIndex_and_nonE8_indexOneDescent` | `RiemannResearch.AlgebraicGeometry.SerreIINonE8` | Period-index index-one production together with no-E8/quasi-split exceptional-factor index-one descent proves Serre II on the combined published scope | Kernel checked implication; intrinsic predicates and both algebraic-group providers remain open |
+| `RiemannResearch.AlgebraicGeometry.SerreII.NonE8.serreII_for_remaining_nonE8_candidates` | `RiemannResearch.AlgebraicGeometry.SerreIINonE8` | Proofs of the trialitarian D4, E6, and E7 cases imply Serre II for every audited remaining family other than E8 | Kernel checked finite classification and assembly; all three family providers remain open |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent` | `RiemannResearch.E8.FullWeylCore` | From the inputs listed below, proves parts (i)--(iii), nonabelianness of the simple core, and `Neutral(ξ) ↔ (Neutral(ξ_F) → Neutral(ξ_{k⁺}))` | Kernel checked implication; open obligations remain |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent_nonabelianH1` | `RiemannResearch.E8.FullWeylCore` | Specializes the conditional assembly to actual discrete nonabelian H¹ and proves the forward restriction-neutrality implication rather than assuming it | Kernel checked implication; remaining E8-specific hypotheses are load-bearing |
 | `RiemannResearch.E8.universalFixedLocusAndSplittingField` | `RiemannResearch.E8.WonderfulFixedLocus` | For a regular cocharacter chosen in the chamber determined by the fixed Borel, the supplied geometric inputs imply the fixed-locus and motivic conclusions, unconditional compactification/Borel point-field and index equality, and—only for inner torsors—neutrality and torsor-index comparisons | Kernel checked implication matching the intended chamber convention and revised scope of Theorem 3.2(iii) |
@@ -285,14 +285,14 @@ unconditional proofs of the motivating named theorems.
 | `RiemannResearch.E8.serreII_of_diagonalKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | One diagonal toral restriction--corestriction value in the neutral fiber, with the index formulas and a positive Bezout congruence, forces the original toral class to map to the neutral class | Kernel checked implication; the E8 diagonal kernel-norm input remains open |
 | `RiemannResearch.E8.serreII_of_finiteEtaleKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | Componentwise neutrality in a repeated finite-etale product, the product kernel-norm principle, index formulas, and a positive Bezout congruence force the original toral class to map to the neutral class | Kernel checked finite-etale formulation of Proposition 6.34; the E8 product kernel-norm input remains open |
 
-### Open obligations: `serreII_of_periodIndex_and_nonE8_indexOneDescent`
+### Open obligations: `serreII_for_remaining_nonE8_candidates`
 
 | Hypothesis binder | Required mathematical input | Provider / status |
 |---|---|---|
-| `IsPerfectFieldCdAtMostTwo`, `CharacteristicNotTwo`, `PeriodIndexAtTwoAndThree` | Intrinsic base-field predicates, including period equals index for the relevant 2- and 3-primary classes | **Open** |
-| `IsSemisimpleSimplyConnected`, `HasNoE8Factor`, `ExceptionalFactorsExceptG2AreQuasiSplit` | Intrinsic reductive-group classification predicates for the published no-E8 scope | **Open** |
-| `indexOne_of_periodIndex` | Period-index/norm theorem giving point-field index one for every torsor in scope | **Open** |
-| `neutral_of_indexOne` | Black-style zero-cycle/index-one descent from the no-E8 quasi-split scope to neutrality | **Open** |
+| `family` | Classifier identifying each audited remaining arbitrary-form group as trialitarian D4, E6, E7, or E8 | **Open** |
+| `trialitarianD4_case` | Serre II for every trialitarian D4 candidate in the stated base-field scope | **Open** |
+| `e6_case` | Serre II for every E6 candidate in the stated base-field scope | **Open** |
+| `e7_case` | Serre II for every E7 candidate in the stated base-field scope | **Open** |
 
 ### Open obligations: `quasisimpleCoreOfFullWeylDescent`
 
