@@ -23,7 +23,7 @@ from pydantic import BaseModel, ConfigDict
 from agent_workspaces import AgentWorkspaceManager
 
 
-WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md and only relevant source ranges. A checkpoint performs the final full build, so do not submit lean_build immediately before agent_workspace_checkpoint. Queue a long operation once; poll agent_workspace_job_status no sooner than retry_after_seconds and never resubmit it. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
+WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive modules with focused imports; checkpoint rejects umbrella `import Mathlib`, unexported root-level modules, and growth of over-500-line files. lean_build is incremental and queued; use it only when standalone project validation is useful, not immediately before checkpoint. Dependency updates are not exposed to ordinary agents. Builds prefer Mathlib binaries; if unavailable, one serialized build fills the shared cache for later agents. Poll queued work no sooner than retry_after_seconds and never resubmit it. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
 mcp._mcp_server.instructions = (
@@ -94,9 +94,10 @@ ROOT_WRITABLE = {
     "AGENTS.md",
     "README.md",
     "RiemannResearch.lean",
-    "lakefile.toml",
 }
-ROOT_READABLE = ROOT_WRITABLE | {"lake-manifest.json", "lean-toolchain"}
+ROOT_READABLE = ROOT_WRITABLE | {
+    "lake-manifest.json", "lakefile.toml", "lean-toolchain"
+}
 WRITABLE_PREFIXES = {"RiemannResearch"}
 WRITABLE_SUFFIXES = {".lean", ".md", ".toml", ".yml", ".yaml", ".json"}
 RESETTABLE_UNTRACKED_ROOT_SUFFIXES = WRITABLE_SUFFIXES | {".txt"}
@@ -701,7 +702,7 @@ def agent_workspace_read_file(
 
 @mcp.tool(
     name="agent_workspace_apply_patch",
-    description="Apply a non-destructive patch to approved project files.",
+    description="Apply a non-destructive patch and report publication architecture blockers.",
 )
 def agent_workspace_apply_patch(workspace_token: str, patch: str) -> dict:
     return AGENT_WORKSPACES.apply_patch(workspace_token, patch)
@@ -731,22 +732,15 @@ def agent_workspace_sync(workspace_token: str) -> dict:
     return AGENT_WORKSPACES.sync(workspace_token)
 
 
-@mcp.tool(
-    name="agent_workspace_update_deps",
-    description="Queue a Lake dependency update; poll its job after the advised delay.",
-)
-def agent_workspace_update_deps(
-    workspace_token: str, package: str = ""
-) -> dict:
-    return AGENT_WORKSPACES.submit_update_dependencies(workspace_token, package)
-
-
 mcp.remove_tool("lean_build")
 
 
 @mcp.tool(
     name="lean_build",
-    description="Queue one incremental project build; do not use directly before checkpoint.",
+    description=(
+        "Queue incremental project validation using shared Mathlib binaries; "
+        "do not call immediately before checkpoint."
+    ),
 )
 def queued_lean_build(lean_project_path: str) -> dict:
     if not lean_project_path:

@@ -54,7 +54,11 @@ with tempfile.TemporaryDirectory() as raw:
     run(["git", "config", "user.email", "test@example.com"], source)
     (source / "RiemannResearch").mkdir()
     (source / "RiemannResearch" / "Basic.lean").write_text("theorem base : True := by trivial\n")
-    (source / "RiemannResearch.lean").write_text("import RiemannResearch.Basic\n")
+    (source / "RiemannResearch.lean").write_text(
+        "import RiemannResearch.Basic\n"
+        "import RiemannResearch.Test.One\n"
+        "import RiemannResearch.Test.Two\n"
+    )
     (source / "README.md").write_text("# Test\n")
     (source / "AGENTS.md").write_text("# Test\n")
     (source / ".gitignore").write_text("/.lake\n")
@@ -99,6 +103,37 @@ with tempfile.TemporaryDirectory() as raw:
 
     first = manager.open()
     first_root = Path(first["project_root"])
+    mathlib_sentinel = (
+        first_root / ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib.olean"
+    )
+    original_run = manager._run
+
+    def repairing_run(args, **kwargs):
+        if args == ["lake", "exe", "cache", "get"]:
+            mathlib_sentinel.parent.mkdir(parents=True, exist_ok=True)
+            mathlib_sentinel.write_text("cached-mathlib\n")
+            return "cache restored"
+        return original_run(args, **kwargs)
+
+    manager._run = repairing_run
+    repaired_cache = manager._ensure_mathlib_cache(first_root)
+    manager._run = original_run
+    assert repaired_cache["ready"] and repaired_cache["repaired"]
+    assert not manager._ensure_mathlib_cache(first_root)["repaired"]
+    mathlib_sentinel.unlink()
+
+    def unavailable_cache_run(args, **kwargs):
+        if args == ["lake", "exe", "cache", "get"]:
+            raise RuntimeError("binary cache unavailable")
+        return original_run(args, **kwargs)
+
+    manager._run = unavailable_cache_run
+    source_fallback = manager._ensure_mathlib_cache(first_root)
+    manager._run = original_run
+    assert source_fallback["source_build_required"]
+    assert "binary cache unavailable" in source_fallback["binary_cache_error"]
+    mathlib_sentinel.parent.mkdir(parents=True, exist_ok=True)
+    mathlib_sentinel.write_text("cached-mathlib\n")
     seeded_artifact = first_root / ".lake" / "build" / "lib" / "Seeded.olean"
     seeded_artifact.parent.mkdir(parents=True)
     seeded_artifact.write_text("cached-project-artifact\n")
@@ -169,22 +204,31 @@ with tempfile.TemporaryDirectory() as raw:
     assert not run_bad["verified"] and "simulated-error" in run_bad["output"]
     assert not list((Path(first["project_root"]) / ".lake" / "agent-scratch").glob("*.lean"))
 
-    patch_one = """diff --git a/RiemannResearch/One.lean b/RiemannResearch/One.lean
+    bad_module = first_root / "RiemannResearch" / "Test" / "Bad.lean"
+    bad_module.parent.mkdir(parents=True, exist_ok=True)
+    bad_module.write_text("import Mathlib\n\ntheorem bad : True := by trivial\n")
+    assert any("umbrella `import Mathlib`" in item for item in manager._architecture_audit(first_root))
+    bad_module.unlink()
+
+    patch_one = """diff --git a/RiemannResearch/Test/One.lean b/RiemannResearch/Test/One.lean
 new file mode 100644
 --- /dev/null
-+++ b/RiemannResearch/One.lean
++++ b/RiemannResearch/Test/One.lean
 @@ -0,0 +1 @@
 +theorem one : True := by trivial
 """
-    manager.apply_patch(first_token, patch_one)
-    assert not (Path(second["project_root"]) / "RiemannResearch" / "One.lean").exists()
+    applied_one = manager.apply_patch(first_token, patch_one)
+    assert applied_one["checkpoint_ready"]
+    assert not (
+        Path(second["project_root"]) / "RiemannResearch" / "Test" / "One.lean"
+    ).exists()
     first_publish = manager.checkpoint(first_token, "Publish first")
     assert first_publish["pushed"]
 
-    patch_two = """diff --git a/RiemannResearch/Two.lean b/RiemannResearch/Two.lean
+    patch_two = """diff --git a/RiemannResearch/Test/Two.lean b/RiemannResearch/Test/Two.lean
 new file mode 100644
 --- /dev/null
-+++ b/RiemannResearch/Two.lean
++++ b/RiemannResearch/Test/Two.lean
 @@ -0,0 +1 @@
 +theorem two : True := by trivial
 """
@@ -193,8 +237,8 @@ new file mode 100644
     assert second_publish["integrated_with_newer_main"]
     resumed = manager.open(second_token)
     resumed_root = Path(resumed["project_root"])
-    assert (resumed_root / "RiemannResearch" / "One.lean").is_file()
-    assert (resumed_root / "RiemannResearch" / "Two.lean").is_file()
+    assert (resumed_root / "RiemannResearch" / "Test" / "One.lean").is_file()
+    assert (resumed_root / "RiemannResearch" / "Test" / "Two.lean").is_file()
 
     published_meta = manager._read_meta(first_token)
     published_meta["last_activity"] = 0
