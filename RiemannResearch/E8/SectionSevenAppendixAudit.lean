@@ -3,7 +3,10 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
-import RiemannResearch.E8.SerreIIProgramChecks
+import Mathlib.Algebra.Group.Subgroup.Basic
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Section 7 and Appendix arithmetic audit

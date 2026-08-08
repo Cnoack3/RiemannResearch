@@ -5,7 +5,7 @@ Authors: Cnoack3
 -/
 import Mathlib.Data.Bool.AllAny
 import Mathlib.Data.List.Sort
-import RiemannResearch.E8.SerreIIProgramChecks
+import RiemannResearch.E8.SerreIIArithmeticCertificates
 import RiemannResearch.GroupTheory.KernelConjugator
 import RiemannResearch.GroupTheory.OrbitDegreeGcd
 import RiemannResearch.GroupTheory.PerfectCore

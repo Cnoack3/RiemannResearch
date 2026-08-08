@@ -3,7 +3,9 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
-import Mathlib
+import Mathlib.Data.Finset.Insert
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Arithmetic of the three triality-packet Sylow-seven indices

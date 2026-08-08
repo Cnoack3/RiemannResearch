@@ -143,10 +143,10 @@ intersection of this splitting-field coset and the prime-local cosets.
 - `E8/A9TrialityArithmetic.lean` checks both signed half-spin residue lists
   for the order-nine calculation and verifies `Φ₃(1)Φ₉(1)=9`. It assumes the
   triality model and does not construct the `A₉` Weyl embedding.
-- `E8/SerreIIProgramChecks.lean` checks the exact arithmetic printed in the
-  attached 5 August artifact, the binary icosahedral index arithmetic, and the
-  A2 chamber-normalization counterexample. It does not construct splitting
-  fields or subgroup actions.
+- Three focused modules replace the former arithmetic catch-all:
+  `E8/SerreIIArithmeticCertificates.lean` contains the numerical certificates,
+  `E8/A2ChamberNormalization.lean` the A2 counterexample, and `E8/SylowLocalSplitting.lean` the finite four-field package.
+  They do not construct splitting fields or subgroup actions.
 - `E8/SectionSevenAppendixAudit.lean` checks the printed Section 7 and
   Appendix arithmetic and supplies the quotient-generation countermodel and
   kernel-adjoining repair for the paragraph after Proposition 7.5.

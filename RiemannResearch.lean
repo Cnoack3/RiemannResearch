@@ -12,6 +12,7 @@ import RiemannResearch.Basic
 import RiemannResearch.GaloisCohomology.DifferenceCocycle
 import RiemannResearch.GaloisCohomology.TwoGaugeDescent
 import RiemannResearch.GaloisCohomology.GaloisAffineCechCoordinates
+import RiemannResearch.GaloisCohomology.GaloisCechCoordinates
 import RiemannResearch.GaloisCohomology.GaloisCechComparison
 import RiemannResearch.GaloisCohomology.GaloisCechSchemeBridge
 import RiemannResearch.GaloisCohomology.GaloisTensorDecomposition
@@ -52,7 +53,9 @@ import RiemannResearch.E8.BinaryIcosahedralTrialityCounterexample
 import RiemannResearch.E8.BinaryIcosahedralSubsystemOrbits
 import RiemannResearch.E8.SylowSevenArithmetic
 import RiemannResearch.E8.WeylIndexPacket
-import RiemannResearch.E8.SerreIIProgramChecks
+import RiemannResearch.E8.A2ChamberNormalization
+import RiemannResearch.E8.SerreIIArithmeticCertificates
+import RiemannResearch.E8.SylowLocalSplitting
 import RiemannResearch.E8.SectionSevenAppendixAudit
 import RiemannResearch.E8.SerreIICompletionTargets
 import RiemannResearch.E8.OmegaEightPlusTwo
@@ -60,5 +63,6 @@ import RiemannResearch.E8.RationalInvolutionsAudit
 import RiemannResearch.E8.SubgroupSieve
 import RiemannResearch.E8.FullWeylCore
 import RiemannResearch.E8.GroupSchemeFoundation
+import RiemannResearch.E8.CoxeterAttractingRank
 import RiemannResearch.E8.WonderfulFixedLocus
 import RiemannResearch.RH.Basic

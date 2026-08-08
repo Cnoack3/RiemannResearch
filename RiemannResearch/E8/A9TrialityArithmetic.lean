@@ -3,7 +3,10 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
-import Mathlib
+import Mathlib.Data.ZMod.Basic
+import Mathlib.RingTheory.Polynomial.Cyclotomic.Eval
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # Arithmetic of the order-nine A9 triality packet

@@ -3,7 +3,10 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
-import Mathlib
+import Mathlib.Algebra.EuclideanDomain.Int
+import Mathlib.Algebra.Group.End
+import Mathlib.Algebra.Group.Subgroup.Ker
+import Mathlib.Algebra.Group.Finsupp
 
 /-!
 # Additive Burnside group and the top-mark obstruction
@@ -37,7 +40,7 @@ theorem not_mem_addSubgroup_closure_of_mark
     (AddSubgroup.closure_le mark.ker).2 hproper
   have htopKer : top ∈ mark.ker := hle hmem
   have hzero : mark top = 0 := htopKer
-  omega
+  exact one_ne_zero (htop.symm.trans hzero)
 
 universe u
 

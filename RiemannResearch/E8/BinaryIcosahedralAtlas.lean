@@ -3,7 +3,8 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
-import Mathlib
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Matrix.Basic
 
 /-!
 # Appendix-A binary-icosahedral row: inner `D₄ ⊔ D₄` certificate

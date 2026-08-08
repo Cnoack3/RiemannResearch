@@ -3,7 +3,14 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
-import Mathlib
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.Group.Subgroup.Ker
+import Mathlib.Data.Finset.Range
+import Mathlib.Data.Fintype.Basic
+import Mathlib.Data.Nat.Bitwise
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
 
 /-!
 # Rational involutions and hidden Weyl-7: exact audit
