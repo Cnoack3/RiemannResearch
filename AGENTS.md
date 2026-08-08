@@ -36,11 +36,14 @@
 - Long builds, updates, and checkpoints use one FIFO worker. Submit once and
   poll `agent_workspace_job_status` no sooner than `retry_after_seconds`; never
   resubmit a pending job.
-- `agent_workspace_checkpoint` performs the source audit, incremental project
-  validation, commit, and serialized publication. `lean_build` performs the
-  same incremental validation without publication; do not run it immediately
-  before checkpoint. After an intentional `lakefile.toml` change, queue
-  `agent_workspace_update_deps` once and wait for it before validation.
+- `agent_workspace_checkpoint` performs the source audit and change-aware
+  validation before commit and serialized publication. It skips Lean for
+  documentation-only changes and otherwise builds changed modules plus local
+  reverse dependents; dependency configuration changes and structural module
+  removals trigger full validation. `lean_build` is the explicit incremental
+  full-project validation; do not run it immediately before checkpoint. After
+  an intentional `lakefile.toml` change, queue `agent_workspace_update_deps`
+  once and wait for it before validation.
 - Dependency artifacts are shared read-mostly. Each clone has its own writable
   project build directory, seeded by exact commit and dependency environment.
   Lake builds use at most four threads. The dependency environment is keyed by
@@ -55,6 +58,15 @@
 
 - Save reusable material results in an appropriate `RiemannResearch/` module.
   Update `RiemannResearch.lean` when exporting a new module.
+- Track provenance best-effort when formalizing material from an external
+  source. Add a nearby module docstring or declaration comment with a stable
+  bibliographic reference or URL and, when known, the theorem, section, or page
+  being adapted. One module-level reference may cover a coherent sourced
+  development; cite declarations separately when their sources differ.
+- Say what the reference supports (for example, the statement, proof strategy,
+  or terminology). Use `Source: user-provided argument` when that is all that
+  is known. Do not describe uncited or independently developed formalization as
+  mathematically novel merely because no prior source was found.
 - Update the theorem catalog when a reusable declaration is added, moved, or
   changes status. Read and edit only the relevant catalog section.
 - Classify a named research result with unresolved substantive hypotheses as a
