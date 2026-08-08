@@ -549,4 +549,27 @@ theorem universalFixedLocusAndSplittingField
           (pointFieldIndex_eq isFinite extensionDegree
             (inner_borelReduction_iff_neutral hinner)) }
 
+/-- Abstract point-field form of PDF Corollary 3.4, “Exact projective
+residual.”  In the inner case, corrected Theorem 3.2 identifies the point
+fields of the wonderful compactification, the twisted Borel variety, and the
+torsor's neutralizing fields.  Thus Theorem 2.1's torsor index-one conclusion
+propagates to both projective varieties. -/
+theorem exactProjectiveResidual
+    {Extension : Type*}
+    (isFinite : Extension → Prop) (extensionDegree : Extension → ℕ)
+    (hasCompactPoint hasBorelPoint neutral : Extension → Prop)
+    (compact_iff_borel : ∀ L, hasCompactPoint L ↔ hasBorelPoint L)
+    (borel_iff_neutral : ∀ L, hasBorelPoint L ↔ neutral L)
+    (torsor_index_one :
+      pointFieldIndex isFinite extensionDegree neutral = 1) :
+    pointFieldIndex isFinite extensionDegree hasCompactPoint = 1 ∧
+      pointFieldIndex isFinite extensionDegree hasBorelPoint = 1 ∧
+      pointFieldIndex isFinite extensionDegree neutral = 1 := by
+  have hcompactBorel :=
+    pointFieldIndex_eq isFinite extensionDegree compact_iff_borel
+  have hborelNeutral :=
+    pointFieldIndex_eq isFinite extensionDegree borel_iff_neutral
+  exact ⟨hcompactBorel.trans (hborelNeutral.trans torsor_index_one),
+    hborelNeutral.trans torsor_index_one, torsor_index_one⟩
+
 end RiemannResearch.E8
