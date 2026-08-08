@@ -881,6 +881,19 @@ class AgentWorkspaceManager:
         export_text = (project / "RiemannResearch.lean").read_text(encoding="utf-8")
         umbrella = re.compile(r"^\s*import\s+Mathlib\s*(?:--.*)?$", re.MULTILINE)
         problems: list[str] = []
+        dependency_status = self._run(
+            [
+                "git", "status", "--porcelain", "--",
+                "lakefile.toml", "lake-manifest.json", "lean-toolchain",
+            ],
+            cwd=project,
+        ).splitlines()
+        for status_line in dependency_status:
+            relative = status_line[3:]
+            problems.append(
+                f"{relative}: dependency control files cannot be changed by ordinary "
+                "proof agents; use an explicit server-maintenance upgrade"
+            )
 
         for relative in relative_files:
             path = project / relative
