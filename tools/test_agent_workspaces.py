@@ -174,6 +174,32 @@ with tempfile.TemporaryDirectory() as raw:
     assert not run_bad["verified"] and "simulated-error" in run_bad["output"]
     assert not list((Path(first["project_root"]) / ".lake" / "agent-scratch").glob("*.lean"))
 
+    readme = first_root / "README.md"
+    original_readme = readme.read_text()
+    readme.write_text(original_readme + "\nDocumentation-only change.\n")
+    docs_validation = manager._checkpoint_validation(first_root)
+    assert docs_validation["scope"] == "skipped"
+    assert docs_validation["command"] is None
+    readme.write_text(original_readme)
+
+    consumer = first_root / "RiemannResearch" / "Test" / "Consumer.lean"
+    consumer.parent.mkdir(parents=True, exist_ok=True)
+    consumer.write_text(
+        "import RiemannResearch.Basic\n\ntheorem consumer : True := by trivial\n"
+    )
+    assert manager._affected_lean_targets(
+        first_root, {"RiemannResearch.Basic"}
+    ) == ["RiemannResearch.Basic", "RiemannResearch.Test.Consumer"]
+    consumer.unlink()
+
+    lakefile = first_root / "lakefile.toml"
+    original_lakefile = lakefile.read_text()
+    lakefile.write_text(original_lakefile + "\n# dependency configuration change\n")
+    dependency_validation = manager._checkpoint_validation(first_root)
+    assert dependency_validation["scope"] == "full"
+    assert dependency_validation["reason"] == "dependency configuration changed"
+    lakefile.write_text(original_lakefile)
+
     bad_module = first_root / "RiemannResearch" / "Test" / "Bad.lean"
     bad_module.parent.mkdir(parents=True, exist_ok=True)
     bad_module.write_text("import Mathlib\n\ntheorem bad : True := by trivial\n")
@@ -207,6 +233,9 @@ new file mode 100644
     ).exists()
     first_publish = manager.checkpoint(first_token, "Publish first")
     assert first_publish["pushed"]
+    assert first_publish["build"]["scope"] == "affected_modules"
+    assert first_publish["build"]["changed_modules"] == ["RiemannResearch.Test.One"]
+    assert first_publish["build"]["targets"] == ["RiemannResearch.Test.One"]
 
     patch_two = """diff --git a/RiemannResearch/Test/Two.lean b/RiemannResearch/Test/Two.lean
 new file mode 100644
