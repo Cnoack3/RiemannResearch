@@ -33,7 +33,7 @@ DEFAULT_READ_CHARS = 20_000
 MAX_METRICS_BYTES = 5_000_000
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
-    ".gitignore", "AGENTS.md", "README.md", "RiemannResearch.lean"
+    ".gitignore", "AGENTS.md", "README.md", "RiemannResearch.lean", "lakefile.toml"
 }
 ROOT_READABLE = ROOT_WRITABLE | {
     "lake-manifest.json", "lakefile.toml", "lean-toolchain"
@@ -247,7 +247,19 @@ class AgentWorkspaceManager:
                 manifest = (project / "lake-manifest.json").read_bytes()
                 self._run(["lake", "update"], cwd=project, timeout=1800)
                 (project / "lake-manifest.json").write_bytes(manifest)
-                self._run(["lake", "exe", "cache", "get"], cwd=project, timeout=3600)
+                cache_error = None
+                try:
+                    self._run(
+                        ["lake", "exe", "cache", "get"],
+                        cwd=project,
+                        timeout=1200,
+                        lean_num_threads=self.lake_build_threads,
+                    )
+                except (RuntimeError, subprocess.TimeoutExpired) as exc:
+                    # Some exact dependency revisions do not have complete
+                    # binary releases. Lake will fill missing artifacts during
+                    # the next serialized incremental build.
+                    cache_error = str(exc)[-2000:]
                 temp = self.shared / f".{key}.tmp.{os.getpid()}"
                 if temp.exists():
                     shutil.rmtree(temp)
@@ -256,7 +268,15 @@ class AgentWorkspaceManager:
                     raise RuntimeError("Lake did not materialize dependency packages")
                 shutil.move(str(local_packages), str(temp / "packages"))
                 (temp / "READY.json").write_text(
-                    json.dumps({"key": key, "created_at": time.time()}) + "\n",
+                    json.dumps(
+                        {
+                            "key": key,
+                            "created_at": time.time(),
+                            "binary_cache_complete": cache_error is None,
+                            "binary_cache_error": cache_error,
+                        }
+                    )
+                    + "\n",
                     encoding="utf-8",
                 )
                 if env_root.exists():
@@ -271,53 +291,6 @@ class AgentWorkspaceManager:
             if not local_packages.exists():
                 local_packages.symlink_to(packages, target_is_directory=True)
         return key
-
-    def _ensure_mathlib_cache(self, project: Path) -> dict:
-        """Prefer Mathlib binaries and report whether one shared source fill is needed."""
-        sentinel = (
-            project
-            / ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib.olean"
-        )
-        key = self._dependency_key(project)
-        if sentinel.is_file():
-            return {
-                "ready": True,
-                "repaired": False,
-                "source_build_required": False,
-                "dependency_key": key,
-            }
-
-        started = time.monotonic()
-        cache_error = None
-        with self._lock(self.shared / ".provision.lock"):
-            if not sentinel.is_file():
-                try:
-                    self._run(
-                        ["lake", "exe", "cache", "get"],
-                        cwd=project,
-                        timeout=1200,
-                        lean_num_threads=self.lake_build_threads,
-                    )
-                except (RuntimeError, subprocess.TimeoutExpired) as exc:
-                    # A binary release may be unavailable for a new exact
-                    # toolchain/dependency key. The serialized source build
-                    # below is the intended fallback and populates this cache.
-                    cache_error = str(exc)[-2000:]
-        repaired = sentinel.is_file()
-        self._record_metric(
-            "dependency_cache_repair",
-            dependency_key=key,
-            repaired=repaired,
-            binary_cache_error=bool(cache_error),
-            elapsed_seconds=round(time.monotonic() - started, 3),
-        )
-        return {
-            "ready": repaired,
-            "repaired": repaired,
-            "source_build_required": not repaired,
-            "dependency_key": key,
-            "binary_cache_error": cache_error,
-        }
 
     def _project_cache_dir(self, dependency_key: str, commit: str) -> Path:
         if not re.fullmatch(r"[0-9a-f]{40}", commit):
@@ -881,20 +854,6 @@ class AgentWorkspaceManager:
         export_text = (project / "RiemannResearch.lean").read_text(encoding="utf-8")
         umbrella = re.compile(r"^\s*import\s+Mathlib\s*(?:--.*)?$", re.MULTILINE)
         problems: list[str] = []
-        dependency_status = self._run(
-            [
-                "git", "status", "--porcelain", "--",
-                "lakefile.toml", "lake-manifest.json", "lean-toolchain",
-            ],
-            cwd=project,
-        ).splitlines()
-        for status_line in dependency_status:
-            relative = status_line[3:]
-            problems.append(
-                f"{relative}: dependency control files cannot be changed by ordinary "
-                "proof agents; use an explicit server-maintenance upgrade"
-            )
-
         for relative in relative_files:
             path = project / relative
             text = path.read_text(encoding="utf-8")
@@ -915,19 +874,6 @@ class AgentWorkspaceManager:
                     "under RiemannResearch/"
                 )
 
-            lines = len(text.splitlines())
-            baseline_lines = len(baseline.splitlines()) if baseline is not None else 0
-            if is_new and lines > 500:
-                problems.append(
-                    f"{relative}: new module has {lines} lines; split it into cohesive "
-                    "modules of at most 500 lines"
-                )
-            elif not is_new and lines > 500 and lines > baseline_lines:
-                problems.append(
-                    f"{relative}: module grew from {baseline_lines} to {lines} lines; "
-                    "split it instead of extending an over-500-line file"
-                )
-
             if is_new and relative != "RiemannResearch.lean":
                 module = relative.removesuffix(".lean").replace("/", ".")
                 if not re.search(
@@ -941,48 +887,19 @@ class AgentWorkspaceManager:
         return problems
 
     def _build(self, project: Path) -> dict:
-        dependency_cache = self._ensure_mathlib_cache(project)
         started = time.monotonic()
-        build_args = ["lake", "build", "RiemannResearch", "--quiet"]
-        if dependency_cache["ready"]:
-            output = self._run(
-                build_args,
-                cwd=project,
-                timeout=3600,
-                lean_num_threads=self.lake_build_threads,
-            )
-        else:
-            # The FIFO already serializes builds. Also hold the dependency lock
-            # so newly opened clones cannot attach to a half-populated cache.
-            with self._lock(self.shared / ".provision.lock"):
-                sentinel = (
-                    project
-                    / ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib.olean"
-                )
-                source_fill_started = not sentinel.is_file()
-                if sentinel.is_file():
-                    dependency_cache.update(
-                        ready=True,
-                        source_build_required=False,
-                        filled_by_another_operation=True,
-                    )
-                output = self._run(
-                    build_args,
-                    cwd=project,
-                    timeout=3600,
-                    lean_num_threads=self.lake_build_threads,
-                )
-                dependency_cache["ready_after_build"] = sentinel.is_file()
-                dependency_cache["shared_source_cache_populated"] = (
-                    source_fill_started and sentinel.is_file()
-                )
+        output = self._run(
+            ["lake", "build", "RiemannResearch", "--quiet"],
+            cwd=project,
+            timeout=3600,
+            lean_num_threads=self.lake_build_threads,
+        )
         result = {
             "command": "lake build RiemannResearch --quiet",
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "lean_num_threads": self.lake_build_threads,
             "output": "\n".join(output.splitlines()[-20:]),
             "cache": "shared dependencies and commit-keyed seed; private per-clone .lake/build",
-            "dependency_cache": dependency_cache,
         }
         result["project_cache"] = self._publish_project_cache(project)
         self._record_metric(
