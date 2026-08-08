@@ -33,9 +33,11 @@ DEFAULT_READ_CHARS = 20_000
 MAX_METRICS_BYTES = 5_000_000
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
-    ".gitignore", "AGENTS.md", "README.md", "RiemannResearch.lean", "lakefile.toml"
+    ".gitignore", "AGENTS.md", "README.md", "RiemannResearch.lean"
 }
-ROOT_READABLE = ROOT_WRITABLE | {"lake-manifest.json", "lean-toolchain"}
+ROOT_READABLE = ROOT_WRITABLE | {
+    "lake-manifest.json", "lakefile.toml", "lean-toolchain"
+}
 WRITABLE_SUFFIXES = {".lean", ".md", ".toml", ".yml", ".yaml", ".json"}
 
 
@@ -269,6 +271,53 @@ class AgentWorkspaceManager:
             if not local_packages.exists():
                 local_packages.symlink_to(packages, target_is_directory=True)
         return key
+
+    def _ensure_mathlib_cache(self, project: Path) -> dict:
+        """Prefer Mathlib binaries and report whether one shared source fill is needed."""
+        sentinel = (
+            project
+            / ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib.olean"
+        )
+        key = self._dependency_key(project)
+        if sentinel.is_file():
+            return {
+                "ready": True,
+                "repaired": False,
+                "source_build_required": False,
+                "dependency_key": key,
+            }
+
+        started = time.monotonic()
+        cache_error = None
+        with self._lock(self.shared / ".provision.lock"):
+            if not sentinel.is_file():
+                try:
+                    self._run(
+                        ["lake", "exe", "cache", "get"],
+                        cwd=project,
+                        timeout=1200,
+                        lean_num_threads=self.lake_build_threads,
+                    )
+                except (RuntimeError, subprocess.TimeoutExpired) as exc:
+                    # A binary release may be unavailable for a new exact
+                    # toolchain/dependency key. The serialized source build
+                    # below is the intended fallback and populates this cache.
+                    cache_error = str(exc)[-2000:]
+        repaired = sentinel.is_file()
+        self._record_metric(
+            "dependency_cache_repair",
+            dependency_key=key,
+            repaired=repaired,
+            binary_cache_error=bool(cache_error),
+            elapsed_seconds=round(time.monotonic() - started, 3),
+        )
+        return {
+            "ready": repaired,
+            "repaired": repaired,
+            "source_build_required": not repaired,
+            "dependency_key": key,
+            "binary_cache_error": cache_error,
+        }
 
     def _project_cache_dir(self, dependency_key: str, commit: str) -> Path:
         if not re.fullmatch(r"[0-9a-f]{40}", commit):
@@ -682,7 +731,14 @@ class AgentWorkspaceManager:
         paths = self._patch_paths(project, patch)
         self._run(["git", "apply", "--check", "--whitespace=error-all", "-"], cwd=project, input_text=patch)
         self._run(["git", "apply", "--whitespace=error-all", "-"], cwd=project, input_text=patch)
-        return {"applied": True, "paths": paths, "project_root": str(project)}
+        architecture_issues = self._architecture_audit(project)
+        return {
+            "applied": True,
+            "paths": paths,
+            "project_root": str(project),
+            "checkpoint_ready": not architecture_issues,
+            "architecture_issues": architecture_issues,
+        }
 
     def git_status(self, token: str) -> dict:
         meta, project = self._get(token, rehydrate=False)
@@ -793,20 +849,127 @@ class AgentWorkspaceManager:
                     warnings.append(f"{path.relative_to(project)}:{line}: {label}")
         return warnings
 
-    def _build(self, project: Path) -> dict:
-        started = time.monotonic()
-        output = self._run(
-            ["lake", "build", "RiemannResearch", "--quiet"],
+    @staticmethod
+    def _head_text(project: Path, relative: str) -> str | None:
+        result = subprocess.run(
+            ["git", "show", f"HEAD:{relative}"],
             cwd=project,
-            timeout=3600,
-            lean_num_threads=self.lake_build_threads,
+            text=True,
+            capture_output=True,
+            check=False,
         )
+        return result.stdout if result.returncode == 0 else None
+
+    def _architecture_audit(self, project: Path) -> list[str]:
+        changed = self._run(
+            [
+                "git", "diff", "--name-only", "--diff-filter=ACMR", "HEAD", "--",
+                "RiemannResearch", "RiemannResearch.lean",
+            ],
+            cwd=project,
+        ).splitlines()
+        untracked = self._run(
+            [
+                "git", "ls-files", "--others", "--exclude-standard", "--",
+                "RiemannResearch", "RiemannResearch.lean",
+            ],
+            cwd=project,
+        ).splitlines()
+        relative_files = sorted(
+            {path for path in changed + untracked if path.endswith(".lean")}
+        )
+        export_text = (project / "RiemannResearch.lean").read_text(encoding="utf-8")
+        umbrella = re.compile(r"^\s*import\s+Mathlib\s*(?:--.*)?$", re.MULTILINE)
+        problems: list[str] = []
+
+        for relative in relative_files:
+            path = project / relative
+            text = path.read_text(encoding="utf-8")
+            baseline = self._head_text(project, relative)
+            is_new = baseline is None
+            match = umbrella.search(text)
+            if match is not None:
+                line = text.count("\n", 0, match.start()) + 1
+                problems.append(
+                    f"{relative}:{line}: umbrella `import Mathlib` is forbidden in "
+                    "new or modified modules; use focused Mathlib/project imports"
+                )
+
+            parts = Path(relative).parts
+            if is_new and len(parts) < 3:
+                problems.append(
+                    f"{relative}: new modules must live in a named subject directory "
+                    "under RiemannResearch/"
+                )
+
+            lines = len(text.splitlines())
+            baseline_lines = len(baseline.splitlines()) if baseline is not None else 0
+            if is_new and lines > 500:
+                problems.append(
+                    f"{relative}: new module has {lines} lines; split it into cohesive "
+                    "modules of at most 500 lines"
+                )
+            elif not is_new and lines > 500 and lines > baseline_lines:
+                problems.append(
+                    f"{relative}: module grew from {baseline_lines} to {lines} lines; "
+                    "split it instead of extending an over-500-line file"
+                )
+
+            if is_new and relative != "RiemannResearch.lean":
+                module = relative.removesuffix(".lean").replace("/", ".")
+                if not re.search(
+                    rf"^\s*import\s+{re.escape(module)}\s*$",
+                    export_text,
+                    re.MULTILINE,
+                ):
+                    problems.append(
+                        f"{relative}: new module is not exported by RiemannResearch.lean"
+                    )
+        return problems
+
+    def _build(self, project: Path) -> dict:
+        dependency_cache = self._ensure_mathlib_cache(project)
+        started = time.monotonic()
+        build_args = ["lake", "build", "RiemannResearch", "--quiet"]
+        if dependency_cache["ready"]:
+            output = self._run(
+                build_args,
+                cwd=project,
+                timeout=3600,
+                lean_num_threads=self.lake_build_threads,
+            )
+        else:
+            # The FIFO already serializes builds. Also hold the dependency lock
+            # so newly opened clones cannot attach to a half-populated cache.
+            with self._lock(self.shared / ".provision.lock"):
+                sentinel = (
+                    project
+                    / ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib.olean"
+                )
+                source_fill_started = not sentinel.is_file()
+                if sentinel.is_file():
+                    dependency_cache.update(
+                        ready=True,
+                        source_build_required=False,
+                        filled_by_another_operation=True,
+                    )
+                output = self._run(
+                    build_args,
+                    cwd=project,
+                    timeout=3600,
+                    lean_num_threads=self.lake_build_threads,
+                )
+                dependency_cache["ready_after_build"] = sentinel.is_file()
+                dependency_cache["shared_source_cache_populated"] = (
+                    source_fill_started and sentinel.is_file()
+                )
         result = {
             "command": "lake build RiemannResearch --quiet",
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "lean_num_threads": self.lake_build_threads,
             "output": "\n".join(output.splitlines()[-20:]),
             "cache": "shared dependencies and commit-keyed seed; private per-clone .lake/build",
+            "dependency_cache": dependency_cache,
         }
         result["project_cache"] = self._publish_project_cache(project)
         self._record_metric(
@@ -829,6 +992,7 @@ class AgentWorkspaceManager:
             raise ValueError("Commit message must be one line containing 5-120 characters")
         meta, project = self._get(token)
         warnings = self._scan(project)
+        warnings.extend(self._architecture_audit(project))
         if warnings:
             raise ValueError("Lean source audit failed:\n" + "\n".join(warnings[:100]))
         build = self._build(project)
