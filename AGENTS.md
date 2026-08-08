@@ -36,12 +36,16 @@
 - Long builds, updates, and checkpoints use one FIFO worker. Submit once and
   poll `agent_workspace_job_status` no sooner than `retry_after_seconds`; never
   resubmit a pending job.
-- `agent_workspace_checkpoint` performs the final source audit, incremental
-  build, commit, and serialized publication. Do not call `lean_build`
-  immediately before checkpointing.
+- `agent_workspace_checkpoint` performs the source audit, incremental project
+  validation, commit, and serialized publication. `lean_build` performs the
+  same incremental validation without publication; do not run it immediately
+  before checkpoint. Dependency updates are not exposed to ordinary agents.
 - Dependency artifacts are shared read-mostly. Each clone has its own writable
   project build directory, seeded by exact commit and dependency environment.
-  Lake builds use at most four threads.
+  Lake builds use at most four threads. If the shared Mathlib binary cache is
+  incomplete, the queued build first runs `lake exe cache get`; if binaries are
+  unavailable, one serialized source build fills the shared cache for all later
+  agents using the same dependency key.
 - Automatic cleanup archives only old clean published or unchanged clones.
   Dirty trees and unpublished commits are retained. Reopening a token restores
   an archived clone; Lean processes restart on demand.
@@ -65,20 +69,27 @@
 
 ## Module architecture
 
-- Organize by mathematical concept or theorem family, not one file per theorem.
+- Before editing, inspect filenames and outlines in the matching subject
+  directory. Extend a module only when the declaration belongs to its existing
+  concept; otherwise create a descriptively named sibling module. Never use a
+  catch-all scratch or program-checks file for unrelated results.
+- New modules must live in a named subject directory and be exported from
+  `RiemannResearch.lean`.
 - Put reusable declarations in the lowest general-purpose namespace appearing
   in their statements; keep application modules focused on assembly.
-- Prefer focused Mathlib imports, keep the import graph acyclic, and preserve
-  declaration names during refactors when practical.
-- Treat 300--500 lines as a review signal for splitting a module, not a rigid
-  limit. Prefer separate checkpoints for structural refactors and new results.
+- Use focused Mathlib or project-module imports; exact `import Mathlib` is
+  forbidden in every new or modified module. Keep the import graph acyclic.
+- Split by concept before a file reaches 500 lines. Checkpoint rejects new
+  modules over 500 lines and further growth of existing over-500-line modules.
+- Preserve declaration names during refactors when practical. Prefer separate
+  checkpoints for structural refactors and new results.
 
 ## Useful commands
 
 - Ephemeral candidate: `agent_workspace_run_code`
 - Declaration discovery: `lean_local_search`, then focused Lean search tools
 - Targeted file verification: `lean_verify` or diagnostics on an absolute path
-- Standalone queued build: `lean_build` only when no checkpoint follows
+- Standalone incremental validation: `lean_build` when no checkpoint follows
 - Final acceptance and publication: `agent_workspace_checkpoint`
 
 Local cost telemetry is written as bounded JSON Lines to
