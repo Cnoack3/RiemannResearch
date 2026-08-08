@@ -275,7 +275,6 @@ unconditional proofs of the motivating named theorems.
 
 | Declaration | Module | Verified consequence | Status |
 |---|---|---|---|
-| `RiemannResearch.AlgebraicGeometry.SerreII.NonE8.serreII_for_remaining_nonE8_candidates` | `RiemannResearch.AlgebraicGeometry.SerreIINonE8` | Proofs of the trialitarian D4, E6, and E7 cases imply Serre II for every audited remaining family other than E8 | Kernel checked finite classification and assembly; all three family providers remain open |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent` | `RiemannResearch.E8.FullWeylCore` | From the inputs listed below, proves parts (i)--(iii), nonabelianness of the simple core, and `Neutral(ξ) ↔ (Neutral(ξ_F) → Neutral(ξ_{k⁺}))` | Kernel checked implication; open obligations remain |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent_nonabelianH1` | `RiemannResearch.E8.FullWeylCore` | Specializes the conditional assembly to actual discrete nonabelian H¹ and proves the forward restriction-neutrality implication rather than assuming it | Kernel checked implication; remaining E8-specific hypotheses are load-bearing |
 | `RiemannResearch.E8.universalFixedLocusAndSplittingField` | `RiemannResearch.E8.WonderfulFixedLocus` | For a regular cocharacter chosen in the chamber determined by the fixed Borel, the supplied geometric inputs imply the fixed-locus and motivic conclusions, unconditional compactification/Borel point-field and index equality, and—only for inner torsors—neutrality and torsor-index comparisons | Kernel checked implication matching the intended chamber convention and revised scope of Theorem 3.2(iii) |
@@ -284,15 +283,6 @@ unconditional proofs of the motivating named theorems.
 | `RiemannResearch.E8.serreII_of_compatibleLocalGauges` | `RiemannResearch.E8.SerreIICompletionTargets` | A common gauge on a generating family makes every selected nonabelian cocycle a global coboundary | Kernel checked implication; existence of the E8 common gauges remains open |
 | `RiemannResearch.E8.serreII_of_diagonalKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | One diagonal toral restriction--corestriction value in the neutral fiber, with the index formulas and a positive Bezout congruence, forces the original toral class to map to the neutral class | Kernel checked implication; the E8 diagonal kernel-norm input remains open |
 | `RiemannResearch.E8.serreII_of_finiteEtaleKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | Componentwise neutrality in a repeated finite-etale product, the product kernel-norm principle, index formulas, and a positive Bezout congruence force the original toral class to map to the neutral class | Kernel checked finite-etale formulation of Proposition 6.34; the E8 product kernel-norm input remains open |
-
-### Open obligations: `serreII_for_remaining_nonE8_candidates`
-
-| Hypothesis binder | Required mathematical input | Provider / status |
-|---|---|---|
-| `family` | Classifier identifying each audited remaining arbitrary-form group as trialitarian D4, E6, E7, or E8 | **Open** |
-| `trialitarianD4_case` | Serre II for every trialitarian D4 candidate in the stated base-field scope | **Open** |
-| `e6_case` | Serre II for every E6 candidate in the stated base-field scope | **Open** |
-| `e7_case` | Serre II for every E7 candidate in the stated base-field scope | **Open** |
 
 ### Open obligations: `quasisimpleCoreOfFullWeylDescent`
 
