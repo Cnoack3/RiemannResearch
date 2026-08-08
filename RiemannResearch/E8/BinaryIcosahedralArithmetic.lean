@@ -48,5 +48,10 @@ theorem binaryIcosahedral_orders_and_indices :
       120 / 4 = 30 ∧
       Nat.gcd 5 6 = 1 := by
   norm_num
+/-- The elementary order and index calculations in PDF Proposition 6.15. -/
+theorem serreIIProgram_binaryIcosahedral_index_arithmetic :
+    12 * 10 / 2 = 60 ∧ 24 * 20 / 4 = 120 ∧
+      120 / 24 = 5 ∧ 120 / 20 = 6 := by
+  norm_num
 
 end RiemannResearch.E8

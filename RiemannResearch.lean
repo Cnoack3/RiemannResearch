@@ -5,6 +5,7 @@ import RiemannResearch.AlgebraicGeometry.FpqcH1
 import RiemannResearch.AlgebraicGeometry.SerreIIConjecture
 import RiemannResearch.AlgebraicGeometry.SerreIINonE8
 import RiemannResearch.AlgebraicGeometry.FpqcTorsor
+import RiemannResearch.AlgebraicGeometry.OddDegreePointDescent
 import RiemannResearch.AlgebraicGeometry.PointFields
 import RiemannResearch.AlgebraicGeometry.PointFieldIndexOne
 import RiemannResearch.AlgebraicGeometry.PrimePowerIndex
@@ -17,12 +18,14 @@ import RiemannResearch.GaloisCohomology.GaloisCechComparison
 import RiemannResearch.GaloisCohomology.GaloisCechSchemeBridge
 import RiemannResearch.GaloisCohomology.GaloisTensorDecomposition
 import RiemannResearch.GaloisCohomology.GaloisTripleTensorDecomposition
+import RiemannResearch.GaloisCohomology.CompatibleLocalGauges
 import RiemannResearch.GaloisCohomology.LocalGaugeTransporter
 import RiemannResearch.GaloisCohomology.NonabelianH1
 import RiemannResearch.GaloisCohomology.SingletonCechH1
 import RiemannResearch.GroupCohomology.Conjugation
 import RiemannResearch.GroupCohomology.Corestriction
 import RiemannResearch.GroupCohomology.ArbitraryCorestriction
+import RiemannResearch.GroupCohomology.FiniteEtaleKernelNorm
 import RiemannResearch.GroupCohomology.Mackey
 import RiemannResearch.GroupCohomology.Restriction
 import RiemannResearch.GroupCohomology.StableElements
@@ -33,6 +36,7 @@ import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.Logic.PointedInvariant
 import RiemannResearch.Motives.IntegralCycleQuotients
 import RiemannResearch.Motives.RostNilpotence
+import RiemannResearch.GroupTheory.AlternatingFiveObstruction
 import RiemannResearch.GroupTheory.CoprimeRestriction
 import RiemannResearch.GroupTheory.BurnsideTopMark
 import RiemannResearch.GroupTheory.CentralExtension
@@ -54,10 +58,8 @@ import RiemannResearch.E8.BinaryIcosahedralSubsystemOrbits
 import RiemannResearch.E8.SylowSevenArithmetic
 import RiemannResearch.E8.WeylIndexPacket
 import RiemannResearch.E8.A2ChamberNormalization
-import RiemannResearch.E8.SerreIIArithmeticCertificates
 import RiemannResearch.E8.SylowLocalSplitting
 import RiemannResearch.E8.SectionSevenAppendixAudit
-import RiemannResearch.E8.SerreIICompletionTargets
 import RiemannResearch.E8.OmegaEightPlusTwo
 import RiemannResearch.E8.RationalInvolutionsAudit
 import RiemannResearch.E8.SubgroupSieve

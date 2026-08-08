@@ -143,10 +143,11 @@ intersection of this splitting-field coset and the prime-local cosets.
 - `E8/A9TrialityArithmetic.lean` checks both signed half-spin residue lists
   for the order-nine calculation and verifies `Φ₃(1)Φ₉(1)=9`. It assumes the
   triality model and does not construct the `A₉` Weyl embedding.
-- Three focused modules replace the former arithmetic catch-all:
-  `E8/SerreIIArithmeticCertificates.lean` contains the numerical certificates,
-  `E8/A2ChamberNormalization.lean` the A2 counterexample, and `E8/SylowLocalSplitting.lean` the finite four-field package.
-  They do not construct splitting fields or subgroup actions.
+- Application-specific numerical certificates live with their subjects:
+  `E8/SubgroupSieve.lean` owns the subsystem and survivor-envelope rows, and
+  `E8/A8NormalizerArithmetic.lean` owns the A8 gauge calculations.
+- `E8/A2ChamberNormalization.lean` and `E8/SylowLocalSplitting.lean`
+  isolate the chamber counterexample and finite four-field package.
 - `E8/SectionSevenAppendixAudit.lean` checks the printed Section 7 and
   Appendix arithmetic and supplies the quotient-generation countermodel and
   kernel-adjoining repair for the paragraph after Proposition 7.5.
@@ -497,7 +498,7 @@ The D2E restriction--corestriction identity is exact but tautological at its
 last step: the resulting difference is the original torus class, and asking it
 to lie in the pointed torus kernel is exactly asking that `ξ` be neutral.
 The same boundary is now kernel checked for the finite-etale formulation.
-`serreII_of_finiteEtaleKernelNorm` proves the repeated-product diagonal
+`eq_neutral_of_finiteEtaleKernelNorm` proves the repeated-product diagonal
 assembly of Proposition 6.34, while
 `finiteEtaleKernelNorm_of_subsingleton_target` proves the reverse direction
 of Proposition 6.35 once the E8 cohomology target is a subsingleton.

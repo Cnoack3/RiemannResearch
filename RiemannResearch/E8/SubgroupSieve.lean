@@ -5,7 +5,8 @@ Authors: Cnoack3
 -/
 import Mathlib.Data.Bool.AllAny
 import Mathlib.Data.List.Sort
-import RiemannResearch.E8.SerreIIArithmeticCertificates
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NormNum.GCD
 import RiemannResearch.GroupTheory.KernelConjugator
 import RiemannResearch.GroupTheory.OrbitDegreeGcd
 import RiemannResearch.GroupTheory.PerfectCore
@@ -53,6 +54,42 @@ triality alignment, is recorded in
 open scoped BigOperators
 
 namespace RiemannResearch.E8
+
+/-- The three subsystem stabilizer orders in PDF Theorem 5.16 have
+the stated indices in the E8 Weyl group. -/
+theorem serreIIProgram_fullWeylSubsystem_index_products :
+    5160960 * 135 = 696729600 ∧
+      62208 * 11200 = 696729600 ∧
+      57600 * 12096 = 696729600 := by
+  norm_num
+
+/-- The degree-one cycle identity in PDF Corollary 5.17. -/
+theorem serreIIProgram_threeSubsystem_bezout :
+    (-1417 : ℤ) * 135 + 16 * 11200 + 12096 = 1 := by
+  norm_num
+
+/-- The three subsystem degrees in PDF Theorem 5.16 have gcd one. -/
+theorem serreIIProgram_threeSubsystem_gcd :
+    Nat.gcd (Nat.gcd 135 11200) 12096 = 1 := by
+  norm_num
+
+/-- All five displayed Bezout identities in PDF Theorem 6.9. -/
+theorem serreIIProgram_survivorEnvelope_bezout :
+    (-73 : ℤ) * 135 - 2 * 1120 + 12096 = 1 ∧
+      (15 : ℤ) * 15 - 5 * 1120 + 5376 = 1 ∧
+      (-17 : ℤ) * 135 - 2 * 1120 + 4536 = 1 ∧
+      (-57 : ℤ) * 135 - 2 * 40 + 7776 = 1 ∧
+      (13 : ℤ) * 25 - 9 * 36 = 1 := by
+  norm_num
+
+/-- The five survivor-envelope degree rows in PDF Theorem 6.9 have gcd one. -/
+theorem serreIIProgram_survivorEnvelope_gcd :
+    Nat.gcd (Nat.gcd 135 1120) 12096 = 1 ∧
+      Nat.gcd (Nat.gcd 15 1120) 5376 = 1 ∧
+      Nat.gcd (Nat.gcd 135 1120) 4536 = 1 ∧
+      Nat.gcd (Nat.gcd 135 40) 7776 = 1 ∧
+      Nat.gcd 25 36 = 1 := by
+  norm_num
 
 /-- One of the three triality-related choices of the seven original subsystem
 stabilizer columns and the corresponding (A1)^8 column in TomLib. -/
