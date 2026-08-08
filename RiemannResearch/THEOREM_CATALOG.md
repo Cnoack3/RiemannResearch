@@ -281,6 +281,7 @@ unconditional proofs of the motivating named theorems.
 | `RiemannResearch.E8.exactProjectiveResidual` | `RiemannResearch.E8.WonderfulFixedLocus` | The compactification/Borel and inner Borel/neutrality point equivalences propagate torsor index one to both projective varieties, formalizing PDF Corollary 3.4 | Kernel checked implication; Theorems 2.1 and 3.2 supply the external mathematical inputs |
 | `RiemannResearch.E8.serreII_of_oddDegreePointDescent` | `RiemannResearch.E8.SerreIICompletionTargets` | Odd-degree splitting, an all-extension point/neutrality equivalence, and odd-degree point descent imply neutrality of every candidate class | Kernel checked implication; the E8-specific inputs below remain open |
 | `RiemannResearch.E8.serreII_of_compatibleLocalGauges` | `RiemannResearch.E8.SerreIICompletionTargets` | A common gauge on a generating family makes every selected nonabelian cocycle a global coboundary | Kernel checked implication; existence of the E8 common gauges remains open |
+| `RiemannResearch.E8.nonabelianH1_family_subsingleton_of_compatibleLocalGauges` | `RiemannResearch.E8.SerreIICompletionTargets` | Compatible common gauges for every cocycle in every member of a family make each discrete nonabelian H¹ a subsingleton | Kernel checked family-level implication; the fpqc/E8 comparison and E8 common gauges remain open |
 | `RiemannResearch.E8.serreII_of_diagonalKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | One diagonal toral restriction--corestriction value in the neutral fiber, with the index formulas and a positive Bezout congruence, forces the original toral class to map to the neutral class | Kernel checked implication; the E8 diagonal kernel-norm input remains open |
 | `RiemannResearch.E8.serreII_of_finiteEtaleKernelNorm` | `RiemannResearch.E8.SerreIICompletionTargets` | Componentwise neutrality in a repeated finite-etale product, the product kernel-norm principle, index formulas, and a positive Bezout congruence force the original toral class to map to the neutral class | Kernel checked finite-etale formulation of Proposition 6.34; the E8 product kernel-norm input remains open |
 
@@ -325,11 +326,11 @@ unconditional proofs of the motivating named theorems.
 | `point_iff_neutral` | Points on the chosen Borel, EVIII, or wonderful variety are equivalent to neutrality over every extension | Borel/wonderful abstract providers are fields of `UniversalFixedLocusConclusion`; their algebraic E8 geometric inputs remain **open**. No EVIII project provider exists. |
 | `oddPointDescent` | A point over the odd-degree extension descends to the base | **Open**; this is completion target A |
 
-### Open obligations: `serreII_of_compatibleLocalGauges`
+### Open obligations: compatible-local-gauge completion targets
 
 | Hypothesis binder | Required mathematical input | Provider / status |
 |---|---|---|
-| `commonGauge` | The prime-local E8 trivialization cosets have a nonempty total intersection for every candidate cocycle | **Open**; this is completion target B |
+| `commonGauge` | The prime-local E8 trivialization cosets have a nonempty total intersection for every candidate cocycle, uniformly for every family member in the family-level theorem | **Open**; this is completion target B |
 | E8 specialization | Identify algebraic E8 torsors with the discrete nonabelian cocycles selected by `Candidate`, and supply the generating prime-local gauges | **Open** |
 
 ### Open obligations: diagonal kernel-norm completion targets

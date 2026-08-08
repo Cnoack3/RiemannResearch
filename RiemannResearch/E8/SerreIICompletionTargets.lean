@@ -31,7 +31,7 @@ These are conditional assembly theorems. They do not prove odd-degree descent,
 existence of compatible E8 gauges, or the diagonal E8 kernel-norm hypothesis.
 -/
 
-universe u v w
+universe u v w x
 
 namespace RiemannResearch.E8
 
@@ -111,6 +111,39 @@ theorem serreII_of_compatibleLocalGauges
   apply eq_trivial_gauge_of_generating_family a b H hgen
   intro i σ hσ
   exact hb i σ hσ
+
+/-- **Family-level form of completion target B.** If every cocycle in every
+member of a family admits one common gauge on a generating family of
+subgroups, then each corresponding discrete nonabelian H¹ is a subsingleton.
+
+This is the Serre-II-shaped conclusion at the abstract Galois-cocycle
+interface. An application to E8 still requires a comparison with fpqc H¹ for
+algebraic E8 groups and an E8 provider for the common-gauge hypothesis. -/
+theorem nonabelianH1_family_subsingleton_of_compatibleLocalGauges
+    {S : Type u} (Γ : S → Type v) (G : S → Type w) (I : S → Type x)
+    [∀ s, Group (Γ s)] [∀ s, Group (G s)]
+    [∀ s, MulDistribMulAction (Γ s) (G s)]
+    (H : ∀ s, I s → Subgroup (Γ s))
+    (hgen : ∀ s, (⨆ i, H s i) = ⊤)
+    (commonGauge :
+      ∀ s (a : NonabelianCocycle (Γ s) (G s)),
+        ∃ b, ∀ i, a.IsLocalGauge (H s i) b) :
+    ∀ s, Subsingleton (NonabelianH1 (Γ s) (G s)) := by
+  intro s
+  constructor
+  intro ξ η
+  refine Quotient.inductionOn₂ ξ η ?_
+  intro a b
+  change NonabelianH1.classOf a = NonabelianH1.classOf b
+  have ha : a.IsCoboundary :=
+    serreII_of_compatibleLocalGauges (fun _ => True) (H s) (hgen s)
+      (fun c _ => commonGauge s c) a trivial
+  have hb : b.IsCoboundary :=
+    serreII_of_compatibleLocalGauges (fun _ => True) (H s) (hgen s)
+      (fun c _ => commonGauge s c) b trivial
+  exact
+    (NonabelianH1.classOf_eq_neutral_iff_isCoboundary a).2 ha |>.trans
+      ((NonabelianH1.classOf_eq_neutral_iff_isCoboundary b).2 hb).symm
 
 /-- **Completion target C.** The diagonal restriction--corestriction value
 attached to one toral class equals the original class whenever its total
