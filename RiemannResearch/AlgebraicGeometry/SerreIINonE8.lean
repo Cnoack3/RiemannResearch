@@ -106,6 +106,38 @@ abbrev ExactFamilyNeutralityProvider
   NeutralityProvider IsPerfectFieldCdAtMostTwo
     IsSemisimpleSimplyConnected family (fun e => e = d)
 
+/-- Exact providers for the four classical Dynkin series assemble into the
+single classical-family provider used by the original non-`E8` reduction.
+
+This separates the load-bearing type-`D` input, including trialitarian
+`D4`, from the type-`A`, type-`B`, and type-`C` inputs. -/
+theorem classicalNeutralityProvider_of_exact_providers
+    (IsPerfectFieldCdAtMostTwo : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (a : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .A)
+    (b : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .B)
+    (c : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .C)
+    (d : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .D) :
+    NeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family DynkinFamily.IsClassical := by
+  intro R A _ hField hGroup hClassical
+  generalize hfamily : family R A = e at hClassical
+  cases e with
+  | A => exact a R A hField hGroup hfamily
+  | B => exact b R A hField hGroup hfamily
+  | C => exact c R A hField hGroup hfamily
+  | D => exact d R A hField hGroup hfamily
+  | E6 => simp [DynkinFamily.IsClassical] at hClassical
+  | E7 => simp [DynkinFamily.IsClassical] at hClassical
+  | E8 => simp [DynkinFamily.IsClassical] at hClassical
+  | F4 => simp [DynkinFamily.IsClassical] at hClassical
+  | G2 => simp [DynkinFamily.IsClassical] at hClassical
+
 /-- If a provider covers the four classical series and separate providers
 cover `E6`, `E7`, `F4`, and `G2`, then Serre II holds for every group
 selected by the supplied classifier whose family is not `E8`.
@@ -160,5 +192,35 @@ theorem conjecture_nonE8_of_family_providers
       exact f4 R A hField hSemisimpleSimplyConnected hfamily
   | G2 =>
       exact g2 R A hField hSemisimpleSimplyConnected hfamily
+
+/-- The non-`E8` assembly theorem with all four classical Dynkin series
+exposed as separate exact-family hypotheses. -/
+theorem conjecture_nonE8_of_exact_family_providers
+    (IsPerfectFieldCdAtMostTwo : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (a : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .A)
+    (b : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .B)
+    (c : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .C)
+    (d : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .D)
+    (e6 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .E6)
+    (e7 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .E7)
+    (f4 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .F4)
+    (g2 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .G2) :
+    Conjecture IsPerfectFieldCdAtMostTwo
+      (NonE8GroupCondition IsSemisimpleSimplyConnected family) :=
+  conjecture_nonE8_of_family_providers IsPerfectFieldCdAtMostTwo
+    IsSemisimpleSimplyConnected family
+    (classicalNeutralityProvider_of_exact_providers
+      IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected family a b c d)
+    e6 e7 f4 g2
 
 end RiemannResearch.AlgebraicGeometry.SerreII

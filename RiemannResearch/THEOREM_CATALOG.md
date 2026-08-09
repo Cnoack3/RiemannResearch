@@ -280,6 +280,9 @@ unconditional proofs of the motivating named theorems.
 | Declaration | Module | Verified consequence | Status |
 |---|---|---|---|
 | `RiemannResearch.AlgebraicGeometry.SerreII.conjecture_nonE8_of_family_providers` | `RiemannResearch.AlgebraicGeometry.SerreIINonE8` | Classical, `E6`, `E7`, `F4`, and `G2` fpqc-neutrality providers assemble to the project Serre-II conjecture on the supplied non-`E8` Dynkin-family scope | Kernel checked assembly theorem; the concrete predicates, classifier, and all five providers below remain open in the project |
+| `RiemannResearch.AlgebraicGeometry.SerreII.conjecture_nonE8_of_exact_family_providers` | `RiemannResearch.AlgebraicGeometry.SerreIINonE8` | Exact `A`, `B`, `C`, `D`, `E6`, `E7`, `F4`, and `G2` providers assemble to the non-`E8` conjecture | Kernel checked refinement exposing the four classical series separately |
+| `RiemannResearch.AlgebraicGeometry.SerreII.exactFamilyA_of_typeA_form_providers` | `RiemannResearch.AlgebraicGeometry.SerreIITypeA` | Inner and outer type-`A_n` providers for all admissible ranks assemble to the exact family-`A` provider | Kernel checked conditional reduction; the form classifier and both providers remain open |
+| `RiemannResearch.AlgebraicGeometry.SerreII.conjecture_nonE8_of_typeA_form_providers` | `RiemannResearch.AlgebraicGeometry.SerreIITypeA` | Type `A_n` is exposed as inner and outer providers while `B`, `C`, and `D` remain separate exact providers | Kernel checked conditional assembly theorem |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent` | `RiemannResearch.E8.FullWeylCore` | From the inputs listed below, proves parts (i)--(iii), nonabelianness of the simple core, and `Neutral(ξ) ↔ (Neutral(ξ_F) → Neutral(ξ_{k⁺}))` | Kernel checked implication; open obligations remain |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent_nonabelianH1` | `RiemannResearch.E8.FullWeylCore` | Specializes the conditional assembly to actual discrete nonabelian H¹ and proves the forward restriction-neutrality implication rather than assuming it | Kernel checked implication; remaining E8-specific hypotheses are load-bearing |
 | `RiemannResearch.AlgebraicGeometry.universalFixedLocusAndSplittingField` | `RiemannResearch.AlgebraicGeometry.FixedLocusSplitting` | For a regular cocharacter chosen in the chamber determined by the fixed Borel, the supplied geometric inputs imply the fixed-locus and motivic conclusions, unconditional compactification/Borel point-field and index equality, and—only for inner torsors—neutrality and torsor-index comparisons | Kernel checked implication matching the intended chamber convention and revised scope of Theorem 3.2(iii) |
@@ -302,6 +305,20 @@ unconditional proofs of the motivating named theorems.
 | `e7` | Fpqc Serre-II neutrality for family `E7` | **Open**; the generic arbitrary-form case is not known, while the quasi-split case is published but not formalized here |
 | `f4` | Fpqc Serre-II neutrality for family `F4` | Published mathematics exists for the stated field scope; an algebraic-group/fpqc project provider remains **open** |
 | `g2` | Fpqc Serre-II neutrality for family `G2` | Published mathematics exists for the stated field scope; an algebraic-group/fpqc project provider remains **open** |
+
+### Open obligations: type-`A_n` refinement
+
+The exact-family theorem replaces the single `classical` binder by separate
+`a`, `b`, `c`, and `d` binders. The type-`A_n` theorem further decomposes `a`:
+
+| Hypothesis binder | Required mathematical input | Provider / status |
+|---|---|---|
+| `typeAForm` | Correct positive-rank inner/outer classifier for groups already classified as family `A` | **Open**; the finite rank-and-kind interface is defined, but no root-datum classifier is constructed |
+| `innerA` | Fpqc neutrality for every inner form of every `A_n`, `n ≥ 1` | Published mathematics/classification remains to be formalized in the project |
+| `outerA` | Fpqc neutrality for every outer form of every `A_n`, necessarily `n ≥ 2` | Published mathematics/classification remains to be formalized in the project |
+| `b` | Fpqc neutrality for family `B` | **Open** as a project provider |
+| `c` | Fpqc neutrality for family `C` | **Open** as a project provider |
+| `d` | Fpqc neutrality for family `D` | **Open**; the binder still contains arbitrary trialitarian `D4` |
 
 ### Open obligations: `quasisimpleCoreOfFullWeylDescent`
 
