@@ -10,9 +10,10 @@ import RiemannResearch.AlgebraicGeometry.SerreIITypeA
 # Type-B form reduction for Serre II
 
 This module refines the exact type-`B` neutrality provider by rank. A
-`TypeBForm` records the rank `n ≥ 2` in `B_n`; the low-rank root system
-`B₁` is handled by the `A₁` convention. No inner/outer split is needed
-because the type-`B_n` Dynkin diagram has no nontrivial automorphism.
+`TypeBForm` records every positive rank `n` in `B_n`, including `B₁`.
+No identification of `B₁` with `A₁` is assumed. Any comparison between
+those low-rank classifications requires a separate theorem about the supplied
+root data or algebraic groups.
 
 The declarations here are conditional assembly interfaces. They do not
 construct root data, classify type-`B_n` groups as spin groups of
@@ -23,12 +24,11 @@ universe u
 
 namespace RiemannResearch.AlgebraicGeometry.SerreII
 
-/-- The admissible rank of an irreducible Dynkin diagram of type `B_n`.
-The convention `n ≥ 2` assigns the low-rank coincidence `B₁ = A₁` to
-family `A`. -/
+/-- The positive rank of a type-`B_n` form. In particular, rank one remains
+an explicit type-`B` case in this interface. -/
 structure TypeBForm where
   rank : Nat
-  rank_ge_two : 2 ≤ rank
+  rank_pos : 0 < rank
 
 /-- An abstract rank classifier for groups already classified as Dynkin
 family `B`. Constructing it and proving its correctness are separate
@@ -51,20 +51,20 @@ abbrev TypeBRankNeutralityProvider
     (typeBForm R A).rank = n →
     Subsingleton (FpqcH1.{u, u} R A)
 
-/-- Rank-indexed type-`B_n` providers for every `n ≥ 2` assemble into the
+/-- Rank-indexed type-`B_n` providers for every positive `n` assemble into the
 exact Dynkin-family-`B` provider. -/
 theorem exactFamilyB_of_typeB_rank_providers
     (IsPerfectFieldCdAtMostTwo : BaseCondition)
     (IsSemisimpleSimplyConnected : GroupCondition)
     (family : DynkinFamilyClassifier)
     (typeBForm : TypeBFormClassifier)
-    (rankB : ∀ n, 2 ≤ n →
+    (rankB : ∀ n, 0 < n →
       TypeBRankNeutralityProvider IsPerfectFieldCdAtMostTwo
         IsSemisimpleSimplyConnected family typeBForm n) :
     ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .B := by
   intro R A _ hField hGroup hB
-  exact rankB (typeBForm R A).rank (typeBForm R A).rank_ge_two
+  exact rankB (typeBForm R A).rank (typeBForm R A).rank_pos
     R A hField hGroup hB rfl
 
 /-- The non-`E8` reduction with type `A_n` split into inner and outer
@@ -80,7 +80,7 @@ theorem conjecture_nonE8_of_typeA_and_typeB_form_providers
     (outerA : TypeAFormNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family typeAForm TypeAForm.IsOuter)
     (typeBForm : TypeBFormClassifier)
-    (rankB : ∀ n, 2 ≤ n →
+    (rankB : ∀ n, 0 < n →
       TypeBRankNeutralityProvider IsPerfectFieldCdAtMostTwo
         IsSemisimpleSimplyConnected family typeBForm n)
     (c : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
@@ -96,26 +96,11 @@ theorem conjecture_nonE8_of_typeA_and_typeB_form_providers
     (g2 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .G2) :
     Conjecture IsPerfectFieldCdAtMostTwo
-      (NonE8GroupCondition IsSemisimpleSimplyConnected family) := by
-  let a :=
-    exactFamilyA_of_typeA_form_providers IsPerfectFieldCdAtMostTwo
-      IsSemisimpleSimplyConnected family typeAForm innerA outerA
-  let b :=
-    exactFamilyB_of_typeB_rank_providers IsPerfectFieldCdAtMostTwo
-      IsSemisimpleSimplyConnected family typeBForm rankB
-  rw [conjecture_iff_subsingleton]
-  intro R A _ hField hGroup
-  rcases hGroup with ⟨hSemisimpleSimplyConnected, hne⟩
-  generalize hfamily : family R A = dynkin at hne
-  cases dynkin with
-  | A => exact a R A hField hSemisimpleSimplyConnected hfamily
-  | B => exact b R A hField hSemisimpleSimplyConnected hfamily
-  | C => exact c R A hField hSemisimpleSimplyConnected hfamily
-  | D => exact d R A hField hSemisimpleSimplyConnected hfamily
-  | E6 => exact e6 R A hField hSemisimpleSimplyConnected hfamily
-  | E7 => exact e7 R A hField hSemisimpleSimplyConnected hfamily
-  | E8 => exact (hne rfl).elim
-  | F4 => exact f4 R A hField hSemisimpleSimplyConnected hfamily
-  | G2 => exact g2 R A hField hSemisimpleSimplyConnected hfamily
+      (NonE8GroupCondition IsSemisimpleSimplyConnected family) :=
+  conjecture_nonE8_of_typeA_form_providers IsPerfectFieldCdAtMostTwo
+    IsSemisimpleSimplyConnected family typeAForm innerA outerA
+    (exactFamilyB_of_typeB_rank_providers IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family typeBForm rankB)
+    c d e6 e7 f4 g2
 
 end RiemannResearch.AlgebraicGeometry.SerreII

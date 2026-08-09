@@ -97,4 +97,37 @@ theorem exactFamilyA_of_typeA_form_providers
   · exact inner R A hField hGroup hA hInner
   · exact outer R A hField hGroup hA hOuter
 
+/-- The non-`E8` reduction with type `A_n` exposed as separate inner and
+outer form providers and the other classical series exposed individually. -/
+theorem conjecture_nonE8_of_typeA_form_providers
+    (IsPerfectFieldCdAtMostTwo : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (typeAForm : TypeAFormClassifier)
+    (innerA : TypeAFormNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family typeAForm TypeAForm.IsInner)
+    (outerA : TypeAFormNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family typeAForm TypeAForm.IsOuter)
+    (b : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .B)
+    (c : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .C)
+    (d : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .D)
+    (e6 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .E6)
+    (e7 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .E7)
+    (f4 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .F4)
+    (g2 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family .G2) :
+    Conjecture IsPerfectFieldCdAtMostTwo
+      (NonE8GroupCondition IsSemisimpleSimplyConnected family) :=
+  conjecture_nonE8_of_exact_family_providers IsPerfectFieldCdAtMostTwo
+    IsSemisimpleSimplyConnected family
+    (exactFamilyA_of_typeA_form_providers IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family typeAForm innerA outerA)
+    b c d e6 e7 f4 g2
+
 end RiemannResearch.AlgebraicGeometry.SerreII
