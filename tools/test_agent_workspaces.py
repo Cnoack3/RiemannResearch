@@ -193,6 +193,9 @@ with tempfile.TemporaryDirectory() as raw:
     assert second_status["state"] == "succeeded"
     assert first_status["progress"]["phase"] == "complete"
     assert first_status["progress"]["percent"] == 100.0
+    assert first_status["progress"]["current"] == 2
+    assert first_status["progress"]["total"] == 2
+    assert first_status["progress"]["detail"] == "simulated second task"
     assert saw_running_progress
     assert first_status["retry_after_seconds"] == 0
     assert "output" not in first_status["result"]

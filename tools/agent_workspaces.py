@@ -1608,7 +1608,9 @@ class AgentWorkspaceManager:
             finally:
                 with self._job_guard:
                     current = self._read_job(job_id)
-                    current.update(job)
+                    current.update(
+                        {key: value for key, value in job.items() if key != "progress"}
+                    )
                     progress = current.get("progress", {})
                     progress.update(
                         phase="complete" if job.get("state") == "succeeded" else "failed",
