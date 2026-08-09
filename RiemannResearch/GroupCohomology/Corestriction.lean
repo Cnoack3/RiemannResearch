@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import Mathlib.RepresentationTheory.Homological.GroupCohomology.Functoriality
+import RiemannResearch.CategoryTheory.PreadditiveIsoConjugation
+import RiemannResearch.GroupCohomology.ExplicitRestriction
 import RiemannResearch.LinearAlgebra.QuotientMap
 
 /-!
@@ -348,79 +350,6 @@ theorem normalCorestrictionCochain_restrict_apply
   rw [hperm, Nat.card_eq_fintype_card]
   abel
 
-/-- Restriction of additive one-cocycles to a subgroup, in the explicit
-low-degree cocycle model. -/
-noncomputable def restrictionCocyclesLinearMap
-    {k G : Type u} [CommRing k] [Group G]
-    (A : Rep k G) (S : Subgroup G) :
-    groupCohomology.cocycles₁ A →ₗ[k]
-      groupCohomology.cocycles₁ (Rep.res S.subtype A) :=
-  ModuleCat.Hom.hom
-    (groupCohomology.mapCocycles₁ S.subtype
-      (𝟙 (Rep.res S.subtype A)))
-
-@[simp]
-theorem restrictionCocyclesLinearMap_apply
-    {k G : Type u} [CommRing k] [Group G]
-    (A : Rep k G) (S : Subgroup G)
-    (z : groupCohomology.cocycles₁ A) (s : S) :
-    restrictionCocyclesLinearMap A S z s = z s.1 := by
-  rw [restrictionCocyclesLinearMap,
-    groupCohomology.coe_mapCocycles₁]
-  rfl
-
-/-- Explicit cocycle restriction sends ambient coboundaries to subgroup
-coboundaries. -/
-theorem restrictionCocyclesLinearMap_maps_toCyclesRange
-    {k G : Type u} [CommRing k] [Group G]
-    (A : Rep k G) (S : Subgroup G) :
-    (groupCohomology.shortComplexH1 A).moduleCatToCycles.range ≤
-      Submodule.comap (restrictionCocyclesLinearMap A S)
-        (groupCohomology.shortComplexH1
-          (Rep.res S.subtype A)).moduleCatToCycles.range := by
-  intro z hz
-  rcases hz with ⟨x, rfl⟩
-  refine ⟨x, ?_⟩
-  apply groupCohomology.cocycles₁_ext
-  intro s
-  rfl
-
-/-- Restriction on the explicit left-homology quotient computing additive
-first group cohomology. -/
-noncomputable def restrictionLeftHomologyLinearMap
-    {k G : Type u} [CommRing k] [Group G]
-    (A : Rep k G) (S : Subgroup G) :
-    ((groupCohomology.shortComplexH1 A).moduleCatLeftHomologyData.H :
-      Type u) →ₗ[k]
-      ((groupCohomology.shortComplexH1
-        (Rep.res S.subtype A)).moduleCatLeftHomologyData.H : Type u) :=
-  Submodule.mapQ
-    (groupCohomology.shortComplexH1 A).moduleCatToCycles.range
-    (groupCohomology.shortComplexH1
-      (Rep.res S.subtype A)).moduleCatToCycles.range
-    (restrictionCocyclesLinearMap A S)
-    (restrictionCocyclesLinearMap_maps_toCyclesRange A S)
-
-/-- Restriction as a morphism between the explicit left-homology objects. -/
-noncomputable def restrictionLeftHomology
-    {k G : Type u} [CommRing k] [Group G]
-    (A : Rep k G) (S : Subgroup G) :
-    (groupCohomology.shortComplexH1 A).moduleCatLeftHomologyData.H ⟶
-      (groupCohomology.shortComplexH1
-        (Rep.res S.subtype A)).moduleCatLeftHomologyData.H :=
-  ModuleCat.ofHom (restrictionLeftHomologyLinearMap A S)
-
-/-- Restriction on additive `H¹` obtained directly from the explicit
-low-degree cocycle quotient. -/
-noncomputable def h1RestrictionViaCocycles
-    {k G : Type u} [CommRing k] [Group G]
-    (A : Rep k G) (S : Subgroup G) :
-    groupCohomology.H1 A ⟶
-      groupCohomology.H1 (Rep.res S.subtype A) :=
-  (groupCohomology.H1Iso A).hom ≫
-    restrictionLeftHomology A S ≫
-      (groupCohomology.H1Iso (Rep.res S.subtype A)).inv
-
 /-- On explicit left-homology quotient modules, restriction followed by
 normal corestriction is multiplication by the subgroup index. -/
 theorem normalCorestrictionLeftHomologyLinearMap_comp_restriction
@@ -460,17 +389,6 @@ theorem restrictionLeftHomology_comp_normalCorestriction
   exact LinearMap.congr_fun
     (normalCorestrictionLeftHomologyLinearMap_comp_restriction A S) x
 
-private theorem isoConjugate_comp_eq_nsmul_id
-    {C : Type u} [Category.{v} C] [Preadditive C]
-    {X X' Y Y' : C} (iX : X ≅ X') (iY : Y ≅ Y')
-    (r : X' ⟶ Y') (c : Y' ⟶ X') (n : ℕ)
-    (h : r ≫ c = n • 𝟙 X') :
-    (iX.hom ≫ r ≫ iY.inv) ≫
-      (iY.hom ≫ c ≫ iX.inv) = n • 𝟙 X := by
-  simp only [Category.assoc, Iso.inv_hom_id_assoc]
-  rw [← Category.assoc r c iX.inv, h]
-  simp
-
 /-- Restriction followed by corestriction is multiplication by the subgroup
 index on additive first group cohomology. -/
 theorem h1RestrictionViaCocycles_comp_h1Corestriction
@@ -478,7 +396,7 @@ theorem h1RestrictionViaCocycles_comp_h1Corestriction
     (A : Rep k G) (S : Subgroup G) [S.Normal] [S.FiniteIndex] :
     h1RestrictionViaCocycles A S ≫ h1Corestriction A S =
       Nat.card (G ⧸ S) • 𝟙 (groupCohomology.H1 A) := by
-  apply isoConjugate_comp_eq_nsmul_id
+  apply RiemannResearch.CategoryTheory.isoConjugate_comp_eq_nsmul_id
   exact restrictionLeftHomology_comp_normalCorestriction A S
 
 end RiemannResearch.GroupCohomology

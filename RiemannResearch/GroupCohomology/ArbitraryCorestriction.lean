@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import Mathlib.GroupTheory.GroupAction.Quotient
+import RiemannResearch.CategoryTheory.PreadditiveIsoConjugation
 import RiemannResearch.GroupCohomology.Corestriction
 
 /-!
@@ -355,24 +356,13 @@ theorem restrictionLeftHomology_comp_corestriction
   exact LinearMap.congr_fun
     (corestrictionLeftHomologyLinearMap_comp_restriction A S) x
 
-private theorem arbitraryIsoConjugate_comp_eq_nsmul_id
-    {C : Type u} [Category.{v} C] [Preadditive C]
-    {X X' Y Y' : C} (iX : X ≅ X') (iY : Y ≅ Y')
-    (r : X' ⟶ Y') (c : Y' ⟶ X') (n : ℕ)
-    (h : r ≫ c = n • 𝟙 X') :
-    (iX.hom ≫ r ≫ iY.inv) ≫
-      (iY.hom ≫ c ≫ iX.inv) = n • 𝟙 X := by
-  simp only [Category.assoc, Iso.inv_hom_id_assoc]
-  rw [← Category.assoc r c iX.inv, h]
-  simp
-
 /-- Restriction followed by arbitrary finite-index transfer is index multiplication on H¹. -/
 theorem h1RestrictionViaCocycles_comp_h1CorestrictionFiniteIndex
     {k G : Type u} [CommRing k] [Group G]
     (A : Rep k G) (S : Subgroup G) [S.FiniteIndex] :
     h1RestrictionViaCocycles A S ≫ h1CorestrictionFiniteIndex A S =
       Nat.card (G ⧸ S) • 𝟙 (groupCohomology.H1 A) := by
-  apply arbitraryIsoConjugate_comp_eq_nsmul_id
+  apply RiemannResearch.CategoryTheory.isoConjugate_comp_eq_nsmul_id
   exact restrictionLeftHomology_comp_corestriction A S
 
 end RiemannResearch.GroupCohomology

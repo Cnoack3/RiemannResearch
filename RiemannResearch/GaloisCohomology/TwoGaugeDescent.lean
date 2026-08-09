@@ -3,7 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
-import RiemannResearch.GaloisCohomology.NonabelianH1
+import RiemannResearch.GaloisCohomology.LocalGaugeTransporter
 
 /-!
 # Two-gauge nonabelian descent
@@ -22,15 +22,6 @@ transition factors.
 namespace RiemannResearch.GaloisCohomology
 
 universe u v
-
-/-- Every nonabelian one-cocycle takes the identity to the identity. -/
-theorem NonabelianCocycle.map_one
-    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
-    [MulDistribMulAction Γ G] (a : NonabelianCocycle Γ G) :
-    a 1 = 1 := by
-  have h := a.map_mul' 1 1
-  have h' : a 1 * 1 = a 1 * a 1 := by simpa using h
-  exact (mul_left_cancel h').symm
 
 /-- The subgroup on which a nonabelian cocycle is pointwise trivial. -/
 def NonabelianCocycle.trivialitySubgroup
@@ -115,11 +106,11 @@ theorem NonabelianCocycle.isCoboundary_of_localGauges
   simpa [z, NonabelianCocycle.gauge_gauge,
     NonabelianCocycle.gauge_one] using hgauged
 
-/-- An element fixed by the action of a subgroup. -/
-def FixedBy
+/-- Backward-compatible two-gauge spelling of the general fixedness predicate. -/
+abbrev FixedBy
     {Γ : Type u} {G : Type v} [Group Γ] [Group G]
     [MulDistribMulAction Γ G] (S : Subgroup Γ) (g : G) : Prop :=
-  ∀ σ : S, σ.1 • g = g
+  NonabelianCocycle.IsFixedBy S g
 
 /-- Two gauges for the same restricted cocycle differ by a fixed element. -/
 theorem transition_fixed_on_subgroup
@@ -129,18 +120,15 @@ theorem transition_fixed_on_subgroup
     (h₁ : ∀ σ : S, a σ.1 = g₁⁻¹ * σ.1 • g₁)
     (h₂ : ∀ σ : S, a σ.1 = g₂⁻¹ * σ.1 • g₂) :
     FixedBy S (g₁ * g₂⁻¹) := by
-  intro σ
-  have e₁ : σ.1 • g₁ = g₁ * a σ.1 := by
-    rw [h₁ σ]
-    simp
-  have e₂ : σ.1 • g₂ = g₂ * a σ.1 := by
-    rw [h₂ σ]
-    simp
-  rw [smul_mul']
-  have hinv : σ.1 • g₂⁻¹ = (σ.1 • g₂)⁻¹ :=
-    map_inv (MulDistribMulAction.toMonoidHom G σ.1) g₂
-  rw [hinv, e₁, e₂]
-  simp [mul_assoc]
+  let H : Bool → Subgroup Γ := fun _ => S
+  let gauges : Bool → G := fun i => if i then g₁ else g₂
+  have hlocal : ∀ i, a.IsLocalGauge (H i) (gauges i) := by
+    intro i σ hσ
+    cases i <;> simp [H, gauges] at hσ ⊢
+    · exact h₂ ⟨σ, hσ⟩
+    · exact h₁ ⟨σ, hσ⟩
+  have h := a.transition_fixed_on_inf H gauges hlocal true false
+  simpa [FixedBy, H, gauges, NonabelianCocycle.transition] using h
 
 /-- Exact two-gauge descent: global neutrality is equivalent to factorization
 of the transition by the two fixed subgroups. -/
@@ -184,13 +172,13 @@ theorem isCoboundary_iff_transition_factorization
         calc
           σ.1 • u⁻¹ = (σ.1 • u)⁻¹ :=
             map_inv (MulDistribMulAction.toMonoidHom G σ.1) u
-          _ = u⁻¹ := congrArg Inv.inv (hu σ)
+          _ = u⁻¹ := congrArg Inv.inv (hu σ.1 σ.2)
       rw [smul_mul', huInv]
       simp [mul_assoc]
     have hKg : ∀ σ : K, a σ.1 = g⁻¹ * σ.1 • g := by
       intro σ
       rw [hK σ, hgv]
-      rw [smul_mul', hv σ]
+      rw [smul_mul', hv σ.1 σ.2]
       simp
     exact a.isCoboundary_of_localGauges H K hgen g hHg hKg
 

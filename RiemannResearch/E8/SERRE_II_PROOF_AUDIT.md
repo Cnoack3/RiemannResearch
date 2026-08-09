@@ -66,7 +66,7 @@ paragraph, however, only chooses pro-p lifts whose images generate the finite
 presentation quotient. Those lifts need not generate the full absolute Galois
 group.
 
-`SectionSevenAppendixAudit.lean` gives a finite exact countermodel. The first
+`GroupTheory/QuotientGeneration.lean` gives a finite exact countermodel. The first
 factor of `ZMod 2 × ZMod 3` maps onto the quotient `ZMod 2`, but is a proper
 subgroup of the ambient group. Adjoining the projection kernel `ZMod 3`
 restores generation. In the Galois application, if `E/k` is the finite Galois
@@ -149,8 +149,9 @@ intersection of this splitting-field coset and the prime-local cosets.
 - `E8/A2ChamberNormalization.lean` and `E8/SylowLocalSplitting.lean`
   isolate the chamber counterexample and finite four-field package.
 - `E8/SectionSevenAppendixAudit.lean` checks the printed Section 7 and
-  Appendix arithmetic and supplies the quotient-generation countermodel and
-  kernel-adjoining repair for the paragraph after Proposition 7.5.
+  Appendix arithmetic. `GroupTheory/QuotientGeneration.lean` supplies the
+  quotient-generation countermodel and kernel-adjoining repair for the
+  paragraph after Proposition 7.5.
 - `E8/BinaryIcosahedralArithmetic.lean` checks the orders and fixed-field
   degrees `5`, `6`, and `30`, their coprimality, and proves the generic
   guard that a nontrivial perfect group is nonsolvable.
@@ -161,16 +162,15 @@ intersection of this splitting-field coset and the prime-local cosets.
 - `LinearAlgebra/RootSystem/AdaptedBase.lean` proves the equivalent reindexing
   convention: a functional regular on every root admits a base on which all
   simple-root values are positive.
-- `E8/WonderfulFixedLocus.lean` constructs a maximal-length element in every
-  finite Coxeter group and proves every reflection is a strict left and right
-  inversion, hence every simple generator is a left and right descent. It also
-  derives the complementary descent count, unique-zero statement, and full
-  rank duality from one length-complement identity. Mathlib still lacks a
-  `Finite` instance for its presented E8 group, the complement theorem, and
-  the E8 maximal-length calculation `120`.
-- `AlgebraicGeometry/FpqcCechH1.lean` packages affine group schemes and
-  witnessed fpqc covers into Mathlib's fixed-cover nonabelian Čech H¹, defines
-  refinement pullback, and proves that it preserves the neutral class.
+- `GroupTheory/CoxeterAttractingRank.lean` constructs a maximal-length element
+  in every finite Coxeter group and proves the general inversion, descent-count,
+  unique-zero, and rank-duality results. `E8/CoxeterAttractingRank.lean` contains
+  only the E8 specialization. Mathlib still lacks a `Finite` instance for its
+  presented E8 group, the complement theorem, and the E8 maximal-length
+  calculation `120`.
+- `AlgebraicGeometry/FpqcCover.lean` defines witnessed covers and refinements;
+  `FpqcCechPullback.lean` contains generic refinement pullback; and
+  `FpqcCechH1.lean` contains only the affine-group fixed-cover H¹ API.
 - `AlgebraicGeometry/FpqcCoverCommonRefinement.lean` proves that two arbitrary
   indexed witnessed fpqc covers have a witnessed common refinement formed by
   pairwise fiber products, together with refinement maps to both inputs.
@@ -337,13 +337,13 @@ is too broad, however: that theorem's E8 clause treats p=2 and heights at least
 4, not all primes and positive heights.
 
 The Lean bridge now reaches Mathlib's actual integral algebraic-cycle type:
-`IntegralCycleQuotients` constructs quotients by supplied linear relations,
-descends relation-preserving maps, and descends supplied bilinear composition
-on cycles over scheme products, including associativity and diagonal identity
-laws. Given additionally supplied correspondence-ring structures, a geometric
-base-change ring homomorphism, and Rost nilpotence, the same module specializes
-projector and complete-projector-family lifting to those concrete quotient
-carriers. This is not yet a construction of Chow groups or motives. Mathlib
+`IntegralCycleQuotients` constructs quotients by supplied linear relations and
+descends relation-preserving maps. `IntegralCorrespondenceComposition`
+contains supplied bilinear composition on cycles over scheme products,
+including associativity and diagonal identity laws. Given additionally supplied
+correspondence-ring structures, a geometric base-change ring homomorphism, and
+Rost nilpotence, `IntegralProjectorLifting` specializes projector and
+complete-projector-family lifting to those concrete quotient carriers. This is not yet a construction of Chow groups or motives. Mathlib
 currently supplies weighted proper pushforward of cycles but not the
 rational-equivalence subgroup, codimension grading, flat pullback, intersection
 product, or the proof that intersection--pushforward composition preserves
@@ -428,8 +428,10 @@ acts inner on both factors. The other eleven root actions are not certified.
 
 ### Rational-involutions / Weyl-7 audit (27 July 2026 draft)
 
-RationalInvolutionsAudit.lean adds kernel-reduced proofs for every
-self-contained exact certificate transcribed in this checkpoint:
+`E8/RationalInvolutionsAudit.lean` contains the incidence, binary, determinant,
+and dimension certificates. `E8/SylowSevenHyperbolicModel.lean` contains the
+256-vector computation. The reusable norm, odd-degree restriction, and boundary
+fiber arguments live in focused GroupTheory and GroupCohomology modules:
 
 - the 15 by 15 complement-incidence row sums, trace, and Gram identity;
 - all three printed XOR inconsistency certificates;

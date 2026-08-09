@@ -12,15 +12,3 @@ import Mathlib.Tactic.NormNum
 /-- A minimal arithmetic check that confirms mathlib tactics are available. -/
 theorem sanity_check : (2 : ℕ) + 2 = 4 := by
   norm_num
-
-namespace Nat
-
-/-- Concurrency branch B: zero is a left identity for natural-number addition. -/
-theorem zero_add_concurrency_b (n : ℕ) : 0 + n = n := by
-  exact Nat.zero_add n
-
-/-- Concurrency branch A: adding zero on the right leaves a natural number unchanged. -/
-theorem add_zero_concurrency_a (n : ℕ) : n + 0 = n := by
-  exact Nat.add_zero n
-
-end Nat
