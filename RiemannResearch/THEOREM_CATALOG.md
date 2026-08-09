@@ -293,6 +293,11 @@ unconditional proofs of the motivating named theorems.
 | `RiemannResearch.AlgebraicGeometry.SerreII.exactFamilyD_of_typeD_form_providers` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | Nontrialitarian and trialitarian form providers assemble into the exact family-`D` provider | Kernel checked conditional reduction |
 | `RiemannResearch.AlgebraicGeometry.SerreII.exactFamilyD_of_nontrialitarian_and_degreeOneCycles` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | Nontrialitarian neutrality, arbitrary-trialitarian degree-one cycles, and index-one descent assemble into exact type `D` | Kernel checked conditional reduction |
 | `RiemannResearch.AlgebraicGeometry.SerreII.conjecture_nonE8_of_typeA_typeB_and_typeD_zeroCycles` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | Hooks the refined type-`D` zero-cycle reduction into the non-`E8` Serre-II assembly | Kernel checked conditional assembly theorem; it does not discharge the listed providers |
+| `RiemannResearch.AlgebraicGeometry.SerreII.trialitarianAllenIndexAtMostTwoProvider_of_twoPrimaryIndexEqualsExponent` | `RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex` | The sourced hereditary 2-primary index-equals-exponent step supplies an Allen-index bound of at most two on the narrower characteristic-zero field scope | Kernel checked conditional reduction; concrete Brauer period/index and Allen-algebra classifiers remain open |
+| `RiemannResearch.AlgebraicGeometry.SerreII.trialitarianNeutralityProvider_of_allenIndexAtMostTwo` | `RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex` | A positive Allen index bounded by two, together with neutrality in the index-one and index-two branches, gives arbitrary-trialitarian neutrality | Kernel checked finite branch reduction |
+| `RiemannResearch.AlgebraicGeometry.SerreII.trialitarianNeutralityProvider_of_twoPrimaryIndexEqualsExponent` | `RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex` | CTGP's Allen-index bound, the quasi-split branch, and Gille's index-two branch give neutrality for arbitrary simply connected `³D₄` and `⁶D₄` forms | Kernel checked conditional research reduction; the three source-level providers remain to be formalized |
+| `RiemannResearch.AlgebraicGeometry.SerreII.exactFamilyD_of_nontrialitarian_and_twoPrimaryIndexEqualsExponent` | `RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex` | Nontrialitarian neutrality and the narrower period-index trialitarian route assemble into exact family `D` | Kernel checked conditional reduction |
+| `RiemannResearch.AlgebraicGeometry.SerreII.conjecture_nonE8_of_typeA_typeB_and_typeD_periodIndex` | `RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex` | Hooks the characteristic-zero hereditary period-index Type-D route into the existing type-A/type-B non-`E8` assembly | Kernel checked conditional assembly theorem on the explicitly narrower base-field scope |
 | `RiemannResearch.Logic.eq_basepoint_of_gcd_one_restriction_corestriction_invariant` | `RiemannResearch.Logic.PointedInvariant` | Rost-style naturality, additive restriction--corestriction index formulas, gcd-one local neutrality, and a trivial global invariant kernel force the original pointed class to be neutral | Kernel checked conditional reduction; actual fpqc scalar-extension maps, degree-three cohomology, Rost invariants, and arbitrary-trialitarian trivial-kernel providers remain open |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent` | `RiemannResearch.E8.FullWeylCore` | From the inputs listed below, proves parts (i)--(iii), nonabelianness of the simple core, and `Neutral(ξ) ↔ (Neutral(ξ_F) → Neutral(ξ_{k⁺}))` | Kernel checked implication; open obligations remain |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent_nonabelianH1` | `RiemannResearch.E8.FullWeylCore` | Specializes the conditional assembly to actual discrete nonabelian H¹ and proves the forward restriction-neutrality implication rather than assuming it | Kernel checked implication; remaining E8-specific hypotheses are load-bearing |
@@ -316,6 +321,7 @@ theorems are successive, substantive refinements:
 | Type `A_n` forms | `a` | `typeAForm`, `innerA`, `outerA` |
 | Type `B_n` ranks | `b` | `typeBForm`, `rankB` |
 | Type `D_n` forms and triality | `d` | `typeDForm`, `nontrialitarianD`, `restrictionData`, `trialitarianCycles`, `trialitarianIndexOneDescent` |
+| Type `D_n` via hereditary period-index | `d` on the narrower characteristic-zero field scope | `typeDForm`, `nontrialitarianD`, `allenIndex`, `allenIndexBound`, `allenIndexOne`, `allenIndexTwo` |
 
 These declarations have different theorem types and are not compatibility
 aliases. The transitive open hypotheses of the most refined theorem are:
@@ -340,6 +346,22 @@ aliases. The transitive open hypotheses of the most refined theorem are:
 | `e7` | Fpqc Serre-II neutrality for family `E7` | **Open**; the generic arbitrary-form case is not known, while the quasi-split case is published but not formalized here |
 | `f4` | Fpqc Serre-II neutrality for family `F4` | Published mathematics exists for the stated field scope; an algebraic-group/fpqc project provider remains **open** |
 | `g2` | Fpqc Serre-II neutrality for family `G2` | Published mathematics exists for the stated field scope; an algebraic-group/fpqc project provider remains **open** |
+
+### Alternative open obligations: trialitarian period-index route
+
+The theorem `conjecture_nonE8_of_typeA_typeB_and_typeD_periodIndex` has the
+same type-A, type-B, type-C, nontrialitarian-D, and remaining exceptional
+obligations, but replaces the zero-cycle/descent inputs by the following
+narrower characteristic-zero inputs:
+
+| Hypothesis binder | Required mathematical input | Provider / status |
+|---|---|---|
+| `IsCharacteristicZeroCdAtMostTwo` | Intrinsic predicate for characteristic-zero fields of cohomological dimension at most two | **Open** as a concrete project predicate |
+| `HasTwoPrimaryIndexEqualsExponentOverFiniteExtensions` | Index equals exponent for every 2-primary central simple algebra over every finite field extension | **Open**; this is an extra field-arithmetic hypothesis, not known from bare cohomological dimension at most two |
+| `allenIndex` | Correct positive index of the Allen algebra attached to every arbitrary trialitarian form | **Open**; Mathlib has no mathematical CSA-index API |
+| `allenIndexBound` | The hereditary period-index hypothesis forces the Allen index to be at most two | Published CTGP proof step; remains to be formalized from Brauer/Allen algebra geometry |
+| `allenIndexOne` | Neutrality in the Allen-index-one, hence quasi-split, branch | Published quasi-split theorem; remains to be formalized in fpqc H1 |
+| `allenIndexTwo` | Neutrality in the Allen-index-two branch | Published Gille Theorem 8; remains to be formalized in fpqc H1 |
 
 
 ### Open obligations: `quasisimpleCoreOfFullWeylDescent`

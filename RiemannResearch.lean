@@ -11,6 +11,7 @@ import RiemannResearch.AlgebraicGeometry.SerreIINonE8
 import RiemannResearch.AlgebraicGeometry.SerreIITypeA
 import RiemannResearch.AlgebraicGeometry.SerreIITypeB
 import RiemannResearch.AlgebraicGeometry.SerreIITypeD
+import RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex
 import RiemannResearch.AlgebraicGeometry.FpqcTorsor
 import RiemannResearch.AlgebraicGeometry.OddDegreePointDescent
 import RiemannResearch.AlgebraicGeometry.PointFields
