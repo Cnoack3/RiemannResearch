@@ -95,8 +95,14 @@
 - Split by mathematical responsibility, not an arbitrary line count. File size
   is a review signal; a long file is appropriate when it contains one cohesive
   complex theorem and its tightly coupled support.
-- Preserve declaration names during refactors when practical. Prefer separate
-  checkpoints for structural refactors and new results.
+- This repository has no external compatibility contract. During refactors,
+  update every in-repository import, reference, reverse dependency, catalog
+  entry, and document that is affected, then remove the obsolete module,
+  declaration, or name. Do not add import-only relocation modules, aliases,
+  deprecated forwarding declarations, duplicate theorem spellings, or other
+  compatibility wrappers unless the user explicitly requests compatibility
+  for a concrete external consumer. Prefer separate checkpoints for structural
+  refactors and new results.
 
 ## Useful commands
 

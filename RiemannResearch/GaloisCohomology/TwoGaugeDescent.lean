@@ -106,12 +106,6 @@ theorem NonabelianCocycle.isCoboundary_of_localGauges
   simpa [z, NonabelianCocycle.gauge_gauge,
     NonabelianCocycle.gauge_one] using hgauged
 
-/-- Backward-compatible two-gauge spelling of the general fixedness predicate. -/
-abbrev FixedBy
-    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
-    [MulDistribMulAction Γ G] (S : Subgroup Γ) (g : G) : Prop :=
-  NonabelianCocycle.IsFixedBy S g
-
 /-- Two gauges for the same restricted cocycle differ by a fixed element. -/
 theorem transition_fixed_on_subgroup
     {Γ : Type u} {G : Type v} [Group Γ] [Group G]
@@ -119,7 +113,7 @@ theorem transition_fixed_on_subgroup
     (S : Subgroup Γ) (g₁ g₂ : G)
     (h₁ : ∀ σ : S, a σ.1 = g₁⁻¹ * σ.1 • g₁)
     (h₂ : ∀ σ : S, a σ.1 = g₂⁻¹ * σ.1 • g₂) :
-    FixedBy S (g₁ * g₂⁻¹) := by
+    NonabelianCocycle.IsFixedBy S (g₁ * g₂⁻¹) := by
   let H : Bool → Subgroup Γ := fun _ => S
   let gauges : Bool → G := fun i => if i then g₁ else g₂
   have hlocal : ∀ i, a.IsLocalGauge (H i) (gauges i) := by
@@ -128,7 +122,7 @@ theorem transition_fixed_on_subgroup
     · exact h₂ ⟨σ, hσ⟩
     · exact h₁ ⟨σ, hσ⟩
   have h := a.transition_fixed_on_inf H gauges hlocal true false
-  simpa [FixedBy, H, gauges, NonabelianCocycle.transition] using h
+  simpa [H, gauges, NonabelianCocycle.transition] using h
 
 /-- Exact two-gauge descent: global neutrality is equivalent to factorization
 of the transition by the two fixed subgroups. -/
@@ -140,7 +134,8 @@ theorem isCoboundary_iff_transition_factorization
     (hH : ∀ σ : H, a σ.1 = gH⁻¹ * σ.1 • gH)
     (hK : ∀ σ : K, a σ.1 = gK⁻¹ * σ.1 • gK) :
     a.IsCoboundary ↔
-      ∃ u v : G, FixedBy H u ∧ FixedBy K v ∧
+      ∃ u v : G, NonabelianCocycle.IsFixedBy H u ∧
+        NonabelianCocycle.IsFixedBy K v ∧
         gH * gK⁻¹ = u * v := by
   constructor
   · rintro ⟨g, hg⟩
