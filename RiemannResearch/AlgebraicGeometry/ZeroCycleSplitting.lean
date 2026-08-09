@@ -142,4 +142,26 @@ theorem subsingleton_of_degreeOneSplittingCycles_of_coprimeRestriction
       eq_basepoint_of_degreeOneSplittingCycle x₀ isFinite degree
         Y neutral restrict hdescent hy]
 
+/-- If every class has a degree-one splitting cycle, then coprime-restriction
+basepoint detection is equivalent to the whole pointed set being a
+subsingleton.
+
+Thus, after the zero-cycle input is supplied, the detection principle is not
+a weaker substitute for global neutrality. -/
+theorem coprimeRestrictionDetectsBasepoint_iff_subsingleton_of_degreeOneSplittingCycles
+    {X Extension : Type*} (x₀ : X)
+    (isFinite : Extension → Prop) (degree : Extension → ℕ)
+    (Y : Extension → Type*) (neutral : ∀ L, Y L)
+    (restrict : ∀ L, X → Y L)
+    (hcycles : ∀ x, Nonempty (DegreeOneSplittingCycle
+      isFinite degree Y neutral restrict x)) :
+    CoprimeRestrictionDetectsBasepoint x₀ isFinite degree Y neutral restrict
+      ↔ Subsingleton X := by
+  constructor
+  · intro hdescent
+    exact subsingleton_of_degreeOneSplittingCycles_of_coprimeRestriction
+      x₀ isFinite degree Y neutral restrict hcycles hdescent
+  · intro hsub x _
+    exact @Subsingleton.elim X hsub x x₀
+
 end RiemannResearch.AlgebraicGeometry

@@ -26,8 +26,13 @@ arbitrary trialitarian D₄ under their stated field hypotheses. They do not
 supply the separate index-one-to-rational-point implication represented here
 by TrialitarianIndexOneDescentProvider.
 
-The declarations below remain conditional interfaces. In particular, the
-project does not yet construct scalar extension on FpqcH1, instantiate the
+The declarations below prove that, once the degree-one-cycle input is supplied
+for every class, TrialitarianIndexOneDescentProvider is equivalent to full
+fpqc-H¹ neutrality for arbitrary ³D₄ and ⁶D₄ forms. Thus the descent provider
+does not by itself reduce the remaining trialitarian Serre-II problem.
+
+These remain conditional interfaces. In particular, the project does not yet
+construct scalar extension on FpqcH1, instantiate the
 sourced degree-one-cycle provider, or prove coprime restriction descent.
 -/
 
@@ -257,6 +262,75 @@ theorem trialitarianNeutralityProvider_of_degreeOneCycles
       IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
       family typeDForm restrictionData cycles)
     indexOneDescent
+
+/-- Trialitarian neutrality makes index-one descent automatic, independently
+of the supplied restriction data. -/
+theorem trialitarianIndexOneDescentProvider_of_neutralityProvider
+    (IsPerfectFieldCdAtMostTwo : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (typeDForm : TypeDFormClassifier)
+    (restrictionData : TrialitarianRestrictionDataClassifier)
+    (neutrality : TypeDFormNeutralityProvider
+      IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+      family typeDForm TypeDForm.IsTrialitarian) :
+    TrialitarianIndexOneDescentProvider
+      IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+      family typeDForm restrictionData := by
+  intro R A _ hField hGroup hD hTrialitarian ξ _
+  exact @Subsingleton.elim _
+    (neutrality R A hField hGroup hD hTrialitarian)
+    ξ (FpqcH1.neutral R A)
+
+/-- Once every trialitarian torsor has coprime neutralizing extensions,
+index-one descent is equivalent to trialitarian neutrality. -/
+theorem trialitarianIndexOneDescentProvider_iff_neutrality_of_coprimeSplitting
+    (IsPerfectFieldCdAtMostTwo : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (typeDForm : TypeDFormClassifier)
+    (restrictionData : TrialitarianRestrictionDataClassifier)
+    (splitting : TrialitarianCoprimeSplittingProvider
+      IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+      family typeDForm restrictionData) :
+    TrialitarianIndexOneDescentProvider
+        IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+        family typeDForm restrictionData ↔
+      TypeDFormNeutralityProvider
+        IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+        family typeDForm TypeDForm.IsTrialitarian := by
+  constructor
+  · exact trialitarianNeutralityProvider_of_coprimeSplitting
+      IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+      family typeDForm restrictionData splitting
+  · exact trialitarianIndexOneDescentProvider_of_neutralityProvider
+      IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+      family typeDForm restrictionData
+
+/-- Under the sourced degree-one-cycle input, the remaining index-one descent
+provider is equivalent to Serre-II neutrality for arbitrary trialitarian
+forms. -/
+theorem trialitarianIndexOneDescentProvider_iff_neutrality_of_degreeOneCycles
+    (IsPerfectFieldCdAtMostTwo : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (typeDForm : TypeDFormClassifier)
+    (restrictionData : TrialitarianRestrictionDataClassifier)
+    (cycles : TrialitarianDegreeOneCycleProvider
+      IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+      family typeDForm restrictionData) :
+    TrialitarianIndexOneDescentProvider
+        IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+        family typeDForm restrictionData ↔
+      TypeDFormNeutralityProvider
+        IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+        family typeDForm TypeDForm.IsTrialitarian :=
+  trialitarianIndexOneDescentProvider_iff_neutrality_of_coprimeSplitting
+    IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+    family typeDForm restrictionData
+    (trialitarianCoprimeSplittingProvider_of_degreeOneCycles
+      IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
+      family typeDForm restrictionData cycles)
 
 /-- Nontrialitarian and trialitarian form providers assemble into the exact
 Dynkin-family-D provider. -/
