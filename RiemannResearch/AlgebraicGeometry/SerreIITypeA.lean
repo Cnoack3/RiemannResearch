@@ -123,11 +123,33 @@ theorem conjecture_nonE8_of_typeA_form_providers
     (g2 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .G2) :
     Conjecture IsPerfectFieldCdAtMostTwo
-      (NonE8GroupCondition IsSemisimpleSimplyConnected family) :=
-  conjecture_nonE8_of_exact_family_providers IsPerfectFieldCdAtMostTwo
-    IsSemisimpleSimplyConnected family
-    (exactFamilyA_of_typeA_form_providers IsPerfectFieldCdAtMostTwo
-      IsSemisimpleSimplyConnected family typeAForm innerA outerA)
-    b c d e6 e7 f4 g2
+      (NonE8GroupCondition IsSemisimpleSimplyConnected family) := by
+  let a :=
+    exactFamilyA_of_typeA_form_providers IsPerfectFieldCdAtMostTwo
+      IsSemisimpleSimplyConnected family typeAForm innerA outerA
+  rw [conjecture_iff_subsingleton]
+  intro R A _ hField hGroup
+  rcases hGroup with ⟨hSemisimpleSimplyConnected, hne⟩
+  generalize hfamily : family R A = dynkin at hne
+  cases dynkin with
+  | A =>
+      exact a R A hField hSemisimpleSimplyConnected hfamily
+  | B =>
+      exact b R A hField hSemisimpleSimplyConnected hfamily
+  | C =>
+      exact c R A hField hSemisimpleSimplyConnected hfamily
+  | D =>
+      exact d R A hField hSemisimpleSimplyConnected hfamily
+  | E6 =>
+      exact e6 R A hField hSemisimpleSimplyConnected hfamily
+  | E7 =>
+      exact e7 R A hField hSemisimpleSimplyConnected hfamily
+  | E8 =>
+      exact (hne rfl).elim
+  | F4 =>
+      exact f4 R A hField hSemisimpleSimplyConnected hfamily
+  | G2 =>
+      exact g2 R A hField hSemisimpleSimplyConnected hfamily
+
 
 end RiemannResearch.AlgebraicGeometry.SerreII
