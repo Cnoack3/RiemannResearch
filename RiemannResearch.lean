@@ -10,11 +10,13 @@ import RiemannResearch.AlgebraicGeometry.SerreIIConjecture
 import RiemannResearch.AlgebraicGeometry.SerreIINonE8
 import RiemannResearch.AlgebraicGeometry.SerreIITypeA
 import RiemannResearch.AlgebraicGeometry.SerreIITypeB
+import RiemannResearch.AlgebraicGeometry.SerreIITypeD
 import RiemannResearch.AlgebraicGeometry.FpqcTorsor
 import RiemannResearch.AlgebraicGeometry.OddDegreePointDescent
 import RiemannResearch.AlgebraicGeometry.PointFields
 import RiemannResearch.AlgebraicGeometry.PointFieldIndexOne
 import RiemannResearch.AlgebraicGeometry.PrimePowerIndex
+import RiemannResearch.AlgebraicGeometry.ZeroCycleSplitting
 import RiemannResearch.Basic
 import RiemannResearch.GaloisCohomology.DifferenceCocycle
 import RiemannResearch.GaloisCohomology.TwoGaugeDescent
