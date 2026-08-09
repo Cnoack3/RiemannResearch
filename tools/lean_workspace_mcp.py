@@ -23,7 +23,7 @@ from pydantic import BaseModel, ConfigDict
 from agent_workspaces import AgentWorkspaceManager
 
 
-WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive, sensibly named modules with focused imports; checkpoint rejects umbrella `import Mathlib` and unexported root-level modules. A long cohesive theorem may remain in one file; split by mathematical responsibility, not an arbitrary line count. Checkpoints skip Lean for documentation-only changes and otherwise build changed modules plus local reverse dependents; lean_build remains an explicit queued full-project validation and should not run immediately before checkpoint. If lakefile.toml changes, queue agent_workspace_update_deps once before further validation. Exact dependency configurations and their built artifacts are shared by content key; Lake fills genuinely missing artifacts during the serialized build. Poll queued work no sooner than retry_after_seconds and never resubmit it. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
+WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive, sensibly named modules with focused imports; checkpoint rejects umbrella `import Mathlib` and unexported root-level modules. A long cohesive theorem may remain in one file; split by mathematical responsibility, not an arbitrary line count. Checkpoints skip Lean for documentation-only changes and otherwise build changed modules plus local reverse dependents; lean_build remains an explicit queued full-project validation and should not run immediately before checkpoint. If lakefile.toml changes, queue agent_workspace_update_deps once before further validation. Exact dependency configurations and binary artifacts are shared by content key; cache preparation is protected and project builds are clone-local. Poll queued work no sooner than retry_after_seconds and never resubmit it; running status includes phase and Lake task progress. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
 mcp._mcp_server.instructions = (
@@ -58,14 +58,16 @@ LEAN_WORKSPACE_THREADS = _bounded_env_int(
     "LEAN_WORKSPACE_THREADS", 8, 1, 8
 )
 LEAN_LAKE_BUILD_THREADS = min(
-    _bounded_env_int("LEAN_LAKE_BUILD_THREADS", 4, 1, 4),
+    _bounded_env_int("LEAN_LAKE_BUILD_THREADS", 8, 1, 8),
     LEAN_WORKSPACE_THREADS,
 )
+LEAN_JOB_WORKERS = _bounded_env_int("LEAN_JOB_WORKERS", 2, 1, 4)
 # Cap the Lean runtime task pool inherited by LSP clients and every Lake/Lean
-# child process. The FIFO queue limits heavyweight jobs to one at a time; this
-# separate ceiling prevents that one job from saturating the host.
+# child process. Two isolated builds may run concurrently; publication and
+# shared-cache mutation remain separately locked.
 os.environ["LEAN_NUM_THREADS"] = str(LEAN_WORKSPACE_THREADS)
 os.environ["LEAN_LAKE_BUILD_THREADS"] = str(LEAN_LAKE_BUILD_THREADS)
+os.environ["LEAN_JOB_WORKERS"] = str(LEAN_JOB_WORKERS)
 # lean-lsp-mcp 0.29.0 hard-codes this private cap at eight. Pinning that
 # package version in the service makes this narrow override deterministic.
 lean_client_utils._MAX_SHARED_CLIENTS = MAX_SHARED_LEAN_CLIENTS
@@ -777,7 +779,10 @@ def agent_workspace_checkpoint(
 
 @mcp.tool(
     name="agent_workspace_job_status",
-    description="Check a queued job; obey retry_after_seconds and request logs only if needed.",
+    description=(
+        "Check queued/running work, including phase, percent, and estimated remaining time; "
+        "obey retry_after_seconds and request logs only if needed."
+    ),
 )
 def agent_workspace_job_status(job_id: str, include_logs: bool = False) -> dict:
     return AGENT_WORKSPACES.job_status(job_id, include_logs)

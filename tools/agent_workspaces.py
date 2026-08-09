@@ -13,6 +13,7 @@ import json
 import os
 import queue
 import re
+import selectors
 import secrets
 import shutil
 import subprocess
@@ -31,6 +32,7 @@ MAX_READ_BYTES = 1_000_000
 MAX_PATCH_BYTES = 2_000_000
 DEFAULT_READ_CHARS = 20_000
 MAX_METRICS_BYTES = 5_000_000
+PROGRESS_UPDATE_SECONDS = 60
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
     ".gitignore", "AGENTS.md", "README.md", "RiemannResearch.lean", "lakefile.toml"
@@ -64,12 +66,18 @@ class AgentWorkspaceManager:
         if not 1 <= self.lean_num_threads <= 8:
             raise ValueError("LEAN_NUM_THREADS must be between 1 and 8")
         try:
-            requested_build_threads = int(os.environ.get("LEAN_LAKE_BUILD_THREADS", "4"))
+            requested_build_threads = int(os.environ.get("LEAN_LAKE_BUILD_THREADS", "8"))
         except ValueError as exc:
             raise ValueError("LEAN_LAKE_BUILD_THREADS must be an integer") from exc
-        if not 1 <= requested_build_threads <= 4:
-            raise ValueError("LEAN_LAKE_BUILD_THREADS must be between 1 and 4")
+        if not 1 <= requested_build_threads <= 8:
+            raise ValueError("LEAN_LAKE_BUILD_THREADS must be between 1 and 8")
         self.lake_build_threads = min(requested_build_threads, self.lean_num_threads)
+        try:
+            self.job_workers = int(os.environ.get("LEAN_JOB_WORKERS", "2"))
+        except ValueError as exc:
+            raise ValueError("LEAN_JOB_WORKERS must be an integer") from exc
+        if not 1 <= self.job_workers <= 4:
+            raise ValueError("LEAN_JOB_WORKERS must be between 1 and 4")
         home = Path(os.environ.get("HOME", "/home/cri_2025")).resolve()
         self.root = Path(
             os.environ.get("LEAN_AGENT_WORKSPACES_ROOT", home / "lean-agent-workspaces")
@@ -100,14 +108,18 @@ class AgentWorkspaceManager:
         self._job_guard = threading.Lock()
         self._metrics_guard = threading.Lock()
         self._job_local = threading.local()
-        self._active_job: str | None = None
+        self._active_jobs: set[str] = set()
         self._recover_interrupted_jobs()
-        self._job_worker_thread = threading.Thread(
-            target=self._job_worker,
-            name="lean-workspace-jobs",
-            daemon=True,
-        )
-        self._job_worker_thread.start()
+        self._job_worker_threads = [
+            threading.Thread(
+                target=self._job_worker,
+                name=f"lean-workspace-job-{index + 1}",
+                daemon=True,
+            )
+            for index in range(self.job_workers)
+        ]
+        for worker in self._job_worker_threads:
+            worker.start()
 
     def _record_metric(self, event: str, **fields: object) -> None:
         record = {"time": time.time(), "event": event, **fields}
@@ -169,6 +181,198 @@ class AgentWorkspaceManager:
                 f"Command failed ({result.returncode}): {' '.join(args)}\n{output[-8000:]}"
             )
         return output
+
+    def _set_job_progress(
+        self,
+        phase: str,
+        *,
+        detail: str = "",
+        current: int | None = None,
+        total: int | None = None,
+        force: bool = False,
+    ) -> None:
+        job_id = getattr(self._job_local, "job_id", None)
+        if not job_id:
+            return
+        now = time.time()
+        last_write = getattr(self._job_local, "last_progress_write", 0.0)
+        if not force and current != total and now - last_write < PROGRESS_UPDATE_SECONDS:
+            return
+        previous = getattr(self._job_local, "progress", {})
+        phase_started_at = (
+            previous.get("phase_started_at", now)
+            if previous.get("phase") == phase
+            else now
+        )
+        percent = None
+        if current is not None and total:
+            percent = round(min(100.0, 100.0 * current / total), 1)
+        progress = {
+            "phase": phase,
+            "detail": detail[-240:],
+            "current": current,
+            "total": total,
+            "percent": percent,
+            "phase_started_at": phase_started_at,
+            "updated_at": now,
+        }
+        with self._job_guard:
+            job = self._read_job(job_id)
+            if job.get("state") != "running":
+                return
+            job["progress"] = progress
+            self._write_job(job)
+        self._job_local.progress = progress
+        self._job_local.last_progress_write = now
+
+    @staticmethod
+    def _parse_lake_progress(record: str) -> tuple[int, int, str] | None:
+        clean = re.sub(r"\x1b\[[0-9;?]*[ -/]*[@-~]", "", record)
+        match = re.search(r"\[(\d+)/(\d+)\]\s+(.+)", clean)
+        if match is None:
+            return None
+        return int(match.group(1)), int(match.group(2)), match.group(3).strip()
+
+    def _run_streaming(
+        self,
+        args: list[str],
+        *,
+        cwd: Path,
+        timeout: int,
+        phase: str,
+    ) -> str:
+        """Run a long command while publishing bounded Lake-style progress."""
+        started = time.monotonic()
+        self._set_job_progress(phase, detail="Starting " + " ".join(args), force=True)
+        process = subprocess.Popen(
+            args,
+            cwd=cwd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            bufsize=0,
+            env={
+                **os.environ,
+                "GIT_TERMINAL_PROMPT": "0",
+                "LEAN_NUM_THREADS": str(self.lake_build_threads),
+            },
+        )
+        if process.stdout is None:
+            raise RuntimeError("Failed to capture command output")
+        selector = selectors.DefaultSelector()
+        selector.register(process.stdout, selectors.EVENT_READ)
+        output = ""
+        pending = ""
+        deadline = started + timeout
+        try:
+            while True:
+                if time.monotonic() > deadline:
+                    process.kill()
+                    process.wait()
+                    raise subprocess.TimeoutExpired(args, timeout, output=output[-8000:])
+                events = selector.select(timeout=1.0)
+                for key, _ in events:
+                    chunk = os.read(key.fileobj.fileno(), 65536)
+                    if not chunk:
+                        selector.unregister(key.fileobj)
+                        continue
+                    text = chunk.decode("utf-8", errors="replace")
+                    output = (output + text)[-100_000:]
+                    pending += text
+                    records = re.split(r"[\r\n]+", pending)
+                    pending = records.pop()
+                    for record in records:
+                        parsed = self._parse_lake_progress(record)
+                        if parsed is not None:
+                            current, total, detail = parsed
+                            self._set_job_progress(
+                                phase,
+                                detail=detail,
+                                current=current,
+                                total=total,
+                                force=current == total,
+                            )
+                if process.poll() is not None and not selector.get_map():
+                    break
+            if pending:
+                parsed = self._parse_lake_progress(pending)
+                if parsed is not None:
+                    current, total, detail = parsed
+                    self._set_job_progress(
+                        phase,
+                        detail=detail,
+                        current=current,
+                        total=total,
+                        force=True,
+                    )
+        finally:
+            selector.close()
+            process.stdout.close()
+        elapsed = round(time.monotonic() - started, 3)
+        output = output.strip()
+        self._record_metric(
+            "command",
+            program=args[0],
+            action=args[1] if len(args) > 1 else "",
+            elapsed_seconds=elapsed,
+            exit_code=process.returncode,
+            output_chars=len(output),
+        )
+        if process.returncode:
+            raise RuntimeError(
+                f"Command failed ({process.returncode}): {' '.join(args)}\n{output[-8000:]}"
+            )
+        return output
+
+    def _dependency_cache_preflight(self, project: Path) -> tuple[str, dict]:
+        """Populate exact dependency binaries before a build.
+
+        Cache downloads are globally serialized. A failed preflight is not a
+        build failure, but it causes the build itself to take an exclusive
+        per-dependency lock so Lake can safely fill missing artifacts.
+        """
+        key = self._attach_dependencies(project)
+        started = time.monotonic()
+        output = ""
+        error = None
+        self._set_job_progress(
+            "dependency_cache",
+            detail="Waiting for protected binary-cache preparation",
+            force=True,
+        )
+        with self._lock(self.shared / ".cache-get.lock"):
+            try:
+                output = self._run_streaming(
+                    ["lake", "exe", "cache", "get"],
+                    cwd=project,
+                    timeout=1800,
+                    phase="dependency_cache",
+                )
+            except (RuntimeError, subprocess.TimeoutExpired) as exc:
+                error = str(exc)[-2000:]
+        result = {
+            "command": "lake exe cache get",
+            "status": "complete" if error is None else "incomplete",
+            "elapsed_seconds": round(time.monotonic() - started, 3),
+            "output": "\n".join(output.splitlines()[-20:]),
+        }
+        if error is not None:
+            result["warning"] = error
+        return key, result
+
+    def _run_lake_build(
+        self, project: Path, args: list[str], *, timeout: int = 3600
+    ) -> tuple[str, dict]:
+        key, cache = self._dependency_cache_preflight(project)
+        if cache["status"] == "complete":
+            output = self._run_streaming(
+                args, cwd=project, timeout=timeout, phase="building"
+            )
+        else:
+            with self._lock(self.shared / key / ".fallback-build.lock"):
+                output = self._run_streaming(
+                    args, cwd=project, timeout=timeout, phase="building"
+                )
+        return output, cache
 
     @contextmanager
     def _lock(self, path: Path, *, shared: bool = False) -> Iterator[None]:
@@ -258,7 +462,7 @@ class AgentWorkspaceManager:
                 except (RuntimeError, subprocess.TimeoutExpired) as exc:
                     # Some exact dependency revisions do not have complete
                     # binary releases. Lake will fill missing artifacts during
-                    # the next serialized incremental build.
+                    # a per-dependency serialized fallback build.
                     cache_error = str(exc)[-2000:]
                 temp = self.shared / f".{key}.tmp.{os.getpid()}"
                 if temp.exists():
@@ -751,6 +955,11 @@ class AgentWorkspaceManager:
         if package and not PACKAGE_RE.fullmatch(package):
             raise ValueError("Invalid Lake package name")
         _, project = self._get(token)
+        self._set_job_progress(
+            "updating_dependencies",
+            detail=f"Updating {package or 'all exact dependencies'}",
+            force=True,
+        )
         local_packages = project / ".lake" / "packages"
         if local_packages.is_symlink():
             local_packages.unlink()
@@ -888,11 +1097,10 @@ class AgentWorkspaceManager:
 
     def _build(self, project: Path) -> dict:
         started = time.monotonic()
-        output = self._run(
+        output, dependency_cache = self._run_lake_build(
+            project,
             ["lake", "build", "RiemannResearch", "--quiet"],
-            cwd=project,
             timeout=3600,
-            lean_num_threads=self.lake_build_threads,
         )
         result = {
             "command": "lake build RiemannResearch --quiet",
@@ -900,6 +1108,7 @@ class AgentWorkspaceManager:
             "lean_num_threads": self.lake_build_threads,
             "output": "\n".join(output.splitlines()[-20:]),
             "cache": "shared dependencies and commit-keyed seed; private per-clone .lake/build",
+            "dependency_cache": dependency_cache,
         }
         result["project_cache"] = self._publish_project_cache(project)
         self._record_metric(
@@ -1023,11 +1232,10 @@ class AgentWorkspaceManager:
         targets = self._affected_lean_targets(project, changed_modules)
         lake_targets = [f"+{module}" for module in targets]
         started = time.monotonic()
-        output = self._run(
+        output, dependency_cache = self._run_lake_build(
+            project,
             ["lake", "build", *lake_targets, "--quiet"],
-            cwd=project,
             timeout=3600,
-            lean_num_threads=self.lake_build_threads,
         )
         result = {
             "command": f"lake build <{len(targets)} affected module(s)> --quiet",
@@ -1041,6 +1249,7 @@ class AgentWorkspaceManager:
             "lean_num_threads": self.lake_build_threads,
             "output": "\n".join(output.splitlines()[-20:]),
             "cache": "shared dependencies; private per-clone affected-module build",
+            "dependency_cache": dependency_cache,
         }
         self._record_metric(
             "checkpoint_validation",
@@ -1064,11 +1273,13 @@ class AgentWorkspaceManager:
         if not 5 <= len(message) <= 120 or "\n" in message:
             raise ValueError("Commit message must be one line containing 5-120 characters")
         meta, project = self._get(token)
+        self._set_job_progress("auditing", detail="Auditing changed source", force=True)
         warnings = self._scan(project)
         warnings.extend(self._architecture_audit(project))
         if warnings:
             raise ValueError("Lean source audit failed:\n" + "\n".join(warnings[:100]))
         build = self._checkpoint_validation(project)
+        self._set_job_progress("committing", detail="Creating local checkpoint", force=True)
         self._run([
             "git", "add", "--", "RiemannResearch", "RiemannResearch.lean", "README.md",
             "lakefile.toml", "lake-manifest.json", "lean-toolchain", ".gitignore", "AGENTS.md",
@@ -1087,7 +1298,9 @@ class AgentWorkspaceManager:
                 "project_cache": project_cache,
             }
 
+        self._set_job_progress("publishing", detail="Waiting for publication lock", force=True)
         with self._lock(self.state / ".publish.lock"):
+            self._set_job_progress("publishing", detail="Synchronizing with origin/main", force=True)
             self._run(["git", "fetch", "origin", "main"], cwd=project)
             origin = self._run(["git", "rev-parse", "origin/main"], cwd=project)
             base = meta["base_commit"]
@@ -1106,6 +1319,11 @@ class AgentWorkspaceManager:
                     published = origin
                     integrated = True
                 else:
+                    self._set_job_progress(
+                        "integrating",
+                        detail="Validating changes against newer origin/main",
+                        force=True,
+                    )
                     integration_parent = self.root / "_integration"
                     integration_parent.mkdir(parents=True, exist_ok=True)
                     integration = Path(tempfile.mkdtemp(prefix="publish-", dir=integration_parent))
@@ -1194,12 +1412,12 @@ class AgentWorkspaceManager:
 
     def _queue_position(self, job_id: str) -> int | None:
         with self._job_guard:
-            if self._active_job == job_id:
+            if job_id in self._active_jobs:
                 return 0
             with self._job_queue.mutex:
                 pending = list(self._job_queue.queue)
             try:
-                return pending.index(job_id) + (1 if self._active_job else 0) + 1
+                return pending.index(job_id) + 1
             except ValueError:
                 job = self._read_job(job_id)
                 return 1 if job.get("state") == "queued" else None
@@ -1251,9 +1469,9 @@ class AgentWorkspaceManager:
                 job_id = existing["job_id"]
                 position = self._queue_position_unlocked(job_id)
                 retry_after = (
-                    45
+                    60
                     if existing["state"] == "running"
-                    else min(180, 60 + 30 * max((position or 1) - 1, 0))
+                    else min(120, 30 + 15 * max((position or 1) - 1, 0))
                 )
                 return {
                     "accepted": False,
@@ -1278,6 +1496,15 @@ class AgentWorkspaceManager:
                 "arguments": arguments,
                 "state": "queued",
                 "submitted_at": time.time(),
+                "progress": {
+                    "phase": "queued",
+                    "detail": "Waiting for an available workspace worker",
+                    "current": None,
+                    "total": None,
+                    "percent": None,
+                    "phase_started_at": time.time(),
+                    "updated_at": time.time(),
+                },
             }
             self._write_job(job)
             self._job_queue.put(job_id)
@@ -1294,21 +1521,20 @@ class AgentWorkspaceManager:
             "job_id": job_id,
             "state": "queued",
             "queue_position": position,
-            "retry_after_seconds": min(
-                180, 60 + 30 * max((position or 1) - 1, 0)
-            ),
+            "worker_count": self.job_workers,
+            "retry_after_seconds": min(120, 30 + 15 * max((position or 1) - 1, 0)),
             "instruction": (
                 "Poll after retry_after_seconds until terminal. Do not resubmit."
             ),
         }
 
     def _queue_position_unlocked(self, job_id: str) -> int | None:
-        if self._active_job == job_id:
+        if job_id in self._active_jobs:
             return 0
         with self._job_queue.mutex:
             pending = list(self._job_queue.queue)
         try:
-            return pending.index(job_id) + (1 if self._active_job else 0) + 1
+            return pending.index(job_id) + 1
         except ValueError:
             job = self._read_job(job_id)
             return 1 if job.get("state") == "queued" else None
@@ -1362,10 +1588,13 @@ class AgentWorkspaceManager:
         while True:
             job_id = self._job_queue.get()
             with self._job_guard:
-                self._active_job = job_id
+                self._active_jobs.add(job_id)
                 job = self._read_job(job_id)
                 job.update(state="running", started_at=time.time())
                 self._write_job(job)
+            self._job_local.job_id = job_id
+            self._job_local.last_progress_write = 0.0
+            self._job_local.progress = {}
             try:
                 result = self._execute_job(job)
             except Exception as exc:
@@ -1377,7 +1606,18 @@ class AgentWorkspaceManager:
             else:
                 job.update(state="succeeded", finished_at=time.time(), result=result)
             finally:
-                self._write_job(job)
+                with self._job_guard:
+                    current = self._read_job(job_id)
+                    current.update(job)
+                    progress = current.get("progress", {})
+                    progress.update(
+                        phase="complete" if job.get("state") == "succeeded" else "failed",
+                        percent=100.0 if job.get("state") == "succeeded" else progress.get("percent"),
+                        updated_at=time.time(),
+                    )
+                    current["progress"] = progress
+                    self._write_job(current)
+                    self._active_jobs.discard(job_id)
                 self._record_metric(
                     "job_finished",
                     job_id=job_id,
@@ -1389,8 +1629,8 @@ class AgentWorkspaceManager:
                         3,
                     ),
                 )
-                with self._job_guard:
-                    self._active_job = None
+                self._job_local.job_id = None
+                self._job_local.progress = {}
                 self._job_queue.task_done()
 
     @staticmethod
@@ -1417,6 +1657,8 @@ class AgentWorkspaceManager:
             if key not in {"arguments"}
         }
         response["queue_position"] = self._queue_position(job_id)
+        response["worker_count"] = self.job_workers
+        response["active_job_count"] = len(self._active_jobs)
         response["elapsed_seconds"] = round(
             (job.get("finished_at", now) - job.get("started_at", job["submitted_at"])),
             3,
@@ -1429,14 +1671,22 @@ class AgentWorkspaceManager:
         if response["terminal"]:
             retry_after = 0
         elif job["state"] == "running":
-            retry_after = 45
+            retry_after = 60
         else:
-            # Poll less frequently as the job sits farther back in the FIFO.
-            retry_after = min(
-                180,
-                60 + 30 * max((response["queue_position"] or 1) - 1, 0),
-            )
+            retry_after = min(120, 30 + 15 * max((response["queue_position"] or 1) - 1, 0))
         response["retry_after_seconds"] = retry_after
+        progress = response.get("progress")
+        if job["state"] == "running" and isinstance(progress, dict):
+            current = progress.get("current")
+            total = progress.get("total")
+            phase_started = progress.get("phase_started_at")
+            if current and total and phase_started and current < total:
+                phase_elapsed = max(0.0, now - float(phase_started))
+                estimated_total = phase_elapsed * total / current
+                progress["estimated_remaining_seconds"] = round(
+                    max(0.0, estimated_total - phase_elapsed), 1
+                )
+                progress["estimate_note"] = "Task-count estimate; Lean tasks vary in cost."
         if "result" in response:
             response["result"] = self._compact_result(
                 response["result"], include_logs=include_logs

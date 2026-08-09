@@ -33,9 +33,10 @@
 - Read only relevant source ranges. Use targeted diagnostics or verification
   during development. Diagnostics are compact by default; request full details
   only when the bounded result omits evidence needed to repair the proof.
-- Long builds, updates, and checkpoints use one FIFO worker. Submit once and
-  poll `agent_workspace_job_status` no sooner than `retry_after_seconds`; never
-  resubmit a pending job.
+- Long builds, updates, and checkpoints use a bounded worker queue. Submit once
+  and poll `agent_workspace_job_status` no sooner than `retry_after_seconds`;
+  never resubmit a pending job. Running status reports the current phase, Lake
+  task percentage when available, and a rough task-count ETA.
 - `agent_workspace_checkpoint` performs the source audit and change-aware
   validation before commit and serialized publication. It skips Lean for
   documentation-only changes and otherwise builds changed modules plus local
@@ -46,10 +47,13 @@
   once and wait for it before validation.
 - Dependency artifacts are shared read-mostly. Each clone has its own writable
   project build directory, seeded by exact commit and dependency environment.
-  Lake builds use at most four threads. The dependency environment is keyed by
-  `lean-toolchain`, `lakefile.toml`, and `lake-manifest.json`; Lake fills any
-  genuinely missing artifact during the serialized build, and later agents
-  reuse it through that shared environment.
+  Up to two isolated jobs may build concurrently, each with at most eight Lean
+  threads; publication remains serialized. Before each build, a protected
+  `lake exe cache get` preflight fills available binary artifacts. If that
+  preflight is incomplete, builds for the same dependency key serialize while
+  Lake fills missing artifacts, preventing shared-cache corruption. The exact
+  environment is keyed by `lean-toolchain`, `lakefile.toml`, and
+  `lake-manifest.json`.
 - Automatic cleanup archives only old clean published or unchanged clones.
   Dirty trees and unpublished commits are retained. Reopening a token restores
   an archived clone; Lean processes restart on demand.

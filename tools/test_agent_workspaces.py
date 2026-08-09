@@ -33,7 +33,13 @@ class TestManager(AgentWorkspaceManager):
                 self.active_test_builds,
             )
         try:
+            self._set_job_progress(
+                "building", detail="simulated first task", current=1, total=2, force=True
+            )
             time.sleep(0.2)
+            self._set_job_progress(
+                "building", detail="simulated second task", current=2, total=2, force=True
+            )
             return {
                 "command": "test-build",
                 "elapsed_seconds": 0,
@@ -74,12 +80,16 @@ with tempfile.TemporaryDirectory() as raw:
     os.environ["LEAN_SHARED_DEPS_ROOT"] = str(temp / "shared")
     os.environ["LEAN_SHARED_PROJECT_BUILDS_ROOT"] = str(temp / "shared-project-builds")
     os.environ["LEAN_NUM_THREADS"] = "8"
-    os.environ["LEAN_LAKE_BUILD_THREADS"] = "4"
+    os.environ["LEAN_LAKE_BUILD_THREADS"] = "8"
+    os.environ["LEAN_JOB_WORKERS"] = "2"
     fake_bin = temp / "bin"
     fake_bin.mkdir()
     fake_lake = fake_bin / "lake"
     fake_lake.write_text(
         "#!/bin/sh\n"
+        "if [ \"$1\" = exe ]; then echo simulated-cache-ready; exit 0; fi\n"
+        "if [ \"$1\" = build ]; then "
+        "printf '[1/2] Building Test.One\\r[2/2] Built Test.One\\n'; exit 0; fi\n"
         "if grep -q FAIL \"$3\"; then echo simulated-error; exit 1; fi\n"
         "echo simulated-verified\n"
     )
@@ -94,12 +104,18 @@ with tempfile.TemporaryDirectory() as raw:
         can_archive=lambda path: str(path) not in active_projects,
     )
     assert manager.lean_num_threads == 8
-    assert manager.lake_build_threads == 4
+    assert manager.lake_build_threads == 8
+    assert manager.job_workers == 2
     assert manager._run(
         ["sh", "-c", 'printf %s "$LEAN_NUM_THREADS"'],
         cwd=source,
         lean_num_threads=manager.lake_build_threads,
-    ) == "4"
+    ) == "8"
+    assert manager._parse_lake_progress("[17/40] Building Example") == (
+        17,
+        40,
+        "Building Example",
+    )
 
     first = manager.open()
     first_root = Path(first["project_root"])
@@ -115,6 +131,12 @@ with tempfile.TemporaryDirectory() as raw:
     assert first["project_root"] != second["project_root"]
     first_token = first["workspace_token"]
     second_token = second["workspace_token"]
+    streamed_output, dependency_cache = manager._run_lake_build(
+        first_root, ["lake", "build", "RiemannResearch", "--quiet"]
+    )
+    assert dependency_cache["status"] == "complete"
+    assert "simulated-cache-ready" in dependency_cache["output"]
+    assert "[2/2] Built Test.One" in streamed_output
     assert manager._relative(first_root, "lakefile.toml", writable=True)[0] == "lakefile.toml"
     listed = manager.list_files(first_token, pattern="Basic", limit=1)
     assert listed["files"] == ["RiemannResearch/Basic.lean"]
@@ -136,12 +158,13 @@ with tempfile.TemporaryDirectory() as raw:
     second_job = manager.submit_build(second_token)
     assert duplicate_job["existing"]
     assert duplicate_job["job_id"] == first_job["job_id"]
-    assert duplicate_job["retry_after_seconds"] >= 20
+    assert duplicate_job["retry_after_seconds"] >= 30
     assert second_job["queue_position"] is not None
     queued_status = manager.job_status(second_job["job_id"])
-    assert queued_status["retry_after_seconds"] >= 45
     if queued_status["state"] == "queued":
-        assert queued_status["retry_after_seconds"] >= 60
+        assert queued_status["retry_after_seconds"] >= 30
+    else:
+        assert queued_status["retry_after_seconds"] == 60
     try:
         manager.submit_checkpoint(first_token, "Blocked checkpoint")
         raise AssertionError("a second job kind was queued for the same workspace")
@@ -153,21 +176,31 @@ with tempfile.TemporaryDirectory() as raw:
     except RuntimeError as exc:
         assert first_job["job_id"] in str(exc)
     deadline = time.monotonic() + 5
+    saw_running_progress = False
     while time.monotonic() < deadline:
         first_status = manager.job_status(first_job["job_id"])
         second_status = manager.job_status(second_job["job_id"])
+        if (
+            first_status["state"] == "running"
+            and first_status.get("progress", {}).get("percent") == 50.0
+        ):
+            saw_running_progress = True
+            assert first_status["progress"]["estimated_remaining_seconds"] >= 0
         if first_status["terminal"] and second_status["terminal"]:
             break
         time.sleep(0.01)
     assert first_status["state"] == "succeeded"
     assert second_status["state"] == "succeeded"
+    assert first_status["progress"]["phase"] == "complete"
+    assert first_status["progress"]["percent"] == 100.0
+    assert saw_running_progress
     assert first_status["retry_after_seconds"] == 0
     assert "output" not in first_status["result"]
     first_status_with_logs = manager.job_status(
         first_job["job_id"], include_logs=True
     )
     assert first_status_with_logs["result"]["output"] == "simulated-build-log"
-    assert manager.max_active_test_builds == 1
+    assert manager.max_active_test_builds == 2
     run_ok = manager.run_code(first_token, "theorem scratch : True := by trivial\n")
     assert run_ok["verified"] and "simulated-verified" in run_ok["output"]
     run_bad = manager.run_code(first_token, "FAIL\n")
