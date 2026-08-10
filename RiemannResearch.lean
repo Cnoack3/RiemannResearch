@@ -10,6 +10,7 @@ import RiemannResearch.AlgebraicGeometry.FpqcH1ScalarExtension
 import RiemannResearch.AlgebraicGeometry.SerreIIConjecture
 import RiemannResearch.AlgebraicGeometry.SerreIINonE8
 import RiemannResearch.AlgebraicGeometry.SerreIIE8AnchoredGauge
+import RiemannResearch.AlgebraicGeometry.SerreIIE8Completion
 import RiemannResearch.AlgebraicGeometry.SerreIIE8SubsystemInduction
 import RiemannResearch.AlgebraicGeometry.SerreIITypeA
 import RiemannResearch.AlgebraicGeometry.SerreIITypeB

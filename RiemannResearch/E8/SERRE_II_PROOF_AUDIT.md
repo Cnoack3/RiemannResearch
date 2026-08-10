@@ -297,11 +297,13 @@ formalization. The attached artifact's exact status is in the theorem ledger.
    subgroup H has neutral H1-image after every finite extension, the maximal-
    torus fixed locus in the twisted reduction variety is finite etale of degree
    [W(G):W(H)], and every one of its residue fields splits the torsor. Applied
-   to D8, A2E6, and A4A4 in the corrected Theorem 5.16 packet, this yields
-   splitting cycles of degrees 135, 11200, and 12096. The named Lean cycle
-   `-1417 z_D8 + 16 z_A2E6 + z_A4A4` has degree one. The geometric proof is
-   informal/source-audited; the corrected degrees and signed identity are
-   kernel checked in E8/SubgroupSieve.lean.
+   to D8, (A2)^4, and (A4)^2 in the source-correct Theorem 5.16 packet, this
+   yields splitting cycles of degrees 135, 11200, and 12096. Totaro's separate
+   A2E6 row has index 1120. The named Lean cycle
+   `-1417 z_D8 + 16 z_(A2)^4 + z_(A4)^2` has degree one. The geometric proof
+   is informal/source-audited; the degrees, labels, and signed identity are
+   audited against Totaro Section 8 and kernel checked arithmetically in
+   E8/SubgroupSieve.lean.
 1. After choosing a chamber-normalized cocharacter and supplying the
    characteristic-zero descent, the one-sided wonderful compactification has
    the same point fields as the twisted Borel variety. For inner torsors these

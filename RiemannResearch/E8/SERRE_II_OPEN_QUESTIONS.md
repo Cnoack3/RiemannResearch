@@ -2,7 +2,8 @@
 
 This ledger separates mathematical questions from formalization work. A
 missing Lean proof is not called an open mathematical problem when the cited
-literature already contains a proof.
+literature already contains a proof. The exact finite completion route and
+its reference list are in `SERRE_II_COMPLETION_PROOF_OBLIGATIONS.md`.
 
 ## A. Mathematical questions stated by the manuscript
 
@@ -17,6 +18,11 @@ literature already contains a proof.
    the degree-five and degree-six local gauges, prove that the transition
    `delta = g5 * g6⁻¹` lies in the product of their two fixed-point groups;
    in the intended E8 field realization this is `delta ∈ E8(L5) E8(L6) ⊆ E8(M)`.
+7. **Certified-survivor common gauge:** for each of the 31 perfect subsystem-
+   free lifts, prove simultaneous E8-gauge compatibility on the admissible
+   toral-cocycle locus. Binary Target 8.1 and full-Weyl Question 5.22 are the
+   smallest and largest instances. After the four binary rows and the full-
+   Weyl row, 26 cases remain.
 
 Lean's `pointDescentAt_iff_of_pointwise_iff`, together with the pointwise
 equivalences assembled in `universalFixedLocusAndSplittingField`, verifies
