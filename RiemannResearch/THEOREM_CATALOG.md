@@ -475,3 +475,10 @@ are:
 | `RiemannResearch.AlgebraicGeometry.FpqcH1RestrictionSystem.map_neutral` | `RiemannResearch.AlgebraicGeometry.FpqcH1ScalarExtension` | Every supplied scalar-extension map lands in fpqc H¹ of the actual tensor-product base-changed group and preserves the neutral class | Kernel checked interface law; construction and functoriality of the scalar-extension map remain open |
 | `RiemannResearch.AlgebraicGeometry.SerreII.TrialitarianRestrictionData.ofFpqcH1RestrictionSystem_restrict_neutral` | `RiemannResearch.AlgebraicGeometry.SerreIITypeDScalarExtension` | A typed family of finite field extensions and concrete fpqc-H¹ scalar-extension maps supplies the restriction data used by the trialitarian zero-cycle reduction | Kernel checked adapter; the scalar-extension maps themselves remain explicit inputs |
 
+## E8 subsystem-induction exclusion
+
+| Declaration | Module | Verified consequence | Status |
+|---|---|---|---|
+| `RiemannResearch.AlgebraicGeometry.SerreII.E8SubsystemInduction.induced_eq_neutral` | `RiemannResearch.AlgebraicGeometry.SerreIIE8SubsystemInduction` | If all six subsystem source H1 sets satisfy Serre II, every class induced from any selected subsystem is neutral | Kernel checked pointed-set implication; subsystem group schemes, embeddings, H1 maps, and six Serre-II providers remain explicit inputs |
+| `RiemannResearch.AlgebraicGeometry.SerreII.E8SubsystemInduction.exists_induced_iff_eq_neutral` | `RiemannResearch.AlgebraicGeometry.SerreIIE8SubsystemInduction` | For each of half-spin D8, A8, E7 A1, E6 A2, A4 A4, and G2 F4, its induction image is exactly the neutral target class under the corresponding Serre-II provider | Kernel checked conditional equivalence |
+| `RiemannResearch.AlgebraicGeometry.SerreII.E8SubsystemInduction.nonneutral_not_induced_from_six_serreII_subsystems` | `RiemannResearch.AlgebraicGeometry.SerreIIE8SubsystemInduction` | A nonneutral target class lies in none of the six proper maximal-rank subsystem induction images | Kernel checked conditional exclusion; central quotients and concrete fpqc induction remain unformalized |
