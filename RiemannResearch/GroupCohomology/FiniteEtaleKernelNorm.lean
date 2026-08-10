@@ -23,6 +23,58 @@ kernel–norm hypothesis.
 
 namespace RiemannResearch.GroupCohomology
 
+/-- The repeated diagonal restriction–corestriction sum equals the original
+class when its total degree is congruent to one modulo an annihilator.
+
+Source: the proof strategy of Proposition 6.34 on page 36 of the
+user-provided E8 Serre II memorandum. -/
+theorem diagonalCorestriction_eq_of_annihilator_bezout
+    {ι A : Type*} [AddCommGroup A]
+    (B : ι → Type*) [∀ i, AddCommGroup (B i)]
+    (s : Finset ι) (degree multiplicity : ι → ℕ)
+    (res : ∀ i, A →+ B i) (cor : ∀ i, B i →+ A)
+    (hindex : ∀ i x, cor i (res i x) = degree i • x)
+    {a : A} {e q : ℕ}
+    (he : e • a = 0)
+    (hcoefficient :
+      ∑ i ∈ s, multiplicity i * degree i = 1 + q * e) :
+    (∑ i ∈ s, multiplicity i • cor i (res i a)) = a := by
+  calc
+    (∑ i ∈ s, multiplicity i • cor i (res i a)) =
+        ∑ i ∈ s, multiplicity i • (degree i • a) := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          rw [hindex i a]
+    _ = ∑ i ∈ s, (multiplicity i * degree i) • a := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          rw [smul_smul]
+    _ = (∑ i ∈ s, multiplicity i * degree i) • a :=
+      Finset.sum_smul.symm
+    _ = a := by
+      rw [hcoefficient, add_nsmul, one_nsmul, ← smul_smul,
+        he, smul_zero, add_zero]
+
+/-- At the additive restriction–corestriction boundary, neutrality of the
+diagonal value selected in PDF Proposition 6.34 is equivalent to neutrality of
+the original class. Thus this diagonal kernel-membership assertion is not an
+independent consequence of the Bézout data. -/
+theorem diagonalKernelNorm_iff_neutral
+    {ι A X : Type*} [AddCommGroup A]
+    (B : ι → Type*) [∀ i, AddCommGroup (B i)]
+    (neutral : X) (toClass : A → X)
+    (s : Finset ι) (degree multiplicity : ι → ℕ)
+    (res : ∀ i, A →+ B i) (cor : ∀ i, B i →+ A)
+    (hindex : ∀ i x, cor i (res i x) = degree i • x)
+    {a : A} {e q : ℕ}
+    (he : e • a = 0)
+    (hcoefficient :
+      ∑ i ∈ s, multiplicity i * degree i = 1 + q * e) :
+    toClass (∑ i ∈ s, multiplicity i • cor i (res i a)) = neutral ↔
+      toClass a = neutral := by
+  rw [diagonalCorestriction_eq_of_annihilator_bezout
+    B s degree multiplicity res cor hindex he hcoefficient]
+
 /-- A diagonal restriction–corestriction value equals the original class when
 its total degree is congruent to one modulo an annihilator. Therefore neutrality
 of that diagonal value implies neutrality of the original class. -/
@@ -39,28 +91,10 @@ theorem eq_neutral_of_diagonalKernelNorm
       ∑ i ∈ s, multiplicity i * degree i = 1 + q * e)
     (hkernelNorm :
       toClass (∑ i ∈ s, multiplicity i • cor i (res i a)) = neutral) :
-    toClass a = neutral := by
-  have hcorestriction :
-      (∑ i ∈ s, multiplicity i • cor i (res i a)) =
-        (∑ i ∈ s, multiplicity i * degree i) • a := by
-    calc
-      (∑ i ∈ s, multiplicity i • cor i (res i a)) =
-          ∑ i ∈ s, multiplicity i • (degree i • a) := by
-            apply Finset.sum_congr rfl
-            intro i hi
-            rw [hindex i a]
-      _ = ∑ i ∈ s, (multiplicity i * degree i) • a := by
-            apply Finset.sum_congr rfl
-            intro i hi
-            rw [smul_smul]
-      _ = (∑ i ∈ s, multiplicity i * degree i) • a :=
-        Finset.sum_smul.symm
-  have hmultiple :
-      (∑ i ∈ s, multiplicity i * degree i) • a = a := by
-    rw [hcoefficient, add_nsmul, one_nsmul, ← smul_smul,
-      he, smul_zero, add_zero]
-  rw [hcorestriction, hmultiple] at hkernelNorm
-  exact hkernelNorm
+    toClass a = neutral :=
+  (diagonalKernelNorm_iff_neutral
+    B neutral toClass s degree multiplicity res cor hindex he hcoefficient).mp
+    hkernelNorm
 
 /-- The finite-étale form: componentwise local neutrality and a finite-étale
 kernel–norm principle provide the diagonal hypothesis above. -/

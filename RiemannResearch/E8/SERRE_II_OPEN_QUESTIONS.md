@@ -26,7 +26,10 @@ prime tower; hence the displayed induction in the cited source is insufficient.
 Proposition 6.35 is an equivalence with E8 Serre II, not independent evidence.
 Lean checks the abstract two-way implication in
 `universalFiniteEtaleKernelNormPrinciple_iff_all_classes_neutral`, under
-explicit restriction-corestriction and local Bezout data. The E8 instance of
+explicit restriction-corestriction and local Bezout data. Moreover,
+`diagonalKernelNorm_iff_neutral` verifies that after the Proposition 6.34
+Bezout choice, the requested diagonal kernel membership is exactly neutrality
+of the original class, not an independent additive lemma. The E8 instance of
 the kernel-norm principle—Conjecture 6.33—remains open.
 Thang's corestriction theorem proves the required kernel principle over local
 and global characteristic-zero fields, not arbitrary fields of cohomological
