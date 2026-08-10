@@ -174,17 +174,17 @@ theorem singleton_isCohomologous_iff
 
 variable [HasBinaryProduct (U ⨯ U) U]
 
-/-- Projection to the zeroth factor of the chosen right-associated triple
+/-- Projection to the zeroth factor of the chosen left-associated triple
 product `(U × U) × U`. -/
 def singletonTripleProj0 : (U ⨯ U) ⨯ U ⟶ U :=
   prod.fst ≫ prod.fst
 
-/-- Projection to the first factor of the chosen right-associated triple
+/-- Projection to the first factor of the chosen left-associated triple
 product `(U × U) × U`. -/
 def singletonTripleProj1 : (U ⨯ U) ⨯ U ⟶ U :=
   prod.fst ≫ prod.snd
 
-/-- Projection to the second factor of the chosen right-associated triple
+/-- Projection to the second factor of the chosen left-associated triple
 product `(U × U) × U`. -/
 def singletonTripleProj2 : (U ⨯ U) ⨯ U ⟶ U :=
   prod.snd
@@ -200,6 +200,138 @@ def singletonTripleFace12 : (U ⨯ U) ⨯ U ⟶ U ⨯ U :=
 /-- The zero-two face from the triple overlap to the double overlap. -/
 def singletonTripleFace02 : (U ⨯ U) ⨯ U ⟶ U ⨯ U :=
   prod.lift (singletonTripleProj0 U) (singletonTripleProj2 U)
+
+variable [HasBinaryProduct U (U ⨯ U)]
+
+/-- The canonical reassociation from the left-associated singleton triple
+overlap to the right-associated triple overlap used by tensor coordinates. -/
+def singletonTripleAssociatorIso :
+    ((U ⨯ U) ⨯ U) ≅ (U ⨯ (U ⨯ U)) where
+  hom :=
+    prod.lift (prod.fst ≫ prod.fst)
+      (prod.lift (prod.fst ≫ prod.snd) prod.snd)
+  inv :=
+    prod.lift (prod.lift prod.fst (prod.snd ≫ prod.fst))
+      (prod.snd ≫ prod.snd)
+  hom_inv_id := by
+    ext <;> simp only [prod.lift_snd_assoc, prod.lift_fst,
+      prod.lift_snd, prod.comp_lift, Category.id_comp]
+  inv_hom_id := by
+    ext <;> simp only [prod.lift_fst_assoc, prod.lift_fst,
+      prod.lift_snd, prod.comp_lift, Category.id_comp]
+
+/-- Projection to the zeroth factor of `U × (U × U)`. -/
+def singletonRightTripleProj0 : U ⨯ (U ⨯ U) ⟶ U :=
+  prod.fst
+
+/-- Projection to the first factor of `U × (U × U)`. -/
+def singletonRightTripleProj1 : U ⨯ (U ⨯ U) ⟶ U :=
+  prod.snd ≫ prod.fst
+
+/-- Projection to the second factor of `U × (U × U)`. -/
+def singletonRightTripleProj2 : U ⨯ (U ⨯ U) ⟶ U :=
+  prod.snd ≫ prod.snd
+
+/-- The zero-one face on the right-associated triple overlap. -/
+def singletonRightTripleFace01 : U ⨯ (U ⨯ U) ⟶ U ⨯ U :=
+  prod.lift (singletonRightTripleProj0 U) (singletonRightTripleProj1 U)
+
+/-- The one-two face on the right-associated triple overlap. -/
+def singletonRightTripleFace12 : U ⨯ (U ⨯ U) ⟶ U ⨯ U :=
+  prod.lift (singletonRightTripleProj1 U) (singletonRightTripleProj2 U)
+
+/-- The zero-two face on the right-associated triple overlap. -/
+def singletonRightTripleFace02 : U ⨯ (U ⨯ U) ⟶ U ⨯ U :=
+  prod.lift (singletonRightTripleProj0 U) (singletonRightTripleProj2 U)
+
+/-- Reassociation carries the right-associated zero-one face to the
+left-associated zero-one face. -/
+@[simp]
+theorem singletonTripleAssociatorIso_hom_comp_rightFace01 :
+    (singletonTripleAssociatorIso U).hom ≫ singletonRightTripleFace01 U =
+      singletonTripleFace01 U := by
+  ext <;> simp only [singletonTripleAssociatorIso,
+    singletonRightTripleFace01, singletonRightTripleProj0,
+    singletonRightTripleProj1, singletonTripleFace01,
+    singletonTripleProj0, singletonTripleProj1, prod.lift_snd_assoc,
+    prod.lift_fst, prod.lift_snd, prod.comp_lift]
+
+/-- Reassociation carries the right-associated one-two face to the
+left-associated one-two face. -/
+@[simp]
+theorem singletonTripleAssociatorIso_hom_comp_rightFace12 :
+    (singletonTripleAssociatorIso U).hom ≫ singletonRightTripleFace12 U =
+      singletonTripleFace12 U := by
+  ext <;> simp only [singletonTripleAssociatorIso,
+    singletonRightTripleFace12, singletonRightTripleProj1,
+    singletonRightTripleProj2, singletonTripleFace12,
+    singletonTripleProj1, singletonTripleProj2, prod.lift_snd_assoc,
+    prod.lift_fst, prod.lift_snd, prod.comp_lift]
+
+/-- Reassociation carries the right-associated zero-two face to the
+left-associated zero-two face. -/
+@[simp]
+theorem singletonTripleAssociatorIso_hom_comp_rightFace02 :
+    (singletonTripleAssociatorIso U).hom ≫ singletonRightTripleFace02 U =
+      singletonTripleFace02 U := by
+  ext <;> simp only [singletonTripleAssociatorIso,
+    singletonRightTripleFace02, singletonRightTripleProj0,
+    singletonRightTripleProj2, singletonTripleFace02,
+    singletonTripleProj0, singletonTripleProj2, prod.lift_snd_assoc,
+    prod.lift_fst, prod.lift_snd, prod.comp_lift]
+
+/-- Inverse reassociation carries the left-associated zero-one face to the
+right-associated zero-one face. -/
+@[simp]
+theorem singletonTripleAssociatorIso_inv_comp_face01 :
+    (singletonTripleAssociatorIso U).inv ≫ singletonTripleFace01 U =
+      singletonRightTripleFace01 U := by
+  rw [← singletonTripleAssociatorIso_hom_comp_rightFace01 U,
+    ← Category.assoc, Iso.inv_hom_id, Category.id_comp]
+
+/-- Inverse reassociation carries the left-associated one-two face to the
+right-associated one-two face. -/
+@[simp]
+theorem singletonTripleAssociatorIso_inv_comp_face12 :
+    (singletonTripleAssociatorIso U).inv ≫ singletonTripleFace12 U =
+      singletonRightTripleFace12 U := by
+  rw [← singletonTripleAssociatorIso_hom_comp_rightFace12 U,
+    ← Category.assoc, Iso.inv_hom_id, Category.id_comp]
+
+/-- Inverse reassociation carries the left-associated zero-two face to the
+right-associated zero-two face. -/
+@[simp]
+theorem singletonTripleAssociatorIso_inv_comp_face02 :
+    (singletonTripleAssociatorIso U).inv ≫ singletonTripleFace02 U =
+      singletonRightTripleFace02 U := by
+  rw [← singletonTripleAssociatorIso_hom_comp_rightFace02 U,
+    ← Category.assoc, Iso.inv_hom_id, Category.id_comp]
+
+/-- The singleton Čech cocycle equation is independent of whether the triple
+overlap is parenthesized as `(U × U) × U` or `U × (U × U)`. -/
+theorem singletonCocycleCondition_iff_rightAssociated
+    (s : P.obj (Opposite.op (U ⨯ U))) :
+    P.map (singletonTripleFace01 U).op s *
+          P.map (singletonTripleFace12 U).op s =
+        P.map (singletonTripleFace02 U).op s ↔
+      P.map (singletonRightTripleFace01 U).op s *
+          P.map (singletonRightTripleFace12 U).op s =
+        P.map (singletonRightTripleFace02 U).op s := by
+  constructor
+  · intro h
+    have h' := congrArg
+      (fun z => P.map (singletonTripleAssociatorIso U).inv.op z) h
+    simpa only [map_mul, ← ConcreteCategory.comp_apply, ← P.map_comp,
+      ← op_comp, singletonTripleAssociatorIso_inv_comp_face01,
+      singletonTripleAssociatorIso_inv_comp_face12,
+      singletonTripleAssociatorIso_inv_comp_face02] using h'
+  · intro h
+    have h' := congrArg
+      (fun z => P.map (singletonTripleAssociatorIso U).hom.op z) h
+    simpa only [map_mul, ← ConcreteCategory.comp_apply, ← P.map_comp,
+      ← op_comp, singletonTripleAssociatorIso_hom_comp_rightFace01,
+      singletonTripleAssociatorIso_hom_comp_rightFace12,
+      singletonTripleAssociatorIso_hom_comp_rightFace02] using h'
 
 /-- A section on the double overlap satisfying the single universal
 triple-overlap cocycle equation. -/

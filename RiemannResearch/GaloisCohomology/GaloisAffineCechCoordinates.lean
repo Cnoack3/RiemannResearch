@@ -27,9 +27,10 @@ projection, and twisted projection.  Consequently, an affine-algebra
 cocycle on the tensor-square overlap is equivalent to the coordinate Čech
 cocycle already used in `GaloisCechComparison`.
 
-No representability assumption is made here.  The remaining scheme-level
-step is to transport these algebra homomorphisms through
-`AlgebraicGeometry.Spec.mapMulEquiv` and the affine pullback isomorphisms.
+No representability assumption is made here.  The separate scheme bridge
+transports sections through `AlgebraicGeometry.Spec.mapMulEquiv` and the
+affine pullback isomorphisms; the remaining comparison step is compatibility
+with the three categorical face maps and with the gauge relation.
 -/
 
 namespace RiemannResearch.GaloisCohomology
@@ -46,6 +47,60 @@ variable [CommRing A] [HopfAlgebra K A]
 the Hopf algebra `A`. -/
 abbrev AffineGaloisPoint :=
   WithConv (A →ₐ[K] L)
+
+/-- Affine points of a commutative Hopf algebra form a group under
+convolution when the target is a field extension.
+
+This specializes the proof of Mathlib's `AlgHom.convGroup` while dropping
+its additional `Bialgebra K L` assumption, which is unavailable for a
+general finite field extension `L / K`.  Its priority is deliberately below
+Mathlib's instance, and the two structures agree definitionally whenever the
+stronger target-bialgebra hypothesis is present. -/
+instance (priority := 900) instGroupAffineGaloisPoint :
+    Group (AffineGaloisPoint K L A) where
+  inv f :=
+    WithConv.toConv
+      (f.ofConv.comp (HopfAlgebra.antipodeAlgHom K A))
+  inv_mul_cancel f := by
+    have H :
+        (Algebra.TensorProduct.lmul' K).comp
+            (Algebra.TensorProduct.map f.ofConv f.ofConv) =
+          f.ofConv.comp (Algebra.TensorProduct.lmul' K) := by
+      ext <;> simp
+    trans WithConv.toConv
+      (((Algebra.TensorProduct.lmul' K).comp
+          (Algebra.TensorProduct.map f.ofConv f.ofConv)).comp
+        ((Algebra.TensorProduct.map
+          (HopfAlgebra.antipodeAlgHom K A) (.id _ _)).comp
+            (Bialgebra.comulAlgHom K A)))
+    · rw [AlgHom.comp_assoc,
+          ← AlgHom.comp_assoc
+            (Algebra.TensorProduct.map f.ofConv f.ofConv),
+          ← Algebra.TensorProduct.map_comp]
+      rfl
+    rw [H, AlgHom.comp_assoc, WithConv.ext_iff,
+      ← AlgHom.toLinearMap_injective.eq_iff]
+    change
+      f.ofConv.toLinearMap.comp
+          (WithConv.toConv (HopfAlgebraStruct.antipode K (A := A)) *
+            WithConv.toConv LinearMap.id).ofConv =
+        (1 : WithConv (A →ₗ[K] L)).ofConv
+    rw [LinearMap.antipode_mul_id]
+    ext
+    simp
+
+/-- Under Mathlib's stronger target-bialgebra hypothesis, the field-extension
+convolution group instance is definitionally the existing
+`AlgHom.convGroup`.  Thus the deliberately overlapping instances are
+coherent. -/
+theorem instGroupAffineGaloisPoint_eq_convGroup
+    (K' L' A' : Type u)
+    [Field K'] [Field L'] [Bialgebra K' L']
+    [CommRing A'] [HopfAlgebra K' A'] :
+    instGroupAffineGaloisPoint K' L' A' =
+      (@AlgHom.convGroup K' A' L' inferInstance inferInstance inferInstance
+        inferInstance inferInstance) := by
+  rfl
 
 /-- Galois automorphisms act on affine points by postcomposition. -/
 def affineGaloisPointSMul
@@ -270,6 +325,94 @@ theorem galoisCechFace12_point
   apply WithConv.ofConv_injective
   ext x
   exact galoisCechFace12_eval K L (f.ofConv x) σ ρ
+
+/-- The affine tensor-overlap cocycle equation is exactly the coordinate
+Čech cocycle equation. This packages the compatibility of all three face
+maps with the finite-Galois coordinate decomposition. -/
+theorem galoisCechFace_cocycle_condition_iff
+    [FiniteDimensional K L] [IsGalois K L]
+    (f : WithConv (A →ₐ[K] TensorProduct K L L)) :
+    pullAffinePointAlong K A (galoisCechFace01 K L) f *
+          pullAffinePointAlong K A (galoisCechFace12 K L) f =
+        pullAffinePointAlong K A (galoisCechFace02 K L) f ↔
+      ∀ σ ρ : L ≃ₐ[K] L,
+        galoisDoubleOverlapPointMulEquiv K L A f σ *
+            σ •
+              galoisDoubleOverlapPointMulEquiv K L A f
+                (σ⁻¹ * ρ) =
+          galoisDoubleOverlapPointMulEquiv K L A f ρ := by
+  constructor
+  · intro h σ ρ
+    have h' := congrArg
+      (galoisTripleOverlapPointMulEquiv K L A) h
+    have h'' := congrFun (congrFun h' σ) ρ
+    simpa using h''
+  · intro h
+    apply (galoisTripleOverlapPointMulEquiv K L A).injective
+    funext σ ρ
+    simpa using h σ ρ
+
+/-- An algebra map into the finite-Galois tensor square satisfying the three
+affine Čech face equation. -/
+@[ext]
+structure AffineGaloisCechCocycle
+    [FiniteDimensional K L] [IsGalois K L] where
+  /-- The represented affine-group point on the tensor-square overlap. -/
+  val : WithConv (A →ₐ[K] TensorProduct K L L)
+  /-- The Čech cocycle equation on the tensor-cube overlap. -/
+  cocycle_condition :
+    pullAffinePointAlong K A (galoisCechFace01 K L) val *
+          pullAffinePointAlong K A (galoisCechFace12 K L) val =
+        pullAffinePointAlong K A (galoisCechFace02 K L) val
+
+/-- Finite-Galois tensor-square affine cocycles are exactly the cocycles in
+independent Galois coordinates. -/
+def affineGaloisCechCocycleEquiv
+    [FiniteDimensional K L] [IsGalois K L] :
+    AffineGaloisCechCocycle K L A ≃
+      GaloisCechCocycle (L ≃ₐ[K] L) (AffineGaloisPoint K L A) where
+  toFun f :=
+    { toFun := galoisDoubleOverlapPointMulEquiv K L A f.val
+      cocycle' :=
+        (galoisCechFace_cocycle_condition_iff K L A f.val).mp
+          f.cocycle_condition }
+  invFun a :=
+    { val := (galoisDoubleOverlapPointMulEquiv K L A).symm a.toFun
+      cocycle_condition :=
+        (galoisCechFace_cocycle_condition_iff K L A _).mpr (by
+          intro σ ρ
+          simpa using a.cocycle' σ ρ) }
+  left_inv f := by
+    apply AffineGaloisCechCocycle.ext
+    exact
+      (galoisDoubleOverlapPointMulEquiv K L A).symm_apply_apply f.val
+  right_inv a := by
+    apply GaloisCechCocycle.ext
+    intro σ
+    exact congrFun
+      ((galoisDoubleOverlapPointMulEquiv K L A).apply_symm_apply
+        a.toFun) σ
+
+/-- Composing the tensor-square coordinate equivalence with the standard
+Čech/group-cocycle equivalence identifies affine Čech cocycles with
+inhomogeneous nonabelian Galois cocycles. -/
+def affineGaloisCechCocycleEquivNonabelian
+    [FiniteDimensional K L] [IsGalois K L] :
+    AffineGaloisCechCocycle K L A ≃
+      NonabelianCocycle (L ≃ₐ[K] L) (AffineGaloisPoint K L A) :=
+  (affineGaloisCechCocycleEquiv K L A).trans
+    (galoisCechCocycleEquiv _ _)
+
+/-- The affine-to-nonabelian cocycle equivalence evaluates through the
+finite-Galois double-overlap coordinate decomposition. -/
+@[simp]
+theorem affineGaloisCechCocycleEquivNonabelian_apply
+    [FiniteDimensional K L] [IsGalois K L]
+    (f : AffineGaloisCechCocycle K L A)
+    (σ : L ≃ₐ[K] L) :
+    affineGaloisCechCocycleEquivNonabelian K L A f σ =
+      galoisDoubleOverlapPointMulEquiv K L A f.val σ :=
+  rfl
 
 end
 

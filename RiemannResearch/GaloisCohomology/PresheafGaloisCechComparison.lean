@@ -112,6 +112,24 @@ theorem h1EquivNonabelian_class
         (galoisCechCocycleEquiv Γ G (D.cocycleEquiv a)) :=
   rfl
 
+include D
+
+/-- A fixed-cover comparison datum transfers the vanishing statement
+(`H¹` is a singleton) exactly to discrete nonabelian `H¹`. This isolates
+construction of the cocycle comparison datum as the remaining comparison
+obligation for Serre-II applications. -/
+theorem subsingleton_h1_iff :
+    Subsingleton (PresheafOfGroups.H1 P U) ↔
+      Subsingleton (NonabelianH1 Γ G) := by
+  let e := h1EquivNonabelian D
+  constructor
+  · intro h
+    exact ⟨fun x y =>
+      e.symm.injective (h.allEq (e.symm x) (e.symm y))⟩
+  · intro h
+    exact ⟨fun x y =>
+      e.injective (h.allEq (e x) (e y))⟩
+
 end PresheafGaloisCechComparison
 
 end

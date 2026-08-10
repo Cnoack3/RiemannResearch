@@ -271,6 +271,23 @@ def finiteGaloisTripleOverlapGaloisMulEquiv :
   (finiteGaloisTripleOverlapSectionMulEquiv K L A).trans
     (galoisTripleOverlapPointMulEquiv K L A)
 
+/-- Evaluating a section on the finite-Galois triple overlap in Galois
+coordinates agrees with first passing to the tensor-cube coordinate and
+then applying the standard two-variable Galois tensor decomposition. -/
+@[simp]
+theorem finiteGaloisTripleOverlapGaloisMulEquiv_apply_apply_apply
+    (s :
+      (finiteGaloisAffineGroupPresheaf K A).obj
+        (Opposite.op
+          ((finiteGaloisCoverObject K L) ⨯
+            ((finiteGaloisCoverObject K L) ⨯
+              (finiteGaloisCoverObject K L)))))
+    (σ ρ : L ≃ₐ[K] L) (x : A) :
+    ((finiteGaloisTripleOverlapGaloisMulEquiv K L A s σ ρ).ofConv x) =
+      galoisTripleTensorEquiv K L
+        ((finiteGaloisTripleOverlapSectionMulEquiv K L A s).ofConv x) σ ρ := by
+  simp [finiteGaloisTripleOverlapGaloisMulEquiv]
+
 end
 
 end RiemannResearch.GaloisCohomology
