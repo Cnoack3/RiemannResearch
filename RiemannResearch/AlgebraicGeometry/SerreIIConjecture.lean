@@ -62,4 +62,25 @@ theorem conjecture_iff_subsingleton
   · intro h R A _ hField hGroup ξ
     exact (h R A hField hGroup).allEq ξ (FpqcH1.neutral R A)
 
+/-- Serre II is equivalent to the concrete local task of neutralizing every
+fixed-cover Čech class after pullback along a witnessed fpqc refinement. -/
+theorem conjecture_iff_every_class_locally_neutral
+    (Base : BaseCondition)
+    (Group : GroupCondition) :
+    Conjecture Base Group ↔
+      ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+        Base R →
+        Group R A →
+        ∀ (I : Type u) (U : FpqcCover R I) (ξ : FpqcCechH1 R A U),
+          ∃ (K : Type u) (W : FpqcCover R K) (r : W.Refinement U),
+            r.pullbackH1 ξ = FpqcCechH1.neutral R A W := by
+  rw [conjecture_iff_subsingleton]
+  constructor
+  · intro h R A _ hBase hGroup
+    exact (FpqcH1.subsingleton_iff_every_class_locally_neutral R A).mp
+      (h R A hBase hGroup)
+  · intro h R A _ hBase hGroup
+    exact (FpqcH1.subsingleton_iff_every_class_locally_neutral R A).mpr
+      (h R A hBase hGroup)
+
 end RiemannResearch.AlgebraicGeometry.SerreII

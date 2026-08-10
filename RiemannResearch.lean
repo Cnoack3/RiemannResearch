@@ -9,6 +9,7 @@ import RiemannResearch.AlgebraicGeometry.FpqcH1
 import RiemannResearch.AlgebraicGeometry.FpqcH1ScalarExtension
 import RiemannResearch.AlgebraicGeometry.SerreIIConjecture
 import RiemannResearch.AlgebraicGeometry.SerreIINonE8
+import RiemannResearch.AlgebraicGeometry.SerreIIE8AnchoredGauge
 import RiemannResearch.AlgebraicGeometry.SerreIITypeA
 import RiemannResearch.AlgebraicGeometry.SerreIITypeB
 import RiemannResearch.AlgebraicGeometry.SerreIITypeD

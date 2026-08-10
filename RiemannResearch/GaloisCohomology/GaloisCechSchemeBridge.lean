@@ -242,6 +242,22 @@ def finiteGaloisDoubleOverlapGaloisMulEquiv :
   (finiteGaloisDoubleOverlapSectionMulEquiv K L A).trans
     (galoisDoubleOverlapPointMulEquiv K L A)
 
+/-- Evaluating a section on the finite-Galois double overlap in Galois
+coordinates agrees with first passing to the tensor-square coordinate and
+then applying the standard Galois tensor decomposition. -/
+@[simp]
+theorem finiteGaloisDoubleOverlapGaloisMulEquiv_apply_apply
+    (s :
+      (finiteGaloisAffineGroupPresheaf K A).obj
+        (Opposite.op
+          ((finiteGaloisCoverObject K L) ⨯
+            (finiteGaloisCoverObject K L))))
+    (σ : L ≃ₐ[K] L) (x : A) :
+    ((finiteGaloisDoubleOverlapGaloisMulEquiv K L A s σ).ofConv x) =
+      galoisTensorEquiv K L
+        ((finiteGaloisDoubleOverlapSectionMulEquiv K L A s).ofConv x) σ := by
+  simp [finiteGaloisDoubleOverlapGaloisMulEquiv]
+
 /-- Sections on the chosen right-associated triple overlap, directly
 expressed as two-variable Galois-indexed affine-group points. -/
 def finiteGaloisTripleOverlapGaloisMulEquiv :

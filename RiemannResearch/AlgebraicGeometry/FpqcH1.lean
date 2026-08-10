@@ -281,6 +281,34 @@ theorem classOf_eq_neutral_iff_exists_refinement
       _ = classOf R A W (FpqcCechH1.neutral R A W) := by rw [hr]
       _ = neutral R A := classOf_neutral R A W
 
+/-- Global fpqc first cohomology is a singleton exactly when every Čech class
+becomes neutral after some refinement of the cover on which it is represented.
+
+This is a concrete descent criterion: unlike `Subsingleton (FpqcH1 R A)`, its
+right-hand side exposes the cover, refinement, pullback, and neutral cocycle
+that must be constructed in a family-specific Serre-II argument. -/
+theorem subsingleton_iff_every_class_locally_neutral :
+    Subsingleton (FpqcH1.{u, v} R A) ↔
+      ∀ (I : Type v) (U : FpqcCover R I) (ξ : FpqcCechH1 R A U),
+        ∃ (K : Type v) (W : FpqcCover R K) (r : W.Refinement U),
+          r.pullbackH1 ξ = FpqcCechH1.neutral R A W := by
+  constructor
+  · intro h I U ξ
+    apply (classOf_eq_neutral_iff_exists_refinement R A U ξ).mp
+    exact h.allEq _ _
+  · intro h
+    have hneutral :
+        ∀ x : FpqcH1.{u, v} R A, x = neutral R A := by
+      intro x
+      refine Quotient.inductionOn x ?_
+      intro representative
+      change classOf R A representative.cover representative.value =
+        neutral R A
+      exact (classOf_eq_neutral_iff_exists_refinement
+        R A representative.cover representative.value).mpr
+        (h representative.I representative.cover representative.value)
+    exact ⟨fun x y => (hneutral x).trans (hneutral y).symm⟩
+
 end FpqcH1
 
 end
