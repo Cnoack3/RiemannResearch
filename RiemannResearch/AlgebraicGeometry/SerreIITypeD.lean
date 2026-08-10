@@ -32,8 +32,9 @@ fpqc-H¹ neutrality for arbitrary ³D₄ and ⁶D₄ forms. Thus the descent pro
 does not by itself reduce the remaining trialitarian Serre-II problem.
 
 These remain conditional interfaces. In particular, the project does not yet
-construct scalar extension on FpqcH1, instantiate the
-sourced degree-one-cycle provider, or prove coprime restriction descent.
+construct scalar extension on FpqcH1, instantiate the sourced degree-one-cycle
+provider, or prove coprime restriction descent. A typed target and adapter to
+this interface are provided separately in `SerreIITypeDScalarExtension`.
 
 The final declarations also retain the useful Allen-index decomposition without
 changing the base-field hypothesis. They split the arbitrary trialitarian

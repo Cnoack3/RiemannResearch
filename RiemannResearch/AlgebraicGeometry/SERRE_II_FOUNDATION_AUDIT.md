@@ -1,0 +1,166 @@
+# Serre II formalization gap audit
+
+This document tracks the structures needed to replace the project's conditional
+Serre-II assembly interfaces by the intrinsic theorem. “Available” means a
+usable Lean definition exists; it does not mean the mathematical theorem has
+been proved. “Open mathematics” marks a genuine unresolved branch rather than
+an engineering task.
+
+## Available foundations
+
+- Mathlib supplies commutative rings and fields, finite-dimensional extensions,
+  schemes, tensor products, Hopf algebras, central simple algebra carriers, and
+  a quotient carrier named `BrauerGroup`.
+- This project supplies fpqc covers, fixed-cover nonabelian Cech H¹, a global
+  common-refinement quotient `FpqcH1`, affine group objects from Hopf algebras,
+  tensor-product base change of affine group coordinates, fpqc torsors,
+  point-field indices, degree-one splitting cycles, gcd-one descent lemmas, and
+  conditional Dynkin-family assembly.
+- The E8 directory contains substantial finite-group and Weyl-group
+  certificates. These are not yet attached to an intrinsic E8 group scheme and
+  its torsors.
+
+## Added concrete interface
+
+`FpqcH1ScalarExtension.lean` now supplies:
+
+- `FiniteFieldExtension K`, bundling a field `L`, `K`-algebra structure,
+  finite dimensionality, and degree `[L:K]`;
+- `baseChangedFpqcH1 K A E`, whose group is the actual Hopf algebra
+  `E.Extension ⊗[K] A`;
+- `FpqcH1ScalarExtensionMap`, fixing the exact source, target, and neutral law;
+- `FpqcH1RestrictionSystem`, a family of such extensions and maps.
+
+`SerreIITypeDScalarExtension.lean` connects this concrete data to the existing
+trialitarian zero-cycle reduction. The construction of the map on the global
+Cech quotient is still open and is deliberately a field of the interface.
+
+## Missing field and cohomology foundations
+
+1. An intrinsic predicate on `CommRingCat` for fields, perfect fields, and
+   perfect fields of cohomological dimension at most two.
+2. Separable and algebraic closures usable functorially in the project.
+3. Absolute Galois groups as profinite groups and continuous discrete modules.
+4. Continuous Galois cohomology, including p-cohomological dimension and the
+   characteristic-p/Kato variants required by the full conjecture.
+5. Étale/fppf H² and H³, Tate twists, cup products, and comparison with Galois
+   cohomology over fields.
+6. Restriction and corestriction on those groups, transitivity, Mackey laws,
+   and `cor (res x) = [L:K] • x`.
+
+## Missing fpqc H¹ and torsor functoriality
+
+1. Construct scalar extension on fixed-cover Cech cocycles and prove it respects
+   coboundaries, refinements, and common-refinement equivalence.
+2. Descend that operation to `FpqcH1ScalarExtensionMap`; prove identity and
+   composition laws.
+3. Construct the equivalence between `FpqcH1` and isomorphism classes of
+   fpqc torsors.
+4. Prove compatibility with pullback of torsors and comparison with continuous
+   Galois H¹ for smooth affine groups.
+5. Add functoriality under homomorphisms of group schemes, twisting
+   equivalences, and exact sequences of pointed sets.
+
+## Missing algebraic-group structures
+
+1. Finite type/presentation, smoothness, connectedness, reductivity, and
+   semisimplicity for affine group schemes in the representation used here.
+2. Centers, adjoint quotients, derived groups, central isogenies, and simply
+   connected semisimple covers.
+3. Tori, maximal tori, Borels, parabolics, unipotent radicals, and their
+   behavior under scalar extension and twisting.
+4. Inner and outer forms, automorphism group schemes, and nonabelian twisting.
+5. Almost-simple decomposition and reduction of H¹ for semisimple products.
+
+## Missing root data and classification
+
+1. Root data attached to reductive groups, based root data, Dynkin diagrams,
+   and the Galois star action.
+2. A proved classification into A, B, C, D, E6, E7, E8, F4, and G2.
+3. Intrinsic rank/form classifiers for inner and outer A, every B and C rank,
+   nontrialitarian D, and the trialitarian ³D4 and ⁶D4 forms.
+4. Proof that the classifiers are invariant under isomorphism and exhaustive.
+
+Until these exist, `BaseCondition`, `GroupCondition`, and the family/form
+classifiers in the Serre-II modules must remain explicit interfaces.
+
+## Missing Brauer, Tits, and trialitarian structures
+
+1. Abelian-group operations on the Brauer group. Current Mathlib exposes the
+   quotient carrier but not an `AddCommGroup` instance.
+2. Scalar extension and corestriction of Brauer classes.
+3. CSA degree, index, exponent/period, division representatives, and splitting
+   fields, with the usual divisibility and restriction/corestriction theorems.
+4. Involutions, quadratic pairs, Clifford algebras, discriminants, orientations,
+   Tits classes/algebras, and their twisting laws.
+5. Trialitarian algebras, the Allen algebra, its triality compatibility datum,
+   and proof that its index lies in {1, 2, 4, 8}.
+6. Formalization of the known quasi-split and Allen-index-one/two theorems.
+7. **Open mathematics:** neutrality/coprime descent for arbitrary trialitarian
+   forms of Allen index four or eight. A degree-one zero-cycle alone does not
+   prove this.
+
+## Missing cohomological invariants
+
+1. Construction of the Rost invariant with its exact coefficient and
+   characteristic conventions.
+2. Naturality under scalar extension and compatibility with corestriction.
+3. Trivial-kernel theorems in their published scopes.
+4. Connections among Rost, Tits/Allen, Arason, Clifford, and boundary
+   invariants.
+
+The generic pointed-invariant res-cor theorem already in the project is only
+an assembly lemma. Instantiating its trivial-kernel premise for arbitrary
+high-index trialitarian forms is equivalent to the unresolved branch on the
+bare cd-at-most-two scope.
+
+## Missing family providers
+
+- A: inner and outer forms at all admissible ranks.
+- B: every positive rank, retaining B1 as its own classified obligation.
+- C: every rank.
+- D: nontrialitarian forms; known low-Allen-index trialitarian branches; open
+  Allen-index-four/eight branches.
+- E6 and E7: arbitrary-form providers in the exact desired scope.
+- F4 and G2: translate published proofs to the intrinsic fpqc-H¹ model.
+- E8: the full E8 provider.
+
+## Missing E8 bridge
+
+1. Construct/classify the intrinsic simply connected E8 group scheme.
+2. Define its Borel and parabolic varieties and prove their point/neutrality
+   equivalences.
+3. Attach the project's Weyl and finite-subgroup calculations to actions on
+   those varieties.
+4. Formalize the fixed-locus, compactification, motivic, common-gauge, and
+   descent inputs currently represented by conditional interfaces.
+5. Produce the E8 neutrality provider and combine it with the non-E8 provider.
+
+## External dependency assessment
+
+The Google DeepMind Formal Conjectures repository is a benchmark collection of
+formalized statements. Its Mathlib-facing aggregate imports only projective
+space and vector bundles from algebraic geometry, and repository searches show
+no Serre II, fpqc H¹, reductive-group, root-datum, or cohomological-dimension
+infrastructure. It also pins an older Mathlib release than this project.
+Consequently it is not added as a dependency.
+
+No maintained Lean package with the missing reductive-group classification,
+continuous nonabelian Galois cohomology, and Rost/trialitarian stack was found.
+A dependency should be added only when it provides concrete reusable
+declarations; otherwise the components above should be developed as focused
+modules here rather than vendoring an unrelated conjecture catalogue.
+
+## Recommended implementation order
+
+1. Construct and verify fpqc-H¹ scalar extension and its composition laws.
+2. Prove the fpqc-H¹/torsor classification and Galois-H¹ comparison.
+3. Build intrinsic field/cohomological-dimension and semisimple simply
+   connected predicates.
+4. Build root data and classifiers, then discharge the classical and F4/G2
+   providers from published mathematics.
+5. Build Brauer/CSA/involution/trialitarian infrastructure and isolate the
+   high-Allen-index open leaf.
+6. Build H³ and Rost naturality/kernel results.
+7. Attach the E8 finite computations to intrinsic E8 geometry and finish the
+   single full-strength `SerreII.Conjecture`.
