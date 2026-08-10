@@ -89,6 +89,99 @@ theorem eq_neutral_of_finiteEtaleKernelNorm
   apply finiteEtaleKernelNorm (fun i => res i a)
   exact hrestrictedKernel
 
+/-- The universal finite-etale kernel-norm principle: for every tuple of
+locally neutral classes and every nonnegative multiplicity function, the
+corestricted sum maps to the global neutral point.
+
+This is the abstract logical shape of Conjecture 6.33. It does not construct
+the required E8 restriction, corestriction, or pointed cohomology maps. -/
+def UniversalFiniteEtaleKernelNormPrinciple
+    {ι A X : Type*} [AddCommGroup A]
+    (B : ι → Type*) [∀ i, AddCommGroup (B i)]
+    (Y : ι → Type*)
+    (neutral : X) (localNeutral : ∀ i, Y i)
+    (toClass : A → X) (localClass : ∀ i, B i → Y i)
+    (s : Finset ι) (cor : ∀ i, B i →+ A) : Prop :=
+  ∀ (multiplicity : ι → ℕ) (x : ∀ i, B i),
+    (∀ i ∈ s, localClass i (x i) = localNeutral i) →
+      toClass (∑ i ∈ s, multiplicity i • cor i (x i)) = neutral
+
+/-- If every global class is neutral, the universal finite-etale kernel-norm
+principle is automatic. This is the abstract reverse direction of PDF
+Proposition 6.35. -/
+theorem universalFiniteEtaleKernelNormPrinciple_of_all_classes_neutral
+    {ι A X : Type*} [AddCommGroup A]
+    (B : ι → Type*) [∀ i, AddCommGroup (B i)]
+    (Y : ι → Type*)
+    (neutral : X) (localNeutral : ∀ i, Y i)
+    (toClass : A → X) (localClass : ∀ i, B i → Y i)
+    (s : Finset ι) (cor : ∀ i, B i →+ A)
+    (allNeutral : ∀ a : A, toClass a = neutral) :
+    UniversalFiniteEtaleKernelNormPrinciple
+      B Y neutral localNeutral toClass localClass s cor := by
+  intro multiplicity x hx
+  exact allNeutral _
+
+/-- Under explicit restriction-corestriction and local Bezout data for every
+global class, the universal finite-etale kernel-norm principle forces every
+global class to be neutral. This packages the abstract forward implication of
+PDF Propositions 6.34--6.35.
+
+For E8, providing localBezoutData and the universal kernel-norm principle is
+the open mathematical content; this theorem only checks the deduction. -/
+theorem all_classes_neutral_of_universalFiniteEtaleKernelNormPrinciple
+    {ι A X : Type*} [AddCommGroup A]
+    (B : ι → Type*) [∀ i, AddCommGroup (B i)]
+    (Y : ι → Type*)
+    (neutral : X) (localNeutral : ∀ i, Y i)
+    (toClass : A → X) (localClass : ∀ i, B i → Y i)
+    (s : Finset ι) (degree : ι → ℕ)
+    (res : ∀ i, A →+ B i) (cor : ∀ i, B i →+ A)
+    (hindex : ∀ i x, cor i (res i x) = degree i • x)
+    (kernelNorm :
+      UniversalFiniteEtaleKernelNormPrinciple
+        B Y neutral localNeutral toClass localClass s cor)
+    (localBezoutData :
+      ∀ a : A, ∃ e q : ℕ, ∃ multiplicity : ι → ℕ,
+        e • a = 0 ∧
+        (∑ i ∈ s, multiplicity i * degree i = 1 + q * e) ∧
+        ∀ i ∈ s, localClass i (res i a) = localNeutral i) :
+    ∀ a : A, toClass a = neutral := by
+  intro a
+  obtain ⟨e, q, multiplicity, he, hcoefficient, hrestrictedKernel⟩ :=
+    localBezoutData a
+  exact eq_neutral_of_finiteEtaleKernelNorm
+    B Y neutral localNeutral toClass localClass s degree multiplicity
+    res cor hindex he hcoefficient hrestrictedKernel (kernelNorm multiplicity)
+
+/-- With exact local restriction-corestriction and Bezout data, the universal
+finite-etale kernel-norm principle is equivalent to neutrality of every global
+class. This is a formal logical equivalence, not a proof of its E8 instance. -/
+theorem universalFiniteEtaleKernelNormPrinciple_iff_all_classes_neutral
+    {ι A X : Type*} [AddCommGroup A]
+    (B : ι → Type*) [∀ i, AddCommGroup (B i)]
+    (Y : ι → Type*)
+    (neutral : X) (localNeutral : ∀ i, Y i)
+    (toClass : A → X) (localClass : ∀ i, B i → Y i)
+    (s : Finset ι) (degree : ι → ℕ)
+    (res : ∀ i, A →+ B i) (cor : ∀ i, B i →+ A)
+    (hindex : ∀ i x, cor i (res i x) = degree i • x)
+    (localBezoutData :
+      ∀ a : A, ∃ e q : ℕ, ∃ multiplicity : ι → ℕ,
+        e • a = 0 ∧
+        (∑ i ∈ s, multiplicity i * degree i = 1 + q * e) ∧
+        ∀ i ∈ s, localClass i (res i a) = localNeutral i) :
+    UniversalFiniteEtaleKernelNormPrinciple
+        B Y neutral localNeutral toClass localClass s cor ↔
+      ∀ a : A, toClass a = neutral := by
+  constructor
+  · intro kernelNorm
+    exact all_classes_neutral_of_universalFiniteEtaleKernelNormPrinciple
+      B Y neutral localNeutral toClass localClass s degree res cor hindex
+      kernelNorm localBezoutData
+  · exact universalFiniteEtaleKernelNormPrinciple_of_all_classes_neutral
+      B Y neutral localNeutral toClass localClass s cor
+
 /-- If the target pointed set is a subsingleton, every finite-étale
 kernel–norm statement is automatic. -/
 theorem finiteEtaleKernelNorm_of_subsingleton_target

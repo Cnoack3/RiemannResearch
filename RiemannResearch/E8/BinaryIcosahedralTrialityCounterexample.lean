@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import RiemannResearch.E8.BinaryIcosahedralAtlas
+import RiemannResearch.E8.BinaryIcosahedralSubsystemOrbits
 
 /-!
 # Binary icosahedral triality counterexample
@@ -207,5 +208,31 @@ theorem not_all_nontrivial_orderThree_stabilizerElements_outer :
   intro h
   exact h r r_mem_binaryTetrahedralMatrixMonoid r_pow_three r_ne_one
     r_mem_certifiedInnerD4xD4
+
+/-- Corrected form of PDF Proposition 6.17 at the exact Lean certificate
+boundary. The four projective A5 rows have twelve degree-five subsystem
+orbits, but the displayed binary-tetrahedral stabilizer contains a
+nonidentity order-three element in the certified inner Weyl image. Hence the
+universal outer-triality clause is false.
+
+The external GAP/TomLib certificate identifies this matrix action with one of
+the singleton degree-five orbits in rows 4015 or 4017. That geometric
+identification is not asserted by this theorem. -/
+theorem correctedProposition617 :
+    (RiemannResearch.E8.binaryIcosahedralSubsystemOrbitData.map fun row =>
+      RiemannResearch.E8.orbitDegreeMultiplicity 5 row.d4d4OrbitHistogram).sum = 12 ∧
+      (∃ g : Mat8,
+        g * g * g = (1 : Mat8) ∧
+        g ≠ (1 : Mat8) ∧
+        g ∈ binaryTetrahedralMatrixMonoid ∧
+        g ∈ certifiedInnerD4xD4) ∧
+      ¬ ∀ g : Mat8,
+        g ∈ binaryTetrahedralMatrixMonoid →
+          g * g * g = (1 : Mat8) →
+            g ≠ (1 : Mat8) →
+              g ∉ certifiedInnerD4xD4 := by
+  refine ⟨RiemannResearch.E8.binaryIcosahedral_degreeFiveOrbit_total, ?_, ?_⟩
+  · exact ⟨r, r_orderThree_innerD4xD4_counterexample⟩
+  · exact not_all_nontrivial_orderThree_stabilizerElements_outer
 
 end RiemannResearch.E8.BinaryIcosahedralAtlas

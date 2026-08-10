@@ -58,6 +58,15 @@ The degree-five `A4 ⊕ A4` side and the final two-gauge factorization problem
 remain separate. The trialitarian cubic kernel, Allen index, and residual
 triality-orbit argument cannot be applied uniformly as printed.
 
+Accordingly, corrected Research Target 8.2 is orbitwise: compute each
+degree-five orbit's actual diagram-action image; use an inner/classical
+`D4 × D4` source when that image is trivial, and introduce the
+orbit-specific cyclic-cubic kernel and centrality target only when the image
+is cyclic of order three. After local neutrality is established for every
+projective-A5 row, the degree-five/degree-six gauge factorization is still a
+separate E8 descent problem. The certificate currently settles one singleton
+orbit in `{4015,4017}`; the other eleven diagram actions remain open.
+
 ## Lean found an omitted kernel after Proposition 7.5
 
 Proposition 7.5 itself is correct: a single point fixed by closed subgroups

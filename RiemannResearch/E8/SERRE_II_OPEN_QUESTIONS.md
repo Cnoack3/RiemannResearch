@@ -24,10 +24,10 @@ printed `{2,3,5}` prime support but cannot be reached by a solvable cyclic-
 prime tower; hence the displayed induction in the cited source is insufficient.
 
 Proposition 6.35 is an equivalence with E8 Serre II, not independent evidence.
-Lean now checks its easy reverse direction in
-`finiteEtaleKernelNorm_of_subsingleton_target` and checks the forward
-finite-etale assembly, conditional on Conjecture 6.33, in
-`eq_neutral_of_finiteEtaleKernelNorm`. The conjecture itself remains open.
+Lean checks the abstract two-way implication in
+`universalFiniteEtaleKernelNormPrinciple_iff_all_classes_neutral`, under
+explicit restriction-corestriction and local Bezout data. The E8 instance of
+the kernel-norm principle—Conjecture 6.33—remains open.
 Thang's corestriction theorem proves the required kernel principle over local
 and global characteristic-zero fields, not arbitrary fields of cohomological
 dimension at most two. Barquero--Merkurjev's norm principle is tautological for
@@ -47,6 +47,27 @@ The remaining statement-level corrections are:
    degree-five `(D4)^2` orbits is false. The numerical orbit count survives.
 2. **Theorem 6.6.** “Independent of every choice” is only established after
    fixing the flag; changing it needs an explicit conjugacy identification.
+
+### Corrected Research Target 8.2: orbitwise `(D4)^2` source
+
+For each of the twelve degree-five subsystem orbits `O`, determine the actual
+image of its stabilizer in the diagram automorphism group and use the
+orbit-specific extension `L_O^inn/L_{5,O}` which kills that image.
+
+- If the action is already inner, treat the source as inner/classical
+  `D4 × D4` over `L_{5,O}`; no cyclic-cubic triality kernel is available or
+  needed.
+- If the image is cyclic of order three, retain an orbit-specific centrality
+  target for the toral-source part of
+  `ker(H¹(L_{5,O}, M_sc) → H¹(L_O^inn, M_sc))`.
+- Establish a locally neutral `(D4)^2` source for every projective-A5 row,
+  then separately prove the bilateral degree-five/degree-six E8 gauge
+  factorization.
+
+The exact ATLAS countercertificate resolves one singleton orbit in the row
+pair `{4015,4017}` as inner; the diagram actions on the other eleven orbits
+remain unverified. Consequently the original Target 8.2 cannot assume a
+trialitarian cyclic-cubic kernel uniformly across all twelve orbits.
 
 ## C. Published-proof layers still to formalize
 
