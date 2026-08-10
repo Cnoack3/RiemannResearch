@@ -245,6 +245,12 @@ intersection of this splitting-field coset and the prime-local cosets.
   with local gauges is a global coboundary exactly when their transition
   factors through the two fixed-point groups. It deliberately does not assert
   that the distinguished E8 transition factors.
+- `GaloisCohomology/TwoGaugeDoubleCoset.lean` repackages that criterion as
+  identity membership in an explicit subgroup double coset and defines the
+  strict oriented subgroup transporter used by Proposition 6.19. It proves
+  the combined transporter-and-double-coset equivalence, but deliberately
+  leaves the actual E8 transporter incidence and Research Target 8.1
+  factorization as open providers.
 - `GroupCohomology/Conjugation.lean` constructs the additive H¹ isomorphism
   for conjugate subgroups, proves restriction--conjugation naturality after
   canonical coefficient transport, and proves that inner conjugation acts
@@ -286,10 +292,11 @@ formalization. The attached artifact's exact status is in the theorem ledger.
    subgroup H has neutral H1-image after every finite extension, the maximal-
    torus fixed locus in the twisted reduction variety is finite etale of degree
    [W(G):W(H)], and every one of its residue fields splits the torsor. Applied
-   to D8, A2E6, and A4A4 in E8, this yields effective splitting cycles of
-   degrees 135, 2240, and 48384 and an odd splitting field of degree at most
-   135. The geometric proof is informal/source-audited; its numerical
-   consequences are kernel checked in E8/WeylIndexPacket.lean.
+   to D8, A2E6, and A4A4 in the corrected Theorem 5.16 packet, this yields
+   splitting cycles of degrees 135, 11200, and 12096. The named Lean cycle
+   `-1417 z_D8 + 16 z_A2E6 + z_A4A4` has degree one. The geometric proof is
+   informal/source-audited; the corrected degrees and signed identity are
+   kernel checked in E8/SubgroupSieve.lean.
 1. After choosing a chamber-normalized cocharacter and supplying the
    characteristic-zero descent, the one-sided wonderful compactification has
    the same point fields as the twisted Borel variety. For inner torsors these

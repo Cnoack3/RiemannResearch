@@ -23,6 +23,7 @@ import RiemannResearch.AlgebraicGeometry.ZeroCycleSplitting
 import RiemannResearch.Basic
 import RiemannResearch.GaloisCohomology.DifferenceCocycle
 import RiemannResearch.GaloisCohomology.TwoGaugeDescent
+import RiemannResearch.GaloisCohomology.TwoGaugeDoubleCoset
 import RiemannResearch.GaloisCohomology.GaloisAffineCechCoordinates
 import RiemannResearch.GaloisCohomology.GaloisCechCoordinates
 import RiemannResearch.GaloisCohomology.PresheafGaloisCechComparison

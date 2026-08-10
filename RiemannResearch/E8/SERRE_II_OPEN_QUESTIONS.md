@@ -13,6 +13,10 @@ literature already contains a proof.
    135 D8 gauges as an anchor, the exact remaining transporter input is one
    E8-valued element satisfying the 135 anchored fixedness conditions.
 5. **Conjecture 6.33:** the diagonal finite-etale kernel norm.
+6. **Research Target 8.1:** binary-icosahedral constrained factorization. For
+   the degree-five and degree-six local gauges, prove that the transition
+   `delta = g5 * g6⁻¹` lies in the product of their two fixed-point groups;
+   in the intended E8 field realization this is `delta ∈ E8(L5) E8(L6) ⊆ E8(M)`.
 
 Lean's `pointDescentAt_iff_of_pointwise_iff`, together with the pointwise
 equivalences assembled in `universalFixedLocusAndSplittingField`, verifies
@@ -22,6 +26,16 @@ one of them. The declarations `alternatingGroup_fin_five_card_prime_support`
 and `alternatingGroup_fin_five_not_solvable` certify that A5 satisfies the
 printed `{2,3,5}` prime support but cannot be reached by a solvable cyclic-
 prime tower; hence the displayed induction in the cited source is insufficient.
+
+The declarations `isCoboundary_iff_one_mem_fixedPointDoubleCoset` and
+`isCoboundary_iff_orientedTransporter_and_doubleCoset` now verify the exact
+coefficient-free reduction behind Research Target 8.1. They do not prove
+that the distinguished E8 double coset contains the identity. That remaining
+existence statement requires the actual `2.A5` field/gauge realization, the
+oriented E8 torus transporter, and a geometric factorization or section.
+Moreover, Proposition 6.17's corrected countercertificate shows that a
+cyclic-cubic outer-triality kernel is not uniformly unavoidable: at least one
+degree-five `(D4)^2` orbit has inner order-three action.
 
 Proposition 6.35 is an equivalence with E8 Serre II, not independent evidence.
 Lean checks the abstract two-way implication in

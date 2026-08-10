@@ -73,6 +73,63 @@ theorem serreIIProgram_threeSubsystem_gcd :
     Nat.gcd (Nat.gcd 135 11200) 12096 = 1 := by
   norm_num
 
+/-- The corrected three subsystem types in the full-Weyl splitting packet of
+Theorem 5.16. In particular, the degree-11200 field is the A2E6 field, not
+an (A2)^4 field. -/
+inductive FullWeylSubsystem
+  | d8
+  | a2e6
+  | a4a4
+  deriving DecidableEq
+
+namespace FullWeylSubsystem
+
+/-- Degree of the splitting field attached to a corrected subsystem type. -/
+def splittingDegree : FullWeylSubsystem → ℕ
+  | .d8 => 135
+  | .a2e6 => 11200
+  | .a4a4 => 12096
+
+/-- Coefficients of the corrected signed degree-one cycle in Corollary 5.17. -/
+def bezoutCoefficient : FullWeylSubsystem → ℤ
+  | .d8 => -1417
+  | .a2e6 => 16
+  | .a4a4 => 1
+
+@[simp] theorem splittingDegree_d8 : splittingDegree .d8 = 135 := rfl
+
+@[simp] theorem splittingDegree_a2e6 : splittingDegree .a2e6 = 11200 := rfl
+
+@[simp] theorem splittingDegree_a4a4 : splittingDegree .a4a4 = 12096 := rfl
+
+/-- Named form of the corrected Bezout identity. -/
+theorem corrected_bezout :
+    bezoutCoefficient .d8 * splittingDegree .d8 +
+      bezoutCoefficient .a2e6 * splittingDegree .a2e6 +
+      bezoutCoefficient .a4a4 * splittingDegree .a4a4 = 1 := by
+  norm_num [bezoutCoefficient, splittingDegree]
+
+end FullWeylSubsystem
+
+/-- The signed cycle built from the corrected D8, A2E6, and A4A4
+splitting cycles. -/
+def fullWeylDegreeOneCycle
+    {A : Type*} [AddCommGroup A] (zD8 zA2E6 zA4A4 : A) : A :=
+  (-1417 : ℤ) • zD8 + 16 • zA2E6 + zA4A4
+
+/-- The corrected signed combination has degree one whenever the three input
+cycles have degrees 135, 11200, and 12096. This is the coefficient-level
+content of Corollary 5.17; existence of the geometric cycles is a separate
+input from Theorem 5.16. -/
+theorem fullWeylDegreeOneCycle_degree
+    {A : Type*} [AddCommGroup A] (degree : A →+ ℤ)
+    (zD8 zA2E6 zA4A4 : A)
+    (hD8 : degree zD8 = 135)
+    (hA2E6 : degree zA2E6 = 11200)
+    (hA4A4 : degree zA4A4 = 12096) :
+    degree (fullWeylDegreeOneCycle zD8 zA2E6 zA4A4) = 1 := by
+  simp [fullWeylDegreeOneCycle, hD8, hA2E6, hA4A4]
+
 /-- All five displayed Bezout identities in PDF Theorem 6.9. -/
 theorem serreIIProgram_survivorEnvelope_bezout :
     (-73 : ℤ) * 135 - 2 * 1120 + 12096 = 1 ∧
