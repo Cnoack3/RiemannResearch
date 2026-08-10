@@ -14,7 +14,9 @@ corresponding discrete nonabelian H¹ a subsingleton.
 
 The motivating application is completion target B in the 5 August 2026 E8
 Serre II memorandum. This module contains only the general cocycle argument;
-the existence of compatible E8 gauges remains a separate open input.
+the existence of compatible E8 gauges remains a separate open input. In
+particular, subgroup generation and the separate existence of local gauges do
+not imply the existence of one common gauge.
 -/
 
 universe u v w x
@@ -43,6 +45,63 @@ theorem isCoboundary_of_compatibleLocalGauges
   apply eq_trivial_gauge_of_generating_family a b H hgen
   intro i σ hσ
   exact hb i σ hσ
+
+namespace NonabelianCocycle
+
+/-- The set of gauges which trivialize a cocycle on a subgroup. -/
+def localGaugeSet
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (a : NonabelianCocycle Γ G) (H : Subgroup Γ) : Set G :=
+  {b | a.IsLocalGauge H b}
+
+end NonabelianCocycle
+
+/-- **Exact common-gauge criterion for a generating family.**
+
+A nonabelian cocycle is a global coboundary if and only if one element is a
+local gauge on every subgroup in a generating family. This is the precise
+logical content of the corrected common-gauge clause in Theorem 6.30 of the
+user-provided Serre II manuscript: it characterizes common-gauge existence but
+does not derive it from separately nonempty local-gauge sets.
+
+Source: user-provided manuscript, corrected Theorem 6.30; the source supports
+the statement and proof strategy.
+-/
+theorem isCoboundary_iff_exists_commonLocalGauge
+    {Γ : Type u} {G : Type v} {I : Type w}
+    [Group Γ] [Group G] [MulDistribMulAction Γ G]
+    (a : NonabelianCocycle Γ G)
+    (H : I → Subgroup Γ) (hgen : (⨆ i, H i) = ⊤) :
+    a.IsCoboundary ↔ ∃ b, ∀ i, a.IsLocalGauge (H i) b := by
+  constructor
+  · rintro ⟨b, hb⟩
+    refine ⟨b, ?_⟩
+    intro i σ hσ
+    rw [hb]
+    simp [NonabelianCocycle.trivial, NonabelianCocycle.gauge]
+  · rintro ⟨b, hb⟩
+    refine ⟨b, ?_⟩
+    apply eq_trivial_gauge_of_generating_family a b H hgen
+    intro i σ hσ
+    exact hb i σ hσ
+
+/-- **Total-intersection form of the exact common-gauge criterion.**
+
+For a generating family, global coboundary status is equivalent to
+nonemptiness of the total intersection of the local-gauge sets. Separate
+nonemptiness of the individual sets is not enough.
+-/
+theorem isCoboundary_iff_iInter_localGaugeSet_nonempty
+    {Γ : Type u} {G : Type v} {I : Type w}
+    [Group Γ] [Group G] [MulDistribMulAction Γ G]
+    (a : NonabelianCocycle Γ G)
+    (H : I → Subgroup Γ) (hgen : (⨆ i, H i) = ⊤) :
+    a.IsCoboundary ↔
+      (⋂ i, NonabelianCocycle.localGaugeSet a (H i)).Nonempty := by
+  rw [isCoboundary_iff_exists_commonLocalGauge a H hgen]
+  simp only [Set.nonempty_iInter, NonabelianCocycle.localGaugeSet,
+    Set.mem_ofPred_eq]
 
 /-- If every cocycle in every member of a family admits one common gauge on a
 generating family of subgroups, then each corresponding discrete nonabelian H¹

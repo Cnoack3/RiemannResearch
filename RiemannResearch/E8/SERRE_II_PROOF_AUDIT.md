@@ -98,6 +98,11 @@ intersection of this splitting-field coset and the prime-local cosets.
 - `GroupTheory/GeneratedFixedPoint.lean` proves that a *single common point*
   fixed by subgroups whose join is the whole group is globally fixed. It does
   not infer a common point from separately nonempty fixed loci.
+- `GaloisCohomology/CompatibleLocalGauges.lean` proves the exact corrected
+  Theorem 6.30 criterion: a cocycle is a global coboundary if and only if one
+  element is a local gauge on every subgroup of the generating family. This
+  equivalence characterizes the missing common gauge; it does not produce one
+  from the separately existing local gauges.
 - `GroupTheory/GeneratedSubgroupsOfCoprimeIndex.lean` proves that a family of
   subgroups with gcd-one indices generates the whole group and that nonempty
   generating families lift through surjective group homomorphisms.

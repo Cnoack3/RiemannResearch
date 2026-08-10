@@ -64,6 +64,12 @@ The remaining statement-level corrections are:
    degree-five `(D4)^2` orbits is false. The numerical orbit count survives.
 2. **Theorem 6.6.** “Independent of every choice” is only established after
    fixing the flag; changing it needs an explicit conjugacy identification.
+3. **Theorem 6.30.** Retitle it “Generating subsystem family and exact
+   common-gauge criterion.” Its conclusions are: the subsystem groups
+   generate; every local gauge coset is separately nonempty; and global
+   neutrality is equivalent to nonemptiness of their total intersection. It
+   does not assert that this intersection is nonempty. Lean checks the exact
+   equivalence in `correctedTheorem630`.
 
 ### Corrected Research Target 8.2: orbitwise `(D4)^2` source
 

@@ -88,6 +88,7 @@ import RiemannResearch.E8.OmegaEightPlusTwo
 import RiemannResearch.E8.RationalInvolutionsAudit
 import RiemannResearch.E8.SubgroupSieve
 import RiemannResearch.E8.FullWeylCore
+import RiemannResearch.E8.FullWeylGaugeCover
 import RiemannResearch.E8.GroupSchemeFoundation
 import RiemannResearch.E8.CoxeterAttractingRank
 import RiemannResearch.RH.Basic
