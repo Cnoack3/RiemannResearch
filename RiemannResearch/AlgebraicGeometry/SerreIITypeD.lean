@@ -8,7 +8,7 @@ import RiemannResearch.AlgebraicGeometry.SerreIITypeB
 import RiemannResearch.AlgebraicGeometry.ZeroCycleSplitting
 
 /-!
-# Type-D and trialitarian zero-cycle reductions for Serre II
+# Type-D and trialitarian reductions for Serre II
 
 This module refines the exact type-D provider into nontrialitarian forms and
 the arbitrary trialitarian forms ³D₄ and ⁶D₄. For the trialitarian branch it
@@ -34,6 +34,12 @@ does not by itself reduce the remaining trialitarian Serre-II problem.
 These remain conditional interfaces. In particular, the project does not yet
 construct scalar extension on FpqcH1, instantiate the
 sourced degree-one-cycle provider, or prove coprime restriction descent.
+
+The final declarations also retain the useful Allen-index decomposition without
+changing the base-field hypothesis. They split the arbitrary trialitarian
+branch into indices one, two, four, and eight. The index-four and index-eight
+providers are the genuine unresolved high-index cases; no stronger
+period--index, C₂, or quasi-split hypothesis is introduced.
 -/
 
 universe u
@@ -379,6 +385,159 @@ theorem exactFamilyD_of_nontrialitarian_and_degreeOneCycles
     (trialitarianNeutralityProvider_of_degreeOneCycles
       IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected family
       typeDForm restrictionData cycles indexOneDescent)
+
+/-- An abstract classifier for the index of the Allen algebra attached to a
+candidate trialitarian group.
+
+The positivity field records the elementary fact that a central simple
+algebra has positive index. Constructing this classifier from actual Allen
+algebras and Mathlib's future Brauer period/index API remains open. -/
+structure TrialitarianAllenIndexClassifier where
+  index : (R A : CommRingCat.{u}) → [HopfAlgebra R A] → ℕ
+  index_pos : ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+    0 < index R A
+
+/-- Every selected arbitrary trialitarian form has Allen-algebra index at most
+two on the supplied base-field scope. This is a reusable low-index branch,
+not a strengthened global Serre-II statement. -/
+abbrev TrialitarianAllenIndexAtMostTwoProvider
+    (Base : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (typeDForm : TypeDFormClassifier)
+    (allenIndex : TrialitarianAllenIndexClassifier) : Prop :=
+  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+    Base R →
+    IsSemisimpleSimplyConnected R A →
+    family R A = .D →
+    (typeDForm R A).IsTrialitarian →
+    allenIndex.index R A ≤ 2
+
+/-- Neutrality for the selected arbitrary trialitarian forms whose Allen
+algebra has the specified index. -/
+abbrev TrialitarianAllenIndexNeutralityProvider
+    (Base : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (typeDForm : TypeDFormClassifier)
+    (allenIndex : TrialitarianAllenIndexClassifier)
+    (n : ℕ) : Prop :=
+  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+    Base R →
+    IsSemisimpleSimplyConnected R A →
+    family R A = .D →
+    (typeDForm R A).IsTrialitarian →
+    allenIndex.index R A = n →
+    Subsingleton (FpqcH1.{u, u} R A)
+
+/-- The structural Allen-index split for a degree-eight exponent-two Allen
+algebra. It is explicit because the project does not yet construct Allen
+algebras or their mathematical index. -/
+abbrev TrialitarianAllenIndexCasesProvider
+    (Base : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (typeDForm : TypeDFormClassifier)
+    (allenIndex : TrialitarianAllenIndexClassifier) : Prop :=
+  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+    Base R →
+    IsSemisimpleSimplyConnected R A →
+    family R A = .D →
+    (typeDForm R A).IsTrialitarian →
+    allenIndex.index R A = 1 ∨
+      allenIndex.index R A = 2 ∨
+      allenIndex.index R A = 4 ∨
+      allenIndex.index R A = 8
+
+/-- A positive Allen index bounded by two is either one or two, so neutrality
+on those two branches gives neutrality for every selected trialitarian form. -/
+theorem trialitarianNeutralityProvider_of_allenIndexAtMostTwo
+    (Base : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (typeDForm : TypeDFormClassifier)
+    (allenIndex : TrialitarianAllenIndexClassifier)
+    (atMostTwo : TrialitarianAllenIndexAtMostTwoProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex)
+    (indexOne : TrialitarianAllenIndexNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex 1)
+    (indexTwo : TrialitarianAllenIndexNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex 2) :
+    TypeDFormNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm
+      TypeDForm.IsTrialitarian := by
+  intro R A _ hBase hGroup hD hTrialitarian
+  by_cases hOne : allenIndex.index R A = 1
+  · exact indexOne R A hBase hGroup hD hTrialitarian hOne
+  · have hTwo : allenIndex.index R A = 2 := by
+      apply Nat.le_antisymm
+      · exact atMostTwo R A hBase hGroup hD hTrialitarian
+      · apply (Nat.two_le_iff (allenIndex.index R A)).2
+        exact ⟨Nat.ne_of_gt (allenIndex.index_pos R A), hOne⟩
+    exact indexTwo R A hBase hGroup hD hTrialitarian hTwo
+
+/-- Neutrality in all four possible Allen-index branches gives neutrality for
+arbitrary trialitarian forms on the unchanged supplied base-field scope.
+
+The index-four and index-eight inputs are intentionally explicit: they are the
+remaining high-index arbitrary-form trialitarian Serre-II problem. -/
+theorem trialitarianNeutralityProvider_of_allenIndexCases
+    (Base : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (typeDForm : TypeDFormClassifier)
+    (allenIndex : TrialitarianAllenIndexClassifier)
+    (indexCases : TrialitarianAllenIndexCasesProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex)
+    (indexOne : TrialitarianAllenIndexNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex 1)
+    (indexTwo : TrialitarianAllenIndexNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex 2)
+    (indexFour : TrialitarianAllenIndexNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex 4)
+    (indexEight : TrialitarianAllenIndexNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex 8) :
+    TypeDFormNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm
+      TypeDForm.IsTrialitarian := by
+  intro R A _ hBase hGroup hD hTrialitarian
+  rcases indexCases R A hBase hGroup hD hTrialitarian with
+    hOne | hTwo | hFour | hEight
+  · exact indexOne R A hBase hGroup hD hTrialitarian hOne
+  · exact indexTwo R A hBase hGroup hD hTrialitarian hTwo
+  · exact indexFour R A hBase hGroup hD hTrialitarian hFour
+  · exact indexEight R A hBase hGroup hD hTrialitarian hEight
+
+/-- Nontrialitarian neutrality and all four Allen-index branches assemble into
+the exact family-D provider on the same base-field scope. This is the
+Allen-index decomposition of the full type-D target, not an alternative
+restricted-field theorem. -/
+theorem exactFamilyD_of_nontrialitarian_and_allenIndexCases
+    (Base : BaseCondition)
+    (IsSemisimpleSimplyConnected : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (typeDForm : TypeDFormClassifier)
+    (nontrialitarian : TypeDFormNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm
+      TypeDForm.IsNontrialitarian)
+    (allenIndex : TrialitarianAllenIndexClassifier)
+    (indexCases : TrialitarianAllenIndexCasesProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex)
+    (indexOne : TrialitarianAllenIndexNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex 1)
+    (indexTwo : TrialitarianAllenIndexNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex 2)
+    (indexFour : TrialitarianAllenIndexNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex 4)
+    (indexEight : TrialitarianAllenIndexNeutralityProvider
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex 8) :
+    ExactFamilyNeutralityProvider
+      Base IsSemisimpleSimplyConnected family .D :=
+  exactFamilyD_of_typeD_form_providers
+    Base IsSemisimpleSimplyConnected family typeDForm nontrialitarian
+    (trialitarianNeutralityProvider_of_allenIndexCases
+      Base IsSemisimpleSimplyConnected family typeDForm allenIndex
+      indexCases indexOne indexTwo indexFour indexEight)
 
 /-- The connected non-E8 reduction with type D refined into
 nontrialitarian forms and arbitrary trialitarian degree-one-cycle/descent

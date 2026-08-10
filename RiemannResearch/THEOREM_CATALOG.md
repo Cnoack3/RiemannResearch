@@ -29,6 +29,8 @@ unreproduced computer-assisted claims, see `E8/SERRE_II_PROOF_AUDIT.md`.
 | `RiemannResearch.AlgebraicGeometry.SerreII.Conjecture` | `RiemannResearch.AlgebraicGeometry.SerreIIConjecture` | For every perfect field of cohomological dimension at most two and every semisimple simply connected group, every fpqc H1 class is neutral | **Open problem**; proposition definition only, not asserted as a theorem or axiom |
 | `RiemannResearch.AlgebraicGeometry.SerreII.conjecture_iff_subsingleton` | `RiemannResearch.AlgebraicGeometry.SerreIIConjecture` | Identifies the every-class-neutral formulation with H1 being a subsingleton | Kernel-checked formulation lemma; Serre II remains open |
 
+The repository maintains this bare perfect-field, cohomological-dimension-at-most-two statement as its only global Serre-II target. Restricted field-arithmetic variants are not exported as competing conjecture endpoints.
+
 ## Established local declarations
 
 | Declaration | Module | Statement / purpose | Status |
@@ -293,11 +295,9 @@ unconditional proofs of the motivating named theorems.
 | `RiemannResearch.AlgebraicGeometry.SerreII.exactFamilyD_of_typeD_form_providers` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | Nontrialitarian and trialitarian form providers assemble into the exact family-`D` provider | Kernel checked conditional reduction |
 | `RiemannResearch.AlgebraicGeometry.SerreII.exactFamilyD_of_nontrialitarian_and_degreeOneCycles` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | Nontrialitarian neutrality, arbitrary-trialitarian degree-one cycles, and index-one descent assemble into exact type `D` | Kernel checked conditional reduction |
 | `RiemannResearch.AlgebraicGeometry.SerreII.conjecture_nonE8_of_typeA_typeB_and_typeD_zeroCycles` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | Hooks the refined type-`D` zero-cycle reduction into the non-`E8` Serre-II assembly | Kernel checked conditional assembly theorem; it does not discharge the listed providers |
-| `RiemannResearch.AlgebraicGeometry.SerreII.trialitarianAllenIndexAtMostTwoProvider_of_twoPrimaryIndexEqualsExponent` | `RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex` | The sourced hereditary 2-primary index-equals-exponent step supplies an Allen-index bound of at most two on the narrower characteristic-zero field scope | Kernel checked conditional reduction; concrete Brauer period/index and Allen-algebra classifiers remain open |
-| `RiemannResearch.AlgebraicGeometry.SerreII.trialitarianNeutralityProvider_of_allenIndexAtMostTwo` | `RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex` | A positive Allen index bounded by two, together with neutrality in the index-one and index-two branches, gives arbitrary-trialitarian neutrality | Kernel checked finite branch reduction |
-| `RiemannResearch.AlgebraicGeometry.SerreII.trialitarianNeutralityProvider_of_twoPrimaryIndexEqualsExponent` | `RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex` | CTGP's Allen-index bound, the quasi-split branch, and Gille's index-two branch give neutrality for arbitrary simply connected `³D₄` and `⁶D₄` forms | Kernel checked conditional research reduction; the three source-level providers remain to be formalized |
-| `RiemannResearch.AlgebraicGeometry.SerreII.exactFamilyD_of_nontrialitarian_and_twoPrimaryIndexEqualsExponent` | `RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex` | Nontrialitarian neutrality and the narrower period-index trialitarian route assemble into exact family `D` | Kernel checked conditional reduction |
-| `RiemannResearch.AlgebraicGeometry.SerreII.conjecture_nonE8_of_typeA_typeB_and_typeD_periodIndex` | `RiemannResearch.AlgebraicGeometry.SerreIITrialitarianPeriodIndex` | Hooks the characteristic-zero hereditary period-index Type-D route into the existing type-A/type-B non-`E8` assembly | Kernel checked conditional assembly theorem on the explicitly narrower base-field scope |
+| `RiemannResearch.AlgebraicGeometry.SerreII.trialitarianNeutralityProvider_of_allenIndexAtMostTwo` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | A positive Allen index bounded by two, together with neutrality in the index-one and index-two branches, gives arbitrary-trialitarian neutrality on any supplied base scope | Kernel checked reusable low-index branch; it is not a second global Serre-II endpoint |
+| `RiemannResearch.AlgebraicGeometry.SerreII.trialitarianNeutralityProvider_of_allenIndexCases` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | Neutrality in Allen-index branches one, two, four, and eight gives arbitrary-trialitarian neutrality without strengthening the base-field predicate | Kernel checked full branch decomposition; the index-four and index-eight providers remain open |
+| `RiemannResearch.AlgebraicGeometry.SerreII.exactFamilyD_of_nontrialitarian_and_allenIndexCases` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | Nontrialitarian neutrality and all four Allen-index branches assemble into exact family `D` on the unchanged base scope | Kernel checked conditional reduction for the full type-D target |
 | `RiemannResearch.Logic.eq_basepoint_of_gcd_one_restriction_corestriction_invariant` | `RiemannResearch.Logic.PointedInvariant` | Rost-style naturality, additive restriction--corestriction index formulas, gcd-one local neutrality, and a trivial global invariant kernel force the original pointed class to be neutral | Kernel checked conditional reduction; actual fpqc scalar-extension maps, degree-three cohomology, Rost invariants, and arbitrary-trialitarian trivial-kernel providers remain open |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent` | `RiemannResearch.E8.FullWeylCore` | From the inputs listed below, proves parts (i)--(iii), nonabelianness of the simple core, and `Neutral(ξ) ↔ (Neutral(ξ_F) → Neutral(ξ_{k⁺}))` | Kernel checked implication; open obligations remain |
 | `RiemannResearch.E8.quasisimpleCoreOfFullWeylDescent_nonabelianH1` | `RiemannResearch.E8.FullWeylCore` | Specializes the conditional assembly to actual discrete nonabelian H¹ and proves the forward restriction-neutrality implication rather than assuming it | Kernel checked implication; remaining E8-specific hypotheses are load-bearing |
@@ -309,11 +309,15 @@ unconditional proofs of the motivating named theorems.
 | `RiemannResearch.GroupCohomology.eq_neutral_of_diagonalKernelNorm` | `RiemannResearch.GroupCohomology.FiniteEtaleKernelNorm` | One diagonal toral restriction--corestriction value in the neutral fiber, with the index formulas and a positive Bezout congruence, forces the original toral class to map to the neutral class | Kernel checked implication; the E8 diagonal kernel-norm input remains open |
 | `RiemannResearch.GroupCohomology.eq_neutral_of_finiteEtaleKernelNorm` | `RiemannResearch.GroupCohomology.FiniteEtaleKernelNorm` | Componentwise neutrality in a repeated finite-etale product, the product kernel-norm principle, index formulas, and a positive Bezout congruence force the original toral class to map to the neutral class | Kernel checked finite-etale formulation of Proposition 6.34; the E8 product kernel-norm input remains open |
 
-### Open obligations: non-`E8` assembly and its refinements
+### Primary target: bare perfect-cd-at-most-two Serre II
 
-The broad theorem `conjecture_nonE8_of_family_providers` has one
-`classical` provider plus `e6`, `e7`, `f4`, and `g2`. The later
-theorems are successive, substantive refinements:
+The sole global target is `SerreII.Conjecture` under the bare perfect-field,
+cohomological-dimension-at-most-two predicate. The non-`E8` refinements
+below and the `E8` program are components of that same target; no exported
+assembly theorem strengthens the field hypothesis. The broad theorem
+`conjecture_nonE8_of_family_providers` has one `classical` provider plus
+`e6`, `e7`, `f4`, and `g2`. The later theorems are successive,
+substantive refinements:
 
 | Refinement | Replaced hypothesis | More explicit hypotheses |
 |---|---|---|
@@ -321,10 +325,10 @@ theorems are successive, substantive refinements:
 | Type `A_n` forms | `a` | `typeAForm`, `innerA`, `outerA` |
 | Type `B_n` ranks | `b` | `typeBForm`, `rankB` |
 | Type `D_n` forms and triality | `d` | `typeDForm`, `nontrialitarianD`, `restrictionData`, `trialitarianCycles`, `trialitarianIndexOneDescent` |
-| Type `D_n` via hereditary period-index | `d` on the narrower characteristic-zero field scope | `typeDForm`, `nontrialitarianD`, `allenIndex`, `allenIndexBound`, `allenIndexOne`, `allenIndexTwo` |
+| Allen-index split inside the same type `D_n` target | trialitarian part of `d` | `allenIndex`, `allenIndexCases`, `allenIndexOne`, `allenIndexTwo`, `allenIndexFour`, `allenIndexEight` |
 
 These declarations have different theorem types and are not compatibility
-aliases. The transitive open hypotheses of the most refined theorem are:
+aliases. The transitive open hypotheses of the zero-cycle refinement are:
 
 | Hypothesis binder | Required mathematical input | Provider / status |
 |---|---|---|
@@ -347,22 +351,18 @@ aliases. The transitive open hypotheses of the most refined theorem are:
 | `f4` | Fpqc Serre-II neutrality for family `F4` | Published mathematics exists for the stated field scope; an algebraic-group/fpqc project provider remains **open** |
 | `g2` | Fpqc Serre-II neutrality for family `G2` | Published mathematics exists for the stated field scope; an algebraic-group/fpqc project provider remains **open** |
 
-### Alternative open obligations: trialitarian period-index route
-
-The theorem `conjecture_nonE8_of_typeA_typeB_and_typeD_periodIndex` has the
-same type-A, type-B, type-C, nontrialitarian-D, and remaining exceptional
-obligations, but replaces the zero-cycle/descent inputs by the following
-narrower characteristic-zero inputs:
+The Allen-index helper is a decomposition of the same bare type-`D` target,
+not a theorem under different field assumptions. Its additional interfaces
+are:
 
 | Hypothesis binder | Required mathematical input | Provider / status |
 |---|---|---|
-| `IsCharacteristicZeroCdAtMostTwo` | Intrinsic predicate for characteristic-zero fields of cohomological dimension at most two | **Open** as a concrete project predicate |
-| `HasTwoPrimaryIndexEqualsExponentOverFiniteExtensions` | Index equals exponent for every 2-primary central simple algebra over every finite field extension | **Open**; this is an extra field-arithmetic hypothesis, not known from bare cohomological dimension at most two |
 | `allenIndex` | Correct positive index of the Allen algebra attached to every arbitrary trialitarian form | **Open**; Mathlib has no mathematical CSA-index API |
-| `allenIndexBound` | The hereditary period-index hypothesis forces the Allen index to be at most two | Published CTGP proof step; remains to be formalized from Brauer/Allen algebra geometry |
-| `allenIndexOne` | Neutrality in the Allen-index-one, hence quasi-split, branch | Published quasi-split theorem; remains to be formalized in fpqc H1 |
-| `allenIndexTwo` | Neutrality in the Allen-index-two branch | Published Gille Theorem 8; remains to be formalized in fpqc H1 |
-
+| `allenIndexCases` | Every trialitarian Allen index is one, two, four, or eight | Standard degree-eight exponent-two CSA structure; remains to be formalized from an actual Allen-algebra classifier |
+| `allenIndexOne` | Neutrality in the Allen-index-one, hence quasi-split, branch | Published quasi-split mathematics; remains to be formalized in fpqc H1 |
+| `allenIndexTwo` | Neutrality in the Allen-index-two branch | Published low-index mathematics; remains to be formalized in fpqc H1 |
+| `allenIndexFour` | Neutrality for arbitrary trialitarian forms of Allen index four | **Open**; genuine unresolved high-index Serre-II branch |
+| `allenIndexEight` | Neutrality for arbitrary trialitarian forms of Allen index eight | **Open**; genuine unresolved high-index Serre-II branch |
 
 ### Open obligations: `quasisimpleCoreOfFullWeylDescent`
 
