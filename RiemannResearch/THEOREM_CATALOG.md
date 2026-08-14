@@ -639,19 +639,28 @@ are:
 | `RiemannResearch.LinearAlgebra.CliffordEven.evenEquivBaseChange` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | Scalar extension of the even Clifford algebra is canonically algebra-equivalent to the even Clifford algebra of the scalar-extended form | Kernel checked from explicit injectivity and surjectivity under Mathlib's existing invertibility-of-two hypothesis |
 | `RiemannResearch.LinearAlgebra.CliffordEven.spinPointToEvenUnits_injective` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | Mathlib's pointwise spin group embeds faithfully into the units of the even Clifford algebra | Kernel checked pointwise algebra statement; not a group-scheme result |
 | `RiemannResearch.LinearAlgebra.CliffordEven.spinVectorRepresentation_preserves_form` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations` | Clifford conjugation constructs the canonical pointwise vector representation of spin points and preserves the original quadratic form | Kernel checked actual representation, not supplied bridge data |
-| `RiemannResearch.LinearAlgebra.CliffordEven.HalfSpinDecomposition.jointlyFaithful` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations` | A supplied splitting `Cl⁰(Q) ≃ End(S⁺) × End(S⁻)` yields two jointly faithful actions and their restrictions to spin points | Kernel checked derivation; construction of the splitting and modules remains Open |
+| `RiemannResearch.LinearAlgebra.CliffordEven.HalfSpinDecomposition.jointlyFaithful` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations` | A supplied splitting `Cl⁰(Q) ≃ End(S⁺) × End(S⁻)` yields two jointly faithful actions and their restrictions to spin points | Kernel checked generic derivation; split D4 modules and actions are constructed below, while the algebra splitting reduces to Fock injectivity |
+| `RiemannResearch.LinearAlgebra.CliffordEven.exteriorFockGenerator_sq` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.ExteriorSpinors` | Creation plus contraction satisfies the hyperbolic Clifford relation, producing an actual action `Cl(U* × U) → End(ΛU)` | Kernel checked from the creation-annihilation anticommutation relations |
+| `RiemannResearch.LinearAlgebra.CliffordEven.exteriorCliffordAction_mem_even` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.ExteriorSpinors` | The even hyperbolic Clifford algebra preserves both exterior-parity pieces | Kernel checked by even induction; the two restricted algebra actions are explicit |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitFockParity_finranks` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock` | The even and odd parity pieces of the rank-four exterior Fock space both have dimension eight | Kernel checked via a norm-one parity-switching generator and the 16-dimensional exterior basis; these are concrete split half-spin modules |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitD4EvenClifford_finrank` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock` | The even split-D4 Clifford algebra and the product of the two half-spin endomorphism algebras both have dimension 128 | Kernel checked exact source and target rank calculations |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitHalfSpinBlockAction_bijective_of_exteriorCliffordAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock` | Injectivity of the full exterior Fock action forces the parity-block action to be bijective | Kernel checked reduction; full Fock injectivity is the remaining PBW/matrix-unit theorem |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitHalfSpinDecomposition_of_exteriorCliffordAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock` | The single full-Fock injectivity hypothesis constructs the expected split-D4 even-Clifford equivalence and `HalfSpinDecomposition` | Kernel checked conditional constructor; no arbitrary half-spin modules or splitting are assumed |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitD4Form_regular` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitQuadratic` | The standard hyperbolic space H⁴ is eight-dimensional and has nondegenerate associated bilinear form | Kernel checked concrete split D4 quadratic space |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.SpinPointTrialityData.orderOf_trialityCycle_action` | `RiemannResearch.LinearAlgebra.RootSystem.D4SpinTriality` | Any supplied faithful diagram-symmetry action on the spin-point group sends the canonical triality cycle to exact order three; the half-spin swap has exact order two | Kernel checked conditional interface; construction of `SpinPointTrialityData` is Open |
 
 This layer now combines the full D4 diagram automorphism group, exact
 root/weight and discriminant-quadratic data, the integral D4-by-D4 gluing
 overlattice, and concrete pointwise Clifford/Spin functoriality. The canonical
-vector representation is constructed and preserves the quadratic form, while
-`V`, `S+`, and `S-` are exact fundamental-weight classes. The E8 atlas now
-identifies the shared triality graph as its index-four D4-by-D4 lattice glue.
-Still Open are construction of the half-spin modules and their even-Clifford
-splitting, a compatible faithful outer S3 lift, Spin and D4-by-D4 group
-schemes, and the comparison with Galois/fpqc descent.
+vector representation is constructed and preserves the quadratic form. For
+split D4, the exterior Fock action now constructs actual eight-dimensional
+`S+` and `S-` parity modules and their pointwise Spin representations; the
+weight labels independently identify the corresponding nonzero discriminant
+classes. The E8 atlas identifies the shared triality graph as its index-four
+D4-by-D4 lattice glue. The remaining even-Clifford splitting obligation is the
+single theorem that the full exterior Fock action is injective. Still Open
+after that are a compatible faithful outer S3 lift, Spin and D4-by-D4 group
+schemes, and comparison with Galois/fpqc descent.
 
 ## E8 subsystem-induction exclusion
 

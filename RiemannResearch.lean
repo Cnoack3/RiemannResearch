@@ -56,6 +56,7 @@ import RiemannResearch.GroupCohomology.Restriction
 import RiemannResearch.GroupCohomology.StableElements
 import RiemannResearch.GroupCohomology.TrialitarianCentralResidue
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality
+import RiemannResearch.LinearAlgebra.CliffordAlgebra.ExteriorSpinors
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations
 import RiemannResearch.LinearAlgebra.QuotientMap
 import RiemannResearch.LinearAlgebra.SplitLift
@@ -68,6 +69,7 @@ import RiemannResearch.LinearAlgebra.RootSystem.D4PairDiscriminant
 import RiemannResearch.LinearAlgebra.RootSystem.D4PairOverlattice
 import RiemannResearch.LinearAlgebra.RootSystem.D4SpinTriality
 import RiemannResearch.LinearAlgebra.RootSystem.D4SplitQuadratic
+import RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock
 import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.Logic.PointedInvariant
 import RiemannResearch.Motives.IntegralCycleQuotients
