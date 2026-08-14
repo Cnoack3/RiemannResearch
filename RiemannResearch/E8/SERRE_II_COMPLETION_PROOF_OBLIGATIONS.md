@@ -249,7 +249,13 @@ u_i u_{i_0}^{-1}c_0\in E_8(E)^{H_i}.
 The Lean theorem
 NonabelianCocycle.isCoboundary_iff_exists_anchoredFixedGaugeCorrection proves
 that FWCG is equivalent to global coboundary status. It does not construct
-\(c_0\).
+\(c_0\). The theorem
+NonabelianCocycle.exists_anchoredFixedGaugeCorrection_iff_iInter_fixedPointRightCoset_nonempty
+now proves the literal equivalence between FWCG and nonemptiness of
+\(\bigcap_i E_8(E)^{H_i}u_i\), while
+NonabelianCocycle.isCoboundary_iff_iInter_fixedPointRightCoset_nonempty
+identifies both with global coboundary status. Neither theorem proves that
+these equivalent conditions hold.
 
 One may instead prove CG(P) using the complete subsystem-orbit family. Neither
 the three degree computations, Sylow neutralizations, nor generation of

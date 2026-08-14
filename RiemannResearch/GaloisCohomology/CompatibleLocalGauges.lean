@@ -17,6 +17,12 @@ Serre II memorandum. This module contains only the general cocycle argument;
 the existence of compatible E8 gauges remains a separate open input. In
 particular, subgroup generation and the separate existence of local gauges do
 not imply the existence of one common gauge.
+
+The fixed-point right-coset and anchored-correction equivalences below
+formalize Section 7.2, Research Target 7.1, of the user-provided 13 August 2026
+Serre II transporter manuscript. The source supports the statement and
+terminology of those equivalences, not the asserted existence of a correction
+for the thirty-one E8 survivor cases.
 -/
 
 universe u v w x
@@ -54,6 +60,133 @@ def localGaugeSet
     [MulDistribMulAction Γ G]
     (a : NonabelianCocycle Γ G) (H : Subgroup Γ) : Set G :=
   {b | a.IsLocalGauge H b}
+
+/-- The right coset through u of the subgroup of elements fixed by H.
+
+Membership is written without first packaging the fixed elements as a
+subgroup: b belongs exactly when b * u⁻¹ is fixed by H. -/
+def fixedPointRightCoset
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (H : Subgroup Γ) (u : G) : Set G :=
+  {b | IsFixedBy H (b * u⁻¹)}
+
+/-- Literal right-coset description of fixedPointRightCoset. -/
+theorem mem_fixedPointRightCoset_iff
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (H : Subgroup Γ) (u b : G) :
+    b ∈ fixedPointRightCoset H u ↔
+      ∃ k : G, IsFixedBy H k ∧ b = k * u := by
+  constructor
+  · intro hb
+    refine ⟨b * u⁻¹, hb, ?_⟩
+    simp [mul_assoc]
+  · rintro ⟨k, hk, rfl⟩
+    simpa [fixedPointRightCoset, mul_assoc] using hk
+
+/-- Once u is a local gauge, all gauges on the same subgroup form its
+fixed-point right coset. -/
+theorem isLocalGauge_iff_mem_fixedPointRightCoset
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (a : NonabelianCocycle Γ G) (H : Subgroup Γ) (u b : G)
+    (hu : a.IsLocalGauge H u) :
+    a.IsLocalGauge H b ↔ b ∈ fixedPointRightCoset H u := by
+  constructor
+  · intro hb
+    change IsFixedBy H (b * u⁻¹)
+    intro σ hσ
+    have heq : b⁻¹ * (σ • b) = u⁻¹ * (σ • u) :=
+      (hb σ hσ).symm.trans (hu σ hσ)
+    have h := congrArg
+      (fun x : G => b * x * (σ • u)⁻¹) heq
+    have h' : (σ • b) * (σ • u)⁻¹ = b * u⁻¹ := by
+      simpa [mul_assoc] using h
+    simpa [smul_mul'] using h'
+  · intro hb
+    change IsFixedBy H (b * u⁻¹) at hb
+    intro σ hσ
+    have hfixed' : (σ • b) * (σ • u)⁻¹ = b * u⁻¹ := by
+      simpa [smul_mul'] using hb σ hσ
+    have h := congrArg
+      (fun x : G => b⁻¹ * x * (σ • u)) hfixed'
+    have heq : b⁻¹ * (σ • b) = u⁻¹ * (σ • u) := by
+      simpa [mul_assoc] using h
+    exact (hu σ hσ).trans heq.symm
+
+/-- The set of gauges on a subgroup is the fixed-point right coset through any
+chosen local gauge. -/
+theorem localGaugeSet_eq_fixedPointRightCoset
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (a : NonabelianCocycle Γ G) (H : Subgroup Γ) (u : G)
+    (hu : a.IsLocalGauge H u) :
+    localGaugeSet a H = fixedPointRightCoset H u := by
+  ext b
+  exact isLocalGauge_iff_mem_fixedPointRightCoset a H u b hu
+
+/-- Anchored correction versus total fixed-point-coset intersection.
+
+For any family of elements and any anchor, the existence of one anchored
+fixed correction is exactly nonemptiness of the total right-coset
+intersection. This is the purely group-theoretic equivalence displayed in
+Research Target 7.1; no cocycle or generation hypothesis is needed. -/
+theorem
+    exists_anchoredFixedGaugeCorrection_iff_iInter_fixedPointRightCoset_nonempty
+    {Γ : Type u} {G : Type v} {I : Type w}
+    [Group Γ] [Group G] [MulDistribMulAction Γ G]
+    (H : I → Subgroup Γ) (u : I → G) (i₀ : I) :
+    (∃ c₀ : G, ∀ i, IsFixedBy (H i) (transition u i i₀ * c₀)) ↔
+      (⋂ i, fixedPointRightCoset (H i) (u i)).Nonempty := by
+  constructor
+  · rintro ⟨c₀, hc₀⟩
+    refine ⟨c₀⁻¹ * u i₀, ?_⟩
+    rw [Set.mem_iInter]
+    intro i
+    have hinv :
+        IsFixedBy (H i) (transition u i i₀ * c₀)⁻¹ := by
+      intro σ hσ
+      calc
+        σ • (transition u i i₀ * c₀)⁻¹ =
+            (σ • (transition u i i₀ * c₀))⁻¹ :=
+          smul_inv' σ (transition u i i₀ * c₀)
+        _ = (transition u i i₀ * c₀)⁻¹ :=
+          congrArg Inv.inv (hc₀ i σ hσ)
+    simpa [fixedPointRightCoset, transition, mul_assoc] using hinv
+  · rintro ⟨b, hb⟩
+    refine ⟨u i₀ * b⁻¹, ?_⟩
+    intro i
+    have hi : b ∈ fixedPointRightCoset (H i) (u i) :=
+      Set.mem_iInter.mp hb i
+    change IsFixedBy (H i) (b * (u i)⁻¹) at hi
+    have hinv : IsFixedBy (H i) (b * (u i)⁻¹)⁻¹ := by
+      intro σ hσ
+      calc
+        σ • (b * (u i)⁻¹)⁻¹ = (σ • (b * (u i)⁻¹))⁻¹ :=
+          smul_inv' σ (b * (u i)⁻¹)
+        _ = (b * (u i)⁻¹)⁻¹ := congrArg Inv.inv (hi σ hσ)
+    simpa [transition, mul_assoc] using hinv
+
+/-- Research Target 7.1's three abstract formulations are equivalent:
+global coboundary status, an anchored fixed correction, and nonemptiness of
+the total fixed-point right-coset intersection.
+
+This theorem proves the equivalence only. It does not assert that these
+conditions hold for any of the thirty-one E8 survivor cases. -/
+theorem isCoboundary_iff_iInter_fixedPointRightCoset_nonempty
+    {Γ : Type u} {G : Type v} {I : Type w}
+    [Group Γ] [Group G] [MulDistribMulAction Γ G]
+    (a : NonabelianCocycle Γ G)
+    (H : I → Subgroup Γ) (u : I → G) (i₀ : I)
+    (hgen : (⨆ i, H i) = ⊤)
+    (hlocal : ∀ i, a.IsLocalGauge (H i) (u i)) :
+    a.IsCoboundary ↔
+      (⋂ i, fixedPointRightCoset (H i) (u i)).Nonempty :=
+  (isCoboundary_iff_exists_anchoredFixedGaugeCorrection
+    a H u i₀ hgen hlocal).trans
+    (exists_anchoredFixedGaugeCorrection_iff_iInter_fixedPointRightCoset_nonempty
+      H u i₀)
 
 end NonabelianCocycle
 
