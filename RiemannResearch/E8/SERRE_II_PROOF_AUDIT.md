@@ -78,11 +78,17 @@ group.
 `GroupTheory/QuotientGeneration.lean` gives a finite exact countermodel. The first
 factor of `ZMod 2 × ZMod 3` maps onto the quotient `ZMod 2`, but is a proper
 subgroup of the ambient group. Adjoining the projection kernel `ZMod 3`
-restores generation. In the Galois application, if `E/k` is the finite Galois
-splitting field and `N = Gal(k_s/E)`, Proposition 7.5 must be applied to `N`
-together with the pro-p lifts. The known trivialization over `E` supplies the
-extra fixed-locus coset. Research Target 8.7 must therefore ask for the
-intersection of this splitting-field coset and the prime-local cosets.
+restores generation. The general theorem
+`kernel_sup_iSup_eq_top_of_iSup_map_eq_top` now proves that quotient-generating
+lifts together with the homomorphism kernel generate the source, and
+`fixed_of_fixed_on_kernel_and_quotient_generators` proves the corrected
+fixed-point implication. In the Galois application, if `E/k` is the finite
+Galois splitting field and `N = Gal(k_s/E)`, Proposition 7.5 must be applied
+to `N` together with the pro-p lifts. The known trivialization over `E`
+supplies the extra fixed-locus coset. The exact theorem
+`isCoboundary_iff_exists_commonLocalGauge_with_kernel` says that neutrality
+is equivalent to the intersection of this splitting-field coset and all
+prime-local cosets.
 
 ## Verified proof kernels
 
@@ -102,7 +108,9 @@ intersection of this splitting-field coset and the prime-local cosets.
   Theorem 6.30 criterion: a cocycle is a global coboundary if and only if one
   element is a local gauge on every subgroup of the generating family. This
   equivalence characterizes the missing common gauge; it does not produce one
-  from the separately existing local gauges.
+  from the separately existing local gauges. Its kernel-restored variant
+  `isCoboundary_iff_exists_commonLocalGauge_with_kernel` incorporates the
+  finite splitting-field gauge required after Proposition 7.5.
 - `GroupTheory/GeneratedSubgroupsOfCoprimeIndex.lean` proves that a family of
   subgroups with gcd-one indices generates the whole group and that nonempty
   generating families lift through surjective group homomorphisms.

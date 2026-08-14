@@ -157,4 +157,4 @@ entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 ## Subsequent Lean transfer
 
 - Theorem 2.2 now has the conditional finite-point-field realization `sylowLocalFourFieldSplittingPackage`: it chooses the four displayed fields from explicit Totaro and prime-avoidance inputs, proves their degree gcd is one, and derives point-field index one. Construction of the prime-avoiding fields remains source dependent.
-- Proposition 7.5's omitted-kernel issue now has the finite Lean countermodel `quotientGeneration_counterexample`; it also checks that adjoining the projection kernel repairs generation.
+- Proposition 7.5's omitted-kernel issue now has the finite countermodel `quotientGeneration_counterexample`, the general generation repair `kernel_sup_iSup_eq_top_of_iSup_map_eq_top`, the corrected fixed-point theorem `fixed_of_fixed_on_kernel_and_quotient_generators`, and the exact gauge formulation `isCoboundary_iff_exists_commonLocalGauge_with_kernel`. The last theorem requires one gauge simultaneously on `Gal(k_s/E)` and every quotient-generating prime-local lift; it does not assert that such a common gauge exists.

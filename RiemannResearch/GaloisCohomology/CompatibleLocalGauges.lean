@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import RiemannResearch.GaloisCohomology.LocalGaugeTransporter
+import RiemannResearch.GroupTheory.QuotientGeneration
 
 /-!
 # Compatible local gauges
@@ -218,6 +219,52 @@ theorem isCoboundary_iff_exists_commonLocalGauge
     apply eq_trivial_gauge_of_generating_family a b H hgen
     intro i σ hσ
     exact hb i σ hσ
+
+/-- **Common-gauge criterion with the presentation kernel restored.**
+
+Suppose the images of the lifted local subgroups generate a quotient of the
+ambient group. A cocycle is a global coboundary exactly when one gauge
+trivializes it both on the homomorphism kernel and on every lifted subgroup.
+
+For the Galois application following Proposition 7.5, the kernel is
+`Gal(k_s / E)` for the finite Galois splitting field `E/k`. Thus the
+right-hand side includes the previously omitted splitting-field coset as well
+as every prime-local coset.
+-/
+theorem isCoboundary_iff_exists_commonLocalGauge_with_kernel
+    {Γ : Type u} {Q : Type v} {G : Type w} {I : Type x}
+    [Group Γ] [Group Q] [Group G] [MulDistribMulAction Γ G]
+    (a : NonabelianCocycle Γ G)
+    (f : Γ →* Q) (H : I → Subgroup Γ)
+    (hgen : (⨆ i, (H i).map f) = ⊤) :
+    a.IsCoboundary ↔
+      ∃ b, a.IsLocalGauge f.ker b ∧ ∀ i, a.IsLocalGauge (H i) b := by
+  let K : Option I → Subgroup Γ
+    | none => f.ker
+    | some i => H i
+  have hKgen : (⨆ o, K o) = ⊤ := by
+    apply top_unique
+    rw [← GroupTheory.kernel_sup_iSup_eq_top_of_iSup_map_eq_top f H hgen]
+    apply sup_le
+    · simpa [K] using le_iSup (fun o : Option I => K o) none
+    · apply iSup_le
+      intro i
+      simpa [K] using le_iSup (fun o : Option I => K o) (some i)
+  constructor
+  · intro ha
+    obtain ⟨b, hb⟩ :=
+      (isCoboundary_iff_exists_commonLocalGauge a K hKgen).mp ha
+    refine ⟨b, ?_, ?_⟩
+    · simpa [K] using hb none
+    · intro i
+      simpa [K] using hb (some i)
+  · rintro ⟨b, hbker, hbH⟩
+    apply (isCoboundary_iff_exists_commonLocalGauge a K hKgen).mpr
+    refine ⟨b, ?_⟩
+    intro o
+    cases o with
+    | none => simpa [K] using hbker
+    | some i => simpa [K] using hbH i
 
 /-- **Total-intersection form of the exact common-gauge criterion.**
 
