@@ -5,7 +5,7 @@ Authors: Cnoack3
 -/
 
 import RiemannResearch.AlgebraicGeometry.SerreIIE8AnchoredGauge
-import RiemannResearch.AlgebraicGeometry.SerreIIE8SubsystemInduction
+import RiemannResearch.AlgebraicGeometry.SerreIIE8SubsystemFamilyHierarchy
 import RiemannResearch.E8.SubgroupSieve
 import RiemannResearch.GaloisCohomology.CompatibleLocalGauges
 
@@ -247,6 +247,37 @@ theorem serreII_of_nonE8_and_certifiedSurvivorCommonGauges
     (exactFamilyE8_of_certifiedSurvivorCommonGauges
       Base GroupCondition family reductions commonGauge)
 
+/-- Shared-family-hierarchy form of the terminal reduction. All proper
+Dynkin-family developments enter through one reusable hierarchy, while the
+certified survivor reduction and common-gauge theorem supply the `E8`
+branch. -/
+theorem serreII_of_familyHierarchy_and_certifiedSurvivorCommonGauges
+    (Base : BaseCondition)
+    (GroupCondition : GroupCondition)
+    (family : DynkinFamilyClassifier)
+    (hierarchy :
+      NonE8FamilyNeutralityHierarchy Base GroupCondition family)
+    (reductions :
+      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+        Base R →
+        GroupCondition R A →
+        family R A = .E8 →
+          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+    (commonGauge :
+      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+        (hBase : Base R) (hGroup : GroupCondition R A)
+        (hE8 : family R A = .E8)
+        (ξ : FpqcH1.{x, x} R A)
+        (survivor : E8PerfectCoreSurvivorCase)
+        (hrealizes :
+          (reductions R A hBase hGroup hE8).realizes ξ survivor),
+        ((reductions R A hBase hGroup hE8).reduction
+          ξ survivor hrealizes).HasCommonGauge) :
+    Conjecture Base GroupCondition :=
+  hierarchy.conjecture_of_e8
+    (exactFamilyE8_of_certifiedSurvivorCommonGauges
+      Base GroupCondition family reductions commonGauge)
+
 /-- Fully exposed family-provider form of the terminal reduction. Exact
 providers for A, B, C, D, E6, E7, F4, and G2, together with the E8 reductions
 and common-gauge theorem, imply the supplied full Serre-II conjecture. -/
@@ -279,9 +310,9 @@ theorem serreII_of_exactFamilies_and_certifiedSurvivorCommonGauges
         ((reductions R A hBase hGroup hE8).reduction
           ξ survivor hrealizes).HasCommonGauge) :
     Conjecture Base GroupCondition :=
-  serreII_of_nonE8_and_certifiedSurvivorCommonGauges
+  serreII_of_familyHierarchy_and_certifiedSurvivorCommonGauges
     Base GroupCondition family
-    (conjecture_nonE8_of_exact_family_providers
+    (NonE8FamilyNeutralityHierarchy.of_exact_providers
       Base GroupCondition family a b c d e6 e7 f4 g2)
     reductions commonGauge
 

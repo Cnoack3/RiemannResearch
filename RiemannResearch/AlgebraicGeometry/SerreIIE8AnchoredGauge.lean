@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 
-import RiemannResearch.AlgebraicGeometry.SerreIINonE8
+import RiemannResearch.AlgebraicGeometry.SerreIIFamilyHierarchy
 import RiemannResearch.GaloisCohomology.LocalGaugeTransporter
 
 /-!

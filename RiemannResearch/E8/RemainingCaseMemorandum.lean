@@ -18,7 +18,7 @@ import RiemannResearch.AlgebraicGeometry.SerreIIConjecture
 import RiemannResearch.AlgebraicGeometry.SerreIIE8AnchoredGauge
 import RiemannResearch.AlgebraicGeometry.SerreIIE8Completion
 import RiemannResearch.AlgebraicGeometry.SerreIIE8SubsystemInduction
-import RiemannResearch.AlgebraicGeometry.SerreIINonE8
+import RiemannResearch.AlgebraicGeometry.SerreIIFamilyHierarchy
 import RiemannResearch.AlgebraicGeometry.ZeroCycleSplitting
 import RiemannResearch.E8.A11BurnsideCertificate
 import RiemannResearch.E8.A2ChamberNormalization
