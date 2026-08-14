@@ -39,6 +39,18 @@ coefficient-free reduction behind Research Target 8.1. They do not prove
 that the distinguished E8 double coset contains the identity. That remaining
 existence statement requires the actual `2.A5` field/gauge realization, the
 oriented E8 torus transporter, and a geometric factorization or section.
+The declarations `normalizedTwoGauge_values`,
+`normalizedTwoGauge_value_of_eq_mul`, and
+`transition_isAdmissibleTwoGaugeTransition` sharpen the target further. A
+genuine transition is fixed by the overlap and satisfies every crossing
+relation obtained from a refactorization `k * h = h' * k'`; after one gauge
+normalization it determines the cocycle on every supplied `H * K`
+factorization. Consequently
+`isCoboundary_of_admissible_orientedTransition_factorization` reduces the
+missing E8 input to factorization on the intersection of this admissible locus
+with the oriented transporter. It still does not prove that restricted
+factorization.
+
 Moreover, Proposition 6.17's corrected countercertificate shows that a
 cyclic-cubic outer-triality kernel is not uniformly unavoidable: at least one
 degree-five `(D4)^2` orbit has inner order-three action.

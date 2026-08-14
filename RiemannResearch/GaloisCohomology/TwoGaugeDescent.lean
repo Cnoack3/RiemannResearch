@@ -177,4 +177,119 @@ theorem isCoboundary_iff_transition_factorization
       simp
     exact a.isCoboundary_of_localGauges H K hgen g hHg hKg
 
+/-! ## Crossing relations for genuine two-gauge transitions
+
+The transition between two local gauges is more constrained than an arbitrary
+element fixed by their overlap. After gauging by the inverse of the
+`K`-gauge, the cocycle is trivial on `K` and is the coboundary determined
+by the transition on `H`. Comparing the two evaluations of a
+refactorization `k * h = h' * k'` gives the crossing relation below.
+
+In the binary-icosahedral application, `H` and `K` model the
+binary-tetrahedral and binary-dihedral subgroups. Their product is the full
+binary-icosahedral group and their overlap is cyclic of order four. Thus
+these relations isolate the admissible transition locus on which the
+E8-specific factorization theorem is actually needed.
+
+Source: user-provided Serre-II E8 two-gauge program; the proof is elementary
+nonabelian cocycle calculus.
+-/
+
+/-- The matched-factorization relations forced on a transition between local
+gauges on two subgroups. -/
+def SatisfiesTwoGaugeCrossingRelations
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (H K : Subgroup Γ) (δ : G) : Prop :=
+  ∀ (k : K) (h h' : H) (k' : K),
+    k.1 * h.1 = h'.1 * k'.1 →
+      k.1 • (δ⁻¹ * h.1 • δ) = δ⁻¹ * h'.1 • δ
+
+/-- A two-gauge transition is admissible when it is fixed on the overlap and
+satisfies every crossing relation coming from a `K * H = H * K`
+refactorization. -/
+def IsAdmissibleTwoGaugeTransition
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (H K : Subgroup Γ) (δ : G) : Prop :=
+  NonabelianCocycle.IsFixedBy (H ⊓ K) δ ∧
+    SatisfiesTwoGaugeCrossingRelations H K δ
+
+/-- Gauging by the inverse of the `K`-gauge normalizes the cocycle to one on
+`K`; on `H` its values are the coboundary determined by the transition. -/
+theorem normalizedTwoGauge_values
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G] (a : NonabelianCocycle Γ G)
+    (H K : Subgroup Γ) (gH gK : G)
+    (hH : ∀ σ : H, a σ.1 = gH⁻¹ * σ.1 • gH)
+    (hK : ∀ σ : K, a σ.1 = gK⁻¹ * σ.1 • gK) :
+    let δ := gH * gK⁻¹
+    let z := a.gauge gK⁻¹
+    (∀ σ : K, z σ.1 = 1) ∧
+      (∀ σ : H, z σ.1 = δ⁻¹ * σ.1 • δ) := by
+  dsimp
+  constructor
+  · intro σ
+    change (gK⁻¹)⁻¹ * a σ.1 * σ.1 • gK⁻¹ = 1
+    rw [hK σ]
+    have hinv : σ.1 • gK⁻¹ = (σ.1 • gK)⁻¹ :=
+      map_inv (MulDistribMulAction.toMonoidHom G σ.1) gK
+    rw [hinv]
+    simp
+  · intro σ
+    change (gK⁻¹)⁻¹ * a σ.1 * σ.1 • gK⁻¹ =
+      (gH * gK⁻¹)⁻¹ * σ.1 • (gH * gK⁻¹)
+    rw [hH σ, smul_mul']
+    simp [mul_assoc]
+
+/-- After normalization, a value on a product `h * k` is determined entirely
+by the transition and its `H` factor. -/
+theorem normalizedTwoGauge_value_of_eq_mul
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G] (a : NonabelianCocycle Γ G)
+    (H K : Subgroup Γ) (gH gK : G)
+    (hH : ∀ σ : H, a σ.1 = gH⁻¹ * σ.1 • gH)
+    (hK : ∀ σ : K, a σ.1 = gK⁻¹ * σ.1 • gK)
+    (γ : Γ) (h : H) (k : K) (hγ : γ = h.1 * k.1) :
+    (a.gauge gK⁻¹) γ =
+      (gH * gK⁻¹)⁻¹ * h.1 • (gH * gK⁻¹) := by
+  let z := a.gauge gK⁻¹
+  have hz := normalizedTwoGauge_values a H K gH gK hH hK
+  calc
+    z γ = z (h.1 * k.1) := by rw [hγ]
+    _ = z h.1 * h.1 • z k.1 := z.map_mul' h.1 k.1
+    _ = (gH * gK⁻¹)⁻¹ * h.1 • (gH * gK⁻¹) := by
+      rw [hz.2 h, hz.1 k]
+      simp only [MulDistribMulAction.smul_one, mul_one]
+
+/-- Every genuine transition between two local gauges satisfies overlap
+fixedness and all matched-factorization crossing relations. -/
+theorem transition_isAdmissibleTwoGaugeTransition
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G] (a : NonabelianCocycle Γ G)
+    (H K : Subgroup Γ) (gH gK : G)
+    (hH : ∀ σ : H, a σ.1 = gH⁻¹ * σ.1 • gH)
+    (hK : ∀ σ : K, a σ.1 = gK⁻¹ * σ.1 • gK) :
+    IsAdmissibleTwoGaugeTransition H K (gH * gK⁻¹) := by
+  constructor
+  · exact transition_fixed_on_subgroup a (H ⊓ K) gH gK
+      (fun σ => hH ⟨σ.1, σ.2.1⟩)
+      (fun σ => hK ⟨σ.1, σ.2.2⟩)
+  · intro k h h' k' heq
+    let z := a.gauge gK⁻¹
+    have hz := normalizedTwoGauge_values a H K gH gK hH hK
+    have hzK : ∀ σ : K, z σ.1 = 1 := hz.1
+    have hzH :
+        ∀ σ : H, z σ.1 =
+          (gH * gK⁻¹)⁻¹ * σ.1 • (gH * gK⁻¹) := hz.2
+    calc
+      k.1 • ((gH * gK⁻¹)⁻¹ * h.1 • (gH * gK⁻¹)) =
+          z k.1 * k.1 • z h.1 := by rw [hzK k, hzH h, one_mul]
+      _ = z (k.1 * h.1) := (z.map_mul' k.1 h.1).symm
+      _ = z (h'.1 * k'.1) := by rw [heq]
+      _ = z h'.1 * h'.1 • z k'.1 := z.map_mul' h'.1 k'.1
+      _ = (gH * gK⁻¹)⁻¹ * h'.1 • (gH * gK⁻¹) := by
+        rw [hzH h', hzK k']
+        simp only [MulDistribMulAction.smul_one, mul_one]
+
 end RiemannResearch.GaloisCohomology

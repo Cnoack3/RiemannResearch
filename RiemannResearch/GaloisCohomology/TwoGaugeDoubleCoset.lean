@@ -121,4 +121,36 @@ theorem isCoboundary_iff_orientedTransporter_and_doubleCoset
   rw [isCoboundary_iff_one_mem_fixedPointDoubleCoset a H K hgen gH gK hH hK]
   exact ⟨fun h => ⟨htransport, h⟩, And.right⟩
 
+/-- A factorization theorem only on the admissible oriented-transition locus
+is sufficient for two-gauge descent.
+
+This is the application-shaped endpoint for the binary-icosahedral E8
+problem. It does not require the false ambient factorization of every element
+of the overlap field group: only elements satisfying the overlap fixedness,
+the matched-factorization crossing relations, and the supplied oriented-torus
+incidence must factor through the two fixed-point groups. -/
+theorem isCoboundary_of_admissible_orientedTransition_factorization
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G] (a : NonabelianCocycle Γ G)
+    (H K : Subgroup Γ) (hgen : H ⊔ K = ⊤)
+    (gH gK : G)
+    (hH : ∀ σ : H, a σ.1 = gH⁻¹ * σ.1 • gH)
+    (hK : ∀ σ : K, a σ.1 = gK⁻¹ * σ.1 • gK)
+    (S6 S5 : Subgroup G) (theta : S6 ≃* S5)
+    (htransport :
+      gH * gK⁻¹ ∈ orientedSubgroupTransporter S6 S5 theta)
+    (hfactor :
+      ∀ x : G,
+        IsAdmissibleTwoGaugeTransition H K x →
+        x ∈ orientedSubgroupTransporter S6 S5 theta →
+        ∃ u v : G, NonabelianCocycle.IsFixedBy H u ∧
+          NonabelianCocycle.IsFixedBy K v ∧ x = u * v) :
+    a.IsCoboundary := by
+  apply
+    (isCoboundary_iff_transition_factorization
+      a H K hgen gH gK hH hK).2
+  exact hfactor (gH * gK⁻¹)
+    (transition_isAdmissibleTwoGaugeTransition a H K gH gK hH hK)
+    htransport
+
 end RiemannResearch.GaloisCohomology
