@@ -87,6 +87,29 @@ theorem mem_orientedSubgroupTransporter_bot
   have hs : s = 1 := Subsingleton.elim _ _
   simp [hs]
 
+/-- Two points of the same strict oriented transporter differ on the left by
+an element centralizing the target subgroup. This is the torsor relation that
+allows one fixed basepoint to control every oriented transition. -/
+theorem leftQuotient_mem_centralizer_of_mem_orientedSubgroupTransporter
+    {G : Type v} [Group G] (S6 S5 : Subgroup G) (theta : S6 ≃* S5)
+    {x x0 : G}
+    (hx : x ∈ orientedSubgroupTransporter S6 S5 theta)
+    (hx0 : x0 ∈ orientedSubgroupTransporter S6 S5 theta) :
+    x * x0⁻¹ ∈ Set.centralizer (S5 : Set G) := by
+  rw [Set.mem_centralizer_iff]
+  intro t ht
+  let s : S6 := theta.symm ⟨t, ht⟩
+  have hx' : x * s.1 * x⁻¹ = t := by
+    simpa [s] using hx s
+  have hx0' : x0 * s.1 * x0⁻¹ = t := by
+    simpa [s] using hx0 s
+  calc
+    t * (x * x0⁻¹) =
+        (x * s.1 * x⁻¹) * (x * x0⁻¹) := by rw [hx']
+    _ = x * s.1 * x0⁻¹ := by simp [mul_assoc]
+    _ = (x * x0⁻¹) * (x0 * s.1 * x0⁻¹) := by simp [mul_assoc]
+    _ = (x * x0⁻¹) * t := by rw [hx0']
+
 /-- Exact two-gauge descent expressed as a double-coset condition. -/
 theorem isCoboundary_iff_one_mem_fixedPointDoubleCoset
     {Γ : Type u} {G : Type v} [Group Γ] [Group G]
@@ -163,6 +186,66 @@ theorem isCoboundary_of_admissible_orientedTransition_factorization
   exact hfactor (gH * gK⁻¹)
     (transition_isAdmissibleTwoGaugeTransition a H K gH gK hH hK)
     htransport
+
+/-- A non-circular constrained factorization criterion for an oriented
+transporter. If its target centralizer is H-fixed and it contains one K-fixed
+basepoint, then every point of the transporter factors through the H- and
+K-fixed point groups.
+
+For the intended E8 application, the centralizer hypothesis is supplied by a
+self-centralizing maximal torus defined over the H-field, while the basepoint
+is a single oriented gauge representative defined over the K-field. -/
+theorem orientedTransition_factorization_of_fixedBasepoint
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (H K : Subgroup Γ) (S6 S5 : Subgroup G) (theta : S6 ≃* S5)
+    {x x0 : G}
+    (hx : x ∈ orientedSubgroupTransporter S6 S5 theta)
+    (hx0 : x0 ∈ orientedSubgroupTransporter S6 S5 theta)
+    (hcentral :
+      Set.centralizer (S5 : Set G) ⊆
+        (fixedPointSubgroup (G := G) H : Set G))
+    (hx0K : NonabelianCocycle.IsFixedBy K x0) :
+    ∃ u v : G, NonabelianCocycle.IsFixedBy H u ∧
+      NonabelianCocycle.IsFixedBy K v ∧ x = u * v := by
+  have hquotientH : x * x0⁻¹ ∈ fixedPointSubgroup (G := G) H :=
+    hcentral
+      (leftQuotient_mem_centralizer_of_mem_orientedSubgroupTransporter
+        S6 S5 theta hx hx0)
+  refine ⟨x * x0⁻¹, x0, ?_, hx0K, ?_⟩
+  · intro σ hσ
+    exact hquotientH ⟨σ, hσ⟩
+  · simp [mul_assoc]
+
+/-- Exact two-gauge descent from two geometric incidence checks: one
+K-fixed basepoint in the oriented transporter and H-fixedness of the target
+centralizer.
+
+Unlike the unrestricted transporter hypothesis, these assumptions exclude the
+trivial-subgroup countermodel and isolate concrete E8 maximal-torus
+obligations rather than assuming the desired factorization. -/
+theorem isCoboundary_of_orientedTransition_fixedBasepoint
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G] (a : NonabelianCocycle Γ G)
+    (H K : Subgroup Γ) (hgen : H ⊔ K = ⊤)
+    (gH gK : G)
+    (hH : ∀ σ : H, a σ.1 = gH⁻¹ * σ.1 • gH)
+    (hK : ∀ σ : K, a σ.1 = gK⁻¹ * σ.1 • gK)
+    (S6 S5 : Subgroup G) (theta : S6 ≃* S5)
+    (htransport :
+      gH * gK⁻¹ ∈ orientedSubgroupTransporter S6 S5 theta)
+    (x0 : G)
+    (hx0 : x0 ∈ orientedSubgroupTransporter S6 S5 theta)
+    (hcentral :
+      Set.centralizer (S5 : Set G) ⊆
+        (fixedPointSubgroup (G := G) H : Set G))
+    (hx0K : NonabelianCocycle.IsFixedBy K x0) :
+    a.IsCoboundary := by
+  apply
+    (isCoboundary_iff_transition_factorization
+      a H K hgen gH gK hH hK).2
+  exact orientedTransition_factorization_of_fixedBasepoint
+    H K S6 S5 theta htransport hx0 hcentral hx0K
 
 /-- A kernel-checked no-go statement for replacing the missing E8 geometry by
 the abstract transporter predicate alone.
