@@ -11,6 +11,7 @@ import RiemannResearch.AlgebraicGeometry.SerreIIConjecture
 import RiemannResearch.AlgebraicGeometry.SerreIINonE8
 import RiemannResearch.AlgebraicGeometry.SerreIIE8AnchoredGauge
 import RiemannResearch.AlgebraicGeometry.SerreIIE8Completion
+import RiemannResearch.AlgebraicGeometry.SerreIIE8SolvableIncidence
 import RiemannResearch.AlgebraicGeometry.SerreIIE8SubsystemInduction
 import RiemannResearch.AlgebraicGeometry.SerreIITypeA
 import RiemannResearch.AlgebraicGeometry.SerreIITypeB
@@ -76,6 +77,7 @@ import RiemannResearch.GroupTheory.OrbitDegreeGcd
 import RiemannResearch.GroupTheory.PerfectCore
 import RiemannResearch.GroupTheory.PGroupFixedPoints
 import RiemannResearch.GroupTheory.QuotientGeneration
+import RiemannResearch.GroupTheory.SimultaneousTransporter
 import RiemannResearch.GroupTheory.TwoFactorNorm
 import RiemannResearch.E6.A2CubedFiniteCertificate
 import RiemannResearch.E7.D6A1FiniteCertificate
@@ -92,6 +94,7 @@ import RiemannResearch.E8.SylowSevenArithmetic
 import RiemannResearch.E8.SylowSevenHyperbolicModel
 import RiemannResearch.E8.WeylIndexPacket
 import RiemannResearch.E8.PrimeMarkedPacket
+import RiemannResearch.E8.PrimeMarkedSolvableIncidence
 import RiemannResearch.E8.RootLatticeSmithCertificates
 import RiemannResearch.E8.A2ChamberNormalization
 import RiemannResearch.E8.SylowLocalSplitting

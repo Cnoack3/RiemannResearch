@@ -143,6 +143,27 @@ theorem NonabelianCocycle.isCoboundary_gauge_iff
     exact NonabelianCocycle.gauge_gauge g q
       (NonabelianCocycle.trivial : NonabelianCocycle Γ G)
 
+/-- Gauging into a coefficient subgroup with trivial nonabelian H¹ is
+equivalent to global neutrality.
+
+This is the abstract cocycle form of the common-Borel warning in the E8
+application. It does not assert that a split Borel reduction exists, nor
+does it construct the algebraic-group/flag-variety comparison. -/
+theorem NonabelianCocycle.isCoboundary_iff_canGaugeInto_of_valuesIn_isCoboundary
+    (a : NonabelianCocycle Γ G) (B : Subgroup G)
+    (hB :
+      ∀ z : NonabelianCocycle Γ G, z.ValuesIn B → z.IsCoboundary) :
+    a.IsCoboundary ↔ a.CanGaugeInto B := by
+  constructor
+  · rintro ⟨g, rfl⟩
+    refine ⟨g⁻¹, ?_⟩
+    rw [NonabelianCocycle.gauge_gauge, mul_inv_cancel,
+      NonabelianCocycle.gauge_one]
+    intro σ
+    simp [NonabelianCocycle.trivial]
+  · rintro ⟨g, hg⟩
+    exact (a.isCoboundary_gauge_iff g).1 (hB _ hg)
+
 /-- A two-stage subgroup reduction.
 
 The hypotheses have distinct mathematical roles:

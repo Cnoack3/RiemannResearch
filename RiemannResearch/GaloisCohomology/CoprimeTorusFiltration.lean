@@ -156,4 +156,46 @@ theorem NonabelianCocycle.exists_commonLocalGauge_of_chosen_gauge_subgroup_filtr
     B U T S s hgcd r hz x x_restricts_to_zero
       gaugeIntoU_of_x_zero hU
 
+namespace NonabelianCocycle
+
+/-- The chosen-gauge coprime filtration produces the anchored fixed
+correction appearing in Research Target 7.1.
+
+The conclusion is exactly the displayed equation (12) in abstract group
+form. The theorem remains conditional on the single simultaneous gauge into
+`B`, the residual additive H¹ class and its local vanishing, the correction
+into `U`, and terminal `U`-vanishing. -/
+theorem exists_anchoredFixedGaugeCorrection_of_chosen_gauge_subgroup_filtration_gcd_one_h1
+    {k Γ : Type u} {G : Type v}
+    [CommRing k] [Group Γ] [Group G] [MulDistribMulAction Γ G]
+    (a : NonabelianCocycle Γ G) (B U : Subgroup G)
+    {ι : Type w} (T : Rep k Γ) (S : ι → Subgroup Γ)
+    [∀ i, (S i).FiniteIndex]
+    (s : Finset ι)
+    (hgcd : s.gcd (fun i => (Nat.card (Γ ⧸ S i) : ℤ)) = 1)
+    (localGauge : ι → G) (anchor : ι)
+    (hgen : (⨆ i, S i) = ⊤)
+    (hlocal : ∀ i, a.IsLocalGauge (S i) (localGauge i))
+    (r : G) (hz : (a.gauge r).ValuesIn B)
+    (x : groupCohomology.H1 T)
+    (x_restricts_to_zero :
+      ∀ (i : ι), i ∈ s →
+        h1RestrictionViaCocycles T (S i) x = 0)
+    (gaugeIntoU_of_x_zero :
+      x = 0 →
+        ∃ q : B, ((a.gauge r).gauge (q : G)).ValuesIn U)
+    (hU :
+      ∀ z : NonabelianCocycle Γ G, z.ValuesIn U → z.IsCoboundary) :
+    ∃ c₀ : G, ∀ i,
+      NonabelianCocycle.IsFixedBy (S i)
+        (NonabelianCocycle.transition localGauge i anchor * c₀) := by
+  apply
+    (NonabelianCocycle.isCoboundary_iff_exists_anchoredFixedGaugeCorrection
+      a S localGauge anchor hgen hlocal).1
+  exact a.isCoboundary_of_chosen_gauge_subgroup_filtration_gcd_one_h1
+    B U T S s hgcd r hz x x_restricts_to_zero
+      gaugeIntoU_of_x_zero hU
+
+end NonabelianCocycle
+
 end RiemannResearch.GaloisCohomology
