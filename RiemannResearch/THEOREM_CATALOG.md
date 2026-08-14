@@ -349,7 +349,63 @@ project’s global Čech quotient is also not yet identified with fpqc torsors.
 | `RiemannResearch.GroupCohomology.all_classes_neutral_of_universalFiniteEtaleKernelNormPrinciple` | `RiemannResearch.GroupCohomology.FiniteEtaleKernelNorm` | The universal kernel-norm principle plus exact local restriction-corestriction and Bezout data forces all global classes neutral | Kernel checked abstract forward implication; E8 providers remain open |
 | `RiemannResearch.GroupCohomology.universalFiniteEtaleKernelNormPrinciple_iff_all_classes_neutral` | `RiemannResearch.GroupCohomology.FiniteEtaleKernelNorm` | Under exact local Bezout data, the universal finite-etale kernel-norm principle is equivalent to global neutrality | Kernel checked abstract Proposition 6.35 equivalence; not a proof of Conjecture 6.33 for E8 |
 
+| `RiemannResearch.GroupCohomology.three_nsmul_eq_self_of_two_torsion` | `RiemannResearch.GroupCohomology.TrialitarianCentralResidue` | A two-torsion additive class satisfies `3 • z = z` | Kernel checked elementary residue step; does not construct a trialitarian boundary or norm map |
+| `RiemannResearch.GroupCohomology.central_residue_of_cubic_norm` | `RiemannResearch.GroupCohomology.TrialitarianCentralResidue` | If a boundary map hits `3 • z` and `2 • z = 0`, the same witness hits `z` | Kernel checked endpoint of the proposed D4 residue argument; the field-valued central norm theorem remains open |
+| `RiemannResearch.E6.A2CubedFiniteCertificate.permutationFunctions_exhaust` | `RiemannResearch.E6.A2CubedFiniteCertificate` | The displayed six maps exhaust all permutations of the three A2 factors | Kernel checked finite certificate |
+| `RiemannResearch.E6.A2CubedFiniteCertificate.permsWithParity_correct` | `RiemannResearch.E6.A2CubedFiniteCertificate` | The attached signs equal inversion parity | Kernel checked finite certificate |
+| `RiemannResearch.E6.A2CubedFiniteCertificate.e6_root_count` | `RiemannResearch.E6.A2CubedFiniteCertificate` | The explicit scaled A2-cubed model has 72 E6 roots | Kernel checked finite certificate |
+| `RiemannResearch.E6.A2CubedFiniteCertificate.e6_root_norms` | `RiemannResearch.E6.A2CubedFiniteCertificate` | Symbolic rescaling gives every encoded E6 root norm two | Kernel checked consequence of the integral norm certificate |
+| `RiemannResearch.E6.A2CubedFiniteCertificate.e6_weight_count` | `RiemannResearch.E6.A2CubedFiniteCertificate` | The explicit minuscule orbit has 27 distinct weights | Kernel checked finite certificate together with `e6_weights_nodup` |
+| `RiemannResearch.E6.A2CubedFiniteCertificate.e6_weight_norms` | `RiemannResearch.E6.A2CubedFiniteCertificate` | Symbolic rescaling gives every encoded minuscule weight norm `4/3` | Kernel checked consequence of the integral norm certificate |
+| `RiemannResearch.E6.A2CubedFiniteCertificate.signed_permutations_preserve_roots` | `RiemannResearch.E6.A2CubedFiniteCertificate` | Every displayed signed factor permutation preserves the E6 root set | Kernel checked finite certificate |
+| `RiemannResearch.E6.A2CubedFiniteCertificate.preserves_27_iff_sign_eq_parity` | `RiemannResearch.E6.A2CubedFiniteCertificate` | A factor permutation preserves the chosen 27 exactly when simultaneous duality has its parity | Kernel checked normalizer-parity rule; no field-valued A2-cubed frame is constructed |
+| `RiemannResearch.E6.A2CubedFiniteCertificate.sends_27_to_dual_iff_sign_neg_parity` | `RiemannResearch.E6.A2CubedFiniteCertificate` | The opposite sign sends the chosen 27 to its dual | Kernel checked signed-action classification |
+| `RiemannResearch.E6.A2CubedFiniteCertificate.commonCentralKernel_eq_diagonal` | `RiemannResearch.E6.A2CubedFiniteCertificate` | The common kernel of the displayed central characters is diagonal mu3 | Kernel checked finite character calculation; does not prove the nonsplit E6 central norm theorem |
+| `RiemannResearch.E7.D6A1FiniteCertificate.e7_root_count` | `RiemannResearch.E7.D6A1FiniteCertificate` | The twice-scaled E7 packet contains 126 roots | Kernel checked finite certificate |
+| `RiemannResearch.E7.D6A1FiniteCertificate.e7_roots_nodup` | `RiemannResearch.E7.D6A1FiniteCertificate` | The 126 encoded roots are pairwise distinct | Kernel checked finite certificate |
+| `RiemannResearch.E7.D6A1FiniteCertificate.e7_root_norms` | `RiemannResearch.E7.D6A1FiniteCertificate` | Symbolic rescaling of the integral norm-eight packet gives rational root norm two | Kernel checked; exhaustive reflection closure is not asserted |
+| `RiemannResearch.E7.D6A1FiniteCertificate.e7Glue_double_coordinates` | `RiemannResearch.E7.D6A1FiniteCertificate` | The half-spin glue numerator has the displayed integral coordinates after doubling | Kernel checked integral coordinate certificate |
+| `RiemannResearch.E7.D6A1FiniteCertificate.e7Glue_not_twice_mem` | `RiemannResearch.E7.D6A1FiniteCertificate` | The glue numerator is not in twice the D6+A1 root lattice | Kernel checked parity argument |
+| `RiemannResearch.E7.D6A1FiniteCertificate.e7Glue_has_exact_order_two` | `RiemannResearch.E7.D6A1FiniteCertificate` | The half-spin glue class has exact order two modulo the D6+A1 root lattice | Kernel checked lattice certificate; does not construct E7 Tits data |
+| `RiemannResearch.E7.D6A1FiniteCertificate.index_four_forces_labelled_split` | `RiemannResearch.E7.D6A1FiniteCertificate` | In the recorded index table, labelled index four at `23` forces index one at `12` or `13` | Kernel checked finite consequence; no theorem supplies the table for an actual E7 group |
+| `RiemannResearch.E8.PrimeMarkedSubsystem.certificate` | `RiemannResearch.E8.PrimeMarkedPacket` | Verifies the D8, A2^4, and A4^2 normalizers, orbit degrees 135, 11200, and 12096, Weyl divisibility, and prime residues | Kernel checked arithmetic; no subgroup scheme or splitting-field provider is claimed |
+| `RiemannResearch.E8.primeMarkedPacket_bezout` | `RiemannResearch.E8.PrimeMarkedPacket` | Verifies `-73·135 - 11·11200 + 11·12096 = 1` | Kernel checked arithmetic |
+| `RiemannResearch.E8.primeMarkedPacket_gcd` | `RiemannResearch.E8.PrimeMarkedPacket` | The three degrees have gcd one | Kernel checked arithmetic |
+| `RiemannResearch.E8.eq_zero_of_primeMarkedPacket_annihilators` | `RiemannResearch.E8.PrimeMarkedPacket` | An additive class killed by 135, 11200, and 12096 is zero | Kernel checked additive shadow; not a nonabelian-H1 common-gauge theorem |
+| `RiemannResearch.E8.RootLatticeSmith.d8Smith_certificate` | `RiemannResearch.E8.RootLatticeSmithCertificates` | Explicit inverse and diagonalization witnesses give Smith diagonal `(1,1,1,1,1,1,2,2)` for D8 | Kernel checked exact matrix certificate |
+| `RiemannResearch.E8.RootLatticeSmith.d4d4Smith_certificate` | `RiemannResearch.E8.RootLatticeSmithCertificates` | Explicit witnesses give Smith diagonal `(1,1,1,1,2,2,2,2)` for D4+D4 | Kernel checked exact matrix certificate |
+| `RiemannResearch.E8.RootLatticeSmith.a4a4Smith_certificate` | `RiemannResearch.E8.RootLatticeSmithCertificates` | Explicit witnesses give Smith diagonal `(1,1,1,1,1,1,5,5)` for A4+A4 | Kernel checked exact matrix certificate |
+| `RiemannResearch.E8.RootLatticeSmith.a2x4Smith_certificate` | `RiemannResearch.E8.RootLatticeSmithCertificates` | Explicit witnesses give Smith diagonal `(1,1,1,1,3,3,3,3)` for A2^4 | Kernel checked exact matrix certificate |
+| `RiemannResearch.E8.RootLatticeSmith.smithDiagonalIndexArithmetic` | `RiemannResearch.E8.RootLatticeSmithCertificates` | Reads index squares 4, 16, 25, and 81 from the Smith diagonals | Kernel checked finite consequence; no E8 subgroup embedding is constructed |
+| `RiemannResearch.E8.BinaryIcosahedralFinite.packet` | `RiemannResearch.E8.BinaryIcosahedralFinite` | Checks the 120-element determinant-one model, Q8, order-24 and order-20 subsets, order-4 overlap, full product, and cardinal quotients 5 and 6 | Kernel checked finite-set certificate; not formal subgroup indices or field-valued E8 factorization |
+| `RiemannResearch.E8.BinaryIcosahedralFinite.overlap_is_c4` | `RiemannResearch.E8.BinaryIcosahedralFinite` | Identifies the overlap with the cyclic closure of the displayed order-four matrix | Kernel checked finite certificate; does not prove E8-BIN |
+
 ### Primary target: bare perfect-cd-at-most-two Serre II
+
+The new finite certificates fix substantial combinatorial input but do not
+close a field-valued Serre-II branch. The D4 declarations prove only the
+final additive residue step after a central norm theorem is supplied. The E6
+and E7 modules certify root, weight, parity, central-character, index-table,
+and lattice-glue data. The E8 modules certify the prime-marked packet, four
+Smith witnesses, and a finite SL2(F5) degree-5/degree-6 model. None constructs
+intrinsic Tits or Allen algebras, oriented frames, labelled quadratic pairs,
+field-valued tori, fpqc/Galois comparison maps, or a common E8 gauge.
+Consequently `SerreII.Conjecture` remains open.
+
+| Obligation | Established Lean support | Remaining work | Status |
+|---|---|---|---|
+| Intrinsic full target | `SerreII.Conjecture`, fpqc Čech H1, and conditional family assembly | Intrinsic characteristic-zero/cd-at-most-two and semisimple-simply-connected predicates, root-data classification, and fpqc/continuous-Galois-H1 comparison | Open foundation |
+| D4-POL | Trialitarian kind/index interfaces and coprime-cycle reductions | Pure-twist polarization descent for nonsplit Allen data with oriented C3/S3 semilinear compatibility | Open mathematics |
+| D4 central residue | `three_nsmul_eq_self_of_two_torsion`, `central_residue_of_cubic_norm` | Construct the actual boundary and prove `cor(im δ_L) ⊆ im δ_k` | Open field-valued theorem |
+| E6-EXIST | Finite A2^3 root/weight and signed-S3 model | Produce a Tits-compatible oriented A2^3 frame in the index-9 and index-27 cases; the cited classification only classifies such a subgroup after existence | Open mathematics |
+| E6-REL | Exact parity/duality rule | Construct one common frame for a pure twist and include simultaneous dualization on odd factor permutations | Open mathematics |
+| E6-CEN | Diagonal-mu3 character kernel | Treat the generally nonsplit center `(R_{L/k} μ3)/μ3` and prove its H1 image in E6 is trivial | Open mathematics |
+| E7-INDEX | Root packet, order-two glue, and finite labelled-index consequence | Construct actual labelled quaternion/Tits data and prove the permitted table applies to the E7 reduction | Open mathematics |
+| E8 transporter bridge | Prime-marked packet and Smith data | Replace the unlike-root-subsystem transporter (empty as stated) by a descended maximal-torus bitorsor with strict orientation | Printed root-subsystem bridge invalid; replacement open |
+| E8-TRI | D4+D4 Smith certificate and abstract cohomological reductions | Construct the cyclic-cubic restriction kernel for the actual D4^2 source with the required central exponent-two kernel | Open mathematics |
+| E8-BIN | Finite SL2(F5) packet and exact common-gauge criterion | Prove constrained E8-valued factorization for transitions coming from one admissible toral cocycle | Open mathematics |
+| Remaining 31 E8 lifts | Embedded 31-row sieve and prime-marked arithmetic | Certificate-to-E8 geometry, local gauges, and common-gauge factorization for every survivor | Open mathematics |
+
 
 The sole global target is `SerreII.Conjecture` under the bare perfect-field,
 cohomological-dimension-at-most-two predicate. The non-`E8` refinements
