@@ -600,6 +600,27 @@ are:
 | `RiemannResearch.AlgebraicGeometry.FpqcH1RestrictionSystem.map_neutral` | `RiemannResearch.AlgebraicGeometry.FpqcH1ScalarExtension` | Every supplied scalar-extension map lands in fpqc H¹ of the actual tensor-product base-changed group and preserves the neutral class | Kernel checked interface law; construction and functoriality of the scalar-extension map remain open |
 | `RiemannResearch.AlgebraicGeometry.SerreII.TrialitarianRestrictionData.ofFpqcH1RestrictionSystem_restrict_neutral` | `RiemannResearch.AlgebraicGeometry.SerreIITypeDScalarExtension` | A typed family of finite field extensions and concrete fpqc-H¹ scalar-extension maps supplies the restriction data used by the trialitarian zero-cycle reduction | Kernel checked adapter; the scalar-extension maps themselves remain explicit inputs |
 
+## Shared D4 triality hierarchy
+
+| Declaration | Module | Verified consequence | Status |
+|---|---|---|---|
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.cartanFinFour_eq_mathlib` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | The labelled D4 Cartan matrix is Mathlib's `CartanMatrix.D 4` in the chosen `V, central, S+, S-` order | Kernel checked finite identification |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.diagramAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | Permuting the three outer labels gives a faithful action on all four D4 nodes | Kernel checked; with `card_diagramSymmetry`, this is the six-element diagram-triality action |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.cartan_diagramAction` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | Every outer-label permutation fixes the D4 Cartan matrix | Kernel checked |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.orderOf_trialityCycle` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | The cycle `V -> S+ -> S- -> V` has exact order three; `orderOf_halfSpinSwap` supplies the order-two generator | Kernel checked finite group calculation |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.DiagramDescent.imageOrder_cases` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | The image of any supplied group action on the D4 outer labels has order 1, 2, 3, or 6 | Kernel checked by Lagrange in the six-element symmetry group |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.DiagramDescent.isTrialitarian_iff` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | A supplied diagram action is trialitarian exactly when its image has order 3 or 6 | Kernel checked diagram-level classifier |
+| `RiemannResearch.AlgebraicGeometry.SerreII.TypeDFormKind.diagramImageEquiv` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | Inner, outer, ³D₄, and ⁶D₄ labels are equivalent to the shared trivial, cyclic-two, cyclic-three, and symmetric-three image labels | Kernel checked metadata adapter; it does not construct an algebraic form |
+| `RiemannResearch.AlgebraicGeometry.SerreII.TypeDForm.ofDiagramDescent_isTrialitarian_iff` | `RiemannResearch.AlgebraicGeometry.SerreIITypeD` | Type-D metadata built from a supplied diagram action is trialitarian exactly for image order 3 or 6 | Kernel checked adapter; no Galois action, Spin group scheme, or fpqc descent is constructed |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.pairCartan_eq_displayed` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | The canonical D4 x D4 block matrix has the central-second ordering; `pairCartanCentralFirst_eq_displayed` proves the ATLAS reindexing | Kernel checked finite certificates |
+| `RiemannResearch.E8.BinaryIcosahedralAtlas.d4d4Gram_eq_shared` | `RiemannResearch.E8.BinaryIcosahedralAtlas` | The binary-icosahedral ATLAS roots use the shared D4 x D4 matrix in central-first order | Kernel checked definitional adapter |
+| `RiemannResearch.E8.RootLatticeSmith.d4d4_eq_shared` | `RiemannResearch.E8.RootLatticeSmithCertificates` | The D4 x D4 Smith certificate uses the same shared matrix in Mathlib's central-second order | Kernel checked definitional adapter |
+
+This layer formalizes diagram triality and shared finite Cartan data only. The
+labels `V`, `S+`, and `S-` do not yet denote constructed Spin(8)
+representations, and no lift to algebraic-group automorphisms or Galois/fpqc
+descent is claimed.
+
 ## E8 subsystem-induction exclusion
 
 | Declaration | Module | Verified consequence | Status |

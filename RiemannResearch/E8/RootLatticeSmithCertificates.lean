@@ -6,6 +6,7 @@ Authors: Cnoack3
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic.NormNum
+import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
 
 
 /-!
@@ -20,6 +21,10 @@ trusted output copied from a computer algebra system.
 The four certificates concern `D₈`, `D₄²`, `A₄²`, and `A₂⁴`.
 They establish finite lattice data only, not the existence of corresponding
 subgroups over a field.
+
+The D4² input is the canonical central-second matrix from the shared
+`LinearAlgebra.RootSystem.D4Triality` layer; the binary-icosahedral ATLAS
+uses the explicitly proved central-first reindexing of the same matrix.
 
 Source: the user-provided Wolfram Language certificate
 `serre_ii_wolfram_certificates.wl` (10 August 2026); the source supports
@@ -82,11 +87,12 @@ theorem d8Smith_certificate :
   unfold SmithCertificate
   decide
 
-def d4d4 : Mat8 := ![
-  ![2,-1,0,0,0,0,0,0], ![-1,2,-1,-1,0,0,0,0],
-  ![0,-1,2,0,0,0,0,0], ![0,-1,0,2,0,0,0,0],
-  ![0,0,0,0,2,-1,0,0], ![0,0,0,0,-1,2,-1,-1],
-  ![0,0,0,0,0,-1,2,0], ![0,0,0,0,0,-1,0,2]]
+def d4d4 : Mat8 :=
+  RiemannResearch.LinearAlgebra.RootSystem.D4Triality.pairCartan
+
+theorem d4d4_eq_shared :
+    d4d4 = RiemannResearch.LinearAlgebra.RootSystem.D4Triality.pairCartan :=
+  rfl
 
 def d4d4Left : Mat8 := ![
   ![2,3,2,2,0,0,0,0], ![1,2,1,1,0,0,0,0],
@@ -124,6 +130,8 @@ set_option maxRecDepth 100000 in
 theorem d4d4Smith_certificate :
     SmithCertificate d4d4 d4d4Smith d4d4Left d4d4LeftInv
       d4d4Right d4d4RightInv := by
+  unfold d4d4
+  rw [RiemannResearch.LinearAlgebra.RootSystem.D4Triality.pairCartan_eq_displayed]
   unfold SmithCertificate
   decide
 

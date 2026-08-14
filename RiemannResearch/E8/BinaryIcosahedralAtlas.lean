@@ -5,6 +5,7 @@ Authors: Cnoack3
 -/
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Matrix.Basic
+import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
 
 /-!
 # Appendix-A binary-icosahedral row: inner `D₄ ⊔ D₄` certificate
@@ -12,6 +13,10 @@ import Mathlib.Data.Matrix.Basic
 Matrices act on row vectors from the right.  For a norm-two row root `a`,
 `refl a` is `I - (Q aᵀ) a`, hence sends `x` to
 `x - (x Q aᵀ) a`.
+
+The D4 x D4 Gram matrix is the central-first reindexing of the shared
+`LinearAlgebra.RootSystem.D4Triality.pairCartan`; it is no longer an
+independent matrix declaration.
 
 The matrices `w`, `j`, and `r` below are the evaluated Appendix-A words
 
@@ -222,19 +227,19 @@ def roots : I8 → Vec8 := ![a0, a1, a2, a3, b0, b1, b2, b3]
 def rootGram : Mat8 :=
   fun i j => ∑ k : I8, ∑ l : I8, roots i k * Q k l * roots j l
 
-def d4d4Gram : Mat8 := ![
-  ![ 2, -1, -1, -1,  0,  0,  0,  0],
-  ![-1,  2,  0,  0,  0,  0,  0,  0],
-  ![-1,  0,  2,  0,  0,  0,  0,  0],
-  ![-1,  0,  0,  2,  0,  0,  0,  0],
-  ![ 0,  0,  0,  0,  2, -1, -1, -1],
-  ![ 0,  0,  0,  0, -1,  2,  0,  0],
-  ![ 0,  0,  0,  0, -1,  0,  2,  0],
-  ![ 0,  0,  0,  0, -1,  0,  0,  2]
-]
+def d4d4Gram : Mat8 :=
+  RiemannResearch.LinearAlgebra.RootSystem.D4Triality.pairCartanCentralFirst
+
+theorem d4d4Gram_eq_shared :
+    d4d4Gram =
+      RiemannResearch.LinearAlgebra.RootSystem.D4Triality.pairCartanCentralFirst :=
+  rfl
 
 theorem rootGram_eq_d4d4 : rootGram = d4d4Gram := by
-  decide
+  unfold d4d4Gram
+  rw [RiemannResearch.LinearAlgebra.RootSystem.D4Triality.pairCartanCentralFirst_eq_displayed]
+  ext i j
+  fin_cases i <;> fin_cases j <;> decide
 
 def refl (root : Vec8) : Mat8 :=
   fun i j =>

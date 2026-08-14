@@ -58,6 +58,7 @@ import RiemannResearch.GroupCohomology.TrialitarianCentralResidue
 import RiemannResearch.LinearAlgebra.QuotientMap
 import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
+import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
 import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.Logic.PointedInvariant
 import RiemannResearch.Motives.IntegralCycleQuotients

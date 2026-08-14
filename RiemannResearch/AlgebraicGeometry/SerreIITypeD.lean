@@ -6,6 +6,7 @@ Authors: Cnoack3
 
 import RiemannResearch.AlgebraicGeometry.SerreIITypeB
 import RiemannResearch.AlgebraicGeometry.ZeroCycleSplitting
+import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
 
 /-!
 # Type-D and trialitarian reductions for Serre II
@@ -41,11 +42,17 @@ changing the base-field hypothesis. They split the arbitrary trialitarian
 branch into indices one, two, four, and eight. The index-four and index-eight
 providers are the genuine unresolved high-index cases; no stronger
 period--index, C₂, or quasi-split hypothesis is introduced.
+
+The four form kinds now map equivalently to the shared combinatorial D4
+diagram-image kinds. This reuses the diagram-level triality classification
+without claiming a constructed Galois action or a lift to a Spin group scheme.
 -/
 
 universe u
 
 namespace RiemannResearch.AlgebraicGeometry.SerreII
+
+open RiemannResearch.LinearAlgebra.RootSystem
 
 /-- Inner, ordinary outer, and the two trialitarian kinds of type-D forms. -/
 inductive TypeDFormKind
@@ -57,19 +64,36 @@ inductive TypeDFormKind
 
 namespace TypeDFormKind
 
+/-- Identify the traditional type-D form names with the four possible image
+types in the shared D4 diagram-symmetry layer. -/
+def diagramImageEquiv :
+    TypeDFormKind ≃
+      D4Triality.DiagramImageKind where
+  toFun
+    | .inner => .trivial
+    | .outer => .cyclicTwo
+    | .trialitarian3 => .cyclicThree
+    | .trialitarian6 => .symmetricThree
+  invFun
+    | .trivial => .inner
+    | .cyclicTwo => .outer
+    | .cyclicThree => .trialitarian3
+    | .symmetricThree => .trialitarian6
+  left_inv kind := by cases kind <;> rfl
+  right_inv kind := by cases kind <;> rfl
+
 /-- The inner and ordinary outer type-D_n forms, excluding triality. -/
-def IsNontrialitarian : TypeDFormKind → Prop
-  | .inner | .outer => True
-  | .trialitarian3 | .trialitarian6 => False
+def IsNontrialitarian (kind : TypeDFormKind) : Prop :=
+  (diagramImageEquiv kind).IsNontrialitarian
 
 /-- Exactly the arbitrary ³D₄ and ⁶D₄ form kinds. -/
-def IsTrialitarian : TypeDFormKind → Prop
-  | .inner | .outer => False
-  | .trialitarian3 | .trialitarian6 => True
+def IsTrialitarian (kind : TypeDFormKind) : Prop :=
+  (diagramImageEquiv kind).IsTrialitarian
 
 theorem nontrialitarian_or_trialitarian (kind : TypeDFormKind) :
     kind.IsNontrialitarian ∨ kind.IsTrialitarian := by
-  cases kind <;> simp [IsNontrialitarian, IsTrialitarian]
+  simpa [IsNontrialitarian, IsTrialitarian] using
+    D4Triality.DiagramImageKind.nontrialitarian_or_trialitarian (diagramImageEquiv kind)
 
 end TypeDFormKind
 
@@ -94,6 +118,38 @@ def IsTrialitarian (form : TypeDForm) : Prop :=
 theorem nontrialitarian_or_trialitarian (form : TypeDForm) :
     form.IsNontrialitarian ∨ form.IsTrialitarian :=
   form.kind.nontrialitarian_or_trialitarian
+
+/-- A rank-four type-D classification record built from one shared D4
+diagram-image kind. This constructs metadata only, not an algebraic group. -/
+def ofDiagramImageKind (kind : D4Triality.DiagramImageKind) : TypeDForm where
+  rank := 4
+  rank_ge_four := le_rfl
+  kind := TypeDFormKind.diagramImageEquiv.symm kind
+  trialitarian_rank := fun _ => rfl
+
+@[simp] theorem diagramImageEquiv_kind_ofDiagramImageKind
+    (kind : D4Triality.DiagramImageKind) :
+    TypeDFormKind.diagramImageEquiv (ofDiagramImageKind kind).kind = kind :=
+  TypeDFormKind.diagramImageEquiv.apply_symm_apply kind
+
+theorem ofDiagramImageKind_isTrialitarian_iff
+    (kind : D4Triality.DiagramImageKind) :
+    (ofDiagramImageKind kind).IsTrialitarian ↔ kind.IsTrialitarian := by
+  simp [IsTrialitarian, TypeDFormKind.IsTrialitarian]
+
+/-- Build the rank-four classification metadata associated to an abstract
+action on the D4 diagram. No algebraic group or Galois action is constructed. -/
+noncomputable def ofDiagramDescent
+    {Γ : Type*} [Group Γ] (D : D4Triality.DiagramDescent Γ) : TypeDForm :=
+  ofDiagramImageKind D.kind
+
+theorem ofDiagramDescent_isTrialitarian_iff
+    {Γ : Type*} [Group Γ] (D : D4Triality.DiagramDescent Γ) :
+    (ofDiagramDescent D).IsTrialitarian ↔
+      D.imageOrder = 3 ∨ D.imageOrder = 6 := by
+  change (ofDiagramImageKind D.kind).IsTrialitarian ↔ _
+  rw [ofDiagramImageKind_isTrialitarian_iff]
+  exact D4Triality.DiagramDescent.isTrialitarian_iff D
 
 end TypeDForm
 
