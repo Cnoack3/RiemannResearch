@@ -56,13 +56,18 @@ import RiemannResearch.GroupCohomology.Restriction
 import RiemannResearch.GroupCohomology.StableElements
 import RiemannResearch.GroupCohomology.TrialitarianCentralResidue
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality
+import RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations
 import RiemannResearch.LinearAlgebra.QuotientMap
 import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
 import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
 import RiemannResearch.LinearAlgebra.RootSystem.D4Lattice
 import RiemannResearch.LinearAlgebra.RootSystem.D4Discriminant
+import RiemannResearch.LinearAlgebra.RootSystem.D4DiscriminantForm
+import RiemannResearch.LinearAlgebra.RootSystem.D4PairDiscriminant
+import RiemannResearch.LinearAlgebra.RootSystem.D4PairOverlattice
 import RiemannResearch.LinearAlgebra.RootSystem.D4SpinTriality
+import RiemannResearch.LinearAlgebra.RootSystem.D4SplitQuadratic
 import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.Logic.PointedInvariant
 import RiemannResearch.Motives.IntegralCycleQuotients
@@ -104,6 +109,7 @@ import RiemannResearch.E8.WeylIndexPacket
 import RiemannResearch.E8.PrimeMarkedPacket
 import RiemannResearch.E8.PrimeMarkedSolvableIncidence
 import RiemannResearch.E8.RootLatticeSmithCertificates
+import RiemannResearch.E8.D4PairLatticeGluing
 import RiemannResearch.E8.A2ChamberNormalization
 import RiemannResearch.E8.SylowLocalSplitting
 import RiemannResearch.E8.SectionSevenAppendixAudit

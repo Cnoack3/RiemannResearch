@@ -4,23 +4,24 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 
-import RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality
+import RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations
 import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
 
 /-!
 # Pointwise Spin data for D4 triality
 
-This file is the first algebraic layer above the combinatorial D4 diagram. It
-records the usual eight-dimensional regularity condition on a quadratic form
-and gives a precise interface for a supplied faithful action of the six
+This file is the pointwise Clifford/Spin branch of the shared D4 hierarchy.
+It records the usual eight-dimensional regularity condition on a quadratic
+form and gives a precise interface for a supplied faithful action of the six
 diagram symmetries on Mathlib's pointwise spin group.
 
 The action in `SpinPointTrialityData` is data, not a theorem constructed here.
 In particular this module does not construct a split Spin(8) group scheme,
-the vector or half-spin representations, an outer action compatible with root
-data, or Galois/fpqc descent. Its purpose is to name that missing bridge without
-conflating it with the concrete Clifford-even results in
-`CliffordAlgebra.EvenFunctoriality`.
+the half-spin decomposition, an outer action compatible with root data, or
+Galois/fpqc descent. The canonical pointwise vector representation is
+constructed in `CliffordAlgebra.SpinRepresentations`; compatibility between
+that representation and the supplied triality action remains part of the
+missing bridge.
 -/
 
 namespace RiemannResearch.LinearAlgebra.RootSystem.D4Triality
