@@ -17,16 +17,14 @@ This file provides the algebraic layer needed below D4 triality:
 * a quadratic isometry maps the even Clifford subalgebra into the even
   Clifford subalgebra;
 * an isometry equivalence induces an equivalence of even Clifford algebras;
-* scalar extension has a canonical map from the scalar extension of the even
-  Clifford algebra to the even Clifford algebra of the extended form; and
+* scalar extension commutes with the even Clifford algebra by a canonical
+  algebra equivalence; and
 * Mathlib's pointwise spin group embeds faithfully into the units of the even
   Clifford algebra.
 
-The scalar-extension declaration is deliberately only an algebra homomorphism.
-No flatness hypothesis is imposed here, so this file does not claim that the
-map is an equivalence. Likewise, `SpinPoint` means an element of Mathlib's
-pointwise group `spinGroup Q`; it is not an affine group scheme, a base-change
-theorem for such a scheme, or a construction of half-spin representations.
+`SpinPoint` means an element of Mathlib's pointwise group `spinGroup Q`; it
+is not an affine group scheme, a base-change theorem for such a scheme, or a
+construction of half-spin representations.
 
 The proofs use the universal-property and even-induction APIs in Mathlib's
 `CliffordAlgebra.Even`, `CliffordAlgebra.BaseChange`, and
@@ -286,9 +284,7 @@ theorem ofBaseChange_tensorEven_mem_even
         ((even (Q.baseChange A)).algebraMap_mem a)
         (ofBaseChangeAux_mem_even (A := A) Q x.property)
 
-/-- The canonical scalar-extension map for even Clifford algebras.
-
-No bijectivity claim is made without additional hypotheses. -/
+/-- The canonical scalar-extension map for even Clifford algebras. -/
 def evenOfBaseChange :
     TensorProduct R A (even Q) →ₐ[A] even (Q.baseChange A) :=
   ((ofBaseChange A Q).comp (tensorEvenInclusion (A := A) Q)).codRestrict
@@ -324,6 +320,158 @@ theorem evenOfBaseChange_commutes :
   intro x
   rfl
 
+theorem purePair_preimage (a b : A) (v w : V) :
+    ofBaseChange A Q
+        ((a * b) ⊗ₜ[R] (ι Q v * ι Q w)) =
+      ι (Q.baseChange A) (a ⊗ₜ[R] v) *
+        ι (Q.baseChange A) (b ⊗ₜ[R] w) := by
+  change
+    algebraMap A (CliffordAlgebra (Q.baseChange A)) (a * b) *
+        (ofBaseChangeAux A Q (ι Q v * ι Q w)) =
+      ι (Q.baseChange A) (a ⊗ₜ[R] v) *
+        ι (Q.baseChange A) (b ⊗ₜ[R] w)
+  rw [show ofBaseChangeAux A Q (ι Q v * ι Q w) =
+      ofBaseChangeAux A Q (ι Q v) *
+        ofBaseChangeAux A Q (ι Q w) by
+        exact (ofBaseChangeAux A Q).map_mul _ _]
+  rw [ofBaseChangeAux_ι, ofBaseChangeAux_ι]
+  rw [show a ⊗ₜ[R] v = a • (1 ⊗ₜ[R] v) by
+    simpa using (TensorProduct.smul_tmul' a (1 : A) v).symm]
+  rw [show b ⊗ₜ[R] w = b • (1 ⊗ₜ[R] w) by
+    simpa using (TensorProduct.smul_tmul' b (1 : A) w).symm]
+  simp only [map_smul, Algebra.smul_def, map_mul]
+  calc
+    _ = algebraMap A (CliffordAlgebra (Q.baseChange A)) a *
+          (algebraMap A (CliffordAlgebra (Q.baseChange A)) b *
+            ι (Q.baseChange A) (1 ⊗ₜ[R] v)) *
+          ι (Q.baseChange A) (1 ⊗ₜ[R] w) := by
+            simp [mul_assoc]
+    _ = algebraMap A (CliffordAlgebra (Q.baseChange A)) a *
+          (ι (Q.baseChange A) (1 ⊗ₜ[R] v) *
+            algebraMap A (CliffordAlgebra (Q.baseChange A)) b) *
+          ι (Q.baseChange A) (1 ⊗ₜ[R] w) := by
+            rw [Algebra.commutes b
+              (ι (Q.baseChange A) (1 ⊗ₜ[R] v))]
+    _ = _ := by
+      simp [mul_assoc]
+
+/-- A product of two Clifford generators, packaged as an even element. -/
+def pairEven
+    (m n : TensorProduct R A V) : even (Q.baseChange A) :=
+  ⟨ι (Q.baseChange A) m * ι (Q.baseChange A) n, by
+    change
+      ι (Q.baseChange A) m * ι (Q.baseChange A) n ∈
+        (even (Q.baseChange A)).toSubmodule
+    rw [even_toSubmodule]
+    exact ι_mul_ι_mem_evenOdd_zero (Q.baseChange A) m n⟩
+
+theorem pairEven_mem_range
+    (m n : TensorProduct R A V) :
+    pairEven (A := A) Q m n ∈
+      (evenOfBaseChange (A := A) Q).range := by
+  induction m using TensorProduct.induction_on with
+  | zero =>
+      rw [show pairEven (A := A) Q 0 n = 0 by
+        apply Subtype.ext
+        simp [pairEven]]
+      exact (evenOfBaseChange (A := A) Q).range.zero_mem
+  | add m₁ m₂ hm₁ hm₂ =>
+      simpa [pairEven, map_add, add_mul] using
+        (evenOfBaseChange (A := A) Q).range.add_mem hm₁ hm₂
+  | tmul a v =>
+      induction n using TensorProduct.induction_on with
+      | zero =>
+          rw [show pairEven (A := A) Q (a ⊗ₜ[R] v) 0 = 0 by
+            apply Subtype.ext
+            simp [pairEven]]
+          exact (evenOfBaseChange (A := A) Q).range.zero_mem
+      | add n₁ n₂ hn₁ hn₂ =>
+          simpa [pairEven, map_add, mul_add] using
+            (evenOfBaseChange (A := A) Q).range.add_mem hn₁ hn₂
+      | tmul b w =>
+          rw [AlgHom.mem_range]
+          refine ⟨(a * b) ⊗ₜ[R] ((even.ι Q).bilin v w), ?_⟩
+          apply Subtype.ext
+          change
+            ofBaseChange A Q
+              (tensorEvenInclusion (A := A) Q
+                ((a * b) ⊗ₜ[R] ((even.ι Q).bilin v w))) =
+              ι (Q.baseChange A) (a ⊗ₜ[R] v) *
+                ι (Q.baseChange A) (b ⊗ₜ[R] w)
+          rw [tensorEvenInclusion_tmul]
+          exact purePair_preimage (A := A) Q a b v w
+
+theorem mem_range_evenOfBaseChange_of_mem_even
+    {x : CliffordAlgebra (Q.baseChange A)}
+    (hx : x ∈ even (Q.baseChange A)) :
+    (⟨x, hx⟩ : even (Q.baseChange A)) ∈
+      (evenOfBaseChange (A := A) Q).range := by
+  change x ∈ (even (Q.baseChange A)).toSubmodule at hx
+  rw [even_toSubmodule] at hx
+  induction x, hx using even_induction with
+  | algebraMap a =>
+      rw [AlgHom.mem_range]
+      refine ⟨algebraMap A (TensorProduct R A (even Q)) a, ?_⟩
+      exact (evenOfBaseChange (A := A) Q).commutes a
+  | add x y hx0 hy0 ihx ihy =>
+      have hx' : x ∈ (even (Q.baseChange A)).toSubmodule := by
+        rw [even_toSubmodule]
+        exact hx0
+      have hy' : y ∈ (even (Q.baseChange A)).toSubmodule := by
+        rw [even_toSubmodule]
+        exact hy0
+      have hmem := (evenOfBaseChange (A := A) Q).range.add_mem
+        (ihx hx') (ihy hy')
+      rw [show (⟨x + y, hx⟩ : even (Q.baseChange A)) =
+          (⟨x, hx'⟩ : even (Q.baseChange A)) + ⟨y, hy'⟩ by
+            apply Subtype.ext
+            rfl]
+      exact hmem
+  | ι_mul_ι_mul m n x hx0 ih =>
+      have hx' : x ∈ (even (Q.baseChange A)).toSubmodule := by
+        rw [even_toSubmodule]
+        exact hx0
+      have hmem := (evenOfBaseChange (A := A) Q).range.mul_mem
+        (pairEven_mem_range (A := A) Q m n) (ih hx')
+      rw [show
+          (⟨ι (Q.baseChange A) m *
+              ι (Q.baseChange A) n * x, hx⟩ :
+            even (Q.baseChange A)) =
+          pairEven (A := A) Q m n * ⟨x, hx'⟩ by
+            apply Subtype.ext
+            rfl]
+      exact hmem
+
+/-- The canonical scalar-extension map on even Clifford algebras is
+surjective. -/
+theorem evenOfBaseChange_surjective :
+    Function.Surjective (evenOfBaseChange (A := A) Q) := by
+  intro x
+  rw [← AlgHom.mem_range]
+  exact mem_range_evenOfBaseChange_of_mem_even (A := A) Q x.property
+
+/-- Even Clifford algebras commute with scalar extension. -/
+noncomputable def evenEquivBaseChange :
+    TensorProduct R A (even Q) ≃ₐ[A] even (Q.baseChange A) :=
+  AlgEquiv.ofBijective (evenOfBaseChange (A := A) Q)
+    ⟨evenOfBaseChange_injective (A := A) Q,
+      evenOfBaseChange_surjective (A := A) Q⟩
+
+@[simp]
+theorem evenEquivBaseChange_apply
+    (x : TensorProduct R A (even Q)) :
+    evenEquivBaseChange (A := A) Q x =
+      evenOfBaseChange (A := A) Q x :=
+  rfl
+
+@[simp]
+theorem coe_evenEquivBaseChange_apply
+    (x : TensorProduct R A (even Q)) :
+    (evenEquivBaseChange (A := A) Q x :
+      CliffordAlgebra (Q.baseChange A)) =
+      ofBaseChange A Q
+        (tensorEvenInclusion (A := A) Q x) :=
+  rfl
 end BaseChange
 
 section SpinPoints
@@ -370,6 +518,26 @@ theorem spinPointToEvenUnits_injective :
     (fun z : (even Q)ˣ =>
       (((z : even Q)) : CliffordAlgebra Q)) h
 
+/-- Inclusion of units of the even subalgebra into units of the full
+Clifford algebra. -/
+def evenUnitsInClifford : (even Q)ˣ →* (CliffordAlgebra Q)ˣ :=
+  Units.map (even Q).val.toRingHom.toMonoidHom
+
+@[simp]
+theorem evenUnitsInClifford_spinPointToEvenUnits
+    (x : SpinPoint Q) :
+    evenUnitsInClifford Q (spinPointToEvenUnits Q x) =
+      spinGroup.toUnits x := by
+  ext
+  rfl
+
+theorem evenUnitsInClifford_comp_spinPointToEvenUnits :
+    (evenUnitsInClifford Q).comp (spinPointToEvenUnits Q) =
+      spinGroup.toUnits := by
+  apply MonoidHom.ext
+  intro x
+  ext
+  rfl
 end SpinPoints
 
 end RiemannResearch.LinearAlgebra.CliffordEven

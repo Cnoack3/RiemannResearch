@@ -6,6 +6,7 @@ Authors: Cnoack3
 
 import Mathlib.GroupTheory.Coset.Card
 import Mathlib.GroupTheory.Perm.Fin
+import Mathlib.GroupTheory.Perm.Option
 import Mathlib.LinearAlgebra.Matrix.Cartan
 import Mathlib.Logic.Equiv.Fin.Basic
 import Mathlib.Tactic.FinCases
@@ -137,6 +138,121 @@ def cartan : Matrix Node Node ℤ
     cartan (diagramAction σ i) (diagramAction σ j) = cartan i j := by
   cases i <;> cases j <;>
     simp [diagramAction, diagramPerm, cartan]
+
+/-- The full subgroup of node permutations preserving the labelled D4 Cartan
+matrix. This is a diagram-automorphism group, not an automorphism group of a
+root datum or algebraic group. -/
+def DiagramAutomorphism : Subgroup (Equiv.Perm Node) where
+  carrier := {σ | ∀ i j, cartan (σ i) (σ j) = cartan i j}
+  one_mem' := by
+    intro i j
+    rfl
+  mul_mem' := by
+    intro σ τ hσ hτ i j
+    exact (hσ (τ i) (τ j)).trans (hτ i j)
+  inv_mem' := by
+    intro σ hσ i j
+    have h := hσ (σ⁻¹ i) (σ⁻¹ j)
+    simpa using h.symm
+
+@[simp]
+theorem mem_diagramAutomorphism_iff (σ : Equiv.Perm Node) :
+    σ ∈ DiagramAutomorphism ↔
+      ∀ i j, cartan (σ i) (σ j) = cartan i j :=
+  Iff.rfl
+
+theorem cartan_central_characterization (i : Node) :
+    i = .central ↔ ∀ j, j ≠ i → cartan i j = -1 := by
+  cases i with
+  | central => decide
+  | outer label =>
+      cases label <;> decide
+
+theorem DiagramAutomorphism.fixesCentral (σ : DiagramAutomorphism) :
+    (σ : Equiv.Perm Node) .central = .central := by
+  apply
+    (cartan_central_characterization
+      ((σ : Equiv.Perm Node) .central)).2
+  intro j hj
+  obtain ⟨k, rfl⟩ := σ.val.surjective j
+  have hk : k ≠ .central := by
+    intro hk
+    subst k
+    exact hj rfl
+  rw [σ.property .central k]
+  exact (cartan_central_characterization .central).1 rfl k hk
+
+/-- The faithful outer-label action, regarded as a Cartan-preserving
+permutation. -/
+def diagramActionToAutomorphism :
+    DiagramSymmetry →* DiagramAutomorphism where
+  toFun σ := ⟨diagramAction σ, cartan_diagramAction σ⟩
+  map_one' := by
+    apply Subtype.ext
+    exact diagramAction.map_one
+  map_mul' σ τ := by
+    apply Subtype.ext
+    exact diagramAction.map_mul σ τ
+
+@[simp]
+theorem coe_diagramActionToAutomorphism (σ : DiagramSymmetry) :
+    (diagramActionToAutomorphism σ : Equiv.Perm Node) =
+      diagramAction σ :=
+  rfl
+
+def optionPermOfDiagramAutomorphism
+    (σ : DiagramAutomorphism) : Equiv.Perm (Option TrialityLabel) :=
+  nodeEquivOption.symm.trans (σ : Equiv.Perm Node) |>.trans nodeEquivOption
+
+@[simp]
+theorem optionPermOfDiagramAutomorphism_none
+    (σ : DiagramAutomorphism) :
+    optionPermOfDiagramAutomorphism σ none = none := by
+  change nodeEquivOption ((σ : Equiv.Perm Node) .central) = none
+  rw [DiagramAutomorphism.fixesCentral σ]
+  rfl
+
+theorem nodeEquivOption_diagramAction
+    (σ : DiagramSymmetry) (node : Node) :
+    nodeEquivOption (diagramAction σ node) =
+      Equiv.optionCongr σ (nodeEquivOption node) := by
+  cases node <;> rfl
+
+theorem diagramActionToAutomorphism_bijective :
+    Function.Bijective diagramActionToAutomorphism := by
+  constructor
+  · intro σ τ h
+    apply diagramAction_injective
+    exact congrArg Subtype.val h
+  · intro σ
+    let p := optionPermOfDiagramAutomorphism σ
+    let τ : DiagramSymmetry := Equiv.removeNone p
+    have hp : Equiv.optionCongr τ = p := by
+      rw [map_equiv_removeNone,
+        optionPermOfDiagramAutomorphism_none σ, Equiv.swap_self]
+      rfl
+    refine ⟨τ, ?_⟩
+    apply Subtype.ext
+    apply Equiv.ext
+    intro node
+    apply nodeEquivOption.injective
+    rw [coe_diagramActionToAutomorphism,
+      nodeEquivOption_diagramAction, hp]
+    simp [p, optionPermOfDiagramAutomorphism]
+
+/-- Every Cartan-preserving permutation of the D4 diagram comes from a unique
+permutation of its three outer nodes. -/
+noncomputable def diagramSymmetryEquivDiagramAutomorphism :
+    DiagramSymmetry ≃* DiagramAutomorphism :=
+  MulEquiv.ofBijective diagramActionToAutomorphism
+    diagramActionToAutomorphism_bijective
+
+theorem natCard_diagramAutomorphism :
+    Nat.card DiagramAutomorphism = 6 := by
+  rw [Nat.card_congr
+    diagramSymmetryEquivDiagramAutomorphism.toEquiv.symm]
+  rw [Nat.card_eq_fintype_card]
+  exact card_diagramSymmetry
 
 /-- Mathlib's D4 order: `V, central, S+, S-`. -/
 def finFourEquivNode : Fin 4 ≃ Node where

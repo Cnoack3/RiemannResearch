@@ -607,6 +607,13 @@ are:
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.cartanFinFour_eq_mathlib` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | The labelled D4 Cartan matrix is Mathlib's `CartanMatrix.D 4` in the chosen `V, central, S+, S-` order | Kernel checked finite identification |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.diagramAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | Permuting the three outer labels gives a faithful action on all four D4 nodes | Kernel checked; with `card_diagramSymmetry`, this is the six-element diagram-triality action |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.cartan_diagramAction` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | Every outer-label permutation fixes the D4 Cartan matrix | Kernel checked |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.diagramSymmetryEquivDiagramAutomorphism` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | Every Cartan-preserving D4 node permutation is induced uniquely by a permutation of the three outer nodes | Kernel checked equivalence; `natCard_diagramAutomorphism` gives order six |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.cartanFinFour_det` | `RiemannResearch.LinearAlgebra.RootSystem.D4Lattice` | The based D4 Cartan map has determinant four | Kernel checked exact integral computation |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.rootSublattice_eq_parityMap_ker` | `RiemannResearch.LinearAlgebra.RootSystem.D4Discriminant` | The integral Cartan image is exactly the kernel of the two mod-two parity coordinates | Kernel checked constructive equality with an explicit integral preimage |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.discriminantEquivParity` | `RiemannResearch.LinearAlgebra.RootSystem.D4Discriminant` | The D4 discriminant group P/Q is additively equivalent to `(ZMod 2) × (ZMod 2)` and has cardinality four | Kernel checked quotient first-isomorphism calculation |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.trialityLabelEquivNonzeroDiscriminant` | `RiemannResearch.LinearAlgebra.RootSystem.D4Discriminant` | The V, S+, and S− outer fundamental-weight classes are exactly the three nonzero D4 discriminant classes | Kernel checked; these are weight classes, not constructed representations |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.discriminantAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4Discriminant` | Diagram triality acts faithfully by additive permutations on P/Q; the canonical cycle and swap retain exact orders three and two | Kernel checked faithful quotient action |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.DiagramDescent.discriminantImageOrder_eq_imageOrder` | `RiemannResearch.LinearAlgebra.RootSystem.D4Discriminant` | Passing a supplied D4 diagram action to the discriminant quotient preserves the exact image order | Kernel checked bridge by an explicit equivalence of image subgroups |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.orderOf_trialityCycle` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | The cycle `V -> S+ -> S- -> V` has exact order three; `orderOf_halfSpinSwap` supplies the order-two generator | Kernel checked finite group calculation |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.DiagramDescent.imageOrder_cases` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | The image of any supplied group action on the D4 outer labels has order 1, 2, 3, or 6 | Kernel checked by Lagrange in the six-element symmetry group |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.DiagramDescent.isTrialitarian_iff` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | A supplied diagram action is trialitarian exactly when its image has order 3 or 6 | Kernel checked diagram-level classifier |
@@ -616,17 +623,20 @@ are:
 | `RiemannResearch.E8.BinaryIcosahedralAtlas.d4d4Gram_eq_shared` | `RiemannResearch.E8.BinaryIcosahedralAtlas` | The binary-icosahedral ATLAS roots use the shared D4 x D4 matrix in central-first order | Kernel checked definitional adapter |
 | `RiemannResearch.E8.RootLatticeSmith.d4d4_eq_shared` | `RiemannResearch.E8.RootLatticeSmithCertificates` | The D4 x D4 Smith certificate uses the same shared matrix in Mathlib's central-second order | Kernel checked definitional adapter |
 | `RiemannResearch.LinearAlgebra.CliffordEven.evenEquivOfIsometry` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | Every quadratic isometry equivalence restricts to an algebra equivalence of the even Clifford subalgebras | Kernel checked; identity, composition, inverse, and transitivity laws are explicit |
-| `RiemannResearch.LinearAlgebra.CliffordEven.evenOfBaseChange_commutes` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | The canonical scalar-extension map on even Clifford algebras agrees, after inclusion, with Mathlib's full Clifford base-change equivalence | Kernel checked commutative square; the even map is not claimed bijective over an arbitrary base algebra |
-| `RiemannResearch.LinearAlgebra.CliffordEven.evenOfBaseChange_injective` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | The canonical scalar-extension map on even Clifford algebras is injective because the even summand has an explicit linear retraction before scalar extension | Kernel checked; surjectivity onto the whole target remains unproved |
+| `RiemannResearch.LinearAlgebra.CliffordEven.evenOfBaseChange_commutes` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | The canonical scalar-extension map on even Clifford algebras agrees, after inclusion, with Mathlib's full Clifford base-change equivalence | Kernel checked commutative square |
+| `RiemannResearch.LinearAlgebra.CliffordEven.evenOfBaseChange_surjective` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | Even Clifford generators after scalar extension have explicit preimages, so the canonical even map is surjective | Kernel checked by even induction; no flatness or finite-dimensionality hypothesis is used |
+| `RiemannResearch.LinearAlgebra.CliffordEven.evenEquivBaseChange` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | Scalar extension of the even Clifford algebra is canonically algebra-equivalent to the even Clifford algebra of the scalar-extended form | Kernel checked from explicit injectivity and surjectivity under Mathlib's existing invertibility-of-two hypothesis |
 | `RiemannResearch.LinearAlgebra.CliffordEven.spinPointToEvenUnits_injective` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | Mathlib's pointwise spin group embeds faithfully into the units of the even Clifford algebra | Kernel checked pointwise algebra statement; not a group-scheme result |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.SpinPointTrialityData.orderOf_trialityCycle_action` | `RiemannResearch.LinearAlgebra.RootSystem.D4SpinTriality` | Any supplied faithful diagram-symmetry action on the spin-point group sends the canonical triality cycle to exact order three; the half-spin swap has exact order two | Kernel checked conditional interface; construction of `SpinPointTrialityData` is Open |
 
-This layer now combines diagram triality, shared finite Cartan data, and
-concrete functoriality/base-change facts for pointwise Clifford algebras. The
-labels `V`, `S+`, and `S-` still do not denote constructed Spin(8)
-representations. A faithful action in `SpinPointTrialityData` remains an
-explicit Open input, and no Spin group scheme, lift compatible with root data,
-half-spin representation, or Galois/fpqc descent is claimed.
+This layer now combines the full D4 diagram automorphism group, exact
+root/weight and discriminant data, shared finite Cartan matrices, and concrete
+functoriality/base-change facts for pointwise Clifford algebras. The labels
+`V`, `S+`, and `S-` are now exact nonzero discriminant classes but still do not
+denote constructed Spin(8) representations. A faithful action in
+`SpinPointTrialityData` remains an explicit Open input, and no compatible lift
+from the discriminant action, Spin group scheme, half-spin representation,
+E8 overlattice gluing, or Galois/fpqc descent is claimed.
 
 ## E8 subsystem-induction exclusion
 

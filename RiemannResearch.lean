@@ -60,6 +60,8 @@ import RiemannResearch.LinearAlgebra.QuotientMap
 import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
 import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
+import RiemannResearch.LinearAlgebra.RootSystem.D4Lattice
+import RiemannResearch.LinearAlgebra.RootSystem.D4Discriminant
 import RiemannResearch.LinearAlgebra.RootSystem.D4SpinTriality
 import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.Logic.PointedInvariant
