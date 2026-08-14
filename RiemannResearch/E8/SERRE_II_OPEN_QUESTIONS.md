@@ -51,6 +51,23 @@ missing E8 input to factorization on the intersection of this admissible locus
 with the oriented transporter. It still does not prove that restricted
 factorization.
 
+The sharper declarations
+`mem_orientedSubgroupTransporter_iff_leftQuotient_mem_centralizer` and
+`isCoboundary_of_selfCentralizing_conjugateTarget` identify the final
+basepoint obstruction. Once the target maximal torus is self-centralizing and
+H-fixed, neutrality follows from one K-fixed point of the strict oriented
+transporter. In the intended field realization this asks for an
+`L6`-rational oriented conjugator; equivalently, the associated
+maximal-torus torsor class in `H^1(L6,T5)` must vanish. Self-centralization
+is standard for maximal tori in connected reductive groups
+([SGA 3, Expose XII](https://webusers.imj-prg.fr/~patrick.polo/SGA3/Expo12.pdf)).
+By contrast, [Beli--Gille--Lee, Proposition
+2.5.3](https://arxiv.org/pdf/1411.6808) reduces the oriented transporter to a
+torus torsor but does not produce a rational point. Cohomological dimension
+two alone does not force first cohomology of tori to vanish, so this rational
+basepoint is the remaining E8/EVIII arithmetic theorem, not a formal
+group-theoretic consequence.
+
 Moreover, Proposition 6.17's corrected countercertificate shows that a
 cyclic-cubic outer-triality kernel is not uniformly unavoidable: at least one
 degree-five `(D4)^2` orbit has inner order-three action.

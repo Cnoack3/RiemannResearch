@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import RiemannResearch.GaloisCohomology.TwoGaugeDescent
+import RiemannResearch.GroupCohomology.Conjugation
 
 /-!
 # Double-coset and oriented-transporter form of two-gauge descent
@@ -22,6 +23,8 @@ Target 8.1.
 -/
 
 namespace RiemannResearch.GaloisCohomology
+
+open RiemannResearch.GroupCohomology
 
 universe u v
 
@@ -109,6 +112,48 @@ theorem leftQuotient_mem_centralizer_of_mem_orientedSubgroupTransporter
     _ = x * s.1 * x0⁻¹ := by simp [mul_assoc]
     _ = (x * x0⁻¹) * (x0 * s.1 * x0⁻¹) := by simp [mul_assoc]
     _ = (x * x0⁻¹) * t := by rw [hx0']
+
+/-- Fixing one point identifies the strict oriented transporter with the
+left coset of the target centralizer.
+
+This is the point-valued torsor identity underlying the transporter reduction
+in Beli--Gille--Lee, Proposition 2.5.3:
+https://arxiv.org/pdf/1411.6808. The reference supports the geometric
+interpretation; the proof here is elementary group algebra. -/
+theorem mem_orientedSubgroupTransporter_iff_leftQuotient_mem_centralizer
+    {G : Type v} [Group G] (S6 S5 : Subgroup G) (theta : S6 ≃* S5)
+    {x x0 : G}
+    (hx0 : x0 ∈ orientedSubgroupTransporter S6 S5 theta) :
+    x ∈ orientedSubgroupTransporter S6 S5 theta ↔
+      x * x0⁻¹ ∈ Set.centralizer (S5 : Set G) := by
+  constructor
+  · intro hx
+    exact leftQuotient_mem_centralizer_of_mem_orientedSubgroupTransporter
+      S6 S5 theta hx hx0
+  · intro hc s
+    have hcomm :
+        (theta s).1 * (x * x0⁻¹) = (x * x0⁻¹) * (theta s).1 :=
+      (Set.mem_centralizer_iff.mp hc) (theta s).1 (theta s).2
+    calc
+      x * s.1 * x⁻¹ =
+          ((x * x0⁻¹) * x0) * s.1 * (((x * x0⁻¹) * x0)⁻¹) := by
+            simp [mul_assoc]
+      _ = (x * x0⁻¹) * (x0 * s.1 * x0⁻¹) * (x * x0⁻¹)⁻¹ := by
+            simp [mul_assoc]
+      _ = (x * x0⁻¹) * (theta s).1 * (x * x0⁻¹)⁻¹ := by
+            rw [hx0 s]
+      _ = (theta s).1 := by rw [← hcomm]; simp [mul_assoc]
+
+/-- Conjugation by x0 supplies a canonical point of the strict oriented
+transporter from S to its conjugate. The only arithmetic issue in applications
+is whether the chosen conjugating element is fixed by the relevant Galois
+subgroup. -/
+theorem mem_orientedSubgroupTransporter_conjugateEquiv
+    {G : Type v} [Group G] (S : Subgroup G) (x0 : G) :
+    x0 ∈ orientedSubgroupTransporter S (conjugateSubgroup S x0)
+      (conjugateEquiv S x0) := by
+  intro s
+  exact coe_conjugateEquiv S x0 s
 
 /-- Exact two-gauge descent expressed as a double-coset condition. -/
 theorem isCoboundary_iff_one_mem_fixedPointDoubleCoset
@@ -246,6 +291,67 @@ theorem isCoboundary_of_orientedTransition_fixedBasepoint
       a H K hgen gH gK hH hK).2
   exact orientedTransition_factorization_of_fixedBasepoint
     H K S6 S5 theta htransport hx0 hcentral hx0K
+
+/-- Self-centralization of the target subgroup discharges the centralizer
+hypothesis in constrained transporter factorization.
+
+For a genuine maximal torus in a connected reductive group, the required
+self-centralization is the standard theorem C_G(T) = T; see SGA 3, Expose XII:
+https://webusers.imj-prg.fr/~patrick.polo/SGA3/Expo12.pdf. The reference
+supports the E8 interpretation. This abstract declaration keeps both
+self-centralization and pointwise H-fixedness explicit. -/
+theorem orientedTransition_factorization_of_selfCentralizing_fixedBasepoint
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (H K : Subgroup Γ) (S6 S5 : Subgroup G) (theta : S6 ≃* S5)
+    {x x0 : G}
+    (hx : x ∈ orientedSubgroupTransporter S6 S5 theta)
+    (hx0 : x0 ∈ orientedSubgroupTransporter S6 S5 theta)
+    (hself : Set.centralizer (S5 : Set G) = (S5 : Set G))
+    (hS5H : S5 ≤ fixedPointSubgroup (G := G) H)
+    (hx0K : NonabelianCocycle.IsFixedBy K x0) :
+    ∃ u v : G, NonabelianCocycle.IsFixedBy H u ∧
+      NonabelianCocycle.IsFixedBy K v ∧ x = u * v := by
+  apply orientedTransition_factorization_of_fixedBasepoint
+    H K S6 S5 theta hx hx0
+  · intro z hz
+    apply hS5H
+    simpa [hself] using hz
+  · exact hx0K
+
+/-- Conjugating one torus by a K-fixed element, together with target
+self-centralization and pointwise H-fixedness, proves two-gauge neutrality.
+
+This discharges all formal transporter and maximal-torus centralizer algebra.
+It deliberately does not assert the existence of the K-fixed conjugating
+element: in the EVIII application that is the rational-point problem for the
+oriented torus torsor and remains the E8-specific arithmetic obligation. -/
+theorem isCoboundary_of_selfCentralizing_conjugateTarget
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G] (a : NonabelianCocycle Γ G)
+    (H K : Subgroup Γ) (hgen : H ⊔ K = ⊤)
+    (gH gK : G)
+    (hH : ∀ σ : H, a σ.1 = gH⁻¹ * σ.1 • gH)
+    (hK : ∀ σ : K, a σ.1 = gK⁻¹ * σ.1 • gK)
+    (S6 : Subgroup G) (x0 : G)
+    (htransport :
+      gH * gK⁻¹ ∈
+        orientedSubgroupTransporter S6 (conjugateSubgroup S6 x0)
+          (conjugateEquiv S6 x0))
+    (hself :
+      Set.centralizer (conjugateSubgroup S6 x0 : Set G) =
+        (conjugateSubgroup S6 x0 : Set G))
+    (hS5H :
+      conjugateSubgroup S6 x0 ≤ fixedPointSubgroup (G := G) H)
+    (hx0K : NonabelianCocycle.IsFixedBy K x0) :
+    a.IsCoboundary := by
+  apply
+    (isCoboundary_iff_transition_factorization
+      a H K hgen gH gK hH hK).2
+  exact orientedTransition_factorization_of_selfCentralizing_fixedBasepoint
+    H K S6 (conjugateSubgroup S6 x0) (conjugateEquiv S6 x0)
+      htransport (mem_orientedSubgroupTransporter_conjugateEquiv S6 x0)
+      hself hS5H hx0K
 
 /-- A kernel-checked no-go statement for replacing the missing E8 geometry by
 the abstract transporter predicate alone.
