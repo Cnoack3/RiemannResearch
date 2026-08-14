@@ -615,11 +615,18 @@ are:
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.pairCartan_eq_displayed` | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality` | The canonical D4 x D4 block matrix has the central-second ordering; `pairCartanCentralFirst_eq_displayed` proves the ATLAS reindexing | Kernel checked finite certificates |
 | `RiemannResearch.E8.BinaryIcosahedralAtlas.d4d4Gram_eq_shared` | `RiemannResearch.E8.BinaryIcosahedralAtlas` | The binary-icosahedral ATLAS roots use the shared D4 x D4 matrix in central-first order | Kernel checked definitional adapter |
 | `RiemannResearch.E8.RootLatticeSmith.d4d4_eq_shared` | `RiemannResearch.E8.RootLatticeSmithCertificates` | The D4 x D4 Smith certificate uses the same shared matrix in Mathlib's central-second order | Kernel checked definitional adapter |
+| `RiemannResearch.LinearAlgebra.CliffordEven.evenEquivOfIsometry` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | Every quadratic isometry equivalence restricts to an algebra equivalence of the even Clifford subalgebras | Kernel checked; identity, composition, inverse, and transitivity laws are explicit |
+| `RiemannResearch.LinearAlgebra.CliffordEven.evenOfBaseChange_commutes` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | The canonical scalar-extension map on even Clifford algebras agrees, after inclusion, with Mathlib's full Clifford base-change equivalence | Kernel checked commutative square; the even map is not claimed bijective over an arbitrary base algebra |
+| `RiemannResearch.LinearAlgebra.CliffordEven.evenOfBaseChange_injective` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | The canonical scalar-extension map on even Clifford algebras is injective because the even summand has an explicit linear retraction before scalar extension | Kernel checked; surjectivity onto the whole target remains unproved |
+| `RiemannResearch.LinearAlgebra.CliffordEven.spinPointToEvenUnits_injective` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | Mathlib's pointwise spin group embeds faithfully into the units of the even Clifford algebra | Kernel checked pointwise algebra statement; not a group-scheme result |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.SpinPointTrialityData.orderOf_trialityCycle_action` | `RiemannResearch.LinearAlgebra.RootSystem.D4SpinTriality` | Any supplied faithful diagram-symmetry action on the spin-point group sends the canonical triality cycle to exact order three; the half-spin swap has exact order two | Kernel checked conditional interface; construction of `SpinPointTrialityData` is Open |
 
-This layer formalizes diagram triality and shared finite Cartan data only. The
-labels `V`, `S+`, and `S-` do not yet denote constructed Spin(8)
-representations, and no lift to algebraic-group automorphisms or Galois/fpqc
-descent is claimed.
+This layer now combines diagram triality, shared finite Cartan data, and
+concrete functoriality/base-change facts for pointwise Clifford algebras. The
+labels `V`, `S+`, and `S-` still do not denote constructed Spin(8)
+representations. A faithful action in `SpinPointTrialityData` remains an
+explicit Open input, and no Spin group scheme, lift compatible with root data,
+half-spin representation, or Galois/fpqc descent is claimed.
 
 ## E8 subsystem-induction exclusion
 

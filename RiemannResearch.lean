@@ -55,10 +55,12 @@ import RiemannResearch.GroupCohomology.OddDegreeRestrictionModTwo
 import RiemannResearch.GroupCohomology.Restriction
 import RiemannResearch.GroupCohomology.StableElements
 import RiemannResearch.GroupCohomology.TrialitarianCentralResidue
+import RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality
 import RiemannResearch.LinearAlgebra.QuotientMap
 import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
 import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
+import RiemannResearch.LinearAlgebra.RootSystem.D4SpinTriality
 import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.Logic.PointedInvariant
 import RiemannResearch.Motives.IntegralCycleQuotients
