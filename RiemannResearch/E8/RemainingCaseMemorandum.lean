@@ -27,6 +27,7 @@ import RiemannResearch.E8.A9TrialityArithmetic
 import RiemannResearch.E8.BinaryIcosahedralArithmetic
 import RiemannResearch.E8.BinaryIcosahedralAtlas
 import RiemannResearch.E8.BinaryIcosahedralFinite
+import RiemannResearch.E8.BinaryIcosahedralSubgroups
 import RiemannResearch.E8.BinaryIcosahedralSubsystemOrbits
 import RiemannResearch.E8.BinaryIcosahedralTrialityCounterexample
 import RiemannResearch.E8.CoxeterAttractingRank

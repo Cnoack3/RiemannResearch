@@ -87,6 +87,7 @@ import RiemannResearch.E8.A11BurnsideCertificate
 import RiemannResearch.E8.BinaryIcosahedralArithmetic
 import RiemannResearch.E8.BinaryIcosahedralAtlas
 import RiemannResearch.E8.BinaryIcosahedralFinite
+import RiemannResearch.E8.BinaryIcosahedralSubgroups
 import RiemannResearch.E8.BinaryIcosahedralLatticeCohomology
 import RiemannResearch.E8.BinaryIcosahedralTrialityCounterexample
 import RiemannResearch.E8.BinaryIcosahedralSubsystemOrbits
