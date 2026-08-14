@@ -115,6 +115,31 @@ The admissibility clauses are essential. The A11 countermodel in the project
 shows that separate local gauges on generating subgroups do not imply a common
 gauge for an arbitrary coefficient group and arbitrary nonabelian cocycle.
 
+### Finite packet and the residual torus step (14 August 2026)
+
+The exact GAP/TomLib/SLA calculation in
+Certificates/O8_PLUS_2_SURVIVOR_PACKET_ORBITS_CERTIFICATE.md now recovers all
+64 integral E8-lattice generators and reduced reflection words. It also proves
+two distinct finite facts for every one of the 31 rows:
+
+1. the stabilizers in the 135-point D8 action generate the projective
+   survivor, hence their full inverse images generate its central lift;
+2. after restricting the corrected D8, (A2)^4, (A4)^2 packet, the combined
+   local-subgroup indices have gcd one.
+
+Lean's h1_eq_zero_of_gcd_one_restrictions and
+isCoboundary_of_subgroup_filtration_gcd_one_h1 therefore close the residual
+additive H1 step: if one simultaneous field-valued gauge puts the cocycle in
+a single Galois-stable Borel, the torus quotient class is killed by
+restriction--corestriction and Bezout; the unipotent radical is then the
+terminal filtration step.
+
+This does not construct the simultaneous Borel reduction. A finite Weyl cell
+has a field-valued torus lifting defect, so E8.2 must additionally supply
+universal Laurent/Chevalley correction formulas, a principal-open cover with
+sections, or a torsor under a group with universally trivial H1. Pure Weyl
+reachability and mod-2 Tits defects do not suffice.
+
 ## 3. Finite completion theorem
 
 **Theorem.** If CG(P) holds for all 31 certified perfect subsystem-free

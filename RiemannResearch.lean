@@ -37,6 +37,7 @@ import RiemannResearch.GaloisCohomology.CompatibleLocalGauges
 import RiemannResearch.GaloisCohomology.LocalGaugeTransporter
 import RiemannResearch.GaloisCohomology.NonabelianH1
 import RiemannResearch.GaloisCohomology.SubgroupFiltration
+import RiemannResearch.GaloisCohomology.CoprimeTorusFiltration
 import RiemannResearch.GaloisCohomology.SingletonCechH1
 import RiemannResearch.CategoryTheory.PreadditiveIsoConjugation
 import RiemannResearch.GroupCohomology.BoundaryFiber
@@ -44,6 +45,7 @@ import RiemannResearch.GroupCohomology.Conjugation
 import RiemannResearch.GroupCohomology.ExplicitRestriction
 import RiemannResearch.GroupCohomology.Corestriction
 import RiemannResearch.GroupCohomology.ArbitraryCorestriction
+import RiemannResearch.GroupCohomology.CoprimeRestrictionDetection
 import RiemannResearch.GroupCohomology.FiniteEtaleKernelNorm
 import RiemannResearch.GroupCohomology.Mackey
 import RiemannResearch.GroupCohomology.OddDegreeRestrictionModTwo
@@ -97,6 +99,7 @@ import RiemannResearch.E8.SectionSevenAppendixAudit
 import RiemannResearch.E8.OmegaEightPlusTwo
 import RiemannResearch.E8.RationalInvolutionsAudit
 import RiemannResearch.E8.SubgroupSieve
+import RiemannResearch.E8.PerfectCoreMatrixCertificate
 import RiemannResearch.E8.FullWeylCore
 import RiemannResearch.E8.FullWeylGaugeCover
 import RiemannResearch.E8.GroupSchemeFoundation

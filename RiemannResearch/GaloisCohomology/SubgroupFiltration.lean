@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
+import Mathlib.GroupTheory.QuotientGroup.Defs
 import RiemannResearch.GaloisCohomology.NonabelianH1
 
 /-!
@@ -64,6 +65,64 @@ theorem NonabelianCocycle.map_isCoboundary_iff_exists_boundaryLift
     ext σ
     simpa [NonabelianCocycle.map, NonabelianCocycle.trivial,
       NonabelianCocycle.gauge] using hg σ
+
+/-- A quotient cocycle is neutral exactly when a gauge of the original
+cocycle takes values in the normal subgroup.
+
+The action on the quotient and the equivariance of the quotient map are kept
+explicit. In the Borel application, `B` is the stable Borel, `N` is its
+unipotent radical, and `B ⧸ N` is the residual torus. Thus this theorem is
+the concrete quotient-group form of the middle correction required by
+`isCoboundary_of_subgroup_filtration`. -/
+theorem NonabelianCocycle.map_quotient_isCoboundary_iff_exists_gauge_valuesIn
+    {B : Type w} [Group B] [MulDistribMulAction Γ B]
+    (N : Subgroup B) [N.Normal]
+    [MulDistribMulAction Γ (B ⧸ N)]
+    (hquot : ∀ (σ : Γ) (b : B),
+      QuotientGroup.mk' N (σ • b) =
+        σ • QuotientGroup.mk' N b)
+    (a : NonabelianCocycle Γ B) :
+    (a.map (QuotientGroup.mk' N) hquot).IsCoboundary ↔
+      ∃ q : B, (a.gauge q).ValuesIn N := by
+  rw [a.map_isCoboundary_iff_exists_boundaryLift]
+  constructor
+  · rintro ⟨g, hg⟩
+    obtain ⟨r, hr⟩ := QuotientGroup.mk'_surjective N g
+    refine ⟨r⁻¹, ?_⟩
+    intro σ
+    apply (QuotientGroup.eq_one_iff ((a.gauge r⁻¹) σ)).mp
+    change QuotientGroup.mk' N
+      ((r⁻¹)⁻¹ * a σ * σ • r⁻¹) = 1
+    simp only [map_mul, map_inv, hquot]
+    simp [hr, hg]
+  · rintro ⟨q, hq⟩
+    refine ⟨QuotientGroup.mk' N q⁻¹, ?_⟩
+    intro σ
+    have hmem := hq σ
+    have hone :
+        QuotientGroup.mk' N ((a.gauge q) σ) = 1 :=
+      (QuotientGroup.eq_one_iff ((a.gauge q) σ)).mpr hmem
+    change QuotientGroup.mk' N
+      (q⁻¹ * a σ * σ • q) = 1 at hone
+    simp only [map_mul, map_inv, hquot] at hone
+    have hsolve :
+        QuotientGroup.mk' N (a σ) =
+          QuotientGroup.mk' N q *
+            (σ • QuotientGroup.mk' N q)⁻¹ := by
+      calc
+        QuotientGroup.mk' N (a σ) =
+            QuotientGroup.mk' N q *
+              ((QuotientGroup.mk' N q)⁻¹ *
+                QuotientGroup.mk' N (a σ) *
+                  (σ • QuotientGroup.mk' N q)) *
+                    (σ • QuotientGroup.mk' N q)⁻¹ := by
+                      simp [mul_assoc]
+        _ = QuotientGroup.mk' N q * 1 *
+              (σ • QuotientGroup.mk' N q)⁻¹ := by rw [hone]
+        _ = QuotientGroup.mk' N q *
+              (σ • QuotientGroup.mk' N q)⁻¹ := by simp
+    rw [hsolve]
+    simp
 
 /-- Coboundary status is invariant under gauging. -/
 theorem NonabelianCocycle.isCoboundary_gauge_iff
