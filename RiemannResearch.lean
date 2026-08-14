@@ -36,6 +36,7 @@ import RiemannResearch.GaloisCohomology.GaloisTripleTensorDecomposition
 import RiemannResearch.GaloisCohomology.CompatibleLocalGauges
 import RiemannResearch.GaloisCohomology.LocalGaugeTransporter
 import RiemannResearch.GaloisCohomology.NonabelianH1
+import RiemannResearch.GaloisCohomology.SubgroupFiltration
 import RiemannResearch.GaloisCohomology.SingletonCechH1
 import RiemannResearch.CategoryTheory.PreadditiveIsoConjugation
 import RiemannResearch.GroupCohomology.BoundaryFiber
@@ -82,6 +83,7 @@ import RiemannResearch.E8.A11BurnsideCertificate
 import RiemannResearch.E8.BinaryIcosahedralArithmetic
 import RiemannResearch.E8.BinaryIcosahedralAtlas
 import RiemannResearch.E8.BinaryIcosahedralFinite
+import RiemannResearch.E8.BinaryIcosahedralLatticeCohomology
 import RiemannResearch.E8.BinaryIcosahedralTrialityCounterexample
 import RiemannResearch.E8.BinaryIcosahedralSubsystemOrbits
 import RiemannResearch.E8.SylowSevenArithmetic
