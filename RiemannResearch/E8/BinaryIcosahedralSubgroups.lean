@@ -19,8 +19,10 @@ determinant-one tuple model, checks closure on the computable carriers, and
 maps the resulting subgroups back into SL(2, ZMod 5).
 
 The order-24 and order-20 subgroups have order-4 intersection, generate the
-order-120 group, and have indices 5 and 6. The last theorem specializes
-admissible two-gauge descent to this fixed subgroup diamond. It does not
+order-120 group, have indices 5 and 6, and multiply onto the ambient group.
+Consequently, the abstract converse construction identifies admissible
+transitions exactly with transitions of normalized locally trivial cocycles.
+The final theorem specializes constrained two-gauge descent. It does not
 construct E8-valued gauges, oriented torus data, or constrained factorization.
 -/
 
@@ -187,6 +189,18 @@ set_option maxRecDepth 100000 in
 theorem tupleProductSet_eq_univ : tupleProductSet = Finset.univ := by
   decide
 
+/-- Every element of the tuple determinant-one group has one factor in the
+order-24 subgroup followed by one factor in the order-20 subgroup. -/
+theorem tuple_product_factorization (γ : TupleSL2) :
+    ∃ h : tupleBinaryTetrahedral, ∃ k : tupleBinaryDihedral,
+      γ = h.1 * k.1 := by
+  have hxp : γ ∈ tupleProductSet := by
+    rw [tupleProductSet_eq_univ]
+    simp
+  obtain ⟨p, hp, hpval⟩ := Finset.mem_image.mp hxp
+  obtain ⟨hpH, hpK⟩ := Finset.mem_product.mp hp
+  exact ⟨⟨p.1, hpH⟩, ⟨p.2, hpK⟩, hpval.symm⟩
+
 theorem tuple_sup_eq :
     tupleBinaryTetrahedral ⊔ tupleBinaryDihedral = ⊤ := by
   apply top_unique
@@ -216,6 +230,24 @@ def binaryDihedralSubgroup : Subgroup SL2F5 :=
   tupleBinaryDihedral.map tupleSL2MulEquiv.toMonoidHom
 def overlapSubgroup : Subgroup SL2F5 :=
   tupleOverlap.map tupleSL2MulEquiv.toMonoidHom
+
+/-- Every element of SL(2, F5) has one factor in the transported order-24
+subgroup followed by one factor in the transported order-20 subgroup. -/
+theorem binary_product_factorization (γ : SL2F5) :
+    ∃ h : binaryTetrahedralSubgroup, ∃ k : binaryDihedralSubgroup,
+      γ = h.1 * k.1 := by
+  obtain ⟨h, k, hx⟩ :=
+    tuple_product_factorization (tupleSL2MulEquiv.symm γ)
+  let h' : binaryTetrahedralSubgroup :=
+    ⟨tupleSL2MulEquiv h.1, ⟨h.1, h.2, rfl⟩⟩
+  let k' : binaryDihedralSubgroup :=
+    ⟨tupleSL2MulEquiv k.1, ⟨k.1, k.2, rfl⟩⟩
+  refine ⟨h', k', ?_⟩
+  calc
+    γ = tupleSL2MulEquiv (tupleSL2MulEquiv.symm γ) :=
+      (tupleSL2MulEquiv.apply_symm_apply γ).symm
+    _ = tupleSL2MulEquiv (h.1 * k.1) := congrArg tupleSL2MulEquiv hx
+    _ = h'.1 * k'.1 := tupleSL2MulEquiv.map_mul h.1 k.1
 
 theorem sl2F5_card : Nat.card SL2F5 = 120 :=
   (Nat.card_congr tupleSL2MulEquiv.toEquiv).symm.trans tupleSL2_card
@@ -295,6 +327,22 @@ theorem binaryIcosahedral_subgroup_lattice :
     binaryDihedralSubgroup_index⟩
 
 universe u
+
+/-- For the certified binary-icosahedral diamond, overlap fixedness and the
+crossing relations are exactly the conditions for an element to occur as a
+normalized transition of a cocycle trivial on both local subgroups. -/
+theorem
+    binary_isAdmissibleTwoGaugeTransition_iff_exists_normalizedCocycle
+    {G : Type u} [Group G] [MulDistribMulAction SL2F5 G] (δ : G) :
+    IsAdmissibleTwoGaugeTransition
+        binaryTetrahedralSubgroup binaryDihedralSubgroup δ ↔
+      ∃ a : NonabelianCocycle SL2F5 G,
+        (∀ k : binaryDihedralSubgroup, a k.1 = 1) ∧
+        (∀ h : binaryTetrahedralSubgroup,
+          a h.1 = δ⁻¹ * h.1 • δ) :=
+  isAdmissibleTwoGaugeTransition_iff_exists_normalizedCocycle
+    binaryTetrahedralSubgroup binaryDihedralSubgroup
+    binary_product_factorization δ
 
 theorem
     isCoboundary_of_binaryIcosahedral_admissible_orientedTransition_factorization

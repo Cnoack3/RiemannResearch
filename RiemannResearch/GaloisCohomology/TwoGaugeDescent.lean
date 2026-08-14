@@ -16,7 +16,10 @@ factors as a product of elements fixed by the respective subgroups.
 For a finite Galois splitting field, the two fixed subgroups model the groups
 of rational points over the two intermediate fields. The final theorem is the
 abstract double-coset factorization criterion; it does not assert that every
-transition factors.
+transition factors. When every group element has a single H-K factorization,
+the converse construction proves that overlap fixedness and the crossing
+relations characterize exactly the transitions of normalized two-gauge
+cocycles.
 -/
 
 namespace RiemannResearch.GaloisCohomology
@@ -291,5 +294,120 @@ theorem transition_isAdmissibleTwoGaugeTransition
       _ = (gH * gK⁻¹)⁻¹ * h'.1 • (gH * gK⁻¹) := by
         rw [hzH h', hzK k']
         simp only [MulDistribMulAction.smul_one, mul_one]
+
+/-- Overlap fixedness makes the coboundary value attached to an H-factor
+independent of an H-K decomposition.
+
+The element comparing two H-factors lies simultaneously in H and K. -/
+theorem overlap_fixed_value_eq_of_eq_mul
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (H K : Subgroup Γ) (δ : G)
+    (hfixed : NonabelianCocycle.IsFixedBy (H ⊓ K) δ)
+    (h h' : H) (k k' : K)
+    (heq : h.1 * k.1 = h'.1 * k'.1) :
+    δ⁻¹ * h.1 • δ = δ⁻¹ * h'.1 • δ := by
+  let c : Γ := h'.1⁻¹ * h.1
+  have hcH : c ∈ H := H.mul_mem (H.inv_mem h'.2) h.2
+  have hc_eq : c = k'.1 * k.1⁻¹ := by
+    dsimp [c]
+    calc
+      h'.1⁻¹ * h.1 =
+          h'.1⁻¹ * (h.1 * k.1) * k.1⁻¹ := by simp [mul_assoc]
+      _ = h'.1⁻¹ * (h'.1 * k'.1) * k.1⁻¹ := by rw [heq]
+      _ = k'.1 * k.1⁻¹ := by simp
+  have hcK : c ∈ K := by
+    rw [hc_eq]
+    exact K.mul_mem k'.2 (K.inv_mem k.2)
+  have hcfix : c • δ = δ := hfixed c ⟨hcH, hcK⟩
+  have hh : h.1 = h'.1 * c := by simp [c]
+  rw [hh, mul_smul, hcfix]
+
+/-- On a group with a single-product factorization Γ = H K, every admissible
+transition is realized by a normalized nonabelian cocycle: the cocycle is
+trivial on K and its restriction to H is the coboundary defined by δ.
+
+The construction chooses one H-K decomposition for each group element.
+Overlap fixedness makes its value independent of the chosen decomposition,
+while the crossing relations are exactly what proves the cocycle identity. -/
+theorem exists_normalizedTwoGaugeCocycle_of_isAdmissible
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (H K : Subgroup Γ)
+    (hprod : ∀ γ : Γ, ∃ h : H, ∃ k : K, γ = h.1 * k.1)
+    (δ : G) (hadm : IsAdmissibleTwoGaugeTransition H K δ) :
+    ∃ a : NonabelianCocycle Γ G,
+      (∀ k : K, a k.1 = 1) ∧
+      (∀ h : H, a h.1 = δ⁻¹ * h.1 • δ) := by
+  let left : Γ → H := fun γ => Classical.choose (hprod γ)
+  let right : Γ → K := fun γ =>
+    Classical.choose (Classical.choose_spec (hprod γ))
+  have factor_spec : ∀ γ : Γ, γ = (left γ).1 * (right γ).1 := by
+    intro γ
+    exact Classical.choose_spec (Classical.choose_spec (hprod γ))
+  let value : Γ → G := fun γ => δ⁻¹ * (left γ).1 • δ
+  have value_eq_of_eq_mul :
+      ∀ (γ : Γ) (h : H) (k : K), γ = h.1 * k.1 →
+        value γ = δ⁻¹ * h.1 • δ := by
+    intro γ h k hγ
+    apply overlap_fixed_value_eq_of_eq_mul
+      H K δ hadm.1 (left γ) h (right γ) k
+    rw [← factor_spec γ, ← hγ]
+  let a : NonabelianCocycle Γ G :=
+    { toFun := value
+      map_mul' := by
+        intro γ₁ γ₂
+        let h₁ : H := left γ₁
+        let k₁ : K := right γ₁
+        let h₂ : H := left γ₂
+        let k₂ : K := right γ₂
+        obtain ⟨h₃, k₃, hcross⟩ := hprod (k₁.1 * h₂.1)
+        have hγ₁ : γ₁ = h₁.1 * k₁.1 := factor_spec γ₁
+        have hγ₂ : γ₂ = h₂.1 * k₂.1 := factor_spec γ₂
+        have hγmul :
+            γ₁ * γ₂ = (h₁ * h₃).1 * (k₃ * k₂).1 := by
+          rw [hγ₁, hγ₂]
+          calc
+            (h₁.1 * k₁.1) * (h₂.1 * k₂.1) =
+                h₁.1 * (k₁.1 * h₂.1) * k₂.1 := by simp [mul_assoc]
+            _ = h₁.1 * (h₃.1 * k₃.1) * k₂.1 := by rw [hcross]
+            _ = (h₁ * h₃).1 * (k₃ * k₂).1 := by simp [mul_assoc]
+        rw [value_eq_of_eq_mul γ₁ h₁ k₁ hγ₁,
+          value_eq_of_eq_mul γ₂ h₂ k₂ hγ₂,
+          value_eq_of_eq_mul
+            (γ₁ * γ₂) (h₁ * h₃) (k₃ * k₂) hγmul,
+          hγ₁, mul_smul, hadm.2 k₁ h₂ h₃ k₃ hcross]
+        simp [smul_mul', mul_smul, mul_assoc] }
+  refine ⟨a, ?_, ?_⟩
+  · intro k
+    have hk : k.1 = (1 : H).1 * k.1 := by simp
+    change value k.1 = 1
+    rw [value_eq_of_eq_mul k.1 1 k hk]
+    simp
+  · intro h
+    have hh : h.1 = h.1 * (1 : K).1 := by simp
+    change value h.1 = δ⁻¹ * h.1 • δ
+    exact value_eq_of_eq_mul h.1 h 1 hh
+
+/-- For Γ = H K, the admissibility relations characterize exactly the
+transitions of normalized cocycles locally trivial on H and K. -/
+theorem isAdmissibleTwoGaugeTransition_iff_exists_normalizedCocycle
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (H K : Subgroup Γ)
+    (hprod : ∀ γ : Γ, ∃ h : H, ∃ k : K, γ = h.1 * k.1)
+    (δ : G) :
+    IsAdmissibleTwoGaugeTransition H K δ ↔
+      ∃ a : NonabelianCocycle Γ G,
+        (∀ k : K, a k.1 = 1) ∧
+        (∀ h : H, a h.1 = δ⁻¹ * h.1 • δ) := by
+  constructor
+  · exact exists_normalizedTwoGaugeCocycle_of_isAdmissible H K hprod δ
+  · rintro ⟨a, hK, hH⟩
+    simpa using
+      (transition_isAdmissibleTwoGaugeTransition a H K δ 1 hH
+        (fun k => by
+          simpa only [inv_one, one_mul, MulDistribMulAction.smul_one]
+            using hK k))
 
 end RiemannResearch.GaloisCohomology
