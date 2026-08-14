@@ -76,6 +76,17 @@ def orientedSubgroupTransporter
     x ∈ orientedSubgroupTransporter S6 S5 theta ↔
       ∀ s : S6, x * s.1 * x⁻¹ = (theta s).1 := Iff.rfl
 
+/-- Every element transports the trivial subgroup to itself. Consequently the
+bare `orientedSubgroupTransporter` predicate does not encode the maximal-torus
+or E8 incidence needed by the intended application. -/
+theorem mem_orientedSubgroupTransporter_bot
+    {G : Type v} [Group G] (x : G) :
+    x ∈ orientedSubgroupTransporter (⊥ : Subgroup G) (⊥ : Subgroup G)
+      (MulEquiv.refl (↥(⊥ : Subgroup G))) := by
+  intro s
+  have hs : s = 1 := Subsingleton.elim _ _
+  simp [hs]
+
 /-- Exact two-gauge descent expressed as a double-coset condition. -/
 theorem isCoboundary_iff_one_mem_fixedPointDoubleCoset
     {Γ : Type u} {G : Type v} [Group Γ] [Group G]
@@ -152,5 +163,34 @@ theorem isCoboundary_of_admissible_orientedTransition_factorization
   exact hfactor (gH * gK⁻¹)
     (transition_isAdmissibleTwoGaugeTransition a H K gH gK hH hK)
     htransport
+
+/-- A kernel-checked no-go statement for replacing the missing E8 geometry by
+the abstract transporter predicate alone.
+
+If a locally trivial two-gauge cocycle is nonneutral, its transition is still
+admissible and lies in an oriented transporter (take both subgroups trivial),
+but it cannot factor through the two fixed-point groups. Thus any proof of the
+E8 target must use a genuinely stronger compatibility notion: for example
+maximal-torus incidence tied to the EVIII embedding or Allen-algebra data. -/
+theorem abstract_orientedTransporter_does_not_strengthen_twoGaugeDescent
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G] (a : NonabelianCocycle Γ G)
+    (H K : Subgroup Γ) (hgen : H ⊔ K = ⊤)
+    (gH gK : G)
+    (hH : ∀ σ : H, a σ.1 = gH⁻¹ * σ.1 • gH)
+    (hK : ∀ σ : K, a σ.1 = gK⁻¹ * σ.1 • gK)
+    (hnontrivial : ¬ a.IsCoboundary) :
+    IsAdmissibleTwoGaugeTransition H K (gH * gK⁻¹) ∧
+      gH * gK⁻¹ ∈
+        orientedSubgroupTransporter (⊥ : Subgroup G) (⊥ : Subgroup G)
+          (MulEquiv.refl (↥(⊥ : Subgroup G))) ∧
+      ¬ ∃ u v : G, NonabelianCocycle.IsFixedBy H u ∧
+        NonabelianCocycle.IsFixedBy K v ∧ gH * gK⁻¹ = u * v := by
+  refine ⟨transition_isAdmissibleTwoGaugeTransition a H K gH gK hH hK,
+    mem_orientedSubgroupTransporter_bot (gH * gK⁻¹), ?_⟩
+  intro hfactor
+  exact hnontrivial
+    ((isCoboundary_iff_transition_factorization
+      a H K hgen gH gK hH hK).2 hfactor)
 
 end RiemannResearch.GaloisCohomology
