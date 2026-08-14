@@ -99,4 +99,5 @@ import RiemannResearch.E8.FullWeylCore
 import RiemannResearch.E8.FullWeylGaugeCover
 import RiemannResearch.E8.GroupSchemeFoundation
 import RiemannResearch.E8.CoxeterAttractingRank
+import RiemannResearch.E8.RemainingCaseMemorandum
 import RiemannResearch.RH.Basic

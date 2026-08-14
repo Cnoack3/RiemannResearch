@@ -7,6 +7,9 @@ propositions, corollaries, and lemmas; four conjectures; and Question 5.22.
 It records the strongest evidence currently available. It is not a claim that
 the E8 case of Serre's Conjecture II has been solved.
 
+All project formalizations supporting the artifact can be imported together
+with `import RiemannResearch.E8.RemainingCaseMemorandum`.
+
 For the declaration-level implementation target attached to every bibliography
 entry, see `SERRE_II_CITATION_FORMALIZATION_PLAN.md`.
 
