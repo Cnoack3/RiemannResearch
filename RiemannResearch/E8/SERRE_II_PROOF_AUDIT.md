@@ -167,8 +167,11 @@ intersection of this splitting-field coset and the prime-local cosets.
   quotient-generation countermodel and kernel-adjoining repair for the
   paragraph after Proposition 7.5.
 - `E8/BinaryIcosahedralArithmetic.lean` checks the orders and fixed-field
-  degrees `5`, `6`, and `30`, their coprimality, and proves the generic
-  guard that a nontrivial perfect group is nonsolvable.
+  degrees `5`, `6`, and `30`, their coprimality, the Proposition 6.22
+  dimension inequality `11 d < 30 d` (including `2728 < 7440` at
+  `dim E8 = 248`), and the Proposition 6.24 Euler-characteristic and
+  rank-`20` arithmetic. It also proves the generic guard that a nontrivial
+  perfect group is nonsolvable. The geometric and Bass--Serre inputs remain open.
 - `E8/BinaryIcosahedralAtlas.lean` checks the Appendix-A words and relations
   and the `D4 ⊕ D4` Gram matrix. `E8/BinaryIcosahedralTrialityCounterexample.lean`
   checks the form isometries, inner reflection image, and the nonidentity

@@ -58,6 +58,7 @@ import RiemannResearch.Motives.IntegralCycleQuotients
 import RiemannResearch.Motives.IntegralCorrespondenceComposition
 import RiemannResearch.Motives.IntegralProjectorLifting
 import RiemannResearch.Motives.RostNilpotence
+import RiemannResearch.Motives.UnitRetractDegree
 import RiemannResearch.GroupTheory.AlternatingFiveObstruction
 import RiemannResearch.GroupTheory.CoprimeRestriction
 import RiemannResearch.GroupTheory.BurnsideTopMark
