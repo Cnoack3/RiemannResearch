@@ -33,8 +33,9 @@ class.
 generic identity, composition, and associativity laws for change of base,
 coefficient functoriality, and the tensor/cover comparison isomorphisms for
 identity and iterated scalar extension. The normalized scalar identity and
-composition laws are reduced to two explicit fixed-cover coherence squares
-for `pullbackSpecIso'` versus `Over.pullbackId` and `Over.pullbackComp`.
+composition laws are proved unconditionally; the fixed-cover comparison
+squares for `pullbackSpecIso'` against `Over.pullbackId` and
+`Over.pullbackComp` are discharged.
 
 `SerreIITypeDScalarExtension.lean` can consume the resulting canonical
 `FpqcH1RestrictionSystem`; scalar-extension maps are no longer an open input.
@@ -59,16 +60,13 @@ The canonical finite-Galois fixed-cover comparison is complete:
 relations, and `finiteGaloisCanonicalH1EquivNonabelian` gives the resulting
 fixed-cover H¹ equivalence.
 
-1. Discharge the two fixed-cover scalar-coherence squares comparing the
-   explicit `pullbackSpecIso'` coefficient maps with `Over.pullbackId` and
-   `Over.pullbackComp`; the global normalized laws then follow.
-2. Construct `FpqcH1TorsorClassifier` by effective fpqc object descent. The
+1. Construct `FpqcH1TorsorClassifier` by effective fpqc object descent. The
    current interface correctly assumes `Module.Flat R A`, supplies a canonical
    torsor self-cover, and proves consequences of a classifier, but Mathlib does
    not yet supply the needed scheme-valued effective descent equivalence.
-3. Pass from finite quotients and fixed covers to continuous absolute-Galois
+2. Pass from finite quotients and fixed covers to continuous absolute-Galois
    H¹ and prove compatibility with pullback of torsors.
-4. Add functoriality under homomorphisms of group schemes, twisting
+3. Add functoriality under homomorphisms of group schemes, twisting
    equivalences, and exact sequences of pointed sets.
 
 ## Missing algebraic-group structures
@@ -163,19 +161,18 @@ modules here rather than vendoring an unrelated conjecture catalogue.
 
 ## Recommended implementation order
 
-1. Prove the two explicit fixed-cover scalar-coherence squares.
-2. Build the scheme-valued effective fpqc descent needed to construct the
+1. Build the scheme-valued effective fpqc descent needed to construct the
    flat-coefficient `FpqcH1TorsorClassifier`.
-3. Pass the completed finite-Galois fixed-cover comparison to continuous
+2. Pass the completed finite-Galois fixed-cover comparison to continuous
    absolute-Galois H¹ with torsor-pullback compatibility.
-4. Build intrinsic field/cohomological-dimension and semisimple simply
+3. Build intrinsic field/cohomological-dimension and semisimple simply
    connected predicates.
-5. Build root data and classifiers, then discharge the classical and F4/G2
+4. Build root data and classifiers, then discharge the classical and F4/G2
    providers from published mathematics.
-6. Build Brauer/CSA/involution/trialitarian infrastructure and isolate the
+5. Build Brauer/CSA/involution/trialitarian infrastructure and isolate the
    high-Allen-index open leaf.
-7. Build H³ and Rost naturality/kernel results.
-8. Attach the E8 finite computations to intrinsic E8 geometry and finish the
+6. Build H³ and Rost naturality/kernel results.
+7. Attach the E8 finite computations to intrinsic E8 geometry and finish the
    single full-strength `SerreII.Conjecture`.
 
 ## Scalar-extension and comparison milestone (2026-08-15)
@@ -184,9 +181,9 @@ Scalar transport is constructed on fixed covers and on the global
 common-refinement quotient, and it preserves the neutral class. Generic
 identity, composition, associativity, and coefficient-map laws are proved.
 
-The normalized scalar identity and composition statements are conditional
-only on the two displayed fixed-cover coherence squares relating the explicit
-affine base-change comparison to `Over.pullbackId` and `Over.pullbackComp`.
+The normalized scalar identity and composition laws are kernel checked as
+`FpqcH1.scalarExtension_self` and `FpqcH1.scalarExtension_comp`; their
+fixed-cover coherence squares are discharged.
 
 `FpqcH1TorsorClassification` specifies a flat-coefficient classifier
 interface, constructs the canonical torsor self-cover, and proves the
