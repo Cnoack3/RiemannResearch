@@ -5,14 +5,15 @@ Authors: Cnoack3
 -/
 
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornFockCharts
+import RiemannResearch.LinearAlgebra.RootSystem.D4ZornBaseChange
 
 /-!
 # Generator-level Fock/Zorn triality comparison
 
-This module packages the parity-changing exterior-Fock generator and reduces
-the two expected Zorn block identities to their exact finite tables on the
-explicit vector and half-spin bases. Each remaining table has 8 by 8 entries;
-no dimension argument or unspecified comparison map is used.
+This module packages the parity-changing exterior-Fock generator, proves the
+two exact 8-by-8 integral tables on the explicit vector and half-spin bases,
+and derives both Zorn block identities over every field by base change and
+bilinearity. No dimension argument or unspecified comparison map is used.
 -/
 
 namespace RiemannResearch.LinearAlgebra.RootSystem.D4Triality
@@ -103,6 +104,645 @@ theorem splitFock_creation_basis_eq_of_not_mem
     (K := K) i (insert i s) (Finset.mem_insert_self i s)
   rw [splitFock_basis_singleton] at h
   simpa [hi] using h
+/-! ## Ordered exterior monomials for the finite generator tables -/
+
+/-- The element in position \`i\` of the increasingly sorted list underlying a
+finite subset. Keeping the cardinality proof explicit lets the kernel reduce
+all sixteen monomials below without evaluating a noncomputable permutation
+sign. -/
+private def splitFockSortedIndex (s : Finset (Fin 4)) {n : ℕ}
+    (h : s.card = n) (i : Fin n) : Fin 4 :=
+  (s.sort (fun a b => a ≤ b)).get
+    ⟨i.1, by simp [h, i.2]⟩
+
+private theorem splitFock_sort_eq_of_eq_toFinset
+    (s : Finset (Fin 4)) (l : List (Fin 4))
+    (h : s = l.toFinset) (hn : l.Nodup)
+    (ho : List.Pairwise (fun a b : Fin 4 => a ≤ b) l) :
+    s.sort (fun a b => a ≤ b) = l := by
+  rw [h]
+  exact
+    (List.toFinset_sort (r := fun a b : Fin 4 => a ≤ b) hn).2 ho
+
+private theorem splitFock_basis_eq_ιMulti_sorted
+    {s : Finset (Fin 4)} {n : ℕ} (h : s.card = n) :
+    (Pi.basisFun K (Fin 4)).ExteriorAlgebra s =
+      ExteriorAlgebra.ιMulti K n
+        (fun i =>
+          (Pi.basisFun K (Fin 4)) (splitFockSortedIndex s h i)) := by
+  rw [ExteriorAlgebra.basis_apply_ofCard
+    (Pi.basisFun K (Fin 4)) h]
+  simp only [ExteriorAlgebra.ιMulti_family,
+    Set.powersetCard.ofFinEmbEquiv]
+  apply congrArg (ExteriorAlgebra.ιMulti K n)
+  funext i
+  apply congrArg (fun j => (Pi.basisFun K (Fin 4)) j)
+  exact Finset.orderEmbOfFin_apply _ _ _
+
+private def splitFockIota (i : Fin 4) :
+    ExteriorAlgebra K (Fin 4 → K) :=
+  ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) i)
+
+/-- The eight ordered even exterior monomials in chart order. -/
+private def splitFockEvenProduct :
+    Fin 8 → ExteriorAlgebra K (Fin 4 → K) := ![
+  1,
+  splitFockIota K 0 * splitFockIota K 1,
+  splitFockIota K 0 * splitFockIota K 2,
+  splitFockIota K 0 * splitFockIota K 3,
+  splitFockIota K 2 * splitFockIota K 3,
+  splitFockIota K 1 * splitFockIota K 3,
+  splitFockIota K 1 * splitFockIota K 2,
+  splitFockIota K 0 *
+    (splitFockIota K 1 *
+      (splitFockIota K 2 * splitFockIota K 3))]
+
+/-- The eight ordered odd exterior monomials in chart order. -/
+private def splitFockOddProduct :
+    Fin 8 → ExteriorAlgebra K (Fin 4 → K) := ![
+  splitFockIota K 1 *
+    (splitFockIota K 2 * splitFockIota K 3),
+  splitFockIota K 1,
+  splitFockIota K 2,
+  splitFockIota K 3,
+  splitFockIota K 0 *
+    (splitFockIota K 2 * splitFockIota K 3),
+  splitFockIota K 0 *
+    (splitFockIota K 1 * splitFockIota K 3),
+  splitFockIota K 0 *
+    (splitFockIota K 1 * splitFockIota K 2),
+  splitFockIota K 0]
+
+private theorem splitFockEvenBasisVector_val (i : Fin 8) :
+    (splitFockEvenBasisVector K i :
+        ExteriorAlgebra K (Fin 4 → K)) =
+      splitFockEvenProduct K i := by
+  fin_cases i
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra ∅ = 1
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 0) (by decide)]
+    have hs :
+        (∅ : Finset (Fin 4)).sort (fun a b => a ≤ b) = [] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {0, 1} =
+        splitFockIota K 0 * splitFockIota K 1
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 2) (by decide)]
+    have hs :
+        ({0, 1} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [0, 1] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {0, 2} =
+        splitFockIota K 0 * splitFockIota K 2
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 2) (by decide)]
+    have hs :
+        ({0, 2} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [0, 2] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {0, 3} =
+        splitFockIota K 0 * splitFockIota K 3
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 2) (by decide)]
+    have hs :
+        ({0, 3} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [0, 3] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {2, 3} =
+        splitFockIota K 2 * splitFockIota K 3
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 2) (by decide)]
+    have hs :
+        ({2, 3} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [2, 3] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {1, 3} =
+        splitFockIota K 1 * splitFockIota K 3
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 2) (by decide)]
+    have hs :
+        ({1, 3} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [1, 3] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {1, 2} =
+        splitFockIota K 1 * splitFockIota K 2
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 2) (by decide)]
+    have hs :
+        ({1, 2} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [1, 2] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra Finset.univ =
+        splitFockIota K 0 *
+          (splitFockIota K 1 *
+            (splitFockIota K 2 * splitFockIota K 3))
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 4) (by decide)]
+    have hs :
+        (Finset.univ : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [0, 1, 2, 3] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+
+private theorem splitFockOddBasisVector_val (i : Fin 8) :
+    (splitFockOddBasisVector K i :
+        ExteriorAlgebra K (Fin 4 → K)) =
+      splitFockOddProduct K i := by
+  fin_cases i
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {1, 2, 3} =
+        splitFockIota K 1 *
+          (splitFockIota K 2 * splitFockIota K 3)
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 3) (by decide)]
+    have hs :
+        ({1, 2, 3} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [1, 2, 3] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {1} =
+        splitFockIota K 1
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 1) (by decide)]
+    have hs :
+        ({1} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [1] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {2} =
+        splitFockIota K 2
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 1) (by decide)]
+    have hs :
+        ({2} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [2] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {3} =
+        splitFockIota K 3
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 1) (by decide)]
+    have hs :
+        ({3} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [3] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {0, 2, 3} =
+        splitFockIota K 0 *
+          (splitFockIota K 2 * splitFockIota K 3)
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 3) (by decide)]
+    have hs :
+        ({0, 2, 3} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [0, 2, 3] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {0, 1, 3} =
+        splitFockIota K 0 *
+          (splitFockIota K 1 * splitFockIota K 3)
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 3) (by decide)]
+    have hs :
+        ({0, 1, 3} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [0, 1, 3] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {0, 1, 2} =
+        splitFockIota K 0 *
+          (splitFockIota K 1 * splitFockIota K 2)
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 3) (by decide)]
+    have hs :
+        ({0, 1, 2} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [0, 1, 2] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+  · change
+      (Pi.basisFun K (Fin 4)).ExteriorAlgebra {0} =
+        splitFockIota K 0
+    rw [splitFock_basis_eq_ιMulti_sorted K
+      (n := 1) (by decide)]
+    have hs :
+        ({0} : Finset (Fin 4)).sort
+            (fun a b => a ≤ b) = [0] := by
+      exact splitFock_sort_eq_of_eq_toFinset _ _
+        (by decide) (by decide) (by decide)
+    simp [splitFockSortedIndex, hs, splitFockIota,
+      ExteriorAlgebra.ιMulti_succ_apply, Matrix.vecTail]
+
+private theorem splitFockEvenBasis_eq_vector (i : Fin 8) :
+    splitFockEvenBasis K i = splitFockEvenBasisVector K i := by
+  simp [splitFockEvenBasis]
+
+private theorem splitFockOddBasis_eq_vector (i : Fin 8) :
+    splitFockOddBasis K i = splitFockOddBasisVector K i := by
+  simp [splitFockOddBasis]
+
+private theorem splitFockIota_sq_tail
+    (i : Fin 4) (z : ExteriorAlgebra K (Fin 4 → K)) :
+    splitFockIota K i * (splitFockIota K i * z) = 0 := by
+  rw [← mul_assoc, splitFockIota,
+    ExteriorAlgebra.ι_sq_zero, zero_mul]
+
+private theorem splitFockIota_swap_tail_of_lt
+    (i j : Fin 4) (_h : i < j)
+    (z : ExteriorAlgebra K (Fin 4 → K)) :
+    splitFockIota K j * (splitFockIota K i * z) =
+      -(splitFockIota K i * (splitFockIota K j * z)) := by
+  have hswap :
+      splitFockIota K j * splitFockIota K i =
+        -(splitFockIota K i * splitFockIota K j) := by
+    apply eq_neg_of_add_eq_zero_left
+    exact ExteriorAlgebra.ι_add_mul_swap _ _
+  calc
+    splitFockIota K j * (splitFockIota K i * z) =
+        (splitFockIota K j * splitFockIota K i) * z := by
+      rw [mul_assoc]
+    _ = (-(splitFockIota K i * splitFockIota K j)) * z := by
+      rw [hswap]
+    _ = -(splitFockIota K i *
+        (splitFockIota K j * z)) := by
+      rw [neg_mul, mul_assoc]
+
+private theorem splitFockIota_raw_sq_tail
+    (i : Fin 4) (z : ExteriorAlgebra K (Fin 4 → K)) :
+    ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) i) *
+        (ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) i) * z) = 0 := by
+  simpa [splitFockIota] using splitFockIota_sq_tail K i z
+
+private theorem splitFockIota_raw_swap_of_lt
+    (i j : Fin 4) (h : i < j) :
+    ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) j) *
+        ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) i) =
+      -(ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) i) *
+        ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) j)) := by
+  simpa [splitFockIota] using
+    splitFockIota_swap_tail_of_lt K i j h 1
+
+private theorem splitFockIota_raw_swap_tail_of_lt
+    (i j : Fin 4) (h : i < j)
+    (z : ExteriorAlgebra K (Fin 4 → K)) :
+    ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) j) *
+        (ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) i) * z) =
+      -(ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) i) *
+        (ExteriorAlgebra.ι K ((Pi.basisFun K (Fin 4)) j) * z)) := by
+  simpa [splitFockIota] using
+    splitFockIota_swap_tail_of_lt K i j h z
+
+
+private theorem splitFock_basisFun_eq_single (i : Fin 4) :
+    (Pi.basisFun K (Fin 4)) i = Pi.single i 1 := by
+  ext j
+  simp
+
+private theorem splitFockPiIota_sq_tail
+    (i : Fin 4) (z : ExteriorAlgebra K (Fin 4 → K)) :
+    ExteriorAlgebra.ι K (Pi.single i 1 : Fin 4 → K) *
+        (ExteriorAlgebra.ι K (Pi.single i 1 : Fin 4 → K) * z) = 0 := by
+  simpa [splitFock_basisFun_eq_single] using
+    splitFockIota_raw_sq_tail K i z
+
+private theorem splitFockPiIota_swap_of_lt
+    (i j : Fin 4) (h : i < j) :
+    ExteriorAlgebra.ι K (Pi.single j 1 : Fin 4 → K) *
+        ExteriorAlgebra.ι K (Pi.single i 1 : Fin 4 → K) =
+      -(ExteriorAlgebra.ι K (Pi.single i 1 : Fin 4 → K) *
+        ExteriorAlgebra.ι K (Pi.single j 1 : Fin 4 → K)) := by
+  simpa [splitFock_basisFun_eq_single] using
+    splitFockIota_raw_swap_of_lt K i j h
+
+private theorem splitFockPiIota_swap_tail_of_lt
+    (i j : Fin 4) (h : i < j)
+    (z : ExteriorAlgebra K (Fin 4 → K)) :
+    ExteriorAlgebra.ι K (Pi.single j 1 : Fin 4 → K) *
+        (ExteriorAlgebra.ι K (Pi.single i 1 : Fin 4 → K) * z) =
+      -(ExteriorAlgebra.ι K (Pi.single i 1 : Fin 4 → K) *
+        (ExteriorAlgebra.ι K (Pi.single j 1 : Fin 4 → K) * z)) := by
+  simpa [splitFock_basisFun_eq_single] using
+    splitFockIota_raw_swap_tail_of_lt K i j h z
+
+private def splitFockEvenToOddBasisOutput
+    (i j : Fin 8) : SplitFockOdd K := ![
+  ![splitFockOddBasisVector K 7, 0, 0, 0,
+    splitFockOddBasisVector K 4, splitFockOddBasisVector K 5,
+    splitFockOddBasisVector K 6, 0],
+  ![splitFockOddBasisVector K 1, 0, -splitFockOddBasisVector K 6,
+    -splitFockOddBasisVector K 5, splitFockOddBasisVector K 0, 0, 0, 0],
+  ![splitFockOddBasisVector K 2, splitFockOddBasisVector K 6, 0,
+    -splitFockOddBasisVector K 4, 0, -splitFockOddBasisVector K 0, 0, 0],
+  ![splitFockOddBasisVector K 3, splitFockOddBasisVector K 5,
+    splitFockOddBasisVector K 4, 0, 0, 0,
+    splitFockOddBasisVector K 0, 0],
+  ![0, splitFockOddBasisVector K 7, 0, 0, 0,
+    -splitFockOddBasisVector K 3, -splitFockOddBasisVector K 2,
+    splitFockOddBasisVector K 4],
+  ![0, 0, splitFockOddBasisVector K 7, 0,
+    -splitFockOddBasisVector K 3, 0, splitFockOddBasisVector K 1,
+    -splitFockOddBasisVector K 5],
+  ![0, 0, 0, splitFockOddBasisVector K 7,
+    splitFockOddBasisVector K 2, splitFockOddBasisVector K 1, 0,
+    splitFockOddBasisVector K 6],
+  ![0, splitFockOddBasisVector K 1, splitFockOddBasisVector K 2,
+    splitFockOddBasisVector K 3, 0, 0, 0,
+    splitFockOddBasisVector K 0]] i j
+
+private def splitFockOddToEvenBasisOutput
+    (i j : Fin 8) : SplitFockEven K := ![
+  ![splitFockEvenBasisVector K 7, splitFockEvenBasisVector K 1,
+    splitFockEvenBasisVector K 2, splitFockEvenBasisVector K 3, 0, 0, 0, 0],
+  ![0, 0, splitFockEvenBasisVector K 6,
+    splitFockEvenBasisVector K 5, -splitFockEvenBasisVector K 7, 0, 0,
+    -splitFockEvenBasisVector K 1],
+  ![0, -splitFockEvenBasisVector K 6, 0,
+    splitFockEvenBasisVector K 4, 0, splitFockEvenBasisVector K 7, 0,
+    -splitFockEvenBasisVector K 2],
+  ![0, -splitFockEvenBasisVector K 5, -splitFockEvenBasisVector K 4, 0,
+    0, 0, -splitFockEvenBasisVector K 7, -splitFockEvenBasisVector K 3],
+  ![-splitFockEvenBasisVector K 4, -splitFockEvenBasisVector K 0, 0, 0,
+    0, splitFockEvenBasisVector K 3, splitFockEvenBasisVector K 2, 0],
+  ![splitFockEvenBasisVector K 5, 0, -splitFockEvenBasisVector K 0, 0,
+    splitFockEvenBasisVector K 3, 0, -splitFockEvenBasisVector K 1, 0],
+  ![-splitFockEvenBasisVector K 6, 0, 0, -splitFockEvenBasisVector K 0,
+    -splitFockEvenBasisVector K 2, -splitFockEvenBasisVector K 1, 0, 0],
+  ![0, 0, 0, 0, splitFockEvenBasisVector K 4,
+    splitFockEvenBasisVector K 5, splitFockEvenBasisVector K 6,
+    splitFockEvenBasisVector K 0]] i j
+
+set_option maxHeartbeats 1000000 in
+-- The 64 explicit exterior-algebra reductions need a larger simplifier budget.
+private theorem splitFockGeneratorEvenToOdd_basis_output
+    (i j : Fin 8) :
+    splitFockGeneratorEvenToOdd K
+        (splitVectorZornBasis K i) (splitFockEvenBasis K j) =
+      splitFockEvenToOddBasisOutput K i j := by
+  fin_cases i <;> fin_cases j
+  all_goals
+    rw [splitVectorZornBasis_eq_source,
+      splitFockEvenBasis_eq_vector]
+    apply Subtype.ext
+    simp [splitVectorZornBasisSource,
+      splitFockGeneratorEvenToOdd,
+      exteriorFockGenerator_apply,
+      splitFockEvenBasisVector_val,
+      splitFockOddBasisVector_val,
+      splitFockEvenProduct, splitFockOddProduct,
+      splitFockEvenToOddBasisOutput,
+      splitFockPiIota_sq_tail,
+      splitFockPiIota_swap_of_lt,
+      splitFockPiIota_swap_tail_of_lt,
+      splitFockIota,
+      CliffordAlgebra.contractLeft_ι_mul]
+
+set_option maxHeartbeats 1000000 in
+-- The 64 explicit exterior-algebra reductions need a larger simplifier budget.
+private theorem splitFockGeneratorOddToEven_basis_output
+    (i j : Fin 8) :
+    splitFockGeneratorOddToEven K
+        (splitVectorZornBasis K i) (splitFockOddBasis K j) =
+      splitFockOddToEvenBasisOutput K i j := by
+  fin_cases i <;> fin_cases j
+  all_goals
+    rw [splitVectorZornBasis_eq_source,
+      splitFockOddBasis_eq_vector]
+    apply Subtype.ext
+    simp [splitVectorZornBasisSource,
+      splitFockGeneratorOddToEven,
+      exteriorFockGenerator_apply,
+      splitFockEvenBasisVector_val,
+      splitFockOddBasisVector_val,
+      splitFockEvenProduct, splitFockOddProduct,
+      splitFockOddToEvenBasisOutput,
+      splitFockPiIota_sq_tail,
+      splitFockPiIota_swap_of_lt,
+      splitFockPiIota_swap_tail_of_lt,
+      splitFockIota,
+      CliffordAlgebra.contractLeft_ι_mul]
+
+
+/-! ## Integral coordinate certificates for the Zorn tables -/
+
+/-- Standard Zorn coordinates, over the integers. -/
+private def splitFockVectorCoordinateInt
+    (i : Fin 8) : Zorn.Octonion ℤ :=
+  Pi.single i 1
+
+/-- Signed positive-half-spin coordinates, over the integers. -/
+private def splitFockEvenCoordinateInt :
+    Fin 8 → Zorn.Octonion ℤ := ![
+  Pi.single 0 1, Pi.single 1 1, Pi.single 2 1, Pi.single 3 1,
+  Pi.single 4 1, -(Pi.single 5 1), Pi.single 6 1, Pi.single 7 1]
+
+/-- Signed negative-half-spin coordinates, over the integers. -/
+private def splitFockOddCoordinateInt :
+    Fin 8 → Zorn.Octonion ℤ := ![
+  Pi.single 0 1, -(Pi.single 1 1), -(Pi.single 2 1),
+  -(Pi.single 3 1), -(Pi.single 4 1), Pi.single 5 1,
+  -(Pi.single 6 1), Pi.single 7 1]
+
+/-- Integral coordinate table for the even-to-odd generator. -/
+private def splitFockEvenToOddCoordinateInt :
+    Fin 8 → Fin 8 → Zorn.Octonion ℤ := ![
+  ![Pi.single 7 1, 0, 0, 0, -(Pi.single 4 1), Pi.single 5 1,
+    -(Pi.single 6 1), 0],
+  ![-(Pi.single 1 1), 0, Pi.single 6 1, -(Pi.single 5 1),
+    Pi.single 0 1, 0, 0, 0],
+  ![-(Pi.single 2 1), -(Pi.single 6 1), 0, Pi.single 4 1,
+    0, -(Pi.single 0 1), 0, 0],
+  ![-(Pi.single 3 1), Pi.single 5 1, -(Pi.single 4 1), 0,
+    0, 0, Pi.single 0 1, 0],
+  ![0, Pi.single 7 1, 0, 0, 0, Pi.single 3 1, Pi.single 2 1,
+    -(Pi.single 4 1)],
+  ![0, 0, Pi.single 7 1, 0, Pi.single 3 1, 0,
+    -(Pi.single 1 1), -(Pi.single 5 1)],
+  ![0, 0, 0, Pi.single 7 1, -(Pi.single 2 1),
+    -(Pi.single 1 1), 0, -(Pi.single 6 1)],
+  ![0, -(Pi.single 1 1), -(Pi.single 2 1), -(Pi.single 3 1),
+    0, 0, 0, Pi.single 0 1]]
+
+/-- Integral coordinate table for the odd-to-even generator. -/
+private def splitFockOddToEvenCoordinateInt :
+    Fin 8 → Fin 8 → Zorn.Octonion ℤ := ![
+  ![Pi.single 7 1, Pi.single 1 1, Pi.single 2 1, Pi.single 3 1,
+    0, 0, 0, 0],
+  ![0, 0, Pi.single 6 1, -(Pi.single 5 1), -(Pi.single 7 1),
+    0, 0, -(Pi.single 1 1)],
+  ![0, -(Pi.single 6 1), 0, Pi.single 4 1, 0, Pi.single 7 1,
+    0, -(Pi.single 2 1)],
+  ![0, Pi.single 5 1, -(Pi.single 4 1), 0, 0, 0,
+    -(Pi.single 7 1), -(Pi.single 3 1)],
+  ![-(Pi.single 4 1), -(Pi.single 0 1), 0, 0, 0,
+    Pi.single 3 1, Pi.single 2 1, 0],
+  ![-(Pi.single 5 1), 0, -(Pi.single 0 1), 0, Pi.single 3 1,
+    0, -(Pi.single 1 1), 0],
+  ![-(Pi.single 6 1), 0, 0, -(Pi.single 0 1),
+    -(Pi.single 2 1), -(Pi.single 1 1), 0, 0],
+  ![0, 0, 0, 0, Pi.single 4 1, -(Pi.single 5 1),
+    Pi.single 6 1, Pi.single 0 1]]
+
+private theorem splitFockEvenToOddCoordinateInt_table :
+    ∀ (i j : Fin 8),
+      splitFockEvenToOddCoordinateInt i j =
+        Zorn.paraMul ℤ (splitFockVectorCoordinateInt i)
+          (splitFockEvenCoordinateInt j) := by
+  decide
+
+private theorem splitFockOddToEvenCoordinateInt_table :
+    ∀ (i j : Fin 8),
+      splitFockOddToEvenCoordinateInt i j =
+        Zorn.paraMul ℤ (splitFockOddCoordinateInt j)
+          (splitFockVectorCoordinateInt i) := by
+  decide
+
+private theorem splitFockVectorCoordinateInt_map (i : Fin 8) :
+    Zorn.map (Int.castRingHom K) (splitFockVectorCoordinateInt i) =
+      Pi.single i 1 := by
+  ext k
+  fin_cases i <;> fin_cases k <;>
+    simp [splitFockVectorCoordinateInt, Zorn.map]
+
+private theorem splitFockEvenCoordinateInt_map (i : Fin 8) :
+    Zorn.map (Int.castRingHom K) (splitFockEvenCoordinateInt i) =
+      splitFockEvenZornSignEquiv K (Pi.single i 1) := by
+  ext k
+  fin_cases i <;> fin_cases k <;>
+    simp [splitFockEvenCoordinateInt, Zorn.map,
+      splitFockEvenZornSignEquiv]
+
+private theorem splitFockOddCoordinateInt_map (i : Fin 8) :
+    Zorn.map (Int.castRingHom K) (splitFockOddCoordinateInt i) =
+      splitFockOddZornSignEquiv K (Pi.single i 1) := by
+  ext k
+  fin_cases i <;> fin_cases k <;>
+    simp [splitFockOddCoordinateInt, Zorn.map,
+      splitFockOddZornSignEquiv]
+
+private theorem splitFockEvenToOddBasisOutput_coordinate
+    (i j : Fin 8) :
+    splitFockOddZornEquiv K (splitFockEvenToOddBasisOutput K i j) =
+      Zorn.map (Int.castRingHom K)
+        (splitFockEvenToOddCoordinateInt i j) := by
+  fin_cases i <;> fin_cases j <;>
+    simp [splitFockEvenToOddBasisOutput,
+      splitFockEvenToOddCoordinateInt,
+      splitFockOddCoordinateInt,
+      splitFockOddZornEquiv_basisVector,
+      ← splitFockOddCoordinateInt_map K]
+
+private theorem splitFockOddToEvenBasisOutput_coordinate
+    (i j : Fin 8) :
+    splitFockEvenZornEquiv K (splitFockOddToEvenBasisOutput K i j) =
+      Zorn.map (Int.castRingHom K)
+        (splitFockOddToEvenCoordinateInt i j) := by
+  fin_cases i <;> fin_cases j <;>
+    simp [splitFockOddToEvenBasisOutput,
+      splitFockOddToEvenCoordinateInt,
+      splitFockEvenCoordinateInt,
+      splitFockEvenZornEquiv_basisVector,
+      ← splitFockEvenCoordinateInt_map K]
+
+private theorem splitFockEvenToOddCoordinate_table (i j : Fin 8) :
+    Zorn.map (Int.castRingHom K)
+        (splitFockEvenToOddCoordinateInt i j) =
+      Zorn.paraMul K
+        (Zorn.map (Int.castRingHom K) (splitFockVectorCoordinateInt i))
+        (Zorn.map (Int.castRingHom K) (splitFockEvenCoordinateInt j)) := by
+  rw [← Zorn.map_paraMul]
+  exact congrArg (Zorn.map (Int.castRingHom K))
+    (splitFockEvenToOddCoordinateInt_table i j)
+
+private theorem splitFockOddToEvenCoordinate_table (i j : Fin 8) :
+    Zorn.map (Int.castRingHom K)
+        (splitFockOddToEvenCoordinateInt i j) =
+      Zorn.paraMul K
+        (Zorn.map (Int.castRingHom K) (splitFockOddCoordinateInt j))
+        (Zorn.map (Int.castRingHom K) (splitFockVectorCoordinateInt i)) := by
+  rw [← Zorn.map_paraMul]
+  exact congrArg (Zorn.map (Int.castRingHom K))
+    (splitFockOddToEvenCoordinateInt_table i j)
+
+/-- The exact 64-entry even-to-odd Fock/Zorn generator table. -/
+theorem splitFockGeneratorEvenToOdd_chart_basis (i j : Fin 8) :
+    splitFockOddZornEquiv K
+        (splitFockGeneratorEvenToOdd K
+          (splitVectorZornBasis K i) (splitFockEvenBasis K j)) =
+      Zorn.paraMul K
+        (splitVectorZornEquiv K (splitVectorZornBasis K i))
+        (splitFockEvenZornEquiv K (splitFockEvenBasis K j)) := by
+  rw [splitFockGeneratorEvenToOdd_basis_output,
+    splitFockEvenBasis_eq_vector,
+    splitFockEvenToOddBasisOutput_coordinate,
+    splitVectorZornEquiv_basis,
+    splitFockEvenZornEquiv_basisVector,
+    ← splitFockVectorCoordinateInt_map K i,
+    ← splitFockEvenCoordinateInt_map K j]
+  exact splitFockEvenToOddCoordinate_table K i j
+
+/-- The exact 64-entry odd-to-even Fock/Zorn generator table. -/
+theorem splitFockGeneratorOddToEven_chart_basis (i j : Fin 8) :
+    splitFockEvenZornEquiv K
+        (splitFockGeneratorOddToEven K
+          (splitVectorZornBasis K i) (splitFockOddBasis K j)) =
+      Zorn.paraMul K
+        (splitFockOddZornEquiv K (splitFockOddBasis K j))
+        (splitVectorZornEquiv K (splitVectorZornBasis K i)) := by
+  rw [splitFockGeneratorOddToEven_basis_output,
+    splitFockOddBasis_eq_vector,
+    splitFockOddToEvenBasisOutput_coordinate,
+    splitVectorZornEquiv_basis,
+    splitFockOddZornEquiv_basisVector,
+    ← splitFockVectorCoordinateInt_map K i,
+    ← splitFockOddCoordinateInt_map K j]
+  exact splitFockOddToEvenCoordinate_table K i j
 
 /-- The even-to-odd block at a fixed positive half-spinor is linear in the
 split vector input. -/
@@ -219,6 +859,26 @@ theorem splitFockGeneratorOddToEven_chart_iff_basis :
     apply (splitVectorZornBasis K).ext
     intro i
     exact h i j
+
+/-- The Fock generator from the positive to the negative half-spin module
+matches left para-octonion multiplication in the chosen triality charts. -/
+theorem splitFockGeneratorEvenToOdd_chart :
+    ∀ (x : SplitD4Space K) (s : SplitFockEven K),
+      splitFockOddZornEquiv K (splitFockGeneratorEvenToOdd K x s) =
+        Zorn.paraMul K (splitVectorZornEquiv K x)
+          (splitFockEvenZornEquiv K s) :=
+  (splitFockGeneratorEvenToOdd_chart_iff_basis K).2
+    (splitFockGeneratorEvenToOdd_chart_basis K)
+
+/-- The Fock generator from the negative to the positive half-spin module
+matches right para-octonion multiplication in the chosen triality charts. -/
+theorem splitFockGeneratorOddToEven_chart :
+    ∀ (x : SplitD4Space K) (s : SplitFockOdd K),
+      splitFockEvenZornEquiv K (splitFockGeneratorOddToEven K x s) =
+        Zorn.paraMul K (splitFockOddZornEquiv K s)
+          (splitVectorZornEquiv K x) :=
+  (splitFockGeneratorOddToEven_chart_iff_basis K).2
+    (splitFockGeneratorOddToEven_chart_basis K)
 
 end
 

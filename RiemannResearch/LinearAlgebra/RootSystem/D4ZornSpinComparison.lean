@@ -20,9 +20,9 @@ outer action on Mathlib spin points; injectivity is proved in this module.
 Odd diagram permutations use Zorn conjugation in the chart transport.  This is
 the concrete correction absent from a pure-relabel symmetric-tensor model.
 
-The norm/tensor preservation and surjectivity boundary is deliberately
-visible: it is the remaining comparison with the classical
-Spin(8)-related-triples theorem, not a consequence of dimension counting.
+The downstream Fock/Zorn modules construct the chart and discharge its norm
+and tensor preservation laws. The remaining comparison boundary is
+surjectivity onto related triples, not a consequence of dimension counting.
 -/
 
 namespace RiemannResearch.LinearAlgebra.RootSystem.D4Triality
