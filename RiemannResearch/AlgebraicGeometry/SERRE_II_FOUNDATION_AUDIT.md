@@ -29,13 +29,17 @@ constructs their canonical fixed-cover and global maps, proves refinement and
 common-refinement quotient descent, and proves preservation of the neutral
 class.
 
-`FpqcH1ChangeOfBase.lean` and `FpqcH1ScalarExtensionCoherence.lean` prove
-generic identity, composition, and associativity laws for change of base,
-coefficient functoriality, and the tensor/cover comparison isomorphisms for
-identity and iterated scalar extension. The normalized scalar identity and
-composition laws are proved unconditionally; the fixed-cover comparison
-squares for `pullbackSpecIso'` against `Over.pullbackId` and
-`Over.pullbackComp` are discharged.
+`FpqcH1ChangeOfBase.lean` proves generic change-of-base identities and
+associativity. `OverMapPullbackCoherence.lean` supplies the
+`Over.map`/`Over.pullback` identity and composition comparisons, while
+`AffineGroupScalarExtensionCoherence.lean` identifies the tensor-unit and
+tensor-associativity comparisons for affine group schemes.
+`FpqcH1ScalarExtensionCoherence.lean` then assembles coefficient
+functoriality, cover refinements, fixed-cover Čech transport, and the
+normalized global laws. The normalized scalar identity and composition laws
+are proved unconditionally; the fixed-cover comparison squares for
+`pullbackSpecIso'` against `Over.pullbackId` and `Over.pullbackComp` are
+discharged.
 
 `SerreIITypeDScalarExtension.lean` can consume the resulting canonical
 `FpqcH1RestrictionSystem`; scalar-extension maps are no longer an open input.
