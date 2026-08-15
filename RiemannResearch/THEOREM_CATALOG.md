@@ -602,11 +602,13 @@ are:
 | `RiemannResearch.AlgebraicGeometry.FpqcCover.Refinement.map_pullbackH1` | `RiemannResearch.AlgebraicGeometry.FpqcH1Functoriality` | Coefficient-presheaf maps on nonabelian Čech H¹ commute with every fpqc-cover refinement pullback | Kernel checked naturality theorem |
 | `RiemannResearch.AlgebraicGeometry.FpqcH1.map_neutral` | `RiemannResearch.AlgebraicGeometry.FpqcH1Functoriality` | Every coefficient-presheaf endomorphism induces a map on the global common-refinement quotient and preserves its neutral class | Kernel checked endomorphism functoriality on the global Čech quotient |
 | `RiemannResearch.AlgebraicGeometry.hopfAutToPresheafAut` | `RiemannResearch.AlgebraicGeometry.HopfFpqcH1Action` | Contravariant Hopf-spectrum functoriality turns Hopf-algebra automorphisms into automorphisms of the represented affine-group presheaf | Kernel checked; the inverse/opposite convention is explicit |
+| `RiemannResearch.AlgebraicGeometry.hopfAutToPresheafAut_injective` | `RiemannResearch.AlgebraicGeometry.HopfFpqcH1Action` | The Hopf-spectrum/group-valued-Yoneda passage is faithful, so distinct Hopf automorphisms remain distinct on the represented affine-group presheaf | Kernel checked categorical faithfulness theorem |
 | `RiemannResearch.AlgebraicGeometry.affineGroupPresheafHomOfBialgHom` | `RiemannResearch.AlgebraicGeometry.HopfFpqcH1Action` | A bialgebra morphism induces the contravariant morphism between represented affine-group presheaves | Kernel checked `hopfSpec`/Yoneda adapter |
 | `RiemannResearch.AlgebraicGeometry.FpqcH1.actionOfHopfAction_neutral` | `RiemannResearch.AlgebraicGeometry.HopfFpqcH1Action` | Any group action by Hopf automorphisms acts on global fpqc Čech H¹ and fixes the neutral class | Kernel checked coefficient-action layer; no scalar-base-change map, torsor comparison, or split-Spin₈ Hopf algebra is asserted |
 | `RiemannResearch.AlgebraicGeometry.AffineGroupTrialityData.fixedCoverAction_pullback` | `RiemannResearch.AlgebraicGeometry.D4FpqcTriality` | A supplied faithful D4 diagram action on an affine-group presheaf acts compatibly on every fixed-cover H¹ and commutes with refinement | Kernel checked adapter; a concrete split-Spin₈ Hopf action is not asserted |
 | `RiemannResearch.AlgebraicGeometry.AffineGroupTrialityData.globalAction_neutral` | `RiemannResearch.AlgebraicGeometry.D4FpqcTriality` | A supplied affine-presheaf D4 triality action induces a neutral-preserving action on global common-refinement fpqc H¹ | Kernel checked adapter; faithfulness of the induced H¹ action is not claimed |
 | `RiemannResearch.AlgebraicGeometry.AffineGroupTrialityData.ofHopfAction` | `RiemannResearch.AlgebraicGeometry.D4FpqcTriality` | A faithful represented-presheaf action induced by Hopf automorphisms supplies the affine-group triality package consumed by fixed-cover and global fpqc Čech H¹ | Kernel checked Hopf-to-fpqc adapter; constructing the split-Spin₈ coordinate Hopf algebra and its action remains separate |
+| `RiemannResearch.AlgebraicGeometry.AffineGroupTrialityData.ofFaithfulHopfAction` | `RiemannResearch.AlgebraicGeometry.D4FpqcTriality` | An injective D4 action by Hopf automorphisms automatically supplies the faithful represented-presheaf action used by fixed-cover and global fpqc Čech H¹ | Kernel checked adapter; the concrete split-Spin₈ coordinate Hopf algebra remains separate |
 
 ## Shared D4 triality hierarchy
 
@@ -657,12 +659,22 @@ are:
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitFockCliffordAction_surjective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFockFaithfulness` | Every endomorphism of the rank-four exterior Fock space is realized by the split Clifford action | Kernel checked constructive matrix-unit proof over every field |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitFockCliffordAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFockFaithfulness` | The split exterior Fock action is faithful when two is invertible | Kernel checked from explicit surjectivity and the exact 256-dimensional source/target calculation |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitHalfSpinDecomposition` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFockFaithfulness` | The even split-D4 Clifford algebra is unconditionally equivalent to the product of the two half-spin endomorphism algebras | Kernel checked concrete split half-spin decomposition |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitTrialityLinearTupleHom_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityFaithfulness` | The vector and two half-spin representations in any common coordinates determine a split spin point | Kernel checked from faithful half-spin blocks and the embedding into even Clifford units |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitVectorZornEquiv_normForm` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornFockCharts` | The explicit hyperbolic-vector chart identifies the split D4 quadratic form with the Zorn norm | Kernel checked coefficientwise isometry |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitZornFockChart_vector_preservesNorm` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornFockCharts` | The vector component of every charted split spin point preserves the Zorn norm | Kernel checked from the vector spin representation and the explicit chart |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.Zorn.norm_mul` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornOctonion` | The explicit eight-coordinate split Zorn product has multiplicative quadratic norm over every commutative ring | Kernel checked coefficientwise polynomial identity |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.Zorn.map_trialityTensor` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornBaseChange` | Every commutative-ring morphism preserves the split Zorn product, norm, conjugation, para-product, polar form, and triality tensor coordinatewise | Kernel checked all-commutative-algebra base-change layer; representability is not inferred |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.Zorn.universalRelatedTripleBaseChange_comp` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornPointFunctor` | Universally norm- and triality-preserving invertible Zorn matrix triples form a group with scalar extension respecting identities and composition over all commutative rings | Kernel checked all-rings point-functor law; representability and a coordinate Hopf algebra are not inferred |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.Zorn.universalRelatedTripleBaseChange_relabel` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornPointFunctor` | The integral Zorn-conjugation matrix produces the parity-twisted D4 diagram action on universal related triples, and every scalar extension intertwines that action | Kernel checked natural twisted S₃ action over all commutative rings; representability is not asserted |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.Zorn.trialityTensor_conjugate_reflection` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornOctonion` | The para-octonion triality tensor is cyclic, while a reflection is a symmetry after conjugating all three inputs | Kernel checked correction: the concrete tensor is not treated as fully symmetric under pure relabelling |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.Zorn.relatedTripleOuterAction_not_inner` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornRelatedTriples` | Every nonidentity diagram symmetry acts non-innerly on the concrete split-Zorn related-triples group when two is invertible | Kernel checked central-sign-marker certificate |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.Zorn.relatedTripleOuterAction_injective_of_invertible_two` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornRelatedTriples` | Cyclic relabelling together with conjugation-twisted reflections gives a faithful concrete S₃ action | Kernel checked over nontrivial commutative rings with invertible two |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitSpinToZornRelatedTriples_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornSpinComparison` | The representation-defined map from split spin points to norm- and tensor-preserving Zorn triples is injective | Kernel checked unconditionally from split triality representation faithfulness once the map's preservation witnesses are supplied |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitSpinToZornRelatedTriples_bijective_iff_surjective` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornSpinComparison` | For the representation-defined comparison, bijectivity is equivalent to surjectivity | Kernel checked exact boundary after unconditional injectivity |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitFockGeneratorEvenToOdd_chart_iff_basis` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornFockGenerators` | The block identity `m(Γ_x s₊) = paraMul (v x) (p s₊)` is equivalent to its explicit 8-by-8 vector/even-Fock basis table | Kernel checked exact bilinear finite-basis reduction; the 64 coefficient entries remain |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitFockGeneratorOddToEven_chart_iff_basis` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornFockGenerators` | The block identity `p(Γ_x s₋) = paraMul (m s₋) (v x)` is equivalent to its explicit 8-by-8 vector/odd-Fock basis table | Kernel checked exact bilinear finite-basis reduction; the 64 coefficient entries remain |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitSpinZornOuterAction_chart_equivariant` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornSpinComparison` | Once the representation-defined Spin-to-Zorn map is bijective, the corrected outer action intertwines the vector and Fock half-spin representations; odd transports include octonion conjugation | Kernel checked conditional compatibility theorem |
-| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitSpinPointTrialityDataOfZornComparison` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornSpinComparison` | Concrete Zorn norm/tensor preservation and bijectivity produce faithful outer pointwise triality data for split spin points | Kernel checked exact endpoint; the three explicit charts, preservation identities, and bijectivity remain the pointwise comparison obligations |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitSpinPointTrialityDataOfZornComparison` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornSpinComparison` | Concrete Zorn norm/tensor preservation and bijectivity produce faithful outer pointwise triality data for split spin points | Kernel checked exact endpoint; after the explicit charts and injectivity, preservation identities and surjectivity remain the pointwise comparison obligations |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.orthogonalRelatedTripleRelabel_not_inner_of_ne_one` | `RiemannResearch.LinearAlgebra.RootSystem.D4OrthogonalRelatedTriples` | Every nonidentity D4 diagram relabelling of an orthogonal related-triples group is non-inner when one vector satisfies `-v ≠ v` | Kernel checked outer-action certificate via the three central sign markers |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.spinRelatedTripleAction_chart_equivariant` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityCompatibility` | Transporting the related-triples action to spin points permutes the actual vector and two Fock half-spin representations through the supplied charts | Kernel checked compatibility theorem |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitSpinRelatedTripleEquiv_isSplitRepresentationChart` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityCompatibility` | Bijectivity of the representation-defined spin-to-related-triples hom automatically supplies the component chart compatibility | Kernel checked reduction; the equivalence is not accepted as unrelated opaque data |
@@ -682,23 +694,26 @@ corresponding vector/half-spin intertwining law once its concrete comparison
 inputs are supplied. Independently, Hopf automorphisms act functorially on
 fixed-cover and global fpqc Čech H¹ and preserve neutrality.
 
-The remaining pointwise comparison boundary is now finite and concrete:
-choose the three explicit Fock/Zorn charts, prove
+The remaining pointwise comparison boundary is now finite and concrete. The
+three explicit Fock/Zorn charts are fixed, and both generator block identities
+are reduced to exact 8-by-8 basis tables. Close those coefficient tables, derive
 `SplitZornTuplePreservesNorm` and
-`SplitZornTuplePreservesTensor`, and prove bijectivity of
+`SplitZornTuplePreservesTensor`, and then prove surjectivity of
 `splitSpinToZornRelatedTriples`. These inputs instantiate the
 already-verified compatible faithful outer action; no fully symmetric
 pure-relabel tensor is assumed.
 
-The subsequent representability boundary is to construct a commutative
-coordinate Hopf algebra for split Spin₈, prove a natural
-all-commutative-algebra comparison with the Zorn related-triples points (and
-hence with Mathlib's Clifford spin points after the pointwise comparison),
-and identify its Hopf/presheaf automorphisms with the concrete twisted S3
-action. The Hopf-to-presheaf-to-fpqc action pipeline is kernel checked, but no
-split Spin₈ coordinate Hopf algebra, D4-by-D4 subgroup scheme, torsor
-classification, or Galois/fpqc comparison is inferred from the pointwise
-constructions.
+The all-ring point layer now consists of a universally norm- and
+tensor-preserving GL₈³ group, functorial scalar extension, and a natural
+conjugation-twisted S3 action. The subsequent representability boundary is to
+replace its universal scalar-extension predicate by finite coefficient
+equations, prove that the resulting group functor is represented, and obtain
+the commutative coordinate Hopf algebra. A further natural comparison must
+identify those points with Mathlib's Clifford spin points after the pointwise
+surjectivity theorem. The Hopf-to-presheaf-to-fpqc action pipeline is kernel
+checked, but no split Spin₈ coordinate Hopf algebra, D4-by-D4 subgroup scheme,
+torsor classification, or Galois/fpqc comparison is inferred from the
+pointwise constructions.
 
 ## E8 subsystem-induction exclusion
 

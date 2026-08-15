@@ -66,7 +66,9 @@ import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
 import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornOctonion
+import RiemannResearch.LinearAlgebra.RootSystem.D4ZornBaseChange
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornRelatedTriples
+import RiemannResearch.LinearAlgebra.RootSystem.D4ZornPointFunctor
 import RiemannResearch.LinearAlgebra.RootSystem.D4RelatedTriples
 import RiemannResearch.LinearAlgebra.RootSystem.D4OrthogonalRelatedTriples
 import RiemannResearch.LinearAlgebra.RootSystem.D4Lattice
@@ -79,7 +81,10 @@ import RiemannResearch.LinearAlgebra.RootSystem.D4SplitQuadratic
 import RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock
 import RiemannResearch.LinearAlgebra.RootSystem.D4SplitFockFaithfulness
 import RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityCompatibility
+import RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityFaithfulness
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornSpinComparison
+import RiemannResearch.LinearAlgebra.RootSystem.D4ZornFockCharts
+import RiemannResearch.LinearAlgebra.RootSystem.D4ZornFockGenerators
 import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.Logic.PointedInvariant
 import RiemannResearch.Motives.IntegralCycleQuotients

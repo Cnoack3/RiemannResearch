@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 
-import RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityCompatibility
+import RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityFaithfulness
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornRelatedTriples
 
 /-!
@@ -13,16 +13,16 @@ import RiemannResearch.LinearAlgebra.RootSystem.D4ZornRelatedTriples
 This module connects the constructed vector/Fock representation family to the
 concrete split-Zorn related-triples group.  The homomorphism into related
 triples is defined componentwise from the three representations.  Once its
-explicit norm and tensor preservation laws and its bijectivity are proved, the
-concrete twisted relabeling action transports to a compatible faithful outer
-action on Mathlib spin points.
+explicit norm and tensor preservation laws and its surjectivity are proved,
+the concrete twisted relabeling action transports to a compatible faithful
+outer action on Mathlib spin points; injectivity is proved in this module.
 
 Odd diagram permutations use Zorn conjugation in the chart transport.  This is
 the concrete correction absent from a pure-relabel symmetric-tensor model.
 
-The norm/tensor preservation and bijectivity hypotheses are deliberately
-visible: they are the remaining comparison with the classical
-Spin(8)-related-triples theorem, not consequences of dimension counting.
+The norm/tensor preservation and surjectivity boundary is deliberately
+visible: it is the remaining comparison with the classical
+Spin(8)-related-triples theorem, not a consequence of dimension counting.
 -/
 
 namespace RiemannResearch.LinearAlgebra.RootSystem.D4Triality
@@ -95,8 +95,41 @@ noncomputable def splitSpinToZornRelatedTriples
       splitTrialityLinearTupleHom K (Zorn.Octonion K) chart g l :=
   rfl
 
-/-- Bijectivity of the representation-defined homomorphism gives the concrete
-Spin-to-Zorn-related-triples equivalence. -/
+/-- The representation-defined map from split spin points to Zorn related
+triples is injective for every choice of charts and preservation proofs. -/
+theorem splitSpinToZornRelatedTriples_injective
+    (chart : SplitZornChart K)
+    (hQ : SplitZornTuplePreservesNorm K chart)
+    (ht : SplitZornTuplePreservesTensor K chart) :
+    Function.Injective
+      (splitSpinToZornRelatedTriples K chart hQ ht) := by
+  intro g h hgh
+  apply splitTrialityLinearTupleHom_injective K
+    (Zorn.Octonion K) chart
+  funext l
+  have hc := congrArg
+    (fun t : Zorn.relatedTripleGroup K => (t.1 l).1) hgh
+  exact hc
+
+/-- For the representation-defined comparison, bijectivity is exactly
+surjectivity: injectivity follows from the faithful pair of Fock half-spin
+blocks. -/
+theorem splitSpinToZornRelatedTriples_bijective_iff_surjective
+    (chart : SplitZornChart K)
+    (hQ : SplitZornTuplePreservesNorm K chart)
+    (ht : SplitZornTuplePreservesTensor K chart) :
+    Function.Bijective
+        (splitSpinToZornRelatedTriples K chart hQ ht) ↔
+      Function.Surjective
+        (splitSpinToZornRelatedTriples K chart hQ ht) := by
+  constructor
+  · exact fun h => h.2
+  · intro hsurj
+    exact ⟨splitSpinToZornRelatedTriples_injective K chart hQ ht,
+      hsurj⟩
+
+/-- A bijectivity witness gives the concrete Spin-to-Zorn-related-triples
+equivalence; only its surjectivity component remains to be constructed. -/
 noncomputable def splitSpinZornRelatedTripleEquiv
     (chart : SplitZornChart K)
     (hQ : SplitZornTuplePreservesNorm K chart)

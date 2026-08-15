@@ -64,6 +64,24 @@ noncomputable def ofHopfAction
       presheafActionOfHopfAction R A ρ :=
   rfl
 
+/-- A faithful Hopf-algebra action supplies affine-group triality without a
+second, presheaf-level faithfulness hypothesis. -/
+noncomputable def ofFaithfulHopfAction
+    (ρ : DiagramSymmetry →*
+      CategoryTheory.Aut (CommHopfAlgCat.of R A))
+    (hρ : Function.Injective ρ) :
+    AffineGroupTrialityData R A :=
+  ofHopfAction ρ
+    (presheafActionOfHopfAction_injective R A ρ hρ)
+
+@[simp] theorem ofFaithfulHopfAction_action
+    (ρ : DiagramSymmetry →*
+      CategoryTheory.Aut (CommHopfAlgCat.of R A))
+    (hρ : Function.Injective ρ) :
+    (ofFaithfulHopfAction ρ hρ).action =
+      presheafActionOfHopfAction R A ρ :=
+  rfl
+
 /-- Triality acts on nonabelian Cech H1 for every fixed fpqc cover. -/
 def fixedCoverAction {I : Type v} (U : FpqcCover R I) :
     DiagramSymmetry →* Equiv.Perm (FpqcCechH1 R A U) where

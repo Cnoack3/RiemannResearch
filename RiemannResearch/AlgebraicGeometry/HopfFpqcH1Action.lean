@@ -173,3 +173,64 @@ def FpqcH1.actionOfHopfAction
 end
 
 end RiemannResearch.AlgebraicGeometry
+
+namespace RiemannResearch.AlgebraicGeometry
+
+open CategoryTheory
+
+universe u v w
+
+noncomputable section
+
+/-- The Hopf-spectrum functor is faithful: the commutative-Hopf/cogroup
+equivalence, affine algebraic spectrum, and group-valued Yoneda functor are
+all faithful. -/
+theorem hopfSpec_faithful (R : CommRingCat.{u}) :
+    (_root_.AlgebraicGeometry.hopfSpec R).Faithful := by
+  unfold _root_.AlgebraicGeometry.hopfSpec
+  exact Functor.Faithful.comp
+    (commHopfAlgCatEquivCogrpCommAlgCat R).functor.leftOp
+    (_root_.AlgebraicGeometry.algSpec R).mapGrp
+
+/-- The represented affine-group presheaf functor remembers every
+commutative-Hopf morphism. -/
+theorem hopfSpecPresheaf_faithful (R : CommRingCat.{u}) :
+    (hopfSpecPresheaf R).Faithful := by
+  unfold hopfSpecPresheaf
+  let _ : (_root_.AlgebraicGeometry.hopfSpec R).Faithful :=
+    hopfSpec_faithful R
+  exact Functor.Faithful.comp
+    (_root_.AlgebraicGeometry.hopfSpec R) yonedaGrp
+/-- Passage from Hopf automorphisms to automorphisms of the represented
+affine-group presheaf is injective. -/
+theorem hopfAutToPresheafAut_injective
+    (R A : Type u) [CommRing R] [CommRing A] [HopfAlgebra R A] :
+    Function.Injective (hopfAutToPresheafAut R A) := by
+  intro e f h
+  let _ : (hopfSpecPresheaf (CommRingCat.of R)).Faithful :=
+    hopfSpecPresheaf_faithful (CommRingCat.of R)
+  have hmapped := congrArg CategoryTheory.Iso.hom h
+  change
+    (hopfSpecPresheaf (CommRingCat.of R)).map e.symm.op.hom =
+      (hopfSpecPresheaf (CommRingCat.of R)).map f.symm.op.hom at hmapped
+  have hop : e.symm.op.hom = f.symm.op.hom :=
+    (hopfSpecPresheaf (CommRingCat.of R)).map_injective hmapped
+  have hinv : e.inv = f.inv := congrArg Opposite.unop hop
+  apply CategoryTheory.Iso.ext
+  let _ : IsIso e.inv := e.isIso_inv
+  rw [← cancel_epi e.inv]
+  rw [e.inv_hom_id]
+  rw [hinv, f.inv_hom_id]
+/-- A faithful action by Hopf automorphisms remains faithful after passage to
+the represented affine-group presheaf. -/
+theorem presheafActionOfHopfAction_injective
+    {Γ : Type w} [Group Γ]
+    (R A : Type u) [CommRing R] [CommRing A] [HopfAlgebra R A]
+    (ρ : Γ →* CategoryTheory.Aut (CommHopfAlgCat.of R A))
+    (hρ : Function.Injective ρ) :
+    Function.Injective (presheafActionOfHopfAction R A ρ) :=
+  (hopfAutToPresheafAut_injective R A).comp hρ
+
+end
+
+end RiemannResearch.AlgebraicGeometry
