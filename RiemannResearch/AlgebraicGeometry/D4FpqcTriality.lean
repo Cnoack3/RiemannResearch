@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 
-import RiemannResearch.AlgebraicGeometry.FpqcH1Functoriality
+import RiemannResearch.AlgebraicGeometry.HopfFpqcH1Action
 import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
 
 /-!
@@ -43,6 +43,26 @@ namespace AffineGroupTrialityData
 
 variable {R A : CommRingCat.{u}} [HopfAlgebra R A]
 variable (D : AffineGroupTrialityData R A)
+
+/-- Construct affine-group triality directly from a Hopf-algebra action once
+faithfulness after passage to the represented presheaf has been checked. -/
+noncomputable def ofHopfAction
+    (ρ : DiagramSymmetry →*
+      CategoryTheory.Aut (CommHopfAlgCat.of R A))
+    (hρ : Function.Injective
+      (presheafActionOfHopfAction R A ρ)) :
+    AffineGroupTrialityData R A where
+  action := presheafActionOfHopfAction R A ρ
+  faithful := hρ
+
+@[simp] theorem ofHopfAction_action
+    (ρ : DiagramSymmetry →*
+      CategoryTheory.Aut (CommHopfAlgCat.of R A))
+    (hρ : Function.Injective
+      (presheafActionOfHopfAction R A ρ)) :
+    (ofHopfAction ρ hρ).action =
+      presheafActionOfHopfAction R A ρ :=
+  rfl
 
 /-- Triality acts on nonabelian Cech H1 for every fixed fpqc cover. -/
 def fixedCoverAction {I : Type v} (U : FpqcCover R I) :
