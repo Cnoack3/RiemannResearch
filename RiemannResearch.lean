@@ -64,6 +64,7 @@ import RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.ExteriorSpinors
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations
 import RiemannResearch.LinearAlgebra.QuotientMap
+import RiemannResearch.LinearAlgebra.QuadraticForm.ReflectionGeneration
 import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
 import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
@@ -94,6 +95,7 @@ import RiemannResearch.LinearAlgebra.RootSystem.D4ZornFockCharts
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornFockGenerators
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornFockPreservation
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornRelatedTripleExt
+import RiemannResearch.LinearAlgebra.RootSystem.D4ZornNormalizer
 import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.Logic.PointedInvariant
 import RiemannResearch.Motives.IntegralCycleQuotients
