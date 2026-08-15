@@ -109,6 +109,7 @@ import RiemannResearch.Motives.IntegralCorrespondenceComposition
 import RiemannResearch.Motives.IntegralProjectorLifting
 import RiemannResearch.Motives.RostNilpotence
 import RiemannResearch.Motives.UnitRetractDegree
+import RiemannResearch.GroupTheory.AddSubgroupCRT
 import RiemannResearch.GroupTheory.AlternatingFiveObstruction
 import RiemannResearch.GroupTheory.CoprimeRestriction
 import RiemannResearch.GroupTheory.BurnsideTopMark
@@ -157,3 +158,4 @@ import RiemannResearch.E8.GroupSchemeFoundation
 import RiemannResearch.E8.CoxeterAttractingRank
 import RiemannResearch.E8.RemainingCaseMemorandum
 import RiemannResearch.RH.Basic
+import RiemannResearch.RH.PrimePhaseCRT
