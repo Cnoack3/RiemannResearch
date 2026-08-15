@@ -24,8 +24,8 @@ universe u₁ v₁ w₁ x₁
 noncomputable section
 
 /-- The cocycle-level comparison datum specialized to an affine group scheme
-on a fixed fpqc cover. Constructing this datum for Spec L → Spec K is exactly
-the remaining Yoneda and affine-fiber-product representability step. -/
+on a fixed fpqc cover. The canonical finite-Galois affine instance is
+constructed in `FiniteGaloisCechComparison`. -/
 abbrev FpqcGaloisCechComparison
     (R A : CommRingCat.{u₁}) [HopfAlgebra R A]
     {I : Type v₁} (U : FpqcCover R I)
@@ -53,7 +53,7 @@ end FpqcGaloisCechComparison
 
 /-- For the singleton finite Galois fpqc cover, an explicit cocycle-level
 Yoneda comparison datum yields the desired fixed-cover Čech/Galois H¹
-equivalence. The datum is the remaining representability obligation. -/
+equivalence. -/
 def finiteGaloisH1EquivNonabelian
     (K L : Type u₁) [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]

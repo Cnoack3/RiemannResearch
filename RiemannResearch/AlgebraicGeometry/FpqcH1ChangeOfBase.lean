@@ -188,6 +188,94 @@ def toFun : FpqcH1.{u, v} R A → FpqcH1.{u, v} S B :=
   exact FpqcH1.classOf_neutral S B
     (D.mapCover (FpqcH1.trivialCover R))
 
+/-- Identity change-of-base data. -/
+def identity
+    (R A : CommRingCat.{u}) [HopfAlgebra R A] :
+    FpqcH1ChangeOfBaseData.{u, v} R A R A where
+  mapCover U := U
+  mapRefinement r := r
+  mapH1 _ ξ := ξ
+  mapH1_pullback _ _ := rfl
+  mapH1_neutral _ := rfl
+
+/-- Composition of change-of-base data. -/
+def comp
+    {R A S B T C : CommRingCat.{u}}
+    [HopfAlgebra R A] [HopfAlgebra S B] [HopfAlgebra T C]
+    (E : FpqcH1ChangeOfBaseData.{u, v} S B T C)
+    (D : FpqcH1ChangeOfBaseData.{u, v} R A S B) :
+    FpqcH1ChangeOfBaseData.{u, v} R A T C where
+  mapCover U := E.mapCover (D.mapCover U)
+  mapRefinement r := E.mapRefinement (D.mapRefinement r)
+  mapH1 U ξ := E.mapH1 (D.mapCover U) (D.mapH1 U ξ)
+  mapH1_pullback r ξ := by
+    rw [D.mapH1_pullback, E.mapH1_pullback]
+  mapH1_neutral U := by
+    rw [D.mapH1_neutral, E.mapH1_neutral]
+
+@[simp] theorem identity_toFun
+    (R A : CommRingCat.{u}) [HopfAlgebra R A]
+    (x : FpqcH1.{u, v} R A) :
+    ((identity R A : FpqcH1ChangeOfBaseData.{u, v} R A R A).toFun x) = x := by
+  refine Quotient.inductionOn x ?_
+  intro a
+  rfl
+
+@[simp] theorem comp_toFun
+    {R A S B T C : CommRingCat.{u}}
+    [HopfAlgebra R A] [HopfAlgebra S B] [HopfAlgebra T C]
+    (E : FpqcH1ChangeOfBaseData.{u, v} S B T C)
+    (D : FpqcH1ChangeOfBaseData.{u, v} R A S B)
+    (x : FpqcH1.{u, v} R A) :
+    (E.comp D).toFun x = E.toFun (D.toFun x) := by
+  refine Quotient.inductionOn x ?_
+  intro a
+  rfl
+
+theorem identity_toFun_eq
+    (R A : CommRingCat.{u}) [HopfAlgebra R A] :
+    (identity R A : FpqcH1ChangeOfBaseData.{u, v} R A R A).toFun = id := by
+  funext x
+  exact identity_toFun R A x
+
+theorem comp_toFun_eq
+    {R A S B T C : CommRingCat.{u}}
+    [HopfAlgebra R A] [HopfAlgebra S B] [HopfAlgebra T C]
+    (E : FpqcH1ChangeOfBaseData.{u, v} S B T C)
+    (D : FpqcH1ChangeOfBaseData.{u, v} R A S B) :
+    (E.comp D).toFun = E.toFun ∘ D.toFun := by
+  funext x
+  exact comp_toFun E D x
+
+/-- Two change-of-base constructions induce the same global map when their
+fixed-cover maps agree after a functorial refinement. -/
+theorem toFun_eq_of_refinement
+    (D E : FpqcH1ChangeOfBaseData.{u, v} R A S B)
+    (r : ∀ {I : Type v} (U : FpqcCover R I),
+      (D.mapCover U).Refinement (E.mapCover U))
+    (h : ∀ {I : Type v} (U : FpqcCover R I) (ξ : FpqcCechH1 R A U),
+      D.mapH1 U ξ = (r U).pullbackH1 (E.mapH1 U ξ)) :
+    D.toFun = E.toFun := by
+  funext x
+  refine Quotient.inductionOn x ?_
+  rintro ⟨I, U, ξ⟩
+  change FpqcH1.classOf S B (D.mapCover U) (D.mapH1 U ξ) =
+    FpqcH1.classOf S B (E.mapCover U) (E.mapH1 U ξ)
+  rw [h U ξ]
+  exact (FpqcH1.classOf_pullback S B (r U) (E.mapH1 U ξ)).symm
+
+/-- Associativity of the induced maps is definitional. -/
+@[simp] theorem comp_assoc_toFun
+    {T C Q D' : CommRingCat.{u}}
+    [HopfAlgebra T C] [HopfAlgebra Q D']
+    (F : FpqcH1ChangeOfBaseData.{u, v} T C Q D')
+    (E : FpqcH1ChangeOfBaseData.{u, v} S B T C)
+    (D : FpqcH1ChangeOfBaseData.{u, v} R A S B)
+    (x : FpqcH1.{u, v} R A) :
+    ((F.comp E).comp D).toFun x =
+      (F.comp (E.comp D)).toFun x :=
+  rfl
+
 end FpqcH1ChangeOfBaseData
 
 /-! ## Geometric data producing the quotient interface -/

@@ -116,8 +116,8 @@ include D
 
 /-- A fixed-cover comparison datum transfers the vanishing statement
 (`H¹` is a singleton) exactly to discrete nonabelian `H¹`. This isolates
-construction of the cocycle comparison datum as the remaining comparison
-obligation for Serre-II applications. -/
+the abstract comparison input; `FiniteGaloisCechComparison` supplies its
+canonical finite-Galois affine instance. -/
 theorem subsingleton_h1_iff :
     Subsingleton (PresheafOfGroups.H1 P U) ↔
       Subsingleton (NonabelianH1 Γ G) := by

@@ -176,4 +176,19 @@ noncomputable def fpqcTorsorTrivializationOfSection
     Mod.regular G ≅ P :=
   ModObj.orbitModIso hP.1 p
 
+/-- A simply transitive action has a global section exactly when it is
+equivariantly trivial. -/
+theorem isSimplyTransitive_nonempty_section_iff_nonempty_trivialization
+    (X : _root_.AlgebraicGeometry.Scheme.{u})
+    (G : Over X) [GrpObj G]
+    (P : CategoryTheory.Mod (Over X) G)
+    (hP : IsSimplyTransitive X G P) :
+    Nonempty (𝟙_ (Over X) ⟶ P.X) ↔
+      Nonempty (Mod.regular G ≅ P) := by
+  constructor
+  · rintro ⟨p⟩
+    exact ⟨ModObj.orbitModIso hP p⟩
+  · rintro ⟨e⟩
+    exact ⟨MonObj.one (X := G) ≫ e.hom.hom⟩
+
 end RiemannResearch.AlgebraicGeometry

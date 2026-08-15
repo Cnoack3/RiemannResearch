@@ -22,18 +22,22 @@ an engineering task.
 
 ## Added concrete interface
 
-`FpqcH1ScalarExtension.lean` now supplies:
+`FpqcH1ScalarExtension.lean` supplies `FiniteFieldExtension`, the actual
+tensor-product target `baseChangedFpqcH1`, and typed scalar-extension and
+restriction-system interfaces. `FpqcH1CanonicalScalarExtension.lean` now
+constructs their canonical fixed-cover and global maps, proves refinement and
+common-refinement quotient descent, and proves preservation of the neutral
+class.
 
-- `FiniteFieldExtension K`, bundling a field `L`, `K`-algebra structure,
-  finite dimensionality, and degree `[L:K]`;
-- `baseChangedFpqcH1 K A E`, whose group is the actual Hopf algebra
-  `E.Extension ⊗[K] A`;
-- `FpqcH1ScalarExtensionMap`, fixing the exact source, target, and neutral law;
-- `FpqcH1RestrictionSystem`, a family of such extensions and maps.
+`FpqcH1ChangeOfBase.lean` and `FpqcH1ScalarExtensionCoherence.lean` prove
+generic identity, composition, and associativity laws for change of base,
+coefficient functoriality, and the tensor/cover comparison isomorphisms for
+identity and iterated scalar extension. The normalized scalar identity and
+composition laws are reduced to two explicit fixed-cover coherence squares
+for `pullbackSpecIso'` versus `Over.pullbackId` and `Over.pullbackComp`.
 
-`SerreIITypeDScalarExtension.lean` connects this concrete data to the existing
-trialitarian zero-cycle reduction. The construction of the map on the global
-Cech quotient is still open and is deliberately a field of the interface.
+`SerreIITypeDScalarExtension.lean` can consume the resulting canonical
+`FpqcH1RestrictionSystem`; scalar-extension maps are no longer an open input.
 
 ## Missing field and cohomology foundations
 
@@ -50,15 +54,21 @@ Cech quotient is still open and is deliberately a field of the interface.
 
 ## Missing fpqc H¹ and torsor functoriality
 
-1. Construct scalar extension on fixed-cover Cech cocycles and prove it respects
-   coboundaries, refinements, and common-refinement equivalence.
-2. Descend that operation to `FpqcH1ScalarExtensionMap`; prove identity and
-   composition laws.
-3. Construct the equivalence between `FpqcH1` and isomorphism classes of
-   fpqc torsors.
-4. Prove compatibility with pullback of torsors and comparison with continuous
-   Galois H¹ for smooth affine groups.
-5. Add functoriality under homomorphisms of group schemes, twisting
+The canonical finite-Galois fixed-cover comparison is complete:
+`finiteGaloisFpqcGaloisCechComparison` packages the cocycle and gauge
+relations, and `finiteGaloisCanonicalH1EquivNonabelian` gives the resulting
+fixed-cover H¹ equivalence.
+
+1. Discharge the two fixed-cover scalar-coherence squares comparing the
+   explicit `pullbackSpecIso'` coefficient maps with `Over.pullbackId` and
+   `Over.pullbackComp`; the global normalized laws then follow.
+2. Construct `FpqcH1TorsorClassifier` by effective fpqc object descent. The
+   current interface correctly assumes `Module.Flat R A`, supplies a canonical
+   torsor self-cover, and proves consequences of a classifier, but Mathlib does
+   not yet supply the needed scheme-valued effective descent equivalence.
+3. Pass from finite quotients and fixed covers to continuous absolute-Galois
+   H¹ and prove compatibility with pullback of torsors.
+4. Add functoriality under homomorphisms of group schemes, twisting
    equivalences, and exact sequences of pointed sets.
 
 ## Missing algebraic-group structures
@@ -153,28 +163,39 @@ modules here rather than vendoring an unrelated conjecture catalogue.
 
 ## Recommended implementation order
 
-1. Construct and verify fpqc-H¹ scalar extension and its composition laws.
-2. Prove the fpqc-H¹/torsor classification and Galois-H¹ comparison.
-3. Build intrinsic field/cohomological-dimension and semisimple simply
+1. Prove the two explicit fixed-cover scalar-coherence squares.
+2. Build the scheme-valued effective fpqc descent needed to construct the
+   flat-coefficient `FpqcH1TorsorClassifier`.
+3. Pass the completed finite-Galois fixed-cover comparison to continuous
+   absolute-Galois H¹ with torsor-pullback compatibility.
+4. Build intrinsic field/cohomological-dimension and semisimple simply
    connected predicates.
-4. Build root data and classifiers, then discharge the classical and F4/G2
+5. Build root data and classifiers, then discharge the classical and F4/G2
    providers from published mathematics.
-5. Build Brauer/CSA/involution/trialitarian infrastructure and isolate the
+6. Build Brauer/CSA/involution/trialitarian infrastructure and isolate the
    high-Allen-index open leaf.
-6. Build H³ and Rost naturality/kernel results.
-7. Attach the E8 finite computations to intrinsic E8 geometry and finish the
+7. Build H³ and Rost naturality/kernel results.
+8. Attach the E8 finite computations to intrinsic E8 geometry and finish the
    single full-strength `SerreII.Conjecture`.
 
-## Scalar-extension milestone (2026-08-15)
+## Scalar-extension and comparison milestone (2026-08-15)
 
-`FpqcH1ChangeOfBase` and `FpqcH1CanonicalScalarExtension` now complete the
-fixed-cover cocycle transport, refinement compatibility, common-refinement
-quotient descent, represented coefficient base-change isomorphism, and the
-neutral-preserving global scalar-extension map. They also construct the
-`FpqcH1ScalarExtensionMap` and `FpqcH1RestrictionSystem` inputs previously
-listed as open.
+Scalar transport is constructed on fixed covers and on the global
+common-refinement quotient, and it preserves the neutral class. Generic
+identity, composition, associativity, and coefficient-map laws are proved.
 
-Accordingly, item 1 above is now narrowed to coherent identity and composition
-laws across the canonical tensor-unit and tensor-associativity isomorphisms.
-After that coherence layer, the next load-bearing generic gate is the
-`FpqcH1`/fpqc-torsor classification and its Galois-H¹ comparison.
+The normalized scalar identity and composition statements are conditional
+only on the two displayed fixed-cover coherence squares relating the explicit
+affine base-change comparison to `Over.pullbackId` and `Over.pullbackComp`.
+
+`FpqcH1TorsorClassification` specifies a flat-coefficient classifier
+interface, constructs the canonical torsor self-cover, and proves the
+neutral-class/global-section criterion from supplied classifier data.
+Effective fpqc object descent, full faithfulness, and essential surjectivity
+are still open.
+
+`FiniteGaloisCechComparison` now constructs the cocycle equivalence, proves
+preservation and reflection of the gauge relation, packages the canonical
+`FpqcGaloisCechComparison`, and supplies the resulting fixed-cover fpqc
+Čech-H¹/discrete-nonabelian-H¹ equivalence. Passage to continuous
+absolute-Galois H¹ and compatibility with torsor pullback remain open.

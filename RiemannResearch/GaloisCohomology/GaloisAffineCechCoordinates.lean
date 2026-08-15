@@ -29,8 +29,9 @@ cocycle already used in `GaloisCechComparison`.
 
 No representability assumption is made here.  The separate scheme bridge
 transports sections through `AlgebraicGeometry.Spec.mapMulEquiv` and the
-affine pullback isomorphisms; the remaining comparison step is compatibility
-with the three categorical face maps and with the gauge relation.
+affine pullback isomorphisms. `GaloisCechFaceCompatibility` proves the three
+categorical face squares and degree-zero projection formulas, and
+`FiniteGaloisCechComparison` packages the resulting gauge comparison.
 -/
 
 namespace RiemannResearch.GaloisCohomology
