@@ -6,6 +6,9 @@ import RiemannResearch.AlgebraicGeometry.FpqcCoverCommonRefinement
 import RiemannResearch.AlgebraicGeometry.FiniteGaloisFpqcCover
 import RiemannResearch.AlgebraicGeometry.FixedLocusSplitting
 import RiemannResearch.AlgebraicGeometry.FpqcH1
+import RiemannResearch.AlgebraicGeometry.FpqcH1Functoriality
+import RiemannResearch.AlgebraicGeometry.D4FpqcTriality
+import RiemannResearch.AlgebraicGeometry.HopfFpqcH1Action
 import RiemannResearch.AlgebraicGeometry.FpqcH1ScalarExtension
 import RiemannResearch.AlgebraicGeometry.SerreIIConjecture
 import RiemannResearch.AlgebraicGeometry.SerreIINonE8
@@ -62,6 +65,8 @@ import RiemannResearch.LinearAlgebra.QuotientMap
 import RiemannResearch.LinearAlgebra.SplitLift
 import RiemannResearch.LinearAlgebra.RootSystem.AdaptedBase
 import RiemannResearch.LinearAlgebra.RootSystem.D4Triality
+import RiemannResearch.LinearAlgebra.RootSystem.D4RelatedTriples
+import RiemannResearch.LinearAlgebra.RootSystem.D4OrthogonalRelatedTriples
 import RiemannResearch.LinearAlgebra.RootSystem.D4Lattice
 import RiemannResearch.LinearAlgebra.RootSystem.D4Discriminant
 import RiemannResearch.LinearAlgebra.RootSystem.D4DiscriminantForm
@@ -70,6 +75,8 @@ import RiemannResearch.LinearAlgebra.RootSystem.D4PairOverlattice
 import RiemannResearch.LinearAlgebra.RootSystem.D4SpinTriality
 import RiemannResearch.LinearAlgebra.RootSystem.D4SplitQuadratic
 import RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock
+import RiemannResearch.LinearAlgebra.RootSystem.D4SplitFockFaithfulness
+import RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityCompatibility
 import RiemannResearch.Logic.PointedKernel
 import RiemannResearch.Logic.PointedInvariant
 import RiemannResearch.Motives.IntegralCycleQuotients

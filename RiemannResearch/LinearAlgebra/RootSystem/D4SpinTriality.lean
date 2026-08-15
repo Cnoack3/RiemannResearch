@@ -15,13 +15,17 @@ It records the usual eight-dimensional regularity condition on a quadratic
 form and gives a precise interface for a supplied faithful action of the six
 diagram symmetries on Mathlib's pointwise spin group.
 
-The action in `SpinPointTrialityData` is data, not a theorem constructed here.
-In particular this module does not construct a split Spin(8) group scheme,
-the half-spin decomposition, an outer action compatible with root data, or
-Galois/fpqc descent. The canonical pointwise vector representation is
-constructed in `CliffordAlgebra.SpinRepresentations`; compatibility between
-that representation and the supplied triality action remains part of the
-missing bridge.
+The action in `SpinPointTrialityData` is the stable interface, not a theorem
+constructed in this low-level module. `D4OrthogonalRelatedTriples` constructs
+a genuinely outer S3 relabel action, and `D4SplitTrialityCompatibility`
+transports it to spin points once the explicit representation-derived
+related-triples homomorphism is proved bijective. The split half-spin
+decomposition itself is constructed in `D4SplitFockFaithfulness`.
+
+This module does not construct a split Spin(8) group scheme or identify
+Mathlib's pointwise spin group with the points of one. The separate fpqc-H1
+functoriality layer transports Hopf/presheaf actions once such a group-scheme
+model is supplied; that concrete representability comparison remains open.
 -/
 
 namespace RiemannResearch.LinearAlgebra.RootSystem.D4Triality

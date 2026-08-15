@@ -28,9 +28,13 @@ actions are also packaged as the canonical block homomorphism
 
 Both sides are proved to have dimension 128. Consequently full faithfulness of
 the exterior Fock action implies that the block map is an algebra equivalence;
-the file exposes this exact conditional constructor. Proving that one
-faithfulness statement is the remaining PBW/matrix-unit boundary. No outer
-triality action or group scheme is constructed.
+this file exposes the exact reduction. `D4SplitFockFaithfulness` closes the
+PBW/matrix-unit boundary constructively and supplies the unconditional split
+half-spin decomposition.
+
+This lower module constructs no outer triality action or group scheme.
+`D4SplitTrialityCompatibility` supplies the separate related-triples
+compatibility layer; split Spin(8) representability remains open.
 -/
 
 namespace RiemannResearch.LinearAlgebra.RootSystem.D4Triality

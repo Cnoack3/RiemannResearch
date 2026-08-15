@@ -599,6 +599,13 @@ are:
 | `RiemannResearch.E8.sylowLocalFourFieldSplittingPackage` | `RiemannResearch.E8.SylowLocalSplitting` | Chooses the four splitting fields in PDF Theorem 2.2, proves their degree gcd is one, and derives point-field index one from explicit Totaro and prime-avoidance inputs | Kernel checked conditional reduction; construction of the input fields remains source dependent |
 | `RiemannResearch.AlgebraicGeometry.FpqcH1RestrictionSystem.map_neutral` | `RiemannResearch.AlgebraicGeometry.FpqcH1ScalarExtension` | Every supplied scalar-extension map lands in fpqc H¹ of the actual tensor-product base-changed group and preserves the neutral class | Kernel checked interface law; construction and functoriality of the scalar-extension map remain open |
 | `RiemannResearch.AlgebraicGeometry.SerreII.TrialitarianRestrictionData.ofFpqcH1RestrictionSystem_restrict_neutral` | `RiemannResearch.AlgebraicGeometry.SerreIITypeDScalarExtension` | A typed family of finite field extensions and concrete fpqc-H¹ scalar-extension maps supplies the restriction data used by the trialitarian zero-cycle reduction | Kernel checked adapter; the scalar-extension maps themselves remain explicit inputs |
+| `RiemannResearch.AlgebraicGeometry.FpqcCover.Refinement.map_pullbackH1` | `RiemannResearch.AlgebraicGeometry.FpqcH1Functoriality` | Coefficient-presheaf maps on nonabelian Čech H¹ commute with every fpqc-cover refinement pullback | Kernel checked naturality theorem |
+| `RiemannResearch.AlgebraicGeometry.FpqcH1.map_neutral` | `RiemannResearch.AlgebraicGeometry.FpqcH1Functoriality` | Every coefficient-presheaf endomorphism induces a map on the global common-refinement quotient and preserves its neutral class | Kernel checked endomorphism functoriality on the global Čech quotient |
+| `RiemannResearch.AlgebraicGeometry.hopfAutToPresheafAut` | `RiemannResearch.AlgebraicGeometry.HopfFpqcH1Action` | Contravariant Hopf-spectrum functoriality turns Hopf-algebra automorphisms into automorphisms of the represented affine-group presheaf | Kernel checked; the inverse/opposite convention is explicit |
+| `RiemannResearch.AlgebraicGeometry.affineGroupPresheafHomOfBialgHom` | `RiemannResearch.AlgebraicGeometry.HopfFpqcH1Action` | A bialgebra morphism induces the contravariant morphism between represented affine-group presheaves | Kernel checked `hopfSpec`/Yoneda adapter |
+| `RiemannResearch.AlgebraicGeometry.FpqcH1.actionOfHopfAction_neutral` | `RiemannResearch.AlgebraicGeometry.HopfFpqcH1Action` | Any group action by Hopf automorphisms acts on global fpqc Čech H¹ and fixes the neutral class | Kernel checked coefficient-action layer; no scalar-base-change map, torsor comparison, or split-Spin₈ Hopf algebra is asserted |
+| `RiemannResearch.AlgebraicGeometry.AffineGroupTrialityData.fixedCoverAction_pullback` | `RiemannResearch.AlgebraicGeometry.D4FpqcTriality` | A supplied faithful D4 diagram action on an affine-group presheaf acts compatibly on every fixed-cover H¹ and commutes with refinement | Kernel checked adapter; a concrete split-Spin₈ Hopf action is not asserted |
+| `RiemannResearch.AlgebraicGeometry.AffineGroupTrialityData.globalAction_neutral` | `RiemannResearch.AlgebraicGeometry.D4FpqcTriality` | A supplied affine-presheaf D4 triality action induces a neutral-preserving action on global common-refinement fpqc H¹ | Kernel checked adapter; faithfulness of the induced H¹ action is not claimed |
 
 ## Shared D4 triality hierarchy
 
@@ -639,28 +646,48 @@ are:
 | `RiemannResearch.LinearAlgebra.CliffordEven.evenEquivBaseChange` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | Scalar extension of the even Clifford algebra is canonically algebra-equivalent to the even Clifford algebra of the scalar-extended form | Kernel checked from explicit injectivity and surjectivity under Mathlib's existing invertibility-of-two hypothesis |
 | `RiemannResearch.LinearAlgebra.CliffordEven.spinPointToEvenUnits_injective` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality` | Mathlib's pointwise spin group embeds faithfully into the units of the even Clifford algebra | Kernel checked pointwise algebra statement; not a group-scheme result |
 | `RiemannResearch.LinearAlgebra.CliffordEven.spinVectorRepresentation_preserves_form` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations` | Clifford conjugation constructs the canonical pointwise vector representation of spin points and preserves the original quadratic form | Kernel checked actual representation, not supplied bridge data |
-| `RiemannResearch.LinearAlgebra.CliffordEven.HalfSpinDecomposition.jointlyFaithful` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations` | A supplied splitting `Cl⁰(Q) ≃ End(S⁺) × End(S⁻)` yields two jointly faithful actions and their restrictions to spin points | Kernel checked generic derivation; split D4 modules and actions are constructed below, while the algebra splitting reduces to Fock injectivity |
+| `RiemannResearch.LinearAlgebra.CliffordEven.HalfSpinDecomposition.jointlyFaithful` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations` | A supplied splitting `Cl⁰(Q) ≃ End(S⁺) × End(S⁻)` yields two jointly faithful actions and their restrictions to spin points | Kernel checked generic derivation; `D4SplitFockFaithfulness` supplies the splitting for split D4 under the standing field and invertibility-of-two hypotheses |
 | `RiemannResearch.LinearAlgebra.CliffordEven.exteriorFockGenerator_sq` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.ExteriorSpinors` | Creation plus contraction satisfies the hyperbolic Clifford relation, producing an actual action `Cl(U* × U) → End(ΛU)` | Kernel checked from the creation-annihilation anticommutation relations |
 | `RiemannResearch.LinearAlgebra.CliffordEven.exteriorCliffordAction_mem_even` | `RiemannResearch.LinearAlgebra.CliffordAlgebra.ExteriorSpinors` | The even hyperbolic Clifford algebra preserves both exterior-parity pieces | Kernel checked by even induction; the two restricted algebra actions are explicit |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitFockParity_finranks` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock` | The even and odd parity pieces of the rank-four exterior Fock space both have dimension eight | Kernel checked via a norm-one parity-switching generator and the 16-dimensional exterior basis; these are concrete split half-spin modules |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitD4EvenClifford_finrank` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock` | The even split-D4 Clifford algebra and the product of the two half-spin endomorphism algebras both have dimension 128 | Kernel checked exact source and target rank calculations |
-| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitHalfSpinBlockAction_bijective_of_exteriorCliffordAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock` | Injectivity of the full exterior Fock action forces the parity-block action to be bijective | Kernel checked reduction; full Fock injectivity is the remaining PBW/matrix-unit theorem |
-| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitHalfSpinDecomposition_of_exteriorCliffordAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock` | The single full-Fock injectivity hypothesis constructs the expected split-D4 even-Clifford equivalence and `HalfSpinDecomposition` | Kernel checked conditional constructor; no arbitrary half-spin modules or splitting are assumed |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitHalfSpinBlockAction_bijective_of_exteriorCliffordAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock` | Injectivity of the full exterior Fock action forces the parity-block action to be bijective | Kernel checked reduction; its hypothesis is discharged by `splitFockCliffordAction_injective` below |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitHalfSpinDecomposition_of_exteriorCliffordAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFock` | The single full-Fock injectivity hypothesis constructs the expected split-D4 even-Clifford equivalence and `HalfSpinDecomposition` | Kernel checked reduction; the unconditional construction is exported from `D4SplitFockFaithfulness` |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitFockCliffordAction_surjective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFockFaithfulness` | Every endomorphism of the rank-four exterior Fock space is realized by the split Clifford action | Kernel checked constructive matrix-unit proof over every field |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitFockCliffordAction_injective` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFockFaithfulness` | The split exterior Fock action is faithful when two is invertible | Kernel checked from explicit surjectivity and the exact 256-dimensional source/target calculation |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitHalfSpinDecomposition` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitFockFaithfulness` | The even split-D4 Clifford algebra is unconditionally equivalent to the product of the two half-spin endomorphism algebras | Kernel checked concrete split half-spin decomposition |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.orthogonalRelatedTripleRelabel_not_inner_of_ne_one` | `RiemannResearch.LinearAlgebra.RootSystem.D4OrthogonalRelatedTriples` | Every nonidentity D4 diagram relabelling of an orthogonal related-triples group is non-inner when one vector satisfies `-v ≠ v` | Kernel checked outer-action certificate via the three central sign markers |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.spinRelatedTripleAction_chart_equivariant` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityCompatibility` | Transporting the related-triples action to spin points permutes the actual vector and two Fock half-spin representations through the supplied charts | Kernel checked compatibility theorem |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitSpinRelatedTripleEquiv_isSplitRepresentationChart` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityCompatibility` | Bijectivity of the representation-defined spin-to-related-triples hom automatically supplies the component chart compatibility | Kernel checked reduction; the equivalence is not accepted as unrelated opaque data |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitSpinPointTrialityDataOfRepresentationBridge` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitTrialityCompatibility` | Quadratic/tensor preservation and bijectivity of the explicit representation tuple produce compatible faithful outer pointwise triality data | Kernel checked conditional endpoint; constructing the common symmetric tensor, charts, and bijectivity remains open |
 | `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.splitD4Form_regular` | `RiemannResearch.LinearAlgebra.RootSystem.D4SplitQuadratic` | The standard hyperbolic space H⁴ is eight-dimensional and has nondegenerate associated bilinear form | Kernel checked concrete split D4 quadratic space |
-| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.SpinPointTrialityData.orderOf_trialityCycle_action` | `RiemannResearch.LinearAlgebra.RootSystem.D4SpinTriality` | Any supplied faithful diagram-symmetry action on the spin-point group sends the canonical triality cycle to exact order three; the half-spin swap has exact order two | Kernel checked conditional interface; construction of `SpinPointTrialityData` is Open |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.SpinPointTrialityData.orderOf_trialityCycle_action` | `RiemannResearch.LinearAlgebra.RootSystem.D4SpinTriality` | Any faithful diagram-symmetry action on the spin-point group sends the canonical triality cycle to exact order three; the half-spin swap has exact order two | Kernel checked interface; `splitSpinPointTrialityDataOfRepresentationBridge` constructs it from a symmetric tensor, common charts, quadratic/tensor preservation, and bijectivity; those concrete inputs remain open |
 
 This layer now combines the full D4 diagram automorphism group, exact
 root/weight and discriminant-quadratic data, the integral D4-by-D4 gluing
-overlattice, and concrete pointwise Clifford/Spin functoriality. The canonical
-vector representation is constructed and preserves the quadratic form. For
-split D4, the exterior Fock action now constructs actual eight-dimensional
-`S+` and `S-` parity modules and their pointwise Spin representations; the
-weight labels independently identify the corresponding nonzero discriminant
-classes. The E8 atlas identifies the shared triality graph as its index-four
-D4-by-D4 lattice glue. The remaining even-Clifford splitting obligation is the
-single theorem that the full exterior Fock action is injective. Still Open
-after that are a compatible faithful outer S3 lift, Spin and D4-by-D4 group
-schemes, and comparison with Galois/fpqc descent.
+overlattice, and concrete pointwise Clifford/Spin functoriality. The full
+exterior Fock action is proved faithful, so the split even-Clifford algebra
+decomposes unconditionally into the two eight-dimensional half-spin blocks.
+Orthogonal related triples carry a constructed faithful outer S3 relabel
+action, and the representation-defined bridge records exactly what is needed
+to make it compatible with the existing vector and half-spin actions.
+Independently, Hopf automorphisms act functorially on fixed-cover and global
+fpqc Čech H¹ and preserve neutrality.
+
+The remaining pointwise comparison boundary is to construct the common
+symmetric triality tensor and charts, prove
+`SplitTrialityTuplePreservesQuadratic` and
+`SplitTrialityTuplePreservesTensor`, and prove bijectivity of
+`splitSpinToOrthogonalRelatedTriples`. These inputs instantiate the
+already-verified compatible faithful outer pointwise action.
+
+The subsequent representability boundary is to construct a commutative
+coordinate Hopf algebra for split Spin₈, prove a natural
+all-commutative-algebra comparison with Mathlib's pointwise Clifford spin
+group, and identify its Hopf/presheaf triality automorphisms with the
+representation-derived related-triples action. No split Spin₈ group scheme,
+D4-by-D4 subgroup scheme, torsor classification, or Galois/fpqc comparison is
+inferred from the pointwise constructions.
 
 ## E8 subsystem-induction exclusion
 
