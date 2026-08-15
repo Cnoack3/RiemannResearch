@@ -164,3 +164,17 @@ modules here rather than vendoring an unrelated conjecture catalogue.
 6. Build H³ and Rost naturality/kernel results.
 7. Attach the E8 finite computations to intrinsic E8 geometry and finish the
    single full-strength `SerreII.Conjecture`.
+
+## Scalar-extension milestone (2026-08-15)
+
+`FpqcH1ChangeOfBase` and `FpqcH1CanonicalScalarExtension` now complete the
+fixed-cover cocycle transport, refinement compatibility, common-refinement
+quotient descent, represented coefficient base-change isomorphism, and the
+neutral-preserving global scalar-extension map. They also construct the
+`FpqcH1ScalarExtensionMap` and `FpqcH1RestrictionSystem` inputs previously
+listed as open.
+
+Accordingly, item 1 above is now narrowed to coherent identity and composition
+laws across the canonical tensor-unit and tensor-associativity isomorphisms.
+After that coherence layer, the next load-bearing generic gate is the
+`FpqcH1`/fpqc-torsor classification and its Galois-H¹ comparison.
