@@ -30,6 +30,7 @@ import RiemannResearch.AlgebraicGeometry.SerreIITypeB
 import RiemannResearch.AlgebraicGeometry.SerreIITypeD
 import RiemannResearch.AlgebraicGeometry.SerreIITypeDScalarExtension
 import RiemannResearch.AlgebraicGeometry.FpqcTorsor
+import RiemannResearch.AlgebraicGeometry.FpqcTorsorCechCocycle
 import RiemannResearch.AlgebraicGeometry.FpqcH1TorsorClassification
 import RiemannResearch.AlgebraicGeometry.OddDegreePointDescent
 import RiemannResearch.AlgebraicGeometry.PointFields

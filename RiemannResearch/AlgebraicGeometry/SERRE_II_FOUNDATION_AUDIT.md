@@ -64,7 +64,13 @@ The canonical finite-Galois fixed-cover comparison is complete:
 relations, and `finiteGaloisCanonicalH1EquivNonabelian` gives the resulting
 fixed-cover H¹ equivalence.
 
-1. Construct `FpqcH1TorsorClassifier` by effective fpqc object descent. The
+The one-way fixed-cover torsor-to-cocycle bridge is complete in
+`FpqcTorsorCechCocycle`: transition elements, cocycles from local sections,
+gauge independence, and refinement compatibility are kernel checked. It does
+not construct torsors from cocycles or invoke effective descent.
+
+1. Construct the reverse cocycle-to-torsor direction and then
+   `FpqcH1TorsorClassifier` by effective fpqc object descent. The
    current interface correctly assumes `Module.Flat R A`, supplies a canonical
    torsor self-cover, and proves consequences of a classifier, but Mathlib does
    not yet supply the needed scheme-valued effective descent equivalence.
@@ -165,8 +171,8 @@ modules here rather than vendoring an unrelated conjecture catalogue.
 
 ## Recommended implementation order
 
-1. Build the scheme-valued effective fpqc descent needed to construct the
-   flat-coefficient `FpqcH1TorsorClassifier`.
+1. Build the reverse scheme-valued effective fpqc descent from Čech cocycles
+   needed to construct the flat-coefficient `FpqcH1TorsorClassifier`.
 2. Pass the completed finite-Galois fixed-cover comparison to continuous
    absolute-Galois H¹ with torsor-pullback compatibility.
 3. Build intrinsic field/cohomological-dimension and semisimple simply
@@ -192,6 +198,12 @@ fixed-cover coherence squares are discharged.
 `FpqcH1TorsorClassification` specifies a flat-coefficient classifier
 interface, constructs the canonical torsor self-cover, and proves the
 neutral-class/global-section criterion from supplied classifier data.
+
+`FpqcTorsorCechCocycle` constructs the oriented transition element and
+fixed-cover represented-presheaf cocycle from chosen local sections. It proves
+gauge independence and strict refinement compatibility, including equality of
+the resulting fixed-cover H¹ classes.
+
 Effective fpqc object descent, full faithfulness, and essential surjectivity
 are still open.
 
