@@ -23,10 +23,10 @@ common project API:
 * coalgebras for the extension--restriction comonad.
 
 For a faithfully flat ring map, Mathlib's comonadicity theorem makes the second
-description equivalent to modules over the base ring. The remaining
-Čech-to-comonad comparison is deliberately not asserted here: it requires the
-tensor-product base-change isomorphism on the double overlap and its triple
-overlap coherence.
+description equivalent to modules over the base ring. The final
+Čech-to-comonad equivalence is deliberately not asserted here. Its choice-free
+interface is recorded below; sibling modules construct the natural tensor
+base change and the generic transport coherence needed to fill it.
 -/
 
 @[expose] public section
@@ -276,6 +276,21 @@ theorem comonadicModuleDescentEquivalence_functor
       comonadicModuleDescentComparison f := by
   rfl
 
+/-- The choice-free bridge between singleton affine descent data and
+extension--restriction coalgebras. This is the convenient interface for the
+hard tensor-product coherence construction. -/
+structure AffineModuleComonadicBridge
+    {R A : CommRingCat.{u}} (f : R ⟶ A) where
+  /-- Choice-free singleton descent data are equivalent to coalgebras for the
+  extension--restriction comonad. -/
+  equivalence :
+    AffineModuleDescentData f ≌ ComonadicModuleDescentData f.hom
+  /-- The equivalence identifies the choice-free descent comparison with the
+  comonadic comparison. -/
+  comparisonIso :
+    affineModuleDescentComparison f ⋙ equivalence.functor ≅
+      comonadicModuleDescentComparison f.hom
+
 /-- The exact remaining bridge between chosen Čech descent data and comonadic
 descent data. Besides an equivalence of categories, it records compatibility
 with the two canonical comparison functors. -/
@@ -290,6 +305,25 @@ structure AffineCechComonadicBridge
   comparisonIso :
     affineCechModuleDescentComparison f ⋙ equivalence.functor ≅
       comonadicModuleDescentComparison f.hom
+
+/-- A bridge constructed on choice-free descent data canonically supplies the
+chosen Čech bridge. The counit of the Čech descent equivalence removes the
+chosen double- and triple-overlap presentation. -/
+noncomputable def AffineModuleComonadicBridge.toCech
+    {R A : CommRingCat.{u}} {f : R ⟶ A}
+    (bridge : AffineModuleComonadicBridge f) :
+    AffineCechComonadicBridge f where
+  equivalence :=
+    (affineCechDescentEquivalence f).trans bridge.equivalence
+  comparisonIso :=
+    Functor.associator _ _ _ ≪≫
+      Functor.isoWhiskerLeft (affineModuleDescentComparison f)
+        ((Functor.associator _ _ _).symm ≪≫
+          Functor.isoWhiskerRight
+            (affineCechDescentEquivalence f).counitIso
+            bridge.equivalence.functor ≪≫
+          Functor.leftUnitor bridge.equivalence.functor) ≪≫
+      bridge.comparisonIso
 
 /-- A faithfully flat ring map has effective chosen Čech module descent once
 the Čech--comonadic bridge is supplied. -/
