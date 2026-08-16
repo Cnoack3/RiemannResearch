@@ -18,7 +18,8 @@ transition element `torsorTransition hP x y` is oriented by
 Thus the transition from the `j`-section to the `i`-section satisfies the
 existing cocycle convention `γᵢⱼ * γⱼₖ = γᵢₖ`. The resulting cocycle is
 independent of the chosen local sections up to Mathlib's nonabelian gauge
-relation and is compatible with refinement of the fixed fpqc cover.
+relation, is natural under equivariant morphisms of simply transitive actions,
+and is compatible with refinement of the fixed fpqc cover.
 
 No effective descent, global torsor class, or torsor classifier is constructed
 here.
@@ -96,6 +97,21 @@ theorem torsorTransition_unique
       torsorTransition hP x y • (torsorTransition hP y z • z) by
       simp only [mul_smul]]
   rw [torsorTransition_smul, torsorTransition_smul]
+
+/-- An equivariant morphism between simply transitive actions preserves every
+transition element. -/
+theorem torsorTransition_comp_modHom
+    {X : _root_.AlgebraicGeometry.Scheme.{u}}
+    {G : Over X} [GrpObj G]
+    {P Q : CategoryTheory.Mod (Over X) G}
+    (hP : IsSimplyTransitive X G P)
+    (hQ : IsSimplyTransitive X G Q)
+    (f : P ⟶ Q)
+    {Z : Over X} (x y : Z ⟶ P.X) :
+    torsorTransition hP x y =
+      torsorTransition hQ (x ≫ f.hom) (y ≫ f.hom) := by
+  apply torsorTransition_unique hQ
+  rw [← IsModHom.map_smul, torsorTransition_smul]
 
 /-- A choice of one section of a torsor over every member of an fpqc cover. -/
 abbrev FpqcCover.TorsorLocalSections
@@ -220,6 +236,28 @@ private theorem oneCocycle_ext
       dsimp at h
       cases h
       rfl
+
+/-- Applying an equivariant morphism to all local sections leaves the
+represented-presheaf torsor cocycle unchanged. -/
+theorem torsorCocycle_comp_modHom
+    {R : CommRingCat.{u}} {I : Type v} (U : FpqcCover R I)
+    {G : Over (_root_.AlgebraicGeometry.Spec R)} [GrpObj G]
+    {P Q : CategoryTheory.Mod
+      (Over (_root_.AlgebraicGeometry.Spec R)) G}
+    (hP : IsSimplyTransitive (_root_.AlgebraicGeometry.Spec R) G P)
+    (hQ : IsSimplyTransitive (_root_.AlgebraicGeometry.Spec R) G Q)
+    (f : P ⟶ Q)
+    (p : U.TorsorLocalSections P) :
+    torsorCocycle U hP p =
+      torsorCocycle U hQ (fun i => p i ≫ f.hom) := by
+  apply oneCocycle_ext
+  apply PresheafOfGroups.OneCochain.ext
+  funext i j Z a b
+  change torsorTransition hP (a ≫ p i) (b ≫ p j) =
+    torsorTransition hQ (a ≫ p i ≫ f.hom) (b ≫ p j ≫ f.hom)
+  simpa only [Category.assoc] using
+    torsorTransition_comp_modHom hP hQ f
+      (a ≫ p i) (b ≫ p j)
 
 namespace FpqcCover.Refinement
 

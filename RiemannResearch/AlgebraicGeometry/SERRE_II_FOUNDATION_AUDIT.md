@@ -64,10 +64,16 @@ The canonical finite-Galois fixed-cover comparison is complete:
 relations, and `finiteGaloisCanonicalH1EquivNonabelian` gives the resulting
 fixed-cover H¹ equivalence.
 
-The one-way fixed-cover torsor-to-cocycle bridge is complete in
-`FpqcTorsorCechCocycle`: transition elements, cocycles from local sections,
-gauge independence, and refinement compatibility are kernel checked. It does
-not construct torsors from cocycles or invoke effective descent.
+The generic fixed-cover torsor-to-cocycle bridge in
+`FpqcTorsorCechCocycle` constructs transition elements and cocycles from local
+sections and proves gauge independence, naturality under equivariant
+morphisms, and refinement compatibility. For affine-group fpqc torsors,
+`FpqcTorsorH1Class` specializes this construction to the canonical singleton
+self-cover, uses its tautological identity section, maps the fixed-cover class
+into the global common-refinement quotient `FpqcH1`, and proves invariance
+under equivariant torsor isomorphism. This is only the torsor-to-class
+direction: it neither constructs a torsor from a cocycle nor proves that
+equality of classes implies an equivariant torsor isomorphism.
 
 1. Construct the reverse cocycle-to-torsor direction and then
    `FpqcH1TorsorClassifier` by effective fpqc object descent. The
@@ -204,8 +210,13 @@ fixed-cover represented-presheaf cocycle from chosen local sections. It proves
 gauge independence and strict refinement compatibility, including equality of
 the resulting fixed-cover H¹ classes.
 
-Effective fpqc object descent, full faithfulness, and essential surjectivity
-are still open.
+`FpqcTorsorH1Class` continues this forward construction through the global
+common-refinement quotient using the torsor's canonical self-cover and
+tautological identity section. The resulting `affineGroupTorsorH1Class` is
+invariant under equivariant torsor isomorphism. Reverse cocycle-to-torsor
+construction, effective fpqc object descent, the converse from class equality
+to torsor isomorphism, and construction of `FpqcH1TorsorClassifier` data
+remain open.
 
 `FiniteGaloisCechComparison` now constructs the cocycle equivalence, proves
 preservation and reflection of the gauge relation, packages the canonical
