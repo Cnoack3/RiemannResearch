@@ -75,6 +75,14 @@ under equivariant torsor isomorphism. This is only the torsor-to-class
 direction: it neither constructs a torsor from a cocycle nor proves that
 equality of classes implies an equivariant torsor isomorphism.
 
+The bounded pre-effective reverse step is now packaged in
+`FpqcCocycleTorsorDescentData`. A represented-presheaf one-cocycle gives
+natural left-equivariant right-translation equivalences between the regular
+local torsor fibers on generalized overlaps, with diagonal identity, inverse,
+and triple-overlap composition. This generalized-point descent datum does not
+construct a descended scheme, prove effective gluing, or produce a global
+fpqc torsor.
+
 1. Construct the reverse cocycle-to-torsor direction and then
    `FpqcH1TorsorClassifier` by effective fpqc object descent. The
    current interface correctly assumes `Module.Flat R A`, supplies a canonical
@@ -217,6 +225,13 @@ invariant under equivariant torsor isomorphism. Reverse cocycle-to-torsor
 construction, effective fpqc object descent, the converse from class equality
 to torsor isomorphism, and construction of `FpqcH1TorsorClassifier` data
 remain open.
+
+`FpqcCocycleTorsorDescentData` starts the reverse fixed-cover direction
+without claiming effectiveness. Its right-translation transitions are
+natural and left-equivariant, and their diagonal identity, inverse, and
+triple-overlap composition laws are kernel checked with the orientation
+`γᵢⱼ * γⱼₖ = γᵢₖ`. Scheme-valued realization and effective gluing remain
+open.
 
 `FiniteGaloisCechComparison` now constructs the cocycle equivalence, proves
 preservation and reflection of the gauge relation, packages the canonical
