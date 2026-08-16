@@ -127,6 +127,14 @@ pair `{4015,4017}` as inner; the diagram actions on the other eleven orbits
 remain unverified. Consequently the original Target 8.2 cannot assume a
 trialitarian cyclic-cubic kernel uniformly across all twelve orbits.
 
+Lean now separates the four projective-order-60 survivors—table classes
+`4013`, `4014`, `4015`, and `4017`—from the other twenty-seven rows.
+`eq_neutral_of_nonbinaryCommonGauges_and_binaryTrialitarianReductions`
+replaces common-gauge existence on those four rows by an explicit D4-pair
+central reduction whose two-torsion residue has a cubic correction. This is
+a conditional reduction, not a construction of the D4-pair subgroup, its
+H2 boundary, or the orbit-specific cubic correction.
+
 ## C. Published-proof layers still to formalize
 
 These are formalization tasks, not claims that the mathematics is open.

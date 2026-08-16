@@ -354,6 +354,47 @@ theorem orderOf_discriminantAction_trialityCycle :
   rw [orderOf_injective discriminantAction discriminantAction_injective]
   exact orderOf_trialityCycle
 
+/-- In parity coordinates, D4 triality is the standard order-three matrix
+sending (a, b) to (b, a + b). -/
+theorem modelAction_trialityCycle_apply (p : DiscriminantModel) :
+    modelAction trialityCycle p = (p.2, p.1 + p.2) := by
+  decide +revert
+
+/-- The only fixed parity vector under the order-three triality cycle is
+zero. -/
+theorem modelAction_trialityCycle_fixed_iff (p : DiscriminantModel) :
+    modelAction trialityCycle p = p ↔ p = 0 := by
+  decide +revert
+
+/-- The order-three triality cycle has no nonzero fixed class in the D4
+discriminant quotient. -/
+theorem discriminantAction_trialityCycle_fixed_iff
+    (x : DiscriminantGroup) :
+    discriminantAction trialityCycle x = x ↔ x = 0 := by
+  constructor
+  · intro h
+    apply discriminantEquivParity.injective
+    have hmraw := congrArg discriminantEquivParity h
+    change
+      discriminantEquivParity
+          (discriminantActionPerm trialityCycle x) =
+        discriminantEquivParity x at hmraw
+    rw [discriminantEquivParity_discriminantActionPerm_apply] at hmraw
+    have hz :=
+      (modelAction_trialityCycle_fixed_iff
+        (discriminantEquivParity x)).mp hmraw
+    simpa using hz
+  · rintro rfl
+    apply discriminantEquivParity.injective
+    change
+      discriminantEquivParity
+          (discriminantActionPerm trialityCycle 0) =
+        discriminantEquivParity 0
+    rw [discriminantEquivParity_discriminantActionPerm_apply]
+    change modelActionFun trialityCycle 0 = discriminantEquivParity 0
+    rw [discriminantEquivParity.map_zero]
+    decide
+
 theorem orderOf_discriminantAction_halfSpinSwap :
     orderOf (discriminantAction halfSpinSwap) = 2 := by
   rw [orderOf_injective discriminantAction discriminantAction_injective]

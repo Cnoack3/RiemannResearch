@@ -43,4 +43,29 @@ theorem central_residue_of_cubic_norm
   obtain ⟨b, hb⟩ := hcubic
   exact ⟨b, hb.trans (three_nsmul_eq_self_of_two_torsion h2)⟩
 
+/-- The matrix formula for the order-three triality action on a pair of
+central two-primary coordinates.  The fixed-point theorem below itself only
+needs additive cancellation. -/
+def trialityPair {A : Type*} [Add A] (z : A × A) : A × A :=
+  (z.2, z.1 + z.2)
+
+/-- Triality has no nonzero fixed central pair.  In the D4 application this
+is the fixed-point calculation on the two-dimensional mod-two discriminant
+or central-character module. -/
+theorem trialityPair_fixed_iff
+    {A : Type*} [AddCommGroup A] (z : A × A) :
+    trialityPair z = z ↔ z = 0 := by
+  constructor
+  · intro h
+    have h₁ : z.2 = z.1 := congrArg Prod.fst h
+    have h₂ : z.1 + z.2 = z.2 := congrArg Prod.snd h
+    have hz₁ : z.1 = 0 := by
+      have hc := congrArg (fun a => a - z.2) h₂
+      simpa using hc
+    apply Prod.ext
+    · simpa using hz₁
+    · simpa using h₁.trans hz₁
+  · rintro rfl
+    simp [trialityPair]
+
 end RiemannResearch.GroupCohomology
