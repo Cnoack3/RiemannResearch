@@ -30,6 +30,7 @@ universe u
 noncomputable section
 
 open CategoryTheory
+open scoped ChangeOfRings
 
 namespace RiemannResearch.AlgebraicGeometry
 
@@ -288,6 +289,52 @@ theorem affineTensorCechBaseChangeIso_inv_app
     (affineTensorCechBaseChangeIso f).inv.app M =
       (affineTensorCechBaseChangeApp f M).inv := by
   rfl
+
+set_option linter.style.haveILetI false in
+/-- The inverse Čech base-change isomorphism sends the standard
+extension--restriction generator to the corresponding double-overlap
+generator. -/
+@[simp]
+theorem affineTensorCechBaseChangeIso_inv_app_one_tmul
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (M : ModuleCat A) (m : M) :
+    letI : Algebra R A := f.hom.toAlgebra
+    let mR : (ModuleCat.restrictScalars f.hom).obj M := m
+    (affineTensorCechBaseChangeIso f).inv.app M
+        ((1 : A) ⊗ₜ[R, f.hom] mR) =
+      (1 : TensorProduct R A A) ⊗ₜ[A,
+        (Algebra.TensorProduct.includeLeftRingHom :
+          A →+* TensorProduct R A A)] m := by
+  letI algRA : Algebra R A := f.hom.toAlgebra
+  let mR : (ModuleCat.restrictScalars f.hom).obj M := m
+  rw [affineTensorCechBaseChangeIso_inv_app]
+  change
+    (affineTensorCechBaseChangeLinearEquiv f M).symm
+        ((1 : A) ⊗ₜ[R, f.hom] mR) =
+      (1 : TensorProduct R A A) ⊗ₜ[A,
+        (Algebra.TensorProduct.includeLeftRingHom :
+          A →+* TensorProduct R A A)] m
+  let modRM : Module R M := Module.compHom M f.hom
+  let towerRAM : IsScalarTower R A M :=
+    IsScalarTower.of_algebraMap_smul (by intro r m'; rfl)
+  let leftAlg : Algebra A (TensorProduct R A A) :=
+    Algebra.TensorProduct.includeLeftRingHom.toAlgebra
+  have hleft : leftAlg =
+      (Algebra.TensorProduct.leftAlgebra :
+        Algebra A (TensorProduct R A A)) :=
+    leftAlgebra_eq
+  let towerLeft : @IsScalarTower R A (TensorProduct R A A)
+      algRA.toSMul leftAlg.toSMul
+      Algebra.TensorProduct.instAlgebra.toSMul := by
+    rw [hleft]
+    infer_instance
+  let pushout := pushoutWithLeftAlg leftAlg hleft towerLeft
+  exact @Algebra.IsPushout.cancelBaseChange_symm_tmul
+    R A _ _ algRA A (TensorProduct R A A) _ _ algRA
+    Algebra.TensorProduct.instAlgebra leftAlg
+    Algebra.TensorProduct.rightAlgebra towerLeft
+    Algebra.TensorProduct.right_isScalarTower pushout
+    M _ modRM (inferInstance : Module A M) towerRAM (1 : A) m
 
 /-- The two tensor-product inclusions agree after composition with the base
 ring map. This is the compatibility used to specialize generic comonadic

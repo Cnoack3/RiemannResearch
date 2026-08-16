@@ -27,6 +27,7 @@ universe u
 noncomputable section
 
 open CategoryTheory
+open scoped ChangeOfRings
 
 namespace RiemannResearch.AlgebraicGeometry
 
@@ -85,6 +86,137 @@ theorem affineModuleComonadicTransport_app
           ((ModuleCat.restrictScalars f).obj M) ≫
         (ModuleCat.extendScalars g₂).map
           ((ModuleCat.extendRestrictScalarsAdj f).counit.app M) := by
+  rfl
+
+private theorem extendScalarsComp_inv_app_one_tmul
+    {R S T : Type u} [CommRing R] [CommRing S] [CommRing T]
+    (f : R →+* S) (g : S →+* T) (M : ModuleCat R) (m : M) :
+    (ModuleCat.extendScalarsComp f g).inv.app M
+        ((1 : T) ⊗ₜ[S, g] ((1 : S) ⊗ₜ[R, f] m)) =
+      (1 : T) ⊗ₜ[R, g.comp f] m := by
+  let x : ↑((ModuleCat.extendScalars (g.comp f)).obj M) :=
+    (1 : T) ⊗ₜ[R, g.comp f] m
+  let y : ↑((ModuleCat.extendScalars g).obj
+      ((ModuleCat.extendScalars f).obj M)) :=
+    (1 : T) ⊗ₜ[S, g] ((1 : S) ⊗ₜ[R, f] m)
+  have hhom :
+      (ModuleCat.extendScalarsComp f g).hom.app M x = y := by
+    exact ModuleCat.extendScalarsComp_hom_app_one_tmul f g M m
+  calc
+    (ModuleCat.extendScalarsComp f g).inv.app M y =
+        (ModuleCat.extendScalarsComp f g).inv.app M
+          ((ModuleCat.extendScalarsComp f g).hom.app M x) := by
+      rw [hhom]
+    _ = x := by
+      have hi := (ModuleCat.extendScalarsComp f g).hom_inv_id_app M
+      have hi' := congrArg
+        (fun q => ModuleCat.Hom.hom q x) hi
+      exact hi'
+
+@[simp]
+private theorem extendScalarsCongr_hom_app_one_tmul
+    {R S : Type u} [CommRing R] [CommRing S]
+    {f g : R →+* S} (h : f = g)
+    (M : ModuleCat R) (m : M) :
+    (extendScalarsCongr h).hom.app M
+        ((1 : S) ⊗ₜ[R, f] m) =
+      (1 : S) ⊗ₜ[R, g] m := by
+  subst g
+  rfl
+
+set_option linter.style.haveILetI false in
+private theorem extendScalars_map_tmul
+    {R S : Type u} [CommRing R] [CommRing S]
+    (f : R →+* S) {M N : ModuleCat R} (q : M ⟶ N)
+    (s : ↑((ModuleCat.restrictScalars f).obj (ModuleCat.of S S))) (m : M) :
+    ModuleCat.Hom.hom ((ModuleCat.extendScalars f).map q) (s ⊗ₜ[R] m) =
+      s ⊗ₜ[R] ModuleCat.Hom.hom q m := by
+  letI : Algebra R S := f.toAlgebra
+  change (LinearMap.baseChange S (ModuleCat.Hom.hom q)) (s ⊗ₜ[R] m) = _
+  exact LinearMap.baseChange_tmul _ _ _
+
+private theorem extendRestrictScalars_counit_tmul
+    {R S : Type u} [CommRing R] [CommRing S]
+    (f : R →+* S) (M : ModuleCat S)
+    (s : ↑((ModuleCat.restrictScalars f).obj (ModuleCat.of S S))) (m : M) :
+    ModuleCat.Hom.hom ((ModuleCat.extendRestrictScalarsAdj f).counit.app M)
+        (s ⊗ₜ[R] m) = (show S from s) • m := by
+  rfl
+
+/-- Comonadic transport sends the canonical nested tensor generator to the
+corresponding generator for the second algebra map. -/
+@[simp]
+theorem affineModuleComonadicTransport_app_one_tmul
+    {R A B : Type u} [CommRing R] [CommRing A] [CommRing B]
+    (f : R →+* A) (g₁ g₂ : A →+* B)
+    (h : g₁.comp f = g₂.comp f)
+    (M : ModuleCat A) (m : M) :
+    (affineModuleComonadicTransport f g₁ g₂ h).app M
+        ((1 : B) ⊗ₜ[A, g₁]
+          ((1 : A) ⊗ₜ[R, f] m)) =
+      (1 : B) ⊗ₜ[A, g₂] m := by
+  rw [affineModuleComonadicTransport_app]
+  let mR : (ModuleCat.restrictScalars f).obj M := m
+  change
+    (ModuleCat.extendScalars g₂).map
+        ((ModuleCat.extendRestrictScalarsAdj f).counit.app M)
+      ((ModuleCat.extendScalarsComp f g₂).hom.app
+          ((ModuleCat.restrictScalars f).obj M)
+        ((extendScalarsCongr h).hom.app
+            ((ModuleCat.restrictScalars f).obj M)
+          ((ModuleCat.extendScalarsComp f g₁).inv.app
+              ((ModuleCat.restrictScalars f).obj M)
+            ((1 : B) ⊗ₜ[A, g₁]
+              ((1 : A) ⊗ₜ[R, f] mR))))) =
+      (1 : B) ⊗ₜ[A, g₂] m
+  rw [extendScalarsComp_inv_app_one_tmul]
+  erw [extendScalarsCongr_hom_app_one_tmul]
+  let z : ↑((ModuleCat.extendScalars (g₂.comp f)).obj
+      ((ModuleCat.restrictScalars f).obj M)) :=
+    (1 : B) ⊗ₜ[R, g₂.comp f] mR
+  change
+    (ModuleCat.extendScalars g₂).map
+        ((ModuleCat.extendRestrictScalarsAdj f).counit.app M)
+      ((ModuleCat.extendScalarsComp f g₂).hom.app
+          ((ModuleCat.restrictScalars f).obj M) z) =
+      (1 : B) ⊗ₜ[A, g₂] m
+  have hh :
+      (ModuleCat.extendScalarsComp f g₂).hom.app
+          ((ModuleCat.restrictScalars f).obj M) z =
+        (1 : B) ⊗ₜ[A, g₂]
+          (show ↑((ModuleCat.extendScalars f).obj
+              ((ModuleCat.restrictScalars f).obj M)) from
+            (1 : A) ⊗ₜ[R, f] mR) := by
+    dsimp only [z]
+    exact ModuleCat.extendScalarsComp_hom_app_one_tmul
+      f g₂ ((ModuleCat.restrictScalars f).obj M) mR
+  rw [hh]
+  let w : ↑((ModuleCat.extendScalars f).obj
+      ((ModuleCat.restrictScalars f).obj M)) :=
+    (1 : A) ⊗ₜ[R, f] mR
+  let v : ↑((ModuleCat.extendScalars g₂).obj
+      ((ModuleCat.extendScalars f).obj
+        ((ModuleCat.restrictScalars f).obj M))) :=
+    (1 : B) ⊗ₜ[A, g₂] w
+  change ModuleCat.Hom.hom
+      ((ModuleCat.extendScalars g₂).map
+        ((ModuleCat.extendRestrictScalarsAdj f).counit.app M)) v =
+    (1 : B) ⊗ₜ[A, g₂] m
+  have hm := extendScalars_map_tmul g₂
+    ((ModuleCat.extendRestrictScalarsAdj f).counit.app M)
+    (show ↑((ModuleCat.restrictScalars g₂).obj (ModuleCat.of B B))
+      from (1 : B)) w
+  change ModuleCat.Hom.hom
+      ((ModuleCat.extendScalars g₂).map
+        ((ModuleCat.extendRestrictScalarsAdj f).counit.app M)) v =
+    _ at hm
+  rw [hm]
+  have hc := extendRestrictScalars_counit_tmul f M
+    (show ↑((ModuleCat.restrictScalars f).obj (ModuleCat.of A A))
+      from (1 : A)) mR
+  change ModuleCat.Hom.hom
+      ((ModuleCat.extendRestrictScalarsAdj f).counit.app M) w = _ at hc
+  rw [hc, one_smul]
   rfl
 
 /-- Along a single algebra map, comonadic transport is the image of the
