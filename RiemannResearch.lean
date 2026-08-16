@@ -1,5 +1,6 @@
 import RiemannResearch.AlgebraicGeometry.AffineGroupSchemeBaseChange
 import RiemannResearch.AlgebraicGeometry.FpqcCover
+import RiemannResearch.AlgebraicGeometry.FpqcModuleDescent
 import RiemannResearch.AlgebraicGeometry.FpqcCechPullback
 import RiemannResearch.AlgebraicGeometry.FpqcCechH1
 import RiemannResearch.AlgebraicGeometry.FpqcCoverCommonRefinement
