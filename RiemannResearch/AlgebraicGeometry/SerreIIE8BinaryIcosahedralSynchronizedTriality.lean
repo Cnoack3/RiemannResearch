@@ -17,18 +17,22 @@ correct triality input is diagonal, or synchronized, triality rather than an
 independent outer action on either D4 factor.
 
 This module feeds that finite statement into the binary-icosahedral two-field
-reduction. For every admissible transporter transition it records the two
-diagram actions and their synchronization. The checked discriminant theorem
-then supplies preservation of the E8 identity glue.
+reduction. For every transporter transition it records the two diagram actions
+and their synchronization. The checked discriminant theorem then supplies
+preservation of the E8 identity glue.
 
-One substantive bridge remains explicit:
-identity-glue preservation must imply factorization of the transporter
-transition into a binary-tetrahedral fixed correction and a binary-dihedral
-fixed correction. This is a group-scheme/transporter theorem; it does not
-follow from the finite lattice calculation alone.
+The transition factorization is proved here rather than stored as an
+assumption. The proof uses the general oriented-transporter theorem: a
+transporter with a binary-dihedral-fixed basepoint and binary-tetrahedral-fixed
+target centralizer factors through the two fixed-point groups. Thus the
+remaining E8-specific arithmetic input is the construction of that fixed
+basepoint and centralizer geometry, not the desired factorization itself.
 
 Source: user-provided synchronized D4-squared triality proposal, combined with
-the existing identity-graph E8 root-data certificate.
+the existing identity-graph E8 root-data certificate. The transporter
+factorization uses the point-valued transporter identity formalized from
+Beli--Gille--Lee, Proposition 2.5.3, as cited in
+`RiemannResearch.GaloisCohomology.TwoGaugeDoubleCoset`.
 -/
 
 universe u x
@@ -40,13 +44,15 @@ open RiemannResearch.GaloisCohomology
 open RiemannResearch.E8.BinaryIcosahedralSubgroups
 open RiemannResearch.LinearAlgebra.RootSystem.D4Triality
 
-/-- Synchronized D4-by-D4 triality data for the transition between the two
-local gauges.
+/-- Synchronized D4-by-D4 triality and oriented-transporter geometry for the
+transition between the two local gauges.
 
-The synchronization field is completely finite. The final field is the
-remaining E8-specific lift from preservation of the identity discriminant
-graph to the fixed-factor decomposition required by two-gauge descent. -/
-structure SynchronizedD4PairTransitionFactorization
+The synchronization field is completely finite. The remaining fields are
+geometric incidence data: one binary-dihedral-fixed transporter basepoint and
+binary-tetrahedral-fixedness of the target centralizer. Unlike the former
+factorization-valued field, these hypotheses do not assume the desired
+fixed-factor decomposition. -/
+structure SynchronizedD4PairTransitionGeometry
     {G : Type u} [Group G] [MulDistribMulAction SL2F5 G]
     (S6 S5 : Subgroup G) (theta : S6 ≃* S5) where
   leftTriality : G → DiagramSymmetry
@@ -55,51 +61,64 @@ structure SynchronizedD4PairTransitionFactorization
     ∀ y : G,
       y ∈ orientedSubgroupTransporter S6 S5 theta →
         rightTriality y = leftTriality y
-  factorizationOfGluePreservation :
-    ∀ y : G,
-      IsAdmissibleTwoGaugeTransition
-        binaryTetrahedralSubgroup binaryDihedralSubgroup y →
-      y ∈ orientedSubgroupTransporter S6 S5 theta →
-      (∀ q, q ∈ discriminantGraph 1 →
-        pairDiscriminantAction (leftTriality y) (rightTriality y) q ∈
-          discriminantGraph 1) →
-      ∃ a b : G,
-        NonabelianCocycle.IsFixedBy binaryTetrahedralSubgroup a ∧
-        NonabelianCocycle.IsFixedBy binaryDihedralSubgroup b ∧
-        y = a * b
+  fixedBasepoint : G
+  fixedBasepoint_mem :
+    fixedBasepoint ∈ orientedSubgroupTransporter S6 S5 theta
+  targetCentralizer_fixedByTetrahedral :
+    Set.centralizer (S5 : Set G) ⊆
+      (fixedPointSubgroup (G := G) binaryTetrahedralSubgroup : Set G)
+  fixedBasepoint_fixedByDihedral :
+    NonabelianCocycle.IsFixedBy binaryDihedralSubgroup fixedBasepoint
 
-namespace SynchronizedD4PairTransitionFactorization
+namespace SynchronizedD4PairTransitionGeometry
 
-/-- Synchronization forces preservation of the diagonal D4-pair glue, so the
-remaining glue-preservation bridge supplies the two fixed factors. -/
+/-- Synchronization forces preservation of the diagonal D4-pair glue. -/
+theorem preserves_identityGraph
+    {G : Type u} [Group G] [MulDistribMulAction SL2F5 G]
+    {S6 S5 : Subgroup G} {theta : S6 ≃* S5}
+    (T : SynchronizedD4PairTransitionGeometry S6 S5 theta)
+    (y : G)
+    (htransport :
+      y ∈ orientedSubgroupTransporter S6 S5 theta) :
+    ∀ q, q ∈ discriminantGraph 1 →
+      pairDiscriminantAction
+        (T.leftTriality y) (T.rightTriality y) q ∈ discriminantGraph 1 :=
+  (pairAction_preserves_identityGraph_iff_synchronized
+    (T.leftTriality y) (T.rightTriality y)).2
+    (T.synchronized y htransport)
+
+/-- Every transition in the synchronized D4-pair oriented transporter factors
+through a binary-tetrahedral-fixed correction and a
+binary-dihedral-fixed correction.
+
+This is now a theorem from fixed transporter geometry, rather than a
+factorization assumption. The synchronization theorem separately certifies
+that the same transition preserves the identity E8 glue. -/
 theorem factorization
     {G : Type u} [Group G] [MulDistribMulAction SL2F5 G]
     {S6 S5 : Subgroup G} {theta : S6 ≃* S5}
-    (T : SynchronizedD4PairTransitionFactorization S6 S5 theta)
+    (T : SynchronizedD4PairTransitionGeometry S6 S5 theta)
     (y : G)
-    (hadmissible :
-      IsAdmissibleTwoGaugeTransition
-        binaryTetrahedralSubgroup binaryDihedralSubgroup y)
     (htransport :
       y ∈ orientedSubgroupTransporter S6 S5 theta) :
     ∃ a b : G,
       NonabelianCocycle.IsFixedBy binaryTetrahedralSubgroup a ∧
       NonabelianCocycle.IsFixedBy binaryDihedralSubgroup b ∧
       y = a * b := by
-  apply T.factorizationOfGluePreservation y hadmissible htransport
-  exact
-    (pairAction_preserves_identityGraph_iff_synchronized
-      (T.leftTriality y) (T.rightTriality y)).2
-      (T.synchronized y htransport)
+  exact orientedTransition_factorization_of_fixedBasepoint
+    binaryTetrahedralSubgroup binaryDihedralSubgroup S6 S5 theta
+    htransport T.fixedBasepoint_mem
+    T.targetCentralizer_fixedByTetrahedral
+    T.fixedBasepoint_fixedByDihedral
 
-end SynchronizedD4PairTransitionFactorization
+end SynchronizedD4PairTransitionGeometry
 
 /-- Binary-icosahedral two-field data in which the transition factorization
 is obtained from synchronized D4-by-D4 triality.
 
 The Gille fields produce the two local gauges. The synchronized transition
-data preserves the identity E8 glue and exposes only the final
-glue-preservation-to-factorization bridge. -/
+data preserves the identity E8 glue, while its fixed basepoint and centralizer
+geometry prove the required factorization. -/
 structure BinaryIcosahedralSynchronizedD4PairTwoFieldPresentation
     {X : Type x} (point neutral : X) where
   G : Type u
@@ -133,7 +152,7 @@ structure BinaryIcosahedralSynchronizedD4PairTwoFieldPresentation
         cocycle σ.1 = gK⁻¹ * σ.1 • gK) →
       gH * gK⁻¹ ∈ orientedSubgroupTransporter S6 S5 theta
   synchronizedTriality :
-    SynchronizedD4PairTransitionFactorization S6 S5 theta
+    SynchronizedD4PairTransitionGeometry S6 S5 theta
   reflectsNeutrality : cocycle.IsCoboundary → point = neutral
 
 namespace BinaryIcosahedralSynchronizedD4PairTwoFieldPresentation
@@ -157,7 +176,8 @@ def toGilleTwoFieldPresentation
     S5 := P.S5
     theta := P.theta
     orientedTransition := P.orientedTransition
-    factorization := P.synchronizedTriality.factorization
+    factorization := fun y _hadmissible htransport =>
+      P.synchronizedTriality.factorization y htransport
     reflectsNeutrality := P.reflectsNeutrality
   }
 
