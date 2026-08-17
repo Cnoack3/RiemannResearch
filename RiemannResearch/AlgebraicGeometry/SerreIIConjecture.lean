@@ -6,6 +6,7 @@ Authors: Cnoack3
 import Mathlib.Algebra.Lie.Semisimple.Defs
 import Mathlib.FieldTheory.AbsoluteGaloisGroup
 import Mathlib.FieldTheory.Perfect
+import Mathlib.RepresentationTheory.Homological.GroupCohomology.Basic
 import RiemannResearch.AlgebraicGeometry.FpqcH1
 import RiemannResearch.AlgebraicGeometry.FpqcTorsor
 import RiemannResearch.GaloisCohomology.NonabelianH1
@@ -22,6 +23,8 @@ The imports make the closest existing foundations available:
 * Mathlib's exact `PerfectField` predicate;
 * Mathlib's topological `Field.absoluteGaloisGroup`, defined for every field
   and equipped with the Krull topology;
+* Mathlib's ordinary `groupCohomology`, providing the homological foundation
+  for formulating cohomological-dimension bounds;
 * Mathlib's `LieAlgebra.IsSemisimple` predicate;
 * the project's scheme-level `IsFpqcTorsor` and `FpqcTorsor` definitions;
 * the project's concrete nonabelian fpqc `H¹` type `FpqcH1`.
@@ -38,8 +41,10 @@ field-arithmetic conditions; no Lie-algebra condition is substituted for the
 former. The Hopf-algebra arguments are the current coordinate presentation of
 this interface.
 
-The imported discrete `NonabelianH1` does not by itself impose continuity for
-an absolute profinite Galois group.
+Mathlib's ordinary group cohomology and the imported discrete `NonabelianH1`
+do not by themselves impose continuity for an absolute profinite Galois group.
+Thus the exact field cohomological-dimension condition remains part of the
+explicit `BaseCondition` interface.
 -/
 
 universe u
