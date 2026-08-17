@@ -171,6 +171,7 @@ import RiemannResearch.E8.PrimeMarkedPacket
 import RiemannResearch.E8.PrimeMarkedSolvableIncidence
 import RiemannResearch.E8.RootLatticeSmithCertificates
 import RiemannResearch.E8.D4PairLatticeGluing
+import RiemannResearch.E8.D4PairEuclideanSimpleRoots
 import RiemannResearch.E8.A2ChamberNormalization
 import RiemannResearch.E8.SylowLocalSplitting
 import RiemannResearch.E8.SectionSevenAppendixAudit
