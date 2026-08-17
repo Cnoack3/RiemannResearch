@@ -2388,6 +2388,43 @@ theorem affineModuleDescentComparison_isEquivalence
   affineModuleDescentComparison_isEquivalence_of_bridge
     f hf (affineCechComonadicBridge f)
 
+/-- A chosen Cech module descent datum over a faithfully flat map has an
+explicitly selected descended module. -/
+noncomputable def affineCechDescendedModule
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D : AffineCechModuleDescentData f) :
+    ModuleCat R := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  exact F.objPreimage D
+
+/-- The comparison functor carries the selected descended module back to the
+given Cech datum. -/
+noncomputable def affineCechDescendedModuleIso
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D : AffineCechModuleDescentData f) :
+    (affineCechModuleDescentComparison f).obj
+        (affineCechDescendedModule f hf D) ≅ D := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  exact F.objObjPreimageIso D
+
+/-- On the cover, the selected descended module base-changes to the module
+carried by the supplied Cech datum. -/
+noncomputable def affineCechDescendedModuleBaseChangeIso
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D : AffineCechModuleDescentData f) :
+    (ModuleCat.extendScalars f.hom).obj
+        (affineCechDescendedModule f hf D) ≅
+      D.obj PUnit.unit :=
+  (AffineCechModuleDescentData.evaluation f).mapIso
+    (affineCechDescendedModuleIso f hf D)
+
 /-- Affine modules satisfy singleton faithfully flat descent. -/
 theorem affineModulePseudofunctor_isStackFor_singleton
     {R A : CommRingCat.{u}} (f : R ⟶ A)

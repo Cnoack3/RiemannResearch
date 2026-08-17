@@ -851,6 +851,15 @@ or establish a Galois/fpqc comparison theorem.
 | `RiemannResearch.AlgebraicGeometry.SerreII.E8SubsystemInduction.allSubsystemsSerreII_of_hierarchy` | `RiemannResearch.AlgebraicGeometry.SerreIIE8SubsystemFamilyHierarchy` | The shared proper-family hierarchy supplies all six subsystem-source neutrality results through an explicit source-H1 bridge | Kernel checked conditional adapter; construction of `E8SubsystemSourceNeutralityBridge` is Open and contains the product, central-isogeny, and lifting obligations |
 | `RiemannResearch.AlgebraicGeometry.SerreII.E8SubsystemInduction.nonneutral_not_induced_of_hierarchy` | `RiemannResearch.AlgebraicGeometry.SerreIIE8SubsystemFamilyHierarchy` | The hierarchy and explicit source-H1 bridge exclude a nonneutral E8 class from every proper subsystem induction image | Kernel checked conditional E8 reuse theorem; the source-H1 bridge remains Open |
 
+## D4 coordinate semilinear and module descent
+
+| Declaration | Module | Verified consequence | Status |
+|---|---|---|---|
+| `RiemannResearch.AlgebraicGeometry.affineCechDescendedModuleBaseChangeIso` | `RiemannResearch.AlgebraicGeometry.AffineModuleComonadicBridge` | Selects a descended module from any chosen Čech module datum and identifies its scalar extension with the datum's cover module | Kernel checked quasi-inverse extraction under faithful flatness |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.Zorn.relatedTripleCoordinateSemilinearAction` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornCoordinateSemilinearDescent` | Algebra automorphisms of L/K and a D4 diagram homomorphism act on the scalar-extended coordinate algebra; `relatedTripleCoordinateSemilinearEvaluation_conjugate` gives the exact evaluation-conjugation formula | Kernel checked tensor-factor action, including nonabelian S3 image and inverse variance on points |
+| `RiemannResearch.LinearAlgebra.RootSystem.D4Triality.Zorn.relatedTripleCoordinateRingHomEquiv_algebraAutSemilinearAction` | `RiemannResearch.LinearAlgebra.RootSystem.D4ZornCoordinateSemilinearDescent` | The coordinate transform induced by the semilinear algebra action represents the existing universal semilinear related-triple action | Kernel checked via the coefficient/universal identity-on-matrices equivalence |
+| `RiemannResearch.AlgebraicGeometry.relatedTripleCoordinateCechModuleDescent_effective` | `RiemannResearch.AlgebraicGeometry.D4ZornCoordinateModuleDescent` | A supplied chosen Čech datum whose cover object is the scalar-extended related-triple coordinate module descends to a base-field module | Conditional research reduction: constructing the datum from the semilinear action remains open; no Hopf descent is asserted |
+
 ## Canonical fpqc H¹ scalar extension
 
 | Declaration | Module | Verified consequence | Status |
