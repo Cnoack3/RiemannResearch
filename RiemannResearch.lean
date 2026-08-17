@@ -1,4 +1,5 @@
 import RiemannResearch.AlgebraicGeometry.AffineGroupSchemeBaseChange
+import RiemannResearch.AlgebraicGeometry.SerreIITypeE7
 import RiemannResearch.AlgebraicGeometry.FpqcCover
 import RiemannResearch.AlgebraicGeometry.FpqcModuleDescent
 import RiemannResearch.AlgebraicGeometry.AffineCechModuleBaseChange
