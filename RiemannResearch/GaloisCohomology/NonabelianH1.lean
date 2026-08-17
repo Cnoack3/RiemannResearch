@@ -265,6 +265,32 @@ theorem restrict_neutral
   rw [neutral, restrict_classOf, NonabelianCocycle.restrict_trivial]
   rfl
 
+/-- Restriction to the trivial subgroup is always neutral.
+
+This is the terminal step used when a cohomology class is restricted along a
+finite Galois tower all the way to its common splitting field. -/
+theorem restrict_bot_eq_neutral
+    {Γ : Type u} {G : Type v} [Group Γ] [Group G]
+    [MulDistribMulAction Γ G]
+    (z : NonabelianH1 Γ G) :
+    restrict (⊥ : Subgroup Γ) z =
+      (neutral : NonabelianH1 (⊥ : Subgroup Γ) G) := by
+  refine Quotient.inductionOn z (fun a => ?_)
+  change restrict (⊥ : Subgroup Γ) (classOf a) = neutral
+  rw [restrict_classOf, classOf_eq_neutral_iff_isCoboundary]
+  refine ⟨1, ?_⟩
+  ext σ
+  have hσ : σ = 1 := Subsingleton.elim _ _
+  subst σ
+  simp only [NonabelianCocycle.restrict, NonabelianCocycle.gauge,
+    NonabelianCocycle.trivial, inv_one, MulDistribMulAction.smul_one, mul_one]
+  have h := a.map_mul' 1 1
+  simp only [one_mul, one_smul] at h
+  calc
+    a 1 = (a 1)⁻¹ * (a 1 * a 1) := by simp
+    _ = (a 1)⁻¹ * a 1 := by rw [← h]
+    _ = 1 := by simp
+
 /-- The proposition that a nonabelian first-cohomology class is neutral. -/
 def IsNeutral
     {Γ : Type u} {G : Type v} [Group Γ] [Group G]
