@@ -82,7 +82,7 @@ theorem conjecture_nonE8
     {Group : GroupCondition}
     {family : DynkinFamilyClassifier}
     (H : NonE8FamilyNeutralityHierarchy Base Group family) :
-    Conjecture Base (NonE8GroupCondition Group family) :=
+    H1Conjecture Base (NonE8GroupCondition Group family) :=
   conjecture_nonE8_of_exact_family_providers Base Group family
     (H.provider .A (by decide))
     (H.provider .B (by decide))
@@ -100,9 +100,9 @@ theorem of_conjecture_nonE8
     {Base : BaseCondition}
     {Group : GroupCondition}
     {family : DynkinFamilyClassifier}
-    (h : Conjecture Base (NonE8GroupCondition Group family)) :
+    (h : H1Conjecture Base (NonE8GroupCondition Group family)) :
     NonE8FamilyNeutralityHierarchy Base Group family := by
-  rw [conjecture_iff_subsingleton] at h
+  rw [h1Conjecture_iff_subsingleton] at h
   refine ⟨?_⟩
   intro d hd R A _ hBase hGroup hfamily
   exact h R A hBase ⟨hGroup, hfamily.trans_ne hd⟩
@@ -113,19 +113,19 @@ theorem conjecture_nonE8_iff_hierarchy
     {Base : BaseCondition}
     {Group : GroupCondition}
     {family : DynkinFamilyClassifier} :
-    Conjecture Base (NonE8GroupCondition Group family) ↔
+    H1Conjecture Base (NonE8GroupCondition Group family) ↔
       NonE8FamilyNeutralityHierarchy Base Group family :=
   ⟨of_conjecture_nonE8, conjecture_nonE8⟩
 
 /-- Adding one exact `E8` provider to the shared proper-family hierarchy
-supplies the full one-family-classifier Serre-II target. -/
+supplies the full one-family-classifier H1 target. -/
 theorem conjecture_of_e8
     {Base : BaseCondition}
     {Group : GroupCondition}
     {family : DynkinFamilyClassifier}
     (H : NonE8FamilyNeutralityHierarchy Base Group family)
     (e8 : ExactFamilyNeutralityProvider Base Group family .E8) :
-    Conjecture Base Group :=
+    H1Conjecture Base Group :=
   conjecture_of_nonE8_and_e8 Base Group family H.conjecture_nonE8 e8
 
 end NonE8FamilyNeutralityHierarchy

@@ -11,7 +11,7 @@ import RiemannResearch.AlgebraicGeometry.SerreIIConjecture
 
 This module gives a finite, fpqc-level assembly theorem: once a supplied
 Dynkin-family classifier and neutrality providers cover the classical series,
-`E6`, `E7`, `F4`, and `G2`, the project Serre-II conjecture follows for
+`E6`, `E7`, `F4`, and `G2`, the project's auxiliary H1 target follows for
 the corresponding non-`E8` scope. It also records the final abstract bridge
 from that non-`E8` result and an exact `E8` provider to the full supplied
 group condition.
@@ -165,9 +165,9 @@ theorem conjecture_nonE8_of_family_providers
     (g2 :
       ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
         IsSemisimpleSimplyConnected family .G2) :
-    Conjecture IsPerfectFieldCdAtMostTwo
+    H1Conjecture IsPerfectFieldCdAtMostTwo
       (NonE8GroupCondition IsSemisimpleSimplyConnected family) := by
-  rw [conjecture_iff_subsingleton]
+  rw [h1Conjecture_iff_subsingleton]
   intro R A _ hField hGroup
   rcases hGroup with ⟨hSemisimpleSimplyConnected, hne⟩
   generalize hfamily : family R A = d at hne
@@ -217,7 +217,7 @@ theorem conjecture_nonE8_of_exact_family_providers
       IsSemisimpleSimplyConnected family .F4)
     (g2 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .G2) :
-    Conjecture IsPerfectFieldCdAtMostTwo
+    H1Conjecture IsPerfectFieldCdAtMostTwo
       (NonE8GroupCondition IsSemisimpleSimplyConnected family) :=
   conjecture_nonE8_of_family_providers IsPerfectFieldCdAtMostTwo
     IsSemisimpleSimplyConnected family
@@ -225,7 +225,7 @@ theorem conjecture_nonE8_of_exact_family_providers
       IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected family a b c d)
     e6 e7 f4 g2
 
-/-- The full supplied Serre-II target follows from its non-`E8` restriction
+/-- The full supplied H1 target follows from its non-`E8` restriction
 and an exact `E8` neutrality provider.
 
 This is a conditional assembly theorem. In particular, the supplied
@@ -237,30 +237,30 @@ theorem conjecture_of_nonE8_and_e8
     (Base : BaseCondition)
     (Group : GroupCondition)
     (family : DynkinFamilyClassifier)
-    (nonE8 : Conjecture Base (NonE8GroupCondition Group family))
+    (nonE8 : H1Conjecture Base (NonE8GroupCondition Group family))
     (e8 : ExactFamilyNeutralityProvider Base Group family .E8) :
-    Conjecture Base Group := by
-  rw [conjecture_iff_subsingleton] at nonE8 ⊢
+    H1Conjecture Base Group := by
+  rw [h1Conjecture_iff_subsingleton] at nonE8 ⊢
   intro R A _ hBase hGroup
   by_cases hE8 : family R A = .E8
   · exact e8 R A hBase hGroup hE8
   · exact nonE8 R A hBase ⟨hGroup, hE8⟩
 
-/-- The supplied full target is equivalent to the conjunction of its
+/-- The supplied full H1 target is equivalent to the conjunction of its
 non-`E8` restriction and its exact `E8` branch. This is an exact logical
 decomposition relative to the supplied one-family classifier. -/
 theorem conjecture_iff_nonE8_and_e8
     (Base : BaseCondition)
     (Group : GroupCondition)
     (family : DynkinFamilyClassifier) :
-    Conjecture Base Group ↔
-      Conjecture Base (NonE8GroupCondition Group family) ∧
+    H1Conjecture Base Group ↔
+      H1Conjecture Base (NonE8GroupCondition Group family) ∧
         ExactFamilyNeutralityProvider Base Group family .E8 := by
   constructor
   · intro h
-    rw [conjecture_iff_subsingleton] at h
+    rw [h1Conjecture_iff_subsingleton] at h
     constructor
-    · rw [conjecture_iff_subsingleton]
+    · rw [h1Conjecture_iff_subsingleton]
       intro R A _ hBase hNonE8
       exact h R A hBase hNonE8.1
     · intro R A _ hBase hGroup _
@@ -269,7 +269,7 @@ theorem conjecture_iff_nonE8_and_e8
     exact conjecture_of_nonE8_and_e8 Base Group family hNonE8 hE8
 
 /-- Classical neutrality together with exact providers for all five exceptional
-families assembles to the full supplied Serre-II target. -/
+families assembles to the full supplied H1 target. -/
 theorem conjecture_of_family_providers
     (Base : BaseCondition)
     (Group : GroupCondition)
@@ -281,14 +281,14 @@ theorem conjecture_of_family_providers
     (e8 : ExactFamilyNeutralityProvider Base Group family .E8)
     (f4 : ExactFamilyNeutralityProvider Base Group family .F4)
     (g2 : ExactFamilyNeutralityProvider Base Group family .G2) :
-    Conjecture Base Group :=
+    H1Conjecture Base Group :=
   conjecture_of_nonE8_and_e8 Base Group family
     (conjecture_nonE8_of_family_providers
       Base Group family classical e6 e7 f4 g2)
     e8
 
 /-- Exact neutrality providers for every constructor of the supplied
-`DynkinFamily` interface assemble to the full supplied Serre-II target.
+`DynkinFamily` interface assemble to the full supplied H1 target.
 The separate family providers, classifier,
 and semisimple factor decomposition remain explicit obligations. -/
 theorem conjecture_of_exact_family_providers
@@ -304,7 +304,7 @@ theorem conjecture_of_exact_family_providers
     (e8 : ExactFamilyNeutralityProvider Base Group family .E8)
     (f4 : ExactFamilyNeutralityProvider Base Group family .F4)
     (g2 : ExactFamilyNeutralityProvider Base Group family .G2) :
-    Conjecture Base Group :=
+    H1Conjecture Base Group :=
   conjecture_of_nonE8_and_e8 Base Group family
     (conjecture_nonE8_of_exact_family_providers
       Base Group family a b c d e6 e7 f4 g2)

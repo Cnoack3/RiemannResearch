@@ -215,7 +215,7 @@ theorem exactFamilyE8_of_certifiedSurvivorCommonGauges
 
 /-- Single terminal reduction: non-E8 Serre II plus the explicit E8
 subsystem/survivor reductions and common-gauge theorem imply the supplied
-full Serre-II conjecture.
+full H1 target.
 
 This is a conditional research reduction. The reductions argument contains
 the finite-Galois/fpqc realization boundary, while commonGauge is precisely
@@ -225,7 +225,7 @@ theorem serreII_of_nonE8_and_certifiedSurvivorCommonGauges
     (GroupCondition : GroupCondition)
     (family : DynkinFamilyClassifier)
     (nonE8 :
-      Conjecture Base (NonE8GroupCondition GroupCondition family))
+      H1Conjecture Base (NonE8GroupCondition GroupCondition family))
     (reductions :
       ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
         Base R →
@@ -242,7 +242,7 @@ theorem serreII_of_nonE8_and_certifiedSurvivorCommonGauges
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
         ((reductions R A hBase hGroup hE8).reduction
           ξ survivor hrealizes).HasCommonGauge) :
-    Conjecture Base GroupCondition :=
+    H1Conjecture Base GroupCondition :=
   conjecture_of_nonE8_and_e8 Base GroupCondition family nonE8
     (exactFamilyE8_of_certifiedSurvivorCommonGauges
       Base GroupCondition family reductions commonGauge)
@@ -273,14 +273,14 @@ theorem serreII_of_familyHierarchy_and_certifiedSurvivorCommonGauges
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
         ((reductions R A hBase hGroup hE8).reduction
           ξ survivor hrealizes).HasCommonGauge) :
-    Conjecture Base GroupCondition :=
+    H1Conjecture Base GroupCondition :=
   hierarchy.conjecture_of_e8
     (exactFamilyE8_of_certifiedSurvivorCommonGauges
       Base GroupCondition family reductions commonGauge)
 
 /-- Fully exposed family-provider form of the terminal reduction. Exact
 providers for A, B, C, D, E6, E7, F4, and G2, together with the E8 reductions
-and common-gauge theorem, imply the supplied full Serre-II conjecture. -/
+and common-gauge theorem, imply the supplied full H1 target. -/
 theorem serreII_of_exactFamilies_and_certifiedSurvivorCommonGauges
     (Base : BaseCondition)
     (GroupCondition : GroupCondition)
@@ -309,7 +309,7 @@ theorem serreII_of_exactFamilies_and_certifiedSurvivorCommonGauges
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
         ((reductions R A hBase hGroup hE8).reduction
           ξ survivor hrealizes).HasCommonGauge) :
-    Conjecture Base GroupCondition :=
+    H1Conjecture Base GroupCondition :=
   serreII_of_familyHierarchy_and_certifiedSurvivorCommonGauges
     Base GroupCondition family
     (NonE8FamilyNeutralityHierarchy.of_exact_providers

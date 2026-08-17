@@ -633,7 +633,7 @@ theorem conjecture_nonE8_of_typeA_typeB_and_typeD_zeroCycles
       IsSemisimpleSimplyConnected family .F4)
     (g2 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .G2) :
-    Conjecture IsPerfectFieldCdAtMostTwo
+    H1Conjecture IsPerfectFieldCdAtMostTwo
       (NonE8GroupCondition IsSemisimpleSimplyConnected family) :=
   conjecture_nonE8_of_typeA_and_typeB_form_providers
     IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected family

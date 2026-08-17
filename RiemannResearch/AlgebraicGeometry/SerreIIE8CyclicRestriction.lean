@@ -244,7 +244,7 @@ theorem serreII_of_familyHierarchy_and_binaryGilleCyclicRestrictions
         (hE8 : family R A = .E8),
           BinaryGilleCyclicRestrictionProvider
             (reductions R A hBase hGroup hE8)) :
-    Conjecture Base GroupCondition :=
+    H1Conjecture Base GroupCondition :=
   hierarchy.conjecture_of_e8
     (exactFamilyE8_of_nonbinaryCommonGauges_and_binaryGilleCyclicRestrictions
       Base GroupCondition family reductions nonbinaryCommonGauge binary)

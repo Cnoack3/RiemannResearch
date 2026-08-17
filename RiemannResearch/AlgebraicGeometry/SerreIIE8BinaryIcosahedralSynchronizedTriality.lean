@@ -289,7 +289,7 @@ theorem
         (hE8 : family R A = .E8),
           BinaryIcosahedralSynchronizedD4PairTwoFieldProvider
             (reductions R A hBase hGroup hE8)) :
-    Conjecture Base GroupCondition :=
+    H1Conjecture Base GroupCondition :=
   hierarchy.conjecture_of_e8
     (exactFamilyE8_of_nonbinaryCommonGauges_and_binaryIcosahedralSynchronizedD4Pair
       Base GroupCondition family reductions nonbinaryCommonGauge binary)

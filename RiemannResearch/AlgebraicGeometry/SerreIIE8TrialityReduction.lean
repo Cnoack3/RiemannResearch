@@ -395,7 +395,7 @@ theorem serreII_of_familyHierarchy_and_binaryOrbitwiseD4Reductions
         (hE8 : family R A = .E8),
           BinaryD4OrbitProvider
             (reductions R A hBase hGroup hE8)) :
-    Conjecture Base GroupCondition :=
+    H1Conjecture Base GroupCondition :=
   hierarchy.conjecture_of_e8
     (exactFamilyE8_of_nonbinaryCommonGauges_and_binaryOrbitwiseD4Reductions
       Base GroupCondition family reductions

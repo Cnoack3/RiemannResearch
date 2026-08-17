@@ -11,7 +11,7 @@ import RiemannResearch.Logic.PointedKernel
 /-!
 # The type-E7 Serre-II reduction
 
-This module keeps the project's single Serre-II target unchanged: the base
+This module keeps the project's auxiliary H1 target's base scope unchanged: the base
 predicate still denotes perfect fields of cohomological dimension at most two.
 It separates the known quasi-split E7 theorem from two precise possible routes
 through the arbitrary-form problem.
@@ -274,7 +274,7 @@ theorem e7FormNeutralityProvider_of_d6a1Reductions
 /-! ## Exact E7 assembly and counterexample constraints -/
 
 /-- Quasi-split and non-quasi-split providers assemble into the exact
-family-E7 provider for the unchanged Serre-II target. -/
+family-E7 provider for the auxiliary H1 target. -/
 theorem exactFamilyE7_of_form_providers
     (Base : BaseCondition)
     (Group : GroupCondition)
