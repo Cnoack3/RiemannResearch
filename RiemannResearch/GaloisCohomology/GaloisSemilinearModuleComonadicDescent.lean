@@ -243,6 +243,107 @@ noncomputable def galoisSemilinearComonadicDescentData
     (galoisSemilinearComonadicCoaction_counit K L M a)
     (galoisSemilinearComonadicCoaction_coassociative K L M a)
 
+section Naturality
+
+variable (N : Type u)
+variable [AddCommGroup N] [Module K N] [Module L N] [IsScalarTower K L N]
+
+/-- Galois tensor coordinates commute with scalar extension of an equivariant
+L-linear map. -/
+theorem galoisSemilinearTensorEquiv_baseChange
+    [FiniteDimensional K L] [IsGalois K L]
+    (a : GaloisSemilinearModuleAction K L M)
+    (b : GaloisSemilinearModuleAction K L N)
+    (f : M →ₗ[L] N)
+    (hf : ∀ σ m, b.action σ (f m) = f (a.action σ m))
+    (z : TensorProduct K L M) (σ : L ≃ₐ[K] L) :
+    galoisSemilinearTensorEquiv K L N b
+        (LinearMap.baseChange L (f.restrictScalars K) z) σ =
+      f (galoisSemilinearTensorEquiv K L M a z σ) := by
+  induction z using TensorProduct.induction_on with
+  | zero => simp
+  | tmul x m =>
+      simp only [LinearMap.baseChange_tmul,
+        galoisSemilinearTensorEquiv_apply,
+        galoisSemilinearTensorToFunctions_tmul_apply]
+      change x • b.action σ (f m) = f (x • a.action σ m)
+      rw [hf, map_smul]
+  | add x y hx hy =>
+      simp only [map_add, Pi.add_apply, hx, hy]
+
+/-- The raw Galois coaction is natural in equivariant L-linear maps. -/
+theorem galoisSemilinearCoaction_natural
+    [FiniteDimensional K L] [IsGalois K L]
+    (a : GaloisSemilinearModuleAction K L M)
+    (b : GaloisSemilinearModuleAction K L N)
+    (f : M →ₗ[L] N)
+    (hf : ∀ σ m, b.action σ (f m) = f (a.action σ m))
+    (m : M) :
+    LinearMap.baseChange L (f.restrictScalars K)
+        (galoisSemilinearCoaction K L M a m) =
+      galoisSemilinearCoaction K L N b (f m) := by
+  apply (galoisSemilinearTensorEquiv K L N b).injective
+  ext σ
+  rw [galoisSemilinearTensorEquiv_baseChange K L M N a b f hf]
+  simp
+
+/-- The categorical comonad maps a normalized raw tensor by scalar extension
+of the underlying linear map. -/
+theorem galoisSemilinearComonadicTensorMap
+    (f : M →ₗ[L] N) (z : TensorProduct K L M) :
+    ConcreteCategory.hom
+        (((ModuleCat.extendRestrictScalarsAdj
+          (algebraMap K L)).toComonad).map (ModuleCat.ofHom f))
+        (galoisSemilinearComonadicTensorEquiv K L M z) =
+      galoisSemilinearComonadicTensorEquiv K L N
+        (LinearMap.baseChange L (f.restrictScalars K) z) := by
+  induction z using TensorProduct.induction_on with
+  | zero => simp
+  | tmul x m => rfl
+  | add x y hx hy =>
+      simpa only [map_add] using congrArg₂ (· + ·) hx hy
+
+/-- Transport to the extension--restriction comonad preserves naturality of
+equivariant semilinear maps. -/
+theorem galoisSemilinearComonadicCoaction_natural
+    [FiniteDimensional K L] [IsGalois K L]
+    (a : GaloisSemilinearModuleAction K L M)
+    (b : GaloisSemilinearModuleAction K L N)
+    (f : M →ₗ[L] N)
+    (hf : ∀ σ m, b.action σ (f m) = f (a.action σ m)) :
+    galoisSemilinearComonadicCoaction K L M a ≫
+        ((ModuleCat.extendRestrictScalarsAdj
+          (algebraMap K L)).toComonad).map (ModuleCat.ofHom f) =
+      ModuleCat.ofHom f ≫
+        galoisSemilinearComonadicCoaction K L N b := by
+  apply ModuleCat.hom_ext
+  ext m
+  change
+    ConcreteCategory.hom
+        (((ModuleCat.extendRestrictScalarsAdj
+          (algebraMap K L)).toComonad).map (ModuleCat.ofHom f))
+        (galoisSemilinearComonadicTensorEquiv K L M
+          (galoisSemilinearCoaction K L M a m)) =
+      galoisSemilinearComonadicTensorEquiv K L N
+        (galoisSemilinearCoaction K L N b (f m))
+  rw [galoisSemilinearComonadicTensorMap K L M N f,
+    galoisSemilinearCoaction_natural K L M N a b f hf]
+
+/-- An equivariant L-linear map between semilinear Galois modules is a
+morphism of their extension--restriction coalgebras. -/
+noncomputable def galoisSemilinearComonadicDescentMap
+    [FiniteDimensional K L] [IsGalois K L]
+    (a : GaloisSemilinearModuleAction K L M)
+    (b : GaloisSemilinearModuleAction K L N)
+    (f : M →ₗ[L] N)
+    (hf : ∀ σ m, b.action σ (f m) = f (a.action σ m)) :
+    galoisSemilinearComonadicDescentData K L M a ⟶
+      galoisSemilinearComonadicDescentData K L N b :=
+  Comonad.Coalgebra.Hom.mk (ModuleCat.ofHom f)
+    (galoisSemilinearComonadicCoaction_natural K L M N a b f hf)
+
+end Naturality
+
 /-- The affine Čech module datum canonically selected from the semilinear
 extension--restriction coalgebra. -/
 noncomputable def galoisSemilinearCechModuleDescentData
