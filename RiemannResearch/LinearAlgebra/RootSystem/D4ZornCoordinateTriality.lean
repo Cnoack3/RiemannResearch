@@ -178,6 +178,51 @@ inverse point symmetry. -/
         (coefficientRelatedTripleOuterAction R σ⁻¹ g) := by
   exact relatedTripleCoordinateEvaluation_comp_pullback σ⁻¹ g
 
+/-- The representing equivalence intertwines contravariant coordinate
+pullback with the covariant diagram action on related-triple points. The
+inverse on the coordinate action is forced by variance. -/
+@[simp] theorem relatedTripleCoordinateRingHomEquiv_outerAction
+    {R : Type} [CommRing R]
+    (σ : DiagramSymmetry)
+    (φ : RelatedTripleCoordinateRing.{0} →+* R) :
+    relatedTripleCoordinateRingHomEquiv R
+        (φ.comp (relatedTripleCoordinateOuterAction σ⁻¹).toRingHom) =
+      coefficientRelatedTripleOuterAction R σ
+        (relatedTripleCoordinateRingHomEquiv R φ) := by
+  have h := relatedTripleCoordinateOuterAction_evaluation
+    σ⁻¹ (relatedTripleCoordinateRingHomEquiv R φ)
+  change
+    (relatedTripleCoordinateEvaluation
+      (coefficientRelatedTripleBaseChange φ
+        universalCoefficientRelatedTriple)).comp
+        (relatedTripleCoordinateOuterAction σ⁻¹).toRingHom =
+      _ at h
+  rw [relatedTripleCoordinateEvaluation_baseChange] at h
+  apply (relatedTripleCoordinateRingHomEquiv R).symm.injective
+  rw [Equiv.symm_apply_apply]
+  change
+    φ.comp (relatedTripleCoordinateOuterAction σ⁻¹).toRingHom =
+      relatedTripleCoordinateEvaluation
+        (coefficientRelatedTripleOuterAction R σ
+          (relatedTripleCoordinateRingHomEquiv R φ))
+  simpa using h
+
+/-- The full representability/triality/base-change square commutes: coordinate
+pullback, passage to a represented point, scalar extension, and the diagram
+action may be performed in either order. -/
+theorem relatedTripleCoordinateRingHomEquiv_outerAction_naturality
+    {R S : Type} [CommRing R] [CommRing S]
+    (f : R →+* S) (σ : DiagramSymmetry)
+    (φ : RelatedTripleCoordinateRing.{0} →+* R) :
+    coefficientRelatedTripleBaseChange f
+      (relatedTripleCoordinateRingHomEquiv R
+        (φ.comp (relatedTripleCoordinateOuterAction σ⁻¹).toRingHom)) =
+      coefficientRelatedTripleOuterAction S σ
+        (relatedTripleCoordinateRingHomEquiv S (f.comp φ)) := by
+  rw [relatedTripleCoordinateRingHomEquiv_outerAction]
+  rw [coefficientRelatedTripleBaseChange_relabel]
+  rw [relatedTripleCoordinateRingHomEquiv_naturality]
+
 /-- Scalar extension sends the matrix unit -1 to -1. -/
 @[simp] theorem coefficientRelatedTripleGLMap_neg_one
     {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) :

@@ -89,6 +89,7 @@ import RiemannResearch.LinearAlgebra.RootSystem.D4ZornOctonion
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornBaseChange
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornRelatedTriples
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornPointFunctor
+import RiemannResearch.LinearAlgebra.RootSystem.D4ZornSemilinearDescent
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornFiniteEquations
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornCoordinateRing
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornCoordinateCogroup
