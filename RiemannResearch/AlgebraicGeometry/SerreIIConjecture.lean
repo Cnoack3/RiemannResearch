@@ -3,7 +3,10 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
+import Mathlib.Algebra.Lie.Semisimple.Defs
+import Mathlib.FieldTheory.Perfect
 import RiemannResearch.AlgebraicGeometry.FpqcH1
+import RiemannResearch.AlgebraicGeometry.FpqcTorsor
 
 /-!
 # Serre's Conjecture II as an open problem
@@ -12,11 +15,20 @@ This module records Serre's Conjecture II as a proposition. It deliberately
 does not assert the proposition, introduce it as an axiom, or supply a
 placeholder proof.
 
-The project already has a concrete fpqc H1 type for affine group schemes
-represented by commutative Hopf algebras. The intrinsic predicates saying that
-the base is a perfect field of cohomological dimension at most two and that
-the group is semisimple simply connected are not yet available, so the
-statement is parameterized by those two predicates.
+The imports make the closest existing foundations available:
+
+* Mathlib's exact `PerfectField` predicate;
+* Mathlib's `LieAlgebra.IsSemisimple` predicate;
+* the project's scheme-level `IsFpqcTorsor` and `FpqcTorsor` definitions;
+* the project's concrete nonabelian fpqc `H¹` type `FpqcH1`.
+
+The Lie-algebra predicate is not a definition of a semisimple affine group
+scheme. Moreover, neither Mathlib nor this project yet supplies the intrinsic
+predicate that an affine group scheme is semisimple and simply connected, or
+the Galois-cohomological-dimension predicate needed here. Consequently the
+global statement remains parameterized by those exact missing group-scheme
+and field-arithmetic conditions; no Lie-algebra condition is substituted for
+the former.
 -/
 
 universe u
