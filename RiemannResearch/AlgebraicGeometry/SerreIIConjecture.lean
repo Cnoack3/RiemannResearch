@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import Mathlib.Algebra.Lie.Semisimple.Defs
+import Mathlib.FieldTheory.AbsoluteGaloisGroup
 import Mathlib.FieldTheory.Perfect
 import RiemannResearch.AlgebraicGeometry.FpqcH1
 import RiemannResearch.AlgebraicGeometry.FpqcTorsor
@@ -19,19 +20,23 @@ placeholder proof.
 The imports make the closest existing foundations available:
 
 * Mathlib's exact `PerfectField` predicate;
+* Mathlib's topological `Field.absoluteGaloisGroup`, defined for every field
+  and equipped with the Krull topology;
 * Mathlib's `LieAlgebra.IsSemisimple` predicate;
 * the project's scheme-level `IsFpqcTorsor` and `FpqcTorsor` definitions;
 * the project's concrete nonabelian fpqc `H¹` type `FpqcH1`.
 * the project's discrete nonabelian Galois-cohomology carrier
   `GaloisCohomology.NonabelianH1`.
 
-The Lie-algebra predicate is not a definition of a semisimple affine group
-scheme. Moreover, neither Mathlib nor this project yet supplies the intrinsic
-predicate that an affine group scheme is semisimple and simply connected, or
+The Lie-algebra predicate is not a definition of a reductive group scheme.
+Moreover, neither Mathlib nor this project yet supplies the intrinsic
+reductive-group predicate, its semisimple simply connected specialization, or
 the Galois-cohomological-dimension predicate needed here. Consequently the
-global statement remains parameterized by those exact missing group-scheme
-and field-arithmetic conditions; no Lie-algebra condition is substituted for
-the former.
+global statement uses `GroupCondition` as an explicit reductive-group
+interface and remains parameterized by the exact missing group-scheme and
+field-arithmetic conditions; no Lie-algebra condition is substituted for the
+former. The Hopf-algebra arguments are the current coordinate presentation of
+this interface.
 
 The imported discrete `NonabelianH1` does not by itself impose continuity for
 an absolute profinite Galois group.
@@ -44,7 +49,8 @@ namespace RiemannResearch.AlgebraicGeometry.SerreII
 /-- Predicate selecting perfect fields of cohomological dimension at most two. -/
 abbrev BaseCondition := CommRingCat.{u} → Prop
 
-/-- Predicate selecting semisimple simply connected affine group schemes. -/
+/-- Explicit interface selecting semisimple simply connected reductive group
+schemes in the current Hopf-algebra coordinate presentation. -/
 abbrev GroupCondition :=
   (R A : CommRingCat.{u}) → [HopfAlgebra R A] → Prop
 
