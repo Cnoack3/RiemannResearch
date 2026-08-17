@@ -7,6 +7,7 @@ import Mathlib.Algebra.Lie.Semisimple.Defs
 import Mathlib.FieldTheory.Perfect
 import RiemannResearch.AlgebraicGeometry.FpqcH1
 import RiemannResearch.AlgebraicGeometry.FpqcTorsor
+import RiemannResearch.GaloisCohomology.NonabelianH1
 
 /-!
 # Serre's Conjecture II as an open problem
@@ -21,6 +22,8 @@ The imports make the closest existing foundations available:
 * Mathlib's `LieAlgebra.IsSemisimple` predicate;
 * the project's scheme-level `IsFpqcTorsor` and `FpqcTorsor` definitions;
 * the project's concrete nonabelian fpqc `H¹` type `FpqcH1`.
+* the project's discrete nonabelian Galois-cohomology carrier
+  `GaloisCohomology.NonabelianH1`.
 
 The Lie-algebra predicate is not a definition of a semisimple affine group
 scheme. Moreover, neither Mathlib nor this project yet supplies the intrinsic
@@ -29,6 +32,9 @@ the Galois-cohomological-dimension predicate needed here. Consequently the
 global statement remains parameterized by those exact missing group-scheme
 and field-arithmetic conditions; no Lie-algebra condition is substituted for
 the former.
+
+The imported discrete `NonabelianH1` does not by itself impose continuity for
+an absolute profinite Galois group.
 -/
 
 universe u
