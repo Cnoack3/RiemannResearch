@@ -133,6 +133,76 @@ def H1Conjecture
     IsSemisimpleSimplyConnected R A →
     ∀ ξ : FpqcH1.{u, u} R A, ξ = FpqcH1.neutral R A
 
+/-- Effective torsor-classification data for one Hopf-algebra presentation.
+Flatness is bundled because the neutral class is represented by the regular
+torsor. Constructing this data is a separate effective-descent obligation. -/
+structure TorsorClassifierData
+    (R A : CommRingCat.{u}) [HopfAlgebra R A] where
+  flat : Module.Flat R A
+  classifier :
+    letI : Module.Flat R A := flat
+    FpqcH1TorsorClassifier R A
+
+/-- A classifier provider supplies effective torsor classification for every
+base and group selected by the Serre-II hypotheses. -/
+abbrev TorsorClassifierProvider
+    (Base : BaseCondition)
+    (Group : GroupCondition) :=
+  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+    Base R →
+    Group R A →
+    Nonempty (TorsorClassifierData R A)
+
+/-- Under effective torsor classification, neutrality of every fpqc
+`H¹` class implies the canonical torsor form of Serre II. -/
+theorem conjecture_of_h1Conjecture_of_torsorClassifiers
+    (Base : BaseCondition)
+    (Group : GroupCondition)
+    (hH1 : H1Conjecture Base Group)
+    (classifiers : TorsorClassifierProvider Base Group) :
+    Conjecture Base Group := by
+  intro R A hHopf hBase hGroup P hP
+  rcases classifiers R A hBase hGroup with ⟨D⟩
+  rcases
+      @FpqcH1TorsorClassifier.essentially_surjective
+        R A hHopf D.flat D.classifier P hP with
+    ⟨x, ⟨e⟩⟩
+  have hx : x = FpqcH1.neutral R A := hH1 R A hBase hGroup x
+  rcases
+      (@FpqcH1TorsorClassifier.class_eq_neutral_iff_nonempty_section
+        R A hHopf D.flat D.classifier x).1 hx with
+    ⟨p⟩
+  exact ⟨p ≫ e.hom.hom⟩
+
+/-- Under effective torsor classification, the canonical torsor form of
+Serre II implies neutrality of every fpqc `H¹` class. -/
+theorem h1Conjecture_of_conjecture_of_torsorClassifiers
+    (Base : BaseCondition)
+    (Group : GroupCondition)
+    (hTorsor : Conjecture Base Group)
+    (classifiers : TorsorClassifierProvider Base Group) :
+    H1Conjecture Base Group := by
+  intro R A hHopf hBase hGroup x
+  rcases classifiers R A hBase hGroup with ⟨D⟩
+  apply
+    (@FpqcH1TorsorClassifier.class_eq_neutral_iff_nonempty_section
+      R A hHopf D.flat D.classifier x).2
+  exact hTorsor R A hBase hGroup
+    (@FpqcH1TorsorClassifier.torsor R A hHopf D.flat D.classifier x)
+    (@FpqcH1TorsorClassifier.isTorsor R A hHopf D.flat D.classifier x)
+
+/-- With effective torsor classifiers, the canonical torsor statement and the
+auxiliary fpqc-`H¹` statement are equivalent. -/
+theorem conjecture_iff_h1Conjecture_of_torsorClassifiers
+    (Base : BaseCondition)
+    (Group : GroupCondition)
+    (classifiers : TorsorClassifierProvider Base Group) :
+    Conjecture Base Group ↔ H1Conjecture Base Group :=
+  ⟨fun h => h1Conjecture_of_conjecture_of_torsorClassifiers
+      Base Group h classifiers,
+    fun h => conjecture_of_h1Conjecture_of_torsorClassifiers
+      Base Group h classifiers⟩
+
 /-- The every-class-neutral formulation is equivalent to saying that the
 corresponding fpqc `H¹` type is a subsingleton. -/
 theorem h1Conjecture_iff_subsingleton
