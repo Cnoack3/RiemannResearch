@@ -229,16 +229,16 @@ theorem
     (GroupCondition : GroupCondition)
     (family : DynkinFamilyClassifier)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (nonbinaryCommonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
+        (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h :
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
@@ -246,7 +246,7 @@ theorem
           ((reductions R A hBase hGroup hE8).reduction
             ξ survivor _h).HasCommonGauge)
     (binary :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8),
           BinaryIcosahedralSynchronizedD4PairTwoFieldProvider
@@ -254,7 +254,7 @@ theorem
     ExactFamilyNeutralityProvider Base GroupCondition family .E8 :=
   exactFamilyE8_of_nonbinaryCommonGauges_and_binaryIcosahedralGilleTwoField
     Base GroupCondition family reductions nonbinaryCommonGauge
-      (fun R A _ hBase hGroup hE8 =>
+      (fun R A _ _ _ hBase hGroup hE8 =>
         (binary R A hBase hGroup hE8).toGilleTwoFieldProvider)
 
 /-- Terminal family-hierarchy reduction using synchronized D4-by-D4 triality
@@ -267,16 +267,16 @@ theorem
     (hierarchy :
       NonE8FamilyNeutralityHierarchy Base GroupCondition family)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (nonbinaryCommonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
+        (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h :
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
@@ -284,12 +284,12 @@ theorem
           ((reductions R A hBase hGroup hE8).reduction
             ξ survivor _h).HasCommonGauge)
     (binary :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8),
           BinaryIcosahedralSynchronizedD4PairTwoFieldProvider
             (reductions R A hBase hGroup hE8)) :
-    H1Conjecture Base GroupCondition :=
+    Conjecture Base GroupCondition :=
   hierarchy.conjecture_of_e8
     (exactFamilyE8_of_nonbinaryCommonGauges_and_binaryIcosahedralSynchronizedD4Pair
       Base GroupCondition family reductions nonbinaryCommonGauge binary)

@@ -82,7 +82,7 @@ theorem conjecture_nonE8
     {Group : GroupCondition}
     {family : DynkinFamilyClassifier}
     (H : NonE8FamilyNeutralityHierarchy Base Group family) :
-    H1Conjecture Base (NonE8GroupCondition Group family) :=
+    Conjecture Base (NonE8GroupCondition Group family) :=
   conjecture_nonE8_of_exact_family_providers Base Group family
     (H.provider .A (by decide))
     (H.provider .B (by decide))
@@ -100,11 +100,11 @@ theorem of_conjecture_nonE8
     {Base : BaseCondition}
     {Group : GroupCondition}
     {family : DynkinFamilyClassifier}
-    (h : H1Conjecture Base (NonE8GroupCondition Group family)) :
+    (h : Conjecture Base (NonE8GroupCondition Group family)) :
     NonE8FamilyNeutralityHierarchy Base Group family := by
-  rw [h1Conjecture_iff_subsingleton] at h
+  rw [conjecture_iff_subsingleton] at h
   refine ⟨?_⟩
-  intro d hd R A _ hBase hGroup hfamily
+  intro d hd R A _ _ _ hBase hGroup hfamily
   exact h R A hBase ⟨hGroup, hfamily.trans_ne hd⟩
 
 /-- The indexed proper-family hierarchy is exactly equivalent to the existing
@@ -113,7 +113,7 @@ theorem conjecture_nonE8_iff_hierarchy
     {Base : BaseCondition}
     {Group : GroupCondition}
     {family : DynkinFamilyClassifier} :
-    H1Conjecture Base (NonE8GroupCondition Group family) ↔
+    Conjecture Base (NonE8GroupCondition Group family) ↔
       NonE8FamilyNeutralityHierarchy Base Group family :=
   ⟨of_conjecture_nonE8, conjecture_nonE8⟩
 
@@ -125,7 +125,7 @@ theorem conjecture_of_e8
     {family : DynkinFamilyClassifier}
     (H : NonE8FamilyNeutralityHierarchy Base Group family)
     (e8 : ExactFamilyNeutralityProvider Base Group family .E8) :
-    H1Conjecture Base Group :=
+    Conjecture Base Group :=
   conjecture_of_nonE8_and_e8 Base Group family H.conjecture_nonE8 e8
 
 end NonE8FamilyNeutralityHierarchy

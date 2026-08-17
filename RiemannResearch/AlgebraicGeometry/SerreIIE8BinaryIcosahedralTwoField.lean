@@ -177,7 +177,7 @@ theorem eq_basepoint
 end BinaryIcosahedralGilleTwoFieldPresentation
 
 /-- A two-field presentation for every realized binary-icosahedral survivor
-row. The finite-Galois/fpqc comparison and the E8 transporter geometry are
+row. The finite-Galois comparison and the E8 transporter geometry are
 deliberately kept inside the supplied presentation. -/
 structure BinaryIcosahedralGilleTwoFieldProvider
     {X : Type x} {neutral : X}
@@ -230,16 +230,16 @@ theorem
     (GroupCondition : GroupCondition)
     (family : DynkinFamilyClassifier)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (nonbinaryCommonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
+        (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h :
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
@@ -247,16 +247,16 @@ theorem
           ((reductions R A hBase hGroup hE8).reduction
             ξ survivor _h).HasCommonGauge)
     (binary :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8),
           BinaryIcosahedralGilleTwoFieldProvider
             (reductions R A hBase hGroup hE8)) :
     ExactFamilyNeutralityProvider Base GroupCondition family .E8 := by
-  intro R A _ hBase hGroup hE8
+  intro R A _ _ _ hBase hGroup hE8
   let D := reductions R A hBase hGroup hE8
   have hnonbinary :
-      ∀ (ξ : FpqcH1.{x, x} R A)
+      ∀ (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h : D.realizes ξ survivor),
         ¬ survivor.IsBinaryIcosahedral →
@@ -284,16 +284,16 @@ theorem serreII_of_familyHierarchy_and_binaryIcosahedralGilleTwoField
     (hierarchy :
       NonE8FamilyNeutralityHierarchy Base GroupCondition family)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (nonbinaryCommonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
+        (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h :
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
@@ -301,12 +301,12 @@ theorem serreII_of_familyHierarchy_and_binaryIcosahedralGilleTwoField
           ((reductions R A hBase hGroup hE8).reduction
             ξ survivor _h).HasCommonGauge)
     (binary :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8),
           BinaryIcosahedralGilleTwoFieldProvider
             (reductions R A hBase hGroup hE8)) :
-    H1Conjecture Base GroupCondition :=
+    Conjecture Base GroupCondition :=
   hierarchy.conjecture_of_e8
     (exactFamilyE8_of_nonbinaryCommonGauges_and_binaryIcosahedralGilleTwoField
       Base GroupCondition family reductions nonbinaryCommonGauge binary)

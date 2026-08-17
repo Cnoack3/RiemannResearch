@@ -318,16 +318,16 @@ theorem
     (GroupCondition : GroupCondition)
     (family : DynkinFamilyClassifier)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (nonbinaryCommonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
+        (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h :
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
@@ -335,16 +335,16 @@ theorem
           ((reductions R A hBase hGroup hE8).reduction
             ξ survivor _h).HasCommonGauge)
     (binary :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8),
           BinaryD4OrbitProvider
             (reductions R A hBase hGroup hE8)) :
     ExactFamilyNeutralityProvider Base GroupCondition family .E8 := by
-  intro R A _ hBase hGroup hE8
+  intro R A _ _ _ hBase hGroup hE8
   let D := reductions R A hBase hGroup hE8
   have hnonbinary :
-      ∀ (ξ : FpqcH1.{x, x} R A)
+      ∀ (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h : D.realizes ξ survivor),
         ¬ survivor.IsBinaryIcosahedral →
@@ -364,7 +364,7 @@ theorem
       hnonbinary B η).symm
 
 /-- Terminal family-hierarchy reduction for full Serre II. It leaves the
-finite-Galois/fpqc realization, the twenty-seven residual common gauges, and
+finite-Galois realization, the twenty-seven residual common gauges, and
 the fixed-geometry orbitwise D4-pair provider as explicit hypotheses. -/
 theorem serreII_of_familyHierarchy_and_binaryOrbitwiseD4Reductions
     (Base : BaseCondition)
@@ -373,16 +373,16 @@ theorem serreII_of_familyHierarchy_and_binaryOrbitwiseD4Reductions
     (hierarchy :
       NonE8FamilyNeutralityHierarchy Base GroupCondition family)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (nonbinaryCommonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
+        (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h :
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
@@ -390,12 +390,12 @@ theorem serreII_of_familyHierarchy_and_binaryOrbitwiseD4Reductions
           ((reductions R A hBase hGroup hE8).reduction
             ξ survivor _h).HasCommonGauge)
     (binary :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8),
           BinaryD4OrbitProvider
             (reductions R A hBase hGroup hE8)) :
-    H1Conjecture Base GroupCondition :=
+    Conjecture Base GroupCondition :=
   hierarchy.conjecture_of_e8
     (exactFamilyE8_of_nonbinaryCommonGauges_and_binaryOrbitwiseD4Reductions
       Base GroupCondition family reductions

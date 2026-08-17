@@ -31,7 +31,7 @@ index less than four neutralizes the class, and a split labelled 12- or
 
 The existing D4 coordinate-module descent theorem helps construct the
 underlying descended module needed by this route. It does not yet descend
-multiplication, Hopf structure, the D4 group scheme, or the map on fpqc H1, so
+multiplication, Hopf structure, the D4 group scheme, or the map on Galois H1, so
 it does not construct these three bridges.
 
 Consequently the terminal declarations below are conditional research
@@ -87,7 +87,7 @@ end E7FormKind
 forms. Constructing it for concrete group schemes is a separate obligation.
 -/
 abbrev E7FormClassifier :=
-  (R A : CommRingCat.{u}) → [HopfAlgebra R A] → E7FormKind
+  (R A : Type u) → [Field R] → [CommRing A] → [HopfAlgebra R A] → E7FormKind
 
 /-- Neutrality for a selected scope of supplied E7 forms. -/
 abbrev E7FormNeutralityProvider
@@ -96,12 +96,12 @@ abbrev E7FormNeutralityProvider
     (family : DynkinFamilyClassifier)
     (formKind : E7FormClassifier)
     (Select : E7FormKind → Prop) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     Base R →
     Group R A →
     family R A = .E7 →
     Select (formKind R A) →
-    Subsingleton (FpqcH1.{u, u} R A)
+    Subsingleton (GaloisH1 R A)
 
 /-! ## Cyclic-prime relative-kernel route -/
 
@@ -150,16 +150,16 @@ abbrev E7CyclicPrimeKernelTowerProvider
     (family : DynkinFamilyClassifier)
     (formKind : E7FormClassifier)
     (Select : E7FormKind → Prop) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     Base R →
     Group R A →
     family R A = .E7 →
     Select (formKind R A) →
-    ∀ ξ : FpqcH1.{u, u} R A,
+    ∀ ξ : GaloisH1 R A,
       ∃ n : Nat,
         Nonempty
           (E7CyclicPrimeKernelTower
-            (FpqcH1.neutral R A) ξ n)
+            (GaloisH1.neutral R A) ξ n)
 
 /-- Cyclic-prime towers with trivial kernels give neutrality for the selected
 E7 form scope. -/
@@ -172,7 +172,7 @@ theorem e7FormNeutralityProvider_of_cyclicPrimeKernelTowers
     (towers : E7CyclicPrimeKernelTowerProvider
       Base Group family formKind Select) :
     E7FormNeutralityProvider Base Group family formKind Select := by
-  intro R A _ hBase hGroup hE7 hSelect
+  intro R A _ _ _ hBase hGroup hE7 hSelect
   constructor
   intro ξ η
   obtain ⟨nξ, ⟨Tξ⟩⟩ :=
@@ -242,15 +242,15 @@ abbrev E7D6A1ReductionProvider
     (family : DynkinFamilyClassifier)
     (formKind : E7FormClassifier)
     (Select : E7FormKind → Prop) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     Base R →
     Group R A →
     family R A = .E7 →
     Select (formKind R A) →
-    ∀ ξ : FpqcH1.{u, u} R A,
+    ∀ ξ : GaloisH1 R A,
       ∃ D : E7D6A1IndexData,
         E7D6A1NeutralityBridges
-          ξ (FpqcH1.neutral R A) D
+          ξ (GaloisH1.neutral R A) D
 
 /-- D6+A1 reductions give neutrality for the selected E7 form scope. -/
 theorem e7FormNeutralityProvider_of_d6a1Reductions
@@ -262,7 +262,7 @@ theorem e7FormNeutralityProvider_of_d6a1Reductions
     (reductions : E7D6A1ReductionProvider
       Base Group family formKind Select) :
     E7FormNeutralityProvider Base Group family formKind Select := by
-  intro R A _ hBase hGroup hE7 hSelect
+  intro R A _ _ _ hBase hGroup hE7 hSelect
   constructor
   intro ξ η
   obtain ⟨Dξ, Bξ⟩ :=
@@ -285,7 +285,7 @@ theorem exactFamilyE7_of_form_providers
     (nonQuasiSplit : E7FormNeutralityProvider
       Base Group family formKind E7FormKind.IsNonQuasiSplit) :
     ExactFamilyNeutralityProvider Base Group family .E7 := by
-  intro R A _ hBase hGroup hE7
+  intro R A _ _ _ hBase hGroup hE7
   rcases E7FormKind.quasiSplit_or_nonQuasiSplit
       (formKind R A) with hq | hnq
   · exact quasiSplit R A hBase hGroup hE7 hq
@@ -331,19 +331,19 @@ non-quasi-split, has no complete cyclic-prime kernel tower, and has no
 complete D6+A1 reduction. -/
 structure E7CounterexampleConstraints
     (formKind : E7FormClassifier)
-    (R A : CommRingCat.{u}) [HopfAlgebra R A]
-    (ξ : FpqcH1.{u, u} R A) : Prop where
+    (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A]
+    (ξ : GaloisH1 R A) : Prop where
   nonQuasiSplit :
     E7FormKind.IsNonQuasiSplit (formKind R A)
   noCyclicPrimeKernelTower :
     ¬ ∃ n : Nat,
         Nonempty
           (E7CyclicPrimeKernelTower
-            (FpqcH1.neutral R A) ξ n)
+            (GaloisH1.neutral R A) ξ n)
   noD6A1Reduction :
     ¬ ∃ D : E7D6A1IndexData,
         E7D6A1NeutralityBridges
-          ξ (FpqcH1.neutral R A) D
+          ξ (GaloisH1.neutral R A) D
 
 /-- Every nonneutral E7 class satisfies the displayed constraints. -/
 theorem e7CounterexampleConstraints_of_ne
@@ -353,19 +353,19 @@ theorem e7CounterexampleConstraints_of_ne
     (formKind : E7FormClassifier)
     (quasiSplit : E7FormNeutralityProvider
       Base Group family formKind E7FormKind.IsQuasiSplit)
-    (R A : CommRingCat.{u}) [HopfAlgebra R A]
+    (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A]
     (hBase : Base R)
     (hGroup : Group R A)
     (hE7 : family R A = .E7)
-    (ξ : FpqcH1.{u, u} R A)
-    (hξ : ξ ≠ FpqcH1.neutral R A) :
+    (ξ : GaloisH1 R A)
+    (hξ : ξ ≠ GaloisH1.neutral R A) :
     E7CounterexampleConstraints formKind R A ξ := by
   constructor
   · rcases E7FormKind.quasiSplit_or_nonQuasiSplit
         (formKind R A) with hq | hnq
     · exact
         (hξ ((quasiSplit R A hBase hGroup hE7 hq).allEq
-          ξ (FpqcH1.neutral R A))).elim
+          ξ (GaloisH1.neutral R A))).elim
     · exact hnq
   · rintro ⟨n, ⟨T⟩⟩
     exact hξ T.eq_basepoint

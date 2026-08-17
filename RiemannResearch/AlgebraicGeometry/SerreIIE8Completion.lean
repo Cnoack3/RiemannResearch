@@ -17,14 +17,14 @@ toral/subsystem-sieve route in the user-provided Serre-II manuscript.
 
 The finite certificate in E8.SubgroupSieve supplies exactly 31 numerical
 perfect-core lift rows. It does not construct algebraic subgroups, field
-extensions, fpqc classes, or E8-valued gauges. Accordingly, the reduction data
+extensions, Galois classes, or E8-valued gauges. Accordingly, the reduction data
 below keeps these mathematical obligations explicit:
 
 * the six proper-subsystem induction maps and Serre-II providers;
 * classification of every E8 class as subsystem-induced or as realizing one
   of the 31 certified survivor rows;
 * a finite-Galois cocycle presentation of each realized survivor, together
-  with its local subsystem gauges and reflection back to fpqc neutrality.
+  with its local subsystem gauges and reflection back to Galois neutrality.
 
 The separate commonGauge argument in the terminal theorems is the genuinely
 new common-gauge/transporter theorem. It is not deduced here from separate
@@ -59,7 +59,7 @@ structure AnchoredGaugeReduction {X : Type x} (point basepoint : X) where
   generates : (⨆ i, stabilizer i) = ⊤
   localGauge :
     ∀ i, cocycle.IsLocalGauge (stabilizer i) (gauge i)
-  /-- The explicit comparison boundary back to the represented fpqc class. -/
+  /-- The explicit comparison boundary back to the represented Galois class. -/
   reflectsNeutrality : cocycle.IsCoboundary → point = basepoint
 
 namespace AnchoredGaugeReduction
@@ -136,7 +136,7 @@ theorem E8PerfectCoreSurvivorCase.card :
 compatibility is invoked.
 
 The fields classify and reduction are not consequences of the numerical
-31-row certificate. They include the finite-Galois/fpqc comparison,
+31-row certificate. They include the finite-Galois comparison,
 certificate-to-E8 geometry, and separately local subsystem gauges. -/
 structure E8SurvivorReductionData {X : Type x} (neutral : X) where
   induction : E8SubsystemInduction.{u, x} neutral
@@ -151,6 +151,24 @@ structure E8SurvivorReductionData {X : Type x} (neutral : X) where
       realizes ξ survivor → AnchoredGaugeReduction.{u, x} ξ neutral
 
 namespace E8SurvivorReductionData
+
+/-- One class together with a certified survivor row realizing it. Bundling the
+class and its realization keeps the dependent reduction proof definitionally
+attached to the same class. -/
+structure RealizedSurvivor
+    {X : Type x} {neutral : X}
+    (D : E8SurvivorReductionData.{u, x} neutral) where
+  ξ : X
+  survivor : E8PerfectCoreSurvivorCase
+  realizes : D.realizes ξ survivor
+
+/-- The anchored reduction determined by a bundled realized survivor. -/
+def realizedReduction
+    {X : Type x} {neutral : X}
+    {D : E8SurvivorReductionData.{u, x} neutral}
+    (w : RealizedSurvivor D) :
+    AnchoredGaugeReduction.{u, x} w.ξ neutral :=
+  D.reduction w.ξ w.survivor w.realizes
 
 /-- Every class is neutral when a common gauge is supplied for every realized
 certified survivor. -/
@@ -181,32 +199,31 @@ theorem exactFamilyE8_of_certifiedSurvivorCommonGauges
     (GroupCondition : GroupCondition)
     (family : DynkinFamilyClassifier)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [field : Field R] [ring : CommRing A] [hopf : HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (commonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [field : Field R] [ring : CommRing A] [hopf : HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
-        (survivor : E8PerfectCoreSurvivorCase)
-        (hrealizes :
-          (reductions R A hBase hGroup hE8).realizes ξ survivor),
-        ((reductions R A hBase hGroup hE8).reduction
-          ξ survivor hrealizes).HasCommonGauge) :
+        (w : E8SurvivorReductionData.RealizedSurvivor
+          (@reductions R A field ring hopf hBase hGroup hE8)),
+        (E8SurvivorReductionData.realizedReduction w).HasCommonGauge) :
     ExactFamilyNeutralityProvider Base GroupCondition family .E8 := by
-  intro R A _ hBase hGroup hE8
-  let D := reductions R A hBase hGroup hE8
+  intro R A field ring hopf hBase hGroup hE8
+  let D := @reductions R A field ring hopf hBase hGroup hE8
   have hcommon :
-      ∀ (ξ : FpqcH1.{x, x} R A)
+      ∀ (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (hrealizes : D.realizes ξ survivor),
         (D.reduction ξ survivor hrealizes).HasCommonGauge := by
     intro ξ survivor hrealizes
-    simpa [D] using
-      commonGauge R A hBase hGroup hE8 ξ survivor hrealizes
+    let w : E8SurvivorReductionData.RealizedSurvivor D :=
+      ⟨ξ, survivor, hrealizes⟩
+    simpa [D, w, E8SurvivorReductionData.realizedReduction] using
+      @commonGauge R A field ring hopf hBase hGroup hE8 w
   refine ⟨?_⟩
   intro ξ η
   exact
@@ -218,31 +235,28 @@ subsystem/survivor reductions and common-gauge theorem imply the supplied
 full H1 target.
 
 This is a conditional research reduction. The reductions argument contains
-the finite-Galois/fpqc realization boundary, while commonGauge is precisely
+the finite-Galois realization boundary, while commonGauge is precisely
 the open simultaneous E8 compatibility theorem. -/
 theorem serreII_of_nonE8_and_certifiedSurvivorCommonGauges
     (Base : BaseCondition)
     (GroupCondition : GroupCondition)
     (family : DynkinFamilyClassifier)
     (nonE8 :
-      H1Conjecture Base (NonE8GroupCondition GroupCondition family))
+      Conjecture Base (NonE8GroupCondition GroupCondition family))
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [field : Field R] [ring : CommRing A] [hopf : HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (commonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [field : Field R] [ring : CommRing A] [hopf : HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
-        (survivor : E8PerfectCoreSurvivorCase)
-        (hrealizes :
-          (reductions R A hBase hGroup hE8).realizes ξ survivor),
-        ((reductions R A hBase hGroup hE8).reduction
-          ξ survivor hrealizes).HasCommonGauge) :
-    H1Conjecture Base GroupCondition :=
+        (w : E8SurvivorReductionData.RealizedSurvivor
+          (@reductions R A field ring hopf hBase hGroup hE8)),
+        (E8SurvivorReductionData.realizedReduction w).HasCommonGauge) :
+    Conjecture Base GroupCondition :=
   conjecture_of_nonE8_and_e8 Base GroupCondition family nonE8
     (exactFamilyE8_of_certifiedSurvivorCommonGauges
       Base GroupCondition family reductions commonGauge)
@@ -258,22 +272,19 @@ theorem serreII_of_familyHierarchy_and_certifiedSurvivorCommonGauges
     (hierarchy :
       NonE8FamilyNeutralityHierarchy Base GroupCondition family)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [field : Field R] [ring : CommRing A] [hopf : HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (commonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [field : Field R] [ring : CommRing A] [hopf : HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
-        (survivor : E8PerfectCoreSurvivorCase)
-        (hrealizes :
-          (reductions R A hBase hGroup hE8).realizes ξ survivor),
-        ((reductions R A hBase hGroup hE8).reduction
-          ξ survivor hrealizes).HasCommonGauge) :
-    H1Conjecture Base GroupCondition :=
+        (w : E8SurvivorReductionData.RealizedSurvivor
+          (@reductions R A field ring hopf hBase hGroup hE8)),
+        (E8SurvivorReductionData.realizedReduction w).HasCommonGauge) :
+    Conjecture Base GroupCondition :=
   hierarchy.conjecture_of_e8
     (exactFamilyE8_of_certifiedSurvivorCommonGauges
       Base GroupCondition family reductions commonGauge)
@@ -294,22 +305,19 @@ theorem serreII_of_exactFamilies_and_certifiedSurvivorCommonGauges
     (f4 : ExactFamilyNeutralityProvider Base GroupCondition family .F4)
     (g2 : ExactFamilyNeutralityProvider Base GroupCondition family .G2)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [field : Field R] [ring : CommRing A] [hopf : HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (commonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [field : Field R] [ring : CommRing A] [hopf : HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
-        (survivor : E8PerfectCoreSurvivorCase)
-        (hrealizes :
-          (reductions R A hBase hGroup hE8).realizes ξ survivor),
-        ((reductions R A hBase hGroup hE8).reduction
-          ξ survivor hrealizes).HasCommonGauge) :
-    H1Conjecture Base GroupCondition :=
+        (w : E8SurvivorReductionData.RealizedSurvivor
+          (@reductions R A field ring hopf hBase hGroup hE8)),
+        (E8SurvivorReductionData.realizedReduction w).HasCommonGauge) :
+    Conjecture Base GroupCondition :=
   serreII_of_familyHierarchy_and_certifiedSurvivorCommonGauges
     Base GroupCondition family
     (NonE8FamilyNeutralityHierarchy.of_exact_providers

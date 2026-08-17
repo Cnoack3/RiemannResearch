@@ -9,9 +9,9 @@ import RiemannResearch.AlgebraicGeometry.SerreIIConjecture
 /-!
 # The non-E8 Dynkin-family reduction for Serre II
 
-This module gives a finite, fpqc-level assembly theorem: once a supplied
+This module gives a finite Galois-cohomological assembly theorem: once a supplied
 Dynkin-family classifier and neutrality providers cover the classical series,
-`E6`, `E7`, `F4`, and `G2`, the project's auxiliary H1 target follows for
+`E6`, `E7`, `F4`, and `G2`, the pointed Galois H1 target follows for
 the corresponding non-`E8` scope. It also records the final abstract bridge
 from that non-`E8` result and an exact `E8` provider to the full supplied
 group condition.
@@ -20,7 +20,7 @@ This does not construct a Dynkin classifier or prove the family providers.
 In particular, for arbitrary forms the trialitarian `D4`, `E6`, and `E7`
 inputs contain presently open mathematics. For quasi-split groups these
 non-`E8` cases are known in the literature, but their algebraic-group and
-fpqc-cohomology formalization is not yet present in this project.
+Galois-cohomology formalization is not yet present in this project.
 -/
 
 universe u
@@ -76,15 +76,16 @@ end DynkinFamily
 family. Constructing this classifier for concrete semisimple simply connected
 group schemes is a separate obligation. -/
 abbrev DynkinFamilyClassifier :=
-  (R A : CommRingCat.{u}) → [HopfAlgebra R A] → DynkinFamily
+  (K A : Type u) → [Field K] → [CommRing A] → [HopfAlgebra K A] →
+    DynkinFamily
 
 /-- Restrict a group predicate to objects whose supplied Dynkin-family
 classifier is not `E8`. -/
 def NonE8GroupCondition
     (IsSemisimpleSimplyConnected : GroupCondition)
     (family : DynkinFamilyClassifier) : GroupCondition :=
-  fun R A _ =>
-    IsSemisimpleSimplyConnected R A ∧ family R A ≠ .E8
+  fun K A _ _ _ =>
+    IsSemisimpleSimplyConnected K A ∧ family K A ≠ .E8
 
 /-- A pointwise provider of the Serre-II neutrality conclusion for the
 families selected by `Select`. -/
@@ -93,11 +94,11 @@ abbrev NeutralityProvider
     (IsSemisimpleSimplyConnected : GroupCondition)
     (family : DynkinFamilyClassifier)
     (Select : DynkinFamily → Prop) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
-    IsPerfectFieldCdAtMostTwo R →
-    IsSemisimpleSimplyConnected R A →
-    Select (family R A) →
-    Subsingleton (FpqcH1.{u, u} R A)
+  ∀ (K A : Type u) [Field K] [CommRing A] [HopfAlgebra K A],
+    IsPerfectFieldCdAtMostTwo K →
+    IsSemisimpleSimplyConnected K A →
+    Select (family K A) →
+    Subsingleton (GaloisH1 K A)
 
 /-- A neutrality provider for one exact Dynkin family. -/
 abbrev ExactFamilyNeutralityProvider
@@ -127,7 +128,7 @@ theorem classicalNeutralityProvider_of_exact_providers
       IsSemisimpleSimplyConnected family .D) :
     NeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family DynkinFamily.IsClassical := by
-  intro R A _ hField hGroup hClassical
+  intro R A _ _ _ hField hGroup hClassical
   generalize hfamily : family R A = e at hClassical
   cases e with
   | A => exact a R A hField hGroup hfamily
@@ -165,10 +166,10 @@ theorem conjecture_nonE8_of_family_providers
     (g2 :
       ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
         IsSemisimpleSimplyConnected family .G2) :
-    H1Conjecture IsPerfectFieldCdAtMostTwo
+    Conjecture IsPerfectFieldCdAtMostTwo
       (NonE8GroupCondition IsSemisimpleSimplyConnected family) := by
-  rw [h1Conjecture_iff_subsingleton]
-  intro R A _ hField hGroup
+  rw [conjecture_iff_subsingleton]
+  intro R A _ _ _ hField hGroup
   rcases hGroup with ⟨hSemisimpleSimplyConnected, hne⟩
   generalize hfamily : family R A = d at hne
   cases d with
@@ -217,7 +218,7 @@ theorem conjecture_nonE8_of_exact_family_providers
       IsSemisimpleSimplyConnected family .F4)
     (g2 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .G2) :
-    H1Conjecture IsPerfectFieldCdAtMostTwo
+    Conjecture IsPerfectFieldCdAtMostTwo
       (NonE8GroupCondition IsSemisimpleSimplyConnected family) :=
   conjecture_nonE8_of_family_providers IsPerfectFieldCdAtMostTwo
     IsSemisimpleSimplyConnected family
@@ -237,11 +238,11 @@ theorem conjecture_of_nonE8_and_e8
     (Base : BaseCondition)
     (Group : GroupCondition)
     (family : DynkinFamilyClassifier)
-    (nonE8 : H1Conjecture Base (NonE8GroupCondition Group family))
+    (nonE8 : Conjecture Base (NonE8GroupCondition Group family))
     (e8 : ExactFamilyNeutralityProvider Base Group family .E8) :
-    H1Conjecture Base Group := by
-  rw [h1Conjecture_iff_subsingleton] at nonE8 ⊢
-  intro R A _ hBase hGroup
+    Conjecture Base Group := by
+  rw [conjecture_iff_subsingleton] at nonE8 ⊢
+  intro R A _ _ _ hBase hGroup
   by_cases hE8 : family R A = .E8
   · exact e8 R A hBase hGroup hE8
   · exact nonE8 R A hBase ⟨hGroup, hE8⟩
@@ -253,17 +254,17 @@ theorem conjecture_iff_nonE8_and_e8
     (Base : BaseCondition)
     (Group : GroupCondition)
     (family : DynkinFamilyClassifier) :
-    H1Conjecture Base Group ↔
-      H1Conjecture Base (NonE8GroupCondition Group family) ∧
+    Conjecture Base Group ↔
+      Conjecture Base (NonE8GroupCondition Group family) ∧
         ExactFamilyNeutralityProvider Base Group family .E8 := by
   constructor
   · intro h
-    rw [h1Conjecture_iff_subsingleton] at h
+    rw [conjecture_iff_subsingleton] at h
     constructor
-    · rw [h1Conjecture_iff_subsingleton]
-      intro R A _ hBase hNonE8
+    · rw [conjecture_iff_subsingleton]
+      intro R A _ _ _ hBase hNonE8
       exact h R A hBase hNonE8.1
-    · intro R A _ hBase hGroup _
+    · intro R A _ _ _ hBase hGroup _
       exact h R A hBase hGroup
   · rintro ⟨hNonE8, hE8⟩
     exact conjecture_of_nonE8_and_e8 Base Group family hNonE8 hE8
@@ -281,7 +282,7 @@ theorem conjecture_of_family_providers
     (e8 : ExactFamilyNeutralityProvider Base Group family .E8)
     (f4 : ExactFamilyNeutralityProvider Base Group family .F4)
     (g2 : ExactFamilyNeutralityProvider Base Group family .G2) :
-    H1Conjecture Base Group :=
+    Conjecture Base Group :=
   conjecture_of_nonE8_and_e8 Base Group family
     (conjecture_nonE8_of_family_providers
       Base Group family classical e6 e7 f4 g2)
@@ -304,7 +305,7 @@ theorem conjecture_of_exact_family_providers
     (e8 : ExactFamilyNeutralityProvider Base Group family .E8)
     (f4 : ExactFamilyNeutralityProvider Base Group family .F4)
     (g2 : ExactFamilyNeutralityProvider Base Group family .G2) :
-    H1Conjecture Base Group :=
+    Conjecture Base Group :=
   conjecture_of_nonE8_and_e8 Base Group family
     (conjecture_nonE8_of_exact_family_providers
       Base Group family a b c d e6 e7 f4 g2)

@@ -31,7 +31,7 @@ Together with common gauges for the other twenty-seven rows, this yields the
 exact E8 provider and hence the full family-hierarchy reduction.
 
 This is a conditional research reduction. It does not construct the cyclic
-extensions, identify fpqc scalar extension with continuous Galois
+extensions, and construct continuous Galois
 restriction, or prove that a binary survivor becomes neutral after
 restriction. In particular, the existing D4 coordinate-module descent theorem
 does not supply that last assertion.
@@ -54,7 +54,7 @@ open RiemannResearch.Logic
 prime degree, together with Gille's trivial relative-kernel conclusion.
 
 The algebraic field extensions and continuous Galois cohomology are still
-external to the current fpqc model. Consequently an inhabitant must only be
+external to the current Galois model. Consequently an inhabitant must only be
 constructed from actual cyclic extensions satisfying Gille's hypotheses; the
 `degree_eq_two_or_three_or_five` and `gilleKernel` fields expose the exact
 theorem used by the subsequent formal argument. -/
@@ -165,16 +165,16 @@ theorem
     (GroupCondition : GroupCondition)
     (family : DynkinFamilyClassifier)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (nonbinaryCommonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
+        (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h :
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
@@ -182,16 +182,16 @@ theorem
           ((reductions R A hBase hGroup hE8).reduction
             ξ survivor _h).HasCommonGauge)
     (binary :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8),
           BinaryGilleCyclicRestrictionProvider
             (reductions R A hBase hGroup hE8)) :
     ExactFamilyNeutralityProvider Base GroupCondition family .E8 := by
-  intro R A _ hBase hGroup hE8
+  intro R A _ _ _ hBase hGroup hE8
   let D := reductions R A hBase hGroup hE8
   have hnonbinary :
-      ∀ (ξ : FpqcH1.{x, x} R A)
+      ∀ (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h : D.realizes ξ survivor),
         ¬ survivor.IsBinaryIcosahedral →
@@ -222,16 +222,16 @@ theorem serreII_of_familyHierarchy_and_binaryGilleCyclicRestrictions
     (hierarchy :
       NonE8FamilyNeutralityHierarchy Base GroupCondition family)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-          E8SurvivorReductionData.{u, x + 1} (FpqcH1.neutral R A))
+          E8SurvivorReductionData.{u, x} (GaloisH1.neutral R A))
     (nonbinaryCommonGauge :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8)
-        (ξ : FpqcH1.{x, x} R A)
+        (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (_h :
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
@@ -239,12 +239,12 @@ theorem serreII_of_familyHierarchy_and_binaryGilleCyclicRestrictions
           ((reductions R A hBase hGroup hE8).reduction
             ξ survivor _h).HasCommonGauge)
     (binary :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = .E8),
           BinaryGilleCyclicRestrictionProvider
             (reductions R A hBase hGroup hE8)) :
-    H1Conjecture Base GroupCondition :=
+    Conjecture Base GroupCondition :=
   hierarchy.conjecture_of_e8
     (exactFamilyE8_of_nonbinaryCommonGauges_and_binaryGilleCyclicRestrictions
       Base GroupCondition family reductions nonbinaryCommonGauge binary)

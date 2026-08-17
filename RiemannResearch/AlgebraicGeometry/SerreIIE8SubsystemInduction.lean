@@ -19,7 +19,7 @@ preserves the neutral class.
 
 The six source `H¹` types and their induction maps are abstract because the
 corresponding central quotients, group-scheme embeddings, and functorial maps
-on the project's fpqc `H¹` have not yet been constructed. In particular,
+on the project's continuous Galois `H¹` have not yet been constructed. In particular,
 `half-spin D8` and several product-type embedded subgroups should not be
 silently identified with their simply connected covers.
 

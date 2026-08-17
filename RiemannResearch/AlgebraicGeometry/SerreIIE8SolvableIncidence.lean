@@ -14,7 +14,7 @@ E8 argument. A certificate records one chosen simultaneous gauge into a
 common coefficient subgroup `B`, one residual additive H¹ class detected by
 a gcd-one family of stabilizers, a correction into `U`, and terminal
 `U`-vanishing. Such a certificate yields a common gauge, the anchored fixed
-correction, and neutrality of the represented fpqc class.
+correction, and neutrality of the represented Galois class.
 
 The structure does not manufacture its hard geometric fields. In the E8
 application, a simultaneous typed transporter/Deodhar calculation must still
@@ -167,17 +167,17 @@ theorem exactFamilyE8_of_certifiedSurvivorSolvableIncidence
     (GroupCondition : GroupCondition)
     (family : DynkinFamilyClassifier)
     (reductions :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = DynkinFamily.E8 →
-        E8SurvivorReductionData.{u, x + 1}
-          (FpqcH1.neutral R A))
+        E8SurvivorReductionData.{u, x}
+          (GaloisH1.neutral R A))
     (certificates :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A]
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A]
         (hBase : Base R) (hGroup : GroupCondition R A)
         (hE8 : family R A = DynkinFamily.E8)
-        (ξ : FpqcH1 R A)
+        (ξ : GaloisH1 R A)
         (survivor : E8PerfectCoreSurvivorCase)
         (hrealizes :
           (reductions R A hBase hGroup hE8).realizes ξ survivor),
@@ -187,12 +187,10 @@ theorem exactFamilyE8_of_certifiedSurvivorSolvableIncidence
       Base GroupCondition family DynkinFamily.E8 :=
   exactFamilyE8_of_certifiedSurvivorCommonGauges
     Base GroupCondition family reductions
-    (fun R A _ hBase hGroup hE8 ξ survivor hrealizes =>
-      let P :=
-        (reductions R A hBase hGroup hE8).reduction
-          ξ survivor hrealizes
+    (fun R A _field _ring _hopf hBase hGroup hE8 w =>
+      let P := E8SurvivorReductionData.realizedReduction w
       P.hasCommonGauge_of_solvableIncidenceCertificate
         (certificates R A hBase hGroup hE8
-          ξ survivor hrealizes))
+          w.ξ w.survivor w.realizes))
 
 end RiemannResearch.AlgebraicGeometry.SerreII

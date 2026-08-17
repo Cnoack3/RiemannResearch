@@ -34,7 +34,7 @@ structure TypeBForm where
 family `B`. Constructing it and proving its correctness are separate
 algebraic-group obligations. -/
 abbrev TypeBFormClassifier :=
-  (R A : CommRingCat.{u}) → [HopfAlgebra R A] → TypeBForm
+  (R A : Type u) → [Field R] → [CommRing A] → [HopfAlgebra R A] → TypeBForm
 
 /-- A neutrality provider for type-`B_n` groups at one exact admissible
 rank `n`. -/
@@ -44,12 +44,12 @@ abbrev TypeBRankNeutralityProvider
     (family : DynkinFamilyClassifier)
     (typeBForm : TypeBFormClassifier)
     (n : Nat) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     IsPerfectFieldCdAtMostTwo R →
     IsSemisimpleSimplyConnected R A →
     family R A = .B →
     (typeBForm R A).rank = n →
-    Subsingleton (FpqcH1.{u, u} R A)
+    Subsingleton (GaloisH1 R A)
 
 /-- Rank-indexed type-`B_n` providers for every positive `n` assemble into the
 exact Dynkin-family-`B` provider. -/
@@ -63,7 +63,7 @@ theorem exactFamilyB_of_typeB_rank_providers
         IsSemisimpleSimplyConnected family typeBForm n) :
     ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .B := by
-  intro R A _ hField hGroup hB
+  intro R A _ _ _ hField hGroup hB
   exact rankB (typeBForm R A).rank (typeBForm R A).rank_pos
     R A hField hGroup hB rfl
 
@@ -95,7 +95,7 @@ theorem conjecture_nonE8_of_typeA_and_typeB_form_providers
       IsSemisimpleSimplyConnected family .F4)
     (g2 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .G2) :
-    H1Conjecture IsPerfectFieldCdAtMostTwo
+    Conjecture IsPerfectFieldCdAtMostTwo
       (NonE8GroupCondition IsSemisimpleSimplyConnected family) :=
   conjecture_nonE8_of_typeA_form_providers IsPerfectFieldCdAtMostTwo
     IsSemisimpleSimplyConnected family typeAForm innerA outerA

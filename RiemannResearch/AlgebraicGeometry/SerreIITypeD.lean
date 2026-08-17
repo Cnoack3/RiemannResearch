@@ -17,7 +17,7 @@ records the following precise implication:
 
 1. every torsor has a finite degree-one splitting cycle;
 2. hence its finite neutralizing-extension degrees have gcd one;
-3. if coprime restriction detects the neutral fpqc H¹ class, the torsor is
+3. if coprime restriction detects the neutral Galois H¹ class, the torsor is
    neutral over the base.
 
 Izquierdo--Lucchini Arteche, "Transfer principles for Galois cohomology and
@@ -29,13 +29,13 @@ by TrialitarianIndexOneDescentProvider.
 
 The declarations below prove that, once the degree-one-cycle input is supplied
 for every class, TrialitarianIndexOneDescentProvider is equivalent to full
-fpqc-H¹ neutrality for arbitrary ³D₄ and ⁶D₄ forms. Thus the descent provider
+Galois-H¹ neutrality for arbitrary ³D₄ and ⁶D₄ forms. Thus the descent provider
 does not by itself reduce the remaining trialitarian Serre-II problem.
 
 These remain conditional interfaces. In particular, the project does not yet
-construct scalar extension on FpqcH1, instantiate the sourced degree-one-cycle
+construct scalar extension on GaloisH1, instantiate the sourced degree-one-cycle
 provider, or prove coprime restriction descent. A typed target and adapter to
-this interface are provided separately in `SerreIITypeDScalarExtension`.
+this interface require a future continuous-Galois restriction construction.
 
 The final declarations also retain the useful Allen-index decomposition without
 changing the base-field hypothesis. They split the arbitrary trialitarian
@@ -155,7 +155,7 @@ end TypeDForm
 
 /-- An abstract type-D rank-and-triality classifier. -/
 abbrev TypeDFormClassifier :=
-  (R A : CommRingCat.{u}) → [HopfAlgebra R A] → TypeDForm
+  (R A : Type u) → [Field R] → [CommRing A] → [HopfAlgebra R A] → TypeDForm
 
 /-- A neutrality provider for selected type-D forms. -/
 abbrev TypeDFormNeutralityProvider
@@ -164,18 +164,18 @@ abbrev TypeDFormNeutralityProvider
     (family : DynkinFamilyClassifier)
     (typeDForm : TypeDFormClassifier)
     (Select : TypeDForm → Prop) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     IsPerfectFieldCdAtMostTwo R →
     IsSemisimpleSimplyConnected R A →
     family R A = .D →
     Select (typeDForm R A) →
-    Subsingleton (FpqcH1.{u, u} R A)
+    Subsingleton (GaloisH1 R A)
 
 /-- Abstract scalar-extension data for one global pointed set.
 
 The field restrict_neutral records that scalar extension preserves the
 distinguished class. Constructing this data from actual field extensions and
-FpqcH1 is a separate obligation. -/
+GaloisH1 is a separate obligation. -/
 structure TrialitarianRestrictionData
     (X : Type u) (x₀ : X) where
   Extension : Type u
@@ -189,9 +189,9 @@ structure TrialitarianRestrictionData
 /-- A choice of restriction data for every candidate type-D group. Its
 meaning is guarded by the explicit trialitarian selector in each provider. -/
 abbrev TrialitarianRestrictionDataClassifier :=
-  (R A : CommRingCat.{u}) → [HopfAlgebra R A] →
+  (R A : Type u) → [Field R] → [CommRing A] → [HopfAlgebra R A] →
     TrialitarianRestrictionData
-      (FpqcH1.{u, u} R A) (FpqcH1.neutral R A)
+      (GaloisH1 R A) (GaloisH1.neutral R A)
 
 /-- The sourced geometric input: every torsor under every selected arbitrary
 trialitarian form has a finite splitting zero-cycle of total degree one. -/
@@ -201,7 +201,7 @@ abbrev TrialitarianDegreeOneCycleProvider
     (family : DynkinFamilyClassifier)
     (typeDForm : TypeDFormClassifier)
     (restrictionData : TrialitarianRestrictionDataClassifier) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     IsPerfectFieldCdAtMostTwo R →
     IsSemisimpleSimplyConnected R A →
     family R A = .D →
@@ -221,7 +221,7 @@ abbrev TrialitarianCoprimeSplittingProvider
     (family : DynkinFamilyClassifier)
     (typeDForm : TypeDFormClassifier)
     (restrictionData : TrialitarianRestrictionDataClassifier) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     IsPerfectFieldCdAtMostTwo R →
     IsSemisimpleSimplyConnected R A →
     family R A = .D →
@@ -234,20 +234,20 @@ abbrev TrialitarianCoprimeSplittingProvider
       (restrictionData R A).restrict ξ
 
 /-- The remaining open trialitarian gate: point-field index one detects the
-global neutral fpqc H¹ class for every selected arbitrary form. -/
+global neutral Galois H¹ class for every selected arbitrary form. -/
 abbrev TrialitarianIndexOneDescentProvider
     (IsPerfectFieldCdAtMostTwo : BaseCondition)
     (IsSemisimpleSimplyConnected : GroupCondition)
     (family : DynkinFamilyClassifier)
     (typeDForm : TypeDFormClassifier)
     (restrictionData : TrialitarianRestrictionDataClassifier) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     IsPerfectFieldCdAtMostTwo R →
     IsSemisimpleSimplyConnected R A →
     family R A = .D →
     (typeDForm R A).IsTrialitarian →
     CoprimeRestrictionDetectsBasepoint
-      (FpqcH1.neutral R A)
+      (GaloisH1.neutral R A)
       (restrictionData R A).isFinite
       (restrictionData R A).degree
       (restrictionData R A).LocalClass
@@ -268,7 +268,7 @@ theorem trialitarianCoprimeSplittingProvider_of_degreeOneCycles
     TrialitarianCoprimeSplittingProvider
       IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
       family typeDForm restrictionData := by
-  intro R A _ hField hGroup hD hTrialitarian ξ
+  intro R A _ _ _ hField hGroup hD hTrialitarian ξ
   obtain ⟨cycle⟩ := cycles R A hField hGroup hD hTrialitarian ξ
   exact hasCoprimeNeutralizingExtensions_of_degreeOneSplittingCycle
     (restrictionData R A).isFinite
@@ -294,7 +294,7 @@ theorem trialitarianNeutralityProvider_of_coprimeSplitting
     TypeDFormNeutralityProvider
       IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
       family typeDForm TypeDForm.IsTrialitarian := by
-  intro R A _ hField hGroup hD hTrialitarian
+  intro R A _ _ _ hField hGroup hD hTrialitarian
   refine ⟨fun ξ η => ?_⟩
   rw [indexOneDescent R A hField hGroup hD hTrialitarian ξ
         (splitting R A hField hGroup hD hTrialitarian ξ),
@@ -340,10 +340,10 @@ theorem trialitarianIndexOneDescentProvider_of_neutralityProvider
     TrialitarianIndexOneDescentProvider
       IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected
       family typeDForm restrictionData := by
-  intro R A _ hField hGroup hD hTrialitarian ξ _
+  intro R A _ _ _ hField hGroup hD hTrialitarian ξ _
   exact @Subsingleton.elim _
     (neutrality R A hField hGroup hD hTrialitarian)
-    ξ (FpqcH1.neutral R A)
+    ξ (GaloisH1.neutral R A)
 
 /-- Once every trialitarian torsor has coprime neutralizing extensions,
 index-one descent is equivalent to trialitarian neutrality. -/
@@ -410,7 +410,7 @@ theorem exactFamilyD_of_typeD_form_providers
       family typeDForm TypeDForm.IsTrialitarian) :
     ExactFamilyNeutralityProvider
       IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected family .D := by
-  intro R A _ hField hGroup hD
+  intro R A _ _ _ hField hGroup hD
   rcases TypeDForm.nontrialitarian_or_trialitarian (typeDForm R A) with
     hNon | hTri
   · exact nontrialitarian R A hField hGroup hD hNon
@@ -450,8 +450,8 @@ The positivity field records the elementary fact that a central simple
 algebra has positive index. Constructing this classifier from actual Allen
 algebras and Mathlib's future Brauer period/index API remains open. -/
 structure TrialitarianAllenIndexClassifier where
-  index : (R A : CommRingCat.{u}) → [HopfAlgebra R A] → ℕ
-  index_pos : ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  index : (R A : Type u) → [Field R] → [CommRing A] → [HopfAlgebra R A] → ℕ
+  index_pos : ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     0 < index R A
 
 /-- Every selected arbitrary trialitarian form has Allen-algebra index at most
@@ -463,7 +463,7 @@ abbrev TrialitarianAllenIndexAtMostTwoProvider
     (family : DynkinFamilyClassifier)
     (typeDForm : TypeDFormClassifier)
     (allenIndex : TrialitarianAllenIndexClassifier) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     Base R →
     IsSemisimpleSimplyConnected R A →
     family R A = .D →
@@ -479,13 +479,13 @@ abbrev TrialitarianAllenIndexNeutralityProvider
     (typeDForm : TypeDFormClassifier)
     (allenIndex : TrialitarianAllenIndexClassifier)
     (n : ℕ) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     Base R →
     IsSemisimpleSimplyConnected R A →
     family R A = .D →
     (typeDForm R A).IsTrialitarian →
     allenIndex.index R A = n →
-    Subsingleton (FpqcH1.{u, u} R A)
+    Subsingleton (GaloisH1 R A)
 
 /-- The structural Allen-index split for a degree-eight exponent-two Allen
 algebra. It is explicit because the project does not yet construct Allen
@@ -496,7 +496,7 @@ abbrev TrialitarianAllenIndexCasesProvider
     (family : DynkinFamilyClassifier)
     (typeDForm : TypeDFormClassifier)
     (allenIndex : TrialitarianAllenIndexClassifier) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     Base R →
     IsSemisimpleSimplyConnected R A →
     family R A = .D →
@@ -523,7 +523,7 @@ theorem trialitarianNeutralityProvider_of_allenIndexAtMostTwo
     TypeDFormNeutralityProvider
       Base IsSemisimpleSimplyConnected family typeDForm
       TypeDForm.IsTrialitarian := by
-  intro R A _ hBase hGroup hD hTrialitarian
+  intro R A _ _ _ hBase hGroup hD hTrialitarian
   by_cases hOne : allenIndex.index R A = 1
   · exact indexOne R A hBase hGroup hD hTrialitarian hOne
   · have hTwo : allenIndex.index R A = 2 := by
@@ -557,7 +557,7 @@ theorem trialitarianNeutralityProvider_of_allenIndexCases
     TypeDFormNeutralityProvider
       Base IsSemisimpleSimplyConnected family typeDForm
       TypeDForm.IsTrialitarian := by
-  intro R A _ hBase hGroup hD hTrialitarian
+  intro R A _ _ _ hBase hGroup hD hTrialitarian
   rcases indexCases R A hBase hGroup hD hTrialitarian with
     hOne | hTwo | hFour | hEight
   · exact indexOne R A hBase hGroup hD hTrialitarian hOne
@@ -633,7 +633,7 @@ theorem conjecture_nonE8_of_typeA_typeB_and_typeD_zeroCycles
       IsSemisimpleSimplyConnected family .F4)
     (g2 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .G2) :
-    H1Conjecture IsPerfectFieldCdAtMostTwo
+    Conjecture IsPerfectFieldCdAtMostTwo
       (NonE8GroupCondition IsSemisimpleSimplyConnected family) :=
   conjecture_nonE8_of_typeA_and_typeB_form_providers
     IsPerfectFieldCdAtMostTwo IsSemisimpleSimplyConnected family

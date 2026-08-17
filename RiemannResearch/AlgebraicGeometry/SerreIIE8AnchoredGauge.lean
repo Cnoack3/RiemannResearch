@@ -11,12 +11,12 @@ import RiemannResearch.GaloisCohomology.LocalGaugeTransporter
 # Anchored-gauge provider for the E8 Serre-II branch
 
 This module connects the exact anchored local-gauge transporter criterion for
-discrete nonabelian first cohomology to the fpqc neutrality-provider interface
+discrete nonabelian first cohomology to the Galois neutrality-provider interface
 used by the Dynkin-family Serre-II assembly.
 
-The comparison with fpqc cohomology is not postulated globally. Instead, each
+The comparison with Galois cohomology is not postulated globally. Instead, each
 presentation contains an explicit reflection implication saying that
-coboundary status of its chosen discrete cocycle neutralizes the fpqc class it
+coboundary status of its chosen discrete cocycle neutralizes the Galois class it
 represents. Constructing these presentations for algebraic E8 torsors remains
 the substantive arithmetic-geometric obligation.
 -/
@@ -74,22 +74,22 @@ end AnchoredGaugePresentation
 /-- Per-class anchored-gauge presentations for every supplied E8 object give
 the exact E8 neutrality provider consumed by the full Dynkin-family assembly.
 
-This theorem does not construct the finite-Galois/fpqc comparison or the E8
+This theorem does not construct the finite-Galois comparison or the E8
 fixed corrections: both occur visibly in AnchoredGaugePresentation. -/
 theorem exactFamilyE8_of_anchoredFixedGaugeCorrections
     (Base : BaseCondition)
     (GroupCondition : GroupCondition)
     (family : DynkinFamilyClassifier)
     (presentations :
-      ∀ (R A : CommRingCat.{x}) [HopfAlgebra R A],
+      ∀ (R A : Type x) [Field R] [CommRing A] [HopfAlgebra R A],
         Base R →
         GroupCondition R A →
         family R A = .E8 →
-        ∀ ξ : FpqcH1.{x, x} R A,
+        ∀ ξ : GaloisH1 R A,
           Nonempty
-            (AnchoredGaugePresentation ξ (FpqcH1.neutral R A))) :
+            (AnchoredGaugePresentation ξ (GaloisH1.neutral R A))) :
     ExactFamilyNeutralityProvider Base GroupCondition family .E8 := by
-  intro R A _ hBase hGroup hE8
+  intro R A _ _ _ hBase hGroup hE8
   refine ⟨?_⟩
   intro ξ η
   obtain ⟨Pξ⟩ := presentations R A hBase hGroup hE8 ξ

@@ -60,7 +60,7 @@ end TypeAForm
 Dynkin family `A`. Constructing it and proving its correctness are separate
 algebraic-group obligations. -/
 abbrev TypeAFormClassifier :=
-  (R A : CommRingCat.{u}) → [HopfAlgebra R A] → TypeAForm
+  (R A : Type u) → [Field R] → [CommRing A] → [HopfAlgebra R A] → TypeAForm
 
 /-- A neutrality provider for selected type-`A_n` forms.
 
@@ -72,12 +72,12 @@ abbrev TypeAFormNeutralityProvider
     (family : DynkinFamilyClassifier)
     (typeAForm : TypeAFormClassifier)
     (Select : TypeAForm → Prop) : Prop :=
-  ∀ (R A : CommRingCat.{u}) [HopfAlgebra R A],
+  ∀ (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A],
     IsPerfectFieldCdAtMostTwo R →
     IsSemisimpleSimplyConnected R A →
     family R A = .A →
     Select (typeAForm R A) →
-    Subsingleton (FpqcH1.{u, u} R A)
+    Subsingleton (GaloisH1 R A)
 
 /-- Inner and outer type-`A_n` neutrality providers, covering all admissible
 ranks, assemble into the exact Dynkin-family-`A` provider. -/
@@ -92,7 +92,7 @@ theorem exactFamilyA_of_typeA_form_providers
       IsSemisimpleSimplyConnected family typeAForm TypeAForm.IsOuter) :
     ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .A := by
-  intro R A _ hField hGroup hA
+  intro R A _ _ _ hField hGroup hA
   rcases TypeAForm.inner_or_outer (typeAForm R A) with hInner | hOuter
   · exact inner R A hField hGroup hA hInner
   · exact outer R A hField hGroup hA hOuter
@@ -122,7 +122,7 @@ theorem conjecture_nonE8_of_typeA_form_providers
       IsSemisimpleSimplyConnected family .F4)
     (g2 : ExactFamilyNeutralityProvider IsPerfectFieldCdAtMostTwo
       IsSemisimpleSimplyConnected family .G2) :
-    H1Conjecture IsPerfectFieldCdAtMostTwo
+    Conjecture IsPerfectFieldCdAtMostTwo
       (NonE8GroupCondition IsSemisimpleSimplyConnected family) :=
   conjecture_nonE8_of_exact_family_providers IsPerfectFieldCdAtMostTwo
     IsSemisimpleSimplyConnected family

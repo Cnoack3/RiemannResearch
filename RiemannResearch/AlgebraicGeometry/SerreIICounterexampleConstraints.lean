@@ -30,7 +30,7 @@ binary-icosahedral table classes `4013`, `4014`, `4015`, and `4017`.
 
 These are necessary conditions relative to the explicit imported reduction
 data. This module does not construct the family classifier, algebraic subgroup
-embeddings, fpqc/Galois comparison, Allen algebra, or `E8` survivor reduction.
+embeddings, Galois comparison, Allen algebra, or `E8` survivor reduction.
 
 Source: user-provided Serre-II counterexample audit. The proofs are logical
 consequences of the kernel-checked reductions in the imported modules.
@@ -51,10 +51,10 @@ theorem nonneutral_family_eq_D_or_E6_or_E7_or_E8
     (c : ExactFamilyNeutralityProvider Base GroupCondition family .C)
     (f4 : ExactFamilyNeutralityProvider Base GroupCondition family .F4)
     (g2 : ExactFamilyNeutralityProvider Base GroupCondition family .G2)
-    (R A : CommRingCat.{u}) [HopfAlgebra R A]
+    (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A]
     (hBase : Base R) (hGroup : GroupCondition R A)
-    (ξ : FpqcH1.{u, u} R A)
-    (hξ : ξ ≠ FpqcH1.neutral R A) :
+    (ξ : GaloisH1 R A)
+    (hξ : ξ ≠ GaloisH1.neutral R A) :
     family R A = .D ∨
       family R A = .E6 ∨
       family R A = .E7 ∨
@@ -65,17 +65,17 @@ theorem nonneutral_family_eq_D_or_E6_or_E7_or_E8
       exact False.elim
         (hξ (@Subsingleton.elim _
           (a R A hBase hGroup hfamily)
-          ξ (FpqcH1.neutral R A)))
+          ξ (GaloisH1.neutral R A)))
   | B =>
       exact False.elim
         (hξ (@Subsingleton.elim _
           (b R A hBase hGroup hfamily)
-          ξ (FpqcH1.neutral R A)))
+          ξ (GaloisH1.neutral R A)))
   | C =>
       exact False.elim
         (hξ (@Subsingleton.elim _
           (c R A hBase hGroup hfamily)
-          ξ (FpqcH1.neutral R A)))
+          ξ (GaloisH1.neutral R A)))
   | D => simp
   | E6 => simp
   | E7 => simp
@@ -84,12 +84,12 @@ theorem nonneutral_family_eq_D_or_E6_or_E7_or_E8
       exact False.elim
         (hξ (@Subsingleton.elim _
           (f4 R A hBase hGroup hfamily)
-          ξ (FpqcH1.neutral R A)))
+          ξ (GaloisH1.neutral R A)))
   | G2 =>
       exact False.elim
         (hξ (@Subsingleton.elim _
           (g2 R A hBase hGroup hfamily)
-          ξ (FpqcH1.neutral R A)))
+          ξ (GaloisH1.neutral R A)))
 
 /-- A type-`D` nonneutral class surviving the nontrialitarian and low-Allen-
 index providers must be trialitarian with Allen index four or eight. -/
@@ -107,11 +107,11 @@ theorem typeD_nonneutral_requires_trialitarian_allenIndex_four_or_eight
       Base GroupCondition family typeDForm allenIndex 1)
     (indexTwo : TrialitarianAllenIndexNeutralityProvider
       Base GroupCondition family typeDForm allenIndex 2)
-    (R A : CommRingCat.{u}) [HopfAlgebra R A]
+    (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A]
     (hBase : Base R) (hGroup : GroupCondition R A)
     (hD : family R A = .D)
-    (ξ : FpqcH1.{u, u} R A)
-    (hξ : ξ ≠ FpqcH1.neutral R A) :
+    (ξ : GaloisH1 R A)
+    (hξ : ξ ≠ GaloisH1.neutral R A) :
     (typeDForm R A).IsTrialitarian ∧
       (allenIndex.index R A = 4 ∨ allenIndex.index R A = 8) := by
   have htrial : (typeDForm R A).IsTrialitarian := by
@@ -120,7 +120,7 @@ theorem typeD_nonneutral_requires_trialitarian_allenIndex_four_or_eight
     · exact False.elim
         (hξ (@Subsingleton.elim _
           (nontrialitarian R A hBase hGroup hD hNon)
-          ξ (FpqcH1.neutral R A)))
+          ξ (GaloisH1.neutral R A)))
     · exact hTri
   refine ⟨htrial, ?_⟩
   rcases indexCases R A hBase hGroup hD htrial with
@@ -128,11 +128,11 @@ theorem typeD_nonneutral_requires_trialitarian_allenIndex_four_or_eight
   · exact False.elim
       (hξ (@Subsingleton.elim _
         (indexOne R A hBase hGroup hD htrial hOne)
-        ξ (FpqcH1.neutral R A)))
+        ξ (GaloisH1.neutral R A)))
   · exact False.elim
       (hξ (@Subsingleton.elim _
         (indexTwo R A hBase hGroup hD htrial hTwo)
-        ξ (FpqcH1.neutral R A)))
+        ξ (GaloisH1.neutral R A)))
   · exact Or.inl hFour
   · exact Or.inr hEight
 
@@ -147,14 +147,14 @@ theorem trialitarian_nonneutral_refutes_coprime_restriction_descent
     (restrictionData : TrialitarianRestrictionDataClassifier)
     (cycles : TrialitarianDegreeOneCycleProvider
       Base GroupCondition family typeDForm restrictionData)
-    (R A : CommRingCat.{u}) [HopfAlgebra R A]
+    (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A]
     (hBase : Base R) (hGroup : GroupCondition R A)
     (hD : family R A = .D)
     (hTrialitarian : (typeDForm R A).IsTrialitarian)
-    (ξ : FpqcH1.{u, u} R A)
-    (hξ : ξ ≠ FpqcH1.neutral R A) :
+    (ξ : GaloisH1 R A)
+    (hξ : ξ ≠ GaloisH1.neutral R A) :
     ¬ CoprimeRestrictionDetectsBasepoint
-      (FpqcH1.neutral R A)
+      (GaloisH1.neutral R A)
       (restrictionData R A).isFinite
       (restrictionData R A).degree
       (restrictionData R A).LocalClass
@@ -189,10 +189,10 @@ theorem nonneutral_family_is_E6_E7_E8_or_highIndexTrialitarianD
       Base GroupCondition family typeDForm allenIndex 1)
     (indexTwo : TrialitarianAllenIndexNeutralityProvider
       Base GroupCondition family typeDForm allenIndex 2)
-    (R A : CommRingCat.{u}) [HopfAlgebra R A]
+    (R A : Type u) [Field R] [CommRing A] [HopfAlgebra R A]
     (hBase : Base R) (hGroup : GroupCondition R A)
-    (ξ : FpqcH1.{u, u} R A)
-    (hξ : ξ ≠ FpqcH1.neutral R A) :
+    (ξ : GaloisH1 R A)
+    (hξ : ξ ≠ GaloisH1.neutral R A) :
     family R A = .E6 ∨
       family R A = .E7 ∨
       family R A = .E8 ∨
