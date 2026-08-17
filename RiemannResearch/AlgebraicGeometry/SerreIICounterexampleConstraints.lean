@@ -230,9 +230,10 @@ structure E8CounterexampleConstraints
     ¬ (D.reduction ξ survivor realizes).HasAnchoredFixedCorrection
   noSolvableIncidenceCertificate :
     IsEmpty (D.reduction ξ survivor realizes).SolvableIncidenceCertificate
-  noTrialitarianCentralReduction :
-    ¬ ∃ P : D4PairCentralReduction.{u, x} ξ neutral,
-      P.HasTrialitarianCorrection
+  noOrbitwiseD4Correction :
+    ∀ (G : D4PairCentralGeometry.{u, x} X neutral)
+      (P : BinaryD4OrbitReduction G ξ survivor),
+      ¬ P.HasRequiredCorrection
   binaryTableClass :
     survivor.IsBinaryIcosahedral →
       survivor.datum.tableClass = 4013 ∨
@@ -264,7 +265,7 @@ theorem E8SurvivorReductionData.counterexampleConstraints_of_ne
       noCommonGauge := ?_
       noAnchoredFixedCorrection := ?_
       noSolvableIncidenceCertificate := ?_
-      noTrialitarianCentralReduction := ?_
+      noOrbitwiseD4Correction := ?_
       binaryTableClass := ?_ }⟩
   · intro hcommon
     exact hξ (P.eq_basepoint_of_commonGauge hcommon)
@@ -273,16 +274,17 @@ theorem E8SurvivorReductionData.counterexampleConstraints_of_ne
       (P.hasCommonGauge_iff_hasAnchoredFixedCorrection.2 hfixed))
   · exact ⟨fun C =>
       hξ (P.eq_basepoint_of_solvableIncidenceCertificate C)⟩
-  · rintro ⟨Q, hQ⟩
-    exact hξ (Q.eq_neutral_of_trialitarianCorrection hQ)
+  · intro G Q hQ
+    exact hξ (Q.eq_neutral_of_requiredCorrection hQ)
   · intro hbinary
     exact
       (E8PerfectCoreSurvivorCase.isBinaryIcosahedral_iff_tableClass
         survivor).1 hbinary
 
 /-- The survivor attached to a counterexample lies either in the explicit
-four-row binary packet and lacks every trialitarian central correction, or in
-the 27-row complement and lacks a common gauge. -/
+four-row binary packet, where every supplied fixed-geometry orbit reduction
+lacks its required correction, or in the 27-row complement and lacks a common
+gauge. -/
 theorem E8CounterexampleConstraints.binary_or_nonbinary
     {X : Type x} {neutral : X}
     {D : E8SurvivorReductionData.{u, x} neutral}
@@ -292,14 +294,15 @@ theorem E8CounterexampleConstraints.binary_or_nonbinary
        C.survivor.datum.tableClass = 4014 ∨
        C.survivor.datum.tableClass = 4015 ∨
        C.survivor.datum.tableClass = 4017) ∧
-      (¬ ∃ P : D4PairCentralReduction.{u, x} ξ neutral,
-        P.HasTrialitarianCorrection)) ∨
+      (∀ (G : D4PairCentralGeometry.{u, x} X neutral)
+        (P : BinaryD4OrbitReduction G ξ C.survivor),
+        ¬ P.HasRequiredCorrection)) ∨
     (¬ C.survivor.IsBinaryIcosahedral ∧
       ¬ (D.reduction ξ C.survivor C.realizes).HasCommonGauge) := by
   by_cases hbinary : C.survivor.IsBinaryIcosahedral
   · exact Or.inl
       ⟨hbinary, C.binaryTableClass hbinary,
-        C.noTrialitarianCentralReduction⟩
+        C.noOrbitwiseD4Correction⟩
   · exact Or.inr ⟨hbinary, C.noCommonGauge⟩
 
 end RiemannResearch.AlgebraicGeometry.SerreII

@@ -237,6 +237,14 @@ The remaining binary proof obligations are:
 5. combine the corrected triality information with the oriented transporter
    constraint to prove BICF.
 
+The Lean interface `BinaryD4OrbitProvider` now mirrors obligations 1--4
+without circular pointwise choices: one fixed central geometry must serve all
+four binary rows, while each realization carries a certified degree-five
+orbit and an explicit inner/cyclic-cubic branch. The finite histogram proves
+only existence of the orbit index. It does not construct the geometry, torsor
+reduction, diagram action, zero-obstruction lift, or cubic correction, and it
+does not imply BICF.
+
 Printed Proposition 6.17 is false in its uniform form: at least one certified
 degree-five orbit has a nonidentity order-three stabilizer acting inside the
 inner \(W(D_4)\times W(D_4)\) image. Research Target 8.2 must therefore be

@@ -67,6 +67,20 @@ projective-A5 row, the degree-five/degree-six gauge factorization is still a
 separate E8 descent problem. The certificate currently settles one singleton
 orbit in `{4015,4017}`; the other eleven diagram actions remain open.
 
+An additional interface audit found that the former existential
+`D4PairCentralReduction` was circular: its quotient types, induction map,
+and reduced class varied with the point, so a corrected package could be
+built exactly when the desired neutrality equality was already available.
+That interface and its downstream theorems have been removed.
+
+The replacement `BinaryD4OrbitProvider` chooses one
+`D4PairCentralGeometry` for the whole pointed set. Each binary realization
+must then select a degree-five orbit from the finite histogram, identify its
+inner or cyclic-cubic action branch, realize the class in the fixed quotient,
+and prove the matching lift/correction. This repairs the theorem boundary but
+does not discharge any of those geometric obligations or the final bilateral
+factorization.
+
 ## Lean found an omitted kernel after Proposition 7.5
 
 Proposition 7.5 itself is correct: a single point fixed by closed subgroups
