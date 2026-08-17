@@ -233,6 +233,20 @@ theorem pairAction_preserves_discriminantGraph_iff
           (discriminantAction σ₁ x.1) at hright
     exact hleft.symm.trans (heval.trans hright)
 
+/-- A pair of D4 triality actions preserves the identity gluing graph exactly
+when the two actions are synchronized.
+
+This is the finite discriminant-form meaning of synchronized D4-by-D4
+triality: independent outer actions do not extend across the diagonal glue
+unless they agree. -/
+theorem pairAction_preserves_identityGraph_iff_synchronized
+    (σ₁ σ₂ : DiagramSymmetry) :
+    (∀ x, x ∈ discriminantGraph 1 →
+      pairDiscriminantAction σ₁ σ₂ x ∈ discriminantGraph 1) ↔
+      σ₂ = σ₁ := by
+  rw [pairAction_preserves_discriminantGraph_iff]
+  simp
+
 /-- The diagonal S3 action preserves the identity gluing graph. -/
 theorem diagonalPairAction_preserves_identityGraph
     (σ : DiagramSymmetry) :
