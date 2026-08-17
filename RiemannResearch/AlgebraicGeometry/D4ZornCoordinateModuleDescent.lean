@@ -5,28 +5,36 @@ Authors: Cnoack3
 -/
 
 import RiemannResearch.AlgebraicGeometry.AffineModuleComonadicBridge
+import RiemannResearch.GaloisCohomology.GaloisSemilinearModuleComonadicDescent
+import RiemannResearch.LinearAlgebra.RootSystem.D4ZornCoordinateGaloisSemilinearModuleDescent
 import RiemannResearch.LinearAlgebra.RootSystem.D4ZornCoordinateTriality
 
 /-!
-# Effective module descent boundary for the D4 coordinate algebra
+# Effective module descent for the D4 coordinate algebra
 
-This module records the exact effective-descent consequence available once a
-chosen Cech module descent datum has been constructed for the scalar-extended
-split-Zorn related-triple coordinate algebra.
+This module first records the effective-descent consequence available from a
+supplied chosen Čech module datum for the scalar-extended split-Zorn
+related-triple coordinate algebra.
 
-Faithful flatness alone then produces a K-module whose scalar extension is the
-underlying L-module of the coordinate algebra. Finite-dimensionality and the
-Galois condition are not needed for this effectiveness step; they belong in a
-future construction of the Cech datum from the semilinear coordinate action.
+For a finite Galois extension, it then constructs that datum canonically from
+the diagram-twisted semilinear Galois action, selects a descended K-module, and
+identifies its scalar extension with the original coordinate module. Thus the
+finite-Galois result no longer assumes a supplied datum or cover isomorphism.
 
 No multiplication, unit, comultiplication, counit, antipode, Hopf identity, or
 represented affine group scheme is descended here.
+
+Source: user-provided D4 semilinear-triality descent program. The construction
+uses the generic comonadic semilinear module descent theorem and the established
+affine Čech/comonadic bridge.
 -/
 
 open CategoryTheory
 
 namespace RiemannResearch.AlgebraicGeometry
 
+open RiemannResearch.GaloisCohomology
+open RiemannResearch.LinearAlgebra.RootSystem.D4Triality
 open RiemannResearch.LinearAlgebra.RootSystem.D4Triality.Zorn
 
 universe u
@@ -66,6 +74,67 @@ theorem relatedTripleCoordinateCechModuleDescent_effective
     (AffineCechModuleDescentData.evaluation
       (CommRingCat.ofHom (algebraMap K L))).mapIso eD
   exact ⟨N, ⟨eL ≪≫ coverIso⟩⟩
+
+/-- The canonical chosen Čech module datum for the diagram-twisted D4
+related-triple coordinate module. -/
+noncomputable def relatedTripleCoordinateGaloisCechModuleDescentData
+    (K L : Type u) [Field K] [Field L] [Algebra K L]
+    [FiniteDimensional K L] [IsGalois K L]
+    (diagram : (L ≃ₐ[K] L) →* DiagramSymmetry) :
+    AffineCechModuleDescentData
+      (CommRingCat.ofHom (algebraMap K L)) :=
+  galoisSemilinearCechModuleDescentData K L
+    (RelatedTripleCoordinateScalarExtension L)
+    (relatedTripleCoordinateGaloisSemilinearModuleAction K L diagram)
+
+/-- The cover object of the canonical D4 Čech datum is the scalar-extended
+related-triple coordinate module. -/
+noncomputable def relatedTripleCoordinateGaloisCechModuleDescentData_coverIso
+    (K L : Type u) [Field K] [Field L] [Algebra K L]
+    [FiniteDimensional K L] [IsGalois K L]
+    (diagram : (L ≃ₐ[K] L) →* DiagramSymmetry) :
+    (relatedTripleCoordinateGaloisCechModuleDescentData
+      K L diagram).obj PUnit.unit ≅
+      relatedTripleCoordinateScalarExtensionModule L :=
+  galoisSemilinearCechModuleDescentData_coverIso K L
+    (RelatedTripleCoordinateScalarExtension L)
+    (relatedTripleCoordinateGaloisSemilinearModuleAction K L diagram)
+
+/-- The canonically selected base-field module descending the diagram-twisted
+D4 related-triple coordinate module. -/
+noncomputable def relatedTripleCoordinateGaloisDescendedModule
+    (K L : Type u) [Field K] [Field L] [Algebra K L]
+    [FiniteDimensional K L] [IsGalois K L]
+    (diagram : (L ≃ₐ[K] L) →* DiagramSymmetry) : ModuleCat K :=
+  galoisSemilinearDescendedModule K L
+    (RelatedTripleCoordinateScalarExtension L)
+    (relatedTripleCoordinateGaloisSemilinearModuleAction K L diagram)
+
+/-- Scalar extension of the canonical descended D4 module recovers the
+scalar-extended related-triple coordinate module. -/
+noncomputable def relatedTripleCoordinateGaloisDescendedModuleBaseChangeIso
+    (K L : Type u) [Field K] [Field L] [Algebra K L]
+    [FiniteDimensional K L] [IsGalois K L]
+    (diagram : (L ≃ₐ[K] L) →* DiagramSymmetry) :
+    (ModuleCat.extendScalars (algebraMap K L)).obj
+        (relatedTripleCoordinateGaloisDescendedModule K L diagram) ≅
+      relatedTripleCoordinateScalarExtensionModule L :=
+  galoisSemilinearDescendedModuleBaseChangeIso K L
+    (RelatedTripleCoordinateScalarExtension L)
+    (relatedTripleCoordinateGaloisSemilinearModuleAction K L diagram)
+
+/-- Finite-Galois diagram-twisted D4 coordinate-module descent is effective
+without a supplied Čech datum or cover identification. -/
+theorem relatedTripleCoordinateGaloisModuleDescent_effective
+    (K L : Type u) [Field K] [Field L] [Algebra K L]
+    [FiniteDimensional K L] [IsGalois K L]
+    (diagram : (L ≃ₐ[K] L) →* DiagramSymmetry) :
+    ∃ N : ModuleCat K,
+      Nonempty ((ModuleCat.extendScalars (algebraMap K L)).obj N ≅
+        relatedTripleCoordinateScalarExtensionModule L) :=
+  ⟨relatedTripleCoordinateGaloisDescendedModule K L diagram,
+    ⟨relatedTripleCoordinateGaloisDescendedModuleBaseChangeIso
+      K L diagram⟩⟩
 
 end
 
