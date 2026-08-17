@@ -255,6 +255,33 @@ theorem diagonalPairAction_preserves_identityGraph
   rw [pairAction_preserves_discriminantGraph_iff]
   simp
 
+/-- Two Galois-style D4 diagram descents preserve the identity E8 glue
+pointwise exactly when their homomorphisms to S3 agree.
+
+This is the group-action form of synchronized D4-by-D4 triality. It treats
+`DiagramDescent` as supplied abstract descent data; constructing the continuous
+absolute-Galois action of an algebraic D4 form is a separate comparison
+problem. -/
+theorem pairDiagramDescent_preserves_identityGraph_iff_synchronized
+    {Γ : Type*} [Group Γ]
+    (D₁ D₂ : DiagramDescent Γ) :
+    (∀ γ : Γ, ∀ x, x ∈ discriminantGraph 1 →
+      pairDiscriminantAction (D₁.action γ) (D₂.action γ) x ∈
+        discriminantGraph 1) ↔
+      D₂.action = D₁.action := by
+  constructor
+  · intro h
+    apply MonoidHom.ext
+    intro γ
+    exact
+      (pairAction_preserves_identityGraph_iff_synchronized
+        (D₁.action γ) (D₂.action γ)).1 (h γ)
+  · intro h γ
+    apply
+      (pairAction_preserves_identityGraph_iff_synchronized
+        (D₁.action γ) (D₂.action γ)).2
+    exact DFunLike.congr_fun h γ
+
 end
 
 end RiemannResearch.LinearAlgebra.RootSystem.D4Triality
