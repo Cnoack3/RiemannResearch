@@ -44,14 +44,36 @@ discharged.
 `SerreIITypeDScalarExtension.lean` can consume the resulting canonical
 `FpqcH1RestrictionSystem`; scalar-extension maps are no longer an open input.
 
+## Continuous finite-stage milestone (2026-08-20)
+
+ContinuousNonabelianCocycle.finite_range proves that every continuous cocycle
+from a compact source to discrete coefficients has finite image.
+ContinuousNonabelianCocycle.exists_finiteQuotientFactorization strengthens this:
+for a profinite source, the cocycle's underlying function factors through a
+finite quotient by an open normal subgroup. Every continuous H¹ class has such
+a representative.
+
+This is the maximal unconditional assembly presently supported. The descended
+function is not yet a finite-stage cocycle: that requires continuity of the
+absolute-Galois action on represented geometric points, passage to the
+open-subgroup fixed-point coefficient group, and compatibility with finite
+Galois extensions and the canonical fpqc comparison.
+
+SerreIIConjecture now uses Mathlib's intrinsic PerfectField and
+Algebra.FiniteType predicates through IsPerfectFieldCondition,
+PerfectCdAtMostTwoCondition, IsFiniteTypeGroupCondition, and
+FiniteTypeGroupCondition. The cohomological-dimension, reductive,
+semisimple, and algebraic simply-connected predicates remain unavailable.
+
 ## Missing field and cohomology foundations
 
-1. An intrinsic predicate on `CommRingCat` for fields, perfect fields, and
-   perfect fields of cohomological dimension at most two.
+1. An intrinsic Galois-cohomological-dimension-at-most-two predicate, including
+   the characteristic-p conventions required by the full conjecture.
 2. Separable and algebraic closures usable functorially in the project.
-3. Absolute Galois groups as profinite groups and continuous discrete modules.
-4. Continuous Galois cohomology, including p-cohomological dimension and the
-   characteristic-p/Kato variants required by the full conjecture.
+3. Continuity of the absolute-Galois action on represented geometric points;
+   the current Hopf-algebra coordinate type is not restricted to finite type.
+4. Descent of continuous cocycles to finite quotients acting on open-subgroup
+   fixed coefficients, with compatibility across finite Galois extensions.
 5. Étale/fppf H² and H³, Tate twists, cup products, and comparison with Galois
    cohomology over fields.
 6. Restriction and corestriction on those groups, transitivity, Mackey laws,

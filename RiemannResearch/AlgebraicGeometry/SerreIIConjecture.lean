@@ -39,6 +39,33 @@ groups in Hopf-algebra coordinates. -/
 abbrev GroupCondition :=
   (K A : Type u) → [Field K] → [CommRing A] → [HopfAlgebra K A] → Prop
 
+/-- The intrinsic perfect-field part of the Serre-II base condition.
+
+Mathlib supplies PerfectField; the Galois-cohomological-dimension bound is
+not yet available as a corresponding intrinsic predicate. -/
+def IsPerfectFieldCondition : BaseCondition :=
+  fun K _ => PerfectField K
+
+/-- Combine Mathlib's intrinsic perfect-field predicate with a supplied
+cohomological-dimension-at-most-two condition. -/
+def PerfectCdAtMostTwoCondition
+    (CdAtMostTwo : BaseCondition) : BaseCondition :=
+  fun K _ => PerfectField K ∧ CdAtMostTwo K
+
+/-- The intrinsic finite-type part of the affine algebraic-group condition.
+
+Finite type is only one necessary part of the usual semisimple simply
+connected reductive hypothesis. Mathlib does not currently provide the
+remaining algebraic-group predicates in Hopf-algebra coordinates. -/
+def IsFiniteTypeGroupCondition : GroupCondition :=
+  fun K A _ _ _ => Algebra.FiniteType K A
+
+/-- Add Mathlib's intrinsic finite-type condition to a supplied algebraic-group
+condition. -/
+def FiniteTypeGroupCondition
+    (Group : GroupCondition) : GroupCondition :=
+  fun K A _ _ _ => Algebra.FiniteType K A ∧ Group K A
+
 /-- **Serre's Conjecture II (open problem).**
 
 If `G` is a simply connected semisimple algebraic group over a perfect field
