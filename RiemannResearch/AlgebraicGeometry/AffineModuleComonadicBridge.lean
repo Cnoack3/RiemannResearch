@@ -2425,6 +2425,139 @@ noncomputable def affineCechDescendedModuleBaseChangeIso
   (AffineCechModuleDescentData.evaluation f).mapIso
     (affineCechDescendedModuleIso f hf D)
 
+/-- A morphism of chosen Čech descent data descends to the selected
+base-ring modules.
+
+This is the morphism-level effective-descent step needed before algebra,
+coaction, and torsor structure maps can be transported. It uses Mathlib's
+full inverse-image operation for an equivalence functor. -/
+noncomputable def affineCechDescendedModuleHom
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    {D E : AffineCechModuleDescentData f} (g : D ⟶ E) :
+    affineCechDescendedModule f hf D ⟶
+      affineCechDescendedModule f hf E := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  exact F.preimage
+    ((affineCechDescendedModuleIso f hf D).hom ≫ g ≫
+      (affineCechDescendedModuleIso f hf E).inv)
+
+/-- Comparing a selected descended morphism recovers the supplied morphism,
+conjugated by the selected object-level comparison isomorphisms. -/
+@[simp] theorem affineCechDescendedModuleHom_comparison
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    {D E : AffineCechModuleDescentData f} (g : D ⟶ E) :
+    (affineCechModuleDescentComparison f).map
+        (affineCechDescendedModuleHom f hf g) =
+      (affineCechDescendedModuleIso f hf D).hom ≫ g ≫
+        (affineCechDescendedModuleIso f hf E).inv := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  exact F.map_preimage _
+
+/-- The selected descent operation preserves identity morphisms. -/
+@[simp] theorem affineCechDescendedModuleHom_id
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D : AffineCechModuleDescentData f) :
+    affineCechDescendedModuleHom f hf (𝟙 D) =
+      𝟙 (affineCechDescendedModule f hf D) := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  apply F.map_injective
+  rw [affineCechDescendedModuleHom_comparison, F.map_id]
+  simp
+  rfl
+
+/-- The selected descent operation preserves composition. -/
+@[simp] theorem affineCechDescendedModuleHom_comp
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    {D E H : AffineCechModuleDescentData f}
+    (g : D ⟶ E) (h : E ⟶ H) :
+    affineCechDescendedModuleHom f hf (g ≫ h) =
+      affineCechDescendedModuleHom f hf g ≫
+        affineCechDescendedModuleHom f hf h := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  apply F.map_injective
+  rw [affineCechDescendedModuleHom_comparison, F.map_comp,
+    affineCechDescendedModuleHom_comparison,
+    affineCechDescendedModuleHom_comparison]
+  simp [Category.assoc]
+
+/-- A descended morphism is uniquely characterized by its comparison square
+on the faithfully flat cover. -/
+theorem affineCechDescendedModuleHom_unique
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    {D E : AffineCechModuleDescentData f} (g : D ⟶ E)
+    (q : affineCechDescendedModule f hf D ⟶
+      affineCechDescendedModule f hf E)
+    (hq : (affineCechModuleDescentComparison f).map q ≫
+        (affineCechDescendedModuleIso f hf E).hom =
+      (affineCechDescendedModuleIso f hf D).hom ≫ g) :
+    q = affineCechDescendedModuleHom f hf g := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  apply F.map_injective
+  rw [affineCechDescendedModuleHom_comparison]
+  apply (cancel_mono (affineCechDescendedModuleIso f hf E).hom).1
+  simpa [Category.assoc] using hq
+
+/-- After base change, the selected descended morphism is the supplied cover
+morphism conjugated by the selected base-change isomorphisms. -/
+@[simp] theorem affineCechDescendedModuleHom_baseChange
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    {D E : AffineCechModuleDescentData f} (g : D ⟶ E) :
+    (ModuleCat.extendScalars f.hom).map
+        (affineCechDescendedModuleHom f hf g) =
+      (affineCechDescendedModuleBaseChangeIso f hf D).hom ≫
+        g.hom PUnit.unit ≫
+          (affineCechDescendedModuleBaseChangeIso f hf E).inv := by
+  change (AffineCechModuleDescentData.evaluation f).map
+    ((affineCechModuleDescentComparison f).map
+      (affineCechDescendedModuleHom f hf g)) = _
+  rw [affineCechDescendedModuleHom_comparison]
+  rfl
+
+/-- The selected object and morphism descent operations form a functor. -/
+noncomputable def affineCechDescendedModuleFunctor
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat) :
+    AffineCechModuleDescentData f ⥤ ModuleCat R where
+  obj := affineCechDescendedModule f hf
+  map := affineCechDescendedModuleHom f hf
+  map_id := affineCechDescendedModuleHom_id f hf
+  map_comp := affineCechDescendedModuleHom_comp f hf
+
+/-- The selected descent functor followed by comparison is naturally
+isomorphic to the identity on chosen Čech module descent data. -/
+noncomputable def affineCechDescendedModuleComparisonIso
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat) :
+    affineCechDescendedModuleFunctor f hf ⋙
+        affineCechModuleDescentComparison f ≅
+      𝟭 (AffineCechModuleDescentData f) :=
+  NatIso.ofComponents
+    (fun D => affineCechDescendedModuleIso f hf D)
+    (by
+      intro D E g
+      change (affineCechModuleDescentComparison f).map
+          (affineCechDescendedModuleHom f hf g) ≫
+            (affineCechDescendedModuleIso f hf E).hom =
+        (affineCechDescendedModuleIso f hf D).hom ≫ g
+      rw [affineCechDescendedModuleHom_comparison]
+      simp [Category.assoc])
+
 /-- Affine modules satisfy singleton faithfully flat descent. -/
 theorem affineModulePseudofunctor_isStackFor_singleton
     {R A : CommRingCat.{u}} (f : R ⟶ A)
