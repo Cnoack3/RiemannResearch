@@ -132,8 +132,11 @@ transition map and the inclusion of fixed coefficient groups. -/
 end Refinement
 
 /-- Restrict an action-compatible factorization to a smaller open normal
-kernel. -/
-def pullbackToSubgroup
+kernel.
+
+This is an abbreviation so that its subgroup projection reduces to the
+specified subgroup inside dependent coefficient and action instances. -/
+abbrev pullbackToSubgroup
     (D : ActionCompatibleFiniteQuotientFactorization a)
     (H : OpenNormalSubgroup Γ) (hH : H ≤ D.subgroup) :
     ActionCompatibleFiniteQuotientFactorization a := by
@@ -159,6 +162,80 @@ def pullbackToSubgroup
   refine ⟨⟨H, htriv, descended, ?_⟩, hfix⟩
   intro σ
   exact QuotientGroup.quotient_liftOn_mk (fun σ => a σ) _ σ
+
+local instance (H : OpenNormalSubgroup Γ) : (H : Subgroup Γ).Normal :=
+  H.isNormal'
+
+local instance (H : OpenNormalSubgroup Γ) :
+    MulDistribMulAction (Γ ⧸ (H : Subgroup Γ))
+      (FixedPoints.subgroup H G) :=
+  MulDistribMulAction.instQuotientSubgroupSubtypeMemSubgroup
+
+/-- The canonical finite quotient cocycle attached directly to an explicit
+open normal subgroup on which a continuous cocycle is trivial and whose
+action fixes the cocycle range. Keeping the subgroup explicit gives a common
+coefficient and quotient type when comparing different representatives. -/
+def descendedCocycleAtSubgroup
+    (a : ContinuousNonabelianCocycle Γ G)
+    (H : OpenNormalSubgroup Γ)
+    (htriv : ∀ h : H, a h.1 = 1)
+    (hfix : ∀ h : H, ∀ σ : Γ, h.1 • a σ = a σ) :
+    NonabelianCocycle (Γ ⧸ (H : Subgroup Γ))
+      (FixedPoints.subgroup H G) := by
+  have hinv : ∀ (σ : Γ) (h : H), a (σ * h.1) = a σ := by
+    intro σ h
+    rw [a.1.map_mul', htriv h]
+    simp
+  let descended : Γ ⧸ (H : Subgroup Γ) → G :=
+    fun q => Quotient.liftOn' q (fun σ => a σ) (by
+      intro x y hxy
+      have hmem : x⁻¹ * y ∈ (H : Subgroup Γ) :=
+        QuotientGroup.leftRel_apply.mp hxy
+      let h : H := ⟨x⁻¹ * y, hmem⟩
+      have hmul : x * h.1 = y := by
+        simp [h]
+      rw [← hmul, hinv x h])
+  refine
+    { toFun := fun q =>
+        ⟨descended q, by
+          refine Quotient.inductionOn' q ?_
+          intro σ
+          exact (FixedPoints.mem_subgroup H G (a σ)).2
+            (fun h => hfix h σ)⟩
+      map_mul' := ?_ }
+  intro q r
+  refine Quotient.inductionOn₂' q r ?_
+  intro σ τ
+  apply Subtype.ext
+  change descended (QuotientGroup.mk (σ * τ)) =
+    descended (QuotientGroup.mk σ) * σ • descended (QuotientGroup.mk τ)
+  change a (σ * τ) = a σ * σ • a τ
+  exact a.1.map_mul' σ τ
+
+/-- Evaluation of the canonical explicit-subgroup cocycle on a quotient
+class represented by an element of the profinite source. -/
+@[simp] theorem coe_descendedCocycleAtSubgroup_mk
+    (a : ContinuousNonabelianCocycle Γ G)
+    (H : OpenNormalSubgroup Γ)
+    (htriv : ∀ h : H, a h.1 = 1)
+    (hfix : ∀ h : H, ∀ σ : Γ, h.1 • a σ = a σ)
+    (σ : Γ) :
+    ((descendedCocycleAtSubgroup a H htriv hfix
+      (QuotientGroup.mk σ) : FixedPoints.subgroup H G) : G) = a σ := by
+  rfl
+
+/-- The explicit-subgroup descent recovers the descent stored in an
+action-compatible factorization when specialized to its subgroup. -/
+theorem descendedCocycleAtSubgroup_eq_descendedCocycle
+    (D : ActionCompatibleFiniteQuotientFactorization a) :
+    descendedCocycleAtSubgroup a D.subgroup D.trivial_on D.fixes_range =
+      D.descendedCocycle := by
+  apply NonabelianCocycle.ext
+  intro q
+  refine Quotient.inductionOn' q ?_
+  intro σ
+  apply Subtype.ext
+  rw [coe_descendedCocycleAtSubgroup_mk, D.coe_descendedCocycle_mk]
 
 /-- A common action-compatible refinement of any two finite-stage
 factorizations of the same cocycle. -/

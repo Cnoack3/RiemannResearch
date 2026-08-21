@@ -144,6 +144,24 @@ def finiteGaloisDoubleOverlapSectionMulEquiv :
         (finiteGaloisDoubleOverlapIso K L).symm.op)).trans
     (finiteGaloisTensorPointMulEquiv K L A).symm
 
+set_option maxHeartbeats 800000 in
+/-- Converting a chosen double-overlap section to tensor coordinates and back
+is literal precomposition with the inverse overlap isomorphism. -/
+theorem finiteGaloisDoubleOverlapSectionMulEquiv_specMap
+    (s : (finiteGaloisAffineGroupPresheaf K A).obj
+      (Opposite.op
+        (finiteGaloisCoverObject K L ⨯ finiteGaloisCoverObject K L))) :
+    (finiteGaloisDoubleOverlapIso K L).inv ≫ s =
+      _root_.AlgebraicGeometry.Spec.mapMulEquiv
+        (finiteGaloisDoubleOverlapSectionMulEquiv K L A s) := by
+  change
+    (finiteGaloisAffineGroupPresheaf K A).map
+        (finiteGaloisDoubleOverlapIso K L).symm.op.hom s =
+      finiteGaloisTensorPointMulEquiv K L A
+        (finiteGaloisDoubleOverlapSectionMulEquiv K L A s)
+  simp [finiteGaloisDoubleOverlapSectionMulEquiv, grpIsoToMulEquiv]
+
+
 /-- The chosen right-associated triple product of the finite-Galois covering
 object is canonically the affine spectrum of
 `L ⊗[K] (L ⊗[K] L)`. -/

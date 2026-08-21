@@ -406,6 +406,130 @@ theorem finiteStageDescendedCocycle_pullback
               (D.descendedCocycle (QuotientGroup.mk σ)))
     _ = a σ := D.coe_descendedCocycle_mk σ
 
+local instance (H : OpenNormalSubgroup (Field.absoluteGaloisGroup K)) :
+    (H : Subgroup (Field.absoluteGaloisGroup K)).Normal :=
+  H.isNormal'
+
+local instance (H : OpenNormalSubgroup (Field.absoluteGaloisGroup K)) :
+    MulDistribMulAction
+      (Field.absoluteGaloisGroup K ⧸
+        (H : Subgroup (Field.absoluteGaloisGroup K)))
+      (FixedPoints.subgroup H (AlgebraicGroupGeometricPoints K A)) :=
+  MulDistribMulAction.instQuotientSubgroupSubtypeMemSubgroup
+
+/-- The coefficient equivalence attached directly to an explicit open normal
+subgroup. -/
+def finiteStageCoefficientEquivAtSubgroup
+    (H : OpenNormalSubgroup (Field.absoluteGaloisGroup K)) :
+    FixedPoints.subgroup H (AlgebraicGroupGeometricPoints K A) ≃*
+      AffineGaloisPoint K (fixedField K H) A :=
+  fixedGeometricPointMulEquivFixedFieldPoint K H A
+
+/-- The fixed-field point inclusion intertwines the explicit quotient action
+with the finite Galois action. -/
+theorem fixedFieldPointToFixedGeometricPoint_smulAtSubgroup
+    (H : OpenNormalSubgroup (Field.absoluteGaloisGroup K))
+    (q : Field.absoluteGaloisGroup K ⧸
+      (H : Subgroup (Field.absoluteGaloisGroup K)))
+    (f : AffineGaloisPoint K (fixedField K H) A) :
+    fixedFieldPointToFixedGeometricPoint K H A
+        (quotientEquivGaloisGroup K H q • f) =
+      q • fixedFieldPointToFixedGeometricPoint K H A f := by
+  refine Quotient.inductionOn' q ?_
+  intro σ
+  apply Subtype.ext
+  apply (geometricPointCoordinateEquiv K A).injective
+  change geometricPointToCoordinate K A
+      (fixedFieldPointToGeometricPoint K H A
+        (quotientEquivGaloisGroup K H (QuotientGroup.mk σ) • f)) =
+    geometricPointToCoordinate K A
+      (σ • fixedFieldPointToGeometricPoint K H A f)
+  rw [geometricPointToCoordinate_smul,
+    geometricPointToCoordinate_fixedFieldPointToGeometricPoint,
+    geometricPointToCoordinate_fixedFieldPointToGeometricPoint]
+  apply AlgHom.ext
+  intro x
+  change (fixedField K H).val
+      ((quotientEquivGaloisGroup K H (QuotientGroup.mk σ)) (f.ofConv x)) =
+    σ.toAlgHom ((fixedField K H).val (f.ofConv x))
+  rw [quotientEquivGaloisGroup_mk]
+  exact AlgEquiv.restrictNormalHom_apply (fixedField K H) σ (f.ofConv x)
+
+/-- The explicit-subgroup coefficient equivalence is equivariant. -/
+theorem finiteStageCoefficientEquivAtSubgroup_smul
+    (H : OpenNormalSubgroup (Field.absoluteGaloisGroup K))
+    (q : Field.absoluteGaloisGroup K ⧸
+      (H : Subgroup (Field.absoluteGaloisGroup K)))
+    (x : FixedPoints.subgroup H (AlgebraicGroupGeometricPoints K A)) :
+    finiteStageCoefficientEquivAtSubgroup K A H (q • x) =
+      quotientEquivGaloisGroup K H q •
+        finiteStageCoefficientEquivAtSubgroup K A H x := by
+  apply (fixedFieldPointMulEquivFixedGeometricPoint K H A).injective
+  change fixedFieldPointMulEquivFixedGeometricPoint K H A
+      ((fixedFieldPointMulEquivFixedGeometricPoint K H A).symm (q • x)) =
+    fixedFieldPointMulEquivFixedGeometricPoint K H A
+      (quotientEquivGaloisGroup K H q •
+        (fixedFieldPointMulEquivFixedGeometricPoint K H A).symm x)
+  rw [(fixedFieldPointMulEquivFixedGeometricPoint K H A).apply_symm_apply]
+  change q • x = fixedFieldPointToFixedGeometricPoint K H A
+    (quotientEquivGaloisGroup K H q •
+      (fixedFieldPointMulEquivFixedGeometricPoint K H A).symm x)
+  rw [fixedFieldPointToFixedGeometricPoint_smulAtSubgroup,
+    show fixedFieldPointToFixedGeometricPoint K H A
+      ((fixedFieldPointMulEquivFixedGeometricPoint K H A).symm x) = x by
+      exact
+        (fixedFieldPointMulEquivFixedGeometricPoint K H A).apply_symm_apply x]
+
+/-- Transport of the canonical explicit-subgroup quotient cocycle to the
+finite Galois fixed field. -/
+def finiteStageDescendedCocycleAtSubgroup
+    (a : ContinuousNonabelianCocycle
+      (Field.absoluteGaloisGroup K) (AlgebraicGroupGeometricPoints K A))
+    (H : OpenNormalSubgroup (Field.absoluteGaloisGroup K))
+    (htriv : ∀ h : H, a h.1 = 1)
+    (hfix : ∀ h : H, ∀ σ : Field.absoluteGaloisGroup K,
+      h.1 • a σ = a σ) :
+    NonabelianCocycle ((fixedField K H) ≃ₐ[K] (fixedField K H))
+      (AffineGaloisPoint K (fixedField K H) A) where
+  toFun := fun τ =>
+    finiteStageCoefficientEquivAtSubgroup K A H
+      (descendedCocycleAtSubgroup a H htriv hfix
+        ((quotientEquivGaloisGroup K H).symm τ))
+  map_mul' := by
+    intro σ τ
+    let eQ := quotientEquivGaloisGroup K H
+    let eG := finiteStageCoefficientEquivAtSubgroup K A H
+    let c := descendedCocycleAtSubgroup a H htriv hfix
+    calc
+      eG (c (eQ.symm (σ * τ))) =
+          eG (c (eQ.symm σ * eQ.symm τ)) := by rw [map_mul]
+      _ = eG (c (eQ.symm σ) * eQ.symm σ • c (eQ.symm τ)) := by
+            rw [c.map_mul']
+      _ = eG (c (eQ.symm σ)) *
+          eG (eQ.symm σ • c (eQ.symm τ)) := by rw [map_mul]
+      _ = eG (c (eQ.symm σ)) *
+          eQ (eQ.symm σ) • eG (c (eQ.symm τ)) := by
+            rw [finiteStageCoefficientEquivAtSubgroup_smul]
+      _ = eG (c (eQ.symm σ)) *
+          σ • eG (c (eQ.symm τ)) := by rw [eQ.apply_symm_apply]
+
+/-- The explicit-subgroup transport specializes to the finite-stage
+transport stored by a factorization. -/
+theorem finiteStageDescendedCocycleAtSubgroup_eq
+    (D : ActionCompatibleFiniteQuotientFactorization a) :
+    finiteStageDescendedCocycleAtSubgroup K A a D.subgroup
+        D.trivial_on D.fixes_range =
+      finiteStageDescendedCocycle K A D := by
+  apply NonabelianCocycle.ext
+  intro τ
+  change finiteStageCoefficientEquivAtSubgroup K A D.subgroup
+      (descendedCocycleAtSubgroup a D.subgroup D.trivial_on D.fixes_range
+        ((quotientEquivGaloisGroup K D.subgroup).symm τ)) =
+    finiteStageCoefficientEquivAtSubgroup K A D.subgroup
+      (D.descendedCocycle
+        ((quotientEquivGaloisGroup K D.subgroup).symm τ))
+  rw [descendedCocycleAtSubgroup_eq_descendedCocycle]
+
 end GaloisH1
 
 end
