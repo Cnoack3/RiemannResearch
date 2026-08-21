@@ -47,17 +47,33 @@ discharged.
 ## Continuous finite-stage milestone (2026-08-20)
 
 ContinuousNonabelianCocycle.finite_range proves that every continuous cocycle
-from a compact source to discrete coefficients has finite image.
-ContinuousNonabelianCocycle.exists_finiteQuotientFactorization strengthens this:
-for a profinite source, the cocycle's underlying function factors through a
-finite quotient by an open normal subgroup. Every continuous H¹ class has such
-a representative.
+from a compact source to discrete coefficients has finite image. The new
+AlgebraicGroupGaloisContinuity module identifies represented geometric points
+with coordinate algebra maps, proves that a point of a finite-type affine
+group is defined over a finite intermediate field, and deduces that its
+absolute-Galois stabilizer is open. Consequently the natural action on the
+discrete represented geometric-point group is continuous.
 
-This is the maximal unconditional assembly presently supported. The descended
-function is not yet a finite-stage cocycle: that requires continuity of the
-absolute-Galois action on represented geometric points, passage to the
-open-subgroup fixed-point coefficient group, and compatibility with finite
-Galois extensions and the canonical fpqc comparison.
+ContinuousNonabelianCocycle.exists_actionCompatibleFiniteQuotientFactorization
+then intersects the identity fiber with the pointwise stabilizer of the finite
+cocycle image and chooses an open normal subgroup inside it. The resulting
+kernel both kills the cocycle and fixes every cocycle value.
+ActionCompatibleFiniteQuotientFactorization.descendedCocycle uses Mathlib's
+quotient action on the fixed-point group to construct a genuine nonabelian
+cocycle on Γ/H with coefficients in G^H; coe_descendedCocycle_mk proves that
+its pullback is the original cocycle pointwise. Every continuous H¹ class has
+a representative with this finite-level descent.
+
+For a perfect base field, AbsoluteGaloisOpenNormalSubgroup.fixedField is finite
+Galois, and quotientEquivGaloisGroup canonically identifies the quotient Γ/H
+with the automorphism group of that fixed field.
+
+Thus continuity of the represented-point action, fixed-point coefficient
+descent, the finite-level cocycle identity, and the individual finite-Galois
+realization are now discharged. The remaining comparison work is to make these
+identifications functorial, prove compatibility across
+refinements, connect the finite-level cocycle to the canonical fpqc fixed-cover
+comparison, and assemble the resulting global continuous-H¹ comparison.
 
 SerreIIConjecture now uses Mathlib's intrinsic PerfectField and
 Algebra.FiniteType predicates through IsPerfectFieldCondition,
@@ -70,10 +86,11 @@ semisimple, and algebraic simply-connected predicates remain unavailable.
 1. An intrinsic Galois-cohomological-dimension-at-most-two predicate, including
    the characteristic-p conventions required by the full conjecture.
 2. Separable and algebraic closures usable functorially in the project.
-3. Continuity of the absolute-Galois action on represented geometric points;
-   the current Hopf-algebra coordinate type is not restricted to finite type.
-4. Descent of continuous cocycles to finite quotients acting on open-subgroup
-   fixed coefficients, with compatibility across finite Galois extensions.
+3. Functorial identification of open normal subgroups and their fixed-point
+   coefficient groups with chosen finite Galois intermediate extensions.
+4. Compatibility of the finite-level cocycles across subgroup refinement and
+   with the canonical finite-Galois fpqc fixed-cover comparison, followed by
+   the global continuous-H¹ comparison.
 5. Étale/fppf H² and H³, Tate twists, cup products, and comparison with Galois
    cohomology over fields.
 6. Restriction and corestriction on those groups, transitivity, Mackey laws,
@@ -110,8 +127,9 @@ fpqc torsor.
    current interface correctly assumes `Module.Flat R A`, supplies a canonical
    torsor self-cover, and proves consequences of a classifier, but Mathlib does
    not yet supply the needed scheme-valued effective descent equivalence.
-2. Pass from finite quotients and fixed covers to continuous absolute-Galois
-   H¹ and prove compatibility with pullback of torsors.
+2. Complete refinement compatibility for the finite-level cocycles and pass
+   the fixed-cover comparison to continuous absolute-Galois H¹ with
+   torsor-pullback compatibility.
 3. Add functoriality under homomorphisms of group schemes, twisting
    equivalences, and exact sequences of pointed sets.
 
