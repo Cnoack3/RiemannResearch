@@ -292,6 +292,54 @@ def finiteGaloisCanonicalH1EquivNonabelian
     K L (CommRingCat.of A) (AffineGaloisPoint K L A)
       (finiteGaloisFpqcGaloisCechComparison K L A)
 
+/-- The canonical finite-Galois cocycle comparison is pointed: the trivial
+fixed-cover Čech cocycle is sent to the trivial Galois cocycle. -/
+@[simp] theorem finiteGaloisFixedCoverCocycleEquiv_one
+    (K L A : Type u)
+    [Field K] [Field L] [Algebra K L]
+    [CommRing A] [HopfAlgebra K A]
+    [FiniteDimensional K L] [IsGalois K L] :
+    finiteGaloisFixedCoverCocycleEquiv K L A
+      (1 : PresheafOfGroups.OneCocycle
+        (finiteGaloisAffineGroupPresheaf K A)
+        (fun _ : PUnit.{1} => finiteGaloisCoverObject K L)) =
+      (GaloisCechCocycle.trivial :
+        GaloisCechCocycle (L ≃ₐ[K] L) (AffineGaloisPoint K L A)) := by
+  apply GaloisCechCocycle.ext
+  intro σ
+  change
+    finiteGaloisDoubleOverlapGaloisMulEquiv K L A
+      ((singletonOneCochainMulEquiv
+        (finiteGaloisAffineGroupPresheaf K A)
+        (finiteGaloisCoverObject K L))
+        (1 : PresheafOfGroups.OneCochain
+          (finiteGaloisAffineGroupPresheaf K A)
+          (fun _ : PUnit.{1} => finiteGaloisCoverObject K L))) σ = 1
+  rw [map_one, map_one]
+  rfl
+
+/-- The canonical finite-Galois fixed-cover equivalence preserves the
+distinguished neutral classes. -/
+@[simp] theorem finiteGaloisCanonicalH1EquivNonabelian_neutral
+    (K L A : Type u)
+    [Field K] [Field L] [Algebra K L]
+    [CommRing A] [HopfAlgebra K A]
+    [FiniteDimensional K L] [IsGalois K L] :
+    finiteGaloisCanonicalH1EquivNonabelian K L A
+      (FpqcCechH1.neutral (CommRingCat.of K) (CommRingCat.of A)
+        (finiteGaloisFpqcCover K L)) =
+      (NonabelianH1.neutral :
+        NonabelianH1 (L ≃ₐ[K] L) (AffineGaloisPoint K L A)) := by
+  rw [FpqcCechH1.neutral_eq_trivialCocycleClass]
+  change
+    NonabelianH1.classOf
+      (galoisCechCocycleEquiv (L ≃ₐ[K] L) (AffineGaloisPoint K L A)
+        (finiteGaloisFixedCoverCocycleEquiv K L A 1)) =
+      (NonabelianH1.neutral :
+        NonabelianH1 (L ≃ₐ[K] L) (AffineGaloisPoint K L A))
+  rw [finiteGaloisFixedCoverCocycleEquiv_one]
+  rfl
+
 end
 
 end RiemannResearch.GaloisCohomology
