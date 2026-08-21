@@ -310,6 +310,29 @@ def geometricPointCoordinateEquiv :
   left_inv := coordinateToGeometricPoint_geometricPointToCoordinate K A
   right_inv := geometricPointToCoordinate_coordinateToGeometricPoint K A
 
+/-- The represented geometric-point group is multiplicatively equivalent to
+its coordinate-algebra presentation. This strengthens the plain coordinate
+equivalence by recording compatibility with the Hopf-algebra group law. -/
+def geometricPointCoordinateMulEquiv :
+    AlgebraicGroupGeometricPoints K A ≃*
+      WithConv (CoordinateGeometricPoint K A) := by
+  change
+    (((_root_.AlgebraicGeometry.Spec
+        (CommRingCat.of (AlgebraicClosure K))).asOver
+          (_root_.AlgebraicGeometry.Spec (CommRingCat.of K))) ⟶
+      ((_root_.AlgebraicGeometry.Spec (CommRingCat.of A)).asOver
+        (_root_.AlgebraicGeometry.Spec (CommRingCat.of K)))) ≃*
+      WithConv (A →ₐ[K] AlgebraicClosure K)
+  exact _root_.AlgebraicGeometry.Spec.mapMulEquiv.symm
+
+/-- The multiplicative coordinate equivalence has the same underlying
+coordinate map as `geometricPointCoordinateEquiv`. -/
+@[simp] theorem geometricPointCoordinateMulEquiv_apply
+    (x : AlgebraicGroupGeometricPoints K A) :
+    (geometricPointCoordinateMulEquiv K A x).ofConv =
+      geometricPointToCoordinate K A x := by
+  rfl
+
 /-- The represented-point/coordinate-point equivalence is equivariant for the
 absolute-Galois actions. -/
 theorem geometricPointToCoordinate_smul
@@ -444,6 +467,176 @@ absolute Galois group. -/
 abbrev fixedField : IntermediateField K (AlgebraicClosure K) :=
   IntermediateField.fixedField
     (H : Subgroup (Field.absoluteGaloisGroup K))
+
+section FixedFieldPoints
+
+variable (A : Type u) [CommRing A] [HopfAlgebra K A]
+
+/-- Geometric points fixed by an open normal subgroup of the absolute Galois
+group. -/
+abbrev FixedGeometricPointGroup :=
+  FixedPoints.subgroup H (AlgebraicGroupGeometricPoints K A)
+
+/-- Include affine points over the fixed field into coordinate points over
+the algebraic closure. -/
+def fixedFieldCoordinateInclusion :
+    WithConv (A →ₐ[K] fixedField K H) →*
+      WithConv (A →ₐ[K] AlgebraicClosure K) where
+  toFun f :=
+    WithConv.toConv ((fixedField K H).val.comp f.ofConv)
+  map_one' := by
+    apply WithConv.ofConv_injective
+    rfl
+  map_mul' f g := by
+    apply WithConv.ofConv_injective
+    exact AlgHom.comp_convMul_distrib (fixedField K H).val f g
+
+/-- Include fixed-field affine points into represented geometric points. -/
+def fixedFieldPointToGeometricPoint :
+    WithConv (A →ₐ[K] fixedField K H) →*
+      AlgebraicGroupGeometricPoints K A :=
+  (geometricPointCoordinateMulEquiv K A).symm.toMonoidHom.comp
+    (fixedFieldCoordinateInclusion K H A)
+
+/-- Coordinate formula for the fixed-field inclusion. -/
+@[simp] theorem geometricPointToCoordinate_fixedFieldPointToGeometricPoint
+    (f : WithConv (A →ₐ[K] fixedField K H)) :
+    geometricPointToCoordinate K A
+        (fixedFieldPointToGeometricPoint K H A f) =
+      (fixedField K H).val.comp f.ofConv := by
+  change
+    ((geometricPointCoordinateMulEquiv K A)
+      ((geometricPointCoordinateMulEquiv K A).symm
+        (fixedFieldCoordinateInclusion K H A f))).ofConv = _
+  rw [MulEquiv.apply_symm_apply]
+  rfl
+
+/-- The multiplicative coordinate equivalence sends the represented
+fixed-field point back to its included coordinate map. -/
+@[simp] theorem geometricPointCoordinateMulEquiv_fixedFieldPointToGeometricPoint
+    (f : WithConv (A →ₐ[K] fixedField K H)) :
+    geometricPointCoordinateMulEquiv K A
+        (fixedFieldPointToGeometricPoint K H A f) =
+      fixedFieldCoordinateInclusion K H A f := by
+  change
+    (geometricPointCoordinateMulEquiv K A)
+        ((geometricPointCoordinateMulEquiv K A).symm
+          (fixedFieldCoordinateInclusion K H A f)) =
+      fixedFieldCoordinateInclusion K H A f
+  exact (geometricPointCoordinateMulEquiv K A).apply_symm_apply _
+
+/-- A fixed-field affine point is fixed by the chosen open normal subgroup
+after inclusion into the algebraic closure. -/
+theorem fixedFieldPointToGeometricPoint_mem_fixed
+    (f : WithConv (A →ₐ[K] fixedField K H)) :
+    fixedFieldPointToGeometricPoint K H A f ∈
+      FixedPoints.subgroup H (AlgebraicGroupGeometricPoints K A) := by
+  apply (FixedPoints.mem_subgroup H _ _).2
+  intro h
+  apply (geometricPointCoordinateEquiv K A).injective
+  change
+    geometricPointToCoordinate K A
+        (h.1 • fixedFieldPointToGeometricPoint K H A f) =
+      geometricPointToCoordinate K A
+        (fixedFieldPointToGeometricPoint K H A f)
+  rw [geometricPointToCoordinate_smul,
+    geometricPointToCoordinate_fixedFieldPointToGeometricPoint]
+  apply AlgHom.ext
+  intro x
+  have hfix :=
+    (IntermediateField.mem_fixedField_iff
+      (H : Subgroup (Field.absoluteGaloisGroup K))
+      ((fixedField K H).val (f.ofConv x))).mp (f.ofConv x).2
+  exact hfix h.1 h.2
+
+/-- The multiplicative inclusion of fixed-field points with its codomain
+restricted to the subgroup of invariant geometric points. -/
+def fixedFieldPointToFixedGeometricPoint :
+    WithConv (A →ₐ[K] fixedField K H) →*
+      FixedGeometricPointGroup K H A :=
+  (fixedFieldPointToGeometricPoint K H A).codRestrict _
+    (fixedFieldPointToGeometricPoint_mem_fixed K H A)
+
+/-- Inclusion of fixed-field coordinate maps into algebraic-closure
+coordinate maps is injective. -/
+theorem fixedFieldCoordinateInclusion_injective :
+    Function.Injective (fixedFieldCoordinateInclusion K H A) := by
+  intro f g hfg
+  apply WithConv.ofConv_injective
+  apply AlgHom.ext
+  intro x
+  apply Subtype.ext
+  exact congrArg
+    (fun q : WithConv (A →ₐ[K] AlgebraicClosure K) => q.ofConv x) hfg
+
+/-- The fixed-field point inclusion is injective. -/
+theorem fixedFieldPointToFixedGeometricPoint_injective :
+    Function.Injective (fixedFieldPointToFixedGeometricPoint K H A) := by
+  intro f g hfg
+  apply fixedFieldCoordinateInclusion_injective K H A
+  have hgeom := congrArg Subtype.val hfg
+  change
+    (geometricPointCoordinateMulEquiv K A).symm
+        (fixedFieldCoordinateInclusion K H A f) =
+      (geometricPointCoordinateMulEquiv K A).symm
+        (fixedFieldCoordinateInclusion K H A g) at hgeom
+  exact (geometricPointCoordinateMulEquiv K A).symm.injective hgeom
+
+/-- Every invariant geometric point is defined over the fixed field. -/
+theorem fixedFieldPointToFixedGeometricPoint_surjective :
+    Function.Surjective (fixedFieldPointToFixedGeometricPoint K H A) := by
+  intro x
+  have hrange : ∀ y : A,
+      (geometricPointCoordinateMulEquiv K A x.1).ofConv y ∈ fixedField K H := by
+    intro y
+    rw [IntermediateField.mem_fixedField_iff
+      (H : Subgroup (Field.absoluteGaloisGroup K))]
+    intro σ hσ
+    let h : H := ⟨σ, hσ⟩
+    have hxfix :=
+      (FixedPoints.mem_subgroup H (AlgebraicGroupGeometricPoints K A) x.1).1
+        x.2 h
+    have hcoord := congrArg (geometricPointToCoordinate K A) hxfix
+    change
+      geometricPointToCoordinate K A (h.1 • x.1) =
+        geometricPointToCoordinate K A x.1 at hcoord
+    rw [geometricPointToCoordinate_smul] at hcoord
+    exact congrArg (fun f : A →ₐ[K] AlgebraicClosure K => f y) hcoord
+  let f : WithConv (A →ₐ[K] fixedField K H) :=
+    WithConv.toConv
+      (AlgHom.codRestrict
+        (geometricPointCoordinateMulEquiv K A x.1).ofConv
+        (fixedField K H).toSubalgebra hrange)
+  refine ⟨f, ?_⟩
+  apply Subtype.ext
+  apply (geometricPointCoordinateMulEquiv K A).injective
+  change
+    geometricPointCoordinateMulEquiv K A
+        (fixedFieldPointToGeometricPoint K H A f) =
+      geometricPointCoordinateMulEquiv K A x.1
+  rw [geometricPointCoordinateMulEquiv_fixedFieldPointToGeometricPoint]
+  apply WithConv.ofConv_injective
+  apply AlgHom.ext
+  intro y
+  rfl
+
+/-- Affine points over the finite fixed field are multiplicatively equivalent
+to the geometric points fixed by its absolute-Galois kernel. -/
+def fixedFieldPointMulEquivFixedGeometricPoint :
+    WithConv (A →ₐ[K] fixedField K H) ≃*
+      FixedGeometricPointGroup K H A :=
+  MulEquiv.ofBijective (fixedFieldPointToFixedGeometricPoint K H A)
+    ⟨fixedFieldPointToFixedGeometricPoint_injective K H A,
+      fixedFieldPointToFixedGeometricPoint_surjective K H A⟩
+
+/-- The orientation used to transport kernel-fixed cocycle coefficients to
+finite-field affine points. -/
+def fixedGeometricPointMulEquivFixedFieldPoint :
+    FixedGeometricPointGroup K H A ≃*
+      WithConv (A →ₐ[K] fixedField K H) :=
+  (fixedFieldPointMulEquivFixedGeometricPoint K H A).symm
+
+end FixedFieldPoints
 
 /-- Infinite Galois correspondence recovers the original open normal subgroup
 from its fixed field. -/

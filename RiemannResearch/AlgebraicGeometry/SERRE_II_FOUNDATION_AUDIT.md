@@ -44,7 +44,7 @@ discharged.
 `SerreIITypeDScalarExtension.lean` can consume the resulting canonical
 `FpqcH1RestrictionSystem`; scalar-extension maps are no longer an open input.
 
-## Continuous finite-stage milestone (2026-08-20)
+## Continuous finite-stage refinement milestone (2026-08-21)
 
 ContinuousNonabelianCocycle.finite_range proves that every continuous cocycle
 from a compact source to discrete coefficients has finite image. The new
@@ -68,12 +68,18 @@ For a perfect base field, AbsoluteGaloisOpenNormalSubgroup.fixedField is finite
 Galois, and quotientEquivGaloisGroup canonically identifies the quotient Γ/H
 with the automorphism group of that fixed field.
 
-Thus continuity of the represented-point action, fixed-point coefficient
-descent, the finite-level cocycle identity, and the individual finite-Galois
-realization are now discharged. The remaining comparison work is to make these
-identifications functorial, prove compatibility across
-refinements, connect the finite-level cocycle to the canonical fpqc fixed-cover
-comparison, and assemble the resulting global continuous-H¹ comparison.
+`ContinuousNonabelianH1Refinement` now supplies quotient and fixed-coefficient
+transition maps, their identity and composition laws, pointwise compatibility
+of descended cocycles, and a common refinement of any two stages.
+`AlgebraicGroupFiniteStage` transports this system through the finite Galois
+fixed fields, including the Galois restriction square and affine-point
+extension. `ContinuousFiniteStageFpqc` gives every chosen stage an explicit
+canonical finite-Galois fixed-cover representative and proves agreement with
+`finiteGaloisCanonicalH1EquivNonabelian` and
+`finiteGaloisToGlobalFpqcH1`. The remaining comparison work is fixed-cover
+naturality under field enlargement, class-level choice independence, fpqc
+cofinality/effectivity, construction of the global pointed equivalence, and
+torsor-pullback compatibility.
 
 SerreIIConjecture now uses Mathlib's intrinsic PerfectField and
 Algebra.FiniteType predicates through IsPerfectFieldCondition,
@@ -86,11 +92,11 @@ semisimple, and algebraic simply-connected predicates remain unavailable.
 1. An intrinsic Galois-cohomological-dimension-at-most-two predicate, including
    the characteristic-p conventions required by the full conjecture.
 2. Separable and algebraic closures usable functorially in the project.
-3. Functorial identification of open normal subgroups and their fixed-point
-   coefficient groups with chosen finite Galois intermediate extensions.
-4. Compatibility of the finite-level cocycles across subgroup refinement and
-   with the canonical finite-Galois fpqc fixed-cover comparison, followed by
-   the global continuous-H¹ comparison.
+3. Naturality of the canonical finite-Galois fpqc fixed-cover comparison under
+   inclusions of the finite fixed fields constructed from subgroup refinements.
+4. Invariance under finite-stage and cocycle-representative choices, followed
+   by finite-Galois cofinality/effectivity and construction of the global
+   continuous-Galois/fpqc H¹ equivalence.
 5. Étale/fppf H² and H³, Tate twists, cup products, and comparison with Galois
    cohomology over fields.
 6. Restriction and corestriction on those groups, transitivity, Mackey laws,
