@@ -379,6 +379,177 @@ theorem relatedTripleCoordinateGaloisSelectedAntipodeDescentMap_cover
   exact relatedTripleCoordinateGaloisCechAntipodeDescentMap_hom
     K L diagram
 
+set_option maxRecDepth 4000 in
+/-- After identifying the right-associated selected triple tensor with the
+ordinary right-associated cover tensor, applying multiplication in the inner
+right pair and then once more is exactly the ordinary nested coordinate
+multiplication. -/
+theorem relatedTripleCoordinateGaloisSelectedMulRightNestedCover
+    (K L : Type u) [Field K] [Field L] [Algebra K L]
+    [FiniteDimensional K L] [IsGalois K L]
+    (diagram : (L ≃ₐ[K] L) →* DiagramSymmetry) :
+    let f := CommRingCat.ofHom (algebraMap K L)
+    let hf := galoisFieldAlgebraMap_faithfullyFlat K L
+    let D := relatedTripleCoordinateGaloisCechModuleDescentData K L diagram
+    let mul := relatedTripleCoordinateGaloisSelectedMulDescentMap K L diagram
+    let eR := affineCechSelectedTensorRightAssociatedCoverIso f hf D D D
+    let muA := ModuleCat.ofHom
+      (galoisAlgebraMultiplicationLinearMap L (RelatedTripleCoordinateScalarExtension L))
+    eR.inv ≫ (affineCechSelectedTensorMap f hf (𝟙 D) mul).hom PUnit.unit ≫
+        mul.hom PUnit.unit =
+      ModuleCat.ofHom (TensorProduct.map LinearMap.id
+        (galoisAlgebraMultiplicationLinearMap L
+          (RelatedTripleCoordinateScalarExtension L))) ≫ muA := by
+  dsimp only
+  let f := CommRingCat.ofHom (algebraMap K L)
+  let hf := galoisFieldAlgebraMap_faithfullyFlat K L
+  let D := relatedTripleCoordinateGaloisCechModuleDescentData K L diagram
+  let mul := relatedTripleCoordinateGaloisSelectedMulDescentMap K L diagram
+  let T := affineCechSelectedTensorDescentData f hf D D
+  let DA : ModuleCat L := (AffineCechModuleDescentData.evaluation f).obj D
+  let TA : ModuleCat L := (AffineCechModuleDescentData.evaluation f).obj T
+  let eT : TA ≅ ModuleCat.of L (TensorProduct L DA DA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf D D
+  let cR : (AffineCechModuleDescentData.evaluation f).obj
+      (affineCechSelectedTensorDescentData f hf D T) ≅
+      ModuleCat.of L (TensorProduct L DA TA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf D T
+  let qR := (TensorProduct.congr (LinearEquiv.refl L DA)
+      eT.toLinearEquiv).toModuleIso
+  let eR := affineCechSelectedTensorRightAssociatedCoverIso f hf D D D
+  let mulA : TA ⟶ DA := mul.hom PUnit.unit
+  let muA : ModuleCat.of L (TensorProduct L DA DA) ⟶ DA :=
+    ModuleCat.ofHom
+      (galoisAlgebraMultiplicationLinearMap L (RelatedTripleCoordinateScalarExtension L))
+  let tm := (affineCechSelectedTensorMap f hf (𝟙 D) mul).hom PUnit.unit
+  let mapm : ModuleCat.of L (TensorProduct L DA TA) ⟶
+      ModuleCat.of L (TensorProduct L DA DA) :=
+    ModuleCat.ofHom
+      (TensorProduct.map
+        (ModuleCat.Hom.hom ((AffineCechModuleDescentData.evaluation f).map (𝟙 D)))
+        (ModuleCat.Hom.hom ((AffineCechModuleDescentData.evaluation f).map mul)))
+  have hm : eT.inv ≫ mulA = muA := by
+    exact relatedTripleCoordinateGaloisSelectedMulDescentMap_cover K L diagram
+  have hn : tm ≫ eT.hom = cR.hom ≫ mapm := by
+    exact affineCechSelectedTensorDescentDataCoverIso_natural f hf (𝟙 D) mul
+  have h1 := congrArg (fun z => qR.inv ≫ cR.inv ≫ z ≫ eT.inv ≫
+    mulA) hn
+  have h2 := congrArg (fun z => qR.inv ≫ z ≫ eT.inv ≫ mulA)
+    (cR.inv_hom_id_assoc mapm)
+  have h3 := congrArg (fun z => qR.inv ≫ mapm ≫ z) hm
+  change eR.inv ≫ tm ≫ mulA =
+      ModuleCat.ofHom (TensorProduct.map LinearMap.id
+        (galoisAlgebraMultiplicationLinearMap L
+          (RelatedTripleCoordinateScalarExtension L))) ≫ muA
+  change (qR.inv ≫ cR.inv) ≫ tm ≫ mulA = _
+  rw [← eT.hom_inv_id_assoc (mulA)]
+  simp only [Category.assoc]
+  refine h1.trans (h2.trans (h3.trans ?_))
+  let std :
+      ModuleCat.of L (TensorProduct L DA (TensorProduct L DA DA)) ⟶
+        ModuleCat.of L (TensorProduct L DA DA) :=
+    ModuleCat.ofHom (TensorProduct.map LinearMap.id (ModuleCat.Hom.hom muA))
+  have hpre : qR.inv ≫ mapm = std := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul x y =>
+        change (show DA from x) ⊗ₜ[L]
+            ModuleCat.Hom.hom (eT.inv ≫ mulA) y =
+          (show DA from x) ⊗ₜ[L] ModuleCat.Hom.hom muA y
+        rw [hm]
+    | add x y hx hy => simp only [map_add, hx, hy]
+  have hpost := congrArg (fun z => z ≫ muA) hpre
+  exact (Category.assoc qR.inv mapm muA).symm.trans hpost
+
+set_option maxRecDepth 4000 in
+/-- After identifying the left-associated selected triple tensor with the
+ordinary left-associated cover tensor, applying multiplication in the inner
+left pair and then once more is exactly the ordinary nested coordinate
+multiplication. -/
+theorem relatedTripleCoordinateGaloisSelectedMulLeftNestedCover
+    (K L : Type u) [Field K] [Field L] [Algebra K L]
+    [FiniteDimensional K L] [IsGalois K L]
+    (diagram : (L ≃ₐ[K] L) →* DiagramSymmetry) :
+    let f := CommRingCat.ofHom (algebraMap K L)
+    let hf := galoisFieldAlgebraMap_faithfullyFlat K L
+    let D := relatedTripleCoordinateGaloisCechModuleDescentData K L diagram
+    let mul := relatedTripleCoordinateGaloisSelectedMulDescentMap K L diagram
+    let eL := affineCechSelectedTensorLeftAssociatedCoverIso f hf D D D
+    let muA := ModuleCat.ofHom
+      (galoisAlgebraMultiplicationLinearMap L (RelatedTripleCoordinateScalarExtension L))
+    eL.inv ≫ (affineCechSelectedTensorMap f hf mul (𝟙 D)).hom PUnit.unit ≫
+        mul.hom PUnit.unit =
+      ModuleCat.ofHom (TensorProduct.map
+        (galoisAlgebraMultiplicationLinearMap L
+          (RelatedTripleCoordinateScalarExtension L)) LinearMap.id) ≫ muA := by
+  dsimp only
+  let f := CommRingCat.ofHom (algebraMap K L)
+  let hf := galoisFieldAlgebraMap_faithfullyFlat K L
+  let D := relatedTripleCoordinateGaloisCechModuleDescentData K L diagram
+  let mul := relatedTripleCoordinateGaloisSelectedMulDescentMap K L diagram
+  let T := affineCechSelectedTensorDescentData f hf D D
+  let DA : ModuleCat L := (AffineCechModuleDescentData.evaluation f).obj D
+  let TA : ModuleCat L := (AffineCechModuleDescentData.evaluation f).obj T
+  let eT : TA ≅ ModuleCat.of L (TensorProduct L DA DA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf D D
+  let cL : (AffineCechModuleDescentData.evaluation f).obj
+      (affineCechSelectedTensorDescentData f hf T D) ≅
+      ModuleCat.of L (TensorProduct L TA DA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf T D
+  let qL := (TensorProduct.congr eT.toLinearEquiv
+      (LinearEquiv.refl L DA)).toModuleIso
+  let eL := affineCechSelectedTensorLeftAssociatedCoverIso f hf D D D
+  let mulA : TA ⟶ DA := mul.hom PUnit.unit
+  let muA : ModuleCat.of L (TensorProduct L DA DA) ⟶ DA :=
+    ModuleCat.ofHom
+      (galoisAlgebraMultiplicationLinearMap L (RelatedTripleCoordinateScalarExtension L))
+  let tm := (affineCechSelectedTensorMap f hf mul (𝟙 D)).hom PUnit.unit
+  let mapm : ModuleCat.of L (TensorProduct L TA DA) ⟶
+      ModuleCat.of L (TensorProduct L DA DA) :=
+    ModuleCat.ofHom
+      (TensorProduct.map
+        (ModuleCat.Hom.hom ((AffineCechModuleDescentData.evaluation f).map mul))
+        (ModuleCat.Hom.hom ((AffineCechModuleDescentData.evaluation f).map (𝟙 D))))
+  have hm : eT.inv ≫ mulA = muA := by
+    exact relatedTripleCoordinateGaloisSelectedMulDescentMap_cover K L diagram
+  have hn : tm ≫ eT.hom = cL.hom ≫ mapm := by
+    exact affineCechSelectedTensorDescentDataCoverIso_natural f hf mul (𝟙 D)
+  have h1 := congrArg (fun z => qL.inv ≫ cL.inv ≫ z ≫ eT.inv ≫
+    mulA) hn
+  have h2 := congrArg (fun z => qL.inv ≫ z ≫ eT.inv ≫ mulA)
+    (cL.inv_hom_id_assoc mapm)
+  have h3 := congrArg (fun z => qL.inv ≫ mapm ≫ z) hm
+  change eL.inv ≫ tm ≫ mulA =
+      ModuleCat.ofHom (TensorProduct.map
+        (galoisAlgebraMultiplicationLinearMap L
+          (RelatedTripleCoordinateScalarExtension L)) LinearMap.id) ≫ muA
+  change (qL.inv ≫ cL.inv) ≫ tm ≫ mulA = _
+  rw [← eT.hom_inv_id_assoc (mulA)]
+  simp only [Category.assoc]
+  refine h1.trans (h2.trans (h3.trans ?_))
+  let std :
+      ModuleCat.of L (TensorProduct L (TensorProduct L DA DA) DA) ⟶
+        ModuleCat.of L (TensorProduct L DA DA) :=
+    ModuleCat.ofHom (TensorProduct.map (ModuleCat.Hom.hom muA) LinearMap.id)
+  have hpre : qL.inv ≫ mapm = std := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul x y =>
+        change
+          ModuleCat.Hom.hom (eT.inv ≫ mulA) x ⊗ₜ[L] (show DA from y) =
+            ModuleCat.Hom.hom muA x ⊗ₜ[L] (show DA from y)
+        rw [hm]
+    | add x y hx hy => simp only [map_add, hx, hy]
+  have hpost := congrArg (fun z => z ≫ muA) hpre
+  exact (Category.assoc qL.inv mapm muA).symm.trans hpost
+
+
 end
 
 end RiemannResearch.AlgebraicGeometry
