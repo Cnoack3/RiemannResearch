@@ -18,10 +18,11 @@ extension over tensor products.
 
 This supplies the tensor comparison needed before descending algebra and Hopf
 structure maps, together with morphism-level functoriality and naturality.
-It also constructs the selected associator and tensor unit, proves exact
-cover-level formulas for the associator and both unitors, and packages the
-unitors as natural isomorphisms.  Symmetry and the remaining coherence laws
-are not asserted here.
+It also constructs the selected associator, tensor unit, and symmetry, proves
+exact cover-level formulas for the associator, both unitors, and symmetry, and
+packages the unitors and symmetry as natural isomorphisms.  The associator is
+natural, and the pentagon, triangle, hexagon, and symmetry-involutivity laws
+are verified explicitly.  Monoidal typeclass packaging is not asserted here.
 -/
 
 @[expose] public section
@@ -1651,5 +1652,914 @@ noncomputable def affineCechSelectedTensorRightUnitorNatIso
     (by
       intro D E g
       exact affineCechSelectedTensorRightUnitorIso_natural f hf g)
+
+/-- The standard base-ring tensor swap between the selected descended
+modules. -/
+noncomputable def affineCechSelectedTensorSymmetryBaseIso
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E : AffineCechModuleDescentData f) :
+    ModuleCat.of R
+        (TensorProduct R
+          (affineCechDescendedModule f hf D)
+          (affineCechDescendedModule f hf E)) ≅
+      ModuleCat.of R
+        (TensorProduct R
+          (affineCechDescendedModule f hf E)
+          (affineCechDescendedModule f hf D)) :=
+  (TensorProduct.comm R
+    (affineCechDescendedModule f hf D)
+    (affineCechDescendedModule f hf E)).toModuleIso
+
+/-- The selected-datum tensor symmetry obtained by transporting the standard
+base-ring tensor swap through affine Čech comparison. -/
+noncomputable def affineCechSelectedTensorSymmetryIso
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E : AffineCechModuleDescentData f) :
+    affineCechSelectedTensorDescentData f hf D E ≅
+      affineCechSelectedTensorDescentData f hf E D :=
+  (affineCechModuleDescentComparison f).mapIso
+    (affineCechSelectedTensorSymmetryBaseIso f hf D E)
+
+/-- The standard tensor swap between the two supplied cover modules. -/
+noncomputable def affineCechSelectedTensorSymmetryCoverIso
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (D E : AffineCechModuleDescentData f) :
+    ModuleCat.of A
+        (TensorProduct A
+          ((AffineCechModuleDescentData.evaluation f).obj D)
+          ((AffineCechModuleDescentData.evaluation f).obj E)) ≅
+      ModuleCat.of A
+        (TensorProduct A
+          ((AffineCechModuleDescentData.evaluation f).obj E)
+          ((AffineCechModuleDescentData.evaluation f).obj D)) :=
+  (TensorProduct.comm A
+    ((AffineCechModuleDescentData.evaluation f).obj D)
+    ((AffineCechModuleDescentData.evaluation f).obj E)).toModuleIso
+
+set_option maxHeartbeats 1600000 in
+-- Two tensor inductions and scalar balancing identify the transported swap.
+set_option linter.style.haveILetI false in
+/-- Under the selected cover comparisons, the descended tensor symmetry is
+exactly the standard cover-module tensor swap. -/
+theorem affineCechSelectedTensorSymmetryIso_cover
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E : AffineCechModuleDescentData f) :
+    (affineCechSelectedTensorSymmetryIso f hf D E).hom.hom PUnit.unit ≫
+        (affineCechSelectedTensorDescentDataCoverIso f hf E D).hom =
+      (affineCechSelectedTensorDescentDataCoverIso f hf D E).hom ≫
+        (affineCechSelectedTensorSymmetryCoverIso f D E).hom := by
+  letI : Algebra R A := f.hom.toAlgebra
+  let MD := affineCechDescendedModule f hf D
+  let ME := affineCechDescendedModule f hf E
+  let DA : ModuleCat A := (AffineCechModuleDescentData.evaluation f).obj D
+  let EA : ModuleCat A := (AffineCechModuleDescentData.evaluation f).obj E
+  let bD := affineCechDescendedModuleBaseChangeIso f hf D
+  let bE := affineCechDescendedModuleBaseChangeIso f hf E
+  let bDE := affineCechDescendedTensorBaseChangeIso f hf D E
+  let bED := affineCechDescendedTensorBaseChangeIso f hf E D
+  let L : TensorProduct R A (TensorProduct R MD ME) →ₗ[A]
+      TensorProduct A EA DA :=
+    ModuleCat.Hom.hom
+      ((affineCechSelectedTensorSymmetryIso f hf D E).hom.hom PUnit.unit ≫
+        (affineCechSelectedTensorDescentDataCoverIso f hf E D).hom)
+  let K : TensorProduct R A (TensorProduct R MD ME) →ₗ[A]
+      TensorProduct A EA DA :=
+    ModuleCat.Hom.hom
+      ((affineCechSelectedTensorDescentDataCoverIso f hf D E).hom ≫
+        (affineCechSelectedTensorSymmetryCoverIso f D E).hom)
+  apply ModuleCat.hom_ext
+  change L = K
+  apply LinearMap.ext
+  intro x
+  induction x using TensorProduct.induction_on with
+  | zero => simp only [map_zero]
+  | tmul a z =>
+      induction z using TensorProduct.induction_on with
+      | zero => simp only [TensorProduct.tmul_zero, map_zero]
+      | tmul m n =>
+          dsimp [L, K]
+          rw [show
+            (affineCechSelectedTensorSymmetryIso f hf D E).hom.hom
+                PUnit.unit =
+              (ModuleCat.extendScalars f.hom).map
+                (affineCechSelectedTensorSymmetryBaseIso f hf D E).hom
+            from rfl]
+          change
+            ModuleCat.Hom.hom bED.hom
+                (ModuleCat.Hom.hom
+                  ((ModuleCat.extendScalars f.hom).map
+                    (affineCechSelectedTensorSymmetryBaseIso f hf D E).hom)
+                  (a ⊗ₜ[R] (m ⊗ₜ[R] n))) =
+              (TensorProduct.comm A DA EA)
+                (ModuleCat.Hom.hom bDE.hom
+                  (a ⊗ₜ[R] (m ⊗ₜ[R] n)))
+          rw [affineCechModuleHom_baseChange_tmul]
+          change
+            ModuleCat.Hom.hom bED.hom (a ⊗ₜ[R] (n ⊗ₜ[R] m)) =
+              (TensorProduct.comm A DA EA)
+                (ModuleCat.Hom.hom bDE.hom (a ⊗ₜ[R] (m ⊗ₜ[R] n)))
+          rw [affineCechDescendedTensorBaseChangeIso_hom_tmul,
+            affineCechDescendedTensorBaseChangeIso_hom_tmul,
+            TensorProduct.comm_tmul]
+          let qD : TensorProduct R A MD →ₗ[A] DA :=
+            ModuleCat.Hom.hom bD.hom
+          let qE : TensorProduct R A ME →ₗ[A] EA :=
+            ModuleCat.Hom.hom bE.hom
+          have hD :
+              qD (a ⊗ₜ[R] m) = a • qD ((1 : A) ⊗ₜ[R] m) := by
+            have htensor :
+                a ⊗ₜ[R] m = a • ((1 : A) ⊗ₜ[R] m) := by
+              simpa only [smul_eq_mul, mul_one] using
+                (TensorProduct.smul_tmul' (R := R) (R' := A)
+                  a (1 : A) m).symm
+            calc
+              qD (a ⊗ₜ[R] m) =
+                  qD (a • ((1 : A) ⊗ₜ[R] m)) := congrArg qD htensor
+              _ = a • qD ((1 : A) ⊗ₜ[R] m) := qD.map_smul _ _
+          have hE :
+              qE (a ⊗ₜ[R] n) = a • qE ((1 : A) ⊗ₜ[R] n) := by
+            have htensor :
+                a ⊗ₜ[R] n = a • ((1 : A) ⊗ₜ[R] n) := by
+              simpa only [smul_eq_mul, mul_one] using
+                (TensorProduct.smul_tmul' (R := R) (R' := A)
+                  a (1 : A) n).symm
+            calc
+              qE (a ⊗ₜ[R] n) =
+                  qE (a • ((1 : A) ⊗ₜ[R] n)) := congrArg qE htensor
+              _ = a • qE ((1 : A) ⊗ₜ[R] n) := qE.map_smul _ _
+          change
+            qE (a ⊗ₜ[R] n) ⊗ₜ[A] qD ((1 : A) ⊗ₜ[R] m) =
+              qE ((1 : A) ⊗ₜ[R] n) ⊗ₜ[A] qD (a ⊗ₜ[R] m)
+          rw [hE, hD]
+          exact TensorProduct.smul_tmul _ _ _
+      | add x y hx hy =>
+          simp only [TensorProduct.tmul_add, map_add, hx, hy]
+  | add x y hx hy => simp only [map_add, hx, hy]
+
+/-- The base tensor symmetries are natural in both descent data. -/
+theorem affineCechSelectedTensorSymmetryBaseIso_natural
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    {D D' E E' : AffineCechModuleDescentData f}
+    (g : D ⟶ D') (h : E ⟶ E') :
+    affineCechDescendedTensorMap f hf g h ≫
+        (affineCechSelectedTensorSymmetryBaseIso f hf D' E').hom =
+      (affineCechSelectedTensorSymmetryBaseIso f hf D E).hom ≫
+        affineCechDescendedTensorMap f hf h g := by
+  let MD := affineCechDescendedModule f hf D
+  let ME := affineCechDescendedModule f hf E
+  let p : MD →ₗ[R] affineCechDescendedModule f hf D' :=
+    ModuleCat.Hom.hom (affineCechDescendedModuleHom f hf g)
+  let q : ME →ₗ[R] affineCechDescendedModule f hf E' :=
+    ModuleCat.Hom.hom (affineCechDescendedModuleHom f hf h)
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  intro z
+  induction z using TensorProduct.induction_on with
+  | zero => simp only [map_zero]
+  | tmul m n =>
+      change (TensorProduct.comm R _ _)
+          (TensorProduct.map p q (m ⊗ₜ[R] n)) =
+        TensorProduct.map q p
+          ((TensorProduct.comm R _ _) (m ⊗ₜ[R] n))
+      simp only [TensorProduct.comm_tmul, TensorProduct.map_tmul]
+  | add x y hx hy => simp only [map_add, hx, hy]
+
+/-- The selected-datum tensor symmetries are natural in both arguments. -/
+theorem affineCechSelectedTensorSymmetryIso_natural
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    {D D' E E' : AffineCechModuleDescentData f}
+    (g : D ⟶ D') (h : E ⟶ E') :
+    affineCechSelectedTensorMap f hf g h ≫
+        (affineCechSelectedTensorSymmetryIso f hf D' E').hom =
+      (affineCechSelectedTensorSymmetryIso f hf D E).hom ≫
+        affineCechSelectedTensorMap f hf h g := by
+  let F := affineCechModuleDescentComparison f
+  change
+    F.map (affineCechDescendedTensorMap f hf g h) ≫
+        F.map (affineCechSelectedTensorSymmetryBaseIso f hf D' E').hom =
+      F.map (affineCechSelectedTensorSymmetryBaseIso f hf D E).hom ≫
+        F.map (affineCechDescendedTensorMap f hf h g)
+  rw [← F.map_comp,
+    affineCechSelectedTensorSymmetryBaseIso_natural f hf g h,
+    F.map_comp]
+
+/-- Swapping the two base tensor factors twice is the identity. -/
+theorem affineCechSelectedTensorSymmetryBaseIso_hom_comp
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E : AffineCechModuleDescentData f) :
+    (affineCechSelectedTensorSymmetryBaseIso f hf D E).hom ≫
+        (affineCechSelectedTensorSymmetryBaseIso f hf E D).hom =
+      𝟙 (ModuleCat.of R
+        (TensorProduct R
+          (affineCechDescendedModule f hf D)
+          (affineCechDescendedModule f hf E))) := by
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  intro z
+  induction z using TensorProduct.induction_on with
+  | zero => simp only [map_zero]
+  | tmul m n =>
+      change
+        (TensorProduct.comm R _ _)
+            ((TensorProduct.comm R _ _) (m ⊗ₜ[R] n)) =
+          m ⊗ₜ[R] n
+      rw [TensorProduct.comm_tmul, TensorProduct.comm_tmul]
+  | add x y hx hy => simp only [map_add, hx, hy]
+
+/-- Swapping the two selected tensor factors twice is the identity. -/
+theorem affineCechSelectedTensorSymmetryIso_hom_comp
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E : AffineCechModuleDescentData f) :
+    (affineCechSelectedTensorSymmetryIso f hf D E).hom ≫
+        (affineCechSelectedTensorSymmetryIso f hf E D).hom =
+      𝟙 (affineCechSelectedTensorDescentData f hf D E) := by
+  let F := affineCechModuleDescentComparison f
+  change
+    F.map (affineCechSelectedTensorSymmetryBaseIso f hf D E).hom ≫
+        F.map (affineCechSelectedTensorSymmetryBaseIso f hf E D).hom =
+      𝟙 (F.obj (ModuleCat.of R
+        (TensorProduct R
+          (affineCechDescendedModule f hf D)
+          (affineCechDescendedModule f hf E))))
+  rw [← F.map_comp,
+    affineCechSelectedTensorSymmetryBaseIso_hom_comp f hf D E,
+    F.map_id]
+
+/-- The selected tensor bifunctor with its two factors exchanged. -/
+noncomputable def affineCechSelectedTensorSwapFunctor
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat) :
+    (AffineCechModuleDescentData f × AffineCechModuleDescentData f) ⥤
+      AffineCechModuleDescentData f where
+  obj X := affineCechSelectedTensorDescentData f hf X.2 X.1
+  map g := affineCechSelectedTensorMap f hf g.2 g.1
+  map_id X := affineCechSelectedTensorMap_id f hf X.2 X.1
+  map_comp g h :=
+    affineCechSelectedTensorMap_comp f hf g.2 h.2 g.1 h.1
+
+/-- The selected tensor symmetry forms a natural isomorphism from the tensor
+bifunctor to the factor-swapped tensor bifunctor. -/
+noncomputable def affineCechSelectedTensorSymmetryNatIso
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat) :
+    affineCechSelectedTensorFunctor f hf ≅
+      affineCechSelectedTensorSwapFunctor f hf :=
+  NatIso.ofComponents
+    (fun X => affineCechSelectedTensorSymmetryIso f hf X.1 X.2)
+    (by
+      intro X Y g
+      exact affineCechSelectedTensorSymmetryIso_natural f hf g.1 g.2)
+
+/-- Comparing the chosen preimage isomorphism recovers the selected
+object-level comparison isomorphism. -/
+theorem affineCechDescendedComparisonObjIso_hom_comparison
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat) (M : ModuleCat R) :
+    (affineCechModuleDescentComparison f).map
+        (affineCechDescendedComparisonObjIso f hf M).hom =
+      (affineCechDescendedModuleIso f hf
+        ((affineCechModuleDescentComparison f).obj M)).hom := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  exact F.map_preimage _
+
+/-- Comparing the inverse chosen preimage isomorphism recovers the inverse
+selected object-level comparison isomorphism. -/
+theorem affineCechDescendedComparisonObjIso_inv_comparison
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat) (M : ModuleCat R) :
+    (affineCechModuleDescentComparison f).map
+        (affineCechDescendedComparisonObjIso f hf M).inv =
+      (affineCechDescendedModuleIso f hf
+        ((affineCechModuleDescentComparison f).obj M)).inv := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  exact F.map_preimage _
+
+/-- Descending a morphism already in the image of affine Čech comparison
+conjugates it by the two chosen preimage isomorphisms. -/
+theorem affineCechDescendedModuleHom_of_comparison_map
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat) {M N : ModuleCat R}
+    (q : M ⟶ N) :
+    affineCechDescendedModuleHom f hf
+        ((affineCechModuleDescentComparison f).map q) =
+      (affineCechDescendedComparisonObjIso f hf M).hom ≫ q ≫
+        (affineCechDescendedComparisonObjIso f hf N).inv := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  apply F.map_injective
+  rw [affineCechDescendedModuleHom_comparison, F.map_comp, F.map_comp,
+    affineCechDescendedComparisonObjIso_hom_comparison,
+    affineCechDescendedComparisonObjIso_inv_comparison]
+
+/-- Descending the selected left unitor recovers its base map after the
+selected tensor preimage comparison. -/
+theorem affineCechDescendedModuleHom_leftUnitorIso_hom
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D : AffineCechModuleDescentData f) :
+    affineCechDescendedModuleHom f hf
+        (affineCechSelectedTensorLeftUnitorIso f hf D).hom =
+      (affineCechSelectedTensorDescendedIso f hf
+          (affineCechSelectedTensorUnitDescentData f) D).hom ≫
+        (affineCechSelectedTensorLeftUnitorBaseIso f hf D).hom := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  let U := affineCechSelectedTensorUnitDescentData f
+  let M := ModuleCat.of R
+    (TensorProduct R
+      (affineCechDescendedModule f hf U)
+      (affineCechDescendedModule f hf D))
+  apply F.map_injective
+  rw [affineCechDescendedModuleHom_comparison, F.map_comp]
+  change
+    (affineCechDescendedModuleIso f hf (F.obj M)).hom ≫
+        (F.map (affineCechSelectedTensorLeftUnitorBaseIso f hf D).hom ≫
+          (affineCechDescendedModuleIso f hf D).hom) ≫
+        (affineCechDescendedModuleIso f hf D).inv =
+      F.map (affineCechDescendedComparisonObjIso f hf M).hom ≫
+        F.map (affineCechSelectedTensorLeftUnitorBaseIso f hf D).hom
+  rw [affineCechDescendedComparisonObjIso_hom_comparison]
+  simp only [Category.assoc, Iso.hom_inv_id, Category.comp_id]
+  rfl
+
+/-- Descending the selected right unitor recovers its base map after the
+selected tensor preimage comparison. -/
+theorem affineCechDescendedModuleHom_rightUnitorIso_hom
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D : AffineCechModuleDescentData f) :
+    affineCechDescendedModuleHom f hf
+        (affineCechSelectedTensorRightUnitorIso f hf D).hom =
+      (affineCechSelectedTensorDescendedIso f hf D
+          (affineCechSelectedTensorUnitDescentData f)).hom ≫
+        (affineCechSelectedTensorRightUnitorBaseIso f hf D).hom := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  let U := affineCechSelectedTensorUnitDescentData f
+  let M := ModuleCat.of R
+    (TensorProduct R
+      (affineCechDescendedModule f hf D)
+      (affineCechDescendedModule f hf U))
+  apply F.map_injective
+  rw [affineCechDescendedModuleHom_comparison, F.map_comp]
+  change
+    (affineCechDescendedModuleIso f hf (F.obj M)).hom ≫
+        (F.map (affineCechSelectedTensorRightUnitorBaseIso f hf D).hom ≫
+          (affineCechDescendedModuleIso f hf D).hom) ≫
+        (affineCechDescendedModuleIso f hf D).inv =
+      F.map (affineCechDescendedComparisonObjIso f hf M).hom ≫
+        F.map (affineCechSelectedTensorRightUnitorBaseIso f hf D).hom
+  rw [affineCechDescendedComparisonObjIso_hom_comparison]
+  simp only [Category.assoc, Iso.hom_inv_id, Category.comp_id]
+  rfl
+
+/-- The selected associator and unitors satisfy the triangle coherence law. -/
+theorem affineCechSelectedTensor_triangle
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E : AffineCechModuleDescentData f) :
+    (affineCechSelectedTensorAssociatorIso f hf D
+          (affineCechSelectedTensorUnitDescentData f) E).hom ≫
+        affineCechSelectedTensorMap f hf (𝟙 D)
+          (affineCechSelectedTensorLeftUnitorIso f hf E).hom =
+      affineCechSelectedTensorMap f hf
+        (affineCechSelectedTensorRightUnitorIso f hf D).hom (𝟙 E) := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  let U := affineCechSelectedTensorUnitDescentData f
+  let MD := affineCechDescendedModule f hf D
+  let ME := affineCechDescendedModule f hf E
+  let eDU := affineCechSelectedTensorDescendedIso f hf D U
+  let eUE := affineCechSelectedTensorDescendedIso f hf U E
+  let lE := affineCechSelectedTensorLeftUnitorBaseIso f hf E
+  let rD := affineCechSelectedTensorRightUnitorBaseIso f hf D
+  have hbase :
+      (affineCechSelectedTensorAssociatorBaseIso f hf D U E).hom ≫
+          affineCechDescendedTensorMap f hf (𝟙 D)
+            (affineCechSelectedTensorLeftUnitorIso f hf E).hom =
+        affineCechDescendedTensorMap f hf
+          (affineCechSelectedTensorRightUnitorIso f hf D).hom (𝟙 E) := by
+    unfold affineCechDescendedTensorMap
+    simp only [affineCechDescendedModuleHom_id,
+      affineCechDescendedModuleHom_leftUnitorIso_hom,
+      affineCechDescendedModuleHom_rightUnitorIso_hom]
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul m n =>
+        rw [← eDU.hom_inv_id_apply m]
+        generalize eDU.hom m = w
+        induction w using TensorProduct.induction_on with
+        | zero =>
+            simp only [TensorProduct.zero_tmul, map_zero]
+        | tmul p u =>
+            change
+              TensorProduct.map LinearMap.id
+                  (ModuleCat.Hom.hom (eUE.hom ≫ lE.hom))
+                ((affineCechSelectedTensorAssociatorBaseIso f hf D U E).hom
+                  (eDU.inv (p ⊗ₜ[R] u) ⊗ₜ[R] n)) =
+                TensorProduct.map
+                    (ModuleCat.Hom.hom (eDU.hom ≫ rD.hom)) LinearMap.id
+                  (eDU.inv (p ⊗ₜ[R] u) ⊗ₜ[R] n)
+            change
+              TensorProduct.map LinearMap.id
+                  (ModuleCat.Hom.hom (eUE.hom ≫ lE.hom))
+                (((TensorProduct.congr eDU.toLinearEquiv
+                    (LinearEquiv.refl R ME)).trans
+                  ((TensorProduct.assoc R MD
+                      (affineCechDescendedModule f hf U) ME).trans
+                    (TensorProduct.congr
+                      (LinearEquiv.refl R MD)
+                      eUE.symm.toLinearEquiv)))
+                  (eDU.inv (p ⊗ₜ[R] u) ⊗ₜ[R] n)) =
+                TensorProduct.map
+                    (ModuleCat.Hom.hom (eDU.hom ≫ rD.hom)) LinearMap.id
+                  (eDU.inv (p ⊗ₜ[R] u) ⊗ₜ[R] n)
+            rw [LinearEquiv.trans_apply, LinearEquiv.trans_apply]
+            rw [TensorProduct.congr_tmul]
+            have hDUcancel :
+                eDU.toLinearEquiv (eDU.inv (p ⊗ₜ[R] u)) =
+                  p ⊗ₜ[R] u := by
+              exact eDU.inv_hom_id_apply _
+            rw [hDUcancel, LinearEquiv.refl_apply]
+            rw [TensorProduct.assoc_tmul]
+            rw [TensorProduct.congr_tmul, LinearEquiv.refl_apply]
+            rw [TensorProduct.map_tmul, TensorProduct.map_tmul]
+            change
+              p ⊗ₜ[R]
+                  lE.hom (eUE.hom (eUE.inv (u ⊗ₜ[R] n))) =
+                rD.hom (eDU.hom (eDU.inv (p ⊗ₜ[R] u))) ⊗ₜ[R] n
+            rw [eUE.inv_hom_id_apply, eDU.inv_hom_id_apply]
+            change
+              p ⊗ₜ[R]
+                  (TensorProduct.lid R _)
+                    ((TensorProduct.congr
+                      (affineCechSelectedTensorUnitDescendedIso f hf).toLinearEquiv
+                      (LinearEquiv.refl R _)) (u ⊗ₜ[R] n)) =
+                (TensorProduct.rid R _)
+                    ((TensorProduct.congr
+                      (LinearEquiv.refl R _)
+                      (affineCechSelectedTensorUnitDescendedIso f hf).toLinearEquiv)
+                      (p ⊗ₜ[R] u)) ⊗ₜ[R] n
+            rw [TensorProduct.congr_tmul, TensorProduct.congr_tmul,
+              LinearEquiv.refl_apply, LinearEquiv.refl_apply,
+              TensorProduct.lid_tmul, TensorProduct.rid_tmul]
+            exact TensorProduct.tmul_smul (R := R) (R' := R)
+              (show R from
+                (affineCechSelectedTensorUnitDescendedIso f hf).hom u)
+              p n
+        | add x y hx hy =>
+            simp only [TensorProduct.add_tmul, map_add, hx, hy]
+    | add x y hx hy => simp only [map_add, hx, hy]
+  change
+    F.map (affineCechSelectedTensorAssociatorBaseIso f hf D U E).hom ≫
+        F.map (affineCechDescendedTensorMap f hf (𝟙 D)
+          (affineCechSelectedTensorLeftUnitorIso f hf E).hom) =
+      F.map (affineCechDescendedTensorMap f hf
+        (affineCechSelectedTensorRightUnitorIso f hf D).hom (𝟙 E))
+  rw [← F.map_comp, hbase]
+
+/-- The selected associator base map on a pure tensor whose first factor
+is expressed through the selected tensor preimage comparison. -/
+theorem affineCechSelectedTensorAssociatorBaseIso_hom_tmul
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E G : AffineCechModuleDescentData f)
+    (m : affineCechDescendedModule f hf D)
+    (n : affineCechDescendedModule f hf E)
+    (p : affineCechDescendedModule f hf G) :
+    (affineCechSelectedTensorAssociatorBaseIso f hf D E G).hom
+        ((affineCechSelectedTensorDescendedIso f hf D E).inv
+          (m ⊗ₜ[R] n) ⊗ₜ[R] p) =
+      m ⊗ₜ[R]
+        (affineCechSelectedTensorDescendedIso f hf E G).inv
+          (n ⊗ₜ[R] p) := by
+  let eDE := affineCechSelectedTensorDescendedIso f hf D E
+  let eEG := affineCechSelectedTensorDescendedIso f hf E G
+  change
+    (((TensorProduct.congr eDE.toLinearEquiv
+        (LinearEquiv.refl R _)).trans
+      ((TensorProduct.assoc R _ _ _).trans
+        (TensorProduct.congr
+          (LinearEquiv.refl R _)
+          eEG.symm.toLinearEquiv)))
+      (eDE.inv (m ⊗ₜ[R] n) ⊗ₜ[R] p)) =
+        m ⊗ₜ[R] eEG.inv (n ⊗ₜ[R] p)
+  rw [LinearEquiv.trans_apply, LinearEquiv.trans_apply]
+  rw [TensorProduct.congr_tmul]
+  have hcancel :
+      eDE.toLinearEquiv (eDE.inv (m ⊗ₜ[R] n)) =
+        m ⊗ₜ[R] n := by
+    exact eDE.inv_hom_id_apply _
+  rw [hcancel, LinearEquiv.refl_apply]
+  rw [TensorProduct.assoc_tmul]
+  rw [TensorProduct.congr_tmul, LinearEquiv.refl_apply]
+  rfl
+
+/-- Descending the selected associator recovers its base map, conjugated by
+the two selected tensor preimage comparisons. -/
+theorem affineCechDescendedModuleHom_associatorIso_hom
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E G : AffineCechModuleDescentData f) :
+    affineCechDescendedModuleHom f hf
+        (affineCechSelectedTensorAssociatorIso f hf D E G).hom =
+      (affineCechSelectedTensorDescendedIso f hf
+          (affineCechSelectedTensorDescentData f hf D E) G).hom ≫
+        (affineCechSelectedTensorAssociatorBaseIso f hf D E G).hom ≫
+        (affineCechSelectedTensorDescendedIso f hf D
+          (affineCechSelectedTensorDescentData f hf E G)).inv := by
+  exact affineCechDescendedModuleHom_of_comparison_map f hf
+    (affineCechSelectedTensorAssociatorBaseIso f hf D E G).hom
+
+/-- The selected associators are natural in all three arguments. -/
+theorem affineCechSelectedTensorAssociatorIso_natural
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    {D D' E E' G G' : AffineCechModuleDescentData f}
+    (p : D ⟶ D') (q : E ⟶ E') (r : G ⟶ G') :
+    affineCechSelectedTensorMap f hf
+          (affineCechSelectedTensorMap f hf p q) r ≫
+        (affineCechSelectedTensorAssociatorIso f hf D' E' G').hom =
+      (affineCechSelectedTensorAssociatorIso f hf D E G).hom ≫
+        affineCechSelectedTensorMap f hf p
+          (affineCechSelectedTensorMap f hf q r) := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  let DE := affineCechSelectedTensorDescentData f hf D E
+  let D'E' := affineCechSelectedTensorDescentData f hf D' E'
+  let EG := affineCechSelectedTensorDescentData f hf E G
+  let E'G' := affineCechSelectedTensorDescentData f hf E' G'
+  let eDE := affineCechSelectedTensorDescendedIso f hf D E
+  let eD'E' := affineCechSelectedTensorDescendedIso f hf D' E'
+  let eEG := affineCechSelectedTensorDescendedIso f hf E G
+  let eE'G' := affineCechSelectedTensorDescendedIso f hf E' G'
+  let pD := ModuleCat.Hom.hom (affineCechDescendedModuleHom f hf p)
+  let pE := ModuleCat.Hom.hom (affineCechDescendedModuleHom f hf q)
+  let pG := ModuleCat.Hom.hom (affineCechDescendedModuleHom f hf r)
+  have hDE :
+      affineCechDescendedModuleHom f hf
+          (affineCechSelectedTensorMap f hf p q) =
+        eDE.hom ≫ affineCechDescendedTensorMap f hf p q ≫ eD'E'.inv := by
+    exact affineCechDescendedModuleHom_of_comparison_map f hf
+      (affineCechDescendedTensorMap f hf p q)
+  have hEG :
+      affineCechDescendedModuleHom f hf
+          (affineCechSelectedTensorMap f hf q r) =
+        eEG.hom ≫ affineCechDescendedTensorMap f hf q r ≫ eE'G'.inv := by
+    exact affineCechDescendedModuleHom_of_comparison_map f hf
+      (affineCechDescendedTensorMap f hf q r)
+  have hbase :
+      affineCechDescendedTensorMap f hf
+            (affineCechSelectedTensorMap f hf p q) r ≫
+          (affineCechSelectedTensorAssociatorBaseIso f hf D' E' G').hom =
+        (affineCechSelectedTensorAssociatorBaseIso f hf D E G).hom ≫
+          affineCechDescendedTensorMap f hf p
+            (affineCechSelectedTensorMap f hf q r) := by
+    unfold affineCechDescendedTensorMap
+    simp only [hDE, hEG]
+    let pDE :=
+      ModuleCat.Hom.hom
+        (eDE.hom ≫ affineCechDescendedTensorMap f hf p q ≫ eD'E'.inv)
+    let pEG :=
+      ModuleCat.Hom.hom
+        (eEG.hom ≫ affineCechDescendedTensorMap f hf q r ≫ eE'G'.inv)
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul m g =>
+        rw [← eDE.hom_inv_id_apply m]
+        generalize eDE.hom m = w
+        induction w using TensorProduct.induction_on with
+        | zero => simp only [TensorProduct.zero_tmul, map_zero]
+        | tmul d e =>
+            change
+              (affineCechSelectedTensorAssociatorBaseIso f hf D' E' G').hom
+                (TensorProduct.map pDE pG
+                  (eDE.inv (d ⊗ₜ[R] e) ⊗ₜ[R] g)) =
+                TensorProduct.map pD pEG
+                  ((affineCechSelectedTensorAssociatorBaseIso f hf D E G).hom
+                    (eDE.inv (d ⊗ₜ[R] e) ⊗ₜ[R] g))
+            rw [TensorProduct.map_tmul]
+            have hpDE :
+                pDE (eDE.inv (d ⊗ₜ[R] e)) =
+                  eD'E'.inv (pD d ⊗ₜ[R] pE e) := by
+              dsimp [pDE]
+              rw [eDE.inv_hom_id_apply]
+              change
+                eD'E'.inv (TensorProduct.map pD pE (d ⊗ₜ[R] e)) =
+                  eD'E'.inv (pD d ⊗ₜ[R] pE e)
+              rw [TensorProduct.map_tmul]
+            rw [hpDE]
+            rw [affineCechSelectedTensorAssociatorBaseIso_hom_tmul]
+            rw [affineCechSelectedTensorAssociatorBaseIso_hom_tmul]
+            rw [TensorProduct.map_tmul]
+            have hpEG :
+                pEG (eEG.inv (e ⊗ₜ[R] g)) =
+                  eE'G'.inv (pE e ⊗ₜ[R] pG g) := by
+              dsimp [pEG]
+              rw [eEG.inv_hom_id_apply]
+              change
+                eE'G'.inv (TensorProduct.map pE pG (e ⊗ₜ[R] g)) =
+                  eE'G'.inv (pE e ⊗ₜ[R] pG g)
+              rw [TensorProduct.map_tmul]
+            rw [hpEG]
+        | add x y hx hy =>
+            simp only [TensorProduct.add_tmul, map_add, hx, hy]
+    | add x y hx hy => simp only [map_add, hx, hy]
+  change
+    F.map (affineCechDescendedTensorMap f hf
+          (affineCechSelectedTensorMap f hf p q) r) ≫
+        F.map (affineCechSelectedTensorAssociatorBaseIso f hf D' E' G').hom =
+      F.map (affineCechSelectedTensorAssociatorBaseIso f hf D E G).hom ≫
+        F.map (affineCechDescendedTensorMap f hf p
+          (affineCechSelectedTensorMap f hf q r))
+  rw [← F.map_comp, hbase, F.map_comp]
+
+/-- The selected associators satisfy the pentagon coherence law. -/
+theorem affineCechSelectedTensor_pentagon
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E G H : AffineCechModuleDescentData f) :
+    (affineCechSelectedTensorAssociatorIso f hf
+          (affineCechSelectedTensorDescentData f hf D E) G H).hom ≫
+        (affineCechSelectedTensorAssociatorIso f hf D E
+          (affineCechSelectedTensorDescentData f hf G H)).hom =
+      affineCechSelectedTensorMap f hf
+          (affineCechSelectedTensorAssociatorIso f hf D E G).hom (𝟙 H) ≫
+        (affineCechSelectedTensorAssociatorIso f hf D
+          (affineCechSelectedTensorDescentData f hf E G) H).hom ≫
+        affineCechSelectedTensorMap f hf (𝟙 D)
+          (affineCechSelectedTensorAssociatorIso f hf E G H).hom := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  let DE := affineCechSelectedTensorDescentData f hf D E
+  let EG := affineCechSelectedTensorDescentData f hf E G
+  let GH := affineCechSelectedTensorDescentData f hf G H
+  let DEG := affineCechSelectedTensorDescentData f hf DE G
+  let D_EG := affineCechSelectedTensorDescentData f hf D EG
+  let E_GH := affineCechSelectedTensorDescentData f hf E GH
+  let EGH := affineCechSelectedTensorDescentData f hf EG H
+  let eDE := affineCechSelectedTensorDescendedIso f hf D E
+  let eDEG := affineCechSelectedTensorDescendedIso f hf DE G
+  let eD_EG := affineCechSelectedTensorDescendedIso f hf D EG
+  let eEG := affineCechSelectedTensorDescendedIso f hf E G
+  let eGH := affineCechSelectedTensorDescendedIso f hf G H
+  let eEGH := affineCechSelectedTensorDescendedIso f hf EG H
+  let eE_GH := affineCechSelectedTensorDescendedIso f hf E GH
+  have hbase :
+      (affineCechSelectedTensorAssociatorBaseIso f hf DE G H).hom ≫
+          (affineCechSelectedTensorAssociatorBaseIso f hf D E GH).hom =
+        affineCechDescendedTensorMap f hf
+            (affineCechSelectedTensorAssociatorIso f hf D E G).hom (𝟙 H) ≫
+          (affineCechSelectedTensorAssociatorBaseIso f hf D EG H).hom ≫
+          affineCechDescendedTensorMap f hf (𝟙 D)
+            (affineCechSelectedTensorAssociatorIso f hf E G H).hom := by
+    unfold affineCechDescendedTensorMap
+    simp only [affineCechDescendedModuleHom_id,
+      affineCechDescendedModuleHom_associatorIso_hom]
+    let qDEG :=
+      ModuleCat.Hom.hom
+        (eDEG.hom ≫
+          (affineCechSelectedTensorAssociatorBaseIso f hf D E G).hom ≫
+          eD_EG.inv)
+    let qEGH :=
+      ModuleCat.Hom.hom
+        (eEGH.hom ≫
+          (affineCechSelectedTensorAssociatorBaseIso f hf E G H).hom ≫
+          eE_GH.inv)
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul m h =>
+        rw [← eDEG.hom_inv_id_apply m]
+        generalize eDEG.hom m = w
+        induction w using TensorProduct.induction_on with
+        | zero => simp only [TensorProduct.zero_tmul, map_zero]
+        | tmul de g =>
+            rw [← eDE.hom_inv_id_apply de]
+            generalize eDE.hom de = v
+            induction v using TensorProduct.induction_on with
+            | zero => simp only [TensorProduct.zero_tmul, map_zero]
+            | tmul d e =>
+                change
+                  (affineCechSelectedTensorAssociatorBaseIso f hf D E GH).hom
+                    ((affineCechSelectedTensorAssociatorBaseIso f hf DE G H).hom
+                      (eDEG.inv (eDE.inv (d ⊗ₜ[R] e) ⊗ₜ[R] g) ⊗ₜ[R] h)) =
+                    TensorProduct.map LinearMap.id qEGH
+                      ((affineCechSelectedTensorAssociatorBaseIso
+                        f hf D EG H).hom
+                        (TensorProduct.map qDEG LinearMap.id
+                          (eDEG.inv
+                            (eDE.inv (d ⊗ₜ[R] e) ⊗ₜ[R] g) ⊗ₜ[R] h)))
+                rw [affineCechSelectedTensorAssociatorBaseIso_hom_tmul,
+                  affineCechSelectedTensorAssociatorBaseIso_hom_tmul]
+                rw [TensorProduct.map_tmul]
+                have hqDEG :
+                    qDEG
+                        (eDEG.inv
+                          (eDE.inv (d ⊗ₜ[R] e) ⊗ₜ[R] g)) =
+                      eD_EG.inv (d ⊗ₜ[R] eEG.inv (e ⊗ₜ[R] g)) := by
+                  dsimp [qDEG]
+                  rw [eDEG.inv_hom_id_apply]
+                  rw [affineCechSelectedTensorAssociatorBaseIso_hom_tmul]
+                rw [hqDEG]
+                rw [affineCechSelectedTensorAssociatorBaseIso_hom_tmul]
+                rw [TensorProduct.map_tmul]
+                have hqEGH :
+                    qEGH
+                        (eEGH.inv
+                          (eEG.inv (e ⊗ₜ[R] g) ⊗ₜ[R] h)) =
+                      eE_GH.inv (e ⊗ₜ[R] eGH.inv (g ⊗ₜ[R] h)) := by
+                  dsimp [qEGH]
+                  rw [eEGH.inv_hom_id_apply]
+                  rw [affineCechSelectedTensorAssociatorBaseIso_hom_tmul]
+                change
+                  d ⊗ₜ[R] eE_GH.inv
+                      (e ⊗ₜ[R] eGH.inv (g ⊗ₜ[R] h)) =
+                    d ⊗ₜ[R]
+                      qEGH
+                        (eEGH.inv
+                          (eEG.inv (e ⊗ₜ[R] g) ⊗ₜ[R] h))
+                rw [hqEGH]
+            | add x y hx hy =>
+                simp only [TensorProduct.add_tmul, map_add, hx, hy]
+        | add x y hx hy =>
+            simp only [TensorProduct.add_tmul, map_add, hx, hy]
+    | add x y hx hy => simp only [map_add, hx, hy]
+  change
+    F.map (affineCechSelectedTensorAssociatorBaseIso f hf DE G H).hom ≫
+        F.map (affineCechSelectedTensorAssociatorBaseIso f hf D E GH).hom =
+      F.map (affineCechDescendedTensorMap f hf
+          (affineCechSelectedTensorAssociatorIso f hf D E G).hom (𝟙 H)) ≫
+        F.map (affineCechSelectedTensorAssociatorBaseIso f hf D EG H).hom ≫
+        F.map (affineCechDescendedTensorMap f hf (𝟙 D)
+          (affineCechSelectedTensorAssociatorIso f hf E G H).hom)
+  rw [← F.map_comp, ← F.map_comp, ← F.map_comp, hbase]
+
+/-- Descending the selected symmetry recovers its base map, conjugated by the
+two selected tensor preimage comparisons. -/
+theorem affineCechDescendedModuleHom_symmetryIso_hom
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E : AffineCechModuleDescentData f) :
+    affineCechDescendedModuleHom f hf
+        (affineCechSelectedTensorSymmetryIso f hf D E).hom =
+      (affineCechSelectedTensorDescendedIso f hf D E).hom ≫
+        (affineCechSelectedTensorSymmetryBaseIso f hf D E).hom ≫
+        (affineCechSelectedTensorDescendedIso f hf E D).inv := by
+  exact affineCechDescendedModuleHom_of_comparison_map f hf
+    (affineCechSelectedTensorSymmetryBaseIso f hf D E).hom
+
+set_option maxHeartbeats 800000 in
+-- Normalizing both three-factor hexagon paths requires nested tensor induction.
+/-- The selected associator and symmetry satisfy the braided hexagon law. -/
+theorem affineCechSelectedTensor_hexagon
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E G : AffineCechModuleDescentData f) :
+    (affineCechSelectedTensorAssociatorIso f hf D E G).hom ≫
+        (affineCechSelectedTensorSymmetryIso f hf D
+          (affineCechSelectedTensorDescentData f hf E G)).hom ≫
+        (affineCechSelectedTensorAssociatorIso f hf E G D).hom =
+      affineCechSelectedTensorMap f hf
+          (affineCechSelectedTensorSymmetryIso f hf D E).hom (𝟙 G) ≫
+        (affineCechSelectedTensorAssociatorIso f hf E D G).hom ≫
+        affineCechSelectedTensorMap f hf (𝟙 E)
+          (affineCechSelectedTensorSymmetryIso f hf D G).hom := by
+  let F := affineCechModuleDescentComparison f
+  let _ : F.IsEquivalence :=
+    affineCechModuleDescentComparison_isEquivalence f hf
+  let DE := affineCechSelectedTensorDescentData f hf D E
+  let ED := affineCechSelectedTensorDescentData f hf E D
+  let EG := affineCechSelectedTensorDescentData f hf E G
+  let DG := affineCechSelectedTensorDescentData f hf D G
+  let GD := affineCechSelectedTensorDescentData f hf G D
+  let eDE := affineCechSelectedTensorDescendedIso f hf D E
+  let eED := affineCechSelectedTensorDescendedIso f hf E D
+  let eEG := affineCechSelectedTensorDescendedIso f hf E G
+  let eDG := affineCechSelectedTensorDescendedIso f hf D G
+  let eGD := affineCechSelectedTensorDescendedIso f hf G D
+  have hbase :
+      (affineCechSelectedTensorAssociatorBaseIso f hf D E G).hom ≫
+          (affineCechSelectedTensorSymmetryBaseIso f hf D EG).hom ≫
+          (affineCechSelectedTensorAssociatorBaseIso f hf E G D).hom =
+        affineCechDescendedTensorMap f hf
+            (affineCechSelectedTensorSymmetryIso f hf D E).hom (𝟙 G) ≫
+          (affineCechSelectedTensorAssociatorBaseIso f hf E D G).hom ≫
+          affineCechDescendedTensorMap f hf (𝟙 E)
+            (affineCechSelectedTensorSymmetryIso f hf D G).hom := by
+    unfold affineCechDescendedTensorMap
+    simp only [affineCechDescendedModuleHom_id,
+      affineCechDescendedModuleHom_symmetryIso_hom]
+    let qDE :=
+      ModuleCat.Hom.hom
+        (eDE.hom ≫
+          (affineCechSelectedTensorSymmetryBaseIso f hf D E).hom ≫
+          eED.inv)
+    let qDG :=
+      ModuleCat.Hom.hom
+        (eDG.hom ≫
+          (affineCechSelectedTensorSymmetryBaseIso f hf D G).hom ≫
+          eGD.inv)
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul m g =>
+        rw [← eDE.hom_inv_id_apply m]
+        generalize eDE.hom m = w
+        induction w using TensorProduct.induction_on with
+        | zero => simp only [TensorProduct.zero_tmul, map_zero]
+        | tmul d e =>
+            change
+              (affineCechSelectedTensorAssociatorBaseIso f hf E G D).hom
+                ((affineCechSelectedTensorSymmetryBaseIso f hf D EG).hom
+                  ((affineCechSelectedTensorAssociatorBaseIso f hf D E G).hom
+                    (eDE.inv (d ⊗ₜ[R] e) ⊗ₜ[R] g))) =
+                TensorProduct.map LinearMap.id qDG
+                  ((affineCechSelectedTensorAssociatorBaseIso f hf E D G).hom
+                    (TensorProduct.map qDE LinearMap.id
+                      (eDE.inv (d ⊗ₜ[R] e) ⊗ₜ[R] g)))
+            rw [affineCechSelectedTensorAssociatorBaseIso_hom_tmul]
+            change
+              (affineCechSelectedTensorAssociatorBaseIso f hf E G D).hom
+                (eEG.inv (e ⊗ₜ[R] g) ⊗ₜ[R] d) =
+              TensorProduct.map LinearMap.id qDG
+                ((affineCechSelectedTensorAssociatorBaseIso f hf E D G).hom
+                  (TensorProduct.map qDE LinearMap.id
+                    (eDE.inv (d ⊗ₜ[R] e) ⊗ₜ[R] g)))
+            rw [affineCechSelectedTensorAssociatorBaseIso_hom_tmul]
+            rw [TensorProduct.map_tmul]
+            have hqDE :
+                qDE (eDE.inv (d ⊗ₜ[R] e)) =
+                  eED.inv (e ⊗ₜ[R] d) := by
+              dsimp [qDE]
+              rw [eDE.inv_hom_id_apply]
+              change
+                eED.inv
+                    ((TensorProduct.comm R
+                      (affineCechDescendedModule f hf D)
+                      (affineCechDescendedModule f hf E))
+                      (d ⊗ₜ[R] e)) =
+                  eED.inv (e ⊗ₜ[R] d)
+              rw [TensorProduct.comm_tmul]
+            rw [hqDE]
+            rw [affineCechSelectedTensorAssociatorBaseIso_hom_tmul]
+            rw [TensorProduct.map_tmul]
+            have hqDG :
+                qDG (eDG.inv (d ⊗ₜ[R] g)) =
+                  eGD.inv (g ⊗ₜ[R] d) := by
+              dsimp [qDG]
+              rw [eDG.inv_hom_id_apply]
+              change
+                eGD.inv
+                    ((TensorProduct.comm R
+                      (affineCechDescendedModule f hf D)
+                      (affineCechDescendedModule f hf G))
+                      (d ⊗ₜ[R] g)) =
+                  eGD.inv (g ⊗ₜ[R] d)
+              rw [TensorProduct.comm_tmul]
+            change
+              e ⊗ₜ[R] eGD.inv (g ⊗ₜ[R] d) =
+                e ⊗ₜ[R] qDG (eDG.inv (d ⊗ₜ[R] g))
+            rw [hqDG]
+        | add x y hx hy =>
+            simp only [TensorProduct.add_tmul, map_add, hx, hy]
+    | add x y hx hy => simp only [map_add, hx, hy]
+  change
+    F.map (affineCechSelectedTensorAssociatorBaseIso f hf D E G).hom ≫
+        F.map (affineCechSelectedTensorSymmetryBaseIso f hf D EG).hom ≫
+        F.map (affineCechSelectedTensorAssociatorBaseIso f hf E G D).hom =
+      F.map (affineCechDescendedTensorMap f hf
+          (affineCechSelectedTensorSymmetryIso f hf D E).hom (𝟙 G)) ≫
+        F.map (affineCechSelectedTensorAssociatorBaseIso f hf E D G).hom ≫
+        F.map (affineCechDescendedTensorMap f hf (𝟙 E)
+          (affineCechSelectedTensorSymmetryIso f hf D G).hom)
+  rw [← F.map_comp, ← F.map_comp, ← F.map_comp, ← F.map_comp, hbase]
 
 end RiemannResearch.AlgebraicGeometry
