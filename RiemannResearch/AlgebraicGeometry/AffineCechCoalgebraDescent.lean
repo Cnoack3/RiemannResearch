@@ -13,13 +13,10 @@ This file begins the coalgebra side of the affine Čech Hopf-descent program.
 It packages coalgebra and cocommutative coalgebra objects for the selected
 symmetric tensor structure, descends their comultiplication and counit, and
 proves exact scalar-extension formulas recovering the ordinary cover maps.
-It also transports cocommutativity to the ordinary tensor swap on the selected
-descended base module.
+It transports coassociativity, both counit equations, and cocommutativity to
+the ordinary tensor product on the selected descended base module.
 
-Coassociativity and the two counit equations are retained as honest fields of
-the selected coalgebra datum. Their transport to the ordinary base tensor
-product, followed by bialgebra compatibility and antipode descent, remains a
-separate next layer.
+Bialgebra compatibility and antipode descent remain a separate next layer.
 
 Source: user-provided affine Čech descent program; the formal proof transports
 coalgebra-object maps through the previously verified selected symmetric
@@ -210,6 +207,291 @@ theorem descendedCounit_baseChange :
     (ModuleCat.extendScalars f.hom).map C.descendedCounit ≫ c.hom
   rw [h]
   rfl
+
+
+/-- The descended comultiplication is coassociative with respect to the
+ordinary tensor-product associator over the base ring. -/
+theorem descendedComul_assoc :
+    let M := affineCechDescendedModule f hf C.obj
+    C.descendedComul ≫
+          ModuleCat.ofHom
+            (TensorProduct.map
+              (ModuleCat.Hom.hom C.descendedComul) LinearMap.id) ≫
+          (TensorProduct.assoc R M M M).toModuleIso.hom =
+      C.descendedComul ≫
+        ModuleCat.ofHom
+          (TensorProduct.map LinearMap.id
+            (ModuleCat.Hom.hom C.descendedComul)) := by
+  dsimp only
+  let M := affineCechDescendedModule f hf C.obj
+  let T := affineCechSelectedTensorDescentData f hf C.obj C.obj
+  let eT := affineCechSelectedTensorDescendedIso f hf C.obj C.obj
+  let eL := affineCechSelectedTensorDescendedIso f hf T C.obj
+  let eR := affineCechSelectedTensorDescendedIso f hf C.obj T
+  let aB := affineCechSelectedTensorAssociatorBaseIso
+    f hf C.obj C.obj C.obj
+  let δ₀ := affineCechDescendedModuleHom f hf C.comul
+  let tL := affineCechDescendedTensorMap f hf C.comul (𝟙 C.obj)
+  let tR := affineCechDescendedTensorMap f hf (𝟙 C.obj) C.comul
+  let pL := ModuleCat.ofHom
+    (TensorProduct.map (ModuleCat.Hom.hom eT.hom)
+      (LinearMap.id : M →ₗ[R] M))
+  let pR := ModuleCat.ofHom
+    (TensorProduct.map (LinearMap.id : M →ₗ[R] M)
+      (ModuleCat.Hom.hom eT.hom))
+  let dL := ModuleCat.ofHom
+    (TensorProduct.map (ModuleCat.Hom.hom C.descendedComul)
+      (LinearMap.id : M →ₗ[R] M))
+  let dR := ModuleCat.ofHom
+    (TensorProduct.map (LinearMap.id : M →ₗ[R] M)
+      (ModuleCat.Hom.hom C.descendedComul))
+  let a := (TensorProduct.assoc R M M M).toModuleIso.hom
+  have htensor_left :
+      affineCechDescendedModuleHom f hf
+          (affineCechSelectedTensorMap f hf C.comul (𝟙 C.obj)) =
+        eT.hom ≫ tL ≫ eL.inv := by
+    exact affineCechDescendedModuleHom_of_comparison_map f hf
+      (affineCechDescendedTensorMap f hf C.comul (𝟙 C.obj))
+  have htensor_right :
+      affineCechDescendedModuleHom f hf
+          (affineCechSelectedTensorMap f hf (𝟙 C.obj) C.comul) =
+        eT.hom ≫ tR ≫ eR.inv := by
+    exact affineCechDescendedModuleHom_of_comparison_map f hf
+      (affineCechDescendedTensorMap f hf (𝟙 C.obj) C.comul)
+  have h := congrArg
+    (fun q => affineCechDescendedModuleHom f hf q) C.comul_assoc
+  simp only [affineCechDescendedModuleHom_comp] at h
+  rw [htensor_left, htensor_right,
+    affineCechDescendedModuleHom_associatorIso_hom] at h
+  dsimp [eL, eR, T] at h
+  have hbase :
+      δ₀ ≫ eT.hom ≫ tL ≫ aB.hom =
+        δ₀ ≫ eT.hom ≫ tR := by
+    apply (cancel_mono eR.inv).1
+    simpa only [Category.assoc, Iso.inv_hom_id_assoc] using h
+  have hassoc : aB.hom ≫ pR = pL ≫ a := by
+    dsimp [aB, pR, pL, a]
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul q p =>
+        rw [← eT.hom_inv_id_apply q]
+        generalize eT.hom q = w
+        induction w using TensorProduct.induction_on with
+        | zero => simp only [TensorProduct.zero_tmul, map_zero]
+        | tmul m n =>
+            simp only [ModuleCat.hom_comp, LinearMap.comp_apply]
+            rw [affineCechSelectedTensorAssociatorBaseIso_hom_tmul]
+            change
+              m ⊗ₜ[R] eT.hom (eT.inv (n ⊗ₜ[R] p)) =
+                (TensorProduct.assoc R M M M)
+                  (eT.hom (eT.inv (m ⊗ₜ[R] n)) ⊗ₜ[R] p)
+            rw [eT.inv_hom_id_apply, eT.inv_hom_id_apply,
+              TensorProduct.assoc_tmul]
+        | add x y hx hy =>
+            simp only [TensorProduct.add_tmul, map_add, hx, hy]
+    | add x y hx hy => simp only [map_add, hx, hy]
+  have hmap_left : tL ≫ pL = dL := by
+    dsimp [tL, pL, dL]
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul x y =>
+        simp only [ModuleCat.hom_comp, LinearMap.comp_apply,
+          affineCechDescendedTensorMap, affineCechDescendedModuleHom_id]
+        change
+          (TensorProduct.map (ModuleCat.Hom.hom eT.hom)
+              (LinearMap.id : M →ₗ[R] M))
+              ((TensorProduct.map (ModuleCat.Hom.hom δ₀)
+                (LinearMap.id : M →ₗ[R] M)) (x ⊗ₜ[R] y)) =
+            (TensorProduct.map
+                (ModuleCat.Hom.hom (δ₀ ≫ eT.hom))
+                (LinearMap.id : M →ₗ[R] M)) (x ⊗ₜ[R] y)
+        rw [TensorProduct.map_tmul, TensorProduct.map_tmul,
+          TensorProduct.map_tmul]
+        simp only [LinearMap.id_apply, ModuleCat.hom_comp,
+          LinearMap.comp_apply]
+    | add x y hx hy => simp only [map_add, hx, hy]
+  have hmap_right : tR ≫ pR = dR := by
+    dsimp [tR, pR, dR]
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul x y =>
+        simp only [ModuleCat.hom_comp, LinearMap.comp_apply,
+          affineCechDescendedTensorMap, affineCechDescendedModuleHom_id]
+        change
+          (TensorProduct.map (LinearMap.id : M →ₗ[R] M)
+              (ModuleCat.Hom.hom eT.hom))
+              ((TensorProduct.map (LinearMap.id : M →ₗ[R] M)
+                (ModuleCat.Hom.hom δ₀)) (x ⊗ₜ[R] y)) =
+            (TensorProduct.map (LinearMap.id : M →ₗ[R] M)
+                (ModuleCat.Hom.hom (δ₀ ≫ eT.hom)))
+              (x ⊗ₜ[R] y)
+        rw [TensorProduct.map_tmul, TensorProduct.map_tmul,
+          TensorProduct.map_tmul]
+        simp only [LinearMap.id_apply, ModuleCat.hom_comp,
+          LinearMap.comp_apply]
+    | add x y hx hy => simp only [map_add, hx, hy]
+  have hmap_left_assoc : tL ≫ pL ≫ a = dL ≫ a := by
+    rw [← Category.assoc, hmap_left]
+  have hpost := congrArg (fun q => q ≫ pR) hbase
+  change (δ₀ ≫ eT.hom) ≫ dL ≫ a =
+    (δ₀ ≫ eT.hom) ≫ dR
+  simpa only [Category.assoc, hassoc, hmap_left_assoc, hmap_right] using hpost
+
+/-- The descended counit satisfies the ordinary left-counit equation. -/
+theorem descendedCounit_left :
+    let M := affineCechDescendedModule f hf C.obj
+    C.descendedComul ≫
+          ModuleCat.ofHom
+            (TensorProduct.map
+              (ModuleCat.Hom.hom C.descendedCounit) LinearMap.id) ≫
+          (TensorProduct.lid R M).toModuleIso.hom =
+      𝟙 M := by
+  dsimp only
+  let M := affineCechDescendedModule f hf C.obj
+  let U := affineCechSelectedTensorUnitDescentData f
+  let eU := affineCechSelectedTensorUnitDescendedIso f hf
+  let eT := affineCechSelectedTensorDescendedIso f hf C.obj C.obj
+  let eL := affineCechSelectedTensorDescendedIso f hf U C.obj
+  let lB := affineCechSelectedTensorLeftUnitorBaseIso f hf C.obj
+  let δ₀ := affineCechDescendedModuleHom f hf C.comul
+  let ε₀ := affineCechDescendedModuleHom f hf C.counit
+  have htensor :
+      affineCechDescendedModuleHom f hf
+          (affineCechSelectedTensorMap f hf C.counit (𝟙 C.obj)) =
+        eT.hom ≫
+          affineCechDescendedTensorMap f hf C.counit (𝟙 C.obj) ≫ eL.inv := by
+    exact affineCechDescendedModuleHom_of_comparison_map f hf
+      (affineCechDescendedTensorMap f hf C.counit (𝟙 C.obj))
+  have h := congrArg
+    (fun q => affineCechDescendedModuleHom f hf q) C.counit_left
+  simp only [affineCechDescendedModuleHom_comp] at h
+  rw [htensor, affineCechDescendedModuleHom_leftUnitorIso_hom] at h
+  dsimp [eL, U] at h
+  have hbase :
+      δ₀ ≫ eT.hom ≫
+          affineCechDescendedTensorMap f hf C.counit (𝟙 C.obj) ≫
+          lB.hom =
+        𝟙 M := by
+    simpa only [Category.assoc, Iso.inv_hom_id_assoc,
+      affineCechDescendedModuleHom_id] using h
+  have hcompare (z : TensorProduct R M M) :
+      (TensorProduct.lid R M)
+          (TensorProduct.map (ModuleCat.Hom.hom (ε₀ ≫ eU.hom))
+            LinearMap.id z) =
+        lB.hom
+          (TensorProduct.map (ModuleCat.Hom.hom ε₀) LinearMap.id z) := by
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul x y =>
+        change
+          eU.hom (ε₀ x) • y =
+            (TensorProduct.lid R M)
+              ((TensorProduct.congr eU.toLinearEquiv
+                (LinearEquiv.refl R M)) (ε₀ x ⊗ₜ[R] y))
+        rw [TensorProduct.congr_tmul, LinearEquiv.refl_apply,
+          TensorProduct.lid_tmul]
+        rfl
+    | add x y hx hy => simp only [map_add, hx, hy]
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  intro m
+  have hp := congrArg (fun q => ModuleCat.Hom.hom q m) hbase
+  simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at hp
+  simp only [affineCechDescendedTensorMap] at hp
+  rw [affineCechDescendedModuleHom_id] at hp
+  change
+    lB.hom
+      (TensorProduct.map (ModuleCat.Hom.hom ε₀) LinearMap.id
+        (eT.hom (δ₀ m))) = m at hp
+  change
+    (TensorProduct.lid R M)
+      (TensorProduct.map (ModuleCat.Hom.hom (ε₀ ≫ eU.hom)) LinearMap.id
+        (eT.hom (δ₀ m))) = m
+  rw [hcompare]
+  exact hp
+
+/-- The descended counit satisfies the ordinary right-counit equation. -/
+theorem descendedCounit_right :
+    let M := affineCechDescendedModule f hf C.obj
+    C.descendedComul ≫
+          ModuleCat.ofHom
+            (TensorProduct.map LinearMap.id
+              (ModuleCat.Hom.hom C.descendedCounit)) ≫
+          (TensorProduct.rid R M).toModuleIso.hom =
+      𝟙 M := by
+  dsimp only
+  let M := affineCechDescendedModule f hf C.obj
+  let U := affineCechSelectedTensorUnitDescentData f
+  let eU := affineCechSelectedTensorUnitDescendedIso f hf
+  let eT := affineCechSelectedTensorDescendedIso f hf C.obj C.obj
+  let eR := affineCechSelectedTensorDescendedIso f hf C.obj U
+  let rB := affineCechSelectedTensorRightUnitorBaseIso f hf C.obj
+  let δ₀ := affineCechDescendedModuleHom f hf C.comul
+  let ε₀ := affineCechDescendedModuleHom f hf C.counit
+  have htensor :
+      affineCechDescendedModuleHom f hf
+          (affineCechSelectedTensorMap f hf (𝟙 C.obj) C.counit) =
+        eT.hom ≫
+          affineCechDescendedTensorMap f hf (𝟙 C.obj) C.counit ≫ eR.inv := by
+    exact affineCechDescendedModuleHom_of_comparison_map f hf
+      (affineCechDescendedTensorMap f hf (𝟙 C.obj) C.counit)
+  have h := congrArg
+    (fun q => affineCechDescendedModuleHom f hf q) C.counit_right
+  simp only [affineCechDescendedModuleHom_comp] at h
+  rw [htensor, affineCechDescendedModuleHom_rightUnitorIso_hom] at h
+  dsimp [eR, U] at h
+  have hbase :
+      δ₀ ≫ eT.hom ≫
+          affineCechDescendedTensorMap f hf (𝟙 C.obj) C.counit ≫
+          rB.hom =
+        𝟙 M := by
+    simpa only [Category.assoc, Iso.inv_hom_id_assoc,
+      affineCechDescendedModuleHom_id] using h
+  have hcompare (z : TensorProduct R M M) :
+      (TensorProduct.rid R M)
+          (TensorProduct.map LinearMap.id
+            (ModuleCat.Hom.hom (ε₀ ≫ eU.hom)) z) =
+        rB.hom
+          (TensorProduct.map LinearMap.id (ModuleCat.Hom.hom ε₀) z) := by
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul x y =>
+        change
+          eU.hom (ε₀ y) • x =
+            (TensorProduct.rid R M)
+              ((TensorProduct.congr (LinearEquiv.refl R M)
+                eU.toLinearEquiv) (x ⊗ₜ[R] ε₀ y))
+        rw [TensorProduct.congr_tmul, LinearEquiv.refl_apply,
+          TensorProduct.rid_tmul]
+        rfl
+    | add x y hx hy => simp only [map_add, hx, hy]
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  intro m
+  have hp := congrArg (fun q => ModuleCat.Hom.hom q m) hbase
+  simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at hp
+  simp only [affineCechDescendedTensorMap] at hp
+  rw [affineCechDescendedModuleHom_id] at hp
+  change
+    rB.hom
+      (TensorProduct.map LinearMap.id (ModuleCat.Hom.hom ε₀)
+        (eT.hom (δ₀ m))) = m at hp
+  change
+    (TensorProduct.rid R M)
+      (TensorProduct.map LinearMap.id
+        (ModuleCat.Hom.hom (ε₀ ≫ eU.hom))
+        (eT.hom (δ₀ m))) = m
+  rw [hcompare]
+  exact hp
 
 end AffineCechSelectedCoalgebraObject
 
