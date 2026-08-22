@@ -2371,6 +2371,48 @@ noncomputable def affineCechComonadicBridge
     AffineCechComonadicBridge f :=
   (affineModuleComonadicBridge f).toCech
 
+/-- Transport an isomorphism from the comonadic side of the canonical bridge
+back to an isomorphism of chosen affine Čech descent data. This is the
+object-level comparison API needed when a cover-level linear equivalence has
+already been proved compatible with the two comonad coactions. -/
+noncomputable def affineCechIsoOfComonadicIso
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (D : AffineCechModuleDescentData f)
+    (Q : ComonadicModuleDescentData f.hom)
+    (q : (affineCechComonadicBridge f).equivalence.functor.obj D ≅ Q) :
+    D ≅ (affineCechComonadicBridge f).equivalence.inverse.obj Q :=
+  (affineCechComonadicBridge f).equivalence.unitIso.app D ≪≫
+    (affineCechComonadicBridge f).equivalence.inverse.mapIso q
+
+/-- A carrier isomorphism satisfying the precise coaction square determines
+an isomorphism from a chosen affine Čech datum to the inverse-bridge datum of
+the target coalgebra. -/
+noncomputable def affineCechIsoOfComonadicCarrierIso
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (D : AffineCechModuleDescentData f)
+    (Q : ComonadicModuleDescentData f.hom)
+    (e : ((affineCechComonadicBridge f).equivalence.functor.obj D).A ≅ Q.A)
+    (h :
+      ((affineCechComonadicBridge f).equivalence.functor.obj D).a ≫
+          ((ModuleCat.extendRestrictScalarsAdj f.hom).toComonad).map e.hom =
+        e.hom ≫ Q.a) :
+    D ≅ (affineCechComonadicBridge f).equivalence.inverse.obj Q :=
+  affineCechIsoOfComonadicIso f D Q
+    (Comonad.Coalgebra.isoMk e h)
+
+/-- Applying the bridge to the transported Čech isomorphism recovers the
+supplied comonadic isomorphism through the equivalence counit. -/
+theorem affineCechIsoOfComonadicIso_comonadic_hom
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (D : AffineCechModuleDescentData f)
+    (Q : ComonadicModuleDescentData f.hom)
+    (q : (affineCechComonadicBridge f).equivalence.functor.obj D ≅ Q) :
+    (affineCechComonadicBridge f).equivalence.functor.map
+        (affineCechIsoOfComonadicIso f D Q q).hom ≫
+      (affineCechComonadicBridge f).equivalence.counitIso.hom.app Q =
+        q.hom := by
+  simp [affineCechIsoOfComonadicIso, Category.assoc]
+
 /-- Faithfully flat ring maps have effective chosen Čech module descent. -/
 theorem affineCechModuleDescentComparison_isEquivalence
     {R A : CommRingCat.{u}} (f : R ⟶ A)
