@@ -355,6 +355,61 @@ noncomputable def galoisSemilinearCechModuleDescentData
     (CommRingCat.ofHom (algebraMap K L))).equivalence.inverse.obj
       (galoisSemilinearComonadicDescentData K L M a)
 
+section CechNaturality
+
+variable (N : Type u)
+variable [AddCommGroup N] [Module K N] [Module L N] [IsScalarTower K L N]
+
+/-- An equivariant semilinear map, transported from extension--restriction
+coalgebras to the canonically selected affine Čech descent data. -/
+noncomputable def galoisSemilinearCechModuleDescentMap
+    [FiniteDimensional K L] [IsGalois K L]
+    (a : GaloisSemilinearModuleAction K L M)
+    (b : GaloisSemilinearModuleAction K L N)
+    (f : M →ₗ[L] N)
+    (hf : ∀ σ m, b.action σ (f m) = f (a.action σ m)) :
+    galoisSemilinearCechModuleDescentData K L M a ⟶
+      galoisSemilinearCechModuleDescentData K L N b :=
+  (affineCechComonadicBridge
+    (CommRingCat.ofHom (algebraMap K L))).equivalence.inverse.map
+      (galoisSemilinearComonadicDescentMap K L M N a b f hf)
+
+/-- On the unique affine cover, transport to Čech descent preserves the
+original equivariant linear map exactly. -/
+@[simp] theorem galoisSemilinearCechModuleDescentMap_hom
+    [FiniteDimensional K L] [IsGalois K L]
+    (a : GaloisSemilinearModuleAction K L M)
+    (b : GaloisSemilinearModuleAction K L N)
+    (f : M →ₗ[L] N)
+    (hf : ∀ σ m, b.action σ (f m) = f (a.action σ m)) :
+    (galoisSemilinearCechModuleDescentMap K L M N a b f hf).hom PUnit.unit =
+      ModuleCat.ofHom f := by
+  rfl
+
+/-- Applying the Čech--comonadic bridge to the transported map recovers the
+original comonadic morphism through the counit of the equivalence. -/
+theorem galoisSemilinearCechModuleDescentMap_comonadic
+    [FiniteDimensional K L] [IsGalois K L]
+    (a : GaloisSemilinearModuleAction K L M)
+    (b : GaloisSemilinearModuleAction K L N)
+    (f : M →ₗ[L] N)
+    (hf : ∀ σ m, b.action σ (f m) = f (a.action σ m)) :
+    let E := (affineCechComonadicBridge
+      (CommRingCat.ofHom (algebraMap K L))).equivalence
+    let Q := galoisSemilinearComonadicDescentData K L M a
+    let Q' := galoisSemilinearComonadicDescentData K L N b
+    E.functor.map (galoisSemilinearCechModuleDescentMap
+        K L M N a b f hf) ≫
+        E.counitIso.hom.app Q' =
+      E.counitIso.hom.app Q ≫
+        galoisSemilinearComonadicDescentMap K L M N a b f hf := by
+  dsimp only
+  exact (affineCechComonadicBridge
+      (CommRingCat.ofHom (algebraMap K L))).equivalence.counitIso.hom.naturality
+    (galoisSemilinearComonadicDescentMap K L M N a b f hf)
+
+end CechNaturality
+
 /-- The unique cover module of the selected Čech datum is the original
 semilinear L-module. -/
 noncomputable def galoisSemilinearCechModuleDescentData_coverIso
