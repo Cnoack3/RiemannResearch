@@ -16,8 +16,9 @@ counit, and antipode into the selected tensor structure and proves that all
 five maps recover the canonical coordinate Hopf operations on the cover.
 
 The selected multiplication is proved associative, unital, and commutative.
-The selected coalgebra, bialgebra, and antipode equations remain the next
-assembly step.
+The two selected nested-comultiplication composites are reduced exactly to the
+ordinary coordinate coalgebra on the cover. The selected coalgebra, bialgebra,
+and antipode equations remain the next assembly step.
 
 Source: user-provided D4 Hopf-descent program.
 -/
@@ -380,6 +381,197 @@ theorem relatedTripleCoordinateGaloisSelectedAntipodeDescentMap_cover
   dsimp only
   exact relatedTripleCoordinateGaloisCechAntipodeDescentMap_hom
     K L diagram
+
+set_option maxRecDepth 4000 in
+/-- After identifying the left-associated selected triple tensor with the
+ordinary left-associated cover tensor, applying comultiplication and then
+comultiplication in the left factor is exactly the ordinary nested coordinate
+comultiplication. -/
+theorem relatedTripleCoordinateGaloisSelectedComulLeftNestedCover
+    (K L : Type u) [Field K] [Field L] [Algebra K L]
+    [FiniteDimensional K L] [IsGalois K L]
+    (diagram : (L ≃ₐ[K] L) →* DiagramSymmetry) :
+    let f := CommRingCat.ofHom (algebraMap K L)
+    let hf := galoisFieldAlgebraMap_faithfullyFlat K L
+    let D := relatedTripleCoordinateGaloisCechModuleDescentData K L diagram
+    let comul :=
+      relatedTripleCoordinateGaloisSelectedComulDescentMap K L diagram
+    let eL := affineCechSelectedTensorLeftAssociatedCoverIso f hf D D D
+    let deltaA := ModuleCat.ofHom (CoalgebraStruct.comul :
+      RelatedTripleCoordinateScalarExtension L →ₗ[L]
+        TensorProduct L (RelatedTripleCoordinateScalarExtension L)
+          (RelatedTripleCoordinateScalarExtension L))
+    comul.hom PUnit.unit ≫
+        (affineCechSelectedTensorMap f hf comul (𝟙 D)).hom PUnit.unit ≫
+        eL.hom =
+      deltaA ≫
+        ModuleCat.ofHom (TensorProduct.map
+          (CoalgebraStruct.comul :
+            RelatedTripleCoordinateScalarExtension L →ₗ[L]
+              TensorProduct L (RelatedTripleCoordinateScalarExtension L)
+                (RelatedTripleCoordinateScalarExtension L))
+          LinearMap.id) := by
+  dsimp only
+  let f := CommRingCat.ofHom (algebraMap K L)
+  let hf := galoisFieldAlgebraMap_faithfullyFlat K L
+  let D := relatedTripleCoordinateGaloisCechModuleDescentData K L diagram
+  let comul :=
+    relatedTripleCoordinateGaloisSelectedComulDescentMap K L diagram
+  let T := affineCechSelectedTensorDescentData f hf D D
+  let DA : ModuleCat L := (AffineCechModuleDescentData.evaluation f).obj D
+  let TA : ModuleCat L := (AffineCechModuleDescentData.evaluation f).obj T
+  let eT : TA ≅ ModuleCat.of L (TensorProduct L DA DA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf D D
+  let cL : (AffineCechModuleDescentData.evaluation f).obj
+      (affineCechSelectedTensorDescentData f hf T D) ≅
+      ModuleCat.of L (TensorProduct L TA DA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf T D
+  let qL := (TensorProduct.congr eT.toLinearEquiv
+      (LinearEquiv.refl L DA)).toModuleIso
+  let eL := affineCechSelectedTensorLeftAssociatedCoverIso f hf D D D
+  let comulA : DA ⟶ TA := comul.hom PUnit.unit
+  let deltaA : DA ⟶ ModuleCat.of L (TensorProduct L DA DA) :=
+    ModuleCat.ofHom (CoalgebraStruct.comul :
+      RelatedTripleCoordinateScalarExtension L →ₗ[L]
+        TensorProduct L (RelatedTripleCoordinateScalarExtension L)
+          (RelatedTripleCoordinateScalarExtension L))
+  let tm :=
+    (affineCechSelectedTensorMap f hf comul (𝟙 D)).hom PUnit.unit
+  let mapc : ModuleCat.of L (TensorProduct L DA DA) ⟶
+      ModuleCat.of L (TensorProduct L TA DA) :=
+    ModuleCat.ofHom
+      (TensorProduct.map
+        (ModuleCat.Hom.hom
+          ((AffineCechModuleDescentData.evaluation f).map comul))
+        (ModuleCat.Hom.hom
+          ((AffineCechModuleDescentData.evaluation f).map (𝟙 D))))
+  let leftA : ModuleCat.of L (TensorProduct L DA DA) ⟶
+      ModuleCat.of L (TensorProduct L (TensorProduct L DA DA) DA) :=
+    ModuleCat.ofHom (TensorProduct.map
+      (CoalgebraStruct.comul :
+        RelatedTripleCoordinateScalarExtension L →ₗ[L]
+          TensorProduct L (RelatedTripleCoordinateScalarExtension L)
+            (RelatedTripleCoordinateScalarExtension L))
+      LinearMap.id)
+  have hc : comulA ≫ eT.hom = deltaA := by
+    exact
+      relatedTripleCoordinateGaloisSelectedComulDescentMap_cover K L diagram
+  have hn : tm ≫ cL.hom = eT.hom ≫ mapc := by
+    exact affineCechSelectedTensorDescentDataCoverIso_natural
+      f hf comul (𝟙 D)
+  have hstd : mapc ≫ qL.hom = leftA := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul x y =>
+        have hx := congrArg (fun z => ModuleCat.Hom.hom z x) hc
+        simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at hx
+        exact congrArg (fun z => z ⊗ₜ[L] (show DA from y)) hx
+    | add x y hx hy => simp only [map_add, hx, hy]
+  have h1 := congrArg (fun z => comulA ≫ z ≫ qL.hom) hn
+  have h2 := congrArg (fun z => z ≫ mapc ≫ qL.hom) hc
+  have h3 := congrArg (fun z => deltaA ≫ z) hstd
+  have ha := congrArg (fun z => z ≫ qL.hom)
+    (Category.assoc comulA tm cL.hom)
+  change comulA ≫ tm ≫ (cL.hom ≫ qL.hom) = deltaA ≫ leftA
+  exact ha.trans (h1.trans (h2.trans h3))
+
+set_option maxRecDepth 4000 in
+/-- After identifying the right-associated selected triple tensor with the
+ordinary right-associated cover tensor, applying comultiplication and then
+comultiplication in the right factor is exactly the ordinary nested coordinate
+comultiplication. -/
+theorem relatedTripleCoordinateGaloisSelectedComulRightNestedCover
+    (K L : Type u) [Field K] [Field L] [Algebra K L]
+    [FiniteDimensional K L] [IsGalois K L]
+    (diagram : (L ≃ₐ[K] L) →* DiagramSymmetry) :
+    let f := CommRingCat.ofHom (algebraMap K L)
+    let hf := galoisFieldAlgebraMap_faithfullyFlat K L
+    let D := relatedTripleCoordinateGaloisCechModuleDescentData K L diagram
+    let comul :=
+      relatedTripleCoordinateGaloisSelectedComulDescentMap K L diagram
+    let eR := affineCechSelectedTensorRightAssociatedCoverIso f hf D D D
+    let deltaA := ModuleCat.ofHom (CoalgebraStruct.comul :
+      RelatedTripleCoordinateScalarExtension L →ₗ[L]
+        TensorProduct L (RelatedTripleCoordinateScalarExtension L)
+          (RelatedTripleCoordinateScalarExtension L))
+    comul.hom PUnit.unit ≫
+        (affineCechSelectedTensorMap f hf (𝟙 D) comul).hom PUnit.unit ≫
+        eR.hom =
+      deltaA ≫
+        ModuleCat.ofHom (TensorProduct.map LinearMap.id
+          (CoalgebraStruct.comul :
+            RelatedTripleCoordinateScalarExtension L →ₗ[L]
+              TensorProduct L (RelatedTripleCoordinateScalarExtension L)
+                (RelatedTripleCoordinateScalarExtension L))) := by
+  dsimp only
+  let f := CommRingCat.ofHom (algebraMap K L)
+  let hf := galoisFieldAlgebraMap_faithfullyFlat K L
+  let D := relatedTripleCoordinateGaloisCechModuleDescentData K L diagram
+  let comul :=
+    relatedTripleCoordinateGaloisSelectedComulDescentMap K L diagram
+  let T := affineCechSelectedTensorDescentData f hf D D
+  let DA : ModuleCat L := (AffineCechModuleDescentData.evaluation f).obj D
+  let TA : ModuleCat L := (AffineCechModuleDescentData.evaluation f).obj T
+  let eT : TA ≅ ModuleCat.of L (TensorProduct L DA DA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf D D
+  let cR : (AffineCechModuleDescentData.evaluation f).obj
+      (affineCechSelectedTensorDescentData f hf D T) ≅
+      ModuleCat.of L (TensorProduct L DA TA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf D T
+  let qR := (TensorProduct.congr (LinearEquiv.refl L DA)
+      eT.toLinearEquiv).toModuleIso
+  let eR := affineCechSelectedTensorRightAssociatedCoverIso f hf D D D
+  let comulA : DA ⟶ TA := comul.hom PUnit.unit
+  let deltaA : DA ⟶ ModuleCat.of L (TensorProduct L DA DA) :=
+    ModuleCat.ofHom (CoalgebraStruct.comul :
+      RelatedTripleCoordinateScalarExtension L →ₗ[L]
+        TensorProduct L (RelatedTripleCoordinateScalarExtension L)
+          (RelatedTripleCoordinateScalarExtension L))
+  let tm :=
+    (affineCechSelectedTensorMap f hf (𝟙 D) comul).hom PUnit.unit
+  let mapc : ModuleCat.of L (TensorProduct L DA DA) ⟶
+      ModuleCat.of L (TensorProduct L DA TA) :=
+    ModuleCat.ofHom
+      (TensorProduct.map
+        (ModuleCat.Hom.hom
+          ((AffineCechModuleDescentData.evaluation f).map (𝟙 D)))
+        (ModuleCat.Hom.hom
+          ((AffineCechModuleDescentData.evaluation f).map comul)))
+  let rightA : ModuleCat.of L (TensorProduct L DA DA) ⟶
+      ModuleCat.of L (TensorProduct L DA (TensorProduct L DA DA)) :=
+    ModuleCat.ofHom (TensorProduct.map LinearMap.id
+      (CoalgebraStruct.comul :
+        RelatedTripleCoordinateScalarExtension L →ₗ[L]
+          TensorProduct L (RelatedTripleCoordinateScalarExtension L)
+            (RelatedTripleCoordinateScalarExtension L)))
+  have hc : comulA ≫ eT.hom = deltaA := by
+    exact
+      relatedTripleCoordinateGaloisSelectedComulDescentMap_cover K L diagram
+  have hn : tm ≫ cR.hom = eT.hom ≫ mapc := by
+    exact affineCechSelectedTensorDescentDataCoverIso_natural
+      f hf (𝟙 D) comul
+  have hstd : mapc ≫ qR.hom = rightA := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro z
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul x y =>
+        have hy := congrArg (fun z => ModuleCat.Hom.hom z y) hc
+        simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at hy
+        exact congrArg (fun z => (show DA from x) ⊗ₜ[L] z) hy
+    | add x y hx hy => simp only [map_add, hx, hy]
+  have h1 := congrArg (fun z => comulA ≫ z ≫ qR.hom) hn
+  have h2 := congrArg (fun z => z ≫ mapc ≫ qR.hom) hc
+  have h3 := congrArg (fun z => deltaA ≫ z) hstd
+  have ha := congrArg (fun z => z ≫ qR.hom)
+    (Category.assoc comulA tm cR.hom)
+  change comulA ≫ tm ≫ (cR.hom ≫ qR.hom) = deltaA ≫ rightA
+  exact ha.trans (h1.trans (h2.trans h3))
+
 
 set_option maxRecDepth 4000 in
 /-- After identifying the right-associated selected triple tensor with the
