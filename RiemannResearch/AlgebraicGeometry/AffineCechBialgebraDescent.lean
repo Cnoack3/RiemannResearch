@@ -171,6 +171,292 @@ theorem affineCechDescendedModuleHom_middleFourIso_hom
   exact affineCechDescendedModuleHom_of_comparison_map f hf
     (affineCechSelectedMiddleFourBaseIso f hf D E G H).hom
 
+set_option maxHeartbeats 3000000 in
+-- Four nested tensor inductions normalize the scalar-extension generators.
+set_option maxRecDepth 4000 in
+set_option linter.style.haveILetI false in
+/-- On the cover, the selected middle-four interchange is the ordinary
+middle-four interchange after identifying all four selected binary tensors. -/
+theorem affineCechSelectedMiddleFourIso_cover
+    {R A : CommRingCat.{u}} (f : R ⟶ A)
+    (hf : f.hom.FaithfullyFlat)
+    (D E G H : AffineCechModuleDescentData f) :
+    let DE := affineCechSelectedTensorDescentData f hf D E
+    let GH := affineCechSelectedTensorDescentData f hf G H
+    let DG := affineCechSelectedTensorDescentData f hf D G
+    let EH := affineCechSelectedTensorDescentData f hf E H
+    let eDE : (AffineCechModuleDescentData.evaluation f).obj DE ≅
+        ModuleCat.of A (TensorProduct A
+          ((AffineCechModuleDescentData.evaluation f).obj D)
+          ((AffineCechModuleDescentData.evaluation f).obj E)) :=
+      affineCechSelectedTensorDescentDataCoverIso f hf D E
+    let eGH : (AffineCechModuleDescentData.evaluation f).obj GH ≅
+        ModuleCat.of A (TensorProduct A
+          ((AffineCechModuleDescentData.evaluation f).obj G)
+          ((AffineCechModuleDescentData.evaluation f).obj H)) :=
+      affineCechSelectedTensorDescentDataCoverIso f hf G H
+    let eDG : (AffineCechModuleDescentData.evaluation f).obj DG ≅
+        ModuleCat.of A (TensorProduct A
+          ((AffineCechModuleDescentData.evaluation f).obj D)
+          ((AffineCechModuleDescentData.evaluation f).obj G)) :=
+      affineCechSelectedTensorDescentDataCoverIso f hf D G
+    let eEH : (AffineCechModuleDescentData.evaluation f).obj EH ≅
+        ModuleCat.of A (TensorProduct A
+          ((AffineCechModuleDescentData.evaluation f).obj E)
+          ((AffineCechModuleDescentData.evaluation f).obj H)) :=
+      affineCechSelectedTensorDescentDataCoverIso f hf E H
+    let source :=
+      affineCechSelectedTensorDescentDataCoverIso f hf DE GH ≪≫
+        (TensorProduct.congr eDE.toLinearEquiv eGH.toLinearEquiv).toModuleIso
+    let target :=
+      affineCechSelectedTensorDescentDataCoverIso f hf DG EH ≪≫
+        (TensorProduct.congr eDG.toLinearEquiv eEH.toLinearEquiv).toModuleIso
+    (affineCechSelectedMiddleFourIso f hf D E G H).hom.hom PUnit.unit ≫
+        target.hom =
+      source.hom ≫
+        (tensorProductMiddleFourIso A
+          ((AffineCechModuleDescentData.evaluation f).obj D)
+          ((AffineCechModuleDescentData.evaluation f).obj E)
+          ((AffineCechModuleDescentData.evaluation f).obj G)
+          ((AffineCechModuleDescentData.evaluation f).obj H)).hom := by
+  dsimp only
+  letI : Algebra R A := f.hom.toAlgebra
+  let AR := (ModuleCat.restrictScalars f.hom).obj (ModuleCat.of A A)
+  letI : Module R AR := AR.isModule
+  letI : IsScalarTower R A AR :=
+    IsScalarTower.of_algebraMap_smul (by intro r x; rfl)
+  let DE := affineCechSelectedTensorDescentData f hf D E
+  let GH := affineCechSelectedTensorDescentData f hf G H
+  let DG := affineCechSelectedTensorDescentData f hf D G
+  let EH := affineCechSelectedTensorDescentData f hf E H
+  let MDE := affineCechDescendedModule f hf DE
+  let MGH := affineCechDescendedModule f hf GH
+  let DA : ModuleCat A := (AffineCechModuleDescentData.evaluation f).obj D
+  let EA : ModuleCat A := (AffineCechModuleDescentData.evaluation f).obj E
+  let GA : ModuleCat A := (AffineCechModuleDescentData.evaluation f).obj G
+  let HA : ModuleCat A := (AffineCechModuleDescentData.evaluation f).obj H
+  let eDE := affineCechSelectedTensorDescendedIso f hf D E
+  let eGH := affineCechSelectedTensorDescendedIso f hf G H
+  let eDG := affineCechSelectedTensorDescendedIso f hf D G
+  let eEH := affineCechSelectedTensorDescendedIso f hf E H
+  let tDE : (AffineCechModuleDescentData.evaluation f).obj DE ≅
+      ModuleCat.of A (TensorProduct A DA EA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf D E
+  let tGH : (AffineCechModuleDescentData.evaluation f).obj GH ≅
+      ModuleCat.of A (TensorProduct A GA HA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf G H
+  let tDG : (AffineCechModuleDescentData.evaluation f).obj DG ≅
+      ModuleCat.of A (TensorProduct A DA GA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf D G
+  let tEH : (AffineCechModuleDescentData.evaluation f).obj EH ≅
+      ModuleCat.of A (TensorProduct A EA HA) :=
+    affineCechSelectedTensorDescentDataCoverIso f hf E H
+  let source :=
+    affineCechSelectedTensorDescentDataCoverIso f hf DE GH ≪≫
+      (TensorProduct.congr tDE.toLinearEquiv tGH.toLinearEquiv).toModuleIso
+  let target :=
+    affineCechSelectedTensorDescentDataCoverIso f hf DG EH ≪≫
+      (TensorProduct.congr tDG.toLinearEquiv tEH.toLinearEquiv).toModuleIso
+  let L : TensorProduct R A (TensorProduct R MDE MGH) →ₗ[A]
+      TensorProduct A (TensorProduct A DA GA) (TensorProduct A EA HA) :=
+    ModuleCat.Hom.hom
+      ((affineCechSelectedMiddleFourIso f hf D E G H).hom.hom PUnit.unit ≫
+        target.hom)
+  let K : TensorProduct R A (TensorProduct R MDE MGH) →ₗ[A]
+      TensorProduct A (TensorProduct A DA GA) (TensorProduct A EA HA) :=
+    ModuleCat.Hom.hom
+      (source.hom ≫ (tensorProductMiddleFourIso A DA EA GA HA).hom)
+  apply ModuleCat.hom_ext
+  change L = K
+  apply LinearMap.ext
+  intro x
+  induction x using TensorProduct.induction_on with
+  | zero => simp only [map_zero]
+  | tmul a z =>
+      induction z using TensorProduct.induction_on with
+      | zero => simp only [TensorProduct.tmul_zero, map_zero]
+      | tmul m n =>
+          rw [← eDE.hom_inv_id_apply m, ← eGH.hom_inv_id_apply n]
+          generalize eDE.hom m = w
+          generalize eGH.hom n = v
+          induction w using TensorProduct.induction_on with
+          | zero =>
+              simp only [TensorProduct.zero_tmul,
+                TensorProduct.tmul_zero, map_zero]
+          | tmul p q =>
+              induction v using TensorProduct.induction_on with
+              | zero => simp only [TensorProduct.tmul_zero, map_zero]
+              | tmul r s =>
+                  have hbase :
+                      (ModuleCat.extendScalars f.hom).map
+                          (affineCechSelectedMiddleFourBaseIso
+                            f hf D E G H).hom
+                          (a ⊗ₜ[R]
+                            (eDE.inv (p ⊗ₜ[R] q) ⊗ₜ[R]
+                              eGH.inv (r ⊗ₜ[R] s))) =
+                        a ⊗ₜ[R]
+                          (eDG.inv (p ⊗ₜ[R] r) ⊗ₜ[R]
+                            eEH.inv (q ⊗ₜ[R] s)) := by
+                    rw [affineCechModuleHom_baseChange_tmul]
+                    exact congrArg
+                      (fun z => (show AR from a) ⊗ₜ[R] z)
+                      (affineCechSelectedMiddleFourBaseIso_hom_tmul
+                        f hf D E G H p q r s)
+                  have hright := congrArg
+                    (ModuleCat.Hom.hom target.hom) hbase
+                  let oneAR : AR := show AR from (1 : A)
+                  let aAR : AR := show AR from a
+                  let deA :
+                      (ModuleCat.extendScalars f.hom).obj
+                        (ModuleCat.of R
+                          (TensorProduct R
+                            (affineCechDescendedModule f hf D)
+                            (affineCechDescendedModule f hf E))) :=
+                    aAR ⊗ₜ[R] (p ⊗ₜ[R] q)
+                  let ghA :
+                      (ModuleCat.extendScalars f.hom).obj
+                        (ModuleCat.of R
+                          (TensorProduct R
+                            (affineCechDescendedModule f hf G)
+                            (affineCechDescendedModule f hf H))) :=
+                    oneAR ⊗ₜ[R] (r ⊗ₜ[R] s)
+                  let dgA :
+                      (ModuleCat.extendScalars f.hom).obj
+                        (ModuleCat.of R
+                          (TensorProduct R
+                            (affineCechDescendedModule f hf D)
+                            (affineCechDescendedModule f hf G))) :=
+                    aAR ⊗ₜ[R] (p ⊗ₜ[R] r)
+                  let ehA :
+                      (ModuleCat.extendScalars f.hom).obj
+                        (ModuleCat.of R
+                          (TensorProduct R
+                            (affineCechDescendedModule f hf E)
+                            (affineCechDescendedModule f hf H))) :=
+                    oneAR ⊗ₜ[R] (q ⊗ₜ[R] s)
+                  let sourceA :
+                      (ModuleCat.extendScalars f.hom).obj
+                        (ModuleCat.of R
+                          (TensorProduct R
+                            (affineCechDescendedModule f hf DE)
+                            (affineCechDescendedModule f hf GH))) :=
+                    aAR ⊗ₜ[R]
+                      (eDE.inv (p ⊗ₜ[R] q) ⊗ₜ[R]
+                        eGH.inv (r ⊗ₜ[R] s))
+                  let targetA :
+                      (ModuleCat.extendScalars f.hom).obj
+                        (ModuleCat.of R
+                          (TensorProduct R
+                            (affineCechDescendedModule f hf DG)
+                            (affineCechDescendedModule f hf EH))) :=
+                    aAR ⊗ₜ[R]
+                      (eDG.inv (p ⊗ₜ[R] r) ⊗ₜ[R]
+                        eEH.inv (q ⊗ₜ[R] s))
+                  let dp : DA := ModuleCat.Hom.hom
+                    (affineCechDescendedModuleBaseChangeIso f hf D).hom
+                      (a ⊗ₜ[R] p)
+                  let eq : EA := ModuleCat.Hom.hom
+                    (affineCechDescendedModuleBaseChangeIso f hf E).hom
+                      ((1 : A) ⊗ₜ[R] q)
+                  let gr : GA := ModuleCat.Hom.hom
+                    (affineCechDescendedModuleBaseChangeIso f hf G).hom
+                      ((1 : A) ⊗ₜ[R] r)
+                  let hs : HA := ModuleCat.Hom.hom
+                    (affineCechDescendedModuleBaseChangeIso f hf H).hom
+                      ((1 : A) ⊗ₜ[R] s)
+                  calc
+                    _ = _ := hright
+                    _ = (dp ⊗ₜ[A] gr) ⊗ₜ[A] (eq ⊗ₜ[A] hs) := by
+                      rw [show target.hom =
+                        (affineCechSelectedTensorDescentDataCoverIso
+                            f hf DG EH).hom ≫
+                          (TensorProduct.congr tDG.toLinearEquiv
+                            tEH.toLinearEquiv).toModuleIso.hom from rfl]
+                      change
+                        (TensorProduct.congr tDG.toLinearEquiv
+                            tEH.toLinearEquiv)
+                          (ModuleCat.Hom.hom
+                            (affineCechDescendedTensorBaseChangeIso
+                              f hf DG EH).hom
+                            targetA) = _
+                      have hOuter :=
+                        affineCechDescendedTensorBaseChangeIso_hom_tmul
+                          f hf DG EH a (eDG.inv (p ⊗ₜ[R] r))
+                            (eEH.inv (q ⊗ₜ[R] s))
+                      dsimp only [targetA, aAR]
+                      rw [hOuter]
+                      rw [
+                        affineCechSelectedTensorDescendedIso_baseChange_inv_tmul
+                          f hf D G]
+                      rw [
+                        affineCechSelectedTensorDescendedIso_baseChange_inv_tmul
+                          f hf E H]
+                      rw [TensorProduct.congr_tmul]
+                      change tDG.toLinearEquiv dgA ⊗ₜ[A]
+                          tEH.toLinearEquiv ehA =
+                        (dp ⊗ₜ[A] gr) ⊗ₜ[A] (eq ⊗ₜ[A] hs)
+                      have hDG :
+                          tDG.toLinearEquiv dgA = dp ⊗ₜ[A] gr := by
+                        exact affineCechDescendedTensorBaseChangeIso_hom_tmul
+                          f hf D G a p r
+                      have hEH :
+                          tEH.toLinearEquiv ehA = eq ⊗ₜ[A] hs := by
+                        exact affineCechDescendedTensorBaseChangeIso_hom_tmul
+                          f hf E H (1 : A) q s
+                      rw [hDG, hEH]
+                    _ = _ := by
+                      dsimp only [K]
+                      rw [show source.hom =
+                        (affineCechSelectedTensorDescentDataCoverIso
+                            f hf DE GH).hom ≫
+                          (TensorProduct.congr tDE.toLinearEquiv
+                            tGH.toLinearEquiv).toModuleIso.hom from rfl]
+                      change
+                        (dp ⊗ₜ[A] gr) ⊗ₜ[A] (eq ⊗ₜ[A] hs) =
+                          (tensorProductMiddleFourIso A DA EA GA HA).hom
+                            ((TensorProduct.congr tDE.toLinearEquiv
+                              tGH.toLinearEquiv)
+                              (ModuleCat.Hom.hom
+                                (affineCechDescendedTensorBaseChangeIso
+                                  f hf DE GH).hom
+                                sourceA))
+                      have hOuter :=
+                        affineCechDescendedTensorBaseChangeIso_hom_tmul
+                          f hf DE GH a (eDE.inv (p ⊗ₜ[R] q))
+                            (eGH.inv (r ⊗ₜ[R] s))
+                      dsimp only [sourceA, aAR]
+                      rw [hOuter]
+                      rw [
+                        affineCechSelectedTensorDescendedIso_baseChange_inv_tmul
+                          f hf D E]
+                      rw [
+                        affineCechSelectedTensorDescendedIso_baseChange_inv_tmul
+                          f hf G H]
+                      rw [TensorProduct.congr_tmul]
+                      change
+                        (dp ⊗ₜ[A] gr) ⊗ₜ[A] (eq ⊗ₜ[A] hs) =
+                          (tensorProductMiddleFourIso A DA EA GA HA).hom
+                            (tDE.toLinearEquiv deA ⊗ₜ[A]
+                              tGH.toLinearEquiv ghA)
+                      have hDE :
+                          tDE.toLinearEquiv deA = dp ⊗ₜ[A] eq := by
+                        exact affineCechDescendedTensorBaseChangeIso_hom_tmul
+                          f hf D E a p q
+                      have hGH :
+                          tGH.toLinearEquiv ghA = gr ⊗ₜ[A] hs := by
+                        exact affineCechDescendedTensorBaseChangeIso_hom_tmul
+                          f hf G H (1 : A) r s
+                      rw [hDE, hGH,
+                        tensorProductMiddleFourIso_hom_tmul]
+              | add x y hx hy =>
+                  simp only [map_add, TensorProduct.tmul_add, hx, hy]
+          | add x y hx hy =>
+              simp only [map_add, TensorProduct.add_tmul,
+                TensorProduct.tmul_add, hx, hy]
+      | add x y hx hy =>
+          simp only [TensorProduct.tmul_add, map_add, hx, hy]
+  | add x y hx hy => simp only [map_add, hx, hy]
+
 /-- A bialgebra object for the selected symmetric tensor structure on affine
 Čech module descent data. The four final fields are the standard equations
 that comultiplication and counit preserve multiplication and unit. -/
