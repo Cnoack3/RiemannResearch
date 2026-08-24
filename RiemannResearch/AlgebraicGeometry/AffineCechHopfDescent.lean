@@ -5,6 +5,9 @@ Authors: Cnoack3
 -/
 
 import RiemannResearch.AlgebraicGeometry.AffineCechBialgebraDescent
+import Mathlib.Algebra.Category.CoalgCat.ComonEquivalence
+import Mathlib.CategoryTheory.Monoidal.Internal.Module
+import Mathlib.RingTheory.HopfAlgebra.Basic
 
 /-!
 # Hopf objects in affine Čech module descent
@@ -16,9 +19,10 @@ identities to the ordinary tensor product over the base ring. A commutative
 selected Hopf object is also packaged, with commutativity transported through
 the existing algebra-object theorem.
 
-This is the abstract Hopf-object layer. Producing the selected Hopf object for
-the diagram-twisted D4 coordinate datum requires equivariance of the concrete
-comultiplication, counit, and antipode and remains a separate specialization.
+The selected commutative Hopf object is also bundled on the ordinary descended
+carrier as a concrete commutative ring, algebra, coalgebra, bialgebra, and Hopf
+algebra. Constructing a selected object and identifying its scalar extension
+with a prescribed cover Hopf algebra remain specialization-level tasks.
 
 Source: user-provided affine Čech Hopf-descent program; the two identities are
 the standard left and right convolution-inverse equations for an antipode.
@@ -238,6 +242,340 @@ theorem descendedMul_comm
       H.toAffineCechSelectedHopfAlgebraObject.toAffineCechSelectedBialgebraObject.toAffineCechSelectedAlgebraObject.descendedMul := by
   exact H.toAffineCechSelectedCommAlgebraObject.descendedMul_comm
 
+/-- The ordinary descended multiplication and unit form a monoid object in
+the standard tensor category of modules over the base ring. -/
+@[instance_reducible]
+noncomputable def descendedMonObj
+    (H : AffineCechSelectedCommHopfAlgebraObject f hf) :
+    MonObj (affineCechDescendedModule f hf H.obj) := by
+  exact
+    { one := H.descendedUnit
+      mul := H.descendedMul
+      one_mul := H.descendedUnit_mul
+      mul_one := H.descendedMul_unit
+      mul_assoc := H.descendedMul_assoc.symm }
+
+/-- The ordinary descended comultiplication and counit form a comonoid object
+in the standard tensor category of modules over the base ring. -/
+@[instance_reducible]
+noncomputable def descendedComonObj
+    (H : AffineCechSelectedCommHopfAlgebraObject f hf) :
+    ComonObj (affineCechDescendedModule f hf H.obj) := by
+  let C :=
+    H.toAffineCechSelectedHopfAlgebraObject.toAffineCechSelectedBialgebraObject
+      |>.toAffineCechSelectedCoalgebraObject
+  let M := affineCechDescendedModule f hf C.obj
+  exact
+    { counit := C.descendedCounit
+      comul := C.descendedComul
+      counit_comul := by
+        apply (cancel_mono (TensorProduct.lid R M).toModuleIso.hom).mp
+        change
+          C.descendedComul ≫
+              ModuleCat.ofHom
+                (TensorProduct.map
+                  (ModuleCat.Hom.hom C.descendedCounit) LinearMap.id) ≫
+              (TensorProduct.lid R M).toModuleIso.hom =
+            (TensorProduct.lid R M).toModuleIso.inv ≫
+              (TensorProduct.lid R M).toModuleIso.hom
+        rw [Iso.inv_hom_id]
+        exact C.descendedCounit_left
+      comul_counit := by
+        apply (cancel_mono (TensorProduct.rid R M).toModuleIso.hom).mp
+        change
+          C.descendedComul ≫
+              ModuleCat.ofHom
+                (TensorProduct.map
+                  LinearMap.id (ModuleCat.Hom.hom C.descendedCounit)) ≫
+              (TensorProduct.rid R M).toModuleIso.hom =
+            (TensorProduct.rid R M).toModuleIso.inv ≫
+              (TensorProduct.rid R M).toModuleIso.hom
+        rw [Iso.inv_hom_id]
+        exact C.descendedCounit_right
+      comul_assoc := C.descendedComul_assoc.symm }
+
+/-- Commutative ring structure on the carrier selected by affine Čech module
+descent. Its multiplication and unit are definitionally the descended maps. -/
+@[instance_reducible]
+noncomputable def descendedCommRing
+    (H : AffineCechSelectedCommHopfAlgebraObject f hf) :
+    CommRing (affineCechDescendedModule f hf H.obj) := by
+  let M := affineCechDescendedModule f hf H.obj
+  letI : MonObj M := H.descendedMonObj
+  letI : Ring M :=
+    ModuleCat.MonModuleEquivalenceAlgebra.MonObj.toRing M
+  apply CommRing.mk
+  intro x y
+  change
+    (ModuleCat.Hom.hom H.descendedMul) (x ⊗ₜ[R] y) =
+      (ModuleCat.Hom.hom H.descendedMul) (y ⊗ₜ[R] x)
+  have h := congrArg
+    (fun q => (ModuleCat.Hom.hom q) (x ⊗ₜ[R] y))
+    H.descendedMul_comm
+  simpa using h.symm
+
+/-- Base-algebra structure on the descended commutative ring. Its algebra map
+is definitionally the descended unit map. -/
+@[instance_reducible]
+noncomputable def descendedAlgebra
+    (H : AffineCechSelectedCommHopfAlgebraObject f hf) :
+    let M := affineCechDescendedModule f hf H.obj
+    let _ : CommRing M := H.descendedCommRing
+    Algebra R M := by
+  dsimp only
+  let M := affineCechDescendedModule f hf H.obj
+  letI : MonObj M := H.descendedMonObj
+  exact ModuleCat.MonModuleEquivalenceAlgebra.Algebra_of_Mon_ M
+
+/-- Coalgebra structure maps on the ordinary descended carrier. -/
+@[instance_reducible]
+noncomputable def descendedCoalgebraStruct
+    (H : AffineCechSelectedCommHopfAlgebraObject f hf) :
+    CoalgebraStruct R (affineCechDescendedModule f hf H.obj) where
+  comul :=
+    ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedComul
+  counit :=
+    ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit
+
+/-- The coalgebra laws on the ordinary descended carrier. -/
+@[instance_reducible]
+noncomputable def descendedCoalgebra
+    (H : AffineCechSelectedCommHopfAlgebraObject f hf) :
+    Coalgebra R (affineCechDescendedModule f hf H.obj) := by
+  let M := affineCechDescendedModule f hf H.obj
+  letI : ComonObj M := H.descendedComonObj
+  exact CoalgCat.instCoalgebra (CoalgCat.ofComonObj M)
+
+@[instance_reducible]
+noncomputable def descendedBialgebra
+    (H : AffineCechSelectedCommHopfAlgebraObject f hf) :
+    let M := affineCechDescendedModule f hf H.obj
+    let _ : CommRing M := H.descendedCommRing
+    let _ : Algebra R M := H.descendedAlgebra
+    let _ : CoalgebraStruct R M := H.descendedCoalgebraStruct
+    let _ : Coalgebra R M := H.descendedCoalgebra
+    Bialgebra R M := by
+  dsimp only
+  let M := affineCechDescendedModule f hf H.obj
+  letI : CommRing M := H.descendedCommRing
+  letI : Algebra R M := H.descendedAlgebra
+  letI : CoalgebraStruct R M := H.descendedCoalgebraStruct
+  letI : Coalgebra R M := H.descendedCoalgebra
+  apply Bialgebra.mk
+  · change
+      (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit)
+          ((ModuleCat.Hom.hom H.descendedUnit) 1) = 1
+    have h := congrArg
+      (fun q => (ModuleCat.Hom.hom q) 1) H.descendedCounit_unit
+    change
+      (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit)
+          ((ModuleCat.Hom.hom H.descendedUnit) 1) = 1 at h
+    exact h
+  · ext x y
+    change
+      (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit)
+          ((ModuleCat.Hom.hom H.descendedMul) (x ⊗ₜ[R] y)) =
+        (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit) x *
+          (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit) y
+    have h := congrArg
+      (fun q => (ModuleCat.Hom.hom q) (x ⊗ₜ[R] y))
+      H.descendedCounit_mul
+    calc
+      (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit)
+          ((ModuleCat.Hom.hom H.descendedMul) (x ⊗ₜ[R] y)) =
+        (ModuleCat.Hom.hom
+          (H.descendedMul ≫
+            H.toAffineCechSelectedCoalgebraObject.descendedCounit))
+          (x ⊗ₜ[R] y) := rfl
+      _ = (ModuleCat.Hom.hom
+          (ModuleCat.ofHom
+              (TensorProduct.map
+                (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit)
+                (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit)) ≫
+            (TensorProduct.rid R (ModuleCat.of R R)).toModuleIso.hom))
+          (x ⊗ₜ[R] y) := h
+      _ = (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit) x *
+          (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit) y := by
+            let x' : affineCechDescendedModule f hf
+                H.toAffineCechSelectedCoalgebraObject.obj := x
+            let y' : affineCechDescendedModule f hf
+                H.toAffineCechSelectedCoalgebraObject.obj := y
+            change
+              (TensorProduct.rid R R)
+                  ((TensorProduct.map
+                    (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit)
+                    (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit))
+                    (x' ⊗ₜ[R] y')) =
+                (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit) x' *
+                  (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedCounit) y'
+            rw [TensorProduct.map_tmul, TensorProduct.rid_tmul]
+            exact _root_.mul_comm _ _
+  · change
+      (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedComul)
+          ((ModuleCat.Hom.hom H.descendedUnit) 1) =
+        (ModuleCat.Hom.hom H.descendedUnit) 1 ⊗ₜ[R]
+          (ModuleCat.Hom.hom H.descendedUnit) 1
+    have h := congrArg
+      (fun q => (ModuleCat.Hom.hom q) 1) H.descendedComul_unit
+    change
+      (ModuleCat.Hom.hom H.toAffineCechSelectedCoalgebraObject.descendedComul)
+          ((ModuleCat.Hom.hom H.descendedUnit) 1) =
+        (ModuleCat.Hom.hom H.descendedUnit) 1 ⊗ₜ[R]
+          (ModuleCat.Hom.hom H.descendedUnit) 1 at h
+    exact h
+  · ext x y
+    let dx : TensorProduct R M M :=
+      (ModuleCat.Hom.hom
+        H.toAffineCechSelectedCoalgebraObject.descendedComul) x
+    let dy : TensorProduct R M M :=
+      (ModuleCat.Hom.hom
+        H.toAffineCechSelectedCoalgebraObject.descendedComul) y
+    change
+      (ModuleCat.Hom.hom
+          H.toAffineCechSelectedCoalgebraObject.descendedComul)
+          ((ModuleCat.Hom.hom H.descendedMul) (x ⊗ₜ[R] y)) =
+        dx * dy
+    have h := congrArg
+      (fun q => (ModuleCat.Hom.hom q) (x ⊗ₜ[R] y))
+      H.descendedComul_mul
+    change
+      (ModuleCat.Hom.hom
+        (H.descendedMul ≫
+          H.toAffineCechSelectedCoalgebraObject.descendedComul))
+        (x ⊗ₜ[R] y) = dx * dy
+    rw [h]
+    change
+      (TensorProduct.map
+          (ModuleCat.Hom.hom H.descendedMul)
+          (ModuleCat.Hom.hom H.descendedMul))
+          ((tensorProductMiddleFourIso R M M M M).hom
+            (dx ⊗ₜ[R] dy)) =
+        dx * dy
+    induction dx using TensorProduct.induction_on with
+    | zero => simp
+    | tmul a b =>
+      induction dy using TensorProduct.induction_on with
+      | zero => simp
+      | tmul c d =>
+        rw [tensorProductMiddleFourIso_hom_tmul,
+          TensorProduct.map_tmul,
+          Algebra.TensorProduct.tmul_mul_tmul]
+        rfl
+      | add q₁ q₂ hq₁ hq₂ =>
+        simp only [TensorProduct.tmul_add, map_add, mul_add,
+          hq₁, hq₂]
+    | add p₁ p₂ hp₁ hp₂ =>
+      simp only [TensorProduct.add_tmul, map_add, add_mul,
+        hp₁, hp₂]
+
+/-- The descended antipode added to the descended bialgebra structure. -/
+@[instance_reducible]
+noncomputable def descendedHopfAlgebraStruct
+    (H : AffineCechSelectedCommHopfAlgebraObject f hf) :
+    let M := affineCechDescendedModule f hf H.obj
+    let _ : CommRing M := H.descendedCommRing
+    let _ : Algebra R M := H.descendedAlgebra
+    let _ : CoalgebraStruct R M := H.descendedCoalgebraStruct
+    let _ : Coalgebra R M := H.descendedCoalgebra
+    let _ : Bialgebra R M := H.descendedBialgebra
+    HopfAlgebraStruct R M := by
+  dsimp only
+  let M := affineCechDescendedModule f hf H.obj
+  letI : CommRing M := H.descendedCommRing
+  letI : Algebra R M := H.descendedAlgebra
+  letI : CoalgebraStruct R M := H.descendedCoalgebraStruct
+  letI : Coalgebra R M := H.descendedCoalgebra
+  letI : Bialgebra R M := H.descendedBialgebra
+  exact HopfAlgebraStruct.mk (ModuleCat.Hom.hom H.descendedAntipode)
+
+/-- The ordinary descended carrier, with all five descended structure maps,
+is a commutative Hopf algebra over the base ring. -/
+@[instance_reducible]
+noncomputable def descendedHopfAlgebra
+    (H : AffineCechSelectedCommHopfAlgebraObject f hf) :
+    let M := affineCechDescendedModule f hf H.obj
+    let _ : CommRing M := H.descendedCommRing
+    let _ : Algebra R M := H.descendedAlgebra
+    let _ : CoalgebraStruct R M := H.descendedCoalgebraStruct
+    let _ : Coalgebra R M := H.descendedCoalgebra
+    let _ : Bialgebra R M := H.descendedBialgebra
+    let _ : HopfAlgebraStruct R M := H.descendedHopfAlgebraStruct
+    HopfAlgebra R M := by
+  dsimp only
+  let M := affineCechDescendedModule f hf H.obj
+  letI : CommRing M := H.descendedCommRing
+  letI : Algebra R M := H.descendedAlgebra
+  letI : CoalgebraStruct R M := H.descendedCoalgebraStruct
+  letI : Coalgebra R M := H.descendedCoalgebra
+  letI : Bialgebra R M := H.descendedBialgebra
+  letI : HopfAlgebraStruct R M := H.descendedHopfAlgebraStruct
+  have hmul :
+      LinearMap.mul' R M = ModuleCat.Hom.hom H.descendedMul := by
+    ext a b
+    rfl
+  have hunit :
+      Algebra.linearMap R M = ModuleCat.Hom.hom H.descendedUnit := by
+    ext
+    rfl
+  have hantipode :
+      (HopfAlgebraStruct.antipode R : M →ₗ[R] M) =
+        ModuleCat.Hom.hom
+          H.toAffineCechSelectedHopfAlgebraObject.descendedAntipode := rfl
+  apply HopfAlgebra.mk
+  · rw [hmul, hantipode, hunit]
+    ext x
+    change
+      (ModuleCat.Hom.hom H.descendedMul)
+          ((TensorProduct.map
+            (ModuleCat.Hom.hom
+              H.toAffineCechSelectedHopfAlgebraObject.descendedAntipode)
+            LinearMap.id)
+            ((ModuleCat.Hom.hom
+              H.toAffineCechSelectedCoalgebraObject.descendedComul) x)) =
+        (ModuleCat.Hom.hom H.descendedUnit)
+          ((ModuleCat.Hom.hom
+            H.toAffineCechSelectedCoalgebraObject.descendedCounit) x)
+    have h := congrArg
+      (fun q => (ModuleCat.Hom.hom q) x)
+      H.toAffineCechSelectedHopfAlgebraObject.descendedAntipode_mul_left
+    change
+      (ModuleCat.Hom.hom H.descendedMul)
+          ((TensorProduct.map
+            (ModuleCat.Hom.hom
+              H.toAffineCechSelectedHopfAlgebraObject.descendedAntipode)
+            LinearMap.id)
+            ((ModuleCat.Hom.hom
+              H.toAffineCechSelectedCoalgebraObject.descendedComul) x)) =
+        (ModuleCat.Hom.hom H.descendedUnit)
+          ((ModuleCat.Hom.hom
+            H.toAffineCechSelectedCoalgebraObject.descendedCounit) x) at h
+    exact h
+  · rw [hmul, hantipode, hunit]
+    ext x
+    change
+      (ModuleCat.Hom.hom H.descendedMul)
+          ((TensorProduct.map LinearMap.id
+            (ModuleCat.Hom.hom
+              H.toAffineCechSelectedHopfAlgebraObject.descendedAntipode))
+            ((ModuleCat.Hom.hom
+              H.toAffineCechSelectedCoalgebraObject.descendedComul) x)) =
+        (ModuleCat.Hom.hom H.descendedUnit)
+          ((ModuleCat.Hom.hom
+            H.toAffineCechSelectedCoalgebraObject.descendedCounit) x)
+    have h := congrArg
+      (fun q => (ModuleCat.Hom.hom q) x)
+      H.toAffineCechSelectedHopfAlgebraObject.descendedAntipode_mul_right
+    change
+      (ModuleCat.Hom.hom H.descendedMul)
+          ((TensorProduct.map LinearMap.id
+            (ModuleCat.Hom.hom
+              H.toAffineCechSelectedHopfAlgebraObject.descendedAntipode))
+            ((ModuleCat.Hom.hom
+              H.toAffineCechSelectedCoalgebraObject.descendedComul) x)) =
+        (ModuleCat.Hom.hom H.descendedUnit)
+          ((ModuleCat.Hom.hom
+            H.toAffineCechSelectedCoalgebraObject.descendedCounit) x) at h
+    exact h
 end AffineCechSelectedCommHopfAlgebraObject
 
 end RiemannResearch.AlgebraicGeometry
