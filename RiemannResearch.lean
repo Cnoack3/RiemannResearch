@@ -1,6 +1,7 @@
 import RiemannResearch.AlgebraicGeometry.AffineGroupSchemeBaseChange
 import RiemannResearch.AlgebraicGeometry.AdditiveGroupScheme
 import RiemannResearch.AlgebraicGeometry.AdditiveGroupPoints
+import RiemannResearch.AlgebraicGeometry.AdditiveGroupPointConvolution
 import RiemannResearch.AlgebraicGeometry.SerreIITypeE7
 import RiemannResearch.AlgebraicGeometry.FpqcCover
 import RiemannResearch.AlgebraicGeometry.FpqcModuleDescent

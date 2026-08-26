@@ -34,3 +34,7 @@ noncomputable def pointAlgHomEquiv
     simp
   right_inv s := by
     simp
+
+end AdditiveGroup
+end AlgebraicGeometry
+end RiemannResearch
