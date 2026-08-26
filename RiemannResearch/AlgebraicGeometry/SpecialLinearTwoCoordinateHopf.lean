@@ -268,7 +268,387 @@ theorem coordinate_right_counit :
   rw [coordinateComul_baseChange]
   rw [rightCounitPoint_left, rightCounitPoint_right, mul_one]
 
+
 end CounitIdentities
+
+private theorem coordinate_commute (x y : A) : Commute x y := by
+  change x * y = y * x
+  exact @mul_comm A (inferInstance : CommMagma A) _ _
+
+private def antipodeLeftMap : T →ₐ[ℤ] A :=
+  Algebra.TensorProduct.lift coordinateAntipode (AlgHom.id ℤ A)
+    (fun x y => coordinate_commute
+      (coordinateAntipode x) ((AlgHom.id ℤ A) y))
+
+private def antipodeRightMap : T →ₐ[ℤ] A :=
+  Algebra.TensorProduct.lift (AlgHom.id ℤ A) coordinateAntipode
+    (fun x y => coordinate_commute
+      ((AlgHom.id ℤ A) x) (coordinateAntipode y))
+
+private theorem antipodeLeftMap_includeLeft :
+    antipodeLeftMap.toRingHom.comp tensorIncludeLeft =
+      coordinateAntipode.toRingHom := by
+  apply DFunLike.ext _ _
+  intro x
+  change coordinateAntipode x * 1 = coordinateAntipode x
+  exact @mul_one A (inferInstance : MulOneClass A) _
+
+private theorem antipodeLeftMap_includeRight :
+    antipodeLeftMap.toRingHom.comp tensorIncludeRight =
+      (AlgHom.id ℤ A).toRingHom := by
+  apply DFunLike.ext _ _
+  intro x
+  change (Algebra.TensorProduct.lift coordinateAntipode (AlgHom.id ℤ A)
+      (fun x y => coordinate_commute
+        (coordinateAntipode x) ((AlgHom.id ℤ A) y)))
+      ((1 : A) ⊗ₜ[ℤ] x) = x
+  rw [Algebra.TensorProduct.lift_tmul]
+  simp only [map_one, AlgHom.coe_id, id_eq]
+  exact @one_mul A (inferInstance : MulOneClass A) x
+
+private theorem antipodeRightMap_includeLeft :
+    antipodeRightMap.toRingHom.comp tensorIncludeLeft =
+      (AlgHom.id ℤ A).toRingHom := by
+  apply DFunLike.ext _ _
+  intro x
+  change (Algebra.TensorProduct.lift (AlgHom.id ℤ A) coordinateAntipode
+      (fun x y => coordinate_commute
+        ((AlgHom.id ℤ A) x) (coordinateAntipode y)))
+      (x ⊗ₜ[ℤ] (1 : A)) = x
+  rw [Algebra.TensorProduct.lift_tmul]
+  simp only [map_one, AlgHom.coe_id, id_eq]
+  exact @mul_one A (inferInstance : MulOneClass A) x
+
+private theorem antipodeRightMap_includeRight :
+    antipodeRightMap.toRingHom.comp tensorIncludeRight =
+      coordinateAntipode.toRingHom := by
+  apply DFunLike.ext _ _
+  intro x
+  change 1 * coordinateAntipode x = coordinateAntipode x
+  exact @one_mul A (inferInstance : MulOneClass A) _
+
+private theorem antipodeLeftPoint_left :
+    Matrix.SpecialLinearGroup.map antipodeLeftMap.toRingHom
+        universalPointLeft = universalPoint⁻¹ := by
+  rw [universalPointLeft]
+  rw [← specialLinearMap_comp_apply]
+  rw [antipodeLeftMap_includeLeft]
+  exact coordinateAntipode_universal
+
+private theorem antipodeLeftPoint_right :
+    Matrix.SpecialLinearGroup.map antipodeLeftMap.toRingHom
+        universalPointRight = universalPoint := by
+  rw [universalPointRight]
+  rw [← specialLinearMap_comp_apply]
+  rw [antipodeLeftMap_includeRight]
+  apply Matrix.SpecialLinearGroup.ext
+  intro i j
+  rfl
+
+private theorem antipodeRightPoint_left :
+    Matrix.SpecialLinearGroup.map antipodeRightMap.toRingHom
+        universalPointLeft = universalPoint := by
+  rw [universalPointLeft]
+  rw [← specialLinearMap_comp_apply]
+  rw [antipodeRightMap_includeLeft]
+  apply Matrix.SpecialLinearGroup.ext
+  intro i j
+  rfl
+
+private theorem antipodeRightPoint_right :
+    Matrix.SpecialLinearGroup.map antipodeRightMap.toRingHom
+        universalPointRight = universalPoint⁻¹ := by
+  rw [universalPointRight]
+  rw [← specialLinearMap_comp_apply]
+  rw [antipodeRightMap_includeRight]
+  exact coordinateAntipode_universal
+
+private theorem antipodeUnitPoint :
+    Matrix.SpecialLinearGroup.map
+        (((Algebra.ofId ℤ A).comp coordinateCounit).toRingHom)
+        universalPoint = 1 := by
+  change Matrix.SpecialLinearGroup.map
+      ((algebraMap ℤ A).comp coordinateCounit.toRingHom)
+      universalPoint = 1
+  rw [specialLinearMap_comp_apply]
+  rw [coordinateCounit_universal]
+  exact map_one _
+
+private theorem antipodeLeft_identity :
+    antipodeLeftMap.comp coordinateComul =
+      (Algebra.ofId ℤ A).comp coordinateCounit := by
+  apply coordinateAlgHom_ext (R := A)
+  rw [coordinateComul_baseChange (R := A)]
+  rw [antipodeLeftPoint_left, antipodeLeftPoint_right,
+    inv_mul_cancel, antipodeUnitPoint]
+
+private theorem antipodeRight_identity :
+    antipodeRightMap.comp coordinateComul =
+      (Algebra.ofId ℤ A).comp coordinateCounit := by
+  apply coordinateAlgHom_ext (R := A)
+  rw [coordinateComul_baseChange (R := A)]
+  rw [antipodeRightPoint_left, antipodeRightPoint_right,
+    mul_inv_cancel, antipodeUnitPoint]
+
+/-- The coordinate antipode is a left inverse of the identity under the
+coordinate convolution product. -/
+theorem coordinateAntipode_left :
+    (Algebra.TensorProduct.lift coordinateAntipode (AlgHom.id ℤ A)
+        (fun x y => coordinate_commute
+          (coordinateAntipode x) ((AlgHom.id ℤ A) y))).comp
+        coordinateComul =
+      (Algebra.ofId ℤ A).comp coordinateCounit := by
+  exact antipodeLeft_identity
+
+/-- The coordinate antipode is a right inverse of the identity under the
+coordinate convolution product. -/
+theorem coordinateAntipode_right :
+    (Algebra.TensorProduct.lift (AlgHom.id ℤ A) coordinateAntipode
+        (fun x y => coordinate_commute
+          ((AlgHom.id ℤ A) x) (coordinateAntipode y))).comp
+        coordinateComul =
+      (Algebra.ofId ℤ A).comp coordinateCounit := by
+  exact antipodeRight_identity
+
+
+local instance hopfTensorAddCommMonoid : AddCommMonoid T :=
+  (inferInstance : Semiring T).toAddCommMonoid
+
+local instance hopfTensorIntModule : Module ℤ T :=
+  @Algebra.toModule ℤ T _ _ (inferInstance : Algebra ℤ T)
+
+private abbrev LeftTripleTensor := T ⊗[ℤ] A
+private abbrev RightTripleTensor := A ⊗[ℤ] T
+
+noncomputable local instance leftTripleTensorRing :
+    Ring LeftTripleTensor := by
+  let sr : Semiring LeftTripleTensor := inferInstance
+  let ag : AddCommGroup LeftTripleTensor := inferInstance
+  exact { sr, ag with
+    sub_eq_add_neg := by intros; rfl
+    intCast := Int.castDef
+    intCast_ofNat := by intro n; rfl
+    intCast_negSucc := by intro n; rfl }
+
+noncomputable local instance leftTripleTensorCommRing :
+    CommRing LeftTripleTensor := by
+  let cr : CommSemiring LeftTripleTensor :=
+    @Algebra.TensorProduct.instCommSemiring ℤ T A
+      (inferInstance : CommSemiring ℤ)
+      (inferInstance : CommSemiring T)
+      (inferInstance : Algebra ℤ T)
+      (inferInstance : CommSemiring A)
+      (inferInstance : Algebra ℤ A)
+  exact { leftTripleTensorRing, cr with }
+
+local instance leftTripleTensorAlgebra : Algebra ℤ LeftTripleTensor :=
+  @Algebra.TensorProduct.instAlgebra ℤ T A
+    (inferInstance : CommSemiring ℤ)
+    (inferInstance : Semiring T)
+    (inferInstance : Algebra ℤ T)
+    (inferInstance : Semiring A)
+    (inferInstance : Algebra ℤ A)
+
+noncomputable local instance rightTripleTensorRing :
+    Ring RightTripleTensor := by
+  let sr : Semiring RightTripleTensor := inferInstance
+  let ag : AddCommGroup RightTripleTensor := inferInstance
+  exact { sr, ag with
+    sub_eq_add_neg := by intros; rfl
+    intCast := Int.castDef
+    intCast_ofNat := by intro n; rfl
+    intCast_negSucc := by intro n; rfl }
+
+noncomputable local instance rightTripleTensorCommRing :
+    CommRing RightTripleTensor := by
+  let cr : CommSemiring RightTripleTensor :=
+    @Algebra.TensorProduct.instCommSemiring ℤ A T
+      (inferInstance : CommSemiring ℤ)
+      (inferInstance : CommSemiring A)
+      (inferInstance : Algebra ℤ A)
+      (inferInstance : CommSemiring T)
+      (inferInstance : Algebra ℤ T)
+  exact { rightTripleTensorRing, cr with }
+
+local instance rightTripleTensorAlgebra : Algebra ℤ RightTripleTensor :=
+  @Algebra.TensorProduct.instAlgebra ℤ A T
+    (inferInstance : CommSemiring ℤ)
+    (inferInstance : Semiring A)
+    (inferInstance : Algebra ℤ A)
+    (inferInstance : Semiring T)
+    (inferInstance : Algebra ℤ T)
+
+private def coassocLeftOuter : T →ₐ[ℤ] RightTripleTensor :=
+  (Algebra.TensorProduct.assoc ℤ ℤ ℤ A A A).toAlgHom.comp
+    (Algebra.TensorProduct.map coordinateComul (AlgHom.id ℤ A))
+
+private def coassocRightOuter : T →ₐ[ℤ] RightTripleTensor :=
+  Algebra.TensorProduct.map (AlgHom.id ℤ A) coordinateComul
+
+private def coassocPair12 : T →ₐ[ℤ] RightTripleTensor :=
+  (Algebra.TensorProduct.assoc ℤ ℤ ℤ A A A).toAlgHom.comp
+    (Algebra.TensorProduct.includeLeft : T →ₐ[ℤ] LeftTripleTensor)
+
+private def coassocPoint3 : A →ₐ[ℤ] RightTripleTensor :=
+  (Algebra.TensorProduct.assoc ℤ ℤ ℤ A A A).toAlgHom.comp
+    (Algebra.TensorProduct.includeRight : A →ₐ[ℤ] LeftTripleTensor)
+
+private def coassocPoint1 : A →ₐ[ℤ] RightTripleTensor :=
+  (Algebra.TensorProduct.includeLeft : A →ₐ[ℤ] RightTripleTensor)
+
+private def coassocPair23 : T →ₐ[ℤ] RightTripleTensor :=
+  (Algebra.TensorProduct.includeRight : T →ₐ[ℤ] RightTripleTensor)
+
+private theorem coassocLeftOuter_includeLeft :
+    coassocLeftOuter.toRingHom.comp tensorIncludeLeft =
+      coassocPair12.toRingHom.comp coordinateComul.toRingHom := by
+  apply DFunLike.ext _ _
+  intro x
+  simp [coassocLeftOuter, coassocPair12, tensorIncludeLeft]
+
+private theorem coassocLeftOuter_includeRight :
+    coassocLeftOuter.toRingHom.comp tensorIncludeRight =
+      coassocPoint3.toRingHom := by
+  apply DFunLike.ext _ _
+  intro x
+  simp [coassocLeftOuter, coassocPoint3, tensorIncludeRight]
+
+private theorem coassocRightOuter_includeLeft :
+    coassocRightOuter.toRingHom.comp tensorIncludeLeft =
+      coassocPoint1.toRingHom := by
+  apply DFunLike.ext _ _
+  intro x
+  simp [coassocRightOuter, coassocPoint1, tensorIncludeLeft]
+
+private theorem coassocRightOuter_includeRight :
+    coassocRightOuter.toRingHom.comp tensorIncludeRight =
+      coassocPair23.toRingHom.comp coordinateComul.toRingHom := by
+  apply DFunLike.ext _ _
+  intro x
+  simp [coassocRightOuter, coassocPair23, tensorIncludeRight]
+
+private theorem coassocPair12_includeLeft :
+    coassocPair12.toRingHom.comp tensorIncludeLeft =
+      coassocPoint1.toRingHom := by
+  apply DFunLike.ext _ _
+  intro x
+  simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_comp,
+    RingHom.coe_coe, Function.comp_apply]
+  change x ⊗ₜ[ℤ] ((1 : A) ⊗ₜ[ℤ] (1 : A)) =
+    x ⊗ₜ[ℤ] (1 : T)
+  exact (congrArg (fun z : T => x ⊗ₜ[ℤ] z)
+    (Algebra.TensorProduct.one_def :
+      (1 : T) = (1 : A) ⊗ₜ[ℤ] (1 : A))).symm
+
+private theorem coassocMiddleFactors :
+    coassocPair12.toRingHom.comp tensorIncludeRight =
+      coassocPair23.toRingHom.comp tensorIncludeLeft := by
+  apply DFunLike.ext _ _
+  intro x
+  simp [coassocPair12, coassocPair23,
+    tensorIncludeLeft, tensorIncludeRight]
+
+private theorem coassocPair23_includeRight :
+    coassocPair23.toRingHom.comp tensorIncludeRight =
+      coassocPoint3.toRingHom := by
+  apply DFunLike.ext _ _
+  intro x
+  simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_comp,
+    RingHom.coe_coe, Function.comp_apply]
+  change (1 : A) ⊗ₜ[ℤ] ((1 : A) ⊗ₜ[ℤ] x) =
+    (Algebra.TensorProduct.assoc ℤ ℤ ℤ A A A)
+      ((1 : T) ⊗ₜ[ℤ] x)
+  rw [show (1 : T) = (1 : A) ⊗ₜ[ℤ] (1 : A) from
+    Algebra.TensorProduct.one_def]
+  rfl
+
+
+private theorem coassocLeftPoint_left :
+    Matrix.SpecialLinearGroup.map coassocLeftOuter.toRingHom
+        universalPointLeft =
+      Matrix.SpecialLinearGroup.map coassocPair12.toRingHom
+          universalPointLeft *
+        Matrix.SpecialLinearGroup.map coassocPair12.toRingHom
+          universalPointRight := by
+  rw [universalPointLeft]
+  rw [← specialLinearMap_comp_apply]
+  rw [coassocLeftOuter_includeLeft]
+  exact coordinateComul_baseChange coassocPair12
+
+private theorem coassocLeftPoint_right :
+    Matrix.SpecialLinearGroup.map coassocLeftOuter.toRingHom
+        universalPointRight =
+      Matrix.SpecialLinearGroup.map coassocPoint3.toRingHom
+        universalPoint := by
+  rw [universalPointRight]
+  rw [← specialLinearMap_comp_apply]
+  rw [coassocLeftOuter_includeRight]
+
+private theorem coassocRightPoint_left :
+    Matrix.SpecialLinearGroup.map coassocRightOuter.toRingHom
+        universalPointLeft =
+      Matrix.SpecialLinearGroup.map coassocPoint1.toRingHom
+        universalPoint := by
+  rw [universalPointLeft]
+  rw [← specialLinearMap_comp_apply]
+  rw [coassocRightOuter_includeLeft]
+
+private theorem coassocRightPoint_right :
+    Matrix.SpecialLinearGroup.map coassocRightOuter.toRingHom
+        universalPointRight =
+      Matrix.SpecialLinearGroup.map coassocPair23.toRingHom
+          universalPointLeft *
+        Matrix.SpecialLinearGroup.map coassocPair23.toRingHom
+          universalPointRight := by
+  rw [universalPointRight]
+  rw [← specialLinearMap_comp_apply]
+  rw [coassocRightOuter_includeRight]
+  exact coordinateComul_baseChange coassocPair23
+
+private theorem coassocPair12Point_left :
+    Matrix.SpecialLinearGroup.map coassocPair12.toRingHom
+        universalPointLeft =
+      Matrix.SpecialLinearGroup.map coassocPoint1.toRingHom
+        universalPoint := by
+  rw [universalPointLeft]
+  rw [← specialLinearMap_comp_apply]
+  rw [coassocPair12_includeLeft]
+
+private theorem coassocMiddlePoints :
+    Matrix.SpecialLinearGroup.map coassocPair12.toRingHom
+        universalPointRight =
+      Matrix.SpecialLinearGroup.map coassocPair23.toRingHom
+        universalPointLeft := by
+  rw [universalPointRight, universalPointLeft]
+  rw [← specialLinearMap_comp_apply,
+    ← specialLinearMap_comp_apply]
+  rw [coassocMiddleFactors]
+
+private theorem coassocPair23Point_right :
+    Matrix.SpecialLinearGroup.map coassocPair23.toRingHom
+        universalPointRight =
+      Matrix.SpecialLinearGroup.map coassocPoint3.toRingHom
+        universalPoint := by
+  rw [universalPointRight]
+  rw [← specialLinearMap_comp_apply]
+  rw [coassocPair23_includeRight]
+
+/-- Coassociativity of the integral `SL₂` coordinate comultiplication. -/
+theorem coordinate_coassoc :
+    (Algebra.TensorProduct.assoc ℤ ℤ ℤ A A A).toAlgHom.comp
+          ((Algebra.TensorProduct.map coordinateComul
+            (AlgHom.id ℤ A)).comp coordinateComul) =
+      (Algebra.TensorProduct.map (AlgHom.id ℤ A)
+          coordinateComul).comp coordinateComul := by
+  change coassocLeftOuter.comp coordinateComul =
+    coassocRightOuter.comp coordinateComul
+  apply coordinateAlgHom_ext
+  rw [coordinateComul_baseChange, coordinateComul_baseChange]
+  rw [coassocLeftPoint_left, coassocLeftPoint_right,
+    coassocRightPoint_left, coassocRightPoint_right,
+    coassocPair12Point_left, coassocMiddlePoints,
+    coassocPair23Point_right]
+  exact mul_assoc _ _ _
 
 end
 
