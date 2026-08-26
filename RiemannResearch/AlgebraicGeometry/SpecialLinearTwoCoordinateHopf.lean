@@ -650,6 +650,112 @@ theorem coordinate_coassoc :
     coassocPair23Point_right]
   exact mul_assoc _ _ _
 
+
+/-- The integral coordinate algebra of split `SL₂` is a bialgebra. -/
+@[instance_reducible] noncomputable instance coordinateBialgebra :
+    Bialgebra ℤ A :=
+  Bialgebra.ofAlgHom coordinateComul coordinateCounit
+    coordinate_coassoc coordinate_left_counit coordinate_right_counit
+
+private theorem coordinateAntipode_left_installed :
+    (Algebra.TensorProduct.lift coordinateAntipode
+        (AlgHom.id ℤ A)
+        (fun x => Commute.all (coordinateAntipode x))).comp
+      (Bialgebra.comulAlgHom ℤ A) =
+        (Algebra.ofId ℤ A).comp (Bialgebra.counitAlgHom ℤ A) := by
+  change
+    (Algebra.TensorProduct.lift coordinateAntipode
+        (AlgHom.id ℤ A)
+        (fun x => Commute.all (coordinateAntipode x))).comp
+      coordinateComul =
+        (Algebra.ofId ℤ A).comp coordinateCounit
+  exact coordinateAntipode_left
+
+private theorem coordinateAntipode_right_installed :
+    (Algebra.TensorProduct.lift (AlgHom.id ℤ A)
+        coordinateAntipode
+        (fun x y => Commute.all
+          ((AlgHom.id ℤ A) x) (coordinateAntipode y))).comp
+      (Bialgebra.comulAlgHom ℤ A) =
+        (Algebra.ofId ℤ A).comp (Bialgebra.counitAlgHom ℤ A) := by
+  change
+    (Algebra.TensorProduct.lift (AlgHom.id ℤ A)
+        coordinateAntipode
+        (fun x y => Commute.all
+          ((AlgHom.id ℤ A) x) (coordinateAntipode y))).comp
+      coordinateComul =
+        (Algebra.ofId ℤ A).comp coordinateCounit
+  exact coordinateAntipode_right
+
+private theorem antipodeLeftLinearBridge (z : T) :
+    (LinearMap.mul' ℤ A)
+        ((TensorProduct.map coordinateAntipode.toLinearMap
+          (LinearMap.id : A →ₗ[ℤ] A)) z) =
+      (Algebra.TensorProduct.lift coordinateAntipode
+        (AlgHom.id ℤ A)
+        (fun x => Commute.all (coordinateAntipode x))) z := by
+  refine TensorProduct.induction_on z ?_ ?_ ?_
+  · simp
+  · intro x y
+    rw [TensorProduct.map_tmul, LinearMap.mul'_apply]
+    rfl
+  · intro x y hx hy
+    simp [hx, hy]
+
+private theorem antipodeRightLinearBridge (z : T) :
+    (LinearMap.mul' ℤ A)
+        ((TensorProduct.map (LinearMap.id : A →ₗ[ℤ] A)
+          coordinateAntipode.toLinearMap) z) =
+      (Algebra.TensorProduct.lift (AlgHom.id ℤ A)
+        coordinateAntipode
+        (fun x y => Commute.all
+          ((AlgHom.id ℤ A) x) (coordinateAntipode y))) z := by
+  refine TensorProduct.induction_on z ?_ ?_ ?_
+  · simp
+  · intro x y
+    rw [TensorProduct.map_tmul, LinearMap.mul'_apply]
+    rfl
+  · intro x y hx hy
+    simp [hx, hy]
+
+private theorem coordinateAntipode_left_conv :
+    WithConv.toConv coordinateAntipode.toLinearMap *
+        WithConv.toConv (LinearMap.id : A →ₗ[ℤ] A) = 1 := by
+  apply WithConv.ext
+  change
+    (LinearMap.mul' ℤ A) ∘ₗ
+          (TensorProduct.map coordinateAntipode.toLinearMap
+            (LinearMap.id : A →ₗ[ℤ] A)) ∘ₗ
+          CoalgebraStruct.comul =
+      (Algebra.linearMap ℤ A) ∘ₗ CoalgebraStruct.counit
+  apply LinearMap.ext
+  intro x
+  simp only [LinearMap.comp_apply]
+  rw [antipodeLeftLinearBridge]
+  exact DFunLike.congr_fun coordinateAntipode_left_installed x
+
+private theorem coordinateAntipode_right_conv :
+    WithConv.toConv (LinearMap.id : A →ₗ[ℤ] A) *
+        WithConv.toConv coordinateAntipode.toLinearMap = 1 := by
+  apply WithConv.ext
+  change
+    (LinearMap.mul' ℤ A) ∘ₗ
+          (TensorProduct.map (LinearMap.id : A →ₗ[ℤ] A)
+            coordinateAntipode.toLinearMap) ∘ₗ
+          CoalgebraStruct.comul =
+      (Algebra.linearMap ℤ A) ∘ₗ CoalgebraStruct.counit
+  apply LinearMap.ext
+  intro x
+  simp only [LinearMap.comp_apply]
+  rw [antipodeRightLinearBridge]
+  exact DFunLike.congr_fun coordinateAntipode_right_installed x
+
+/-- The integral coordinate algebra of split `SL₂` is a Hopf algebra. -/
+@[instance_reducible] noncomputable instance coordinateHopfAlgebra :
+    HopfAlgebra ℤ A :=
+  HopfAlgebra.ofConvInverse coordinateAntipode.toLinearMap
+    coordinateAntipode_left_conv coordinateAntipode_right_conv
+
 end
 
 end SpecialLinearTwo
