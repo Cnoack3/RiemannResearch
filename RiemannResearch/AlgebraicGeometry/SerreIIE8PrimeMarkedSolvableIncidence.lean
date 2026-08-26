@@ -5,6 +5,7 @@ Authors: Cnoack3
 -/
 import RiemannResearch.AlgebraicGeometry.SerreIIE8BinaryIcosahedralRelatedTripleCoordinate
 import RiemannResearch.E8.PrimeMarkedSolvableIncidence
+import RiemannResearch.GaloisCohomology.SubgroupGaugeFiltration
 
 /-!
 # Prime-marked solvable incidence for the nonbinary E8 rows
@@ -23,8 +24,8 @@ the four binary-icosahedral rows, this reaches the terminal conditional
 Serre-II reduction.
 
 The certificate remains an honest geometric boundary. It does not construct
-the common band-valued gauge, the three restriction vanishings, the correction
-into the unipotent subgroup, or terminal unipotent H¹ vanishing.
+the common band-valued gauge, the three restriction vanishings, or the
+layer-by-layer corrections in its finite unipotent gauge filtration.
 -/
 
 universe u v w x
@@ -66,8 +67,7 @@ structure PrimeMarkedSolvableFiltrationCertificate
   correct_to_unipotent :
     obstruction = 0 →
       ∃ q : B, ((a.gauge bandGauge).gauge (q : G)).ValuesIn U
-  unipotent_h1 :
-    ∀ z : NonabelianCocycle Γ G, z.ValuesIn U → z.IsCoboundary
+  unipotentFiltration : SubgroupGaugeFiltration Γ G U
 
 namespace PrimeMarkedSolvableFiltrationCertificate
 
@@ -87,7 +87,7 @@ theorem isCoboundary
       C.B C.U C.T (S C.i2) (S C.i3) (S C.i5)
       C.card2 C.card3 C.card5 C.bandGauge C.bandValued
       C.obstruction C.obstruction_local2 C.obstruction_local3
-      C.obstruction_local5 C.correct_to_unipotent C.unipotent_h1
+      C.obstruction_local5 C.correct_to_unipotent C.unipotentFiltration.isCoboundary
 
 /-- The same packet-specialized calculation gives the anchored fixed
 correction for any separately constructed generating family of local gauges. -/
@@ -111,7 +111,7 @@ theorem exists_anchoredFixedGaugeCorrection
       C.card2 C.card3 C.card5 localGauge hgen hlocal
       C.bandGauge C.bandValued C.obstruction C.obstruction_local2
       C.obstruction_local3 C.obstruction_local5 C.correct_to_unipotent
-      C.unipotent_h1
+      C.unipotentFiltration.isCoboundary
 
 end PrimeMarkedSolvableFiltrationCertificate
 
