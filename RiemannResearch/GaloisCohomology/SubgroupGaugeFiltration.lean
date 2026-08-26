@@ -38,6 +38,34 @@ inductive SubgroupGaugeFiltration
 
 namespace SubgroupGaugeFiltration
 
+/-- Extend a gauge filtration by one step when the quotient coefficient group
+has neutral nonabelian H¹.
+
+The quotient kernel is presented as a normal subgroup N of the subtype group
+U; hN identifies it with the ambient next subgroup V. -/
+def stepOfQuotientH1
+    {Γ : Type u} {G : Type v}
+    [Group Γ] [Group G] [MulDistribMulAction Γ G]
+    {U V : Subgroup G}
+    [MulDistribMulAction Γ U]
+    (hU : ∀ (σ : Γ) (u : U),
+      ((σ • u : U) : G) = σ • (u : G))
+    (N : Subgroup U) [N.Normal]
+    [MulDistribMulAction Γ (U ⧸ N)]
+    (hquot : ∀ (σ : Γ) (u : U),
+      QuotientGroup.mk' N (σ • u) =
+        σ • QuotientGroup.mk' N u)
+    (hN : ∀ u : U, u ∈ N ↔ (u : G) ∈ V)
+    (hH1 : ∀ b : NonabelianCocycle Γ (U ⧸ N),
+      b.IsCoboundary)
+    (tail : SubgroupGaugeFiltration Γ G V) :
+    SubgroupGaugeFiltration Γ G U :=
+  .step V
+    (fun a ha =>
+      a.exists_subgroupGauge_valuesIn_of_quotient_h1
+        U V hU N hquot hN hH1 ha)
+    tail
+
 /-- Every cocycle valued in the first subgroup of a finite gauge-lowering
 filtration is a coboundary. -/
 theorem isCoboundary

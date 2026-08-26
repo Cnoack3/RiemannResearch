@@ -41,6 +41,40 @@ def NonabelianCocycle.CanGaugeInto
     (a : NonabelianCocycle Γ G) (S : Subgroup G) : Prop :=
   ∃ g : G, (a.gauge g).ValuesIn S
 
+/-- Regard a cocycle whose values lie in a stable subgroup as a cocycle with
+that subgroup as its coefficient group.
+
+The compatibility hypothesis identifies the supplied action on the subtype
+with the ambient action. -/
+def NonabelianCocycle.subgroupValued
+    (a : NonabelianCocycle Γ G) (U : Subgroup G)
+    [MulDistribMulAction Γ U]
+    (hU : ∀ (σ : Γ) (u : U),
+      ((σ • u : U) : G) = σ • (u : G))
+    (ha : a.ValuesIn U) :
+    NonabelianCocycle Γ U where
+  toFun := fun σ => ⟨a σ, ha σ⟩
+  map_mul' := by
+    intro σ τ
+    apply Subtype.ext
+    change a (σ * τ) =
+      a σ * ((↑(σ • (⟨a τ, ha τ⟩ : U)) : G))
+    rw [hU]
+    exact a.map_mul' σ τ
+
+/-- Gauging a subgroup-valued cocycle by a subgroup element agrees, after
+coercion, with gauging the original cocycle in the ambient group. -/
+@[simp] theorem NonabelianCocycle.coe_subgroupValued_gauge_apply
+    (a : NonabelianCocycle Γ G) (U : Subgroup G)
+    [MulDistribMulAction Γ U]
+    (hU : ∀ (σ : Γ) (u : U),
+      ((σ • u : U) : G) = σ • (u : G))
+    (ha : a.ValuesIn U) (q : U) (σ : Γ) :
+    ((((a.subgroupValued U hU ha).gauge q) σ : U) : G) =
+      (a.gauge (q : G)) σ := by
+  simp [NonabelianCocycle.subgroupValued,
+    NonabelianCocycle.gauge, hU]
+
 /-- Exact neutral-image criterion for a change of coefficient group.
 
 For an equivariant inclusion of a torus into a reductive group, the witness
@@ -123,6 +157,45 @@ theorem NonabelianCocycle.map_quotient_isCoboundary_iff_exists_gauge_valuesIn
               (σ • QuotientGroup.mk' N q)⁻¹ := by simp
     rw [hsolve]
     simp
+
+/-- If all cocycles on a quotient coefficient group are coboundaries, then an
+ambient cocycle valued in the numerator subgroup can be gauged into the
+ambient subgroup represented by the quotient kernel.
+
+The subgroup N is normal only inside U; neither U nor the target subgroup V
+is required to be normal in the ambient group. The membership equivalence hN
+records how the abstract kernel inside U is realized by V inside G.
+
+Source: user-provided quotient-H¹ gauge-filtration argument (25 August 2026);
+the source supports the statement and proof strategy. -/
+theorem NonabelianCocycle.exists_subgroupGauge_valuesIn_of_quotient_h1
+    (a : NonabelianCocycle Γ G) (U V : Subgroup G)
+    [MulDistribMulAction Γ U]
+    (hU : ∀ (σ : Γ) (u : U),
+      ((σ • u : U) : G) = σ • (u : G))
+    (N : Subgroup U) [N.Normal]
+    [MulDistribMulAction Γ (U ⧸ N)]
+    (hquot : ∀ (σ : Γ) (u : U),
+      QuotientGroup.mk' N (σ • u) =
+        σ • QuotientGroup.mk' N u)
+    (hN : ∀ u : U, u ∈ N ↔ (u : G) ∈ V)
+    (hH1 : ∀ b : NonabelianCocycle Γ (U ⧸ N),
+      b.IsCoboundary)
+    (ha : a.ValuesIn U) :
+    ∃ q : U, (a.gauge (q : G)).ValuesIn V := by
+  let aU : NonabelianCocycle Γ U :=
+    a.subgroupValued U hU ha
+  have hquotient :
+      (aU.map (QuotientGroup.mk' N) hquot).IsCoboundary :=
+    hH1 _
+  obtain ⟨q, hq⟩ :=
+    (aU.map_quotient_isCoboundary_iff_exists_gauge_valuesIn
+      N hquot).mp hquotient
+  refine ⟨q, ?_⟩
+  intro σ
+  have hv : (((aU.gauge q) σ : U) : G) ∈ V :=
+    (hN ((aU.gauge q) σ)).mp (hq σ)
+  simpa [aU] using hv
 
 /-- Coboundary status is invariant under gauging. -/
 theorem NonabelianCocycle.isCoboundary_gauge_iff
