@@ -891,4 +891,89 @@ theorem allGenerators_weight_isometries :
     allGenerators.all weightIsometryCheck = true := by
   decide
 
+/-! ## First nonbinary row: exact simple-root action
+
+The aligned table puts the first non-binary perfect-core survivor at index
+four (table class 9329). Its matrices are stored in the fundamental-weight
+basis. The following small certificate records the corresponding action in
+the simple-root basis. This is deliberately a lattice statement: it does not
+pretend that the project already contains the missing E8 Chevalley group
+scheme or its root subgroups.
+
+For the first generator, the first simple root is sent to the negative of the
+highest-root coefficient vector. In particular, the raw perfect-core action
+does not preserve the standard nonnegative simple-root cone. Any later
+unipotent-radical construction therefore has to keep the chamber/Borel gauge
+separate from this raw Weyl-lattice action.
+-/
+
+/-- The first row after the four projective-order-60 binary-icosahedral rows. -/
+abbrev firstNonbinaryRow : PerfectCoreMatrixDatum :=
+  perfectCoreMatrixData[4]
+
+/-- The first displayed generator in table class 9329. -/
+abbrev firstNonbinaryGenerator : GeneratorDatum :=
+  firstNonbinaryRow.generators[0]
+
+/-- Coefficients of the E8 highest root in Mathlib's simple-root numbering. -/
+def e8HighestRootCoeffs : I8 → ℤ :=
+  ![2, 3, 4, 6, 4, 3, 2, 1]
+
+/-- The standard nonnegative cone in simple-root coordinates. -/
+def nonnegativeSimpleCone (v : I8 → ℤ) : Prop :=
+  ∀ i, 0 ≤ v i
+
+/-- Metadata of the first nonbinary aligned row. -/
+theorem firstNonbinaryRow_metadata :
+    firstNonbinaryRow.tableClass = 9329 ∧
+    firstNonbinaryRow.projectiveOrder = 360 ∧
+    firstNonbinaryRow.liftOrder = 720 ∧
+    firstNonbinaryRow.generators.length = 2 := by
+  decide
+
+/-- Its first generator preserves the E8 root Gram matrix after change of
+basis. -/
+theorem firstNonbinaryGenerator_root_isometry :
+    rootIsometryCheck firstNonbinaryGenerator = true := by
+  set_option maxHeartbeats 0 in
+  set_option maxRecDepth 100000 in
+    decide
+
+/-- In simple-root coordinates, the first generator sends the first simple
+root to the negative highest root. -/
+theorem firstNonbinaryGenerator_sends_simpleRoot0_to_neg_highestRoot :
+    Matrix.vecMul (RiemannResearch.E8.e8SimpleRoot 0)
+      (rootBasisMatrix firstNonbinaryGenerator.matrix) =
+      -e8HighestRootCoeffs := by
+  set_option maxHeartbeats 0 in
+  set_option maxRecDepth 100000 in
+    decide
+
+/-- The first coordinate simple root is in the standard positive cone. -/
+theorem simpleRoot0_mem_nonnegativeSimpleCone :
+    nonnegativeSimpleCone (RiemannResearch.E8.e8SimpleRoot 0) := by
+  intro i
+  fin_cases i <;> decide
+
+/-- The first nonbinary generator moves that simple root out of the standard
+positive cone. -/
+theorem firstNonbinaryGenerator_simpleRoot0_not_mem_nonnegativeSimpleCone :
+    ¬nonnegativeSimpleCone
+      (Matrix.vecMul (RiemannResearch.E8.e8SimpleRoot 0)
+        (rootBasisMatrix firstNonbinaryGenerator.matrix)) := by
+  rw [firstNonbinaryGenerator_sends_simpleRoot0_to_neg_highestRoot]
+  intro h
+  have h0 := h 0
+  norm_num [e8HighestRootCoeffs] at h0
+
+/-- Concrete chamber-instability witness for the first nonbinary row. -/
+theorem firstNonbinaryGenerator_does_not_preserve_standard_positive_cone :
+    ∃ v : I8 → ℤ,
+      nonnegativeSimpleCone v ∧
+      ¬nonnegativeSimpleCone
+        (Matrix.vecMul v (rootBasisMatrix firstNonbinaryGenerator.matrix)) := by
+  exact ⟨RiemannResearch.E8.e8SimpleRoot 0,
+    simpleRoot0_mem_nonnegativeSimpleCone,
+    firstNonbinaryGenerator_simpleRoot0_not_mem_nonnegativeSimpleCone⟩
+
 end RiemannResearch.E8.PerfectCoreMatrixCertificate
