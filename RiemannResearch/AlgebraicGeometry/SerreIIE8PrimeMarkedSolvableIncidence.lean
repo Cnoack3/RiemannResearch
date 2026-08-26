@@ -149,6 +149,22 @@ theorem hasCommonGauge_of_primeMarkedSolvableIncidenceCertificate
 
 end AnchoredGaugeReduction
 
+/-- A concrete representative of the first nonbinary row in the aligned
+31-row perfect-core certificate. The first four rows are the
+projective-order-60 binary-icosahedral packet. -/
+def firstNonbinarySurvivor : E8PerfectCoreSurvivorCase :=
+  ⟨4, by decide⟩
+
+/-- The selected first nonbinary survivor is the aligned table class 9329. -/
+theorem firstNonbinarySurvivor_tableClass :
+    firstNonbinarySurvivor.datum.tableClass = 9329 := by
+  decide
+
+/-- The selected row is genuinely outside the binary-icosahedral packet. -/
+theorem firstNonbinarySurvivor_not_binary :
+    ¬ firstNonbinarySurvivor.IsBinaryIcosahedral := by
+  decide
+
 /-- Prime-marked solvable-incidence certificates for every realized
 nonbinary survivor row. -/
 structure NonbinaryPrimeMarkedSolvableIncidenceProvider
