@@ -50,6 +50,31 @@ noncomputable def generatorUnit : (Coordinate R)ˣ :=
   exact IsUnit.unit_spec
     (LaurentPolynomial.isUnit_T (R := R) (1 : ℤ))
 
+/-- The inverse universal unit is the Laurent monomial `T⁻¹`. -/
+@[simp] theorem coe_generatorUnit_inv :
+    (↑((generatorUnit R)⁻¹) : Coordinate R) =
+      (LaurentPolynomial.T (-1) : Coordinate R) := by
+  have hmul : (LaurentPolynomial.T 1 : Coordinate R) *
+      LaurentPolynomial.T (-1) = 1 := by
+    rw [← LaurentPolynomial.T_add]
+    norm_num
+  calc
+    (↑((generatorUnit R)⁻¹) : Coordinate R) =
+        ↑((generatorUnit R)⁻¹) * 1 := by simp
+    _ = ↑((generatorUnit R)⁻¹) *
+        ((LaurentPolynomial.T 1 : Coordinate R) *
+          LaurentPolynomial.T (-1)) := by rw [hmul]
+    _ = (↑((generatorUnit R)⁻¹) *
+          (LaurentPolynomial.T 1 : Coordinate R)) *
+        LaurentPolynomial.T (-1) := by ac_rfl
+    _ = 1 * LaurentPolynomial.T (-1) := by
+      congr 1
+      rw [← coe_generatorUnit]
+      change (↑((generatorUnit R)⁻¹ * generatorUnit R) :
+        Coordinate R) = 1
+      simp
+    _ = LaurentPolynomial.T (-1) := by simp
+
 /-- Evaluation of Laurent polynomials at a unit, as an algebra morphism. -/
 noncomputable def evalAlgHom
     {S : Type v} [CommRing S] [Algebra R S] (u : Sˣ) :
@@ -66,6 +91,17 @@ noncomputable def evalAlgHom
     {S : Type v} [CommRing S] [Algebra R S] (u : Sˣ) (n : ℤ) :
     evalAlgHom R u (LaurentPolynomial.T n) = (u ^ n : Sˣ) := by
   simp [evalAlgHom]
+
+/-- Coordinate comultiplication of `Gₘ`. -/
+noncomputable def comul :
+    Coordinate R →ₐ[R] (Coordinate R ⊗[R] Coordinate R) := by
+  letI : HopfAlgebra R (Coordinate R) := hopfAlgebra R
+  exact Bialgebra.comulAlgHom R (Coordinate R)
+
+/-- Coordinate counit of `Gₘ`. -/
+noncomputable def counit : Coordinate R →ₐ[R] R := by
+  letI : HopfAlgebra R (Coordinate R) := hopfAlgebra R
+  exact Bialgebra.counitAlgHom R (Coordinate R)
 
 noncomputable local instance coordinateHopf :
     HopfAlgebra R (Coordinate R) :=
