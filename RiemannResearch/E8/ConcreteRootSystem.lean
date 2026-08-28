@@ -156,6 +156,96 @@ theorem coefficients_simpleRoot :
       coefficients (simpleRoot i) j = if i = j then 1 else 0 := by
   decide
 
+/-- A root is positive when all coefficients in the fixed simple-root basis
+are nonnegative. -/
+def IsPositive (r : Root) : Prop :=
+  ∀ i : Fin 8, 0 ≤ coefficients (rootVector r) i
+
+instance isPositiveDecidable (r : Root) : Decidable (IsPositive r) :=
+  Fintype.decidableForallFintype
+
+/-- The finite set of positive roots determined by the displayed simple
+roots. -/
+def positiveRoots : Finset Root :=
+  Finset.univ.filter IsPositive
+
+/-- Height in the fixed simple-root basis. -/
+def height (r : Root) : ℤ :=
+  ∑ i, coefficients (rootVector r) i
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 5000000 in
+/-- Exactly half of the 240 concrete roots are positive. -/
+theorem card_positiveRoots :
+    positiveRoots.card = 120 := by
+  decide
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 5000000 in
+/-- Positive-root heights range from one through twenty-nine. -/
+theorem positive_height_bounds :
+    ∀ r : Root, IsPositive r → 1 ≤ height r ∧ height r ≤ 29 := by
+  decide
+
+/-- Multiplicity of each positive-root height, indexed by heights `1, …, 29`. -/
+def heightMultiplicity : Fin 29 → Nat :=
+  ![8, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 5, 5, 4, 4, 4, 4,
+    3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1]
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 10000000 in
+/-- Complete height distribution of the 120 positive roots. -/
+theorem positive_height_distribution :
+    ∀ h : Fin 29,
+      (positiveRoots.filter fun r =>
+        height r = Int.ofNat (h.val + 1)).card = heightMultiplicity h := by
+  decide
+
+/-- The highest root in the repository's `CartanMatrix.E₈` numbering. -/
+def highestRoot : Root :=
+  Sum.inl ⟨(((6 : Fin 8), (7 : Fin 8)), (false, false)), by decide⟩
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 5000000 in
+/-- The corrected highest-root coefficient vector is
+`(2,3,4,6,5,4,3,2)`. -/
+theorem highestRoot_coefficients :
+    coefficients (rootVector highestRoot) =
+      ![2, 3, 4, 6, 5, 4, 3, 2] := by
+  decide
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 5000000 in
+/-- The displayed highest root is the unique positive root of height 29. -/
+theorem highestRoot_unique_maximum :
+    ∀ r : Root, IsPositive r → (height r = 29 ↔ r = highestRoot) := by
+  decide
+
+/-- The root attached to the coefficient vector previously displayed as the
+highest root. -/
+def previouslyMislabelledRoot : Root :=
+  Sum.inl ⟨(((2 : Fin 8), (7 : Fin 8)), (false, false)), by decide⟩
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 5000000 in
+/-- The previously displayed vector is indeed an E8 root, but its height is
+only 25. -/
+theorem previouslyMislabelledRoot_coefficients :
+    coefficients (rootVector previouslyMislabelledRoot) =
+      ![2, 3, 4, 6, 4, 3, 2, 1] := by
+  decide
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 5000000 in
+theorem previouslyMislabelledRoot_height :
+    height previouslyMislabelledRoot = 25 := by
+  decide
+
+set_option maxRecDepth 100000 in
+theorem previouslyMislabelledRoot_ne_highestRoot :
+    previouslyMislabelledRoot ≠ highestRoot := by
+  decide
+
 end ConcreteRootSystem
 end E8
 end RiemannResearch
