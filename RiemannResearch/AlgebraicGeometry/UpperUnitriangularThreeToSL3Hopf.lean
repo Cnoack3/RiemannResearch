@@ -16,11 +16,11 @@ constructs the pullback
 `O(SL₃) → O(U₃) = ℤ[x₁₂,x₂₃,x₁₃]`
 
 from the universal upper-unitriangular matrix.  It proves specialization over
-every commutative ring and compatibility with comultiplication.  The counit,
-antipode, bundled bialgebra morphism, and affine group-scheme morphism are
-added in the continuation of this module.
+every commutative ring, compatibility with all Hopf structure maps, and the
+resulting affine group-scheme morphism.
 -/
 
+open CategoryTheory
 open scoped TensorProduct
 
 namespace RiemannResearch
@@ -53,6 +53,12 @@ local instance sourceTensorAlgebra : Algebra ℤ T :=
     (inferInstance : Algebra ℤ A)
     (inferInstance : Semiring A)
     (inferInstance : Algebra ℤ A)
+
+noncomputable local instance sl3Hopf : HopfAlgebra ℤ A :=
+  SpecialLinearThree.coordinateHopfAlgebra
+
+noncomputable local instance u3Hopf : HopfAlgebra ℤ P :=
+  hopfAlgebra
 
 /-- The tautological upper-unitriangular point over its coordinate algebra. -/
 def universalPoint : Point P := ⟨x12, x23, x13⟩
@@ -219,6 +225,124 @@ theorem toSL3AlgHom_comul :
   rw [SpecialLinearThree.specialLinearMap_comp_apply]
   rw [toSL3AlgHom_universal]
   exact universalSL3Point_comul
+
+private theorem universalPoint_counit :
+    Point.map counit.toRingHom universalPoint = (1 : Point ℤ) := by
+  ext <;> simp [universalPoint]
+
+private theorem universalSL3Point_counit :
+    Matrix.SpecialLinearGroup.map counit.toRingHom universalSL3Point =
+      (1 : Matrix.SpecialLinearGroup (Fin 3) ℤ) := by
+  rw [universalSL3Point, Point.toSL3_map]
+  rw [universalPoint_counit]
+  exact (Point.toSL3Hom (S := ℤ)).map_one
+
+/-- The coordinate pullback preserves the counit. -/
+theorem toSL3AlgHom_counit :
+    counit.comp toSL3AlgHom =
+      SpecialLinearThree.coordinateCounit := by
+  apply SpecialLinearThree.coordinateAlgHom_ext
+  change Matrix.SpecialLinearGroup.map
+      (counit.toRingHom.comp toSL3AlgHom.toRingHom)
+        SpecialLinearThree.universalPoint =
+    Matrix.SpecialLinearGroup.map
+      SpecialLinearThree.coordinateCounit.toRingHom
+        SpecialLinearThree.universalPoint
+  rw [SpecialLinearThree.specialLinearMap_comp_apply]
+  rw [toSL3AlgHom_universal]
+  rw [SpecialLinearThree.coordinateCounit_universal]
+  exact universalSL3Point_counit
+
+private theorem universalPoint_antipode :
+    Point.map antipode.toRingHom universalPoint = universalPoint⁻¹ := by
+  ext <;> simp [universalPoint]
+
+private theorem universalSL3Point_antipode :
+    Matrix.SpecialLinearGroup.map antipode.toRingHom universalSL3Point =
+      universalSL3Point⁻¹ := by
+  rw [universalSL3Point, Point.toSL3_map]
+  rw [universalPoint_antipode]
+  exact (Point.toSL3Hom (S := P)).map_inv universalPoint
+
+/-- The coordinate pullback preserves the antipode. -/
+theorem toSL3AlgHom_antipode :
+    antipode.comp toSL3AlgHom =
+      toSL3AlgHom.comp SpecialLinearThree.coordinateAntipode := by
+  apply SpecialLinearThree.coordinateAlgHom_ext
+  change Matrix.SpecialLinearGroup.map
+      (antipode.toRingHom.comp toSL3AlgHom.toRingHom)
+        SpecialLinearThree.universalPoint =
+    Matrix.SpecialLinearGroup.map
+      (toSL3AlgHom.toRingHom.comp
+        SpecialLinearThree.coordinateAntipode.toRingHom)
+        SpecialLinearThree.universalPoint
+  rw [SpecialLinearThree.specialLinearMap_comp_apply]
+  rw [toSL3AlgHom_universal]
+  rw [SpecialLinearThree.specialLinearMap_comp_apply]
+  rw [SpecialLinearThree.coordinateAntipode_universal]
+  rw [map_inv]
+  rw [toSL3AlgHom_universal]
+  exact universalSL3Point_antipode
+
+private theorem toSL3AlgHom_counit_linear :
+    CoalgebraStruct.counit ∘ₗ toSL3AlgHom.toLinearMap =
+      CoalgebraStruct.counit := by
+  change counit.toLinearMap ∘ₗ toSL3AlgHom.toLinearMap =
+    SpecialLinearThree.coordinateCounit.toLinearMap
+  apply LinearMap.ext
+  intro x
+  exact DFunLike.congr_fun toSL3AlgHom_counit x
+
+private theorem toSL3AlgHom_comul_linear :
+    TensorProduct.map toSL3AlgHom.toLinearMap toSL3AlgHom.toLinearMap ∘ₗ
+        CoalgebraStruct.comul =
+      CoalgebraStruct.comul ∘ₗ toSL3AlgHom.toLinearMap := by
+  change TensorProduct.map toSL3AlgHom.toLinearMap toSL3AlgHom.toLinearMap ∘ₗ
+      SpecialLinearThree.coordinateComul.toLinearMap =
+    comul.toLinearMap ∘ₗ toSL3AlgHom.toLinearMap
+  apply LinearMap.ext
+  intro x
+  change (Algebra.TensorProduct.map toSL3AlgHom toSL3AlgHom)
+      (SpecialLinearThree.coordinateComul x) =
+    comul (toSL3AlgHom x)
+  exact DFunLike.congr_fun toSL3AlgHom_comul x
+
+/-- The bialgebra morphism representing the standard inclusion `U₃ → SL₃`.
+Together with `toSL3AlgHom_antipode`, this is the full coordinate-Hopf
+morphism. -/
+noncomputable def toSL3BialgHom : A →ₐc[ℤ] P :=
+  BialgHom.mk
+    (CoalgHom.mk toSL3AlgHom.toLinearMap
+      toSL3AlgHom_counit_linear
+      toSL3AlgHom_comul_linear)
+    toSL3AlgHom.map_one
+    toSL3AlgHom.map_mul
+
+theorem toSL3BialgHom_toAlgHom :
+    toSL3BialgHom.toAlgHom = toSL3AlgHom := by
+  apply AlgHom.ext
+  intro x
+  rfl
+
+/-- Specializing the bundled bialgebra morphism recovers the standard
+upper-unitriangular embedding on points. -/
+theorem toSL3BialgHom_specialization
+    {S : Type} [CommRing S] (f : P →+* S) :
+    SpecialLinearThree.coordinateRingHomEquiv S
+      (f.comp toSL3BialgHom.toAlgHom.toRingHom) =
+      Point.toSL3 (coordinateRingHomEquiv S f) := by
+  rw [toSL3BialgHom_toAlgHom]
+  exact toSL3AlgHom_specialization f
+
+/-- The affine group-scheme morphism `U₃ → SL₃` induced by the coordinate
+bialgebra morphism. -/
+noncomputable def toSL3GroupSchemeHom :
+    ((_root_.AlgebraicGeometry.hopfSpec (CommRingCat.of ℤ)).obj
+      (Opposite.op (CommHopfAlgCat.of ℤ P))) ⟶
+    ((_root_.AlgebraicGeometry.hopfSpec (CommRingCat.of ℤ)).obj
+      (Opposite.op (CommHopfAlgCat.of ℤ A))) :=
+  (_root_.AlgebraicGeometry.hopfSpec (CommRingCat.of ℤ)).map
+    (CommHopfAlgCat.ofHom toSL3BialgHom).op
 
 end
 end UpperUnitriangularThree
