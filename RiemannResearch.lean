@@ -214,6 +214,11 @@ import RiemannResearch.GroupTheory.QuotientGeneration
 import RiemannResearch.GroupTheory.SimultaneousTransporter
 import RiemannResearch.GroupTheory.TwoFactorNorm
 import RiemannResearch.E6.A2CubedFiniteCertificate
+import RiemannResearch.E7.QuaternionTrialityPacket
+import RiemannResearch.E7.TrialityOrientation
+import RiemannResearch.E7.D4CenterTitsPacket
+import RiemannResearch.E7.E7BoundaryEffectivity
+import RiemannResearch.E7.QuaternionCompletionPluckerObstruction
 import RiemannResearch.E7.D6A1FiniteCertificate
 import RiemannResearch.E8.A8NormalizerArithmetic
 import RiemannResearch.E8.A9TrialityArithmetic
