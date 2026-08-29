@@ -10,7 +10,8 @@ import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 import Mathlib.RingTheory.TensorProduct.Basic
 import Mathlib.RingTheory.TensorProduct.Finite
-import Mathlib.Tactic
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
 
 /-!
 # Quaternion and hermitian foundations for the degree-eight E7 boundary
@@ -124,7 +125,7 @@ def reducedNorm (x : PresentedQuaternion p) : k :=
   ext <;> simp [reducedNorm] <;> ring
 
 @[simp] theorem reducedNorm_one : reducedNorm p 1 = 1 := by
-  simp [reducedNorm, PresentedQuaternion]
+  simp [reducedNorm]
 
 @[simp] theorem reducedNorm_mul (x y : PresentedQuaternion p) :
     reducedNorm p (x * y) = reducedNorm p x * reducedNorm p y := by
