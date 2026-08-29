@@ -57,7 +57,7 @@ local instance sourceTensorAlgebra : Algebra ℤ T :=
 noncomputable local instance sl3Hopf : HopfAlgebra ℤ A :=
   SpecialLinearThree.coordinateHopfAlgebra
 
-noncomputable local instance u3Hopf : HopfAlgebra ℤ P :=
+noncomputable local instance u3ToSL3Hopf : HopfAlgebra ℤ P :=
   hopfAlgebra
 
 /-- The tautological upper-unitriangular point over its coordinate algebra. -/

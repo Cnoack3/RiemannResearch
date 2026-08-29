@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import RiemannResearch.E7.E7BoundaryEffectivity
 import RiemannResearch.E7.D6A1FiniteCertificate
 
@@ -292,5 +292,143 @@ theorem realization_of_total_index_eight_is_anisotropic
   exact (total_index_eight_packet_not_allowed
     I IsQuaternionClass hQuaternion q₁ q₂ q₃
       hq₁ hq₂ hq₃ hTotal) hAllowed
+/-! ## Exact partition of the E7 realization target -/
+
+/-- Target packets represented by quaternion triples whose total class has
+Schur index eight. -/
+def IsIndexEightQuaternionTargetPacket
+    (I : BrauerIndexModel A)
+    (IsQuaternionClass : A → Prop) (P : BrauerPacket A) : Prop :=
+  ∃ q₁ q₂ q₃ : A,
+    IsQuaternionClass q₁ ∧
+      IsQuaternionClass q₂ ∧
+      IsQuaternionClass q₃ ∧
+      I.index (q₁ + q₂ + q₃) = 8 ∧
+      P = BrauerPacket.ofTriple q₁ q₂ q₃
+
+/-- The genuine index-eight part of the E7 realization problem. -/
+def E7IndexEightRealizationGoal
+    (I : BrauerIndexModel A)
+    (C : BoundaryRealization A) (IsQuaternionClass : A → Prop) : Prop :=
+  ∀ q₁ q₂ q₃ : A,
+    IsQuaternionClass q₁ →
+      IsQuaternionClass q₂ →
+      IsQuaternionClass q₃ →
+      I.index (q₁ + q₂ + q₃) = 8 →
+      C.IsEffective (BrauerPacket.ofTriple q₁ q₂ q₃)
+
+/-- The complementary part of the E7 realization problem. -/
+def E7AwayFromIndexEightRealizationGoal
+    (I : BrauerIndexModel A)
+    (C : BoundaryRealization A) (IsQuaternionClass : A → Prop) : Prop :=
+  ∀ q₁ q₂ q₃ : A,
+    IsQuaternionClass q₁ →
+      IsQuaternionClass q₂ →
+      IsQuaternionClass q₃ →
+      I.index (q₁ + q₂ + q₃) ≠ 8 →
+      C.IsEffective (BrauerPacket.ofTriple q₁ q₂ q₃)
+
+/-- The exact E7 target partitions into the index-eight and complementary
+strata. -/
+theorem e7RealizationGoal_iff_indexEight_partition
+    (I : BrauerIndexModel A)
+    (C : BoundaryRealization A) (IsQuaternionClass : A → Prop) :
+    E7RealizationGoal C IsQuaternionClass ↔
+      E7AwayFromIndexEightRealizationGoal I C IsQuaternionClass ∧
+        E7IndexEightRealizationGoal I C IsQuaternionClass := by
+  constructor
+  · intro h
+    constructor
+    · intro q₁ q₂ q₃ hq₁ hq₂ hq₃ _
+      exact h q₁ q₂ q₃ hq₁ hq₂ hq₃
+    · intro q₁ q₂ q₃ hq₁ hq₂ hq₃ _
+      exact h q₁ q₂ q₃ hq₁ hq₂ hq₃
+  · rintro ⟨hAway, hEight⟩ q₁ q₂ q₃ hq₁ hq₂ hq₃
+    by_cases h : I.index (q₁ + q₂ + q₃) = 8
+    · exact hEight q₁ q₂ q₃ hq₁ hq₂ hq₃ h
+    · exact hAway q₁ q₂ q₃ hq₁ hq₂ hq₃ h
+
+/-- The quantified index-eight formulation is exactly effectivity on the
+index-eight target-packet locus. -/
+theorem e7IndexEightRealizationGoal_iff_targetPackets
+    (I : BrauerIndexModel A)
+    (C : BoundaryRealization A) (IsQuaternionClass : A → Prop) :
+    E7IndexEightRealizationGoal I C IsQuaternionClass ↔
+      ∀ P : BrauerPacket A,
+        IsIndexEightQuaternionTargetPacket I IsQuaternionClass P →
+          C.IsEffective P := by
+  constructor
+  · intro h P hP
+    rcases hP with ⟨q₁, q₂, q₃, hq₁, hq₂, hq₃, hIndex, hEq⟩
+    rcases h q₁ q₂ q₃ hq₁ hq₂ hq₃ hIndex with ⟨X, hX⟩
+    exact ⟨X, hX.trans hEq.symm⟩
+  · intro h q₁ q₂ q₃ hq₁ hq₂ hq₃ hIndex
+    exact h (BrauerPacket.ofTriple q₁ q₂ q₃)
+      ⟨q₁, q₂, q₃, hq₁, hq₂, hq₃, hIndex, rfl⟩
+
+/-- Every index-eight quaternion target packet has labelled Schur indices
+`(4,4,4)`. -/
+theorem indexEightTargetPacket_has_index_four
+    (I : BrauerIndexModel A)
+    (IsQuaternionClass : A → Prop)
+    (hQuaternion : QuaternionClassesHaveIndexAtMostTwo I IsQuaternionClass)
+    (P : BrauerPacket A)
+    (hP : IsIndexEightQuaternionTargetPacket I IsQuaternionClass P) :
+    I.index P.underlying = 4 ∧
+      I.index P.cliffordPlus = 4 ∧
+      I.index P.cliffordMinus = 4 := by
+  rcases hP with ⟨q₁, q₂, q₃, hq₁, hq₂, hq₃, hIndex, rfl⟩
+  exact total_index_eight_forces_packet_index_four
+    I IsQuaternionClass hQuaternion q₁ q₂ q₃ hq₁ hq₂ hq₃ hIndex
+
+section CentralBoundary
+
+variable [Module (ZMod 2) A]
+
+/-- The index-eight target locus transported to a central Tits datum on
+`Z(Spin₈)^*`. -/
+def IsIndexEightQuaternionTargetCentralDatum
+    (I : BrauerIndexModel A)
+    (IsQuaternionClass : A → Prop)
+    (t : D4CenterCharacter →ₗ[ZMod 2] A) : Prop :=
+  IsIndexEightQuaternionTargetPacket I IsQuaternionClass
+    (packetOfCentralTitsMap t)
+
+/-- Effectivity restricted to index-eight central Tits data. -/
+def IndexEightCentralTargetEffectivityGoal
+    (I : BrauerIndexModel A)
+    (C : BoundaryRealization A) (IsQuaternionClass : A → Prop) : Prop :=
+  ∀ t : D4CenterCharacter →ₗ[ZMod 2] A,
+    IsIndexEightQuaternionTargetCentralDatum I IsQuaternionClass t →
+      C.IsEffective (packetOfCentralTitsMap t)
+
+/-- The index-eight quaternion-triple realization problem is equivalent to the
+same effectivity problem on the central boundary. -/
+theorem e7IndexEightRealizationGoal_iff_centralTargetEffectivity
+    (I : BrauerIndexModel A)
+    (C : BoundaryRealization A) (IsQuaternionClass : A → Prop) :
+    E7IndexEightRealizationGoal I C IsQuaternionClass ↔
+      IndexEightCentralTargetEffectivityGoal I C IsQuaternionClass := by
+  constructor
+  · intro h t ht
+    rcases ht with ⟨q₁, q₂, q₃, hq₁, hq₂, hq₃, hIndex, hEq⟩
+    rcases h q₁ q₂ q₃ hq₁ hq₂ hq₃ hIndex with ⟨X, hX⟩
+    exact ⟨X, hX.trans hEq.symm⟩
+  · intro h q₁ q₂ q₃ hq₁ hq₂ hq₃ hIndex
+    let P : BrauerPacket A := BrauerPacket.ofTriple q₁ q₂ q₃
+    let t : D4CenterCharacter →ₗ[ZMod 2] A :=
+      centralTitsMap P.underlying P.cliffordPlus
+    have hP : BrauerPacket.IsBalanced P := by
+      exact BrauerPacket.isBalanced_ofTriple module_isExponentTwo q₁ q₂ q₃
+    have ht : packetOfCentralTitsMap t = P := by
+      exact packetOfCentralTitsMap_centralTitsMap_of_isBalanced P hP
+    have hTarget :
+        IsIndexEightQuaternionTargetCentralDatum
+          I IsQuaternionClass t := by
+      exact ⟨q₁, q₂, q₃, hq₁, hq₂, hq₃, hIndex, ht⟩
+    rcases h t hTarget with ⟨X, hX⟩
+    exact ⟨X, hX.trans ht⟩
+
+end CentralBoundary
 
 end RiemannResearch.E7.QuaternionTrialityPacket
