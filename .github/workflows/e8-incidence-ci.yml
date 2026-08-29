@@ -1,0 +1,27 @@
+name: E8 Incidence CI
+
+on:
+  push:
+    branches:
+      - serreii-e8-incidence
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-incidence:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build the E8 positive-root incidence module
+        uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          build: true
+          test: false
+          lint: false
+          use-mathlib-cache: true
+          use-github-cache: true
+          build-args: "RiemannResearch.E8.PositiveRootIncidence --quiet"
