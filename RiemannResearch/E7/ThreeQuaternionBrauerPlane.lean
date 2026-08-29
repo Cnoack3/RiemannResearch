@@ -75,7 +75,7 @@ theorem direction_r2_add_r3_eq_r4
     (q1 q2 q3 : β) :
     let d := directionFourClasses q1 q2 q3
     d.r2 + d.r3 = d.r4 := by
-  change (q2 + q3) + (q1 + q2) = q1 + q3
+  simp only [directionFourClasses, affineFourClasses, zero_add]
   calc
     (q2 + q3) + (q1 + q2) = q1 + (q2 + q2) + q3 := by abel
     _ = q1 + q3 := by rw [twoTorsion q2]; simp
@@ -86,7 +86,7 @@ theorem direction_r2_add_r4_eq_r3
     (q1 q2 q3 : β) :
     let d := directionFourClasses q1 q2 q3
     d.r2 + d.r4 = d.r3 := by
-  change (q2 + q3) + (q1 + q3) = q1 + q2
+  simp only [directionFourClasses, affineFourClasses, zero_add]
   calc
     (q2 + q3) + (q1 + q3) = q1 + q2 + (q3 + q3) := by abel
     _ = q1 + q2 := by rw [twoTorsion q3]; simp
@@ -97,7 +97,7 @@ theorem direction_r3_add_r4_eq_r2
     (q1 q2 q3 : β) :
     let d := directionFourClasses q1 q2 q3
     d.r3 + d.r4 = d.r2 := by
-  change (q1 + q2) + (q1 + q3) = q2 + q3
+  simp only [directionFourClasses, affineFourClasses, zero_add]
   calc
     (q1 + q2) + (q1 + q3) = (q1 + q1) + (q2 + q3) := by abel
     _ = q2 + q3 := by rw [twoTorsion q1]; simp
