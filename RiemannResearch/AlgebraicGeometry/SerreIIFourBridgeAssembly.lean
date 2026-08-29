@@ -182,7 +182,7 @@ theorem conjecture_of_fourBridgeBoundary
       Base Group family .E6 e6Stratum e6Established bridges.highIndexE6)
     (exactFamilyNeutralityProvider_of_strata
       Base Group family .E7 e7Stratum e7Established bridges.indexEightE7)
-    bridges.eviviiiOddE8 f4 g2
+    bridges.eviiiOddE8 f4 g2
 
 /-- Relative to the established family and stratum providers, the full
 supplied Serre-II conjecture is exactly equivalent to the four residual bridge
