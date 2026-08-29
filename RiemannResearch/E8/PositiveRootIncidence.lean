@@ -129,22 +129,112 @@ theorem positive_root_simple_subtraction
   exact
     ⟨i, s.1, enumeratedPositiveRoot_isPositive s, hvec, hsheight⟩
 
-set_option maxHeartbeats 100000000 in
--- Shape closure checks no candidate witness roots.
-private theorem positiveA2Pair_sum_isConcrete :
-    ∀ p : ↥positiveA2PairFinset,
-      IsConcreteRootVector (addRootVectors p.1.1 p.1.2) := by
+private def PositiveA2SumIsConcrete (α β : Root) : Prop :=
+  IsPositive α →
+    IsPositive β →
+      dot (rootVector α) (rootVector β) = -4 →
+        IsConcreteRootVector (addRootVectors α β)
+
+set_option maxHeartbeats 30000000 in
+private theorem positiveA2Sum_isConcrete_inl_inl :
+    ∀ α β : IntegerRootParam,
+      PositiveA2SumIsConcrete
+        (Sum.inl α : Root) (Sum.inl β : Root) := by
   decide
 
-set_option maxHeartbeats 100000000 in
--- Coefficient additivity is certified on precisely the positive A₂ pairs.
-private theorem positiveA2Pair_sum_coefficients :
-    ∀ p : ↥positiveA2PairFinset,
-      coefficients (addRootVectors p.1.1 p.1.2) =
-        fun i =>
-          coefficients (rootVector p.1.1) i +
-            coefficients (rootVector p.1.2) i := by
+set_option maxHeartbeats 30000000 in
+private theorem positiveA2Sum_isConcrete_inl_inr :
+    ∀ α : IntegerRootParam, ∀ β : HalfRootParam,
+      PositiveA2SumIsConcrete
+        (Sum.inl α : Root) (Sum.inr β : Root) := by
   decide
+
+set_option maxHeartbeats 30000000 in
+private theorem positiveA2Sum_isConcrete_inr_inl :
+    ∀ α : HalfRootParam, ∀ β : IntegerRootParam,
+      PositiveA2SumIsConcrete
+        (Sum.inr α : Root) (Sum.inl β : Root) := by
+  decide
+
+set_option maxHeartbeats 30000000 in
+private theorem positiveA2Sum_isConcrete_inr_inr :
+    ∀ α β : HalfRootParam,
+      PositiveA2SumIsConcrete
+        (Sum.inr α : Root) (Sum.inr β : Root) := by
+  decide
+
+-- Shape closure checks no candidate witness roots.  The four certificates
+-- keep each reduction below 16,384 root-parameter pairs.
+private theorem positiveA2Pair_sum_isConcrete
+    (p : ↥positiveA2PairFinset) :
+    IsConcreteRootVector (addRootVectors p.1.1 p.1.2) := by
+  rcases p with ⟨⟨α, β⟩, hp⟩
+  have hpair := (positiveA2PairFinset_spec (α, β)).1 hp
+  rcases α with α | α <;> rcases β with β | β
+  · exact positiveA2Sum_isConcrete_inl_inl α β
+      hpair.1 hpair.2.1 hpair.2.2
+  · exact positiveA2Sum_isConcrete_inl_inr α β
+      hpair.1 hpair.2.1 hpair.2.2
+  · exact positiveA2Sum_isConcrete_inr_inl α β
+      hpair.1 hpair.2.1 hpair.2.2
+  · exact positiveA2Sum_isConcrete_inr_inr α β
+      hpair.1 hpair.2.1 hpair.2.2
+
+private def PositiveA2SumCoefficientsCorrect (α β : Root) : Prop :=
+  IsPositive α →
+    IsPositive β →
+      dot (rootVector α) (rootVector β) = -4 →
+        coefficients (addRootVectors α β) =
+          fun i =>
+            coefficients (rootVector α) i +
+              coefficients (rootVector β) i
+
+set_option maxHeartbeats 30000000 in
+private theorem positiveA2Sum_coefficients_inl_inl :
+    ∀ α β : IntegerRootParam,
+      PositiveA2SumCoefficientsCorrect
+        (Sum.inl α : Root) (Sum.inl β : Root) := by
+  decide
+
+set_option maxHeartbeats 30000000 in
+private theorem positiveA2Sum_coefficients_inl_inr :
+    ∀ α : IntegerRootParam, ∀ β : HalfRootParam,
+      PositiveA2SumCoefficientsCorrect
+        (Sum.inl α : Root) (Sum.inr β : Root) := by
+  decide
+
+set_option maxHeartbeats 30000000 in
+private theorem positiveA2Sum_coefficients_inr_inl :
+    ∀ α : HalfRootParam, ∀ β : IntegerRootParam,
+      PositiveA2SumCoefficientsCorrect
+        (Sum.inr α : Root) (Sum.inl β : Root) := by
+  decide
+
+set_option maxHeartbeats 30000000 in
+private theorem positiveA2Sum_coefficients_inr_inr :
+    ∀ α β : HalfRootParam,
+      PositiveA2SumCoefficientsCorrect
+        (Sum.inr α : Root) (Sum.inr β : Root) := by
+  decide
+
+-- Coefficient additivity is certified on precisely the positive A₂ pairs.
+private theorem positiveA2Pair_sum_coefficients
+    (p : ↥positiveA2PairFinset) :
+    coefficients (addRootVectors p.1.1 p.1.2) =
+      fun i =>
+        coefficients (rootVector p.1.1) i +
+          coefficients (rootVector p.1.2) i := by
+  rcases p with ⟨⟨α, β⟩, hp⟩
+  have hpair := (positiveA2PairFinset_spec (α, β)).1 hp
+  rcases α with α | α <;> rcases β with β | β
+  · exact positiveA2Sum_coefficients_inl_inl α β
+      hpair.1 hpair.2.1 hpair.2.2
+  · exact positiveA2Sum_coefficients_inl_inr α β
+      hpair.1 hpair.2.1 hpair.2.2
+  · exact positiveA2Sum_coefficients_inr_inl α β
+      hpair.1 hpair.2.1 hpair.2.2
+  · exact positiveA2Sum_coefficients_inr_inr α β
+      hpair.1 hpair.2.1 hpair.2.2
 
 /-- Every positive `A₂` pair has a positive sum root, and height is additive
 on that sum. -/
