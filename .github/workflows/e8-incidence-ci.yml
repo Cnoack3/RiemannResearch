@@ -15,13 +15,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - name: Build the E8 positive-root incidence module
+      - name: Set up Lean and caches
         uses: leanprover/lean-action@v1
         with:
           auto-config: false
-          build: true
+          build: false
           test: false
           lint: false
           use-mathlib-cache: true
           use-github-cache: true
-          build-args: "RiemannResearch.E8.PositiveRootIncidence --quiet"
+      - name: Build the E8 positive-root incidence module
+        shell: bash
+        run: |
+          set -o pipefail
+          lake build RiemannResearch.E8.PositiveRootIncidence --quiet 2>&1 | tee e8-incidence-build.log
+      - name: Preserve Lean diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e8-incidence-build-log
+          path: e8-incidence-build.log
+          if-no-files-found: warn
