@@ -233,6 +233,7 @@ import RiemannResearch.E7.QuaternionHermitianBiquaternionSymmetry
 import RiemannResearch.E7.QuaternionHermitianOrthogonalEnvelope
 import RiemannResearch.E7.QuaternionHermitianCentralSimpleTransfer
 import RiemannResearch.E7.QuaternionHermitianCentralSimpleOrthogonalPair
+import RiemannResearch.E7.QuaternionHermitianQuadraticPair
 import RiemannResearch.E7.D6A1FiniteCertificate
 import RiemannResearch.E8.A8NormalizerArithmetic
 import RiemannResearch.E8.A9TrialityArithmetic
