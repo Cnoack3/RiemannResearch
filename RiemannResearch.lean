@@ -97,6 +97,7 @@ import RiemannResearch.AlgebraicGeometry.PointFieldIndexOne
 import RiemannResearch.AlgebraicGeometry.PrimePowerIndex
 import RiemannResearch.AlgebraicGeometry.ZeroCycleSplitting
 import RiemannResearch.Basic
+import RiemannResearch.Algebra.AzumayaFieldSimple
 import RiemannResearch.GaloisCohomology.DifferenceCocycle
 import RiemannResearch.GaloisCohomology.TwoGaugeDescent
 import RiemannResearch.GaloisCohomology.TwoGaugeDoubleCoset

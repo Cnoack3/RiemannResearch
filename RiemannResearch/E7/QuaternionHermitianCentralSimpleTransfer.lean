@@ -5,6 +5,7 @@ Authors: Cnoack3
 -/
 
 import RiemannResearch.E7.QuaternionHermitianOrthogonalEnvelope
+import RiemannResearch.Algebra.AzumayaFieldSimple
 import Mathlib.Algebra.BrauerGroup.Defs
 import Mathlib.Algebra.Central.Basic
 import Mathlib.Algebra.Central.Matrix
@@ -91,6 +92,18 @@ noncomputable def degreeEightAdjointCSA
   isCentral := degreeEightAdjointAlgebra_isCentral p q G
   isSimple := degreeEightAdjointAlgebra_isSimpleRing p q G
   fin_dim := degreeEightAdjointAlgebra_finiteDimensional p q G
+
+/-- The same degree-eight central simple algebra, obtained from the single
+Azumaya hypothesis on the biquaternion coefficient algebra. Over a field,
+Azumaya supplies centrality through Mathlib and simplicity through
+`RiemannResearch.IsAzumaya.isSimpleRing_of_field`. -/
+noncomputable def degreeEightAdjointCSA_of_isAzumaya
+    (p q : QuaternionParameters k) (G : DegreeEightHermitianGram p q)
+    [IsAzumaya k (Biquaternion p q)] :
+    CSA k := by
+  have : IsSimpleRing (Biquaternion p q) :=
+    RiemannResearch.IsAzumaya.isSimpleRing_of_field k (Biquaternion p q)
+  exact degreeEightAdjointCSA p q G
 
 end DegreeEight
 
