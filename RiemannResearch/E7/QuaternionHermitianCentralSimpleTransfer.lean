@@ -5,6 +5,7 @@ Authors: Cnoack3
 -/
 
 import RiemannResearch.E7.QuaternionHermitianOrthogonalEnvelope
+import RiemannResearch.E7.QuaternionAzumaya
 import RiemannResearch.Algebra.AzumayaFieldSimple
 import Mathlib.Algebra.BrauerGroup.Defs
 import Mathlib.Algebra.Central.Basic
@@ -104,6 +105,19 @@ noncomputable def degreeEightAdjointCSA_of_isAzumaya
   have : IsSimpleRing (Biquaternion p q) :=
     RiemannResearch.IsAzumaya.isSimpleRing_of_field k (Biquaternion p q)
   exact degreeEightAdjointCSA p q G
+
+/-- A completely instantiated central-simple algebra for the rank-two
+hermitian construction when the two quaternion presentations are
+nondegenerate. -/
+noncomputable def degreeEightAdjointCSA_of_nondegenerate
+    (p q : QuaternionParameters k) (G : DegreeEightHermitianGram p q)
+    (hp₃ : p.c₃ ≠ 0) (hpdisc : 4 * p.c₁ + p.c₂ ^ 2 ≠ 0)
+    (hq₃ : q.c₃ ≠ 0) (hqdisc : 4 * q.c₁ + q.c₂ ^ 2 ≠ 0) :
+    CSA k := by
+  letI : IsAzumaya k (Biquaternion p q) :=
+    QuaternionAzumaya.biquaternion_isAzumaya_of_nondegenerate
+      p q hp₃ hpdisc hq₃ hqdisc
+  exact degreeEightAdjointCSA_of_isAzumaya p q G
 
 end DegreeEight
 

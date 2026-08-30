@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 
+import RiemannResearch.Algebra.AzumayaTensorProduct
 import RiemannResearch.E7.QuaternionAzumayaMatrix
 
 /-!
@@ -156,6 +157,21 @@ theorem isAzumaya_of_nondegenerate
     (hc : p.c₃ ≠ 0) (hdisc : 4 * p.c₁ + p.c₂ ^ 2 ≠ 0) :
     IsAzumaya k (PresentedQuaternion p) :=
   IsAzumaya.mk (mulLeftRight_bijective_of_nondegenerate p hc hdisc)
+
+/-- The tensor product of two nondegenerate uniform quaternion algebras is
+Azumaya. This is the coefficient algebra in the rank-two hermitian
+construction at the E7 boundary. -/
+theorem biquaternion_isAzumaya_of_nondegenerate
+    (p q : QuaternionParameters k)
+    (hp₃ : p.c₃ ≠ 0) (hpdisc : 4 * p.c₁ + p.c₂ ^ 2 ≠ 0)
+    (hq₃ : q.c₃ ≠ 0) (hqdisc : 4 * q.c₁ + q.c₂ ^ 2 ≠ 0) :
+    IsAzumaya k (Biquaternion p q) := by
+  haveI : IsAzumaya k (PresentedQuaternion p) :=
+    isAzumaya_of_nondegenerate p hp₃ hpdisc
+  haveI : IsAzumaya k (PresentedQuaternion q) :=
+    isAzumaya_of_nondegenerate q hq₃ hqdisc
+  exact RiemannResearch.IsAzumaya.tensorProduct_of_field
+    k (PresentedQuaternion p) (PresentedQuaternion q)
 
 end QuaternionAzumaya
 end RiemannResearch.E7.QuaternionHermitian
