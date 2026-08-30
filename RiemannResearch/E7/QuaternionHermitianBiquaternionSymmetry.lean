@@ -216,4 +216,87 @@ def extendSymmetricCoordinates {k : Type*} [Zero k]
 
 end SymmetricCoordinateIndex
 
+
+section SymmetricDimension
+
+variable {k : Type u} [Field k] [StarRing k] [TrivialStar k]
+
+/-- The self-adjoint subspace of a biquaternion algebra with canonical
+conjugation is linearly equivalent to one scalar-scalar coordinate and nine
+imaginary-imaginary coordinates. -/
+noncomputable def biquaternionSymmetricCoordinatesEquiv
+    (p q : QuaternionParameters k) [NeZero (2 : k)] :
+    symmetricSubmodule (k := k) (A := Biquaternion p q) ≃ₗ[k]
+      (BiquaternionSymmetricCoordinateIndex → k) where
+  toFun z a :=
+    (biquaternionEigenBasis p q).equivFun z.1
+      (symmetricCoordinatePair a)
+  invFun f := ⟨(biquaternionEigenBasis p q).equivFun.symm
+      (extendSymmetricCoordinates f), by
+    apply (biquaternionEigenBasis p q).equivFun.injective
+    ext ij
+    rw [biquaternionEigenCoordinates_star]
+    simp only [LinearEquiv.apply_symm_apply]
+    rcases ij with ⟨i, j⟩
+    refine Fin.cases ?_ (fun i => ?_) i
+    · refine Fin.cases ?_ (fun j => ?_) j
+      · simp [quaternionEigenSign]
+      · simp [quaternionEigenSign]
+    · refine Fin.cases ?_ (fun j => ?_) j
+      · simp [quaternionEigenSign]
+      · simp [quaternionEigenSign]⟩
+  map_add' x y := by
+    ext a
+    simp
+  map_smul' r x := by
+    ext a
+    simp
+  left_inv z := by
+    apply Subtype.ext
+    apply (biquaternionEigenBasis p q).equivFun.injective
+    rw [LinearEquiv.apply_symm_apply]
+    ext ij
+    rcases ij with ⟨i, j⟩
+    refine Fin.cases ?_ (fun i => ?_) i
+    · refine Fin.cases ?_ (fun j => ?_) j
+      · simp [symmetricCoordinatePair]
+      · simpa using
+          (biquaternionEigenCoordinate_zero_succ_of_symmetric p q z j).symm
+    · refine Fin.cases ?_ (fun j => ?_) j
+      · simpa using
+          (biquaternionEigenCoordinate_succ_zero_of_symmetric p q z i).symm
+      · simp [symmetricCoordinatePair]
+  right_inv f := by
+    ext a
+    change (biquaternionEigenBasis p q).equivFun
+      ((biquaternionEigenBasis p q).equivFun.symm
+        (extendSymmetricCoordinates f)) (symmetricCoordinatePair a) = f a
+    rw [LinearEquiv.apply_symm_apply]
+    exact extend_at_symmetricCoordinatePair f a
+
+/-- Canonical conjugation on a biquaternion algebra has a ten-dimensional
+self-adjoint subspace when `2 ≠ 0`. -/
+theorem biquaternionSymmetric_finrank
+    (p q : QuaternionParameters k) [NeZero (2 : k)] :
+    Module.finrank k
+      (symmetricSubmodule (k := k) (A := Biquaternion p q)) = 10 := by
+  calc
+    _ = Module.finrank k (BiquaternionSymmetricCoordinateIndex → k) :=
+      (biquaternionSymmetricCoordinatesEquiv p q).finrank_eq
+    _ = Fintype.card BiquaternionSymmetricCoordinateIndex :=
+      Module.finrank_pi k
+    _ = 10 := by native_decide
+
+/-- The adjoint involution of a rank-two hermitian form over a biquaternion
+algebra has the orthogonal fixed-space dimension `8 * 9 / 2 = 36`. -/
+theorem degreeEightAdjointSymmetric_finrank
+    (p q : QuaternionParameters k) [NeZero (2 : k)]
+    (G : DegreeEightHermitianGram p q) :
+    Module.finrank k
+      (symmetricSubmodule
+        (k := k) (A := DegreeEightAdjointAlgebra p q G)) = 36 := by
+  rw [degreeEightAdjointSymmetric_finrank_formula p q G,
+    biquaternionSymmetric_finrank, biquaternion_finrank]
+
+end SymmetricDimension
 end RiemannResearch.E7.QuaternionHermitian
