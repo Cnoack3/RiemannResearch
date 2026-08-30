@@ -224,6 +224,7 @@ import RiemannResearch.E7.QuaternionHermitianDegreeEight
 import RiemannResearch.E7.QuaternionHermitianGram
 import RiemannResearch.E7.QuaternionHermitianAdjointAlgebra
 import RiemannResearch.E7.QuaternionHermitianSemiTrace
+import RiemannResearch.E7.QuaternionHermitianSymmetricDimension
 import RiemannResearch.E7.D6A1FiniteCertificate
 import RiemannResearch.E8.A8NormalizerArithmetic
 import RiemannResearch.E8.A9TrialityArithmetic
