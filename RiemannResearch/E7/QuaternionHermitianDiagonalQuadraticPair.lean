@@ -20,7 +20,15 @@ For a matrix `X`, the formula is
 `X ↦ [[star X₀₀, star X₁₀ * z],
       [z⁻¹ * star X₀₁, z⁻¹ * star X₁₁ * z]]`.
 
-This isolates the remaining E7 realization problem: choose `z` so that the
+It also constructs the explicit invertible skew-adjoint matrix
+
+`[[0,z],[-1,0]]`,
+
+with inverse `[[0,-1],[z⁻¹,0]]`.  This is an actual alternating witness in
+characteristic different from two and is the concrete input needed for a
+future reduced-norm/discriminant calculation.
+
+The remaining E7 realization problem is still to choose `z` so that the
 discriminant and generalized Clifford components carry the required third
 quaternion class.  No such invariant calculation is asserted here.
 -/
@@ -139,5 +147,72 @@ theorem diagonalDegreeEightAdjoint_eq_neg_iff
     · simpa using h01
     · simpa using h10
     · simpa using h11
+
+/-- The antidiagonal matrix used as an intrinsic discriminant witness for the
+quadratic pair attached to `diag(1,z)`. -/
+def diagonalSkewMatrix
+    (p q : QuaternionParameters k)
+    (z : SelfAdjointUnit (A := Biquaternion p q)) :
+    DegreeEightAlgebra p q :=
+  !![0, z.val; -1, 0]
+
+/-- The explicit two-sided inverse of `diagonalSkewMatrix`. -/
+def diagonalSkewMatrixInverse
+    (p q : QuaternionParameters k)
+    (z : SelfAdjointUnit (A := Biquaternion p q)) :
+    DegreeEightAlgebra p q :=
+  !![0, -1; z.inv, 0]
+
+@[simp] theorem diagonalSkewMatrix_mul_inverse
+    (p q : QuaternionParameters k)
+    (z : SelfAdjointUnit (A := Biquaternion p q)) :
+    diagonalSkewMatrix p q z * diagonalSkewMatrixInverse p q z = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [diagonalSkewMatrix, diagonalSkewMatrixInverse,
+      Matrix.mul_apply, Fin.sum_univ_two, z.val_mul_inv]
+
+@[simp] theorem diagonalSkewMatrix_inverse_mul
+    (p q : QuaternionParameters k)
+    (z : SelfAdjointUnit (A := Biquaternion p q)) :
+    diagonalSkewMatrixInverse p q z * diagonalSkewMatrix p q z = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [diagonalSkewMatrix, diagonalSkewMatrixInverse,
+      Matrix.mul_apply, Fin.sum_univ_two, z.inv_mul_val]
+
+/-- The intrinsic antidiagonal witness is skew-adjoint for the involution
+attached to `diag(1,z)`. -/
+theorem diagonalDegreeEightAdjoint_skewMatrix
+    (p q : QuaternionParameters k)
+    (z : SelfAdjointUnit (A := Biquaternion p q)) :
+    (diagonalDegreeEightGram p q z).adjoint
+        (diagonalSkewMatrix p q z) =
+      -diagonalSkewMatrix p q z := by
+  apply (diagonalDegreeEightAdjoint_eq_neg_iff p q z
+    (diagonalSkewMatrix p q z)).2
+  simp [diagonalSkewMatrix, z.star_val, z.inv_mul_val]
+
+/-- The antidiagonal witness bundled as an invertible skew-adjoint element of
+the actual degree-eight adjoint algebra. -/
+noncomputable def diagonalAdjointSkewUnit
+    (p q : QuaternionParameters k)
+    (z : SelfAdjointUnit (A := Biquaternion p q)) :
+    SkewAdjointUnit (A := DiagonalDegreeEightAdjointAlgebra p q z) where
+  val := ⟨diagonalSkewMatrix p q z⟩
+  inv := ⟨diagonalSkewMatrixInverse p q z⟩
+  val_mul_inv := by
+    apply AdjointAlgebra.ext
+    change diagonalSkewMatrix p q z * diagonalSkewMatrixInverse p q z = 1
+    exact diagonalSkewMatrix_mul_inverse p q z
+  inv_mul_val := by
+    apply AdjointAlgebra.ext
+    change diagonalSkewMatrixInverse p q z * diagonalSkewMatrix p q z = 1
+    exact diagonalSkewMatrix_inverse_mul p q z
+  star_val := by
+    apply AdjointAlgebra.ext
+    change (diagonalDegreeEightGram p q z).adjoint
+      (diagonalSkewMatrix p q z) = -diagonalSkewMatrix p q z
+    exact diagonalDegreeEightAdjoint_skewMatrix p q z
 
 end RiemannResearch.E7.QuaternionHermitian
