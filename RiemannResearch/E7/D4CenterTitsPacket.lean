@@ -51,21 +51,21 @@ theorem d4CenterCharacter_classification :
     ∀ χ : D4CenterCharacter,
       χ = 0 ∨ χ = vectorCharacter ∨
         χ = spinPlusCharacter ∨ χ = spinMinusCharacter := by
-  native_decide
+  decide
 
 @[simp] theorem vectorCharacter_ne_zero : vectorCharacter ≠ 0 := by
-  native_decide
+  decide
 
 @[simp] theorem spinPlusCharacter_ne_zero : spinPlusCharacter ≠ 0 := by
-  native_decide
+  decide
 
 @[simp] theorem spinMinusCharacter_ne_zero : spinMinusCharacter ≠ 0 := by
-  native_decide
+  decide
 
 /-- The unique relation among the three nonzero central characters. -/
 theorem d4Character_sum :
     vectorCharacter + spinPlusCharacter + spinMinusCharacter = 0 := by
-  native_decide
+  decide
 
 /-- Every central character is the indicated linear combination of the vector
 and positive half-spin characters. -/

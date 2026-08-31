@@ -5,7 +5,8 @@ Authors: Cnoack3
 -/
 
 import RiemannResearch.E7.QuaternionHermitianQuadraticPair
-import Mathlib.Tactic
+import Mathlib.Tactic.Abel
+import Lean.Elab.Tactic.Omega
 
 /-!
 # Symmetric-skew decomposition of the E7 quadratic pair
@@ -166,7 +167,7 @@ variable {A : Type v} [Ring A] [Algebra k A] [StarRing A] [StarModule k A]
 theorem skew_finrank [NeZero (2 : k)]
     (P : DegreeEightQuadraticPair k A) :
     Module.finrank k (skewSubmodule (k := k) (A := A)) = 28 := by
-  letI : FiniteDimensional k A := P.finiteDimensional
+  let : FiniteDimensional k A := P.finiteDimensional
   have h := LinearEquiv.finrank_eq
     (symmetricSkewLinearEquiv (k := k) (A := A))
   rw [Module.finrank_prod, P.algebra_finrank, P.symmetric_finrank] at h

@@ -5,7 +5,7 @@ Authors: Cnoack3
 -/
 
 import RiemannResearch.E7.QuaternionHermitianSymmetricSkewDecomposition
-import Mathlib.Tactic
+import Mathlib.Tactic.FinCases
 
 /-!
 # Diagonal degree-eight quadratic pairs

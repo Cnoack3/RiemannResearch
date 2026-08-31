@@ -5,7 +5,8 @@ Authors: Cnoack3
 -/
 
 import RiemannResearch.E7.QuaternionHermitianCentralSimpleTransfer
-import Mathlib.Tactic
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum
 
 /-!
 # The underlying Brauer class of the E7 hermitian adjoint algebra

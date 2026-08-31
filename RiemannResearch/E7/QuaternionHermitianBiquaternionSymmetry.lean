@@ -285,7 +285,7 @@ theorem biquaternionSymmetric_finrank
       (biquaternionSymmetricCoordinatesEquiv p q).finrank_eq
     _ = Fintype.card BiquaternionSymmetricCoordinateIndex :=
       Module.finrank_pi k
-    _ = 10 := by native_decide
+    _ = 10 := by rfl
 
 /-- The adjoint involution of a rank-two hermitian form over a biquaternion
 algebra has the orthogonal fixed-space dimension `8 * 9 / 2 = 36`. -/
