@@ -222,6 +222,7 @@ import RiemannResearch.E7.D4CenterTitsPacket
 import RiemannResearch.E7.E7BoundaryEffectivity
 import RiemannResearch.E7.QuaternionCompletionPluckerObstruction
 import RiemannResearch.E7.E7IndexEightBoundary
+import RiemannResearch.E7.E7IndexEightHermitianEffectivity
 import RiemannResearch.E7.QuaternionHermitianDegreeEight
 import RiemannResearch.E7.QuaternionAzumayaMatrix
 import RiemannResearch.E7.QuaternionAzumaya
