@@ -227,6 +227,7 @@ import RiemannResearch.E7.QuaternionHermitianDegreeEight
 import RiemannResearch.E7.QuaternionAzumayaMatrix
 import RiemannResearch.E7.QuaternionAzumaya
 import RiemannResearch.E7.QuaternionHermitianGram
+import RiemannResearch.E7.QuaternionHermitianDiagonalNormSquare
 import RiemannResearch.E7.QuaternionHermitianAdjointAlgebra
 import RiemannResearch.E7.QuaternionHermitianSemiTrace
 import RiemannResearch.E7.QuaternionHermitianSymmetricDimension
