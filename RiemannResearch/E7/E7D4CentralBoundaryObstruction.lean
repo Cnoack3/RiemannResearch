@@ -65,7 +65,6 @@ def targetCentralTitsMap (q₁ q₂ q₃ : A) :
     (q₁ q₂ q₃ : A) :
     targetCentralTitsMap q₁ q₂ q₃ spinMinusCharacter = q₁ + q₃ := by
   simp only [targetCentralTitsMap, centralTitsMap_spinMinusCharacter]
-  change (q₂ + q₃) + (q₁ + q₂) = q₁ + q₃
   calc
     (q₂ + q₃) + (q₁ + q₂) =
         (q₂ + q₂) + (q₁ + q₃) := by abel
