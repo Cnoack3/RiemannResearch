@@ -85,6 +85,19 @@ def diagonalAlternatingPreimageMatrix
     simp [diagonalAlternatingMatrix, diagonalAlternatingInverseMatrix,
       Matrix.mul_apply, z.inv_mul_val]
 
+/-- Squaring the alternating unit gives the scalar-looking diagonal matrix
+`diag(-z,-z)`.  The entries need not be central, so this identity does not by
+itself make the unit square-central or identify a Clifford component. -/
+@[simp] theorem diagonalAlternatingMatrix_mul_self
+    (p q : QuaternionParameters k)
+    (z : SelfAdjointUnit (A := Biquaternion p q)) :
+    diagonalAlternatingMatrix p q z *
+        diagonalAlternatingMatrix p q z =
+      Matrix.diagonal ![-z.val, -z.val] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [diagonalAlternatingMatrix, Matrix.mul_apply]
+
 /-- The displayed matrix is skew under the adjoint involution of
 `diag(1,z)`. -/
 @[simp] theorem diagonalAlternatingMatrix_adjoint
