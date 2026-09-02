@@ -28,6 +28,17 @@ The module also identifies the lift condition with a factorization problem:
 extension, one having corestriction `α`. The other factor then automatically
 has the same corestriction. Finally, the condition is shown to be invariant
 under swapping the two Clifford labels `β` and `α + β`.
+
+For the characteristic-not-two field-theoretic interpretation, Lam--Leep--
+Tignol, *Biquaternion algebras and quartic extensions*, Publ. Math. IHES 77
+(1993), Theorem 5.12, proves that a non-split biquaternion class `α` in the
+image of corestriction has a quaternion corestriction preimage. Combined with
+the vanishing of its `H^3` obstruction in cohomological 2-dimension at most
+two, this supplies a quaternion basepoint for every quadratic field extension.
+Arason's quadratic restriction--corestriction exact sequence then identifies
+the rest of the fibre with base-field twists. The companion affine-reduction
+module isolates the remaining condition as an edge of displacement `β` in
+the resulting quaternion-twist locus. Neither cited field theorem is formalized.
 -/
 
 namespace RiemannResearch.E7.QuaternionTrialityPacket
