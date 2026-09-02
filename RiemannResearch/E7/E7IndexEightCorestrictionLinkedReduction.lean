@@ -22,6 +22,12 @@ quadratic extension such that cor r = α and both r and r + res β are
 quaternion classes. The verified statements below formalize the exact transfer
 identities and the resulting effectivity bridge, conditional only on a
 constructor implementing that published algebra-with-involution input.
+
+The module also identifies the lift condition with a factorization problem:
+`res β` must be the sum of two quaternion classes over the quadratic
+extension, one having corestriction `α`. The other factor then automatically
+has the same corestriction. Finally, the condition is shown to be invariant
+under swapping the two Clifford labels `β` and `α + β`.
 -/
 
 namespace RiemannResearch.E7.QuaternionTrialityPacket
@@ -51,6 +57,46 @@ def HasCorestrictionLinkedQuaternionLift
     IsQuaternionClassB r ∧
       T.cor r = α ∧
       IsQuaternionClassB (r + T.res β)
+
+/-- Factor form of the linked-lift condition: `res β` decomposes into two
+quaternion classes, with the first factor having corestriction `α`.
+
+For the quadratic Brauer transfer identities, the second factor automatically
+has corestriction `α`; see
+`corestrictionQuaternionFactorization_second_corestriction`. -/
+def HasCorestrictionQuaternionFactorization
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop) (α β : A) : Prop :=
+  ∃ r s : B,
+    IsQuaternionClassB r ∧
+      IsQuaternionClassB s ∧
+      T.cor r = α ∧
+      r + s = T.res β
+
+/-- Over an exponent-two target Brauer group, the one-witness linked-lift
+condition is exactly the two-factor decomposition of `res β`. -/
+theorem hasCorestrictionLinkedQuaternionLift_iff_factorization
+    (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop) (α β : A) :
+    HasCorestrictionLinkedQuaternionLift T IsQuaternionClassB α β ↔
+      HasCorestrictionQuaternionFactorization
+        T IsQuaternionClassB α β := by
+  constructor
+  · rintro ⟨r, hr, hcor, hs⟩
+    refine ⟨r, r + T.res β, hr, hs, hcor, ?_⟩
+    calc
+      r + (r + T.res β) = (r + r) + T.res β := by abel
+      _ = T.res β := by rw [hB₂ r, zero_add]
+  · rintro ⟨r, s, hr, hs, hcor, hsum⟩
+    refine ⟨r, hr, hcor, ?_⟩
+    have hrs : r + T.res β = s := by
+      calc
+        r + T.res β = r + (r + s) := by rw [hsum]
+        _ = (r + r) + s := by abel
+        _ = s := by rw [hB₂ r, zero_add]
+    rw [hrs]
+    exact hs
 
 /-- The linkage condition specialized to the underlying and first Clifford
 classes of the packet attached to a quaternion triple. -/
@@ -85,6 +131,117 @@ theorem corestrictionLinkedWitness_identities
       _ = T.res (T.cor r) + T.res β := by rw [T.res_cor]
       _ = T.res α + T.res β := by rw [hcor]
       _ = T.res (α + β) := by rw [map_add]
+
+/-- In a quaternion factorization of `res β`, both factors have
+corestriction `α`; it is enough to impose the condition on one factor. -/
+theorem corestrictionQuaternionFactorization_second_corestriction
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop) (α β : A)
+    (h : HasCorestrictionQuaternionFactorization
+      T IsQuaternionClassB α β) :
+    ∃ r s : B,
+      IsQuaternionClassB r ∧
+        IsQuaternionClassB s ∧
+        T.cor r = α ∧
+        T.cor s = α ∧
+        r + s = T.res β := by
+  rcases h with ⟨r, s, hr, hs, hcor, hsum⟩
+  have hrs : r + T.res β = s := by
+    calc
+      r + T.res β = r + (r + s) := by rw [hsum]
+      _ = (r + r) + s := by abel
+      _ = s := by rw [hB₂ r, zero_add]
+  refine ⟨r, s, hr, hs, hcor, ?_, hsum⟩
+  calc
+    T.cor s = T.cor (r + T.res β) := by rw [hrs]
+    _ = T.cor r + T.cor (T.res β) := by rw [map_add]
+    _ = α + (β + β) := by rw [hcor, T.cor_res]
+    _ = α := by rw [hA₂ β, add_zero]
+
+/-- Corestriction is invariant under the nontrivial automorphism of a
+quadratic étale algebra on exponent-two Brauer classes. This is derived from
+the restriction--corestriction identities rather than added as a field of the
+transfer model. -/
+theorem corestriction_conjugate
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B) (r : B) :
+    T.cor (T.conjugate r) = T.cor r := by
+  have hsum :
+      T.cor r + T.cor (T.conjugate r) = 0 := by
+    calc
+      T.cor r + T.cor (T.conjugate r) =
+          T.cor (r + T.conjugate r) := by rw [map_add]
+      _ = T.cor (T.res (T.cor r)) := by rw [T.res_cor]
+      _ = T.cor r + T.cor r := by rw [T.cor_res]
+      _ = 0 := hA₂ (T.cor r)
+  calc
+    T.cor (T.conjugate r) =
+        T.cor (T.conjugate r) + 0 := by simp
+    _ = T.cor (T.conjugate r) + (T.cor r + T.cor r) := by
+      rw [hA₂ (T.cor r)]
+    _ = (T.cor r + T.cor (T.conjugate r)) + T.cor r := by abel
+    _ = 0 + T.cor r := by rw [hsum]
+    _ = T.cor r := by simp
+
+/-- The quaternion-class locus over the quadratic extension is stable under
+the nontrivial automorphism. -/
+def ConjugationPreservesQuaternionClasses
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop) : Prop :=
+  ∀ r : B, IsQuaternionClassB r →
+    IsQuaternionClassB (T.conjugate r)
+
+/-- Conjugating a linked quaternion witness swaps the two Clifford labels. -/
+theorem hasCorestrictionLinkedQuaternionLift_swap
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop)
+    (hconj : ConjugationPreservesQuaternionClasses T IsQuaternionClassB)
+    (α β : A) :
+    HasCorestrictionLinkedQuaternionLift T IsQuaternionClassB α β →
+      HasCorestrictionLinkedQuaternionLift
+        T IsQuaternionClassB α (α + β) := by
+  rintro ⟨r, hr, hcor, hs⟩
+  refine ⟨T.conjugate r, hconj r hr, ?_, ?_⟩
+  · rw [corestriction_conjugate hA₂ T r, hcor]
+  · have hresα : T.res α = r + T.conjugate r := by
+      rw [← hcor]
+      exact T.res_cor r
+    have heq :
+        T.conjugate r + T.res (α + β) =
+          r + T.res β := by
+      rw [map_add, hresα]
+      calc
+        T.conjugate r + ((r + T.conjugate r) + T.res β) =
+            r + (T.conjugate r + T.conjugate r) + T.res β := by abel
+        _ = r + T.res β := by rw [hB₂ (T.conjugate r)]; simp
+    rw [heq]
+    exact hs
+
+/-- The corestriction-linked criterion depends only on the unordered
+Clifford pair `{β, α + β}`. -/
+theorem hasCorestrictionLinkedQuaternionLift_swap_iff
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop)
+    (hconj : ConjugationPreservesQuaternionClasses T IsQuaternionClassB)
+    (α β : A) :
+    HasCorestrictionLinkedQuaternionLift T IsQuaternionClassB α β ↔
+      HasCorestrictionLinkedQuaternionLift
+        T IsQuaternionClassB α (α + β) := by
+  constructor
+  · exact hasCorestrictionLinkedQuaternionLift_swap
+      hA₂ hB₂ T IsQuaternionClassB hconj α β
+  · intro h
+    have h' := hasCorestrictionLinkedQuaternionLift_swap
+      hA₂ hB₂ T IsQuaternionClassB hconj α (α + β) h
+    have hlabel : α + (α + β) = β := by
+      calc
+        α + (α + β) = (α + α) + β := by abel
+        _ = β := by rw [hA₂ α, zero_add]
+    rw [hlabel] at h'
+    exact h'
 
 /-- In an exponent-two Brauer group, the third label of a quaternion-triple
 packet is the sum of the first two labels. -/
