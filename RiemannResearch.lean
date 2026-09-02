@@ -223,6 +223,7 @@ import RiemannResearch.E7.E7BoundaryEffectivity
 import RiemannResearch.E7.QuaternionCompletionPluckerObstruction
 import RiemannResearch.E7.E7IndexEightBoundary
 import RiemannResearch.E7.E7IndexEightQuadraticExtensionExclusion
+import RiemannResearch.E7.E7IndexEightCorestrictionLinkedReduction
 import RiemannResearch.E7.E7D4CentralBoundaryObstruction
 import RiemannResearch.E7.E7IndexEightHermitianEffectivity
 import RiemannResearch.E7.QuaternionHermitianDegreeEight
