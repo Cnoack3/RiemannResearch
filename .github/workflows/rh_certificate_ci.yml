@@ -23,7 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: leanprover/lean-action@v1
+      - name: Build kernel-checked log-three certificate
+        uses: leanprover/lean-action@v1
         with:
           auto-config: false
           build: true
