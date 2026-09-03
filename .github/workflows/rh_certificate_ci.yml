@@ -31,4 +31,4 @@ jobs:
           lint: false
           use-mathlib-cache: true
           use-github-cache: true
-          build-args: 'RiemannResearch.RH.StrictDiagonalDominance --quiet'
+          build-args: 'RiemannResearch.RH.Log3IntervalCertificate --quiet'
