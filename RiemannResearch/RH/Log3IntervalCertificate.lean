@@ -42,7 +42,9 @@ def unitUpper (c : Matrix n n ℝ) : Matrix n n ℝ := fun i j =>
 theorem unitUpper_isUpperTriangular (c : Matrix n n ℝ) :
     (unitUpper c).IsUpperTriangular := by
   intro i j hji
-  simp [unitUpper, (ne_of_gt hji).symm, not_lt_of_ge hji.le]
+change j < i at hji
+simp only [unitUpper]
+rw [if_neg (ne_of_gt hji).symm, if_neg (not_lt_of_ge hji.le)]
 
 /-- Every diagonal entry of `unitUpper c` is one. -/
 @[simp] theorem unitUpper_apply_self (c : Matrix n n ℝ) (i : n) :
@@ -52,7 +54,7 @@ theorem unitUpper_isUpperTriangular (c : Matrix n n ℝ) :
 /-- The determinant of a unit-upper-triangular matrix is one. -/
 theorem unitUpper_det (c : Matrix n n ℝ) :
     (unitUpper c).det = 1 := by
-  rw [Matrix.det_of_isUpperTriangular _ (unitUpper_isUpperTriangular c)]
+  rw [Matrix.det_of_isUpperTriangular (unitUpper_isUpperTriangular c)]
   simp
 
 /-- A unit-upper-triangular real matrix acts surjectively on column vectors. -/
