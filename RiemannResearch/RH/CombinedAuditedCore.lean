@@ -8,6 +8,7 @@ import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.LinearAlgebra.Isomorphisms
+import Mathlib.Topology.Instances.Real
 import Mathlib.Topology.Order.OrderClosed
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FieldSimp
@@ -19,13 +20,13 @@ import Mathlib.Tactic.Ring
 # Kernel-checked cores from `combined_audited_manuscript(4).pdf`
 
 The manuscript mixes finite algebra, analytic number theory, probability,
-operator theory, and conjectural geometric bridges.  This module formalizes
+operator theory, and conjectural geometric bridges. This module formalizes
 the portions whose mathematical content can be stated and proved with the
 present repository and mathlib.
 
-Deep analytic or geometric assertions are not introduced as axioms.  For the
+Deep analytic or geometric assertions are not introduced as axioms. For the
 conditional RH arguments, the substantial missing construction is exposed as
-an explicit hypothesis or a typed target.  This proves the implication while
+an explicit hypothesis or a typed target. This proves the implication while
 preserving the distinction between a reduction and a proof of RH.
 
 Source: Christian Noack, `combined_audited_manuscript(4).pdf`, August 2026.
@@ -41,7 +42,7 @@ noncomputable section
 /-! ## Theorem 2.1: prime-exponent coordinates -/
 
 /-- A nonzero natural number is reconstructed from its finite prime
-factorization.  This is the kernel-checked arithmetic core of Theorem 2.1. -/
+factorization. This is the kernel-checked arithmetic core of Theorem 2.1. -/
 theorem primeExponent_reconstructs {n : ℕ} (hn : n ≠ 0) :
     n.factorization.prod (fun p e => p ^ e) = n :=
   Nat.prod_factorization_pow_eq_self hn
@@ -62,11 +63,11 @@ theorem primeExponent_le_iff_dvd {m n : ℕ} (hm : m ≠ 0) (hn : n ≠ 0) :
 def forwardDifference {A : Type*} [Sub A] (s : ℕ → A) (n : ℕ) : A :=
   s n - s (n + 1)
 
-/-- Finite differences recover interval masses by exact telescoping.  This is
+/-- Finite differences recover interval masses by exact telescoping. This is
 the one-coordinate algebraic core of directed cylinder inversion. -/
 theorem sum_forwardDifference {A : Type*} [AddCommGroup A]
     (s : ℕ → A) (a n : ℕ) :
-    (∑ k in Finset.range n, forwardDifference s (a + k)) =
+    (∑ k ∈ Finset.range n, forwardDifference s (a + k)) =
       s a - s (a + n) := by
   induction n with
   | zero =>
@@ -115,14 +116,14 @@ theorem onePrimeHochschildObstruction
 squares. -/
 def scalarGluingPenalty {ι : Type*} (s : Finset ι)
     (G β : ι → ℝ) (b : ℝ) : ℝ :=
-  ∑ i in s, G i * (b - β i) ^ 2
+  ∑ i ∈ s, G i * (b - β i) ^ 2
 
 /-- A scalar blockwise loss splits into the sum of local optima and one common
 gluing penalty. -/
 theorem scalarOptimizerAwareTotalVariance
     {ι : Type*} (s : Finset ι) (ρ G β : ι → ℝ) (b : ℝ) :
-    (∑ i in s, (ρ i + G i * (b - β i) ^ 2)) =
-      (∑ i in s, ρ i) + scalarGluingPenalty s G β b := by
+    (∑ i ∈ s, (ρ i + G i * (b - β i) ^ 2)) =
+      (∑ i ∈ s, ρ i) + scalarGluingPenalty s G β b := by
   simp [scalarGluingPenalty, Finset.sum_add_distrib]
 
 /-- Positive block weights make the gluing penalty nonnegative. -/
@@ -130,6 +131,7 @@ theorem scalarGluingPenalty_nonneg
     {ι : Type*} {s : Finset ι} {G β : ι → ℝ} {b : ℝ}
     (hG : ∀ i ∈ s, 0 ≤ G i) :
     0 ≤ scalarGluingPenalty s G β b := by
+  unfold scalarGluingPenalty
   exact Finset.sum_nonneg fun i hi =>
     mul_nonneg (hG i hi) (sq_nonneg (b - β i))
 
@@ -140,10 +142,10 @@ theorem scalarGluingPenalty_eq_zero_iff
     (hG : ∀ i ∈ s, 0 < G i) :
     scalarGluingPenalty s G β b = 0 ↔
       ∀ i ∈ s, b = β i := by
+  unfold scalarGluingPenalty
   constructor
   · intro h i hi
-    have hterm :
-        G i * (b - β i) ^ 2 = 0 :=
+    have hterm : G i * (b - β i) ^ 2 = 0 :=
       (Finset.sum_eq_zero_iff_of_nonneg
         (fun j hj => mul_nonneg (hG j hj).le (sq_nonneg (b - β j)))).1 h i hi
     have hsquare : (b - β i) ^ 2 = 0 :=
@@ -154,7 +156,7 @@ theorem scalarGluingPenalty_eq_zero_iff
   · intro h
     apply Finset.sum_eq_zero
     intro i hi
-    simp [scalarGluingPenalty, h i hi]
+    simp [h i hi]
 
 /-- Scalar form of the head-tail Schur/Woodbury completion. -/
 theorem scalarHeadTailSchurIdentity (m l z : ℝ) :
@@ -172,13 +174,15 @@ theorem scalarHeadTailSchur_lowerBound (m l z : ℝ) :
   rw [scalarHeadTailSchurIdentity]
   have hcoef : 0 ≤ 1 + l ^ 2 := by
     nlinarith [sq_nonneg l]
-  exact le_add_of_nonneg_left
-    (mul_nonneg hcoef (sq_nonneg (z - l * m / (1 + l ^ 2))))
+  have hterm :
+      0 ≤ (1 + l ^ 2) * (z - l * m / (1 + l ^ 2)) ^ 2 :=
+    mul_nonneg hcoef (sq_nonneg (z - l * m / (1 + l ^ 2)))
+  linarith
 
 /-- A scalar linear constraint has a unique feasible lift; its weighted energy
 is the corresponding dual-frame value. -/
 theorem scalarMinimumEnergyDualFrame
-    {r b S z : ℝ} (hr : 0 < r) (hb : b ≠ 0) (hconstraint : b * z = S) :
+    {r b S z : ℝ} (_hr : 0 < r) (hb : b ≠ 0) (hconstraint : b * z = S) :
     z = S / b ∧ r * z ^ 2 = r * (S / b) ^ 2 := by
   have hz : z = S / b := by
     apply (eq_div_iff hb).2
@@ -189,7 +193,7 @@ theorem scalarMinimumEnergyDualFrame
 /-! ## Theorems 9.1 and 9.2: the pointed absolute point and shift exactness -/
 
 /-- The two-element pointed set used as the algebraic core of the manuscript's
-`F₁` model. -/
+`F1` model. -/
 inductive FOne
   | zero
   | one
@@ -204,10 +208,10 @@ def fOneMap {A : Type*} [Zero A] [One A] : FOne → A
   | .one => 1
 
 /-- A map from `FOne` preserving the two distinguished points is forced to be
-`fOneMap`.  This is the initiality core, without importing an `F₁` category. -/
+`fOneMap`. This is the initiality core, without importing an `F1` category. -/
 theorem fOneMap_unique
     {A : Type*} [Zero A] [One A] (f : FOne → A)
-    (hzero : f 0 = 0) (hone : f 1 = 1) :
+    (hzero : f FOne.zero = 0) (hone : f FOne.one = 1) :
     f = fOneMap := by
   funext x
   cases x with
@@ -249,7 +253,7 @@ theorem exists_unilateralShift_iff
 calculation. -/
 theorem finiteGeometricTelescope
     {R : Type*} [CommRing R] (a : R) (n : ℕ) :
-    (1 - a) * (∑ k in Finset.range n, a ^ k) = 1 - a ^ n := by
+    (1 - a) * (∑ k ∈ Finset.range n, a ^ k) = 1 - a ^ n := by
   induction n with
   | zero =>
       simp
@@ -280,7 +284,7 @@ theorem scalarRenormalizationCannotRemoveNegative
     {q c : ℝ} (hq : q < 0) (hc : |c| < -q) :
     q + c < 0 := by
   have hcle : c ≤ |c| := le_abs_self c
-  linarith
+  linarith [hq]
 
 /-! ## Theorems 12.17 and 12.18: rigorous conditional RH implications -/
 
@@ -291,7 +295,7 @@ theorem deningerEigenvalue_onCriticalLine
     ρ.re = (1 : ℝ) / 2 := by
   nlinarith
 
-/-- A fully explicit conditional form of the Deninger implication.  The
+/-- A fully explicit conditional form of the Deninger implication. The
 zero-independent cohomology and determinant transfer remain hypotheses. -/
 theorem deningerPolarizationImplication
     (isZero : ℂ → Prop)
@@ -306,7 +310,7 @@ theorem deningerPolarizationImplication
   obtain ⟨mass, hmass, hpair⟩ := hpolarization ρ hρ
   exact deningerEigenvalue_onCriticalLine hmass hpair
 
-/-- Imaginary part of the second-order spectral parameter `ρ(1-ρ)`. -/
+/-- Imaginary part of the second-order spectral parameter `rho * (1-rho)`. -/
 theorem secondOrder_im (ρ : ℂ) :
     (ρ * (1 - ρ)).im = ρ.im * (1 - 2 * ρ.re) := by
   rw [Complex.mul_im]
@@ -325,7 +329,7 @@ theorem criticalLine_of_secondOrder_real
   linarith
 
 /-- A fully explicit conditional form of the arithmetic second-order Selberg
-target.  Self-adjointness is used only through reality of the spectral value. -/
+target. Self-adjointness is used only through reality of the spectral value. -/
 theorem arithmeticSecondOrderImplication
     (isZero : ℂ → Prop)
     (criticalLineImpliesRH :
@@ -344,7 +348,7 @@ theorem arithmeticSecondOrderImplication
 theorem nonnegative_of_tendsto_nonnegative
     {u : ℕ → ℝ} {x : ℝ}
     (hu : ∀ n, 0 ≤ u n)
-    (hlim : Tendsto u atTop (𝓝 x)) :
+    (hlim : Tendsto u atTop (nhds x)) :
     0 ≤ x :=
   ge_of_tendsto hlim (Filter.Eventually.of_forall hu)
 
@@ -354,7 +358,7 @@ theorem exactConditionalPositivityBridge
     (criterion : (∀ f, 0 ≤ QW f) → RiemannResearch.RH.Statement)
     (approx : ℕ → A0 → ℝ)
     (happrox : ∀ n f, 0 ≤ approx n f)
-    (hlim : ∀ f, Tendsto (fun n => approx n f) atTop (𝓝 (QW f))) :
+    (hlim : ∀ f, Tendsto (fun n => approx n f) atTop (nhds (QW f))) :
     RiemannResearch.RH.Statement := by
   apply criterion
   intro f
@@ -362,7 +366,7 @@ theorem exactConditionalPositivityBridge
     (fun n => happrox n f) (hlim f)
 
 /-- Abstract data supplied by one support-adaptive semilocal trace
-certificate.  The analytic trace-class construction is not assumed globally;
+certificate. The analytic trace-class construction is not assumed globally;
 it has to be provided as data. -/
 structure SupportAdaptiveCertificate
     {Test : Type*} (QW : Test → ℝ)
@@ -373,7 +377,7 @@ structure SupportAdaptiveCertificate
   error_nonneg : ∀ f, 0 ≤ errorTerm f
   identity : ∀ f, admissible R f → QW f = traceTerm f + errorTerm f
 
-/-- Typed form of Conjecture 12.20.  It is a proposition, not an axiom. -/
+/-- Typed form of Conjecture 12.20. It is a proposition, not an axiom. -/
 def SupportAdaptiveSemilocalTraceBridge
     {Test : Type*} (QW : Test → ℝ)
     (admissible : ℝ → Test → Prop) : Prop :=
@@ -398,9 +402,10 @@ theorem supportAdaptiveSemilocalTraceBridgeImplication
 
 /-! ## Lemma 13.1 and Proposition 13.2: analytic symmetry algebra -/
 
-/-- The anti-holomorphic reflection fixing the critical line. -/
+/-- The anti-holomorphic reflection fixing the critical line, written in real
+and imaginary coordinates. -/
 def criticalReflection (ρ : ℂ) : ℂ :=
-  1 - Complex.conj ρ
+  ⟨1 - ρ.re, ρ.im⟩
 
 /-- Fixed points of the analytic reflection are exactly the critical line. -/
 theorem criticalReflection_fixed_iff (ρ : ℂ) :
@@ -408,17 +413,18 @@ theorem criticalReflection_fixed_iff (ρ : ℂ) :
   constructor
   · intro h
     have hre := congrArg Complex.re h
-    simp [criticalReflection] at hre
+    change 1 - ρ.re = ρ.re at hre
     linarith
   · intro hre
     apply Complex.ext
-    · simp [criticalReflection, hre]
-    · simp [criticalReflection]
+    · change 1 - ρ.re = ρ.re
+      linarith
+    · rfl
 
-/-- The four analytic transforms have constant total sum.  This is the
+/-- The four analytic transforms have constant total sum. This is the
 termwise algebra behind the unweighted-conjugate-sum no-go. -/
 theorem symmetryQuartet_sum (ρ : ℂ) :
-    ρ + Complex.conj ρ + (1 - ρ) + (1 - Complex.conj ρ) = 2 := by
+    ρ + star ρ + (1 - ρ) + (1 - star ρ) = 2 := by
   ring
 
 /-! ## Registered classical and conjectural targets
