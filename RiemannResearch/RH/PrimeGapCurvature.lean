@@ -187,8 +187,10 @@ theorem curvature_eq_zero_iff_exists_affine_on_range
       simpa [Nat.succ_eq_add_one] using Nat.succ_le_succ hiSuccLe
     have hgap₀ : gap t i ≠ 0 := hgap i hiLe
     have hgap₁ : gap t (i + 1) ≠ 0 := hgap (i + 1) hiSuccLe
+    simp only [adjacentCurvature, adjacentSlope]
     rw [hz i hi₀, hz (i + 1) hi₁, hz (i + 2) hi₂]
-    exact adjacentCurvature_affine t a b i hgap₀ hgap₁
+    simpa only [adjacentCurvature, adjacentSlope] using
+      adjacentCurvature_affine t a b i hgap₀ hgap₁
 
 section BilinearEnergy
 
@@ -214,7 +216,7 @@ theorem bilinearEnergy_decomposition
     B r r = B (q + (r - q)) (q + (r - q)) := by
       congr 1 <;> abel
     _ = B q q + B q (r - q) + B (r - q) q + B (r - q) (r - q) := by
-      simp only [map_add]
+      simp only [map_add, LinearMap.add_apply]
       ring
     _ = B q q + B (r - q) (r - q) := by
       rw [hqk, hkq]
@@ -337,5 +339,7 @@ theorem signedReturn_mul_rayleigh
     returnEnergy * rayleigh =
       (diagonal - eta * primePower + remainder) * rayleigh := by
   rw [hreturn]
+
+end
 
 end RiemannResearch.RH.PrimeGapCurvature
