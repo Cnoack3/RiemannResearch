@@ -145,6 +145,94 @@ theorem alignedLayerCorrection_preserves_linkedPair
       _ = T.res (q₁ + q₂) := by rw [hB₂, zero_add]
   exact ⟨hr'Quaternion, hs'Quaternion, hr'cor, hs'cor, hsum⟩
 
+/-- Translation by the restricted opposite packet label preserves the two
+split quaternion endpoints and their prescribed corestriction. Applying the
+same correction a second time returns to the original endpoint.
+
+Unlike `alignedLayerCorrection_preserves_linkedPair`, this specialization does
+not need exponent two on all of `B`: exponent two for `β` in `A` implies that
+`T.res β` has order at most two. The conclusion does not assert that the two
+endpoints are distinct.
+
+In the corrected LLT orientation, `β` restricts to `q₂` over the quadratic
+middle field when that field splits `q₁` (and to `q₃` after the half-spin
+swap). The hypothesis `hβU` is therefore exactly the unresolved second-slot
+incidence; this theorem does not construct that incidence. -/
+theorem oppositeLabelCorrection_swaps_linkedLiftEndpoints
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C)
+    (IsQuaternionClassB : B → Prop)
+    (hKernelQuaternion :
+      LayerRestrictionKernelConsistsOfQuaternionClasses
+        down IsQuaternionClassB)
+    (α β : A) (r : B)
+    (hrU : down r = 0)
+    (hβU : down (T.res β) = 0)
+    (hcor : T.cor r = α) :
+    let s := r + T.res β
+    IsQuaternionClassB s ∧
+      IsQuaternionClassB (s + T.res β) ∧
+      T.cor s = α ∧
+      T.cor (s + T.res β) = α ∧
+      s + T.res β = r := by
+  dsimp only
+  have hresβ₂ : T.res β + T.res β = 0 := by
+    rw [← map_add, hA₂ β, map_zero]
+  have hsU : down (r + T.res β) = 0 := by
+    rw [map_add, hrU, hβU, add_zero]
+  have hswap : (r + T.res β) + T.res β = r := by
+    calc
+      (r + T.res β) + T.res β =
+          r + (T.res β + T.res β) := by abel
+      _ = r := by rw [hresβ₂, add_zero]
+  have hsQuaternion : IsQuaternionClassB (r + T.res β) :=
+    hKernelQuaternion (r + T.res β) hsU
+  have hbackQuaternion :
+      IsQuaternionClassB ((r + T.res β) + T.res β) := by
+    rw [hswap]
+    exact hKernelQuaternion r hrU
+  have hsCor : T.cor (r + T.res β) = α := by
+    rw [map_add, hcor, T.cor_res, hA₂ β, add_zero]
+  have hbackCor :
+      T.cor ((r + T.res β) + T.res β) = α := by
+    rw [hswap, hcor]
+  exact ⟨hsQuaternion, hbackQuaternion, hsCor, hbackCor, hswap⟩
+
+/-- The preceding opposite-label correction is a genuine two-cycle when its
+restricted label is nonzero. Nondegeneracy is deliberately an explicit
+hypothesis rather than being inferred from the endpoint identities. -/
+theorem oppositeLabelCorrection_forms_nondegenerateTwoCycle
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C)
+    (IsQuaternionClassB : B → Prop)
+    (hKernelQuaternion :
+      LayerRestrictionKernelConsistsOfQuaternionClasses
+        down IsQuaternionClassB)
+    (α β : A) (r : B)
+    (hrU : down r = 0)
+    (hβU : down (T.res β) = 0)
+    (hcor : T.cor r = α)
+    (hβne : T.res β ≠ 0) :
+    let s := r + T.res β
+    IsQuaternionClassB s ∧
+      IsQuaternionClassB (s + T.res β) ∧
+      T.cor s = α ∧
+      T.cor (s + T.res β) = α ∧
+      s + T.res β = r ∧
+      s ≠ r := by
+  dsimp only
+  rcases oppositeLabelCorrection_swaps_linkedLiftEndpoints
+      hA₂ T down IsQuaternionClassB hKernelQuaternion
+        α β r hrU hβU hcor with
+    ⟨hsQuaternion, hbackQuaternion, hsCor, hbackCor, hswap⟩
+  have hsne : r + T.res β ≠ r := by
+    intro hs
+    apply hβne
+    simpa [add_assoc] using congrArg (fun x : B => -r + x) hs
+  exact ⟨hsQuaternion, hbackQuaternion, hsCor, hbackCor, hswap, hsne⟩
+
 /-- An aligned layer, together with the published common-discriminant
 constructor represented by `D`, realizes the original labelled packet.
 
