@@ -1,0 +1,33 @@
+name: Update RH prime-gap theorem catalog
+
+on:
+  push:
+    branches:
+      - rh-prime-gap-curvature-lean
+    paths:
+      - tools/update_rh_prime_gap_catalog.py
+      - .github/workflows/update-rh-prime-gap-catalog.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: rh-prime-gap-curvature-lean
+          fetch-depth: 0
+      - name: Insert catalog rows
+        run: python3 tools/update_rh_prime_gap_catalog.py
+      - name: Commit catalog update
+        run: |
+          if git diff --quiet -- RiemannResearch/THEOREM_CATALOG.md; then
+            exit 0
+          fi
+          git config user.name "Lean Research Agent"
+          git config user.email "lean-agent@localhost"
+          git add RiemannResearch/THEOREM_CATALOG.md
+          git commit -m "Catalog prime-gap curvature declarations"
+          git push origin HEAD:rh-prime-gap-curvature-lean
