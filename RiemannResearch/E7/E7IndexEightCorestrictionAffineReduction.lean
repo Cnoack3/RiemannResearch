@@ -36,6 +36,12 @@ The module also proves that the split quadratic-etale branch is exactly the
 previous four-quaternion completion problem and corrects the final E7 bridge
 so that the quadratic extension and its transfer data may vary with the target
 quaternion triple.
+
+Finally, translation by the residual Clifford label on the gauge quotient has
+a fixed point exactly when the quadratic extension splits that label or its
+partner. Thus, in the hard field-theoretic row where neither index-four label
+can split over a quadratic field extension, any solution must be a genuine
+two-cycle of quaternion gauge classes.
 -/
 
 namespace RiemannResearch.E7.QuaternionTrialityPacket
@@ -633,6 +639,88 @@ theorem twistGaugeQuotientTranslate_involutive
       calc
         (γ + β) + β = γ + (β + β) := by abel
         _ = γ := by rw [hA₂ β, add_zero]
+
+/-- A represented gauge class is fixed by translation by `β` exactly when
+`β` restricts to zero or to the same class as `α`. Equivalently, the
+quadratic extension splits one of the two labels `β` and `α + β`. -/
+theorem twistGaugeQuotientTranslate_mk_eq_self_iff
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (α β γ : A) :
+    twistGaugeQuotientTranslate hA₂ T α β
+        (Quotient.mk (TwistGaugeSetoid hA₂ T α) γ) =
+        Quotient.mk (TwistGaugeSetoid hA₂ T α) γ ↔
+      T.res β = 0 ∨ T.res β = T.res α := by
+  constructor
+  · intro h
+    change
+      Quotient.mk (TwistGaugeSetoid hA₂ T α) (γ + β) =
+        Quotient.mk (TwistGaugeSetoid hA₂ T α) γ at h
+    have hrel : TwistGaugeEquivalent T α (γ + β) γ :=
+      Quotient.exact h
+    rcases hrel with hleft | hright
+    · left
+      rw [map_add] at hleft
+      apply add_left_cancel (a := T.res γ)
+      simpa using hleft
+    · right
+      rw [map_add, map_add] at hright
+      exact add_left_cancel hright
+  · intro h
+    change
+      Quotient.mk (TwistGaugeSetoid hA₂ T α) (γ + β) =
+        Quotient.mk (TwistGaugeSetoid hA₂ T α) γ
+    apply Quotient.sound
+    rcases h with hβ | hβα
+    · left
+      rw [map_add, hβ, add_zero]
+    · right
+      rw [map_add, map_add, hβα]
+
+/-- Translation by `β` has a fixed gauge class precisely in the same two
+restriction-degenerate cases. The criterion is independent of the chosen
+class. -/
+theorem twistGaugeQuotientTranslate_hasFixedPoint_iff
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (α β : A) :
+    (∃ q : TwistGaugeQuotient hA₂ T α,
+      twistGaugeQuotientTranslate hA₂ T α β q = q) ↔
+      T.res β = 0 ∨ T.res β = T.res α := by
+  constructor
+  · rintro ⟨q, hq⟩
+    induction q using Quotient.inductionOn with
+    | _ γ =>
+        exact
+          (twistGaugeQuotientTranslate_mk_eq_self_iff
+            hA₂ T α β γ).1 hq
+  · intro h
+    exact
+      ⟨Quotient.mk (TwistGaugeSetoid hA₂ T α) 0,
+        (twistGaugeQuotientTranslate_mk_eq_self_iff
+          hA₂ T α β 0).2 h⟩
+
+/-- If neither Clifford label becomes split after restriction, translation by
+`β` acts without fixed points on the gauge quotient. Thus a linked lift must
+come from a genuine two-cycle in the quotient quaternion locus. -/
+theorem twistGaugeQuotientTranslate_fixedPointFree
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (α β : A)
+    (hβ : T.res β ≠ 0)
+    (hβα : T.res β ≠ T.res α) :
+    ∀ q : TwistGaugeQuotient hA₂ T α,
+      twistGaugeQuotientTranslate hA₂ T α β q ≠ q := by
+  intro q hq
+  have hfixed :
+      ∃ q' : TwistGaugeQuotient hA₂ T α,
+        twistGaugeQuotientTranslate hA₂ T α β q' = q' :=
+    ⟨q, hq⟩
+  rcases
+      (twistGaugeQuotientTranslate_hasFixedPoint_iff
+        hA₂ T α β).1 hfixed with h | h
+  · exact hβ h
+  · exact hβα h
 
 /-- The residual linked-lift problem is exactly a `[β]`-edge in the
 quaternion locus on `A / (ker(res) + ⟨α⟩)`. -/
