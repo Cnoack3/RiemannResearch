@@ -20,7 +20,7 @@ jobs:
         run: |
           python3 -m py_compile tools/lean_workspace_mcp.py tools/agent_workspaces.py
           python3 tools/test_agent_workspaces.py
-      - name: Build the RiemannResearch library
+      - name: Build the prime-gap curvature module
         uses: leanprover/lean-action@v1
         with:
           auto-config: false
@@ -29,6 +29,4 @@ jobs:
           lint: false
           use-mathlib-cache: true
           use-github-cache: true
-          build-args: "RiemannResearch --quiet"
-      - name: Check the new prime-gap curvature module
-        run: lake env lean RiemannResearch/RH/PrimeGapCurvature.lean
+          build-args: "RiemannResearch.RH.PrimeGapCurvature --quiet"
