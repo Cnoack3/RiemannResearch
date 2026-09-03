@@ -1,0 +1,34 @@
+name: RH certificate CI
+
+on:
+  push:
+    branches:
+      - rh-prime-gap-curvature-lean
+    paths:
+      - 'RiemannResearch/RH/StrictDiagonalDominance.lean'
+      - 'RiemannResearch/RH/Log3IntervalCertificate.lean'
+      - '.github/workflows/rh_certificate_ci.yml'
+  pull_request:
+    paths:
+      - 'RiemannResearch/RH/StrictDiagonalDominance.lean'
+      - 'RiemannResearch/RH/Log3IntervalCertificate.lean'
+      - '.github/workflows/rh_certificate_ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          build: true
+          test: false
+          lint: false
+          use-mathlib-cache: true
+          use-github-cache: true
+          build-args: 'RiemannResearch.RH.StrictDiagonalDominance --quiet'
