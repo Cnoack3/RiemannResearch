@@ -6,6 +6,8 @@ Authors: Cnoack3
 import RiemannResearch.RH.StrictDiagonalDominance
 import Mathlib.LinearAlgebra.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum
 
 /-!
 # Rational proof kernel for the localized `L = log 3` interval certificate
@@ -68,22 +70,14 @@ def congruence (Q A : Matrix n n ℝ) : Matrix n n ℝ :=
 original Hermitian matrix. -/
 theorem posDef_of_congruence_posDef
     {A Q : Matrix n n ℝ}
-    (hA : A.IsHermitian)
+    (_hA : A.IsHermitian)
     (hQ : Function.Surjective Q.mulVec)
     (hcong : (congruence Q A).PosDef) :
     A.PosDef := by
-  refine Matrix.PosDef.of_dotProduct_mulVec_pos hA ?_
-  intro x hx
-  obtain ⟨y, hy⟩ := hQ x
-  have hy0 : y ≠ 0 := by
-    intro hzero
-    apply hx
-    rw [← hy, hzero, Matrix.mulVec_zero]
-  have hp := hcong.dotProduct_mulVec_pos hy0
-  rw [← hy]
-  simpa [congruence, ← Matrix.mulVec_mulVec,
-    dotProduct_mulVec _ _ (Q *ᵥ y), star_eq_conjTranspose,
-    vecMul_conjTranspose] using hp
+  have hunit : IsUnit Q :=
+    Matrix.mulVec_surjective_iff_isUnit.mp hQ
+  apply (hunit.posDef_star_left_conjugate_iff (x := A)).mp
+  simpa [congruence, star_eq_conjTranspose] using hcong
 
 abbrev Log3Index := Fin 20
 
@@ -133,7 +127,8 @@ def evenRowRadiusQ : Log3Index → ℚ := ![
 /-- The rational row bounds for the even block are strictly separated. -/
 theorem evenRationalMarginsPositive :
     ∀ i, evenRowRadiusQ i < evenDiagLowerQ i := by
-  decide
+  intro i
+  fin_cases i <;> norm_num [evenRowRadiusQ, evenDiagLowerQ]
 
 /-- Exact Lean-checkable endpoint for the even finite block. The two
 hypotheses are the remaining analytic interval-enclosure obligations. -/
@@ -209,7 +204,8 @@ def oddRowRadiusQ : Log3Index → ℚ := ![
 /-- The rational row bounds for the odd block are strictly separated. -/
 theorem oddRationalMarginsPositive :
     ∀ i, oddRowRadiusQ i < oddDiagLowerQ i := by
-  decide
+  intro i
+  fin_cases i <;> norm_num [oddRowRadiusQ, oddDiagLowerQ]
 
 /-- Exact Lean-checkable endpoint for the odd finite block. The two
 hypotheses are the remaining analytic interval-enclosure obligations. -/
