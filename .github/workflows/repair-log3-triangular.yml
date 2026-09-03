@@ -1,0 +1,61 @@
+name: Repair log-three triangular lemmas
+
+on:
+  push:
+    branches:
+      - rh-prime-gap-curvature-lean
+    paths:
+      - '.github/workflows/repair-log3-triangular.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: rh-prime-gap-curvature-lean
+      - name: Patch triangular proofs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('RiemannResearch/RH/Log3IntervalCertificate.lean')
+          text = path.read_text()
+          old1 = """  intro i j hji
+            simp [unitUpper, (ne_of_gt hji).symm, not_lt_of_ge hji.le]
+          """
+          old1b = """  intro i j hji
+          simp [unitUpper, (ne_of_gt hji).symm, not_lt_of_ge hji.le]
+          """
+          new1 = """  intro i j hji
+          change j < i at hji
+          simp only [unitUpper]
+          rw [if_neg (ne_of_gt hji).symm, if_neg (not_lt_of_ge hji.le)]
+          """
+          if old1 in text:
+              text = text.replace(old1, new1)
+          elif old1b in text:
+              text = text.replace(old1b, new1)
+          else:
+              text = text.replace(
+                  "  intro i j hji\n  simp [unitUpper, (ne_of_gt hji).symm, not_lt_of_ge hji.le]\n",
+                  "  intro i j hji\n  change j < i at hji\n  simp only [unitUpper]\n  rw [if_neg (ne_of_gt hji).symm, if_neg (not_lt_of_ge hji.le)]\n",
+              )
+          text = text.replace(
+              "  rw [Matrix.det_of_isUpperTriangular _ (unitUpper_isUpperTriangular c)]\n  simp\n",
+              "  rw [Matrix.det_of_isUpperTriangular (unitUpper_isUpperTriangular c)]\n  simp\n",
+          )
+          path.write_text(text)
+          PY
+      - name: Verify patch and commit
+        run: |
+          grep -A7 'theorem unitUpper_isUpperTriangular' RiemannResearch/RH/Log3IntervalCertificate.lean
+          grep -A5 'theorem unitUpper_det' RiemannResearch/RH/Log3IntervalCertificate.lean
+          git config user.name 'Lean Research Agent'
+          git config user.email 'lean-agent@localhost'
+          git add RiemannResearch/RH/Log3IntervalCertificate.lean
+          git diff --cached --quiet || git commit -m 'Repair unit-upper triangular certificate lemmas'
+          git push origin HEAD:rh-prime-gap-curvature-lean
