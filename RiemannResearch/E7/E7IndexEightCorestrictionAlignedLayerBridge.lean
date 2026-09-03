@@ -84,6 +84,67 @@ theorem hasCorestrictionLinkedLiftForTriple_of_alignedLayer
   apply hKernelQuaternion
   rw [map_add, map_add, hMiddle, add_zero, hrU, hq₁U, zero_add]
 
+/-- A correction lying in both the upper restriction kernel and the
+corestriction kernel can be absorbed into an aligned linked pair.
+
+Both translated endpoints remain split by the upper quadratic layer, hence
+are quaternion classes under `hKernelQuaternion`. Their common
+corestriction and their difference are unchanged. This is the exact abstract
+stability needed if a weak Albert transporter contributes a nonzero Brauer
+norm class; realizing such a correction algebraically remains external.
+
+The calculation is independent of the Albert interpretation and uses only
+the displayed restriction and corestriction kernels. -/
+theorem alignedLayerCorrection_preserves_linkedPair
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C)
+    (IsQuaternionClassB : B → Prop)
+    (hKernelQuaternion :
+      LayerRestrictionKernelConsistsOfQuaternionClasses
+        down IsQuaternionClassB)
+    (q₁ q₂ q₃ : A)
+    (hMiddle : T.res q₂ = 0)
+    (r δ : B)
+    (hq₁U : down (T.res q₁) = 0)
+    (hrU : down r = 0)
+    (hcor : T.cor r = q₂ + q₃)
+    (hδU : down δ = 0)
+    (hδcor : T.cor δ = 0) :
+    let r' := r + δ
+    let s' := r' + T.res (q₁ + q₂)
+    IsQuaternionClassB r' ∧
+      IsQuaternionClassB s' ∧
+      T.cor r' = q₂ + q₃ ∧
+      T.cor s' = q₂ + q₃ ∧
+      r' + s' = T.res (q₁ + q₂) := by
+  dsimp only
+  have hr'Quaternion : IsQuaternionClassB (r + δ) := by
+    apply hKernelQuaternion
+    rw [map_add, hrU, hδU, add_zero]
+  have hs'Quaternion :
+      IsQuaternionClassB ((r + δ) + T.res (q₁ + q₂)) := by
+    apply hKernelQuaternion
+    calc
+      down ((r + δ) + T.res (q₁ + q₂)) =
+          (down r + down δ) +
+            (down (T.res q₁) + down (T.res q₂)) := by
+              simp only [map_add]
+      _ = 0 := by simp [hrU, hδU, hq₁U, hMiddle]
+  have hr'cor : T.cor (r + δ) = q₂ + q₃ := by
+    rw [map_add, hcor, hδcor, add_zero]
+  have hs'cor :
+      T.cor ((r + δ) + T.res (q₁ + q₂)) = q₂ + q₃ := by
+    rw [map_add, hr'cor, T.cor_res, hA₂, add_zero]
+  have hsum :
+      (r + δ) + ((r + δ) + T.res (q₁ + q₂)) =
+        T.res (q₁ + q₂) := by
+    calc
+      (r + δ) + ((r + δ) + T.res (q₁ + q₂)) =
+          ((r + δ) + (r + δ)) + T.res (q₁ + q₂) := by abel
+      _ = T.res (q₁ + q₂) := by rw [hB₂, zero_add]
+  exact ⟨hr'Quaternion, hs'Quaternion, hr'cor, hs'cor, hsum⟩
+
 /-- An aligned layer, together with the published common-discriminant
 constructor represented by `D`, realizes the original labelled packet.
 

@@ -38,6 +38,26 @@ theorem eq_zero_of_coprime_restrictions
   · rw [← hM x, hxM, map_zero]
   · rw [← hN x, hxN, map_zero]
 
+/-- A torsion class killed by one restriction is zero when its torsion
+exponent is coprime to the restriction--corestriction degree.
+
+For example, this is the exact additive step behind the observation that a
+three-torsion central obstruction killed by a degree-eight restriction must
+vanish. As above, the theorem does not construct the restriction lift and does
+not apply directly to pointed nonabelian H¹. -/
+theorem eq_zero_of_torsion_and_coprime_restriction
+    {A B : Type*} [AddCommGroup A] [AddCommGroup B]
+    (res : A →+ B) (cor : B →+ A)
+    {m n : ℕ}
+    (hindex : ∀ x, cor (res x) = n • x)
+    (hcop : m.Coprime n)
+    {x : A} (htorsion : m • x = 0) (hres : res x = 0) :
+    x = 0 := by
+  apply (nsmul_eq_zero_iff_of_coprime hcop).mp
+  constructor
+  · exact htorsion
+  · rw [← hindex x, hres, map_zero]
+
 /-- A finite family of annihilating degrees with gcd one detects zero.
 
 This is the abstract additive core of Lemma 6.36, “Abelian Bezout descent,”
