@@ -9,8 +9,8 @@ import RiemannResearch.E7.E7IndexEightCorestrictionAlignedLayerBridge
 /-!
 # Dual-quartic incidence for the hard E7 packet
 
-Let M/F be the quadratic extension splitting the middle quaternion and let U/M
-be a surviving nonnormal quadratic layer. In the intended field interpretation,
+Let M/F be a quadratic extension and let U/M be a surviving nonnormal
+quadratic layer. In the intended field interpretation,
 
     A = Br₂(F), B = Br₂(M), C = Br₂(U), E = Br₂(check U).
 
@@ -33,6 +33,18 @@ packet labels on opposite members:
     (q₁ + q₂)|_U = 0  and  (q₂ + q₃)|_(check U) = 0.
 
 This removes the prescribed-middle and constituent-splitting hypotheses.
+
+There is also a complementary transfer-theoretic reduction when M splits q₁.
+If q₂ and q₃ have respective corestriction preimages s and t in the same
+layer kernel, then s+t is automatically quaternion and has corestriction
+q₂+q₃. Its linked complement is exactly the crossed class
+
+    t + conjugate(s).
+
+Thus quaternionity of this one crossed class is sufficient. The calculation is
+formalized below; Lam--Leep--Tignol Theorem 5.12 and Tignol Corollary 3.5
+motivate the corestriction data, but neither cited result by itself supplies
+the simultaneous kernel preimages required by this conditional reduction.
 
 Under Arason exactness, this is also the vanishing of a canonical,
 basepoint-independent class in Br₂(U) / res_U/F(Br₂(F)).
@@ -556,6 +568,103 @@ theorem totalIndexEight_excludes_quadratic_commonSplitter_of_thirdIndexTwo
       I.index (q₁ + q₂) * I.index q₃ ≤ 2 * 2 :=
     Nat.mul_le_mul hPair hThird
   omega
+
+/-- A crossed quaternion kernel rectangle consists of two classes in the same
+quadratic-layer kernel with separately prescribed corestrictions, together
+with quaternionity of the crossed conjugate sum.
+
+In the intended field model, Tignol's dual relative-Brauer calculation
+identifies existence of each kernel preimage with splitting of the
+corresponding ground-field class by the dual quartic. Lam--Leep--Tignol
+Theorem 5.12 supplies individual corestriction presentations under its cup
+product criterion, but does not assert that two prescribed presentations lie
+in one fixed layer kernel. -/
+def HasCrossedQuaternionKernelRectangle
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C)
+    (IsQuaternionClassB : B → Prop)
+    (q₂ q₃ : A) : Prop :=
+  ∃ s t : B,
+    down s = 0 ∧
+      down t = 0 ∧
+      T.cor s = q₂ ∧
+      T.cor t = q₃ ∧
+      IsQuaternionClassB (t + T.conjugate s)
+
+/-- When M splits q₁ and cor(s) = q₂, the linked complement of the kernel
+sum s+t is exactly the crossed conjugate class t+conjugate(s). -/
+theorem kernelRectangle_linkedComplement_eq_crossedConjugate
+    (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (q₁ q₂ : A) (s t : B)
+    (hFirst : T.res q₁ = 0)
+    (hcorS : T.cor s = q₂) :
+    (s + t) + T.res (q₁ + q₂) =
+      t + T.conjugate s := by
+  rw [map_add, hFirst, zero_add, ← hcorS, T.res_cor]
+  calc
+    (s + t) + (s + T.conjugate s) =
+        (s + s) + (t + T.conjugate s) := by abel
+    _ = t + T.conjugate s := by rw [hB₂ s, zero_add]
+
+/-- A crossed quaternion kernel rectangle constructs the required linked lift.
+
+This is strictly a conditional algebraic reduction: the field-theoretic
+problem is to put the two prescribed corestriction preimages in one nonnormal
+layer kernel and make their crossed conjugate sum quaternion. -/
+theorem hasCorestrictionLinkedLiftForTriple_of_crossedQuaternionKernelRectangle
+    (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C)
+    (IsQuaternionClassB : B → Prop)
+    (hKernelQuaternion :
+      LayerRestrictionKernelConsistsOfQuaternionClasses
+        down IsQuaternionClassB)
+    (q₁ q₂ q₃ : A)
+    (hFirst : T.res q₁ = 0)
+    (hRectangle :
+      HasCrossedQuaternionKernelRectangle
+        T down IsQuaternionClassB q₂ q₃) :
+    HasCorestrictionLinkedLiftForTriple
+      T IsQuaternionClassB q₁ q₂ q₃ := by
+  rcases hRectangle with ⟨s, t, hs, ht, hcorS, hcorT, hCross⟩
+  refine ⟨s + t, hKernelQuaternion (s + t) ?_, ?_, ?_⟩
+  · rw [map_add, hs, ht, add_zero]
+  · rw [map_add, hcorS, hcorT]
+  · rw [kernelRectangle_linkedComplement_eq_crossedConjugate
+      hB₂ T q₁ q₂ s t hFirst hcorS]
+    exact hCross
+
+/-- The crossed quaternion kernel rectangle realizes the original labelled
+E7 packet through the common-discriminant constructor. -/
+theorem BoundaryRealization.isEffective_of_crossedQuaternionKernelRectangle
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (R : BoundaryRealization.{u, x} A)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C)
+    (IsQuaternionClassB : B → Prop)
+    (hKernelQuaternion :
+      LayerRestrictionKernelConsistsOfQuaternionClasses
+        down IsQuaternionClassB)
+    (Disc : CommonDiscriminantSumConstructor R T IsQuaternionClassB)
+    (q₁ q₂ q₃ : A)
+    (hFirst : T.res q₁ = 0)
+    (hRectangle :
+      HasCrossedQuaternionKernelRectangle
+        T down IsQuaternionClassB q₂ q₃) :
+    R.IsEffective (BrauerPacket.ofTriple q₁ q₂ q₃) := by
+  have hLinked :=
+    hasCorestrictionLinkedLiftForTriple_of_crossedQuaternionKernelRectangle
+      hB₂ T down IsQuaternionClassB hKernelQuaternion
+        q₁ q₂ q₃ hFirst hRectangle
+  rcases R.isEffective_of_corestrictionLinkedLift
+      T IsQuaternionClassB Disc (q₂ + q₃) (q₁ + q₂) hLinked with
+    ⟨X, hX⟩
+  refine ⟨X, hX.trans ?_⟩
+  apply BrauerPacket.ext
+  · rfl
+  · rfl
+  · exact target_underlying_add_plus hA₂ q₁ q₂ q₃
 
 /-- If the dual member splits `α`, splitting either of the two other balanced
 packet labels on the first member gives the required linked lift. The second
