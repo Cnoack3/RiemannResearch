@@ -284,3 +284,4 @@ import RiemannResearch.E8.RemainingCaseMemorandum
 import RiemannResearch.RH.Basic
 import RiemannResearch.RH.CombinedGain
 import RiemannResearch.RH.PrimePhaseCRT
+import RiemannResearch.RH.PrimeGapCurvature
