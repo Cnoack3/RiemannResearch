@@ -284,3 +284,9 @@ import RiemannResearch.E8.RemainingCaseMemorandum
 import RiemannResearch.RH.Basic
 import RiemannResearch.RH.CombinedGain
 import RiemannResearch.RH.PrimePhaseCRT
+import RiemannResearch.RH.StrictDiagonalDominance
+import RiemannResearch.RH.Log3Parameters
+import RiemannResearch.RH.Log3Bounds
+import RiemannResearch.RH.Log3IntervalCertificate
+import RiemannResearch.RH.Log3FiniteMatrixFormula
+import RiemannResearch.RH.Log3ActualMatrix
