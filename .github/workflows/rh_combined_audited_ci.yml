@@ -6,12 +6,14 @@ on:
       - "RiemannResearch/RH/CombinedAuditedCore.lean"
       - "RiemannResearch/RH/CombinedAuditedInventory.lean"
       - "RiemannResearch/RH/CombinedGain.lean"
+      - "RiemannResearch/RH/COMBINED_AUDITED_CATALOG.md"
       - ".github/workflows/rh_combined_audited_ci.yml"
   pull_request:
     paths:
       - "RiemannResearch/RH/CombinedAuditedCore.lean"
       - "RiemannResearch/RH/CombinedAuditedInventory.lean"
       - "RiemannResearch/RH/CombinedGain.lean"
+      - "RiemannResearch/RH/COMBINED_AUDITED_CATALOG.md"
       - ".github/workflows/rh_combined_audited_ci.yml"
   workflow_dispatch:
 
@@ -23,13 +25,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Build audited RH modules
+      - name: Build and audit the audited RH modules
         uses: leanprover/lean-action@v1
         with:
           auto-config: false
           build: true
           test: false
           lint: false
+          axiom-audit: true
           use-mathlib-cache: true
           use-github-cache: true
           build-args: "RiemannResearch.RH.CombinedAuditedCore RiemannResearch.RH.CombinedAuditedInventory RiemannResearch.RH.CombinedGain --quiet"
