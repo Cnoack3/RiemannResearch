@@ -8,7 +8,6 @@ import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.LinearAlgebra.Isomorphisms
-import Mathlib.Topology.Instances.Real
 import Mathlib.Topology.Order.OrderClosed
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FieldSimp
