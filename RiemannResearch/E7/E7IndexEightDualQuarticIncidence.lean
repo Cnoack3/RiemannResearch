@@ -27,6 +27,13 @@ field-theoretic equality. Consequently the remaining labelled E7 alignment is
 
     q₁|_U = 0  and  (q₂ + q₃)|_(check U) = 0.
 
+More strongly, the linked-lift construction itself only needs the two actual
+packet labels on opposite members:
+
+    (q₁ + q₂)|_U = 0  and  (q₂ + q₃)|_(check U) = 0.
+
+This removes the prescribed-middle and constituent-splitting hypotheses.
+
 Under Arason exactness, this is also the vanishing of a canonical,
 basepoint-independent class in Br₂(U) / res_U/F(Br₂(F)).
 
@@ -408,5 +415,233 @@ theorem BoundaryRealization.isEffective_of_dualQuarticSplitting
   exact R.isEffective_of_alignedLayerForTriple
     hA₂ T down IsQuaternionClassB hKernelQuaternion Disc
       q₁ q₂ q₃ hMiddle hAligned
+
+/-- Opposite splitting of the two actual packet labels on a Tignol dual
+quartic pair directly constructs the linked quaternion lift. Unlike the older
+aligned-layer endpoint, this needs no prescribed quadratic middle splitter. -/
+theorem hasCorestrictionLinkedQuaternionLift_of_oppositeLabelledDualQuartic
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C) (dualDown : A →+ E)
+    (hDual : DualQuarticRestrictionDetectsLayerCorestrictions
+      T down dualDown)
+    (IsQuaternionClassB : B → Prop)
+    (hKernelQuaternion :
+      LayerRestrictionKernelConsistsOfQuaternionClasses down IsQuaternionClassB)
+    (α β : A)
+    (hBeta : down (T.res β) = 0)
+    (hAlpha : dualDown α = 0) :
+    HasCorestrictionLinkedQuaternionLift T IsQuaternionClassB α β := by
+  have hAlphaMem : α ∈ AddSubgroup.map T.cor down.ker := by
+    rw [hDual]
+    exact hAlpha
+  rw [AddSubgroup.mem_map] at hAlphaMem
+  rcases hAlphaMem with ⟨r, hr, hcor⟩
+  have hr0 : down r = 0 := hr
+  have hTranslate0 : down (r + T.res β) = 0 := by
+    rw [map_add, hr0, hBeta, add_zero]
+  exact ⟨r, hKernelQuaternion r hr0, hcor,
+    hKernelQuaternion (r + T.res β) hTranslate0⟩
+
+/-- The labelled E7 packet is effective as soon as the first dual quartic
+splits `q₁ + q₂` and its Tignol dual splits `q₂ + q₃`. -/
+theorem BoundaryRealization.isEffective_of_oppositeLabelledDualQuarticSplitting
+    (hA₂ : IsExponentTwo A)
+    (R : BoundaryRealization.{u, x} A)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C) (dualDown : A →+ E)
+    (hDual : DualQuarticRestrictionDetectsLayerCorestrictions
+      T down dualDown)
+    (IsQuaternionClassB : B → Prop)
+    (hKernelQuaternion :
+      LayerRestrictionKernelConsistsOfQuaternionClasses down IsQuaternionClassB)
+    (Disc : CommonDiscriminantSumConstructor R T IsQuaternionClassB)
+    (q₁ q₂ q₃ : A)
+    (hPlus : down (T.res (q₁ + q₂)) = 0)
+    (hUnderlying : dualDown (q₂ + q₃) = 0) :
+    R.IsEffective (BrauerPacket.ofTriple q₁ q₂ q₃) := by
+  have hLinked :=
+    hasCorestrictionLinkedQuaternionLift_of_oppositeLabelledDualQuartic
+      T down dualDown hDual IsQuaternionClassB hKernelQuaternion
+        (q₂ + q₃) (q₁ + q₂) hPlus hUnderlying
+  rcases R.isEffective_of_corestrictionLinkedLift
+      T IsQuaternionClassB Disc (q₂ + q₃) (q₁ + q₂) hLinked with
+    ⟨X, hX⟩
+  refine ⟨X, hX.trans ?_⟩
+  apply BrauerPacket.ext
+  · rfl
+  · rfl
+  · exact target_underlying_add_plus hA₂ q₁ q₂ q₃
+
+/-- For any representative of the same labelled packet, once its middle class
+is split by `M`, upper-layer splitting of its first class is exactly splitting
+of the fixed positive Clifford label. -/
+theorem samePacket_middleSplitter_firstSide_iff_packetLabelSplits
+    (T : QuadraticBrauerTransferModel A B) (down : B →+ C)
+    (p₁ p₂ p₃ q₁ q₂ q₃ : A)
+    (hpacket :
+      BrauerPacket.ofTriple p₁ p₂ p₃ =
+        BrauerPacket.ofTriple q₁ q₂ q₃)
+    (hMiddle : T.res p₂ = 0) :
+    down (T.res p₁) = 0 ↔
+      down (T.res (q₁ + q₂)) = 0 := by
+  have hplus := congrArg BrauerPacket.cliffordPlus hpacket
+  change p₁ + p₂ = q₁ + q₂ at hplus
+  have hp₂U : down (T.res p₂) = 0 := by
+    rw [hMiddle, map_zero]
+  constructor
+  · intro hp₁U
+    rw [← hplus, map_add, map_add, hp₁U, hp₂U, add_zero]
+  · intro hβU
+    rw [← hplus, map_add, map_add, hp₂U, add_zero] at hβU
+    exact hβU
+
+/-- If a same-packet representative literally puts the original first class
+in its middle slot, its third class is forced to be the original total. -/
+theorem samePacket_middle_eq_first_forces_third_eq_total
+    (h₂ : IsExponentTwo A)
+    (p₁ p₂ p₃ q₁ q₂ q₃ : A)
+    (hpacket :
+      BrauerPacket.ofTriple p₁ p₂ p₃ =
+        BrauerPacket.ofTriple q₁ q₂ q₃)
+    (hMiddle : p₂ = q₁) :
+    p₃ = q₁ + q₂ + q₃ := by
+  have hunderlying := congrArg BrauerPacket.underlying hpacket
+  change p₂ + p₃ = q₂ + q₃ at hunderlying
+  rw [hMiddle] at hunderlying
+  calc
+    p₃ = (q₁ + q₁) + p₃ := by rw [h₂ q₁, zero_add]
+    _ = q₁ + (q₁ + p₃) := by abel
+    _ = q₁ + (q₂ + q₃) := by rw [hunderlying]
+    _ = q₁ + q₂ + q₃ := by abel
+
+/-- In the total-index-eight row, no quaternion representative of the same
+packet can literally put the original first quaternion into the middle slot. -/
+theorem no_quaternion_samePacket_rep_with_first_as_middle_of_totalIndexEight
+    (h₂ : IsExponentTwo A)
+    (I : BrauerIndexModel A)
+    (IsQuaternionClass : A → Prop)
+    (hQuaternionIndex : ∀ a, IsQuaternionClass a → I.index a ≤ 2)
+    (q₁ q₂ q₃ : A)
+    (hTotal : I.index (q₁ + q₂ + q₃) = 8) :
+    ¬ ∃ p₁ p₂ p₃ : A,
+      IsQuaternionClass p₁ ∧ IsQuaternionClass p₂ ∧
+      IsQuaternionClass p₃ ∧ p₂ = q₁ ∧
+      BrauerPacket.ofTriple p₁ p₂ p₃ =
+        BrauerPacket.ofTriple q₁ q₂ q₃ := by
+  rintro ⟨p₁, p₂, p₃, hp₁, hp₂, hp₃, hm, hpacket⟩
+  have hp₃eq := samePacket_middle_eq_first_forces_third_eq_total
+    h₂ p₁ p₂ p₃ q₁ q₂ q₃ hpacket hm
+  have hle := hQuaternionIndex p₃ hp₃
+  rw [hp₃eq, hTotal] at hle
+  omega
+
+/-- A quadratic extension cannot split two quaternion factors of a
+triquaternion division class of index eight. -/
+theorem totalIndexEight_excludes_quadratic_commonSplitter_of_thirdIndexTwo
+    (I : BrauerIndexModel A)
+    (T : QuadraticBrauerTransferModel A B)
+    (hQuadratic : ∀ a : A, T.res a = 0 → I.index a ≤ 2)
+    (q₁ q₂ q₃ : A)
+    (hThird : I.index q₃ ≤ 2)
+    (hTotal : I.index (q₁ + q₂ + q₃) = 8) :
+    ¬ (T.res q₁ = 0 ∧ T.res q₂ = 0) := by
+  rintro ⟨hq₁, hq₂⟩
+  have hsum : T.res (q₁ + q₂) = 0 := by
+    rw [map_add, hq₁, hq₂, add_zero]
+  have hPair : I.index (q₁ + q₂) ≤ 2 :=
+    hQuadratic (q₁ + q₂) hsum
+  have hIndexProduct := I.index_add_le_mul (q₁ + q₂) q₃
+  rw [hTotal] at hIndexProduct
+  have hProduct :
+      I.index (q₁ + q₂) * I.index q₃ ≤ 2 * 2 :=
+    Nat.mul_le_mul hPair hThird
+  omega
+
+/-- If the dual member splits `α`, splitting either of the two other balanced
+packet labels on the first member gives the required linked lift. The second
+branch is transported by quadratic conjugation. -/
+theorem hasCorestrictionLinkedQuaternionLift_of_dualSplitting_and_eitherCliffordSide
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C) (dualDown : A →+ E)
+    (IsQuaternionClassB : B → Prop)
+    (hKernelQuaternion :
+      LayerRestrictionKernelConsistsOfQuaternionClasses
+        down IsQuaternionClassB)
+    (hconj :
+      ConjugationPreservesQuaternionClasses T IsQuaternionClassB)
+    (hDual :
+      DualQuarticRestrictionDetectsLayerCorestrictions
+        T down dualDown)
+    (α β : A)
+    (hα : dualDown α = 0)
+    (hEither :
+      down (T.res β) = 0 ∨
+        down (T.res (α + β)) = 0) :
+    HasCorestrictionLinkedQuaternionLift
+      T IsQuaternionClassB α β := by
+  have hαImage : α ∈ AddSubgroup.map T.cor down.ker := by
+    rw [hDual]
+    simpa only [AddMonoidHom.mem_ker] using hα
+  rw [AddSubgroup.mem_map] at hαImage
+  rcases hαImage with ⟨r, hr, hcor⟩
+  change down r = 0 at hr
+  rcases hEither with hβ | hαβ
+  · refine ⟨r, hKernelQuaternion r hr, hcor, ?_⟩
+    apply hKernelQuaternion
+    rw [map_add, hr, hβ, add_zero]
+  · apply (hasCorestrictionLinkedQuaternionLift_swap_iff
+      hA₂ hB₂ T IsQuaternionClassB hconj α β).2
+    refine ⟨r, hKernelQuaternion r hr, hcor, ?_⟩
+    apply hKernelQuaternion
+    rw [map_add, hr, hαβ, add_zero]
+
+/-- For an LLT dual pair whose first quartic contains a quadratic subfield of
+`q₁` and whose dual splits `q₂ + q₃`, it is enough that the first quartic
+split either `q₂` or `q₃`. -/
+theorem hasCorestrictionLinkedLiftForTriple_of_firstAndEitherRemainingSplit
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C) (dualDown : A →+ E)
+    (IsQuaternionClassB : B → Prop)
+    (hKernelQuaternion :
+      LayerRestrictionKernelConsistsOfQuaternionClasses
+        down IsQuaternionClassB)
+    (hconj :
+      ConjugationPreservesQuaternionClasses T IsQuaternionClassB)
+    (hDual :
+      DualQuarticRestrictionDetectsLayerCorestrictions
+        T down dualDown)
+    (q₁ q₂ q₃ : A)
+    (hFirst : down (T.res q₁) = 0)
+    (hDualOpposite : dualDown (q₂ + q₃) = 0)
+    (hEitherRemaining :
+      down (T.res q₂) = 0 ∨ down (T.res q₃) = 0) :
+    HasCorestrictionLinkedLiftForTriple
+      T IsQuaternionClassB q₁ q₂ q₃ := by
+  apply hasCorestrictionLinkedQuaternionLift_of_dualSplitting_and_eitherCliffordSide
+    hA₂ hB₂ T down dualDown IsQuaternionClassB hKernelQuaternion
+      hconj hDual (q₂ + q₃) (q₁ + q₂) hDualOpposite
+  rcases hEitherRemaining with hq₂ | hq₃
+  · left
+    rw [map_add, map_add, hFirst, hq₂, add_zero]
+  · right
+    have hlabel : (q₂ + q₃) + (q₁ + q₂) = q₁ + q₃ := by
+      calc
+        (q₂ + q₃) + (q₁ + q₂) =
+            q₁ + (q₂ + q₂) + q₃ := by abel
+        _ = q₁ + q₃ := by rw [hA₂ q₂]; simp
+    rw [hlabel, map_add, map_add, hFirst, hq₃, add_zero]
+
+/-- In the LLT coordinates `z = b + 2 c sqrt(m)` and
+`f = m e² + b e + c²`, the correction slot satisfies
+`f = (e sqrt(m) - c)² + e z`. -/
+theorem llt_embeddedSlot_polynomial_identity
+    {F : Type z} [CommRing F] (m b c e s : F)
+    (hs : s ^ 2 = m) :
+    m * e ^ 2 + b * e + c ^ 2 =
+      (e * s - c) ^ 2 + e * (b + 2 * c * s) := by
+  rw [← hs]
+  ring
 
 end RiemannResearch.E7.QuaternionTrialityPacket

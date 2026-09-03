@@ -125,6 +125,31 @@ theorem isBalanced_ofTriple
     IsBalanced (ofTriple q₁ q₂ q₃) :=
   ofTriple_balanced h₂ q₁ q₂ q₃
 
+/-- Balanced packets are exactly the packets arising from three exponent-two
+classes. Thus balance is the entire additive content of a triality packet. -/
+theorem isBalanced_iff_exists_ofTriple
+    (h₂ : IsExponentTwo A) (P : BrauerPacket A) :
+    IsBalanced P ↔ ∃ q₁ q₂ q₃ : A, ofTriple q₁ q₂ q₃ = P := by
+  constructor
+  · intro hP
+    exact exists_of_balanced h₂ P hP
+  · rintro ⟨q₁, q₂, q₃, rfl⟩
+    exact isBalanced_ofTriple h₂ q₁ q₂ q₃
+
+/-- To prove an additive property of every triple packet is equivalent to
+proving it for every balanced packet. -/
+theorem forall_ofTriple_iff_forall_balanced
+    (h₂ : IsExponentTwo A) (Special : BrauerPacket A → Prop) :
+    (∀ q₁ q₂ q₃ : A, Special (ofTriple q₁ q₂ q₃)) ↔
+      ∀ P : BrauerPacket A, IsBalanced P → Special P := by
+  constructor
+  · intro h P hP
+    rcases exists_of_balanced h₂ P hP with ⟨q₁, q₂, q₃, rfl⟩
+    exact h q₁ q₂ q₃
+  · intro h q₁ q₂ q₃
+    exact h (ofTriple q₁ q₂ q₃)
+      (isBalanced_ofTriple h₂ q₁ q₂ q₃)
+
 end BrauerPacket
 
 end RiemannResearch.E7.QuaternionTrialityPacket
