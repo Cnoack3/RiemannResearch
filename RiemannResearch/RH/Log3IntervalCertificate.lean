@@ -6,7 +6,6 @@ Authors: Cnoack3
 import RiemannResearch.RH.StrictDiagonalDominance
 import Mathlib.LinearAlgebra.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.Tactic.NativeDecide
 
 /-!
 # Rational proof kernel for the localized `L = log 3` interval certificate
@@ -134,7 +133,7 @@ def evenRowRadiusQ : Log3Index → ℚ := ![
 /-- The rational row bounds for the even block are strictly separated. -/
 theorem evenRationalMarginsPositive :
     ∀ i, evenRowRadiusQ i < evenDiagLowerQ i := by
-  native_decide
+  decide
 
 /-- Exact Lean-checkable endpoint for the even finite block. The two
 hypotheses are the remaining analytic interval-enclosure obligations. -/
@@ -210,7 +209,7 @@ def oddRowRadiusQ : Log3Index → ℚ := ![
 /-- The rational row bounds for the odd block are strictly separated. -/
 theorem oddRationalMarginsPositive :
     ∀ i, oddRowRadiusQ i < oddDiagLowerQ i := by
-  native_decide
+  decide
 
 /-- Exact Lean-checkable endpoint for the odd finite block. The two
 hypotheses are the remaining analytic interval-enclosure obligations. -/
