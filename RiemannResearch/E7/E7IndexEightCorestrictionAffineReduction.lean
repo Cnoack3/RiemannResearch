@@ -875,4 +875,28 @@ theorem e7IndexEightRealizationGoal_of_variableCorestrictionLinkedRealizations
   · rfl
   · exact target_underlying_add_plus hA₂ q₁ q₂ q₃
 
+/-- The already-settled strata together with per-triple variable
+corestriction-linked witnesses for the index-eight stratum imply the full
+abstract E7 packet-realization goal.
+
+This is a composition theorem: it does not construct the field-theoretic
+linked witnesses or the common-discriminant quadratic-pair realizations
+stored in them. -/
+theorem e7RealizationGoal_of_away_and_variableCorestrictionLinkedRealizations
+    (hA₂ : IsExponentTwo A)
+    (I : BrauerIndexModel A)
+    (C : BoundaryRealization.{u, w} A)
+    (IsQuaternionClassA : A → Prop)
+    (hAway :
+      E7AwayFromIndexEightRealizationGoal I C IsQuaternionClassA)
+    (hHard :
+      IndexEightVariableCorestrictionLinkedRealizationGoal.{u, v, w}
+        I C IsQuaternionClassA) :
+    E7RealizationGoal C IsQuaternionClassA := by
+  exact (e7RealizationGoal_iff_indexEight_partition
+    I C IsQuaternionClassA).2
+      ⟨hAway,
+        e7IndexEightRealizationGoal_of_variableCorestrictionLinkedRealizations
+          hA₂ I C IsQuaternionClassA hHard⟩
+
 end RiemannResearch.E7.QuaternionTrialityPacket
