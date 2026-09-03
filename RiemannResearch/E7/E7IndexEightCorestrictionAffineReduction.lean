@@ -12,7 +12,18 @@ import RiemannResearch.E7.E7IndexEightCorestrictionLinkedReduction
 For a fixed quadratic extension and a chosen point `r₀` with prescribed
 corestriction `α`, this module identifies the whole corestriction fibre with
 an affine image of base-field restriction. The remaining linked-quaternion
-condition is exactly a `β`-directed edge in a quaternion-twist locus.
+condition is exactly a `β`-directed edge in a quaternion-twist locus. A
+quotient refinement removes both restriction-kernel ambiguity and the
+conjugation translation by `α`.
+
+When the chosen quadratic extension splits the middle quaternion of a hard
+triple, the same condition becomes a prescribed-corestriction quaternion
+linked to one fixed restricted quaternion. Over fields, this is the exact
+common-slot bottleneck.
+
+Becher--Grenier-Boley--Tignol, *Transfer of quadratic forms and of quaternion
+algebras over quadratic field extensions*, Arch. Math. 111 (2018), Theorem
+0.1, supplies the non-descended-slot obstruction used in this interpretation.
 
 The field-theoretic motivation comes from Lam--Leep--Tignol,
 *Biquaternion algebras and quartic extensions*, Publ. Math. IHES 77 (1993),
@@ -181,6 +192,75 @@ theorem hasCorestrictionKernelQuaternionEdge_basepoint_iff
           T IsQuaternionClassB r₁ β :=
       hasCorestrictionLinkedQuaternionLift_iff_kernelEdge
         T IsQuaternionClassB α β r₁ hcor₁
+
+/-! ## Middle-factor splitting and the fixed common-slot bottleneck -/
+
+/-- Three quaternion classes forming a linked pair: the two endpoints and
+their sum are quaternion classes. Over fields, the Albert common-slot theorem
+identifies this with the two endpoint quaternions sharing a quadratic slot. -/
+def QuaternionLinkedPair
+    (IsQuaternionClassB : B → Prop) (r s : B) : Prop :=
+  IsQuaternionClassB r ∧
+    IsQuaternionClassB s ∧
+    IsQuaternionClassB (r + s)
+
+/-- Once the prescribed displacement restricts to a quaternion class, the
+corestriction lift is exactly a prescribed-corestriction quaternion linked
+to that fixed restricted quaternion. -/
+theorem
+    hasCorestrictionLinkedQuaternionLift_iff_linkedPair_of_restriction_quaternion
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop) (α β : A)
+    (hβ : IsQuaternionClassB (T.res β)) :
+    HasCorestrictionLinkedQuaternionLift T IsQuaternionClassB α β ↔
+      ∃ r : B,
+        T.cor r = α ∧
+          QuaternionLinkedPair IsQuaternionClassB r (T.res β) := by
+  constructor
+  · rintro ⟨r, hr, hcor, hrs⟩
+    exact ⟨r, hcor, hr, hβ, hrs⟩
+  · rintro ⟨r, hcor, hr, _, hrs⟩
+    exact ⟨r, hr, hcor, hrs⟩
+
+/-- If the quadratic extension splits the middle quaternion of a triple,
+the hard linked lift is exactly a quaternion preimage of the other two-factor
+sum linked to the restriction of the first quaternion. -/
+theorem hasCorestrictionLinkedLiftForTriple_iff_middleSplittingLinkedPair
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop) (q₁ q₂ q₃ : A)
+    (hq₁ : IsQuaternionClassB (T.res q₁))
+    (hq₂ : T.res q₂ = 0) :
+    HasCorestrictionLinkedLiftForTriple T IsQuaternionClassB q₁ q₂ q₃ ↔
+      ∃ r : B,
+        T.cor r = q₂ + q₃ ∧
+          QuaternionLinkedPair IsQuaternionClassB r (T.res q₁) := by
+  constructor
+  · rintro ⟨r, hr, hcor, hrs⟩
+    refine ⟨r, hcor, hr, hq₁, ?_⟩
+    simpa only [map_add, hq₂, add_zero] using hrs
+  · rintro ⟨r, hcor, hr, _, hrs⟩
+    refine ⟨r, hr, hcor, ?_⟩
+    simpa only [map_add, hq₂, add_zero] using hrs
+
+/-- If the quadratic extension instead splits the first quaternion, the
+fixed endpoint is the restriction of the middle quaternion. This is the
+orientation naturally produced by choosing a slot of `q₁`. -/
+theorem hasCorestrictionLinkedLiftForTriple_iff_firstSplittingLinkedPair
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop) (q₁ q₂ q₃ : A)
+    (hq₂ : IsQuaternionClassB (T.res q₂))
+    (hq₁ : T.res q₁ = 0) :
+    HasCorestrictionLinkedLiftForTriple T IsQuaternionClassB q₁ q₂ q₃ ↔
+      ∃ r : B,
+        T.cor r = q₂ + q₃ ∧
+          QuaternionLinkedPair IsQuaternionClassB r (T.res q₂) := by
+  constructor
+  · rintro ⟨r, hr, hcor, hrs⟩
+    refine ⟨r, hcor, hr, hq₂, ?_⟩
+    simpa only [map_add, hq₁, zero_add] using hrs
+  · rintro ⟨r, hcor, hr, _, hrs⟩
+    refine ⟨r, hr, hcor, ?_⟩
+    simpa only [map_add, hq₁, zero_add] using hrs
 
 /-- Exactness at the quadratic-extension Brauer group: every class with
 trivial corestriction is restricted from the base. -/
@@ -358,6 +438,228 @@ theorem mem_quaternionTwistLocus_add_corestriction_iff
     rwa [heq] at h'
   · exact mem_quaternionTwistLocus_add_corestriction
       hA₂ hB₂ T IsQuaternionClassB hconj r₀ α h₀ γ
+
+/-! ## Affine squares and the gauge quotient -/
+
+/-- A complete affine parallelogram in the quaternion-twist locus, with
+directions `α` and `β`. -/
+def HasQuaternionTwistSquare
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop) (r₀ : B)
+    (α β : A) : Prop :=
+  ∃ γ : A,
+    γ ∈ QuaternionTwistLocus T IsQuaternionClassB r₀ ∧
+      γ + α ∈ QuaternionTwistLocus T IsQuaternionClassB r₀ ∧
+      γ + β ∈ QuaternionTwistLocus T IsQuaternionClassB r₀ ∧
+      γ + α + β ∈ QuaternionTwistLocus T IsQuaternionClassB r₀
+
+/-- Conjugation symmetry upgrades the single `β`-edge criterion to a full
+`α`-by-`β` affine square. -/
+theorem hasCorestrictionLinkedQuaternionLift_iff_twist_square
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (hexact : CorestrictionKernelIsRestrictionImage T)
+    (IsQuaternionClassB : B → Prop)
+    (hconj : ConjugationPreservesQuaternionClasses T IsQuaternionClassB)
+    (α β : A) (r₀ : B) (h₀ : T.cor r₀ = α) :
+    HasCorestrictionLinkedQuaternionLift T IsQuaternionClassB α β ↔
+      HasQuaternionTwistSquare T IsQuaternionClassB r₀ α β := by
+  rw [hasCorestrictionLinkedQuaternionLift_iff_twist_edge
+    hA₂ T hexact IsQuaternionClassB α β r₀ h₀]
+  constructor
+  · rintro ⟨γ, hγ, hγβ⟩
+    have hγα := mem_quaternionTwistLocus_add_corestriction
+      hA₂ hB₂ T IsQuaternionClassB hconj r₀ α h₀ γ hγ
+    have hγβα := mem_quaternionTwistLocus_add_corestriction
+      hA₂ hB₂ T IsQuaternionClassB hconj r₀ α h₀ (γ + β) hγβ
+    refine ⟨γ, hγ, hγα, hγβ, ?_⟩
+    have heq : (γ + β) + α = γ + α + β := by abel
+    rwa [heq] at hγβα
+  · rintro ⟨γ, hγ, _, hγβ, _⟩
+    exact ⟨γ, hγ, hγβ⟩
+
+/-- Two twist parameters are gauge equivalent when their restrictions agree
+up to the conjugation translation by `res α`. -/
+def TwistGaugeEquivalent
+    (T : QuadraticBrauerTransferModel A B) (α γ δ : A) : Prop :=
+  T.res γ = T.res δ ∨ T.res γ = T.res (δ + α)
+
+theorem twistGaugeEquivalent_refl
+    (T : QuadraticBrauerTransferModel A B) (α γ : A) :
+    TwistGaugeEquivalent T α γ γ :=
+  Or.inl rfl
+
+theorem twistGaugeEquivalent_symm
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B) (α γ δ : A) :
+    TwistGaugeEquivalent T α γ δ →
+      TwistGaugeEquivalent T α δ γ := by
+  rintro (h | h)
+  · exact Or.inl h.symm
+  · right
+    rw [map_add] at h ⊢
+    have hα : T.res α + T.res α = 0 := by
+      rw [← map_add, hA₂ α, map_zero]
+    calc
+      T.res δ = T.res δ + 0 := by simp
+      _ = T.res δ + (T.res α + T.res α) := by rw [hα]
+      _ = (T.res δ + T.res α) + T.res α := by abel
+      _ = T.res γ + T.res α := by rw [← h]
+
+theorem twistGaugeEquivalent_trans
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B) (α γ δ ε : A) :
+    TwistGaugeEquivalent T α γ δ →
+      TwistGaugeEquivalent T α δ ε →
+        TwistGaugeEquivalent T α γ ε := by
+  rintro (hγδ | hγδ) (hδε | hδε)
+  · exact Or.inl (hγδ.trans hδε)
+  · exact Or.inr (hγδ.trans hδε)
+  · right
+    calc
+      T.res γ = T.res (δ + α) := hγδ
+      _ = T.res δ + T.res α := by rw [map_add]
+      _ = T.res ε + T.res α := by rw [hδε]
+      _ = T.res (ε + α) := by rw [map_add]
+  · left
+    rw [map_add] at hγδ hδε
+    have hα : T.res α + T.res α = 0 := by
+      rw [← map_add, hA₂ α, map_zero]
+    calc
+      T.res γ = T.res δ + T.res α := hγδ
+      _ = (T.res ε + T.res α) + T.res α := by rw [hδε]
+      _ = T.res ε + (T.res α + T.res α) := by abel
+      _ = T.res ε := by rw [hα, add_zero]
+
+/-- Quotient twist parameters simultaneously by `ker res` and the
+conjugation translation by `α`. -/
+def TwistGaugeSetoid
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B) (α : A) : Setoid A where
+  r := TwistGaugeEquivalent T α
+  iseqv := {
+    refl := twistGaugeEquivalent_refl T α
+    symm := fun {γ δ} h =>
+      twistGaugeEquivalent_symm hA₂ T α γ δ h
+    trans := fun {γ δ ε} h₁ h₂ =>
+      twistGaugeEquivalent_trans hA₂ T α γ δ ε h₁ h₂
+  }
+
+abbrev TwistGaugeQuotient
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B) (α : A) :=
+  Quotient (TwistGaugeSetoid hA₂ T α)
+
+/-- The quaternion-twist locus depends only on the restricted twist. -/
+theorem mem_quaternionTwistLocus_iff_of_res_eq
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop) (r₀ : B)
+    {γ δ : A} (hres : T.res γ = T.res δ) :
+    γ ∈ QuaternionTwistLocus T IsQuaternionClassB r₀ ↔
+      δ ∈ QuaternionTwistLocus T IsQuaternionClassB r₀ := by
+  change IsQuaternionClassB (r₀ + T.res γ) ↔
+    IsQuaternionClassB (r₀ + T.res δ)
+  rw [hres]
+
+/-- Conjugation stability makes membership constant on gauge classes. -/
+theorem mem_quaternionTwistLocus_iff_of_twistGaugeEquivalent
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop)
+    (hconj : ConjugationPreservesQuaternionClasses T IsQuaternionClassB)
+    (r₀ : B) (α : A) (h₀ : T.cor r₀ = α)
+    {γ δ : A} (h : TwistGaugeEquivalent T α γ δ) :
+    γ ∈ QuaternionTwistLocus T IsQuaternionClassB r₀ ↔
+      δ ∈ QuaternionTwistLocus T IsQuaternionClassB r₀ := by
+  rcases h with hres | hres
+  · exact mem_quaternionTwistLocus_iff_of_res_eq
+      T IsQuaternionClassB r₀ hres
+  · exact (mem_quaternionTwistLocus_iff_of_res_eq
+      T IsQuaternionClassB r₀ hres).trans
+        (mem_quaternionTwistLocus_add_corestriction_iff
+          hA₂ hB₂ T IsQuaternionClassB hconj r₀ α h₀ δ)
+
+/-- The well-defined quaternion locus on gauge classes. -/
+def QuaternionTwistQuotientLocus
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop)
+    (hconj : ConjugationPreservesQuaternionClasses T IsQuaternionClassB)
+    (r₀ : B) (α : A) (h₀ : T.cor r₀ = α) :
+    Set (TwistGaugeQuotient hA₂ T α) :=
+  {q | Quotient.liftOn q
+    (fun γ => γ ∈ QuaternionTwistLocus T IsQuaternionClassB r₀)
+    (fun _ _ h => propext
+      (mem_quaternionTwistLocus_iff_of_twistGaugeEquivalent
+        hA₂ hB₂ T IsQuaternionClassB hconj r₀ α h₀ h))}
+
+/-- Translation descends to the gauge quotient. -/
+theorem twistGaugeEquivalent_add_right
+    (T : QuadraticBrauerTransferModel A B)
+    (α β γ δ : A)
+    (h : TwistGaugeEquivalent T α γ δ) :
+    TwistGaugeEquivalent T α (γ + β) (δ + β) := by
+  rcases h with h | h
+  · left
+    rw [map_add, map_add, h]
+  · right
+    simp only [map_add] at h ⊢
+    rw [h]
+    abel
+
+def twistGaugeQuotientTranslate
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (α β : A) :
+    TwistGaugeQuotient hA₂ T α →
+      TwistGaugeQuotient hA₂ T α :=
+  Quotient.map (fun γ => γ + β)
+    (fun γ δ h => twistGaugeEquivalent_add_right T α β γ δ h)
+
+/-- Translation by an exponent-two class is an involution on the gauge
+quotient, so the quotient twist-edge relation is undirected. -/
+theorem twistGaugeQuotientTranslate_involutive
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (α β : A) :
+    Function.Involutive (twistGaugeQuotientTranslate hA₂ T α β) := by
+  intro q
+  induction q using Quotient.inductionOn with
+  | _ γ =>
+      apply Quotient.sound
+      left
+      change T.res ((γ + β) + β) = T.res γ
+      congr 1
+      calc
+        (γ + β) + β = γ + (β + β) := by abel
+        _ = γ := by rw [hA₂ β, add_zero]
+
+/-- The residual linked-lift problem is exactly a `[β]`-edge in the
+quaternion locus on `A / (ker(res) + ⟨α⟩)`. -/
+theorem hasCorestrictionLinkedQuaternionLift_iff_quotientTwistEdge
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (hexact : CorestrictionKernelIsRestrictionImage T)
+    (IsQuaternionClassB : B → Prop)
+    (hconj : ConjugationPreservesQuaternionClasses T IsQuaternionClassB)
+    (α β : A) (r₀ : B) (h₀ : T.cor r₀ = α) :
+    HasCorestrictionLinkedQuaternionLift T IsQuaternionClassB α β ↔
+      ∃ q : TwistGaugeQuotient hA₂ T α,
+        q ∈ QuaternionTwistQuotientLocus
+          hA₂ hB₂ T IsQuaternionClassB hconj r₀ α h₀ ∧
+        twistGaugeQuotientTranslate hA₂ T α β q ∈
+          QuaternionTwistQuotientLocus
+            hA₂ hB₂ T IsQuaternionClassB hconj r₀ α h₀ := by
+  rw [hasCorestrictionLinkedQuaternionLift_iff_twist_edge
+    hA₂ T hexact IsQuaternionClassB α β r₀ h₀]
+  constructor
+  · rintro ⟨γ, hγ, hγβ⟩
+    refine ⟨Quotient.mk (TwistGaugeSetoid hA₂ T α) γ, ?_, ?_⟩
+    · exact hγ
+    · exact hγβ
+  · rintro ⟨q, hq, hqβ⟩
+    induction q using Quotient.inductionOn with
+    | _ γ => exact ⟨γ, hq, hqβ⟩
 
 /-! ## Per-packet quadratic extensions -/
 
