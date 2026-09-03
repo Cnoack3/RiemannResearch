@@ -43,8 +43,12 @@ q₂+q₃. Its linked complement is exactly the crossed class
 
 Thus quaternionity of this one crossed class is sufficient. The calculation is
 formalized below; Lam--Leep--Tignol Theorem 5.12 and Tignol Corollary 3.5
-motivate the corestriction data, but neither cited result by itself supplies
-the simultaneous kernel preimages required by this conditional reduction.
+motivate the corestriction data, but neither cited result by itself places q₂
+in the chosen layer-corestriction image or proves crossed quaternionity.
+
+Once q₂ and q₂+q₃ have kernel preimages, however, the q₃ preimage is forced
+additively. The crossed class is also independent of every decomposition of
+the same total witness with prescribed first corestriction.
 
 Under Arason exactness, this is also the vanishing of a canonical,
 basepoint-independent class in Br₂(U) / res_U/F(Br₂(F)).
@@ -606,6 +610,146 @@ theorem kernelRectangle_linkedComplement_eq_crossedConjugate
     (s + t) + (s + T.conjugate s) =
         (s + s) + (t + T.conjugate s) := by abel
     _ = t + T.conjugate s := by rw [hB₂ s, zero_add]
+
+/-- Diagonally changing both corestriction preimages by a
+corestriction-zero class leaves the crossed conjugate sum unchanged.
+
+This is the exact affine-gauge invariance behind the canonical crossed
+obstruction; it is a formal consequence of restriction--corestriction. -/
+theorem crossedConjugate_add_diagonal_of_corestriction_zero
+    (T : QuadraticBrauerTransferModel A B)
+    (s t u : B)
+    (hcor : T.cor u = 0) :
+    (t + u) + T.conjugate (s + u) =
+      t + T.conjugate s := by
+  have hu : u + T.conjugate u = 0 := by
+    rw [← T.res_cor, hcor, map_zero]
+  rw [map_add]
+  calc
+    (t + u) + (T.conjugate s + T.conjugate u) =
+        (t + T.conjugate s) + (u + T.conjugate u) := by abel
+    _ = t + T.conjugate s := by rw [hu, add_zero]
+
+/-- For a fixed total witness and prescribed first corestriction, the crossed
+conjugate class is independent of the chosen two-term decomposition. -/
+theorem kernelRectangle_crossedConjugate_eq_of_same_total
+    (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (q₁ q₂ : A)
+    (s t s' t' : B)
+    (hFirst : T.res q₁ = 0)
+    (hcorS : T.cor s = q₂)
+    (hcorS' : T.cor s' = q₂)
+    (hTotal : s + t = s' + t') :
+    t + T.conjugate s =
+      t' + T.conjugate s' := by
+  calc
+    t + T.conjugate s =
+        (s + t) + T.res (q₁ + q₂) :=
+      (kernelRectangle_linkedComplement_eq_crossedConjugate
+        hB₂ T q₁ q₂ s t hFirst hcorS).symm
+    _ = (s' + t') + T.res (q₁ + q₂) := by rw [hTotal]
+    _ = t' + T.conjugate s' :=
+      kernelRectangle_linkedComplement_eq_crossedConjugate
+        hB₂ T q₁ q₂ s' t' hFirst hcorS'
+
+/-- Quaternionity of the crossed conjugate class therefore depends only on
+the total witness and the prescribed corestriction, not on its decomposition. -/
+theorem kernelRectangle_crossedQuaternion_iff_of_same_total
+    (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (IsQuaternionClassB : B → Prop)
+    (q₁ q₂ : A)
+    (s t s' t' : B)
+    (hFirst : T.res q₁ = 0)
+    (hcorS : T.cor s = q₂)
+    (hcorS' : T.cor s' = q₂)
+    (hTotal : s + t = s' + t') :
+    IsQuaternionClassB (t + T.conjugate s) ↔
+      IsQuaternionClassB (t' + T.conjugate s') := by
+  rw [kernelRectangle_crossedConjugate_eq_of_same_total
+    hB₂ T q₁ q₂ s t s' t' hFirst hcorS hcorS' hTotal]
+
+/-- The simultaneous-preimage formulation of a crossed kernel rectangle is
+equivalent to one constituent lying in the layer-corestriction image together
+with one kernel witness for the opposite pair whose canonical complement is
+quaternion.
+
+Thus the second constituent preimage is forced additively; it is not a
+separate synchronization obligation. -/
+theorem hasCrossedQuaternionKernelRectangle_iff_constituentImage_and_kernelComplement
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C)
+    (IsQuaternionClassB : B → Prop)
+    (q₁ q₂ q₃ : A)
+    (hFirst : T.res q₁ = 0) :
+    HasCrossedQuaternionKernelRectangle
+        T down IsQuaternionClassB q₂ q₃ ↔
+      q₂ ∈ AddSubgroup.map T.cor down.ker ∧
+        ∃ r : B,
+          down r = 0 ∧
+            T.cor r = q₂ + q₃ ∧
+            IsQuaternionClassB (r + T.res (q₁ + q₂)) := by
+  constructor
+  · rintro ⟨s, t, hs, ht, hcorS, hcorT, hCross⟩
+    constructor
+    · rw [AddSubgroup.mem_map]
+      exact ⟨s, hs, hcorS⟩
+    · refine ⟨s + t, ?_, ?_, ?_⟩
+      · rw [map_add, hs, ht, add_zero]
+      · rw [map_add, hcorS, hcorT]
+      · rw [kernelRectangle_linkedComplement_eq_crossedConjugate
+          hB₂ T q₁ q₂ s t hFirst hcorS]
+        exact hCross
+  · rintro ⟨hq₂Image, r, hr, hcorR, hComplement⟩
+    rw [AddSubgroup.mem_map] at hq₂Image
+    rcases hq₂Image with ⟨s, hs, hcorS⟩
+    let t := r + s
+    refine ⟨s, t, hs, ?_, hcorS, ?_, ?_⟩
+    · dsimp [t]
+      rw [map_add, hr, hs, add_zero]
+    · dsimp [t]
+      rw [map_add, hcorR, hcorS]
+      calc
+        (q₂ + q₃) + q₂ = (q₂ + q₂) + q₃ := by abel
+        _ = q₃ := by rw [hA₂ q₂, zero_add]
+    · have hTotal : s + t = r := by
+        dsimp [t]
+        calc
+          s + (r + s) = (s + s) + r := by abel
+          _ = r := by rw [hB₂ s, zero_add]
+      have hIdentity :=
+        kernelRectangle_linkedComplement_eq_crossedConjugate
+          hB₂ T q₁ q₂ s t hFirst hcorS
+      rw [hTotal] at hIdentity
+      rw [← hIdentity]
+      exact hComplement
+
+/-- For a Tignol dual quartic pair, the constituent-image condition in the
+canonical rectangle criterion is exactly splitting of q₂ by the dual member.
+The remaining existential is only over the total kernel witness r. -/
+theorem hasCrossedQuaternionKernelRectangle_iff_dualConstituentSplitting_and_kernelComplement
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C) (dualDown : A →+ E)
+    (hDual :
+      DualQuarticRestrictionDetectsLayerCorestrictions
+        T down dualDown)
+    (IsQuaternionClassB : B → Prop)
+    (q₁ q₂ q₃ : A)
+    (hFirst : T.res q₁ = 0) :
+    HasCrossedQuaternionKernelRectangle
+        T down IsQuaternionClassB q₂ q₃ ↔
+      dualDown q₂ = 0 ∧
+        ∃ r : B,
+          down r = 0 ∧
+            T.cor r = q₂ + q₃ ∧
+            IsQuaternionClassB (r + T.res (q₁ + q₂)) := by
+  rw [hasCrossedQuaternionKernelRectangle_iff_constituentImage_and_kernelComplement
+    hA₂ hB₂ T down IsQuaternionClassB q₁ q₂ q₃ hFirst]
+  rw [hDual]
+  rfl
 
 /-- A crossed quaternion kernel rectangle constructs the required linked lift.
 
