@@ -3,6 +3,8 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
+import RiemannResearch.RH.CombinedAuditedCore
+import RiemannResearch.RH.CombinedAuditedInventory
 import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Order.CompleteLattice.Basic
