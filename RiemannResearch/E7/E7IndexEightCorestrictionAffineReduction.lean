@@ -722,6 +722,62 @@ theorem twistGaugeQuotientTranslate_fixedPointFree
   · exact hβ h
   · exact hβα h
 
+/-- When the quadratic extension splits the middle quaternion `q₂`,
+the two fixed-point degeneracies are labelled by `q₁` and `q₁ + q₃`.
+Thus a further quadratic layer in the nested common-slot criterion must
+split `q₁`, not the already split class `q₂`. -/
+theorem middleSplitting_twistGaugeQuotientTranslate_eq_self_iff
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (q₁ q₂ q₃ : A) (hq₂ : T.res q₂ = 0)
+    (q : TwistGaugeQuotient hA₂ T (q₂ + q₃)) :
+    twistGaugeQuotientTranslate hA₂ T
+        (q₂ + q₃) (q₁ + q₂) q = q ↔
+      T.res q₁ = 0 ∨ T.res (q₁ + q₃) = 0 := by
+  induction q using Quotient.inductionOn with
+  | _ γ =>
+      rw [twistGaugeQuotientTranslate_mk_eq_self_iff]
+      have hres₁₂ : T.res (q₁ + q₂) = T.res q₁ := by
+        rw [map_add, hq₂, add_zero]
+      have hres₂₃ : T.res (q₂ + q₃) = T.res q₃ := by
+        rw [map_add, hq₂, zero_add]
+      rw [hres₁₂, hres₂₃]
+      constructor
+      · rintro (h | h)
+        · exact Or.inl h
+        · right
+          have hq₃ := congrArg T.res (hA₂ q₃)
+          simpa only [map_add, map_zero, h] using hq₃
+      · rintro (h | h)
+        · exact Or.inl h
+        · right
+          rw [map_add] at h
+          have hq₃ := congrArg T.res (hA₂ q₃)
+          have hq₃' : T.res q₃ + T.res q₃ = 0 := by
+            simpa only [map_add, map_zero] using hq₃
+          calc
+            T.res q₁ = T.res q₁ + 0 := by simp
+            _ = T.res q₁ + (T.res q₃ + T.res q₃) := by rw [hq₃']
+            _ = (T.res q₁ + T.res q₃) + T.res q₃ := by abel
+            _ = T.res q₃ := by rw [h, zero_add]
+
+/-- In the non-splitting middle branch, translation by the second packet
+label is fixed-point-free. Hence every successful quotient-locus edge is
+a genuine two-element orbit. -/
+theorem middleSplitting_twistGaugeQuotientTranslate_fixedPointFree
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (q₁ q₂ q₃ : A) (hq₂ : T.res q₂ = 0)
+    (hq₁ : T.res q₁ ≠ 0)
+    (hq₁₃ : T.res (q₁ + q₃) ≠ 0) :
+    ∀ q : TwistGaugeQuotient hA₂ T (q₂ + q₃),
+      twistGaugeQuotientTranslate hA₂ T
+        (q₂ + q₃) (q₁ + q₂) q ≠ q := by
+  intro q hfix
+  rw [middleSplitting_twistGaugeQuotientTranslate_eq_self_iff
+    hA₂ T q₁ q₂ q₃ hq₂ q] at hfix
+  exact hfix.elim hq₁ hq₁₃
+
 /-- The residual linked-lift problem is exactly a `[β]`-edge in the
 quaternion locus on `A / (ker(res) + ⟨α⟩)`. -/
 theorem hasCorestrictionLinkedQuaternionLift_iff_quotientTwistEdge

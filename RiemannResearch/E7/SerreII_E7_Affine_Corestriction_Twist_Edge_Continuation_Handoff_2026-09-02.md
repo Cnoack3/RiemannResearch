@@ -4,7 +4,7 @@ Date: 2026-09-02
 
 Continuation updated: 2026-09-03
 
-Base repository checkpoint: `6520d5c6cd4b068a6e4e2a6bae337145e6c55518`
+Base repository checkpoint: `e16ecbbaafe5bda5515958cf8cd9c11f97aac83d`
 
 ## Status
 
@@ -180,7 +180,7 @@ This proves existence of a dihedral maximal subfield in the characteristic-not-t
 
 The obstruction is structural: replacing every `qᵢ` by `qᵢ+δ` leaves all pairwise packet classes unchanged in exponent two, while the total class changes from `T` to `T+δ`. Thus a maximal field of the total class is not packet data. For the LLT hull aligned with a slot of `q₁`, the unresolved condition remains linkage of the chosen preimage `r` with `(q₂)_K`.
 
-The dihedral lattice does contain related linkage, but over the wrong quadratic field. If `F⊂K₀⊂E` is the quadratic tower inside the quartic splitter, LLT Theorem 4.7 links `(q₂)_{K₀}` and `(q₃)_{K₀}`. The prescribed-corestriction preimage lives instead over the discriminant field `M`, where it must link to `(q₂)_M`. The unresolved step is transporting or aligning this slot across the two quadratic subfields of the dihedral hull. Equivalently, among the three quadratic subextensions `U/M` of the dihedral hull, one must find one satisfying both `q₂_U=0` and `α∈cor_{M/F}(Br(U/M))`.
+The dihedral lattice does contain related linkage, but over the wrong quadratic field. If `F⊂K₀⊂E` is the quadratic tower inside the quartic splitter, LLT Theorem 4.7 links `(q₂)_{K₀}` and `(q₃)_{K₀}`. The prescribed-corestriction preimage lives instead over the discriminant field `M`, where it must link to the appropriate restricted packet label. In the middle-splitting normalization `q₂_M=0`, the nested quadratic criterion is `q₁_U=0` together with `α∈cor_{M/F}(Br(U/M))`; the earlier `q₂_U=0` label was redundant and incorrect.
 
 ## Corrected norm obstruction
 
@@ -243,7 +243,7 @@ The module import checks and full `lake build RiemannResearch --quiet` pass. No 
 ## Exact next targets
 
 1. Prove `(q₃)_M=(at,N(t-w))_M` for some staged choices, or make the staged family exhaustive.
-2. In the automatic dihedral hull, find a quadratic `U/M` with `q₂_U=0` and `α∈cor_{M/F}(Br(U/M))`.
+2. In the automatic dihedral hull aligned with a middle-splitting field `M`, find a quadratic `U/M` with `q₁_U=0` and `α∈cor_{M/F}(Br(U/M))`.
 3. Compare Barry's adapted decomposition with the original triple.
 4. Kill the canonical class in `Br(K/F)/im(ρ_e)`.
 5. Instantiate the Brauer/common-discriminant constructor in Lean and treat characteristic two.
