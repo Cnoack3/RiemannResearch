@@ -12,7 +12,8 @@ import Mathlib.LinearAlgebra.Matrix.Gershgorin
 This module supplies the proof kernel used by the repaired finite-dimensional
 `L = log 3` positivity certificate. A real Hermitian matrix whose positive
 diagonal strictly dominates every absolute off-diagonal row sum is positive
-definite. The proof uses the spectral theorem and Gershgorin's theorem.
+definite. The proof uses the spectral theorem and Gershgorin's theorem and
+contains no compiler-trust calculation.
 -/
 
 namespace RiemannResearch.RH.StrictDiagonalDominance
@@ -39,11 +40,11 @@ theorem eigenvalues_pos_of_strictlyRowDiagonallyDominant
     ∀ i, 0 < hA.eigenvalues i := by
   intro i
   have hEig : Module.End.HasEigenvalue (Matrix.toLin' A) (hA.eigenvalues i) := by
-    apply Module.End.hasEigenvalue_of_hasEigenvector
-    refine ⟨?_, ?_⟩
-    · rw [Module.End.mem_eigenspace_iff, Matrix.toLin'_apply]
-      exact hA.mulVec_eigenvectorBasis i
-    · exact (ofLp_eq_zero 2).ne.2 <| hA.eigenvectorBasis.orthonormal.ne_zero i
+    exact Module.End.hasEigenvalue_of_hasEigenvector
+      ⟨by
+        rw [Module.End.mem_eigenspace_iff, Matrix.toLin'_apply]
+        exact hA.mulVec_eigenvectorBasis i,
+       (ofLp_eq_zero 2).ne.2 <| hA.eigenvectorBasis.orthonormal.ne_zero i⟩
   obtain ⟨k, hk⟩ := eigenvalue_mem_ball hEig
   rw [mem_closedBall_iff_norm'] at hk
   have habs : |A k k - hA.eigenvalues i| ≤ offDiagonalRowSum A k := by
