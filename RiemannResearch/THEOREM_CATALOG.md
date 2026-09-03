@@ -773,6 +773,45 @@ are:
 | `hkernelNorm` | The single diagonal corestriction value maps to the neutral E8 class | **Open and equivalent to neutrality for the selected class** after `hindex`, `he`, and `hcoefficient`, by `diagonalKernelNorm_iff_neutral`; it is not an independent additive completion step |
 | `finiteEtaleKernelNorm` | Componentwise local kernel membership is preserved by corestriction from the repeated finite-etale product | **Open**; this is Conjecture 6.33. The abstract countermodel `zmodTwo_diagonalKernelNorm_counterexample` proves it does not follow from the additive transfer and Bezout data alone. |
 
+## RH combined-audit import (3 September 2026)
+
+The canonical import surface is `RiemannResearch.RH.CombinedAudited`. It
+contains every unique Lean declaration and metadata item in the supplied
+`combined_audited_lean_sources.zip`; duplicate candidate files were merged
+rather than redeclared. The separately supplied SHA-256 manifest names five
+payloads that were absent, so it cannot establish proposition-level coverage
+of the missing PDF/TEX/scripts. `sourceClaims` remains honestly empty.
+
+### Open RH obligations represented as propositions or data
+
+| Declaration | Module | Statement / purpose | Status |
+|---|---|---|---|
+| `RiemannResearch.RH.CombinedAudited.SignalDirectionBound` | `RH.CombinedAudited.OpenTargets` | Quadratic-log signal-direction estimate | **Open proposition definition**; no witness is asserted |
+| `RiemannResearch.RH.CombinedAudited.GrowingDegreeSignalDirectionBound` | `RH.CombinedAudited.OpenTargets` | Cofinal conductor-degree path with the signal bound | **Open proposition definition** |
+| `RiemannResearch.RH.CombinedAudited.UniformLinearGap` | `RH.CombinedAudited.OpenTargets` | Positive linear lower bound for every cutoff | **Open proposition definition** |
+| `RiemannResearch.RH.CombinedAudited.DivergentInnovationEnergy` | `RH.CombinedAudited.OpenTargets` | Nonnegative innovation partial sums diverge | **Open proposition definition** |
+| `RiemannResearch.RH.CombinedAudited.RestrictedGlobalOptimizerBound` | `RH.CombinedAudited.OpenTargets` | One admissible optimizer family obeys the signal bound | **Open proposition definition**; abstract admissibility does not itself impose polynomial conductors |
+| `RiemannResearch.RH.CombinedAudited.LiLinearLogBound` | `RH.CombinedAudited.OpenTargets` | Linear-log bound for supplied Li coefficients | **Open proposition definition** |
+| `RiemannResearch.RH.CombinedAudited.PolarizedModel` | `RH.CombinedAudited.OpenTargets` | Polarized spectrum covering a specified zero predicate | **Open construction**; no inhabitant is asserted |
+| `RiemannResearch.RH.CombinedAudited.PositiveTraceBridge` | `RH.CombinedAudited.OpenTargets` | Identifies an arithmetic form with a nonnegative geometric form | **Open construction** for the actual Weil form |
+| `RiemannResearch.RH.CombinedAudited.SemilocalCompletion` | `RH.CombinedAudited.OpenTargets` | Pointwise convergence of supplied cutoff forms | **Open construction** for the actual semilocal complex |
+
+### Kernel-checked finite and closure results
+
+| Declaration | Module | Verified consequence | Status |
+|---|---|---|---|
+| `RiemannResearch.RH.CombinedAudited.negative_subspace_finrank_le_target` | `RH.CombinedAudited.MorseIndex` | Kernel nonnegativity forces a strictly negative subspace to inject into the finite detector | Kernel checked; actual-operator kernel positivity remains open |
+| `RiemannResearch.RH.CombinedAudited.two_by_two_has_negative_direction_iff` | `RH.CombinedAudited.TwoPolarModes` | For a positive first pivot, a two-by-two form has a negative direction iff its determinant is negative | Kernel checked; finite sign test for C2 |
+| `RiemannResearch.RH.CombinedAudited.finite_total_variance_at_weighted_mean` | `RH.CombinedAudited.WeightedPythagoras` | Weighted centering derives cross-term cancellation from nonzero total weight | Kernel checked |
+| `RiemannResearch.RH.CombinedAudited.scalar_schur_eq_iff` | `RH.CombinedAudited.ScalarSchur` | Equality in the positive scalar Schur bound occurs exactly at the normal-equation solution | Kernel checked |
+| `RiemannResearch.RH.CombinedAudited.positivity_of_convergent_compressions` | `RH.CombinedAudited.LimitsPositivity` | Positivity of convergent compressions passes through a continuous functional | Kernel checked closure lemma |
+| `RiemannResearch.RH.CombinedAudited.isNormContraction_of_pointwise_limit` | `RH.CombinedAudited.NormContraction` | Pointwise limits of norm contractions remain contractions | Kernel checked closure lemma |
+| `RiemannResearch.RH.CombinedAudited.UniformLinearGap.tendsto_atTop` | `RH.CombinedAudited.OpenTargets` | A supplied uniform positive linear gap diverges | Kernel checked conditional consequence |
+
+These results do not prove RH. The decisive missing providers remain the actual
+finite-matrix enclosure/Hermitian identities, operator provenance, high-mode
+positivity, Schur/tail control, and noncircular spectral or trace construction.
+
 ## Planned research areas
 
 | Area | Initial target |
