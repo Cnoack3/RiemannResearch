@@ -28,3 +28,5 @@ jobs:
           use-mathlib-cache: true
           use-github-cache: true
           build-args: "RiemannResearch --quiet"
+      - name: Check the new prime-gap curvature module
+        run: lake env lean RiemannResearch/RH/PrimeGapCurvature.lean
