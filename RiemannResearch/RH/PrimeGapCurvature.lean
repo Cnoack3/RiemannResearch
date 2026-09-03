@@ -7,7 +7,6 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Omega
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 
@@ -149,8 +148,9 @@ theorem exists_affine_on_range_of_curvature_eq_zero
       simp [a]
   | succ i ih =>
       intro hi
-      have hin : i ≤ n := by omega
-      have hiPrev : i ≤ n + 1 := by omega
+      have hin : i ≤ n := by
+        exact Nat.succ_le_succ_iff.mp (by simpa [Nat.succ_eq_add_one] using hi)
+      have hiPrev : i ≤ n + 1 := hin.trans (Nat.le_succ n)
       have ihz : z i = a + b * t i := ih hiPrev
       have hslope : adjacentSlope t z i = b := by
         dsimp only [b]
@@ -173,11 +173,15 @@ theorem curvature_eq_zero_iff_exists_affine_on_range
   constructor
   · exact exists_affine_on_range_of_curvature_eq_zero t z n hgap
   · rintro ⟨a, b, hz⟩ i hi
-    have hi₀ : i ≤ n + 1 := by omega
-    have hi₁ : i + 1 ≤ n + 1 := by omega
-    have hi₂ : i + 2 ≤ n + 1 := by omega
-    have hgap₀ : gap t i ≠ 0 := hgap i (by omega)
-    have hgap₁ : gap t (i + 1) ≠ 0 := hgap (i + 1) (by omega)
+    have hiLe : i ≤ n := Nat.le_of_lt hi
+    have hiSuccLe : i + 1 ≤ n := by
+      simpa [Nat.succ_eq_add_one] using (Nat.succ_le_iff.mpr hi)
+    have hi₀ : i ≤ n + 1 := hiLe.trans (Nat.le_succ n)
+    have hi₁ : i + 1 ≤ n + 1 := hiSuccLe.trans (Nat.le_succ n)
+    have hi₂ : i + 2 ≤ n + 1 := by
+      simpa [Nat.succ_eq_add_one] using Nat.succ_le_succ hiSuccLe
+    have hgap₀ : gap t i ≠ 0 := hgap i hiLe
+    have hgap₁ : gap t (i + 1) ≠ 0 := hgap (i + 1) hiSuccLe
     simp only [adjacentCurvature, adjacentSlope]
     rw [hz i hi₀, hz (i + 1) hi₁, hz (i + 2) hi₂]
     exact adjacentCurvature_affine t a b i hgap₀ hgap₁
