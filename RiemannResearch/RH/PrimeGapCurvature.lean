@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.Module.LinearMap.Defs
 import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
@@ -15,7 +17,7 @@ import Mathlib.Tactic.Ring
 
 This module formalizes the exact finite-dimensional algebra behind the
 adjacent-curvature compression in the user-provided RH continuation dated
-2026-09-03.  It does not assert the unresolved arithmetic estimate for the
+2026-09-03. It does not assert the unresolved arithmetic estimate for the
 actual Nyman--Beurling signal and does not assert localized Weil positivity.
 
 The main checked ingredients are:
@@ -30,12 +32,14 @@ The main checked ingredients are:
   energy is nonnegative when the pivots are positive.
 
 Source: user-provided argument, `rh_irreducible_targets_progress_2026-09-03`.
-The source supports the statements and proof strategy.  The asymptotic
+The source supports the statements and proof strategy. The asymptotic
 actual-signal estimate, the all-window Weil statement, and the transcendental
 interval certificate remain separate obligations.
 -/
 
 namespace RiemannResearch.RH.PrimeGapCurvature
+
+noncomputable section
 
 open scoped BigOperators
 
@@ -55,14 +59,15 @@ def adjacentCurvature (t z : ℕ → ℝ) (i : ℕ) : ℝ :=
 theorem adjacentCurvature_eq_zero_iff (t z : ℕ → ℝ) (i : ℕ) :
     adjacentCurvature t z i = 0 ↔
       adjacentSlope t z (i + 1) = adjacentSlope t z i := by
-  simp [adjacentCurvature]
+  change adjacentSlope t z (i + 1) - adjacentSlope t z i = 0 ↔ _
+  exact sub_eq_zero
 
 /-- Every affine function of the coordinate `t` has zero adjacent curvature. -/
 theorem adjacentCurvature_affine
     (t : ℕ → ℝ) (a b : ℝ) (i : ℕ)
     (hgap₀ : gap t i ≠ 0) (hgap₁ : gap t (i + 1) ≠ 0) :
     adjacentCurvature t (fun n ↦ a + b * t n) i = 0 := by
-  simp only [adjacentCurvature, adjacentSlope, gap]
+  simp only [adjacentCurvature, adjacentSlope, gap] at hgap₀ hgap₁ ⊢
   field_simp [hgap₀, hgap₁]
   ring
 
@@ -72,7 +77,7 @@ theorem adjacentCurvature_add_affine
     (hgap₀ : gap t i ≠ 0) (hgap₁ : gap t (i + 1) ≠ 0) :
     adjacentCurvature t (fun n ↦ z n + (a + b * t n)) i =
       adjacentCurvature t z i := by
-  simp only [adjacentCurvature, adjacentSlope, gap]
+  simp only [adjacentCurvature, adjacentSlope, gap] at hgap₀ hgap₁ ⊢
   field_simp [hgap₀, hgap₁]
   ring
 
@@ -100,7 +105,7 @@ theorem consecutiveTripleDet_eq
     (hgap₀ : gap t i ≠ 0) (hgap₁ : gap t (i + 1) ≠ 0) :
     tripleDet t z i (i + 1) (i + 2) =
       gap t i * gap t (i + 1) * adjacentCurvature t z i := by
-  simp only [tripleDet, adjacentCurvature, adjacentSlope, gap]
+  simp only [tripleDet, adjacentCurvature, adjacentSlope, gap] at hgap₀ hgap₁ ⊢
   field_simp [hgap₀, hgap₁]
   ring
 
@@ -182,7 +187,6 @@ theorem curvature_eq_zero_iff_exists_affine_on_range
       simpa [Nat.succ_eq_add_one] using Nat.succ_le_succ hiSuccLe
     have hgap₀ : gap t i ≠ 0 := hgap i hiLe
     have hgap₁ : gap t (i + 1) ≠ 0 := hgap (i + 1) hiSuccLe
-    simp only [adjacentCurvature, adjacentSlope]
     rw [hz i hi₀, hz (i + 1) hi₁, hz (i + 2) hi₂]
     exact adjacentCurvature_affine t a b i hgap₀ hgap₁
 
@@ -212,7 +216,9 @@ theorem bilinearEnergy_decomposition
     _ = B q q + B q (r - q) + B (r - q) q + B (r - q) (r - q) := by
       simp only [map_add]
       ring
-    _ = B q q + B (r - q) (r - q) := by rw [hqk, hkq]; ring
+    _ = B q q + B (r - q) (r - q) := by
+      rw [hqk, hkq]
+      ring
 
 /-- A kernel-orthogonal lift minimizes every nonnegative symmetric bilinear
 energy among vectors with the same constraint image. -/
@@ -234,7 +240,7 @@ end BilinearEnergy
 def twoBlockMean (a b u v : ℝ) : ℝ :=
   (a * u + b * v) / (a + b)
 
-/-- Exact two-block completion of squares.  The final term is the scalar
+/-- Exact two-block completion of squares. The final term is the scalar
 common-optimizer gluing penalty. -/
 theorem twoBlock_schur_identity
     (a b u v x : ℝ) (hab : a + b ≠ 0) :
@@ -257,12 +263,12 @@ theorem twoBlock_value_at_mean
 theorem twoBlock_gluing_nonneg
     (a b u v : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : 0 < a + b) :
     0 ≤ (a * b / (a + b)) * (u - v) ^ 2 := by
-  positivity
+  exact mul_nonneg (div_nonneg (mul_nonneg ha hb) hab.le) (sq_nonneg _)
 
-/-- With positive block weights, the common weighted mean minimizes the sum of
+/-- With positive total weight, the common weighted mean minimizes the sum of
 the two block losses. -/
 theorem twoBlock_mean_minimizes
-    (a b u v x : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : 0 < a + b) :
+    (a b u v x : ℝ) (hab : 0 < a + b) :
     a * (twoBlockMean a b u v - u) ^ 2 +
         b * (twoBlockMean a b u v - v) ^ 2 ≤
       a * (x - u) ^ 2 + b * (x - v) ^ 2 := by
@@ -326,9 +332,9 @@ theorem bandwidthTwoEnergy_nonneg
 /-- Algebraic bookkeeping for retaining the signed prime-power contribution
 until after multiplication by the actual Rayleigh factor. -/
 theorem signedReturn_mul_rayleigh
-    (return diagonal eta primePower remainder rayleigh : ℝ)
-    (hreturn : return = diagonal - eta * primePower + remainder) :
-    return * rayleigh =
+    (returnEnergy diagonal eta primePower remainder rayleigh : ℝ)
+    (hreturn : returnEnergy = diagonal - eta * primePower + remainder) :
+    returnEnergy * rayleigh =
       (diagonal - eta * primePower + remainder) * rayleigh := by
   rw [hreturn]
 
