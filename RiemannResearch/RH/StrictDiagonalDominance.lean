@@ -91,7 +91,7 @@ theorem posDef_of_entrywise_interval_certificate
         ≤ ∑ j ∈ Finset.univ.erase i, absUpper i j := by
           apply Finset.sum_le_sum
           intro j hj
-          exact hoff i j (Finset.ne_of_mem_erase hj)
+          exact hoff i j (Finset.ne_of_mem_erase hj).symm
     _ < diagLower i i := hcert i
     _ ≤ A i i := hdiag i
 
