@@ -35,6 +35,10 @@ Lemma 11.8.4 (tag 074X): <https://stacks.math.columbia.edu/tag/074X>.
 Thus a successful labelled layer must be genuinely nonnormal over `F`.
 In a dihedral quartic framework this excludes the conjugation-stable/Galois
 quartic layer and leaves only the nonnormal conjugate layers as candidates.
+The two remaining layers are not independent: conjugating the layer and its
+relative Brauer witness preserves both the splitting label and the prescribed
+corestriction. Consequently the residual search is a single conjugation orbit,
+not a two-case search.
 Lam--Leep--Tignol, *Biquaternion algebras and quartic extensions*, Publ.
 Math. IHES 77 (1993), Proposition 3.3 and Theorems 5.10 and 5.12, supports
 the dihedral and corestriction terminology:
@@ -76,6 +80,59 @@ def HasAlignedRelativeCorestrictionLayer
     down (T.res q₁) = 0 ∧
     down r = 0 ∧
     T.cor r = q₂ + q₃
+
+/-- Restriction to the layer conjugate to `down`. In the field
+interpretation, an identification of the conjugate target with `C` is
+understood. -/
+def conjugateLayerRestriction
+    (T : QuadraticBrauerTransferModel A B) (down : B →+ C) : B →+ C :=
+  down.comp T.conjugate
+
+/-- Corestriction is invariant under quadratic conjugation. This is forced
+already by the two restriction--corestriction identities in the transfer
+model. -/
+theorem QuadraticBrauerTransferModel.cor_conjugate
+    (T : QuadraticBrauerTransferModel A B) (r : B) :
+    T.cor (T.conjugate r) = T.cor r := by
+  have h := congrArg T.cor (T.res_cor r)
+  simp only [map_add, T.cor_res] at h
+  exact (add_left_cancel h).symm
+
+/-- The abstract quadratic conjugation is involutive. Although this was not a
+field of the original transfer-model structure, it follows from `res_cor`
+and the fact that conjugation fixes restricted classes. -/
+theorem QuadraticBrauerTransferModel.conjugate_involutive
+    (T : QuadraticBrauerTransferModel A B) (r : B) :
+    T.conjugate (T.conjugate r) = r := by
+  have h := congrArg T.conjugate (T.res_cor r)
+  rw [T.conjugate_res, map_add, T.res_cor] at h
+  exact add_left_cancel (by simpa [add_comm] using h.symm)
+
+/-- The corrected aligned-layer condition is invariant under passage to the
+conjugate layer. A witness `r` is transported to its conjugate, which has the
+same corestriction.
+
+Thus, after the stable quartic layer has been excluded, the two nonnormal
+conjugate layers form one incidence orbit: either both carry the labelled
+aligned condition or neither does. -/
+theorem hasAlignedRelativeCorestrictionLayer_conjugate_iff
+    (T : QuadraticBrauerTransferModel A B) (down : B →+ C)
+    (q₁ q₂ q₃ : A) :
+    HasAlignedRelativeCorestrictionLayer
+        T (conjugateLayerRestriction T down) q₁ q₂ q₃ ↔
+      HasAlignedRelativeCorestrictionLayer T down q₁ q₂ q₃ := by
+  constructor
+  · rintro ⟨r, hq₁, hr, hcor⟩
+    refine ⟨T.conjugate r, ?_, ?_, ?_⟩
+    · simpa [conjugateLayerRestriction, T.conjugate_res] using hq₁
+    · simpa [conjugateLayerRestriction] using hr
+    · exact (T.cor_conjugate r).trans hcor
+  · rintro ⟨r, hq₁, hr, hcor⟩
+    refine ⟨T.conjugate r, ?_, ?_, ?_⟩
+    · simpa [conjugateLayerRestriction, T.conjugate_res] using hq₁
+    · simpa [conjugateLayerRestriction,
+        T.conjugate_involutive] using hr
+    · exact (T.cor_conjugate r).trans hcor
 
 /-- A conjugation-stable layer which splits a relative class also splits the
 base restriction of its corestriction. -/
