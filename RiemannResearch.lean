@@ -250,6 +250,7 @@ import RiemannResearch.E7.QuaternionHermitianDiagonalQuadraticPair
 import RiemannResearch.E7.QuaternionHermitianAlternatingUnit
 import RiemannResearch.E7.QuaternionHermitianUnderlyingBrauerClass
 import RiemannResearch.E7.D6A1FiniteCertificate
+import RiemannResearch.E7.ThreeQuaternionBrauerCompletion
 import RiemannResearch.E8.A8NormalizerArithmetic
 import RiemannResearch.E8.A9TrialityArithmetic
 import RiemannResearch.E8.A11BurnsideCertificate
