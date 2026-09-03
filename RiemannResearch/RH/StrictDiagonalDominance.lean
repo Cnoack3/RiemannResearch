@@ -61,9 +61,22 @@ theorem posDef_of_strictlyRowDiagonallyDominant
   rw [hA.posDef_iff_eigenvalues_pos]
   exact eigenvalues_pos_of_strictlyRowDiagonallyDominant hA hdom
 
-/-- A convenient interval form: lower diagonal bounds and upper absolute
-bounds imply positive definiteness once every certified lower diagonal is
-larger than the certified off-diagonal row sum. -/
+/-- Lower diagonal bounds and upper row-radius bounds imply positive
+definiteness once every certified lower diagonal exceeds its row radius. -/
+theorem posDef_of_row_interval_certificate
+    {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    (diagLower rowRadius : n → ℝ)
+    (hdiag : ∀ i, diagLower i ≤ A i i)
+    (hrow : ∀ i, offDiagonalRowSum A i ≤ rowRadius i)
+    (hcert : ∀ i, rowRadius i < diagLower i) :
+    A.PosDef := by
+  apply posDef_of_strictlyRowDiagonallyDominant hA
+  intro i
+  exact (hrow i).trans_lt ((hcert i).trans_le (hdiag i))
+
+/-- A convenient entrywise interval form: lower diagonal bounds and upper
+absolute bounds imply positive definiteness once every certified lower
+diagonal is larger than the certified off-diagonal row sum. -/
 theorem posDef_of_entrywise_interval_certificate
     {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (diagLower absUpper : Matrix n n ℝ)
