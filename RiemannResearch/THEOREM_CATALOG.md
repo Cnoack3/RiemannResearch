@@ -108,6 +108,15 @@ source material.
   the constant-slope gauge change from the anchored prefix profile. This is
   finite-dimensional algebra, not dyadic density, a Weil-form identification,
   or an RH proof.
+- `RiemannResearch.RH.FiniteEndpointProfile` prefix-integrates arbitrary
+  finite slope vectors on the unit grid and proves exact telescoping in both
+  directions. It packages profiles with zero initial and final coordinates as
+  `endpointZeroProfileSubmodule`, proves that centered curvature-prefix
+  slopes integrate into that submodule, and reconstructs every member from its
+  finite curvature. `curvatureEndpointZeroProfileEquiv` is the resulting
+  linear equivalence from `Fin n → ℝ` curvature data to endpoint-zero
+  profiles, including `n = 0`. This closes a finite coordinate chain; it is
+  not dyadic density, a Weil-form identification, or an RH proof.
 - `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
   weighted least-energy representative in every finite-curvature fiber.  Its
   moment formula `weightedAffineProjection` removes the weighted-orthogonal
