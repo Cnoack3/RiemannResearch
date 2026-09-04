@@ -15,6 +15,7 @@ import RiemannResearch.RH.FiniteDirichletGreenMatrix
 import RiemannResearch.RH.FiniteDirichletGreenEnergy
 import RiemannResearch.RH.FiniteDirichletGreenGram
 import RiemannResearch.RH.FiniteSlopeCompression
+import RiemannResearch.RH.FiniteCenteredSlopeMatrixFormula
 import RiemannResearch.RH.FiniteCurvatureWeightedGreen
 import RiemannResearch.RH.TripleCurvatureCompression
 import RiemannResearch.RH.InnovationLittleOObstruction

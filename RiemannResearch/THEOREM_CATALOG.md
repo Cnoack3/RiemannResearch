@@ -149,6 +149,11 @@ source material.
   identity, and shows that symmetry is preserved. This is a finite-dimensional
   generic kernel congruence, not a Weil-form identification, a positivity claim
   for a concrete arithmetic kernel, dyadic/Haar density, or an RH proof.
+- `RiemannResearch.RH.FiniteCenteredSlopeMatrixFormula` proves the exact
+  two-branch entries of `finiteCenteredSlopeMatrix` on the standard curvature
+  basis, including the centering normalization. This is finite coordinate
+  algebra, not a concrete Weil-kernel construction, positivity or density
+  theorem, or an RH proof.
 - `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
   weighted least-energy representative in every finite-curvature fiber.  Its
   moment formula `weightedAffineProjection` removes the weighted-orthogonal
