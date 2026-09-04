@@ -816,6 +816,18 @@ source material.
   `finiteCurvatureMap_surjective` give the exact section and surjectivity
   statements.  These are finite algebraic results, not a Weil-form
   identification or an RH proof.
+- `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
+  weighted least-energy representative in every finite-curvature fiber.  Its
+  moment formula `weightedAffineProjection` removes the weighted-orthogonal
+  affine component, while `weightedOrthogonalPrefix` is a right inverse to
+  `finiteCurvatureMap`.  Theorems
+  `weightedOrthogonalPrefix_orthogonal_affineRange`,
+  `weightedOrthogonalGreen_pythagoras`,
+  `weightedOrthogonalGreen_minimizes`, and
+  `weightedOrthogonalPrefix_unique_minimizer` give orthogonality,
+  Pythagoras, minimization, and uniqueness under positive weights.  This is a
+  finite-dimensional auxiliary Green construction, not a Weil-form
+  identification or an RH proof.
 - `RiemannResearch.RH.TripleCurvatureCompression` defines
   `tripleCurvatureLinearMap`, `selectedTripleCurvatureMap`, and the finite
   weighted form `selectedTripleCurvatureEnergy`.  The theorem
