@@ -149,6 +149,9 @@ import RiemannResearch.GroupCohomology.OddDegreeRestrictionModTwo
 import RiemannResearch.GroupCohomology.Restriction
 import RiemannResearch.GroupCohomology.StableElements
 import RiemannResearch.GroupCohomology.TrialitarianCentralResidue
+import RiemannResearch.LinearAlgebra.DualGreenProjection
+import RiemannResearch.LinearAlgebra.FiniteWeightedEnergy
+import RiemannResearch.LinearAlgebra.RankOneSchur
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.ExteriorSpinors
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations
@@ -287,6 +290,7 @@ import RiemannResearch.E8.RemainingCaseMemorandum
 import RiemannResearch.RH.Basic
 import RiemannResearch.RH.CombinedGain
 import RiemannResearch.RH.PrimePhaseCRT
+import RiemannResearch.RH.PrimeGapCurvature
 import RiemannResearch.RH.StrictDiagonalDominance
 import RiemannResearch.RH.Log3Parameters
 import RiemannResearch.RH.Log3Bounds
