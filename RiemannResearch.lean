@@ -13,6 +13,7 @@ import RiemannResearch.RH.FiniteMeanZeroSlope
 import RiemannResearch.RH.FiniteEndpointProfile
 import RiemannResearch.RH.FiniteDirichletGreenMatrix
 import RiemannResearch.RH.FiniteDirichletGreenEnergy
+import RiemannResearch.RH.FiniteDirichletGreenGram
 import RiemannResearch.RH.FiniteCurvatureWeightedGreen
 import RiemannResearch.RH.TripleCurvatureCompression
 import RiemannResearch.RH.InnovationLittleOObstruction

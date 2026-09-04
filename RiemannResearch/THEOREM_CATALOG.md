@@ -136,6 +136,13 @@ source material.
   nonpositivity and negative definiteness, including `n = 0`. This is a
   finite-dimensional energy identity, not a Weil-form identification or an RH
   proof.
+- `RiemannResearch.RH.FiniteDirichletGreenGram` proves the exact mixed
+  bilinear summation-by-parts identity, realizes the centered-slope map as
+  multiplication by `finiteCenteredSlopeMatrix`, and factors the finite
+  Dirichlet Green matrix as the negative Gram matrix of that slope transform,
+  uniformly including `n = 0`. This is a finite-dimensional coordinate
+  factorization, not a dyadic/Haar density result, a Weil-form identification,
+  or an RH proof.
 - `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
   weighted least-energy representative in every finite-curvature fiber.  Its
   moment formula `weightedAffineProjection` removes the weighted-orthogonal
