@@ -4,6 +4,10 @@ Persistent, kernel-checked Lean research library focused on the Riemann
 hypothesis and related analytic, spectral, operator-algebraic, and geometric
 approaches.
 
+
+The Serre II Lean program and its supporting research files are preserved on
+[`serre-ii-archive-20260904`](https://github.com/Cnoack3/RiemannResearch/tree/serre-ii-archive-20260904).
+
 ## Source of truth
 
 The `.lean` files in this repository are the mathematical record. Chat
@@ -19,13 +23,10 @@ it has been:
 
 ## Layout
 
-- `RiemannResearch/RH/`: zeta-function and RH-equivalent formulations
-- `RiemannResearch/OperatorTheory/`: spectral and operator-theoretic foundations
-- `RiemannResearch/NoncommutativeGeometry/`: C*-algebras and spectral triples
-- `RiemannResearch/F1/`: field-with-one-element constructions
-- `RiemannResearch/AlgebraicGeometry/`: scheme-theoretic foundations
-- `RiemannResearch/THEOREM_CATALOG.md`: publication and research-obligation ledger;
-  agents use Lean-aware declaration search instead of loading it for discovery
+- `RiemannResearch/RH/`: zeta-function, finite certificates, and RH-oriented reductions
+- `RiemannResearch/LinearAlgebra/`: finite-energy, Green-projection, Schur, and common-optimizer support used by the RH program
+- `RiemannResearch/GroupTheory/AddSubgroupCRT.lean`: exact CRT support for prime-phase work
+- `RiemannResearch/THEOREM_CATALOG.md`: RH declaration and research-obligation ledger
 
 ## Reproducibility
 

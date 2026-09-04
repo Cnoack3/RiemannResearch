@@ -61,8 +61,11 @@ The ChatGPT Lean Verifier connection failed before Lean was reached. The observe
 
 The existing ChatGPT conversation may remain pinned to the stale remote tunnel identifier. If local service health and Lean compilation pass while ChatGPT still receives HTTP 404, the remaining fix is to reconnect the Lean Verifier or open a fresh ChatGPT session so it obtains the newly registered tunnel.
 
-Once MCP access succeeds, use `agent_workspace_open`, then compile the same smoke theorem through `agent_workspace_run_code`. Only after that should the Serre II work resume.
+Once MCP access succeeds, use `agent_workspace_open`, then compile the same smoke theorem through `agent_workspace_run_code`. Only after that should RH work resume.
 
-## Serre II restart point
+## Branch scope after recovery
 
-Resume from `SerreII_full_proof_blueprint_nonLean_2026-08-28.md` if that handoff is available. Formalize the conditional four-bridge assembly boundary first, without representing the bridges as completed results. Then begin the first genuine bridge target, the `T_E7` three-quaternion realization/common quadratic-pair theorem.
+The default Lean workspace publishes to the RH-focused `main` branch. The former
+Serre II development is preserved on `serre-ii-archive-20260904`; do not resume it
+through the default main-only workspace. Resume RH work only after the smoke test,
+or first add and verify explicit branch-aware workspace support for Serre II.

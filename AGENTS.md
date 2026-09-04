@@ -1,5 +1,14 @@
 # RiemannResearch agent instructions
 
+## Branch scope
+
+- `main` is the RH-focused development branch. Add Lean modules here only when they
+  are part of the RH program or have a concrete identified RH consumer.
+- The complete Serre II development at commit
+  `0d8199086f808671b3f61460fab7864b46915bce` is preserved on
+  `serre-ii-archive-20260904`. Do not reconstruct or publish Serre II modules on
+  `main`; future Serre II work requires an explicitly branch-aware workspace.
+
 ## Mathematical and verification policy
 
 - Treat this repository as the persistent source of truth. A successful Lean
