@@ -203,17 +203,17 @@ For the total hard class, pass to
 is the ramified Witt character.  Nakayama--Witt gives
 
     ind(q₁+q₂+q₃)
-      = 2 * ind((q₂+q₃)_{K(sqrt(g))}
+      = 2 * ind((q₂+q₃)_{K(sqrt(g))})
       = 8.
 
 An exact accessible statement of the index formula is given by
 Hanke--Neftin--Sonn, citing Jacob--Wadsworth:
 <https://msp.org/ant/2014/8-4/ant-v8-n4-p.pdf>.
 
-Apply Elman--Karpenko--Merkurjev, Theorem 38.4, with `n=4`, preserving
-the degree-eight division algebra through the tower of 9-dimensional
-quadric function fields, 3-fold Pfister function fields, and 2-special
-closures:
+Run the proof of Elman--Karpenko--Merkurjev, Theorem 38.4, with `n=4`,
+while tracking the fixed degree-eight and degree-four division algebras
+through its tower of 9-dimensional quadric function fields, 3-fold Pfister
+function fields, and 2-special closures:
 <https://www.math.ucla.edu/~rse/book/Kniga.pdf>.
 
 The crossed degree-four division algebra over `M` also survives:
@@ -303,12 +303,17 @@ As of September 2026, current published work still leaves the general
 
 ## 7. Verification / recovery note
 
-Before the verifier transport session terminated, all three new Lean
-modules had clean full-file diagnostics, all listed principal
-declarations passed source-scanned `lean_verify`, and the umbrella
-imports and theorem catalog had been updated.  Two full-project build
-attempts reached approximately 98.6% before the remote verifier service
-restarted.  The edits still require a successful final
-affected-module checkpoint/push once the Lean workspace connection is
-restored.
+Before the verifier transport session terminated, the original forms of all
+three new Lean modules had clean full-file diagnostics, all then-listed
+principal declarations passed source-scanned `lean_verify`, and the
+umbrella imports and theorem catalog had been updated.  Two full-project
+build attempts reached approximately 98.6% before the remote verifier
+service restarted.
 
+Exact source reconstructions, including the sharper already-effective packet
+specialization, are preserved on
+`codex/e7-prescribed-dual-affine-obstruction` in PR #15.  A GitHub Actions
+validation run failed before checkout and reported no executed steps or Lean
+diagnostics, so it does not constitute a source failure.  Source scanning of
+the branch finds no `sorry`, `admit`, local `axiom`, or `unsafe`.
+The branch must still receive a successful Lean build before it is merged.
