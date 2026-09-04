@@ -150,6 +150,63 @@ theorem exists_quaternionPoint_iff_exists_directionCorrection
     apply Subtype.ext
     exact add_left_cancel hε.symm
 
+/-- If the chosen basepoint has a non-quaternion prescribed translate, then
+any successful point of the same canonical fibre must be obtained from it by
+a nonzero simultaneous restriction/corestriction-kernel direction.
+
+This isolates the exact source of flexibility left after fixing the LLT--
+Tignol quartic layer: a failed explicit crossed witness can only be repaired
+inside `ker down ∩ ker T.cor`, never by choosing another decomposition of the
+same point. -/
+theorem exists_nonzero_directionCorrection_of_basepoint_not_quaternion
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C)
+    (IsQuaternionClassB : B → Prop)
+    (q₂ q₃ β : A)
+    (r₀ : B)
+    (hr₀ : r₀ ∈ CanonicalCrossedFibre T down q₂ q₃)
+    (hr₀NotQuaternion :
+      ¬ IsQuaternionClassB (r₀ + T.res β))
+    (hExists :
+      ∃ r ∈ CanonicalCrossedFibre T down q₂ q₃,
+        IsQuaternionClassB (r + T.res β)) :
+    ∃ δ : CanonicalCrossedDirection T down,
+      (δ : B) ≠ 0 ∧
+        IsQuaternionClassB (r₀ + (δ : B) + T.res β) := by
+  rcases
+      (exists_quaternionPoint_iff_exists_directionCorrection
+        T down IsQuaternionClassB q₂ q₃ β r₀ hr₀).mp hExists with
+    ⟨δ, hδQuaternion⟩
+  refine ⟨δ, ?_, hδQuaternion⟩
+  intro hδZero
+  apply hr₀NotQuaternion
+  simpa only [hδZero, add_zero] using hδQuaternion
+
+/-- If the simultaneous restriction/corestriction kernel is trivial, then
+the translated quaternion-point problem has no hidden choice: it is decided
+by any one basepoint of the canonical fibre. -/
+theorem exists_quaternionPoint_iff_basepoint_of_trivial_direction
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C)
+    (IsQuaternionClassB : B → Prop)
+    (q₂ q₃ β : A)
+    (r₀ : B)
+    (hr₀ : r₀ ∈ CanonicalCrossedFibre T down q₂ q₃)
+    (hDirectionTrivial :
+      ∀ δ : CanonicalCrossedDirection T down, (δ : B) = 0) :
+    (∃ r ∈ CanonicalCrossedFibre T down q₂ q₃,
+        IsQuaternionClassB (r + T.res β)) ↔
+      IsQuaternionClassB (r₀ + T.res β) := by
+  constructor
+  · intro hExists
+    rcases
+        (exists_quaternionPoint_iff_exists_directionCorrection
+          T down IsQuaternionClassB q₂ q₃ β r₀ hr₀).mp hExists with
+      ⟨δ, hδQuaternion⟩
+    simpa only [hDirectionTrivial δ, add_zero] using hδQuaternion
+  · intro hr₀Quaternion
+    exact ⟨r₀, hr₀, hr₀Quaternion⟩
+
 /-- When the kernel of the chosen quadratic restriction consists of
 quaternion classes, the translated point problem on the canonical fibre is
 exactly a layer-constrained corestriction-linked quaternion lift. -/
@@ -249,6 +306,37 @@ theorem hasCrossedQuaternionKernelRectangle_iff_exists_quaternionPoint
     exact ⟨r, ⟨hrDown, hrCor⟩, hrQuaternion⟩
   · rintro ⟨r, ⟨hrDown, hrCor⟩, hrQuaternion⟩
     exact ⟨r, hrDown, hrCor, hrQuaternion⟩
+
+/-- If an explicit point in the LLT--Tignol canonical fibre has a
+non-quaternion translate, then existence of the desired crossed rectangle
+forces a nonzero simultaneous kernel direction that repairs that point. -/
+theorem crossedRectangle_forces_nonzero_direction_of_bad_basepoint
+    (hA₂ : IsExponentTwo A) (hB₂ : IsExponentTwo B)
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C) (dualDown : A →+ E)
+    (IsQuaternionClassB : B → Prop)
+    (q₁ q₂ q₃ : A)
+    (hFirst : T.res q₁ = 0)
+    (h : HasPrescribedDualCommonSplitter T down dualDown q₂ q₃)
+    (r₀ : B)
+    (hr₀ : r₀ ∈ CanonicalCrossedFibre T down q₂ q₃)
+    (hr₀NotQuaternion :
+      ¬ IsQuaternionClassB (r₀ + T.res (q₁ + q₂)))
+    (hRectangle :
+      HasCrossedQuaternionKernelRectangle
+        T down IsQuaternionClassB q₂ q₃) :
+    ∃ δ : CanonicalCrossedDirection T down,
+      (δ : B) ≠ 0 ∧
+        IsQuaternionClassB
+          (r₀ + (δ : B) + T.res (q₁ + q₂)) := by
+  apply
+    exists_nonzero_directionCorrection_of_basepoint_not_quaternion
+      T down IsQuaternionClassB q₂ q₃ (q₁ + q₂)
+        r₀ hr₀ hr₀NotQuaternion
+  exact
+    (hasCrossedQuaternionKernelRectangle_iff_exists_quaternionPoint
+      hA₂ hB₂ T down dualDown IsQuaternionClassB
+        q₁ q₂ q₃ hFirst h).mp hRectangle
 
 /-- Under prescribed-dual incidence, the crossed rectangle is equivalent to
 the exact layer-constrained linked-lift condition.  This is the formal

@@ -203,6 +203,33 @@ theorem constituent_kernel_witnesses :
       transfer.cor s = q2 ∧ transfer.cor t = q3 := by
   decide
 
+/-- The finite obstruction is rigid: there is no nonzero simultaneous
+restriction/corestriction-kernel direction along which its canonical
+crossed witness could be repaired. -/
+theorem canonicalCrossedDirection_trivial :
+    ∀ δ : CanonicalCrossedDirection transfer down,
+      (δ : B4) = 0 := by
+  rintro ⟨x, hx⟩
+  change down x = 0 ∧ transfer.cor x = 0 at hx
+  change x = 0
+  revert x
+  decide
+
+/-- The general affine-direction criterion recovers the failure of a
+quaternion point in the finite model from rigidity of the direction space
+and failure of its unique basepoint. -/
+theorem no_quaternionPoint_by_trivialDirection :
+    ¬ ∃ x ∈ CanonicalCrossedFibre transfer down q2 q3,
+      IsQuaternionB (x + transfer.res beta) := by
+  have hr :
+      r ∈ CanonicalCrossedFibre transfer down q2 q3 := by
+    change down r = 0 ∧ transfer.cor r = q2 + q3
+    decide
+  rw [exists_quaternionPoint_iff_basepoint_of_trivial_direction
+    transfer down IsQuaternionB q2 q3 beta r hr
+      canonicalCrossedDirection_trivial]
+  decide
+
 theorem alpha_kernel_fibre_unique :
     ∀ x : B4,
       (down x = 0 ∧ transfer.cor x = alpha) ↔ x = r := by
