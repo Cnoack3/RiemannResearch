@@ -291,6 +291,9 @@ import RiemannResearch.RH.Basic
 import RiemannResearch.RH.CombinedGain
 import RiemannResearch.RH.PrimePhaseCRT
 import RiemannResearch.RH.PrimeGapCurvature
+import RiemannResearch.RH.FiniteCurvatureGreen
+import RiemannResearch.RH.TripleCurvatureCompression
+import RiemannResearch.RH.InnovationLittleOObstruction
 import RiemannResearch.RH.StrictDiagonalDominance
 import RiemannResearch.RH.Log3Parameters
 import RiemannResearch.RH.Log3Bounds

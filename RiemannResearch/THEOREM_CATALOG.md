@@ -806,6 +806,30 @@ source material.
   determinant into adjacent curvatures.  The same module retains the scalar
   two-block mean/Schur and bandwidth-two recurrence families.  These are exact
   finite identities, not asymptotic prime-gap estimates.
+- `RiemannResearch.RH.FiniteCurvatureGreen` packages adjacent curvature as
+  the concrete linear map `finiteCurvatureMap` between finite coordinate
+  spaces.  It proves
+  `ker_finiteCurvatureMap_eq_range_affineProfileMap` and the equivalent
+  range and coordinate forms of “equal curvature iff affine difference.”
+  The two-prefix construction `profilePrefixLinearMap` is an explicit right
+  inverse; `finiteCurvatureMap_comp_profilePrefixLinearMap` and
+  `finiteCurvatureMap_surjective` give the exact section and surjectivity
+  statements.  These are finite algebraic results, not a Weil-form
+  identification or an RH proof.
+- `RiemannResearch.RH.TripleCurvatureCompression` defines
+  `tripleCurvatureLinearMap`, `selectedTripleCurvatureMap`, and the finite
+  weighted form `selectedTripleCurvatureEnergy`.  The theorem
+  `sum_weight_mul_tripleDet_sq_eq_selectedTripleCurvatureEnergy` factors any
+  selected finite family of ordered triple-determinant squares through
+  adjacent curvature, while `selectedTripleCurvatureEnergy_nonneg` proves
+  positivity for nonnegative weights.  This auxiliary PSD result is not an
+  identification with the Weil form.
+- `RiemannResearch.RH.InnovationLittleOObstruction` proves that the literal
+  fixed-prefix condition `ActualInnovationLittleO` forces the nonnegative
+  monotone bandwidth-two energy to vanish.  In particular,
+  `bandwidthTwoInnovation_eq_zero_of_actualLittleO` shows that every
+  bandwidth-two innovation is zero when all pivots are positive.  This is a
+  formal obstruction/guardrail and does not establish an RH criterion.
 - `RiemannResearch.LinearAlgebra.DualGreenProjection` defines `greenOperator`
   and `dualGreenProjection`.  The declarations `dualGreenProjection_apply`,
   `dualGreenProjection_mapsTo`, `dualGreenProjection_residual_mem_ker`,
