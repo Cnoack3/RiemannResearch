@@ -143,6 +143,12 @@ source material.
   uniformly including `n = 0`. This is a finite-dimensional coordinate
   factorization, not a dyadic/Haar density result, a Weil-form identification,
   or an RH proof.
+- `RiemannResearch.RH.FiniteSlopeCompression` defines the curvature-space
+  pullback `Tᵀ K T` of an arbitrary real finite slope-space kernel `K`
+  through `finiteCenteredSlopeMatrix`, proves its exact mixed bilinear
+  identity, and shows that symmetry is preserved. This is a finite-dimensional
+  generic kernel congruence, not a Weil-form identification, a positivity claim
+  for a concrete arithmetic kernel, dyadic/Haar density, or an RH proof.
 - `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
   weighted least-energy representative in every finite-curvature fiber.  Its
   moment formula `weightedAffineProjection` removes the weighted-orthogonal
