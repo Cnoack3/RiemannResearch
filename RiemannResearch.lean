@@ -11,6 +11,7 @@ import RiemannResearch.RH.PrimeGapCurvature
 import RiemannResearch.RH.FiniteCurvatureGreen
 import RiemannResearch.RH.FiniteMeanZeroSlope
 import RiemannResearch.RH.FiniteEndpointProfile
+import RiemannResearch.RH.FiniteDirichletGreenMatrix
 import RiemannResearch.RH.FiniteCurvatureWeightedGreen
 import RiemannResearch.RH.TripleCurvatureCompression
 import RiemannResearch.RH.InnovationLittleOObstruction

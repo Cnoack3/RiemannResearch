@@ -117,6 +117,15 @@ source material.
   linear equivalence from `Fin n → ℝ` curvature data to endpoint-zero
   profiles, including `n = 0`. This closes a finite coordinate chain; it is
   not dyadic density, a Weil-form identification, or an RH proof.
+- `RiemannResearch.RH.FiniteDirichletGreenMatrix` gives the closed
+  piecewise formula for the unit-grid endpoint-zero Green kernel. Its columns
+  are the profiles of standard curvature vectors, arbitrary centered profiles
+  are their finite Green superpositions, and the interior restriction is a
+  symmetric, entrywise nonpositive matrix whose `mulVec` recovers the
+  interior profile. `finiteCurvature_green_sum` proves the exact inverse
+  identity, including the vacuous `n = 0` case. This is a finite-dimensional
+  coordinate result, not dyadic density, a Weil-form identification, or an RH
+  proof.
 - `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
   weighted least-energy representative in every finite-curvature fiber.  Its
   moment formula `weightedAffineProjection` removes the weighted-orthogonal
