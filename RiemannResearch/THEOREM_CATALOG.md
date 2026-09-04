@@ -98,6 +98,16 @@ source material.
   `finiteCurvatureMap_surjective` give the exact section and surjectivity
   statements.  These are finite algebraic results, not a Weil-form
   identification or an RH proof.
+- `RiemannResearch.RH.FiniteMeanZeroSlope` packages adjacent slope
+  differences and arithmetic-mean centering as linear maps. It proves that
+  centered curvature-prefix slopes have coordinate sum zero, that adjacent
+  differences recover the original curvature vector, and that every zero-sum
+  slope vector is recovered by centering its adjacent differences.
+  `curvatureMeanZeroSlopeEquiv` gives the resulting exact linear equivalence,
+  while `finiteAdjacentSlope_profilePrefix_eq_centeredSlope_add_mean` records
+  the constant-slope gauge change from the anchored prefix profile. This is
+  finite-dimensional algebra, not dyadic density, a Weil-form identification,
+  or an RH proof.
 - `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
   weighted least-energy representative in every finite-curvature fiber.  Its
   moment formula `weightedAffineProjection` removes the weighted-orthogonal
