@@ -126,6 +126,16 @@ source material.
   identity, including the vacuous `n = 0` case. This is a finite-dimensional
   coordinate result, not dyadic density, a Weil-form identification, or an RH
   proof.
+- `RiemannResearch.RH.FiniteDirichletGreenEnergy` proves the exact
+  finite summation-by-parts identity
+  `finiteDirichletGreenMatrix_quadraticForm_eq_neg_slopeEnergy`, identifying
+  the Green quadratic form with the negative sum of squares of the centered
+  slope vector. Theorems
+  `finiteDirichletGreenMatrix_quadraticForm_nonpos` and
+  `finiteDirichletGreenMatrix_quadraticForm_eq_zero_iff` establish
+  nonpositivity and negative definiteness, including `n = 0`. This is a
+  finite-dimensional energy identity, not a Weil-form identification or an RH
+  proof.
 - `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
   weighted least-energy representative in every finite-curvature fiber.  Its
   moment formula `weightedAffineProjection` removes the weighted-orthogonal
