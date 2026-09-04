@@ -152,6 +152,7 @@ import RiemannResearch.GroupCohomology.TrialitarianCentralResidue
 import RiemannResearch.LinearAlgebra.DualGreenProjection
 import RiemannResearch.LinearAlgebra.FiniteWeightedEnergy
 import RiemannResearch.LinearAlgebra.RankOneSchur
+import RiemannResearch.LinearAlgebra.TwoBlockCommonOptimizer
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.EvenFunctoriality
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.ExteriorSpinors
 import RiemannResearch.LinearAlgebra.CliffordAlgebra.SpinRepresentations

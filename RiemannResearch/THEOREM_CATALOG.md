@@ -851,6 +851,20 @@ source material.
   `dualGreen_minimizes` give the exact energy, Pythagoras, and minimization
   statements.  Their hypotheses remain explicit and do not assume the
   analytic realization required by the RH program.
+- `RiemannResearch.LinearAlgebra.TwoBlockCommonOptimizer` packages the
+  vector common-optimizer and exact Schur-mismatch argument.  Its distinct-form
+  layer proves `twoBlockForm_commonOptimizer_identity`,
+  `twoBlockFormMismatch_eq_commonFlux`, minimization, and equality rigidity.
+  The basis-free `twoBlockFormOptimizer` inverts the summed normal map via
+  bilinear duality; `existsUnique_twoBlockForm_minimizer` proves existence
+  and uniqueness for finite-dimensional symmetric blocks when one block is
+  positive definite and the other is nonnegative.  Its scalar-weighted
+  same-form layer defines `weightedTwoBlockOptimizer` and proves the closed
+  parallel-sum formula `weightedTwoBlockLoss_completion`, minimization, and
+  equality and mismatch rigidity.  These theorems vectorize the earlier scalar
+  two-block identities while retaining one global optimizer.  They are finite
+  linear algebra and do not identify the block forms with the completed Weil
+  form or establish RH.
 - `RiemannResearch.LinearAlgebra.FiniteWeightedEnergy` proves the exact finite
   identities and dual certificates `affine_normal_det_double_sum`,
   `affine_normal_det_nonnegative`, `affine_normal_det_positive`,
