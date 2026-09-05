@@ -169,6 +169,12 @@ source material.
   reconstruction for finite real cell steps and jointly continuous kernels,
   proving all integrability used. Separated one-variable kernel terms cancel
   on mean-zero steps, giving the exact anchored-screw/convolution identity.
+- RiemannResearch.Analysis.HingeKernel defines the positive-part hinge used by
+  each prime-power screw-kernel summand. It proves continuity, evenness, and
+  exact finite-window inactivity: a log n hinge vanishes on differences of
+  points in [-R,R] whenever exp (2R) <= n. This is local support bookkeeping
+  only; it does not construct the von Mangoldt series, prove the cubic cell
+  integral, establish positivity, or identify the complete Weil form.
 - `RiemannResearch.RH.FiniteDyadicCellKernel` constructs equal dyadic cells,
   proves that literal Haar-generated steps have integral zero, and identifies
   their actual kernel integrals with the exact cell-matrix Haar compression.

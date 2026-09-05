@@ -20,6 +20,7 @@ import RiemannResearch.RH.FiniteDyadicHaarSlope
 import RiemannResearch.RH.FiniteDyadicHaarBasis
 import RiemannResearch.RH.FiniteDyadicHaarCompression
 import RiemannResearch.Analysis.FiniteCellKernel
+import RiemannResearch.Analysis.HingeKernel
 import RiemannResearch.RH.FiniteDyadicCellKernel
 import RiemannResearch.RH.FiniteCurvatureWeightedGreen
 import RiemannResearch.RH.TripleCurvatureCompression
