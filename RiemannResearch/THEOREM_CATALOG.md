@@ -154,6 +154,17 @@ source material.
   basis, including the centering normalization. This is finite coordinate
   algebra, not a concrete Weil-kernel construction, positivity or density
   theorem, or an RH proof.
+- `RiemannResearch.RH.FiniteDyadicHaarSlope` constructs literal dyadic
+  Haar atoms and proves zero-sum membership, exact squared norms, pairwise
+  orthogonality, and the three-jump curvature formula.
+- `RiemannResearch.RH.FiniteDyadicHaarBasis` proves the full finite
+  mean-zero slope basis, coefficient normalization, Parseval, and sparse
+  curvature basis, including dimension zero.
+- `RiemannResearch.RH.FiniteDyadicHaarCompression` proves exact literal
+  Haar/curvature congruence and equivalence of finite nonnegativity in all
+  directions. `FiniteSlopeCompression` supplies general family/basis versions.
+  Actual cell-integral Weil kernels, arithmetic positivity, analytic density
+  and limits remain open; these results are finite coordinate algebra.
 - `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
   weighted least-energy representative in every finite-curvature fiber.  Its
   moment formula `weightedAffineProjection` removes the weighted-orthogonal

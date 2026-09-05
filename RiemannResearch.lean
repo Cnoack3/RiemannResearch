@@ -16,6 +16,9 @@ import RiemannResearch.RH.FiniteDirichletGreenEnergy
 import RiemannResearch.RH.FiniteDirichletGreenGram
 import RiemannResearch.RH.FiniteSlopeCompression
 import RiemannResearch.RH.FiniteCenteredSlopeMatrixFormula
+import RiemannResearch.RH.FiniteDyadicHaarSlope
+import RiemannResearch.RH.FiniteDyadicHaarBasis
+import RiemannResearch.RH.FiniteDyadicHaarCompression
 import RiemannResearch.RH.FiniteCurvatureWeightedGreen
 import RiemannResearch.RH.TripleCurvatureCompression
 import RiemannResearch.RH.InnovationLittleOObstruction
