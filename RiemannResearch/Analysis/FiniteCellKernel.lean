@@ -179,3 +179,36 @@ theorem finiteCellKernel_screw_reconstruction {ι : Type*} [Fintype ι]
   simpa only [sub_eq_add_neg, add_assoc] using h
 end
 end RiemannResearch.Analysis
+
+namespace RiemannResearch.Analysis
+open MeasureTheory Set
+noncomputable section
+
+theorem norm_integral_integral_le {k : ℝ → ℝ → ℝ} {a b c d C : ℝ}
+    (h : ∀ x ∈ uIoc a b, ∀ y ∈ uIoc c d, ‖k x y‖ ≤ C) :
+    ‖∫ x in a..b, ∫ y in c..d, k x y‖ ≤ C * |d-c| * |b-a| := by
+  apply intervalIntegral.norm_integral_le_of_norm_le_const
+  intro x hx
+  exact intervalIntegral.norm_integral_le_of_norm_le_const (h x hx)
+
+theorem integral_integral_sub {k l : ℝ → ℝ → ℝ}
+    (hk : Continuous (Function.uncurry k)) (hl : Continuous (Function.uncurry l))
+    (a b c d : ℝ) :
+    (∫ x in a..b, ∫ y in c..d, k x y) -
+      (∫ x in a..b, ∫ y in c..d, l x y) =
+      ∫ x in a..b, ∫ y in c..d, k x y-l x y := by
+  have hki (x : ℝ) : IntervalIntegrable (k x) volume c d :=
+    (hk.comp (continuous_const.prodMk continuous_id)).intervalIntegrable c d
+  have hli (x : ℝ) : IntervalIntegrable (l x) volume c d :=
+    (hl.comp (continuous_const.prodMk continuous_id)).intervalIntegrable c d
+  have hko : IntervalIntegrable (fun x => ∫ y in c..d, k x y) volume a b :=
+    (intervalIntegral.continuous_parametric_intervalIntegral_of_continuous'
+      hk c d).intervalIntegrable a b
+  have hlo : IntervalIntegrable (fun x => ∫ y in c..d, l x y) volume a b :=
+    (intervalIntegral.continuous_parametric_intervalIntegral_of_continuous'
+      hl c d).intervalIntegrable a b
+  simp_rw [intervalIntegral.integral_sub (hki _) (hli _)]
+  exact (intervalIntegral.integral_sub hko hlo).symm
+
+end
+end RiemannResearch.Analysis

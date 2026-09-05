@@ -45,3 +45,11 @@ import RiemannResearch.RH.CombinedAudited.SourceClaimIndex
 import RiemannResearch.RH.CombinedAudited.TwoPolarModes
 import RiemannResearch.RH.CombinedAudited.WeightedPythagoras
 import RiemannResearch.RH.CombinedAudited
+import RiemannResearch.Analysis.ExponentialKernelGram
+import RiemannResearch.LinearAlgebra.FiniteQuadraticError
+import RiemannResearch.RH.ArithmeticScrewCellBounds
+import RiemannResearch.RH.ArithmeticScrewKernel
+import RiemannResearch.RH.ScrewArchimedeanPositivity
+import RiemannResearch.RH.ScrewArchimedeanSeries
+import RiemannResearch.RH.ScrewPrimePart
+import RiemannResearch.Analysis.HingeKernelIntegral

@@ -167,21 +167,52 @@ source material.
   and limits remain open; these results are finite coordinate algebra.
 - `RiemannResearch.Analysis.FiniteCellKernel` proves actual iterated-integral
   reconstruction for finite real cell steps and jointly continuous kernels,
-  proving all integrability used. Separated one-variable kernel terms cancel
-  on mean-zero steps, giving the exact anchored-screw/convolution identity.
-- RiemannResearch.Analysis.HingeKernel defines the positive-part hinge used by
-  each prime-power screw-kernel summand. It proves continuity, evenness, and
-  exact finite-window inactivity: a log n hinge vanishes on differences of
-  points in [-R,R] whenever exp (2R) <= n. This is local support bookkeeping
-  only; it does not construct the von Mangoldt series, prove the cubic cell
-  integral, establish positivity, or identify the complete Weil form.
+  with all integrability used. Separated one-variable terms cancel on
+  mean-zero steps. It also supplies continuous-kernel subtraction and
+  uniform rectangle-integral error bounds.
+- `RiemannResearch.Analysis.HingeKernel` defines the common hinge and proves
+  continuity, evenness, and exact finite-window inactivity. This previously
+  published module is retained and used by HingeKernelIntegral and ScrewPrimePart.
 - `RiemannResearch.RH.FiniteDyadicCellKernel` constructs equal dyadic cells,
-  proves that literal Haar-generated steps have integral zero, and identifies
-  their actual kernel integrals with the exact cell-matrix Haar compression.
-  `dyadicHaarStep_screw_compression` combines this with anchor cancellation.
-  These are analytic reconstruction theorems for arbitrary continuous real
-  kernels, including R=0 and m=0. The complete arithmetic g, the Weil/RH
-  bridge, analytic density, and all-window arithmetic positivity remain Open.
+  proves their support bounds and Haar-step mean zero, and identifies actual
+  kernel integrals with the exact Haar compression, including R=0 and m=0.
+- `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
+  power derivatives at every point, hinge primitives, and the exact
+  four-corner double cell formula, including threshold crossings.
+- `RiemannResearch.RH.ScrewPrimePart` defines the von Mangoldt weighted
+  prime-power hinge series, proves local finiteness and continuity, and
+  evaluates its finite-sum rectangle integrals exactly.
+- `RiemannResearch.RH.ScrewArchimedeanSeries` constructs the continuous,
+  even archimedean series and proves summability, an explicit uniform
+  tail majorant `B_J`, and `tendsto_archimedeanTailMajorant_zero`.
+- `RiemannResearch.Analysis.ExponentialKernelGram` proves an integrable
+  Volterra-feature product identity and the square-integral Gram formula
+  `exponentialKernel_finite_gram`. For every positive rate this gives
+  nonnegativity on arbitrary finite configurations of real points.
+- `RiemannResearch.RH.ScrewArchimedeanPositivity` proves
+  `neg_archimedeanScrewTail_finite_nonneg` and
+  `neg_archimedeanScrewSeries_finite_nonneg`: the negative archimedean
+  series and every infinite tail are nonnegative on finite configurations
+  with zero-sum real coefficients. Summability and interchanges are proved.
+  This establishes one signed component, not complete arithmetic positivity
+  or the corresponding integrated step/L2 theorem.
+- `RiemannResearch.RH.ArithmeticScrewKernel` defines the full elementary
+  arithmetic expression with polar, prime-power, linear, and archimedean
+  terms. It proves continuity, evenness, value zero at zero, symmetry of the
+  anchored kernel, and `arithmeticScrewHaarMatrix_quadratic`, the exact
+  actual integral/Haar-matrix identity. Its finite approximation has
+  explicit pointwise errors on bounded windows.
+- `RiemannResearch.LinearAlgebra.FiniteQuadraticError` proves
+  `quadratic_error_of_entrywise_bound` for arbitrary real finite matrices.
+- `RiemannResearch.RH.ArithmeticScrewCellBounds` proves exact finite
+  prime-power cell sums for N>exp(2R), entry errors at most
+  `4*B_J*h^2`, and `dyadicCell_arithmeticScrewApprox_quadratic_error`
+  with bound `4*B_J*h^2*(sum_i |s_i|)^2` in every slope direction.
+  Source-normalization/Lerch agreement, identification with the zeta
+  zero sum or Weil distribution, analytic density, complexification,
+  the Weil/RH endpoint, and all-window full arithmetic positivity remain
+  **Open**. No theorem in this batch proves or assumes the RH-strength
+  arithmetic positivity target.
 - `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
   weighted least-energy representative in every finite-curvature fiber.  Its
   moment formula `weightedAffineProjection` removes the weighted-orthogonal

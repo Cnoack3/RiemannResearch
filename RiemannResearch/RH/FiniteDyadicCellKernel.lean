@@ -112,3 +112,33 @@ theorem dyadicHaarStep_screw_compression {R : ℝ} (hR : 0 ≤ R)
 
 end
 end RiemannResearch.RH.PrimeGapCurvature
+
+namespace RiemannResearch.RH.PrimeGapCurvature
+open MeasureTheory Set
+noncomputable section
+
+theorem dyadicCellWidth_mul_count (R : ℝ) (m : ℕ) :
+    dyadicCellWidth R m * (2 : ℝ)^m = 2*R := by
+  unfold dyadicCellWidth
+  field_simp
+
+theorem dyadicCell_endpoints_bounds {R : ℝ} (hR : 0 ≤ R) (m : ℕ) (j : Fin (2^m)) :
+    -R ≤ dyadicCellLeft R m j ∧ dyadicCellRight R m j ≤ R := by
+  have hw := dyadicCellWidth_nonneg hR m
+  have hj : (j.val : ℝ)+1 ≤ (2 : ℝ)^m := by
+    exact_mod_cast (Nat.succ_le_iff.mpr j.isLt)
+  have hm := mul_le_mul_of_nonneg_left hj hw
+  rw [dyadicCellWidth_mul_count] at hm
+  have hz := mul_nonneg hw (Nat.cast_nonneg (α := ℝ) j.val)
+  dsimp [dyadicCellLeft, dyadicCellRight]
+  constructor <;> nlinarith
+
+theorem abs_le_of_mem_dyadicCell {R : ℝ} (hR : 0 ≤ R) (m : ℕ) (j : Fin (2^m))
+    {x : ℝ} (hx : x ∈ uIcc (dyadicCellLeft R m j) (dyadicCellRight R m j)) :
+    |x| ≤ R := by
+  rw [uIcc_of_le (dyadicCell_ordered hR m j)] at hx
+  have hb := dyadicCell_endpoints_bounds hR m j
+  exact abs_le.mpr ⟨hb.1.trans hx.1, hx.2.trans hb.2⟩
+
+end
+end RiemannResearch.RH.PrimeGapCurvature
