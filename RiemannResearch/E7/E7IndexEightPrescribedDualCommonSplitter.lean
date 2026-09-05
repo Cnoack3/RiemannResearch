@@ -62,6 +62,82 @@ def CanonicalCrossedDirection
     (down : B →+ C) : AddSubgroup B :=
   down.ker ⊓ T.cor.ker
 
+/-- The upper quadratic layer kills no new restriction of a
+ground-field class beyond those already killed over the quadratic base. -/
+def UpperLayerAddsNoNewGroundRestrictionKernel
+    (T : QuadraticBrauerTransferModel A B)
+    (down : B →+ C) : Prop :=
+  ∀ γ : A, down (T.res γ) = 0 → T.res γ = 0
+
+/-- Under quadratic-transfer exactness, a canonical direction is exactly the
+restriction of a ground-field class that becomes split over the upper
+quartic layer. -/
+theorem mem_canonicalCrossedDirection_iff_exists_restricted_layerSplitter
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (hexact : CorestrictionKernelIsRestrictionImage T)
+    (down : B →+ C)
+    (δ : B) :
+    δ ∈ CanonicalCrossedDirection T down ↔
+      ∃ γ : A, down (T.res γ) = 0 ∧ T.res γ = δ := by
+  constructor
+  · intro hδ
+    have hmem := AddSubgroup.mem_inf.mp hδ
+    have hdown : down δ = 0 := AddMonoidHom.mem_ker.mp hmem.1
+    have hcor : T.cor δ = 0 := AddMonoidHom.mem_ker.mp hmem.2
+    rcases hexact δ hcor with ⟨γ, hγ⟩
+    exact ⟨γ, by simpa only [hγ] using hdown, hγ⟩
+  · rintro ⟨γ, hdown, rfl⟩
+    apply AddSubgroup.mem_inf.mpr
+    constructor
+    · exact AddMonoidHom.mem_ker.mpr hdown
+    · apply AddMonoidHom.mem_ker.mpr
+      rw [T.cor_res, hA₂ γ]
+
+/-- Exactness identifies the affine direction subgroup with the restriction
+image of the ground-field classes split by the full quartic layer. -/
+theorem canonicalCrossedDirection_eq_restriction_map_layerKernel
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (hexact : CorestrictionKernelIsRestrictionImage T)
+    (down : B →+ C) :
+    CanonicalCrossedDirection T down =
+      AddSubgroup.map T.res (down.comp T.res).ker := by
+  ext δ
+  rw [mem_canonicalCrossedDirection_iff_exists_restricted_layerSplitter
+    hA₂ T hexact down δ]
+  constructor
+  · rintro ⟨γ, hdown, hres⟩
+    exact
+      ⟨γ, AddMonoidHom.mem_ker.mpr hdown, hres⟩
+  · rintro ⟨γ, hγ, hres⟩
+    exact
+      ⟨γ, AddMonoidHom.mem_ker.mp hγ, hres⟩
+
+/-- The canonical direction is trivial exactly when the upper layer kills no
+new restricted ground-field Brauer class. -/
+theorem canonicalCrossedDirection_trivial_iff_upperLayerAddsNoNew
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (hexact : CorestrictionKernelIsRestrictionImage T)
+    (down : B →+ C) :
+    (∀ δ : CanonicalCrossedDirection T down, (δ : B) = 0) ↔
+      UpperLayerAddsNoNewGroundRestrictionKernel T down := by
+  constructor
+  · intro htrivial γ hdown
+    have hmem :
+        T.res γ ∈ CanonicalCrossedDirection T down :=
+      (mem_canonicalCrossedDirection_iff_exists_restricted_layerSplitter
+        hA₂ T hexact down (T.res γ)).mpr
+          ⟨γ, hdown, rfl⟩
+    exact htrivial ⟨T.res γ, hmem⟩
+  · intro hNoNew δ
+    rcases
+        (mem_canonicalCrossedDirection_iff_exists_restricted_layerSplitter
+          hA₂ T hexact down (δ : B)).mp δ.property with
+      ⟨γ, hdown, hres⟩
+    exact hres.symm.trans (hNoNew γ hdown)
+
 /-- The exact residual algebraic condition after a quadratic upper layer has
 been fixed: a class in its restriction kernel has prescribed corestriction,
 and both it and its prescribed translate are quaternion classes.
@@ -181,6 +257,42 @@ theorem exists_nonzero_directionCorrection_of_basepoint_not_quaternion
   intro hδZero
   apply hr₀NotQuaternion
   simpa only [hδZero, add_zero] using hδQuaternion
+
+/-- With corestriction exactness, every successful repair of a bad
+basepoint is already the restriction of a ground-field class which is
+nontrivial over the quadratic base but split by the upper quartic layer. -/
+theorem exists_nonzero_restrictedGroundCorrection_of_bad_basepoint
+    (hA₂ : IsExponentTwo A)
+    (T : QuadraticBrauerTransferModel A B)
+    (hexact : CorestrictionKernelIsRestrictionImage T)
+    (down : B →+ C)
+    (IsQuaternionClassB : B → Prop)
+    (q₂ q₃ β : A)
+    (r₀ : B)
+    (hr₀ : r₀ ∈ CanonicalCrossedFibre T down q₂ q₃)
+    (hr₀NotQuaternion :
+      ¬ IsQuaternionClassB (r₀ + T.res β))
+    (hExists :
+      ∃ r ∈ CanonicalCrossedFibre T down q₂ q₃,
+        IsQuaternionClassB (r + T.res β)) :
+    ∃ γ : A,
+      down (T.res γ) = 0 ∧
+        T.res γ ≠ 0 ∧
+          IsQuaternionClassB
+            (r₀ + T.res γ + T.res β) := by
+  rcases
+      exists_nonzero_directionCorrection_of_basepoint_not_quaternion
+        T down IsQuaternionClassB q₂ q₃ β
+          r₀ hr₀ hr₀NotQuaternion hExists with
+    ⟨δ, hδNonzero, hδQuaternion⟩
+  rcases
+      (mem_canonicalCrossedDirection_iff_exists_restricted_layerSplitter
+        hA₂ T hexact down (δ : B)).mp δ.property with
+    ⟨γ, hγDown, hγRes⟩
+  refine ⟨γ, hγDown, ?_, ?_⟩
+  · intro hγZero
+    exact hδNonzero (hγRes.symm.trans hγZero)
+  · simpa only [hγRes] using hδQuaternion
 
 /-- If the simultaneous restriction/corestriction kernel is trivial, then
 the translated quaternion-point problem has no hidden choice: it is decided
