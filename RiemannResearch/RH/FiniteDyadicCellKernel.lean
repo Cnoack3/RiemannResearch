@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
+import RiemannResearch.Analysis.ExponentialKernelGram
 import RiemannResearch.Analysis.FiniteCellKernel
 import RiemannResearch.RH.FiniteDyadicHaarCompression
 
@@ -46,6 +47,13 @@ def dyadicHaarStep (R : ℝ) (m : ℕ) (c : FiniteDyadicHaarIndex m → ℝ) : �
   finiteCellStep (dyadicCellLeft R m) (dyadicCellRight R m)
     ((finiteDyadicHaarMatrix m).mulVec c)
 
+@[fun_prop]
+theorem measurable_dyadicHaarStep
+    (R : ℝ) (m : ℕ) (c : FiniteDyadicHaarIndex m → ℝ) :
+    Measurable (dyadicHaarStep R m c) := by
+  unfold dyadicHaarStep
+  exact measurable_finiteCellStep _ _ _
+
 theorem integrable_dyadicHaarStep_mul_continuous
     (R : ℝ) (m : ℕ) (c : FiniteDyadicHaarIndex m → ℝ)
     (f : ℝ → ℝ) (hf : Continuous f) :
@@ -54,6 +62,30 @@ theorem integrable_dyadicHaarStep_mul_continuous
   simpa only [mul_comm] using
     integrable_mul_finiteCellStep (dyadicCellLeft R m) (dyadicCellRight R m)
       ((finiteDyadicHaarMatrix m).mulVec c) f hf
+
+theorem dyadicHaarStep_exponentialKernel_integral_gram
+    {α : ℝ} (hα : 0 < α) (R : ℝ) (m : ℕ)
+    (c : FiniteDyadicHaarIndex m → ℝ) :
+    (∫ x, dyadicHaarStep R m c x *
+      (∫ y, Real.exp (-α * |x - y|) * dyadicHaarStep R m c y)) =
+      2 * α * (∫ z, (∫ x, dyadicHaarStep R m c x *
+        exponentialVolterraFeature α x z) ^ 2) := by
+  apply exponentialKernel_integral_gram hα
+  · simpa only [mul_one] using
+      integrable_dyadicHaarStep_mul_continuous
+        R m c (fun _ => (1 : ℝ)) continuous_const
+  · exact measurable_dyadicHaarStep R m c
+
+theorem dyadicHaarStep_exponentialKernel_integral_nonneg
+    {α : ℝ} (hα : 0 < α) (R : ℝ) (m : ℕ)
+    (c : FiniteDyadicHaarIndex m → ℝ) :
+    0 ≤ ∫ x, dyadicHaarStep R m c x *
+      (∫ y, Real.exp (-α * |x - y|) * dyadicHaarStep R m c y) := by
+  apply exponentialKernel_integral_nonneg hα
+  · simpa only [mul_one] using
+      integrable_dyadicHaarStep_mul_continuous
+        R m c (fun _ => (1 : ℝ)) continuous_const
+  · exact measurable_dyadicHaarStep R m c
 
 theorem finiteDyadicHaarMatrix_mulVec_sum_zero (m : ℕ)
     (c : FiniteDyadicHaarIndex m → ℝ) :
@@ -127,14 +159,14 @@ open MeasureTheory Set
 noncomputable section
 
 theorem dyadicCellWidth_mul_count (R : ℝ) (m : ℕ) :
-    dyadicCellWidth R m * (2 : ℝ)^m = 2*R := by
+    dyadicCellWidth R m * (2 : ℝ) ^ m = 2 * R := by
   unfold dyadicCellWidth
   field_simp
 
-theorem dyadicCell_endpoints_bounds {R : ℝ} (hR : 0 ≤ R) (m : ℕ) (j : Fin (2^m)) :
+theorem dyadicCell_endpoints_bounds {R : ℝ} (hR : 0 ≤ R) (m : ℕ) (j : Fin (2 ^ m)) :
     -R ≤ dyadicCellLeft R m j ∧ dyadicCellRight R m j ≤ R := by
   have hw := dyadicCellWidth_nonneg hR m
-  have hj : (j.val : ℝ)+1 ≤ (2 : ℝ)^m := by
+  have hj : (j.val : ℝ) + 1 ≤ (2 : ℝ) ^ m := by
     exact_mod_cast (Nat.succ_le_iff.mpr j.isLt)
   have hm := mul_le_mul_of_nonneg_left hj hw
   rw [dyadicCellWidth_mul_count] at hm
@@ -142,7 +174,7 @@ theorem dyadicCell_endpoints_bounds {R : ℝ} (hR : 0 ≤ R) (m : ℕ) (j : Fin 
   dsimp [dyadicCellLeft, dyadicCellRight]
   constructor <;> nlinarith
 
-theorem abs_le_of_mem_dyadicCell {R : ℝ} (hR : 0 ≤ R) (m : ℕ) (j : Fin (2^m))
+theorem abs_le_of_mem_dyadicCell {R : ℝ} (hR : 0 ≤ R) (m : ℕ) (j : Fin (2 ^ m))
     {x : ℝ} (hx : x ∈ uIcc (dyadicCellLeft R m j) (dyadicCellRight R m j)) :
     |x| ≤ R := by
   rw [uIcc_of_le (dyadicCell_ordered hR m j)] at hx

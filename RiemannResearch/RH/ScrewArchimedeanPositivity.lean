@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import RiemannResearch.Analysis.ExponentialKernelGram
+import RiemannResearch.RH.FiniteDyadicCellKernel
 import RiemannResearch.RH.ScrewArchimedeanSeries
 
 /-!
@@ -19,6 +20,9 @@ Source: user-provided RH_Local_to_Global_Trace_Attack_Plan_2026-09-05,
 archimedean decomposition and Gram-factorization sections. These finite-node
 results do not yet prove the analogous integrated step/L2 statements, and do
 not give positivity of the complete signed arithmetic kernel.
+The individual-term dyadic theorem below is a later integrated extension;
+interchange of the full series or an infinite tail with the double integral
+remains open.
 -/
 
 namespace RiemannResearch.RH
@@ -50,7 +54,8 @@ theorem neg_archimedeanScrewTail_finite_nonneg {ι : Type*} [Fintype ι]
       archimedeanScrewTerm (k+J) (x i-x j))) * c j := by
   have hs (i j : ι) : Summable (fun k : ℕ =>
       c i * (-archimedeanScrewTerm (k+J) (x i-x j)) * c j) :=
-    ((((summable_nat_add_iff J).mpr (summable_archimedeanScrewTerm (x i-x j))).neg).mul_left (c i)).mul_right (c j)
+    ((((summable_nat_add_iff J).mpr
+      (summable_archimedeanScrewTerm (x i-x j))).neg).mul_left (c i)).mul_right (c j)
   have he : (∑' k : ℕ, ∑ i, ∑ j,
       c i * (-archimedeanScrewTerm (k+J) (x i-x j)) * c j) =
       ∑ i, ∑ j, c i * (-(∑' k : ℕ,
@@ -66,6 +71,59 @@ theorem neg_archimedeanScrewSeries_finite_nonneg {ι : Type*} [Fintype ι]
     0 ≤ ∑ i, ∑ j, c i * (-archimedeanScrewSeries (x i-x j)) * c j := by
   simpa only [archimedeanScrewSeries, Nat.add_zero] using
     neg_archimedeanScrewTail_finite_nonneg 0 x c hc
+
+open RiemannResearch.RH.PrimeGapCurvature
+open MeasureTheory
+
+/-- The actual integrated quadratic form of each negative archimedean
+summand is nonnegative on every dyadic Haar step. The mean-zero identity removes
+the constant part before the exponential Gram theorem supplies the sign. -/
+theorem neg_archimedeanScrewTerm_dyadic_integral_nonneg
+    {R : ℝ} (hR : 0 ≤ R) (m k : ℕ)
+    (c : FiniteDyadicHaarIndex m → ℝ) :
+    0 ≤ ∫ x, dyadicHaarStep R m c x *
+      (∫ y, (-archimedeanScrewTerm k (x - y)) *
+        dyadicHaarStep R m c y) := by
+  let u := dyadicHaarStep R m c
+  let A : ℝ := 4 * archimedeanWeight k
+  let e : ℝ → ℝ → ℝ :=
+    fun x y => Real.exp (-archimedeanRate k * |x - y|)
+  have hecont : Continuous (Function.uncurry e) := by
+    unfold e
+    fun_prop
+  have hgauge := finiteCellKernel_gauge_invariant
+    (dyadicCellLeft R m) (dyadicCellRight R m)
+    ((finiteDyadicHaarMatrix m).mulVec c) (dyadicCell_ordered hR m)
+    (fun x y => A * e x y) (continuous_const.mul hecont)
+    (fun _ => -A) (fun _ => 0) continuous_const
+    (dyadicHaarStep_integral_zero hR m c)
+  have hkernel (x y : ℝ) :
+      A * e x y + -A + 0 = -archimedeanScrewTerm k (x - y) := by
+    unfold A e archimedeanScrewTerm
+    ring
+  have heq :
+      (∫ x, u x * (∫ y, (-archimedeanScrewTerm k (x - y)) * u y)) =
+        A * (∫ x, u x * (∫ y, e x y * u y)) := by
+    have hg : (∫ x, u x *
+        (∫ y, (A * e x y + -A + 0) * u y)) =
+        ∫ x, u x * (∫ y, A * e x y * u y) := by
+      simpa only [u, dyadicHaarStep] using hgauge
+    simp_rw [hkernel] at hg
+    rw [hg]
+    have hinner (x : ℝ) :
+        (∫ y, A * e x y * u y) = A * (∫ y, e x y * u y) := by
+      have h := integral_const_mul (μ := volume) A (fun y => e x y * u y)
+      simpa only [mul_assoc] using h
+    simp_rw [hinner]
+    have hout := integral_const_mul (μ := volume) A
+      (fun x => u x * (∫ y, e x y * u y))
+    simpa only [mul_assoc, mul_left_comm, mul_comm] using hout
+  rw [heq]
+  apply mul_nonneg
+  · exact mul_nonneg (by norm_num) (archimedeanWeight_nonneg k)
+  · unfold e u
+    exact dyadicHaarStep_exponentialKernel_integral_nonneg
+      (archimedeanRate_pos k) R m c
 
 end
 end RiemannResearch.RH

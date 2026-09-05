@@ -189,6 +189,9 @@ source material.
   Volterra-feature product identity and the square-integral Gram formula
   `exponentialKernel_finite_gram`. For every positive rate this gives
   nonnegativity on arbitrary finite configurations of real points.
+  It now also proves absolute integrability of the three-variable Volterra
+  product and `exponentialKernel_integral_gram`, so the actual convolution
+  quadratic form is nonnegative for every measurable integrable real test.
 - `RiemannResearch.RH.ScrewArchimedeanPositivity` proves
   `neg_archimedeanScrewTail_finite_nonneg` and
   `neg_archimedeanScrewSeries_finite_nonneg`: the negative archimedean
@@ -196,6 +199,9 @@ source material.
   with zero-sum real coefficients. Summability and interchanges are proved.
   This establishes one signed component, not complete arithmetic positivity
   or the corresponding integrated step/L2 theorem.
+  The declaration `neg_archimedeanScrewTerm_dyadic_integral_nonneg`
+  separately proves the actual integrated sign of every individual term on
+  dyadic Haar steps; integrated series/tail interchange remains open.
 - `RiemannResearch.RH.ArithmeticScrewKernel` defines the full elementary
   arithmetic expression with polar, prime-power, linear, and archimedean
   terms. It proves continuity, evenness, value zero at zero, symmetry of the

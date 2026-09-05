@@ -31,6 +31,16 @@ def finiteCellStep {ι : Type*} [Fintype ι]
     (a b c : ι → ℝ) (x : ℝ) : ℝ :=
   ∑ i, (Ioc (a i) (b i)).indicator (fun _ => c i) x
 
+@[fun_prop]
+theorem measurable_finiteCellStep {ι : Type*} [Fintype ι]
+    (a b c : ι → ℝ) :
+    Measurable (finiteCellStep a b c) := by
+  classical
+  unfold finiteCellStep
+  apply Finset.measurable_sum
+  intro i hi
+  exact measurable_const.indicator measurableSet_Ioc
+
 theorem integrable_mul_finiteCellStep {ι : Type*} [Fintype ι]
     (a b c : ι → ℝ) (f : ℝ → ℝ) (hf : Continuous f) :
     Integrable (fun x => f x * finiteCellStep a b c x) := by
