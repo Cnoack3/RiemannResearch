@@ -32,6 +32,8 @@ def archimedeanRate (k : ℕ) : ℝ := (4*(k : ℝ)+1)/2
 def archimedeanScrewTerm (k : ℕ) (t : ℝ) : ℝ :=
   4 * (1 - Real.exp (-archimedeanRate k * |t|)) * archimedeanWeight k
 def archimedeanScrewSeries (t : ℝ) : ℝ := ∑' k : ℕ, archimedeanScrewTerm k t
+def archimedeanScrewTail (J : ℕ) (t : ℝ) : ℝ :=
+  ∑' k : ℕ, archimedeanScrewTerm (k + J) t
 
 theorem archimedeanWeight_nonneg (k : ℕ) : 0 ≤ archimedeanWeight k := by
   unfold archimedeanWeight
@@ -82,6 +84,13 @@ theorem continuous_archimedeanScrewTerm (k : ℕ) :
 theorem continuous_archimedeanScrewSeries : Continuous archimedeanScrewSeries :=
   continuous_tsum continuous_archimedeanScrewTerm
     (summable_archimedeanWeight.mul_left 4) norm_archimedeanScrewTerm_le
+
+theorem continuous_archimedeanScrewTail (J : ℕ) :
+    Continuous (archimedeanScrewTail J) := by
+  apply continuous_tsum (fun k => continuous_archimedeanScrewTerm (k + J))
+    (((summable_nat_add_iff J).mpr summable_archimedeanWeight).mul_left 4)
+  intro k t
+  exact norm_archimedeanScrewTerm_le (k + J) t
 
 theorem archimedeanScrewSeries_zero : archimedeanScrewSeries 0 = 0 := by
   simp [archimedeanScrewSeries, archimedeanScrewTerm]
@@ -157,9 +166,16 @@ theorem archimedeanScrewSeries_tail_bounds (J : ℕ) (t : ℝ) :
       _ ≤ ∑' k : ℕ, 4*archimedeanWeight (k+J) := by
         apply Summable.tsum_le_tsum _ hs (hw.mul_left 4)
         intro k
-        exact le_trans (le_abs_self _) (by simpa [Real.norm_eq_abs] using (norm_archimedeanScrewTerm_le (k+J) t))
+        exact le_trans (le_abs_self _) (by
+          simpa [Real.norm_eq_abs] using norm_archimedeanScrewTerm_le (k+J) t)
       _ = 4 * (∑' k : ℕ, archimedeanWeight (k+J)) := tsum_mul_left
       _ ≤ _ := mul_le_mul_of_nonneg_left (tsum_archimedeanWeight_tail_le J) (by norm_num)
+
+theorem archimedeanScrewTail_bounds (J : ℕ) (t : ℝ) :
+    0 ≤ archimedeanScrewTail J t ∧
+      archimedeanScrewTail J t ≤ 4 * archimedeanTailMajorant J := by
+  simpa only [archimedeanScrewTail] using
+    archimedeanScrewSeries_tail_bounds J t
 
 open Filter
 open scoped Topology

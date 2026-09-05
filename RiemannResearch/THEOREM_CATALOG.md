@@ -197,11 +197,14 @@ source material.
   `neg_archimedeanScrewSeries_finite_nonneg`: the negative archimedean
   series and every infinite tail are nonnegative on finite configurations
   with zero-sum real coefficients. Summability and interchanges are proved.
-  This establishes one signed component, not complete arithmetic positivity
-  or the corresponding integrated step/L2 theorem.
-  The declaration `neg_archimedeanScrewTerm_dyadic_integral_nonneg`
-  separately proves the actual integrated sign of every individual term on
-  dyadic Haar steps; integrated series/tail interchange remains open.
+  For actual integrals, `neg_archimedeanScrewTerm_dyadic_integral_eq`
+  isolates each exponential Gram term exactly.
+  `neg_archimedeanScrewTail_integral_eq_tsum` proves the infinite-tail
+  interchange on every integrable real test by an absolute product-space
+  majorant, while `neg_archimedeanScrewTail_dyadic_integral_bounds_l1`
+  gives dyadic nonnegativity and the explicit bound
+  `4 * B_J * (∫ |u|)^2`. This controls one signed component, not complete
+  arithmetic positivity or the sharper support-based L2 remainder estimate.
 - `RiemannResearch.RH.ArithmeticScrewKernel` defines the full elementary
   arithmetic expression with polar, prime-power, linear, and archimedean
   terms. It proves continuity, evenness, value zero at zero, symmetry of the
