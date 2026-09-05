@@ -202,6 +202,12 @@ source material.
   anchored kernel, and `arithmeticScrewHaarMatrix_quadratic`, the exact
   actual integral/Haar-matrix identity. Its finite approximation has
   explicit pointwise errors on bounded windows.
+- `RiemannResearch.RH.ScrewPolarQuadratic` proves the exact polar
+  quadratic identity for integrable real tests with integrable positive and
+  negative exponential moments. It retains the constant correction
+  `8 * (∫ x, u x)^2`, derives the mean-zero reduction, and specializes it
+  to dyadic Haar steps. These are signed component identities; no
+  nonnegativity of the full arithmetic form or RH consequence is asserted.
 - `RiemannResearch.LinearAlgebra.FiniteQuadraticError` proves
   `quadratic_error_of_entrywise_bound` for arbitrary real finite matrices.
 - `RiemannResearch.RH.ArithmeticScrewCellBounds` proves exact finite

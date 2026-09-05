@@ -46,6 +46,15 @@ def dyadicHaarStep (R : ℝ) (m : ℕ) (c : FiniteDyadicHaarIndex m → ℝ) : �
   finiteCellStep (dyadicCellLeft R m) (dyadicCellRight R m)
     ((finiteDyadicHaarMatrix m).mulVec c)
 
+theorem integrable_dyadicHaarStep_mul_continuous
+    (R : ℝ) (m : ℕ) (c : FiniteDyadicHaarIndex m → ℝ)
+    (f : ℝ → ℝ) (hf : Continuous f) :
+    Integrable (fun x => dyadicHaarStep R m c x * f x) := by
+  unfold dyadicHaarStep
+  simpa only [mul_comm] using
+    integrable_mul_finiteCellStep (dyadicCellLeft R m) (dyadicCellRight R m)
+      ((finiteDyadicHaarMatrix m).mulVec c) f hf
+
 theorem finiteDyadicHaarMatrix_mulVec_sum_zero (m : ℕ)
     (c : FiniteDyadicHaarIndex m → ℝ) :
     ∑ j, (finiteDyadicHaarMatrix m).mulVec c j = 0 := by

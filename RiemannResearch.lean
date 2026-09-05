@@ -49,6 +49,7 @@ import RiemannResearch.Analysis.ExponentialKernelGram
 import RiemannResearch.LinearAlgebra.FiniteQuadraticError
 import RiemannResearch.RH.ArithmeticScrewCellBounds
 import RiemannResearch.RH.ArithmeticScrewKernel
+import RiemannResearch.RH.ScrewPolarQuadratic
 import RiemannResearch.RH.ScrewArchimedeanPositivity
 import RiemannResearch.RH.ScrewArchimedeanSeries
 import RiemannResearch.RH.ScrewPrimePart
