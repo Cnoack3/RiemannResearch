@@ -165,6 +165,17 @@ source material.
   directions. `FiniteSlopeCompression` supplies general family/basis versions.
   Actual cell-integral Weil kernels, arithmetic positivity, analytic density
   and limits remain open; these results are finite coordinate algebra.
+- `RiemannResearch.Analysis.FiniteCellKernel` proves actual iterated-integral
+  reconstruction for finite real cell steps and jointly continuous kernels,
+  proving all integrability used. Separated one-variable kernel terms cancel
+  on mean-zero steps, giving the exact anchored-screw/convolution identity.
+- `RiemannResearch.RH.FiniteDyadicCellKernel` constructs equal dyadic cells,
+  proves that literal Haar-generated steps have integral zero, and identifies
+  their actual kernel integrals with the exact cell-matrix Haar compression.
+  `dyadicHaarStep_screw_compression` combines this with anchor cancellation.
+  These are analytic reconstruction theorems for arbitrary continuous real
+  kernels, including R=0 and m=0. The complete arithmetic g, the Weil/RH
+  bridge, analytic density, and all-window arithmetic positivity remain Open.
 - `RiemannResearch.RH.FiniteCurvatureWeightedGreen` constructs the explicit
   weighted least-energy representative in every finite-curvature fiber.  Its
   moment formula `weightedAffineProjection` removes the weighted-orthogonal
