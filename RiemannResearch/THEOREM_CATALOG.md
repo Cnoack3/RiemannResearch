@@ -251,6 +251,15 @@ source material.
   the actual arithmetic form, whose signed comparison remains
   `q_approx ≤ q_actual`. The module also records the vacuous level-zero PSD
   and zero-window matrix boundaries.
+- `RiemannResearch.RH.ArithmeticFiniteFirstLevelCertificate` proves the
+  exact level-one, cutoff-two scalar formula and rigorous rational lower
+  bounds for its polar and first four archimedean contributions. Exact bounds
+  for Euler's constant, `log π`, `log 2`, and π give the live linear/pole
+  coefficient an upper bound of `269/100`. At `R = 1/16`, `J = 4`,
+  the unique diagonal is above `1/500000`, yielding native finite PSD and,
+  through the signed comparison, native PSD of the actual arithmetic Haar
+  matrix at that same window and level. This is not all-level positivity,
+  completed-Weil positivity, or RH.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.
