@@ -169,13 +169,26 @@ source material.
   reconstruction for finite real cell steps and jointly continuous kernels,
   with all integrability used. Separated one-variable terms cancel on
   mean-zero steps. It also supplies continuous-kernel subtraction and
-  uniform rectangle-integral error bounds.
+  uniform rectangle-integral error bounds, global finite-step norm bounds,
+  and square integrability without disjoint-cell assumptions. Quadratic
+  subtraction carries explicit inner and outer integrability evidence.
+- `RiemannResearch.Analysis.SupportL2Bound` proves the support Cauchy bound
+  `(∫ |u|)^2 ≤ 2R * ∫ u^2` with explicit L1/L2 integrability and vanishing
+  outside `[-R,R]`, including the zero-length interval without division.
+- `RiemannResearch.Analysis.PrimitiveEnergy` proves the exact signed identity
+  `q_abs(u) = -2 * ∫ U^2` for compactly supported real integrable mean-zero
+  tests, where `U(t)=∫ x in Iic t, u x`. Joint measurability and absolute
+  triple integrability precede Fubini; primitive-square integrability and
+  component nonpositivity are also proved, including empty support intervals.
 - `RiemannResearch.Analysis.HingeKernel` defines the common hinge and proves
   continuity, evenness, and exact finite-window inactivity. This previously
   published module is retained and used by HingeKernelIntegral and ScrewPrimePart.
 - `RiemannResearch.RH.FiniteDyadicCellKernel` constructs equal dyadic cells,
   proves their support bounds and Haar-step mean zero, and identifies actual
   kernel integrals with the exact Haar compression, including R=0 and m=0.
+  It also proves pointwise vanishing outside the support window, square
+  integrability, and the exact support-length L1-to-L2 estimate. It specializes
+  the primitive-energy identity and cumulative-square integrability to Haar steps.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.
@@ -203,8 +216,10 @@ source material.
   interchange on every integrable real test by an absolute product-space
   majorant, while `neg_archimedeanScrewTail_dyadic_integral_bounds_l1`
   gives dyadic nonnegativity and the explicit bound
-  `4 * B_J * (∫ |u|)^2`. This controls one signed component, not complete
-  arithmetic positivity or the sharper support-based L2 remainder estimate.
+  `4 * B_J * (∫ |u|)^2`. The sharp support-based theorem
+  `neg_archimedeanScrewTail_dyadic_integral_bounds_l2` strengthens the upper
+  bound to `8 * R * B_J * ∫ u^2`. This controls one signed component,
+  not complete arithmetic positivity.
 - `RiemannResearch.RH.ArithmeticScrewKernel` defines the full elementary
   arithmetic expression with polar, prime-power, linear, and archimedean
   terms. It proves continuity, evenness, value zero at zero, symmetry of the
@@ -215,7 +230,9 @@ source material.
   quadratic identity for integrable real tests with integrable positive and
   negative exponential moments. It retains the constant correction
   `8 * (∫ x, u x)^2`, derives the mean-zero reduction, and specializes it
-  to dyadic Haar steps. These are signed component identities; no
+  to dyadic Haar steps. Its hyperbolic version gives `-8 C^2 + 8 S^2`
+  for mean-zero tests, retaining the mean correction in the general theorem.
+  These are signed component identities; no
   nonnegativity of the full arithmetic form or RH consequence is asserted.
 - `RiemannResearch.LinearAlgebra.FiniteQuadraticError` proves
   `quadratic_error_of_entrywise_bound` for arbitrary real finite matrices.
@@ -223,6 +240,17 @@ source material.
   prime-power cell sums for N>exp(2R), entry errors at most
   `4*B_J*h^2`, and `dyadicCell_arithmeticScrewApprox_quadratic_error`
   with bound `4*B_J*h^2*(sum_i |s_i|)^2` in every slope direction.
+  On mean-zero Haar steps, its exact actual-minus-approximation identity is
+  the negative archimedean tail quadratic form, yielding the one-sided
+  enclosure `q_approx ≤ q_actual ≤ q_approx + 8*R*B_J*∫u^2` for N>exp(2R).
+  This lower approximation need not be nonnegative.
+- `RiemannResearch.RH.ArithmeticScrewQuadraticDecomposition` proves
+  `dyadicHaarStep_arithmeticScrewFunction_quadratic_decomposition` and
+  `arithmeticScrewHaarMatrix_quadratic_decomposition`: exact signed polar
+  squares, all active von Mangoldt prime-power hinge quadratics, negative
+  cumulative-primitive energy, and the infinite positive Volterra Gram series.
+  Every sign and coefficient is inherited from the defined elementary function.
+  This assembles components; it does not prove full arithmetic positivity.
   Source-normalization/Lerch agreement, identification with the zeta
   zero sum or Weil distribution, analytic density, complexification,
   the Weil/RH endpoint, and all-window full arithmetic positivity remain

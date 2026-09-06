@@ -51,6 +51,29 @@ theorem integrable_mul_finiteCellStep {ι : Type*} [Fintype ι]
   intro i hi
   exact (hf.mul continuous_const).integrableOn_Ioc.integrable_indicator measurableSet_Ioc
 
+/-- A finite-cell step is globally bounded, even when its cells overlap. -/
+theorem norm_finiteCellStep_le {ι : Type*} [Fintype ι]
+    (a b c : ι → ℝ) (x : ℝ) :
+    ‖finiteCellStep a b c x‖ ≤ ∑ i, ‖c i‖ := by
+  classical
+  unfold finiteCellStep
+  apply (norm_sum_le _ _).trans
+  apply Finset.sum_le_sum
+  intro i hi
+  by_cases hx : x ∈ Ioc (a i) (b i)
+  · simp [hx]
+  · simp [hx]
+
+/-- Square integrability of a finite step, without a disjoint-cell hypothesis. -/
+theorem integrable_finiteCellStep_sq {ι : Type*} [Fintype ι]
+    (a b c : ι → ℝ) :
+    Integrable (fun x => (finiteCellStep a b c x) ^ 2) := by
+  have hu : Integrable (finiteCellStep a b c) := by
+    simpa using integrable_mul_finiteCellStep a b c (fun _ => 1) continuous_const
+  simpa only [pow_two] using
+    hu.mul_bdd (measurable_finiteCellStep a b c).aestronglyMeasurable
+      (Filter.Eventually.of_forall (norm_finiteCellStep_le a b c))
+
 theorem integral_mul_finiteCellStep {ι : Type*} [Fintype ι]
     (a b c : ι → ℝ) (hab : ∀ i, a i ≤ b i)
     (f : ℝ → ℝ) (hf : Continuous f) :
@@ -219,6 +242,21 @@ theorem integral_integral_sub {k l : ℝ → ℝ → ℝ}
       hl c d).intervalIntegrable a b
   simp_rw [intervalIntegral.integral_sub (hki _) (hli _)]
   exact (intervalIntegral.integral_sub hko hlo).symm
+
+/-- Subtract actual quadratic integrals only after proving both integrabilities. -/
+theorem finiteCellKernel_quadratic_sub {ι : Type*} [Fintype ι]
+    (a b c : ι → ℝ) (hab : ∀ i, a i ≤ b i)
+    (k l : ℝ → ℝ → ℝ)
+    (hk : Continuous (Function.uncurry k)) (hl : Continuous (Function.uncurry l)) :
+    (∫ x, finiteCellStep a b c x * (∫ y, k x y * finiteCellStep a b c y)) -
+      (∫ x, finiteCellStep a b c x * (∫ y, l x y * finiteCellStep a b c y)) =
+    (∫ x, finiteCellStep a b c x *
+      (∫ y, (k x y - l x y) * finiteCellStep a b c y)) := by
+  have hki := finiteCellKernel_integrable a b c hab k hk
+  have hli := finiteCellKernel_integrable a b c hab l hl
+  symm
+  simp_rw [sub_mul, integral_sub (hki.1 _) (hli.1 _), mul_sub]
+  exact integral_sub hki.2 hli.2
 
 end
 end RiemannResearch.Analysis

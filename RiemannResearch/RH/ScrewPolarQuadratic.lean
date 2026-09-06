@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import RiemannResearch.RH.ArithmeticScrewKernel
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-!
 # Exact polar quadratic form
@@ -12,8 +13,9 @@ The polar summand of the elementary arithmetic screw function is evaluated as
 an exact rank-two quadratic form. For an integrable real test with integrable
 positive and negative exponential moments, the iterated integral is the
 product of those moments plus the constant-kernel correction. On mean-zero
-tests the correction vanishes. A final theorem specializes this identity to
-the project's dyadic Haar steps.
+tests the correction vanishes. The hyperbolic rewrite retains the negative
+cosh square and positive sinh square. Both versions specialize to the
+project's dyadic Haar steps.
 
 Source: the signed decomposition in the user-provided
 RH_Local_to_Global_Trace_Attack_Plan_2026-09-05.pdf supports the statement and
@@ -183,6 +185,82 @@ theorem dyadicHaarStep_screwPolarPart_quadratic
       (fun x => Real.exp (-x / 2))
       (Real.continuous_exp.comp (continuous_neg.div_const 2))
   · exact dyadicHaarStep_integral_zero hR m c
+
+/-- Exact hyperbolic polar identity; the mean correction is retained. -/
+theorem screwPolarPart_quadratic_integral_hyperbolic
+    (u : ℝ → ℝ)
+    (hu : Integrable u)
+    (hp : Integrable (fun x => u x * Real.exp (x / 2)))
+    (hm : Integrable (fun x => u x * Real.exp (-x / 2))) :
+    (∫ x, u x * (∫ y, screwPolarPart (x - y) * u y)) =
+      -8 * (∫ x, u x * Real.cosh (x / 2)) ^ 2 +
+      8 * (∫ x, u x * Real.sinh (x / 2)) ^ 2 +
+      8 * (∫ x, u x) ^ 2 := by
+  have hC :
+      (∫ x, u x * Real.cosh (x / 2)) =
+        ((∫ x, u x * Real.exp (x / 2)) +
+          (∫ x, u x * Real.exp (-x / 2))) / 2 := by
+    calc
+      (∫ x, u x * Real.cosh (x / 2)) =
+          ∫ x, (u x * Real.exp (x / 2) +
+            u x * Real.exp (-x / 2)) / 2 := by
+        apply integral_congr_ae
+        filter_upwards with x
+        rw [Real.cosh_eq]
+        simp only [neg_div]
+        ring
+      _ = _ := by rw [integral_div, integral_add hp hm]
+  have hS :
+      (∫ x, u x * Real.sinh (x / 2)) =
+        ((∫ x, u x * Real.exp (x / 2)) -
+          (∫ x, u x * Real.exp (-x / 2))) / 2 := by
+    calc
+      (∫ x, u x * Real.sinh (x / 2)) =
+          ∫ x, (u x * Real.exp (x / 2) -
+            u x * Real.exp (-x / 2)) / 2 := by
+        apply integral_congr_ae
+        filter_upwards with x
+        rw [Real.sinh_eq]
+        simp only [neg_div]
+        ring
+      _ = _ := by rw [integral_div, integral_sub hp hm]
+  rw [screwPolarPart_quadratic_integral u hu hp hm, hC, hS]
+  ring
+
+/-- On mean-zero tests the polar form has a negative cosh and positive sinh square. -/
+theorem screwPolarPart_quadratic_integral_hyperbolic_of_zero
+    (u : ℝ → ℝ)
+    (hu : Integrable u)
+    (hp : Integrable (fun x => u x * Real.exp (x / 2)))
+    (hm : Integrable (fun x => u x * Real.exp (-x / 2)))
+    (hzero : (∫ x, u x) = 0) :
+    (∫ x, u x * (∫ y, screwPolarPart (x - y) * u y)) =
+      -8 * (∫ x, u x * Real.cosh (x / 2)) ^ 2 +
+      8 * (∫ x, u x * Real.sinh (x / 2)) ^ 2 := by
+  rw [screwPolarPart_quadratic_integral_hyperbolic u hu hp hm, hzero]
+  ring
+
+/-- Exact signed hyperbolic polar form on dyadic Haar steps. -/
+theorem dyadicHaarStep_screwPolarPart_quadratic_hyperbolic
+    {R : ℝ} (hR : 0 ≤ R) (m : ℕ)
+    (c : FiniteDyadicHaarIndex m → ℝ) :
+    (∫ x, dyadicHaarStep R m c x *
+      (∫ y, screwPolarPart (x - y) * dyadicHaarStep R m c y)) =
+      -8 * (∫ x, dyadicHaarStep R m c x * Real.cosh (x / 2)) ^ 2 +
+      8 * (∫ x, dyadicHaarStep R m c x * Real.sinh (x / 2)) ^ 2 := by
+  apply screwPolarPart_quadratic_integral_hyperbolic_of_zero
+      (u := dyadicHaarStep R m c)
+  · simpa only [mul_one] using
+      integrable_dyadicHaarStep_mul_continuous
+        R m c (fun _ => (1 : ℝ)) continuous_const
+  · exact integrable_dyadicHaarStep_mul_continuous R m c
+      (fun x => Real.exp (x / 2))
+      (Real.continuous_exp.comp (continuous_id.div_const 2))
+  · exact integrable_dyadicHaarStep_mul_continuous R m c
+      (fun x => Real.exp (-x / 2))
+      (Real.continuous_exp.comp (continuous_neg.div_const 2))
+  · exact dyadicHaarStep_integral_zero hR m c
+
 
 end
 end RiemannResearch.RH

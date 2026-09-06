@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cnoack3
 -/
 import RiemannResearch.Analysis.ExponentialKernelGram
+import RiemannResearch.Analysis.PrimitiveEnergy
+import RiemannResearch.Analysis.SupportL2Bound
 import RiemannResearch.Analysis.FiniteCellKernel
 import RiemannResearch.RH.FiniteDyadicHaarCompression
 
@@ -180,6 +182,61 @@ theorem abs_le_of_mem_dyadicCell {R : ℝ} (hR : 0 ≤ R) (m : ℕ) (j : Fin (2 
   rw [uIcc_of_le (dyadicCell_ordered hR m j)] at hx
   have hb := dyadicCell_endpoints_bounds hR m j
   exact abs_le.mpr ⟨hb.1.trans hx.1, hx.2.trans hb.2⟩
+
+/-- The actual Ioc-cell step vanishes outside its closed support window. -/
+theorem dyadicHaarStep_eq_zero_of_not_mem {R : ℝ} (hR : 0 ≤ R)
+    (m : ℕ) (c : FiniteDyadicHaarIndex m → ℝ) {x : ℝ}
+    (hx : x ∉ Icc (-R) R) : dyadicHaarStep R m c x = 0 := by
+  classical
+  unfold dyadicHaarStep finiteCellStep
+  apply Finset.sum_eq_zero
+  intro j hj
+  apply Set.indicator_of_notMem
+  intro hcell
+  apply hx
+  have hb := dyadicCell_endpoints_bounds hR m j
+  exact ⟨hb.1.trans hcell.1.le, hcell.2.trans hb.2⟩
+
+/-- Every dyadic Haar step has an integrable square. -/
+theorem integrable_dyadicHaarStep_sq (R : ℝ) (m : ℕ)
+    (c : FiniteDyadicHaarIndex m → ℝ) :
+    Integrable (fun x => dyadicHaarStep R m c x ^ 2) := by
+  unfold dyadicHaarStep
+  exact integrable_finiteCellStep_sq _ _ _
+
+/-- Exact support-length Cauchy bound, including the degenerate window. -/
+theorem dyadicHaarStep_integral_norm_sq_le {R : ℝ} (hR : 0 ≤ R)
+    (m : ℕ) (c : FiniteDyadicHaarIndex m → ℝ) :
+    (∫ x, ‖dyadicHaarStep R m c x‖) ^ 2 ≤
+      2 * R * (∫ x, dyadicHaarStep R m c x ^ 2) := by
+  apply integral_norm_sq_le_support_length_mul_integral_sq hR
+  · simpa only [mul_one] using
+      integrable_dyadicHaarStep_mul_continuous R m c (fun _ => (1 : ℝ)) continuous_const
+  · exact integrable_dyadicHaarStep_sq R m c
+  · intro x hx
+    exact dyadicHaarStep_eq_zero_of_not_mem hR m c hx
+
+theorem dyadicHaarStep_absKernel_integral_eq {R : ℝ} (hR : 0 ≤ R)
+    (m : ℕ) (c : FiniteDyadicHaarIndex m → ℝ) :
+    (∫ x, dyadicHaarStep R m c x *
+      (∫ y, |x-y| * dyadicHaarStep R m c y)) =
+      -2 * (∫ t, (∫ x in Iic t, dyadicHaarStep R m c x)^2) := by
+  apply absKernel_integral_eq_neg_two_cumulative_sq (-R) R
+  · simpa only [mul_one] using
+      integrable_dyadicHaarStep_mul_continuous R m c (fun _ => (1 : ℝ)) continuous_const
+  · intro x hx
+    exact dyadicHaarStep_eq_zero_of_not_mem hR m c hx
+  · exact dyadicHaarStep_integral_zero hR m c
+
+theorem integrable_dyadicHaarStep_cumulative_sq {R : ℝ} (hR : 0 ≤ R)
+    (m : ℕ) (c : FiniteDyadicHaarIndex m → ℝ) :
+    Integrable (fun t => (∫ x in Iic t, dyadicHaarStep R m c x)^2) := by
+  apply integrable_cumulativeIntegral_sq (-R) R
+  · simpa only [mul_one] using
+      integrable_dyadicHaarStep_mul_continuous R m c (fun _ => (1 : ℝ)) continuous_const
+  · intro x hx
+    exact dyadicHaarStep_eq_zero_of_not_mem hR m c hx
+  · exact dyadicHaarStep_integral_zero hR m c
 
 end
 end RiemannResearch.RH.PrimeGapCurvature

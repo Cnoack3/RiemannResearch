@@ -19,6 +19,8 @@ import RiemannResearch.RH.FiniteCenteredSlopeMatrixFormula
 import RiemannResearch.RH.FiniteDyadicHaarSlope
 import RiemannResearch.RH.FiniteDyadicHaarBasis
 import RiemannResearch.RH.FiniteDyadicHaarCompression
+import RiemannResearch.Analysis.PrimitiveEnergy
+import RiemannResearch.Analysis.SupportL2Bound
 import RiemannResearch.Analysis.FiniteCellKernel
 import RiemannResearch.Analysis.HingeKernel
 import RiemannResearch.RH.FiniteDyadicCellKernel
@@ -47,6 +49,7 @@ import RiemannResearch.RH.CombinedAudited.WeightedPythagoras
 import RiemannResearch.RH.CombinedAudited
 import RiemannResearch.Analysis.ExponentialKernelGram
 import RiemannResearch.LinearAlgebra.FiniteQuadraticError
+import RiemannResearch.RH.ArithmeticScrewQuadraticDecomposition
 import RiemannResearch.RH.ArithmeticScrewCellBounds
 import RiemannResearch.RH.ArithmeticScrewKernel
 import RiemannResearch.RH.ScrewPolarQuadratic

@@ -19,9 +19,9 @@ part; no arithmetic positivity hypothesis is used.
 Source: user-provided RH_Local_to_Global_Trace_Attack_Plan_2026-09-05,
 archimedean decomposition and Gram-factorization sections. The integrated
 theorems below prove the actual infinite-tail interchange, dyadic positivity,
-and an explicit L1 remainder bound. The support-based L2 refinement and
-positivity of the complete signed arithmetic kernel remain separate
-obligations.
+and explicit L1 and sharp support-based L2 remainder bounds.
+Positivity of the complete signed arithmetic kernel remains a separate
+obligation.
 -/
 
 namespace RiemannResearch.RH
@@ -371,6 +371,29 @@ theorem neg_archimedeanScrewTail_dyadic_integral_bounds_l1
       norm_neg_archimedeanScrewTail_integral_le_l1_sq J u hu
     rw [Real.norm_eq_abs, abs_of_nonneg hnonneg] at hbound
     exact hbound
+
+/-- Sharp support-based L2 enclosure for the negative archimedean tail only.
+Source: user-provided RH trace attack plan (2026-09-05), page 3.
+This does not assert positivity of the complete arithmetic form. -/
+theorem neg_archimedeanScrewTail_dyadic_integral_bounds_l2
+    {R : ℝ} (hR : 0 ≤ R) (m J : ℕ)
+    (c : FiniteDyadicHaarIndex m → ℝ) :
+    0 ≤ ∫ x, dyadicHaarStep R m c x *
+      (∫ y, (-archimedeanScrewTail J (x - y)) * dyadicHaarStep R m c y) ∧
+    (∫ x, dyadicHaarStep R m c x *
+      (∫ y, (-archimedeanScrewTail J (x - y)) * dyadicHaarStep R m c y)) ≤
+      8 * R * archimedeanTailMajorant J *
+        (∫ x, dyadicHaarStep R m c x ^ 2) := by
+  have h := neg_archimedeanScrewTail_dyadic_integral_bounds_l1 hR m J c
+  have hB : 0 ≤ archimedeanTailMajorant J := by
+    unfold archimedeanTailMajorant
+    exact add_nonneg (archimedeanWeight_nonneg J) (by positivity)
+  have hmul := mul_le_mul_of_nonneg_left
+    (dyadicHaarStep_integral_norm_sq_le hR m c)
+    (mul_nonneg (by norm_num : (0 : ℝ) ≤ 4) hB)
+  refine ⟨h.1, h.2.trans ?_⟩
+  convert hmul using 1
+  ring
 
 end
 end RiemannResearch.RH
