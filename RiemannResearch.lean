@@ -22,6 +22,7 @@ import RiemannResearch.RH.FiniteDyadicHaarCompression
 import RiemannResearch.Analysis.PrimitiveEnergy
 import RiemannResearch.Analysis.SupportL2Bound
 import RiemannResearch.Analysis.CompactKernelQuadraticContinuity
+import RiemannResearch.Analysis.ComplexKernelQuadratic
 import RiemannResearch.Analysis.FiniteCellKernel
 import RiemannResearch.Analysis.HingeKernel
 import RiemannResearch.RH.FiniteDyadicCellKernel
@@ -54,6 +55,7 @@ import RiemannResearch.LinearAlgebra.FiniteQuadraticError
 import RiemannResearch.RH.ArithmeticScrewQuadraticDecomposition
 import RiemannResearch.RH.ArithmeticScrewCellBounds
 import RiemannResearch.RH.ArithmeticScrewKernel
+import RiemannResearch.RH.ArithmeticDyadicPositivityTransfer
 import RiemannResearch.RH.ScrewPolarQuadratic
 import RiemannResearch.RH.ScrewArchimedeanPositivity
 import RiemannResearch.RH.ScrewArchimedeanSeries

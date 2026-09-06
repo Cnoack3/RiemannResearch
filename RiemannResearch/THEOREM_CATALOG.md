@@ -184,6 +184,13 @@ source material.
   nonnegativity from a mean-zero L2-dense test class. The density and
   approximating-test positivity inputs remain hypotheses; no arithmetic
   positivity, Weil identification, or RH conclusion is supplied.
+- `RiemannResearch.Analysis.ComplexKernelQuadratic` defines the actual
+  conjugate-first complex quadratic form for real kernels and proves absolute
+  product and outer integrability before Fubini. For symmetric continuous
+  kernels it identifies the form exactly with the sum of the real quadratic
+  forms of the real and imaginary parts. Its positivity transfer retains real
+  positivity as an explicit premise and concludes zero imaginary part plus a
+  nonnegative real part; complex numbers are not assigned an order.
 - `RiemannResearch.Analysis.PrimitiveEnergy` proves the exact signed identity
   `q_abs(u) = -2 * ∫ U^2` for compactly supported real integrable mean-zero
   tests, where `U(t)=∫ x in Iic t, u x`. Joint measurability and absolute
@@ -204,8 +211,18 @@ source material.
   convergence for every integrable, square-integrable, compact-window-supported
   mean-zero real test. The proof handles R=0 before positive-width cancellation
   and includes m=0. This closes the real fixed-window dyadic density bridge;
-  arithmetic positivity, completed-Weil agreement, complexification, support
+  arithmetic positivity, completed-Weil agreement, and support
   exhaustion, and the RH endpoint remain open.
+- `RiemannResearch.RH.ArithmeticDyadicPositivityTransfer` is a conditional
+  research reduction: positivity of the exact arithmetic-screw quadratic form
+  on every dyadic Haar coefficient vector at every level transfers to every
+  real integrable, square-integrable, mean-zero test on the same compact
+  support window. A matrix-facing form uses the existing unnormalized
+  `arithmeticScrewHaarMatrix` without rescaling. The all-level matrix
+  premise also conditionally yields zero imaginary part and nonnegative real
+  part for the actual complex form on mean-zero tests with integrable component
+  squares. The all-level positivity premise, support exhaustion, completed Weil
+  identification, and RH endpoint remain open.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.
