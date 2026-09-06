@@ -175,6 +175,15 @@ source material.
 - `RiemannResearch.Analysis.SupportL2Bound` proves the support Cauchy bound
   `(∫ |u|)^2 ≤ 2R * ∫ u^2` with explicit L1/L2 integrability and vanishing
   outside `[-R,R]`, including the zero-length interval without division.
+- `RiemannResearch.Analysis.CompactKernelQuadraticContinuity` proves product
+  and iterated integrability for bounded measurable kernels on a fixed support
+  window, exact quadratic subtraction, and quantitative L1/L2 continuity.
+  It shows that square-integral convergence on the common window implies
+  convergence of the actual full-line quadratic integrals. For jointly
+  continuous kernels it also gives an explicitly conditional transfer of
+  nonnegativity from a mean-zero L2-dense test class. The density and
+  approximating-test positivity inputs remain hypotheses; no arithmetic
+  positivity, Weil identification, or RH conclusion is supplied.
 - `RiemannResearch.Analysis.PrimitiveEnergy` proves the exact signed identity
   `q_abs(u) = -2 * ∫ U^2` for compactly supported real integrable mean-zero
   tests, where `U(t)=∫ x in Iic t, u x`. Joint measurability and absolute
@@ -189,6 +198,14 @@ source material.
   It also proves pointwise vanishing outside the support window, square
   integrability, and the exact support-length L1-to-L2 estimate. It specializes
   the primitive-energy identity and cumulative-square integrability to Haar steps.
+- `RiemannResearch.RH.DyadicL2Density` constructs genuine averages on the
+  literal Ioc dyadic cells, proves their exact zero-sum Haar reconstruction
+  in the existing unnormalized basis, and establishes whole-line squared-L2
+  convergence for every integrable, square-integrable, compact-window-supported
+  mean-zero real test. The proof handles R=0 before positive-width cancellation
+  and includes m=0. This closes the real fixed-window dyadic density bridge;
+  arithmetic positivity, completed-Weil agreement, complexification, support
+  exhaustion, and the RH endpoint remain open.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.

@@ -21,9 +21,11 @@ import RiemannResearch.RH.FiniteDyadicHaarBasis
 import RiemannResearch.RH.FiniteDyadicHaarCompression
 import RiemannResearch.Analysis.PrimitiveEnergy
 import RiemannResearch.Analysis.SupportL2Bound
+import RiemannResearch.Analysis.CompactKernelQuadraticContinuity
 import RiemannResearch.Analysis.FiniteCellKernel
 import RiemannResearch.Analysis.HingeKernel
 import RiemannResearch.RH.FiniteDyadicCellKernel
+import RiemannResearch.RH.DyadicL2Density
 import RiemannResearch.RH.FiniteCurvatureWeightedGreen
 import RiemannResearch.RH.TripleCurvatureCompression
 import RiemannResearch.RH.InnovationLittleOObstruction
