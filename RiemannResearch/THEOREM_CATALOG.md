@@ -243,6 +243,14 @@ source material.
   subtracted truncated archimedean cells. It then expands every entry of the
   literal unnormalized Haar matrix as a finite double sum. These are exact
   finite formulas, not positivity certificates.
+- `RiemannResearch.RH.ArithmeticFiniteFirstLevel` proves that the first
+  nonempty Haar matrix is PSD exactly when its unique diagonal is nonnegative,
+  with a literal four-cell formula. At `R = 1/4`, `N = 2`, `J = 0`,
+  Lean certifies the admissible cutoff but proves that diagonal is below
+  `-5/1536`. This is an exact obstruction to that finite truncation, not to
+  the actual arithmetic form, whose signed comparison remains
+  `q_approx ≤ q_actual`. The module also records the vacuous level-zero PSD
+  and zero-window matrix boundaries.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.

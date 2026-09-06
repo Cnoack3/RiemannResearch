@@ -58,6 +58,7 @@ import RiemannResearch.RH.ArithmeticScrewKernel
 import RiemannResearch.RH.ArithmeticDyadicPositivityTransfer
 import RiemannResearch.RH.ArithmeticFiniteApproxPositivity
 import RiemannResearch.RH.ArithmeticFiniteEntryFormulas
+import RiemannResearch.RH.ArithmeticFiniteFirstLevel
 import RiemannResearch.RH.ScrewPolarQuadratic
 import RiemannResearch.RH.ScrewArchimedeanPositivity
 import RiemannResearch.RH.ScrewArchimedeanSeries
