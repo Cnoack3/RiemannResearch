@@ -223,6 +223,18 @@ source material.
   part for the actual complex form on mean-zero tests with integrable component
   squares. The all-level positivity premise, support exhaustion, completed Weil
   identification, and RH endpoint remain open.
+- `RiemannResearch.RH.ArithmeticFiniteApproxPositivity` defines the literal
+  Haar compression of the existing exact finite arithmetic approximation and
+  proves its exact quadratic reconstruction. Using the signed archimedean-tail
+  theorem, it proves the one-sided implication
+  `q_approx ≤ q_actual`; no pointwise comparison is integrated against signed
+  Haar products. Consequently, nonnegativity of one admissible finite
+  approximation implies actual arithmetic Haar nonnegativity at the same level.
+  If such an exact finite certificate exists at every Haar level, the published
+  density and continuity bridges give positivity for all supported mean-zero
+  real tests and zero imaginary part plus nonnegative real part for complex
+  tests on the fixed window. Existence of the finite certificates, support
+  exhaustion, completed Weil agreement, and the RH endpoint remain open.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.
