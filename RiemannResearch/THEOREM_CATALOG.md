@@ -224,17 +224,25 @@ source material.
   squares. The all-level positivity premise, support exhaustion, completed Weil
   identification, and RH endpoint remain open.
 - `RiemannResearch.RH.ArithmeticFiniteApproxPositivity` defines the literal
-  Haar compression of the existing exact finite arithmetic approximation and
-  proves its exact quadratic reconstruction. Using the signed archimedean-tail
-  theorem, it proves the one-sided implication
-  `q_approx ≤ q_actual`; no pointwise comparison is integrated against signed
-  Haar products. Consequently, nonnegativity of one admissible finite
-  approximation implies actual arithmetic Haar nonnegativity at the same level.
-  If such an exact finite certificate exists at every Haar level, the published
-  density and continuity bridges give positivity for all supported mean-zero
-  real tests and zero imaginary part plus nonnegative real part for complex
-  tests on the fixed window. Existence of the finite certificates, support
-  exhaustion, completed Weil agreement, and the RH endpoint remain open.
+  Haar compression of the exact finite arithmetic approximation and proves its
+  quadratic reconstruction and the signed implication `q_approx ≤ q_actual`.
+  It now also proves approximation evenness, cell and Haar symmetry, Hermitian
+  structure, an exact native `Matrix.PosSemidef` interface, and conditional
+  fixed/all-level real and complex transfers. A generic entrywise interval
+  certificate implies native PSD when its exact enclosures and strict margins
+  are supplied. No finite certificate, completed-Weil agreement, or RH endpoint
+  is proved.
+- `RiemannResearch.Analysis.TranslationKernelCellIntegral` proves a generic
+  four-corner double-integral theorem and exact cells for exponential,
+  absolute-value, and exponential-absolute-value translation kernels on
+  arbitrary oriented intervals. The exponential-absolute-value second
+  primitive is globally `C²`, including at the origin.
+- `RiemannResearch.RH.ArithmeticFiniteEntryFormulas` evaluates the finite
+  approximation cell as the exact signed sum of the polar cell, the full finite
+  von Mangoldt prime-power cells, the linear absolute-value cell, and the
+  subtracted truncated archimedean cells. It then expands every entry of the
+  literal unnormalized Haar matrix as a finite double sum. These are exact
+  finite formulas, not positivity certificates.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.
