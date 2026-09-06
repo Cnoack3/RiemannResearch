@@ -273,6 +273,19 @@ source material.
   gamma/pole coefficient, four archimedean modes, and Haar normalization are
   retained. This is not all-level or all-window arithmetic positivity,
   completed-Weil positivity, or RH.
+- `RiemannResearch.RH.ArithmeticFiniteThirdLevelCertificate` proves the
+  exact seven-dimensional unnormalized Haar compression at level three.
+  At `R = 1/16`, `N = 2`, and `J = 4`, exact rational exponential
+  enclosures, reflection blocks, rational shears, and strict row diagonal
+  dominance give the unconditional lower bound `1/1000000000` times the
+  sum of squares of all seven Haar coefficients. An exact eight-cell
+  prefix-sum identity proves the auxiliary form is below the literal finite
+  arithmetic form, and the signed tail comparison transfers the same bound
+  and native PSD to the actual arithmetic Haar matrix at this fixed window
+  and level. The complete range-two von Mangoldt sum, polar correction,
+  live gamma/pole coefficient, four archimedean modes, and Haar normalization
+  are retained. This is not all-level or all-window arithmetic positivity,
+  completed-Weil positivity, or RH.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.
