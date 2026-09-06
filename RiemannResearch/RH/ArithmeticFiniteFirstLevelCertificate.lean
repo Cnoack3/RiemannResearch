@@ -26,7 +26,6 @@ finite-cell strategy. The rational enclosures are proved from Mathlib bounds.
 -/
 
 set_option maxRecDepth 4096
-set_option maxHeartbeats 1000000
 
 open scoped BigOperators
 open RiemannResearch.Analysis RiemannResearch.RH.PrimeGapCurvature
@@ -137,6 +136,8 @@ theorem sixteenth_polar_lower :
   nlinarith [sq_nonneg
     (Real.exp (1/32 : ℝ)+Real.exp (-1/32 : ℝ)-2 - 97/100000)]
 
+set_option maxHeartbeats 1000000 in
+-- The eight twelfth-order exponential enclosures need extra elaboration time.
 /-- Rational lower bound for the first four archimedean contributions at
 `R = 1/16`. -/
 theorem sixteenth_archimedean_lower :
@@ -258,7 +259,7 @@ theorem arithmeticScrewHaarMatrix_isHermitian (R : ℝ) (m : ℕ) :
 approximation to the actual arithmetic Haar matrix. -/
 theorem arithmeticScrewHaarMatrix_posSemidef_of_approx_posSemidef
     {R : ℝ} (hR : 0 ≤ R) (m N J : ℕ)
-    (hN : Real.exp (2*R) < N)
+    (hN : Real.exp (2 * R) < N)
     (hpos : (arithmeticScrewApproxHaarMatrix R m N J).PosSemidef) :
     (arithmeticScrewHaarMatrix R m).PosSemidef := by
   rw [Matrix.posSemidef_iff_dotProduct_mulVec]

@@ -260,6 +260,19 @@ source material.
   through the signed comparison, native PSD of the actual arithmetic Haar
   matrix at that same window and level. This is not all-level positivity,
   completed-Weil positivity, or RH.
+- `RiemannResearch.RH.ArithmeticFiniteSecondLevelCertificate` proves the
+  exact three-dimensional unnormalized Haar compression at level two,
+  including all nine Toeplitz entries and a sum-of-squares quadratic
+  decomposition. At `R = 1/16`, `N = 2`, and `J = 4`, certified
+  rational Taylor enclosures give the finite quadratic form the unconditional
+  lower bound `21/100000000` times the sum of squares of its three Haar
+  coefficients. Hence the finite matrix is natively positive semidefinite,
+  and the signed tail comparison transfers the same lower bound and native
+  PSD to the actual arithmetic Haar matrix at this fixed window and level.
+  The complete range-two von Mangoldt sum, polar correction, live
+  gamma/pole coefficient, four archimedean modes, and Haar normalization are
+  retained. This is not all-level or all-window arithmetic positivity,
+  completed-Weil positivity, or RH.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.
