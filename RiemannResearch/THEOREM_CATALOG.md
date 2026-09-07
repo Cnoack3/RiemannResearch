@@ -300,6 +300,21 @@ source material.
   PSD to the actual arithmetic Haar matrix at this fixed window and level.
   This is not all-level or all-window arithmetic positivity, completed-Weil
   positivity, or RH.
+- The seven-module level-five certificate package, culminating in
+  `RiemannResearch.RH.ArithmeticFiniteFifthLevelCertificate`, extracts reusable
+  endpoint-jump, reflection-block, coefficient-Gram, rational interval, and
+  integer-shear certificate infrastructure. At `R = 1/16`, `m = 5`,
+  `N = 2`, and `J = 5`, exact rational exponential enclosures and
+  denominator-10000 unit-upper shears give the unconditional lower bound
+  `1/1000000000` times the sum of squares of all thirty-one native
+  unnormalized Haar coefficients. The odd sixteen-dimensional and even
+  fifteen-dimensional reflected blocks have certified positive margins
+  `7500436/10^15` and `12178181/10^15`. The literal finite form retains the
+  complete range-two von Mangoldt sum, polar correction, live gamma/pole
+  coefficient, and all five archimedean modes. The signed comparison proves
+  the same quantitative bound and native PSD for the actual arithmetic Haar
+  matrix at this fixed window and level. This is not all-level or all-window
+  arithmetic positivity, completed-Weil positivity, or RH.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.
