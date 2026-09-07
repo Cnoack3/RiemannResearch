@@ -62,6 +62,7 @@ import RiemannResearch.RH.ArithmeticFiniteFirstLevel
 import RiemannResearch.RH.ArithmeticFiniteFirstLevelCertificate
 import RiemannResearch.RH.ArithmeticFiniteSecondLevelCertificate
 import RiemannResearch.RH.ArithmeticFiniteThirdLevelCertificate
+import RiemannResearch.RH.ArithmeticFiniteFourthLevelCertificate
 import RiemannResearch.RH.ScrewPolarQuadratic
 import RiemannResearch.RH.ScrewArchimedeanPositivity
 import RiemannResearch.RH.ScrewArchimedeanSeries

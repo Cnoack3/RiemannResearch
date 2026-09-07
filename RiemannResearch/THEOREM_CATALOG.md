@@ -286,6 +286,20 @@ source material.
   live gamma/pole coefficient, four archimedean modes, and Haar normalization
   are retained. This is not all-level or all-window arithmetic positivity,
   completed-Weil positivity, or RH.
+- `RiemannResearch.RH.ArithmeticFiniteFourthLevelCertificate` proves the
+  exact fifteen-dimensional unnormalized Haar compression at level four.
+  At `R = 1/16`, `N = 2`, and `J = 5`, all sixteen primitive
+  values are enclosed by rigorous rational exponential bounds. Exact
+  jump-stencil and Toeplitz identities, an eight-plus-seven reflection split,
+  denominator-1000 rational shears, and strict row diagonal dominance give
+  the unconditional lower bound `1/1000000000` times the sum of squares of
+  all fifteen Haar coefficients. The exact auxiliary comparison retains the
+  complete range-two von Mangoldt sum, polar correction, live gamma/pole
+  coefficient, all five archimedean modes, and Haar normalization. The
+  established signed tail comparison transfers the same lower bound and native
+  PSD to the actual arithmetic Haar matrix at this fixed window and level.
+  This is not all-level or all-window arithmetic positivity, completed-Weil
+  positivity, or RH.
 - `RiemannResearch.Analysis.HingeKernelIntegral` proves positive-part
   power derivatives at every point, hinge primitives, and the exact
   four-corner double cell formula, including threshold crossings.
