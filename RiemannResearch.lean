@@ -6,6 +6,7 @@ import RiemannResearch.LinearAlgebra.TwoBlockCommonOptimizer
 import RiemannResearch.GroupTheory.AddSubgroupCRT
 import RiemannResearch.RH.Basic
 import RiemannResearch.RH.CombinedGain
+import RiemannResearch.RH.TwoChannelConditionalGain
 import RiemannResearch.RH.PrimePhaseCRT
 import RiemannResearch.RH.PrimeGapCurvature
 import RiemannResearch.RH.FiniteCurvatureGreen
