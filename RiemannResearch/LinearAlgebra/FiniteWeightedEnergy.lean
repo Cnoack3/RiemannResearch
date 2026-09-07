@@ -163,4 +163,39 @@ theorem affine_normal_det_positive
   rw [affine_normal_det_double_sum s w t] at hsum
   linarith
 
+/-- Exact square completion with reciprocal coordinate weights.
+Source: user-provided RH_Pareto_CRT_Enlargement_and_Dual_Obstruction_2026-09-07.md,
+§§6 and 12. Used by genuine Möbius witness error-floor certificates. -/
+theorem finite_weighted_square_completion {ι : Type*} (s : Finset ι)
+    (w c x : ι → ℝ) (t : ℝ) (hw : ∀ i ∈ s, w i ≠ 0) :
+    (∑ i ∈ s, (x i - t*w i*c i)^2 / w i) =
+      (∑ i ∈ s, (x i)^2 / w i) - 2*t*(∑ i ∈ s, c i*x i) +
+        t^2*(∑ i ∈ s, w i*(c i)^2) := by
+  simp_rw [Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  field_simp [hw i hi]
+  ring
+
+/-- A finite dual bound; positive weights and positive dual energy are explicit. -/
+theorem finite_weighted_dual_bound {ι : Type*} (s : Finset ι)
+    (w c x : ι → ℝ) (hw : ∀ i ∈ s, 0 < w i)
+    (hn : 0 < ∑ i ∈ s, w i*(c i)^2) :
+    (∑ i ∈ s, c i*x i)^2 / (∑ i ∈ s, w i*(c i)^2) ≤
+      ∑ i ∈ s, (x i)^2 / w i := by
+  let L := ∑ i ∈ s, c i*x i
+  let N := ∑ i ∈ s, w i*(c i)^2
+  have h := finite_weighted_square_completion s w c x (L/N)
+    (fun i hi => ne_of_gt (hw i hi))
+  have hnonneg : 0 ≤ ∑ i ∈ s, (x i - (L/N)*w i*c i)^2 / w i := by
+    apply Finset.sum_nonneg
+    intro i hi
+    exact div_nonneg (sq_nonneg _) (le_of_lt (hw i hi))
+  have hn0 : N ≠ 0 := ne_of_gt hn
+  change L^2/N ≤ _
+  have he : -(2*(L/N)*L)+(L/N)^2*N = -(L^2/N) := by field_simp; ring
+  change _ = _ - 2*(L/N)*L+(L/N)^2*N at h
+  rw [sub_eq_add_neg, add_assoc, he] at h
+  linarith
+
 end RiemannResearch.LinearAlgebra

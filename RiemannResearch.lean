@@ -7,6 +7,13 @@ import RiemannResearch.GroupTheory.AddSubgroupCRT
 import RiemannResearch.RH.Basic
 import RiemannResearch.RH.CombinedGain
 import RiemannResearch.RH.TwoChannelConditionalGain
+import RiemannResearch.RH.ParetoResidueDuality
+import RiemannResearch.RH.ParetoPrimePackets
+import RiemannResearch.RH.ParetoFiniteCertificates
+import RiemannResearch.RH.ParetoPrimorialObstruction
+import RiemannResearch.RH.ParetoBoundedInteraction
+import RiemannResearch.RH.ParetoAnchoredGreen
+import RiemannResearch.RH.ParetoMobiusPotential
 import RiemannResearch.RH.PrimePhaseCRT
 import RiemannResearch.RH.PrimeGapCurvature
 import RiemannResearch.RH.FiniteCurvatureGreen
