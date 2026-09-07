@@ -16,11 +16,13 @@ import re
 import selectors
 import secrets
 import shutil
+import signal
 import subprocess
 import tempfile
 import threading
 import time
 from contextlib import contextmanager
+from functools import wraps
 from pathlib import Path
 from typing import Callable, Iterator
 
@@ -33,6 +35,7 @@ MAX_PATCH_BYTES = 2_000_000
 DEFAULT_READ_CHARS = 20_000
 MAX_METRICS_BYTES = 5_000_000
 PROGRESS_UPDATE_SECONDS = 60
+MAX_VERIFICATION_OUTPUT_BYTES = 32_000
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
     ".gitignore", "AGENTS.md", "README.md", "RiemannResearch.lean", "lakefile.toml"
@@ -41,6 +44,19 @@ ROOT_READABLE = ROOT_WRITABLE | {
     "lake-manifest.json", "lakefile.toml", "lean-toolchain"
 }
 WRITABLE_SUFFIXES = {".lean", ".md", ".toml", ".yml", ".yaml", ".json"}
+
+
+def _workspace_operation(method):
+    """Serialize full managed mutations, not merely their initial idle check."""
+    @wraps(method)
+    def locked(self, token, *args, **kwargs):
+        if method.__name__ != "_get":
+            # Fail fast when already busy, then repeat the authoritative check
+            # inside the decorated mutation after its full operation lock.
+            self._ensure_workspace_idle(token, method.__name__)
+        with self._operation_lock(token):
+            return method(self, token, *args, **kwargs)
+    return locked
 
 
 class AgentWorkspaceManager:
@@ -73,7 +89,7 @@ class AgentWorkspaceManager:
             raise ValueError("LEAN_LAKE_BUILD_THREADS must be between 1 and 8")
         self.lake_build_threads = min(requested_build_threads, self.lean_num_threads)
         try:
-            self.job_workers = int(os.environ.get("LEAN_JOB_WORKERS", "2"))
+            self.job_workers = int(os.environ.get("LEAN_JOB_WORKERS", "1"))
         except ValueError as exc:
             raise ValueError("LEAN_JOB_WORKERS must be an integer") from exc
         if not 1 <= self.job_workers <= 4:
@@ -108,7 +124,15 @@ class AgentWorkspaceManager:
         self._job_guard = threading.Lock()
         self._metrics_guard = threading.Lock()
         self._job_local = threading.local()
+        self._operation_local = threading.local()
         self._active_jobs: set[str] = set()
+        # A lifetime lease distinguishes another live manager from an actual
+        # restart. The OS releases it on process exit, including SIGKILL.
+        self._owner_id = secrets.token_hex(16)
+        self._owner_directory = self.state / "job-owners"
+        self._owner_directory.mkdir(exist_ok=True)
+        self._owner_lease = (self._owner_directory / self._owner_id).open("a+")
+        fcntl.flock(self._owner_lease.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         self._recover_interrupted_jobs()
         self._job_worker_threads = [
             threading.Thread(
@@ -384,6 +408,27 @@ class AgentWorkspaceManager:
             finally:
                 fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
+    @contextmanager
+    def _operation_lock(self, token: str) -> Iterator[None]:
+        """Cross-process, same-thread-reentrant lease for managed workspace operations.
+
+        Admission/status never take this potentially long-held lock. External
+        writers and raw Lean/LSP clients do not participate in this protocol.
+        """
+        self._meta_path(token)
+        held = getattr(self._operation_local, "held", None)
+        if held is None:
+            held = self._operation_local.held = set()
+        if token in held:
+            yield
+            return
+        with self._lock(self.state / f"{token}.operation.lock"):
+            held.add(token)
+            try:
+                yield
+            finally:
+                held.remove(token)
+
     def _meta_path(self, token: str) -> Path:
         if not TOKEN_RE.fullmatch(token):
             raise ValueError("Invalid workspace token; call agent_workspace_open without a token")
@@ -650,10 +695,11 @@ class AgentWorkspaceManager:
         self.cleanup(retention_days=self.retention_days, dry_run=False)
         if resume_token:
             self._meta_path(resume_token)
-            with self._lock(self.state / f"{resume_token}.lock"):
+            with self._operation_lock(resume_token), self._lock(self.state / f"{resume_token}.lock"):
                 meta = self._read_meta(resume_token)
                 project = Path(meta["path"])
                 if not project.is_dir() or meta.get("needs_rehydrate"):
+                    self._ensure_workspace_idle(resume_token, "restore workspace")
                     project = self._rehydrate(meta)
                 resumed = True
                 meta["last_activity"] = time.time()
@@ -673,7 +719,7 @@ class AgentWorkspaceManager:
                     "needs_rehydrate": False,
                 }
                 self._write_meta(meta)
-            with self._lock(self.state / f"{token}.lock"):
+            with self._operation_lock(token), self._lock(self.state / f"{token}.lock"):
                 project_cache = self._clone(project)
                 head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
                 meta.update(base_commit=head, state="active", project_cache=project_cache)
@@ -681,6 +727,7 @@ class AgentWorkspaceManager:
                 resumed = False
         return self.describe(meta, resumed=resumed)
 
+    @_workspace_operation
     def _get(self, token: str, *, rehydrate: bool = True) -> tuple[dict, Path]:
         self._meta_path(token)
         with self._lock(self.state / f"{token}.lock"):
@@ -688,6 +735,7 @@ class AgentWorkspaceManager:
             project = Path(meta["path"])
             self._validate_workspace_path(token, project)
             if rehydrate and (not project.is_dir() or meta.get("needs_rehydrate")):
+                self._ensure_workspace_idle(token, "restore workspace")
                 project = self._rehydrate(meta)
             if not project.is_dir():
                 raise RuntimeError(
@@ -737,7 +785,7 @@ class AgentWorkspaceManager:
             raise ValueError("pattern is too long")
         if not 1 <= limit <= 1000:
             raise ValueError("limit must be between 1 and 1000")
-        _, project = self._get(token)
+        _, project = self._read_project(token)
         output = self._run(["rg", "--files", "-g", "!.git/**", "-g", "!.lake/**"], cwd=project)
         files = []
         for raw in output.splitlines():
@@ -788,7 +836,7 @@ class AgentWorkspaceManager:
         if not 80 <= max_match_chars <= 1000:
             raise ValueError("max_match_chars must be between 80 and 1000")
 
-        _, project = self._get(token)
+        _, project = self._read_project(token)
         listed = self.list_files(token, limit=1000)
         paths = [path for path in listed["files"] if fnmatch.fnmatch(path, file_glob)]
         needle = query if case_sensitive else query.casefold()
@@ -853,7 +901,7 @@ class AgentWorkspaceManager:
             raise ValueError("Use a valid 1-based line range")
         if not 1 <= max_chars <= 100_000:
             raise ValueError("max_chars must be between 1 and 100000")
-        _, project = self._get(token)
+        _, project = self._read_project(token)
         normalized, resolved = self._relative(project, path)
         if not resolved.is_file() or resolved.stat().st_size > MAX_READ_BYTES:
             raise ValueError("File is missing or too large")
@@ -902,6 +950,7 @@ class AgentWorkspaceManager:
             raise ValueError("Expected a unified Git patch")
         return sorted(set(paths))
 
+    @_workspace_operation
     def apply_patch(self, token: str, patch: str) -> dict:
         self._ensure_workspace_idle(token, "apply a patch")
         _, project = self._get(token)
@@ -918,7 +967,7 @@ class AgentWorkspaceManager:
         }
 
     def git_status(self, token: str) -> dict:
-        meta, project = self._get(token, rehydrate=False)
+        meta, project = self._read_project(token)
         return {
             "workspace_token": token,
             "state": meta["state"],
@@ -929,12 +978,13 @@ class AgentWorkspaceManager:
         }
 
     def git_diff(self, token: str) -> dict:
-        _, project = self._get(token, rehydrate=False)
+        _, project = self._read_project(token)
         return {
             "unstaged": self._run(["git", "diff", "--no-ext-diff", "--"], cwd=project),
             "staged": self._run(["git", "diff", "--cached", "--no-ext-diff", "--"], cwd=project),
         }
 
+    @_workspace_operation
     def sync(self, token: str) -> dict:
         self._ensure_workspace_idle(token, "synchronize")
         meta, project = self._get(token, rehydrate=False)
@@ -950,6 +1000,7 @@ class AgentWorkspaceManager:
         after = self._run(["git", "rev-parse", "HEAD"], cwd=project)
         return {"before": head, "after": after, "changed": head != after, "project_root": str(project)}
 
+    @_workspace_operation
     def update_dependencies(self, token: str, package: str = "") -> dict:
         self._ensure_workspace_idle(token, "update dependencies")
         if package and not PACKAGE_RE.fullmatch(package):
@@ -968,53 +1019,214 @@ class AgentWorkspaceManager:
         key = self._attach_dependencies(project)
         return {"updated": package or "all", "shared_dependency_key": key, "output": output[-12000:]}
 
-    def run_code(self, token: str, code: str, timeout_seconds: int = 300) -> dict:
-        self._ensure_workspace_idle(token, "run Lean code")
-        if not code.strip():
+    @staticmethod
+    def _validate_verification_timeout(timeout_seconds: int) -> None:
+        if type(timeout_seconds) is not int or not 1 <= timeout_seconds <= 1800:
+            raise ValueError("timeout_seconds must be an integer between 1 and 1800")
+
+    @classmethod
+    def _validate_code(cls, code: str, timeout_seconds: int) -> None:
+        if not isinstance(code, str) or not code.strip():
             raise ValueError("Lean code is empty")
         if len(code.encode("utf-8")) > MAX_PATCH_BYTES:
             raise ValueError("Lean code is too large")
-        if not 1 <= timeout_seconds <= 1800:
-            raise ValueError("timeout_seconds must be between 1 and 1800")
+        if "\x00" in code:
+            raise ValueError("Lean code contains a NUL character")
+        cls._validate_verification_timeout(timeout_seconds)
+
+    def _read_project(self, token: str) -> tuple[dict, Path]:
+        """Read-only snapshot; no restore, writer lock, or metadata overwrite.
+
+        Reads are not transactional against managed or external source changes.
+        Explicitly reopen archived/stale clones before reading or admission.
+        """
+        meta = self._read_meta(token)
+        project = Path(meta["path"])
+        self._validate_workspace_path(token, project)
+        if (
+            meta.get("state") not in {"active", "published"} or not project.is_dir()
+        ):
+            raise ValueError("Resume this workspace with agent_workspace_open before reading or verification")
+        return meta, project
+
+    def _verification_project(self, token: str) -> Path:
+        meta, project = self._read_project(token)
+        if meta.get("needs_rehydrate"):
+            raise ValueError("Resume this workspace with agent_workspace_open before verification")
+        return project
+
+    def _verification_file(self, project: Path, raw: str) -> tuple[str, Path, str]:
+        if not isinstance(raw, str) or not raw or len(raw) > 4096 or "\x00" in raw:
+            raise ValueError("Use an approved Lean file path of at most 4096 characters")
+        normalized, path = self._relative(project, raw)
+        if path.suffix != ".lean" or not path.is_file():
+            raise ValueError("Verification requires an existing approved .lean file")
+        if path.stat().st_size > MAX_READ_BYTES:
+            raise ValueError("Lean file is too large")
+        with path.open("rb") as handle:
+            content = handle.read(MAX_READ_BYTES + 1)
+        if len(content) > MAX_READ_BYTES:
+            raise ValueError("Lean file is too large")
+        return normalized, path, hashlib.sha256(content).hexdigest()
+
+    @staticmethod
+    def _request_sha256(token: str, kind: str, arguments: dict) -> str:
+        request = {"workspace_token": token, "kind": kind, "arguments": arguments}
+        encoded = json.dumps(
+            request, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        ).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+    @staticmethod
+    def _kill_verification_group(process: subprocess.Popen) -> None:
+        # Kill descendants even if the Lake parent has exited but they still
+        # hold its diagnostic pipe. Reap our direct child; orphan descendants
+        # are reaped by the host's init, not by this (non-subreaper) service.
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        process.wait()
+
+    def _run_verification(self, project: Path, path: Path, timeout_seconds: int) -> dict:
+        """Bound memory and wall time independently of Lean's logical limits."""
+        started = time.monotonic()
+        self._set_job_progress("verifying", detail="Checking Lean source", force=True)
+        try:
+            process = subprocess.Popen(
+                ["lake", "env", "lean", str(path)],
+                cwd=project,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                bufsize=0,
+                start_new_session=True,
+                env={
+                    **os.environ,
+                    "GIT_TERMINAL_PROMPT": "0",
+                    "LEAN_NUM_THREADS": str(self.lean_num_threads),
+                },
+            )
+        except OSError as exc:
+            return {
+                "verified": False, "classification": "process_error", "exit_code": None,
+                "error": f"{type(exc).__name__}: {exc}"[-1000:],
+                "timeout_seconds": timeout_seconds,
+                "elapsed_seconds": round(time.monotonic() - started, 3),
+                "output": "", "output_truncated": False, "output_bytes": 0,
+            }
+        selector = selectors.DefaultSelector()
+        tail = b""
+        output_bytes = 0
+        timed_out = False
+        deadline = started + timeout_seconds
+        try:
+            assert process.stdout is not None
+            selector.register(process.stdout, selectors.EVENT_READ)
+            while selector.get_map() or process.poll() is None:
+                now = time.monotonic()
+                if now >= deadline:
+                    if timed_out:
+                        break  # An escaped descendant must not hold us indefinitely.
+                    timed_out = True
+                    self._kill_verification_group(process)
+                    deadline = time.monotonic() + 1.0  # Bounded post-kill pipe drain.
+                for key, _ in selector.select(timeout=min(0.1, max(0.0, deadline - now))):
+                    chunk = os.read(key.fileobj.fileno(), 65536)
+                    if not chunk:
+                        selector.unregister(key.fileobj)
+                    else:
+                        output_bytes += len(chunk)
+                        tail = (tail + chunk)[-MAX_VERIFICATION_OUTPUT_BYTES:]
+            process.wait()
+        finally:
+            if process.poll() is None:
+                self._kill_verification_group(process)
+            selector.close()
+            if process.stdout is not None:
+                process.stdout.close()
+        verified = not timed_out and process.returncode == 0
+        output = tail.decode("utf-8", errors="replace").strip()
+        output_limit = 4000 if verified else 8000
+        return {
+            "verified": verified,
+            "classification": (
+                "wall_timeout" if timed_out else "success" if verified
+                else "process_error" if process.returncode < 0 else "compiler_error"
+            ),
+            "exit_code": process.returncode,
+            "timeout_seconds": timeout_seconds,
+            "elapsed_seconds": round(time.monotonic() - started, 3),
+            "output": output[-output_limit:],
+            "output_truncated": output_bytes > len(tail) or len(output) > output_limit,
+            "output_bytes": output_bytes,
+        }
+
+    @_workspace_operation
+    def run_code(self, token: str, code: str, timeout_seconds: int = 300) -> dict:
+        """Synchronous execution primitive; MCP callers should submit_run_code."""
+        self._ensure_workspace_idle(token, "run Lean code")
+        self._validate_code(code, timeout_seconds)
         _, project = self._get(token)
         scratch = project / ".lake" / "agent-scratch"
         scratch.mkdir(parents=True, exist_ok=True)
         path = scratch / f"Run_{secrets.token_hex(12)}.lean"
-        path.write_text(code, encoding="utf-8")
-        started = time.monotonic()
+        response = {
+            "workspace_token": token,
+            "project_root": str(project),
+            "request_sha256": self._request_sha256(
+                token, "run_code", {"code": code, "timeout_seconds": timeout_seconds}
+            ),
+            "code_sha256": hashlib.sha256(code.encode("utf-8")).hexdigest(),
+            "temporary_file_removed": False,
+        }
         try:
-            result = subprocess.run(
-                ["lake", "env", "lean", str(path)],
-                cwd=project,
-                text=True,
-                capture_output=True,
-                timeout=timeout_seconds,
-                check=False,
-                env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
-            )
-            output = (result.stdout + result.stderr).strip()
-            verified = result.returncode == 0
-            output_limit = 4000 if verified else 8000
-            response = {
-                "workspace_token": token,
-                "verified": verified,
-                "exit_code": result.returncode,
-                "output": output[-output_limit:],
-                "output_truncated": len(output) > output_limit,
-                "temporary_file_removed": True,
-                "project_root": str(project),
-            }
-            self._record_metric(
-                "run_code",
-                workspace=self._workspace_label(token),
-                elapsed_seconds=round(time.monotonic() - started, 3),
-                verified=verified,
-                request_chars=len(code),
-                output_chars=len(response["output"]),
-            )
-            return response
+            path.write_text(code, encoding="utf-8")
+            response.update(self._run_verification(project, path, timeout_seconds))
         finally:
-            path.unlink(missing_ok=True)
+            try:
+                path.unlink(missing_ok=True)
+            except OSError as exc:
+                response["cleanup_error"] = str(exc)[-1000:]
+            response["temporary_file_removed"] = not path.exists()
+        self._record_metric(
+            "run_code",
+            workspace=self._workspace_label(token),
+            elapsed_seconds=response["elapsed_seconds"],
+            verified=response["verified"],
+            request_chars=len(code),
+            output_chars=len(response["output"]),
+        )
+        return response
+
+    @_workspace_operation
+    def _check_file(self, token: str, path: str, timeout_seconds: int, file_sha256: str) -> dict:
+        self._ensure_workspace_idle(token, "check Lean file")
+        self._validate_verification_timeout(timeout_seconds)
+        _, project = self._get(token)
+        normalized, resolved, checked_sha256 = self._verification_file(project, path)
+        if checked_sha256 != file_sha256:
+            raise RuntimeError("Lean file changed after submission; submit its current contents again")
+        result = {
+            "workspace_token": token,
+            "project_root": str(project),
+            "path": normalized,
+            "file_sha256": file_sha256,
+            "checked_file_sha256": checked_sha256,
+            # No temporary file is created or removed for an existing-file check.
+            "temporary_file_removed": None,
+            **self._run_verification(project, resolved, timeout_seconds),
+        }
+        try:
+            unchanged = self._verification_file(project, path)[2] == file_sha256
+        except (OSError, ValueError):
+            unchanged = False
+        if not unchanged:
+            result.update(
+                verified=False,
+                classification="source_changed",
+                error="Lean file changed during verification; this result is not a certificate",
+            )
+        return result
 
     def _scan(self, project: Path) -> list[str]:
         warnings = []
@@ -1262,11 +1474,13 @@ class AgentWorkspaceManager:
         )
         return result
 
+    @_workspace_operation
     def build(self, token: str) -> dict:
         self._ensure_workspace_idle(token, "build")
         _, project = self._get(token)
         return self._build(project)
 
+    @_workspace_operation
     def checkpoint(self, token: str, message: str, push: bool = True) -> dict:
         self._ensure_workspace_idle(token, "checkpoint")
         message = message.strip()
@@ -1392,23 +1606,77 @@ class AgentWorkspaceManager:
         )
         os.replace(temporary, path)
 
-    def _recover_interrupted_jobs(self) -> None:
-        for path in self.jobs.glob("job_*.json"):
+    def _job_owner_alive(self, job: dict) -> bool:
+        owner = job.get("owner_id", "")
+        if not isinstance(owner, str) or not re.fullmatch(r"[0-9a-f]{32}", owner):
+            return False  # Legacy records have no liveness lease.
+        with (self._owner_directory / owner).open("a+") as handle:
             try:
-                job = json.loads(path.read_text(encoding="utf-8"))
-            except (OSError, ValueError, json.JSONDecodeError):
-                continue
-            if job.get("state") not in {"queued", "running"}:
-                continue
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                return True
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+        return False
+
+    def _recover_interrupted_jobs(self) -> None:
+        # Serialize recovery with admission, never with long-running execution.
+        # Pending jobs are never replayed: a checkpoint may have published just
+        # before the owner died, and retrying it automatically would be unsafe.
+        with self._lock(self.state / ".jobs-admission.lock"):
+            for path in self.jobs.glob("job_*.json"):
+                try:
+                    job = json.loads(path.read_text(encoding="utf-8"))
+                except (OSError, ValueError, json.JSONDecodeError):
+                    continue
+                self._interrupt_abandoned_job(job)
+
+    def _interrupt_abandoned_job(self, job: dict) -> dict:
+        """Caller holds admission lock and has read a fresh job record."""
+        if job.get("state") in {"queued", "running"} and not self._job_owner_alive(job):
             job.update(
                 state="interrupted",
                 finished_at=time.time(),
                 error=(
-                    "The MCP service restarted while this job was pending. Inspect workspace "
-                    "and Git status before submitting it again."
+                    "The job owner exited while this job was pending. Inspect workspace "
+                    "and Git status before submitting it again; it was not replayed."
                 ),
             )
             self._write_job(job)
+        return job
+
+    def _read_live_job(self, job_id: str) -> dict:
+        job = self._read_job(job_id)
+        if job.get("state") in {"queued", "running"} and not self._job_owner_alive(job):
+            with self._lock(self.state / ".jobs-admission.lock"):
+                job = self._interrupt_abandoned_job(self._read_job(job_id))
+        return job
+
+    @contextmanager
+    def _heavy_worker_slot(self) -> Iterator[None]:
+        """Admission for queued work across cooperating managers on this state root.
+
+        Explicit LEAN_JOB_WORKERS overrides select the slot count. All managers
+        should use the same setting. This does NOT limit raw LSP/external Lean,
+        synchronous internal helpers, or unrelated tools outside this queue.
+        """
+        self._set_job_progress(
+            "waiting_for_worker", detail="Waiting for a shared heavy-worker slot", force=True
+        )
+        while True:
+            for index in range(self.job_workers):
+                handle = (self.state / f".heavy-worker-{index}.lock").open("a+")
+                try:
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except BlockingIOError:
+                    handle.close()
+                    continue
+                try:
+                    yield
+                finally:
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+                    handle.close()
+                return
+            time.sleep(0.05)
 
     def _queue_position(self, job_id: str) -> int | None:
         with self._job_guard:
@@ -1422,7 +1690,7 @@ class AgentWorkspaceManager:
                 job = self._read_job(job_id)
                 return 1 if job.get("state") == "queued" else None
 
-    def _existing_job(self, token: str, kind: str) -> dict | None:
+    def _existing_job(self, token: str, kind: str, arguments: dict) -> dict | None:
         for path in self.jobs.glob("job_*.json"):
             try:
                 job = json.loads(path.read_text(encoding="utf-8"))
@@ -1431,6 +1699,7 @@ class AgentWorkspaceManager:
             if (
                 job.get("workspace_token") == token
                 and job.get("kind") == kind
+                and job.get("arguments") == arguments
                 and job.get("state") in {"queued", "running"}
             ):
                 return job
@@ -1454,6 +1723,10 @@ class AgentWorkspaceManager:
             return
         job = self._pending_job_for_workspace(token)
         if job is not None:
+            job = self._read_live_job(job["job_id"])
+            if job.get("state") not in {"queued", "running"}:
+                job = None
+        if job is not None:
             raise RuntimeError(
                 f"Cannot {operation} while job {job['job_id']} is {job['state']}; "
                 "poll agent_workspace_job_status until it is terminal."
@@ -1463,8 +1736,11 @@ class AgentWorkspaceManager:
         self._meta_path(token)
         if not self._meta_path(token).is_file():
             raise ValueError("Unknown workspace token")
-        with self._job_guard:
-            existing = self._existing_job(token, kind)
+        with self._job_guard, self._lock(self.state / ".jobs-admission.lock"):
+            pending = self._pending_job_for_workspace(token)
+            if pending is not None:
+                self._interrupt_abandoned_job(pending)
+            existing = self._existing_job(token, kind, arguments)
             if existing is not None:
                 job_id = existing["job_id"]
                 position = self._queue_position_unlocked(job_id)
@@ -1478,6 +1754,7 @@ class AgentWorkspaceManager:
                     "existing": True,
                     "job_id": job_id,
                     "state": existing["state"],
+                    "request_sha256": existing.get("request_sha256"),
                     "queue_position": position,
                     "retry_after_seconds": retry_after,
                     "instruction": "Poll after retry_after_seconds; do not resubmit.",
@@ -1494,6 +1771,8 @@ class AgentWorkspaceManager:
                 "workspace_token": token,
                 "kind": kind,
                 "arguments": arguments,
+                "request_sha256": self._request_sha256(token, kind, arguments),
+                "owner_id": self._owner_id,
                 "state": "queued",
                 "submitted_at": time.time(),
                 "progress": {
@@ -1506,6 +1785,10 @@ class AgentWorkspaceManager:
                     "updated_at": time.time(),
                 },
             }
+            if kind == "run_code":
+                job["code_sha256"] = hashlib.sha256(arguments["code"].encode("utf-8")).hexdigest()
+            elif kind == "check_file":
+                job["file_sha256"] = arguments["file_sha256"]
             self._write_job(job)
             self._job_queue.put(job_id)
             position = self._queue_position_unlocked(job_id)
@@ -1520,6 +1803,7 @@ class AgentWorkspaceManager:
             "accepted": True,
             "job_id": job_id,
             "state": "queued",
+            "request_sha256": job["request_sha256"],
             "queue_position": position,
             "worker_count": self.job_workers,
             "retry_after_seconds": min(120, 30 + 15 * max((position or 1) - 1, 0)),
@@ -1541,6 +1825,22 @@ class AgentWorkspaceManager:
 
     def submit_build(self, token: str) -> dict:
         return self._submit_job(token, "build", {})
+
+    def submit_run_code(self, token: str, code: str, timeout_seconds: int = 300) -> dict:
+        self._validate_code(code, timeout_seconds)
+        self._verification_project(token)
+        return self._submit_job(
+            token, "run_code", {"code": code, "timeout_seconds": timeout_seconds}
+        )
+
+    def submit_check_file(self, token: str, path: str, timeout_seconds: int = 300) -> dict:
+        self._validate_verification_timeout(timeout_seconds)
+        project = self._verification_project(token)
+        _, _, file_sha256 = self._verification_file(project, path)
+        return self._submit_job(
+            token, "check_file",
+            {"path": path, "timeout_seconds": timeout_seconds, "file_sha256": file_sha256},
+        )
 
     def submit_build_for_project(self, project_path: str) -> dict:
         project = Path(project_path).expanduser().resolve()
@@ -1580,6 +1880,12 @@ class AgentWorkspaceManager:
                 return self.checkpoint(token, arguments["message"], arguments["push"])
             if job["kind"] == "update_dependencies":
                 return self.update_dependencies(token, arguments.get("package", ""))
+            if job["kind"] == "run_code":
+                return self.run_code(token, arguments["code"], arguments["timeout_seconds"])
+            if job["kind"] == "check_file":
+                return self._check_file(
+                    token, arguments["path"], arguments["timeout_seconds"], arguments["file_sha256"]
+                )
             raise RuntimeError(f"Unsupported job kind: {job['kind']}")
         finally:
             self._job_local.workspace_token = None
@@ -1596,15 +1902,28 @@ class AgentWorkspaceManager:
             self._job_local.last_progress_write = 0.0
             self._job_local.progress = {}
             try:
-                result = self._execute_job(job)
+                with self._heavy_worker_slot():
+                    self._set_job_progress(
+                        "waiting_for_workspace", detail="Waiting for the workspace operation lock",
+                        force=True,
+                    )
+                    with self._operation_lock(job["workspace_token"]):
+                        result = self._execute_job(job)
+                result["request_sha256"] = job["request_sha256"]
             except Exception as exc:
                 job.update(
                     state="failed",
                     finished_at=time.time(),
-                    error=f"{type(exc).__name__}: {exc}",
+                    error=f"{type(exc).__name__}: {exc}"[-8000:],
                 )
             else:
-                job.update(state="succeeded", finished_at=time.time(), result=result)
+                verification_failed = (
+                    job["kind"] in {"run_code", "check_file"} and not result.get("verified")
+                )
+                job.update(
+                    state="failed" if verification_failed else "succeeded",
+                    finished_at=time.time(), result=result,
+                )
             finally:
                 with self._job_guard:
                     current = self._read_job(job_id)
@@ -1650,8 +1969,33 @@ class AgentWorkspaceManager:
             ]
         return value
 
+    def list_jobs(self, token: str, limit: int = 20) -> dict:
+        """Recover job IDs after a lost response; never include code, arguments, or logs."""
+        self._read_meta(token)
+        if type(limit) is not int or not 1 <= limit <= 100:
+            raise ValueError("limit must be an integer between 1 and 100")
+        jobs = []
+        for path in self.jobs.glob("job_*.json"):
+            try:
+                job = json.loads(path.read_text(encoding="utf-8"))
+                if job.get("workspace_token") != token:
+                    continue
+                job = self._read_live_job(job["job_id"])
+            except (OSError, ValueError, KeyError, json.JSONDecodeError):
+                continue
+            jobs.append({
+                key: job.get(key)
+                for key in ("job_id", "kind", "state", "request_sha256", "submitted_at")
+            })
+            jobs[-1]["terminal"] = job.get("state") in {"succeeded", "failed", "interrupted"}
+        jobs.sort(key=lambda job: (job["submitted_at"], job["job_id"]), reverse=True)
+        return {
+            "workspace_token": token, "jobs": jobs[:limit],
+            "total_matches": len(jobs), "truncated": len(jobs) > limit,
+        }
+
     def job_status(self, job_id: str, include_logs: bool = False) -> dict:
-        job = self._read_job(job_id)
+        job = self._read_live_job(job_id)
         now = time.time()
         response = {
             key: value
@@ -1703,6 +2047,7 @@ class AgentWorkspaceManager:
         )
         return response
 
+    @_workspace_operation
     def reset(self, token: str, confirmation_token: str = "") -> dict:
         self._ensure_workspace_idle(token, "reset")
         meta, project = self._get(token, rehydrate=False)
@@ -1754,43 +2099,52 @@ class AgentWorkspaceManager:
         cutoff = time.time() - retention_days * 86400
         archived, preserved = [], []
 
+        def inspect_workspace(path: Path) -> None:
+            # Re-read after acquiring the operation lease: an in-flight change
+            # may have refreshed metadata or dirtied the clone while we waited.
+            meta = json.loads(path.read_text(encoding="utf-8"))
+            token = meta["token"]
+            project = Path(meta["path"])
+            if meta.get("last_activity", 0) >= cutoff or not project.is_dir():
+                return
+            self._validate_workspace_path(token, project)
+            pending_job = self._pending_job_for_workspace(token)
+            if pending_job is not None:
+                preserved.append({
+                    "workspace_token": token,
+                    "reason": f"queued or running job {pending_job['job_id']}",
+                })
+                return
+            if self.can_archive is not None and not self.can_archive(project):
+                preserved.append({
+                    "workspace_token": token,
+                    "reason": "active Lean client or build",
+                })
+                return
+            status = self._run(["git", "status", "--porcelain"], cwd=project)
+            head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
+            safe_heads = {meta.get("published_commit"), meta.get("base_commit")}
+            if status or head not in safe_heads:
+                preserved.append({"workspace_token": token, "reason": "unpublished work"})
+                return
+            archived.append({"workspace_token": token, "commit": head})
+            if not dry_run:
+                if self.before_replace is not None:
+                    self.before_replace(project)
+                shutil.rmtree(project)
+                meta.update(
+                    state="archived", archive_commit=head, needs_rehydrate=True,
+                    archived_at=time.time(),
+                )
+                self._write_meta(meta)
+
         def perform() -> None:
             for path in self.state.glob("ws_*.json"):
                 meta = json.loads(path.read_text(encoding="utf-8"))
-                token = meta["token"]
-                project = Path(meta["path"])
-                if meta.get("last_activity", 0) >= cutoff or not project.is_dir():
+                if meta.get("last_activity", 0) >= cutoff:
                     continue
-                self._validate_workspace_path(token, project)
-                pending_job = self._pending_job_for_workspace(token)
-                if pending_job is not None:
-                    preserved.append({
-                        "workspace_token": token,
-                        "reason": f"queued or running job {pending_job['job_id']}",
-                    })
-                    continue
-                if self.can_archive is not None and not self.can_archive(project):
-                    preserved.append({
-                        "workspace_token": token,
-                        "reason": "active Lean client or build",
-                    })
-                    continue
-                status = self._run(["git", "status", "--porcelain"], cwd=project)
-                head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
-                safe_heads = {meta.get("published_commit"), meta.get("base_commit")}
-                if status or head not in safe_heads:
-                    preserved.append({"workspace_token": token, "reason": "unpublished work"})
-                    continue
-                archived.append({"workspace_token": token, "commit": head})
-                if not dry_run:
-                    if self.before_replace is not None:
-                        self.before_replace(project)
-                    shutil.rmtree(project)
-                    meta.update(
-                        state="archived", archive_commit=head, needs_rehydrate=True,
-                        archived_at=time.time(),
-                    )
-                    self._write_meta(meta)
+                with self._operation_lock(meta["token"]):
+                    inspect_workspace(path)
 
         if _already_locked:
             perform()
