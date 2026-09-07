@@ -491,3 +491,92 @@ those estimates to RH.
 | Spectral triples | Finite-dimensional prototype, then compact resolvent |
 | Noncommutative geometry | C*-algebra representations and commutators |
 | Field with one element | Select and encode a precise F₁ framework |
+
+## Exact arithmetic-channel effects (7 September 2026)
+
+Source: the user-provided paper argument
+`RH_Exact_Arithmetic_Channel_Effects_2026-09-07.md`, sections 2–10.
+The publication checkpoint checks the exact declarations below and their imports.
+This is a substantive partial formalization of that paper, not a claim that every
+paper proof, the complete Weil identification, or an RH implication is formalized.
+The table below records the declaration scopes and the outstanding obligations.
+
+| Module | Principal reusable declarations | Exact verified scope |
+|---|---|---|
+| `LinearAlgebra.SignedChannelUpdate` | `LinearMap.IsSymm.signed_change_synthesis`, `signed_gain_sum`, `signed_complete_square`, `signed_schur_nonnegative_iff`, `signed_universal_monotone_iff`, `signed_null_coupling_negative_witness`, `signed_minimum_eq_iff_normal`; `LinearMap.signed_change_sum_forms`, `signed_hilbert_projection_accounting`, `signed_no_gain_of_existing_span` | Native complex sesquilinear signed expansions with all mixed terms; signed completion and minimization assuming a supplied signed normal-equation solution; universal monotonicity iff channel positivity and vanishing signed mixed couplings; actual Hilbert accounting and redundant-channel obstruction. Existence of a Moore–Penrose/range solution is not proved. |
+| `LinearAlgebra.GreenChannelBoundaryUpdate` | `RiemannResearch.LinearAlgebra.GreenChannelBoundary.woodbury_inverse`, `gluing`, `schur_update_inverse`, `innovation_update`, `boundary_migration`, `symmetric_schur_update`, `symmetric_inverse_energy_drop`, `update_nonsingular`, `MigrationExample.exact_migration` | Exact real finite-matrix inverses, screened updates and gluing under explicit ordinary invertibility/symmetry assumptions. The rational example proves total 1→2/3 and boundary 0→1/6. A general Loewner-order theorem and complex/operator extensions are not claimed. |
+| `RH.PrimePowerReturnBoundary` | `RiemannResearch.RH.PrimePowerReturn.finiteAR1_inverse`, `finiteAR1_det_ne_zero`, `compressedPrimeGreen_inverse`, `compressedPrimeGreen_det_ne_zero`, `compressedPrimeGreen_inverse_singleton` | Direct multiplication proves all nonempty finite chain inverses and both endpoint corrections, including the coincident endpoints for the singleton. Only p>1 is needed for the prime-parameter identity. Identification with compression of an infinite operator remains separate. |
+| `RH.PrimeCurvaturePolarBridge` | `RiemannResearch.RH.PrimeCurvaturePolarBridge.halfDensity_existsUnique_iff`, `halfDensity_complex_existsUnique_iff`, `translated_polarNull_iff_unique_curvature`, `halfDensity_polar_annihilation`, `halfDensity_complex_polar_annihilation`, `halfDensity_coefficientMass_positive`; `Matrix.signed_complex_congruence`, `physicalMass_identity`; `LinearMap.sesquilinear_curvature_compression` | Constructive unique real/complex curvature coordinates for exactly two polar constraints at positive nodes with nonzero adjacent gaps. The actual translated-bump integral equivalence has explicit integrability and nonzero base-moment hypotheses. Full signed congruence and distinct coefficient/physical mass are retained. No prime-grid density or signed positivity is assumed or established. |
+| `Analysis.SquarePartitionLocalization` | `RiemannResearch.Analysis.SquarePartitionLocalization.partitionDefect_eq_half_sum_sq`, `partitionDefect_nonneg`, `sum_autocorrelation_localized`, `gluingCorrelation_zero`, `autocorrelation_add` | Exact finite square-partition defect and actual complex autocorrelation integrals, with their necessary integrability hypotheses. Both mixed correlations remain. No uniform gluing bound is asserted. |
+| `RH.SignedWeilCorrelation` | `RiemannResearch.RH.SignedWeilCorrelation.correlationValue_sub`, `correlationValue_sum`, `correlationValue_net_effect`, `correlationValue_gluing`, `primePowerCorrelationValue_localization`, `primePowerCorrelationValue_cutoff_stable` | Signed finite von-Mangoldt correlation value with both pole terms, gamma regularizer and arbitrary diagonal constant. Actual-test localization under explicit integrability assumptions; exact cutoff invariance assumes omitted weighted values vanish. Full Weil/zero-side identification and the fixed archimedean constant are not supplied by these declarations. |
+| `Analysis.WeightedAbelDiscrepancy` | `RiemannResearch.Analysis.weighted_abel_discrepancy` | Actual finite Abel summation against an arbitrary differentiable comparison primitive, retaining both endpoints; local differentiability/continuity assumptions only. |
+| `RH.PrimePowerDiscrepancy` | `RiemannResearch.RH.primePowerHalfCutoff_exact_discrepancy`, `primePowerHalfCutoff_add_density` | Actual Λ(n)/sqrt(n) partial summation against 2(sqrt(x)−1), with the upper discrepancy boundary and continuous-density cancellation retained. No arithmetic estimate is assumed. The logarithmic-variable full Weil assembly is still open. |
+| `RH.PrimeSquarePartialSummation` | `RiemannResearch.RH.primeSquareSector_eq_cutoff`, `primeSquareCutoff_exact_remainder`, `primeSquareSector_exact_remainder`, `primeSquareProfile_variation`, `abs_primeSquareSector_remainder_le` | Actual prime-square weights log(p)/p; supported-profile full sum equals its finite cutoff; exact main integral and discrepancy remainder; variation bound conditional on the displayed uniform discrepancy bound. Mertens and the autocorrelation/profile asymptotic assembly are not proved. |
+| `RH.BroadTestNormalization` | `MeasureTheory.integral_sq_secondDeriv_sub_quarter`, `integral_exp_mul_secondDeriv_sub_quarter_eq_zero`; `RiemannResearch.RH.broadProfileNormalizer_sq`, `broadProfileNormalizer_lower`, `broadPolarOperator_broadBump_integral_sq`, `broadTest_eq_dilated_profile`, `broadTest_integral_sq`, `broadTest_polarMoments`, `normalizedBroadProfile_integral` | Actual compact C² broad-test construction, exact norm formula, positive lower bound, unit L² mass, both vanishing polar moments, dilation and profile mean. These are established analytic statements; no Mertens or RH hypotheses are used. |
+
+### Remaining formalization obligations
+
+- **Open:** identify the completed Weil distribution and zero-side pairing with
+  the full explicit arithmetic correlation formula; evaluate the archimedean
+  constant and complete the discrepancy representation (paper (3.4)/(4.3)).
+- **Open:** discharge the correlation integrability/compact-cutoff hypotheses
+  uniformly for the intended smooth test family; derive the discrepancy gluing
+  expression (5.3) and compact-potential inverse/uniqueness plus its derivative
+  localization repair (5.4)–(5.6).
+- **Open:** complete Moore–Penrose range-existence/inertia and infinite Green
+  operator provenance where needed; none is inferred from a finite inverse.
+- **Open:** prime-log mesh density, common-bump approximation and exact two-moment
+  correction in the compact-test topology, and the all-window Weil criterion.
+- **Open:** the Mertens estimate, actual autocorrelation assembly of the square
+  asymptotic, higher-prime-power/gamma limits and their O(R⁻²) errors.
+- **Open:** the semiboundedness⇒RH proof, including an actual Weil distribution,
+  Bochner–Schwartz temperateness, half-line Laplace holomorphy and the exact
+  logarithmic-derivative pole obstruction.
+
+The normal-equation and discrepancy-bound hypotheses in the corresponding
+general theorems are explicit; kernel checking does not supply the missing
+research inputs. No statement here establishes the desired all-window signed
+arithmetic positivity.
+
+## Nyman–Weil arithmetic completions (7 September 2026)
+
+Source: user-provided argument,
+`RH_Nyman_Weil_Null_Channels_and_Exact_Prime_Compensation_2026-09-07.md`,
+sections 4, 5, 7, 9, and 10.
+The four candidates passed serialized isolated checks and key-declaration axiom
+audits using only propext, Classical.choice, and Quot.sound. The final
+publication checkpoint validates the actual modular imports and retained work.
+
+| Module | Principal declarations | Established scope |
+|---|---|---|
+| `RH.NymanConductorArithmetic` | `RiemannResearch.RH.vonMangoldt_mul_nymanConductorBeta`, `nymanConductorBeta_mul_inverse`, `nymanConductorInversePrefix_exact`, `nymanTwoThree_prefix_feasible` | Actual full prime-power convolution, constructive Dirichlet inversion, exact finite-prefix matching, and concrete 2/3 feasibility. |
+| `RH.ArithmeticConductorCommonZeros` | `RiemannResearch.RH.ArithmeticConductorCommonZeros.conductorSymbol_zero_iff_phase`, `conductorSymbol_zero_re`, `conductorSymbol_two_three_common_zero_iff`, `common_conductor_products_zero_iff` | Actual complex symbols; phase lattice and real part one; only common 2/3 zero is one; shared-factor product characterization away from one. Integer log independence is proved. |
+| `Analysis.RemoteLaplaceTail` | `MeasureTheory.RemoteLaplaceTail.integral_kernel_norm_sq`, `norm_integral_mul_sq_le`, `remote_energy_lower_bound`, `null_completion_energy_lower_bound` | Evaluated kernel norm and actual Bochner-integral bound. The last result explicitly assumes supported L2 tail, weighted integrability, and actual transform nullity; no requested inequality is an input. |
+| `LinearAlgebra.NullChannelTail` | `LinearMap.IsSymm.null_sub_diagonal`, `null_completion_mixed`, `null_completion_diagonal`, `null_completion_cross`, `null_compactification_change` | Exact Hermitian null-channel and head–tail identities, including full mixed terms. Radical membership is an explicit hypothesis. |
+
+### Conditional research reductions and open providers
+
+- **Open:** the actual arithmetic completion's support, regularity and transform-nullity provider.
+- **Open:** the completed Weil distribution and arithmetic radical-membership provider.
+- **Open:** removable zeta-multiplier values and full analytic multiplicity assembly.
+- **Open:** the optimized mixed-tail subexponential upper bound and its all-window RH implication.
+
+The four modules prove reusable arithmetic, complex-analysis, integral, and
+Hermitian-form results. They do not prove RH or its missing upper bound.
+
+### Isolated verification evidence
+
+| Module | Successful job | Runtime |
+|---|---|---:|
+| `RH.NymanConductorArithmetic` | `job_kgsqlFuPuZmPodfH1_Phd8YzCgy0HPxc` | 2.108 s |
+| `RH.ArithmeticConductorCommonZeros` | `job_dy3c8yGmVXI0og2C8DF1t1K04Gy1mkiJ` | 2.266 s |
+| `Analysis.RemoteLaplaceTail` | `job_lWfGz1EfW0z4pMidsDYav2pvXSNFMFDM` | 3.622 s |
+| `LinearAlgebra.NullChannelTail` with its exact dependency source | `job_dznjEZ6WPZ-breuErkv6acQyz_UK2k-G` | 3.192 s |
+
+Each returned verified true and exit code zero. The last check included the
+unchanged SignedChannelUpdate source because isolated file checks do not
+emit importable object files. The integrated module keeps its normal import.
+Repairs concerned pinned APIs, cast normalization, the already-declared
+Hermitian hypothesis's inclusion, and symmetry rewrite orientation.
+Unused tactic arguments and draft status comments were removed before integration.
+These isolated checks alone do not establish checkpoint publication.
