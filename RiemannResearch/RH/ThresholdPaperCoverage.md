@@ -1,5 +1,7 @@
 # RH threshold paper: Lean continuation and coverage
 
+The September 8, 32-page extension is audited in `ThresholdAffineCoverage.md`, including all 44 new Section 11 labels and 22 additional Lean modules. This file preserves the earlier 151-label audit; explicitly discharged obligations in the newer ledger supersede their historical status here.
+
 This is a partial formalization of Christian Noack's revised September 7,
 2026, 25-page *RH_Two_Seed_Threshold.pdf*. It is not a formalization of the
 entire paper and is not a proof of RH.
