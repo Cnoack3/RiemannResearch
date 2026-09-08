@@ -1,5 +1,7 @@
 # RH Two-Seed Threshold: affine extension and weighted Hilbert coverage
 
+Latest attempt (8 September 2026): `ThresholdOperatorComparisonAttempt.md` preserves unverified infinite-operator and actual legal-covariance proof candidates. Four research checks timed out without diagnostics. No mathematical obligation below is closed by that attempt; no new theorem is exported.
+
 Follow-up (8 September 2026): `ThresholdAdjointPhaseProgress.md` records four additional modules and 64 public declarations, including exact adjoint recovery, the actual infinite weighted block projection, uniform affine tails, and the numerical phase limit with an explicit quadratic rate. These providers supersede the historical open status only where specified below. RH remains unproved.
 
 This is a **partial formalization** of Christian Noack's September 8, 2026, 32-page `RH_Two_Seed_Threshold.pdf`. The support listed below has passed the coordinator's Lean checks; the saved-module checkpoint additionally validates the actual import graph before publication. Exact types and substantive hypotheses govern coverage. Neither the full paper nor RH is proved.

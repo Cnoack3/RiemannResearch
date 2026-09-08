@@ -1,0 +1,109 @@
+{
+  "status": "No new mathematical theorem verified; unverified candidates only.",
+  "base_commit": "dcb61e8462bb9fc173c1bc9931ff8ebacdf8dee1",
+  "serialized": true,
+  "receipts": [
+    {
+      "job_id": "job_g10Mtw6vz9NebiAU91M2AJ3QD2VeBUae",
+      "kind": "run_code",
+      "state": "failed",
+      "terminal": true,
+      "request_sha256": "e47e11e7af90e86caaf8ef45a161df86812448fb28bffa02034411f009426e13",
+      "classification": "wall_timeout",
+      "verified": false,
+      "elapsed_seconds": 180.045,
+      "exit_code": -9,
+      "output": "",
+      "output_bytes": 0,
+      "code_sha256": "6dd60de18a4d845a11e04af11a9bf7c529e1a3f49ee09ad6bdba1649524bfbac",
+      "timeout_seconds": 180
+    },
+    {
+      "job_id": "job_sPAlne0L0Y2nh0Kdn4y2ZZqq6Ehv5R5e",
+      "kind": "run_code",
+      "state": "succeeded",
+      "terminal": true,
+      "request_sha256": "f50b01c5c16a79c2d0a77a41cade42a9af9d97eb9389ec1fa0070ba9738ad90d",
+      "classification": "success",
+      "verified": true,
+      "elapsed_seconds": 17.623,
+      "exit_code": 0,
+      "output": "Nat : Type",
+      "output_bytes": 11,
+      "code_sha256": "d7a22561f59d5a350e4285becc716df680280029c73113fefbc05f8e0187a58a",
+      "timeout_seconds": 60
+    },
+    {
+      "job_id": "job_SgnlCJoRPpJjj625rlf3KiGWdGwQ7cn9",
+      "kind": "run_code",
+      "state": "failed",
+      "terminal": true,
+      "request_sha256": "0c87ba1701fd238bb2331c74b8c5eed2b15774be60daa524afed1493d58c2458",
+      "classification": "wall_timeout",
+      "verified": false,
+      "elapsed_seconds": 600.088,
+      "exit_code": -9,
+      "output": "",
+      "output_bytes": 0,
+      "code_sha256": "e60c0917f70cea0bd3fea69a002b2ed862ea7711b21091fd6a3f542463abf842",
+      "timeout_seconds": 600
+    },
+    {
+      "job_id": "job_p2yuCCNUr9abnU7_mDCaN0wE9VauMw-5",
+      "kind": "run_code",
+      "state": "failed",
+      "terminal": true,
+      "request_sha256": "69251c1893c43ee768949c1652d92a8576ab82e2eab336639b9c290ffb45ae92",
+      "classification": "wall_timeout",
+      "verified": false,
+      "elapsed_seconds": 240.037,
+      "exit_code": -9,
+      "output": "",
+      "output_bytes": 0,
+      "code_sha256": "3a6e4261e3a44c958d6b5ddba0e56e1f7fdff773c74ee7073f323b5bc168106c",
+      "timeout_seconds": 240
+    },
+    {
+      "job_id": "job_dKIhDMIbSI_RksSXSaeBCADRxG_Wvt2L",
+      "kind": "check_file",
+      "state": "failed",
+      "terminal": true,
+      "request_sha256": "be8bfc4759f86a11d5a2126f5d747a6be6d056ca202464afcecd7fff3bc7ca64",
+      "classification": "wall_timeout",
+      "verified": false,
+      "elapsed_seconds": 180.106,
+      "exit_code": -9,
+      "output": "",
+      "output_bytes": 0,
+      "checked_file_sha256": "c17f56d5e5163204fce2214e7494f7f35996d5dd3cc14bba2fb0645178c7bc01",
+      "timeout_seconds": 180
+    }
+  ],
+  "candidate_files": {
+    "RiemannResearch/RH/ThresholdUniformAffineOperatorCandidate.md": {
+      "candidate_body_sha256": "c17f56d5e5163204fce2214e7494f7f35996d5dd3cc14bba2fb0645178c7bc01",
+      "saved_markdown_sha256": "e9ffa18b9f9c52c2aac6b728441c7e0eb604a6531705ed1240f8e653c98e2909",
+      "status": "unverified"
+    },
+    "RiemannResearch/RH/ThresholdAffineOperatorComparisonCandidate.md": {
+      "candidate_body_sha256": "f6dd2b467bb268fc2133c72397e8f251a18fbcc5a73b20926fba5468d1d6ac84",
+      "saved_markdown_sha256": "5b86fd71497e02280546b04a34d30dca4b726e1e0bcfde8d8e42d0c5a8e3943d",
+      "status": "unverified"
+    },
+    "RiemannResearch/RH/ThresholdHilbertFiniteLegalCandidate.md": {
+      "candidate_body_sha256": "a372ce01425ab747e544f90bf6c16809e357f6071992a0e91ccc4d8c6fb90383",
+      "saved_markdown_sha256": "204d1dc4cc31b58a426c3a7504b83998bcf711b1428376015c170af6792827b3",
+      "status": "unverified"
+    },
+    "RiemannResearch/RH/ThresholdHilbertLegalCertificateCandidate.md": {
+      "candidate_body_sha256": "3cca8e3320ef423c836a1b39fb160cb165aa4956da60cedeeb03d3ab7fd2d2c2",
+      "saved_markdown_sha256": "8ee5d99878c630b81688d9783ac41fa6a831bd88c57fc247ec6d9bf97a789119",
+      "status": "unverified"
+    },
+    "RiemannResearch/RH/ThresholdTwoSeedAffineCovarianceCandidate.md": {
+      "candidate_body_sha256": "c04e8c34798436d0ce2aefc72b54fd04950465cfdba3a783ca43342ff9008eed",
+      "saved_markdown_sha256": "47f781db75560bcabf9c5bb09d5053405c49cdea9e50a2ae005d32189af98636",
+      "status": "unverified"
+    }
+  }
+}

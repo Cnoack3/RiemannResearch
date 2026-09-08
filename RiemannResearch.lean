@@ -23,6 +23,7 @@ import RiemannResearch.RH.ThresholdHilbertLegal
 import RiemannResearch.RH.ThresholdHilbertMean
 import RiemannResearch.RH.ThresholdHilbertAdjoint
 import RiemannResearch.RH.ThresholdHilbertProjection
+import RiemannResearch.RH.ThresholdUniformAffineOperator
 import RiemannResearch.RH.ThresholdHilbertSpace
 import RiemannResearch.RH.ThresholdLegalIntegrability
 import RiemannResearch.RH.ThresholdPhaseConstant
