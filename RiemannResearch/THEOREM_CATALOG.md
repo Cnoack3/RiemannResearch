@@ -76,6 +76,38 @@ proofs of the motivating RH statements.
 | `RiemannResearch.RH.Log3IntervalCertificate.evenBlock_posDef` | `RiemannResearch.RH.Log3IntervalCertificate` | The exact rational even-block preconditioner and row certificate imply positive definiteness for any supplied Hermitian 20-by-20 matrix satisfying the displayed `hdiag` and `hrow` bounds | Kernel checked conditional certificate; identification of the exact-real formula layer with the localized Weil operator and both enclosure hypotheses remain open |
 | `RiemannResearch.RH.Log3IntervalCertificate.oddBlock_posDef` | `RiemannResearch.RH.Log3IntervalCertificate` | The exact rational odd-block preconditioner and repaired row certificate imply positive definiteness for any supplied Hermitian 20-by-20 matrix satisfying the displayed `hdiag` and `hrow` bounds | Kernel checked conditional certificate; identification of the exact-real formula layer with the localized Weil operator and both enclosure hypotheses remain open |
 
+## Pareto noise and arithmetic repair (8 September 2026)
+
+Source: RH_Noise_Signal_Arithmetic_Repair_2026-09-07.pdf; detailed coverage and
+source hashes: RH/ParetoNoiseSignalReport.md.
+
+| Declarations | Module | Scope and status |
+|---|---|---|
+| scale_error_completion; finite_pair_remainder_identity | LinearAlgebra.NoiseSignalQuadratic | Kernel checked scalar optimization and exact finite weighted-pair remainder |
+| paretoError_at_optimal_scale; paretoError_optimal_scale_minimizes; primePowerCombination_noiseSignal_floor | RH.ParetoNoiseSignal | Actual complete Pareto variance/NSR; bounded sequences and nonzero mean explicit; prime-power NSR at least 1/91 |
+| mobiusDifference_arithmeticRepair; arithmeticRepair_eq_mixedPrimeLift | RH.ParetoArithmeticRepair | Genuine four-residue construction, full defect response, head preservation and finite packet legality |
+| paretoInner_scaleRepair; arithmeticRepair_variance; arithmeticRepair_variance_le | RH.ParetoRepairCovariance | Exact full covariance and actual arithmetic diagonal bound; no correlation omitted |
+| packetCombination_fixedSupport_full_error_lower_bound; packetCombination_fixedSupport_noiseSignal_lower_bound | RH.ParetoCoprimeObstruction | Actual full infinite reciprocal-square mass and fixed-support error/NSR floors; conductor divisibility witnesses explicit |
+| smooth35Repairs_fixed_base_no_pointwise_limit | RH.ParetoRepairObstruction | Automatic composite invariant for all smooth35 repair scales plus any fixed finite packet base; varying coefficients allowed |
+| hiddenNoise_mean_zero; hiddenNoise_interval_mass; hiddenNoise_interval_energy_odd; hiddenNoise_interval_energy_even | RH.ParetoHiddenNoise | Genuine sequence, exact finite interval laws and energies; asymptotics not asserted |
+| paretoError_tendsto_mobiusDifference; boundedPrimeSupport_no_paretoError_limit | RH.ParetoDefectContinuity | Full-error convergence forces genuine arithmetic defects; boundedness separately for each approximant |
+
+Open translation obligations (no provider declaration or project axiom):
+
+- Published quantitative smooth35 gap input, square-wave integral modulus,
+  and prime-repair diagonal variance summability.
+- Euler-product evaluation of coprimeReciprocalSquareMass when the support
+  modulus is even; the actual infinite mass bound itself is established.
+- Residue-four second moment evaluation, hidden-noise moment asymptotics,
+  conditioned limit, and fixed-space gain estimate.
+- Remaining Hilbert infimum and infinite gain-product statements, and the
+  cited Bagchi/Burnol/Bettin-Conrey-Farmer literature inputs.
+
+RH.ParetoNoiseResearchTargets contains proposition definitions, not proofs,
+for key remaining analytic statements. RepairBesselBound is an open
+mathematical suggestion in the report itself. These definitions are not
+assumed by any established repair theorem. RH remains unresolved.
+
 ## Pareto analytic obligations (7 September 2026)
 
 The exact bounded-sequence geometric error identity is now established as
