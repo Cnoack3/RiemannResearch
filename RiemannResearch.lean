@@ -16,9 +16,13 @@ import RiemannResearch.LinearAlgebra.SpectralDiagonalRealization
 import RiemannResearch.LinearAlgebra.SpectralRepeatedFit
 import RiemannResearch.RH.ThresholdAffineBranches
 import RiemannResearch.RH.ThresholdAffineProjectionBlocks
+import RiemannResearch.RH.ThresholdAffineTailBounds
+import RiemannResearch.RH.ThresholdAffinePhaseLimit
 import RiemannResearch.RH.ThresholdHilbertDilation
 import RiemannResearch.RH.ThresholdHilbertLegal
 import RiemannResearch.RH.ThresholdHilbertMean
+import RiemannResearch.RH.ThresholdHilbertAdjoint
+import RiemannResearch.RH.ThresholdHilbertProjection
 import RiemannResearch.RH.ThresholdHilbertSpace
 import RiemannResearch.RH.ThresholdLegalIntegrability
 import RiemannResearch.RH.ThresholdPhaseConstant

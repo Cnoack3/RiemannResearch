@@ -1,5 +1,7 @@
 # RH Two-Seed Threshold: affine extension and weighted Hilbert coverage
 
+Follow-up (8 September 2026): `ThresholdAdjointPhaseProgress.md` records four additional modules and 64 public declarations, including exact adjoint recovery, the actual infinite weighted block projection, uniform affine tails, and the numerical phase limit with an explicit quadratic rate. These providers supersede the historical open status only where specified below. RH remains unproved.
+
 This is a **partial formalization** of Christian Noack's September 8, 2026, 32-page `RH_Two_Seed_Threshold.pdf`. The support listed below has passed the coordinator's Lean checks; the saved-module checkpoint additionally validates the actual import graph before publication. Exact types and substantive hypotheses govern coverage. Neither the full paper nor RH is proved.
 
 ## Source and verification evidence
@@ -42,7 +44,7 @@ Module names below omit the common prefix `RiemannResearch.`. All integer dilati
 | `LinearAlgebra.SpectralRepeatedFit` | Exact geometric repeated-fit error and increment; full error increases after the first optimal step although the coarse residual decreases. |
 | `LinearAlgebra.SpectralDiagonalRealization` | Explicit cutoff amplitudes derive the profile, norm and error formulas from the diagonal quadratic model, including the factor-two bound. Actual weighted legal covariance/synthesis realization remains open. |
 
-The actual real Hilbert construction is now supplied, including its exact mixed inner product and fixed unit target. The remaining adjoint obligations are the explicit weighted-block coordinate law, phase fixed-space theory and joint rigidity. Complex analytic and profinite realizations are also separate.
+The actual real Hilbert construction is now supplied, including its exact mixed inner product and fixed unit target. The explicit weighted-block adjoint law and rigidity for the complete family of all positive integer adjoints are now supplied by `ThresholdHilbertAdjoint`. Phase fixed-space theory and rigidity for only two selected independent seeds remain open. Complex analytic and profinite realizations are also separate.
 
 The finite spectral inequalities have no unresolved arithmetic input as statements about their explicit finite data. Their hypotheses include nonnegative masses, eigenvalues at most one, positive cutoff, and target normalization where used. Identifying those data with the paper's actual covariance and constructing the stated legal vector is a substantive missing application provider.
 
@@ -56,15 +58,15 @@ The finite spectral inequalities have no unresolved arithmetic input as statemen
 | `prop:affine-algebra` | Partial: `affineBranch_comp`, `affineBranch_disjoint`, `affineBranch_positive_partition`. | Actual operator/C*-algebra construction, compact ideal, quotient isomorphism, Cuntz simplicity and vector state. |
 | `eq:affine-relations` | Partial: exact arithmetic composition and disjointness. | Actual bounded branch operators and their adjoints. |
 | `eq:affine-boundary` | Partial: `affineBranch_positive_partition`. | Range-projection identity and exact weighted state mass. |
-| `eq:conditional-rank-one` | Open. | Actual conditional projection as weighted rank-one sum, its rank and quotient image. |
+| `eq:conditional-rank-one` | Partial: `hilbertBlockProjection_coordinate`, `hilbertBlockProjection_pythagoras` construct the actual infinite weighted dilation-range projection. | Explicit infinite rank-one matrix assembly, rank and C*-quotient image remain separate. |
 | `eq:affine-average` | Partial: `hilbertNormalizedDilation`. | Uniform branch average `L_m`, its isometry and semigroup laws. |
 | `thm:affine-compact` | Partial: branch normalization and `Ring.hom_difference_cocycle`. | Operator assembly, uniform tail, compact/Schatten membership and non-trace-class asymptotic. |
 | `eq:weighted-branches` | Partial: `affineBranchCoefficient_sq_sum`, `Ring.hom_difference_cocycle`. | Concrete operator sum and diagonal normalization identity. |
-| `eq:compact-tail` | Open. | Uniform operator tail `1/[2(J+1)]`. |
+| `eq:compact-tail` | Actual column bound checked: `affineColumnEnergy_le_quarter_successor_sq`. | Uniform comparison operator assembly is still needed to turn the squared-column bound into the operator tail `1/[2(J+1)]`. |
 | `eq:affine-singular-asymptotic` | Open. | Precise fixed-scale singular-value expansion and class consequences. |
 | `thm:affine-phase-constant` | Partial: `affineProjection_block_discrepancy` and actual phase summability. | Infinite HS identification and its limit/rate. |
-| `eq:affine-projection-HS` | Partial: exact actual finite physical-block discrepancy. | Infinite orthogonal-block norm assembly and stated overlap formula. |
-| `eq:affine-phase-limit` | Partial: `phaseDelta_summable`, `universalPhaseConstant_certificate`. | Actual limit `2s` and nonnegative `m^-2` error bound. |
+| `eq:affine-projection-HS` | Actual full numerical sum, summability and tail are checked in `ThresholdAffineTailBounds`. | Identification with the infinite difference operator's Hilbert–Schmidt norm remains open. |
+| `eq:affine-phase-limit` | Actual numerical sum limit `2s` and `0 <= 2s-E_m <= 2/(3m^2)` checked by `affineProjection_phase_gap_rate` and `affineProjectionEnergyTotal_tendsto`. | Infinite Hilbert–Schmidt operator identification remains separate. |
 | `eq:affine-seed-limit` | Partial: `affineBranchCoefficient_uniform_defect`. | Seed assembly, dominated convergence and positive lower limit. |
 | `thm:affine-transfer` | Partial: actual legal integrability and finite mixed Gram algebra. | Concrete correction vectors and coefficient-sensitive retained-head/tail estimates. |
 | `eq:affine-exact-error` | Partial: complete quadratic/Gram accounting infrastructure. | Concrete affine and legal vector identification in H. |
@@ -101,10 +103,10 @@ Arithmetic and Hilbert endpoints are in `RiemannResearch.RH.Pareto`; phase-serie
 
 ## Preserved substantive obligations
 
-1. **Full RH criteria remain open.** Strong Nyman–Beurling must be a checked dependency, with the exact discrete step-function bridge. Full-span density, primitive common-base classification of arbitrary rank-one seed data, joint rigidity for independent seeds and shrinking-cell recovery are unfinished. Proving the adjoints fix the constant does not prove that their joint fixed space contains only constants.
+1. **Full RH criteria remain open.** Strong Nyman–Beurling must be a checked dependency, with the exact discrete step-function bridge. Full-span density, primitive common-base classification of arbitrary rank-one seed data, joint rigidity for independent seeds and shrinking-cell recovery are unfinished. The joint fixed space for EVERY positive integer adjoint is now proved to consist of constants; this does not establish the same assertion for only two selected seeds or identify a legal annihilator.
 2. **The phase distance is not yet established.** Actual phase laws/conditional operators, martingale spectrum, fixed-space classification, extremal vector and its arithmetic moments/annihilation remain open. Scalar phase-floor positivity and conditional Hilbert witness geometry do not discharge these providers. Exact one-base distance/RH equivalence, witness asymptotics, Mellin continuation, removable values, nonvanishing and off-line-zero penalties remain unfinished.
 3. **The numerical certificate scope remains limited.** The actual phase tail and rational enclosure are checked, but the paper's narrow decimal intervals, finite witness interval, coarse-6 determinant, constrained norm `(22,23)`, and unconstrained optimum lower bound `>0.051` remain open. The prior actual infinite-tail legal upper witness `<0.053` remains established; it does not itself identify a covariance optimizer or the cutoff vector.
-4. **The affine quotient does not replace the weight or legality.** Cuntz's quotient/simplicity theorem, weighted vector state/non-descent, conditional rank-one formula, rank-one cyclicity of the full affine algebra, actual compact/Schatten comparison, infinite HS limit, positive seed discrepancy and non-collective compactness remain open. Atomic/Haar singularity, profinite topology, nonclosability and projection strong convergence also remain historical gaps.
+4. **The affine quotient does not replace the weight or legality.** Cuntz's quotient/simplicity theorem, weighted vector state/non-descent, conditional rank-one formula, rank-one cyclicity of the full affine algebra, actual compact/Schatten comparison, identification of the verified numerical phase limit with the infinite HS norm, positive seed discrepancy and non-collective compactness remain open. Atomic/Haar singularity, profinite topology, nonclosability and projection strong convergence also remain historical gaps.
 5. **Finite legal synthesis still needs its operator provider.** Actual finite legal projections, dimensions, coarse surjectivity, multicolumn Gram/Schur inverse identities, exact second-seed gain, constrained-lift minimum, covariance diagonalization, spectral target masses, legal cutoff synthesis and innovation transport remain unfinished. Ambient weighted quotient defect rank is not legal surjectivity.
 6. **No uniform repair or vanishing error is proved.** A bounded sequence of exact two-seed lifts, a uniform target negative-moment estimate, and full legal error tending to zero remain open. The paper's bounded-lift RH criterion itself still needs formalization. The spectral regularity assumption is not a checked arithmetic theorem.
 
