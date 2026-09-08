@@ -19,6 +19,29 @@ stood on 4 September 2026 is preserved on
   input. Local hypotheses do not appear in `#print axioms`, so a clean axiom
   report alone does not make a result unconditional.
 
+## Prime-seven gain and seed-power obstructions (8 September 2026)
+
+The new rational witness certifies the jointly reoptimized enlargement from period
+360 to 2520. Every old generator is retained; all signed coefficients and the full
+infinite weighted error are included. No numerical-optimality or RH premise is used.
+
+| Declaration family | Module | Exact scope |
+|---|---|---|
+| `Analysis.upper_certificate_of_cross_mul`, `residue_upper_common_denominator` | `Analysis.UpperCertificateArithmetic` | Generic denominator-clearing bridge and exact progression upper-weight formula |
+| `RH.TwoSeedThreshold.conductor360Generator_exhaustive`, `conductor360Combination_full_error_gt` | `RH.ThresholdConductor360DualLower` | All 34 allowed endpoint pairs covered; every signed old combination has full error >27/625 |
+| `RH.TwoSeedThreshold.legalWitness2520_upper_certificate` | `RH.ThresholdPrimeSevenCertificate2520` | Explicit rational witness, exact periodicity, all 2520 integer residue certificates, finite bound <421/10000 |
+| `RH.TwoSeedThreshold.legalWitness2520_mem_legalSeedSpan`, `legalWitness2520_full_error_lt` | `RH.ThresholdPrimeSevenInfinite2520` | Actual legal span, summability, exact residue regrouping, and full infinite error <421/10000 |
+| `RH.TwoSeedThreshold.legalWitness2520_uniform_improvement` | `RH.ThresholdPrimeSevenGain` | Strict improvement >11/10000 over every old period-360 combination; bounded current seed powers cannot halve the new witness error |
+| `RH.PrimeDefectEnergy.finiteError_joint_completion`, `signed_seed_joint_forcedMass`, `conductor_omitting_seven_fullError_lower` | `RH.PrimeDefectEnergy` | Exact coupled signed prime-5/7 square completion; full coefficient-mass bounds; conductors omitting 7 have error at least 1/100 |
+| `RH.SquarefreeConductorObstruction.conductor_seedValuations_fullError_lower`, `legalWitness360_beats_conductors_with_small_seedValuations` | `RH.SquarefreeConductorObstruction` | If 4 and 9 both fail to divide the conductor, every signed approximation has error at least 2/45; the old period-360 witness beats this entire infinite family |
+| `RH.BoundedSeedConductorObstruction.conductor_seedCaps_three_two_fullError_lower` | `RH.BoundedSeedConductorObstruction` | If 16 and 27 both fail to divide the conductor, every signed approximation has error at least 2/95, independently of all other prime factors |
+
+**Next target:** certify period 2520 to 5040 and analyze how increasing seed powers
+interacts with new prime components. The next-level comparisons are numerical
+research diagnostics. General bounds for arbitrary seed-exponent caps, exact
+component transport, and uniform residual capture remain open formalization or
+research obligations. None of these results establishes convergence to zero or RH.
+
 ## Signed seed constraints and certified finite gains (8 September 2026)
 
 These are unconditional finite-space and full infinite-error results for the actual
@@ -48,8 +71,8 @@ covariance and centered Abel tail estimate, quantitative Mellin lift obstruction
 any scalable residual-capture estimate are research arguments or targets in the
 accompanying note, not consequences claimed for this formalization.
 
-**Next finite target:** certify the jointly reoptimized enlargement from conductor
-360 to 2520, retaining every existing generator and adding the prime-seven block.
+**Completed finite target:** the jointly reoptimized enlargement from conductor
+360 to 2520 is now certified above, retaining all old generators and the full error.
 For asymptotic work, use cofinal periods such as `lcm(1,...,N)` so that every
 positive integer dilation, including higher prime powers, eventually appears.
 
