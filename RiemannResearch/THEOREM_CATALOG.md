@@ -19,6 +19,35 @@ stood on 4 September 2026 is preserved on
   input. Local hypotheses do not appear in `#print axioms`, so a clean axiom
   report alone does not make a result unconditional.
 
+## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
+
+These results concern actual signed two-seed generators and complete infinite
+Pareto error. The exact finite certificates and obstruction identities use no RH
+or numerical optimality premise. General matrix and distributed-repair research
+is recorded separately; its uniform upper estimate remains open.
+
+| Declaration family | Module | Established scope |
+|---|---|---|
+| `Analysis.lower_certificate_of_cross_mul`, `residue_lower_common_denominator` | `Analysis.LowerCertificateArithmetic` | Exact real bridges from signed integer lower certificates |
+| `RH.TwoSeedThreshold.legalWitness5040_upper_certificate` | `RH.ThresholdSeedPowerCertificate5040` | Explicit rational witness; all 5040 residue caps and exact periodicity |
+| `RH.TwoSeedThreshold.legalWitness5040_mem_legalSeedSpan`, `legalWitness5040_full_error_lt` | `RH.ThresholdSeedPowerInfinite5040` | Actual legal witness; summability and exact residue regrouping; full error <39/1000 |
+| `RH.TwoSeedThreshold.conductor2520Generator_exhaustive`, `conductor2520Combination_full_error_gt` | `RH.ThresholdConductor2520DualLower` | All 68 legal generators covered and annihilated; every signed combination has full error >419/10000 |
+| `RH.TwoSeedThreshold.legalWitness5040_uniform_improvement` | `RH.ThresholdSeedPowerGain` | Strict full-error gain >29/10000 over the entire period-2520 space; >149/9000 over every balanced single-boundary repair in the proved smooth-endpoint class |
+| `RH.FiniteSeedComponentCharge.mobiusDifference_generator`, `componentFiniteError_exact` | `RH.FiniteSeedComponentCharge` | Actual endpoint divergence; arbitrary finite closed components; exact finite Riesz square remainder and full-error bound |
+| `RH.seedEdge_dvd_component_iff`, `twoSeed_dvd_component_iff` | `RH.DivisorComponentArithmetic` | Divisor-component closure for legal edges in D*r when the complementary factor is coprime to the seed |
+| `RH.divisor_moebius_signal_eq_totient_div`, `divisor_moebius_signal_pos` | `RH.DivisorComponentSignal` | Exact target charge phi(D)/D and its positivity for every D>0 |
+| `RH.DivisorSeedComponentObstruction.divisorComponent_seedCombination_fullError_lower` | `RH.DivisorSeedComponentObstruction` | Explicit positive finite-norm error floor for fixed D>0, uniformly over all r coprime to 6 and all signed legal combinations in D*r |
+| `RH.CoupledSeedComponentObstruction.conductor_seedCaps_four_two_coupled_fullError_lower`, `coupled_component_gram_completion` | `RH.CoupledSeedComponentObstruction` | Exact mixed-component completion; full error >=272/15927 when 32 and 27 both fail to divide the conductor |
+| `RH.OneBoundaryRepair.adjacent_error_completion`, `smooth_single_boundary_fullError_lower` | `RH.OneBoundaryRepairObstruction` | Balanced actual Mobius-head floor repairs with one smooth root endpoint have full error >=1/18; all other endpoints are positive and do not divide the root endpoint; smoothness and summability discharged |
+
+**Next research target:** jointly optimize the head and distributed component
+repairs under exact charge balance, retaining every mixed and tail term. Numerical
+tests favor permitting head error, but the tested sparse antichains do not beat the
+established certificates. The period-15120 comparison is a useful next certificate target.
+The general closed-form seed-exponent bound, full coupled-component network,
+bounded-number repair extension, and antichain convergence analysis remain ordinary
+research or open formalization. No convergence to zero or RH is established here.
+
 ## Prime-seven gain and seed-power obstructions (8 September 2026)
 
 The new rational witness certifies the jointly reoptimized enlargement from period
@@ -36,11 +65,10 @@ infinite weighted error are included. No numerical-optimality or RH premise is u
 | `RH.SquarefreeConductorObstruction.conductor_seedValuations_fullError_lower`, `legalWitness360_beats_conductors_with_small_seedValuations` | `RH.SquarefreeConductorObstruction` | If 4 and 9 both fail to divide the conductor, every signed approximation has error at least 2/45; the old period-360 witness beats this entire infinite family |
 | `RH.BoundedSeedConductorObstruction.conductor_seedCaps_three_two_fullError_lower` | `RH.BoundedSeedConductorObstruction` | If 16 and 27 both fail to divide the conductor, every signed approximation has error at least 2/95, independently of all other prime factors |
 
-**Next target:** certify period 2520 to 5040 and analyze how increasing seed powers
-interacts with new prime components. The next-level comparisons are numerical
-research diagnostics. General bounds for arbitrary seed-exponent caps, exact
-component transport, and uniform residual capture remain open formalization or
-research obligations. None of these results establishes convergence to zero or RH.
+**Continuation completed above:** period 2520 to 5040 is certified, and the
+general divisor-component functional now has a proved positive signal and exact
+finite Riesz completion. The closed-form exponent bound and uniform residual
+capture remain research obligations. None of these results establishes RH.
 
 ## Signed seed constraints and certified finite gains (8 September 2026)
 
