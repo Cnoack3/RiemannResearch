@@ -1,3 +1,5 @@
+import RiemannResearch.RH.ParetoResidueMoments
+import RiemannResearch.RH.ParetoHiddenNoiseAsymptotics
 import RiemannResearch.RH.ParetoArithmeticRepair
 import RiemannResearch.RH.ParetoNoiseSignal
 import RiemannResearch.RH.ParetoHiddenNoise
@@ -6,19 +8,22 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-!
-# Unproved analytic statements from the noise-to-signal report
+# Analytic statements and proved providers from the noise-to-signal report
 
 Source: user-provided argument,
 `RH_Noise_Signal_Arithmetic_Repair_2026-09-07.pdf`, §§4–6 and 8.
 
-Every declaration below is a proposition DEFINITION, not a proved theorem and
-not an axiom. These statements preserve the principal remaining translation
-obligations in a form that can be used in later proof work. No theorem in the
-verified repair modules imports or assumes one of these propositions.
+The proposition definitions record the original targets. The residue-four and
+both hidden-noise moment targets have unconditional proved providers below.
+The conditioned limit is proved in ParetoHiddenConditioningVerified. The
+summability target is reduced to the quantitative smooth-gap theorem in
+Smooth35RepairCompletion. None of these propositions is a project axiom.
 
 The smooth-gap input is a published theorem, but its Lean proof is absent.
-The Bessel estimate is an open mathematical suggestion in the report itself.
-These two statuses must not be conflated.
+The Bessel estimate was an open suggestion in the report. It is now disproved
+for the actual least-smooth scale choice in ParetoBesselSmoothObstruction,
+without the quantitative gap input. This negative result does not contradict
+any theorem claimed proved in the report.
 -/
 
 open scoped BigOperators
@@ -37,7 +42,7 @@ def SummablePrimeRepairs : Prop :=
     Summable (fun p : {p : ℕ // p.Prime ∧ 7 ≤ p} =>
       paretoVariance (arithmeticRepair 2 p.val (E p.val)))
 
-/-- Missing evaluation of the exact residue-four second moment. -/
+/-- The exact residue-four second moment, with its proved provider below. -/
 def ResidueFourMoment : Prop :=
   paretoInner (residue 4) (residue 4) = 6 * Real.log 2 - Real.pi / 2
 
@@ -61,8 +66,9 @@ def HiddenNoiseConditionedLimit : Prop :=
     (atTop ⊓ Filter.principal {n : ℕ | n % 2 = 1})
     (nhds ((Real.pi^2 - 6) / 9))
 
-/-- The suggested all-coefficient covariance bound is not proved in the PDF
-and is deliberately not included in the established results. -/
+/-- The original suggested all-coefficient covariance bound. Its negation for
+the actual least-smooth scale choice is proved in ParetoBesselSmoothObstruction.
+The parameterized proposition remains useful for stating that precise result. -/
 def RepairBesselBound (E : ℕ → ℕ) : Prop :=
   ∃ C : ℝ, 0 < C ∧ ∀ (s : Finset ℕ) (a : ℕ → ℝ),
     (∀ p ∈ s, p.Prime ∧ 7 ≤ p) →
@@ -71,6 +77,18 @@ def RepairBesselBound (E : ℕ → ℕ) : Prop :=
       (fun k => ∑ p ∈ s, a p * arithmeticRepair 2 p (E p) k) ≤
     C * ∑ p ∈ s, (a p)^2 *
       paretoInner (arithmeticRepair 2 p (E p)) (arithmeticRepair 2 p (E p))
+
+/-- Complete infinite-sum evaluation, including the digamma-series proof. -/
+theorem residueFourMoment : ResidueFourMoment :=
+  paretoInner_residue_four
+
+/-- A uniform constant of 18 works; the provider also covers even n ≥ 3. -/
+theorem hiddenNoiseSecondMoment : HiddenNoiseSecondMoment := by
+  exact ⟨18, fun n hn _ => hiddenNoise_secondMoment_log_bound n hn⟩
+
+/-- The actual first absolute moment, with all infinite tails included. -/
+theorem hiddenNoiseFirstMoment : HiddenNoiseFirstMoment := by
+  exact ⟨18, fun n hn _ => hiddenNoise_firstMoment_log_bound n hn⟩
 
 end
 end RiemannResearch.RH.Pareto.ResearchTargets

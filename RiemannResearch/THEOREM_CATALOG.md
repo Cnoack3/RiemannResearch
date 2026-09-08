@@ -91,22 +91,35 @@ source hashes: RH/ParetoNoiseSignalReport.md.
 | smooth35Repairs_fixed_base_no_pointwise_limit | RH.ParetoRepairObstruction | Automatic composite invariant for all smooth35 repair scales plus any fixed finite packet base; varying coefficients allowed |
 | hiddenNoise_mean_zero; hiddenNoise_interval_mass; hiddenNoise_interval_energy_odd; hiddenNoise_interval_energy_even | RH.ParetoHiddenNoise | Genuine sequence, exact finite interval laws and energies; asymptotics not asserted |
 | paretoError_tendsto_mobiusDifference; boundedPrimeSupport_no_paretoError_limit | RH.ParetoDefectContinuity | Full-error convergence forces genuine arithmetic defects; boundedness separately for each approximant |
+| coprimeReciprocalSquareMass_eulerProduct; coprimeReciprocalSquareMass_six; packetCombination_two_three_noiseSignal_lower_bound | RH.ParetoEulerProduct | Kernel checked complete Euler mass, with exact pi-squared floors |
+| primeDualRepresenter_norm_sq; packetResidueCoefficient_prime_error_bound | RH.ParetoPrimeDualNorm | Kernel checked exact dual norm 2(p²+1) for p≥3 and actual packet coefficient bound |
+| paretoInner_residue_four; paretoMean_residue_two; paretoInner_residue_two | RH.ParetoResidueMoments | Kernel checked complete infinite moments from digamma series |
+| hiddenNoise_secondMoment_log_bound; hiddenNoise_firstMoment_log_bound | RH.ParetoHiddenNoiseAsymptotics | Kernel checked error≤18 from 2 log n, all n≥3; exact blocks and full tails supplied by RH.ParetoHiddenNoiseMoments |
+| hiddenNoise_conditioned_limit_all; hiddenNoiseConditionedLimit | RH.ParetoHiddenConditioningVerified | Kernel checked actual conditioned limit (π²−6)/9; all indices; substitution, domination and constant evaluation proved |
+| integral_fermi_first; integrable_fermi_first | RH.FermiIntegral | Kernel checked actual integral π²/12 and integrability |
+| arithmeticRepair_binary_variance_log_bound | RH.ParetoRepairModulus | Kernel checked full discrete variance≤8(h/n²)(1+log(n/h)) for 0<h≤n |
+| summable_prime_inv_mul_log_rpow; summable_prime_loglog_div_mul_log_rpow | RH.PrimeLogSummability | Kernel checked unconditional prime-weight convergence from Chebyshev |
+| prime_repairs_limit_and_summable_of_log_gap | RH.ParetoRepairSummability | Kernel checked conditional reduction from an explicit quantitative gap; all variance and limit estimates discharged |
+| summablePrimeRepairs_of_leastSmooth35_log_gap | RH.Smooth35RepairCompletion | Exact named SummablePrimeRepairs target follows from only the missing quantitative least-smooth gap input; conditional arithmetic reduction |
+| residual_tendsto_zero_iff_not_summable | Analysis.ResidualGainProduct | Kernel checked exact recurrence/product and strict-gain exhaustion criterion; Analysis.ResidualGainTermination covers a gain equal to one |
+| not_repairBesselBound_leastSmooth35Above | RH.ParetoBesselSmoothObstruction | Kernel checked NEGATIVE resolution of the report's proposed normalized Bessel bound for its actual least-smooth scale choice |
+| repairBessel_commonScale_card_sq_le | RH.ParetoBesselClusters | Actual full Pareto cluster energy forces square-root cardinal bounds; Analysis.SmoothScaleReciprocal and RH.PrimeReciprocalTail contradict them |
+| leastSmooth35Above_spec; leastSmooth35Above_le_twice | RH.Smooth35Choice | Actual minimal smooth scale and elementary factor-two bound, without a quantitative gap theorem |
 
-Open translation obligations (no provider declaration or project axiom):
+Four of the original six named targets have unconditional positive providers:
+ResidueFourMoment, HiddenNoiseSecondMoment, HiddenNoiseFirstMoment and
+HiddenNoiseConditionedLimit. The proposed RepairBesselBound is disproved for
+the actual least-smooth choice (and all eventually comparable smooth choices).
+This was an open suggestion in the PDF, not a theorem claimed proved there.
 
-- Published quantitative smooth35 gap input, square-wave integral modulus,
-  and prime-repair diagonal variance summability.
-- Euler-product evaluation of coprimeReciprocalSquareMass when the support
-  modulus is even; the actual infinite mass bound itself is established.
-- Residue-four second moment evaluation, hidden-noise moment asymptotics,
-  conditioned limit, and fixed-space gain estimate.
-- Remaining Hilbert infimum and infinite gain-product statements, and the
-  cited Bagchi/Burnol/Bettin-Conrey-Farmer literature inputs.
+The remaining named positive target is SummablePrimeRepairs. Its analytic
+steps and exact conditional assembly are proved; the published quantitative
+smooth35 gap theorem itself is still unformalized. It is an explicit hypothesis
+of the conditional provider, not an axiom or an assumed variance estimate.
 
-RH.ParetoNoiseResearchTargets contains proposition definitions, not proofs,
-for key remaining analytic statements. RepairBesselBound is an open
-mathematical suggestion in the report itself. These definitions are not
-assumed by any established repair theorem. RH remains unresolved.
+Other open translations include the fixed-old-space gain asymptotic, full
+Hilbert infimum/closure results, and cited spectral and RH-criterion literature.
+RH and global convergence of a sufficient repair system remain unresolved.
 
 ## Pareto analytic obligations (7 September 2026)
 

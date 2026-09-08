@@ -28,36 +28,64 @@ The project toolchain is Lean 4.33.0-rc2.
 | §5: fixed base plus smooth35 repairs is insufficient | ParetoRepairObstruction | Automatic arithmetic invariant and no pointwise convergence, including varying coefficients |
 | §6: hidden-noise family | ParetoHiddenNoise | Actual residue/dilation family, zero mean, head values, parity amplitudes, exact interval masses and energies |
 | §8.2: common optimizer mismatch | Existing TwoBlockCommonOptimizer | Generic two-form completion reused; literal matrix inverse display not separately re-proved |
-| §§4–6 and 8: remaining key analytic statements | ParetoNoiseResearchTargets | Proposition definitions only; these are not theorems or assumptions imported by established results |
+| §3.3: exact finite Euler product | ParetoEulerProduct | Full reciprocal-square mass for every nonzero even modulus; exact two-prime constants |
+| §3.1: prime defect dual norm | ParetoPrimeDualNorm | Actual finite-support representer, full squared dual norm 2(p²+1) for p≥3, and packet coefficient error bound |
+| §4: residue moments | ParetoResidueMoments; DigammaQuarter | Complete sums: G44=6 log 2−π/2 and binary residue mean/norm=log 2 |
+| §6: full hidden-noise moments | ParetoHiddenNoiseMoments; ParetoHiddenNoiseAsymptotics | Explicit error at most 18 from 2 log n, for every n≥3; all tails retained |
+| §6: conditioned limit | ParetoHiddenConditioning; ParetoHiddenConditioningLimit; ParetoHiddenConditioningSubstitution; ParetoHiddenConditioningConstant; ParetoHiddenConditioningVerified; FermiIntegral | Complete actual limit (π²−6)/9, for all natural indices tending to infinity |
+| §5: repair modulus and prime summation | ParetoRepairModulus; PrimeLogSummability; ParetoRepairSummability | Actual discrete variance bound and unconditional prime-weight convergence |
+| §5: exact existence target from the gap theorem | Smooth35RepairCompletion | Conditional reduction: the quantitative smooth-number gap is the only remaining hypothesis |
+| §8.3: gain-product criterion | Analysis.ResidualGainProduct; Analysis.ResidualGainTermination | Exact recurrence/product and complete exhaustion criterion, including a gain equal to one |
+| §8: proposed normalized Bessel estimate | ParetoBesselClusters; Analysis.SmoothScaleReciprocal; ParetoBesselSmoothObstruction; Smooth35Choice; PrimeReciprocalTail | Refuted for the actual least-smooth scale assignment; no quantitative gap input |
+| Named analytic targets | ParetoNoiseResearchTargets and the providers above | Four positive targets proved, the proposed Bessel route refuted for the report's choice, and one arithmetic input unformalized |
+
+## New conclusions
+
+For the actual hidden-noise family and every n≥3, both
+`|paretoInner(Fn,Fn) − 2 log n| ≤ 18` and
+`|n·paretoMean(|Fn|) − 2 log n| ≤ 18` are proved. The conditioned
+energy satisfies `n·∫_0^1 (CFn)^2 → (π²−6)/9`. Its proof includes
+the exact transform, exponential substitution, integrable majorant, dominated
+convergence, and the exact Fermi integral π²/12.
+
+For 0<h≤n, the actual binary repair satisfies
+`variance ≤ 8(h/n²)(1+log(n/h)) ≤ 16 sqrt(h/n)/n`.
+An eventual bound `h/p ≤ C/(log p)^η`, η>0, therefore implies both
+the actual scale-ratio limit and summability of the actual repair variances.
+The theorem `summablePrimeRepairs_of_leastSmooth35_log_gap` has exactly
+the original `ResearchTargets.SummablePrimeRepairs` as its conclusion.
+
+The speculative normalized all-coefficient Bessel estimate fails for
+`leastSmooth35Above`. A Bessel constant would bound each common-scale
+cluster cardinality by a constant times sqrt(E). Since p<E≤2p, its prime
+reciprocal mass would then be bounded by a constant times 1/sqrt(E).
+Summing over E=3^a5^b gives a convergent double geometric series, contradicting
+Euler's divergence of prime reciprocals. The least-scale construction and
+its bound E≤2p are proved elementarily; this negative result uses no
+unformalized gap theorem. It resolves a suggestion explicitly left open in
+the PDF, and is compatible with summability of individual squared norms.
+
+For fixed even prime support P, the complete reciprocal-square mass equals
+`(π²/6) · ∏_{p∣P}(1−p⁻²)`. For P=6 this gives actual error and NSR
+floors `(π²−9)/(2π²)` and `(π²−9)/(π²+9)`.
 
 ## Remaining proof obligations
 
-The PDF is not fully verified by this translation. In particular:
+The quantitative spacing theorem for consecutive 3^a5^b numbers remains
+unformalized. It is the explicit missing arithmetic input to the original
+`SummablePrimeRepairs` target. The new conditional proof does not
+silently assume a variance bound, a ratio limit, or summability.
 
-1. The published quantitative gaps between 3^a5^b numbers, the square-wave
-   integral modulus estimate, and the resulting summability of individual
-   prime-repair variances need Lean proofs.
-2. The fixed-support infinite reciprocal-square mass is defined and used
-   directly. Its zeta/Euler-product evaluation, and hence the displayed
-   pi-squared numerical constants, are not yet proved here.
-3. The hidden-noise logarithmic asymptotics, conditional-variance limit
-   (pi^2-6)/9, and fixed-space gain estimate need the remaining analytic steps.
-   Exact finite interval formulas are available as proved ingredients.
-4. The residue-four moment evaluation, prime dual norm formula, full
-   Hilbert-space infimum conversion, and the infinite product/gain criterion
-   have not all been separately translated.
-5. Literature inputs such as the Bagchi criterion and squarefree sufficiency,
-   weighted Hankel diagonalization, Burnol rate barrier, and conditional
-   Bettin–Conrey–Farmer benchmark are not asserted as new Lean theorems.
-6. Numerical tables remain numerical evidence, not interval certificates.
+Other report statements outside the six named targets still need formalization:
+the fixed-old-space gain asymptotic, full Hilbert-space infimum/closure
+conversions, and the cited spectral and RH-criterion literature inputs,
+including the sharp pi/4 Hankel contraction and Bagchi/Burnol/Bettin–Conrey–Farmer
+results. Numerical tables are not promoted to interval certificates.
 
-The suggested all-coefficient Bessel/covariance bound is unproved in the PDF
-itself. RH and global convergence of a sufficient repair system remain open
-mathematical research problems, not merely omitted Lean proof scripts.
-
-No project axiom, `sorry`, `admit`, or `unsafe` declaration is part of the
-intended translation. Normal Lean foundations are distinguished from all
-substantive hypotheses appearing in theorem statements.
+RH and convergence of a sufficient repair system remain unresolved. No
+project axiom, `sorry`, `admit`, or `unsafe` declaration is used in
+these proofs. Normal Lean foundations and explicit theorem hypotheses are
+distinguished from unproved arithmetic inputs.
 
 ## Use
 

@@ -178,5 +178,13 @@ theorem re_digamma_one_quarter :
       Complex.ofReal_div, Complex.ofReal_ofNat] using digamma_one_quarter
   simpa only [Complex.ofReal_re] using congrArg Complex.re hc
 
+/-- The exact complex digamma value at three quarters. -/
+theorem digamma_three_quarters :
+    Complex.digamma (3 / 4) = -(Real.eulerMascheroniConstant : ℂ) -
+      3 * (Real.log 2 : ℂ) + (Real.pi : ℂ) / 2 := by
+  have h := quarter_logDeriv_reflect
+  rw [digamma_one_quarter] at h
+  linear_combination -h
+
 end
 end RiemannResearch.RH
