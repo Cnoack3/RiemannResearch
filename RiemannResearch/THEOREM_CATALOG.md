@@ -197,6 +197,30 @@ proofs of the motivating RH statements.
 | `RiemannResearch.RH.Log3IntervalCertificate.evenBlock_posDef` | `RiemannResearch.RH.Log3IntervalCertificate` | The exact rational even-block preconditioner and row certificate imply positive definiteness for any supplied Hermitian 20-by-20 matrix satisfying the displayed `hdiag` and `hrow` bounds | Kernel checked conditional certificate; identification of the exact-real formula layer with the localized Weil operator and both enclosure hypotheses remain open |
 | `RiemannResearch.RH.Log3IntervalCertificate.oddBlock_posDef` | `RiemannResearch.RH.Log3IntervalCertificate` | The exact rational odd-block preconditioner and repaired row certificate imply positive definiteness for any supplied Hermitian 20-by-20 matrix satisfying the displayed `hdiag` and `hrow` bounds | Kernel checked conditional certificate; identification of the exact-real formula layer with the localized Weil operator and both enclosure hypotheses remain open |
 
+## RH chat: Pareto–Nyman, Green, and single-test tails (8 September 2026)
+
+Source: user-provided RH_Candid_Assessment_Pareto_Green_CRT_2026-09-07.md and
+the associated chat. Exact inventory, verification evidence, hypotheses, and
+remaining obligations: RH/ChatFormalizationReport.md. This change adds 39
+public proved theorems; it does not formalize every claim or prove RH.
+
+| Module | New scope and status |
+|---|---|
+| RH.ParetoNymanPointwise; RH.ParetoUniformLaw; RH.ParetoNymanNorm | Actual reciprocal-floor distribution, pointwise residue identity, full squared-error norm transfer and finiteness for finite positive-conductor combinations |
+| RH.ParetoResidueMean | General residue mean log(n), actual packet mean vonMangoldt(q), prime-power and zero-mean specializations |
+| RH.ParetoBinaryApproximation | Exact complete-Pareto binary quadratic and optimum 1-log(2) |
+| RH.NymanInverseMobius | Actual mixed two/three synthesis forces the Möbius head; finite support and reciprocal cancellation A_M(1)=0 |
+| RH.ParetoPacketGreenGram | Ramanujan increments and gcd formula; exact finite boundary term and full summable tail |
+| Analysis.SubpowerTailObstruction | Conditional obstruction for actual L² tails with logarithmic support, fixed transform signature, and subpower energy |
+| RH.RiemannHypothesisStrip | Actual Mathlib RH iff all actual open-strip zeta zeros lie on the critical line |
+| RH.SingleTestTailCriterion | Conditional theorem concluding actual RH; detector nonvanishing, tail L², support, cancellation and subpower growth remain explicit hypotheses |
+
+Outstanding formalization includes the smooth compact detector construction
+and the classical Nyman–Beurling equivalence. Subpower growth and asymptotic
+variance reduction remain mathematically unproved targets. The criterion does
+not identify the mixed optimizer with the canonical one-conductor tails.
+
+
 ## Pareto noise and arithmetic repair (8 September 2026)
 
 Source: RH_Noise_Signal_Arithmetic_Repair_2026-09-07.pdf; detailed coverage and

@@ -77,6 +77,15 @@ import RiemannResearch.RH.ParetoEulerProduct
 import RiemannResearch.RH.ParetoHiddenNoiseMoments
 import RiemannResearch.RH.ParetoHiddenNoiseAsymptotics
 import RiemannResearch.RH.ParetoResidueMoments
+import RiemannResearch.RH.ParetoResidueMean
+import RiemannResearch.RH.ParetoBinaryApproximation
+import RiemannResearch.RH.ParetoNymanPointwise
+import RiemannResearch.RH.ParetoUniformLaw
+import RiemannResearch.RH.ParetoNymanNorm
+import RiemannResearch.RH.ParetoPacketGreenGram
+import RiemannResearch.Analysis.SubpowerTailObstruction
+import RiemannResearch.RH.RiemannHypothesisStrip
+import RiemannResearch.RH.SingleTestTailCriterion
 import RiemannResearch.RH.PrimeLogSummability
 import RiemannResearch.RH.SmallGapLogBound
 import RiemannResearch.RH.ParetoRepairModulus

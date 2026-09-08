@@ -1,4 +1,5 @@
 import RiemannResearch.RH.NymanConductorArithmetic
+import RiemannResearch.RH.ParetoResidueDuality
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Topology.Algebra.InfiniteSum.Basic
 import Mathlib.Tactic.FieldSimp
@@ -215,4 +216,246 @@ theorem nymanConductorInverse_eq_mobius_tsum (n : ℕ) (hn : 2 ≤ n)
   exact nymanMobiusPowerTerm_zero_of_large_exponent n hn hk
     (by simp only [Finset.mem_range] at hj; omega)
 
+/-!
+## Exact finite matching forces the Möbius head
+
+Source: user-provided argument
+`RH_Candid_Assessment_Pareto_Green_CRT_2026-09-07.md`.
+The following statements formalize the finite arithmetic conclusion itself.
+They do not assume any estimate for the optimizer's tail.
+-/
+
+/-- If the positive divisor sums agree with the Dirichlet unit through `M`,
+then every coefficient through `M` is the actual Möbius coefficient.
+No constraint is imposed on coefficients beyond the finite head. -/
+theorem finite_divisor_sums_force_moebius (e : ℕ → ℝ) (M : ℕ)
+    (hhead : ∀ k, 0 < k → k ≤ M →
+      (∑ d ∈ k.divisors, e d) = if k = 1 then 1 else 0)
+    (k : ℕ) (hk : 0 < k) (hkM : k ≤ M) :
+    e k = (ArithmeticFunction.moebius k : ℝ) := by
+  have hi := (Pareto.mobius_inversion e
+    (fun n => ∑ d ∈ n.divisors, e d)).mp (fun _ _ => rfl) k hk
+  calc
+    e k = ∑ d ∈ k.divisors, (ArithmeticFunction.moebius (k / d) : ℝ) *
+        (∑ j ∈ d.divisors, e j) := hi.symm
+    _ = ∑ d ∈ k.divisors, (ArithmeticFunction.moebius (k / d) : ℝ) *
+        (if d = 1 then 1 else 0) := by
+      apply Finset.sum_congr rfl
+      intro d hd
+      rw [hhead d (Nat.pos_of_mem_divisors hd) ((Nat.divisor_le hd).trans hkM)]
+    _ = (ArithmeticFunction.moebius k : ℝ) := by
+      simp [mul_ite, Nat.mem_divisors, ne_of_gt hk]
+
+/-- The exact coefficients of `(1/n - n^(-s)) D(s)`.
+At `k`, dilation contributes the coefficient at `k/n` exactly when `n ∣ k`. -/
+def nymanConductorSynthesis (n : ℕ) (d : ArithmeticFunction ℝ) :
+    ArithmeticFunction ℝ where
+  toFun k := d k / (n : ℝ) - if n ∣ k then d (k / n) else 0
+  map_zero' := by simp
+
+theorem nymanConductorSynthesis_apply (n k : ℕ) (d : ArithmeticFunction ℝ) :
+    nymanConductorSynthesis n d k =
+      d k / (n : ℝ) - if n ∣ k then d (k / n) else 0 := rfl
+
+/-- The synthesis coefficient is the genuine Möbius transform of the
+conductor's return coefficient; the equality holds at every natural index. -/
+theorem nymanConductorSynthesis_eq_moebius_return (n : ℕ)
+    (d : ArithmeticFunction ℝ) :
+    nymanConductorSynthesis n d =
+      (ArithmeticFunction.moebius : ArithmeticFunction ℝ) *
+        (nymanConductorBeta n * d) := by
+  rw [← mul_assoc, moebius_mul_nymanConductorBeta, sub_mul, smul_mul_assoc,
+    one_mul, mul_comm (arithmeticDilation n 1) d, mul_arithmeticDilation, mul_one]
+  ext k
+  change d k / (n : ℝ) - (if n ∣ k then d (k / n) else 0) =
+    ((1 / (n : ℝ)) • d) k - arithmeticDilation n d k
+  simp only [ArithmeticFunction.smul_map, smul_eq_mul, arithmeticDilation_apply]
+  ring
+
+/-- The concrete combined coefficients in the two-conductor polynomial. -/
+def nymanTwoThreeSynthesis (d₂ d₃ : ArithmeticFunction ℝ) :
+    ArithmeticFunction ℝ :=
+  nymanConductorSynthesis 2 d₂ + nymanConductorSynthesis 3 d₃
+
+/-- Exact matching of the actual two-conductor return through `M` forces
+the entire synthesized initial segment to be Möbius, independently of the
+choice of redundant conductor coefficients or any tail optimization. -/
+theorem nymanTwoThreeSynthesis_forced_moebius_head
+    (d₂ d₃ : ArithmeticFunction ℝ) (M : ℕ)
+    (hhead : ∀ k, k ≤ M →
+      (nymanConductorBeta 2 * d₂ + nymanConductorBeta 3 * d₃) k =
+        if k = 1 then 1 else 0)
+    (k : ℕ) (hkM : k ≤ M) :
+    nymanTwoThreeSynthesis d₂ d₃ k = (ArithmeticFunction.moebius k : ℝ) := by
+  have hs : nymanTwoThreeSynthesis d₂ d₃ =
+      (ArithmeticFunction.moebius : ArithmeticFunction ℝ) *
+        (nymanConductorBeta 2 * d₂ + nymanConductorBeta 3 * d₃) := by
+    rw [nymanTwoThreeSynthesis, nymanConductorSynthesis_eq_moebius_return,
+      nymanConductorSynthesis_eq_moebius_return, mul_add]
+  rw [hs]
+  calc
+    _ = ((ArithmeticFunction.moebius : ArithmeticFunction ℝ) * 1) k := by
+      rw [ArithmeticFunction.mul_apply, ArithmeticFunction.mul_apply]
+      apply Finset.sum_congr rfl
+      intro p hp
+      have hpM : p.2 ≤ M :=
+        (Nat.divisor_le (Nat.snd_mem_divisors_of_mem_antidiagonal hp)).trans hkM
+      rw [hhead p.2 hpM, ArithmeticFunction.one_apply]
+    _ = (ArithmeticFunction.moebius k : ℝ) := by
+      rw [mul_one, ArithmeticFunction.intCoe_apply]
+
+/-- A conductor multiplication enlarges a genuinely finite coefficient
+support from `M` to at most `n*M`; there is no concealed infinite tail. -/
+theorem nymanConductorSynthesis_zero_above (n M : ℕ) (hn : 0 < n)
+    (d : ArithmeticFunction ℝ) (hd : ∀ k, M < k → d k = 0)
+    (k : ℕ) (hk : n * M < k) : nymanConductorSynthesis n d k = 0 := by
+  have hMM : M ≤ n * M := by
+    calc
+      M = 1 * M := by simp
+      _ ≤ n * M := Nat.mul_le_mul_right M (by omega : 1 ≤ n)
+  have hkM : M < k := hMM.trans_lt hk
+  by_cases hnk : n ∣ k
+  · have hq : M < k / n := by
+      by_contra hq
+      have hle : k / n ≤ M := by omega
+      have hmul := Nat.mul_le_mul_right n hle
+      rw [Nat.div_mul_cancel hnk] at hmul
+      nlinarith
+    simp [nymanConductorSynthesis_apply, hnk, hd k hkM, hd (k / n) hq]
+  · simp [nymanConductorSynthesis_apply, hnk, hd k hkM]
+
+/-- The concrete two-conductor synthesis is supported through `3*M`
+when each input polynomial is supported through `M`. -/
+theorem nymanTwoThreeSynthesis_zero_above (d₂ d₃ : ArithmeticFunction ℝ) (M : ℕ)
+    (hd₂ : ∀ k, M < k → d₂ k = 0) (hd₃ : ∀ k, M < k → d₃ k = 0)
+    (k : ℕ) (hk : 3 * M < k) : nymanTwoThreeSynthesis d₂ d₃ k = 0 := by
+  change nymanConductorSynthesis 2 d₂ k + nymanConductorSynthesis 3 d₃ k = 0
+  rw [nymanConductorSynthesis_zero_above 2 M (by omega) d₂ hd₂ k (by omega),
+    nymanConductorSynthesis_zero_above 3 M (by omega) d₃ hd₃ k hk, add_zero]
+
+end RiemannResearch.RH
+
+/-!
+## The synthesized Dirichlet polynomial vanishes at one
+
+The proof below reindexes the actual coefficient sum.  In particular its
+vanishing is not introduced as a hypothesis or encoded in an unrelated
+polynomial definition.  Source: user-provided two-conductor synthesis argument.
+-/
+
+namespace RiemannResearch.RH
+
+noncomputable section
+open scoped BigOperators
+
+private theorem conductor_dilation_reciprocal_sum (n M : ℕ) (hn : 0 < n)
+    (d : ArithmeticFunction ℝ) :
+    (∑ k ∈ Finset.Icc 1 (n * M),
+      (if n ∣ k then d (k / n) else 0) / (k : ℝ)) =
+      ∑ j ∈ Finset.Icc 1 M, d j / ((n : ℝ) * (j : ℝ)) := by
+  classical
+  have hprod (j : ℕ) : n * j / n = j := by
+    have hdiv : n ∣ n * j := ⟨j, rfl⟩
+    have he : n * (n * j / n) = n * j := by
+      simpa only [Nat.mul_comm] using Nat.div_mul_cancel hdiv
+    exact mul_left_cancel₀ (ne_of_gt hn) he
+  have himage : (Finset.Icc 1 M).image (fun j => n * j) =
+      (Finset.Icc 1 (n * M)).filter (fun k => n ∣ k) := by
+    ext k
+    constructor
+    · intro hk
+      obtain ⟨j, hj, rfl⟩ := Finset.mem_image.mp hk
+      have hj' := Finset.mem_Icc.mp hj
+      refine Finset.mem_filter.mpr ⟨Finset.mem_Icc.mpr ⟨?_, ?_⟩, ⟨j, rfl⟩⟩
+      · exact Nat.mul_pos hn hj'.1
+      · exact Nat.mul_le_mul_left n hj'.2
+    · intro hk
+      obtain ⟨hk, hdiv⟩ := Finset.mem_filter.mp hk
+      have hk' := Finset.mem_Icc.mp hk
+      have he : n * (k / n) = k := by
+        simpa only [Nat.mul_comm] using Nat.div_mul_cancel hdiv
+      have hqpos : 0 < k / n := by
+        apply Nat.pos_of_ne_zero
+        intro hq0
+        rw [hq0, mul_zero] at he
+        exact (ne_of_gt (show 0 < k from hk'.1)) he.symm
+      have hqM : k / n ≤ M := by
+        by_contra hq
+        have hlarge : M + 1 ≤ k / n := by omega
+        have hmul := Nat.mul_le_mul_left n hlarge
+        nlinarith [hk'.2]
+      exact Finset.mem_image.mpr
+        ⟨k / n, Finset.mem_Icc.mpr ⟨hqpos, hqM⟩, he⟩
+  simp_rw [ite_div, zero_div]
+  rw [← Finset.sum_filter, ← himage]
+  rw [Finset.sum_image (fun a _ b _ hab => mul_left_cancel₀ (ne_of_gt hn) hab)]
+  apply Finset.sum_congr rfl
+  intro j hj
+  rw [hprod j, Nat.cast_mul]
+
+/-- The genuine finite coefficient sum of `(1/n - n^(-s)) D(s)` at `s=1`
+is zero.  `L` may be any cutoff beyond the complete synthesized support.
+The proof retains all coefficients and reindexes the dilated sum exactly. -/
+theorem nymanConductorSynthesis_reciprocal_sum (n M L : ℕ) (hn : 0 < n)
+    (d : ArithmeticFunction ℝ) (hd : ∀ k, M < k → d k = 0)
+    (hL : n * M ≤ L) :
+    (∑ k ∈ Finset.Icc 1 L, nymanConductorSynthesis n d k / (k : ℝ)) = 0 := by
+  have hMM : M ≤ n * M := by
+    calc
+      M = 1 * M := by simp
+      _ ≤ n * M := Nat.mul_le_mul_right M (by omega : 1 ≤ n)
+  have hfirst :
+      (∑ k ∈ Finset.Icc 1 (n * M), d k / (n : ℝ) / (k : ℝ)) =
+        ∑ k ∈ Finset.Icc 1 M, d k / (n : ℝ) / (k : ℝ) := by
+    symm
+    apply Finset.sum_subset
+    · intro k hk
+      have hk' := Finset.mem_Icc.mp hk
+      exact Finset.mem_Icc.mpr ⟨hk'.1, hk'.2.trans hMM⟩
+    · intro k hk hknot
+      have hk' := Finset.mem_Icc.mp hk
+      have hlarge : M < k := by
+        simp only [Finset.mem_Icc] at hknot
+        omega
+      rw [hd k hlarge, zero_div, zero_div]
+  have hcanonical :
+      (∑ k ∈ Finset.Icc 1 (n * M),
+        nymanConductorSynthesis n d k / (k : ℝ)) = 0 := by
+    simp_rw [nymanConductorSynthesis_apply, sub_div]
+    rw [Finset.sum_sub_distrib, hfirst, conductor_dilation_reciprocal_sum n M hn d]
+    simp_rw [div_div]
+    exact sub_self _
+  calc
+    (∑ k ∈ Finset.Icc 1 L, nymanConductorSynthesis n d k / (k : ℝ)) =
+        ∑ k ∈ Finset.Icc 1 (n * M),
+          nymanConductorSynthesis n d k / (k : ℝ) := by
+      symm
+      apply Finset.sum_subset
+      · intro k hk
+        have hk' := Finset.mem_Icc.mp hk
+        exact Finset.mem_Icc.mpr ⟨hk'.1, hk'.2.trans hL⟩
+      · intro k hk hknot
+        have hk' := Finset.mem_Icc.mp hk
+        have hlarge : n * M < k := by
+          simp only [Finset.mem_Icc] at hknot
+          omega
+        rw [nymanConductorSynthesis_zero_above n M hn d hd k hlarge, zero_div]
+    _ = 0 := hcanonical
+
+/-- `A_M(1)=0` for the actual two-conductor coefficient polynomial
+`A_M(s)=sum_{1≤k≤3M} e_k k^(-s)`, including every synthesized coefficient. -/
+theorem nymanTwoThreeSynthesis_reciprocal_sum
+    (d₂ d₃ : ArithmeticFunction ℝ) (M : ℕ)
+    (hd₂ : ∀ k, M < k → d₂ k = 0) (hd₃ : ∀ k, M < k → d₃ k = 0) :
+    (∑ k ∈ Finset.Icc 1 (3 * M),
+      nymanTwoThreeSynthesis d₂ d₃ k / (k : ℝ)) = 0 := by
+  change (∑ k ∈ Finset.Icc 1 (3 * M),
+    (nymanConductorSynthesis 2 d₂ k + nymanConductorSynthesis 3 d₃ k) / (k : ℝ)) = 0
+  simp_rw [add_div]
+  rw [Finset.sum_add_distrib,
+    nymanConductorSynthesis_reciprocal_sum 2 M (3 * M) (by omega) d₂ hd₂ (by omega),
+    nymanConductorSynthesis_reciprocal_sum 3 M (3 * M) (by omega) d₃ hd₃ (by omega),
+    add_zero]
+
+end
 end RiemannResearch.RH
