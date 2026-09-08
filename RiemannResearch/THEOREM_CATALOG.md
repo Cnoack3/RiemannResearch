@@ -19,6 +19,40 @@ stood on 4 September 2026 is preserved on
   input. Local hypotheses do not appear in `#print axioms`, so a clean axiom
   report alone does not make a result unconditional.
 
+## Signed seed constraints and certified finite gains (8 September 2026)
+
+These are unconditional finite-space and full infinite-error results for the actual
+seed-2/seed-3 generators and Pareto weights. They do not prove norm convergence or RH.
+The prime-five enlargement retains arbitrary signed coefficients and the full weighted
+error. The lower certificate checks all twelve period-dividing-36 generators;
+an exhaustive-coverage theorem proves that every allowed seed/dilation pair
+appears in this list.
+
+| Declaration family | Module | Exact scope |
+|---|---|---|
+| `Analysis.periodic_square_error_bound` | `Analysis.PeriodicSquareBound` | A generic finite uniform bound for the squared error of a sequence with a positive period |
+| `LinearAlgebra.weighted_error_dual_exact`, `weighted_error_lower_of_dual` | `LinearAlgebra.WeightedDualCertificate` | Generic exact weighted square identity and dual lower bound; positive weights and annihilation explicit |
+| `RH.TwoSeedThreshold.legalWitness180_full_error_lt`, `legalWitness360_full_error_lt` | `RH.ThresholdPrimeFiveInfinite180`, `RH.ThresholdPrimeFiveInfinite360` | Explicit legal witnesses with full infinite squared error <47/1000 and <44/1000; summability, regrouping and tail enclosure proved |
+| `RH.TwoSeedThreshold.conductor36Generator_exhaustive`, `conductor36Combination_full_error_gt` | `RH.ThresholdConductor36DualLower` | Every allowed conductor-36 generator appears among the twelve indexed generators; every indexed combination has full squared error >49/1000 |
+| `RH.TwoSeedThreshold.legalWitness180_uniform_improvement`, `legalWitness360_uniform_improvement` | `RH.ThresholdPrimeFiveGain` | Strict full-error improvements exceeding 2/1000 and 5/1000 over every old combination |
+| `RH.PositiveSeedCone.generator_defects_exact`, `finiteError_completion`, `positive_seed_cone_full_lower` | `RH.PositiveSeedCone` | Exact prime-five/seven defects; arbitrary nonnegative finite seed combinations have full error at least 37/1299, with summability discharged |
+| `RH.PositiveSeedCone.signed_seed_primeFive_forcedMass`, `signed_seed_exists_negative_primeFive` | `RH.PositiveSeedCone` | Arbitrary signed finite combinations satisfy the prime-five square bound; error <1/52 forces a negative coefficient at dilation 5 |
+
+The finite upper certificates live in `RH.ThresholdPrimeFiveCertificate180` and
+`RH.ThresholdPrimeFiveCertificate360`. These use exact rational arithmetic, with no
+numerical-optimality assumption. The positive-cone constant is sharp for the two-defect
+halfspace relaxation; no attainment assertion for the actual positive cone is made.
+
+**Open obligations:** the general arithmetic-component transport theorem, four-gcd
+covariance and centered Abel tail estimate, quantitative Mellin lift obstruction, and
+any scalable residual-capture estimate are research arguments or targets in the
+accompanying note, not consequences claimed for this formalization.
+
+**Next finite target:** certify the jointly reoptimized enlargement from conductor
+360 to 2520, retaining every existing generator and adding the prime-seven block.
+For asymptotic work, use cofinal periods such as `lcm(1,...,N)` so that every
+positive integer dilation, including higher prime powers, eventually appears.
+
 ## Two-seed threshold paper: partial formalization (8 September 2026)
 
 Kernel-checked support results below do not prove the paper's main RH equivalences. The September 8, 32-page edition has 195 source labels. See `RH/ThresholdPaperCoverage.md` for the historical 151-label audit and `RH/ThresholdAffineCoverage.md` for the 22-module extension, all 44 new Section 11 labels, exact hypotheses, and open obligations. Names have the common prefix `RiemannResearch` unless an ordinary algebraic namespace is shown.
