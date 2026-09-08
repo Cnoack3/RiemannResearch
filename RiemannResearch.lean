@@ -2,6 +2,10 @@ import RiemannResearch.Basic
 import RiemannResearch.NumberTheory.ArithmeticLogWeight
 import RiemannResearch.Probability.ConditionalVarianceError
 import RiemannResearch.RH.ParetoCovariance
+import RiemannResearch.RH.ParetoFiniteGram
+import RiemannResearch.RH.ParetoTailOrthogonalization
+import RiemannResearch.RH.ParetoFiniteTailProjection
+import RiemannResearch.RH.ParetoRepairAnchorCancellation
 import RiemannResearch.Analysis.ResidualGainProduct
 import RiemannResearch.Analysis.ResidualGainTermination
 import RiemannResearch.Analysis.HalfHarmonicLog

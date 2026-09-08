@@ -71,6 +71,14 @@ floors `(π²−9)/(2π²)` and `(π²−9)/(π²+9)`.
 
 ## Remaining proof obligations
 
+The false normalized Bessel route now has verified finite replacements in
+`ParetoRepairAnchorCancellation`, `ParetoTailOrthogonalization`,
+`ParetoFiniteGram`, and `ParetoFiniteTailProjection`. Exact shared-anchor and
+adjacent-chain decompositions retain the collective coefficient; tail
+projection preserves the repaired head and gives exact energy splitting.
+The original Bessel refutation and composite obstruction remain valid.
+See `ParetoCovarianceRepairReport.md` for precise scope and remaining limits.
+
 The quantitative spacing theorem for consecutive 3^a5^b numbers remains
 unformalized. It is the explicit missing arithmetic input to the original
 `SummablePrimeRepairs` target. The new conditional proof does not

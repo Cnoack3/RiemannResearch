@@ -105,12 +105,25 @@ source hashes: RH/ParetoNoiseSignalReport.md.
 | not_repairBesselBound_leastSmooth35Above | RH.ParetoBesselSmoothObstruction | Kernel checked NEGATIVE resolution of the report's proposed normalized Bessel bound for its actual least-smooth scale choice |
 | repairBessel_commonScale_card_sq_le | RH.ParetoBesselClusters | Actual full Pareto cluster energy forces square-root cardinal bounds; Analysis.SmoothScaleReciprocal and RH.PrimeReciprocalTail contradict them |
 | leastSmooth35Above_spec; leastSmooth35Above_le_twice | RH.Smooth35Choice | Actual minimal smooth scale and elementary factor-two bound, without a quantitative gap theorem |
+| arithmeticRepair_common_anchor_cancel; arithmeticRepair_common_anchor_sum; arithmeticRepair_adjacent_chain | RH.ParetoRepairAnchorCancellation | Exact shared-scale and adjacent-scale changes of basis, retaining collective and terminal anchor coefficients |
+| arithmeticRepair_binary_neighbor_defect; arithmeticRepair_common_anchor_variance_bound | RH.ParetoRepairAnchorCancellation | Compensating defect transfers to the neighboring scale; full variance bound uses the neighbor gap |
+| tailOrthogonalize_energy_split; tailOrthogonalize_preserves_defect; arithmeticRepair_tail_elimination | RH.ParetoTailOrthogonalization | Exact Schur energy, preserved arithmetic head/defect, positive anchored pivot; the binary invariant is preserved |
+| paretoInner_finsetCombination; paretoInner_finsetCombination_of_orthogonal | RH.ParetoFiniteGram | Exact full signed Gram expansion and Parseval for finite bounded orthogonal families with their actual coefficients |
+| paretoInner_finsetCombination_le_total_energy; paretoInner_finsetCombination_le_tsum_energy | RH.ParetoFiniteGram | Valid Cauchy--Schwarz bound by unweighted coefficient square sum times total diagonal energy; not the refuted normalized Bessel bound |
+| finiteTailProjection_orthogonal; finiteTailProjection_energy_split; finiteTailProjection_preserves_head; finiteTailProjection_pos_of_anchor | RH.ParetoFiniteTailProjection | Simultaneous finite projection for an already orthogonal bounded tail family, exact norm split and positive anchored pivot |
 
 Four of the original six named targets have unconditional positive providers:
 ResidueFourMoment, HiddenNoiseSecondMoment, HiddenNoiseFirstMoment and
 HiddenNoiseConditionedLimit. The proposed RepairBesselBound is disproved for
 the actual least-smooth choice (and all eventually comparable smooth choices).
 This was an open suggestion in the PDF, not a theorem claimed proved there.
+
+The finite covariance step now has proved replacements: exact anchor cancellation,
+reverse orthogonal elimination, finite tail projection, and exact Gram identities.
+See RH/ParetoCovarianceRepairReport.md. Transformed coefficients and all final
+anchors are retained. The finite projection assumes an already orthogonal tail
+family; a full recursive existence theorem is not claimed. These operations do
+not remove the binary composite obstruction or prove infinite convergence.
 
 The remaining named positive target is SummablePrimeRepairs. Its analytic
 steps and exact conditional assembly are proved; the published quantitative

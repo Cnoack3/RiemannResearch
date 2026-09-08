@@ -24,6 +24,12 @@ The Bessel estimate was an open suggestion in the report. It is now disproved
 for the actual least-smooth scale choice in ParetoBesselSmoothObstruction,
 without the quantitative gap input. This negative result does not contradict
 any theorem claimed proved in the report.
+
+Finite replacements are proved in ParetoRepairAnchorCancellation,
+ParetoTailOrthogonalization, ParetoFiniteGram, and ParetoFiniteTailProjection.
+They retain the full covariance, transformed coefficients, and collective
+anchor. They neither establish the original Bessel proposition nor remove
+the composite obstruction or quantitative smooth-gap obligation.
 -/
 
 open scoped BigOperators
