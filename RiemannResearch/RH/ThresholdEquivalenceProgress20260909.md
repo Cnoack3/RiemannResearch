@@ -44,6 +44,9 @@ conditional only on the actual unproved legal invariance/repair construction.
   exact mU(mn)=U(n) and iterated scaling, finite block and coordinate identities,
   the full tail-energy decomposition and its limit zero, and the genuine
   finite-cell Cauchy–Schwarz estimate with that tail-energy budget retained.
+- `PrimeLogPeriodRigidity.lean`: the logarithms of distinct primes have
+  irrational ratio; every continuous profile with both prime-log periods is
+  constant. This includes the actual `log 2`/`log 3` specialization.
 - `ThresholdTwoSeedConverse.lean`: full residue density plus genuine joint
   adjoint rigidity imply full two-seed density and hence target membership.
   Both analytic inputs remain explicit assumptions.
@@ -58,8 +61,9 @@ conditional only on the actual unproved legal invariance/repair construction.
    not the analytic RH-to-density theorem.
 2. Two-seed joint adjoint rigidity:
    every h fixed by the actual adjoints for 2 and 3 is `c • hilbertOne`.
-   The paper's proof still needs the local L² limit with quantitative tail
-   recovery, irrational logarithmic periods, and shrinking-cell recovery.
+   The continuous irrational-period step is now checked. The paper's proof
+   still needs the local L² limit or a justified continuous representative,
+   together with quantitative tail and shrinking-cell coordinate recovery.
    Plain local L² convergence does not recover every discrete coordinate.
    The necessary quantitative form retains
    `C * 2^(-j) * E_floor(A*2^j)`; the tail-energy factor may not be dropped.

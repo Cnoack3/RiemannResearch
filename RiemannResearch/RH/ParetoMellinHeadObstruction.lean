@@ -1,4 +1,5 @@
 import RiemannResearch.RH.ParetoMellinFunctional
+import RiemannResearch.RH.ParetoPacketCoordinates
 import Mathlib.Tactic.LinearCombination
 
 /-!
@@ -92,6 +93,30 @@ theorem paretoMellin_head_tail_energy {f : ThresholdHilbert} {N : ℕ}
   have h := intervalIntegral.integral_interval_add_Ioi hfull htail
   rw [head_energy_integral hhead, mellinWeightedStep_energy] at h
   exact h.symm
+
+/-- For a mean-one vector with exact head through `N`, the entire Mellin
+tail energy is the unavoidable target tail `1 / (N + 1)` plus the exact
+squared approximation error.  No tail term or mixed term is discarded. -/
+theorem meanOne_exactHead_tail_energy
+    {f : ThresholdHilbert} {N : ℕ}
+    (hmean : inner ℝ f hilbertOne = 1)
+    (hhead : ∀ k : ℕ, 0 < k → k ≤ N →
+      hilbertSequence f k = 1) :
+    (∫ x in Set.Ioi ((N : ℝ) + 1),
+        ‖mellinWeightedStep f x‖ ^ 2) =
+      1 / ((N : ℝ) + 1) + ‖f - hilbertOne‖ ^ 2 := by
+  have hsplit := paretoMellin_head_tail_energy hhead
+  have hpyth := pareto_mean_one_norm_sq f hmean
+  rw [hpyth] at hsplit
+  calc
+    (∫ x in Set.Ioi ((N : ℝ) + 1),
+        ‖mellinWeightedStep f x‖ ^ 2) =
+        1 + ‖f - hilbertOne‖ ^ 2 -
+          (N : ℝ) / ((N : ℝ) + 1) := by linarith
+    _ = 1 / ((N : ℝ) + 1) + ‖f - hilbertOne‖ ^ 2 := by
+      have hne : (N : ℝ) + 1 ≠ 0 := by positivity
+      field_simp [hne]
+      ring
 
 /-- The head signature cannot disappear; nullity forces its exact negative into the tail. -/
 theorem paretoMellin_tail_signature {f : ThresholdHilbert} {N : ℕ}
