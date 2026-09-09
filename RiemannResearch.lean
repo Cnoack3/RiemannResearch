@@ -445,3 +445,6 @@ import RiemannResearch.RH.ParetoBesselSmoothObstruction
 import RiemannResearch.RH.ParetoPrimeDualNorm
 import RiemannResearch.RH.ParetoRepairSummability
 import RiemannResearch.RH.Smooth35RepairCompletion
+import RiemannResearch.RH.CountableZetaDetector
+import RiemannResearch.RH.NymanConductorTailObstruction
+import RiemannResearch.RH.ConductorDifferenceEnergy

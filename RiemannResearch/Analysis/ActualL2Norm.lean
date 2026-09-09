@@ -3,6 +3,8 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.MeasureTheory.Group.Integral
 import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
 import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 
 /-! # The actual square-integral L2 norm and finite-translate bounds -/
 
@@ -84,5 +86,72 @@ theorem actualL2Norm_sum_smul_translate_le {ι : Type*} (S : Finset ι)
   have h := actualL2Norm_sum_le S (fun k => c k • (fun y => f (y - t k)))
     (fun k _ => (memLp_two_translate hf hc (t k)).const_smul (c k))
   simpa only [actualL2Norm_const_smul, actualL2Norm_translate, Finset.sum_mul] using h
+
+/-- Exact agreement of squared norm with the ordinary energy integral. -/
+theorem actualL2Norm_sq (f : ℝ → ℂ) :
+    actualL2Norm f ^ 2 = ∫ y : ℝ, ‖f y‖ ^ 2 := by
+  unfold actualL2Norm
+  exact Real.sq_sqrt (integral_nonneg (fun y => sq_nonneg ‖f y‖))
+
+/-- Exact translation-difference energy, retaining the complete square
+remainder. Source: direct expansion for the user's exact energy-accounting
+program; no domain-specific hypotheses are introduced. -/
+theorem actualL2Norm_sub_smul_translate_sq_exact (a b t : ℝ)
+    {f : ℝ → ℂ} (hf : MemLp f 2 volume) (hc : Continuous f) :
+    actualL2Norm (a • f - b • (fun y => f (y - t))) ^ 2 =
+      (a - b) ^ 2 * actualL2Norm f ^ 2 +
+        a * b * actualL2Norm (f - (fun y => f (y - t))) ^ 2 := by
+  let g : ℝ → ℂ := fun y => f (y - t)
+  have hg : MemLp g 2 volume := memLp_two_translate hf hc t
+  have hif : Integrable (fun y => ‖f y‖ ^ 2) := hf.norm.integrable_sq
+  have hig : Integrable (fun y => ‖g y‖ ^ 2) := hg.norm.integrable_sq
+  have hid : Integrable (fun y => ‖f y - g y‖ ^ 2) :=
+    (hf.sub hg).norm.integrable_sq
+  have h₁ := hif.const_mul ((a - b) ^ 2)
+  have h₂ := hid.const_mul (a * b)
+  have h₃ : Integrable (fun y => b * (b - a) * (‖g y‖ ^ 2 - ‖f y‖ ^ 2)) :=
+    (hig.sub hif).const_mul (b * (b - a))
+  have h₁₂ : Integrable (fun y =>
+      (a - b) ^ 2 * ‖f y‖ ^ 2 + a * b * ‖f y - g y‖ ^ 2) := h₁.add h₂
+  have hpoint (z w : ℂ) :
+      ‖a • z - b • w‖ ^ 2 =
+        (a - b) ^ 2 * ‖z‖ ^ 2 + a * b * ‖z - w‖ ^ 2 +
+          b * (b - a) * (‖w‖ ^ 2 - ‖z‖ ^ 2) := by
+    simp only [Complex.real_smul, Complex.sq_norm, Complex.normSq_apply,
+      Complex.sub_re, Complex.sub_im, Complex.mul_re, Complex.mul_im,
+      Complex.ofReal_re, Complex.ofReal_im]
+    ring
+  have hgintegral : (∫ y : ℝ, ‖g y‖ ^ 2) = ∫ y : ℝ, ‖f y‖ ^ 2 :=
+    integral_sub_right_eq_self (fun y : ℝ => ‖f y‖ ^ 2) t
+  simp only [actualL2Norm_sq, Pi.sub_apply, Pi.smul_apply]
+  change (∫ y : ℝ, ‖a • f y - b • g y‖ ^ 2) =
+    (a - b) ^ 2 * (∫ y : ℝ, ‖f y‖ ^ 2) +
+      a * b * (∫ y : ℝ, ‖f y - g y‖ ^ 2)
+  calc
+    _ = ∫ y : ℝ, ((a - b) ^ 2 * ‖f y‖ ^ 2 +
+        a * b * ‖f y - g y‖ ^ 2 +
+        b * (b - a) * (‖g y‖ ^ 2 - ‖f y‖ ^ 2)) :=
+      integral_congr_ae (Filter.Eventually.of_forall (fun y => hpoint (f y) (g y)))
+    _ = (a - b) ^ 2 * (∫ y : ℝ, ‖f y‖ ^ 2) +
+        a * b * (∫ y : ℝ, ‖f y - g y‖ ^ 2) +
+        b * (b - a) * ((∫ y : ℝ, ‖g y‖ ^ 2) - ∫ y : ℝ, ‖f y‖ ^ 2) := by
+      rw [integral_add h₁₂ h₃, integral_add h₁ h₂,
+        integral_const_mul, integral_const_mul, integral_const_mul,
+        integral_sub hig hif]
+    _ = _ := by rw [hgintegral]; ring
+
+/-- Reverse triangle bound with the translation norm evaluated exactly. -/
+theorem actualL2Norm_sub_smul_translate_lower_bound (a b t : ℝ)
+    {f : ℝ → ℂ} (hf : MemLp f 2 volume) (hc : Continuous f) :
+    (|b| - |a|) * actualL2Norm f ≤
+      actualL2Norm (a • f - b • (fun y => f (y - t))) := by
+  have hT := (memLp_two_translate hf hc t).const_smul b
+  have hA := hf.const_smul a
+  have h := actualL2Norm_sub_le hA (hA.sub hT)
+  have heq : a • f - (a • f - b • (fun y => f (y - t))) =
+      b • (fun y => f (y - t)) := sub_sub_cancel _ _
+  rw [heq, actualL2Norm_const_smul, actualL2Norm_translate,
+    actualL2Norm_const_smul] at h
+  nlinarith
 
 end RiemannResearch.Analysis

@@ -262,13 +262,22 @@ public proved theorems; it does not formalize every claim or prove RH.
 | RH.ParetoApproximationRatio | 3 established declarations: exact bias/variance error and equivalence of two small-error properties in a scalar-closed bounded class; existence of approximations remains Open |
 | RH.ParetoFiniteSchur | 20 established finite-control identities for the complete Pareto law, with explicit invertible Gram action; all-scale variance convergence remains Open |
 | Analysis.CountableLaplaceDetector | 10 established declarations: countable entire zeros, simultaneous real tilt, normalized compact bump, transform shift and smooth compact detection of a specified countable spectrum |
-| RH.CountableTiltDetector | Established existence of a nonzero smooth compact pole-annihilating countable-spectrum detector; actual-zeta specialization and original whole-strip detector remain Open |
-| RH.SingleZetaDetectorCriterion | Conditional research reduction to actual RH with detection only at actual strip zeros; tail L², support, cancellation, detection identification and subpower growth remain Open |
+| RH.CountableTiltDetector | Established existence of a nonzero smooth compact pole-annihilating countable-spectrum detector; actual-zeta specialization is now supplied by RH.CountableZetaDetector; original whole-strip detector remains Open |
+| RH.CountableZetaDetector | Standard actual-zeta zero countability and an unconditional smooth compact polar-annihilating detector for all nontrivial zeta zeros; no growth estimate asserted |
+| RH.SingleZetaDetectorCriterion | Conditional research reduction to actual RH with detection only at actual strip zeros; an actual detector is supplied by RH.CountableZetaDetector. Tail L², support, cancellation and subpower growth remain explicit obligations for an arbitrary/mixed optimizer |
+| RH.NymanConductorTailObstruction | Exact canonical-tail signature at conductor-multiplier zeros; linear energy floor and failure of subpower growth under a nonzero artificial-zero signature; for every fixed conductor, a genuine zeta-detecting compact potential with a positive linear tail floor is constructed |
+| Analysis.ActualL2Norm; RH.ConductorDifferenceEnergy | Exact translation-difference squared-energy identity with its full remainder, reverse triangle lower bound, and actual conductor operator with strictly positive L² gap for n at least two |
 
-Outstanding formalization includes the smooth compact detector construction
-and the classical Nyman–Beurling equivalence. Subpower growth and asymptotic
-variance reduction remain mathematically unproved targets. The criterion does
-not identify the mixed optimizer with the canonical one-conductor tails.
+The countable-spectrum smooth compact detector and its actual-zeta specialization
+are established. The original whole-strip detector and the classical
+Nyman–Beurling equivalence remain Open. Subpower growth and asymptotic
+variance reduction for a suitable mixed family remain mathematically unproved.
+The canonical one-conductor family is obstructed whenever its head has a
+nonzero artificial-zero signature. A stronger universal finite-jet obstruction
+for a fixed nonzero head is proved in prose in
+[the conductor-tail audit](RH/NymanConductorTailObstruction.md), but its
+derivative-signature and moment/projection steps remain Open in Lean.
+The criterion does not identify the mixed optimizer with canonical tails.
 
 
 ## Pareto noise and arithmetic repair (8 September 2026)
