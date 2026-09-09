@@ -309,12 +309,14 @@ proofs of the motivating RH statements.
 | `RiemannResearch.RH.Log3IntervalCertificate.evenBlock_posDef` | `RiemannResearch.RH.Log3IntervalCertificate` | The exact rational even-block preconditioner and row certificate imply positive definiteness for any supplied Hermitian 20-by-20 matrix satisfying the displayed `hdiag` and `hrow` bounds | Kernel checked conditional certificate; identification of the exact-real formula layer with the localized Weil operator and both enclosure hypotheses remain open |
 | `RiemannResearch.RH.Log3IntervalCertificate.oddBlock_posDef` | `RiemannResearch.RH.Log3IntervalCertificate` | The exact rational odd-block preconditioner and repaired row certificate imply positive definiteness for any supplied Hermitian 20-by-20 matrix satisfying the displayed `hdiag` and `hrow` bounds | Kernel checked conditional certificate; identification of the exact-real formula layer with the localized Weil operator and both enclosure hypotheses remain open |
 
-## RH chat: Pareto–Nyman, Green, and single-test tails (8 September 2026)
+## RH chat: Pareto–Nyman, Green, and single-test tails (updated 9 September 2026)
 
 Source: user-provided RH_Candid_Assessment_Pareto_Green_CRT_2026-09-07.md and
 the associated chat. Exact inventory, verification evidence, hypotheses, and
-remaining obligations: RH/ChatFormalizationReport.md. This change adds 39
-public proved theorems; it does not formalize every claim or prove RH.
+remaining obligations: RH/ChatFormalizationReport.md. The recorded original
+publications added 39 and 41 public theorems; the latest continuation adds
+40 more, alongside the additional upstream research cited below. The full
+discussion remains incompletely formalized and RH remains unproved.
 
 | Module | New scope and status |
 |---|---|
@@ -323,22 +325,29 @@ public proved theorems; it does not formalize every claim or prove RH.
 | RH.ParetoBinaryApproximation | Exact complete-Pareto binary quadratic and optimum 1-log(2) |
 | RH.NymanInverseMobius | Actual mixed two/three synthesis forces the Möbius head; finite support and reciprocal cancellation A_M(1)=0 |
 | RH.ParetoPacketGreenGram | Ramanujan increments and gcd formula; exact finite boundary term and full summable tail |
-| Analysis.SubpowerTailObstruction | Conditional obstruction for actual L² tails with logarithmic support, fixed transform signature, and subpower energy |
+| Analysis.SubpowerTailObstruction | Two conditional obstructions for actual L² tails: subpower growth and eventual power bounds, retaining logarithmic support and fixed transform signature |
 | RH.RiemannHypothesisStrip | Actual Mathlib RH iff all actual open-strip zeta zeros lie on the critical line |
 | RH.SingleTestTailCriterion | Conditional theorem concluding actual RH; detector nonvanishing, tail L², support, cancellation and subpower growth remain explicit hypotheses |
-| RH.ConductorBoundedReciprocal | 6 established declarations: actual symbol gap, reciprocal bound and exact convergent geometric series; L² inverse/support remains Open |
+| RH.ConductorBoundedReciprocal | 6 established declarations: actual symbol gap, reciprocal bound and exact convergent geometric series |
+| Analysis.ConductorL2Inverse | 17 established theorems: actual Lebesgue L² translations, operator geometric inverse series, both inverse identities, norm bound n/(sqrt(n)-1) and bijectivity for n>1 |
+| Analysis.ConductorL2Support | 9 established theorems: exact inverse values on full left blocks almost everywhere; a compact input has an inverse nonzero on positive-measure sets below every threshold |
+| Analysis.CenteredTransformPlancherel | 4 established theorems: actual centered/Fourier convention, spectral integrability and full-line Plancherel with normalization 1/(2π), including smooth-superexponential functions |
 | RH.ParetoApproximationRatio | 3 established declarations: exact bias/variance error and equivalence of two small-error properties in a scalar-closed bounded class; existence of approximations remains Open |
 | RH.ParetoFiniteSchur | 20 established finite-control identities for the complete Pareto law, with explicit invertible Gram action; all-scale variance convergence remains Open |
+| RH.ParetoLegalApproximationClosure | 6 established theorems: exact Hilbert norm/error identity, equivalence of legal closure with small error/noise ratio, prime-pair packet formulation, and actual RH from arbitrarily small legal noise/signal ratio using the proved Mellin bridge |
 | Analysis.CountableLaplaceDetector | 10 established declarations: countable entire zeros, simultaneous real tilt, normalized compact bump, transform shift and smooth compact detection of a specified countable spectrum |
 | RH.CountableTiltDetector | Established existence of a nonzero smooth compact pole-annihilating countable-spectrum detector; actual-zeta specialization is now supplied by RH.CountableZetaDetector; original whole-strip detector remains Open |
 | RH.CountableZetaDetector | Standard actual-zeta zero countability and an unconditional smooth compact polar-annihilating detector for all nontrivial zeta zeros; no growth estimate asserted |
+| RH.FixedZetaDetectorCriterion | 3 established theorems: properties of one fixed choice of the actual compact detector, and conditional RH/quantitative zero-free consequences. Detector existence is discharged; actual tail L², support, cancellation and growth remain explicit |
 | RH.SingleZetaDetectorCriterion | Conditional research reduction to actual RH with detection only at actual strip zeros; an actual detector is supplied by RH.CountableZetaDetector. Tail L², support, cancellation and subpower growth remain explicit obligations for an arbitrary/mixed optimizer |
 | RH.NymanConductorTailObstruction | Exact canonical-tail signature at conductor-multiplier zeros; linear energy floor and failure of subpower growth under a nonzero artificial-zero signature; for every fixed conductor, a genuine zeta-detecting compact potential with a positive linear tail floor is constructed |
 | Analysis.ActualL2Norm; RH.ConductorDifferenceEnergy | Exact translation-difference squared-energy identity with its full remainder, reverse triangle lower bound, and actual conductor operator with strictly positive L² gap for n at least two |
 
 The countable-spectrum smooth compact detector and its actual-zeta specialization
-are established. The original whole-strip detector and the classical
-Nyman–Beurling equivalence remain Open. Subpower growth and asymptotic
+are established. The forward legal-approximation-to-RH implication is also
+established; the RH-to-approximation converse remains Open here. The original
+whole-strip infinite-convolution detector and the full classical
+Nyman–Beurling equivalence remain unformalized in this development. Subpower growth and asymptotic
 variance reduction for a suitable mixed family remain mathematically unproved.
 The canonical one-conductor family is obstructed whenever its head has a
 nonzero artificial-zero signature. A stronger universal finite-jet obstruction
@@ -346,6 +355,8 @@ for a fixed nonzero head is proved in prose in
 [the conductor-tail audit](RH/NymanConductorTailObstruction.md), but its
 derivative-signature and moment/projection steps remain Open in Lean.
 The criterion does not identify the mixed optimizer with canonical tails.
+The genuine centered Plancherel theorem does not by itself identify that
+mixed family's actual transform factorization.
 
 
 ## Pareto noise and arithmetic repair (8 September 2026)
