@@ -19,6 +19,48 @@ stood on 4 September 2026 is preserved on
   input. Local hypotheses do not appear in `#print axioms`, so a clean axiom
   report alone does not make a result unconditional.
 
+## Gibbs contraction, legal wavelets, and arithmetic repair (9 September 2026)
+
+Source: the chat research development and
+`RH_Contracting_Evolution_and_Arithmetic_Repair_2026-09-08.md`, together with
+the general component and distributed-repair notes. These declarations concern
+the actual infinite Pareto Hilbert space, the actual signed legal arithmetic
+generators, and full errors. They do not establish RH. See
+`RH/ChatFormalizationCoverage20260909.md` for the claim-by-claim scope and open
+formalization obligations.
+
+Names in the analytic rows have prefix `RiemannResearch.RH.Pareto`.
+
+| Declaration family | Modules | Established scope |
+|---|---|---|
+| `gibbsAction_pairing_symm`, `gibbs_dirichlet_identity`, `gibbs_conditional_loss_identity`, `gibbsAction_fixed_iff_constant` | `RH.ParetoGibbsOperator`, `ParetoGibbsEnergy`, `ParetoGibbsPositive` | Infinite kernel normalization, full weighted square summability, reversible positivity, exact energy losses, and constant fixed space |
+| `hilbertGibbsContinuous`, `hilbertGibbsContinuous_isSelfAdjoint`, `hilbertGibbsIterate_tendsto` | `RH.ParetoGibbsHilbert`, `ParetoGibbsHilbertEnergy`, `ParetoGibbsConvergence` | Actual bounded positive self-adjoint operator and unconditional strong convergence of every iterate to the weighted mean |
+| `tailBasis_inner`, `tailBasisSpan_closure`, `tailBasis_gibbs_inner` | `RH.ParetoGibbsTailBasis`, `ParetoGibbsTailMatrix`, `ParetoGibbsHankel` | Actual orthonormal basis for the mean-zero closure and exact infinite-operator matrix; these analytic basis vectors are not asserted to be legal arithmetic vectors |
+| `gibbsSchurGamma_row_hasSum`, `gibbsComplementKernel_quadratic_le`, `paretoGibbsSharpGap` | `RH.ParetoGibbsSchur`, `ParetoGibbsSchurGamma`, `ParetoGibbsSchurEnergy`, `ParetoGibbsSpectralGap`; `Analysis.PositiveQuadraticNorm` | Exact Gamma row, uniform Schur estimate, and unconditional norm contraction by pi/4 on the whole mean-zero space |
+| `gibbsSchur_truncation_defect_le`, `hilbertGibbs_meanZero_optimal_constant_iff`, `hilbertGibbsMeanZeroContinuous_norm` | `RH.ParetoGibbsGammaTruncation`, `ParetoGibbsGammaDefect`, `ParetoGibbsOptimality` | Explicit Gamma-weighted truncations have unbounded norms and bounded Rayleigh defects; the actual restricted operator norm is exactly pi/4. No complete spectral-set claim is inferred |
+| `hilbertWaveletClosure_eq_legal`, `twoSeed_waveletClosure_eq_legal` | `RH.DilationWaveletAlgebra`, `DilationWaveletClosure` | Exact period cancellation, geometric infinite tail bounds, and equality of actual full wavelet and legal closed spaces |
+| `binary_wavelet_hilbert_gram_bound`, `normalizedBinaryWavelet_adjacent_tendsto_zero`, `normalizedBinaryWavelet_no_uniformLowerRiesz` | `RH.BinaryWaveletPrimitive`, `BinaryWaveletNearbySupport`, `DilationWaveletBinaryNorm`, `DilationWaveletOffScale`, `DilationWaveletNearbyEnergy`, `DilationWaveletNoRiesz`; `Analysis.BoundedPrimitiveAbel`, `NormalizedPairObstruction` | Exact binary norm pi/(4m), full signed Abel Gram identity, off-scale and nearby-scale estimates, and failure of any positive uniform lower Riesz bound |
+| `paretoMean_residue`, `paretoMean_dilationWaveletSequence`, `initialLegalMeanOne_mean` | `RH.ParetoResidueLogMean`, `GibbsLegalSeed` | General logarithmic means, binary geometric-tail constant, and an actual finite legal mean-one initial vector |
+| `geometricTransform_residue_generator`, `paretoStep_energy_identity` | `RH.ParetoCyclotomicTransform`, `ParetoWaveletTransform`, `ParetoStepIsometry` | Actual scalar transforms of legal generators/wavelets and exact step-function integral isometry under weighted square summability |
+| `hilbertGibbs_repair_energy`, `hilbertGibbs_repair_convergence`, `hilbertGibbs_legal_repair_iff_closure_unconditional` | `RH.ThresholdContractiveRepair`, `ParetoGibbsRepair`, `ParetoGibbsSpectralGap`; `Analysis.ContractiveRepair`, `MeanNormalization`, `ContractiveRepairClosure` | Exact mixed-energy identity; vanishing actual errors suffice without summability; existence of a legal repair orbit is equivalent to target membership in the legal closure. Existence itself remains open |
+| `hilbertOne_mem_legalClosure_of_gibbs_invariance`, `riemannHypothesis_of_gibbs_repair` | `RH.GibbsArithmeticResearchTargets` | Conditional research reductions. Legal Gibbs invariance/repair and the threshold-to-RH bridge are explicit unresolved inputs; no spectral-gap hypothesis remains |
+| `RH.FiniteBoundaryRepair.smooth_finite_boundary_fullError_lower` | `RH.FiniteRepairTriangular`, `FiniteBoundaryRepairObstruction` | For N ordered balanced repair endpoints, the actual full-error floor is 1/[72((3/2)^N-1)^2], with genuine root-charge and slope hypotheses explicit |
+| `RH.DistributedRepair.fullError_distributed_completion`, `RH.FiniteBalancedRepair.balancedFloor_mem_legalSeedSpan` | `RH.DistributedRepairCompletion`, `SmoothRepairAntichain`, `FiniteBalancedRepairSynthesis` | Every mixed/remainder/tail term is retained; explicit smooth divisibility antichains and actual finite legal synthesis under component balance |
+| `RH.DivisorComponentJumpRow.componentCharge_eq_totient_jumps`, `smooth_seed_fullError_lower`, `smooth_jumpWeight` | `RH.ComponentJumpGram`, `DivisorComponentJumpRow`, `DivisorComponentNormBound`, `SmoothComponentClosedFloor`, `SmoothComponentJumpWeights` | Actual totient jump row and norm bound; full-error floor 2/[(A+4)(4B+9)] for every A,B>0 and complements coprime to 6; explicit interior and boundary weights |
+
+**Open obligations:** construct finite legal mean-one Gibbs repairs with errors
+tending to zero, and prove the actual approximation-to-RH identification. Other
+unproved propositions are represented explicitly in
+`GibbsArithmeticResearchTargets`, `ArithmeticMellinResearchTargets`,
+`DilationWaveletAsymptoticTargets`, `GeometricDifferentialResearchTargets`, and
+`ParetoGibbsSpectrumTarget`, `GeometricHilbertRealizationResearchTargets`, and
+`ArithmeticFluxResearchTargets`. Defining such a `Prop` only records its statement;
+it does not provide a proof. Complete spectrum, Mellin/Plancherel and zero-mode
+bridges, sharp adjacent asymptotics, differential/Meixner identities, and the
+remaining arithmetic network identifications are tracked in the coverage ledger.
+Finite experiments are not used as hypotheses or extrapolated to convergence.
+
+
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
 These results concern actual signed two-seed generators and complete infinite
@@ -44,9 +86,10 @@ is recorded separately; its uniform upper estimate remains open.
 repairs under exact charge balance, retaining every mixed and tail term. Numerical
 tests favor permitting head error, but the tested sparse antichains do not beat the
 established certificates. The period-15120 comparison is a useful next certificate target.
-The general closed-form seed-exponent bound, full coupled-component network,
-bounded-number repair extension, and antichain convergence analysis remain ordinary
-research or open formalization. No convergence to zero or RH is established here.
+The closed-form seed-exponent bound and bounded-number repair extension are
+now proved in the 9 September addition above. The full coupled-component network
+and antichain convergence analysis remain research obligations. No convergence
+to zero or RH is established here.
 
 ## Prime-seven gain and seed-power obstructions (8 September 2026)
 
@@ -67,8 +110,9 @@ infinite weighted error are included. No numerical-optimality or RH premise is u
 
 **Continuation completed above:** period 2520 to 5040 is certified, and the
 general divisor-component functional now has a proved positive signal and exact
-finite Riesz completion. The closed-form exponent bound and uniform residual
-capture remain research obligations. None of these results establishes RH.
+finite Riesz completion. The closed-form exponent bound is now proved in the
+9 September addition; uniform residual capture remains a research obligation.
+None of these results establishes RH.
 
 ## Signed seed constraints and certified finite gains (8 September 2026)
 
