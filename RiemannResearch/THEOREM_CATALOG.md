@@ -394,6 +394,27 @@ source hashes: RH/ParetoNoiseSignalReport.md.
 | paretoInner_finsetCombination; paretoInner_finsetCombination_of_orthogonal | RH.ParetoFiniteGram | Exact full signed Gram expansion and Parseval for finite bounded orthogonal families with their actual coefficients |
 | paretoInner_finsetCombination_le_total_energy; paretoInner_finsetCombination_le_tsum_energy | RH.ParetoFiniteGram | Valid Cauchy--Schwarz bound by unweighted coefficient square sum times total diagonal energy; not the refuted normalized Bessel bound |
 | finiteTailProjection_orthogonal; finiteTailProjection_energy_split; finiteTailProjection_preserves_head; finiteTailProjection_pos_of_anchor | RH.ParetoFiniteTailProjection | Simultaneous finite projection for an already orthogonal bounded tail family, exact norm split and positive anchored pivot |
+| TwoChannelCancellation.centered_energy; TwoChannelCancellation.correlation_identity; TwoChannelCancellation.correlation_fourth_power | LinearAlgebra.TwoChannelCancellation | Exact Hilbert variance/covariance identities; fourth-power cancellation under explicit centered-norm lower bounds |
+| PairedAnnihilatorObstruction.no_exact_decomposition; PairedAnnihilatorObstruction.reciprocal_error_lower_bound | LinearAlgebra.PairedAnnihilatorObstruction | Conditional research reduction from explicitly quantified paired annihilators; actual arithmetic witness construction remains Open |
+| summable_adjacent_arithmeticRepair_variance; summable_adjacent_arithmeticRepair_sq_norm | RH.ParetoAdjacentSummability | Unconditional full diagonal summability for every positive adjacent integer scale |
+| inverseSmooth35_tsum; inverseSmooth35_shift_tsum | Analysis.Smooth35ReciprocalMass | Exact full reciprocal smooth-grid mass 15/8 and quadrant tails |
+| arithmeticRepair_binary_variance_sqrt_telescope; summable_ordered_disjoint_arithmeticRepair_variance | RH.ParetoDisjointRepairSummability | Full variance bounded by 64 times the reciprocal-square-root potential drop; unconditional disjoint-interval summability |
+| summable_smooth35SuccessorRepair_variance; smooth35SuccessorRepair_span_eq | RH.ParetoSmoothAdjacentSummability | Actual least-smooth replacement family has summable full variances and exactly the original algebraic span, without quantitative smooth gaps |
+| exists_head_mean; mem_legal_iff_exists_budget | RH.FiniteTwoSeedHeadMean | Actual two-seed finite head and complete-mean interpolation, with algebraic budget exhaustion |
+| residue_finset_coefficient; residueGramQuadratic_pos | RH.ParetoResidueGramStrict | Exact coefficient recovery, residue independence and strict positivity of the full infinite-tail Gram form |
+| residue_constrained_minimum_identity; residue_constrained_minimum_strict | RH.ParetoConstrainedResidueMinimum | Exact constrained minimum and strictness under actual stationarity and constraint equations |
+| budgetErrorInfimum_antitone; exact_approximation_iff_budget | RH.ParetoTwoSeedBudgetMinimum | Actual constrained budget infima and algebraic exhaustion; no vanishing-error limit asserted |
+| paretoHeadMean_energy_identity; paretoHead_one_mean_zero_cost | RH.ParetoHeadMeanEnergy | Exact complete head/mean minimizer and nonnegative remainder; sharp constant-head cost |
+| closedRepairProjection_tendsto_zero; infiniteRepairPivotSpan_closure; infiniteRepairPivot_summable_iff | RH.ParetoClosedRepairTails | Actual closed Hilbert tails, orthogonal pivots, completeness and strong convergence under the stated triangular hypotheses |
+| infiniteRepairPivot_sharp_lower_at_anchor | RH.ParetoTailPivotEnergy | Full mean-zero pivot energy lower bound at the actual physical anchor, including sparse indexing |
+| finiteRepairPivot_tendsto; finiteRepairPivot_energy_gap | RH.ParetoFinitePivotLimit | Finite pivots converge to actual infinite pivots with exact energy difference |
+| originalRepairSeries_converges_iff | RH.ParetoReversePivotExpansion | Exact transformed-coefficient convergence criterion retaining the complete moving-boundary term |
+| adjacentBinaryRepair_covariance; adjacentBinaryRepair_abel | RH.ParetoAdjacentRepairCalculus | Full signed covariance differences and Abel summation retaining terminal anchors |
+| binaryDilation_combination_energy_le_cumulative_tail; adjacentBinaryRepair_combination_energy | RH.ParetoAdjacentKernelBounds | Exact minimum-kernel factorization and full signed Gram energy |
+| CompressedMellin.cellDensity_eq; CompressedMellin.phase_difference_square | RH.ParetoCompressedMellinCosine | Exact actual cosine density and signed phase identities |
+| CompressedMellin.cosineDeficit_summable; CompressedMellin.cosineMass_le_quadratic | RH.ParetoCompressedMellinSummability | Unconditional actual cosine-series convergence and full majorant |
+| CompressedMellin.compressedMellinEnergy_eq; CompressedMellin.fullCosineIdentity | RH.ParetoCompressedMellinNorm | Exact complete complex-cell norm; supplies FullCosineIdentity without additional analytic hypotheses |
+| CompressedMellin.actual_no_exact_decomposition; CompressedMellin.actual_reciprocal_error_obstruction | RH.ParetoMellinObstructionTargets | Conditional research reductions for actual seed closures. CosineMassAsymptotic, PhaseCenteredAnalyticProvider and ActualPairedMellinProvider remain Open |
 
 Four of the original six named targets have unconditional positive providers:
 ResidueFourMoment, HiddenNoiseSecondMoment, HiddenNoiseFirstMoment and
