@@ -173,6 +173,20 @@ Kernel-checked support results below do not prove the paper's main RH equivalenc
 | `Ring.compression_product_defect`, `hom_difference_cocycle`; `StarRing.compression_square_defect_finite_gram`; `Real.unit_rankOne_difference_sum_sq` | `LinearAlgebra.CompressionProductDefect`, `RankOneProjectionDistance` | Exact ordered operator algebra and complete finite mixed Gram/rank-one identities |
 | `LinearAlgebra.SpectralCutoff.diagonal_half_cutoff`, `certified_half_cutoff_bounds`, `repeatedError_nondecreasing` | `LinearAlgebra.SpectralCutoffRepair`, `SpectralRepeatedFit`, `SpectralDiagonalRealization` | Explicit finite diagonal synthesis, factor-two bounds and repeated-fit full-error growth; actual weighted legal covariance realization remains open |
 
+## Bounded exact interpolation and weighted CRT target (9 September 2026)
+
+See [RH/ThresholdBoundedInterpolation.md](RH/ThresholdBoundedInterpolation.md) for the exact minimum-norm argument, capacity dichotomy, finite-head construction, all-component two-seed charge constraints, and weighted CRT Schur-complement target.
+
+| Declaration family | Module | Exact scope / status |
+|---|---|---|
+| `Analysis.BoundedInterpolation.cauchySeq_of_bounded_exact_energy`, `exists_minimum_head`, `minimum_head_pythagoras`, `exists_exact_heads_tendsto_of_bounded` | `Analysis.BoundedInterpolation` | Established Hilbert-space support: actual closed-subspace projections, exact minimum-head completion, and strong convergence plus exact target error from an explicit uniform interpolation bound. |
+| `Pareto.hilbertLegalClosure_of_bounded_exact_heads` | `RH.ThresholdBoundedInterpolation` | **Conditional research reduction:** uniformly bounded finite legal exact heads imply membership of the actual unit target in the genuine weighted legal closure. All positive integer dilations remain available. |
+
+- **Open:** provide uniformly bounded full squared norms for finite legal exact interpolants, in particular for seeds {2, 3}.
+- **Open:** prove the proposed family of weighted CRT Schur-complement tail energies is uniformly bounded; the note's exact matrix assembly and charge extension formulation are written arguments, not newly checked providers.
+- **Open:** assemble the RH criterion bridge in Lean. The cited classical full-residue criterion does not establish a two-seed converse.
+- The finite/closed exact-head infimum equality and capacity dichotomy are proved in the research note; they are not asserted to be fully formalized by these declarations.
+
 ## Adjoint operators and quantitative affine phase limit (8 September 2026)
 
 These 64 additional public declarations are established support results, not a proof of RH. All scales are actual positive integers. See `RH/ThresholdAdjointPhaseProgress.md` for exact definitions, verification receipts, and remaining bridges.
