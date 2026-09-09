@@ -258,6 +258,12 @@ public proved theorems; it does not formalize every claim or prove RH.
 | Analysis.SubpowerTailObstruction | Conditional obstruction for actual L² tails with logarithmic support, fixed transform signature, and subpower energy |
 | RH.RiemannHypothesisStrip | Actual Mathlib RH iff all actual open-strip zeta zeros lie on the critical line |
 | RH.SingleTestTailCriterion | Conditional theorem concluding actual RH; detector nonvanishing, tail L², support, cancellation and subpower growth remain explicit hypotheses |
+| RH.ConductorBoundedReciprocal | 6 established declarations: actual symbol gap, reciprocal bound and exact convergent geometric series; L² inverse/support remains Open |
+| RH.ParetoApproximationRatio | 3 established declarations: exact bias/variance error and equivalence of two small-error properties in a scalar-closed bounded class; existence of approximations remains Open |
+| RH.ParetoFiniteSchur | 20 established finite-control identities for the complete Pareto law, with explicit invertible Gram action; all-scale variance convergence remains Open |
+| Analysis.CountableLaplaceDetector | 10 established declarations: countable entire zeros, simultaneous real tilt, normalized compact bump, transform shift and smooth compact detection of a specified countable spectrum |
+| RH.CountableTiltDetector | Established existence of a nonzero smooth compact pole-annihilating countable-spectrum detector; actual-zeta specialization and original whole-strip detector remain Open |
+| RH.SingleZetaDetectorCriterion | Conditional research reduction to actual RH with detection only at actual strip zeros; tail L², support, cancellation, detection identification and subpower growth remain Open |
 
 Outstanding formalization includes the smooth compact detector construction
 and the classical Nyman–Beurling equivalence. Subpower growth and asymptotic

@@ -1,5 +1,51 @@
 # RH chat formalization audit — 8 September 2026
 
+## Verified continuation — 9 September 2026
+
+The five preserved candidates in RH_Lean_Continuation_2026-09-09.zip have now
+passed serialized Lean verification after repairs. They supply 41 public
+theorems in six new modules. The combined packaging and representative axiom
+check succeeded as job_nExKbVWLTN-2hCeKRL3FgNdi9MNwbOyZ, exit code 0,
+verified true (6.720 seconds). All six representative axiom reports list only
+propext, Classical.choice, and Quot.sound.
+
+| Module | Theorems | Exact scope |
+|---|---:|---|
+| RH/ConductorBoundedReciprocal | 6 | Actual conductor-symbol lower bound, positive gap, uniform reciprocal bound, and convergent exact geometric reciprocal series for n>1 and Re(s)<1. No L² operator/support theorem. |
+| RH/ParetoApproximationRatio | 3 | Complete Pareto error decomposition, exact mean normalization, and equivalence of arbitrarily small approximation error and noise/signal ratio in a scalar-closed bounded-function class. Neither approximation property is asserted to hold. |
+| RH/ParetoFiniteSchur | 20 | Actual complete Pareto Gram optimizer, mean preservation, exact signed covariance remainder, Schur value, and joint coefficient/scale optimum. The Gram linear equivalence and its coordinate identification remain explicit hypotheses. |
+| Analysis/CountableLaplaceDetector | 10 | Countable entire zero set, a real tilt avoiding it at a specified countable spectrum, actual normalized bump and transform shift, and existence of a smooth compact detector. |
+| RH/CountableTiltDetector | 1 | A nonzero smooth compact test annihilating 0 and 1 and detecting every member of a specified countable set excluding 0 and 1. Does not claim a whole-strip zero-free transform. |
+| RH/SingleZetaDetectorCriterion | 1 | Conditional actual RH criterion requiring detection only at actual strip zeta zeros; tail L², support, exact transform cancellation, and subpower growth remain explicit. |
+
+The countable-detector construction supersedes only the detector-existence
+gap for a specified countable spectrum. The actual-zeta-zero countability
+specialization and its connection to the criterion remain Open here. The
+original infinite-convolution whole-strip detector remains unformalized.
+The Nyman–Beurling equivalence, the genuine L² conductor inverse/support
+realization, and the mixed optimizer's analytic providers remain Open.
+Subpower growth and all-scale variance/signal convergence remain
+mathematically unproved. No unconditional RH result is claimed.
+
+Recovery preserved the retained workspace and verified all nine package
+checksums. The initial workspace was clean at 454a2ef, while GitHub main was
+126b563 (one newer commit). Workspace sync restored the saved publication
+commit; it did not advance HEAD. The checkpoint containing this report must
+fetch origin/main, integrate in a clean clone, revalidate affected modules,
+and publish without force-push. Its terminal result is the authority for
+project integration/publication; the snippet result alone does not certify
+the newer GitHub tree. Existing unrelated work is not replaced.
+
+Repairs corrected an import from Analysis/PoleCancellationTransform to its
+actual RH location, restricted logarithm simplification, used explicit
+function equalities for HasSum, unfolded finite combinations/let-bound
+residuals, and specified the scalar function in HasCompactSupport.smul_left.
+The last change eliminated the detector elaboration timeout at the normal
+heartbeat allowance. HTTP 504 on a source read was distinct from successful
+verification jobs.
+
+---
+
 This report covers the user-provided discussion and
 `RH_Candid_Assessment_Pareto_Green_CRT_2026-09-07.md`.
 It supersedes the earlier interrupted verification audit.
