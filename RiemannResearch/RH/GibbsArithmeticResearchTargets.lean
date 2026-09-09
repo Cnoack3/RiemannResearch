@@ -2,6 +2,7 @@ import RiemannResearch.RH.ParetoGibbsSpectralGap
 import RiemannResearch.RH.ParetoGibbsConvergence
 import RiemannResearch.RH.GibbsLegalSeed
 import Mathlib.NumberTheory.LSeries.RiemannZeta
+import RiemannResearch.RH.ThresholdRiemannHypothesis
 
 /-!
 # The open arithmetic obligations in the Gibbs research proposal
@@ -25,8 +26,8 @@ def GibbsArithmeticRepairTarget : Prop :=
 def GibbsLegalInvarianceTarget : Prop :=
   ∀ f ∈ hilbertLegalClosure {2, 3}, hilbertGibbs f ∈ hilbertLegalClosure {2, 3}
 
-/-- The analytic identification needed before labelling the formal closure
-criterion an RH equivalence. It remains unproved in this development. -/
+/-- The full analytic identification. The forward implication is now supplied
+by riemannHypothesis_of_twoSeed_closure; the RH-to-closure converse remains open. -/
 def ThresholdRiemannHypothesisBridgeTarget : Prop :=
   (hilbertOne ∈ hilbertLegalClosure {2, 3}) ↔ RiemannHypothesis
 
@@ -55,19 +56,19 @@ theorem hilbertOne_mem_legalClosure_of_gibbs_invariance
   exact (hilbertLegalSubspace {2, 3}).isClosed_topologicalClosure.mem_of_tendsto
     hlim (Filter.Eventually.of_forall hmem)
 
-/-- The proposed invariance route requires its arithmetic construction and
-the explicit RH identification, but no external numerical gap value. -/
+/-- The proposed invariance route requires only its arithmetic construction.
+The actual approximation-to-RH implication is now supplied by a theorem. -/
 theorem riemannHypothesis_of_gibbs_invariance
-    (hbridge : ThresholdRiemannHypothesisBridgeTarget)
     (hinv : GibbsLegalInvarianceTarget) : RiemannHypothesis :=
-  hbridge.mp (hilbertOne_mem_legalClosure_of_gibbs_invariance hinv)
+  riemannHypothesis_of_twoSeed_closure (hilbertOne_mem_legalClosure_of_gibbs_invariance hinv)
 
-/-- A fully explicit conditional consumer. Neither open input is proved here. -/
+/-- Conditional on the actual arithmetic repair construction only.
+No unproved analytic RH-identification input remains. -/
 theorem riemannHypothesis_of_gibbs_repair
-    (hbridge : ThresholdRiemannHypothesisBridgeTarget)
     (hrepair : GibbsArithmeticRepairTarget) :
     RiemannHypothesis :=
-  hbridge.mp (hilbertGibbs_legal_repair_iff_closure_unconditional.mp hrepair)
+  riemannHypothesis_of_twoSeed_closure
+    (hilbertGibbs_legal_repair_iff_closure_unconditional.mp hrepair)
 
 end
 end RiemannResearch.RH.Pareto

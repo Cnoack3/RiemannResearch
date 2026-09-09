@@ -19,6 +19,35 @@ stood on 4 September 2026 is preserved on
   input. Local hypotheses do not appear in `#print axioms`, so a clean axiom
   report alone does not make a result unconditional.
 
+## Two-seed approximation implies RH (9 September 2026)
+
+The declarations below have namespace `RiemannResearch.RH.Pareto` and live in
+`RH.ThresholdRiemannHypothesis`. They use the actual weighted Hilbert space,
+actual zeta function, and all positive integer dilations. The converse
+`RiemannHypothesis → hilbertOne ∈ hilbertLegalClosure {2, 3}` remains **Open**.
+
+| Declaration | Established scope |
+|---|---|
+| `paretoMellin_zero_on_legalClosure_of_zeta` | A hypothetical zeta zero with Re(s)>1/2, s≠1 annihilates the entire closed legal space for any positive seeds. |
+| `zeta_ne_zero_of_hilbertOne_mem_legalClosure` | Actual target membership excludes these zeros without an assumed NB bridge. |
+| `riemannHypothesis_of_hilbertOne_mem_legalClosure` | For any positive seeds, actual target membership implies Mathlib's RH; reflection and boundary/trivial-zero issues are discharged by existing providers. |
+| `riemannHypothesis_of_twoSeed_closure` | The complete 2,3 approximation-to-RH implication. This does not establish target membership or the reverse implication. |
+| `legalClosure_distance_sq_lower_bound_of_zeta` | Full weighted squared distance is at least (2 Re(s)−1)/‖s‖² for every vector in the closed legal space at a hypothetical such zero. |
+| `arithmeticZeroObstruction` | Discharges the previously open `ArithmeticZeroObstructionTarget`, including every finite two-seed legal vector. |
+
+
+The converse now has the following proved supporting components:
+
+| Declaration family | Module | Exact status |
+|---|---|---|
+| `hilbertTail_inner_scaling`, `hilbertTail_inner_pow_scaling`, `hilbertTail_inner_sub`, `hilbertTail_inner_sub_sq_le_tailEnergy`, `hilbertTailEnergy_tendsto_zero` | `RH.ThresholdJointAdjointTail` | Actual absolutely summable weighted tails, exact scaling from a fixed-adjoint equation, exact finite blocks, full tail-energy decompositions and vanishing energy. The local L² limit/rate and irrational-period rigidity remain Open. |
+| `legalSeedSpan_positive_eq_residue_span`, `hilbertDilation_sub_mem_legalClosure`, `adjoint_sub_mem_full_orthogonal` | `RH.ThresholdHilbertCocycle` | Exact full-residue space identification and closed-Hilbert cocycle/orthogonality reduction, without RH or density hypotheses. |
+| `adjoint_fixed_of_legal_orthogonal_of_full_density` | `RH.ThresholdHilbertCocycle` | **Conditional research reduction:** full positive-residue density is an explicit input. |
+| `twoSeed_legalClosure_eq_top_of_full_density_of_joint_fixed_constants`, `hilbertOne_mem_twoSeed_of_full_density_of_joint_fixed_constants` | `RH.ThresholdTwoSeedConverse` | **Conditional research reduction:** full positive-residue density and two-seed adjoint rigidity are explicit inputs. Both still require actual providers before the RH-to-approximation converse can be claimed. |
+
+See `RH/ThresholdEquivalenceProgress20260909.md` for the exact remaining
+targets and the combined verification receipt.
+
 ## Gibbs contraction, legal wavelets, and arithmetic repair (9 September 2026)
 
 Source: the chat research development and
@@ -43,13 +72,14 @@ Names in the analytic rows have prefix `RiemannResearch.RH.Pareto`.
 | `paretoMean_residue`, `paretoMean_dilationWaveletSequence`, `initialLegalMeanOne_mean` | `RH.ParetoResidueLogMean`, `GibbsLegalSeed` | General logarithmic means, binary geometric-tail constant, and an actual finite legal mean-one initial vector |
 | `geometricTransform_residue_generator`, `paretoStep_energy_identity` | `RH.ParetoCyclotomicTransform`, `ParetoWaveletTransform`, `ParetoStepIsometry` | Actual scalar transforms of legal generators/wavelets and exact step-function integral isometry under weighted square summability |
 | `hilbertGibbs_repair_energy`, `hilbertGibbs_repair_convergence`, `hilbertGibbs_legal_repair_iff_closure_unconditional` | `RH.ThresholdContractiveRepair`, `ParetoGibbsRepair`, `ParetoGibbsSpectralGap`; `Analysis.ContractiveRepair`, `MeanNormalization`, `ContractiveRepairClosure` | Exact mixed-energy identity; vanishing actual errors suffice without summability; existence of a legal repair orbit is equivalent to target membership in the legal closure. Existence itself remains open |
-| `hilbertOne_mem_legalClosure_of_gibbs_invariance`, `riemannHypothesis_of_gibbs_repair` | `RH.GibbsArithmeticResearchTargets` | Conditional research reductions. Legal Gibbs invariance/repair and the threshold-to-RH bridge are explicit unresolved inputs; no spectral-gap hypothesis remains |
+| `hilbertOne_mem_legalClosure_of_gibbs_invariance`, `riemannHypothesis_of_gibbs_invariance`, `riemannHypothesis_of_gibbs_repair` | `RH.GibbsArithmeticResearchTargets` | Conditional research reductions. Only legal Gibbs invariance/repair remains an unresolved input; the approximation-to-RH implication is supplied by `riemannHypothesis_of_twoSeed_closure`. |
 | `RH.FiniteBoundaryRepair.smooth_finite_boundary_fullError_lower` | `RH.FiniteRepairTriangular`, `FiniteBoundaryRepairObstruction` | For N ordered balanced repair endpoints, the actual full-error floor is 1/[72((3/2)^N-1)^2], with genuine root-charge and slope hypotheses explicit |
 | `RH.DistributedRepair.fullError_distributed_completion`, `RH.FiniteBalancedRepair.balancedFloor_mem_legalSeedSpan` | `RH.DistributedRepairCompletion`, `SmoothRepairAntichain`, `FiniteBalancedRepairSynthesis` | Every mixed/remainder/tail term is retained; explicit smooth divisibility antichains and actual finite legal synthesis under component balance |
 | `RH.DivisorComponentJumpRow.componentCharge_eq_totient_jumps`, `smooth_seed_fullError_lower`, `smooth_jumpWeight` | `RH.ComponentJumpGram`, `DivisorComponentJumpRow`, `DivisorComponentNormBound`, `SmoothComponentClosedFloor`, `SmoothComponentJumpWeights` | Actual totient jump row and norm bound; full-error floor 2/[(A+4)(4B+9)] for every A,B>0 and complements coprime to 6; explicit interior and boundary weights |
 
 **Open obligations:** construct finite legal mean-one Gibbs repairs with errors
-tending to zero, and prove the actual approximation-to-RH identification. Other
+tending to zero, and prove the RH-to-approximation converse. The forward
+approximation-to-RH implication is now established. Other
 unproved propositions are represented explicitly in
 `GibbsArithmeticResearchTargets`, `ArithmeticMellinResearchTargets`,
 `DilationWaveletAsymptoticTargets`, `GeometricDifferentialResearchTargets`, and

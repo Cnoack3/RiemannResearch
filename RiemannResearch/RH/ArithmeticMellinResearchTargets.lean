@@ -52,7 +52,8 @@ def ArithmeticPlancherelTarget : Prop :=
         ((1/4 : ℝ) + t^2)
 
 /-- The hypothetical off-line zero gives a positive lower bound for every
-actual finite legal Hilbert vector. This implication is not yet proved here. -/
+actual finite legal Hilbert vector. This target is discharged by
+`arithmeticZeroObstruction` in `ThresholdRiemannHypothesis.lean`. -/
 def ArithmeticZeroObstructionTarget : Prop :=
   ∀ ρ : ℂ, riemannZeta ρ = 0 → (1/2 : ℝ) < ρ.re → ρ.re < 1 →
     ∀ F ∈ hilbertLegalSubspace {2, 3},

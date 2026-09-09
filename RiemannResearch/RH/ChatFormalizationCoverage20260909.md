@@ -101,13 +101,15 @@ tend to zero. Neither spectral contraction nor pairwise wavelet decorrelation
 constructs this orbit. The analytic tail basis used to prove the gap is not
 claimed to lie in the arithmetic legal space.
 
-The separate `ThresholdRiemannHypothesisBridgeTarget` records the actual
-approximation-to-RH identification. The theorem
-`riemannHypothesis_of_gibbs_repair` proves the implication from those two
-explicit inputs; it is not an unconditional proof of RH.
+The separate `ThresholdRiemannHypothesisBridgeTarget` records the full
+approximation/RH equivalence. Its approximation-to-RH direction is now proved
+by `ThresholdRiemannHypothesis.riemannHypothesis_of_twoSeed_closure`; the converse
+remains open. `riemannHypothesis_of_gibbs_repair` now requires only the actual
+arithmetic repair input. It does not establish that input or prove RH.
 
-The most useful next work is to prove the actual step-function Mellin bridge
-and to seek a legal repair estimate that controls full tails across nearby
+The actual Mellin/zeta identity now supplies the forward RH implication.
+Remaining work includes the RH-to-approximation converse and a legal repair
+estimate that controls full tails across nearby
 dilation blocks. The no-lower-Riesz theorem rules out relying on a uniform
 inverse estimate for the raw wavelet family. A block construction must retain
 the signed cross terms and quantify its coefficient growth.
@@ -153,7 +155,7 @@ Unless stated otherwise, theorem names are in `RiemannResearch.RH.Pareto`; modul
 | Existence of vanishing-repair legal orbits is equivalent to target membership in the legal closure | `Analysis.ContractiveRepair.vanishing_repair_orbit_iff_mem_closure`; `ParetoGibbsRepair.hilbertGibbs_legal_repair_iff_closure`; unconditional specialization in `ParetoGibbsSpectralGap` | Generic, gap-conditional, and actual unconditional equivalences proved. This is a reduction, not a construction of an orbit. |
 | `P` preserves the closed legal space | `GibbsArithmeticResearchTargets.GibbsLegalInvarianceTarget` | **Target only.** `hilbertOne_mem_legalClosure_of_gibbs_invariance` proves that this assumption already implies target membership, using unconditional strong convergence. |
 | Actual arithmetic reconstruction with vanishing defect, (20) | `GibbsArithmeticRepairTarget`, `GibbsRelativeArithmeticRepairTarget` | **Targets only.** No explicit arithmetic reconstruction coefficient formula and no vanishing full-tail repair bound have been proved. The individual wavelet reconstruction with its specified coefficient/remainder formula is not separately formalized. |
-| Closure criterion is equivalent to RH; legal repair therefore proves RH | `ThresholdRiemannHypothesisBridgeTarget`; `riemannHypothesis_of_gibbs_invariance`, `riemannHypothesis_of_gibbs_repair` | The RH bridge is **target only**. The named RH consumers explicitly require this bridge plus the relevant open arithmetic input. They are not proofs of RH. |
+| Closure criterion is equivalent to RH; legal repair therefore proves RH | `ThresholdRiemannHypothesisBridgeTarget`; `riemannHypothesis_of_gibbs_invariance`, `riemannHypothesis_of_gibbs_repair` | The approximation-to-RH direction is now proved by `ThresholdRiemannHypothesis.riemannHypothesis_of_twoSeed_closure`. Only the converse remains **Open**. The named RH consumers now require only the relevant open arithmetic input; they do not establish that input or prove RH. |
 
 ## Wavelets and exact analytic estimates
 
