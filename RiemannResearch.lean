@@ -484,6 +484,8 @@ import RiemannResearch.RH.NymanBroadSquareAsymptotic
 import RiemannResearch.RH.ArchimedeanCorrectionLimit
 import RiemannResearch.RH.NymanBroadCorrectionLimits
 import RiemannResearch.RH.NymanActualTailEnergy
+import RiemannResearch.Analysis.CompactLaplaceInterpolation
+import RiemannResearch.RH.NymanSingleConductorObstruction
 import RiemannResearch.RH.NymanBroadSchwartzConvergence
 import RiemannResearch.RH.NymanBroadSchwartzTopology
 import RiemannResearch.RH.NymanBroadPrimeSquareCompensation

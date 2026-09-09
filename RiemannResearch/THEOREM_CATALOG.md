@@ -1,5 +1,21 @@
 # Theorem catalog
 
+### Single-conductor obstruction with a constructed nonzero signature (2026-09-09)
+
+Source: the user-provided Nyman–Weil note, sections 10.3–10.4, especially equation (10.5). These are unconditional established results about the actual functions and Bochner integrals.
+
+| Result | Declaration and precise scope |
+| --- | --- |
+| Compact smooth interpolation | `Analysis/CompactLaplaceInterpolation.lean`: `MeasureTheory.BilateralLaplace.centeredTransform_compactLaplaceSeed` constructs an actual smooth test v_s supported in [-2,2] with Mv_s(s)=1, for every complex s. Thus the required nonzero spectral signature is constructed, rather than assumed. |
+| General single-conductor obstruction | `RH/NymanSingleConductorObstruction.lean`: `singleConductorCompletion_energy_lower_bound`. For any compact smooth potential u, smooth superexponential f, and actual equality L R_n u=f below Y, the actual difference has energy at least exp(Y)|M f(s)|² at every conductor-symbol zero s distinct from 1. Its L² membership and exact transform signature are derived. No zeta-zero or RH hypothesis is used. |
+| Actual arithmetic-tail growth floor | `nymanCompletionTail_artificial_zero_linear_lower_bound`, `nymanCompletionTail_explicit_artificial_zero_lower_bound`: the concrete inverse-completion tails satisfy energy >= exp(a)|M(Lv)(s)|²(M+1). The latter theorem uses the literal frequencies s=1+2πik/log(n), k!=0. |
+| Constructed failure of sublinear energy | `nymanCompletionTail_compactLaplaceSeed_linear_lower_bound` gives energy >= exp(-2)|s(s-1)|²(M+1) for the concrete interpolating seed. `exists_nymanCompletionTail_normalized_energy_not_tendsto_zero` proves that every n>=2 has a compact smooth seed for which energy/(M+1) does not converge to zero. The seed's nonzero signature is fully discharged. |
+| Quantified divergence for a given signature | `nymanCompletionTail_energy_unbounded_of_artificial_signature` and `nymanCompletionTail_normalized_energy_not_tendsto_zero` give the corresponding general-seed consequences under an explicitly stated nonzero transform value. |
+
+The complete isolated check succeeded in job `job_EdjW3qXuXoisnvZV2JTfeJ3O22Ak2yyF`, `verified: true`, exit code 0, 17.196 seconds. Submitted-source SHA-256: `f5596c65d61c1725df66ca9e2d8aa82c601c3a2de49341c33dded481906a3758`. It included the two new modules and their 28 dependency modules. Axiom audits for the interpolation, general completion obstruction, and constructed nonconvergence endpoints use only `propext`, `Classical.choice`, and `Quot.sound`.
+
+This establishes the single-conductor obstruction independently of RH. It does not establish the optimized mixed-conductor upper bound, a uniform analytic inverse for conductors 2 and 3, or RH.
+
 This catalog is the orientation layer for the RH-focused `main` branch. Lean source files
 and successful builds remain authoritative. The complete Serre II development as it
 stood on 4 September 2026 is preserved on
