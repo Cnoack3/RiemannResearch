@@ -183,9 +183,32 @@ See [RH/ThresholdBoundedInterpolation.md](RH/ThresholdBoundedInterpolation.md) f
 | `Pareto.hilbertLegalClosure_of_bounded_exact_heads` | `RH.ThresholdBoundedInterpolation` | **Conditional research reduction:** uniformly bounded finite legal exact heads imply membership of the actual unit target in the genuine weighted legal closure. All positive integer dilations remain available. |
 
 - **Open:** provide uniformly bounded full squared norms for finite legal exact interpolants, in particular for seeds {2, 3}.
-- **Open:** prove the proposed family of weighted CRT Schur-complement tail energies is uniformly bounded; the note's exact matrix assembly and charge extension formulation are written arguments, not newly checked providers.
+- **Open:** prove that the weighted CRT Schur-complement tail energies remain uniformly bounded. The exact infinite-tail matrix assembly, its inverse, and attained minimization are now proved in `RH.ParetoExactHeadCRT`; the uniform bound is still missing.
 - **Open:** assemble the RH criterion bridge in Lean. The cited classical full-residue criterion does not establish a two-seed converse.
 - The finite/closed exact-head infimum equality and capacity dichotomy are proved in the research note; they are not asserted to be fully formalized by these declarations.
+
+## Exact Pareto packets, arithmetic obstructions, and the remaining bound (9 September 2026)
+
+See [RH/RHChatFormalization.md](RH/RHChatFormalization.md) and the preserved [research note](RH/RH_CRT_Packet_Research_2026-09-09.md). These are support results and concrete constructions, not a proof of RH.
+
+| Declaration family | Modules | Exact scope / status |
+|---|---|---|
+| `ExactHeadCRT.tail_schur_completion`, `exists_inverse_tail_optimizer`, `mixed_uniform_defect` | `RH.ParetoExactHeadCRT` | Actual infinite tail weights, every mixed defect, positive Gram matrix, constructed inverse, and attained constrained minimum. |
+| `nearbyDilationGram_exact`, `nearbyDilationGram_div_log_tendsto` | `RH.NearbyDilationGram`, `NearbyDilationAsymptotic`, `Analysis.PeriodicHarmonicMean` | Full infinite remainder retained; exact harmonic extraction and fixed-periodic logarithmic limit. |
+| Residue gcd covariance, phi/theta identities, sharp jump completion | `RH.ResidueJumpCovariance`, `ResidueNearbyAsymptotic`, `OptimizedResiduePackets`, `OptimizedResidueHarmonic`, `OptimizedResidueIdentities`, `SmoothResidueJumpOptimality` | Exact arithmetic providers, including the sharp one-half fixed-seed coefficient. |
+| Concrete Hilbert packets, dyadic substitution, logarithmic Gram/transfer limits | `RH.OptimizedResidueHilbert`, `OptimizedResidueSubstitution`, `OptimizedResidueAsymptotic`, `OptimizedCorrectionNormAsymptotic`, `OptimizedTransferAsymptotic` | Actual legal vectors, nonzero repair direction, exact vanishing remainder, closure equivalence, and full norm limits. |
+| `optimizedPacketIterate_energy_telescope`, `optimizedPacketUniformBound_target_membership` | `RH.OptimizedPacketRecursion`, `ParetoPacketCoordinates`, `LinearAlgebra.OrthogonalSchurRepair` | Concrete all-N legal mean-one exact heads and complete signed energies. **Only the final membership implication assumes the open uniform bound.** |
+| Complete Haar coordinates and sharp future transfer | `RH.ParetoHaarCoordinates`, `ParetoSchurTransfer`, `LinearAlgebra.SchurTransferSharpBound` | Actual isometry and reconstruction, arithmetic coefficients, causal recurrence, and attained sharp amplification. |
+| Tail process identities and target-induced completeness | `RH.ParetoTailMartingale`, `ThresholdInterpolationCompleteness` | Exact covariance and mean-zero obstruction; target membership plus all integer dilations implies closure equals top. No Gaussian or independence claim. |
+| Forced head charges and full arithmetic mixed energy | `RH.ExactHeadCharges`, `RoughComponentHead`, `RoughComponentExhaustion`, `ComponentHeadEnergy`, `RoughProfileCancellation` | Automatic finite component exhaustion, exact divisor inversion and profile partition, every ordered cross term, and the negative linear mixed-energy limit. |
+| `fixed_prefix_norms_not_bounded` | `RH.FixedPrefixIncidence`, `SmoothHeadBoundaryFlux`, `SmoothPrefixFlow`, `SmoothPrefixDivergence` | Actual fixed original-generator prefix obstruction, with quantitative energy growth. |
+| `roughDiagonalHead_div_tendsto_explicit`, `hasSum_squarefree_coprime_six` | `RH.RoughProfileBounds`, `RoughDiagonalLimit`, `RoughDiagonalEvaluation`, `NumberTheory.SquarefreeEulerSeries` | Actual dominated convergence and exact Euler-product evaluation give the full diagonal limit `6/(5*pi^2)`. |
+| `arithmeticMellin_identity` | `RH.ParetoMellinFunctional`, `ParetoMellinDilation`, `ParetoMellinHolomorphic`, `ParetoResidueMellinArithmetic`, `ParetoResidueMellinContinuation`, `ArithmeticMellinIdentity` | Actual integral, continuity, dilation, Abel identity, holomorphic continuation, and finite coefficient linearity. |
+| `finite_legal_seed_not_cyclic`, `finite_legal_seed_positive_distance_gap`, `finite_legal_seed_interpolation_unbounded` | `Analysis.AnalyticZeroPersistence`, `FiniteExponentialZeros`, `RH.ArithmeticMellinSymbolZeros`, `ParetoMellinHeadObstruction`, `FiniteSeedMellinObstruction` | Nonreal arithmetic zeros and genuine continuous Mellin separation; no unresolved identity or zero-existence providers. |
+
+- **Open:** `Pareto.OptimizedPacketUniformBound` and the broader `UniformLegalExactHeadBound`. No proof of either is asserted.
+- **Open formal bridge:** the classical RH criterion. Countability of zeros and the proved projection identities do not supply this bridge or the uniform bound.
+- The exact Euler-product constant, automatic finite component exhaustion, and actual signed arithmetic cancellation have proved providers. Numerical experiments remain informal.
 
 ## Adjoint operators and quantitative affine phase limit (8 September 2026)
 
