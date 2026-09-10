@@ -29,7 +29,8 @@ private theorem log_factorial_eq_sum_range (N : ℕ) :
         Finset.sum_range_succ, ih]
       ring
 
-private theorem sum_floor_weight (N k : ℕ) (hk : k ≠ 0) (a : ℝ) :
+/-- Exact count of positive multiples, reusable in finite divisor regrouping. -/
+theorem sum_floor_weight (N k : ℕ) (hk : k ≠ 0) (a : ℝ) :
     (∑ l ∈ Finset.range (N + 1),
       if k * l ≤ N then (if l = 0 then 0 else a) else 0) = (N / k : ℕ) * a := by
   have hk0 : 0 < k := Nat.pos_of_ne_zero hk

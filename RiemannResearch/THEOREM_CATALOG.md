@@ -1,5 +1,29 @@
 # Theorem catalog
 
+### Vanishing-damping quotient: checked components and conditional norm assembly (2026-09-10)
+
+Source: the user-provided continuation “The vanishing-damping quotient norm is uniformly bounded,” equations (N1)–(N31), in the two-seed signed-tail handoff. This is a **partial formalization** of that argument. The unconditional uniform arithmetic norm theorem is not yet an established Lean result.
+
+| Status | Module and declaration | Precise checked scope |
+| --- | --- | --- |
+| Established local declaration | `Analysis/AbelPrefixBound.lean`: `normalized_geometric_tsum_le_of_nonneg` | A nonnegative sequence with prefix sums at most `C N` has a summable geometric series and normalized Abel sum at most `C`. Exact finite summation retains its terminal term. |
+| Established local declaration | `Analysis/AbelCoboundary.lean`: `orbit_average_fixed_add_coboundary` | Exact Abel identity for an invariant vector plus a coboundary, with every required series convergence hypothesis visible. |
+| Established local declaration | `Analysis/AbelOrbitGrowth.lean`: `norm_orbit_average_coboundary_le_sqrt` | Physical orbit growth bounded by `C sqrt(n+1)` implies summability and the explicit bound `4 C sqrt(1-r)` for the averaged coboundary, when `1/2 ≤ r < 1`. |
+| Established local declaration | `Analysis/AbelGramBound.lean`: `norm_average_sq_le` | Diagonal bound `D(j+1)` and an off-diagonal Gram majorant with prefix bound `A N` imply the full squared Abel norm bound `D+2A`. Vector convergence is derived; the exact recurrence includes every mixed term. |
+| Established local declaration | `RH/DampedMobiusSeed.lean`: `dampedMobius_centered_seed_identity`, `dampedMobiusPrefix_at_zero` | Actual finite Möbius/floor/residue identities, exact compensation of any density term, and zero-damping cancellation. These do not assume or prove quantitative Mertens cancellation. |
+| Established local declaration | `RH/DyadicRegularizedNorm.lean`: `mem_dyadicQuotientSubspace_iff`, `dyadicQuotientProjection_dilation_projection`, `regularizationZetaSeries_summable` | Genuine quotient projection in the actual weighted Hilbert space, fixed-adjoint characterization, exact `Q T_m Q = Q T_m`, quotient dilation bound, and positive-damping scalar Dirichlet-series convergence. |
+| Established local declaration | `RH/DyadicQuotientAbel.lean`: `dyadicQuotientDilation_orbit`, `dyadicQuotientDilation_fixed_residue_two` | Actual induced integer-dilation semigroup and physical orbits; the mean vector `QR₂` is fixed. |
+| Established local declaration | `RH/DyadicTailQuotient.lean`: `mem_dyadicPhysicalTail_iff`, `dyadicTailRegularizedFamily_eq_transfer`, `dyadicTailRegularizedSeriesSummable_of_base` | Constructs the actual tail spaces and quotient projections, proves their support/variational semantics and exact arithmetic transfer. Convergence of the base arithmetic series implies convergence of the concrete tail series. |
+| Conditional research reduction | `RH/DyadicQuotientAbel.lean`: `dyadicStepAbelOrbit_norm_sq_le_of_gram` | The concrete step-orbit Abel bound follows from its actual diagonal/off-diagonal Gram data and their prefix bound. Those concrete analytic providers are not yet discharged. |
+| Conditional research reduction | `RH/DyadicRegularizedNorm.lean`: `dyadicRegularizedNormBound_of_analytic_estimates` | For the concrete product-index Möbius regularization, projected-series summability, a uniform actual step-orbit bound, and the actual remainder estimate (N24) imply uniform base norm boundedness. All three domain-specific inputs remain explicit. |
+| Conditional research reduction | `RH/DyadicTailQuotient.lean`: `dyadicTailRegularizedNormBound_of_base` | Base summability and base boundedness imply the full concrete `C d` bound with all original `X,d,ε` quantifiers. The base bound remains an explicit hypothesis; no arbitrary-projection or transfer-identity assumption remains. |
+
+**Open formal providers:** the critical fold/martingale norm and its BV estimates; uniform quantitative Möbius cancellation and damping differentiation; construction and growth of the concrete seed potential; actual logarithmic Gram and continued-fraction prefix estimates; convergence and exact identification of the projected arithmetic series; and the concrete (N24) remainder. These are missing Lean providers for the ordinary proof, not a claim that the statements are mathematically open. Weak convergence, finite convex recovery, and the quotient density conclusion are not established by the current formalization.
+
+The complete eight-module supporting check and nineteen project dependencies passed in job `job_H3BDnrCxPZVm2eNwx5awrKGwWOkal1rV` (`verified: true`, exit code 0; submitted-source SHA-256 `376022424baaf8952e72ca2f01a98601658cfdd52fdbb7cc51a5687087a389c0`). The audited endpoints use only `propext`, `Classical.choice`, and `Quot.sound`; these axiom reports do not discharge the conditional theorem's local hypotheses. The final repository checkpoint additionally validates the separated modules.
+
+Detailed coverage and exact remaining inputs: [`RH/DyadicRegularizedNormFormalization20260910.md`](RH/DyadicRegularizedNormFormalization20260910.md).
+
 ### Single-conductor obstruction with a constructed nonzero signature (2026-09-09)
 
 Source: the user-provided Nyman–Weil note, sections 10.3–10.4, especially equation (10.5). These are unconditional established results about the actual functions and Bochner integrals.
