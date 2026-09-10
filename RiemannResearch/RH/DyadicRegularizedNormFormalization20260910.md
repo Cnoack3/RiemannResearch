@@ -15,6 +15,21 @@ fully formalized.
 The assembly theorem is a conditional research reduction. Its domain-specific
 hypotheses are not axioms, and a clean axiom audit does not discharge them.
 
+## September 10 verification continuation
+
+Six additional modules supply a complete operator realization of the critical
+quotient norm and every mixed Gram term; finite-support specializations;
+exact step mean/variance identities; conditional finite legal recovery and
+quotient density; and explicit Gram-to-tail norm assembly.
+
+The actual single-seed Mellin obstruction also proves that small projected
+error for finite triadic lifts forces positive complementary energy. The
+second seed's signed interaction therefore remains essential for full-space
+completion. Neither unconditional (N2) nor RH has been proved.
+
+See [the continuation report](DyadicRegularizedVerificationContinuation20260910.md)
+for precise declarations, remaining hypotheses, and the combined source audit.
+
 ## Actual objects
 
 All application declarations below use namespace
