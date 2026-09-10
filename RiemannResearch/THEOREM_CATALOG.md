@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Actual signed boundary coefficients, residue blocks, and full Abel regrouping (2026-09-10)
+
+This continuation adds 34 public theorems across six new RH modules. It discharges the handoff's exact-coefficient derivation and proves a complete conductor Abel representation at positive damping. The uniform arithmetic square-sum estimate is still Open.
+
+| Status | Module and endpoints | Precise checked scope |
+| --- | --- | --- |
+| Established local declaration | `RH/DyadicRegularizedBoundaryCoefficients.lean`: `dyadicRegularizedFamily_boundaryCoordinate`, `dyadicNormalizationRemainder_boundaryCoordinate` | Actual full-H coefficients equal explicit signed Mobius/residue-difference series, including the complete comparison and Abel step terms. Positive damping supplies absolute convergence. |
+| Established local declaration | `RH/DyadicArithmeticBoundaryBlocks.lean`: `dyadicBoundaryCoordinate_residue_eq_blocks`, `dyadicResidueBoundaryBlock_abs_summable` | Every projected residue coefficient is an absolutely convergent sum of exact adjacent weighted arithmetic blocks. Both blocks and all residues are retained. The nested formula is not flattened into an unjustified unrestricted triple sum. |
+| Established local declaration | `RH/DyadicProjectedResidueAbel.lean`: `dyadicProjectedTriadicColumn_tsum_eq` | At fixed n>0 and epsilon>0, the complete projected triadic column equals -Q R_n plus (1-q) times the remaining full projected residue orbit. Actual Hilbert summability justifies the identity. |
+| Established local declaration | `RH/DyadicRegularizedResidueAbel.lean`: `dyadicRegularizedResidueAbelTerm_norm_summable`, `dyadicRegularizedFamily_eq_residueAbel` | The complete Mobius sum of entire signed Abel brackets is norm absolutely summable and equals the actual arithmetic family. Separate convergence of the two bracket components is not asserted. |
+| Established local declaration | `RH/DyadicBoundaryUniformCriterion.lean`: `dyadicBoundaryDetailEnergy_eq_coordinate_square`, `dyadicBoundaryDetailEnergy_le_iff_finite_sums` | Full boundary energy equals one quarter the complete sum of squared canonical coefficients. One constant must bound every finite set, not one chosen cutoff. |
+| Established local declaration | `RH/DyadicSignedBoundaryNormCriterion.lean`: `dyadicNormalizationRemainder_norm_sq_eq_signedBoundary`, `dyadicRegularizedFamily_error_sq_eq_signedBoundary` | The actual remainder norm and projected approximation error equal the full explicit arithmetic square sums; all signed and mixed contributions remain inside the squares. |
+| Conditional research reduction | `RH/DyadicSignedBoundaryNormCriterion.lean`: `dyadicRegularized_norm_obligations_of_signedBoundary` | A nonnegative C bounding every finite signed remainder square sum for all 0<epsilon<=1/2 supplies the existing base and physical-tail norm obligations. This uniform estimate remains an explicit hypothesis. |
+
+Combined source check `job_DBgmOZDiHpYMUWwTVpSl2e8pvEwLrG7j` succeeded (verified true, exit 0, 5.243 seconds). Final exact-source and eight-endpoint theorem-type/axiom audit `job_7rLv2Lh7SwGRjd2cN5fT825qpHaDhxXa` succeeded (verified true, exit 0, 5.042 seconds); code SHA-256 `8b4220a1657cf91d3a7f5c4bba7f8ef04dd29c054fd7d0d040fbed2a50d50d03`. All eight audited endpoints use only propext, Classical.choice, and Quot.sound. Separate-module validation and publication use the single final checkpoint.
+
+**Open:** one constant controlling the entire actual remainder square sum uniformly as damping vanishes; the stronger O(epsilon) squared remainder estimate; arithmetic vector/Mellin/separating limits; full legal two-seed recovery including complementary energy; the separate N5 identification; RH. The ordinary-mathematics discussion in `RH/DyadicBoundaryFourierResearchNote20260910.md` is not a checked provider and changes none of these statuses.
+
 ### Actual scalar normalization, signed Gram energy, and projected terminals (2026-09-10)
 
 This continuation adds 35 public theorems across eight new modules. Scalar normalization is now discharged for the actual positive-damping arithmetic family. The full vector remainder, the uniform vanishing-damping norm bound, and full legal recovery remain Open.
