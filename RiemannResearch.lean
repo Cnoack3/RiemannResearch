@@ -1,3 +1,6 @@
+import RiemannResearch.Analysis.ScaledHarmonicBlock
+import RiemannResearch.Analysis.LogarithmicTentIntegral
+import RiemannResearch.RH.DyadicResidueBinaryLogMean
 import RiemannResearch.Analysis.AbelCancellationMultiplier
 import RiemannResearch.Analysis.DyadicSequenceInterpolation
 import RiemannResearch.RH.DyadicBoundaryTents

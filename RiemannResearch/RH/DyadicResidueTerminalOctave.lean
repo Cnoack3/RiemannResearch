@@ -92,5 +92,21 @@ theorem hilbertResidue_two_terminalOctave_full_boundary_error_le (N : ℕ) :
     Nat.cast_ofNat, show ((2 : ℝ)-1)^2 = 1 by norm_num] using
       hilbertResidue_stepJumpPrefix_boundary_error_le 2 (by norm_num) (2*N)
 
+open Filter
+
+/-- The surviving octave tends to the actual binary residue coefficient. -/
+theorem hilbertResidue_two_terminalOctave_tendsto (i : ℕ) :
+    Tendsto (fun N => dyadicResidueTwoTerminalOctave N i) atTop
+      (nhds (dyadicBoundaryCoordinate (hilbertResidue 2 (by norm_num)) i)) := by
+  have hc : Continuous (fun f : ThresholdHilbert => dyadicBoundaryCoordinate f i) := by
+    unfold dyadicBoundaryCoordinate
+    exact continuous_const.mul (continuous_const.inner continuous_id)
+  have hN : Tendsto (fun N : ℕ => 2*N) atTop atTop :=
+    tendsto_atTop_mono (fun N => Nat.le_mul_of_pos_left N (by norm_num)) tendsto_id
+  have ht := (hc.tendsto _).comp ((hilbertResidue_stepJumpPrefix_tendsto 2
+    (by norm_num)).comp hN)
+  simpa only [Function.comp_def,
+    hilbertResidue_two_stepJumpPrefix_boundary_eq_octave] using ht
+
 end
 end RiemannResearch.RH.Pareto

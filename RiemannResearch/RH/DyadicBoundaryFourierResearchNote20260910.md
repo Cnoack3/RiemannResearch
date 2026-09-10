@@ -1,3 +1,14 @@
+Update, September 10, 2026 (binary logarithmic mean):
+`DyadicResidueBinaryLogMean.lean` now proves the exact actual binary coefficient
+r_2(i)=q log q-2(q+1)log(q+1)+(q+2)log(q+2), q=2(i+1),
+and its identification with the weighted continuous root-tent integral.
+`Analysis/LogarithmicTentIntegral.lean` provides the real integral independently.
+The full terminal-octave boundary error against this explicit target remains
+at most 1/(2N+1). The periodic extension and Fourier interchanges below remain
+unverified. See `DyadicCoordinateFourierReview20260910.md` for an ordinary
+scalar-Fourier route and a warning about the absence of a general l2-valued
+real extension. No uniform arithmetic norm estimate is supplied.
+
 Update, September 10, 2026: `DyadicBoundaryTents.lean` now proves the exact
 integer affine tent pieces at every dyadic depth. `DyadicResidueStepApproximation.lean`
 and `DyadicResidueTerminalOctave.lean` prove the signed finite residue/step bridge

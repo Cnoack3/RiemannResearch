@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Binary residue logarithmic mean and real tent integral (2026-09-10)
+
+This continuation adds **20 public theorems** across three new modules and the existing terminal-octave module. The actual binary residue boundary coefficient is now identified unconditionally with the logarithmic second difference of x log x and the weighted real root-tent integral. No Fourier expansion or uniform arithmetic energy estimate is assumed.
+
+| Status | Module and endpoints | Precise checked scope |
+| --- | --- | --- |
+| Established | `Analysis/ScaledHarmonicBlock.lean` (3): `scaledHarmonicBlock_eq_harmonic`, `harmonic_scaled_difference_tendsto`, `scaledHarmonicBlock_tendsto` | Exact finite harmonic blocks and their logarithmic limits at positive integer scales. |
+| Established | `Analysis/LogarithmicTentIntegral.lean` (10): `continuous_rootTent`, affine/support endpoints, `rootTent_div_intervalIntegrable`, `integral_rootTent_div` | The continuous real tent max(0,1-abs(x-(a+1))) has an exact weighted integral for a>0, retaining both affine pieces. |
+| Established | `RH/DyadicResidueTerminalOctave.lean` (1 new): `hilbertResidue_two_terminalOctave_tendsto` | The actual surviving binary octave tends to the actual residue coefficient at every boundary index. |
+| Established | `RH/DyadicResidueBinaryLogMean.lean` (6): gap/refinement endpoints, `dyadicResidueTwoTerminalOctave_eq_harmonic_blocks`, `dyadicBoundaryCoordinate_residue_two_eq_log`, `dyadicResidueTwoTerminalOctave_log_full_error_le`, `dyadicBoundaryCoordinate_residue_two_eq_tent_integral` | With q=2(i+1), r_2(i)=q log q-2(q+1)log(q+1)+(q+2)log(q+2)=integral_q^(q+2) rootTent(q,x) dx/x. The complete one-quarter square error of the terminal octave against this explicit target is at most 1/(2N+1). |
+
+The final combined source and seven-endpoint exact-type/axiom audit `job_K8-SFDIs1G4NMB48xzzlv3aHQDpeWuDi` succeeded: verified true, exit 0, 4.570 seconds, no warnings. Audited source SHA-256: `75aae40c91b0a7a7ec76eafa345538b8ab7fa5bbad386999eb3fed19221c7fb7`. Every audited endpoint uses only propext, Classical.choice, and Quot.sound. Separate-module validation and publication follow through the checkpoint.
+
+**Open:** construction and integer identification of the full continuous log-periodic extension; Fourier coefficients and scalar signed residue/Fourier interchange; zeta multiplier identification; the complete signed arithmetic energy bound uniform as damping vanishes; full legal two-seed recovery and complementary energy; RH. The binary mean and its weighted root-tent integral are no longer open.
+
+`RH/DyadicCoordinateFourierReview20260910.md` is an explicitly unverified ordinary-mathematics review of the next scalar Fourier route. Its x=4/3 example explains why coordinatewise continuous tents need not form an l2-valued function; none of its new Fourier or non-l2 claims is used as a Lean provider.
+
+
 ### Exact boundary tents, signed step approximation, and terminal octave (2026-09-10)
 
 This continuation adds **28 public theorems**: 27 across six new modules and one in `RH/DyadicBoundaryUniformCriterion.lean`. It establishes quantitative convergence of the entire boundary error at each fixed conductor. It does not prove uniform arithmetic energy control as the conductor and inverse damping grow.
