@@ -1,5 +1,22 @@
 # Theorem catalog
 
+### Exact dyadic Gram, complete boundary coordinates, and repair rigidity (2026-09-10)
+
+Source: the supplied dyadic verification continuation. This advance adds 29 public theorems across four modules, while retaining the unresolved arithmetic and full-space approximation obligations.
+
+| Status | Module and declaration | Precise checked scope |
+| --- | --- | --- |
+| Established local declaration | `RH/DyadicStepGram.lean`: `dyadicProjectedStep_odd_inner_step`, `dyadicProjectedStep_adjacent_norm_sq_on_annulus` | Exact off-diagonal refinement and adjacent squared energy (1-4^(-N))/3 on 2^N ≤ m < 2^(N+1). No arithmetic provider. |
+| Established local declaration | `RH/DyadicStepGram.lean`: `dyadicProjectedBoundary_finite_inner`, `dyadicProjectedBoundary_finite_mean_energy` | Distinct physical projected boundaries are orthogonal, each of squared norm 1/4. Complete finite signed energies diagonalize exactly, including the mean coordinate. |
+| Established local declaration | `RH/DyadicBoundaryCompleteness.lean`: `dyadicBoundarySpan_closure_eq_quotient`, `dyadicQuotientProjection_eq_of_boundary_inner` | The actual constant and projected boundaries densely span the full quotient; all their pairings determine Qf. Infinite Parseval and identification with the specific N5 fold remain unformalized. |
+| Established local declaration | `RH/DyadicCenteredRepairRigidity.lean`: `dyadicRepairDifference_mem_centeredClosure_iff` | A=T₂-I is bounded below; Af is in the centered repair closure iff f is in the actual all-positive legal closure. No density hypothesis enters this equivalence. |
+| Conditional research reduction | `RH/DyadicCenteredRepairRigidity.lean`: `riemannHypothesis_of_difference_one_mem_centeredClosure`, `riemannHypothesis_of_centeredClosure_exhausts_kernel` | Approximating the single explicit vector (T₂-I)1 by centered repairs implies RH. That membership is Open. Exhausting all ker Q is consequently an RH-strength input. |
+| Established local declaration | `Analysis/RotationMinimumSpacing.lean`: `integer_approximation_minimum_spacing` | Integer determinant spacing: 0<h<q and 0<|qα-pq|≤|hα-ph| imply |hα-ph|>1/(2q). Concrete ingredient for the RH Gram/prefix bound; no CF assumption. |
+
+The complete four-module source and eight-endpoint type/axiom audit passed in `job_JmttxrBmzAsPdqXpcp34vDzSyBFwEq4-` (verified true; exit code 0; 5.31 seconds; SHA-256 `9b2610554f13be12811ffab80a38c7e9fb92ca72476d7c02b596d68285f379b7`). Only standard foundational axioms occur. Final acceptance validates the separated modules with the repository checkpoint.
+
+**Open:** the exact tent expansion and full logarithmic prefix argument are preserved as an ordinary proof candidate in [Dyadic_Gram_Prefix_Ordinary_Proof_20260910.md](RH/Dyadic_Gram_Prefix_Ordinary_Proof_20260910.md). They have not discharged the assembly hypotheses in Lean. Product-index Möbius convergence, arithmetic identification, normalization remainder, Mellin limits, and full legal approximation remain Open. Neither unconditional (N2) nor RH is established. Detailed continuation: [DyadicVerificationAdvance20260910.md](RH/DyadicVerificationAdvance20260910.md).
+
 ### Vanishing-damping quotient: checked components and conditional norm assembly (2026-09-10)
 
 Source: the user-provided continuation “The vanishing-damping quotient norm is uniformly bounded,” equations (N1)–(N31), in the two-seed signed-tail handoff. This is a **partial formalization** of that argument. The unconditional uniform arithmetic norm theorem is not yet an established Lean result.
