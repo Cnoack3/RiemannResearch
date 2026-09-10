@@ -1,5 +1,18 @@
 # Theorem catalog
 
+### Fourier/Mellin and signed arithmetic energy formalization (2026-09-10)
+
+This continuation adds **78 public theorems in 15 modules**. Full source checking succeeded before publication. This is a partial formalization of the ordinary FourierBridgeUniformSignedEnergy20260910.md proof: the unconditional final Fourier bridge and uniform boundary-energy theorem are still Open as Lean providers.
+
+**Established providers:** the exact complex root-tent Mellin integral; actual inverse-square Mellin coefficient bounds and full row absolute summability; the binary zero-frequency identification; exact integer negative-depth atomic cancellation; the actual Möbius divisor/Euler-product identity and epsilon-log bound; elementary actual normalization bounds; and unconditional full weighted coefficient energy O(epsilon^2).
+
+**Checked conditional deductions:** dominated scalar Fourier extraction from actual approximants; infinite mean/comparison cancellation; complete signed Fourier-to-boundary norm transfer; Banach-valued Abel convergence and uniform norm assembly from logarithmic integer-conductor growth; and full continuous-dual weak convergence from uniform boundedness and actual mean/boundary limits. All substantive hypotheses remain visible in the exact theorem types.
+
+**Open providers:** ClassicalQuantitativeMertensBound; the uniform signed hyperbola/discrepancy consequence; actual periodization and signed residue/zeta Fourier identification; compensated large-depth shell estimates and pole/constant identification; DyadicSignedFourierBridge; DyadicUniformSignedFourierEnergyBound. The actual boundary-energy theorem must not be inferred merely from the checked coefficient energy or from the axiom list of a conditional theorem.
+
+The concrete targets and their conditional equivalence are in RH/DyadicFourierAnalyticTargets.lean. The complete 15-module map, 78-theorem counts, precise arithmetic hypotheses, and remaining proof stages are in RH/FourierBridgeFormalizationStatus20260910.md. RH/FourierBridgeUniformSignedEnergy20260910.md preserves the ordinary argument, explicitly distinguished from this formal status. The complementary physical-energy/legal recovery and RH remain separate and unproved.
+
+
 ### Binary residue logarithmic mean and real tent integral (2026-09-10)
 
 This continuation adds **20 public theorems** across three new modules and the existing terminal-octave module. The actual binary residue boundary coefficient is now identified unconditionally with the logarithmic second difference of x log x and the weighted real root-tent integral. No Fourier expansion or uniform arithmetic energy estimate is assumed.
