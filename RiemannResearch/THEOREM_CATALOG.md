@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Actual scalar normalization, signed Gram energy, and projected terminals (2026-09-10)
+
+This continuation adds 35 public theorems across eight new modules. Scalar normalization is now discharged for the actual positive-damping arithmetic family. The full vector remainder, the uniform vanishing-damping norm bound, and full legal recovery remain Open.
+
+| Status | Module and endpoints | Precise checked scope |
+| --- | --- | --- |
+| Established local declaration | `Analysis/AbsolutelySummableGram.lean`: `inner_tsum_eq_tsum_product`, `norm_sq_tsum_eq_tsum_gram` | Absolute norm summability supplies the full signed product-index Gram identity for real Hilbert families. |
+| Established local declaration | `RH/DyadicRegularizedSignedGram.lean`: `dyadicRegularizedGram_abs_summable`, `dyadicRegularizedFamily_error_sq_eq_signed_gram` | Actual signed arithmetic Gram and cross series converge absolutely at every epsilon>0. Exact squared error against any comparison retains all off-diagonal and mixed terms. |
+| Established local declaration | `RH/DyadicRegularizedMean.lean`: `regularizationZetaSeries_mul_mobius`, `dyadicRegularizedFamily_inner_one` | Mathlib's Mobius Dirichlet inversion and the actual Hilbert resolvent prove mean(F_epsilon)=1 for every epsilon>0, without a supplied arithmetic norm or mean hypothesis. |
+| Established local declaration | `RH/DyadicRegularizedBoundaryEnergy.lean`: `dyadicRegularizedFamily_error_sq_eq_boundary`, `dyadicNormalizationRemainder_norm_sq_eq_boundary`, `dyadicRegularizedFamily_norm_sq_comparison_remainder` | The actual family lies in QH and norm(F-1)^2 equals its complete boundary energy. The specified remainder has mean zero, lies in QH, and its squared norm equals its full boundary energy. The comparison/remainder interaction is retained exactly. |
+| Established local declaration | `Analysis/FiniteGeometricDifference.lean`, `RH/DyadicArithmeticResidueTelescoping.lean`: `dyadicRegularizedRectangle_residue_telescope` | Finite raw and projected arithmetic rectangles have an exact signed residue decomposition with the complete terminal column. No convergence premise. |
+| Established local declaration | `RH/DyadicResidueOrbitGrowth.lean`: `dyadicQuotientProjection_residue_triadic_norm_le_quadratic` | The actual projected terminal residue grows at most quadratically in triadic depth, for a fixed positive starting conductor. |
+| Established local declaration | `RH/DyadicProjectedResidueTerminal.lean`: `dyadicProjectedResidueTerminal_norm_summable`, `dyadicProjectedResidueTerminal_tendsto_zero` | For every fixed n>0 and epsilon>0, the projected terminal orbit is absolutely summable in H and tends to zero in H. No uniformity in n or epsilon is asserted. |
+
+Combined source verification: `job_66edWvInJYfTYNheBUXasl4UgWNHjsRB`, verified true, exit 0, 4.939 seconds. Final combined source plus eight-endpoint theorem-type/axiom audit: `job_gE-0xmB75_YHZLRwMP8x6w6hs6ss9ihG`, verified true, exit 0, 5.074 seconds; source SHA-256 `3259f1c58104f13d6c1900733dc2a02ed8ef617fc1f95557943b14753c1fefe5`. Audited endpoints depend only on propext, Classical.choice, and Quot.sound. Separate-module validation and publication follow through one checkpoint.
+
+**Open:** uniform boundedness of the actual complete mean-zero boundary energy as epsilon tends to zero; the stronger O(sqrt epsilon) actual remainder estimate; arithmetic vector/Mellin/separating identifications; full legal two-seed witnesses with complete complementary and boundary energies tending to zero; the separate N5 identification; RH. The computed mean and projected-terminal limit do not supply these limits. No epsilon=0 substitution into the normalized zeta-based definition is used.
+
 ### All-scale arithmetic kernel bound and positive-damping convergence (2026-09-10)
 
 This continuation adds 32 public theorems across six new RH modules. The previous all-scale block and actual arithmetic-series convergence obligations are discharged. These results concern every positive integer dilation of the actual triadic residue. Uniform vanishing-damping bounds and RH remain unproved.
