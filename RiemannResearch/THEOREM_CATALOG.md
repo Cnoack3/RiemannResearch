@@ -1,5 +1,24 @@
 # Theorem catalog
 
+### Actual dyadic Gram/prefix providers and completed Parseval (2026-09-10)
+
+This continuation adds 90 public theorems across fourteen new modules and the existing Gram assembly. The actual step average now has an unconditional uniform norm bound. The full arithmetic family and RH remain conditional on the obligations listed below.
+
+| Status | Module and endpoint | Precise checked scope |
+| --- | --- | --- |
+| Established local declaration | `RH/DyadicBoundaryParseval.lean`: `dyadicBoundary_full_error_sq`, `dyadicBoundary_parseval_inner` | Complete convergent boundary Parseval and full physical error = mean defect squared + 4 times the boundary pairing square sum + complementary energy. No hidden quotient component or omitted mixed pairing. |
+| Established local declaration | `RH/DyadicFiniteBoundaryCoordinates.lean`: `dyadicProjectedStep_finite_boundary_error_sq` | Exact actual finite signed step energy in canonical boundary coordinates. Coefficients lie in [0,1]; no signed coefficient restriction. |
+| Established local declaration | `RH/DyadicBoundaryAnnulusMass.lean`, `RH/DyadicBoundaryLocality.lean`, `RH/DyadicStepGramCutoff.lean` | Annular mass at most one and exact support give normalized separation at least 2^(-R) implies raw Gram at most 1+R/4. The explicit tent-height formula is unnecessary for this provider. |
+| Established local declaration | `Analysis/RotationNearestSpacing.lean`, `Analysis/TriadicRotationSeparation.lean`, `Analysis/TriadicMantissaSeparation.lean` | Actual nearest-integer errors, minimum-denominator spacing, delta_q at least 1/(2*3^q), log(1/delta_q) at most q log6, and normalized triadic mantissa separation. |
+| Established local declaration | `Analysis/RotationLogarithmicPrefix.lean`: `triadicLogGramMajorant_prefix_le` | Actual nonnegative a_h from the ordinary argument has every prefix bounded by A0*N, with explicit A0. Finite packing, logarithmic blocks, and grouping are proved in four supporting Analysis modules. |
+| Established local declaration | `RH/DyadicTriadicGramBound.lean`: `dyadicProjectedStep_triadic_off_diagonal` | The complete actual absolute off-diagonal triadic Gram pairing is bounded by a_(k-j), with no Gram or arithmetic provider assumed. |
+| Established local declaration | `RH/DyadicRegularizedGramAssembly.lean`: `dyadicStepAbelOrbit_norm_sq_le_explicit` | Every epsilon>0 has actual step-average squared norm at most 3/2+2*A0 (approximately 10.2921). |
+| Conditional research reduction | `RH/DyadicRegularizedGramAssembly.lean`: `dyadicRegularized_explicit_bounds_of_series_and_error`, `dyadicRegularized_norm_obligations_of_series_and_error` | The base and all-tail arithmetic norm bounds now require only actual series summability and the stated O(sqrt epsilon) normalization remainder. Both remain Open. No diagonal, off-diagonal, or prefix provider remains in these specialized theorem types. |
+
+The combined source and theorem-type audit passed in `job_RJpGpp05PV1J-f19Afg0I7dl1qMR2iad` (verified true, exit 0, 14.607 seconds; source SHA-256 `a0913111de7dd5c7573119af326beec48e55a8eea3c1ace48e468575934cdcda`). The compact ten-endpoint axiom audit passed in `job_IcznDUFqujwWQOLplCq-lYVBAVeg9--K`; all ten depend only on propext, Classical.choice, and Quot.sound. The publication checkpoint validates the separated modules and affected dependents.
+
+**Open:** actual product-index Mobius-series convergence; arithmetic identification and the normalization remainder; Mellin/separating limits; full legal two-seed approximation, including complementary energy. The particular N5 fold/martingale identification and explicit tent-height formula are not established by the new coordinate formulas. Neither unconditional (N2) nor RH is proved.
+
 ### Exact dyadic Gram, complete boundary coordinates, and repair rigidity (2026-09-10)
 
 Source: the supplied dyadic verification continuation. This advance adds 29 public theorems across four modules, while retaining the unresolved arithmetic and full-space approximation obligations.
@@ -8,14 +27,14 @@ Source: the supplied dyadic verification continuation. This advance adds 29 publ
 | --- | --- | --- |
 | Established local declaration | `RH/DyadicStepGram.lean`: `dyadicProjectedStep_odd_inner_step`, `dyadicProjectedStep_adjacent_norm_sq_on_annulus` | Exact off-diagonal refinement and adjacent squared energy (1-4^(-N))/3 on 2^N ≤ m < 2^(N+1). No arithmetic provider. |
 | Established local declaration | `RH/DyadicStepGram.lean`: `dyadicProjectedBoundary_finite_inner`, `dyadicProjectedBoundary_finite_mean_energy` | Distinct physical projected boundaries are orthogonal, each of squared norm 1/4. Complete finite signed energies diagonalize exactly, including the mean coordinate. |
-| Established local declaration | `RH/DyadicBoundaryCompleteness.lean`: `dyadicBoundarySpan_closure_eq_quotient`, `dyadicQuotientProjection_eq_of_boundary_inner` | The actual constant and projected boundaries densely span the full quotient; all their pairings determine Qf. Infinite Parseval and identification with the specific N5 fold remain unformalized. |
+| Established local declaration | `RH/DyadicBoundaryCompleteness.lean`: `dyadicBoundarySpan_closure_eq_quotient`, `dyadicQuotientProjection_eq_of_boundary_inner` | The actual constant and projected boundaries densely span the full quotient; all their pairings determine Qf. Infinite Parseval is now supplied by DyadicBoundaryParseval; identification with the specific N5 fold remains Open. |
 | Established local declaration | `RH/DyadicCenteredRepairRigidity.lean`: `dyadicRepairDifference_mem_centeredClosure_iff` | A=T₂-I is bounded below; Af is in the centered repair closure iff f is in the actual all-positive legal closure. No density hypothesis enters this equivalence. |
 | Conditional research reduction | `RH/DyadicCenteredRepairRigidity.lean`: `riemannHypothesis_of_difference_one_mem_centeredClosure`, `riemannHypothesis_of_centeredClosure_exhausts_kernel` | Approximating the single explicit vector (T₂-I)1 by centered repairs implies RH. That membership is Open. Exhausting all ker Q is consequently an RH-strength input. |
 | Established local declaration | `Analysis/RotationMinimumSpacing.lean`: `integer_approximation_minimum_spacing` | Integer determinant spacing: 0<h<q and 0<|qα-pq|≤|hα-ph| imply |hα-ph|>1/(2q). Concrete ingredient for the RH Gram/prefix bound; no CF assumption. |
 
 The complete four-module source and eight-endpoint type/axiom audit passed in `job_JmttxrBmzAsPdqXpcp34vDzSyBFwEq4-` (verified true; exit code 0; 5.31 seconds; SHA-256 `9b2610554f13be12811ffab80a38c7e9fb92ca72476d7c02b596d68285f379b7`). Only standard foundational axioms occur. Final acceptance validates the separated modules with the repository checkpoint.
 
-**Open:** the exact tent expansion and full logarithmic prefix argument are preserved as an ordinary proof candidate in [Dyadic_Gram_Prefix_Ordinary_Proof_20260910.md](RH/Dyadic_Gram_Prefix_Ordinary_Proof_20260910.md). They have not discharged the assembly hypotheses in Lean. Product-index Möbius convergence, arithmetic identification, normalization remainder, Mellin limits, and full legal approximation remain Open. Neither unconditional (N2) nor RH is established. Detailed continuation: [DyadicVerificationAdvance20260910.md](RH/DyadicVerificationAdvance20260910.md).
+**Open:** the exact tent expansion and full logarithmic prefix argument are preserved as an ordinary proof candidate in [Dyadic_Gram_Prefix_Ordinary_Proof_20260910.md](RH/Dyadic_Gram_Prefix_Ordinary_Proof_20260910.md). The new continuation discharges the required Gram/prefix hypotheses using actual coefficient support and annular mass, while leaving the explicit tent-height formula unformalized. Product-index Möbius convergence, arithmetic identification, normalization remainder, Mellin limits, and full legal approximation remain Open. Neither unconditional (N2) nor RH is established. Detailed continuation: [DyadicVerificationAdvance20260910.md](RH/DyadicVerificationAdvance20260910.md).
 
 ### Vanishing-damping quotient: checked components and conditional norm assembly (2026-09-10)
 

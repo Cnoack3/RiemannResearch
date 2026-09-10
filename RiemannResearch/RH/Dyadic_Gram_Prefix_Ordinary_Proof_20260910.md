@@ -3,7 +3,7 @@
 Source: the user-supplied `DyadicRegularizedVerificationContinuation20260910 (1).md`.
 Date: September 10, 2026.
 
-**Verification status:** The argument below is an ordinary mathematical proof candidate derived during this continuation. Its tent representation, logarithmic majorant, and prefix estimate have not been checked in Lean. The orthogonal boundary identities and the minimum-denominator spacing lemma used below have been source-checked in this pass; the exact tent representation, logarithmic block sum, and their assembled consequence remain unverified in Lean. This note does not establish the Möbius-series convergence, normalization remainder, Mellin limits, full two-seed completion, or RH.
+**Verification status (updated continuation):** The required logarithmic Gram majorant and linear prefix estimate are now Lean-verified. The implementation uses canonical physical boundary coefficients, exact support, and annular mass instead of proving their explicit tent-height formula. Complete infinite boundary Parseval, finite signed energies, actual rotation spacing, exponential separation, finite logarithmic packing, and the uniform actual damped-step norm bound are established. The full product-index Mobius-series convergence, normalization remainder, Mellin limits, full two-seed completion, and RH remain Open. See the current theorem catalog and the specialized endpoints in DyadicRegularizedGramAssembly.lean.
 
 ## 1. Exact finite orthogonal expansion
 

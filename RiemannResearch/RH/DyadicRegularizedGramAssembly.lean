@@ -1,3 +1,4 @@
+import RiemannResearch.RH.DyadicTriadicGramBound
 import RiemannResearch.RH.DyadicQuotientAbel
 import RiemannResearch.RH.DyadicTailQuotient
 import RiemannResearch.RH.DyadicStepLogBound
@@ -13,7 +14,10 @@ the actual base and tail regularized families. The arithmetic series convergence
 the concrete off-diagonal Gram/prefix estimates, and the concrete remainder
 estimate are hypotheses. The diagonal growth is now proved internally with
 D = 3/2 by DyadicStepLogBound; it is no longer an assembly hypothesis.
-Consequently these theorems do not assert the unconditional norm obligation or RH.
+The specialized endpoints at the end of this module now supply the actual
+off-diagonal and prefix providers internally. The actual step average is
+unconditionally bounded. The full arithmetic norm obligation still requires
+series convergence and the normalization remainder; RH is not established.
 -/
 
 namespace RiemannResearch.RH.Pareto
@@ -115,6 +119,63 @@ theorem dyadicRegularized_norm_obligations_of_gram_and_error
     hts,
     ⟨dyadicRegularizedGramNormConstant (3 / 2) A R,
       dyadicRegularizedGramNormConstant_nonneg (3 / 2) A R, htb⟩⟩
+
+end
+end RiemannResearch.RH.Pareto
+
+
+namespace RiemannResearch.RH.Pareto
+open RiemannResearch.Analysis
+noncomputable section
+
+/-- Unconditional uniform bound for the actual damped projected step average.
+This is not the product-index Mobius-series bound. -/
+theorem dyadicStepAbelOrbit_norm_sq_le_explicit (ε : ℝ) (hε : 0 < ε) :
+    ‖dyadicStepAbelOrbit ε‖^2 ≤ (3/2 : ℝ) + 2 * triadicLogGramPrefixConstant := by
+  exact dyadicStepAbelOrbit_norm_sq_le_of_gram (3/2) triadicLogGramPrefixConstant
+    (by norm_num) triadicLogGramPrefixConstant_nonneg
+    triadicLogGramMajorant triadicLogGramMajorant_nonneg
+    dyadicProjectedStep_triadic_diagonal triadicLogGramMajorant_prefix_le
+    dyadicProjectedStep_triadic_off_diagonal ε hε
+
+/-- With the complete actual step Gram inputs discharged, only the original
+arithmetic-series convergence and normalization remainder remain as providers
+for the explicit base and all-tail norm bounds. -/
+theorem dyadicRegularized_explicit_bounds_of_series_and_error
+    (hseries : DyadicRegularizedSeriesSummable)
+    (R : ℝ) (hR : 0 ≤ R)
+    (herror : ∀ ε : ℝ, 0 < ε → ε ≤ 1 / 2 →
+      ‖dyadicRegularizedFamily ε -
+        (dyadicQuotientProjection hilbertOne +
+          (Real.log 2)⁻¹ • dyadicQuotientProjection (hilbertResidue 2 (by norm_num)) -
+          dyadicStepAbelOrbit ε)‖ ≤ R * Real.sqrt ε) :
+    DyadicRegularizedSeriesSummable ∧ DyadicTailRegularizedSeriesSummable ∧
+    (∀ ε : ℝ, 0 < ε → ε ≤ 1 / 2 →
+      ‖dyadicRegularizedFamily ε‖ ^ 2 ≤
+        dyadicRegularizedGramNormConstant (3/2) triadicLogGramPrefixConstant R) ∧
+    (∀ X d (hX : 0 < X) (hXd : X ≤ d),
+      ∀ ε : ℝ, 0 < ε → ε ≤ 1 / 2 →
+        ‖dyadicTailRegularizedFamily X d (Nat.lt_of_lt_of_le hX hXd) ε‖ ^ 2 ≤
+          dyadicRegularizedGramNormConstant (3/2) triadicLogGramPrefixConstant R * d) := by
+  exact dyadicRegularized_explicit_bounds_of_gram_and_error hseries
+    triadicLogGramPrefixConstant R triadicLogGramPrefixConstant_nonneg hR
+    triadicLogGramMajorant triadicLogGramMajorant_nonneg
+    triadicLogGramMajorant_prefix_le dyadicProjectedStep_triadic_off_diagonal herror
+
+theorem dyadicRegularized_norm_obligations_of_series_and_error
+    (hseries : DyadicRegularizedSeriesSummable)
+    (R : ℝ) (hR : 0 ≤ R)
+    (herror : ∀ ε : ℝ, 0 < ε → ε ≤ 1 / 2 →
+      ‖dyadicRegularizedFamily ε -
+        (dyadicQuotientProjection hilbertOne +
+          (Real.log 2)⁻¹ • dyadicQuotientProjection (hilbertResidue 2 (by norm_num)) -
+          dyadicStepAbelOrbit ε)‖ ≤ R * Real.sqrt ε) :
+    DyadicRegularizedSeriesSummable ∧ DyadicRegularizedNormBound ∧
+      DyadicTailRegularizedSeriesSummable ∧ DyadicTailRegularizedNormBound := by
+  exact dyadicRegularized_norm_obligations_of_gram_and_error hseries
+    triadicLogGramPrefixConstant R triadicLogGramPrefixConstant_nonneg hR
+    triadicLogGramMajorant triadicLogGramMajorant_nonneg
+    triadicLogGramMajorant_prefix_le dyadicProjectedStep_triadic_off_diagonal herror
 
 end
 end RiemannResearch.RH.Pareto
