@@ -1,5 +1,24 @@
 # Theorem catalog
 
+### Actual residue jumps, kernel energy, and full-energy recovery (2026-09-10)
+
+This continuation adds 46 public theorems across six new RH modules. It proves an unconditional first-block bound for every actual positive integer dilation. Higher-block growth, the full arithmetic-series convergence, the normalization remainder, and RH remain Open.
+
+| Status | Module and endpoints | Precise checked scope |
+| --- | --- | --- |
+| Established local declaration | `RH/DyadicResidueJumps.lean`: `hilbertDilation_residue_three_difference_multiple`, `dyadicKernelDefect_even_dilation` | Actual jumps vanish away from dilation multiples, equal +m at ordinary multiples and -2m at triple multiples. Every even dilation is killed by the dyadic kernel defect. |
+| Established local declaration | `RH/DyadicKernelJumpEnergy.lean`: `dyadicKernelDefect_jump_energy_summable`, `dyadicKernelDefect_norm_sq_jumps`, `dyadicQuotientProjection_norm_sq_resolvent_jumps` | Exact convergent kernel energy in physical adjacent jumps, and its specialization to the actual critical resolvent. No jump or signed interaction is omitted. |
+| Established local declaration | `RH/DyadicResidueKernelEnergy.lean`: `dyadicKernelDefect_residue_three_norm_sq_arithmetic`, `dyadicKernelDefect_residue_three_norm_sq_le_four` | Exact arithmetic divisibility-channel energy, including the mixed-term correction, followed by the unconditional bound norm-squared K(T_m R3) <= 4 for every m>0. This is the first kernel block, not the full quotient norm. |
+| Established local declaration | `RH/DyadicRegularizedResolvent.lean`: `dyadicRegularizedRectangle_resolvent` | Exact finite arithmetic resolvent with the complete signed terminal column, at every damping and finite cutoff; no summability hypothesis. |
+| Conditional research reduction | `RH/DyadicRegularizedResolvent.lean`: `dyadicRegularizedFamily_resolvent`, `dyadicRegularizedColumn_eq_orbit` | Regrouping and the infinite actual triadic resolvent require Summable(dyadicRegularizedTerm epsilon). This actual product-index convergence remains Open. |
+| Established local declaration | `RH/DyadicBoundaryLegalRecovery.lean`: `dyadicBoundary_tendsto_one_iff`, `dyadicBoundaryLegalRecovery_iff_legalClosure` | Exact equivalence between physical convergence and decay of mean defect squared, full infinite boundary energy, and complementary energy; equivalence to the original legal closure target. No witness existence follows merely from the equivalence. |
+| Conditional research reduction | `RH/DyadicBoundaryLegalRecovery.lean`: `riemannHypothesis_of_dyadicBoundary_meanOne_recovery` | The actual RH implication from mean-one legal two-seed witnesses with both full energies tending to zero. Existence of such witnesses remains Open. |
+| Established local declaration | `RH/DyadicBoundaryEscape.lean`: `dyadicBoundaryEscape_prefixEnergy_eq_zero`, `dyadicBoundaryEscape_detailEnergy`, `dyadicBoundaryEscape_not_tendsto_one` | Actual bounded mean-one vectors have zero complementary energy and eventually-zero every finite boundary prefix, while total boundary energy and physical error remain exactly one. No legal membership is asserted. |
+
+The first five modules' 42 declarations passed combined source verification and ten-endpoint axiom audit in `job_ls7WmphcmAjOCE5yxvoEf7EWu72VfFsA` (verified true; exit 0; 6.191 seconds; source SHA-256 `47c66a9e9556b2a3ecb6103a1aff412bfbc4bd3b7369c96e96e62c5450284320`). All ten audited endpoints use only propext, Classical.choice, and Quot.sound. The four additional exact arithmetic energy/bound declarations passed `job_CsaJThJy1PFVBLN8lyeSZWi5mTapuyJG` (verified true; exit 0; 4.228 seconds). The two arithmetic-energy endpoints also passed the axiom and theorem-type audit in `job_AL1-qq8XzsHNtopVX62xLL5Z6g-RE1hS` (verified true; exit 0; 4.852 seconds; source SHA-256 `c4b6e75c78faea1d2c9eb8c2f2c1ccb5e048866d56b806604b0c58f67fd56927`), using only the same three foundational axioms. The final checkpoint validates the separate modules before publication.
+
+**Open next arithmetic target:** for A=T2*/2 and K=I-T2 T2*/2, prove norm K(A^j T_m R3) <= 6 uniformly in m>0 and j>=0. The j=0 case is now proved with the stronger bound 2. See `RH/DyadicResidueGrowth_OrdinaryProofPlan20260910.md` for the proposed weighted-block proof and the existing exact finite-packet route from this provider to logarithmic depth growth. Those higher-block and shell-summability steps remain unverified; the normalized remainder and full legal energy recovery are also still Open.
+
 ### Actual dyadic Gram/prefix providers and completed Parseval (2026-09-10)
 
 This continuation adds 90 public theorems across fourteen new modules and the existing Gram assembly. The actual step average now has an unconditional uniform norm bound. The full arithmetic family and RH remain conditional on the obligations listed below.
