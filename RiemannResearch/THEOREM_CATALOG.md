@@ -1,5 +1,16 @@
 # Theorem catalog
 
+### Actual tent Fourier reconstruction and signed finite packets (2026-09-10 continuation)
+
+This continuation adds **60 public theorems in five new modules**. The actual compact logarithmic tent now has an unconditional Fourier-to-Mellin identity and a continuous, summable periodization with an actual Fourier `HasSum`. Its physical extension agrees with every positive-integer dyadic boundary coordinate, including all zero gaps and negative-depth atomic cancellation. Every finite signed packet has an exact Fourier `HasSum` expansion.
+
+**Established:** `RH/DyadicTentFourierReconstruction.lean` (19 public theorems), `RH/DyadicTentFourierSamples.lean` (20), `RH/DyadicTentCoordinateEnergy.lean` (4), `Analysis/PositiveArithmeticPrefix.lean` (5), and `RH/DyadicArithmeticAbelReduction.lean` (12). In addition to reconstruction, these prove frequency-column square summability, exact signed discrepancy centering with endpoint error at most one, and damping-uniform transfer of ordinary Mertens prefix bounds.
+
+**Still Open:** the full infinite signed zeta-ratio/residue Fourier bridge and its cutoff domination; quantitative Mertens and hyperbola/tail estimates; uniform complete signed boundary energy; actual arithmetic coordinate limits; complementary physical-energy/legal two-seed recovery; RH. Neither coefficient-column square summability nor the finite signed packet identity supplies these limiting estimates.
+
+The completed reconstruction discharges the periodization/integer-sample stage of the earlier Fourier ledger. The exact module map, theorem endpoints, scope, and next bounded target are in `RH/FourierTentContinuationStatus20260910.md`. All ten audited endpoints use only standard Lean foundations; substantive assumptions are assessed separately from axiom lists.
+
+
 ### Fourier/Mellin and signed arithmetic energy formalization (2026-09-10)
 
 This continuation adds **78 public theorems in 15 modules**. Full source checking succeeded before publication. This is a partial formalization of the ordinary FourierBridgeUniformSignedEnergy20260910.md proof: the unconditional final Fourier bridge and uniform boundary-energy theorem are still Open as Lean providers.

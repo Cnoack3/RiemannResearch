@@ -1,5 +1,15 @@
 # Fourier bridge and signed energy: formalization scope
 
+**Continuation update:** The actual periodization, its Fourier-to-Mellin
+identification, and all positive-integer boundary samples are now proved in
+`DyadicTentFourierReconstruction.lean` and `DyadicTentFourierSamples.lean`.
+Arbitrary finite signed packets also have an exact Fourier `HasSum`.
+The five-module, 60-theorem continuation is recorded in
+`FourierTentContinuationStatus20260910.md`. The sections below record the
+preceding 78-theorem checkpoint; its periodization stage is superseded by
+this update. The infinite signed arithmetic bridge and uniform full energy
+targets remain Open.
+
 September 10, 2026. Source: the supplied terminal-tent handoff and
 FourierBridgeUniformSignedEnergy20260910.md from this conversation.
 
