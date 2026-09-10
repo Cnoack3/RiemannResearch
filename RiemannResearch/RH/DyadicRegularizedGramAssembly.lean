@@ -1,5 +1,6 @@
 import RiemannResearch.RH.DyadicQuotientAbel
 import RiemannResearch.RH.DyadicTailQuotient
+import RiemannResearch.RH.DyadicStepLogBound
 
 /-!
 # Explicit assembly from the concrete step Gram estimates
@@ -9,7 +10,9 @@ continuation (N24), (N26)--(N30), and Section 7; supports the assembly strategy.
 
 This file closes the assembly between the existing physical Gram reduction and
 the actual base and tail regularized families. The arithmetic series convergence,
-the concrete Gram estimates, and the concrete remainder estimate are hypotheses.
+the concrete off-diagonal Gram/prefix estimates, and the concrete remainder
+estimate are hypotheses. The diagonal growth is now proved internally with
+D = 3/2 by DyadicStepLogBound; it is no longer an assembly hypothesis.
 Consequently these theorems do not assert the unconditional norm obligation or RH.
 -/
 
@@ -32,12 +35,8 @@ constant for the base bound and the full physical `X,d` tail bound. Both actual
 series convergence conclusions are retained independently of the norm bounds. -/
 theorem dyadicRegularized_explicit_bounds_of_gram_and_error
     (hseries : DyadicRegularizedSeriesSummable)
-    (D A R : ℝ) (hD : 0 ≤ D) (hA : 0 ≤ A) (hR : 0 ≤ R)
+    (A R : ℝ) (hA : 0 ≤ A) (hR : 0 ≤ R)
     (a : ℕ → ℝ) (ha : ∀ n, 0 ≤ a n)
-    (hdiag : ∀ j : ℕ,
-      ‖dyadicQuotientProjection
-        (hilbertDilation (3 ^ (j + 1)) (by positivity) hilbertOne)‖ ^ 2 ≤
-          D * ((j : ℝ) + 1))
     (hprefix : ∀ N, RiemannResearch.Analysis.prefixSum a N ≤ A * N)
     (hoff : ∀ j k : ℕ, j < k →
       |inner ℝ (dyadicQuotientProjection
@@ -52,21 +51,21 @@ theorem dyadicRegularized_explicit_bounds_of_gram_and_error
     DyadicRegularizedSeriesSummable ∧
     DyadicTailRegularizedSeriesSummable ∧
     (∀ ε : ℝ, 0 < ε → ε ≤ 1 / 2 →
-      ‖dyadicRegularizedFamily ε‖ ^ 2 ≤ dyadicRegularizedGramNormConstant D A R) ∧
+      ‖dyadicRegularizedFamily ε‖ ^ 2 ≤ dyadicRegularizedGramNormConstant (3 / 2) A R) ∧
     (∀ X d (hX : 0 < X) (hXd : X ≤ d),
       ∀ ε : ℝ, 0 < ε → ε ≤ 1 / 2 →
         ‖dyadicTailRegularizedFamily X d (Nat.lt_of_lt_of_le hX hXd) ε‖ ^ 2 ≤
-          dyadicRegularizedGramNormConstant D A R * d) := by
-  have hDA : 0 ≤ D + 2 * A := by positivity
+          dyadicRegularizedGramNormConstant (3 / 2) A R * d) := by
+  have hDA : 0 ≤ (3 / 2 : ℝ) + 2 * A := by positivity
   have hstep : ∀ ε : ℝ, 0 < ε → ε ≤ 1 / 2 →
-      ‖dyadicStepAbelOrbit ε‖ ≤ Real.sqrt (D + 2 * A) := by
+      ‖dyadicStepAbelOrbit ε‖ ≤ Real.sqrt ((3 / 2 : ℝ) + 2 * A) := by
     intro ε hε _
     have hb := dyadicStepAbelOrbit_norm_sq_le_of_gram
-      D A hD hA a ha hdiag hprefix hoff ε hε
-    nlinarith [Real.sq_sqrt hDA, Real.sqrt_nonneg (D + 2 * A),
+      (3 / 2) A (by norm_num) hA a ha dyadicProjectedStep_triadic_diagonal hprefix hoff ε hε
+    nlinarith [Real.sq_sqrt hDA, Real.sqrt_nonneg ((3 / 2 : ℝ) + 2 * A),
       norm_nonneg (dyadicStepAbelOrbit ε)]
   have hbase : ∀ ε : ℝ, 0 < ε → ε ≤ 1 / 2 →
-      ‖dyadicRegularizedFamily ε‖ ^ 2 ≤ dyadicRegularizedGramNormConstant D A R := by
+      ‖dyadicRegularizedFamily ε‖ ^ 2 ≤ dyadicRegularizedGramNormConstant (3 / 2) A R := by
     intro ε hε hεhalf
     apply uniform_norm_sq_of_exact_decomposition
       dyadicRegularizedFamily dyadicStepAbelOrbit
@@ -76,7 +75,7 @@ theorem dyadicRegularized_explicit_bounds_of_gram_and_error
           dyadicStepAbelOrbit δ))
       (dyadicQuotientProjection hilbertOne)
       ((Real.log 2)⁻¹ • dyadicQuotientProjection (hilbertResidue 2 (by norm_num)))
-      (Real.sqrt (D + 2 * A)) R (Real.sqrt_nonneg _) hR
+      (Real.sqrt ((3 / 2 : ℝ) + 2 * A)) R (Real.sqrt_nonneg _) hR
       (fun δ _ _ => by abel) hstep herror ε hε hεhalf
   refine ⟨hseries, dyadicTailRegularizedSeriesSummable_of_base hseries, hbase, ?_⟩
   intro X d hX hXd ε hε hεhalf
@@ -85,20 +84,16 @@ theorem dyadicRegularized_explicit_bounds_of_gram_and_error
   calc
     _ ≤ (d : ℝ) * ‖dyadicRegularizedFamily ε‖ ^ 2 :=
       dyadicTailTransfer_norm_sq_le X d (Nat.lt_of_lt_of_le hX hXd) _
-    _ ≤ (d : ℝ) * dyadicRegularizedGramNormConstant D A R :=
+    _ ≤ (d : ℝ) * dyadicRegularizedGramNormConstant (3 / 2) A R :=
       mul_le_mul_of_nonneg_left (hbase ε hε hεhalf) (Nat.cast_nonneg d)
-    _ = dyadicRegularizedGramNormConstant D A R * d := mul_comm _ _
+    _ = dyadicRegularizedGramNormConstant (3 / 2) A R * d := mul_comm _ _
 
 /-- The proposition-level base and full-tail norm obligations follow from the
 preceding explicit bounds, with no additional transfer assumptions. -/
 theorem dyadicRegularized_norm_obligations_of_gram_and_error
     (hseries : DyadicRegularizedSeriesSummable)
-    (D A R : ℝ) (hD : 0 ≤ D) (hA : 0 ≤ A) (hR : 0 ≤ R)
+    (A R : ℝ) (hA : 0 ≤ A) (hR : 0 ≤ R)
     (a : ℕ → ℝ) (ha : ∀ n, 0 ≤ a n)
-    (hdiag : ∀ j : ℕ,
-      ‖dyadicQuotientProjection
-        (hilbertDilation (3 ^ (j + 1)) (by positivity) hilbertOne)‖ ^ 2 ≤
-          D * ((j : ℝ) + 1))
     (hprefix : ∀ N, RiemannResearch.Analysis.prefixSum a N ≤ A * N)
     (hoff : ∀ j k : ℕ, j < k →
       |inner ℝ (dyadicQuotientProjection
@@ -113,13 +108,13 @@ theorem dyadicRegularized_norm_obligations_of_gram_and_error
     DyadicRegularizedSeriesSummable ∧ DyadicRegularizedNormBound ∧
     DyadicTailRegularizedSeriesSummable ∧ DyadicTailRegularizedNormBound := by
   obtain ⟨hs, hts, hb, htb⟩ := dyadicRegularized_explicit_bounds_of_gram_and_error
-    hseries D A R hD hA hR a ha hdiag hprefix hoff herror
+    hseries A R hA hR a ha hprefix hoff herror
   exact ⟨hs,
-    ⟨dyadicRegularizedGramNormConstant D A R,
-      dyadicRegularizedGramNormConstant_nonneg D A R, hb⟩,
+    ⟨dyadicRegularizedGramNormConstant (3 / 2) A R,
+      dyadicRegularizedGramNormConstant_nonneg (3 / 2) A R, hb⟩,
     hts,
-    ⟨dyadicRegularizedGramNormConstant D A R,
-      dyadicRegularizedGramNormConstant_nonneg D A R, htb⟩⟩
+    ⟨dyadicRegularizedGramNormConstant (3 / 2) A R,
+      dyadicRegularizedGramNormConstant_nonneg (3 / 2) A R, htb⟩⟩
 
 end
 end RiemannResearch.RH.Pareto
