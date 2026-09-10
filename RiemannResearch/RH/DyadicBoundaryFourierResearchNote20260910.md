@@ -1,3 +1,11 @@
+Update, September 10, 2026: `DyadicBoundaryTents.lean` now proves the exact
+integer affine tent pieces at every dyadic depth. `DyadicResidueStepApproximation.lean`
+and `DyadicResidueTerminalOctave.lean` prove the signed finite residue/step bridge
+with complete boundary error at most (a-1)^2/(K+1), and 1/(2N+1) for the binary
+terminal octave. `Analysis/AbelCancellationMultiplier.lean` proves the elementary
+multiplier bound, sharpened to 2/(1+q), and the finite mean-cancellation algebra.
+The full real/Fourier identities and interchanges below remain unverified.
+
 Status: **Not Lean verified.** This ordinary research review is retained for independent review. Its proposed Fourier multiplier identity is an open candidate, and no assertion in this note is used as a provider by the new Lean modules.
 
 # Analytic review of the signed mean-energy frontier

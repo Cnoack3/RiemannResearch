@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Exact boundary tents, signed step approximation, and terminal octave (2026-09-10)
+
+This continuation adds **28 public theorems**: 27 across six new modules and one in `RH/DyadicBoundaryUniformCriterion.lean`. It establishes quantitative convergence of the entire boundary error at each fixed conductor. It does not prove uniform arithmetic energy control as the conductor and inverse damping grow.
+
+| Status | Module and endpoints | Precise checked scope |
+| --- | --- | --- |
+| Established local declaration | `Analysis/DyadicSequenceInterpolation.lean`: `dyadicSequence_exact_interpolation`; `RH/DyadicBoundaryTents.lean`: `dyadicBoundaryCoordinate_step_interpolation`, `dyadicBoundaryCoordinate_step_tent_rising`, `dyadicBoundaryCoordinate_step_tent_falling` | Actual integer boundary coefficients have exact affine tent pieces at every dyadic subdivision. The real log-periodic extension and Fourier expansion are separate. |
+| Established local declaration | `RH/ThresholdStepTruncation.lean`: `hilbertStepJumpPrefix_sequence`, `hilbertStepJumpPrefix_error_sq`, `hilbertStepJumpPrefix_error_sq_le`, `hilbertStepJumpPrefix_tendsto_of_bounded` | A finite signed jump prefix equals f(min(n,K)); its full weighted tail error is exact. Bounded physical sequences converge in the actual Hilbert norm. |
+| Established local declaration | `RH/DyadicResidueStepApproximation.lean`: `natResidue_cast_jump`, `hilbertResidue_stepJumpPrefix_signed_boundary`, `hilbertResidue_stepJumpPrefix_error_sq_le`, `hilbertResidue_stepJumpPrefix_tendsto`, `hilbertResidue_stepJumpPrefix_boundary_error_le` | The actual residue jumps retain negative resets. Both physical squared error and the full one-quarter boundary square sum are bounded by (a-1)^2/(K+1), with a>0 and no arithmetic bound assumed. |
+| Established local declaration | `RH/DyadicBoundaryUniformCriterion.lean`: `dyadicBoundaryCoordinate_square_tsum_le_norm_sq` | The full canonical boundary square sum is bounded by the physical norm squared for every vector. |
+| Established local declaration | `RH/DyadicResidueTerminalOctave.lean`: `hilbertResidue_two_stepJumpPrefix_boundary_eq_octave`, `hilbertResidue_two_terminalOctave_full_boundary_error_le` | At cutoff 2N, the binary-residue boundary prefix is exactly the surviving octave sum from N+1 to 2N. Its complete boundary error is at most 1/(2N+1). No divergent sums are separated. |
+| Established algebraic declarations | `Analysis/AbelCancellationMultiplier.lean`: `abel_norm_sq_identity`, `abelCancellationMultiplier_norm_le_sharp`, `abelCancellationMultiplier_norm_neg_one`, `abelCancellationMultiplier_finite_mean_cancellation` | For unit z and 0<=q<1 the complete multiplier (1-z)/(1-qz) has sharp bound 2/(1+q), attained at z=-1. Finite mean cancellation keeps every coefficient and the comparison term. No actual Fourier identification or removal of Gram cross terms is asserted. |
+
+Combined final source check `job_2t4PrqwSDACkz3BLIU7Bpjja-yEFhpRy` succeeded: verified true, exit 0, 5.291 seconds. The source contains no placeholder proofs or added axioms. The nine-endpoint exact-type/axiom audit `job_6pKF_yDs20VmZpssK5jwNaKqTEjKTzW_` also succeeded (verified true, exit 0, 4.640 seconds), with only propext, Classical.choice, and Quot.sound; audited source SHA-256 `6fc4a1d35c922c2ed8822e8f048f77c0a27b01081058811970b8b79b1a602f1c`. Separate module validation and publication use the final checkpoint.
+
+**Open:** full real log-periodic/Fourier identification and justified residue/Fourier limits; the actual complete signed arithmetic square-sum bound uniform in vanishing damping; the stronger O(epsilon) energy estimate; arithmetic vector/Mellin/separating limits; full legal two-seed recovery and complementary energy; separate N5 identification; RH. The fixed-conductor rate above is not a provider for the uniform arithmetic estimate.
+
+
 ### Actual signed boundary coefficients, residue blocks, and full Abel regrouping (2026-09-10)
 
 This continuation adds 34 public theorems across six new RH modules. It discharges the handoff's exact-coefficient derivation and proves a complete conductor Abel representation at positive damping. The uniform arithmetic square-sum estimate is still Open.

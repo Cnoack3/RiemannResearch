@@ -64,5 +64,20 @@ theorem dyadicRegularized_norm_obligations_of_boundary_energy
   nlinarith [Real.sq_sqrt hC, Real.sqrt_nonneg C,
     norm_nonneg (dyadicNormalizationRemainder ε)]
 
+/-- The complete boundary energy is bounded by the actual physical norm. -/
+theorem dyadicBoundaryCoordinate_square_tsum_le_norm_sq (f : ThresholdHilbert) :
+    (∑' i : ℕ, (1/4 : ℝ) * dyadicBoundaryCoordinate f i ^ 2) ≤ ‖f‖^2 := by
+  have hp := dyadicQuotientProjection_pythagoras f
+  have hb := dyadicBoundary_parseval_norm_sq f
+  have he : (∑' i : ℕ, (1/4 : ℝ) * dyadicBoundaryCoordinate f i ^ 2) =
+      ∑' n : ℕ, 4 * (inner ℝ (dyadicQuotientProjection
+        (dyadicStepBoundary (n+1) (by positivity))) f)^2 := by
+    apply tsum_congr
+    intro i
+    dsimp [dyadicBoundaryCoordinate, dyadicBoundaryVector]
+    ring
+  rw [he]
+  nlinarith [sq_nonneg (inner ℝ hilbertOne f), sq_nonneg ‖f-dyadicQuotientProjection f‖]
+
 end
 end RiemannResearch.RH.Pareto
