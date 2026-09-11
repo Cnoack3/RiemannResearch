@@ -1575,3 +1575,39 @@ The environment is Lean `v4.33.0-rc2` and Mathlib commit `51e6992efd06126df61a49
 The additional coefficient/crude-tail-size chain passed job `job_-r8DwnTrVWQiTUe4yCyohmVnhlzVB81Z` with verified true, exit code 0, and 6.202 seconds. Its 32-module combined-source SHA-256 is `c7c0a6786436cc4ac332f8ba7b4a2a0c86f5d2693528e8f88e241d95d86c630c`. It adds three authored modules to the completion set, for 109 authored modules in total.
 
 The RH target remains open: an appropriate subexponential upper bound for the optimized **mixed-conductor** remote tails has not been proved. These unconditional completion identities, null channels, and prime–square compensation do not establish that upper bound or RH. This entry also does not certify every earlier optimizer calculation, truncated-residual endpoint formula, or numerical experiment in the source note.
+
+### Summable-tail uniqueness and completed regularity upgrade (2026-09-11)
+
+**Established:** `Analysis/DyadicBlockRigidity.lean` proves the previously
+missing implication in the Fourier/Sobolev argument. If A is summable,
+sum n(n+1)(A(n)-A(n+1))² is finite, and A(2n)=A(n)/2, then A(n)=0 for every
+positive n. In particular sum (n A(n))² is finite, with no additional
+regularity hypothesis.
+
+The proof is discrete. For c(n)=n A(n), dyadic block averages tend to zero.
+Exact averaging increments, disjoint blocks, and Cauchy-Schwarz give
+c(n)² <= (1/2) sum_{j >= 2n}(c(j+1)-c(j))². The difference sequence is square
+summable by the original weighted energy. Tail decay and dyadic invariance
+then force vanishing.
+
+`RH/ParetoSummableTailRigidity.lean` proves the actual application:
+`LegalAnnihilator.signedTail_weighted_square_summable` is a checked
+provider, and `legalAnnihilator_eq_zero_of_summable_signedTail` gives
+uniqueness from actual weighted L2 orthogonality, seed 2 availability,
+and summability of the signed tail. The energy and dyadic equations are
+derived from the original Pareto definitions. The former Fourier/Sobolev
+formalization obligation is **Discharged**.
+
+Recovered prior verified results are preserved:
+`RH/ParetoSignedTails.lean` (exact tails, mean, and energy),
+`Analysis/SummableMultiples.lean` (summable inversion and grouped equations),
+`Analysis/SummableDiscreteAbel.lean` (summation by parts),
+`Analysis/DyadicTailRigidity.lean` (terminal orbit lemmas),
+`Analysis/FirstMomentTails.lean` and `RH/ParetoFirstMomentUniqueness.lean`
+(first-moment uniqueness), and the eventual-sign/oscillation extension to
+`RH/ParetoAnnihilatorPositivity.lean`.
+
+**Open research:** proving that the canonical residual has summable signed
+tails. This regularity is not inferred from weighted L2 membership alone.
+No unconditional RH conclusion is asserted. Other unformalized claims from
+the two source notes are listed in `RH/ParetoTailRigidityVerification20260911.md`.
