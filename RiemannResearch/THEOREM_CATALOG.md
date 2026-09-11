@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Positivity, indicators, and signed annihilator uniqueness (2026-09-11)
+
+**Established:** `RH/ParetoAnnihilatorPositivity.lean` defines
+`LegalAnnihilator` using the actual Pareto weighted square summability and
+orthogonality to `legalSeedSpan A`. Weighted square summability implies
+summability against every bounded test. For any seed set containing 2,
+`legalAnnihilator_nonnegative_eq_zero` proves that every nonnegative
+annihilator vanishes at every positive index. The indicator corollary excludes
+all positive members of its support. Index zero has weight zero and is not
+detected by the pairing.
+
+`Analysis/IndicatorAnnihilator.lean` proves the two-point counterexample:
+every mean-zero indicator is empty, but the nonzero signed function (1,-1)
+has mean zero. Its absolute value has mean one and its positive-level-set
+indicator has mean 1/2. Thus indicator uniqueness alone does not imply signed
+uniqueness, and orthogonality alone does not supply the level-set preservation
+that an attempted monotone-convergence reduction would need.
+
+**Conditional research reduction:**
+`legalAnnihilator_eq_zero_of_abs_closed` gives full signed uniqueness on
+positive indices if the legal annihilator is closed under pointwise absolute
+value. `legalAnnihilator_anchored_eq_zero_of_abs_closed` gives function
+equality to zero with the additional anchor h(0)=0.
+
+**Open:** absolute-value closure for the actual legal annihilator. No provider
+for this hypothesis, legal approximation sequence, or proof of RH is supplied.
+
 ### Reflection-pair total variance and the actual Jordan objective (2026-09-11)
 
 This continuation adds **86 public theorems across nine modules**.
