@@ -1,3 +1,7 @@
+import RiemannResearch.Analysis.HilbertBasisWeakLimit
+import RiemannResearch.Analysis.WeakConvexRepair
+import RiemannResearch.RH.DyadicSignedDampingPackets
+import RiemannResearch.RH.DyadicRemainderConvexRepair
 import RiemannResearch.RH.DyadicFourierZeroDamping
 import RiemannResearch.Analysis.NonnegativeSeriesTightness
 import RiemannResearch.RH.DyadicSignedBoundaryTightness

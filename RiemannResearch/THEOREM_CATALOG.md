@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Convex repair of the actual normalization remainder (2026-09-11)
+
+This continuation adds **17 public theorems across four modules**.
+
+**Established:** `RH/DyadicSignedDampingPackets.lean` (8 theorems) proves
+summability and the exact signed mixed-damping Gram identity, finite-mixture
+coordinates, and complete boundary/Fourier norm identities for arbitrary real
+weights and positive used dampings. Every mixed damping and frequency term
+is retained. `Analysis/HilbertBasisWeakLimit.lean` (1) proves the standard
+bounded-coordinate-to-pairing limit theorem.
+`Analysis/WeakConvexRepair.lean` (3) implements Riesz representation and the
+standard weak/convex-closure argument for arbitrary nontrivial filters.
+
+**Conditional research reduction:** `RH/DyadicRemainderConvexRepair.lean`
+(5 theorems) proves weak convergence of the actual remainder from coordinate
+decay and an eventual norm bound. In particular, the two existing named
+hypotheses `DyadicUniformSignedFourierMultiplierSqrtBound` and
+`DyadicNormalizationRemainderUniformEnergyBound` imply that every interval
+`0 < epsilon < delta` contains a finite convex mixture of actual remainders
+with norm below any `eta > 0`. An explicit finite-weight theorem has
+nonnegative weights summing to one and complete signed Fourier energy
+below `eta^2`. Individual boundary-tail tightness is not needed for mixtures.
+
+**Open:** both displayed analytic providers; unconditional coordinate and
+weak limits; a rate or arithmetic algorithm selecting the mixtures;
+centered-comparison control; full physical/legal recovery; and RH.
+The mixture conclusion is not decay of individual remainder norms and does
+not by itself approximate the constant. See
+`RH/FourierConvexRepairStatus20260911.md` for exact scope and audit evidence.
+
 ### Zero-damping modes and exact tail criteria (2026-09-11 continuation)
 
 This continuation adds **27 public theorems across five modules**.
