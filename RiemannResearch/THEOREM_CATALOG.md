@@ -1,5 +1,42 @@
 # Theorem catalog
 
+### Unconditional fixed-conductor residue Fourier bridge (2026-09-11 continuation)
+
+This continuation adds **29 public theorems in three new modules and one extended
+module**. Both analytic inputs isolated by the preceding residue cutoff reduction
+are now discharged. The specialized endpoint
+`dyadicBoundaryCoordinate_residue_hasSum_fourier` has only the positive-conductor
+hypothesis and is an **established result**, not a conditional research reduction.
+
+**Established:** `Analysis/HarmonicFourierVariation.lean` (5 theorems) proves
+unitary exponential and harmonic-weight variation estimates, exact reciprocal-tail
+telescoping, and the harmonic/variation cutoff split.
+`RH/DyadicResidueFourierKernel.lean` gains 5 phase, norm, terminal and exact-tail
+lemmas. `RH/DyadicResidueFourierBounds.lean` (8) proves the unconditional bound
+`norm D_a(K,h) <= 4a + 2a log(1+abs(omega_h))`, hence the required logarithmic
+frequency majorant, and absolute convergence of the modular Abel differences.
+`RH/DyadicResidueFourierBridge.lean` (11) proves the exact finite Mellin identity,
+the nonzero zeta limit through the continuous Pareto Mellin functional, convergence
+at every frequency including the separate zero mode, the actual Fourier HasSum,
+and the exact absolutely convergent modular-series representation of the symbol.
+It also proves the cutoff error squared bound
+`norm(D_a(K,h)-symbol_a(h))^2 <= norm(1-I*omega_h)^2*(a-1)^2/(K+1)`.
+
+No RH, Mertens, Fourier-bridge, or uniform signed-energy hypothesis occurs in
+these providers. Ordered physical jump convergence remains `Tendsto`; the
+`HasSum` over physical indices concerns Abel differences, and the Fourier
+`HasSum` is over frequencies.
+
+**Still Open:** passage through the actual damped Mobius/conductor family; the
+full signed arithmetic-family zeta-ratio bridge; the quantitative Mertens provider
+and hyperbola/reciprocal-tail consequences; uniform complete signed boundary and
+normalization-remainder energies; actual arithmetic coordinate limits and the
+complementary physical/legal two-seed recovery; RH. The present majorant is linear
+in the conductor and does not itself provide every positive-damping interchange.
+A useful next bounded target is a logarithmic-in-conductor bound retaining the
+exact reset cancellation, followed by the actual damped-family interchange.
+See `RH/FourierResidueBridgeStatus20260911.md` for proof scope and verification.
+
 ### Signed infinite packets, actual comparison, and residue Fourier cutoffs (2026-09-11)
 
 This continuation adds **30 public theorems and four definitions in four modules**.
@@ -18,12 +55,12 @@ and independent physical-coordinate convergence.
 
 **Conditional research reductions:** the dominated signed-packet extraction;
 `dyadicSignedFourierBridge_of_regularizedFamily_hasSum` (actual arithmetic-family
-Fourier expansion remains a hypothesis); and
-`dyadicBoundaryCoordinate_residue_hasSum_fourier_of_logarithmic_kernel`
-(logarithmic cutoff domination and nonzero zeta cutoff identification remain hypotheses).
-Defining `dyadicResidueFourierSymbol` is not a provider of its limiting identification.
+Fourier expansion remains a hypothesis). The original conditional residue extraction
+`dyadicBoundaryCoordinate_residue_hasSum_fourier_of_logarithmic_kernel` now has proved
+providers for both inputs and the unconditional specialization recorded above.
 
-**Still Open:** these arithmetic kernel estimates; the full signed arithmetic Fourier
+**Now discharged:** the two fixed-conductor kernel obligations from this continuation.
+**Still Open:** the full signed arithmetic Fourier
 bridge; quantitative Mertens and hyperbola/tail estimates; uniform complete signed
 boundary energy; actual arithmetic coordinate limits and complementary physical/legal
 two-seed recovery; RH. No frequency-diagonal bound replaces the signed norm.

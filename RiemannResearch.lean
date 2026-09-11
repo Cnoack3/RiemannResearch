@@ -1,3 +1,6 @@
+import RiemannResearch.Analysis.HarmonicFourierVariation
+import RiemannResearch.RH.DyadicResidueFourierBounds
+import RiemannResearch.RH.DyadicResidueFourierBridge
 import RiemannResearch.RH.DyadicTentFourierPackets
 import RiemannResearch.RH.DyadicTriadicFourierComparison
 import RiemannResearch.RH.DyadicTentLogMajorant

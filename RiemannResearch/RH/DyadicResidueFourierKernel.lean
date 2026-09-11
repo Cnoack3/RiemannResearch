@@ -11,7 +11,8 @@ import Mathlib.NumberTheory.LSeries.RiemannZeta
 Source: independently developed from the actual residue jump expansion in
 the user-provided FourierTentContinuationVerification20260910(1).md.
 The finite Abel identity retains the conductor reset before any estimate.
-No zeta identification or cutoff-independent majorant is asserted here.
+Unconditional cutoff bounds and zeta identification are proved in the sibling
+DyadicResidueFourierBounds and DyadicResidueFourierBridge modules.
 -/
 
 open scoped BigOperators
@@ -185,7 +186,8 @@ theorem hilbertResidue_stepJumpPrefix_boundaryCoordinate_tendsto
 
 /-- The signed residue symbol, with its finite zero-frequency value kept
 separate from the nonzero zeta expression. Identifying nonzero cutoff limits
-with this symbol remains an explicit analytic hypothesis below. -/
+with this symbol is an explicit hypothesis in the reduction below and has an
+unconditional provider in DyadicResidueFourierBridge. -/
 def dyadicResidueFourierSymbol (a : ℕ) (h : ℤ) : ℂ :=
   if h = 0 then (Real.log a : ℂ) else
     (1 - dyadicIntegerFourierPhase h a) *
@@ -226,6 +228,51 @@ theorem dyadicBoundaryCoordinate_residue_hasSum_fourier_of_logarithmic_kernel
     (dyadicBoundaryCoordinate (hilbertResidue a ha) i : ℂ)
     (fun K => (hilbertResidue_stepJumpPrefix_hasSum_fourier a ha K i).tsum_eq.symm)
     (hilbertResidue_stepJumpPrefix_boundaryCoordinate_tendsto a ha i)
+
+
+theorem norm_dyadicIntegerFourierPhase (h : ℤ) (n : ℕ) :
+    ‖dyadicIntegerFourierPhase h n‖ = 1 := by
+  simp only [dyadicIntegerFourierPhase, fourier_apply, Circle.norm_coe]
+
+theorem norm_dyadicHarmonicFourierWeight (h : ℤ) (n : ℕ) :
+    ‖dyadicHarmonicFourierWeight h n‖ = 1 / (n : ℝ) := by
+  rw [dyadicHarmonicFourierWeight, norm_div,
+    norm_dyadicIntegerFourierPhase, Complex.norm_natCast]
+
+theorem dyadicResidueFourierKernel_endpoint_tendsto_zero
+    (a : ℕ) (ha : 0 < a) (h : ℤ) :
+    Filter.Tendsto (fun K : ℕ =>
+      ((K % a : ℕ) : ℂ) * dyadicHarmonicFourierWeight h (K+1))
+      Filter.atTop (nhds 0) := by
+  apply tendsto_zero_iff_norm_tendsto_zero.mpr
+  simpa only [norm_mul, Complex.norm_natCast,
+    norm_dyadicHarmonicFourierWeight, Nat.cast_add, Nat.cast_one,
+    mul_one_div, residue] using residue_harmonic_endpoint_tendsto_zero a ha
+
+theorem dyadicResidueFourierKernel_abel_tail
+    (a : ℕ) (ha : 0 < a) (N M : ℕ) (h : ℤ) :
+    dyadicResidueFourierKernel a (N+M) h -
+      dyadicResidueFourierKernel a N h =
+    (((N+M) % a : ℕ) : ℂ) * dyadicHarmonicFourierWeight h (N+M+1) -
+      ((N % a : ℕ) : ℂ) * dyadicHarmonicFourierWeight h (N+1) +
+      ∑ j ∈ Finset.range M, (((N+j+1) % a : ℕ) : ℂ) *
+        (dyadicHarmonicFourierWeight h (N+j+1) -
+          dyadicHarmonicFourierWeight h (N+j+2)) := by
+  rw [dyadicResidueFourierKernel_eq_modular_abel a ha,
+    dyadicResidueFourierKernel_eq_modular_abel a ha,
+    Finset.sum_range_add]
+  ring
+
+
+theorem dyadicIntegerFourierPhase_eq_exp (h : ℤ) (n : ℕ) :
+    dyadicIntegerFourierPhase h n =
+      Complex.exp (Complex.I * ((dyadicLogFrequency h * Real.log n : ℝ) : ℂ)) := by
+  unfold dyadicIntegerFourierPhase
+  rw [fourier_coe_apply]
+  unfold dyadicLogFrequency
+  push_cast
+  congr 1
+  ring
 
 
 end
