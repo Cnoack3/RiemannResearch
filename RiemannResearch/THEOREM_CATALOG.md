@@ -1,5 +1,49 @@
 # Theorem catalog
 
+### Legal sequences, Ramanujan coordinates, and bounded moment repair (2026-09-11)
+
+**Established:** `RH/LegalMobiusConstraints.lean` formalizes actual finite
+two-seed coefficient flow, its Möbius recovery, necessary coefficient limits,
+and the exact omitted-five/nonnegative-coefficient error floor. The companion
+`LegalMobiusHeadCorrection` retains the mean, head, norm cost, and complete
+mixed-term identity of the mean correction.
+
+`RH/IntegratedRamanujanBasis.lean` proves finite independence and exact equality
+between the two-seed legal span and the span of integrated Ramanujan packets
+whose conductors are divisible by 2 or 3. `IntegratedRamanujanGram` proves
+strict positivity of the actual full finite Gram form. Finite independence or
+positivity does not assert completeness or any uniform inverse bound.
+
+`RH/ParetoGramMeanOptimizer.lean` proves the full projection error and
+mean-one minimum formulas from actual Gram normal equations and nonzero
+normalization, including the exact nonnegative excess quadratic.
+
+`Analysis/BoundedMomentRepair.lean` proves bounded progressively matched dense
+tests imply weak convergence and arbitrarily small finite convex mixtures.
+`Analysis/BoundedMomentAverages.lean` proves extraction of a strictly increasing
+subsequence with the complete equal-average bound B/m+4/m². The exact finite
+Gram identity keeps all signed mixed terms.
+
+`Analysis/LaguerreMomentTransform.lean` proves the finite triangular transform,
+its injectivity, correction identities and the actual Bochner-integral bridge
+under explicit integrability and ordinary-moment hypotheses.
+
+**Conditional research reductions:** `RH/ParetoMomentRepair.lean` transfers
+bounded matched dense tests to actual finite legal mean-one approximation and
+RH. The dense actual tests, matching, and uniform actual norm bound are inputs.
+`RH/ParetoLegalCompleteness.lean` connects the actual sequence annihilator to
+Hilbert completeness and RH conditional on signed uniqueness or absolute-value
+closure. `RamanujanLaguerreResearchTargets` gives actual exponential-Pareto
+integral definitions and proves arithmetic ordinary moments imply the stated
+Laguerre cancellation, conditional on the ordinary-moment provider.
+
+**Open:** uniform variance bounds, unconditional legal completeness, and
+absolute-value closure. **Formalization still pending:** concrete Laguerre
+realization/Parseval, Mellin-derived arithmetic moments, dyadic finite
+feasibility/optimizer inverse formulas and displayed special-function
+specializations. `RH/WholePageCoverage20260911.md` records precise coverage and
+retains both original source notes. Numerical tables are not certificates.
+
 ### Positivity, indicators, and signed annihilator uniqueness (2026-09-11)
 
 **Established:** `RH/ParetoAnnihilatorPositivity.lean` defines
