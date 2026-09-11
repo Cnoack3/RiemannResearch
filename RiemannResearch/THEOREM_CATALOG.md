@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Finite optimizer and dyadic evaluation completion (2026-09-11)
+
+**Established:** `RH/RamanujanMeanOptimizer.lean` supplies the actual inverse
+coefficients and legal mean-one optimizer on each finite allowed conductor set
+containing 2. The mass q satisfies 0<q<1; projection error is 1-q and minimum
+mean-one variance is q⁻¹-1. Normal equations, inverse existence, and nonzero
+normalization are derived. The full signed excess quadratic remains present.
+
+`RH/ParetoFiniteErrorObstruction.lean` proves strictly positive error for
+each finite legal packet and a positive error floor uniform over coefficients
+on each fixed finite conductor set. This is not uniform across growing sets.
+
+`Analysis/IndependentMeanOneObstruction.lean` proves finite-prefix
+independence, exact mean-one least-squares minima, a uniform 1/2 error floor,
+and convergence of the minima to 6/π² using Mathlib's Basel theorem.
+`Analysis/DyadicMomentEvaluation.lean` proves the triangular/Vandermonde
+factorization and finite dyadic polynomial-evaluation solvability for every K.
+
+**Conditional formalization bridge:** `RH/ParetoDyadicMomentFeasibility.lean`
+proves actual finite-integral synthesis and legal budget membership.
+`everyBudgetFeasible_of_polynomial_and_realization` proves actual feasibility
+at every budget 2^K from two explicit analytic providers:
+`DyadicCoefficientPolynomialProvider` and `ContinuousParetoRealizationTarget`.
+Both providers remain **Open**. Finite matrix invertibility is discharged.
+
+**Open research:** uniform moment cost, q→1, unconditional completeness/RH,
+and absolute-value closure. Concrete Parseval/Mellin providers and the
+additional-moment constrained inverse formula remain formalization work.
+
 ### Legal sequences, Ramanujan coordinates, and bounded moment repair (2026-09-11)
 
 **Established:** `RH/LegalMobiusConstraints.lean` formalizes actual finite

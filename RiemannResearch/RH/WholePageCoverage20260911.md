@@ -26,6 +26,32 @@ tables in the source snapshots remain exploratory and uncertified.
 | Actual exponential lift, Laguerre integrals, budget constraints and remaining analytic targets | `RamanujanLaguerreResearchTargets.lean` | Named propositions for unresolved providers; ordinary-moment provider implies actual Laguerre cancellation conditionally. |
 | Actual sequence annihilator → Hilbert orthogonality/completeness/RH | `ParetoLegalCompleteness.lean` | Signed uniqueness or absolute-value closure remains explicit. |
 
+## Further formalization from the same chat
+
+- `RamanujanMeanOptimizer.lean` assembles the actual finite Gram inverse and
+  mean-one optimizer. For every finite allowed conductor set containing 2,
+  the inverse mass q is positive and strictly below 1, the projection error
+  is 1-q, and the minimum mean-one variance is q⁻¹-1. Legality, normal
+  equations, and nonzero normalization are derived, not research hypotheses.
+- `ParetoFiniteErrorObstruction.lean` proves positive error for each finite
+  legal packet and a positive error floor uniform over all signed coefficients
+  on any fixed finite positive conductor set. The floor depends on that set
+  and does not obstruct approximation by growing conductor sets.
+- `Analysis/IndependentMeanOneObstruction.lean` gives actual finite-prefix
+  vectors, linear independence, exact least-squares coefficients and minimum,
+  a uniform 1/2 lower bound, and convergence of the minima to 6/π² using
+  Mathlib's proved Basel sum. It rules out every sequence of mean-one finite
+  combinations in this example.
+- `Analysis/DyadicMomentEvaluation.lean` proves the exact triangular times
+  Vandermonde determinant, nonzero dyadic leading coefficients, and finite
+  solvability for all K and all prescribed moment vectors.
+- `ParetoDyadicMomentFeasibility.lean` proves legality at budget 2^K and
+  finite synthesis of the actual Laguerre integrals under explicit moment
+  integrability. Its all-budget feasibility theorem still requires
+  `DyadicCoefficientPolynomialProvider` and
+  `ContinuousParetoRealizationTarget`. The matrix algebra is now proved;
+  those two analytic providers remain unproved.
+
 ## Existing results reused
 
 - `ParetoPacketGreenGram`: actual Ramanujan divisor sum, increments,
@@ -58,9 +84,10 @@ tables in the source snapshots remain exploratory and uncertified.
 
 - The complete continuous Pareto–Laguerre realization and Parseval theorem.
 - Mellin differentiation and the arithmetic moment provider for every B_d.
-- The concrete dyadic polynomial evaluation argument proving feasibility of
-  all Laguerre constraints at budget 2^K, and the explicit constrained inverse
-  matrix optimizer formula.
+- The analytic polynomial coefficient identity and continuous realization
+  needed to discharge actual dyadic feasibility; its finite polynomial
+  evaluation algebra is now proved. The additional-moment constrained inverse
+  matrix optimizer formula remains to be formalized.
 - The exact finite-budget conductor cardinality, and the pseudoinverse formula
   for the redundant generator matrix; the checked optimizer formulation uses
   actual normal equations instead.
@@ -68,8 +95,9 @@ tables in the source snapshots remain exploratory and uncertified.
   constants and exact off-line-zero exponential-cost estimate, insofar as
   their precise displayed specializations are not supplied by an existing
   checked declaration.
-- Certification of the numerical tables and the illustrative infinite
-  ell² counterexample's limiting constant 6/pi².
+- Certification of the numerical tables. The counterexample's finite-prefix
+  minima and their exact limit 6/pi² are now proved; an explicit encoding of
+  the same vectors inside infinite ell² is not included.
 
 Continuous Laguerre polynomials live in the exponential-variable L² space.
 Their projections into the discrete Pareto step-function space are testing
