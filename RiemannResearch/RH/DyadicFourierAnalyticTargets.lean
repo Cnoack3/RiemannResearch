@@ -11,12 +11,13 @@ Sections 5–9. The phase, Fourier coefficients, normalization, arithmetic
 coefficients, and Hilbert remainder below are the actual objects used in the
 research project. Mathlib's `riemannZeta` supplies the complex zeta function.
 
-The propositions `DyadicSignedFourierBridge`,
+The specification `DyadicSignedFourierBridge` has an unconditional provider
+in `DyadicArithmeticFourierBridge`. The propositions
 `DyadicUniformSignedFourierEnergyBound`, `ClassicalQuantitativeMertensBound`,
-and `DyadicUniformSignedArithmeticDiscrepancyBound` are unproved analytic
-targets, not axioms or theorem providers. The subsequent theorems establish
-conditional equivalences and consequences of these explicit hypotheses.
-They do not discharge those hypotheses and do not assert RH.
+and `DyadicUniformSignedArithmeticDiscrepancyBound` remain unproved analytic
+targets, not axioms or theorem providers. The theorems below establish
+conditional equivalences and consequences; the downstream arithmetic bridge
+discharges the Fourier premise, but no uniform energy bound or RH is asserted.
 
 For the mathematical Mertens input, see E. S. Lee and N. Leong,
 https://arxiv.org/abs/2208.06141v4 (statement and proof of quantitative
@@ -57,10 +58,11 @@ def dyadicSignedFourierTerm (ε : ℝ) (i : ℕ)
     (h : DyadicNonzeroFourierFrequency) : ℂ :=
   dyadicTentMellinCoefficient i h.1 * dyadicSignedFourierMultiplier ε h
 
-/-- Unproved actual Fourier bridge: each scalar series must converge to the
+/-- Actual Fourier bridge specification: each scalar series must converge to the
 already identified boundary coefficient of the actual arithmetic remainder.
 `HasSum` explicitly excludes reliance on a default value of an unsummable
-`tsum`. The proposition covers every positive damping. -/
+`tsum`. The proposition covers every positive damping and has the proved
+provider `dyadicSignedFourierBridge_proved` in DyadicArithmeticFourierBridge. -/
 def DyadicSignedFourierBridge : Prop :=
   ∀ ε : ℝ, 0 < ε → ∀ i : ℕ,
     HasSum (dyadicSignedFourierTerm ε i)

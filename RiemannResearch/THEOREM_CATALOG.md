@@ -1,5 +1,44 @@
 # Theorem catalog
 
+### Full signed arithmetic Fourier bridge (2026-09-11 continuation)
+
+This continuation adds **40 public theorems in six new modules**.
+`dyadicSignedFourierBridge_proved : DyadicSignedFourierBridge` is now an
+**established result for every positive damping**. There is no RH, Mertens,
+Fourier-bridge, or uniform-energy premise.
+
+**Established:** `RH/DyadicResidueConductorBounds.lean` (7) proves exact reset
+harmonic reindexing, the retained signed Abel tail, the bound
+`norm D_a(K,h) <= 5 + 2 log a + 2 log(1+abs(omega_h))`, and the actual
+inverse-cutoff error `a*(3+abs(omega_h))/(K+1)`.
+`RH/DyadicDampedConductorFourier.lean` (6) proves logarithmically weighted
+actual Mobius summability and absolute conductor/frequency interchange.
+`RH/DyadicResidueFourierCocycle.lean` (10) proves the exact all-frequency identity
+`S_(a*b)-S_a = phase(a)*S_b`, its conductor-independent norm, the actual
+dilated-residue Fourier rows, and infinite signed packet extraction.
+`RH/DampedMobiusFourierSymbol.lean` (6) supplies genuine Mobius Dirichlet
+HasSum providers, complex phases and the nonzero residue-symbol zeta identity.
+`RH/DyadicRegularizationPhaseKernel.lean` (6) evaluates the actual
+Mobius/triadic product kernel, proves absolute coefficient summability, and
+retains the exact original real normalization at frequency zero.
+`RH/DyadicArithmeticFourierBridge.lean` (5) assembles the actual arithmetic
+family, removes its zero mode exactly, discharges the full signed Fourier
+bridge, and proves the unconditional complete signed norm identity.
+
+The key actual-family interchange first uses the signed cocycle:
+successive triadic conductors have symbol difference of norm exactly
+`norm S_3(h)`. The existing projected Hilbert-valued convergence is used.
+No unprojected infinite Hilbert series or quantitative Mertens input is assumed.
+
+**Still Open:** `DyadicUniformSignedFourierEnergyBound` and
+`DyadicNormalizationRemainderUniformEnergyBound`. They are now unconditionally
+equivalent, but neither is proved. Actual zero-damping coordinate limits,
+complementary physical/legal two-seed recovery, and RH remain Open.
+The quantitative Mertens and hyperbola/tail providers remain Open on that
+separate route; they are not needed for the Fourier bridge.
+Every frequency cross term remains inside the complete squared modulus.
+See `RH/FourierSignedBridgeStatus20260911.md` for proof scope and verification.
+
 ### Unconditional fixed-conductor residue Fourier bridge (2026-09-11 continuation)
 
 This continuation adds **29 public theorems in three new modules and one extended
@@ -27,7 +66,7 @@ these providers. Ordered physical jump convergence remains `Tendsto`; the
 `HasSum` over physical indices concerns Abel differences, and the Fourier
 `HasSum` is over frequencies.
 
-**Still Open:** passage through the actual damped Mobius/conductor family; the
+**Historical remaining obligations (updated above):** passage through the actual damped Mobius/conductor family; the
 full signed arithmetic-family zeta-ratio bridge; the quantitative Mertens provider
 and hyperbola/reciprocal-tail consequences; uniform complete signed boundary and
 normalization-remainder energies; actual arithmetic coordinate limits and the
@@ -60,7 +99,7 @@ Fourier expansion remains a hypothesis). The original conditional residue extrac
 providers for both inputs and the unconditional specialization recorded above.
 
 **Now discharged:** the two fixed-conductor kernel obligations from this continuation.
-**Still Open:** the full signed arithmetic Fourier
+**Historical remaining obligations (updated above):** the full signed arithmetic Fourier
 bridge; quantitative Mertens and hyperbola/tail estimates; uniform complete signed
 boundary energy; actual arithmetic coordinate limits and complementary physical/legal
 two-seed recovery; RH. No frequency-diagonal bound replaces the signed norm.

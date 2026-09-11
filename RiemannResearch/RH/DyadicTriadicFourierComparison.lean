@@ -9,8 +9,8 @@ Source: continuation of the user-provided
 The geometric orbit is absolutely summable at every positive damping. Its
 Fourier expansion follows from actual integer boundary samples, with the
 binary-residue mean removed exactly. This proves the comparison component
-of the signed Fourier bridge, not the arithmetic zeta-ratio component or a
-bound uniform in vanishing damping.
+of the signed Fourier bridge. The arithmetic zeta-ratio premise is discharged
+in DyadicArithmeticFourierBridge; a bound uniform in vanishing damping remains open.
 -/
 
 namespace RiemannResearch.RH.Pareto
@@ -186,8 +186,9 @@ theorem dyadicNormalizationComparison_hasSum_fourier
 /-- Conditional research reduction to the sole remaining arithmetic-family
 Fourier expansion. The actual phase, Abel denominator, scalar mean and
 normalization comparison are supplied by proved provider declarations.
-The hypothesis still requires the actual zeta-ratio expansion and its
-convergence; it is not an unconditional arithmetic bridge or energy estimate. -/
+The hypothesis requires the actual zeta-ratio expansion and its convergence.
+It is discharged by the downstream DyadicArithmeticFourierBridge module;
+this assembly alone does not provide a uniform energy estimate. -/
 theorem dyadicSignedFourierBridge_of_regularizedFamily_hasSum
     (hg : ∀ ε : ℝ, 0 < ε → ∀ i : ℕ,
       HasSum (fun h : DyadicNonzeroFourierFrequency =>
