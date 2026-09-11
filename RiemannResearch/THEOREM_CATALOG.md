@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Signed infinite packets, actual comparison, and residue Fourier cutoffs (2026-09-11)
+
+This continuation adds **30 public theorems and four definitions in four modules**.
+The actual triadic comparison component of the signed Fourier bridge is now established
+for every positive damping, with its binary-residue mean and nonzero-frequency sign
+proved exactly. The arithmetic-family zeta-ratio expansion remains Open.
+
+**Established:** `RH/DyadicTentFourierPackets.lean` (7 theorems) proves signed infinite
+packet extraction under absolute weight summability, with a proved phase-kernel
+majorant. `RH/DyadicTriadicFourierComparison.lean` (11) supplies the actual geometric
+orbit and comparison Fourier series. `RH/DyadicTentLogMajorant.lean` (3) proves
+absolute summability of the actual Mellin row weighted by 1+log(2+|h|).
+`RH/DyadicResidueFourierKernel.lean` (9, four definitions) gives the exact signed
+residue reset kernel, modular Abel identity, retained endpoint, zero-mode limit log a,
+and independent physical-coordinate convergence.
+
+**Conditional research reductions:** the dominated signed-packet extraction;
+`dyadicSignedFourierBridge_of_regularizedFamily_hasSum` (actual arithmetic-family
+Fourier expansion remains a hypothesis); and
+`dyadicBoundaryCoordinate_residue_hasSum_fourier_of_logarithmic_kernel`
+(logarithmic cutoff domination and nonzero zeta cutoff identification remain hypotheses).
+Defining `dyadicResidueFourierSymbol` is not a provider of its limiting identification.
+
+**Still Open:** these arithmetic kernel estimates; the full signed arithmetic Fourier
+bridge; quantitative Mertens and hyperbola/tail estimates; uniform complete signed
+boundary energy; actual arithmetic coordinate limits and complementary physical/legal
+two-seed recovery; RH. No frequency-diagonal bound replaces the signed norm.
+See `RH/FourierArithmeticContinuationStatus20260911.md` for exact scope and resumption.
+
 ### Actual tent Fourier reconstruction and signed finite packets (2026-09-10 continuation)
 
 This continuation adds **60 public theorems in five new modules**. The actual compact logarithmic tent now has an unconditional Fourier-to-Mellin identity and a continuous, summable periodization with an actual Fourier `HasSum`. Its physical extension agrees with every positive-integer dyadic boundary coordinate, including all zero gaps and negative-depth atomic cancellation. Every finite signed packet has an exact Fourier `HasSum` expansion.
