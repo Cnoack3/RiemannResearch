@@ -1,5 +1,40 @@
 # Theorem catalog
 
+### Legal family structure and exact CRT-weight calculus (2026-09-11)
+
+This continuation adds **68 public theorems across nine modules**.
+
+**Established:** `RH/ParetoLegalStructure.lean` (15) proves common periods,
+reflection at every multiple, actual positive zeros, exclusion of the constant,
+and nonclosure under pointwise multiplication. It also proves that a legal real
+function has a legal square exactly when its range lies in `{0,c}` for some c.
+`RH/ParetoLegalAffine.lean` (3) records the actual mean linear map and the
+mean-one affine family. `RH/ParetoGeneratedAlgebra.lean` (14) constructs finite
+nonunital OR polynomials, proves their full Pareto error tends to zero, and
+proves they are outside every positive-seed legal span for K >= 2.
+
+`RH/ParetoProgressionCalculus.lean` (10) proves convergent reciprocal differences,
+signed sum interchange, full periodic error, strict decrease, and small-modulus
+values. `RH/ParetoProgressionTaylor.lean` (10) proves the exact-head Basel bound
+and signed expansions through fourth order, with explicit fifth-order error.
+`RH/ParetoProgressionMidpoint.lean` (3) proves the uniform positive error bound
+pi^4/(360 Q^4). `RH/ParetoProgressionDigamma.lean` (8) proves the actual digamma
+formulas, full-positive series, strict increase and strict concavity.
+`RH/ParetoDigammaDerivative.lean` (3) identifies the midpoint series with the
+actual digamma derivative. `RH/ParetoProgressionIntegral.lean` (2) proves both
+exact integral representations. The zero residue class r=Q is retained.
+
+All 68 theorems passed the coherent source audit. The thirteen decisive axiom
+checks use only propext, Classical.choice, and Quot.sound. No RH or unresolved
+analytic-provider hypothesis is present. Existing normalization, refinement,
+dilation-invariance and periodic-regrouping results are reused.
+
+**Open:** full approximation within the permitted linear span and RH. The
+algebra-generated approximation cannot replace that constraint. The optional
+finite Gauss/cotangent rearrangement and modulus-3 evaluations are not separately
+formalized here. See `RH/ParetoFamilyWeightStatus20260911.md` for exact scope,
+theorem names, conventions and audit evidence.
+
 ### Convex repair of the actual normalization remainder (2026-09-11)
 
 This continuation adds **17 public theorems across four modules**.
