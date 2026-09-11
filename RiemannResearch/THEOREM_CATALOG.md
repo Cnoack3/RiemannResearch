@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Zero-damping modes and exact tail criteria (2026-09-11 continuation)
+
+This continuation adds **27 public theorems across five modules**.
+
+**Established:** `RH/DyadicFourierZeroDamping.lean` proves that the original
+normalization tends to one and every fixed nonzero signed zeta factor,
+complete Abel multiplier, Fourier term, finite packet, and finite
+boundary/frequency energy tends to zero as positive damping vanishes.
+Zeta nonvanishing on real part one is supplied by Mathlib; no RH hypothesis
+is present. `RH/DyadicFourierFrequencyDomination.lean` proves the actual
+half-order coefficient moment `sum norm(c_i(h))*abs(h)^(1/2) < infinity`.
+`RH/DyadicSignedFrequencyTailCriterion.lean` gives an exact signed
+frequency-tail criterion for the full row limit.
+`Analysis/NonnegativeSeriesTightness.lean` and
+`RH/DyadicSignedBoundaryTightness.lean` supply the exact complete
+finite-head/infinite-tail norm decomposition and tail convergence criteria.
+
+**Conditional research reductions:** a provider of
+`DyadicUniformSignedFourierMultiplierSqrtBound` would discharge a summable
+frequency majorant and the actual boundary-coordinate limits. Given those
+limits, actual remainder energy tends to zero iff the complete boundary
+tails are asymptotically tight. If actual energy stays above `c > 0`,
+coordinate decay forces at least `c/2` outside every fixed boundary set.
+
+**Open:** the uniform square-root multiplier provider, unconditional actual
+coordinate limits, boundary-tail tightness, both original uniform-energy
+targets, complementary physical/legal recovery, and RH. Tail tightness
+with coordinate decay implies the stronger zero-energy limit; it is not
+inferred from bounded energy. Every signed Fourier mixed term is retained.
+See `RH/FourierZeroDampingStatus20260911.md` for the precise scope.
+
 ### Full signed arithmetic Fourier bridge (2026-09-11 continuation)
 
 This continuation adds **40 public theorems in six new modules**.
