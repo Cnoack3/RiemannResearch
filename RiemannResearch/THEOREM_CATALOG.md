@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Reflection-pair total variance and the actual Jordan objective (2026-09-11)
+
+This continuation adds **86 public theorems across nine modules**.
+
+**Established:** finite conditional variance identities; the actual progression
+bounds Q^-2 <= W_Q(r) and upper-half W_Q(r) <= pi^2/(2 Q^2); the complete
+Pareto identity Var = J + T; and the uniform comparison
+Var <= J + (pi^2/Q) U <= (1+pi^2) Var. An explicit CRT bijection proves the
+actual uniform residue covariance (gcd(L,K)^2-1)/12 on every common period.
+The genuine Mobius-defined Jordan weights are positive and diagonalize the
+actual uniform variance of signed legal packets. Full Pareto normalization is
+recorded as sum c_i log(a_i) = sum Lambda(d) H_d, preserving all mixed terms
+and all positive integer dilations. The final arithmetic endpoint is
+divisorLegalPacket_variance_jordan_comparison.
+
+**Conditional research reduction:** vanishing reflection calibration and
+U_Q/Q along legal mean-one packets imply actual RH via the existing proved
+Pareto/Mellin bridge. Equivalence of the variance and surrogate zero-limit
+criteria is proved. For fixed witnesses, disappearing conditional noise
+passes the unchanged variance into calibration.
+
+**Open:** the required legal packet sequence and its two convergence
+providers. Neither conditional averaging nor period enlargement supplies
+that approximation. See RH/ParetoReflectionVarianceVerification20260911.md
+for all modules, precise conventions, theorem names, and audit evidence.
+The coherent 86-theorem audit succeeded; ten decisive axiom checks use only
+propext, Classical.choice, and Quot.sound.
+
 ### Legal family structure and exact CRT-weight calculus (2026-09-11)
 
 This continuation adds **68 public theorems across nine modules**.
