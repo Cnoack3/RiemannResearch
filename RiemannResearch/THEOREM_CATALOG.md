@@ -1637,3 +1637,44 @@ Recovered prior verified results are preserved:
 tails. This regularity is not inferred from weighted L2 membership alone.
 No unconditional RH conclusion is asserted. Other unformalized claims from
 the two source notes are listed in `RH/ParetoTailRigidityVerification20260911.md`.
+
+### Grouped signed tails and exact-head energy growth (2026-09-12)
+
+**Established:** `RH/ParetoGroupedSignedTails.lean` removes absolute
+summability of the signed tail from the actual pairing identities.
+Weighted L2 membership alone supplies summability of the binary and triadic
+grouped tails. For every positive dilation m, the actual pairings equal
+m times their respective grouped sums. Actual legal annihilators therefore
+satisfy both grouped equations whenever seeds 2 and 3 are available.
+The signs and the negative triadic coefficient -2 are retained inside each
+summand. No divergent positive/negative channels are separated.
+
+Supporting declarations:
+- `Analysis/SummableDiscreteAbel.lean`: `ordered_abel_finite`,
+  `ordered_abel_tendsto`; the finite boundary term is explicit.
+- `Analysis/SummableMultiples.lean`: `sum_divisibility_mask_range`,
+  `binary_block_sum`, `triadic_block_sum`, `finite_signed_divisibility_sum`.
+- `RH/ParetoSignedTails.lean`: `signedTail_shift_difference_summable`.
+- Actual endpoints: `dyadic_pairing_eq_grouped_signedTail`,
+  `triadic_pairing_eq_grouped_signedTail`,
+  `LegalAnnihilator.binary_grouped_signedTail_eq_zero`,
+  `LegalAnnihilator.triadic_grouped_signedTail_eq_zero`.
+
+**Established zero obstruction:** `paretoMellin_exact_head_power_lower`
+and `RH/ParetoLegalHeadGrowth.lean` prove that a zeta zero s with
+Re(s)>1/2 forces every legal vector f equal to one through N>=3 to satisfy
+`((2*Re(s)-1)/(4*norm(s)^2))*(N+1)^(2*Re(s)-1) <= norm(f)^2`.
+The actual Mellin nullity provider is used; no arithmetic nullity assumption
+is left in `legal_exactHead_power_lower_of_zeta`.
+`legal_exactHead_energy_tendsto_atTop_of_zeta` proves full energy divergence.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_legal_exactHead_subpower` concludes Mathlib's actual
+`RiemannHypothesis` from an actual legal exact-head family whose full squared
+norm is o((N+1)^p) for every p>0.
+
+**Open:** construction of a family meeting the joint exact-head and
+subpolynomial full-energy requirements. **Open:** inversion of the simultaneous
+binary/triadic grouped equations in the full weighted L2 class.
+Summability of grouped differences does not supply summability of the tail
+or license the earlier separated multiples inversion. RH remains open.

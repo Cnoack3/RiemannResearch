@@ -110,3 +110,26 @@ theorem eq_zero_of_anchoredSignedTail_eq_zero {h : ℕ → ℝ}
   exact (mul_eq_zero.mp hc).resolve_left (ne_of_gt hw)
 end
 end RiemannResearch.RH.Pareto
+
+namespace RiemannResearch.RH.Pareto
+/-- Fixed-width tail differences along an arithmetic progression are summable
+from actual L2 alone. The proof adds finitely many coefficient subsequences. -/
+theorem signedTail_shift_difference_summable {h : ℕ → ℝ}
+    (hs : Summable (fun k => positiveWeight k * h k ^ 2))
+    {q : ℕ} (hq : 0 < q) (r L : ℕ) :
+    Summable (fun j => signedTail h (q*j+r) - signedTail h (q*j+r+L)) := by
+  induction L with
+  | zero => simp
+  | succ L ih =>
+    have hc : Summable (fun j => signedCoefficient h (q*j+r+L)) :=
+      (signedCoefficient_summable hs).comp_injective (by
+        intro i j hij
+        change q*i+r+L = q*j+r+L at hij
+        have he : q*i = q*j := by omega
+        exact Nat.eq_of_mul_eq_mul_left hq he)
+    convert ih.add hc using 1
+    funext j
+    have hd := signedTail_difference hs (q*j+r+L)
+    rw [show q*j+r+(L+1) = (q*j+r+L)+1 by omega]
+    linarith
+end RiemannResearch.RH.Pareto

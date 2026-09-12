@@ -1,4 +1,6 @@
 import RiemannResearch.RH.ParetoL1MellinBound
+import RiemannResearch.RH.ParetoGroupedSignedTails
+import RiemannResearch.RH.ParetoLegalHeadGrowth
 import RiemannResearch.RH.RHFalseEnergyConsequences
 import RiemannResearch.RH.ParetoFiniteErrorObstruction
 import RiemannResearch.RH.RamanujanMeanOptimizer

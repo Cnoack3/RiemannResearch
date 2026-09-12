@@ -197,3 +197,41 @@ theorem paretoMellin_exact_head_linear_lower {f : ThresholdHilbert} {N : ℕ}
 
 end
 end RiemannResearch.RH.Pareto
+
+/- The general positive-power analogue of the preceding linear estimate.
+Source: the same exact Mellin head-tail inequality, with a uniform mode bound. -/
+namespace RiemannResearch.RH.Pareto
+theorem paretoMellin_exact_head_power_lower {f : ThresholdHilbert} {N : ℕ}
+    (hN : 3 ≤ N)
+    (hhead : ∀ k, 0 < k → k ≤ N → hilbertSequence f k = 1)
+    (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) (hnull : paretoMellin f s = 0) :
+    ((2 * s.re - 1) / (4 * ‖s‖ ^ 2)) *
+      ((N : ℝ) + 1) ^ (2 * s.re - 1) ≤ ‖f‖ ^ 2 := by
+  have hb : 4 ≤ (N : ℝ) + 1 := by exact_mod_cast (show 4 ≤ N + 1 by omega)
+  have hb0 : 0 < (N : ℝ) + 1 := by positivity
+  have hmode : ‖((N : ℂ) + 1)^(-s)‖ = ((N : ℝ) + 1)^(-s.re) := by
+    simpa only [Complex.ofReal_add, Complex.ofReal_natCast, Complex.ofReal_one,
+      Complex.neg_re] using Complex.norm_cpow_eq_rpow_re_of_pos hb0 (-s)
+  have hmode_sq : ‖((N : ℂ) + 1)^(-s)‖ ^ 2 ≤ (1 / 4 : ℝ) := by
+    rw [hmode, ← Real.rpow_natCast, ← Real.rpow_mul hb0.le]
+    calc
+      _ ≤ ((N : ℝ) + 1)^(-1 : ℝ) :=
+        Real.rpow_le_rpow_of_exponent_le (by linarith) (by norm_num; linarith)
+      _ = 1 / ((N : ℝ) + 1) := by rw [Real.rpow_neg_one, one_div]
+      _ ≤ 1 / 4 := (div_le_div_iff₀ hb0 (by norm_num)).2 (by linarith)
+  have hmode_half : ‖((N : ℂ) + 1)^(-s)‖ ≤ (1 / 2 : ℝ) := by
+    nlinarith [norm_nonneg (((N : ℂ) + 1)^(-s))]
+  have hrev := norm_sub_norm_le (1 : ℂ) (((N : ℂ) + 1)^(-s))
+  rw [norm_one] at hrev
+  have hdiff : (1 / 2 : ℝ) ≤ ‖1 - ((N : ℂ) + 1)^(-s)‖ := by linarith
+  have hsq : (1 / 4 : ℝ) ≤ ‖1 - ((N : ℂ) + 1)^(-s)‖ ^ 2 := by nlinarith
+  have h := paretoMellin_exact_head_lower_bound hhead s hs hnull
+  have hd : 0 < 2 * s.re - 1 := by linarith
+  have hcoef : 0 ≤ (2 * s.re - 1) * ((N : ℝ) + 1)^(2 * s.re - 1) / ‖s‖^2 := by positivity
+  have hmul := mul_le_mul_of_nonneg_left hsq hcoef
+  have hheadpos : 0 ≤ (N : ℝ) / ((N : ℝ) + 1) := by positivity
+  have he : ((2 * s.re - 1) * ((N : ℝ) + 1)^(2 * s.re - 1) / ‖s‖^2) * (1 / 4) =
+      ((2 * s.re - 1) / (4 * ‖s‖^2)) * ((N : ℝ) + 1)^(2 * s.re - 1) := by ring
+  rw [he] at hmul
+  linarith
+end RiemannResearch.RH.Pareto

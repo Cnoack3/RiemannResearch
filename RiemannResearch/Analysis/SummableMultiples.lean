@@ -187,3 +187,81 @@ theorem dyadic_scaling_of_summable_binary_grouped
     (multiples_equation_of_summable_binary_grouped hA hzero hQ)
 end
 end RiemannResearch.Analysis
+
+/-! Finite divisor masks and signed blocks. These exact finite identities
+support grouped Pareto tail equations without splitting divergent channels. -/
+namespace RiemannResearch.Analysis
+lemma sum_divisibility_mask_range (A : ℕ → ℝ) {m : ℕ} (hm : 0 < m) (N : ℕ) :
+  (∑ n ∈ Finset.range (m*N+1), if m ∣ n then A n else 0) =
+    ∑ j ∈ Finset.range (N+1), A (m*j) := by
+  classical
+  have hf : (Finset.range (m*N+1)).filter (fun n => m ∣ n) =
+      (Finset.range (N+1)).image (fun j => m*j) := by
+    ext n
+    simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_image]
+    constructor
+    · rintro ⟨hn, ⟨j, rfl⟩⟩
+      refine ⟨j, ?_, rfl⟩
+      by_contra hj
+      have hj' : N+1 ≤ j := by omega
+      have hp := Nat.mul_le_mul_left m hj'
+      nlinarith
+    · rintro ⟨j, hj, rfl⟩
+      refine ⟨?_, dvd_mul_right m j⟩
+      have hp := Nat.mul_le_mul_left m (show j ≤ N by omega)
+      omega
+  rw [← Finset.sum_filter, hf, Finset.sum_image]
+  intro i hi j hj hij
+  exact Nat.eq_of_mul_eq_mul_left hm hij
+
+lemma binary_block_sum (f : ℕ → ℝ) (hzero : f 0 = 0) (K : ℕ) :
+    (∑ n ∈ Finset.range (2*K+1), f n) -
+      2*(∑ j ∈ Finset.range (K+1), f (2*j)) =
+    ∑ j ∈ Finset.range K, (f (2*j+1)-f (2*j+2)) := by
+  induction K with
+  | zero => simp [hzero]
+  | succ K ih =>
+    have h₁ := Finset.sum_range_succ f (2*K+2)
+    have h₂ := Finset.sum_range_succ f (2*K+1)
+    have h₃ := Finset.sum_range_succ (fun j => f (2*j)) (K+1)
+    have h₄ := Finset.sum_range_succ (fun j => f (2*j+1)-f (2*j+2)) K
+    simp only [Nat.mul_add, Nat.mul_one, Nat.add_assoc] at *
+    linarith
+
+lemma triadic_block_sum (f : ℕ → ℝ) (hzero : f 0 = 0) (K : ℕ) :
+    (∑ n ∈ Finset.range (3*K+1), f n) -
+      3*(∑ j ∈ Finset.range (K+1), f (3*j)) =
+    ∑ j ∈ Finset.range K, (f (3*j+1)+f (3*j+2)-2*f (3*j+3)) := by
+  induction K with
+  | zero => simp [hzero]
+  | succ K ih =>
+    have h₁ := Finset.sum_range_succ f (3*K+3)
+    have h₂ := Finset.sum_range_succ f (3*K+2)
+    have h₃ := Finset.sum_range_succ f (3*K+1)
+    have h₄ := Finset.sum_range_succ (fun j => f (3*j)) (K+1)
+    have h₅ := Finset.sum_range_succ
+      (fun j => f (3*j+1)+f (3*j+2)-2*f (3*j+3)) K
+    simp only [Nat.mul_add, Nat.mul_one, Nat.add_assoc] at *
+    linarith
+
+lemma finite_signed_divisibility_sum (A : ℕ → ℝ) {m a : ℕ}
+    (hm : 0 < m) (ha : 0 < a) (K : ℕ) :
+    (∑ n ∈ Finset.range ((m*a)*K+1), A n *
+      ((if m ∣ n then (m : ℝ) else 0) -
+        (if m*a ∣ n then ((m*a : ℕ) : ℝ) else 0))) =
+    (m : ℝ) * ((∑ j ∈ Finset.range (a*K+1), A (m*j)) -
+      (a : ℝ)*(∑ j ∈ Finset.range (K+1), A (m*(a*j)))) := by
+  have he : ∀ n, A n *
+      ((if m ∣ n then (m : ℝ) else 0) -
+        (if m*a ∣ n then ((m*a : ℕ) : ℝ) else 0)) =
+      (m : ℝ) * ((if m ∣ n then A n else 0) -
+        (a : ℝ)*(if m*a ∣ n then A n else 0)) := by
+    intro n
+    split_ifs <;> push_cast <;> ring
+  simp_rw [he]
+  rw [← Finset.mul_sum, Finset.sum_sub_distrib, ← Finset.mul_sum]
+  have h1 := sum_divisibility_mask_range A hm (a*K)
+  have h2 := sum_divisibility_mask_range A (Nat.mul_pos hm ha) K
+  simp only [← Nat.mul_assoc] at h1 ⊢
+  rw [h1, h2]
+end RiemannResearch.Analysis
