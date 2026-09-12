@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Failure of RH and subpolynomial complete energy (2026-09-12)
+
+**Established implications:** `RH/ParetoL1MellinBound.lean` proves the
+actual weighted L1/integral identity, head and complete-tail estimates,
+and the explicit power lower bound
+`mellinL1Constant s ≤ ‖e‖² * hilbertL1 e ^ mellinL1Exponent s`
+from the actual Mellin value 1/s. The exponent is
+(2 Re(s)-1)/(1-Re(s)); the constant is positive. The optimized clipping
+constant in the companion analytic note is not asserted by this module.
+
+`RH/RHFalseEnergyConsequences.lean` derives an actual right-half-strip
+zero from failure of Mathlib's RH, supplies the legal error's Mellin value
+from existing verified zeta identities, and proves that every finite legal
+L1 approximating sequence has full energy tending to infinity if RH fails.
+These are implications under the explicitly stated zero/RH-failure premise,
+not assertions that an off-critical zero exists.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_legal_subpower_l1` proves actual RH from finite
+legal witnesses F_n with L1 error epsilon_n tending to zero and
+epsilon_n^p * ‖F_n‖² tending to zero for every p>0.
+**Open:** construction of actual finite legal witnesses satisfying both
+limits jointly. The handoff's analytic L1-density construction has not been
+formalized in these modules, and its energy rate remains unproved.
+All signed and mixed contributions remain within the complete Hilbert norm.
+
 ### Finite optimizer and dyadic evaluation completion (2026-09-11)
 
 **Established:** `RH/RamanujanMeanOptimizer.lean` supplies the actual inverse
