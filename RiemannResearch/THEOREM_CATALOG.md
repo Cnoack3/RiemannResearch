@@ -725,6 +725,11 @@ For every bounded real sequence and 0 < t < 1, the centered covariance series
 is absolutely summable and equals t times the actual derivative of its
 geometric transform. The proof establishes a locally summable derivative bound.
 
+**Closed on 14 September 2026:** the same module supplies
+`geometricDifferentialVarianceTarget_proved : GeometricDifferentialVarianceTarget`.
+The exact centered second moment and covariance identity give the complete
+infinite regression decomposition, with no finite truncation assumption.
+
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
 These results concern actual signed two-seed generators and complete infinite

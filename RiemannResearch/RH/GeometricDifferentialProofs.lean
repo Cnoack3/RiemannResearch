@@ -7,7 +7,9 @@ import Mathlib.Analysis.SpecificLimits.Normed
 
 Proves the actual derivative and absolute summability in
 `GeometricCovarianceDerivativeTarget` by locally uniform differentiation of
-geometric series and exact first-moment centering.
+geometric series and exact first-moment centering. The exact second moment
+also yields `GeometricDifferentialVarianceTarget`, including its full infinite
+regression residual.
 -/
 namespace RiemannResearch.RH.Pareto
 noncomputable section
@@ -148,6 +150,107 @@ theorem geometricCovarianceDerivativeTarget_proved : GeometricCovarianceDerivati
     (∑' n, p n*(f n-m)*((n : ℝ)-μ))/t
   simp_rw [hterm]
   rw [hcovsum, tsum_div_const]
+
+
+private theorem geometricProbability_nat_sq_hasSum {t : ℝ} (ht0 : 0 < t) (ht1 : t < 1) :
+    HasSum (fun n : ℕ => geometricProbability n t * (n : ℝ)^2)
+      (t*(1+t)/(1-t)^2) := by
+  have ht : ‖t‖ < 1 := by simpa [Real.norm_eq_abs, abs_of_pos ht0] using ht1
+  have hne : 1-t ≠ 0 := ne_of_gt (sub_pos.mpr ht1)
+  have h0 := hasSum_geometric_of_norm_lt_one ht
+  have h1 := hasSum_coe_mul_geometric_of_norm_lt_one ht
+  have h2 : Summable (fun n : ℕ => (n : ℝ)^2*t^n) :=
+    summable_pow_mul_geometric_of_norm_lt_one 2 ht
+  let S : ℝ := ∑' n : ℕ, (n : ℝ)^2*t^n
+  have hrec : S = t*(S + 2*(t/(1-t)^2)+(1-t)⁻¹) := by
+    have hsplit := h2.tsum_eq_zero_add
+    simp only [Nat.cast_zero, zero_pow (by omega : 2 ≠ 0), zero_mul, zero_add] at hsplit
+    calc
+      S = ∑' n : ℕ, ((n+1 : ℕ) : ℝ)^2*t^(n+1) := hsplit
+      _ = ∑' n : ℕ, t*((n : ℝ)^2*t^n + 2*((n : ℝ)*t^n) + t^n) := by
+        apply tsum_congr
+        intro n
+        simp only [Nat.cast_add, Nat.cast_one, pow_succ]
+        ring
+      _ = t*(S + 2*(t/(1-t)^2)+(1-t)⁻¹) := by
+        rw [tsum_mul_left, (h2.add (h1.summable.mul_left 2)).tsum_add h0.summable,
+          h2.tsum_add (h1.summable.mul_left 2), tsum_mul_left, h1.tsum_eq, h0.tsum_eq]
+  have hS : S = t*(1+t)/(1-t)^3 := by
+    apply (eq_div_iff (pow_ne_zero 3 hne)).mpr
+    field_simp [hne] at hrec
+    nlinarith [hrec]
+  have h2sum : HasSum (fun n : ℕ => (n : ℝ)^2*t^n) (t*(1+t)/(1-t)^3) := by
+    rw [← hS]
+    exact h2.hasSum
+  convert! h2sum.mul_left (1-t) using 1
+  · funext n
+    dsimp [geometricProbability]
+    ring
+  · field_simp [hne]
+
+private theorem geometricProbability_centered_nat_sq_hasSum {t : ℝ}
+    (ht0 : 0 < t) (ht1 : t < 1) :
+    HasSum (fun n : ℕ => geometricProbability n t * ((n : ℝ)-t/(1-t))^2)
+      (t/(1-t)^2) := by
+  have hne : 1-t ≠ 0 := ne_of_gt (sub_pos.mpr ht1)
+  have h0 := geometricProbability_hasSum ⟨ht0.le,ht1⟩
+  have h1 := geometricProbability_nat_hasSum ht0 ht1
+  have h2 := geometricProbability_nat_sq_hasSum ht0 ht1
+  convert! (h2.sub (h1.mul_left (2*(t/(1-t))))).add
+    (h0.mul_left ((t/(1-t))^2)) using 1
+  · funext n
+    ring
+  · field_simp [hne]
+    ring
+
+/-- Exact geometric regression decomposition, with the complete infinite residual. -/
+theorem geometricDifferentialVarianceTarget_proved : GeometricDifferentialVarianceTarget := by
+  intro f hbounded t ht0 ht1
+  obtain ⟨C,hf⟩ := hbounded
+  have htne : t ≠ 0 := ne_of_gt ht0
+  have hone : 1-t ≠ 0 := ne_of_gt (sub_pos.mpr ht1)
+  let p : ℕ → ℝ := fun n => geometricProbability n t
+  let μ : ℝ := t/(1-t)
+  let m : ℝ := geometricTransform f t
+  let a : ℕ → ℝ := fun n => f n-m
+  let z : ℕ → ℝ := fun n => (n : ℝ)-μ
+  let D : ℝ := deriv (geometricTransform f) t
+  let β : ℝ := (1-t)^2*D
+  have hC : 0 ≤ C := (abs_nonneg (f 0)).trans (hf 0)
+  have habound (n : ℕ) : |a n| ≤ C+|m| := by
+    exact (abs_sub (f n) m).trans (add_le_add (hf n) (le_refl _))
+  have hasqbound (n : ℕ) : |(a n)^2| ≤ (C+|m|)^2 := by
+    rw [abs_of_nonneg (sq_nonneg _)]
+    have h := mul_self_le_mul_self (abs_nonneg (a n)) (habound n)
+    simpa only [← pow_two, sq_abs] using h
+  have hV : Summable (fun n => p n*(a n)^2) := by
+    convert! (geometricTransform_norm_summable hasqbound ⟨ht0.le,ht1⟩).of_norm using 1
+    funext n
+    ring
+  have hcov := geometricCovarianceDerivativeTarget_proved f ⟨C,hf⟩ t ht0 ht1
+  have hcovS : Summable (fun n => p n*a n*z n) := hcov.1
+  have hcovsum : (∑' n, p n*a n*z n) = t*D := by
+    have h := (eq_div_iff htne).mp hcov.2
+    dsimp only [p,a,z,m,μ,D]
+    nlinarith [h]
+  have hz : HasSum (fun n => p n*(z n)^2) (t/(1-t)^2) :=
+    geometricProbability_centered_nat_sq_hasSum ht0 ht1
+  have hres : HasSum (fun n => p n*(a n-β*z n)^2)
+      (geometricVariance f t - t*(1-t)^2*D^2) := by
+    convert! ((hV.hasSum.sub (hcovS.hasSum.mul_left (2*β))).add
+      (hz.mul_left (β^2))) using 1
+    · funext n
+      ring
+    · rw [hcovsum]
+      change geometricVariance f t - t*(1-t)^2*D^2 =
+        geometricVariance f t - 2*β*(t*D) + β^2*(t/(1-t)^2)
+      dsimp [β]
+      field_simp [hone]
+      ring
+  have hR : geometricRegressionResidual f t =
+      geometricVariance f t - t*(1-t)^2*D^2 := hres.tsum_eq
+  change geometricVariance f t = t*(1-t)^2*D^2 + geometricRegressionResidual f t
+  linarith
 
 end
 end RiemannResearch.RH.Pareto
