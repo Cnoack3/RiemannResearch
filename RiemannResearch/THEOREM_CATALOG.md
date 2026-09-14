@@ -846,6 +846,11 @@ proves the exact centered logarithmic cell integral, its complete boundary estim
 and the finite-head energy bound 28/t. These are estimates for the actual physical
 unit-cell integrals, with no omitted crossing cell.
 
+**Bottom-up complete derivative estimate proved:** `RH.PhaseCenteredDerivativeBound`
+proves `actualPhaseCenteredDerivativeOperator_norm_bound : ∀ t ≥ 1, ‖q′(t)‖² ≤ 82/t`.
+The actual integral splits at floor(t): finite head energy 28/t and complete tail
+energy 4/t yield 64/t for t > 2; the small-frequency interval is handled directly.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof
