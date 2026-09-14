@@ -36,6 +36,7 @@ import RiemannResearch.Analysis.FourierL1L2Plancherel
 import RiemannResearch.RH.ArithmeticZeroProjectionProof
 import RiemannResearch.RH.ArithmeticPlancherelProof
 import RiemannResearch.RH.GeometricHilbertRealizationProof
+import RiemannResearch.RH.BinaryWaveletAdjacentAsymptotic
 import RiemannResearch.LinearAlgebra.FinitePairVariance
 import RiemannResearch.Analysis.IndicatorAnnihilator
 import RiemannResearch.RH.ParetoAnnihilatorPositivity

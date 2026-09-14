@@ -757,6 +757,12 @@ proves its almost-everywhere series realization and coordinate integral
 adjoint, and identifies its adjoint composition with the full Gibbs operator.
 The theorem applies to every ThresholdHilbert vector, not only bounded ones.
 
+**Closed on 14 September 2026:** `RH.BinaryWaveletAdjacentAsymptotic` supplies
+`binaryWaveletAdjacentAsymptotic_proved : BinaryWaveletAdjacentAsymptoticTarget`.
+The exact normalized adjacent-wavelet squared distance has leading term
+(6/π) log(m)/m and a proved O(1/m) remainder. The proof uses the exact arithmetic
+head, an absolute bound on the entire tail, and the exact wavelet norm.
+
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
 These results concern actual signed two-seed generators and complete infinite
