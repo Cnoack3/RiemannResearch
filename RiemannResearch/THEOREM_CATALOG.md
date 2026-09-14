@@ -763,6 +763,13 @@ The exact normalized adjacent-wavelet squared distance has leading term
 (6/π) log(m)/m and a proved O(1/m) remainder. The proof uses the exact arithmetic
 head, an absolute bound on the entire tail, and the exact wavelet norm.
 
+**Closed on 14 September 2026:** `RH.BinaryWaveletContinuousGram` supplies
+`binaryWaveletContinuousGram_proved : BinaryWaveletContinuousGramTarget`.
+It proves the exact signed Gram formula using the actual continuous primitive,
+an absolutely convergent arithmetic jump series, and the complete continuous
+correction integral. Unit-cell identities retain all endpoints before taking
+the infinite limit.
+
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
 These results concern actual signed two-seed generators and complete infinite
