@@ -680,6 +680,30 @@ localized block-average recovery in the actual Pareto Hilbert space.
 | `riemannHypothesis_iff_twoSeed_closure_of_density_from_rh`, `riemannHypothesis_iff_twoSeed_density_of_density_from_rh`, `riemannHypothesis_iff_twoSeed_meanOne_sequence_of_density_from_rh` | `RH.ThresholdTwoSeedEquivalence` | **Conditional research reduction:** sole remaining input is `PositiveResidueDensityFromRH`; joint rigidity is proved. |
 | `PositiveResidueDensityFromRH` | `RH.ThresholdTwoSeedEquivalence` | **Open formalization obligation:** RH implies full positive-remainder density (strong Báez-Duarte/Bagchi theorem). This proposition has no checked provider yet. |
 
+## Minimal seeds, balanced coordinates, and arithmetic charge (14 September 2026)
+
+Source: `RH_Minimal_Seeds_Canonical_Basis_and_Arithmetic_Charge_20260914.md`.
+These results use the actual infinite Pareto Hilbert space and finite signed
+arithmetic generators. See `RH/MinimalSeedsVerification20260914.md` for scope.
+
+| Declaration family | Modules | Exact status |
+|---|---|---|
+| `twoSeedAnnihilatorDefects_injective` | `RH.ThresholdAnnihilatorInjection` | Established unconditional injection of the two-seed annihilator into a pair of full-remainder annihilators. |
+| `balancedGrid_difference_mem`, `balancedSelected_span_eq_twoSeedSpan`, `rough_grid_decomposition_unique` | `LinearAlgebra.BalancedGridSpan`, `RH.BalancedResidueDictionary`, `RH.BalancedScalarDictionary` | Established exact finite span equality for the valuation rule selecting one original generator per positive dilation. |
+| `balancedArithmeticCut_biorthogonal`, `balancedCoefficientCLM_biorthogonal`, `scalarBalancedHilbert_linearIndependent`, `balancedCut_signal_ne_zero_iff` | `LinearAlgebra.BalancedGridCuts`, `RH.BalancedArithmeticCuts`, `RH.ParetoCoordinateEvaluation`, `RH.BalancedContinuousCoordinates`, `RH.BalancedScalarBasis`, `RH.BalancedCoefficientTargets` | Established explicit finite cuts, actual continuous biorthogonality, scalar independence, and complete exact target table. No coordinate-provider assumption remains. |
+| `biorthogonal_delete_finite_iff`, `balanced_finite_deletion_iff`, `balanced_exists_minimal_iff_support_approximates`, `hilbertOne_mem_balancedWithoutFourth_iff` | `Analysis.ContinuousBiorthogonalDeletion`, `RH.BalancedMinimalTarget`, `RH.BalancedFourthDeletion` | Established finite deletion and minimal-family characterization. Removing R12-R4 preserves constant approximation but destroys ambient density. Infinite deletion is not inferred. |
+| `fullResidueSpan_not_cyclic`, `fullResidueSpan_positive_distance_gap`, `integerSeed_explicit_distance_gap`, `finiteDilationFamily_distance_gap` | `RH.FiniteResidueTemplateObstruction`, `RH.IntegerSeedExplicitGap`, `RH.FiniteDilationFamilyGap` | Established: every fixed finite full-remainder template fails; the integer-seed floor and finite-family common-atom floor are explicit. |
+| `two_finite_templates_optimal_of_full_density` | `RH.FiniteResidueTemplateObstruction` | **Conditional research reduction:** full positive-remainder density is explicit. Two seeds then suffice, and every single finite template fails unconditionally. The RH-to-density formal provider remains Open. |
+| `physicalRemainderCoefficient_tendsto_of_hilbert_limit`, `twoSeed_smoothComponent_charge_escapes`, `rough_dilationCoefficientMass_tendsto` | `RH.ArithmeticChargeEscape`, `RH.RoughDilationMassLimits`, `RH.ArithmeticChargeHilbertLimits` | Established necessary coefficient limits and signed charge escape along any successful legal sequence. Existence of such a sequence is not asserted. |
+| `squarefree_seed_no_hilbert_target_limit`, `squarefree_allowed_ramanujan_no_pointwise_limit`, `omitted_rough_squarefree_dilation_no_pointwise_limit` | `RH.SquarefreeDilationObstruction`, `RH.SquarefreeRamanujanObstruction`, `RH.RoughDilationMassLimits`, `RH.ArithmeticChargeHilbertLimits` | Established failures of squarefree-only dilations and squarefree allowed Ramanujan conductors; every rough squarefree dilation is individually necessary. |
+| `total_nonnegative_energy_tendsto_atTop`, `twoSeed_roughComponent_energy_diverges_of_hilbert_limit`, `roughComponent_no_continuous_extension_along_approximants` | `Analysis.PointwiseEnergyDivergence`, `RH.RoughComponentNormDivergence`, `RH.RoughComponentProjection`, `RH.ArithmeticChargeHilbertLimits` | Established discrete Fatou argument and actual filtered-generator projection. Every nonzero rough component has diverging energy along any successful sequence; no continuous extension can agree with it on those approximants. |
+| `balancedDictionary_no_series_representation_one` | `RH.SpineSeriesObstruction`, `RH.BalancedSpineSeries` | Established: no fixed coefficients in any enumeration give an ordinary convergent series representation of 1. This does not exclude changing finite coefficient arrays. |
+| `BalancedSupportThinning` | `RH.BalancedMinimalTarget` | **Open conjecture:** two-seed density implies approximation of 1 using only the nonzero target support. Recorded as a proposition, not an axiom or theorem. |
+
+The ancillary density value `3/π²` is not formalized here. The pre-existing
+`PositiveResidueDensityFromRH` obligation remains Open. These structural
+results do not prove RH.
+
 ## Gibbs contraction, legal wavelets, and arithmetic repair (9 September 2026)
 
 Source: the chat research development and
