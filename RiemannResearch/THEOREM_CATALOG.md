@@ -831,6 +831,11 @@ proves the exact integral of log(x/t)^2/x^2 over every positive tail. It bounds
 the tail by 4/t when its boundary lies in [t/2,t], and bounds the entire tail
 from 1 by 2 for frequencies 1 ≤ t ≤ 2.
 
+**Bottom-up operator differentiation proved:** `RH.ParetoMellinOperatorDerivative`
+proves a uniform quadratic remainder in operator norm for the actual Mellin
+functional on the line Re(s)=1, and hence `mellinLineOperator_hasDerivAt`.
+This differentiates the full bounded operator, with no pointwise-only premise.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof
