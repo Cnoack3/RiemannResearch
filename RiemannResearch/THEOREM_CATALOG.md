@@ -69,6 +69,13 @@ actual integer dilation translates the exponential lift and acts on every
 integrable ordinary log moment by the exact finite binomial formula.
 The zero-at-zero hypothesis accounts for the full translated boundary.
 
+`RH/ParetoMomentOptimizer.lean` now supplies
+`RamanujanLaguerre.everyBudgetOptimizerTarget : EveryBudgetOptimizerTarget`.
+It embeds the exact finite budget in the genuine Hilbert space, represents
+actual coefficient integrals as continuous linear observations, and constructs
+a full-Pareto-error minimizer by finite-dimensional projection. No uniform
+cost assumption is used; uniform cost as the budget grows remains open.
+
 **Open research:** uniform moment cost, q→1, unconditional completeness/RH,
 and absolute-value closure. Concrete Parseval/Mellin providers and the
 additional-moment constrained inverse formula remain formalization work.
