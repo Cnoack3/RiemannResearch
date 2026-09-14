@@ -76,8 +76,15 @@ actual coefficient integrals as continuous linear observations, and constructs
 a full-Pareto-error minimizer by finite-dimensional projection. No uniform
 cost assumption is used; uniform cost as the budget grows remains open.
 
+`RH/RamanujanOrdinaryMomentsProof.lean` supplies
+`RamanujanLaguerre.ramanujanOrdinaryMomentsTarget` with no extra hypotheses.
+Every actual packet has all ordinary moments integrable; the first nonzero
+moment has order omega(d)-1 and equals (omega(d)-1)! times the product of
+prime logarithms. The proof uses the exact prime-factor/dilation recurrence,
+including repeated prime factors, rather than an unproved Mellin provider.
+
 **Open research:** uniform moment cost, q→1, unconditional completeness/RH,
-and absolute-value closure. Concrete Parseval/Mellin providers and the
+and absolute-value closure. Concrete Parseval providers and the
 additional-moment constrained inverse formula remain formalization work.
 
 ### Legal sequences, Ramanujan coordinates, and bounded moment repair (2026-09-11)
