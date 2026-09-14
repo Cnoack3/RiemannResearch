@@ -717,7 +717,7 @@ supplies `arithmeticMellinIdentityTarget_proved : ArithmeticMellinIdentityTarget
 The generator integrability and integral formula now hold for Re(s) > 0
 (away from s = 1 for the formula); finite legal synthesis proves the exact
 requested strip identity. The zero-projection target is now also closed below;
-the Plancherel target remains open.
+the Plancherel target is closed below as well.
 
 
 **Closed on 14 September 2026:** `RH.GeometricDifferentialProofs` supplies
@@ -742,6 +742,13 @@ For any zeta zero with 1/2 < Re(ρ) < 1 and every finite legal arithmetic
 combination, the full Pareto error equals the exact zero-mode contribution
 plus the complete continuous squared residual integral. This is the original
 conditional-on-a-zero statement; it assumes no unproved analytic provider.
+
+**Closed on 14 September 2026:** `RH.ArithmeticPlancherelProof` supplies
+`arithmeticPlancherelTarget_proved : ArithmeticPlancherelTarget`.
+The complete Pareto error equals the actual continuous critical-line spectral
+integral with its exact 1/(2π) normalization, for every finite legal arithmetic
+combination. The logarithmic lift is proved L1 and L2; no truncation or
+additional spectral identity is assumed.
 
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 

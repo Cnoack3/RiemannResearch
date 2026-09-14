@@ -34,6 +34,7 @@ import RiemannResearch.RH.RamanujanOrdinaryMomentsProof
 import RiemannResearch.RH.GeometricDifferentialProofs
 import RiemannResearch.Analysis.FourierL1L2Plancherel
 import RiemannResearch.RH.ArithmeticZeroProjectionProof
+import RiemannResearch.RH.ArithmeticPlancherelProof
 import RiemannResearch.LinearAlgebra.FinitePairVariance
 import RiemannResearch.Analysis.IndicatorAnnihilator
 import RiemannResearch.RH.ParetoAnnihilatorPositivity
