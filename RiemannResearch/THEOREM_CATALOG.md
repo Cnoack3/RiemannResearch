@@ -663,7 +663,7 @@ unproved propositions are represented explicitly in
 `DilationWaveletAsymptoticTargets`, `GeometricDifferentialResearchTargets`, and
 `ParetoGibbsSpectrumTarget` and `GeometricHilbertRealizationResearchTargets`.
 Defining such a `Prop` only records its statement;
-it does not provide a proof. Complete spectrum, Mellin/Plancherel and zero-mode
+it does not provide a proof. Complete spectrum, Plancherel and zero-projection
 bridges, sharp adjacent asymptotics, differential/Meixner identities, and the
 remaining arithmetic network identifications are tracked in the coverage ledger.
 Finite experiments are not used as hypotheses or extrapolated to convergence.
@@ -675,6 +675,12 @@ Finite experiments are not used as hypotheses or extrapolated to convergence.
 These retain arbitrary finite cutoffs and prove the logarithmic limit from
 the exact Pareto mean with a vanishing Abel boundary term. No open hypothesis
 or RH assumption remains in this target.
+
+**Closed on 14 September 2026:** `RH.ArithmeticMellinPositiveHalfPlane`
+supplies `arithmeticMellinIdentityTarget_proved : ArithmeticMellinIdentityTarget`.
+The generator integrability and integral formula now hold for Re(s) > 0
+(away from s = 1 for the formula); finite legal synthesis proves the exact
+requested strip identity. Plancherel and zero-projection targets remain open.
 
 
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)

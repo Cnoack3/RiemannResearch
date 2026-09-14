@@ -8,9 +8,11 @@ import Mathlib.MeasureTheory.Integral.Bochner.Set
 # Exact Mellin and hypothetical-zero proof obligations
 
 Source: RH_Contracting_Evolution_and_Arithmetic_Repair_2026-09-08.md, Section 8.
-These definitions faithfully record the ordinary analytic claims that are
-not yet connected to the actual step-function embedding in Lean. They are
-propositions awaiting proofs; none is an axiom or a proved provider.
+These definitions record the ordinary analytic claims on actual step functions.
+ArithmeticMellinIdentityTarget is supplied by arithmeticMellinIdentityTarget_proved
+in ArithmeticMellinPositiveHalfPlane. ArithmeticZeroObstructionTarget is supplied
+in ThresholdRiemannHypothesis. Plancherel and zero-projection remain open.
+None of these proposition definitions is an axiom.
 -/
 
 namespace RiemannResearch.RH.Pareto
