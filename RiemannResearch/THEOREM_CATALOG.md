@@ -730,6 +730,11 @@ geometric transform. The proof establishes a locally summable derivative bound.
 The exact centered second moment and covariance identity give the complete
 infinite regression decomposition, with no finite truncation assumption.
 
+**Supporting theorem, 14 September 2026:** `Analysis.FourierL1L2Plancherel`
+proves agreement almost everywhere between the actual Fourier integral and
+Mathlib's unitary L2 Fourier transform for L1 ∩ L2 functions, and hence the
+full ordinary-integral Plancherel identity.
+
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
 These results concern actual signed two-seed generators and complete infinite
