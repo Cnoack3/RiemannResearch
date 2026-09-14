@@ -816,6 +816,11 @@ proves absolute summability and the weighted complex Cauchy inequality for every
 actual physical Hilbert vector. Its operator-energy bound uses the real carrier
 without identifying a real-to-complex operator norm with complex Riesz energy.
 
+**Bottom-up actual operator norm proved:** `RH.PhaseCenteredOperatorUniformBound`
+proves full square summability of the phase-centered cells and
+`actualPhaseCenteredOperator_norm_sq_le_seven_div` for every real t ≥ 1.
+The bound applies to the actual operator representing the original pairing.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof
