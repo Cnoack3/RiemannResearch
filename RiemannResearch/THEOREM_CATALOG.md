@@ -826,6 +826,11 @@ proves the complete finite bound ∑_{k=1}^N log(t/k)^2 ≤ 2t whenever 1 ≤ t
 and N ≤ t, using an explicit compact-interval primitive and monotone sum–integral
 comparison.
 
+**Bottom-up complete logarithmic tails proved:** `Analysis.LogarithmicMellinBounds`
+proves the exact integral of log(x/t)^2/x^2 over every positive tail. It bounds
+the tail by 4/t when its boundary lies in [t/2,t], and bounds the entire tail
+from 1 by 2 for frequencies 1 ≤ t ≤ 2.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof

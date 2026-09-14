@@ -49,6 +49,7 @@ import RiemannResearch.RH.ParetoMellinKernelPairing
 import RiemannResearch.RH.WeightedComplexPairingBound
 import RiemannResearch.RH.PhaseCenteredOperatorUniformBound
 import RiemannResearch.Analysis.LogarithmicMellinHead
+import RiemannResearch.Analysis.LogarithmicMellinBounds
 import RiemannResearch.LinearAlgebra.FinitePairVariance
 import RiemannResearch.Analysis.IndicatorAnnihilator
 import RiemannResearch.RH.ParetoAnnihilatorPositivity
