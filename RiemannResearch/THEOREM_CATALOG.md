@@ -770,6 +770,10 @@ an absolutely convergent arithmetic jump series, and the complete continuous
 correction integral. Unit-cell identities retain all endpoints before taking
 the infinite limit.
 
+**Supporting theorem, 14 September 2026:** `Analysis.NatStepIntegral` proves
+the complete Lebesgue integral of an absolutely summable unit-cell step
+function and its exact rescaling for every positive real mesh parameter.
+
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
 These results concern actual signed two-seed generators and complete infinite
