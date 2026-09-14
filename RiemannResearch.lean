@@ -52,6 +52,7 @@ import RiemannResearch.Analysis.LogarithmicMellinHead
 import RiemannResearch.Analysis.LogarithmicMellinBounds
 import RiemannResearch.RH.ParetoMellinOperatorDerivative
 import RiemannResearch.RH.PhaseCenteredOperatorDerivative
+import RiemannResearch.RH.PhaseCenteredDerivativeCells
 import RiemannResearch.LinearAlgebra.FinitePairVariance
 import RiemannResearch.Analysis.IndicatorAnnihilator
 import RiemannResearch.RH.ParetoAnnihilatorPositivity

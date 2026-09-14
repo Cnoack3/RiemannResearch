@@ -841,6 +841,11 @@ proves differentiability of the actual phase-centered operator at every t > 0,
 identifies its operator derivative, and proves the exact continuous centered
 logarithmic kernel formula on the complete physical half-line.
 
+**Bottom-up differentiated cell estimates proved:** `RH.PhaseCenteredDerivativeCells`
+proves the exact centered logarithmic cell integral, its complete boundary estimate,
+and the finite-head energy bound 28/t. These are estimates for the actual physical
+unit-cell integrals, with no omitted crossing cell.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof
