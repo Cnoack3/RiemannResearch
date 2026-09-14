@@ -1,12 +1,13 @@
 import RiemannResearch.RH.ParetoResidueLogMean
 
 /-!
-# Exact cutoff logarithmic flux: the remaining general statement
+# Exact cutoff logarithmic flux specification
 
 Source: equation (23) of the contracting-evolution research report.
 Residue jumps, discrete Abel identities, and full logarithmic residue means
 are proved elsewhere. This records the exact arbitrary-cutoff generator
-formula and its limit as an unproved proposition, not a theorem or axiom.
+formula and its limit as a proposition. The unconditional provider is
+`arithmeticGeneratorLogFlux_proved` in `ArithmeticGeneratorLogFlux`.
 -/
 
 namespace RiemannResearch.RH.Pareto

@@ -661,12 +661,20 @@ approximation-to-RH implication is now established. Other
 unproved propositions are represented explicitly in
 `GibbsArithmeticResearchTargets`, `ArithmeticMellinResearchTargets`,
 `DilationWaveletAsymptoticTargets`, `GeometricDifferentialResearchTargets`, and
-`ParetoGibbsSpectrumTarget`, `GeometricHilbertRealizationResearchTargets`, and
-`ArithmeticFluxResearchTargets`. Defining such a `Prop` only records its statement;
+`ParetoGibbsSpectrumTarget` and `GeometricHilbertRealizationResearchTargets`.
+Defining such a `Prop` only records its statement;
 it does not provide a proof. Complete spectrum, Mellin/Plancherel and zero-mode
 bridges, sharp adjacent asymptotics, differential/Meixner identities, and the
 remaining arithmetic network identifications are tracked in the coverage ledger.
 Finite experiments are not used as hypotheses or extrapolated to convergence.
+
+**Closed on 14 September 2026:** `RH.ArithmeticGeneratorLogFlux` supplies
+`arithmeticGeneratorCutoffFlux_eq_harmonic`,
+`arithmeticGeneratorCutoffFlux_tendsto_log`, and
+`arithmeticGeneratorLogFlux_proved : ArithmeticGeneratorLogFluxTarget`.
+These retain arbitrary finite cutoffs and prove the logarithmic limit from
+the exact Pareto mean with a vanishing Abel boundary term. No open hypothesis
+or RH assumption remains in this target.
 
 
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)

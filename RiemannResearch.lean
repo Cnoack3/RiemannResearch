@@ -222,6 +222,7 @@ import RiemannResearch.Analysis.PositiveQuadraticNorm
 import RiemannResearch.RH.DilationWaveletAlgebra
 import RiemannResearch.RH.ParetoResidueLogMean
 import RiemannResearch.RH.ArithmeticFluxResearchTargets
+import RiemannResearch.RH.ArithmeticGeneratorLogFlux
 import RiemannResearch.RH.ArithmeticMellinResearchTargets
 import RiemannResearch.RH.BinaryWaveletPrimitive
 import RiemannResearch.RH.BinaryWaveletNearbySupport
