@@ -44,7 +44,7 @@ and convergence of the minima to 6/π² using Mathlib's Basel theorem.
 `Analysis/DyadicMomentEvaluation.lean` proves the triangular/Vandermonde
 factorization and finite dyadic polynomial-evaluation solvability for every K.
 
-**Conditional formalization bridge:** `RH/ParetoDyadicMomentFeasibility.lean`
+**Established finite-budget feasibility (14 September 2026):** `RH/ParetoDyadicMomentFeasibility.lean`
 proves actual finite-integral synthesis and legal budget membership.
 `everyBudgetFeasible_of_polynomial_and_realization` proves actual feasibility
 at every budget 2^K from two explicit analytic providers:
@@ -59,6 +59,10 @@ is now discharged by `RamanujanLaguerre.dyadicCoefficientPolynomialProvider`
 in `RH/ParetoDyadicCoefficientPolynomial.lean`: the actual coefficient matrix,
 its lower triangularity, diagonal, and evaluation formula are all proved.
 Both analytic providers and finite matrix invertibility are discharged.
+`RamanujanLaguerre.everyBudgetFeasibleTarget` in the coefficient-polynomial
+module now supplies `EveryBudgetFeasibleTarget` unconditionally: at every K,
+an actual legal mean-one packet meets all K zero Laguerre constraints within
+budget 2^K. A uniform full-error estimate is a separate open obligation.
 
 `RH/ParetoDilationLogMoments.lean` now proves `ordinaryMoment_dilation`:
 actual integer dilation translates the exponential lift and acts on every

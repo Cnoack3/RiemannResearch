@@ -120,4 +120,10 @@ theorem dyadicCoefficientPolynomialProvider : DyadicCoefficientPolynomialProvide
   exact ⟨dyadicCoefficientMatrix K, dyadicCoefficientMatrix_lower K,
     dyadicCoefficientMatrix_diagonal K, dyadicCoefficientMatrix_evaluation K⟩
 
+/-- Every prescribed dyadic budget has an actual legal mean-one packet with
+all required Laguerre moments zero. No uniform full-error bound is claimed. -/
+theorem everyBudgetFeasibleTarget : EveryBudgetFeasibleTarget :=
+  everyBudgetFeasible_of_polynomial_and_realization
+    dyadicCoefficientPolynomialProvider continuousParetoRealizationTarget
+
 end RiemannResearch.RH.Pareto.RamanujanLaguerre
