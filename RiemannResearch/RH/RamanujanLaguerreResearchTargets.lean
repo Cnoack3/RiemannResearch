@@ -13,7 +13,8 @@ two-seed arithmetic packets and the continuous Pareto realization.
 The companion modules ParetoExponentialRealization, ParetoDyadicCoefficientPolynomial,
 ParetoMomentOptimizer and RamanujanOrdinaryMomentsProof now supply the realization,
 finite-budget feasibility and optimizer, ordinary-moment and cancellation targets.
-ActualParsevalTarget and the uniform-in-budget bounds remain open.
+ActualLaguerreParseval now supplies ActualParsevalTarget using the complete ordinary
+Laguerre basis. Only the uniform-in-budget bounds remain open here.
 No proposition definition is an axiom, and no uniform bound or RH is asserted.
 -/
 
@@ -88,8 +89,9 @@ def ContinuousParetoRealizationTarget : Prop :=
     (∫ t in Set.Ici (0 : ℝ),
       (exponentialLift F t - 1) ^ 2 * Real.exp (-t)) = paretoError F
 
-/-- Open formalization obligation: Parseval for the actual Laguerre
-coefficients of each mean-one legal packet. Summability is part of the target. -/
+/-- Parseval for the actual Laguerre coefficients of each mean-one legal packet.
+Summability is part of the target. Supplied by `actualParsevalTarget` in
+`ActualLaguerreParseval`, without a completeness or RH hypothesis. -/
 def ActualParsevalTarget : Prop :=
   ∀ F : ℕ → ℝ, F ∈ legalSeedSpan ({2, 3} : Set ℕ) →
     paretoMean F = 1 →

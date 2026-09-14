@@ -915,12 +915,22 @@ dilation (`315527b`), ordinary-integral Fourier Plancherel (`a56859d`),
 exact natural-step integration (`2fef128`), and cosine reciprocal integrals
 (`76fbf60`).
 
+The actual Laguerre Parseval obligation is now supplied unconditionally by
+`RamanujanLaguerre.actualParsevalTarget` in `RH/ActualLaguerreParseval.lean`.
+It proves summability of the nonconstant coefficient squares and their exact
+equality with the full mean-one Pareto error. The stronger
+`hasSum_coefficient_sq_of_bounded` includes the constant mode for every bounded packet.
+The supporting modules establish exponential-moment measure determinacy,
+polynomial-annihilator uniqueness, the exponential-measure L2 realization,
+actual Laguerre orthonormality, and the complete basis `Analysis.laguerreBasis`.
+The assembled exact target passed Lean with only `propext`, `Classical.choice`,
+and `Quot.sound`; no RH, completeness, or uniform-energy input is assumed.
+
 All names in the remaining table lie under `RiemannResearch.RH.Pareto`;
 subnamespaces are shown. These are formalization gaps, not refutations.
 
 | Remaining specification | Missing proof |
 |---|---|
-| `RamanujanLaguerre.ActualParsevalTarget` | Completeness of the actual Laguerre orthonormal expansion and its full Parseval sum. |
 | `GeometricMeixnerParsevalTarget` | Complete geometric-weight orthogonal expansion and identification of all derivative coefficients. |
 | `paretoGibbsFullSpectrumTarget` | Spectral representation of the actual operator proving exactly [0, π/4] ∪ {1}. |
 | `ClassicalQuantitativeMertensBound` | The precise Möbius cancellation bound with exp(−c√log(2x)); the vendored log-power-nine zero-free strip does not supply it. |
