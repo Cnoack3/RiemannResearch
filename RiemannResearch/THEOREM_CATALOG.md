@@ -57,6 +57,11 @@ continuous squared error equals the complete discrete error. These identities
 are proved for every bounded sequence. `DyadicCoefficientPolynomialProvider`
 remains **Open**. Finite matrix invertibility is discharged.
 
+`RH/ParetoDilationLogMoments.lean` now proves `ordinaryMoment_dilation`:
+actual integer dilation translates the exponential lift and acts on every
+integrable ordinary log moment by the exact finite binomial formula.
+The zero-at-zero hypothesis accounts for the full translated boundary.
+
 **Open research:** uniform moment cost, q→1, unconditional completeness/RH,
 and absolute-value closure. Concrete Parseval/Mellin providers and the
 additional-moment constrained inverse formula remain formalization work.
