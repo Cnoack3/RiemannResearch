@@ -5,13 +5,15 @@ import Mathlib.Data.Finsupp.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
-# Exact Mellin and hypothetical-zero proof obligations
+# Exact Mellin and hypothetical-zero specifications with proved providers
 
 Source: RH_Contracting_Evolution_and_Arithmetic_Repair_2026-09-08.md, Section 8.
 These definitions record the ordinary analytic claims on actual step functions.
-ArithmeticMellinIdentityTarget is supplied by arithmeticMellinIdentityTarget_proved
-in ArithmeticMellinPositiveHalfPlane. ArithmeticZeroObstructionTarget is supplied
-in ThresholdRiemannHypothesis. Plancherel and zero-projection remain open.
+All four specifications now have unconditional providers:
+`arithmeticMellinIdentityTarget_proved` in `ArithmeticMellinPositiveHalfPlane`,
+`arithmeticPlancherelTarget_proved` in `ArithmeticPlancherelProof`,
+`arithmeticZeroObstruction` in `ThresholdRiemannHypothesis`, and
+`arithmeticZeroProjectionTarget` in `ArithmeticZeroProjectionProof`.
 None of these proposition definitions is an axiom.
 -/
 
@@ -45,7 +47,8 @@ def ArithmeticMellinIdentityTarget : Prop :=
     (∫ x in Set.Ioi (1 : ℝ), arithmeticStep c x * (x : ℂ)^(-s-1)) =
       riemannZeta s / s * arithmeticMellinSymbol c s
 
-/-- Full Mellin-Plancherel identity, not a finite frequency truncation. -/
+/-- Full Mellin-Plancherel identity, supplied by
+`arithmeticPlancherelTarget_proved` in `ArithmeticPlancherelProof`. -/
 def ArithmeticPlancherelTarget : Prop :=
   ∀ c, ArithmeticCoefficientsLegal c →
     arithmeticFullError c = (1 / (2 * Real.pi)) *
@@ -65,7 +68,9 @@ def hypotheticalZeroMode (ρ : ℂ) (x : ℝ) : ℂ :=
   (x : ℂ) ^ (1 - star ρ)
 
 /-- The complete projection identity from the chat, retaining the residual
-integral. The continuous mode is not silently treated as a step function. -/
+integral. Supplied by `arithmeticZeroProjectionTarget` in
+`ArithmeticZeroProjectionProof`; the continuous mode remains distinct from the
+arithmetic step function. -/
 def ArithmeticZeroProjectionTarget : Prop :=
   ∀ ρ : ℂ, riemannZeta ρ = 0 → (1/2 : ℝ) < ρ.re → ρ.re < 1 →
     ∀ c, ArithmeticCoefficientsLegal c →

@@ -3,8 +3,8 @@ import RiemannResearch.Analysis.PeriodicHarmonicMean
 import Mathlib.NumberTheory.Harmonic.Bounds
 
 /-!
-Draft: exact adjacent binary-wavelet logarithmic asymptotic.
-No Lean submission has been run on this file. The proof retains a nonnegative
+Exact adjacent binary-wavelet logarithmic asymptotic.
+The proof retains a nonnegative
 tail bounded by 4/[m(m+1)] after evaluating disjoint moved-jump intervals.
 -/
 

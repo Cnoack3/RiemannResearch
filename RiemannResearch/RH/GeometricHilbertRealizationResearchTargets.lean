@@ -3,13 +3,14 @@ import RiemannResearch.RH.ParetoGeometricTransform
 import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
-# The full geometric transform and its actual adjoint: proof obligation
+# The full geometric transform and its actual adjoint: proved specification
 
 Source: Section 2 of the contracting-evolution research report.
-The actual full-H Gibbs operator is proved elsewhere. This proposition asks
-for its specific conditional-geometric L2 factorization, including agreement
-with the scalar series and the integral adjoint formula. It is not an axiom
-or a claimed theorem, and no proved Gibbs result depends on it.
+This proposition specifies the actual conditional-geometric L2 factorization
+of the full Hilbert-space Gibbs operator, including agreement with the scalar
+series and the integral adjoint formula. Its unconditional provider is
+`geometricHilbertRealizationTarget_proved` in `GeometricHilbertRealizationProof`.
+The proposition definition is not an axiom.
 -/
 
 namespace RiemannResearch.RH.Pareto
@@ -20,8 +21,9 @@ def geometricLatentMeasure : Measure ℝ := volume.restrict (Set.Ioo 0 1)
 
 abbrev GeometricLatentL2 := Lp ℝ 2 geometricLatentMeasure
 
-/-- A concrete realization on the full Hilbert space, rather than an
-arbitrary factorization with no connection to the actual geometric series. -/
+/-- Concrete full-Hilbert-space realization of the actual geometric series,
+supplied by `geometricHilbertRealizationTarget_proved` in
+`GeometricHilbertRealizationProof`. -/
 def GeometricHilbertRealizationTarget : Prop :=
   ∃ T : ThresholdHilbert →L[ℝ] GeometricLatentL2,
     ‖T‖ ≤ 1 ∧

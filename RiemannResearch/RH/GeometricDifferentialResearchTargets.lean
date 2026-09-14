@@ -6,8 +6,9 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 
 Source: analytic_gibbs_method.md and the contracting-evolution research report.
 The exact total-variance identities are already proved in ParetoGeometricTransform.
-The derivative and complete orthogonal expansion below remain proof obligations.
-They are definitions of propositions, not axioms or claimed theorems.
+GeometricDifferentialProofs supplies the covariance derivative and differential
+variance specifications. The complete Meixner expansion remains open.
+These proposition definitions are not axioms.
 -/
 
 namespace RiemannResearch.RH.Pareto
@@ -18,7 +19,8 @@ def geometricVariance (f : ℕ → ℝ) (t : ℝ) : ℝ :=
   ∑' n, geometricProbability n t * (f n - geometricTransform f t)^2
 
 /-- Actual centered geometric covariance, including convergence of its series
-and its identification with the derivative. This is a proof target only. -/
+and its identification with the derivative. Supplied by
+`geometricCovarianceDerivativeTarget_proved` in `GeometricDifferentialProofs`. -/
 def GeometricCovarianceDerivativeTarget : Prop :=
   ∀ f : ℕ → ℝ, (∃ C : ℝ, ∀ n, |f n| ≤ C) → ∀ t : ℝ, 0 < t → t < 1 →
     Summable (fun n => geometricProbability n t * (f n - geometricTransform f t) *

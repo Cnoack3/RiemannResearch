@@ -6,10 +6,12 @@ import RiemannResearch.RH.RamanujanLaguerreResearchTargets
 
 Source: `RH_Ramanujan_Laguerre_Schur_Continuation_20260911.md`, §6.
 The linear algebra is supplied by `DyadicMomentEvaluation`. This module connects
-it to the actual integral coefficients and actual finite legal packets.
-The polynomial coefficient identity and the continuous Pareto realization are
-explicit hypotheses. The theorem does not supply either analytic provider and
-does not assert a uniform norm bound.
+it to the actual integral coefficients and actual finite legal packets through
+explicit analytic hypotheses. Both hypotheses now have unconditional providers:
+`dyadicCoefficientPolynomialProvider` in `ParetoDyadicCoefficientPolynomial` and
+`continuousParetoRealizationTarget` in `ParetoExponentialRealization`.
+`everyBudgetFeasibleTarget` in `ParetoDyadicCoefficientPolynomial` combines them.
+No uniform full-error bound is asserted.
 -/
 noncomputable section
 open MeasureTheory
@@ -75,8 +77,9 @@ theorem coefficient_finite_synthesis {ι : Type*} [Fintype ι]
   · intro i hi
     exact (coefficient_integrable (b i) (hb i) k).const_mul _
 
-/-- The precise remaining polynomial identity, on actual dyadic generators
-and their actual continuous Pareto Laguerre integrals. -/
+/-- Exact polynomial identity for actual dyadic generators and their continuous
+Pareto Laguerre integrals, supplied by `dyadicCoefficientPolynomialProvider`
+in `ParetoDyadicCoefficientPolynomial`. -/
 def DyadicCoefficientPolynomialProvider : Prop :=
   ∀ K : ℕ, ∃ C : Matrix (Fin (K + 1)) (Fin (K + 1)) ℝ,
     C.IsLowerTriangular ∧
@@ -84,9 +87,10 @@ def DyadicCoefficientPolynomialProvider : Prop :=
     ∀ j v : Fin (K + 1), coefficient (dyadicPacket v) j =
       ∑ i : Fin (K + 1), C j i * (v : ℝ) ^ (i : ℕ)
 
-/-- Conditional, actual-packet feasibility at every prescribed dilation
-budget. Finite invertibility is proved, not assumed. The remaining analytic
-providers occur explicitly in the theorem type. -/
+/-- Actual-packet feasibility at every prescribed dilation budget from explicit
+analytic providers. Finite invertibility is proved here. The unconditional
+`everyBudgetFeasibleTarget` in `ParetoDyadicCoefficientPolynomial` supplies both
+analytic inputs. -/
 theorem everyBudgetFeasible_of_polynomial_and_realization
     (hpoly : DyadicCoefficientPolynomialProvider)
     (hreal : ContinuousParetoRealizationTarget) : EveryBudgetFeasibleTarget := by

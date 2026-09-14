@@ -693,15 +693,12 @@ Names in the analytic rows have prefix `RiemannResearch.RH.Pareto`.
 
 **Open obligations:** construct finite legal mean-one Gibbs repairs with errors
 tending to zero, and prove the RH-to-approximation converse. The forward
-approximation-to-RH implication is now established. Other
-unproved propositions are represented explicitly in
-`GibbsArithmeticResearchTargets`, `ArithmeticMellinResearchTargets`,
-`DilationWaveletAsymptoticTargets`, `GeometricDifferentialResearchTargets`, and
-`ParetoGibbsSpectrumTarget` and `GeometricHilbertRealizationResearchTargets`.
-Defining such a `Prop` only records its statement;
-it does not provide a proof. Complete spectrum, Plancherel and zero-projection
-bridges, sharp adjacent asymptotics, differential/Meixner identities, and the
-remaining arithmetic network identifications are tracked in the coverage ledger.
+approximation-to-RH implication is now established. The exact named
+specifications now have the providers recorded below for Mellin, Plancherel,
+zero projection, both wavelet identities, covariance/variance and full geometric
+Hilbert realization. The complete spectrum and Meixner expansion remain open.
+A `Prop` definition alone records a statement; its separate provider supplies
+a proof. The remaining named obligations are listed explicitly below.
 Finite experiments are not used as hypotheses or extrapolated to convergence.
 
 **Closed on 14 September 2026:** `RH.ArithmeticGeneratorLogFlux` supplies
@@ -784,6 +781,58 @@ unit-interval indicator and an explicit reciprocal change of variables.
 The complete original cosine mass divided by t tends to π as t tends to
 positive infinity. Exact step integration, a logarithmic phase squeeze, and
 dominated convergence with majorant 4/(1+x²) retain the whole infinite series.
+
+### Named-target proof audit — 14 September 2026
+
+Sixteen named specifications were proved with their original types. Each proof
+was independently committed and pushed after the affected-module build.
+Axiom inspection of every provider found only propext, Classical.choice and
+Quot.sound: no admitted proofs or additional project axioms. The nine named
+specifications below remain unproved; this work does not claim to close them.
+
+| Proved specification | Proof commit |
+|---|---|
+| `ArithmeticGeneratorLogFluxTarget` | `bd69610` |
+| `ArithmeticMellinIdentityTarget` | `b4280cb` |
+| `ContinuousParetoRealizationTarget` | `7353281` |
+| `DyadicCoefficientPolynomialProvider` | `a706595` |
+| `EveryBudgetFeasibleTarget` | `80b770f` |
+| `EveryBudgetOptimizerTarget` | `a84595e` |
+| `RamanujanOrdinaryMomentsTarget` | `64d0e9e` |
+| `RamanujanLaguerreCancellationTarget` | `16f4554` |
+| `GeometricCovarianceDerivativeTarget` | `b9f9871` |
+| `GeometricDifferentialVarianceTarget` | `c40e5a3` |
+| `ArithmeticZeroProjectionTarget` | `ec1ac86` |
+| `ArithmeticPlancherelTarget` | `c627cac` |
+| `GeometricHilbertRealizationTarget` | `c5b04c4` |
+| `BinaryWaveletAdjacentAsymptoticTarget` | `890100b` |
+| `BinaryWaveletContinuousGramTarget` | `13f7321` |
+| `CosineMassAsymptotic` | `a394d21` |
+
+Four supporting results were separately verified and published: log-moment
+dilation (`315527b`), ordinary-integral Fourier Plancherel (`a56859d`),
+exact natural-step integration (`2fef128`), and cosine reciprocal integrals
+(`76fbf60`).
+
+All names in the remaining table lie under `RiemannResearch.RH.Pareto`;
+subnamespaces are shown. These are formalization gaps, not refutations.
+
+| Remaining specification | Missing proof |
+|---|---|
+| `RamanujanLaguerre.ActualParsevalTarget` | Completeness of the actual Laguerre orthonormal expansion and its full Parseval sum. |
+| `GeometricMeixnerParsevalTarget` | Complete geometric-weight orthogonal expansion and identification of all derivative coefficients. |
+| `paretoGibbsFullSpectrumTarget` | Spectral representation of the actual operator proving exactly [0, π/4] ∪ {1}. |
+| `ClassicalQuantitativeMertensBound` | The precise Möbius cancellation bound with exp(−c√log(2x)); the vendored log-power-nine zero-free strip does not supply it. |
+| `DyadicUniformSignedArithmeticDiscrepancyBound` | Uniform weighted partial summation for the actual coefficients, including the stated compensator and all epsilon parameters. |
+| `ResearchTargets.SummablePrimeRepairs` | A quantitative logarithmic relative-gap estimate for leastSmooth35Above; the subsequent summability reduction is already proved. |
+| `ThresholdRiemannHypothesisBridgeTarget` | RH implies membership of hilbertOne in the two-seed legal closure; the converse is proved. |
+| `CompressedMellin.PhaseCenteredAnalyticProvider` | The actual operator representation, norm and derivative bounds, and exact seed-frequency annihilation. |
+| `CompressedMellin.ActualPairedMellinProvider` | Quantitative construction of the actual paired annihilators with every stated detection, norm and difference bound. |
+
+Uniform moment-optimizer costs and the main Gibbs-repair approximation
+construction also remain separate open obligations. Finite-budget existence,
+the analytic identities above, and failed searches for missing infrastructure
+are not proofs of those uniform or RH-related conclusions.
 
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 

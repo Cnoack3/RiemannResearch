@@ -13,7 +13,9 @@ and `dual-audit-phase-centering.md` (8 September 2026).
 
 The proposition definitions record analytic obligations, not axioms.
 `fullCosineIdentity` in `ParetoCompressedMellinNorm` supplies `FullCosineIdentity`;
-the remaining analytic providers are OPEN. The closing theorems are CONDITIONAL research reductions on
+`cosineMassAsymptotic` in `ParetoCosineMassAsymptotic` supplies the sharp mass limit.
+The phase-centered and paired providers remain OPEN. The closing theorems are
+CONDITIONAL research reductions on
 the actual existing weighted Hilbert carrier and separately closed seed modules.
 The complete compressed cell and phase are stated explicitly so that abstract
 witness hypotheses cannot be mistaken for their arithmetic construction.
@@ -52,7 +54,8 @@ def FullCosineIdentity : Prop :=
     Summable (fun n => paretoWeight n * ‖compressedMellinCell t n‖ ^ 2) ∧
     compressedMellinEnergy t = cosineMass t / (1 + t ^ 2)
 
-/-- OPEN: sharp asymptotic of the actual positive cosine series. -/
+/-- Sharp asymptotic of the actual positive cosine series, supplied by
+`cosineMassAsymptotic` in `ParetoCosineMassAsymptotic`. -/
 def CosineMassAsymptotic : Prop :=
   Filter.Tendsto (fun t : ℝ => cosineMass t / t) Filter.atTop (nhds Real.pi)
 

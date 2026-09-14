@@ -3,13 +3,15 @@ import Mathlib.Analysis.Asymptotics.Defs
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 /-!
-# Remaining precise analytic claims about binary wavelets
+# Exact binary-wavelet specifications with proved providers
 
 Source: RH_Contracting_Evolution_and_Arithmetic_Repair_2026-09-08.md,
 and analytic_wavelet_foothold.md, Section 8.
 The full adjacent-pair limit and absence of a lower Riesz bound are proved
-elsewhere. The sharper leading constant and the continuous signed formula
-below are formal proof targets only. No theorem depends on them.
+in `DilationWaveletNoRiesz`. The sharper logarithmic asymptotic is supplied by
+`binaryWaveletAdjacentAsymptotic_proved` in `BinaryWaveletAdjacentAsymptotic`.
+The complete continuous signed Gram identity is supplied by
+`binaryWaveletContinuousGram_proved` in `BinaryWaveletContinuousGram`.
 -/
 
 namespace RiemannResearch.RH.Pareto
@@ -24,7 +26,8 @@ def binaryWaveletContinuousPrimitive (m : ℕ) (x : ℝ) : ℝ :=
 def binaryWaveletJump (j : ℕ) : ℝ :=
   if j % 4 = 1 then 1 else if j % 4 = 2 then -2 else if j % 4 = 3 then 1 else 0
 
-/-- Ordinary integration-by-parts claim, recorded without asserting a proof. -/
+/-- Complete continuous signed Gram identity, supplied by
+`binaryWaveletContinuousGram_proved` in `BinaryWaveletContinuousGram`. -/
 def BinaryWaveletContinuousGramTarget : Prop :=
   ∀ m n : ℕ, 0 < m → 0 < n →
     paretoInner (dilationWaveletSequence 2 m) (dilationWaveletSequence 2 n) =
@@ -33,8 +36,9 @@ def BinaryWaveletContinuousGramTarget : Prop :=
       2 * ∫ x in Set.Ioi (n : ℝ),
         binaryWaveletContinuousPrimitive m x * binaryWaveletStep n x / x^3
 
-/-- The claimed 6/pi leading coefficient is a stronger statement than the
-proved fact that adjacent normalized wavelets approach one another. -/
+/-- Exact 6/pi logarithmic leading coefficient with an O(1/n) remainder,
+supplied by `binaryWaveletAdjacentAsymptotic_proved` in
+`BinaryWaveletAdjacentAsymptotic`. -/
 def BinaryWaveletAdjacentAsymptoticTarget : Prop :=
   Asymptotics.IsBigO Filter.atTop
     (fun n : ℕ => ‖normalizedBinaryWavelet (n+1) (by omega) -

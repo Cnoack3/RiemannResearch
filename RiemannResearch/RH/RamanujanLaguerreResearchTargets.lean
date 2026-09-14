@@ -8,12 +8,13 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 # Concrete Ramanujan--Laguerre research obligations
 
 Source: user-provided RH_Ramanujan_Laguerre_Schur_Continuation_20260911.md,
-Sections 3--7. These definitions record remaining obligations on the actual
-two-seed arithmetic packets and the actual continuous Pareto realization.
-Every target below is a proposition, not an axiom or a proved theorem.
-In particular, the definitions do not assert the uniform bound or RH.
-The companion LaguerreMomentTransform module proves the finite integral
-transform once the ordinary moment and integrability providers are supplied.
+Sections 3--7. These definitions record exact specifications on actual
+two-seed arithmetic packets and the continuous Pareto realization.
+The companion modules ParetoExponentialRealization, ParetoDyadicCoefficientPolynomial,
+ParetoMomentOptimizer and RamanujanOrdinaryMomentsProof now supply the realization,
+finite-budget feasibility and optimizer, ordinary-moment and cancellation targets.
+ActualParsevalTarget and the uniform-in-budget bounds remain open.
+No proposition definition is an axiom, and no uniform bound or RH is asserted.
 -/
 
 noncomputable section
@@ -78,8 +79,8 @@ def UniformOptimizerBoundTarget : Prop :=
   ∃ B : ℝ, 0 ≤ B ∧ ∀ K : ℕ, ∃ F : ℕ → ℝ,
     IsMomentOptimizer K F ∧ paretoError F ≤ B
 
-/-- Open formalization obligation: connect the continuous exponential
-realization to the discrete mean and the complete discrete squared error. -/
+/-- Exact continuous exponential realization, supplied by
+`continuousParetoRealizationTarget` in `ParetoExponentialRealization`. -/
 def ContinuousParetoRealizationTarget : Prop :=
   ∀ F : ℕ → ℝ, F ∈ legalSeedSpan ({2, 3} : Set ℕ) →
     AllMomentsIntegrable F ∧
@@ -95,8 +96,9 @@ def ActualParsevalTarget : Prop :=
     Summable (fun k : ℕ => coefficient F (k + 1) ^ 2) ∧
     paretoError F = ∑' k : ℕ, coefficient F (k + 1) ^ 2
 
-/-- Open formalization obligation: the Mellin-derived ordinary moments of
-the actual integrated Ramanujan packets. The order is omega(d)-1. -/
+/-- Exact ordinary moments of actual Ramanujan packets, supplied by
+`ramanujanOrdinaryMomentsTarget` in `RamanujanOrdinaryMomentsProof`.
+The first surviving order is omega(d)-1. -/
 def RamanujanOrdinaryMomentsTarget : Prop :=
   ∀ d : ℕ, 1 < d →
     AllMomentsIntegrable (ramanujanPacket d) ∧
@@ -106,8 +108,8 @@ def RamanujanOrdinaryMomentsTarget : Prop :=
       ((d.primeFactors.card - 1).factorial : ℝ) *
         ∏ p ∈ d.primeFactors, Real.log (p : ℝ)
 
-/-- Open formalization obligation: the page's precise arithmetic triangular
-Laguerre cancellation statement, formulated on actual coefficient integrals. -/
+/-- Exact arithmetic Laguerre cancellation on actual coefficient integrals,
+supplied by `ramanujanLaguerreCancellationTarget` in `RamanujanOrdinaryMomentsProof`. -/
 def RamanujanLaguerreCancellationTarget : Prop :=
   ∀ d : ℕ, 1 < d →
     (∀ k : ℕ, k < d.primeFactors.card - 1 →
@@ -153,9 +155,9 @@ theorem coefficient_eq_momentTransform (F : ℕ → ℝ)
       (fun t => exponentialLift F t * Real.exp (-t)) k hint,
     hmom]
 
-/-- Conditional research reduction: the arithmetic ordinary-moment target
-implies the advertised arithmetic Laguerre cancellation. The ordinary-moment
-provider remains a substantive open formalization obligation. -/
+/-- The arithmetic ordinary-moment specification implies Laguerre cancellation.
+`RamanujanOrdinaryMomentsProof` supplies the ordinary-moment hypothesis and
+exports the resulting unconditional cancellation provider. -/
 theorem cancellationTarget_of_ordinaryMomentsTarget
     (h : RamanujanOrdinaryMomentsTarget) : RamanujanLaguerreCancellationTarget := by
   intro d hd
