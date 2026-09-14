@@ -31,6 +31,7 @@ import RiemannResearch.RH.ParetoDilationLogMoments
 import RiemannResearch.RH.ParetoDyadicCoefficientPolynomial
 import RiemannResearch.RH.ParetoMomentOptimizer
 import RiemannResearch.RH.RamanujanOrdinaryMomentsProof
+import RiemannResearch.RH.GeometricDifferentialProofs
 import RiemannResearch.LinearAlgebra.FinitePairVariance
 import RiemannResearch.Analysis.IndicatorAnnihilator
 import RiemannResearch.RH.ParetoAnnihilatorPositivity

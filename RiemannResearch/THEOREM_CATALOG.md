@@ -719,6 +719,12 @@ The generator integrability and integral formula now hold for Re(s) > 0
 requested strip identity. Plancherel and zero-projection targets remain open.
 
 
+**Closed on 14 September 2026:** `RH.GeometricDifferentialProofs` supplies
+`geometricCovarianceDerivativeTarget_proved : GeometricCovarianceDerivativeTarget`.
+For every bounded real sequence and 0 < t < 1, the centered covariance series
+is absolutely summable and equals t times the actual derivative of its
+geometric transform. The proof establishes a locally summable derivative bound.
+
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
 These results concern actual signed two-seed generators and complete infinite
