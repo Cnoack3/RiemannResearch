@@ -653,14 +653,32 @@ The converse now has the following proved supporting components:
 
 | Declaration family | Module | Exact status |
 |---|---|---|
-| `hilbertTail_inner_scaling`, `hilbertTail_inner_pow_scaling`, `hilbertTail_inner_sub`, `hilbertTail_inner_sub_sq_le_tailEnergy`, `hilbertTailEnergy_tendsto_zero` | `RH.ThresholdJointAdjointTail` | Actual absolutely summable weighted tails, exact scaling from a fixed-adjoint equation, exact finite blocks, full tail-energy decompositions and vanishing energy. The local L² limit/rate and quantitative coordinate recovery remain Open. |
-| `continuous_eq_const_of_two_irrational_periods`, `primeLogRatio_irrational`, `continuous_primeLog_periods_constant`, `continuous_twoSeed_log_periods_constant` | `RH.PrimeLogPeriodRigidity` | Unconditional dense-period rigidity for continuous profiles and its actual distinct-prime and two-seed logarithmic specializations. Constructing such a continuous profile from the adjoint-fixed Hilbert data remains Open. |
+| `hilbertTail_inner_scaling`, `hilbertTail_inner_pow_scaling`, `hilbertTail_inner_sub`, `hilbertTail_inner_sub_sq_le_tailEnergy`, `hilbertTailEnergy_tendsto_zero` | `RH.ThresholdJointAdjointTail` | Actual absolutely summable weighted tails, exact scaling from a fixed-adjoint equation, exact finite blocks, full tail-energy decompositions and vanishing energy. The September 14 prefix-primitive proof supplies the needed continuous limit and quantitative coordinate recovery. |
+| `continuous_eq_const_of_two_irrational_periods`, `primeLogRatio_irrational`, `continuous_primeLog_periods_constant`, `continuous_twoSeed_log_periods_constant` | `RH.PrimeLogPeriodRigidity` | Unconditional dense-period rigidity for continuous profiles and its actual distinct-prime and two-seed logarithmic specializations. The September 14 modules now construct the required continuous prefix profile from the adjoint-fixed Hilbert data. |
 | `legalSeedSpan_positive_eq_residue_span`, `hilbertDilation_sub_mem_legalClosure`, `adjoint_sub_mem_full_orthogonal` | `RH.ThresholdHilbertCocycle` | Exact full-residue space identification and closed-Hilbert cocycle/orthogonality reduction, without RH or density hypotheses. |
 | `adjoint_fixed_of_legal_orthogonal_of_full_density` | `RH.ThresholdHilbertCocycle` | **Conditional research reduction:** full positive-residue density is an explicit input. |
-| `twoSeed_legalClosure_eq_top_of_full_density_of_joint_fixed_constants`, `hilbertOne_mem_twoSeed_of_full_density_of_joint_fixed_constants` | `RH.ThresholdTwoSeedConverse` | **Conditional research reduction:** full positive-residue density and two-seed adjoint rigidity are explicit inputs. Both still require actual providers before the RH-to-approximation converse can be claimed. |
+| `twoSeed_legalClosure_eq_top_of_full_density_of_joint_fixed_constants`, `hilbertOne_mem_twoSeed_of_full_density_of_joint_fixed_constants` | `RH.ThresholdTwoSeedConverse` | **Conditional research reduction:** full positive-residue density and two-seed adjoint rigidity are explicit inputs. Joint rigidity now has the checked provider `hilbertDilationAdjoint_two_three_fixed_iff`; the classical RH-to-full-density provider remains Open as a formalization obligation. |
 
-See `RH/ThresholdEquivalenceProgress20260909.md` for the exact remaining
-targets and the combined verification receipt.
+See `RH/ThresholdEquivalenceProgress20260909.md` for the earlier status and
+`RH/TwoSeedEquivalenceVerification20260914.md` for the current verified scope.
+
+## Two-seed rigidity and full-density equivalence (14 September 2026)
+
+Source: the conversation and `RH_Iff_Two_Seed_Approximation_20260914.md`.
+The new converse argument is proved using continuous prefix primitives and
+localized block-average recovery in the actual Pareto Hilbert space.
+
+| Declaration family | Modules | Exact status |
+|---|---|---|
+| `dyadicInvariant_prefix_energy_bound`, `dyadicPrefixPrimitive_tendsto`, `prefixPrimitiveLimit_holder`, `prefixPrimitiveLimit_double`, `prefixPrimitiveLimit_triple` | `Analysis.DyadicInvariantEnergy`, `Analysis.MultiplicativePrefixPrimitive` | Established prefix-energy bound and actual continuous-primitive construction from discrete invariance and square-summable increments. |
+| `continuousOn_Ioi_of_sq_increment_le`, `continuousOn_two_three_scaling_const`, `continuousOn_two_three_homogeneous` | `Analysis.PositiveScalingRigidity` | Established continuity and constancy/linearity consequences using the existing irrational prime-log periods. |
+| `dyadicBlockAverage_recovery_bound`, `sequence_constant_of_linear_prefix_limit`, `multiplicativeSequence_rigidity` | `Analysis.DyadicBlockRecovery`, `Analysis.MultiplicativeSequenceRigidity` | **Established:** a(2n)=a(3n)=a(n) for positive n and square-summable increments imply a(n)=a(1) at every positive n. No RH or norm-control hypothesis remains. |
+| `scaledFloorStep_recovery_lower_bound`, `dyadicFloorStep_recovery` | `Analysis.DyadicCellRecovery` | Established exact floor-cell integral and discrete recovery from the stated vanishing squared-error budget. |
+| `hilbertNormalizedTail_scaling`, `hilbertNormalizedTail_increment`, `eq_smul_hilbertOne_of_normalizedTail_constant`, `hilbertNormalizedTail_increment_square_summable_of_dyadic_fixed` | `RH.ThresholdNormalizedTail`, `RH.ThresholdDyadicTailSummability` | Established actual weighted-tail bridge; dyadic adjoint fixedness supplies summability internally through a finite kernel estimate. |
+| `hilbertDilationAdjoint_two_three_fixed_iff`, `twoSeed_legalClosure_eq_top_of_full_density`, `twoSeed_density_iff_full_density` | `RH.ThresholdJointAdjointRigidity` | **Established:** actual joint fixed vectors are exactly constants; two-seed density is equivalent to full remainder density. Equality of proper closures is not asserted. |
+| `hilbertLegalClosure_eq_top_iff_one_mem`, `hilbertOne_mem_legalClosure_iff_meanOne_variance`, `hilbertOne_mem_legalClosure_iff_meanOne_variance_sequence` | `RH.ParetoMeanOneApproximation` | Established exact equivalences for positive seed sets, full Pareto variance, and all positive integer dilation indices. |
+| `riemannHypothesis_iff_twoSeed_closure_of_density_from_rh`, `riemannHypothesis_iff_twoSeed_density_of_density_from_rh`, `riemannHypothesis_iff_twoSeed_meanOne_sequence_of_density_from_rh` | `RH.ThresholdTwoSeedEquivalence` | **Conditional research reduction:** sole remaining input is `PositiveResidueDensityFromRH`; joint rigidity is proved. |
+| `PositiveResidueDensityFromRH` | `RH.ThresholdTwoSeedEquivalence` | **Open formalization obligation:** RH implies full positive-remainder density (strong Báez-Duarte/Bagchi theorem). This proposition has no checked provider yet. |
 
 ## Gibbs contraction, legal wavelets, and arithmetic repair (9 September 2026)
 
