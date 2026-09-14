@@ -49,7 +49,13 @@ proves actual finite-integral synthesis and legal budget membership.
 `everyBudgetFeasible_of_polynomial_and_realization` proves actual feasibility
 at every budget 2^K from two explicit analytic providers:
 `DyadicCoefficientPolynomialProvider` and `ContinuousParetoRealizationTarget`.
-Both providers remain **Open**. Finite matrix invertibility is discharged.
+`ContinuousParetoRealizationTarget` is now discharged by
+`RamanujanLaguerre.continuousParetoRealizationTarget` in
+`RH/ParetoExponentialRealization.lean` (14 September 2026): all ordinary
+moments are integrable, the zeroth moment is the exact Pareto mean, and the
+continuous squared error equals the complete discrete error. These identities
+are proved for every bounded sequence. `DyadicCoefficientPolynomialProvider`
+remains **Open**. Finite matrix invertibility is discharged.
 
 **Open research:** uniform moment cost, q→1, unconditional completeness/RH,
 and absolute-value closure. Concrete Parseval/Mellin providers and the
