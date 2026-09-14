@@ -856,12 +856,19 @@ energy 4/t yield 64/t for t > 2; the small-frequency interval is handled directl
 original operator, every original quantifier, and both original constants 7 and 82.
 All six analytic clauses are proved on the actual Threshold Hilbert carrier.
 
+**Closed on 14 September 2026:** `RH.ActualPairedMellinProviderProof` supplies
+`actualPairedMellinProvider_proved : ActualPairedMellinProvider`. The construction
+uses C = 400000 and δ₀ = 1 and covers every 0 < δ ≤ 1. Its unconditional
+corollaries exclude an exact decomposition into the separately closed seed spaces
+and force reciprocal-error growth in both approximating channels. They do not
+exclude membership in the closure of the joint sum and do not settle RH.
+
 ### Named-target proof audit — 14 September 2026
 
-Seventeen named specifications were proved with their original types. Each proof
+Eighteen named specifications were proved with their original types. Each proof
 was independently committed and pushed after the affected-module build.
 Axiom inspection of every provider found only propext, Classical.choice and
-Quot.sound: no admitted proofs or additional project axioms. The eight named
+Quot.sound: no admitted proofs or additional project axioms. The seven named
 specifications below remain unproved; this work does not claim to close them.
 
 | Proved specification | Proof reference |
@@ -882,7 +889,8 @@ specifications below remain unproved; this work does not claim to close them.
 | `BinaryWaveletAdjacentAsymptoticTarget` | `890100b` |
 | `BinaryWaveletContinuousGramTarget` | `13f7321` |
 | `CosineMassAsymptotic` | `a394d21` |
-| `CompressedMellin.PhaseCenteredAnalyticProvider` | `RH.PhaseCenteredAnalyticProviderProof` |
+| `CompressedMellin.PhaseCenteredAnalyticProvider` | `90234ac` |
+| `CompressedMellin.ActualPairedMellinProvider` | `RH.ActualPairedMellinProviderProof` |
 
 Four supporting results were separately verified and published: log-moment
 dilation (`315527b`), ordinary-integral Fourier Plancherel (`a56859d`),
@@ -901,7 +909,6 @@ subnamespaces are shown. These are formalization gaps, not refutations.
 | `DyadicUniformSignedArithmeticDiscrepancyBound` | Uniform weighted partial summation for the actual coefficients, including the stated compensator and all epsilon parameters. |
 | `ResearchTargets.SummablePrimeRepairs` | A quantitative logarithmic relative-gap estimate for leastSmooth35Above; the subsequent summability reduction is already proved. |
 | `ThresholdRiemannHypothesisBridgeTarget` | RH implies membership of hilbertOne in the two-seed legal closure; the converse is proved. |
-| `CompressedMellin.ActualPairedMellinProvider` | Quantitative construction of the actual paired annihilators with every stated detection, norm and difference bound. |
 
 Uniform moment-optimizer costs and the main Gibbs-repair approximation
 construction also remain separate open obligations. Finite-budget existence,
