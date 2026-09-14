@@ -789,6 +789,11 @@ The complete energy is at most 7/t for every t ≥ 1, with an exact infinite-tai
 split. This closes the scalar energy estimate needed by the phase-centered
 provider; the full operator and derivative provider remains a separate target.
 
+`RH.PairedMellinFrequencies` proves `pairedMellinFrequencies`: every real
+r ≥ 4 admits positive dyadic/triadic resonance frequencies with maximum at
+most 64r² and difference at most min(1,16/r²). The finite-cutoff Dirichlet
+theorem supplies every scale; no continued-fraction growth hypothesis is used.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof
