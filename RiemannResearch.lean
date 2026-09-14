@@ -7,6 +7,10 @@ import RiemannResearch.RH.ActualLaguerreParseval
 import RiemannResearch.RH.ParetoL1MellinBound
 import RiemannResearch.RH.ParetoGroupedSignedTails
 import RiemannResearch.RH.ParetoLegalHeadGrowth
+import RiemannResearch.RH.TwoSeedExactHeadEnergy
+import RiemannResearch.Analysis.AdjacentGreenPair
+import RiemannResearch.RH.AdjacentGreenSource
+import RiemannResearch.RH.AdjacentGreenSourceCorrection
 import RiemannResearch.RH.RHFalseEnergyConsequences
 import RiemannResearch.RH.ParetoFiniteErrorObstruction
 import RiemannResearch.RH.RamanujanMeanOptimizer

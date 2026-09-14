@@ -1976,3 +1976,38 @@ subpolynomial full-energy requirements. **Open:** inversion of the simultaneous
 binary/triadic grouped equations in the full weighted L2 class.
 Summability of grouped differences does not supply summability of the tail
 or license the earlier separated multiples inversion. RH remains open.
+
+### Finite two-seed energy and exact rough-source splitting (2026-09-14)
+
+**Established:** `RH/TwoSeedExactHeadEnergy.lean` defines the infimum of the
+actual full squared Pareto Hilbert norm over finite legal combinations of
+seeds 2 and 3 equal to one through N. The feasible set is proved nonempty,
+the energy is nonnegative and monotone in N, and the compulsory head costs
+at least N/(N+1). Arbitrary near-minimizers have an actual finite dilation
+budget. For each fixed N, the finite-budget energies decrease to this
+unrestricted finite-legal infimum. No rate uniform in N or exchange of
+limits is asserted.
+
+The actual Mellin zero obstruction gives a polynomial lower bound for this
+infimum uniformly over all finite budgets.
+`riemannHypothesis_of_cofinal_subpower` concludes Mathlib's actual RH if,
+for every p>0, there is C such that arbitrarily large N satisfy
+energy(N) <= C*(N+1)^p. Different exponents may use different cofinal
+sequences, and the finite budgets are unrestricted.
+**Open:** proving this cofinal subpolynomial upper bound.
+
+**Established source calculation:** `Analysis/AdjacentGreenPair.lean`
+evaluates the exact adjacent-pair square completion at Pareto weights.
+It proves the signed Pythagorean split, the symmetric-profile correction
+1/(2*n^2*(n^2-1)), and the finite selected-subset bound 1/(6*X^3).
+The bound is elementary and needs no prime-counting estimate.
+`RH/AdjacentGreenSource.lean` applies the split to the actual full finite
+prefix Green energy for every even conductor. For the cumulative rough
+source minus a gcd-atom coefficient field with g(1)=0, the compulsory jump
+is proved from the definition. The unpaired coordinate 1 is retained.
+`RH/AdjacentGreenSourceCorrection.lean` identifies the full prefix energy
+of the optimal profile minus the symmetric neighboring profile exactly,
+and proves the same uniform 1/(6*X^3) bound for selected centers beyond X.
+**Open:** controlling the remaining distance of the repaired source to
+the legally supported CRT atom span. These finite source identities do
+not supply the full two-seed subpolynomial energy bound.
