@@ -821,6 +821,11 @@ proves full square summability of the phase-centered cells and
 `actualPhaseCenteredOperator_norm_sq_le_seven_div` for every real t ≥ 1.
 The bound applies to the actual operator representing the original pairing.
 
+**Bottom-up logarithmic head estimate proved:** `Analysis.LogarithmicMellinHead`
+proves the complete finite bound ∑_{k=1}^N log(t/k)^2 ≤ 2t whenever 1 ≤ t
+and N ≤ t, using an explicit compact-interval primitive and monotone sum–integral
+comparison.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof
