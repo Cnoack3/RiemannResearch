@@ -811,6 +811,11 @@ bounded integral pairings on the actual Threshold Hilbert space, proves all
 logarithmic Mellin kernels square-integrable, and supplies a global quadratic
 remainder bound for imaginary exponentials.
 
+**Bottom-up sharp pairing bound proved:** `RH.WeightedComplexPairingBound`
+proves absolute summability and the weighted complex Cauchy inequality for every
+actual physical Hilbert vector. Its operator-energy bound uses the real carrier
+without identifying a real-to-complex operator norm with complex Riesz energy.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof

@@ -46,6 +46,7 @@ import RiemannResearch.RH.PairedMellinFrequencies
 import RiemannResearch.RH.PairedMellinFromPhase
 import RiemannResearch.RH.PhaseCenteredActualOperator
 import RiemannResearch.RH.ParetoMellinKernelPairing
+import RiemannResearch.RH.WeightedComplexPairingBound
 import RiemannResearch.LinearAlgebra.FinitePairVariance
 import RiemannResearch.Analysis.IndicatorAnnihilator
 import RiemannResearch.RH.ParetoAnnihilatorPositivity
