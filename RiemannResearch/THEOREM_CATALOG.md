@@ -871,7 +871,7 @@ Axiom inspection of every provider found only propext, Classical.choice and
 Quot.sound: no admitted proofs or additional project axioms. The seven named
 specifications below remain unproved; this work does not claim to close them.
 
-| Proved specification | Proof reference |
+| Proved specification | Proof commit |
 |---|---|
 | `ArithmeticGeneratorLogFluxTarget` | `bd69610` |
 | `ArithmeticMellinIdentityTarget` | `b4280cb` |
@@ -890,9 +890,9 @@ specifications below remain unproved; this work does not claim to close them.
 | `BinaryWaveletContinuousGramTarget` | `13f7321` |
 | `CosineMassAsymptotic` | `a394d21` |
 | `CompressedMellin.PhaseCenteredAnalyticProvider` | `90234ac` |
-| `CompressedMellin.ActualPairedMellinProvider` | `RH.ActualPairedMellinProviderProof` |
+| `CompressedMellin.ActualPairedMellinProvider` | `f6f316e` |
 
-Four supporting results were separately verified and published: log-moment
+The earlier batch included four supporting results, separately verified and published: log-moment
 dilation (`315527b`), ordinary-integral Fourier Plancherel (`a56859d`),
 exact natural-step integration (`2fef128`), and cosine reciprocal integrals
 (`76fbf60`).
@@ -908,7 +908,7 @@ subnamespaces are shown. These are formalization gaps, not refutations.
 | `ClassicalQuantitativeMertensBound` | The precise Möbius cancellation bound with exp(−c√log(2x)); the vendored log-power-nine zero-free strip does not supply it. |
 | `DyadicUniformSignedArithmeticDiscrepancyBound` | Uniform weighted partial summation for the actual coefficients, including the stated compensator and all epsilon parameters. |
 | `ResearchTargets.SummablePrimeRepairs` | A quantitative logarithmic relative-gap estimate for leastSmooth35Above; the subsequent summability reduction is already proved. |
-| `ThresholdRiemannHypothesisBridgeTarget` | RH implies membership of hilbertOne in the two-seed legal closure; the converse is proved. |
+| `ThresholdRiemannHypothesisBridgeTarget` | Reverse RH-to-two-seed closure implication: RH implies full positive-residue density, and the joint adjoint-rigidity input of `ThresholdTwoSeedConverse` must be verified. The forward closure-to-RH implication is proved. |
 
 Uniform moment-optimizer costs and the main Gibbs-repair approximation
 construction also remain separate open obligations. Finite-budget existence,

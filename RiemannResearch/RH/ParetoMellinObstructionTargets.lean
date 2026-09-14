@@ -14,9 +14,12 @@ and `dual-audit-phase-centering.md` (8 September 2026).
 The proposition definitions record analytic obligations, not axioms.
 `fullCosineIdentity` in `ParetoCompressedMellinNorm` supplies `FullCosineIdentity`;
 `cosineMassAsymptotic` in `ParetoCosineMassAsymptotic` supplies the sharp mass limit.
-The phase-centered and paired providers remain OPEN. The closing theorems are
-CONDITIONAL research reductions on
-the actual existing weighted Hilbert carrier and separately closed seed modules.
+The phase-centered provider is supplied by `phaseCenteredAnalyticProvider_proved`
+in `PhaseCenteredAnalyticProviderProof`; the paired provider is supplied by
+`actualPairedMellinProvider_proved` in `ActualPairedMellinProviderProof`.
+The closing theorems below are reusable provider-parameterized reductions on
+the actual weighted Hilbert carrier and separately closed seed modules.
+Their unconditional instances are in `ActualPairedMellinProviderProof`.
 The complete compressed cell and phase are stated explicitly so that abstract
 witness hypotheses cannot be mistaken for their arithmetic construction.
 -/
@@ -59,8 +62,8 @@ def FullCosineIdentity : Prop :=
 def CosineMassAsymptotic : Prop :=
   Filter.Tendsto (fun t : ℝ => cosineMass t / t) Filter.atTop (nhds Real.pi)
 
-/-- OPEN: bounded operator representation, complete-tail norm bound and the
-phase-centered derivative estimate.  The operator acts on real physical vectors,
+/-- Exact analytic specification, supplied by `phaseCenteredAnalyticProvider_proved`
+in `PhaseCenteredAnalyticProviderProof`. The operator acts on real physical vectors,
 so its norm is bounded by the complexified Riesz energy rather than identified
 with that energy by an unjustified real/complex conversion. -/
 def PhaseCenteredAnalyticProvider : Prop :=
@@ -74,16 +77,18 @@ def PhaseCenteredAnalyticProvider : Prop :=
       ∀ f ∈ hilbertLegalClosure ({b} : Set ℕ),
         q (2 * Real.pi * (m : ℝ) / Real.log (b : ℝ)) f = 0)
 
-/-- OPEN: the quantitatively paired annihilator provider for the actual two
-separately closed seed spaces.  A proof must combine the preceding analytic
-provider with the stated Dirichlet frequency selection; it is not supplied here. -/
+/-- Exact paired-annihilator specification for the actual separately closed seed
+spaces, supplied by `actualPairedMellinProvider_proved` in
+`ActualPairedMellinProviderProof` using the analytic provider and verified
+cutoff Dirichlet frequency selection. -/
 def ActualPairedMellinProvider : Prop :=
   ∃ C δ₀ : ℝ,
     PairedAnnihilatorEstimates
       (hilbertLegalClosure ({2} : Set ℕ))
       (hilbertLegalClosure ({3} : Set ℕ)) hilbertOne C δ₀
 
-/-- CONDITIONAL: no exact sum of vectors from the two separately closed spaces.
+/-- No exact sum of vectors from the separately closed spaces, given the provider.
+See `actual_no_exact_decomposition_proved` for its unconditional instance.
 This says nothing against membership in the closure of their joint sum. -/
 theorem actual_no_exact_decomposition (h : ActualPairedMellinProvider) :
     ¬ ∃ f ∈ hilbertLegalClosure ({2} : Set ℕ),
@@ -91,7 +96,8 @@ theorem actual_no_exact_decomposition (h : ActualPairedMellinProvider) :
   obtain ⟨C, δ₀, h⟩ := h
   exact no_exact_decomposition h
 
-/-- CONDITIONAL: the report's reciprocal-error channel norm obstruction, with
+/-- The report's reciprocal-error channel norm obstruction, given the provider.
+See `actual_reciprocal_error_obstruction_proved` for its unconditional instance, with
 explicit constants and the actual complete weighted Hilbert norm. -/
 theorem actual_reciprocal_error_obstruction (h : ActualPairedMellinProvider) :
     ∃ C δ₀ : ℝ, 0 < C ∧ 0 < δ₀ ∧
