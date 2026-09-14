@@ -794,6 +794,12 @@ r ≥ 4 admits positive dyadic/triadic resonance frequencies with maximum at
 most 64r² and difference at most min(1,16/r²). The finite-cutoff Dirichlet
 theorem supplies every scale; no continued-fraction growth hypothesis is used.
 
+**Bottom-up reduction proved:** `RH.PairedMellinFromPhase` supplies
+`actualPairedMellinProvider_of_phase : PhaseCenteredAnalyticProvider → ActualPairedMellinProvider`.
+The verified cutoff resonance selection and a common normalization supply witnesses
+for every 0 < δ ≤ 1 with C = 400000. This is a conditional reduction; the actual
+analytic provider remains an obligation until all its clauses are constructed.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof
