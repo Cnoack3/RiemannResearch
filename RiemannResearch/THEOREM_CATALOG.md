@@ -806,6 +806,11 @@ unit-cell pairing identity, its exact mean norm, and annihilation of each closed
 single-seed space at every positive arithmetic resonance. The quantitative norm
 and derivative estimates are recorded separately.
 
+**Bottom-up kernel foundation proved:** `RH.ParetoMellinKernelPairing` constructs
+bounded integral pairings on the actual Threshold Hilbert space, proves all
+logarithmic Mellin kernels square-integrable, and supplies a global quadratic
+remainder bound for imaginary exponentials.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof
