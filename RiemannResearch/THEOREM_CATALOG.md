@@ -779,6 +779,12 @@ proves the exact positive-half-line integrals of (1 − cos u)/u² and
 1 − cos(1/x), both equal to π/2, by ordinary-integral Plancherel for the
 unit-interval indicator and an explicit reciprocal change of variables.
 
+**Closed on 14 September 2026:** `RH.ParetoCosineMassAsymptotic` supplies
+`CompressedMellin.cosineMassAsymptotic : CosineMassAsymptotic`.
+The complete original cosine mass divided by t tends to π as t tends to
+positive infinity. Exact step integration, a logarithmic phase squeeze, and
+dominated convergence with majorant 4/(1+x²) retain the whole infinite series.
+
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
 These results concern actual signed two-seed generators and complete infinite
