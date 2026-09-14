@@ -716,7 +716,8 @@ or RH assumption remains in this target.
 supplies `arithmeticMellinIdentityTarget_proved : ArithmeticMellinIdentityTarget`.
 The generator integrability and integral formula now hold for Re(s) > 0
 (away from s = 1 for the formula); finite legal synthesis proves the exact
-requested strip identity. Plancherel and zero-projection targets remain open.
+requested strip identity. The zero-projection target is now also closed below;
+the Plancherel target remains open.
 
 
 **Closed on 14 September 2026:** `RH.GeometricDifferentialProofs` supplies
@@ -734,6 +735,13 @@ infinite regression decomposition, with no finite truncation assumption.
 proves agreement almost everywhere between the actual Fourier integral and
 Mathlib's unitary L2 Fourier transform for L1 ∩ L2 functions, and hence the
 full ordinary-integral Plancherel identity.
+
+**Closed on 14 September 2026:** `RH.ArithmeticZeroProjectionProof` supplies
+`arithmeticZeroProjectionTarget : ArithmeticZeroProjectionTarget`.
+For any zeta zero with 1/2 < Re(ρ) < 1 and every finite legal arithmetic
+combination, the full Pareto error equals the exact zero-mode contribution
+plus the complete continuous squared residual integral. This is the original
+conditional-on-a-zero statement; it assumes no unproved analytic provider.
 
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
