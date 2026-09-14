@@ -750,6 +750,13 @@ integral with its exact 1/(2π) normalization, for every finite legal arithmetic
 combination. The logarithmic lift is proved L1 and L2; no truncation or
 additional spectral identity is assumed.
 
+**Closed on 14 September 2026:** `RH.GeometricHilbertRealizationProof` supplies
+`geometricHilbertRealizationTarget_proved : GeometricHilbertRealizationTarget`.
+This constructs the actual continuous linear contraction into geometric L2,
+proves its almost-everywhere series realization and coordinate integral
+adjoint, and identifies its adjoint composition with the full Gibbs operator.
+The theorem applies to every ThresholdHilbert vector, not only bounded ones.
+
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
 These results concern actual signed two-seed generators and complete infinite
