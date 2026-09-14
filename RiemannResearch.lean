@@ -39,6 +39,7 @@ import RiemannResearch.RH.GeometricHilbertRealizationProof
 import RiemannResearch.RH.BinaryWaveletAdjacentAsymptotic
 import RiemannResearch.RH.BinaryWaveletContinuousGram
 import RiemannResearch.Analysis.NatStepIntegral
+import RiemannResearch.Analysis.CosineReciprocalIntegral
 import RiemannResearch.LinearAlgebra.FinitePairVariance
 import RiemannResearch.Analysis.IndicatorAnnihilator
 import RiemannResearch.RH.ParetoAnnihilatorPositivity

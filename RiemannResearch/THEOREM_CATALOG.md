@@ -774,6 +774,11 @@ the infinite limit.
 the complete Lebesgue integral of an absolutely summable unit-cell step
 function and its exact rescaling for every positive real mesh parameter.
 
+**Supporting theorem, 14 September 2026:** `Analysis.CosineReciprocalIntegral`
+proves the exact positive-half-line integrals of (1 − cos u)/u² and
+1 − cos(1/x), both equal to π/2, by ordinary-integral Plancherel for the
+unit-interval indicator and an explicit reciprocal change of variables.
+
 ## Period-5040 gain, general component charges, and boundary-repair obstruction (8 September 2026)
 
 These results concern actual signed two-seed generators and complete infinite
