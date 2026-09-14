@@ -800,6 +800,12 @@ The verified cutoff resonance selection and a common normalization supply witnes
 for every 0 < δ ≤ 1 with C = 400000. This is a conditional reduction; the actual
 analytic provider remains an obligation until all its clauses are constructed.
 
+**Bottom-up analytic construction proved:** `RH.PhaseCenteredActualOperator`
+defines the actual bounded phase-centered Mellin operator, proves its complete
+unit-cell pairing identity, its exact mean norm, and annihilation of each closed
+single-seed space at every positive arithmetic resonance. The quantitative norm
+and derivative estimates are recorded separately.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof

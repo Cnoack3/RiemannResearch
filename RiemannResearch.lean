@@ -44,6 +44,7 @@ import RiemannResearch.RH.ParetoCosineMassAsymptotic
 import RiemannResearch.RH.ParetoCompressedMellinUniformBound
 import RiemannResearch.RH.PairedMellinFrequencies
 import RiemannResearch.RH.PairedMellinFromPhase
+import RiemannResearch.RH.PhaseCenteredActualOperator
 import RiemannResearch.LinearAlgebra.FinitePairVariance
 import RiemannResearch.Analysis.IndicatorAnnihilator
 import RiemannResearch.RH.ParetoAnnihilatorPositivity
