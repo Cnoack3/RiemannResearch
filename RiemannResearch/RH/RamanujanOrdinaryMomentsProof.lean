@@ -173,4 +173,9 @@ theorem ramanujanOrdinaryMomentsTarget : RamanujanOrdinaryMomentsTarget := by
   intro d hd
   exact ⟨ramanujanPacket_allMomentsIntegrable d, ramanujanMomentProfile_all d hd⟩
 
+/-- Actual integrated Laguerre coefficients have the exact arithmetic
+triangular cancellation, with the signed leading prime-log product. -/
+theorem ramanujanLaguerreCancellationTarget : RamanujanLaguerreCancellationTarget :=
+  cancellationTarget_of_ordinaryMomentsTarget ramanujanOrdinaryMomentsTarget
+
 end RiemannResearch.RH.Pareto.RamanujanLaguerre

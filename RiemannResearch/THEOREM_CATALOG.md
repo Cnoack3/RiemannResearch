@@ -82,6 +82,10 @@ Every actual packet has all ordinary moments integrable; the first nonzero
 moment has order omega(d)-1 and equals (omega(d)-1)! times the product of
 prime logarithms. The proof uses the exact prime-factor/dilation recurrence,
 including repeated prime factors, rather than an unproved Mellin provider.
+The same module now also supplies `ramanujanLaguerreCancellationTarget`:
+actual Laguerre coefficients vanish below omega(d)-1, and the leading value
+is (-1)^(omega(d)-1) times the product of prime logarithms. This closes the
+previously conditional arithmetic cancellation target.
 
 **Open research:** uniform moment cost, q→1, unconditional completeness/RH,
 and absolute-value closure. Concrete Parseval providers and the
