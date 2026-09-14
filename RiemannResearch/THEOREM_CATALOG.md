@@ -836,6 +836,11 @@ proves a uniform quadratic remainder in operator norm for the actual Mellin
 functional on the line Re(s)=1, and hence `mellinLineOperator_hasDerivAt`.
 This differentiates the full bounded operator, with no pointwise-only premise.
 
+**Bottom-up centered operator derivative proved:** `RH.PhaseCenteredOperatorDerivative`
+proves differentiability of the actual phase-centered operator at every t > 0,
+identifies its operator derivative, and proves the exact continuous centered
+logarithmic kernel formula on the complete physical half-line.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof
