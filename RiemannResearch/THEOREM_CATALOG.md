@@ -797,8 +797,8 @@ theorem supplies every scale; no continued-fraction growth hypothesis is used.
 **Bottom-up reduction proved:** `RH.PairedMellinFromPhase` supplies
 `actualPairedMellinProvider_of_phase : PhaseCenteredAnalyticProvider → ActualPairedMellinProvider`.
 The verified cutoff resonance selection and a common normalization supply witnesses
-for every 0 < δ ≤ 1 with C = 400000. This is a conditional reduction; the actual
-analytic provider remains an obligation until all its clauses are constructed.
+for every 0 < δ ≤ 1 with C = 400000. The analytic provider is now constructed below; applying this reduction
+supplies the actual paired witnesses.
 
 **Bottom-up analytic construction proved:** `RH.PhaseCenteredActualOperator`
 defines the actual bounded phase-centered Mellin operator, proves its complete
@@ -851,15 +851,20 @@ proves `actualPhaseCenteredDerivativeOperator_norm_bound : ∀ t ≥ 1, ‖q′(
 The actual integral splits at floor(t): finite head energy 28/t and complete tail
 energy 4/t yield 64/t for t > 2; the small-frequency interval is handled directly.
 
+**Closed on 14 September 2026:** `RH.PhaseCenteredAnalyticProviderProof` supplies
+`phaseCenteredAnalyticProvider_proved : PhaseCenteredAnalyticProvider` with the
+original operator, every original quantifier, and both original constants 7 and 82.
+All six analytic clauses are proved on the actual Threshold Hilbert carrier.
+
 ### Named-target proof audit — 14 September 2026
 
-Sixteen named specifications were proved with their original types. Each proof
+Seventeen named specifications were proved with their original types. Each proof
 was independently committed and pushed after the affected-module build.
 Axiom inspection of every provider found only propext, Classical.choice and
-Quot.sound: no admitted proofs or additional project axioms. The nine named
+Quot.sound: no admitted proofs or additional project axioms. The eight named
 specifications below remain unproved; this work does not claim to close them.
 
-| Proved specification | Proof commit |
+| Proved specification | Proof reference |
 |---|---|
 | `ArithmeticGeneratorLogFluxTarget` | `bd69610` |
 | `ArithmeticMellinIdentityTarget` | `b4280cb` |
@@ -877,6 +882,7 @@ specifications below remain unproved; this work does not claim to close them.
 | `BinaryWaveletAdjacentAsymptoticTarget` | `890100b` |
 | `BinaryWaveletContinuousGramTarget` | `13f7321` |
 | `CosineMassAsymptotic` | `a394d21` |
+| `CompressedMellin.PhaseCenteredAnalyticProvider` | `RH.PhaseCenteredAnalyticProviderProof` |
 
 Four supporting results were separately verified and published: log-moment
 dilation (`315527b`), ordinary-integral Fourier Plancherel (`a56859d`),
@@ -895,7 +901,6 @@ subnamespaces are shown. These are formalization gaps, not refutations.
 | `DyadicUniformSignedArithmeticDiscrepancyBound` | Uniform weighted partial summation for the actual coefficients, including the stated compensator and all epsilon parameters. |
 | `ResearchTargets.SummablePrimeRepairs` | A quantitative logarithmic relative-gap estimate for leastSmooth35Above; the subsequent summability reduction is already proved. |
 | `ThresholdRiemannHypothesisBridgeTarget` | RH implies membership of hilbertOne in the two-seed legal closure; the converse is proved. |
-| `CompressedMellin.PhaseCenteredAnalyticProvider` | The actual operator representation, norm and derivative bounds, and exact seed-frequency annihilation. |
 | `CompressedMellin.ActualPairedMellinProvider` | Quantitative construction of the actual paired annihilators with every stated detection, norm and difference bound. |
 
 Uniform moment-optimizer costs and the main Gibbs-repair approximation
