@@ -28,6 +28,7 @@ import RiemannResearch.RH.ParetoMomentRepair
 import RiemannResearch.RH.RamanujanLaguerreResearchTargets
 import RiemannResearch.RH.ParetoExponentialRealization
 import RiemannResearch.RH.ParetoDilationLogMoments
+import RiemannResearch.RH.ParetoDyadicCoefficientPolynomial
 import RiemannResearch.LinearAlgebra.FinitePairVariance
 import RiemannResearch.Analysis.IndicatorAnnihilator
 import RiemannResearch.RH.ParetoAnnihilatorPositivity

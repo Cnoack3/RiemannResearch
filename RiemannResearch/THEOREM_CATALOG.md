@@ -55,7 +55,10 @@ at every budget 2^K from two explicit analytic providers:
 moments are integrable, the zeroth moment is the exact Pareto mean, and the
 continuous squared error equals the complete discrete error. These identities
 are proved for every bounded sequence. `DyadicCoefficientPolynomialProvider`
-remains **Open**. Finite matrix invertibility is discharged.
+is now discharged by `RamanujanLaguerre.dyadicCoefficientPolynomialProvider`
+in `RH/ParetoDyadicCoefficientPolynomial.lean`: the actual coefficient matrix,
+its lower triangularity, diagonal, and evaluation formula are all proved.
+Both analytic providers and finite matrix invertibility are discharged.
 
 `RH/ParetoDilationLogMoments.lean` now proves `ordinaryMoment_dilation`:
 actual integer dilation translates the exponential lift and acts on every
