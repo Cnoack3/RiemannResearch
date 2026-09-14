@@ -782,6 +782,13 @@ The complete original cosine mass divided by t tends to π as t tends to
 positive infinity. Exact step integration, a logarithmic phase squeeze, and
 dominated convergence with majorant 4/(1+x²) retain the whole infinite series.
 
+**Bottom-up continuation, 14 September 2026:**
+`RH.ParetoCompressedMellinUniformBound` proves `cosineMass_le_linear`,
+`compressedMellinEnergy_le_two`, and `compressedMellinEnergy_le_seven_div`.
+The complete energy is at most 7/t for every t ≥ 1, with an exact infinite-tail
+split. This closes the scalar energy estimate needed by the phase-centered
+provider; the full operator and derivative provider remains a separate target.
+
 ### Named-target proof audit — 14 September 2026
 
 Sixteen named specifications were proved with their original types. Each proof
