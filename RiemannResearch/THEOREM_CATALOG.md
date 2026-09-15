@@ -2122,3 +2122,36 @@ analytic results, not assertions of completed Lean formalization.
 **Open:** establish arithmetic source improvement for the actual joint
 binary and triadic legal spaces. Small leakage or weak-* compactness alone
 does not prove disappearance of the low spectral mass. RH remains open.
+
+### Arithmetic source improvement and far dilation limits
+
+`Analysis/ProjectionSourceImprovement.lean` proves exact signed single-column
+refitting, its Rayleigh gain, strict improvement from nonzero source
+correlation, and membership of the refitted vector in an enlarged subspace.
+Its Pythagorean identity includes every adjustment of the old coefficients.
+
+For tail subspace T and current projection P, if
+norm(Pz)^2 <= a norm(z)^2 with a<1, the full gain from any p+z, p in P,
+z in T, is at most norm(T(b-Pb))^2/(1-a).
+An additional source-tail bound gives the relative ceiling
+a/(1-a) times norm(b-Pb)^2.
+These concentration bounds are explicit hypotheses, not arithmetic conclusions.
+
+`RH/TwoSeedFarDilationBlindSpot.lean` defines the actual binary and triadic
+seeds together with all dilation indices greater than six. All generators
+are legal, but every vector in their full Hilbert closure vanishes at
+physical coordinate six. The squared error against hilbertOne is therefore
+at least 1/42. This restricted family is not the full two-seed legal span.
+
+**Analytic continuation, not yet fully formalized:** the companion note
+derives an exact periodic Laplace formula for source correlations. It proves
+strict improvement by every sufficiently large binary period multiple and a
+joint two-seed lower bound in terms of the period mean, the signed quadratic
+dilation charge, and a fourth-moment remainder. An explicit period-dependent
+tail estimate supplies the hypotheses of the general gain ceiling.
+
+**Open:** a nonsummable relative improvement rate for the actual cofinal
+budget spaces. Strict improvement at every finite stage is insufficient:
+the restricted family above can keep improving while retaining its positive
+coordinate floor. No source-charge lower bound in terms of the full defect,
+nor an RH proof, is supplied here.

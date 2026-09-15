@@ -16,6 +16,8 @@ import RiemannResearch.RH.RootComponentUnbounded
 import RiemannResearch.Analysis.ProjectionCompressionDefect
 import RiemannResearch.LinearAlgebra.SourceSpectralMass
 import RiemannResearch.Analysis.CompressedProjectionModes
+import RiemannResearch.Analysis.ProjectionSourceImprovement
+import RiemannResearch.RH.TwoSeedFarDilationBlindSpot
 import RiemannResearch.Analysis.AdjacentGreenPair
 import RiemannResearch.RH.AdjacentGreenSource
 import RiemannResearch.RH.AdjacentGreenSourceCorrection
