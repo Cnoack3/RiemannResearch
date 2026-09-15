@@ -2191,3 +2191,42 @@ matrix across the ordinary block M <= m < 2M. A sufficient estimate is
 D_M <= C log(2M)(D_M-D_2M)+epsilon_M with epsilon_M -> 0 independently
 of RH. Same-index packet decorrelation and leading zero-ordinate
 equidistribution do not discharge this obligation. No RH proof is supplied.
+
+### Two-three resonance cell and canonical ordinary budget
+
+**Established:** `LinearAlgebra/TwoThreeResonanceCell.lean` proves the
+exact four-square decomposition of the five-dimensional leading screened
+quadratic form. Its kernel consists precisely of multiples of
+(1,1,1,-1,-1); the form lies between 2/3 and 7/3 times squared coefficient
+size on the compatible complement. The module gives the exact dual
+completion, a compatible optimizer attaining the four-charge source energy
+Q, and Q(h) >= (3/7) |h|^2 for compatible h. These are finite quadratic
+identities, not a provider of the actual Gram asymptotic.
+
+**Established:** `RH/TwoThreePacketRelations.lean` proves the actual
+Hilbert generator cocycle, product-seed decomposition, and exact relation
+A_2,3k + A_2,3k+1 + A_2,3k+2 - A_3,2k - A_3,2k+1
+= A_2,k - A_3,k. It proves source compatibility for any source orthogonal
+to the two old packets, including the actual projection residual when
+those packets belong to the old subspace. The common source sum is the
+legal composite-seed correlation with A_6,k.
+
+**Established:** `RH/FiniteResidueIndependence.lean` proves that every
+finite relation among residue(n), n >= 2, has zero coefficients.
+`RH/TwoThreeCanonicalBudget.lean` proves that retaining every ternary
+generator and only binary generators with 3 not dividing the dilation
+index leaves the actual ordinary budgetSpan unchanged. Every elimination
+stays within the original budget.
+
+**Written analytic continuation, not yet fully formalized:** the note
+RH_Resonance_Cell_and_Canonical_Budget_2026-09-15.md proves the fixed-slope,
+fixed-offset full covariance kernel; the actual screened-cell logarithmic
+asymptotic and four-charge gain bound; independence of the canonical
+budget family, dimension 2M-floor(M/3), and the full five-cycle quotient
+formula. The covariance constants are not uniform in growing slopes.
+
+**Open:** a quantitative lower bound for the actual signed source
+variation across the entire ordinary block, with all cross-cell energies
+retained. Neither the positive finite quadratic form nor removal of exact
+relations establishes the required nonsummable relative improvement.
+The RH-closing estimate remains open.
