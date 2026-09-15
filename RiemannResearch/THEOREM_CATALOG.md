@@ -2077,3 +2077,48 @@ or control the corresponding orthogonal energy increments. The component
 instability theorem rules out general component norm bounds inferred solely
 from full-energy size; it neither supplies the source estimate nor disproves
 the full signed-energy route. RH remains open.
+
+### Compressed projection source mass and full Hilbert cutoff synthesis
+
+Established in `Analysis/ProjectionCompressionDefect.lean`,
+`LinearAlgebra/SourceSpectralMass.lean`, and
+`Analysis/CompressedProjectionModes.lean`.
+
+For orthogonal projections P and Q, a head source x in Q, and a tail t in
+Q-perp, the exact full-source defect retains its signed cross term:
+norm((I-P)(x+t))^2 = norm((I-P)x)^2 + norm((I-P)t)^2
+- 2 inner((I-Q)Px,t).
+The corresponding error is at most
+2 norm(t) norm((I-Q)Px) + norm(t)^2.
+
+For a finite orthonormal head eigenfamily satisfying QPe_i=lambda_i e_i,
+the actual projections Pe_i realize the diagonal Gram matrix, full synthesis
+norm, and signed error. Eigenvalues in [0,1] follow from these geometric
+hypotheses. No modal norm identity is supplied as an extra assumption.
+
+Let mu_i=c_i^2, k=sum((1-lambda_i)mu_i), and
+L=sum(lambda_i(1-lambda_i)mu_i). The latter is exactly
+norm((I-Q)Px)^2. With m(eta)=sum_{lambda_i<eta}(mu_i), the finite estimates are
+k-L/eta <= m(eta) <= k+L/(1-eta) for 0<eta<1.
+The actual half-cutoff/full-source comparison is
+abs(m(1/2)-norm((I-P)(x+t))^2)
+<= 2L + 2 norm(t) sqrt(L) + norm(t)^2.
+
+The finite-subspace witness
+h_eta=sum_{lambda_i>=eta}(c_i/lambda_i)Pe_i belongs to P and satisfies
+norm(h_eta)^2 <= norm(x)^2/eta and
+norm(x-h_eta)^2 <= m(eta)+L/eta^2.
+These are full Hilbert norms, not truncated coordinate norms.
+The one-mode theorem `arbitrarily_small_polarization_full_omission`
+shows that arbitrarily small positive polarization is compatible with
+omitted mass one.
+
+**Formalization boundary:** the eigenfamily and its compression equations
+are geometric inputs. This module does not assemble a cofinal family of
+actual two-seed matrices or prove their source-mass decay. The infinite
+weak-* limit and Pareto countermodel in the companion research note are
+analytic results, not assertions of completed Lean formalization.
+
+**Open:** establish arithmetic source improvement for the actual joint
+binary and triadic legal spaces. Small leakage or weak-* compactness alone
+does not prove disappearance of the low spectral mass. RH remains open.
