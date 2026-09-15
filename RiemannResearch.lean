@@ -8,6 +8,11 @@ import RiemannResearch.RH.ParetoL1MellinBound
 import RiemannResearch.RH.ParetoGroupedSignedTails
 import RiemannResearch.RH.ParetoLegalHeadGrowth
 import RiemannResearch.RH.TwoSeedExactHeadEnergy
+import RiemannResearch.RH.FiniteTwoSeedHeadRepair
+import RiemannResearch.RH.TwoSeedHeadEnergyGeometry
+import RiemannResearch.Analysis.DestructiveComponentEnergy
+import RiemannResearch.RH.RootComponentExactHeadEnergy
+import RiemannResearch.RH.RootComponentUnbounded
 import RiemannResearch.Analysis.AdjacentGreenPair
 import RiemannResearch.RH.AdjacentGreenSource
 import RiemannResearch.RH.AdjacentGreenSourceCorrection

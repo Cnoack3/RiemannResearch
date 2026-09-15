@@ -2011,3 +2011,69 @@ and proves the same uniform 1/(6*X^3) bound for selected centers beyond X.
 **Open:** controlling the remaining distance of the repaired source to
 the legally supported CRT atom span. These finite source identities do
 not supply the full two-seed subpolynomial energy bound.
+
+### Closed head minimizers and unbounded arithmetic projection (2026-09-15)
+
+**Established finite-head repair:** `RH/FiniteTwoSeedHeadRepair.lean`
+constructs a continuous linear repair from actual finite legal vectors.
+For each fixed N, every vector in the closed two-seed legal space can be
+approximated by finite legal vectors with exactly the same first N physical
+coordinates. The operator norm may depend on N; no uniform estimate follows.
+
+**Established optimum geometry:** `RH/TwoSeedHeadEnergyGeometry.lean`
+constructs the canonical minimum-norm vector F_N in each closed exact-head
+fiber. The finite legal infimum is unchanged on taking this closure:
+`closedMinimizer_norm_sq` identifies norm(F_N)^2 with the actual energy(N).
+For M>=N, `nested_minimizer_energy` gives exactly
+energy(M) = energy(N) + norm(F_M-F_N)^2.
+There is no missing tail or unsigned replacement.
+
+`energy_bddAbove_iff_closure` proves that boundedness of energy(N) is
+equivalent to membership of the constant one in the closed two-seed legal
+space. In this case the minimizers converge strongly to one, every
+energy(N)<=1, and energy(N) tends to 1.
+Unconditionally, `energy_limit_dichotomy` proves that energy(N) tends either
+to 1 or to positive infinity. This does not prove boundedness, a growth
+upper bound, or a reverse implication from RH to two-seed closure.
+
+**Established component necessity:** `RH/RootComponentExactHeadEnergy.lean`
+realizes the actual arithmetic root projection on finite legal vectors by
+selecting whole generators. Its projected head is forced by the exact head,
+and its head energy is asymptotic to N/9; eventually its full norm squared
+is at least N/18, uniformly over all finite dilation budgets.
+`eventual_normalized_root_cancellation` proves, writing U for this component,
+(inner(U,F-U)/norm(U)^2 + 1)^2 <= 18*norm(F)^2/N.
+Thus any sublinear full-energy family requires asymptotically complete
+signed cancellation. A uniform component angle separated from opposition
+would force linear full-energy growth.
+The supporting full signed Hilbert inequalities are in
+`Analysis/DestructiveComponentEnergy.lean`.
+
+**Established unconditional instability:** `RH/RootComponentUnbounded.lean`
+uses m=6^(k+1) and the actual normalized binary wavelets W_m.
+The four-generator packet p_k=W_m-W_(m+1) has full norm tending to zero,
+whereas its root projection is exactly W_m and has norm one.
+It vanishes at all physical coordinates below m.
+Hence the root projection has no norm bound even on the finite legal
+vectors vanishing on any fixed finite head, and has no continuous Hilbert
+extension agreeing with it on the finite legal span. No RH or closure
+assumption is used.
+
+`exists_nearby_head_preserving_large_root` strengthens this: every
+neighborhood of every finite legal vector, with any fixed finite head held
+exactly, contains finite legal vectors with arbitrarily large root norm.
+Near-optimal full energy alone therefore gives no component norm control.
+This does not exclude choosing some better controlled representatives.
+
+The instability does not force growth of the canonical source energy.
+`closedMinimizer_orthogonal_packet` and `closedMinimizer_packet_energy`
+prove, for k>=N, inner(F_N,p_k)=0 and exactly
+norm(F_N+t*p_k)^2 = energy(N) + t^2*norm(p_k)^2.
+The full Hilbert minimizer remains well-defined even though its algebraic
+arithmetic component need not have a continuous extension.
+
+**Open:** prove the actual cofinal subpolynomial upper bound for energy(N),
+or control the corresponding orthogonal energy increments. The component
+instability theorem rules out general component norm bounds inferred solely
+from full-energy size; it neither supplies the source estimate nor disproves
+the full signed-energy route. RH remains open.
