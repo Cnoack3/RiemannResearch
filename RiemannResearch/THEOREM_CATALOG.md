@@ -2155,3 +2155,39 @@ budget spaces. Strict improvement at every finite stage is insufficient:
 the restricted family above can keep improving while retaining its positive
 coordinate floor. No source-charge lower bound in terms of the full defect,
 nor an RH proof, is supplied here.
+
+### Ordinary adjacent packets and signed cross-seed covariance
+
+**Established:** `RH/AdjacentDigitCovariance.lean` proves the complete
+signed moved-interval head/tail identity for two arbitrary positive digit
+seeds. Both infinite sums are proved summable. The full tail is uniformly
+bounded, with no positivity assumption on the mixed covariance.
+The period-six binary, ternary, and mixed jump means are respectively
+1, 2, and 0. For d_p,m = digit(p,m)-digit(p,m+1), the actual Hilbert
+covariance satisfies:
+m(m+1) <d_2,m,d_2,m>/log(m) -> 1;
+m(m+1) <d_3,m,d_3,m>/log(m) -> 2;
+m(m+1) <d_2,m,d_3,m>/log(m) -> 0.
+Explicit uniform deviations from the corresponding harmonic terms and
+the equality with the actual bundled Hilbert inner product are verified.
+
+**Established:** `RH/AdjacentDilationPackets.lean` defines the original
+scaled generator and its ordinary adjacent difference A_p,m. It proves
+the normalization, exact zero target mean, source correlation
+<1-P1,A_p,m> = -<P1,A_p,m>, and the exact Mellin factor
+zeta(s)/s * (1-p^(1-s)) * ((m+1)^(1-s)-m^(1-s))
+on Re(s)>1/2, s != 1. This last domain is explicit in the Lean theorem.
+
+**Written analytic continuation, not yet fully formalized:** the note
+RH_Adjacent_Packets_and_Zero_Ordinates_2026-09-15.md proves the original
+packet diagonal laws log(m)+O(1), 2 log(m)+O(1), and the stronger full
+mixed bound (14+8 zeta(2))/(m+1), by signed period-six Abel cancellation
+throughout the infinite tail. It also derives the shrinking-frequency
+zero-ordinate scaling limit and records full-period numerical block audits.
+These additional conclusions are not claimed as completed Lean results.
+
+**Open:** control the actual source correlations and the entire screened
+matrix across the ordinary block M <= m < 2M. A sufficient estimate is
+D_M <= C log(2M)(D_M-D_2M)+epsilon_M with epsilon_M -> 0 independently
+of RH. Same-index packet decorrelation and leading zero-ordinate
+equidistribution do not discharge this obligation. No RH proof is supplied.

@@ -18,6 +18,8 @@ import RiemannResearch.LinearAlgebra.SourceSpectralMass
 import RiemannResearch.Analysis.CompressedProjectionModes
 import RiemannResearch.Analysis.ProjectionSourceImprovement
 import RiemannResearch.RH.TwoSeedFarDilationBlindSpot
+import RiemannResearch.RH.AdjacentDigitCovariance
+import RiemannResearch.RH.AdjacentDilationPackets
 import RiemannResearch.Analysis.AdjacentGreenPair
 import RiemannResearch.RH.AdjacentGreenSource
 import RiemannResearch.RH.AdjacentGreenSourceCorrection
