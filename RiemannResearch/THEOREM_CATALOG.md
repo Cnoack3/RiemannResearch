@@ -2263,6 +2263,17 @@ the actual packet consumer. RH/TwoThreePacketLogGain.lean already gives
 the unconditional ordinary-budget gain sizeSq(h)/(7*log(k)+K) <= D_M-D_2M,
 for k > 0 and 3*k+3 <= 2*M.
 
+**Established:** RH/TwoThreePacketSharpGain.lean assembles all 49 actual
+raw Gram entries with the fixed error B = 4*twoSeedEnergy+2259. It proves
+ordinary_budget_sharp_log_gain:
+sizeSq(h)/((7/3)*log(k)+K) <= D_M-D_2M,
+where K=(21/2)*B+7/3, k >= 24, and 3*k+3 <= 2*M.
+It also proves ordinary_budget_four_charge_gain:
+sourceEnergy(h)/(harmonic(k)+(63/4)*B) <= D_M-D_2M.
+Both have only the stated numerical index assumptions. The covariance
+providers and original-budget membership obligations are fully discharged.
+The explicit correction is followed by full old-space refitting.
+
 **Still written rather than formally asserted:** the general fixed-slope
 covariance kernel, the full screened five-vertex inverse Gram formula,
 and the exact four-charge asymptotic with trial coefficient bounds.

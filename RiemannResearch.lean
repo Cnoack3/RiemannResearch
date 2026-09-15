@@ -40,6 +40,7 @@ import RiemannResearch.RH.TwoThreePacketLogGain
 import RiemannResearch.RH.CrossResonanceCovarianceBounds
 import RiemannResearch.RH.OldNewCovarianceBounds
 import RiemannResearch.RH.SameScaleCovarianceBounds
+import RiemannResearch.RH.TwoThreePacketSharpGain
 import RiemannResearch.Analysis.AdjacentGreenPair
 import RiemannResearch.RH.AdjacentGreenSource
 import RiemannResearch.RH.AdjacentGreenSourceCorrection
