@@ -2179,12 +2179,12 @@ zeta(s)/s * (1-p^(1-s)) * ((m+1)^(1-s)-m^(1-s))
 on Re(s)>1/2, s != 1. This last domain is explicit in the Lean theorem.
 
 **Written analytic continuation, not yet fully formalized:** the note
-RH_Adjacent_Packets_and_Zero_Ordinates_2026-09-15.md proves the original
-packet diagonal laws log(m)+O(1), 2 log(m)+O(1), and the stronger full
+RH_Adjacent_Packets_and_Zero_Ordinates_2026-09-15.md gives the stronger
 mixed bound (14+8 zeta(2))/(m+1), by signed period-six Abel cancellation
-throughout the infinite tail. It also derives the shrinking-frequency
-zero-ordinate scaling limit and records full-period numerical block audits.
-These additional conclusions are not claimed as completed Lean results.
+throughout the infinite tail, the shrinking-frequency zero-ordinate
+scaling limit, and full-period numerical block audits. These conclusions
+remain written results. The original packet diagonal laws log(m)+O(1)
+and 2 log(m)+O(1) are now formalized in AdjacentPacketNormBounds.lean.
 
 **Open:** control the actual source correlations and the entire screened
 matrix across the ordinary block M <= m < 2M. A sufficient estimate is
@@ -2218,15 +2218,59 @@ generator and only binary generators with 3 not dividing the dilation
 index leaves the actual ordinary budgetSpan unchanged. Every elimination
 stays within the original budget.
 
-**Written analytic continuation, not yet fully formalized:** the note
-RH_Resonance_Cell_and_Canonical_Budget_2026-09-15.md proves the fixed-slope,
-fixed-offset full covariance kernel; the actual screened-cell logarithmic
-asymptotic and four-charge gain bound; independence of the canonical
-budget family, dimension 2M-floor(M/3), and the full five-cycle quotient
-formula. The covariance constants are not uniform in growing slopes.
+**Further written results:** RH_Resonance_Cell_and_Canonical_Budget_2026-09-15.md
+gives the general fixed-slope full covariance kernel, the four-charge
+asymptotic with trial coefficient control, and the full five-cycle inverse
+Gram formula. Canonical independence, dimension 2M-floor(M/3), and the
+concrete cell covariance bounds are now formalized below. Covariance
+constants are not asserted uniform over growing slopes.
 
 **Open:** a quantitative lower bound for the actual signed source
 variation across the entire ordinary block, with all cross-cell energies
 retained. Neither the positive finite quadratic form nor removal of exact
 relations establishes the required nonsummable relative improvement.
 The RH-closing estimate remains open.
+
+### Formal canonical basis and quantitative resonance gain
+
+**Established:** RH/TwoThreeCanonicalBasis.lean proves independence of
+the actual canonical generator family, its exact cardinality, and
+finrank(budgetSpan M) = 2*M-M/3 for every natural M.
+RH/TwoThreeHilbertBudget.lean transports the same basis and dimension
+to the existing Pareto budgetHilbert, proves nestedness, and discharges
+the old and new cell membership conditions within the original budgets.
+
+**Established:** Analysis/FiniteHarmonicBounds.lean proves uniform finite
+harmonic cutoff bounds. RH/AdjacentPacketNormBounds.lean proves the
+original packet diagonal laws with explicit bounded errors.
+RH/ResonantDigitOverlap.lean, RH/ResonantHarmonicHead.lean, and
+RH/OldNewDigitHead.lean prove exact signed overlap/head/tail identities
+and the concrete periodic coefficients. RH/CrossResonanceCovarianceBounds.lean,
+RH/OldNewCovarianceBounds.lean, and RH/SameScaleCovarianceBounds.lean
+give unconditional, scale-independent remainder bounds for every entry
+of the seven-column cell Gram matrix, for k >= 24. The entire infinite
+tail is retained. These are fixed cell slopes, not uniform estimates
+over all ratios in a growing ordinary block.
+
+**Established:** Analysis/SmallColumnCovariance.lean gives a weighted
+Young transfer estimate, instantiated by RH/AdjacentPacketCovarianceTransfer.lean
+for actual binary and ternary packets. Analysis/ResonanceCellRefit.lean
+gives exact trial identities and enlarged-space lower bounds.
+Analysis/ResonanceLeadingGram.lean retains every signed mixed Gram entry
+and bounds the corrected energy by L*energy(a)+(21/2)*E*sizeSq(a),
+under an explicit raw Gram error E. RH/TwoThreePacketRefit.lean supplies
+the actual packet consumer. RH/TwoThreePacketLogGain.lean already gives
+the unconditional ordinary-budget gain sizeSq(h)/(7*log(k)+K) <= D_M-D_2M,
+for k > 0 and 3*k+3 <= 2*M.
+
+**Still written rather than formally asserted:** the general fixed-slope
+covariance kernel, the full screened five-vertex inverse Gram formula,
+and the exact four-charge asymptotic with trial coefficient bounds.
+The canonical dimension and the concrete cell entry estimates above are
+now formal results, superseding their earlier written-only status.
+
+**Open:** a lower bound on the actual source variation sufficient to
+force nonsummable relative gains across the entire ordinary block.
+No source lower bound, RH assumption, or zero-ordinate distribution
+hypothesis is hidden in the unconditional local estimates. Local gains
+must not be summed without controlling the cross-cell Gram matrix.

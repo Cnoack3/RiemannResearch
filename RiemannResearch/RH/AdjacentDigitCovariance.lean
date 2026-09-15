@@ -52,7 +52,7 @@ theorem difference_abs_le (p m n : ℕ) (hp : 0 < p) :
   rw [abs_of_nonneg h2] at h4
   exact abs_le.mpr ⟨by unfold difference; linarith, by unfold difference; linarith⟩
 
-private theorem interval_quotients (m j n : ℕ) (_hm : 0 < m)
+theorem interval_quotients (m j n : ℕ) (_hm : 0 < m)
     (hj : 0 < j) (hjm : j ≤ m)
     (hn : n ∈ Finset.Ico (m * j) ((m + 1) * j)) :
     n/m = j ∧ n/(m+1) = j-1 := by
@@ -66,7 +66,7 @@ private theorem interval_quotients (m j n : ℕ) (_hm : 0 < m)
     · have he : j-1+1 = j := by omega
       simpa only [he, Nat.mul_comm] using hhi
 
-private theorem mismatch_interval (m n : ℕ) (hm : 0 < m)
+theorem mismatch_interval (m n : ℕ) (hm : 0 < m)
     (ht : n < m * (m + 1)) (hne : n / m ≠ n / (m + 1)) :
     ∃ j ∈ Finset.Icc 1 m, n ∈ Finset.Ico (m*j) ((m+1)*j) := by
   have hmod := Nat.div_add_mod n m
@@ -97,7 +97,7 @@ private theorem mismatch_interval (m n : ℕ) (hm : 0 < m)
   · have h' : n/(m+1)+1 ≤ n/m := by omega
     exact lt_of_lt_of_le hnewhi (Nat.mul_le_mul_left (m+1) h')
 
-private theorem interval_value (p m j n : ℕ) (hm : 0 < m)
+theorem interval_value (p m j n : ℕ) (hm : 0 < m)
     (hj : 0 < j) (hjm : j ≤ m)
     (hn : n ∈ Finset.Ico (m * j) ((m + 1) * j)) :
     difference p m n = jump p j := by
@@ -124,14 +124,14 @@ private theorem jumpMask_tsum (p q m j : ℕ) (hm : 0 < m) (hj : 0 < j) :
   field_simp
   ring
 
-private theorem tailWeight_summable (K : ℕ) :
+theorem tailWeight_summable (K : ℕ) :
     Summable (fun n => if K ≤ n then positiveWeight n else (0:ℝ)) := by
   have h := weighted_summable_of_bounded
     (f := fun n => if K ≤ n then (1:ℝ) else 0) (C := 1)
     (fun n => by split_ifs <;> norm_num)
   simpa only [mul_ite, mul_one, mul_zero] using h
 
-private theorem tailWeight_tsum (K : ℕ) (hK : 0 < K) :
+theorem tailWeight_tsum (K : ℕ) (hK : 0 < K) :
     (∑' n, if K ≤ n then positiveWeight n else (0:ℝ)) = 1/(K:ℝ) := by
   have hs : Summable (fun n => if n < K then positiveWeight n else (0:ℝ)) := by
     apply summable_of_ne_finset_zero (s := Finset.range K)
