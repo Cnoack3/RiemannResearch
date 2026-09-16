@@ -705,6 +705,29 @@ The ancillary density value `3/π²` is not formalized here. The pre-existing
 `PositiveResidueDensityFromRH` obligation remains Open. These structural
 results do not prove RH.
 
+## Minimal-support exact heads, common scales, and finite Gram gains (16 September 2026)
+
+Source: `RH/RH_Minimal_Seeds_Continuation_20260916.md`, sections 10–14.
+See `RH/MinimalSeedsContinuationVerification20260916.md` for exact scope and
+the unformalized analytic portion.
+
+| Declaration family | Modules | Exact status |
+|---|---|---|
+| `balancedTargetHead_mem_nonzeroTargetSpan`, `balancedTargetHead_exact` | `RH.BalancedHeadInterpolation` | Established actual finite interpolation on the nonzero-target support. No uniform norm bound. |
+| `commonDilation_coercivity`, `fifthChargeObserver_sq_le`, `commonScaleRoughPacket_norm_sq_lower` | `RH.CommonDilationCoercivity`, `RH.CommonScaleRepairObstruction`, `RH.CommonScaleRoughPackets` | Established actual signed lower bounds with constants (1+2√2)² and 52, without cross-term deletion. |
+| `commonScaleRoughPacket_norm_tendsto_atTop`, `commonScale_repaired_norm_tendsto_atTop` | `RH.CommonScaleRoughPackets`, `RH.CommonScaleRepairObstruction` | Established divergence under explicit persistent-charge and outward-scale hypotheses, including subtraction of bounded packets. |
+| `fifthRoughComponentCharge_eq_four`, `fifthRoughComponentCharge_tendsto`, `commonScale_repaired_norm_tendsto_of_approximation` | `RH.CommonScaleApproximationCharge` | Established extraction of the actual four-coordinate charge and its forced limit 1/15 from Hilbert approximation. The divergence application requires the explicit exact identification of the repair coefficient with this extracted charge, with no unproved charge-limit hypothesis. |
+| `minimalSeedDampingSymbol_clear_denominator`, `minimalSeedDampingSymbol_undamped`, `minimalSeedPowerDampingResidue_ne_zero`, `minimalSeedPowerDampingResidue_norm_lower` | `RH.MinimalSeedPowerDamping` | Established rational-symbol algebra and quantitative noncancellation of the concrete candidate residue. These do not assert that it is the residue of the actual sequence's Mellin transform. |
+| `balancedPowerDampedSequence`, `BalancedPowerDampingNonmembership` | `RH.BalancedPowerDamping` | Actual pointwise arithmetic sequence defined. Nonmembership is an **Open formalization obligation**, recorded as a proposition; the infinite Mellin identity and analytic contradiction remain unproved in Lean. |
+| `hilbertOne_mem_closure_of_bounded_exact_heads`, `hilbertOne_mem_closure_of_bounded_exact_head_energy` | `RH.ParetoExactHeadClosure` | Established closure inference from actual bounded coordinate-exact witnesses, with no abstract compactness provider. |
+| `BalancedExactHeadEnergy.energy_bddAbove_iff_closure`, `energy_limit_dichotomy` | `RH.BalancedExactHeadEnergy` | Established unrestricted exact-head energy criterion for the proposed minimal support: boundedness iff supported approximation, and limit one or positive infinity. Boundedness is not asserted. |
+| `FiniteHilbertGram.gramEquiv`, `residual_completion`, `residual_minimizer_unique`, `additive_inverse_schur_value` | `Analysis.FiniteHilbertGram` | Established complete signed Gram minimum and unique optimizer. The actual inverse is constructed from linear independence. Concrete RH consumer: `RH.BalancedFiniteTailGram`. |
+| `BalancedFiniteTailGram.optimizedHead_norm_sq`, `optimizedHead_feasible`, `energy_le_schur_value` | `RH.BalancedFiniteTailGram` | Established specialization to actual finite allowed balanced tails, preserving exact heads. |
+| `riemannHypothesis_of_bounded_exact_subspace_heads`, `BalancedExactHeadEnergy.riemannHypothesis_of_energy_bddAbove`, `BalancedFiniteTailGram.riemannHypothesis_of_uniform_tail_gain` | `RH.ParetoExactHeadClosure`, `RH.BalancedExactHeadEnergy`, `RH.BalancedFiniteTailGram` | **Conditional research reductions:** conclude Mathlib's actual `RiemannHypothesis`. The respective uniform witness, energy, or finite signed-gain bound is **Open**, with no provider supplied here. |
+
+The minimal-support thinning conjecture and the RH-to-full-density formal
+provider remain Open. This continuation does not prove RH.
+
 ## Gibbs contraction, legal wavelets, and arithmetic repair (9 September 2026)
 
 Source: the chat research development and
