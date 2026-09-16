@@ -75,13 +75,14 @@ mathematics, but their application has not been formally supplied here.
    are proved. The arithmetic eta(p^k)=1/k, its weighted membership, and its
    Euler-series continuation identity still need checked providers.
 
-3. Open formalization provider: the Chebyshev specialization.
-   The integral theorems apply to arbitrary actual measures with explicitly
-   integrable 1, f, and f^2. The report uses f(x)=x and the measure
-   x^(-s-1)dx restricted to each prime-power interval. These measure choices,
-   their moment formulas, the identification of the cumulative coefficients
-   with the actual von Mangoldt function, and the global RH energy criterion
-   have not been specialized in these modules.
+3. Partially discharged provider: the Chebyshev specialization.
+   The continuation update below proves the critical x^-2 moment formulas on
+   actual positive intervals, uses Mathlib's actual von Mangoldt coefficients,
+   and identifies finite cumulative sums with the Chebyshev sum under the
+   explicit CompleteThrough support condition. A global prime-power
+   enumeration with that property, identification of the real step function
+   on every interval, general x^(-s-1) moments, and the global RH criterion
+   remain Open (formalization).
 
 4. Open mathematical obligation: the actual global centered arithmetic bound.
    Nothing here proves integral_1^X (psi(x)-x)^2/x^2 dx = O(log X), or all
@@ -115,3 +116,104 @@ types; an axiom report does not discharge them.
 
 The final project checkpoint is the acceptance gate for separate-module
 imports, exports, source audit, affected modules, and publication.
+
+
+## Continuation Sections 11-19: exact coverage of the 2026-09-16 update
+
+The following results extend the earlier work. They do not turn the report's
+analytic reductions into a proof of RH.
+
+### Established declarations
+
+All namespaces below begin with RiemannResearch.
+
+- Analysis.ReciprocalCellEnergy.integral_residual_square_split identifies the
+  actual integral of (c-x)^2/x^2 on [a,b] with
+  (1/a-1/b)(c-m)^2 + R, for 0<a<b. Here
+  m=log(b/a)/(1/a-1/b) and R=b-a-log(b/a)^2/(1/a-1/b).
+  intervalRemainder_cubic_bounds proves
+  (b-a)^3/(12*b^2) <= R <= (b-a)^3/(12*a^2).
+  Mean minimality, nonnegativity, and the actual constant-correction integral
+  are checked, not supplied as assumptions.
+- LinearAlgebra.CumulativeCellEnergy.cumulative_resetJump and
+  resetJump_tail_zero construct the first N jumps plus the compensating jump
+  at index N; their cumulative value vanishes for every n>N.
+  reset_optimal_head attains the target on the original head.
+  weightedPrefixEnergy_signed_identity is the exact Abel identity with all
+  signed earlier-current cross terms and the terminal subtraction.
+  reset_correction_energy_exact is the full finite correction cost after
+  reset, independent of any terminal mass.
+- In Analysis/CumulativeEnergySummability.lean,
+  LinearAlgebra.CumulativeCellEnergy.reset_total_correction_energy_exact
+  proves that the entire infinite-sum squared correction cost equals the
+  finite excess energy, not merely a prefix or a lower bound.
+  Analysis.NonnegativeEnergy.summable_iff_nonnegative_prefix_bound proves
+  the general nonnegative summability/bounded-prefix equivalence.
+- Analysis.GapEnergy.cubic_gap_sum_le splits short and large gaps.
+  cubic_gap_sum_le_of_external_bounds derives the cubic estimate from the
+  explicitly named externalMaxGap, externalTotalMass, externalLargeGapMass
+  hypotheses. summable_remainder_of_cubic_gap, summable_of_geometric_majorant,
+  and tail_tsum_le_of_geometric_majorant prove the summability reductions
+  and the full geometric tail bound C*r^k/(1-r).
+- RH.PrimePowerCriticalEnergy.actualJump is the actual von Mangoldt
+  coefficient, never a geometric proxy. actualCumulative_eq_chebyshev uses
+  StrictMono q and the explicit CompleteThrough q n condition.
+  actual_interval_energy_split is the sum of actual interval integrals,
+  split into signed cumulative discrepancy and geometric remainder.
+  actual_signed_abel_identity uses the actual weights 1/q_i-1/q_(i+1).
+  actual_total_reset_cost equates the entire squared correction norm with
+  that discrepancy energy. actual_discrepancy_summable_iff_bounded_prefix
+  is only a criterion; it does not prove its boundedness condition.
+
+The convention is zero-based: cell i is [q_i,q_(i+1)], and its cumulative
+coefficient is the sum through index i. The reset jump is at q_N, after N
+corrected cells. No initial interval is silently included; when q_0=2 the
+unchanged [1,2] contribution cancels from the excess and correction cost.
+These weights are distinct from the integer Pareto weights in
+RH/ArithmeticCumulativeEnergy.lean.
+
+### Conditional research reductions and outstanding inputs
+
+1. Open (formalization): Baker--Harman--Pintz maximal prime gaps and
+   Jaerviniemi's large-gap total-mass estimate, their dyadic exponent
+   combination, transfer to all prime-power intervals, and the resulting
+   global cubic-gap summability. The exact finite algebra and geometric
+   majorant reduction above are checked. In particular,
+   RH.PrimePowerCriticalEnergy.actual_remainder_summable_of_external_cubic_gap
+   explicitly assumes externalPrimePowerCubicGapSummability; it does not
+   assert that the classical providers have already been formalized.
+   Intended sources from the user-provided report:
+   https://doi.org/10.1112/plms/83.3.532 and
+   https://arxiv.org/abs/2212.10965.
+2. Open (formalization): the general weighted spaces E_s and geometric
+   membership G in E_s for s>9/10; positive reference jumps, Dirichlet
+   convolution exponentiation and its multiplicative coefficients; the
+   meromorphic reference Z_b on Re z>9/20, with a simple pole at 1 and no
+   zeros. No Lean declaration in this update asserts those analytic facts.
+3. Open (formalization): the quotient zeta/Z_b, pole cancellation at 1 and
+   preservation of zeta zeros with their multiplicities; the actual Mellin
+   integral initially on Re z>1, its meromorphic continuation, residues
+   -m_rho/rho, and the half-plane Hardy/holomorphy bounds. Meromorphic
+   continuation is not being identified with convergence of the original
+   integral on the larger half-plane.
+4. Open (mathematics): the bound for the actual signed arithmetic
+   discrepancy. The report's all-positive-damping or critical
+   subpolynomial-growth target is RH-equivalent, not proved by this note.
+   Finite optimization and geometric summability do not supply that bound.
+   A uniformly bounded critical undamped correction norm is not the target:
+   the report derives divergence (not yet formalized here), even under RH.
+5. Open (formalization): the energy-threshold/rightmost-zero characterization
+   and the RH-conditional logarithmic asymptotic. The report's constant is
+   the sum over distinct nontrivial zeros of m_rho^2/|rho|^2; multiplicities
+   are not discarded and RH is an essential hypothesis. The explicit-formula
+   and B^2 providers remain unchecked in this continuation update.
+   Intended source: https://arxiv.org/abs/1306.1657.
+
+### Verification boundary for this continuation
+
+The coherent candidate is checked with autoImplicit disabled. Axiom
+inspection of the central interval, cubic, signed-Abel, geometric-tail,
+Chebyshev-identification, and total-reset theorems reports only propext,
+Classical.choice, and Quot.sound. Substantive local hypotheses remain visible
+in theorem types and are not discharged by that audit. The single final
+push-enabled checkpoint validates the actual module graph and publication.

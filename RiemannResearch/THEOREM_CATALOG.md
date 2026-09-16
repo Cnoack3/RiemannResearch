@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Prime-power interval energy and boundary-reset continuation (2026-09-16)
+
+Source and exact declarations: the continuation section of
+`RH/VectorSpacesZetaFormalization20260916.md` (report Sections 11-19).
+
+**Established:** `Analysis/ReciprocalCellEnergy` proves the actual x^-2
+integral split, weighted mean, exact correction integral, and two-sided cubic
+remainder bounds. `LinearAlgebra/FiniteCumulativeCellEnergy` now proves
+`cumulative_resetJump`, `resetJump_tail_zero`,
+`reset_correction_energy_exact`, and `weightedPrefixEnergy_signed_identity`.
+`Analysis/CumulativeEnergySummability` proves the full infinite-sum reset
+cost `reset_total_correction_energy_exact` and nonnegative-prefix
+summability equivalence. `Analysis/GapEnergySummability` proves the cubic
+short/large-gap split, explicit external-bound reduction, geometric
+summability and its exact tail majorant.
+`RH/PrimePowerCriticalEnergy` retains actual von Mangoldt coefficients:
+`actualCumulative_eq_chebyshev` has an explicit support-completeness input;
+`actual_interval_energy_split`, `actual_signed_abel_identity`, and
+`actual_total_reset_cost` use actual prime-power-cell weights, not integer
+Pareto weights.
+
+**Conditional research reductions:** `cubic_gap_sum_le_of_external_bounds`
+exposes the maximal-gap, total-mass and large-gap-mass hypotheses.
+`actual_remainder_summable_of_external_cubic_gap` exposes
+`externalPrimePowerCubicGapSummability`. The BHP/Jaerviniemi providers,
+dyadic exponent combination, and prime-power transfer are **Open
+(formalization)**. The multiplicative reference/Mellin continuation,
+zero residues, energy threshold and RH-conditional asymptotic are also
+**Open (formalization)**. The actual signed arithmetic bound remains
+**Open (mathematics), RH-equivalent**. Neither RH nor uniform boundedness
+of critical undamped arithmetic energy is proved.
+
 ### Prime-power vector spaces and zeta sampling (2026-09-16)
 
 Scope and outstanding providers: `RH/VectorSpacesZetaFormalization20260916.md`.
@@ -22,8 +54,9 @@ Hilbert zeta kernel using the actual value zeta(0)=-1/2.
 the actual zero-ordinate equidistribution provider is **Open (formalization)**.
 `continued_eval_not_continuousWithinAt_zero` has an explicit arithmetic
 continuation identity; its actual eta/Euler-series provider is **Open (formalization)**.
-The actual Chebyshev specialization of the integral identities is **Open
-(formalization)**. The global arithmetic energy bound is **Open (mathematics)**.
+The general weighted Chebyshev specialization and global enumeration are **Open
+(formalization)**; the critical finite specialization is updated above. The global
+arithmetic energy bound is **Open (mathematics)**.
 The Fock realization and full covariance asymptotics are not formalized here.
 No RH proof, unproved provider declaration, or project-local axiom is added.
 

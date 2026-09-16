@@ -141,4 +141,102 @@ theorem excess_le_correction_energy (n : ℕ) (w b d a : ℕ → ℝ) (τ : ℝ)
   have h := mul_nonneg hτ (sq_nonneg (targetLevel w b n - cumulative a n))
   linarith
 
+
+/-! ## Finite boundary reset and exact signed Abel energy
+
+Source: user-provided continuation, Sections 14-15. Resetting at the next
+boundary makes the cumulative correction vanish outside the finite window.
+-/
+
+/-- Keep the first `N` jumps and reset their accumulated value at index `N`. -/
+def resetJump (a : ℕ → ℝ) (N i : ℕ) : ℝ :=
+  if i < N then a i else if i = N then -cumulative a N else 0
+
+theorem cumulative_resetJump (a : ℕ → ℝ) (N n : ℕ) :
+    cumulative (resetJump a N) n = if n ≤ N then cumulative a n else 0 := by
+  induction n with
+  | zero => simp [cumulative]
+  | succ n ih =>
+    have hc (f : ℕ → ℝ) : cumulative f (n + 1) = cumulative f n + f n := by
+      simp [cumulative, Finset.sum_range_succ]
+    rw [hc, ih]
+    by_cases hn : n < N
+    · simp [resetJump, hn, Nat.le_of_lt hn, Nat.succ_le_iff.mpr hn, hc]
+    · by_cases he : n = N
+      · subst n
+        simp [resetJump]
+      · have h1 : ¬ n ≤ N := by omega
+        have h2 : ¬ n + 1 ≤ N := by omega
+        simp [resetJump, hn, he, h1, h2]
+
+theorem resetJump_tail_zero (a : ℕ → ℝ) (N n : ℕ) (hn : N < n) :
+    cumulative (resetJump a N) n = 0 := by
+  simp [cumulative_resetJump, Nat.not_le.mpr hn]
+
+/-- Finite cumulative energy for arbitrary cell weights, with no tail mass. -/
+def weightedPrefixEnergy (w a : ℕ → ℝ) (N : ℕ) : ℝ :=
+  ∑ i ∈ Finset.range N, w i * cumulative a (i + 1) ^ 2
+
+theorem weightedPrefixEnergy_reset (w a : ℕ → ℝ) (N M : ℕ) (hNM : N ≤ M) :
+    weightedPrefixEnergy w (resetJump a N) M = weightedPrefixEnergy w a N := by
+  unfold weightedPrefixEnergy
+  calc
+    _ = ∑ i ∈ Finset.range N, w i * cumulative (resetJump a N) (i + 1) ^ 2 := by
+      symm
+      apply Finset.sum_subset (Finset.range_mono hNM)
+      intro i hi hin
+      have hiN : N ≤ i := by simpa using hin
+      rw [resetJump_tail_zero a N (i + 1) (by omega)]
+      simp
+    _ = _ := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [cumulative_resetJump, if_pos (Nat.succ_le_of_lt (Finset.mem_range.mp hi))]
+
+theorem reset_optimal_head (w b a : ℕ → ℝ) (N n : ℕ) (hn : n ≤ N) :
+    cumulative (fun i => a i + resetJump (optimalJumpCorrection w b a) N i) n =
+      targetLevel w b n := by
+  rw [cumulative_add, cumulative_resetJump, if_pos hn,
+    cumulative_optimalJumpCorrection]
+  ring
+
+theorem reset_correction_energy_exact (N M : ℕ) (w b d a : ℕ → ℝ) (τ : ℝ)
+    (hNM : N < M) (hw : ∀ i ∈ Finset.range N, w i ≠ 0) :
+    correctionEnergy M w (resetJump (optimalJumpCorrection w b a) N) τ =
+      signedCellEnergy N w b d a - freeCellEnergy N w b d := by
+  change weightedPrefixEnergy w (resetJump (optimalJumpCorrection w b a) N) M +
+    τ * cumulative (resetJump (optimalJumpCorrection w b a) N) M ^ 2 = _
+  rw [weightedPrefixEnergy_reset w _ N M hNM.le,
+    resetJump_tail_zero _ N M hNM]
+  simpa [correctionEnergy, weightedPrefixEnergy] using
+    (correction_energy_exact N w b d a 0 hw)
+
+/-- Abel's identity keeps all signed earlier-current cross terms and the endpoint. -/
+theorem weightedPrefixEnergy_signed_identity (a v : ℕ → ℝ) (N : ℕ) :
+    weightedPrefixEnergy (fun i => v i - v (i + 1)) a N =
+      (∑ i ∈ Finset.range N,
+        v i * (a i ^ 2 + 2 * a i * cumulative a i)) -
+          v N * cumulative a N ^ 2 := by
+  induction N with
+  | zero => simp [weightedPrefixEnergy, cumulative]
+  | succ N ih =>
+    have hc : cumulative a (N + 1) = cumulative a N + a N := by
+      simp [cumulative, Finset.sum_range_succ]
+    have he : weightedPrefixEnergy (fun i => v i - v (i + 1)) a (N + 1) =
+        weightedPrefixEnergy (fun i => v i - v (i + 1)) a N +
+          (v N - v (N + 1)) * cumulative a (N + 1) ^ 2 := by
+      simp [weightedPrefixEnergy, Finset.sum_range_succ]
+    rw [he, ih, Finset.sum_range_succ, hc]
+    ring
+
+theorem weightedPrefixEnergy_nonneg (w a : ℕ → ℝ) (N : ℕ)
+    (hw : ∀ i, 0 ≤ w i) : 0 ≤ weightedPrefixEnergy w a N := by
+  exact Finset.sum_nonneg fun i _ => mul_nonneg (hw i) (sq_nonneg _)
+
+theorem weightedPrefixEnergy_mono (w a : ℕ → ℝ) (hw : ∀ i, 0 ≤ w i) :
+    Monotone (weightedPrefixEnergy w a) := by
+  intro N M hNM
+  exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono hNM)
+    (fun i _ _ => mul_nonneg (hw i) (sq_nonneg _))
+
 end RiemannResearch.LinearAlgebra.CumulativeCellEnergy
