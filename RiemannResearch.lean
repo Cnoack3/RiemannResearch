@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ArithmeticCumulativeEnergy
 import RiemannResearch.Analysis.ResidualHarmonicGain
 import RiemannResearch.Analysis.ProjectionChordObservability
 import RiemannResearch.RH.TwoThreeChordGram
