@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Exact signed fixed-head Schur remainder (2026-09-16)
+
+Source and precise scope: `RH/ExactSignedSchurFormalization20260916.md`.
+
+- `RH/ParetoPointClosure`: actual point-target closure iff constant-target
+  closure, by a contractive dyadic operator; no finite legal packet equals the
+  point target; point-target approximation implies actual Mathlib RH.
+- `LinearAlgebra/FiniteHilbertSchur`: full signed normal equations, inverse
+  Gram gain, completion of the square, and old-space Gram residualization.
+- `RH/ParetoSignedSchurRemainder`: actual remainder positivity, head preservation,
+  legality, exact binary-seed value `log 2 - 1/2 - sum c_i inner(z_i, seed)`,
+  coefficient-minimization identity, and line-projection distance `R/(1+2R)`.
+  Actual decreasing remainder gains are nonsummable iff the remainders vanish.
+  Nonsummable gains, or a positive harmonic lower bound, imply Mathlib RH for
+  legal packets; positivity is proved rather than assumed in these consumers.
+- `Analysis/ResidualHarmonicGain`: explicit harmonic residual bound and
+  nonsummability comparison; reuses the existing exact gain-product criterion.
+- `LinearAlgebra/OrthogonalFarSupportBound` and `SchurSubspaceGain`: full
+  optimized correction-subspace gain is at most `norm(z)^2/(1-tau)`, under
+  explicit support-pairing and old-space capture hypotheses.
+
+**Not claimed:** the manuscript's one-edge finite dictionary is not identified
+with the existing ordinary-budget family. Its finite-budget instantiation,
+Fourier tail constants, periodic adjoint asymptotics, and uniform mean-zero
+rate remain to be formalized. The actual arithmetic gain lower bound remains
+open. No RH-to-density converse or project-local axiom is added.
+
 ### Failure of RH and subpolynomial complete energy (2026-09-12)
 
 **Established implications:** `RH/ParetoL1MellinBound.lean` proves the
