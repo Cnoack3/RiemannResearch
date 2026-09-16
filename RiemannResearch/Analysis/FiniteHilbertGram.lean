@@ -174,5 +174,25 @@ theorem additive_minimizes {v : ι → H} (hv : LinearIndependent ℝ v)
   simpa only [map_neg, sub_neg_eq_add, ← sub_eq_add_neg] using
     residual_minimizes hv f (-c)
 
+/-! The following bilinear identities formalize the exact screening/source
+formulas in Sections 23 and 25 of the user-provided
+RH_Global_Approximation_and_Resonance_Blind_Patterns_Handoff_2026-09-16(1).md.
+The inverse is the already constructed actual Gram inverse. -/
+
+theorem residual_bilinear_schur {v : ι → H} (hv : LinearIndependent ℝ v) (f g : H) :
+    inner ℝ (f - Fintype.linearCombination ℝ v (inverseCoeff hv f))
+      (g - Fintype.linearCombination ℝ v (inverseCoeff hv g)) =
+    inner ℝ f g - ∑ i, inverseCoeff hv f i * cross v g i := by
+  rw [inner_sub_right, residual_orthogonal, sub_zero, inner_sub_left,
+    inner_synthesis_left]
+  rfl
+
+theorem residual_cross_source {v : ι → H} (hv : LinearIndependent ℝ v)
+    (f z : H) :
+    inner ℝ (f - Fintype.linearCombination ℝ v (inverseCoeff hv f)) z =
+      inner ℝ f z - ∑ i, inverseCoeff hv f i * cross v z i := by
+  rw [inner_sub_left, inner_synthesis_left]
+  rfl
+
 end
 end RiemannResearch.Analysis.FiniteHilbertGram

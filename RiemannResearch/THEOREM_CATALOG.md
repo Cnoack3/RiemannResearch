@@ -732,6 +732,25 @@ The ancillary density value `3/π²` is not formalized here. The pre-existing
 `PositiveResidueDensityFromRH` obligation remains Open. These structural
 results do not prove RH.
 
+## Signed boundary chords and actual residual charge (16 September 2026)
+
+Source: user-provided boundary-observability handoff, Sections 23–31.
+Exact coverage: RH/BoundaryObservabilityVerification20260916.md.
+
+| Declaration family | Modules | Status |
+|---|---|---|
+| generator_gram_periodic, generator_gram_lcm, generator_gram_digamma, chord_gram_exact | RH.TwoThreeChordGram | Established exact full-tail signed arithmetic Gram formula and actual chord kernel. |
+| residual_bilinear_schur, residual_cross_source | Analysis.FiniteHilbertGram | Established bilinear inverse-Gram screening and exact source correction, under actual linear independence. |
+| screened_chord_gram, screened_chord_source, innovation_source, innovation_energy | Analysis.ProjectionChordObservability | Established signed screening and nested-source/energy identities; arbitrary-block LDL construction not yet formalized. |
+| chord_dilation, chord_norm_sq_dilation, aligned_chord_log_bound | RH.TwoThreeChordGram | Established exact dilation and O(L log(a/L)) aligned dyadic energy, with explicit constants different from 160. |
+| gain_ge_sourceSquare, gain_ge_single_correlation, matched_chord_gain | Analysis.ProjectionChordObservability, RH.TwoThreeChordObservability | Established finite projection consumers. Any synthesis/charge bounds in their types are hypotheses, not arithmetic providers. |
+| matched_binary_normal, matched_ternary_normal, matchedSpace_mono | RH.TwoThreeChordObservability | Established actual finite-dimensional matched spaces and both normal-equation families. |
+| tendsto_zero_of_harmonic_loss | Analysis.ResidualHarmonicGain | Established nonnegative scalar-energy decay, including finite termination. |
+| limitingResidual_moments, limitingResidual_charge, positive_charge_pattern_of_not_rh, limitingResidual_mellin_lower_bound | RH.TwoSeedAnnihilatorCharge | Established actual closed-space annihilator/positive-charge consequences and Mellin lower bound. No nonzero pattern constructed unconditionally. |
+| riemannHypothesis_of_dyadic_chord_bessel_charge | RH.TwoThreeChordObservability | **Conditional research reduction** to Mathlib's RiemannHypothesis. Uniform signed Bessel and actual-source charge providers: **Open**. |
+| riemannHypothesis_of_moment_unique_continuation | RH.TwoSeedAnnihilatorCharge | **Conditional research reduction** to Mathlib's RiemannHypothesis. Infinite moment unique continuation: **Open**. |
+| CriticalLineChordGram, FullChordEnergy160 | RH.TwoThreeChordTargets | **Open formalization obligations**, defined propositions only; informal source proofs not imported as axioms. |
+| SameScaleChordBessel, BlockBoundaryObservability | RH.TwoThreeChordTargets | **Open mathematical estimates**, defined propositions only. |
 ## Minimal-support exact heads, common scales, and finite Gram gains (16 September 2026)
 
 Source: `RH/RH_Minimal_Seeds_Continuation_20260916.md`, sections 10–14.
