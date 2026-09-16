@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Prime-power vector spaces and zeta sampling (2026-09-16)
+
+Scope and outstanding providers: `RH/VectorSpacesZetaFormalization20260916.md`.
+
+**Established deductions and obstructions:**
+`Analysis/SampledGaugeCompleteness` proves actual l2 coordinate recovery from
+bounded diagonal filters, finite demodulation, and absence of a positive
+uniform lower bound for the coordinate covariance. `Analysis/ZeroDivisorTopology`
+proves finite-coordinate and translated density, tail convergence, exponential
+zero-set preservation, and analytic zero-order preservation.
+`Analysis/FinitePolynomialSampling` constructs finite null polynomials and
+proves the exact sampling-density obstruction. `LinearAlgebra/FiniteCumulativeCellEnergy`
+and `Analysis/IntegralCellEnergy` prove complete signed energy decomposition,
+optimal cumulative corrections, actual integral identities, and exact boundary
+correction cost. `RH/ZetaKernelObstruction` excludes the unchanged global
+Hilbert zeta kernel using the actual value zeta(0)=-1/2.
+
+**Conditional research reductions:**
+`gaugeOrbit_dense_of_phase_limits` has an explicit phase-covariance limit input;
+the actual zero-ordinate equidistribution provider is **Open (formalization)**.
+`continued_eval_not_continuousWithinAt_zero` has an explicit arithmetic
+continuation identity; its actual eta/Euler-series provider is **Open (formalization)**.
+The actual Chebyshev specialization of the integral identities is **Open
+(formalization)**. The global arithmetic energy bound is **Open (mathematics)**.
+The Fock realization and full covariance asymptotics are not formalized here.
+No RH proof, unproved provider declaration, or project-local axiom is added.
+
+
 ### Exact signed fixed-head Schur remainder (2026-09-16)
 
 Source and precise scope: `RH/ExactSignedSchurFormalization20260916.md`.
