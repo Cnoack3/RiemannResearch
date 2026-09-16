@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.DivisibilityGraphEnergy
+import RiemannResearch.Analysis.CumulativeFourierEnergy
 import RiemannResearch.Analysis.ZeroSamplingQuadratic
 import RiemannResearch.Analysis.CumulativeTailKernel
 import RiemannResearch.Analysis.ResidualZeroSensors
