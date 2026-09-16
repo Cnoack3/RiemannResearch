@@ -8,6 +8,7 @@ import Mathlib.Tactic
 All coefficients may be complex. The strict cutoff convention differs from
 q <= x only on the finite set of jump locations, hence not in the integrals.
 No equidistribution or number-theoretic asymptotic is used in this module.
+The continuous Fourier identification is proved in `CumulativeFourierEnergy`.
 -/
 
 noncomputable section

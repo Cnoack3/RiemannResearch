@@ -8,6 +8,8 @@ import Mathlib.Tactic
 The finite algebra and optimization statements in this file are unconditional.
 A quantitative entrywise sampling estimate is a visible hypothesis when used;
 no Landau or Selberg estimate is postulated as an axiom.
+In particular, `data_dependent_energy_limit` does not assert that the actual
+zeta-zero Gram matrices satisfy its quantitative entrywise hypothesis.
 -/
 
 noncomputable section

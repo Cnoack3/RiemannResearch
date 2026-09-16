@@ -90,7 +90,7 @@ lemma zeta_analytic_at_zero (ρ : ℂ) (hρ : IsNontrivialZero ρ) :
 theorem zeta_lower_derivatives_zero (ρ : ℂ) (hρ : IsNontrivialZero ρ) :
     ∀ j < zeroMult ρ, iteratedDeriv j riemannZeta ρ = 0 := by
   apply (natCast_le_analyticOrderAt_iff_iteratedDeriv_eq_zero (zeta_analytic_at_zero ρ hρ)).mp
-  exact ENat.coe_toNat_le_self _
+  exact ENat.natCast_toNat_le_self _
 
 /-- At the first potentially nonzero derivative, the correction A becomes visible. -/
 theorem zeta_residual_jet (A : ℂ → ℂ) (ρ : ℂ) (hρ : IsNontrivialZero ρ)
@@ -157,7 +157,7 @@ theorem zeta_multiplicity_derivative_ne_zero (ρ : ℂ) (hρ : IsNontrivialZero 
   have hle := (natCast_le_analyticOrderAt_iff_iteratedDeriv_eq_zero
     (zeta_analytic_at_zero ρ hρ)).mpr hvan
   have hcast : (zeroMult ρ : ℕ∞) = analyticOrderAt riemannZeta ρ :=
-    ENat.coe_toNat (Zeta23.analyticOrderAt_riemannZeta_ne_top hρ.not_trivial.2)
+    ENat.natCast_toNat (Zeta23.analyticOrderAt_riemannZeta_ne_top hρ.not_trivial.2)
   rw [← hcast] at hle
   have hbad : zeroMult ρ + 1 ≤ zeroMult ρ := by exact_mod_cast hle
   omega
@@ -168,7 +168,7 @@ theorem correction_recovered_from_jet (A : ℂ → ℂ) (ρ : ℂ) (hρ : IsNont
     -(iteratedDeriv (zeroMult ρ) (residualNumerator A) ρ) /
       iteratedDeriv (zeroMult ρ) riemannZeta ρ = A ρ := by
   rw [zeta_residual_jet A ρ hρ hA]
-  field_simp [zeta_multiplicity_derivative_ne_zero ρ hρ] <;> ring
+  field_simp [zeta_multiplicity_derivative_ne_zero ρ hρ]
 
 lemma nat_cpow_symbol_analytic (n : ℕ) (hn : 0 < n) (ρ : ℂ) :
     AnalyticAt ℂ (fun s : ℂ => (n : ℂ) ^ (1 - s)) ρ := by

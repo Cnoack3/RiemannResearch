@@ -7,8 +7,9 @@ import Mathlib.Tactic
 /-!
 # Exact von-Mangoldt divisibility energy and its harmonic blind direction
 
-The second diagonal sum is retained as a divisor sum. No Mertens estimate or
-zero-ordinate asymptotic is assumed. All coefficients are complex.
+The second diagonal sum is reindexed exactly as a harmonic von-Mangoldt sum.
+Its logarithmic upper bound is proved from Chebyshev and divisor convolution.
+No zero-ordinate asymptotic is assumed. All coefficients are complex.
 -/
 
 noncomputable section

@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.CriticalBoundaryWitness
 import RiemannResearch.Analysis.DivisibilityGraphEnergy
 import RiemannResearch.Analysis.CumulativeFourierEnergy
 import RiemannResearch.Analysis.ZeroSamplingQuadratic

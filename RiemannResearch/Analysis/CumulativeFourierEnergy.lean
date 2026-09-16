@@ -10,6 +10,7 @@ import Mathlib.Tactic
 This is an ordinary L1/L2 Plancherel proof for finite complex charges.
 No zero sampling, RH, analytic number theory, or discrete replacement of the
 continuous spectral integral is used. Angular frequency is normalized explicitly.
+Thus the Fourier and max-kernel formulas describe the same full signed energy.
 -/
 
 noncomputable section
