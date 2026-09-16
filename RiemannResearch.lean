@@ -1,3 +1,4 @@
+import RiemannResearch.Probability.ConditionalIIDWeightedEnergy
 import RiemannResearch.Probability.ConditionalIIDMarginal
 import RiemannResearch.Probability.ConditionalIIDSampleMean
 import RiemannResearch.Probability.ConditionalIIDPrimeRows
