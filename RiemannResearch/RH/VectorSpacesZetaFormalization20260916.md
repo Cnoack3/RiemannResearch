@@ -79,10 +79,11 @@ mathematics, but their application has not been formally supplied here.
    The continuation update below proves the critical x^-2 moment formulas on
    actual positive intervals, uses Mathlib's actual von Mangoldt coefficients,
    and identifies finite cumulative sums with the Chebyshev sum under the
-   explicit CompleteThrough support condition. A global prime-power
-   enumeration with that property, identification of the real step function
-   on every interval, general x^(-s-1) moments, and the global RH criterion
-   remain Open (formalization).
+   explicit CompleteThrough support condition. The later update in
+   SignedArithmeticBoundVerification20260916.md supplies the global enumeration
+   and the general power-weight moments. Identification of the real step
+   function inside every interval and the global RH criterion remain Open
+   (formalization).
 
 4. Open mathematical obligation: the actual global centered arithmetic bound.
    Nothing here proves integral_1^X (psi(x)-x)^2/x^2 dx = O(log X), or all
@@ -217,3 +218,23 @@ Chebyshev-identification, and total-reset theorems reports only propext,
 Classical.choice, and Quot.sound. Substantive local hypotheses remain visible
 in theorem types and are not discharged by that audit. The single final
 push-enabled checkpoint validates the actual module graph and publication.
+
+
+## Later update: actual global enumeration and unconditional energy bounds
+
+See `RH/SignedArithmeticBoundVerification20260916.md` for exact statements.
+`RH/PrimePowerEnumeration.lean` now discharges the global enumeration and
+endpoint Chebyshev-identification provider: strict monotonicity, positivity,
+complete support, the first value 2, and q_(i+1)<=2*q_i are proved.
+`Analysis/PowerCellEnergy.lean` supplies the actual general power-weight
+interval integral. `RH/PrimePowerEnergyBounds.lean` proves the unconditional
+critical bound A_N<=(log 4+4)^2*(q_N-2), and uniform damped prefix boundedness
+and summability for every s>2. The same critical reference mean and reset
+corrections are retained.
+
+**Still Open (mathematics):** `SignedArithmeticDampedBound` requires every
+s=1+epsilon>1, including 1<s<=2. `SignedArithmeticSubpolynomialBound` requires
+every positive growth exponent, including 0<delta<1. These are explicit
+proposition definitions with no proof provided. Neither the estimates here
+nor the completed enumeration prove them. The Mellin/RH equivalence remains
+Open (formalization), separately from the mathematical bound.

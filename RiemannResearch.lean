@@ -9,6 +9,9 @@ import RiemannResearch.Analysis.ReciprocalCellEnergy
 import RiemannResearch.Analysis.CumulativeEnergySummability
 import RiemannResearch.Analysis.GapEnergySummability
 import RiemannResearch.RH.PrimePowerCriticalEnergy
+import RiemannResearch.Analysis.PowerCellEnergy
+import RiemannResearch.RH.PrimePowerEnumeration
+import RiemannResearch.RH.PrimePowerEnergyBounds
 import RiemannResearch.RH.ZetaKernelObstruction
 import RiemannResearch.RH.SingleCorrectionObstruction
 import RiemannResearch.RH.CoupledCorrectionRHBridge

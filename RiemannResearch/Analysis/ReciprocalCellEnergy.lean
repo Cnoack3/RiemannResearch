@@ -195,4 +195,44 @@ theorem intervalRemainder_cubic_bounds {a b : ℝ} (ha : 0 < a) (hab : a < b) :
       intervalRemainder a b ≤ (b - a) ^ 3 / (12 * a ^ 2) :=
   ⟨cubic_le_intervalRemainder ha hab, intervalRemainder_le_cubic ha hab⟩
 
+/-! Elementary interval bounds used by the unconditional arithmetic estimates. -/
+
+theorem interval_excess_le_linear_of_level_bound {a b c K : ℝ}
+    (ha : 0 < a) (hab : a < b) (hK : 1 ≤ K) (hc0 : 0 ≤ c) (hc : c ≤ K * a) :
+    intervalWeight a b * (c - intervalMean a b) ^ 2 ≤ K ^ 2 * (b - a) := by
+  have hK0 : 0 ≤ K := le_trans zero_le_one hK
+  have hi : (∫ x in a..b, (c - x) ^ 2 / x ^ 2) ≤ K ^ 2 * (b - a) := by
+    calc
+      _ ≤ ∫ x in a..b, K ^ 2 := by
+        apply intervalIntegral.integral_mono_on hab.le
+          (intervalIntegrable_weighted_residual_square ha hab c) intervalIntegrable_const
+        intro x hx
+        have hx0 : 0 < x := lt_of_lt_of_le ha hx.1
+        have hcx : c ≤ K * x := hc.trans (mul_le_mul_of_nonneg_left hx.1 hK0)
+        have hxK : x ≤ K * x := by nlinarith
+        have hs : (c - x) ^ 2 ≤ (K * x) ^ 2 :=
+          sq_le_sq' (by linarith) (by linarith)
+        apply (div_le_iff₀ (sq_pos_of_pos hx0)).mpr
+        nlinarith
+      _ = _ := by simp [mul_comm]
+  rw [integral_residual_square_split ha hab c] at hi
+  linarith [intervalRemainder_nonneg ha hab]
+
+
+theorem intervalMean_nonneg {a b : ℝ} (ha : 0 < a) (hab : a < b) :
+    0 ≤ intervalMean a b := by
+  apply div_nonneg _ (intervalWeight_pos ha hab).le
+  exact Real.log_nonneg ((le_div_iff₀ ha).mpr (by linarith))
+
+theorem intervalMean_le_right {a b : ℝ} (ha : 0 < a) (hab : a < b) :
+    intervalMean a b ≤ b := by
+  have hb : 0 < b := ha.trans hab
+  apply (div_le_iff₀ (intervalWeight_pos ha hab)).mpr
+  have he : b * intervalWeight a b = b / a - 1 := by
+    unfold intervalWeight
+    field_simp
+  rw [he]
+  exact Real.log_le_sub_one_of_pos (div_pos hb ha)
+
+
 end RiemannResearch.Analysis.ReciprocalCellEnergy

@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Signed arithmetic bound: complete enumeration and unconditional range (2026-09-16)
+
+Exact statements and remaining targets: `RH/SignedArithmeticBoundVerification20260916.md`.
+
+**Established:** `RH/PrimePowerEnumeration` proves a complete increasing
+prime-power enumeration starting at 2, its factor-two successor bound, and
+`enumerated_cumulative_eq_psi`. The earlier global enumeration provider is
+discharged. `Analysis/PowerCellEnergy` identifies the actual damped interval
+weight with its integral. `RH/PrimePowerEnergyBounds` proves
+`enumerated_critical_energy_le_linear`, `enumerated_damped_energy_le`, and
+`enumerated_damped_energy_summable`: A_N <= (log 4+4)^2*(q_N-2), and the
+s-damped energy is at most (log 4+4)^2*2^(2-s)/(s-2) for every s>2.
+`actual_damped_signed_abel_identity` and `actual_damped_total_reset_cost`
+retain the full signed form and the same canonical corrections.
+
+**Open (mathematics):** the explicit propositions
+`SignedArithmeticDampedBound` (every s>1) and
+`SignedArithmeticSubpolynomialBound` (every positive growth exponent).
+The verified baseline range s>2 does not prove these targets.
+**Open (formalization):** the Mellin/RH equivalence, the global geometric
+prime-gap providers, and the real step-function identification within cells.
+No RH hypothesis, new axiom, or proof placeholder is introduced.
+
 ### Prime-power interval energy and boundary-reset continuation (2026-09-16)
 
 Source and exact declarations: the continuation section of
@@ -54,8 +77,9 @@ Hilbert zeta kernel using the actual value zeta(0)=-1/2.
 the actual zero-ordinate equidistribution provider is **Open (formalization)**.
 `continued_eval_not_continuousWithinAt_zero` has an explicit arithmetic
 continuation identity; its actual eta/Euler-series provider is **Open (formalization)**.
-The general weighted Chebyshev specialization and global enumeration are **Open
-(formalization)**; the critical finite specialization is updated above. The global
+The global enumeration and power-weight moments are discharged in the later
+signed arithmetic bound entry above; the remaining Chebyshev specialization is
+**Open (formalization)**. The global
 arithmetic energy bound is **Open (mathematics)**.
 The Fock realization and full covariance asymptotics are not formalized here.
 No RH proof, unproved provider declaration, or project-local axiom is added.
