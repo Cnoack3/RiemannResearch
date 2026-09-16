@@ -142,5 +142,43 @@ theorem riemannHypothesis_of_legal_noiseSignalRatio
   riemannHypothesis_of_hilbertOne_mem_legalClosure A hA
     ((hilbertOne_mem_legalClosure_iff_noiseSignalRatio A hA).mpr happrox)
 
+/-- Arbitrarily small full Pareto error of finite legal packets implies
+Mathlib's actual Riemann hypothesis. The only analytic approximation input
+is the displayed epsilon condition; the Mellin and reflection bridges are proved. -/
+theorem riemannHypothesis_of_legal_paretoError
+    (A : Set ℕ) (hA : ∀ a ∈ A, 0 < a)
+    (happrox : ∀ ε : ℝ, 0 < ε → ∃ g : ℕ → ℝ,
+      g ∈ legalSeedSpan A ∧ paretoError g < ε) : RiemannHypothesis :=
+  riemannHypothesis_of_hilbertOne_mem_legalClosure A hA
+    ((hilbertOne_mem_legalClosure_iff_paretoError A hA).mpr happrox)
+
+/-- Sequential version of the complete Pareto approximation-to-RH chain.
+No rate, uniform coefficient bound, or pointwise convergence assumption is needed. -/
+theorem riemannHypothesis_of_legal_paretoError_tendsto
+    (A : Set ℕ) (hA : ∀ a ∈ A, 0 < a)
+    (g : ℕ → ℕ → ℝ) (hg : ∀ j, g j ∈ legalSeedSpan A)
+    (hlim : Filter.Tendsto (fun j => paretoError (g j))
+      Filter.atTop (nhds 0)) : RiemannHypothesis := by
+  apply riemannHypothesis_of_legal_paretoError A hA
+  intro ε hε
+  obtain ⟨j, hj⟩ := (hlim.eventually (gt_mem_nhds hε)).exists
+  exact ⟨g j, hg j, hj⟩
+
+/-- The original mean-one, vanishing-variance criterion implies actual RH.
+Summability follows internally from finite legality at every index. -/
+theorem riemannHypothesis_of_legal_meanOne_variance_tendsto
+    (A : Set ℕ) (hA : ∀ a ∈ A, 0 < a)
+    (g : ℕ → ℕ → ℝ) (hg : ∀ j, g j ∈ legalSeedSpan A)
+    (hmean : ∀ j, paretoMean (g j) = 1)
+    (hlim : Filter.Tendsto (fun j => paretoVariance (g j))
+      Filter.atTop (nhds 0)) : RiemannHypothesis := by
+  apply riemannHypothesis_of_legal_paretoError_tendsto A hA g hg
+  have he : (fun j => paretoError (g j)) = fun j => paretoVariance (g j) := by
+    funext j
+    obtain ⟨C, hC⟩ := legalSeedSpan_bounded A hA (hg j)
+    rw [paretoError_eq_variance_add_bias_sq hC, hmean j]
+    simp
+  rwa [he]
+
 end
 end RiemannResearch.RH.Pareto

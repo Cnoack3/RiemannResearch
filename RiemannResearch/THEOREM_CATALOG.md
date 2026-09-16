@@ -647,6 +647,7 @@ actual zeta function, and all positive integer dilations. The converse
 | `riemannHypothesis_of_twoSeed_closure` | The complete 2,3 approximation-to-RH implication. This does not establish target membership or the reverse implication. |
 | `legalClosure_distance_sq_lower_bound_of_zeta` | Full weighted squared distance is at least (2 Re(s)−1)/‖s‖² for every vector in the closed legal space at a hypothetical such zero. |
 | `arithmeticZeroObstruction` | Discharges the previously open `ArithmeticZeroObstructionTarget`, including every finite two-seed legal vector. |
+| `riemannHypothesis_of_legalClosure_eq_top` | Density in the actual Pareto Hilbert space implies Mathlib's RH for any positive seed set. Added 16 September 2026. |
 
 
 The converse now has the following proved supporting components:
@@ -1209,7 +1210,7 @@ discussion remains incompletely formalized and RH remains unproved.
 | Analysis.CenteredTransformPlancherel | 4 established theorems: actual centered/Fourier convention, spectral integrability and full-line Plancherel with normalization 1/(2π), including smooth-superexponential functions |
 | RH.ParetoApproximationRatio | 3 established declarations: exact bias/variance error and equivalence of two small-error properties in a scalar-closed bounded class; existence of approximations remains Open |
 | RH.ParetoFiniteSchur | 20 established finite-control identities for the complete Pareto law, with explicit invertible Gram action; all-scale variance convergence remains Open |
-| RH.ParetoLegalApproximationClosure | 6 established theorems: exact Hilbert norm/error identity, equivalence of legal closure with small error/noise ratio, prime-pair packet formulation, and actual RH from arbitrarily small legal noise/signal ratio using the proved Mellin bridge |
+| RH.ParetoLegalApproximationClosure | 9 established theorems: exact Hilbert norm/error identity, equivalence of legal closure with small error/noise ratio, prime-pair packet formulation, and actual RH from legal small error, error convergence, mean-one variance convergence, or small noise/signal ratio using the proved Mellin bridge. The approximation hypotheses remain unproved; no RH-bridge hypothesis is required. |
 | Analysis.CountableLaplaceDetector | 10 established declarations: countable entire zeros, simultaneous real tilt, normalized compact bump, transform shift and smooth compact detection of a specified countable spectrum |
 | RH.CountableTiltDetector | Established existence of a nonzero smooth compact pole-annihilating countable-spectrum detector; actual-zeta specialization is now supplied by RH.CountableZetaDetector; original whole-strip detector remains Open |
 | RH.CountableZetaDetector | Standard actual-zeta zero countability and an unconditional smooth compact polar-annihilating detector for all nontrivial zeta zeros; no growth estimate asserted |

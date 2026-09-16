@@ -113,5 +113,14 @@ theorem arithmeticZeroObstruction : ArithmeticZeroObstructionTarget := by
   rwa [norm_sub_rev] at h
 
 
+/-- Density of the actual legal space in the Pareto Hilbert norm implies
+Mathlib's Riemann hypothesis, with no separate criterion hypothesis. -/
+theorem riemannHypothesis_of_legalClosure_eq_top
+    (A : Set ℕ) (hA : ∀ a ∈ A, 0 < a)
+    (hdense : hilbertLegalClosure A = ⊤) : RiemannHypothesis := by
+  apply riemannHypothesis_of_hilbertOne_mem_legalClosure A hA
+  rw [hdense]
+  trivial
+
 end
 end RiemannResearch.RH.Pareto
