@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Approximate heads and regularized conditional energy (2026-09-17)
+
+Source and precise scope: `RH/ApproximateHeadRegularization20260917.md`.
+Fourteen theorems extend `Analysis/WeightedComplexPairing` and add
+`RH/ConditionalMeanApproximateHeads` and `RH/ConditionalMeanRegularizedHeads`.
+
+**Established:** a signed head-error/tail-energy tradeoff for the actual legal
+witnesses; a support-independent positive regularized-cost obstruction at every
+hypothetical right-half-plane zero; exact heads have zero truncated error; full
+conditional-mean approximation implies the regularized feasibility property.
+
+**Conditional research reductions:** vanishing weighted approximate-head error
+and sparse subpolynomial full conditional energy imply mathlib RH. A sparse
+O(N^alpha) bound confines nontrivial zeros to [(1-alpha)/2,(1+alpha)/2].
+`ArbitrarilySmallRegularizedHeads A` also implies mathlib RH, with every
+arithmetic feasibility requirement explicit in the theorem type.
+
+**Open:** a provider for `ArbitrarilySmallRegularizedHeads` for the actual
+positive or two-seed span, or an actual family satisfying the sparse growth and
+head-error conditions. The existing canonical O(N) bound has not been improved.
+No unconditional RH proof or RH-to-density equivalence is claimed.
+
 ### Conditional iid and Cesàro variational completion (2026-09-17)
 
 Exact scope and verification evidence:

@@ -1,3 +1,5 @@
+import RiemannResearch.RH.ConditionalMeanApproximateHeads
+import RiemannResearch.RH.ConditionalMeanRegularizedHeads
 import RiemannResearch.RH.ConditionalMeanTailNonattainment
 import RiemannResearch.RH.FiniteResidueHeadSurjectivity
 import RiemannResearch.RH.ConditionalResidueGram

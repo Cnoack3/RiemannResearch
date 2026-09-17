@@ -67,4 +67,56 @@ theorem pairing_norm_sq_le (w : ℕ → ℝ) (hw : ∀ n, 0 < w n) (b M : ℕ �
     · exact tsum_nonneg (fun n => div_nonneg (sq_nonneg _) (hw n).le)
   exact le_of_tendsto (hp.hasSum.tendsto_sum_nat.norm.pow 2) (Eventually.of_forall hbound)
 
+/-- A zero signed pairing forces either a prefix mismatch or tail energy.
+The prefix mismatch and tail pairing are separated before Cauchy--Schwarz.
+Source: the proof combines the two signed pairing bounds in this module. -/
+theorem prefix_obstruction_of_pairing_zero
+    (w : ℕ → ℝ) (hw : ∀ n, 0 < w n) (b M : ℕ → ℂ)
+    (hb : Summable (fun n => ‖b n‖ ^ 2 / w n))
+    (hM : Summable (fun n => w n * ‖M n‖ ^ 2))
+    (hz : (∑' n : ℕ, b n * M n) = 0) (N : ℕ) :
+    ‖∑ n ∈ Finset.range N, b n‖ ^ 2 ≤
+      2 * (∑' n : ℕ, ‖b n‖ ^ 2 / w n) *
+        (∑ n ∈ Finset.range N, w n * ‖1 - M n‖ ^ 2) +
+      2 * (∑' k : ℕ, ‖b (k + N)‖ ^ 2 / w (k + N)) *
+        (∑' n : ℕ, w n * ‖M n‖ ^ 2) := by
+  have hsplit := (summable_pairing w hw b M hb hM).sum_add_tsum_nat_add N
+  rw [hz] at hsplit
+  have heq : (∑ n ∈ Finset.range N, b n) =
+      (∑ n ∈ Finset.range N, b n * (1 - M n)) -
+        (∑' k : ℕ, b (k + N) * M (k + N)) := by
+    simp only [mul_sub, mul_one, Finset.sum_sub_distrib]
+    linear_combination hsplit
+  have hn := norm_sub_le
+    (∑ n ∈ Finset.range N, b n * (1 - M n))
+    (∑' k : ℕ, b (k + N) * M (k + N))
+  rw [← heq] at hn
+  have hsq : ‖∑ n ∈ Finset.range N, b n‖ ^ 2 ≤
+      2 * ‖∑ n ∈ Finset.range N, b n * (1 - M n)‖ ^ 2 +
+      2 * ‖∑' k : ℕ, b (k + N) * M (k + N)‖ ^ 2 := by
+    nlinarith [norm_nonneg (∑ n ∈ Finset.range N, b n),
+      norm_nonneg (∑ n ∈ Finset.range N, b n * (1 - M n)),
+      norm_nonneg (∑' k : ℕ, b (k + N) * M (k + N)),
+      sq_nonneg (‖∑ n ∈ Finset.range N, b n * (1 - M n)‖ -
+        ‖∑' k : ℕ, b (k + N) * M (k + N)‖)]
+  have hhead := finite_pairing_norm_sq_le w hw b (fun n => 1 - M n) (Finset.range N)
+  have hhead' : ‖∑ n ∈ Finset.range N, b n * (1 - M n)‖ ^ 2 ≤
+      (∑' n : ℕ, ‖b n‖ ^ 2 / w n) *
+        (∑ n ∈ Finset.range N, w n * ‖1 - M n‖ ^ 2) := by
+    exact hhead.trans (mul_le_mul_of_nonneg_right
+      (sum_le_hasSum _ (fun n _ => div_nonneg (sq_nonneg _) (hw n).le) hb.hasSum)
+      (Finset.sum_nonneg (fun n _ => mul_nonneg (hw n).le (sq_nonneg _))))
+  have hbTail : Summable (fun k => ‖b (k + N)‖ ^ 2 / w (k + N)) := hb.comp_injective (fun _ _ h => Nat.add_right_cancel h)
+  have hMTail : Summable (fun k => w (k + N) * ‖M (k + N)‖ ^ 2) := hM.comp_injective (fun _ _ h => Nat.add_right_cancel h)
+  have htail := pairing_norm_sq_le (fun k => w (k + N)) (fun k => hw (k + N))
+    (fun k => b (k + N)) (fun k => M (k + N)) hbTail hMTail
+  have hesplit := hM.sum_add_tsum_nat_add N
+  have hpre_nonneg : 0 ≤ ∑ n ∈ Finset.range N, w n * ‖M n‖ ^ 2 :=
+    Finset.sum_nonneg (fun n _ => mul_nonneg (hw n).le (sq_nonneg _))
+  have htail_le : (∑' k : ℕ, w (k + N) * ‖M (k + N)‖ ^ 2) ≤
+      ∑' n : ℕ, w n * ‖M n‖ ^ 2 := by linarith
+  have htail' := htail.trans (mul_le_mul_of_nonneg_left htail_le
+    (tsum_nonneg (fun k => div_nonneg (sq_nonneg _) (hw (k + N)).le)))
+  nlinarith
+
 end RiemannResearch.Analysis.WeightedPairing
