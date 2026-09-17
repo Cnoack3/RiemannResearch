@@ -890,3 +890,6 @@ import RiemannResearch.RH.LogarithmicCorrectionTarget
 import RiemannResearch.RH.CoupledResidualAnalyticTargets
 import RiemannResearch.RH.ActualResidualLaplace
 import RiemannResearch.RH.BurnolDyadicComparison
+import RiemannResearch.Analysis.CesaroPulseObstruction
+import RiemannResearch.Probability.PrimeExponentMatrix
+import RiemannResearch.Probability.ConditionalIIDLatentSupport
