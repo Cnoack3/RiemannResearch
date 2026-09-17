@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Conditional iid and Cesàro variational completion (2026-09-17)
+
+Detailed scope and remaining obligations: `RH/ConditionalMeanFormalization20260917.md`.
+Mathematical source: `RH/Conditional_IID_Cesaro_Mathematical_Completion_2026-09-17.md`.
+
+**Established:** `RH/ConditionalMeanHeadMinimum` constructs actual finite legal
+interpolants and the genuine infimum E_N. It proves monotonicity, the compulsory
+lower bound N/(N+2), exact head/tail splitting, the 8/(N+2) error bound for
+energy-at-most-one heads, and bounded E_N implies actual mathlib RH.
+`RH/CesaroResidueMean` gives the exact quotient/remainder mean and the 1/2 bound.
+`RH/ConditionalMeanCorrectionObstruction` proves the finite conditional-mean
+obstructions α²Y/3 and β⁵/(9216 D⁴), including the actual floor repair.
+`Analysis/FiniteHilbertConstraints` proves attained constrained minima using the
+actual Gram inverse. `Analysis/FiniteConstraintClosure` proves exact affine
+repair and constrained closure under a continuous right-inverse hypothesis.
+
+**Open mathematics:** a uniform/subpolynomial bound for actual signed energies.
+**Open formalization:** the classical RH-to-density provider, the concrete
+arithmetic Gram specialization, canonical Möbius quantitative bound, and the
+operator/probability extensions listed in the detailed scope record.
+No unconditional RH theorem or custom axiom is introduced.
+
 ### Coupled Pareto corrections: recovery and completion (2026-09-16)
 
 Coverage and exact remaining obligations:
