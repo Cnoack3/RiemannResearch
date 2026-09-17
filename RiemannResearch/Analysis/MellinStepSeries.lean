@@ -92,16 +92,38 @@ private theorem integral_step_cell (f : ThresholdHilbert) (s : ℂ) (hs : s ≠ 
       rw [cell_floor k hx]
     _ = _ := by rw [integral_const_mul, integral_power_cell s hs]
 
-/-- A genuine HasSum equality connects the first-difference coefficients to the existing Mellin integral. -/
-theorem hasSum_first_mellin_pairing (f : ThresholdHilbert) (s : ℂ)
-    (hs : (1 / 2 : ℝ) < s.re) :
+/-- A bounded physical step has an integrable Mellin integrand throughout Re(s)>0.
+Source: user-provided mathematical completion, Section 5. -/
+theorem stepMellin_integrable_of_bounded (f : ThresholdHilbert) (B : ℝ)
+    (hB : ∀ n, |hilbertSequence f n| ≤ B) (s : ℂ) (hs : 0 < s.re) :
+    IntegrableOn (fun x : ℝ => (hilbertSequence f ⌊x⌋₊ : ℂ) *
+      (x : ℂ) ^ (-s - 1)) (Ioi 1) := by
+  have hmeas : Measurable (fun x : ℝ => (hilbertSequence f ⌊x⌋₊ : ℂ) *
+      (x : ℂ) ^ (-s - 1)) :=
+    (Complex.continuous_ofReal.measurable.comp
+      ((measurable_of_countable (hilbertSequence f)).comp Nat.measurable_floor)).mul
+      (Complex.continuous_ofReal.measurable.pow_const (-s - 1))
+  have hi := (integrableOn_Ioi_rpow_of_lt
+    (by linarith : -s.re - 1 < -1) (by norm_num : (0 : ℝ) < 1)).const_mul B
+  apply hi.mono' hmeas.aestronglyMeasurable
+  filter_upwards [ae_restrict_mem measurableSet_Ioi] with x hx
+  have hx0 : 0 < x := lt_trans zero_lt_one hx
+  rw [norm_mul, Complex.norm_real, Real.norm_eq_abs,
+    Complex.norm_cpow_eq_rpow_re_of_pos hx0]
+  simp only [Complex.sub_re, Complex.neg_re, Complex.one_re]
+  exact mul_le_mul_of_nonneg_right (hB ⌊x⌋₊) (Real.rpow_nonneg hx0.le _)
+
+/-- Countable cell integration supplies an actual HasSum whenever its full integrand is integrable. -/
+theorem hasSum_first_mellin_pairing_of_integrable (f : ThresholdHilbert) (s : ℂ)
+    (hs0 : s ≠ 0)
+    (hint : IntegrableOn (fun x : ℝ => (hilbertSequence f ⌊x⌋₊ : ℂ) *
+      (x : ℂ) ^ (-s - 1)) (Ioi 1)) :
     HasSum (fun k : ℕ => mellinFirst s (k + 1) * (hilbertSequence f (k + 1) : ℂ))
       (s * paretoMellin f s) := by
-  have hs0 : s ≠ 0 := by intro h; norm_num [h] at hs
   have hi : IntegrableOn
       (fun x : ℝ => (hilbertSequence f ⌊x⌋₊ : ℂ) * (x : ℂ) ^ (-s - 1)) (⋃ k, cell k) := by
     rw [cell_union, integrableOn_Ici_iff_integrableOn_Ioi]
-    exact stepMellin_integrable f s hs
+    exact hint
   have h := hasSum_integral_iUnion (fun k => (show MeasurableSet (cell k) from measurableSet_Ico))
     cell_disjoint hi
   simp_rw [integral_step_cell f s hs0] at h
@@ -114,5 +136,22 @@ theorem hasSum_first_mellin_pairing (f : ThresholdHilbert) (s : ℂ)
     field_simp
   rw [he] at hm
   exact hm
+
+/-- The original all-Hilbert statement, with its existing name and signature preserved. -/
+theorem hasSum_first_mellin_pairing (f : ThresholdHilbert) (s : ℂ)
+    (hs : (1 / 2 : ℝ) < s.re) :
+    HasSum (fun k : ℕ => mellinFirst s (k + 1) * (hilbertSequence f (k + 1) : ℂ))
+      (s * paretoMellin f s) := by
+  have hs0 : s ≠ 0 := by intro h; norm_num [h] at hs
+  exact hasSum_first_mellin_pairing_of_integrable f s hs0 (stepMellin_integrable f s hs)
+
+/-- Bounded physical vectors have the actual first-difference series on the full positive half-plane. -/
+theorem hasSum_first_mellin_pairing_of_bounded (f : ThresholdHilbert) (B : ℝ)
+    (hB : ∀ n, |hilbertSequence f n| ≤ B) (s : ℂ) (hs : 0 < s.re) :
+    HasSum (fun k : ℕ => mellinFirst s (k + 1) * (hilbertSequence f (k + 1) : ℂ))
+      (s * paretoMellin f s) := by
+  have hs0 : s ≠ 0 := by intro h; simp [h] at hs
+  exact hasSum_first_mellin_pairing_of_integrable f s hs0
+    (stepMellin_integrable_of_bounded f B hB s hs)
 
 end RiemannResearch.Analysis.Cesaro
