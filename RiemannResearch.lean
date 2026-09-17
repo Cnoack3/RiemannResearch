@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.ExhaustiveProjectionWalk
+import RiemannResearch.RH.ParetoExhaustiveWalk
 import RiemannResearch.RH.ConditionalMeanApproximateHeads
 import RiemannResearch.RH.ConditionalMeanRegularizedHeads
 import RiemannResearch.RH.ConditionalMeanTailNonattainment

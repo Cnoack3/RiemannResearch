@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Exhaustive Pareto packet walks and deterministic residuals (2026-09-17)
+
+Modules: `Analysis/ExhaustiveProjectionWalk` and `RH/ParetoExhaustiveWalk`.
+Twenty-five theorems formalize finite sampled spans, monotonicity, exhaustive
+projection convergence, order-independent limiting squared error, exact
+Pythagorean step gains, accumulated gain limits, and their actual legal
+Pareto interpretation.
+
+**Established:** every surjective sampling order has the same limiting
+projection and error; every finite legal walk error is positive; vanishing
+error is equivalent to nonsummability of the actual relative gains.
+A hypothetical zero with Re(s)>1/2 gives the explicit error floor
+(2 Re(s)-1)/|s|^2 at every step and at the deterministic limit.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_legalWalk_nonsummable_gain` concludes actual mathlib
+`RiemannHypothesis` with only the displayed actual-gain nonsummability
+obligation; `riemannHypothesis_of_legalWalk_tendsto` needs no exhaustive
+sampling assumption.
+
+**Open:** proving that actual limiting legal error is zero, or proving
+nonsummability of the actual gains. No uniform arithmetic gain estimate,
+unconditional RH proof, or Lean RH-to-Nyman converse is asserted.
+
+The separate research companion
+`RH_Random_Walk_Nyman_Pareto_CRT_2026-09-17.md` proves an IID rank-one
+random-correction convergence theorem in ordinary mathematics and combines
+it with Baez-Duarte's classical full-dictionary criterion. That stochastic
+trace proof and the classical reverse implication are not Lean-verified.
+The numerical investigation consists of one 128-step PCG64 trajectory,
+seed 20260917, with 27 distinct two-seed packets (numerical rank 22);
+floating-point results are not formal numeric certificates.
+
 ### Approximate heads and regularized conditional energy (2026-09-17)
 
 Source and precise scope: `RH/ApproximateHeadRegularization20260917.md`.
