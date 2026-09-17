@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Deterministic exact heads and residual amplification (2026-09-17)
+
+Module: `RH/ParetoExactHeadResidual` (seven public theorems).
+
+**Established:** a residual vanishing through coordinate N has its entire
+Mellin transform and full energy in the tail beyond N+1. If zeta(s)=0,
+Re(s)>1/2, and s!=1, every legal exact-head approximant f satisfies
+||1-f||^2 >= (2 Re(s)-1)(N+1)^(2 Re(s)-1)/|s|^2. This is a residual
+bound without the oscillating factor in the earlier bound on ||f||^2.
+A strictly smaller complete error certificate excludes the indicated zero.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_bounded_exact_head_residuals` concludes actual
+Mathlib RH from a family legal at every N, exactly one on coordinates 1..N,
+with one uniform bound on the actual full squared residual norm.
+The uniform-bound provider remains **Open**. All assumptions occur in the
+declaration type; no RH converse or arithmetic boundedness axiom is added.
+
+The separate ordinary mathematical report
+`RH_Deterministic_Exact_Head_Tail_Repair_2026-09-17.md` identifies the
+known divergence of raw Mobius heads, derives their complete head-preserving
+tail correction basis and signed Gram optimum, and records 15 rational
+finite-witness certificates including infinite-tail bounds. Those arithmetic
+basis proofs and Python integer certificates are not claimed as Lean-verified.
+Random draws in this continuation: zero.
+
 ### Stochastic legal hitting and invariant Mellin obstructions (2026-09-17)
 
 Module: `RH/ParetoStochasticHitting` (eight theorems).
