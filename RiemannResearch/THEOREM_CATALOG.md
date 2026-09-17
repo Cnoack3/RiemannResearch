@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Stochastic legal hitting and invariant Mellin obstructions (2026-09-17)
+
+Module: `RH/ParetoStochasticHitting` (eight theorems).
+
+**Established:** at any hypothetical zero s with Re(s)>1/2, every legal
+residual has Mellin value 1/s. For any random sequence of a.e. legal
+approximants, the lower squared-error bound (2 Re(s)-1)/|s|^2 holds
+simultaneously at every time, at every finite random observation time,
+and in expectation when that actual squared error is integrable.
+The event of ever crossing a smaller error threshold has measure zero.
+No independence, adaptedness, or extra moments are assumed in the
+pathwise or hitting conclusions.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_positive_legal_hitting` concludes actual mathlib RH
+if every positive squared-error tolerance is ever reached with positive
+measure. The required hitting property remains **Open**. The proof does
+not assert that repeated sampling forces zero limiting error.
+
+The separate ordinary mathematical continuation
+`RH_Stochastic_Attack_and_Single_Atom_Obstruction_2026-09-17.md` proves
+a finite-witness drift bound and a linear lower bound for the second moment
+of single-atom random estimators fitting the first N coordinates. These
+ordinary stochastic/Mobius arguments are not claimed as Lean-verified.
+
 ### Exhaustive Pareto packet walks and deterministic residuals (2026-09-17)
 
 Modules: `Analysis/ExhaustiveProjectionWalk` and `RH/ParetoExhaustiveWalk`.

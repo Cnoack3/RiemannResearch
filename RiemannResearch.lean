@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ParetoStochasticHitting
 import RiemannResearch.Analysis.ExhaustiveProjectionWalk
 import RiemannResearch.RH.ParetoExhaustiveWalk
 import RiemannResearch.RH.ConditionalMeanApproximateHeads
