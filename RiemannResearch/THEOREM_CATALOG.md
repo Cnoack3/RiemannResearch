@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Global prime-power enumeration and real cells (2026-09-18)
+
+Module: `RH/PrimePowerEnumeration`.
+The existing strict enumeration of the nonzero von Mangoldt support,
+its initial value 2, and endpoint completeness have been reverified.
+
+**Established without domain-specific hypotheses:**
+- `primePowerEnumeration_existsUnique_iff`: a natural number occurs
+  exactly once if and only if it is a prime power.
+- `primePowerEnumeration_tendsto_atTop`: the enumeration tends to infinity.
+- `primePowerEnumeration_existsUnique_cell`: every real x >= 2 lies
+  in exactly one half-open cell [q_n,q_(n+1)).
+- `vonMangoldt_eq_zero_between_enumerated`: the open interior contains
+  no omitted nonzero coefficient.
+- `enumerated_cumulative_eq_psi_on_cell`: the cumulative actual jumps
+  equal Mathlib's Chebyshev psi throughout each half-open real cell.
+
+This closes both the global enumeration obligation and the real
+step-function identification obligation. It does not prove the external
+sharp prime-gap estimates, the Mellin/RH links, or the signed energy bound.
+
 ### Actual prime-gap inputs and dyadic energy (2026-09-18)
 
 Modules: `NumberTheory/PrimeGapProviders`, `Analysis/GapEnergySummability`.

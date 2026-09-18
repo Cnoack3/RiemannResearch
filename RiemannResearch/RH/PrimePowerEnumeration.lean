@@ -146,4 +146,98 @@ theorem primePowerEnumeration_succ_le_twice (i : ℕ) :
   exact hle.trans hpow
 
 
+/-- Every prime power occurs exactly once, and no other integer occurs. -/
+theorem primePowerEnumeration_existsUnique_iff (k : ℕ) :
+    (∃! n, primePowerEnumeration n = k) ↔ IsPrimePow k := by
+  constructor
+  · rintro ⟨n, hn, _⟩
+    rw [← hn]
+    exact primePowerEnumeration_isPrimePow n
+  · intro hk
+    obtain ⟨n, hn⟩ := Nat.subset_range_nth
+      (p := fun k => ArithmeticFunction.vonMangoldt k ≠ 0)
+      (ArithmeticFunction.vonMangoldt_ne_zero_iff.mpr hk)
+    refine ⟨n, hn, ?_⟩
+    intro m hm
+    exact primePowerEnumeration_strictMono.injective (hm.trans hn.symm)
+
+/-- The enumeration has no finite accumulation cutoff: it tends to infinity. -/
+theorem primePowerEnumeration_tendsto_atTop :
+    Filter.Tendsto primePowerEnumeration Filter.atTop Filter.atTop :=
+  primePowerEnumeration_strictMono.tendsto_atTop
+
+/-- Every real x >= 2 belongs to exactly one half-open prime-power cell. -/
+theorem primePowerEnumeration_existsUnique_cell (x : ℝ) (hx : 2 ≤ x) :
+    ∃! n, (primePowerEnumeration n : ℝ) ≤ x ∧
+      x < (primePowerEnumeration (n + 1) : ℝ) := by
+  have hex : ∃ k, x < (primePowerEnumeration k : ℝ) := by
+    obtain ⟨k, hk⟩ := exists_nat_gt x
+    refine ⟨k, hk.trans_le ?_⟩
+    exact Nat.cast_le.mpr (primePowerEnumeration_strictMono.id_le k)
+  let k := Nat.find hex
+  have hk : x < (primePowerEnumeration k : ℝ) := Nat.find_spec hex
+  have hk0 : k ≠ 0 := by
+    intro he
+    rw [he, primePowerEnumeration_zero] at hk
+    norm_num at hk
+    linarith
+  obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero hk0
+  have hleft : (primePowerEnumeration n : ℝ) ≤ x := by
+    apply le_of_not_gt
+    exact Nat.find_min hex (by omega : n < k)
+  have hright : x < (primePowerEnumeration (n + 1) : ℝ) := by
+    simpa only [hn] using hk
+  refine ⟨n, ⟨hleft, hright⟩, ?_⟩
+  intro m hm
+  by_contra hne
+  rcases lt_or_gt_of_ne hne with hmn | hnm
+  · have hle : (primePowerEnumeration (m + 1) : ℝ) ≤
+        (primePowerEnumeration n : ℝ) :=
+      Nat.cast_le.mpr (primePowerEnumeration_strictMono.monotone (Nat.succ_le_of_lt hmn))
+    linarith [hm.2]
+  · have hle : (primePowerEnumeration (n + 1) : ℝ) ≤
+        (primePowerEnumeration m : ℝ) :=
+      Nat.cast_le.mpr (primePowerEnumeration_strictMono.monotone (Nat.succ_le_of_lt hnm))
+    linarith [hm.1]
+
+/-- No nonzero von Mangoldt coefficient lies strictly between consecutive cells. -/
+theorem vonMangoldt_eq_zero_between_enumerated {n k : ℕ}
+    (hleft : primePowerEnumeration n < k)
+    (hright : k < primePowerEnumeration (n + 1)) :
+    ArithmeticFunction.vonMangoldt k = 0 := by
+  by_contra hk
+  obtain ⟨j, hj⟩ := Nat.subset_range_nth
+    (p := fun k => ArithmeticFunction.vonMangoldt k ≠ 0) hk
+  change primePowerEnumeration j = k at hj
+  have hn : n < j :=
+    primePowerEnumeration_strictMono.lt_iff_lt.mp (by simpa only [hj] using hleft)
+  have hjn : j < n + 1 :=
+    primePowerEnumeration_strictMono.lt_iff_lt.mp (by simpa only [hj] using hright)
+  omega
+
+/-- The endpoint identification is valid on the entire half-open real cell.
+No support-completeness or prime-gap estimate is assumed. -/
+theorem enumerated_cumulative_eq_psi_on_cell (n : ℕ) (x : ℝ)
+    (hleft : (primePowerEnumeration n : ℝ) ≤ x)
+    (hright : x < (primePowerEnumeration (n + 1) : ℝ)) :
+    cumulative (actualJump primePowerEnumeration) (n + 1) = Chebyshev.psi x := by
+  rw [enumerated_cumulative_eq_psi, Chebyshev.psi_eq_sum_Icc,
+    Chebyshev.psi_eq_sum_Icc]
+  simp only [Nat.floor_natCast]
+  have hx : 0 ≤ x := (Nat.cast_nonneg _).trans hleft
+  have hfloor : primePowerEnumeration n ≤ Nat.floor x :=
+    (Nat.le_floor_iff hx).mpr hleft
+  apply Finset.sum_subset
+  · intro k hk
+    simp only [Finset.mem_Icc] at hk ⊢
+    exact ⟨hk.1, hk.2.trans hfloor⟩
+  · intro k hk hnot
+    have hkgt : primePowerEnumeration n < k := by
+      simpa only [Finset.mem_Icc, Nat.zero_le, true_and, not_le] using hnot
+    have hkreal : (k : ℝ) ≤ x :=
+      (Nat.cast_le.mpr (Finset.mem_Icc.mp hk).2).trans (Nat.floor_le hx)
+    have hklt : k < primePowerEnumeration (n + 1) := by
+      exact_mod_cast hkreal.trans_lt hright
+    exact vonMangoldt_eq_zero_between_enumerated hkgt hklt
+
 end RiemannResearch.RH.PrimePowerCriticalEnergy

@@ -73,9 +73,36 @@ estimate to all the exponents in its definition remains Open (mathematics).
 No theorem of unprovability is claimed.
 
 Still Open (formalization): the global prime-gap providers and geometric
-summability, the real step-function identification inside every cell, and
-the Mellin/zero/RH analytic links. The global enumeration and its endpoint
-Chebyshev identification are now discharged.
+summability, and the Mellin/zero/RH analytic links.
+The global enumeration and endpoint Chebyshev identification are discharged.
+The 2026-09-18 update below also discharges the real step-function
+identification inside every half-open cell.
+
+## Global coverage and uniqueness update (2026-09-18)
+
+The original enumeration declarations have been reverified.
+In the same module, the additional theorems now prove:
+
+- `primePowerEnumeration_existsUnique_iff`: every prime power occurs
+  exactly once, and no other integer occurs.
+- `primePowerEnumeration_tendsto_atTop`: q_n tends to infinity.
+- `primePowerEnumeration_existsUnique_cell`: for every real x >= 2,
+  there exists exactly one n with q_n <= x < q_(n+1).
+- `vonMangoldt_eq_zero_between_enumerated`: all integer coefficients
+  strictly between consecutive enumeration entries vanish.
+- `enumerated_cumulative_eq_psi_on_cell`: for every point of that
+  half-open interval, sum_(j<=n) Lambda(q_j) = psi(x).
+
+These have no RH, prime-gap, or unproved completeness hypothesis.
+The equality at the lower endpoint includes its von Mangoldt jump;
+the upper endpoint belongs to the next cell. The interval below 2 is
+not part of the claimed cell cover.
+
+Fresh verification jobs job_jFiHKn_qMTWGtL3Zgbdkp0h0hNaMe3sn and
+job_s5BPOGQhgl0pC74DDrqXMSu11ApUMATA both returned exit_code 0 and
+verified true. The checked main declarations depend only on propext,
+Classical.choice, and Quot.sound. Final publication is performed by the
+project checkpoint reported in the conversation.
 
 ## Verification and source
 
