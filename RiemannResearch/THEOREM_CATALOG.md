@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### Mean-zero infimum, cofinal growth, and conductor refinement (2026-09-18)
+
+**Established:** RH/CRTMeanZeroInfimum.lean proves zeroMeanHeadMinimum_eq:
+the actual mean-zero exact-head energy infimum equals the unrestricted
+conditionalHeadMinimum. Period existence is discharged using the existing
+legalSeedSpan_hasLegalReflectionPeriod theorem. The equivalence
+subpolynomial_heads_zeroMean_iff preserves actual legal families along any
+supplied cofinal sequence; it asserts no existence of a bounded family.
+
+**Conditional research reduction:**
+riemannHypothesis_of_positiveM_subpolynomial_heads concludes mathlib's
+RiemannHypothesis from actual legal exact heads and a subpolynomial bound on
+the concrete positive polygamma core. The domain-specific bound hcore remains
+**Open**. No provider declaration for it is introduced.
+
+**Established:** RH/CRTConductorRefinement.lean proves exact finite
+refinements of both progressionL and progressionM under conductor multiplication.
+The proof uses the actual residue-class reindexing of convergent arithmetic
+series. Increasing the computational period does not itself improve energy.
+
 ### Exact positive quadratic CRT weight and delayed mean repair (2026-09-18)
 
 **Established:** RH/CRTPositiveMExpansion.lean proves the exact finite expansion
