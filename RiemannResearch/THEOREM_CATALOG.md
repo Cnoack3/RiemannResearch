@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Exact positive quadratic CRT weight and delayed mean repair (2026-09-18)
+
+**Established:** RH/CRTPositiveMExpansion.lean proves the exact finite expansion
+of the actual progressionM weight with a strictly positive remainder, identifies
+every term with actual polygamma derivatives, and bounds the remainder uniformly
+in the conductor. The order-one positive core lies between E/2 and E. The
+growing_zeroMean_positiveM_subpolynomial_iff theorem equates two growing-bound
+obligations without asserting either.
+
+**Established:** RH/CRTMeanRepair.lean constructs the legal pulse
+H_A = 2 g_(2A) - g_A, proves its zero head, periodicity, mean 1/2, and conditional
+energy at most 2/(A+1). The actual meanRepair is legal, preserves the head, and
+has zero mean over an explicit common period. meanRepair_square_completion
+retains the full second square and gives meanRepair_energy_le.
+exists_zeroMean_head_near constructs a mean-zero periodic legal exact-head
+witness with energy arbitrarily close from above to any supplied periodic legal
+exact-head witness. meanPulse_difference_tailCorrection identifies the repair
+inside the handoff's actual two-direction tail dictionary.
+
+**Open:** an unconditional cofinal subpolynomial bound for the actual legal
+exact-head energy, or a sufficient residual-specific signed Schur gain. None
+of these declarations assumes or proves that arithmetic bound.
+
 ### CRT/coupled residual open declarations (2026-09-18)
 
 Modules: `RH/CoupledResidualAnalyticTargets`,
