@@ -1,3 +1,4 @@
+import RiemannResearch.RH.CRTBlockSymmetryCertificate
 import RiemannResearch.RH.CRTBlockRationalData
 import RiemannResearch.RH.CRTPeriodicEnergy
 import RiemannResearch.RH.CRTBlockLegalPackets
