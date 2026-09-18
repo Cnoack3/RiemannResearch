@@ -155,4 +155,49 @@ theorem dyadic_triadic_pulse_compatibility (A n : ℕ) :
   rw [show 3*(2*A) = 2*(3*A) by ring]
   ring
 
+/-! Source: CRTProjectionContinuation20260918.md, Section 4.
+The explicit estimate below reuses the verified periodic tail bound.
+It is uniform over delayed corrections of a fixed witness, not over
+growing exact-head witnesses: their period-defect bound B remains explicit. -/
+
+/-- Cubic tail control in terms of the actual period defect of a mean-zero witness. -/
+theorem zeroMean_tail_energy_bound (F : ℕ → ℝ) (Q M : ℕ) (B : ℝ)
+    (hm : periodMean F Q = 0) (hB : 0 ≤ B)
+    (hb : ∀ t, M < t → |periodDefect F Q t| ≤ B) :
+    conditionalMeanTailSquare M F ≤
+      2 / ((M : ℝ)+2) * (B / ((M : ℝ)+1))^2 := by
+  have h := periodic_error_tail_bound F Q M B 0 hB hb
+  simpa only [conditionalMeanTailSquare, conditionalWeight, hm,
+    sub_zero, abs_zero, zero_add, Nat.add_comm] using h
+
+/-- Any number of delayed legal directions, synthesized into G, has at most
+this gain. The bound retains dependence on the original witness's defect. -/
+theorem delayed_correction_gain_bound
+    (F G : ℕ → ℝ) (Q M : ℕ) (B : ℝ)
+    (hF : F ∈ legalSeedSpan (Set.Ici 1))
+    (hG : G ∈ legalSeedSpan (Set.Ici 1))
+    (hhead : ∀ n, 0 < n → n ≤ M → F n = G n)
+    (hm : periodMean F Q = 0) (hB : 0 ≤ B)
+    (hb : ∀ t, M < t → |periodDefect F Q t| ≤ B) :
+    conditionalMeanSquare F - conditionalMeanSquare G ≤
+      2 / ((M : ℝ)+2) * (B / ((M : ℝ)+1))^2 := by
+  exact (conditionalMeanSquare_gain_le_original_tail F G M hF hG hhead).trans
+    (zeroMean_tail_energy_bound F Q M B hm hB hb)
+
+
+/-- Residual-normalized gain of every delayed legal direction has cubic decay
+for a fixed mean-zero witness with bounded period defect. -/
+theorem delayed_scalar_gain_bound
+    (F R : ℕ → ℝ) (Q M : ℕ) (B : ℝ)
+    (hF : F ∈ legalSeedSpan (Set.Ici 1))
+    (hR : R ∈ legalSeedSpan (Set.Ici 1))
+    (hzero : ∀ n, 0 < n → n ≤ M → R n = 0)
+    (hg : conditionalMeanSquare R ≠ 0)
+    (hm : periodMean F Q = 0) (hB : 0 ≤ B)
+    (hb : ∀ t, M < t → |periodDefect F Q t| ≤ B) :
+    (conditionalMeanInner F R)^2 / conditionalMeanSquare R ≤
+      2 / ((M : ℝ)+2) * (B / ((M : ℝ)+1))^2 :=
+  (delayed_scalar_gain_le_original_tail F R M hF hR hzero hg).trans
+    (zeroMean_tail_energy_bound F Q M B hm hB hb)
+
 end RiemannResearch.RH.CRTBlock

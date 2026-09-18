@@ -28,6 +28,25 @@ and riemannHypothesis_of_signed_schur_subpolynomial conclude mathlib RH.
 Their actual signed cofinal remainder bound hbound remains **Open**.
 No unconditional subpolynomial family or proof of RH is supplied.
 
+**Established (delayed-gain continuation):** the same two modules now prove
+conditionalMeanSquare_gain_eq_tail_difference and
+conditionalMeanSquare_gain_le_original_tail: an arbitrary legal correction
+preserving the head through M changes only the actual tail energy.
+delayed_scalar_gain_le_original_tail bounds the exact signed scalar gain
+by that tail. For period mean zero and actual defect bound B,
+zeroMean_tail_energy_bound, delayed_correction_gain_bound, and
+delayed_scalar_gain_bound give the explicit upper bound
+2/(M+2) * (B/(M+1))^2. This is uniform over all delayed legal corrections
+of a fixed witness, including combined finite directions. It is not
+a bound uniform in growing head length: control of B remains unresolved.
+
+**Written mathematics, not Lean-verified:**
+RH/UniformEnergyAttempt20260918.md proves strict finite mean-zero witness
+improvement using W_d = 3*g_(2d) - g_d - 2*g_(4d), with an explicit
+period/defect-dependent gain and conductor bound. Its Dirichlet inversion
+and finite detection estimates are not formalized. Their dependence on
+the growing period and defect leaves the RH-strength bound **Open**.
+
 Coverage and supplementary written arguments are in
 RH/CRTProjectionContinuation20260918.md.
 

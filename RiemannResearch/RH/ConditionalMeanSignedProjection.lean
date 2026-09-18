@@ -1,4 +1,5 @@
 import RiemannResearch.RH.ConditionalMeanHeadMinimum
+import RiemannResearch.RH.ConditionalMeanTailNonattainment
 
 /-!
 # Signed projection for the actual infinite conditional energy
@@ -376,5 +377,67 @@ theorem riemannHypothesis_of_signed_schur_subpolynomial
         conditionalMeanSquare (screenedDirection (G j) (H j)))*
           screenedDirection (G j) (H j) n) ≤ _
   rwa [conditionalMeanSquare_schur_optimum (F j) (G j) (H j) (hF j).1 (hG j) (hH j) (hg j)]
+
+/-! Source: CRTProjectionContinuation20260918.md, Section 4, for the
+locality argument. These statements concern the actual signed energy and
+allow every finite legal correction preserving the indicated prefix. -/
+
+/-- Exact localization: equal positive heads cancel from the energy difference. -/
+theorem conditionalMeanSquare_gain_eq_tail_difference
+    (F G : ℕ → ℝ) (M : ℕ)
+    (hF : F ∈ legalSeedSpan (Set.Ici 1))
+    (hG : G ∈ legalSeedSpan (Set.Ici 1))
+    (hhead : ∀ n, 0 < n → n ≤ M → F n = G n) :
+    conditionalMeanSquare F - conditionalMeanSquare G =
+      conditionalMeanTailSquare M F - conditionalMeanTailSquare M G := by
+  have hcesaro (t : ℕ) (ht : t ≤ M) : cesaro F t = cesaro G t := by
+    unfold cesaro
+    congr 1
+    apply Finset.sum_congr rfl
+    intro n hn
+    obtain ⟨hn1, hnt⟩ := Finset.mem_Icc.mp hn
+    exact hhead n (by omega) (hnt.trans ht)
+  have hsF := (legal_conditionalMeanSquare_summable (Set.Ici 1)
+    (by intro a ha; exact ha) hF).sum_add_tsum_nat_add M
+  have hsG := (legal_conditionalMeanSquare_summable (Set.Ici 1)
+    (by intro a ha; exact ha) hG).sum_add_tsum_nat_add M
+  have he : (∑ k ∈ Finset.range M,
+      conditionalWeight k * (cesaro F (k+1))^2) =
+      ∑ k ∈ Finset.range M, conditionalWeight k * (cesaro G (k+1))^2 := by
+    apply Finset.sum_congr rfl
+    intro k hk
+    rw [hcesaro (k+1)
+      (by have := Finset.mem_range.mp hk; omega)]
+  change _ + conditionalMeanTailSquare M F = conditionalMeanSquare F at hsF
+  change _ + conditionalMeanTailSquare M G = conditionalMeanSquare G at hsG
+  rw [he] at hsF
+  linarith
+
+/-- An arbitrary legal correction preserving the prefix can remove no more
+than the original tail energy, regardless of its coefficients or conductor. -/
+theorem conditionalMeanSquare_gain_le_original_tail
+    (F G : ℕ → ℝ) (M : ℕ)
+    (hF : F ∈ legalSeedSpan (Set.Ici 1))
+    (hG : G ∈ legalSeedSpan (Set.Ici 1))
+    (hhead : ∀ n, 0 < n → n ≤ M → F n = G n) :
+    conditionalMeanSquare F - conditionalMeanSquare G ≤ conditionalMeanTailSquare M F := by
+  rw [conditionalMeanSquare_gain_eq_tail_difference F G M hF hG hhead]
+  exact sub_le_self _ (conditionalMeanTailSquare_nonneg M G)
+
+/-- The exact signed optimal scalar gain obeys the same locality bound. -/
+theorem delayed_scalar_gain_le_original_tail
+    (F R : ℕ → ℝ) (M : ℕ)
+    (hF : F ∈ legalSeedSpan (Set.Ici 1))
+    (hR : R ∈ legalSeedSpan (Set.Ici 1))
+    (hzero : ∀ n, 0 < n → n ≤ M → R n = 0)
+    (hg : conditionalMeanSquare R ≠ 0) :
+    (conditionalMeanInner F R)^2 / conditionalMeanSquare R ≤
+      conditionalMeanTailSquare M F := by
+  have h := conditionalMeanSquare_gain_le_original_tail F
+    (fun n => F n+(-conditionalMeanInner F R/conditionalMeanSquare R)*R n) M
+    hF (legal_add_mul F R hF hR _)
+    (by intro n hn hnM; simp only [hzero n hn hnM, mul_zero, add_zero])
+  rw [conditionalMeanSquare_optimal_scalar F R hF hR hg] at h
+  linarith
 
 end RiemannResearch.RH.Pareto
