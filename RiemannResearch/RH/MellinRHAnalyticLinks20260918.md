@@ -45,11 +45,18 @@ away from 1, the local zero/pole obstruction, and an exact RH analyticity
 criterion. They do not establish convergence of the original integral for
 Re(s)<=1.
 
-Still requiring formalization are the signed-energy-to-holomorphy/Hardy
-steps, the quotient by the report's reference Z_b, its pole cancellation
-and zero multiplicities, cancellation of M's apparent singularity at 1
-with the correct filled-in value, and the numerical residues -m_rho/rho.
-A simple-pole order calculation does not determine that residue.
+Subsequent addition: WeightedMellinEnergy, WeightedMellinHardy, and
+ChebyshevEnergyHardy prove the forward weighted-energy-to-holomorphy/Hardy
+bridge, with exact line norms and their supremum. See
+EnergyHardyFormalization20260918.md. Convergence below Re(s)=1 is now
+available conditional on the explicitly stated actual energy bound.
+
+Still requiring formalization are the signed-prefix/geometric-energy
+transfer, the general Hardy converse and boundary trace, the quotient by
+the report's reference Z_b, its pole cancellation and zero multiplicities,
+cancellation of M's apparent singularity at 1 with the correct filled-in
+value, and the numerical residues -m_rho/rho. A simple-pole order
+calculation does not determine that residue.
 
 The actual SignedArithmeticDampedBound for every positive damping and
 SignedArithmeticSubpolynomialBound for every positive exponent remain

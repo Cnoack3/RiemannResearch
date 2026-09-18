@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Weighted energy implies holomorphy and Hardy H2 (2026-09-18)
+
+Modules: `Analysis/WeightedMellinEnergy`, `Analysis/WeightedMellinHardy`,
+`RH/ChebyshevEnergyHardy`.
+
+**Established:** `transform_integrable`, `transform_norm_sq_le`,
+`transform_hasDerivAt`, and `transform_analyticAt` prove convergence,
+the sharp Cauchy--Schwarz bound, differentiation, and holomorphy from
+finite weighted energy on Re(z)>s/2. `vertical_memLp` proves actual
+square integrability of each transformed line. `angular_plancherel`
+gives (1/(2*pi))*integral |M_f(sigma+i*t)|^2 = E_(2*sigma)(f).
+`energy_to_hardy` proves Hardy H2 membership; `hardy_energy_isLUB`
+identifies its squared norm with E_s(f), using `energy_tendsto`.
+
+**Conditional research reductions:** `errorMellin_analyticAt_of_energy`,
+`errorMellin_hardy_of_energy`, and
+`errorMellin_analyticAt_of_all_damping` specialize to the actual
+Chebyshev error. Their actual weighted integrability hypotheses are **Open**.
+The prime-power signed-prefix/geometric-energy transfer, general
+Paley--Wiener converse, and boundary L2 convergence remain unformalized.
+The RH-equivalent signed arithmetic bound remains unproved.
+See `RH/EnergyHardyFormalization20260918.md`.
+
 ### Chebyshev Mellin transform, local poles, and RH (2026-09-18)
 
 Modules: `RH/ChebyshevMellin`, `Analysis/LogDerivZeroOrder`,
@@ -17,8 +40,9 @@ equivalent to analyticity of M throughout 1/2<Re(s)<1.
 The reusable `AnalyticAt.meromorphicOrderAt_logDeriv_of_zero` proves the
 finite-order local calculation for general analytic complex functions.
 
-**Open formalization:** the signed-energy/Hardy implications, the reference
-Z_b quotient, pole cancellation at 1, and the precise residue coefficients.
+**Open formalization:** transfer from signed prime-power prefix energy to
+Chebyshev error energy, the reference Z_b quotient, pole cancellation at 1,
+and the precise residue coefficients. The forward analytic bridge is above.
 **Open mathematics:** the actual all-positive-damping or subpolynomial
 signed arithmetic bound. The RH equivalence above asserts neither side.
 See `RH/MellinRHAnalyticLinks20260918.md`.
