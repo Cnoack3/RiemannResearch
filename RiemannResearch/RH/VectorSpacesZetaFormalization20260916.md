@@ -176,10 +176,15 @@ RH/ArithmeticCumulativeEnergy.lean.
 ### Conditional research reductions and outstanding inputs
 
 1. Open (formalization): Baker--Harman--Pintz maximal prime gaps and
-   Jaerviniemi's large-gap total-mass estimate, their dyadic exponent
-   combination, transfer to all prime-power intervals, and the resulting
-   global cubic-gap summability. The exact finite algebra and geometric
-   majorant reduction above are checked. In particular,
+   Jaerviniemi's large-gap total-mass estimate, transfer to all prime-power
+   intervals, and the resulting global cubic-gap summability.
+   Update 2026-09-18: NumberTheory/PrimeGapProviders proves actual-prime
+   total dyadic gap mass <= 4X, so that input is no longer external for
+   this specialization. The exact exponent combination and dyadic
+   summability from the two remaining strong estimates are also proved.
+   Those two estimates remain explicit hypotheses; see
+   RH/PrimeGapProviderProgress20260918.md.
+   The finite algebra and geometric majorant reduction are checked. In particular,
    RH.PrimePowerCriticalEnergy.actual_remainder_summable_of_external_cubic_gap
    explicitly assumes externalPrimePowerCubicGapSummability; it does not
    assert that the classical providers have already been formalized.

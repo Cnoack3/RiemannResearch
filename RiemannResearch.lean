@@ -1,3 +1,4 @@
+import RiemannResearch.NumberTheory.PrimeGapProviders
 import RiemannResearch.Analysis.HatMassIntegral
 import RiemannResearch.RH.SplineWeilMatrixTargets
 import RiemannResearch.RH.PolynomialSplineRH

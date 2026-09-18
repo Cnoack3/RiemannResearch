@@ -108,4 +108,31 @@ theorem tail_tsum_le_of_geometric_majorant (R : ℕ → ℝ) (C r : ℝ)
   simpa only [tsum_mul_left, tsum_geometric_of_lt_one hr0 hr1, div_eq_mul_inv]
     using hle
 
+/-- The total length of selected consecutive intervals inside [0,B] is at most B.
+Source: elementary clipping and telescoping; used by the actual prime-gap mass provider. -/
+theorem sum_adjacent_gaps_le (a : ℕ → ℝ) (ha : Monotone a)
+    (h0 : 0 ≤ a 0) (N : ℕ) (S : Finset ℕ) (B : ℝ)
+    (hB : 0 ≤ B) (hS : S ⊆ Finset.range N)
+    (hend : ∀ i ∈ S, a (i + 1) ≤ B) :
+    (∑ i ∈ S, (a (i + 1) - a i)) ≤ B := by
+  let f : ℕ → ℝ := fun i => min (a i) B
+  have hf : Monotone f := fun i j hij => min_le_min_right B (ha hij)
+  have heq (i : ℕ) (hi : i ∈ S) :
+      a (i + 1) - a i = f (i + 1) - f i := by
+    dsimp [f]
+    rw [min_eq_left (hend i hi),
+      min_eq_left ((ha (Nat.le_succ i)).trans (hend i hi))]
+  calc
+    (∑ i ∈ S, (a (i + 1) - a i)) =
+        ∑ i ∈ S, (f (i + 1) - f i) := Finset.sum_congr rfl heq
+    _ ≤ ∑ i ∈ Finset.range N, (f (i + 1) - f i) :=
+      Finset.sum_le_sum_of_subset_of_nonneg hS
+        (fun i _ _ => sub_nonneg.mpr (hf (Nat.le_succ i)))
+    _ = f N - f 0 := Finset.sum_range_sub f N
+    _ ≤ B := by
+      have hn : f N ≤ B := min_le_right _ _
+      have hz : 0 ≤ f 0 := le_min h0 hB
+      linarith
+
+
 end RiemannResearch.Analysis.GapEnergy

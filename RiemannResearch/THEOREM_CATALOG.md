@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Actual prime-gap inputs and dyadic energy (2026-09-18)
+
+Modules: `NumberTheory/PrimeGapProviders`, `Analysis/GapEnergySummability`.
+
+**Established:** `sum_adjacent_gaps_le` bounds the total length of selected
+disjoint consecutive intervals by clipping and telescoping.
+For the actual zero-based prime enumeration, `next_prime_le_two_mul`
+proves Bertrand's bound, `mem_dyadicIndices` proves that the finite shell
+includes every relevant index, and `dyadic_gap_mass_le` proves total gap
+mass at most 4X, including the final boundary-crossing gap.
+
+**Conditional research reductions:** `dyadic_cubic_gap_le` removes the
+external total-mass hypothesis in the actual-prime specialization.
+`dyadic_cubic_gap_le_published_exponents` and
+`dyadic_normalized_cubic_le` assemble maximal gaps C X^(21/40) and
+exceptional mass D X^(16/25), at threshold X^(9/20), into the exact bound
+4 X^(-1/10) + C^2 D X^(-31/100) after division by X^2.
+`summable_dyadic_normalized_cubic_of_gap_bounds` proves dyadic
+summability from those two explicit all-scale inputs.
+
+**Open formalization:** the BHP maximal-gap provider and Jarviniemi
+exceptional-gap provider are not proved. Absorbing their finite exceptional
+ranges, global shell regrouping, and transfer to all prime-power cells are
+not asserted in these declarations. See
+`RH/PrimeGapProviderProgress20260918.md`.
+**Open mathematics:** the actual signed arithmetic energy bound remains
+unproved and is not supplied by the geometric gap results.
+
 ### Concrete Cesaro Gram and signed completion (2026-09-18)
 
 Modules: `Analysis/FiniteSignedQuadratic`, `RH/ConditionalMeanGram`.
