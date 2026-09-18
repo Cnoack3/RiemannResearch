@@ -1,3 +1,5 @@
+import RiemannResearch.RH.CRTBlockRationalData
+import RiemannResearch.RH.CRTPeriodicEnergy
 import RiemannResearch.RH.CRTBlockLegalPackets
 import RiemannResearch.RH.CRTBlockOrthogonality
 import RiemannResearch.RH.CRTTrigammaBounds
