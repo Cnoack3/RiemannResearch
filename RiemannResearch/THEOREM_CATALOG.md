@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Concrete Cesaro Gram and signed completion (2026-09-18)
+
+Modules: `Analysis/FiniteSignedQuadratic`, `RH/ConditionalMeanGram`.
+Actual infinite Gram entries are summable; head/tail splitting and the tail
+sum-of-squares identity are proved. Exact signed Schur completion and the
+attained affine minimum expose kernel-parametrization and inverse premises.
+The uniform finite-tail and signed-Schur targets are defined; the implication
+from the latter to the former proves neither bound.
+
+Concurrent `RH/ConditionalFiniteMatrixMinimum` and
+`RH/ConditionalNormalizedMatrixMinimum` already supply actual positivity,
+head surjectivity and inverse minima in conductor-indexed coordinates.
+They remain intact. The smaller outstanding integration work is coordinate
+transport/kernel-basis assembly and conductor-infimum identification (11.5).
+See `RH/ConditionalMeanGramProgress20260918.md` for precise scope and the
+historical verification/publication distinction. Assertion (11.7), or a
+cofinal subpolynomial replacement, remains **Open mathematics**.
+
 ### Layer-cake, fixed-width discrepancy, and polynomial spline RH reductions (2026-09-18)
 
 Full source: `RH/LayerCakeSublevelProgram20260918.md` (sections 1–40).
