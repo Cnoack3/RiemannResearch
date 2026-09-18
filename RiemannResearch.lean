@@ -1,3 +1,6 @@
+import RiemannResearch.RH.CRTCoordinateLegality
+import RiemannResearch.RH.CRTLegalCoordinates
+import RiemannResearch.RH.CRTFirstPeriodEnergy
 import RiemannResearch.RH.ConditionalConductorStrictImprovement
 import RiemannResearch.RH.ConditionalHeadStrictImprovement
 import RiemannResearch.Analysis.LatePulseDetection

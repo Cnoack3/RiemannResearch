@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### CRT–Pareto first-period reduction and exact coordinate legality (2026-09-18)
+
+**Established:** RH/CRTFirstPeriodEnergy.lean proves that for every real
+mean-zero sequence of positive integral period Q, the actual complete
+conditional Cesaro energy lies between its first-period energy A_Q and
+(9/8)*A_Q. The factor is independent of the conductor. The finite form
+uses the actual signed cumulative defects; all mixed terms are retained.
+The progression tail proof uses an elementary telescoping fourth-power
+majorant. firstPeriod_subpolynomial_iff transfers growth for the same family.
+
+**Established:** RH/CRTLegalCoordinates.lean proves the full exact-head
+and zero-mean feasibility equivalence for normalized residue coefficients:
+sum c_d/d=1, sum c_d=1, and low coefficients c_d=-mu(d). It also proves the
+two exact high-range Mobius moments, low-prime divisibility of the support
+conductor, and gcd-class compatibility of increments and defect second
+differences.
+
+**Established obstruction:** RH/CRTCoordinateLegality.lean gives a free
+defect vector with first-period cost Y/(Y+2) and complete cost at most
+(9/8)*Y/(Y+2), but proves it cannot be realized by a legal mean-zero witness
+when Y>0 and Q>=Y+4. Legal reflection excludes this particular shortcut.
+
+**Conditional research reductions:** riemannHypothesis_of_subpolynomial_firstPeriod
+and riemannHypothesis_of_subpolynomial_residue_coordinates conclude Mathlib RH.
+**Open:** construct legal coefficient families satisfying the explicit
+moment/low-coefficient constraints with subpolynomial finite cost hcore/hcost.
+Neither endpoint proves that input. See RH/CRTCoordinateReduction20260918.md.
+
 ### Strict improvement of all exact heads and conductor escape (2026-09-18)
 
 **Established:** RH/ConditionalHeadStrictImprovement.lean extends the existing
