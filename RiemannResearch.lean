@@ -924,6 +924,7 @@ import RiemannResearch.Analysis.HeadTailResidualLift
 import RiemannResearch.Analysis.FiniteResidueCharge
 import RiemannResearch.Analysis.LogarithmicResidualBarrier
 import RiemannResearch.RH.CoupledResidualCorrections
+import RiemannResearch.RH.CoupledResidualChatCompletion
 import RiemannResearch.Analysis.HeadTailCompression
 import RiemannResearch.RH.PhysicalHeadResidualLift
 import RiemannResearch.RH.FreshCoprimeDecomposition
