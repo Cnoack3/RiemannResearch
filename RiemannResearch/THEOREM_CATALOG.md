@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Signed conditional projection and the dyadic-only obstruction (2026-09-18)
+
+**Established:** RH/ConditionalMeanSignedProjection.lean defines the actual
+infinite signed Cesaro pairing, proves summability and bilinearity, scalar
+square completion, legal exact-head projection bounds, and the full signed
+two-direction Schur gain. Covariance is retained in the screened source and
+energy. Zero screened energy forces zero screened source; the optimum
+identity includes that singular branch.
+
+**Established:** RH/CRTDelayedProjection.lean proves
+exists_delayed_pulse_projection: for every positive error allowance a
+finite legal mean-zero pulse swap preserves the exact head and recovers
+the entire one-direction projection gain up to that error. It also proves
+the exact triadic dictionary identity and dyadic/triadic compatibility.
+
+**Established:** RH/ConditionalSeedFactorObstruction.lean proves the
+unconditional dyadic_pulse_head_linear_obstruction_eventually and
+not_subpolynomial_dyadic_heads. A fixed nonreal conductor resonance on
+Re(s)=1 annihilates the actual one-seed dyadic space and forces E(F) >= c*N
+for sufficiently long exact heads, with a proved positive c. This applies
+to witnesses entirely in that restricted space, not to the full legal
+dictionary or an arbitrary affine family around a witness outside it.
+
+**Conditional research reductions:** riemannHypothesis_of_signed_projection_subpolynomial
+and riemannHypothesis_of_signed_schur_subpolynomial conclude mathlib RH.
+Their actual signed cofinal remainder bound hbound remains **Open**.
+No unconditional subpolynomial family or proof of RH is supplied.
+
+Coverage and supplementary written arguments are in
+RH/CRTProjectionContinuation20260918.md.
+
+
 ### Mean-zero infimum, cofinal growth, and conductor refinement (2026-09-18)
 
 **Established:** RH/CRTMeanZeroInfimum.lean proves zeroMeanHeadMinimum_eq:
