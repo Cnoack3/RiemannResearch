@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Strict improvement of all exact heads and conductor escape (2026-09-18)
+
+**Established:** RH/ConditionalHeadStrictImprovement.lean extends the existing
+mean-zero three-generator result to every finite legal nonempty exact head.
+A nonzero period mean is detected by a late nonnegative pulse using the exact
+bounded-period-defect formula. The actual unrestricted minimum is strictly
+below every finite witness and is never attained by one.
+
+**Established:** RH/ConditionalConductorStrictImprovement.lean proves every
+finite inverse-matrix minimum has a strictly better larger conductor budget.
+For each fixed old budget, a single new witness gives a positive additive
+improvement over all feasible old-budget witnesses. Any minimizing family
+must escape every fixed finite residue dictionary; its valid budgets tend
+to infinity.
+
+**Established limitation:** signed_gain_le_variational_excess bounds every
+actual signed scalar gain by E(F)-conditionalHeadMinimum Y. Theorems
+exists_head_with_all_signed_gains_small and
+near_minimizer_signed_gains_tendsto_zero show that all directions have
+simultaneously small gains at near-minimizers, including adaptively selected
+directions. No positive additive gain floor can hold across all conductors.
+
+**Open:** subpolynomial control of the unrestricted minima as the head length
+grows. Strict improvement and conductor escape do not provide it. See
+RH/StrictImprovementConductorEscape20260918.md for the exact argument,
+formalization scope, and remaining RH obligation.
+
 ### Signed conditional projection and the dyadic-only obstruction (2026-09-18)
 
 **Established:** RH/ConditionalMeanSignedProjection.lean defines the actual

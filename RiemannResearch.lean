@@ -1,3 +1,5 @@
+import RiemannResearch.RH.ConditionalConductorStrictImprovement
+import RiemannResearch.RH.ConditionalHeadStrictImprovement
 import RiemannResearch.Analysis.LatePulseDetection
 import RiemannResearch.RH.ConditionalPulsePairing
 import RiemannResearch.RH.ThreeGeneratorCorrection
