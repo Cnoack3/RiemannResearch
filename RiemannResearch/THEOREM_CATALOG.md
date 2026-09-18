@@ -1,5 +1,44 @@
 # Theorem catalog
 
+### Layer-cake, fixed-width discrepancy, and polynomial spline RH reductions (2026-09-18)
+
+Full source: `RH/LayerCakeSublevelProgram20260918.md` (sections 1–40).
+Precise coverage and provider ledger: `RH/LayerCakeLeanCoverage20260918.md`.
+The archived ordinary analytic arguments are not all claimed kernel-verified.
+
+Modules: `Analysis/CofinalQuadraticPositivity`,
+`Analysis/DyadicHatRefinement`, `Analysis/HatIntegrability`,
+`Analysis/HatMassIntegral`, `Analysis/FiniteKernelRefinement`,
+`LinearAlgebra/SparseQuadraticEnergy`, `LinearAlgebra/SignedSchurResidual`,
+`LinearAlgebra/IncreasingEnergyTolerance`, `RH/WeilPositiveDiagonal`,
+`RH/FixedWidthWeilDiscrepancy`, `RH/PolynomialWeilCriterion`,
+`RH/SplineWeilMatrixTargets`, `RH/PolynomialSplineRH`.
+
+**Established:** cofinal vanishing-error positivity; actual hat refinement,
+support, integrability and exact masses; complex sparse quadratic bounds;
+complete signed Schur residual/inverse bounds and induction; increasing
+natural-degree polynomial tolerance buffers; actual fixed-width correlation
+support/diagonal, von Mangoldt cutoff equality and remainder sign; concrete
+spline tests/matrices; and RH implies actual completed Weil positivity on
+the already-supported smooth test class.
+
+**Conditional research reductions:** actual Mathlib RH follows from the
+fixed-width polynomial lower bound with `TwoHatWeilIdentity` and
+`FixedWidthLandauDetection`. Their analytic proofs remain **Open** for
+formalization. The spline/matrix consumer additionally requires
+`QuantitativeTwoHatSplineApproximation` and, for literal matrix entries,
+`SplineQuadraticRepresentation`; both remain **Open** for formalization.
+`SplineEnergyAdmissibility`, `SplineWeilHermitian`, and the concrete uniform
+entry/mass/refinement providers are tracked separately as **Open**, where not
+discharged by the new elementary hat theorems.
+
+**Open mathematical RH target:** a uniform polynomial lower bound on the
+actual signed forms/matrices, or a sufficient uniform full signed Schur
+certificate with a finite starting certificate. No such bound is proved.
+No density-only, two-point-only, shrinking-width scalar, or unsigned bound
+is substituted. No project-local axiom is added.
+
+
 ### Deterministic exact heads and residual amplification (2026-09-17)
 
 Module: `RH/ParetoExactHeadResidual` (seven public theorems).
