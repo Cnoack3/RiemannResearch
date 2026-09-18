@@ -60,9 +60,13 @@ completing the relevant continuation/identification arguments.
 ## Scope not claimed
 
 This addition proves the forward energy-to-holomorphy/Hardy bridge.
-It does not formalize the general Paley--Wiener converse, L2 boundary trace
-convergence, reset-truncation identities, or the complete transfer from
-prime-power signed prefix sums through geometric energy to Chebyshev error.
+The subsequent WeightedMellinBoundary module proves strong L2 boundary
+trace convergence for these finite-energy Mellin transforms.
+WeightedMellinConverse proves endpoint recovery for represented transforms
+with all interior energies finite; it records the general converse only as
+an unproved Prop. See HardyConverseBoundaryStatus20260918.md.
+The general Paley--Wiener converse, reset-truncation identities, and complete
+signed-prefix/geometric-energy transfer remain unformalized.
 The all-positive-damping signed arithmetic bound remains unproved.
 The earlier meromorphic RH criterion remains a separate checked equivalence.
 

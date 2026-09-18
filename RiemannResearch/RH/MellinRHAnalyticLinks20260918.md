@@ -51,8 +51,13 @@ bridge, with exact line norms and their supremum. See
 EnergyHardyFormalization20260918.md. Convergence below Re(s)=1 is now
 available conditional on the explicitly stated actual energy bound.
 
+The subsequent WeightedMellinBoundary module proves L2 boundary convergence
+under that finite-energy hypothesis. The represented-function converse and
+the exact unproved general representation obligation are recorded in
+HardyConverseBoundaryStatus20260918.md.
+
 Still requiring formalization are the signed-prefix/geometric-energy
-transfer, the general Hardy converse and boundary trace, the quotient by
+transfer, the general Hardy converse, the quotient by
 the report's reference Z_b, its pole cancellation and zero multiplicities,
 cancellation of M's apparent singularity at 1 with the correct filled-in
 value, and the numerical residues -m_rho/rho. A simple-pole order

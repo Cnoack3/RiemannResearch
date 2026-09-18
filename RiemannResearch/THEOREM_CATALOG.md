@@ -18,10 +18,24 @@ identifies its squared norm with E_s(f), using `energy_tendsto`.
 `errorMellin_hardy_of_energy`, and
 `errorMellin_analyticAt_of_all_damping` specialize to the actual
 Chebyshev error. Their actual weighted integrability hypotheses are **Open**.
-The prime-power signed-prefix/geometric-energy transfer, general
-Paley--Wiener converse, and boundary L2 convergence remain unformalized.
-The RH-equivalent signed arithmetic bound remains unproved.
-See `RH/EnergyHardyFormalization20260918.md`.
+**Boundary-trace addition:** `Analysis/WeightedMellinBoundary` proves
+strong L2 convergence of finite-energy Mellin transforms to their unitary
+Fourier boundary trace, along every interior sequence approaching s/2.
+`transform_boundary_integral` gives convergence of actual squared-difference
+integrals; `boundaryTrace_norm_sq` identifies the trace norm with energy.
+
+**Restricted converse:** `Analysis/WeightedMellinConverse` proves
+`finiteEnergy_iff_hardy_of_interior`, assuming finite energy at every
+interior exponent. Fatou supplies endpoint finite energy.
+`GeneralHardyConverse` precisely STATES the arbitrary-Hardy representation
+obligation as an unproved Prop, not an axiom.
+`hardy_boundary_of_general_converse` explicitly assumes that obligation.
+
+The general Paley--Wiener converse and the signed-prefix/geometric-energy
+transfer remain open formalization tasks. The RH-equivalent signed
+arithmetic bound remains unproved.
+See `RH/EnergyHardyFormalization20260918.md` and
+`RH/HardyConverseBoundaryStatus20260918.md`.
 
 ### Chebyshev Mellin transform, local poles, and RH (2026-09-18)
 
