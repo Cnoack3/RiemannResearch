@@ -2,8 +2,10 @@
 
 This continuation does not prove the RH-equivalent arithmetic bound.
 It supplies the complete prime-power enumeration and unconditional estimates
-for the actual prescribed signed charges. The RH/Mellin equivalence in the
-research report remains a separate formalization obligation.
+for the actual prescribed signed charges. The 2026-09-18 Mellin update proves
+the initial integral identity, the local pole obstruction, and an exact RH
+analyticity criterion. The energy-to-holomorphy/Hardy implications remain
+separate formalization obligations.
 
 ## Exact objects
 
@@ -73,7 +75,10 @@ estimate to all the exponents in its definition remains Open (mathematics).
 No theorem of unprovability is claimed.
 
 Still Open (formalization): the global prime-gap providers and geometric
-summability, and the Mellin/zero/RH analytic links.
+summability, and the signed-energy/Hardy implications. The Mellin identity
+on Re(s)>1, meromorphic extension away from 1, local zero/pole obstruction,
+and RH analyticity criterion are now proved; see
+MellinRHAnalyticLinks20260918.md for exact statements and remaining scope.
 The global enumeration and endpoint Chebyshev identification are discharged.
 The 2026-09-18 update below also discharges the real step-function
 identification inside every half-open cell.

@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Chebyshev Mellin transform, local poles, and RH (2026-09-18)
+
+Modules: `RH/ChebyshevMellin`, `Analysis/LogDerivZeroOrder`,
+`RH/ChebyshevMellinRH`.
+
+**Established:** `error_mellin_integrable` and `error_mellin_identity`
+identify the actual integral of (psi(x)-x)*x^(-s-1) on (1,infinity) with
+M(s)=-zeta'(s)/(s*zeta(s))-1/(s-1), for Re(s)>1.
+`meromorphicAt_meromorphicError` extends this expression meromorphically
+away from 1. `meromorphicError_order_at_zero` gives order -1 at every zeta
+zero away from 0 and 1, without a simple-zero hypothesis.
+`analyticAt_meromorphicError_iff` identifies analyticity with nonvanishing
+there. `riemannHypothesis_iff_error_analytic` proves that Mathlib RH is
+equivalent to analyticity of M throughout 1/2<Re(s)<1.
+The reusable `AnalyticAt.meromorphicOrderAt_logDeriv_of_zero` proves the
+finite-order local calculation for general analytic complex functions.
+
+**Open formalization:** the signed-energy/Hardy implications, the reference
+Z_b quotient, pole cancellation at 1, and the precise residue coefficients.
+**Open mathematics:** the actual all-positive-damping or subpolynomial
+signed arithmetic bound. The RH equivalence above asserts neither side.
+See `RH/MellinRHAnalyticLinks20260918.md`.
+
 ### Global prime-power enumeration and real cells (2026-09-18)
 
 Module: `RH/PrimePowerEnumeration`.

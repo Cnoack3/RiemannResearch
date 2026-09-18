@@ -79,11 +79,12 @@ mathematics, but their application has not been formally supplied here.
    The continuation update below proves the critical x^-2 moment formulas on
    actual positive intervals, uses Mathlib's actual von Mangoldt coefficients,
    and identifies finite cumulative sums with the Chebyshev sum under the
-   explicit CompleteThrough support condition. The later update in
-   SignedArithmeticBoundVerification20260916.md supplies the global enumeration
-   and the general power-weight moments. Identification of the real step
-   function inside every interval and the global RH criterion remain Open
-   (formalization).
+   explicit CompleteThrough support condition. The later updates in
+   SignedArithmeticBoundVerification20260916.md supply the global enumeration,
+   general power-weight moments, and the real step-function identification
+   throughout every half-open cell. MellinRHAnalyticLinks20260918.md proves
+   the Mellin identity and RH analyticity criterion. The energy/Hardy
+   implications remain Open (formalization).
 
 4. Open mathematical obligation: the actual global centered arithmetic bound.
    Nothing here proves integral_1^X (psi(x)-x)^2/x^2 dx = O(log X), or all
@@ -196,12 +197,14 @@ RH/ArithmeticCumulativeEnergy.lean.
    convolution exponentiation and its multiplicative coefficients; the
    meromorphic reference Z_b on Re z>9/20, with a simple pole at 1 and no
    zeros. No Lean declaration in this update asserts those analytic facts.
-3. Open (formalization): the quotient zeta/Z_b, pole cancellation at 1 and
-   preservation of zeta zeros with their multiplicities; the actual Mellin
-   integral initially on Re z>1, its meromorphic continuation, residues
-   -m_rho/rho, and the half-plane Hardy/holomorphy bounds. Meromorphic
-   continuation is not being identified with convergence of the original
-   integral on the larger half-plane.
+3. Partially discharged (formalization): ChebyshevMellin proves the actual
+   Mellin integral identity on Re z>1. ChebyshevMellinRH proves meromorphic
+   continuation away from 1, simple-pole order at every zeta zero away from
+   0,1 without a simplicity hypothesis, and an exact RH analyticity criterion.
+   Still Open: the quotient zeta/Z_b, pole cancellation at 1, its zero
+   multiplicities, residues -m_rho/rho, and half-plane Hardy/energy bounds.
+   Meromorphic continuation is not identified with convergence of the original
+   integral on the larger half-plane. See MellinRHAnalyticLinks20260918.md.
 4. Open (mathematics): the bound for the actual signed arithmetic
    discrepancy. The report's all-positive-damping or critical
    subpolynomial-growth target is RH-equivalent, not proved by this note.
@@ -241,5 +244,7 @@ corrections are retained.
 s=1+epsilon>1, including 1<s<=2. `SignedArithmeticSubpolynomialBound` requires
 every positive growth exponent, including 0<delta<1. These are explicit
 proposition definitions with no proof provided. Neither the estimates here
-nor the completed enumeration prove them. The Mellin/RH equivalence remains
-Open (formalization), separately from the mathematical bound.
+nor the completed enumeration prove them. The initial Mellin identity and
+RH analyticity criterion are proved in the 2026-09-18 analytic-links update;
+the signed-energy/Hardy implications remain Open (formalization), separately
+from the mathematical bound.
