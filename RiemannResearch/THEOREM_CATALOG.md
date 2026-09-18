@@ -49,6 +49,42 @@ not asserted in these declarations. See
 **Open mathematics:** the actual signed arithmetic energy bound remains
 unproved and is not supplied by the geometric gap results.
 
+### Assertion (11.7): named RH-equivalence conjecture (2026-09-18)
+
+Module: `RH/ConditionalSignedSchurConjecture`.
+
+**Conjecture definitions, not theorems:** the existing
+`ConditionalMeanGram.UniformSignedSchurTarget` is the exact assertion
+(11.7), with one real K independent of Y, a finite conductor chosen for
+each Y, the entire injectively parametrized head kernel, and two-sided
+inverse identities. Here D counts columns 2,...,D+1.
+`SignedSchurRHEquivalenceConjecture` records
+`UniformSignedSchurTarget ↔ RiemannHypothesis` as a `Prop` only.
+
+**Established finite transport:** `columnSynthesis_mem_legal`,
+`cesaro_columnSynthesis`, `columnSynthesis_headClass`, and
+`columnSynthesis_energy` connect the Fin D normalized matrix API to actual
+legal functions, including the exact compulsory head and complete signed
+tail energy.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_uniformSignedSchurTarget` proves actual Mathlib RH
+from (11.7), with no additional density, kernel, or inverse provider
+hypothesis. The existential kernel and inverse conditions are part of
+(11.7) itself. `bounded_headMinimum_of_finiteTailTarget` supplies the
+intermediate uniform bound on actual legal minima.
+
+**Remaining obligations:**
+- **Open mathematics:** prove `UniformSignedSchurTarget` itself. This patch
+  supplies no bound and no unconditional RH theorem.
+- **Open formalization:** prove `RiemannHypothesis →
+  UniformSignedSchurTarget`. The manuscript's converse uses classical
+  RH-to-density, exact-head correction, and finite kernel-basis assembly.
+  `signedSchurRHEquivalenceConjecture_iff_reverse` identifies precisely
+  this remaining direction; it does not prove it.
+
+No new axioms, placeholders, or assumed conjecture instances are added.
+
 ### Concrete Cesaro Gram and signed completion (2026-09-18)
 
 Modules: `Analysis/FiniteSignedQuadratic`, `RH/ConditionalMeanGram`.
