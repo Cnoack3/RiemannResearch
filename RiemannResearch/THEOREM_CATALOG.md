@@ -12,8 +12,13 @@ from the latter to the former proves neither bound.
 Concurrent `RH/ConditionalFiniteMatrixMinimum` and
 `RH/ConditionalNormalizedMatrixMinimum` already supply actual positivity,
 head surjectivity and inverse minima in conductor-indexed coordinates.
-They remain intact. The smaller outstanding integration work is coordinate
-transport/kernel-basis assembly and conductor-infimum identification (11.5).
+They remain intact. `RH/ConditionalConductorExhaustion` proves (11.5):
+`conditionalHeadMinimum_eq_iInf_fullValue` identifies the infimum over all
+admissible budgets, and `tendsto_fullValue_conditionalHeadMinimum` proves
+convergence along every budget N+1+k. Finite-support exhaustion and
+`fullValue_antitone` are also proved, without an RH or bounded-energy premise.
+The remaining finite integration work is coordinate transport/kernel-basis
+assembly for the alternative Fin D signed-completion API.
 See `RH/ConditionalMeanGramProgress20260918.md` for precise scope and the
 historical verification/publication distinction. Assertion (11.7), or a
 cofinal subpolynomial replacement, remains **Open mathematics**.

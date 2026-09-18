@@ -65,15 +65,29 @@ finite facts as unresolved mathematics.
    construct a basis of ker(headMatrix). Its injective synthesis gives a
    positive-definite correction Gram and hence the required inverse. This is
    finite-dimensional integration, not a new arithmetic bound.
-2. Assemble the conductor-exhaustion identity (11.5):
-   conditionalHeadMinimum Y = inf over D >= Y+1 of fullValue Y D.
-   The existing conditionalHeadMinimum_le_fullValue supplies one inequality.
-   The other uses finite support of every legal witness and the attained
-   finite minimum. This continuation does not supply that identity.
 
-These are the remaining connections in the inspected finite-matrix path, not
-a certification that all other mathematics in the completion has been
-formalized. ConditionalMeanFormalization20260917.md and
+## Equation (11.5): formalization completed
+
+RH/ConditionalConductorExhaustion.lean now supplies the previously missing
+conductor-exhaustion step, with no RH or uniform-bound premise:
+
+- legal_mem_finiteResidueSubspace proves finite support for the actual legal
+  span, including its dilation generators.
+- fullValue_antitone proves decrease under conductor enlargement.
+- conditionalHeadMinimum_eq_iInf_fullValue proves equality with the infimum
+  indexed by all natural D satisfying N+1 <= D.
+- tendsto_fullValue_conditionalHeadMinimum proves convergence along the full
+  sequence D=N+1+k, not merely an unspecified subsequence.
+
+The finite minima are the existing fullValue, already identified with the
+literal normalized inverse-Gram expression. Development verification passed;
+both principal declarations' axiom audits contain only propext,
+Classical.choice and Quot.sound. The publication checkpoint verifies the saved
+module. No conductor rate or uniform-in-N energy estimate follows from (11.5).
+
+Closing (11.5) is not a certification that all other mathematics in the
+completion has been formalized; the coordinate/kernel-basis task above remains.
+ConditionalMeanFormalization20260917.md and
 ConditionalMeanCoverageAudit.md are historical audits; some of their gaps
 have since been addressed by new main modules. Their old gap lists must not
 be read as a fresh exhaustive audit.
