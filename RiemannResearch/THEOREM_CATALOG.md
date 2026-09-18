@@ -1,5 +1,15 @@
 # Theorem catalog
 
+### Multi-range divisor correction research submission (2026-09-18)
+
+**Documentation only; no new verified theorem:** the complete source note is
+RH/RH_Multi_Range_Divisor_Corrections_2026-09-18.md. See
+RH/MultiRangeSubmission20260918.md for existing-result coverage and recovery.
+Two final candidate checks ended in wall timeouts without diagnostics.
+The three proposed Lean modules remain unverified and are not exported.
+**Open:** the actual multi-range legal family with subpolynomial energy.
+The existing canonical witness has the stronger checked linear bound below 2Y.
+
 ### CRT–Pareto first-period reduction and exact coordinate legality (2026-09-18)
 
 **Established:** RH/CRTFirstPeriodEnergy.lean proves that for every real
