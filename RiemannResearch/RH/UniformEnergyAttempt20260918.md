@@ -54,18 +54,26 @@ Its theorem type still has the explicit unproved hypothesis
 h : UniformSignedSchurTarget; its foundational axiom audit does not
 discharge that hypothesis.
 
-## Written mathematical continuation — not Lean-verified
+## Mathematical continuation and verification status
 
 Source: the user's conditional-iid/CRT program and mathematical development
 during this task. No claim of mathematical priority is made.
 
-The argument below supplies strict finite improvement with three residue
-generators and a finite conductor bound. Its Dirichlet inversion and
-quantitative detection proof have not been formalized in Lean in this task.
-Their constants depend on the current period and cumulative defect, so they
-do not supply the missing uniform energy estimate.
+The qualitative strict-improvement conclusion has now been Lean-verified:
+RH/ThreeGeneratorStrictImprovement.lean proves
+exists_threeGenerator_strict_improvement, including existence of a
+nonzero actual correlation for some d > Y. Its proof uses the exact
+conditional Hilbert adjoint, first absolute moments, summable-multiples
+inversion and dyadic rigidity. RH/ThreeGeneratorCorrection.lean supplies
+the precise three-generator identity, optimal energy decrease, exact-head
+and mean preservation, and a corrected period Q*(4*d).
 
-Mathematical working draft for the uniform conditional-energy task. These arguments have not been submitted to Lean. They do not establish a uniform or subpolynomial bound, and do not prove RH.
+The explicit Dirichlet-inverse coefficient formula and quantitative
+finite-scale detection estimates below remain a written mathematical
+argument. They are not claimed as Lean-verified. Their constants depend
+on the current period and cumulative defect; neither the written estimates
+nor the verified qualitative theorem supplies a uniform or subpolynomial
+energy bound or a proof of RH.
 
 ## Statement
 

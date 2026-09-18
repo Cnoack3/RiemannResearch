@@ -40,12 +40,26 @@ delayed_scalar_gain_bound give the explicit upper bound
 of a fixed witness, including combined finite directions. It is not
 a bound uniform in growing head length: control of B remains unresolved.
 
-**Written mathematics, not Lean-verified:**
-RH/UniformEnergyAttempt20260918.md proves strict finite mean-zero witness
-improvement using W_d = 3*g_(2d) - g_d - 2*g_(4d), with an explicit
-period/defect-dependent gain and conductor bound. Its Dirichlet inversion
-and finite detection estimates are not formalized. Their dependence on
-the growing period and defect leaves the RH-strength bound **Open**.
+**Established (three-generator strict improvement):**
+RH/ThreeGeneratorStrictImprovement.lean proves
+exists_threeGenerator_correlation_ne_zero and
+exists_threeGenerator_strict_improvement: every finite legal zero-mean
+exact head of positive length Y admits d > Y and an optimal correction
+u*W_d, where W_d = 3*g_(2d) - g_d - 2*g_(4d), preserving its head and
+zero period mean and strictly decreasing the actual infinite energy.
+Nonzero correlation is proved, not assumed. Analysis/LatePulseDetection.lean
+uses summable-multiples inversion and dyadic rigidity;
+RH/ConditionalPulsePairing.lean proves the actual adjoint pairing,
+second differences, and the first-moment/weighted-tail decay providers.
+RH/ThreeGeneratorCorrection.lean proves the exact gain R_d^2/E(W_d)
+and a corrected period Q*(4*d). No RH assumption is used.
+
+**Written mathematics, not Lean-verified:** the explicit Dirichlet-inverse
+coefficient formula and quantitative finite-scale detection estimates in
+RH/UniformEnergyAttempt20260918.md remain informal. The qualitative
+strict-improvement conclusion is now established as above. No uniform
+gain or subpolynomial exact-head family has been proved; the RH-strength
+energy bound remains **Open**.
 
 Coverage and supplementary written arguments are in
 RH/CRTProjectionContinuation20260918.md.
