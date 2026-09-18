@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### CRT/coupled residual open declarations (2026-09-18)
+
+Modules: `RH/CoupledResidualAnalyticTargets`,
+`NumberTheory/GeneralizedCRTDescentTargets`.
+
+**Open declarations, not providers:** `LaplaceFiniteOrder`,
+`FarPeriodIntegralIdentity`, `FarPeriodGainLowerBound`,
+`BurnolDistanceLowerEnvelope`, `FreshMoorePenroseFormula`,
+`InverseHeadSpectralFormula`, `ReconstructionCostLimsupBarrier`, and
+`LogarithmicGainBound` are collected by `CoupledResidualOpenPackage`.
+The Moore--Penrose target retains the complete signed screened Gram matrix;
+the limsup target treats zero gain as infinite reconstruction cost.
+
+`IsTopologicalRingCRT` and `IsEffectiveDescent` record interfaces for the
+profinite product CRT and higher-overlap descent claims. Their concrete
+profinite and Amitsur-totalization instances remain open formalization work.
+No declaration in this section is an axiom, and no RH conclusion is claimed.
+
 ### Weighted energy implies holomorphy and Hardy H2 (2026-09-18)
 
 Modules: `Analysis/WeightedMellinEnergy`, `Analysis/WeightedMellinHardy`,

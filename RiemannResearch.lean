@@ -954,6 +954,7 @@ import RiemannResearch.Analysis.SharpLogarithmicResidualBarrier
 import RiemannResearch.RH.DyadicResidualConstraints
 import RiemannResearch.RH.LogarithmicCorrectionTarget
 import RiemannResearch.RH.CoupledResidualAnalyticTargets
+import RiemannResearch.NumberTheory.GeneralizedCRTDescentTargets
 import RiemannResearch.RH.ActualResidualLaplace
 import RiemannResearch.RH.BurnolDyadicComparison
 import RiemannResearch.Analysis.CesaroPulseObstruction
