@@ -1,14 +1,28 @@
 # Theorem catalog
 
-### Multi-range divisor correction research submission (2026-09-18)
+### Multi-range divisor corrections: exact construction and optimization (2026-09-19)
 
-**Documentation only; no new verified theorem:** the complete source note is
-RH/RH_Multi_Range_Divisor_Corrections_2026-09-18.md. See
-RH/MultiRangeSubmission20260918.md for existing-result coverage and recovery.
-Two final candidate checks ended in wall timeouts without diagnostics.
-The three proposed Lean modules remain unverified and are not exported.
-**Open:** the actual multi-range legal family with subpolynomial energy.
-The existing canonical witness has the stronger checked linear bound below 2Y.
+**Established:** the MultiRange modules prove the complete original primorial
+correction characterization with reciprocal balance -alpha, anchored legality,
+exact heads and coefficient uniqueness; actual finite Gram positivity and a
+unique inverse-Gram optimizer; exact signed screened Schur gains with global
+old/new reoptimization; and convergence of finite-range infima to the legal
+infimum. Signed cross terms and overlapping supports are preserved.
+
+**Established:** explicit finite-horizon positive definiteness, actual prefix
+minimization, exact rational inverse coefficients, infinite-tail certificates,
+and convergence of both rational endpoints to each fixed-family minimum.
+The delayed-support obstruction includes the balance-anchor caveat. The
+explicit polynomial zeta-zero obstruction applies to the remaining tail.
+See RH/MultiRangeFormalization20260919.md for declaration/module coverage.
+
+**Conditional research reduction:**
+riemannHypothesis_of_multiRangeSubpolynomialTarget.
+**Open:** MultiRangeSubpolynomialTarget, the actual legal family with
+subpolynomial conditional-mean energy; a uniform fractional tail gain; RH.
+No provider for these obligations is asserted. The existing canonical witness
+has the stronger unconditional linear energy bound below 2Y.
+The earlier documentation-only submission is superseded.
 
 ### CRT–Pareto first-period reduction and exact coordinate legality (2026-09-18)
 
