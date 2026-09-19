@@ -1,3 +1,5 @@
+import RiemannResearch.RH.IntegratedRamanujanInverse
+import RiemannResearch.RH.RamanujanOrthogonalScores
 import RiemannResearch.Analysis.FiniteHilbertGramProjection
 import RiemannResearch.RH.TwoSeedSchurConvergence
 import RiemannResearch.RH.ParetoCRTWeightLimits

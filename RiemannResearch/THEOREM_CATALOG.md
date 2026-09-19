@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Ramanujan inverse and von Mangoldt orthogonal scores (2026-09-19)
+
+Modules: RH/IntegratedRamanujanInverse and RH/RamanujanOrthogonalScores.
+Explanation: RH/RamanujanVonMangoldtRoute20260919.md.
+
+**Established:** ramanujanPacket_prime_pow_mul_inverse gives the explicit
+finite inverse from \(B_{p^{v+1}u}\) to prime-seed dilations, for a prime
+\(p\), positive \(u\), and \(p\nmid u\). The full Pareto orthogonalization
+constructs the old Gram fit, proves orthogonality, and identifies the
+screened score as von Mangoldt minus the fitted von Mangoldt means
+(score_vonMangoldt). The theorem pivot_schur retains every covariance.
+The theorem pivot_pos proves a strictly positive pivot for an increasing
+conductor enumeration from the Mobius coordinate innovation_mobiusDifference.
+The theorem update_error proves the exact one-step squared-error gain;
+gain_le_error bounds it by the previous full error; update_legal
+preserves the two-seed space.
+
+The prior paretoMean_ramanujanPacket identifies the mean with the actual
+ArithmeticFunction.vonMangoldt. Mixed conductors stay in the Gram
+dictionary even when this raw mean vanishes.
+
+**Open:** exhaustion of the target norm by the sum of orthogonal gains,
+or decay of the growing exact-head affine Schur errors. The finite inverse
+and normal equations do not provide these all-scale estimates. The
+orthogonal-sum and exact-head matrix displays in the explanation describe
+the finite construction; no new Lean theorem asserts their limiting decay.
+
+
 ### CRT weights and two-seed regression limits (2026-09-19)
 
 Modules: `Analysis/FiniteHilbertGramProjection`,
