@@ -489,6 +489,8 @@ import RiemannResearch.RH.ThresholdAnnihilatorInjection
 import RiemannResearch.LinearAlgebra.BalancedGridCuts
 import RiemannResearch.RH.BalancedArithmeticCuts
 import RiemannResearch.RH.BalancedContinuousCoordinates
+import RiemannResearch.RH.MobiusHilbertCoordinates
+import RiemannResearch.RH.MobiusCoefficientStabilization
 import RiemannResearch.RH.BalancedCoefficientTargets
 import RiemannResearch.RH.BalancedScalarBasis
 import RiemannResearch.RH.BalancedMinimalTarget

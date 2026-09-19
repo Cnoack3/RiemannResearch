@@ -9,6 +9,8 @@ Source: user-requested randomized exploration of the Nyman--Pareto--CRT program
 (2026-09-17). The convergence proof specializes Mathlib's
 Submodule.starProjection_tendsto_closure_iSup; energy identities are elementary
 Hilbert-space Pythagoras. No novelty claim is made.
+The continuous-coordinate statements also formalize the user-developed
+coefficient-stabilization argument of 2026-09-18.
 Randomness is not an assumption: every surjective ordering has the same limit.
 IID full-support exhaustion and the separate rank-one stochastic walk theorem
 are proved in the companion RH_Random_Walk_Nyman_Pareto_CRT_2026-09-17.md;
@@ -168,5 +170,55 @@ theorem accumulated_gain_tendsto (v : ι → H) (draw : ℕ → ι)
       (𝓝 (‖x‖ ^ 2 - limitingError v x)) :=
     tendsto_const_nhds.sub (walkError_tendsto v draw hexhaust x)
   simpa only [accumulated_gain, hzero] using ht
+
+/-- Every continuous linear coordinate stabilizes under exhaustive projection,
+without assuming that the limiting residual vanishes. -/
+theorem walkProjection_map_tendsto (v : ι → H) (draw : ℕ → ι)
+    (hexhaust : Function.Surjective draw) (x : H) (ℓ : H →L[ℝ] ℝ) :
+    Tendsto (fun n => ℓ ((walkSpan v draw n).starProjection x)) atTop
+      (𝓝 (ℓ ((dictionaryClosure v).starProjection x))) :=
+  (ℓ.continuous.tendsto _).comp (walkProjection_tendsto v draw hexhaust x)
+
+/-- The exact limiting energy decomposition. Exhaustiveness is unnecessary:
+every finite walk span lies in the closed full dictionary span. -/
+theorem walkError_eq_limitingError_add (v : ι → H) (draw : ℕ → ι)
+    (x : H) (n : ℕ) :
+    walkError v draw x n = limitingError v x +
+      ‖(dictionaryClosure v).starProjection x -
+        (walkSpan v draw n).starProjection x‖ ^ 2 := by
+  apply nested_projection_energy
+  exact (walkSpan_le v draw n).trans
+    (Submodule.span ℝ (Set.range v)).le_topologicalClosure
+
+/-- Quantitative stabilization controlled by the exact energy excess. -/
+theorem walkProjection_map_error_bound (v : ι → H) (draw : ℕ → ι)
+    (x : H) (n : ℕ) (ℓ : H →L[ℝ] ℝ) :
+    ‖ℓ ((dictionaryClosure v).starProjection x) -
+      ℓ ((walkSpan v draw n).starProjection x)‖ ^ 2 ≤
+      ‖ℓ‖ ^ 2 * (walkError v draw x n - limitingError v x) := by
+  let y := (dictionaryClosure v).starProjection x -
+    (walkSpan v draw n).starProjection x
+  have henergy : walkError v draw x n - limitingError v x = ‖y‖ ^ 2 := by
+    have he := walkError_eq_limitingError_add v draw x n
+    change walkError v draw x n = limitingError v x + ‖y‖ ^ 2 at he
+    linarith
+  rw [henergy, ← map_sub]
+  change ‖ℓ y‖ ^ 2 ≤ ‖ℓ‖ ^ 2 * ‖y‖ ^ 2
+  have hsq := mul_self_le_mul_self (norm_nonneg (ℓ y)) (ℓ.le_opNorm y)
+  nlinarith [hsq]
+
+/-- The deviation of the limiting coordinate from its target is bounded by
+exactly the remaining residual energy. This does not assert that energy is zero. -/
+theorem limitingProjection_map_target_bound (v : ι → H) (x : H)
+    (ℓ : H →L[ℝ] ℝ) :
+    ‖ℓ x - ℓ ((dictionaryClosure v).starProjection x)‖ ^ 2 ≤
+      ‖ℓ‖ ^ 2 * limitingError v x := by
+  rw [← map_sub]
+  unfold limitingError
+  have hsq := mul_self_le_mul_self
+    (norm_nonneg (ℓ (x - (dictionaryClosure v).starProjection x)))
+    (ℓ.le_opNorm (x - (dictionaryClosure v).starProjection x))
+  nlinarith [hsq]
+
 
 end RiemannResearch.Analysis.ExhaustiveWalk

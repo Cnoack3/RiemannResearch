@@ -24,6 +24,30 @@ No provider for these obligations is asserted. The existing canonical witness
 has the stronger unconditional linear energy bound below 2Y.
 The earlier documentation-only submission is superseded.
 
+### Möbius coefficient stabilization and exact residual characterization (2026-09-19)
+
+**Established:** RH/MobiusHilbertCoordinates.lean proves the actual finite
+Möbius coordinates jointly separate points of the Pareto Hilbert space,
+biorthogonality on normalized residues, the finite-support Riesz representation,
+and the exact squared coordinate norm sum j(j+1)*dualCoeff(m,j)^2.
+
+**Established:** Analysis/ExhaustiveProjectionWalk.lean now gives continuous
+coordinate convergence, the exact limiting energy decomposition, and coordinate
+error bounds. RH/MobiusCoefficientStabilization.lean proves the actual finite
+projection expansion and uniqueness, unconditional coefficient stabilization,
+the finite residual-correction formula, and equivalence of all Möbius target
+limits with zero residual, zero limiting energy, target membership, and energy
+convergence to zero. Stage n uses g_2,...,g_(n+1); all norms are the full Pareto norm.
+
+**Conditional research reductions:** riemannHypothesis_of_limitCoefficients and
+riemannHypothesis_of_coefficients_tendsto_mobius conclude Mathlib RH through
+the existing actual Mellin bridge. **Open:** every stabilized coefficient equals
+-mu(m), equivalently all Möbius coordinates of the actual limiting residual vanish.
+riemannHypothesis_of_mobiusRiesz_mem supplies a second route. **Open:** every
+finite-support Möbius Riesz vector for m>=2 belongs to the closed legal residue span.
+Neither continuity, finite support, nor stabilization discharges these inputs.
+See RH/RH_Coefficient_Lean_Integration_2026-09-19.md and the accompanying written proof.
+
 ### CRT–Pareto first-period reduction and exact coordinate legality (2026-09-18)
 
 **Established:** RH/CRTFirstPeriodEnergy.lean proves that for every real
