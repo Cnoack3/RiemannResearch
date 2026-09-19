@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### Full finite two-seed Schur candidates (2026-09-19)
+
+Module: `RH/TwoSeedSchurCandidates`.
+
+**Established:** `candidate` constructs the canonical exact head plus the
+full inverse-Gram correction on any finite set of balanced indices greater
+than the head length. Zero-target coefficients are allowed. Target zero
+minimizes packet energy; target one minimizes squared error to one.
+`correctedHead_feasible` also covers arbitrary fixed coefficients.
+`candidate_feasible`, `candidate_error_sq`, `candidate_completion`, and
+`candidate_minimizes` prove exact-head legality, the full signed Schur value,
+the exact excess loss, and finite affine optimality. The existing Green
+identity retains the negative finite boundary and the true infinite tail.
+
+**Open:** all-scale error decay or a uniform bound on the energies of chosen
+growing candidates. Fixed-dictionary CLT arguments concern coefficient
+estimation only; no CLT or growing-dimension statistical theorem is
+formalized in this module. Numerical rational candidates and integer
+arithmetic certificates are separate from the Lean kernel proofs.
+
 ### Quantitative finite two-seed approximation (2026-09-19)
 
 Module: `RH/TwoSeedHeadEnergyGeometry`.
