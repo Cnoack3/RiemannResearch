@@ -79,6 +79,45 @@ continuation derives the inverse-Gram scalar formulation and finite transfer
 to multi-range conditional-mean witnesses; these extra written arguments
 are not claimed as kernel-checked declarations in this module.
 
+### Full Pareto tail capacity and the unresolved RH limit (2026-09-19)
+
+**Established:** Analysis/FiniteGramCapacity and Analysis/FiniteGramScreenedCapacity
+prove actual inverse-Gram capacities, normalized constrained minima, rank-one
+identities, screened independence, exact additive Schur gains, and telescoping.
+RH/ParetoTailCapacity specializes them to the actual residue dictionary and
+removes only physical coordinate one. It proves finite tail independence,
+delta_n = 1/(tau_n+2), kappa_n = 2*tau_n/(tau_n+2), and equivalence of
+tau_n tending to infinity, kappa_n tending to 2, and point error tending to zero.
+Stage n uses moduli 2 through n+1.
+
+**Established:** RH/ParetoTailCapacityDuality constructs actual minimum-energy
+tail vectors, proves exact squared-norm increments and capacity monotonicity,
+and identifies bounded capacities with existence of an actual Hilbert tail
+certificate. RH/ResidueTailCertificateRegularity excludes certificates with
+finite absolute first moment and proves both signs occur arbitrarily far out.
+Hilbert membership alone does not provide that moment condition.
+
+**Established:** RH/ParetoFullTailCRT gives complete signed CRT/digamma tail
+formulas. RH/TailCapacityDilationCorrection gives legal finite corrections and
+exact energy gains. RH/PointTargetDilationSynthesis proves the finite
+point-to-constant transfer with its exact largest-modulus budget.
+RH/OmittedPrimeResidueBarrier proves permanent point and tail error lower
+bounds when an odd prime modulus is omitted.
+
+**Conditional research reductions:** riemannHypothesis_of_tailCapacity_tendsto,
+riemannHypothesis_of_fullCapacity_tendsto, and
+riemannHypothesis_of_no_tailCertificate. **Open:** TailCapacityDivergence,
+equivalently excluding all actual tail certificates. No provider is asserted;
+regularity exclusion and positive finite gains do not supply divergence.
+
+**Conditional rate barrier:** RH/PointTargetLogarithmicBarrier rules out
+eventual fixed fractional dyadic point-error improvement assuming
+PointBurnolLogLowerEnvelope. Analysis/PointLogarithmicTransfer proves the
+scalar transfer. **Open formalization input:** Burnol's analytic provider,
+the continuous comparison, and logarithmic scale asymptotics.
+See RH/TailCapacityFormalization20260919.md for exact coverage and limitations.
+No unconditional RH theorem is asserted.
+
 ### Multi-range divisor corrections: exact construction and optimization (2026-09-19)
 
 **Established:** the MultiRange modules prove the complete original primorial

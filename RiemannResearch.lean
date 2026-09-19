@@ -73,6 +73,17 @@ import RiemannResearch.RH.PolynomialWeilCriterion
 import RiemannResearch.RH.ParetoExactHeadResidual
 import RiemannResearch.RH.ParetoStochasticHitting
 import RiemannResearch.Analysis.ExhaustiveProjectionWalk
+import RiemannResearch.Analysis.FiniteGramCapacity
+import RiemannResearch.RH.ParetoTailCapacity
+import RiemannResearch.RH.TailCapacityDilationCorrection
+import RiemannResearch.Analysis.FiniteGramScreenedCapacity
+import RiemannResearch.RH.ResidueTailCertificateRegularity
+import RiemannResearch.RH.OmittedPrimeResidueBarrier
+import RiemannResearch.RH.ParetoTailCapacityDuality
+import RiemannResearch.RH.ParetoFullTailCRT
+import RiemannResearch.RH.PointTargetDilationSynthesis
+import RiemannResearch.Analysis.PointLogarithmicTransfer
+import RiemannResearch.RH.PointTargetLogarithmicBarrier
 import RiemannResearch.RH.ParetoExhaustiveWalk
 import RiemannResearch.RH.ConditionalMeanApproximateHeads
 import RiemannResearch.RH.ConditionalMeanRegularizedHeads
