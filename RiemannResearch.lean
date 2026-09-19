@@ -491,6 +491,7 @@ import RiemannResearch.RH.BalancedArithmeticCuts
 import RiemannResearch.RH.BalancedContinuousCoordinates
 import RiemannResearch.RH.MobiusHilbertCoordinates
 import RiemannResearch.RH.MobiusCoefficientStabilization
+import RiemannResearch.RH.MobiusResidualFirstCoordinate
 import RiemannResearch.RH.BalancedCoefficientTargets
 import RiemannResearch.RH.BalancedScalarBasis
 import RiemannResearch.RH.BalancedMinimalTarget

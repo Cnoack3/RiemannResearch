@@ -1,5 +1,29 @@
 # Theorem catalog
 
+### First-coordinate rigidity and the single-point RH target (2026-09-19)
+
+**Established:** RH/MobiusResidualFirstCoordinate.lean proves the exact normalized
+residue dilation formula and invariance of the actual coefficient dictionary
+closure. For its actual limiting projection residual r and squared norm E,
+the first physical coordinate satisfies
+(1-sqrt(2)/2)*E <= r(1)/2 <= (1+sqrt(2)/2)*E.
+It is nonnegative and vanishes exactly when the residual is zero. Membership
+of the first point vector in the closed span is equivalent to membership of
+the constant target. Point-error convergence and convergence of the first
+constant-projection coordinate to one are equivalent to the existing
+simultaneous Mobius coefficient target. Finite-stage first-coordinate
+agreement is not asserted to imply zero error.
+
+**Conditional research reductions:**
+riemannHypothesis_of_firstCoordinate_zero and
+riemannHypothesis_of_firstPoint_error_tendsto_zero.
+**Open:** the actual limiting first residual coordinate equals zero;
+equivalently, the full Pareto point approximation error tends to zero.
+No provider for this equality or limit is asserted. The separate written
+continuation derives the inverse-Gram scalar formulation and finite transfer
+to multi-range conditional-mean witnesses; these extra written arguments
+are not claimed as kernel-checked declarations in this module.
+
 ### Multi-range divisor corrections: exact construction and optimization (2026-09-19)
 
 **Established:** the MultiRange modules prove the complete original primorial
