@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.FiniteParetoAffineEnergy
 import RiemannResearch.RH.DyadicGainEndpoint
 import RiemannResearch.RH.TwoSeedContrastObstruction
 import RiemannResearch.RH.MultiRangeFiniteMinimum

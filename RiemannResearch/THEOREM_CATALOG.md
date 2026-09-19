@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### Tail-capacity literature audit and affine-head energy obstruction (2026-09-19)
+
+**Established:** `Analysis/FiniteParetoAffineEnergy.lean` proves
+`finite_pareto_affine_energy`, `finite_pareto_linear_energy`,
+`pareto_affine_head_error_lower`, and
+`pareto_affine_head_error_lower_linear`. A physical head 1-c*k forces
+full squared error at least c^2*N/2, with an explicit summability hypothesis.
+
+**Written mathematics:** `RH/TailCapacityLiteratureAudit20260919.md`
+identifies the exact discrete residue space with Bagchi's Theorem 1.
+It derives the primorial Mobius sieve head, proves its divergent energy,
+and proves that a single exact-head repair still has divergent Pareto energy.
+Those arithmetic specializations and asymptotic arguments are not claimed
+as end-to-end Lean formalizations. The actual projection theorems are unaffected.
+
+**Open:** actual tail-capacity divergence, or exclusion of every Hilbert tail
+certificate. The audited literature gives equivalences, lower error bounds,
+and RH-conditional upper estimates; no unconditional provider was added.
+
+
 ### Minimal-support finite-tail exhaustion and cofinal RH criterion (2026-09-19)
 
 **Established:** `RH/BalancedFiniteTailGram.lean` now proves
