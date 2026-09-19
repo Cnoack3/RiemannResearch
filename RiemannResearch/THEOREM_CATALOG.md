@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Quantitative finite two-seed approximation (2026-09-19)
+
+Module: `RH/TwoSeedHeadEnergyGeometry`.
+Namespace: `RiemannResearch.RH.Pareto.TwoSeedExactHeadEnergy`.
+
+**Conditional research reduction:** for the actual full-norm exact-head
+infimum `energy N`, `BddAbove (Set.range energy)` produces finite legal
+two-seed packets `F N` at finite dilation budgets `M N`, satisfying
+`F N(k) = 1` for `1 <= k <= N`,
+`norm (F N - hilbertOne)^2 < 4/(N+1)`, and norm convergence to
+`hilbertOne`. No growth restriction on `M N` is imposed or proved.
+
+Endpoints: `exists_finite_budget_approximation_of_energy_bddAbove` and
+`exists_finite_budget_sequence_of_energy_bddAbove`.
+
+The supporting checked identities keep their closure hypothesis explicit:
+`closedMinimizer_error_sq_of_closure` gives
+`norm (hilbertOne - closedMinimizer N)^2 = 1 - energy N`;
+`feasible_error_sq_le` bounds the full error by twice the excess energy
+plus twice `1 - energy N`.
+
+**Open:** prove the uniform bound `BddAbove (Set.range energy)`.
+The pre-existing `energy_bddAbove_iff_closure` shows that it is exactly
+the two-seed approximation problem. The new rate constructs finite
+witnesses from that hypothesis; it does not discharge it. No unconditional
+two-seed approximation or RH proof is asserted.
+
+Source: independently derived from the project's exact-head projection
+geometry in response to the user's two-seed approximation request.
+
 ### Exact-head residual tails and RH-criterion failures (2026-09-19)
 
 Modules: `RH/ExactHeadResidualTail` and `RH/RHCriterionFailures`.

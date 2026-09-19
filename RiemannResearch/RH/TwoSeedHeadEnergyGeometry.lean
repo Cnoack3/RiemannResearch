@@ -15,6 +15,12 @@ Source: independently developed from the user-provided full-energy problem,
 with a minimum in the closed legal space. Orthogonal projection constructs
 that minimizer and gives an exact Pythagorean identity as the head grows.
 No growth estimate for the energy is assumed in this construction.
+
+The quantitative finite-witness continuation (19 September 2026) is
+independently derived from this geometry. Under the still-open uniform
+energy bound it produces actual finite packets with an exact growing head,
+squared error less than 4/(N+1), and norm convergence to one. The bound
+itself is not proved.
 -/
 
 open Filter
@@ -300,6 +306,94 @@ theorem energy_limit_dichotomy :
     obtain ⟨N, rfl⟩ := he
     filter_upwards [eventually_ge_atTop N] with M hM
     exact hB.le.trans (energy_monotone hM)
+
+/-- If one is in the closed legal space, its squared distance from the
+closed head minimizer is exactly the remaining unit energy. -/
+theorem closedMinimizer_error_sq_of_closure
+    (h1 : hilbertOne ∈ hilbertLegalClosure ({2, 3} : Set ℕ)) (N : ℕ) :
+    ‖hilbertOne - closedMinimizer N‖ ^ 2 = 1 - energy N := by
+  have hh : ClosedFeasible N hilbertOne := by
+    refine ⟨h1, ?_⟩
+    intro k hk _
+    simp [hilbertOne_sequence, zeroAnchor, Nat.ne_of_gt hk]
+  have h := closedMinimizer_energy_split hh
+  rw [hilbertOne_norm_sq, closedMinimizer_norm_sq] at h
+  linarith
+
+/-- A finite packet's error is controlled by its excess above the head
+minimum and the minimum's error. The projection identities use the full norm. -/
+theorem feasible_error_sq_le
+    (h1 : hilbertOne ∈ hilbertLegalClosure ({2, 3} : Set ℕ))
+    {N : ℕ} {f : ThresholdHilbert} (hf : Feasible N f) :
+    ‖f - hilbertOne‖ ^ 2 ≤
+      2 * (‖f‖ ^ 2 - energy N) + 2 * (1 - energy N) := by
+  have hs := closedMinimizer_energy_split (feasible_closed hf)
+  rw [closedMinimizer_norm_sq] at hs
+  have he := closedMinimizer_error_sq_of_closure h1 N
+  have ht : ‖f - hilbertOne‖ ≤ ‖f - closedMinimizer N‖ +
+      ‖hilbertOne - closedMinimizer N‖ := by
+    calc
+      _ = ‖(f - closedMinimizer N) -
+          (hilbertOne - closedMinimizer N)‖ := by congr 1; abel
+      _ ≤ _ := norm_sub_le _ _
+  nlinarith [norm_nonneg (f - hilbertOne),
+    norm_nonneg (f - closedMinimizer N),
+    norm_nonneg (hilbertOne - closedMinimizer N),
+    sq_nonneg (‖f - closedMinimizer N‖ -
+      ‖hilbertOne - closedMinimizer N‖)]
+
+/-- Conditional finite approximation with an exact head and squared error
+less than 4/(N+1). The uniform energy bound is an unresolved arithmetic input. -/
+theorem exists_finite_budget_approximation_of_energy_bddAbove
+    (hb : BddAbove (Set.range energy)) (N : ℕ) :
+    ∃ M : ℕ, ∃ f : ThresholdHilbert,
+      hilbertSequence f ∈ FiniteTwoSeedCompletion.budgetSpan M ∧
+      (∀ k, 0 < k → k ≤ N → hilbertSequence f k = 1) ∧
+      ‖f - hilbertOne‖ ^ 2 < 4 / ((N : ℝ) + 1) := by
+  have h1 := hilbertOne_mem_closure_of_energy_bddAbove hb
+  have hn : (0 : ℝ) < (N : ℝ) + 1 := by positivity
+  obtain ⟨f, hf, he⟩ := exists_near_minimizer N (one_div_pos.mpr hn)
+  obtain ⟨M, hM⟩ :=
+    (FiniteTwoSeedCompletion.mem_legal_iff_exists_budget (hilbertSequence f)).mp hf.1
+  refine ⟨M, f, hM, hf.2, ?_⟩
+  have herr := feasible_error_sq_le h1 hf
+  have hfloor := head_floor_le_energy N
+  have hid : (N : ℝ) / ((N : ℝ) + 1) +
+      1 / ((N : ℝ) + 1) = 1 := by
+    field_simp
+  have hfour : 4 / ((N : ℝ) + 1) = 4 * (1 / ((N : ℝ) + 1)) := by ring
+  rw [hfour]
+  nlinarith
+
+
+/-- Under the open energy bound, finite two-seed witnesses form a genuine
+norm-convergent sequence, with an exact growing head and a squared-error rate.
+No bound on the finite dilation budgets is asserted. -/
+theorem exists_finite_budget_sequence_of_energy_bddAbove
+    (hb : BddAbove (Set.range energy)) :
+    ∃ (M : ℕ → ℕ) (F : ℕ → ThresholdHilbert),
+      (∀ N, hilbertSequence (F N) ∈ FiniteTwoSeedCompletion.budgetSpan (M N)) ∧
+      (∀ N k, 0 < k → k ≤ N → hilbertSequence (F N) k = 1) ∧
+      (∀ N, ‖F N - hilbertOne‖ ^ 2 < 4 / ((N : ℝ) + 1)) ∧
+      Tendsto F atTop (nhds hilbertOne) := by
+  choose M F hM hhead herr using
+    fun N => exists_finite_budget_approximation_of_energy_bddAbove hb N
+  refine ⟨M, F, hM, hhead, herr, ?_⟩
+  have ht : Tendsto (fun N : ℕ => (N : ℝ) + 1) atTop atTop :=
+    tendsto_atTop_mono (fun N => by linarith) tendsto_natCast_atTop_atTop
+  have hu : Tendsto (fun N : ℕ => 4 / ((N : ℝ) + 1))
+      atTop (nhds (0 : ℝ)) := by
+    simpa [div_eq_mul_inv] using
+      (tendsto_const_nhds.mul (tendsto_inv_atTop_zero.comp ht) :
+        Tendsto (fun N : ℕ => (4 : ℝ) * ((N : ℝ) + 1)⁻¹)
+          atTop (nhds (4 * 0)))
+  have hs : Tendsto (fun N => ‖F N - hilbertOne‖ ^ 2) atTop (nhds (0 : ℝ)) :=
+    squeeze_zero (fun N => sq_nonneg _) (fun N => (herr N).le) hu
+  apply tendsto_iff_norm_sub_tendsto_zero.mpr
+  have hn := Real.continuous_sqrt.continuousAt.tendsto.comp hs
+  simpa [Function.comp_def, Real.sqrt_sq_eq_abs,
+    abs_of_nonneg (norm_nonneg _)] using hn
+
 
 end
 
