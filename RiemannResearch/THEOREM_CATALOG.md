@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Escape of the canonical defect reconstruction (2026-09-19)
+
+**Established:** finite Möbius inversion makes the ordered reconstruction
+error linear on the first N+1 coordinates. The coefficient Riesz dictionary
+is total independently of residue density. Its finite projections converge
+strongly to every vector. For the actual orthogonal residual r and its
+ordered reconstruction R_N, the exact pairing is
+`inner (r - R_N) (r - dualProjection_N r) = norm r ^ 2`.
+Cauchy--Schwarz and Pythagoras give the corresponding squared norm bound.
+
+**Established under explicit not RH:** `norm R_N` tends to infinity.
+This strengthens the earlier exclusion of an ordinary norm limit and
+excludes every bounded cofinal subsequence.
+
+Module: `RH/MobiusResidualEscape`.
+Principal endpoints: `coordinatePartialSum_prefix_linear`,
+`dualCoordinateProjection_tendsto`,
+`defect_reconstruction_dual_bound_sq`,
+`not_RH_defect_norms_tendsto_atTop`.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_cofinally_bounded_defect_reconstruction`.
+
+**Open:** a cofinal norm bound for the actual stabilized defect reconstruction.
+No boundedness, subpower signed Gram estimate, or contradiction is asserted.
+Polynomial and multiplicity-sensitive Mellin lower bounds in the written
+continuation are not new Lean declarations in this module.
+
 ### Canonical constraints under failure of RH (2026-09-19)
 
 **Established under explicit ¬RH:** the actual canonical tail certificate
