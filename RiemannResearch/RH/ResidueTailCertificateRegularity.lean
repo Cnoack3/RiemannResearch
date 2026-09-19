@@ -186,4 +186,49 @@ theorem tailCertificate_both_signs_arbitrarily_far (z : ThresholdHilbert)
   exact ⟨⟨k, le_trans (le_max_left N 2) hk, hk2, hkpos⟩,
     ⟨j, le_trans (le_max_left N 2) hj, hj2, hjneg⟩⟩
 
+/-- Source: user-provided continuation, Section 26.1. The general summable-tail
+rigidity theorem is already established in ParetoSummableTailRigidity. -/
+theorem normalizedResidue_orthogonal_eq_zero_of_summable_signedTail
+    (h : ThresholdHilbert)
+    (horth : ∀ (d : ℕ) (hd : 1 < d),
+      inner ℝ h (normalizedResidueHilbert d (by omega)) = 0)
+    (hA : Summable (anchoredSignedTail (hilbertSequence h))) : h = 0 := by
+  apply hilbertSequence_injective
+  have hz := legalAnnihilator_anchored_eq_zero_of_summable_signedTail
+    (show 2 ∈ {n : ℕ | 0 < n} by norm_num)
+    (legalAnnihilator_of_normalizedResidue_orthogonal h horth) hA
+    (hilbertSequence_zero h)
+  exact hz.trans (hilbertSequenceLinear.map_zero).symm
+
+/-- Altering the first coordinate leaves every primitive starting at n ≥ 2 unchanged. -/
+theorem tailCertificateAnnihilator_signedTail (z : ThresholdHilbert)
+    (n : ℕ) (hn : 2 ≤ n) :
+    anchoredSignedTail (hilbertSequence (tailCertificateAnnihilator z)) n =
+      anchoredSignedTail (hilbertSequence z) n := by
+  rw [anchoredSignedTail_pos _ (by omega), anchoredSignedTail_pos _ (by omega)]
+  unfold signedTail
+  apply tsum_congr
+  intro j
+  unfold signedCoefficient
+  rw [tailCertificateAnnihilator_tail z (j + n) (by omega)]
+
+/-- Section 26.1 specialized to the actual reciprocal-source tail certificate.
+Unlike the earlier absolute first moment, this allows cancellation inside each tail. -/
+theorem tailCertificate_not_summable_signedTail (z : ThresholdHilbert)
+    (hz : IsResidueTailCertificate z) :
+    ¬ Summable (anchoredSignedTail (hilbertSequence z)) := by
+  intro hA
+  have hA' : Summable (anchoredSignedTail
+      (hilbertSequence (tailCertificateAnnihilator z))) := by
+    apply (summable_nat_add_iff 2).mp
+    have hs := (summable_nat_add_iff 2).mpr hA
+    convert hs using 1
+    funext n
+    exact tailCertificateAnnihilator_signedTail z (n + 2) (by omega)
+  have heq := normalizedResidue_orthogonal_eq_zero_of_summable_signedTail
+    (tailCertificateAnnihilator z) (tailCertificateAnnihilator_orthogonal z hz) hA'
+  have hfirst := tailCertificateAnnihilator_first z hz
+  rw [heq] at hfirst
+  simp [hilbertSequence] at hfirst
+
 end RiemannResearch.RH.Pareto

@@ -1,5 +1,47 @@
 # Theorem catalog
 
+### Signed primitives, full sieve boundaries, and the canonical RH endpoint (2026-09-19)
+
+Source: continuation handoff
+`RH_First_Coordinate_and_Tail_Capacity_Continuation_2026-09-19.md`,
+Sections 24–31. Detailed scope and verification:
+`RH/TailCertificateSieveFormalization20260919.md`.
+
+**Established:** weighted-H membership implies primitive ℓ² with constant
+four and vanishing square-root boundary; primitive ℓ¹ excludes an actual
+reciprocal tail certificate, reusing the existing summable-tail rigidity.
+Actual additive cancellation, including explicit power/logarithmic saving,
+implies this exclusion. The alternating α=0 and constant-one examples
+certify the two distinct regularity gaps.
+
+`RH/ParetoFiniteSieveBoundary` and
+`RH/ParetoMobiusSieveBoundary` prove the exact finite signed
+identity. `RH/ParetoSieveBoundaryNorm` and
+`RH/ParetoSieveBoundaryGrowth` prove the full signed
+functional norm and its divergence for cutoff floor(Y/2).
+`Analysis/FinitePrimeProductBounds` supplies all prime-product
+rates. `RH/PrimeSievePointEnergy` proves the actual legal
+candidate's correct pointwise/coefficient limits and divergent full-tail
+energy. `RH/TailCapacityJointCorrections` proves attained
+joint optimization, complete signed covariance, reciprocal-defect sources,
+capacity-gain bounds and the telescope, including dependent trial families.
+
+**Conditional research reductions:** in
+`RH/TailCertificateCancellationEndpoint`,
+`riemannHypothesis_of_canonicalTailSummability` and
+`riemannHypothesis_of_canonicalAdditiveCancellation`
+retain their actual summability premise. In the joint module,
+`riemannHypothesis_of_jointScreenedGainDivergence` retains
+the actual divergent-gain premise.
+
+**Open:** canonical primitive ℓ¹ under a nonzero residual; an arithmetic
+power/logarithmic cancellation estimate that would supply it; or concrete
+finite legal trial families with divergent cumulative screened gains.
+`CanonicalTailSummability` is a proposition, not an axiom,
+and its checked equivalence with vanishing of the canonical residual
+makes its strength explicit. The unconditional attempt leaves precisely
+the canonical summability goal unresolved. No unconditional RH proof.
+
 ### Exact conductor enlargement and cumulative gain (2026-09-19)
 
 Source: user-provided argument, `RH_Controlled_Conductor_Schur_2026-09-10.md`, §§1–8.
