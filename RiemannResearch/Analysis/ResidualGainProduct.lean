@@ -122,4 +122,77 @@ theorem residual_tendsto_zero_iff_not_summable {d r : ℕ → ℝ}
         Tendsto (fun n => d 0 * survivalProduct r n) atTop (𝓝 (d 0 * 0)))
     exact hh.congr' (Filter.Eventually.of_forall (fun n => (hformula n).symm))
 
+/-!
+Source: user-provided argument, `RH_Controlled_Conductor_Schur_2026-09-10.md`, §7.
+The logarithmic and additive forms below do not prove arithmetic gain divergence.
+-/
+
+/-- The additive version of the exact product identity: no gains or mixed
+contributions are discarded. -/
+theorem recurrence_eq_initial_sub_sum {d r : ℕ → ℝ}
+    (hrec : ∀ n, d (n + 1) = d n * (1 - r n)) (n : ℕ) :
+    d n = d 0 - ∑ i ∈ Finset.range n, d i * r i := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [hrec, Finset.sum_range_succ]
+    nlinarith
+
+/-- Strict relative gains preserve positivity at every finite stage. -/
+theorem recurrence_pos {d r : ℕ → ℝ} (hd : 0 < d 0)
+    (h1 : ∀ n, r n < 1)
+    (hrec : ∀ n, d (n + 1) = d n * (1 - r n)) (n : ℕ) :
+    0 < d n := by
+  rw [recurrence_eq_mul_product hrec n]
+  exact mul_pos hd (survivalProduct_pos h1 n)
+
+/-- Exact logarithmic accounting for the residual; this is an equality at
+every finite scale. -/
+theorem log_recurrence_eq_initial_sub_sum {d r : ℕ → ℝ} (hd : 0 < d 0)
+    (h1 : ∀ n, r n < 1)
+    (hrec : ∀ n, d (n + 1) = d n * (1 - r n)) (n : ℕ) :
+    Real.log (d n) = Real.log (d 0) -
+      ∑ i ∈ Finset.range n, -Real.log (1 - r i) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [hrec, Real.log_mul
+      (ne_of_gt (recurrence_pos hd h1 hrec n))
+      (ne_of_gt (sub_pos.mpr (h1 n))), Finset.sum_range_succ]
+    linarith
+
+/-- Each relative gain is bounded by its exact logarithmic gain. -/
+theorem gain_le_neg_log_one_sub {t : ℝ} (ht : t < 1) :
+    t ≤ -Real.log (1 - t) := by
+  have h := Real.log_le_sub_one_of_pos (sub_pos.mpr ht)
+  linarith
+
+/-- Under strict nonnegative gains, the logarithmic gains and ordinary gains
+are summable simultaneously. -/
+theorem summable_neg_log_one_sub_iff {r : ℕ → ℝ}
+    (h0 : ∀ n, 0 ≤ r n) (h1 : ∀ n, r n < 1) :
+    Summable (fun n => -Real.log (1 - r n)) ↔ Summable r := by
+  constructor
+  · intro hs
+    exact Summable.of_nonneg_of_le h0
+      (fun n => gain_le_neg_log_one_sub (h1 n)) hs
+  · intro hs
+    have hlog := Real.summable_log_one_add_of_summable hs.neg
+    simpa only [sub_eq_add_neg] using hlog.neg
+
+/-- The two divergent-sum conditions in Section 7 are exactly equivalent.
+Together with `residual_tendsto_zero_iff_not_summable`, this gives the complete
+three-way criterion without a new arithmetic divergence assumption. -/
+theorem log_gain_sum_tendsto_atTop_iff {r : ℕ → ℝ}
+    (h0 : ∀ n, 0 ≤ r n) (h1 : ∀ n, r n < 1) :
+    Tendsto (fun N => ∑ n ∈ Finset.range N, -Real.log (1 - r n)) atTop atTop ↔
+      Tendsto (fun N => ∑ n ∈ Finset.range N, r n) atTop atTop := by
+  have hlog0 : ∀ n, 0 ≤ -Real.log (1 - r n) :=
+    fun n => (h0 n).trans (gain_le_neg_log_one_sub (h1 n))
+  calc
+    _ ↔ ¬Summable (fun n => -Real.log (1 - r n)) :=
+      (not_summable_iff_tendsto_nat_atTop_of_nonneg hlog0).symm
+    _ ↔ ¬Summable r := not_congr (summable_neg_log_one_sub_iff h0 h1)
+    _ ↔ _ := not_summable_iff_tendsto_nat_atTop_of_nonneg h0
+
 end RiemannResearch.Analysis.ResidualGain

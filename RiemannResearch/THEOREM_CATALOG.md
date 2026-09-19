@@ -1,5 +1,70 @@
 # Theorem catalog
 
+### Exact conductor enlargement and cumulative gain (2026-09-19)
+
+Source: user-provided argument, `RH_Controlled_Conductor_Schur_2026-09-10.md`, §§1–8.
+The new development uses real Hilbert spaces and the actual complete Pareto weights.
+
+**Established finite identities:** `LinearAlgebra/ConditionalSchurDecomposition.lean`
+and `ConditionalSchurWoodbury.lean` prove the signed mean/fluctuation Gram split,
+exact objective, attained enlarged-space projection, two-sided Woodbury inverse,
+and marked spectral energy, including an actual symmetric eigensystem.
+`FiniteHilbertSchur.lean` additionally gives normal-equation existence for singular
+or redundant families, exact mixed residual covariance, and zero-gain criteria.
+`WeightedFiniteCovariance.lean` and `WeightedQuotientHilbert.lean` prove the full
+signed pairwise covariance and weighted averaging as orthogonal projection.
+
+**Established arithmetic providers:** `RH/ParetoConductorFibers.lean`,
+`ParetoConductorHilbert.lean`, and `ParetoConductorSchur.lean` construct the actual
+weighted finite-period model and discharge its orthogonality assumptions.
+`ParetoNewPacketPeriodicity.lean`, `ParetoNewPacketCovariance.lean`, and
+`ParetoConductorInnovationCovariance.lean` prove independence modulo every old
+periodic function and strict positivity of the actual full innovation covariance,
+including repeated-prime enlargement. The proof uses divisor/Möbius arithmetic
+rather than an assumed Fourier-support theorem.
+
+**Established Green and obstruction statements:** `RH/ParetoPacketGreenGram.lean`
+retains the exact finite boundary, complete tail, marked-score minus sign, full
+means, and fixed-data limits for arbitrary finite combinations.
+`IntegratedRamanujanHilbert.lean` and `OmittedPrimePacketObstruction.lean`
+construct actual Hilbert packets and prove the prime functional, its Riesz
+coordinates and exact norm, and the complete error identity throughout the
+restricted packet closure for every omitted prime greater than two.
+The norm theorem in `TwoSeedContrastObstruction.lean` now covers primes >2.
+
+**Established all-scale equivalences:** `RH/ConductorProjectionChain.lean`
+constructs actual divisor-packet projections, proves the full progression-mass
+error floor, exact recurrence, gain bounds, and energy convergence iff actual
+gains are nonsummable. Cofinality identifies the limiting packet closure.
+`Analysis/ResidualGainProduct.lean` supplies additive, product, and logarithmic
+accounting; `ResidualSpectralGain.lean` supplies the conditional marked-mass bound.
+
+**Established exact assembly:** `RH/ParetoConductorEnergy.lean` identifies each
+finite weighted minimum with the complete Hilbert conductor error.
+`ParetoConductorSchurGain.lean` proves the complete old/new divisor partition,
+the new-prime divisor enumeration, and equality of the full infinite gain with
+the signed finite Schur value. `ParetoConductorInnovationBasis.lean` supplies
+actual innovation synthesis injectivity. `ParetoConductorSpectrum.lean`
+constructs both covariance and Schur inverse operators from that arithmetic
+provider. `conductor_resolvent_energy` and `conductor_actual_spectral_formula`
+prove equations (4.2), (4.3), and (7.3) for the actual conductor errors and gains.
+The eigensystem is on the full finite ambient space; additional zero eigenvalues
+preserve the exact marked residual weights. No rank or inverse provider is assumed.
+`LinearAlgebra/ScalarSchurAddition.lean` proves the exact addition defect and
+a strictly positive-block counterexample to Schur additivity.
+`ConductorProjectionChain.lean` also specializes exact additive, product, and
+logarithmic accounting directly to the actual conductor energies.
+The existing complex `LinearMap.IsSymm.signed_change` in
+`LinearAlgebra/SignedChannelUpdate.lean` supplies the signed-form audit in §8.
+
+**Conditional research reduction:** `RH/ConductorProjectionRH.lean` proves
+`riemannHypothesis_of_gain_not_summable` for actual nested conductor projections.
+Its positive-seed closure is identified exactly with full packet closure.
+**Open:** prove nonsummability of the actual arithmetic gains, or a sufficient
+marked spectral-mass estimate. No such provider, unconditional RH theorem,
+or formal RH-to-approximation converse is asserted here. Redundant designs
+are handled by attained normal equations, not a named Moore–Penrose API.
+
 ### Tail-capacity literature audit and affine-head energy obstruction (2026-09-19)
 
 **Established:** `Analysis/FiniteParetoAffineEnergy.lean` proves

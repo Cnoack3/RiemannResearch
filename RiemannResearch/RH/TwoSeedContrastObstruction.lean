@@ -47,7 +47,7 @@ theorem prime_mobius_generator_coordinate (q p m : ℕ)
   split_ifs <;> ring
 
 theorem mobiusDifferenceCLM_prime_norm_sq (q : ℕ)
-    (hq : q.Prime) (hq3 : 3 < q) :
+    (hq : q.Prime) (hq3 : 2 < q) :
     ‖mobiusDifferenceCLM q‖ ^ 2 = 2 * ((q : ℝ)^2 + 1) := by
   classical
   have hnd2 : ¬ 2 ∣ q := by
@@ -252,14 +252,14 @@ theorem completedBudget_prime_error_identity (M q : ℕ) (hq : q.Prime)
     ‖hilbertOne-F‖^2 = 1 / (2*((q : ℝ)^2+1)) +
       ‖hilbertOne-F + (1/(2*((q : ℝ)^2+1))) •
         mobiusRieszHilbert q‖^2 := by
-  simpa only [mobiusDifferenceCLM_prime_norm_sq q hq hq3] using
+  simpa only [mobiusDifferenceCLM_prime_norm_sq q hq (by omega)] using
     completedBudget_error_identity M q hq hq3 hMq F hF
 
 theorem completedBudget_prime_error_floor (M q : ℕ) (hq : q.Prime)
     (hq3 : 3 < q) (hMq : M < q) (F : ThresholdHilbert)
     (hF : F ∈ completedBudget M) :
     1 / (2*((q : ℝ)^2+1)) ≤ ‖hilbertOne-F‖^2 := by
-  simpa only [mobiusDifferenceCLM_prime_norm_sq q hq hq3] using
+  simpa only [mobiusDifferenceCLM_prime_norm_sq q hq (by omega)] using
     completedBudget_error_floor M q hq hq3 hMq F hF
 
 theorem actual_distance_prime_lower_bound (M q : ℕ) (hq : q.Prime)
