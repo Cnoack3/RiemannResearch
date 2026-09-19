@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Canonical constraints under failure of RH (2026-09-19)
+
+**Established under explicit ¬RH:** the actual canonical tail certificate
+has finite limiting capacity, a square-summable but not absolutely summable
+primitive, both signs arbitrarily far out, and cofinal violations of
+power/logarithmic additive savings. One common right-half-strip zero gives
+a genuine Mellin pole and polynomial growth of the unrestricted head energy.
+
+**Established canonical geometry:** finite dual vectors converge strongly
+to the canonical certificate; every competing certificate satisfies exact
+Pythagoras. The point projection is orthogonal to every integer dilation
+m≥2. Every off-line zero imposes exact canonical Mellin interpolation.
+
+**Established coefficient obstruction:** the actual stabilized defect
+reconstruction has no ordinary ordered Hilbert-norm limit under ¬RH, is not
+unconditionally summable, and has divergent absolute norm sum. Wrong
+stabilized coefficients occur at arbitrarily large moduli.
+
+Modules: `RH/CanonicalTailCapacityGeometry`, `RH/RHFalseTailConstraints`,
+`RH/MobiusResidualInfiniteDefects`. Verification details and exact scope:
+`RH/RHFalseConstraintsVerification20260919.md`. All 18 audited endpoints
+use only standard foundations; no density-from-RH provider is used.
+
+**Open:** the constraints have not been proved contradictory. Canonical
+primitive absolute summability, cofinal subpower head energy, convergent
+actual defect reconstruction, or divergent actual screened gains still
+needs a new arithmetic estimate. The explicit Mellin-kernel compatibility
+model and sqrt-modulus weight comparison remain written arguments.
+
+
 ### Signed primitives, full sieve boundaries, and the canonical RH endpoint (2026-09-19)
 
 Source: continuation handoff

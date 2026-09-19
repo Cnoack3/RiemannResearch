@@ -1063,3 +1063,6 @@ import RiemannResearch.RH.CRTPositiveMExpansion
 import RiemannResearch.RH.CRTMeanRepair
 import RiemannResearch.RH.CRTMeanZeroInfimum
 import RiemannResearch.RH.CRTConductorRefinement
+import RiemannResearch.RH.CanonicalTailCapacityGeometry
+import RiemannResearch.RH.RHFalseTailConstraints
+import RiemannResearch.RH.MobiusResidualInfiniteDefects
