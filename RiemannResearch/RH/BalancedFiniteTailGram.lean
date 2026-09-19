@@ -281,6 +281,78 @@ theorem riemannHypothesis_of_cofinal_subpower_energy
   obtain ⟨N, hN, he⟩ := hC N₀
   exact ⟨N, hN, (twoSeed_energy_le N).trans he⟩
 
+/-!
+The following equivalences complete the finite-witness quantifiers in the
+user-provided minimal-seeds handoff (19 September 2026). They follow from
+finite near-minimizers and elementary power growth. They prove neither open
+arithmetic target and introduce no budget-growth or attainment assumption.
+-/
+
+/-- The infimum formulation and actual finite-tail formulation have exactly the
+same cofinal subpower strength. Neither side is asserted independently. -/
+theorem cofinal_subpower_energy_iff_tail_gain :
+    (∀ p : ℝ, 0 < p → ∃ C : ℝ, ∀ N₀ : ℕ,
+      ∃ N : ℕ, N₀ ≤ N ∧
+        BalancedExactHeadEnergy.energy N ≤ C * ((N : ℝ) + 1) ^ p) ↔
+    (∀ p : ℝ, 0 < p → ∃ C : ℝ, ∀ N₀ : ℕ,
+      ∃ N : ℕ, N₀ ≤ N ∧ ∃ S : Finset ℕ+, SupportedTail N S ∧
+        ‖balancedTargetHead N‖ ^ 2 - gain N S ≤ C * ((N : ℝ) + 1) ^ p) := by
+  constructor
+  · intro hsub p hp
+    obtain ⟨C, hC⟩ := hsub p hp
+    refine ⟨C + 1, fun N₀ => ?_⟩
+    obtain ⟨N, hN, he⟩ := hC N₀
+    obtain ⟨S, hS, hnear⟩ :=
+      exists_schur_near_minimizer N (by norm_num : (0 : ℝ) < 1)
+    have hpower : 1 ≤ ((N : ℝ) + 1) ^ p :=
+      Real.one_le_rpow (by have hn : (0 : ℝ) ≤ N := Nat.cast_nonneg N; linarith) hp.le
+    refine ⟨N, hN, S, hS, ?_⟩
+    nlinarith
+  · intro hsub p hp
+    obtain ⟨C, hC⟩ := hsub p hp
+    refine ⟨C, fun N₀ => ?_⟩
+    obtain ⟨N, hN, S, hS, he⟩ := hC N₀
+    exact ⟨N, hN, (energy_le_schur_value hS).trans he⟩
+
+/-- Since every positive exponent is allowed, its multiplicative constant can
+be absorbed by halving the exponent and moving far enough along its cofinal
+set. This is an equivalence of open arithmetic targets, not a bound. -/
+theorem cofinal_subpower_tail_gain_iff_unit_constant :
+    (∀ p : ℝ, 0 < p → ∃ C : ℝ, ∀ N₀ : ℕ,
+      ∃ N : ℕ, N₀ ≤ N ∧ ∃ S : Finset ℕ+, SupportedTail N S ∧
+        ‖balancedTargetHead N‖ ^ 2 - gain N S ≤ C * ((N : ℝ) + 1) ^ p) ↔
+    (∀ p : ℝ, 0 < p → ∀ N₀ : ℕ,
+      ∃ N : ℕ, N₀ ≤ N ∧ ∃ S : Finset ℕ+, SupportedTail N S ∧
+        ‖balancedTargetHead N‖ ^ 2 - gain N S ≤ ((N : ℝ) + 1) ^ p) := by
+  constructor
+  · intro hsub p hp N₀
+    obtain ⟨C, hC⟩ := hsub (p / 2) (half_pos hp)
+    have ht : Filter.Tendsto (fun N : ℕ => (N : ℝ) + 1)
+        Filter.atTop Filter.atTop :=
+      Filter.tendsto_atTop_mono (fun N => by linarith) tendsto_natCast_atTop_atTop
+    have hpow : Filter.Tendsto (fun N : ℕ => ((N : ℝ) + 1) ^ (p / 2))
+        Filter.atTop Filter.atTop :=
+      (tendsto_rpow_atTop (half_pos hp)).comp ht
+    obtain ⟨M, hM⟩ := Filter.eventually_atTop.mp
+      (hpow.eventually (Filter.eventually_ge_atTop C))
+    obtain ⟨N, hN, S, hS, hbound⟩ := hC (max N₀ M)
+    have hlarge : C ≤ ((N : ℝ) + 1) ^ (p / 2) :=
+      hM N ((le_max_right _ _).trans hN)
+    have hbase : 0 < (N : ℝ) + 1 := by positivity
+    have hsplit : ((N : ℝ) + 1) ^ p =
+        ((N : ℝ) + 1) ^ (p / 2) * ((N : ℝ) + 1) ^ (p / 2) := by
+      rw [← Real.rpow_add hbase]
+      congr 1
+      ring
+    refine ⟨N, (le_max_left _ _).trans hN, S, hS, ?_⟩
+    rw [hsplit]
+    exact hbound.trans (mul_le_mul_of_nonneg_right hlarge
+      (Real.rpow_pos_of_pos hbase _).le)
+  · intro h p hp
+    refine ⟨1, fun N₀ => ?_⟩
+    simpa only [one_mul] using h p hp N₀
+
+
 /-- CONDITIONAL RESEARCH REDUCTION: unlike the older uniform-gain criterion,
 cofinal subpower control already suffices for actual Mathlib RH. The bound is not proved. -/
 theorem riemannHypothesis_of_cofinal_subpower_tail_gain
@@ -288,12 +360,8 @@ theorem riemannHypothesis_of_cofinal_subpower_tail_gain
       ∃ N : ℕ, N₀ ≤ N ∧ ∃ S : Finset ℕ+, SupportedTail N S ∧
         ‖balancedTargetHead N‖ ^ 2 - gain N S ≤ C * ((N : ℝ) + 1) ^ p) :
     RiemannHypothesis := by
-  apply riemannHypothesis_of_cofinal_subpower_energy
-  intro p hp
-  obtain ⟨C, hC⟩ := hsub p hp
-  refine ⟨C, fun N₀ => ?_⟩
-  obtain ⟨N, hN, S, hS, he⟩ := hC N₀
-  exact ⟨N, hN, (energy_le_schur_value hS).trans he⟩
+  exact riemannHypothesis_of_cofinal_subpower_energy
+    (cofinal_subpower_energy_iff_tail_gain.mpr hsub)
 
 end TailExhaustion
 

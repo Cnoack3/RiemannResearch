@@ -33,6 +33,13 @@ ansatz, minimizer attainment, or prescribed budget growth is assumed.
 `twoSeed_energy_le` compares the full and retained dictionaries, and
 `energy_power_lower_of_zeta` transfers the polynomial zero obstruction.
 
+`cofinal_subpower_energy_iff_tail_gain` proves that the cofinal bound on
+the infimum is exactly equivalent to the cofinal bound on actual finite
+inverse-Gram witnesses; a near-minimizer changes C to C+1.
+`cofinal_subpower_tail_gain_iff_unit_constant` removes the multiplicative
+constant by halving the exponent and using cofinality. These are proved
+equivalences of still-open arithmetic estimates, not providers of them.
+
 **Conditional research reductions:**
 `riemannHypothesis_of_cofinal_subpower_energy` and
 `riemannHypothesis_of_cofinal_subpower_tail_gain` conclude Mathlib's actual
