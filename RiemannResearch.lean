@@ -294,6 +294,12 @@ import RiemannResearch.Analysis.BoundedMomentRepair
 import RiemannResearch.Analysis.LaguerreMomentTransform
 import RiemannResearch.RH.IntegratedRamanujanBasis
 import RiemannResearch.RH.IntegratedRamanujanGram
+import RiemannResearch.RH.IntegratedRamanujanCovariance
+import RiemannResearch.LinearAlgebra.FiniteSignalNoise
+import RiemannResearch.RH.RamanujanSignalNoise
+import RiemannResearch.RH.ConductorDegreeObstruction
+import RiemannResearch.RH.ParetoOccurrenceGreen
+import RiemannResearch.RH.MobiusFloorTail
 import RiemannResearch.RH.LegalMobiusConstraints
 import RiemannResearch.RH.LegalMobiusHeadCorrection
 import RiemannResearch.RH.ParetoGramMeanOptimizer

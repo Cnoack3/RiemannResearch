@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Signal-to-noise PDF audit (2026-09-19)
+
+Source: Christian Noack, user-provided `signal_to_noise_RH_program (2)(1).pdf`,
+Lemma 4.1, Theorem 4.2, Conjecture 8.2, and Section 10.
+Explanation: `RH/SignalNoiseAudit20260919.md`.
+
+**Established:** `RH/IntegratedRamanujanCovariance` proves strict centered
+variance for actual finite packet combinations.
+`LinearAlgebra/FiniteSignalNoise` proves finite covariance completion,
+unique minimization, Rayleigh bounds and the scalar signal inequality under
+its stated symmetric positive definite matrix and normal-equation hypotheses.
+`RH/RamanujanSignalNoise` supplies the actual arithmetic solution, its
+uniqueness, the exact error `1/(1+R)), and optimal coefficients, using the
+full Pareto law and actual Gram inverse with no assumed inverse provider.
+
+`RH/ConductorDegreeObstruction` proves the direct Hilbert version of
+Conjecture 8.2 for all conductors of bounded distinct-prime count, with the
+exact error remainder and centered signal/variance inequality.
+`RH/ParetoOccurrenceGreen` proves the exact digamma block and Green sums.
+`RH/MobiusFloorTail` proves the finite split and actual endpoint refutation
+of the missing-constant residual; its general repair explicitly assumes the
+coprime-count inclusion-exclusion equality.
+
+**Open:** the main scalar variance rate, atom-reuse decay, and shell SNR
+divergence. The accompanying audit gives an analytic occurrence-decay
+argument via a squarefree transfer of Heath-Brown's gap method; it is not
+Lean-verified and supplies no project axiom. The general coprime-count
+identity, exact primorial subspace assembly, and RH-to-closure converse
+remain formalization obligations. Finite inverse and positivity results
+do not discharge these limiting estimates.
+
 ### Ramanujan inverse and von Mangoldt orthogonal scores (2026-09-19)
 
 Modules: RH/IntegratedRamanujanInverse and RH/RamanujanOrthogonalScores.
