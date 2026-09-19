@@ -1,5 +1,44 @@
 # Theorem catalog
 
+### Exact-head residual tails and RH-criterion failures (2026-09-19)
+
+Modules: `RH/ExactHeadResidualTail` and `RH/RHCriterionFailures`.
+
+**Established:** the actual canonical residual has vanishing weighted tail
+energy `t_N`, and every exact-head vector in the closed legal residue span
+satisfies `E^2 <= t_N * norm (one - f)^2`, where `E = norm r^2`.
+The shift realization is proved equal to the physical infinite Pareto tail.
+Simultaneous orthogonal repair preserves legality and the exact head, and
+has the exact full-energy split; the remaining Schur error obeys the same
+canonical lower bound.
+
+**Established under explicit not RH:** every growing exact-head legal
+family has squared errors tending to infinity. Positive-seed approximation,
+mean-one variance, noise-to-signal and conditional-iid criteria have positive
+uniform error floors; every legal walk has summable relative gains.
+Conditional exact-head minima diverge. Dyadic boundary recovery, the
+applicable repair-orbit criteria, balanced finite-deletion approximation,
+and the literal uniform signed-Schur targets fail. The cofinal subpower
+criterion fails with its exact quantified negation: some positive exponent
+eventually beats every constant-multiple bound for the head minimum.
+
+**Conditional research reductions:**
+`riemannHypothesis_of_residual_tail_product`,
+`riemannHypothesis_of_small_residual_tail_product`, and
+`riemannHypothesis_of_bounded_exact_head_errors`.
+Only arbitrarily small residual-tail/error products are needed; a prescribed
+rate or convergence of the approximants is not assumed. General repair
+operators retain their fixing and contraction hypotheses.
+
+**Open:** construct genuine exact-head legal witnesses with these
+product/energy upper bounds. The exact finite optimization identities and
+their strict improvements do not establish an all-scale bound. No
+unconditional RH proof, reverse density provider, or contradiction between
+already-proved arithmetic estimates is asserted.
+
+Verification and candidate-clash audit: `RH/RHContradictionAudit20260919.md`.
+
+
 ### Escape of the canonical defect reconstruction (2026-09-19)
 
 **Established:** finite Möbius inversion makes the ordered reconstruction

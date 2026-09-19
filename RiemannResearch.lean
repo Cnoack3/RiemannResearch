@@ -1067,3 +1067,5 @@ import RiemannResearch.RH.CanonicalTailCapacityGeometry
 import RiemannResearch.RH.RHFalseTailConstraints
 import RiemannResearch.RH.MobiusResidualInfiniteDefects
 import RiemannResearch.RH.MobiusResidualEscape
+import RiemannResearch.RH.ExactHeadResidualTail
+import RiemannResearch.RH.RHCriterionFailures
