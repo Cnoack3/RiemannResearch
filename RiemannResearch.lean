@@ -1,3 +1,5 @@
+import RiemannResearch.RH.DyadicGainEndpoint
+import RiemannResearch.RH.TwoSeedContrastObstruction
 import RiemannResearch.RH.MultiRangeFiniteMinimum
 import RiemannResearch.RH.MultiRangeGainBudget
 import RiemannResearch.RH.MultiRangeRationalCertificates

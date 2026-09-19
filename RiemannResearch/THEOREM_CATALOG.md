@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Dyadic gain endpoint and prime contrast obstruction (2026-09-19)
+
+**Established:** `RH/DyadicGainEndpoint.lean` specializes the exact survival
+product and zero-distance/nonsummable-relative-gain equivalence to the actual
+two-seed Pareto budget residual. Summable gains have an explicit positive
+surviving-energy limit. `normalized_dyadic_cost_iff` identifies the exact
+reciprocal-cost condition for normalized legal screened corrections.
+
+**Conditional research reductions:**
+`riemannHypothesis_of_dyadic_gain_divergence`,
+`riemannHypothesis_of_dyadic_gain_schedule`,
+`riemannHypothesis_of_dyadic_cost_schedule`, and
+`riemannHypothesis_of_dyadicLogarithmicGainBound`.
+**Open:** nonsummability of the actual relative gains; an actual nonnegative
+nonsummable gain minorant; normalized legal corrections with nonsummable
+reciprocal costs; `DyadicLogarithmicGainBound`. No provider is asserted.
+The dyadic-only logarithmic proposition has the precise handoff quantifiers;
+it is not asserted RH-necessary or unconditionally RH-equivalent.
+
+**Established:** `RH/TwoSeedContrastObstruction.lean` proves the prime Mobius
+coordinate of every seed generator, its exact squared dual norm 2(q^2+1),
+and annihilation of the closed span of a fixed old budget V_M plus all future
+contrasts g_(3,m)-g_(2,m), including screened contrasts. For prime q>max(M,3),
+every F in that closed span has the exact full-norm identity
+||1-F||^2 = 1/[2(q^2+1)] + ||1-F+k_q/[2(q^2+1)]||^2.
+This gives a positive obstruction for that restricted construction and the
+same lower bound for the actual finite residual. Full prime generators escape
+the kernel: their coordinate is q, and a pair of coefficients contributes
+q(a+b). This does not prove or refute the full dyadic gain target.
+
 ### First-coordinate rigidity and the single-point RH target (2026-09-19)
 
 **Established:** RH/MobiusResidualFirstCoordinate.lean proves the exact normalized
