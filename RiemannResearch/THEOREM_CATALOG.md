@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Minimal-support finite-tail exhaustion and cofinal RH criterion (2026-09-19)
+
+**Established:** `RH/BalancedFiniteTailGram.lean` now proves
+`feasible_tail_representation`: every actual minimal-support exact-head packet
+is the canonical head plus a finite supported tail.
+`exists_schur_le_feasible`, `exists_schur_near_minimizer`, and
+`energy_eq_sInf_schurValues` identify the unrestricted optimum exactly as
+the infimum of the full signed finite inverse-Gram values. No finite-tail
+ansatz, minimizer attainment, or prescribed budget growth is assumed.
+`closure_iff_near_unit_schur` gives the exact target-synthesis criterion.
+`twoSeed_energy_le` compares the full and retained dictionaries, and
+`energy_power_lower_of_zeta` transfers the polynomial zero obstruction.
+
+**Conditional research reductions:**
+`riemannHypothesis_of_cofinal_subpower_energy` and
+`riemannHypothesis_of_cofinal_subpower_tail_gain` conclude Mathlib's actual
+`RiemannHypothesis`. Each positive exponent may use its own cofinal head
+sequence, with arbitrary finite tail budgets.
+
+**Open:** the actual cofinal subpower energy/tail-gain upper estimate;
+the stronger uniform bound; simultaneous deletion of all zero-target
+coordinates under RH; RH itself. No provider for these estimates was added.
+The infimum equality is unconditional; the RH conclusion retains its displayed
+arithmetic upper-bound hypothesis.
+
 ### Dyadic gain endpoint and prime contrast obstruction (2026-09-19)
 
 **Established:** `RH/DyadicGainEndpoint.lean` specializes the exact survival
