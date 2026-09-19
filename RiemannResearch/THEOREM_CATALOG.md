@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### CRT weights and two-seed regression limits (2026-09-19)
+
+Modules: `Analysis/FiniteHilbertGramProjection`,
+`RH/TwoSeedSchurConvergence`, and `RH/ParetoCRTWeightLimits`.
+Explanation: `RH/CRTRegressionLimits20260919.md`.
+
+**Established:** the exact inverse-Gram fit equals orthogonal projection.
+Finite coefficients are unique. Nested finite tail dictionaries with the
+same prescribed head obey the full Pythagorean error-drop identity.
+`candidate_tendsto_fixed_head` proves norm convergence to the affine
+projection onto the closed union of these tail spans. The literal intervals
+`{N+1,...,N+M}` exhaust all balanced tail indices. The theorem
+`candidate_tendsto_one_iff` identifies the precise target-membership condition.
+No density hypothesis is needed to prove existence of the projection limit.
+
+The genuine CRT progression mass at fixed residue `r` tends to its first
+atom. In particular `uniformDefect_one_tendsto_half` and
+`uniformDefect_one_not_tendsto_zero` rule out asymptotic uniformity of these
+weights. This is not a positive error floor for exact-head candidates.
+
+**Conditional research reduction:** `diagonal_limit_eq_one` identifies any
+norm limit of the growing exact-head candidates with one.
+`riemannHypothesis_of_diagonal_limit` concludes RH from the explicitly
+supplied existence of that limit. Existence, all-scale Schur error decay,
+and a uniform exact-head energy bound remain open. Finite uniqueness,
+CRT regrouping, and a fixed-dictionary CLT do not discharge them.
+
 ### Full finite two-seed Schur candidates (2026-09-19)
 
 Module: `RH/TwoSeedSchurCandidates`.
