@@ -1,5 +1,45 @@
 # Theorem catalog
 
+### Joint carry heads, dyadic carry blocks, and canonical Schur tails (2026-09-20)
+
+Modules: `RH/OddCarryJointHead`, `RH/DyadicCarryBlocks`,
+`RH/IntegerDPPSchurCanonicalEnergy`.
+
+Source: the user-provided odd-carry/DPP continuation, particularly its exact
+signed residual and simultaneous boundary-repair task; the existing finite
+Mobius inversion, argument-doubling, and canonical tail-capacity modules.
+
+**Established:** the actual carry Mobius coefficients are the positive
+progression convolution minus the single period atom. `mobiusJointHead` gives
+an explicit finite legal interpolation of every anchored sequence on its
+entire prescribed head. Its complete signed floor residual and its summable
+carry energy are retained in `doublingCarry_joint_energy_eq_tail`.
+
+The whole dyadic carry block is an exact weighted finite sum of sampled
+carries. The sampled residue at modulus 2^k+1 converges to the constant in the
+actual norm. `dyadicCarryBlock_projection_residual` removes its legal residue
+term exactly, and `dyadicCarryGap_tendsto` identifies the limiting optimum with
+the constant's distance to the closed legal space. The formerly private
+`reverseResidue_head` is now public and reused, without a duplicate proof.
+
+Under the explicit hypothesis `pointDualResidual != 0`,
+`schur_hasSum_canonical_energy` and `schur_tail_hasSum_error` give the exact
+infinite Schur sum and every remaining tail as canonical certificate energies.
+The same hypothesis gives uniform normalized vanishing of all reciprocal
+source discrepancies. This describes the obstruction case; it does not
+exclude it.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_dyadicCarryBlock_approx` implies Mathlib's RH from legal
+approximation of whole dyadic blocks with norm error tending to zero along
+an unbounded sequence of stages. It does not require a Hurwitz-series provider.
+
+**Open:** construct that block approximation, or bound the complete signed
+tails of the explicit joint head interpolants uniformly across the growing
+stages. Individual carries tending to zero and finite head interpolation do
+not discharge this obligation. The original odd-carry approximation bound,
+capacity/Schur divergence, and unconditional RH remain unproved.
+
 ### Odd-carry arithmetic and a concrete legal approximation (2026-09-20)
 
 Module: `RH/OddCarryArithmetic`.

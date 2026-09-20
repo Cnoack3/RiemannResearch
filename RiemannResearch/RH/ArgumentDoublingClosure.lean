@@ -25,7 +25,7 @@ open scoped Topology
 namespace RiemannResearch.RH.Pareto
 open RiemannResearch.RH.ArithmeticCumulative
 
-private theorem reverseResidue_head (m n : ℕ) (hn : 0 < n) (hnm : n < m + 1) :
+theorem reverseResidue_head (m n : ℕ) (hn : 0 < n) (hnm : n < m + 1) :
     residueFraction (m + 1) (m * n) = 1 - (n : ℝ) / (m + 1 : ℕ) := by
   have hsub : m + 1 - n + n = m + 1 := Nat.sub_add_cancel hnm.le
   have hnsub : n - 1 + 1 = n := Nat.sub_add_cancel hn
