@@ -1,5 +1,76 @@
 # Theorem catalog
 
+### Determinantal laws, actual integer vacancy, and odd-carry RH reduction (2026-09-20)
+
+Modules: `Probability/DeterminantalProcess`, `Probability/DeterminantalEntry`,
+`Analysis/ProjectionDPPKernel`, `RH/IntegerDPPHazards`,
+`RH/ResidueClosureDensity`, `RH/IntegerDPPClosure`, `RH/IntegerDPPSchur`,
+`RH/IntegerDPPKernel`, `RH/IntegerDPPMellinObstruction`,
+`RH/IntegerDPPReduction`.
+
+Source: user-provided `RH_DPP_Proof_Attempt_and_Explicit_Zero_Hole_Obstruction_2026-09-20.md`,
+`RH_CRT_Orbit_Exhaustion_and_Doubling_Invariance_2026-09-20.md`, and the
+argument-doubling handoff. Hough--Krishnapur--Peres--Virag,
+https://arxiv.org/abs/math/0503110, supports the DPP terminology and correlation
+definition. The explicit singleton and single-hole constructions are proved
+directly here; a general existence theorem is not imported as an axiom.
+
+**Established:** `Probability.DPP.IsDPP` specifies all finite inclusion
+determinants, not just marginals. Occupation, vacancy, almost-sure saturation,
+two-point covariance and pairwise negative correlation for symmetric kernels
+follow from that definition. `singleton_isDPP` and `singleHole_isDPP` construct
+actual laws from any PMF and verify every correlation determinant.
+The rank-one kernel is normalized, symmetric, idempotent, and has trace one.
+`normalized_singleHole_vacancy` gives the exact normalized weight law with
+explicit finite, nonzero total-mass hypotheses.
+
+`ProjectionDPPKernel` proves Gram positivity and the complementary residual
+kernel identity. `IntegerDPPKernel` defines the actual arithmetic kernels
+using `lp.single` and the finite/closed residue projections. Counting coordinate
+0 is physical integer 1. It proves q_N = 1-K_N(0,0), kernel convergence, and
+q_infinity = 1-K_infinity(0,0). `IntegerDPPHazards` proves
+q_N = 2/(C_N+2), q_0=1, positivity, monotonicity, the hazard product, exact log
+accounting, and vacancy decay iff divergence of the actual hazard series.
+
+`IntegerDPPSchur` constructs the actual tail innovation, proves sigma_N>0,
+retains the signed eta_N, and establishes
+C_(N+1)-C_N = eta_N^2/sigma_N and
+h_N = eta_N^2/((C_N+2)sigma_N+eta_N^2), including the exact telescope.
+No arbitrary capacity-increment identity is assumed.
+
+`ResidueClosureDensity` expresses every point vector as a difference of scaled
+floor dilations of the constant and proves 1 in S iff S is the entire Hilbert
+space. `IntegerDPPClosure` and `IntegerDPPReduction` prove exact equivalences
+between all odd carries belonging to S, q_infinity=0, q_N tending to zero,
+C_N tending to infinity, and divergence of the actual hazard and Schur sums.
+
+`IntegerDPPMellinObstruction` evaluates the first-point Mellin transform as
+(1-2^(-s))/s and proves it is nonzero for Re(s)>1/2. A zeta zero s with
+Re(s)>1/2 and s != 1 forces the explicit positive vacancy floor
+2(2 Re(s)-1)|1-2^(-s)|^2/|s|^2, bounded actual capacity, and summable hazards.
+These are implications from a hypothetical zero, not an assertion that one
+exists or an exclusion of the resulting hole.
+
+**Conditional research reductions:** the odd-carry, vacancy, capacity,
+hazard-sum, and Schur-sum endpoints prove Mathlib's `RiemannHypothesis` under
+their stated equivalent hypotheses. With a supplied arithmetic `IsDPP` law,
+`odd_carry_iff_first_site_ae` and `odd_carry_iff_full_occupation_ae` identify
+almost-sure saturation; `riemannHypothesis_of_dpp_first_site_ae` is the
+probability endpoint. `dpp_entry_probability_eq_hazard` additionally requires
+a given nested coupling and identifies the exact conditional entry probability.
+
+**Open mathematical obligation:** prove membership in S of every odd carry,
+equivalently any one of the actual divergence/vanishing criteria above.
+**Open formalization obligations:** general existence of the finite-rank and
+limiting arithmetic projection DPPs on the countable ground set; their nested
+coupling; identification of the handoff's specific complex Mellin rank-one
+mode with a constructed probability law; the RH-to-density converse; and
+the supplementary CRT-lift, arithmetic-progression occupation, first-moment,
+and Mellin-frequency gap arguments. The exact Gram-determinant ratio is not
+added here; the equivalent capacity formula is fully proved.
+No unconditional proof of RH, general negative association, or general
+projection-DPP existence is claimed.
+
 ### Argument-doubling operator and odd-generator criterion (2026-09-20)
 
 Module: `RH/ArgumentDoublingGenerators`.
