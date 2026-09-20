@@ -9,7 +9,8 @@ project-local axiom or admitted theorem is used to stand for a missing result.
 A successful proof of an implication does not supply its hypothesis.
 
 The original additions comprise 30 focused Lean modules; the subsequent
-finite-rank Mellin DPP construction adds 11 more. Every new module is exported
+finite-rank Mellin DPP construction adds 11 more, followed by two modules for
+exact finite and dual vacancy certificates. Every new module is exported
 from `RiemannResearch.lean`; the checkpoint validates the individual modules
 and their affected dependents. The status below refers to each theorem's exact
 Lean statement, including any explicitly listed hypotheses.
@@ -53,6 +54,7 @@ kernel K in the chat. The first physical site's counting index is zero.
 | Symmetric finite damping | `RH/IntegerDPPFiniteDamping`: sqrt-weight compressed determinants equal the actual multiplicative expectations, also for the limiting law |
 | Exact scalar benchmark | `RH/ParetoProductBenchmark`: positive Pareto product limit sin(π(√5−1)/2)/π, by exact finite identity and Euler's product |
 | Damped saturation | `Probability/MultiplicativeOccupancy`, `Probability/MultiplicativeOccupancyLower`, `RH/IntegerDPPDampedMinimum`, `RH/IntegerDPPDampedLimit`: finite minimum rigidity and infinite-prefix benchmark convergence equivalent to zero limiting vacancy; hence a sufficient condition for RH |
+| Decisive vacancy certificates | `RH/IntegerDPPVacancyCertificates`, `RH/IntegerDPPVacancyDuality`: exact finite-trial criterion using all signed Gram terms; sharp certificate lower bound and unique canonical equality case; the arithmetic provider remains open |
 | Rank-growth counterexample | `Probability/DeterminantalRankGrowth`: a genuinely nested DPP family with exactly N occupied sites and a permanent first-site hole |
 | Actual Mellin kernel | `Analysis/ComplexKernelPairCorrelation`, `RH/MellinFrequencyKernel`: exact zeta-envelope factorization of the actual inverse-Gram kernel, Hermitian symmetry, zero rows at critical-line zeros, cancellation from normalized pair correlation |
 | Finite-rank Mellin DPP construction | `RH/MellinProjectionDPP` with six analytic/kernel support modules and four `Probability/ContinuousProjection*` modules: actual Mellin cross-Plancherel, angular-measure orthonormality, inverse-Gram/mode identity, normalized probability law, permutation invariance, exactly n distinct points, full n-point determinant density, reproducing kernel and trace n |
@@ -107,8 +109,11 @@ The following distinctions must remain visible in any later RH claim.
    not been silently inferred from Hermitian symmetry alone.
 7. **Arithmetic endpoint: open research.** Zero limiting vacancy, constant
    membership, tail-capacity divergence, and attainment of the damped
-   benchmark remain unproved. No new theorem assumes these without showing
-   them explicitly in its type.
+   benchmark remain unproved. The exact new criterion requires finite trials
+   with arbitrarily large source-squared-to-full-energy ratio; equivalently,
+   every genuine Hilbert tail certificate must be excluded. Both formulations
+   remain open. No new theorem assumes these without showing them explicitly
+   in its type.
 8. **Montgomery, Airy, KPZ, and Hilbert–Pólya identification: open research.**
    The new algebra and conditional limits do not establish a sine/Airy
    scaling limit, identify sampled frequencies with zeta-zero ordinates,

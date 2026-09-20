@@ -1,5 +1,40 @@
 # Theorem catalog
 
+### Decisive vacancy endpoint: exact finite and dual certificates (2026-09-20)
+
+Modules: `RH/IntegerDPPVacancyCertificates` and
+`RH/IntegerDPPVacancyDuality`.
+
+**Established:** for a finite conductor trial `c`, define its reciprocal
+source `A = finiteTrialSource n c` and full Hilbert-tail energy
+`E = finiteTrialEnergy n c`. The energy's Gram expansion retains every
+signed mixed term. For `E > 0`, the actual finite vacancy satisfies
+`vacancy n <= 2 E / (A^2 + 2 E)`. Moreover,
+`limitingVacancy = 0` is equivalent to
+`forall B : Real, exists n c, 0 < E and B * E < A^2`.
+The forward direction uses actual finite inverse-Gram optimizers; the
+reverse direction uses the source-energy inequality and monotone capacity.
+
+Every genuine tail certificate `z` forces
+`2 / (norm(z)^2 + 2) <= limitingVacancy`. Positive limiting vacancy is
+equivalent to the existence of such a certificate, and zero limiting
+vacancy is equivalent to their exclusion. In the positive-vacancy case,
+the canonical certificate has energy `2 / limitingVacancy - 2), attains
+the sharp vacancy bound, and is its unique equality case.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_finiteTrial_certificates` consumes the explicitly
+quantified finite-witness family. It proves Mathlib's RH only under that
+hypothesis.
+
+**Open:** produce trials with arbitrarily large source-squared-to-energy
+ratio, or equivalently exclude every genuine Hilbert tail certificate.
+Zero limiting vacancy, closure saturation, tail-capacity divergence,
+full-capacity saturation at 2, and the damped benchmark endpoint remain
+unproved. Finite inverse-Gram existence and the finite-rank Mellin DPP
+construction do not discharge this arithmetic obligation. No RH-to-density
+converse is asserted.
+
 ### Finite-rank Mellin DPP construction (2026-09-20)
 
 Main module: `RH/MellinProjectionDPP`.

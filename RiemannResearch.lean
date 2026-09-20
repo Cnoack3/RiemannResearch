@@ -1,3 +1,5 @@
+import RiemannResearch.RH.IntegerDPPVacancyCertificates
+import RiemannResearch.RH.IntegerDPPVacancyDuality
 import RiemannResearch.Probability.ContinuousProjectionDensity
 import RiemannResearch.Probability.ContinuousProjectionKernel
 import RiemannResearch.Probability.ContinuousProjectionLaw
