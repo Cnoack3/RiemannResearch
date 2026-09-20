@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.CovarianceAbsorption
 import RiemannResearch.Analysis.ComplexKernelPairCorrelation
 import RiemannResearch.Analysis.ComplexKernelScaling
 import RiemannResearch.Analysis.FourierFirstMomentContinuity

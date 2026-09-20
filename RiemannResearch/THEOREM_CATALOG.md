@@ -1,5 +1,22 @@
 # Theorem catalog
 
+### Route 6 covariance absorption (2026-09-20)
+
+Module: `Analysis/CovarianceAbsorption`.
+
+**Established abstract inequalities:** `finite_absorption_bound` telescopes
+the exact square balance while retaining the endpoint term;
+`partial_energy_bound` bounds partial energy given a positive margin and
+bounded diagonal/error sums; `cofinal_nonpositive_covariance_bound` bounds
+monotone energy from a cofinal covariance-sign hypothesis.
+
+**Conditional research reduction:** the Chebyshev application requires its
+actual integral/jump square identity and matching sequence definitions.
+**Open:** the strict arithmetic covariance bound with summable errors, or
+cofinal nonpositive covariance for exponents approaching one. Neither these
+inputs nor RH is proved here. The exact-divisor and operator-obstruction
+arguments in the companion continuation remain outside Lean.
+
 ### Orthonormal/DPP/Mellin chat additions and remaining obligations (2026-09-20)
 
 See `RH/OrthonormalDPPMellinChatCoverage20260920.md` for the complete itemized
