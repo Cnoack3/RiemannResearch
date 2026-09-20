@@ -1,5 +1,43 @@
 # Theorem catalog
 
+### Orthonormal/DPP/Mellin chat additions and remaining obligations (2026-09-20)
+
+See `RH/OrthonormalDPPMellinChatCoverage20260920.md` for the complete itemized
+comparison against the supplied conversation and exact indexing conventions.
+
+**Established additions:** normalized Gram cofactor formulas and positive
+leading coefficients; exact finite digamma Gram evaluation and the first
+binary/ternary constants; finite inverse-Gram/mode identities; actual
+finite-window independent-Bernoulli count-law representation; weighted
+multiplicative Gram determinants; the maximum-point distribution on an
+infinite-tail event; symmetric finite damping; the positive scalar benchmark
+`sin (pi * (sqrt 5 - 1)/2) / pi`; finite minimum rigidity and an infinite-prefix
+damped determinant criterion equivalent to zero limiting vacancy; a nested
+rank-growth DPP counterexample with a permanent hole; actual Mellin
+inverse-Gram kernel factorization, Hermitian symmetry and normalized pair
+cancellation; convergent Hermitian cutoff matrices with real spectrum;
+finite and infinite nonnegative spectral products with real zeros; and the
+logarithmic step-space frequency-multiplication domain obstruction.
+
+**Conditional research reductions:** the damped benchmark must actually be
+attained to invoke its RH implication. The new sine-kernel and upper-edge
+scaling properties are precise targets, not supplied limits. The positive
+spectral representation of the completed zeta function on the strip has no
+provider; the theorem deriving Mathlib RH from that identity is conditional.
+None of these hypotheses is hidden in a project axiom.
+
+**Open formalization obligations for known mathematics:** the Bagchi
+RH-to-density converse; full DPP negative association and the finite spatial
+transport provider; the general Mellin isometry/continuum-DPP construction;
+the infinite continuum local-trace obstruction; the operator trace-class
+Fredholm identification; and the cutoff eigenvalue interval bound.
+
+**Open arithmetic/research obligations:** zero vacancy/weighted vacancy
+estimates, capacity divergence, the arithmetic spectral determinant identity,
+sine/Airy scaling existence and its connection to zero ordinates, and KPZ
+joint dynamics. No unconditional RH theorem has been added.
+
+
 ### Spatial arithmetic DPP coupling: finite-window reduction (2026-09-20)
 
 Modules: `Probability/CompactProbabilityConstraints`,
