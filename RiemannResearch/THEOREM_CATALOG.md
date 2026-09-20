@@ -101,6 +101,34 @@ and uniform midpoint approximation do not prove that distance is zero.
 Odd-carry membership and the general arithmetic DPP law/coupling remain
 unproved; this change constructs neither, and does not assert unconditional RH.
 
+### Quantitative dyadic carry transport (2026-09-20)
+
+Module: `RH/DyadicCarryQuantitative`.
+
+Source: the user-provided odd-carry continuation and its exact finite residue
+identities. No novelty claim is made.
+
+**Established:** reusing `residueFraction_reverse_all` from `RH/DyadicCarryCRT`,
+`dyadicMultipleIndicator_sequence` identifies the remaining error exactly
+with the positive-multiple indicator. `dyadicMultipleIndicator_norm_sq`
+retains its entire infinite sparse energy, and
+`dyadicMultipleIndicator_norm_sq_le` bounds it by 2/(2^k+1)^2.
+The existing `positiveWeight_mul_bound` in `RH/DilationWaveletOffScale` is
+exported and reused, without a persisted duplicate proof.
+
+`dyadicCarryBlock_projection_sparse` gives the exact projected discrepancy.
+`dyadicCarryGap_error_le` bounds the difference between the block optimum
+and the constant's distance by sqrt(2)/(2^k+1).
+`dyadicCarryBlock_transport_mem` and `dyadicCarryBlock_transport_error`
+convert each legal block candidate v to the legal constant candidate
+(2^k+1) g_(2^k+1)-v with that same additive error bound.
+The unprojected sampled-residue squared error is also bounded by 2/(2^k+1).
+
+**Open:** the constant's distance has not been proved zero; neither a vanishing
+block approximation nor unconditional RH follows from the quantitative
+convergence-to-that-distance theorem. Later-modulus head-preserving
+optimization still needs an all-scale tail-energy estimate.
+
 ### Joint carry heads, dyadic carry blocks, and canonical Schur tails (2026-09-20)
 
 Modules: `RH/OddCarryJointHead`, `RH/DyadicCarryBlocks`,

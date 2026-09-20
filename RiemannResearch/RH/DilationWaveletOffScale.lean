@@ -137,7 +137,7 @@ private theorem binary_wavelet_gram_block (m n j : ℕ) (hm : 0 < m) (hn : 0 < n
         exact mul_le_mul_of_nonneg_right (binary_wavelet_abs_le 1 j) (abs_nonneg _)
       _ ≤ _ := by simpa only [one_mul] using binary_wavelet_weighted_interval m (n*j) n hm hnj
 
-private theorem positiveWeight_mul_bound (n j : ℕ) (hn : 0 < n) :
+theorem positiveWeight_mul_bound (n j : ℕ) (hn : 0 < n) :
     positiveWeight (n*j) ≤ (2 / (n:ℝ)^2) * positiveWeight j := by
   by_cases hj : j = 0
   · subst j; simp [positiveWeight]
