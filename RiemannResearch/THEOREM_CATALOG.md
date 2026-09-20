@@ -1,5 +1,120 @@
 # Theorem catalog
 
+### Orthonormal coordinates, arithmetic DPP structure, and RH reductions (2026-09-20)
+
+Modules: `Analysis/FiniteHilbertGramProjection`, `Analysis/FiniteHilbertGramMatrix`,
+`Probability/FiniteDeterminantalGenerating`, `Probability/DeterminantalWindow`,
+`Probability/DeterminantalMoments`, `Probability/DeterminantalCardinality`,
+`RH/ResidueOrthonormalCoordinates`, `RH/IntegerDPPTrace`,
+`RH/IntegerDPPCardinality`, `RH/IntegerDPPArithmeticExclusion`,
+`RH/IntegerDPPWindow`, `RH/IntegerDPPGramDeterminant`,
+`RH/RiemannHypothesisRightHalfStrip`, `RH/IntegerDPPAllSiteObstruction`,
+`RH/IntegerDPPWeightedHoles`, `RH/IntegerDPPWeightedWindow`,
+`Probability/DeterminantalWindowGenerating`, `RH/IntegerDPPWindowGenerating`,
+`Probability/DeterminantalConfiguration`, `RH/IntegerDPPLiftFactorization`,
+`Probability/CountableProductConditioning`, and `RH/IntegerDPPConditionalLifts`.
+
+Source: the user-provided orthonormal/DPP/Fredholm argument; finite DPP
+generating and cardinality statements also follow the terminology of
+Hough--Krishnapur--Peres--Virag, https://arxiv.org/abs/math/0503110.
+The formal proofs use actual Hilbert projections and constructed probability
+laws. No RH, density, coupling, or pointwise saturation assumption is used
+for the structural results below.
+
+**Established orthonormal structure:** `residueMode_orthonormal` and the
+finite/full span identities identify Gram--Schmidt modes with the residue
+dictionary. `projection_eq_mode_sum`, `modeAlpha_sq_tsum`,
+`mode_coefficient_series_norm_summable`, and
+`mode_coefficient_series_hasSum` prove actual vector and coefficient
+expansions, including unconditional absolute convergence.
+`modeCoefficient_eq_zero_of_lt` gives triangularity;
+`residueAtom_inner_one` and `modeAlpha_eq_log_sum` give the logarithmic means.
+The Parseval equality is equivalent to constant membership, completeness,
+vanishing vacancy, and all limiting coefficients being negative Moebius
+values. The limiting residual belongs to the mode closure if and only if
+it is zero; merely choosing Gram--Schmidt modes does not supply that membership.
+
+**Established matrix identities:** actual Gram matrices are positive definite
+and invertible. `gramMatrix_inverseSource` identifies the matrix inverse with
+the already defined source. `projection_kernel_matrix` proves the
+observation-matrix inverse-Gram formula. `gram_det_ratio_eq_vacancy` proves
+det(tailGram)/det(fullGram) = vacancy, and the latter equals 2/(tailCapacity+2)
+by the existing capacity theorem. `headDeterminant_eq` gives the full
+real-parameter first-site determinant polynomial.
+`window_determinant_eq_gram_ratio` and
+`integerLaw_window_gram_determinant` prove finite-window determinant and
+actual gap-probability ratios, with every tail/mixed Gram contribution retained.
+
+**Established probability structure:** finite PMF generating polynomials,
+the actual finite restriction law, and finite-window gap determinants.
+`IsDPP.expected_windowCount` and `IsDPP.variance_windowCount` prove
+expectation = trace and variance = trace minus the sum of Q(i,j)Q(j,i).
+`integerKernel_diagonal_tsum` proves trace N, and the order N+1 minors vanish.
+Tonelli plus the rank bound proves `integerLaw_cardinality`: exactly N
+points almost surely under the constructed stage-N law.
+Common conductor residue classes contain at most one occupied site almost
+surely, multiples are absent, and occupation probability divided by Pareto
+weight is constant on each residue class.
+
+**Established actual generating functions and joint lift weights:**
+`IsDPP.window_generating` and `IsDPP.window_count_generating` are Bochner
+expectations under the DPP measure, with determinant formulas. The finite and
+limiting arithmetic specializations discharge all matrix-positivity inputs.
+`IsDPP.full_configuration_of_setCount` identifies a full N-point inclusion
+minor with the exact configuration probability.
+`integerKernel_principal_det_weight_factorization` and
+`integerLaw_full_configuration_weight_factorization` factor probabilities
+into the product of Pareto weights times a determinant depending only on
+residue features. `integerLaw_full_configuration_common_conductor` proves
+that the full-configuration probability divided by that product is invariant
+under every residue-preserving choice of all N integer lifts. These are joint
+factorization identities, beyond the earlier singleton marginal identities.
+`conditional_product_partition` normalizes actual countable disjoint
+configuration events. `integerLaw_conditional_residue_lifts` gives every
+conditional joint atom as the product of the individually normalized Pareto
+lift weights, conditional on distinct selected classes of positive probability.
+`residueClassWeight_pos` and `residueLiftWeight_tsum_one` discharge positivity
+and normalization of the individual factors. This characterizes the conditional
+independent lift distribution on the countable tuple space; it does not assert
+cross-stage independence or establish the missing class-selection asymptotics.
+
+**Established analytic RH iff:**
+`riemannHypothesis_iff_right_half_strip_zero_free` is an unconditional
+equivalence with Mathlib's actual `RiemannHypothesis`, using functional-equation
+reflection. It is an analytic right-half-strip equivalence, not the missing
+RH-to-residue-density converse.
+
+**Established conditional research reductions:** the supplied hypotheses in
+`riemannHypothesis_of_mode_parseval`,
+`riemannHypothesis_of_determinant_ratio_zero`,
+`riemannHypothesis_of_limitingKernel_site_one`, and
+`riemannHypothesis_of_site_vacancy_tendsto_zero` each imply actual RH.
+An off-line zero in the right half strip forces the explicit positive
+`siteMellinVacancyFloor` at every site, simultaneously for all finite stages
+and for the closed-space projection. `weightedLimitingHole_harmonic_lower`
+then implies divergence of the weighted expected hole sum under not-RH.
+`riemannHypothesis_of_weightedLimitingHole_summable` proves the summability
+criterion; `riemannHypothesis_of_summable_weighted_hole_probabilities`
+identifies its actual probability interpretation.
+`riemannHypothesis_of_bounded_weighted_hole_windows` needs only a fixed real
+C such that every window [0,M) has some stage N with
+sum (n+1)*(1-integerKernel N n n) <= C. N may depend arbitrarily on M.
+
+**Open providers:** no proof of Parseval saturation, determinant-ratio decay,
+single-site saturation, weighted-hole summability, or the uniform weighted
+finite-window bound is supplied. The DPP identities alone do not discharge
+these arithmetic obligations.
+
+**Open classical formalization:** RH implies residue density (Bagchi,
+https://arxiv.org/abs/math/0607733, Theorem 2). Missing providers include
+RH-dependent Moebius Dirichlet partial-sum bounds, a uniform spectral L2
+majorant, and transport of the two norm limits to this residue Hilbert space.
+`GeneralHardyConverse` is also an unproved proposition in the existing
+analytic library; it must not be treated as an established provider.
+The full spatial monotone coupling, continuous Mellin-space DPP, infinite
+trace-class Fredholm theory, and claimed scaling limits are not established
+by this finite/countable development.
+
 ### Arithmetic DPP existence and the remaining spatial coupling (2026-09-20)
 
 Modules: `LinearAlgebra/AccretiveDeterminant`,
