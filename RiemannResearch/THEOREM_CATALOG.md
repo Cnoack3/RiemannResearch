@@ -1,5 +1,39 @@
 # Theorem catalog
 
+### Spatial arithmetic DPP coupling: finite-window reduction (2026-09-20)
+
+Modules: `Probability/CompactProbabilityConstraints`,
+`Probability/DeterminantalLimit`, `RH/IntegerDPPSpatialCoupling`,
+and `RH/IntegerDPPSpatialVacancy`.
+
+**Established:** `exists_probabilityMeasure_clopen_constraints` assembles
+finitely satisfiable clopen probability constraints by compactness, with no
+compatibility assumption on finite witnesses. `isDPP_pastUnion` converts
+almost-sure nested paths to pointwise nested paths without changing any DPP
+marginal. `spatialWindowFeasible_iff_exists_spatialCoupling` proves the exact
+equivalence between finite rectangular transport feasibility and a canonical
+countable spatial coupling. `exists_spatialCoupling_of_windows` is its
+noncomputable forward implication.
+
+**Conditional research reduction:** `SpatialWindowFeasible` has no checked
+provider. The full spatial coupling is still an open formalization obligation;
+ordered kernels alone are not treated as a coupling. The remaining finite
+domination/supported-transport proof follows the route of Lyons,
+https://arxiv.org/abs/math/0204325, Theorems 6.2 and 7.1, and Strassen.
+See `RH/SpatialCouplingStatus.md` for the concrete signed-minor/Hall route.
+
+**Established identification for every supplied coupling:**
+`never_enter_site_probability` gives P(k never enters) = 1 - K_infinity(k,k).
+`weighted_never_entry_summable_iff` identifies the weighted sum exactly with
+`Summable weightedLimitingHole`; `limitingLaw_weighted_hole_summable_iff`
+gives the same identification for the already constructed limiting law.
+`riemannHypothesis_of_weighted_never_entry_summable` retains this explicit
+arithmetic hypothesis. `weighted_never_entry_harmonic_lower` and
+`weighted_never_entry_not_summable_of_not_RH` transfer the existing obstruction.
+
+**Open arithmetic provider:** weighted summability, and in particular
+zero vacancy, is not proved. No RH-to-residue-density converse is assumed.
+
 ### Orthonormal coordinates, arithmetic DPP structure, and RH reductions (2026-09-20)
 
 Modules: `Analysis/FiniteHilbertGramProjection`, `Analysis/FiniteHilbertGramMatrix`,

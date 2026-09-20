@@ -74,3 +74,45 @@ theorem isDPP_increasingUnion {α Ω : Type*} [MeasurableSpace Ω]
     rw [inclusion_event_increasingUnion Z hmono m e]
     exact tendsto_nhds_unique hp hd
 end RiemannResearch.Probability.DPP
+
+namespace RiemannResearch.Probability.DPP
+variable {α Ω : Type*}
+def pastUnion (Z : ℕ → Ω → Set α) (n : ℕ) (ω : Ω) : Set α :=
+  ⋃ j ≤ n, Z j ω
+theorem pastUnion_mono (Z : ℕ → Ω → Set α) (n : ℕ) (ω : Ω) :
+    pastUnion Z n ω ⊆ pastUnion Z (n+1) ω := by
+  intro i hi
+  simp only [pastUnion, Set.mem_iUnion] at hi ⊢
+  obtain ⟨j, hj, hi⟩ := hi
+  exact ⟨j, hj.trans (Nat.le_succ n), hi⟩
+theorem pastUnion_eq (Z : ℕ → Ω → Set α) (n : ℕ) (ω : Ω)
+    (h : ∀ j, Z j ω ⊆ Z (j+1) ω) : pastUnion Z n ω = Z n ω := by
+  ext i
+  simp only [pastUnion, Set.mem_iUnion]
+  constructor
+  · rintro ⟨j, hj, hi⟩
+    exact (monotone_nat_of_le_succ h) hj hi
+  · intro hi
+    exact ⟨n, le_rfl, hi⟩
+theorem isDPP_pastUnion [MeasurableSpace Ω]
+    {μ : Measure Ω} [IsProbabilityMeasure μ]
+    (Z : ℕ → Ω → Set α) (K : ℕ → α → α → ℝ)
+    (hZ : ∀ n, IsDPP μ (Z n) (K n))
+    (hmono : ∀ᵐ ω ∂μ, ∀ n, Z n ω ⊆ Z (n+1) ω) (n : ℕ) :
+    IsDPP μ (pastUnion Z n) (K n) := by
+  constructor
+  · intro i
+    have he : {ω | i ∈ pastUnion Z n ω} =
+        ⋃ j, ⋃ (_ : j ≤ n), {ω | i ∈ Z j ω} := by
+      ext ω
+      simp [pastUnion]
+    rw [he]
+    exact MeasurableSet.iUnion fun j => MeasurableSet.iUnion fun _ =>
+      (hZ j).measurable_occupancy i
+  · intro m e
+    rw [← (hZ n).correlation m e]
+    apply measureReal_congr
+    filter_upwards [hmono] with ω hω
+    change (∀ i, e i ∈ pastUnion Z n ω) = (∀ i, e i ∈ Z n ω)
+    rw [pastUnion_eq Z n ω hω]
+end RiemannResearch.Probability.DPP

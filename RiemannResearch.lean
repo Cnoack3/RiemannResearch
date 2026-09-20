@@ -28,6 +28,9 @@ import RiemannResearch.Probability.DeterminantalLimit
 import RiemannResearch.Probability.ScalarVacancyCoupling
 import RiemannResearch.RH.IntegerDPPExistence
 import RiemannResearch.RH.IntegerDPPCoupling
+import RiemannResearch.Probability.CompactProbabilityConstraints
+import RiemannResearch.RH.IntegerDPPSpatialCoupling
+import RiemannResearch.RH.IntegerDPPSpatialVacancy
 import RiemannResearch.RH.DyadicCarryOptimizationCRT
 import RiemannResearch.RH.DyadicCarryOptimizationLimit
 import RiemannResearch.RH.MobiusJointHeadProjection
