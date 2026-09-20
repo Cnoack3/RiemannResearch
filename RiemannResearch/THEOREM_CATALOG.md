@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Route 4 Möbius coefficient defect (2026-09-20)
+
+Module: `RH/MobiusCoefficientDefect`.
+Detailed status and exact notation: `RH/RH_Mobius_Coefficient_Option4_2026-09-20.md`.
+
+**Established:** totality of the Möbius Riesz tests; coefficient uniqueness and
+reconstruction under summability; weak convergence from bounded coefficient
+tests; and divergence of residue-coordinate truncations of every nonzero
+orthogonal vector. In particular, not RH forces coefficient defects beyond
+every conductor bound and full-sequence divergence of the norms of
+`defectPartialSum`. The exact Gram identity retains all signed mixed terms.
+The complete atom norm satisfies `norm(g_d)^2 <= log(d)/d`.
+
+**Conditional research reductions:** `riemannHypothesis_of_eventual_mobius`
+(and its mode-series version) tolerates finitely many exceptional conductors.
+`riemannHypothesis_of_cofinal_defect_gram_bound` requires only a cofinal
+bound on the actual signed defect Gram energy.
+`riemannHypothesis_of_summable_weighted_defect` consumes the scalar condition
+`sum |c_infinity,d + mu(d)| * sqrt(log(d)/d) < infinity`.
+
+**Open:** arithmetic providers for eventual identification, the cofinal Gram
+bound, or weighted defect summability. Fixed-conductor absolute convergence
+of the mode series supplies none of these uniform conditions. RH remains
+unproved; no RH-to-density converse is used.
+
 ### Route 6 covariance absorption (2026-09-20)
 
 Module: `Analysis/CovarianceAbsorption`.
