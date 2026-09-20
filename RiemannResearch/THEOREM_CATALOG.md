@@ -1,5 +1,44 @@
 # Theorem catalog
 
+### Reciprocal Mellin reflection and symmetric completion (2026-09-20)
+
+Modules: `Analysis/ReciprocalMellinSymmetry`, `Analysis/ReflectedProjection`,
+`Analysis/ReflectedHilbertRank`, `Analysis/DoubleHilbertReflection`,
+`Analysis/ReflectedKernel`,
+`RH/IntegerDPPReflection`.
+
+Source: user-provided reciprocal Mellin construction. Mathlib's actual Mellin
+change-of-variable theorems support the analytic identities; the DPP
+correlation terminology follows Hough--Krishnapur--Peres--Virag,
+https://arxiv.org/abs/math/0503110.
+
+**Established:** reciprocal reflection and conjugation
+are commuting involutions on the positive axis; they act on the actual Mellin
+transform by s -> 1-s and conjugation. Both weighted energy and its integrability
+are preserved. The original and reflected positive-side functions are
+orthogonal, including treatment of the measure-zero endpoint at 1.
+
+The algebraic completion P+JPJ is self-adjoint, idempotent, and commutes with J
+under the explicit involution and orthogonality conditions. A concrete
+Hilbert direct-sum implementation proves these conditions for the actual
+Submodule.starProjection, and is specialized to the arithmetic finite spaces.
+Hilbert projection
+orthogonality supplies PJP=0, and finite dimensions double. For real physical
+features the reflected Mellin kernel equals the complex conjugate kernel;
+the completed kernel is twice its real part, and every finite correlation
+determinant is reflection-invariant.
+
+The actual arithmetic doubled-space condition is equivalent to the original
+closedSpace=top, limitingVacancy=0, and vacancy tending to zero.
+**Conditional research reduction:** riemannHypothesis_of_reflectedClosedSpace_eq_top
+uses the existing checked implication to RH. **Open:** proving that the actual
+reflectedClosedSpace is top, equivalently the original arithmetic density.
+Symmetry does not discharge that obligation.
+
+Formalization boundary: these modules prove analytic, projection, dimension,
+and correlation-kernel statements. They do not construct a general continuous
+DPP probability law or identify random particles with zeta zeros.
+
 ### Joint carry heads, dyadic carry blocks, and canonical Schur tails (2026-09-20)
 
 Modules: `RH/OddCarryJointHead`, `RH/DyadicCarryBlocks`,
