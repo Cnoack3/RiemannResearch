@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Argument-doubling closure reduction (2026-09-20)
+
+Module: `RH/ArgumentDoublingClosure`.
+
+Source: user-provided CRT/orbit research direction and the ensuing
+argument-doubling construction.
+
+**Established:** `hilbert_tendsto_one_of_bounded_coordinates` proves norm
+convergence to the constant target from positive-coordinate convergence and
+values in [0,1], using the actual summable Pareto weights.
+`floorDilation_ne_argumentDoubling` proves that the already available
+floor dilation differs from sampling even arguments.
+
+**Conditional research reduction:**
+`CoefficientStabilization.hilbertOne_mem_of_argumentDoubling` and
+`CoefficientStabilization.riemannHypothesis_of_argumentDoubling` prove
+that invariance of the actual closed residue span under f(n) ↦ f(2n)
+implies target membership and Mathlib's Riemann hypothesis.
+The proof iterates the assumed map on g_(2^k+1), uses
+g_(2^k+1)(2^k n) = 1 - n/(2^k+1) for 0 < n < 2^k+1,
+and applies dominated convergence and the verified Mellin bridge.
+
+**Open:** `CoefficientStabilization.ArgumentDoublingInvariant`.
+It is an explicit hypothesis, not a proved provider. CRT orbit exhaustion
+and the existing floor-dilation theorem do not discharge it.
+No unconditional proof of RH, or formal RH-to-invariance converse,
+is claimed here.
+
 ### Signal-to-noise PDF audit (2026-09-19)
 
 Source: Christian Noack, user-provided `signal_to_noise_RH_program (2)(1).pdf`,
