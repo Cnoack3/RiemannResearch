@@ -1,4 +1,5 @@
 import RiemannResearch.RH.DyadicCarryOptimization
+import RiemannResearch.RH.DyadicCarryQuantitative
 
 /-!
 # Limit of a concrete finite dyadic optimization schedule
@@ -94,5 +95,60 @@ theorem dyadicRepairEnergy_zero_head_tendsto_zero_iff :
       (tendsto_nhds_unique dyadicRepairEnergy_zero_head_tendsto h)
   · intro h
     simpa only [limitEnergy_zero_iff_mem.mpr h] using dyadicRepairEnergy_zero_head_tendsto
+
+
+/-! Source: the user's request to complete the dyadic proof, 2026-09-20.
+These exact finite comparisons retain the covariance and quantify a change
+of target. They do not supply vanishing of the original projection error. -/
+
+/-- The sparse-multiple error remaining after the actual finite projection. -/
+def dyadicFiniteSparseResidual (k : ℕ) : ThresholdHilbert :=
+  dyadicMultipleIndicator k -
+    (finiteSpace (2 ^ k)).starProjection (dyadicMultipleIndicator k)
+
+theorem dyadicFiniteSparseResidual_norm_le (k : ℕ) :
+    ‖dyadicFiniteSparseResidual k‖ ≤
+      Real.sqrt (2 / ((2 ^ k + 1 : ℕ) : ℝ) ^ 2) := by
+  have hp : ‖dyadicFiniteSparseResidual k‖ ≤ ‖dyadicMultipleIndicator k‖ := by
+    unfold dyadicFiniteSparseResidual
+    rw [← Submodule.starProjection_orthogonal_val]
+    exact (finiteSpace (2 ^ k))ᗮ.norm_starProjection_apply_le _
+  exact hp.trans ((Real.le_sqrt (norm_nonneg _) (by positivity)).mpr
+    (dyadicMultipleIndicator_norm_sq_le k))
+
+/-- Exact finite optimizer after the legal residue is removed. -/
+theorem dyadicRepairEnergy_zero_head_eq_sparse (k : ℕ) :
+    dyadicRepairEnergy k 0 (2 ^ k) =
+      ‖(hilbertOne - projection (2 ^ k)) - dyadicFiniteSparseResidual k‖ ^ 2 := by
+  rw [dyadicRepairEnergy_zero_head_eq_sampled]
+  have hg := Submodule.starProjection_eq_self_iff.mpr (dyadicResidue_mem_finiteSpace k)
+  congr 2
+  dsimp [dyadicFiniteSparseResidual, dyadicMultipleIndicator, projection]
+  rw [map_sub, map_add, hg]
+  abel
+
+/-- Full signed energy identity: the covariance term is retained. -/
+theorem dyadicRepairEnergy_zero_head_signed (k : ℕ) :
+    dyadicRepairEnergy k 0 (2 ^ k) = energy (2 ^ k) -
+      2 * inner ℝ (hilbertOne - projection (2 ^ k)) (dyadicFiniteSparseResidual k) +
+      ‖dyadicFiniteSparseResidual k‖ ^ 2 := by
+  rw [dyadicRepairEnergy_zero_head_eq_sparse, norm_sub_sq_real]
+  rfl
+
+/-- This compares two finite optima; it does not assert either tends to zero. -/
+theorem dyadicRepairEnergy_zero_head_sqrt_error_le (k : ℕ) :
+    |Real.sqrt (dyadicRepairEnergy k 0 (2 ^ k)) -
+      Real.sqrt (energy (2 ^ k))| ≤
+      Real.sqrt (2 / ((2 ^ k + 1 : ℕ) : ℝ) ^ 2) := by
+  have he : energy (2 ^ k) = ‖hilbertOne - projection (2 ^ k)‖ ^ 2 := rfl
+  rw [dyadicRepairEnergy_zero_head_eq_sparse, he,
+    Real.sqrt_sq_eq_abs, abs_norm, Real.sqrt_sq_eq_abs, abs_norm]
+  have h := abs_norm_sub_norm_le
+    ((hilbertOne - projection (2 ^ k)) - dyadicFiniteSparseResidual k)
+    (hilbertOne - projection (2 ^ k))
+  have hv : (hilbertOne - projection (2 ^ k) - dyadicFiniteSparseResidual k) -
+      (hilbertOne - projection (2 ^ k)) = -dyadicFiniteSparseResidual k := by abel
+  rw [hv, norm_neg] at h
+  exact h.trans (dyadicFiniteSparseResidual_norm_le k)
 
 end RiemannResearch.RH.Pareto

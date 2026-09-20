@@ -124,6 +124,16 @@ convert each legal block candidate v to the legal constant candidate
 (2^k+1) g_(2^k+1)-v with that same additive error bound.
 The unprojected sampled-residue squared error is also bounded by 2/(2^k+1).
 
+**Finite signed comparison:** in `RH/DyadicCarryOptimizationLimit`,
+`dyadicRepairEnergy_zero_head_eq_sparse` writes the actual optimum as the
+squared norm of the constant residual minus the projected multiple indicator.
+`dyadicRepairEnergy_zero_head_signed` retains the exact negative twice-inner
+product term and the complete remaining square.
+`dyadicRepairEnergy_zero_head_sqrt_error_le` bounds the difference of the
+two finite error norms by sqrt(2)/(2^k+1), using
+`dyadicFiniteSparseResidual_norm_le`. This is a comparison with the original
+finite constant error, not an upper bound tending to zero for either error.
+
 **Open:** the constant's distance has not been proved zero; neither a vanishing
 block approximation nor unconditional RH follows from the quantitative
 convergence-to-that-distance theorem. Later-modulus head-preserving
