@@ -1,5 +1,63 @@
 # Theorem catalog
 
+### Arithmetic DPP existence and the remaining spatial coupling (2026-09-20)
+
+Modules: `LinearAlgebra/AccretiveDeterminant`,
+`Probability/FiniteDeterminantalLaw`, `Probability/FiniteSubsetLaw`,
+`Probability/BooleanProjectiveLimit`, `Probability/DeterminantalExistence`,
+`Probability/DeterminantalLimit`, `Probability/ScalarVacancyCoupling`,
+`Analysis/ProjectionDPPKernel`, `RH/IntegerDPPExistence`, and
+`RH/IntegerDPPCoupling`.
+
+Source: Lyons, *Determinantal Probability Measures*,
+https://arxiv.org/abs/math/0204325, Sections 5, 7, and 8, for the existence
+statement and DPP terminology. The formal construction uses explicit mixed-row
+determinant weights, row multilinearity, finite inclusion-law uniqueness, and
+compact Boolean cylinders. Its Caratheodory step follows Mathlib's projective
+content and Ionescu--Tulcea implementation. No general existence theorem is
+assumed as an axiom.
+
+**Established:** `Matrix.det_nonneg_of_quadratic_nonneg` needs only a
+nonnegative real quadratic form, not matrix symmetry. This proves
+`exactWeight_nonneg` for every real positive contraction; `sum_exactWeight`
+and `sum_exactWeight_supersets` give normalization and every inclusion minor.
+`finiteLaw_isDPP` checks all finite correlations. Finite Boolean laws are
+projectively consistent by `isProjectiveFamily_of_isDPP`.
+`contractionDPP_isDPP` constructs the full probability law for an arbitrary
+ground set from positive-contraction finite principal matrices.
+
+The arithmetic proofs discharge both matrix hypotheses using the actual
+orthogonal projections and counting basis. `integerLaw_isDPP` gives every
+finite-rank arithmetic DPP on the full countable set, and
+`limitingLaw_isDPP` gives the closed-space DPP. Their first-site vacancies
+are exactly `vacancy n` and `limitingVacancy`. These existence theorems
+have no RH, density, carry-membership, or vacancy-decay hypothesis.
+
+**Coupling results established:** every principal kernel increment is positive
+semidefinite, with the exact projection-difference Gram identity.
+`isDPP_increasingUnion` identifies the union of any supplied pointwise nested
+DPP sequence with its limiting kernel. The arithmetic specialization gives the
+exact never-entry probability, but still assumes that spatial coupling.
+Separately, `firstSiteOccupied` constructs a genuine monotone process on a
+single uniform probability space with the arithmetic first-site marginals.
+`firstSite_entry_ratio` proves its conditional entry ratio equals the actual
+`hazard n`, unconditionally. This scalar process is not a construction of
+joint spatial DPP correlations.
+
+**Open formalization obligation:** a monotone coupling of the full arithmetic
+random subsets. The finite rank-one projection-extension transport problem is
+the next concrete step: construct nonnegative joint masses supported on
+S subset T whose marginals are the two explicit determinant laws. Kernel
+order alone is not a formal proof of the required stochastic domination and
+transport. The mathematical existence is established by Lyons, Theorems 6.2
+and 7.1 together with Strassen's theorem; it is not an open RH conjecture.
+
+**Conditional research reduction:** `riemannHypothesis_of_limitingLaw_first_site_ae`
+uses the now-constructed law but retains almost-sure first-site occupation.
+**Open mathematical obligation:** prove zero limiting vacancy, or an existing
+equivalent density/carry/divergence criterion. DPP existence and either scalar
+or full spatial coupling do not by themselves discharge that obligation.
+
 ### Reciprocal Mellin reflection and symmetric completion (2026-09-20)
 
 Modules: `Analysis/ReciprocalMellinSymmetry`, `Analysis/ReflectedProjection`,
@@ -98,8 +156,9 @@ full signed Schur remainder tends to zero. `dyadicRepairEnergy_limit_lower_bound
 shows that any such energy limit is at least the constant target's squared
 distance to the closed legal space. Finite interpolation, invertibility,
 and uniform midpoint approximation do not prove that distance is zero.
-Odd-carry membership and the general arithmetic DPP law/coupling remain
-unproved; this change constructs neither, and does not assert unconditional RH.
+Odd-carry membership remains unproved. Arithmetic DPP existence is supplied
+by the later `RH/IntegerDPPExistence` development; the full spatial monotone
+coupling remains unformalized. No unconditional RH is asserted.
 
 ### Quantitative dyadic carry transport (2026-09-20)
 
@@ -267,15 +326,17 @@ a given nested coupling and identifies the exact conditional entry probability.
 
 **Open mathematical obligation:** prove membership in S of every odd carry,
 equivalently any one of the actual divergence/vanishing criteria above.
-**Open formalization obligations:** general existence of the finite-rank and
-limiting arithmetic projection DPPs on the countable ground set; their nested
-coupling; identification of the handoff's specific complex Mellin rank-one
-mode with a constructed probability law; the RH-to-density converse; and
-the supplementary CRT-lift, arithmetic-progression occupation, first-moment,
-and Mellin-frequency gap arguments. The exact Gram-determinant ratio is not
-added here; the equivalent capacity formula is fully proved.
-No unconditional proof of RH, general negative association, or general
-projection-DPP existence is claimed.
+**Existence formalization discharged:** the later `RH/IntegerDPPExistence`
+module constructs the finite-rank and limiting arithmetic projection DPPs on
+the full countable ground set, without a DPP-existence assumption.
+**Open formalization obligations:** the full spatial nested coupling;
+identification of the handoff's specific complex Mellin rank-one mode with a
+constructed probability law; the RH-to-density converse; and supplementary
+CRT-lift, arithmetic-progression occupation, first-moment, and Mellin-frequency
+gap arguments. The scalar coupling and hazard interpretation are now proved
+in `RH/IntegerDPPCoupling`; they do not assert spatial correlations.
+The equivalent capacity formula remains fully proved. No unconditional RH
+or general negative-association theorem is claimed.
 
 ### Argument-doubling operator and odd-generator criterion (2026-09-20)
 

@@ -88,3 +88,42 @@ theorem identity_sub_principal_posSemidef {κ : Type*} [Fintype κ] [DecidableEq
   exact hole_principal_posSemidef S e a
 
 end RiemannResearch.Analysis.ProjectionDPP
+
+namespace RiemannResearch.Analysis.ProjectionDPP
+variable {H ι : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+variable (S T : Submodule ℝ H) [S.HasOrthogonalProjection] [T.HasOrthogonalProjection]
+    (hST : S ≤ T) (e : ι → H)
+
+include hST
+
+theorem nested_kernel_difference (i j : ι) :
+    kernel T e i j - kernel S e i j =
+      inner ℝ (T.starProjection (e i) - S.starProjection (e i))
+        (T.starProjection (e j) - S.starProjection (e j)) := by
+  have h₁ : inner ℝ (S.starProjection (e j))
+      (e i - T.starProjection (e i)) = 0 :=
+    (T.mem_orthogonal _).mp (Submodule.sub_starProjection_mem_orthogonal (e i)) _
+      (hST (S.starProjection_apply_mem (e j)))
+  have h₂ : inner ℝ (S.starProjection (e j))
+      (e i - S.starProjection (e i)) = 0 :=
+    (S.mem_orthogonal _).mp (Submodule.sub_starProjection_mem_orthogonal (e i)) _
+      (S.starProjection_apply_mem (e j))
+  have h₃ : inner ℝ (S.starProjection (e i))
+      (e j - T.starProjection (e j)) = 0 :=
+    (T.mem_orthogonal _).mp (Submodule.sub_starProjection_mem_orthogonal (e j)) _
+      (hST (S.starProjection_apply_mem (e i)))
+  have h₄ : inner ℝ (S.starProjection (e i))
+      (e j - S.starProjection (e j)) = 0 :=
+    (S.mem_orthogonal _).mp (Submodule.sub_starProjection_mem_orthogonal (e j)) _
+      (S.starProjection_apply_mem (e i))
+  simp only [inner_sub_right] at h₁ h₂ h₃ h₄
+  have hc₁ := real_inner_comm (S.starProjection (e j)) (T.starProjection (e i))
+  have hc₂ := real_inner_comm (S.starProjection (e j)) (S.starProjection (e i))
+  simp only [kernel, inner_sub_left, inner_sub_right]
+  linarith
+
+theorem nested_principal_difference_posSemidef {κ : Type*} [Finite κ] (a : κ → ι) :
+    (Matrix.of (fun i j => kernel T e (a i) (a j) - kernel S e (a i) (a j))).PosSemidef := by
+  simp_rw [nested_kernel_difference S T hST e]
+  exact Matrix.posSemidef_gram ℝ _
+end RiemannResearch.Analysis.ProjectionDPP
