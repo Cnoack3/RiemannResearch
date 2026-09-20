@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Odd-carry arithmetic and a concrete legal approximation (2026-09-20)
+
+Module: `RH/OddCarryArithmetic`.
+
+Source: the user-provided DPP/odd-carry and argument-doubling handoffs,
+especially Sections 2 and 4 of the doubling/Hurwitz note, support the carry
+definition, modular identities, and finite Mellin proof strategy.
+
+**Established:** `doublingCarry_succ_sub` proves the exact positive and
+negative jumps for every modulus at least two. The finite complex-weight
+telescope and its cpow specialization retain the terminal boundary term.
+`doublingCarryHilbert_tendsto_zero` proves unconditional norm decay of the
+actual carries, which is not a closed-span membership assertion.
+
+`oddCarryAdjacentApprox` is an explicit finite legal combination for modulus
+2*m+1. Its exact signed error is the argument-doubling image of
+g_(2*m+2)-g_(2*m+1), with the corresponding norm upper bound. The error at
+physical coordinate 2*m+1 is m/(m+1). The resulting full-norm square lower
+bound concerns this particular approximation; it is not a bound on the
+optimum over all legal vectors.
+
+**Open:** the infinite paired progression/Hurwitz Mellin identification and
+the parameter-derivative asymptotic are not formalized by this module.
+Odd-carry membership, vanishing vacancy, and the actual capacity/Schur
+divergence remain unresolved mathematical obligations. None of the new
+declarations is an unconditional RH theorem.
+
 ### Determinantal laws, actual integer vacancy, and odd-carry RH reduction (2026-09-20)
 
 Modules: `Probability/DeterminantalProcess`, `Probability/DeterminantalEntry`,
