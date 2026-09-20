@@ -1,5 +1,41 @@
 # Theorem catalog
 
+### Argument-doubling operator and odd-generator criterion (2026-09-20)
+
+Module: `RH/ArgumentDoublingGenerators`.
+
+Source: user-provided
+`RH_Doubling_Generators_and_Hurwitz_Obstruction_2026-09-20(1).md`,
+Sections 1--4; Bagchi, Theorem 1, https://arxiv.org/abs/math/0607733
+supports the weighted residue-space terminology.
+
+**Established:** `argumentDoublingContinuous_norm` constructs the actual
+operator A_2 f(n) = f(2n) and proves its exact operator norm is 2.
+`doubling_weight_identity` keeps the exact weight ratio.
+`hilbertArgumentDoubling_residue_even` proves A_2 g_(2q) = g_q.
+`hilbertArgumentDoubling_residue` and `doublingCarry_odd` give
+A_2 g_d = 2 g_d - b_d, with the exact odd half-residue indicator.
+`CoefficientStabilization.argumentDoublingInvariant_iff_generators`
+and `argumentDoublingInvariant_iff_odd_carry` identify the remaining
+closed-span membership condition without assuming it.
+`doubled_three_not_mem_finiteSpan` proves there is no finite residue identity
+for A_2 g_3; it makes no assertion of nonmembership in the closure.
+`closedSpace_mellin_distance_sq_lower_bound` proves, for a right-half-plane
+zeta zero s and u in S,
+(2 Re(s)-1) |L_s(f)|^2 <= ||f-u||^2 in the original full weighted norm.
+`doubled_residue_not_mem_of_mellin_ne_zero` applies the actual Mellin separator.
+
+**Conditional research reduction:**
+`CoefficientStabilization.riemannHypothesis_of_odd_carry` proves Mathlib's
+`RiemannHypothesis` from membership in S of b_d for every odd d >= 3.
+The contrapositive `exists_odd_carry_not_mem_of_not_RH` is also proved.
+
+**Open:** the odd-indicator membership hypothesis. Neither the norm bound
+nor the finite modular formulas supplies it. The handoff's Hurwitz Taylor
+estimate and nonvanishing, all-sufficiently-large-odd obstruction,
+unbounded-index criterion, and RH-to-invariance converse are not yet
+formalized here. No unconditional proof of RH is claimed.
+
 ### Argument-doubling closure reduction (2026-09-20)
 
 Module: `RH/ArgumentDoublingClosure`.
