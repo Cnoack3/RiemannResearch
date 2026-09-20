@@ -1,5 +1,41 @@
 # Theorem catalog
 
+### Finite-rank Mellin DPP construction (2026-09-20)
+
+Main module: `RH/MellinProjectionDPP`.
+
+**Established for every rank n, without an RH hypothesis:** an actual
+probability measure `mellinLaw n` on n labeled real frequencies, invariant
+under relabeling and almost surely consisting of n distinct points. Its
+joint density relative to the product of `frequencyMeasure = dt/(2*pi)`
+is `det (kernel n (x i) (x j)) / n!`, where `kernel` is the existing
+arithmetic inverse-Gram Mellin kernel. The kernel reproducing integral
+and trace n are also proved.
+
+The analytic input is proved for the actual Pareto realization:
+`RH/ParetoMellinIsometry` constructs the logarithmic real-linear isometry
+and proves complex cross-Plancherel;
+`RH/MellinModeOrthonormality` identifies the actual Mellin integrals with
+the Fourier transform and proves orthonormality;
+`RH/MellinFrequencyMeasure` gives the exact angular measure and L2 bounds.
+`RH/ParetoBoundedMellinLinearity`, `RH/ResidueModeGramInverse`, and
+`RH/MellinProjectionKernel` identify the actual finite mode sum with the
+arithmetic inverse-Gram kernel.
+
+Reusable probability modules: `Probability/ContinuousProjectionLaw`,
+`Probability/ContinuousProjectionDensity`,
+`Probability/ContinuousProjectionSymmetry`, and
+`Probability/ContinuousProjectionKernel`. Normalization follows by
+integrating the squared determinant using the proved cross-Gram identities;
+neither a probability-law provider nor a Mellin isometry is assumed.
+
+**Scope:** this constructs the finite-rank family by its full n-point
+joint density. Separate formulas for every lower-order factorial marginal
+and an infinite-rank locally finite continuum process are not asserted.
+The infinite local-trace obstruction and scaling limits remain separate
+formalization/research obligations.
+
+
 ### Route 4 Möbius coefficient defect (2026-09-20)
 
 Module: `RH/MobiusCoefficientDefect`.
@@ -70,7 +106,7 @@ None of these hypotheses is hidden in a project axiom.
 
 **Open formalization obligations for known mathematics:** the Bagchi
 RH-to-density converse; full DPP negative association and the finite spatial
-transport provider; the general Mellin isometry/continuum-DPP construction;
+transport provider; separate lower-order continuum correlation marginals;
 the infinite continuum local-trace obstruction; the operator trace-class
 Fredholm identification; and the cutoff eigenvalue interval bound.
 

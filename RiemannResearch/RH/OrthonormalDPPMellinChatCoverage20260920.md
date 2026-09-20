@@ -8,7 +8,8 @@ lemma, a conditional implication, and an outstanding formalization. No
 project-local axiom or admitted theorem is used to stand for a missing result.
 A successful proof of an implication does not supply its hypothesis.
 
-The additions comprise 30 focused Lean modules. Every new module is exported
+The original additions comprise 30 focused Lean modules; the subsequent
+finite-rank Mellin DPP construction adds 11 more. Every new module is exported
 from `RiemannResearch.lean`; the checkpoint validates the individual modules
 and their affected dependents. The status below refers to each theorem's exact
 Lean statement, including any explicitly listed hypotheses.
@@ -54,6 +55,7 @@ kernel K in the chat. The first physical site's counting index is zero.
 | Damped saturation | `Probability/MultiplicativeOccupancy`, `Probability/MultiplicativeOccupancyLower`, `RH/IntegerDPPDampedMinimum`, `RH/IntegerDPPDampedLimit`: finite minimum rigidity and infinite-prefix benchmark convergence equivalent to zero limiting vacancy; hence a sufficient condition for RH |
 | Rank-growth counterexample | `Probability/DeterminantalRankGrowth`: a genuinely nested DPP family with exactly N occupied sites and a permanent first-site hole |
 | Actual Mellin kernel | `Analysis/ComplexKernelPairCorrelation`, `RH/MellinFrequencyKernel`: exact zeta-envelope factorization of the actual inverse-Gram kernel, Hermitian symmetry, zero rows at critical-line zeros, cancellation from normalized pair correlation |
+| Finite-rank Mellin DPP construction | `RH/MellinProjectionDPP` with six analytic/kernel support modules and four `Probability/ContinuousProjection*` modules: actual Mellin cross-Plancherel, angular-measure orthonormality, inverse-Gram/mode identity, normalized probability law, permutation invariance, exactly n distinct points, full n-point determinant density, reproducing kernel and trace n |
 | Cutoff matrices | `Analysis/FrequencyCutoffMatrix`, `RH/MellinFrequencyRegularization`: actual compact-frequency integrals of residue modes, integrability/continuity, Hermitian matrices, real spectrum |
 | Positive spectral factors | `Analysis/PositiveSpectralPolynomial`, `Analysis/PositiveSpectralProduct`: finite factors and actual convergent canonical products with summable nonnegative weights have only real zeros; `RH/HilbertPolyaPositiveProduct` proves actual Mathlib RH from an explicit, unproved completed-zeta product identity on the critical strip |
 | Step-profile obstruction | `Analysis/MellinLogStepContinuity`, `RH/ParetoMellinLogDomain`: even a continuous a.e. representative forces the actual profile to vanish |
@@ -79,12 +81,16 @@ The following distinctions must remain visible in any later RH claim.
    for arbitrary increasing functions of disjoint occupation sets, and the
    finite supported-transport provider for `SpatialWindowFeasible`, are not.
    These are known general DPP theorems, not proposed new RH assumptions.
-3. **Continuum Mellin DPP: formalization gap.** The arithmetic Mellin features
-   and kernel algebra are concrete. A general Mellin–Plancherel isometric
-   embedding, the needed cross-Gram identities in its codomain, and a genuine
-   continuum DPP law with its correlation densities still require assembly.
-   An isometric transform of Hilbert spaces does not map sampled integer
-   configurations pointwise to frequency configurations.
+3. **Finite-rank continuum Mellin law: completed; further identities remain.**
+   `RH/MellinProjectionDPP` constructs the actual law for every rank n from
+   the actual Mellin modes, with no RH or normalization-provider hypothesis.
+   The logarithmic isometry, Fourier/Mellin identification, cross-Gram
+   identities, full n-point determinant density, probability normalization,
+   permutation invariance, distinctness, and cardinality are proved.
+   Separate lower-order factorial marginal formulas have not yet been
+   formalized. This construction does not assert an infinite-rank locally
+   finite law or a pointwise map from sampled integer configurations to
+   frequency configurations.
 4. **Infinite local-trace obstruction: formalization gap.** The chat's weakly
    null scaled residue sequence and local noncompactness argument have not
    yet been fully instantiated as a theorem about the continuum projection.
