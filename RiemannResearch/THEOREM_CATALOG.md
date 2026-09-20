@@ -43,7 +43,8 @@ DPP probability law or identify random particles with zeta zeros.
 
 Modules: `RH/DyadicCarryCRT`, `RH/MobiusJointHeadProjection`,
 `RH/MobiusJointHeadCorrections`, `RH/DyadicCarryOptimization`,
-`RH/DyadicCarryOptimizationCRT`, and `RH/ParetoProgressionMidpoint`.
+`RH/DyadicCarryOptimizationCRT`, `RH/DyadicCarryOptimizationLimit`,
+and `RH/ParetoProgressionMidpoint`.
 
 Source: the user-provided
 `RH_Dyadic_Block_CRT_Energy_and_Mobius_Obstruction_2026-09-20.md`,
@@ -76,6 +77,16 @@ zero along exactly the same parameter limits, with no coefficient-growth
 restriction. The minimum-comparison theorem takes minimizing points and
 their minimizing properties explicitly; it does not construct a separate
 midpoint optimizer.
+
+**Concrete limit:** `dyadicRepairEnergy_zero_head_tendsto` proves, without
+a convergence hypothesis, that the completely specified schedule N=0, L=2^k
+converges to `limitEnergy`, the constant target's squared projection defect.
+`headCorrection_zero_eq_projection` identifies the actual inverse-Gram
+correction with the established finite residue projection. Removing the legal
+terminal residue and the uniform contraction bound control the moving target.
+`dyadicRepairEnergy_zero_head_tendsto_zero_iff` proves that this limit is zero
+exactly when the constant belongs to the closed legal space. Exhaustion has
+therefore supplied the limit, but not the missing assertion `limitEnergy = 0`.
 
 **Conditional endpoint:** `riemannHypothesis_of_dyadicRepairEnergy_tendsto`
 derives Mathlib's RH from vanishing of the constructed Schur energies along

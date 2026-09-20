@@ -183,4 +183,56 @@ theorem headCorrection_minimizes (N L : ℕ) (f : ThresholdHilbert) (c : Fin L �
       ‖f - Fintype.linearCombination ℝ (fun i : Fin L => headNullHilbert N i.val) c‖ ^ 2 :=
   residual_minimizes (finiteHeadNull_independent N L) f c
 
+/-- With no prescribed positive coordinates the correction dictionary is
+the ordinary residue dictionary, with nonzero rescaling of each column. -/
+theorem headNullHilbert_zero_base (i : ℕ) :
+    headNullHilbert 0 i = (((i + 2 : ℕ) : ℝ)) • residueAtom i := by
+  have h1 : positiveResidueHilbert 1 = 0 := by
+    apply hilbertSequence_injective
+    rw [positiveResidueHilbert_sequence 1 (by omega)]
+    change residue 1 = hilbertSequenceLinear 0
+    rw [map_zero]
+    funext n
+    simp [residue, Nat.mod_one]
+  simp only [headNullHilbert, Nat.zero_add, h1, sub_zero]
+  rw [show 2 + i = i + 2 by omega]
+  rw [positiveResidueHilbert, dif_pos (by omega : 0 < i + 2)]
+  rfl
+
+theorem headNull_zero_synthesisSpan (L : ℕ) :
+    synthesisSpan (fun i : Fin L => headNullHilbert 0 i.val) = finiteSpace L := by
+  apply le_antisymm
+  · apply Submodule.span_le.mpr
+    rintro _ ⟨i, rfl⟩
+    change headNullHilbert 0 i.val ∈ finiteSpace L
+    rw [headNullHilbert_zero_base]
+    apply (finiteSpace L).smul_mem
+    exact Submodule.subset_span ⟨i, rfl⟩
+  · change Submodule.span ℝ (Set.range (fun i : Fin L => residueAtom i.val)) ≤ _
+    apply Submodule.span_le.mpr
+    rintro _ ⟨i, rfl⟩
+    change residueAtom i.val ∈ synthesisSpan (fun j : Fin L => headNullHilbert 0 j.val)
+    have hu : headNullHilbert 0 i.val ∈
+        synthesisSpan (fun j : Fin L => headNullHilbert 0 j.val) :=
+      Submodule.subset_span ⟨i, rfl⟩
+    have hc : residueAtom i.val = (((i.val + 2 : ℕ) : ℝ))⁻¹ •
+        headNullHilbert 0 i.val := by
+      rw [headNullHilbert_zero_base, smul_smul,
+        inv_mul_cancel₀ (by positivity : (((i.val + 2 : ℕ) : ℝ)) ≠ 0), one_smul]
+    rw [hc]
+    exact (synthesisSpan (fun j : Fin L => headNullHilbert 0 j.val)).smul_mem _ hu
+
+/-- The actual inverse-Gram correction is exactly the established finite
+residue projection, including the empty dictionary L=0. -/
+theorem headCorrection_zero_eq_projection (L : ℕ) (f : ThresholdHilbert) :
+    headCorrection 0 L f = (finiteSpace L).starProjection f := by
+  unfold headCorrection headCorrectionCoefficients
+  rw [synthesis_inverseCoeff_eq_projection]
+  have hc (K Q : Submodule ℝ ThresholdHilbert)
+      [K.HasOrthogonalProjection] [Q.HasOrthogonalProjection] (h : K = Q) :
+      K.starProjection f = Q.starProjection f := by
+    subst Q
+    rfl
+  exact hc _ _ (headNull_zero_synthesisSpan L)
+
 end RiemannResearch.RH.Pareto
