@@ -39,6 +39,57 @@ Formalization boundary: these modules prove analytic, projection, dimension,
 and correlation-kernel statements. They do not construct a general continuous
 DPP probability law or identify random particles with zeta zeros.
 
+### Exact dyadic CRT optimization and the remaining convergence estimate (2026-09-20)
+
+Modules: `RH/DyadicCarryCRT`, `RH/MobiusJointHeadProjection`,
+`RH/MobiusJointHeadCorrections`, `RH/DyadicCarryOptimization`,
+`RH/DyadicCarryOptimizationCRT`, and `RH/ParetoProgressionMidpoint`.
+
+Source: the user-provided
+`RH_Dyadic_Block_CRT_Energy_and_Mobius_Obstruction_2026-09-20.md`,
+especially Sections 2--8. This entry records the formalized finite argument;
+the paper's external analytic nonconvergence and hypothetical-zero discussion
+are not asserted as Lean results here.
+
+**Established:** `dyadicCarryBlock_sequence` identifies the actual Hilbert
+block at d = 2^k+1 with r_d minus the indicator of nonmultiples of d.
+The exact-head interpolant reproduces every vector with conductors at most
+N+1 and is uniquely determined by that head. `headNullResidueSpan_iff`
+identifies every finite legal head-zero correction with a finite combination
+of r_m-r_(N+1), m>N+1. The natural diagonal error is exactly the corrected
+constant Möbius approximant minus the nonmultiple indicator.
+
+`headNullHilbert_independent` proves independence of the actual Hilbert
+correction vectors using their Möbius charges. `headCorrectionCoefficients`
+constructs their inverse-Gram minimizer without an inverse hypothesis.
+`dyadicRepairEnergy_eq_norm` and `dyadicRepairEnergy_minimizes` identify the
+complete signed Schur remainder with the true optimum for the finite
+correction dictionary. `dyadicRepairEnergy_crt` identifies that optimized
+energy with its full positive-period CRT sum. Summability, periodicity,
+all mixed terms, and the vanishing repaired head are included.
+
+`progressionMidpointWeight_relative_bounds` proves
+(1 - 1/(2P+3)^2) W <= W_mid <= W for every positive P and r.
+The global factor is at least 24/25. The comparison holds for arbitrary
+signed finite quadratic forms; their exact and midpoint energies tend to
+zero along exactly the same parameter limits, with no coefficient-growth
+restriction. The minimum-comparison theorem takes minimizing points and
+their minimizing properties explicitly; it does not construct a separate
+midpoint optimizer.
+
+**Conditional endpoint:** `riemannHypothesis_of_dyadicRepairEnergy_tendsto`
+derives Mathlib's RH from vanishing of the constructed Schur energies along
+unbounded dyadic stages. Legal vectors, exact heads, inverse coefficients,
+and CRT identities are discharged. The vanishing-energy hypothesis is not.
+
+**Open:** choose stage, head, and correction schedules and prove that their
+full signed Schur remainder tends to zero. `dyadicRepairEnergy_limit_lower_bound`
+shows that any such energy limit is at least the constant target's squared
+distance to the closed legal space. Finite interpolation, invertibility,
+and uniform midpoint approximation do not prove that distance is zero.
+Odd-carry membership and the general arithmetic DPP law/coupling remain
+unproved; this change constructs neither, and does not assert unconditional RH.
+
 ### Joint carry heads, dyadic carry blocks, and canonical Schur tails (2026-09-20)
 
 Modules: `RH/OddCarryJointHead`, `RH/DyadicCarryBlocks`,
