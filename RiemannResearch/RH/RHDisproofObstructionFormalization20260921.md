@@ -6,10 +6,17 @@ Source: the ordinary argument archived in
 `RHDisproofObstructionDraft20260921.md`, corresponding to the user's
 `RH_Obstruction_Compact_Frequency_Rigidity_2026-09-21.md`.
 
-This update does not prove or disprove RH. It adds checked gap and convergence
-criteria, a complete Jensen sampling theorem, a complete individual critical-mode
-energy obstruction, and explicit statements and conditional reductions for the
-remaining mixture arguments.
+This continuation does not prove or disprove RH. It removes the analytic
+provider assumptions from compact-frequency continuum rigidity. The earlier
+gap, capacity, Jensen-sampling, and individual-mode results remain established.
+The complex coercivity extension and complete countable critical-mixture
+energy law are now verified, including nonsummability theorems without analytic
+provider hypotheses. The finite-mixture specialization and complete compact critical-triviality
+assembly are also verified.
+
+The classical implication from RH to density of the actual residue span
+remains a separate, explicit missing formalization. It is not hidden inside
+an equivalence and is not supplied by the mixture rigidity theorems.
 
 ## Conventions
 
@@ -17,8 +24,9 @@ The capacity development uses the project's actual real `ThresholdHilbert`.
 Stage `n` contains moduli 2 through `n+1`; the gap infimum uses stages `n+1`
 to omit the empty dictionary. Coercivity is formalized for every real signed
 coefficient family, retaining the entire Hilbert tail and all mixed terms.
-The complex-coefficient formulation in the ordinary draft follows by
-complexification; that identification is not an additional theorem of this update.
+`ComplexTailCoercivity` gives a verified explicit complexification, including
+equality of the real and complex coercivity constants and the actual weighted
+coordinate norm identities.
 
 The spectral development uses complex-valued coordinate sequences. Array index
 `n` means physical integer `n+1`, so `paretoWeight n` is
@@ -100,30 +108,99 @@ Complete helper proofs include `densityFourier_norm_le`,
 `weightedDensity_zero_iff_supported_on_zeros`, and
 `continuumMixture_eq_zero_of_density_zero`.
 
-## Conditional reductions and open formalization obligations
+### Continuum rigidity with the analytic inputs discharged
+
+`compactFrequencyRigidity_proved` in the `CompactFrequencyRigidity` module
+is the assembly theorem (its Lean namespace is `SpectralObstruction`). Its only inputs are
+the actual `CompactFrequencyData`: `1/2 <= sigma < 1`, a nonnegative frequency
+bound, a finite positive measure, an integrable complex density, and
+almost-everywhere frequency support inside the stated bound. It proves
+
+    every normalized residue pairing vanishes
+      iff zeta(verticalPoint sigma t) * a(t) = 0 almost everywhere.
+
+The formerly required analytic inputs are supplied by:
+
+| Module | Checked mathematical content |
+|---|---|
+| `MellinModeResiduePairing` | Exact single-mode arithmetic pairing and genuine absolute convergence on the positive half-plane, away from the pole. |
+| `CompactMixtureResidueIdentity` | The actual mixture's summation/integration interchange and residue identity, including absolute convergence. |
+| `CompactFrequencyMellinEntire` | Integrability of the zeta-weighted density, entire dependence on the Fourier variable, and exponential growth of the actual sampling defect. |
+| `WeightedDensityFourierUniqueness` | An integrable complex density whose Fourier transform vanishes on the real axis is zero almost everywhere. No positivity of the density or compact-support hypothesis is required for this uniqueness theorem. |
+| `LogIntegerSamplingUniqueness` | Jensen logarithmic-sampling uniqueness, already established in the previous publication. |
+| `CompactFrequencyRigidity` | `compactMixtureAnalyticProvider_proved` and `compactFrequencyRigidity_proved`, with no remaining provider arguments. |
+
+The earlier `_of_provider` assembly lemmas retain their general hypothesis
+forms; those hypotheses are now instantiated by actual checked declarations
+for compact-frequency data. They no longer represent a missing analytic step
+in the specialized continuum rigidity theorem.
+
+### Critical-mixture and complex-coercivity developments
+
+The complete combined proof batch verified every module below. The source
+audit and module validation are performed by the publication checkpoint.
+
+| Module | Intended fully specialized conclusion | Verification status |
+|---|---|---|
+| `ComplexTailCoercivity` | The same sharp tail gap controls every finite complex coefficient family; `complex_tail_bound_iff_real` identifies all real and complex coercivity constants. The norm is that of the genuine complex Pareto Hilbert space. | Verified |
+| `CriticalMellinCellAsymptotics` | `cellSlope_tendsto` for every complex parameter; exact Mellin-mode first-difference factorization and the positive-real-part slope norm bound. | Verified |
+| `HarmonicToeplitz` | Harmonic normalization tends to one, and harmonic weighted means of every complex sequence tending to zero also tend to zero. | Verified |
+| `LogarithmicPowerMeans` | `harmonic_phase_tendsto`: the normalized sum of `(n+1)^(-1-i*t)` tends to `1` when `t=0`, and to `0` otherwise. | Verified |
+| `CriticalMellinGramLimits` | Exact complex mixed-energy decomposition, diagonal/off-diagonal limits, and a uniform frequency-factorized Gram bound. | Verified |
+| `FiniteCriticalMellinMixtureEnergy` | The full logarithmic-energy law for finite distinct critical modes, retaining every cross term; finite energy forces every coefficient to vanish. | Verified |
+| `CriticalMellinCountableEnergy` | `criticalPurePointEnergyProvider_proved`: the actual countable logarithmic-energy law for injective ordinates and summable absolute first moments. No bound on the ordinates is assumed. | Verified |
+| `CompactCriticalMixtureAtoms` | Finitely many zeros in a compact critical-line band; exact atomic decomposition of an annihilating compact-frequency density. | Verified |
+| `CompactCriticalMixtureTriviality` | `compactCriticalMixtureTriviality_proved`: finite-energy compact-frequency critical-line annihilators have zero density almost everywhere and identically zero coordinate mixture. | Verified |
+
+For the power means, the proof uses the exact telescope
+
+    q_n - q_(n+1) = (n+1)^(-1-i*t) * cellSlope(i*t,n),
+    q_n = (n+1)^(-i*t),  |q_n| = 1,
+
+together with `cellSlope(i*t,n) -> i*t` and harmonic Toeplitz convergence.
+Thus an assumed asymptotic estimate for the oscillatory partial sums is
+unnecessary. Countable-energy convergence uses the actual mixed Gram series
+and the summable first-moment majorant.
+
+## Remaining formalization obligation and mathematical scope
 
 | Declaration | Explicit dependency still required |
 |---|---|
 | `not_RH_iff_firstCoordinateTailGap_pos` and `riemannHypothesis_iff_firstCoordinateTailGap_zero` | `hDensity : RiemannHypothesis -> closedSpace = top`. This is the classical RH-to-density theorem, still missing as a checked provider in this project. |
-| `compactFrequencyRigidity_of_analyticProvider` | `CompactMixtureAnalyticProvider`: the actual Mellin/Fubini pairing identity (including convergence), entire exponential-type control of the actual sampling defect, and Fourier uniqueness for the actual weighted density. Jensen sampling uniqueness is now discharged. |
-| `nonzero_criticalMixture_not_summable_of_provider` | `CriticalPurePointEnergyProvider`: the actual logarithmic-energy limit for distinct ordinates with absolute first-moment coefficient control. Coordinate convergence and positive coefficient energy are already proved separately. |
 
-`CompactCriticalMixtureTrivialityTarget` records the complete bounded-frequency
-critical-line statement with actual quantities. It remains an open formalization
-target: the finite zero-support decomposition and mixture energy argument have
-not been completed in Lean. It is a proposition definition, not an axiom.
+`CriticalMellinCountableEnergy` also proves the directly usable specialized APIs
+`criticalMixture_not_summable` and `nonzero_criticalMixture_not_summable`. They
+assume only injective ordinates, summability of the absolute first-moment
+coefficients, and respectively positive coefficient energy or a nonzero
+coefficient. No analytic provider, zeta-zero, or RH hypothesis remains.
 
-The ordinary proofs of these analytic statements are in the companion draft.
-Their Open status here denotes missing formalization, not a claim that those
-analytic statements are new unsolved mathematical conjectures.
+`compactCriticalMixtureTriviality_proved` proves the complete
+`CompactCriticalMixtureTrivialityTarget` proposition: finite-energy compact
+critical-line mixtures annihilating every residue have density zero almost
+everywhere, and their coordinate mixture is identically zero. No additional
+analytic provider or RH hypothesis remains.
 
-The separate mathematical problem is deciding the gap: proving strict
-positivity would disprove RH, and proving it vanishes would prove RH.
-Neither endpoint is established.
+The RH-to-density dependency is a missing formalization of a known classical
+theorem, not an unsolved theorem of ordinary mathematics. The detailed audit
+is `RHToDensityDependencyAudit20260921.md`. It identifies the exact remaining
+provider and Bagchi's classical route: finite damped Möbius residue sums,
+Littlewood's RH-dependent ordered Dirichlet convergence and uniform bounds,
+zeta growth and shifted-quotient estimates, and two boundary L2 limits.
+No checked project provider for those RH-dependent analytic inputs was found.
+
+Crucially, Littlewood's series convergence must use ordered finite partial
+sums. Mathlib's `LSeriesSummable_moebius_iff` identifies absolute summability
+with `Re(s)>1`; writing `Summable` in the larger RH half-plane would be an
+incorrect formalization of conditional convergence.
+
+The separate mathematical problem is deciding the gap. Using the classical
+RH-to-density converse, strict positivity would disprove RH; that reverse
+implication still carries `hDensity` in Lean. Vanishing of the gap implies
+RH by an already established Lean theorem. Neither endpoint is established.
 
 ## Verification evidence
 
-The combined candidates passed the isolated Lean check
+The previous publication's combined candidates passed the isolated Lean check
 `job_Ap3qxyBblw90Qrk6aErQQzd2T3xlJiT_` with exit code 0. A redundant unreachable
 tactic was subsequently removed before the project checkpoint.
 
@@ -136,3 +213,24 @@ Local theorem hypotheses remain visible and are listed above; an axiom audit
 does not discharge them. No `sorry`, `admit`, project-local axiom, or unsafe
 declaration is introduced. The changed modules and root exports are subject to
 the final publication checkpoint's affected-module validation.
+
+**Continuation verification:** the complete fifteen-module combined batch
+passed as `job_KIcJpWoBI14ZXz8ybgjvQu6GCm66OD_c`. This includes all the
+actual compact-frequency, complex-coercivity, finite/countable energy, and
+compact critical-triviality results described above.
+
+The final batch axiom audits of `compactCriticalMixtureTriviality_proved`,
+`criticalPurePointEnergyProvider_proved`, `compactFrequencyRigidity_proved`,
+and `firstCoordinateTailGap_controls_complex` report only `propext`,
+`Classical.choice`, and `Quot.sound`. The finite-mixture energy theorem is
+also covered by the downstream compact-critical-triviality audit.
+
+The source audit and module validation are performed by the publication
+checkpoint. No additional checks were submitted by the documentation/audit
+agent. Mathematical development was parallel and all Lean verification
+submissions were serialized by the root coordinator.
+
+These axiom audits accompany the exact theorem types. They do not remove
+the explicit RH-to-density hypothesis in the separate RH equivalences.
+That classical converse is the only remaining formalization obligation
+identified in this coverage report.

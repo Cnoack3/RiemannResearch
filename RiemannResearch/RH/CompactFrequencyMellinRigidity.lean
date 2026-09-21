@@ -5,18 +5,19 @@ import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 
 /-!
-# Compact-frequency Mellin mixtures: exact analytic obligations and reductions
+# Compact-frequency Mellin mixtures: definitions and analytic reductions
 
 Source: user-provided `RH_Obstruction_Compact_Frequency_Rigidity_2026-09-21.md`,
 Sections 3--4. This module formalizes the actual sequences and integrals and
-separates the arithmetic reduction from the substantial analytic providers.
+separates the arithmetic reduction from its analytic inputs.
 
 The Mellin/Fubini identity, entire-defect estimate, and Fourier uniqueness
-for weighted complex measures remain **open formalization obligations**.
-The logarithmic-sampling uniqueness input is proved in the sibling module
-`LogIntegerSamplingUniqueness`.
-In particular, the unconditional continuum rigidity theorem from the informal
-note is not claimed as a completed formalization.
+for weighted complex measures are proved in `CompactMixtureResidueIdentity`,
+`CompactFrequencyMellinEntire`, and `WeightedDensityFourierUniqueness`.
+The logarithmic-sampling input is proved in `LogIntegerSamplingUniqueness`.
+`compactFrequencyRigidity_proved` in `CompactFrequencyRigidity` assembles these
+results with no additional analytic provider hypothesis. These modules import
+the definitions here; the dependency direction is intentional.
 
 A finite complex measure is represented here by an integrable complex density
 against a finite positive measure, as in its polar decomposition. The proofs
@@ -69,17 +70,19 @@ def CompactFrequencyData (σ T : ℝ) (μ : Measure ℝ) (a : ℝ → ℂ) : Pro
   (1 / 2 : ℝ) ≤ σ ∧ σ < 1 ∧ 0 ≤ T ∧ IsFiniteMeasure μ ∧
     Integrable a μ ∧ ∀ᵐ t ∂μ, |t| ≤ T
 
-/-- The complete continuum rigidity statement remains an open formalization
-obligation. Its actual quantities are shared by the reductions below. -/
+/-- The complete continuum rigidity statement. It is proved by
+`compactFrequencyRigidity_proved` in `CompactFrequencyRigidity`; the
+definitions and general reductions here are shared by its analytic proofs. -/
 def CompactFrequencyRigidityTarget : Prop :=
   ∀ (σ T : ℝ) (μ : Measure ℝ) (a : ℝ → ℂ),
     CompactFrequencyData σ T μ a →
     ((∀ d : ℕ, 2 ≤ d → residuePairing (continuumMixture σ μ a) d = 0) ↔
       zetaWeightedDensity σ a =ᵐ[μ] 0)
 
-/-- Section 4's full bounded-frequency critical-line conclusion. This remains
-an open formalization obligation: finite zero-support reduction and the
-critical-line energy law are not proved by the elementary reductions below. -/
+/-- Section 4's full bounded-frequency critical-line conclusion. The theorem
+`compactCriticalMixtureTriviality_proved` in `CompactCriticalMixtureTriviality`
+proves this statement from the finite zero-support decomposition and the
+fully proved critical-line mixture energy law. -/
 def CompactCriticalMixtureTrivialityTarget : Prop :=
   ∀ (T : ℝ) (μ : Measure ℝ) (a : ℝ → ℂ),
     CompactFrequencyData (1 / 2) T μ a →
@@ -98,8 +101,9 @@ def LogIntegerSamplingUniqueness : Prop :=
   ∀ f : ℂ → ℂ, EntireExponentialType f →
     (∀ d : ℕ, 2 ≤ d → f (Real.log (d : ℝ)) = 0) → ∀ z, f z = 0
 
-/-- Open arithmetic/analytic identity, on the actual coordinate mixture.
-It incorporates absolute convergence and the Mellin/Fubini interchange. -/
+/-- Arithmetic/analytic identity on the actual coordinate mixture, including
+absolute convergence and the Mellin/Fubini interchange. Under compact-frequency
+data it is proved by `mixtureResidueIdentity_of_compact_data`. -/
 def MixtureResidueIdentity (σ : ℝ) (μ : Measure ℝ) (a : ℝ → ℂ) : Prop :=
   ∀ d : ℕ, 2 ≤ d →
     Summable (fun n => (paretoWeight n : ℂ) * continuumMixture σ μ a n *
@@ -108,7 +112,8 @@ def MixtureResidueIdentity (σ : ℝ) (μ : Measure ℝ) (a : ℝ → ℂ) : Pro
       -Complex.exp (-(σ : ℂ) * (Real.log (d : ℝ) : ℂ)) *
         samplingDefect σ μ a (Real.log (d : ℝ))
 
-/-- Open Fourier-uniqueness provider for the actual zeta-weighted density. -/
+/-- Fourier uniqueness for the actual zeta-weighted density. The theorem
+`weightedFourierUniqueness_of_integrable` supplies this input. -/
 def WeightedFourierUniqueness (σ : ℝ) (μ : Measure ℝ) (a : ℝ → ℂ) : Prop :=
   (∀ x : ℝ, densityFourier μ (zetaWeightedDensity σ a) x = 0) →
     zetaWeightedDensity σ a =ᵐ[μ] 0
@@ -163,8 +168,9 @@ theorem samplingDefect_zero_implies_mass_zero (σ : ℝ) (hσ : σ < 1)
   simp [Complex.ofReal_exp, Complex.ofReal_mul,
     Complex.ofReal_sub]
 
-/-- Conditional reduction of all arithmetic equations to zero weighted measure.
-The explicit arguments display every substantial unproved analytic provider. -/
+/-- General reduction of all arithmetic equations to zero weighted measure.
+The explicit analytic arguments are discharged for compact-frequency data by
+the theorems assembled in `CompactFrequencyRigidity`. -/
 theorem weightedDensity_zero_of_annihilates
     (σ : ℝ) (hσ : σ < 1) (μ : Measure ℝ) (a : ℝ → ℂ)
     (hidentity : MixtureResidueIdentity σ μ a)
@@ -244,7 +250,8 @@ theorem continuumMixture_eq_zero_of_density_zero
       simp [ht]
     _ = 0 := by simp
 
-/-- The exact remaining measure-analytic obligations. -/
+/-- The exact measure-analytic inputs, proved jointly by
+`compactMixtureAnalyticProvider_proved` in `CompactFrequencyRigidity`. -/
 def CompactMixtureAnalyticProvider : Prop :=
   ∀ (σ T : ℝ) (μ : Measure ℝ) (a : ℝ → ℂ),
     CompactFrequencyData σ T μ a →
@@ -252,8 +259,9 @@ def CompactMixtureAnalyticProvider : Prop :=
     EntireExponentialType (samplingDefect σ μ a) ∧
     WeightedFourierUniqueness σ μ a
 
-/-- Conditional assembly. The sampling input is supplied by the sibling
-Jensen module; the actual mixture analytic provider remains open. -/
+/-- General assembly from analytic inputs. The sampling input is proved in
+the sibling Jensen module; `CompactFrequencyRigidity` supplies the analytic
+input and applies this assembly to the actual compact-frequency mixtures. -/
 theorem compactFrequencyRigidity_of_providers
     (hanalytic : CompactMixtureAnalyticProvider)
     (hsampling : LogIntegerSamplingUniqueness) : CompactFrequencyRigidityTarget := by

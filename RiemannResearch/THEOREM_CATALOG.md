@@ -1,42 +1,56 @@
 # Theorem catalog
 
-### Exact disproof gap and Mellin mixture obstructions (2026-09-21)
+### Sharp tail gap and Mellin mixture obstructions (2026-09-21)
 
-Modules: `RH/FirstCoordinateTailGap`, `RH/TailMinimumConvergence`,
-`RH/CompactFrequencyMellinRigidity`, `RH/LogIntegerSamplingUniqueness`,
-and `RH/CriticalMellinMixtureEnergy`.
-Coverage and all declaration names:
-`RH/RHDisproofObstructionFormalization20260921.md`.
-Ordinary proof: `RH/RHDisproofObstructionDraft20260921.md`.
+Core modules: `RH/FirstCoordinateTailGap`, `RH/TailMinimumConvergence`,
+`RH/ComplexTailCoercivity`, `RH/CompactFrequencyRigidity`,
+`RH/CriticalMellinCountableEnergy`, `RH/FiniteCriticalMellinMixtureEnergy`,
+and `RH/CompactCriticalMixtureTriviality`. The supporting Mellin summation,
+Fourier, sampling, cell asymptotic, harmonic mean, Gram, and atomic modules
+are listed in `RH/RHDisproofObstructionFormalization20260921.md`.
+Ordinary argument: `RH/RHDisproofObstructionDraft20260921.md`.
 
 **Established:** the actual first-coordinate tail gap is the sharp constant
-for all real signed finite tail combinations. Positivity is equivalent to
-bounded capacity and existence of a residue tail certificate. Not RH forces
-a positive gap, while a zero gap implies actual Mathlib RH. The actual finite
-minimum vectors converge iff capacities are bounded, with the canonical
-limit and exact squared-error bound.
+for all real and complex signed finite tail combinations, with the complex
+space realized in genuine complex `lp` at exponent two. Positivity is
+equivalent to bounded capacity and existence of a residue tail certificate.
+Not RH forces a positive gap; a zero gap implies actual Mathlib RH.
+Finite minimum vectors converge iff capacities are bounded, with the
+canonical limit and exact squared-error bound.
 
-**Established:** `SpectralObstruction.logIntegerSamplingUniqueness_proved`
-fully proves the Jensen sampling input. Every individual critical-line mode
-has the unconditional harmonic energy lower bound and infinite energy.
-Actual countable-mixture coordinate convergence and positive summable
-diagonal coefficient energy are proved from absolute first-moment control.
+**Established:** `SpectralObstruction.compactFrequencyRigidity_proved`
+assumes only `CompactFrequencyData`. It proves the equivalence between
+annihilation of all normalized residues and almost-everywhere vanishing
+of the actual zeta-weighted density. The Mellin/Fubini identity, absolute
+summability, entire exponential-type bound, Jensen logarithmic sampling,
+and weighted Fourier injectivity all have checked proofs.
 
-**Conditional research reductions:** the full gap/RH equivalences expose
-the classical RH-to-density converse as `hDensity`. Continuum rigidity
-exposes `CompactMixtureAnalyticProvider`; Jensen sampling is now supplied.
-Countable-mixture nonsummability exposes `CriticalPurePointEnergyProvider`.
+**Established:** `criticalPurePointEnergyProvider_proved` supplies the actual
+countable logarithmic-energy law under injective ordinates and absolute
+coefficient first-moment control. `nonzero_criticalMixture_not_summable`
+excludes every such nonzero critical mixture from finite Pareto energy.
+The finite-family law is proved separately. Actual Gram limits and a
+uniform bound of `4 * norm(s_t) * norm(s_u)` justify every mixed-series
+interchange, without frequency separation or bounded ordinates.
 
-**Open formalization:** classical RH-to-density; actual Mellin/Fubini
-pairing and convergence; exponential-type regularity of the actual mixture
-defect; weighted Fourier injectivity; countable logarithmic-energy asymptotics;
-and `CompactCriticalMixtureTrivialityTarget`. These have ordinary proofs in
-the draft; they are not being declared new open mathematical conjectures.
+**Established:** `compactCriticalMixtureTriviality_proved` shows that a
+compact critical-line mixture with finite Pareto energy and every residue
+pairing zero has zero density almost everywhere and is the zero mixture.
+The reduction uses the actual finite set of critical-line zeta zeros and
+the measure's actual atom coefficients. No analytic provider is assumed.
+
+**Conditional research reductions:** the full gap/RH equivalences still
+expose `hDensity : RiemannHypothesis → closedSpace = ⊤`.
+**Open formalization:** this classical RH-to-density implication; its exact
+missing analytic inputs are documented in
+`RH/RHToDensityDependencyAudit20260921.md`. The completed mixture theorems
+do not discharge it. This is a missing formalization of known ordinary
+mathematics, not a new mathematical conjecture.
 
 **Open mathematical endpoint:** neither positivity nor vanishing of the
-unrestricted gap is proved. No disproof or proof of RH is claimed. The audited
-declarations use only `propext`, `Classical.choice`, and `Quot.sound`;
-this does not discharge explicit local hypotheses.
+unrestricted gap is proved. No disproof or proof of RH is claimed.
+The audited completed declarations use only `propext`, `Classical.choice`,
+and `Quot.sound`; explicit local hypotheses are tracked separately.
 
 ### Joint arithmetic obstruction under failure of RH (2026-09-21)
 

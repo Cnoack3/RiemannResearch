@@ -172,8 +172,9 @@ theorem logIntegerSamplingUniqueness_proved : LogIntegerSamplingUniqueness := by
   change (n : ℝ) ^ 2 * Real.log 2 ≤ 4 * K * (n : ℝ) + C at hb
   nlinarith [abs_nonneg C, le_abs_self C, mul_nonneg (abs_nonneg C) (by linarith : 0 ≤ (n : ℝ) - 1)]
 
-/-- The general sampling input is now discharged. The remaining argument
-is the actual Mellin/Fubini, entire-defect, and Fourier-uniqueness provider. -/
+/-- Assembly after discharging the general sampling input. The actual
+Mellin/Fubini, entire-defect, and Fourier-uniqueness input is supplied by
+`compactMixtureAnalyticProvider_proved` in `CompactFrequencyRigidity`. -/
 theorem compactFrequencyRigidity_of_analyticProvider
     (h : CompactMixtureAnalyticProvider) : CompactFrequencyRigidityTarget :=
   compactFrequencyRigidity_of_providers h logIntegerSamplingUniqueness_proved

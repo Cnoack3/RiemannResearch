@@ -8,9 +8,11 @@ import Mathlib.Topology.Algebra.InfiniteSum.NatInt
 
 Source: user-provided argument,
 `RH_Obstruction_Compact_Frequency_Rigidity_2026-09-21.md`, Sections 4--5.
-The logarithmic-energy asymptotic below is an explicitly named analytic
-obligation, not a theorem asserted without its provider. The consequences
-of that asymptotic are proved from the actual weighted coordinate sequence.
+The logarithmic-energy asymptotic is defined here and proved by
+`criticalPurePointEnergyProvider_proved` in `CriticalMellinCountableEnergy`.
+That module discharges the analytic input of the general reductions below
+and gives `criticalMixture_not_summable` and
+`nonzero_criticalMixture_not_summable` without provider hypotheses.
 
 The physical coordinate represented by the index `n` is `n + 1`.
 -/
@@ -114,9 +116,11 @@ theorem coefficientEnergy_pos (a : ℕ → ℂ) (γ : ℕ → ℝ)
     (fun k _ => sq_nonneg ‖criticalAmplitude a γ k‖)
   exact lt_of_lt_of_le hp hle
 
-/-- The complete analytic obligation for the actual countable critical-line
-mixture. No declaration in this module supplies this provider. Its inputs
-are distinct ordinates and absolute first-moment coefficient control. -/
+/-- The complete logarithmic-energy statement for the actual countable
+critical-line mixture. Its inputs are distinct ordinates and absolute
+first-moment coefficient control. The theorem
+`criticalPurePointEnergyProvider_proved` in `CriticalMellinCountableEnergy`
+proves this proposition. -/
 def CriticalPurePointEnergyProvider : Prop :=
   ∀ (a : ℕ → ℂ) (γ : ℕ → ℝ), Function.Injective γ →
     Summable (fun j => ‖criticalAmplitude a γ j‖) →
@@ -153,8 +157,9 @@ theorem not_summable_of_positive_logEnergy_limit (v : ℕ → ℂ) {C : ℝ}
     tendsto_nhds_unique hlim (summable_logEnergy_tendsto_zero v hs)
   linarith
 
-/-- Conditional research reduction. The substantive premise is the named
-analytic energy provider, together with positive actual coefficient mass.
+/-- General reduction from the logarithmic-energy law and positive actual
+coefficient mass. `CriticalMellinCountableEnergy` supplies the energy theorem
+and specializes this reduction without provider arguments.
 No zeta-zero or RH assumption is used. -/
 theorem criticalMixture_not_summable_of_provider
     (hprovider : CriticalPurePointEnergyProvider)
@@ -166,8 +171,8 @@ theorem criticalMixture_not_summable_of_provider
     hpos (hprovider a γ hγ ha)
 
 /-- The actual countable critical mixture is excluded by the energy law
-as soon as any coefficient is nonzero. The named analytic provider remains
-the sole substantive unresolved hypothesis. -/
+as soon as any coefficient is nonzero. The energy provider is supplied by
+`criticalPurePointEnergyProvider_proved` in `CriticalMellinCountableEnergy`. -/
 theorem nonzero_criticalMixture_not_summable_of_provider
     (hprovider : CriticalPurePointEnergyProvider)
     (a : ℕ → ℂ) (γ : ℕ → ℝ) (hγ : Function.Injective γ)
@@ -262,7 +267,7 @@ theorem criticalMode_energy_lower (t : ℝ) (n : ℕ) :
   exact h'.trans (criticalMode_energy_ge_sqrt_gap t n)
 
 /-- No individual critical-line Mellin mode belongs to the Pareto Hilbert
-space. Unlike the mixture theorem, this has no open analytic provider. -/
+space. This direct proof does not use the countable mixture energy theorem. -/
 theorem criticalMode_not_summable (t : ℝ) :
     ¬ Summable (fun n => paretoWeight n *
       ‖mellinMode (MellinFrequency.criticalPoint t) n‖ ^ 2) := by
