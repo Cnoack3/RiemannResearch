@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### Odd-moment parity elimination and sign obstruction (2026-09-21)
+
+**Established:** `RH/ParetoOddMomentParity` proves independence of the
+odd atoms after projection off all even atoms, the exact full Schur
+Gram entries, and the unique optimal even coefficients. Its energy
+completion retains the entire even correction. The original defect
+minimum and capacity equal those of the screened odd system exactly.
+
+**Established:** `RH/ParetoOddMomentSignObstruction` proves that every
+nonnegative odd-moment-one coefficient vector has physical value at
+least six at site two and full tail energy at least six. Thus energy
+below six requires a negative coefficient.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_screenedOdd_small_tail` proves RH from normalized
+screened odd combinations of arbitrarily small energy. This condition
+is equivalent to the original full-dictionary small-tail condition.
+**Open:** constructing those signed vectors or proving the equivalent
+capacity unboundedness. No RH, not-RH, density or zero provider was added.
+
 ### Odd-moment variational problem (2026-09-21)
 
 **Established:** `Analysis/FiniteGramSourceTranslation` proves the exact
