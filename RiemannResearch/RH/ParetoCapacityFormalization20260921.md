@@ -722,3 +722,162 @@ The two new modules are exported from `RiemannResearch.lean`.
 The key axiom audits use only `propext`, `Classical.choice`,
 and `Quot.sound`. The final publishing checkpoint validates the
 changed modules and records the publication commit in Git.
+
+## Continuation: exact fresh-prime updates for the growing dictionary
+
+This continuation addresses the dictionary growth left open above.
+It does not assume divergence of the capacity gains. The existing module
+`RH/IntegerDPPSchur.lean` already proves their exact Schur formula and
+finite sum; the additions evaluate the arithmetic contribution from a
+fresh prime and construct a concrete next-stage correction.
+
+### Exact arithmetic defect
+
+Write
+
+\[
+M_P=1+S_P
+=\frac{\pi^2}{6}\prod_{\ell\in P.\mathrm{primeFactors}}
+   (1-\ell^{-2}),
+\qquad E_P=\|z_P\|^2=\frac{2}{M_P-1}.
+\]
+
+Assume \(P\ne0\), \(2\mid P\), and let \(q=k+2\) be prime.
+Pairing the actual infinite Hilbert sum with the tail atom gives
+
+\[
+\boxed{
+\langle \operatorname{tailAtom}_k,z_P\rangle
+=\frac1q-\frac{M_P-M_{Pq}}{M_P-1}.
+}
+\]
+
+The proof retains the signed divisor indicator in every two-point
+certificate. Sieving by \(q\) removes exactly the terms divisible by
+\(q\); convergence and reindexing are proved for the infinite sums.
+
+For a fresh prime, \(q\nmid P\), the complete Euler product gives
+
+\[
+M_{Pq}=M_P(1-q^{-2}),\qquad
+\boxed{\delta_{P,q}:=\frac{M_P}{q^2(M_P-1)}>0.}
+\]
+
+Thus the observation is exactly \(1/q-\delta_{P,q}\).
+The positivity statement uses the already proved positive coprime mass.
+
+### The signed term in the actual capacity gain
+
+Let the old dictionary be \(g_2,\ldots,g_{n+1}\), take \(q=n+2\)
+prime, and suppose every old dictionary modulus divides \(P\), while
+\(q\nmid P\). Use the existing Schur notation
+
+\[
+r_n=\operatorname{tailInnovation}(n),\quad
+\sigma_n=\|r_n\|^2>0,\quad
+\eta_n=\frac1q-\langle\operatorname{tailAtom}_n,z_n^{\min}\rangle,
+\quad w_{n,P}=z_P-z_n^{\min}.
+\]
+
+The new arithmetic decomposition and the existing Schur identity give
+
+\[
+\boxed{\eta_n=\delta_{P,q}+\langle r_n,w_{n,P}\rangle,}
+\]
+
+\[
+\boxed{
+C_{n+1}-C_n
+=\frac{(\delta_{P,q}+\langle r_n,w_{n,P}\rangle)^2}{\sigma_n}.
+}
+\]
+
+This preserves the entire signed cross term. The explicit defect is
+positive, but these identities do not rule out cancellation by the
+signed error pairing.
+
+For \(n>0\) and prime \(n+2\), choosing \(P=(n+1)!\) supplies all modulus
+conditions in Lean, including the proof that \(n+2\) does not divide the
+factorial. The resulting capacity identity has only these explicit
+stage and primality assumptions.
+
+### A concrete correction and its exact gap decrease
+
+Define the actual Hilbert vector
+
+\[
+y_{n,P}=z_P+\frac{\delta_{P,q}}{\sigma_n}r_n.
+\]
+
+Lean proves all observations for the enlarged dictionary
+\(g_2,\ldots,g_{n+2}\). Its full energy is
+
+\[
+\boxed{
+\|y_{n,P}\|^2
+=E_P+\frac{2\delta_{P,q}\eta_n-\delta_{P,q}^2}{\sigma_n}.
+}
+\]
+
+The mixed term is retained. In particular, this formula does not assert
+that the total energy always decreases.
+
+Applying the exact finite-capacity completion at both stages yields
+
+\[
+\boxed{
+\|y_{n,P}-z_{n+1}^{\min}\|^2
+=\|z_P-z_n^{\min}\|^2
+-\frac{(\eta_n-\delta_{P,q})^2}{\sigma_n}.
+}
+\]
+
+The corrected certificate's gap from the new minimum is therefore no
+larger than the original certificate's gap from the old minimum.
+The factorial specialization is also checked directly.
+
+This is a one-step theorem starting from \(z_P\). Reapplying the formula
+at another stage starts from the corresponding coprime certificate;
+the theorem does not identify that new starting vector with the
+previous corrected vector. Consequently the displayed gap decreases
+cannot simply be telescoped across changing moduli.
+
+### Checked modules and remaining target
+
+`RH/ParetoCoprimePrimeObservation.lean` contains six public theorems,
+one private summation lemma, and the definition `coprimePrimeDefect`.
+It proves the exact prime sieve, Euler-factor update, arbitrary prime
+observation, and positive fresh-prime defect.
+
+`RH/ParetoCoprimePrimeUpdates.lean` contains thirteen public theorems
+and the concrete corrected-vector definition. It connects the defect
+to the screened source, proves next-stage feasibility and both energy
+identities, and provides the factorial specializations.
+
+Key declarations:
+
+- `infiniteCoprimeCertificate_prime_observation`
+- `infiniteCoprimeCertificate_fresh_prime_observation`
+- `schurEta_fresh_prime_decomposition`
+- `capacity_schur_fresh_prime`
+- `capacity_schur_factorial_fresh_prime`
+- `primeCorrectedCoprimeCertificate_observation`
+- `primeCorrectedCoprimeCertificate_energy`
+- `primeCorrectedCoprimeCertificate_gap`
+- `primeCorrectedCoprimeCertificate_factorial_gap`
+
+These additions use no RH, not-RH, zeta-zero, or Bagchi-density premise.
+The remaining arithmetic target is control of the signed pairing
+\(\langle r_n,z_P-z_n^{\min}\rangle\) sufficient to prove divergence
+of the actual gain sum. Neither that estimate nor capacity divergence
+has been established here. RH and the separate exact critical-zero
+and density providers remain unresolved.
+
+The two new modules are exported from `RiemannResearch.lean`.
+The final publishing checkpoint validates their imports and records
+the publication commit in Git.
+
+The coherent verification completed with exit code 0 and no warnings.
+Axiom audits of the prime observations, factorial capacity identity,
+next-stage feasibility, corrected energy, and factorial gap use only
+`[propext, Classical.choice, Quot.sound]`.

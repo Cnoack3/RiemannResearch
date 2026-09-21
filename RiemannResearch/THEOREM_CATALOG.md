@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Fresh-prime observations and growing-dictionary corrections (2026-09-21)
+
+**Established:** `RH/ParetoCoprimePrimeObservation` evaluates the actual
+infinite certificate's prime observation as 1/q minus
+(M_P - M_(Pq))/(M_P - 1). For a fresh prime q, the exact Euler-factor
+update makes this defect delta = M_P/(q^2*(M_P - 1)) > 0.
+
+**Established:** `RH/ParetoCoprimePrimeUpdates` proves
+eta = delta + inner(innovation, z_P - tailMinimum(n)) and the full
+signed capacity increment (delta + inner(...))^2/sigma.
+The concrete vector y = z_P + (delta/sigma)*innovation satisfies every
+next-stage observation. Its energy is E_P + (2*delta*eta - delta^2)/sigma,
+and its next-stage squared-distance gap equals the old gap minus
+(eta - delta)^2/sigma. Factorial specializations discharge the common
+modulus and fresh-prime conditions when n > 0 and n+2 is prime.
+
+**Scope:** nineteen public proved theorems, two definitions, and one
+private summation lemma. No RH, zeta-zero, or density premise is used.
+This is a one-step correction from z_P, not an iterated certificate
+construction. Controlling the signed error pairing sufficiently to
+prove divergence of the actual gain sum remains Open.
+
 ### Coprime modulus refinement and divergent fixed-dictionary excess (2026-09-21)
 
 **Established:** `RH/ParetoCoprimeModulusRefinement` proves that P dividing Q
