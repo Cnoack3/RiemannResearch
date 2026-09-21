@@ -1,5 +1,55 @@
 # Theorem catalog
 
+### Coordinate Mellin defects and the unscaled RH test (2026-09-21)
+
+Modules: `Analysis/NonnegativeDeficit`, `RH/MellinCoordinateDefect`,
+`RH/MellinZeroProfile`, `RH/MellinDeficitRHTest`, and
+`RH/MellinCoordinateScaling`. Detailed coverage and remaining obligations:
+`RH/ArithmeticProjectionDPPFormalization20260921.md`. The complete ordinary
+mathematics draft is archived as `RH/ArithmeticProjectionDPPDraft20260921.md`.
+
+**Established:** explicit coordinate features equal the actual Mellin
+integrals on the critical line; exact intensity/defect decomposition;
+nonnegative extended window integrals; the first-cutoff factorization
+`d_1(I) = ofReal(limitingVacancy) * firstModeMass(I)`; and
+`first_window_zero_iff_density` on any positive-measure window.
+`riemannHypothesis_of_first_window_zero` proves actual Mathlib RH from
+that zero-deficit premise without an additional analytic provider.
+It does not prove the premise.
+
+The exact finite zero profile equals a combination of the actual Mellin
+functionals of the cutoff heads. `zeroProfilePartial_cauchy_bound` proves
+`((2 Re(rho)-1)/2) * norm(F_rho,M(t))^2 <= E_M(t,t)` from an actual
+off-critical zeta zero. This weaker-than-sharp bound is fully supplied.
+Fatou then proves `zeroWindowMass_le_liminf` from explicit profile
+convergence. The general ENNReal criterion is exactly equivalent to
+cofinally arbitrarily small deficits, including the potentially unbounded
+case.
+
+**Established scaling distinction:** the omitted-first-coordinate
+correction tends to zero after logarithmic normalization; compensating
+by that logarithm recovers a nonzero limit. The filled comparison and its
+proper subprojection share any existing leading kernel limit.
+
+**Conditional research reduction:** `riemannHypothesis_iff_windowTest`
+exposes the classical RH-to-density converse and `ZeroModeWindowProvider`
+as explicit hypotheses. **Open formalization:** profile convergence,
+positive limiting profile mass on a bounded positive-measure window, and
+the classical RH-to-density converse. The two profile fields concern
+all points in the right half-plane, not only zeta zeros; domination is
+proved separately. Absence of nonstandard axioms does not discharge
+these local hypotheses.
+
+**Open formalization:** `CoordinateSineLimitTarget`,
+`CoordinateSecondOrderTarget`, the full process/Fredholm convergence,
+the meromorphic profile and higher-order refinements, and the infinite
+local trace-class obstruction. They remain ordinary proofs in the draft,
+not fully formalized theorems.
+
+**Open mathematical estimate:** unconditional zero unscaled deficit (or
+signed-capacity divergence). No RH proof, Montgomery matching, or
+Hilbert--Polya spectrum is claimed.
+
 ### Decisive vacancy endpoint: exact finite and dual certificates (2026-09-20)
 
 Modules: `RH/IntegerDPPVacancyCertificates` and
