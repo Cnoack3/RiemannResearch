@@ -1,5 +1,39 @@
 # Theorem catalog
 
+### Normalized even optimization, harmonic corrections, and solved parity contrasts (2026-09-21)
+
+**Established:** `RH/ParetoOddMomentNormalizedSchur` constructs the unique
+optimal even correction for fixed signed odd coefficients with h=kappa*J.
+Its exact energy is ||x_b||^2+r_b^2/K_n, with positive K_n, an affine
+completion, uniqueness, and a dictionary-independent multiplicative bound.
+`RH/ParetoNormalizedOddOptimizer` gives the exact nonnegative energy cost
+of normalizing the existing global odd-moment inverse-Gram optimizer.
+
+**Established:** `RH/AdjacentResidueHarmonic` and
+`RH/ParetoAdjacentMomentCorrection` construct adjacent odd/even packets,
+preserve the physical head and reciprocal head, normalize the odd moment,
+and retain full signed correction energy. Their full packet energy lies
+between d^2*(H_d-d/(d+1)) and d^2*H_d; the literal infinite remainder is bounded.
+
+**Established:** `RH/ParetoParityContrast` proves exact finite arithmetic
+contrast extraction with the complete orthogonal remainder retained.
+`RH/ParetoParitySieveMass`, `RH/ParetoSieveMobiusBridge`, and
+`RH/ParetoSieveContrastClosure` construct actual finite all-divisor Mobius
+vectors with normalized odd moment, prove the exact coprimality mask and
+mass identity, and establish that their entire odd-pair contrast energy
+tends to zero along factorial stages. This is unconditional, with no
+prime-rate, RH, density, or zero-existence premise.
+`RH/ParetoSieveFullEnergy` retains the separate actual site-two lower
+bound (2*head-a)^2/6 on the full norm.
+
+**Conditional research reduction:** the normalized-even small-tail condition
+implies RH and is equivalent to the original small-tail condition.
+**Open:** prove the complete optimized energy small, including the
+block-mean remainder. The solved contrast component is not the full norm;
+no small-tail witness family or unconditional RH is asserted.
+Ordinary infinite-space geometry and additional Euler-product specializations
+are distinguished from Lean results in the accompanying research notes.
+
 ### Dyadic repair obstruction and admissible reciprocal head (2026-09-21)
 
 **Established:** `RH/ParetoOddMomentDyadicRepair` identifies the three-scale
