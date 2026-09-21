@@ -1,5 +1,81 @@
 # Theorem catalog
 
+### Stringent conditions under failure of RH: exact additions and open coverage (2026-09-21)
+
+Full ledger: [all 35 groups](RH/NOT_RH_STRINGENT_CONDITIONS.md).
+The historical source is preserved alongside it; its earlier claims do not
+override the exact Lean status recorded here. This update adds 17 modules
+and 49 public proved declarations, and strengthens the existing joint theorem.
+It does **not** complete the proofs of all 35 groups.
+
+**Established consequences on the actual common arithmetic projection:**
+
+- `RH/ResidualGainObstruction`: actual relative-gain summability, exact
+  logarithmic `HasSum` budget, comparison for its total sum, finite harmonic
+  mass of large-gain scales, and exact capacity-increment `HasSum`.
+- `RH/MeanOneResidualFloor`: the sharp lower bound `E/(1-E)` for every
+  exactly mean-one vector in the actual closed legal space, with `E<1`;
+  cofinally large repairs at every strict threshold below
+  `(1-q)*sqrt(E/(1-E))`, and positivity under not RH.
+  `Analysis/ContractiveRepairFloor` supplies the general finite-descent
+  proof without assuming bounded repairs. Finite-legal infimum attainment
+  and approximation remain separate.
+- `RH/IntegerDPPPowerWeightedHoles`: the physical weight `(n+1)^alpha`
+  times limiting site vacancy is nonsummable for every
+  `alpha >= 2*Re(rho)-1`, including equality, for each applicable actual
+  zero. One common zero gives all these exponents under not RH.
+  This is not an almost-sure infinitely-many-holes assertion.
+- `RH/IntegerDPPDampedConvergence`: unconditional convergence of actual
+  finite occupied determinants; `B >= p0*(1+limitingVacancy)`; and
+  `p0 < B` under not RH. The stronger logarithmic comparison remains Open.
+- `RH/ResidualMellinZeroConditions`: the same limiting residual has Mellin
+  value `1/rho` at every applicable actual zero, while its projection
+  has value zero.
+- `RH/ChebyshevZeroObstruction`: actual simple-pole and Hardy-half-plane
+  obstructions. This does not discharge the weighted-energy endpoint.
+- `RH/ReflectionFailureConditions`: the exact disjunction that signed
+  calibration or normalized reflection variance fails to tend to zero,
+  retaining all legal-packet, mean, periodicity, and reflection hypotheses.
+- `RH/RHFalseJointObstruction`: strengthened `not_RH_joint_arithmetic_obstruction`
+  assembles the common zero, sharp weighted exponents, positive limiting
+  energy, exact-head residual-tail product, wrong coefficients, reconstruction
+  divergence, canonical excursions, exact logarithmic gain budget, and
+  strict occupied-determinant separation under sole `not RH`.
+
+**Established supporting geometry and analysis:**
+`LinearAlgebra/SourceSpectralObstruction` proves persistent omitted mass and
+divergent inverse first moment from positive limiting defect and vanishing
+polarization. Its arithmetic compression/spectral-measure assembly remains
+Open. `RH/ClassicalArithmeticObstructions` proves Chebyshev damping monotonicity.
+`RH/LiCoefficientObstructions` proves the actual transformed-zero radius
+identity `R(rho)^2*norm(rho)^2 = norm(rho)^2-(2*Re(rho)-1)` and `0<R(rho)<1`
+at an applicable actual zero, using correctly regularized xi.
+
+**Conditional research reductions:**
+`RH/WeilFailureConditions` derives late polynomial and reference-energy
+lower-bound failures from `TwoHatWeilIdentity h` and
+`FixedWidthLandauDetection h`. Both providers remain **Open**.
+The provider-alternative theorem asserts a disjunction, not the failure of
+each provider. Nested support/moment-constrained window test sets are proved.
+
+**Open, concrete proposition definitions (not axioms or theorem providers):**
+`RH/CanonicalTailHistoricalTargets`, `RH/CanonicalSieveAbelTargets`,
+`RH/ResidualEnergyHistoricalTargets`, `RH/IntegerDPPHistoricalTargets`,
+`RH/DeBruijnNewmanObstructions`, and target sections in the Mellin, Chebyshev,
+Weil, classical, and Li modules record the unresolved numerical, tail,
+multiplicity, normalized escape, Abel/sieve, DPP pair-hole, Fredholm,
+profinite, endpoint energy, Weil spectral/Sobolev, prime/Mertens, Li-sign,
+Robin/Lagarias, and Newman claims. Series convergence and bounded-extremum
+conditions are kept explicit where totalized values would be misleading.
+The sieve statement retains the order of both limits; it does not assert
+that every fixed-sieve Abel limit is zero.
+
+**Further specification gaps:** the ledger explicitly retains family-specific
+Schur-minimizer covariance growth, some simultaneous higher-jet Gram
+constructions, and several historical analytic proof packages whose actual
+objects and providers are not supplied by this update. There is no opaque
+assumed proposition standing in for these proofs.
+
 ### Exact Cauchy-annihilator criterion and signed capacity barriers (2026-09-21)
 
 Modules: `RH/CauchyAnnihilatorRH`, `RH/MellinCapacityBarrier`.
