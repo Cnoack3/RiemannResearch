@@ -27,6 +27,49 @@ theorem schur_pairing_sq_le (x y : H) :
   apply (div_le_iff₀ hypos).mp
   linarith
 
+/-- Bessel's inequality for two explicitly orthogonal directions, written
+without divisions so that zero vectors require no separate hypotheses. -/
+theorem two_orthogonal_pairings_sq_le (r e d : H)
+    (hed : inner ℝ e d = 0) :
+    (inner ℝ r e) ^ 2 * ‖d‖ ^ 2 +
+        (inner ℝ r d) ^ 2 * ‖e‖ ^ 2 ≤
+      ‖r‖ ^ 2 * ‖e‖ ^ 2 * ‖d‖ ^ 2 := by
+  let a : ℝ := inner ℝ r e
+  let b : ℝ := inner ℝ r d
+  let D : ℝ := ‖e‖ ^ 2
+  let R : ℝ := ‖d‖ ^ 2
+  let S : ℝ := a ^ 2 * R + b ^ 2 * D
+  let x : H := (R * a) • e + (D * b) • d
+  have hinner : inner ℝ r x = S := by
+    simp only [x, inner_add_right, inner_smul_right]
+    dsimp only [a, b, S]
+    ring
+  have hcross : inner ℝ ((R * a) • e) ((D * b) • d) = 0 := by
+    simp only [inner_smul_left, inner_smul_right, hed, mul_zero]
+  have hxnorm : ‖x‖ ^ 2 = D * R * S := by
+    dsimp only [x]
+    rw [norm_add_sq_real, hcross]
+    simp only [mul_zero, norm_smul, Real.norm_eq_abs, mul_pow, sq_abs]
+    dsimp only [D, R, S]
+    ring
+  have hcs := schur_pairing_sq_le r x
+  rw [hinner, hxnorm] at hcs
+  have hS : 0 ≤ S := by
+    simp only [S]
+    exact add_nonneg (mul_nonneg (sq_nonneg _) (sq_nonneg _))
+      (mul_nonneg (sq_nonneg _) (sq_nonneg _))
+  by_cases hSz : S = 0
+  · have hmain : S ≤ ‖r‖ ^ 2 * D * R := by
+      rw [hSz]
+      positivity
+    simpa only [a, b, D, R, S] using hmain
+  · have hSpos : 0 < S := lt_of_le_of_ne hS (Ne.symm hSz)
+    have hmul : S * S ≤ S * (‖r‖ ^ 2 * D * R) := by
+      simpa only [pow_two, mul_assoc, mul_left_comm, mul_comm] using hcs
+    have hmain : S ≤ ‖r‖ ^ 2 * D * R :=
+      le_of_mul_le_mul_left hmul hSpos
+    simpa only [a, b, D, R, S] using hmain
+
 /-- Pythagoras for an explicitly supplied orthogonal old-space component. -/
 theorem orthogonal_component_residual_norm_sq (q p : H)
     (hp : inner ℝ (q - p) p = 0) :

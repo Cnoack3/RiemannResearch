@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Normalized prime cancellation and refinement budget (2026-09-21)
+
+**Established:** `RH/ParetoPrimeNormalizedCancellation` defines the positive
+fresh-prime source delta and the dimensionless survivor energy
+`1/q * (1 + kappa/delta)^2`. It proves the pointwise bound by eight times
+the actual Schur gain. Consequently, not RH forces these relative survivors
+to be summable with reciprocal-prime weight. Equivalently, failure of this
+weighted-L2 cancellation condition implies RH.
+
+**Established:** `RH/ParetoPrimeRefinementCancellation` constructs the actual
+factorial refinement vector `d_n = z_((n+3)!) - z_((n+2)!)`. It is invisible
+to every old observation, pairs with the new innovation by exactly delta,
+and is orthogonal to the old feasible error. The reusable two-direction
+Bessel lemma in `LinearAlgebra/OrthogonalFarSupportBound` then proves
+`kappa^2*norm(d)^2 + delta^2*norm(w)^2 <=
+sigma*norm(w)^2*norm(d)^2`.
+
+**Scope:** these are unconditional necessary constraints and sharpen the
+remaining cancellation channel. The normalized nonsummability premise is
+**Open**. The two-vector estimate is sharp in abstract Hilbert geometry, so
+an arithmetic lower bound for the signed Schur numerator on a prime set of
+divergent reciprocal mass is still required. Neither module proves RH.
+
 ### Divergent fresh-prime source and necessary cancellation (2026-09-21)
 
 **Established:** `RH/ParetoPrimeSourceDivergence` proves the actual
