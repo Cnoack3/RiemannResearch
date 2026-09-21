@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Odd-moment variational problem (2026-09-21)
+
+**Established:** `Analysis/FiniteGramSourceTranslation` proves the exact
+minimum-vector translation and signed capacity identity for subtracting
+the observations of a fixed Hilbert vector, with two-sided finite bounds.
+
+**Established:** `RH/ParetoCoprimeDefectVariational` defines the actual
+odd-source interpolation minimum and inverse-Gram energy Q_n. Its nested
+energies are monotone; Q_n=C_n-2<tailMinimum_n,z_2>+||P_n z_2||^2 exactly.
+Uniform boundedness of Q_n, boundedness of C_n, existence of a single
+Hilbert interpolant for all odd-source observations, and summability of
+the existing full signed row energy are equivalent without an RH premise.
+
+**Established:** For n>=2, Q_n>0. With kappa=pi^2/(pi^2-8), the actual
+coefficients (kappa/Q_n)G_n^{-1}H_n have odd reciprocal-square moment one
+and exact minimum full tail energy kappa^2/Q_n. The completion retains
+the squared distance from this optimizer. Even and composite dictionary
+vectors remain. Unbounded Q_n is equivalent to existence, for every
+epsilon>0, of a finite legal combination with odd moment one and tail
+squared norm less than epsilon.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_oddMoment_small_tail` proves RH from these witnesses.
+**Open:** construction of the small-energy witness family, equivalently
+unbounded Q_n or nonsummable screened row energy. No unconditional RH,
+not-RH, or new density/zero provider is asserted.
+
 ### All-modulus observations and odd-source screening (2026-09-21)
 
 **Established:** `RH/ParetoCoprimeCompositeObservation` proves the actual

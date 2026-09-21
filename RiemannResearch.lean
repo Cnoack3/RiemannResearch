@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.FiniteGramSourceTranslation
+import RiemannResearch.RH.ParetoCoprimeDefectVariational
 import RiemannResearch.Analysis.OrthogonalPairingEnergy
 import RiemannResearch.RH.ParetoCrossGramRowEnergy
 import RiemannResearch.RH.ParetoFactorialRefinementArithmetic
