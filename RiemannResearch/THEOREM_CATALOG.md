@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### All-modulus observations and odd-source screening (2026-09-21)
+
+**Established:** `RH/ParetoCoprimeCompositeObservation` proves the actual
+certificate observation 1/d - F_P(d) for every d >= 2, where
+F_P(d)=M_P/[d^2(M_P-1)] when gcd(d,P)=1 and zero otherwise.
+It reindexes the convergent divisor mass without a primality premise.
+
+**Established:** `RH/ParetoCoprimeDefectScreening` evaluates every raw
+refinement entry as a difference of F values. For P=2 the source H(d)
+is zero at even moduli and pi^2/[(pi^2-8)d^2] at odd moduli, with exact
+HasSum pi^2/8 over d >= 2. The full signed row is exactly
+L_n=H(n+3)-sum_(i<=n) c_(n,i) H(i+2), using the actual full inverse-Gram
+projection coefficients. Its normalized square is the existing row energy.
+All thirteen new theorems are unconditional. Composite dictionary vectors
+remain in the Gram matrix and Schur denominator.
+
+**Open:** nonsummability of this screened energy, the arithmetic premise
+of the existing conditional RH reduction. The summable raw source does
+not control the growing inverse Gram matrices or Schur denominators.
+
 ### Prime-only refinements and raw arithmetic cancellation (2026-09-21)
 
 **Established:** `RH/ParetoFactorialRefinementArithmetic` proves that the

@@ -1088,3 +1088,140 @@ Both modules are exported, and their established and conditional statuses
 are recorded separately in the theorem catalog. Final publication is through
 the single affected-module validation checkpoint. Its result is recorded
 in Git and in the exported handoff after completion.
+
+## Continuation: all-modulus observations and exact odd-source screening
+
+Date: 21 September 2026. Starting published commit:
+e7ef109313c3387223e00db47e2e7bf517f37832.
+
+This continuation resolves the full raw arithmetic input to screening,
+including composite dictionary rows. It does not prove the remaining
+screened-energy divergence or RH.
+
+### All-modulus certificate observations
+
+Let \(P\ne0\) be even, \(d\ge2\), and retain
+\(M_P=\operatorname{coprimeReciprocalSquareMass}(P)\).
+Define
+\[
+F_P(d)=
+\begin{cases}
+\dfrac{M_P}{d^2(M_P-1)},&\gcd(d,P)=1,\\
+0,&\gcd(d,P)>1.
+\end{cases}
+\]
+Lean proves for the actual infinite coprime Hilbert certificate:
+\[
+\boxed{\langle t_{d-2},z_P\rangle=\frac1d-F_P(d).}
+\]
+No primality assumption is present. The proof evaluates the convergent
+divisibility mass by the exact reindexing \(j=da\):
+\[
+\sum_{\substack{j\ge3,\ j\ {\rm odd}\\(j,P)=1,\ d\mid j}}\frac1{j^2}
+=
+\begin{cases}M_P/d^2,&(d,P)=1,\\0,&(d,P)>1.\end{cases}
+\]
+It then pairs the actual Hilbert sum with the tail atom. No signed divisor
+contribution or infinite tail is dropped.
+
+For \(d_m=z_{(m+3)!}-z_{(m+2)!}\), this yields the entire raw matrix:
+\[
+\boxed{\langle t_k,d_m\rangle
+=F_{(m+2)!}(k+2)-F_{(m+3)!}(k+2).}
+\]
+
+### The complete raw source is explicit and summable
+
+Set \(H(d)=F_2(d)\). Lean evaluates \(M_2=\pi^2/8\) and proves
+\[
+\boxed{
+H(d)=
+\begin{cases}
+0,&2\mid d,\\
+\dfrac{\pi^2}{(\pi^2-8)d^2},&2\nmid d,
+\end{cases}\qquad d\ge2.
+}
+\]
+Odd composite moduli contribute, as do odd primes. The exact sum is
+proved as a Lean HasSum statement:
+\[
+\boxed{\sum_{d=2}^{\infty}H(d)=\frac{\pi^2}{8}.}
+\]
+This convergent ordinary source sum is distinct from screened energy.
+
+For every \(k<n+2\), finite telescoping and feasibility give
+\[
+\boxed{
+\left\langle t_k,\sum_{m=0}^{n}d_m\right\rangle=H(k+2).
+}
+\]
+Every raw observation required by the finite screening is now explicit.
+
+### Full inverse-Gram screening
+
+Let \(c_{n,i}\), \(0\le i\le n\), be the actual inverse-Gram
+projection coefficients of \(t_{n+1}\) onto \(t_0,\ldots,t_n\).
+In matrix notation \(c_n=G_{n+1}^{-1}b_n\), where
+\[
+(G_{n+1})_{ij}=\langle t_i,t_j\rangle,\qquad
+(b_n)_i=\langle t_i,t_{n+1}\rangle.
+\]
+The inverse exists by the project's proved finite-dictionary independence.
+
+For \(L_n=\sum_{m=0}^{n}\langle r_{n+1},d_m\rangle\), Lean proves
+\[
+\boxed{
+L_n=H(n+3)-\sum_{i=0}^{n}c_{n,i}H(i+2).
+}
+\]
+Consequently the actual screened row energy is exactly
+\[
+\boxed{
+\mathcal E_n=
+\frac{\left[H(n+3)-\sum_{i=0}^{n}c_{n,i}H(i+2)\right]^2}
+{\sigma_{n+1}},\qquad \sigma_{n+1}=\|r_{n+1}\|^2>0.
+}
+\]
+All signed coefficients and the full Schur denominator remain.
+Even-modulus source entries vanish, but those dictionary vectors still
+affect the inverse Gram matrix and denominator. They cannot be removed
+from the screening problem on that basis.
+
+### Remaining RH obligation
+
+The existing checked implication from nonsummability of
+factorialCrossGramRowEnergy to RH applies to this exact expression.
+Its arithmetic nonsummability premise remains **Open**.
+
+The new result replaces growing factorial row sums by an explicit,
+summable source acted on by the actual full inverse Gram matrix.
+Summability of \(H\) does not imply summability of \(\mathcal E\):
+the growing inverse matrices and shrinking Schur denominators are not
+uniformly controlled. The exact identity does not itself prove divergence.
+
+The next target is a lower bound for these screened residuals, with their
+Schur weights, strong enough to prove \(\sum_n\mathcal E_n=+\infty\).
+No RH, not-RH, critical-zero, or density premise is used in the new results.
+
+### Modules and verification
+
+New modules:
+
+- RH/ParetoCoprimeCompositeObservation.lean: divisibility-mass
+  reindexing, its shifted series, coprimeObservationDefect, and
+  infiniteCoprimeCertificate_all_observations.
+- RH/ParetoCoprimeDefectScreening.lean: the complete raw matrix,
+  all-row telescope, odd-source formula and exact sum,
+  factorialCrossGramRow_eq_screened_defect, and
+  factorialCrossGramRowEnergy_eq_screened_defect.
+
+The addition contains thirteen proved theorems and one definition.
+The combined candidate completed with exit code 0 in about 42 seconds.
+Its three key axiom audits reported only
+[propext, Classical.choice, Quot.sound].
+Minor tactic-style warnings were cleaned in the installed source.
+No admitted proof, project-local axiom, or unsafe declaration was added.
+
+Verified candidate: job_Ls0YRD5UY0EsrDPDM-5RMQz3hfSjPqKN.
+Final project acceptance is the single publishing checkpoint.
+Its completed receipt is appended to the exported handoff after publication.
