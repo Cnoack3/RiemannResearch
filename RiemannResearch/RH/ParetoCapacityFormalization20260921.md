@@ -157,3 +157,171 @@ acceptance is the repository checkpoint, which audits the source, builds
 changed modules and their local reverse dependents, and publishes only
 after successful validation. The publication commit is recorded in Git.
 No sorry, admit, local axiom, or unsafe declaration is introduced.
+
+## Continuation: critical-line zero search and numerical first zero
+
+Date: 21 September 2026. Starting published commit:
+`82c4ba162d52a3be7d83f3dfc1823d969e99e7c1`.
+
+### What the installed Lean dependency supplies
+
+The pinned Mathlib revision is
+`51e6992efd06126df61a496bebf8f49482a4e129` (`v4.33.0-rc2`).
+It includes `Mathlib.NumberTheory.LSeries.ZetaZeros`.
+Its relevant declarations are:
+
+- `riemannZetaZeros`: the set of all zeros.
+- `mem_riemannZetaZeros`: membership is equivalent to actual zeta vanishing.
+- `isClosed_riemannZetaZeros` and `isDiscrete_riemannZetaZeros`.
+- `IsCompact.inter_riemannZetaZeros_finite`: compact sets contain finitely many zeros.
+- `tendsto_riemannZeta_cofinite_cocompact`.
+
+These results do not exhibit a zero with real part one half. Bounded
+declaration searches in both this project and the pinned Mathlib dependency
+did not locate Hardy's theorem or a checked first-positive-zero provider.
+This is a report about the inspected dependency, not a claim about every
+external Lean project.
+
+Source for the package's statements:
+[Mathlib ZetaZeros source at the pinned revision](https://github.com/leanprover-community/mathlib4/blob/51e6992efd06126df61a496bebf8f49482a4e129/Mathlib/NumberTheory/LSeries/ZetaZeros.lean).
+
+### Numerical computation
+
+Using Python 3.12.14 and mpmath 1.4.1 at 120 decimal digits of working
+precision, `zetazero(1)` returned the approximation
+
+\[
+\rho_1=\frac12+i\gamma_1,\qquad
+\gamma_1\approx
+14.13472514173469379045725198356247027078425711569924317568556746014996342980925676494901039317156101.
+\]
+
+At the internal, unrounded approximation, the computed residual was
+
+\[
+|\zeta(\rho_{1,\mathrm{num}})|\approx 2.163980592834693\times10^{-121}.
+\]
+
+This residual is not an error bound for the displayed decimal and is not a
+proof that any finite decimal is an exact zero.
+
+For the real Hardy function
+\(Z(t)=e^{i\theta(t)}\zeta(\tfrac12+it)\), mpmath returned
+
+\[
+Z(14)\approx-0.10562626777988261013891075576194791686188797004733,
+\]
+\[
+Z(15)\approx 0.71994239134213713351661016594703005117787734307689.
+\]
+
+Its numerical zero-count routine returned \(N(14)=0\) and \(N(15)=1\).
+A tighter numerical sign bracket is
+
+\[
+\begin{aligned}
+a&=14.13472514173469379045725198356247027078425711569924,\\
+b&=14.13472514173469379045725198356247027078425711569925,\\
+Z(a)&\approx-2.5188281408906945825755300209075938413782932954927
+           \times10^{-51},\\
+Z(b)&\approx 5.4127761926743665775634456318359273000806357550502
+           \times10^{-51}.
+\end{aligned}
+\]
+
+These are floating-point computations. Neither the signs nor the zero
+counts are certified in Lean by this continuation. A formally proved
+real-valued continuous Hardy function and certified endpoint signs would
+suffice for existence by the intermediate value theorem. Proving that the
+root is the *first* positive root additionally requires excluding earlier
+zeros. The Pareto capacity application only needs existence of one
+critical-line zero; it does not need firstness.
+
+The numerical result agrees with the first-zero example in
+[mpmath's documentation](https://mpmath.readthedocs.io/en/latest/functions/zeta.html).
+The [LMFDB zeta-zero database](https://www.lmfdb.org/zeros/zeta/) separately
+documents high-precision initial critical-line zeros; those external
+certificates are not Lean declarations in this project.
+
+### Consequence for the explicit Pareto constant
+
+For an actual critical-line zero \(\rho=\tfrac12+it\), retain the exact
+constant
+
+\[
+A(\rho)=\frac{|\rho|^2}{|1-2^{-\rho}|^2}.
+\]
+
+The existing coefficient and supremum theorems give, for \(0<\alpha<1\)
+and every finite stage \(n\),
+
+\[
+\operatorname{shapeFiniteCapacity}(\alpha,n)
+\le
+A(\rho)\frac{2^{\alpha-1}}{\alpha(1-\alpha)}.
+\]
+
+Evaluating the exact expression at the numerical first-zero approximation
+gives
+
+\[
+A(\rho_1)\approx
+71.00831118873284247475329639853726496100261170179239583445514975815115.
+\]
+
+For example, at \(\alpha=\tfrac12\), the exact bound is
+\(2\sqrt2\,A(\rho_1)\), whose numerical value is approximately
+
+\[
+200.84183344863035350178306739698427811488073023143.
+\]
+
+The displayed rounded constants are numerical evaluations, not certified
+upper bounds substituted into Lean. This does not address the original
+\(\alpha=1\) capacity, whose Mellin certificate has nonsummable energy.
+
+### Reproduction
+
+Run the following with mpmath 1.4.1 installed. It needs no Lean process.
+
+```python
+import mpmath as mp
+
+mp.mp.dps = 120
+rho = mp.zetazero(1)
+A = abs(rho)**2 / abs(1 - mp.power(2, -rho))**2
+
+print("mpmath:", mp.__version__)
+print("working decimal digits:", mp.mp.dps)
+print("rho:", mp.nstr(rho, 100))
+print("abs(zeta(rho)):", mp.nstr(abs(mp.zeta(rho)), 16))
+print("A(rho):", mp.nstr(A, 70))
+print("C_bound_alpha_half:", mp.nstr(A * 2 * mp.sqrt(2), 50))
+
+for x in (mp.mpf(14), mp.mpf(15)):
+    print("Hardy_Z(%s):" % x, mp.nstr(mp.siegelz(x), 50))
+    print("N(%s):" % x, mp.nzeros(x))
+
+lo = mp.mpf("14.13472514173469379045725198356247027078425711569924")
+hi = mp.mpf("14.13472514173469379045725198356247027078425711569925")
+print("Hardy_Z(lo):", mp.nstr(mp.siegelz(lo), 50))
+print("Hardy_Z(hi):", mp.nstr(mp.siegelz(hi), 50))
+```
+
+### Formal status and stopping point
+
+The continuation records the package audit and numerical computation; it
+does not add or change a Lean theorem. A serialized Lean check completed
+successfully (exit code 0), confirming the package declarations and the
+exact type of `critical_shapeFiniteCapacities_bddAbove`. Its axiom audit
+reported only `[propext, Classical.choice, Quot.sound]`. That audit does not
+discharge the theorem's explicit local hypotheses. The substantive input
+
+```lean
+hz : riemannZeta (MellinFrequency.criticalPoint t) = 0
+```
+
+remains explicit. No decimal approximation is asserted to satisfy it, and
+no axiom is introduced. The RH-to-density input attributed to Bagchi also
+remains explicit and untouched. Work stops after publishing this record,
+pending the user's exact Bagchi equation.
