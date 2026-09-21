@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Odd-moment matched dyadic obstruction and repair (2026-09-21)
+
+**Established:** `RH/ParetoOddMomentDyadicObstruction` constructs the actual
+signed packets g_d-2g_(2d), verifies their full-dictionary synthesis and
+odd reciprocal-square moment, and proves exact initial head cancellation.
+Their Mellin transform at s=2 is -zeta(2)/(4d^2). Every signed mixture with
+odd moment one has full tail energy at least 81*|zeta(2)|^2/16 > 0.
+When all active odd moduli exceed N, the bound is
+3*(N+1)^3*|zeta(2)|^2/16. Independent Hilbert corrections must cancel the
+fixed Mellin value; the quantitative energy obstruction is explicit.
+
+**Established:** The three-scale packet g_d-6g_(2d)+8g_(4d) retains
+initial head cancellation and the odd coefficient moment while its actual
+Mellin transform at s=2 is exactly zero. This repairs one bounded
+functional obstruction; no small-norm theorem is asserted.
+
+**Open:** prove vanishing full signed energy for normalized repaired
+combinations or for the unrestricted odd Schur optimizer. The matched
+dyadic lower bound does not apply to the unrestricted Schur complement.
+No RH, density, or zeta-zero existence premise is used in the new results.
+
 ### Odd-moment parity elimination and sign obstruction (2026-09-21)
 
 **Established:** `RH/ParetoOddMomentParity` proves independence of the
