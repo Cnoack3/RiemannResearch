@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Divergent fresh-prime source and necessary cancellation (2026-09-21)
+
+**Established:** `RH/ParetoPrimeSourceDivergence` proves the actual
+Pareto bound norm(g_d)^2 <= 2/d, full Schur bound sigma_n <= 2/(n+2),
+and exact defect identity delta = (1 + norm(z_P)^2/2)/q^2.
+For P=(n+1)! and n>=1, support escape gives delta>=1/(2q) and
+delta^2/sigma>=1/(8q). Mathlib's checked prime reciprocal divergence
+therefore proves nonsummability and divergence of partial sums of the
+explicit positive prime-source energy.
+
+**Established implications:** `RH/ParetoPrimeCancellation` retains
+eta=delta+kappa with the actual changing certificate and full innovation.
+Under not RH the actual Schur gains are summable, while the signed prime
+error energy is nonsummable. For each epsilon>0 the primes where
+abs(delta+kappa)>=epsilon*delta have summable reciprocal-prime mass.
+This is a weighted exceptional-set condition, not pointwise convergence
+at every prime. No RH-to-density or critical-zero provider is used.
+
+**Conditional research reductions:** RH follows from summability of the
+signed prime error energy, or from nonsummable reciprocal mass of primes
+with fixed-fraction noncancellation. Uniform relative noncancellation is
+a sufficient specialization. Each of these arithmetic premises is **Open**;
+they are not asserted equivalent to RH. Divergence of the actual signed
+gain sum, the unrestricted capacity limit, and RH remain **Open**.
+Twenty proved theorems and four definitions are added across both modules.
+
 ### Fresh-prime observations and growing-dictionary corrections (2026-09-21)
 
 **Established:** `RH/ParetoCoprimePrimeObservation` evaluates the actual

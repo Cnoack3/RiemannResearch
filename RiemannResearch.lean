@@ -270,6 +270,8 @@ import RiemannResearch.RH.ParetoCoprimeModulusRefinement
 import RiemannResearch.RH.ParetoCoprimeCertificateEscape
 import RiemannResearch.RH.ParetoCoprimePrimeObservation
 import RiemannResearch.RH.ParetoCoprimePrimeUpdates
+import RiemannResearch.RH.ParetoPrimeSourceDivergence
+import RiemannResearch.RH.ParetoPrimeCancellation
 import RiemannResearch.RH.ParetoShapeMellinEnergy
 import RiemannResearch.RH.ParetoShapeCapacity
 import RiemannResearch.RH.ParetoTailCertificateEscape

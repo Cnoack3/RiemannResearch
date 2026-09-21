@@ -881,3 +881,210 @@ The coherent verification completed with exit code 0 and no warnings.
 Axiom audits of the prime observations, factorial capacity identity,
 next-stage feasibility, corrected energy, and factorial gap use only
 `[propext, Classical.choice, Quot.sound]`.
+
+## Continuation: divergent prime source and necessary signed cancellation
+
+Date: 21 September 2026. Starting published commit:
+`142b3f4cecd59b617da8434d6ddf88868d10d641`.
+
+This continuation proves divergence of the explicit positive source energy
+in the growing-dictionary fresh-prime formula. It then derives a quantitative
+cancellation condition from the assumption that RH is false. It does not
+remove the signed error from the actual capacity increment.
+
+### Notation and the exact source identity
+
+At stage \(n\ge1\), the dictionary is \(g_2,\ldots,g_{n+1}\).
+For a fresh prime \(q=n+2\), set
+
+\[
+P_n=(n+1)!,\quad E_n=\|z_{P_n}\|^2,\quad
+\delta_n=\operatorname{coprimePrimeDefect}(P_n,q),
+\]
+\[
+\kappa_n=\langle r_n,z_{P_n}-z_n^{\min}\rangle,\qquad
+\sigma_n=\|r_n\|^2>0.
+\]
+
+The new exact defect identity is
+
+\[
+\boxed{\delta_n=\frac{1+E_n/2}{q^2}.}
+\]
+
+The existing signed relations remain intact:
+
+\[
+\boxed{\eta_n=\delta_n+\kappa_n,\qquad
+C_{n+1}-C_n=\frac{(\delta_n+\kappa_n)^2}{\sigma_n}.}
+\]
+
+The Lean series use index \(m=n-1\); thus their prime is \(q=m+3\).
+The prime \(2\) is excluded, and all odd primes are included.
+
+### Unconditional divergence of the explicit source
+
+For the actual normalized residue vector, Lean proves
+
+\[
+\|g_d\|^2\le\frac2d.
+\]
+
+The proof uses the genuine Pareto-weighted coordinates:
+each squared coordinate is at most \(d^{-2}\), and also at most its
+Pareto weight. Splitting after \(d\) coordinates gives the bound using
+the full, exactly summed Pareto tail. Orthogonal screening and removal of
+the first coordinate can only decrease the squared norm, so
+
+\[
+0<\sigma_n\le\frac2q.
+\]
+
+The previously checked support-escape theorem gives \(E_n\ge n+1=q-1\).
+Together with the exact defect identity, this proves
+
+\[
+\delta_n\ge\frac1{2q},\qquad
+\boxed{\frac{\delta_n^2}{\sigma_n}\ge\frac1{8q}.}
+\]
+
+Consequently,
+
+\[
+\boxed{\sum_{\substack{n\ge1\\n+2\ \mathrm{prime}}}
+       \frac{\delta_n^2}{\sigma_n}=+\infty.}
+\]
+
+The formal statement is nonsummability of a nonnegative real sequence and
+convergence of its finite partial sums to \(+\infty\). It does not assign
+a real `tsum` value to a divergent series.
+
+The last step uses Mathlib's checked divergence of the reciprocal-prime
+series, rather than an extra number-theoretic hypothesis:
+[Mathlib SumPrimeReciprocals](https://leanprover-community.github.io/mathlib4_docs/Mathlib/NumberTheory/SumPrimeReciprocals.html).
+
+### What not RH now forces
+
+The existing capacity telescope and the implication
+capacity divergence \(\Rightarrow\) RH give, under \(\neg\mathrm{RH}\),
+
+\[
+\sum_{n\ge0}\frac{\eta_n^2}{\sigma_n}<\infty.
+\]
+
+This implication uses no RH-to-density provider. Combining it with
+\(\eta_n=\delta_n+\kappa_n\) and the unconditional source divergence gives
+
+\[
+\boxed{\neg\mathrm{RH}\ \Longrightarrow\sum_{\substack{n\ge1\\n+2\ \mathrm{prime}}}
+\frac{\kappa_n^2}{\sigma_n}=+\infty.}
+\]
+
+Here the checked statement is nonsummability of the nonnegative error-energy
+sequence; divergence of its partial sums follows from the same standard
+nonnegative-series criterion. The proof keeps both signed terms, using
+
+\[
+\frac{\delta_n^2}{\sigma_n}
+\le2\frac{(\delta_n+\kappa_n)^2}{\sigma_n}
+  +2\frac{\kappa_n^2}{\sigma_n}.
+\]
+
+Thus a fixed-vector Bessel argument cannot simply be applied to the
+changing vectors \(z_{P_n}-z_n^{\min}\) without justifying the required
+common-vector or uniform estimate.
+
+More precisely, for every \(\varepsilon>0\), define the set of odd primes
+
+\[
+\mathcal B_\varepsilon=
+\left\{q=n+2:\ |\delta_n+\kappa_n|\ge\varepsilon\delta_n\right\}.
+\]
+
+Lean proves the pointwise bound
+
+\[
+\frac{\mathbf1_{\{q\in\mathcal B_\varepsilon\}}}{q}
+\le\frac8{\varepsilon^2}\,
+       \frac{\eta_n^2}{\sigma_n},
+\]
+
+and hence the necessary condition
+
+\[
+\boxed{\neg\mathrm{RH}\ \Longrightarrow\forall\varepsilon>0,\quad
+\sum_{q\in\mathcal B_\varepsilon}\frac1q<\infty.}
+\]
+
+For each fixed tolerance, the actual signed correction must therefore
+cancel the source to that relative tolerance except on a set of primes
+with finite reciprocal sum. This is a weighted exceptional-set statement.
+It does not assert pointwise convergence of \(\kappa_n/\delta_n\)
+along every prime.
+
+### Sufficient RH criteria and the unresolved arithmetic step
+
+The checked sufficient implications are:
+
+1. Summability of the actual prime signed-error energy implies RH.
+2. If some \(\varepsilon>0\) has
+   \(\sum_{q\in\mathcal B_\varepsilon}1/q=+\infty\), then RH holds.
+3. In particular, a uniform bound
+   \(|\delta_n+\kappa_n|\ge\varepsilon\delta_n\)
+   at every odd-prime stage implies RH.
+
+Their arithmetic premises remain **Open**. These are sufficient conditions,
+not claimed equivalents to RH; none is supplied by the positive-source
+divergence theorem. Substantial cancellation can also occur when RH holds.
+
+The original target remains divergence of the full signed gain sum
+
+\[
+\sum_{n\ge0}\frac{(\operatorname{schurEta}(n))^2}
+                       {\operatorname{schurSigma}(n)}.
+\]
+
+The new work proves a divergent source inside that problem and characterizes
+how strongly it must be cancelled if RH fails. It does not prove that the
+required cancellation is impossible, and does not prove RH or its negation.
+
+### Modules, declarations, and verification
+
+`RH/ParetoPrimeSourceDivergence.lean` contains ten proved theorems and
+the definition `factorialPrimeSourceEnergy`. Main declarations:
+
+- `normalizedResidue_norm_sq_le`
+- `schurSigma_le_two_div`
+- `coprimePrimeDefect_energy_identity`
+- `factorialPrimeDefect_lower`
+- `factorialPrimeDefect_normalized_lower`
+- `factorialPrimeSourceEnergy_not_summable`
+- `factorialPrimeSourceEnergy_sum_tendsto`
+
+`RH/ParetoPrimeCancellation.lean` contains ten proved theorems and
+the definitions `factorialPrimeError`, `factorialPrimeErrorEnergy`, and
+`primeNoncancellationMass`. Main declarations:
+
+- `factorialPrimeError_decomposition`
+- `schurGain_summable_of_not_RH`
+- `factorialPrimeErrorEnergy_not_summable_of_not_RH`
+- `primeNoncancellationMass_le_schurGain`
+- `primeNoncancellationMass_summable_of_not_RH`
+- `riemannHypothesis_of_factorialPrimeErrorEnergy_summable`
+- `riemannHypothesis_of_primeNoncancellationMass_not_summable`
+- `riemannHypothesis_of_uniform_prime_noncancellation`
+
+The residue norm bounds are in namespace `RiemannResearch.RH.Pareto`;
+the application declarations are in its
+`CoefficientStabilization.TailCapacity` namespace.
+
+The coherent proof candidate passed with exit code 0 and no warnings.
+Key axiom audits use only `propext`, `Classical.choice`, and `Quot.sound`.
+The not-RH implications retain their explicit not-RH premise; the RH
+criteria retain their open arithmetic premises. No local axiom, unchecked
+zero, density provider, or placeholder proof is introduced.
+
+Both modules are exported, and their established and conditional statuses
+are recorded separately in the theorem catalog. Final publication is through
+the single affected-module validation checkpoint. Its result is recorded
+in Git and in the exported handoff after completion.
