@@ -76,6 +76,49 @@ constructions, and several historical analytic proof packages whose actual
 objects and providers are not supplied by this update. There is no opaque
 assumed proposition standing in for these proofs.
 
+### Pareto shape threshold and concrete full-tail capacity certificates (2026-09-21)
+
+Modules: `RH/ParetoRoughTailCertificates`, `RH/ParetoShapeMellinEnergy`,
+`RH/ParetoShapeCapacity`, `RH/ParetoTailCertificateEscape`; extensions to `RH/ParetoTailCapacityDuality`
+and `RH/FirstCoordinateTailGap`.
+Source and coverage: `RH/ParetoCapacityFormalization20260921.md`.
+
+**Established:** actual two-point Hilbert certificates have exact squared
+norm 2p^2 and residue pairing 1/d minus the divisibility indicator.
+Finite orthogonal averaging, passage to the complete coprime
+reciprocal-square sum, and the existing proved Euler product give
+`tailCapacity_le_factorial_eulerProduct`. This is a finite-stage upper
+bound for the actual full-tail Gram capacity, not a uniform bound as the
+dictionary grows. `finiteTailCertificate_energy_completion` retains
+the exact nonnegative distance from the finite minimum.
+`roughCertificate_affine_energy_completion` proves optimality of the
+inverse-square average within each finite separated family, including
+signed reweightings. Independently, actual certificates supported on
+physical sites j>=M with g_2 pairing 1/2 have squared norm at least M;
+escaping support therefore forces their energy to tend to infinity.
+
+**Established:** actual Pareto shape-cell Mellin energy is summable for
+0<alpha<2 Re(s), with the explicit complete-tail constant.
+`criticalNormalizedTailEnergy_not_summable` proves genuine divergence of
+the literal normalized critical-line certificate at alpha=1, using a
+harmonic lower bound. These analytic statements require no zeta-zero input.
+
+**Established theorem with an explicit zero hypothesis:**
+`critical_shapeFiniteCapacities_bddAbove` bounds all actual finite
+coefficient-supremum capacities for 0<alpha<1, given
+`riemannZeta (criticalPoint t)=0`. All legal-combination summability and
+arithmetic pairing steps are proved. **Not supplied here:** a formal
+critical-line-zero existence provider. This classical existence input
+is not an RH assumption, but it remains visible in the theorem type.
+
+**Conditional research reduction:**
+`tailCapacity_bounded_iff_not_RH` directly states the original Pareto(1)
+criterion with the explicit classical Bagchi argument
+`hDensity : RiemannHypothesis → closedSpace = ⊤`.
+**Open:** formal provider for that density direction; independently,
+whether the original capacities are uniformly bounded or diverge.
+No new axiom or conclusion proving or disproving RH is introduced.
+
 ### Exact Cauchy-annihilator criterion and signed capacity barriers (2026-09-21)
 
 Modules: `RH/CauchyAnnihilatorRH`, `RH/MellinCapacityBarrier`.

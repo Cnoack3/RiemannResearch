@@ -263,6 +263,10 @@ import RiemannResearch.Analysis.FiniteGramScreenedCapacity
 import RiemannResearch.RH.ResidueTailCertificateRegularity
 import RiemannResearch.RH.OmittedPrimeResidueBarrier
 import RiemannResearch.RH.ParetoTailCapacityDuality
+import RiemannResearch.RH.ParetoRoughTailCertificates
+import RiemannResearch.RH.ParetoShapeMellinEnergy
+import RiemannResearch.RH.ParetoShapeCapacity
+import RiemannResearch.RH.ParetoTailCertificateEscape
 import RiemannResearch.RH.ParetoFullTailCRT
 import RiemannResearch.Analysis.DiscreteTailHardy
 import RiemannResearch.Analysis.LogPowerSummability

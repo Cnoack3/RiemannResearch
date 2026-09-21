@@ -200,4 +200,13 @@ theorem riemannHypothesis_iff_firstCoordinateTailGap_zero
     exact ((not_RH_iff_firstCoordinateTailGap_pos hDensity).mpr (lt_of_not_ge h)) hRH
   · exact riemannHypothesis_of_firstCoordinateTailGap_zero
 
+/-- The original Pareto(1) uniform-capacity criterion. The classical Bagchi
+RH-to-density direction remains an explicit argument, not a project axiom.
+Source: user-provided Pareto capacity note (2026-09-21), Section 2. -/
+theorem tailCapacity_bounded_iff_not_RH
+    (hDensity : RiemannHypothesis → closedSpace = ⊤) :
+    (∃ B : ℝ, ∀ n : ℕ, tailCapacity n ≤ B) ↔ ¬ RiemannHypothesis :=
+  firstCoordinateTailGap_pos_iff_capacity_bounded.symm.trans
+    (not_RH_iff_firstCoordinateTailGap_pos hDensity).symm
+
 end RiemannResearch.RH.Pareto.CoefficientStabilization.TailCapacity

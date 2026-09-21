@@ -75,14 +75,28 @@ theorem tailCertificate_observation (z : ThresholdHilbert)
     real_inner_comm]
   exact hz.2 (i.val + 2) (by omega)
 
+/-- Exact completion for observations on one finite dictionary.
+Source: user-provided Pareto capacity note (2026-09-21), Section 3.
+No observation beyond this dictionary is assumed. -/
+theorem finiteTailCertificate_energy_completion (n : ℕ) (z : ThresholdHilbert)
+    (hz : ∀ i : Fin n, inner ℝ (tailAtom i.val) z = reciprocalSource n i) :
+    ‖z‖ ^ 2 = tailCapacity n + ‖z - tailMinimum n‖ ^ 2 := by
+  have h := feasible_norm_sq_completion (finiteTailAtom_independent n)
+    (reciprocalSource n) z hz
+  change ‖z‖ ^ 2 = ‖tailMinimum n‖ ^ 2 + ‖z - tailMinimum n‖ ^ 2 at h
+  simpa only [tailMinimum_norm_sq] using h
+
+theorem finiteTailCertificate_capacity_le (n : ℕ) (z : ThresholdHilbert)
+    (hz : ∀ i : Fin n, inner ℝ (tailAtom i.val) z = reciprocalSource n i) :
+    tailCapacity n ≤ ‖z‖ ^ 2 := by
+  rw [finiteTailCertificate_energy_completion n z hz]
+  exact le_add_of_nonneg_right (sq_nonneg _)
+
 /-- Every infinite certificate satisfies an exact finite energy decomposition. -/
 theorem tailCertificate_energy_completion (z : ThresholdHilbert)
     (hz : IsResidueTailCertificate z) (n : ℕ) :
     ‖z‖ ^ 2 = tailCapacity n + ‖z - tailMinimum n‖ ^ 2 := by
-  have h := feasible_norm_sq_completion (finiteTailAtom_independent n)
-    (reciprocalSource n) z (tailCertificate_observation z hz n)
-  change ‖z‖ ^ 2 = ‖tailMinimum n‖ ^ 2 + ‖z - tailMinimum n‖ ^ 2 at h
-  simpa only [tailMinimum_norm_sq] using h
+  exact finiteTailCertificate_energy_completion n z (tailCertificate_observation z hz n)
 
 theorem tailCapacity_le_certificate_energy (z : ThresholdHilbert)
     (hz : IsResidueTailCertificate z) (n : ℕ) :
