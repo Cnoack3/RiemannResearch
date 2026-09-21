@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Exact Cauchy-annihilator criterion and signed capacity barriers (2026-09-21)
+
+Modules: `RH/CauchyAnnihilatorRH`, `RH/MellinCapacityBarrier`.
+
+**Established equivalence:** `not_RH_iff_exists_finite_energy_cauchy_annihilator`
+identifies failure of actual Mathlib RH with existence of one positive-scale
+Cauchy mixture, with scale less than one half, that is nonzero, has genuinely
+summable positive Pareto energy, and annihilates every normalized residue.
+`riemannHypothesis_iff_cauchy_generator_detected` identifies RH with
+nonvanishing of the single modulus-two pairing throughout this two-parameter
+Cauchy family. Neither theorem assumes RH, Bagchi's theorem, a density
+provider, or a new analytic provider. These are reformulations, not a proof
+of either side.
+
+**Established conditional obstruction:** write `v(s)=mellinVacancyFloor s`
+and `B(s)=2/v(s)-2`. A right-half-plane zeta zero away from the pole forces
+`B(s)>0`, `tailCapacity n <= B(s)` at every stage, and
+`1/B(s) <= firstCoordinateTailGap`. The same bound controls every finite
+signed coefficient family, with all mixed terms retained.
+`not_RH_common_signed_tail_barrier` selects one zero for all these bounds.
+`zeta_ne_zero_of_capacity_exceeds_mellin_bound` turns a finite capacity
+exceeding the explicit threshold into a zero exclusion. The previously
+proved cell-integral bound in `MellinZeroQuantitativeGap` remains available;
+no optimality claim is made for either estimate.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_arbitrarily_small_signed_tails` requires, for every
+positive epsilon, a finite real coefficient family with reciprocal source
+one and full tail norm squared below epsilon.
+**Open:** construction or an arithmetic estimate providing those trials.
+The Cauchy equivalence does not discharge that input, and the existing
+compact-frequency/first-moment exclusions do not cover its Cauchy witnesses.
+
 ### Cauchy frequency mixtures and explicit zero-to-gap bounds (2026-09-21)
 
 Modules: `RH/CauchyFourierTransform`, `RH/CauchyFrequencyMoments`,

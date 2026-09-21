@@ -1222,3 +1222,5 @@ import RiemannResearch.RH.MobiusResidualInfiniteDefects
 import RiemannResearch.RH.MobiusResidualEscape
 import RiemannResearch.RH.ExactHeadResidualTail
 import RiemannResearch.RH.RHCriterionFailures
+import RiemannResearch.RH.MellinCapacityBarrier
+import RiemannResearch.RH.CauchyAnnihilatorRH
