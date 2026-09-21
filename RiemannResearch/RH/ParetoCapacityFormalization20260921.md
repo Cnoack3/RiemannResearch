@@ -508,3 +508,217 @@ The following remain open in this record:
 3. The explicitly retained Bagchi RH-to-density input.
 
 The floating-point first-zero calculation recorded earlier is unchanged.
+
+## Continuation: modulus refinement and divergent excess energy
+
+Date: 21 September 2026. Starting published commit:
+`24d7a18eac1c51f2b675d40023fe3990933887e1`.
+
+This continuation analyzes the exact squared-distance term in the
+previous result. It proves that enlarging the certificate modulus can
+make that term diverge with the dictionary held fixed, and that signed
+averages of enlarged-modulus certificates cannot reduce the energy
+below the original certificate.
+
+### Exact arithmetic refinement identity
+
+Let \(P\ne0\) be even, let \(Q\ne0\), and assume \(P\mid Q\).
+Retain the actual infinite averages \(z_P,z_Q\), and write
+
+\[
+E_P=\|z_P\|^2=\frac{2}{S_P},\qquad
+S_P=\sum_{\substack{p\ge3\\p\text{ odd}\\(p,P)=1}}\frac1{p^2}.
+\]
+
+The summation indices are odd coprime integers, including composites.
+The surviving family for \(Q\) is a subset of that for \(P\).
+For each \(p\) in that subset,
+
+\[
+\langle z_P,u_p\rangle
+=\frac{1}{S_Pp^2}\|u_p\|^2
+=\frac{2}{S_P}=E_P.
+\]
+
+The coefficients of \(z_Q\) sum to one, so the full infinite cross term is
+
+\[
+\boxed{\langle z_P,z_Q\rangle=E_P.}
+\]
+
+Hence the refinement increment is orthogonal to \(z_P\), and
+
+\[
+\boxed{
+E_Q=E_P+\|z_Q-z_P\|^2.
+}
+\]
+
+This is an exact identity for the original Hilbert vectors. No mixed term
+is omitted and no asymptotic approximation is substituted.
+
+If every dictionary modulus \(2,\ldots,n+1\) divides \(P\), then both
+certificates give the same observations on that dictionary. Consequently
+
+\[
+\langle g_d^{\rm tail},z_Q-z_P\rangle=0
+\quad(2\le d\le n+1).
+\]
+
+Writing \(z_n^{\min}\) for the unrestricted finite-dictionary minimum, the
+new gap identity is
+
+\[
+\boxed{
+\|z_Q-z_n^{\min}\|^2
+=
+\|z_P-z_n^{\min}\|^2+\|z_Q-z_P\|^2.
+}
+\]
+
+Thus, with \(n\) fixed, the entire energy added by modulus enlargement goes
+into the squared-distance gap. It does not alter \(C_n\).
+
+### Exact obstruction to signed averaging of refinements
+
+Let \(Q_i\) be any family of nonzero multiples of \(P\); they need not
+be pairwise comparable by divisibility. Suppose
+
+\[
+\sum_i a_i=1,\qquad
+\sum_i a_i z_{Q_i}=z,
+\]
+
+where the scalar and vector series have the indicated `HasSum` limits.
+The real coefficients may have either sign. Continuity of the inner
+product preserves the full cross term:
+
+\[
+\langle z_P,z\rangle=E_P.
+\]
+
+The checked conclusion is
+
+\[
+\boxed{\|z\|^2=E_P+\|z-z_P\|^2.}
+\]
+
+The energy is at least \(E_P\), with equality exactly when \(z=z_P\).
+Allowing signed weights and infinitely many enlarged moduli therefore
+does not lower this family's base energy. This statement concerns the
+specified certificate family; arbitrary feasible Hilbert vectors remain
+a larger class.
+
+### A concrete divergent family with a fixed capacity
+
+Separate the dictionary size \(n\) from the modulus-growth parameter \(m\).
+Set
+
+\[
+Q_{n,m}=(m+n+2)!,\qquad Z_{n,m}=z_{Q_{n,m}},
+\qquad G_{n,m}=\|Z_{n,m}-z_n^{\min}\|^2.
+\]
+
+Every \(Q_{n,m}\) is an admissible common multiple for the fixed dictionary.
+An odd integer coprime to \((r+2)!\) and at least three must exceed \(r+2\).
+Therefore the actual infinite vector \(z_{(r+2)!}\) vanishes at physical
+sites \(1,\ldots,r+1\). This is proved for the Hilbert sum itself by
+continuous coordinate pairings.
+
+Its exact pairing with \(g_2\) remains \(1/2\). The existing support-escape
+theorem therefore gives the explicit bound
+
+\[
+\|z_{(r+2)!}\|^2\ge r+2.
+\]
+
+In particular, for every fixed \(n\),
+
+\[
+\|Z_{n,m}\|^2\longrightarrow+\infty.
+\]
+
+The capacity completion still reads
+
+\[
+\boxed{G_{n,m}=\|Z_{n,m}\|^2-C_n.}
+\]
+
+Lean proves both consequences
+
+\[
+\boxed{
+G_{n,m}\longrightarrow+\infty,
+\qquad
+\frac{G_{n,m}}{\|Z_{n,m}\|^2}\longrightarrow1
+\quad(m\to\infty,\ n\text{ fixed}).
+}
+\]
+
+Every denominator is positive by the explicit energy lower bound.
+The exact identity
+
+\[
+\|Z_{n,m}\|^2-G_{n,m}=C_n
+\]
+
+holds at every stage even though both terms on the left diverge.
+
+This supplies an unconditional example inside the actual arithmetic
+construction where divergent certificate energy is absorbed by the
+squared-distance term. No RH assumption, zeta-zero assumption, or
+Bagchi-density input is used.
+
+### New declarations
+
+Module: `RH/ParetoCoprimeModulusRefinement.lean`.
+
+All declarations use the existing namespace
+`RiemannResearch.RH.Pareto.CoefficientStabilization.TailCapacity`.
+
+- `coprimeCertificateIndexOfDvd`: the actual index inclusion.
+- `infiniteCoprimeCertificate_inner_refined_member` and
+  `infiniteCoprimeCertificate_inner_of_dvd`: exact cross terms.
+- `infiniteCoprimeCertificate_refinement_energy` and
+  `infiniteCoprimeCertificate_energy_mono`: refinement cost.
+- `infiniteCoprimeCertificate_refinement_observation_zero` and
+  `infiniteCoprimeCertificate_refinement_gap`: invisibility to the
+  fixed dictionary and exact growth of the gap.
+- `infiniteCoprimeCertificate_mixture_energy_completion` and
+  `infiniteCoprimeCertificate_mixture_energy_eq_iff`: the full
+  signed-mixture identity and equality characterization.
+
+Module: `RH/ParetoCoprimeCertificateEscape.lean`.
+
+- `coprimeCertificate_factorial_index_lower` and
+  `infiniteCoprimeCertificate_factorial_coordinate_zero`: actual
+  support escape of the infinite factorial averages.
+- `infiniteCoprimeCertificate_residue_two_observation`:
+  exact \(g_2\) normalization.
+- `infiniteCoprimeCertificate_factorial_energy_lower` and
+  `infiniteCoprimeCertificate_factorial_energy_tendsto`:
+  unconditional energy growth of these explicit certificates.
+- `infiniteCoprimeCertificate_factorial_observation` and
+  `infiniteCoprimeCertificate_factorial_fixed_gap`: feasibility
+  and exact gap at a fixed dictionary.
+- `infiniteCoprimeCertificate_factorial_fixed_gap_tendsto` and
+  `infiniteCoprimeCertificate_factorial_fixed_gap_ratio_tendsto`:
+  divergence and limiting relative excess.
+
+### What remains undecided
+
+The limit statements above keep \(n\) fixed while \(m\) increases.
+They do not determine the diagonal limit in which the dictionary grows.
+In particular, they prove neither boundedness nor divergence of \(C_n\),
+and neither RH nor its negation.
+
+The infinite-series construction and exact Euler energy are now
+supplemented by an explicit description of energy introduced through
+modulus enlargement. A proof of capacity divergence must still control
+the projection onto the growing dictionary; increasing the modulus or
+taking signed mixtures of its refinements does not provide that control.
+
+The two new modules are exported from `RiemannResearch.lean`.
+The key axiom audits use only `propext`, `Classical.choice`,
+and `Quot.sound`. The final publishing checkpoint validates the
+changed modules and records the publication commit in Git.

@@ -266,6 +266,8 @@ import RiemannResearch.RH.ParetoTailCapacityDuality
 import RiemannResearch.RH.ParetoRoughTailCertificates
 import RiemannResearch.Analysis.OrthogonalAffineSeries
 import RiemannResearch.RH.ParetoInfiniteRoughTailCertificates
+import RiemannResearch.RH.ParetoCoprimeModulusRefinement
+import RiemannResearch.RH.ParetoCoprimeCertificateEscape
 import RiemannResearch.RH.ParetoShapeMellinEnergy
 import RiemannResearch.RH.ParetoShapeCapacity
 import RiemannResearch.RH.ParetoTailCertificateEscape

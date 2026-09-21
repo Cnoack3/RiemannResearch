@@ -1,5 +1,29 @@
 # Theorem catalog
 
+### Coprime modulus refinement and divergent fixed-dictionary excess (2026-09-21)
+
+**Established:** `RH/ParetoCoprimeModulusRefinement` proves that P dividing Q
+gives inner(z_P,z_Q) = norm(z_P)^2 and the exact orthogonal energy increment
+norm(z_Q)^2 = norm(z_P)^2 + norm(z_Q-z_P)^2. For a dictionary already
+supported by P, the refinement increment has zero observations and its
+whole energy is added to the gap from the unrestricted minimum.
+
+The same module proves exact energy completion and the unique equality
+case for every Hilbert-convergent signed mixture of certificates from
+nonzero multiples of P, with scalar coefficient HasSum one. The refined
+moduli need not form a chain. Such mixtures cannot lower the base energy.
+
+**Established:** `RH/ParetoCoprimeCertificateEscape` instantiates support
+escape for the actual infinite averages at (m+2)!. The physical head
+through m+1 vanishes and the exact g2 pairing is 1/2, giving squared norm
+at least m+2 and divergence. For fixed dictionary size n and modulus
+(m+n+2)!, it proves the exact gap G = E - tailCapacity(n), G tending to
+infinity, and G/E tending to one.
+
+**Scope:** these new statements require no RH, zeta-zero, or density
+provider. The factorial limits hold with the dictionary fixed. They do
+not decide the growing-dictionary capacity limit, which remains Open.
+
 ### Infinite coprime tail certificate and exact capacity gap (2026-09-21)
 
 **Established:** `Analysis/OrthogonalAffineSeries` constructs the actual
