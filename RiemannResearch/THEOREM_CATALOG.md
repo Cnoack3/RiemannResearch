@@ -1,5 +1,22 @@
 # Theorem catalog
 
+### Exact residue-class DPP probabilities (2026-09-21)
+
+**Established:** `RH/IntegerDPPResidueProbability` proves that the actual
+probability of occupying physical class 1 modulo any positive common
+conductor equals its full Pareto progression weight times `fullCapacity`.
+It defines the canonical lcm modulus and `qN`, then proves the exact
+inverse-Gram, orthonormal-sum, determinant-ratio, and successor identities.
+The proof uses almost-sure arithmetic exclusion and countable additivity.
+
+**Established:** `RH/IntegerDPPResidueSmallValues` computes `qN 1 = 1` and
+the exact closed expression for `qN 2` in log(2), log(3), and pi/sqrt(3).
+`RH/ResidueSmallGram.progressionWeight_six_one` supplies the exact full
+class weight. These are unconditional statements about the actual DPP.
+**Open:** the limiting assertion `qN N → 1`; none of these identities
+asserts saturation or proves RH.
+
+
 ### Invariant defect under independent even correction (2026-09-21)
 
 **Established:** `RH/ParetoIndependentEvenDefect` proves that every legal

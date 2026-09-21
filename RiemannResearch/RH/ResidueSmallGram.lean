@@ -209,4 +209,16 @@ theorem residueAtom_one_norm_sq :
   linear_combination hg - 2 * re_digamma_thirds_sum / 27 -
     re_digamma_thirds_difference / 27
 
+
+/-- The exact full Pareto mass of the class 1 modulo 6. -/
+theorem progressionWeight_six_one :
+    progressionWeight 6 1 =
+      Real.log 2 / 3 + Real.pi / (6 * Real.sqrt 3) := by
+  rw [progressionWeight_eq_digamma 6 1
+    (by norm_num) (by norm_num) (by norm_num)]
+  norm_num
+  linear_combination re_digamma_thirds_sum / 12 -
+    re_digamma_thirds_difference / 12 -
+    re_digamma_sixths_sum / 12 +
+    re_digamma_sixths_difference / 12
 end RiemannResearch.RH.Pareto
