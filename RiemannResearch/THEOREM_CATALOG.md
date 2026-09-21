@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Full signed cross-Gram row energy (2026-09-21)
+
+**Established:** `Analysis/OrthogonalPairingEnergy` proves normalized
+orthonormality, summability and Bessel bounds for fixed-vector pairings,
+and invariance of weighted square summability under a finite-energy addition.
+The cross-stage Schur row identity now holds without a primality premise.
+
+`RH/ParetoCrossGramRowEnergy` defines the actual signed row
+`L_n = sum_(j<=n) A(n,j)` and `E_n = L_n^2 / sigma_(n+1)`.
+It proves the exact capacity telescope, summability of each fixed column,
+and the equivalence between summability of E and of the complete Schur
+gain series. Deleting or modifying any fixed finite signed combination
+of columns preserves this summability question.
+
+**Conditional research reduction:** nonsummability of the actual full
+row energy implies RH, with no density or zeta-zero provider.
+**Open:** prove that nonsummability. Positive prime diagonal source
+divergence does not exclude signed off-diagonal cancellation. The
+necessary implication from not RH retains its explicit not-RH premise;
+no RH converse is asserted here.
+
 ### Exact cross-stage prime cancellation (2026-09-21)
 
 **Established:** `RH/ParetoPrimeCrossStageCancellation` proves that the
@@ -7,7 +28,7 @@ Schur innovations and factorial refinements are each pairwise orthogonal.
 The cross-Gram entries `A(n,m) = inner(r_(n+1),d_m)` vanish for `n < m`,
 and `A(n,n) = delta_n` at prime stages. Exact telescoping gives
 `kappa_n = inner(r_(n+1),z_2) + sum_(j<n) A(n,j)` and
-`eta_(n+1) = inner(r_(n+1),z_2) + sum_(j<=n) A(n,j)` at prime stages.
+`eta_(n+1) = inner(r_(n+1),z_2) + sum_(j<=n) A(n,j)` at every stage.
 All signed terms are retained.
 
 **Scope:** these structural equalities are unconditional. A lower bound

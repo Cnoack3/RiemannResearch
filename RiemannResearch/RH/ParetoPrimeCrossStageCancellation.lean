@@ -143,15 +143,35 @@ theorem factorialPrimeError_eq_base_add_crossGram (n : ℕ) :
     factorialCoprimeCertificate_eq_base_add_refinements]
   simp only [inner_add_right, inner_sum, factorialPrimeCrossGram]
 
-/-- Exact finite signed expansion at a fresh-prime stage. -/
-theorem schurEta_eq_base_add_crossGram (n : ℕ) (hp : Nat.Prime (n + 3)) :
-    schurEta (n + 1) =
-      inner ℝ (tailInnovation (n + 1)) (infiniteCoprimeCertificate (Nat.factorial 2)) +
-        ∑ j ∈ Finset.range (n + 1), factorialPrimeCrossGram n j := by
-  rw [factorialPrimeError_decomposition n hp,
-    factorialPrimeError_eq_base_add_crossGram, Finset.sum_range_succ,
-    factorialPrimeCrossGram_diag n hp]
-  unfold factorialPrimeDelta
-  ring
-
+/-- Exact finite signed expansion at every stage, including composite moduli. -/
+theorem schurEta_eq_base_add_crossGram (n : ℕ) :
+    schurEta (n+1) =
+      inner ℝ (tailInnovation (n+1)) (infiniteCoprimeCertificate (Nat.factorial 2)) +
+        ∑ j ∈ Finset.range (n+1), factorialPrimeCrossGram n j := by
+  let z := infiniteCoprimeCertificate (n+3).factorial
+  have hz (i : Fin (n+2)) :
+      inner ℝ (tailAtom i.val) z = reciprocalSource (n+2) i :=
+    infiniteCoprimeCertificate_observation (n+2) (n+3).factorial
+      (Nat.factorial_ne_zero _)
+      (Nat.dvd_factorial (by decide) (by omega))
+      (fun i => Nat.dvd_factorial (by omega) (by omega)) i
+  have hold (i : Fin (n+1)) :
+      inner ℝ (tailAtom i.val) (z - tailMinimum (n+1)) = 0 := by
+    have hi := hz i.castSucc
+    simp only [Fin.val_castSucc, reciprocalSource] at hi
+    rw [inner_sub_right, hi, tailMinimum_observation]
+    simp [reciprocalSource]
+  have he := tailInnovation_inner_of_old_observation_zero (n+1)
+    (z - tailMinimum (n+1)) hold
+  have hlast := hz (Fin.last (n+1))
+  simp only [Fin.val_last, reciprocalSource] at hlast
+  rw [inner_sub_right, tailInnovation_inner_minimum, sub_zero,
+    inner_sub_right, hlast] at he
+  change inner ℝ (tailInnovation (n+1)) z = schurEta (n+1) at he
+  rw [← he]
+  dsimp [z]
+  rw [show n+3 = (n+1)+2 by omega,
+    factorialCoprimeCertificate_eq_base_add_refinements]
+  simp only [inner_add_right, inner_sum, factorialPrimeCrossGram,
+    show Nat.factorial 2 = 2 by decide]
 end RiemannResearch.RH.Pareto.CoefficientStabilization.TailCapacity

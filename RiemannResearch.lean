@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.OrthogonalPairingEnergy
+import RiemannResearch.RH.ParetoCrossGramRowEnergy
 import RiemannResearch.RH.ResidualGainObstruction
 import RiemannResearch.RH.IntegerDPPHistoricalTargets
 import RiemannResearch.RH.CanonicalSieveAbelTargets
