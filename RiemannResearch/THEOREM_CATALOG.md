@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Independent even corrections, full block energy, and bounded first-point heads (2026-09-21)
+
+**Established:** `Analysis/FiniteHilbertHeadConstraint` proves exact
+one-observation finite Gram minimization and the nested-dictionary identity
+old energy = new energy + squared change in the optimizer.
+`RH/ParetoIndependentEvenCorrection` applies this with an independent even
+dictionary, preserving every odd contrast of normalized candidates.
+
+**Established:** `RH/ParetoFullContrastEnergy` proves summability and the full
+norm bound for the complete contrast series of every actual Hilbert vector.
+`RH/ParetoParityBlockEnergy` identifies the entire remaining energy as
+f(1)^2/2 + twice the norm squared of the dyadic half-adjoint. For the genuine
+corrected factorial sieve, full-energy decay is equivalent to decay of its
+actual block-mean norm; the exact arithmetic contrast term is retained.
+
+**Established:** `RH/ParetoBoundedCoordinateClosure` proves that a uniformly
+bounded coordinatewise-convergent family in a submodule has its limit in
+that submodule's norm closure. `RH/ParetoFirstPointHeadObstruction` proves
+the explicit polynomial complete-energy lower bound for exact first-point
+heads at any hypothetical right-half-plane zeta zero, including the full
+factor |1-2^(-s)|^2/|s|^2.
+
+**Conditional research reduction:** a uniformly full-norm-bounded genuine
+legal family with growing first-point heads implies Mathlib RH, without an
+RH-to-density provider. **Open:** the uniform bound or corrected-sieve
+block-mean decay. Monotonicity under even refinement and vanishing parity
+contrast do not discharge those arithmetic obligations.
+No unconditional RH or off-line-zero existence is asserted.
+
 ### Normalized even optimization, harmonic corrections, and solved parity contrasts (2026-09-21)
 
 **Established:** `RH/ParetoOddMomentNormalizedSchur` constructs the unique
