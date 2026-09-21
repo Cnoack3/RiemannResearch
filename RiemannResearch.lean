@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ParetoIndependentEvenRH
 import RiemannResearch.Analysis.FiniteHilbertHeadConstraint
 import RiemannResearch.RH.ParetoFullContrastEnergy
 import RiemannResearch.RH.ParetoParityBlockEnergy

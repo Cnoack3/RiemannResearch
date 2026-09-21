@@ -43,8 +43,9 @@ Modules: `Analysis/FiniteHilbertHeadConstraint.lean` and
 ## 2. Preservation of every odd contrast
 
 An even tail combination has identical pairing with the difference
-certificate u_p and with z, for every odd physical p>=3. Consequently a
-certificate-normalized even correction leaves every odd contrast unchanged.
+certificate u_p and with z, for every odd physical p>=3. Consequently, when
+both the original candidate and corrected output are orthogonal to z,
+the added even correction has zero z pairing and leaves every odd contrast unchanged.
 This proves preservation of the entire convergent contrast series, not only
 of a finite truncation.
 
@@ -104,6 +105,15 @@ Key declarations: `independentEvenCorrection_refinement`,
 `independentlyCorrectedSieve_energy_exact`, and
 `independentlyCorrectedSieve_fullEnergy_iff_blockMeans`.
 
+The additional module `RH/ParetoIndependentEvenRH.lean` proves that
+E_(P,m)+kappa*e₁ belongs to the original legal closure. The reason is
+explicit: the sieve has reciprocal head kappa, and a normalized even
+correction has reciprocal head zero. Consequently
+`riemannHypothesis_of_independentlyCorrectedSieve_blockMeans` derives
+Mathlib's RH from the displayed block-mean decay for any schedule m(n).
+This is a **conditional research reduction**. The block-mean decay
+assumption remains **Open**.
+
 ## 5. The bounded exact-head route is sufficient
 
 For an arbitrary submodule S, a uniformly norm-bounded family in S which
@@ -124,7 +134,7 @@ Module: `RH/ParetoBoundedCoordinateClosure.lean`.
 
 ## 6. A quantitative obstruction under an off-line zero
 
-If s is an actual zeta zero with beta=Re(s)>1/2, and a legal vector f agrees
+If s is an actual zeta zero with s != 1 and beta=Re(s)>1/2, and a legal vector f agrees
 with a e₁ through physical site N>=1, the complete energy satisfies
 
     ||f||² >= a²/2
@@ -139,9 +149,17 @@ Module: `RH/ParetoFirstPointHeadObstruction.lean`.
 ## Verification and scope
 
 Development and review were parallel; the coordinator serialized all Lean
-verification submissions. Final installed-module acceptance is the single
-publishing checkpoint for this continuation. Its receipt and commit are
-recorded in the delivered handoff and in Git.
+verification submissions. The full seven-module candidate, containing 60
+proved theorems and six definitions, passed with exit code 0 in 65.598 seconds
+in job `job_bSmxnCHJ7orsZrnGgC2LSRJBREQnOX4q`. Nine key declarations were
+audited; each used only `[propext, Classical.choice, Quot.sound]`.
+Cosmetic tactic warnings remained, with no compilation errors.
+Installed-module acceptance is recorded by the publishing checkpoints in
+the delivered handoff and Git. A rejected final multi-file patch left the
+concrete RH-assembly module out of the first checkpoint. The six core modules
+are validated first; the already candidate-checked RH assembly is then
+installed and checkpoint-validated separately. No source is classified as
+published solely on the strength of an ephemeral candidate check.
 
 No `sorry`, `admit`, project-local axiom, unsafe declaration, RH assumption,
 or zero-existence provider is introduced. Conditional RH endpoints retain

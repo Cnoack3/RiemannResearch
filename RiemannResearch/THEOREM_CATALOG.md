@@ -27,6 +27,10 @@ legal family with growing first-point heads implies Mathlib RH, without an
 RH-to-density provider. **Open:** the uniform bound or corrected-sieve
 block-mean decay. Monotonicity under even refinement and vanishing parity
 contrast do not discharge those arithmetic obligations.
+**Conditional research reduction:** `RH/ParetoIndependentEvenRH` proves
+that the actual corrected sieve plus its fixed first-point head is legal,
+and derives Mathlib RH from the displayed block-mean decay for any schedule.
+The complete block-mean estimate remains **Open**.
 No unconditional RH or off-line-zero existence is asserted.
 
 ### Normalized even optimization, harmonic corrections, and solved parity contrasts (2026-09-21)
