@@ -1,5 +1,20 @@
 # Theorem catalog
 
+### Exact cross-stage prime cancellation (2026-09-21)
+
+**Established:** `RH/ParetoPrimeCrossStageCancellation` proves that the
+Schur innovations and factorial refinements are each pairwise orthogonal.
+The cross-Gram entries `A(n,m) = inner(r_(n+1),d_m)` vanish for `n < m`,
+and `A(n,n) = delta_n` at prime stages. Exact telescoping gives
+`kappa_n = inner(r_(n+1),z_2) + sum_(j<n) A(n,j)` and
+`eta_(n+1) = inner(r_(n+1),z_2) + sum_(j<=n) A(n,j)` at prime stages.
+All signed terms are retained.
+
+**Scope:** these structural equalities are unconditional. A lower bound
+excluding cancellation in the finite row sums remains **Open**. Pairwise
+orthogonality does not identify the moving certificate errors with one
+fixed vector and does not by itself prove RH.
+
 ### Normalized prime cancellation and refinement budget (2026-09-21)
 
 **Established:** `RH/ParetoPrimeNormalizedCancellation` defines the positive

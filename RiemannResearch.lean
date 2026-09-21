@@ -274,6 +274,7 @@ import RiemannResearch.RH.ParetoPrimeSourceDivergence
 import RiemannResearch.RH.ParetoPrimeCancellation
 import RiemannResearch.RH.ParetoPrimeNormalizedCancellation
 import RiemannResearch.RH.ParetoPrimeRefinementCancellation
+import RiemannResearch.RH.ParetoPrimeCrossStageCancellation
 import RiemannResearch.RH.ParetoShapeMellinEnergy
 import RiemannResearch.RH.ParetoShapeCapacity
 import RiemannResearch.RH.ParetoTailCertificateEscape
