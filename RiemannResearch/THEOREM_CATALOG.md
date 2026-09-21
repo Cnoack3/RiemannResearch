@@ -1,5 +1,43 @@
 # Theorem catalog
 
+### Exact disproof gap and Mellin mixture obstructions (2026-09-21)
+
+Modules: `RH/FirstCoordinateTailGap`, `RH/TailMinimumConvergence`,
+`RH/CompactFrequencyMellinRigidity`, `RH/LogIntegerSamplingUniqueness`,
+and `RH/CriticalMellinMixtureEnergy`.
+Coverage and all declaration names:
+`RH/RHDisproofObstructionFormalization20260921.md`.
+Ordinary proof: `RH/RHDisproofObstructionDraft20260921.md`.
+
+**Established:** the actual first-coordinate tail gap is the sharp constant
+for all real signed finite tail combinations. Positivity is equivalent to
+bounded capacity and existence of a residue tail certificate. Not RH forces
+a positive gap, while a zero gap implies actual Mathlib RH. The actual finite
+minimum vectors converge iff capacities are bounded, with the canonical
+limit and exact squared-error bound.
+
+**Established:** `SpectralObstruction.logIntegerSamplingUniqueness_proved`
+fully proves the Jensen sampling input. Every individual critical-line mode
+has the unconditional harmonic energy lower bound and infinite energy.
+Actual countable-mixture coordinate convergence and positive summable
+diagonal coefficient energy are proved from absolute first-moment control.
+
+**Conditional research reductions:** the full gap/RH equivalences expose
+the classical RH-to-density converse as `hDensity`. Continuum rigidity
+exposes `CompactMixtureAnalyticProvider`; Jensen sampling is now supplied.
+Countable-mixture nonsummability exposes `CriticalPurePointEnergyProvider`.
+
+**Open formalization:** classical RH-to-density; actual Mellin/Fubini
+pairing and convergence; exponential-type regularity of the actual mixture
+defect; weighted Fourier injectivity; countable logarithmic-energy asymptotics;
+and `CompactCriticalMixtureTrivialityTarget`. These have ordinary proofs in
+the draft; they are not being declared new open mathematical conjectures.
+
+**Open mathematical endpoint:** neither positivity nor vanishing of the
+unrestricted gap is proved. No disproof or proof of RH is claimed. The audited
+declarations use only `propext`, `Classical.choice`, and `Quot.sound`;
+this does not discharge explicit local hypotheses.
+
 ### Joint arithmetic obstruction under failure of RH (2026-09-21)
 
 Module: `RH/RHFalseJointObstruction.lean`.
