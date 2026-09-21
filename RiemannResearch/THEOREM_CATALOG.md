@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Invariant defect under independent even correction (2026-09-21)
+
+**Established:** `RH/ParetoIndependentEvenDefect` proves that every legal
+first-point lift has defect exactly minus its head times the first-point
+defect. For the actual independently corrected normalized sieves it proves
+the exact identity: block-mean energy plus half the complete contrast energy
+equals kappa squared times limiting vacancy divided by four, plus half the
+full legal projection energy.
+
+**Conditional obstruction:** under not-RH, the block-mean energy is eventually
+at least kappa squared times the positive limiting vacancy divided by eight,
+uniformly over EVERY finite even-dictionary size. Its not-RH hypothesis is
+explicit; no off-line-zero existence, vacancy positivity, or RH conclusion
+is asserted unconditionally.
+**Open:** vanishing limiting vacancy and full independently corrected energy.
+The accompanying analytic candidate failures are ordinary proofs, not
+declarations in this module.
+
 ### Explicit exhaustive legal residue families (2026-09-21)
 
 **Established:** `RH/ResidueExhaustiveFamilies` supplies ordinary, dyadic,
