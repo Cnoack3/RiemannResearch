@@ -28,6 +28,36 @@ it has been:
 - `RiemannResearch/GroupTheory/AddSubgroupCRT.lean`: exact CRT support for prime-phase work
 - `RiemannResearch/THEOREM_CATALOG.md`: RH declaration and research-obligation ledger
 
+## Mellin mixture and quantitative gap results
+
+The compact-frequency and countable critical-line mixture obstructions are
+formalized, including their analytic inputs. A further continuous Cauchy
+frequency mixture has an exact coordinate identity: averaging the critical
+modes with location `gamma` and positive scale `delta` gives the Mellin mode
+at `s = 1/2 + delta + i*gamma`. Every coordinate integral converges absolutely,
+and the resulting sequence has positive finite Pareto energy. The Cauchy
+measure is atomless, gives every countable frequency set measure zero, and
+has unbounded support. Its moments of order `0 <= alpha < 1` are finite,
+but its first absolute moment is infinite. Thus this continuous construction
+lies outside the earlier compact-frequency and pure-point hypotheses.
+
+For `0 < delta < 1/2`, `cauchyMellinMixture_annihilates_iff` proves that
+the mixture annihilates every normalized residue exactly when the shifted
+parameter is an actual zeta zero. An actual zero
+`s = beta + i*gamma`, with `1/2 < beta < 1`, also supplies an explicit positive
+lower bound for the sharp first-coordinate tail gap:
+
+```text
+(2*beta-1) * 2^(2*beta-1) * |1-2^(-s)|^2 / |s|^2 <= firstCoordinateTailGap.
+```
+
+These are exact identities, energy estimates, and implications from a stated
+zero. They do not establish the existence of an off-line zero or prove or
+disprove RH. The classical implication from RH to density of the actual
+residue span remains an explicit formalization dependency in the full
+gap/RH equivalences. See `RiemannResearch/THEOREM_CATALOG.md` and
+`RiemannResearch/RH/RHToDensityDependencyAudit20260921.md` for exact scope.
+
 ## Reproducibility
 
 `lean-toolchain`, `lakefile.toml`, and `lake-manifest.json` pin the

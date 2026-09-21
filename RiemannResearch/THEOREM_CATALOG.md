@@ -1,5 +1,89 @@
 # Theorem catalog
 
+### Cauchy frequency mixtures and explicit zero-to-gap bounds (2026-09-21)
+
+Modules: `RH/CauchyFourierTransform`, `RH/CauchyFrequencyMoments`,
+`RH/CauchyMellinMixture`, `RH/CauchyMixtureEscape`,
+`RH/PowerCellMassSummation`, `RH/MellinModeEnergyBounds`,
+`RH/MellinModeTailCauchy`, and `RH/MellinZeroQuantitativeGap`.
+
+**Established:** `cauchyMellinMixture_eq_mellinMode` identifies the actual
+coordinate mixture against `cauchyMeasure gamma delta` with the Mellin mode
+at `verticalPoint (1/2 + delta) gamma`, for positive scale. The more general
+identity `cauchyMeasure_integral_mellinMode` shifts any real part `sigma`
+to `sigma + delta`. Every displayed coordinate integral is absolutely
+integrable; the corresponding ordinary Cauchy-density/Lebesgue identity is
+also proved. No Hilbert-valued integral of the individual critical modes is
+asserted.
+
+**Established:** `cauchyMeasure_noAtoms` and `cauchyMeasure_countable_null`
+show that positive-scale Cauchy measures are atomless and give every countable
+frequency set measure zero. Their support is the entire real line and no
+bounded frequency band has full measure.
+`cauchyMeasure_integrable_abs_rpow` proves finiteness of every absolute
+moment of order `0 <= alpha < 1`, for arbitrary location and positive scale.
+The first absolute moment and the critical-amplitude first moment are
+infinite. This identifies precisely why this continuous construction lies
+outside both the compact-frequency and countable pure-point hypotheses.
+`cauchyMellinMixture_frequency_obstructions` packages failure of the actual
+compact-data predicate, countable almost-everywhere support, and the critical
+first-moment condition for this same Cauchy mixture.
+
+**Established:** for `beta > 1/2` and `a > 0`,
+`powerCellMass_hasSum` proves genuine summability of the actual integrals
+over `[n+a,n+a+1]`, with exact sum
+`a^(1-2*beta)/(2*beta-1)`. Weighted cell Cauchy--Schwarz then proves
+absolute Pareto square summability of each Mellin mode with
+`Re(s)>1/2` and the bounds
+
+```text
+sum_n paretoWeight n * norm(mellinMode s n)^2
+  <= norm(s)^2 / (2*Re(s)-1),
+sum_k paretoWeight (k+1) * norm(mellinMode s (k+1))^2
+  <= norm(s)^2 * 2^(1-2*Re(s)) / (2*Re(s)-1).
+```
+
+The sums include the complete sequence and complete first-coordinate tail,
+respectively. `cauchyMellinMixture_energy_summable`,
+`cauchyMellinMixture_energy_le`, and `cauchyMellinMixture_energy_pos` give
+positive finite energy with upper bound `norm(s)^2/(2*delta)` for every
+positive-scale Cauchy mixture. `cauchyMellinMixture_energy_contrast` proves
+this simultaneously with infinite energy for every constituent critical
+mode. These are coordinate integrals, so no Hilbert-valued integrability
+of the constituent modes is used.
+
+**Established:** `cauchyMellinMixture_residuePairing` computes each actual
+pairing as `(1/d - d^(-s))*zeta(s)`. For `0 < delta < 1/2`,
+`cauchyMellinMixture_annihilates_iff` proves simultaneous vanishing of every
+normalized residue pairing if and only if `zeta(s)=0`, where
+`s=1/2+delta+i*gamma`.
+
+**Established conditional implication:**
+`TailCapacity.firstCoordinateTailGap_lower_bound_of_zeta_zero` assumes
+only an actual zero `riemannZeta s = 0` and `1/2 < Re(s) < 1`. It proves
+
+```text
+(2*Re(s)-1) * 2^(2*Re(s)-1) * norm(1 - (2:Complex)^(-s))^2 / norm(s)^2
+  <= firstCoordinateTailGap.
+```
+
+`firstCoordinateTailGap_pos_of_zeta_zero` proves strict positivity under
+the same hypotheses. The argument uses the actual complex tail pairing,
+retains every signed coefficient direction, and supplies all norm and
+convergence estimates; it assumes no separate analytic provider or
+hypothetical certificate. This is a quantitative bound obtained from exact
+cell integrals, not a claim that the displayed bound is optimal.
+
+**Open formalization:** `RiemannHypothesis -> closedSpace = top` remains
+explicit in the converse gap/RH equivalences. The present zero-to-gap
+theorems neither assume nor discharge that provider. Its classical analytic
+dependencies are recorded in `RH/RHToDensityDependencyAudit20260921.md`.
+
+**Open mathematical endpoint:** no off-line zeta zero is constructed, and
+the unrestricted gap is not shown positive or zero. No RH proof or disproof
+is claimed. The Cauchy coordinate identity alone does not supply the
+arithmetic annihilation equations.
+
 ### Sharp tail gap and Mellin mixture obstructions (2026-09-21)
 
 Core modules: `RH/FirstCoordinateTailGap`, `RH/TailMinimumConvergence`,
