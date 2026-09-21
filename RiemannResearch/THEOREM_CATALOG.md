@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Dyadic repair obstruction and admissible reciprocal head (2026-09-21)
+
+**Established:** `RH/ParetoOddMomentDyadicRepair` identifies the three-scale
+repair with R=I-2T_2. It proves its exact signed energy and the bound
+||Rf|| >= (2sqrt(2)-1)||f||. Repaired odd-moment-one mixtures have a
+positive full-energy floor, and repeated repairs give a geometric lower
+bound. Vanishing Mellin value at s=2 is compatible with norm expansion.
+
+**Established:** `RH/ParetoOddMomentHeadNormalization` proves
+<F_c,z_2>=h(c)-kappa*J(c), where kappa=pi^2/(pi^2-8).
+Thus J=1 and h=0 force energy at least kappa^2/||z_2||^2>0 for arbitrary
+signed full-dictionary coefficients. Changing only the modulus-two
+coefficient by 2(kappa*J-h) preserves J and sets h=kappa*J exactly.
+The full correction energy and a dictionary-independent norm bound
+are proved. Small-tail existence with J=1 is equivalent to small-tail
+existence with J=1 and h=kappa.
+
+**Open:** construct these signed witnesses, equivalently prove Q_n
+unbounded. Their existence remains the premise of the existing RH
+endpoint. No RH, not-RH, density or zero provider is added.
+DPP sampling is not used; no new arithmetic benefit was established.
+
 ### Odd-moment matched dyadic obstruction and repair (2026-09-21)
 
 **Established:** `RH/ParetoOddMomentDyadicObstruction` constructs the actual
@@ -16,9 +38,10 @@ initial head cancellation and the odd coefficient moment while its actual
 Mellin transform at s=2 is exactly zero. This repairs one bounded
 functional obstruction; no small-norm theorem is asserted.
 
-**Open:** prove vanishing full signed energy for normalized repaired
-combinations or for the unrestricted odd Schur optimizer. The matched
-dyadic lower bound does not apply to the unrestricted Schur complement.
+**Resolved negatively:** the normalized three-scale repaired combinations
+cannot have vanishing energy; see the dyadic repair continuation above.
+**Open:** small-energy witnesses for the unrestricted odd Schur optimizer.
+The restricted packet bounds do not apply to that full Schur problem.
 No RH, density, or zeta-zero existence premise is used in the new results.
 
 ### Odd-moment parity elimination and sign obstruction (2026-09-21)

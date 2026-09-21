@@ -180,9 +180,18 @@ not-RH hypothesis, density provider, or zeta-zero-existence input is added.
 The statements about small-energy witness existence remain equivalences
 or conditional consequences: no such witness family has been constructed.
 
-The single publishing checkpoint validates the installed modules and their
-local reverse dependents. Its completed receipt is appended to the exported
-handoff after publication.
+The publishing checkpoint validated both installed modules against their
+declared imports and published their exports and research report.
+It returned `state: succeeded`, `committed: true`, and `pushed: true`.
+Job: `job_WRNQpwowDgDtpPhWA75pRysLdkbSrFN8`.
+Code publication commit: `a923ff6c4ec38d8062bf2c7505433d03a5dcd4b2`.
+The affected-module build/cache phase took 55.499 seconds; the complete
+checkpoint took 65.139 seconds. Cosmetic style warnings remain, with no
+compilation errors. No separate full-project build was submitted.
+
+The theorem-catalog patch initially failed before that checkpoint, so a
+separate documentation-only checkpoint records the corrected catalog and
+this completed receipt. It does not change or reverify the Lean source.
 
 Workspace resume token: `ws_iIiyKm3NO1JdN1JglnG5AR-O6kIsmqB4`.
 
