@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Joint arithmetic obstruction under failure of RH (2026-09-21)
+
+Module: `RH/RHFalseJointObstruction.lean`.
+
+**Established:** `Pareto.not_RH_joint_arithmetic_obstruction` assumes only
+`¬ RiemannHypothesis`. One actual right-half-strip zeta zero simultaneously
+forces a Chebyshev-Mellin pole, strictly positive vacancy floors at every
+integer site and every finite projection stage, an exact oscillatory
+exact-head energy lower bound, and the canonical certificate's Mellin identity.
+The same canonical certificate satisfies every residue observation, is the
+unique minimum-energy certificate, is the finite tail-capacity limit in energy,
+has square-summable but nonsummable signed tails, lacks the stated additive
+partial-sum summability, and has both signs arbitrarily far out.
+Weighted limiting holes are nonsummable, exact-head energy eventually exceeds
+every constant multiple of one positive power, and the full uniform signed
+Schur target fails.
+
+The isolated combined theorem passed Lean with only `propext`,
+`Classical.choice`, and `Quot.sound`. No RH-to-density provider is assumed.
+**Open:** excluding this simultaneous obstruction; the constraints have not
+been shown contradictory. This synthesis does not claim a maximal theorem
+inventory or an RH proof.
+
 ### Coordinate Mellin defects and the unscaled RH test (2026-09-21)
 
 Modules: `Analysis/NonnegativeDeficit`, `RH/MellinCoordinateDefect`,

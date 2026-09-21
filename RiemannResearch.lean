@@ -1189,6 +1189,7 @@ import RiemannResearch.RH.CRTMeanZeroInfimum
 import RiemannResearch.RH.CRTConductorRefinement
 import RiemannResearch.RH.CanonicalTailCapacityGeometry
 import RiemannResearch.RH.RHFalseTailConstraints
+import RiemannResearch.RH.RHFalseJointObstruction
 import RiemannResearch.RH.MobiusResidualInfiniteDefects
 import RiemannResearch.RH.MobiusResidualEscape
 import RiemannResearch.RH.ExactHeadResidualTail
