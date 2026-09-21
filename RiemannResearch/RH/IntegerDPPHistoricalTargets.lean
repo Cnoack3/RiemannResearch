@@ -7,7 +7,8 @@ import RiemannResearch.RH.IntegerDPPCardinality
 Source: user-provided catalogue, groups 24--27, 2026-09-21.
 
 Every capitalized declaration in this module is a proposition *definition*,
-not a theorem and not an axiom.  No proof provider is asserted.  The events,
+not a theorem and not an axiom. PositiveFiniteHead is proved in
+IntegerDPPWindowPositivity. Other providers remain separate. The events,
 finite determinants, laws, and kernels are the actual arithmetic objects.
 This records precise remaining obligations instead of assuming conclusions
 in a purported proof.  In particular, finite determinant generating formulas
@@ -36,7 +37,7 @@ def AtLeastTwoHoles : Prop :=
   ¬ RiemannHypothesis →
     ∀ᵐ x ∂limitingLaw, ∃ i j : ℕ, i ≠ j ∧ x i = false ∧ x j = false
 
-/-- Open: positivity of every finite head event. -/
+/-- Positivity of every finite head event; proved by IntegerDPPWindowPositivity.positiveFiniteHead. -/
 def PositiveFiniteHead : Prop :=
   ∀ m : ℕ, 0 < headOccupationProbability m
 

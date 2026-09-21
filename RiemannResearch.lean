@@ -1,3 +1,6 @@
+import RiemannResearch.RH.ParetoDiagonalCardinal
+import RiemannResearch.RH.IntegerDPPWindowPositivity
+import RiemannResearch.RH.ParetoFirstPointSubpower
 import RiemannResearch.RH.ParetoIndependentEvenRH
 import RiemannResearch.Analysis.FiniteHilbertHeadConstraint
 import RiemannResearch.RH.ParetoFullContrastEnergy

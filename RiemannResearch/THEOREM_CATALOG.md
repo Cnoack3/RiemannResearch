@@ -1,5 +1,49 @@
 # Theorem catalog
 
+### Exact diagonal cardinal residues (2026-09-21)
+
+**Established:** `RH/ParetoDiagonalCardinal` defines a concrete
+three-residue vector `diagonalCardinalResidue` and proves its actual
+finite-dictionary membership, exact floor identity, upper-half head
+interpolation, and top-third doubled-coordinate matrix formula
+`C(M,j)(2*i) = indicator(i=j) - (M+1)/(j*(j+1))`.
+No RH, density, or norm estimate is assumed.
+
+The separate Cauchy-Binet/exponential determinant obstruction is an ordinary
+mathematical derivation, not a Lean theorem in this module. It does not
+settle any unrestricted energy, weighted-vacancy, or saturation endpoint.
+
+### Positive finite arithmetic windows (2026-09-21)
+
+**Established:** `RH/IntegerDPPWindowPositivity` constructs exact finite
+head interpolation in the actual residue closure using integer dilations.
+`limitingWindow_projected_basis_independent` and
+`limitingKernel_window_posDef` prove strict positive definiteness of
+every finite limiting compression. `limitingLaw_window_occupation_pos`
+proves every prescribed finite occupation event has positive probability.
+`positiveFiniteHead` is a checked provider for the formerly open
+`HistoricalTargets.PositiveFiniteHead` proposition.
+
+These declarations have no RH, zero-existence, density, or energy hypotheses.
+**Open:** saturation at one; any uniform or subpower lower bound as the
+window grows. Finite positive definiteness alone does not supply these.
+
+### First-point subpower witnesses (2026-09-21)
+
+**Established:** `RH/ParetoFirstPointSubpower.firstPoint_power_obstruction_of_not_RH`
+quantifies the complete-energy obstruction uniformly over every exact
+first-point head: if RH fails and a is nonzero, some fixed p,c>0 satisfy
+`a^2/2 + c*(N+1)^p <= ||f||^2` for all N>=1 and every f in the actual
+residue closure with the prescribed head.
+
+**Conditional research reductions:** `riemannHypothesis_of_firstPoint_head_small_power_witnesses`
+needs only one genuine witness below `c*(N+1)^p` for each p,c>0;
+`riemannHypothesis_of_firstPoint_head_subpower` specializes to a family
+whose complete squared norms divided by every positive power tend to zero.
+**Open:** construction and the full-energy estimate. No upper bound,
+vanishing weighted vacancy, spectral saturation, or RH is asserted.
+All three declarations use only ordinary Mathlib foundations.
+
 ### Independent even corrections, full block energy, and bounded first-point heads (2026-09-21)
 
 **Established:** `Analysis/FiniteHilbertHeadConstraint` proves exact
