@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Explicit exhaustive legal residue families (2026-09-21)
+
+**Established:** `RH/ResidueExhaustiveFamilies` supplies ordinary, dyadic,
+and factorial cutoffs, and the adjacent-difference dictionary. Every residue
+generator appears at a finite stage; the adjacent-difference finite spans
+equal the original finite spans exactly. The full-norm projections converge
+strongly to `closedSpace.starProjection`, and converge to each vector already
+in `closedSpace`. The exact error decomposition retains the entire limiting
+defect. The first-point defect lower bound is uniform across all cutoffs.
+
+**Established equivalence:** `tendsto_identity_iff_top` identifies convergence
+to the ambient identity with `closedSpace = top`; `tendsto_identity_iff_one`
+identifies it with convergence to the constant target alone.
+**Conditional research reduction:** `riemannHypothesis_of_identity` proves
+actual Mathlib RH from the full strong-convergence premise.
+**Open:** ambient identity convergence / residue density. No unconditional
+RH proof or formal RH-to-density converse is supplied.
+
 ### Exact diagonal cardinal residues (2026-09-21)
 
 **Established:** `RH/ParetoDiagonalCardinal` defines a concrete
