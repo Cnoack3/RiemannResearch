@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### Prime-only refinements and raw arithmetic cancellation (2026-09-21)
+
+**Established:** `RH/ParetoFactorialRefinementArithmetic` proves that the
+factorial refinement d_n is nonzero exactly when n+3 is prime. Composite
+columns of the screened cross-Gram matrix vanish, giving an exact prime-only
+column sum without removing composite dictionary rows.
+
+The exact refinement energy is D_n = E_(n+1) - E_n; at prime stages
+D_n = delta_n * E_(n+1). For raw tail-atom pairings B(n,m), every prime row
+has B(n,m)=0 above the diagonal, B(n,n)=delta_n, and
+B(n,m)=-D_m/[2(n+3)^2] below the diagonal. Earlier prime entries are negative.
+The complete raw row is (1+E_0/2)/(n+3)^2, and its ratio to the positive
+diagonal is exactly (E_0+2)/(E_n+2), tending to zero along prime stages.
+All thirteen new theorems are unconditional.
+
+**Open:** nonsummability of the actual screened row energy. The raw matrix
+already has strong arithmetic cancellation; its identities and convergence
+do not establish the screened matrix's row-energy limit or RH. The next
+arithmetic question is the effect of full-dictionary orthogonal screening.
+
 ### Full signed cross-Gram row energy (2026-09-21)
 
 **Established:** `Analysis/OrthogonalPairingEnergy` proves normalized
