@@ -325,3 +325,186 @@ remains explicit. No decimal approximation is asserted to satisfy it, and
 no axiom is introduced. The RH-to-density input attributed to Bagchi also
 remains explicit and untouched. Work stops after publishing this record,
 pending the user's exact Bagchi equation.
+
+## Continuation: infinite coprime average and exact capacity gap
+
+Date: 21 September 2026. Starting published commit:
+`dde42cb74277ded4075568dbab09abebaa6c891c`.
+
+This continuation completes the infinite-vector construction and
+infinite-family equality characterization explicitly left open in the
+original scope section. It resumes the project after the numerical-zero
+record above. It does not use a new zeta-zero existence provider or a
+Bagchi-density provider.
+
+### Exact construction
+
+Keep the original Pareto weights \(w_j=1/[j(j+1)]\). For a nonzero even
+integer \(P\), let
+
+\[
+\mathcal R_P=\{p\in\mathbb N:p\ge3,\ p\text{ odd},\ \gcd(p,P)=1\},
+\qquad
+S_P=\sum_{p\in\mathcal R_P}\frac1{p^2},
+\qquad M_P=\frac{S_P}{2}.
+\]
+
+The arithmetic series defining \(S_P\) is summable, and \(S_P>0\).
+For \(p\in\mathcal R_P\), set
+
+\[
+u_p=p(p+1)e_p-p(p-1)e_{p-1}.
+\]
+
+The original module proves \(\|u_p\|^2=2p^2\); distinct vectors in this
+odd-indexed family are orthogonal. The new construction is the genuine
+Hilbert-norm sum
+
+\[
+z_P=\frac1{M_P}\sum_{p\in\mathcal R_P}\frac{u_p}{2p^2}
+    =\sum_{p\in\mathcal R_P}\frac{u_p}{S_Pp^2}.
+\]
+
+Lean proves the `HasSum` statement for this vector series, not just
+convergence of the scalar masses. Its coefficients have `HasSum` one.
+The squared norm is exactly
+
+\[
+\boxed{\|z_P\|^2=\frac1{M_P}
+=\frac2{S_P}
+=\frac{2}{
+(\pi^2/6)\prod_{\ell\mid P,\ \ell\ {\rm prime}}(1-\ell^{-2})-1}.}
+\]
+
+The construction uses summability of squared norms of the orthogonal
+summands. It does not assume absolute summability of their vector norms.
+
+### Actual tail feasibility
+
+If every dictionary modulus \(d=2,\ldots,n+1\) divides \(P\), then
+
+\[
+\langle g_d^{\rm tail},z_P\rangle=\frac1d.
+\]
+
+The new theorem also proves \(\langle z_P,e_1\rangle=0\), retaining the
+absence of a first-coordinate component after infinite summation.
+These are statements in the original infinite Pareto Hilbert space, with
+the entire weighted tail and all the finite-dictionary observations.
+
+### Infinite-family optimality with signed coefficients
+
+Let \(a_p\) be arbitrary real coefficients such that
+\(\sum_{p\in\mathcal R_P}a_pu_p\) has Hilbert sum \(z\). The general theorem
+first proves that the scalar coefficients themselves are summable. Thus
+the normalization \(\sum_p a_p=1\) is not being imposed on an undefined or
+totalized divergent series.
+
+Under that normalization, Lean proves
+
+\[
+\boxed{\|z\|^2=\frac2{S_P}+\|z-z_P\|^2.}
+\]
+
+Consequently \(\|z\|^2\ge 2/S_P\), with equality exactly when \(z=z_P\).
+The normalized inverse-square coefficients attain the minimum. This
+extends the finite-family theorem to every convergent signed combination
+of the whole infinite coprime family.
+
+### Exact gap to the unrestricted capacity
+
+Let \(C_n=\operatorname{tailCapacity}(n)\) and
+\(z_n^{\min}=\operatorname{tailMinimum}(n)\). The existing finite-dictionary
+energy completion now applies to the constructed infinite vector:
+
+\[
+\boxed{
+\frac2{S_P}=C_n+\|z_P-z_n^{\min}\|^2.
+}
+\]
+
+The Euler-product form is also proved directly:
+
+\[
+\boxed{
+\frac{2}{
+(\pi^2/6)\prod_{\ell\mid P,\ \ell\ {\rm prime}}(1-\ell^{-2})-1}
+=C_n+\|z_P-z_n^{\min}\|^2.
+}
+\]
+
+Thus the earlier Euler bound has an explicit feasible Hilbert vector,
+and its entire slack is identified exactly. Optimality inside the coprime
+family does not assert that this vector minimizes over all feasible
+vectors. Equality with the unrestricted capacity holds precisely when
+the displayed Hilbert distance vanishes.
+
+A growing value of the left-hand side does not alone force \(C_n\) to
+diverge: the squared-distance term is still present. This continuation
+does not prove either boundedness or divergence of the capacities.
+
+### Declarations and assumptions
+
+New general module: `Analysis/OrthogonalAffineSeries.lean`.
+
+The namespace is
+`RiemannResearch.Analysis.OrthogonalAffineSeries`.
+Its reusable declarations include:
+
+- `summable_iff_sq_norm_summable`: orthogonal Hilbert summability.
+- `reciprocalEnergy_summable`, `reciprocalEnergyVector_inner`,
+  and `reciprocalEnergyVector_norm_sq`: the actual infinite vector,
+  its unit pairings, and exact energy.
+- `coefficient_hasSum`: scalar coefficient summability for every
+  convergent signed vector series in this family.
+- `affineMinimum_hasSum` and
+  `affineMinimum_coefficients_hasSum`: attainment and normalization.
+- `affine_energy_completion` and `affine_energy_eq_iff`:
+  exact infinite affine energy and uniqueness.
+
+New arithmetic module: `RH/ParetoInfiniteRoughTailCertificates.lean`.
+
+The namespace is the existing
+`RiemannResearch.RH.Pareto.CoefficientStabilization.TailCapacity`.
+Its main declarations are:
+
+- `coprimeCertificate_reciprocalEnergy_summable` and
+  `coprimeCertificate_reciprocalEnergyMass`.
+- `infiniteCoprimeCertificate_hasSum` and
+  `infiniteCoprimeCertificate_coefficients_hasSum`.
+- `infiniteCoprimeCertificate_inner_firstPoint`,
+  `infiniteCoprimeCertificate_norm_sq`, and
+  `infiniteCoprimeCertificate_observation`.
+- `infiniteCoprimeCertificate_affine_energy_completion` and
+  `infiniteCoprimeCertificate_affine_energy_eq_iff`.
+- `infiniteCoprimeCertificate_capacity_gap` and
+  `infiniteCoprimeCertificate_eulerProduct_capacity_gap`.
+
+The arithmetic hypotheses are \(P\ne0\), \(2\mid P\), and, for the finite
+dictionary assertions, \(d\mid P\) for every \(2\le d\le n+1\).
+Signed-series optimality additionally specifies the Hilbert convergence
+and scalar normalization of the trial combination. The arithmetic
+construction proves its own reciprocal-energy summability.
+No theorem in this addition assumes RH, not RH, a critical-line zero,
+or RH-to-density.
+
+### Verification and remaining frontier
+
+The proof candidates were checked serially. The key axiom audits contain
+only `propext`, `Classical.choice`, and `Quot.sound`.
+Both modules are exported from `RiemannResearch.lean`; the theorem
+catalog records their established status and separates the open capacity
+limit from the completed certificate construction.
+
+Final project acceptance is the single publishing checkpoint containing
+this section, which audits the source and builds the changed modules and
+their local reverse dependents. Its publication commit is recorded in Git.
+
+The following remain open in this record:
+
+1. Boundedness or divergence of the unrestricted \(\alpha=1\) capacities.
+2. A kernel-checked provider of an actual critical-line zeta zero for the
+   previously conditional \(0<\alpha<1\) application.
+3. The explicitly retained Bagchi RH-to-density input.
+
+The floating-point first-zero calculation recorded earlier is unchanged.

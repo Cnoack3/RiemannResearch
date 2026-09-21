@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Infinite coprime tail certificate and exact capacity gap (2026-09-21)
+
+**Established:** `Analysis/OrthogonalAffineSeries` constructs the actual
+reciprocal-energy Hilbert sum for a nonzero orthogonal family with summable
+reciprocal squared norms. It proves its unit pairings, exact norm,
+normalization and attainment, scalar coefficient summability for every
+convergent signed vector series, and the exact affine energy completion
+with unique equality case.
+
+**Established arithmetic specialization:**
+`RH/ParetoInfiniteRoughTailCertificates` constructs the whole infinite
+odd-coprime two-point average in the original Pareto Hilbert space.
+For a nonzero even common multiple P of the stage-n dictionary, it proves
+the actual finite observations, zero first-coordinate component,
+and exact energy 2/S_P, where S_P is the full coprime reciprocal-square
+sum. Every convergent signed affine combination in this family has
+energy 2/S_P plus its squared distance from the constructed average.
+
+`infiniteCoprimeCertificate_capacity_gap` and
+`infiniteCoprimeCertificate_eulerProduct_capacity_gap` identify the
+complete excess over the unrestricted capacity:
+2/S_P = tailCapacity(n) + norm(z_P - tailMinimum(n))^2.
+All Euler factors are retained. No RH, not-RH, zero-existence, or
+RH-to-density hypothesis is used by these additions.
+
+**Open:** boundedness/divergence of the unrestricted stage capacities.
+Optimality within the infinite coprime family does not discharge this
+limit, because the exact squared-distance excess can vary with the stage.
+The separate critical-line-zero and Bagchi-density providers remain open.
+
 ### Stringent conditions under failure of RH: exact additions and open coverage (2026-09-21)
 
 Full ledger: [all 35 groups](RH/NOT_RH_STRINGENT_CONDITIONS.md).
