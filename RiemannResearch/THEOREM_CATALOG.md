@@ -60,6 +60,16 @@ and constructs finite legal vectors with all those limits but full squared
 error at least N^2. Thus the optimal-projection hypothesis in the preceding
 criterion matters. Its counterexample has no PNT or RH assumptions.
 
+**Further established finite estimate:** `RH/OptimalProjectionDilationGaps`
+proves `dilationCorrection_norm_identity`, the exact sum-of-squares
+bound for W=-4I-13D+3D^2 with squared constant 5425/12, and
+`dilationCorrection_two_gap_sq_bound`. At stages m, n=4m+3,
+k=4n+3, the square of the residual pairing is at most
+(5425/12)(energy n-energy k)(energy m-energy n).
+These are the same unconstrained optimal projections as above.
+**Still open:** proving that their total Schur gain equals the initial
+error; this finite estimate does not establish zero limiting error.
+
 ### Exact signed Schur gains and fixed-head capacity density (2026-09-22)
 
 **Established:** 47 declarations in six modules. `RH/CanonicalMobiusTailIndependence`

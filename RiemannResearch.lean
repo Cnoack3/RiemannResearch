@@ -811,6 +811,7 @@ import RiemannResearch.RH.MobiusHilbertCoordinates
 import RiemannResearch.RH.MobiusCoefficientStabilization
 import RiemannResearch.RH.MobiusResidualFirstCoordinate
 import RiemannResearch.RH.OptimalTwoCoefficientCriterion
+import RiemannResearch.RH.OptimalProjectionDilationGaps
 import RiemannResearch.RH.ArgumentDoublingClosure
 import RiemannResearch.RH.BalancedCoefficientTargets
 import RiemannResearch.RH.BalancedScalarBasis
