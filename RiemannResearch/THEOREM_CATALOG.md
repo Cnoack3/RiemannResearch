@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Exact inverse-Gram Möbius correction and convergence (2026-09-22)
+
+**Established:** `RH/ResidueGramMobiusCorrection` formalizes the actual full
+Pareto inverse-Gram coefficients and their exact Möbius correction.
+Project stage n corresponds to manuscript cutoff N=n+1.
+
+- `source_apply` gives the source entry log(i+2)/(i+2).
+- `canonicalVector_apply` and `projection_eq_inverseGram_synthesis`
+  identify the inverse-Gram vector with the actual projection coefficients.
+- `canonical_decomposition` holds for every reference vector;
+  `canonical_mobius_decomposition` specializes it to the Möbius vector.
+- `correctionVector_apply` identifies the matrix correction with c+mu.
+- `correction_tendsto` proves that fixed correction limits exist.
+- `correction_tendsto_zero_iff` and `correction_limits_iff_norm` prove
+  correction decay iff Möbius coefficient convergence, and simultaneous
+  correction decay iff full unsquared Pareto norm convergence.
+
+**Conditional research reduction:**
+`GramMobiusCorrection.riemannHypothesis_of_correction_limits` concludes Mathlib RH.
+**Open:** every fixed correction tends to zero for conductors m>=2.
+The exact decomposition adds no estimate proving that limit.
+Axiom checks of the decomposition, norm equivalence, and conditional RH
+theorem report only `propext`, `Classical.choice`, and `Quot.sound`.
+The convergence hypothesis remains explicit in the RH theorem's type.
+
 ### Canonical Pareto norm convergence and closure (2026-09-22)
 
 **Established:** `RH/ParetoNormClosure` formalizes the supplied
