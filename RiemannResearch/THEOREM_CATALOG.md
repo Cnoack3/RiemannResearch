@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Exact signed Schur gains and fixed-head capacity density (2026-09-22)
+
+**Established:** 47 declarations in six modules. `RH/CanonicalMobiusTailIndependence`
+proves complete-tail injectivity, new canonical directions, and positive definite
+full-tail covariance for every finite set of distinct positive indices.
+`Analysis/FiniteGramOneStepCapacity` constructs screening for singular Gram systems
+and proves the exact one-vector gain. `RH/CanonicalMobiusOneStepCapacity` specializes
+this to actual infinite tails: eta = 1 - sum a, sigma = C_mm - a^T b, C a = b,
+capacity increment = eta^2/sigma. Every higher new index has sigma > 0.
+`RH/CanonicalMobiusWindowRecursion` proves the actual window recursion, diagonal
+initial value, and exact telescope of all signed gains.
+
+`RH/CanonicalMobiusHeadRepair` constructs continuous triangular legal head repair.
+It proves that finite legal exact-head vectors approximate every target in the
+corresponding closed affine slice, with fixed head length.
+`RH/CanonicalMobiusCapacityDensity` proves density iff conductor-capacity divergence
+at every fixed positive head, iff every such head admits capacity at least one.
+
+**Conditional research reductions:** divergence of the actual signed-gain sums at
+every fixed positive head implies actual Mathlib RH. **Open research provider:**
+that divergence, or the weaker positive cofinal capacity lower bound.
+No cumulative arithmetic numerator lower bound is supplied.
+**Open formalization providers:** the previously recorded RH-to-density converse
+and classical reciprocal Mobius cancellation. Neither is assumed by the new
+finite identities or geometric equivalences. No RH proof is claimed.
+See `RH/ParetoExactSchurContinuation20260922.md`.
+
+
 ### Canonical finite affine exhaustion and exact capacity increments (2026-09-22)
 
 **Established:** `NumberTheory/IsolatedPrimeReciprocalSum` and
