@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Canonical Pareto norm convergence and closure (2026-09-22)
+
+**Established:** `RH/ParetoNormClosure` formalizes the supplied
+`Pareto_Norm_Convergence_and_Closure_Equivalence(1).md` for the actual
+complete Pareto Hilbert space and the existing canonical residue projections.
+The project stage n corresponds to manuscript N = n + 1.
+
+- `projection_norm_error_tendsto`: the full unsquared error converges
+  unconditionally to the norm of the actual limiting residual.
+- `projection_norm_tendsto_zero_iff_mem`: error tends to zero exactly when
+  the constant target belongs to the closed residue span.
+- `projection_norm_tendsto_zero_iff_fixed_point`: equivalently, the closed-span
+  projection fixes the target.
+- `limitResidual_norm_le_projection_error`: the limiting residual norm is
+  a lower bound at every finite stage.
+- `projection_error_uniform_floor_of_not_rh`: if Mathlib RH fails, that
+  same residual norm is strictly positive and bounds all finite errors below.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_projection_norm_tendsto_zero` concludes actual Mathlib
+RH from the displayed norm limit. **Open:** a proof of that limit, or an
+independent proof of target membership. The equivalences do not provide it.
+Axiom inspection of the equivalence, conditional RH theorem, and positive-floor
+theorem reports only `propext`, `Classical.choice`, and `Quot.sound`;
+the convergence hypothesis remains visible in the RH theorem's type.
+
 ### Classical Möbius cancellation and actual residual-tail dichotomy (2026-09-22)
 
 **Established:** `RH/CanonicalMobiusPNT` supplies the previously missing

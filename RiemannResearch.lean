@@ -809,6 +809,7 @@ import RiemannResearch.RH.BalancedArithmeticCuts
 import RiemannResearch.RH.BalancedContinuousCoordinates
 import RiemannResearch.RH.MobiusHilbertCoordinates
 import RiemannResearch.RH.MobiusCoefficientStabilization
+import RiemannResearch.RH.ParetoNormClosure
 import RiemannResearch.RH.MobiusResidualFirstCoordinate
 import RiemannResearch.RH.OptimalTwoCoefficientCriterion
 import RiemannResearch.RH.OptimalProjectionDilationGaps
