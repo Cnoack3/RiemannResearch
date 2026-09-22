@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Pareto L1 convergence and the actual projection defect (2026-09-22)
+
+**Established:** `RH/ThresholdHilbertL1` defines the complete weighted
+`hilbertL1Norm`, proves its summability, and proves
+`inner_one_le_hilbertL1Norm` and `hilbertL1Norm_le_norm`.
+Thus convergence in the actual Hilbert norm implies Pareto L1 convergence.
+
+**Established:** `RH/ResidueProjectionL1` applies these bounds to the actual
+inverse-Gram projections, retaining the limiting defect D = limitEnergy.
+
+- `ProjectionSchur.energy_le_l1_error` and `l1_error_le_l2_error` prove
+  E_n <= L1_error_n <= sqrt(E_n) at every finite stage.
+- `inner_one_projection_tendsto` and `projection_norm_sq_tendsto` give
+  the unconditional first and second moment limits 1-D.
+- `energy_expansion` and `expanded_energy_tendsto` show that the expanded
+  squared error tends to 1-2(1-D)+(1-D)=D.
+- `projection_l1_tendsto_limit` gives unconditional L1 convergence to
+  the closed-span projection of one.
+- `l1_error_tendsto_zero_iff_limitEnergy_zero`,
+  `l1_error_tendsto_zero_iff_l2`, and
+  `l1_error_tendsto_zero_iff_closed_span` give the precise equivalences.
+- `projection_tendsto_one_of_limitEnergy_zero` retains D=0 explicitly.
+
+**Conditional research reduction:**
+`ProjectionSchur.riemannHypothesis_of_projection_l1_tendsto_zero`.
+**Open:** L1 convergence of these projections to one, equivalently D=0.
+The convergence audit does not establish this assertion. The L1 and L2
+equivalences do not provide an unconditional RH proof.
+Representative snippet axiom audits report only `propext`,
+`Classical.choice`, and `Quot.sound`; the RH theorem retains its
+explicit convergence hypothesis.
+
 ### Infinite Schur tails and relative-gain saturation (2026-09-22)
 
 **Established:** `RH/ResidueSchurLimits` continues the full-Pareto Schur

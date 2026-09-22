@@ -179,6 +179,7 @@ import RiemannResearch.RH.ResidueGramCofactors
 import RiemannResearch.RH.ResidueGramMobiusCorrection
 import RiemannResearch.RH.ResidueProjectionSchur
 import RiemannResearch.RH.ResidueSchurLimits
+import RiemannResearch.RH.ResidueProjectionL1
 import RiemannResearch.RH.ResidueGramDigamma
 import RiemannResearch.RH.ResidueGramModeIdentities
 import RiemannResearch.RH.ResidueSmallGram
@@ -935,6 +936,7 @@ import RiemannResearch.RH.ThresholdAffinePhaseLimit
 import RiemannResearch.RH.ThresholdHilbertDilation
 import RiemannResearch.RH.ThresholdHilbertLegal
 import RiemannResearch.RH.ThresholdHilbertMean
+import RiemannResearch.RH.ThresholdHilbertL1
 import RiemannResearch.RH.ThresholdHilbertAdjoint
 import RiemannResearch.RH.ThresholdHilbertProjection
 import RiemannResearch.RH.ThresholdUniformAffineOperator
