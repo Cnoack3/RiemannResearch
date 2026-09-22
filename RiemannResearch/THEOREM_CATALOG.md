@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Infinite Schur tails and relative-gain saturation (2026-09-22)
+
+**Established:** `RH/ResidueSchurLimits` continues the full-Pareto Schur
+recursion into exact infinite sums, retaining the limiting defect.
+
+- `ProjectionSchur.schur_gain_hasSum`, `schur_gain_tail_hasSum`, and
+  `energy_eq_limit_add_schur_tail` prove that the total Schur gain is
+  1 - limitEnergy and its tail is energy n - limitEnergy.
+- `schur_gain_after_two_hasSum` removes the exact first gain log 2.
+- `schur_gain_tail_eq_projection_distance` and
+  `coefficient_error_bound_schur_tail` identify what the tail controls.
+- `captured_tendsto` proves the unconditional captured-energy limit.
+- `finite_energy_factorial_floor` and `finite_energy_pos` prove a
+  positive finite-stage error using the common multiple (n+1)!.
+- `projectionRelativeGain_eq_schur`, `relativeGain_lt_one`, and
+  `energy_relativeGain_product` give the exact normalized Schur gains
+  and survival product without a not-RH assumption.
+- `energy_zero_iff_relativeGain_not_summable` and
+  `schur_saturation_iff_relativeGain_not_summable` prove the exact
+  infinite-product criterion for this actual residue chain.
+- `coefficient_total_variation_summable` proves unconditional finite
+  total variation of every fixed canonical coefficient.
+
+**Conditional research reductions:**
+`riemannHypothesis_of_schur_saturation` and
+`riemannHypothesis_of_relativeGain_not_summable`.
+**Open:** total Schur gain equals 1, equivalently the actual relative
+gains are not summable. These are explicit hypotheses, not providers.
+No unconditional RH conclusion is asserted.
+Representative axiom audits return only `propext`, `Classical.choice`,
+and `Quot.sound`; the RH theorem still has its open hypothesis.
+
+
 ### Full-Pareto minimizer and exact Schur recursion (2026-09-22)
 
 **Established:** `RH/ResidueProjectionSchur` proves the unique full-norm
