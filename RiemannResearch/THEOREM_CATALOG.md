@@ -45,6 +45,29 @@ The proof uses almost-sure arithmetic exclusion and countable additivity.
 the exact closed expression for `qN 2` in log(2), log(3), and pi/sqrt(3).
 `RH/ResidueSmallGram.progressionWeight_six_one` supplies the exact full
 class weight. These are unconditional statements about the actual DPP.
+
+**Established (2026-09-22):** `RH/IntegerDPPResidueAccounting` gives the
+actual DPP kernel-increment recurrence, and exact telescoping from `qN 1=1`.
+The nonnegative entry and retention-loss series are summable, with total
+entry at most total loss and total loss at most `log(2*log 2)<log 2<1`.
+`qN_liminf_eq_entry_loss` computes the actual limit/liminf as one plus total
+entry minus total loss, using direct recurrence accounting.
+
+**Established:** `RH/IntegerDPPResiduePrimePowers` proves the canonical
+modulus is unchanged exactly when `vonMangoldt (N+2)=0`; at a prime power
+`N+2=p^(k+1)` it is multiplied by p. Non-prime-power steps have retention
+factor one, zero loss, and nondecreasing qN. All losses are prime-power
+losses. The infinite prime-power entry sum is less than one, and the
+infinite prime-power loss sum is less than log two. These sums start at N=1.
+
+**Established limitation:** `retentionOnly_liminf_lt_one` verifies a scalar
+comparison sequence with the same actual arithmetic weights, initial value
+one, retention recurrence, and values in (0,1], whose limit is
+`1/(2*log 2)<1`. It is not asserted to be the arithmetic DPP.
+**Open:** equality of the actual total entry and total loss. By
+`qN_liminf_eq_one_iff_entry_eq_loss`, this is exactly the remaining assertion
+for liminf qN equal to one. No unconditional saturation or RH proof is supplied.
+
 **Open:** the limiting assertion `qN N → 1`; none of these identities
 asserts saturation or proves RH.
 

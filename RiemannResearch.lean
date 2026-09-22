@@ -8,6 +8,8 @@ import RiemannResearch.RH.RamanujanFiniteSpanBridge
 import RiemannResearch.RH.IntegerDPPPacketRankTwo
 import RiemannResearch.RH.IntegerDPPResidueSmallValues
 import RiemannResearch.RH.IntegerDPPResidueProbability
+import RiemannResearch.RH.IntegerDPPResidueAccounting
+import RiemannResearch.RH.IntegerDPPResiduePrimePowers
 import RiemannResearch.RH.ParetoIndependentEvenDefect
 import RiemannResearch.RH.ResidueExhaustiveFamilies
 import RiemannResearch.RH.ParetoDiagonalCardinal
