@@ -131,6 +131,38 @@ The heavy-tail theorem does not exclude all possible nonzero annihilators.
 No RH proof is supplied; the separate RH-to-density converse remains unformalized.
 See `RH/ParetoSingleHeadProjectionContinuation20260922.md`.
 
+### Compressed-dilation reconstruction and a single cyclic obstruction (2026-09-22)
+
+**Established:** 19 theorem declarations in two modules.
+`Analysis/ContractiveNeumannReconstruction` proves the exact finite Neumann
+remainder, its geometric squared-norm bound, and strong convergence under an
+explicit global squared-contraction hypothesis.
+`RH/ParetoResidualDilation` discharges that hypothesis for the actual
+compressed unscaled integer dilations A_B = P_(S^perp) U_B. It proves
+A_B A_C = A_(BC), A_B P_(S^perp) = A_B, and
+||A_B x||^2 <= ||x||^2/B.
+
+For the actual first-head defect rho and canonical residual r it proves
+rho = r - A_2 r, the exact finite remainder
+r - sum_(j<M) A_2^j rho = A_2^M r, the error bound
+||r - sum_(j<M) A_2^j rho||^2 <= 2^(-M) limitEnergy, and strong convergence.
+The theorem `annihilator_eq_zero_of_inner_firstHead_orbit_zero` proves that
+z in S^perp orthogonal to every A_B rho must vanish. Thus the orbit separates
+the whole annihilator space; the checked statement is this exact separation
+criterion.
+
+All actual RH-module results are unconditional. The reconstruction terms
+belong to S^perp and converge to the possible obstruction r.
+**Open research provider:** an estimate forcing rho = 0, such as the already
+recorded bounded cofinal normalized-tail condition or first-head capacity
+divergence. The contraction equation contains the forcing term rho and does
+not prove RH. No missing arithmetic estimate is marked established.
+
+The combined source check `job_geHw5Bsra-F-98k2VqZheRjR7QZBZvto` passed with
+exit code 0, verified true, and no warnings. Principal axiom audits report only
+`propext`, `Classical.choice`, and `Quot.sound`.
+See `RH/ParetoResidualDilationContinuation20260922.md`.
+
 ### Canonical finite affine exhaustion and exact capacity increments (2026-09-22)
 
 **Established:** `NumberTheory/IsolatedPrimeReciprocalSum` and
