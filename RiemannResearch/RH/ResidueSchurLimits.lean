@@ -16,7 +16,7 @@ All norms and Gram entries are the complete infinite Pareto quantities.
 Established: exact Schur tail sums, finite-stage error positivity, an exact
 survival product, and the equivalence of zero limiting error with
 nonsummability of the actual relative gains.
-Conditional research reductions: the two RH implications at the end.
+Conditional research reductions: the RH implications in this module.
 Open: Schur saturation, equivalently nonsummability of the relative gains.
 No such arithmetic estimate is assumed to have been proved.
 -/
@@ -101,6 +101,45 @@ theorem captured_tendsto :
   simpa only [he] using
     (tendsto_const_nhds.sub energy_tendsto :
       Tendsto (fun n => 1 - energy n) atTop (𝓝 (1 - limitEnergy)))
+
+/-- Q tends to one exactly when the actual limiting projection defect vanishes. -/
+theorem captured_tendsto_one_iff_limitEnergy_zero :
+    Tendsto captured atTop (𝓝 1) ↔ limitEnergy = 0 := by
+  constructor
+  · intro h
+    have he := tendsto_nhds_unique captured_tendsto h
+    linarith
+  · intro hD
+    simpa only [hD, sub_zero] using captured_tendsto
+
+theorem captured_tendsto_one_iff_norm :
+    Tendsto captured atTop (𝓝 1) ↔
+      Tendsto (fun n => ‖hilbertOne - projection n‖) atTop (𝓝 0) :=
+  captured_tendsto_one_iff_limitEnergy_zero.trans
+    (limitEnergy_zero_iff_mem.trans projection_norm_tendsto_zero_iff_mem.symm)
+
+/-- Existence of coefficient limits is unconditional; their Mobius values
+are equivalent to saturation of the complete inverse-Gram captured energy. -/
+theorem captured_tendsto_one_iff_coefficients_tendsto_mobius :
+    Tendsto captured atTop (𝓝 1) ↔
+      ∀ d : ℕ, 1 < d →
+        Tendsto (fun n => coefficient n d) atTop
+          (𝓝 (-(ArithmeticFunction.moebius d : ℝ))) := by
+  exact (captured_tendsto_one_iff_limitEnergy_zero.trans
+    limitEnergy_zero_iff_mem).trans
+    (coefficients_tendsto_mobius_iff.trans limitCoefficients_eq_mobius_iff_mem).symm
+
+theorem captured_tendsto_one_iff_correction_tendsto_zero :
+    Tendsto captured atTop (𝓝 1) ↔
+      ∀ d : ℕ, 1 < d →
+        Tendsto (fun n => GramMobiusCorrection.correction n d) atTop (𝓝 0) :=
+  captured_tendsto_one_iff_norm.trans GramMobiusCorrection.correction_limits_iff_norm.symm
+
+/-- Conditional research reduction. Q -> 1 remains an explicit open hypothesis. -/
+theorem riemannHypothesis_of_captured_tendsto_one
+    (h : Tendsto captured atTop (𝓝 1)) : RiemannHypothesis :=
+  riemannHypothesis_of_projection_norm_tendsto_zero
+    (captured_tendsto_one_iff_norm.mp h)
 
 theorem schur_saturation_iff_norm :
     (∑' j, (schurEta j)^2 / schurSigma j) = 1 ↔

@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Captured energy and coefficient convergence equivalences (2026-09-22)
+
+**Established:** `RH/ResidueSchurLimits` now proves:
+
+- `ProjectionSchur.captured_tendsto_one_iff_limitEnergy_zero`;
+- `captured_tendsto_one_iff_norm`;
+- `captured_tendsto_one_iff_coefficients_tendsto_mobius`;
+- `captured_tendsto_one_iff_correction_tendsto_zero`.
+
+These are unconditional equivalences of propositions, not unconditional
+assertions that Q tends to one or that the fixed coefficient limits have
+their Mobius values. The existing `coefficient_tendsto` proves existence of
+every fixed limit. The exact Schur recurrence and inverse-Gram Mobius
+decomposition remain unchanged.
+
+**Conditional research reduction:** `riemannHypothesis_of_captured_tendsto_one`.
+**Open arithmetic assertion:** Q tends to one, equivalently the full
+Pareto error tends to zero or all fixed Mobius corrections vanish.
+
+**Separate formalization gap:** the current project has approximation => RH;
+its classical reverse direction RH => membership of one in the closed
+residue span is not yet supplied by a checked provider. This gap is exposed
+explicitly in `MellinDeficitRHTest` and `FirstCoordinateTailGap`.
+The new theorems do not assert a provider-free equivalence with RH.
+Representative snippet checks pass and report only standard Lean axioms.
+
 ### Coefficient limits imply zero defect and the full RH chain (2026-09-22)
 
 **Conditional research reductions:** `RH/ResidueProjectionL1` now includes
