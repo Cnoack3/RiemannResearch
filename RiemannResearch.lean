@@ -13,6 +13,9 @@ import RiemannResearch.RH.CanonicalMobiusOneStepCapacity
 import RiemannResearch.RH.CanonicalMobiusHeadRepair
 import RiemannResearch.RH.CanonicalMobiusCapacityDensity
 import RiemannResearch.RH.CanonicalMobiusWindowRecursion
+import RiemannResearch.RH.ParetoFiniteHeadDilation
+import RiemannResearch.RH.CanonicalMobiusWindowDuality
+import RiemannResearch.RH.CanonicalMobiusFixedHeadLimit
 import RiemannResearch.Analysis.FiniteGramCapacityIncrement
 import RiemannResearch.RH.CanonicalMobiusCapacityIncrement
 import RiemannResearch.RH.CanonicalMobiusWindowMinimum

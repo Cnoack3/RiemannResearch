@@ -65,6 +65,41 @@ geometric equivalences. No RH proof is claimed.
 See `RH/ParetoExactSchurContinuation20260922.md`.
 
 
+### One fixed head and the attained infinite capacity dual (2026-09-22)
+
+**Established:** 34 declarations in three modules.
+`RH/ParetoFiniteHeadDilation` proves the exact finite-head dilation identity,
+the two-sided residual pairing bound
+`(1 - 1/sqrt(N+1))*delta <= h_N <= (1 + 1/sqrt(N+1))*delta`,
+positive residual pairing at EVERY positive head, and the uniform all-family
+capacity bound `capacity <= T_N / (delta^2*(1-1/sqrt(N+1))^2)` when delta>0.
+Membership of any one positive head indicator is equivalent to full legal density.
+
+`RH/CanonicalMobiusWindowDuality` identifies bounded fixed-head capacities
+with existence of a common infinite normal witness. The actual finite normals
+converge strongly; their limiting energy equals the capacity supremum.
+The infinite minimum is attained and unique, with exact finite and infinite
+Pythagorean remainders. A nonzero actual residual supplies an explicit common
+normal at every positive head; not RH therefore gives finite normal limits.
+
+`RH/CanonicalMobiusFixedHeadLimit` identifies inverse capacity with the
+optimizer's squared distance to the finite head indicator. It proves that,
+for ANY ONE fixed N>=1, density is equivalent to capacity divergence and to
+divergence of that single exact signed Schur-gain series.
+Bounded capacity at any one head is equivalent to failure of legal density;
+mixed bounded/divergent behavior between positive heads is impossible.
+Under not RH, every fixed-head gain series has an exact finite normal-energy limit.
+
+**Conditional research reduction:** divergence of the single gain series at
+N=1 implies actual Mathlib RH. **Open research provider:** this divergence,
+equivalently exclusion of the corresponding infinite common normal.
+No such exclusion, residual vanishing, or RH proof is supplied.
+The separate RH-to-density converse remains a formalization provider.
+The concurrent `RH/CanonicalMobiusPNT` now supplies unconditional reciprocal
+Mobius cancellation; neither input is assumed by these new results.
+See `RH/ParetoSingleHeadDualityContinuation20260922.md`.
+
+
 ### Canonical finite affine exhaustion and exact capacity increments (2026-09-22)
 
 **Established:** `NumberTheory/IsolatedPrimeReciprocalSum` and
