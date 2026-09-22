@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Exact Ramanujan coordinates, periodic Green inverse, and qN (2026-09-22)
+
+**Established:** `RH/IntegratedRamanujanMarkedArithmetic` proves the head
+value `-mu(q)`, nonsquarefree head vanishing, prime-power floor formulas,
+full Pareto norm scaling, and common-prime-power correlation scaling.
+`RH/ParetoPeriodicPacketGreen` proves the complete finite-period Green
+identity, including the zero-boundary version on `1,...,L-1`.
+`LinearAlgebra/WeightedGreenInverse` proves the Green action, inverse flux
+formula, tridiagonal rows, and exact weighted Dirichlet identity.
+
+**Established:** `Analysis/FiniteGramBasisInvariance` and
+`RH/RamanujanFiniteSpanBridge` prove equality of the actual finite residue
+and packet spans and capacities. `qN_eq_packetInverseGram` identifies the
+existing DPP probability with `W_L(1) * mu^T Xi^(-1) mu`.
+`residue_inverseGram_eq_packetInverseGram` proves the corresponding exact
+identity for `b^T G^(-1) b`. The actual Gram inverse follows from independence.
+
+**Established algebra:** `LinearAlgebra/RankTwoWoodbury` proves the explicit
+two-variable elimination from an actual symmetric rank-two matrix identity.
+`RH/IntegerDPPPacketRankTwo` defines the finite cotangent sum and its double
+Mobius-divisor core, and proves the core's symmetry.
+
+**Conditional research reductions:** `RH/IntegratedRamanujanRankTwo` and
+`RH/IntegerDPPPacketRankTwo` apply that algebra to the actual arithmetic
+Gram and the canonical `qN`. **Open providers:** the proposed cotangent
+identification of the full Gram, a symmetric inverse for that core at each
+relevant finite stage, and nonvanishing of the small Schur denominator.
+These are explicit hypotheses; the desired marked quadratic is derived.
+**Open:** `qN N -> 1` and RH. Neither is asserted by this addition.
+The complete informal calculation and formal coverage ledger are recorded
+in `RH/RamanujanGreenSchurFormalization20260922.md`.
+
 ### Exact residue-class DPP probabilities (2026-09-21)
 
 **Established:** `RH/IntegerDPPResidueProbability` proves that the actual
