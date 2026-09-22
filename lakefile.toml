@@ -10,6 +10,11 @@ weak.linter.mathlibStandardSet = true
 maxSynthPendingDepth = 3
 
 [[require]]
+name = "PrimeNumberTheoremAnd"
+git = "https://github.com/AlexKontorovich/PrimeNumberTheoremAnd.git"
+rev = "a5154676af9aa3095150ee410cdda80555aa0642"
+
+[[require]]
 name = "mathlib"
 scope = "leanprover-community"
 rev = "v4.33.0-rc2"

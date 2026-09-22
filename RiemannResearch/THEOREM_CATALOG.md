@@ -1,5 +1,41 @@
 # Theorem catalog
 
+### Classical Möbius cancellation and actual residual-tail dichotomy (2026-09-22)
+
+**Established:** `RH/CanonicalMobiusPNT` supplies the previously missing
+unconditional theorem `mobiusReciprocalSum_tendsto_zero` and
+`canonicalMobiusHilbert_sublinear`. The formal proof uses the local PNT+ compatibility port
+`NumberTheory/PrimeNumberTheorem/{Fourier,Defs,Wiener,Consequences}`,
+adapted from commit `a5154676af9aa3095150ee410cdda80555aa0642`.
+It preserves the project's Lean/Mathlib version and reuses the existing
+Fourier, Sobolev, and logarithm ports plus pinned upstream smooth-function
+and asymptotic support. Three unused alternative decay declarations with
+incomplete upstream proofs are omitted. The adapter converts
+`mu_pnt_alt`'s real cutoff to the project's inclusive positive Möbius sum. The ordinary normalized
+Möbius limit follows from the existing Cesàro identity.
+
+Mathematical reference: Terence Tao, *A remark on partial sums involving
+the Möbius function*, arXiv:0908.4323, introduction, equation (1).
+Tao records the classical PNT-equivalent limit, attributed to Landau;
+the elementary bound alone does not imply it.
+
+**Established:** `RH/ParetoResidualTailDichotomy` proves
+`actual_normalized_residual_tail_dichotomy`: the actual projection
+residual is zero and all normalized tail energies are zero, or the residual
+is nonzero and `N * residualTailEnergy N -> atTop`.
+It also proves `not_RH_normalized_residual_tail_tendsto_atTop`.
+
+**Verification:** the combined Lean proof check reports only `propext`,
+`Classical.choice`, and `Quot.sound` for `mu_pnt_alt`, the concrete reciprocal
+limit, the actual-residual dichotomy, and the bounded-tail-to-RH implication.
+
+**Conditional research reductions:**
+`limitResidual_zero_of_frequently_bounded_actual_tail` and
+`riemannHypothesis_of_frequently_bounded_actual_tail` need only a bounded
+cofinal subsequence of the normalized actual residual tails.
+**Open:** that tail upper-bound provider. RH-to-zero-residual is not claimed
+by this module; the separate RH-to-density formalization obligation remains.
+
 ### Exact signed Schur gains and fixed-head capacity density (2026-09-22)
 
 **Established:** 47 declarations in six modules. `RH/CanonicalMobiusTailIndependence`
@@ -22,9 +58,10 @@ at every fixed positive head, iff every such head admits capacity at least one.
 every fixed positive head implies actual Mathlib RH. **Open research provider:**
 that divergence, or the weaker positive cofinal capacity lower bound.
 No cumulative arithmetic numerator lower bound is supplied.
-**Open formalization providers:** the previously recorded RH-to-density converse
-and classical reciprocal Mobius cancellation. Neither is assumed by the new
-finite identities or geometric equivalences. No RH proof is claimed.
+**Open formalization provider:** the previously recorded RH-to-density converse.
+Classical reciprocal Möbius cancellation is now supplied by
+`RH/CanonicalMobiusPNT`. Neither is assumed by these finite identities or
+geometric equivalences. No RH proof is claimed.
 See `RH/ParetoExactSchurContinuation20260922.md`.
 
 
@@ -49,7 +86,7 @@ Singular Gram systems and noninjective family maps remain allowed.
 
 **Open research provider:** a positive cofinal lower bound for window
 capacity, equivalently sufficient bounded cofinal exact-head energies.
-**Open formalization provider:** the classical limit m_N → 0.
+The classical limit m_N → 0 is now supplied by `RH/CanonicalMobiusPNT`.
 Finite nonvanishing and spanning are discharged; no RH proof is claimed.
 See `RH/ParetoAffineExhaustionContinuation20260922.md`.
 
@@ -72,7 +109,8 @@ applies it to family enlargement and proves the exact fixed-family cutoff law
 `normalized_capacity_tendsto_atTop_of_reciprocal_cancellation` proves
 `N * capacity_N -> atTop` when the family eventually contains index N and
 `mobiusReciprocalSum -> 0`.
-**Open formalization provider:** unconditional reciprocal Mobius cancellation.
+The classical premise is now supplied by `RH/CanonicalMobiusPNT` through
+`mobiusReciprocalSum_tendsto_zero`.
 **Open research provider:** a fixed positive cofinal capacity lower bound.
 These bounds permit capacity to tend to zero; RH is not proved.
 See `RH/ParetoCapacityBoundsContinuation20260922.md` for exact coverage.
@@ -97,10 +135,11 @@ M(N)/N tends to zero. The sublinear-energy theorem thus needs only m_N -> 0.
 
 **Conditional research reductions:** a fixed positive capacity lower bound
 along arbitrarily large cutoffs implies Mathlib RH, without a PNT premise.
-Reciprocal Möbius cancellation together with bounded cofinal normalized
-residual tails also implies RH.
+`RH/ParetoResidualTailDichotomy` now supplies the corresponding RH reduction
+from bounded cofinal normalized residual tails alone, using the classical
+limit proved in `RH/CanonicalMobiusPNT`.
 **Open:** the positive cofinal capacity lower bound or residual-tail upper
-bound. **Open formalization provider:** the classical limit m_N -> 0.
+bound.
 No RH proof or vanishing projection residual is asserted. Exact declarations
 and verification are recorded in `RH/ParetoCovarianceMinimumContinuation20260922.md`.
 
@@ -136,8 +175,9 @@ Its precise hypotheses are M(N)/N→0 and m_N=Σ(d≤N)μ(d)/d→0.
 `canonical_normalized_tail_tendsto_atTop_of_mobius_cancellation`
 uses this result for the actual residual, without an extra energy premise.
 
-**Open formalization providers:** checked proofs of the two classical PNT
-cancellation inputs. They remain explicit theorem hypotheses.
+The two classical cancellation inputs are now supplied by
+`RH/CanonicalMobiusPNT` and the Cesàro theorem in `RH/CanonicalMobiusCesaro`.
+The older implication theorems retain their explicit hypotheses for reuse.
 **Open research providers:** bounded cofinal candidate energy or normalized
 residual-tail estimates. The new
 `canonical_limitEnergy_zero_of_frequently_bounded_tail` is a conditional
@@ -163,8 +203,9 @@ from the two explicit PNT limits and frequently bounded normalized
 residual tails.
 
 **Open:** the bounded signed-covariance or residual-tail provider.
-The classical PNT inputs still lack checked providers here. No residual
-vanishing or RH is claimed. See
+The classical PNT inputs now have checked providers in
+`RH/CanonicalMobiusPNT` and `RH/CanonicalMobiusCesaro`. No unconditional
+residual vanishing or RH is claimed. See
 `RH/ParetoSignedAverageContinuation20260922.md`.
 
 ### Exact Ramanujan coordinates, periodic Green inverse, and qN (2026-09-22)
