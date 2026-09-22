@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Signed covariance minimum and one-input arithmetic bridge (2026-09-22)
+
+**Established:** `Analysis/FiniteGramRange` proves singular Gram solvability
+from synthesis-kernel compatibility. `Analysis/FiniteGramAffineMinimum` proves
+the attained mass-one minimum, exact signed completion, uniqueness of the
+synthesized minimizer, and independence of the scalar normal mass.
+`RH/CanonicalMobiusCovarianceMinimum` discharges compatibility for actual
+canonical infinite tails using finite periodicity. It constructs `C z = 1`,
+proves `capacity = sum z > 0`, and attains minimum tail energy `1/capacity`.
+The exact full energy is `N/(N+1) + 1/capacity` when every index is at least N.
+Failure of RH forces these capacities to tend to zero for every growing
+nonempty finite family satisfying that index condition.
+
+**Established arithmetic implication:** `RH/CanonicalMobiusCesaro` proves
+`M(N) = N m_N - sum_(k<N) m_k`; convergence of m_N to any finite limit implies
+M(N)/N tends to zero. The sublinear-energy theorem thus needs only m_N -> 0.
+
+**Conditional research reductions:** a fixed positive capacity lower bound
+along arbitrarily large cutoffs implies Mathlib RH, without a PNT premise.
+Reciprocal Möbius cancellation together with bounded cofinal normalized
+residual tails also implies RH.
+**Open:** the positive cofinal capacity lower bound or residual-tail upper
+bound. **Open formalization provider:** the classical limit m_N -> 0.
+No RH proof or vanishing projection residual is asserted. Exact declarations
+and verification are recorded in `RH/ParetoCovarianceMinimumContinuation20260922.md`.
+
 ### Canonical Mobius full energy and sublinear residual tails (2026-09-22)
 
 **Established:** `RH/CanonicalMobiusFullEnergy` realizes the manuscript's
