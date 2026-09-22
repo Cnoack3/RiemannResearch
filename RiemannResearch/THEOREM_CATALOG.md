@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Canonical Mobius full energy and sublinear residual tails (2026-09-22)
+
+**Established:** `RH/CanonicalMobiusFullEnergy` realizes the manuscript's
+canonical family in the actual Pareto Hilbert space, proves its finite-span
+membership and exact head, its all-coordinate floor formula, the full
+infinite head/tail norm identity, and
+`canonicalMobiusHilbert_norm_sq_le`:
+`||u_N||^2 <= N(4N+1)/(N+1) < 4N` for positive N.
+
+**Established analytic implications:** `Analysis/SublinearEnergyLimits`
+proves the fixed-cutoff limiting step and positive-product divergence.
+`RH/ParetoSublinearResidualTail` proves that sublinear exact-head full
+energy forces `N * residualTailEnergy N -> atTop` when `limitEnergy > 0`.
+The concrete canonical specialization supplies verified head and legality
+providers. Failure of RH forces every exact-head family's full energy to
+diverge.
+
+**Conditional research reductions:** a bounded cofinal subsequence of
+exact-head full energies implies actual Mathlib RH, without a sublinear
+premise. Sublinear energy together with a bounded cofinal subsequence of
+normalized residual-tail energies also implies RH.
+
+**Open providers:** the source's PNT-based sublinear full-energy estimate
+is not yet formalized; `canonicalMobiusHilbert_sublinear_of_cutoff_bounds`
+retains the arithmetic cutoff bounds explicitly. The bounded cofinal
+energy or normalized-tail estimates remain open. No vanishing actual
+residual, approximation convergence, or RH is asserted.
+See `RH/ParetoSublinearEnergyFormalization20260922.md` for exact coverage.
+
 ### Exact Ramanujan coordinates, periodic Green inverse, and qN (2026-09-22)
 
 **Established:** `RH/IntegratedRamanujanMarkedArithmetic` proves the head

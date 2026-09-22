@@ -10,7 +10,7 @@ Source: user-provided `Conditional_IID_Cesaro_Mathematical_Completion_2026-09-17
 Section 10.2. The ordinary mathematical proof was completed first in
 `MobiusHeadProof.md`. All coefficients, heads, and energies below use the
 actual project definitions. No useful uniform or subpolynomial energy estimate
-is asserted. This source awaits coordinator verification.
+is asserted.
 -/
 
 noncomputable section
@@ -88,7 +88,7 @@ theorem finite_mobius_floor_sum (Y n : ℕ) (hn : 0 < n) (hnY : n ≤ Y) :
         (by have := Finset.mem_range.mp hk; omega)
     _ = 1 := cumulative_delta_one n hn
 
-private theorem residueFraction_eq_div_sub_floor (d n : ℕ) (hd : 0 < d) :
+theorem residueFraction_eq_div_sub_floor (d n : ℕ) (hd : 0 < d) :
     residueFraction d n = (n : ℝ) / (d : ℝ) - ((n / d : ℕ) : ℝ) := by
   have hdR : (d : ℝ) ≠ 0 := by positivity
   have he : ((n % d : ℕ) : ℝ) + (d : ℝ) * ((n / d : ℕ) : ℝ) = (n : ℝ) := by
@@ -123,7 +123,7 @@ theorem canonicalMobiusHead_exact (Y n : ℕ) (hn : 0 < n) (hnY : n ≤ Y) :
   unfold residueFraction
   rw [Nat.mod_eq_of_lt (by omega : n < Y + 1)]
   field_simp
-  <;> ring
+  ring
 
 private theorem residueFraction_mem_full_legal (d : ℕ) (hd : 0 < d) :
     residueFraction d ∈ legalSeedSpan (Set.Ici 1) := by
@@ -159,7 +159,7 @@ theorem canonicalMobiusHead_mem_class (Y : ℕ) :
     canonicalMobiusHead Y ∈ conditionalHeadClass Y :=
   ⟨canonicalMobiusHead_mem_legal Y, fun n hn hnY => canonicalMobiusHead_exact Y n hn hnY⟩
 
-private theorem finite_mobius_sum_abs (Y : ℕ) (hY : 0 < Y) (a : ℕ → ℝ) (B : ℝ)
+theorem finite_mobius_sum_abs (Y : ℕ) (hY : 0 < Y) (a : ℕ → ℝ) (B : ℝ)
     (ha1 : a 1 = 0) (ha : ∀ d ∈ Finset.Icc 1 Y, |a d| ≤ B) :
     |∑ d ∈ Finset.Icc 1 Y, (ArithmeticFunction.moebius d : ℝ) * a d| ≤
       ((Y : ℝ) - 1) * B := by
@@ -188,7 +188,7 @@ private theorem finite_mobius_sum_abs (Y : ℕ) (hY : 0 < Y) (a : ℕ → ℝ) (
       rw [Nat.cast_sub (by omega : 1 ≤ Y)]
       norm_num
 
-private theorem residueFraction_abs_le_one (d n : ℕ) (hd : 0 < d) :
+theorem residueFraction_abs_le_one (d n : ℕ) (hd : 0 < d) :
     |residueFraction d n| ≤ 1 := by
   have hdR : (0 : ℝ) < d := by exact_mod_cast hd
   have hm : ((n % d : ℕ) : ℝ) ≤ d := by
