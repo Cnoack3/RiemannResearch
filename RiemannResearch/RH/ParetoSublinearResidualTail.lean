@@ -185,5 +185,19 @@ theorem canonical_limitEnergy_zero_of_frequently_bounded_tail
     canonicalMobiusHilbert_mem_closedSpace canonicalMobiusHilbert_exact
     (canonicalMobiusHilbert_sublinear_of_mobius_cancellation hM hm) C hbounded
 
+
+/-- With the two explicit PNT inputs, a bounded cofinal normalized residual
+tail implies actual Mathlib RH. The tail bound remains a research premise. -/
+theorem riemannHypothesis_of_mobius_cancellation_and_bounded_tail
+    (hM : Tendsto (fun N : ℕ =>
+      (∑ d ∈ Finset.Icc 1 N, (ArithmeticFunction.moebius d : ℝ)) / (N : ℝ))
+      atTop (𝓝 0))
+    (hm : Tendsto mobiusReciprocalSum atTop (𝓝 0))
+    (C : ℝ) (hbounded : ∃ᶠ N : ℕ in atTop, (N : ℝ) * residualTailEnergy N ≤ C) :
+    RiemannHypothesis := by
+  have hz := canonical_limitEnergy_zero_of_frequently_bounded_tail hM hm C hbounded
+  exact riemannHypothesis_of_limitCoefficients
+    (limitCoefficients_eq_mobius_iff_mem.mpr (limitEnergy_zero_iff_mem.mp hz))
+
 end CoefficientStabilization
 end RiemannResearch.RH.Pareto

@@ -41,6 +41,28 @@ research reduction with these obligations explicit. No vanishing actual
 residual, approximation convergence, or RH is asserted.
 See `RH/ParetoSublinearEnergyFormalization20260922.md` for exact coverage.
 
+### Signed canonical averages and tail nondegeneracy (2026-09-22)
+
+**Established:** `RH/CanonicalMobiusSignedAverages` proves finite legality,
+exact heads, the dyadic average, the complete infinite tail-covariance
+identity, and its signed quadratic expansion and nonnegativity.
+`RH/CanonicalMobiusTailNondegeneracy` proves that every covariance-null
+direction over positive candidate indices has coefficient sum zero.
+Every admissible finite average at a positive cutoff therefore has strictly
+positive tail energy; no uniform lower bound is asserted.
+
+**Conditional research reductions:** frequently bounded actual signed
+tail-covariance energies imply Mathlib RH. This criterion needs no PNT
+premise. `riemannHypothesis_of_mobius_cancellation_and_bounded_tail`
+also assembles the published arithmetic-to-energy chain into actual RH
+from the two explicit PNT limits and frequently bounded normalized
+residual tails.
+
+**Open:** the bounded signed-covariance or residual-tail provider.
+The classical PNT inputs still lack checked providers here. No residual
+vanishing or RH is claimed. See
+`RH/ParetoSignedAverageContinuation20260922.md`.
+
 ### Exact Ramanujan coordinates, periodic Green inverse, and qN (2026-09-22)
 
 **Established:** `RH/IntegratedRamanujanMarkedArithmetic` proves the head
