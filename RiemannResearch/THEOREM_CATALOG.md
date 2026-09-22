@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Full-Pareto minimizer and exact Schur recursion (2026-09-22)
+
+**Established:** `RH/ResidueProjectionSchur` proves the unique full-norm
+inverse-Gram minimizer, exact error identity, positive innovation Schur
+complement, and adjoining-generator coefficient and energy recursions.
+It reuses `ResidueGramMobiusCorrection` and `ResidueGramDigamma`.
+See `RH/ResidueProjectionSchur.md` for formulas and the numerical table.
+
+- `ProjectionSchur.canonical_completion`, `canonical_minimizes`, and
+  `canonical_unique` give the exact variational characterization.
+- `error_eq_one_sub_captured` and `captured_eq_norm_sq` identify
+  the error and b-transpose-G-inverse-b with the actual projection.
+- `sigma_eq_gram_schur`, `eta_eq_gram_schur`, and `sigma_pos`
+  identify the matrix Schur data and prove strict positivity.
+- `projection_schur_step`, `canonicalVector_schur_new`,
+  `canonicalVector_schur_old`, and `captured_schur_step` prove
+  the exact projection, coefficient, and captured-energy recursions.
+- `canonicalVector_one`, `projection_one`, `captured_one`, and
+  `energy_one` give the exact manuscript N=2 values.
+
+Project stage n is manuscript cutoff N=n+1. Schur index n adjoins
+conductor n+2. All statements use the complete infinite Pareto norm.
+The rounded N=2,...,5 table is numerically checked documentation, not
+Lean-certified decimal enclosures. No convergence-to-zero is asserted.
+Axiom checks report only `propext`, `Classical.choice`, and `Quot.sound`.
+
 ### Exact inverse-Gram Möbius correction and convergence (2026-09-22)
 
 **Established:** `RH/ResidueGramMobiusCorrection` formalizes the actual full
