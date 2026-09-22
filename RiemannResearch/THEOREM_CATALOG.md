@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Canonical finite affine exhaustion and exact capacity increments (2026-09-22)
+
+**Established:** `NumberTheory/IsolatedPrimeReciprocalSum` and
+`RH/MobiusReciprocalNonvanishing` prove finite nonvanishing m_N ≠ 0 for N>0
+by Bertrand and integer denominator clearing, without PNT or RH.
+`RH/CanonicalMobiusTriangular` proves the adjacent-step identities,
+canonical span = full finite legal span, finite head injectivity, and an
+actual mass-one canonical-window expansion of every finite legal exact-head
+vector. At diagonal budget the canonical vector is the unique candidate.
+
+`RH/CanonicalMobiusWindowMinimum` proves the attained minimum over ALL
+finite legal vectors at budget M+1 with head 1..N equal to one:
+full norm squared = N/(N+1) + inverse window capacity.
+`Analysis/FiniteGramCapacityIncrement` and
+`RH/CanonicalMobiusCapacityIncrement` identify capacity gain with the
+squared change of synthesized normal vectors, characterize saturation,
+and bound signed new-equation defects by screened energy times gain.
+Singular Gram systems and noninjective family maps remain allowed.
+
+**Open research provider:** a positive cofinal lower bound for window
+capacity, equivalently sufficient bounded cofinal exact-head energies.
+**Open formalization provider:** the classical limit m_N → 0.
+Finite nonvanishing and spanning are discharged; no RH proof is claimed.
+See `RH/ParetoAffineExhaustionContinuation20260922.md`.
+
+
 ### Quantitative signed capacity and uniform residual obstruction (2026-09-22)
 
 **Established:** `RH/CanonicalMobiusCapacityBounds` proves the exact residual
