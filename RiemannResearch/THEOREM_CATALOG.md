@@ -100,6 +100,37 @@ Mobius cancellation; neither input is assumed by these new results.
 See `RH/ParetoSingleHeadDualityContinuation20260922.md`.
 
 
+### First-head projection identity and all-annihilator heavy tails (2026-09-22)
+
+**Established:** 42 declarations in four modules.
+`Analysis/SingleObservationProjection` proves the attained one-observation
+projection minimum, its exact completion, and optimizer uniqueness.
+`RH/CanonicalMobiusSingleHeadCapacity` identifies the actual first-point
+projection error `t_M = 1 / (windowCapacity 1 M + 2)`, proves its conductor
+limit, and expresses its exact one-step decrease through the signed Schur gain.
+In the nondense case, the capacity limit is `1/t - 2`, the energy of the
+actual limiting normal, where `t = ||e_1 - P_S e_1||^2`.
+
+`RH/ParetoAnnihilatorTail` proves that EVERY nonzero vector in the actual
+legal annihilator satisfies `N * ||tail_N z||^2 -> atTop`, without a
+nonzero-mean hypothesis. It uses the unconditional canonical sublinear energy,
+integer dilation invariance, and totality of the integer threshold family.
+Any annihilator with a bounded cofinal normalized-tail subsequence is zero.
+
+`RH/ParetoFirstHeadDefect` constructs `rho = e_1 - P_S e_1`, proves its
+positive constant pairing when the original residual energy delta is positive,
+and verifies `(6 - 4*sqrt(2))*||rho||^2 <= delta <=
+(6 + 4*sqrt(2))*||rho||^2`. Hence in the nondense case
+`6 - 4*sqrt(2) <= delta*(||Z_1^*||^2 + 2) <= 6 + 4*sqrt(2)`.
+
+**Conditional research reduction:** a bounded cofinal normalized-tail
+subsequence for this one first-point projection defect implies Mathlib RH.
+**Open research provider:** that upper bound, or equivalently at the geometric
+level vanishing first-point error/divergence of the single-head capacity.
+The heavy-tail theorem does not exclude all possible nonzero annihilators.
+No RH proof is supplied; the separate RH-to-density converse remains unformalized.
+See `RH/ParetoSingleHeadProjectionContinuation20260922.md`.
+
 ### Canonical finite affine exhaustion and exact capacity increments (2026-09-22)
 
 **Established:** `NumberTheory/IsolatedPrimeReciprocalSum` and

@@ -16,6 +16,10 @@ import RiemannResearch.RH.CanonicalMobiusWindowRecursion
 import RiemannResearch.RH.ParetoFiniteHeadDilation
 import RiemannResearch.RH.CanonicalMobiusWindowDuality
 import RiemannResearch.RH.CanonicalMobiusFixedHeadLimit
+import RiemannResearch.Analysis.SingleObservationProjection
+import RiemannResearch.RH.CanonicalMobiusSingleHeadCapacity
+import RiemannResearch.RH.ParetoAnnihilatorTail
+import RiemannResearch.RH.ParetoFirstHeadDefect
 import RiemannResearch.Analysis.FiniteGramCapacityIncrement
 import RiemannResearch.RH.CanonicalMobiusCapacityIncrement
 import RiemannResearch.RH.CanonicalMobiusWindowMinimum
