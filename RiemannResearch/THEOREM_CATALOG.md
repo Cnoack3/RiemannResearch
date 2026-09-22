@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Exact limit of the inverse-Gram Mobius correction (2026-09-22)
+
+**Established:** `RH/ResidueGramMobiusCorrection` now identifies the actual
+arithmetic correction at each finite stage as the Mobius difference
+functional applied to the full projection residual
+(`correction_eq_residual_coordinate`).
+`correction_tendsto_residual` and `correction_tendsto_divisor_sum` prove
+its unconditional limit, explicitly as a finite divisor sum of
+`limitResidual`. These statements assume only a positive conductor.
+
+The existing captured-energy/coefficient/norm convergence equivalences
+were rechecked with the new limit theorem. Axiom inspection reports only
+`propext`, `Classical.choice`, and `Quot.sound`.
+**Open:** vanishing of the displayed divisor sums for every conductor
+at least two; this is equivalent to zero full projection defect.
+Existence of their limits, the Schur recurrence, and the algebraic
+Mobius decomposition do not establish this vanishing.
+
 ### Captured energy and coefficient convergence equivalences (2026-09-22)
 
 **Established:** `RH/ResidueSchurLimits` now proves:

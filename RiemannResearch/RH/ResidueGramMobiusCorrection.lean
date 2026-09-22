@@ -93,6 +93,31 @@ theorem correction_tendsto (m : ℕ) :
       (𝓝 (limitCoefficient m + (ArithmeticFunction.moebius m : ℝ))) := by
   exact (coefficient_tendsto m).add_const _
 
+/-- Exact arithmetic correction as a finite-coordinate test of the full residual. -/
+theorem correction_eq_residual_coordinate (n m : ℕ) (hm : 0 < m) :
+    correction n m = mobiusDifferenceCLM m (hilbertOne - projection n) := by
+  simp only [correction, coefficient, coefficientCLM, neg_apply,
+    map_sub, mobius_coordinate_one m hm]
+  ring
+
+/-- The limit exists unconditionally and is identified by the limiting residual. -/
+theorem correction_tendsto_residual (m : ℕ) (hm : 0 < m) :
+    Tendsto (fun n => correction n m) atTop
+      (𝓝 (mobiusDifferenceCLM m limitResidual)) := by
+  have he : limitCoefficient m + (ArithmeticFunction.moebius m : ℝ) =
+      mobiusDifferenceCLM m limitResidual := by
+    rw [limitCoefficient_eq_residual m hm]
+    ring
+  simpa only [he] using correction_tendsto m
+
+/-- Explicit finite divisor-sum value of the limiting inverse-Gram correction. -/
+theorem correction_tendsto_divisor_sum (m : ℕ) (hm : 0 < m) :
+    Tendsto (fun n => correction n m) atTop
+      (𝓝 (∑ d ∈ m.divisors, (ArithmeticFunction.moebius (m / d) : ℝ) *
+        (hilbertSequence limitResidual d - hilbertSequence limitResidual (d - 1)))) := by
+  simpa only [mobiusDifferenceCLM_apply, mobiusDifference] using
+    correction_tendsto_residual m hm
+
 theorem correction_tendsto_zero_iff (m : ℕ) :
     Tendsto (fun n => correction n m) atTop (𝓝 0) ↔
       Tendsto (fun n => coefficient n m) atTop
