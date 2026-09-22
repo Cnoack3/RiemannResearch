@@ -68,6 +68,19 @@ one, retention recurrence, and values in (0,1], whose limit is
 `qN_liminf_eq_one_iff_entry_eq_loss`, this is exactly the remaining assertion
 for liminf qN equal to one. No unconditional saturation or RH proof is supplied.
 
+**Established (2026-09-22):** `RH/IntegerDPPResidueSymbolic` proves the
+nonrecursive prime-product formula for the canonical modulus and its prime
+valuations. It expresses every progression weight and full Gram entry as
+finite remainder sums with exact rational-argument digamma constants, whose
+Gamma logarithmic-derivative definition is also recorded.
+
+`qN_eq_symbolic_determinant_ratio` gives the actual probability as
+`1 - det(M - Delta_1 J)/det(M)`, for the explicitly defined finite matrix
+M. `qN_eq_finite_symbolic_formula` expands both determinants into finite
+signed permutation sums. `residueDeterminantPolynomial_zero_pos` proves
+the denominator is positive for every N. These formulas are unconditional,
+contain no entry/loss or unknown capacity inputs, and retain all Pareto tails.
+
 **Open:** the limiting assertion `qN N → 1`; none of these identities
 asserts saturation or proves RH.
 
