@@ -1,6 +1,6 @@
 import RiemannResearch.Analysis.SublinearEnergyLimits
 import RiemannResearch.RH.ExactHeadResidualTail
-import RiemannResearch.RH.CanonicalMobiusFullEnergy
+import RiemannResearch.RH.CanonicalMobiusSublinearEnergy
 import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
@@ -12,17 +12,18 @@ All tails below refer to the actual canonical residual and its complete
 infinite weighted energy. The finite product lower bound is imported from
 `ExactHeadResidualTail`; this module supplies the new limit implications.
 
-Conditional research reductions: sublinear full energy implies divergence of
-normalized tails for nonzero residual, and frequently bounded normalized tails
-then imply RH. Sublinear full energy remains an explicit hypothesis.
+The general reductions retain sublinear energy explicitly. The concrete
+Möbius specialization now derives it from the two explicit PNT cancellation
+inputs in `CanonicalMobiusSublinearEnergy`. Checked providers for those two
+classical asymptotics are not supplied here.
 A bounded cofinal subsequence of exact-head full energies also implies RH,
 without any sublinear hypothesis; the boundedness provider remains open.
-No PNT asymptotic or vanishing actual residual is proved here.
+No vanishing actual residual is proved here.
 -/
 
 noncomputable section
 open Filter
-open scoped Topology
+open scoped BigOperators Topology
 
 namespace RiemannResearch.RH.Pareto
 
@@ -157,6 +158,32 @@ theorem riemannHypothesis_of_canonical_frequently_bounded_energy
     RiemannHypothesis :=
   riemannHypothesis_of_frequently_bounded_exact_head_energy canonicalMobiusHilbert
     canonicalMobiusHilbert_mem_closedSpace canonicalMobiusHilbert_exact C hbounded
+
+
+/-- Ordinary and reciprocal Möbius cancellation supply the sublinear-energy
+provider for the actual residual-tail divergence theorem. -/
+theorem canonical_normalized_tail_tendsto_atTop_of_mobius_cancellation
+    (hpos : 0 < limitEnergy)
+    (hM : Tendsto (fun N : ℕ =>
+      (∑ d ∈ Finset.Icc 1 N, (ArithmeticFunction.moebius d : ℝ)) / (N : ℝ))
+      atTop (𝓝 0))
+    (hm : Tendsto mobiusReciprocalSum atTop (𝓝 0)) :
+    Tendsto (fun N : ℕ => (N : ℝ) * residualTailEnergy N) atTop atTop :=
+  canonical_normalized_tail_tendsto_atTop hpos
+    (canonicalMobiusHilbert_sublinear_of_mobius_cancellation hM hm)
+
+/-- With the two explicit PNT inputs, a bounded cofinal normalized residual
+tail suffices. The bounded-tail estimate is still an open research input. -/
+theorem canonical_limitEnergy_zero_of_frequently_bounded_tail
+    (hM : Tendsto (fun N : ℕ =>
+      (∑ d ∈ Finset.Icc 1 N, (ArithmeticFunction.moebius d : ℝ)) / (N : ℝ))
+      atTop (𝓝 0))
+    (hm : Tendsto mobiusReciprocalSum atTop (𝓝 0))
+    (C : ℝ) (hbounded : ∃ᶠ N : ℕ in atTop, (N : ℝ) * residualTailEnergy N ≤ C) :
+    limitEnergy = 0 :=
+  limitEnergy_zero_of_frequently_bounded_normalized_tail canonicalMobiusHilbert
+    canonicalMobiusHilbert_mem_closedSpace canonicalMobiusHilbert_exact
+    (canonicalMobiusHilbert_sublinear_of_mobius_cancellation hM hm) C hbounded
 
 end CoefficientStabilization
 end RiemannResearch.RH.Pareto

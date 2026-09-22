@@ -22,10 +22,22 @@ exact-head full energies implies actual Mathlib RH, without a sublinear
 premise. Sublinear energy together with a bounded cofinal subsequence of
 normalized residual-tail energies also implies RH.
 
-**Open providers:** the source's PNT-based sublinear full-energy estimate
-is not yet formalized; `canonicalMobiusHilbert_sublinear_of_cutoff_bounds`
-retains the arithmetic cutoff bounds explicitly. The bounded cofinal
-energy or normalized-tail estimates remain open. No vanishing actual
+**Established arithmetic-to-energy implication:**
+`NumberTheory/FiniteFloorTail` proves finite floor-tail double counting.
+`RH/CanonicalMobiusWindowCancellation` proves the exact Möbius tail
+identity and fixed-window estimate. `RH/CanonicalMobiusSublinearEnergy`
+proves the full head/window/infinite-tail cutoff bound and
+`canonicalMobiusHilbert_sublinear_of_mobius_cancellation`.
+Its precise hypotheses are M(N)/N→0 and m_N=Σ(d≤N)μ(d)/d→0.
+`canonical_normalized_tail_tendsto_atTop_of_mobius_cancellation`
+uses this result for the actual residual, without an extra energy premise.
+
+**Open formalization providers:** checked proofs of the two classical PNT
+cancellation inputs. They remain explicit theorem hypotheses.
+**Open research providers:** bounded cofinal candidate energy or normalized
+residual-tail estimates. The new
+`canonical_limitEnergy_zero_of_frequently_bounded_tail` is a conditional
+research reduction with these obligations explicit. No vanishing actual
 residual, approximation convergence, or RH is asserted.
 See `RH/ParetoSublinearEnergyFormalization20260922.md` for exact coverage.
 

@@ -42,8 +42,47 @@ These are unconditional full Pareto norms, not conditional-mean energies.
   b_{K,N}→0, then e_N→0. No uniformity of b in K is required.
 
 The concrete consumer `canonicalMobiusHilbert_sublinear_of_cutoff_bounds`
-applies the latter theorem to e_N=‖u_N‖²/N. The actual arithmetic cutoff
-bounds remain an explicit provider hypothesis.
+applies the latter theorem to e_N=‖u_N‖²/N. The continuation now supplies
+these bounds from the two precise Möbius cancellation inputs below.
+
+## Fixed windows and the full sublinear-energy proof
+
+`NumberTheory/FiniteFloorTail.lean` proves the exact double-counting
+identity `finite_floor_tail_swap` for arbitrary real coefficients and a
+positive-prefix splitting lemma.
+
+`RH/CanonicalMobiusWindowCancellation.lean` specializes this identity:
+`finite_mobius_floor_tail_identity` expresses the omitted floor terms as
+differences of ordinary Möbius partial sums. Its finite estimate
+`canonicalMobiusHead_window_bound` proves
+\[
+|u_N(j)|\le 1+\varepsilon K(K+2)(N+1)
+\]
+for N<j≤K(N+1), given |M(t)|≤εt for every t≥N and |m_N|≤ε.
+This estimate is a proved implication, with its hypotheses explicit.
+
+`canonicalMobiusHead_windows_of_mobius_cancellation` derives uniform
+o(N) values on every fixed window N<j≤KN from
+\[
+M(N)/N\longrightarrow0,\qquad m_N=\sum_{d\le N}\mu(d)/d\longrightarrow0.
+\]
+These two classical PNT inputs are explicit hypotheses, not new axioms,
+and no checked provider for them is supplied by this continuation.
+
+`RH/CanonicalMobiusSublinearEnergy.lean` proves
+`canonicalMobiusHilbert_cutoff_bound`:
+\[
+\|u_N\|_P^2/N\le 1/N+a^2+4/K
+\]
+when |u_N(j)|≤aN on N<j≤KN. The far tail starts exactly at KN+1 and
+contains every remaining coordinate.
+`canonicalMobiusHilbert_sublinear_of_windows` performs the epsilon limit.
+The assembled theorem
+`canonicalMobiusHilbert_sublinear_of_mobius_cancellation` proves
+\[
+\|u_N\|_P^2/N\longrightarrow0
+\]
+from exactly the two stated cancellation inputs.
 
 `RH/ParetoSublinearResidualTail.lean` uses the existing exact theorem
 `residual_tail_product_lower`:
@@ -63,8 +102,13 @@ candidate energy o(N) to error energy o(N). Then
 \quad\Longrightarrow\quad N T_N\longrightarrow+\infty.
 \]
 `canonical_normalized_tail_tendsto_atTop` discharges the legality and head
-hypotheses for the explicit Möbius family. It **retains** the sublinear
-energy limit as a hypothesis.
+hypotheses for the explicit Möbius family and retains the energy limit.
+The new
+`canonical_normalized_tail_tendsto_atTop_of_mobius_cancellation`
+supplies that limit from the two explicit classical cancellation inputs.
+`canonical_limitEnergy_zero_of_frequently_bounded_tail` consequently
+requires only those two inputs and the bounded cofinal normalized-tail
+estimate; the latter remains a research obligation.
 
 `limitEnergy_zero_of_frequently_bounded_normalized_tail` proves δ=0
 under the sublinear-energy hypothesis and
@@ -92,9 +136,11 @@ previously established divergence of exact-head errors.
 
 ## Open providers and exact limits of this formalization
 
-- **Not yet formalized here:** the source's PNT-driven proof
-  ‖u_N‖²/N→0, including intermediate-window cancellation. The ordinary
-  mathematical argument in the source is not contradicted by this limitation.
+- **Formalized implication:** the complete proof from M(N)/N→0 and
+  m_N→0 to ‖u_N‖²/N→0, including intermediate-window cancellation.
+- **Open formalization providers:** checked proofs of those two classical
+  PNT inputs. This is a formalization gap, not an assertion that the
+  classical limits are open mathematical problems.
 - **Open research estimate:** a bounded cofinal subsequence of candidate
   full energies, or the required bounded cofinal normalized residual tails.
 - **Not proved:** vanishing projection residual, convergence of optimal
