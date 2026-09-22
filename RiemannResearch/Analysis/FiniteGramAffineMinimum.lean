@@ -117,4 +117,56 @@ theorem normal_mass_unique (v : ι → H) (z w : ι → ℝ)
     simp only [mul_one]
   exact hzw.symm.trans ((real_inner_comm _ _).trans hwz)
 
+
+section FamilyMonotonicity
+variable {κ : Type*} [Fintype κ] [Nonempty κ]
+
+/-- Enlarging the admissible affine synthesis set increases normal mass. -/
+theorem normal_mass_mono_of_affine_transfer
+    (v : ι → H) (w : κ → H) (z : ι → ℝ) (u : κ → ℝ)
+    (hz : gram v z = fun _ => 1) (hu : gram w u = fun _ => 1)
+    (htransfer : ∀ c : ι → ℝ, (∑ i, c i) = 1 →
+      ∃ d : κ → ℝ, (∑ j, d j) = 1 ∧
+        Fintype.linearCombination ℝ w d = Fintype.linearCombination ℝ v c) :
+    (∑ i, z i) ≤ ∑ j, u j := by
+  obtain ⟨d, hd, he⟩ := htransfer (affineCoefficients z)
+    (affineCoefficients_sum v z hz)
+  have henergy : ‖Fintype.linearCombination ℝ w d‖ ^ 2 = (∑ i, z i)⁻¹ := by
+    rw [he, affineCoefficients_energy v z hz]
+  have hmin : (∑ j, u j)⁻¹ ≤ (∑ i, z i)⁻¹ :=
+    (affineCoefficients_isLeast w u hu).2 ⟨d, hd, henergy⟩
+  exact (inv_le_inv₀ (normal_mass_pos w u hu) (normal_mass_pos v z hz)).mp hmin
+
+/-- A map into a larger family transfers every synthesis by summing coefficient
+fibers. The map need not be injective, so duplicates are handled as well. -/
+theorem normal_mass_mono_of_family_map
+    (v : ι → H) (w : κ → H) (z : ι → ℝ) (u : κ → ℝ)
+    (hz : gram v z = fun _ => 1) (hu : gram w u = fun _ => 1)
+    (e : ι → κ) (he : ∀ i, v i = w (e i)) :
+    (∑ i, z i) ≤ ∑ j, u j := by
+  apply normal_mass_mono_of_affine_transfer v w z u hz hu
+  intro c hc
+  classical
+  let d : κ → ℝ := fun j => ∑ i, if e i = j then c i else 0
+  have hsum : (∑ j, d j) = ∑ i, c i := by
+    change (∑ j, ∑ i, if e i = j then c i else 0) = _
+    rw [Finset.sum_comm]
+    simp
+  refine ⟨d, hsum.trans hc, ?_⟩
+  simp only [Fintype.linearCombination_apply]
+  change (∑ j, (∑ i, if e i = j then c i else 0) • w j) = ∑ i, c i • v i
+  simp only [Finset.sum_smul]
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro i hi
+  calc
+    (∑ j, (if e i = j then c i else 0) • w j) =
+        ∑ j, if e i = j then c i • w j else 0 := by
+      apply Finset.sum_congr rfl
+      intro j hj
+      by_cases hij : e i = j <;> simp [hij]
+    _ = c i • w (e i) := by simp
+    _ = c i • v i := by rw [← he i]
+
+end FamilyMonotonicity
 end RiemannResearch.Analysis.FiniteHilbertGram

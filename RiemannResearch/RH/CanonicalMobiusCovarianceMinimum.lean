@@ -200,4 +200,69 @@ theorem capacity_tendsto_zero_of_not_RH
   filter_upwards [he] with N hN
   simpa only [Real.dist_eq, sub_zero, abs_of_pos (capacity_pos N (k N) (hk N))] using hN
 
+
+section FamilyMonotonicity
+variable {κ : Type*} [Fintype κ] [Nonempty κ]
+
+/-- Adding indices to an actual finite signed-covariance family cannot decrease
+its capacity. Neither family is required to have an invertible Gram matrix. -/
+theorem capacity_mono_of_family_map
+    (N : ℕ) (k : ι → ℕ) (l : κ → ℕ)
+    (hk : ∀ i, 0 < k i) (hl : ∀ j, 0 < l j)
+    (e : ι → κ) (he : ∀ i, k i = l (e i)) :
+    capacity N k hk ≤ capacity N l hl := by
+  unfold capacity
+  apply normal_mass_mono_of_family_map
+    (tailFamily N k) (tailFamily N l) (normal N k hk) (normal N l hl)
+    (normal_equations N k hk) (normal_equations N l hl) e
+  intro i
+  simp only [tailFamily, he i]
+
+end FamilyMonotonicity
+
+/-- Every affine coefficient choice bounds the inverse actual capacity. -/
+theorem capacity_inv_le_tail_energy
+    (N : ℕ) (k : ι → ℕ) (hk : ∀ i, 0 < k i)
+    (c : ι → ℝ) (hc : ∑ i, c i = 1) :
+    (capacity N k hk)⁻¹ ≤ ‖hilbertTailShift (combination k c) N‖ ^ 2 := by
+  rw [combination_tail]
+  exact (affineCoefficients_isLeast (tailFamily N k) (normal N k hk)
+    (normal_equations N k hk)).2 ⟨c, hc, rfl⟩
+
+/-- For a fixed family exact through K, changing the tail cutoff from N to K
+subtracts only the common deterministic head energy from the affine minimum.
+No invertibility or linear independence premise is used. -/
+theorem capacity_inv_cutoff_identity
+    (N K : ℕ) (hNK : N ≤ K) (k : ι → ℕ) (hk : ∀ i, 0 < k i)
+    (hindex : ∀ i, K ≤ k i) :
+    (capacity N k hk)⁻¹ = (capacity K k hk)⁻¹ +
+      (K : ℝ) / ((K : ℝ) + 1) - (N : ℝ) / ((N : ℝ) + 1) := by
+  have hindexN : ∀ i, N ≤ k i := fun i => hNK.trans (hindex i)
+  have hNmin := capacity_inv_le_tail_energy N k hk
+    (affineCoefficients (normal K k hk))
+    (affineCoefficients_sum (tailFamily K k) (normal K k hk)
+      (normal_equations K k hk))
+  change (capacity N k hk)⁻¹ ≤
+    ‖hilbertTailShift (optimizedAverage K k hk) N‖ ^ 2 at hNmin
+  have hKmin := capacity_inv_le_tail_energy K k hk
+    (affineCoefficients (normal N k hk))
+    (affineCoefficients_sum (tailFamily N k) (normal N k hk)
+      (normal_equations N k hk))
+  change (capacity K k hk)⁻¹ ≤
+    ‖hilbertTailShift (optimizedAverage N k hk) K‖ ^ 2 at hKmin
+  have hheadNK : ∀ j, 0 < j → j ≤ K →
+      hilbertSequence (optimizedAverage N k hk) j = 1 := by
+    intro j hj hjK
+    exact combination_exact K k (affineCoefficients (normal N k hk)) hindex
+      (affineCoefficients_sum (tailFamily N k) (normal N k hk)
+        (normal_equations N k hk)) j hj hjK
+  have hheadKN : ∀ j, 0 < j → j ≤ N →
+      hilbertSequence (optimizedAverage K k hk) j = 1 := by
+    intro j hj hjN
+    exact optimizedAverage_exact K k hk hindex j hj (hjN.trans hNK)
+  have hnormN := optimizedAverage_norm_sq N k hk hindexN
+  have hnormK := optimizedAverage_norm_sq K k hk hindex
+  have hsplitN := exact_head_norm_sq_split (optimizedAverage N k hk) K hheadNK
+  have hsplitK := exact_head_norm_sq_split (optimizedAverage K k hk) N hheadKN
+  linarith
 end RiemannResearch.RH.Pareto.CoefficientStabilization.SignedCovariance

@@ -1,5 +1,29 @@
 # Theorem catalog
 
+### Quantitative signed capacity and uniform residual obstruction (2026-09-22)
+
+**Established:** `RH/CanonicalMobiusCapacityBounds` proves the exact residual
+head pairing and `capacity * residualHeadPairing^2 <= residualTailEnergy`.
+For positive residual energy, all admissible finite families simultaneously
+satisfy `capacity <= 4 * residualTailEnergy / limitEnergy^2` eventually.
+Under not RH, decay is uniform over all finite index types and conductor
+horizons. Each member gives the strict lower bound `capacity > 1/(4*k_i)`.
+
+`Analysis/FiniteGramAffineMinimum` proves monotonicity under affine transfer
+or a possibly noninjective family map. `RH/CanonicalMobiusCovarianceMinimum`
+applies it to family enlargement and proves the exact fixed-family cutoff law
+`cap(N)^-1 = cap(K)^-1 + K/(K+1) - N/(N+1)`.
+
+**Established arithmetic implication with explicit classical premise:**
+`normalized_capacity_tendsto_atTop_of_reciprocal_cancellation` proves
+`N * capacity_N -> atTop` when the family eventually contains index N and
+`mobiusReciprocalSum -> 0`.
+**Open formalization provider:** unconditional reciprocal Mobius cancellation.
+**Open research provider:** a fixed positive cofinal capacity lower bound.
+These bounds permit capacity to tend to zero; RH is not proved.
+See `RH/ParetoCapacityBoundsContinuation20260922.md` for exact coverage.
+
+
 ### Signed covariance minimum and one-input arithmetic bridge (2026-09-22)
 
 **Established:** `Analysis/FiniteGramRange` proves singular Gram solvability
