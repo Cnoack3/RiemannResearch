@@ -36,6 +36,30 @@ cofinal subsequence of the normalized actual residual tails.
 **Open:** that tail upper-bound provider. RH-to-zero-residual is not claimed
 by this module; the separate RH-to-density formalization obligation remains.
 
+### Two optimal coefficients and the full Pareto error (2026-09-22)
+
+**Established:** `RH/OptimalTwoCoefficientCriterion` proves the exact identity
+`4 - 3 * limitCoefficient 2 - limitCoefficient 3 =
+(1/12) * norm(6r - (13/2)Dr + 3D^2r)^2 + (23/24) * limitEnergy`,
+where r is the actual limiting projection residual and D is the project's
+scaled dilation, Df(j)=2f(floor(j/2)). Consequently the single scalar
+limit `3 * coefficient n 2 + coefficient n 3 -> 4` is equivalent to
+vanishing full Pareto error. The project index n uses g_2 through g_(n+1).
+
+**Conditional research reductions:** `riemannHypothesis_of_twoThreeCoefficients`
+and `riemannHypothesis_of_second_and_third_coefficients` conclude actual
+Mathlib RH from this scalar limit, or from the two separate coefficient
+limits to 1. **Open:** a provider for those limits. The exact Gram formulas
+and positivity of Schur gains do not discharge that obligation.
+The checked identity, equivalence, and RH implication use only ordinary
+Mathlib foundational axioms; the scalar limit is a local hypothesis.
+
+**Established distinction:** `RH/ExactHeadCoefficientCounterexample` proves
+that growing exact heads force every fixed coefficient to its Mobius target,
+and constructs finite legal vectors with all those limits but full squared
+error at least N^2. Thus the optimal-projection hypothesis in the preceding
+criterion matters. Its counterexample has no PNT or RH assumptions.
+
 ### Exact signed Schur gains and fixed-head capacity density (2026-09-22)
 
 **Established:** 47 declarations in six modules. `RH/CanonicalMobiusTailIndependence`

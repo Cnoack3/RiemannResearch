@@ -35,6 +35,7 @@ import RiemannResearch.RH.CanonicalMobiusWindowCancellation
 import RiemannResearch.RH.CanonicalMobiusSublinearEnergy
 import RiemannResearch.Analysis.SublinearEnergyLimits
 import RiemannResearch.RH.CanonicalMobiusFullEnergy
+import RiemannResearch.RH.ExactHeadCoefficientCounterexample
 import RiemannResearch.RH.ParetoSublinearResidualTail
 import RiemannResearch.RH.CanonicalMobiusSignedAverages
 import RiemannResearch.RH.CanonicalMobiusTailNondegeneracy
@@ -809,6 +810,7 @@ import RiemannResearch.RH.BalancedContinuousCoordinates
 import RiemannResearch.RH.MobiusHilbertCoordinates
 import RiemannResearch.RH.MobiusCoefficientStabilization
 import RiemannResearch.RH.MobiusResidualFirstCoordinate
+import RiemannResearch.RH.OptimalTwoCoefficientCriterion
 import RiemannResearch.RH.ArgumentDoublingClosure
 import RiemannResearch.RH.BalancedCoefficientTargets
 import RiemannResearch.RH.BalancedScalarBasis
