@@ -1,5 +1,24 @@
 # Theorem catalog
 
+### Coefficient limits imply zero defect and the full RH chain (2026-09-22)
+
+**Conditional research reductions:** `RH/ResidueProjectionL1` now includes
+`CoefficientStabilization.limitEnergy_zero_of_coefficients_tendsto_mobius`
+and `ProjectionSchur.convergence_chain_of_coefficients_tendsto_mobius`.
+
+Assuming the actual fixed-conductor coefficients tend to -moebius(d) for
+every d>=2, the checked chain proves D=0, convergence of the actual
+projections to one in L2 and L1 Pareto, convergence of the first and second
+moments to one, convergence of the expanded squared error to zero, target
+membership in the closed span of all residue generators, and Mathlib RH.
+
+**Open hypothesis:** simultaneous coefficient convergence to -moebius(d).
+The unconditional coefficient-stabilization theorem proves existence of
+the coefficient limits; it does not identify them as the Mobius values.
+The new theorem proves the requested implication and retains this premise.
+Snippet verification succeeded; axiom inspection reports only
+`propext`, `Classical.choice`, and `Quot.sound`.
+
 ### Pareto L1 convergence and the actual projection defect (2026-09-22)
 
 **Established:** `RH/ThresholdHilbertL1` defines the complete weighted

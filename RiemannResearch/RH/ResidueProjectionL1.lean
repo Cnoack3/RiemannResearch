@@ -24,6 +24,20 @@ noncomputable section
 open Filter
 open scoped Topology BigOperators
 
+namespace RiemannResearch.RH.Pareto.CoefficientStabilization
+
+/-- The actual coefficient limits force the actual limiting defect to vanish. -/
+theorem limitEnergy_zero_of_coefficients_tendsto_mobius
+    (h : ∀ d : ℕ, 1 < d →
+      Tendsto (fun n => coefficient n d) atTop
+        (𝓝 (-(ArithmeticFunction.moebius d : ℝ)))) :
+    limitEnergy = 0 := by
+  apply limitEnergy_zero_iff_mem.mpr
+  exact limitCoefficients_eq_mobius_iff_mem.mp
+    (coefficients_tendsto_mobius_iff.mp h)
+
+end RiemannResearch.RH.Pareto.CoefficientStabilization
+
 namespace RiemannResearch.RH.Pareto.CoefficientStabilization.ProjectionSchur
 
 theorem inner_one_projection_eq_captured (n : ℕ) :
@@ -132,5 +146,29 @@ theorem riemannHypothesis_of_projection_l1_tendsto_zero
     (fun _ hn => hn)
   exact closedSpace_le_legalClosure
     (l1_error_tendsto_zero_iff_closed_span.mp h)
+
+/-- Conditional research reduction: the user's entire chain, starting with
+the simultaneous fixed-conductor Mobius limits for the actual projections. -/
+theorem convergence_chain_of_coefficients_tendsto_mobius
+    (h : ∀ d : ℕ, 1 < d →
+      Tendsto (fun n => coefficient n d) atTop
+        (𝓝 (-(ArithmeticFunction.moebius d : ℝ)))) :
+    limitEnergy = 0 ∧
+    Tendsto projection atTop (𝓝 hilbertOne) ∧
+    Tendsto (fun n => hilbertL1Norm (hilbertOne - projection n)) atTop (𝓝 0) ∧
+    Tendsto (fun n => inner ℝ hilbertOne (projection n)) atTop (𝓝 1) ∧
+    Tendsto (fun n => ‖projection n‖ ^ 2) atTop (𝓝 1) ∧
+    Tendsto (fun n => 1 - 2 * inner ℝ hilbertOne (projection n) + ‖projection n‖ ^ 2)
+      atTop (𝓝 0) ∧
+    hilbertOne ∈ (Submodule.span ℝ (Set.range residueAtom)).topologicalClosure ∧
+    RiemannHypothesis := by
+  have hD := limitEnergy_zero_of_coefficients_tendsto_mobius h
+  have hL1 := l1_error_tendsto_zero_iff_limitEnergy_zero.mpr hD
+  refine ⟨hD, projection_tendsto_one_of_limitEnergy_zero hD, hL1, ?_, ?_, ?_,
+    l1_error_tendsto_zero_iff_closed_span.mp hL1,
+    riemannHypothesis_of_projection_l1_tendsto_zero hL1⟩
+  · simpa only [hD, sub_zero] using inner_one_projection_tendsto
+  · simpa only [hD, sub_zero] using projection_norm_sq_tendsto
+  · simpa only [hD] using expanded_energy_tendsto
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization.ProjectionSchur
