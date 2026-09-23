@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Continuous Nyman space and Burnol analytic prerequisites (2026-09-23)
+
+**Established:** `RH/NymanContinuousSpace` constructs the actual complex L²
+generators, their closed span, the norm-one constant, and dilation membership.
+`RH/NymanCommonZeros` proves the exact common-zero statement for the scalar
+numerators and, away from 0 and 1, their zeta Mellin symbols.
+
+**Established:** `RH/BurnolCriticalLine` proves local logarithmic and weighted
+integrability, evenness, finite-cutoff additivity, finiteness of bounded
+critical zero sets, and almost-everywhere nonvanishing.
+`RH/BurnolCayleyJensen` constructs the analytic pole-removed Cayley zeta
+function and proves its exact finite-radius Jensen formula.
+`RH/BurnolBoundaryCoordinates` proves its actual critical-line boundary
+modulus identity. `RH/BurnolRealAxis` proves zeta and normalized real-axis
+limits from the Dirichlet series. These six modules add 68 proved theorems.
+
+**Open:** the global weighted integrability and boundary passage needed for
+BSY; transport of divisor multiplicities to the canonical zero sum; the
+Mellin--Hardy surjection, inner factorization and invariant-subspace
+identification needed for the full Nyman--Beurling projection theorem.
+Neither full requested identity is claimed by these prerequisites.
+The continuous-to-Pareto transport and its exact projection gap also remain
+separate obligations. Detailed acceptance gates and research priorities:
+`RH/BurnolCompletionResearchAgenda.md`.
+
+
 ### Burnol zero product with actual multiplicities (2026-09-23)
 
 **Established:** `RH/BurnolZeroFactors` and `RH/BurnolProductCalculus` prove
