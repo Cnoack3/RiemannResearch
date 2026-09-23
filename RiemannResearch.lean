@@ -991,6 +991,7 @@ import RiemannResearch.RH.ParetoNymanPointwise
 import RiemannResearch.RH.ParetoUniformLaw
 import RiemannResearch.RH.ParetoNymanNorm
 import RiemannResearch.RH.ParetoPacketGreenGram
+import RiemannResearch.RH.ParetoCRTGramTransfer
 import RiemannResearch.Analysis.SubpowerTailObstruction
 import RiemannResearch.RH.RiemannHypothesisStrip
 import RiemannResearch.RH.SingleTestTailCriterion

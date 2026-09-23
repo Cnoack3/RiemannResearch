@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Exact Pareto CRT transfer and growing-family Green bounds (2026-09-23)
+
+**Established in Lean:** `RH/ParetoCRTGramTransfer` transfers the closed
+uniform CRT covariance formula to the actual Pareto inner product. The result
+is an exact identity: the gcd covariance is the main term and a finite signed
+`uniformDefect` sum is retained as the complete correction. Its absolute
+value is bounded explicitly by the L1 defect of the genuine residue weights.
+
+**Established in Lean:** the same module defines a visible coefficient
+envelope for arbitrary finite Ramanujan-packet combinations and proves that
+the complete tail beyond N has absolute value at most the product of the two
+envelopes divided by N+1. Consequently the anchored-Green finite Gram has that
+same error bound. The support, conductors, dimension, and coefficients may all
+depend on N; convergence follows constructively whenever the displayed
+envelope product divided by N+1 tends to zero.
+
+**Important limitation:** no asymptotic replacement of the Pareto weights by
+uniform weights is asserted. In fact `RH/ParetoCRTWeightLimits` proves that
+the residue-one defect tends to one half. The exact correction must therefore
+remain unless separate cancellation is proved. These results control the
+transfer and Green tail; they do not prove density of the legal span or RH.
+
+
 ### Exact inverse-Gram correction pairings (2026-09-23)
 
 **Established in Lean:** `RH/ResidueGramCorrectionPairing` adds six proved
