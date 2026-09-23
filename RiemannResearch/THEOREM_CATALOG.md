@@ -1,5 +1,40 @@
 # Theorem catalog
 
+### Burnol zero product with actual multiplicities (2026-09-23)
+
+**Established:** `RH/BurnolZeroFactors` and `RH/BurnolProductCalculus` prove
+the exact one-zero, multiplicity, cutoff, and logarithmic identities.
+`Analysis/ContractiveProducts` supplies the finite and infinite weighted
+defect telescopes and the contractive-product limit calculus.
+
+**Established:** `RH/BurnolZeroProduct` uses actual nontrivial zeta zeros
+strictly right of the critical line and their analytic multiplicities.
+It proves finite-subset net convergence, agreement with Mathlib `HasProd`,
+single-zero quantitative obstructions, and `productSq_eq_one_iff_rh`.
+`RH/BurnolZeroProductConvergence` proves unconditional strict positivity,
+absolute summability of logarithms, `productSq = exp (-2 * logarithmicZeroSum)`,
+the unsquared infinite product, and `product_eq_one_iff_rh`.
+The positivity proof uses the checked multiplicity-weighted inverse-square
+zero sum with `Zeta23.zetaSeam`; it assumes neither RH nor a projection identity.
+
+**Established:** `Analysis/NestedProjectionEnergy` retains the exact squared
+norm of the difference between nested projections.
+`Analysis/InnerMultiplierProjection` proves the abstract isometric-multiplier
+projection computation from its explicitly stated reproducing relation.
+
+**Conditional research reductions:** `RH/BurnolProjectionConsequences` assumes
+the projection norm/product identity for the larger space. It derives the
+RH membership equivalence and the exact smaller-space error, including the
+full projection-difference remainder. No equality of discrete and continuous
+projections follows from inclusion alone.
+
+**Open formalization obligations:** the continuous Nyman--Beurling/Hardy
+identification and analytic inner-factor/evaluation providers for Burnol
+Theorem 1.2; the BSY critical-line integral identity and integrability; and
+the actual continuous-to-Pareto transport for the intended application.
+The equivalent assertion `product = 1` remains RH-strength and is not proved.
+Sources, theorem map, and details: `RH/BurnolZeroProductNotes.md`.
+
 ### Inverse Gram dual identities and the Pareto tail-average criterion (2026-09-23)
 
 **Established:** `Analysis/FiniteHilbertGramDual` identifies entries of the actual
