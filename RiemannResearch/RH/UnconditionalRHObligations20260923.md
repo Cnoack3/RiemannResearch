@@ -1,7 +1,10 @@
 # What must be proved for an unconditional RH result
 
 Date: 2026-09-23.
-Base project commit: d911872ed0092a731316c61f869529d1e5bc6c59.
+Base project commit for the original audit: d911872ed0092a731316c61f869529d1e5bc6c59.
+Updated after the Noor regularity completion on the same date:
+the former shifted-density formalization gap is discharged. See
+`NoorRegularityCompletion20260923.md`.
 Scope: the current Pareto projection, inverse-Gram, CRT/Green, residual-tail,
 Noor, and Mellin/Burnol routes in RiemannResearch.
 
@@ -232,27 +235,29 @@ does not construct approximants to 1.
 |---|---|---|
 | Optimal Pareto projections | Strong convergence to P_V 1; exact full error split; fixed coefficient convergence | Prove r=0, for example via (A) or (B) |
 | Inverse Gram / CRT | Exact corrections, dual pairings, entry limits, weighted CRT transfer | Control the full growing signed correction sum |
-| Noor tail regularity | ShiftedResidueDensity and TailRegular r together imply RH | Formalize the known shifted-density theorem; separately prove actual residual regularity |
+| Noor tail regularity | Shifted density and the regular-annihilator theorem are proved; TailRegular r implies RH | Prove actual residual regularity |
 | Mellin-window limit | ZeroModeWindowProvider plus WindowTest imply RH | Supply profile convergence and positive window mass, then prove the actual WindowTest |
 | RH equivalence for Mellin windows | Conditional forward-and-reverse assembly | The RH-to-density converse is an additional formalization input to that equivalence, not needed for the direct Pareto-to-RH route |
 | Burnol product | product = 1 iff RH | Prove the product is exactly 1; positivity and convergence alone do not do so |
 
 Noor's published Theorem 9 proves density after applying I-S in the Hardy
 model. Theorem 12 gives trivial intersection of the orthogonal complement
-with the local Dirichlet space. The project still needs the correctly
-normalized transport to its actual coefficient coordinates. The independent
-research issue is putting the actual limiting residual in that regularity
-class.
+with the local Dirichlet space. These are now formalized in the project's
+actual real coefficient coordinates: `Noor.shiftedResidue_density` and
+`eq_zero_of_orthogonal_tailRegular`. The proof includes the exact factor
+relating the normalized residues to the logarithmic generators.
+Putting the actual limiting residual in that regularity class remains open.
 
 Reference for those mathematical statements and the strategy:
 S. Waleed Noor, *A Hardy space analysis of the Báez-Duarte criterion for the RH*,
 Advances in Mathematics 350 (2019), 242–255, Theorems 9 and 12:
 https://arxiv.org/html/1809.09577v4.
 
-The minimal-hypothesis tool reported both hdense and hreg as load-bearing in
-the present proof of riemannHypothesis_of_tailRegular. It did this by deleting
-each binder and re-elaborating the unchanged proof. This is a dependency check,
-not a proof that no alternative argument could omit a hypothesis.
+The original audit's minimal-hypothesis check reported both hdense and hreg
+as load-bearing in the then-conditional proof. The completed proof supplies
+hdense internally, so `riemannHypothesis_of_tailRegular` now requires only
+hreg. The earlier deletion test was a check of that proof, not a claim that
+shifted density was mathematically unprovable.
 
 Finishing the known Burnol/BSY identities would remove formalization gaps in
 another route. Those identities would still need a zero-defect conclusion.
@@ -269,9 +274,9 @@ the head conditions, then prove a bound uniform in the chosen cutoffs.
 Alternatively prove the actual-residual bound (A) directly. Lean can already
 assemble either provider into Mathlib's actual RiemannHypothesis.
 
-Formalizing Noor's theorem is a tractable, separate project that would remove
-a named formalization gap. It must not be reported as proving the residual
-regularity hypothesis or as an unconditional RH proof.
+Noor's regularity theorem has now been completed in the real Pareto model.
+This removes the named shifted-density formalization gap. The actual residual
+regularity hypothesis remains an independent requirement for an RH proof.
 
 ## 7. Verification record
 

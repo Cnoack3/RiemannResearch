@@ -144,15 +144,27 @@ dense-span annihilation lemma. `RH/ParetoTailAverageCriterion` proves the
 unconditional residual identities T_1(r)=D and
 sum_m |T_m(r)-T_(m+1)(r)|^2 = D-D^2.
 
-**Conditional research reduction:** `limitResidual_zero_iff_tailRegular` and
-`limitResidual_zero_iff_tail_average_summable` assume the named proposition
-`ShiftedResidueDensity`. `riemannHypothesis_of_tailRegular` additionally
-assumes actual residual tail regularity.
+**Established:** `Analysis/NoorLogarithmDensity` proves convergence of finite
+factorial-divisor Möbius combinations of logarithmic vectors to each positive
+coordinate vector. `RH/NoorShiftedResidueDensity` proves the exact normalization
+of the actual shifted residue coordinates and their dense span
+(`Noor.shiftedResidue_density`). The density proof uses finite divisor
+cancellation and dominated convergence, without PNT or RH.
 
-**Open formalization obligation:** a checked provider for
-`ShiftedResidueDensity`, the real coefficient-space transport of Noor's
-unconditional Theorem 9 (arXiv:1809.09577). The full logarithmic-generator
-identification and analytic density proof are not asserted as formalized.
+**Established:** `eq_zero_of_orthogonal_tailRegular` now proves Noor's
+regularity theorem in the real Pareto model with no density hypothesis:
+a tail-regular vector orthogonal to the complete residue span is zero.
+Via `localDirichlet_iff_tailRegular`, this is the real coefficient form of
+Noor's Theorem 12. Both `limitResidual_zero_iff_tailRegular` and
+`limitResidual_zero_iff_tail_average_summable` are unconditional equivalences.
+The former `ShiftedResidueDensity` obligation has been discharged and its
+unused proposition wrapper removed.
+
+**Conditional research reduction:** `riemannHypothesis_of_tailRegular`
+now assumes only `TailRegular limitResidual`. The shifted density,
+regular-annihilator theorem, and resulting RH implication have only the
+standard axioms `propext`, `Classical.choice`, and `Quot.sound`.
+Details: `RH/NoorRegularityCompletion20260923.md`.
 
 **Open RH-strength arithmetic assertion:** `TailRegular limitResidual`.
 Square-summability of successive differences, already proved, does not
