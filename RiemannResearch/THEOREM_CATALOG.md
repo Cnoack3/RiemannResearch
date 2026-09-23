@@ -1,5 +1,22 @@
 # Theorem catalog
 
+### Exact inverse-Gram correction pairings (2026-09-23)
+
+**Established in Lean:** `RH/ResidueGramCorrectionPairing` adds six proved
+theorems for the actual Pareto Hilbert space. The natural Mobius residual
+annihilates the full finite-support coefficient dual. Its pairing with the
+projected dual equals the inverse-Gram correction, hence also the negative
+pairing with the missed dual component. An exact norm-square identity
+retains the entire signed interaction.
+
+**Mathematical proof, not yet formalized:** each fixed coordinate of
+`b_N + G_N * mu_N` tends to zero, using classical PNT limits, exact periodic
+summation by parts, and a summable divisor bound. Full proof and normalization:
+`RH/InverseGramCorrectionAttempt20260923.md`.
+
+**Open:** decay after multiplication by the growing inverse Gram matrix.
+Source convergence alone does not prove the requested correction limit.
+
 ### Continuous Nyman space and Burnol analytic prerequisites (2026-09-23)
 
 **Established:** `RH/NymanContinuousSpace` constructs the actual complex L²
