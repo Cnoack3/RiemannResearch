@@ -1,5 +1,49 @@
 # Theorem catalog
 
+### Inverse Gram dual identities and the Pareto tail-average criterion (2026-09-23)
+
+**Established:** `Analysis/FiniteHilbertGramDual` identifies entries of the actual
+inverse Gram endomorphism with pairings of projected biorthogonal vectors.
+It proves the diagonal and bilinear residual identities, retaining the full
+orthogonal complement.
+
+**Established:** `RH/ParetoInverseGramDual` specializes these identities to
+`coefficientDual i = -mobiusRieszHilbert (i+2)`. It proves every fixed-entry
+limit, the explicit finite divisor formula for each dual norm, and
+`one_mem_iff_inverse_diagonals`. Thus simultaneous saturation of all inverse
+diagonals is equivalent to membership of the constant in the full closed
+residue span; an individual diagonal is only a single dual membership test.
+The exact small-index targets are 14, 20, and the cross pairing -2.
+
+**Established:** `RH/ParetoTailAverages` constructs `fullTailBasis` from the
+existing wavelets plus the negative constant. It proves the absolute
+summability of the weighted physical mean, the full infinite-tail formula,
+the coordinate difference and finite telescoping formulas, Parseval, and
+`localDirichlet_iff_tailRegular`. In this API `tailAverage f n` is the
+markdown's T_(n+1), not T_n.
+
+**Established:** `Analysis/CoefficientShift` constructs the forward/backward
+coefficient differences and their adjoint pairing, and proves the abstract
+dense-span annihilation lemma. `RH/ParetoTailAverageCriterion` proves the
+unconditional residual identities T_1(r)=D and
+sum_m |T_m(r)-T_(m+1)(r)|^2 = D-D^2.
+
+**Conditional research reduction:** `limitResidual_zero_iff_tailRegular` and
+`limitResidual_zero_iff_tail_average_summable` assume the named proposition
+`ShiftedResidueDensity`. `riemannHypothesis_of_tailRegular` additionally
+assumes actual residual tail regularity.
+
+**Open formalization obligation:** a checked provider for
+`ShiftedResidueDensity`, the real coefficient-space transport of Noor's
+unconditional Theorem 9 (arXiv:1809.09577). The full logarithmic-generator
+identification and analytic density proof are not asserted as formalized.
+
+**Open RH-strength arithmetic assertion:** `TailRegular limitResidual`.
+Square-summability of successive differences, already proved, does not
+supply square-summability of the centered averages. No RH converse or
+unconditional zero-residual theorem is claimed.
+
+
 ### Exact limit of the inverse-Gram Mobius correction (2026-09-22)
 
 **Established:** `RH/ResidueGramMobiusCorrection` now identifies the actual
