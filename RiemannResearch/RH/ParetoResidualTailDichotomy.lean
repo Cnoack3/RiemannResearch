@@ -78,6 +78,21 @@ theorem limitResidual_zero_of_frequently_bounded_actual_tail
     mobiusReciprocalSum_tendsto_zero C hbounded
   exact limitResidual_zero_iff_energy_zero.mpr hE
 
+/-- An exact formulation of the remaining tail obligation. Existence of a
+finite bound at arbitrarily large cutoffs is equivalent to zero residual;
+no bound is constructed here. Source: the 2026-09-23 unconditional-RH audit. -/
+theorem frequently_bounded_actual_tail_iff_residual_zero :
+    (∃ C : ℝ, ∃ᶠ N : ℕ in atTop,
+      (N : ℝ) * residualTailEnergy N ≤ C) ↔ limitResidual = 0 := by
+  constructor
+  · rintro ⟨C, hC⟩
+    exact limitResidual_zero_of_frequently_bounded_actual_tail C hC
+  · intro hr
+    refine ⟨0, Filter.Eventually.frequently (Filter.Eventually.of_forall ?_)⟩
+    intro N
+    rw [residualTailEnergy_eq_zero_of_limitEnergy_zero
+      (limitResidual_zero_iff_energy_zero.mp hr) N, mul_zero]
+
 /-- Conditional research reduction: bounded cofinal normalized tails imply
 Mathlib RH. No arithmetic cancellation hypothesis remains. -/
 theorem riemannHypothesis_of_frequently_bounded_actual_tail

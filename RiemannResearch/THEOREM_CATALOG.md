@@ -1,5 +1,20 @@
 # Theorem catalog
 
+### Exact remaining normalized-tail obligation (2026-09-23)
+
+**Established in Lean:** `RH/ParetoResidualTailDichotomy` now exposes
+`frequently_bounded_actual_tail_iff_residual_zero`: existence of one finite
+bound on N times the actual residual tail energy at arbitrarily large N is
+equivalent to the actual limiting projection residual being zero.
+The forward proof uses the existing checked PNT provider and tail dichotomy.
+No RH-to-density converse is required.
+
+**Conditional research reduction:** the existing
+`riemannHypothesis_of_frequently_bounded_actual_tail` concludes Mathlib RH
+from that bound. **Open:** a provider of the bound. The equivalence does not
+assert either side. The current coefficient, CRT, tail-regularity, and
+Mellin-window obligations are audited in `RH/UnconditionalRHObligations20260923.md`.
+
 ### Exact Pareto CRT transfer and growing-family Green bounds (2026-09-23)
 
 **Established in Lean:** `RH/ParetoCRTGramTransfer` transfers the closed
