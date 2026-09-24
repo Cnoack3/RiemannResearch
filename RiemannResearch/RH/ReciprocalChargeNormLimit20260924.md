@@ -1,8 +1,10 @@
 # The reciprocal-charge Riesz vectors have a positive limiting norm
 
-Status: rigorous mathematical proof; the full limit below has not been
-Lean-verified. A draft for the exact upper-window reindexing was explored but has not
-been kernel-verified or added as a compiled project module. No novelty claim is made.
+Status updated 24 September 2026: the complete norm limit is Lean-verified in
+`ReciprocalChargeNormLimit.lean`, using the general quotient-window modules.
+Its exact finite reindexing, dominated limits, and signed corrections are proved.
+See `ReciprocalChargeContinuationVerification20260924.md` for the declarations,
+verification record, and signed dilation extension. No novelty claim is made.
 
 Put
 

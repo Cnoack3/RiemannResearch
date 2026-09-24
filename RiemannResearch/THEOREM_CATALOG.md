@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Reciprocal-charge norm limit and signed dilation correlations (2026-09-24 continuation)
+
+**Established in Lean:** `RH/ReciprocalChargeNormLimit` proves
+`reciprocalChargeRiesz_norm_sq_tendsto`: the actual squared norms tend to
+`15 / Real.pi ^ 2`. The proof uses exact low/isolated quotient-window
+separation, PNT, summable domination, and the existing squarefree Euler series.
+All signed mixed terms are retained. It also proves the limiting squared
+distance from every fixed Hilbert vector is its squared norm plus `15/pi^2`,
+and that no cofinal subsequence converges in norm.
+
+**Established in Lean:** `NumberTheory/QuotientWindowEnergySplit`,
+`NumberTheory/QuotientWindowEnergyLimit`, `Analysis/BoundedSquareEnergy`, and
+`NumberTheory/QuotientKernelEnergyLimit` provide the reusable exact finite
+identities, dominated limits, correction limits, and homogeneous kernel theorem.
+
+**Established in Lean:** the `RH/ReciprocalChargeDilation*` chain constructs
+actual two-cutoff kernels and proves their Hilbert norm identity, complete
+coefficient-series expansion, and signed correlation limit
+`(1/h) * sum_d mu(d)*mu(h*d)/d^2` for every positive integer h.
+`RH/PrimeReciprocalChargeCorrelation` evaluates prime factors. The final
+specializations are `-6/pi^2` for h=2 and `-9/(2*pi^2)` for h=3.
+
+**Still Open:** these dual-vector limits do not prove the residual sign
+r(1)<=0, inverse-Gram control, signed Schur saturation, or approximation at
+weights tending to 1. RH remains unproved. The full rational-dilation formula,
+two-seed rectangle averages, rescaled energy measures, and periodic Gram-source
+decay are recorded as written research with a distinct formal-status boundary
+in `RH/ReciprocalCharge_DilationAndPeriodicSource_20260924.md`.
+
+
 ### Agenda execution: signed Schur, weighted minima, reciprocal charges (2026-09-24)
 
 **Established in Lean:** `RH/ReciprocalSchurVariation` proves the actual
@@ -45,9 +75,9 @@ actual cofinal tail boundedness, one-sided mass control, and residual regularity
 **Remaining formal imports:** the local RH converse, Burnol projection
 representation, and full BSY boundary passage.
 
-**Written mathematics, not Lean-verified:** the complete derivation
-||Q_N||^2 -> sum mu(n)^2/n^2 = 15/pi^2 is saved in
-`RH/ReciprocalChargeNormLimit20260924.md`. No mathematical novelty is claimed.
+**Completed by the continuation above:** the full norm-limit argument in
+`RH/ReciprocalChargeNormLimit20260924.md` is now formalized in
+`RH/ReciprocalChargeNormLimit`. No mathematical novelty is claimed.
 Full execution report: `RH/RH_Agenda_Execution_2026-09-24.md`.
 No unconditional RH proof is asserted.
 
