@@ -1,5 +1,42 @@
 # Theorem catalog
 
+### Quantitative raw budget and fixed-power zero-free regions (2026-09-24)
+
+**Established in Lean:** RH/RawMobiusBudgetQuantitative proves the exact
+identity
+\[
+ B_N+T_N=\|U_N\|_P^2+m_N^2(H_{N+1}-1)
+\]
+and rawMobiusSquareBudget_le_two_raw_norm_sq: \(B_N\le2\|U_N\|_P^2\).
+Together with the existing forward comparison, the finite budget and full
+physical norm control each other with universal constants.
+
+**Established in Lean:** rawMobiusSquareBudget_eventual_explicit_ceiling
+has no new arithmetic hypothesis. There is \(C\ge0\) such that eventually
+\[
+ B_N/N\le16/N+(25+8(2+4C)^2)x_N+16(2+4C)^2x_N^2,\quad
+ x_N=\frac{1+\log(\log N+3)}{\log N}.
+\]
+rawMobiusBudgetCeiling_tendsto_zero proves convergence of this explicit
+ceiling. The providers are the actual quantitative PNT results in
+CanonicalMobiusQuantitativeEnergy and MobiusQuantitativeRate.
+This logarithmic improvement does not establish a positive power saving.
+
+**Conditional research reductions:** RH/RawMobiusBudgetZeroFree proves:
+- zeta_ne_zero_of_frequently_raw_square_budget_power: a frequent
+  \(B_N\le C(N+1)^\alpha\), \(\alpha\ge0\), excludes zeros strictly right
+  of \((1+\alpha)/2\).
+- zeta_ne_zero_of_frequently_small_raw_square_budget_power: for
+  \(\alpha>0\), arbitrarily small frequent coefficients also exclude
+  the boundary.
+- zeta_ne_zero_of_raw_square_budget_normalized_tendsto_zero supplies the
+  boundary premise from normalized convergence.
+
+The arithmetic power hypotheses remain **Open** at the exponents needed
+for RH. The continuation also records a literature-based converse to the
+subpower RH criterion, explicitly **not yet formalized in Lean**.
+See [RawMobiusBudgetContinuation20260924.md](RH/RawMobiusBudgetContinuation20260924.md).
+
 ### Unconditional sublinear finite budget (2026-09-24)
 
 **Established in Lean:** `RH/RawMobiusBudgetSublinear` proves
