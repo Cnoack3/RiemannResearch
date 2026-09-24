@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Complete mixed arithmetic Gram and exact shift defect (2026-09-24)
+
+**Established in Lean:** `RH/NoorMixedGramArithmetic` proves the harmonic
+coefficient formula and the full signed mixed Gram series, including the
+skew part. `Analysis/NoorLogarithmGram.summable_log_multiples` verifies
+the general summability input. For fixed e, d B(d,e)/log d tends to
+log(e)/e, while d B(e,d)/log d tends to zero. These are fixed-column
+limits, not bounds uniform over growing arrays.
+
+**Established in Lean:** `Analysis/ShiftedLiftDefect` proves an exact
+square completion, specialized by `RH/NoorShiftedDefect` to the actual
+canonical minimizer. For 0<s<1 and t=(1-s^2)/s,
+J_N(t)/t = s E_N + ||S v_N-s^2(v_N-a_N)||^2/[s(1-s^2)].
+The complete arithmetic inverse gain obeys the matched-parameter bound.
+No conditional arithmetic premise is used in these identities.
+
+**Open:** the existing cofinal divided-gap provider `hrate`, source-zero
+provider `hsource`, and vanishing limiting residual remain unresolved.
+Neither the full mixed-entry formula nor its asymmetric fixed-column limits
+discharge the growing inverse-matrix obligation. Details and primary-source
+audit: `RH/NoorMixedGramDefect20260924.md`.
+
 ### Actual shifted source moments and Schur control (2026-09-24)
 
 **Established in Lean:** `RH/NoorShiftedSource` identifies the actual source:

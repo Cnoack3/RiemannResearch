@@ -53,6 +53,24 @@ theorem logVector_inner (k l : ℕ) (hk : 0 < k) (hl : 0 < l) :
   simp_rw [hterm]
   exact tsum_mul_left
 
+/-- The logarithmic-moment series is absolutely convergent. -/
+theorem summable_log_multiples (a : Space) (k : ℕ) (hk : 0 < k) :
+    Summable (fun m : ℕ => a (k*m) / (m : ℝ)) := by
+  have hkr : (k : ℝ) ≠ 0 := by exact_mod_cast Nat.ne_of_gt hk
+  have hinj : Function.Injective (fun m : ℕ => k*m) := by
+    intro m n h
+    exact Nat.eq_of_mul_eq_mul_left hk h
+  have hs : Summable (fun n : ℕ => a n * logSequence k n) := by
+    simpa [mul_comm] using (lp.hasSum_inner (𝕜 := ℝ) a (logVector k)).summable
+  apply (hs.comp_injective hinj).congr
+  intro m
+  have hd : k ∣ k*m := Nat.dvd_mul_right k m
+  simp only [Function.comp_def, logSequence, if_pos hd, Nat.cast_mul]
+  by_cases hm : m = 0
+  · simp [hm]
+  · have hmr : (m : ℝ) ≠ 0 := by exact_mod_cast hm
+    field_simp
+
 /-- Exact pairing with a logarithmic divisibility vector, retaining all multiples. -/
 theorem inner_logVector_eq_tsum_multiples (a : Space) (k : ℕ) (hk : 0 < k) :
     inner ℝ a (logVector k) = ∑' m : ℕ, a (k*m) / (m : ℝ) := by

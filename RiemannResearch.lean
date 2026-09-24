@@ -26,6 +26,9 @@ import RiemannResearch.RH.NoorShiftedResidueDensity
 import RiemannResearch.RH.NoorRegularizedApproximation
 import RiemannResearch.RH.NoorRegularizedGram
 import RiemannResearch.RH.NoorShiftedSource
+import RiemannResearch.Analysis.ShiftedLiftDefect
+import RiemannResearch.RH.NoorShiftedDefect
+import RiemannResearch.RH.NoorMixedGramArithmetic
 import RiemannResearch.RH.ParetoTailAverageCriterion
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.Fourier
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.Defs
