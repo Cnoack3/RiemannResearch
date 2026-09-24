@@ -69,4 +69,50 @@ theorem rawMobiusResidual_residue_inner_tendsto_zero (m : ℕ) (hm : 0 < m) :
     (((m : ℝ) - 1) / (2 * (m : ℝ)))
   simpa only [sub_add_cancel, mul_zero, add_zero] using hc.add hm0
 
+/-- Every fixed finite signed Möbius head is an unconditional vanishing test. -/
+theorem rawMobiusResidual_inner_rawMobius_tendsto_zero (M : ℕ) :
+    Tendsto (fun N =>
+      inner ℝ (hilbertOne - rawMobiusHilbert N) (rawMobiusHilbert M))
+      atTop (𝓝 0) := by
+  have hsum (s : Finset {d // d ∈ Finset.Icc 1 M}) :
+      Tendsto (fun N => ∑ d ∈ s,
+        (ArithmeticFunction.moebius (d : ℕ) : ℝ) *
+          inner ℝ (hilbertOne - rawMobiusHilbert N)
+            (normalizedResidueHilbert d (Finset.mem_Icc.mp d.property).1))
+        atTop (𝓝 0) := by
+    induction s using Finset.induction_on with
+    | empty => simp
+    | @insert d s hds ih =>
+      have hd := (rawMobiusResidual_residue_inner_tendsto_zero d
+        (Finset.mem_Icc.mp d.property).1).const_mul
+          (ArithmeticFunction.moebius (d : ℕ) : ℝ)
+      simpa only [Finset.sum_insert hds, mul_zero, add_zero] using hd.add ih
+  simpa only [rawMobiusHilbert, inner_neg_right, inner_sum, inner_smul_right,
+    neg_zero] using (hsum (Finset.Icc 1 M).attach).neg
+
+/-- The entire signed rectangle between a fixed head and its extending tail
+has an explicit unconditional limit. For N ≥ M this is exactly the sum of
+μ(d)μ(e)G(d,e) over d ≤ M < e ≤ N. -/
+theorem rawMobius_tail_inner_head_tendsto (M : ℕ) :
+    Tendsto (fun N =>
+      inner ℝ (rawMobiusHilbert N - rawMobiusHilbert M) (rawMobiusHilbert M))
+      atTop (𝓝 (-logarithmicMobiusMean M - ‖rawMobiusHilbert M‖^2)) := by
+  have hz := rawMobiusResidual_inner_rawMobius_tendsto_zero M
+  have hhead : inner ℝ hilbertOne (rawMobiusHilbert M) =
+      -logarithmicMobiusMean M := by
+    have h := rawMobiusResidual_inner_one_eq_logarithmicMean M
+    rw [inner_sub_left, real_inner_self_eq_norm_sq, hilbertOne_norm_sq] at h
+    rw [real_inner_comm]
+    linarith
+  have hid (N : ℕ) :
+      inner ℝ (rawMobiusHilbert N - rawMobiusHilbert M) (rawMobiusHilbert M) =
+        (-logarithmicMobiusMean M - ‖rawMobiusHilbert M‖^2) -
+          inner ℝ (hilbertOne - rawMobiusHilbert N) (rawMobiusHilbert M) := by
+    rw [inner_sub_left, inner_sub_left, real_inner_self_eq_norm_sq, hhead]
+    ring
+  simp_rw [hid]
+  simpa only [sub_zero] using
+    tendsto_const_nhds.sub hz
+
+
 end RiemannResearch.RH.Pareto

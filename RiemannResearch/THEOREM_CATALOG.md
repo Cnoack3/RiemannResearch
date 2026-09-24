@@ -1,5 +1,48 @@
 # Theorem catalog
 
+### Signed raw Gram energy and far-tail continuation (2026-09-24)
+
+**Established in Lean:** RH/RawMobiusSignedGramEnergy defines actual signed
+atoms, the diagonal \(D_N\), and the complete ordered off-diagonal sum \(Q_N\).
+It proves
+\[
+ \|U_N\|_P^2=1+2L_N+D_N+Q_N,\quad 0\le D_N\le2H_N,\quad
+ Q_N-4\le B_N\le2Q_N+4H_N\ \text{eventually}.
+\]
+For every positive exponent,
+frequently_power_rawMobiusBudget_iff_offDiagonal proves equivalence of the
+cofinal upper power bounds for \(B_N\) and \(Q_N\).
+
+**Conditional research reduction:**
+riemannHypothesis_of_frequently_subpower_raw_offDiagonal proves Mathlib RH
+from those upper estimates on \(Q_N\) at every positive exponent.
+Its arithmetic hsub is **Open**. No bound on the growing mixed Gram block
+is inferred from fixed-source convergence.
+
+**Established in Lean:** NaturalMobiusSourceLimits adds
+rawMobiusResidual_inner_rawMobius_tendsto_zero and
+rawMobius_tail_inner_head_tendsto: unconditional cancellation of every
+fixed-head/expanding-tail signed rectangle, with its explicit limit.
+
+**Established in Lean:** RawMobiusBudgetQuantitative adds
+rawMobiusSquareBudget_add_far_sub_norm_tendsto_zero, proving the exact
+harmonic correction tends to zero while retaining the far tail.
+
+**Established in Lean:** Analysis/ReciprocalEnergyFromPrefix proves finite
+and infinite Abel energy transfers. RawMobiusFiniteWindowEnergy specializes
+them as rawMobiusFarEnergy_le_of_prefix, with its finite-interval arithmetic
+provider explicit.
+
+**Mathematical proof, not yet fully Lean-formalized:** the classical dual
+large sieve plus exact CRT covariance gives
+\[
+ T_N\le[2A_N^2+(N/6)H_N^2]/(N^2+2)\longrightarrow0.
+\]
+The Fourier/CRT and large-sieve provider implementation remains pending;
+the middle-window subpower bound remains **Open**.
+See [RawMobiusSignedGramAttempt20260924.md](RH/RawMobiusSignedGramAttempt20260924.md)
+and [RawMobiusFarTailLargeSieve20260924.md](RH/RawMobiusFarTailLargeSieve20260924.md).
+
 ### Quantitative raw budget and fixed-power zero-free regions (2026-09-24)
 
 **Established in Lean:** RH/RawMobiusBudgetQuantitative proves the exact

@@ -109,4 +109,31 @@ theorem rawMobiusSquareBudget_le_two_raw_norm_sq (N : ℕ) :
   nlinarith
 
 
+/-- The full-tail-completed budget differs from the physical norm by a
+harmonic correction that vanishes unconditionally. -/
+theorem rawMobiusSquareBudget_add_far_sub_norm_tendsto_zero :
+    Tendsto (fun N => rawMobiusSquareBudget N + rawMobiusFarEnergy N (N^2) -
+      ‖hilbertOne-rawMobiusHilbert N‖^2) atTop (𝓝 0) := by
+  have hm : Tendsto (fun N => (mobiusReciprocalSum N)^2) atTop (𝓝 0) := by
+    simpa using mobiusReciprocalSum_tendsto_zero.pow 2
+  have hh : Tendsto (fun N => (mobiusReciprocalSum N)^2*
+      ((harmonic N : ℝ)+1)) atTop (𝓝 0) := by
+    have he (N : ℕ) : (∑ n ∈ Finset.range (N+1), 1/(n : ℝ)) = (harmonic N : ℝ) := by
+      rw [Finset.sum_range_succ']
+      simp only [Nat.cast_add, Nat.cast_one, Nat.cast_zero, div_zero, add_zero]
+      simp [harmonic, one_div]
+    simpa only [he] using mobiusReciprocalSum_sq_mul_harmonic_tendsto_zero
+  have hb : Tendsto (fun N : ℕ => (N : ℝ)+1) atTop atTop :=
+    tendsto_atTop_mono (fun N => by linarith) tendsto_natCast_atTop_atTop
+  have hi : Tendsto (fun N : ℕ => 1/((N : ℝ)+1)) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop hb
+  have ht := (hh.add (hm.mul hi)).sub (hm.const_mul 2)
+  simp only [zero_add, mul_zero, sub_zero] at ht
+  convert ht using 1
+  ext N
+  rw [rawMobiusSquareBudget_add_far_eq, harmonic_succ]
+  push_cast
+  ring
+
+
 end RiemannResearch.RH.Pareto
