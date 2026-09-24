@@ -25,16 +25,16 @@ namespace RiemannResearch.RH.Pareto.CoefficientStabilization
 open RiemannResearch.Analysis.ExhaustiveWalk
 set_option backward.isDefEq.respectTransparency false
 
-def dilationCorrection : ThresholdHilbert →L[ℝ] ThresholdHilbert :=
+def optimalProjectionDilationCorrection : ThresholdHilbert →L[ℝ] ThresholdHilbert :=
   (-4 : ℝ) • ContinuousLinearMap.id ℝ ThresholdHilbert -
     (13 : ℝ) • doubleDilation + (3 : ℝ) • doubleDilation.comp doubleDilation
 
 theorem dilationCorrection_apply (x : ThresholdHilbert) :
-    dilationCorrection x = (-4 : ℝ) • x - (13 : ℝ) • doubleDilation x +
+    optimalProjectionDilationCorrection x = (-4 : ℝ) • x - (13 : ℝ) • doubleDilation x +
       (3 : ℝ) • doubleDilation (doubleDilation x) := rfl
 
 theorem dilationCorrection_norm_identity (x : ThresholdHilbert) :
-    ‖dilationCorrection x‖ ^ 2 +
+    ‖optimalProjectionDilationCorrection x‖ ^ 2 +
       24 * ‖x + (13 / 24 : ℝ) • doubleDilation x +
         (1 / 2 : ℝ) • doubleDilation (doubleDilation x)‖ ^ 2 =
       (5425 / 12 : ℝ) * ‖x‖ ^ 2 := by
@@ -47,7 +47,7 @@ theorem dilationCorrection_norm_identity (x : ThresholdHilbert) :
   ring
 
 theorem dilationCorrection_norm_sq_le (x : ThresholdHilbert) :
-    ‖dilationCorrection x‖ ^ 2 ≤ (5425 / 12 : ℝ) * ‖x‖ ^ 2 := by
+    ‖optimalProjectionDilationCorrection x‖ ^ 2 ≤ (5425 / 12 : ℝ) * ‖x‖ ^ 2 := by
   have h := dilationCorrection_norm_identity x
   nlinarith [sq_nonneg ‖x + (13 / 24 : ℝ) • doubleDilation x +
     (1 / 2 : ℝ) • doubleDilation (doubleDilation x)‖]
@@ -95,7 +95,7 @@ theorem hilbertDilation_mem_quadruple {n : ℕ} {x : ThresholdHilbert}
 
 theorem dilationCorrection_mem_quadruple {n : ℕ} {x : ThresholdHilbert}
     (hx : x ∈ finiteSpace n) :
-    dilationCorrection x ∈ finiteSpace (quadrupleStage n) := by
+    optimalProjectionDilationCorrection x ∈ finiteSpace (quadrupleStage n) := by
   rw [dilationCorrection_apply, doubleDilation_twice]
   apply (finiteSpace (quadrupleStage n)).add_mem
   · apply (finiteSpace (quadrupleStage n)).sub_mem
@@ -108,45 +108,45 @@ theorem dilationCorrection_mem_quadruple {n : ℕ} {x : ThresholdHilbert}
 
 theorem dilationCorrection_two_gap (m : ℕ) :
     inner ℝ (projectionResidual (quadrupleStage m))
-        (dilationCorrection (projection (quadrupleStage m))) =
+        (optimalProjectionDilationCorrection (projection (quadrupleStage m))) =
       inner ℝ (projection (quadrupleStage (quadrupleStage m)) -
           projection (quadrupleStage m))
-        (dilationCorrection (projection (quadrupleStage m) - projection m)) := by
+        (optimalProjectionDilationCorrection (projection (quadrupleStage m) - projection m)) := by
   let n := quadrupleStage m
   let k := quadrupleStage n
   have hm : projection m ∈ finiteSpace m := (finiteSpace m).starProjection_apply_mem _
   have hn : projection n ∈ finiteSpace n := (finiteSpace n).starProjection_apply_mem _
   have hmn : m ≤ n := by dsimp [n, quadrupleStage]; omega
-  have hv : dilationCorrection (projection m) ∈ finiteSpace n :=
+  have hv : optimalProjectionDilationCorrection (projection m) ∈ finiteSpace n :=
     dilationCorrection_mem_quadruple hm
   have h0 := projectionResidual_inner_mem n _ hv
   have hdiff : projection n - projection m ∈ finiteSpace n :=
     (finiteSpace n).sub_mem hn (walkSpan_mono residueAtom id hmn hm)
   have h1 := projectionResidual_inner_mem k _
     (dilationCorrection_mem_quadruple hdiff)
-  change inner ℝ (projectionResidual n) (dilationCorrection (projection n)) =
+  change inner ℝ (projectionResidual n) (optimalProjectionDilationCorrection (projection n)) =
     inner ℝ (projection k - projection n)
-      (dilationCorrection (projection n - projection m))
+      (optimalProjectionDilationCorrection (projection n - projection m))
   have he : projectionResidual n =
       projectionResidual k + (projection k - projection n) := by
     unfold projectionResidual
     abel
   calc
     _ = inner ℝ (projectionResidual n)
-        (dilationCorrection (projection n - projection m)) := by
+        (optimalProjectionDilationCorrection (projection n - projection m)) := by
       rw [map_sub, inner_sub_right, h0, sub_zero]
     _ = _ := by rw [he, inner_add_left, h1, zero_add]
 
 theorem dilationCorrection_two_gap_sq_bound (m : ℕ) :
     (inner ℝ (projectionResidual (quadrupleStage m))
-      (dilationCorrection (projection (quadrupleStage m)))) ^ 2 ≤
+      (optimalProjectionDilationCorrection (projection (quadrupleStage m)))) ^ 2 ≤
     (5425 / 12 : ℝ) *
       (energy (quadrupleStage m) - energy (quadrupleStage (quadrupleStage m))) *
       (energy m - energy (quadrupleStage m)) := by
   rw [dilationCorrection_two_gap]
   let a := projection (quadrupleStage (quadrupleStage m)) - projection (quadrupleStage m)
   let b := projection (quadrupleStage m) - projection m
-  have h := norm_inner_le_norm (𝕜 := ℝ) a (dilationCorrection b)
+  have h := norm_inner_le_norm (𝕜 := ℝ) a (optimalProjectionDilationCorrection b)
   have hs := mul_self_le_mul_self (norm_nonneg _) h
   rw [Real.norm_eq_abs] at hs
   have hv := dilationCorrection_norm_sq_le b
@@ -156,8 +156,8 @@ theorem dilationCorrection_two_gap_sq_bound (m : ℕ) :
     projection_gap_sq (by unfold quadrupleStage; omega)
   have hb : ‖b‖ ^ 2 = energy m - energy (quadrupleStage m) :=
     projection_gap_sq (by unfold quadrupleStage; omega)
-  change (inner ℝ a (dilationCorrection b)) ^ 2 ≤ _
+  change (inner ℝ a (optimalProjectionDilationCorrection b)) ^ 2 ≤ _
   rw [← ha, ← hb]
-  nlinarith [sq_abs (inner ℝ a (dilationCorrection b))]
+  nlinarith [sq_abs (inner ℝ a (optimalProjectionDilationCorrection b))]
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization

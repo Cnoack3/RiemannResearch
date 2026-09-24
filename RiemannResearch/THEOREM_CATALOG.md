@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Quantitative Mobius energy and moving Hardy boundaries (2026-09-24)
+
+**Established in Lean:** `RH/CanonicalMobiusQuantitativeEnergy` proves a
+simultaneous full-energy bound for every pair of finite cutoffs K>=2, J>=1:
+E_1(F_N)/N <= 3/N + 2K D(N,K,J)^2 + 4/K, with
+D=1/J+1/(NJ)+C(H_K+H_J+2)/log N and one unconditional C.
+Optimization gives the explicit ceiling B_C(N) with logarithmic ratio
+x_N=(1+log(log N+3))/log N. Both B_C(N) and the residual ceiling
+q_C(N)=2B_C(N)+3/N tend to zero.
+
+**Established in Lean:** `Analysis/WeightedMellinHeadTail` and
+`RH/ExactHeadWeightedEnergy` prove the exact head-tail energy identity,
+including its nonnegative weight defect, and the complete zero-head
+suppression factor (N+1)^(1-u). Actual Hardy line integrals are identified.
+
+**Established in Lean:** `RH/CanonicalMobiusMovingBoundary` assembles an
+unconditional explicit moving-half-plane theorem:
+beta_N=1+log(q_C(N))/(4 log(N+1)) tends to 1 from below and every residual
+line integral on sigma>beta_N is at most sqrt(q_C(N)), tending to zero.
+The module also gives an unconditional intermediate-exponent upper bound
+for the approximants themselves and the full finite theta scheduling family.
+
+**Open:** boundaries tending to 1/2 with a common approximant bound.
+The new logarithmic full-energy saving does not discharge this RH-strength
+obligation. No unconditional RH proof is claimed.
+
+Proof details, exact constants, declarations, and verification scope:
+`RH/QuantitativeMobiusMovingBoundary20260924.md`.
+Integration also renames the operator in `OptimalProjectionDilationGaps`
+to `optimalProjectionDilationCorrection`, resolving a pre-existing root
+import collision with the different `TailCapacityDilationCorrection` definition.
+
 ### Hardy endpoint and moving-bound RH reduction (2026-09-24)
 
 **Established in Lean:** `RH/HardyMobiusEndpoint.rawHardyMobiusSum_endpoint`
