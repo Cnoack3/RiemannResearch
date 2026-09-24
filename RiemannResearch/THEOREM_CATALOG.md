@@ -211,20 +211,23 @@ transfer and Green tail; they do not prove density of the legal span or RH.
 
 ### Exact inverse-Gram correction pairings (2026-09-23)
 
-**Established in Lean:** `RH/ResidueGramCorrectionPairing` adds six proved
-theorems for the actual Pareto Hilbert space. The natural Mobius residual
+**Established in Lean:** `RH/ResidueGramCorrectionPairing` proves exact
+pairings for the actual Pareto Hilbert space. The natural Mobius residual
 annihilates the full finite-support coefficient dual. Its pairing with the
 projected dual equals the inverse-Gram correction, hence also the negative
 pairing with the missed dual component. An exact norm-square identity
-retains the entire signed interaction.
+retains the entire signed interaction. `fixed_matrix_correction_tendsto`
+identifies the limit of each actual inverse-Gram correction coordinate as
+`-inner limitResidual (coefficientDual i)`, with only finitely many
+zero-padded stages. This is unconditional; the limit may be nonzero.
 
 **Mathematical proof, not yet formalized:** each fixed coordinate of
 `b_N + G_N * mu_N` tends to zero, using classical PNT limits, exact periodic
 summation by parts, and a summable divisor bound. Full proof and normalization:
 `RH/InverseGramCorrectionAttempt20260923.md`.
 
-**Open:** decay after multiplication by the growing inverse Gram matrix.
-Source convergence alone does not prove the requested correction limit.
+**Open:** proving that every identified inverse-Gram correction limit is zero.
+Source convergence alone does not prove this vanishing.
 
 ### Continuous Nyman space and Burnol analytic prerequisites (2026-09-23)
 

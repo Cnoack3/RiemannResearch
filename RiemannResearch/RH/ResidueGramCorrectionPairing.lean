@@ -15,7 +15,8 @@ an actual mixed pairing; its decay is not assumed or asserted.
 -/
 
 noncomputable section
-open scoped BigOperators
+open Filter
+open scoped Topology BigOperators
 namespace RiemannResearch.RH.Pareto.CoefficientStabilization.GramMobiusCorrection
 
 /-- Residual of the finite, uncorrected negative-Mobius synthesis. -/
@@ -79,5 +80,25 @@ theorem correction_twice_eq_energy_difference (n : ℕ) (i : Fin n) :
   have ha := norm_add_sq_real (naturalResidual n) (dualResidual n i.val)
   have hc := correction_eq_neg_dualResidual_pairing n i
   linarith
+
+/-- The fixed coordinate of the actual inverse-Gram source correction has an
+unconditional limit. The zero padding affects only stages before the coordinate
+appears. Here the index `i` denotes the generator `g_(i+2)`.
+
+Source: user-requested identification, 24 September 2026; this combines the
+project's full-Pareto projection limit with its finite-support Möbius dual. -/
+theorem fixed_matrix_correction_tendsto (i : ℕ) :
+    Tendsto (fun n => if h : i < n then correctionVector n ⟨i, h⟩ else 0)
+      atTop (𝓝 (-inner ℝ limitResidual (coefficientDual i))) := by
+  have hval : mobiusDifferenceCLM (i + 2) limitResidual =
+      -inner ℝ limitResidual (coefficientDual i) := by
+    rw [coefficientDual_inner]
+    simp [coefficientCLM]
+  have hlim : Tendsto (fun n => correction n (i + 2)) atTop
+      (𝓝 (-inner ℝ limitResidual (coefficientDual i))) := by
+    simpa only [hval] using correction_tendsto_residual (i + 2) (by omega)
+  apply hlim.congr'
+  filter_upwards [eventually_gt_atTop i] with n hn
+  simp [hn, correctionVector_apply]
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization.GramMobiusCorrection

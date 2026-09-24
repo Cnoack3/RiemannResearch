@@ -1,6 +1,6 @@
 # The actual Gram source tends coordinatewise to zero
 
-This is an unconditional analytic result for the **source** \(b_N+G_N\mu_N\). It does not prove that its product with the growing inverse Gram matrix tends coordinatewise to zero. The proof below is mathematical and is not yet formalized in Lean. A separate module, `ResidueGramCorrectionPairing.lean`, verifies six exact Hilbert-space identities described at the end of this note. The requested inverse-Gram correction limit remains open.
+This is an unconditional analytic result for the **source** \(b_N+G_N\mu_N\). It does not prove that its product with the growing inverse Gram matrix tends coordinatewise to zero. The proof below is mathematical and is not yet formalized in Lean. The module `ResidueGramCorrectionPairing.lean` verifies the exact Hilbert-space identities described at the end of this note. It also identifies the unconditional limit of each actual inverse-Gram correction as \(-\langle r,u_m\rangle_P\), with \(r=\mathbf1-P_V\mathbf1\). Proving these limits all equal zero remains open.
 
 Fix integers \(N\ge1\) and \(m\ge2\). For positive integers \(n,d\), put
 \[
