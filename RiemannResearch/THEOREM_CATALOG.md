@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Lateral arithmetic synthesis: charges, projections, and logarithmic tests (2026-09-24)
+
+**Established in Lean:** `RH/ReciprocalChargeDyadicAverages` proves the exact
+limiting energy (3L+15)/(pi^2 (L+1)^2) of the mean of L+1 dyadic charge vectors,
+retaining negative neighboring correlations.
+`RH/ReciprocalChargeInnovations` proves exact charge/adjacent-step
+biorthogonality, orthogonality to the preceding finite legal space, and the
+full-space innovation energy bound >=1/42.
+`RH/CanonicalMobiusSourceProjection` identifies the actual capacity normal
+scaled by first-head error with the negative projection-residual tail.
+`NumberTheory/DivisorCountLogSummability` proves the divisor-weighted
+logarithmic series converges for p>2.
+`RH/NaturalMobiusLogarithmicTests` extends the PNT test class to physical
+primitive growth C(K+1)/log(2(K+1))^p.
+
+**Conditional RH reduction:** the new logarithmic RH implication retains
+this explicit bound for the actual limiting residual as an **Open** input.
+Dual norm cancellation and full-space innovation positivity do not prove
+capacity divergence. Unconditional RH was not established.
+See `RH/LateralArithmeticSynthesis20260924.md`.
+
+
 ### Exact arithmetic gain cancellation and harmonic bound (2026-09-24)
 
 **Established in Lean:** `RH/CanonicalMobiusWindowGainBounds` cancels the
