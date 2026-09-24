@@ -1,5 +1,15 @@
 # Theorem catalog
 
+### Signed Gram moving exponents (2026-09-24)
+
+**Conditional research reductions:** RH/RawMobiusSignedGramMovingExponent
+proves zeta_ne_zero_of_frequently_raw_offDiagonal_power,
+riemannHypothesis_of_raw_offDiagonal_exponents_tendsto_zero, and
+riemannHypothesis_of_raw_offDiagonal_moving_exponent.
+Each exponent may have its own constant and cofinal set.
+The actual signed arithmetic bounds hC/hbound remain **Open**.
+See RH/SignedGramMovingExponentAudit20260924.md for literature and limits.
+
 ### Signed raw Gram energy and far-tail continuation (2026-09-24)
 
 **Established in Lean:** RH/RawMobiusSignedGramEnergy defines actual signed
