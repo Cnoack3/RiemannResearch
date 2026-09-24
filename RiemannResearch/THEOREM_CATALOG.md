@@ -1,5 +1,57 @@
 # Theorem catalog
 
+### Agenda execution: signed Schur, weighted minima, reciprocal charges (2026-09-24)
+
+**Established in Lean:** `RH/ReciprocalSchurVariation` proves the actual
+signed W increment including the Mobius term, symmetric reciprocal numerator,
+exact projection budgets, absolute mixed variation <=sqrt(2), and exact mixed
+sum 1-r(1). Signed saturation remains Open.
+
+**Established in Lean:** `RH/ParetoWeightedCells` and `RH/ParetoWeightedGram`
+prove exact positive physical cell weights, complete infinite weighted energy,
+the actual positive definite finite matrix and minimum 1/u-b^T G^(-1)b.
+They prove cutoff monotonicity, finite/closure approximation transfer, and
+unconditional optimized convergence for u>=2. The `riemannHypothesis_of_minima`
+consumer is a **conditional research reduction**: the actual vanishing
+minima for weights approaching 1 remain Open.
+
+**Established in Lean:** `RH/ParetoResidualShell` and
+`RH/ParetoTailAverageArithmetic` prove exact dyadic tail bookkeeping, signed
+full-tail observations of legal exact heads, and a residue-jump Abel identity.
+No cofinal normalized-tail upper bound or actual Noor regularity is proved.
+
+**Established in Lean:** `RH/MobiusResidualOneSidedMass` proves uniform
+reconstruction bounds from either norm-summable charge sign part. Under
+not RH, both actual residual sign masses have partial sums tending to infinity.
+The sufficient one-sided mass hypothesis remains an Open arithmetic input.
+
+**Classical import completed in this physical realization:** Balazard
+Propositions 5--7 are implemented by
+`NumberTheory/QuotientWindowSquareBound`, `RH/MobiusQuotientEnergy`,
+`RH/MobiusReciprocalChargeBridge`, and `RH/BalazardReciprocalCharge`.
+The actual quotient-window bound is 10 and the Riesz squared norm bound is 42.
+`mobiusDifference_reciprocal_tendsto_zero` proves the ordered reciprocal
+charge sum tends to zero for every physical Hilbert vector, without any
+unproved uniform-bound premise. The from-two sum tends to -f(1).
+The representing vectors converge weakly to zero but provably not in norm.
+
+**Established in Lean:** `RH/NaturalMobiusPhysicalTests` proves actual raw
+Mobius exact heads, fixed-coordinate decay, |A_N(k)|<=min(N,k), and convergence
+against an explicitly summable test class. Periodic residue atoms fail that
+test condition; full fixed Gram-source decay is not claimed.
+
+**Still Open:** the signed scalar saturation, approximation at weights near 1,
+actual cofinal tail boundedness, one-sided mass control, and residual regularity.
+**Remaining formal imports:** the local RH converse, Burnol projection
+representation, and full BSY boundary passage.
+
+**Written mathematics, not Lean-verified:** the complete derivation
+||Q_N||^2 -> sum mu(n)^2/n^2 = 15/pi^2 is saved in
+`RH/ReciprocalChargeNormLimit20260924.md`. No mathematical novelty is claimed.
+Full execution report: `RH/RH_Agenda_Execution_2026-09-24.md`.
+No unconditional RH proof is asserted.
+
+
 ### RH criteria, reciprocal correction, and sign oscillation (2026-09-24)
 
 **Established in Lean:** `RH/ReciprocalGramCorrection` computes the growing
