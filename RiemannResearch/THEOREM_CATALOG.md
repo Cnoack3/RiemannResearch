@@ -1,5 +1,17 @@
 # Theorem catalog
 
+### Directed RH arithmetic: prefixes and first window (2026-09-24)
+
+**Established in Lean:** `RH/CenteredResiduePrefixes` proves an exact
+discrete primitive, uniform shifted Mobius prefix bounds, summability, and
+an unconditional signed Pareto-tail bound. `RH/RawMobiusFirstWindow` proves
+U_N(k)=k*m_N+M(k)-M(N) on N<k<=2N+1 and weighted increment energy <=2*B_N.
+`RH/ParetoUniformJordanIdentification` identifies the top-half moving
+divisor coordinates exactly as mu(q)/q and derives a uniform-variance lower bound.
+The actual cofinal subpower bound for B_N remains **Open**. First-moment
+cancellation is not a bound on the required weighted second moment.
+See `RH/DirectedRHArithmeticAttempt20260924.md`.
+
 ### Exact centered Mobius Jordan variance (2026-09-24)
 
 **Established in Lean:** `RH/ParetoUniformJordanIdentification` proves the

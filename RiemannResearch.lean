@@ -720,6 +720,8 @@ import RiemannResearch.RH.ParetoReflectionWeightBounds
 import RiemannResearch.RH.ParetoReflectionVariance
 import RiemannResearch.RH.ParetoUniformJordanVariance
 import RiemannResearch.RH.ParetoResidueUniformCovariance
+import RiemannResearch.RH.CenteredResiduePrefixes
+import RiemannResearch.RH.RawMobiusFirstWindow
 import RiemannResearch.RH.ParetoJordanMeanCoordinates
 import RiemannResearch.RH.ParetoUniformJordanIdentification
 import RiemannResearch.RH.ParetoReflectionConvergence

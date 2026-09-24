@@ -259,5 +259,72 @@ theorem centeredMobius_factorial_variance_eq_jordan (N : ℕ) :
   exact Nat.dvd_factorial (by have := (Finset.mem_Icc.mp hd).1; omega)
     (Finset.mem_Icc.mp hd).2
 
+/-!
+## Moving divisor coordinates in the top half of the cutoff
+
+Source: direct divisibility calculation for the user's directed RH attempt,
+September 24, 2026. If q<=N<2q, the sole multiple of q in 1,...,N is q.
+The actual coefficient is therefore mu(q)/q, with no cancellation hypothesis.
+The variance lower bound concerns the uniform period only; it is not a
+lower or upper estimate for the weighted Pareto middle window.
+-/
+
+theorem divisorCoordinate_eq_single_of_top_half
+    (c : ℕ → ℝ) (N q : ℕ) (hq : 0 < q) (hqN : q ≤ N)
+    (hhalf : N < 2 * q) :
+    (∑ d ∈ Finset.Icc 1 N, c d * divisorIncidence d q) = c q := by
+  classical
+  rw [Finset.sum_eq_single q]
+  · simp [divisorIncidence]
+  · intro d hd hdq
+    have hnot : ¬ q ∣ d := by
+      intro hqd
+      rcases hqd with ⟨k, rfl⟩
+      have hk : 2 ≤ k := by
+        by_contra h
+        have hk' : k = 0 ∨ k = 1 := by omega
+        rcases hk' with rfl | rfl <;> simp_all
+      have hdN := (Finset.mem_Icc.mp hd).2
+      have hmul : q * 2 ≤ q * k := Nat.mul_le_mul_left q hk
+      omega
+    simp [divisorIncidence, hnot]
+  · intro hnot
+    exact (hnot (Finset.mem_Icc.mpr ⟨hq, hqN⟩)).elim
+
+theorem centeredMobius_divisorCoordinate_eq_top_half
+    (N q : ℕ) (hq : 0 < q) (hqN : q ≤ N) (hhalf : N < 2 * q) :
+    (∑ d ∈ Finset.Icc 1 N,
+      ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) * divisorIncidence d q) =
+        (ArithmeticFunction.moebius q : ℝ)/(q : ℝ) :=
+  divisorCoordinate_eq_single_of_top_half
+    (fun d => (ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) N q hq hqN hhalf
+
+theorem centeredMobius_factorial_variance_ge_top_half
+    (N : ℕ) (hN : 2 ≤ N) :
+    (∑ q ∈ Finset.Icc (N / 2 + 1) N,
+      jordanTwo q * ((ArithmeticFunction.moebius q : ℝ)/(q : ℝ))^2) / 12 ≤
+    (∑ n ∈ Finset.range N.factorial,
+      (∑ d ∈ Finset.Icc 1 N, ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) *
+        (residue d n - ((d : ℝ)-1)/2))^2) / (N.factorial : ℝ) := by
+  rw [centeredMobius_factorial_variance_eq_jordan]
+  apply div_le_div_of_nonneg_right _ (by norm_num : (0 : ℝ) ≤ 12)
+  calc
+    _ = ∑ q ∈ Finset.Icc (N / 2 + 1) N, jordanTwo q *
+        (∑ d ∈ Finset.Icc 1 N,
+          ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) * divisorIncidence d q)^2 := by
+      apply Finset.sum_congr rfl
+      intro q hq
+      have hq' := Finset.mem_Icc.mp hq
+      rw [centeredMobius_divisorCoordinate_eq_top_half N q
+        (by omega) hq'.2 (by omega)]
+    _ ≤ _ := by
+      apply Finset.sum_le_sum_of_subset_of_nonneg
+      · intro q hq
+        have hq' := Finset.mem_Icc.mp hq
+        exact Finset.mem_Icc.mpr ⟨by omega, hq'.2⟩
+      · intro q hq _
+        exact mul_nonneg (jordanTwo_pos q
+          (by have := (Finset.mem_Icc.mp hq).1; omega)).le (sq_nonneg _)
+
 end
 end RiemannResearch.RH.Pareto
