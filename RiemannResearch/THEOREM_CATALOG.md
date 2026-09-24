@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Exact screening bridge and centered primitives (2026-09-24)
+
+**Established in Lean:** `RH/ReciprocalChargeGeometricInnovation` proves the
+geometric dyadic charge energy limit (12+3*4^(-L))/pi^2, its exact unit pairing
+with the full adjacent innovation, and eventual full innovation energy > c
+for every c < pi^2/12.
+`RH/CanonicalMobiusScreeningBridge` proves the actual identities
+B_M = D_M + E_M*s_M^2 and D_M = B_M*E_(M+1)/E_M, with the full signed source
+and complete tail retained. It transfers the dyadic bound to the actual tail
+denominator with this error ratio. Nondensity implies the ratio tends to one
+and the actual denominator is eventually > c for every c < pi^2/12.
+`RH/NaturalMobiusCenteredPrimitiveTests` proves the exact physical-primitive
+formula H_f(N)-L*N = 2*sum_(j<N)(tailAverage f j-L)-N*(tailAverage f N-L),
+and extends the PNT pairing tests to centered physical primitives.
+
+**Conditional RH reduction:** the centered physical primitive bound
+|H_r(K)-L*K| <= C*(K+1)/log(2*(K+1))^p, p>2, for the actual residual remains
+**Open**. Actual signed source accumulation sum s_M^2/D_M = infinity also
+remains **Open**. The all-integer dilation extension to a full innovation
+lower limit of 1 is an informal mathematical argument, not a new Lean result.
+Unconditional RH was not proved.
+See `RH/LateralScreeningContinuation20260924.md`.
+
 ### Lateral arithmetic synthesis: charges, projections, and logarithmic tests (2026-09-24)
 
 **Established in Lean:** `RH/ReciprocalChargeDyadicAverages` proves the exact
