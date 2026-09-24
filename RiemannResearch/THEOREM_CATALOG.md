@@ -1,5 +1,48 @@
 # Theorem catalog
 
+### Physical signed harmonic masses (2026-09-24)
+
+**Established in Lean:** `RH/ResidualPhysicalSignMass` proves that, for any
+annihilator of all actual residue generators, summability of either
+positive or negative physical first moment forces summability of the
+absolute first moment. For the actual projection residual, the existing
+raw-Mobius test convergence then forces residual vanishing.
+
+The theorem `not_RH_physical_sign_masses_nonsummable` proves that failure
+of RH makes both nonnegative series `sum r(k)^+/(k+1)` and
+`sum r(k)^-/(k+1)` nonsummable. The formal statements use the equal
+weights `positiveWeight k * k`, with the zero coordinate anchored at zero.
+These are physical sign masses, not Möbius-charge sign masses.
+
+The coherent check `job_gx4m_YwzFV0V7Qcc7-X67PF61Z8C5uzj` succeeded,
+exit 0, verified true, in 4.750 seconds. Both principal axiom reports
+contain only `propext`, `Classical.choice`, and `Quot.sound`.
+
+**Open:** summability of either signed mass for the actual residual.
+The proved conditional vanishing implications do not discharge that
+arithmetic premise and do not prove unconditional RH.
+
+### Residual dilation tail localization (2026-09-24)
+
+**Established in Lean:** `RH/ParetoDilationTailLocalization` proves, for any
+Pareto Hilbert vectors f,g, that
+`inner(f,D_(N+1) g)^2 <= (N+1)*norm(g)^2*norm(tail_N f)^2`.
+Consequently the squared correlation divided by N+1 tends to zero.
+
+**Established in Lean:** `RH/ResidualDilationTailBounds` specializes this
+bound and limit to the actual projection residual. It also proves the
+finite partial-sum upper bound obtained by retaining the individual tail
+energies in the signed dilation identity.
+
+The coherent proof check `job_i-lCGXY-xMXctD5cpNL8d4dj0ktS4qz6` succeeded,
+exit 0, verified true, in 4.225 seconds. Principal axiom reports contain
+only `propext`, `Classical.choice`, and `Quot.sound`.
+No unresolved arithmetic premise occurs in these declarations.
+Publication additionally requires the affected-module checkpoint.
+
+**Still Open:** an estimate for the actual residual strong enough to force
+its energy to vanish. The new limits do not establish RH.
+
 ### Logarithmic Möbius mean, full fixed sources, and primitive criteria (2026-09-24)
 
 **Established in Lean:** `NumberTheory/PrimeNumberTheorem/LogarithmicMobiusMean`
