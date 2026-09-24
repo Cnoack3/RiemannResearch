@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Residual tails and inverse source escape (2026-09-24)
+
+**Established in Lean:** `RH/ResidualTailPNT` connects the existing
+sublinear-energy reduction to `canonicalMobiusHilbert_sublinear`, whose
+classical PNT premise is already discharged. Positive limiting energy E
+forces positive residual tails T_N at every cutoff and N T_N -> infinity.
+The actual residual is zero exactly when N T_N has a bounded cofinal
+subsequence. With the existing explicit PNT ceiling q_C(N), one unconditional
+constant C gives eventually (N+1) T_N >= E^2/q_C(N), with q_C(N)>0 and q_C(N)->0.
+
+**Historical target resolved:** `residualTailLinearFloor` in
+`RH/ResidualEnergyHistoricalTargets` proves `ResidualTailLinearFloorTarget`. The stronger divergence result
+makes the proposed linear exact-head upper witness unnecessary for this target.
+
+**Established in Lean:** `RH/NaturalMobiusResidualEscape` proves
+<A_N,r-Q_N r>=E for the raw Mobius residual A_N and the total finite-dual
+projections Q_N. It proves the exact full-norm identity
+||A_N||^2 = energy N + s_N^T G_N^(-1) s_N, where s_N=b_N+G_N mu_N.
+Positive E forces both ||A_N|| and this inverse quadratic form to infinity.
+Every fixed correction still has its previously proved finite limit.
+
+**Conditional research reductions / Open:** a bounded cofinal subsequence
+of N T_N, of ||A_N||, or of s_N^T G_N^(-1) s_N suffices for RH.
+None of these boundedness providers is proved. Fixed source decay, relative
+Gram-inverse bounds, and sublinear energy do not supply them.
+The qualitative tail argument was already present conditionally; this update
+discharges its arithmetic inputs and adds the quantitative and raw-source results.
+No unconditional RH proof or claim of mathematical novelty is made.
+
+Proofs, exact declarations, and remaining obligations:
+`RH/ResidualEscapePNT20260924.md`.
+
 ### Gram–Mobius quantitative bridge (2026-09-24)
 
 **Established in Lean:** `RH/UniformTrigammaMeanPoint` combines the cubic

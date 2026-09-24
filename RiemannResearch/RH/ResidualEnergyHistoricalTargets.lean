@@ -6,14 +6,16 @@ import RiemannResearch.RH.IntegerDPPGramDeterminant
 import RiemannResearch.RH.ParetoGibbsSpectralGap
 import RiemannResearch.RH.TwoSeedHeadEnergyGeometry
 import RiemannResearch.RH.ActualLaguerreParseval
+import RiemannResearch.RH.ResidualTailPNT
 
 /-!
-# Open quantitative residual-energy assertions from the historical catalogue
+# Quantitative residual-energy assertions from the historical catalogue
 
 Source: user-provided stringent-condition catalogue, conditions 1, 3--4,
-11--14, and 16--18, 2026-09-21. All statements below are concrete OPEN
-formalization targets, with actual arithmetic objects and explicit quantifiers.
-No target is asserted as a theorem. In particular, the previously quoted
+11--14, and 16--18, 2026-09-21. The residual-tail floor is discharged below
+using the later PNT provider. Statements marked OPEN remain formalization
+targets with actual arithmetic objects and explicit quantifiers. No open
+target is assumed as a theorem. In particular, the previously quoted
 numerical certificate is recorded without pretending to have reverified it.
 -/
 
@@ -66,13 +68,23 @@ def LinearExactHeadUpperWitnessTarget : Prop :=
   ∀ N : ℕ, ∃ f : ThresholdHilbert, FiniteResidueLegal f ∧ ExactHead N f ∧
     ‖hilbertOne - f‖ ^ 2 ≤ 4 * (N : ℝ) + 1 / ((N : ℝ) + 1)
 
-/-- OPEN: positive tails and the precise liminf floor, stated without a
+/-- Historical target, now proved by `residualTailLinearFloor`: positive tails
+and the precise liminf floor, stated without a
 real-valued liminf convention for a possibly unbounded sequence. -/
 def ResidualTailLinearFloorTarget : Prop :=
   ¬ RiemannHypothesis →
     (∀ N : ℕ, 0 < residualTailEnergy N) ∧
     (∀ b : ℝ, b < limitEnergy ^ 2 / 4 →
       ∀ᶠ N : ℕ in atTop, b < (N : ℝ) * residualTailEnergy N)
+
+/-- The historical floor follows from the stronger PNT tail-divergence theorem.
+The previously proposed linear upper witness is not required for this proof. -/
+theorem residualTailLinearFloor : ResidualTailLinearFloorTarget := by
+  intro hRH
+  have hp := not_RH_limitEnergy_pos hRH
+  refine ⟨residualTailEnergy_pos_of_limitEnergy_pos hp, ?_⟩
+  intro b hb
+  exact (normalized_residual_tail_tendsto_atTop hp).eventually_gt_atTop b
 
 /-- Exact multiplicity expressed by actual derivatives at an actual zero. -/
 def ZetaMultiplicity (ρ : ℂ) (m : ℕ) : Prop :=

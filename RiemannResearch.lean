@@ -1,3 +1,5 @@
+import RiemannResearch.RH.NaturalMobiusResidualEscape
+import RiemannResearch.RH.ResidualTailPNT
 import RiemannResearch.RH.UniformTrigammaMeanPoint
 import RiemannResearch.RH.MidpointTailEnergy
 import RiemannResearch.RH.CanonicalMobiusCapacityHardy
