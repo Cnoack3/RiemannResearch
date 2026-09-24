@@ -1,5 +1,162 @@
 # Actual residual regularity and concrete Lean routes
 
+## Continuation: recovered queue and exact cutoff minimizers
+
+Date: 2026-09-24. Source inspected in the resumed workspace at commit
+`8a7abbde985f0c4e39e1dc75bfc574b4aa45e914`.
+Source for the candidate statements: user-provided
+`ActualResidualRegularityRoutes20260924_ExactEnergy_Continuation(1)(1).md`.
+The cutoff argument below is an elementary consequence of the exact tail
+splitting in that handoff; no novelty claim is made.
+
+### Verification boundary
+
+**No new theorem was kernel-verified. No unconditional proof of RH or
+provider of actual residual regularity was obtained.**
+
+The workspace-resume call returned HTTP 504, but subsequent read-only calls
+recovered the existing workspace and the previously unknown audit job. The
+working tree was clean at the source commit above. The relevant source files
+and repository instructions were read directly.
+
+| Job | Purpose | Terminal result |
+| --- | --- | --- |
+| `job_NUvBOuST_PODobZU37H-t2ztdeWXetpr` | Recovered earlier audit | `wall_timeout`, 90.023 seconds, exit code -9, no diagnostics |
+| `job_JfAHZq-Kkn1mZBCJrt8-71mNLU00Hgb6` | Shifted-energy and coefficient-shift candidate batch | `wall_timeout`, 300.025 seconds, exit code -9, no diagnostics |
+| `job_maMqhfk9t_BHo6idCK_OGJm2QQp5gkga` | Import-free `example : True := True.intro` | `wall_timeout`, 60.029 seconds, exit code -9, no diagnostics |
+
+All three jobs are terminal. The last status response reported zero active
+jobs. The import-free diagnostic shows that the verification execution path
+also fails on a trivial example; it does not identify the exact startup or
+process-level cause. None of these timeouts is a Lean refutation. No further
+proof submission was made after that diagnostic.
+
+The candidate batch added both real-inner-product scalar orientations to the
+simplification used in the weighted and rescaled identities. That change is
+unverified; no tactic diagnostic established that it was necessary. The
+covariance and RH-bridge candidates were inspected and prepared but not
+submitted. No `.lean` file, import, or established theorem-catalog status was
+changed by this continuation. Publication of this note checks documentation,
+not the proposed Lean proofs.
+
+### Exact cutoff change on a fixed family
+
+Let H_i be a finite nonempty family of vectors in the Pareto Hilbert space,
+all with physical value one at every integer 1 through K. Let 0 <= N <= K.
+Define the complete tail covariance
+
+\[
+C_L(i,j)=\sum_{n>L}\frac{H_i(n)H_j(n)}{n(n+1)},\qquad
+p=\frac K{K+1}-\frac N{N+1}.
+\]
+
+Splitting the convergent tail at K and summing the finite telescoping head gives
+
+\[
+C_N=C_K+p\mathbf1\mathbf1^{\mathsf T},\qquad
+c^{\mathsf T}C_Nc=c^{\mathsf T}C_Kc+p\left(\sum_i c_i\right)^2.
+\]
+
+Every signed mixed term and the complete infinite tail are retained. On the
+affine set sum_i c_i = 1, the two objectives differ by exactly p. Therefore
+**their entire sets of minimizing coefficient vectors coincide**, including
+any nonuniqueness caused by a singular Gram matrix. This strengthens the
+handoff's equality of minimizing Hilbert vectors. It does not assert equality
+of independently chosen `Classical.choose` coefficient vectors.
+
+Here is a short Lean candidate using the existing exact head splitting and
+capacity identity. **It has not been submitted to Lean or kernel-verified.**
+
+```lean
+import RiemannResearch.RH.CanonicalMobiusCovarianceMinimum
+
+noncomputable section
+open scoped BigOperators
+
+namespace RiemannResearch.RH.Pareto.CoefficientStabilization.SignedCovariance
+
+variable {ι : Type*} [Fintype ι] [Nonempty ι]
+
+/-- Every affine minimizer for one admissible cutoff minimizes for the other. -/
+theorem affine_minimizer_cutoff_iff
+    (N K : ℕ) (hNK : N ≤ K) (k : ι → ℕ) (hk : ∀ i, 0 < k i)
+    (hindex : ∀ i, K ≤ k i) (c : ι → ℝ) (hc : ∑ i, c i = 1) :
+    (‖hilbertTailShift (combination k c) N‖ ^ 2 = (capacity N k hk)⁻¹ ↔
+      ‖hilbertTailShift (combination k c) K‖ ^ 2 = (capacity K k hk)⁻¹) := by
+  have hsN := exact_head_norm_sq_split (combination k c) N
+    (combination_exact N k c (fun i => hNK.trans (hindex i)) hc)
+  have hsK := exact_head_norm_sq_split (combination k c) K
+    (combination_exact K k c hindex hc)
+  have hcap := capacity_inv_cutoff_identity N K hNK k hk hindex
+  constructor <;> intro h <;> linarith
+
+end RiemannResearch.RH.Pareto.CoefficientStabilization.SignedCovariance
+```
+
+### Exact transport of normal solutions, including singular matrices
+
+Suppose C_K z_K = 1 and kappa_K = sum_i (z_K)_i > 0. Since p >= 0, define
+
+\[
+z_N=\frac{z_K}{1+p\kappa_K}.
+\]
+
+Then direct matrix multiplication gives
+
+\[
+C_Nz_N
+=\frac{C_Kz_K+p\mathbf1(\mathbf1^{\mathsf T}z_K)}{1+p\kappa_K}
+=\mathbf1.
+\]
+
+The uniqueness of normal mass, already available in the inspected source,
+identifies the resulting mass with kappa_N. Consequently
+
+\[
+\kappa_N=\frac{\kappa_K}{1+p\kappa_K},\qquad
+\frac{z_N}{\kappa_N}=\frac{z_K}{\kappa_K},\qquad
+\kappa_N^{-1}=\kappa_K^{-1}+p.
+\]
+
+The coefficient equality here concerns this explicitly transported solution.
+For independently selected normal solutions, the minimizing vectors and
+minimizer sets agree, while coefficient vectors may differ by a kernel vector.
+
+The kernels also agree. If C_N c = 0, symmetry and C_N z_N = 1 give
+sum_i c_i = c^T C_N z_N = 0. The rank-one identity then gives C_K c = 0.
+The reverse implication follows by the same argument with C_K and z_K.
+Thus ker C_N = ker C_K without an invertibility assumption.
+
+The handoff's phrase "including zero and singular Gram matrices" should be
+read as **including zero coefficient mass and singular Gram matrices with a
+normal solution**. The zero Gram matrix itself has no solution of C z = 1 on
+a nonempty index set.
+
+### Remaining RH obligation and recovery order
+
+This is a fixed-family calculation. It supplies no positive lower bound for
+capacities of families whose indices and cutoffs grow. The open arithmetic
+provider remains a family with kappa_N bounded away from zero at arbitrarily
+large N, or the existing normalized residual-tail bound in Route 1 below.
+The quantitative legal-lift hypothesis in the proposed RH bridge also
+remains open; its implication to residual vanishing does not prove it.
+
+Recovery workspace: `ws_QlZUcOI01jahsWwm0Er-hAPhDEX89Ywp`.
+Project root:
+`/home/cri_2025/lean-agent-workspaces/ws_QlZUcOI01jahsWwm0Er-hAPhDEX89Ywp/RiemannResearch`.
+
+After restoring the verification execution path, establish success of the
+import-free check, then test the shifted-energy/support batch, the covariance
+batch, and the actual-residual bridge sequentially. Only successful checks
+justify integrating the declarations into their owning modules and updating
+the established theorem catalog. The repository's separate formalization gap
+for RH implying Pareto membership is not discharged by these candidates.
+
+---
+
+## Earlier research note (historical source state)
+
+
 Date: 2026-09-24.
 Source state inspected: 408aad739d7ef4f2401f7f85aaae606d53ca7e70.
 
