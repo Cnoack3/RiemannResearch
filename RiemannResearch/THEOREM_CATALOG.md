@@ -1,5 +1,15 @@
 # Theorem catalog
 
+### Exact centered Mobius Jordan variance (2026-09-24)
+
+**Established in Lean:** `RH/ParetoUniformJordanIdentification` proves the
+exact centered Mobius uniform variance as Jordan-weighted divisor squares.
+`centeredMobius_uniform_variance_finite_cutoff` removes all coordinates q>N;
+`centeredMobius_factorial_variance_eq_jordan` has no hypotheses. Only standard
+foundational axioms occur. Uniform variance is not Pareto energy. The cofinal
+subpower estimate for the actual RH budget remains **Open**.
+See `RH/CenteredMobiusJordanVarianceAudit20260924.md`.
+
 ### Signed Gram moving exponents (2026-09-24)
 
 **Conditional research reductions:** RH/RawMobiusSignedGramMovingExponent

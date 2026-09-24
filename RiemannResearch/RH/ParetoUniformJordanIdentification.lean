@@ -126,5 +126,138 @@ theorem uniformReflectionVariance_divisorLegalPacket {ι : Type*}
   rw [mul_div_cancel_left₀ _ hQ0]
   exact legalPacket_gcd_energy_eq_jordan s c a m Q hQ hperiod hscale
 
+/-!
+## Centered raw residue combinations and the actual Mobius cutoff
+
+Source: user-provided RH_Centered_Far_Tail_and_Subpower_Obstruction_2026-09-24(1).md,
+Part I, Sections 2--3, for the centered Mobius variance identity.
+The proof extends the legal-packet identification above to arbitrary centered
+residue combinations, removes the constant Jordan coordinate, and proves that
+the actual Mobius coordinates vanish beyond the arithmetic cutoff. It uses the
+existing CRT and Mobius-inversion proofs, not a uniform-to-Pareto substitution.
+No arithmetic cancellation, large-sieve estimate, or RH hypothesis is assumed.
+-/
+
+
+theorem gcd_square_sub_one_eq_jordan_incidence (Q L K : ℕ) (hQ : 0 < Q)
+    (hL : L ∣ Q) (hK : K ∣ Q) :
+    (Nat.gcd L K : ℝ)^2 - 1 =
+      ∑ d ∈ Q.divisors.erase 1,
+        jordanTwo d * divisorIncidence L d * divisorIncidence K d := by
+  have h1 : 1 ∈ Q.divisors := Nat.mem_divisors.mpr ⟨one_dvd Q, hQ.ne'⟩
+  have he := Finset.sum_erase_add Q.divisors
+    (fun d => jordanTwo d * divisorIncidence L d * divisorIncidence K d) h1
+  rw [← gcd_square_eq_jordan_incidence Q L K hQ hL hK] at he
+  simp only [jordanTwo_one, divisorIncidence, one_dvd, if_true, mul_one] at he ⊢
+  linarith
+
+theorem centeredResidue_uniform_variance_eq_jordan {ι : Type*}
+    (s : Finset ι) (c : ι → ℝ) (m : ι → ℕ)
+    (Q : ℕ) (hQ : 0 < Q) (hm : ∀ i ∈ s, 0 < m i)
+    (hperiod : ∀ i ∈ s, m i ∣ Q) :
+    (∑ n ∈ Finset.range Q,
+      (∑ i ∈ s, c i * (residue (m i) n - ((m i : ℝ)-1)/2))^2) / (Q : ℝ) =
+    (∑ d ∈ Q.divisors.erase 1,
+      jordanTwo d * (∑ i ∈ s, c i * divisorIncidence (m i) d)^2) / 12 := by
+  classical
+  let h : ι → ℕ → ℝ := fun i n => residue (m i) n - ((m i : ℝ)-1)/2
+  have hsum :
+      (∑ n ∈ Finset.range Q, (∑ i ∈ s, c i * h i n)^2) =
+      ∑ i ∈ s, ∑ j ∈ s, c i * c j *
+        (∑ n ∈ Finset.range Q, h i n * h j n) := by
+    simpa only [one_mul] using
+      (finite_gram_diagonal s (Finset.range Q) c (fun _ => 1) h).symm
+  have hc (i : ι) (hi : i ∈ s) (j : ι) (hj : j ∈ s) :
+      (∑ n ∈ Finset.range Q, h i n * h j n) =
+      (Q : ℝ) * (∑ d ∈ Q.divisors.erase 1,
+        jordanTwo d * divisorIncidence (m i) d * divisorIncidence (m j) d) / 12 := by
+    dsimp [h]
+    rw [residue_uniform_covariance_sum (m i) (m j) Q
+      (hm i hi) (hm j hj) (hperiod i hi) (hperiod j hj),
+      gcd_square_sub_one_eq_jordan_incidence Q (m i) (m j) hQ
+        (hperiod i hi) (hperiod j hj)]
+  change (∑ n ∈ Finset.range Q, (∑ i ∈ s, c i * h i n)^2) / (Q : ℝ) = _
+  rw [hsum]
+  have he :
+      (∑ i ∈ s, ∑ j ∈ s, c i * c j * (∑ n ∈ Finset.range Q, h i n * h j n)) =
+      (Q : ℝ)/12 * (∑ i ∈ s, ∑ j ∈ s, c i * c j *
+        (∑ d ∈ Q.divisors.erase 1,
+          jordanTwo d * divisorIncidence (m i) d * divisorIncidence (m j) d)) := by
+    rw [Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro j hj
+    rw [hc i hi j hj]
+    ring
+  rw [he, finite_gram_diagonal]
+  have hQR : (Q : ℝ) ≠ 0 := by positivity
+  field_simp
+
+theorem centeredMobius_uniform_variance_eq_jordan
+    (N Q : ℕ) (hQ : 0 < Q)
+    (hperiod : ∀ d ∈ Finset.Icc 1 N, d ∣ Q) :
+    (∑ n ∈ Finset.range Q,
+      (∑ d ∈ Finset.Icc 1 N, ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) *
+        (residue d n - ((d : ℝ)-1)/2))^2) / (Q : ℝ) =
+    (∑ q ∈ Q.divisors.erase 1, jordanTwo q *
+      (∑ d ∈ Finset.Icc 1 N,
+        ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) * divisorIncidence d q)^2) / 12 :=
+  centeredResidue_uniform_variance_eq_jordan (Finset.Icc 1 N)
+    (fun d => (ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) id Q hQ
+    (fun _d hd => (Finset.mem_Icc.mp hd).1) hperiod
+
+
+/-- The Jordan coordinates outside the original arithmetic cutoff vanish exactly. -/
+theorem centeredMobius_uniform_variance_finite_cutoff
+    (N Q : ℕ) (hQ : 0 < Q)
+    (hperiod : ∀ d ∈ Finset.Icc 1 N, d ∣ Q) :
+    (∑ n ∈ Finset.range Q,
+      (∑ d ∈ Finset.Icc 1 N, ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) *
+        (residue d n - ((d : ℝ)-1)/2))^2) / (Q : ℝ) =
+    (∑ q ∈ Finset.Icc 2 N, jordanTwo q *
+      (∑ d ∈ Finset.Icc 1 N,
+        ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) * divisorIncidence d q)^2) / 12 := by
+  rw [centeredMobius_uniform_variance_eq_jordan N Q hQ hperiod]
+  congr 1
+  symm
+  apply Finset.sum_subset
+  · intro q hq
+    have hq' := Finset.mem_Icc.mp hq
+    exact Finset.mem_erase.mpr ⟨by omega,
+      Nat.mem_divisors.mpr ⟨hperiod q (Finset.mem_Icc.mpr ⟨by omega, hq'.2⟩), hQ.ne'⟩⟩
+  · intro q hq hnot
+    have hq1 : q ≠ 1 := (Finset.mem_erase.mp hq).1
+    have hq0 : 0 < q := Nat.pos_of_mem_divisors (Finset.mem_erase.mp hq).2
+    have hNq : N < q := by
+      have : ¬ (2 ≤ q ∧ q ≤ N) := by simpa only [Finset.mem_Icc] using hnot
+      omega
+    have hz : (∑ d ∈ Finset.Icc 1 N,
+        ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) * divisorIncidence d q) = 0 := by
+      apply Finset.sum_eq_zero
+      intro d hd
+      have hd' := Finset.mem_Icc.mp hd
+      have hnd : ¬ q ∣ d := by
+        intro hqd
+        have := Nat.le_of_dvd (by omega : 0 < d) hqd
+        omega
+      simp [divisorIncidence, hnd]
+    rw [hz]
+    ring
+
+/-- A completely unconditional common-period formula for the actual Mobius coefficients. -/
+theorem centeredMobius_factorial_variance_eq_jordan (N : ℕ) :
+    (∑ n ∈ Finset.range N.factorial,
+      (∑ d ∈ Finset.Icc 1 N, ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) *
+        (residue d n - ((d : ℝ)-1)/2))^2) / (N.factorial : ℝ) =
+    (∑ q ∈ Finset.Icc 2 N, jordanTwo q *
+      (∑ d ∈ Finset.Icc 1 N,
+        ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) * divisorIncidence d q)^2) / 12 := by
+  apply centeredMobius_uniform_variance_finite_cutoff N N.factorial (Nat.factorial_pos N)
+  intro d hd
+  exact Nat.dvd_factorial (by have := (Finset.mem_Icc.mp hd).1; omega)
+    (Finset.mem_Icc.mp hd).2
+
 end
 end RiemannResearch.RH.Pareto
