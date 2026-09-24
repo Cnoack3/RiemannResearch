@@ -177,4 +177,28 @@ theorem rawMobiusFarEnergy_le_of_prefix
     a K C (Nat.cast_nonneg K) hC hp hs
   simpa only [hid, rawMobiusFarEnergy] using hb
 
+/-- A sharp affine prefix estimate at an arbitrary physical cutoff.
+The finite-interval arithmetic provider remains an explicit hypothesis. -/
+theorem rawMobiusFarEnergy_le_of_affine_prefix
+    (N K : ℕ) (B C : ℝ) (hC : 0 ≤ C)
+    (hp : ∀ L : ℕ, (∑ i ∈ Finset.range L,
+      (hilbertSequence (hilbertOne-rawMobiusHilbert N) (i+(K+1)))^2) ≤
+        B+C*L) :
+    rawMobiusFarEnergy N K ≤
+      (B+C*((K : ℝ)+2))/(((K : ℝ)+1)*((K : ℝ)+2)) := by
+  let a : ℕ → ℝ := fun i =>
+    (hilbertSequence (hilbertOne-rawMobiusHilbert N) (i+(K+1)))^2
+  have hid (i : ℕ) : a i / (((K : ℝ)+i+1)*((K : ℝ)+i+2)) =
+      rawMobiusCoordinateEnergy N (i+(K+1)) := by
+    dsimp [a, rawMobiusCoordinateEnergy, positiveWeight]
+    push_cast
+    ring
+  have hs : Summable (fun i : ℕ =>
+      a i / (((K : ℝ)+i+1)*((K : ℝ)+i+2))) := by
+    simp_rw [hid]
+    exact (summable_nat_add_iff (K+1)).mpr (rawMobiusCoordinateEnergy_summable N)
+  have hb := RiemannResearch.Analysis.reciprocal_energy_tsum_le_of_affine_prefix
+    a K B C (Nat.cast_nonneg K) hC hp hs
+  simpa only [hid, rawMobiusFarEnergy] using hb
+
 end RiemannResearch.RH.Pareto
