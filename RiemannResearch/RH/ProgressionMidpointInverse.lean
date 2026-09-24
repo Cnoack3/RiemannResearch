@@ -24,7 +24,7 @@ def midpointGram (Q : ℕ) (I : Finset ℕ) (a : ℕ → ι → ℝ) : Matrix ι
 theorem weightedGram_quadratic (I : Finset ℕ) (w : ℕ → ℝ) (a : ℕ → ι → ℝ)
     (c : ι → ℝ) :
     gramQuadratic (fun i j => ∑ r ∈ I, w r * a r i * a r j) c =
-      ∑ r ∈ I, w r * (dotProduct c (a r))^2 := by
+      ∑ r ∈ I, w r * (dotProduct c (a r)) ^ 2 := by
   simp only [gramQuadratic, Matrix.mulVec, dotProduct, Finset.mul_sum,
     Finset.sum_mul, pow_two]
   rw [Finset.sum_comm]
@@ -39,14 +39,14 @@ theorem weightedGram_quadratic (I : Finset ℕ) (w : ℕ → ℝ) (a : ℕ → �
 
 theorem midpointGram_quadratic_bounds (Q : ℕ) (hQ : 0 < Q) (I : Finset ℕ)
     (hI : ∀ r ∈ I, 0 < r) (a : ℕ → ι → ℝ) (c : ι → ℝ) :
-    (1 - 1 / (2*(Q : ℝ)+3)^2) * gramQuadratic (progressionGram Q I a) c ≤
+    (1 - 1 / (2 * (Q : ℝ) + 3) ^ 2) * gramQuadratic (progressionGram Q I a) c ≤
         gramQuadratic (midpointGram Q I a) c ∧
       gramQuadratic (midpointGram Q I a) c ≤ gramQuadratic (progressionGram Q I a) c := by
   have hg : gramQuadratic (progressionGram Q I a) c =
-      ∑ r ∈ I, progressionWeight Q r * (dotProduct c (a r))^2 :=
+      ∑ r ∈ I, progressionWeight Q r * (dotProduct c (a r)) ^ 2 :=
     weightedGram_quadratic I (progressionWeight Q) a c
   have hm : gramQuadratic (midpointGram Q I a) c =
-      ∑ r ∈ I, progressionMidpointWeight Q r * (dotProduct c (a r))^2 :=
+      ∑ r ∈ I, progressionMidpointWeight Q r * (dotProduct c (a r)) ^ 2 :=
     weightedGram_quadratic I (progressionMidpointWeight Q) a c
   rw [hg, hm]
   exact progressionMidpoint_quadratic_comparison Q hQ I hI (fun r => dotProduct c (a r))
@@ -71,7 +71,7 @@ theorem midpointGram_posDef (Q : ℕ) (hQ : 0 < Q) (I : Finset ℕ)
 theorem midpointGram_inverse_bounds (Q : ℕ) (hQ : 0 < Q) (I : Finset ℕ)
     (hI : ∀ r ∈ I, 0 < r) (a : ℕ → ι → ℝ)
     (hG : (progressionGram Q I a).PosDef) (b : ι → ℝ) :
-    (1 - 1 / (2*(Q : ℝ)+3)^2) *
+    (1 - 1 / (2 * (Q : ℝ) + 3) ^ 2) *
       inverseQuadratic (midpointGram Q I a) (midpointGram_posDef Q hQ I hI a hG) b ≤
         inverseQuadratic (progressionGram Q I a) hG b ∧
       inverseQuadratic (progressionGram Q I a) hG b ≤
@@ -84,7 +84,7 @@ theorem midpointGram_inverse_bounds (Q : ℕ) (hQ : 0 < Q) (I : Finset ℕ)
 /-- The already proved midpoint weight uses the actual trigamma derivative. -/
 theorem progressionMidpointWeight_eq_trigamma (Q r : ℕ) (hQ : 0 < Q) :
     progressionMidpointWeight Q r = positiveWeight r +
-      CRTBlock.trigamma (1 + ((r : ℝ) + 1/2)/Q) / (Q : ℝ)^2 := by
+      CRTBlock.trigamma (1 + ((r : ℝ) + 1 / 2) / Q) / (Q : ℝ) ^ 2 := by
   unfold progressionMidpointWeight
   rw [CRTBlock.trigamma_eq_series (by positivity)]
   rfl
@@ -101,10 +101,10 @@ theorem weightedGram_leverage_le_one (I : Finset ℕ) (w : ℕ → ℝ)
   let x := (gramEquiv G hG).symm (a k)
   have hpair : dotProduct x (a k) = C := rfl
   have henergy : gramQuadratic G x = C := (inverseQuadratic_eq_energy G hG (a k)).symm
-  have hbound : w k * C^2 ≤ C := by
+  have hbound : w k * C ^ 2 ≤ C := by
     calc
-      _ = w k * (dotProduct x (a k))^2 := by rw [hpair]
-      _ ≤ ∑ r ∈ I, w r * (dotProduct x (a r))^2 :=
+      _ = w k * (dotProduct x (a k)) ^ 2 := by rw [hpair]
+      _ ≤ ∑ r ∈ I, w r * (dotProduct x (a r)) ^ 2 :=
         Finset.single_le_sum
           (fun r hr => mul_nonneg (hw r hr) (sq_nonneg (dotProduct x (a r)))) hk
       _ = C := by rw [← weightedGram_quadratic]; exact henergy
@@ -123,20 +123,20 @@ uniform probability comparison, with no condition-number assumption. -/
 theorem probability_comparison_of_relative_bounds
     {δ w wm C Cm : ℝ} (hδ : 0 ≤ δ) (hwm : 0 ≤ wm)
     (hC : 0 ≤ C)
-    (hwlo : (1-δ)*w ≤ wm) (hwhi : wm ≤ w)
-    (hClo : (1-δ)*Cm ≤ C) (hChi : C ≤ Cm)
-    (hq : w*C ≤ 1) (hqm : wm*Cm ≤ 1) :
-    |w*C - wm*Cm| ≤ δ := by
-  have hlo : (1-δ)*(w*C) ≤ wm*Cm := by
+    (hwlo : (1 - δ) * w ≤ wm) (hwhi : wm ≤ w)
+    (hClo : (1 - δ) * Cm ≤ C) (hChi : C ≤ Cm)
+    (hq : w * C ≤ 1) (hqm : wm * Cm ≤ 1) :
+    |w * C - wm * Cm| ≤ δ := by
+  have hlo : (1 - δ) * (w * C) ≤ wm * Cm := by
     calc
-      _ = ((1-δ)*w)*C := by ring
-      _ ≤ wm*C := mul_le_mul_of_nonneg_right hwlo hC
-      _ ≤ wm*Cm := mul_le_mul_of_nonneg_left hChi hwm
-  have hhi : (1-δ)*(wm*Cm) ≤ w*C := by
+      _ = ((1 - δ) * w) * C := by ring
+      _ ≤ wm * C := mul_le_mul_of_nonneg_right hwlo hC
+      _ ≤ wm * Cm := mul_le_mul_of_nonneg_left hChi hwm
+  have hhi : (1 - δ) * (wm * Cm) ≤ w * C := by
     calc
-      _ = wm*((1-δ)*Cm) := by ring
-      _ ≤ wm*C := mul_le_mul_of_nonneg_left hClo hwm
-      _ ≤ w*C := mul_le_mul_of_nonneg_right hwhi hC
+      _ = wm * ((1 - δ) * Cm) := by ring
+      _ ≤ wm * C := mul_le_mul_of_nonneg_left hClo hwm
+      _ ≤ w * C := mul_le_mul_of_nonneg_right hwhi hC
   apply abs_le.mpr
   constructor
   · nlinarith [mul_le_mul_of_nonneg_left hqm hδ]
@@ -150,7 +150,7 @@ theorem progressionMidpoint_occupation_error (Q : ℕ) (hQ : 0 < Q) (I : Finset 
     |progressionWeight Q k * inverseQuadratic (progressionGram Q I a) hG (a k) -
       progressionMidpointWeight Q k * inverseQuadratic (midpointGram Q I a)
         (midpointGram_posDef Q hQ I hI a hG) (a k)| ≤
-      1 / (2*(Q : ℝ)+3)^2 := by
+      1 / (2 * (Q : ℝ) + 3) ^ 2 := by
   have hwm (r) (hr : r ∈ I) : 0 ≤ progressionMidpointWeight Q r := by
     exact (mul_nonneg (progressionMidpoint_relative_factor_pos Q).le
       (progressionWeight_nonneg Q r)).trans
@@ -190,13 +190,13 @@ theorem probability_tendsto_iff_of_error
 
 theorem progressionMidpoint_error_tendsto (Q : ℕ → ℕ)
     (hQt : Tendsto Q atTop atTop) :
-    Tendsto (fun n => 1 / (2*(Q n : ℝ)+3)^2) atTop (nhds 0) := by
+    Tendsto (fun n => 1 / (2 * (Q n : ℝ) + 3) ^ 2) atTop (nhds 0) := by
   have hn : Tendsto (fun n => Q n + 1) atTop atTop :=
     tendsto_atTop_mono (fun n => Nat.le_succ (Q n)) hQt
   have hr := (tendsto_natCast_atTop_atTop :
     Tendsto (fun k : ℕ => (k : ℝ)) atTop atTop).comp hn
   have hi := tendsto_inv_atTop_zero.comp hr
-  have hs : Tendsto (fun n => 1 / ((Q n : ℝ)+1)^2) atTop (nhds 0) := by
+  have hs : Tendsto (fun n => 1 / ((Q n : ℝ) + 1) ^ 2) atTop (nhds 0) := by
     simpa only [Function.comp_apply, Nat.cast_add, Nat.cast_one, one_div,
       inv_pow, zero_pow (by decide : (2 : ℕ) ≠ 0)] using hi.pow 2
   apply squeeze_zero (fun n => by positivity) _ hs

@@ -20,10 +20,28 @@ strictly with r and decreases strictly with L. It also proves
 
 sqrt(r(r+1))/L < alpha_{r,L} < (r+1/2)/L.
 
-The quantitative bound proved by `progressionAlpha_scaled_sq_error` is
+The original quantitative bound proved by `progressionAlpha_scaled_sq_error` is
 
 0 <= (L alpha_{r,L})^2-r(r+1)
   <= psi_1(1) r(r+1)^3/L^2.
+
+The 24 September extension cancels the common reciprocal-series tails.
+For a=r/L, b=(r+1)/L and x=alpha, use x>a and decreasing trigamma to bound
+psi_1(x+1)-digammaSlope(a+1,b+1) by
+(b-a) psi_1(1). The extra factor b-a=1/L gives the checked refinement
+
+0 <= (L alpha_{r,L})^2-r(r+1)
+  <= psi_1(1) r(r+1)^3/L^3.
+
+`progressionAlpha_scaled_sq_error_cubic` proves this squared bound, and
+`progressionAlpha_scaled_error_cubic` proves
+
+0 <= L alpha_{r,L}-sqrt(r(r+1))
+  <= psi_1(1) r(r+1)^3/[2 sqrt(r(r+1)) L^3].
+
+Both estimates hold for all positive real r,L. The cubic estimate improves
+the earlier bound when L>1; neither establishes uniform control when r
+also grows without a specified relation to L.
 
 Thus L alpha_{r,L}->sqrt(r(r+1)) for fixed r. Residues varying with L do
 not satisfy the fixed-r limit: if r/L->x>0 then alpha_{r,L}->x.

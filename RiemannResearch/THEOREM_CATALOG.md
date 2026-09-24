@@ -1779,10 +1779,19 @@ converse is asserted.
 
 **Established:** `RH/CRTTrigammaMeanValue` defines the unique mean point
 for the actual digamma derivative and proves strict increase in the residue,
-strict decrease in the conductor, geometric/arithmetic bounds, an explicit
-scaled squared-error bound, and the fixed-residue limit
-`L * alpha(r,L) -> sqrt(r*(r+1))` along every positive conductor sequence
-that tends to infinity.
+strict decrease in the conductor, geometric/arithmetic bounds, and the
+fixed-residue limit `L * alpha(r,L) -> sqrt(r*(r+1))` along every positive
+conductor sequence that tends to infinity.
+
+The interval-width cancellation estimate
+`trigammaMean_sq_sub_mul_le_width` sharpens the scaled squared error:
+`progressionAlpha_scaled_sq_error_cubic` bounds it by
+`trigamma(1) * r * (r+1)^3 / L^3`.
+`progressionAlpha_scaled_error_cubic` also gives the nonnegative absolute
+difference from `sqrt(r*(r+1))`, bounded by that quantity divided by
+`2*sqrt(r*(r+1))`. Both hold for every real `r > 0` and `L > 0`, with no
+new analytic hypothesis. The previous squared-error bound with `L^2`
+also remains available; the cubic bound is stronger for `L > 1`.
 
 `LinearAlgebra/FiniteMatrixInverseComparison` proves antitonicity and
 relative comparison for actual positive finite Gram inverses, reusing
@@ -1799,11 +1808,15 @@ explicit; no condition-number or saturation hypothesis is hidden.
 `2/27` and occupation cap `27/31` for normalized nonnegative-coefficient
 trials. It does not bound unrestricted signed optimizers.
 
-**Verification:** repaired trigamma and midpoint modules passed full-file
-checks on 24 September; final integrated validation is recorded by the
-publication checkpoint. The earlier inverse full-file check and endpoint
-axiom audits are preserved in the recovery branch. These results use the
-existing `CRTPolygammaSigns` and `ParetoProgressionMidpoint` ingredients.
+**Verification:** commit `090bf0ca128df7ca1c9e892577f50cf93ad1cdd2`
+published all four recovered modules after affected-module builds on both
+the recovery base and the newer main. The cubic extension is validated by
+its publication checkpoint. These results use the existing
+`CRTPolygammaSigns` and `ParetoProgressionMidpoint` ingredients. Verification
+of these modules is not a claim of whole-repository or unconditional RH
+verification. A subsequent 16-theorem axiom audit, including both cubic
+bounds, reported only `propext`, `Classical.choice`, and `Quot.sound`;
+explicit theorem hypotheses remain as stated.
 
 **Open:** exact/midpoint saturation, physical-tail capacity divergence,
 strict decrease of the scaled mean point `L*alpha` in `L`, and the signed

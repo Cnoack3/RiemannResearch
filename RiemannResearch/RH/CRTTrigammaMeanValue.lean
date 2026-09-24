@@ -134,7 +134,7 @@ theorem progressionAlpha_strictAnti_L {r L M : ℝ}
 theorem progressionWeight_eq_trigammaAlpha (Q r : ℕ) (hQ : 0 < Q)
     (hr : 0 < r) (hrQ : r ≤ Q) :
     progressionWeight Q r = trigamma (progressionAlpha (r : ℝ) (Q : ℝ)
-      (by exact_mod_cast hr) (by exact_mod_cast hQ)) / (Q : ℝ)^2 := by
+      (by exact_mod_cast hr) (by exact_mod_cast hQ)) / (Q : ℝ) ^ 2 := by
   have hQr : (0 : ℝ) < Q := by exact_mod_cast hQ
   have hrR : (0 : ℝ) < r := by exact_mod_cast hr
   rw [(progressionAlpha_spec (r : ℝ) (Q : ℝ) hrR hQr).2,
@@ -149,7 +149,7 @@ theorem trigammaMean_lt_midpoint (a b : ℝ) (ha : 0 < a) (hab : a < b) :
     trigammaMean a b ha hab < (a + b) / 2 := by
   have hb : 0 < b := lt_trans ha hab
   have hm : 0 < (a + b) / 2 := by positivity
-  have hgap : 0 < (b - a)^2 := sq_pos_of_pos (sub_pos.mpr hab)
+  have hgap : 0 < (b - a) ^ 2 := sq_pos_of_pos (sub_pos.mpr hab)
   have hs : trigamma ((a + b) / 2) < digammaSlope a b := by
     rw [trigamma_eq_series hm, ← (hasSum_digammaSlope ha hab).tsum_eq]
     apply Summable.tsum_lt_tsum (i := 0)
@@ -176,8 +176,8 @@ theorem sqrt_mul_lt_trigammaMean (a b : ℝ) (ha : 0 < a) (hab : a < b) :
   have hb : 0 < b := lt_trans ha hab
   have hp : 0 < a * b := mul_pos ha hb
   have hm : 0 < Real.sqrt (a * b) := Real.sqrt_pos.2 hp
-  have hm2 : (Real.sqrt (a * b))^2 = a * b := Real.sq_sqrt hp.le
-  have hgap : 0 < (b - a)^2 := sq_pos_of_pos (sub_pos.mpr hab)
+  have hm2 : (Real.sqrt (a * b)) ^ 2 = a * b := Real.sq_sqrt hp.le
+  have hgap : 0 < (b - a) ^ 2 := sq_pos_of_pos (sub_pos.mpr hab)
   have hmean : 2 * Real.sqrt (a * b) < a + b := by nlinarith
   have hs : digammaSlope a b < trigamma (Real.sqrt (a * b)) := by
     rw [trigamma_eq_series hm, ← (hasSum_digammaSlope ha hab).tsum_eq]
@@ -202,20 +202,20 @@ theorem sqrt_mul_lt_trigammaMean (a b : ℝ) (ha : 0 < a) (hab : a < b) :
     linarith
 
 theorem trigammaMean_sq_sub_mul_le (a b : ℝ) (ha : 0 < a) (hab : a < b) :
-    (trigammaMean a b ha hab)^2 - a * b ≤
-      trigamma 1 * (a * b) * (trigammaMean a b ha hab)^2 := by
+    (trigammaMean a b ha hab) ^ 2 - a * b ≤
+      trigamma 1 * (a * b) * (trigammaMean a b ha hab) ^ 2 := by
   let x := trigammaMean a b ha hab
   have hx := trigammaMean_spec a b ha hab
   have hxpos : 0 < x := lt_trans ha hx.1.1
   have hb : 0 < b := lt_trans ha hab
   have habpos : 0 < a * b := mul_pos ha hb
-  have hx2pos : 0 < x^2 := sq_pos_of_pos hxpos
+  have hx2pos : 0 < x ^ 2 := sq_pos_of_pos hxpos
   have hhead : 1 / (a * b) ≤ digammaSlope a b := by
     have h := (hasSum_digammaSlope ha hab).summable.sum_le_tsum ({0} : Finset ℕ)
       (fun k _ => by positivity)
     simpa only [Finset.sum_singleton, Nat.cast_zero, zero_add,
       (hasSum_digammaSlope ha hab).tsum_eq] using h
-  have hshift : trigamma x = 1 / x^2 + trigamma (x + 1) := by
+  have hshift : trigamma x = 1 / x ^ 2 + trigamma (x + 1) := by
     rw [trigamma_eq_series hxpos, trigamma_eq_series (by positivity)]
     exact reciprocalSquareSeries_shift hxpos
   have htail : trigamma (x + 1) ≤ trigamma 1 :=
@@ -223,42 +223,42 @@ theorem trigammaMean_sq_sub_mul_le (a b : ℝ) (ha : 0 < a) (hab : a < b) :
       (show (0 : ℝ) < 1 by norm_num)
       (show (0 : ℝ) < x + 1 by positivity)
       (show (1 : ℝ) < x + 1 by linarith)).le
-  have hbound : 1 / (a * b) ≤ 1 / x^2 + trigamma 1 := by
+  have hbound : 1 / (a * b) ≤ 1 / x ^ 2 + trigamma 1 := by
     rw [← hx.2] at hhead
     change 1 / (a * b) ≤ trigamma x at hhead
     rw [hshift] at hhead
     linarith
   have hmul := mul_le_mul_of_nonneg_right hbound (le_of_lt (mul_pos habpos hx2pos))
   have hab0 : a * b ≠ 0 := ne_of_gt habpos
-  have hx20 : x^2 ≠ 0 := ne_of_gt hx2pos
+  have hx20 : x ^ 2 ≠ 0 := ne_of_gt hx2pos
   field_simp at hmul
   dsimp only [x] at hmul ⊢
   nlinarith
 
 /-- An explicit squared-distance bound, for arbitrary real L > 0. -/
 theorem progressionAlpha_scaled_sq_error (r L : ℝ) (hr : 0 < r) (hL : 0 < L) :
-    (L * progressionAlpha r L hr hL)^2 - r * (r + 1) ≤
-      trigamma 1 * r * (r + 1) * (r + 1)^2 / L^2 := by
+    (L * progressionAlpha r L hr hL) ^ 2 - r * (r + 1) ≤
+      trigamma 1 * r * (r + 1) * (r + 1) ^ 2 / L ^ 2 := by
   have h := trigammaMean_sq_sub_mul_le (r / L) ((r + 1) / L)
     (div_pos hr hL) ((div_lt_div_iff_of_pos_right hL).2 (by linarith))
-  change (progressionAlpha r L hr hL)^2 - r / L * ((r + 1) / L) ≤
-    trigamma 1 * (r / L * ((r + 1) / L)) * (progressionAlpha r L hr hL)^2 at h
+  change (progressionAlpha r L hr hL) ^ 2 - r / L * ((r + 1) / L) ≤
+    trigamma 1 * (r / L * ((r + 1) / L)) * (progressionAlpha r L hr hL) ^ 2 at h
   have hx := progressionAlpha_spec r L hr hL
   have hxpos : 0 < progressionAlpha r L hr hL := lt_trans (div_pos hr hL) hx.1.1
-  have hxupper : (progressionAlpha r L hr hL)^2 ≤ ((r + 1) / L)^2 := by
+  have hxupper : (progressionAlpha r L hr hL) ^ 2 ≤ ((r + 1) / L) ^ 2 := by
     nlinarith [hx.1.2]
   have ht : 0 < trigamma 1 := trigamma_pos (by norm_num)
   have hmul := mul_le_mul_of_nonneg_right h (sq_nonneg L)
   have L0 : L ≠ 0 := ne_of_gt hL
-  have he1 : ((progressionAlpha r L hr hL)^2 - r / L * ((r + 1) / L)) * L^2 =
-      (L * progressionAlpha r L hr hL)^2 - r * (r + 1) := by field_simp
+  have he1 : ((progressionAlpha r L hr hL) ^ 2 - r / L * ((r + 1) / L)) * L ^ 2 =
+      (L * progressionAlpha r L hr hL) ^ 2 - r * (r + 1) := by field_simp
   have he2 : (trigamma 1 * (r / L * ((r + 1) / L)) *
-      (progressionAlpha r L hr hL)^2) * L^2 =
-      trigamma 1 * r * (r + 1) * (progressionAlpha r L hr hL)^2 := by field_simp
+      (progressionAlpha r L hr hL) ^ 2) * L ^ 2 =
+      trigamma 1 * r * (r + 1) * (progressionAlpha r L hr hL) ^ 2 := by field_simp
   rw [he1, he2] at hmul
   calc
-    _ ≤ trigamma 1 * r * (r + 1) * (progressionAlpha r L hr hL)^2 := hmul
-    _ ≤ trigamma 1 * r * (r + 1) * ((r + 1) / L)^2 :=
+    _ ≤ trigamma 1 * r * (r + 1) * (progressionAlpha r L hr hL) ^ 2 := hmul
+    _ ≤ trigamma 1 * r * (r + 1) * ((r + 1) / L) ^ 2 :=
       mul_le_mul_of_nonneg_left hxupper (by positivity)
     _ = _ := by ring
 
@@ -268,7 +268,7 @@ open scoped Topology
 /-- The squared error is nonnegative, by the strict geometric-mean bound. -/
 theorem progressionAlpha_scaled_sq_error_nonneg (r L : ℝ)
     (hr : 0 < r) (hL : 0 < L) :
-    0 ≤ (L * progressionAlpha r L hr hL)^2 - r * (r + 1) := by
+    0 ≤ (L * progressionAlpha r L hr hL) ^ 2 - r * (r + 1) := by
   have hgeom := sqrt_mul_lt_trigammaMean (r / L) ((r + 1) / L)
     (div_pos hr hL) ((div_lt_div_iff_of_pos_right hL).2 (by linarith))
   change Real.sqrt (r / L * ((r + 1) / L)) < progressionAlpha r L hr hL at hgeom
@@ -277,12 +277,12 @@ theorem progressionAlpha_scaled_sq_error_nonneg (r L : ℝ)
   have hp : 0 < r / L * ((r + 1) / L) := by positivity
   have hsqrt := Real.sq_sqrt hp.le
   have hsqrtnonneg := Real.sqrt_nonneg (r / L * ((r + 1) / L))
-  have hsq : 0 ≤ (progressionAlpha r L hr hL)^2 - r / L * ((r + 1) / L) := by
+  have hsq : 0 ≤ (progressionAlpha r L hr hL) ^ 2 - r / L * ((r + 1) / L) := by
     nlinarith
   have hmul := mul_nonneg hsq (sq_nonneg L)
   have L0 : L ≠ 0 := ne_of_gt hL
-  have he : ((progressionAlpha r L hr hL)^2 - r / L * ((r + 1) / L)) * L^2 =
-      (L * progressionAlpha r L hr hL)^2 - r * (r + 1) := by
+  have he : ((progressionAlpha r L hr hL) ^ 2 - r / L * ((r + 1) / L)) * L ^ 2 =
+      (L * progressionAlpha r L hr hL) ^ 2 - r * (r + 1) := by
     field_simp
   rw [he] at hmul
   exact hmul
@@ -295,7 +295,7 @@ theorem progressionAlpha_scaled_tendsto_sqrt (r : ℝ) (hr : 0 < r)
     (hLt : Tendsto L atTop atTop) :
     Tendsto (fun n => L n * progressionAlpha r (L n) hr (hL n))
       atTop (𝓝 (Real.sqrt (r * (r + 1)))) := by
-  let C : ℝ := trigamma 1 * r * (r + 1) * (r + 1)^2
+  let C : ℝ := trigamma 1 * r * (r + 1) * (r + 1) ^ 2
   let b : ℕ → ℝ := fun n => L n * progressionAlpha r (L n) hr (hL n)
   have hbpos (n : ℕ) : 0 < b n := by
     have hx := progressionAlpha_spec r (L n) hr (hL n)
@@ -303,27 +303,176 @@ theorem progressionAlpha_scaled_tendsto_sqrt (r : ℝ) (hr : 0 < r)
   have hinv : Tendsto (fun n => (L n)⁻¹) atTop (𝓝 (0 : ℝ)) := by
     apply hLt.inv_tendsto_atTop.congr'
     exact Filter.Eventually.of_forall (fun n => rfl)
-  have hupper : Tendsto (fun n => C / (L n)^2) atTop (𝓝 (0 : ℝ)) := by
+  have hupper : Tendsto (fun n => C / (L n) ^ 2) atTop (𝓝 (0 : ℝ)) := by
     have h := (tendsto_const_nhds : Tendsto (fun _ : ℕ => C) atTop (𝓝 C)).mul
       (hinv.pow 2)
     simpa only [div_eq_mul_inv, inv_pow, zero_pow (by decide : (2 : ℕ) ≠ 0),
       mul_zero] using h
-  have herr : Tendsto (fun n => (b n)^2 - r * (r + 1)) atTop (𝓝 (0 : ℝ)) := by
+  have herr : Tendsto (fun n => (b n) ^ 2 - r * (r + 1)) atTop (𝓝 (0 : ℝ)) := by
     apply squeeze_zero
       (fun n => progressionAlpha_scaled_sq_error_nonneg r (L n) hr (hL n))
       (fun n => progressionAlpha_scaled_sq_error r (L n) hr (hL n)) hupper
-  have hsquare : Tendsto (fun n => (b n)^2) atTop (𝓝 (r * (r + 1))) := by
+  have hsquare : Tendsto (fun n => (b n) ^ 2) atTop (𝓝 (r * (r + 1))) := by
     have h := herr.add
       (tendsto_const_nhds : Tendsto (fun _ : ℕ => r * (r + 1)) atTop (𝓝 (r * (r + 1))))
     simpa only [sub_add_cancel, zero_add] using h
   have hsqrt := Real.continuous_sqrt.continuousAt.tendsto.comp hsquare
-  have he (n : ℕ) : Real.sqrt ((b n)^2) = b n := by
+  have he (n : ℕ) : Real.sqrt ((b n) ^ 2) = b n := by
     rw [Real.sqrt_sq_eq_abs, abs_of_pos (hbpos n)]
   apply hsqrt.congr'
   apply Filter.Eventually.of_forall
   intro n
-  change Real.sqrt ((b n)^2) = b n
+  change Real.sqrt ((b n) ^ 2) = b n
   exact he n
+
+
+/- The interval-width factor below cancels the common reciprocal-series tails.
+Source: continuation of the user-provided mean-value argument, 24 September 2026. -/
+theorem digammaSlope_shift (a b : ℝ) (ha : 0 < a) (hab : a < b) :
+    digammaSlope a b = 1 / (a * b) + digammaSlope (a + 1) (b + 1) := by
+  have hb : 0 < b := lt_trans ha hab
+  have ha0 : a ≠ 0 := ne_of_gt ha
+  have hb0 : b ≠ 0 := ne_of_gt hb
+  have hgap : b - a ≠ 0 := ne_of_gt (sub_pos.mpr hab)
+  have he : b + 1 - (a + 1) = b - a := by ring
+  unfold digammaSlope realDigamma
+  rw [re_digamma_add_one ha, re_digamma_add_one hb, he]
+  field_simp
+  ring
+
+/-- Cancellation of the equal leading tail terms contributes the interval width. -/
+theorem trigamma_sub_shifted_digammaSlope_le (a b : ℝ)
+    (ha : 0 < a) (hab : a < b) :
+    trigamma (a + 1) - digammaSlope (a + 1) (b + 1) ≤
+      (b - a) * trigamma 1 := by
+  have hb : 0 < b := lt_trans ha hab
+  have ha1 : 0 < a + 1 := by positivity
+  have hab1 : a + 1 < b + 1 := by linarith
+  have h1 : (0 : ℝ) < 1 := by norm_num
+  have hs := (reciprocalSquareSeries_summable_pos ha1).hasSum.sub
+    (hasSum_digammaSlope ha1 hab1)
+  rw [← trigamma_eq_series ha1] at hs
+  have hm := (reciprocalSquareSeries_summable_pos h1).hasSum.mul_left (b - a)
+  rw [← trigamma_eq_series h1] at hm
+  rw [← hs.tsum_eq, ← hm.tsum_eq]
+  apply Summable.tsum_le_tsum _ hs.summable hm.summable
+  intro k
+  have hu : 0 < (k : ℝ) + (a + 1) := by positivity
+  have hv : 0 < (k : ℝ) + (b + 1) := by positivity
+  have hz : 0 < (k : ℝ) + 1 := by positivity
+  have hu0 : (k : ℝ) + (a + 1) ≠ 0 := ne_of_gt hu
+  have hv0 : (k : ℝ) + (b + 1) ≠ 0 := ne_of_gt hv
+  have hsq : ((k : ℝ) + 1) ^ 2 ≤ ((k : ℝ) + (a + 1)) ^ 2 := by
+    nlinarith [mul_nonneg ha.le hz.le, sq_nonneg a]
+  have hk : (0 : ℝ) ≤ k := Nat.cast_nonneg k
+  have hv1 : 1 ≤ (k : ℝ) + (b + 1) := by linarith
+  have hden : ((k : ℝ) + 1) ^ 2 ≤
+      ((k : ℝ) + (a + 1)) ^ 2 * ((k : ℝ) + (b + 1)) := by
+    have hmul := mul_le_mul_of_nonneg_left hv1
+      (sq_nonneg ((k : ℝ) + (a + 1)))
+    nlinarith
+  have he : 1 / ((k : ℝ) + (a + 1)) ^ 2 -
+      1 / (((k : ℝ) + (a + 1)) * ((k : ℝ) + (b + 1))) =
+      (b - a) / (((k : ℝ) + (a + 1)) ^ 2 * ((k : ℝ) + (b + 1))) := by
+    field_simp
+    ring
+  change 1 / ((k : ℝ) + (a + 1)) ^ 2 -
+      1 / (((k : ℝ) + (a + 1)) * ((k : ℝ) + (b + 1))) ≤
+      (b - a) * (1 / ((k : ℝ) + 1) ^ 2)
+  rw [he]
+  simpa only [div_eq_mul_inv, one_mul] using
+    div_le_div_of_nonneg_left (sub_nonneg.mpr hab.le) (sq_pos_of_pos hz) hden
+
+theorem trigammaMean_sq_sub_mul_le_width (a b : ℝ)
+    (ha : 0 < a) (hab : a < b) :
+    (trigammaMean a b ha hab) ^ 2 - a * b ≤
+      (b - a) * trigamma 1 * (a * b) * (trigammaMean a b ha hab) ^ 2 := by
+  let x := trigammaMean a b ha hab
+  have hx := trigammaMean_spec a b ha hab
+  have hxpos : 0 < x := lt_trans ha hx.1.1
+  have hb : 0 < b := lt_trans ha hab
+  have habpos : 0 < a * b := mul_pos ha hb
+  have hx2pos : 0 < x ^ 2 := sq_pos_of_pos hxpos
+  have hshift : trigamma x = 1 / x ^ 2 + trigamma (x + 1) := by
+    rw [trigamma_eq_series hxpos, trigamma_eq_series (by positivity)]
+    exact reciprocalSquareSeries_shift hxpos
+  have htail : trigamma (x + 1) ≤ trigamma (a + 1) :=
+    (trigamma_strictAntiOn
+      (show (0 : ℝ) < a + 1 by positivity)
+      (show (0 : ℝ) < x + 1 by positivity)
+      (show a + 1 < x + 1 by dsimp only [x]; linarith [hx.1.1])).le
+  have hcancel := trigamma_sub_shifted_digammaSlope_le a b ha hab
+  have hmean : trigamma x = digammaSlope a b := hx.2
+  rw [hshift, digammaSlope_shift a b ha hab] at hmean
+  have hbound : 1 / (a * b) ≤ 1 / x ^ 2 + (b - a) * trigamma 1 := by
+    linarith
+  have hmul := mul_le_mul_of_nonneg_right hbound (le_of_lt (mul_pos habpos hx2pos))
+  have hab0 : a * b ≠ 0 := ne_of_gt habpos
+  have hx20 : x ^ 2 ≠ 0 := ne_of_gt hx2pos
+  field_simp at hmul
+  dsimp only [x] at hmul ⊢
+  nlinarith
+
+/-- The common tail cancellation improves the denominator from `L^2` to `L^3`. -/
+theorem progressionAlpha_scaled_sq_error_cubic (r L : ℝ)
+    (hr : 0 < r) (hL : 0 < L) :
+    (L * progressionAlpha r L hr hL) ^ 2 - r * (r + 1) ≤
+      trigamma 1 * r * (r + 1) * (r + 1) ^ 2 / L ^ 3 := by
+  have h := trigammaMean_sq_sub_mul_le_width (r / L) ((r + 1) / L)
+    (div_pos hr hL) ((div_lt_div_iff_of_pos_right hL).2 (by linarith))
+  change (progressionAlpha r L hr hL) ^ 2 - r / L * ((r + 1) / L) ≤
+    (((r + 1) / L) - r / L) * trigamma 1 * (r / L * ((r + 1) / L)) *
+      (progressionAlpha r L hr hL) ^ 2 at h
+  have hx := progressionAlpha_spec r L hr hL
+  have hxpos : 0 < progressionAlpha r L hr hL := lt_trans (div_pos hr hL) hx.1.1
+  have hxupper : (progressionAlpha r L hr hL) ^ 2 ≤ ((r + 1) / L) ^ 2 := by
+    nlinarith [hx.1.2]
+  have ht : 0 < trigamma 1 := trigamma_pos (by norm_num)
+  have hmul := mul_le_mul_of_nonneg_right h (sq_nonneg L)
+  have L0 : L ≠ 0 := ne_of_gt hL
+  have he1 : ((progressionAlpha r L hr hL) ^ 2 - r / L * ((r + 1) / L)) * L ^ 2 =
+      (L * progressionAlpha r L hr hL) ^ 2 - r * (r + 1) := by
+    field_simp
+  have he2 : ((((r + 1) / L) - r / L) * trigamma 1 *
+      (r / L * ((r + 1) / L)) * (progressionAlpha r L hr hL) ^ 2) * L ^ 2 =
+      (trigamma 1 * r * (r + 1) / L) * (progressionAlpha r L hr hL) ^ 2 := by
+    field_simp
+    ring
+  rw [he1, he2] at hmul
+  calc
+    _ ≤ (trigamma 1 * r * (r + 1) / L) * (progressionAlpha r L hr hL) ^ 2 := hmul
+    _ ≤ (trigamma 1 * r * (r + 1) / L) * ((r + 1) / L) ^ 2 :=
+      mul_le_mul_of_nonneg_left hxupper (by positivity)
+    _ = _ := by ring
+
+/-- An explicit absolute-distance bound for the physical mean point. -/
+theorem progressionAlpha_scaled_error_cubic (r L : ℝ)
+    (hr : 0 < r) (hL : 0 < L) :
+    0 ≤ L * progressionAlpha r L hr hL - Real.sqrt (r * (r + 1)) ∧
+    L * progressionAlpha r L hr hL - Real.sqrt (r * (r + 1)) ≤
+      (trigamma 1 * r * (r + 1) * (r + 1) ^ 2) /
+        (2 * Real.sqrt (r * (r + 1)) * L ^ 3) := by
+  have hD : 0 < r * (r + 1) := by positivity
+  have hg : 0 < Real.sqrt (r * (r + 1)) := Real.sqrt_pos.2 hD
+  have hg2 := Real.sq_sqrt hD.le
+  have hx := progressionAlpha_spec r L hr hL
+  have hxpos : 0 < L * progressionAlpha r L hr hL :=
+    mul_pos hL (lt_trans (div_pos hr hL) hx.1.1)
+  have hnonneg := progressionAlpha_scaled_sq_error_nonneg r L hr hL
+  have hgap : 0 ≤ L * progressionAlpha r L hr hL - Real.sqrt (r * (r + 1)) := by
+    nlinarith
+  refine ⟨hgap, ?_⟩
+  have hupper := progressionAlpha_scaled_sq_error_cubic r L hr hL
+  have hL3 : 0 < L ^ 3 := pow_pos hL 3
+  have hupper' := (le_div_iff₀ hL3).mp hupper
+  have hlinear : 2 * Real.sqrt (r * (r + 1)) *
+      (L * progressionAlpha r L hr hL - Real.sqrt (r * (r + 1))) ≤
+      (L * progressionAlpha r L hr hL) ^ 2 - r * (r + 1) := by
+    nlinarith [sq_nonneg (L * progressionAlpha r L hr hL - Real.sqrt (r * (r + 1)))]
+  have hscaled := mul_le_mul_of_nonneg_right hlinear hL3.le
+  apply (le_div_iff₀ (show 0 < 2 * Real.sqrt (r * (r + 1)) * L ^ 3 by positivity)).mpr
+  nlinarith
+
 
 end
 end RiemannResearch.RH.CRTBlock
