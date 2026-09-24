@@ -17,9 +17,11 @@ import RiemannResearch.Analysis.FiniteHilbertGramDual
 import RiemannResearch.RH.ParetoInverseGramDual
 import RiemannResearch.Analysis.CoefficientShift
 import RiemannResearch.Analysis.ShiftedLift
+import RiemannResearch.Analysis.ShiftedLiftApproximation
 import RiemannResearch.Analysis.NoorLogarithmDensity
 import RiemannResearch.RH.ParetoTailAverages
 import RiemannResearch.RH.NoorShiftedResidueDensity
+import RiemannResearch.RH.NoorRegularizedApproximation
 import RiemannResearch.RH.ParetoTailAverageCriterion
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.Fourier
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.Defs

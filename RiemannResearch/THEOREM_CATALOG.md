@@ -176,8 +176,30 @@ unconditional zero-residual theorem is claimed.
 shifted-lift identity, a scaled regularized bound, and the exact
 completion/minimum formula on every lift subspace when its normal equations
 are supplied. These are unconditional Hilbert-space lemmas.
-**Open:** a cofinal arithmetic provider making the associated regularized
-finite minima small enough; the new lemmas neither supply nor assume it.
+**Established (2026-09-24):** `Analysis/ShiftedLiftApproximation` proves
+finite-dimensional attainment for positive regularization without a
+normal-equation hypothesis, and convergence of unscaled finite infima
+from shifted density. `RH/NoorRegularizedApproximation` applies this to
+the actual arithmetic residue spans and finite projection residuals:
+`Noor.finiteMinimum_tendsto_zero` proves `J_N(t_N) -> 0` for every
+parameter schedule `t_N -> 0`, along all cutoffs. For `t_N > 0`,
+`Noor.exists_finite_minimizing_lifts` supplies finite arithmetic minimizers
+with the same vanishing complete regularized energy. No RH-strength
+arithmetic hypothesis enters either theorem.
+
+**Established rate obstruction:** `Noor.energy_div_le_finiteMinimum_div`
+proves `E_N / (1+t) <= J_N(t) / t` for `t > 0`. The infimum is also
+identified with the previous exact normal-solution formula when that
+solution is supplied. Axiom inspection reports only `propext`,
+`Classical.choice`, and `Quot.sound`.
+
+**Conditional research reduction:**
+`Noor.riemannHypothesis_of_finiteMinimum_div_parameter_tendsto_zero`
+deduces residual vanishing and RH from divided-energy convergence on a
+cofinal sequence. **Open:** a cofinal arithmetic provider with positive
+`t_j -> 0` and `J_{N_j}(t_j) / t_j -> 0`. The proved unscaled convergence
+does not discharge this rate hypothesis. No unconditional RH or RH
+converse is claimed. Details: `RH/NoorRegularizedApproximation20260924.md`.
 
 ### Exact limit of the inverse-Gram Mobius correction (2026-09-22)
 

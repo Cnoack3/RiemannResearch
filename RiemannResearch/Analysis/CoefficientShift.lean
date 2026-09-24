@@ -1,6 +1,7 @@
 import Mathlib.Analysis.InnerProductSpace.l2Space
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Linarith
 
 /-!
 # Forward and backward differences on coefficient l2
@@ -74,5 +75,32 @@ theorem backwardDifference_orthogonal_dense {ι : Type*} (v : ι → Space)
     rw [hdense]
     trivial
   exact (inner_self_eq_zero.mp (hdouble b horth))
+
+/-- The unilateral right shift as a real linear map. -/
+def rightShiftLinear : Space →ₗ[ℝ] Space where
+  toFun := rightShift
+  map_add' a b := by
+    apply Subtype.ext
+    funext n
+    cases n with
+    | zero => change (0 : ℝ) = 0 + 0; simp
+    | succ n => rfl
+  map_smul' c a := by
+    apply Subtype.ext
+    funext n
+    cases n with
+    | zero => change (0 : ℝ) = c * 0; simp
+    | succ n => rfl
+
+/-- The unilateral right shift preserves the complete coefficient norm. -/
+theorem rightShift_norm (a : Space) : ‖rightShift a‖ = ‖a‖ := by
+  have he : leftShift (rightShift a) = a := by
+    apply Subtype.ext
+    funext n
+    rfl
+  have hi := shift_inner a (rightShift a)
+  rw [he, real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq] at hi
+  nlinarith [norm_nonneg (rightShift a), norm_nonneg a]
+
 
 end RiemannResearch.Analysis.CoefficientShift
