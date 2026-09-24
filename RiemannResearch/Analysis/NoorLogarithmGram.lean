@@ -53,4 +53,33 @@ theorem logVector_inner (k l : ℕ) (hk : 0 < k) (hl : 0 < l) :
   simp_rw [hterm]
   exact tsum_mul_left
 
+/-- Exact pairing with a logarithmic divisibility vector, retaining all multiples. -/
+theorem inner_logVector_eq_tsum_multiples (a : Space) (k : ℕ) (hk : 0 < k) :
+    inner ℝ a (logVector k) = ∑' m : ℕ, a (k*m) / (m : ℝ) := by
+  have hkR : (k : ℝ) ≠ 0 := by exact_mod_cast Nat.ne_of_gt hk
+  have hinj : Function.Injective (fun m : ℕ => k*m) := by
+    intro m n h
+    exact Nat.eq_of_mul_eq_mul_left hk h
+  have hs : Function.support (fun n => a n * logSequence k n) ⊆
+      Set.range (fun m : ℕ => k*m) := by
+    intro n hn
+    by_cases hd : k ∣ n
+    · obtain ⟨m, rfl⟩ := hd
+      exact ⟨m, rfl⟩
+    · simp only [Function.mem_support, ne_eq, logSequence, if_neg hd, mul_zero,
+        not_true_eq_false] at hn
+  have hts : inner ℝ a (logVector k) = ∑' n : ℕ, a n * logSequence k n := by
+    rw [lp.inner_eq_tsum]
+    apply tsum_congr
+    intro n
+    simp [mul_comm]
+  rw [hts, ← hinj.tsum_eq hs]
+  apply tsum_congr
+  intro m
+  have hd : k ∣ k*m := Nat.dvd_mul_right k m
+  simp only [logSequence, if_pos hd, Nat.cast_mul]
+  by_cases hm : m = 0
+  · simp [hm]
+  · have hmR : (m : ℝ) ≠ 0 := by exact_mod_cast hm
+    field_simp
 end RiemannResearch.Analysis.Noor

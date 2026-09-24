@@ -25,6 +25,7 @@ import RiemannResearch.RH.ParetoTailAverages
 import RiemannResearch.RH.NoorShiftedResidueDensity
 import RiemannResearch.RH.NoorRegularizedApproximation
 import RiemannResearch.RH.NoorRegularizedGram
+import RiemannResearch.RH.NoorShiftedSource
 import RiemannResearch.RH.ParetoTailAverageCriterion
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.Fourier
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.Defs

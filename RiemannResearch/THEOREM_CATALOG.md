@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Actual shifted source moments and Schur control (2026-09-24)
+
+**Established in Lean:** `RH/NoorShiftedSource` identifies the actual source:
+d h_N(d) = E_N log d + M_N(1) - M_N(d), where
+M_N(d) is the full logarithmic moment of the actual finite residual.
+`Analysis/NoorLogarithmGram.inner_logVector_eq_tsum_multiples` expresses
+the moment as the exact sum of a_N(dm)/m over positive m.
+
+**Established in Lean:** for cofinal cutoffs and legal indices d_j tending
+to infinity, M_(N_j)(d_j) tends to zero and d_j h_(N_j)(d_j)/log d_j
+tends to the actual limiting residual energy. The zero value of this
+normalized source limit is equivalent to zero limiting residual.
+No zero-energy conclusion is claimed.
+
+**Established in Lean:** with the full mixed matrix
+B_N(d,e)=<Du_d,u_e>, h_N=b_N-B_N c_N and B_N+B_N^T=K_N.
+The source obeys the complete Schur quadratic bound
+(x^T h_N)^2 <= E_N [x^T K_N x - (B_N^T x)^T G_N^(-1)(B_N^T x)].
+Only the original independent family's Gram inverse is used.
+
+**Conditional research reduction:**
+`riemannHypothesis_of_finiteShiftedSource_log_scaled_zero` concludes
+Mathlib RH from the explicit source-zero premise `hsource`.
+**Open:** this source-zero provider and the original divided inverse-Gram
+gap provider `hrate`. Source limits and the Schur bound do not discharge
+either obligation. Details: `RH/NoorShiftedSource20260924.md`.
 ### Exact shifted arithmetic Gram and canonical minimizers (2026-09-24)
 
 **Established in Lean:** `Analysis/NoorLogarithmGram` computes the exact
