@@ -16,6 +16,7 @@ import RiemannResearch.RH.BurnolProjectionConsequences
 import RiemannResearch.Analysis.FiniteHilbertGramDual
 import RiemannResearch.RH.ParetoInverseGramDual
 import RiemannResearch.Analysis.CoefficientShift
+import RiemannResearch.Analysis.ShiftedLift
 import RiemannResearch.Analysis.NoorLogarithmDensity
 import RiemannResearch.RH.ParetoTailAverages
 import RiemannResearch.RH.NoorShiftedResidueDensity

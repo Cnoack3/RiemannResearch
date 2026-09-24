@@ -172,6 +172,13 @@ supply square-summability of the centered averages. No RH converse or
 unconditional zero-residual theorem is claimed.
 
 
+**Established:** Analysis/ShiftedLift verifies the exact isometric
+shifted-lift identity, a scaled regularized bound, and the exact
+completion/minimum formula on every lift subspace when its normal equations
+are supplied. These are unconditional Hilbert-space lemmas.
+**Open:** a cofinal arithmetic provider making the associated regularized
+finite minima small enough; the new lemmas neither supply nor assume it.
+
 ### Exact limit of the inverse-Gram Mobius correction (2026-09-22)
 
 **Established:** `RH/ResidueGramMobiusCorrection` now identifies the actual
