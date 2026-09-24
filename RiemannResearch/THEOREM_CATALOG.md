@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Ordered damping, finite certificates, and next-atom source prediction (2026-09-24)
+
+**Established in Lean:** `Analysis/OrderedPrimitiveAbel` proves natural-order
+Abel pairing limits without assuming absolute summability of the physical
+series, including a variation-majorant and damping-limit theorem.
+`RH/DampedMobiusOrderedPairing` supplies the actual power-damped physical
+specialization, its endpoint bound, and the correctly ordered iterated
+physical-cutoff/damping limits. No Hilbert membership of the damped
+approximant is assumed.
+`RH/FiniteDilationInnovationCertificates` proves finite signed certificate
+orthogonality, exact pairing w_Q, Cauchy--Schwarz innovation bounds, and an
+eventual lower bound with the actual arithmetic limiting energy retained.
+`RH/DivisorBoxLocalEnergy` proves the exact local geometric polynomial and
+prime-square specialization; the global Euler product is not formalized.
+`RH/ScreeningSourcePrediction` identifies the actual source exactly:
+E_M*s_M = (M+2)*inner(rho_(M+2),P_M e1)-1/2. Normalization recovers s_M.
+
+**Conditional research reduction:** nonsummability of the actual normalized
+prediction errors squared with harmonic weight implies RH. This arithmetic
+nonsummability remains **Open**. The actual residual Dini envelope and
+squarefree-divisor weighted primitive criterion also remain **Open**.
+
+**Audited prose, not fully formalized:** a squarefree-divisor weighted
+primitive criterion removes the monotone envelope and separate sublinear
+primitive assumption. A consecutive-dilation certificate has exact limiting
+energy 1 plus a truncated Mobius tail, tending to one by divisor-square
+summability. Its global Gram-reversal/provider assembly is not yet in Lean.
+The full fixed-damping legal-series interchange and zeta-mode identification
+remain formalization tasks. These implications do not discharge an actual
+RH-strength provider. Unconditional RH was not proved.
+See `RH/OrderedDampingAndSourcePrediction20260924.md`.
+
 ### Power damping, finite dilations, and exact source masses (2026-09-24)
 
 **Established in Lean:** `RH/DampedMobiusPrimitiveVariation` proves exact
