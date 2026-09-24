@@ -326,5 +326,68 @@ theorem centeredMobius_factorial_variance_ge_top_half
         exact mul_nonneg (jordanTwo_pos q
           (by have := (Finset.mem_Icc.mp hq).1; omega)).le (sq_nonneg _)
 
+/-!
+## Prime contributions prevent small uniform variance
+
+Source: direct specialization of the exact top-half Jordan coordinates,
+developed for the user's directed RH attempt, September 24, 2026.
+Each prime p in (N/2,N] contributes (1-p^(-2))/12 >= 1/16.
+This is a finite uniform-period lower bound, not a Pareto-energy estimate.
+-/
+
+
+/-- Each prime coordinate in the upper half contributes at least 1/16 to
+the uniform variance, including the 1/12 normalization. -/
+theorem jordanTwo_moebius_prime_term_ge (p : ℕ) (hp : p.Prime) :
+    (3 : ℝ) / 4 ≤
+      jordanTwo p * ((ArithmeticFunction.moebius p : ℝ) / (p : ℝ)) ^ 2 := by
+  have hj : jordanTwo p = (p : ℝ) ^ 2 - 1 := by
+    simpa [hp.not_dvd_one] using jordanTwo_prime_mul p 1 hp (by omega)
+  have hpR : (2 : ℝ) ≤ p := by exact_mod_cast hp.two_le
+  have hp0 : (p : ℝ) ≠ 0 := by positivity
+  have hp2 : (0 : ℝ) < (p : ℝ)^2 := by positivity
+  calc
+    (3 : ℝ) / 4 ≤ ((p : ℝ)^2 - 1) / (p : ℝ)^2 := by
+      apply (le_div_iff₀ hp2).2
+      nlinarith
+    _ = jordanTwo p * ((ArithmeticFunction.moebius p : ℝ) / (p : ℝ)) ^ 2 := by
+      rw [hj, ArithmeticFunction.moebius_apply_prime hp]
+      push_cast
+      field_simp
+
+/-- The raw Mobius variance cannot be made small by cancellation among all
+Jordan coordinates: every upper-half prime contributes a positive amount.
+This theorem concerns uniform complete periods, not the weighted middle window. -/
+theorem centeredMobius_factorial_variance_ge_top_half_prime_count
+    (N : ℕ) (hN : 2 ≤ N) :
+    (((Finset.Icc (N / 2 + 1) N).filter Nat.Prime).card : ℝ) / 16 ≤
+    (∑ n ∈ Finset.range N.factorial,
+      (∑ d ∈ Finset.Icc 1 N, ((ArithmeticFunction.moebius d : ℝ)/(d : ℝ)) *
+        (residue d n - ((d : ℝ)-1)/2))^2) / (N.factorial : ℝ) := by
+  classical
+  let S := (Finset.Icc (N / 2 + 1) N).filter Nat.Prime
+  have hs : (S.card : ℝ) * ((3 : ℝ) / 4) ≤
+      ∑ q ∈ Finset.Icc (N / 2 + 1) N,
+        jordanTwo q * ((ArithmeticFunction.moebius q : ℝ)/(q : ℝ))^2 := by
+    calc
+      (S.card : ℝ) * ((3 : ℝ) / 4) = ∑ q ∈ S, (3 : ℝ) / 4 := by simp
+      _ ≤ ∑ q ∈ S,
+          jordanTwo q * ((ArithmeticFunction.moebius q : ℝ)/(q : ℝ))^2 := by
+        apply Finset.sum_le_sum
+        intro q hq
+        exact jordanTwo_moebius_prime_term_ge q (Finset.mem_filter.mp hq).2
+      _ ≤ _ := by
+        apply Finset.sum_le_sum_of_subset_of_nonneg
+        · exact Finset.filter_subset Nat.Prime _
+        · intro q hq _
+          have hq0 : 0 < q := by have := (Finset.mem_Icc.mp hq).1; omega
+          exact mul_nonneg (jordanTwo_pos q hq0).le (sq_nonneg _)
+  calc
+    _ = ((S.card : ℝ) * ((3 : ℝ) / 4)) / 12 := by dsimp [S]; ring
+    _ ≤ (∑ q ∈ Finset.Icc (N / 2 + 1) N,
+        jordanTwo q * ((ArithmeticFunction.moebius q : ℝ)/(q : ℝ))^2) / 12 :=
+      div_le_div_of_nonneg_right hs (by norm_num)
+    _ ≤ _ := centeredMobius_factorial_variance_ge_top_half N hN
+
 end
 end RiemannResearch.RH.Pareto

@@ -1,5 +1,19 @@
 # Theorem catalog
 
+### Quantitative first-window energy and signed primitive identity (2026-09-24)
+
+**Established in Lean:** `RH/RawMobiusFirstWindowQuantitative` proves
+the unconditional eventual bound I_N <= 4*C^2*N/(log N)^2 and
+`rawMobiusFirstWindowBudget_div_mul_log_tendsto_zero`, namely (W_N/N)*log N -> 0.
+W_N includes the reciprocal head and the actual first middle window.
+`RH/RawMobiusPrimitiveEnergy` proves an exact weighted interval energy identity
+with all endpoint, mean, and signed cross terms retained. Only the diagonal
+of the primitive-times-divisor-jump product vanishes.
+`RH/ParetoUniformJordanIdentification` proves uniform variance is at least
+one sixteenth of the number of upper-half primes.
+The cofinal subpower bound on the full B_N remains **Open**.
+See `RH/SecondMomentRHAttempt20260924.md`.
+
 ### Directed RH arithmetic: prefixes and first window (2026-09-24)
 
 **Established in Lean:** `RH/CenteredResiduePrefixes` proves an exact
