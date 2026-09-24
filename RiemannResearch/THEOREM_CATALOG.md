@@ -1775,6 +1775,43 @@ unproved. Finite inverse-Gram existence and the finite-rank Mellin DPP
 construction do not discharge this arithmetic obligation. No RH-to-density
 converse is asserted.
 
+### Trigamma mean points and midpoint inverse comparisons (2026-09-24)
+
+**Established:** `RH/CRTTrigammaMeanValue` defines the unique mean point
+for the actual digamma derivative and proves strict increase in the residue,
+strict decrease in the conductor, geometric/arithmetic bounds, an explicit
+scaled squared-error bound, and the fixed-residue limit
+`L * alpha(r,L) -> sqrt(r*(r+1))` along every positive conductor sequence
+that tends to infinity.
+
+`LinearAlgebra/FiniteMatrixInverseComparison` proves antitonicity and
+relative comparison for actual positive finite Gram inverses, reusing
+`FiniteConstrainedMatrixInverse` for literal inverse identification.
+`RH/ProgressionMidpointInverse` proves midpoint Gram positivity and
+`progressionMidpoint_occupation_error`: the exact and midpoint occupations
+differ by at most `1/(2*L+3)^2`, independently of the dimension.
+`progressionMidpoint_occupation_tendsto_iff` transfers convergence to every
+real limit for arbitrary growing finite dictionaries. Limit one gives the
+saturation equivalence. Positive definiteness of the exact finite Gram is
+explicit; no condition-number or saturation hypothesis is hidden.
+
+`RH/NonnegativeResidueObstruction` proves the two-site tail lower bound
+`2/27` and occupation cap `27/31` for normalized nonnegative-coefficient
+trials. It does not bound unrestricted signed optimizers.
+
+**Verification:** repaired trigamma and midpoint modules passed full-file
+checks on 24 September; final integrated validation is recorded by the
+publication checkpoint. The earlier inverse full-file check and endpoint
+axiom audits are preserved in the recovery branch. These results use the
+existing `CRTPolygammaSigns` and `ParetoProgressionMidpoint` ingredients.
+
+**Open:** exact/midpoint saturation, physical-tail capacity divergence,
+strict decrease of the scaled mean point `L*alpha` in `L`, and the signed
+Mobius candidate's weighted infinite-tail estimate. The comparison theorems
+do not discharge these arithmetic obligations. See
+`RH/TrigammaMidpointSaturationResearch20260921.md` and
+`RH/RHContinuation20260924.md` for normalization and continuation.
+
 ### Finite-rank Mellin DPP construction (2026-09-20)
 
 Main module: `RH/MellinProjectionDPP`.

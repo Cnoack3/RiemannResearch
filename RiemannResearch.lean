@@ -665,6 +665,10 @@ import RiemannResearch.RH.ParetoGeneratedAlgebra
 import RiemannResearch.RH.ParetoProgressionCalculus
 import RiemannResearch.RH.ParetoProgressionTaylor
 import RiemannResearch.RH.ParetoProgressionMidpoint
+import RiemannResearch.RH.CRTTrigammaMeanValue
+import RiemannResearch.LinearAlgebra.FiniteMatrixInverseComparison
+import RiemannResearch.RH.ProgressionMidpointInverse
+import RiemannResearch.RH.NonnegativeResidueObstruction
 import RiemannResearch.RH.ParetoProgressionDigamma
 import RiemannResearch.RH.ParetoDigammaDerivative
 import RiemannResearch.RH.ParetoProgressionIntegral
