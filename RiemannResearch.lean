@@ -35,6 +35,8 @@ import RiemannResearch.NumberTheory.PrimeNumberTheorem.Defs
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.Wiener
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.Consequences
 import RiemannResearch.RH.CanonicalMobiusPNT
+import RiemannResearch.RH.CanonicalMobiusWeightedEndpoint
+import RiemannResearch.RH.DampedDiagonalCompactness
 import RiemannResearch.RH.ParetoResidualTailDichotomy
 import RiemannResearch.NumberTheory.IsolatedPrimeReciprocalSum
 import RiemannResearch.RH.MobiusReciprocalNonvanishing

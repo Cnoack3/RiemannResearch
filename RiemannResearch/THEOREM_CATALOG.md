@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Hardy endpoint and bounded damping diagonal (2026-09-24)
+
+**Established in Lean:** `RH/CanonicalMobiusWeightedEndpoint` proves
+`inverseCoordinateEnergy_le_of_zero_head`,
+`canonicalMobiusResidual_sublinear`, and
+`canonicalMobiusResidual_inverseCoordinateEnergy_tendsto_zero`.
+For the actual corrected Möbius family, the full residual energy with
+weight 1/[n^2(n+1)] tends to zero unconditionally. The existing formal
+PNT provider discharges the arithmetic input. This is a weaker norm
+than the RH-critical weight 1/[n(n+1)].
+
+**Established general criterion:** `RH/DampedDiagonalCompactness` proves
+`mem_closure_of_bounded_finite_coordinate_approximants` and
+`mem_closure_of_bounded_damping_diagonal`. Finite-coordinate approximation
+and one fixed uniform Hilbert norm bound imply closed-span membership.
+
+**Conditional research reduction / Open:** applying the damping diagonal
+to the actual RH target still requires the uniformly bounded legal
+approximants in `hdiag`. Shrinking the parameter alone does not supply
+this bound. No unconditional RH theorem is claimed.
+
+**Analytic result, not fully formalized:** the raw Hardy Möbius sums also
+converge at alpha=1, using Mellin–Plancherel and Ramaré's reciprocal
+Möbius estimate. Neither that analytic identification nor the quantitative
+Ramaré estimate is asserted to have a Lean provider here.
+Proof, source audit, Wolfram checks, and reproducible finite computation:
+`RH/HardyEndpointCompactness20260924.md`.
+
 ### Complete mixed arithmetic Gram and exact shift defect (2026-09-24)
 
 **Established in Lean:** `RH/NoorMixedGramArithmetic` proves the harmonic
