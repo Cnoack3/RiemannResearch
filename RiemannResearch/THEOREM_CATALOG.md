@@ -1,31 +1,42 @@
 # Theorem catalog
 
-### Hardy endpoint and bounded damping diagonal (2026-09-24)
+### Hardy endpoint and moving-bound RH reduction (2026-09-24)
 
-**Established in Lean:** `RH/CanonicalMobiusWeightedEndpoint` proves
-`inverseCoordinateEnergy_le_of_zero_head`,
-`canonicalMobiusResidual_sublinear`, and
-`canonicalMobiusResidual_inverseCoordinateEnergy_tendsto_zero`.
-For the actual corrected Möbius family, the full residual energy with
-weight 1/[n^2(n+1)] tends to zero unconditionally. The existing formal
-PNT provider discharges the arithmetic input. This is a weaker norm
-than the RH-critical weight 1/[n(n+1)].
+**Established in Lean:** `RH/HardyMobiusEndpoint.rawHardyMobiusSum_endpoint`
+and `correctedHardyMobiusSum_endpoint` prove unconditional convergence of the
+actual raw and boundary-corrected Möbius sums in H²(Re(s)>1).
+`RH/ParetoMellinHardyEndpoint` proves actual Hardy membership and the exact
+least-upper-bound identity for line integrals with cell weight
+(2n+1)/[2n²(n+1)²]. The analytic identification is fully formalized.
 
-**Established general criterion:** `RH/DampedDiagonalCompactness` proves
-`mem_closure_of_bounded_finite_coordinate_approximants` and
-`mem_closure_of_bounded_damping_diagonal`. Finite-coordinate approximation
-and one fixed uniform Hilbert norm bound imply closed-span membership.
+**Established arithmetic providers:** `NumberTheory/PrimeNumberTheorem/Quantitative`
+adapts the pinned PNT+ Mellin calculus, zeta conjugation, and MediumPNT proofs.
+`PrimeErrorInverseLogSq`, `MobiusLogarithmicRateBridge`,
+`MobiusFloorTailReindex`, `RH/MobiusReciprocalCutoff`,
+`RH/MobiusReciprocalLogRate`, and `RH/MobiusQuantitativeRate` prove the
+unconditional decay m_N²(H_N+1) → 0. Thus the scalar premise in
+`rawHardyMobiusSum_endpoint_of_headRate` is discharged; no Ramaré bound is assumed.
+`RH/EndpointResidueCorrection` includes the entire infinite correction tail.
 
-**Conditional research reduction / Open:** applying the damping diagonal
-to the actual RH target still requires the uniformly bounded legal
-approximants in `hdiag`. Shrinking the parameter alone does not supply
-this bound. No unconditional RH theorem is claimed.
+**Established general criteria:** `RH/DampedDiagonalCompactness` retains the
+bounded finite-coordinate and damping-diagonal closed-span criteria.
+`RH/ExactHeadMovingHardyRH` proves the actual Mellin tail bound, the
+polynomial energy cost of a zero, and the moving-energy/Hardy-bound RH implications.
+The canonical specialization discharges legality and exact heads.
 
-**Analytic result, not fully formalized:** the raw Hardy Möbius sums also
-converge at alpha=1, using Mellin–Plancherel and Ramaré's reciprocal
-Möbius estimate. Neither that analytic identification nor the quantitative
-Ramaré estimate is asserted to have a Lean provider here.
-Proof, source audit, Wolfram checks, and reproducible finite computation:
+**Conditional research reduction / Open:** the common bound in
+`canonicalMobius_riemannHypothesis_of_movingHardy_bound` remains unproved:
+alpha_N ≥ 0, alpha_N → 0 and one C bounding every actual line integral on
+sigma > 1/2 + alpha_N. No unconditional RH theorem is claimed.
+The earlier diagonal criterion's bounded-approximant provider remains open.
+
+**Established finite improvement:** `RH/MobiusSignCrossingBridge` proves
+the reciprocal-sum and critical correction bounds at a finite sign crossing.
+Cofinality of crossings and control of the full critical residual tail are not supplied.
+
+Proof, provenance, and verification boundaries:
+`RH/HardyEndpointFormalization20260924.md`.
+Earlier analytic argument, Wolfram checks, and finite computations:
 `RH/HardyEndpointCompactness20260924.md`.
 
 ### Complete mixed arithmetic Gram and exact shift defect (2026-09-24)

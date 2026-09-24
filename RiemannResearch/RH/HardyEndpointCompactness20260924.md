@@ -1,6 +1,16 @@
 # Hardy endpoint, damping, and compactness — 24 September 2026
 
-## Outcome and verification boundary
+## Formalization update
+
+The raw and corrected Hardy endpoint convergence theorems are now fully formalized.
+The quantitative input is derived from a checked quantitative PNT, without assuming
+Ramaré's estimate. The actual moving-bound-to-RH implication is also formalized,
+with its common bound explicitly open. See
+[HardyEndpointFormalization20260924.md](HardyEndpointFormalization20260924.md).
+The remainder of this note records the earlier analytic route and its verification
+status at the first checkpoint; the linked continuation supersedes those status statements.
+
+## Original outcome and verification boundary
 
 The June 2026 paper proves convergence of its raw Möbius sums for half-plane boundary alpha > 1. The argument below includes alpha = 1, unconditionally. This extends that paper's stated range; no claim of historical novelty is made. Earlier work already treats closely related endpoint weights and weak compactness.
 
