@@ -1,5 +1,59 @@
 # Theorem catalog
 
+### Finite raw Möbius energy windows (2026-09-24)
+
+**Established in Lean:** `RH/RawMobiusFiniteWindowEnergy` retains the exact
+head, finite middle window, and complete infinite far tail of the raw
+Möbius residual. It proves
+\[
+ \|U_N\|_P^2=m_N^2\sum_{k=1}^{N}\frac{k}{k+1}+M_{N,K}+F_{N,K},
+ \qquad F_{N,K}\le N^2/(K+1).
+\]
+At the square cutoff this gives
+\(\|U_N\|_P^2\le Nm_N^2+M_{N,N^2}+1\).
+`rawMobiusMiddleEnergy_finite_arithmetic` expands the middle window entirely
+into finite Möbius and residue sums.
+
+**Established in Lean:** `RH/RawMobiusFiniteWindowCriterion` identifies the
+raw cutoff \(N=n+1\) with `naturalResidual n` and proves the quantitative
+actual-residual obstruction
+\[
+ E^2\le (B_{n+1}+1)\|r-Q_n r\|_P^2,\qquad
+ B_N=Nm_N^2+M_{N,N^2}.
+\]
+
+**Conditional research reduction:**
+`riemannHypothesis_of_frequently_bounded_raw_square_window` proves RH
+from one cofinal upper bound on \(B_N\). Its explicit `hbudget` remains
+**Open**. No provider for the middle-window estimate or the classical
+cofinal reciprocal-Möbius sign-change cutoffs is supplied by these modules.
+
+### Geometric residual correlation summability (2026-09-24)
+
+**Established in Lean:** `Analysis/GeometricGramInnovations` constructs an
+orthonormal innovation family from an exact geometric Gram kernel, proves
+finite and infinite Bessel bounds, and proves an exact scalar energy identity.
+
+**Established in Lean:** `RH/ResidualGeometricInnovations` discharges the
+Gram hypotheses using actual Pareto dilations and specializes to the actual
+limiting residual. With \(E=\|r\|_P^2\) and \(A_j=\langle r,D_{4^j}r\rangle_P\),
+\[
+ E^2+\frac13\sum_{j\ge0}4^{-j}(A_{j+1}-A_j)^2\le E,\qquad
+ \sum_{j\ge0}4^{-j}A_j^2\le3E-E^2.
+\]
+Both series are explicitly proved summable. Principal declarations:
+`residual_geometric_pairing_difference_summable`,
+`residual_geometric_pairing_difference_bound`,
+`residual_geometric_pairing_square_summable`,
+`residual_geometric_pairing_square_tsum_bound`.
+
+**Still Open:** signed cancellation strong enough to bound the ordinary
+residual primitive sublinearly or to force the residual energy to vanish.
+Geometric-scale summability alone does not provide that arithmetic estimate.
+
+Details and source audit:
+[FiniteWindowsAndGeometricCorrelations20260924.md](RH/FiniteWindowsAndGeometricCorrelations20260924.md).
+
 ### Physical signed harmonic masses (2026-09-24)
 
 **Established in Lean:** `RH/ResidualPhysicalSignMass` proves that, for any
