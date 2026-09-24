@@ -1,5 +1,45 @@
 # Theorem catalog
 
+### Unconditional sublinear finite budget (2026-09-24)
+
+**Established in Lean:** `RH/RawMobiusBudgetSublinear` proves
+\[
+ B_N\le4\|F_N\|_P^2+4+9Nm_N^2,\qquad B_N/N\longrightarrow0.
+\]
+The principal theorem `rawMobiusSquareBudget_sublinear` uses the
+actual unconditional PNT providers from `CanonicalMobiusPNT`.
+It has no new arithmetic premise and retains the full physical energy.
+
+This is weaker than the cofinal subpower estimates below: sublinear
+growth alone does not imply growth slower than every positive power.
+The missing estimate `hsub` remains **Open**.
+
+Source audit and exact formulas:
+[NymanBeurlingSubpowerAudit20260924.md](RH/NymanBeurlingSubpowerAudit20260924.md).
+
+### Subpower finite arithmetic budget criterion (2026-09-24)
+
+**Established in Lean:** `RH/RawMobiusSubpowerCriterion` defines
+`rawMobiusSquareBudget N = N*m_N^2 + M_{N,N^2}` and proves
+`canonicalMobius_norm_sq_le_raw_square_budget`:
+\\(\\|F_N\\|_P^2\\le12B_N+8\\) for every positive cutoff.
+The actual continuous critical energy is identified with the Pareto norm.
+
+**Established in Lean:** `rawMobiusSquareBudget_lower_of_zeta_zero`
+shows that any zeta zero \\(\\rho\\ne1\\) with \\(\\beta=\\Re\\rho>1/2\\) forces
+\\[
+ \\frac{2\\beta-1}{4|\\rho|^2}(N+1)^{2\\beta-1}\\le12B_N+8
+ \\qquad(N\\ge3).
+\\]
+
+**Conditional research reduction:**
+`riemannHypothesis_of_frequently_subpower_raw_square_budget` proves
+Mathlib's `RiemannHypothesis` if for every \\(\\varepsilon>0\\) there is a
+constant \\(C_\\varepsilon\\) and cofinally many cutoffs with
+\\(B_N\\le C_\\varepsilon(N+1)^\\varepsilon\\). The cofinal sets may depend
+on the exponent. No sign-crossing hypothesis is required.
+The actual arithmetic estimate `hsub` remains **Open**.
+
 ### Finite raw Möbius energy windows (2026-09-24)
 
 **Established in Lean:** `RH/RawMobiusFiniteWindowEnergy` retains the exact
