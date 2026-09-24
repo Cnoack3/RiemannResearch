@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Power damping, finite dilations, and exact source masses (2026-09-24)
+
+**Established in Lean:** `RH/DampedMobiusPrimitiveVariation` proves exact
+increments and pointwise convergence of genuine damped Mobius physical sums,
+a uniform weighted variation bound 2/((n+1)(n+2)), and convergence of the
+primitive-side pairing series under its explicit summable majorant. It does
+not assume Hilbert membership of an infinite damped approximant.
+`RH/FiniteDilationMobiusKernel` and `RH/FiniteDilationReciprocalCharge` prove
+unconditional quotient energy and physical norm limits for every finite
+signed positive integer-dilation family, using an explicit common-multiple
+reversal and proved PNT/size inputs.
+`RH/ScreeningSourceMass` proves E_M^2*s_M^2/B_M=E_M-E_(M+1), the exact HasSum
+E_1-E_infinity, and that nondensity forces sum s_M^2/H_(M+1) to converge.
+Nonsummability of the latter is a verified **conditional RH reduction**;
+its actual arithmetic provider remains **Open**.
+
+**Mathematical proofs, not fully formalized:** preserving power-damped signed
+Mobius cancellation lowers the centered primitive sufficient logarithmic
+exponent from p>2 to p>1. The fixed-epsilon absolute interchange and constant
+zeta-mode limit are proved in prose, not assumed in a Lean RH theorem.
+Divisor-box Euler products complete the all-dilation innovation lower-limit
+bound of 1 in prose; the generic finite physical limit is verified but that
+Euler-product specialization is not yet formalized.
+The actual residual Dini envelope and source divergence remain **Open**.
+Unconditional RH was not proved.
+See `RH/PowerDampingAndAllDilationContinuation20260924.md`.
+
 ### Exact screening bridge and centered primitives (2026-09-24)
 
 **Established in Lean:** `RH/ReciprocalChargeGeometricInnovation` proves the
