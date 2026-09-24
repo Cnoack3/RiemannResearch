@@ -724,6 +724,9 @@ import RiemannResearch.RH.CenteredResiduePrefixes
 import RiemannResearch.RH.RawMobiusFirstWindow
 import RiemannResearch.RH.RawMobiusFirstWindowQuantitative
 import RiemannResearch.RH.RawMobiusPrimitiveEnergy
+import RiemannResearch.Analysis.FiniteGramScreeningCalculus
+import RiemannResearch.RH.CanonicalMobiusWindowGainBounds
+import RiemannResearch.RH.RawMobiusPrimitivePeriodMean
 import RiemannResearch.RH.ParetoTailRateCompatibility
 import RiemannResearch.RH.ParetoJordanMeanCoordinates
 import RiemannResearch.RH.ParetoUniformJordanIdentification

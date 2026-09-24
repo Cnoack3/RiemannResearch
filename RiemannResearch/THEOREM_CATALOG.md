@@ -1,5 +1,19 @@
 # Theorem catalog
 
+### Exact arithmetic gain cancellation and harmonic bound (2026-09-24)
+
+**Established in Lean:** `RH/CanonicalMobiusWindowGainBounds` cancels the
+nonzero reciprocal Mobius factor from both terms of the actual one-step
+capacity quotient. The screened adjacent-step energy is positive and at most
+`H_(M+1)`, giving gain >= signed-source^2 / H_(M+1) and an accumulated
+finite lower bound on the actual window capacity.
+`Analysis/FiniteGramScreeningCalculus` supplies the general screening algebra.
+`RH/RawMobiusPrimitivePeriodMean` identifies the complete signed primitive
+remainder's period mean exactly with the Jordan variance, including the
+upper-half prime-count lower bound.
+Source-sum divergence and the actual RH upper bounds remain **Open**.
+See `RH/ArithmeticGainRepair20260924.md`.
+
 ### PNT and dichotomy compatibility audit (2026-09-24)
 
 **Established in Lean:** `RH/ParetoTailRateCompatibility` realizes every
