@@ -724,6 +724,7 @@ import RiemannResearch.RH.CenteredResiduePrefixes
 import RiemannResearch.RH.RawMobiusFirstWindow
 import RiemannResearch.RH.RawMobiusFirstWindowQuantitative
 import RiemannResearch.RH.RawMobiusPrimitiveEnergy
+import RiemannResearch.RH.ParetoTailRateCompatibility
 import RiemannResearch.RH.ParetoJordanMeanCoordinates
 import RiemannResearch.RH.ParetoUniformJordanIdentification
 import RiemannResearch.RH.ParetoReflectionConvergence

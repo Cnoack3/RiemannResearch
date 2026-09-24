@@ -1,5 +1,18 @@
 # Theorem catalog
 
+### PNT and dichotomy compatibility audit (2026-09-24)
+
+**Established in Lean:** `RH/ParetoTailRateCompatibility` realizes every
+decreasing zero-limit sequence as an exact Hilbert tail energy and proves
+sharp exact-head interpolation in an orthogonal hyperplane.
+`exists_hyperplane_exact_head_sublinear_divergence` constructs constant-head
+vectors in a hyperplane excluding `hilbertOne`, with full error energy
+`c^2 * sqrt(N+1)` for `c > 0`. The energy diverges while its quotient by N
+tends to zero. This refutes the inference from those analytic rates alone;
+it does not identify the hyperplane with the arithmetic legal space.
+The actual cofinal bounded normalized-tail provider remains **Open**.
+See `RH/DichotomyPNTAttempt20260924.md`.
+
 ### Quantitative first-window energy and signed primitive identity (2026-09-24)
 
 **Established in Lean:** `RH/RawMobiusFirstWindowQuantitative` proves
