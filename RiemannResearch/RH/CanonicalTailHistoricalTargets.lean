@@ -1,12 +1,14 @@
 import RiemannResearch.RH.RHFalseTailConstraints
+import RiemannResearch.RH.ParetoReciprocalDifference
 
 /-!
-# Open canonical-tail assertions from the historical condition list
+# Canonical-tail assertions from the historical condition list
 
 Source: user-provided stringent-condition catalogue, conditions 2, 6--9,
 2026-09-21. These definitions record exact additional assertions on the actual
-canonical arithmetic objects. They are OPEN formalization targets: no theorem
-in this file proves them, and their definability does not establish them.
+canonical arithmetic objects. Most remain OPEN formalization targets; their
+definability does not establish them. The elementary physical-sublinearity
+target now has a checked provider below.
 -/
 
 noncomputable section
@@ -96,9 +98,13 @@ def AnnihilatorSubexponentialExcursionTarget : Prop :=
         C * (Real.log (n : ℝ)) ^ θ <
           Real.log (1 + |hilbertSequence u n|)
 
-/-- OPEN formalization of the elementary Hilbert-coordinate growth limit. -/
+/-- Historical elementary Hilbert-coordinate growth target, now proved below. -/
 def HilbertPhysicalSublinearTarget : Prop :=
   ∀ u : ThresholdHilbert,
     Tendsto (fun n : ℕ => hilbertSequence u n / (n : ℝ)) atTop (𝓝 0)
+
+/-- Every physical Hilbert sequence is sublinear, without RH assumptions. -/
+theorem hilbertPhysicalSublinear : HilbertPhysicalSublinearTarget :=
+  hilbert_physical_sublinear
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization

@@ -1,5 +1,42 @@
 # Theorem catalog
 
+### RH criteria, reciprocal correction, and sign oscillation (2026-09-24)
+
+**Established in Lean:** `RH/ReciprocalGramCorrection` computes the growing
+reciprocal-weighted inverse-Gram correction W_n exactly and proves
+W_n -> -r(1). Its limit lies between -(2+sqrt(2))E and -(2-sqrt(2))E.
+Zero limit is equivalent to actual residual zero. No limit is passed through
+an inverse matrix.
+
+**Established in Lean:** `RH/ParetoWeightedApproximationRH` proves the
+positive error floor (2 Re(s)-u)/|s|^2 at an actual right-hand zeta zero,
+for every legal closure member and 1<=u<2 Re(s). Independently small errors
+on individual vertical lines approaching 1/2 suffice for RH.
+
+**Established in Lean:** `RH/ParetoReciprocalDifference` proves
+sum |f(n)/n|^2 <= 2||f||^2, physical sublinearity, exact finite Abel
+summation, and convergence of ordered reciprocal first differences to
+<f,1>. `hilbertPhysicalSublinear` now discharges the historical
+`HilbertPhysicalSublinearTarget` in `RH/CanonicalTailHistoricalTargets`.
+This imports the real s=1 difference-series result, not Balazard's separate
+Mobius reciprocal sum rule.
+
+**Established in Lean:** `RH/MobiusResidualSignOscillation` proves a general
+order reversal for vectors with nonnegative Mobius charges, contractivity
+of their ordered reconstructions, and both defect signs arbitrarily far
+under not RH. Eventual one-sided charges of the actual residual force RH.
+
+**Conditional research reductions / Open:** a nonnegative W_n limit;
+independently small weighted errors with u tending to 1; or eventual
+one-sided residual charges. None of these arithmetic providers is asserted.
+The compact scalar obligation remains r(1)<=0. The proved internal
+residual equivalences must not be called a Lean RH equivalence: the
+classical RH-to-Nyman/Baez-Duarte converse remains unimported here.
+
+Primary-source coverage, exact proof statements, missing criterion imports,
+and explicit obstructions to an endpoint/interpolation or sign bootstrap:
+`RH/RHCriteriaImportAudit20260924.md`. No unconditional RH or novelty claim.
+
 ### Residual tails and inverse source escape (2026-09-24)
 
 **Established in Lean:** `RH/ResidualTailPNT` connects the existing
