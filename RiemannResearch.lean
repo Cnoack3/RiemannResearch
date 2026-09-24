@@ -1,3 +1,6 @@
+import RiemannResearch.RH.UniformTrigammaMeanPoint
+import RiemannResearch.RH.MidpointTailEnergy
+import RiemannResearch.RH.CanonicalMobiusCapacityHardy
 import RiemannResearch.Analysis.WeightedMellinHeadTail
 import RiemannResearch.RH.ExactHeadWeightedEnergy
 import RiemannResearch.RH.CanonicalMobiusQuantitativeEnergy

@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Gram–Mobius quantitative bridge (2026-09-24)
+
+**Established in Lean:** `RH/UniformTrigammaMeanPoint` combines the cubic
+mean-point estimate with the midpoint sandwich:
+(L alpha(r,L)-sqrt(r(r+1)))^4 <= trigamma(1)/(512 L^3)
+for every real r>=1 and L>0, uniformly in growing residues.
+
+**Established in Lean:** `RH/MidpointTailEnergy` identifies the actual complete
+midpoint physical energy, proves its relative zero-head error bound with
+factor 1-(2N+3)^(-2), and transfers the canonical full-tail Hardy schedule
+to any certified midpoint competitor. No inverse-norm bound or minimizer
+existence is assumed. The comparator premise is explicit.
+
+**Established in Lean:** `RH/CanonicalMobiusCapacityHardy` transfers the
+unconditional quantitative PNT ceiling to the attained signed-covariance
+optimizer, including singular covariance matrices. For every finite positive
+index family with k_i>=N containing N, one eventual arithmetic constant gives
+1 <= (N B_C(N)-N/(N+1))*capacity. The optimizer satisfies the exact weighted
+identity head + (N+1)^(1-u)/capacity - weightDefect and the same explicit
+uniform moving-Hardy residual bound as the canonical competitor.
+
+**Open:** a capacity improvement or signed weight-defect estimate sufficient
+for the RH-strength moving boundary. The proved boundary still tends to 1,
+not 1/2. Relative midpoint stability does not supply the missing arithmetic rate.
+The literature obstruction to full critical convergence of the classical
+canonical family is explained, but not formalized, in the audit.
+
+Comparison, literature, exact constants, assumptions, and verification scope:
+`RH/GramMobiusBridgeAudit20260924.md`.
+
 ### Quantitative Mobius energy and moving Hardy boundaries (2026-09-24)
 
 **Established in Lean:** `RH/CanonicalMobiusQuantitativeEnergy` proves a
