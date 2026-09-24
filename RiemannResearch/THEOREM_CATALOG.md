@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Exact shifted arithmetic Gram and canonical minimizers (2026-09-24)
+
+**Established in Lean:** `Analysis/NoorLogarithmGram` computes the exact
+lcm inner product of logarithmic vectors. `RH/NoorRegularizedGram`
+transfers it to every entry of the actual shifted residue Gram K.
+`Analysis/ShiftedLiftGram` proves positivity of K+t^2 G for an independent
+dictionary and t>0, constructs the actual inverse-matrix normal solution,
+and proves the full-norm minimum E-h^T(K+t^2 G)^(-1)h.
+
+**Established in Lean:** the arithmetic application constructs the unique
+canonical finite minimizer, proves its normal equations and exact energy,
+and derives unscaled convergence for every positive vanishing parameter
+schedule. The finite inverse gain is at most E/(1+t). All signed terms and
+the complete infinite Hilbert norm are retained.
+
+**Conditional research reduction:** `riemannHypothesis_of_inverseGram_gap`
+concludes Mathlib RH from vanishing of the actual inverse-matrix gap
+divided by t along cofinal cutoffs and positive parameters tending to zero.
+**Open:** the divided-gap provider `hrate`. Explicit inversion and the
+lcm kernel do not discharge this estimate.
+Details: `RH/NoorRegularizedGram20260924.md`.
+
 ### Exact remaining normalized-tail obligation (2026-09-23)
 
 **Established in Lean:** `RH/ParetoResidualTailDichotomy` now exposes
