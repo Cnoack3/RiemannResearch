@@ -1,5 +1,68 @@
 # Theorem catalog
 
+### Logarithmic Möbius mean, full fixed sources, and primitive criteria (2026-09-24)
+
+**Established in Lean:** `NumberTheory/PrimeNumberTheorem/LogarithmicMobiusMean`
+proves `logarithmicMobiusMean_tendsto_neg_one` for the actual ordered sum
+`sum_{n=1}^N mu(n)*log(n)/n`, with no additional arithmetic hypotheses.
+The proof uses the existing `Quantitative.MediumPNT`, its inverse-fourth-log
+weakening, exact finite convolution and Abel identities, an explicit
+inverse-cube-log harmonic-defect remainder, and fixed quotient-window
+cancellation. The classical statement is NIST DLMF 27.11.15.
+
+**Established providers:** `Analysis/ReciprocalAbel`,
+`Analysis/LogarithmicAbelRemainder`, `NumberTheory/LogarithmicKernelConvolution`,
+and `NumberTheory/PrimeNumberTheorem/{LogarithmicMobiusConvolution,
+LogarithmicMobiusConvergence,PrimeErrorInverseLogFourth,MangoldtHarmonicAbel}`.
+In particular `mangoldtHarmonicDefect_inverse_log_cube_bound` discharges the
+explicit envelope of the intermediate conditional mean assembly. No
+unsquared logarithmic Mertens estimate is assumed.
+
+**Established in Lean:** `RH/NaturalMobiusSourceLimits` proves the exact
+constant-source identity `inner U_N One = 1 + logarithmicMobiusMean N`,
+its unconditional limit zero, and
+`rawMobiusResidual_residue_inner_tendsto_zero` for every fixed actual
+normalized residue generator. This closes the centered and constant source
+obligations in Sections 7–8 of the reciprocal-charge research note.
+
+**Established in Lean:** `Analysis/DominatedPrimitivePairing`,
+`NumberTheory/DivisorCountSummability`, and
+`RH/{NaturalMobiusVariation,NaturalMobiusPrimitiveTests,NaturalMobiusPeriodicTests}`
+prove the exact weighted variation bound and pairing decay for tests whose
+ordinary primitive is summable against
+`(3 + tau(K+1))/((K+1)*(K+2))`. A fixed power bound
+`|H(K)| <= C*(K+1)^alpha`, with `alpha < 1`, suffices. The divisor
+Dirichlet series is established for every real exponent greater than one;
+the actual raw-residual endpoint follows from its proved cutoff bound.
+
+**Established equivalence; conditional research reduction:**
+`RH/NaturalMobiusResidualCriterion` proves
+`limitResidual_zero_iff_summable_primitive` and
+`riemannHypothesis_of_residual_primitive_rpow_bound`.
+**Open:** the displayed summability or a sufficient fixed sublinear power
+bound for the actual orthogonal residual. No such provider is asserted.
+The non-RH consequence only states that each proposed fixed bound is
+exceeded at some cutoff.
+
+**Established in Lean:** `RH/ResidualDilationPartialSums` proves the exact
+signed formula `H_r(N)=2*sum_{m=1}^N inner r (D_m r)-N*inner r (D_(N+1) r)`
+and the unconditional square-root dilation bound. Its resulting
+order-three-halves primitive bound does not close the sublinear obligation.
+
+**Verification:** the 16-module coherent check
+`job_MRYX9KShwGKCY8LFBcQV0RrndaHpoE7z` succeeded, exit 0,
+`verified:true`, 6.466 seconds, SHA-256
+`69ba1fe754ce8cf70d2201819cb6085120d6d090d64dcaafed90a58dac37e05b`.
+All 12 principal axiom reports contain only `propext`, `Classical.choice`,
+and `Quot.sound`. Local hypotheses in the RH reduction remain explicit.
+The repository checkpoint independently validates the published modules.
+
+**Still Open:** growing inverse-Gram amplification, signed saturation, or
+a sufficient actual-residual bound. RH remains unproved. The new research
+ledger is `RH/PrimitiveAndLogarithmicContinuation20260924.md`;
+`RH/Residual_Abel_Obstruction_20260924.md` contains separately labeled
+paper derivations, including the Abel limit-interchange obstruction.
+
 ### Reciprocal-charge norm limit and signed dilation correlations (2026-09-24 continuation)
 
 **Established in Lean:** `RH/ReciprocalChargeNormLimit` proves
@@ -25,9 +88,10 @@ specializations are `-6/pi^2` for h=2 and `-9/(2*pi^2)` for h=3.
 **Still Open:** these dual-vector limits do not prove the residual sign
 r(1)<=0, inverse-Gram control, signed Schur saturation, or approximation at
 weights tending to 1. RH remains unproved. The full rational-dilation formula,
-two-seed rectangle averages, rescaled energy measures, and periodic Gram-source
-decay are recorded as written research with a distinct formal-status boundary
-in `RH/ReciprocalCharge_DilationAndPeriodicSource_20260924.md`.
+two-seed rectangle averages and rescaled energy measures are recorded as
+written research in `RH/ReciprocalCharge_DilationAndPeriodicSource_20260924.md`.
+The fixed periodic Gram-source obligation is now discharged by the modules
+in the continuation entry above.
 
 
 ### Agenda execution: signed Schur, weighted minima, reciprocal charges (2026-09-24)

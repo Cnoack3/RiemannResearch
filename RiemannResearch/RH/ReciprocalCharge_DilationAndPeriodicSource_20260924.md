@@ -2,16 +2,18 @@
 
 Prepared 24 September 2026. Mathematical research note. No novelty claim is made.
 
-Formal status: the exact norm limit and the actual integer-dilation correlation
-formula are Lean-verified in the companion modules. Prime evaluations are
-recorded in the execution report. The general rational-dilation formula,
-quotient-spike approximation, joint finite averages, rescaled energy profile,
-and periodic source limits below are written mathematics, not Lean-verified.
+Formal status: the exact norm limit, actual integer-dilation correlations,
+and the centered and full fixed periodic source limits are Lean-verified.
+The logarithmic Möbius mean for the constant source is now proved from the
+existing quantitative PNT in `NumberTheory/PrimeNumberTheorem/LogarithmicMobiusMean`.
+`RH/NaturalMobiusSourceLimits` assembles the actual full source limits.
+Prime evaluations are recorded in the execution report. The general
+rational-dilation formula, quotient-spike approximation, joint finite averages,
+and rescaled energy profile remain written mathematics, not Lean-verified.
 
-This note extends the supplied `ReciprocalChargeNormLimit20260924.md` using its
-now-formalized norm separation. It also proves the remaining centered-periodic
-part of the raw Gram-source limit. The logarithmic Möbius mean used for the
-constant part is classical, but its Lean import must still be supplied.
+This note extends the supplied `ReciprocalChargeNormLimit20260924.md`.
+The current proof ledger and remaining RH obligations are recorded in
+`PrimitiveAndLogarithmicContinuation20260924.md`.
 
 ## 1. Definitions and the existing norm argument
 
@@ -477,12 +479,12 @@ decay
 Only stages (N\ge m) are needed for that coordinate. The same proof applies
 to every fixed periodic test sequence, by subtracting its period mean.
 
-**Formal import boundary.** The logarithmic mean is recorded in NIST DLMF
-27.11.15; the page identifies it as equivalent to PNT. A citation does not
-install a Lean theorem. A complete Lean version of the full source statement
-must prove this result from existing PNT infrastructure or retain it as an
-explicit premise until that import is completed. In contrast, the centered
-periodic result can be formalized independently of the logarithmic mean.
+**Formal import completed.** The logarithmic mean recorded in NIST DLMF
+27.11.15 is now proved by `logarithmicMobiusMean_tendsto_neg_one` from the
+existing `MediumPNT` theorem, finite Abel summation, and an explicit cubic-log
+quotient-convolution argument. `rawMobiusResidual_residue_inner_tendsto_zero`
+combines it with the independently proved centered periodic result. These
+declarations have no additional arithmetic hypotheses.
 
 ## 9. Why these results do not prove RH
 
