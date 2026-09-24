@@ -1,3 +1,7 @@
+import RiemannResearch.RH.DampedMobiusPrimitiveVariation
+import RiemannResearch.RH.FiniteDilationMobiusKernel
+import RiemannResearch.RH.FiniteDilationReciprocalCharge
+import RiemannResearch.RH.ScreeningSourceMass
 import RiemannResearch.RH.ReciprocalChargeGeometricInnovation
 import RiemannResearch.RH.CanonicalMobiusScreeningBridge
 import RiemannResearch.RH.NaturalMobiusCenteredPrimitiveTests
