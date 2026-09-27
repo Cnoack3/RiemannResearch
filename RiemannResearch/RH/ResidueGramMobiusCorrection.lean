@@ -156,4 +156,119 @@ theorem riemannHypothesis_of_correction_limits
   riemannHypothesis_of_projection_norm_tendsto_zero
     (correction_limits_iff_norm.mp h)
 
+/-- The natural finite Möbius synthesis, in the complete Pareto Hilbert space. -/
+def mobiusSynthesis (n : ℕ) : ThresholdHilbert :=
+  ∑ i : Fin n, mobiusVector n i • residueAtom i.val
+
+/-- The uncorrected residual R_N, where N=n+1. -/
+def mobiusResidual (n : ℕ) : ThresholdHilbert := hilbertOne + mobiusSynthesis n
+
+/-- The Hilbert synthesis of the exact inverse-Gram correction vector. -/
+def correctionSynthesis (n : ℕ) : ThresholdHilbert :=
+  ∑ i : Fin n, correctionVector n i • residueAtom i.val
+
+theorem mobiusSynthesis_mem (n : ℕ) :
+    (∑ i : Fin n, mobiusVector n i • residueAtom i.val) ∈ finiteSpace n :=
+  synthesis_mem (fun i : Fin n => residueAtom i.val) (mobiusVector n)
+
+theorem correctionSynthesis_eq (n : ℕ) :
+    correctionSynthesis n = projection n + mobiusSynthesis n := by
+  simp only [correctionSynthesis, correctionVector_eq, Pi.add_apply,
+    add_smul, Finset.sum_add_distrib, ← projection_eq_inverseGram_synthesis,
+    mobiusSynthesis]
+
+/-- The correction is the projection of the natural residual. -/
+theorem mobiusResidual_projection (n : ℕ) :
+    (finiteSpace n).starProjection (mobiusResidual n) = correctionSynthesis n := by
+  rw [mobiusResidual, map_add,
+    Submodule.starProjection_eq_self_iff.mpr
+      (show mobiusSynthesis n ∈ finiteSpace n from mobiusSynthesis_mem n),
+    correctionSynthesis_eq]
+  rfl
+
+theorem mobiusResidual_sub_correction (n : ℕ) :
+    mobiusResidual n - correctionSynthesis n = hilbertOne - projection n := by
+  rw [mobiusResidual, correctionSynthesis_eq]
+  abel
+
+theorem mobiusSynthesis_norm_sq (n : ℕ) :
+    ‖mobiusSynthesis n‖ ^ 2 =
+      dotProduct (mobiusVector n) ((fullGram n).mulVec (mobiusVector n)) := by
+  rw [fullGram, gramMatrix_mulVec]
+  exact gram_quadratic (fun i : Fin n => residueAtom i.val) (mobiusVector n)
+
+theorem mobiusSynthesis_inner_one (n : ℕ) :
+    inner ℝ (mobiusSynthesis n) hilbertOne = dotProduct (mobiusVector n) (source n) :=
+  inner_synthesis_left (fun i : Fin n => residueAtom i.val) (mobiusVector n) hilbertOne
+
+theorem mobiusResidual_source (n : ℕ) :
+    cross (fun i : Fin n => residueAtom i.val) (mobiusResidual n) =
+      source n + (fullGram n).mulVec (mobiusVector n) := by
+  rw [fullGram, gramMatrix_mulVec]
+  funext i
+  change inner ℝ (residueAtom i.val) (hilbertOne + mobiusSynthesis n) =
+    inner ℝ (residueAtom i.val) hilbertOne +
+      inner ℝ (residueAtom i.val) (mobiusSynthesis n)
+  exact inner_add_right _ _ _
+
+theorem mobiusResidual_norm_sq (n : ℕ) :
+    ‖mobiusResidual n‖ ^ 2 = 1 +
+      2 * dotProduct (mobiusVector n) (source n) +
+      dotProduct (mobiusVector n) ((fullGram n).mulVec (mobiusVector n)) := by
+  have hi : inner ℝ hilbertOne (mobiusSynthesis n) =
+      inner ℝ (mobiusSynthesis n) hilbertOne := real_inner_comm _ _
+  rw [mobiusResidual, norm_add_sq_real, hilbertOne_norm_sq,
+    hi, mobiusSynthesis_inner_one, mobiusSynthesis_norm_sq]
+
+/-- Exact complete energy removed by the inverse-Gram correction. -/
+theorem correctionSynthesis_norm_sq (n : ℕ) :
+    ‖correctionSynthesis n‖ ^ 2 =
+      dotProduct (source n + (fullGram n).mulVec (mobiusVector n))
+        ((fullGram n)⁻¹.mulVec (source n + (fullGram n).mulVec (mobiusVector n))) := by
+  have h := projection_inner_eq_inverseGram (TailCapacity.finiteAtom_independent n)
+    (mobiusResidual n) (mobiusResidual n)
+  change inner ℝ ((finiteSpace n).starProjection (mobiusResidual n))
+    ((finiteSpace n).starProjection (mobiusResidual n)) =
+      dotProduct (cross (fun i : Fin n => residueAtom i.val) (mobiusResidual n))
+        ((fullGram n)⁻¹.mulVec
+          (cross (fun i : Fin n => residueAtom i.val) (mobiusResidual n))) at h
+  simpa only [mobiusResidual_projection, real_inner_self_eq_norm_sq,
+    mobiusResidual_source] using h
+
+/-- Pythagoras for the natural residual and its finite orthogonal correction. -/
+theorem mobiusResidual_energy_split (n : ℕ) :
+    ‖mobiusResidual n‖ ^ 2 =
+      ‖hilbertOne - projection n‖ ^ 2 + ‖correctionSynthesis n‖ ^ 2 := by
+  have h := residual_completion (TailCapacity.finiteAtom_independent n)
+    hilbertOne (-mobiusVector n)
+  rw [synthesis_inverseCoeff_eq_projection] at h
+  have hi : inverseCoeff (TailCapacity.finiteAtom_independent n) hilbertOne =
+      canonicalVector n := by
+    rw [canonicalVector, fullGram, gramMatrix_inverseSource]
+    rfl
+  rw [hi] at h
+  have hs : Fintype.linearCombination ℝ (fun i : Fin n => residueAtom i.val)
+      (-mobiusVector n) = -mobiusSynthesis n := by
+    simp [Fintype.linearCombination_apply, mobiusSynthesis]
+  have hd : Fintype.linearCombination ℝ (fun i : Fin n => residueAtom i.val)
+      (-mobiusVector n - canonicalVector n) = -correctionSynthesis n := by
+    have hv : -mobiusVector n - canonicalVector n = -correctionVector n := by
+      rw [correctionVector_eq]
+      abel
+    rw [hv]
+    simp [Fintype.linearCombination_apply, correctionSynthesis]
+  rw [hs, hd, sub_neg_eq_add, norm_neg] at h
+  exact h
+
+/-- Equation (34), including the entire infinite Pareto error. -/
+theorem error_eq_mobius_matrix_correction (n : ℕ) :
+    ‖hilbertOne - projection n‖ ^ 2 = 1 +
+      2 * dotProduct (mobiusVector n) (source n) +
+      dotProduct (mobiusVector n) ((fullGram n).mulVec (mobiusVector n)) -
+      dotProduct (source n + (fullGram n).mulVec (mobiusVector n))
+        ((fullGram n)⁻¹.mulVec (source n + (fullGram n).mulVec (mobiusVector n))) := by
+  have h := mobiusResidual_energy_split n
+  rw [mobiusResidual_norm_sq, correctionSynthesis_norm_sq] at h
+  linarith
+
 end RiemannResearch.RH.Pareto.CoefficientStabilization.GramMobiusCorrection

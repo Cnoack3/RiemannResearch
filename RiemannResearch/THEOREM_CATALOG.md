@@ -6734,3 +6734,60 @@ force nonsummable relative gains across the entire ordinary block.
 No source lower bound, RH assumption, or zero-ordinate distribution
 hypothesis is hidden in the unconditional local estimates. Local gains
 must not be summed without controlling the cross-cell Gram matrix.
+
+### Cofinal bounds force full Pareto projection convergence (2026-09-26)
+
+**Conditional research reduction:** a fixed energy bound at arbitrarily late
+exact-head approximants in the actual closed residue span forces the limiting
+projection defect to vanish. No RH-to-density implication is assumed.
+
+- `CoefficientStabilization.limitEnergy_eq_zero_of_cofinally_bounded_exact_head_errors`
+  in `RH/ExactHeadCofinalBounds` reuses the actual residual-tail product lower bound.
+- `CorrectionTail.projection_norm_tendsto_zero_of_cofinal_bounded_tailError`
+  specializes it to the arithmetic Möbius tails and concludes full norm convergence.
+- `projection_norm_tendsto_zero_of_subsequence_bounded_tailError` permits any
+  cofinal index map, without strict monotonicity.
+- `riemannHypothesis_of_cofinal_bounded_tailError` applies the checked
+  convergence-to-RH direction.
+
+**Open:** a constant `C` with
+`∀ M, ∃ n ≥ M, ‖CorrectionTail.tailError n‖^2 ≤ C`.
+This is weaker than the previously required bound at every index.
+The existence of such a cofinal bound is not established.
+
+### Uploaded Pareto projection proof: correction energy and arithmetic tails (2026-09-22)
+
+**Established:** the internal argument in the uploaded `Pasted markdown.md`
+is assembled in the existing concept owners and dedicated modules.
+See `RH/ResidueProjectionProofFormalization.md` for the equation map,
+indexing convention, and precise boundary of the classical RH endpoint.
+
+- `Pareto.hilbertSequence_sq_le_norm_sq` in `RH/ParetoCoordinateBounds`
+  gives the physical-coordinate square bound.
+- `Pareto.normalizedResidue_partial_sum_harmonic` in
+  `RH/ParetoResiduePartialSummation` retains the arbitrary-cutoff boundary.
+- `GramMobiusCorrection.mobiusResidual_projection` and
+  `error_eq_mobius_matrix_correction` prove the exact full correction energy.
+- `GramMobiusCorrection.mobiusSynthesis_mem` is owned by
+  `RH/ResidueGramMobiusCorrection`; `RH/ResidueGramCorrectionPairing`
+  reuses it instead of redeclaring the membership lemma.
+- `ProjectionSchur.limitEnergy_eq_one_sub_log_sub_schur_tsum`,
+  `projection_norm_tendsto_sqrt_limitEnergy`, and
+  `canonical_saturation_equivalences` in `RH/ResidueSchurLimits`
+  identify the limiting defect and all six equivalent saturation conditions.
+- `CorrectionTail.tailError_eq_mobiusResidual_sub`,
+  `correction_eq_weighted_tail`, `correction_sq_le_tail_product`,
+  `projectedDualTailEnergy_tendsto_zero`, and `tailError_energy_split`
+  in `RH/ResidueProjectionCorrectionTail` retain the actual complete
+  arithmetic tail and both factors in its Cauchy–Schwarz estimate.
+
+**Conditional research reductions:** `riemannHypothesis_of_tail_products`,
+`riemannHypothesis_of_bounded_tailError`, and the shifted Schur endpoint.
+**Open:** the arithmetic product decay, a sufficient uniform tail-energy
+bound, or equivalent Schur saturation. None is asserted unconditionally.
+
+**External theorem formalization obligation:** the argument
+`hBaezDuarte : RiemannHypothesis → hilbertOne ∈ closedSpace` remains
+explicit in `projection_norm_iff_riemannHypothesis_of_baez_duarte`.
+This missing provider for a known classical theorem is distinct from
+the open mathematical assertion `limitEnergy = 0`.

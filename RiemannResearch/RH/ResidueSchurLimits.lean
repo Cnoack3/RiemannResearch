@@ -249,4 +249,94 @@ theorem riemannHypothesis_of_relativeGain_not_summable
   riemannHypothesis_of_schur_saturation
     (schur_saturation_iff_relativeGain_not_summable.mpr h)
 
+open TailCapacity IntegerDPP GramMobiusCorrection
+
+/-- At stage n+1, the Schur gains following conductor 2 exactly exhaust the increment. -/
+theorem captured_eq_log_two_add_schur_sum (n : ℕ) :
+    captured (n + 1) = Real.log 2 +
+      ∑ j ∈ Finset.range n, (schurEta (j + 1)) ^ 2 / schurSigma (j + 1) := by
+  induction n with
+  | zero => simpa using captured_one
+  | succ n ih =>
+    rw [captured_schur_step, ih, Finset.sum_range_succ]
+    ring
+
+/-- This is an exact defect identity, with no assertion that the defect is zero. -/
+theorem limitEnergy_eq_one_sub_log_sub_schur_tsum :
+    limitEnergy = 1 - Real.log 2 -
+      ∑' j, (schurEta (j + 1)) ^ 2 / schurSigma (j + 1) := by
+  have h := schur_gain_after_two_hasSum.tsum_eq
+  linarith
+
+/-- Saturation is equivalent to a vanishing limiting defect, not a consequence of summability. -/
+theorem schur_tail_saturation_iff_energy_zero :
+    (∑' j, (schurEta (j + 1)) ^ 2 / schurSigma (j + 1)) =
+        1 - Real.log 2 ↔ limitEnergy = 0 := by
+  rw [schur_gain_after_two_hasSum.tsum_eq]
+  constructor <;> intro h <;> linarith
+
+/-- Exact criterion for the user's full, unsquared Pareto norm convergence. -/
+theorem schur_tail_saturation_iff_norm_tendsto_zero :
+    (∑' j, (schurEta (j + 1)) ^ 2 / schurSigma (j + 1)) =
+        1 - Real.log 2 ↔
+      Tendsto (fun n => ‖hilbertOne - projection n‖) atTop (𝓝 0) :=
+  schur_tail_saturation_iff_energy_zero.trans
+    (limitEnergy_zero_iff_mem.trans projection_norm_tendsto_zero_iff_mem.symm)
+
+/-- Conditional RH reduction. The Schur saturation equality remains the open input. -/
+theorem riemannHypothesis_of_schur_tail_saturation
+    (h : (∑' j, (schurEta (j + 1)) ^ 2 / schurSigma (j + 1)) =
+      1 - Real.log 2) : RiemannHypothesis :=
+  riemannHypothesis_of_projection_norm_tendsto_zero
+    (schur_tail_saturation_iff_norm_tendsto_zero.mp h)
+
+/-- The unsquared full error always converges, to the square root of the actual defect. -/
+theorem projection_norm_tendsto_sqrt_limitEnergy :
+    Tendsto (fun n => ‖hilbertOne - projection n‖) atTop
+      (𝓝 (Real.sqrt limitEnergy)) := by
+  have hs : Real.sqrt limitEnergy = ‖limitResidual‖ := by
+    change Real.sqrt (‖limitResidual‖ ^ 2) = ‖limitResidual‖
+    rw [Real.sqrt_sq_eq_abs, abs_of_nonneg (norm_nonneg _)]
+  rw [hs]
+  exact projection_norm_error_tendsto
+
+/-- Equation (33): six equivalent descriptions of saturation for the actual canonical
+projections. Each displayed condition separately suffices; none is asserted to hold. -/
+theorem canonical_saturation_equivalences :
+    (limitEnergy = 0 ↔
+      Tendsto (fun n => ‖hilbertOne - projection n‖) atTop (𝓝 0)) ∧
+    (limitEnergy = 0 ↔ Tendsto captured atTop (𝓝 1)) ∧
+    (limitEnergy = 0 ↔
+      (∑' j, (schurEta (j + 1)) ^ 2 / schurSigma (j + 1)) =
+        1 - Real.log 2) ∧
+    (limitEnergy = 0 ↔
+      ∀ d : ℕ, 1 < d → Tendsto (fun n => coefficient n d) atTop
+        (𝓝 (-(ArithmeticFunction.moebius d : ℝ)))) ∧
+    (limitEnergy = 0 ↔
+      ∀ d : ℕ, 1 < d → Tendsto (fun n => correction n d) atTop (𝓝 0)) := by
+  have hn : limitEnergy = 0 ↔
+      Tendsto (fun n => ‖hilbertOne - projection n‖) atTop (𝓝 0) :=
+    limitEnergy_zero_iff_mem.trans projection_norm_tendsto_zero_iff_mem.symm
+  have hc :
+      (∀ d : ℕ, 1 < d → Tendsto (fun n => coefficient n d) atTop
+        (𝓝 (-(ArithmeticFunction.moebius d : ℝ)))) ↔
+        Tendsto (fun n => ‖hilbertOne - projection n‖) atTop (𝓝 0) :=
+    coefficients_tendsto_mobius_iff.trans
+      (limitCoefficients_eq_mobius_iff_mem.trans
+        projection_norm_tendsto_zero_iff_mem.symm)
+  exact ⟨hn, hn.trans captured_tendsto_one_iff_norm.symm,
+    schur_tail_saturation_iff_energy_zero.symm, hn.trans hc.symm,
+    hn.trans correction_limits_iff_norm.symm⟩
+
+/-- The final classical equivalence, retaining its external Báez--Duarte direction
+as an explicit premise. No provider of that premise or of saturation is introduced. -/
+theorem projection_norm_iff_riemannHypothesis_of_baez_duarte
+    (hBaezDuarte : RiemannHypothesis → hilbertOne ∈ closedSpace) :
+    Tendsto (fun n => ‖hilbertOne - projection n‖) atTop (𝓝 0) ↔
+      RiemannHypothesis := by
+  constructor
+  · exact riemannHypothesis_of_projection_norm_tendsto_zero
+  · intro hRH
+    exact projection_norm_tendsto_zero_iff_mem.mpr (hBaezDuarte hRH)
+
 end RiemannResearch.RH.Pareto.CoefficientStabilization.ProjectionSchur

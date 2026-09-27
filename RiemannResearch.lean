@@ -311,6 +311,10 @@ import RiemannResearch.RH.ParetoProductBenchmark
 import RiemannResearch.RH.ResidueGramCofactors
 import RiemannResearch.RH.ResidueGramMobiusCorrection
 import RiemannResearch.RH.ResidueProjectionSchur
+import RiemannResearch.RH.ParetoCoordinateBounds
+import RiemannResearch.RH.ParetoResiduePartialSummation
+import RiemannResearch.RH.ExactHeadCofinalBounds
+import RiemannResearch.RH.ResidueProjectionCorrectionTail
 import RiemannResearch.RH.ResidueSchurLimits
 import RiemannResearch.RH.ResidueProjectionL1
 import RiemannResearch.RH.ResidueGramDigamma

@@ -32,13 +32,6 @@ theorem coefficientDual_inner (x : ThresholdHilbert) (i : ℕ) :
   rw [coefficientDual, inner_neg_right, real_inner_comm, mobiusRieszHilbert_inner]
   rfl
 
-theorem mobiusSynthesis_mem (n : ℕ) :
-    (∑ j : Fin n, mobiusVector n j • residueAtom j.val) ∈ finiteSpace n := by
-  apply Submodule.sum_mem
-  intro j hj
-  apply Submodule.smul_mem
-  exact Submodule.subset_span ⟨j, rfl⟩
-
 /-- The natural residual already annihilates each full finite-support dual
 whose coordinate is present. This is not annihilation of its projection. -/
 theorem naturalResidual_inner_dual (n : ℕ) (i : Fin n) :
