@@ -1,5 +1,48 @@
 # Theorem catalog
 
+### Stronger signed cancellation transfers and moving subhalf band (2026-09-27)
+
+**Established without an arithmetic hypothesis:**
+`RH/DampedMobiusMovingSubhalfBand` proves full Hilbert convergence uniformly
+throughout every shrinking band
+0 <= 1/2-epsilon <= A/log(M+1), for fixed A>=0. The limit is the actual
+half-damped vector. Complete cutoff energies converge, and full signed Gram
+off-diagonals and every physical signed head have a common band-dependent bound.
+The general increasing triangular Abel theorem is in
+`Analysis/IncreasingAbelConvergence`. This does not prove fixed subhalf
+membership: the moving damping tends to one half, not zero.
+
+**Established analytic implications / conditional research reductions:**
+
+- `Analysis/ScalarPrefixDensityTail` derives the reciprocal density tail
+  from one signed scalar prefix estimate. Consequently
+  `RH/ArithmeticFloorSinglePrefixConvergence` requires only a<epsilon
+  in the power case, or one critical prefix logarithm b>1. The independent
+  density-tail estimate is discharged by Abel summation.
+- `Analysis/SignedCriticalDamping` and
+  `RH/DampedMobiusCriticalSignedGrowth` replace the strict raw Hilbert
+  growth exponent gap by the eventual critical bound
+  ||F_0,M|| <= C M^epsilon / log(2M)^q, q>1. This gives full natural-order
+  convergence and canonical finite energy.
+- `Analysis/SignedDiniBoundedSubsequence`,
+  `Analysis/SignedAveragedSquareDamping`, and
+  `RH/DampedMobiusSignedDiniEnergy` give actual finite energy from
+  sum_M ||F_0,M|| / M^(1+epsilon) < infinity, without a boundary-limit
+  hypothesis. A logarithmically weighted square-average is another
+  sufficient input. Dini finiteness at positive dampings approaching zero
+  implies RH; no common bound across damping stages is assumed.
+- `RH/DampedMobiusNormGrowthZeroFree` proves that a full signed cutoff
+  bound ||F_alpha,M|| <= C M^theta, alpha,theta>=0, excludes zeros with
+  1/2+alpha+theta < Re(rho) < 1. Varying the extra damping removes the
+  single-shift common-zero loophole. Its contrapositive forces failure
+  of every such growth bound when an eligible zero exists.
+
+**Open arithmetic providers:** no verified fixed 0<epsilon<1/2 instance
+of the new scalar-prefix, critical signed-logarithmic, or signed Dini
+hypotheses is supplied. The unconditional moving band does not discharge
+them. No new unconditional zero-free region or RH proof is claimed.
+See `RH/SignedCancellationContinuation20260927.md`.
+
 ### General truncation and sharp exponent criteria (2026-09-27)
 
 **Established analytic implications:** the argument of
