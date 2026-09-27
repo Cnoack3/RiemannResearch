@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
+import RiemannResearch.RH.DampedMobiusAllLogMovingBand
 import RiemannResearch.Analysis.IncreasingAbelConvergence
 import RiemannResearch.RH.DampedMobiusUniformHalfRange
 import RiemannResearch.RH.DampedMobiusHalfHilbertRate
@@ -11,6 +12,11 @@ import RiemannResearch.Analysis.MovingBandAsymptotics
 
 /-!
 # Natural-order convergence in a shrinking subhalf band
+
+The imported `DampedMobiusAllLogMovingBand` now proves uniform convergence
+for every fixed coefficient c >= 0 in the log-logarithmic band, using
+every fixed endpoint logarithmic rate. The explicit quarter-logarithmic
+margin estimates below remain useful quantitative special cases.
 
 The half-damped Möbius cutoff limit remains valid when damping approaches
 one half from below and the conductor amplification stays bounded.

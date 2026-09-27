@@ -1,5 +1,12 @@
 # Quantitative endpoint convergence and the enlarged moving band
 
+**Status update, 2026-09-27:** the quarter-logarithmic estimates below
+record the earlier result at `ba20efab`. They remain valid, but are
+superseded in strength by every fixed logarithmic Mertens and endpoint
+exponent and every fixed log-logarithmic moving-band coefficient.
+See `MertensAllLogPowersContinuation20260927.md` for the new checked
+provider chain and its explicit remaining uniformity and RH gaps.
+
 Continuation of `b6f6c5a8eaf653c3e5b95368d0f7a82fbeb47787`, 2026-09-27.
 
 Write `F_{epsilon,M}` for the complete arithmetic Hilbert cutoff and `f` for
@@ -158,8 +165,11 @@ assembled from `M_mul_sqrt_log_cube_eventual_of_inverseLogFourth`.
 The weighted Mertens transfer and tail modules use the fixed exponent
 `3/2`. A stronger Chebyshev-error PNT provider exists, but the audit found
 no already assembled stronger Mertens logarithmic provider that would
-automatically replace the present endpoint envelope. Strengthening that
-assembly would be further work; arithmetic optimality is not asserted.
+automatically replace the present endpoint envelope. That assembly has now been strengthened in
+`NumberTheory/PrimeNumberTheorem/MertensAllLogPowers.lean` to every fixed
+logarithmic exponent, with all-logarithmic weighted, endpoint, and
+moving-band consumers. The paragraph above describes the earlier audit;
+see the status update and continuation linked at the start of this file.
 
 ## Principal declarations
 

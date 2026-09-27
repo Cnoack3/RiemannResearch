@@ -1,6 +1,37 @@
 # Theorem catalog
 
-### Quantitative endpoint and sharp supported moving band (2026-09-27)
+### Every fixed logarithmic Mertens/endpoint rate and all fixed moving-band coefficients (2026-09-27)
+
+**Established without a new arithmetic hypothesis:**
+
+- `NumberTheory/PrimeNumberTheorem/MertensAllLogPowers.M_shiftedLog_all_powers`
+  proves, for every fixed real a, an exponent-dependent B_a>=0 with
+  |M(x)|<=B_a*x*(6+log x)^(-a) for every real x>=1.
+- `RH/DampedMobiusHalfHilbertAllLogRates.dampedMobius_half_cutoffs_all_log_rate`
+  proves, for every fixed real a, C_a>=0 with
+  ||F_(1/2),M-f_(1/2)||<=C_a*(6+log(M+1))^(-a) for every natural M.
+  The complete finite physical head and the infinite physical tail are both included.
+- `RH/DampedMobiusAllLogMovingBand` proves full Hilbert norm and energy
+  convergence uniformly in every band delta=1/2-epsilon>=0 satisfying
+  delta*log(M+1)<=c*log(6+log(M+1)), for every fixed c>=0.
+
+The finite bootstrap has no fixed logarithmic-exponent ceiling. It uses
+J=floor(exp(sqrt(log N)))+1 and the logarithmic harmonic bound, then
+inducts on the Mertens exponent. Every prime-error inverse-log power has
+a checked provider from Quantitative.MediumPNT. The moving-band proof
+uses centered Abel error splitting, avoiding the old scalar multiplier's
+restriction that its endpoint exponent be below one.
+
+**Scope:** there is no largest fixed logarithmic endpoint exponent or
+fixed log-logarithmic band coefficient in these families. Constants and
+thresholds depend on the exponent; a single specified stretched-exponential
+Mertens rate has not been formalized. No new fixed-subhalf finite energy
+or positive damping sequence tending to zero is proved; the RH gap remains Open.
+
+See `RH/MertensAllLogPowersContinuation20260927.md` for the exact finite
+inequality, cutoff induction, downstream transfers, and remaining uniformity gap.
+
+### Earlier quarter-log endpoint and moving-band estimates (superseded in strength)
 
 **Established without an arithmetic hypothesis:** with L(M)=6+log(M+1),
 `RH/DampedMobiusHalfHilbertRate.dampedMobius_half_cutoffs_log_rate`

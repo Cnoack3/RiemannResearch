@@ -9,6 +9,10 @@ import RiemannResearch.Analysis.LogPowerTail
 /-!
 # Quantitative half-damped Hilbert convergence
 
+This module retains the original explicit quarter-logarithmic estimate.
+`DampedMobiusHalfHilbertAllLogRates` strengthens it to every fixed real
+logarithmic exponent, using the iterated unconditional Mertens provider.
+
 The checked finite head has squared error at most a constant times
 (6 + log M)^(-3). The conductor-uniform coordinate envelope gives a
 physical tail of order (6 + log M)^(-1/2) in squared norm. The complete
