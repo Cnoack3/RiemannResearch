@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Joint signed-head convergence through the half endpoint (2026-09-27)
+
+**Established without an arithmetic hypothesis:** `RH/DampedMobiusJointHeadLimits`
+proves, for every epsilon>=1/2, that the signed off-diagonal
+O_epsilon(H(j),M(j)) tends to E_epsilon-Delta_epsilon whenever both
+cutoffs diverge and H(j)<=M(j) eventually. Equal cutoffs are allowed.
+`dampedMobius_equal_cutoff_signed_bound_of_half_le` supplies an actual
+unconditional bound on O_epsilon(H,H) for every H.
+
+The endpoint density tail has the proved saving
+D*M^(-1/2)*(6+log M)^(-3/2). The exact signed head-error identity therefore
+gives square error <=K*(6+log M)^(-3) for H<=M and M>=1, which tends to
+zero at the formerly critical equal-cutoff scale. The strict half range
+uses the elementary M^(1-2*epsilon)/epsilon^2 bound. The existing endpoint
+and strict-range finite-energy providers discharge every domain premise.
+
+`RH/DampedMobiusExactSignedHeadLimits.dampedMobius_headDiagonal_joint_tendsto`
+also proves diagonal convergence for every epsilon>0 at arbitrary
+diverging cutoffs, without a relative-rate condition.
+`Analysis/FiniteWeightedEnergyComparison` now supplies weighted
+Cauchy--Schwarz and moving-energy convergence from vanishing square error.
+
+**Conditional transfer / Open arithmetic obligation:** the general
+`dampedMobius_offDiagonal_joint_tendsto_of_head_error` retains actual
+finite energy and vanishing head error as hypotheses. Subhalf membership
+and the signed bounds at positive dampings approaching zero remain
+**Open**. No new unconditional zero-free region, full Hilbert-series
+endpoint convergence, or absolute signed summability is claimed.
+See `RH/JointSignedHeadLimits20260927.md`.
+
 ### Actual diagonal and exact iterated signed-head limits (2026-09-27)
 
 **Established for every epsilon>0:**

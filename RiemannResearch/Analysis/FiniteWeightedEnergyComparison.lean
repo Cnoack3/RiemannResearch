@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
@@ -63,5 +65,66 @@ theorem sum_weighted_sq_comparison_of_sub_sq_le
     ring
   rw [heq] at hgf
   exact ⟨by linarith, by linarith⟩
+
+
+/-- Weighted Cauchy--Schwarz, retaining the signs of both factors. -/
+theorem sum_weighted_mul_sq_le {ι : Type*} (s : Finset ι) (w f g : ι → ℝ)
+    (hw : ∀ i ∈ s, 0 ≤ w i) :
+    (∑ i ∈ s, w i * f i * g i)^2 ≤
+      (∑ i ∈ s, w i * (f i)^2) * (∑ i ∈ s, w i * (g i)^2) := by
+  have h := Finset.sum_mul_sq_le_sq_mul_sq s
+    (fun i => Real.sqrt (w i) * f i) (fun i => Real.sqrt (w i) * g i)
+  have hp (a : ι → ℝ) :
+      (∑ i ∈ s, (Real.sqrt (w i) * a i)^2) = ∑ i ∈ s, w i * (a i)^2 := by
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [mul_pow, Real.sq_sqrt (hw i hi)]
+  have hm : (∑ i ∈ s, (Real.sqrt (w i) * f i) * (Real.sqrt (w i) * g i)) =
+      ∑ i ∈ s, w i * f i * g i := by
+    apply Finset.sum_congr rfl
+    intro i hi
+    calc
+      _ = (Real.sqrt (w i))^2 * f i * g i := by ring
+      _ = _ := by rw [Real.sq_sqrt (hw i hi)]
+  simpa only [hp, hm] using h
+
+/-- Vanishing weighted square error transfers finite energies on moving
+finite sets. Only a uniform bound on the target energy is needed. -/
+theorem sum_weighted_sq_sub_tendsto_zero {ι : Type*}
+    (s : ℕ → Finset ι) (w : ι → ℝ) (f : ℕ → ι → ℝ) (g : ι → ℝ)
+    (hw : ∀ i, 0 ≤ w i) (E : ℝ)
+    (hE : ∀ j, (∑ i ∈ s j, w i * (g i)^2) ≤ E)
+    (herr : Filter.Tendsto (fun j => ∑ i ∈ s j, w i * (f j i - g i)^2)
+      Filter.atTop (nhds 0)) :
+    Filter.Tendsto (fun j =>
+      (∑ i ∈ s j, w i * (f j i)^2) - (∑ i ∈ s j, w i * (g i)^2))
+      Filter.atTop (nhds 0) := by
+  let e := fun j => ∑ i ∈ s j, w i * (f j i - g i)^2
+  have he (j) : 0 ≤ e j := Finset.sum_nonneg (fun i _ => mul_nonneg (hw i) (sq_nonneg _))
+  have ht : Filter.Tendsto (fun j => 2 * Real.sqrt (E * e j) + e j)
+      Filter.atTop (nhds 0) := by
+    have hroot := Real.continuous_sqrt.continuousAt.tendsto.comp
+      (Filter.Tendsto.const_mul E herr)
+    simpa using (hroot.const_mul 2).add herr
+  apply squeeze_zero_norm _ ht
+  intro j
+  let c := ∑ i ∈ s j, w i * g i * (f j i - g i)
+  have hc : c^2 ≤ E * e j :=
+    (sum_weighted_mul_sq_le (s j) w g (fun i => f j i - g i)
+      (fun i _ => hw i)).trans (mul_le_mul_of_nonneg_right (hE j) (he j))
+  have hca : |c| ≤ Real.sqrt (E * e j) := by
+    simpa only [Real.sqrt_sq_eq_abs] using Real.sqrt_le_sqrt hc
+  have hid : (∑ i ∈ s j, w i * (f j i)^2) - (∑ i ∈ s j, w i * (g i)^2) =
+      2 * c + e j := by
+    dsimp [c, e]
+    rw [← Finset.sum_sub_distrib, Finset.mul_sum, ← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro i hi
+    ring
+  rw [Real.norm_eq_abs, hid]
+  calc
+    |2 * c + e j| ≤ |2 * c| + |e j| := abs_add_le _ _
+    _ = 2 * |c| + e j := by rw [abs_mul, abs_of_nonneg (he j)]; norm_num
+    _ ≤ _ := by linarith
 
 end RiemannResearch.Analysis

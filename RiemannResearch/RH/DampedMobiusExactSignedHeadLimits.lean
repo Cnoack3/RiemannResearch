@@ -98,6 +98,42 @@ theorem dampedMobius_completedHeadDiagonal_tendsto {ε : ℝ} (hε : 0 < ε) :
     rw [Real.norm_eq_abs, abs_of_nonneg (paretoHeadPairing_self_nonneg H _)]
     exact paretoHeadPairing_self_le H _)
 
+
+/-- Both cutoffs may tend to infinity at unrelated rates for the nonnegative
+diagonal. This needs only positive damping. -/
+theorem dampedMobius_headDiagonal_joint_tendsto {ε : ℝ} (hε : 0 < ε)
+    (H M : ℕ → ℕ) (hH : Tendsto H atTop atTop) (hM : Tendsto M atTop atTop) :
+    Tendsto (fun j => dampedMobiusHeadDiagonal ε (H j) (M j)) atTop
+      (𝓝 (dampedMobiusExactDiagonal ε)) := by
+  let a := fun j m => if m < M j then paretoHeadPairing (H j)
+    (arithmeticResidueTerm (dampedMobiusWeight ε) m)
+    (arithmeticResidueTerm (dampedMobiusWeight ε) m) else 0
+  have ht : Tendsto (fun j => ∑' m, a j m) atTop
+      (𝓝 (dampedMobiusExactDiagonal ε)) := by
+    apply tendsto_tsum_of_dominated_convergence
+      (dampedMobiusResidue_norm_sq_summable hε)
+    · intro m
+      have hself := paretoHeadPairing_self_tendsto
+        (arithmeticResidueTerm (dampedMobiusWeight ε) m)
+      apply (hself.comp hH).congr'
+      filter_upwards [hM.eventually (eventually_ge_atTop (m+1))] with j hj
+      simp [a, show m < M j by omega]
+    · exact Eventually.of_forall (fun j m => by
+        dsimp [a]
+        split_ifs
+        · rw [abs_of_nonneg (paretoHeadPairing_self_nonneg _ _)]
+          exact paretoHeadPairing_self_le _ _
+        · simp)
+  convert ht using 1
+  funext j
+  rw [tsum_eq_sum (s := Finset.range (M j)) (fun m hm => by
+    have hn : ¬ m < M j := by simpa only [Finset.mem_range] using hm
+    simp [a, hn])]
+  simp only [a, dampedMobiusHeadDiagonal]
+  apply Finset.sum_congr rfl
+  intro m hm
+  simp only [Finset.mem_range.mp hm, if_true]
+
 /-- The signed residue-cutoff limit on one finite physical head. -/
 def dampedMobiusSignedHeadLimit (ε : ℝ) (H : ℕ) : ℝ :=
   (∑ n ∈ Finset.range H, positiveWeight n *
