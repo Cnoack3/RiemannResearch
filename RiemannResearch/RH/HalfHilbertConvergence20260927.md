@@ -2,6 +2,11 @@
 
 Date: 2026-09-27. Project: RiemannResearch, Lean 4 / Mathlib.
 
+**Subsequent strengthening:** `DampedMobiusUniformHalfRange.lean` now
+proves a common approximation modulus over every epsilon>=1/2, a single
+energy and signed bound independent of damping, and endpoint norm and
+energy continuity. See `UniformHalfRange20260927.md`.
+
 ## Established result
 
 The missing full-tail convergence dependency is discharged. For every fixed

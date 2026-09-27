@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Uniform damping range and endpoint norm continuity (2026-09-27)
+
+**Established without an arithmetic hypothesis:**
+`RH/DampedMobiusUniformHalfRange.dampedMobius_half_range_uniform_approximation`
+proves one full Hilbert approximation modulus for every epsilon>=1/2:
+for each eta>0 there is K such that ||F_epsilon,M-g_epsilon||<=eta
+for all epsilon>=1/2 and M>=K. This includes the infinite physical tail.
+
+`dampedMobius_half_range_uniform_energy_and_signed_bounds` supplies
+one B for every epsilon>=1/2, bounding the actual energy, every full
+signed Gram off-diagonal, and every signed physical head at all H,M.
+The constant is independent of damping as well as both cutoffs.
+
+`dampedMobius_joint_damping_cutoff_tendsto` permits epsilon_j>=1/2
+to approach 1/2 and M_j to diverge at any independent rates.
+`dampedMobius_limit_tendsto_half` and
+`dampedMobius_energy_tendsto_half` prove norm and actual energy
+continuity at the endpoint. No monotonicity of epsilon_j is required.
+Even without a damping limit, `dampedMobius_varying_damping_error_tendsto`
+proves vanishing approximation error whenever M_j diverges.
+
+The generic positive decreasing-weight argument is in
+`Analysis/MonotoneAbelConvergence`. It preserves signed prefix and
+tail bounds by exact Abel summation and supplies uniform Cauchy and
+approximation moduli; absolute summability is not required.
+
+**Open:** subhalf arithmetic finite energy and positive-damping
+bounds approaching zero. For epsilon<1/2 the extra conductor weights
+increase, so this transfer does not give descent or prove RH.
+See `RH/UniformHalfRange20260927.md`.
+
 ### Full natural-order Hilbert convergence at half damping (2026-09-27)
 
 **Established without an arithmetic hypothesis:**
