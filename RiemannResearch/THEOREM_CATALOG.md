@@ -1,5 +1,43 @@
 # Theorem catalog
 
+### Actual damped Mellin identity and finite-energy continuation (2026-09-26)
+
+**Established in Lean:** `RH/DampedDivisorLSeries` identifies the actual
+damped divisor Dirichlet series with zeta(s)/zeta(s+epsilon) on its common
+absolute-convergence domain. `RH/DampedMobiusMellinArithmetic` proves the
+actual centered floor-prefix Mellin identity for Re(s)>1, with arbitrary
+real centering. Neither statement assumes PNT or RH.
+
+**Established in Lean:** `RH/ParetoMellinFiniteEnergy` proves
+`paretoMellin_tendstoUniformlyOn_of_tendsto`,
+`paretoMellin_differentiableAt`, and `paretoMellin_analyticOnNhd`.
+Every actual Pareto Hilbert vector has a holomorphic Mellin transform on
+Re(s)>1/2; the former bounded-coordinate assumption is removed.
+
+**Established in Lean:** `RH/BurnolMellinContinuation` continues the
+cross-multiplied identity through the former poles using entire conductor
+factors. It proves forced normalization C*zeta(1+epsilon)=1 and propagation
+of eligible actual zeta zeros. The analytic function and its initial
+identity are explicit premises of these general analytic lemmas.
+Source: Burnol, arXiv:math/0202166, Lemma 4.3 and Theorem 4.2.
+
+**Conditional research reduction:** `RH/BurnolFiniteEnergyReduction`
+assembles those premises from actual centered arithmetic Hilbert vectors.
+`riemannHypothesis_of_centered_damped_square_summable` assumes only a
+positive sequence epsilon_j tending to zero and, at each stage, some real
+C_j for which the actual weighted square sequence
+positiveWeight(n)*(dampedMobiusPrefix(epsilon_j,n)-n*C_j)^2 is summable.
+It concludes Mathlib's `RiemannHypothesis`. No common norm bound is needed.
+The scalar-to-Hilbert realization is proved, not assumed.
+
+**Open:** this small-positive-damping arithmetic summability. The arithmetic
+Mellin identity, finite-energy holomorphy, and continuation steps are now
+formalized, but they do not prove the membership premise. The reverse
+RH-to-membership direction is not formalized here. No unconditional RH
+proof is claimed. The combined candidate passed with `verified=true`,
+exit code 0, and only standard foundational axioms in the five principal
+dependency reports. See `RH/NymanBeurlingFiniteEnergyContinuation20260926.md`.
+
 ### Joint damping limits and Burnol zero-shift obstruction (2026-09-26)
 
 **Established in Lean:** `Analysis/OrderedPrimitiveAbel` adds
@@ -21,7 +59,7 @@ proof strategy: Burnol, arXiv:math/0202166, Corollary 4.1 and Theorem 4.2.
 propagation along a positive damping sequence tending to zero imply
 Mathlib's `RiemannHypothesis`. Both conclusions retain their explicit
 `hprop` premise. The arithmetic Mellin continuation deriving propagation
-from square-integrability is not formalized in this module. Small-damping
+from square-integrability is supplied by the new modules above. Small-damping
 square-integrability for the actual arithmetic family remains **Open**.
 The joint pairing theorem does not discharge the actual residual's
 primitive regularity, critical Hilbert membership, or legal-series

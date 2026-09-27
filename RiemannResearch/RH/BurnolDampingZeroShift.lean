@@ -1,4 +1,4 @@
-import RiemannResearch.RH.WeilExplicitFormula.Statement.Seam
+import RiemannResearch.RH.ZetaConductorRegularization
 import RiemannResearch.RH.RiemannHypothesisRightHalfStrip
 
 /-!
@@ -25,10 +25,10 @@ namespace RiemannResearch.RH.Burnol
 /-- Every point away from the pole has a punctured zero-free neighborhood. -/
 theorem zeta_eventually_ne_zero_punctured (ρ : ℂ) (hρ : ρ ≠ 1) :
     ∀ᶠ z in 𝓝[≠] ρ, riemannZeta z ≠ 0 := by
-  have ha := Zeta23.riemannZeta_analyticOnNhd_compl_one ρ hρ
+  have ha := analyticOn_riemannZeta ρ hρ
   apply ha.eventually_eq_zero_or_eventually_ne_zero.resolve_left
   intro h
-  exact Zeta23.analyticOrderAt_riemannZeta_ne_top hρ
+  exact ZetaConductorRegularization.analyticOrderAt_riemannZeta_ne_top_of_ne_one hρ
     (analyticOrderAt_eq_top.mpr h)
 
 /-- All sufficiently small nonzero positive horizontal shifts avoid zeros,
