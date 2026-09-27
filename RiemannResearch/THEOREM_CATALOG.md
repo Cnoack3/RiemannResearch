@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Actual centered head growth below half damping (2026-09-27)
+
+**Established without an arithmetic hypothesis:**
+`RH/DampedMobiusCenteredHeadGrowth` proves, for every fixed 0<epsilon<1/2,
+E_epsilon(H)/(H+1)^(1-2*epsilon)->0, where E_epsilon(H) is the energy of
+the actual centered arithmetic sequence on n<H. The conductor has
+already been completed; this result transfers the prior normalized
+finite-conductor Hilbert energy theorem to physical-head growth.
+
+`dampedMobius_centered_head_energy_le` compares the actual head energy
+with 2*||F_epsilon,M||^2 plus (2/epsilon^2)*H*M^(-2*epsilon).
+`Analysis/TwoScaleEnergyTransfer.two_scale_energy_tendsto_zero` uses
+M=k*(H+1)+H, first fixing k and taking H to infinity, then increasing k.
+Its generic hypotheses need q>0, C>=0 and E>=0, but not q<1 or A>=0.
+
+`dampedMobius_completed_head_diagonal_normalized_tendsto` and
+`dampedMobius_signed_head_limit_normalized_tendsto` also give vanishing
+normalized completed diagonal and absolute completed signed-head limit.
+Absolute values are taken after the full signed sum.
+
+**Open:** bounded unnormalized subhalf centered energy and the positive
+damping providers approaching zero needed by the RH reductions.
+The growing normalization does not establish finite energy or RH.
+See `RH/CenteredHeadGrowth20260927.md`.
+
 ### Normalized signed cancellation below half damping (2026-09-27)
 
 **Established without an arithmetic hypothesis:**
