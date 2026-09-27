@@ -1,12 +1,35 @@
 # Theorem catalog
 
+### Actual diagonal and exact iterated signed-head limits (2026-09-27)
+
+**Established for every epsilon>0:**
+`RH/DampedMobiusExactSignedHeadLimits` constructs the summable actual
+diagonal Delta_epsilon=sum_d ||u_{epsilon,d}||^2 and proves
+Delta_epsilon <= 2*sum_d d^(-1-2*epsilon). On each finite physical head H,
+the signed residue-cutoff limit exists and equals
+E_epsilon(H)-Delta_epsilon(H). The completed head diagonal tends to
+Delta_epsilon by dominated convergence for series.
+
+**Exact energy identity:** under the explicit actual finite-energy
+premise, lim_H lim_M O_epsilon(H,M)=E_epsilon-Delta_epsilon.
+The residue cutoff M tends to infinity first. No reversed order or
+absolute signed double-series summability is asserted. The endpoint
+provider discharges the energy premise for every epsilon>=1/2.
+For subhalf damping that premise remains **Open**.
+
+The sparse moving-head theorem now has the sharper conclusion
+E_epsilon <= Delta_epsilon+B, replacing the coarse p-series budget.
+Its signed upper-bound hypothesis and all downstream RH obligations
+remain explicit. No new unconditional subhalf membership is established.
+See `RH/ExactSignedHeadLimits20260927.md` for the proofs and verification.
+
 ### Sparse signed-head transfer and damping accumulation (2026-09-27)
 
 **Established transfer and divergence implications:**
 `RH/DampedMobiusSparseHeadDichotomy` proves that at any epsilon>0 and
 residue cutoff M(H) tending to infinity, a signed off-diagonal bound B
 at arbitrarily large physical heads supplies actual centered finite
-energy E_epsilon <= diagonalBudget(epsilon)+B. There is no factor-two
+energy E_epsilon <= Delta_epsilon+B with the actual arithmetic diagonal. There is no factor-two
 loss or head-error term. M need not be monotone, polynomial, or at least H.
 The signed bound is an explicit hypothesis, not an arithmetic estimate.
 

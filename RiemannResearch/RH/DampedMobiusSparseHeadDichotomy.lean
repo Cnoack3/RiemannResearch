@@ -5,6 +5,7 @@ Authors: RiemannResearch contributors
 -/
 import RiemannResearch.RH.DampedMobiusPolynomialHeadCriterion
 import RiemannResearch.RH.BurnolFixedDampingObstruction
+import RiemannResearch.RH.DampedMobiusExactSignedHeadLimits
 
 /-!
 # Sparse signed-head energy and its divergent alternative
@@ -32,28 +33,28 @@ open scoped Topology BigOperators
 namespace RiemannResearch.RH.Pareto
 
 /-- Sparse signed bounds suffice at any residue cutoff tending to infinity.
-The conclusion retains the exact diagonal budget, without a comparison loss. -/
+The conclusion uses the actual diagonal total, without a comparison loss. -/
 theorem centered_damped_energy_of_frequently_bounded_moving_heads
     {ε : ℝ} (hε : 0 < ε) (M : ℕ → ℕ) (hM : Tendsto M atTop atTop)
     (B : ℝ)
     (hB : ∃ᶠ H : ℕ in atTop, dampedMobiusHeadOffDiagonal ε H (M H) ≤ B) :
     Summable (fun n : ℕ => positiveWeight n *
       (dampedMobiusPrefix ε n - (n : ℝ) *
-        (1 / riemannZeta (1 + (ε : ℂ))).re)^2) ∧
+        (1 / riemannZeta (1 + (ε : ℂ))).re) ^ 2) ∧
     (∑' n : ℕ, positiveWeight n *
       (dampedMobiusPrefix ε n - (n : ℝ) *
-        (1 / riemannZeta (1 + (ε : ℂ))).re)^2) ≤
-      dampedMobiusDiagonalBudget ε + B := by
+        (1 / riemannZeta (1 + (ε : ℂ))).re) ^ 2) ≤
+      dampedMobiusExactDiagonal ε + B := by
   have hb (N : ℕ) : (∑ n ∈ Finset.range N, positiveWeight n *
       (dampedMobiusPrefix ε n - (n : ℝ) *
-        (1 / riemannZeta (1 + (ε : ℂ))).re)^2) ≤
-      dampedMobiusDiagonalBudget ε + B := by
+        (1 / riemannZeta (1 + (ε : ℂ))).re) ^ 2) ≤
+      dampedMobiusExactDiagonal ε + B := by
     have ht := (dampedMobius_partial_head_tendsto hε N).comp hM
     have hf : ∃ᶠ H : ℕ in atTop,
         paretoHeadPairing N
           (arithmeticFloorHilbertPartial (dampedMobiusWeight ε) (M H))
           (arithmeticFloorHilbertPartial (dampedMobiusWeight ε) (M H)) ≤
-          dampedMobiusDiagonalBudget ε + B := by
+          dampedMobiusExactDiagonal ε + B := by
       apply (hB.and_eventually (eventually_ge_atTop N)).mono
       rintro H ⟨hHB, hNH⟩
       have hhead : paretoHeadPairing N
@@ -70,14 +71,14 @@ theorem centered_damped_energy_of_frequently_bounded_moving_heads
             (hilbertSequence
               (arithmeticFloorHilbertPartial (dampedMobiusWeight ε) (M H)) n))
       rw [dampedMobius_partial_head_eq_signed ε H (M H)] at hhead
-      exact hhead.trans (add_le_add (dampedMobiusHeadDiagonal_le hε H (M H)) hHB)
+      exact hhead.trans (add_le_add (dampedMobiusHeadDiagonal_le_exact hε H (M H)) hHB)
     by_contra hn
     have hlt := lt_of_not_ge hn
     obtain ⟨H, hle, hgt⟩ := (hf.and_eventually (ht.eventually (lt_mem_nhds hlt))).exists
     exact (not_lt_of_ge hle) hgt
   have hn (n : ℕ) : 0 ≤ positiveWeight n *
       (dampedMobiusPrefix ε n - (n : ℝ) *
-        (1 / riemannZeta (1 + (ε : ℂ))).re)^2 :=
+        (1 / riemannZeta (1 + (ε : ℂ))).re) ^ 2 :=
     mul_nonneg (positiveWeight_nonneg n) (sq_nonneg _)
   exact ⟨summable_of_sum_range_le hn hb, Real.tsum_le_of_sum_range_le hn hb⟩
 
@@ -87,7 +88,7 @@ theorem dampedMobius_moving_offDiagonal_tendsto_atTop_of_not_summable
     {ε : ℝ} (hε : 0 < ε) (M : ℕ → ℕ) (hM : Tendsto M atTop atTop)
     (henergy : ¬ Summable (fun n : ℕ => positiveWeight n *
       (dampedMobiusPrefix ε n - (n : ℝ) *
-        (1 / riemannZeta (1 + (ε : ℂ))).re)^2)) :
+        (1 / riemannZeta (1 + (ε : ℂ))).re) ^ 2)) :
     Tendsto (fun H => dampedMobiusHeadOffDiagonal ε H (M H)) atTop atTop := by
   apply tendsto_atTop.mpr
   intro B
@@ -103,9 +104,9 @@ theorem centered_damped_energy_iff_frequently_bounded_polynomial_heads
     {ε : ℝ} (hε : 0 < ε) (k : ℕ) (hscale : 1 ≤ 2 * (k : ℝ) * ε) :
     Summable (fun n : ℕ => positiveWeight n *
       (dampedMobiusPrefix ε n - (n : ℝ) *
-        (1 / riemannZeta (1 + (ε : ℂ))).re)^2) ↔
+        (1 / riemannZeta (1 + (ε : ℂ))).re) ^ 2) ↔
     ∃ B : ℝ, ∃ᶠ H : ℕ in atTop,
-      dampedMobiusHeadOffDiagonal ε H ((H+1)^k) ≤ B := by
+      dampedMobiusHeadOffDiagonal ε H ((H + 1) ^ k) ≤ B := by
   constructor
   · intro hs
     obtain ⟨B, hB⟩ :=
@@ -116,7 +117,7 @@ theorem centered_damped_energy_iff_frequently_bounded_polynomial_heads
       by_contra hn
       have hz : k = 0 := by omega
       norm_num [hz] at hscale
-    have ht : Tendsto (fun H : ℕ => (H+1)^k) atTop atTop :=
+    have ht : Tendsto (fun H : ℕ => (H + 1) ^ k) atTop atTop :=
       tendsto_atTop_mono
         (fun H => RiemannResearch.Analysis.le_succ_pow H k hk) tendsto_id
     exact (centered_damped_energy_of_frequently_bounded_moving_heads hε _ ht B hB).1
@@ -136,7 +137,6 @@ theorem right_half_zero_small_damping_moving_offDiagonal_diverges
   exact dampedMobius_moving_offDiagonal_tendsto_atTop_of_not_summable hε M hM
     (hbad ε hε he _)
 
-
 /-- Failure of RH forces all sufficiently small dampings to diverge along
 every cofinal residue-cutoff schedule. This is an implication, not a proof
 that the divergent alternative is impossible. -/
@@ -152,7 +152,6 @@ theorem not_RH_small_damping_moving_offDiagonal_diverges
   push Not at hn
   obtain ⟨ρ, hhalf, hone, hz⟩ := hn
   exact right_half_zero_small_damping_moving_offDiagonal_diverges ρ hhalf hone hz
-
 
 /-- Finite signed bounds at dampings accumulating from above at a >= 0
 exclude zeros to the right of 1/2+a. Bounds may exist only at arbitrarily
@@ -213,16 +212,16 @@ theorem riemannHypothesis_of_doubly_frequent_signed_heads
 for RH. The signed bound remains Open. -/
 theorem riemannHypothesis_of_sparse_reciprocal_polynomial_signed_heads
     (hbound : ∃ᶠ j : ℕ in atTop, ∃ B : ℝ, ∃ᶠ H : ℕ in atTop,
-      dampedMobiusHeadOffDiagonal (1 / ((j+3 : ℕ) : ℝ)) H ((H+1)^(j+3)) ≤ B) :
+      dampedMobiusHeadOffDiagonal (1 / ((j + 3 : ℕ) : ℝ)) H ((H + 1) ^ (j + 3)) ≤ B) :
     RiemannHypothesis := by
   apply riemannHypothesis_of_doubly_frequent_signed_heads
-    (fun j => 1 / ((j+3 : ℕ) : ℝ)) (fun j => by positivity) _
-    (fun j H => (H+1)^(j+3)) _ hbound
-  · have ht : Tendsto (fun j : ℕ => ((j+3 : ℕ) : ℝ)) atTop atTop :=
+    (fun j => 1 / ((j + 3 : ℕ) : ℝ)) (fun j => by positivity) _
+    (fun j H => (H + 1) ^ (j + 3)) _ hbound
+  · have ht : Tendsto (fun j : ℕ => ((j + 3 : ℕ) : ℝ)) atTop atTop :=
       tendsto_natCast_atTop_atTop.comp (Filter.tendsto_add_atTop_nat 3)
     simpa only [Function.comp_def, one_div] using tendsto_inv_atTop_zero.comp ht
   · intro j
     exact tendsto_atTop_mono
-      (fun H => RiemannResearch.Analysis.le_succ_pow H (j+3) (by omega)) tendsto_id
+      (fun H => RiemannResearch.Analysis.le_succ_pow H (j + 3) (by omega)) tendsto_id
 
 end RiemannResearch.RH.Pareto
