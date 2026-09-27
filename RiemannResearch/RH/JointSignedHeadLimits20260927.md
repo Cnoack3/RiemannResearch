@@ -2,6 +2,12 @@
 
 Date: 2026-09-27. Project: RiemannResearch, Lean 4 / Mathlib.
 
+**Subsequent strengthening:** `DampedMobiusHalfHilbertConvergence.lean`
+now proves full natural-order Hilbert norm convergence, including the
+infinite physical tail, and removes the relative-rate condition on the
+cutoffs. See `HalfHilbertConvergence20260927.md`. The original theorem
+and its proof are documented below.
+
 ## What was discharged
 
 The previous signed-head result took the residue cutoff to infinity before
@@ -66,10 +72,11 @@ The arithmetic and signed-limit assembly is in
 subhalf damping 0 < epsilon < 1/2. The existing positive-damping sequence
 criterion approaching zero still has its arithmetic hypothesis.
 
-The new endpoint signed bound does not discharge those small-damping
-hypotheses. It also does not assert absolute off-diagonal summability,
-convergence of the full untruncated Hilbert vectors at epsilon=1/2, or
-the reversed iterated limit with the residue cutoff held fixed first.
+The small-damping hypotheses remain open. Full natural-order Hilbert
+convergence at epsilon=1/2 has subsequently been established in
+`DampedMobiusHalfHilbertConvergence.lean`, together with unrestricted
+joint signed limits and a uniform bound for every pair of cutoffs.
+Absolute off-diagonal summability is not asserted.
 
 The unconditional half-damping membership was already established.
 This change closes the simultaneous-cutoff and endpoint approximation

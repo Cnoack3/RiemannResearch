@@ -82,7 +82,8 @@ private theorem moebius_threeHalf_summable :
   apply mul_le_of_le_one_left (Real.rpow_nonneg (Nat.cast_nonneg n) _)
   exact_mod_cast ArithmeticFunction.abs_moebius_le_one (n := n)
 
-private theorem dampedMobius_half_weight_bound (d : ℕ) (hd : 0 < d) :
+/-- The elementary coefficient bound at half damping. -/
+theorem dampedMobius_half_weight_bound (d : ℕ) (hd : 0 < d) :
     |dampedMobiusWeight (1 / 2) d| ≤ 1 / Real.sqrt (d : ℝ) := by
   have hd0 : (0 : ℝ) < d := by exact_mod_cast hd
   have hmu : |(ArithmeticFunction.moebius d : ℝ)| ≤ 1 := by
@@ -93,6 +94,25 @@ private theorem dampedMobius_half_weight_bound (d : ℕ) (hd : 0 < d) :
     _ ≤ 1 * (d : ℝ) ^ (-(1 / 2 : ℝ)) :=
       mul_le_mul_of_nonneg_right hmu (Real.rpow_nonneg hd0.le _)
     _ = _ := by rw [Real.sqrt_eq_rpow, Real.rpow_neg hd0.le]; simp
+
+/-- Unconditional signed summatory cancellation for the half-damped
+coefficients, with the logarithmic saving needed uniformly in truncations. -/
+theorem dampedMobius_half_prefix_log_bound :
+    ∃ B : ℝ, 0 ≤ B ∧ ∀ t : ℕ, 0 < t →
+      |positiveArithmeticPrefix (dampedMobiusWeight (1 / 2)) t| ≤
+        B * Real.sqrt (t : ℝ) / (6 + Real.log (t : ℝ)) ^ (3 / 2 : ℝ) := by
+  obtain ⟨B, hB, hM⟩ := M_shiftedLog_threeHalves_bound
+  have hMu : ∀ x : ℝ, 1 ≤ x →
+      |arithmeticSummatory (fun n => (ArithmeticFunction.moebius n : ℝ)) x| ≤
+        B * x * shiftedLogProfile x := by
+    simpa only [arithmeticSummatory_moebius, shiftedLogProfile] using hM
+  refine ⟨3 * B, by positivity, ?_⟩
+  intro t ht
+  have ht1 : (1 : ℝ) ≤ t := by exact_mod_cast ht
+  have h := halfWeightedPrefix_bound
+    (fun n => (ArithmeticFunction.moebius n : ℝ)) (by simp) hB ht1 hMu
+  rw [halfWeightedPrefix_moebius, halfLogPrimitive_eq_sqrt_div ht1] at h
+  simpa only [mul_div_assoc] using h
 
 /-- Quantitative endpoint cancellation with the absolutely convergent density
 series as center. All prime-error and Mertens premises are discharged. -/

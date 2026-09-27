@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import Mathlib.NumberTheory.AbelSummation
+import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
@@ -66,6 +68,29 @@ theorem halfLogKernel_le_four_derivative {x : ℝ} (hx : 1 ≤ x) :
       (Real.rpow_nonneg hL.le _)
   unfold halfLogDerivative
   nlinarith
+
+/-- The logarithmic half-power profile increases on the full arithmetic range. -/
+theorem halfLogPrimitive_monotoneOn : MonotoneOn halfLogPrimitive (Set.Ici 1) := by
+  apply monotoneOn_of_hasDerivWithinAt_nonneg (convex_Ici (1 : ℝ))
+  · intro x hx
+    exact (hasDerivAt_halfLogPrimitive hx).continuousAt.continuousWithinAt
+  · intro x hx
+    exact (hasDerivAt_halfLogPrimitive (interior_subset hx)).hasDerivWithinAt
+  · intro x hx
+    have hx1 : 1 ≤ x := interior_subset hx
+    have h := halfLogKernel_le_four_derivative hx1
+    have hk : 0 ≤ halfLogKernel x := by
+      unfold halfLogKernel shiftedLogProfile
+      exact mul_nonneg (Real.rpow_nonneg (by linarith) _)
+        (Real.rpow_nonneg (shiftedLog_pos hx1).le _)
+    linarith
+
+theorem halfLogPrimitive_eq_sqrt_div {x : ℝ} (hx : 1 ≤ x) :
+    halfLogPrimitive x = Real.sqrt x / (6 + Real.log x) ^ (3 / 2 : ℝ) := by
+  unfold halfLogPrimitive shiftedLogProfile
+  rw [← Real.sqrt_eq_rpow, show (-3 / 2 : ℝ) = -(3 / 2 : ℝ) by ring,
+    Real.rpow_neg (shiftedLog_pos hx).le]
+  rfl
 
 private theorem continuousOn_rpow_above_one (r b : ℝ) :
     ContinuousOn (fun x : ℝ => x ^ r) (Icc 1 b) := by

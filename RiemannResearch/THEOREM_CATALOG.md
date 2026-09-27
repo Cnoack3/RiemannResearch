@@ -1,5 +1,39 @@
 # Theorem catalog
 
+### Full natural-order Hilbert convergence at half damping (2026-09-27)
+
+**Established without an arithmetic hypothesis:**
+`RH/DampedMobiusHalfHilbertConvergence.dampedMobius_half_cutoffs_converge`
+proves full Hilbert norm convergence at epsilon=1/2 to the canonical
+centered arithmetic sequence. This includes the infinite physical tail.
+`dampedMobius_cutoffs_converge_of_half_le` covers every epsilon>=1/2.
+
+The decisive new provider is
+`dampedMobius_half_partial_uniform_log_bound`: every conductor cutoff M
+obeys a common K*sqrt(n)/(6+log n)^(3/4) envelope for log(n)>=200,
+without a relation between n and M. Truncation preserves the signed
+prefix and density-tail estimates; the existing hyperbola theorem and
+full weighted dominated convergence discharge the missing tail control.
+
+**Stronger signed results for epsilon>=1/2:**
+`dampedMobius_full_offDiagonal_tendsto_of_half_le` proves that the full
+Gram off-diagonal tends to E_epsilon-Delta_epsilon.
+`dampedMobius_offDiagonal_unrestricted_joint_tendsto` proves the same
+head limit for arbitrary diverging H(j),M(j), removing H(j)<=M(j).
+`dampedMobius_signed_bounds_of_half_le` supplies one finite upper bound
+for every full Gram cutoff and every pair of physical/conductor cutoffs.
+
+Generic components are in `RH/ArithmeticFloorTruncationBounds` and
+`RH/ParetoDominatedConvergence`; logarithmic-profile monotonicity extends
+`Analysis/WeightedMertensTransfer`, and the signed prefix provider
+extends `RH/DampedMobiusHalfEndpoint`.
+
+**Open:** actual subhalf finite energy and signed bounds at positive
+dampings approaching zero. Natural-order endpoint convergence does not
+assert an unordered Hilbert `tsum` or absolute off-diagonal summability.
+No unconditional RH or new zero-free region is claimed.
+See `RH/HalfHilbertConvergence20260927.md`.
+
 ### Joint signed-head convergence through the half endpoint (2026-09-27)
 
 **Established without an arithmetic hypothesis:** `RH/DampedMobiusJointHeadLimits`
@@ -26,8 +60,9 @@ Cauchy--Schwarz and moving-energy convergence from vanishing square error.
 `dampedMobius_offDiagonal_joint_tendsto_of_head_error` retains actual
 finite energy and vanishing head error as hypotheses. Subhalf membership
 and the signed bounds at positive dampings approaching zero remain
-**Open**. No new unconditional zero-free region, full Hilbert-series
-endpoint convergence, or absolute signed summability is claimed.
+**Open**. Full natural-order endpoint convergence is now established in
+`RH/DampedMobiusHalfHilbertConvergence`, which also removes the cutoff-order
+restriction. No subhalf membership or absolute signed summability is claimed.
 See `RH/JointSignedHeadLimits20260927.md`.
 
 ### Actual diagonal and exact iterated signed-head limits (2026-09-27)
