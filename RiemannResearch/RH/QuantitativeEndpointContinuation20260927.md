@@ -2,10 +2,11 @@
 
 **Status update, 2026-09-27:** the quarter-logarithmic estimates below
 record the earlier result at `ba20efab`. They remain valid, but are
-superseded in strength by every fixed logarithmic Mertens and endpoint
-exponent and every fixed log-logarithmic moving-band coefficient.
-See `MertensAllLogPowersContinuation20260927.md` for the new checked
-provider chain and its explicit remaining uniformity and RH gaps.
+superseded in strength by the direct MediumPNT stretched-exponential
+Mertens and complete endpoint profile exp(-a*(L*log L)^(1/11)). The
+supported moving band has width c*L^(-10/11)*(log L)^(1/11), for fixed
+c below the endpoint coefficient. See `MertensStretchedContinuation20260927.md`
+for the checked provider chain, finite-bootstrap audit, and remaining RH gap.
 
 Continuation of `b6f6c5a8eaf653c3e5b95368d0f7a82fbeb47787`, 2026-09-27.
 

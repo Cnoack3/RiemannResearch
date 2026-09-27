@@ -267,6 +267,7 @@ not been optimized.
 | `mertensTailEnvelope_stretched_recurrence` | Uniform recurrence (7) for the actual Mertens tail supremum |
 | `optimized_stretched_envelope_bound` | Uniform optimized real-variable barrier |
 | `M_stretched_loglog_bound` | Unconditional real-argument Mertens estimate (1) |
+| `M_shiftedLog_stretched_bound` | The same stronger provider exposed through `MertensShiftedGlobal` |
 | `dampedMobius_half_loglog_stretched_providers` | Matched signed prefix and density-tail estimates |
 | `dampedMobius_half_cutoffs_loglog_stretched_rate` | Complete endpoint norm estimate (2) |
 | `dampedMobius_loglog_stretched_subhalf_band_package` | Shared constants for quantitative, sequential, uniform norm, and full energy assertions |

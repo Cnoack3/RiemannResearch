@@ -2,6 +2,13 @@
 
 Continuation of `ba20efab4f7d02ff2ed484f1de9b78909c74e009`.
 
+**Subsequent improvement in this continuation:** the direct uniform
+exponential bootstrap has now closed the exponent-uniformity gap discussed
+below. It proves Mertens and endpoint decay exp(-a*(L*log L)^(1/11)) and
+an optimized moving band. See `MertensStretchedContinuation20260927.md`.
+The fixed-power theorems below remain valid; their historical comparison
+does not limit the current arithmetic provider.
+
 The finite bootstrap has no fixed logarithmic-exponent ceiling. The new
 arithmetic provider proves, for every fixed real `a`, a constant `B_a >= 0`
 such that
@@ -149,7 +156,7 @@ The last two statements make the two terms of the signed Abel budget
 vanish. Uniform convergence in the entire band is proved, not just
 convergence along one prescribed damping sequence.
 
-## What is still missing
+## Scope of this intermediate fixed-power argument
 
 No fixed `epsilon<1/2` has newly established finite energy. All these
 bands approach one half. The estimates do not supply finite energy at
@@ -170,8 +177,9 @@ yet it is not bounded eventually by `C exp(-d T^beta)` for fixed positive
 `d,beta,C`. This comparison illustrates the quantifier gap; it is not an
 assertion about the actual Mertens function. Retaining the original
 MediumPNT exponential through a uniform tail-envelope bootstrap is a
-further analytic/formalization obligation, not a new arithmetic premise
-silently assumed here.
+separate analytic/formalization obligation, not a new arithmetic premise.
+That obligation is discharged by the subsequent direct exponential
+bootstrap documented in `MertensStretchedContinuation20260927.md`.
 
 ## Principal declarations
 

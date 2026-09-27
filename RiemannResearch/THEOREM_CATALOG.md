@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Direct MediumPNT: optimized stretched-exponential Mertens and endpoint rates (2026-09-27)
+
+**Established without a new arithmetic hypothesis:** let Phi(L)=(L*log L)^(1/11).
+
+- `NumberTheory/PrimeNumberTheorem/MertensStretchedDecay.M_stretched_loglog_bound`
+  proves positive d and B>=0 with |M(x)|<=B*x*exp(-d*Phi(6+log x)) for all real x>=1.
+- `RH/DampedMobiusHalfHilbertLoglogStretchedRate.dampedMobius_half_cutoffs_loglog_stretched_rate`
+  proves positive a and C>=0 with ||F_(1/2),M-f_(1/2)||<=C*exp(-a*Phi(L_M)),
+  L_M=6+log(M+1), for every natural M. This includes the complete physical head and tail.
+- `RH/DampedMobiusLoglogStretchedMovingBand.dampedMobius_loglog_stretched_subhalf_band_package`
+  supplies one shared a>0,C>=0 and, for every fixed 0<=c<a, quantitative,
+  sequential and uniform full norm/energy convergence in delta*L_M<=c*Phi(L_M),
+  delta=1/2-epsilon>=0. The width is c*L_M^(-10/11)*(log L_M)^(1/11).
+
+The direct exponential prime provider feeds a genuine supremum of future
+Mertens tails. A uniform delayed contraction with cutoff
+L=((T+6)*log(T+6))^(10/11) closes the earlier exponent-uniformity gap.
+Signed Abel transfer preserves the optimized profile in weighted prefixes,
+density tails, complete endpoint norms, and the moving-band estimate.
+The principal arithmetic, endpoint and band-package axiom audits report
+only propext, Classical.choice and Quot.sound.
+
+**Scope:** 1/11, together with the iterated-logarithm factor, reaches the
+documented regular-profile balance of the positive finite-bootstrap majorant.
+Absolute arithmetic optimality and numerical constants are not asserted.
+No finite energy at any newly supplied fixed epsilon<1/2 is proved.
+All supported moving dampings approach one half; the RH gap remains Open.
+
+See `RH/MertensStretchedContinuation20260927.md` for the explicit recurrence,
+cutoff optimization, full propagation, verification record, and limitations.
+
 ### Every fixed logarithmic Mertens/endpoint rate and all fixed moving-band coefficients (2026-09-27)
 
 **Established without a new arithmetic hypothesis:**
@@ -24,12 +55,14 @@ restriction that its endpoint exponent be below one.
 
 **Scope:** there is no largest fixed logarithmic endpoint exponent or
 fixed log-logarithmic band coefficient in these families. Constants and
-thresholds depend on the exponent; a single specified stretched-exponential
-Mertens rate has not been formalized. No new fixed-subhalf finite energy
-or positive damping sequence tending to zero is proved; the RH gap remains Open.
+thresholds in this intermediate family depend on the exponent. The new
+uniform stretched-exponential result above is stronger and closes that
+uniformity gap. No new fixed-subhalf finite energy or positive damping
+sequence tending to zero is proved; the RH gap remains Open.
 
 See `RH/MertensAllLogPowersContinuation20260927.md` for the exact finite
-inequality, cutoff induction, downstream transfers, and remaining uniformity gap.
+inequality, cutoff induction, downstream transfers, and the historical
+uniformity gap subsequently resolved by the direct exponential bootstrap.
 
 ### Earlier quarter-log endpoint and moving-band estimates (superseded in strength)
 

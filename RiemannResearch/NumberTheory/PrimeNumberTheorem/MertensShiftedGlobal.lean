@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
+import RiemannResearch.NumberTheory.PrimeNumberTheorem.MertensStretchedDecay
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusLogBootstrapFinite
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MertensLogThreeHalvesAssembly
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.PrimeErrorInverseLogFourth
@@ -14,6 +15,14 @@ open Filter
 open scoped Topology
 
 namespace RiemannResearch.NumberTheory.PrimeNumberTheorem
+
+/-- Stronger unconditional shifted-log provider from the direct MediumPNT
+bootstrap. The original three-halves bound remains a valid special case. -/
+theorem M_shiftedLog_stretched_bound :
+    ∃ d : ℝ, 0 < d ∧ ∃ B : ℝ, 0 ≤ B ∧ ∀ x : ℝ, 1 ≤ x →
+      |M x| ≤ B * x * Real.exp
+        (-d * ((6 + Real.log x) * Real.log (6 + Real.log x)) ^ ((1 : ℝ) / 11)) :=
+  M_stretched_loglog_bound
 
 /-- Converts the natural-index endpoint rate to a global shifted-log bound
 on every real argument. The shift makes the small-argument denominator

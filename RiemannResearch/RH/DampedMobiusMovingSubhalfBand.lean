@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
+import RiemannResearch.RH.DampedMobiusLoglogStretchedMovingBand
 import RiemannResearch.RH.DampedMobiusAllLogMovingBand
 import RiemannResearch.Analysis.IncreasingAbelConvergence
 import RiemannResearch.RH.DampedMobiusUniformHalfRange
@@ -13,7 +14,12 @@ import RiemannResearch.Analysis.MovingBandAsymptotics
 /-!
 # Natural-order convergence in a shrinking subhalf band
 
-The imported `DampedMobiusAllLogMovingBand` now proves uniform convergence
+The imported `DampedMobiusLoglogStretchedMovingBand` supplies the strongest
+current provider: one a>0 and uniform full norm/energy convergence for every
+0<=c<a throughout delta*L<=c*(L*log L)^(1/11), L=6+log(M+1).
+It makes no fixed-subhalf finite-energy assertion.
+
+The imported `DampedMobiusAllLogMovingBand` also proves uniform convergence
 for every fixed coefficient c >= 0 in the log-logarithmic band, using
 every fixed endpoint logarithmic rate. The explicit quarter-logarithmic
 margin estimates below remain useful quantitative special cases.

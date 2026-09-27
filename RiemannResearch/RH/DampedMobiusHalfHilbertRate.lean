@@ -12,6 +12,9 @@ import RiemannResearch.Analysis.LogPowerTail
 This module retains the original explicit quarter-logarithmic estimate.
 `DampedMobiusHalfHilbertAllLogRates` strengthens it to every fixed real
 logarithmic exponent, using the iterated unconditional Mertens provider.
+`DampedMobiusHalfHilbertLoglogStretchedRate` now retains the full MediumPNT
+saving and proves C*exp(-a*(L*log L)^(1/11)), L=6+log(M+1), with a>0.
+Both strengthen the complete Hilbert error, including its physical head.
 
 The checked finite head has squared error at most a constant times
 (6 + log M)^(-3). The conductor-uniform coordinate envelope gives a
