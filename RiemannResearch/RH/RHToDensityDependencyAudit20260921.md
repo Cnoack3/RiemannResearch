@@ -6,6 +6,36 @@ Audited project: `RiemannResearch`, commit
 This is a source audit and classical proof route, not a Lean proof of the missing theorem.
 No verification jobs were submitted by the audit agent.
 
+## Update: natural-dilation normalization (2026-09-27)
+
+The separate normalization obligation is now formalized in
+`BaezDuarteCenteredBridge.lean` and `BaezDuarteNaturalApproximation.lean`.
+`BaezDuarte.naturalApproximation_iff_one_mem` identifies the actual finite
+natural-dilation approximation property on `L²((0,infinity), dx)` with
+membership of `hilbertOne` in the existing `closedSpace`.
+
+The transfer uses the already checked fractional-part/residue identity and
+complete Pareto norm identity, proves a universal centering error bound,
+and proves the exact reverse coefficient correction at conductor one.
+The direct `hBaezDuarte : RiemannHypothesis → hilbertOne ∈ closedSpace`
+premise in `ResidueSchurLimits.lean` is replaced by the explicit input
+`RiemannHypothesis → BaezDuarte.NaturalApproximation`; its normalization is
+then discharged by checked declarations.
+
+**Still Open as a formalization dependency:** a provider of that last
+RH-to-natural-approximation implication. Báez-Duarte's 2002 Theorem 1.1
+proves it classically: <https://arxiv.org/abs/math/0202141>.
+The paper's analytic proof has not thereby been imported into Lean.
+No axiom or unconditional RH-to-density theorem is introduced.
+See `BaezDuarteNaturalDensityTranslation20260927.md` for the exact
+normalizations, proof boundary, and declaration list.
+
+The original audit below records the older Bagchi route. Báez-Duarte's
+weighted argument instead uses the symmetric shifted-zeta quotient in his
+Lemma 2.2, obtained from the functional equation and Gamma estimates; it
+need not introduce the older route's separate Hadamard-quotient or general
+Hardy-converse obligation. Neither analytic route is completed here.
+
 ## Exact missing declaration
 
 ```lean

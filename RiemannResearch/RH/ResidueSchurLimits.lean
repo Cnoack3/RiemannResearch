@@ -1,6 +1,7 @@
 import RiemannResearch.RH.ResidueProjectionSchur
 import RiemannResearch.RH.ResidualGainObstruction
 import RiemannResearch.RH.FiniteDilationFamilyGap
+import RiemannResearch.RH.BaezDuarteNaturalApproximation
 
 /-!
 # Infinite Schur gains and the remaining saturation condition
@@ -328,15 +329,19 @@ theorem canonical_saturation_equivalences :
     schur_tail_saturation_iff_energy_zero.symm, hn.trans hc.symm,
     hn.trans correction_limits_iff_norm.symm⟩
 
-/-- The final classical equivalence, retaining its external Báez--Duarte direction
-as an explicit premise. No provider of that premise or of saturation is introduced. -/
+/-- Conditional classical equivalence. The external input is the actual natural-dilation
+approximation statement of Báez-Duarte, arXiv:math/0202141, Theorem 1.1.
+Its complete transfer to the Pareto residue closure is checked in
+BaezDuarteNaturalApproximation. The paper's analytic RH implication itself
+remains an explicit hypothesis, not an axiom or a checked provider. -/
 theorem projection_norm_iff_riemannHypothesis_of_baez_duarte
-    (hBaezDuarte : RiemannHypothesis → hilbertOne ∈ closedSpace) :
+    (hBaezDuarte : RiemannHypothesis → BaezDuarte.NaturalApproximation) :
     Tendsto (fun n => ‖hilbertOne - projection n‖) atTop (𝓝 0) ↔
       RiemannHypothesis := by
   constructor
   · exact riemannHypothesis_of_projection_norm_tendsto_zero
   · intro hRH
-    exact projection_norm_tendsto_zero_iff_mem.mpr (hBaezDuarte hRH)
+    exact projection_norm_tendsto_zero_iff_mem.mpr
+      (BaezDuarte.one_mem_of_riemannHypothesis hBaezDuarte hRH)
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization.ProjectionSchur

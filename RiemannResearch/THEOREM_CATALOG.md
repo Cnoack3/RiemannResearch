@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Báez-Duarte natural-dilation to Pareto closure translation (2026-09-27)
+
+**Established normalization, without an analytic approximation hypothesis:**
+
+- `RH/BaezDuarteCenteredBridge.centeredError_eq_hilbert_norm_sq` identifies
+  the full centered Lebesgue squared error exactly with the existing Pareto
+  Hilbert norm. Conductor one is zero; coordinate zero has zero Pareto mass.
+- `RH/BaezDuarteNaturalApproximation.centeredError_le_ten_naturalError`
+  proves an explicit universal centering bound on the complete natural error.
+  `corrected_naturalError_eq` proves the exact reverse coefficient correction.
+- `BaezDuarte.naturalApproximation_iff_one_mem` proves the full correspondence
+  between finite natural-dilation approximation on (0,infinity) and
+  `hilbertOne ∈ CoefficientStabilization.closedSpace`.
+
+**Conditional research reduction:** `BaezDuarte.one_mem_of_riemannHypothesis`
+and the updated `ProjectionSchur.projection_norm_iff_riemannHypothesis_of_baez_duarte`
+take `RiemannHypothesis → BaezDuarte.NaturalApproximation` explicitly.
+This is the RH-to-approximation direction of Báez-Duarte (2002), Theorem 1.1,
+in its real finite-coefficient form. Its analytic proof is **Open as a Lean
+formalization dependency**. The direct residue-closure assumption is replaced
+by this precise continuous input plus the checked normalization bridge;
+the external analytic input itself is not eliminated or installed as an axiom.
+
+See `RH/BaezDuarteNaturalDensityTranslation20260927.md` and the updated
+`RH/RHToDensityDependencyAudit20260921.md`.
+
+
 ### Positive cutoff necessity and fixed-subhalf certificate obstruction (2026-09-27)
 
 **Established analytic necessity under explicit proof-certificate assumptions:**
