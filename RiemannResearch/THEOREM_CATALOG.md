@@ -1,5 +1,44 @@
 # Theorem catalog
 
+### Explicit polynomial signed heads and ordered vector damping (2026-09-27)
+
+**Established unconditional estimates:** `RH/DampedMobiusHeadApproximation`
+proves the reciprocal-density tail bound M^(-epsilon)/epsilon for every
+epsilon>0, then applies the existing exact signed-head identity to prove
+head error <= H*M^(-2*epsilon)/epsilon^2. No absolute Hilbert-series
+convergence is assumed. `Analysis/NaturalPowerCutoff` proves that
+M=(H+1)^k, 2*k*epsilon>=1 makes H*M^(-2*epsilon)<=1.
+`Analysis/FiniteWeightedEnergyComparison` supplies both finite energy
+comparisons with twice the signed-error energy.
+
+**Exact conditional research reduction:**
+`RH/DampedMobiusPolynomialHeadCriterion` proves fixed-damping energy iff
+exists B, forall H, signedHeadOffDiagonal(epsilon,H,(H+1)^k)<=B.
+The approximation error and diagonal budget are discharged unconditionally.
+The uniform signed off-diagonal bound remains **Open** at any specified
+fixed 0<epsilon<1/2. The numerical hypothesis
+forall j, exists B_j, forall H,
+signedHeadOffDiagonal(1/(j+3),H,(H+1)^(j+3))<=B_j
+implies RH via `riemannHypothesis_of_reciprocal_polynomial_signed_head_bound`.
+No uniformity across j is required. This hypothesis is **Open** and
+RH-strength; no unconditional RH theorem or new subhalf membership is claimed.
+
+**Established analytic transfer, unresolved arithmetic provider:**
+`Analysis/SignedPowerDampingAbel` proves a Banach-valued finite Abel identity
+and ordered convergence from signed-prefix variation and boundary decay.
+Signed prefix growth ||S_N||<=C*N^theta suffices for every positive
+epsilon>theta. `RH/DampedMobiusSignedAbelGrowth` constructs the actual
+damped Hilbert limit from that complete raw residue norm bound and
+identifies canonical centered finite energy. The raw power-growth premise
+needed for subhalf damping remains **Open**. Ordered convergence is not
+asserted to be unconditional summability of the original vector series.
+
+The literature audit in `RH/PolynomialSignedHeadResearch20260927.md` records
+the separated-scale ranges of Maier--Rassias, the shrinking-boundary gap
+in Conrey--Myerson, and the RH premise of Bettin--Conrey--Farmer. These
+published results were not introduced as axioms. The half endpoint and
+the already proved sharp power/log obstruction were not redone.
+
 ### Signed cancellation below the Burnol half endpoint (2026-09-27)
 
 **Established in Lean:** `Analysis/PowerLogSquareObstruction` proves the
