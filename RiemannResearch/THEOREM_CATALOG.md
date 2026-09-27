@@ -1,5 +1,42 @@
 # Theorem catalog
 
+### Signed cancellation below the Burnol half endpoint (2026-09-27)
+
+**Established in Lean:** `Analysis/PowerLogSquareObstruction` proves the
+subcritical power/log majorant is nonsummable for every real fixed log
+exponent, including the exact Pareto weight. At the power threshold the
+logarithmic majorant is summable iff q > 1/2. This is a majorant obstruction,
+not divergence of the actual arithmetic energy.
+
+**Established unconditional bridge:** `RH/DampedMobiusSignedGram` proves
+squared residue-atom norms have a summable majorant 2*d^(-1-2*epsilon)
+for every epsilon > 0. The exact cutoff Gram identity retains all signed
+distinct-pair terms. `RH/DampedMobiusSignedHeadClosure` proves scalar
+coordinate convergence at every positive damping and an exact fixed-head
+error identity: the entire omitted signed tail combines into one density
+error before squaring.
+
+**Conditional research reduction:**
+`centered_damped_energy_iff_signed_head_bound` identifies actual centered
+finite energy at one fixed positive epsilon with
+exists B, forall H, eventually M, signedHeadOffDiagonal(epsilon,H,M) <= B.
+The cutoff threshold may depend on H; B may not. The uniform diagonal
+estimate is discharged. The common signed off-diagonal bound is **Open**
+for any chosen fixed 0 < epsilon < 1/2.
+
+**Strength audit:** `RH/BurnolFixedDampingObstruction` proves fixed-energy
+zero propagation and that an off-line zero prevents finite energy at every
+sufficiently small positive damping, for every center. One fixed damping
+has no RH equivalence established here; a positive sequence tending to
+zero is RH-strength. The stronger existing raw subpower, growing signed
+covariance, and single fixed-head capacity criteria already imply RH.
+No numerical descent below one half is claimed.
+
+The combined new-source check returned exit_code=0, verified=true, without
+warnings. Six principal axiom reports contain only propext,
+Classical.choice, Quot.sound. See `RH/SignedCancellationAudit20260927.md`
+for the source audit, exact definitions, and quantifier order.
+
 ### Burnol half-damping endpoint and quantitative arithmetic strengthening (2026-09-27)
 
 **Established in Lean:** `RH/DampedMobiusHalfEndpoint` closes the actual
