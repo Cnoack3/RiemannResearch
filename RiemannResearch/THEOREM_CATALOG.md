@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Positive cutoff necessity and fixed-subhalf certificate obstruction (2026-09-27)
+
+**Established analytic necessity under explicit proof-certificate assumptions:**
+
+- `Analysis/PositiveCutoffObstruction.regular_trial_positive_cutoff_exponents_necessary`
+  proves beta<=1/11 and beta=1/11 implies eta<=1/11 for p(T)=b*T^beta*(log T)^eta.
+  It assumes b,beta>0; c>=0; a fixed H>0; and eventually L>=0, A=3L+K>=1,
+  exp(p-c*L^(1/10))/T<=H and A*exp(p(T)-p(r))/T<=1, where r=T-L-log 2.
+  The delayed argument must satisfy r>1 and 2*|eta|<=beta*log r.
+  The corollary `regular_trial_positive_cutoff_exponents_of_delay_tendsto`
+  obtains this region automatically from r(T)->infinity; no regularity of L is assumed.
+- `positive_cutoff_certificate_exact_deficit` retains the complete finite budget
+  kappa*p*(p-log(T*H))^10 <= c^10*T*log(T/A), with its explicit nonnegativity,
+  forcing-absorption, contraction and lower-shift assumptions. The regular-profile
+  lower shift itself is proved in `Analysis/PowerLogProfileObstruction`.
+- `rpow_log_rpow_eventually_bounded_iff` classifies the scalar power/log budget
+  exactly. Its converse is not a converse for arbitrary recurrence certificates.
+- `Analysis/PositiveAbelObstruction` proves the terminal positive majorant tends
+  to infinity for every fixed positive linear weight and positive amplitude when
+  the supplied phase is sublinear. `RH/DampedMobiusPositiveAbelObstruction`
+  specializes this to the actual endpoint profile, preserves its index shift,
+  and proves every fixed epsilon<1/2 eventually leaves the supported moving band.
+
+**Scope:** these hypotheses constrain a one-step positive certificate, not the
+actual arithmetic envelope. The zero envelope satisfies the recurrence with
+arbitrarily fast upper bounds. Signed cancellation before the triangle inequality,
+stronger arithmetic inputs, and other proof mechanisms are not excluded.
+No new fixed-subhalf finite-energy theorem or RH conclusion is asserted.
+See Sections 5-6 of `RH/MertensStretchedContinuation20260927.md`.
+
 ### Direct MediumPNT: optimized stretched-exponential Mertens and endpoint rates (2026-09-27)
 
 **Established without a new arithmetic hypothesis:** let Phi(L)=(L*log L)^(1/11).
@@ -22,8 +52,8 @@ density tails, complete endpoint norms, and the moving-band estimate.
 The principal arithmetic, endpoint and band-package axiom audits report
 only propext, Classical.choice and Quot.sound.
 
-**Scope:** 1/11, together with the iterated-logarithm factor, reaches the
-documented regular-profile balance of the positive finite-bootstrap majorant.
+**Scope:** the exponent pair (1/11,1/11) reaches the verified necessity boundary
+for the positive one-step certificates and regular-profile region stated above.
 Absolute arithmetic optimality and numerical constants are not asserted.
 No finite energy at any newly supplied fixed epsilon<1/2 is proved.
 All supported moving dampings approach one half; the RH gap remains Open.

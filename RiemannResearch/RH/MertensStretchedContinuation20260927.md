@@ -1,6 +1,9 @@
 # Direct MediumPNT bootstrap and the optimized moving subhalf band
 
 Continuation of `ba20efab4f7d02ff2ed484f1de9b78909c74e009`.
+The positive-certificate necessity extension starts from
+`9434d9b3704cd76a0c3cfa93f43e6030ea8b7b24`, following
+`4e15dc26dd80f7da1a9777340cd67cda23846d87`.
 
 **Verification record:** the complete arithmetic, analytic, endpoint, and
 moving-band assembly passed serialized Lean job
@@ -9,6 +12,15 @@ moving-band assembly passed serialized Lean job
 package declarations each depend only on `propext`, `Classical.choice`,
 and `Quot.sound`. Publication additionally validates the actual modules
 and affected reverse dependencies through the final project checkpoint.
+
+**Necessity extension verification:** the complete regular-profile comparison,
+lower-shift, finite positive-certificate budget, and exponent-necessity assembly
+passed serialized Lean job `job_S3KpGSBQdx-DubWlUuW7kYWEqIBxCZKH` with
+`exit_code=0` and `verified=true`. The necessity theorem, its delayed-argument
+corollary, exact deficit theorem, and scalar-budget classification each report
+only `propext`, `Classical.choice`, and `Quot.sound`. The final project checkpoint
+also validates the companion positive-Abel modules, actual imports, and reverse
+dependencies before publication.
 
 ## Result and scope
 
@@ -231,32 +243,206 @@ Both terms vanish uniformly in (3). A split using only a constant bound
 for all early prefix errors would lose part of this moving-band scale;
 the full-profile Abel estimate avoids that additional loss.
 
-## 5. What “strongest” means here
+## 5. Necessity within the positive cutoff framework
 
-An intermediate stage of this continuation established every fixed logarithmic Mertens and
-endpoint exponent and every fixed coefficient of the
-\(\log\log M/\log M\) band. Those results remain useful, but (1)–(3)
-are stronger: they control one uniform stretched-exponential profile.
-
-There is a clear optimization boundary for regular trial profiles in the
-**positive recurrence (7)**. For a trial envelope
-\(\exp[-bT^\beta(\log T)^\eta]\), the prime forcing requires a cutoff
-with approximate scale at least
-\(T^{10\beta}(\log T)^{10\eta}\). The delayed-envelope term requires
-the cutoff to fit within approximate scale
-\(T^{1-\beta}(\log T)^{1-\eta}\). Comparing powers suggests
+The exponent restriction is a theorem about a **positive proof certificate**
+for recurrence (7). It is not a lower bound for the actual Mertens envelope.
+Write
 
 \[
-\beta\le1/11,
-\qquad \eta\le1/11\text{ when }\beta=1/11.
+p(T)=bT^\beta(\log T)^\eta,\qquad
+r(T)=T-L(T)-\log2,\qquad A(T)=3L(T)+K.
 \]
 
-The profile used above reaches that exponent pair. This comparison is
-documented optimization analysis, **not a kernel-verified lower bound or
-an impossibility theorem**. It does not establish absolute optimality of
-the signed arithmetic identity, of stronger cancellation estimates, or
-of other consequences of MediumPNT. Numerical exponential constants have
-not been optimized.
+Fix \(b>0\), \(\beta>0\), \(\eta\in\mathbb R\), \(c\ge0\),
+\(H>0\), and \(K\in\mathbb R\). Suppose \(r(T)\to\infty\), and
+that for all sufficiently large \(T\),
+
+\[
+L(T)\ge0,\qquad A(T)\ge1,
+\qquad
+\frac{\exp(p(T)-cL(T)^{1/10})}{T}\le H,
+\tag{11}
+\]
+\[
+\frac{A(T)\exp(p(T)-p(r(T)))}{T}\le1.
+\tag{12}
+\]
+
+Then
+
+\[
+\boxed{\beta\le\frac1{11},\qquad
+\beta=\frac1{11}\Longrightarrow\eta\le\frac1{11}.}
+\tag{13}
+\]
+
+Here \(H\) is a fixed uniform bound, not a function of \(T\).
+No monotonicity or continuity of \(L\) is required. Negative logarithmic
+exponents \(\eta\) are allowed. The declaration is
+`regular_trial_positive_cutoff_exponents_of_delay_tendsto`. The stronger
+`regular_trial_positive_cutoff_exponents_necessary` needs only the eventual
+regular-region conditions \(r(T)>1\) and \(2|\eta|\le\beta\log r(T)\),
+rather than \(r(T)\to\infty\). This restriction excludes the singular
+behavior near \(r=1\) when \(\eta<0\).
+
+These certificate assumptions follow, in particular, from a positive
+supersolution calculation with trial majorant \(B\exp[-p(T)]\), where
+\(B>0\) and the prime-source coefficient \(D>0\). Substitution into
+(7) and division by that majorant gives the sufficient condition
+
+\[
+\frac{A(T)e^{p(T)-p(r(T))}
+ +(3/B)e^{p(T)-L(T)}
+ +(3D/B)e^{p(T)-cL(T)^{1/10}}}{T}\le1.
+\tag{14}
+\]
+
+Under the stated cutoff and regular-region assumptions, every summand
+is nonnegative. Thus (14) implies the forcing inequality in (11) and
+(12), with \(H=B/(3D)\). More generally, the necessity theorem applies directly
+to separate bounded-forcing and delayed-contraction certificates; it
+does not require (14) as an additional assumption.
+
+The finite obstruction retains the factors that the informal scale
+comparison suppressed. Put
+\(\Delta=p(T)-p(r(T))\). Taking logarithms of (11)–(12) gives exactly
+
+\[
+p(T)\le cL(T)^{1/10}+\log(TH),\qquad
+\Delta\le\log\frac{T}{A(T)}.
+\tag{15}
+\]
+
+In particular, the original factor \(1/T\) in the forcing term allows
+the additive slack \(\log(TH)\); dropping it would impose an unjustified
+stronger condition. The prefactor \(A(T)\) is also retained in (15).
+
+Let \(\kappa=\beta/(\beta+2)>0\). Once
+\(r(T)>1\) and \(2|\eta|\le\beta\log r(T)\), the regular-profile
+shift estimate gives
+
+\[
+\kappa p(T)\frac{L(T)}{T}
+ \le p(T)-p(r(T)).
+\tag{16}
+\]
+
+Its threshold follows from \(r(T)\to\infty\), including when
+\(\eta<0\). Combining (15)–(16), whenever
+\(p(T)-\log(TH)\ge0\), yields the exact finite deficit budget
+
+\[
+\boxed{
+\kappa p(T)\bigl(p(T)-\log(TH)\bigr)^{10}
+ \le c^{10}T\log\frac{T}{A(T)}.
+}
+\tag{17}
+\]
+
+This is `positive_cutoff_certificate_exact_deficit`. The proof raises
+the nonnegative forcing deficit to the tenth power and then eliminates
+\(L\) using (16); it makes no estimate of the unknown arithmetic error
+from below.
+
+Because \(b,\beta>0\), eventually \(2\log(TH)\le p(T)\).
+Using \(A(T)\ge1\) therefore gives the simpler necessary budget
+
+\[
+\kappa p(T)^{11}\le(2c)^{10}T\log T.
+\tag{18}
+\]
+
+After division by the positive constants and by \(T\log T\), this
+bounds \(T^{11\beta-1}(\log T)^{11\eta-1}\) uniformly. A positive
+power of \(T\) exceeds every fixed logarithmic power; if the power of
+\(T\) is zero, a positive logarithmic power is also unbounded. This
+proves (13). At \(\beta=\eta=1/11\), the exact equality
+\(p(T)^{11}=b^{11}T\log T\) shows that (18) permits the endpoint pair when \(c>0\) and \(b>0\)
+is sufficiently small. It does not establish admissibility for every value of \(b\), nor a
+converse from the algebraic budget to a recurrence certificate.
+
+The distinction between a certificate and the actual envelope is essential:
+the identically zero envelope satisfies the positive recurrence (7), and
+is bounded by every positive trial envelope. Consequently, recurrence (7)
+alone cannot force a lower decay rate on its solutions. The theorem rules
+out certificates (11)–(12) beyond (13); it does not rule out a faster
+arithmetic estimate obtained by another argument. Numerical exponential
+constants and absolute arithmetic optimality are not claimed.
+
+## 6. Fixed subhalf damping and the signed-cancellation escape
+
+The obstruction to fixed subhalf damping is separate from the cutoff
+optimization. For any real profile \(P\) satisfying
+
+\[
+\frac{P(T)}T\longrightarrow0,
+\]
+
+any fixed \(\delta>0\), \(C>0\), and real \(a,k\) satisfy
+
+\[
+C\exp\!\bigl(\delta(T-k)-aP(T)\bigr)\longrightarrow+\infty.
+\tag{19}
+\]
+
+The same conclusion holds after addition of any eventually nonnegative
+remainder. These are statements about the supplied positive majorant,
+not about the quantity it bounds. The assumption \(C>0\) excludes an
+identically zero endpoint certificate.
+
+Apply this to \(\Phi(T)=(T\log T)^{1/11}\), whose ratio to \(T\)
+tends to zero. For every fixed \(\epsilon<1/2\) and every fixed real
+band coefficient \(c\), one eventually has
+
+\[
+c\Phi(L_M)<(1/2-\epsilon)L_M.
+\tag{20}
+\]
+
+Thus fixed \(\epsilon\) eventually lies outside the actual band (3).
+Moreover, the terminal majorant arising in positive Abel transfer, with
+its one-index displacement retained, satisfies
+
+\[
+C\exp\!\left[(1/2-\epsilon)\log(M+1)
+ -a\Phi\bigl(6+\log(M+2)\bigr)\right]
+ \longrightarrow+\infty.
+\tag{21}
+\]
+
+The displacement causes only a bounded logarithmic-coordinate shift,
+since \(\log(M+2)\le\log2+\log(M+1)\). Equations (20)–(21) apply
+along every conductor sequence tending to infinity. The declarations are
+`dampedMobius_loglog_stretched_fixed_subhalf_eventually_not_mem` and
+`dampedMobius_loglog_stretched_positiveAbel_terminal_tendsto_atTop`.
+
+The signed-cancellation escape is control of the expression before applying
+the triangle inequality. To make this precise, write
+\(e_n=\sum_{m<n}u_m-f\) and \(w_m=(m+1)^\delta\). The exact
+centered Abel identity is
+
+\[
+\sum_{m=0}^{N}w_mu_m-f
+ =w_Ne_{N+1}
+  -\sum_{m=0}^{N-1}(w_{m+1}-w_m)e_{m+1}.
+\tag{22}
+\]
+
+A concrete open escape target, for one fixed \(0<\epsilon<1/2\) and
+\(\delta=1/2-\epsilon\), is a uniform bound on the norm of the
+**complete signed right-hand side of (22)**. A Cauchy estimate for that
+same expression would address natural-order norm convergence. Neither
+estimate follows from the supplied endpoint majorant.
+
+Positive Abel transfer bounds the two terms separately by their norms.
+Their signed interaction is absent from that scalar budget. A sharper
+estimate of (22), a signed Gram or bilinear estimate, or cancellation in
+the original prime-error identity could avoid the certificate obstruction.
+Such an estimate is not supplied by the necessity theorem. In particular,
+divergence of (21) proves neither divergence of the actual Hilbert error
+nor failure of finite energy at a fixed subhalf damping. The latter
+question remains open here; no RH conclusion follows.
 
 ## Principal declarations and verification scope
 
@@ -266,6 +452,9 @@ not been optimized.
 | `M_log_bootstrap_finite_stretched` | Complete finite signed bootstrap |
 | `mertensTailEnvelope_stretched_recurrence` | Uniform recurrence (7) for the actual Mertens tail supremum |
 | `optimized_stretched_envelope_bound` | Uniform optimized real-variable barrier |
+| `regular_trial_positive_cutoff_exponents_necessary` | Necessary beta/eta boundary under explicit positive certificate and regular-region assumptions |
+| `positive_cutoff_certificate_exact_deficit` | Finite deficit budget retaining both logarithmic slack and the cutoff prefactor |
+| `dampedMobius_loglog_stretched_positiveAbel_terminal_tendsto_atTop` | Fixed-subhalf divergence of the supplied positive Abel terminal majorant |
 | `M_stretched_loglog_bound` | Unconditional real-argument Mertens estimate (1) |
 | `M_shiftedLog_stretched_bound` | The same stronger provider exposed through `MertensShiftedGlobal` |
 | `dampedMobius_half_loglog_stretched_providers` | Matched signed prefix and density-tail estimates |
