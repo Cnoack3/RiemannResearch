@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Joint damping limits and Burnol zero-shift obstruction (2026-09-26)
+
+**Established in Lean:** `Analysis/OrderedPrimitiveAbel` adds
+`primitive_abel_diagonal_partialSum_tendsto`: dominated primitive variations
+control arbitrary simultaneous cutoffs. `RH/DampedMobiusOrderedPairing`
+adds `dampedPhysicalWeight_diagonal_primitive_boundary` and
+`dampedPhysical_joint_ordered_pairing_tendsto`. The latter allows every
+physical cutoff sequence tending to infinity as damping and centering tend
+to zero, under the existing summable primitive majorant and sublinear
+boundary assumptions. No coordination of convergence rates is required.
+
+**Established in Lean:** `RH/BurnolDampingZeroShift` proves punctured
+zero-free neighborhoods for Mathlib's actual zeta function away from its
+pole, nonvanishing at all sufficiently small positive left shifts, and
+the resulting right-half-strip zero-shift obstruction. Source for this
+proof strategy: Burnol, arXiv:math/0202166, Corollary 4.1 and Theorem 4.2.
+
+**Conditional research reductions:** cofinal zero propagation and
+propagation along a positive damping sequence tending to zero imply
+Mathlib's `RiemannHypothesis`. Both conclusions retain their explicit
+`hprop` premise. The arithmetic Mellin continuation deriving propagation
+from square-integrability is not formalized in this module. Small-damping
+square-integrability for the actual arithmetic family remains **Open**.
+The joint pairing theorem does not discharge the actual residual's
+primitive regularity, critical Hilbert membership, or legal-series
+interchange obligations; these remain **Open**.
+
+The combined candidate passed with exit code 0 and `verified=true`;
+the principal dependency checks contain only `propext`,
+`Classical.choice`, and `Quot.sound`. Publication requires the project
+checkpoint. No unconditional RH proof is claimed.
+See `RH/JointDampingAndBurnolZeroShift20260926.md`.
+
 ### Ordered damping, finite certificates, and next-atom source prediction (2026-09-24)
 
 **Established in Lean:** `Analysis/OrderedPrimitiveAbel` proves natural-order

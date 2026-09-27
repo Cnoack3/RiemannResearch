@@ -116,4 +116,74 @@ theorem dampedPhysical_iterated_ordered_pairing_tendsto
       (hε j) (hc0 j) (hc1 j) hH hboundary
   · exact dampedPhysicalPrimitive_pairing_tendsto H ε c hε hc0 hc1 hlim hc hH
 
+/-- Uniform boundary control permits the damping and physical cutoff to vary
+simultaneously, with no relation between their rates. -/
+theorem dampedPhysicalWeight_diagonal_primitive_boundary
+    (H ε c : ℕ → ℝ) (N : ℕ → ℕ)
+    (hε : ∀ j, 0 ≤ ε j) (hc0 : ∀ j, 0 ≤ c j) (hc1 : ∀ j, c j ≤ 1)
+    (hN : Tendsto N atTop atTop)
+    (hH : Tendsto (fun n => H n / ((n : ℝ) + 2)) atTop (𝓝 0)) :
+    Tendsto (fun j => H (N j) *
+      dampedPhysicalWeight (ε j) (c j) (N j + 1)) atTop (𝓝 0) := by
+  have hnorm : Tendsto (fun n => ‖H n / ((n : ℝ) + 2)‖) atTop (𝓝 0) := by
+    simpa only [norm_zero] using hH.norm
+  apply squeeze_zero_norm _ (hnorm.comp hN)
+  intro j
+  rw [Real.norm_eq_abs, abs_mul]
+  have hw : |dampedPhysicalWeight (ε j) (c j) (N j + 1)| ≤
+      1 / ((N j : ℝ) + 2) := by
+    simpa only [Nat.cast_add, Nat.cast_one,
+      show (N j : ℝ) + 1 + 1 = (N j : ℝ) + 2 by ring] using
+      dampedPhysicalWeight_abs_le (hε j) (hc0 j) (hc1 j) (N j + 1) (by omega)
+  calc
+    _ ≤ |H (N j)| * (1 / ((N j : ℝ) + 2)) :=
+      mul_le_mul_of_nonneg_left hw (abs_nonneg _)
+    _ = ‖H (N j) / ((N j : ℝ) + 2)‖ := by
+      rw [Real.norm_eq_abs, abs_div,
+        abs_of_pos (show 0 < (N j : ℝ) + 2 by positivity)]
+      ring
+
+/-- Joint scalar pairing convergence along every diverging physical cutoff.
+This strengthens the iterated-limit theorem under its existing hypotheses.
+The exact primitive-side target is retained, rather than replacing a
+possibly conditionally convergent physical series by a `tsum`. -/
+theorem dampedPhysical_joint_ordered_pairing_tendsto
+    (H : ℕ → ℝ) (hzero : H 0 = 0) (ε c : ℕ → ℝ) (N : ℕ → ℕ)
+    (hε : ∀ j, 0 ≤ ε j) (hc0 : ∀ j, 0 ≤ c j) (hc1 : ∀ j, c j ≤ 1)
+    (hlim : Tendsto ε atTop (𝓝 0)) (hc : Tendsto c atTop (𝓝 0))
+    (hN : Tendsto N atTop atTop)
+    (hH : Summable (fun n : ℕ => |H (n + 1)| *
+      (2 / (((n : ℝ) + 2) * ((n : ℝ) + 3)))))
+    (hboundary : Tendsto (fun n => H n / ((n : ℝ) + 2)) atTop (𝓝 0)) :
+    Tendsto (fun j => ∑ k ∈ Finset.range (N j),
+      (H (k + 1) - H k) * dampedPhysicalWeight (ε j) (c j) (k + 1)) atTop
+      (𝓝 (∑' k : ℕ, H (k + 1) *
+        (1 / (((k : ℝ) + 1) * ((k : ℝ) + 2)) -
+         1 / (((k : ℝ) + 2) * ((k : ℝ) + 3))))) := by
+  have hv (j k : ℕ) :
+      |dampedPhysicalWeight (ε j) (c j) (k + 1) -
+        dampedPhysicalWeight (ε j) (c j) (k + 1 + 1)| ≤
+      2 / (((k : ℝ) + 2) * ((k : ℝ) + 3)) := by
+    rw [abs_sub_comm]
+    simpa only [Nat.cast_add, Nat.cast_one,
+      show (k : ℝ) + 1 + 1 = (k : ℝ) + 2 by ring,
+      show (k : ℝ) + 1 + 2 = (k : ℝ) + 3 by ring] using
+        dampedPhysicalWeight_variation_le (hε j) (hc0 j) (hc1 j) (k + 1) (by omega)
+  have hp (k : ℕ) : Tendsto
+      (fun j => dampedPhysicalWeight (ε j) (c j) (k + 1)) atTop
+      (𝓝 (1 / (((k : ℝ) + 1) * ((k : ℝ) + 2)))) := by
+    simpa only [Nat.cast_add, Nat.cast_one,
+      show (k : ℝ) + 1 + 1 = (k : ℝ) + 2 by ring] using
+        dampedPhysicalWeight_tendsto ε c hε hlim hc (k + 1) (by omega)
+  have ht := RiemannResearch.Analysis.primitive_abel_diagonal_partialSum_tendsto
+    H (fun j k => dampedPhysicalWeight (ε j) (c j) (k + 1))
+    (fun k => 1 / (((k : ℝ) + 1) * ((k : ℝ) + 2)))
+    (fun k => 2 / (((k : ℝ) + 2) * ((k : ℝ) + 3)))
+    N hN hH hv hp
+    (dampedPhysicalWeight_diagonal_primitive_boundary H ε c N
+      hε hc0 hc1 hN hboundary)
+  simpa only [hzero, neg_zero, zero_mul, zero_add, Nat.cast_add, Nat.cast_one,
+    show ∀ k : ℕ, (k : ℝ) + 1 + 1 = (k : ℝ) + 2 by intro k; ring,
+    show ∀ k : ℕ, (k : ℝ) + 1 + 2 = (k : ℝ) + 3 by intro k; ring] using ht
+
 end RiemannResearch.RH.Pareto
