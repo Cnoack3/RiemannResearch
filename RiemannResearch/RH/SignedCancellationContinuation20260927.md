@@ -226,11 +226,16 @@ the critical signed bound with logarithmic saving `q>1`. Proving Dini
 finiteness along positive dampings tending to zero would prove RH; the
 new theorem states that assumption explicitly and does not discharge it.
 
-The explicit endpoint rate `‖F_{1/2,M}−f_{1/2}‖≤C/(log M)^(1/4)` is a
-plausible further consequence of the physical envelope and quantitative
-tail summation. It is **not formalized or claimed verified in this commit**.
-It could widen the moving band, but would still not settle fixed subhalf
-membership.
+**Quantitative status updated:** `DampedMobiusHalfHilbertRate.lean` now
+proves `dampedMobius_half_cutoffs_log_rate`, with error at most
+`C*(6+log(M+1))^(-1/4)` at every cutoff. The finite head has the stronger
+squared-error bound `D*(6+log M)^(-3)`. The quantitative increasing Abel
+transfer gives convergence whenever
+`(1/2-epsilon)*log(M+1)-(1/4)*log(6+log(M+1)) -> -infinity`, including
+every coefficient `c<1/4` log-logarithmic band and arbitrary divergent
+slack at the critical coefficient. Critical-band signed bounds are also
+proved. Fixed subhalf membership remains Open. See
+`QuantitativeEndpointContinuation20260927.md` for the proof and audit.
 
 ## Verification
 

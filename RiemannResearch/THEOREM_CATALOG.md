@@ -1,5 +1,39 @@
 # Theorem catalog
 
+### Quantitative endpoint and sharp supported moving band (2026-09-27)
+
+**Established without an arithmetic hypothesis:** with L(M)=6+log(M+1),
+`RH/DampedMobiusHalfHilbertRate.dampedMobius_half_cutoffs_log_rate`
+proves ||F_(1/2),M-f_(1/2)|| <= C L(M)^(-1/4), for every M.
+The finite physical head has squared error <=D(6+log M)^(-3);
+the infinite physical tail contributes <=12K^2(6+log M)^(-1/2).
+The quarter-logarithmic norm rate is sharp for the existing envelope
+argument, not asserted optimal for the actual arithmetic error.
+
+`Analysis/IncreasingAbelConvergence` now retains the exact centered
+signed-prefix error budget. `Analysis/IncreasingLogWeights` bounds its
+power-weight/log-profile variation uniformly in the undamping exponent;
+`Analysis/MovingBandAsymptotics` proves the exact amplification/margin test.
+`RH/DampedMobiusMovingSubhalfBand.dampedMobius_subhalf_quantitative_bound`
+therefore gives, for delta=1/2-epsilon>=0, a single constant C with
+||F_epsilon,M-f_(1/2)|| <= C (M+1)^delta L(M)^(-1/4).
+
+Consequences: full Hilbert and energy convergence when
+delta*log(M+1)-(1/4)*log L(M) -> -infinity; uniform error <=C L(M)^(c-1/4)
+throughout every band delta*log(M+1)<=c*log L(M); uniform convergence
+for c<1/4 or any divergent subtractive slack at the critical coefficient.
+At the critical coefficient with a bounded additive margin, the complete
+cutoff norms, signed Gram off-diagonals, and every signed physical head
+have a uniform upper bound. Fixed-subhalf cutoff growth gains one quarter
+logarithm over its existing power scale.
+
+**Still Open:** actual finite energy at any newly supplied fixed
+0<epsilon<1/2, and finite energy at positive dampings tending to zero.
+Every supported moving damping approaches one half. The critical-band
+boundedness theorem is not a fixed-subhalf membership theorem.
+See `RH/QuantitativeEndpointContinuation20260927.md` for the exact proof,
+provider audit, declaration table, and scope of the sharpness claim.
+
 ### Stronger signed cancellation transfers and moving subhalf band (2026-09-27)
 
 **Established without an arithmetic hypothesis:**
