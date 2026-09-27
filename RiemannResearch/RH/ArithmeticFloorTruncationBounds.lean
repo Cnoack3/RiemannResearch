@@ -193,3 +193,114 @@ theorem arithmeticFloorHilbertPartial_uniform_log_bound
   ring
 
 end RiemannResearch.RH.Pareto
+
+/-!
+# Scalar envelopes preserved by conductor truncation
+
+These estimates retain signs inside each arithmetic prefix and density tail.
+They concern arbitrary real weights and make no arithmetic cancellation claim.
+-/
+
+noncomputable section
+open Set RiemannResearch.Analysis
+open scoped BigOperators
+
+namespace RiemannResearch.RH.Pareto
+
+/-- A monotone scalar envelope for signed prefixes survives every conductor
+cutoff, with its original constant. -/
+theorem arithmeticCutoff_prefix_profile_bound
+    (w : ℕ → ℝ) (P : ℕ → ℝ) (hPmono : Monotone P)
+    (hP : ∀ t : ℕ, |positiveArithmeticPrefix w t| ≤ P t)
+    (M t : ℕ) :
+    |positiveArithmeticPrefix (arithmeticCutoffWeight w M) t| ≤ P t := by
+  rw [positiveArithmeticPrefix_cutoff]
+  exact (hP (min M t)).trans (hPmono (min_le_right M t))
+
+/-- Exact truncated density-tail identity. The zero-conductor term vanishes
+by division by zero, so no hypothesis on `w 0` is needed. -/
+theorem arithmeticCutoff_density_prefix_eq
+    (w : ℕ → ℝ) (M t : ℕ) :
+    (∑ d ∈ Finset.range (t + 1), arithmeticCutoffWeight w M d / (d : ℝ)) =
+      positiveArithmeticPrefix (fun d => w d / (d : ℝ)) (min M t) := by
+  rw [Finset.sum_range_succ']
+  simp only [Nat.cast_zero, div_zero, add_zero]
+  change positiveArithmeticPrefix (fun d => arithmeticCutoffWeight w M d / (d : ℝ)) t = _
+  have hf : (fun d => arithmeticCutoffWeight w M d / (d : ℝ)) =
+      arithmeticCutoffWeight (fun d => w d / (d : ℝ)) M := by
+    funext d
+    simp only [arithmeticCutoffWeight]
+    split_ifs <;> simp
+  rw [hf, positiveArithmeticPrefix_cutoff]
+
+/-- A decreasing density-tail envelope survives every conductor cutoff.
+Only positivity on positive natural inputs is needed; the cost is at most two. -/
+theorem arithmeticCutoff_density_tail_profile_bound
+    (w : ℕ → ℝ) (C : ℝ) (T : ℕ → ℝ)
+    (hTmono : AntitoneOn T (Set.Ici 1))
+    (hTnonneg : ∀ t : ℕ, 0 < t → 0 ≤ T t)
+    (hT : ∀ t : ℕ, 0 < t →
+      |C - positiveArithmeticPrefix (fun d => w d / (d : ℝ)) t| ≤ T t)
+    (M t : ℕ) (ht : 0 < t) :
+    |positiveArithmeticPrefix (fun d => w d / (d : ℝ)) M -
+      ∑ d ∈ Finset.range (t + 1), arithmeticCutoffWeight w M d / (d : ℝ)| ≤
+      2 * T t := by
+  rw [arithmeticCutoff_density_prefix_eq]
+  by_cases hMt : M ≤ t
+  · simp only [min_eq_left hMt, sub_self, abs_zero]
+    exact mul_nonneg (by norm_num) (hTnonneg t ht)
+  · have htM : t ≤ M := by omega
+    have hMp : 0 < M := ht.trans_le htM
+    have htailM := (hT M hMp).trans
+      (hTmono (show t ∈ Set.Ici 1 by change 1 ≤ t; omega)
+        (show M ∈ Set.Ici 1 by change 1 ≤ M; omega) htM)
+    rw [min_eq_right htM]
+    have hh := abs_sub_le
+      (positiveArithmeticPrefix (fun d => w d / (d : ℝ)) M)
+      C (positiveArithmeticPrefix (fun d => w d / (d : ℝ)) t)
+    rw [abs_sub_comm (positiveArithmeticPrefix (fun d => w d / (d : ℝ)) M) C] at hh
+    linarith [hT t ht]
+
+/-- An individual residue is no larger than its conductor, so a finite
+residue head is controlled by the coefficient mass. -/
+theorem arithmetic_residue_sum_abs_le_sum_abs (w : ℕ → ℝ) (N y : ℕ) :
+    |∑ d ∈ Finset.range (y + 1), (w d / (d : ℝ)) * residue d N| ≤
+      ∑ d ∈ Finset.range (y + 1), |w d| := by
+  calc
+    _ ≤ ∑ d ∈ Finset.range (y + 1), |(w d / (d : ℝ)) * residue d N| :=
+      Finset.abs_sum_le_sum_abs _ _
+    _ ≤ _ := by
+      apply Finset.sum_le_sum
+      intro d hd
+      by_cases hd0 : d = 0
+      · simp only [hd0, Nat.cast_zero, div_zero, zero_mul, abs_zero]
+        exact abs_nonneg _
+      have hdp : 0 < d := Nat.pos_of_ne_zero hd0
+      have hdR : (0 : ℝ) < d := by exact_mod_cast hdp
+      have hr0 : 0 ≤ residue d N := by unfold residue; positivity
+      have hr : residue d N ≤ d := by
+        unfold residue
+        exact_mod_cast (Nat.mod_lt N hdp).le
+      rw [abs_mul, abs_div, abs_of_pos hdR, abs_of_nonneg hr0]
+      calc
+        _ ≤ (|w d| / (d : ℝ)) * d :=
+          mul_le_mul_of_nonneg_left hr (by positivity)
+        _ = |w d| := div_mul_cancel₀ _ (ne_of_gt hdR)
+
+/-- The coefficient-mass bound is uniform in the conductor cutoff.
+No assumption on `w 0` is needed. -/
+theorem arithmeticCutoff_residue_sum_abs_le
+    (w : ℕ → ℝ) (M N y : ℕ) :
+    |∑ d ∈ Finset.range (y + 1),
+      (arithmeticCutoffWeight w M d / (d : ℝ)) * residue d N| ≤
+        ∑ d ∈ Finset.range (y + 1), |w d| := by
+  refine (arithmetic_residue_sum_abs_le_sum_abs
+    (arithmeticCutoffWeight w M) N y).trans ?_
+  apply Finset.sum_le_sum
+  intro d hd
+  unfold arithmeticCutoffWeight
+  split_ifs
+  · exact le_rfl
+  · exact (by simpa only [abs_zero] using abs_nonneg (w d))
+
+end RiemannResearch.RH.Pareto

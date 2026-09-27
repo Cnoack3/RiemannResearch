@@ -1,5 +1,42 @@
 # Theorem catalog
 
+### General truncation and sharp exponent criteria (2026-09-27)
+
+**Established analytic implications:** the argument of
+`DampedMobiusHalfHilbertConvergence` is abstracted in
+`ArithmeticFloorProfileCriterion`, `ArithmeticFloorPowerConvergence`, and
+`ArithmeticFloorLogConvergence`. The limit's finite energy is a conclusion,
+not an assumed premise. All bounds are uniform in the conductor and include
+the infinite physical tail.
+
+For 0<epsilon<=1/2, a signed prefix bound B*t^a and density tail D*t^(-d)
+give full natural-order convergence when a<epsilon and d>1-epsilon.
+`dampedMobius_cutoffs_converge_of_prefix_density_powers` states the actual
+arithmetic specialization with both estimates explicit.
+
+At a=epsilon,d=1-epsilon, prefix/tail logarithmic savings b,e>1 suffice.
+The proved integer cutoff gives a physical saving min(b,e)/2>1/2.
+See `dampedMobius_cutoffs_converge_of_critical_log_bounds` and
+`arithmeticFloorHilbertPartial_tendsto_of_critical_two_log_bounds`.
+
+Generic support is in `Analysis/HyperbolaExponentOptimization`,
+`Analysis/HyperbolaLogOptimization`, `Analysis/PowerLogProfiles`, and
+`RH/ArithmeticFloorHyperbolaPowerBounds`. The general profile criterion
+retains a replaceable signed residue-head estimate. Exact power/log
+feasibility tests are sharp for the separate positive majorants, not
+necessary conditions for actual convergence.
+
+**Conditional research reduction / Open arithmetic providers:** no fixed
+0<epsilon<1/2 is supplied by the audited estimates. The newer normalized
+subhalf norm and head-energy limits do not give a fixed power saving or an
+unnormalized bound. Relative to a=1-epsilon,d=epsilon, the exact strict power
+gain needed in both inputs is delta>1-2*epsilon; equality needs the stated
+logarithmic saving. Scalar prefix conditions become too strong at very small
+damping, so signed residue-head or Hilbert cancellation is needed toward zero.
+Finite energy at positive dampings approaching zero remains RH-strength and
+Open; a fixed damping is not identified with RH.
+See `RH/TruncationExponentCriterion20260927.md`.
+
 ### Actual centered head growth below half damping (2026-09-27)
 
 **Established without an arithmetic hypothesis:**

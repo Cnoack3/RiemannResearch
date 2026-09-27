@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.RH.ThresholdHilbertAdjoint
+import RiemannResearch.RH.ParetoLogEnergyCriterion
+import Mathlib.Analysis.PSeries
 import Mathlib.Analysis.Normed.Group.Tannery
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic.Linarith
@@ -77,5 +79,94 @@ theorem pareto_tendsto_of_eventual_dominated_coordinates
   apply tendsto_iff_norm_sub_tendsto_zero.mpr
   have hr := Real.continuous_sqrt.continuousAt.tendsto.comp ht'
   simpa only [Function.comp_def, Real.sqrt_sq_eq_abs, abs_norm, Real.sqrt_zero] using hr
+
+end RiemannResearch.RH.Pareto
+
+noncomputable section
+open Filter
+open scoped Topology BigOperators
+namespace RiemannResearch.RH.Pareto
+
+/-- Domination constructs the limit as well as proving norm convergence.
+Finite energy of the proposed limit is a conclusion, not a premise. -/
+theorem pareto_exists_tendsto_of_eventual_dominated_coordinates
+    (F : ℕ → ThresholdHilbert) (g A : ℕ → ℝ) (hg0 : g 0 = 0)
+    (hs : Summable (fun n => positiveWeight n * (A n) ^ 2))
+    (hlim : ∀ n, Tendsto (fun j => hilbertSequence (F j) n) atTop (𝓝 (g n)))
+    (hbound : ∀ᶠ n : ℕ in atTop, ∀ j, |hilbertSequence (F j) n| ≤ A n) :
+    ∃ f : ThresholdHilbert, hilbertSequence f = g ∧ Tendsto F atTop (𝓝 f) := by
+  have hg : Summable (fun n => positiveWeight n * (g n) ^ 2) := by
+    apply hs.of_norm_bounded_eventually_nat
+    filter_upwards [hbound] with n hn
+    have h : |g n| ≤ A n := le_of_tendsto (hlim n).abs (Eventually.of_forall (hn ·))
+    have hA : 0 ≤ A n := (abs_nonneg _).trans h
+    have hsq := (sq_le_sq₀ (abs_nonneg _) hA).mpr h
+    rw [sq_abs] at hsq
+    rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (positiveWeight_nonneg n) (sq_nonneg _))]
+    exact mul_le_mul_of_nonneg_left hsq (positiveWeight_nonneg n)
+  let f := sequenceHilbert g hg
+  have he : hilbertSequence f = g := hilbertSequence_sequenceHilbert g hg hg0
+  refine ⟨f, he, ?_⟩
+  apply pareto_tendsto_of_eventual_dominated_coordinates F f A hs
+  · simpa only [he] using hlim
+  · exact hbound
+
+/-- Strict sub-square-root growth gives finite Pareto energy. -/
+theorem square_summable_of_eventual_rpow_bound
+    {g : ℕ → ℝ} {C b : ℝ} (hb : b < 1 / 2)
+    (hg : ∀ᶠ n : ℕ in atTop, |g n| ≤ C * (n : ℝ) ^ b) :
+    Summable (fun n => positiveWeight n * (g n) ^ 2) := by
+  have hs := (Real.summable_nat_rpow.mpr (by linarith : 2 * b - 2 < -1)).mul_left (C ^ 2)
+  apply hs.of_norm_bounded_eventually_nat
+  filter_upwards [hg, eventually_ge_atTop (1 : ℕ)] with n hn hn1
+  have hn0 : (0 : ℝ) < n := by exact_mod_cast (show 0 < n by omega)
+  have hsquare := mul_self_le_mul_self (abs_nonneg (g n)) hn
+  have hpow : ((n : ℝ) ^ b) ^ 2 = (n : ℝ) ^ (2 * b) := by
+    rw [← Real.rpow_natCast, ← Real.rpow_mul hn0.le]
+    congr 1
+    ring
+  have hsq : (g n) ^ 2 ≤ C ^ 2 * (n : ℝ) ^ (2 * b) := by
+    simpa only [← pow_two, sq_abs, mul_pow, hpow] using hsquare
+  rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (positiveWeight_nonneg n) (sq_nonneg _))]
+  calc
+    _ ≤ positiveWeight n * (C ^ 2 * (n : ℝ) ^ (2 * b)) :=
+      mul_le_mul_of_nonneg_left hsq (positiveWeight_nonneg n)
+    _ ≤ (1 / ((n : ℝ) ^ 2)) * (C ^ 2 * (n : ℝ) ^ (2 * b)) := by
+      apply mul_le_mul_of_nonneg_right _ (by positivity)
+      unfold positiveWeight
+      apply one_div_le_one_div_of_le (by positivity)
+      nlinarith
+    _ = C ^ 2 * (n : ℝ) ^ (2 * b - 2) := by
+      rw [Real.rpow_sub hn0, Real.rpow_two]
+      ring
+
+/-- Strict power envelope criterion; there is no assumed limiting energy. -/
+theorem pareto_exists_tendsto_of_uniform_rpow_bound
+    (F : ℕ → ThresholdHilbert) (g : ℕ → ℝ) (hg0 : g 0 = 0)
+    {C b : ℝ} (hC : 0 ≤ C) (hb : b < 1 / 2)
+    (hlim : ∀ n, Tendsto (fun j => hilbertSequence (F j) n) atTop (𝓝 (g n)))
+    (hbound : ∀ᶠ n : ℕ in atTop, ∀ j, |hilbertSequence (F j) n| ≤ C * (n : ℝ) ^ b) :
+    ∃ f : ThresholdHilbert, hilbertSequence f = g ∧ Tendsto F atTop (𝓝 f) := by
+  apply pareto_exists_tendsto_of_eventual_dominated_coordinates F g
+    (fun n => C * (n : ℝ) ^ b) hg0
+  · apply square_summable_of_eventual_rpow_bound hb
+    exact Eventually.of_forall (fun n => by rw [abs_of_nonneg (by positivity)])
+  · exact hlim
+  · exact hbound
+
+/-- The sharp logarithmic endpoint for a common physical-coordinate envelope. -/
+theorem pareto_exists_tendsto_of_uniform_sqrt_log_bound
+    (F : ℕ → ThresholdHilbert) (g : ℕ → ℝ) (hg0 : g 0 = 0)
+    {C q : ℝ} (hC : 0 ≤ C) (hq : 1 / 2 < q)
+    (hlim : ∀ n, Tendsto (fun j => hilbertSequence (F j) n) atTop (𝓝 (g n)))
+    (hbound : ∀ᶠ n : ℕ in atTop, ∀ j, |hilbertSequence (F j) n| ≤
+      C * Real.sqrt (n : ℝ) * (6 + Real.log (n : ℝ)) ^ (-q)) :
+    ∃ f : ThresholdHilbert, hilbertSequence f = g ∧ Tendsto F atTop (𝓝 f) := by
+  apply pareto_exists_tendsto_of_eventual_dominated_coordinates F g
+    (fun n => C * Real.sqrt (n : ℝ) * (6 + Real.log (n : ℝ)) ^ (-q)) hg0
+  · apply square_summable_of_eventual_sqrt_shifted_log_bound hC hq
+    exact Eventually.of_forall (fun n => by rw [abs_of_nonneg (by positivity)])
+  · exact hlim
+  · exact hbound
 
 end RiemannResearch.RH.Pareto
