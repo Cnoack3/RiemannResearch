@@ -1,5 +1,49 @@
 # Theorem catalog
 
+### Published Burnol strict-range finite energy and quantitative synthesis (2026-09-27)
+
+**Established in Lean:** `RH/ArithmeticFloorHilbertSeries` constructs the
+actual centered floor prefix for arbitrary real weights w satisfying
+sum |w(n)|/sqrt(n) < infinity (n >= 1). It proves scalar-density summability,
+absolute Hilbert-series summability, exact coordinates
+A_w(k)-k*C_w, a full norm bound, and exact signed truncation tails.
+No sign condition, multiplicativity, or Mobius cancellation is assumed.
+`square_summable_centering_unique` proves that finite energy fixes the
+linear centering of any real sequence uniquely.
+
+**Established in Lean:** `RH/DampedMobiusFiniteEnergy` discharges the
+actual centered Mobius square-summability obligation for every epsilon>1/2.
+`centered_dampedMobius_square_summable_iff` characterizes all centers:
+the weighted squares are summable iff
+C = Re(1/zeta(1+epsilon)). `dampedMobius_finiteEnergy_with_bound`
+constructs the Hilbert vector with a full infinite norm bound.
+`centered_dampedMobius_normalization` proves C*zeta(1+epsilon)=1
+from actual finite energy at every epsilon>0, including the still-open
+small-damping range; it does not assert existence there.
+
+**Quantitative extension:** `dampedMobius_finiteEnergy_tail_bound`
+proves the complete Hilbert truncation error is at most
+sqrt(2)*N^(1/2-epsilon)/(epsilon-1/2), for N>=1.
+The general integral-test bound is `Real.tsum_nat_rpow_tail_le` in
+`Analysis/PSeriesTail`.
+
+Source for the absolute-convergence strategy: J.-F. Burnol,
+Acta Cientifica Venezolana 54 (2003), 210-215, Section 4,
+Lemma 4.1 in https://arxiv.org/abs/math/0202166.
+This is the discrete counterpart of the lemma's strict epsilon>1/2 part.
+The published lemma also includes epsilon=1/2; that endpoint remains
+**Open in this formalization**. The arbitrary-weight and explicit-tail
+statements are standard generalizations/corollaries, with no novelty claim.
+
+**Open RH obligation:** finite energy for the actual centered prefixes
+at positive epsilon_j tending to zero. The new epsilon>1/2 provider
+does not supply such a sequence. The prior conditional Burnol RH
+reduction remains conditional, and the reverse RH-to-membership
+direction remains unformalized here.
+The combined candidate passed with exit code 0, verified=true, and only
+propext, Classical.choice, and Quot.sound in the principal axiom reports.
+See `RH/BurnolStrictRangeFormalization20260927.md`.
+
 ### Actual damped Mellin identity and finite-energy continuation (2026-09-26)
 
 **Established in Lean:** `RH/DampedDivisorLSeries` identifies the actual
