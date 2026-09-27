@@ -3,6 +3,11 @@
 Working date: 2026-09-26 (America/New_York).
 Base: 234497e34671b4a893d8f0642f38fce8d9ab4463.
 
+Status reconciled on 2026-09-27 with endpoint commit
+`d4e06595e09075250bc2c2c49399dcd0b3cd6767`. The verification record below
+describes the original continuation development; the subsequently verified
+half-damping endpoint is recorded under the remaining arithmetic obligation.
+
 Combined candidate verification: succeeded, `verified=true`, exit code 0.
 Job: `job_eQxijapPHngZmALTfhH0na2Ig0UC8RTM`; elapsed 3.673 seconds.
 The five principal axiom reports contain only `propext`, `Classical.choice`,
@@ -112,9 +117,19 @@ Burnol's Lemma 4.1 establishes square-integrability for epsilon >= 1/2,
 including the endpoint, unconditionally. For x in [n,n+1), his function
 satisfies -f_epsilon(1/x)=A_epsilon(n)-C*n-C*(x-n). The rounding term is
 bounded and has finite Pareto energy, so his membership statement transfers
-to the centered discrete sequence. This endpoint statement is a literature
-finding, not a theorem newly formalized in the present modules. It does not
-supply damping parameters tending to zero.
+to the centered discrete sequence. The discrete endpoint is now established
+unconditionally in `RH/DampedMobiusHalfEndpoint.lean` at commit
+`d4e06595e09075250bc2c2c49399dcd0b3cd6767`:
+`dampedMobius_half_endpoint` proves the actual centered weighted-square
+summability at epsilon=1/2, together with a quantitative discrepancy bound.
+`centered_dampedMobius_square_summable_iff_of_half_le` proves, for every
+epsilon >= 1/2 and every real C, that this energy is finite if and only if
+C = Re(1/zeta(1+epsilon)). See
+[`BurnolHalfEndpointFormalization20260927.md`](BurnolHalfEndpointFormalization20260927.md)
+for the arithmetic proof and verification record. Thus the endpoint is no
+longer merely a literature finding. The inclusive range epsilon >= 1/2
+does not supply positive damping parameters tending to zero; finite energy
+along such a sequence remains **Open**.
 
 ## Provenance
 
@@ -143,6 +158,7 @@ supplies the proof evidence for the declarations above.
 | `ParetoMellinFiniteEnergy` | `paretoMellin_tendstoUniformlyOn_of_tendsto`, `paretoMellin_differentiableAt`, `paretoMellin_analyticOnNhd` |
 | `BurnolMellinContinuation` | `damped_mellin_conductor_identity`, `normalization_of_mellin_identity`, `zero_propagation_of_mellin_identity` |
 | `BurnolFiniteEnergyReduction` | `centered_dampedMobius_mellin_cross_identity`, `riemannHypothesis_of_centered_damped_finiteEnergy_sequence`, `riemannHypothesis_of_centered_damped_square_summable` |
+| `DampedMobiusHalfEndpoint` (subsequent endpoint development) | `dampedMobius_half_endpoint`, `centered_dampedMobius_square_summable_iff_of_half_le` |
 
 The existing `BurnolDampingZeroShift` keeps its statements and uses the
 already verified conductor regularization lemma for finite zeta zero order,

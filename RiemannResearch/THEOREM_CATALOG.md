@@ -80,6 +80,7 @@ for the source audit, exact definitions, and quantifier order.
 
 **Established in Lean:** `RH/DampedMobiusHalfEndpoint` closes the actual
 centered arithmetic/Pareto finite-energy obligation at epsilon=1/2.
+Published in commit `d4e06595e09075250bc2c2c49399dcd0b3cd6767`.
 `dampedMobius_half_endpoint` proves both full weighted square summability
 and an unconditional bound
 |A_{1/2}(N)-N*Re(1/zeta(3/2))| <= K*sqrt(N)/(6+log(N))^(3/4)
@@ -154,12 +155,15 @@ Acta Cientifica Venezolana 54 (2003), 210-215, Section 4,
 Lemma 4.1 in https://arxiv.org/abs/math/0202166.
 This is the discrete counterpart of the lemma's strict epsilon>1/2 part.
 The published lemma also includes epsilon=1/2; that endpoint is now
-**Established** by the half-damping development above. The arbitrary-weight and explicit-tail
+**Established** by `dampedMobius_half_endpoint` in the half-damping development
+above. `centered_dampedMobius_square_summable_iff_of_half_le` extends the
+unique-centering characterization to every epsilon>=1/2; the explicit
+truncation bound above still requires epsilon>1/2. The arbitrary-weight and explicit-tail
 statements are standard generalizations/corollaries, with no novelty claim.
 
 **Open RH obligation:** finite energy for the actual centered prefixes
-at positive epsilon_j tending to zero. The new epsilon>1/2 provider
-does not supply such a sequence. The prior conditional Burnol RH
+at positive epsilon_j tending to zero. Even the completed inclusive
+epsilon>=1/2 range does not supply such a sequence. The prior conditional Burnol RH
 reduction remains conditional, and the reverse RH-to-membership
 direction remains unformalized here.
 The combined candidate passed with exit code 0, verified=true, and only
@@ -198,7 +202,10 @@ The scalar-to-Hilbert realization is proved, not assumed.
 
 **Open:** this small-positive-damping arithmetic summability. The arithmetic
 Mellin identity, finite-energy holomorphy, and continuation steps are now
-formalized, but they do not prove the membership premise. The reverse
+formalized, but they do not prove the membership premise. The subsequent
+`RH/DampedMobiusHalfEndpoint` development proves membership throughout
+epsilon>=1/2, including the endpoint; it does not supply positive dampings
+tending to zero. The reverse
 RH-to-membership direction is not formalized here. No unconditional RH
 proof is claimed. The combined candidate passed with `verified=true`,
 exit code 0, and only standard foundational axioms in the five principal

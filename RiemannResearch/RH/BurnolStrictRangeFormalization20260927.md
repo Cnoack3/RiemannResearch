@@ -3,6 +3,11 @@
 Date: 2026-09-27. Repository: Cnoack3/RiemannResearch.
 Base commit: 70ef2e5183ccd61e4096cf6366ecc0070224ef72.
 
+Status reconciled with endpoint commit
+`d4e06595e09075250bc2c2c49399dcd0b3cd6767`. The original strict-range
+construction and its quantitative truncation bound retain their hypotheses;
+the current finite-energy status includes the subsequently verified endpoint.
+
 ## Source and exact scope
 
 J.-F. Burnol, *On an analytic estimate in the theory of the Riemann zeta
@@ -19,8 +24,12 @@ The endpoint epsilon = 1/2 uses additional estimates for zeta and its inverse.
 
 This development formalizes the **discrete counterpart of the strict-range
 argument**, using the repository's actual Pareto Hilbert space and genuine
-Mathlib Mobius function. It does not claim to formalize the endpoint or
-the full continuous Mellin–Plancherel theorem. The arithmetic weight
+Mathlib Mobius function. The discrete endpoint is now formalized separately
+in `RH/DampedMobiusHalfEndpoint.lean`, using quantitative PNT, Abel summation,
+and an exact hyperbola decomposition. See
+[`BurnolHalfEndpointFormalization20260927.md`](BurnolHalfEndpointFormalization20260927.md).
+The full continuous Mellin–Plancherel theorem is outside this development.
+The arithmetic weight
 generalization and explicit truncation rate are standard consequences
 of the proof mechanism, not claimed as new mathematics.
 
@@ -71,7 +80,10 @@ not a new result in this development.
 
 ## Actual unconditional arithmetic provider
 
-For **every epsilon > 1/2**, Lean proves
+The original strict-range provider covers epsilon > 1/2. With
+`centered_dampedMobius_square_summable_iff_of_half_le` in
+`RH/DampedMobiusHalfEndpoint.lean`, Lean now proves the inclusive statement
+for **every epsilon >= 1/2**:
 
 Summable (k -> positiveWeight(k) *
   (dampedMobiusPrefix(epsilon,k)-k*C)^2)
@@ -101,6 +113,13 @@ Principal declarations in `RH/DampedMobiusFiniteEnergy.lean`:
 - `centered_dampedMobius_square_summable_iff`
 - `dampedMobius_finiteEnergy_with_bound`
 - `dampedMobius_finiteEnergy_tail_bound`
+
+Subsequent endpoint declarations in `RH/DampedMobiusHalfEndpoint.lean`:
+
+- `dampedMobius_half_endpoint`: unconditional centered weighted-square
+  summability at epsilon=1/2, together with a quantitative discrepancy bound.
+- `centered_dampedMobius_square_summable_iff_of_half_le`: the unique-centering
+  characterization above for every epsilon >= 1/2.
 
 ## Quantitative refinement proved
 
@@ -139,20 +158,24 @@ establish a premise such as small-damping energy.
 
 ## Remaining obligations toward RH
 
-| Obligation | Status after this development |
+| Obligation | Current status after endpoint reconciliation |
 | --- | --- |
 | Arithmetic centered Mellin identity and half-plane holomorphy | Previously established |
 | Finite energy of actual centered prefixes for every epsilon>1/2 | Established here |
 | General real-weight synthesis, unique centering, explicit truncation error | Established here |
-| Burnol endpoint epsilon=1/2 | Not formalized here |
+| Burnol discrete endpoint epsilon=1/2 | Established in `DampedMobiusHalfEndpoint.lean` by `dampedMobius_half_endpoint` (commit `d4e06595e09075250bc2c2c49399dcd0b3cd6767`) |
+| Unique-centering characterization for every epsilon>=1/2 | Established by `centered_dampedMobius_square_summable_iff_of_half_le` |
 | Finite energy for positive epsilon_j tending to zero | Open |
 | RH implies the small-damping membership premise | Not formalized here |
 | Unconditional RH | Not proved |
 
 The existing `riemannHypothesis_of_centered_damped_square_summable`
 needs finite energy along positive damping parameters tending to zero.
-The new provider covers epsilon>1/2, so it cannot discharge that premise.
-The norm majorant also loses control as epsilon decreases to 1/2.
-Extending a summability proof across that boundary requires additional
-input; substituting an RH-conditional published bound would retain RH
-as a hypothesis and would not prove RH unconditionally.
+The current unconditional providers cover epsilon>=1/2, so they cannot
+discharge that premise. Finite energy at positive dampings tending to zero
+remains **Open**, and no unconditional RH proof is claimed.
+The strict-range truncation majorant still loses control as epsilon
+decreases to 1/2; the separate endpoint proof does not extend that bound.
+Descending below 1/2 requires additional input; substituting an
+RH-conditional published bound would retain RH as a hypothesis and would
+not prove RH unconditionally.
