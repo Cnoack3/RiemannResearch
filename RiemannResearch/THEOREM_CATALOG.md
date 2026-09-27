@@ -1,5 +1,51 @@
 # Theorem catalog
 
+### Burnol half-damping endpoint and quantitative arithmetic strengthening (2026-09-27)
+
+**Established in Lean:** `RH/DampedMobiusHalfEndpoint` closes the actual
+centered arithmetic/Pareto finite-energy obligation at epsilon=1/2.
+`dampedMobius_half_endpoint` proves both full weighted square summability
+and an unconditional bound
+|A_{1/2}(N)-N*Re(1/zeta(3/2))| <= K*sqrt(N)/(6+log(N))^(3/4)
+for positive N with log(N)>=200.
+`centered_dampedMobius_square_summable_iff_of_half_le` characterizes the
+unique center Re(1/zeta(1+epsilon)) throughout epsilon>=1/2.
+
+**Established arithmetic provider:** `NumberTheory/PrimeNumberTheorem/
+MertensShiftedGlobal.M_shiftedLog_threeHalves_bound` derives
+|M(x)| <= B*x*(6+log(x))^(-3/2) for every real x>=1 from the existing
+unconditional quantitative PNT. `MobiusLogBootstrapFinite` retains exact
+signed Mobius-von-Mangoldt convolution terms and proves the finite estimate;
+`MertensBootstrapCutoffs` and `MertensLogThreeHalvesAssembly` optimize it.
+Their provider-facing bounds display all quantitative hypotheses.
+
+**Generic strengthening:** `Analysis/WeightedMertensTransfer` and
+`Analysis/WeightedMertensTail` prove signed-coefficient Abel bounds with
+constants 3B and 5B. `RH/ArithmeticFloorHyperbola`,
+`ArithmeticFloorHyperbolaBounds`, and `HyperbolaLogCutoff` retain the exact
+centered decomposition and optimize the complete discrepancy, without
+multiplicativity or positivity assumptions on the weights.
+`RH/ParetoLogEnergyCriterion` proves energy summability from any eventual
+sqrt(N)/(log N)^q bound with q>1/2.
+`RH/DampedMobiusEnergyClosure` proves a coordinatewise Fatou transfer;
+its common finite-head energy bound remains an explicit premise. The actual
+half-endpoint proof does not assume that bound.
+
+Statement source: Burnol, Acta Cientifica Venezolana 54 (2003), 210-215,
+Lemma 4.1, https://arxiv.org/abs/math/0202166. This formalization uses an
+arithmetic proof through the existing PNT+ compatibility port. The pointwise
+bound strengthens the qualitative statement; no literature novelty is claimed.
+
+**Open RH obligation:** actual finite energy at positive epsilon_j tending
+to zero. The inclusive range epsilon>=1/2 does not discharge this obligation.
+Further fixed logarithmic gains alone leave a divergent proposed majorant
+below one half; that does not establish divergence of actual energy.
+The conditional Burnol RH reduction remains conditional.
+
+The combined kernel check passed with exit code 0, verified=true, and only
+propext, Classical.choice, and Quot.sound in the three principal dependency
+reports. See `RH/BurnolHalfEndpointFormalization20260927.md`.
+
 ### Published Burnol strict-range finite energy and quantitative synthesis (2026-09-27)
 
 **Established in Lean:** `RH/ArithmeticFloorHilbertSeries` constructs the
@@ -31,8 +77,8 @@ Source for the absolute-convergence strategy: J.-F. Burnol,
 Acta Cientifica Venezolana 54 (2003), 210-215, Section 4,
 Lemma 4.1 in https://arxiv.org/abs/math/0202166.
 This is the discrete counterpart of the lemma's strict epsilon>1/2 part.
-The published lemma also includes epsilon=1/2; that endpoint remains
-**Open in this formalization**. The arbitrary-weight and explicit-tail
+The published lemma also includes epsilon=1/2; that endpoint is now
+**Established** by the half-damping development above. The arbitrary-weight and explicit-tail
 statements are standard generalizations/corollaries, with no novelty claim.
 
 **Open RH obligation:** finite energy for the actual centered prefixes
