@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Sparse signed-head transfer and damping accumulation (2026-09-27)
+
+**Established transfer and divergence implications:**
+`RH/DampedMobiusSparseHeadDichotomy` proves that at any epsilon>0 and
+residue cutoff M(H) tending to infinity, a signed off-diagonal bound B
+at arbitrarily large physical heads supplies actual centered finite
+energy E_epsilon <= diagonalBudget(epsilon)+B. There is no factor-two
+loss or head-error term. M need not be monotone, polynomial, or at least H.
+The signed bound is an explicit hypothesis, not an arithmetic estimate.
+
+Failure of finite energy forces the signed off-diagonal to tend to
+positive infinity for every cofinal cutoff. For M(H)=(H+1)^k with
+2*k*epsilon>=1, finite energy is equivalent to a signed upper bound at
+arbitrarily large H, hence to the existing all-head condition.
+
+**Conditional zero-free and RH reductions:** sparse signed bounds at
+arbitrarily large damping indices epsilon_j>a tending to a>=0 exclude
+zeros in 1/2+a<Re(s)<1, without uniform constants in j. At a=0 they imply RH.
+`riemannHypothesis_of_sparse_reciprocal_polynomial_signed_heads` needs
+only arbitrarily large j with a finite B_j bounding
+O_{1/(j+3)}(H,(H+1)^(j+3)) at arbitrarily large H.
+This signed hypothesis remains **Open** and RH-strength.
+No new fixed subhalf finite-energy provider is established.
+
+The verified not-RH implication forces divergence at every sufficiently
+small positive damping and every cofinal residue cutoff. That divergence
+has not been excluded. See `RH/SparseSignedHeadDichotomy20260927.md`
+for complete proofs, provenance, and verification evidence.
+
 ### Explicit polynomial signed heads and ordered vector damping (2026-09-27)
 
 **Established unconditional estimates:** `RH/DampedMobiusHeadApproximation`

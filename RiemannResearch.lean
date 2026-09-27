@@ -4,6 +4,7 @@ import RiemannResearch.Analysis.NaturalPowerCutoff
 import RiemannResearch.RH.DampedMobiusSignedAbelGrowth
 import RiemannResearch.RH.DampedMobiusHeadApproximation
 import RiemannResearch.RH.DampedMobiusPolynomialHeadCriterion
+import RiemannResearch.RH.DampedMobiusSparseHeadDichotomy
 import RiemannResearch.Analysis.PowerLogSquareObstruction
 import RiemannResearch.RH.DampedMobiusSignedGram
 import RiemannResearch.RH.DampedMobiusSignedHeadClosure
