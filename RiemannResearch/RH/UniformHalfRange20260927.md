@@ -2,6 +2,11 @@
 
 Date: 2026-09-27. Project: RiemannResearch, Lean 4 / Mathlib.
 
+**Further consequence:** `DampedMobiusSubhalfNormalization.lean` now
+proves vanishing critically normalized full energies and signed heads
+for every epsilon<1/2, including zero damping. Unnormalized subhalf
+finite energy remains open. See `SubhalfNormalization20260927.md`.
+
 ## Established strengthening
 
 The earlier result proved full natural-order Hilbert convergence for

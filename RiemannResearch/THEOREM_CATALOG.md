@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Normalized signed cancellation below half damping (2026-09-27)
+
+**Established without an arithmetic hypothesis:**
+`RH/DampedMobiusSubhalfNormalization` proves, for every real epsilon<1/2,
+that the full signed vector divided by (M+1)^(1/2-epsilon) tends to zero
+in Hilbert norm. Its squared norm, actual finite diagonal, and full signed
+off-diagonal, divided by (M+1)^(1-2*epsilon), each tend to zero.
+
+`dampedMobius_subhalf_normalized_signed_heads_uniform` proves vanishing
+absolute normalized signed heads uniformly in EVERY physical cutoff H.
+The absolute value follows the complete signed sum. Arbitrary moving H_j
+are allowed whenever M_j diverges; no relative-rate condition is needed.
+
+At zero damping, `rawMobius_norm_div_sqrt_tendsto` proves
+||F_0,M||/sqrt(M+1)->0 and `rawMobius_energy_div_cutoff_tendsto`
+proves ||F_0,M||^2/(M+1)->0. Both control the entire infinite physical tail.
+
+`Analysis/VectorKronecker` proves the general increasing-weight signed
+prefix and tail estimates and the vector Kronecker lemma. The arithmetic
+specialization uses the checked half-endpoint natural-order convergence
+and an exact inverse-power atom factorization. It assumes no RH or
+unproved cancellation estimate.
+
+**Open:** bounded unnormalized subhalf energy and the positive-damping
+bounds approaching zero. The growing normalization does not supply
+finite energy or a fixed power saving below the raw exponent 1/2.
+No new zero-free region or unconditional RH is claimed.
+See `RH/SubhalfNormalization20260927.md`.
+
 ### Uniform damping range and endpoint norm continuity (2026-09-27)
 
 **Established without an arithmetic hypothesis:**

@@ -83,7 +83,8 @@ theorem dampedMobius_half_range_uniform_norm_bound :
   refine ⟨C, hC0, fun ε hε M => ?_⟩
   rw [dampedMobiusPartial_from_half]
   have hp (n : ℕ) :
-      ‖signedVectorPrefix (fun m => -arithmeticResidueTerm (dampedMobiusWeight (1 / 2)) m) n‖ ≤ C := by
+      ‖signedVectorPrefix
+        (fun m => -arithmeticResidueTerm (dampedMobiusWeight (1 / 2)) m) n‖ ≤ C := by
     simpa only [signedVectorPrefix, Finset.sum_neg_distrib,
       arithmeticFloorHilbertPartial] using hb n
   have h := signedVector_monotone_weight_norm_le
