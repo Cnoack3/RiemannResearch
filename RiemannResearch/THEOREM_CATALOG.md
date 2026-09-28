@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Dyadic signed-shell criterion at the stretched scale (2026-09-28)
+
+**Established identities.** In `RH/ParetoDyadicShellCriterion.lean`,
+`hilbert_weighted_dyadic_shell_telescope` gives exact finite telescoping
+for every Hilbert vector and real weight.
+`residualSignedShell_eq_energy` identifies the full signed expression
+<r,A_N-P_V1>_shell - <r,A_(2N)-A_N>_tail with actual residual shell energy.
+The local projection pairing cannot be discarded by global orthogonality.
+
+**Conditional research reductions; signed-gain provider Open.**
+`cofinally_small_dyadic_tail_iff_signed_gain` exactly expresses the
+cofinal-small tail condition as one-sided cumulative shell gain.
+`limitEnergy_eq_zero_of_cofinal_dyadic_signed_gain` assembles this with the
+stretched complete-energy bound at its full exponent.
+`exists_stretched_signed_shell_criterion` proves that, for every
+0<b<a at a checked universal a>0, zero residual is equivalent to
+cumulative weighted signed gains being bounded below on a cofinal set of
+dyadic endpoints. Individual gains need not be nonnegative.
+No unconditional upper bound on residual tails or these gains is proved.
+RH remains Open. See `RH/DyadicSignedShellAudit20260928.md`.
+
 ### Stretched transfer to sources, corrections, and residual tails (2026-09-28)
 
 **Established without a new arithmetic hypothesis.**
