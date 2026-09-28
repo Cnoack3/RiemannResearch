@@ -1,10 +1,10 @@
 # Projected inverse-column concentration audit — 28 September 2026
 
-Subsequent investigation: `ProjectedDualMassObstruction.lean` now proves
-the complete obstruction to this strict-margin provider, with critical-zero
-existence explicit as a premise. The arithmetic exponent is supplied by a
-checked theorem. Critical-zero existence remains an Open formalization
-dependency; no axiom is added. See `ProjectedDualMassObstructionAudit20260928.md`.
+Subsequent investigation: `ProjectedDualMassObstructionUnconditional.lean`
+discharges the critical-zero premise using `CriticalLineZeros.lean`.
+The arithmetic exponent and the critical zero are supplied by proved
+providers. The strict-margin global budget is refuted unconditionally.
+See `ProjectedDualMassObstructionAudit20260928.md`.
 The sufficient implications below remain valid; RH remains Open.
 
 Continuation of Cnoack3/RiemannResearch commit
@@ -19,8 +19,7 @@ and inspected conductor results do not discharge that provider.
 This continuation isolates a concrete l2 concentration budget, proves its
 connection to the existing coefficient-mass criterion, and weakens the
 endpoint requirement to cofinal smallness at the arithmetic exponent itself.
-The strict-margin global budget is now ruled out under the displayed
-critical-zero premise. Endpoint concentration providers and RH remain **Open**.
+The strict-margin global budget is now ruled out unconditionally. Endpoint concentration providers and RH remain **Open**.
 
 ## Notation
 
@@ -100,7 +99,7 @@ The generic Analysis/FiniteCoefficientConcentration.lean also proves
 which allows other weighting choices. The application is
 projectedDualCoefficientMass_sq_le_weighted_energy.
 
-## Sufficient quantitative providers, all explicitly Open
+## Strict-margin sufficient implications and open endpoint providers
 
 For any b<a it suffices that, separately for every fixed d>1, there is K_d
 such that at arbitrarily large n one can choose I and rho>=0 satisfying
@@ -120,7 +119,8 @@ required.
 
 For example, on those same indices, bounds L<=A_d exp(u Phi(n)) and
 kappa<=D_d exp(v Phi(n)) are sufficient when u+v<a: take b=u+v.
-Neither factor estimate has been supplied here.
+The simultaneous global strict-margin provider is now impossible by the
+unconditional obstruction. The endpoint hypotheses below remain Open.
 
 A weaker endpoint requirement dispenses with b<a: for every d>1 and
 epsilon>0, cofinally one can choose I with

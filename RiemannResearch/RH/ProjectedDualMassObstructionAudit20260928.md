@@ -1,8 +1,10 @@
 # Coefficient-mass obstruction audit — 28 September 2026
 
 Continuation of commit 27303d288368384e410b08f84a8693d5ee44b5ab.
-This checkpoint completes the previously written obstruction in Lean,
-with critical-zero existence retained as an explicit premise.
+The original conditional obstruction is now supplemented by a premise-free
+specialization in `ProjectedDualMassObstructionUnconditional.lean`.
+`CriticalLineZeros.lean` supplies an actual critical-line zero from the
+pinned Zeta23 zero-proportion and Riemann--von Mangoldt theorems.
 
 ## Result and exact formal status
 
@@ -27,15 +29,22 @@ from `canonicalMobiusResidual_eventual_stretched_energy`. Its only
 domain-specific input is the displayed critical-line zero. There is no
 remaining unproved quantitative estimate in that specialization.
 
-**Open formalization dependency:** existence of such a zero. No checked
-provider was located in the repository or inspected Mathlib declarations.
-It remains a premise, never an axiom. The obstruction is therefore not
-claimed here as a premise-free Lean refutation.
+**Zero-existence dependency discharged.** The imported upstream proof chain
+now yields `RiemannResearch.RH.exists_critical_zero`, with no premises.
+The stronger `exists_simple_critical_zero_above` supplies a simple
+critical-line zero above any real height. This uses the actual Mathlib
+zeta function and its analytic order of vanishing.
+
+The new `exists_coefficient_mass_stretched_barrier` combines this theorem
+with the original conditional obstruction and the unconditional arithmetic
+provider. It has no domain-specific hypotheses and proves
+`∃ a>0, ∃ d∈{2,3}, ∀ b<a, exp(-b Phi(n)) B_(n,d)^2 → +∞`.
+The conditional theorem remains available as a lighter analytic interface.
 
 RH is neither assumed nor proved. RH remains **Open**.
 The earlier sufficient implications from mass or concentration budgets to
-zero residual and RH remain correct. Under the critical-zero premise, their
-global strict-margin hypotheses are impossible; this does not contradict RH.
+zero residual and RH remain correct. Their global strict-margin hypotheses
+are now refuted unconditionally; this does not contradict RH.
 The endpoint b=a and direct signed physical-tail criteria are not refuted.
 
 ## Notation
@@ -173,6 +182,11 @@ Module: `RH/ProjectedDualMassObstruction.lean`.
 - `not_cofinal_stretched_l2_concentration_of_critical_zero`: refutes the
   global effective-support/l2 budget under the same explicit zero premise.
 
+Module: `RH/ProjectedDualMassObstructionUnconditional.lean` exports the
+same four declarations without the `_of_critical_zero` suffix, discharging
+the zero premise. The explicit-energy versions retain ha, hC and henergy;
+the existential arithmetic specialization has no premises.
+
 For the last theorem, leakage outside I is retained:
 
     sum_(i outside I) c_i^2 <= rho L,
@@ -203,10 +217,14 @@ provider:
 
 Its existing checked implication yields zero residual and RH. Absolute
 column mass loses cancellations retained by this signed-tail criterion.
-This checkpoint proves neither that provider nor another sufficient
-condition for RH.
+This continuation proves neither that provider nor another sufficient
+condition for RH. The imported Montgomery--Vaughan and prime-side estimates
+are available, but no estimate for the moving Pareto signed pairing is
+inferred without a justified correspondence.
 
 The obstruction's principal declarations report only `propext`,
 `Classical.choice`, and `Quot.sound`. No sorry, admit, unsafe declaration,
-or project-local axiom is added. The explicit critical-zero premise is
-visible in theorem types; it is not reported by `#print axioms`.
+or project-local axiom is added. The original conditional interfaces display the zero premise in their
+types. The new unconditional corollaries discharge it with a proved
+provider, rather than adding an axiom. See
+`Zeta23ImportCompletion20260928.md` for the expanded import boundary.

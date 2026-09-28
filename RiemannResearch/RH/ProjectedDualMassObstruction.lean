@@ -13,8 +13,10 @@ companion modules; see ProjectedDualMassObstructionAudit20260928.md.
 
 The arithmetic energy exponent is supplied by a checked unconditional theorem.
 A critical-line zeta zero is an explicit premise in every obstruction theorem.
-Existence of such a zero remains an Open formalization dependency here; it is
-not added as an axiom. RH is neither assumed nor proved.
+The sibling ProjectedDualMassObstructionUnconditional module discharges
+this premise using the imported zero-proportion theorem through CriticalLineZeros.
+The present module retains the conditional analytic interface.
+RH is neither assumed nor proved.
 
 The selected d is fixed in {2,3}, before quantifying over b<a. The resulting
 divergence refutes even separate cofinal bounds and separate strict exponents

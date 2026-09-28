@@ -1,6 +1,35 @@
 # Theorem catalog
 
-### Critical-zero coefficient-mass obstruction (2026-09-28)
+### Critical-line zeros and imported zero-proportion results (2026-09-28)
+
+**Established without RH.** The pinned Zeta23 import now contains 140
+upstream modules (57 existing plus 83 added). It exports the full
+Riemann--von Mangoldt provider, Montgomery--Vaughan weighted Hilbert
+inequality, prime-side trace estimates, and the unconditional proportions
+`Zeta23.thmA₀`, `Zeta23.thmB₀_mult`, `Zeta23.thmC₀_mult`:
+at least 2/3 distinct on-line, 2/3 simple on-line, and 5/6 distinct zeros.
+The optimized-window forms `Zeta23.ThmD.thmD₀_simple_mult` and
+`Zeta23.ThmD.thmD₀_dist_mult` retain the exact Montgomery--Taylor constants.
+These are upstream results, not new results attributed to this project.
+
+`RH/CriticalLineZeros.lean` derives:
+
+- `simpleCriticalZeroCount_dyadic_tendsto_atTop`;
+- `eventually_exists_simple_critical_zero_dyadic`;
+- `exists_simple_critical_zero_above`;
+- `exists_critical_zero`.
+
+The last theorem has type
+`∃ ρ : ℂ, riemannZeta ρ = 0 ∧ ρ.re = 1/2`, with no premises.
+Growth of the full zero count makes the proportion theorem nonvacuous.
+Lean/Mathlib versions are unchanged. Only the selected upstream proof
+closure is imported; Challenge placeholders, Dirichlet, XiPrime, and
+PairCeiling developments are excluded. Provenance and import adjustments
+are recorded in `RH/WeilExplicitFormula/PROVENANCE.md`.
+The signed-pairing estimate needed for the Pareto RH route remains Open;
+none of these proportion results proves RH.
+
+### Unconditional coefficient-mass obstruction (2026-09-28)
 
 **Established analytic components.** `RH/ParetoCriticalMellinCutoff.lean`
 checks the literal critical-line bound
@@ -21,14 +50,19 @@ barrier from a nonzero cutoff value and a fourth-power error envelope.
 a>0 from the checked arithmetic provider and proves that one fixed
 d in {2,3} satisfies exp(-b Phi(n)) B_(n,d)^2 -> infinity for every b<a.
 The explicit domain-specific premises are Re(s)=1/2 and zeta(s)=0.
-Critical-zero existence is an **Open formalization dependency**; no
-unproved quantitative estimate remains in this specialization, and no
-RH assumption, sorry, or new axiom is used.
+The zero premise is now discharged by `RH.exists_critical_zero` in
+`RH/ProjectedDualMassObstructionUnconditional.lean`.
+Its `exists_coefficient_mass_stretched_barrier` has no premises:
+it supplies a>0 and one fixed d in {2,3} with the same divergence for
+every b<a. No quantitative or zero-existence provider remains open
+for this obstruction. No RH assumption or new axiom is used.
 
 `not_cofinal_stretched_coefficient_mass_of_critical_zero` and
 `not_cofinal_stretched_l2_concentration_of_critical_zero` refute the
 global strict-margin providers under that same premise, even allowing
 each column a separate cofinal set and separate exponent b_d<a.
+The declarations without the `_of_critical_zero` suffix discharge that
+premise, preserving the displayed arithmetic-energy exponent.
 The endpoint b=a and direct signed physical-tail criteria are not
 refuted; their providers and RH remain **Open**. Earlier sufficient
 implications remain valid. See `RH/ProjectedDualMassObstructionAudit20260928.md`.
@@ -83,11 +117,10 @@ for 0<d<=N and m(N+1)<=n+1. Exact syntheses of h_2 and h_3 give
 ||h_2-P_nh_2||^4<=270 B_(n,2)^2 ||T_N||^2/(N+1) and the
 corresponding constant 530 for d=3, with the stated conductor cutoffs.
 
-**Obstruction now formalized with an explicit critical-zero premise.**
-See the preceding entry and `RH/ProjectedDualMassObstructionAudit20260928.md`.
-Only critical-zero existence remains an Open formalization dependency;
-the cutoff, witness, profile comparison, and asymptotic assembly are checked.
-The earlier sufficient implications remain valid.
+**Obstruction now unconditional.** See the preceding entries and
+`RH/ProjectedDualMassObstructionAudit20260928.md`.
+The cutoff, witness, profile comparison, asymptotic assembly, and
+critical-zero provider are checked. The earlier sufficient implications remain valid.
 
 **Conditional research reduction; provider Open.** Direct signed
 physical-tail control still suffices for residual zero and RH. Neither
@@ -122,8 +155,8 @@ The reusable finite concentration inequalities are in
 `Analysis/FiniteCoefficientConcentration.lean`.
 
 **Conditional research reductions.** The strict-margin global budgets
-are now refuted under the explicit critical-zero premise above; endpoint
-providers remain Open.
+are now refuted unconditionally by the zero-existence specialization above;
+endpoint providers remain Open.
 `limitResidual_eq_zero_of_cofinal_stretched_l2_concentration` requires
 the leakage estimate and the joint budget exp(-b Phi(n)) kappa L<=K_d
 at the same cofinal indices, b<a, separately for each d>1. It calls the
@@ -159,7 +192,8 @@ weight and dyadic orbit. At b<a, cofinal boundedness suffices.
 `limitResidual_eq_zero_of_cofinal_stretched_coefficient_mass` gives the
 stronger sufficient inverse-column condition
 exp(-b Phi(n)) B_(n,d)^2 cofinally bounded, b<a.
-No rate provider is supplied by the existing qualitative projection,
+The strict-margin global coefficient-mass provider is now refuted
+unconditionally. No physical-tail rate provider is supplied by the existing qualitative projection,
 mode-summability, diagonal, or Schur results. RH remains Open.
 See `RH/ProjectedDualStretchedTailAudit20260928.md`.
 

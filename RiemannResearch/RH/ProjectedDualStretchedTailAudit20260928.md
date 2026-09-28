@@ -1,16 +1,14 @@
 # Moving projected-dual quantitative audit — 28 September 2026
 
-Later assessment: `ProjectedDualMassObstruction.lean` now checks the complete
-critical-zero obstruction to the strict-margin absolute coefficient-mass
-provider. Critical-zero existence remains an explicit premise and an Open
-formalization dependency; no quantitative estimate remains unproved in the
-specialization. See `ProjectedDualMassObstructionAudit20260928.md`.
+Later assessment: `ProjectedDualMassObstructionUnconditional.lean` now
+discharges the critical-zero premise using `CriticalLineZeros.lean`.
+The strict-margin global absolute coefficient-mass provider is refuted
+unconditionally. See `ProjectedDualMassObstructionAudit20260928.md`.
 Direct signed-tail control remains an Open sufficient provider; RH remains Open.
 
 Follow-up: `ProjectedDualColumnConcentrationAudit20260928.md` records
 the subsequent l2 concentration criteria and accumulated Schur bounds.
-Their strict-margin global budgets are refuted under the explicit critical-zero
-premise. The endpoint and signed-tail providers remain Open.
+Their strict-margin global budgets are refuted unconditionally. The endpoint and signed-tail providers remain Open.
 
 Continuation of Cnoack3/RiemannResearch commit
 37b70ace875015abc52da4a504e9b2b9232702b0.
@@ -130,7 +128,8 @@ A more concrete but stronger sufficient inverse-Gram estimate is
 equivalently cofinal l1 column growth O_d(exp(b Phi(n)/2)).
 This follows from item 3 and is formalized as
 limitResidual_eq_zero_of_cofinal_stretched_coefficient_mass.
-The coefficient-mass bound itself remains Open. In particular no
+The global strict-margin coefficient-mass bound is now refuted
+unconditionally. The sufficient implication remains valid; no
 n-independent column l1 bound is asserted.
 
 ## Connection to the cumulative signed gains
@@ -172,5 +171,7 @@ the quantitative projection provider has not been discharged.
   criterion are exact. Their arithmetic upper-control provider remains
   open.
 
-No external analytic theorem was imported. No sorry, admit, project-local
-axiom, or unsafe declaration is part of this continuation.
+The original quantitative-tail continuation imported no external analytic
+theorem. The later unconditional obstruction uses the pinned, proved
+Zeta23 critical-zero provider described above. No sorry, admit,
+project-local axiom, or unsafe declaration is introduced.
