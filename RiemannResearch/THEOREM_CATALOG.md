@@ -27,6 +27,15 @@ is claimed. The earlier sufficient implications remain valid.
 physical-tail control still suffices for residual zero and RH. Neither
 that provider nor RH is proved by this continuation.
 
+`RH/ResidueProjectionCorrectionTail.lean` now records
+`correction_signed_shell_split`: for every finite shell the correction is
+the signed shell pairing plus its exact later-tail pairing. The theorem
+`signed_pairing_cofinal_forces_limit` uses the unconditional existence of
+each fixed correction limit. Consequently
+`riemannHypothesis_of_cofinal_signed_pairings` needs only arbitrarily late
+small signed pairings for each fixed d>1, with no common subsequence.
+This hypothesis is Open and equivalent in strength to vanishing of all
+limiting corrections; the shell split itself supplies no decay estimate.
 ### Projected inverse-column l2 concentration and Schur accumulation (2026-09-28)
 
 **Established bounds.** `RH/ProjectedDualColumnConcentration.lean` identifies

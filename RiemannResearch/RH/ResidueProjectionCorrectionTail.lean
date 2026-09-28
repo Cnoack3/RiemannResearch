@@ -2,6 +2,7 @@ import RiemannResearch.RH.ExactHeadCofinalBounds
 import RiemannResearch.RH.ResidueGramMobiusCorrection
 import RiemannResearch.RH.ExactHeadCoefficientCounterexample
 import RiemannResearch.RH.CanonicalMobiusSignedAverages
+import RiemannResearch.RH.ParetoResidualShell
 
 /-!
 # Exact arithmetic tails representing the canonical coefficient correction
@@ -159,6 +160,51 @@ theorem correction_eq_weighted_tail (n d : ℕ) (hd : 1 < d) (hdn : d ≤ n) :
         hilbertSequence (tailError n) (k+n+1)) := by
   rw [correction_eq_tail_pairing n d hd hdn, hilbertTailShift_inner_weighted]
 
+/-- An arbitrary finite physical shell plus its exact signed remainder.
+Neither term is replaced by an absolute-value majorant. -/
+theorem correction_signed_shell_split (n d M : ℕ) (hd : 1 < d) (hdn : d ≤ n) :
+    correction n d =
+      hilbertShellPairing ((finiteSpace n).starProjection (coefficientRiesz d))
+        (tailError n) n M +
+      inner ℝ
+        (hilbertTailShift ((finiteSpace n).starProjection (coefficientRiesz d)) (n + M))
+        (hilbertTailShift (tailError n) (n + M)) := by
+  rw [correction_eq_tail_pairing n d hd hdn]
+  exact (hilbert_tail_shell_pairing _ _ n M).symm
+
+/-- Cofinal smallness of the signed physical pairing for one fixed coefficient
+forces its already-existing limit to vanish. The cofinal estimate is open. -/
+theorem signed_pairing_cofinal_forces_limit (d : ℕ) (hd : 1 < d)
+    (hsmall : ∀ ε : ℝ, 0 < ε → ∃ᶠ n : ℕ in atTop,
+      |inner ℝ (hilbertTailShift ((finiteSpace n).starProjection (coefficientRiesz d)) n)
+        (hilbertTailShift (tailError n) n)| < ε) :
+    mobiusDifferenceCLM d limitResidual = 0 := by
+  let L := mobiusDifferenceCLM d limitResidual
+  by_contra hne
+  have hpos : 0 < |L| / 2 := by have := abs_pos.mpr hne; positivity
+  have hlarge : ∀ᶠ n : ℕ in atTop, |L| / 2 < |correction n d| :=
+    ((GramMobiusCorrection.correction_tendsto_residual d (by omega)).abs).eventually_const_lt (by
+      change |L| / 2 < |L|
+      linarith [abs_pos.mpr hne])
+  have hfreq : ∃ᶠ n : ℕ in atTop, |correction n d| < |L| / 2 :=
+    ((hsmall (|L| / 2) hpos).and_eventually (eventually_ge_atTop d)).mono
+      (fun n hn => by
+        rw [correction_eq_tail_pairing n d hd hn.2]
+        exact hn.1)
+  obtain ⟨n, hn, hn'⟩ := (hfreq.and_eventually hlarge).exists
+  linarith
+
+/-- The cofinal signed-pairing criterion, separately for each fixed coefficient.
+Its analytic smallness premise remains open. -/
+theorem riemannHypothesis_of_cofinal_signed_pairings
+    (hsmall : ∀ d : ℕ, 1 < d → ∀ ε : ℝ, 0 < ε → ∃ᶠ n : ℕ in atTop,
+      |inner ℝ (hilbertTailShift ((finiteSpace n).starProjection (coefficientRiesz d)) n)
+        (hilbertTailShift (tailError n) n)| < ε) :
+    RiemannHypothesis := by
+  apply GramMobiusCorrection.riemannHypothesis_of_correction_limits
+  intro d hd
+  have hz := signed_pairing_cofinal_forces_limit d hd (hsmall d hd)
+  simpa only [hz] using GramMobiusCorrection.correction_tendsto_residual d (by omega)
 def projectedDualTailEnergy (n d : ℕ) : ℝ :=
   ‖hilbertTailShift ((finiteSpace n).starProjection (coefficientRiesz d)) n‖^2
 
