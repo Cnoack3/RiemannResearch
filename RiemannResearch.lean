@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ProjectedDualStretchedTail
 import RiemannResearch.RH.ParetoDyadicShellCriterion
 import RiemannResearch.RH.CanonicalMobiusStretchedCorrection
 import RiemannResearch.RH.ParetoStretchedAnnihilatorTail

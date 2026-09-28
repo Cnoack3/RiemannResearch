@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Moving projected-dual stretched tail bridge (2026-09-28)
+
+**Established bounds and identities.** In `RH/ProjectedDualStretchedTail.lean`,
+`projectedDualTailEnergy_eq_inverse_diagonal_sub_head` gives the exact
+inverse diagonal minus physical-head formula;
+`inverse_diagonal_eq_modeCoefficient_sq_sum` identifies the diagonal with
+the finite orthonormal coefficient sum.
+`projectedDualTailEnergy_le_coefficient_mass` bounds the complete tail by
+B_(n,d)^2/(n+1), and `projectedDualCoefficientMass_eq_inverse_column`
+identifies B with the actual inverse-Gram column l1 norm.
+`correction_eventual_stretched_coefficient_mass_bound` gives the uniform
+eventual bound delta_(n,d)^2 <= [8/(n+1)+C exp(-a Phi(n))] B_(n,d)^2.
+`exists_projectedDual_stretched_barrier` proves that any nonzero fixed
+correction limit forces n exp(-b Phi(n)) E_(n,d) -> infinity for every
+b<a, where a>0 comes from the checked arithmetic energy provider.
+
+**Conditional research reductions; quantitative projection providers Open.**
+`exists_projectedDual_stretched_shell_bridge` proves that cofinal
+smallness of n exp(-a Phi(n)) E_(n,d), separately for each fixed d>1,
+forces zero residual and zero cumulative signed shell gains for every
+weight and dyadic orbit. At b<a, cofinal boundedness suffices.
+`limitResidual_eq_zero_of_cofinal_stretched_coefficient_mass` gives the
+stronger sufficient inverse-column condition
+exp(-b Phi(n)) B_(n,d)^2 cofinally bounded, b<a.
+No rate provider is supplied by the existing qualitative projection,
+mode-summability, diagonal, or Schur results. RH remains Open.
+See `RH/ProjectedDualStretchedTailAudit20260928.md`.
+
 ### Dyadic signed-shell criterion at the stretched scale (2026-09-28)
 
 **Established identities.** In `RH/ParetoDyadicShellCriterion.lean`,
