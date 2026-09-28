@@ -1,9 +1,10 @@
 # Projected inverse-column concentration audit — 28 September 2026
 
-Subsequent investigation: `ProjectedDualMassObstructionAudit20260928.md`
-records checked relative Schur asymptotics and finite dual approximation
-bounds, plus a critical-zero obstruction to this strict-margin provider
-on paper. The complete obstruction is not yet formalized in Lean.
+Subsequent investigation: `ProjectedDualMassObstruction.lean` now proves
+the complete obstruction to this strict-margin provider, with critical-zero
+existence explicit as a premise. The arithmetic exponent is supplied by a
+checked theorem. Critical-zero existence remains an Open formalization
+dependency; no axiom is added. See `ProjectedDualMassObstructionAudit20260928.md`.
 The sufficient implications below remain valid; RH remains Open.
 
 Continuation of Cnoack3/RiemannResearch commit
@@ -18,7 +19,8 @@ and inspected conductor results do not discharge that provider.
 This continuation isolates a concrete l2 concentration budget, proves its
 connection to the existing coefficient-mass criterion, and weakens the
 endpoint requirement to cofinal smallness at the arithmetic exponent itself.
-The quantitative concentration provider and RH remain **Open**.
+The strict-margin global budget is now ruled out under the displayed
+critical-zero premise. Endpoint concentration providers and RH remain **Open**.
 
 ## Notation
 

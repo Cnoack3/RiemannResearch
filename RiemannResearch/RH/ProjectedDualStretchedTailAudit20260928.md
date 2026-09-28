@@ -1,14 +1,16 @@
 # Moving projected-dual quantitative audit — 28 September 2026
 
-Later assessment: `ProjectedDualMassObstructionAudit20260928.md` gives
-a critical-zero obstruction to the strict-margin absolute coefficient-mass
-provider on paper, with its finite projection estimates checked in Lean.
-The complete obstruction is not yet formalized. Direct signed-tail control
-remains an Open sufficient provider; RH remains Open.
+Later assessment: `ProjectedDualMassObstruction.lean` now checks the complete
+critical-zero obstruction to the strict-margin absolute coefficient-mass
+provider. Critical-zero existence remains an explicit premise and an Open
+formalization dependency; no quantitative estimate remains unproved in the
+specialization. See `ProjectedDualMassObstructionAudit20260928.md`.
+Direct signed-tail control remains an Open sufficient provider; RH remains Open.
 
 Follow-up: `ProjectedDualColumnConcentrationAudit20260928.md` records
 the subsequent l2 concentration criteria and accumulated Schur bounds.
-Their sub-stretched quantitative providers remain Open.
+Their strict-margin global budgets are refuted under the explicit critical-zero
+premise. The endpoint and signed-tail providers remain Open.
 
 Continuation of Cnoack3/RiemannResearch commit
 37b70ace875015abc52da4a504e9b2b9232702b0.

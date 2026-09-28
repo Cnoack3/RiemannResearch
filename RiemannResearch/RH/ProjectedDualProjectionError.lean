@@ -10,9 +10,9 @@ The second and third coefficient duals have short threshold syntheses, giving
 fourth-power error bounds with constants 270 and 530.
 
 These are unconditional inequalities, not upper growth estimates on column
-mass and not a proof of RH. The companion audit explains a critical-line
-Mellin obstruction on paper. That obstruction's boundary estimate, critical
-zero existence, and final asymptotic assembly are not formalized here.
+mass and not a proof of RH. ProjectedDualMassObstruction now assembles the
+critical-line Mellin obstruction in Lean. Critical-zero existence remains
+an explicit premise in that module, not an axiom or an RH assumption.
 -/
 
 noncomputable section
