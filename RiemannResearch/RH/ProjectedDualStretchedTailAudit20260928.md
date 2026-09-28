@@ -1,5 +1,9 @@
 # Moving projected-dual quantitative audit — 28 September 2026
 
+Follow-up: `ProjectedDualColumnConcentrationAudit20260928.md` records
+the subsequent l2 concentration criteria and accumulated Schur bounds.
+Their sub-stretched quantitative providers remain Open.
+
 Continuation of Cnoack3/RiemannResearch commit
 37b70ace875015abc52da4a504e9b2b9232702b0.
 

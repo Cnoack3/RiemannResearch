@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Projected inverse-column l2 concentration and Schur accumulation (2026-09-28)
+
+**Established bounds.** `RH/ProjectedDualColumnConcentration.lean` identifies
+the actual signed inverse column and proves B^2<=n L, L<=projected-dual
+energy times the complete inverse trace, and B^2<=2 Q(I), where
+Q(I)=|I| sum_I c_k^2+|I-complement| sum_(I-complement) c_k^2.
+A relative l2 leakage bound gives
+B^2<=2[|I|+|I-complement| rho] L. Exact sparsity and weighted variants
+retain their hypotheses explicitly. A nonzero correction limit forces
+exp(-b Phi(n)) B^2 to diverge for every b<a.
+
+`RH/ProjectedDualSchurMass.lean` proves exact rank-one column updates,
+B_(n,d)<=sum_(j<n)|modeCoefficient(d,j)| A_j, and
+A_j=(1+||eliminated j||_1)/residueModeScale j.
+The Bessel bound leaves the factor sum_(j<n) A_j^2, proved to be >=n.
+This is a limitation of that majorant, not a lower bound on B itself.
+The reusable finite concentration inequalities are in
+`Analysis/FiniteCoefficientConcentration.lean`.
+
+**Conditional research reductions; providers Open.**
+`limitResidual_eq_zero_of_cofinal_stretched_l2_concentration` requires
+the leakage estimate and the joint budget exp(-b Phi(n)) kappa L<=K_d
+at the same cofinal indices, b<a, separately for each d>1. It calls the
+existing coefficient-mass criterion through a split-energy bound.
+At the endpoint a, `limitResidual_eq_zero_of_cofinally_small_split_energy`
+requires only cofinal smallness. The checked arithmetic-provider assembly
+`exists_stretched_l2_concentration_rh_criterion` conditionally concludes
+zero residual and RH. No unconditional sub-stretched column-mass,
+concentration, or accumulated-Schur rate is obtained.
+See `RH/ProjectedDualColumnConcentrationAudit20260928.md`.
+
 ### Moving projected-dual stretched tail bridge (2026-09-28)
 
 **Established bounds and identities.** In `RH/ProjectedDualStretchedTail.lean`,
