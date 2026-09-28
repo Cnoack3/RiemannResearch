@@ -129,3 +129,39 @@ Verification of the 28 September extension: the full project build
 all endpoints report only propext, Classical.choice, and Quot.sound.
 The critical-zero and existential mass-obstruction specializations have
 no premises. Publication uses the affected-module checkpoint gate.
+
+## Complete RH-relevant extension (28 September 2026)
+
+The subsequent comprehensive import adds 171 modules from the same pinned
+revision, bringing this directory to 311 proof modules. The earlier exclusions
+of Dirichlet, XiPrime and PairCeiling above describe the historical 140-module
+stage, not the current scope.
+
+Added groups: XiPrime (108), ThmE (37), ThmDE (9), PairCeiling (11),
+Taper (3), WeilEF (2), and ZeroSide (1). This includes Hardy's Z derivative
+and W-function development, primitive Dirichlet L-functions, Gevrey tapers,
+rank-trace sharpness, and conditional certificate stability.
+
+The new files preserve executable source exactly after import relocation
+and whitespace normalization, verified by a nested-comment/string-aware
+comparison with the fetched pinned sources. No new file uses a blanket
+Mathlib import. The NumericCert documentation replaces the phrase naming
+a native evaluation tactic with "native evaluation"; proof tokens are unchanged.
+The executable-source scan found no proof holes, added axioms, unsafe
+declarations, native evaluation, or external proof-evaluation hooks.
+
+The source and upstream Git blob identity of every imported module are recorded
+in SOURCE_MANIFEST.json. All new modules are exported from RiemannResearch.lean.
+UPSTREAM_README.md and UPSTREAM_AUDIT.md are snapshots of upstream documentation;
+their build claims describe upstream runs, not a new local comparator run.
+
+Theorem assumptions remain part of their types. In particular, law-specific
+PairCeiling bounds require both form-factor enclosures (EnclOK) and certificate
+validity, along with their regularity conditions. No enclosure provider for the
+actual periodic law is added. Pure integer checks and general stability lemmas
+are separately proved. No RH assumption or new proof of RH is introduced.
+
+The unused Unconditional module only repeats existing endpoints as aliases.
+The four unused FromPNTPlus files are outside this dependency closure.
+Challenge placeholders and Solution wrappers remain excluded.
+See ../AnthropicRHImport20260928.md for concrete consumers and reading material.

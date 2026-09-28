@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Complete Anthropic RH proof-library import (2026-09-28)
+
+**Imported upstream mathematics; no new RH proof.** The pinned
+`anthropics/formal-math` source at `fbdc36bbf17d20af3fd0447c6d1a8a02773c9844`
+now contributes 311 proof modules (171 newly added) under
+`RH/WeilExplicitFormula/`, with the existing Lean/Mathlib pins unchanged.
+The new entry points cover xi' zeros and Hardy-Z stationary points
+(`Zeta23.XiPrime.xiDeriv_simple_on_line_quartic_std`,
+`hardyZ_simple_stationary_points_quartic`), primitive Dirichlet zero counts
+and optimized proportions (`Zeta23.ThmE.thmE_B₀_mult`,
+`Zeta23.ThmDE.thmE_D₀_simple_mult`), Gevrey tapers, and rank-trace sharpness
+(`Zeta23.ZeroSide.TightMult.lemmaR_tight`). Upstream proofs and namespaces
+are preserved. These results supply analytic infrastructure; no application
+to the actual Pareto inverse-Gram correction is asserted without a bridge.
+
+**Conditional research reduction; Open numerical provider.**
+`Zeta23.PairCeiling.ceiling_law256_signed` retains the form-factor enclosure
+premise `EnclOK` and certificate validity `hvalid`, as well as regularity
+conditions. The import does not discharge the law's enclosure premise.
+The general `ceiling_stability` and Abel/discrepancy lemmas are available
+under their explicit mathematical conditions. Standard foundation-only axiom
+reports must not be interpreted as discharging hypotheses in theorem types.
+
+See `RH/AnthropicRHImport20260928.md` for consumers, exact endpoints,
+research-reading links, and verification boundaries, and
+`RH/WeilExplicitFormula/SOURCE_MANIFEST.json` for all upstream blob identities.
+
 ### CRT orbit signed transport (2026-09-28)
 
 **Established without RH.** `RH/DyadicCarrySignedTransport.lean` proves
