@@ -1,5 +1,11 @@
 # Projected inverse-column concentration audit — 28 September 2026
 
+Subsequent investigation: `ProjectedDualMassObstructionAudit20260928.md`
+records checked relative Schur asymptotics and finite dual approximation
+bounds, plus a critical-zero obstruction to this strict-margin provider
+on paper. The complete obstruction is not yet formalized in Lean.
+The sufficient implications below remain valid; RH remains Open.
+
 Continuation of Cnoack3/RiemannResearch commit
 396b7c015e48d46aca4648d4587799ebffe4ec63.
 

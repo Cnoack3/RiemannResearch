@@ -1,5 +1,11 @@
 # Moving projected-dual quantitative audit — 28 September 2026
 
+Later assessment: `ProjectedDualMassObstructionAudit20260928.md` gives
+a critical-zero obstruction to the strict-margin absolute coefficient-mass
+provider on paper, with its finite projection estimates checked in Lean.
+The complete obstruction is not yet formalized. Direct signed-tail control
+remains an Open sufficient provider; RH remains Open.
+
 Follow-up: `ProjectedDualColumnConcentrationAudit20260928.md` records
 the subsequent l2 concentration criteria and accumulated Schur bounds.
 Their sub-stretched quantitative providers remain Open.

@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Schur asymptotics and finite dual approximation (2026-09-28)
+
+**Established without RH.** `RH/ProjectedDualSchurAsymptotics.lean`
+proves B_(n,d)^2=o(S_n), S_n=sum_(j<n) A_j^2, by splitting off a
+summable coefficient-mode tail. It also proves A_j^2>=(j+2)/2 and
+S_n>=n(n+3)/4. The latter bounds concern the absolute Schur majorant,
+not the actual signed column. No absolute sub-stretched bound follows.
+
+`RH/ProjectedDualProjectionError.lean` proves exact conductor control
+for dilated canonical approximants, the arbitrary-cutoff mass tail bound,
+and |<h_d-P_nh_d,D_m 1>|^2<=m B_(n,d)^2 ||T_N||^2/(N+1)
+for 0<d<=N and m(N+1)<=n+1. Exact syntheses of h_2 and h_3 give
+||h_2-P_nh_2||^4<=270 B_(n,2)^2 ||T_N||^2/(N+1) and the
+corresponding constant 530 for d=3, with the stated conductor cutoffs.
+
+**Obstruction on paper; formalization obligations Open.**
+`RH/ProjectedDualMassObstructionAudit20260928.md` derives a critical-zero
+obstruction to the global strict-margin mass/concentration provider.
+The actual critical-line cutoff inequality, Mellin witness assembly,
+profile-rescaling/asymptotic step and critical-zero existence are not
+formalized by these new modules. No Lean theorem refuting the provider
+is claimed. The earlier sufficient implications remain valid.
+
+**Conditional research reduction; provider Open.** Direct signed
+physical-tail control still suffices for residual zero and RH. Neither
+that provider nor RH is proved by this continuation.
+
 ### Projected inverse-column l2 concentration and Schur accumulation (2026-09-28)
 
 **Established bounds.** `RH/ProjectedDualColumnConcentration.lean` identifies

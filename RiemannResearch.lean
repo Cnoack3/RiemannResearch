@@ -1,6 +1,8 @@
 import RiemannResearch.Analysis.FiniteCoefficientConcentration
 import RiemannResearch.RH.ProjectedDualColumnConcentration
 import RiemannResearch.RH.ProjectedDualSchurMass
+import RiemannResearch.RH.ProjectedDualSchurAsymptotics
+import RiemannResearch.RH.ProjectedDualProjectionError
 import RiemannResearch.RH.ProjectedDualStretchedTail
 import RiemannResearch.RH.ParetoDyadicShellCriterion
 import RiemannResearch.RH.CanonicalMobiusStretchedCorrection
