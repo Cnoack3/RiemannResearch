@@ -480,6 +480,7 @@ import RiemannResearch.RH.IntegerDPPSpatialCoupling
 import RiemannResearch.RH.IntegerDPPSpatialVacancy
 import RiemannResearch.RH.DyadicCarryOptimizationCRT
 import RiemannResearch.RH.DyadicCarryOptimizationLimit
+import RiemannResearch.RH.DyadicCarrySignedTransport
 import RiemannResearch.RH.MobiusJointHeadProjection
 import RiemannResearch.RH.DyadicCarryOptimization
 import RiemannResearch.RH.DyadicCarryCRT

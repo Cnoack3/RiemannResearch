@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### CRT orbit signed transport (2026-09-28)
+
+**Established without RH.** `RH/DyadicCarrySignedTransport.lean` proves
+`dyadicMultipleIndicator_scaled_moving_pairing_tendsto_zero`: for
+d_k=2^k+1, b_k=1_{d_k divides n}, and every norm-convergent family f_k,
+d_k*inner(f_k,b_k) tends to zero. The complete tail estimate is
+d_k^2*inner(f,b_k)^2 <= 2*norm(tail_(2^k) f)^2.
+`dyadicRepairEnergy_zero_head_scaled_difference_tendsto_zero` gives
+d_k*(dyadicRepairEnergy k 0 (2^k)-energy(2^k)) -> 0.
+This improves the comparison of actual finite optima; it does not prove their
+common limit is zero. Exact signed covariance and residual-observation
+identities retain the complete infinite Pareto norm.
+
+**Conditional research reduction; Open.**
+`dyadic_residual_pairing_cofinally_nonpos_iff` identifies constant membership
+with cofinally nonpositive inner(limitResidual,dyadicSampledResidue k).
+`riemannHypothesis_of_dyadic_residual_pairing_cofinally_nonpos` derives
+Mathlib RH from that explicit condition. A checked arithmetic provider for
+the cofinal sign assertion is **Open**. No infinite-DPP assumption or
+RH-to-density provider is introduced.
+See `RH/CRTOrbitSignedTransport20260928.md` for the source audit and proof.
+
 ### Exact dyadic Dyson connection and Mellin operator audit (2026-09-28)
 
 **Established without RH, Lean-checked algebra.**
