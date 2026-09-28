@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Signed correction covariance and two-gap stabilization (2026-09-28)
+
+**Established without RH.** `Analysis/NestedProjectionPairing.lean` proves
+residual and nested-gap pairing inequalities using orthogonal projections.
+Its RH consumer `RH/ResidueCorrectionCovariance.lean` proves:
+
+- `correction_quadratic_le_residual_covariance`: for every signed test vector,
+  the squared inverse-Gram correction pairing is at most the optimal residual
+  energy times the full dual-residual Gram quadratic form, with constant 1.
+- `correction_sq_le_inverse_diagonal_defect`: the scalar bound uses the
+  uncaptured dual energy, not the full dual norm.
+- `correction_error_sq_le_two_gaps` and
+  `correction_error_sq_isLittleO_energy_excess`: the squared error to the
+  actual correction limit is bounded by the product of primal and dual
+  projection gaps and is little-o of the remaining primal energy.
+- `dualProjectionGap_eq_inverse_excess`: the dual gap is the difference
+  between the limiting captured dual norm squared and the finite inverse
+  diagonal.
+- `correction_limit_sq_le_dual_defect`: the surviving limit is bounded by
+  limiting residual energy times limiting uncaptured dual energy.
+- `correction_two_three_ellipse`: the explicit simultaneous bound is
+  `20*k₂² + 4*k₂*k₃ + 14*k₃² ≤ 276*energy`, uniformly in the cutoff.
+
+**Open:** the actual limiting corrections vanish for all conductors, or
+equivalently the full inverse-Gram captured energy tends to one. No estimate
+above supplies this saturation. Fixed-coordinate convergence and finite total
+variation were already established and are not new contributions here.
+These are direct Hilbert-space estimates, with no claim of mathematical novelty.
+See `RH/InverseGramCorrectionCovariance20260928.md` for notation and proof.
+
 ### Both-column endpoint obstruction and subcritical coercivity (2026-09-28)
 
 **Established without RH.** `RH/SmallDualCriticalZeros.lean` proves that the

@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.NestedProjectionPairing
+import RiemannResearch.RH.ResidueCorrectionCovariance
 import RiemannResearch.Analysis.CriticalCutoffEndpoint
 import RiemannResearch.Analysis.CriticalCutoffSharpness
 import RiemannResearch.RH.SmallDualCriticalZeros
