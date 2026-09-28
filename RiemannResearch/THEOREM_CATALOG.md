@@ -33,6 +33,41 @@ The endpoint b=a and direct signed physical-tail criteria are not
 refuted; their providers and RH remain **Open**. Earlier sufficient
 implications remain valid. See `RH/ProjectedDualMassObstructionAudit20260928.md`.
 
+### Sharp Pareto shape threshold and endpoint uniformity (2026-09-28)
+
+**Established without RH.** `RH/ParetoShapeThreshold.lean` proves
+summability of the actual Mellin cell energy iff alpha < 2 Re(s),
+for alpha>0 and Re(s)>0, also for normalized certificates after every
+finite deletion. At the boundary it supplies an explicit harmonic lower
+bound. Positive shape weights admit one-sided domination exactly in
+the reverse shape order, and two-sided comparison exactly when shapes agree.
+
+`RH/ParetoShapeEnergyBlowup.lean` strengthens this to divergence of the
+actual full and normalized energies as alpha approaches 2 Re(s) from
+below, after every finite cutoff. It uses the arbitrary-filter extension
+in `Analysis/PointwiseEnergyDivergence.lean`.
+
+`RH/ParetoShapeEndpoint.lean` proves continuity of complete legal energies
+and identifies shape one with the original complex tail norm. One
+coefficient-uniform normalized coercivity constant in any left
+neighborhood of one exists iff the original Pareto(1) capacities are
+bounded. Failure of all such constants implies RH without a density premise.
+
+`RH/ParetoComparableWeights.lean` proves that two-sided comparable
+positive weights preserve raw finite-energy domains, actual legal
+approximation, and the quantitative off-line-zero obstruction. It covers
+all weights comparable to inverse squares. Approximation implies RH.
+
+**Conditional research reductions.** The weighted approximation-to-RH
+equivalence still takes RH -> BaezDuarte.NaturalApproximation (**Open
+formalization dependency**). Uniform near-one coercivity iff not RH
+still takes RH -> closedSpace=top (**Open formalization dependency**).
+Existing below-one capacity bounds retain explicit critical-zero existence
+(**Open formalization dependency**). An external source candidate is
+recorded but is not integrated or kernel-replayed here.
+Certificate-energy divergence does not establish capacity divergence.
+See `RH/ParetoShapeBoundaryFormalization20260928.md`.
+
 ### Schur asymptotics and finite dual approximation (2026-09-28)
 
 **Established without RH.** `RH/ProjectedDualSchurAsymptotics.lean`

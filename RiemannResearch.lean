@@ -618,6 +618,10 @@ import RiemannResearch.RH.ParetoPrimeRefinementCancellation
 import RiemannResearch.RH.ParetoPrimeCrossStageCancellation
 import RiemannResearch.RH.ParetoShapeMellinEnergy
 import RiemannResearch.RH.ParetoShapeCapacity
+import RiemannResearch.RH.ParetoShapeThreshold
+import RiemannResearch.RH.ParetoShapeEnergyBlowup
+import RiemannResearch.RH.ParetoShapeEndpoint
+import RiemannResearch.RH.ParetoComparableWeights
 import RiemannResearch.RH.ParetoTailCertificateEscape
 import RiemannResearch.RH.ParetoFullTailCRT
 import RiemannResearch.Analysis.DiscreteTailHardy
