@@ -1,5 +1,45 @@
 # Theorem catalog
 
+### Exact dyadic Dyson connection and Mellin operator audit (2026-09-28)
+
+**Established without RH, Lean-checked algebra.**
+`Analysis/PowerDifferenceDeterminant.lean` proves the power-difference
+Vandermonde determinant identity and its nondegeneracy criterion.
+`RH/MellinDyadicVandermonde.lean` specializes it to actual dyadic residue
+symbols and actual Mellin transforms. In particular,
+`dyadicMellinMatrix_det_ne_zero_iff` says that the actual dyadic minor is
+nonsingular exactly when all sampled critical-line zeta values are nonzero
+and the dyadic phases are pairwise distinct. The result has no RH premise.
+
+**On-paper results, not claimed Lean-verified.**
+`RH/DyadicDysonConnection20260928.md` proves exact folding to a circular
+beta=2 ensemble, a positive analytic weight between 1/528 and
+(3+2*sqrt 2)/4, bulk sine-kernel universality, and a dimension-independent
+inverse-Gram bound 528 for normalized dyadic differences. The dyadic
+constant-function approximation defect is nevertheless at least 1/20;
+its first-site vacancy is at least 1/10. General integer dilations have no
+uniform Riesz lower bound. The canonical circle operator has continuous
+spectrum; its occupied-space shift Cayley operator has unequal deficiency
+indices and no selfadjoint extension on that same space.
+
+`RH/MellinJacobiOperator20260928.md` proves a trivial ordinary Mellin
+frequency domain, constructs the symmetric-cutoff Jacobi operator with
+coefficients sqrt(n*(n+2))/2, and identifies its unique selfadjoint closure
+with the Meixner-Pollaczek spectral measure
+2*(t^2+1/4)/cosh(pi*t) dt. Its spectrum is purely absolutely continuous.
+Its domain intersects each finite residue space in span(g_2), and its
+leakage on g_2 is exactly one sixteenth of the constant-function defect.
+
+**Conditional research reduction; Open.**
+`RH/HilbertPolyaKernelTarget20260928.md` derives the renormalized
+Lagarias-de Branges kernel associated with Xi+i*Xi'. Positivity of this
+specific kernel is equivalent to RH; it has not been proved. An arithmetic
+Gram representation converging to it is Open. The unmodified Mellin DPP
+kernels cannot provide that pointwise limit at simple critical zeros,
+because their diagonal values there are zero. Operator domains and zeta
+multiplicity preservation would also need verification for an operator
+construction. No Hilbert-Polya operator is claimed unconditionally.
+
 ### DPP critical zeros, uniform intensity, and conductor obstruction (2026-09-28)
 
 **Established without RH.** `RH/MellinDPPIntensity.lean` proves

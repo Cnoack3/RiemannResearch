@@ -398,6 +398,8 @@ import RiemannResearch.RH.MellinFrequencyMeasure
 import RiemannResearch.RH.MellinModeOrthonormality
 import RiemannResearch.RH.MellinProjectionDPP
 import RiemannResearch.RH.MellinDPPIntensity
+import RiemannResearch.Analysis.PowerDifferenceDeterminant
+import RiemannResearch.RH.MellinDyadicVandermonde
 import RiemannResearch.RH.IntegerDPPConductorCutoff
 import RiemannResearch.RH.MellinProjectionKernel
 import RiemannResearch.RH.ParetoBoundedMellinLinearity
