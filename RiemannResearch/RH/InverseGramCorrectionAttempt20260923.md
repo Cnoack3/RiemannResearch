@@ -241,3 +241,23 @@ Lean declaration names in namespace
 The project stage n corresponds to the manuscript cutoff N=n+1. The proofs
 use the actual Pareto Hilbert space and actual orthogonal projections, with
 no RH hypothesis or new axiom.
+
+## Stretched transfer update (2026-09-28)
+
+The new `CanonicalMobiusStretchedCorrection.lean` proves uniform stretched
+pairing bounds for the boundary-corrected exact-head residual and actual
+inverse-Gram correction bounds retaining the projected dual's physical tail.
+The boundary-corrected canonical vector is different from the natural residual
+called A_N in this historical note.
+
+A fixed inverse-Gram dual already has bounded Hilbert norm:
+its diagonal entry is at most ||u_m||^2. Its physical tail at the moving cutoff
+has no checked rate adequate for the transfer. Existing Schur and screening
+identities do not supply that missing estimate.
+
+`ParetoStretchedAnnihilatorTail.lean` strengthens the limiting-residual
+obstruction to stretched weighted tail divergence. The remaining direct
+sufficient condition is cofinal smallness of
+N exp(-a Phi(N)) T_N(r), at an exponent supplied by the arithmetic theorem.
+It remains Open. See `StretchedInverseGramTransfer20260928.md` for exact
+normalizations, the finite two-cutoff estimates, and the conditional scope.

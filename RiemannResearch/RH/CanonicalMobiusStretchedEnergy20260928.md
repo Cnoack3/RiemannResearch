@@ -119,3 +119,14 @@ job_Nfz56UffWqCAqL31ti2zVBCuQmy31lQe with exit_code=0 and verified=true.
 Each declaration reports only propext, Classical.choice, and Quot.sound.
 The two assembled rate theorems have no domain-specific hypotheses.
 The project checkpoint additionally checks the saved module before publication.
+
+## Subsequent checked transfer
+
+The continuation `StretchedInverseGramTransfer20260928.md` and modules
+`CanonicalMobiusStretchedCorrection.lean` and
+`ParetoStretchedAnnihilatorTail.lean` transfer this bound to uniform
+residue-atom source decay, finite inverse-Gram correction and optimal-error
+bounds with a physical-tail factor, and a stronger necessary tail-growth
+condition on the limiting residual. The factor N is removed for bounded
+atom tests, but not for the moving projected dual without a new tail rate.
+No zero limiting defect or RH conclusion is asserted unconditionally.

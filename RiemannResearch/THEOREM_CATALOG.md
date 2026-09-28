@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Stretched transfer to sources, corrections, and residual tails (2026-09-28)
+
+**Established without a new arithmetic hypothesis.**
+In `RH/CanonicalMobiusStretchedCorrection.lean`:
+
+- `canonicalMobiusResidual_eventual_uniform_atom_pairing` gives the
+  uniform squared source bound 8/(N+1)+C exp(-a Phi(N)) for every residue
+  modulus, using complete physical tails.
+- `correction_eventual_stretched_tail_bound` gives, for N<=M and m<=N,
+  delta_(M,m)^2 <= (8+C N exp(-a Phi(N))) T_N(P_M u_m).
+- `projection_error_eventual_stretched_tail_bound` gives the corresponding
+  finite optimal-error bound E_M^2 <= (8+C N exp(-a Phi(N))) T_N(1-P_M 1).
+- `residueInverseEntry_diagonal_le_dual` records that every fixed inverse
+  diagonal is bounded by the squared norm of its finite-support dual.
+
+In `RH/ParetoStretchedAnnihilatorTail.lean`,
+`exists_annihilator_stretched_tail_barrier` proves that a nonzero constant
+pairing of an actual annihilator forces
+N exp(-b Phi(N)) T_N(z) -> infinity for every 0<b<a, for a universal a>0.
+
+**Conditional research reductions; tail providers remain Open.**
+`limitEnergy_eq_zero_of_cofinally_small_stretched_tail` proves that
+cofinally arbitrarily small N exp(-a Phi(N)) T_N(r) suffices for zero
+limiting defect at the provider's original exponent.
+`exists_riemannHypothesis_of_cofinally_small_stretched_residual_tail`
+assembles the checked arithmetic provider and the existing forward RH bridge.
+At a smaller positive exponent, cofinal boundedness already suffices
+(`exists_riemannHypothesis_of_frequently_bounded_stretched_residual_tail`).
+No such tail bound is supplied. Fixed correction vanishing and RH remain Open.
+See `RH/StretchedInverseGramTransfer20260928.md`.
+
 ### Unconditional stretched canonical Möbius energy (2026-09-28)
 
 **Established without an unresolved arithmetic hypothesis.**

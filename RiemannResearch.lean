@@ -1,3 +1,5 @@
+import RiemannResearch.RH.CanonicalMobiusStretchedCorrection
+import RiemannResearch.RH.ParetoStretchedAnnihilatorTail
 import RiemannResearch.RH.CanonicalMobiusStretchedEnergy
 import RiemannResearch.Analysis.PowerLogProfileObstruction
 import RiemannResearch.Analysis.PositiveCutoffObstruction
