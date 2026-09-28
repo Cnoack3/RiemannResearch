@@ -1,5 +1,43 @@
 # Theorem catalog
 
+### Both-column endpoint obstruction and subcritical coercivity (2026-09-28)
+
+**Established without RH.** `RH/SmallDualCriticalZeros.lean` proves that the
+critical-line Mellin zeros of each individual column h_2 and h_3 form at most
+one conjugate pair. With the imported actual simple critical zeros, it gives
+arbitrarily high nonzero witnesses for each column and a common witness for
+both. `ArithmeticConductorCommonZeros.two_three_cpow_neg_injective` supplies
+the underlying injectivity of the pair (2^(-s),3^(-s)).
+
+`RH/ProjectedDualMassEndpoint.lean` proves
+`exists_coefficient_mass_endpoint_lower_bound_both`, with no premises:
+there exist a>0 and kappa>0 such that eventually, simultaneously for d=2,3,
+
+    kappa <= Phi(n)^2 exp(-a Phi(n)) B_(n,d)^2.
+
+Its conditional interface preserves any positive arithmetic exponent a
+satisfying the displayed canonical-energy estimate. Consequences are strict
+exponent divergence for BOTH columns and exclusion of endpoint little-o
+with the quadratic profile loss along every cofinal subsequence.
+`exists_projectedDualError_log_mass_lower_bound` gives the all-n tradeoff
+L^2/8 <= Q_(n,d)^2 log(4(12+B_(n,d)+L)/L), for some L>0 and each d=2,3.
+
+`Analysis/CriticalCutoffEndpoint.lean` isolates the scalar inequalities.
+`Analysis/CriticalCutoffSharpness.lean` proves an explicit scalar model
+satisfying the hypotheses with endpoint normalized mass exactly one. This
+establishes the limitation of those scalar assumptions, not an asymptotic
+formula for actual projected duals. Bounded exp(-a Phi)B^2 and the direct
+signed physical-tail estimate remain **Open**; RH is not proved.
+
+`RH/SubcriticalShapeCoercivity.lean` removes the old critical-zero premise:
+one C>0 satisfies alpha(1-alpha)|A(n,c)|^2 <= C E_alpha(n,c) for every
+0<alpha<1 and every legal complex trial. It gives finite-capacity bounds
+C/[alpha(1-alpha)] and positive normalized energy gaps. If normalized trials
+have vanishing complete energy and shapes stay bounded away from zero,
+their shapes must tend to one. Their energy cannot be little-o of 1-alpha.
+These are necessary conditions, not constructions of endpoint approximants.
+See `RH/Zeta23Consequences20260928.md` for exact scope and provenance.
+
 ### Critical-line zeros and imported zero-proportion results (2026-09-28)
 
 **Established without RH.** The pinned Zeta23 import now contains 140
@@ -63,8 +101,9 @@ global strict-margin providers under that same premise, even allowing
 each column a separate cofinal set and separate exponent b_d<a.
 The declarations without the `_of_critical_zero` suffix discharge that
 premise, preserving the displayed arithmetic-energy exponent.
-The endpoint b=a and direct signed physical-tail criteria are not
-refuted; their providers and RH remain **Open**. Earlier sufficient
+The new endpoint result above retains a quadratic profile factor. Bounded
+endpoint mass without that factor and the direct signed physical-tail
+criterion remain **Open**, as does RH. Earlier sufficient
 implications remain valid. See `RH/ProjectedDualMassObstructionAudit20260928.md`.
 
 ### Sharp Pareto shape threshold and endpoint uniformity (2026-09-28)
@@ -96,9 +135,9 @@ all weights comparable to inverse squares. Approximation implies RH.
 equivalence still takes RH -> BaezDuarte.NaturalApproximation (**Open
 formalization dependency**). Uniform near-one coercivity iff not RH
 still takes RH -> closedSpace=top (**Open formalization dependency**).
-Existing below-one capacity bounds retain explicit critical-zero existence
-(**Open formalization dependency**). An external source candidate is
-recorded but is not integrated or kernel-replayed here.
+`RH/SubcriticalShapeCoercivity.lean` now discharges critical-zero existence
+using the integrated and kernel-checked Zeta23 provider. Its uniform
+shape-dependent bound and moving-shape necessity are unconditional.
 Certificate-energy divergence does not establish capacity divergence.
 See `RH/ParetoShapeBoundaryFormalization20260928.md`.
 

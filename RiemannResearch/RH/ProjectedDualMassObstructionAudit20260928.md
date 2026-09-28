@@ -6,7 +6,25 @@ specialization in `ProjectedDualMassObstructionUnconditional.lean`.
 `CriticalLineZeros.lean` supplies an actual critical-line zero from the
 pinned Zeta23 zero-proportion and Riemann--von Mangoldt theorems.
 
-## Result and exact formal status
+## Stronger consequences of the completed import
+
+`RH/SmallDualCriticalZeros.lean` now supplies arbitrarily high actual simple
+critical zeros at which BOTH small Mellin duals are nonzero. Each dual has
+at most one exceptional conjugate pair on the critical line.
+`RH/ProjectedDualMassEndpoint.lean` consequently proves, without premises,
+
+    exists a>0, kappa>0, eventually for both d=2 and d=3:
+      kappa <= Phi(n)^2 exp(-a Phi(n)) B_(n,d)^2.
+
+The strict-margin divergence therefore holds for each column with the same a.
+The endpoint normalized expression cannot tend to zero on any cofinal
+subsequence. The quadratic profile factor is essential to the stated result:
+bounded exp(-a Phi)B^2 is not refuted. An exact scalar sharpness model is
+proved in `Analysis/CriticalCutoffSharpness.lean`; it is not asserted to be an
+actual arithmetic projected dual. The all-n logarithmic error/mass tradeoff
+and full scope are recorded in `RH/Zeta23Consequences20260928.md`.
+
+## Earlier conditional interface and exact formal status
 
 **Kernel-checked conditional obstruction.** For every positive arithmetic
 exponent a and nonnegative C satisfying the displayed canonical-energy
@@ -45,7 +63,8 @@ RH is neither assumed nor proved. RH remains **Open**.
 The earlier sufficient implications from mass or concentration budgets to
 zero residual and RH remain correct. Their global strict-margin hypotheses
 are now refuted unconditionally; this does not contradict RH.
-The endpoint b=a and direct signed physical-tail criteria are not refuted.
+Bounded endpoint mass without the quadratic profile factor and the direct
+signed physical-tail criterion are not refuted.
 
 ## Notation
 

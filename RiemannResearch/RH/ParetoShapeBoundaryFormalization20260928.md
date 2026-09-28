@@ -55,13 +55,23 @@ Approximation implies RH through the previously proved Mellin obstruction. The c
 
 The original Nyman–Beurling theorem is an L2 fractional-part density criterion. Pareto(1) is the weight in the discrete reformulation used here. Two-sided comparable weights preserve this criterion; changing the Pareto shape does not preserve two-sided comparability.
 
-Critical-line zero existence is known classically but is not supplied by these modules. Existing below-one capacity bounds continue to take the zero explicitly. The RH-to-density analytic implication also remains explicit.
+Critical-line zero existence is now supplied without premises by `RH/CriticalLineZeros.lean`, through the imported and kernel-checked Zeta23 zero-proportion and total-count theorems. The original bounds retain explicit-zero interfaces for reuse; `RH/SubcriticalShapeCoercivity.lean` discharges that input. The RH-to-density analytic implication remains explicit.
 
 Primary sources:
 * Bagchi, Theorem 1 and its following paragraph: https://arxiv.org/pdf/math/0607733
 * Baez-Duarte's strengthened criterion: https://arxiv.org/abs/math/0202141
 
-A source-level candidate for eliminating the critical-zero premise was located in the pinned external development:
+The pinned imported proof source is:
 https://github.com/anthropics/formal-math/tree/fbdc36bbf17d20af3fd0447c6d1a8a02773c9844/zeta23
 
-Its actual critical-line count theorem and unconditional total-count growth imply existence. The inspected `Zeta23.Final` local import cone contains 117 modules (about 39,800 lines), uses matching Lean/mathlib versions, and contains no proof placeholders or declared axioms in a comment/string-stripped source scan. It has not been integrated or kernel-replayed here. It is a research lead, not an assumed proof dependency.
+The selected closure now contains 140 imported modules, with unchanged Lean/mathlib versions. `exists_critical_zero` and the stronger arbitrarily-high simple-critical-zero theorem are proved consumers of that import, not axioms.
+
+## Unconditional subcritical coercivity and moving shapes
+
+`exists_uniform_subcritical_shape_coercivity` supplies one C>0 such that
+
+    alpha(1-alpha)|A(n,c)|^2 <= C E_alpha(n,c),  0<alpha<1.
+
+Thus `exists_subcritical_shape_capacity_rate` bounds every finite capacity by C/[alpha(1-alpha)], and every fixed subcritical shape has a positive normalized energy gap. For shapes bounded below by any a0>0, `exists_subcritical_shape_normalized_gap_rate` bounds normalized energy below by delta(1-alpha), with one delta>0.
+
+`subcritical_normalized_small_tail_shapes_tendsto_one` proves that normalized trials of vanishing complete energy must approach shape one when bounded away from shape zero. `not_subcritical_normalized_energy_ratio_tendsto_zero` further excludes energy little-o of 1-alpha. These results supply no approximating trials at shape one and do not prove RH. See `RH/Zeta23Consequences20260928.md`.

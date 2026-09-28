@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
+import Mathlib.Analysis.SpecialFunctions.Pow.Complex
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Algebra.Order.Ring.Cast
 import Mathlib.Algebra.Order.Ring.Int
@@ -221,5 +222,38 @@ theorem common_conductor_products_zero_iff (z s : ℂ) (hs : s ≠ 1) :
     · exact (mul_eq_zero.mp h3).resolve_right h3n
   · rintro rfl
     simp
+
+
+
+/-- Equality of two conductor powers produces a zero of the translated
+entire conductor symbol. -/
+theorem conductorSymbol_shift_zero_of_cpow_eq
+    (n : ℕ) (hn : 1 < n) (s t : ℂ)
+    (h : (n : ℂ) ^ (-s) = (n : ℂ) ^ (-t)) :
+    conductorSymbol n (1 + s - t) = 0 := by
+  have hn0 : (n : ℂ) ≠ 0 := by
+    exact_mod_cast (lt_trans Nat.zero_lt_one hn).ne'
+  have he : Complex.exp (-s * (Real.log n : ℂ)) =
+      Complex.exp (-t * (Real.log n : ℂ)) := by
+    simpa only [Complex.cpow_def_of_ne_zero hn0, ← Complex.natCast_log,
+      mul_comm] using h
+  obtain ⟨k, hk⟩ := Complex.exp_eq_exp_iff_exists_int.mp he
+  apply (conductorSymbol_zero_iff_phase n hn (1 + s - t)).mpr
+  refine ⟨-k, ?_⟩
+  simp only [Int.cast_neg]
+  linear_combination -hk
+
+/-- The pair of conductor powers at 2 and 3 determines the entire complex
+Mellin parameter. No restriction to a vertical line is necessary. -/
+theorem two_three_cpow_neg_injective :
+    Function.Injective (fun s : ℂ => ((2 : ℂ) ^ (-s), (3 : ℂ) ^ (-s))) := by
+  intro s t h
+  have h2 : (2 : ℂ) ^ (-s) = (2 : ℂ) ^ (-t) := congrArg Prod.fst h
+  have h3 : (3 : ℂ) ^ (-s) = (3 : ℂ) ^ (-t) := congrArg Prod.snd h
+  have hs : 1 + s - t = 1 :=
+    (conductorSymbol_two_three_common_zero_iff (1 + s - t)).mp
+      ⟨conductorSymbol_shift_zero_of_cpow_eq 2 (by norm_num) s t h2,
+        conductorSymbol_shift_zero_of_cpow_eq 3 (by norm_num) s t h3⟩
+  linear_combination hs
 
 end RiemannResearch.RH.ArithmeticConductorCommonZeros
