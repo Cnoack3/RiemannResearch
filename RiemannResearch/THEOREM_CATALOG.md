@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Unconditional stretched canonical Möbius energy (2026-09-28)
+
+**Established without an unresolved arithmetic hypothesis.**
+In `RH/CanonicalMobiusStretchedEnergy.lean`:
+
+- `canonicalMobius_energy_of_uniform_mertens_square` proves that
+  |M(y)|<=h^2*y for all y>=N, with N>=1 and 0<h<=1/2, gives
+  |m_N|<=5h and ||A_N||^2/N<=3/N+260h.
+- `canonicalMobius_eventual_stretched_bounds` instantiates the finite
+  transfer using the checked `M_stretched_loglog_bound` provider. For some
+  a>0 and C>=0, eventually |m_N|<=C exp(-a Phi(N)) and
+  ||A_N||^2<=3+C*N*exp(-a Phi(N)), where
+  Phi(N)=((6+log N)*log(6+log N))^(1/11).
+- `canonicalMobiusResidual_eventual_stretched_energy` gives the complete
+  exact-head error bound ||1-A_N||^2<=8+C*N*exp(-a Phi(N)).
+  The full infinite physical tail is included.
+
+This strengthens the previous logarithmic normalized energy ceiling.
+The factor N remains: cofinal bounded error, zero optimal projection
+error, and identification of the limiting coefficient corrections
+remain **Open**. See `RH/CanonicalMobiusStretchedEnergy20260928.md`.
+
 ### Báez-Duarte natural-dilation to Pareto closure translation (2026-09-27)
 
 **Established normalization, without an analytic approximation hypothesis:**
