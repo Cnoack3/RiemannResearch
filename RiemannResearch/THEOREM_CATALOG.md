@@ -89,6 +89,54 @@ because their diagonal values there are zero. Operator domains and zeta
 multiplicity preservation would also need verification for an operator
 construction. No Hilbert-Polya operator is claimed unconditionally.
 
+### Actual continuous Mellin-window count law and concentration (2026-09-28)
+
+**Established without RH, Lean-checked.** `RH/MellinWindowCount.lean`
+proves the complete Poisson-binomial law of the number of sampled frequencies
+in any measurable window under the actual finite `mellinLaw n`.
+The eigenvalues come from the restricted Gram matrix of its actual Mellin modes
+and lie in [0,1]. The count agrees almost surely with the unordered
+configuration count.
+
+The new continuous bridge is weighted Andréief in
+`Probability/ContinuousProjectionDensity.lean`, followed by
+`ContinuousProjectionCompression`, `ContinuousProjectionGenerating`,
+and `ContinuousProjectionWindowEnergy`. `BoundedCountLaw` reuses the
+existing finite Bernoulli and determinantal moment machinery to identify
+the actual continuum count distribution. `BoundedCountGenerating` supplies
+exact exponential-product upper and lower tails.
+
+Main checked declarations:
+- `mellinWindowCount_law`, `mellinWindowCount_moments`;
+- `mellinWindowCount_expectation_kernel`: mean = integral of K(t,t);
+- `mellinWindowCount_variance_kernel`: variance = trace minus kernel HS square;
+- `mellinWindowCount_variance_boundary`: variance = integral over I x I-complement
+  of |K(t,u)|²;
+- `mellinWindowCount_variance_bounds`: variance <= min(mean, n-mean, n/4);
+- `mellinWindowCount_upper_tail`, `mellinWindowCount_lower_tail`: exact
+  spectral Chernoff products, for every nonnegative tilt;
+- `mellinWindowCount_hole`, `mellinWindowCount_hole_le_exp`;
+- `mellinWindowCount_hole_first_mode`: an explicit zeta/conductor-two
+  integral in the hole exponent, independent of larger positive rank.
+
+`RH/MellinCoordinateDefect.lean` additionally proves
+`first_window_deficit_ge_zero_floor`: a hypothetical off-critical zero
+forces a quantitative positive first-coordinate window deficit, using the
+existing site Mellin vacancy floor without a zero-profile provider.
+
+**Conditional research reduction; arithmetic provider Open.**
+`RH/MellinWindowCountArithmetic20260928.md` gives a rigorous paper localization:
+for the unit first-coordinate Mellin image h, a_R = ||1_[-R,R] h||² and
+c_d = integral_[-R,R] conjugate(phi_d) h,
+the limiting vacancy is at most
+(sqrt(a_R - c* G^-1 c) + sqrt((3+2sqrt(2))/(pi R)))².
+Finding ranks and expanding windows for which a_R - c* G^-1 c tends to zero
+would imply RH. This estimate is not proved. The full frequency-L² localization
+bridge is explained on paper, not claimed Lean-formalized here.
+Count concentration and leading sine scaling do not supply the missing
+orientation-sensitive signed inverse-Gram saturation. Physical-coordinate
+cutoff M and arithmetic rank n remain distinct. No infinite DPP is assumed.
+
 ### DPP critical zeros, uniform intensity, and conductor obstruction (2026-09-28)
 
 **Established without RH.** `RH/MellinDPPIntensity.lean` proves

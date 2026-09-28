@@ -167,4 +167,62 @@ theorem isProbabilityMeasure_law_of_orthonormal (ψ : Fin n → X → ℂ)
     IsProbabilityMeasure (law μ ψ) :=
   isProbabilityMeasure_law (integrable_squaredDet ψ hψ) (integral_squaredDet ψ hψ ho)
 
+/-- Weighted Andréief identity for an arbitrary integrable cross-Gram matrix.
+This is the finite-dimensional identity needed for continuous window counts. -/
+theorem integral_weighted_squaredDet (ψ : Fin n → X → ℂ) (w : X → ℂ)
+    (hc : ∀ i j, Integrable (fun t => w t * (conj (ψ i t) * ψ j t)) μ) :
+    (∫ x, (∏ j, w (x j)) * (squaredDet ψ x : ℂ)
+      ∂(Measure.pi fun _ : Fin n => μ)) =
+      (n.factorial : ℂ) * Matrix.det (fun i j => ∫ t, w t *
+        (conj (ψ i t) * ψ j t) ∂μ) := by
+  classical
+  let B : Matrix (Fin n) (Fin n) ℂ :=
+    fun i j => ∫ t, w t * (conj (ψ i t) * ψ j t) ∂μ
+  have he (x : Fin n → X) :
+      (∏ j, w (x j)) * (squaredDet ψ x : ℂ) =
+      ∑ σ : Equiv.Perm (Fin n), ∑ τ : Equiv.Perm (Fin n),
+        (permutationSign σ * permutationSign τ) *
+          ∏ j, w (x j) * (conj (ψ (σ j) (x j)) * ψ (τ j) (x j)) := by
+    rw [squaredDet_expansion]
+    simp only [Finset.mul_sum, permutationCross, Finset.prod_mul_distrib]
+    apply Finset.sum_congr rfl
+    intro σ _
+    apply Finset.sum_congr rfl
+    intro τ _
+    ring
+  simp_rw [he]
+  have hint (σ τ : Equiv.Perm (Fin n)) :
+      Integrable (fun x : Fin n → X =>
+        (permutationSign σ * permutationSign τ) *
+          ∏ j, w (x j) * (conj (ψ (σ j) (x j)) * ψ (τ j) (x j)))
+        (Measure.pi fun _ : Fin n => μ) :=
+    (Integrable.fintype_prod (fun j => hc (σ j) (τ j))).const_mul _
+  rw [integral_finsetSum Finset.univ (fun σ _ =>
+    integrable_finsetSum _ (fun τ _ => hint σ τ))]
+  simp_rw [integral_finsetSum Finset.univ (fun τ _ => hint _ τ), integral_const_mul]
+  have hprod (σ τ : Equiv.Perm (Fin n)) :
+      (∫ x : Fin n → X, ∏ j, w (x j) *
+        (conj (ψ (σ j) (x j)) * ψ (τ j) (x j))
+        ∂(Measure.pi fun _ : Fin n => μ)) = ∏ j, B (σ j) (τ j) :=
+    integral_fintype_prod_eq_prod (fun j t => w t * (conj (ψ (σ j) t) * ψ (τ j) t))
+  simp_rw [hprod]
+  have hs (σ : Equiv.Perm (Fin n)) :
+      (∑ τ : Equiv.Perm (Fin n), (permutationSign σ * permutationSign τ) *
+        ∏ j, B (σ j) (τ j)) = B.det := by
+    calc
+      _ = permutationSign σ * (B.submatrix σ id).transpose.det := by
+        rw [Matrix.det_apply']
+        simp only [Finset.mul_sum, permutationSign, Matrix.submatrix_apply, Matrix.transpose_apply, id_eq]
+        apply Finset.sum_congr rfl
+        intro τ _
+        ring
+      _ = B.det := by
+        rw [Matrix.det_transpose, Matrix.det_permute]
+        rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with h | h <;>
+          simp [permutationSign, h]
+  change (∑ σ : Equiv.Perm (Fin n), ∑ τ : Equiv.Perm (Fin n),
+    (permutationSign σ * permutationSign τ) * ∏ j, B (σ j) (τ j)) = _
+  simp_rw [hs]
+  simp [Fintype.card_perm, B]
+
 end ProbabilityTheory.ContinuousProjectionDPP

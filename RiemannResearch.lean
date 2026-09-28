@@ -397,6 +397,12 @@ import RiemannResearch.Probability.ContinuousProjectionSymmetry
 import RiemannResearch.RH.MellinFrequencyMeasure
 import RiemannResearch.RH.MellinModeOrthonormality
 import RiemannResearch.RH.MellinProjectionDPP
+import RiemannResearch.Probability.ContinuousProjectionCompression
+import RiemannResearch.Probability.ContinuousProjectionGenerating
+import RiemannResearch.Probability.ContinuousProjectionWindowEnergy
+import RiemannResearch.Probability.BoundedCountGenerating
+import RiemannResearch.Probability.BoundedCountLaw
+import RiemannResearch.RH.MellinWindowCount
 import RiemannResearch.RH.MellinDPPIntensity
 import RiemannResearch.Analysis.PowerDifferenceDeterminant
 import RiemannResearch.RH.MellinDyadicVandermonde

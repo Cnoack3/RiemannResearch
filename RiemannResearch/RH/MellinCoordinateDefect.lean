@@ -1,3 +1,4 @@
+import Mathlib.Tactic.GCongr
 import RiemannResearch.RH.IntegerDPPAllSiteObstruction
 import RiemannResearch.RH.MellinFrequencyMeasure
 import RiemannResearch.RH.ParetoBoundedMellinLinearity
@@ -265,5 +266,18 @@ theorem riemannHypothesis_of_first_window_zero (I : Set ℝ)
     (hI : 0 < frequencyMeasure I) (h : windowDeficit 1 I = 0) : RiemannHypothesis := by
   apply riemannHypothesis_of_vacancy_tendsto_zero
   exact vacancy_tendsto_zero_iff_top.mpr ((first_window_zero_iff_density I hI).mp h)
+
+/-- An off-critical zero imposes a quantitative positive lower bound on every
+first-coordinate Mellin window. No zero-profile provider is assumed. -/
+theorem first_window_deficit_ge_zero_floor
+    (I : Set ℝ) (s : ℂ)
+    (hs : (1 / 2 : ℝ) < s.re) (hs1 : s ≠ 1)
+    (hz : riemannZeta s = 0) :
+    ENNReal.ofReal (siteMellinVacancyFloor 0 s) * firstModeMass I ≤
+      windowDeficit 1 I := by
+  rw [windowDeficit_one]
+  gcongr
+  rw [limitingVacancy_eq_kernel_complement]
+  exact siteMellinVacancyFloor_le_limitingKernel_complement s hs hs1 hz 0
 
 end RiemannResearch.RH.Pareto.CoordinateMellin

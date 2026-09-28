@@ -58,6 +58,7 @@ kernel K in the chat. The first physical site's counting index is zero.
 | Rank-growth counterexample | `Probability/DeterminantalRankGrowth`: a genuinely nested DPP family with exactly N occupied sites and a permanent first-site hole |
 | Actual Mellin kernel | `Analysis/ComplexKernelPairCorrelation`, `RH/MellinFrequencyKernel`: exact zeta-envelope factorization of the actual inverse-Gram kernel, Hermitian symmetry, zero rows at critical-line zeros, cancellation from normalized pair correlation |
 | Finite-rank Mellin DPP construction | `RH/MellinProjectionDPP` with six analytic/kernel support modules and four `Probability/ContinuousProjection*` modules: actual Mellin cross-Plancherel, angular-measure orthonormality, inverse-Gram/mode identity, normalized probability law, permutation invariance, exactly n distinct points, full n-point determinant density, reproducing kernel and trace n |
+| Actual continuous-window counts (2026-09-28) | `RH/MellinWindowCount` and generic `ContinuousProjection*` / `BoundedCount*` modules: weighted determinant PGF, compression positive contraction, complete Bernoulli count law, exact mean/variance, kernel HS and boundary-leakage identities, exact Chernoff tails, explicit conductor-two hole bound; no RH or infinite-process premise |
 | Cutoff matrices | `Analysis/FrequencyCutoffMatrix`, `RH/MellinFrequencyRegularization`: actual compact-frequency integrals of residue modes, integrability/continuity, Hermitian matrices, real spectrum |
 | Positive spectral factors | `Analysis/PositiveSpectralPolynomial`, `Analysis/PositiveSpectralProduct`: finite factors and actual convergent canonical products with summable nonnegative weights have only real zeros; `RH/HilbertPolyaPositiveProduct` proves actual Mathlib RH from an explicit, unproved completed-zeta product identity on the critical strip |
 | Step-profile obstruction | `Analysis/MellinLogStepContinuity`, `RH/ParetoMellinLogDomain`: even a continuous a.e. representative forces the actual profile to vanish |
@@ -89,8 +90,10 @@ The following distinctions must remain visible in any later RH claim.
    The logarithmic isometry, Fourier/Mellin identification, cross-Gram
    identities, full n-point determinant density, probability normalization,
    permutation invariance, distinctness, and cardinality are proved.
-   Separate lower-order factorial marginal formulas have not yet been
-   formalized. This construction does not assert an infinite-rank locally
+   The actual continuum-window generating function, full count law,
+   expectation, variance, and exponential concentration are now formalized
+   in `RH/MellinWindowCount`. Separate pointwise lower-order factorial
+   marginal density formulas have not yet been formalized. This construction does not assert an infinite-rank locally
    finite law or a pointwise map from sampled integer configurations to
    frequency configurations.
 4. **Infinite local-trace obstruction: formalization gap.** The chat's weakly
