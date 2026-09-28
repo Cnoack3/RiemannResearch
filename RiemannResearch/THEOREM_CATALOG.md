@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### DPP critical zeros, uniform intensity, and conductor obstruction (2026-09-28)
+
+**Established without RH.** `RH/MellinDPPIntensity.lean` proves
+`first_atom_intensity_uniform_bound`: for every positive rank and every real
+frequency, the actual Mellin kernel diagonal is at least
+`((3-2*sqrt 2)/log 2) * |zeta(1/2+it)/(1/2+it)|^2`.
+`mellin_diagonal_zero_iff` identifies its zero set exactly with the actual
+critical-line zeta zeros. There is no inverse-Gram growth premise.
+
+`RH/IntegerDPPConductorCutoff.lean` proves coefficient-free control
+`|hilbertSequence f k| <= L*norm f` on every finite legal space whose
+conductors divide positive L. With the imported critical-zero provider,
+`exists_uniform_conductor_vacancy_obstruction` proves, with no premises,
+that some a>0 satisfies for all ranks and positive common conductors:
+
+    a^2 <= 4 * vacancy(n) * log(4*(L+1+a)/a).
+
+This is a lower bound on vacancy, not a saturation theorem.
+
+**On-paper results, not claimed Lean-verified:** the companion notes
+`CriticalZeroConductorCertificate20260928.md` and
+`MellinDPPArithmeticBounds20260928.md` give sharper explicit finite-conductor
+certificates, multizero Gram limits, infinite mean first-site entrance time,
+global fixed-dyadic-subspace correlation and probability lower bounds,
+exact zero-window exponents, and two-prime interpolation nondegeneracy.
+The first-site threshold coupling suffices for the entrance theorem;
+no new full spatial coupling is claimed. The conductor scale is weaker
+than the classical Burnol logarithmic-cutoff benchmark.
+
+**Open:** vacancy tends to zero, equivalently the relevant arithmetic
+saturation endpoint. Critical-line intensity zeros and lower bounds do not
+exclude off-line zeta zeros or supply the signed-correction cancellation.
+
 ### Signed correction covariance and two-gap stabilization (2026-09-28)
 
 **Established without RH.** `Analysis/NestedProjectionPairing.lean` proves

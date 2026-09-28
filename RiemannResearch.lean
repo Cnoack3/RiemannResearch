@@ -397,6 +397,8 @@ import RiemannResearch.Probability.ContinuousProjectionSymmetry
 import RiemannResearch.RH.MellinFrequencyMeasure
 import RiemannResearch.RH.MellinModeOrthonormality
 import RiemannResearch.RH.MellinProjectionDPP
+import RiemannResearch.RH.MellinDPPIntensity
+import RiemannResearch.RH.IntegerDPPConductorCutoff
 import RiemannResearch.RH.MellinProjectionKernel
 import RiemannResearch.RH.ParetoBoundedMellinLinearity
 import RiemannResearch.RH.ParetoMellinIsometry
