@@ -1,5 +1,50 @@
 # Theorem catalog
 
+### Three-route quantitative bridge (2026-09-29)
+
+**Established without RH.** Analysis/ContractiveProductDefect.lean proves
+exact multiplication and finite interaction telescopes for f(p)=p+1/p-2,
+plus the complete multiplicity-weighted finite-product inequality.
+RH/BurnolQuadraticZeroDefect.lean identifies its term with the actual
+reflected-zero geometric defect, proves summability over actual right-hand
+zeros, and bounds its total by f(productSq). The certificate version keeps
+q>0 and q<=productSq explicit; it does not supply the analytic Pareto
+projection comparison.
+
+RH/ResidualCorrectionCertificate.lean proves the exact augmented covariance
+identity for the optimal residual and the missing coefficient-dual Gram.
+Every signed contraction obeys (z.e)^2<=E*z^T(U-Ginv)z, retaining all
+cross terms and avoiding the potentially large raw Mobius residual norm.
+
+NumberTheory/WeightedDivisorTransform.lean and RH/WeightedDivisorCorrection.lean
+prove finite weighted convolution and complete Pareto Cauchy--Schwarz
+budgets. RH/WeightedDivisorCorrectionLimit.lean supplies the actual Hilbert
+weighted-l1 bound and correction_weightedMass_tendsto_zero with no extra
+provider hypothesis. This is convergence about the identified residual
+limit, not a claim that this limit vanishes.
+
+**Rigorous paper deductions, not fully Lean-formalized endpoints:**
+ThreeRouteQuantitativeBridge20260929.md proves the finite Weil negative-mass
+bound tr(W_-)<=2*M^2*(1-Q)^2/[sqrt(Q)*(1+sqrt(Q))^2], using Burnol's classical
+continuous projection identity, the full positive defect decomposition,
+and a retained projection gap. It also proves weighted-array convergence
+for every exponent s>3/2 and the exact CRT row separation into a reciprocal
+charge and uniformly O(d^-2) remainder.
+CorrectionDirichletZeroBridge20260929.md proves local uniform convergence
+of the actual signed coefficient polynomials on Re(s)>1/2 and identifies
+the correction continuation as 1/zeta(s)+P(s), with P holomorphic. All
+off-line poles retain the full reciprocal-zeta principal part, including
+multiplicity and the d=1 boundary term. This supplies a paper proof of
+ClosedSpaceMellinMultiplicityTarget; its checked provider remains Open.
+
+**Open mathematical RH obligation:** prove the limiting signed correction
+vanishes, or an independent full Weil positivity/removability theorem.
+**Open formalization obligations:** the complete analytic projection
+provider, sharp conjugate-pair spectral transfer, general-s convergence,
+and the correction continuation/principal-parts bridge. No literature
+priority or RH proof is claimed. See RH/ThreeRouteQuantitativeBridge20260929.md.
+
+
 ### Fixed signed derivative correction and cofinal Abel criterion (2026-09-29)
 
 **Established without RH.** RH/DerivativeSignedCorrection.lean defines
