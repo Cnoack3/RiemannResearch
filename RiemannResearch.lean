@@ -1,3 +1,6 @@
+import RiemannResearch.RH.ParetoPrimitiveEnergy
+import RiemannResearch.RH.CRTPrimitiveEscape
+import RiemannResearch.RH.ResidueDerivativeOptimization
 import RiemannResearch.RH.CRTSparseEnergy
 import RiemannResearch.RH.CRTGCDGram
 import RiemannResearch.RH.PrimePowerRamanujanSchur

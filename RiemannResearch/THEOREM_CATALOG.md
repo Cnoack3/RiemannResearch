@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Exact failure of uniform CRT primitive transfer and optimizer incompatibility (2026-09-29)
+
+**Established without RH.** RH/ParetoPrimitiveEnergy.lean proves
+PrimitiveEnergy.energy_sub_backwardShift and full_primitive_energy_identity:
+the complete shift defect and symmetric primitive square are retained.
+
+RH/CRTPrimitiveEscape.lean proves binaryPrimitive_energy = m*log(2),
+binaryPrimitive_mean = log(2), and binaryJump_energy_add_remainder = zetaTwoSeries.
+The endpoint binaryPrimitive_full_remainder combines the whole primitive
+identity with the positive sparse remainder. no_uniform_primitive_bound
+refutes a conductor-independent upper primitive bound using two legal atoms
+with zero reciprocal charge. The normalized_binary_approximate_kernel theorem
+gives fixed positive primitive energy and arbitrarily small derivative energy.
+
+The stronger centeredPrimitive_mean and centeredPrimitive_energy give an
+actual Pareto-mean-zero three-atom family with full energy m*pi/2.
+centeredJump_energy_le bounds its complete derivative energy by 4*zetaTwoSeries;
+no_uniform_centered_primitive_bound refutes uniform transfer even on this family.
+
+RH/ResidueDerivativeOptimization.lean proves the complete derivative objective
+for the first legal residue is 1/4+(t-1/2)^2, whereas binaryPrimitive_scale_error
+gives legal objective 1-log(2)+log(2)*(t-1)^2. The checked signed derivative
+normal-equation mismatch at the legal optimizer is -1/2. Projection and
+differentiation therefore do not commute automatically.
+
+**RH closure remains Open.** These results do not refute convergence of the
+actual optimal projections or the screened prime-power route.
+RH/CRTPrimitiveTransferAudit20260929.md gives the paper identity
+derivative_error^2 = derivative_optimal_error^2 + h_N^T D_N^{-1} h_N,
+where h_N=d_N-D_N G_N^{-1}b_N. The compatibility energy tending to zero remains
+an unresolved RH-strength obligation, not a checked arithmetic estimate.
+Endpoint axiom audits report only propext, Classical.choice, and Quot.sound.
+
 ### Exact CRT Gram comparison, global prime-power Schur elimination, and actual Weil translations (2026-09-29)
 
 **Established identities, without assuming RH.** In namespace

@@ -2,6 +2,11 @@
 
 Date: 2026-09-29.
 
+Follow-up: [CRTPrimitiveTransferAudit20260929.md](CRTPrimitiveTransferAudit20260929.md)
+now records checked full primitive identities and explicit counterexamples to
+uniform derivative-to-primitive control, including a zero-Pareto-mean family.
+It also verifies the first-atom optimizer mismatch. The RH closure remains open.
+
 This combines the user's CRT program with the integrated actual-zeta Weil
 formula and zero-isolation theorems. It establishes exact finite identities
 and a uniform sparse quadratic-form comparison. It does not establish RH or
