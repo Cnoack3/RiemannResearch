@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Derivative vanishing attempt: raw source cancellation and canonical nonlinear coercivity (2026-09-29)
+
+**Established without RH.** RH/NaturalMobiusDerivativeTests.lean proves
+rawMobiusDerivativeResidual_inner_tendsto_of_bounded and
+raw_derivative_signed_row_tendsto_zero: the complete derivative source
+d_N+D_N*mu_N tends to zero in each fixed row. The proof uses the exact
+truncated divisor jump, PNT, and a summable divisor-count majorant.
+mismatchSource_eq_raw_sub_correction preserves the entire correction
+D_N*G_N^{-1}(b_N+G_N*mu_N). This is not asserted to vanish.
+
+RH/DerivativeAdjointRows.lean proves the exact weighted adjoint row and
+fixedMismatch_first_limit_exact = -D - the full signed weighted parity
+correlation. Ordinary legal orthogonality does not delete that correlation.
+
+RH/ResidualDerivativeCoercivity.lean proves derivative_limit_exact_four_terms:
+the limiting derivative energy equals (3-2*sqrt(2))*D^2 plus the complete
+nonnegative dyadic cross term, dyadic remainder square, and derivative tail.
+canonical_energy_sq_le_derivative_energy gives nonlinear coercivity specific
+to the canonical residual. canonical_energy_sq_le_finite_compatibility gives
+a finite certificate retaining the mismatch cost and full projection gap.
+
+RH/PrimeSievePrimitiveEscape.lean proves exact primitive head-plus-tail
+identities and derivativeSieveHilbert_primitive_error_tendsto_atTop:
+the actual derivative sieve has diverging primitive error, despite its
+vanishing derivative error. Its primitive norm also diverges.
+
+**Requested optimal-coefficient vanishing remains Open.** The new raw
+cancellation theorem does not discharge the signed canonical correction.
+See RH/DerivativeVanishingAttempt20260929.md for the precise attempt and
+the distinction between raw coefficients and optimal coefficients.
+Endpoint axiom audits use only propext, Classical.choice, and Quot.sound.
+
 ### Formalized derivative compatibility, exact sieve scale, and fixed-coordinate reduction (2026-09-29)
 
 **Established without RH.** RH/ThresholdHilbertDifference.lean constructs
