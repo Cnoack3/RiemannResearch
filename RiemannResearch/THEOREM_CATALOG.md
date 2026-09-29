@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Full smooth Weil converse and quantitative arithmetic zero exclusion (2026-09-29)
+
+**Established without RH.** `Analysis/FiniteTransformZeroRemoval.lean` proves
+finite-order integral zero removal in the full smooth-superexponential class.
+`RH/WeilSingleZeroTest.lean` constructs, for every actual nontrivial zero,
+an admissible test with transform one there and zero at every other actual zero.
+No simplicity or spectral-interpolation hypothesis is assumed.
+`RH/WeilConverse.lean` proves
+`exists_smooth_negative_weil_of_off_line`: an actual off-line zero produces
+a smooth test of exact arithmetic Weil value minus twice its actual multiplicity.
+The full converse is discharged:
+`riemannHypothesis_iff_arithmeticWeilPairing_nonneg`,
+`riemannHypothesis_iff_smoothWeilMatrix_two_nonneg`, and
+`riemannHypothesis_iff_smoothWeilMatrix_nonneg`.
+These are proved equivalences, not proofs of their positivity side or RH.
+
+**Established quantitative obstruction.** `RH/ResidueDivisorZeroExclusion.lean`
+makes the signed statistic's limiting deficit explicit in any hypothetical
+right-half-plane zero: r(1) >= (2-sqrt(2))(2 Re(rho)-1)/norm(rho)^2.
+It proves eventual negativity with an explicit positive margin and a bounded
+zero-exclusion region from a cofinal arithmetic lower budget.
+`RH/ResidualDyadicFactor.lean` strengthens this with the exact factorization
+r(1)=(1+sqrt(2)/2)*norm(r-(1-sqrt(2)/2)*D_2(r))^2, and the sharper multiplier
+(1+sqrt(2)/2)*norm(1-(1-sqrt(2)/2)*2^(1-rho))^2.
+`dyadic_zero_multiplier_lower` proves this multiplier dominates 2-sqrt(2).
+
+**Open positivity / conditional research reduction.** Arithmetic Weil
+nonnegativity for every smooth test remains Open. Cofinal lower budgets for
+the actual divisor statistic remain Open; the zero-exclusion theorems retain
+these hypotheses. No effective residual convergence rate or RH-to-Pareto
+density provider is asserted. The former open negative-witness construction
+is now discharged. See `RH/StrongRHConsequences20260929.md`.
+
 ### Signed reciprocal divisor limit and admissible zero removal (2026-09-29)
 
 **Established without RH.** `RH/MovingReciprocalCharge.lean` justifies growing
@@ -22,8 +55,9 @@ This is an admissible way to remove one order of a transform zero.
 **Conditional research reduction; Open arithmetic lower estimate.**
 `riemannHypothesis_of_divisorReciprocalStatistic_cofinal_lower` requires
 that for each positive epsilon the statistic exceed minus epsilon cofinally.
-No provider is asserted. The full multiplicity-sensitive negative Weil witness
-construction and any positivity estimate are also not formalized here.
+No arithmetic lower-bound provider is asserted. The negative Weil witness
+has now been formalized in `RH/WeilConverse.lean`; arithmetic positivity
+remains Open.
 See `RH/DivisorReciprocalAndZeroRemoval20260929.md` for proofs and exact scope.
 
 ### Signed Abel and common-period divisor bridge (2026-09-29)
