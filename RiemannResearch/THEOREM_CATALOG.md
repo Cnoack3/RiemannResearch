@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Signed Abel and common-period divisor bridge (2026-09-29)
+
+**Verified Lean formalization.** The six modules
+`Analysis/SignedAbel`, `RH/ResidueCorrectionAbel`, `RH/ResidueCorrectionAbelLimits`,
+`RH/ResidueDualDifferences`, `RH/ResidueCorrectionDivisorAbel`, and
+`RH/SmoothWeilMatrix` reconstruct the attached Anthropic bridge and extend it
+with common-period cancellation. Principal endpoints include
+`correction_sub_period_divisor_sq_le`, `correctionPeriodDivisor_tendsto`,
+`projectedDualReciprocalCharge_sq_le`, and `smoothWeilMatrix_quadratic_zero_sum`.
+The arithmetic identities and finite error certificate require no RH premise.
+Weil positivity explicitly assumes RH; completed-Nyman matrices are zero.
+
+**Conditional research reduction; Open signed cancellation provider.**
+`riemannHypothesis_of_cofinal_period_divisor` retains separate cofinal
+smallness of each actual signed inverse-column/progression pairing. No
+provider of that hypothesis is asserted. See
+`RH/ResidueDivisorAbelAudit20260929.md` for the paper argument and verification
+boundary. All 16 principal declarations named in the supplied markdown are
+available. The combined Lean check passes, and the 11 audited endpoints use
+only `propext`, `Classical.choice`, and `Quot.sound`. The cofinal cancellation
+and RH premises remain explicit hypotheses; the axiom audit does not discharge them.
+
 ### Complete Anthropic RH proof-library import (2026-09-28)
 
 **Imported upstream mathematics; no new RH proof.** The pinned
