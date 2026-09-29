@@ -1,6 +1,11 @@
 import RiemannResearch.NumberTheory.DivisorCountSquareSummability
 import RiemannResearch.RH.NaturalMobiusDerivativeConvergence
 import RiemannResearch.RH.DerivativeSignedCorrection
+import RiemannResearch.RH.DerivativeCRT
+import RiemannResearch.RH.GeometricDerivativeMoments
+import RiemannResearch.RH.DerivativeCRTPowerMoments
+import RiemannResearch.RH.DerivativeZetaGeometricBridge
+import RiemannResearch.RH.DerivativeCorrectionWeilBridge
 import RiemannResearch.Analysis.ContractiveProductDefect
 import RiemannResearch.RH.BurnolQuadraticZeroDefect
 import RiemannResearch.RH.ResidualCorrectionCertificate

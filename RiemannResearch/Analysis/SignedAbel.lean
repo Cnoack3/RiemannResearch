@@ -1,6 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Data.Real.Basic
+import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic.Ring
 
 /-!
@@ -55,5 +56,20 @@ theorem second_difference (b : ℕ → ℝ) (k : ℕ) :
     difference (difference b) k = b (k+2) - 2*b (k+1) + b k := by
   simp only [difference]
   ring
+
+/-- The same real primitive paired with a complex kernel, retaining the endpoint. -/
+def complexValue (a : ℕ → ℝ) (b : ℕ → ℂ) (M : ℕ) : ℂ :=
+  (primitive a M : ℂ) * b M -
+    ∑ k ∈ Finset.range M, (primitive a (k + 1) : ℂ) * (b (k + 1) - b k)
+
+theorem sum_eq_complexValue (a : ℕ → ℝ) (b : ℕ → ℂ) (M : ℕ) :
+    (∑ k ∈ Finset.range M, (a k : ℂ) * b k) = complexValue a b M := by
+  induction M with
+  | zero => simp [complexValue, primitive]
+  | succ M ih =>
+    simp only [complexValue] at ih ⊢
+    rw [Finset.sum_range_succ, Finset.sum_range_succ, ih]
+    simp only [primitive, Finset.sum_range_succ, Complex.ofReal_add]
+    ring
 
 end RiemannResearch.Analysis.SignedAbel

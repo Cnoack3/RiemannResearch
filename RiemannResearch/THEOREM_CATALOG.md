@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Exact Abel–CRT–Weil transfer (2026-09-29)
+
+**Established without RH.** RH/DerivativeCRT.lean proves the complete lcm
+derivative kernel, explicit Abel kernel differences and endpoint, and the
+finite Mobius-divisor primitive. Its combined CRT row has precisely the
+existing cofinal residual-zero criterion.
+
+RH/GeometricDerivativeMoments.lean constructs the actual tail multiplier of
+norm at most 2^(-M), retains the first physical site and full signed/square
+remainders, and proves an unconditional uniform correction norm bound.
+RH/DerivativeCRTPowerMoments.lean evaluates its moments by actual integer
+zeta values and lcm data. RH/DerivativeZetaGeometricBridge.lean proves
+signedCorrectionRow_eq_zetaCRT and its dimension-independent geometric
+error bound. The diagonal finite arithmetic criterion
+correctionZetaCRT_cofinal_iff_residual_zero is equivalent to residual zero;
+the diagonal limit is justified by uniform control, not coordinatewise limits.
+
+RH/DerivativeCorrectionWeilBridge.lean uses the SAME correction primitive
+in actual finite Weil zero sums, retaining the reflected-difference square.
+Actual mixed Weil entries recover its Mellin samples at every actual zero
+with multiplicity. The full finite Mellin proxy discrepancy has its own Abel
+endpoint and complete square identity. mellinProxy_cofinal_iff_residual_zero
+retains cancellation between proxy and discrepancy.
+
+**Conditional research reductions:** the cofinal zeta/CRT-core and jointly
+cofinal mixed-Weil/discrepancy budget implications to RH.
+**Open:** provider of either complete signed arithmetic cancellation estimate.
+No positivity, null-Weil/Gram identification, or growing-sum interchange is
+assumed. See RH/AbelCRTWeilBridge20260929.md for exact formulas and scope.
+
+
 ### Three-route quantitative bridge (2026-09-29)
 
 **Established without RH.** Analysis/ContractiveProductDefect.lean proves
