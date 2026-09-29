@@ -1,5 +1,49 @@
 # Theorem catalog
 
+### Exact CRT Gram comparison, global prime-power Schur elimination, and actual Weil translations (2026-09-29)
+
+**Established identities, without assuming RH.** In namespace
+RiemannResearch.RH.Pareto.CRTSparseEnergy, the new modules
+RH/CRTSparseEnergy.lean and RH/CRTGCDGram.lean prove the complete identity
+E_M + R_M = E_infinity, with a full nonnegative square remainder.
+The declarations sparseEnergy_add_remainder, positiveRemainder_bounds,
+full_physical_energy_eq_sparseEnergy, gcdReferenceKernel_gcd,
+referenceEnergy_incidenceProfile, and incidence_sparseEnergy_gcd_relative_bounds
+give exact physical support reindexing and the full signed GCD quadratic form.
+For every finite incidence profile, summability is proved and the relative
+factor M/(M+1) is independent of dimension and conductor.
+
+RH/PrimePowerRamanujanSchur.lean proves exact projection against the entire
+non-prime-power Ramanujan packet space. The endpoint
+PrimePowerSchur.exists_exact_global_elimination provides screened normal
+equations with von Mangoldt source and the original minimum with BOTH full
+square remainders. It assumes neither a Gram inverse nor unique coefficients.
+It builds on the already established packet means and finite-span bridge.
+
+Analysis/SuperexponentialTranslation.lean proves translation closure of every
+derivative in the smooth superexponential test class.
+RH/WeilPrimeTranslationKernel.lean uses the actual imported Weil formula and
+proved single-zero tests. SignedWeilCorrelation.exists_smooth_translated_reflection_kernel
+constructs the full translated arithmetic pairing from an explicitly supplied
+actual off-line zero. The theorem does not assert such a zero exists.
+Combined endpoint axiom audits report only propext, Classical.choice, Quot.sound.
+
+**Conditional research reduction.** See
+RH/CRTGramAndWeilTranslation20260929.md for precise equations, provenance,
+and paper proofs of squarefree tensor inversion, the full legal primitive
+identity, and the prime-log Weil matrix spectrum. Those paper matrix/primitive
+consequences are not additional Lean declarations.
+
+- **Open:** Vanishing of the exhaustive legal screened minima (equivalently the
+  appropriate von Mangoldt inverse quadratic tending to one where defined).
+- **Open:** Control of the complete primitive-energy and signed covariance terms
+  needed to transfer sparse CRT information to legal optimization.
+- **Open:** For the Weil route, positivity of the full actual arithmetic form
+  on a sufficient test class.
+
+No RH conclusion, uniform legal-Gram inverse, or mathematical novelty is claimed.
+The sparse positive Gram and the conditional indefinite Weil matrix are distinct.
+
 ### Exact dyadic balance, complete remainders, and cumulative slope (2026-09-29)
 
 **Established without RH.** `RH/FiniteDyadicDefect.lean` now keeps the exact
