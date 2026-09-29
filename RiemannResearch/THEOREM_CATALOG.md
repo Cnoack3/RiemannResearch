@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Signed reciprocal divisor limit and admissible zero removal (2026-09-29)
+
+**Established without RH.** `RH/MovingReciprocalCharge.lean` justifies growing
+reciprocal heads against strongly convergent vectors using the proved Balazard
+Riesz bound. It also proves `correction_terminal_div_tendsto_zero` and
+`coefficient_terminal_div_tendsto_zero`: the actual last correction and
+optimal coefficient are o(n). `RH/ResidueDivisorReciprocalLimit.lean` proves
+`divisorReciprocalStatistic_error_le` with error `harmonic n / sqrt(n+1)`
+and `divisorReciprocalStatistic_tendsto` with exact limit minus the first
+residual coordinate. The existing energy interval transfers to this finite
+signed progression statistic; positive defect forces eventual negative drift.
+`Analysis/FiniteHarmonicBounds.lean` supplies the vanishing error envelope.
+
+**Established analytic provider.** `Analysis/SuperexponentialPrimitive.lean`
+and `Analysis/SmoothZeroRemoval.lean` construct the actual twisted primitive
+at a transform zero. It preserves the smooth-superexponential Weil test class
+and proves `F(s)=(s-z)G(s)`, preserves other zeros, and gives `G(z)=F'(z)`.
+This is an admissible way to remove one order of a transform zero.
+
+**Conditional research reduction; Open arithmetic lower estimate.**
+`riemannHypothesis_of_divisorReciprocalStatistic_cofinal_lower` requires
+that for each positive epsilon the statistic exceed minus epsilon cofinally.
+No provider is asserted. The full multiplicity-sensitive negative Weil witness
+construction and any positivity estimate are also not formalized here.
+See `RH/DivisorReciprocalAndZeroRemoval20260929.md` for proofs and exact scope.
+
 ### Signed Abel and common-period divisor bridge (2026-09-29)
 
 **Verified Lean formalization.** The six modules

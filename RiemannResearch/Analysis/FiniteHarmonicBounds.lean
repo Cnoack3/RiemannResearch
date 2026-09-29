@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import Mathlib.NumberTheory.Harmonic.Bounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
@@ -16,7 +17,8 @@ continuation of Christian Noack's RH research. These bounds provide uniform
 arithmetic remainders without invoking any limiting zero-distribution claim.
 -/
 namespace RiemannResearch.Analysis
-open scoped BigOperators
+open Filter
+open scoped BigOperators Topology
 
 /-- The real harmonic sum in its zero-based finite form. -/
 theorem harmonic_cast_range (n : ℕ) :
@@ -72,5 +74,41 @@ theorem harmonic_bounded_ratio_gap (k m a : ℕ) (hkm : k ≤ m) (hma : m ≤ a*
   have hn : m-k ≤ a*(k+1) :=
     (Nat.sub_le m k).trans (hma.trans (Nat.mul_le_mul_left a (Nat.le_succ k)))
   exact_mod_cast hn
+
+/-- The accumulated reciprocal weights remain negligible against the
+square-root accuracy supplied by the certified arithmetic cutoffs. -/
+theorem harmonic_over_sqrt_succ_tendsto_zero :
+    Tendsto (fun n : ℕ => (harmonic n : ℝ) / Real.sqrt ((n : ℝ) + 1))
+      atTop (𝓝 0) := by
+  have hn : Tendsto (fun n : ℕ => (n : ℝ) + 1) atTop atTop := by
+    simpa only [Nat.cast_add, Nat.cast_one, Function.comp_def] using
+      (tendsto_natCast_atTop_atTop : Tendsto (fun n : ℕ => (n : ℝ)) atTop atTop).comp
+        (tendsto_add_atTop_nat 1)
+  have hlog : Tendsto (fun n : ℕ =>
+      Real.log ((n : ℝ) + 1) / Real.sqrt ((n : ℝ) + 1)) atTop (𝓝 0) := by
+    simpa only [Real.sqrt_eq_rpow, Function.comp_def] using
+      ((isLittleO_log_rpow_atTop (show 0 < (1 / (2 : ℝ)) by norm_num)).tendsto_div_nhds_zero).comp hn
+  have hinv : Tendsto (fun n : ℕ => 1 / Real.sqrt ((n : ℝ) + 1))
+      atTop (𝓝 0) := by
+    simpa only [one_div, Function.comp_def] using
+      tendsto_inv_atTop_zero.comp (Real.tendsto_sqrt_atTop.comp hn)
+  have hupper : Tendsto (fun n : ℕ =>
+      (1 + Real.log ((n : ℝ) + 1)) / Real.sqrt ((n : ℝ) + 1)) atTop (𝓝 0) := by
+    simpa only [add_div, add_zero] using hinv.add hlog
+  apply squeeze_zero _ _ hupper
+  · intro n
+    have hh : 0 ≤ (harmonic n : ℝ) := by
+      simp only [harmonic, Rat.cast_sum, Rat.cast_inv, Rat.cast_natCast]
+      positivity
+    exact div_nonneg hh (Real.sqrt_nonneg _)
+  · intro n
+    have hmono : (harmonic n : ℝ) ≤ (harmonic (n + 1) : ℝ) := by
+      rw [harmonic_succ, Rat.cast_add]
+      exact le_add_of_nonneg_right (by positivity)
+    have hb : (harmonic n : ℝ) ≤ 1 + Real.log ((n : ℝ) + 1) := by
+      simpa only [Nat.cast_add, Nat.cast_one] using
+        hmono.trans (harmonic_le_one_add_log (n + 1))
+    exact div_le_div_of_nonneg_right hb (Real.sqrt_nonneg _)
+
 
 end RiemannResearch.Analysis
