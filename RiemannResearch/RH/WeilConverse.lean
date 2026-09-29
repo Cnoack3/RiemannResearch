@@ -137,4 +137,38 @@ theorem riemannHypothesis_iff_smoothWeilMatrix_nonneg :
   · intro hpos
     exact riemannHypothesis_iff_smoothWeilMatrix_two_nonneg.mpr (hpos 2)
 
+/-- The exact arithmetic restriction on a reflected off-line pair has matrix
+`[[0,m],[m,0]]`. Both tests are obtained without assuming simple zeros. -/
+theorem exists_smooth_weil_reflection_block
+    (ρ : Zeta23.zetaZeroConfig.carrier) (hoff : (ρ : ℂ).re ≠ 1 / 2) :
+    ∃ f g : ℝ → ℂ,
+      SmoothSuperexponentialDecay f ∧ SmoothSuperexponentialDecay g ∧
+      arithmeticWeilPairing f f = 0 ∧
+      arithmeticWeilPairing f g = (Zeta23.zeroMult ρ : ℂ) ∧
+      arithmeticWeilPairing g f = (Zeta23.zeroMult ρ : ℂ) ∧
+      arithmeticWeilPairing g g = 0 := by
+  have hne : actualZeroReflect ρ ≠ ρ := by
+    intro he
+    have hr := congrArg (fun σ : Zeta23.zetaZeroConfig.carrier => (σ : ℂ).re) he
+    change (1 - conj (ρ : ℂ)).re = (ρ : ℂ).re at hr
+    simp only [Complex.sub_re, Complex.one_re, Complex.conj_re] at hr
+    exact hoff (by linarith)
+  obtain ⟨f, hf, hfρ, hfz⟩ := exists_smooth_single_actual_zero_test ρ
+  obtain ⟨g, hg, hgr, hgz⟩ := exists_smooth_single_actual_zero_test (actualZeroReflect ρ)
+  have hρr : 1 - conj (ρ : ℂ) = (actualZeroReflect ρ : ℂ) := rfl
+  have hrr : 1 - conj (actualZeroReflect ρ : ℂ) = (ρ : ℂ) := by
+    change 1 - conj (1 - conj (ρ : ℂ)) = (ρ : ℂ)
+    simp
+  refine ⟨f, g, hf, hg, ?_, ?_, ?_, ?_⟩
+  · rw [arithmeticWeilPairing_of_single_zero hf hf ρ hfz, hρr, hfz _ hne]
+    simp
+  · rw [arithmeticWeilPairing_of_single_zero hf hg (actualZeroReflect ρ) hgz,
+      hrr, hfρ, hgr, zeroMult_actualZeroReflect]
+    simp
+  · rw [arithmeticWeilPairing_of_single_zero hg hf ρ hfz, hρr, hgr, hfρ]
+    simp
+  · rw [arithmeticWeilPairing_of_single_zero hg hg (actualZeroReflect ρ) hgz,
+      hrr, hgz ρ hne.symm]
+    simp
+
 end RiemannResearch.RH.SignedWeilCorrelation

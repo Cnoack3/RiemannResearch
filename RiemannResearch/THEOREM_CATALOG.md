@@ -1,5 +1,40 @@
 # Theorem catalog
 
+### Summable dyadic signed defect and reciprocal correction budget (2026-09-29)
+
+**Established without RH.** `RH/FiniteDyadicDefect.lean` proves the exact
+finite first-coordinate square-minus-defect identity for the actual optimal
+projections. `finiteDyadicDefect_two_gap_sq` bounds the squared defect by
+twice the product of consecutive dyadic projection-energy decreases.
+`finiteDyadicDefect_sum_abs_le` telescopes a complete finite l1 budget;
+`finiteDyadicDefect_tsum_abs_gap_bound` bounds the infinite absolute sum by
+sqrt(2) times the remaining projection gap. The actual full reciprocal
+inverse-Gram statistic satisfies
+`reciprocalCorrection_centered_dyadic_abs_summable`,
+`reciprocalCorrection_dyadic_sum_le`, and
+`reciprocalCorrection_dyadic_positive_sum_le`. No arithmetic sign or RH
+hypothesis occurs in these declarations.
+
+**Established exact Weil block.** `exists_smooth_weil_reflection_block` in
+`RH/WeilConverse.lean` constructs the full arithmetic two-test matrix
+[[0,m],[m,0]] for an actual off-line reflected zero pair. Analytic multiplicity
+is retained; simplicity is not assumed. The full converse was already proved
+in the preceding commit and is not counted as new here.
+
+**Paper consequence with explicit external analytic inputs.** Combining the
+finite budget with Burnol's NB distance lower bound and Johnston--Leong--Tudzi
+Theorem A.2 gives summable positive parts of the dyadic reciprocal corrections
+and negative cumulative drift at least 0.03903688411*log K asymptotically.
+These cited analytic inputs and their assembled numerical consequence are NOT
+kernel-formalized here and are not introduced as axioms. The statistic includes
+the terminal conductor; no cumulative claim for the truncated divisor
+statistic follows merely from a pointwise approximation. See
+`RH/DyadicSignedCorrectionResearch20260929.md` for the full proof.
+
+**Open.** Vanishing of the nonnegative main residual energy, fixed correction
+limits zero, and universal arithmetic Weil positivity remain Open. Divergent
+negative sums are compatible with RH and do not prove its failure.
+
 ### Full smooth Weil converse and quantitative arithmetic zero exclusion (2026-09-29)
 
 **Established without RH.** `Analysis/FiniteTransformZeroRemoval.lean` proves

@@ -1,3 +1,4 @@
+import RiemannResearch.RH.FiniteDyadicDefect
 import RiemannResearch.Analysis.FiniteTransformZeroRemoval
 import RiemannResearch.RH.WeilSingleZeroTest
 import RiemannResearch.RH.WeilConverse
