@@ -72,6 +72,20 @@ makes \(\sum_k w_k(1+\tau(k))\) finite. Dominated convergence therefore proves
 for every Hilbert vector u with bounded physical coordinates. A more general
 summable weighted-test hypothesis is also exposed.
 
+The continuation NaturalMobiusDerivativeConvergence.lean strengthens this to
+the actual full Hilbert limit
+\[
+\boxed{\Delta\rho_N\longrightarrow0,\qquad
+\|\Delta\rho_N\|^2\longrightarrow0.}
+\]
+NumberTheory/DivisorCountSquareSummability.lean proves
+\(\tau(k)\le2\sqrt{k}\), hence square summability from the established
+divisor-count Dirichlet series at exponent 3/2. In particular,
+\(\sum_k w_k(1+\tau(k))^2<\infty\). Dominated convergence now retains
+every coordinate, including the first-site boundary, and permits every fixed
+Hilbert test without a physical boundedness hypothesis. The endpoint is
+rawMobiusDerivativeResidual_tendsto_zero, with no RH assumption.
+
 In particular, the full signed derivative row for coefficients -mu vanishes:
 \[
 \boxed{
@@ -84,10 +98,26 @@ different coefficients \(c_N=-\mu_N+e_N\), where
 \[
 \boxed{h_N=d_N+D_N\mu_N-D_Ne_N.}
 \]
-Thus the raw term now has a checked vanishing provider. Control of the full
-signed correction \(D_Ne_N\) is still missing. The arbitrary-cutoff Hilbert
-identity fixedMismatch_eq_raw_sub_correction retains the same difference
-without any coefficient identification.
+The raw term has a checked vanishing provider. Control of the full signed
+correction \(D_Ne_N\) is still missing. The new strong limit identifies the
+precise possible obstruction. At repository stage n, write
+\(u_n=\Delta(\mathrm{correctionSynthesis}(n))\) and
+\(v_n=\mathrm{derivativeResidual}(n)\). The complete exact identities are
+\[
+\Delta\rho_{n+1}=v_n+u_n,\qquad
+\|\Delta\rho_{n+1}\|^2
+=\|v_n\|^2+2\langle v_n,u_n\rangle+\|u_n\|^2.
+\]
+The checked strong limits give
+\[
+u_n\to-\Delta r_\infty,\qquad
+\|u_n\|^2\to q,\qquad
+\langle v_n,u_n\rangle\to-q,
+\quad q=\|\Delta r_\infty\|^2.
+\]
+Thus the raw energy vanishes through the exact cancellation q-2q+q=0.
+This does not establish q=0. No signed term or norm-square remainder is
+discarded.
 
 ## 3. Quantitative coercivity specific to the canonical limiting residual
 
@@ -148,7 +178,8 @@ It does not refute convergence of the canonical optimal projections.
 optimal coefficients. Neither the raw Möbius provider nor sieve derivative
 density supplies that estimate. No unconditional RH theorem is claimed.
 
-The four new focused modules are exported from RiemannResearch.lean.
+The original four modules and the two strong-convergence continuation modules
+are exported from RiemannResearch.lean.
 Endpoint axiom audits use only propext, Classical.choice, and Quot.sound.
 Source: the user's requested vanishing attempt, continuing the exact
 CRTPrimitiveTransferAudit20260929.md Section 6 and existing dyadic/PNT results.

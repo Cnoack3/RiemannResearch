@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Strong natural-cutoff Mobius derivative convergence (2026-09-29)
+
+**Established without RH.** NumberTheory/DivisorCountSquareSummability.lean
+proves square divisor-count summability using elementary divisor pairing
+and the existing Dirichlet series at exponent 3/2.
+RH/NaturalMobiusDerivativeConvergence.lean proves
+rawMobiusDerivativeResidual_tendsto_zero: the complete raw derivative
+converges strongly to zero as the natural cutoff N tends to infinity.
+Every fixed Hilbert test is now allowed, without physical boundedness.
+
+derivative_correction_exact and raw_derivative_complete_correction_energy
+retain the entire correction and signed cross term.
+derivative_correction_tendsto identifies the strong correction limit as
+-Delta(limitResidual). Its energy tends to q = ||Delta(limitResidual)||^2;
+derivative_correction_cross_tendsto gives cross-term limit -q.
+The exact raw-energy identity therefore has limiting cancellation q-2q+q=0.
+
+**Open:** the requested canonical optimal-coefficient vanishing, equivalently
+limitResidual = 0, is not supplied by this stronger raw convergence.
+All audited endpoints use only propext, Classical.choice, and Quot.sound.
+See RH/DerivativeVanishingAttempt20260929.md, Section 2.
+
 ### Derivative vanishing attempt: raw source cancellation and canonical nonlinear coercivity (2026-09-29)
 
 **Established without RH.** RH/NaturalMobiusDerivativeTests.lean proves
