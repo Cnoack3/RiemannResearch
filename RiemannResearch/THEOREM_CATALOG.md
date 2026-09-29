@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Fixed signed derivative correction and cofinal Abel criterion (2026-09-29)
+
+**Established without RH.** RH/DerivativeSignedCorrection.lean defines
+signedCorrectionRow as the entire derivative Gram row applied to the
+original inverse-Gram correction. signedCorrectionRow_eq_pairing and
+fixedMismatch_eq_raw_sub_signedCorrectionRow preserve the exact sign.
+signedCorrectionRow_tendsto identifies its limit as the negative adjoint
+pairing; signedCorrectionRow_first_tendsto retains D plus the weighted
+parity remainder at conductor two.
+
+correction_limit_error_exact and correction_limit_error_energy_exact retain
+the full vector difference, signed cross term, and both square remainders.
+correction_limit_test_bound and correction_limit_test_sq_bound give
+dimension-independent estimates for every Hilbert test. The budget tends
+to zero, and correction_limit_moving_test_tendsto_zero permits arbitrary
+uniformly bounded moving tests. These establish convergence about the
+identified limit, not vanishing of that limit.
+
+signedCorrectionRow_eq_abel and signedCorrectionRow_eq_secondAbel give exact
+finite Abel formulas with all boundary terms. The equivalences
+signedCorrectionRow_cofinal_iff_residual_zero and
+correctionAbel_cofinal_iff_residual_zero require only cofinal smallness
+separately for each fixed test and accuracy.
+
+**Conditional research reduction:** riemannHypothesis_of_cofinal_signedCorrectionRow.
+**Open:** prove this signed cofinal smallness for the actual correction
+coefficients. No rate, common cofinal set, or inverse-Gram norm bound is
+assumed. See RH/DerivativeSignedCorrection20260929.md.
+
 ### Strong natural-cutoff Mobius derivative convergence (2026-09-29)
 
 **Established without RH.** NumberTheory/DivisorCountSquareSummability.lean
