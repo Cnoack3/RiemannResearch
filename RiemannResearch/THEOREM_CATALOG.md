@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Exact dyadic balance, complete remainders, and cumulative slope (2026-09-29)
+
+**Established without RH.** `RH/FiniteDyadicDefect.lean` now keeps the exact
+identities as the primary results. The declarations
+`finiteDyadicSquare_eq_energy_add_remainder` and
+`finiteDyadicDefect_eq_energy_drop_sub_remainder` restore the two norm-square
+remainders. `finiteDyadicDefect_sum_eq_boundary_sub_remainders` telescopes the
+signed defect exactly. `reciprocalCorrection_dyadic_sum_eq_full_remainders`
+retains both square sums, the signed Mobius sum, and all four boundary energies.
+No absolute-value replacement or unspecified error term occurs in that equality.
+
+`firstCoordinate_eq_energy_add_dyadicRemainder` identifies the limiting first
+coordinate as (2-sqrt(2))*limitEnergy plus the full normalized-dilation square
+with coefficient 1/sqrt(2). `reciprocalCorrection_tendsto_full_remainder` and
+`reciprocalCorrection_dyadic_average_tendsto` establish the exact correction
+limit and cumulative slope. `dyadicStage_tendsto` supplies cofinal sampling.
+`reciprocalCorrection_dyadic_average_zero_iff_residual_zero` proves zero slope
+is equivalent to residual vanishing. Endpoint axiom audits report only the
+standard foundations `propext`, `Classical.choice`, and `Quot.sound`.
+
+**Conditional research reduction.**
+`riemannHypothesis_of_reciprocalCorrection_dyadic_average_zero` derives RH
+from zero slope. **Open:** an arithmetic proof that this slope is zero. The
+existing logarithmic growth bound does not discharge this obligation. The
+reverse RH-to-residual implication still uses the explicit analytic provider
+`RiemannHypothesis → BaezDuarte.NaturalApproximation`; it is not a hidden
+assumption of the new results. See `RH/DyadicSignedCorrectionResearch20260929.md`,
+Section 1a, for the exact formulas and verification boundary.
+
 ### Summable dyadic signed defect and reciprocal correction budget (2026-09-29)
 
 **Established without RH.** `RH/FiniteDyadicDefect.lean` proves the exact

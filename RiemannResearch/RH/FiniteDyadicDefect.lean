@@ -2,9 +2,10 @@ import RiemannResearch.RH.OptimalProjectionDilationGaps
 import RiemannResearch.RH.ResidualDyadicFactor
 import RiemannResearch.RH.ReciprocalGramCorrection
 import Mathlib.Topology.Algebra.InfiniteSum.Real
+import Mathlib.Analysis.Asymptotics.SpecificAsymptotics
 
 /-!
-# A summable dyadic defect for the actual optimal projections
+# Exact dyadic balances for the actual optimal projections
 
 Independent assembly of the existing exact dilation, finite projection, and
 reciprocal Gram correction identities. No novelty claim is made.
@@ -12,8 +13,13 @@ reciprocal Gram correction identities. No novelty claim is made.
 The conductor cutoff doubles at each step: stage n becomes 2*n+1.
 The failure of the finite residual to satisfy the limiting dyadic square
 identity is a pairing of two successive projection increments. Its absolute
-values have a finite telescoping budget. No arithmetic sign condition or RH
-is assumed or proved.
+values have a finite telescoping budget. The primary finite equality retains
+both normalized-dilation norm-square remainders, the signed Mobius sum, and
+all boundary energies. The exact cumulative slope is also proved; zero slope
+implies RH, but zero slope remains an explicit open hypothesis.
+
+Source: equality-first refinement of the user-directed research argument,
+2026-09-29, using polarization and Cesaro convergence. No novelty is claimed.
 -/
 
 noncomputable section
@@ -39,6 +45,49 @@ def finiteDyadicFactor (n : ℕ) : ThresholdHilbert :=
 
 def finiteDyadicSquare (n : ℕ) : ℝ :=
   (1 + Real.sqrt 2 / 2) * ‖finiteDyadicFactor n‖ ^ 2
+
+/-- Polarization for the normalized dyadic isometry, with its full remainder. -/
+theorem doubleDilation_inner_eq_norm_remainder (x y : ThresholdHilbert) :
+    inner ℝ x (doubleDilation y) = (Real.sqrt 2 / 2) *
+      (‖x‖ ^ 2 + ‖y‖ ^ 2 -
+        ‖x - (Real.sqrt 2 / 2) • doubleDilation y‖ ^ 2) := by
+  have ha : (Real.sqrt 2 / 2) ^ 2 = (1 / 2 : ℝ) := by
+    rw [div_pow, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+    norm_num
+  have hd : ‖doubleDilation y‖ ^ 2 = 2 * ‖y‖ ^ 2 := by
+    rw [← real_inner_self_eq_norm_sq, doubleDilation_inner, real_inner_self_eq_norm_sq]
+  have hn : ‖(Real.sqrt 2 / 2) • doubleDilation y‖ ^ 2 = ‖y‖ ^ 2 := by
+    rw [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs, ha, hd]
+    ring
+  have hp := norm_sub_sq_real x ((Real.sqrt 2 / 2) • doubleDilation y)
+  rw [hn, inner_smul_right] at hp
+  calc
+    _ = (2 * (Real.sqrt 2 / 2) ^ 2) * inner ℝ x (doubleDilation y) := by
+      rw [ha]
+      ring
+    _ = _ := by nlinarith [congrArg (fun t : ℝ => (Real.sqrt 2 / 2) * t) hp]
+
+/-- The residual mismatch under the normalized dyadic isometry. -/
+def finiteDyadicResidualRemainder (n : ℕ) : ℝ :=
+  ‖projectionResidual n - (Real.sqrt 2 / 2) •
+    doubleDilation (projectionResidual n)‖ ^ 2
+
+/-- The complete mismatch between consecutive dyadic projection increments. -/
+def finiteDyadicIncrementRemainder (m : ℕ) : ℝ :=
+  ‖(projection (doubleStage (doubleStage m)) - projection (doubleStage m)) -
+    (Real.sqrt 2 / 2) • doubleDilation (projection (doubleStage m) - projection m)‖ ^ 2
+
+/-- Exact refinement of the previous energy lower bound: the square is retained. -/
+theorem finiteDyadicSquare_eq_energy_add_remainder (n : ℕ) :
+    finiteDyadicSquare n = (2 - Real.sqrt 2) * energy n +
+      (Real.sqrt 2 / 2) * finiteDyadicResidualRemainder n := by
+  have hs := dyadic_factor_energy (projectionResidual n)
+  change finiteDyadicSquare n = 2 * energy n -
+    inner ℝ (projectionResidual n) (doubleDilation (projectionResidual n)) at hs
+  rw [hs, doubleDilation_inner_eq_norm_remainder]
+  change 2 * energy n - (Real.sqrt 2 / 2) *
+    (energy n + energy n - finiteDyadicResidualRemainder n) = _
+  ring
 
 theorem doubleDilation_mem_double {n : ℕ} {x : ThresholdHilbert}
     (hx : x ∈ finiteSpace n) :
@@ -134,6 +183,39 @@ theorem finiteDyadicDefect_two_gap (m : ℕ) :
         (doubleDilation (projection n - projection m)) := by
       rw [map_sub, inner_sub_right, h0, sub_zero]
     _ = _ := by rw [he, inner_add_left, h1, zero_add]
+
+/-- The signed defect is an exact two-step energy drop minus a norm square. -/
+theorem finiteDyadicDefect_eq_energy_drop_sub_remainder (m : ℕ) :
+    finiteDyadicDefect (doubleStage m) = (Real.sqrt 2 / 2) *
+      (energy m - energy (doubleStage (doubleStage m)) -
+        finiteDyadicIncrementRemainder m) := by
+  rw [finiteDyadicDefect_two_gap, doubleDilation_inner_eq_norm_remainder,
+    projection_gap_sq (show doubleStage m ≤ doubleStage (doubleStage m) by
+      unfold doubleStage; omega),
+    projection_gap_sq (show m ≤ doubleStage m by unfold doubleStage; omega)]
+  change (Real.sqrt 2 / 2) *
+    ((energy (doubleStage m) - energy (doubleStage (doubleStage m))) +
+      (energy m - energy (doubleStage m)) - finiteDyadicIncrementRemainder m) = _
+  ring
+
+/-- Exact finite telescope, retaining the signed defect sum, all boundary
+energies, and the complete increment remainder sum. -/
+theorem finiteDyadicDefect_sum_eq_boundary_sub_remainders (b K : ℕ) :
+    (∑ k ∈ Finset.range K, finiteDyadicDefect (dyadicStage b (k + 1))) =
+      (Real.sqrt 2 / 2) *
+        (energy b + energy (doubleStage b) - energy (dyadicStage b K) -
+          energy (dyadicStage b (K + 1)) -
+          ∑ k ∈ Finset.range K, finiteDyadicIncrementRemainder (dyadicStage b k)) := by
+  induction K with
+  | zero => simp [dyadicStage]
+  | succ K ih =>
+    rw [Finset.sum_range_succ, ih, Finset.sum_range_succ]
+    have h := finiteDyadicDefect_eq_energy_drop_sub_remainder (dyadicStage b K)
+    change finiteDyadicDefect (dyadicStage b (K + 1)) = (Real.sqrt 2 / 2) *
+      (energy (dyadicStage b K) - energy (dyadicStage b (K + 2)) -
+        finiteDyadicIncrementRemainder (dyadicStage b K)) at h
+    rw [h]
+    ring
 
 theorem finiteDyadicDefect_two_gap_sq (m : ℕ) :
     finiteDyadicDefect (doubleStage m) ^ 2 ≤
@@ -252,6 +334,29 @@ theorem reciprocalCorrection_add_dyadicSquare_sub_mobius (n : ℕ) :
     rw [map_sub, hone]
   have hs := finite_firstCoordinate_eq_dyadicSquare_sub_defect n
   rw [he] at hs
+  linarith
+
+/-- Full signed reciprocal-correction identity. No norm square, signed Mobius
+summand, or boundary term is discarded. Valid also for K = 0. -/
+theorem reciprocalCorrection_dyadic_sum_eq_full_remainders (b K : ℕ) :
+    -(∑ k ∈ Finset.range K,
+      GramMobiusCorrection.reciprocalCorrection (dyadicStage b (k + 1))) =
+      (2 - Real.sqrt 2) * (∑ k ∈ Finset.range K, energy (dyadicStage b (k + 1))) +
+      (Real.sqrt 2 / 2) * (∑ k ∈ Finset.range K,
+        (finiteDyadicResidualRemainder (dyadicStage b (k + 1)) +
+          finiteDyadicIncrementRemainder (dyadicStage b k))) -
+      (∑ k ∈ Finset.range K, mobiusReciprocalSum (dyadicStage b (k + 1) + 1)) -
+      (Real.sqrt 2 / 2) *
+        (energy b + energy (doubleStage b) - energy (dyadicStage b K) -
+          energy (dyadicStage b (K + 1))) := by
+  have hc := Finset.sum_congr rfl (fun k (_ : k ∈ Finset.range K) =>
+    reciprocalCorrection_add_dyadicSquare_sub_mobius (dyadicStage b (k + 1)))
+  simp only [Finset.sum_sub_distrib, Finset.sum_add_distrib] at hc
+  have hj := Finset.sum_congr rfl (fun k (_ : k ∈ Finset.range K) =>
+    finiteDyadicSquare_eq_energy_add_remainder (dyadicStage b (k + 1)))
+  simp only [Finset.sum_add_distrib, ← Finset.mul_sum] at hj
+  rw [finiteDyadicDefect_sum_eq_boundary_sub_remainders] at hc
+  rw [Finset.sum_add_distrib]
   linarith
 
 theorem reciprocalCorrection_dyadic_sum_abs_le (b K : ℕ) :
@@ -377,5 +482,74 @@ theorem reciprocalCorrection_dyadic_positive_sum_le (b K : ℕ) :
     (fun k _ => reciprocalCorrection_positive_part_le (dyadicStage b (k + 1)))
   rw [Finset.sum_add_distrib] at h
   exact h.trans (add_le_add (le_refl _) (finiteDyadicDefect_sum_abs_le b K))
+
+/-- Exact limiting first-coordinate identity with the normalized-dilation
+remainder retained. -/
+theorem firstCoordinate_eq_energy_add_dyadicRemainder :
+    hilbertSequence limitResidual 1 = (2 - Real.sqrt 2) * limitEnergy +
+      (Real.sqrt 2 / 2) *
+        ‖limitResidual - (Real.sqrt 2 / 2) • doubleDilation limitResidual‖ ^ 2 := by
+  have h := firstCoordinate_energy_identity
+  change hilbertSequence limitResidual 1 / 2 = limitEnergy -
+    inner ℝ limitResidual (doubleDilation limitResidual) / 2 at h
+  rw [doubleDilation_inner_eq_norm_remainder] at h
+  change hilbertSequence limitResidual 1 / 2 = limitEnergy -
+    ((Real.sqrt 2 / 2) * (limitEnergy + limitEnergy -
+      ‖limitResidual - (Real.sqrt 2 / 2) • doubleDilation limitResidual‖ ^ 2)) / 2 at h
+  linarith
+
+theorem reciprocalCorrection_tendsto_full_remainder :
+    Tendsto GramMobiusCorrection.reciprocalCorrection atTop
+      (𝓝 (-((2 - Real.sqrt 2) * limitEnergy + (Real.sqrt 2 / 2) *
+        ‖limitResidual - (Real.sqrt 2 / 2) • doubleDilation limitResidual‖ ^ 2))) := by
+  simpa only [firstCoordinate_eq_energy_add_dyadicRemainder] using
+    GramMobiusCorrection.reciprocalCorrection_tendsto
+
+theorem dyadicStage_tendsto (b : ℕ) : Tendsto (dyadicStage b) atTop atTop := by
+  have hle : ∀ k, k ≤ dyadicStage b k := by
+    intro k
+    induction k with
+    | zero => exact Nat.zero_le _
+    | succ k ih => simp only [dyadicStage, doubleStage]; omega
+  exact tendsto_atTop_mono hle tendsto_id
+
+/-- The cumulative signed correction has an exact linear slope. Both limiting
+energy contributions remain explicit; their vanishing is not asserted. -/
+theorem reciprocalCorrection_dyadic_average_tendsto (b : ℕ) :
+    Tendsto (fun K : ℕ =>
+      -(∑ k ∈ Finset.range K,
+        GramMobiusCorrection.reciprocalCorrection (dyadicStage b (k + 1))) / (K : ℝ))
+      atTop (𝓝 ((2 - Real.sqrt 2) * limitEnergy + (Real.sqrt 2 / 2) *
+        ‖limitResidual - (Real.sqrt 2 / 2) • doubleDilation limitResidual‖ ^ 2)) := by
+  have h := (reciprocalCorrection_tendsto_full_remainder.comp
+    ((dyadicStage_tendsto b).comp (tendsto_add_atTop_nat 1))).neg.cesaro
+  simpa only [Function.comp_def, Finset.sum_neg_distrib, neg_neg,
+    div_eq_mul_inv, mul_comm] using h
+
+/-- Zero slope is exactly residual vanishing, with the arithmetic limit
+condition kept explicit. -/
+theorem reciprocalCorrection_dyadic_average_zero_iff_residual_zero (b : ℕ) :
+    Tendsto (fun K : ℕ =>
+      -(∑ k ∈ Finset.range K,
+        GramMobiusCorrection.reciprocalCorrection (dyadicStage b (k + 1))) / (K : ℝ))
+      atTop (𝓝 0) ↔ limitResidual = 0 := by
+  have ht := reciprocalCorrection_dyadic_average_tendsto b
+  rw [← firstCoordinate_eq_energy_add_dyadicRemainder] at ht
+  constructor
+  · intro h
+    exact firstCoordinate_zero_iff_residual_zero.mp (tendsto_nhds_unique ht h)
+  · intro h
+    have hz := firstCoordinate_zero_iff_residual_zero.mpr h
+    simpa only [hz] using ht
+
+/-- Conditional RH reduction: establishing zero cumulative slope remains open. -/
+theorem riemannHypothesis_of_reciprocalCorrection_dyadic_average_zero (b : ℕ)
+    (h : Tendsto (fun K : ℕ =>
+      -(∑ k ∈ Finset.range K,
+        GramMobiusCorrection.reciprocalCorrection (dyadicStage b (k + 1))) / (K : ℝ))
+      atTop (𝓝 0)) : RiemannHypothesis := by
+  apply riemannHypothesis_of_firstCoordinate_zero
+  exact firstCoordinate_zero_iff_residual_zero.mpr
+    ((reciprocalCorrection_dyadic_average_zero_iff_residual_zero b).mp h)
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization

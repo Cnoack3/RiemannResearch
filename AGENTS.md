@@ -11,6 +11,11 @@
 
 ## Mathematical and verification policy
 
+- For RH research, keep complete exact identities as the primary results.
+  Preserve all signed summands, boundary terms, and norm-square remainders.
+  When an estimate is useful, give the full equality first and identify the
+  terms being estimated. Do not treat a lossy bound as closing an RH argument.
+  This is the user's explicit research preference, reaffirmed 2026-09-29.
 - Treat this repository as the persistent source of truth. A successful Lean
   check verifies a declaration's exact type, not the truth of hypotheses in
   that type or an informal interpretation of it.

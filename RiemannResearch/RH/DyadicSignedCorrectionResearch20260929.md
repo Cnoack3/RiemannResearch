@@ -1,12 +1,12 @@
-# Dyadic signed correction: a summable defect and an unavoidable negative drift
+# Dyadic signed correction: exact balance with complete remainders
 
 Date: 2026-09-29 UTC. Starting repository commit: `824b2610cad6d45da52326344ab249edd44dbd9b`.
 
 ## Outcome and verification boundary
 
-RH is not proved. The new formal development proves an unconditional absolute-summability theorem for a signed defect of the **actual optimal inverse-Gram corrections**. Combining its finite inequality with established results of Burnol and Johnston–Leong–Tudzi gives an unconditional paper theorem: the reciprocal corrections sampled at powers of two have summable positive parts and a negative cumulative sum tending to minus infinity, with an explicit logarithmic lower rate.
+RH is not proved. The primary result is now an exact finite equality for the **actual optimal inverse-Gram corrections**, retaining both squared-norm remainders, the signed Mobius sum, and all four boundary energies. Its exact asymptotic slope is also formalized. The previous absolute-summability and logarithmic-growth results remain valid corollaries, but do not distinguish zero from positive asymptotic slope.
 
-The finite identities, two-gap bound, absolute summability, cumulative inequality, and finite positive-part bound are formalized in `RH/FiniteDyadicDefect.lean`. The final numerical drift theorem uses cited analytic theorems not formalized in this module; it is not advertised as a fully kernel-checked theorem. No such theorem is inserted as an axiom.
+The finite identities, full remainder balance, correction limit, Cesaro slope, and implication from zero slope to RH are formalized in `RH/FiniteDyadicDefect.lean`. Establishing zero slope remains Open. The numerical logarithmic-growth consequence uses cited analytic theorems not formalized in this module; no such theorem is inserted as an axiom.
 
 The starting commit already contains the full smooth Weil converse. This work independently checked it and adds the exact two-test reflection block to `RH/WeilConverse.lean`. It does not count the existing converse as a new result.
 
@@ -39,6 +39,108 @@ The finite arithmetic identity already in the project is
 Indeed, \(g_d(1)=1/d\), so \(F_N(1)=\sum c_{N,d}/d\), while \(\mu(1)=1\).
 
 Lean stage `n` corresponds to this note's \(N=n+1\). Hence `doubleStage n = 2*n+1`, and `dyadicStage 0 k` corresponds to conductor cutoff \(2^k\). The statistic here includes **all** conductors through \(N\); it is the existing `reciprocalCorrection`, not the slightly truncated `divisorReciprocalStatistic`.
+
+## 1a. Primary result: exact balance with every remainder retained
+
+This refinement responds to the instruction to keep equalities and not drop terms.
+The estimates in later sections remain corollaries; the following exact balance
+is the primary finite statement.
+
+Set
+\[
+R_k=r_{2^k},\qquad e_k=E_{2^k},\qquad
+\Delta_k=F_{2^{k+1}}-F_{2^k},\qquad
+(Uf)(j)=2f(\lfloor j/2\rfloor),\qquad S=U/\sqrt2.
+\]
+The operator \(S\) is an isometry. Define, for \(k\ge1\),
+\[
+D_k=\|R_k-SR_k\|^2,\qquad
+A_k=\|\Delta_k-S\Delta_{k-1}\|^2.
+\]
+Both norm-square terms are retained. For every integer \(K\ge0\),
+\[
+\boxed{
+\begin{aligned}
+-\sum_{k=1}^{K}C_{2^k}
+={}&(2-\sqrt2)\sum_{k=1}^{K}e_k
+ +\frac1{\sqrt2}\sum_{k=1}^{K}(D_k+A_k)\\
+&-\sum_{k=1}^{K}m(2^k)
+ -\frac{e_0+e_1-e_K-e_{K+1}}{\sqrt2}.
+\end{aligned}}
+\tag{E1}
+\]
+There is no absolute-value replacement of a signed sum, no omitted endpoint,
+no discarded square, and no unspecified error term in (E1).
+
+For clarity, the equalities underlying (E1) are
+\[
+J_{2^k}=(2-\sqrt2)e_k+\frac{D_k}{\sqrt2},\qquad
+B_{2^k}=\frac{e_{k-1}-e_{k+1}-A_k}{\sqrt2},\qquad
+C_{2^k}=m(2^k)-J_{2^k}+B_{2^k}.
+\tag{E2}
+\]
+Here \(J_N=2E_N-\langle r_N,Ur_N\rangle\) and
+\(B_N=\langle r_N,UF_N\rangle\), as in Section 2.
+
+To prove the second equality, first use the exact orthogonality identity
+\(B_{2^k}=\langle\Delta_k,U\Delta_{k-1}\rangle\).
+Polarization of the isometry gives
+\[
+\langle x,Uy\rangle
+=\frac{\|x\|^2+\|y\|^2-\|x-Sy\|^2}{\sqrt2}.
+\]
+Then use \(\|\Delta_k\|^2=e_k-e_{k+1}\) and telescope.
+For \(K=1\), the boundary expression reduces exactly to \(e_0-e_2\).
+
+**Kernel-checked declarations:**
+`doubleDilation_inner_eq_norm_remainder`,
+`finiteDyadicSquare_eq_energy_add_remainder`,
+`finiteDyadicDefect_eq_energy_drop_sub_remainder`,
+`finiteDyadicDefect_sum_eq_boundary_sub_remainders`, and
+`reciprocalCorrection_dyadic_sum_eq_full_remainders`.
+The last theorem is more general: it holds for every starting stage `b`,
+corresponding to conductor cutoffs \((b+1)2^k\).
+
+### Exact asymptotic slope and the remaining RH obligation
+
+Let \(r_\infty\) be the limiting residual and
+\(E_\infty=\|r_\infty\|^2\). The exact limiting identity is
+\[
+\lambda=r_\infty(1)
+=(2-\sqrt2)E_\infty+
+ \frac{\|r_\infty-Sr_\infty\|^2}{\sqrt2}.
+\tag{E3}
+\]
+The existing correction convergence theorem, followed by Cesaro convergence,
+now gives the kernel-checked equality of limits
+\[
+\boxed{
+\lim_{K\to\infty}\frac{-\sum_{k=1}^{K}C_{2^k}}{K}
+=\lambda
+=(2-\sqrt2)E_\infty+
+ \frac{\|r_\infty-Sr_\infty\|^2}{\sqrt2}.}
+\tag{E4}
+\]
+In fact \(C_N\to-\lambda\) over all conductor cutoffs. The formal declarations
+are `firstCoordinate_eq_energy_add_dyadicRemainder`,
+`reciprocalCorrection_tendsto_full_remainder`, and
+`reciprocalCorrection_dyadic_average_tendsto`.
+
+The theorem `reciprocalCorrection_dyadic_average_zero_iff_residual_zero`
+proves that zero slope is equivalent to zero residual.
+`riemannHypothesis_of_reciprocalCorrection_dyadic_average_zero` proves the
+forward RH implication, with the zero-slope hypothesis explicit.
+**Conditional research reduction: establishing zero slope remains Open.**
+No theorem in this refinement establishes it. The reverse implication from
+RH to residual vanishing uses the analytic Baez--Duarte direction, still
+represented in the project by the explicit provider hypothesis
+`RiemannHypothesis → BaezDuarte.NaturalApproximation`; it is not silently
+assumed in these new declarations.
+
+The logarithmic lower growth in Section 5 does not resolve this obligation:
+it allows a zero slope as well as a strictly positive slope. The restored
+identities identify exactly what would have to vanish, but they do not supply
+the arithmetic cancellation that forces vanishing.
 
 ## 2. Exact finite dyadic identity
 
@@ -234,6 +336,10 @@ The matrix has eigenvalues \(\pm m_\rho\), and \(W(f-g,f-g)=-2m_\rho\). The four
 
 New main module: `RiemannResearch/RH/FiniteDyadicDefect.lean`.
 
+- `reciprocalCorrection_dyadic_sum_eq_full_remainders`
+- `reciprocalCorrection_dyadic_average_tendsto`
+- `reciprocalCorrection_dyadic_average_zero_iff_residual_zero`
+- `riemannHypothesis_of_reciprocalCorrection_dyadic_average_zero` (conditional)
 - `finite_firstCoordinate_eq_dyadicSquare_sub_defect`
 - `finiteDyadicDefect_two_gap` and `finiteDyadicDefect_two_gap_sq`
 - `finiteDyadicDefect_sum_abs_le`
