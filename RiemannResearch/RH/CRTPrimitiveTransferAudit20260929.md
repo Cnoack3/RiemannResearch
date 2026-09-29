@@ -177,10 +177,10 @@ The endpoints are **binaryJumpOne_derivative_target_error** and
 not carry the legal orthogonal projection to the derivative-space orthogonal
 projection automatically. The anchored boundary term is part of the proof.
 
-## 6. The precise remaining compatibility energy: paper reduction
+## 6. Formalized compatibility energy and the stronger limit criterion
 
-This section is a finite-dimensional paper derivation, not a newly formalized
-all-\(N\) matrix theorem.
+This section is now formalized in the six modules listed below. Repository
+stage n corresponds to the displayed cutoff N=n+1.
 
 For the original normalized legal atoms, let
 \[
@@ -188,70 +188,131 @@ c_N=G_N^{-1}b_N,\quad F_N=\sum_{j=2}^N c_{N,j}g_j,\quad
 D_N(i,j)=\langle\Delta g_i,\Delta g_j\rangle,\quad
 d_N(j)=\langle\delta_1,\Delta g_j\rangle=\frac1{2j}.
 \]
-The anchored difference map is injective: \(\Delta f=0\), \(f(0)=0\) implies
-\(f=0\) by induction. Hence \(D_N\) is positive definite when the original
-finite atoms are independent. Write
+ThresholdHilbertDifference.lean constructs the actual bounded linear operator
+on the entire anchored Pareto Hilbert space. It proves injectivity,
+\(\|\Delta f\|\le2\|f\|\), and the boundary identity \(\Delta1=\delta_1\).
+Derivative-family independence and positivity of the actual Gram determinant
+therefore follow from the established independence of the legal atoms.
+There is no postulated matrix inverse or bounded primitive inverse.
+
+Write
 \[
 a_N=D_N^{-1}d_N,\qquad
-\varepsilon_N^2=\min_a\left\|\delta_1-\sum_{j=2}^N a_j\Delta g_j\right\|^2.
+\varepsilon_N^2=\min_a\left\|\delta_1-\sum_{j=2}^N a_j\Delta g_j\right\|^2,
+\qquad h_N=d_N-D_Nc_N.
 \]
-Derivative-space orthogonality gives the exact Pythagorean decomposition
+The checked endpoint **derivative_error_exact_split** gives
 \[
-\begin{aligned}
-\|\Delta(1-F_N)\|^2
-&=\varepsilon_N^2+(c_N-a_N)^{\mathsf T}D_N(c_N-a_N)\\
-&=\boxed{\varepsilon_N^2+
-h_N^{\mathsf T}D_N^{-1}h_N},\qquad
-h_N=d_N-D_NG_N^{-1}b_N.
-\end{aligned}
+\boxed{\|\Delta(1-F_N)\|^2
+=\varepsilon_N^2+h_N^{\mathsf T}D_N^{-1}h_N.}
 \]
-All signed cross terms remain inside the complete compatibility quadratic.
+Analysis/FiniteGramCompatibility.lean proves the underlying identity,
+identifies the coefficient correction as \(D_N^{-1}h_N=a_N-c_N\),
+and retains the full dual square:
+\[
+2t^{\mathsf T}h_N-t^{\mathsf T}D_Nt
+=h_N^{\mathsf T}D_N^{-1}h_N
+-\|U_N(a_N-c_N-t)\|^2,
+\quad U_Nt=\sum_jt_j\Delta g_j.
+\]
+The dual maximum is attained. All signed covariance terms remain present.
 
-Derivative approximability of the target is not the remaining obstacle.
-For completeness, let \(Q_y\) be a primorial,
-\(C_y=\prod_{p\le y}(1-1/p)\), and
-\(A_y=-\sum_{d\mid Q_y}\mu(d)g_d\). Exact inclusion-exclusion gives
-\[
-\Delta A_y(n)=\mathbf1_{(n,Q_y)=1}-C_y.
-\]
-With
-\(J_y=\sum_{n\ge2,\,(n,Q_y)=1}w_n\),
-\[
-\boxed{\|\delta_1-\Delta A_y\|^2=C_y^2-2C_yJ_y+J_y.}
-\]
-Here \(0\le J_y\le1/(\lfloor y\rfloor+1)\) and \(C_y\to0\), so the derivative
-error tends to zero. These sieve ingredients are already present in
-PrimeSievePointEnergy.lean and the finite prime-product results. The displayed
-derivative-error assembly is a paper consequence. Exhausting legal denominators
-therefore gives \(\varepsilon_N\to0\).
+### Unconditional derivative approximation, including its exact scale
 
-The actual legal projections already converge strongly to \(P_V1\), with \(V\)
-the closed legal span. The difference map is bounded and injective on the
-anchored Hilbert space: the shift contraction gives boundedness, and the
-coordinate recurrence gives injectivity. It follows that
+The implementation uses factorial moduli \(Y!\), which have the same prime
+support as the corresponding primorial. Set
 \[
-h_N^{\mathsf T}D_N^{-1}h_N\longrightarrow0
+C_Y=\sum_{d\mid Y!}\frac{\mu(d)}d
+=\prod_{p\le Y}(1-1/p),\qquad
+A_Y=-\sum_{d\mid Y!}\mu(d)g_d.
+\]
+For \(n\ge1\), exact inclusion-exclusion gives
+\[
+\Delta A_Y(n)=\mathbf1_{(n,Y!)=1}-C_Y.
+\]
+With \(J_Y=\sum_{n\ge2,\ (n,Y!)=1}w_n\), the checked theorem
+**derivativeSieveError_exact** is
+\[
+\boxed{E_Y:=\|\delta_1-\Delta A_Y\|^2=C_Y^2-2C_YJ_Y+J_Y.}
+\]
+The complete tail satisfies \(0\le J_Y\le1/(Y+1)\), and the established
+finite-prime-product limit gives \(C_Y\to0\). Hence \(E_Y\to0\).
+The stronger checked estimates and asymptotic are
+\[
+|E_Y-C_Y^2|\le\frac1{Y+1},\qquad
+\left|\frac{E_Y}{C_Y^2}-1\right|
+ \le\frac1{(Y+1)C_Y^2},\qquad
+\boxed{\frac{E_Y}{C_Y^2}\longrightarrow1}.
+\]
+The last step uses the repository's established
+\(Y C_Y^2\to\infty\), without an RH assumption.
+
+PrimeSieveDerivativeClosure.lean constructs these same sieves as explicit
+finite sums of the actual Hilbert residue atoms and proves the exact norm
+identity. Consequently **derivative_target_mem_dictionaryClosure** and
+**derivativeBestError_tendsto_zero** establish \(\varepsilon_N^2\to0\)
+for the actual exhaustive derivative optimum.
+
+### The compatibility limit exists; its vanishing remains open
+
+Let \(r_\infty=1-P_V1\), using the already established strong convergence
+\(F_N\to P_V1\). Boundedness of \(\Delta\), the exact split, and
+\(\varepsilon_N^2\to0\) give the unconditional checked limit
+\[
+\boxed{h_N^{\mathsf T}D_N^{-1}h_N
+\longrightarrow\|\Delta r_\infty\|^2.}
+\]
+Injectivity now yields
+\[
+h_N^{\mathsf T}D_N^{-1}h_N\to0
 \quad\Longleftrightarrow\quad
-F_N\longrightarrow1.
+\|1-F_N\|\to0.
 \]
-This is an exact reformulation of the same closure target, not a new arithmetic
-estimate proving it. Strong convergence of the optimal sequence removes any
-need for a uniform inverse bound if derivative consistency can be established.
-However, legal normal equations \(G_Nc_N=b_N\) do not imply derivative normal
-equations \(D_Nc_N=d_N\); the first-atom calculation exhibits the discrepancy.
+No claim that the compatibility sequence is monotone is made.
 
-**Open:** prove the complete compatibility energy tends to zero for the actual
-optimal coefficients, or establish another genuinely sufficient arithmetic
-estimate. No such provider was obtained in this attempt. The prime-power Schur
-saturation and the full Weil positivity routes remain open as well.
+There is a stronger formulation of the required arithmetic input. It is
+enough to prove, for every fixed \(j\ge2\),
+\[
+\boxed{\langle\Delta g_j,\Delta(1-F_N)\rangle\longrightarrow0.}
+\]
+Indeed \(\Delta r_\infty\) belongs to the closed derivative span: the sieve
+puts \(\delta_1\) there, while continuity puts \(\Delta P_V1\) there.
+The displayed limits make it orthogonal to every generator and hence to
+itself. Thus \(\Delta r_\infty=0\), and injectivity gives \(r_\infty=0\).
+This is **fixedMismatch_limits_iff_projection_norm_zero**. It needs no
+dimension-dependent inverse Gram bound because the actual primitive
+projections already converge strongly.
+
+The full limiting primitive identity also remains intact:
+\[
+4\|r_\infty\|^2
+=\|\Delta r_\infty\|^2+\|r_\infty+Sr_\infty\|^2+2J(r_\infty).
+\]
+Here \(J(r_\infty)\) is the complete shift defect, distinct from the sieve
+tail \(J_Y\). The operator module proves this identity for every Hilbert
+vector, removing the earlier bounded-sequence restriction.
+The compatibility limit lies between zero and \(4\|r_\infty\|^2\);
+failure of RH would force it to be strictly positive.
+
+**Conditional research reduction — Open:** prove the fixed signed
+compatibility limits for the actual legal optimal coefficients, or prove
+the equivalent complete inverse-Gram cost tends to zero.
+The checked implication from either condition concludes Mathlib's actual
+RiemannHypothesis. Neither decay condition is supplied by the formalization.
+Legal normal equations do not imply derivative normal equations, as the
+first-atom counterexample already shows. The prime-power Schur saturation
+and full Weil positivity obligations also remain open.
 
 ## Verification and provenance
 
-Three new modules carry the established results:
-ParetoPrimitiveEnergy.lean, CRTPrimitiveEscape.lean, and
-ResidueDerivativeOptimization.lean. The combined candidates and endpoint
+The initial transfer results are in ParetoPrimitiveEnergy.lean,
+CRTPrimitiveEscape.lean, and ResidueDerivativeOptimization.lean.
+Section 6 adds Analysis/FiniteGramCompatibility.lean,
+Analysis/ClosedSpanCompatibility.lean, RH/ThresholdHilbertDifference.lean,
+RH/PrimeSieveDerivativeApproximation.lean, RH/PrimeSieveDerivativeClosure.lean,
+and RH/ResidueDerivativeCompatibility.lean. Combined candidates and endpoint
 axiom audits passed Lean using only propext, Classical.choice, and Quot.sound.
-The publication checkpoint validates the affected modules.
+The publication checkpoint validates the affected modules and root exports.
 
 Source: direct analysis of the user's CRT transfer question, using existing
 exact Pareto dilation, binary/fourth-residue moments, and the previously

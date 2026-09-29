@@ -1,5 +1,41 @@
 # Theorem catalog
 
+### Formalized derivative compatibility, exact sieve scale, and fixed-coordinate reduction (2026-09-29)
+
+**Established without RH.** RH/ThresholdHilbertDifference.lean constructs
+the actual continuous injective anchored difference operator, its norm bound
+2, its first-site boundary, and the complete primitive energy identity for
+every Hilbert vector. Analysis/FiniteGramCompatibility.lean proves the exact
+inverse-Gram mismatch cost and its attained dual formula with full square.
+
+RH/PrimeSieveDerivativeApproximation.lean proves the complete factorial-sieve
+derivative error C_Y^2 - 2*C_Y*J_Y + J_Y, its vanishing, and the stronger
+derivativeSieveError_ratio_tendsto_one. The explicit absolute relative error
+is bounded by 1/((Y+1)*C_Y^2). RH/PrimeSieveDerivativeClosure.lean proves actual
+finite Hilbert sieve membership and derivative_target_mem_dictionaryClosure.
+
+RH/ResidueDerivativeCompatibility.lean specializes the matrix theorem to the
+actual legal projection coefficients. derivative_error_exact_split retains
+h_N^T D_N^{-1} h_N with h_N=d_N-D_N G_N^{-1}b_N. Independence proves actual
+derivative Gram determinant positivity, and derivativeSource_apply gives
+1/(2*j). derivativeBestError_tendsto_zero is unconditional.
+mismatchEnergy_tendsto identifies the full limit as the squared norm of the
+derivative of limitResidual. The complete limiting primitive identity is kept.
+
+Analysis/ClosedSpanCompatibility.lean and the application theorem
+fixedMismatch_limits_iff_projection_norm_zero prove that, for these actual
+strongly convergent projections, vanishing of every fixed signed derivative
+pairing is equivalent to vanishing of the original full norm error.
+No uniform inverse estimate is assumed.
+
+**Conditional research reduction. Open:** the fixed signed derivative
+compatibility limits (equivalently, vanishing of the complete mismatch cost)
+are not established. riemannHypothesis_of_fixedMismatch_limits and
+riemannHypothesis_of_mismatchEnergy_tendsto_zero retain those hypotheses.
+This closes the paper-to-Lean gap in the audit, not the RH arithmetic gap.
+See RH/CRTPrimitiveTransferAudit20260929.md, Section 6.
+Endpoint axiom audits use only propext, Classical.choice, and Quot.sound.
+
 ### Exact failure of uniform CRT primitive transfer and optimizer incompatibility (2026-09-29)
 
 **Established without RH.** RH/ParetoPrimitiveEnergy.lean proves
@@ -27,7 +63,7 @@ differentiation therefore do not commute automatically.
 
 **RH closure remains Open.** These results do not refute convergence of the
 actual optimal projections or the screened prime-power route.
-RH/CRTPrimitiveTransferAudit20260929.md gives the paper identity
+RH/CRTPrimitiveTransferAudit20260929.md records the now-formalized identity
 derivative_error^2 = derivative_optimal_error^2 + h_N^T D_N^{-1} h_N,
 where h_N=d_N-D_N G_N^{-1}b_N. The compatibility energy tending to zero remains
 an unresolved RH-strength obligation, not a checked arithmetic estimate.
