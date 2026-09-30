@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Signed aggregate lower bounds and complete Möbius CRT cancellation (2026-09-30)
+
+**Established without RH.** RH/DerivativeMobiusCRT.lean includes conductor one
+in completeMobiusCRTIntersection_eq_lcm_sum and retains every actual lcm
+intersection and progression tail. completeMobiusCRTIntersection_exact
+identifies that sum as M_(m+1)*D_n minus the complete raw-derivative pairing
+against the divisor correction synthesis. completeMobiusCRTIntersection_bound
+and completeMobiusCRTIntersection_uniform_approximation prove uniform
+cancellation over ALL optimization stages, without inverse-Gram l1 norms.
+completeMobiusCRTIntersection_tendsto_zero even permits a fixed or oscillating
+optimization sequence. The reciprocal charge remains in
+mobiusRowAggregate_complete_crt.
+
+RH/DerivativeMobiusAggregate.lean now retains the full finite signed balance
+in mobiusRowAggregate_doubleStage_full_remainders: scalar Mobius sum,
+residual dyadic square, increment square, both energy endpoints, and the
+full raw-pairing remainder. mobiusRowAggregate_doubleStage_lower_bound gives
+a finite one-sided estimate about the surviving negative residual square.
+mobiusRowAggregate_centered_dyadic_budget bounds only the complete centered
+signed expression, not the uncentered negative part.
+reciprocalCorrectionAbel_eq_moment identifies the scalar correction with
+its exact endpoint plus harmonic-weighted signed primitive sum.
+
+**Conditional research reduction.**
+reciprocalCorrectionAbel_cofinal_iff_residual_zero proves that cofinal
+lower control of this COMBINED Abel charge is exactly residual vanishing.
+riemannHypothesis_of_cofinal_reciprocalCorrectionAbel retains that provider
+as an explicit hypothesis. **Open:** the zero-threshold one-sided bound
+on this harmonic Abel charge, equivalently on T_(n,n).
+Uniform cancellation of the complete CRT intersections does not remove
+the reciprocal charge. See RH/DerivativeMobiusLowerBound20260930.md.
+
+
 ### Imported research libraries: large sieve, Li/Hadamard, operator core (2026-09-30)
 
 **Established abstract results, with RH applications still open.**

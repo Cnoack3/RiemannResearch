@@ -230,4 +230,166 @@ theorem cofinal_mobius_gram_iff_fixedMismatch :
   simpa only [mobiusRowAggregate, mobiusVector, signedCorrectionRow, id_eq] using
     mobiusRowAggregate_cofinal_iff_fixedMismatch id tendsto_id
 
+/-- Endpoint plus the entire signed harmonic-weighted primitive sum. -/
+def reciprocalCorrectionAbel (n : ℕ) : ℝ :=
+  primitive (correctionCoefficient n) n / ((n + 2 : ℕ) : ℝ) +
+    ∑ k ∈ Finset.range n, primitive (correctionCoefficient n) (k + 1) /
+      (((k + 2 : ℕ) : ℝ) * ((k + 3 : ℕ) : ℝ))
+
+private theorem reciprocal_kernel_difference (k : ℕ) :
+    difference (fun j => 1 / ((j + 2 : ℕ) : ℝ)) k =
+      -(1 / (((k + 2 : ℕ) : ℝ) * ((k + 3 : ℕ) : ℝ))) := by
+  unfold difference
+  have h2 : (k : ℝ) + 2 ≠ 0 := by positivity
+  have h3 : (k : ℝ) + 3 ≠ 0 := by positivity
+  push_cast
+  field_simp [h2, h3]
+  ring
+
+theorem reciprocalCorrectionAbel_eq_moment (n : ℕ) :
+    reciprocalCorrectionAbel n = correctionReciprocalMoment n := by
+  have he : correctionReciprocalMoment n =
+      ∑ j ∈ Finset.range n, correctionCoefficient n j *
+        (1 / ((j + 2 : ℕ) : ℝ)) := by
+    rw [← Fin.sum_univ_eq_sum_range]
+    unfold correctionReciprocalMoment
+    apply Finset.sum_congr rfl
+    intro j hj
+    simp [correctionCoefficient]
+    ring
+  rw [he, sum_eq_value]
+  unfold value reciprocalCorrectionAbel
+  simp_rw [reciprocal_kernel_difference]
+  simp only [mul_neg, Finset.sum_neg_distrib, sub_neg_eq_add]
+  congr 1
+  · ring
+  · apply Finset.sum_congr rfl
+    intro k hk
+    ring
+
+theorem mobiusRowAggregate_reciprocalAbel_exact (m n : ℕ) :
+    reciprocalCorrectionAbel n / 2 =
+      mobiusRowAggregate m n + mobiusRowRemainder m n := by
+  rw [reciprocalCorrectionAbel_eq_moment]
+  exact mobiusRowAggregate_exact m n
+
+/-- A finite residual square remains, even after the exact CRT cancellations. -/
+theorem mobiusRowAggregate_finite_dyadic_exact (m n : ℕ) :
+    2 * mobiusRowAggregate m n + finiteDyadicSquare n -
+      mobiusReciprocalSum (n + 1) + 2 * mobiusRowRemainder m n =
+        finiteDyadicDefect n := by
+  have h := reciprocalCorrection_add_dyadicSquare_sub_mobius n
+  rw [← correctionReciprocalMoment_eq_reciprocalCorrection] at h
+  have he := mobiusRowAggregate_exact m n
+  linarith
+
+/-- Exact signed diagonal balance with both complete dyadic squares. -/
+theorem mobiusRowAggregate_doubleStage_full_remainders (m b : ℕ) :
+    2 * mobiusRowAggregate m (doubleStage b) =
+      mobiusReciprocalSum (doubleStage b + 1) -
+        (2 - Real.sqrt 2) * energy (doubleStage b) -
+        (Real.sqrt 2 / 2) * finiteDyadicResidualRemainder (doubleStage b) +
+        (Real.sqrt 2 / 2) *
+          (energy b - energy (doubleStage (doubleStage b)) -
+            finiteDyadicIncrementRemainder b) -
+        2 * mobiusRowRemainder m (doubleStage b) := by
+  have h := mobiusRowAggregate_finite_dyadic_exact m (doubleStage b)
+  rw [finiteDyadicSquare_eq_energy_add_remainder,
+    finiteDyadicDefect_eq_energy_drop_sub_remainder] at h
+  linarith
+
+theorem derivative_correction_finite_norm_bound (n : ℕ) :
+    ‖hilbertDifference (correctionSynthesis n)‖ ≤
+      ‖rawMobiusDerivativeResidual (n + 1)‖ +
+        2 * ‖projectionResidual n‖ := by
+  rw [derivative_correction_exact]
+  change ‖rawMobiusDerivativeResidual (n + 1) -
+    hilbertDifference (projectionResidual n)‖ ≤ _
+  exact (norm_sub_le _ _).trans
+    (add_le_add_right (hilbertDifference_norm_le (projectionResidual n)) _)
+
+/-- A fully finite estimate about the negative residual square, retaining its center. -/
+theorem mobiusRowAggregate_doubleStage_centered_bound (m b : ℕ) :
+    |mobiusRowAggregate m (doubleStage b) +
+        finiteDyadicSquare (doubleStage b) / 2 -
+        mobiusReciprocalSum (doubleStage b + 1) / 2| ≤
+      (Real.sqrt 2 / 4) * (energy b - energy (doubleStage (doubleStage b))) +
+        ‖rawMobiusDerivativeResidual (m + 1)‖ *
+          (‖rawMobiusDerivativeResidual (doubleStage b + 1)‖ +
+            2 * ‖projectionResidual (doubleStage b)‖) := by
+  have he : mobiusRowAggregate m (doubleStage b) +
+      finiteDyadicSquare (doubleStage b) / 2 -
+      mobiusReciprocalSum (doubleStage b + 1) / 2 =
+      finiteDyadicDefect (doubleStage b) / 2 - mobiusRowRemainder m (doubleStage b) := by
+    linarith [mobiusRowAggregate_finite_dyadic_exact m (doubleStage b)]
+  rw [he]
+  have hd := finiteDyadicDefect_two_gap_abs b
+  have hu := (mobiusRowRemainder_bound m (doubleStage b)).trans
+    (mul_le_mul_of_nonneg_left (derivative_correction_finite_norm_bound (doubleStage b))
+      (norm_nonneg _))
+  have ha := abs_sub (finiteDyadicDefect (doubleStage b) / 2)
+    (mobiusRowRemainder m (doubleStage b))
+  rw [abs_div, show |(2 : ℝ)| = 2 by norm_num] at ha
+  linarith
+
+
+/-- One-sided lower estimate for the signed aggregate, with the residual square retained. -/
+theorem mobiusRowAggregate_doubleStage_lower_bound (m b : ℕ) :
+    -finiteDyadicSquare (doubleStage b) / 2 +
+        mobiusReciprocalSum (doubleStage b + 1) / 2 -
+        (Real.sqrt 2 / 4) * (energy b - energy (doubleStage (doubleStage b))) -
+        ‖rawMobiusDerivativeResidual (m + 1)‖ *
+          (‖rawMobiusDerivativeResidual (doubleStage b + 1)‖ +
+            2 * ‖projectionResidual (doubleStage b)‖) ≤
+      mobiusRowAggregate m (doubleStage b) := by
+  have h := (abs_le.mp (mobiusRowAggregate_doubleStage_centered_bound m b)).1
+  linarith
+
+/-- Complete cancellation occurs before the absolute value in the dyadic budget. -/
+theorem mobiusRowAggregate_centered_dyadic_budget (m : ℕ → ℕ) (b K : ℕ) :
+    (∑ k ∈ Finset.range K,
+      |2 * mobiusRowAggregate (m k) (dyadicStage b (k + 1)) +
+        finiteDyadicSquare (dyadicStage b (k + 1)) -
+        mobiusReciprocalSum (dyadicStage b (k + 1) + 1) +
+        2 * mobiusRowRemainder (m k) (dyadicStage b (k + 1))|) ≤
+      (Real.sqrt 2 / 2) *
+        (energy b + energy (doubleStage b) - energy (dyadicStage b K) -
+          energy (dyadicStage b (K + 1))) := by
+  simp_rw [mobiusRowAggregate_finite_dyadic_exact]
+  exact finiteDyadicDefect_sum_abs_le b K
+
+/-- CONDITIONAL RESEARCH REDUCTION: the endpoint and signed sum are tested together. -/
+theorem reciprocalCorrectionAbel_cofinal_iff_residual_zero :
+    (∀ ε : ℝ, 0 < ε → ∃ᶠ n : ℕ in atTop,
+      -ε < reciprocalCorrectionAbel n) ↔ limitResidual = 0 := by
+  have ht : Tendsto reciprocalCorrectionAbel atTop
+      (𝓝 (-hilbertSequence limitResidual 1)) := by
+    have he : reciprocalCorrectionAbel = reciprocalCorrection := by
+      funext n
+      rw [reciprocalCorrectionAbel_eq_moment,
+        correctionReciprocalMoment_eq_reciprocalCorrection]
+    simpa only [he] using reciprocalCorrection_tendsto
+  constructor
+  · intro h
+    apply firstCoordinate_zero_iff_residual_zero.mp
+    by_contra hz
+    have hp : 0 < hilbertSequence limitResidual 1 :=
+      lt_of_le_of_ne firstCoordinate_nonneg (Ne.symm hz)
+    have he : ∀ᶠ n : ℕ in atTop, reciprocalCorrectionAbel n <
+        -(hilbertSequence limitResidual 1 / 2) :=
+      ht.eventually_lt_const (by linarith)
+    obtain ⟨n, hn, hn'⟩ :=
+      ((h (hilbertSequence limitResidual 1 / 2) (by positivity)).and_eventually he).exists
+    linarith
+  · intro hz ε hε
+    rw [firstCoordinate_zero_iff_residual_zero.mpr hz, neg_zero] at ht
+    exact (ht.eventually_const_lt (by linarith)).frequently
+
+theorem riemannHypothesis_of_cofinal_reciprocalCorrectionAbel
+    (h : ∀ ε : ℝ, 0 < ε → ∃ᶠ n : ℕ in atTop,
+      -ε < reciprocalCorrectionAbel n) : RiemannHypothesis := by
+  apply riemannHypothesis_of_fixedMismatch_limits
+  exact fixedMismatch_limits_iff_residual_zero.mpr
+    (reciprocalCorrectionAbel_cofinal_iff_residual_zero.mp h)
+
 end RiemannResearch.RH.Pareto.CoefficientStabilization.DerivativeCompatibility
