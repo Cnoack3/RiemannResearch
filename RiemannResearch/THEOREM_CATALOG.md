@@ -1,5 +1,46 @@
 # Theorem catalog
 
+### Imported research libraries: large sieve, Li/Hadamard, operator core (2026-09-30)
+
+**Established abstract results, with RH applications still open.**
+Pinned external developments add 42 focused Lean modules. Original namespaces
+and licenses are retained; source pins, scope, target adaptations, and verified
+endpoints are recorded in RH/ResearchImports20260930.md and the adjacent
+provenance documents.
+
+- **Exact arithmetic identities and estimates.**
+  Analysis/LargeSieve/Additive.lean supplies Erdos768LS.parseval_expsum and
+  Erdos768LS.additive_large_sieve, with constant delta^(-1) + 4*pi*N.
+  Analysis/LargeSieve/Multiplicative.lean supplies
+  Erdos768LS.plancherel_dft, Erdos768LS.orthogonality_sum,
+  Erdos768LS.farey_sum_bound, and Erdos768LS.mult_large_sieve_final.
+  The exact identities precede the estimates; the positive universal
+  multiplicative constant is witnessed by 4*pi.
+  **Open:** duality, exact CRT Fourier identification, and weighted-tail
+  transfer for RH/RawMobiusFarTailLargeSieve20260924.md. Its sharper displayed
+  constant is not certified by this import.
+- **Actual Li criterion and multiplicity-weighted zero identity.**
+  Analysis/LiCriterionImport/Lc/LiCriterion/XiOrderBridge.lean supplies
+  LiCriterion.li_criterion_rh_iff using Mathlib's RiemannHypothesis and
+  riemannXi. XiGrowth proves the finite-order and order-at-most-one inputs.
+  Fidelity.lean supplies LiCriterion.taylorCoeff_eq_li_symmetrized and
+  LiCriterion.summable_li_symmetrized, retaining the factor one-half,
+  both signed exponents, and analytic multiplicities. The 33-module
+  Hadamard/complex-analysis dependency closure is included.
+  **Open:** positivity of every actual coefficient, or a checked provider
+  relating the signed CRT/Weil forms to these coefficients.
+- **Canonical partial-operator closure and self-adjointness.**
+  Analysis/UnboundedOperatorImport supplies closability/adjoint/core
+  identities, shifted-range self-adjointness criteria, and deficiency-space
+  identities in Mathlib's LinearPMap domains.
+  Spectra.Operator.isEssentiallySelfAdjoint_of_denseRange_addSub retains
+  symmetry, a dense domain, and density of both shifted ranges.
+  **Open:** prove these hypotheses for the actual operator in
+  RH/MellinJacobiOperator20260928.md and identify its spectrum with zeta zeros.
+
+These imports discharge no signed CRT cancellation, Li positivity, or
+Mellin/Jacobi domain/range obligation merely by being available.
+
 ### Uniform Möbius aggregation of derivative correction rows (2026-09-29)
 
 **Established without RH.** RH/DerivativeMobiusAggregate.lean defines
