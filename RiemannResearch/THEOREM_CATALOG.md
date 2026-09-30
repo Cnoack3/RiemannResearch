@@ -1,5 +1,44 @@
 # Theorem catalog
 
+### Abel endpoint decay and sharp signed-charge comparison (2026-09-30)
+
+**Established without RH.** RH/MobiusPrimitiveCharge.lean proves
+mobiusCharge_prefix_identity and primitiveChargeRiesz_inner with conductor
+one retained. primitiveChargeRiesz_norm_le bounds the normalized complete
+primitive kernel by 14; primitiveChargeRiesz_weak_zero and
+primitiveChargeRiesz_inner_moving_tendsto_zero allow arbitrary divergent
+test cutoffs and strongly convergent moving Hilbert vectors.
+
+RH/DerivativeAbelChargeBounds.lean proves the exact first-site-corrected
+endpoint formula correctionPrimitive_normalized_exact, its full square and
+a dimension-independent centered-square bound, and the unconditional
+correctionPrimitive_endpoint_tendsto_zero. The divisor primitive is identified
+using the existing correctionPrimitive_eq_divisor_sum.
+reciprocalCorrectionAbel_eq_divisor_endpoint_sum retains the entire endpoint
+and harmonic signed sum at every finite stage.
+signedDivisorPrimitiveSum_tendsto_full_square identifies the harmonic sum's
+limit with minus the complete residual dyadic square.
+reciprocalCorrectionAbel_doubleStage_full_squares retains the residual and
+increment squares, the scalar Mobius sum, and both energy endpoints.
+reciprocalCorrectionAbel_centered_two_gap_sq and
+reciprocalCorrectionAbel_doubleStage_lower give a direct finite lower estimate
+with the product of adjacent energy drops and no auxiliary raw-test error.
+finiteDyadicSquare_tendsto_firstCoordinate and
+reciprocalCorrectionAbel_centered_tendsto_zero establish the exact
+coefficient-one comparison boundary.
+
+**Conditional research reductions.**
+signedDivisorPrimitiveSum_cofinal_iff_residual_zero leaves only cofinal
+one-sided lower control of the signed divisor-primitive harmonic sum.
+riemannHypothesis_of_signedDivisorPrimitiveSum_cofinal keeps that provider
+explicit. reciprocalCorrectionAbel_strict_fraction_cofinal_iff_residual_zero
+shows that any fixed strict improvement theta<1 in the complete comparison
+A_n + theta*Q_n is also equivalent to residual zero.
+**Open:** either signed arithmetic provider. Vanishing of the endpoint and
+the previously established complete CRT cancellation do not prove that
+provider. See RH/DerivativeAbelChargeEstimate20260930.md.
+
+
 ### Signed aggregate lower bounds and complete Möbius CRT cancellation (2026-09-30)
 
 **Established without RH.** RH/DerivativeMobiusCRT.lean includes conductor one
