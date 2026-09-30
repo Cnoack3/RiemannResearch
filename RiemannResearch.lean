@@ -518,6 +518,8 @@ import RiemannResearch.Probability.MultiplicativeOccupancyLower
 import RiemannResearch.RH.HilbertPolyaPositiveProduct
 import RiemannResearch.RH.IntegerDPPDampedLimit
 import RiemannResearch.RH.IntegerDPPDampedMinimum
+import RiemannResearch.RH.IntegerDPPWeightedVacancy
+import RiemannResearch.RH.IntegerDPPWeightedDeterminant
 import RiemannResearch.RH.IntegerDPPEdgeScalingTargets
 import RiemannResearch.RH.IntegerDPPFiniteDamping
 import RiemannResearch.RH.IntegerDPPMaximum

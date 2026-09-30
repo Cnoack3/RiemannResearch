@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Pareto DPP vacancy cutoffs and quantitative determinant separation (2026-09-30)
+
+**Established without RH.** `RH/IntegerDPPWeightedVacancy.lean` proves
+`finiteWeightedVacancyMass_exact`, retaining the complete infinite tail,
+and `weightedVacancyTail_bounds` with cutoff error at most `1/(M+1)`.
+The actual weighted masses are strictly positive at finite rank, antitone,
+and converge to the existing `HistoricalTargets.weightedVacancyMass`.
+`weightedVacancyPrefix_eq_gram_trace` gives the exact finite formula using
+the full arithmetic Gram matrix. `weightedVacancyMass_zero_iff_top` and
+`finiteWeightedVacancyMass_tendsto_zero_iff_top` identify zero mass with
+density of the actual residue span; not RH gives strictly positive mass.
+
+`Analysis/ContractiveProducts.lean` retains the exact two-product insert
+recurrence and proves two-sided factor-difference bounds.
+`Probability/MultiplicativeOccupancy.lean` proves the exact weighted-hole
+expectation and its quantitative product comparison without independence
+or negative association.
+`RH/IntegerDPPWeightedDeterminant.lean` retains the exact finite product
+expectation and proves `dampedPrefixLimit_defect_bounds`:
+`p_* * mu_infty <= dampedPrefixLimit - p_* <= mu_infty`.
+Zero weighted vacancy is equivalent to exact equality at the benchmark.
+
+**Conditional research reduction.**
+`weightedVacancyCutoffCertificates_iff_top` identifies arbitrarily small
+finite certificates `weightedVacancyPrefix N M + 1/(M+1)` with density.
+`riemannHypothesis_of_weightedVacancyCutoffCertificates` keeps this provider
+explicit. **Open:** supply those certificates for every positive epsilon.
+The logarithmic comparison, operator Fredholm identification, full negative
+association, and spatial transport provider are not discharged here.
+See `RH/DPPWeightedVacancyCutoffs20260930.md`.
+
 ### Abel endpoint decay and sharp signed-charge comparison (2026-09-30)
 
 **Established without RH.** RH/MobiusPrimitiveCharge.lean proves

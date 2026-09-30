@@ -209,3 +209,59 @@ theorem log_partialProduct_limit_eq_tsum_log (a : ℕ → ℝ)
   rw [partialProduct_limit_eq_exp_tsum_log a ha hs hL, Real.log_exp]
 
 end Real
+
+/-!
+Source: user-provided arithmetic DPP weighted-vacancy argument, Sections 6--8.
+The following two-product comparison is elementary and is consumed by
+Probability/MultiplicativeOccupancy and RH/IntegerDPPWeightedDeterminant.
+The exact insert recurrence is retained before the bounds.
+-/
+
+namespace Real
+open scoped BigOperators
+
+/-- Exact one-factor recurrence, with both complete products retained. -/
+theorem product_defect_insert {ι : Type*} [DecidableEq ι]
+    (s : Finset ι) (i : ι) (hi : i ∉ s) (b c : ι → ℝ) :
+    (∏ j ∈ insert i s, c j) - (∏ j ∈ insert i s, b j) =
+      c i * ((∏ j ∈ s, c j) - (∏ j ∈ s, b j)) +
+        (c i - b i) * (∏ j ∈ s, b j) := by
+  rw [Finset.prod_insert hi, Finset.prod_insert hi]
+  ring
+
+theorem product_defect_bounds {ι : Type*} (s : Finset ι) (b c : ι → ℝ)
+    (hb : ∀ i ∈ s, 0 ≤ b i) (hbc : ∀ i ∈ s, b i ≤ c i)
+    (hc : ∀ i ∈ s, c i ≤ 1) :
+    s.prod b * s.sum (fun i : ι => c i - b i) ≤ s.prod c - s.prod b ∧
+    s.prod c - s.prod b ≤ s.sum (fun i : ι => c i - b i) := by
+  classical
+  revert hb hbc hc
+  induction s using Finset.induction_on with
+  | empty => simp
+  | @insert i s hi ih =>
+    intro hb hbc hc
+    have hbS (j : ι) (hj : j ∈ s) := hb j (Finset.mem_insert_of_mem hj)
+    have hbcS (j : ι) (hj : j ∈ s) := hbc j (Finset.mem_insert_of_mem hj)
+    have hcS (j : ι) (hj : j ∈ s) := hc j (Finset.mem_insert_of_mem hj)
+    obtain ⟨hl, hu⟩ := ih hbS hbcS hcS
+    have hbi := hb i (Finset.mem_insert_self i s)
+    have hbci := hbc i (Finset.mem_insert_self i s)
+    have hci := hc i (Finset.mem_insert_self i s)
+    have hci0 : 0 ≤ c i := hbi.trans hbci
+    have hbi1 : b i ≤ 1 := hbci.trans hci
+    have hB0 : 0 ≤ ∏ j ∈ s, b j := Finset.prod_nonneg hbS
+    have hB1 : (∏ j ∈ s, b j) ≤ 1 :=
+      Finset.prod_le_one hbS (fun j hj => (hbcS j hj).trans (hcS j hj))
+    have hD0 : 0 ≤ ∑ j ∈ s, (c j - b j) :=
+      Finset.sum_nonneg (fun j hj => sub_nonneg.mpr (hbcS j hj))
+    have hδ0 : 0 ≤ c i - b i := sub_nonneg.mpr hbci
+    have hL := mul_le_mul_of_nonneg_left hl hci0
+    have hL' := mul_nonneg hδ0 (mul_nonneg hB0 hD0)
+    have hL'' := mul_nonneg (sub_nonneg.mpr hbi1) (mul_nonneg hδ0 hB0)
+    have hU := mul_le_mul_of_nonneg_left hu hci0
+    have hU' := mul_le_mul_of_nonneg_right hci hD0
+    have hU'' := mul_le_mul_of_nonneg_left hB1 hδ0
+    rw [Finset.prod_insert hi, Finset.prod_insert hi, Finset.sum_insert hi]
+    constructor <;> nlinarith
+
+end Real

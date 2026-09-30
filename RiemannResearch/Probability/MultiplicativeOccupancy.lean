@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.ContractiveProducts
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.Set
 import Mathlib.MeasureTheory.Constructions.Pi
@@ -85,5 +86,104 @@ theorem integral_product_eq_benchmark_iff (a : ι → ℝ)
   exact hz.trans (Filter.eventually_congr (Filter.Eventually.of_forall
     (fun ω => by simpa only [Pi.zero_apply, sub_eq_zero] using
       product_eq_benchmark_iff a ha (f ω))))
+
+end RiemannResearch.Probability.Occupancy
+
+/-!
+Source: user-provided DPP weighted-vacancy argument. These quantitative
+extensions use the actual finite occupation variables and require no
+independence, negative association, or determinantal process hypothesis.
+-/
+
+noncomputable section
+open MeasureTheory
+open scoped BigOperators Classical
+namespace RiemannResearch.Probability.Occupancy
+
+variable {ι : Type*} [Fintype ι]
+
+/-- Finite weighted vacancy, with the actual occupation indicators retained. -/
+def weightedHoleMass (a : ι → ℝ) (x : ι → Bool) : ℝ :=
+  ∑ i, if x i = false then a i else 0
+
+theorem product_defect_bounds (a : ι → ℝ)
+    (ha : ∀ i, 0 < a i ∧ a i < 1) (x : ι → Bool) :
+    benchmark a * weightedHoleMass a x ≤ product a x - benchmark a ∧
+      product a x - benchmark a ≤ weightedHoleMass a x := by
+  have h := Real.product_defect_bounds Finset.univ
+    (fun i => 1 - a i) (fun i => if x i = true then 1 - a i else 1)
+    (fun i _ => by linarith [(ha i).2])
+    (fun i _ => by split_ifs <;> linarith [(ha i).1])
+    (fun i _ => by split_ifs <;> linarith [(ha i).1])
+  have he (i : ι) :
+      (if x i = true then 1 - a i else 1) - (1 - a i) =
+        if x i = false then a i else 0 := by
+    cases x i <;> simp
+  simpa only [he, benchmark, product, weightedHoleMass] using h
+
+variable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+
+theorem weightedHoleMass_integrable (a : ι → ℝ)
+    (f : Ω → ι → Bool) (hf : Measurable f) :
+    Integrable (fun ω => weightedHoleMass a (f ω)) μ := by
+  apply integrable_finsetSum
+  intro i hi
+  have hA : MeasurableSet {ω | f ω i = false} :=
+    (measurableSet_singleton false).preimage ((measurable_pi_apply i).comp hf)
+  have he : (fun ω => if f ω i = false then a i else 0) =
+      ({ω | f ω i = false}).indicator (fun _ : Ω => a i) := by
+    funext ω
+    by_cases h : f ω i = false <;> simp [h]
+  rw [he]
+  exact (integrable_const (μ := μ) (a i)).indicator hA
+
+/-- Exact expectation; no independence or determinantal hypothesis is needed. -/
+theorem integral_weightedHoleMass (a : ι → ℝ)
+    (f : Ω → ι → Bool) (hf : Measurable f) :
+    (∫ ω, weightedHoleMass a (f ω) ∂μ) =
+      ∑ i, a i * μ.real {ω | f ω i = false} := by
+  have hA (i : ι) : MeasurableSet {ω | f ω i = false} :=
+    (measurableSet_singleton false).preimage ((measurable_pi_apply i).comp hf)
+  have hint (i : ι) : Integrable
+      (fun ω => if f ω i = false then a i else 0) μ :=
+    by
+      have he : (fun ω => if f ω i = false then a i else 0) =
+          ({ω | f ω i = false}).indicator (fun _ : Ω => a i) := by
+        funext ω
+        by_cases h : f ω i = false <;> simp [h]
+      rw [he]
+      exact (integrable_const (μ := μ) (a i)).indicator (hA i)
+  unfold weightedHoleMass
+  rw [integral_finsetSum _ (fun i _ => hint i)]
+  apply Finset.sum_congr rfl
+  intro i hi
+  have he : (fun ω => if f ω i = false then a i else 0) =
+      fun ω => a i * ({ω | f ω i = false}).indicator (1 : Ω → ℝ) ω := by
+    funext ω
+    by_cases h : f ω i = false <;> simp [h]
+  rw [he, integral_const_mul, integral_indicator_one (hA i)]
+
+theorem integral_product_defect_bounds (a : ι → ℝ)
+    (ha : ∀ i, 0 < a i ∧ a i < 1)
+    (f : Ω → ι → Bool) (hf : Measurable f) :
+    benchmark a * (∑ i, a i * μ.real {ω | f ω i = false}) ≤
+      (∫ ω, product a (f ω) ∂μ) - benchmark a ∧
+    (∫ ω, product a (f ω) ∂μ) - benchmark a ≤
+      ∑ i, a i * μ.real {ω | f ω i = false} := by
+  have hint := weightedHoleMass_integrable μ a f hf
+  have hprod := product_integrable μ a ha f hf
+  have hd : Integrable (fun ω => product a (f ω) - benchmark a) μ :=
+    hprod.sub (integrable_const (benchmark a))
+  have hl := integral_mono (hint.const_mul (benchmark a)) hd
+    (fun ω => (product_defect_bounds a ha (f ω)).1)
+  have hu := integral_mono hd hint
+    (fun ω => (product_defect_bounds a ha (f ω)).2)
+  rw [integral_const_mul, integral_weightedHoleMass μ a f hf,
+    integral_sub hprod (integrable_const (benchmark a)),
+    integral_const, probReal_univ, one_smul] at hl
+  rw [integral_sub hprod (integrable_const (benchmark a)),
+    integral_const, probReal_univ, one_smul,
+    integral_weightedHoleMass μ a f hf] at hu
+  exact ⟨hl, hu⟩
 
 end RiemannResearch.Probability.Occupancy
