@@ -1,5 +1,47 @@
 # Theorem catalog
 
+### RH consequences and the monotone prime angular channel (2026-09-30)
+
+**Established without RH.** RH/ParetoFirstSitePrimeAngular.lean proves
+primeCancellationVariance_succ and primeCancellationVariance_eq_sum:
+W_(n+1)=W_n+Gamma_n, where
+Gamma_n=w_n*(U_n*kappa_n-X_n*delta_n)^2/[U_n*(U_n+w_n*delta_n^2)].
+primeCancellationVariance_monotone and capacity_eq_prime_angular_budget
+give C_(N+1)=C_1+R_N+sum_(n<N) Gamma_n+J_N.
+primeMeanMismatchBudget_step preserves the complete mean/angular/gain balance.
+The existing actual Schur source lower bound proves
+primeRelativeAngularEnergy_le: E_n<=16*Gamma_n, where E_n is
+(kappa_n/delta_n-X_n/U_n)^2/(n+3) at positive prime stages and zero otherwise.
+primeRelativeAngularEnergy_eq_screened_rows retains every signed screened
+CRT entry, the fixed base pairing, and the historical running slope.
+Analysis/WeightedScalarEnergy.lean adds exact regression completion,
+centered_energy_update, and the reduced-weight lower bound.
+
+tailCapacity_tendsto_iff_prime_angular_channels is the exact alternative:
+capacity divergence iff R_n does not tend to zero, or Gamma is not summable,
+or the complete nonprime gain is not summable. No individual channel is
+asserted necessary by itself. Failure of RH forces Gamma and E to be summable.
+
+**Conditional research reductions. Open:** nonsummability of the actual
+reciprocal-prime centered relative error E, or of Gamma, supplies capacity
+divergence and the existing RH endpoint. The weakest exact inequality remains
+forall B exists N>=1, R_N+sum_(n<N) Gamma_n+J_N>B.
+RH/ParetoFirstSiteRHConsequences.lean connects this to RH while explicitly
+retaining hBaezDuarte : RH -> NaturalApproximation. The analytic provider is
+a classical published theorem, but is not yet Lean-provided.
+primeSignedBudget_ratio_tendsto_of_capacity_sublinear_source proves
+C_(N+1)/U_N -> 0 implies A_N/U_N -> -1, with that rate hypothesis explicit.
+
+**Classical scale deduction, not kernel-verified here:** Burnol's lower bound,
+the exact centered norm transfer, and dyadic denominator enlargement give
+C_N=O(log N); PNT with the exact factorial Euler product gives
+U_N>=(1/4-o(1))*(log N)^2. Consequently the fixed-fraction A-saving and
+V-saving hypotheses from ParetoFirstSitePrimeBudget are incompatible with
+these classical growth scales. Their conditional Lean implications remain
+valid; these hypotheses are not suitable arithmetic targets.
+See RH/FirstSiteRHAngularContinuation20260930.md for the deduction,
+verification distinctions, and the remaining screened arithmetic inequality.
+
 ### First-site prime alignment and fluctuation-scale providers (2026-09-30)
 
 **Established without RH.** RH/ParetoFirstSitePrimeAlignment.lean proves
@@ -48,13 +90,15 @@ capacity forces (V_N+2X_N+J_N)/U_N -> -1; no converse is asserted.
 tailCapacity_tendsto_iff_prime_budget_unbounded identifies the exact
 unbounded combined-signed-budget provider.
 
-**Conditional research reductions. Open:** a cofinal estimate
+**Conditional research reductions:** a cofinal estimate
 V_N+2X_N+J_N >= -theta*U_N-K for fixed theta<1 and finite K.
 tailCapacity_tendsto_of_prime_signed_fraction then proves C_n -> +infinity;
 riemannHypothesis_of_prime_signed_fraction gives the existing RH endpoint.
 Alternatively a cofinal V_N <= theta*U_N+K with 0<=theta<1 suffices,
 by tailCapacity_tendsto_of_prime_error_strict_fraction. Neither arithmetic
-provider is established. The weakest exact remaining condition is
+provider is established in Lean. The classical scale comparison in the new
+RH angular continuation rules out these fixed-fraction hypotheses; the
+conditional implications remain valid. The weakest exact remaining condition is
 forall B exists N, B<U_N+V_N+2X_N+J_N.
 See RH/FirstSitePrimeBudget20260930.md.
 

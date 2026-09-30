@@ -4,6 +4,12 @@ Date: 2026-09-30.
 Base: Cnoack3/RiemannResearch e9f76732570540900138d9e6b01c43ee4188c3d6.
 Module: RH/ParetoFirstSitePrimeBudget.lean.
 
+Follow-up: [RH consequences and the angular channel](FirstSiteRHAngularContinuation20260930.md).
+The fixed-fraction conditions below remain valid conditional implications,
+but the later classical Burnol/PNT comparison rules out their arithmetic
+hypotheses. The exact total-budget target remains valid; the later angular
+reduction retains the complete signed square and every nonprime gain.
+
 The first-site provider remains open. This continuation proves exact
 unconditional budget identities and quantitative conditional growth criteria.
 It does not redo the offsite transfer or claim RH.

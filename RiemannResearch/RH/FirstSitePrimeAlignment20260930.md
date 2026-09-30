@@ -4,6 +4,11 @@ Date: 2026-09-30.
 Base: Cnoack3/RiemannResearch 2e18190a98441778f47d5fdf7542e73bc5d68868.
 Modules: Analysis/WeightedScalarEnergy.lean and RH/ParetoFirstSitePrimeAlignment.lean.
 
+Follow-up: [RH consequences and the angular channel](FirstSiteRHAngularContinuation20260930.md).
+That continuation distinguishes the classical RH implication from its explicit
+Lean analytic provider, adds a monotone angular channel, and explains why
+fixed-fraction source saving is incompatible with the classical growth scales.
+
 The arithmetic provider remains **Open**. This continuation establishes exact
 identities, stronger necessary cancellation under bounded capacity, and weaker
 sufficient providers. It establishes no unconditional capacity divergence or RH.
