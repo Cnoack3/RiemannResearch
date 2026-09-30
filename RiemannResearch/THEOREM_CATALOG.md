@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### First-site capacity and signed prime budgets (2026-09-30)
+
+**Established without RH.** RH/ParetoFirstSitePrimeBudget.lean proves
+capacity_eq_prime_signed_budget:
+C_(N+1)=C_1+U_N+V_N+2X_N+J_N.
+U_N is the already divergent factorial fresh-prime source energy, V_N is
+the full signed-error square energy, X_N is the signed mixed pairing,
+and J_N retains every nonprime Schur increment. All physical tails and
+old-block Gram correlations remain in the underlying vectors.
+primeSourceBudget_young_completion retains the exact nonnegative square:
+U_N+R_N(t)=(1+t)G_N+(1+1/t)V_N for every t>0.
+primeSignedBudget_ratio_tendsto_of_capacity_bounded proves that bounded
+capacity forces (V_N+2X_N+J_N)/U_N -> -1; no converse is asserted.
+tailCapacity_tendsto_iff_prime_budget_unbounded identifies the exact
+unbounded combined-signed-budget provider.
+
+**Conditional research reductions. Open:** a cofinal estimate
+V_N+2X_N+J_N >= -theta*U_N-K for fixed theta<1 and finite K.
+tailCapacity_tendsto_of_prime_signed_fraction then proves C_n -> +infinity;
+riemannHypothesis_of_prime_signed_fraction gives the existing RH endpoint.
+Alternatively a cofinal V_N <= theta*U_N+K with 0<=theta<1 suffices,
+by tailCapacity_tendsto_of_prime_error_strict_fraction. Neither arithmetic
+provider is established. The weakest exact remaining condition is
+forall B exists N, B<U_N+V_N+2X_N+J_N.
+See RH/FirstSitePrimeBudget20260930.md.
+
 ### Finite-rank offsite vacancy control (2026-09-30)
 
 **Established without RH.** RH/IntegerDPPOffsiteTrialBounds.lean proves
