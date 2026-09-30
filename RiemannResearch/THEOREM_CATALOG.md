@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Old DPP certificates and weighted cutoff bridge (2026-09-30)
+
+**Established without RH.** `RH/IntegerDPPCertificateCutoffBridge.lean`
+proves `weightedVacancyCutoffCertificates_iff_finiteTrial_certificates`
+and `weightedVacancyCutoffCertificates_iff_no_tailCertificate`.
+The old large-ratio finite trial provider and the new cutoff provider are
+equivalent; genuine infinite dual certificates instead obstruct both.
+`weightedVacancyCutoff_eq_trial_split` retains the full Gram trial energy,
+the nonnegative square slack, every offsite term, and the physical tail
+allowance. `weightedVacancyCutoff_lt_iff_trial_budget` gives the exact
+necessary-and-sufficient budget for an individual trial.
+`finiteTailCertificate_weightedVacancyCutoff_exact` retains the finite
+observation certificate's energy-completion square.
+`tailCertificate_weightedVacancyCutoff_lower` gives
+`C(N,q) >= 1/(||z||^2+2) + 1/(q+1)` for positive physical cutoff q.
+`weightedVacancyCutoff_eq_canonical_split` retains the finite-to-closed
+projection square in the obstruction case.
+The damped window minimum and infinite prefix benchmark equality are
+equivalent to the cutoff provider; a dual certificate gives the quantitative
+lower bound `p_*/(||z||^2+2) <= dampedPrefixLimit-p_*`.
+
+**Conditional research reduction. Open:** construct arbitrarily large
+source-to-full-energy ratios, equivalently arbitrarily small cutoffs, or
+exclude all genuine infinite dual certificates. A single finite trial
+controls only the first site until its offsite budget is controlled.
+Damped minimum equality does not discharge this provider.
+See `RH/DPPCertificateCutoffComparison20260930.md`.
+
 ### Pareto DPP vacancy cutoffs and quantitative determinant separation (2026-09-30)
 
 **Established without RH.** `RH/IntegerDPPWeightedVacancy.lean` proves
