@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Finite-rank offsite vacancy control (2026-09-30)
+
+**Established without RH.** RH/IntegerDPPOffsiteTrialBounds.lean proves
+offsiteWeightedVacancyCutoff_eq_gram_trace:
+O_(N,M)+1/(M+2)=1/2-tr(D_off B_off G_N^(-1) B_off^T).
+The Gram matrix is complete; every mixed entry and physical tail is retained.
+weightedVacancyTerm_eq_fullGram_trial and
+weightedVacancyTerm_eq_dilation_energy record the signed energies and the
+full nonnegative trial-to-projection square before estimates are taken.
+Analysis/ProjectionTrialEnergy.lean provides the underlying general identity.
+
+Reusing the existing PointTargetDilationSynthesis and finite dilation
+membership, offsiteWeightedVacancyPrefix_le_rank_trial_budget gives
+O_(N,M) <= A_M(q^(K+1)+a_(K+1)*sqrt(Delta_n))^2 whenever
+N+1 >= (M+2)*2^K*(n+1), where q=1/sqrt(2),
+a_(K+1)=(1-q^(K+1))/(1-q),
+A_M=sum_(j=2)^(M+1)(1/sqrt(j)+1/sqrt(j+1))^2,
+and Delta_n=E/(S^2+2E)-finiteTrialVacancySlack n c=vacancy n/2.
+weightedVacancyCutoff_le_rank_trial_budget adds Delta_n and the exact
+1/(M+2) physical tail. Assumptions are finite rank enlargement and E>0.
+offsiteDilationFactor_le_reciprocal_sum supplies the harmonic upper bound.
+No new dilation operator or duplicate geometric synthesis is introduced.
+
+**Conditional research reduction. Open:** arbitrarily small Delta_n,
+equivalently the existing unbounded-capacity/large finite-trial-ratio provider.
+Once provided, the new bound controls all offsite terms after explicit
+conductor enlargement. No rate or uniform Gram inverse bound is required
+for existential cutoff certificates. Same-rank vanishing is not asserted.
+See RH/DPPOffsiteRankTrialBounds20260930.md.
+
 ### Old DPP certificates and weighted cutoff bridge (2026-09-30)
 
 **Established without RH.** `RH/IntegerDPPCertificateCutoffBridge.lean`

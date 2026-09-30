@@ -1991,3 +1991,5 @@ import RiemannResearch.RH.MovingReciprocalCharge
 import RiemannResearch.RH.ResidueDivisorReciprocalLimit
 import RiemannResearch.Analysis.SuperexponentialPrimitive
 import RiemannResearch.Analysis.SmoothZeroRemoval
+import RiemannResearch.Analysis.ProjectionTrialEnergy
+import RiemannResearch.RH.IntegerDPPOffsiteTrialBounds
