@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Uniform Möbius aggregation of derivative correction rows (2026-09-29)
+
+**Established without RH.** RH/DerivativeMobiusAggregate.lean defines
+T_(m,n) as the negative Mobius-weighted sum of the complete signed derivative
+correction rows. mobiusRowAggregate_exact reconstructs half the reciprocal
+correction with the full Hilbert-pairing remainder.
+mobiusRowAggregate_square retains the signed cross term and remainder square;
+mobiusRowRemainder_bound and mobiusRowAggregate_uniform_bound give a constant
+independent of both finite dimensions, and
+mobiusRowAggregate_uniform_approximation proves uniform approximation over
+all optimization stages. The Abel endpoint and all signed kernel differences
+and CRT lcm intersections remain explicit in mobiusRowAggregate_eq_abel and
+mobiusRowAggregate_eq_crt.
+
+mobiusRowAggregate_tendsto identifies the limit for any test cutoff m(n)
+tending to infinity, without a relative growth condition.
+mobiusRowAggregate_tendsto_full_remainder retains the complete dyadic
+norm square and identifies the limit as -r(1)/2.
+limiting_derivative_test_sq_le_firstCoordinate bounds every limiting
+derivative pairing by (4+2*sqrt(2))*norm(f)^2*r(1).
+
+**Conditional research reduction.** cofinal_mobius_gram_iff_fixedMismatch
+and mobiusRowAggregate_cofinal_iff_residual_zero show that the single
+one-sided estimate T_(n,n)>-epsilon at cofinally many stages for each
+epsilon>0 is equivalent to all fixed mismatches vanishing and to residual
+zero. riemannHypothesis_of_cofinal_mobiusRowAggregate supplies the RH
+implication with that hypothesis explicit.
+**Open:** an arithmetic provider of this cofinal lower bound.
+Neither the existing reciprocal limit nor raw Mobius derivative convergence
+supplies it. See RH/DerivativeMobiusAggregate20260929.md.
+
+
 ### Exact Abel–CRT–Weil transfer (2026-09-29)
 
 **Established without RH.** RH/DerivativeCRT.lean proves the complete lcm
