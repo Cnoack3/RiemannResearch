@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Kolmogorov truncation of the exact angular variance (2026-09-30)
+
+**Established without RH.** Analysis/NonnegativeSeriesTruncation.lean proves
+clipped_eq_large_add_small, summable_clipped_iff,
+summable_iff_tail_indicator_and_truncated_energy, and
+not_summable_iff_clipped_prefix_unbounded for nonnegative real energies at
+every fixed positive cutoff. RH/ParetoFirstSitePrimeThreeSeries.lean proves
+primeAngularInnovation_summable_iff_three_series and
+primeAngularInnovation_not_summable_iff_clipped_unbounded.
+tailCapacity_tendsto_iff_prime_clipped_angular_channels retains the mean
+channel and the complete nonprime gain series.
+
+**Conditional research reduction. Open:** unbounded prefixes of
+sum min(Gamma_n,1), supplied explicitly to
+riemannHypothesis_of_clipped_prime_angular_unbounded. This is equivalent to
+the existing angular nonsummability provider, not a proof of the provider.
+The full weakest inequality remains unbounded R_N+sum Gamma_n+J_N.
+
+**Classical interpretation, not kernel-formalized probability here:**
+independent auxiliary fair signs times the complete signed angular
+amplitudes give Var(M_N)=W_N. Kolmogorov three-series says this series
+converges a.s. exactly when Gamma is summable. Arithmetic row independence
+is not assumed or proved. Summability concerns increments Gamma, not
+cumulative W_N or raw V_N. See
+RH/FirstSiteKolmogorovThreeSeries20260930.md for the exact truncation,
+rare-spike caveat, and the still-open screened prime-block lower bound.
+
 ### RH consequences and the monotone prime angular channel (2026-09-30)
 
 **Established without RH.** RH/ParetoFirstSitePrimeAngular.lean proves
