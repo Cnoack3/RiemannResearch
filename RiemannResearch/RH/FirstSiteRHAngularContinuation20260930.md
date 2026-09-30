@@ -157,10 +157,13 @@ The new kernel-checked comparison is
 \[
 \boxed{0\le E_n\le16\Gamma_n.}
 \]
-Consequently nonsummability of \(E_n\) suffices for capacity divergence and
-RH. Failure of RH forces both \(\Gamma_n\) and \(E_n\) to be summable.
-This bounds the weight, not the unknown size of the signed arithmetic
-deviation; the nonsummability provider remains **Open**.
+Consequently nonsummability of \(E_n\) conditionally suffices for capacity
+divergence and RH. Failure of RH forces both \(\Gamma_n\) and \(E_n\) to be
+summable. The sharper classical factorial weights and the capacity scale
+above in fact imply that \(E_n\) is summable without RH, as deduced in
+[the three-series continuation](FirstSiteKolmogorovThreeSeries20260930.md).
+Those analytic rates are not kernel-imported here. The coarse conditional
+endpoint remains valid, but \(E\)-nonsummability should not guide the search.
 
 The exact screened expression inside the square is
 \[
@@ -187,9 +190,11 @@ Equivalently, the weakest explicit remaining inequality is
  R_N+\sum_{n<N}\Gamma_n+J_N>B.}
 \]
 No one channel is asserted necessary individually. A sufficient arithmetic
-subtask is unbounded partial sums of \(E_n\), with every screened row and its
-historical running slope retained. No imported large-sieve upper inequality
-currently provides this lower-energy or nonsummability assertion.
+subtask is unbounded partial sums of the **full** \(\Gamma_n\), retaining the
+actual reduced Schur/factorial weight, every screened row, and the historical
+running slope. The reciprocal-prime \(E\)-nonsummability endpoint is too strong
+under the classical scale audit. No imported large-sieve upper inequality
+currently provides the required full angular lower-energy assertion.
 
 Wolfram independently checked the finite determinant update and the paired
 scalar example \(\delta_n=w_n=1\),

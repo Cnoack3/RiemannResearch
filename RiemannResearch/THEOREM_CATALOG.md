@@ -50,8 +50,8 @@ or the complete nonprime gain is not summable. No individual channel is
 asserted necessary by itself. Failure of RH forces Gamma and E to be summable.
 
 **Conditional research reductions. Open:** nonsummability of the actual
-reciprocal-prime centered relative error E, or of Gamma, supplies capacity
-divergence and the existing RH endpoint. The weakest exact inequality remains
+full weighted angular energy Gamma supplies capacity divergence and the
+existing RH endpoint. The weakest exact inequality remains
 forall B exists N>=1, R_N+sum_(n<N) Gamma_n+J_N>B.
 RH/ParetoFirstSiteRHConsequences.lean connects this to RH while explicitly
 retaining hBaezDuarte : RH -> NaturalApproximation. The analytic provider is
@@ -66,8 +66,15 @@ U_N>=(1/4-o(1))*(log N)^2. Consequently the fixed-fraction A-saving and
 V-saving hypotheses from ParetoFirstSitePrimeBudget are incompatible with
 these classical growth scales. Their conditional Lean implications remain
 valid; these hypotheses are not suitable arithmetic targets.
-See RH/FirstSiteRHAngularContinuation20260930.md for the deduction,
-verification distinctions, and the remaining screened arithmetic inequality.
+The sharper fresh-prime weight gives E_n << Gamma_n/(log(n+3))^2.
+Since W_N=sum Gamma_n<=C_(N+1)=O(log N), summation by parts proves that
+E is summable classically without RH. This rate deduction is not yet
+kernel-imported; the conditional E-nonsummability endpoints remain valid
+but their hypotheses are not suitable arithmetic targets. The actual Gamma
+nonsummability provider remains Open. See
+RH/FirstSiteRHAngularContinuation20260930.md and
+RH/FirstSiteKolmogorovThreeSeries20260930.md for the deductions,
+verification distinctions, and the remaining full angular inequality.
 
 ### First-site prime alignment and fluctuation-scale providers (2026-09-30)
 

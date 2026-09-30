@@ -127,24 +127,71 @@ many nonzero terms almost surely. The three-series theorem uses truncated
 variance. The symmetric-sign realization above avoids this rare-spike
 obstruction because each coefficient has deterministic absolute size.
 
-## Arithmetic research step
+## Classical weight audit: keep the full angular energy
 
-The existing verified inequality `E_n<=16*Gamma_n` uses
+The earlier coarse comparison `E_n<=16*Gamma_n` is kernel-verified, where
 
 \[
-E_n=\frac{1}{n+3}
- \left(\frac{\kappa_n}{\delta_n}-\frac{X_n}{U_n}\right)^2
+E_n=\frac1p
+ \left(\frac{\kappa_n}{\delta_n}-\frac{X_n}{U_n}\right)^2,
+\qquad p=n+3
 \]
 
-at positive prime stages and zero otherwise. A sufficient deterministic
-target is a lower bound on disjoint prime blocks,
+at positive prime stages and zero otherwise. Its conditional nonsummability
+endpoint remains logically valid. However, **E nonsummability is not a
+sensible arithmetic target** under the classical scale deduction in
+[the preceding continuation](FirstSiteRHAngularContinuation20260930.md).
+The following further deduction is classical, not a kernel-verified import
+of the needed analytic rates.
+
+The factorial Euler product and PNT give `delta_n~log(p)/p`; the checked
+pivot upper bound `sigma<=2/p` gives
+`u_n=w_n*delta_n^2 >= c*(log p)^2/p` eventually. Also
+`U_n>=c*(log p)^2` eventually. Therefore the exact reduced weight satisfies
 
 \[
-\sum_{2^j\le n+3<2^{j+1}}E_n\ge b_j,
+\lambda_n=\frac{u_nU_n}{U_n+u_n}
+ \ge\tfrac12\min(u_n,U_n)
+ \gg\frac{(\log p)^2}{p}.
+\]
+
+Multiplying this lower weight by the complete centered square yields
+
+\[
+E_n\ll\frac{\Gamma_n}{(\log(n+3))^2}.
+\]
+
+On the other hand, the exact capacity decomposition and the previously
+documented Burnol/dyadic transfer give
+`W_N=sum_(n<N) Gamma_n <= C_(N+1)=O(log(N+3))`.
+Summation by parts, retaining the endpoint term, consequently gives
+
+\[
+\sum_n\frac{\Gamma_n}{(\log(n+3))^2}<\infty.
+\]
+
+Indeed the endpoint is `O(1/log N)`, and the remaining sum is dominated by
+a constant times `sum 1/(n*(log n)^2)` after a finite initial segment.
+Thus **E is summable classically, without RH**. This does not force Gamma
+to be summable: the full source weight carries the extra logarithmic factor.
+
+Source for the approximation lower bound: J.-F. Burnol,
+*A lower bound in an approximation problem involving the zeros of the
+Riemann zeta function*, Theorems 1.2--1.3,
+https://arxiv.org/abs/math/0103058. PNT, the exact factorial defect identity,
+and the point-target transfer are assembled in the preceding continuation;
+the weighted-series deduction here is an additional inference.
+
+## Arithmetic research step
+
+The sufficient block target must use the **actual** complete angular energy:
+
+\[
+\sum_{2^j\le n+3<2^{j+1}}\Gamma_n\ge b_j,
 \qquad b_j\ge0,\quad \sum_j b_j=\infty.
 \]
 
-This allows individual centered errors to tend to zero. The required bound
-must be proved for the actual screened factorial/CRT errors and running
-slope; auxiliary independent signs do not provide it. These block lower
+This allows individual centered errors to tend to zero and retains the
+entire Schur/factorial weight. The required bound must be proved for the
+actual screened factorial/CRT errors and running slope. These block lower
 bounds and clipped angular unboundedness remain **Open**.
