@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### First-site prime alignment and fluctuation-scale providers (2026-09-30)
+
+**Established without RH.** RH/ParetoFirstSitePrimeAlignment.lean proves
+capacity_eq_prime_alignment_budget:
+C_(N+1)=C_1+R_N+W_N+J_N, where R_N=(U_N+X_N)^2/U_N and W_N is the
+complete centered signed-error square. primeCancellationVariance_eq_pair_budget
+identifies W_N as the full ordered-pair determinant sum divided by 2U_N.
+Every prime correlation, actual Schur pivot, physical tail, nonprime gain,
+and initial capacity term is retained.
+Analysis/WeightedScalarEnergy.lean proves exact finite square completion,
+the weighted Lagrange identity, and normalized_product_tendsto_zero by a
+finite-head/tail argument.
+Bounded capacity forces R_N -> 0 and (V_N-U_N)^2/U_N -> 0, formalized by
+primeMeanMismatchBudget_tendsto_of_capacity_bounded and
+primeErrorMismatchBudget_tendsto_of_capacity_bounded.
+primeErrorMismatchBudget_completion retains the full extra square before
+the subsequent comparison drops it.
+prime_source_add_cross_eq_screened_rows records the exact signed CRT pairing.
+
+**Conditional research reductions. Open:** a cofinal R_N >= epsilon>0, or
+(V_N-U_N)^2/U_N >= epsilon>0, supplies the first-site capacity provider.
+The weaker square-root saving V_N <= U_N-c*sqrt(U_N)+K, for fixed c>0
+and finite real K, also suffices via
+tailCapacity_tendsto_of_prime_error_sqrt_gap_additive and its RH endpoint.
+None of these arithmetic providers is established. Nonvanishing R_N is
+sufficient, not asserted equivalent to RH. The weakest exact remaining
+condition is unbounded R_N+W_N+J_N, by
+tailCapacity_tendsto_iff_prime_alignment_unbounded.
+The imported large-sieve upper bounds still lack a verified signed transfer
+through adaptive inverse-Gram screening. See RH/FirstSitePrimeAlignment20260930.md.
+
+
 ### First-site capacity and signed prime budgets (2026-09-30)
 
 **Established without RH.** RH/ParetoFirstSitePrimeBudget.lean proves

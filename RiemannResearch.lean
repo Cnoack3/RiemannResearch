@@ -174,6 +174,7 @@ import RiemannResearch.Analysis.MonotoneAbelConvergence
 import RiemannResearch.RH.DampedMobiusUniformHalfRange
 import RiemannResearch.Analysis.SignedPowerDampingAbel
 import RiemannResearch.Analysis.FiniteWeightedEnergyComparison
+import RiemannResearch.Analysis.WeightedScalarEnergy
 import RiemannResearch.Analysis.NaturalPowerCutoff
 import RiemannResearch.RH.DampedMobiusSignedAbelGrowth
 import RiemannResearch.RH.DampedMobiusHeadApproximation
@@ -726,6 +727,7 @@ import RiemannResearch.RH.ParetoPrimeSourceDivergence
 import RiemannResearch.RH.ParetoPrimeCancellation
 import RiemannResearch.RH.ParetoPrimeNormalizedCancellation
 import RiemannResearch.RH.ParetoFirstSitePrimeBudget
+import RiemannResearch.RH.ParetoFirstSitePrimeAlignment
 import RiemannResearch.RH.ParetoPrimeRefinementCancellation
 import RiemannResearch.RH.ParetoPrimeCrossStageCancellation
 import RiemannResearch.RH.ParetoShapeMellinEnergy
