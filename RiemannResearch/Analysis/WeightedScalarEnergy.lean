@@ -413,3 +413,43 @@ theorem centered_square_weight_mono (s : Finset ι) (w v a b : ι → ℝ)
   centered_square_le_larger_weight _ _ _ _ _ _ hv hvw
 
 end RiemannResearch.Analysis.WeightedScalarEnergy
+
+namespace RiemannResearch.Analysis.WeightedScalarEnergy
+
+/-- The model square and the full signed screening error retain one exact square. -/
+theorem model_square_completion (w g m : ℝ) :
+    2 * (w * g ^ 2) + 2 * (w * (g - m) ^ 2) =
+      w * m ^ 2 + w * (2 * g - m) ^ 2 := by
+  ring
+
+theorem model_square_le_actual_error (w g m : ℝ) (hw : 0 ≤ w) :
+    w * m ^ 2 ≤ 2 * (w * g ^ 2) + 2 * (w * (g - m) ^ 2) := by
+  rw [model_square_completion]
+  exact le_add_of_nonneg_right (mul_nonneg hw (sq_nonneg _))
+
+/-- Square-summable complete signed discrepancy transfers actual to model energy. -/
+theorem model_square_summable {ι : Type*} (w g m : ι → ℝ)
+    (hw : ∀ i, 0 ≤ w i)
+    (hg : Summable (fun i => w i * (g i) ^ 2))
+    (he : Summable (fun i => w i * (g i - m i) ^ 2)) :
+    Summable (fun i => w i * (m i) ^ 2) := by
+  exact Summable.of_nonneg_of_le
+    (fun i => mul_nonneg (hw i) (sq_nonneg _))
+    (fun i => model_square_le_actual_error (w i) (g i) (m i) (hw i))
+    ((hg.mul_left 2).add (he.mul_left 2))
+
+/-- A model with divergent energy forces actual divergence when the full
+centered screening-error budget is summable. Its provider stays explicit. -/
+theorem actual_square_not_summable_of_model {ι : Type*}
+    (w g m E : ι → ℝ) (hw : ∀ i, 0 ≤ w i)
+    (hm : ¬ Summable (fun i => w i * (m i) ^ 2))
+    (hE : Summable E)
+    (herror : ∀ i, w i * (g i - m i) ^ 2 ≤ E i) :
+    ¬ Summable (fun i => w i * (g i) ^ 2) := by
+  intro hg
+  have he : Summable (fun i => w i * (g i - m i) ^ 2) :=
+    Summable.of_nonneg_of_le
+      (fun i => mul_nonneg (hw i) (sq_nonneg _)) herror hE
+  exact hm (model_square_summable w g m hw hg he)
+
+end RiemannResearch.Analysis.WeightedScalarEnergy

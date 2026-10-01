@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Failure agenda: Li witnesses and complete model-error transfer (2026-10-01)
+
+**Established generic transfer and negated-RH consequence; candidate kernel checks passed.**
+Analysis/WeightedScalarEnergy.lean adds model_square_completion, the exact
+nonnegative square identity; model_square_summable and
+actual_square_not_summable_of_model transfer divergence of a weighted model
+through a summable bound on the COMPLETE signed discrepancy.
+RH/LiFailureWitness.lean proves not_RH_exists_negative_li from the unconditional
+LiCriterion.li_criterion_rh_iff. Taylor index n represents lambda_(n+1).
+Their axiom audits contain only propext, Classical.choice and Quot.sound.
+
+**Conditional research reductions; substantive providers remain Open.**
+The new report RH/NotRHConditionsAndContradictionAgenda20261001.md separates
+ordinary proofs from formal declarations. It records centered screened-model
+transfer, moving-vector variation, DPP truncated maximum-hole moments,
+directional inverse saturation, Mellin-window nonvanishing, exponential
+negative Li subsequences, screw weighted-energy/cofinal positivity, confluent
+Hilbert-kernel obstructions, complete Weil positivity, and Connes generator
+approximation/error floors. These ordinary deductions do not supply RH.
+
+Open: arithmetic model with divergent actual-weight signed gap energy together
+with summable complete centered screening errors; exact moving-remainder
+representation and bounded Hilbert variation; synchronized bounded DPP range
+moment or bounded full inverse-direction deficit; vanishing unscaled actual
+Mellin deficit on a fixed positive-measure window; one-sided subexponential
+Li lower bound; complete arithmetic screw identification in Lean and
+cofinal weighted-energy bounds or full-window positivity; locally uniform
+arithmetic jet-Gram matching to the target kernel; cofinal full Weil lower
+bounds including tails and mixed blocks; Connes simple-even generators at
+the same cofinal scales plus projection-tail/spectral-excess approximation.
+No priority claim or RH contradiction is asserted.
+
 ### Failure intersection: signed raw growth and screened survivor rigidity (2026-10-01)
 
 **Established consequences of hypothetical zeros or negated RH; isolated kernel checks passed.**
