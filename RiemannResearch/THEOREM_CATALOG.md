@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Exact adjacent-weight regression and screened odd-charge contrasts (2026-10-01)
+
+**Unconditional finite identities and bounds; coherent kernel candidate passed.**
+Analysis/WeightedScalarEnergy.lean adds zero-source regression completion and
+regression_weight_remainder, retaining both change-of-weight squares.
+RH/ParetoFirstSiteAdjacentRegression.lean proves the explicit full-tail
+adjacent weight, harmonic<=adjacent<=actual Schur weights, the corresponding
+centered-scatter hierarchy, complete adjacent-weight split tree, actual signed
+moment formula and capacity_eq_adjacentPrimeSurvivor_budget.
+Every physical residue remainder, comparison square, historical drift,
+mean mismatch, initial capacity and nonprime gain remains.
+harmonicPrimeBlockSourceFloor_le_adjacent_source and
+adjacentPrimeSurvivorVariance_ge_floor_gap keep the NEW model's actual signed
+pooled slopes; prime density supplies no gap lower bound.
+
+RH/ParetoFirstSiteAdjacentContrasts.lean proves fixed-vector contrast-energy
+summability for changing tests with these explicit weights; the complete signed
+base cross term; moving/full-row equality after diagonal source cancellation;
+and adjacentPrimeMovingCRTContrastPairing_eq_screened_charge.
+The charge is the explicit odd reciprocal-square source, screened against
+EVERY old inverse-Gram row, including composite moduli.
+
+**Conditional research reductions. Open:** nonsummability of the actual new
+adjacent survivor scatter or moving CRT contrast series. The explicit finite
+provider in riemannHypothesis_of_adjacentMovingCRTContrast_unbounded requires
+unbounded nonnegative certificate prefixes. No signed arithmetic provider,
+capacity divergence or unconditional RH is established. The source-only
+harmonic rate assembly is still ordinary mathematics.
+See RH/ScreenedAdjacentRegression20261001.md for exact formulas, the remaining
+original G_j inequality, primary-source applicability and verification scope.
+
 ### Adjacent harmonic bounds for actual Schur gains (2026-09-30)
 
 **Formalized finite certificates; isolated kernel checks passed.**

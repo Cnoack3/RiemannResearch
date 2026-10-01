@@ -738,6 +738,8 @@ import RiemannResearch.Analysis.DyadicWeightedContrast
 import RiemannResearch.RH.ParetoFirstSitePrimeContrastPerturbations
 import RiemannResearch.RH.ParetoFirstSitePrimeMultiscale
 import RiemannResearch.RH.ParetoFirstSitePrimeSourceFloors
+import RiemannResearch.RH.ParetoFirstSiteAdjacentRegression
+import RiemannResearch.RH.ParetoFirstSiteAdjacentContrasts
 import RiemannResearch.RH.ParetoPrimeRefinementCancellation
 import RiemannResearch.RH.ParetoPrimeCrossStageCancellation
 import RiemannResearch.RH.ParetoShapeMellinEnergy

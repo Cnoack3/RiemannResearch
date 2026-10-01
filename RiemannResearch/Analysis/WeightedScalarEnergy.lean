@@ -365,4 +365,51 @@ theorem reduced_weight_mean_gap_eq_det (U u X x : ℝ) :
   · simp [hs]
   field_simp [hU,hu,hs]
 
+/-- Regression completion including zero source mass. -/
+theorem regression_square_completion_nonneg (s : Finset ι) (w a b : ι → ℝ)
+    (t : ℝ) (hw : ∀ i ∈ s, 0 ≤ w i) :
+    square s w (fun i => b i - t * a i) =
+      square s w (fun i => b i - (product s w a b / square s w a) * a i) +
+        square s w a * (t - product s w a b / square s w a)^2 := by
+  by_cases hU : square s w a = 0
+  · have hX : product s w a b = 0 := by
+      have hg := gram_nonneg s w a b hw
+      rw [hU, zero_mul] at hg
+      nlinarith [sq_nonneg (product s w a b)]
+    rw [square_sub, square_sub, hU, hX]
+    ring
+  · exact regression_square_completion s w a b t hU
+
+/-- Exact change of weights after signed regression; both remainders remain. -/
+theorem regression_weight_remainder (s : Finset ι) (w v a b : ι → ℝ)
+    (t : ℝ) (hv : ∀ i ∈ s, 0 ≤ v i) :
+    square s w (fun i => b i - t * a i) =
+      square s v (fun i => b i - (product s v a b / square s v a) * a i) +
+        square s v a * (t - product s v a b / square s v a)^2 +
+        square s (fun i => w i-v i) (fun i => b i-t*a i) := by
+  have he : square s w (fun i => b i-t*a i) =
+      square s v (fun i => b i-t*a i) +
+        square s (fun i => w i-v i) (fun i => b i-t*a i) := by
+    unfold square
+    rw [← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro i hi
+    ring
+  rw [he, regression_square_completion_nonneg s v a b t hv]
+
+theorem centered_square_le_larger_weight (s : Finset ι) (w v a b : ι → ℝ)
+    (t : ℝ) (hv : ∀ i ∈ s, 0 ≤ v i) (hvw : ∀ i ∈ s, v i ≤ w i) :
+    square s v (fun i => b i - (product s v a b / square s v a) * a i) ≤
+      square s w (fun i => b i-t*a i) := by
+  rw [regression_weight_remainder s w v a b t hv]
+  have hU := square_nonneg s v a hv
+  have hR := square_nonneg s (fun i => w i-v i) (fun i => b i-t*a i)
+    (fun i hi => sub_nonneg.mpr (hvw i hi))
+  nlinarith [sq_nonneg (t-product s v a b / square s v a)]
+theorem centered_square_weight_mono (s : Finset ι) (w v a b : ι → ℝ)
+    (hv : ∀ i ∈ s, 0 ≤ v i) (hvw : ∀ i ∈ s, v i ≤ w i) :
+    square s v (fun i => b i - (product s v a b / square s v a)*a i) ≤
+      square s w (fun i => b i - (product s w a b / square s w a)*a i) :=
+  centered_square_le_larger_weight _ _ _ _ _ _ hv hvw
+
 end RiemannResearch.Analysis.WeightedScalarEnergy
