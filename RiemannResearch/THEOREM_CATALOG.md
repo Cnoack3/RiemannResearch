@@ -2,7 +2,11 @@
 
 ### Moving-remainder verification and signed CRT transfer (2026-10-01)
 
-**Established generic analysis; kernel candidate and axiom audits passed.**
+**Established generic analysis; independent source and axiom checks passed.**
+The pinned b306d93 audit recompiled both new files and their combined proof
+bodies; all six foundation audits use only propext, Classical.choice and
+Quot.sound. See RH/MovingRemaindersIndependentAudit20261001.md for receipts,
+the complete assumption trace, zero-energy handling and Wolfram reproduction.
 Analysis/MovingOrthogonalEnergy.lean proves maskedPairingVector_norm_le,
 finite_masked_moving_bound, moving_pairing_prefix_bound and
 moving_pairing_summable. Complete signed increments remain, with absolute
