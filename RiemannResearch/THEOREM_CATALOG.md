@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Exact weighted prime-block variance and pair certificates (2026-09-30)
+
+**Established without RH.** RH/ParetoFirstSitePrimeBlocks.lean proves
+primeAngularBlock_eq_variance_add_drift: the complete sum of Gamma on
+[N,N+k), N>0, equals its internal weighted variance S plus the exact
+head--block mean drift H. This retains the full Schur/factorial weights and
+signed screened errors, including at empty block source. The ordered-pair
+formula primeBlockVariance_eq_pair and the concrete lower bound
+primeBlockVariance_ge_two_rows give a fully weighted two-row certificate
+B(a,b)<=S<=sum Gamma. primeBlockVariance_eq_survivor_scatter cancels the
+aligned negative source exactly, exposing the actual Schur survivor scatter.
+
+primeAngularInnovation_summable_iff_dyadic_blocks is the exact equivalence
+Summable Gamma iff Summable S_j and Summable H_j on [2^j,2^(j+1)).
+capacity_eq_dyadic_prime_block_budget retains C_1, R, both block sums and
+all nonprime gains. tailCapacity_tendsto_iff_dyadic_prime_block_channels
+keeps all four channel alternatives; scatter divergence alone is not
+asserted necessary. Analysis/WeightedScalarEnergy.lean supplies the exact
+two-budget merge and two-row regression completion with their square
+remainders.
+
+**Conditional research reductions. Open:** nonsummability of actual
+dyadic block scatter, or a nonsummable nonnegative lower sequence b_j<=S_j.
+riemannHypothesis_of_dyadic_prime_pair_separation reduces a sufficient
+provider to nonsummability of the complete two-row determinant energies
+for explicitly distinct rows in [2^(j+1),2^(j+2)). No lower-series growth
+provider is established. These use full Gamma weights, not the coarse
+reciprocal-prime E target. See RH/FirstSitePrimeBlockVariance20260930.md
+for the preceding three-series audit, exact identities and remaining task.
+
 ### Kolmogorov truncation of the exact angular variance (2026-09-30)
 
 **Established without RH.** Analysis/NonnegativeSeriesTruncation.lean proves

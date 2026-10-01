@@ -216,4 +216,63 @@ theorem reduced_weight_lower (u U v : ℝ)
   have h2 := mul_nonneg hu (sub_nonneg.mpr hUv)
   nlinarith
 
+
+/-- Exact merge of two weighted regression budgets, including both centered
+energies and the complete mean mismatch square. -/
+theorem centered_energy_merge (U V X u v x : ℝ)
+    (hU : U ≠ 0) (hu : u ≠ 0) (hSum : U + u ≠ 0) :
+    V + v - (X + x) ^ 2 / (U + u) =
+      (V - X ^ 2 / U) + (v - x ^ 2 / u) +
+        U * u / (U + u) * (x / u - X / U) ^ 2 := by
+  field_simp [hU, hu, hSum]
+  ring
+
+/-- Real division by zero gives the same identity at an empty source. -/
+theorem centered_square_eq_sub_quotient (s : Finset ι) (w a b : ι → ℝ) :
+    square s w (fun i => b i - (product s w a b / square s w a) * a i) =
+      square s w b - (product s w a b) ^ 2 / square s w a := by
+  by_cases hU : square s w a = 0
+  · simp [hU]
+  · rw [centered_square_eq s w a b hU]
+    field_simp [hU]
+
+/-- The optimal two-row fit plus its complete slope remainder. -/
+theorem two_row_regression_completion (wi wj ai aj bi bj t : ℝ)
+    (hu : wi * ai^2 + wj * aj^2 ≠ 0) :
+    wi * (bi-t*ai)^2 + wj * (bj-t*aj)^2 =
+      wi*wj*(ai*bj-aj*bi)^2 / (wi*ai^2+wj*aj^2) +
+        (wi*ai^2+wj*aj^2) *
+          (t-(wi*ai*bi+wj*aj*bj)/(wi*ai^2+wj*aj^2))^2 := by
+  field_simp [hu]
+  ring
+
+/-- A pair certificate inside the full fit square. Only the other nonnegative
+row squares and the explicit two-row slope remainder are discarded. -/
+theorem two_row_determinant_le_square [DecidableEq ι]
+    (s : Finset ι) (w a b : ι → ℝ) (t : ℝ)
+    (hw : ∀ i ∈ s, 0 ≤ w i) (i j : ι)
+    (hi : i ∈ s) (hj : j ∈ s) (hij : i ≠ j) :
+    w i*w j*(a i*b j-a j*b i)^2 / (w i*(a i)^2+w j*(a j)^2) ≤
+      square s w (fun q => b q-t*a q) := by
+  have hnn := square_nonneg s w (fun q => b q-t*a q) hw
+  by_cases hu : w i*(a i)^2+w j*(a j)^2 = 0
+  · simpa [hu] using hnn
+  have hpos : 0 < w i*(a i)^2+w j*(a j)^2 :=
+    lt_of_le_of_ne
+      (add_nonneg (mul_nonneg (hw i hi) (sq_nonneg _))
+        (mul_nonneg (hw j hj) (sq_nonneg _))) (Ne.symm hu)
+  have he := two_row_regression_completion (w i) (w j) (a i) (a j) (b i) (b j) t hu
+  have hrest : 0 ≤ (w i*(a i)^2+w j*(a j)^2) *
+      (t-(w i*a i*b i+w j*a j*b j)/(w i*(a i)^2+w j*(a j)^2))^2 :=
+    mul_nonneg hpos.le (sq_nonneg _)
+  have hpair : w i*(b i-t*a i)^2+w j*(b j-t*a j)^2 ≤
+      square s w (fun q => b q-t*a q) := by
+    have hsub : ({i,j} : Finset ι) ⊆ s := by
+      intro q hq
+      simp only [Finset.mem_insert, Finset.mem_singleton] at hq
+      rcases hq with rfl | rfl <;> assumption
+    have hh := Finset.sum_le_sum_of_subset_of_nonneg hsub
+      (fun q hq _ => mul_nonneg (hw q hq) (sq_nonneg (b q-t*a q)))
+    simpa [square, hij] using hh
+  linarith
 end RiemannResearch.Analysis.WeightedScalarEnergy
