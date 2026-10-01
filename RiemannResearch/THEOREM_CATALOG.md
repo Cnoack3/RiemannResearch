@@ -1,5 +1,62 @@
 # Theorem catalog
 
+### Adjacent harmonic bounds for actual Schur gains (2026-09-30)
+
+**Formalized finite certificates; isolated kernel checks passed.**
+RH/ParetoAdjacentSchurBound.lean connects the existing complete adjacent raw
+residue energy to the actual finite inverse-Gram completion. For conductor
+q=n+3, v=t_q-((q-1)/q)t_(q-1) equals a scaled adjacentMomentPacket. Its exact
+whole-tail norm is [H_(q-1)-(q-1)/q+adjacentResidueRemainder(q-1)]/q^2.
+The literal infinite remainder is nonnegative and at most (q-1)/q.
+Hence sigma_q<=H_(q-1)/q^2, eta_q=-<v,tailMinimum>, and
+actual gain_q>=q^2*eta_q^2/H_(q-1), at both prime and nonprime conductors.
+adjacentInnovationLower_sum_le_capacity retains the initial capacity and
+all actual gain contributions. factorialPrimeSourceEnergy_ge_adjacent_harmonic
+gives the pointwise lower 1/(4*H_(q-1)); it concerns the positive source,
+not reciprocal-prime energy nonsummability or actual signed gain divergence.
+
+**Conditional research reduction. Open:** a positive lower bound for enough
+actual dyadic moments sum q^2*eta_q^2, or another divergent weighted moment.
+The paper PNT/Burnol assembly improves U_N's lower scale to linear order and
+C/U to O(log N/N); those analytic providers remain unformalized.
+RH/AdjacentSchurResearch20260930.md records the exact proof, finite numerical
+screening, open moment estimate, and exclusions from the source audit.
+No RH or mathematical-priority claim is made.
+
+### Vanishing slope, two gain channels and balanced nonprime trials (2026-09-30)
+
+**Formalized conditional research reductions; isolated kernel checks passed.**
+Analysis/VanishingRegressionSlope.lean proves the fixed finite-head implication
+from bounded centered-prefix energy and slopes tending to zero to bounded
+uncentered prefixes and summability. RH/ParetoFirstSiteAngularTwoChannels.lean
+uses the actual survivor slope tau=(U+X)/U and retains the full centered square.
+Under tau->0, Summable Gamma iff Summable factorialPrimeGain, their finite
+totals agree, and R_N<=sum' Gamma-sum_(n<N) Gamma. Both gain series summable
+give C_(N+1)<=C_1+sum' Gamma+sum' factorialCompositeGain. The separate
+mean-channel alternative is consequently redundant under tau->0.
+
+**Analytic inputs explicit.** C_(N+1)/U_N->0 implies tau->0 and the resulting
+two-channel capacity equivalence. RH_iff_two_gain_channels_of_sublinear_source
+also retains hBaezDuarte. Burnol/PNT give the source-scale premise classically
+as detailed in RH/FirstSiteTwoChannels20260930.md; their complete analytic
+rate assembly is not supplied as a Lean theorem or installed as an axiom.
+
+RH/ParetoBalancedSchurTrial.lean retains the entire norm completion for a
+balanced old-row direction v=t_new-a*t_old. The exact reciprocal constraint
+gives eta=-<v,tailMinimum>, and sigma<=||v||^2 only after its projection
+remainder is retained. A positive trial-norm upper bound K yields the actual
+lower certificate <v,tailMinimum>^2/K<=eta^2/sigma, including composite gains.
+The paper doubling application has v_p=t_(2p)-(1/2)t_p=(1/p)D_p g_2 and
+||v_p||^2=log(2)/(4p). Its specialized Lean norm and prime-subset series
+transfer are still pending. No arithmetic divergence is asserted.
+
+**Open:** a divergent signed lower energy for the full prime block scatter,
+or the actual nonprime bucket pairings, or the repository's complete
+reciprocal Abel charge lower bound. The note records primary-source
+applicability, exploratory full-tail numerics through N=256, and six
+sequenced research stages. Verification timeouts without diagnostics are
+recorded separately from the mathematical proofs.
+
 ### Source-balanced full-angular block contrasts (2026-09-30)
 
 **Established without RH.** RH/ParetoFirstSitePrimeBlockContrast.lean proves

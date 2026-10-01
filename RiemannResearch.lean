@@ -2002,3 +2002,7 @@ import RiemannResearch.Analysis.SuperexponentialPrimitive
 import RiemannResearch.Analysis.SmoothZeroRemoval
 import RiemannResearch.Analysis.ProjectionTrialEnergy
 import RiemannResearch.RH.IntegerDPPOffsiteTrialBounds
+import RiemannResearch.Analysis.VanishingRegressionSlope
+import RiemannResearch.RH.ParetoFirstSiteAngularTwoChannels
+import RiemannResearch.RH.ParetoBalancedSchurTrial
+import RiemannResearch.RH.ParetoAdjacentSchurBound
