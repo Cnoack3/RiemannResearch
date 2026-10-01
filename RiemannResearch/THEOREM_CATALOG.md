@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Failure intersection: signed raw growth and screened survivor rigidity (2026-10-01)
+
+**Established consequences of hypothetical zeros or negated RH; isolated kernel checks passed.**
+RH/RHFalseRawCorrelationGrowth.lean proves the same-zero polynomial lower bounds
+for the complete signed raw off-diagonal Gram sum, inverse-source quadratic form,
+and exact-head residual energy. Both pair orientations, signs and physical tails
+remain. RH/RHFalseScreenedSurvivorRigidity.lean proves harmonic-weighted actual
+prime-survivor summability, uniform arbitrary-window bounds, exact prime-plus-
+nonprime capacity and certificate-error accounting, and finite exceptional-row
+bounds by the SAME canonical remaining error. RHFalseJointObstruction adds
+not_RH_signed_growth_and_screened_rigidity with sole premise negated Mathlib RH,
+combining the shared zero, raw/inverse growth, screened summability and normalized
+residual-tail divergence.
+
+**Ordinary mathematical deductions, not new kernel-verified analytic providers:**
+the exact Euler-tail calculation with classical prime estimates strengthens
+failure to sum_prime(log p)*s_p^2 finite, and sum_j 2^j*G_j^2 finite for the actual
+pooled screened gap. It also yields the discrete height-sensitive zero floor
+D >= (2 beta - 1)*|rho|^(2 beta - 3)/6, retaining the full tail and correlated
+multi-zero Gram optimization. No priority claim is made.
+See RH/NotRHSignedIntersection20261001.md for proofs and source applicability.
+
+**Conditional research reductions. Open:** actual signed survivor/contrast
+nonsummability, a subpower signed raw Gram upper bound, or another arithmetic
+estimate incompatible with this conjunction. No contradiction, RH proof,
+screening lower bound or unconditional capacity divergence is asserted.
+
+
 ### Exact adjacent-weight regression and screened odd-charge contrasts (2026-10-01)
 
 **Unconditional finite identities and bounds; coherent kernel candidate passed.**

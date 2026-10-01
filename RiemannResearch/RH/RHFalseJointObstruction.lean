@@ -1,3 +1,6 @@
+import RiemannResearch.RH.RHFalseScreenedSurvivorRigidity
+import RiemannResearch.RH.RHFalseRawCorrelationGrowth
+import RiemannResearch.RH.ResidualTailPNT
 import RiemannResearch.RH.IntegerDPPWeightedHoles
 import RiemannResearch.RH.RHFalseTailConstraints
 import RiemannResearch.RH.RHCriterionFailures
@@ -122,5 +125,45 @@ theorem not_RH_joint_arithmetic_obstruction (hRH : ¬ RiemannHypothesis) :
   exact ⟨siteMellinVacancyFloor_pos n s hs,
     siteMellinVacancyFloor_le_limitingKernel_complement s hs hs1 hz n,
     siteMellinVacancyFloor_le_integerKernel_complement s hs hs1 hz n⟩
+
+end RiemannResearch.RH.Pareto
+
+namespace RiemannResearch.RH.Pareto
+open CoefficientStabilization CoefficientStabilization.TailCapacity IntegerDPP
+open CoefficientStabilization.GramMobiusCorrection
+open Filter
+open scoped BigOperators Topology
+
+/-- A single actual zero forces raw/inverse growth while the SAME actual
+screened rows have uniformly vanishing finite-window energy. No contradiction
+between these different quantities or arithmetic provider is asserted. -/
+theorem not_RH_signed_growth_and_screened_rigidity (hRH : ¬ RiemannHypothesis) :
+    (∃ s : ℂ, riemannZeta s = 0 ∧ (1 / 2 : ℝ) < s.re ∧ s.re < 1 ∧
+      (∀ᶠ N : ℕ in atTop,
+        (((2 * s.re - 1) / (4 * ‖s‖ ^ 2)) *
+          ((N : ℝ) + 1) ^ (2 * s.re - 1) -
+          48 * (∑ d ∈ Finset.Icc 1 N, 1 / (d : ℝ)) - 8) / 24 ≤
+            rawMobiusOffDiagonalEnergy N) ∧
+      (∀ n : ℕ, 2 ≤ n →
+        (((2 * s.re - 1) / (4 * ‖s‖ ^ 2)) *
+          (((n + 1 : ℕ) : ℝ) + 1) ^ (2 * s.re - 1) -
+          24 * energy 0 - 8) / 24 ≤ inverseSourceEnergy n)) ∧
+    Summable factorialPrimeGain ∧
+    Summable harmonicPrimeSurvivorEnergy ∧
+    Tendsto (fun N : ℕ => (N : ℝ) * residualTailEnergy N) atTop atTop ∧
+    (∀ N k : ℕ, ∀ ε : ℝ, 0 ≤ ε →
+      ((primeExceptionalSurvivorRows N k ε).card : ℝ) *
+        (ε^2 / (4 * (harmonic (N+k+1) : ℝ))) ≤
+          ‖canonicalTailCertificate - tailMinimum (N+1)‖^2) := by
+  obtain ⟨s, hz, hs, h1, hraw, _⟩ :=
+    not_RH_same_zero_signed_raw_and_head_obstruction hRH
+  have hs1 : s ≠ 1 := by intro he; simp [he] at h1
+  refine ⟨⟨s, hz, hs, h1, hraw, fun n hn =>
+    inverseSourceEnergy_power_lower_of_zeta_zero n hn s hs hs1 hz⟩,
+    factorialPrimeGain_summable_of_not_RH hRH,
+    harmonicPrimeSurvivorEnergy_summable_of_not_RH hRH,
+    normalized_residual_tail_tendsto_atTop (not_RH_limitEnergy_pos hRH), ?_⟩
+  intro N k ε hε
+  exact primeExceptionalSurvivorRows_count_canonical_error_of_not_RH hRH N k ε hε
 
 end RiemannResearch.RH.Pareto
