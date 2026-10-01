@@ -1,3 +1,5 @@
+import RiemannResearch.RH.ParetoMovingRemainderTransfer
+import RiemannResearch.Analysis.MovingOrthogonalEnergy
 import RiemannResearch.RH.LiFailureWitness
 import RiemannResearch.RH.RHFalseScreenedSurvivorRigidity
 import RiemannResearch.RH.RHFalseRawCorrelationGrowth

@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Moving-remainder verification and signed CRT transfer (2026-10-01)
+
+**Established generic analysis; kernel candidate and axiom audits passed.**
+Analysis/MovingOrthogonalEnergy.lean proves maskedPairingVector_norm_le,
+finite_masked_moving_bound, moving_pairing_prefix_bound and
+moving_pairing_summable. Complete signed increments remain, with absolute
+total variation and orthonormality explicit. Standard foundations only:
+propext, Classical.choice and Quot.sound.
+
+RH/ParetoMovingRemainderTransfer.lean defines primeMovingCRTAmplitude and proves
+primeMovingCRTAmplitude_sq for the actual signed pairing and actual energy,
+including zero denominators. No raw rows or proxy weights are substituted.
+
+**Conditional research reduction.**
+riemannHypothesis_of_moving_remainder_model assembles the generic summability
+theorem and the existing exact CRT contrast contradiction. Open: a genuinely
+square-nonsummable arithmetic model; an exact complete remainder representation;
+orthonormal tests for that representation; summable total Hilbert variation.
+The axiom audit does not establish these hypotheses.
+
+**Ordinary deductions, not newly formalized arithmetic providers.**
+RH/MovingRemaindersVerificationAndResearch20261001.md proves the stronger full
+block/centered-energy consequence and corrects the prior agenda's paired-only
+limitation. Under negated RH, the prime coefficient dual and canonical
+interpolant give 1/sigma_p <= 4*p^2+4+2*C, hence the natural raw-charge
+comparison has finite gap energy with the ACTUAL weights. An exact abstract
+Hilbert countermodel has growing sources and finite screened energy.
+RH/MovingRemaindersDiagnostics20261001.md supplies reproducible full-tail
+digamma Gram, signed screening and exact countermodel computations.
+The report reviews primary preprints and retains the complete inverse-Gram
+provider as Open. No priority claim or unconditional RH proof is asserted.
+
+
 ### Failure agenda: Li witnesses and complete model-error transfer (2026-10-01)
 
 **Established generic transfer and negated-RH consequence; candidate kernel checks passed.**

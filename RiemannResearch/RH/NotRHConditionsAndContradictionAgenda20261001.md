@@ -107,9 +107,11 @@ then
 $$\boxed{\sum_j\kappa_j(G_j-\widetilde G_j)^2\le
 \left(\|R_0\|+\sum_j\|R_{j+1}-R_j\|\right)^2<\infty.}$$
 
-Proof: write $R_j=R_0+\sum_{i<j}(R_{i+1}-R_i)$, use Bessel for each fixed vector against the appropriate subfamily of the $v_j$, and use Minkowski in $\ell^2$. One first obtains the same bound for every finite collection of levels, then takes the monotone limit. This handles genuinely moving vectors; it does not replace them by a fixed vector. It supplies the transfer theorem directly even when the full uncentered row errors do not have finite total energy.
+Proof: write $R_j=R_0+\sum_{i<j}(R_{i+1}-R_i)$, use Bessel for each fixed vector against the appropriate subfamily of the $v_j$, and use Minkowski in $\ell^2$. One first obtains the same bound for every finite collection of levels, then takes the monotone limit. This handles genuinely moving vectors and preserves the complete signed remainder.
 
-This paired contrast estimate is sufficient for the transfer argument directly. It does not assert that the stronger full centered error sum $\sum_jE_j$ is finite.
+The stated complete row representation gives more: if $\Pi_j$ projects onto the innovations in $B_j$, its ranges are pairwise orthogonal and $\|\Pi_jR_j\|^2=\sum_{p\in B_j}w_p\varepsilon_p^2$. The same Bessel--Minkowski proof therefore bounds the sum of these full uncentered row energies by $(\|R_0\|+\sum_i\|R_{i+1}-R_i\|)^2$. Hence the full centered error sum $\sum_jE_j$ is finite as well. The earlier paired-only limitation was unnecessarily weak.
+
+The scalar analytic bound and its conditional signed CRT application are now formalized in Analysis/MovingOrthogonalEnergy.lean and RH/ParetoMovingRemainderTransfer.lean. See [MovingRemaindersVerificationAndResearch20261001.md](MovingRemaindersVerificationAndResearch20261001.md) for the block proof, explicit arithmetic assumptions, inverse-pivot restriction, countermodel and reproducible Wolfram diagnostics.
 
 **Open arithmetic program B.** Derive an exact model-remainder representation and an unconditional bound on its total Hilbert variation. Alternatively, directly control $\sum_j|\langle R_j,v_j\rangle|^2$; that is weaker and may be more attainable. If its companion model has the nonsummable signed gap energy in A, the proved reduction yields a contradiction.
 
