@@ -1,5 +1,49 @@
 # Theorem catalog
 
+### Unconditional prime pivots, raw-model obstruction and norm-saving transfer (2026-10-01)
+
+**Established arithmetic and analytic results; coherent kernel checks passed.**
+RH/ParetoPrimePivotCertificates.lean proves exact two-site source observations,
+capacity and four-site inverse-pivot norm-square completions for the COMPLETE
+tail dictionary, including older composite conductors. Formal Bertrand gives
+prime_schur_inverse_le_ten_sq and prime_schurSigma_ge_tenth:
+1/sigma_p <= 10*p^2 and sigma_p >= 1/(10*p^2), unconditionally.
+prime_schur_inverse_le_capacity preserves the signed credit
+4*p^2+2*C_<=p-4*C_<p. The physical dictionary is not truncated.
+
+RH/ParetoPrimeRawChargeModels.lean proves primeRawCharge_energy_summable,
+primeRawModelRow_energy_summable and primeRawModelAmplitude_square_summable
+for Q/p^2 plus any fixed Hilbert-vector pairing, with the ACTUAL prime Schur
+weights and arbitrary dyadic block tests. Exact mixed-square and source-shift
+identities remain. coprimePrimeRawCharge_eq connects the genuine coprime-two
+charge. primeMovingCRT_rawModel_error_summable_iff equates summability of the
+complete discrepancy to summability of the actual amplitude because the raw
+model is square summable. This raw family cannot provide model divergence.
+
+Analysis/WeightedNormDefectTransfer.lean proves
+actual_square_not_summable_of_cofinal_norm_defect: divergent model energy
+and a fixed positive cofinal saving in PREFIX NORMS force actual energy
+divergence. The full signed cross term is retained before the bound.
+All five critical audits use only propext, Classical.choice and Quot.sound.
+
+**Conditional research reduction; arithmetic providers remain Open.**
+RH/ParetoMovingRemainderTransfer.riemannHypothesis_of_moving_norm_defect uses
+the actual normalized signed CRT amplitude, including zero-energy cases.
+Open: an independently defined divergent arithmetic model outside the raw
+summable family; a positive cofinal prefix-norm saving for the COMPLETE signed
+error with that model. Relative error energy may tend to one. Unbounded saving
+in energies alone is insufficient. The earlier moving-Hilbert theorem's
+representation, orthonormality, model divergence and variation inputs remain
+Open as an alternative route.
+
+RH/PrimePivotAndRawModelContinuation20261001.md records exact ordinary
+arguments, precise formal status, primary-source comparisons and the next
+arithmetic obligation. RH/PrimePivotAndRawModelDiagnostics20261001.md records
+successful Wolfram full-tail and exact finite-support checks plus reproduction.
+This supersedes the earlier conditional raw-charge pivot estimate below;
+historical audit receipts remain intact. No unconditional RH proof or
+mathematical priority claim is asserted.
+
 ### Moving-remainder verification and signed CRT transfer (2026-10-01)
 
 **Established generic analysis; independent source and axiom checks passed.**

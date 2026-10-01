@@ -2,6 +2,8 @@
 
 Date: October 1, 2026. Repository baseline: 653e0105593468c966c9436a6b24c0f88e3ef942.
 
+Continuation: [Prime pivots and the next moving-remainder target](PrimePivotAndRawModelContinuation20261001.md) proves an unconditional complete-screened bound sigma_p >= 1/(10*p^2), superseding the conditional raw-charge pivot estimate in this historical report. It also formally rules out the raw charge plus fixed-vector family as a divergent model and adds a weaker conditional transfer through positive cofinal prefix-norm saving. The earlier audit receipts and open moving-Hilbert obligations remain valid.
+
 ## Scope and result
 
 The user requested two previously suggested GitHub prompts, verification first, with Mathematica/Wolfram and trusted web research. The verbatim prompt texts were not available in the recovered conversation. This execution therefore audited the latest RH/Route B work first, then continued its moving-remainder and signed arithmetic analysis. It does not claim to have recovered the exact prompts.

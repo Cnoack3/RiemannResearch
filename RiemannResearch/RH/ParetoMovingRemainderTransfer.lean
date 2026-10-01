@@ -5,6 +5,7 @@ Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.MovingOrthogonalEnergy
 import RiemannResearch.Analysis.WeightedScalarEnergy
+import RiemannResearch.Analysis.WeightedNormDefectTransfer
 import RiemannResearch.RH.ParetoFirstSitePrimeContrastPerturbations
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 
@@ -23,6 +24,11 @@ CONDITIONAL RESEARCH REDUCTION. Open: construct a square-nonsummable arithmetic
 model, an exact complete remainder representation, its orthonormal tests, and
 a summable absolute total variation bound. Axiom audits do not discharge these
 local mathematical hypotheses. This module does not prove unconditional RH.
+
+The cofinal norm-defect theorem supplies a weaker alternative analytic
+transfer. Open: a divergent arithmetic model and a positive cofinal saving in
+prefix norms of its complete signed error. ParetoPrimeRawChargeModels rules
+out the raw Q/p^2 plus fixed-vector family as a divergent model.
 -/
 
 noncomputable section
@@ -61,4 +67,27 @@ theorem riemannHypothesis_of_moving_remainder_model
     (fun j => primeMovingCRTAmplitude j f) m (fun _ => by norm_num)
     (by simpa only [one_mul] using ha) (by simpa only [one_mul] using he)
   exact hmodel (by simpa only [one_mul] using hm)
+
+/-- CONDITIONAL RESEARCH REDUCTION: a divergent arithmetic model and a fixed
+positive prefix-norm saving for the complete signed error remain explicit. -/
+theorem riemannHypothesis_of_moving_norm_defect
+    (f : ℕ → ℕ → ℝ) (m : ℕ → ℝ)
+    (hmodel : Filter.Tendsto
+      (fun N => square (Finset.range N) (fun _ : ℕ => (1 : ℝ)) m)
+      Filter.atTop Filter.atTop)
+    (δ : ℝ) (hδ : 0 < δ)
+    (hgap : ∀ N0 : ℕ, ∃ N ≥ N0,
+      δ ≤ Real.sqrt (square (Finset.range N) (fun _ : ℕ => (1 : ℝ)) m) -
+        Real.sqrt (square (Finset.range N) (fun _ : ℕ => (1 : ℝ))
+          (fun j => primeMovingCRTAmplitude j f - m j))) :
+    RiemannHypothesis := by
+  apply riemannHypothesis_of_movingCRTContrast_not_summable f
+  intro hs
+  have ha : Summable (fun j => (primeMovingCRTAmplitude j f)^2) := by
+    simpa only [primeMovingCRTAmplitude_sq] using hs
+  have hnot := actual_square_not_summable_of_cofinal_norm_defect
+    (fun _ : ℕ => (1 : ℝ)) (fun j => primeMovingCRTAmplitude j f) m
+    (fun _ => by norm_num) hmodel δ hδ hgap
+  exact hnot (by simpa only [one_mul] using ha)
+
 end RiemannResearch.RH.Pareto.CoefficientStabilization.TailCapacity

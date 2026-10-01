@@ -1,3 +1,6 @@
+import RiemannResearch.RH.ParetoPrimePivotCertificates
+import RiemannResearch.RH.ParetoPrimeRawChargeModels
+import RiemannResearch.Analysis.WeightedNormDefectTransfer
 import RiemannResearch.RH.ParetoMovingRemainderTransfer
 import RiemannResearch.Analysis.MovingOrthogonalEnergy
 import RiemannResearch.RH.LiFailureWitness
