@@ -369,6 +369,89 @@ Installed-module and reverse-dependent validation is handled by the single final
 
 The additional common-joint theorem completed Lean with exit 0, verified true, job `job_7FkdpQUWJ5Uch9WLm9OaYdhunB3dM-WI`, code SHA-256 `634836e419e9d5f8c40889e05c5c4fd24763f3eaa9982909dca4c6d115f27663`. Its axiom inspection also reported only the three standard foundations above.
 
+## 12. Coverage audit: cofinality, inverse Gram growth, DPP, Mellin and Bagchi
+
+This audit answers the follow-up about these five families. The first edition integrated the principal cofinal barriers and integer-DPP/Mellin hole consequences, but did not separately develop operator-norm growth, the Mellin-frequency DPP, spatial coupling or Bagchi's named equivalence. This section makes their roles explicit. It adds ordinary deductions and an assumption audit; it adds no Lean declarations or external axioms.
+
+### Cofinal conditions: keep the quantifiers
+
+Under failure, the checked normalized residual-tail result gives $Nt_N\to\infty$. Hence for every $K$ there is a threshold after which $Nt_N>K$ at every index. Thus there is no cofinal bounded subsequence.
+
+Similarly, the exact signed capacity budget has $U_N\to\infty$ and $A_N/U_N\to-1$. For every fixed $\theta<1$ and $K\in\mathbb R$ this implies, eventually,
+
+$$A_N<-\theta U_N-K.$$
+
+Indeed choose $\theta<c<1$; eventually $A_N/U_N<-c$, and $(c-\theta)U_N>K$. This rules out the strict-fraction cofinal provider, with every signed prime cross term and nonprime gain still inside $A_N$.
+
+The inverse-column cofinal criteria in ProjectedDualColumnConcentration.lean remain separate, explicit arithmetic obligations. With the unconditionally supplied $a>0$ and $\ell(n)=\operatorname{logProductPower}(1/11)(6+\log n)$, put $M_n(d)=\operatorname{projectedDualCoefficientMass}(n,d)$. For present conductors this is the full $\ell^1$ norm of the signed inverse-Gram column. The checked endpoint criterion and contraposition imply, under failure,
+
+$$\exists d>1,\ \exists\varepsilon>0,\quad
+e^{-a\ell(n)}M_n(d)^2\ge\varepsilon\quad\text{eventually}.$$
+
+The stronger repository barrier applies whenever the fixed limiting correction for $d$ is nonzero: for each $b<a$, $e^{-b\ell(n)}M_n(d)^2\to\infty$. The unconditional stretched-energy provider and the existence of a nonzero fixed correction under failure permit that barrier to be used. Neither conclusion establishes divergence of the fixed column's Euclidean norm without retaining its dimension or support cost.
+
+Separate cofinal sets need not intersect. The concentration criterion requires support, leakage and column-energy bounds at the same indices. This joint-index obligation cannot be replaced by separately cofinal estimates.
+
+### Matrix norm growth is unconditional
+
+Use the Euclidean operator norm on conductor coefficients and the full Pareto Gram matrix $G_N$ for $g_2,\ldots,g_N$. For $N\ge2$,
+
+$$G_N(N,N)=\|g_N\|_H^2
+\le\frac{N-1}{N^2}+\frac1N<\frac2N.$$
+
+The first term bounds the entire physical head $1\le n<N$, using $g_N(n)=n/N$. The second bounds the entire tail using $0\le g_N(n)<1$ and $\sum_{n\ge N}1/[n(n+1)]=1/N$. Positive definiteness and the Rayleigh principle give
+
+$$\boxed{\|G_N^{-1}\|_{2\to2}\ge \frac1{G_N(N,N)}>\frac N2.}$$
+
+Thus inverse-matrix unboundedness holds with either truth value of RH. It does not itself obstruct RH. Fixed inverse entries nevertheless have finite limits, as proved in ParetoInverseGramDual.lean:
+
+$$(G_N^{-1})_{de}\longrightarrow
+\langle P_Vu_d,P_Vu_e\rangle,\qquad
+\|u_d\|^2-\lim_N(G_N^{-1})_{dd}
+=\|(I-P_V)u_d\|^2.$$
+
+Under failure at least one fixed dual has a positive saturation deficit. All fixed inverse diagonals attain their full dual norms exactly when $1\in V$. This identity, the actual inverse-column concentration criteria, and the growing inverse-source quadratic form are the relevant directional constraints; an operator-norm upper or lower bound alone does not replace them.
+
+### Integer DPP and its Mellin obstruction
+
+For normalized integer projection kernel $K_N$, the vacancy at site $k$ is $1-K_N(k,k)$. The existing RHFalseJointObstruction theorem already retains the same-zero all-site Mellin floors, weighted-hole divergence and determinant defect. IntegerDPPMellinObstruction.lean also explicitly proves
+
+$$v_N\ge v_\rho
+=2(2\beta-1)\frac{|1-2^{-\rho}|^2}{|\rho|^2}>0,\qquad
+C_N+2\le\frac2{v_\rho},\qquad
+\sum_n h_n\le-\log v_\rho.$$
+
+Here $v_N$ is the first-site vacancy, $C_N$ the complete tail capacity and $h_n$ the actual hazard. These are compatible with the summable screened gains in Sections 3-6; they do not force filling.
+
+The Mellin-frequency DPP is an additional representation of the same finite-dimensional projection under the Mellin isometry. Its actual kernel is
+
+$$\mathcal K_N(t,u)=E(t)\overline{E(u)}\,
+v_N(t)^TG_N^{-1}\overline{v_N(u)},\qquad
+E(t)=\frac{\zeta(1/2+it)}{1/2+it},\quad
+v_{N,d}(t)=d^{-1}-d^{-1/2-it}.$$
+
+MellinProjectionDPP.lean constructs the finite-rank probability law unconditionally. MellinDPPIntensity.lean proves, for positive rank, $\mathcal K_N(t,t)=0$ exactly at critical-line zeta zeros and a rank-independent positive lower bound away from them. These intensity-zero statements hold under either truth value of RH. The process is not a process of sampled zeta zeros and is not the samplewise Mellin transform of an integer configuration. An infinite locally finite frequency process requires additional local trace control; the finite-rank construction does not supply it.
+
+### Coupling: ordinary theorem and formal boundary
+
+[Lyons, Determinantal probability measures, Theorem 7.1](https://arxiv.org/pdf/math/0204325) gives stochastic domination for nested closed projection subspaces. Together with monotone coupling and gluing, it supplies the ordinary mathematical route to increasing arithmetic DPPs $Z_N$. The repository proves the first-site scalar threshold coupling unconditionally. Its full spatial construction still requires SpatialWindowFeasible; IntegerDPPSpatialCoupling.lean reduces that obligation exactly to finite transport and does not supply the provider.
+
+For every supplied monotone spatial coupling, the existing union law gives
+
+$$\mathbb P(k\text{ never enters})=1-K_\infty(k,k).$$
+
+Thus failure forces a positive never-entry probability at every site, and the weighted series $\sum_k(k+1)\mathbb P(k\text{ never enters})$ diverges. Coupling cannot change these fixed marginals. Even an unconditional formalization of full coupling would not establish zero vacancy. An additional arithmetic filling or weighted-hole estimate is needed.
+
+### Bagchi's implications
+
+The prior handoffs identify the intended author as Bhaskar Bagchi. [Bagchi, Theorem 1](https://arxiv.org/pdf/math/0607733) states the exact ordinary equivalence in this weighted sequence space:
+
+$$RH\iff 1\in V\iff V=H.$$
+
+Hence under failure $V\ne H$, its projection is not the identity, and the limiting integer DPP has a nonzero defect. The constant-to-full-density direction and approximation-to-RH implications are established project components. Some formal reverse equivalences still explicitly take PositiveResidueDensityFromRH or another classical density/Baez-Duarte provider. Bagchi establishes the mathematical input; citing him does not supply its missing Lean proof. That classical formalization obligation is distinct from the open RH-strength arithmetic estimate.
+
+These additions reinforce a consistent failure scenario: nonzero Mellin defect, persistent coupled holes, finite capacity and summable hazards, exceptionally accurate prime screening, and badly conditioned inverse matrices with the specified directional failures. No contradiction between them has been proved.
+
 ## Primary references
 
 - Jean-Francois Burnol, *A note on Nyman's equivalent formulation of the Riemann Hypothesis*, Theorem 1.2 and Lemma 2.4: <https://arxiv.org/pdf/math/9910055>.
