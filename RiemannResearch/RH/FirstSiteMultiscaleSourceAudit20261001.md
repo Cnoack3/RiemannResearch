@@ -336,8 +336,35 @@ All newly developed proof candidates were submitted to the Lean kernel in
 one serialized verification stream. Original source checks, new snippet
 checks, source auditing and final project validation are distinct evidence.
 The publication checkpoint validates changed modules and local reverse
-dependents, including the root export. Its final job output is the acceptance
-record for the published commit.
+dependents, including the root export. Build and publication evidence must be assessed separately from cache
+housekeeping errors; the observed records follow.
 
 No substantive growth hypothesis is relabeled as established. Axioms and
 precise new declaration types are checked again after the project build.
+
+### Observed publication and post-build evidence
+
+The proof commit is
+[78e1dcaa2a0acdb7aa117425a6231cc1c95442b1](https://github.com/Cnoack3/RiemannResearch/commit/78e1dcaa2a0acdb7aa117425a6231cc1c95442b1).
+The checkpoint completed source auditing, affected-module and reverse-dependent
+validation, commit and push. Its outer job subsequently finished with failure
+while copying the project build cache: `Errno 28, No space left on device`.
+This is not reported as a globally successful checkpoint job.
+
+Independent GitHub lookup confirmed that proof commit on main. The workspace
+reported `state: published`, identical HEAD and origin/main, and a clean tree.
+The missing cache snapshot does not mean the source or commit was lost.
+
+After publication, Lean imported the committed modules and checked the exact
+declaration types: zero-source split without positivity hypotheses; arbitrary
+tests with a fixed Hilbert vector or fixed finite column packet; the explicit
+weighted-square-summability premise for row corrections; and the actual
+nonsummability premises of all four new RH endpoints. That job returned exit 0.
+
+A separate untruncated axiom check of 17 key published declarations returned
+exit 0 and only `propext`, `Classical.choice`, `Quot.sound` for every entry.
+Its code SHA-256 is
+`fd89a7d41367d495e23f89a79ecb3c0b374105a3cf415bae4b9c9077e1baff1c`.
+The check covered split/determinant/tree/capacity identities, both source-floor
+families, fixed/moving/finite-column/general-row contrast transfer, the exact
+signed square, and the explicit conditional RH endpoints.
