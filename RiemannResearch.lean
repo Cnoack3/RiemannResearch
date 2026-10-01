@@ -733,6 +733,7 @@ import RiemannResearch.RH.ParetoFirstSitePrimeAngular
 import RiemannResearch.Analysis.NonnegativeSeriesTruncation
 import RiemannResearch.RH.ParetoFirstSitePrimeThreeSeries
 import RiemannResearch.RH.ParetoFirstSitePrimeBlocks
+import RiemannResearch.RH.ParetoFirstSitePrimeBlockContrast
 import RiemannResearch.RH.ParetoPrimeRefinementCancellation
 import RiemannResearch.RH.ParetoPrimeCrossStageCancellation
 import RiemannResearch.RH.ParetoShapeMellinEnergy

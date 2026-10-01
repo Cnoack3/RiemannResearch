@@ -275,4 +275,67 @@ theorem two_row_determinant_le_square [DecidableEq ι]
       (fun q hq _ => mul_nonneg (hw q hq) (sq_nonneg (b q-t*a q)))
     simpa [square, hij] using hh
   linarith
+/-- Exact source-balanced contrast completion, including its full remaining
+square. The zero contrast-energy case uses real division by zero. -/
+theorem balanced_contrast_completion (s : Finset ι) (w a b c : ι → ℝ)
+    (t : ℝ) (hc : product s w a c = 0) :
+    square s w (fun i => b i - t * a i) =
+      (product s w c b)^2 / square s w c +
+        square s w (fun i => b i - t * a i -
+          (product s w c b / square s w c) * c i) := by
+  have hp : product s w c (fun i => b i - t * a i) = product s w c b := by
+    have hca : product s w c a = 0 := by
+      simpa only [product, mul_comm, mul_left_comm, mul_assoc] using hc
+    calc
+      _ = product s w c b - t * product s w c a := by
+        unfold product
+        simp only [mul_sub, Finset.sum_sub_distrib]
+        congr 1
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro i hi
+        ring
+      _ = _ := by rw [hca]; ring
+  have he := centered_square_eq_sub_quotient s w c (fun i => b i-t*a i)
+  rw [hp] at he
+  linarith
+/-- Only the explicit nonnegative contrast remainder is discarded. -/
+theorem balanced_contrast_le_square (s : Finset ι) (w a b c : ι → ℝ)
+    (t : ℝ) (hw : ∀ i ∈ s, 0 ≤ w i) (hc : product s w a c = 0) :
+    (product s w c b)^2 / square s w c ≤
+      square s w (fun i => b i-t*a i) := by
+  rw [balanced_contrast_completion s w a b c t hc]
+  exact le_add_of_nonneg_right (square_nonneg _ _ _ hw)
+
+/-- Finite signed bilinearity before any estimate. -/
+theorem product_sub_right (s : Finset ι) (w c b a : ι → ℝ) (t : ℝ) :
+    product s w c (fun i => b i-t*a i) =
+      product s w c b - t * product s w c a := by
+  unfold product
+  simp only [mul_sub, Finset.sum_sub_distrib]
+  congr 1
+  rw [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  ring
+/-- Orthogonalizing a finite test against the source also works at zero
+source energy for nonnegative weights; the Gram inequality supplies that case. -/
+theorem centered_product_zero (s : Finset ι) (w a b : ι → ℝ)
+    (hw : ∀ i ∈ s, 0 ≤ w i) :
+    product s w a (fun i => b i -
+      (product s w a b / square s w a) * a i) = 0 := by
+  have haa : product s w a a = square s w a := by
+    unfold product square
+    apply Finset.sum_congr rfl
+    intro i hi
+    ring
+  rw [product_sub_right, haa]
+  by_cases hU : square s w a = 0
+  · have hX : product s w a b = 0 := by
+      have hg := gram_nonneg s w a b hw
+      rw [hU, zero_mul] at hg
+      nlinarith [sq_nonneg (product s w a b)]
+    simp [hU, hX]
+  · field_simp [hU]
+    ring
 end RiemannResearch.Analysis.WeightedScalarEnergy

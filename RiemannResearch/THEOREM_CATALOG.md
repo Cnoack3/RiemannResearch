@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Source-balanced full-angular block contrasts (2026-09-30)
+
+**Established without RH.** RH/ParetoFirstSitePrimeBlockContrast.lean proves
+primeAngularBlock_eq_contrast_remainder_drift: an arbitrary automatically
+source-balanced finite test supplies Q=L^2/D, with exact equality
+sum Gamma=Q+contrastRemainder+historicalMeanDrift. The full screened CRT row
+and every Schur/factorial weight remain in L; its survivor formula cancels
+the aligned source exactly. primeBlockContrastCertificate_le_angular is the
+all-row lower certificate, and primeBlockContrastCertificate_eq_variance_at_error
+proves sharpness without growth. capacity_eq_dyadic_prime_contrast_budget
+retains C_1, R, every contrast remainder, historical drift and nonprime gain.
+primeBlockVariance_split retains both child scatters and pooled mean
+separation. primeAngularBlock_ge_split_gap proves the finite bound
+sum Gamma >= (v/2)*(x_R/u_R-x_L/u_L)^2 when 0<=v<=u_L,u_R, also at v=0.
+Analysis/WeightedScalarEnergy.lean supplies exact balanced_contrast_completion,
+centered_product_zero and signed finite product_sub_right.
+
+**Conditional research reductions. Open:** nonsummability of the actual
+dyadic contrast energies, or explicit lower source and pooled signed-gap
+bounds with nonsummable (v_j/2)*d_j^2. These are the hypotheses of
+riemannHypothesis_of_dyadic_prime_contrast and
+riemannHypothesis_of_dyadic_split_gap. No positive divergent arithmetic
+lower sequence or unconditional capacity divergence is supplied. E
+nonsummability is not pursued; Burnol/PNT rates are not imported here.
+See RH/FirstSitePrimeBlockContrast20260930.md.
+
 ### Exact weighted prime-block variance and pair certificates (2026-09-30)
 
 **Established without RH.** RH/ParetoFirstSitePrimeBlocks.lean proves
