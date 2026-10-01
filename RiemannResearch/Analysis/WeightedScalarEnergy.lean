@@ -338,4 +338,31 @@ theorem centered_product_zero (s : Finset ι) (w a b : ι → ℝ)
     simp [hU, hX]
   · field_simp [hU]
     ring
+/-- Reduced source weights increase with both nonnegative child budgets,
+including zero budgets. -/
+theorem reduced_weight_mono (u v U V : ℝ)
+    (hu : 0 ≤ u) (hv : 0 ≤ v) (huU : u ≤ U) (hvV : v ≤ V) :
+    u*v/(u+v) ≤ U*V/(U+V) := by
+  have hU := hu.trans huU
+  have hV := hv.trans hvV
+  by_cases hz : u+v = 0
+  · simp only [hz, div_zero]
+    exact div_nonneg (mul_nonneg hU hV) (add_nonneg hU hV)
+  have hs : 0 < u+v := lt_of_le_of_ne (add_nonneg hu hv) (Ne.symm hz)
+  have hS : 0 < U+V := by linarith
+  apply (div_le_div_iff₀ hs hS).mpr
+  nlinarith [mul_nonneg (mul_nonneg hU hu) (sub_nonneg.mpr hvV),
+    mul_nonneg (mul_nonneg hV hv) (sub_nonneg.mpr huU)]
+
+/-- Exact signed determinant form, also at zero denominators under real division. -/
+theorem reduced_weight_mean_gap_eq_det (U u X x : ℝ) :
+    U*u/(U+u)*(x/u-X/U)^2 = (U*x-u*X)^2/(U*u*(U+u)) := by
+  by_cases hU : U=0
+  · simp [hU]
+  by_cases hu : u=0
+  · simp [hu]
+  by_cases hs : U+u=0
+  · simp [hs]
+  field_simp [hU,hu,hs]
+
 end RiemannResearch.Analysis.WeightedScalarEnergy

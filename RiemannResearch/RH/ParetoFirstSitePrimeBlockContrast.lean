@@ -209,9 +209,9 @@ theorem primeBlockSplitDrift_nonneg (N k l : ℕ) :
       (add_nonneg (primeBlockSource_nonneg _ _) (primeBlockSource_nonneg _ _)))
     (sq_nonneg _)
 
-/-- Exact two-subblock scatter decomposition; both child squares are retained. -/
-theorem primeBlockVariance_split (N k l : ℕ)
-    (hk : 0 < primeBlockSource N k) (hl : 0 < primeBlockSource (N+k) l) :
+/-- Exact two-subblock scatter decomposition, also for empty source children.
+Both child squares and the signed cross budgets are retained. -/
+theorem primeBlockVariance_split (N k l : ℕ) :
     primeBlockVariance N (k+l) = primeBlockVariance N k +
       primeBlockVariance (N+k) l + primeBlockSplitDrift N k l := by
   have hs : primeBlockSource N (k+l) =
@@ -225,23 +225,37 @@ theorem primeBlockVariance_split (N k l : ℕ)
     simp only [primeBlockCross, product, Finset.sum_range_add, Nat.add_assoc]
   rw [primeBlockVariance_eq_quotient, primeBlockVariance_eq_quotient,
     primeBlockVariance_eq_quotient, hs, hv, hx]
-  exact centered_energy_merge _ _ _ _ _ _ (ne_of_gt hk) (ne_of_gt hl)
-    (ne_of_gt (add_pos hk hl))
+  by_cases hk : primeBlockSource N k = 0
+  · have hxk : primeBlockCross N k = 0 := by
+      have hg := primeBlock_gram N k
+      rw [hk, zero_mul] at hg
+      nlinarith [sq_nonneg (primeBlockCross N k)]
+    simp [primeBlockSplitDrift, hk, hxk]
+    ring
+  by_cases hl : primeBlockSource (N+k) l = 0
+  · have hxl : primeBlockCross (N+k) l = 0 := by
+      have hg := primeBlock_gram (N+k) l
+      rw [hl, zero_mul] at hg
+      nlinarith [sq_nonneg (primeBlockCross (N+k) l)]
+    simp [primeBlockSplitDrift, hl, hxl]
+    ring
+  exact centered_energy_merge _ _ _ _ _ _ hk hl
+    (ne_of_gt (add_pos
+      (lt_of_le_of_ne (primeBlockSource_nonneg _ _) (Ne.symm hk))
+      (lt_of_le_of_ne (primeBlockSource_nonneg _ _) (Ne.symm hl))))
 
 theorem primeAngularBlock_eq_split_scatter_drift (N k l : ℕ)
-    (hN : 0 < N) (hk : 0 < primeBlockSource N k)
-    (hl : 0 < primeBlockSource (N+k) l) :
+    (hN : 0 < N) :
     primeAngularBlock N (k+l) = primeBlockVariance N k +
       primeBlockVariance (N+k) l + primeBlockSplitDrift N k l +
       primeBlockMeanDrift N (k+l) := by
   rw [primeAngularBlock_eq_variance_add_drift _ _ hN,
-    primeBlockVariance_split _ _ _ hk hl]
+    primeBlockVariance_split _ _ _]
 
 theorem primeBlockSplitDrift_le_angular (N k l : ℕ)
-    (hN : 0 < N) (hk : 0 < primeBlockSource N k)
-    (hl : 0 < primeBlockSource (N+k) l) :
+    (hN : 0 < N) :
     primeBlockSplitDrift N k l ≤ primeAngularBlock N (k+l) := by
-  rw [primeAngularBlock_eq_split_scatter_drift _ _ _ hN hk hl]
+  rw [primeAngularBlock_eq_split_scatter_drift _ _ _ hN]
   linarith [primeBlockVariance_nonneg N k, primeBlockVariance_nonneg (N+k) l,
     primeBlockMeanDrift_nonneg N (k+l)]
 
@@ -262,7 +276,7 @@ theorem primeAngularBlock_ge_split_gap (N k l : ℕ) (hN : 0 < N)
   have hm := mul_le_mul_of_nonneg_right hred
     (sq_nonneg (primeBlockCross (N+k) l / primeBlockSource (N+k) l -
       primeBlockCross N k / primeBlockSource N k))
-  have hle := primeBlockSplitDrift_le_angular N k l hN (hvpos.trans_le hk) (hvpos.trans_le hl)
+  have hle := primeBlockSplitDrift_le_angular N k l hN
   unfold primeBlockSplitDrift at hle
   rw [mul_comm (primeBlockSource (N+k) l) (primeBlockSource N k)] at hm
   exact hm.trans hle
@@ -300,10 +314,13 @@ theorem riemannHypothesis_of_dyadic_split_gap (v d : ℕ → ℝ)
     exact (mul_le_mul_of_nonneg_left (hgap j)
       (div_nonneg (hv j) (by norm_num))).trans h
 
-
-
-
-
-
+/-- Every split is the complete signed determinant, including empty children. -/
+theorem primeBlockSplitDrift_eq_determinant (N k l : ℕ) :
+    primeBlockSplitDrift N k l =
+      (primeBlockSource N k * primeBlockCross (N+k) l -
+        primeBlockSource (N+k) l * primeBlockCross N k)^2 /
+      (primeBlockSource N k * primeBlockSource (N+k) l *
+        (primeBlockSource N k + primeBlockSource (N+k) l)) := by
+  exact reduced_weight_mean_gap_eq_det _ _ _ _
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization.TailCapacity

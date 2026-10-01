@@ -57,6 +57,62 @@ applicability, exploratory full-tail numerics through N=256, and six
 sequenced research stages. Verification timeouts without diagnostics are
 recorded separately from the mathematical proofs.
 
+### Source floors, complete split trees and moving CRT contrast transfer (2026-10-01)
+
+**Established without RH.** Analysis/WeightedScalarEnergy.lean proves
+reduced_weight_mono and the exact zero-denominator signed determinant form.
+RH/ParetoFirstSitePrimeBlockContrast.lean generalizes primeBlockVariance_split
+and its angular consequences to empty-source children.
+
+RH/ParetoFirstSitePrimeMultiscale.lean proves
+primeBlockVariance_eq_dyadicSplitBudget, capacity_eq_dyadicSplitBudget,
+primeAngularInnovation_summable_iff_dyadicSplitBudget and the full four-channel
+alternative. Every internal binary split, historical drift, mean mismatch,
+initial capacity and nonprime gain is retained.
+
+RH/ParetoFirstSitePrimeSourceFloors.lean proves reciprocalPrimeSourceFloor_le,
+reciprocalPrimeBlockSourceFloor_le, the finite prime-count bridge and both
+dyadicSplitSourceFloor source comparisons. The harmonic reduced floor keeps
+unequal child mass and gives reciprocalPrimeSplitEnergy_le_variance.
+The newer adjacent-conductor source bound also gives harmonicPrimeSourceFloor_le,
+harmonicPrimeBlockSourceFloor_ge_count and a stronger harmonic split energy.
+reciprocalPrimeSplitEnergy_le_harmonic proves pointwise domination with the
+same actual screened slope gap. No asymptotic PNT/Dusart rate is assumed.
+The harmonic endpoint retains its explicit actual-energy nonsummability hypothesis.
+
+Analysis/DyadicWeightedContrast.lean proves exact dyadic grouping and finite
+weighted-energy transfer. RH/ParetoFirstSitePrimeContrastPerturbations.lean
+proves primeBlockFixedPairingCertificate_dyadic_summable for arbitrary varying
+tests, primeBlockAdjustedContrastCertificate_dyadic_summable_iff,
+primeBlockContrast_finite_columns_dyadic_summable_iff, and
+primeBlockMovingCRTContrastCertificate_dyadic_summable_iff.
+The exact primeBlockContrastCertificate_eq_movingCRT_split retains the signed
+base cross term; only the summability question permits base removal.
+primeBlockContrast_row_perturbation_dyadic_summable_iff explicitly requires
+the signed correction's weighted square summability.
+
+**Conditional research reductions. Open:** nonsummability of the actual
+complete tree budget, reciprocal-prime weighted screened split energies, or
+moving CRT contrast certificates. The corresponding endpoints are
+riemannHypothesis_of_dyadicSplitBudget_not_summable,
+riemannHypothesis_of_reciprocalPrimeSplitEnergy_not_summable,
+riemannHypothesis_of_harmonicPrimeSplitEnergy_not_summable and
+riemannHypothesis_of_movingCRTContrast_not_summable.
+No actual screened-gap or moving-row growth provider is established.
+
+**Ordinary mathematical consequence, not a new Lean import:** Dusart's
+unconditional prime-count bounds give both child source floors at least
+1/[80(j+3)log 2] for j>=17, reducing a sufficient provider to divergence of
+the actual screened slope-gap squares divided by j+3. The existing pi_alt'
+PNT declaration has standard axioms. Combining the newer harmonic floor
+with the same ordinary count proof strengthens the sufficient gap-series
+weight to 2^j/(j+3)^2. Interval-rate formalization and actual divergence
+remain separate obligations.
+See RH/FirstSiteMultiscaleSourceAudit20261001.md for the reproduced audit,
+full proofs, primary literature screening and concrete research sequence.
+
+
+
 ### Source-balanced full-angular block contrasts (2026-09-30)
 
 **Established without RH.** RH/ParetoFirstSitePrimeBlockContrast.lean proves
