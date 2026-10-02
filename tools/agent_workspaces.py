@@ -6,6 +6,7 @@ confined to a registered clone and every publication is serialized.
 
 from __future__ import annotations
 
+import copy
 import fcntl
 import fnmatch
 import hashlib
@@ -126,6 +127,10 @@ class AgentWorkspaceManager:
         self._job_local = threading.local()
         self._operation_local = threading.local()
         self._active_jobs: set[str] = set()
+        # Terminal results remain observable if the filesystem fills. Admission
+        # still requires a durable write; this fallback never accepts new work.
+        self._volatile_jobs: dict[str, dict] = {}
+        self._job_processes: dict[str, subprocess.Popen] = {}
         # A lifetime lease distinguishes another live manager from an actual
         # restart. The OS releases it on process exit, including SIGKILL.
         self._owner_id = secrets.token_hex(16)
@@ -177,32 +182,55 @@ class AgentWorkspaceManager:
         lean_num_threads: int | None = None,
     ) -> str:
         started = time.monotonic()
-        result = subprocess.run(
-            args,
-            cwd=cwd,
-            input=input_text,
-            text=True,
-            capture_output=True,
-            timeout=timeout,
-            check=False,
-            env={
-                **os.environ,
-                "GIT_TERMINAL_PROMPT": "0",
-                "LEAN_NUM_THREADS": str(lean_num_threads or self.lean_num_threads),
-            },
-        )
-        output = (result.stdout + result.stderr).strip()
+        self._prepare_job_command()
+        try:
+            process = subprocess.Popen(
+                args, cwd=cwd, stdin=subprocess.PIPE if input_text is not None else None,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                start_new_session=True,
+                env={
+                    **os.environ, "GIT_TERMINAL_PROMPT": "0",
+                    "LEAN_NUM_THREADS": str(lean_num_threads or self.lean_num_threads),
+                },
+            )
+        except OSError:
+            self._clear_job_command()
+            raise
+        deadline = started + timeout
+        try:
+            self._job_command_heartbeat(process, force=True)
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise subprocess.TimeoutExpired(args, timeout)
+                try:
+                    stdout, stderr = process.communicate(
+                        input=input_text, timeout=min(PROGRESS_UPDATE_SECONDS, remaining),
+                    )
+                    break
+                except subprocess.TimeoutExpired:
+                    input_text = None  # communicate has already accepted its input.
+                    if time.monotonic() >= deadline:
+                        raise subprocess.TimeoutExpired(args, timeout)
+                    self._job_command_heartbeat(process)
+        finally:
+            self._kill_verification_group(process)
+            self._clear_job_command()
+            for handle in (process.stdin, process.stdout, process.stderr):
+                if handle is not None:
+                    handle.close()
+        output = (stdout + stderr).strip()
         self._record_metric(
             "command",
             program=args[0],
             action=args[1] if len(args) > 1 else "",
             elapsed_seconds=round(time.monotonic() - started, 3),
-            exit_code=result.returncode,
+            exit_code=process.returncode,
             output_chars=len(output),
         )
-        if result.returncode:
+        if process.returncode:
             raise RuntimeError(
-                f"Command failed ({result.returncode}): {' '.join(args)}\n{output[-8000:]}"
+                f"Command failed ({process.returncode}): {' '.join(args)}\n{output[-8000:]}"
             )
         return output
 
@@ -268,31 +296,38 @@ class AgentWorkspaceManager:
         """Run a long command while publishing bounded Lake-style progress."""
         started = time.monotonic()
         self._set_job_progress(phase, detail="Starting " + " ".join(args), force=True)
-        process = subprocess.Popen(
-            args,
-            cwd=cwd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            bufsize=0,
-            env={
-                **os.environ,
-                "GIT_TERMINAL_PROMPT": "0",
-                "LEAN_NUM_THREADS": str(self.lake_build_threads),
-            },
-        )
+        self._prepare_job_command()
+        try:
+            process = subprocess.Popen(
+                args,
+                cwd=cwd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                bufsize=0,
+                start_new_session=True,
+                env={
+                    **os.environ,
+                    "GIT_TERMINAL_PROMPT": "0",
+                    "LEAN_NUM_THREADS": str(self.lake_build_threads),
+                },
+            )
+        except OSError:
+            self._clear_job_command()
+            raise
         if process.stdout is None:
             raise RuntimeError("Failed to capture command output")
         selector = selectors.DefaultSelector()
-        selector.register(process.stdout, selectors.EVENT_READ)
         output = ""
         pending = ""
         deadline = started + timeout
         try:
+            selector.register(process.stdout, selectors.EVENT_READ)
+            self._job_command_heartbeat(process, force=True)
             while True:
                 if time.monotonic() > deadline:
-                    process.kill()
-                    process.wait()
+                    self._kill_verification_group(process)
                     raise subprocess.TimeoutExpired(args, timeout, output=output[-8000:])
+                self._job_command_heartbeat(process)
                 events = selector.select(timeout=1.0)
                 for key, _ in events:
                     chunk = os.read(key.fileobj.fileno(), 65536)
@@ -301,7 +336,7 @@ class AgentWorkspaceManager:
                         continue
                     text = chunk.decode("utf-8", errors="replace")
                     output = (output + text)[-100_000:]
-                    pending += text
+                    pending = (pending + text)[-100_000:]
                     records = re.split(r"[\r\n]+", pending)
                     pending = records.pop()
                     for record in records:
@@ -329,6 +364,11 @@ class AgentWorkspaceManager:
                         force=True,
                     )
         finally:
+            # A progress/metadata write can raise ENOSPC while Lake is alive.
+            # Close the entire session on every exit, including a parent that
+            # exited while a descendant still holds its output pipe.
+            self._kill_verification_group(process)
+            self._clear_job_command()
             selector.close()
             process.stdout.close()
         elapsed = round(time.monotonic() - started, 3)
@@ -1092,6 +1132,7 @@ class AgentWorkspaceManager:
         """Bound memory and wall time independently of Lean's logical limits."""
         started = time.monotonic()
         self._set_job_progress("verifying", detail="Checking Lean source", force=True)
+        self._prepare_job_command()
         try:
             process = subprocess.Popen(
                 ["lake", "env", "lean", str(path)],
@@ -1107,6 +1148,7 @@ class AgentWorkspaceManager:
                 },
             )
         except OSError as exc:
+            self._clear_job_command()
             return {
                 "verified": False, "classification": "process_error", "exit_code": None,
                 "error": f"{type(exc).__name__}: {exc}"[-1000:],
@@ -1122,7 +1164,9 @@ class AgentWorkspaceManager:
         try:
             assert process.stdout is not None
             selector.register(process.stdout, selectors.EVENT_READ)
+            self._job_command_heartbeat(process, force=True)
             while selector.get_map() or process.poll() is None:
+                self._job_command_heartbeat(process)
                 now = time.monotonic()
                 if now >= deadline:
                     if timed_out:
@@ -1139,8 +1183,8 @@ class AgentWorkspaceManager:
                         tail = (tail + chunk)[-MAX_VERIFICATION_OUTPUT_BYTES:]
             process.wait()
         finally:
-            if process.poll() is None:
-                self._kill_verification_group(process)
+            self._kill_verification_group(process)
+            self._clear_job_command()
             selector.close()
             if process.stdout is not None:
                 process.stdout.close()
@@ -1593,6 +1637,8 @@ class AgentWorkspaceManager:
 
     def _read_job(self, job_id: str) -> dict:
         path = self._job_path(job_id)
+        if job_id in self._volatile_jobs:
+            return copy.deepcopy(self._volatile_jobs[job_id])
         if not path.is_file():
             raise ValueError("Unknown job ID")
         return json.loads(path.read_text(encoding="utf-8"))
@@ -1600,21 +1646,146 @@ class AgentWorkspaceManager:
     def _write_job(self, job: dict) -> None:
         path = self._job_path(job["job_id"])
         temporary = path.with_suffix(f".tmp.{os.getpid()}.{secrets.token_hex(4)}")
-        temporary.write_text(
-            json.dumps(job, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
-        )
-        os.replace(temporary, path)
+        try:
+            temporary.write_text(
+                json.dumps(job, indent=2, sort_keys=True) + "\n", encoding="utf-8",
+            )
+            os.replace(temporary, path)
+        finally:
+            # A partial temporary file must not amplify disk exhaustion.
+            temporary.unlink(missing_ok=True)
+        self._volatile_jobs.pop(job["job_id"], None)
 
-    def _job_owner_alive(self, job: dict) -> bool:
+    def _persist_job_state(self, job: dict) -> None:
+        """Keep the worker alive after a failed state write; report nondurability."""
+        try:
+            durable = copy.deepcopy(job)
+            durable.pop("metadata_persistence_error", None)
+            self._write_job(durable)
+        except OSError as exc:
+            saved = copy.deepcopy(job)
+            saved["metadata_persistence_error"] = f"{type(exc).__name__}: {exc}"[-1000:]
+            self._volatile_jobs[job["job_id"]] = saved
+            self._record_metric("job_metadata_error", job_id=job["job_id"], error=str(exc)[-500:])
+
+    @staticmethod
+    def _process_identity(pid: int) -> dict | None:
+        """Linux identity guards against PID reuse; absence is not proof of death."""
+        try:
+            # Some hosted runtimes virtualize syscalls but expose host /proc.
+            # Never attach an unrelated host PID's identity to a child record.
+            if int(Path("/proc/self/stat").read_text().split(" ", 1)[0]) != os.getpid():
+                return None
+            stat = Path(f"/proc/{pid}/stat").read_text()
+            fields = stat[stat.rindex(")") + 2:].split()
+            return {
+                "pid": pid, "state": fields[0], "start_ticks": fields[19],
+                "boot_id": Path("/proc/sys/kernel/random/boot_id").read_text().strip(),
+            }
+        except (OSError, ValueError, IndexError):
+            return None
+
+    def _job_process_alive(self, job: dict) -> bool | None:
+        process = self._job_processes.get(job["job_id"])
+        if process is not None:
+            if process.poll() is None:
+                return True
+            return self._process_group_alive(process.pid)
+        recorded = job.get("process")
+        if not isinstance(recorded, dict):
+            # Legacy running records did not track child identity. Restarting
+            # the service alone cannot certify that their subprocesses stopped.
+            return None if job.get("state") == "running" and job.get("process_tracking_version") != 1 else False
+        pid = recorded.get("pid")
+        if type(pid) is not int or pid <= 0:
+            return None
+        current = self._process_identity(pid)
+        if current is None:
+            group_alive = self._process_group_alive(pid)
+            if group_alive is not False:
+                return group_alive
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                return False
+            except PermissionError:
+                return None
+            return None
+        if not recorded.get("start_ticks") or not recorded.get("boot_id"):
+            return None
+        matches = (
+            recorded["start_ticks"] == current["start_ticks"]
+            and recorded["boot_id"] == current["boot_id"]
+            and current["state"] != "Z"
+        )
+        if matches:
+            return True
+        return None if self._process_group_alive(pid) is not False else False
+
+    @staticmethod
+    def _process_group_alive(pid: int) -> bool | None:
+        try:
+            os.killpg(pid, 0)
+        except ProcessLookupError:
+            return False
+        except PermissionError:
+            return None
+        return True
+
+    def _job_command_heartbeat(self, process: subprocess.Popen, *, force: bool = False) -> None:
+        job_id = getattr(self._job_local, "job_id", None)
+        if not job_id:
+            return
+        self._job_processes[job_id] = process
+        now = time.time()
+        last = getattr(self._job_local, "last_heartbeat_write", 0.0)
+        if not force and now - last < PROGRESS_UPDATE_SECONDS:
+            return
+        with self._job_guard:
+            job = self._read_job(job_id)
+            job["heartbeat_at"] = now
+            job["process"] = self._process_identity(process.pid) or {"pid": process.pid}
+            self._write_job(job)  # Abort safely if monitoring cannot be persisted.
+        self._job_local.last_heartbeat_write = now
+
+    def _prepare_job_command(self) -> None:
+        # Close the fork-to-metadata crash window. A restart must treat this
+        # durable marker as unknown until child identity or cleanup is recorded.
+        job_id = getattr(self._job_local, "job_id", None)
+        if job_id:
+            with self._job_guard:
+                job = self._read_job(job_id)
+                job["process"] = {"launch_in_progress": True}
+                self._write_job(job)
+
+    def _clear_job_command(self) -> None:
+        job_id = getattr(self._job_local, "job_id", None)
+        if not job_id:
+            return
+        with self._job_guard:
+            self._job_processes.pop(job_id, None)
+            job = self._read_job(job_id)
+            job["process"] = None
+            job["heartbeat_at"] = time.time()
+            self._persist_job_state(job)
+
+    def _job_owner_alive(self, job: dict) -> bool | None:
         owner = job.get("owner_id", "")
         if not isinstance(owner, str) or not re.fullmatch(r"[0-9a-f]{32}", owner):
             return False  # Legacy records have no liveness lease.
-        with (self._owner_directory / owner).open("a+") as handle:
+        try:
+            handle = (self._owner_directory / owner).open("r")
+        except FileNotFoundError:
+            return False
+        except OSError:
+            return None  # Unknown: do not interrupt potentially live work.
+        with handle:
             try:
                 fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
                 return True
+            except OSError:
+                return None
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
         return False
 
@@ -1632,7 +1803,11 @@ class AgentWorkspaceManager:
 
     def _interrupt_abandoned_job(self, job: dict) -> dict:
         """Caller holds admission lock and has read a fresh job record."""
-        if job.get("state") in {"queued", "running"} and not self._job_owner_alive(job):
+        if job.get("state") in {"queued", "running"} and self._job_owner_alive(job) is False:
+            if self._job_process_alive(job) is not False:
+                # A dead service can leave a live Lake/Lean child. Do not release
+                # its slot or replay a possibly published checkpoint.
+                return job
             job.update(
                 state="interrupted",
                 finished_at=time.time(),
@@ -1641,12 +1816,17 @@ class AgentWorkspaceManager:
                     "and Git status before submitting it again; it was not replayed."
                 ),
             )
-            self._write_job(job)
+            self._persist_job_state(job)
+            return self._read_job(job["job_id"])
         return job
 
     def _read_live_job(self, job_id: str) -> dict:
         job = self._read_job(job_id)
-        if job.get("state") in {"queued", "running"} and not self._job_owner_alive(job):
+        if job_id in self._volatile_jobs:
+            with self._job_guard:
+                self._persist_job_state(job)
+                job = self._read_job(job_id)
+        if job.get("state") in {"queued", "running"} and self._job_owner_alive(job) is False:
             with self._lock(self.state / ".jobs-admission.lock"):
                 job = self._interrupt_abandoned_job(self._read_job(job_id))
         return job
@@ -1662,7 +1842,18 @@ class AgentWorkspaceManager:
         self._set_job_progress(
             "waiting_for_worker", detail="Waiting for a shared heavy-worker slot", force=True
         )
+        last_orphan = None
         while True:
+            orphan = self._orphaned_running_job()
+            if orphan is not None:
+                self._set_job_progress(
+                    "waiting_for_orphan",
+                    detail=f"Operator must resolve orphan job {orphan['job_id']} before shared-cache work",
+                    force=last_orphan != orphan["job_id"],
+                )
+                last_orphan = orphan["job_id"]
+                time.sleep(0.05)
+                continue
             for index in range(self.job_workers):
                 handle = (self.state / f".heavy-worker-{index}.lock").open("a+")
                 try:
@@ -1671,12 +1862,30 @@ class AgentWorkspaceManager:
                     handle.close()
                     continue
                 try:
+                    # Recheck after acquiring the slot: its previous owner may
+                    # have exited between the precheck and lock acquisition.
+                    if self._orphaned_running_job() is not None:
+                        continue
                     yield
                 finally:
                     fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
                     handle.close()
                 return
             time.sleep(0.05)
+
+    def _orphaned_running_job(self) -> dict | None:
+        """A dead owner's unknown/live child may still write shared caches."""
+        for path in self.jobs.glob("job_*.json"):
+            try:
+                job = self._read_job(path.stem)
+            except (OSError, ValueError):
+                continue
+            if (
+                job.get("state") == "running" and self._job_owner_alive(job) is not True
+                and self._job_process_alive(job) is not False
+            ):
+                return job
+        return None
 
     def _queue_position(self, job_id: str) -> int | None:
         with self._job_guard:
@@ -1693,7 +1902,7 @@ class AgentWorkspaceManager:
     def _existing_job(self, token: str, kind: str, arguments: dict) -> dict | None:
         for path in self.jobs.glob("job_*.json"):
             try:
-                job = json.loads(path.read_text(encoding="utf-8"))
+                job = self._read_job(path.stem)
             except (OSError, ValueError, json.JSONDecodeError):
                 continue
             if (
@@ -1708,7 +1917,7 @@ class AgentWorkspaceManager:
     def _pending_job_for_workspace(self, token: str) -> dict | None:
         for path in self.jobs.glob("job_*.json"):
             try:
-                job = json.loads(path.read_text(encoding="utf-8"))
+                job = self._read_job(path.stem)
             except (OSError, ValueError, json.JSONDecodeError):
                 continue
             if (
@@ -1765,6 +1974,12 @@ class AgentWorkspaceManager:
                     f"Workspace already has {pending['kind']} job {pending['job_id']} "
                     f"{pending['state']}; poll it until terminal before submitting {kind}."
                 )
+            orphan = self._orphaned_running_job()
+            if orphan is not None:
+                raise RuntimeError(
+                    f"Orphan job {orphan['job_id']} may still be writing shared caches; "
+                    "resolve its actual process state before admitting more verification."
+                )
             job_id = "job_" + secrets.token_urlsafe(24)
             job = {
                 "job_id": job_id,
@@ -1773,6 +1988,7 @@ class AgentWorkspaceManager:
                 "arguments": arguments,
                 "request_sha256": self._request_sha256(token, kind, arguments),
                 "owner_id": self._owner_id,
+                "process_tracking_version": 1,
                 "state": "queued",
                 "submitted_at": time.time(),
                 "progress": {
@@ -1893,15 +2109,17 @@ class AgentWorkspaceManager:
     def _job_worker(self) -> None:
         while True:
             job_id = self._job_queue.get()
-            with self._job_guard:
-                self._active_jobs.add(job_id)
-                job = self._read_job(job_id)
-                job.update(state="running", started_at=time.time())
-                self._write_job(job)
+            job = None
             self._job_local.job_id = job_id
             self._job_local.last_progress_write = 0.0
+            self._job_local.last_heartbeat_write = 0.0
             self._job_local.progress = {}
             try:
+                with self._job_guard:
+                    self._active_jobs.add(job_id)
+                    job = self._read_job(job_id)
+                    job.update(state="running", started_at=time.time())
+                    self._write_job(job)
                 with self._heavy_worker_slot():
                     self._set_job_progress(
                         "waiting_for_workspace", detail="Waiting for the workspace operation lock",
@@ -1911,11 +2129,13 @@ class AgentWorkspaceManager:
                         result = self._execute_job(job)
                 result["request_sha256"] = job["request_sha256"]
             except Exception as exc:
-                job.update(
-                    state="failed",
-                    finished_at=time.time(),
-                    error=f"{type(exc).__name__}: {exc}"[-8000:],
-                )
+                if job is not None:
+                    job.update(
+                        state="failed", finished_at=time.time(),
+                        error=f"{type(exc).__name__}: {exc}"[-8000:],
+                    )
+                else:
+                    self._record_metric("unreadable_job", job_id=job_id, error=str(exc)[-500:])
             else:
                 verification_failed = (
                     job["kind"] in {"run_code", "check_file"} and not result.get("verified")
@@ -1925,34 +2145,38 @@ class AgentWorkspaceManager:
                     finished_at=time.time(), result=result,
                 )
             finally:
-                with self._job_guard:
-                    current = self._read_job(job_id)
-                    current.update(
-                        {key: value for key, value in job.items() if key != "progress"}
-                    )
-                    progress = current.get("progress", {})
-                    progress.update(
-                        phase="complete" if job.get("state") == "succeeded" else "failed",
-                        percent=100.0 if job.get("state") == "succeeded" else progress.get("percent"),
-                        updated_at=time.time(),
-                    )
-                    current["progress"] = progress
-                    self._write_job(current)
-                    self._active_jobs.discard(job_id)
-                self._record_metric(
-                    "job_finished",
-                    job_id=job_id,
-                    kind=job.get("kind"),
-                    state=job.get("state"),
-                    elapsed_seconds=round(
-                        job.get("finished_at", time.time())
-                        - job.get("started_at", job.get("submitted_at", time.time())),
-                        3,
-                    ),
-                )
-                self._job_local.job_id = None
-                self._job_local.progress = {}
-                self._job_queue.task_done()
+                try:
+                    if job is not None:
+                        with self._job_guard:
+                            try:
+                                current = self._read_job(job_id)
+                            except (OSError, ValueError):
+                                current = copy.deepcopy(job)
+                            current.update(
+                                {key: value for key, value in job.items() if key != "progress"}
+                            )
+                            progress = current.get("progress", {})
+                            progress.update(
+                                phase="complete" if job.get("state") == "succeeded" else "failed",
+                                percent=100.0 if job.get("state") == "succeeded" else progress.get("percent"),
+                                updated_at=time.time(),
+                            )
+                            current["progress"] = progress
+                            self._persist_job_state(current)
+                        self._record_metric(
+                            "job_finished", job_id=job_id, kind=job.get("kind"), state=job.get("state"),
+                            elapsed_seconds=round(
+                                job.get("finished_at", time.time())
+                                - job.get("started_at", job.get("submitted_at", time.time())), 3,
+                            ),
+                        )
+                finally:
+                    with self._job_guard:
+                        self._active_jobs.discard(job_id)
+                        self._job_processes.pop(job_id, None)
+                    self._job_local.job_id = None
+                    self._job_local.progress = {}
+                    self._job_queue.task_done()
 
     @staticmethod
     def _compact_result(value: object, *, include_logs: bool) -> object:
@@ -2005,6 +2229,16 @@ class AgentWorkspaceManager:
         response["queue_position"] = self._queue_position(job_id)
         response["worker_count"] = self.job_workers
         response["active_job_count"] = len(self._active_jobs)
+        response["liveness"] = {
+            "owner_alive": self._job_owner_alive(job),
+            "process_alive": self._job_process_alive(job),
+            "worker_threads_alive": sum(worker.is_alive() for worker in self._job_worker_threads),
+            "heartbeat_age_seconds": (
+                round(max(0.0, now - job["heartbeat_at"]), 3) if job.get("heartbeat_at") else None
+            ),
+            "note": "Quiet or old progress alone does not establish a stalled or dead process.",
+        }
+        response["metadata_durable"] = "metadata_persistence_error" not in job
         response["elapsed_seconds"] = round(
             (job.get("finished_at", now) - job.get("started_at", job["submitted_at"])),
             3,
@@ -2023,16 +2257,20 @@ class AgentWorkspaceManager:
         response["retry_after_seconds"] = retry_after
         progress = response.get("progress")
         if job["state"] == "running" and isinstance(progress, dict):
+            progress_age = max(0.0, now - progress.get("updated_at", now))
+            progress["sample_age_seconds"] = round(progress_age, 3)
             current = progress.get("current")
             total = progress.get("total")
             phase_started = progress.get("phase_started_at")
-            if current and total and phase_started and current < total:
+            if current and total and phase_started and current < total and progress_age <= 120:
                 phase_elapsed = max(0.0, now - float(phase_started))
                 estimated_total = phase_elapsed * total / current
                 progress["estimated_remaining_seconds"] = round(
                     max(0.0, estimated_total - phase_elapsed), 1
                 )
                 progress["estimate_note"] = "Task-count estimate; Lean tasks vary in cost."
+            elif progress_age > 120:
+                progress["estimate_note"] = "Progress sample is old; no remaining-time estimate is inferred."
         if "result" in response:
             response["result"] = self._compact_result(
                 response["result"], include_logs=include_logs
@@ -2046,6 +2284,39 @@ class AgentWorkspaceManager:
             response_chars=len(json.dumps(response, separators=(",", ":"))),
         )
         return response
+
+    def diagnostics(self, token: str = "") -> dict:
+        """Bounded, read-only server filesystem and worker facts; never restores a clone."""
+        paths = {
+            "workspaces": self.root, "job_state": self.state,
+            "dependencies": self.shared, "project_cache": self.project_cache,
+            "temporary_files": Path(tempfile.gettempdir()),
+        }
+        if token:
+            meta = self._read_meta(token)
+            project = Path(meta["path"])
+            self._validate_workspace_path(token, project)
+            paths["workspace"] = project
+        filesystems = {}
+        for label, path in paths.items():
+            try:
+                stat = os.statvfs(path)
+                filesystems[label] = {
+                    "path": str(path), "device": path.stat().st_dev,
+                    "total_bytes": stat.f_blocks * stat.f_frsize,
+                    "available_bytes": stat.f_bavail * stat.f_frsize,
+                    "free_bytes": stat.f_bfree * stat.f_frsize,
+                    "total_inodes": stat.f_files, "available_inodes": stat.f_favail,
+                }
+            except OSError as exc:
+                filesystems[label] = {"path": str(path), "error": f"{type(exc).__name__}: {exc}"[-500:]}
+        return {
+            "filesystems": filesystems,
+            "worker_threads_alive": sum(worker.is_alive() for worker in self._job_worker_threads),
+            "configured_workers": self.job_workers, "active_jobs": len(self._active_jobs),
+            "nondurable_job_records": len(self._volatile_jobs),
+            "note": "Available blocks/inodes do not measure quotas or space held by deleted open files.",
+        }
 
     @_workspace_operation
     def reset(self, token: str, confirmation_token: str = "") -> dict:

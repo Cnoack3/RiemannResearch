@@ -816,6 +816,18 @@ async def agent_workspace_job_status(job_id: str, include_logs: bool = False) ->
 
 
 @mcp.tool(
+    name="agent_workspace_diagnostics",
+    description=(
+        "Read server free blocks/inodes, temporary-files mount, and worker liveness "
+        "without launching Lean, restoring a clone, deleting files, or canceling jobs."
+    ),
+    annotations={"readOnlyHint": True, "destructiveHint": False, "openWorldHint": False},
+)
+async def agent_workspace_diagnostics(workspace_token: str = "") -> dict:
+    return await asyncio.to_thread(AGENT_WORKSPACES.diagnostics, workspace_token)
+
+
+@mcp.tool(
     name="agent_workspace_list_jobs",
     description=(
         "List bounded recent job summaries for a workspace without starting Lean; "
