@@ -88,6 +88,13 @@ class VerificationJobsTests(unittest.TestCase):
             "LEAN_NUM_THREADS": "2",
             "LEAN_LAKE_BUILD_THREADS": "2",
             "LEAN_STORAGE_POLICY": "preserve",
+            # These tiny fixtures run a fake Lake executable and create no
+            # Mathlib artifacts. Keep admission checks active without requiring
+            # production-sized free space on the GitHub Actions runner.
+            "LEAN_STORAGE_RESERVE_BYTES": str(1024 ** 3),
+            "LEAN_NEW_CLONE_BUDGET_BYTES": str(64 * 1024 ** 2),
+            "LEAN_NEW_DEPS_BUDGET_BYTES": str(1024 ** 3),
+            "LEAN_BUILD_GROWTH_BUDGET_BYTES": str(64 * 1024 ** 2),
             "PATH": str(self.fake_bin) + os.pathsep + os.environ["PATH"],
         })
         self.environment.start()
