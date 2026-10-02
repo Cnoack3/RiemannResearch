@@ -50,6 +50,8 @@ class TestManager(AgentWorkspaceManager):
                 self.active_test_builds -= 1
 
 
+previous_environment = os.environ.copy()
+
 with tempfile.TemporaryDirectory() as raw:
     temp = Path(raw)
     source = temp / "source"
@@ -82,6 +84,13 @@ with tempfile.TemporaryDirectory() as raw:
     os.environ["LEAN_NUM_THREADS"] = "8"
     os.environ["LEAN_LAKE_BUILD_THREADS"] = "8"
     os.environ["LEAN_JOB_WORKERS"] = "2"
+    # This lifecycle intentionally exercises opt-in cache seeding, pruning and
+    # destructive retention. Default preservation has its own separate suite.
+    os.environ["LEAN_STORAGE_POLICY"] = "retention"
+    # The fixture has tiny fake artifacts and must also run on small CI disks.
+    os.environ["LEAN_STORAGE_RESERVE_BYTES"] = str(1024 ** 3)
+    os.environ["LEAN_NEW_DEPS_BUDGET_BYTES"] = str(1024 ** 3)
+    os.environ["LEAN_BUILD_GROWTH_BUDGET_BYTES"] = str(64 * 1024 ** 2)
     fake_bin = temp / "bin"
     fake_bin.mkdir()
     fake_lake = fake_bin / "lake"
@@ -329,5 +338,8 @@ new file mode 100644
     assert '"event":"read_file"' in metrics
     assert '"event":"job_status"' in metrics
     assert first_token not in metrics
+
+os.environ.clear()
+os.environ.update(previous_environment)
 
 print("isolated workspace lifecycle ok")

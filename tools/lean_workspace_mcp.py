@@ -24,7 +24,7 @@ from pydantic import BaseModel, ConfigDict
 from agent_workspaces import AgentWorkspaceManager
 
 
-WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive, sensibly named modules with focused imports; checkpoint rejects umbrella `import Mathlib` and unexported root-level modules. A long cohesive theorem may remain in one file; split by mathematical responsibility, not an arbitrary line count. Checkpoints skip Lean for documentation-only changes and otherwise build changed modules plus local reverse dependents; lean_build remains an explicit queued full-project validation and should not run immediately before checkpoint. If lakefile.toml changes, queue agent_workspace_update_deps once before further validation. Exact dependency configurations and binary artifacts are shared by content key; cache preparation is protected and project builds are clone-local. Poll queued work no sooner than retry_after_seconds and never resubmit it; running status includes phase and Lake task progress. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
+WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive, sensibly named modules with focused imports; checkpoint rejects umbrella `import Mathlib` and unexported root-level modules. A long cohesive theorem may remain in one file; split by mathematical responsibility, not an arbitrary line count. Checkpoints skip Lean for documentation-only changes and otherwise build changed modules plus local reverse dependents; lean_build remains an explicit queued full-project validation and should not run immediately before checkpoint. Consult storage_policy before changing dependencies: preserve mode refuses replacement-based updates; retention mode permits one queued agent_workspace_update_deps after an intentional lakefile.toml change. Exact dependency configurations and binary artifacts are shared by content key; cache preparation is protected and project builds are clone-local. Poll queued work no sooner than retry_after_seconds and never resubmit it; running status includes phase and Lake task progress. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Preserve mode refuses destructive resets. Under opt-in retention policy, reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
 
 WORKFLOW_INSTRUCTIONS += (
     " agent_workspace_run_code and agent_workspace_check_file are asynchronous "
@@ -40,6 +40,22 @@ WORKFLOW_INSTRUCTIONS += (
     "underlying job failed. Interrupted jobs are not automatically replayed, "
     "especially publication jobs. Only one heavy queue worker runs by default; "
     "keep direct upstream LSP proof operations sequential as well."
+)
+
+WORKFLOW_INSTRUCTIONS += (
+    " Storage policy takes precedence over the generic maintenance guidance above. "
+    "Check storage_policy in the open response. Reuse an existing workspace token "
+    "and its build whenever possible; opening a fresh clone requires storage admission. "
+    "Under the default preserve policy, do not call sync, dependency update, or reset: "
+    "replacement-based operations are refused to retain existing content. Do not delete "
+    "workspaces, build trees, dependencies, or cache entries to satisfy an admission refusal. "
+    "If provisioning fails, retain the reported workspace token and retry its resume after "
+    "capacity is available. If publication returns a continuation workspace, retain and "
+    "resume that token for further edits: it already contains the validated integration "
+    "build. The original workspace remains available for reading and verification of its "
+    "own source revision. Preserve mode skips full build-tree seed and snapshot copies; "
+    "that never substitutes for the required Lean validation. Dependency changes require "
+    "a separately admitted environment, not replacement of an existing one."
 )
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
@@ -667,7 +683,11 @@ def workspace_checkpoint(message: str, push: bool = True) -> dict:
 # must not be reported as rollback. Long compilations have durable jobs below.
 @mcp.tool(
     name="agent_workspace_open",
-    description="Open a fresh isolated Lean clone, or resume one by token.",
+    description=(
+        "Resume an existing Lean workspace and its retained build by token, or open "
+        "a fresh clone after storage admission. Read storage_policy and follow any "
+        "continuation workspace returned after publication."
+    ),
 )
 async def agent_workspace_open(resume_token: str = "") -> dict:
     return await asyncio.to_thread(AGENT_WORKSPACES.open, resume_token)
@@ -752,7 +772,11 @@ async def agent_workspace_git_diff(workspace_token: str) -> dict:
 
 @mcp.tool(
     name="agent_workspace_sync",
-    description="Safely refresh a clean clone from published main.",
+    description=(
+        "Refresh a clean clone from published main only under opt-in retention policy. "
+        "Default preservation policy refuses replacement; resume the publication "
+        "continuation workspace instead."
+    ),
 )
 async def agent_workspace_sync(workspace_token: str) -> dict:
     return await asyncio.to_thread(AGENT_WORKSPACES.sync, workspace_token)
@@ -761,8 +785,9 @@ async def agent_workspace_sync(workspace_token: str) -> dict:
 @mcp.tool(
     name="agent_workspace_update_deps",
     description=(
-        "Queue a dependency update after an intentional lakefile.toml change; "
-        "the resulting exact dependency environment is shared by content key."
+        "Queue a dependency update only under opt-in retention policy. Default "
+        "preservation policy retains existing environments and refuses replacement; "
+        "use a separately admitted workspace/environment for dependency changes."
     ),
 )
 async def agent_workspace_update_deps(
@@ -794,7 +819,11 @@ async def queued_lean_build(lean_project_path: str) -> dict:
 
 @mcp.tool(
     name="agent_workspace_checkpoint",
-    description="Queue audit, affected-module validation, commit, and publication.",
+    description=(
+        "Queue audit, affected-module Lean validation, commit, and publication. "
+        "If integration is needed, preserve its validated build and follow the returned "
+        "continuation workspace for subsequent edits."
+    ),
 )
 async def agent_workspace_checkpoint(
     workspace_token: str, message: str, push: bool = True
@@ -841,7 +870,7 @@ async def agent_workspace_list_jobs(workspace_token: str, limit: int = 20) -> di
 @mcp.tool(
     name="agent_workspace_reset",
     description=(
-        "Permission-gated fail-safe for one isolated clone. First call without a token "
+        "Destructive reset is refused under default preservation policy. Under opt-in retention policy, first call without a token "
         "to preview, obtain explicit user permission, then submit the exact token."
     ),
     annotations={

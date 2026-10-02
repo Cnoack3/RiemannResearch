@@ -87,6 +87,7 @@ class VerificationJobsTests(unittest.TestCase):
             "LEAN_SHARED_PROJECT_BUILDS_ROOT": str(self.root / "project-builds"),
             "LEAN_NUM_THREADS": "2",
             "LEAN_LAKE_BUILD_THREADS": "2",
+            "LEAN_STORAGE_POLICY": "preserve",
             "PATH": str(self.fake_bin) + os.pathsep + os.environ["PATH"],
         })
         self.environment.start()
@@ -123,6 +124,13 @@ class VerificationJobsTests(unittest.TestCase):
         (module / "Other.lean").write_text("theorem other : True := by trivial\n")
         (project / "RiemannResearch.lean").write_text("import RiemannResearch.Basic\n")
         (project / "README.md").write_text("test\n")
+        # Managed clones have a real source revision; verification reports its
+        # provenance even when all Lean execution in this suite is simulated.
+        subprocess.run(["git", "add", "--all"], cwd=project, check=True, capture_output=True)
+        subprocess.run([
+            "git", "-c", "user.name=Offline Fixture", "-c", "user.email=fixture@example.invalid",
+            "commit", "-q", "-m", "Create verification fixture",
+        ], cwd=project, check=True, capture_output=True)
         self.manager._write_meta({
             "token": token, "path": str(project), "state": "active",
             "needs_rehydrate": False, "last_activity": time.time(),
@@ -333,8 +341,11 @@ class VerificationJobsTests(unittest.TestCase):
         held = self.hold_worker()
         queued = self.manager.submit_run_code(self.token, "-- simulated launch failure")
         observed = []
+        real_popen = subprocess.Popen
 
         def before_launch(*args, **kwargs):
+            if args[0][0] != "lake":
+                return real_popen(*args, **kwargs)
             job = self.manager._read_job(queued["job_id"])
             observed.append(job["process"])
             raise FileNotFoundError("simulated unavailable executable")
@@ -480,7 +491,8 @@ class VerificationJobsTests(unittest.TestCase):
 
         def tracked_popen(*args, **kwargs):
             child = real_popen(*args, **kwargs)
-            children.append(child)
+            if args[0][0] == "lake":
+                children.append(child)
             return child
 
         with patch("agent_workspaces.subprocess.Popen", side_effect=tracked_popen):
@@ -492,6 +504,7 @@ class VerificationJobsTests(unittest.TestCase):
         self.assertTrue(result["temporary_file_removed"])
         self.assertGreaterEqual(result["elapsed_seconds"], 1)
         self.assertLess(result["elapsed_seconds"], 3)
+        self.assertEqual(len(children), 1)
         self.assertEqual(children[0].returncode, -9)
         with self.assertRaises(ChildProcessError):
             os.waitpid(children[0].pid, os.WNOHANG)
@@ -518,7 +531,14 @@ class VerificationJobsTests(unittest.TestCase):
         result = self.terminal(self.manager.submit_run_code(self.token, "-- SIGNAL"))["result"]
         self.assertEqual(result["classification"], "process_error")
         self.assertEqual(result["exit_code"], -9)
-        with patch("agent_workspaces.subprocess.Popen", side_effect=FileNotFoundError("missing lake")):
+        real_popen = subprocess.Popen
+
+        def missing_lake(*args, **kwargs):
+            if args[0][0] == "lake":
+                raise FileNotFoundError("missing lake")
+            return real_popen(*args, **kwargs)
+
+        with patch("agent_workspaces.subprocess.Popen", side_effect=missing_lake):
             result = self.terminal(self.manager.submit_run_code(self.token, "-- cannot start"))["result"]
         self.assertEqual(result["classification"], "process_error")
         self.assertIsNone(result["exit_code"])
@@ -553,8 +573,11 @@ class VerificationJobsTests(unittest.TestCase):
         meta = self.manager._read_meta(self.token)
         meta["needs_rehydrate"] = True
         self.manager._write_meta(meta)
-        with self.assertRaisesRegex(ValueError, "Resume"):
-            self.manager.submit_run_code(self.token, "-- fine")
+        # Opt-in retention still requires replacement-based restoration;
+        # preserve mode instead verifies the retained local source revision.
+        with patch.object(self.manager, "storage_policy", "retention"):
+            with self.assertRaisesRegex(ValueError, "Resume"):
+                self.manager.submit_run_code(self.token, "-- fine")
         self.assertEqual(list(self.manager.jobs.glob("job_*.json")), [])
 
     def test_invalid_file_paths_and_size_rejected_before_enqueue(self):
