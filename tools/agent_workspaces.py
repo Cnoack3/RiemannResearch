@@ -558,7 +558,7 @@ class AgentWorkspaceManager:
 
     @_storage_operation
     def _run_lake_build(
-        self, project: Path, args: list[str], *, timeout: int = 3600
+        self, project: Path, args: list[str], *, timeout: int = 10800
     ) -> tuple[str, dict]:
         self._require_storage_space(
             "Lean build", project, self.shared, self.state,
@@ -1691,7 +1691,7 @@ class AgentWorkspaceManager:
         output, dependency_cache = self._run_lake_build(
             project,
             ["lake", "build", "RiemannResearch", "--quiet"],
-            timeout=3600,
+            timeout=10800,
         )
         result = {
             "command": "lake build RiemannResearch --quiet",
@@ -1830,7 +1830,7 @@ class AgentWorkspaceManager:
         output, dependency_cache = self._run_lake_build(
             project,
             ["lake", "build", *lake_targets, "--quiet"],
-            timeout=3600,
+            timeout=10800,
         )
         result = {
             "command": f"lake build <{len(targets)} affected module(s)> --quiet",

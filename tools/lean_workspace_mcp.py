@@ -612,7 +612,7 @@ def workspace_checkpoint(message: str, push: bool = True) -> dict:
     build_before = _project_olean_snapshot()
     build_started = time.monotonic()
     build_output = _run(
-        ["lake", "build", "RiemannResearch", "--quiet"], timeout=3600
+        ["lake", "build", "RiemannResearch", "--quiet"], timeout=10800
     )
     build_seconds = round(time.monotonic() - build_started, 3)
     build_after = _project_olean_snapshot()
