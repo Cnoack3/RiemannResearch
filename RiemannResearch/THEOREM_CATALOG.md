@@ -1,5 +1,129 @@
 # Theorem catalog
 
+### Complete inverse defects and actual physical-dual support transfer (2026-10-04)
+
+**Established physical Hilbert identities and support approximation.**
+Source: user-provided `Prime_Phases_Agenda_Proof_Attempts.tex`, section
+"Full inverse bounds and an exact controlled-transfer test". Stage `n`
+contains every legal conductor `2,...,n+1`, including every composite.
+
+RH/ParetoPhysicalDualTransfer.lean proves the quadratic equality
+`physicalInverseDefect_eq_residual_sq`, its nonnegativity, and the corresponding
+`physicalPrefixInverseDefect_eq_residual_sq` for a small principal block taken
+AFTER the full stage inverse. Thus the physical-dual Gram dominates the actual
+full inverse Gram. `residueInverseEntry_diagonal_nonneg` and
+`residueInverseEntry_diagonal_le_physical` give unconditional diagonal bounds.
+`physicalPrefixInverseDefect_support_transfer` is the exact reverse-norm
+sandwich; `physicalPrefixInverseDefect_finite_certificate` gives its finite
+error certificate. `physicalSignedCharge_exact` retains the complete signed
+coefficient charge and residual pairing before the Cauchy bound.
+
+RH/ParetoDualSupportError.lean proves the elementary harmonic budget:
+`A_K=H_(K+1)-1`, `0<=A_K<=K/2`, `A_K<=log(K+1)`, and
+`supportErrorSq K <= (2*log(K+1)^2+1)/K` for `K>=1`.
+
+RH/ParetoPhysicalDualProjection.lean constructs the ACTUAL orthogonal projection
+onto `span(u_2,...,u_K)`, not an assumed approximation-provider structure.
+Finite Möbius inversion proves its head coordinates, and finite support proves
+its zero tail. `physicalDualProjection_explicit` identifies it with the
+manuscript's anchored vector `q_K(n)=1-A_K*n/(K-A_K)` for `1<=n<=K`.
+`physicalDualProjectionResidual_norm_sq` proves the complete squared error
+`A_K^2/(K-A_K)+1/(K+1)` exactly. The support error is therefore a proved physical
+Hilbert quantity. Actual finite dual coefficients are obtained from its span
+membership; the manuscript's separate closed-form multiples-sum formula for
+those coefficients is not asserted by this development.
+
+RH/ParetoPhysicalDualSupportLimit.lean proves the actual support error tends
+to zero. RH/ParetoPhysicalDualSupportRate.lean gives the explicit eventual
+bound `||1-q_K|| <= 2*log(K+1)/sqrt(K)` and its `IsBigO` declaration.
+
+**Exact closure criterion and conditional RH consumer.**
+RH/ParetoPhysicalDualSequenceCriterion.lean proves
+`physicalDualProjection_inverse_criterion`: along EVERY support sequence
+`k_j->infinity` with full stages `n_j>=k_j`, the actual complete principal
+inverse defect tends to zero if and only if `hilbertOne` belongs to the closed
+legal residue span. The support-error provider is discharged by the preceding
+modules. `riemannHypothesis_of_physicalDualProjection_inverse_defect` concludes
+Mathlib's actual `RiemannHypothesis` from the remaining vanishing-defect input.
+
+Open: a proved provider making that moving complete inverse defect tend to
+zero, or making the corresponding signed charge saturate. Positivity and
+boundedness of the inverse defect do not discharge this obligation.
+
+Formalization gap: the published RH-to-legal-density direction of the
+Nyman--Beurling/Baez-Duarte theorem is not proved in the current project.
+The new unconditional equivalence is therefore to CLOSED-SPAN MEMBERSHIP;
+the RH implication is checked in the sufficient direction. An unconditional
+Lean `RH iff vanishing defect` claim additionally requires the classical
+RH-to-density provider. This gap is a missing formalization of a classical
+theorem, not a newly proposed arithmetic assumption or an unconditional RH
+proof. See RH/MellinDeficitRHTest.lean and
+RH/BaezDuarteNaturalApproximation.lean for the existing explicit boundary.
+
+### Inverse conditioning, prime-only budgets, Fourier measure classes and zero kernels (2026-10-04)
+
+**Established finite estimates and actual zeta convergence.**
+RH/ParetoInversePolynomial.lean proves
+`completeResidue_inverse_quadratic_bound`: the ACTUAL complete inverse
+quadratic form is at most `5*R^2*H_R^2*sum(a_i^2)`, with `R=n+1`.
+Its subdictionary and composite-only corollaries retain the complete dictionary
+bound. This is an explicit Euclidean quadratic-form statement, not the default
+Pi/sup-norm operator norm.
+
+Analysis/SignedIncidenceEnergy.lean preserves the exact finite signed energy
+and every diagonal/off-diagonal term. RH/PrimeOnlyDyadicEnergy.lean applies it
+to actual finite von Mangoldt and prime-only sums, retaining the square-root
+prime-power correction. Analysis/FixedEnergyPerturbation.lean proves the
+norm perturbation estimates. RH/ActualPrimePowerErrorSummability.lean consumes the existing unconditional
+MediumPNT theorem and the pinned Mathlib Costa-Pereira inequalities.
+RH/ActualPrimePowerParetoEnergy.lean proves the actual square-root compensated
+prime-power error is Pareto-square-summable. RH/PrimeOnlyArithmeticBridge.lean
+identifies these exact Chebyshev providers with the finite psi/theta sums.
+RH/PrimeOnlyDyadicErrorBudget.lean proves the exact paired factor 1/2,
+the uniform dyadic difference budget 3E, both-direction finite energy comparison,
+and the sharper signed difference bound
+`abs(E_psi-E_prime)<=2*sqrt(3*E*E_prime)+3*E`.
+The decisive cofinal arithmetic energy bound is not inferred.
+
+RH/ActualIntegratedZeroSeries.lean proves `absolutely_summable` for the ACTUAL
+multiplicity-weighted kernel
+`-m(rho)*exp(rho*log x)*(1-exp(-rho*log 2))/rho^2`, for `x>=1`.
+It uses the existing unconditional zeta seam and proved reciprocal-square
+zero summability. Analysis/IntegratedZeroSeriesBounds.lean supplies the generic
+absolute-majorant truncation inequality.
+RH/IntegratedZeroScalarTail.lean proves a logarithmic reciprocal-square
+telescope, retaining its terminal term.
+RH/ActualIntegratedZeroTruncation.lean applies the ACTUAL proved local zero
+count with multiplicities and both signs of the ordinate: the weight tail is
+at most `32*A0*log(K+3)/K`, and the integrated kernel tail is at most
+`192*A0*x*log(K+3)/K`, for `K>=5`, `x>=1`.
+RH/ActualIntegratedZeroRealTruncation.lean gives the literal real-height
+bound `768*A0*x*log(Y)/Y` for `Y>=10`, plus its IsBigO declaration. Both boundary endpoints belong to the finite
+head; the exact complete-minus-head remainder is proved before its norm bound.
+A0 is the proved unit-window count constant; no numerical decimal A0 is claimed.
+Open: the arithmetic logarithmic Perron/integrated explicit-formula identity
+and the exact trivial-zero/dilogarithm evaluation.
+
+**Conditional analytic assembly; explicit providers remain Open.**
+Analysis/GrowingFourierGramBounds.lean proves the finite Wiener and
+support-cardinality/ell2 error estimates from the displayed uniform entry bound.
+Analysis/DistinctPhaseMeasureClass.lean proves the finite weighted/distinct
+sampling inequalities and the Borel set sandwich.
+Analysis/ContinuousSamplingMeasureClass.lean passes the continuous-test
+sandwich through weak limits on compact regular spaces and proves mutual
+absolute continuity. Open for ACTUAL zeta phases: growing-support quantitative
+Landau/Fourier cancellation and the bounded normalized multiplicity-square
+cluster budget. No exact Haar equality is claimed for distinct sampling.
+
+Analysis/MarkedFourierTail.lean proves the tent inverse-square envelope,
+the symmetric positive-kernel quadratic row bound, the marked Cauchy bound,
+and the finite tail with its retained endpoint remainder. The two-sided
+infinite tail is at most `4*C/B` from a uniform window-mass provider.
+Open for ACTUAL marked zeta tails: the microscopic ordinate-cluster row/mass
+provider and the Fourier representation/overlap assembly. The scalar theorem
+does not prove that provider. Bounded-frequency signed cancellation and the
+cofinal `O(log N)` arithmetic bound/signed inverse saturation remain open.
+
 ### Unconditional prime pivots, raw-model obstruction and norm-saving transfer (2026-10-01)
 
 **Established arithmetic and analytic results; coherent kernel checks passed.**
