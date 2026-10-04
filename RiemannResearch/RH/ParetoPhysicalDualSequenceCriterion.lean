@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ParetoPhysicalDualCoefficients
 import RiemannResearch.RH.ParetoPhysicalDualSupportLimit
 import RiemannResearch.RH.ParetoNormClosure
 
@@ -62,14 +63,6 @@ theorem physicalPrefixInverseDefect_tendsto_zero_iff
           physicalPrefixInverseDefect (k j) (n j) (hkn j) (a j) :=
       Real.sq_sqrt (physicalPrefixInverseDefect_nonneg (k j) (n j) (hkn j) (a j))
     simpa only [heq, zero_pow (by omega : 2 ≠ 0)] using ht
-
-/-- An actual coefficient representation of the proved support projection. -/
-def physicalDualProjectionCoeff (n : ℕ) : Fin n → ℝ :=
-  Classical.choose (physicalDualProjection_expansion n)
-
-theorem physicalDualProjectionCoeff_spec (n : ℕ) :
-    physicalDualProjection n = physicalDualCombination n (physicalDualProjectionCoeff n) :=
-  Classical.choose_spec (physicalDualProjection_expansion n)
 
 /-- Every unbounded support/cutoff pair retains all composites in its inverse. -/
 theorem physicalDualProjection_inverse_criterion

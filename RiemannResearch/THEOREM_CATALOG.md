@@ -1,5 +1,172 @@
 # Theorem catalog
 
+### Strengthened exact normalization and literal marked tails (2026-10-04)
+
+**Established natural-error decomposition.**
+RH/BaezDuarteNaturalApproximation.lean proves `lintegral_sq_div_Ioi` for
+arbitrary positive cutoff, `natural_tailError_eq_charge_sq`, and
+`naturalError_eq_head_add_charge_sq`. The complete natural error is exactly
+its head error plus the signed charge squared. `charge_sq_le_naturalError`
+and `naturalHeadError_le_naturalError` precede the sharpened
+`centeredError_le_two_naturalError` and `corrected_naturalError_le_two`.
+`corrected_naturalCharge_eq_zero` retains the exact coefficient charge.
+The obsolete factor-four/factor-ten declarations have been removed and their
+in-repository documentation updated. Open: a checked provider of the classical
+`RiemannHypothesis -> NaturalApproximation`; the translation theorem does not
+supply that direction.
+
+**Established exact marked Fourier and occurrence assembly.**
+Analysis/MarkedIntegralCauchy.lean proves actual Bochner integral Cauchy--Schwarz
+from MemLp, not an assumed scalar Cauchy premise.
+Analysis/MarkedLaplaceKernel.lean identifies the complete original pair weight
+`4/(4+(gamma_i-gamma_j)^2)` with its actual Laplace integral;
+`kernelForm_zero_eq_energy` identifies the unmarked positive energy.
+Analysis/TentFourierIntegral.lean preserves both affine-primitive endpoints and
+proves the literal compact tent's Mathlib Fourier transform.
+Analysis/TentFourierInversion.lean proves absolute integrability of that transform
+and inversion at every point, including the support endpoints.
+
+Analysis/GaussianCellGeometry.lean proves the complete finite Gaussian pair mass
+is at most six times the full cell-occupancy square sum. Equal ordinates,
+separate analytic multiplicity copies and diagonal terms are all retained.
+Analysis/CellOccupancyOverlap.lean identifies the occupancy-square budget with
+ordered same-cell pairs and proves the overlap comparison.
+Analysis/GaussianSpectralWindows.lean supplies the genuine Gaussian finite
+transform and unit-window L2 bounds. Analysis/GaussianAbsoluteWindowMass.lean
+passes to the integral of the marked norm. Analysis/RationalGaussianWindows.lean
+applies these bounds to the exact original rational pair weight, proving
+`unit_window_absolute_marked_Ico_mass_le` uniformly in both marked centres.
+RH/ActualZeroGaussianCells.lean specializes to every copy of every actual zero
+in (T,2T] and proves the exact copy count equals `Ncount T (2*T)` for T>=0.
+RH/ActualZeroSpectralWindows.lean specializes the genuine L2 and absolute
+spectral windows; RH/ActualMarkedRationalWindows.lean specializes the original
+rational form and its literal normalized window mass.
+
+Analysis/MarkedContinuousTail.lean partitions the actual frequency integral into
+disjoint half-open unit windows, proves absolute tail integrability and proves
+`two_sided_tail_integrable_and_le`: tail <= `4*C/(pi^2*B)` for B>=1.
+RH/ActualMarkedRationalTail.lean consumes the actual finite-copy window bounds.
+`normalizedRationalForm_absolute_tail_integrable_and_le` is unconditional for
+each finite shell, with exact bound `24*Q/(c0*M*pi^2*B)`, where Q is the actual
+square occupancy at `scale*gamma/sqrt(2)`, M is the full copy count, and
+`c0=exp(-1/8)/sqrt(2*pi)`. Empty-shell division is totalized. The signed complex
+tail is absolutely integrable and has the same norm bound.
+`normalizedRationalForm_absolute_tail_le_of_squareBudget` gives the uniform
+bound `24*C/(c0*pi^2*B)` from the explicit premise Q<=C*M, M>0, C>=0.
+
+**Conditional research reduction and remaining providers.** The latter uniform
+budget is Open as an actual Lean provider. It is the known unconditional
+Tsang/Selberg/Fujii microscopic second-moment input, not an RH-equivalent new
+conjecture. Primary paper sources: https://arxiv.org/abs/2010.10675, Theorem 2;
+https://arxiv.org/abs/2503.15449, Propositions 1--2 and (5.4)--(5.6).
+Ordinary unit-height O(log T) zero counting does not discharge it.
+Bounded-frequency signed marked cancellation, the cofinal arithmetic
+O(log N) estimate and signed inverse saturation remain unproved.
+The scope ledger `RH/PrimePhasesFormalizationScope20261004.md` distinguishes
+all established identities, consumers, classical formalization gaps and the
+RH-equivalent targets.
+
+### Full integer-frequency phase covariance and conditional Gram assembly (2026-10-04)
+
+Source: user-provided `Prime_Phases_Agenda_Proof_Attempts.tex`, Theorem
+`growing-phase-gram`. The formal statements below are finite complex quadratic-pairing bounds;
+they do not yet instantiate an operator on the actual zero-phase sample.
+Unless otherwise specified, declaration names have namespace
+`RiemannResearch.Fourier`.
+
+**Established actual arithmetic covariance.** All frequencies in
+`Finset.Ioc 0 N` are retained, including every composite integer frequency.
+`Analysis/PrimePowerCovarianceRowBudget.lean` defines the genuine directed
+prime-power covariance and proves:
+
+- `sum_primePowerCovarianceDirectedEntry_eq`: its complete row is exactly
+  `sum_(q<=N/n) Lambda(q)/q + sum_(q|n) Lambda(q)`.
+- `primePowerCovarianceRowBudget_eq`: the divisor part is exactly `log n`.
+- `primePowerCovarianceRowBudget_le`: for `1<=n<=N`, the full row is at most
+  `log N + log 4 + 4`. Its provider is the already-proved unconditional
+  `Mertens.E₁Λ.le` in `RH/WeilExplicitFormula/FromPNTPlus/Mertens.lean`;
+  no PNT, RH, zero-density, or phase-cancellation assumption is supplied.
+
+`Analysis/FiniteWeightedSchurPairing.lean` proves
+`finiteGramErrorPairing_norm_le_weighted_schur` from positive weights,
+symmetric absolute entries, and the explicit weighted-row bound.
+`Analysis/PrimePowerCovarianceConjugation.lean` supplies these hypotheses
+for the actual arithmetic kernel. Its theorems
+`primePowerCovarianceDirectedEntry_balance`,
+`primePowerCovarianceSymmetricEntry_mul_weight`,
+`primePowerCovarianceSymmetricEntry_symm`, and
+`primePowerCovarianceSymmetricEntry_weighted_row` prove the square-root
+conjugation and the complete row identity exactly.
+`primePowerCovarianceSymmetricEntry_eq_of_lt_of_dvd` identifies an integer
+ratio `q=m/n>1` with `Lambda(q)/sqrt(q)`; the diagonal is zero and
+nondivisible pairs have zero entries. Thus the main covariance is the
+manuscript's exact signed matrix, including every prime-power resonance.
+
+`primePowerCovariance_normalized_pairing_bound` proves
+
+    |a* C_N a| <= [(log N + log 4 + 4)/(2*pi)] sum_(n<=N) |a_n|^2,
+
+where `C_N` has the exact negative coefficient `-1/(2*pi)`.
+This is an actual arithmetic specialization, rather than a theorem assuming
+the desired covariance bound.
+
+**Established consumer with an explicit analytic premise.**
+`Analysis/GrowingPhaseCovarianceAssembly.lean` defines the exact complex
+`primePowerCovarianceSignedEntry`. Its theorem
+`fullIntegerGramErrorPairing_bound_of_entrywise_remainder` assumes only the
+entrywise analytic provider
+
+    |G(n,m) - delta_(n,m) - t*C_N(n,m)| <= eta
+    for every n,m in Ioc 0 N, with eta : NNReal,
+
+and proves
+
+    |a* (G-I) a|
+      <= [N*eta + |t|*(log N + log 4 + 4)/(2*pi)] sum_(n<=N) |a_n|^2.
+
+The coefficient `t` is a real parameter; the theorem does not identify it
+with `T/N(T)` or identify `G` with the actual zero-phase Gram. All arithmetic
+covariance obligations are discharged. The actual uniform rational-character
+Landau/Ford–Meng–Zaharescu remainder is still a missing formalization provider.
+Consequently the unconditional actual-zero assertion at growing support
+`X=(log T)^(2-epsilon)` is not claimed as proved by this consumer.
+
+**Established Fourier and measure-class reductions; actual sampling premises remain.**
+The earlier verified `GrowingFourierGramBounds.lean` gives the exact
+Wiener-square and cardinality losses in
+`finiteGramErrorPairing_norm_le_wiener_sq` and
+`finiteGramErrorPairing_norm_le_card_l2`.
+`finite_fourier_error_le_wiener_budget` transfers an assumed uniform character
+bound to a finite Fourier polynomial with its precise Wiener budget.
+
+`DistinctPhaseMeasureClass.lean` proves the finite normalized sampling
+inequalities from `sum H(gamma)^2 <= C*sum H(gamma)` and `H(gamma)>=1`.
+`MeasureTheory.Measure.mutual_absoluteContinuity_of_set_sandwich` proves the
+actual Mathlib relations `(ν ≪ μ) ∧ (μ ≪ ν)` from upper and quadratic
+lower Borel-set domination. `ContinuousSamplingMeasureClass.lean` closes
+regular approximation and the passage through continuous-test weak limits:
+`MeasureTheory.Measure.mutual_absoluteContinuity_of_weak_test_limits` applies
+to finite regular Borel measures with a finite domination constant on the stated
+Hausdorff space with closed-set outer approximation. Its conclusion is a common measure class, not equality
+of measures.
+
+Still required for the distinct-ordinate/Haar specialization: construction
+and identification of the two actual empirical measures, the actual
+multiplicity-weighted Haar convergence provider, the uniform ordinate-cluster
+square budget, and the corresponding subsequential weak-limit identification.
+The square-budget statement is a known unconditional paper-level consequence
+of Selberg/Fujii mean-square bounds, not a new arithmetic conjecture; no actual
+Lean provider was found in this audit. None of these inputs is discharged
+merely by the generic measure-class theorem.
+
+The proved logarithmic estimate concerns the phase-covariance matrix,
+not the fully screened legal-residue inverse Gram. The decisive cofinal
+arithmetic O(log N) bound for that different matrix and signed inverse
+saturation remain unresolved. The proposed stronger support
+`X=exp(o(sqrt(log T)))` is recorded in
+`RH/UnverifiedHorizontalBootstrapRoute20261004.md` as an unverified research
+route. It is not a Lean theorem or an established provider.
+
 ### Complete inverse defects and actual physical-dual support transfer (2026-10-04)
 
 **Established physical Hilbert identities and support approximation.**
@@ -29,9 +196,10 @@ its zero tail. `physicalDualProjection_explicit` identifies it with the
 manuscript's anchored vector `q_K(n)=1-A_K*n/(K-A_K)` for `1<=n<=K`.
 `physicalDualProjectionResidual_norm_sq` proves the complete squared error
 `A_K^2/(K-A_K)+1/(K+1)` exactly. The support error is therefore a proved physical
-Hilbert quantity. Actual finite dual coefficients are obtained from its span
-membership; the manuscript's separate closed-form multiples-sum formula for
-those coefficients is not asserted by this development.
+Hilbert quantity. RH/ParetoPhysicalDualCoefficients.lean defines actual dual coefficients by
+inner products and proves their finite-inner, floor, multiples, and closed
+harmonic-multiples formulas. The latter is exactly the manuscript formula for
+every conductor, including every composite, and feeds the moving criterion.
 
 RH/ParetoPhysicalDualSupportLimit.lean proves the actual support error tends
 to zero. RH/ParetoPhysicalDualSupportRate.lean gives the explicit eventual
@@ -65,9 +233,12 @@ RH/BaezDuarteNaturalApproximation.lean for the existing explicit boundary.
 **Established finite estimates and actual zeta convergence.**
 RH/ParetoInversePolynomial.lean proves
 `completeResidue_inverse_quadratic_bound`: the ACTUAL complete inverse
-quadratic form is at most `5*R^2*H_R^2*sum(a_i^2)`, with `R=n+1`.
+quadratic form is at most `4*R^2*H_R^2*sum(a_i^2)`, with `R=n+1`.
 Its subdictionary and composite-only corollaries retain the complete dictionary
-bound. This is an explicit Euclidean quadratic-form statement, not the default
+bound. The exact `normalizedDifference_energy_completion` preserves every
+interior square and the terminal boundary. RH/ParetoInverseMobiusHarmonic.lean
+sharpens all three bounds to `4*R^2*M_R^2*sum(a_i^2)`, where
+`M_R=sum_(1<=q<=R) abs(mu(q))/q <= H_R`; this removes no conductors. This is an explicit Euclidean quadratic-form statement, not the default
 Pi/sup-norm operator norm.
 
 Analysis/SignedIncidenceEnergy.lean preserves the exact finite signed energy
@@ -101,8 +272,13 @@ RH/ActualIntegratedZeroRealTruncation.lean gives the literal real-height
 bound `768*A0*x*log(Y)/Y` for `Y>=10`, plus its IsBigO declaration. Both boundary endpoints belong to the finite
 head; the exact complete-minus-head remainder is proved before its norm bound.
 A0 is the proved unit-window count constant; no numerical decimal A0 is claimed.
+Analysis/DilogarithmSeries.lean, RH/TrivialZeroLogIntegral.lean and
+RH/IntegratedTrivialZeroTerm.lean now prove the exact trivial-zero/dilogarithm
+evaluation and its logarithmic integral, retaining both endpoints.
+`correction_eq_log_integral` identifies the actual correction with the dyadic
+logarithmic integral, and `correction_isBigO` proves its O(x^-2) decay.
 Open: the arithmetic logarithmic Perron/integrated explicit-formula identity
-and the exact trivial-zero/dilogarithm evaluation.
+joining the convergent zero sum and correction to the Chebyshev error.
 
 **Conditional analytic assembly; explicit providers remain Open.**
 Analysis/GrowingFourierGramBounds.lean proves the finite Wiener and
@@ -119,9 +295,9 @@ Analysis/MarkedFourierTail.lean proves the tent inverse-square envelope,
 the symmetric positive-kernel quadratic row bound, the marked Cauchy bound,
 and the finite tail with its retained endpoint remainder. The two-sided
 infinite tail is at most `4*C/B` from a uniform window-mass provider.
-Open for ACTUAL marked zeta tails: the microscopic ordinate-cluster row/mass
-provider and the Fourier representation/overlap assembly. The scalar theorem
-does not prove that provider. Bounded-frequency signed cancellation and the
+The new original-kernel/window/integral assembly is described below.
+Open for a bound uniform in actual shell height: the checked microscopic
+ordinate-square provider. The generic scalar theorem cannot supply it. Bounded-frequency signed cancellation and the
 cofinal `O(log N)` arithmetic bound/signed inverse saturation remain open.
 
 ### Unconditional prime pivots, raw-model obstruction and norm-saving transfer (2026-10-01)

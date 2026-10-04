@@ -16,7 +16,7 @@ open scoped FourierTransform NNReal ENNReal
 
 namespace RiemannResearch.RH.Pareto.SpectralObstruction
 
-private def laplaceFourierIntegrand (a b x : ℝ) : ℂ :=
+def laplaceFourierIntegrand (a b x : ℝ) : ℂ :=
   Complex.exp (-(a : ℂ) * (|x| : ℝ) - Complex.I * (b : ℂ) * (x : ℂ))
 
 private theorem laplaceFourierIntegrand_on_neg (a b x : ℝ) (hx : x ≤ 0) :
@@ -33,7 +33,7 @@ private theorem laplaceFourierIntegrand_on_pos (a b x : ℝ) (hx : 0 ≤ x) :
   congr 1
   ring
 
-private theorem laplaceFourierIntegrand_integrable (a b : ℝ) (ha : 0 < a) :
+theorem laplaceFourierIntegrand_integrable (a b : ℝ) (ha : 0 < a) :
     Integrable (laplaceFourierIntegrand a b) := by
   have hneg : IntegrableOn (laplaceFourierIntegrand a b) (Iic 0) := by
     apply (integrableOn_exp_mul_complex_Iic (a := (a : ℂ) - I * b)
@@ -48,7 +48,7 @@ private theorem laplaceFourierIntegrand_integrable (a b : ℝ) (ha : 0 < a) :
   rw [← integrableOn_univ, ← Iic_union_Ioi (a := (0 : ℝ))]
   exact integrableOn_union.mpr ⟨hneg, hpos⟩
 
-private theorem integral_laplaceFourierIntegrand (a b : ℝ) (ha : 0 < a) :
+theorem integral_laplaceFourierIntegrand (a b : ℝ) (ha : 0 < a) :
     (∫ x : ℝ, laplaceFourierIntegrand a b x) =
       ((2 * a / (a ^ 2 + b ^ 2) : ℝ) : ℂ) := by
   have hi := laplaceFourierIntegrand_integrable a b ha

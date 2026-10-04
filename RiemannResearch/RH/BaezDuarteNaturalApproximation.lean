@@ -1,5 +1,6 @@
 import RiemannResearch.RH.BaezDuarteCenteredBridge
 import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # Natural-dilation to centered Pareto approximation
@@ -7,9 +8,9 @@ import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 The analytic density assertion in L. Báez-Duarte, "A strengthening of the
 Nyman--Beurling criterion for the Riemann Hypothesis", Theorem 1.1,
 https://arxiv.org/abs/math/0202141, is stated below as a proposition; the file does not assert it.
-The lemmas prove its elementary normalization transfer. The harmless
-constant 10 avoids using an improper-integral formula: the coefficient charge
-is controlled on (1,2] alone.
+The lemmas prove its elementary normalization transfer. The complete
+squared-error tail on (1,∞) is exactly the coefficient charge squared, so
+centering has an explicit squared-error loss of at most two.
 -/
 
 namespace RiemannResearch.RH.Pareto.BaezDuarte
@@ -72,52 +73,98 @@ theorem centered_sum_eq (s : Finset ℕ) (a : ℕ → ℝ) (x : ℝ) :
   intro d hd
   ring
 
-/-- The coefficient charge is controlled by the error on the finite interval
-(1,2], so no improper integration theorem is needed here. -/
-theorem charge_sq_le_four_error (s : Finset ℕ) (a : ℕ → ℝ)
-    (hs : ∀ d ∈ s, 0 < d) :
-    ENNReal.ofReal ((naturalCharge s a) ^ 2) ≤ 4 * naturalError s a := by
-  have hp (x : ℝ) (hx : x ∈ Ioc (1 : ℝ) 2) :
-      ENNReal.ofReal ((naturalCharge s a) ^ 2) ≤
-        4 * ENNReal.ofReal ((chi x - naturalSum s a x) ^ 2) := by
-    rw [chi_eq_zero_of_one_lt hx.1, naturalSum_eq_charge_div s a hs hx.1]
-    have hx0 : 0 < x := by linarith [hx.1]
-    have hx2 : x ^ 2 ≤ 4 := by
-      nlinarith [mul_nonneg (show 0 ≤ 2 - x by linarith [hx.2])
-        (show 0 ≤ 2 + x by linarith [hx.1])]
-    have hmul : (naturalCharge s a / x) * x = naturalCharge s a :=
-      div_mul_cancel₀ _ (ne_of_gt hx0)
-    have hreal : (naturalCharge s a) ^ 2 ≤
-        4 * (0 - naturalCharge s a / x) ^ 2 := by
-      have hm := mul_nonneg (sq_nonneg (naturalCharge s a / x))
-        (show 0 ≤ 4 - x ^ 2 by linarith)
-      have hsq := congrArg (fun z : ℝ => z ^ 2) hmul
-      nlinarith only [hm, hsq]
-    calc
-      _ ≤ ENNReal.ofReal (4 * (0 - naturalCharge s a / x) ^ 2) :=
-        ENNReal.ofReal_le_ofReal hreal
-      _ = _ := by rw [ENNReal.ofReal_mul (by norm_num)]; norm_num
+/-- An explicit improper-integral normalization; no charge cancellation is
+assumed. The cutoff can be any positive real number. -/
+theorem lintegral_sq_div_Ioi (c : ℝ) {t : ℝ} (ht : 0 < t) :
+    (∫⁻ x : ℝ in Ioi t, ENNReal.ofReal ((c / x) ^ 2)) =
+      ENNReal.ofReal (c ^ 2 / t) := by
+  have hi : IntegrableOn (fun x : ℝ => x ^ (-2 : ℝ)) (Ioi t) :=
+    integrableOn_Ioi_rpow_of_lt (by norm_num) ht
+  have hnonneg : 0 ≤ᵐ[volume.restrict (Ioi t)] (fun x : ℝ => x ^ (-2 : ℝ)) := by
+    filter_upwards [ae_restrict_mem measurableSet_Ioi] with x hx
+    exact Real.rpow_nonneg (ht.trans hx).le _
+  have hreal : (∫ x : ℝ in Ioi t, x ^ (-2 : ℝ)) = 1 / t := by
+    rw [integral_Ioi_rpow_of_lt (by norm_num : (-2 : ℝ) < -1) ht]
+    norm_num [Real.rpow_neg_one, div_eq_mul_inv]
+  have hbase : (∫⁻ x : ℝ in Ioi t, ENNReal.ofReal (x ^ (-2 : ℝ))) =
+      ENNReal.ofReal (1 / t) := by
+    rw [← ofReal_integral_eq_lintegral_ofReal hi hnonneg, hreal]
+  have hpoint (x : ℝ) : (c / x) ^ 2 = c ^ 2 * x ^ (-2 : ℝ) := by
+    rw [Real.rpow_neg_eq_inv_rpow, Real.rpow_two]
+    simp only [div_eq_mul_inv, mul_pow]
   calc
-    _ = ∫⁻ _x : ℝ in Ioc 1 2, ENNReal.ofReal ((naturalCharge s a) ^ 2) := by
-      norm_num
-    _ ≤ ∫⁻ x : ℝ in Ioc 1 2,
-        4 * ENNReal.ofReal ((chi x - naturalSum s a x) ^ 2) := by
-      apply lintegral_mono_ae
-      filter_upwards [ae_restrict_mem measurableSet_Ioc] with x hx
-      exact hp x hx
-    _ = 4 * ∫⁻ x : ℝ in Ioc 1 2,
-        ENNReal.ofReal ((chi x - naturalSum s a x) ^ 2) :=
-      lintegral_const_mul' _ _ (by norm_num)
-    _ ≤ 4 * naturalError s a := by
-      apply mul_le_mul_of_nonneg_left _ (by positivity)
-      apply lintegral_mono_set
-      intro x hx
-      exact lt_trans (by norm_num : (0 : ℝ) < 1) hx.1
+    _ = ∫⁻ x : ℝ in Ioi t,
+        ENNReal.ofReal (c ^ 2) * ENNReal.ofReal (x ^ (-2 : ℝ)) := by
+      apply lintegral_congr
+      intro x
+      rw [hpoint, ENNReal.ofReal_mul (sq_nonneg c)]
+    _ = ENNReal.ofReal (c ^ 2) *
+        (∫⁻ x : ℝ in Ioi t, ENNReal.ofReal (x ^ (-2 : ℝ))) :=
+      lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
+    _ = ENNReal.ofReal (c ^ 2 / t) := by
+      rw [hbase, ← ENNReal.ofReal_mul (sq_nonneg c)]
+      congr 1
+      ring
 
-/-- Centering a finite natural-dilation sum preserves approximation, with an
-explicit universal squared-error loss. -/
-theorem centeredError_le_ten_naturalError (s : Finset ℕ) (a : ℕ → ℝ)
-    (hs : ∀ d ∈ s, 0 < d) : centeredError s a ≤ 10 * naturalError s a := by
+noncomputable def naturalHeadError (s : Finset ℕ) (a : ℕ → ℝ) : ℝ≥0∞ :=
+  ∫⁻ x : ℝ in Ioc 0 1, ENNReal.ofReal ((chi x - naturalSum s a x) ^ 2)
+
+/-- Every composite positive dilation is retained in the exact charge tail. -/
+theorem natural_tailError_eq_charge_sq (s : Finset ℕ) (a : ℕ → ℝ)
+    (hs : ∀ d ∈ s, 0 < d) :
+    (∫⁻ x : ℝ in Ioi 1, ENNReal.ofReal ((chi x - naturalSum s a x) ^ 2)) =
+      ENNReal.ofReal ((naturalCharge s a) ^ 2) := by
+  calc
+    _ = ∫⁻ x : ℝ in Ioi 1, ENNReal.ofReal ((naturalCharge s a / x) ^ 2) := by
+      apply lintegral_congr_ae
+      filter_upwards [ae_restrict_mem measurableSet_Ioi] with x hx
+      rw [chi_eq_zero_of_one_lt hx, naturalSum_eq_charge_div s a hs hx]
+      simp
+    _ = _ := by simpa using lintegral_sq_div_Ioi (naturalCharge s a) (by norm_num : (0 : ℝ) < 1)
+
+/-- Exact head/tail decomposition, including the complete signed charge. -/
+theorem naturalError_eq_head_add_charge_sq (s : Finset ℕ) (a : ℕ → ℝ)
+    (hs : ∀ d ∈ s, 0 < d) :
+    naturalError s a = naturalHeadError s a + ENNReal.ofReal ((naturalCharge s a) ^ 2) := by
+  have hsplit : Ioi (0 : ℝ) = Ioc 0 1 ∪ Ioi 1 := by
+    ext x
+    simp only [mem_Ioi, mem_union, mem_Ioc]
+    constructor
+    · intro hx
+      by_cases hx1 : x ≤ 1
+      · exact Or.inl ⟨hx, hx1⟩
+      · exact Or.inr (lt_of_not_ge hx1)
+    · rintro (⟨hx, _⟩ | hx)
+      · exact hx
+      · linarith
+  have hdis : Disjoint (Ioc (0 : ℝ) 1) (Ioi 1) := by
+    refine disjoint_left.mpr ?_
+    intro x hx hy
+    exact (not_lt_of_ge hx.2) hy
+  unfold naturalError naturalHeadError
+  rw [hsplit, lintegral_union measurableSet_Ioi hdis,
+    natural_tailError_eq_charge_sq s a hs]
+
+/-- The exact improper tail improves the former finite-interval factor four. -/
+theorem charge_sq_le_naturalError (s : Finset ℕ) (a : ℕ → ℝ)
+    (hs : ∀ d ∈ s, 0 < d) :
+    ENNReal.ofReal ((naturalCharge s a) ^ 2) ≤ naturalError s a := by
+  rw [naturalError_eq_head_add_charge_sq s a hs]
+  simpa only [zero_add] using
+    (add_le_add (show (0 : ℝ≥0∞) ≤ naturalHeadError s a from zero_le)
+      (le_refl (ENNReal.ofReal ((naturalCharge s a) ^ 2))))
+
+theorem naturalHeadError_le_naturalError (s : Finset ℕ) (a : ℕ → ℝ)
+    (hs : ∀ d ∈ s, 0 < d) : naturalHeadError s a ≤ naturalError s a := by
+  rw [naturalError_eq_head_add_charge_sq s a hs]
+  simpa only [add_zero] using
+    (add_le_add (le_refl (naturalHeadError s a))
+      (show (0 : ℝ≥0∞) ≤ ENNReal.ofReal ((naturalCharge s a) ^ 2) from zero_le))
+
+/-- A factor-two squared-error centering bound with no approximation or RH
+hypothesis. The sum and its charge range over the full positive support. -/
+theorem centeredError_le_two_naturalError (s : Finset ℕ) (a : ℕ → ℝ)
+    (hs : ∀ d ∈ s, 0 < d) : centeredError s a ≤ 2 * naturalError s a := by
   have hp (x : ℝ) (hx : x ∈ Ioc (0 : ℝ) 1) :
       ENNReal.ofReal ((1 - ∑ d ∈ s, a d *
         (Int.fract (1 / ((d : ℝ) * x)) -
@@ -153,28 +200,23 @@ theorem centeredError_le_ten_naturalError (s : Finset ℕ) (a : ℕ → ℝ)
       apply lintegral_mono_ae
       filter_upwards [ae_restrict_mem measurableSet_Ioc] with x hx
       exact hp x hx
-    _ = 2 * (∫⁻ x : ℝ in Ioc 0 1,
-        ENNReal.ofReal ((chi x - naturalSum s a x) ^ 2)) +
+    _ = 2 * naturalHeadError s a +
           2 * ENNReal.ofReal ((naturalCharge s a) ^ 2) := by
       rw [lintegral_add_right _ measurable_const,
         lintegral_const_mul' _ _ (by norm_num)]
-      simp
-    _ ≤ 2 * naturalError s a + 2 * (4 * naturalError s a) := by
-      apply add_le_add
-      · apply mul_le_mul_of_nonneg_left _ (by positivity)
-        exact lintegral_mono_set (fun x hx => hx.1)
-      · exact mul_le_mul_of_nonneg_left (charge_sq_le_four_error s a hs) (by positivity)
-    _ = 10 * naturalError s a := by ring
+      simp [naturalHeadError]
+    _ = 2 * naturalError s a := by
+      rw [naturalError_eq_head_add_charge_sq s a hs, mul_add]
 
 theorem naturalApproximation_implies_centeredApproximation
     (h : NaturalApproximation) : CenteredApproximation := by
   intro ε hε
-  obtain ⟨s, a, hs, he⟩ := h (ε / 20) (by positivity)
+  obtain ⟨s, a, hs, he⟩ := h (ε / 4) (by positivity)
   refine ⟨s, a, hs, ?_⟩
   calc
-    centeredError s a ≤ 10 * naturalError s a := centeredError_le_ten_naturalError s a hs
-    _ ≤ 10 * ENNReal.ofReal (ε / 20) := mul_le_mul_of_nonneg_left he.le (by positivity)
-    _ = ENNReal.ofReal (10 * (ε / 20)) := by
+    centeredError s a ≤ 2 * naturalError s a := centeredError_le_two_naturalError s a hs
+    _ ≤ 2 * ENNReal.ofReal (ε / 4) := mul_le_mul_of_nonneg_left he.le (by positivity)
+    _ = ENNReal.ofReal (2 * (ε / 4)) := by
       rw [ENNReal.ofReal_mul (by norm_num)]
       norm_num
     _ < ENNReal.ofReal ε :=
@@ -276,6 +318,30 @@ theorem corrected_naturalError_eq (s : Finset ℕ) (a : ℕ → ℝ)
         norm_num
       _ = 0 := by simp
   rw [hhead, htail, add_zero]
+
+/-- The actual index-one correction has a quantitative complete-domain bound. -/
+theorem corrected_naturalError_le_two (s : Finset ℕ) (a : ℕ → ℝ)
+    (hs : ∀ d ∈ s, 0 < d) :
+    naturalError (insert 1 s) (correctedCoefficient s a) ≤ 2 * naturalError s a := by
+  rw [corrected_naturalError_eq s a hs]
+  exact centeredError_le_two_naturalError s a hs
+
+/-- The actual correction satisfies the legal zero-charge condition exactly. -/
+theorem corrected_naturalCharge_eq_zero (s : Finset ℕ) (a : ℕ → ℝ)
+    (hs : ∀ d ∈ s, 0 < d) :
+    naturalCharge (insert 1 s) (correctedCoefficient s a) = 0 := by
+  have hs' : ∀ d ∈ insert 1 s, 0 < d := by
+    intro d hd
+    rcases Finset.mem_insert.mp hd with h1 | hd
+    · subst d
+      norm_num
+    · exact hs d hd
+  have h := naturalSum_eq_charge_div (insert 1 s) (correctedCoefficient s a)
+    hs' (by norm_num : (1 : ℝ) < 2)
+  rw [corrected_naturalSum_eq_zero_of_one_lt s a hs
+    (by norm_num : (1 : ℝ) < 2)] at h
+  linarith
+
 
 theorem centeredApproximation_implies_naturalApproximation
     (h : CenteredApproximation) : NaturalApproximation := by

@@ -12,6 +12,9 @@ Source: user-provided `Prime_Phases_Agenda_Proof_Attempts.tex`, equation
 `full-inverse-polynomial-bound` and its finite Möbius-convolution proof.
 The coefficient estimate below applies to every legal conductor, including
 composites. No coercivity or inverse-growth provider is assumed.
+The exact finite difference-energy completion retains every nonnegative site
+square and the terminal physical boundary before deriving the constant-four
+conditioning bound.
 -/
 
 noncomputable section
@@ -143,78 +146,162 @@ private theorem sum_Icc_one_eq_range (R : ℕ) (f : ℕ → ℝ) :
   · intro k hk
     rfl
 
-private theorem shifted_head_energy_le (R : ℕ) (F : ThresholdHilbert) :
-    (∑ k ∈ Finset.range R, hilbertSequence F k ^ 2 / ((k : ℝ) + 1) ^ 2) ≤
-      ∑ k ∈ Finset.range R, hilbertSequence F (k + 1) ^ 2 / ((k : ℝ) + 2) ^ 2 := by
+/-- Exact weighted difference completion; the remainder is retained before
+any bound is taken. -/
+theorem physical_difference_completion (t x y : ℝ) (ht : 1 < t) :
+    2 * x ^ 2 / (t * (t + 1)) + 2 * y ^ 2 / ((t - 1) * t) -
+      (x - y) ^ 2 / t ^ 2 =
+        ((t - 1) * x + (t + 1) * y) ^ 2 /
+          (t ^ 2 * (t - 1) * (t + 1)) := by
+  have h0 : t ≠ 0 := by linarith
+  have hm : t - 1 ≠ 0 := by linarith
+  have hp : t + 1 ≠ 0 := by linarith
+  field_simp [h0, hm, hp]
+  ring
+
+/-- The physical Pareto difference energy has a nonnegative explicit square
+remainder at every noninitial site. -/
+theorem normalizedDifference_completion (k : ℕ) (F : ThresholdHilbert) :
+    2 * (positiveWeight (k + 2) * hilbertSequence F (k + 2) ^ 2) +
+      2 * (positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2) -
+        normalizedDifference F (k + 2) ^ 2 =
+          (((k : ℝ) + 1) * hilbertSequence F (k + 2) +
+            ((k : ℝ) + 3) * hilbertSequence F (k + 1)) ^ 2 /
+            (((k : ℝ) + 2) ^ 2 * ((k : ℝ) + 1) * ((k : ℝ) + 3)) := by
+  have h := physical_difference_completion ((k : ℝ) + 2)
+    (hilbertSequence F (k + 2)) (hilbertSequence F (k + 1))
+    (by linarith [Nat.cast_nonneg (α := ℝ) k])
+  have hmreal : (k : ℝ) + 2 - 1 = (k : ℝ) + 1 := by ring
+  have hpreal : (k : ℝ) + 2 + 1 = (k : ℝ) + 3 := by ring
+  rw [hmreal, hpreal] at h
+  have hw1 : positiveWeight (k + 1) =
+      1 / (((k : ℝ) + 1) * ((k : ℝ) + 2)) := by
+    rw [positiveWeight_succ]
+    rfl
+  have hw2 : positiveWeight (k + 2) =
+      1 / (((k : ℝ) + 2) * ((k : ℝ) + 3)) := by
+    change positiveWeight ((k + 1) + 1) = _
+    rw [positiveWeight_succ]
+    unfold paretoWeight
+    push_cast
+    congr 1
+    ring
+  have hm : k + 2 - 1 = k + 1 := by omega
+  rw [hw1, hw2]
+  unfold normalizedDifference
+  simp only [hm, Nat.cast_add, Nat.cast_ofNat]
+  simpa only [div_pow, div_eq_mul_inv, mul_pow, inv_pow, one_mul,
+    mul_assoc, mul_left_comm, mul_comm] using h
+
+/-- The local nonnegative square at physical site `k+2`. -/
+def normalizedDifferenceEnergyRemainder (F : ThresholdHilbert) (k : ℕ) : ℝ :=
+  (((k : ℝ) + 1) * hilbertSequence F (k + 2) +
+    ((k : ℝ) + 3) * hilbertSequence F (k + 1)) ^ 2 /
+    (((k : ℝ) + 2) ^ 2 * ((k : ℝ) + 1) * ((k : ℝ) + 3))
+
+theorem normalizedDifferenceEnergyRemainder_nonneg (F : ThresholdHilbert) (k : ℕ) :
+    0 ≤ normalizedDifferenceEnergyRemainder F k := by
+  unfold normalizedDifferenceEnergyRemainder
+  positivity
+
+theorem normalizedDifference_energy_completion_range (R : ℕ) (F : ThresholdHilbert) :
+    (∑ k ∈ Finset.range (R + 1), normalizedDifference F (k + 1) ^ 2) +
+      (∑ k ∈ Finset.range R, normalizedDifferenceEnergyRemainder F k) +
+        2 * (positiveWeight (R + 1) * hilbertSequence F (R + 1) ^ 2) =
+          4 * ∑ k ∈ Finset.range (R + 1),
+            positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2 := by
   induction R with
-  | zero => simp
+  | zero =>
+    norm_num [normalizedDifference, positiveWeight_succ, paretoWeight] <;> ring
   | succ R ih =>
-    have he :
-        (∑ k ∈ Finset.range (R + 1), hilbertSequence F k ^ 2 / ((k : ℝ) + 1) ^ 2) =
-          ∑ k ∈ Finset.range R, hilbertSequence F (k + 1) ^ 2 / ((k : ℝ) + 2) ^ 2 := by
-      rw [Finset.sum_range_succ']
-      simp only [hilbertSequence_zero, zero_pow (by norm_num : 2 ≠ 0), zero_div,
-        add_zero, Nat.cast_add, Nat.cast_one]
-      apply Finset.sum_congr rfl
-      intro k hk
-      congr 1
-      ring
-    rw [he, Finset.sum_range_succ]
-    have hp : 0 ≤ hilbertSequence F (R + 1) ^ 2 / ((R : ℝ) + 2) ^ 2 := by positivity
+    have hd :
+        (∑ k ∈ Finset.range (R + 1 + 1), normalizedDifference F (k + 1) ^ 2) =
+          (∑ k ∈ Finset.range (R + 1), normalizedDifference F (k + 1) ^ 2) +
+            normalizedDifference F (R + 1 + 1) ^ 2 :=
+      Finset.sum_range_succ _ _
+    have hr :
+        (∑ k ∈ Finset.range (R + 1), normalizedDifferenceEnergyRemainder F k) =
+          (∑ k ∈ Finset.range R, normalizedDifferenceEnergyRemainder F k) +
+            normalizedDifferenceEnergyRemainder F R :=
+      Finset.sum_range_succ _ _
+    have hh :
+        (∑ k ∈ Finset.range (R + 1 + 1), positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2) =
+          (∑ k ∈ Finset.range (R + 1), positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2) +
+            positiveWeight (R + 1 + 1) * hilbertSequence F (R + 1 + 1) ^ 2 :=
+      Finset.sum_range_succ _ _
+    change (∑ k ∈ Finset.range (R + 1 + 1), normalizedDifference F (k + 1) ^ 2) +
+      (∑ k ∈ Finset.range (R + 1), normalizedDifferenceEnergyRemainder F k) +
+        2 * (positiveWeight (R + 1 + 1) * hilbertSequence F (R + 1 + 1) ^ 2) =
+          4 * ∑ k ∈ Finset.range (R + 1 + 1), positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2
+    rw [hd, hr, hh]
+    have hidx : R + 1 + 1 = R + 2 := by omega
+    rw [hidx]
+    have hc := normalizedDifference_completion R F
+    change 2 * (positiveWeight (R + 2) * hilbertSequence F (R + 2) ^ 2) +
+      2 * (positiveWeight (R + 1) * hilbertSequence F (R + 1) ^ 2) -
+        normalizedDifference F (R + 2) ^ 2 = normalizedDifferenceEnergyRemainder F R at hc
     linarith
 
-private theorem physical_difference_weight (k : ℕ) :
-    2 / ((k : ℝ) + 1) ^ 2 + 2 / ((k : ℝ) + 2) ^ 2 ≤
-      5 * positiveWeight (k + 1) := by
-  rw [positiveWeight_succ]
-  unfold paretoWeight
-  have h1 : (0 : ℝ) < (k : ℝ) + 1 := by positivity
-  have h2 : (0 : ℝ) < (k : ℝ) + 2 := by positivity
-  field_simp
-  nlinarith [Nat.cast_nonneg (α := ℝ) k]
+/-- Exact cutoff identity. The terminal physical mass and all interior square
+remainders are explicit; discarding them gives the constant-four bound. -/
+theorem normalizedDifference_energy_completion (R : ℕ) (hR : 0 < R) (F : ThresholdHilbert) :
+    (∑ k ∈ Finset.range R, normalizedDifference F (k + 1) ^ 2) +
+      (∑ k ∈ Finset.range (R - 1), normalizedDifferenceEnergyRemainder F k) +
+        2 * (positiveWeight R * hilbertSequence F R ^ 2) =
+          4 * ∑ k ∈ Finset.range R,
+            positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2 := by
+  have h := normalizedDifference_energy_completion_range (R - 1) F
+  have hidx : R - 1 + 1 = R := by omega
+  simpa only [hidx] using h
 
-/-- The constant five is valid on the actual infinite Pareto Hilbert space. -/
+
+private theorem normalizedDifference_pointwise_le (k : ℕ) (F : ThresholdHilbert) :
+    normalizedDifference F (k + 1) ^ 2 ≤
+      2 * (positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2) +
+        2 * (positiveWeight k * hilbertSequence F k ^ 2) := by
+  cases k with
+  | zero =>
+    norm_num [normalizedDifference, positiveWeight_succ, paretoWeight,
+      hilbertSequence_zero] <;> nlinarith
+  | succ k =>
+    have h := normalizedDifference_completion k F
+    have hpos : 0 ≤
+        (((k : ℝ) + 1) * hilbertSequence F (k + 2) +
+          ((k : ℝ) + 3) * hilbertSequence F (k + 1)) ^ 2 /
+          (((k : ℝ) + 2) ^ 2 * ((k : ℝ) + 1) * ((k : ℝ) + 3)) := by positivity
+    have he : k + 1 + 1 = k + 2 := by omega
+    simpa only [Nat.succ_eq_add_one, he] using (le_of_sub_nonneg (by linarith :
+      0 ≤ 2 * (positiveWeight (k + 2) * hilbertSequence F (k + 2) ^ 2) +
+        2 * (positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2) -
+          normalizedDifference F (k + 2) ^ 2))
+
+/-- The sharper constant four holds in the actual infinite Pareto Hilbert space. -/
 theorem normalizedDifference_energy_le (R : ℕ) (F : ThresholdHilbert) :
-    (∑ k ∈ Finset.Icc 1 R, normalizedDifference F k ^ 2) ≤ 5 * ‖F‖ ^ 2 := by
+    (∑ k ∈ Finset.Icc 1 R, normalizedDifference F k ^ 2) ≤ 4 * ‖F‖ ^ 2 := by
   rw [sum_Icc_one_eq_range]
-  have hp (k : ℕ) : normalizedDifference F (k + 1) ^ 2 ≤
-      2 * hilbertSequence F (k + 1) ^ 2 / ((k : ℝ) + 1) ^ 2 +
-      2 * hilbertSequence F k ^ 2 / ((k : ℝ) + 1) ^ 2 := by
-    simp only [normalizedDifference, Nat.add_sub_cancel, Nat.cast_add, Nat.cast_one, div_pow]
-    rw [← add_div]
-    apply (div_le_div_iff_of_pos_right (by positivity : (0 : ℝ) < ((k : ℝ) + 1) ^ 2)).mpr
-    nlinarith [sq_nonneg (hilbertSequence F (k + 1) + hilbertSequence F k)]
+  have hhead :
+      (∑ k ∈ Finset.range R, positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2) ≤
+        ‖F‖ ^ 2 := by
+    simp_rw [hilbertSequence_weighted_square]
+    rw [hilbert_norm_sq]
+    exact (hilbert_coordinate_square_summable F).sum_le_tsum _ (by
+      intro k hk; exact sq_nonneg _)
+  have hprev :
+      (∑ k ∈ Finset.range R, positiveWeight k * hilbertSequence F k ^ 2) ≤ ‖F‖ ^ 2 := by
+    rw [hilbert_norm_weighted_sq]
+    exact (hilbertSequence_square_summable F).sum_le_tsum _ (by
+      intro k hk
+      unfold positiveWeight
+      positivity)
   calc
     _ ≤ ∑ k ∈ Finset.range R,
-        (2 * hilbertSequence F (k + 1) ^ 2 / ((k : ℝ) + 1) ^ 2 +
-          2 * hilbertSequence F k ^ 2 / ((k : ℝ) + 1) ^ 2) :=
-      Finset.sum_le_sum fun k hk => hp k
-    _ ≤ ∑ k ∈ Finset.range R,
-        (2 * hilbertSequence F (k + 1) ^ 2 / ((k : ℝ) + 1) ^ 2 +
-          2 * hilbertSequence F (k + 1) ^ 2 / ((k : ℝ) + 2) ^ 2) := by
-      simp_rw [Finset.sum_add_distrib, mul_div_assoc, ← Finset.mul_sum]
-      have hshift :
-          2 * (∑ k ∈ Finset.range R, hilbertSequence F k ^ 2 / ((k : ℝ) + 1) ^ 2) ≤
-            2 * ∑ k ∈ Finset.range R, hilbertSequence F (k + 1) ^ 2 / ((k : ℝ) + 2) ^ 2 :=
-        mul_le_mul_of_nonneg_left (shifted_head_energy_le R F) (by norm_num : (0 : ℝ) ≤ 2)
-      exact add_le_add le_rfl hshift
-    _ ≤ ∑ k ∈ Finset.range R,
-        5 * (positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2) := by
-      apply Finset.sum_le_sum
-      intro k hk
-      have h := mul_le_mul_of_nonneg_right (physical_difference_weight k)
-        (sq_nonneg (hilbertSequence F (k + 1)))
-      convert h using 1 <;> ring
-    _ = 5 * ∑ k ∈ Finset.range R, positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2 := by
-      rw [Finset.mul_sum]
-    _ ≤ 5 * ‖F‖ ^ 2 := by
-      rw [← sum_Icc_one_eq_range R
-        (fun k => positiveWeight k * hilbertSequence F k ^ 2), hilbert_norm_weighted_sq]
-      apply mul_le_mul_of_nonneg_left _ (by norm_num)
-      exact (hilbertSequence_square_summable F).sum_le_tsum _ (by
-        intro k hk
-        unfold positiveWeight
-        positivity)
+        (2 * (positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2) +
+          2 * (positiveWeight k * hilbertSequence F k ^ 2)) :=
+      Finset.sum_le_sum fun k hk => normalizedDifference_pointwise_le k F
+    _ = 2 * (∑ k ∈ Finset.range R, positiveWeight (k + 1) * hilbertSequence F (k + 1) ^ 2) +
+        2 * ∑ k ∈ Finset.range R, positiveWeight k * hilbertSequence F k ^ 2 := by
+      rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
+    _ ≤ _ := by linarith
 
 theorem cutoffDivisorTransform_normalizedDifference (R d : ℕ)
     (hd : 0 < d) (hdR : d ≤ R) (F : ThresholdHilbert) :
@@ -266,7 +353,7 @@ theorem cutoffDivisorTransform_normalizedDifference (R d : ℕ)
 /-- Weighted ℓ² coefficient recovery for every finite legal conductor. -/
 theorem mobiusDifferenceCLM_weighted_energy_le (R : ℕ) (F : ThresholdHilbert) :
     (∑ d ∈ Finset.Icc 1 R, (mobiusDifferenceCLM d F / (d : ℝ)) ^ 2) ≤
-      5 * cutoffHarmonic R ^ 2 * ‖F‖ ^ 2 := by
+      4 * cutoffHarmonic R ^ 2 * ‖F‖ ^ 2 := by
   have he :
       (∑ d ∈ Finset.Icc 1 R, (mobiusDifferenceCLM d F / (d : ℝ)) ^ 2) =
         ∑ d ∈ Finset.Icc 1 R, cutoffDivisorTransform R (normalizedDifference F) d ^ 2 := by
@@ -285,7 +372,7 @@ def residueSynthesis (n : ℕ) (v : Fin n → ℝ) : ThresholdHilbert :=
 
 theorem completeResidue_weighted_coefficient_bound (n : ℕ) (v : Fin n → ℝ) :
     (∑ i, (v i / ((i.val + 2 : ℕ) : ℝ)) ^ 2) ≤
-      5 * cutoffHarmonic (n + 1) ^ 2 * ‖residueSynthesis n v‖ ^ 2 := by
+      4 * cutoffHarmonic (n + 1) ^ 2 * ‖residueSynthesis n v‖ ^ 2 := by
   have hex (i : Fin n) : coefficientCLM (i.val + 2) (residueSynthesis n v) = v i :=
     coefficient_finite_sum n v i
   have hsum :
@@ -310,12 +397,12 @@ theorem completeResidue_weighted_coefficient_bound (n : ℕ) (v : Fin n → ℝ)
       exact sq_nonneg _
   exact hsum.trans (mobiusDifferenceCLM_weighted_energy_le (n + 1) _)
 
-/-- The smallest Gram eigenvalue is at least `1/(5 R² H_R²)`.
+/-- The smallest Gram eigenvalue is at least `1/(4 R² H_R²)`.
 Equivalently, this is the quadratic-form conditioning estimate for the full
 dictionary, with `R=n+1`. Restricting `v` to composites retains the same bound. -/
 theorem completeResidue_coefficient_bound (n : ℕ) (v : Fin n → ℝ) :
     (∑ i, v i ^ 2) ≤
-      5 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2 *
+      4 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2 *
         ‖residueSynthesis n v‖ ^ 2 := by
   have hweight := completeResidue_weighted_coefficient_bound n v
   have hpoint (i : Fin n) : v i ^ 2 ≤
@@ -372,10 +459,10 @@ private theorem inverse_quadratic_le_of_coercive
 The inverse is the actual Gram equivalence of all conductors `2,...,n+1`. -/
 theorem completeResidue_inverse_quadratic_bound (n : ℕ) (a : Fin n → ℝ) :
     (∑ i, (gramEquiv (finiteResidue_independent n)).symm a i * a i) ≤
-      5 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2 *
+      4 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2 *
         ∑ i, a i ^ 2 := by
   apply inverse_quadratic_le_of_coercive (finiteResidue_independent n)
-    (5 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2)
+    (4 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2)
     (by positivity)
   intro c
   simpa only [Fintype.linearCombination_apply, residueSynthesis] using
@@ -387,7 +474,7 @@ theorem residueSubdictionary_coefficient_bound
     {ι : Type*} [Fintype ι] (n : ℕ) (e : ι → Fin n) (he : Function.Injective e)
     (v : ι → ℝ) :
     (∑ i, v i ^ 2) ≤
-      5 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2 *
+      4 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2 *
         ‖Fintype.linearCombination ℝ (fun i => residueAtom (e i).val) v‖ ^ 2 := by
   classical
   let w : Fin n → ℝ := fun j => if h : ∃ i, e i = j then v (Classical.choose h) else 0
@@ -422,9 +509,9 @@ theorem residueSubdictionary_inverse_quadratic_bound
     {ι : Type*} [Fintype ι] (n : ℕ) (e : ι → Fin n) (he : Function.Injective e)
     (a : ι → ℝ) :
     (∑ i, (gramEquiv ((finiteResidue_independent n).comp e he)).symm a i * a i) ≤
-      5 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2 * ∑ i, a i ^ 2 := by
+      4 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2 * ∑ i, a i ^ 2 := by
   apply inverse_quadratic_le_of_coercive ((finiteResidue_independent n).comp e he)
-    (5 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2)
+    (4 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2)
     (by positivity)
   exact residueSubdictionary_coefficient_bound n e he
 
@@ -445,7 +532,7 @@ polynomial bound. No conductor in `2,...,n+1` that is composite is omitted. -/
 theorem completeComposite_inverse_quadratic_bound (n : ℕ)
     (a : CompleteCompositeIndex n → ℝ) :
     (∑ i, (gramEquiv (completeComposite_independent n)).symm a i * a i) ≤
-      5 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2 * ∑ i, a i ^ 2 :=
+      4 * ((n + 1 : ℕ) : ℝ) ^ 2 * cutoffHarmonic (n + 1) ^ 2 * ∑ i, a i ^ 2 :=
   residueSubdictionary_inverse_quadratic_bound n Subtype.val Subtype.val_injective a
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization
