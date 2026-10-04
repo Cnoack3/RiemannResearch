@@ -79,3 +79,10 @@ and signed inverse saturation remain unproved. No new proof of RH is asserted.
 the catalog separately records unresolved domain-specific providers.
 The proposed larger-support bootstrap is recorded separately as unverified
 research, not as a Lean-established result.
+
+Validation record: code commit `c60aabaacbfba72fa2f4db03b5195885f4eff22b`
+passed checkpoint validation of all 27 changed Lean modules and 49 affected
+modules including reverse dependents. A subsequent actual-import audit of
+18 principal declarations (including `Mertens.E₁Λ.le`) reported only
+`propext`, `Classical.choice`, and `Quot.sound`. The printed uniform-tail
+and entrywise-Gram consumer types retain their analytic premises explicitly.

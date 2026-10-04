@@ -48,10 +48,10 @@ Since 0≤ρ_1<1 on (0,1],
 
     ||G−χ||² ≤ 2 integral_0^1 |F−χ|² + 2 A² ≤ 2 ||F−χ||².
 
-The Lean transfer uses the weaker universal constant 10: the finite interval
-(1,2] gives A² ≤ 4 ||F−χ||², and the unit interval then gives
-||G−χ||² ≤ 10 ||F−χ||². This avoids an additional improper-integral
-formalization; either constant transfers arbitrarily small errors.
+The Lean transfer now proves the exact improper tail and error decomposition:
+the tail is A², and the complete error is the head error plus A².
+Consequently A² ≤ ||F−χ||² and ||G−χ||² ≤ 2 ||F−χ||².
+The charge-corrected reverse translation has the same factor 2.
 
 Consequently the paper's approximation property implies centered residue
 approximation at every tolerance. Conversely, a centered combination is
@@ -94,8 +94,10 @@ RH would complete the equivalence; it would not prove RH unconditionally.
 
 `RH/BaezDuarteNaturalApproximation.lean`:
 
-- `charge_sq_le_four_error` and `centeredError_le_ten_naturalError`: explicit
-  centering bounds with no analytic hypothesis.
+- `natural_tailError_eq_charge_sq` and `naturalError_eq_head_add_charge_sq`:
+  exact improper-tail and full-error identities.
+- `charge_sq_le_naturalError` and `centeredError_le_two_naturalError`:
+  sharp centering bounds with no analytic hypothesis.
 - `corrected_naturalError_eq`: exact reverse coefficient translation.
 - `naturalApproximation_iff_one_mem`: the full continuous natural-dilation
   approximation property is equivalent to the repository closure statement.
