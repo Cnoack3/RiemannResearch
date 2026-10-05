@@ -243,15 +243,14 @@ through the original full N(T), complete harmonic cap and signed operators.
 remains the displayed one-point density difference, now available at a
 proved admissible shrinking point. The detector estimate is a stronger
 sufficient route, not a proved unconditional shrinking-tail theorem.
-To discharge it by the cited proof, the following still require checked
-providers:
+The current provider status is:
 
-- Open: Littlewood's weighted analytic-zero identity/inequality, with
-  compatible horizontal argument lifts, finite detector orders and all
-  boundary-zero or limiting-height treatment.
-- Open: the bound on the full signed rectangle functional, obtained in the
-  source using Gabriel interpolation, the fourth zeta moment, mollifier
-  moments and the remaining vertical/horizontal integral estimates.
+- Established in the continuation below: Littlewood's weighted identity,
+  compatible argument lifts, finite detector orders, outward boundary
+  treatment and an unconditional signed right-side estimate.
+- Open: the signed left logarithmic integral and compatible top-minus-bottom
+  argument estimate, using the source's Gabriel interpolation, mollifier
+  second moment and zeta fourth moment.
 - Open: the source parameter and constant verification needed to produce
   fixed C>0 and B2,B3>=0 at the prescribed one point.
 
@@ -312,3 +311,120 @@ The inghamDifference consumer accepts the exact power-shaped literature
 statement at the chosen cutoff and proves its conversion to the exponential
 budget. The unconditional sourceCountCutoff_shrinking theorem also proves
 eventual membership in 0<=delta<=1/32 before any density premise is supplied.
+
+## Littlewood and right-boundary continuation
+
+The continuation from d21be649 independently proves the analytic rectangle
+steps instead of assuming hLittlewood. The current published declaration
+`shrinking_harmonic_tail_of_leftRectangleBudget` still has one explicit
+quantitative provider. It does not assert that Chourasiya--Simonic Theorem 1
+or its near-line moment estimates have been fully formalized.
+
+### Established
+
+- Analysis/ComplexIntegralLogLift.lean constructs a differentiable logarithm
+  lift by integrating a continuous clamped derivative quotient. The equality
+  exp L = p follows from FTC applied to p exp(-L). Rectangle lifts match at
+  three complex corners; the fourth imaginary value may carry winding.
+- Analysis/ComplexLittlewoodBoundary.lean proves the full signed boundary
+  identity by integration by parts. It uses the weight s-z at the lower-left
+  corner, so the starting endpoint is zero. Both vertical log integrals and
+  both horizontal argument integrals retain the source signs.
+- Analysis/ComplexRectangleZeroCount.lean specializes the proved weighted
+  argument principle to analytic orders. Finite exclusion of real/imaginary
+  zero coordinates gives arbitrarily small outward rectangles with unchanged
+  zero-free right side and inclusion of the entire original closed rectangle.
+- Analysis/ActualMollifierRectangleContour.lean proves actual detector
+  analyticity and includes the active zeta window in the full finite detector
+  zero set. Additional detector zeros and mollifier orders are handled by
+  the existing nonnegative finite complement, not by claiming equal zero sets.
+- Analysis/ActualMollifierBoundaryAvoidance.lean applies that construction
+  unconditionally for X>=37 on positive-height rectangles with right side
+  3/2. The expanded window equals the original H<gamma<=T window plus both
+  added height windows. D(T,sigma)-D(H,sigma) is retained.
+- Analysis/ZetaAbsoluteConvergenceBounds.lean proves
+  ||zeta(s)-1||<=1/(Re s-1) directly from the Dirichlet series and the proved
+  p-series tail. Analysis/ActualMollifierRightBoundary.lean proves the exact
+  Mobius tail identity
+  zeta M_X-1 = -zeta * sum_{n>X} mu(n)n^{-s}. It gives
+  ||zeta M_X-1||<=6/sqrt X on Re s=3/2 and, for integer X>=37,
+  detector nonvanishing, logarithmic continuity and the signed bound
+
+      -integral_H^T log|h_X(3/2+it)| dt
+        <= -(T-H) log(1-36/X) <= 36(T-H)/(X-36).
+
+  These constants are independently proved absolute-convergence bounds,
+  not a formalization of the paper's sharper numerical mean-square C5.
+- Analysis/ActualMollifierSignedBoundaryBudget.lean derives the finite strict
+  harmonic cap and the complete one-point asymptotic transfer from the
+  remaining signed left-and-horizontal provider. With X(T)=ceil(T)+37 and
+  an outward top T'<=T+1, its right boundary is <=36. Since the left/count
+  gap is at least eta/log T, the induced count remainder is at most
+  18 log T/(pi eta). It is absorbed by replacing B3 with B3+18/(pi eta).
+
+The full original N(T), analytic multiplicities, reflection, strict boundary
+correction J(T,sigma), retained D(H,sigma), both exponential channels,
+negative sinh square and composite-frequency interactions survive in the
+unchanged actual signed operators. The Landau growing-support declarations
+are unchanged by this continuation.
+
+### Weakest remaining provider
+
+The count-only sufficient premise remains exactly the one-point bound on
+D(T,sigma)-D(H,sigma) already displayed above. The new analytic route reduces
+its stronger detector premise to `ExpandedLeftRectangleBudget` alone.
+
+At the source-admissible delta(T), sigma=1/2+delta and L=log T, this provider
+chooses a zero-free outward rectangle with H'>0, H'<=H, T<=T'<=T+1 and
+alpha<=sigma-eta/L. For the compatible logarithm lifts supplied by the
+proved normalized contour identity it requires only
+
+    integral_H'^T' log|h_X(alpha+it)| dt
+      + integral_alpha^(3/2) arg_top
+      - integral_alpha^(3/2) arg_bottom
+      <= 2*pi*(sigma-alpha)*F(T),
+
+where F(T)=C*T*L^3*exp(-(L+log L)*I(delta))+B2*L^2+B3*L.
+The right vertical integral, logarithm-lift existence, Littlewood identity,
+finite zero counting, boundary avoidance and asymptotic transfer are no
+longer imported hypotheses. Geometric zero-free rectangles exist
+unconditionally; the quantitative inequality on one such rectangle remains
+Open and must be proved from the moment and horizontal argument estimates.
+
+In particular, the cited Gabriel interpolation, mollifier second moment,
+zeta fourth moment, and numerical/source-parameter verification remain Open.
+This work does not turn the literature result into an axiom or replace it
+with a finite-height RH certificate. The unconditional shrinking strict-tail
+provider is therefore not yet established.
+
+Primary source: https://arxiv.org/html/2507.15184v2, equations (29), (32),
+Section 4 and Lemmas 7--9. Web reading checked which signed terms the source
+actually bounds. Wolfram independently checked the real p-series integral,
+the logarithm inequality and the rational constants. Those computations are
+not used as Lean axioms or proof certificates.
+
+### Continuation verification
+
+The coherent candidate, including the concrete-cutoff consumer, passed Lean
+without warnings. Principal axiom audits report only
+
+    propext, Classical.choice, Quot.sound
+
+No sorryAx or project-specific axiom occurs in the audited dependencies.
+The remaining quantitative local hypotheses are visible in the declaration
+types. Final publication validates all new modules and reverse dependents.
+
+Principal continuation declarations:
+
+- Complex.exists_logLift_of_nonzero
+- Complex.exists_rectangle_fourSide_logLifts
+- Complex.exists_logRectangleBoundary_eq_contour
+- Complex.weightedLogExcess_eq_rectangleContour
+- Complex.exists_zeroFreeRectangle_expansion
+- InghamMollifier.mollifier_error_exact
+- InghamMollifier.zetaDetector_right_signed_log_integral_le_rational
+- InghamMollifier.zetaDetector_exists_zeroFreeRectangle_expansion
+- ActualZeroOrdinate.rightInclusiveWindow_expansion_exact
+- ActualZeroOrdinate.densityDifference_le_of_expandedLeftRectangleBudget
+- ActualZeroPhaseMoments.strictHarmonicBudget_le_of_expandedSignedRectangleBudget
+- ActualZeroPhaseMoments.shrinking_harmonic_tail_of_leftRectangleBudget

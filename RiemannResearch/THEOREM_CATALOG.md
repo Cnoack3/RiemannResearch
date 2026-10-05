@@ -1,5 +1,55 @@
 # Theorem catalog
 
+
+### Proved Littlewood identity and unconditional signed right boundary (2026-10-05)
+
+**Established analytic rectangle providers.**
+Analysis/ComplexIntegralLogLift.lean constructs differentiable logarithm
+lifts from FTC. Analysis/ComplexLittlewoodBoundary.lean proves the complete
+signed Littlewood boundary identity from actual analyticity and border
+nonvanishing; no log-lift or hLittlewood premise remains.
+Analysis/ComplexRectangleZeroCount.lean proves the weighted finite analytic
+order identity and arbitrarily small outward zero-free rectangles.
+Analysis/ActualMollifierRectangleContour.lean includes the actual zeta window
+in the full detector zero count, retaining extra detector orders.
+Analysis/ActualMollifierBoundaryAvoidance.lean preserves the original closed
+top T and exactly expands the H<gamma<=T window into the original and both
+added windows. The original finite-height subtraction is retained.
+
+**Established unconditional Mobius-tail right provider.**
+Analysis/ZetaAbsoluteConvergenceBounds.lean proves the integral-test zeta
+bound for Re s>1. Analysis/ActualMollifierRightBoundary.lean proves the exact
+Mobius tail identity, ||zeta M_X-1||<=6/sqrt X on Re s=3/2 and, for X>=37,
+
+    -integral_H^T log|h_X| <= -(T-H)log(1-36/X)
+      <=36(T-H)/(X-36).
+
+The detector is nonzero and its log norm is continuous on that right line.
+These are independent absolute-convergence constants; the paper's numerical
+C5 and near-line moments are not claimed to be imported.
+
+**Conditional analytic reduction with a strictly weaker remaining budget.**
+Analysis/ActualMollifierSignedBoundaryBudget.lean proves
+shrinking_harmonic_tail_of_leftRectangleBudget using the concrete mollifier
+cutoff ceil(T)+37. Only ExpandedLeftRectangleBudget remains: a bound on the
+signed left log integral plus compatible top-minus-bottom argument integrals
+at one admissible source cutoff on an outward rectangle. The automatic right
+term contributes at most 18 log T/(pi eta), absorbed into B3 log T.
+All logarithm lifts, contour identities, detector counting, boundary
+avoidance and asymptotic transfers are proved. The strict J(T,sigma)
+subtraction, D(H,sigma), full N(T), multiplicities, reflection, composites
+and negative sinh contribution are preserved.
+
+**Open:** the quantitative signed left-and-horizontal provider, including
+the cited Gabriel/mollifier-second/zeta-fourth-moment argument and source
+constants. A fully unconditional shrinking strict-tail provider is not
+claimed. The weakest count-only interface is still the one-point density
+difference below. Principal new audits contain only propext, Classical.choice
+and Quot.sound; no source theorem is an axiom.
+
+Report: RH/StrictShrinkingTailProvider20261005.md.
+
+
 ### Strict shrinking-cutoff harmonic transfer (2026-10-05)
 
 **Established exact counting and unconditional cutoff/remainder transfers.**
@@ -56,12 +106,12 @@ multiplicities, full N(T), negative sinh square and composites survive.
 
 **Open:** the one-point actual density estimate remains the minimal
 count-only analytic interface. The stronger sufficient detector estimate
-has not been proved. Its cited route still needs Littlewood with compatible
-argument lifts and boundary treatment, the full signed boundary estimate
-via Gabriel/fourth-moment/mollifier estimates, and source constant/parameter
-verification. No cited theorem is an axiom. Principal continuation audits
-report only propext, Classical.choice and Quot.sound, with all domain
-hypotheses explicit in declaration types.
+has not been proved. Littlewood, compatible lifts, boundary avoidance and
+the right-side provider are now established in the continuation above.
+The signed left-and-horizontal bound via Gabriel/fourth-moment/mollifier
+estimates and source constants remain Open. No cited theorem is an axiom.
+Principal continuation audits report only propext, Classical.choice and
+Quot.sound, with all domain hypotheses explicit in declaration types.
 
 **Conditional research reduction: one actual density point suffices.**
 Analysis/ActualHyperbolicShrinkingTail.lean proves
