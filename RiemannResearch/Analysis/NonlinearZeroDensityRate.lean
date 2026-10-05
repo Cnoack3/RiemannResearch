@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
@@ -165,5 +166,130 @@ theorem fixed_center_budget_nonneg_iff {M ell p H z : ℝ}
   · intro h
     apply (le_div_iff₀ hden).2
     linarith
+
+end RiemannResearch.Analysis.ZeroDensityRate
+
+noncomputable section
+
+namespace RiemannResearch.Analysis.ZeroDensityRate
+
+theorem stableCutoff_nonneg {ell B R : ℝ} (hB : 0 < B) (hR : 0 ≤ R) :
+    0 ≤ stableCutoff ell B R := by
+  unfold stableCutoff
+  apply div_nonneg
+  · positivity
+  · exact le_of_lt (add_pos_of_pos_of_nonneg hB (Real.sqrt_nonneg _))
+
+/-- The stable root has an exact comparison test against any nonnegative bound. -/
+theorem stableCutoff_le_iff {ell B R t : ℝ}
+    (hell : 0 ≤ ell) (hB : 0 < B) (hR : 0 ≤ R) (ht : 0 ≤ t) :
+    stableCutoff ell B R ≤ t ↔ 3 * R ≤ 2 * ell * t ^ 2 + B * t := by
+  let δ := stableCutoff ell B R
+  have hδ : 0 ≤ δ := stableCutoff_nonneg hB hR
+  have hq : 2 * ell * δ ^ 2 + B * δ - 3 * R = 0 :=
+    stableCutoff_quadratic hell hB hR
+  change δ ≤ t ↔ _
+  constructor
+  · intro hδt
+    have hsq : δ ^ 2 ≤ t ^ 2 := by
+      have hp := mul_nonneg (sub_nonneg.mpr hδt) (add_nonneg ht hδ)
+      nlinarith
+    have hqm := mul_le_mul_of_nonneg_left hsq (by positivity : 0 ≤ 2 * ell)
+    have hlm := mul_le_mul_of_nonneg_left hδt (le_of_lt hB)
+    nlinarith
+  · intro hbound
+    by_contra hnot
+    have hlt : t < δ := lt_of_not_ge hnot
+    have hstrict : 0 < B * (δ - t) := mul_pos hB (sub_pos.mpr hlt)
+    have hsq : t ^ 2 ≤ δ ^ 2 := by
+      have hp := mul_nonneg (le_of_lt (sub_pos.mpr hlt)) (add_nonneg hδ ht)
+      nlinarith
+    have hqm := mul_le_mul_of_nonneg_left hsq (by positivity : 0 ≤ 2 * ell)
+    nlinarith
+
+/-- This is sharp: the root stays in the physical displacement range precisely
+when the requested margin is at most the endpoint margin. -/
+theorem stableCutoff_half_iff {M ell R : ℝ}
+    (hell : 0 ≤ ell) (hR : 0 ≤ R) (hB : 0 < 4 * M - 3 * ell + 2 * R) :
+    stableCutoff ell (4 * M - 3 * ell + 2 * R) R ≤ 1 / 2 ↔
+      R ≤ M - ell / 2 := by
+  rw [stableCutoff_le_iff hell hB hR (by positivity : 0 ≤ (1 / 2 : ℝ))]
+  constructor <;> intro h <;> nlinarith
+
+theorem stableCutoff_range {M ell R : ℝ}
+    (hell : 0 ≤ ell) (hR : 0 ≤ R) (hB : 0 < 4 * M - 3 * ell + 2 * R)
+    (hbudget : R ≤ M - ell / 2) :
+    0 ≤ stableCutoff ell (4 * M - 3 * ell + 2 * R) R ∧
+      stableCutoff ell (4 * M - 3 * ell + 2 * R) R ≤ 1 / 2 := by
+  exact ⟨stableCutoff_nonneg hB hR,
+    (stableCutoff_half_iff hell hR hB).mpr hbudget⟩
+
+/-- No nonsingular-denominator premise is needed when the requested margin
+is within the physical range. -/
+theorem stableCutoff_margin_of_budget {M ell R : ℝ}
+    (hell : 0 ≤ ell) (hR : 0 ≤ R) (hB : 0 < 4 * M - 3 * ell + 2 * R)
+    (hbudget : R ≤ M - ell / 2) :
+    M * inghamRate (stableCutoff ell (4 * M - 3 * ell + 2 * R) R) -
+      ell * stableCutoff ell (4 * M - 3 * ell + 2 * R) R = R := by
+  apply stableCutoff_margin hell hR hB
+  have hδ := (stableCutoff_range hell hR hB hbudget).2
+  exact ne_of_gt (by linarith)
+
+theorem weighted_exp_tangent_le {M δ s : ℝ} (ell : ℝ) (hM : 0 ≤ M)
+    (hδs : δ ≤ s) (hs : s ≤ 1 / 2) :
+    Real.exp (ell * s - M * inghamRate s) ≤
+      Real.exp (ell * δ - M * inghamRate δ) *
+        Real.exp (-(12 * M / (3 - 2 * δ) ^ 2 - ell) * (s - δ)) := by
+  rw [← Real.exp_add]
+  apply Real.exp_le_exp.mpr
+  have h := weighted_tangent_le ell hM hδs hs
+  nlinarith only [h]
+
+theorem exp_inghamRate_tangent_le {M δ s : ℝ} (hM : 0 ≤ M)
+    (hδs : δ ≤ s) (hs : s ≤ 1 / 2) :
+    Real.exp (-M * inghamRate s) ≤
+      Real.exp ((12 * M / (3 - 2 * δ) ^ 2) * δ - M * inghamRate δ) *
+        Real.exp (-(12 * M / (3 - 2 * δ) ^ 2) * s) := by
+  rw [← Real.exp_add]
+  apply Real.exp_le_exp.mpr
+  have h := weighted_tangent_le (0 : ℝ) hM hδs hs
+  nlinarith only [h]
+
+theorem margin_exp_cancellation {M ell R δ : ℝ}
+    (hmargin : M * inghamRate δ - ell * δ = R) :
+    Real.exp ell * Real.exp (ell * δ - M * inghamRate δ) = Real.exp (ell - R) := by
+  rw [← Real.exp_add]
+  congr 1
+  linarith
+
+/-- The tangent slope exceeds the secant slope by an exact positive term. -/
+theorem localSlope_margin_identity (M ell δ : ℝ) (hδ : 3 - 2 * δ ≠ 0) :
+    δ * (12 * M / (3 - 2 * δ) ^ 2 - ell) -
+        (M * inghamRate δ - ell * δ) = 8 * M * δ ^ 2 / (3 - 2 * δ) ^ 2 := by
+  have hδc : 3 - δ * 2 ≠ 0 := by simpa [mul_comm] using hδ
+  unfold inghamRate
+  field_simp [hδ, hδc] <;> ring_nf <;> field_simp [hδ, hδc] <;> ring
+
+/-- A strictly positive cutoff margin automatically gives the integrable
+weighted tangent slope, even without the coarse condition ell < 4M/3. -/
+theorem localSlope_pos_of_margin {M ell R δ : ℝ}
+    (hM : 0 ≤ M) (hδ0 : 0 ≤ δ) (hδ : δ ≤ 1 / 2) (hR : 0 < R)
+    (hmargin : M * inghamRate δ - ell * δ = R) :
+    ell < 12 * M / (3 - 2 * δ) ^ 2 := by
+  have hden : 3 - 2 * δ ≠ 0 := ne_of_gt (by linarith)
+  have he := localSlope_margin_identity M ell δ hden
+  have hnonneg : 0 ≤ 8 * M * δ ^ 2 / (3 - 2 * δ) ^ 2 := by positivity
+  by_contra hnot
+  have hp : δ * (12 * M / (3 - 2 * δ) ^ 2 - ell) ≤ 0 :=
+    mul_nonpos_of_nonneg_of_nonpos hδ0 (sub_nonpos.mpr (le_of_not_gt hnot))
+  linarith
+
+theorem stableCutoff_localSlope_pos {M ell R : ℝ}
+    (hell : 0 ≤ ell) (hR : 0 < R) (hB : 0 < 4 * M - 3 * ell + 2 * R)
+    (hbudget : R ≤ M - ell / 2) :
+    ell < 12 * M / (3 - 2 * stableCutoff ell (4 * M - 3 * ell + 2 * R) R) ^ 2 := by
+  have hr := stableCutoff_range hell (le_of_lt hR) hB hbudget
+  exact localSlope_pos_of_margin (by linarith) hr.1 hr.2 hR
+    (stableCutoff_margin_of_budget hell (le_of_lt hR) hB hbudget)
 
 end RiemannResearch.Analysis.ZeroDensityRate

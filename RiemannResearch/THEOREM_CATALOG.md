@@ -1,5 +1,43 @@
 # Theorem catalog
 
+### Signed Landau residual and nonlinear density consumers (2026-10-05)
+
+**Unconditional Landau residual assembly.**
+Analysis/ActualLandauOperatorResidual.lean realizes the complete prime-power
+covariance on the same Fin d Euclidean space as the actual Landau Gram.
+The signed residual is exactly H-I+T*C_d/(2*pi*N(T)); every integer and
+composite-frequency interaction is retained, the diagonal is zero, and
+reflection gives its exact Hermitian entry identity.
+`exists_actualLandauResidual_norm_bound` gives
+`C*d*(d^(5/2)+d^(3/2)*log(T+3)^2+d*log(T+3))/N(T)`
+without a density or RH premise.
+`actualLandauResidual_norm_tendsto_zero_sqrt_support` proves its norm tends
+to zero whenever log d(T)<=c*sqrt(log(T+3)) eventually, for every fixed real c
+and eventually positive d(T). The arithmetic main matrix remains explicit.
+
+Analysis/LandauGrowingSupport.lean proves the exact three-term exponential
+envelope, polynomial-times-exponential decay, and the square-root-log
+support majorant. EuclideanOperatorCoordinates.lean now supplies the full
+d*R Euclidean norm bound from a uniform entry bound, including empty spaces.
+
+**Conditional nonlinear density and frame consumers.**
+Analysis/ActualZeroNonlinearDensityTransfer.lean transfers
+`strictTail T s <= K*exp(-M*inghamRate s)+E` to the exact finite cosh budget.
+Both exponential endpoints and the negative companion term remain, and
+the additive remainder is exactly weighted by cosh(ell/2)-1.
+`badCorrection_norm_le_of_nonlinearTail` retains d/(2*N(T));
+`phaseGram_isUnit_of_nonlinearTail` gives the finite frame test from the
+explicit actual density estimate, Landau-to-identity norm and scalar gap.
+These are conditional research reductions. The actual Ingham/Selberg
+density estimate, sharper classical Landau rate, and unconditional frame
+specialization remain Open.
+
+NonlinearZeroDensityRate.lean also proves the sharp physical cutoff test
+`stableCutoff <= 1/2 iff R <= M-ell/2`, automatic denominator safety,
+automatic positive weighted tangent slope for R>0, and exact exponential
+cancellation before any estimate. No analytic density hypothesis is
+discharged by these scalar identities.
+
 ### Full Landau and actual density work (2026-10-05)
 
 **Established complete uniform rational Landau provider.**

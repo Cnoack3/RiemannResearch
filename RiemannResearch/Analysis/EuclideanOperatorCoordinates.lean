@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import Mathlib.Analysis.CStarAlgebra.Matrix
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Linarith
 import Mathlib.Topology.Algebra.InfiniteSum.Module
 import Mathlib.Tactic.Ext
 import Mathlib.Tactic.Ring
@@ -191,3 +194,70 @@ theorem iterComm_diagonalCLM_apply_single (r : ι → ℂ)
     ring
 
 end EuclideanSpace
+namespace ContinuousLinearMap
+
+/-- A complete d by d entry bound in the Euclidean operator norm. -/
+theorem norm_toEuclideanCLM_le_card_mul {d : ℕ}
+    (M : Matrix (Fin d) (Fin d) ℂ) (R : ℝ) (hR : 0 ≤ R)
+    (hM : ∀ n m, ‖M n m‖ ≤ R) :
+    ‖Matrix.toEuclideanCLM (n := Fin d) (𝕜 := ℂ) M‖ ≤ (d : ℝ) * R := by
+  apply ContinuousLinearMap.opNorm_le_bound _ (by positivity)
+  intro x
+  let S : ℝ := ∑ j : Fin d, ‖x j‖
+  have hS0 : 0 ≤ S := Finset.sum_nonneg (fun _ _ => norm_nonneg _)
+  have hS : S ^ 2 ≤ (d : ℝ) * ‖x‖ ^ 2 := by
+    have h := Finset.sum_mul_sq_le_sq_mul_sq Finset.univ
+      (fun j : Fin d => ‖x j‖) (fun _ => (1 : ℝ))
+    simp only [mul_one, one_pow, Finset.sum_const, Finset.card_univ,
+      Fintype.card_fin, nsmul_eq_mul, mul_one] at h
+    simpa only [← EuclideanSpace.norm_sq_eq, mul_comm] using h
+  have hc (n : Fin d) :
+      ‖(Matrix.toEuclideanCLM (n := Fin d) (𝕜 := ℂ) M x) n‖ ≤ R * S := by
+    change ‖∑ m : Fin d, M n m * x m‖ ≤ R * ∑ m : Fin d, ‖x m‖
+    calc
+      _ ≤ ∑ m : Fin d, ‖M n m * x m‖ := norm_sum_le _ _
+      _ ≤ ∑ m : Fin d, R * ‖x m‖ := by
+        apply Finset.sum_le_sum
+        intro m hm
+        rw [norm_mul]
+        exact mul_le_mul_of_nonneg_right (hM n m) (norm_nonneg _)
+      _ = _ := by rw [Finset.mul_sum]
+  have hs : ‖Matrix.toEuclideanCLM (n := Fin d) (𝕜 := ℂ) M x‖ ^ 2 ≤
+      ((d : ℝ) * R * ‖x‖) ^ 2 := by
+    calc
+      _ = ∑ n : Fin d,
+          ‖(Matrix.toEuclideanCLM (n := Fin d) (𝕜 := ℂ) M x) n‖ ^ 2 :=
+        EuclideanSpace.norm_sq_eq _
+      _ ≤ ∑ n : Fin d, (R * S) ^ 2 := by
+        apply Finset.sum_le_sum
+        intro n hn
+        exact (sq_le_sq₀ (norm_nonneg _) (mul_nonneg hR hS0)).2 (hc n)
+      _ = (d : ℝ) * R ^ 2 * S ^ 2 := by
+        simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+          nsmul_eq_mul, mul_pow]
+        ring
+      _ ≤ (d : ℝ) * R ^ 2 * ((d : ℝ) * ‖x‖ ^ 2) :=
+        mul_le_mul_of_nonneg_left hS (by positivity)
+      _ = _ := by ring
+  exact (sq_le_sq₀ (norm_nonneg _) (by positivity)).1 hs
+
+
+theorem norm_le_card_mul_of_euclideanEntry_le {d : ℕ}
+    (A : EuclideanSpace ℂ (Fin d) →L[ℂ] EuclideanSpace ℂ (Fin d))
+    (R : ℝ) (hR : 0 ≤ R) (hA : ∀ n m, ‖euclideanEntry A n m‖ ≤ R) :
+    ‖A‖ ≤ (d : ℝ) * R := by
+  have ha : A = Matrix.toEuclideanCLM (n := Fin d) (𝕜 := ℂ)
+      (Matrix.of fun n m => euclideanEntry A n m) := by
+    apply euclideanEntry_ext
+    intro n m
+    exact (euclideanEntry_toEuclideanCLM _ n m).symm
+  rw [ha]
+  exact norm_toEuclideanCLM_le_card_mul _ R hR hA
+
+@[simp] theorem euclideanEntry_one {d : ℕ} (n m : Fin d) :
+    euclideanEntry (1 : EuclideanSpace ℂ (Fin d) →L[ℂ]
+      EuclideanSpace ℂ (Fin d)) n m = if n = m then 1 else 0 := by
+  change (EuclideanSpace.single m (1 : ℂ)) n = _
+  simp only [PiLp.single_apply]
+
+end ContinuousLinearMap
