@@ -19,8 +19,9 @@ all analytic multiplicities and both masks are retained before taking norms.
 
 The centered log diagonal and the actual positive moments supply every finite
 operator provider. The complete good correction has the factor one half from
-positive-operator centering. These identities require no Landau, zero-density,
-simplicity or RH estimate. Source: the user-provided phase-Gram argument and
+positive-operator centering and admits the smaller zeroth-good-Gram budget,
+including an explicit finite-head truncation bound. These identities require no
+Landau, zero-density, simplicity or RH estimate. Source: the user-provided phase-Gram argument and
 RH/GrowingPhaseGramBootstrapAudit20261005.md.
 -/
 
@@ -215,5 +216,60 @@ theorem norm_landauGram_sub_phaseGram_le
     (∑' k, evenTerm (logDiagonal d) (goodMoment T d δ) k) (badCorrection T d δ)
   rw [landauGram_sub_phaseGram T d hd δ hδ]
   linarith only [ha, hb]
+
+/-- The complete actual good correction has the refined norm bound.
+The full signed bad correction is subtracted exactly. -/
+theorem goodCorrection_norm_le_zeroth
+    (T : ℝ) (d : ℕ) (hd : 1 ≤ d)
+    (δ : ℝ) (hδ : 0 ≤ δ) :
+    ‖landauGram T d - phaseGram T d -
+        badCorrection T d δ‖ ≤
+      (‖goodMoment T d δ 0‖ / 2) *
+        (Real.cosh (δ * Real.log (d : ℝ)) - 1) := by
+  rw [landauGram_sub_phaseGram T d hd δ hδ,
+    add_sub_cancel_right]
+  exact
+    (logEvenGoodCorrection_summable_and_norm_le_zeroth
+      T d hd δ hδ).2.2
+
+set_option maxHeartbeats 800000 in
+/-- Complete correction estimate with the smaller actual good-copy Gram budget.
+The complementary bad correction is retained with its original sign in the exact
+identity before this final triangle inequality. -/
+theorem norm_landauGram_sub_phaseGram_le_zeroth
+    (T : ℝ) (d : ℕ) (hd : 1 ≤ d)
+    (δ : ℝ) (hδ : 0 ≤ δ) :
+    ‖landauGram T d - phaseGram T d‖ ≤
+      (‖goodMoment T d δ 0‖ / 2) *
+        (Real.cosh (δ * Real.log (d : ℝ)) - 1) +
+          ‖badCorrection T d δ‖ := by
+  have hb :=
+    (logEvenGoodCorrection_summable_and_norm_le_zeroth
+      T d hd δ hδ).2.2
+  rw [landauGram_sub_phaseGram T d hd δ hδ]
+  exact (norm_add_le _ _).trans (add_le_add hb (le_refl _))
+
+set_option maxHeartbeats 800000 in
+/-- Actual finite-head error retaining the complete signed bad correction.
+The original full-copy normalization is unchanged and every retained head
+endpoint appears explicitly. -/
+theorem goodCorrection_truncation_norm_le_zeroth
+    (T : ℝ) (d : ℕ) (hd : 1 ≤ d)
+    (δ : ℝ) (hδ : 0 ≤ δ) (J : ℕ) :
+    ‖(landauGram T d - phaseGram T d - badCorrection T d δ) -
+      ∑ k ∈ Finset.range J,
+        evenTerm (logDiagonal d) (goodMoment T d δ) k‖ ≤
+      (‖goodMoment T d δ 0‖ / 2) *
+        (Real.cosh (δ * Real.log (d : ℝ)) - 1) -
+          ∑ k ∈ Finset.range J,
+            (‖goodMoment T d δ 0‖ / 2) *
+              ((δ * Real.log (d : ℝ)) ^ (2 * (k + 1)) /
+                (Nat.factorial (2 * (k + 1)) : ℝ)) := by
+  rw [landauGram_sub_phaseGram T d hd δ hδ,
+    add_sub_cancel_right]
+  exact evenCorrection_truncation_norm_le
+    (logDiagonal d) (goodMoment T d δ) (Real.log (d : ℝ)) δ
+    ‖goodMoment T d δ 0‖ (two_mul_logDiagonal_norm_le d hd)
+    (fun k => goodMoment_center_norm_le_zeroth T d δ hδ (k + 1)) J
 
 end RiemannResearch.Analysis.ActualZeroPhaseMoments

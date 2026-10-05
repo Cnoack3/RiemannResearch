@@ -19,8 +19,9 @@ that provider, but its asymptotic smallness is a separate application input.
 
 Source: the user-requested actual hyperbolic lower-bound analysis (2026-10-05)
 and the finite balanced-row proof in HyperbolicRowNumericalRange. The closed
-harmonic cap and published-density specialization are paper calculations in
-RH/ActualHyperbolicLowerBounds20261005.md, not added Lean hypotheses or axioms.
+harmonic cap is proved in ActualHyperbolicHarmonicTail. The published-density
+specialization remains an analytic formalization obligation; see
+RH/LeanProviderGapContinuation20261005.md.
 -/
 
 noncomputable section

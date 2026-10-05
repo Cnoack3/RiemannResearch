@@ -1,5 +1,40 @@
 # Theorem catalog
 
+### Verified provider-gap continuation (2026-10-05)
+
+**Established actual good-copy refinement.** The exact positive domination
+delta^(2k)*B0-Bk proves ||Bk||<=delta^(2k)*||B0|| and ||B0||<=||phaseGram||.
+The actual centered logarithmic commutator series, its complete signed good
+correction, and its explicit finite-head remainder now use ||B0||/2.
+These results extend HorizontalEuclideanMoments, ActualZeroPhaseMoments,
+ActualZeroLogDiagonal and ActualZeroPhaseOperators without analytic premises.
+
+**Established full leading-budget Landau convergence.**
+LandauGrowingSupport proves that the normalized nonnegative three-term
+envelope tends to zero iff exp(7*ell/2-L)/L does. This iff concerns the
+envelope, not necessity for a signed residual. ActualLandauOperatorResidual
+proves residual norm convergence if d^(7/2)/((T+3)*log(T+3))->0, including
+d=O((T+3)^(2/7)*log(T+3)^b) for every fixed b<2/7. The complete signed
+prime-power covariance main is retained.
+
+**Established two-sided harmonic actual tail bound.**
+FiniteHyperbolicHarmonicCap proves W_d=(d+sqrt(d*(d+1)*H_d/2))/2 and
+W_d<=d*(1+sqrt(1+log d))/2 for d>=1. ActualHyperbolicHarmonicTail proves
+||signedBadHyperbolic||<=actualSignedTailBudget<=(strictTail/N(T))*W_d,
+Hermiticity, the corresponding masked-good norm bound, and the imported
+two-thirds proportion consumers. Both row channels and the full normalizer
+remain unchanged. With r=strictTail/N(T), the sharper spectral interval is
+[-r*(W_d-d), r*W_d]; the centered norm is bounded by
+||signedBadHyperbolic-(r*d/2)*I||<=r*sqrt(d*(d+1)*H_d/2)/2.
+
+**Open actual analytic input.** The imported cumulative proportion only
+gives strictTail/N<=1/3+epsilon. It supplies no shrinking-cutoff decay.
+(strictTail(T,delta(T))/N(T))*W_(d(T))->0 is a sufficient one-point input;
+the exact signed-surplus provider can be weaker. The sharp Landau--Gonek
+estimate, the displacement-sensitive actual density provider, and the
+separate physical Pareto transfer remain formalization obligations. See
+RH/LeanProviderGapContinuation20261005.md for proofs, scope and sources.
+
 ### Actual hyperbolic lower bounds and signed-tail frames (2026-10-05)
 
 **Established full actual form.**

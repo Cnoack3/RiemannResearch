@@ -21,8 +21,10 @@ main term retains every integer and composite-frequency interaction.
 The exact diagonal, reflection symmetry, original Ncount and full signed
 residual are explicit. Residual norm tends to zero for every fixed
 square-root-log support coefficient and at polynomial endpoint
-d(T)=O((T+3)^(2/7)). No density, simplicity or RH premise
-is used for these residual results. The main arithmetic operator is retained;
+d(T)=O((T+3)^(2/7)). The leading-budget extension gives convergence
+whenever d(T)^(7/2)/((T+3)*log(T+3)) -> 0, including every
+d(T)=O((T+3)^(2/7)*(log(T+3))^b) with b<2/7. No density, simplicity
+or RH premise is used for these residual results. The main arithmetic operator is retained;
 this result alone does not assert a frame gap or physical Pareto saturation.
 Source for the analytic contour strategy: Gonek (1985), Theorem 1,
 https://www.sas.rochester.edu/mth/people/faculty/gonek-steve/assets/pdf/8-landau-form.pdf .
@@ -337,5 +339,105 @@ theorem actualLandauResidual_norm_tendsto_zero_critical_power_support
         (div_le_div_of_nonneg_right (matrixEnvelope_mono hLpos.le hs.2) hLpos.le)
         (by positivity)
   · exact hmajor
+
+
+/-- Unconditional actual signed Landau residual convergence under the sharp
+leading budget of the existing fixed-c=2 provider. The support premise is
+only an elementary rate for d; it is independent of actual zero density.
+The exact full integer covariance main is retained. -/
+theorem actualLandauResidual_norm_tendsto_zero_of_leading_budget
+    (d : ℝ → ℕ)
+    (hd : ∀ᶠ T : ℝ in atTop, 1 ≤ d T)
+    (hleading : Tendsto (fun T : ℝ =>
+      (d T : ℝ) ^ (7 / 2 : ℝ) /
+        ((T + 3) * Real.log (T + 3))) atTop (nhds 0)) :
+    Tendsto (fun T : ℝ => ‖actualLandauResidual T (d T)‖) atTop (nhds 0) := by
+  obtain ⟨C, hC, hbound⟩ := exists_actualLandauResidual_norm_bound
+  let q : ℝ := 1 / (64 * Real.pi)
+  have hq : 0 < q := by dsimp [q]; positivity
+  have hplus : Tendsto (fun T : ℝ => T + 3) atTop atTop := by
+    apply tendsto_atTop.2
+    intro b
+    filter_upwards [eventually_ge_atTop b] with T hT
+    linarith
+  have hlog := Real.tendsto_log_atTop.comp hplus
+  have hlead : Tendsto (fun T : ℝ =>
+      Real.exp (7 * Real.log (d T : ℝ) / 2 - Real.log (T + 3)) /
+        Real.log (T + 3)) atTop (nhds 0) := by
+    apply hleading.congr'
+    filter_upwards [hd, eventually_ge_atTop (9 : ℝ)] with T hdT hT
+    have hdpos : (0 : ℝ) < (d T : ℝ) := by
+      exact_mod_cast (lt_of_lt_of_le Nat.zero_lt_one hdT)
+    have hY : 0 < T + 3 := by linarith
+    rw [Real.rpow_def_of_pos hdpos,
+      show 7 * Real.log (d T : ℝ) / 2 =
+        Real.log (d T : ℝ) * (7 / 2) by ring,
+      Real.exp_sub, Real.exp_log hY, div_div]
+  have hmatrix := matrixEnvelope_div_tendsto_zero_of_leading_budget atTop
+    (fun T : ℝ => Real.log (T + 3)) (fun T : ℝ => Real.log (d T : ℝ)) hlog hlead
+  have hmajor : Tendsto (fun T : ℝ => (C / q) *
+      (matrixEnvelope (Real.log (T + 3)) (Real.log (d T : ℝ)) /
+        Real.log (T + 3))) atTop (nhds 0) := by
+    simpa only [mul_zero] using hmatrix.const_mul (C / q)
+  refine squeeze_zero' ?_ ?_ hmajor
+  · exact Eventually.of_forall (fun T => norm_nonneg _)
+  · filter_upwards [eventually_count_ge_height_add_three_log,
+      eventually_ge_atTop (9 : ℝ), hd] with T hNheight hT hdT
+    have hY : 0 < T + 3 := by linarith
+    have hLpos : 0 < Real.log (T + 3) := Real.log_pos (by linarith)
+    change q * (T + 3) * Real.log (T + 3) ≤ (Ncount 0 T : ℝ) at hNheight
+    have hNr : (0 : ℝ) < (Ncount 0 T : ℝ) :=
+      lt_of_lt_of_le (by positivity) hNheight
+    have hN : 0 < Ncount 0 T := by exact_mod_cast hNr
+    have hdpos : (0 : ℝ) < (d T : ℝ) := by
+      exact_mod_cast (lt_of_lt_of_le Nat.zero_lt_one hdT)
+    have henv : 0 ≤ landauScalarEnvelope T (d T) := by
+      unfold landauScalarEnvelope
+      positivity
+    calc
+      _ ≤ (d T : ℝ) * C * landauScalarEnvelope T (d T) /
+          (Ncount 0 T : ℝ) := hbound T (d T) hT hN
+      _ ≤ (d T : ℝ) * C * landauScalarEnvelope T (d T) /
+          (q * (T + 3) * Real.log (T + 3)) :=
+        div_le_div_of_nonneg_left (by positivity) (by positivity) hNheight
+      _ = _ := by
+        rw [matrixEnvelope_eq_rpow hY hdpos]
+        unfold landauScalarEnvelope
+        field_simp [hq.ne', hY.ne', hLpos.ne']
+
+/-- Explicit log-enlarged polynomial support for the actual signed residual.
+The arithmetic main matrix, multiplicities, and original zero count remain.
+This theorem provides neither a frame lower bound nor physical saturation. -/
+theorem actualLandauResidual_norm_tendsto_zero_log_power_support
+    (d : ℝ → ℕ) (a b : ℝ) (hb : b < 2 / 7)
+    (hsupport : ∀ᶠ T : ℝ in atTop,
+      1 ≤ d T ∧ Real.log (d T : ℝ) ≤
+        a + (2 / 7 : ℝ) * Real.log (T + 3) +
+          b * Real.log (Real.log (T + 3))) :
+    Tendsto (fun T : ℝ => ‖actualLandauResidual T (d T)‖) atTop (nhds 0) := by
+  have hd := hsupport.mono (fun _ h => h.1)
+  have hs := hsupport.mono (fun _ h => h.2)
+  have hplus : Tendsto (fun T : ℝ => T + 3) atTop atTop := by
+    apply tendsto_atTop.2
+    intro c
+    filter_upwards [eventually_ge_atTop c] with T hT
+    linarith
+  have hlog := Real.tendsto_log_atTop.comp hplus
+  have hlead := leading_budget_tendsto_zero_log_support atTop
+    (fun T : ℝ => Real.log (T + 3))
+    (fun T : ℝ => Real.log (d T : ℝ)) a b hlog hb hs
+  have hbudget : Tendsto (fun T : ℝ =>
+      (d T : ℝ) ^ (7 / 2 : ℝ) /
+        ((T + 3) * Real.log (T + 3))) atTop (nhds 0) := by
+    apply hlead.congr'
+    filter_upwards [hd, eventually_ge_atTop (9 : ℝ)] with T hdT hT
+    have hdpos : (0 : ℝ) < (d T : ℝ) := by
+      exact_mod_cast (lt_of_lt_of_le Nat.zero_lt_one hdT)
+    have hY : 0 < T + 3 := by linarith
+    rw [Real.rpow_def_of_pos hdpos,
+      show 7 * Real.log (d T : ℝ) / 2 =
+        Real.log (d T : ℝ) * (7 / 2) by ring,
+      Real.exp_sub, Real.exp_log hY, div_div]
+  exact actualLandauResidual_norm_tendsto_zero_of_leading_budget d hd hbudget
 
 end RiemannResearch.Analysis.ActualZeroPhaseMoments

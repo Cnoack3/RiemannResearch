@@ -100,4 +100,12 @@ theorem rankTwoCross_form_upper (u v f : E) :
   apply (mul_le_mul_iff_right₀ hp).mp
   nlinarith
 
+/-- The negative form has the complementary rank-two coefficient. -/
+theorem rankTwoCross_form_neg_upper (u v f : E) :
+    -(inner ℂ u f*star (inner ℂ v f)).re ≤
+      ((‖u‖*‖v‖-(inner ℂ u v).re)/2)*‖f‖^2 := by
+  have h := rankTwoCross_form_upper u (-v) f
+  simpa only [inner_neg_left, inner_neg_right, star_neg, mul_neg,
+    Complex.neg_re, norm_neg, sub_eq_add_neg] using h
+
 end RiemannResearch.Analysis.CenteredHyperbolicFrames

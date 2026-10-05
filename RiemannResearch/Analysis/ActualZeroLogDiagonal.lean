@@ -17,8 +17,9 @@ import RiemannResearch.Analysis.ActualZeroPhaseMoments
 The integer frequencies 1,...,d define a Euclidean diagonal operator centered
 at log d / 2. Its norm is exactly log d / 2 for d >= 1, attained at frequency 1.
 Centering cancels exactly in every iterated commutator entry. The sharp width
-provider closes the ordinary diagonal-norm premise in the actual-zero even
-moment series; no spectral, Landau, density, or RH hypothesis is introduced.
+provider closes the ordinary diagonal-norm premise in both the full-Gram
+and zeroth-good-Gram actual even moment bounds. No spectral, Landau,
+density, or RH hypothesis is introduced.
 
 Source: the user-provided research argument in
 Prime_Phases_Agenda_Proof_Attempts.tex. The Euclidean norm and coordinate proof
@@ -29,6 +30,8 @@ noncomputable section
 open scoped BigOperators Matrix
 
 namespace RiemannResearch.Analysis.ActualZeroPhaseMoments
+
+open HorizontalPhaseBootstrap
 
 /-- Integer frequencies 1,...,d have logarithmic coordinates. -/
 def logFrequency (d : ℕ) (n : Fin d) : ℝ :=
@@ -113,5 +116,22 @@ theorem logEvenMomentCorrection_summable_and_norm_le
         (‖phaseGram T d‖ / 2) * (Real.cosh (δ * Real.log (d : ℝ)) - 1) :=
   evenMomentCorrection_summable_and_norm_le T d (logDiagonal d)
     (Real.log (d : ℝ)) δ hδ (two_mul_logDiagonal_norm_le d hd)
+
+/-- The actual centered logarithmic diagonal discharges the width premise. -/
+theorem logEvenGoodCorrection_summable_and_norm_le_zeroth
+    (T : ℝ) (d : ℕ) (hd : 1 ≤ d)
+    (δ : ℝ) (hδ : 0 ≤ δ) :
+    Summable
+        (fun k =>
+          ‖evenTerm (logDiagonal d) (goodMoment T d δ) k‖) ∧
+      Summable
+        (evenTerm (logDiagonal d) (goodMoment T d δ)) ∧
+      ‖∑' k,
+          evenTerm (logDiagonal d) (goodMoment T d δ) k‖ ≤
+        (‖goodMoment T d δ 0‖ / 2) *
+          (Real.cosh (δ * Real.log (d : ℝ)) - 1) := by
+  exact evenGoodCorrection_summable_and_norm_le_zeroth
+    T d (logDiagonal d) (Real.log (d : ℝ)) δ hδ
+    (two_mul_logDiagonal_norm_le d hd)
 
 end RiemannResearch.Analysis.ActualZeroPhaseMoments

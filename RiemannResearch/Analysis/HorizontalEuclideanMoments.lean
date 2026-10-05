@@ -23,9 +23,10 @@ Source for the proof strategy: Mathlib's proved Rayleigh characterization and
 positive rank-one operators, revision 51e6992efd06126df61a496bebf8f49482a4e129:
 https://github.com/leanprover-community/mathlib4/blob/51e6992efd06126df61a496bebf8f49482a4e129/Mathlib/Analysis/InnerProductSpace/Rayleigh.lean
 and the sibling Positive.lean. The actual-zero consumer is
-Analysis/ActualZeroPhaseMoments.lean. This module supplies moment centering;
-the full actual correction identity and analytic distribution estimates remain
-separate obligations.
+Analysis/ActualZeroPhaseMoments.lean. This module supplies moment centering and
+positive-operator norm comparison.
+The full actual correction identity is proved in ActualZeroPhaseOperators;
+analytic distribution estimates remain separate obligations.
 -/
 
 open scoped InnerProductSpace BigOperators ComplexOrder
@@ -98,6 +99,94 @@ theorem qform_le_norm (T : E →L[ℂ] E) (x : E) :
   have hx2 : 0 < ‖x‖ ^ 2 := pow_pos (norm_pos_iff.mpr hx) 2
   have h := (le_abs_self (T.rayleighQuotient x)).trans (T.rayleighQuotient_le_norm x)
   exact (div_le_iff₀ hx2).mp h
+
+/-- A positive operator's norm is bounded by an actual quadratic-form upper
+bound. This is a direct consequence of the proved Rayleigh characterization. -/
+theorem norm_le_of_positive_qform_upper_bound
+    (S : E →L[ℂ] E) (b : ℝ) (hb : 0 ≤ b) (hS : S.IsPositive)
+    (hhi : ∀ x, S.reApplyInnerSelf x ≤ b * ‖x‖ ^ 2) :
+    ‖S‖ ≤ b := by
+  rw [ContinuousLinearMap.norm_eq_iSup_rayleighQuotient _ hS.isSymmetric]
+  apply ciSup_le
+  intro x
+  by_cases hx : x = 0
+  · simp only [hx, ContinuousLinearMap.rayleighQuotient_apply_zero, abs_zero]
+    exact hb
+  have hx2 : 0 < ‖x‖ ^ 2 := pow_pos (norm_pos_iff.mpr hx) 2
+  change |S.reApplyInnerSelf x / ‖x‖ ^ 2| ≤ b
+  rw [abs_div, abs_sq, abs_of_nonneg (hS.2 x), div_le_iff₀ hx2]
+  exact hhi x
+
+/-- Positive domination never increases operator norm. The upper operator
+need not carry a separate positivity premise: the signed difference supplies
+the required actual quadratic-form comparison. -/
+theorem norm_le_of_positive_domination
+    (S T : E →L[ℂ] E) (hS : S.IsPositive)
+    (hupper : (T - S).IsPositive) :
+    ‖S‖ ≤ ‖T‖ := by
+  apply norm_le_of_positive_qform_upper_bound S ‖T‖ (norm_nonneg _) hS
+  intro x
+  have hh := hupper.2 x
+  rw [qform_sub] at hh
+  exact (by linarith : S.reApplyInnerSelf x ≤ T.reApplyInnerSelf x).trans
+    (qform_le_norm T x)
+
+/-- A genuine symmetric CLM's absolute real quadratic-form bound controls
+its actual operator norm. This also covers the zero-dimensional case. -/
+theorem norm_le_of_abs_re_inner_le (A : E →L[ℂ] E) (B : ℝ) (hB : 0 ≤ B)
+    (hA : A.IsSymmetric)
+    (hform : ∀ f : E, |(inner ℂ f (A f)).re| ≤ B*‖f‖^2) :
+    ‖A‖ ≤ B := by
+  rw [ContinuousLinearMap.norm_eq_iSup_rayleighQuotient _ hA]
+  apply ciSup_le
+  intro f
+  by_cases hf : f = 0
+  · simp only [hf, ContinuousLinearMap.rayleighQuotient_apply_zero, abs_zero]
+    exact hB
+  have hf2 : 0 < ‖f‖^2 := pow_pos (norm_pos_iff.mpr hf) 2
+  change |A.reApplyInnerSelf f/‖f‖^2| ≤ B
+  rw [abs_div, abs_sq, div_le_iff₀ hf2]
+  change |(inner ℂ (A f) f).re| ≤ B*‖f‖^2
+  have he := hA f f
+  change inner ℂ (A f) f = inner ℂ f (A f) at he
+  rw [he]
+  exact hform f
+
+/-- Both endpoints of a symmetric operator's actual quadratic-form interval
+give the centered operator norm, including in the zero-dimensional case. -/
+theorem norm_sub_center_le_of_re_inner_interval (A : E →L[ℂ] E)
+    (lo hi : ℝ) (hlohi : lo ≤ hi) (hA : A.IsSymmetric)
+    (hlo : ∀ f : E, lo*‖f‖^2 ≤ (inner ℂ f (A f)).re)
+    (hhi : ∀ f : E, (inner ℂ f (A f)).re ≤ hi*‖f‖^2) :
+    ‖A-((lo+hi)/2) • (1 : E →L[ℂ] E)‖ ≤ (hi-lo)/2 := by
+  let c : ℝ := (lo+hi)/2
+  have hS : (A-c • (1 : E →L[ℂ] E)).IsSymmetric := by
+    intro x y
+    change inner ℂ (A x-c • x) y = inner ℂ x (A y-c • y)
+    simp only [inner_sub_left, inner_sub_right,
+      RCLike.real_smul_eq_coe_smul (K := ℂ), inner_smul_real_left,
+      inner_smul_real_right]
+    have hh := hA x y
+    change inner ℂ (A x) y = inner ℂ x (A y) at hh
+    simpa only [RCLike.real_smul_eq_coe_smul (K := ℂ)] using
+      congrArg (fun z : ℂ => z-c • inner ℂ x y) hh
+  apply norm_le_of_abs_re_inner_le _ _ (by linarith) hS
+  intro f
+  have hq : (inner ℂ f ((A-c • (1 : E →L[ℂ] E)) f)).re =
+      (inner ℂ f (A f)).re-c*‖f‖^2 := by
+    have hsf := hS f f
+    change inner ℂ ((A-c • (1 : E →L[ℂ] E)) f) f =
+      inner ℂ f ((A-c • (1 : E →L[ℂ] E)) f) at hsf
+    rw [← hsf]
+    change (A-c • (1 : E →L[ℂ] E)).reApplyInnerSelf f = _
+    rw [qform_sub, qform_real_smul, qform_one]
+    change (inner ℂ (A f) f).re-c*‖f‖^2 = _
+    have haf := hA f f
+    change inner ℂ (A f) f = inner ℂ f (A f) at haf
+    rw [haf]
+  rw [hq, abs_le]
+  dsimp [c]
+  constructor <;> nlinarith [hlo f, hhi f]
 
 end ContinuousLinearMap
 
@@ -221,5 +310,15 @@ theorem finiteGoodMoment_center_norm_le (d : ℕ) (s : Finset ι) (ρ : ι → �
   · positivity
   · intro i hi
     exact goodEvenWeight_bounds δ hδ k (ρ i)
+
+/-- Domination by the zeroth masked moment retains the cutoff exactly. -/
+theorem goodEvenWeight_le_zeroth
+    (δ : ℝ) (hδ : 0 ≤ δ) (k : ℕ) (ρ : ℂ) :
+    goodEvenWeight δ k ρ ≤
+      δ ^ (2 * k) * goodEvenWeight δ 0 ρ := by
+  by_cases h : |ρ.re - 1 / 2| ≤ δ
+  · simpa only [goodEvenWeight, if_pos h, Nat.mul_zero, pow_zero, mul_one] using
+      (goodEvenWeight_bounds δ hδ k ρ).2
+  · simp only [goodEvenWeight, if_neg h, mul_zero, le_refl]
 
 end RiemannResearch.Analysis.HorizontalEuclideanMoments

@@ -7,6 +7,7 @@ import RiemannResearch.Analysis.EuclideanOperatorCoordinates
 import RiemannResearch.Analysis.ZeroSamplingQuadratic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Arcosh
+import Mathlib.Algebra.Star.BigOperators
 import Mathlib.Tactic.NormNum
 
 /-!
@@ -86,6 +87,21 @@ theorem hyperbolic_form_factorization
   apply Finset.sum_congr rfl
   intro s hs
   simp only [Complex.star_def, Complex.mul_conj, Complex.sq_norm]
+  ring
+
+/-- Real cosine-hyperbolic weights give a Hermitian finite kernel. -/
+theorem hyperbolicKernel_star {ι κ : Type*} (samples : Finset κ)
+    (weight shift : κ → ℝ) (coordinate : ι → ℝ)
+    (phase : κ → ι → ℂ) (i j : ι) :
+    star (hyperbolicKernel samples weight shift coordinate phase i j) =
+      hyperbolicKernel samples weight shift coordinate phase j i := by
+  simp only [hyperbolicKernel, star_sum]
+  apply Finset.sum_congr rfl
+  intro s hs
+  rw [show shift s*(coordinate j-coordinate i) =
+    -(shift s*(coordinate i-coordinate j)) by ring, Real.cosh_neg]
+  simp only [star_mul, star_star]
+  simp only [Complex.star_def, Complex.conj_ofReal]
   ring
 
 end FiniteFactorization

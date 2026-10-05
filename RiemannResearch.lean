@@ -39,6 +39,8 @@ import RiemannResearch.Analysis.WeightedGroundStateForm
 import RiemannResearch.Analysis.HyperbolicRowNumericalRange
 import RiemannResearch.Analysis.ActualHyperbolicGramLowerBounds
 import RiemannResearch.Analysis.ActualHyperbolicTailFrames
+import RiemannResearch.Analysis.FiniteHyperbolicHarmonicCap
+import RiemannResearch.Analysis.ActualHyperbolicHarmonicTail
 import RiemannResearch.Analysis.FiniteOscillatoryKernel
 import RiemannResearch.Analysis.MarkedContinuousTail
 import RiemannResearch.Analysis.MarkedIntegralCauchy
