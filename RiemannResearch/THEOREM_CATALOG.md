@@ -1,70 +1,76 @@
 # Theorem catalog
 
-### Actual zeta provider progress (2026-10-05)
+### Actual zeta central provider progress (2026-10-05)
 
-**Established actual providers.** Analysis/HorizontalEuclideanMoments.lean
-proves Euclidean continuous-operator centering from actual positivity and
-exact finite rank-one moment domination. Analysis/ActualZeroPhaseMoments.lean
-specializes to every actual zero copy and integer frequency with the original
-Ncount normalizer, discharging the old centered-moment norm premise and
-proving absolute summability of its even commutator series.
-Analysis/ActualZeroCountAsymptotics.lean proves eventual
-`Ncount 0 T >= T*log T/(16*pi)` and positivity from the already proved actual
-Riemann-von Mangoldt theorem. Analysis/ActualZeroOrdinate.lean proves the
-complete good/bad split and both masked signed cosh corrections.
-RvM/CountByIntegral.lean proves the actual weighted completed-zeta contour
-identity and its centered exponential specialization. Analysis/ActualZeroLandauContour.lean
-proves the direct zeta analogue. Analysis/FiniteOscillatoryKernel.lean proves
-the exact finite exponential integral, rational nonresonant norm bound 4*n,
-and exact resonant value B-A. Ordinary contour boundary and analyticity
-conditions remain explicit.
+**Established actual providers.**
+Analysis/ActualZeroHorizontalExpansion.lean proves the complete convergent
+scalar even expansion for actual multiplicity sums. Generic Euclidean operator
+coordinates and diagonal commutators are in EuclideanOperatorCoordinates.lean;
+ActualZeroLogDiagonal.lean proves the actual centered diagonal norm is exactly
+log(d)/2 for d>=1. ActualZeroPhaseOperators.lean proves
+`landauGram_sub_phaseGram`: the full actual H-G is exactly its even commutator
+series plus the entire signed bad correction. Every integer frequency and
+analytic multiplicity is retained, with the original Ncount normalizer.
+The actual correction norm has the sharp factor one-half.
 
-**Conditional research reduction remains Open.** Uniform rational Landau,
-uniform zero density, the weighted bad tail, exact actual operator-series
-identification, microscopic square budget and spectral assembly are not
-supplied by these providers. The precise source audit and smaller sufficient
-rational Landau target are in RH/ActualZetaAnalyticProviderAudit20261005.md.
+ActualZeroBadPhaseTail.lean identifies the complete bad operator with its
+finite copy sum and proves d/(2N) times the bad cosh-minus-one sum, then d/(4N)
+times the bad exponential sum. ActualZeroTailLayerCake.lean proves strict
+finite layer cake with both endpoints; ActualZeroTailReflection.lean identifies
+the absolute strict tail as twice the right strict tail and dominates it by
+the inclusive density count. ActualZeroTailDensityTransfer.lean proves the
+exact closed finite cosh bound from an explicit actual scalar tail estimate.
+ActualZeroBadTailDensity.lean composes it with the actual bad operator, preserving
+the complete strict mask, both endpoint terms and the original normalizer.
 
-### Horizontal phase-Gram commutators and norm bootstrap (2026-10-05)
+ActualZeroCountAsymptotics.lean strengthens the eventual normalization to every
+coefficient c<1/(2*pi), concretely 7/(16*pi), from the existing actual
+Riemann-von Mangoldt theorem. PrimePowerCovarianceEuclideanNorm.lean realizes
+the full integer-frequency arithmetic covariance in the Euclidean operator
+norm and proves log(d)-2 <= norm <= log(d)+log(4)+4 for d>=1.
+Composite divisibility interactions are retained; no density or RH premise
+occurs in either provider.
 
-**Established abstract deterministic results.**
-Analysis/HorizontalPhaseBootstrap.lean proves `commutator_sub_scalar` and
-`iterComm_sub_scalar`, retaining the exact scalar cancellation before norm
-estimates. `iterComm_norm_le_half_pos` gives the sharp factor-one-half
-budget from an explicit centered-moment norm premise.
-`evenCorrection_summable_and_norm_le` proves absolute convergence of the
-actual even commutator series and its bound
-`(g/2)*(cosh(delta*w)-1)`; `evenCorrection_truncation_norm_le` retains the
-complete finite head and explicit scalar remainder.
-`norm_sub_bootstrap`, `norm_self_le_of_bootstrap`, and
-`norm_sub_lt_one_of_bootstrap` solve the self-consistent norm estimate.
-`norm_sub_one_bound_of_evenCorrection` consumes the exact full correction
-identity, including the bad-copy remainder. `isUnit_of_evenCorrection`
-gives Banach-algebra invertibility from the strict explicit gap
-`alpha+beta+cosh(delta*w)<2`. These are genuine normed-algebra theorems,
-not claims about an unspecified default matrix norm.
+ActualRationalLandauRightLine.lean proves the actual zeta Dirichlet-series
+identity on Re(s)=2, finite-interval interchange, complete rational integer
+resonance split and the uniform nonresonant norm bound. The exact completed-zeta
+and direct-zeta weighted contours remain in RvM/CountByIntegral.lean and
+ActualZeroLandauContour.lean. Ordinary boundary and analyticity conditions are
+explicit. ActualZeroPhaseBootstrap.lean specializes norm absorption and
+invertibility to the actual finite Gram; only explicit Landau/bad norm estimates
+and scalar gap premises remain.
 
-**Conditional research reduction: actual-zeta specialization is Open.**
-The accompanying paper-level source audit
-RH/GrowingPhaseGramBootstrapAudit20261005.md derives an optimized cutoff,
-the sharp factor one-half, a smaller rational-Landau remainder, and
-uniform Euclidean phase-Gram conditioning for
-`log X / sqrt(log T) -> c < sqrt((4/3)*arcosh 2)`.
-This is the full multiplicity Gram on every integer frequency 1<=n<=X.
-The asymptotic spectral lower and upper bounds are
-`2*(2-q)/(3-q)` and `2/(3-q)`, with `q=cosh(3*c^2/4)`.
-The PSD-to-centered operator norm and actual finite moment provider are now
-Established in HorizontalEuclideanMoments.lean and ActualZeroPhaseMoments.lean.
-Open Lean providers: actual-zero even commutator identification, uniform
-rational Landau estimate, uniform zero density and its weighted tail, and
-asymptotic spectral assembly.
-Actual-zero multiplicity and reflection already exist in
-Analysis/ActualZeroOrdinate.lean. The reviewed paper inputs are
-Ford--Zaharescu, Lemma 1 (https://www.ford126.web.illinois.edu/wwwpapers/fz.pdf)
-and Chourasiya--Simonic, Corollary 1 (https://arxiv.org/pdf/2507.15184).
-This phase Gram does not replace the screened physical Pareto inverse.
-The RH-equivalent cofinal arithmetic bound, signed inverse saturation,
-and bounded-frequency signed marked cancellation remain unproved.
+**Conditional research reduction remains Open.** Full uniform rational Landau,
+actual uniform zero density, microscopic square budget and asymptotic spectral
+assembly are not supplied by these deterministic providers. The weighted-tail
+consumer is proved, but its actual density input remains Open. The precise
+ledger is RH/ActualZetaAnalyticProviderAudit20261005.md.
+
+### Horizontal phase-Gram bootstrap and strengthened conditional support
+
+HorizontalPhaseBootstrap.lean proves exact scalar centering of commutators,
+absolute even-series convergence, sharp half-factor bounds, finite truncation,
+norm absorption and Banach-algebra invertibility. HorizontalEuclideanMoments.lean
+and ActualZeroPhaseMoments.lean discharge actual positive moment centering;
+the actual centered diagonal and full operator identity are now also
+Established as described above.
+
+RH/GrowingPhaseGramBootstrapAudit20261005.md derives the conditionally sufficient
+support threshold
+`log X / sqrt(log T) -> c < sqrt((4/3)*arcosh 2) = 1.325120320033778...`.
+Its limiting lower and upper spectral bounds are 2*(2-q)/(3-q) and 2/(3-q),
+q=cosh(3*c^2/4). The asymptotic statement still needs checked full-contour
+Landau and actual density providers. The sharper normalization and exact finite
+cosh transfer improve constants and endpoints; only near-line density on
+0<=s<=1/32 is sufficient at this support scale.
+
+Primary analytic sources: Ford--Zaharescu, Lemma 1
+(https://www.ford126.web.illinois.edu/wwwpapers/fz.pdf), and
+Chourasiya--Simonic, Theorem 1, Corollary 1 and Table 1
+(https://arxiv.org/html/2507.15184v2). Literature and Wolfram checks are not Lean
+providers. This zero-ordinate phase Gram does not replace the screened physical
+Pareto inverse. RH-equivalent cofinal screened arithmetic, signed inverse
+saturation and bounded-frequency signed marked cancellation remain unproved.
 
 
 ### Strengthened exact normalization and literal marked tails (2026-10-04)
@@ -136,8 +142,11 @@ RH-equivalent targets.
 ### Full integer-frequency phase covariance and conditional Gram assembly (2026-10-04)
 
 Source: user-provided `Prime_Phases_Agenda_Proof_Attempts.tex`, Theorem
-`growing-phase-gram`. The formal statements below are finite complex quadratic-pairing bounds;
-they do not yet instantiate an operator on the actual zero-phase sample.
+`growing-phase-gram`. The original quadratic-pairing statements below now
+have a checked Euclidean arithmetic operator realization in
+PrimePowerCovarianceEuclideanNorm.lean, with log(d)-2 <= norm <=
+log(d)+log(4)+4 for d>=1. Identifying the complete analytic main term of the
+actual zero-phase sample still requires the uniform Landau provider.
 Unless otherwise specified, declaration names have namespace
 `RiemannResearch.Fourier`.
 

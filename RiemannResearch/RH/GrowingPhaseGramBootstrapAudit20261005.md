@@ -1,15 +1,18 @@
 # Growing-support phase Gram bootstrap: audit and strengthening
 
-Source base: `be751019201ab4f48e41c2e46b750e3c2edb63ac`.
+Source base: `9aad406831dd6b017a6cb592e07b22a2389cd4cc`.
 Research continuation requested 4 October 2026.
 This note supersedes the estimates in `UnverifiedHorizontalBootstrapRoute20261004.md`.
 The source review and the mathematical argument below are paper-level work.
 The abstract normed-algebra commutator series and bootstrap are separately
 formalized in `Analysis/HorizontalPhaseBootstrap.lean`. Euclidean moment
 centering, the actual finite-copy moment provider, masked signed corrections,
-weighted actual zero contour and eventual count normalization are now checked;
-see `ActualZetaAnalyticProviderAudit20261005.md`. The quantitative Landau,
-density, weighted bad-tail and complete operator-series providers remain Open.
+weighted actual zero contours, sharp eventual count normalization, complete
+actual operator identity, strict finite layer cake, actual right-contour
+Dirichlet-series formula and full-integer arithmetic operator bounds are now
+checked; see `ActualZetaAnalyticProviderAudit20261005.md`. The quantitative
+full-contour Landau and actual zero-density providers remain Open. The weighted
+bad-tail transfer is checked under its explicit actual density premise.
 
 ## Full dictionary and exact reflection identity
 
@@ -62,8 +65,9 @@ The Lean theorem `evenCorrection_summable_and_norm_le` proves absolute
 summability and this bound in an arbitrary complete real normed algebra
 from the explicit centered-moment norm premise. It does not silently assume
 that a Lean matrix norm is the Euclidean operator norm. The PSD implication
-of that premise and the exact actual-zero commutator expansion remain to
-be instantiated formally.
+of that premise is proved in HorizontalEuclideanMoments.lean. The exact
+actual-zero expansion is `landauGram_sub_phaseGram` in ActualZeroPhaseOperators.lean;
+its actual centered log diagonal has norm exactly log(d)/2 for d>=1.
 
 ## Uniform density and the optimized cutoff
 
@@ -82,14 +86,24 @@ at sigma=7/8 and 1-4s/3>=1/3. Reflection gives
     B(s) = # {copies with |a_rho|>=s}
          <= 400 T L^3 exp(-(4/3)L s).
 
-For a bad copy, the centered rank-one operator has norm at most d exp(|a|ell)
-and its unweighted Gram term has norm d. Therefore the difference is at most
-2d exp(|a|ell). Retain this factor in the unspecified absolute constant.
-Using N(T)>=c0 T L eventually and Stieltjes layer cake, if
+The complete bad family has a checked exact finite cosh-correction identity.
+Positive rank-one moment centering gives the sharper unconditional finite bound
+
+    beta <= d/(2N) sum_bad [cosh(|a|ell)-1]
+         <= d/(4N) sum_bad exp(|a|ell).
+
+The checked strict finite layer cake retains e^(ell*delta) B_>(delta) and the
+upper endpoint 1/2. It identifies B_>(s) exactly with twice the right strict
+tail and dominates it by the paper's inclusive count. Under the explicit
+actual density input and the now-sharp N(T)>=c0 T L eventually, if
 A=(4/3)L-ell>0,
 
     beta := ||H_bad-G_bad||
-       <= C d L^2 exp(-A delta) (1+ell/A).
+       <= (100/c0)*d*L^2*
+          [(1+ell/A)*exp(-A*delta) - (ell/A)*exp(-A/2)].
+
+The checked count family permits any c0<1/(2*pi), so the leading coarse
+coefficient can approach 200*pi. The old 1/(16*pi) normalization gave 1600*pi.
 
 For any fixed r>0 choose
 
@@ -142,7 +156,14 @@ For the first, after splitting m<n and m>n, the terms log2 have row sum
 O(X^2), while sqrt(t)log(1/t) is bounded on (0,1].
 For the third use 1/(sqrt x log x)<=sqrt(nm)/|n-m|.
 
-Weighted Schur with weights n^(-1/2) gives ||A||<=log X+C.
+The checked Euclidean arithmetic provider now gives, for d>=1,
+
+    log(d)-2 <= ||A_d|| <= log(d)+log(4)+4.
+
+It retains every integer frequency and all composite divisor interactions.
+The lower bound uses the exact weighted row on w_n=n^(-1/2), so the leading
+log(d) term is real and cannot be replaced by a bounded prime-only direct sum.
+Weighted Schur with weights n^(-1/2) gives the stated upper bound.
 The downward divisor sum is sum_(q|n) Lambda(q)=log n, and the upward
 multiples sum is sum_(q<=X/n) Lambda(q)/q<=log(X/n)+C.
 Consequently
@@ -166,8 +187,9 @@ decomposition is H-G=(H_good-G_good)+(H_bad-G_bad). Hence, for epsilon<1,
     lambda_min(G) >= (1-tau-2epsilon)/(1-epsilon).
 
 The lower bound is positive when tau+2epsilon<1. Lean proves the abstract
-norm absorption and a Banach-algebra invertibility consumer, retaining the
-exact correction identity and bad-copy norm premise.
+norm absorption and a Banach-algebra invertibility consumer. The actual
+specialization discharges the centered-moment and full signed identity
+providers; its Landau and bad-copy norm estimates remain explicit premises.
 
 For ell=o(sqrt L), alpha,beta,epsilon ->0 and ||G-I||->0.
 For ell/sqrt L -> c>=0, let q=cosh(3c^2/4). The optimized cutoff gives
@@ -197,12 +219,14 @@ publication; the checkpoint is the publication record.
 
 Open for the actual-zeta Lean specialization:
 
-1. The actual-zero operator-series identity for the good correction and the
-   complete complementary bad contribution. The Euclidean moment centering
-   provider and scalar masked signed corrections are already Established.
-3. The uniform centered Landau formula with rational-frequency remainders.
-4. Uniform zero density and its weighted bad-copy tail.
-5. The asymptotic support and spectral eigenvalue assembly.
+1. The uniform centered Landau formula with rational-frequency remainders.
+   The actual zeta right-line series interchange, integer resonance split and
+   nonresonant norm bound are Established; horizontal and left contour estimates
+   and transfer to arbitrary heights remain Open.
+2. Uniform actual zero density. The exact strict finite layer cake, reflection
+   bridge and density-to-cosh-tail transfer are Established; their quantitative
+   actual density premise remains Open.
+3. The asymptotic support and spectral eigenvalue assembly.
 
 Actual multiplicity cutoffs and reflection are already proved in
 Analysis/ActualZeroOrdinate.lean; they are not new assumed providers.
@@ -216,3 +240,33 @@ arithmetic estimate, and bounded-frequency signed marked cancellation remain
 unproved. The phase Gram is a sampling matrix on zero ordinates; its inverse
 bound cannot replace the screened physical Pareto inverse without a proved
 transfer estimate.
+
+## Stronger finite tail transfer and smaller remaining density target
+
+The exact finite cosh tail factor keeps both q-ell and q+ell endpoints, rather
+than bounding cosh by a single exponential at the outset. Under
+B_>(s)<=K*exp(-q*s), q>ell>=0, the checked transfer is
+
+    sum_bad[cosh(ell*|a|)-1] <= K*F,
+    F=(cosh(ell*delta)-1)*exp(-q*delta)
+      +(ell/2)*[(exp(-(q-ell)*delta)-exp(-(q-ell)/2))/(q-ell)
+               -(exp(-(q+ell)*delta)-exp(-(q+ell)/2))/(q+ell)].
+
+For q=4L/3 and delta=(ell+p*log L)/(q-ell), this gives a smaller bad budget
+than the coarse exponential formula. At ell=o(sqrt L), the additional small
+cosh factor allows p=2 for the paper-level isotropy conclusion. This asymptotic
+analysis still depends on the actual density and Landau providers; it is not
+presented as a hypothesis-free Lean theorem.
+
+Only the near-line range 0<=s<=1/32 is necessary on the sqrt L support scale.
+Splitting layer cake there and bounding the farther count by B_>(1/32) gives
+an exponentially small farther contribution, O(exp(-L/24+O(sqrt L))). The
+first interval in Chourasiya--Simonic Table 1 has leading constant 5.069;
+reflection yields leading coefficient 10.138 after the additive logarithmic
+terms are retained and absorbed eventually. This improves constants without
+requiring a new large-sigma density formalization. The actual analytic density
+proof remains Open.
+
+Wolfram checked the closed finite cosh integral and the value of c_star.
+These symbolic checks support the calculations above; Lean verifies the exact
+finite identities and explicit-premise transfer declarations separately.
