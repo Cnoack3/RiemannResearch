@@ -1,5 +1,50 @@
 # Theorem catalog
 
+### Actual hyperbolic lower bounds and signed-tail frames (2026-10-05)
+
+**Established full actual form.**
+Analysis/ActualHyperbolicGramLowerBounds.lean traces the normalized conjugate
+phase rows over every actual zero copy with the transpose of the actual Landau
+Gram. The exact quadratic identity is ||Cf||^2-||Sf||^2=Re<f,Hf>; analytic
+multiplicities, the original complex convention, every integer frequency and
+all composite interactions are retained. The explicit Ioc(0,d)/Fin d reindex
+transfers the existing full arithmetic Schur estimate. For T>=0 it proves
+
+    H[f] >= [1-T*(log d+log 4+4)/(2*pi*N(T))-||E||]*||f||^2,
+
+where E=H-I+T*A/(2*pi*N(T)) is the original signed residual.
+The stronger ground-state formula keeps the complete positive arithmetic
+graph square and estimates only the signed residual. Its general finite
+identity is in Analysis/WeightedGroundStateForm.lean.
+For 0<=theta<=2/7, eventual log d<=a+theta*log(T+3), and h<1-theta,
+eventually H[f]>=h*||f||^2 uniformly in all coefficient vectors.
+In particular every h<5/7 holds at the existing 2/7 support endpoint.
+No zero-density or RH premise is used. The concrete all-row centered transfer
+now uses this computed form coefficient rather than an arbitrary form input.
+
+**Established finite signed-tail budget; conditional masked-frame reduction.**
+Analysis/HyperbolicRowNumericalRange.lean proves the sharp signed rank-two
+upper coefficient (||u||*||v||+Re<u,v>)/2 by balanced sum/difference channels.
+Analysis/ActualHyperbolicTailFrames.lean specializes it to the actual
+normalized exponential rows and sums every strict-bad zero copy.
+The original negative sinh square is retained in the exact bad form.
+The good operator is exactly H-H_bad, using the full N(T) normalization.
+Its zeroed good-row realization has the exact masked hyperbolic form.
+goodHyperbolic_lower_iff_signed_surplus states the weakest exact directional
+provider; SignedBadHyperbolicUpper is a useful one-sided sufficient provider.
+actual_good_centered_frame_lower_of_signedBad feeds that explicit provider
+directly into the finite centered-frame theorem with the shrinking delta.
+
+**Open application input.**
+The smallness of the actual signed bad-tail budget at the improved centered
+support constant remains Open in Lean. A sufficient count-only budget is
+strictTail(T,delta)*[d+sqrt(d*(d+1)*H_d/2)]/(2*N(T)); its harmonic reduction
+and the published uniform-density specialization are paper consequences in
+RH/ActualHyperbolicLowerBounds20261005.md. The report distinguishes these
+from the checked finite declarations. Actual Ingham/Selberg density and
+fully screened physical Pareto transfer remain separate Open obligations.
+This work does not formalize the paper 1/3 Landau strengthening.
+
 ### Endpoint Landau support and centered hyperbolic frames (2026-10-05)
 
 **Unconditional actual signed residual endpoint.**

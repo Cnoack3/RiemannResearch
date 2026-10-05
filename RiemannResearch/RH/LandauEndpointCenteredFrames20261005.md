@@ -60,6 +60,16 @@ No application supplies a zeta density estimate merely by defining C or Q.
 Phase-row signs must match the existing complex quadratic convention when
 specializing generic kernels to the actual zero Gram.
 
+The follow-up [actual hyperbolic lower-bound analysis](ActualHyperbolicLowerBounds20261005.md)
+now discharges the FULL form input using the complete arithmetic main matrix:
+every h<1-theta is eventually valid for theta<=2/7, so every h<5/7 holds at
+the existing endpoint. Its actual-row identity keeps the negative sinh square,
+every multiplicity and the original complex sign convention. The shrinking
+good-zero mask is distinguished explicitly: H_good=H-H_bad, and its concrete
+centered-frame specialization consumes the one-sided signed bad-row provider.
+The finite rank-two copy budget is proved; its required asymptotic smallness
+and the closed harmonic/density specialization are separately classified.
+
 The exact improved gap is z<7/5:
 2-z^2>0 and (z-1)/2 < sqrt(2-z^2).
 For z=cosh(3c^2/8), Lean proves the exact equivalence for c>=0:
