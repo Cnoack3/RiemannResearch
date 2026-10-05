@@ -20,6 +20,49 @@ Analysis/ActualZeroDensityCutoff.lean proves sourceCountCutoff_shrinking:
 if log d/log T->0 and omega/log T->0, the exact actual-count cutoff tends
 to zero and eventually lies in [0,1/32], without a density premise.
 
+**Established detector, weighted identities and source admissibility.**
+Analysis/ComplexQuadraticZeroDetector.lean proves the full analytic order
+sum. Analysis/ActualMobiusZeroDetector.lean defines the finite actual Mobius
+mollifier, proves its real-line limit is one and its order is finite, and
+proves detector order = original zeta multiplicity + mollifier order.
+Analysis/ActualZeroDensityLogExcess.lean proves the exact threshold-window
+decomposition, the extra mollifier contribution and the finite complement
+sum before using their nonnegativity. The threshold remains closed.
+Analysis/ComplexLogRectangleBoundary.lean retains all four signed integrals
+and explicit horizontal argument lifts; a common additive lift change
+cancels exactly. No principal-argument compatibility is asserted.
+
+Analysis/ActualZeroDensityCutoff.lean additionally proves
+sourceAdmissibleCutoff_shrinking: for fixed eta>0, replace the inverse cutoff
+by max(inverse cutoff,2*eta/log T). It tends to zero, eventually lies in
+[0,1/32] and strictly exceeds eta/log T. Its canonical left line
+1/2+delta-eta/log T is strictly above 1/2. The exact rate difference and
+monotonicity in Analysis/NonlinearZeroDensityRate.lean prove that this
+larger physical cutoff preserves the inverse-rate exponential budget.
+
+**Conditional research reduction: the actual detector route.**
+Analysis/ActualMollifierDensityTransfer.lean proves the finite count and
+complete harmonic consequences of a detector-weighted window bound and
+exposes optional Littlewood/full-boundary premises.
+shrinking_harmonic_tail_of_admissibleDetector assumes only the eventual
+weighted estimate at the canonical left line and refined cutoff, with
+X(T)>=1. Analysis/ActualHyperbolicShrinkingTail.lean proves
+shrinking_harmonic_tail_of_admissibleDifference from the one-point count
+estimate at that same admissible cutoff. Both imply delta->0,
+(strictTail/N(T))*W_d->0, actualSignedTailBudget->0 and
+||signedBadHyperbolic||->0 under the existing prescribed growth conditions.
+The strict equality subtraction, retained finite-height count, reflection,
+multiplicities, full N(T), negative sinh square and composites survive.
+
+**Open:** the one-point actual density estimate remains the minimal
+count-only analytic interface. The stronger sufficient detector estimate
+has not been proved. Its cited route still needs Littlewood with compatible
+argument lifts and boundary treatment, the full signed boundary estimate
+via Gabriel/fourth-moment/mollifier estimates, and source constant/parameter
+verification. No cited theorem is an axiom. Principal continuation audits
+report only propext, Classical.choice and Quot.sound, with all domain
+hypotheses explicit in declaration types.
+
 **Conditional research reduction: one actual density point suffices.**
 Analysis/ActualHyperbolicShrinkingTail.lean proves
 shrinking_harmonic_tail_of_inghamDifference and

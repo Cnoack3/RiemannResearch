@@ -131,7 +131,7 @@ listed as a checked declaration below.
 ## Precise remaining analytic provider
 
 Open: prove in Lean the displayed actual one-point difference inequality
-with the source's M=log T+log log T and K=C*T*(log T)^3, or equivalently its exact power-shaped bound, with justified fixed constants. The source's near-line interval membership is already proved for the chosen schedule; the analytic estimate and its numerical parameter verification remain Open. A uniform theorem
+with the source's M=log T+log log T and K=C*T*(log T)^3, or equivalently its exact power-shaped bound, with justified fixed constants. The source's upper near-line range is proved for the original schedule; the continuation below additionally proves a strict lower margin at a refined cutoff. The analytic estimate and its parameter verification remain Open. A uniform theorem
 over the whole zero strip is unnecessary for this consumer.
 
 The published proof's Gabriel convexity, Littlewood zero-detector, and
@@ -143,6 +143,143 @@ transfer are proved independently around this remaining provider.
 The negative sinh contribution and composite interactions survive through
 the existing signedBadHyperbolic norm and form identities. This work does not
 discharge the separate fully screened physical Pareto transfer or prove RH.
+
+## Detector and source-admissibility continuation
+
+This continuation starts from the checked publication
+72d6312b809bc37c0c1cb133c34b9b6d145a54a5. The requested 81ecb base and its
+subsequent harmonic and Landau strengthenings remain intact.
+
+The actual finite mollifier is now defined, for an integer cutoff X>=1, by
+
+    M_X(s)=sum_{1<=n<=X} mu(n)*exp[-s*log n].
+    h_X(s)=1-(1-zeta(s)*M_X(s))^2
+          =(2-zeta(s)*M_X(s))*zeta(s)*M_X(s).
+
+For each fixed X, M_X(t)->1 as real t->infinity. Analyticity and the identity
+theorem therefore prove that its analytic order is finite everywhere.
+At every actual cutoff zeta zero rho, the checked exact identity is
+
+    ord(h_X,rho)=zeroMult(rho)+ord(M_X,rho).
+
+Here the displayed orders are natural analytic orders; their finiteness at
+these actual zeros is proved. The extra mollifier multiplicity is retained,
+rather than identifying the two zero multisets.
+
+For alpha<=sigma define the multiplicity-weighted window
+
+    W(H,T;alpha)=sum_{rho in actual cutoff T}
+      zeroMult(rho)*1_{H<gamma}*max(0,beta-alpha).
+
+Its exact decomposition is
+
+    W(H,T;alpha)=(sigma-alpha)*D(H,T;sigma)
+      +sum zeroMult*1_{H<gamma, sigma<=beta}*(beta-sigma)
+      +sum zeroMult*1_{H<gamma, alpha<beta<sigma}*(beta-alpha).
+
+Both remainder sums are nonnegative, including all analytic copies. The
+detector-weighted sum on the same actual points equals W plus its explicit
+mollifier-order contribution. On a finite superset of the active actual
+points it gains a further exact complement sum. Both additions are retained
+before taking upper bounds. Every active actual zeta point is also proved
+to be a detector zero in the source rectangle for any right line >=1;
+the top height is closed and the lower height is strict.
+
+Complex.logRectangleBoundary defines the entire signed functional
+
+    B=integral_H^T log|h_X(alpha+it)|
+      -integral_H^T log|h_X(betaRight+it)|
+      +integral_alpha^betaRight aTop(u)
+      -integral_alpha^betaRight aBottom(u).
+
+The two horizontal functions are explicit argument lifts. This definition
+does not assert their analytic compatibility or substitute the principal
+argument. A common additive change in both lifts cancels exactly when the
+lifts are interval integrable. The finite rectangle consumer accepts the
+Littlewood weighted-sum bound and a bound on this complete B as explicit
+premises, then proves the actual density difference and harmonic transfer.
+The right vertical and bottom horizontal contributions are not removed.
+
+There is also a source-admissibility refinement. For any fixed eta>0 put
+
+    delta_eta(T)=max(sourceCountCutoff(T),2*eta/log T),
+    alpha(T)=1/2+delta_eta(T)-eta/log T.
+
+The new unconditional sourceAdmissibleCutoff_shrinking proves, under the
+same prescribed subpower support and sublinear margin conditions,
+
+    delta_eta->0,
+    eventually 0<=delta_eta<=1/32 and eta/log T<delta_eta.
+    1/2<alpha<1/2+delta_eta whenever log T>0.
+
+Here eta is the paper's lower-line gap parameter, not its separately named
+Gaussian damping parameter kappa. The exact nonlinear rate difference and
+its monotonicity show that a cutoff above the inverse cutoff preserves the
+exponential budget. No cumulative count upper bound is needed for this
+refinement. The density estimate must be supplied at delta_eta itself; a
+bound at a larger cutoff is never used to infer one at a smaller cutoff.
+
+The checked shrinking_harmonic_tail_of_admissibleDifference uses only the
+eventual one-point actual difference estimate
+
+    D(T,1/2+delta_eta)-D(H,1/2+delta_eta)
+      <=F(T,delta_eta),
+    F(T,delta)=(C*T*L^3)*exp[-(L+log L)*I(delta)]+B2*L^2+B3*L.
+
+It proves the shrinking cutoff and all three harmonic/signed limits.
+shrinking_harmonic_tail_of_admissibleDetector is a stronger sufficient
+analytic route: it accepts only the eventual weighted detector estimate at
+the canonical alpha,
+
+    detectorWeightedWindow(X(T),H,T,alpha(T))
+      <=(eta/log T)*F(T,delta_eta).
+
+The mollifier cutoff schedule satisfies X(T)>=1 eventually. The preceding
+exact identities prove the count inequality from this premise. Every
+finite-height count and the strict equality correction are transported
+through the original full N(T), complete harmonic cap and signed operators.
+
+**Open analytic obligations.** The weakest count-only source interface
+remains the displayed one-point density difference, now available at a
+proved admissible shrinking point. The detector estimate is a stronger
+sufficient route, not a proved unconditional shrinking-tail theorem.
+To discharge it by the cited proof, the following still require checked
+providers:
+
+- Open: Littlewood's weighted analytic-zero identity/inequality, with
+  compatible horizontal argument lifts, finite detector orders and all
+  boundary-zero or limiting-height treatment.
+- Open: the bound on the full signed rectangle functional, obtained in the
+  source using Gabriel interpolation, the fourth zeta moment, mollifier
+  moments and the remaining vertical/horizontal integral estimates.
+- Open: the source parameter and constant verification needed to produce
+  fixed C>0 and B2,B3>=0 at the prescribed one point.
+
+The paper's equations (29) and (32), Section 4, and Theorem 1 support the
+detector construction and analytic proof route. This development proves
+the finite algebra, counting and asymptotic transfers independently; it
+does not import those analytic estimates as axioms.
+
+The coherent continuation candidate passed Lean without warnings.
+Axiom audits of its detector orders, exact weighted decompositions,
+argument-shift identity, admissible cutoff and principal harmonic consumers
+report only propext, Classical.choice and Quot.sound. Local hdet,
+hLittlewood and hboundary assumptions remain visible in theorem types.
+Final publication validates the persisted modules and reverse dependents.
+
+Principal new declarations:
+
+- Complex.quadraticZeroDetector_order
+- Complex.logRectangleBoundary_add_argument_const
+- InghamMollifier.mollifier_order_ne_top
+- InghamMollifier.zetaDetector_orderNat
+- ActualZeroOrdinate.rightLogExcessWindow_exact
+- ActualZeroOrdinate.detectorLogExcessOnZetaWindow_exact
+- ActualZeroOrdinate.detectorLogExcessFinite_exact
+- ActualZeroOrdinate.densityDifference_le_of_finiteLogRectangle
+- ActualZeroOrdinate.sourceAdmissibleCutoff_shrinking
+- ActualZeroPhaseMoments.shrinking_harmonic_tail_of_admissibleDifference
+- ActualZeroPhaseMoments.shrinking_harmonic_tail_of_admissibleDetector
 
 ## Verification
 

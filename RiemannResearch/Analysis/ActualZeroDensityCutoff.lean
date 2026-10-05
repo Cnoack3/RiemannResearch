@@ -123,3 +123,48 @@ theorem sourceCountCutoff_shrinking
     positiveCountCutoff_eventually_nearLine _ _ _ hm hr⟩
 
 end RiemannResearch.Analysis.ActualZeroOrdinate
+
+namespace RiemannResearch.Analysis.ActualZeroOrdinate
+open ZeroDensityRate
+/-- Source-admissible shrinking cutoff. The added lower margin makes the
+source's strict near-line restriction automatic without a count upper bound. -/
+def sourceAdmissibleCutoff (T : ℝ) (d : ℕ) (C ω η : ℝ) : ℝ :=
+  max (sourceCountCutoff T d C ω) (2*η/Real.log T)
+
+theorem sourceAdmissibleCutoff_shrinking
+    (d : ℝ → ℕ) (ω : ℝ → ℝ) (C η : ℝ) (hC : 0 < C) (hη : 0 < η)
+    (hd : ∀ᶠ T : ℝ in atTop, 1 ≤ d T)
+    (hsmall : Tendsto (fun T : ℝ => Real.log (d T : ℝ)/Real.log T) atTop (nhds 0))
+    (hωsmall : Tendsto (fun T : ℝ => ω T/Real.log T) atTop (nhds 0)) :
+    Tendsto (fun T => sourceAdmissibleCutoff T (d T) C (ω T) η) atTop (nhds 0) ∧
+      ∀ᶠ T : ℝ in atTop,
+        0 ≤ sourceAdmissibleCutoff T (d T) C (ω T) η ∧
+        sourceAdmissibleCutoff T (d T) C (ω T) η ≤ 1/32 ∧
+        η/Real.log T < sourceAdmissibleCutoff T (d T) C (ω T) η := by
+  have hc := sourceCountCutoff_shrinking d ω C hC hd hsmall hωsmall
+  have hl : Tendsto (fun T : ℝ => 2*η/Real.log T) atTop (nhds 0) :=
+    tendsto_const_nhds.div_atTop Real.tendsto_log_atTop
+  have hs : Tendsto (fun T => sourceAdmissibleCutoff T (d T) C (ω T) η)
+      atTop (nhds 0) := by
+    simpa only [sourceAdmissibleCutoff, max_self] using hc.1.max hl
+  refine ⟨hs, ?_⟩
+  filter_upwards [hc.2, hs.eventually_le_const (by norm_num : (0:ℝ)<1/32),
+    Real.tendsto_log_atTop.eventually_gt_atTop 0] with T ht hu hL
+  refine ⟨ht.1.trans (le_max_left _ _), hu, ?_⟩
+  have hk : 0 < η/Real.log T := div_pos hη hL
+  have hm := le_max_right (sourceCountCutoff T (d T) C (ω T)) (2*η/Real.log T)
+  change η/Real.log T < max _ _
+  simp only [mul_div_assoc] at hm ⊢
+  linarith
+
+theorem sourceAdmissibleCutoff_leftLine {T C ω η : ℝ} (d : ℕ)
+    (hη : 0 < η) (hL : 0 < Real.log T) :
+    1/2 < 1/2+sourceAdmissibleCutoff T d C ω η-η/Real.log T ∧
+      1/2+sourceAdmissibleCutoff T d C ω η-η/Real.log T <
+        1/2+sourceAdmissibleCutoff T d C ω η := by
+  have hk : 0 < η/Real.log T := div_pos hη hL
+  have hm := le_max_right (sourceCountCutoff T d C ω) (2*η/Real.log T)
+  unfold sourceAdmissibleCutoff
+  simp only [mul_div_assoc] at hm ⊢
+  constructor <;> linarith
+end RiemannResearch.Analysis.ActualZeroOrdinate

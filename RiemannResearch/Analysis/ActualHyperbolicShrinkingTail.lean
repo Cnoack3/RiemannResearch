@@ -304,3 +304,100 @@ theorem shrinking_harmonic_tail_of_inghamDifference
         simpa only [mul_assoc] using hc
     _ = _ := by rw [hex]; ring
 end RiemannResearch.Analysis.ActualZeroPhaseMoments
+
+namespace RiemannResearch.Analysis.ActualZeroPhaseMoments
+open ActualZeroOrdinate Zeta23 ZeroDensityRate FiniteHyperbolicHarmonicCap
+
+/-- A larger physical cutoff preserves the inverse-rate exponential budget.
+The density bound is required at that larger cutoff itself. -/
+theorem strictHarmonicBudget_le_above_positiveCutoff
+    (T : ℝ) (d : ℕ) (hd : 1 ≤ d) (M K E ω δ : ℝ)
+    (hM : 0 < M) (hK : 0 < K) (hN : 0 < (Ncount 0 T : ℝ))
+    (hcut : positiveCountCutoff M (2*K*harmonicHyperbolicCap d/(Ncount 0 T : ℝ)) ω ≤ δ)
+    (hδ : δ ≤ 1/2)
+    (hcount : rightInclusiveCount T (1/2+δ) ≤ K*Real.exp (-M*inghamRate δ)+E) :
+    (strictTail T δ/(Ncount 0 T : ℝ))*harmonicHyperbolicCap d ≤
+      Real.exp (-ω)+(2*E/(Ncount 0 T : ℝ))*harmonicHyperbolicCap d := by
+  let A : ℝ := 2*K*harmonicHyperbolicCap d/(Ncount 0 T : ℝ)
+  have hdR : (0:ℝ) < d := by exact_mod_cast (lt_of_lt_of_le Nat.zero_lt_one hd)
+  have hW : 0 < harmonicHyperbolicCap d :=
+    hdR.trans_le (harmonicHyperbolicCap_ge_card d)
+  have hA : 0 < A := by dsimp [A]; positivity
+  have hδ0 : 0 ≤ δ := (positiveCountCutoff_nonneg A ω hM).trans hcut
+  have hc : strictTail T δ ≤ 2*(K*Real.exp (-M*inghamRate δ)+E) :=
+    (strictTail_le_twice_inclusive T δ hδ0).trans
+      (mul_le_mul_of_nonneg_left hcount (by norm_num))
+  calc
+    _ ≤ (2*(K*Real.exp (-M*inghamRate δ)+E)/(Ncount 0 T : ℝ))*
+        harmonicHyperbolicCap d :=
+      mul_le_mul_of_nonneg_right (div_le_div_of_nonneg_right hc hN.le) hW.le
+    _ = A*Real.exp (-M*inghamRate δ)+
+        (2*E/(Ncount 0 T : ℝ))*harmonicHyperbolicCap d := by
+      dsimp [A]
+      simp only [div_eq_mul_inv]
+      ring
+    _ ≤ _ := add_le_add (positiveCountCutoff_exp_le_of_le hM hA hcut hδ) le_rfl
+
+/-- Conditional research reduction at a source-admissible shrinking cutoff.
+Only the one-point actual density difference is an analytic hypothesis. -/
+theorem shrinking_harmonic_tail_of_admissibleDifference
+    (d : ℝ → ℕ) (ω : ℝ → ℝ) (C η H B₂ B₃ : ℝ)
+    (hC : 0 < C) (hη : 0 < η) (hB₂ : 0 ≤ B₂) (hB₃ : 0 ≤ B₃)
+    (hd : ∀ᶠ T : ℝ in atTop, 1 ≤ d T)
+    (hsmall : Tendsto (fun T : ℝ => Real.log (d T : ℝ)/Real.log T) atTop (nhds 0))
+    (hω : Tendsto ω atTop atTop)
+    (hωsmall : Tendsto (fun T : ℝ => ω T/Real.log T) atTop (nhds 0))
+    (hcount : ∀ᶠ T : ℝ in atTop,
+      let L := Real.log T
+      let δ := sourceAdmissibleCutoff T (d T) C (ω T) η
+      rightInclusiveCount T (1/2+δ)-rightInclusiveCount H (1/2+δ) ≤
+        (C*T*L^3)*Real.exp (-(L+Real.log L)*inghamRate δ)+B₂*L^2+B₃*L) :
+    let δ := fun T => sourceAdmissibleCutoff T (d T) C (ω T) η
+    Tendsto δ atTop (nhds 0) ∧
+      Tendsto (fun T => (strictTail T (δ T)/(Ncount 0 T : ℝ))*
+        harmonicHyperbolicCap (d T)) atTop (nhds 0) ∧
+      Tendsto (fun T => actualSignedTailBudget T (d T) (δ T)) atTop (nhds 0) ∧
+      Tendsto (fun T => ‖signedBadHyperbolic T (d T) (δ T)‖) atTop (nhds 0) := by
+  let δ := fun T => sourceAdmissibleCutoff T (d T) C (ω T) η
+  have hs := sourceAdmissibleCutoff_shrinking d ω C η hC hη hd hsmall hωsmall
+  have hsupport : ∀ᶠ T : ℝ in atTop,
+      1 ≤ d T ∧ Real.log (d T : ℝ) ≤ Real.log T/2 := by
+    filter_upwards [hd, Real.tendsto_log_atTop.eventually_gt_atTop 0,
+      hsmall.eventually_le_const (by norm_num : (0:ℝ)<1/2)] with T hdT hl ht
+    refine ⟨hdT, ?_⟩
+    have h := (div_le_iff₀ hl).mp ht
+    linarith
+  have hexp : Tendsto (fun T => Real.exp (-ω T)) atTop (nhds 0) := by
+    simpa only [Function.comp_def, pow_zero, one_mul] using
+      (Real.tendsto_pow_mul_exp_neg_atTop_nhds_zero 0).comp hω
+  have hrem := finiteHeight_log_remainder_tendsto_zero d H B₂ B₃ hB₂ hB₃ hsupport
+  have hmajor := hexp.add hrem
+  simp only [zero_add] at hmajor
+  have ht : Tendsto (fun T : ℝ => (strictTail T (δ T)/(Ncount 0 T : ℝ))*
+      harmonicHyperbolicCap (d T)) atTop (nhds 0) := by
+    refine squeeze_zero' ?_ ?_ hmajor
+    · exact Eventually.of_forall fun T =>
+        mul_nonneg (div_nonneg (strictTail_nonneg _ _) (Nat.cast_nonneg _))
+          (harmonicHyperbolicCap_nonneg _)
+    · filter_upwards [hd, hs.2, hcount, eventually_count_pos,
+        Real.tendsto_log_atTop.eventually_ge_atTop 1, eventually_gt_atTop (0:ℝ)]
+        with T hdT hδ hc hn hL hT
+      have hN : (0:ℝ) < (Ncount 0 T : ℝ) := by exact_mod_cast hn
+      have hM : 0 < Real.log T+Real.log (Real.log T) := by
+        have hll := Real.log_nonneg hL
+        linarith
+      have hK : 0 < C*T*(Real.log T)^3 := by positivity
+      apply strictHarmonicBudget_le_above_positiveCutoff T (d T) hdT
+        (Real.log T+Real.log (Real.log T)) (C*T*(Real.log T)^3)
+        (B₂*(Real.log T)^2+B₃*Real.log T+(Ncount 0 H : ℝ)) (ω T) (δ T)
+        hM hK hN
+      · exact le_max_left _ _
+      · dsimp [δ]
+        linarith [hδ.2.1]
+      · have hi := rightInclusiveCount_le_count H (1/2+δ T)
+        dsimp only at hc
+        change rightInclusiveCount T (1/2+δ T) ≤ _
+        linarith
+  exact ⟨hs.1, ht, actualSignedTailBudget_tendsto_zero_of_harmonic d δ ht,
+    signedBadHyperbolic_norm_tendsto_zero_of_harmonic d δ ht⟩
+end RiemannResearch.Analysis.ActualZeroPhaseMoments

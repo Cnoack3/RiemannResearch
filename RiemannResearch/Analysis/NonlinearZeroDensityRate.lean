@@ -449,3 +449,33 @@ theorem positiveCountCutoff_eventually_nearLine {α : Type*} {F : Filter α}
   exact ⟨positiveCountCutoff_nonneg _ _ hm, ht⟩
 
 end RiemannResearch.Analysis.ZeroDensityRate
+
+namespace RiemannResearch.Analysis.ZeroDensityRate
+/-- Exact difference of the nonlinear rates. -/
+theorem inghamRate_sub_identity (a b : ℝ)
+    (ha : 3-2*a ≠ 0) (hb : 3-2*b ≠ 0) :
+    inghamRate b-inghamRate a = 12*(b-a)/((3-2*b)*(3-2*a)) := by
+  have ha' : 3-a*2 ≠ 0 := by simpa [mul_comm] using ha
+  have hb' : 3-b*2 ≠ 0 := by simpa [mul_comm] using hb
+  unfold inghamRate
+  field_simp [ha, hb, ha', hb']
+  ring
+
+theorem inghamRate_mono_of_le {a b : ℝ} (hab : a ≤ b) (hb : b ≤ 1/2) :
+    inghamRate a ≤ inghamRate b := by
+  have ha0 : 0 < 3-2*a := by linarith
+  have hb0 : 0 < 3-2*b := by linarith
+  have he := inghamRate_sub_identity a b ha0.ne' hb0.ne'
+  have hn : 0 ≤ 12*(b-a)/((3-2*b)*(3-2*a)) := by positivity
+  linarith
+
+theorem positiveCountCutoff_exp_le_of_le {M A ω δ : ℝ}
+    (hM : 0 < M) (hA : 0 < A)
+    (hcut : positiveCountCutoff M A ω ≤ δ) (hδ : δ ≤ 1/2) :
+    A*Real.exp (-M*inghamRate δ) ≤ Real.exp (-ω) := by
+  have hr := inghamRate_mono_of_le hcut hδ
+  have he : Real.exp (-M*inghamRate δ) ≤
+      Real.exp (-M*inghamRate (positiveCountCutoff M A ω)) :=
+    Real.exp_le_exp.mpr (by nlinarith)
+  exact (mul_le_mul_of_nonneg_left he hA.le).trans (positiveCountCutoff_exp_le hM hA)
+end RiemannResearch.Analysis.ZeroDensityRate
