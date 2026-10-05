@@ -33,6 +33,8 @@ import RiemannResearch.Analysis.ActualUniformRationalLandau
 import RiemannResearch.Analysis.LandauGrowingSupport
 import RiemannResearch.Analysis.ActualLandauOperatorResidual
 import RiemannResearch.Analysis.ActualZeroNonlinearDensityTransfer
+import RiemannResearch.Analysis.CenteredHyperbolicFrames
+import RiemannResearch.Analysis.CenteredHyperbolicRows
 import RiemannResearch.Analysis.FiniteOscillatoryKernel
 import RiemannResearch.Analysis.MarkedContinuousTail
 import RiemannResearch.Analysis.MarkedIntegralCauchy

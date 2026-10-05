@@ -1,5 +1,45 @@
 # Theorem catalog
 
+### Endpoint Landau support and centered hyperbolic frames (2026-10-05)
+
+**Unconditional actual signed residual endpoint.**
+Analysis/ActualLandauOperatorResidual.lean adds
+actualLandauResidual_norm_tendsto_zero_critical_power_support:
+for any fixed real a and eventually positive integer support d(T),
+log d(T) <= a + (2/7)*log(T+3) implies the full signed residual tends
+to zero in Euclidean operator norm. The actual zero count retains its
+logarithmic gain; no density or RH premise is used. Every original integer,
+composite interaction, analytic multiplicity and the arithmetic main matrix
+remain in the exact residual. This is not a physical Pareto inverse bound.
+
+Analysis/LandauGrowingSupport.lean proves the exact critical envelope
+divided by L, its three-term limit, and strict polynomial support envelopes.
+Analysis/NonlinearZeroDensityRate.lean proves the exact source power-to-exp
+identity retaining log(log T), plus uniform scalar exponent cutoffs.
+
+**Established finite centered identities and conditional frame transfer.**
+Analysis/CenteredHyperbolicFrames.lean proves the exact cosh kernel and
+quadratic C/S factorization, scalar centered row series, sharp even diagonal
+half-centering, absolute operator-series summability, dimension-free
+half-factor remainder bound, and lower norm/injectivity transfer.
+The negative sinh square is retained. The finite transfer lists its form
+bound explicitly. Analysis/CenteredHyperbolicRows.lean realizes rectangular
+Euclidean analysis operators, proves their exact centered decomposition,
+identifies the concrete remainder with the full operator series, and supplies
+its half-factor norm bound from finite coordinate bounds. Its concrete lower
+frame theorem leaves only the hyperbolic form lower bound as an application
+input beyond the listed finite bounds.
+The improved z < 7/5 certificate is algebraic. The exact positive constant
+centeredSupportConstant=sqrt((8/3)*arcosh(7/5)) and its equivalence to
+cosh(3*c^2/8)<7/5 for nonnegative c are proved without decimal assumptions.
+
+**Open analytic/application obligations.**
+The actual Ingham/Selberg zero-density theorem is still Open in Lean.
+A cited theorem and Wolfram computations do not discharge this premise.
+The unconditional actual-zero growing-support frame specialization and
+the fully screened physical Pareto transfer remain Open.
+See RH/LandauEndpointCenteredFrames20261005.md for exact scope and sources.
+
 ### Signed Landau residual and nonlinear density consumers (2026-10-05)
 
 **Unconditional Landau residual assembly.**

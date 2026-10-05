@@ -5,6 +5,7 @@ Authors: RiemannResearch contributors
 -/
 import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
@@ -291,5 +292,31 @@ theorem stableCutoff_localSlope_pos {M ell R : ℝ}
   have hr := stableCutoff_range hell (le_of_lt hR) hB hbudget
   exact localSlope_pos_of_margin (by linarith) hr.1 hr.2 hR
     (stableCutoff_margin_of_budget hell (le_of_lt hR) hB hbudget)
+
+/-- Exact source power budget, retaining the log(log T) gain. -/
+theorem inghamPower_eq_expDecay {T L s : ℝ} (hT : 0 < T) (hL : 0 < L) :
+    T ^ (1 - inghamRate s) * L ^ (3 - inghamRate s) =
+      T * L ^ (3 : ℕ) * Real.exp (-(Real.log T + Real.log L) * inghamRate s) := by
+  rw [Real.rpow_def_of_pos hT, Real.rpow_def_of_pos hL,
+    show T = Real.exp (Real.log T) from (Real.exp_log hT).symm,
+    show L = Real.exp (Real.log L) from (Real.exp_log hL).symm]
+  rw [← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add]
+  congr 1
+  simp only [Real.log_exp]
+  ring
+
+theorem inghamRate_le_two_thirds {s : ℝ} (hs : s ≤ 3 / 8) :
+    inghamRate s ≤ 2 / 3 := by
+  have hden : 0 < 3 - 2 * s := by linarith
+  unfold inghamRate
+  apply (div_le_iff₀ hden).mpr
+  linarith
+
+theorem inghamRate_le_two_over_47 {s : ℝ} (hs : s ≤ 1 / 32) :
+    inghamRate s ≤ 2 / 47 := by
+  have hden : 0 < 3 - 2 * s := by linarith
+  unfold inghamRate
+  apply (div_le_iff₀ hden).mpr
+  linarith
 
 end RiemannResearch.Analysis.ZeroDensityRate

@@ -19,9 +19,10 @@ The actual rational Landau provider is assembled in the Euclidean operator
 norm on the same Fin d space as the phase Gram. The negative prime-power
 main term retains every integer and composite-frequency interaction.
 The exact diagonal, reflection symmetry, original Ncount and full signed
-residual are explicit. Square-root-log support gives residual norm tending
-to zero for every fixed coefficient c. No density, simplicity or RH premise
-is used for this residual result. The main arithmetic operator is retained;
+residual are explicit. Residual norm tends to zero for every fixed
+square-root-log support coefficient and at polynomial endpoint
+d(T)=O((T+3)^(2/7)). No density, simplicity or RH premise
+is used for these residual results. The main arithmetic operator is retained;
 this result alone does not assert a frame gap or physical Pareto saturation.
 Source for the analytic contour strategy: Gonek (1985), Theorem 1,
 https://www.sas.rochester.edu/mth/people/faculty/gonek-steve/assets/pdf/8-landau-form.pdf .
@@ -208,6 +209,30 @@ theorem eventually_count_ge_height_add_three :
   have hmul := mul_le_mul_of_nonneg_left hscaled (by linarith : 0 ≤ T)
   nlinarith only [hN, hT, hmul]
 
+/-- Preserve the logarithmic zero-count gain after shifting height by three. -/
+theorem eventually_count_ge_height_add_three_log :
+    ∀ᶠ T : ℝ in atTop,
+      (1 / (64 * Real.pi)) * (T + 3) * Real.log (T + 3) ≤
+        (Ncount 0 T : ℝ) := by
+  filter_upwards [eventually_count_ge_log, eventually_ge_atTop (9 : ℝ)]
+    with T hN hT
+  have hT0 : 0 < T := by linarith
+  have hY : T + 3 ≤ 2 * T := by linarith
+  have hL : Real.log (T + 3) ≤ 2 * Real.log T := by
+    calc
+      _ ≤ Real.log (T * T) := Real.log_le_log (by linarith) (by nlinarith)
+      _ = _ := by rw [Real.log_mul hT0.ne' hT0.ne']; ring
+  have hprod : (T + 3) * Real.log (T + 3) ≤ 4 * T * Real.log T := by
+    have hh := mul_le_mul hY hL
+      (Real.log_nonneg (by linarith : 1 ≤ T + 3)) (by linarith : 0 ≤ 2 * T)
+    nlinarith only [hh]
+  calc
+    _ = (1 / (64 * Real.pi)) * ((T + 3) * Real.log (T + 3)) := by ring
+    _ ≤ (1 / (64 * Real.pi)) * (4 * T * Real.log T) :=
+      mul_le_mul_of_nonneg_left hprod (by positivity)
+    _ = (1 / (16 * Real.pi)) * T * Real.log T := by field_simp; ring
+    _ ≤ _ := hN
+
 end RiemannResearch.Analysis.ActualZeroOrdinate
 
 namespace RiemannResearch.Analysis.ActualZeroPhaseMoments
@@ -256,6 +281,61 @@ theorem actualLandauResidual_norm_tendsto_zero_sqrt_support
         unfold landauScalarEnvelope
         ring
       _ ≤ _ := mul_le_mul_of_nonneg_left (matrixEnvelope_mono hL hs.2) hC.le
+  · exact hmajor
+
+
+/-- Unconditional endpoint polynomial support for the full signed residual.
+The constant offset allows d(T) = O((T+3)^(2/7)). This does not remove the
+arithmetic main matrix or assert a phase frame, density estimate, or RH. -/
+theorem actualLandauResidual_norm_tendsto_zero_critical_power_support
+    (d : ℝ → ℕ) (a : ℝ)
+    (hsupport : ∀ᶠ T : ℝ in atTop,
+      1 ≤ d T ∧ Real.log (d T : ℝ) ≤ a + (2 / 7 : ℝ) * Real.log (T + 3)) :
+    Tendsto (fun T : ℝ => ‖actualLandauResidual T (d T)‖) atTop (nhds 0) := by
+  obtain ⟨C, hC, hbound⟩ := exists_actualLandauResidual_norm_bound
+  let q : ℝ := 1 / (64 * Real.pi)
+  have hq : 0 < q := by dsimp [q]; positivity
+  have hplus : Tendsto (fun T : ℝ => T + 3) atTop atTop := by
+    apply tendsto_atTop.2
+    intro b
+    filter_upwards [eventually_ge_atTop b] with T hT
+    linarith
+  have hlog := Real.tendsto_log_atTop.comp hplus
+  have hmajor : Tendsto (fun T : ℝ =>
+      (C / q) * (matrixEnvelope (Real.log (T + 3))
+        (a + (2 / 7 : ℝ) * Real.log (T + 3)) / Real.log (T + 3)))
+      atTop (nhds 0) := by
+    simpa only [Function.comp_def, mul_zero] using
+      ((matrixEnvelope_critical_div_tendsto_zero a).const_mul (C / q)).comp hlog
+  apply squeeze_zero'
+  · exact Eventually.of_forall (fun T => norm_nonneg _)
+  · filter_upwards [eventually_count_ge_height_add_three_log,
+      eventually_ge_atTop (9 : ℝ), hsupport] with T hNheight hT hs
+    have hY : 0 < T + 3 := by linarith
+    have hLpos : 0 < Real.log (T + 3) := Real.log_pos (by linarith)
+    change q * (T + 3) * Real.log (T + 3) ≤ (Ncount 0 T : ℝ) at hNheight
+    have hNr : (0 : ℝ) < (Ncount 0 T : ℝ) :=
+      lt_of_lt_of_le (by positivity) hNheight
+    have hN : 0 < Ncount 0 T := by exact_mod_cast hNr
+    have hd : (0 : ℝ) < (d T : ℝ) := by
+      exact_mod_cast (lt_of_lt_of_le Nat.zero_lt_one hs.1)
+    have henv : 0 ≤ landauScalarEnvelope T (d T) := by
+      unfold landauScalarEnvelope
+      positivity
+    calc
+      _ ≤ (d T : ℝ) * C * landauScalarEnvelope T (d T) /
+          (Ncount 0 T : ℝ) := hbound T (d T) hT hN
+      _ ≤ (d T : ℝ) * C * landauScalarEnvelope T (d T) /
+          (q * (T + 3) * Real.log (T + 3)) :=
+        div_le_div_of_nonneg_left (by positivity) (by positivity) hNheight
+      _ = (C / q) * (matrixEnvelope (Real.log (T + 3))
+          (Real.log (d T : ℝ)) / Real.log (T + 3)) := by
+        rw [matrixEnvelope_eq_rpow hY hd]
+        unfold landauScalarEnvelope
+        field_simp [hq.ne', hY.ne', hLpos.ne'] <;> ring
+      _ ≤ _ := mul_le_mul_of_nonneg_left
+        (div_le_div_of_nonneg_right (matrixEnvelope_mono hLpos.le hs.2) hLpos.le)
+        (by positivity)
   · exact hmajor
 
 end RiemannResearch.Analysis.ActualZeroPhaseMoments
