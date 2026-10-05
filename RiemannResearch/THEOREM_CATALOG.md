@@ -1,5 +1,45 @@
 # Theorem catalog
 
+### Horizontal phase-Gram commutators and norm bootstrap (2026-10-05)
+
+**Established abstract deterministic results.**
+Analysis/HorizontalPhaseBootstrap.lean proves `commutator_sub_scalar` and
+`iterComm_sub_scalar`, retaining the exact scalar cancellation before norm
+estimates. `iterComm_norm_le_half_pos` gives the sharp factor-one-half
+budget from an explicit centered-moment norm premise.
+`evenCorrection_summable_and_norm_le` proves absolute convergence of the
+actual even commutator series and its bound
+`(g/2)*(cosh(delta*w)-1)`; `evenCorrection_truncation_norm_le` retains the
+complete finite head and explicit scalar remainder.
+`norm_sub_bootstrap`, `norm_self_le_of_bootstrap`, and
+`norm_sub_lt_one_of_bootstrap` solve the self-consistent norm estimate.
+`norm_sub_one_bound_of_evenCorrection` consumes the exact full correction
+identity, including the bad-copy remainder. `isUnit_of_evenCorrection`
+gives Banach-algebra invertibility from the strict explicit gap
+`alpha+beta+cosh(delta*w)<2`. These are genuine normed-algebra theorems,
+not claims about an unspecified default matrix norm.
+
+**Conditional research reduction: actual-zeta specialization is Open.**
+The accompanying paper-level source audit
+RH/GrowingPhaseGramBootstrapAudit20261005.md derives an optimized cutoff,
+the sharp factor one-half, a smaller rational-Landau remainder, and
+uniform Euclidean phase-Gram conditioning for
+`log X / sqrt(log T) -> c < sqrt((4/3)*arcosh 2)`.
+This is the full multiplicity Gram on every integer frequency 1<=n<=X.
+The asymptotic spectral lower and upper bounds are
+`2*(2-q)/(3-q)` and `2/(3-q)`, with `q=cosh(3*c^2/4)`.
+Open Lean providers: PSD-to-centered operator norm, actual-zero even
+commutator decomposition, uniform rational Landau estimate, uniform
+zero density and its weighted tail, and asymptotic spectral assembly.
+Actual-zero multiplicity and reflection already exist in
+Analysis/ActualZeroOrdinate.lean. The reviewed paper inputs are
+Ford--Zaharescu, Lemma 1 (https://www.ford126.web.illinois.edu/wwwpapers/fz.pdf)
+and Chourasiya--Simonic, Corollary 1 (https://arxiv.org/pdf/2507.15184).
+This phase Gram does not replace the screened physical Pareto inverse.
+The RH-equivalent cofinal arithmetic bound, signed inverse saturation,
+and bounded-frequency signed marked cancellation remain unproved.
+
+
 ### Strengthened exact normalization and literal marked tails (2026-10-04)
 
 **Established natural-error decomposition.**

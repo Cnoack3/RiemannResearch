@@ -2,6 +2,11 @@
 
 Status: research argument only. None of the analytic providers below has been formalized here, and this is outside the Lean-established result ledger.
 
+Historical route: the corrected and strengthened argument is now recorded in
+`GrowingPhaseGramBootstrapAudit20261005.md`, including a sharp factor one-half
+and fixed-critical-scale conditioning. The abstract algebraic core is proved in
+`Analysis/HorizontalPhaseBootstrap.lean`; actual-zeta providers remain Open.
+
 Let `L = log T`, `ell = log X`, `d = floor X`, and use every integer frequency `1 <= n <= d`. Let `G` be the normalized multiplicity phase Gram and `H` the centered Landau Gram with entries `N(T)^(-1) sum (n/m)^(rho-1/2)`. Reflection across `Re rho = 1/2` expresses its real-part correction using `cosh`.
 
 ## Source-checked density quantifiers

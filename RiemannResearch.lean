@@ -5,6 +5,7 @@ import RiemannResearch.Analysis.GaussianAbsoluteWindowMass
 import RiemannResearch.Analysis.GaussianCellGeometry
 import RiemannResearch.Analysis.GaussianSpectralWindows
 import RiemannResearch.Analysis.GrowingPhaseCovarianceAssembly
+import RiemannResearch.Analysis.HorizontalPhaseBootstrap
 import RiemannResearch.Analysis.MarkedContinuousTail
 import RiemannResearch.Analysis.MarkedIntegralCauchy
 import RiemannResearch.Analysis.MarkedLaplaceKernel

@@ -77,8 +77,12 @@ Bounded-frequency signed marked cancellation, the cofinal arithmetic bound,
 and signed inverse saturation remain unproved. No new proof of RH is asserted.
 `#print axioms` reports foundational axioms, not local theorem hypotheses;
 the catalog separately records unresolved domain-specific providers.
-The proposed larger-support bootstrap is recorded separately as unverified
-research, not as a Lean-established result.
+The strengthened phase-Gram argument is recorded in
+`GrowingPhaseGramBootstrapAudit20261005.md`. Its abstract commutator series,
+truncation, norm absorption and invertibility consumer are Lean-verified in
+`Analysis/HorizontalPhaseBootstrap.lean`; the actual-zeta analytic providers
+and specialization remain Open. Its sampling inverse does not replace the
+screened physical Pareto inverse.
 
 Validation record: code commit `c60aabaacbfba72fa2f4db03b5195885f4eff22b`
 passed checkpoint validation of all 27 changed Lean modules and 49 affected
