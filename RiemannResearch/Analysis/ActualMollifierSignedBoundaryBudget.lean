@@ -8,6 +8,7 @@ import RiemannResearch.Analysis.ComplexLittlewoodBoundary
 import RiemannResearch.Analysis.ActualMollifierRectangleContour
 import RiemannResearch.Analysis.ActualMollifierRightBoundary
 import RiemannResearch.Analysis.ActualMollifierBoundaryAvoidance
+import RiemannResearch.Analysis.ComplexQuadraticDetectorMoments
 
 /-!
 # The remaining signed analytic budget and one-point harmonic transfer
@@ -343,3 +344,109 @@ theorem shrinking_harmonic_tail_of_leftRectangleBudget
     (Eventually.of_forall growingMollifierCutoff_height) hbudget
 
 end RiemannResearch.Analysis.ActualZeroPhaseMoments
+
+namespace RiemannResearch.Analysis.InghamMollifier
+open MeasureTheory
+
+/-- The actual quadratic detector is dominated by every error moment of order
+one through two. Interval integrability remains explicit. -/
+theorem zetaDetector_left_log_integral_le_moment
+    (X : ℕ) {α H T p : ℝ} (hHT : H ≤ T) (hp1 : 1 ≤ p) (hp2 : p ≤ 2)
+    (hlog : IntervalIntegrable (fun t =>
+      Real.log ‖zetaDetector X ((α : ℂ) + (t : ℂ) * Complex.I)‖) volume H T)
+    (hmoment : IntervalIntegrable (fun t =>
+      ‖riemannZeta ((α : ℂ) + (t : ℂ) * Complex.I) *
+        mollifier X ((α : ℂ) + (t : ℂ) * Complex.I) - 1‖ ^ p) volume H T) :
+    (∫ t in H..T, Real.log ‖zetaDetector X ((α : ℂ) + (t : ℂ) * Complex.I)‖) ≤
+      ∫ t in H..T, ‖riemannZeta ((α : ℂ) + (t : ℂ) * Complex.I) *
+        mollifier X ((α : ℂ) + (t : ℂ) * Complex.I) - 1‖ ^ p := by
+  simp_rw [zetaDetector_eq_one_sub_error_sq] at hlog ⊢
+  exact Complex.integral_log_norm_one_sub_sq_le_rpow hHT hp1 hp2 hlog hmoment
+
+end RiemannResearch.Analysis.InghamMollifier
+
+namespace RiemannResearch.Analysis.ActualZeroOrdinate
+open InghamMollifier Complex Set MeasureTheory
+
+/-- A concrete norm-power moment and the compatible signed horizontal estimate
+supply the remaining budget. This is a conditional research reduction:
+the analytic moment and horizontal estimates are not inferred from it. -/
+theorem signedLeftRectangleBudget_of_moment_and_horizontal
+    (X : ℕ) {α H T σ F p M A : ℝ} (hHT : H ≤ T)
+    (hp1 : 1 ≤ p) (hp2 : p ≤ 2)
+    (hlog : IntervalIntegrable (fun t =>
+      Real.log ‖zetaDetector X ((α : ℂ) + (t : ℂ) * I)‖) volume H T)
+    (hmi : IntervalIntegrable (fun t =>
+      ‖riemannZeta ((α : ℂ) + (t : ℂ) * I) *
+        mollifier X ((α : ℂ) + (t : ℂ) * I) - 1‖ ^ p) volume H T)
+    (hm : (∫ t in H..T, ‖riemannZeta ((α : ℂ) + (t : ℂ) * I) *
+        mollifier X ((α : ℂ) + (t : ℂ) * I) - 1‖ ^ p) ≤ M)
+    (hhorizontal : ∀ B U : ℝ → ℂ, Continuous B → Continuous U →
+      (RectangleIntegral'
+        (fun s => (s - ((α : ℂ) + (H : ℂ) * I)) * logDeriv (zetaDetector X) s)
+        ((α : ℂ) + (H : ℂ) * I) (((3 / 2 : ℝ) : ℂ) + (T : ℂ) * I)).re =
+        logRectangleBoundary (zetaDetector X)
+          (fun u => (B u).im) (fun u => (U u).im) α (3 / 2) H T / (2 * Real.pi) →
+      (∫ u in α..(3 / 2), (U u).im) - (∫ u in α..(3 / 2), (B u).im) ≤ A)
+    (hMA : M + A ≤ 2 * Real.pi * (σ - α) * F) :
+    SignedLeftRectangleBudget X α H T σ F := by
+  intro B U hBc hUc hn
+  have hl := (zetaDetector_left_log_integral_le_moment X hHT hp1 hp2 hlog hmi).trans hm
+  have hh := hhorizontal B U hBc hUc hn
+  linarith
+
+/-- Exact logarithmic right-side cost for any X>=37, with the original
+closed top T and finite-height subtraction. No X>=T+37 premise is needed. -/
+theorem densityDifference_le_of_expandedLeftRectangleBudget_sharpRight
+    {X : ℕ} (hX : 37 ≤ X) {H T σ F L η : ℝ}
+    (hHT : H ≤ T) (hL : 0 < L) (hη : 0 < η)
+    (hbudget : ExpandedLeftRectangleBudget X H T σ (σ - η / L) F) :
+    rightInclusiveCount T σ - rightInclusiveCount H σ ≤
+      F + (T + 1) * (-Real.log (1 - 36 / (X : ℝ))) * L / (2 * Real.pi * η) := by
+  obtain ⟨α, H', T', hαβ, hαmax, hH', hH'H, hTT', hT'T, hborder, hleft⟩ := hbudget
+  have hHT' : H' ≤ T' := hH'H.trans (hHT.trans hTT')
+  have hgap : η / L ≤ σ - α := by linarith
+  have hασ : α < σ := by linarith [div_pos hη hL]
+  have hXp : 0 < (X : ℝ) := by exact_mod_cast (show 0 < X by omega)
+  have hx36 : (36 : ℝ) < (X : ℝ) := by exact_mod_cast (show 36 < X by omega)
+  have hbase : 0 < 1 - 36 / (X : ℝ) := by
+    have hh := (div_lt_one hXp).mpr hx36
+    linarith
+  let q : ℝ := -Real.log (1 - 36 / (X : ℝ))
+  have hq : 0 ≤ q := by
+    dsimp [q]
+    apply neg_nonneg.mpr
+    have hh := Real.log_le_log hbase (show 1 - 36 / (X : ℝ) ≤ 1 by
+      linarith [div_nonneg (by norm_num : (0 : ℝ) ≤ 36) hXp.le])
+    simpa using hh
+  have hT1 : 0 ≤ T + 1 := by linarith
+  let E : ℝ := (T + 1) * q * L / (2 * Real.pi * η)
+  have hE : 0 ≤ E := by dsimp [E]; positivity
+  have heq : 2 * Real.pi * (η / L) * E = (T + 1) * q := by
+    dsimp [E]
+    field_simp [Real.pi_ne_zero, hL.ne', hη.ne']
+  have hcost : (T' - H') * q ≤ 2 * Real.pi * (σ - α) * E := by
+    calc
+      (T' - H') * q ≤ (T + 1) * q :=
+        mul_le_mul_of_nonneg_right (by linarith) hq
+      _ = 2 * Real.pi * (η / L) * E := heq.symm
+      _ ≤ _ := mul_le_mul_of_nonneg_right
+        (mul_le_mul_of_nonneg_left hgap (by positivity)) hE
+  obtain ⟨B, U, hBc, hUc, _, _, hn⟩ :=
+    Complex.exists_logRectangleBoundary_eq_contour hαβ hHT'
+      (zetaDetector_analyticOnNhd_rectangle X hαβ hH' hHT') hborder
+  have hl := hleft B U hBc hUc hn
+  have hb :
+      (∫ t in H'..T', Real.log ‖zetaDetector X ((α : ℂ) + (t : ℂ) * I)‖) +
+      (∫ u in α..(3 / 2), (U u).im) - (∫ u in α..(3 / 2), (B u).im) ≤
+      2 * Real.pi * (σ - α) * (F + E) -
+        (T' - H') * (-Real.log (1 - 36 / (X : ℝ))) := by
+    change _ ≤ 2 * Real.pi * (σ - α) * (F + E) - (T' - H') * q
+    nlinarith [hl, hcost]
+  have hc := densityDifference_le_of_normalizedContour_signedBudget hX B U
+    hαβ hH' hHT' hασ hborder hn hb
+  have hw := rightInclusiveDifference_le_expandedWindow hH'H hHT hTT' σ
+  rw [rightInclusiveWindow_eq_sub hHT'] at hw
+  exact hw.trans hc
+
+end RiemannResearch.Analysis.ActualZeroOrdinate

@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Quadratic first moments and flexible signed mollifier budgets (2026-10-05)
+
+Analysis/ComplexQuadraticDetectorMoments.lean proves log(1+x^2)<=x^p
+for x>=0 and 1<=p<=2, complex quadratic-detector domination, and its
+interval-integral version with explicit integrability assumptions.
+
+Analysis/ActualMollifierSignedBoundaryBudget.lean applies this bound to the
+actual zeta detector and constructs SignedLeftRectangleBudget from concrete
+moment and compatible-horizontal estimates. Its new finite-X count consumer
+requires only X>=37, replacing X>=T+37, with the exact extra term
+(T+1)(-log(1-36/X))log T/(2*pi*eta). These are conditional reductions:
+the near-line moments, Gabriel interpolation, and horizontal estimates remain
+analytic provider obligations.
+
+RH/MollifierFirstMomentContinuation20261005.md proves on paper a
+height-independent signed right bound Li_2(36/X)/log(X+1)<=1 and a
+first-moment shrinking-tail refinement. Those analytic series and moment
+arguments are not asserted to be kernel-formalized, and normalized tail
+decay does not prove RH. The original finite head, full N(T), detector
+multiplicities, and compatible boundary signs are retained.
+
 
 ### Proved Littlewood identity and unconditional signed right boundary (2026-10-05)
 

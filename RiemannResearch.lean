@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.ComplexQuadraticDetectorMoments
 import RiemannResearch.Analysis.CellOccupancyOverlap
 import RiemannResearch.Analysis.DilogarithmSeries
 import RiemannResearch.Analysis.FiniteWeightedSchurPairing
