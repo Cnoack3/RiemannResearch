@@ -6,6 +6,11 @@ import RiemannResearch.Analysis.GaussianCellGeometry
 import RiemannResearch.Analysis.GaussianSpectralWindows
 import RiemannResearch.Analysis.GrowingPhaseCovarianceAssembly
 import RiemannResearch.Analysis.HorizontalPhaseBootstrap
+import RiemannResearch.Analysis.HorizontalEuclideanMoments
+import RiemannResearch.Analysis.ActualZeroCountAsymptotics
+import RiemannResearch.Analysis.ActualZeroPhaseMoments
+import RiemannResearch.Analysis.ActualZeroLandauContour
+import RiemannResearch.Analysis.FiniteOscillatoryKernel
 import RiemannResearch.Analysis.MarkedContinuousTail
 import RiemannResearch.Analysis.MarkedIntegralCauchy
 import RiemannResearch.Analysis.MarkedLaplaceKernel

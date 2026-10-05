@@ -26,8 +26,10 @@ multiplicity zeroMult = analyticOrderAt ζ. Ingredients (all proved here from Ma
 -/
 import RiemannResearch.RH.WeilExplicitFormula.Analytic.RectangleLogDeriv
 import RiemannResearch.RH.WeilExplicitFormula.Statement.SeamClosed
+import Mathlib.Tactic.FunProp
 
 open Complex Set Topology Filter Real
+open scoped BigOperators
 
 noncomputable section
 
@@ -167,6 +169,102 @@ theorem rectangleIntegral'_logDeriv_completedZeta_eq_Ncount {T₁ T₂ : ℝ} (h
   rw [Set.Finite.mem_toFinset] at hρ
   obtain ⟨⟨_, h1, h2⟩, _⟩ := hρ
   rw [analyticOrderNatAt_completedRiemannZeta h1 (fun h' => by simp [h'] at h2)]
+
+/-! ## Weighted actual-zero contour identity
+
+This extends the preceding actual zero-count proof to an analytic weight and
+variable rectangle width. All ordinary analyticity and boundary conditions
+are explicit. The centered exponential result is an exact equality; a uniform
+Landau estimate remains a separate analytic obligation.
+-/
+
+/-- Weighted argument principle for the actual completed zeta function, with
+all actual multiplicities retained, on [1-c,c] x [T1,T2]. -/
+theorem rectangleIntegral'_mul_logDeriv_completedZeta_eq_zero_sum
+    {T₁ T₂ c : ℝ} (hc : 1 < c) (hT₁ : 0 < T₁) (hT : T₁ ≤ T₂)
+    (hgood₁ : ∀ ρ, IsNontrivialZero ρ → ρ.im ≠ T₁)
+    (hgood₂ : ∀ ρ, IsNontrivialZero ρ → ρ.im ≠ T₂)
+    (g : ℂ → ℂ) (hg : Differentiable ℂ g) :
+    RectangleIntegral' (fun s => g s * logDeriv completedRiemannZeta s)
+        ((1 - c : ℝ) + T₁ * I) ((c : ℝ) + T₂ * I)
+      = ∑ ρ ∈ (zetaSeam.finite_window T₁ T₂).toFinset,
+          (zeroMult ρ : ℂ) * g ρ := by
+  classical
+  set z : ℂ := (1 - c : ℝ) + T₁ * I with hzdef
+  set w : ℂ := (c : ℝ) + T₂ * I with hwdef
+  have hzre : z.re = 1 - c := by simp [z]
+  have hzim : z.im = T₁ := by simp [z]
+  have hwre : w.re = c := by simp [w]
+  have hwim : w.im = T₂ := by simp [w]
+  have hre : z.re ≤ w.re := by rw [hzre, hwre]; linarith
+  have him : z.im ≤ w.im := by rw [hzim, hwim]; exact hT
+  have hmem : ∀ s : ℂ, s ∈ Rectangle z w ↔
+      (1 - c ≤ s.re ∧ s.re ≤ c) ∧ (T₁ ≤ s.im ∧ s.im ≤ T₂) := by
+    intro s
+    simp only [Rectangle, mem_reProdIm, hzre, hzim, hwre, hwim,
+      uIcc_of_le (show (1 - c : ℝ) ≤ c by linarith), uIcc_of_le hT, mem_Icc]
+  have hf : AnalyticOnNhd ℂ completedRiemannZeta (Rectangle z w) := by
+    intro s hs
+    have hi : 0 < s.im := by linarith [((hmem s).mp hs).2.1]
+    exact analyticAt_completedRiemannZeta
+      (fun h => by simp [h] at hi) (fun h => by simp [h] at hi)
+  have hga : AnalyticOnNhd ℂ g (Rectangle z w) := fun s _ => hg.analyticAt s
+  have hfin := zetaSeam.finite_window T₁ T₂
+  have hZ : ∀ s ∈ Rectangle z w,
+      completedRiemannZeta s = 0 ↔ s ∈ hfin.toFinset := by
+    intro s hs
+    rw [Set.Finite.mem_toFinset]
+    obtain ⟨⟨hr1, hr2⟩, ⟨hi1, hi2⟩⟩ := (hmem s).mp hs
+    rw [completedRiemannZeta_eq_zero_iff]
+    constructor
+    · intro hnz
+      exact ⟨hnz, lt_of_le_of_ne hi1
+        (fun h' => hgood₁ s hnz h'.symm), hi2⟩
+    · rintro ⟨hnz, _⟩
+      exact hnz
+  have hZsub : ((hfin.toFinset : Finset ℂ) : Set ℂ) ⊆ Rectangle z w := by
+    intro s hs
+    rw [Finset.mem_coe, Set.Finite.mem_toFinset] at hs
+    obtain ⟨⟨_, h1, h2⟩, hi1, hi2⟩ := hs
+    exact (hmem s).mpr ⟨⟨by linarith, by linarith⟩, hi1.le, hi2⟩
+  have hborder : ∀ s ∈ RectangleBorder z w,
+      completedRiemannZeta s ≠ 0 := by
+    intro s hs h0
+    obtain ⟨⟨hr1, hr2⟩, ⟨hi1, hi2⟩⟩ :=
+      (hmem s).mp (rectangleBorder_subset_rectangle z w hs)
+    have hnz := completedRiemannZeta_eq_zero_iff.mp h0
+    simp only [RectangleBorder, mem_union, mem_reProdIm, mem_singleton_iff,
+      hzre, hzim, hwre, hwim] at hs
+    rcases hs with ((⟨_, h'⟩ | ⟨h', _⟩) | ⟨_, h'⟩) | ⟨h', _⟩
+    · exact hgood₁ s hnz h'
+    · linarith [hnz.2.1]
+    · exact hgood₂ s hnz h'
+    · linarith [hnz.2.2]
+  have key := Zeta23.Analytic.rectangleIntegral'_mul_logDeriv
+    hre him hf hga hborder hfin.toFinset hZ hZsub
+  rw [key]
+  refine Finset.sum_congr rfl (fun ρ hρ => ?_)
+  rw [Set.Finite.mem_toFinset] at hρ
+  obtain ⟨⟨_, h1, h2⟩, _⟩ := hρ
+  rw [analyticOrderNatAt_completedRiemannZeta h1
+    (fun h' => by simp [h'] at h2)]
+
+/-- Centered exponential specialization of the exact weighted contour identity.
+No bound for this contour integral is asserted. -/
+theorem rectangleIntegral'_centered_exp_logDeriv_completedZeta_eq_zero_sum
+    {T₁ T₂ c : ℝ} (hc : 1 < c) (hT₁ : 0 < T₁) (hT : T₁ ≤ T₂)
+    (hgood₁ : ∀ ρ, IsNontrivialZero ρ → ρ.im ≠ T₁)
+    (hgood₂ : ∀ ρ, IsNontrivialZero ρ → ρ.im ≠ T₂) (u : ℝ) :
+    RectangleIntegral'
+        (fun s => Complex.exp ((u : ℂ) * (s - 1 / 2)) *
+          logDeriv completedRiemannZeta s)
+        ((1 - c : ℝ) + T₁ * I) ((c : ℝ) + T₂ * I)
+      = ∑ ρ ∈ (zetaSeam.finite_window T₁ T₂).toFinset,
+          (zeroMult ρ : ℂ) * Complex.exp ((u : ℂ) * (ρ - 1 / 2)) := by
+  exact rectangleIntegral'_mul_logDeriv_completedZeta_eq_zero_sum
+    hc hT₁ hT hgood₁ hgood₂
+    (fun s => Complex.exp ((u : ℂ) * (s - 1 / 2))) (by fun_prop)
+
 
 end RvM
 end Zeta23

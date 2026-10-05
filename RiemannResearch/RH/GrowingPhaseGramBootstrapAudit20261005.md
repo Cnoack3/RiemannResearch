@@ -5,8 +5,11 @@ Research continuation requested 4 October 2026.
 This note supersedes the estimates in `UnverifiedHorizontalBootstrapRoute20261004.md`.
 The source review and the mathematical argument below are paper-level work.
 The abstract normed-algebra commutator series and bootstrap are separately
-formalized in `Analysis/HorizontalPhaseBootstrap.lean`. The actual-zeta
-specialization and analytic providers are not Lean-verified.
+formalized in `Analysis/HorizontalPhaseBootstrap.lean`. Euclidean moment
+centering, the actual finite-copy moment provider, masked signed corrections,
+weighted actual zero contour and eventual count normalization are now checked;
+see `ActualZetaAnalyticProviderAudit20261005.md`. The quantitative Landau,
+density, weighted bad-tail and complete operator-series providers remain Open.
 
 ## Full dictionary and exact reflection identity
 
@@ -194,8 +197,9 @@ publication; the checkpoint is the publication record.
 
 Open for the actual-zeta Lean specialization:
 
-1. PSD Euclidean operator norm centering and the moment domination provider.
-2. The actual-zero good/bad commutator decomposition.
+1. The actual-zero operator-series identity for the good correction and the
+   complete complementary bad contribution. The Euclidean moment centering
+   provider and scalar masked signed corrections are already Established.
 3. The uniform centered Landau formula with rational-frequency remainders.
 4. Uniform zero density and its weighted bad-copy tail.
 5. The asymptotic support and spectral eigenvalue assembly.

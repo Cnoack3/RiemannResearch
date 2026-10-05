@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Actual zeta provider progress (2026-10-05)
+
+**Established actual providers.** Analysis/HorizontalEuclideanMoments.lean
+proves Euclidean continuous-operator centering from actual positivity and
+exact finite rank-one moment domination. Analysis/ActualZeroPhaseMoments.lean
+specializes to every actual zero copy and integer frequency with the original
+Ncount normalizer, discharging the old centered-moment norm premise and
+proving absolute summability of its even commutator series.
+Analysis/ActualZeroCountAsymptotics.lean proves eventual
+`Ncount 0 T >= T*log T/(16*pi)` and positivity from the already proved actual
+Riemann-von Mangoldt theorem. Analysis/ActualZeroOrdinate.lean proves the
+complete good/bad split and both masked signed cosh corrections.
+RvM/CountByIntegral.lean proves the actual weighted completed-zeta contour
+identity and its centered exponential specialization. Analysis/ActualZeroLandauContour.lean
+proves the direct zeta analogue. Analysis/FiniteOscillatoryKernel.lean proves
+the exact finite exponential integral, rational nonresonant norm bound 4*n,
+and exact resonant value B-A. Ordinary contour boundary and analyticity
+conditions remain explicit.
+
+**Conditional research reduction remains Open.** Uniform rational Landau,
+uniform zero density, the weighted bad tail, exact actual operator-series
+identification, microscopic square budget and spectral assembly are not
+supplied by these providers. The precise source audit and smaller sufficient
+rational Landau target are in RH/ActualZetaAnalyticProviderAudit20261005.md.
+
 ### Horizontal phase-Gram commutators and norm bootstrap (2026-10-05)
 
 **Established abstract deterministic results.**
@@ -28,9 +53,11 @@ uniform Euclidean phase-Gram conditioning for
 This is the full multiplicity Gram on every integer frequency 1<=n<=X.
 The asymptotic spectral lower and upper bounds are
 `2*(2-q)/(3-q)` and `2/(3-q)`, with `q=cosh(3*c^2/4)`.
-Open Lean providers: PSD-to-centered operator norm, actual-zero even
-commutator decomposition, uniform rational Landau estimate, uniform
-zero density and its weighted tail, and asymptotic spectral assembly.
+The PSD-to-centered operator norm and actual finite moment provider are now
+Established in HorizontalEuclideanMoments.lean and ActualZeroPhaseMoments.lean.
+Open Lean providers: actual-zero even commutator identification, uniform
+rational Landau estimate, uniform zero density and its weighted tail, and
+asymptotic spectral assembly.
 Actual-zero multiplicity and reflection already exist in
 Analysis/ActualZeroOrdinate.lean. The reviewed paper inputs are
 Ford--Zaharescu, Lemma 1 (https://www.ford126.web.illinois.edu/wwwpapers/fz.pdf)

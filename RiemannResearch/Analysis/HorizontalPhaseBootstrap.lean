@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: RiemannResearch contributors
+-/
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 import Mathlib.Analysis.Normed.Group.InfiniteSum
 import Mathlib.Topology.Algebra.InfiniteSum.Order
@@ -15,9 +20,10 @@ positive-order commutator when its centered-moment norm premise holds.
 The actual even cosh series gives absolute convergence, an explicit finite
 truncation bound, and deterministic norm absorption and invertibility.
 
-For Euclidean positive operators, the centered-moment premise follows from
-the spectral theorem; this file keeps that premise explicit rather than
-silently using an entrywise matrix norm. The exact actual-zero commutator
+For Euclidean positive operators, the centered-moment premise is proved from
+Mathlib's Rayleigh characterization in HorizontalEuclideanMoments.lean and
+specialized to every actual zero copy in ActualZeroPhaseMoments.lean.
+This abstract module retains its explicit norm premise. The exact actual-zero commutator
 identity, uniform Landau estimate, and zero-density providers are separate
 formalization obligations. The audit note cites Ford--Zaharescu Lemma 1
 and Chourasiya--Simonic Corollary 1 for those paper-level analytic inputs.

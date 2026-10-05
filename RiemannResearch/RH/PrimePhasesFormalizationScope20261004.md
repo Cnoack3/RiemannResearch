@@ -80,8 +80,14 @@ the catalog separately records unresolved domain-specific providers.
 The strengthened phase-Gram argument is recorded in
 `GrowingPhaseGramBootstrapAudit20261005.md`. Its abstract commutator series,
 truncation, norm absorption and invertibility consumer are Lean-verified in
-`Analysis/HorizontalPhaseBootstrap.lean`; the actual-zeta analytic providers
-and specialization remain Open. Its sampling inverse does not replace the
+`Analysis/HorizontalPhaseBootstrap.lean`. The actual Euclidean moment
+provider, symmetric masked corrections, both weighted zero contours,
+finite rational kernels with exact resonance, and eventual
+`Ncount 0 T >= T*log T/(16*pi)` normalization are now Established.
+`ActualZetaAnalyticProviderAudit20261005.md` records their declarations and
+remaining obligations. Uniform rational Landau, zero density, the weighted
+bad tail, exact actual operator-series identification and spectral assembly
+remain Open. Its sampling inverse does not replace the
 screened physical Pareto inverse.
 
 Validation record: code commit `c60aabaacbfba72fa2f4db03b5195885f4eff22b`

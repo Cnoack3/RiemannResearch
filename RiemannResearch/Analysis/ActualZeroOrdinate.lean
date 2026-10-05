@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: RiemannResearch contributors
+-/
 import RiemannResearch.Analysis.ZeroOrdinateEquidistribution
 import RiemannResearch.RH.WeilExplicitFormula.Statement.SeamClosed
 import RiemannResearch.RH.WeilExplicitFormula.RvM.LocalCount
@@ -414,5 +419,100 @@ theorem exact_signed_correction (T u : ℝ) :
   congr 1
   funext ρ
   ring
+
+/-! ## Symmetric good/bad masks with complete signed corrections -/
+
+def goodWeight (δ : ℝ) (ρ : ℂ) : ℂ :=
+  if |ρ.re - 1 / 2| ≤ δ then 1 else 0
+
+def badWeight (δ : ℝ) (ρ : ℂ) : ℂ := 1 - goodWeight δ ρ
+
+theorem abs_displacement_reflect (ρ : ℂ) :
+    |(reflect ρ).re - 1 / 2| = |ρ.re - 1 / 2| := by
+  rw [reflect_re]
+  have h : 1 - ρ.re - 1 / 2 = -(ρ.re - 1 / 2) := by ring
+  rw [h, abs_neg]
+
+theorem goodWeight_reflect (δ : ℝ) (ρ : ℂ) :
+    goodWeight δ (reflect ρ) = goodWeight δ ρ := by
+  simp only [goodWeight, abs_displacement_reflect]
+
+theorem badWeight_reflect (δ : ℝ) (ρ : ℂ) :
+    badWeight δ (reflect ρ) = badWeight δ ρ := by
+  simp only [badWeight, goodWeight_reflect]
+
+theorem weighted_sum_split (T δ : ℝ) (f : ℂ → ℂ) :
+    sum T f = sum T (fun ρ => goodWeight δ ρ * f ρ) +
+      sum T (fun ρ => badWeight δ ρ * f ρ) := by
+  rw [← sum_add]
+  congr 1
+  funext ρ
+  unfold badWeight
+  ring
+
+def weightedLandauSum (T u : ℝ) (w : ℂ → ℂ) : ℂ :=
+  sum T (fun ρ => w ρ * Complex.exp ((u : ℂ) * (ρ - 1 / 2)))
+
+def weightedOrdinateSum (T u : ℝ) (w : ℂ → ℂ) : ℂ :=
+  sum T (fun ρ => w ρ * phase u ρ.im)
+
+def weightedCoshCorrection (T u : ℝ) (w : ℂ → ℂ) : ℂ :=
+  sum T (fun ρ => w ρ * phase u ρ.im *
+    ((Real.cosh (u * (ρ.re - 1 / 2)) : ℂ) - 1))
+
+/-- Actual-zero reflection with an invariant weight. The explicit good/bad
+weights below discharge invariance without any analytic assumption. -/
+theorem weightedLandauSum_eq_cosh (T u : ℝ) (w : ℂ → ℂ)
+    (hw : ∀ ρ, w (reflect ρ) = w ρ) :
+    weightedLandauSum T u w = sum T (fun ρ => w ρ * phase u ρ.im *
+      (Real.cosh (u * (ρ.re - 1 / 2)) : ℂ)) := by
+  have hr := sum_reflect T (fun ρ => w ρ * phase u ρ.im *
+    (Real.exp (u * (ρ.re - 1 / 2)) : ℂ))
+  have hneg : sum T (fun ρ => w ρ * phase u ρ.im *
+      (Real.exp (-(u * (ρ.re - 1 / 2))) : ℂ)) =
+        weightedLandauSum T u w := by
+    unfold weightedLandauSum
+    simp_rw [exp_centered_eq, ← mul_assoc]
+    convert hr using 2
+    funext ρ
+    rw [hw, reflect_im, reflect_re]
+    congr 3
+    ring
+  have heq : (fun ρ : ℂ => w ρ * phase u ρ.im *
+      (Real.cosh (u * (ρ.re - 1 / 2)) : ℂ)) =
+      (fun ρ => (w ρ * phase u ρ.im * (Real.exp (u * (ρ.re - 1 / 2)) : ℂ) +
+        w ρ * phase u ρ.im * (Real.exp (-(u * (ρ.re - 1 / 2))) : ℂ)) *
+          (2 : ℂ)⁻¹) := by
+    funext ρ
+    rw [Real.cosh_eq]
+    push_cast
+    ring
+  rw [heq, sum_mul_const, sum_add, hneg]
+  unfold weightedLandauSum
+  simp_rw [exp_centered_eq, ← mul_assoc]
+  ring
+
+theorem weighted_exact_signed_correction (T u : ℝ) (w : ℂ → ℂ)
+    (hw : ∀ ρ, w (reflect ρ) = w ρ) :
+    weightedOrdinateSum T u w =
+      weightedLandauSum T u w - weightedCoshCorrection T u w := by
+  rw [weightedLandauSum_eq_cosh T u w hw, weightedCoshCorrection, ← sum_sub]
+  unfold weightedOrdinateSum
+  congr 1
+  funext ρ
+  ring
+
+theorem good_exact_signed_correction (T u δ : ℝ) :
+    weightedOrdinateSum T u (goodWeight δ) =
+      weightedLandauSum T u (goodWeight δ) -
+        weightedCoshCorrection T u (goodWeight δ) :=
+  weighted_exact_signed_correction T u _ (goodWeight_reflect δ)
+
+theorem bad_exact_signed_correction (T u δ : ℝ) :
+    weightedOrdinateSum T u (badWeight δ) =
+      weightedLandauSum T u (badWeight δ) -
+        weightedCoshCorrection T u (badWeight δ) :=
+  weighted_exact_signed_correction T u _ (badWeight_reflect δ)
+
 
 end RiemannResearch.Analysis.ActualZeroOrdinate
