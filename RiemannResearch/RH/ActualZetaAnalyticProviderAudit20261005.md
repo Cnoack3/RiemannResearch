@@ -4,6 +4,48 @@ Source base: `9aad406831dd6b017a6cb592e07b22a2389cd4cc`.
 This ledger distinguishes exact actual-zeta providers from analytic estimates
 that remain Open. All actual zero sums retain analytic multiplicity.
 
+## Further rigorous deductions and actual contour providers
+
+The follow-up at base `0944f251e93d6725dbe82188e5bbb0b56d990584` proves more of
+the actual Landau contour. ActualZetaGoodLandauHorizontals.lean supplies the
+full [-1,2] good-height norm and centered weighted horizontal integral bound.
+ActualZeroHeightTransfer.lean supplies exact complete signed increments,
+reflection before estimation, and the arbitrary short-height cosh bound.
+ComplexLogIntegralBounds.lean retains all FTC/integration-by-parts endpoints.
+ActualLandauLeftLine.lean proves the full complex chi model (error <=6/t),
+finite oscillatory chi bound, reflected actual zeta-series interchange and
+nonresonance estimate, and complete signed left-side split and bound.
+ActualUniformRationalLandau.lean assembles the entire actual contour and proves
+an unconditional estimate, uniform for T>=9 and 1<=m<n<=X:
+`C*(X^(5/2)+X^(3/2)*log(T+3)^2+X*log(T+3))`.
+Its main coefficient is proved exactly equal to the centered classical
+von Mangoldt term. No analytic Landau or density estimate is assumed.
+
+ActualZeroCriticalLineTailFraction.lean is a genuine additional actual density
+provider of constant-fraction strength: from the already proved unconditional
+critical-line theorem, eventually every nonnegative strict cutoff has at most
+`(1/3+epsilon)*Ncount` bad copies. Reflection halves the right strict count.
+Its bad-operator bound improves the strip estimate by this fraction. It does
+not give exponential decay and does not close the Ingham analytic obligation.
+
+RH/FullLandauDensityProof20261005.md and its two linked reports supply complete
+source-based deductions for the requested analytic inputs. The rational Landau
+scalar error is uniformly `O(X*log(2XT))`; the actual all-integer matrix error is
+bounded by `C0*(27*d^(3/2)+5*d*H_d*log(2T))/N(T)`. The density proof strengthens
+400 to 44 over the full strip, includes `log(log T)` in the decay parameter,
+and gives 10.14 with exact nonlinear rate on s<=1/32. It retains every finite
+zero at H=3*10^12 and needs no finite computational RH certificate.
+NonlinearZeroDensityRate.lean checks the exact exponent, tangent, stable-root
+and support-budget identities, without claiming an actual density theorem.
+
+The words **Open** below now mean **not discharged by a Lean declaration**.
+The full analytic inequalities are known unconditionally in the literature;
+the reports rigorously derive the actual providers from those theorems.
+The sharper classical Landau source theorem remains a formalization
+obligation. The complete sufficient fixed-c=2 assembly is now discharged,
+together with the horizontal, arbitrary-height and fixed left-line estimates. Density still
+needs its substantive mean-value, Littlewood and Gabriel proofs.
+
 ## Established providers
 
 | Provider | Checked declaration or module | Scope |
@@ -22,6 +64,7 @@ that remain Open. All actual zero sums retain analytic multiplicity.
 | Actual finite Gram bootstrap | `phaseGram_norm_sub_one_le`, `phaseGram_isUnit` in Analysis/ActualZeroPhaseBootstrap.lean | Actual moment and operator identity providers discharged; only explicit Landau/bad norm estimates and the scalar gap remain |
 | Density-to-tail transfer | `badCoshSum_le_of_expTail_closed` in Analysis/ActualZeroTailDensityTransfer.lean | Exact closed finite-interval factor from an explicit actual strict-tail bound; actual density input remains Open |
 | Full integer arithmetic operator | `primePowerMainOperator_norm_le`, `primePowerMainOperator_norm_ge` in Analysis/PrimePowerCovarianceEuclideanNorm.lean | log(d)-2 <= norm <= log(d)+log(4)+4; complete composite-frequency interactions, no analytic hypothesis |
+| Complete sufficient uniform rational Landau | `exists_uniform_rational_landau_bound`, `exists_uniform_rational_landau_rpow_bound`, `rationalLandauMain_eq_vonMangoldt_div_sqrt` in Analysis/ActualUniformRationalLandau.lean | Actual zeta, uniform T>=9 and 1<=m<n<=X; complete signed contour and exact classical main; no analytic estimate hypothesis |
 | Exact actual right contour | `integral_centered_two_neg_logDeriv_eq_kernel_tsum`, `rightLandauLine_rational_eq_split`, `norm_rightLandauLine_rational_add_resonance_le` in Analysis/ActualRationalLandauRightLine.lean | Actual zeta Dirichlet series, finite-interval interchange, exact integer resonance and uniform nonresonant bound |
 | Exact symmetric split | `weighted_sum_split`, `good_exact_signed_correction`, `bad_exact_signed_correction` in Analysis/ActualZeroOrdinate.lean | Good means absolute displacement <= delta; bad means > delta; equality-boundary copies stay in good |
 | Weighted actual zero contours | `RvM.rectangleIntegral'_mul_logDeriv_completedZeta_eq_zero_sum` and `rectangleIntegral'_mul_logDeriv_riemannZeta_eq_zero_sum`, with both exponential specializations | Exact completed-zeta and direct zeta contours; ordinary analyticity and horizontal boundary conditions explicit |
@@ -34,56 +77,53 @@ The concrete coefficient 7/(16 pi) is seven times the former 1/(16 pi).
 The moment norm is the ContinuousLinearMap norm on EuclideanSpace over C,
 not an entrywise matrix norm. Empty cutoffs use totalized division.
 
-The final coherent source check succeeded in 10.447 seconds. All 21 principal
+The prior coherent source check succeeded in 10.447 seconds. All 21 principal
 axiom audits reported only `propext`, `Classical.choice`, and `Quot.sound`. Source-file integration
 and the affected import graph are validated by the publication checkpoint.
 No domain-specific conclusion is inferred from that foundational axiom list.
+The seven follow-up modules passed a coherent source check in 11.529 seconds
+and a check with separate file scopes in 10.765 seconds. All 24 principal
+follow-up axiom audits reported only these three foundational axioms.
+Publication validates separate imports and the affected modules.
 
 ## Open analytic and assembly obligations
 
 | Obligation | Status | Existing infrastructure and missing work |
 |---|---|---|
 | Actual even commutator identity | Established | `landauGram_sub_phaseGram` supplies the complete actual operator series with the signed bad term retained |
-| Uniform rational Landau estimate | Open | Weighted contour, actual good heights, actual von Mangoldt Dirichlet series and logarithm spacing exist; the exact right-line interchange and bound are now proved; the other contour sides and arbitrary-height transfer remain |
-| Uniform zero density | Open | Ingham/Selberg estimate is established in the literature; no checked actual-zeta provider in this repository |
+| Uniform rational Landau estimate | Established sufficient bound | ActualUniformRationalLandau.lean proves the complete fixed-c=2 uniform rational provider; sharper classical Landau–Gonek scalar and matrix rates remain Open in Lean |
+| Uniform exponential zero density | Open | Ingham/Selberg estimate is established in the literature; its substantive actual-zeta mean-value and counting proof is unformalized; the checked constant-fraction tail is a weaker actual provider |
 | Weighted bad-zero tail | Conditional research reduction | Exact strict layer cake, reflection bridge and finite density-to-tail transfer are checked; the substantive actual zero-density provider is Open |
 | Microscopic ordinate square budget | Open | The known unconditional Fujii/Selberg/Tsang second moment is still a separate marked-tail formalization gap |
-| Growing-support spectral assembly | Open | The exact actual operator identity is proved; still needs quantitative Landau/density inputs and asymptotic assembly |
+| Growing-support spectral assembly | Open | The exact actual operator identity is proved; still needs the actual exponential density input and asymptotic operator assembly |
 
-### A smaller sufficient rational Landau target
+### Established sufficient rational Landau provider
 
 The bootstrap only needs rational frequencies x=n/m, with 1<=m<n<=X.
-It can use a fixed contour c=2 instead of the sharper nearest-prime-power
-formula. Write lambda_rat(n,m)=vonMangoldt(n/m) if m divides n, and zero
-otherwise. A sufficient actual provider, still **Open**, is a uniform bound
+The complete fixed-c=2 proof now establishes, uniformly for T>=9,
 
     ||landauSum T (log x) + T*lambda_rat(n,m)/(2*pi*sqrt x)||
       <= C*(X^(5/2) + X^(3/2)*log(T+3)^2 + X*log(T+3)).
 
-It would give a normalized matrix remainder at most
+The uniform constant depends only on fixed actual analytic providers and the
+fixed finite low-height cutoff. No analytic bound hypothesis is assumed.
+The proof keeps the exact low sum, all four signed sides, full nonresonant
+series, arbitrary-height increment and +(A+T-B)*main. The normalization bridge
+proves the displayed classical main coefficient exactly. It counts every
+prime-power interaction and every actual zero with analytic multiplicity.
+
+Elementary matrix and actual-count estimates consequently give
 
     C*(X^(7/2)/(T*log T) + X^(5/2)*log T/T + X^2/T),
 
-which tends to zero when log X=O(sqrt(log T)).
-Analysis/ActualZeroLandauContour.lean supplies the direct zeta contour,
-so gamma factors can be handled through the left functional equation.
-Analysis/FiniteOscillatoryKernel.lean now proves the exact right-line kernel
-and its zero-frequency value B-A. For every nonresonant k, the existing
-`Zeta23.PrimeSide.inv_two_mul_le_abs_log_sub`, applied to n and m*k,
-gives |log(n/m)-log k| >= 1/(2n). The checked kernel norm is <=4n.
-The known summability of vonMangoldt(k)/k^2 then controls the right-line
-nonresonant sum. The right-line finite-interval series interchange and rational split are now
-proved in Analysis/ActualRationalLandauRightLine.lean. The remaining analytic
-steps are horizontal good-height bounds, the left functional equation,
-explicit logarithm integration by parts, and transfer to arbitrary T.
-The existing digamma Stirling O(t^-2) remainder is absolutely integrable;
-a new trigamma theorem is unnecessary for this sufficient target.
+which tends to zero when log X=O(sqrt(log T)). This is a mathematical
+consequence of the checked scalar provider; an asymptotic operator theorem
+is not asserted by this module. The original N(T) normalization is retained,
+and division for the normalized Gram requires N(T)>0.
 
-Primary source supporting the sharper comparison statement and contour
-strategy: Ford--Zaharescu, Lemma 1,
-https://www.ford126.web.illinois.edu/wwwpapers/fz.pdf.
-The reduced rational target above is an independently derived sufficient
-formalization target, not a quotation of their theorem.
+The classical sharper Landau–Gonek rates in the linked source report remain
+separate analytic formalization targets. A bound from a published theorem
+does not become a Lean provider by citation.
 
 ### Density source and stronger paper-level bad budget
 
@@ -103,7 +143,7 @@ centering, gives the unconditional finite bound
     beta <= d/(2N) * sum_bad [cosh(|a_rho|*ell)-1]
          <= d/(4N) * sum_bad exp(|a_rho|*ell).
 
-The density specialization remains conditional. Under the explicit actual
+The historical coarse density specialization remains conditional in Lean. Under the explicit actual
 strict-tail premise B_>(s)<=400*T*L^3*exp(-4*L*s/3), with
 L=log T, ell=log X, A=4*L/3-ell>0 and 0<=delta<=1/2, this yields
 
@@ -143,8 +183,10 @@ sqrt(log T) support scale. Split the exact layer cake at b=1/32 and use
 monotonicity for the farther tail. Under the paper input that farther piece
 is O(exp(-log(T)/24+O(sqrt(log T)))). Table 1's first interval has constants
 5.069, 9.461 and 167.8; after absorbing additive errors the leading reflected
-coefficient approaches 10.138 rather than 400. This is an informal
-strengthening of the missing analytic target, not a new density proof.
+coefficient approaches 10.138 rather than 400. The complete follow-up report proves the uniform eventual coefficient 10.14
+from Theorem 1 while retaining the actual finite N(H). The stronger nonlinear
+rate improves this farther decay to exp(-2*log(T)/47+O(sqrt(log T))).
+This source-based deduction does not discharge the analytic Lean theorem.
 
 For q>ell>=0 the checked density-to-cosh-tail transfer retains the exact
 finite factor

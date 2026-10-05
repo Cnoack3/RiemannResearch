@@ -1,5 +1,54 @@
 # Theorem catalog
 
+### Full Landau and actual density work (2026-10-05)
+
+**Established complete uniform rational Landau provider.**
+ActualUniformRationalLandau.lean proves, for all T>=9 and 1<=m<n<=X,
+the actual multiplicity-weighted residual bound
+`C*(X^(5/2)+X^(3/2)*log(T+3)^2+X*log(T+3))`.
+`exists_uniform_rational_landau_rpow_bound` has no analytic estimate premise;
+`rationalLandauMain_eq_vonMangoldt_div_sqrt` proves the exact classical main
+coefficient. All four contour sides, the low sum, nonresonant series, arbitrary
+cutoff window and `(A+T-B)*main` correction are retained before taking norms.
+This sufficient uniform provider closes the fixed-c=2 Landau obligation.
+The sharper classical scalar and matrix rates below remain unformalized.
+
+ActualZetaGoodLandauHorizontals.lean proves
+the actual functional equation for logarithmic derivatives, Gamma growth on
+[-1,2], and full weighted horizontal bounds at actual good heights.
+ActualZeroHeightTransfer.lean proves the complete signed window increment,
+its reflected cosh form, and the actual arbitrary short-height bound
+`cosh(|u|/2)*Ncount T R`, then `2A*log(T+4)*cosh(|u|/2)`.
+ComplexLogIntegralBounds.lean retains the exact horizontal complex-log FTC
+and oscillatory logarithm integration-by-parts endpoints. ActualLandauLeftLine.lean
+proves the actual chi model with full complex error <=6/t, its finite
+oscillatory integral bound, the complete reflected von Mangoldt series and
+finite interval interchange, and the entire signed left contour split/bound.
+No analytic bound hypothesis occurs in these actual providers.
+
+ActualZeroCriticalLineTailFraction.lean transfers the existing unconditional
+`Zeta23.thmA₀_cumulative` to an exact on-line/off-line partition and the
+uniform eventual strict-tail fraction `(1/3+epsilon)*Ncount`, together with
+the actual bad-operator consequence. This constant fraction does not close
+shrinking-window exponential density. NonlinearZeroDensityRate.lean proves
+the exact common Ingham rate, positive tangent remainder, stable cutoff
+quadratic and support-budget equivalence; it asserts no actual density theorem.
+
+**Rigorous source deductions; analytic Lean obligations remain Open.**
+RH/FullLandauDensityProof20261005.md links complete proofs of rational
+Landau error `O(X*log(2XT))`, the stronger all-integer matrix remainder
+`C0*(27*d^(3/2)+5*d*H_d*log(2T))/N(T)`, and actual strict density
+`44*T*log(T)^3*exp(-(4/3)*(log T+log(log T))*s)`, uniformly on the full strip.
+The shrinking interval s<=1/32 admits constant 10.14 and exact nonlinear
+rate `4s/(3-2s)`. The finite count `N(3*10^12)` is retained and absorbed
+uniformly; no finite RH certificate is imported. These are mathematical
+deductions from unconditional published theorems, not Lean providers of the
+source analytic theorem. The sharper Landau–Gonek rates and actual Ingham/Selberg
+mean-value/zero-counting arguments remain Open in Lean. The leading sufficient
+support coefficient is unchanged; the nonlinear rate improves the next-order
+cutoff. Neither this phase Gram nor the source deductions supplies the
+screened physical Pareto inverse or proves RH.
+
 ### Actual zeta central provider progress (2026-10-05)
 
 **Established actual providers.**
@@ -40,9 +89,10 @@ explicit. ActualZeroPhaseBootstrap.lean specializes norm absorption and
 invertibility to the actual finite Gram; only explicit Landau/bad norm estimates
 and scalar gap premises remain.
 
-**Conditional research reduction remains Open.** Full uniform rational Landau,
-actual uniform zero density, microscopic square budget and asymptotic spectral
-assembly are not supplied by these deterministic providers. The weighted-tail
+**Conditional research reduction remains Open.** Actual uniform exponential
+zero density, the sharper Landau rates, microscopic square budget and asymptotic
+spectral assembly remain separate obligations. The sufficient full rational
+Landau provider is established in the follow-up above. The weighted-tail
 consumer is proved, but its actual density input remains Open. The precise
 ledger is RH/ActualZetaAnalyticProviderAudit20261005.md.
 
@@ -59,8 +109,8 @@ RH/GrowingPhaseGramBootstrapAudit20261005.md derives the conditionally sufficien
 support threshold
 `log X / sqrt(log T) -> c < sqrt((4/3)*arcosh 2) = 1.325120320033778...`.
 Its limiting lower and upper spectral bounds are 2*(2-q)/(3-q) and 2/(3-q),
-q=cosh(3*c^2/4). The asymptotic statement still needs checked full-contour
-Landau and actual density providers. The sharper normalization and exact finite
+q=cosh(3*c^2/4). The asymptotic statement still needs the checked actual density provider
+and asymptotic operator assembly; its sufficient scalar Landau input is now proved. The sharper normalization and exact finite
 cosh transfer improve constants and endpoints; only near-line density on
 0<=s<=1/32 is sufficient at this support scale.
 

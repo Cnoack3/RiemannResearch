@@ -14,7 +14,7 @@ import RiemannResearch.RH.WeilExplicitFormula.WeilEF.ZeroSummability
 
 All zeros, multiplicities and cutoffs below are those of Mathlib's actual
 `riemannZeta`. The finite identities and estimates have no analytic assumptions.
-This file does not assert the still missing Landau or zero-density asymptotics.
+The sufficient Landau estimate is in ActualUniformRationalLandau; exponential density remains open.
 -/
 
 noncomputable section
