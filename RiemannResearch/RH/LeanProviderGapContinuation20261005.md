@@ -1,5 +1,10 @@
 # Lean provider-gap continuation — 2026-10-05
 
+Follow-up: [LandauHilbertSchmidt20261005.md](LandauHilbertSchmidt20261005.md)
+verifies the 1/3 support strengthening and logarithmic gain, updating the
+earlier paper-only status. [ActualZeroOptimizedDensity20261005.md](ActualZeroOptimizedDensity20261005.md)
+records the checked count consumer and its separate Open analytic provider.
+
 This continuation verifies and strengthens the saved provider candidates against
 base `d63493371c5aa8dd4f69897d3df62cdd4d09a317`. It proves finite moment,
 Landau-residual, and actual signed-tail estimates. It does not prove RH or

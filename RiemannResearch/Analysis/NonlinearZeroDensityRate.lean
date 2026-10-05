@@ -319,4 +319,55 @@ theorem inghamRate_le_two_over_47 {s : ℝ} (hs : s ≤ 1 / 32) :
   apply (div_le_iff₀ hden).mpr
   linarith
 
+/-- Exact inverse of the nonlinear count-only exponent budget.
+This algebraic definition asserts no actual zero-density estimate. -/
+noncomputable def countCutoff (M S : ℝ) : ℝ := 3*S/(4*M+2*S)
+theorem countCutoff_nonneg {M S : ℝ} (hM : 0 < M) (hS : 0 ≤ S) :
+    0 ≤ countCutoff M S := by unfold countCutoff; positivity
+theorem countCutoff_rate {M S : ℝ} (hM : 0 < M) (hS : 0 ≤ S) :
+    M * inghamRate (countCutoff M S) = S := by
+  have hd : 4*M+2*S ≠ 0 := ne_of_gt (by positivity)
+  have hm : M ≠ 0 := ne_of_gt hM
+  have hden : 3-2*countCutoff M S = 12*M/(4*M+2*S) := by
+    unfold countCutoff
+    field_simp [hd]
+    ring
+  unfold inghamRate
+  rw [hden]
+  unfold countCutoff
+  field_simp [hd, hm]
+  ring
+theorem countCutoff_le_iff {M S t : ℝ} (hM : 0 < M) (hS : 0 ≤ S) :
+    countCutoff M S ≤ t ↔ 3*S ≤ t*(4*M+2*S) := by
+  unfold countCutoff
+  exact div_le_iff₀ (by positivity)
+theorem countCutoff_smallRange {M S : ℝ} (hM : 0 < M) (hS : 0 ≤ S) :
+    countCutoff M S ≤ 1/32 ↔ 47*S ≤ 2*M := by
+  rw [countCutoff_le_iff hM hS]
+  constructor <;> intro h <;> nlinarith
+/-- The inverse-rate cutoff is the least cutoff meeting the count-only
+exponent budget, not merely a sufficient root. -/
+theorem countCutoff_le_iff_rate {M S t : ℝ}
+    (hM : 0 < M) (hS : 0 ≤ S) (ht : t ≤ 1/2) :
+    countCutoff M S ≤ t ↔ S ≤ M*inghamRate t := by
+  have htden : 0 < 3-2*t := by linarith
+  have hr : M*inghamRate t = (4*M*t)/(3-2*t) := by
+    unfold inghamRate
+    simp only [div_eq_mul_inv]
+    ring
+  rw [countCutoff_le_iff hM hS, hr, le_div_iff₀ htden]
+  constructor <;> intro h <;> nlinarith
+theorem countCutoff_exp_cancellation {M A ω : ℝ}
+    (hM : 0 < M) (hA : 0 < A) (hS : 0 ≤ Real.log A + ω) :
+    A * Real.exp (-M*inghamRate (countCutoff M (Real.log A + ω))) =
+      Real.exp (-ω) := by
+  rw [show -M*inghamRate (countCutoff M (Real.log A+ω)) =
+    -(M*inghamRate (countCutoff M (Real.log A+ω))) by ring,
+    countCutoff_rate hM hS]
+  rw [show A = Real.exp (Real.log A) from (Real.exp_log hA).symm,
+    ← Real.exp_add]
+  simp only [Real.log_exp]
+  congr 1
+  ring
+
 end RiemannResearch.Analysis.ZeroDensityRate

@@ -1,5 +1,10 @@
 # Actual hyperbolic lower bounds and the signed bad-row provider
 
+Follow-up: [LandauHilbertSchmidt20261005.md](LandauHilbertSchmidt20261005.md)
+verifies the 1/3 support strengthening and logarithmic gain, updating the
+earlier paper-only status. [ActualZeroOptimizedDensity20261005.md](ActualZeroOptimizedDensity20261005.md)
+records the checked count consumer and its separate Open analytic provider.
+
 Research date: 2026-10-05.
 Base: 9c8940313d0ff4d49065e4c3902fb677b6b53f6a.
 

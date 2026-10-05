@@ -1,5 +1,10 @@
 # Landau endpoint support and centered hyperbolic frames
 
+Follow-up: [LandauHilbertSchmidt20261005.md](LandauHilbertSchmidt20261005.md)
+verifies the 1/3 support strengthening and logarithmic gain, updating the
+earlier paper-only status. [ActualZeroOptimizedDensity20261005.md](ActualZeroOptimizedDensity20261005.md)
+records the checked count consumer and its separate Open analytic provider.
+
 Base commit: 6c74acbd2a68d5d36f5d8d4e9a86a88ea3304c3d.
 Research date: 2026-10-05.
 

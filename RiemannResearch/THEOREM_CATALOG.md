@@ -1,5 +1,59 @@
 # Theorem catalog
 
+### Hilbert--Schmidt Landau strengthening and optimized density consumers (2026-10-05)
+
+**Established unconditional actual residual and full form.**
+Analysis/EuclideanHilbertSchmidt.lean gives finite Euclidean entry-square
+certificates. Analysis/LandauHilbertSchmidtResidual.lean assembles the existing
+actual nonmaxed rational Landau provider without any new analytic premise:
+for T>=9 and N(T)>0, the complete signed residual obeys
+
+    ||E_d(T)|| <= C/N(T) * [2*d^3+2*d^2*log(T+3)^2+3*d^2*log(T+3)].
+
+Eventually log d(T)<=a+log(T+3)/3 and d(T)>=1 imply ||E||->0.
+This strengthens the previous 2/7 support endpoint to 1/3. For
+0<=theta<=1/3 and every h<1-theta the full actual Gram is eventually
+bounded below by h*||f||^2. At theta=1/3 every h<2/3 holds in the
+explicit actual-row form ||Cf||^2-||Sf||^2, retaining the negative
+sinh square, analytic multiplicity, original complex convention and
+all integer/composite coordinates. The leading-budget theorem proves residual convergence under
+d(T)^3/((T+3)*log(T+3))->0, including the checked logarithmic extension
+d=O((T+3)^(1/3)*log(T+3)^b) for every b<1/3. Its exact iff characterizes
+the nonnegative normalized envelope, not necessity for the signed residual.
+
+**Established exact scalar cutoff; conditional actual-density reduction.**
+Analysis/NonlinearZeroDensityRate.lean proves countCutoff(M,S)=3*S/(4*M+2*S),
+M*inghamRate(countCutoff)=S and the least-cutoff equivalence for t<=1/2.
+Its 1/32 range is equivalent to 47*S<=2*M. With A>0, S=log A+omega>=0,
+A*exp(-M*inghamRate(countCutoff))=exp(-omega) exactly.
+Analysis/ActualHyperbolicDensityBudget.lean transports an explicit inclusive
+right-count hypothesis K*exp(-M*v(delta))+E through actual reflection and the
+complete harmonic cap W_d. For A=2*K*W_d/N(T), it proves
+
+    ||signedBadHyperbolic(T,d,delta)|| <= exp(-omega)+2*E*W_d/N(T).
+
+This is a checked consumer, not an analytic zero-density provider.
+**Open:** formalize the published uniform actual count estimate with its
+initial count and additive remainder; prove the actual shrinking signed-tail
+budget where needed; discharge the separate physical Pareto transfer.
+
+**Established finite Schur transport; paper actual Cauchy specialization.**
+Analysis/CorrelationSchurFrameBounds.lean proves that a PSD matrix S with
+diagonal one transports both PSD frame bounds under Schur multiplication,
+with unchanged constants. The actual Cauchy correlation, its positive
+continuous displacement law, the sharp full arithmetic norm
+||B_d||=4*log(log d)+O(1), and its exact inverse amplification
+(d+1)/(2*sqrt(d)) are self-contained paper proofs, not Lean declarations.
+Combining those paper results with the checked actual residual gives a
+smoothed ordinary phase Gram tending to identity at d=O(T^(1/3)).
+**Open:** the Lean Cauchy/Fourier/arithmetic specializations and the distinct
+unsmoothed discrete-phase and physical transfers. No RH conclusion follows.
+
+Reports: RH/LandauHilbertSchmidt20261005.md,
+RH/ActualZeroOptimizedDensity20261005.md,
+RH/CauchySmoothedActualZeroFrames20261005.md,
+RH/SmoothedPrimePowerArithmetic20261005.md.
+
 ### Verified provider-gap continuation (2026-10-05)
 
 **Established actual good-copy refinement.** The exact positive domination
@@ -78,7 +132,8 @@ and the published uniform-density specialization are paper consequences in
 RH/ActualHyperbolicLowerBounds20261005.md. The report distinguishes these
 from the checked finite declarations. Actual Ingham/Selberg density and
 fully screened physical Pareto transfer remain separate Open obligations.
-This work does not formalize the paper 1/3 Landau strengthening.
+The Hilbert--Schmidt continuation above now formalizes the 1/3 strengthening
+and its logarithmic support gain in Analysis/LandauHilbertSchmidtResidual.lean.
 
 ### Endpoint Landau support and centered hyperbolic frames (2026-10-05)
 
