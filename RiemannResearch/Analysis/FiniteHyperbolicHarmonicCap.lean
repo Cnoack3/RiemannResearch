@@ -198,4 +198,15 @@ theorem harmonicHyperbolicCap_sub_card_nonneg (d : ℕ) :
     0 ≤ harmonicHyperbolicCap d-(d : ℝ) :=
   sub_nonneg.mpr (harmonicHyperbolicCap_ge_card d)
 
+theorem harmonicHyperbolicCap_le_card_log (d : ℕ) (hd : 1 ≤ d) :
+    harmonicHyperbolicCap d ≤ (d : ℝ)*(1+Real.log (d : ℝ)) := by
+  have hdR : (1 : ℝ) ≤ d := by exact_mod_cast hd
+  have hL : 0 ≤ Real.log (d : ℝ) := Real.log_nonneg hdR
+  have hs : Real.sqrt (1+Real.log (d : ℝ)) ≤ 1+Real.log (d : ℝ) := by
+    nlinarith [Real.sq_sqrt (by linarith : 0 ≤ 1+Real.log (d : ℝ)),
+      sq_nonneg (Real.sqrt (1+Real.log (d : ℝ))-1)]
+  have h := harmonicHyperbolicCap_le_log d hd
+  have hp := mul_le_mul_of_nonneg_left hs (by positivity : 0 ≤ (d : ℝ)/2)
+  nlinarith [mul_nonneg (Nat.cast_nonneg d : (0:ℝ) ≤ d) hL]
+
 end RiemannResearch.Analysis.FiniteHyperbolicHarmonicCap

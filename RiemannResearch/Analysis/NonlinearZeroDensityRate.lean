@@ -6,6 +6,7 @@ Authors: RiemannResearch contributors
 import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
@@ -369,5 +370,82 @@ theorem countCutoff_exp_cancellation {M A ω : ℝ}
   simp only [Real.log_exp]
   congr 1
   ring
+
+open Filter
+
+theorem countCutoff_le_ratio {M S : ℝ} (hM : 0 < M) (hS : 0 ≤ S) :
+    countCutoff M S ≤ (3/4)* (S/M) := by
+  unfold countCutoff
+  calc
+    _ ≤ 3*S/(4*M) :=
+      div_le_div_of_nonneg_left (by positivity) (by positivity) (by linarith)
+    _ = _ := by field_simp [hM.ne']
+
+theorem countCutoff_tendsto_zero {α : Type*} {F : Filter α} (M S : α → ℝ)
+    (hM : ∀ᶠ t in F, 0 < M t) (hS : ∀ᶠ t in F, 0 ≤ S t)
+    (hratio : Tendsto (fun t => S t/M t) F (nhds 0)) :
+    Tendsto (fun t => countCutoff (M t) (S t)) F (nhds 0) := by
+  apply squeeze_zero'
+  · filter_upwards [hM, hS] with t hm hs
+    exact countCutoff_nonneg hm hs
+  · filter_upwards [hM, hS] with t hm hs
+    exact countCutoff_le_ratio hm hs
+  · simpa using hratio.const_mul (3/4 : ℝ)
+
+/-- The least nonnegative inverse-rate cutoff; negative requested margins
+use cutoff zero rather than an artificial positivity hypothesis. -/
+noncomputable def positiveCountCutoff (M A ω : ℝ) : ℝ :=
+  countCutoff M (max 0 (Real.log A+ω))
+
+theorem positiveCountCutoff_nonneg {M : ℝ} (A ω : ℝ) (hM : 0 < M) :
+    0 ≤ positiveCountCutoff M A ω :=
+  countCutoff_nonneg hM (le_max_left _ _)
+
+theorem positiveCountCutoff_exp_le {M A ω : ℝ} (hM : 0 < M) (hA : 0 < A) :
+    A*Real.exp (-M*inghamRate (positiveCountCutoff M A ω)) ≤ Real.exp (-ω) := by
+  unfold positiveCountCutoff
+  rw [show -M*inghamRate (countCutoff M (max 0 (Real.log A+ω))) =
+      -(M*inghamRate (countCutoff M (max 0 (Real.log A+ω)))) by ring,
+    countCutoff_rate hM (le_max_left _ _),
+    show A = Real.exp (Real.log A) from (Real.exp_log hA).symm,
+    ← Real.exp_add]
+  simp only [Real.log_exp]
+  apply Real.exp_le_exp.mpr
+  have h := le_max_right 0 (Real.log A+ω)
+  linarith
+
+
+/-- The exact least-cutoff characterization for the nonlinear count-only
+margin, including a possibly negative requested logarithmic margin. -/
+theorem positiveCountCutoff_le_iff_margin {M A ω t : ℝ}
+    (hM : 0 < M) (ht0 : 0 ≤ t) (ht : t ≤ 1/2) :
+    positiveCountCutoff M A ω ≤ t ↔ Real.log A+ω ≤ M*inghamRate t := by
+  unfold positiveCountCutoff
+  rw [countCutoff_le_iff_rate hM (le_max_left _ _) ht]
+  have hi : 0 ≤ inghamRate t := by
+    have hd : 0 < 3-2*t := by linarith
+    unfold inghamRate
+    positivity
+  constructor
+  · intro h
+    exact (le_max_right _ _).trans h
+  · intro h
+    exact max_le (mul_nonneg hM.le hi) h
+
+theorem positiveCountCutoff_tendsto_zero {α : Type*} {F : Filter α}
+    (M A ω : α → ℝ) (hM : ∀ᶠ t in F, 0 < M t)
+    (hratio : Tendsto (fun t => max 0 (Real.log (A t)+ω t)/M t) F (nhds 0)) :
+    Tendsto (fun t => positiveCountCutoff (M t) (A t) (ω t)) F (nhds 0) :=
+  countCutoff_tendsto_zero M _ hM (Eventually.of_forall fun _ => le_max_left _ _) hratio
+/-- Shrinking inverse margins eventually lie in the source's first near-line
+interval, without importing any analytic density assertion. -/
+theorem positiveCountCutoff_eventually_nearLine {α : Type*} {F : Filter α}
+    (M A ω : α → ℝ) (hM : ∀ᶠ t in F, 0 < M t)
+    (hratio : Tendsto (fun t => max 0 (Real.log (A t)+ω t)/M t) F (nhds 0)) :
+    ∀ᶠ t in F, 0 ≤ positiveCountCutoff (M t) (A t) (ω t) ∧
+      positiveCountCutoff (M t) (A t) (ω t) ≤ 1/32 := by
+  filter_upwards [hM, (positiveCountCutoff_tendsto_zero M A ω hM hratio).eventually_le_const
+    (by norm_num : (0 : ℝ) < 1/32)] with t hm ht
+  exact ⟨positiveCountCutoff_nonneg _ _ hm, ht⟩
 
 end RiemannResearch.Analysis.ZeroDensityRate

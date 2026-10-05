@@ -1,5 +1,61 @@
 # Theorem catalog
 
+### Strict shrinking-cutoff harmonic transfer (2026-10-05)
+
+**Established exact counting and unconditional cutoff/remainder transfers.**
+Analysis/ActualZeroDensityWindow.lean proves the multiplicity-preserving
+finite-height split D(T,sigma)=D(H,sigma)+D(H,T;sigma), and exactly
+
+    strictTail(T,delta)=2*(D(T,1/2+delta)-J(T,1/2+delta)),
+
+where J counts equality copies at the closed density threshold.
+The strict bad-mask boundary, reflection and original full N(T) are retained.
+Analysis/NonlinearZeroDensityRate.lean now includes the positive-part inverse
+cutoff and its least-cutoff characterization and eventual 1/32 range.
+Analysis/ActualHyperbolicLogRemainder.lean proves that the retained fixed count
+N(H), log-square and logarithmic terms vanish after multiplication by W_d/N(T)
+whenever d>=1 and log d<=log T/2 eventually. Analysis/LogMarginAsymptotics.lean
+contains the general real scalar asymptotic lemmas.
+Analysis/ActualZeroDensityCutoff.lean proves sourceCountCutoff_shrinking:
+if log d/log T->0 and omega/log T->0, the exact actual-count cutoff tends
+to zero and eventually lies in [0,1/32], without a density premise.
+
+**Conditional research reduction: one actual density point suffices.**
+Analysis/ActualHyperbolicShrinkingTail.lean proves
+shrinking_harmonic_tail_of_inghamDifference and
+shrinking_harmonic_tail_of_sourceDifference. Put L=log T, M=L+log L,
+I(delta)=4*delta/(3-2*delta), K=C*T*L^3, A=2*K*W_d/N(T),
+S=max(0,log A+omega), and delta=3*S/(4*M+2*S). The only analytic premise is
+
+    D(T,1/2+delta)-D(H,1/2+delta)
+      <=K*exp(-M*I(delta))+B2*L^2+B3*L.
+
+The power-shaped consumer accepts the equivalent source exponents directly.
+For C>0, B2,B3>=0, d>=1 eventually, log d/log T->0, omega->infinity and
+omega/log T->0, this implies
+
+    delta->0, (strictTail/N(T))*W_d->0,
+    actualSignedTailBudget->0, ||signedBadHyperbolic||->0.
+
+The finite bound retains D(H,sigma)-J(T,sigma); its coarse asymptotic bound
+retains N(H). Both hyperbolic channels, the negative sinh square and all
+composite coordinates survive. The one-point limit also supplies the existing
+signed one-sided frame provider uniformly in f and makes the original
+masked-good/full-operator norm difference tend to zero.
+
+**Open domain-specific obligation:** prove the displayed actual one-point
+difference estimate from the Chourasiya--Simonic analytic argument and verify
+its chosen numerical parameters. It is an explicit hypothesis, not an axiom
+or an imported theorem. No finite-height RH certificate is assumed.
+**Separate Open obligation:** the fully screened physical Pareto transfer.
+The principal base declarations and the new reductions pass #print axioms
+with only propext, Classical.choice and Quot.sound; local hypotheses remain
+visible in the theorem types.
+
+Report: RH/StrictShrinkingTailProvider20261005.md.
+Requested audit base: 81ecb78f890611273f961c6ca1d056c448587eb4.
+The immediate descendant's independent 1/3 Landau improvement is preserved.
+
 ### Hilbert--Schmidt Landau strengthening and optimized density consumers (2026-10-05)
 
 **Established unconditional actual residual and full form.**
