@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Moving gaps, mixed trials, approximate heads and double-log source budgets (2026-10-06)
+
+**Conditional research reductions.** The actual RH consumers expose their
+arithmetic providers. All finite identities retain complete signed interactions.
+
+- `Analysis/MovingSignedGap.lean`: exact signed absorption and zero-defect
+  consumers for positive stage-dependent gaps, without a uniform lower gap.
+- `RH/ParetoMovingSignedGap.lean`: actual RH from cofinal legal trials, an
+  eventual complete signed budget, and head/additive errors little-o of the gap.
+- `Analysis/FiniteSpectralDoubleLog.lean`: finite double-logarithmic envelope
+  bound and cofinal defect-zero consumer; unbounded moments are allowed.
+- `RH/ParetoAffineHeadTrials.lean`: complete mixed residual Gram identity and
+  actual canonical Mobius affine-trial RH consumer. No individual energy cap
+  or reciprocal-charge crossing premise is needed.
+- `RH/LegalApproximateHeadSubpolynomial.lean`: actual localized power floor
+  for small physical residual heads, and RH from head norm convergence plus
+  subpolynomial complete residual-energy growth. Exact interpolation is dropped.
+
+Open: provide the signed moving-gap budget and relative head/additive errors.
+Open: realize the finite double-log data as the actual full-conductor source
+and prove its arithmetic normalized double-log moment estimate.
+Open: construct normalized affine weights with subpolynomial complete mixed
+Gram growth, or legal approximate-head trials with the stated full-energy growth.
+The new implications do not establish RH or a converse for prescribed families.
+Source: user-provided Green-Pareto-Schur continuation, Sections 17-28, and
+the requested strengthening. See `RH/GreenParetoStrongerConditions20261006.md`
+for exact hypotheses, scope, primary-source context and Wolfram diagnostics.
+
+
 ### Crossing-balanced squarefree windows and subpolynomial RH reductions (2026-10-06)
 
 **Conditional research reductions.** All displayed complete identities and

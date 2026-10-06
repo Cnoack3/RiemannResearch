@@ -1,4 +1,9 @@
 import RiemannResearch.Analysis.HeadTailPairing
+import RiemannResearch.Analysis.MovingSignedGap
+import RiemannResearch.Analysis.FiniteSpectralDoubleLog
+import RiemannResearch.RH.ParetoMovingSignedGap
+import RiemannResearch.RH.ParetoAffineHeadTrials
+import RiemannResearch.RH.LegalApproximateHeadSubpolynomial
 import RiemannResearch.Analysis.SubpolynomialWindowGrowth
 import RiemannResearch.RH.BalancedSquarefreeCrossing
 import RiemannResearch.RH.CompactCorrectedTrialWindow
