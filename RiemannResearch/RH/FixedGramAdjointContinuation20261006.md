@@ -1,6 +1,6 @@
 # Fixed inverse Gram and signed coefficient criteria for RH
 
-Continuation update: 6 October 2026. Sections 1–10 preserve the supplied handoff. Sections 11–17 develop the actual dyadic adjoint defect, stronger finite and limiting signed bounds, a relaxed RH-equivalent provider, and multiplicity-aware Mellin obstructions. The arithmetic provider remains open. Verification of the new algebraic layer is recorded separately in Section 17; it does not upgrade the older uncompiled drafts.
+Continuation update: 6 October 2026. Sections 1–10 preserve the supplied handoff. Sections 11–17 develop the actual dyadic adjoint defect, stronger finite and limiting signed bounds, a relaxed RH-equivalent provider, and multiplicity-aware Mellin obstructions. The arithmetic provider remains open. Verification of the new algebraic layer is recorded separately in Section 17; it does not upgrade the older uncompiled drafts. Section 18 records the subsequent verified actual operator and coefficient bridge; the cofinal arithmetic provider and the formal RH converse remain explicit.
 
 Date: 6 October 2026. Continuation of the 5 October handoff. Base: `bc2fd31a9641976a9e34049028419d3ef08f5dfd`.
 
@@ -812,10 +812,78 @@ The supporting module `Analysis/DyadicAdjointDefect.lean` was checked in an isol
 | `weighted_pair_defect` | The finite weighted-pair variance identity supporting (22). This check does not sum the infinite Pareto series. |
 | `adjoint_square_identity` | A generic real Hilbert-space identity for four vectors, with its required inner-product premises. This check does not instantiate the actual dyadic operator or its arithmetic compression. |
 
-The actual operator and coefficient applications, including (22), (28), (33), (39), and the Mellin-jet construction, remain paper proofs. The ten verified supporting declarations do not establish the actual Hilbert-space energy premises or close the arithmetic provider. None of this asserts that the five older draft modules compiled or that a full-project rebuild completed.
+At commit `dd5e0269ca04ddb8b84b75fbbd0a3ebe2c00cff6`, the actual operator and coefficient applications, including (22), (28), (33), (39), and the Mellin-jet construction, remained paper proofs. Section 18 records the subsequent actual formalization of (22), (28), and the conditional (33) consumer. The ten supporting declarations alone did not establish those Hilbert-space energy premises or close the arithmetic provider. This historical check did not assert that the five older draft modules compiled or that a full-project rebuild completed.
 
 Primary-source grounding: [Bagchi's paper](https://www.isibang.ac.in/~statmath/eprints/2005/isibc200535.pdf), Theorems 1, 2, and 7, supplies the Pareto criterion, step-function interpretation, and dilation setting. The explicit canonical leakage identities, chosen fixed polynomial, compensated statistic, and finite certificates here are deductions from that setting and the project's dual identities. [Burnol's paper](https://arxiv.org/pdf/math/0103058), Theorem 1.3 and Section 5, supports using multiplicity derivative constraints in related approximation problems. Its critical-line logarithmic bound is a different result; its multiplicity-squared constant is not imported into (49).
 
 The next RH task is now the relaxed arithmetic provider (33), or equivalently its exact signed mixed-gain budget (35). A successful proof must bound the complete inverse-derived coefficients, or the aggregate signed mixed gains, from below along an unbounded sequence of legal stages. An upper bound for a normalized zero-density statistic, a source term before inverse amplification, or absolute convergence of the Schur gains does not supply this provider.
 
 The new unconditional result is a stronger obstruction with an exact weaker consumer. It does not prove RH.
+
+## 18. Actual dyadic and compensated coefficient formalization
+
+This continuation instantiates the algebra with the existing complete
+`ThresholdHilbert`, actual zero-anchored dyadic dilation, Hilbert adjoint,
+closed residue span, and full-norm optimal projections.
+
+- `RH/ActualDyadicAdjointDefect.lean` proves the actual coordinate adjoint
+  formula (21), convergence of the complete pair-variance series, exact
+  infinite norm defect (22), and full-space positive-square identity (37).
+  Its operator and summability premises are constructed, not supplied.
+- `RH/DyadicCanonicalLeakage.lean` proves the actual canonical inner
+  identities and equation (28). Its theorem
+  `canonical_completed_leakage_two_remainders` retains the scalar
+  completion square, both orthogonal Hilbert remainder squares, and the
+  whole pair-variance series. `limiting_twoThree_leakage_energy_budget`
+  proves the previously missing actual Hilbert-to-scalar energy premise.
+  The checked scalar `leakage_lower_bound` and
+  `zero_of_compensated_upper` are thereby instantiated with actual
+  canonical objects. The surplus estimate in (32) is also formalized.
+- `RH/CompensatedTwoCoefficientCriterion.lean` proves the actual complete
+  inverse-Gram formula for the statistic, its unconditional convergence,
+  and its exact limiting negative-square identity. The finite identity
+  keeps both signed enlargement terms:
+  `T_n = -||B r_n||^2/12 + 13 <r_n,D F_n> - 3 <r_n,D^2 F_n>`,
+  where `D=2S` and `B=6I-(13/2)D+3D^2`. These are exactly
+  `+26 delta_n-12 delta_(2,n)`; no finite-space dilation invariance is
+  assumed.
+
+The formal compensated consumer is
+`twoThreeCompensated_cofinal_iff_residual_zero`, together with the equivalent
+zero-energy and constant-membership formulations. The cofinal condition
+`TwoThreeCompensatedCofinal` remains an explicit **Open arithmetic provider**.
+It is not discharged by coefficient convergence or square summability.
+
+The RH implication
+`riemannHypothesis_of_twoThreeCompensated_cofinal` uses the existing
+membership-to-RH bridge and has only this arithmetic hypothesis.
+The formal reverse RH implication still requires the explicit structural
+bridge
+`hTarget : RiemannHypothesis → hilbertOne ∈ closedSpace`.
+Accordingly `riemannHypothesis_iff_twoThreeCompensated_cofinal` exposes
+`hTarget`; the unconditional formal equivalence is with residual zero,
+not a silently assumed RH-to-density theorem.
+
+Equations (39), the Mellin-jet construction, the cofinal arithmetic estimate
+(33)/(35), and the classical RH-to-target-membership converse are not claimed
+to have been supplied by this continuation. RH remains open.
+
+The smallest remaining formal statement needed for the reverse implication is:
+
+```lean
+theorem one_mem_closedSpace_of_riemannHypothesis
+    (hRH : RiemannHypothesis) :
+    hilbertOne ∈ CoefficientStabilization.closedSpace
+```
+
+This is the classical analytic converse, not the cofinal arithmetic provider.
+The actual dyadic operator and projection definitions do not prevent the
+forward instantiation.
+
+Verification: coherent snippet job `job_CYQwLzZAHN16mkaNGaBWPXRDd0f_0hcJ`
+succeeded with exit code 0 and `verified: true` in 8.367 seconds. The ten
+main declaration axiom checks reported only `propext`, `Classical.choice`,
+and `Quot.sound`; no placeholder axiom occurred. A baseline
+`lake build RiemannResearch --quiet` succeeded before this check.
+The new modules are exported from `RiemannResearch.lean` for the separate
+checkpoint validation of the actual module graph and publication.

@@ -1,4 +1,7 @@
 import RiemannResearch.Analysis.DyadicAdjointDefect
+import RiemannResearch.RH.ActualDyadicAdjointDefect
+import RiemannResearch.RH.CompensatedTwoCoefficientCriterion
+import RiemannResearch.RH.DyadicCanonicalLeakage
 import RiemannResearch.Analysis.ComplexQuadraticDetectorMoments
 import RiemannResearch.Analysis.CellOccupancyOverlap
 import RiemannResearch.Analysis.DilogarithmSeries

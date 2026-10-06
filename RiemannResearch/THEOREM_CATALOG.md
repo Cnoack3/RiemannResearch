@@ -1,19 +1,25 @@
 # Theorem catalog
 
-### Fixed-Gram dyadic adjoint-defect algebra (2026-10-06)
+### Actual fixed-Gram dyadic adjoint and compensated coefficient bridge (2026-10-06)
 
-Analysis/DyadicAdjointDefect.lean proves the real Hilbert four-vector
-adjoint-square identity, exact weighted pair defect, scalar completed-square
-identities, nonlinear leakage bounds with explicit energy premises, and
-zero_of_compensated_upper. These are algebraic support results, independently
-verified as a coherent snippet; checkpoint validation is tracked separately.
+RH/ActualDyadicAdjointDefect.lean proves actual equations (21), (22), and
+(37), including convergence and the full nonnegative pair-variance series.
+RH/DyadicCanonicalLeakage.lean proves equation (28) with both orthogonal
+norm squares, the actual scalar energy premise, the stronger signed
+obstruction, and the compensated surplus. Analysis/DyadicAdjointDefect.lean
+supplies the reused adjoint-square and leakage/contradiction algebra.
 
-RH/FixedGramAdjointContinuation20261006.md derives the actual canonical
-residual bound on paper and the compensated signed RH-equivalent criterion.
-The infinite adjoint application, coefficient specialization, and Mellin jet
-construction are paper proofs, not claims of completed formalization.
-Open: the cofinal lower provider for
-3*c[n,2]+c[n,3]-4+(23/24)*(1-Q[n]), or fixed full-inverse saturation.
+RH/CompensatedTwoCoefficientCriterion.lean identifies the statistic with
+the complete inverse Gram, keeps both finite signed enlargement terms,
+and proves cofinal lower control iff the actual residual is zero, iff
+constant-target membership holds. Its RH consumer is a **conditional
+research reduction**.
+
+Open: TwoThreeCompensatedCofinal, the actual cofinal arithmetic provider
+for 3*c[n,2]+c[n,3]-4+(23/24)*(1-Q[n]), or fixed full-inverse saturation.
+The reverse formal RH equivalence exposes the separate hypothesis
+hTarget : RiemannHypothesis → hilbertOne ∈ closedSpace.
+The Mellin jets and equation (39) are not formalized here. RH is not proved.
 
 ### Quadratic first moments and flexible signed mollifier budgets (2026-10-05)
 
