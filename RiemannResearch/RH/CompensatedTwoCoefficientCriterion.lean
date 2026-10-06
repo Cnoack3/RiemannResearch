@@ -270,4 +270,102 @@ theorem twoThreeCompensated_finite_square_identity (n : ℕ) :
   unfold twoThreeCompensated
   linarith
 
+/-!
+## Compact dual and exact two-defect completion
+
+Source: RH_Dyadic_Coefficient_Bridge_Next_Steps.md, Section 8.4, and the
+prior compact-target argument in FixedGramAdjointContinuation20261006.md.
+These theorems instantiate the actual closed span; dual convergence stays
+an explicit Open arithmetic hypothesis.
+-/
+
+/-- Compact coefficient dual v=(14,-12,-12,0,...), already identified on paper. -/
+def twoThreeDual : ThresholdHilbert :=
+  (-3 : ℝ) • mobiusRieszHilbert 2 - mobiusRieszHilbert 3
+
+def twoThreeDualResidual (n : ℕ) : ThresholdHilbert :=
+  twoThreeDual - (finiteSpace n).starProjection twoThreeDual
+
+def twoThreeShiftedResidual (n : ℕ) : ThresholdHilbert :=
+  twoThreeResidual n - (12/23 : ℝ) • twoThreeDualResidual n
+
+theorem twoThreeResidual_inner_dualResidual (n : ℕ) :
+    inner ℝ (twoThreeResidual n) (twoThreeDualResidual n) =
+      4 - 3 * coefficient n 2 - coefficient n 3 := by
+  have ho : inner ℝ (twoThreeResidual n)
+      ((finiteSpace n).starProjection twoThreeDual) = 0 := by
+    rw [real_inner_comm]
+    exact ((finiteSpace n).mem_orthogonal _).mp
+      (Submodule.sub_starProjection_mem_orthogonal hilbertOne) _
+      ((finiteSpace n).starProjection_apply_mem twoThreeDual)
+  rw [twoThreeDualResidual, inner_sub_right, ho, sub_zero]
+  unfold twoThreeDual
+  rw [twoThreeRiesz_eq_dilation]
+  exact twoThreeResidual_charge n
+
+/-- Exact difference of whole nonnegative approximation defects. -/
+theorem twoThreeCompensated_two_defect_identity (n : ℕ) :
+    twoThreeCompensated n =
+      (23/24 : ℝ) * ‖twoThreeShiftedResidual n‖^2 -
+        (6/23 : ℝ) * ‖twoThreeDualResidual n‖^2 := by
+  have hc := twoThreeResidual_inner_dualResidual n
+  unfold twoThreeShiftedResidual
+  rw [norm_sub_sq_real, norm_smul, real_inner_smul_right,
+    twoThreeResidual_norm_sq]
+  norm_num [Real.norm_eq_abs]
+  unfold twoThreeCompensated
+  nlinarith [hc]
+
+/-- The stable compact dual has the same closed-span target as the constant. -/
+theorem twoThreeDual_mem_iff_one_mem :
+    twoThreeDual ∈ closedSpace ↔ hilbertOne ∈ closedSpace := by
+  constructor
+  · intro hv
+    have ho : inner ℝ limitResidual twoThreeDual = 0 := by
+      rw [real_inner_comm]
+      exact (closedSpace.mem_orthogonal _).mp limitResidual_mem_orthogonal _ hv
+    have hi (m : ℕ) :
+        inner ℝ limitResidual (mobiusRieszHilbert m) =
+          mobiusDifferenceCLM m limitResidual := by
+      rw [real_inner_comm]
+      exact mobiusRieszHilbert_inner m limitResidual
+    simp only [twoThreeDual, inner_sub_right, real_inner_smul_right] at ho
+    rw [hi 2, hi 3] at ho
+    simp only [mobiusDifferenceCLM_apply] at ho
+    have h2 := limitCoefficient_eq_residual 2 (by decide)
+    have h3 := limitCoefficient_eq_residual 3 (by decide)
+    norm_num [ArithmeticFunction.moebius_apply_prime Nat.prime_two,
+      ArithmeticFunction.moebius_apply_prime Nat.prime_three] at h2 h3
+    apply limitEnergy_zero_iff_mem.mp
+    apply limitResidual_zero_iff_energy_zero.mp
+    apply twoThreeLimit_eq_four_iff_residual_zero.mp
+    linarith
+  · intro hOne
+    have hd : doubleDilation hilbertOne ∈ closedSpace :=
+      closedSpace_dilation hOne 2 (by decide)
+    have hdd : doubleDilation (doubleDilation hilbertOne) ∈ closedSpace :=
+      closedSpace_dilation hd 2 (by decide)
+    rw [twoThreeDual, twoThreeRiesz_eq_dilation]
+    exact closedSpace.add_mem
+      (closedSpace.sub_mem (closedSpace.smul_mem _ hOne)
+        (closedSpace.smul_mem _ hd)) (closedSpace.smul_mem _ hdd)
+
+/-- Actual dual-target convergence; no RH converse is assumed. -/
+theorem twoThreeDual_error_tendsto_zero_iff_one_mem :
+    Tendsto (fun n => ‖twoThreeDualResidual n‖^2) atTop (𝓝 0) ↔
+      hilbertOne ∈ closedSpace := by
+  change Tendsto (RiemannResearch.Analysis.ExhaustiveWalk.walkError
+    residueAtom id twoThreeDual) atTop (𝓝 0) ↔ _
+  exact (RiemannResearch.Analysis.ExhaustiveWalk.walkError_tendsto_zero_iff
+    residueAtom id Function.surjective_id twoThreeDual).trans
+    twoThreeDual_mem_iff_one_mem
+
+/-- Conditional research reduction: actual dual-target saturation is Open. -/
+theorem riemannHypothesis_of_twoThreeDual_error_tendsto_zero
+    (h : Tendsto (fun n => ‖twoThreeDualResidual n‖^2) atTop (𝓝 0)) :
+    RiemannHypothesis := by
+  apply riemannHypothesis_of_twoThreeCompensated_cofinal
+  apply twoThreeCompensated_cofinal_iff_one_mem_closedSpace.mpr
+  exact twoThreeDual_error_tendsto_zero_iff_one_mem.mp h
+
 end RiemannResearch.RH.Pareto.CoefficientStabilization

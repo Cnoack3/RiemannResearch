@@ -887,3 +887,113 @@ and `Quot.sound`; no placeholder axiom occurred. A baseline
 `lake build RiemannResearch --quiet` succeeded before this check.
 The new modules are exported from `RiemannResearch.lean` for the separate
 checkpoint validation of the actual module graph and publication.
+
+## 19. Exact Schur budget, compact dual completion, and allowable gain rate
+
+This continuation follows RH_Dyadic_Coefficient_Bridge_Next_Steps.md.
+It reuses the compact dual and finite dyadic transfer of Sections 1--6,
+the existing coefficient total variation in ResidueSchurLimits.lean,
+and the generic survival criterion in Analysis/ResidualGainProduct.lean.
+The deductions below do not claim mathematical novelty or prove RH.
+
+### Actual formal declarations
+
+RH/CompensatedTwoCoefficientSchur.lean proves, for every stage k,
+\[
+ T_{k+1}-T_k=\alpha_k\beta_k-\frac{23}{24}\alpha_k^2
+ =\frac{\eta_k\ell(w_k)-(23/24)\eta_k^2}{\sigma_k}.
+\]
+For k>=2 it substitutes the complete screened old-stage coefficient:
+\[
+ \ell(w_k)=-(3\xi_{k,0}+\xi_{k,1}),\qquad
+ \xi_k=G_k^{-1}h_k.
+\]
+Every conductor remains in the inverse. It also proves the stage-zero
+constant -73/24, the stage-two telescope, absolute summability, the
+exact series sum T_infinity+73/24, and equivalence of the signed cofinal
+budget with TwoThreeCompensatedCofinal. Its RH implication still assumes
+that cofinal budget.
+
+The existing compensated criterion module additionally formalizes
+v=-3 mobiusRiesz(2)-mobiusRiesz(3), already identified here on paper as
+(14,-12,-12,0,...), and its actual residual q_n=(I-P_n)v. It proves
+\[
+ T_n=\frac{23}{24}\|r_n-\tfrac{12}{23}q_n\|^2
+       -\frac6{23}\|q_n\|^2.
+\]
+Both whole nonnegative defects survive. The actual theorem
+twoThreeDual_mem_iff_one_mem proves v in W iff 1 in W, and
+twoThreeDual_error_tendsto_zero_iff_one_mem proves ||q_n||^2->0
+iff 1 in W. Their RH consumer has this convergence as an explicit
+Open arithmetic hypothesis. The separate formal RH-to-membership gap
+remains unchanged.
+
+### Paper deductions that constrain the provider
+
+Write d_n=||q_n||^2=134-a_n^T G_n^{-1}a_n for n>=2,
+a_n=(3,1,0,...). Periodicity of every finite residue combination, with
+L=lcm(2,...,n+1), gives the strict two-site lower floor
+\[
+ d_n\ge\frac{196}{2+(L+1)(L+2)}>0.
+\]
+Indeed if its value at site 1 is x, the repeated value at L+1 is x,
+and the two-site weighted squared error is
+(14-x)^2/2+x^2/((L+1)(L+2)); minimize this whole square.
+
+Let s_k=a_k^T G_k^{-1}h_k and
+rho_k=s_k^2/(sigma_k d_k). Then the exact dual Schur recurrence and
+strict finite positivity give
+\[
+ 0\le\rho_k<1,\qquad
+ d_n=d_2\prod_{k=2}^{n-1}(1-\rho_k),\qquad
+ 1\in W\ \Longleftrightarrow\ \sum_{k\ge2}\rho_k=\infty.
+\]
+This applies existing infrastructure; it supplies no lower gain bound.
+
+Under the step isometry into L^2(0,infinity), g_d maps exactly to
+{1/(dx)}-{1/x}/d. Thus JV_n is contained in Burnol's B_(1/(n+1)).
+[Burnol, Theorem 1.3](https://arxiv.org/pdf/math/0103058) yields
+liminf e_n log n >= Ccrit, where Ccrit sums m_rho^2/|rho|^2 over
+distinct critical zeros, including both conjugates. Combine this with
+the prior finite transfer
+\[
+ \sqrt{e_{2^K(n+1)-1}}\le\kappa^{-1}\sqrt{d_n}+E_K,\quad
+ E_K^2\le(25/2)2^{-K},\quad\kappa=20-13\sqrt2,
+\]
+and choose K=ceil(2 log_2 log n). Then log m/log n->1 and
+E_K sqrt(log n)->0, so
+\[
+ \liminf d_n\log n\ge\kappa^2 Ccrit,\qquad
+ \sum_{k=2}^{n-1}\rho_k
+ \le\log(d_2/d_n)\le\log\log n+O(1).
+\]
+An eventual rho_k>=c/k over all conductors is consequently impossible.
+Polynomial dual decay, or logarithmic decay with exponent greater than
+one, is also excluded. This is a lower obstruction, not approximation
+convergence.
+
+A viable sufficient Open provider is divergence of the prime subsum
+sum_(p>=5) rho_(p-2). The full composite screening remains at these
+prime stages. Since sigma_(p-2)<2/p, a pointwise sufficient Open target is
+\[
+ s_{p-2}^2\ge2c\,d_{p-2}/p^2\quad(p\text{ prime, sufficiently large}).
+\]
+It would imply rho_(p-2)>=c/p. No such lower estimate is proved.
+Constants c>1 would violate the logarithmic cap. Alternatively,
+unboundedness of the stronger denominator-free budget
+sum_(5<=p<=X) p*s_(p-2)^2/d_(p-2) is sufficient; that budget is at most
+2 log log X+O(1). Neither prime divergence nor this stronger divergence
+is asserted equivalent to RH.
+
+The polarized signed window estimate
+|T_m-T_n+(23/24)(e_n-e_m)|^2 <= (e_n-e_m)(d_n-d_m)
+and its corresponding absolute tail bound are also paper deductions.
+They retain the signed mixed sum before applying Cauchy--Schwarz.
+
+Verification of all sixteen actual formal theorems: coherent snippet
+job_kGaIM-lVRoyVTqOf6kqPuphx_jGrUccK succeeded with exit code 0 and
+verified: true in 5.248 seconds. All eight main axiom checks reported only
+propext, Classical.choice, and Quot.sound. Baseline lake build RiemannResearch --quiet
+succeeded in job_a2vz_RP7cqKOCAcTyc85vAQ-7QGJgkNu.
+The periodic floor, normalized gain application, Burnol rate transfer,
+and prime providers are not asserted Lean-checked here. RH remains Open.

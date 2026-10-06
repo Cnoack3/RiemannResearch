@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### Exact compensated Schur budget and compact dual target (2026-10-06)
+
+RH/CompensatedTwoCoefficientSchur.lean proves the actual signed Schur
+increment, its complete old-stage inverse screening, stage-zero and stage-two
+telescoping, absolute summability, and the exact series sum. The equivalent
+signed cofinal budget has a conditional RH consumer; convergence alone is
+not its arithmetic provider.
+
+RH/CompensatedTwoCoefficientCriterion.lean additionally identifies the
+compact dual target, retains both whole approximation defects in the finite
+completion, and proves dual-target membership and dual-error convergence
+equivalent to constant-target membership. Its RH consumer assumes actual
+dual-error convergence.
+
+Open: the signed cofinal lower bound or compact dual saturation. The
+periodic finite dual floor, normalized gain application, Burnol-inherited
+logarithmic cap, and prime sufficient providers are paper deductions in
+RH/FixedGramAdjointContinuation20261006.md, Section 19. No gain divergence
+or RH-to-target-membership converse is supplied.
+
 ### Actual fixed-Gram dyadic adjoint and compensated coefficient bridge (2026-10-06)
 
 RH/ActualDyadicAdjointDefect.lean proves actual equations (21), (22), and
