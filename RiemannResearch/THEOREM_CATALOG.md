@@ -1,5 +1,56 @@
 # Theorem catalog
 
+### Crossing-balanced squarefree windows and subpolynomial RH reductions (2026-10-06)
+
+**Conditional research reductions.** All displayed complete identities and
+analytic obstructions below are unconditional under their explicit finite
+construction hypotheses. The RH consumers keep the arithmetic providers Open.
+
+- `Analysis/SubpolynomialWindowGrowth.lean`: logarithmic contradiction to a
+  positive-power floor and transfer under a fixed multiplicative budget.
+- `RH/BalancedSquarefreeCrossing.lean`: actual canonical Möbius trial at a
+  reciprocal-charge crossing, squarefree boundary/support, convex parameter,
+  source charge zero, exact head, endpoint and full pointwise error bound.
+- `RH/ParetoFiniteWindowEnergy.lean`: actual complete norm = finite square
+  window + whole farther tail, far bound one, exact window mass, full signed
+  quadratic decomposition, diagonal < 1, signed pair >= -1/2, and sharp
+  square-root comparison between trial and residual window energies.
+- `RH/LocalizedMellinObstruction.lean`: sharp localized residual power lower
+  bound at an actual zeta zero, using the actual Mellin/legal-space theorem.
+- `RH/LegalExactHeadSubpolynomial.lean`: actual RH from cofinal legal exact-head
+  trials, full error certificates, and literal subpolynomial growth.
+- `RH/SquarefreeWindowSubpolynomial.lean`:
+  `riemannHypothesis_of_subpolynomial_crossing_window` specializes this to the
+  actual crossing-balanced family; `riemannHypothesis_of_subpolynomial_positive_crossing_pairs`
+  uses the positive part of the complete signed unequal-pair sum. The pair is
+  half the ordered unequal-pair sum, retaining every interaction.
+- `RH/CompactTargetMellinObstruction.lean`: actual compact target transform
+  `(14-26*2^(-s)+12*2^(-2s))/s`, nonvanishing for Re(s)>1/2, and conditional
+  compact-target subpolynomial RH consumer with a complete error budget.
+- `RH/CompactShiftedMobiusSource.lean`: explicit shifted source formula and
+  actual arithmetic coefficient bound `|nu(n)| <= 40`.
+- `RH/CompactCorrectedTrialWindow.lean`: actual corrected compact lift, source
+  floor inversion, legality, exact expanding head and endpoint, actual
+  orthogonal head bound `400/(N*(N+1))`, complete certificate bounds with the
+  whole far tail bounded by 1600, and its conditional RH consumer.
+- `RH/ParetoCompactHead.lean`: reusable actual head norm equals the sole
+  endpoint energy when the strict initial head vanishes.
+- `RH/PrimorialExtrapolationObstruction.lean`: actual finite atom formula,
+  prime-divisor regrouping to the paper's extrapolant, complete norm/error
+  lower bounds, and cofinal divergence of its complete physical energy.
+
+Open: provide a checked cofinal crossing sequence (the classical oscillation
+argument in the continuation is not formalized by these modules).
+Open: prove literal subpolynomial growth of the complete crossing window, or
+of the positive part of the complete signed squarefree pair energy.
+Open (formalization): supply checked cofinal compact cutoffs with
+`|xi_N| <= 20/N` from the continuation's classical small-charge argument.
+Open: prove literal subpolynomial growth of the compact residual certificate
+on those cutoffs. No RH converse or unconditional RH proof is asserted.
+Source: user-provided Green--Pareto--Schur continuation, Sections 21--26
+(statements and proof strategies); no mathematical novelty claim is made.
+
+
 ### Signed physical trial tails and relative logarithmic source growth (2026-10-06)
 
 **Conditional research reductions.** The actual Pareto trial consumers conclude

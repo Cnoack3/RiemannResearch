@@ -146,4 +146,25 @@ theorem compactHead_mobiusRiesz (N m : ℕ) (hm : 0 < m) (hmN : m ≤ N) :
     dualCoeff_eq_zero_of_lt hm (by omega)]
   simp
 
+/- Source: user-provided continuation, Section 25, equation (69),
+6 October 2026 (endpoint support proof strategy). -/
+/-- The actual orthogonal head has just its boundary coordinate when every
+strictly earlier residual coordinate vanishes. -/
+theorem compactHead_norm_sq_eq_endpoint (N : ℕ) (f : ThresholdHilbert)
+    (hhead : ∀ j < N, hilbertSequence f j = 0) :
+    ‖compactHead N f‖^2 = positiveWeight N * (hilbertSequence f N)^2 := by
+  rw [hilbert_norm_weighted_sq]
+  calc
+    _ = positiveWeight N * (hilbertSequence (compactHead N f) N)^2 := by
+      apply tsum_eq_single N
+      intro j hjN
+      rw [compactHead_sequence]
+      by_cases hj : j ≤ N
+      · rw [if_pos hj, hhead j (by omega)]
+        simp
+      · rw [if_neg hj]
+        simp
+    _ = _ := by rw [compactHead_sequence, if_pos (le_refl N)]
+
+
 end RiemannResearch.RH.Pareto
