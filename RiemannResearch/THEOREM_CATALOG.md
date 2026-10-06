@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Actual spectral limits, sharp moment feedback and relative signed gaps (2026-10-06)
+
+Unconditional geometry and conditional research reductions; complete tails
+and every signed interaction remain explicit. Eight new focused modules:
+
+- RH/ParetoCompactCutoffLimits.lean: strong physical cutoff convergence,
+  independently cofinal moving cutoff convergence, actual optimizer tail decay.
+- RH/ParetoCompactSourceLimits.lean: exact shifted charge dilation formula,
+  unconditional PNT decay, conductor-stage membership and actual head-error decay.
+- RH/ParetoActualSpectralLimits.lean: literal actual S_n->0 and T_n->delta,
+  fixed-threshold escaped mass ->delta, tightness iff one_mem_closedSpace,
+  actual tightness-to-RH and strict double-log feedback-to-RH consumers.
+- Analysis/FiniteSpectralMomentObstruction.lean: coefficient-one eventual
+  normalized moment lower floor, sharp additive-log2 finite envelope,
+  any theta<1 feedback absorption.
+- Analysis/FiniteSpectralDependentEscape.lean: changing-dimension full-source
+  escape, tightness equivalence and sharp moment consumers.
+- Analysis/CumulativeRelativeFloor.lean: normalized negative-prefix variation
+  automatically vanishes under O(terminal prefix) excursions and diverging mass.
+- RH/ParetoCumulativeRelativeFloor.lean: actual cumulative signed RH consumer
+  using that automatic penalty limit.
+- Analysis/FiniteConstrainedProjection.lean: constructed unique constrained
+  projection, exact inverse correction, full Pythagorean completion,
+  delta+head^2 <= E <= delta+C^2 head^2 from an explicit legal repair norm cap.
+
+Open arithmetic: actual source tightness or strict normalized moment feedback;
+actual cumulative signed budget and normalized numerator with relative floor;
+concrete optimized complete-error decay and support schedule.
+Open formalization: concrete Mobius O(H) repair operator/cap; RH-to-density converse.
+The previously open unconditional actual spectral sequence assembly is closed.
+Decisive isolated check and seven axiom audits passed with only standard
+foundations. See RH/GreenParetoSpectralLimitsAdvance20261006.md.
+
 ### Cumulative variation, exact-head closure, literal spectrum and retained signature (2026-10-06)
 
 **Unconditional finite geometry and conditional research reductions.**
