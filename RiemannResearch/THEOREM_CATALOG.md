@@ -1,5 +1,20 @@
 # Theorem catalog
 
+### Fixed-Gram dyadic adjoint-defect algebra (2026-10-06)
+
+Analysis/DyadicAdjointDefect.lean proves the real Hilbert four-vector
+adjoint-square identity, exact weighted pair defect, scalar completed-square
+identities, nonlinear leakage bounds with explicit energy premises, and
+zero_of_compensated_upper. These are algebraic support results, independently
+verified as a coherent snippet; checkpoint validation is tracked separately.
+
+RH/FixedGramAdjointContinuation20261006.md derives the actual canonical
+residual bound on paper and the compensated signed RH-equivalent criterion.
+The infinite adjoint application, coefficient specialization, and Mellin jet
+construction are paper proofs, not claims of completed formalization.
+Open: the cofinal lower provider for
+3*c[n,2]+c[n,3]-4+(23/24)*(1-Q[n]), or fixed full-inverse saturation.
+
 ### Quadratic first moments and flexible signed mollifier budgets (2026-10-05)
 
 Analysis/ComplexQuadraticDetectorMoments.lean proves log(1+x^2)<=x^p
