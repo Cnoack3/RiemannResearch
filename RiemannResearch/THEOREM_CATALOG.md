@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Actual canonical-envelope spectral consumer (2026-10-06)
+
+Unconditional geometric providers and a **conditional research reduction**.
+
+- Analysis/FiniteSpectralDependentEscape.lean: the sharp moment lower floor
+  permits eventual envelope hypotheses; strict feedback can be supplied only
+  on a cofinal sequence.
+- RH/ParetoActualSpectralLimits.lean: J_n->delta with T_n=J_n+S_n retained;
+  the literal sigma_n=S_n+1/(n+1) is positive, dominates the entire optimizer
+  tail, tends to zero and is eventually below one. The canonical lower floor
+  has no additional geometric hypotheses.
+- riemannHypothesis_of_actual_compactSpectrum_cofinal_canonical_feedback:
+  requires k_n->infinity, theta<1, E_n->0 and the complete-source normalized
+  arithmetic moment upper budget only along k_n. All envelope inputs are
+  internally discharged.
+
+Open arithmetic: actual tightness or the strict cofinal moment budget.
+Open formalization: RH-to-density converse. No arithmetic provider is inferred
+from the unconditional geometric limits. Source: the supplied continuation
+and exact actual full-stage geometry. See Section 7 of
+RH/GreenParetoSpectralLimitsAdvance20261006.md.
+
+
 ### Actual spectral limits, sharp moment feedback and relative signed gaps (2026-10-06)
 
 Unconditional geometry and conditional research reductions; complete tails
@@ -68,13 +91,14 @@ remain explicit. No arithmetic provider or RH converse is inferred.
 Open (arithmetic): actual cumulative signed budgets and normalized smallness;
 complete optimized/affine error growth; literal spectral tightness or source
 moments; actual Mellin-signature noncancellation.
-Open (formalization): assemble cutoff convergence, compact head-error decay
-and optimizer-tail decay with the actual finite spectrum before claiming an
-actual sequence-to-RH spectral consumer. These geometric steps do not require
-a new RH estimate. The RH-to-density converse remains separately explicit.
-Paper only: the explicit O(H) Mobius head-repair operator and the stronger
-comparison delta_M+e_HM^2 <= E_HM <= delta_M+C_H^2 e_HM^2, C_H<=12H+4;
-also the normalized double-log liminf obstruction >=delta.
+Closed by ParetoCompactCutoffLimits, ParetoCompactSourceLimits and
+ParetoActualSpectralLimits: cutoff convergence, actual compact head-error
+decay, optimizer-tail decay and the actual sequence-to-RH spectral consumer.
+The normalized double-log lower-floor obstruction >=delta is also formalized.
+Open (formalization): the RH-to-density converse and the concrete O(H)
+Mobius head-repair operator with its proposed cap C_H<=12H+4.
+FiniteConstrainedProjection proves the stronger exact constrained-energy
+comparison conditional on an explicit legal repair norm cap.
 Earlier source status was stale: reciprocal-charge nonvanishing, complete
 canonical affine exhaustion and continuous head repair were already proved.
 See RH/GreenParetoGitHubAdvance20261006.md for exact hypotheses, proof

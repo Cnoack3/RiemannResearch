@@ -239,3 +239,52 @@ relative negative excursion control, and vanishing normalized signed numerator.
 The finite spectral realization and its asymptotic geometric assembly no
 longer need to be supplied as assumptions. The concrete Möbius repair cap
 remains a useful separate finite formalization task.
+
+## 7. Canonical envelope and cofinal arithmetic consumer
+
+The selected sequence-to-RH assembly was already completed in
+`257c85b767c95f18a1e171f1e7d2aec1e057ee41`, which supersedes `52ec`.
+This continuation reuses those checked declarations.
+
+Define the literal complete-tail envelope
+\[
+\sigma_n=S_n+\frac1{n+1}.
+\]
+The actual optimizer-tail limit proves internally that `sigma_n>0`,
+`S_n<=sigma_n`, `sigma_n->0`, and eventually `sigma_n<1`.
+Finite initial exceptions in the double-log normalization are harmless.
+No decay rate is asserted. The separate head-displacement limit
+`J_n->delta` is proved by the retained exact identity `T_n=J_n+S_n`.
+
+With
+\[
+M_n=\sum_iw_{n,i}\log(1+\log(1+\lambda_{n,i})),\qquad
+D_n=\log(1+\log(1/\sigma_n)),
+\]
+the unconditional literal-source obstruction is now
+\[
+\forall c<\delta,\qquad c<M_n/D_n\quad\text{eventually}.
+\]
+Its declaration is `compactSpectrum_canonical_doubleLog_lower_floor`.
+Every eigenvalue and source weight of the full actual stage is included.
+
+The new consumer
+`riemannHypothesis_of_actual_compactSpectrum_cofinal_canonical_feedback`
+requires only a cofinal sequence `k_n->infinity`, a fixed `theta<1`,
+a remainder `E_n->0`, and the OPEN arithmetic budget
+\[
+\frac{M_{k_n}}{D_{k_n}}\le E_n+\theta T_{k_n}
+\quad\text{eventually}.
+\]
+Thus the previous four envelope hypotheses are discharged by actual
+geometry, and the moment budget need hold only cofinally.
+The inequality is not proved: geometry establishes the lower obstruction,
+not this strict upper feedback bound. Actual complete-source tightness is
+also still open. Neither `S_n->0` nor PNT charge cancellation implies it.
+The RH-to-density converse remains a separate formalization gap.
+
+The coherent extension and decisive axiom audits passed
+`job_py6zVcoptQjuKlscrXcWI7c75FA4TYOO`, exit 0; the extension's decisive
+declarations use only `propext`, `Classical.choice`, and `Quot.sound`.
+Final publication uses the affected-module checkpoint, not a separate
+full-project build.

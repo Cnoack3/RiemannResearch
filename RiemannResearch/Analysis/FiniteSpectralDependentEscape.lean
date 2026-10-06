@@ -254,4 +254,80 @@ theorem dependent_defect_eq_zero_of_relative_doubleLog_feedback
   linarith [hn.1, hn.2.1, hn.2.2]
 
 
+
+/-- Finite initial exceptions in envelope positivity, size and domination are
+irrelevant. This permits envelopes built directly from the optimizer tail. -/
+theorem dependent_eventually_lt_relative_doubleLog_moment_of_eventual_envelope
+    (w lam : (n : ℕ) → ι n → ℝ) (delta : ℝ) (sigma : ℕ → ℝ)
+    (hw : ∀ n i, 0 ≤ w n i) (hlam : ∀ n i, 0 ≤ lam n i)
+    (hT : Tendsto (fun n => correction Finset.univ (w n) (lam n)) atTop (𝓝 delta))
+    (hsigma : Tendsto sigma atTop (𝓝 0))
+    (hpos : ∀ᶠ n in atTop, 0 < sigma n)
+    (hone : ∀ᶠ n in atTop, sigma n < 1)
+    (htail : ∀ᶠ n in atTop, optimizerTail Finset.univ (w n) (lam n) ≤ sigma n) :
+    ∀ c : ℝ, c < delta → ∀ᶠ n in atTop,
+      c < moment Finset.univ (w n) (lam n) doubleLog /
+        Real.log (1 + Real.log (1 / sigma n)) := by
+  obtain ⟨K, hK⟩ := eventually_atTop.mp (hpos.and (hone.and htail))
+  have hshift := tendsto_add_atTop_nat K
+  have hlower :=
+    dependent_eventually_lt_relative_doubleLog_moment_of_envelope
+      (fun n => ι (n+K)) (fun n => w (n+K)) (fun n => lam (n+K))
+      delta (fun n => sigma (n+K)) (fun n => hw (n+K))
+      (fun n => hlam (n+K)) (hT.comp hshift) (hsigma.comp hshift)
+      (fun n => (hK (n+K) (by omega)).1)
+      (fun n => (hK (n+K) (by omega)).2.1)
+      (fun n => (hK (n+K) (by omega)).2.2)
+  intro c hc
+  obtain ⟨L, hL⟩ := eventually_atTop.mp (hlower c hc)
+  apply eventually_atTop.mpr
+  refine ⟨L+K, ?_⟩
+  intro n hn
+  have he : n-K+K = n := Nat.sub_add_cancel (by omega)
+  let P : ℕ → Prop := fun j =>
+    c < moment Finset.univ (w j) (lam j) doubleLog /
+      Real.log (1 + Real.log (1 / sigma j))
+  have hh : P (n-K+K) := hL (n-K) (by omega)
+  exact (congrArg P he).mp hh
+
+/-- A strict normalized moment budget is needed only on a cofinal sequence.
+All finite initial envelope exceptions are allowed. This is an arithmetic
+provider consumer, not a proof of the budget. -/
+theorem dependent_defect_eq_zero_of_cofinal_relative_doubleLog_feedback
+    (w lam : (n : ℕ) → ι n → ℝ) (delta theta : ℝ)
+    (sigma E : ℕ → ℝ) (k : ℕ → ℕ)
+    (hw : ∀ n i, 0 ≤ w n i) (hlam : ∀ n i, 0 ≤ lam n i)
+    (hT : Tendsto (fun n => correction Finset.univ (w n) (lam n)) atTop (𝓝 delta))
+    (hsigma : Tendsto sigma atTop (𝓝 0))
+    (hpos : ∀ᶠ n in atTop, 0 < sigma n)
+    (hone : ∀ᶠ n in atTop, sigma n < 1)
+    (htail : ∀ᶠ n in atTop, optimizerTail Finset.univ (w n) (lam n) ≤ sigma n)
+    (hk : Tendsto k atTop atTop) (htheta : theta < 1)
+    (hE : Tendsto E atTop (𝓝 0))
+    (hbudget : ∀ᶠ n in atTop,
+      moment Finset.univ (w (k n)) (lam (k n)) doubleLog /
+          Real.log (1 + Real.log (1 / sigma (k n))) ≤
+        E n + theta * correction Finset.univ (w (k n)) (lam (k n))) : delta = 0 := by
+  have hdelta : 0 ≤ delta := le_of_tendsto_of_tendsto tendsto_const_nhds hT
+    (Filter.Eventually.of_forall fun n =>
+      correction_nonneg Finset.univ (w n) (lam n)
+        (fun i _ => hw n i) (fun i _ => hlam n i))
+  by_contra hne
+  have hdelta_pos : 0 < delta := lt_of_le_of_ne hdelta (Ne.symm hne)
+  have hstrict : theta * delta < delta := by
+    simpa only [one_mul] using mul_lt_mul_of_pos_right htheta hdelta_pos
+  let c : ℝ := (delta + theta * delta) / 2
+  have hc_delta : c < delta := by dsimp [c]; linarith
+  have htheta_c : theta * delta < c := by dsimp [c]; linarith
+  have hlower := hk.eventually
+    (dependent_eventually_lt_relative_doubleLog_moment_of_eventual_envelope
+      ι w lam delta sigma hw hlam hT hsigma hpos hone htail c hc_delta)
+  have hrhs : Tendsto (fun n => E n +
+      theta * correction Finset.univ (w (k n)) (lam (k n)))
+      atTop (𝓝 (theta * delta)) := by
+    simpa only [Function.comp_def, zero_add] using hE.add ((hT.comp hk).const_mul theta)
+  obtain ⟨n, hn⟩ :=
+    (hlower.and (hbudget.and (hrhs.eventually_lt_const htheta_c))).exists
+  linarith [hn.1, hn.2.1, hn.2.2]
+
 end RiemannResearch.Analysis.FiniteSpectralBudget

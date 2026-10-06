@@ -151,4 +151,99 @@ theorem riemannHypothesis_of_actual_compactSpectrum_doubleLog_feedback
   apply riemannHypothesis_of_twoThreeDual_error_tendsto_zero
   simpa only [hz] using hd0
 
+
+/-- The head-displacement square has the full limiting defect. The vanishing
+optimizer-tail square is retained in the exact identity before taking limits. -/
+theorem compactSpectrum_headDisplacement_tendsto_defect :
+    Tendsto (fun n => headDisplacement Finset.univ
+      (compactSpectrumWeight n) (compactSpectrumEigenvalue n))
+      atTop (𝓝 compactProjectionDefect) := by
+  have he (n : ℕ) : headDisplacement Finset.univ
+      (compactSpectrumWeight n) (compactSpectrumEigenvalue n) =
+      correction Finset.univ (compactSpectrumWeight n) (compactSpectrumEigenvalue n) -
+        optimizerTail Finset.univ (compactSpectrumWeight n) (compactSpectrumEigenvalue n) := by
+    have h := correction_eq_headDisplacement_add_optimizerTail Finset.univ
+      (compactSpectrumWeight n) (compactSpectrumEigenvalue n)
+      (fun i _ => compactSpectrumEigenvalue_nonneg n i)
+    linarith only [h]
+  simpa only [he, sub_zero] using
+    compactSpectrum_correction_tendsto_defect.sub compactSpectrum_optimizerTail_tendsto_zero
+
+/-- A canonical positive envelope is built from the literal complete physical
+optimizer-tail square. No convergence rate or arithmetic bound is presumed. -/
+def compactSpectrumTailEnvelope (n : ℕ) : ℝ :=
+  optimizerTail Finset.univ (compactSpectrumWeight n) (compactSpectrumEigenvalue n) +
+    1 / ((n : ℝ) + 1)
+
+theorem compactSpectrumTailEnvelope_pos (n : ℕ) :
+    0 < compactSpectrumTailEnvelope n := by
+  have hS := optimizerTail_nonneg Finset.univ
+    (compactSpectrumWeight n) (compactSpectrumEigenvalue n)
+    (fun i _ => compactSpectrumWeight_nonneg n i)
+    (fun i _ => compactSpectrumEigenvalue_nonneg n i)
+  have hinv : (0 : ℝ) < 1 / ((n : ℝ) + 1) := by positivity
+  dsimp [compactSpectrumTailEnvelope]
+  linarith
+
+theorem compactSpectrum_optimizerTail_le_envelope (n : ℕ) :
+    optimizerTail Finset.univ (compactSpectrumWeight n)
+      (compactSpectrumEigenvalue n) ≤ compactSpectrumTailEnvelope n := by
+  unfold compactSpectrumTailEnvelope
+  have hinv : (0 : ℝ) ≤ 1 / ((n : ℝ) + 1) := by positivity
+  linarith
+
+theorem compactSpectrumTailEnvelope_tendsto_zero :
+    Tendsto compactSpectrumTailEnvelope atTop (𝓝 0) := by
+  have hinv : Tendsto (fun n : ℕ => 1 / ((n : ℝ) + 1)) atTop (𝓝 0) := by
+    exact tendsto_one_div_add_atTop_nhds_zero_nat
+  change Tendsto (fun n => optimizerTail Finset.univ
+    (compactSpectrumWeight n) (compactSpectrumEigenvalue n) +
+      1 / ((n : ℝ) + 1)) atTop (𝓝 0)
+  simpa only [add_zero] using compactSpectrum_optimizerTail_tendsto_zero.add hinv
+
+/-- The sharp normalized moment obstruction now uses an internally
+constructed envelope, with no additional geometric hypotheses. -/
+theorem compactSpectrum_canonical_doubleLog_lower_floor :
+    ∀ c : ℝ, c < compactProjectionDefect → ∀ᶠ n in atTop,
+      c < moment Finset.univ (compactSpectrumWeight n)
+        (compactSpectrumEigenvalue n) doubleLog /
+          Real.log (1 + Real.log (1 / compactSpectrumTailEnvelope n)) :=
+  dependent_eventually_lt_relative_doubleLog_moment_of_eventual_envelope
+    compactSpectrumIndex compactSpectrumWeight compactSpectrumEigenvalue
+    compactProjectionDefect compactSpectrumTailEnvelope
+    compactSpectrumWeight_nonneg compactSpectrumEigenvalue_nonneg
+    compactSpectrum_correction_tendsto_defect compactSpectrumTailEnvelope_tendsto_zero
+    (Filter.Eventually.of_forall compactSpectrumTailEnvelope_pos)
+    (compactSpectrumTailEnvelope_tendsto_zero.eventually_lt_const zero_lt_one)
+    (Filter.Eventually.of_forall compactSpectrum_optimizerTail_le_envelope)
+
+/-- Actual sequence-to-RH consumer with no tail-envelope provider.
+Only the strict normalized arithmetic moment budget remains. It need hold
+on just a cofinal sequence and retains every source weight and correction. -/
+theorem riemannHypothesis_of_actual_compactSpectrum_cofinal_canonical_feedback
+    (k : ℕ → ℕ) (E : ℕ → ℝ) (theta : ℝ)
+    (hk : Tendsto k atTop atTop) (htheta : theta < 1)
+    (hE : Tendsto E atTop (𝓝 0))
+    (hbudget : ∀ᶠ n in atTop,
+      moment Finset.univ (compactSpectrumWeight (k n))
+        (compactSpectrumEigenvalue (k n)) doubleLog /
+          Real.log (1 + Real.log (1 / compactSpectrumTailEnvelope (k n))) ≤
+        E n + theta * correction Finset.univ
+          (compactSpectrumWeight (k n)) (compactSpectrumEigenvalue (k n))) :
+    RiemannHypothesis := by
+  have hz := dependent_defect_eq_zero_of_cofinal_relative_doubleLog_feedback
+    compactSpectrumIndex compactSpectrumWeight compactSpectrumEigenvalue
+    compactProjectionDefect theta compactSpectrumTailEnvelope E k
+    compactSpectrumWeight_nonneg compactSpectrumEigenvalue_nonneg
+    compactSpectrum_correction_tendsto_defect compactSpectrumTailEnvelope_tendsto_zero
+    (Filter.Eventually.of_forall compactSpectrumTailEnvelope_pos)
+    (compactSpectrumTailEnvelope_tendsto_zero.eventually_lt_const zero_lt_one)
+    (Filter.Eventually.of_forall compactSpectrum_optimizerTail_le_envelope)
+    hk htheta hE hbudget
+  have hd0 : Tendsto (fun n => ‖twoThreeDualResidual n‖^2)
+      atTop (𝓝 compactProjectionDefect) :=
+    ExhaustiveWalk.walkError_tendsto residueAtom id Function.surjective_id twoThreeDual
+  apply riemannHypothesis_of_twoThreeDual_error_tendsto_zero
+  simpa only [hz] using hd0
+
 end RiemannResearch.RH.Pareto.CoefficientStabilization
