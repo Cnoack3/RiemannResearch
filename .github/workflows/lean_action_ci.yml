@@ -2,18 +2,38 @@ name: Lean Action CI
 
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      full_build:
+        description: Run full Lean verification (false runs tooling preflight only)
+        type: boolean
+        default: true
+      disk_check:
+        description: With full_build=false, check hosted disk without installing Lean
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# Automatic runs supersede earlier runs on the same branch/PR. Manual runs
+# have unique groups so a research push cannot cancel requested verification.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
 
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      lean_required: ${{ steps.scope.outputs.lean_required }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - name: Install MCP workspace tooling dependencies
         run: |
           sudo apt-get update
@@ -22,7 +42,63 @@ jobs:
         run: |
           python3 -m py_compile tools/lean_workspace_mcp.py tools/agent_workspaces.py
           python3 tools/test_agent_workspaces.py
+      - name: Decide verification scope conservatively
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          FULL_BUILD: ${{ inputs.full_build }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import subprocess
+
+          required = True
+          if os.environ['EVENT_NAME'] == 'workflow_dispatch':
+              required = os.environ['FULL_BUILD'] != 'false'
+          else:
+              base = os.environ['BASE_SHA']
+              if base and set(base) != {'0'}:
+                  diff = subprocess.run(
+                      ['git', 'diff', '--no-renames', '--name-only', '-z', base, 'HEAD'],
+                      capture_output=True, check=False,
+                  )
+                  if diff.returncode == 0:
+                      paths = diff.stdout.decode('utf-8').rstrip('\0').split('\0')
+                      tooling = {
+                          'tools/lean_workspace_mcp.py', 'tools/agent_workspaces.py',
+                          'tools/test_agent_workspaces.py',
+                      }
+                      required = any(
+                          p and p not in tooling and not p.endswith(('.md', '.tex', '.pdf'))
+                          for p in paths
+                      )
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'lean_required={str(required).lower()}\n')
+          print('Full Lean build required:', required)
+          PY
+
+  build:
+    needs: preflight
+    if: ${{ needs.preflight.outputs.lean_required == 'true' || (github.event_name == 'workflow_dispatch' && inputs.disk_check) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: ${{ needs.preflight.outputs.lean_required == 'true' && 360 || 5 }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Reclaim unused hosted SDKs and check disk headroom
+        timeout-minutes: 3
+        run: |
+          df -h "$GITHUB_WORKSPACE"
+          # These SDKs are unrelated to Lean; retain all project/toolchain caches.
+          sudo rm -rf -- /usr/local/lib/android /usr/share/dotnet
+          df -h "$GITHUB_WORKSPACE"
+          available_kib="$(df -Pk "$GITHUB_WORKSPACE" | awk 'NR == 2 {print $4}')"
+          if (( available_kib < 20 * 1024 * 1024 )); then
+            echo "::error::Less than 20 GiB free before Lean setup; refusing a likely disk-exhausting build."
+            exit 1
+          fi
       - name: Build the RiemannResearch library
+        if: ${{ needs.preflight.outputs.lean_required == 'true' }}
         uses: leanprover/lean-action@v1
         with:
           auto-config: false
