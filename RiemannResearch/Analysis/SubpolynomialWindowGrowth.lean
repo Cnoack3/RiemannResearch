@@ -110,4 +110,32 @@ theorem relativeLog_tendsto_zero_of_scaled_budget
         _ = _ := add_div _ _ _
     exact hratio.trans_lt hup
 
+/-- Subpolynomial energy excludes a positive-power lower bound even on an
+unbounded set of indices. -/
+theorem no_positive_power_floor_frequently (x E : ℕ → ℝ) (K c a : ℝ)
+    (hx : Tendsto x atTop atTop)
+    (hE : ∀ n, 0 ≤ E n) (hK : 1 ≤ K) (hc : 0 < c) (ha : 0 < a)
+    (hsub : Tendsto (fun n => Real.log (1 + E n) / Real.log (x n))
+      atTop (𝓝 0))
+    (hfloor : ∃ᶠ n in atTop, c * (x n) ^ a ≤ E n + K) : False := by
+  have hlog : Tendsto (fun n => Real.log (x n)) atTop atTop :=
+    Real.tendsto_log_atTop.comp hx
+  have hconst : Tendsto
+      (fun n => (Real.log K - Real.log c) / Real.log (x n))
+      atTop (𝓝 0) := hlog.const_div_atTop _
+  have hrhs : Tendsto (fun n =>
+      (Real.log (1 + E n) + Real.log K - Real.log c) / Real.log (x n))
+      atTop (𝓝 0) := by
+    have h := hsub.add hconst
+    convert h using 1
+    · ext n
+      ring
+    · simp
+  have hx1 : ∀ᶠ n in atTop, 1 < x n := hx.eventually (eventually_gt_atTop 1)
+  have hup := hrhs.eventually (Iio_mem_nhds ha)
+  obtain ⟨i, hfi, hxi, hui⟩ := (hfloor.and_eventually (hx1.and hup)).exists
+  exact (not_lt_of_ge (exponent_le_log_ratio (x i) (E i) K c a
+    hxi (hE i) hK hc hfi)) hui
+
+
 end RiemannResearch.Analysis.SubpolynomialWindow

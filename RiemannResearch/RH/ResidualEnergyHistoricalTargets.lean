@@ -7,6 +7,7 @@ import RiemannResearch.RH.ParetoGibbsSpectralGap
 import RiemannResearch.RH.TwoSeedHeadEnergyGeometry
 import RiemannResearch.RH.ActualLaguerreParseval
 import RiemannResearch.RH.ResidualTailPNT
+import RiemannResearch.RH.CanonicalMobiusSharpResidualEnergy
 
 /-!
 # Quantitative residual-energy assertions from the historical catalogue
@@ -62,11 +63,29 @@ def finiteExactHeadErrorValues (N : ℕ) : Set ℝ :=
   {v | ∃ f : ThresholdHilbert, FiniteResidueLegal f ∧ ExactHead N f ∧
     v = ‖hilbertOne - f‖ ^ 2}
 
-/-- OPEN: the concrete upper witness needed for the claimed `liminf Nt_N`
+/-- Proved by `linearExactHeadUpperWitness` below: the concrete upper witness
+needed for the historical `liminf Nt_N`
 constant. The witness is finite legal, with the complete error norm retained. -/
 def LinearExactHeadUpperWitnessTarget : Prop :=
   ∀ N : ℕ, ∃ f : ThresholdHilbert, FiniteResidueLegal f ∧ ExactHead N f ∧
     ‖hilbertOne - f‖ ^ 2 ≤ 4 * (N : ℝ) + 1 / ((N : ℝ) + 1)
+
+/-- The previously open linear witness exists unconditionally. -/
+theorem linearExactHeadUpperWitness : LinearExactHeadUpperWitnessTarget := by
+  intro N
+  cases N with
+  | zero =>
+    refine ⟨0, ⟨0, (finiteSpace 0).zero_mem⟩, ?_, ?_⟩
+    · intro k hk hkN
+      omega
+    · simp only [sub_zero]
+      norm_num [hilbertOne_norm_sq]
+  | succ N =>
+    refine ⟨canonicalMobiusHilbert (N + 1),
+      ⟨N + 1, canonicalMobiusHilbert_mem_finiteSpace (N + 1)⟩,
+      canonicalMobiusHilbert_exact (N + 1), ?_⟩
+    exact canonicalMobiusResidual_norm_sq_le_linear_ceiling (N + 1) (by omega)
+
 
 /-- Historical target, now proved by `residualTailLinearFloor`: positive tails
 and the precise liminf floor, stated without a

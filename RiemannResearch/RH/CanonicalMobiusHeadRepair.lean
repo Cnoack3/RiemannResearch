@@ -121,4 +121,50 @@ theorem exists_legal_exact_head_near
   obtain ⟨M, hM⟩ := hsmall.exists
   exact ⟨max M N, le_max_right _ _, f M, hmem M, hhead M, hM⟩
 
+private theorem finiteSpace_mem_closedSpace_aux (M : ℕ) (x : ThresholdHilbert)
+    (hx : x ∈ finiteSpace M) : x ∈ closedSpace := by
+  exact Submodule.le_topologicalClosure _ (walkSpan_le residueAtom id M hx)
+
+/-- A fixed head with arbitrary conductor support and complete error norm. -/
+def FixedHeadApproximation (z : ThresholdHilbert) (N : ℕ) : Prop :=
+  ∀ ε : ℝ, 0 < ε → ∃ M : ℕ, N ≤ M ∧ ∃ x : ThresholdHilbert,
+    x ∈ finiteSpace M ∧
+    (∀ j, 0 < j → j ≤ N → hilbertSequence x j = hilbertSequence z j) ∧
+    ‖x - z‖ ^ 2 < ε
+
+/-- Prescribing any fixed physical head imposes no additional closure
+condition when the conductor budget is allowed to grow. -/
+theorem fixedHeadApproximation_iff_mem_closedSpace
+    (z : ThresholdHilbert) (N : ℕ) :
+    FixedHeadApproximation z N ↔ z ∈ closedSpace := by
+  constructor
+  · intro h
+    have hc : IsClosed (closedSpace : Set ThresholdHilbert) :=
+      Submodule.isClosed_topologicalClosure _
+    apply hc.closure_subset
+    apply Metric.mem_closure_iff.mpr
+    intro ε hε
+    obtain ⟨M, hNM, x, hx, hhead, herr⟩ := h (ε ^ 2) (sq_pos_of_pos hε)
+    refine ⟨x, finiteSpace_mem_closedSpace_aux M x hx, ?_⟩
+    rw [dist_eq_norm, norm_sub_rev]
+    nlinarith [norm_nonneg (x - z)]
+  · intro hz ε hε
+    exact exists_legal_exact_head_near z hz N ε hε
+
+/-- Every prescribed positive error budget can be met while the exact head
+grows, under the actual closure criterion. There is no quantitative upper
+bound on the chosen conductor schedule. -/
+theorem exists_legal_exact_head_arbitrary_error_budget
+    (z : ThresholdHilbert) (hz : z ∈ closedSpace)
+    (budget : ℕ → ℝ) (hbudget : ∀ N, 0 < budget N) :
+    ∃ support : ℕ → ℕ, ∃ x : ℕ → ThresholdHilbert,
+      ∀ N, N ≤ support N ∧ x N ∈ finiteSpace (support N) ∧
+        (∀ j, 0 < j → j ≤ N → hilbertSequence (x N) j = hilbertSequence z j) ∧
+        ‖x N - z‖ ^ 2 < budget N := by
+  classical
+  have h (N : ℕ) := exists_legal_exact_head_near z hz N (budget N) (hbudget N)
+  choose support hsupport x hmem hhead herr using h
+  exact ⟨support, x, fun N => ⟨hsupport N, hmem N, hhead N, herr N⟩⟩
+
+
 end RiemannResearch.RH.Pareto.CoefficientStabilization

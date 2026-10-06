@@ -82,5 +82,26 @@ theorem closure_exact_constraints (S : Submodule ℝ H)
     obtain ⟨u, hu, hut⟩ := exists_exact_approximants S L R hR hRS b x hxS hx
     exact mem_closure_iff_seq_limit.mpr ⟨u, hu, hut⟩
 
+/-- Quantitative exact repair. A bound on the right inverse yields a complete
+norm error bound with no head or tail term discarded. -/
+theorem repair_norm_error_le
+    {H E : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (L : H →L[ℝ] E) (R : E →L[ℝ] H)
+    (b : E) (z y : H) (hz : L z = b) :
+    ‖y + R (b - L y) - z‖ ≤ (1 + ‖R‖ * ‖L‖) * ‖y - z‖ := by
+  have hs : b - L y = L (z - y) := by rw [map_sub, hz]
+  have hv : y + R (b - L y) - z = (y - z) + R (b - L y) := by abel
+  rw [hv]
+  calc
+    _ ≤ ‖y - z‖ + ‖R (b - L y)‖ := norm_add_le _ _
+    _ ≤ ‖y - z‖ + ‖R‖ * (‖L‖ * ‖z - y‖) := by
+      apply add_le_add_right
+      rw [hs]
+      exact (R.le_opNorm _).trans (mul_le_mul_of_nonneg_left (L.le_opNorm _)
+        (norm_nonneg R))
+    _ = _ := by rw [norm_sub_rev z y]; ring
+
+
 end
 end RiemannResearch.Analysis.FiniteConstraintClosure

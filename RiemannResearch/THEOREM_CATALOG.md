@@ -1,5 +1,52 @@
 # Theorem catalog
 
+### Cumulative variation, exact-head closure, literal spectrum and retained signature (2026-10-06)
+
+**Unconditional finite geometry and conditional research reductions.**
+Complete signed interactions, boundary terms and infinite-tail norm squares
+remain explicit. No arithmetic provider or RH converse is inferred.
+
+- Analysis/CumulativeSignedGap.lean: exact signed Abel boundary and
+  negative-prefix residual-variation penalty. Intermediate cumulative
+  prefixes may be negative, even unbounded below.
+- RH/ParetoCumulativeSignedGap.lean: actual RH consumer from a cofinal
+  complete signed budget and normalized signed head+budget+penalty smallness.
+- RH/CanonicalMobiusHeadRepair.lean: arbitrary fixed-head approximation iff
+  actual closed-span membership; every prescribed positive complete-error
+  budget is attainable with unrestricted finite support after membership.
+- RH/CanonicalMobiusHeadErrorCriterion.lean: cofinal bounded complete errors
+  with exact growing heads iff actual closure membership.
+- Analysis/FiniteConstraintClosure.lean: quantitative continuous exact repair.
+- RH/CanonicalMobiusSharpResidualEnergy.lean: unconditional canonical complete
+  error <= 4N+1/(N+1). RH/ResidualEnergyHistoricalTargets.lean now proves
+  linearExactHeadUpperWitness, closing LinearExactHeadUpperWitnessTarget.
+  This linear ceiling is not a subpower estimate or an optimality claim.
+- Analysis/FiniteHeadTailSpectralRealization.lean and
+  RH/ParetoActualHeadSpectrum.lean: literal full-stage head image, constructed
+  inverse head lift, complete positive tail spectrum, actual optimizer fit,
+  correction squares S+J, source mass and exact projection error e+T.
+- Analysis/FiniteSpectralEscape.lean: if T_N->delta and S_N->0, source mass
+  above every fixed positive threshold tends to delta. Eventual tightness
+  iff delta=0; moving thresholds also work when (1+R_N)S_N->0.
+- RH/LocalizedMellinHeadSignature.lean: exact full complex head signature
+  and head square; RH under subpolynomial complete-error growth and positive
+  weighted signature growth only on unbounded indices. No head-norm limit.
+
+Open (arithmetic): actual cumulative signed budgets and normalized smallness;
+complete optimized/affine error growth; literal spectral tightness or source
+moments; actual Mellin-signature noncancellation.
+Open (formalization): assemble cutoff convergence, compact head-error decay
+and optimizer-tail decay with the actual finite spectrum before claiming an
+actual sequence-to-RH spectral consumer. These geometric steps do not require
+a new RH estimate. The RH-to-density converse remains separately explicit.
+Paper only: the explicit O(H) Mobius head-repair operator and the stronger
+comparison delta_M+e_HM^2 <= E_HM <= delta_M+C_H^2 e_HM^2, C_H<=12H+4;
+also the normalized double-log liminf obstruction >=delta.
+Earlier source status was stale: reciprocal-charge nonvanishing, complete
+canonical affine exhaustion and continuous head repair were already proved.
+See RH/GreenParetoGitHubAdvance20261006.md for exact hypotheses, proof
+derivations, verification records, primary sources and an improved next prompt.
+
 ### Moving gaps, mixed trials, approximate heads and double-log source budgets (2026-10-06)
 
 **Conditional research reductions.** The actual RH consumers expose their
@@ -19,8 +66,9 @@ arithmetic providers. All finite identities retain complete signed interactions.
   subpolynomial complete residual-energy growth. Exact interpolation is dropped.
 
 Open: provide the signed moving-gap budget and relative head/additive errors.
-Open: realize the finite double-log data as the actual full-conductor source
-and prove its arithmetic normalized double-log moment estimate.
+Update: the literal finite full-conductor spectrum is now constructed in
+RH/ParetoActualHeadSpectrum.lean. Its asymptotic sequence assembly remains a
+formalization task; the arithmetic normalized double-log moment estimate is Open.
 Open: construct normalized affine weights with subpolynomial complete mixed
 Gram growth, or legal approximate-head trials with the stated full-energy growth.
 The new implications do not establish RH or a converse for prescribed families.
