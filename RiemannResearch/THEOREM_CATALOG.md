@@ -1,5 +1,44 @@
 # Theorem catalog
 
+### Signed physical trial tails and relative logarithmic source growth (2026-10-06)
+
+**Conditional research reductions.** The actual Pareto trial consumers conclude
+RH from explicit cofinal arithmetic providers; these providers are Open.
+
+- `Analysis/HeadTailPairing.lean`: exact residual and complete correction signed
+  identities, with both full tails retained; Cauchy/product and cofinal bounds.
+- `Analysis/HeadTailConditions.lean`: cofinal/frequent/absorbed/growing product
+  conditions, signed head-error limit and strict-fraction cancellation, and
+  conditional forced divergence of trial-tail energy.
+- `Analysis/FiniteSpectralBudget.lean`: finite nonnegative source data, exact
+  `correction_eq_headDisplacement_add_optimizerTail`, full threshold
+  comparisons, logarithmic/general moment and screening budget consumers.
+- `Analysis/FiniteSpectralRelativeLog.lean`:
+  `correction_le_relative_log_envelope` gives
+  `T ≤ sigma + sqrt sigma + 2 L / log (1 / sigma)`;
+  `limit_eq_zero_of_cofinal_relative_log_envelope` allows unbounded log moments
+  when `L / log (1 / sigma) → 0`, on a cofinal positive tail envelope.
+- `RH/ParetoCompactHead.lean`: actual orthogonal cutoff at physical sites
+  `1,...,N`, coordinate formula, symmetry, Pythagoras, contraction and linearity.
+- `RH/ParetoTrialTailConditions.lean`:
+  `twoThree_actual_trial_signed_identity` proves `D = H + L` for every legal
+  trial, and `twoThree_actual_trial_head_pair_abs_le` bounds only the head error.
+  `riemannHypothesis_of_cofinal_signed_trial_fraction` and
+  `riemannHypothesis_of_cofinal_approximate_head_tail_product` invoke the existing
+  compact-dual RH criterion. Normal equations and residual convergence are
+  supplied by the actual projection, with no exact head-lift construction.
+
+Open: construct legal trials with cofinal head-error convergence.
+Open: prove the signed strict-fraction provider, or the full tail-product
+smallness provider, for those trials.
+Open: construct the actual whitened arithmetic spectral/source realization in
+Lean and identify its finite sums with the correction and optimizer-tail energy.
+Open: prove the arithmetic relative-logarithmic growth estimate.
+The sharp Jensen lower bound remains a paper proof. No RH converse is used.
+Source: user-provided Green-Pareto-Schur continuation, Sections 12, 17 and 18
+(statements and signed proof strategy). See
+`RH/GreenParetoTrialConditions20261006.md` for exact assumptions and scope.
+
 ### Exact compensated Schur budget and compact dual target (2026-10-06)
 
 RH/CompensatedTwoCoefficientSchur.lean proves the actual signed Schur
