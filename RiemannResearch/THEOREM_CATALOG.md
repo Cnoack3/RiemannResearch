@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Actual Mellin/zeta and all-order digamma formalization (2026-10-07)
+
+Thirteen new modules contain 124 public theorem declarations and 13 private
+proof helpers. Targeted builds through actual project imports pass. A coherent
+24-theorem axiom audit contains only propext, Classical.choice, and Quot.sound.
+
+- RH/ParetoAtomMellinSignature.lean and ParetoBeurlingMellinObstruction.lean:
+  actual corrected fractional-part Mellin/zeta identity, holomorphy, removable
+  value at one, actual atom closure annihilation and quantitative physical distance.
+- RH/ParetoZetaSeries.lean, DigammaSmallArgument.lean, DigammaLaurentSeries.lean,
+  and DigammaComplexLaurent.lean: actual zeta coefficients, all finite rational
+  remainders, full convergent real/complex Laurent series and literal CRT weights.
+- RH/DigammaAsymptotic.lean and the Bernoulli Cells/Remainder/Bounds/Estimates/
+  SignedRemainder modules: actual complete integral remainders at every order,
+  real-axis reality, harmonic bounds, and strict signed first-omitted-term bounds.
+- Analysis/BernoulliEndpointDefect.lean: actual Fourier endpoint sign and strict
+  midpoint positivity at every even Bernoulli order.
+
+For all N >= 0 and x > 0, the literal digamma error after N even terms satisfies
+0 < (-1)^(N+1)*E_N(x) < |B_(2N+2)|/((2N+2)*x^(2N+2)). The complex Laurent
+identity holds on the punctured unit disk. This is not a complex-sector
+all-order Bernoulli theorem or a new RH proof. Arithmetic cumulative gain,
+approximation converse/squarefree provider, and named continuum norm assembly
+remain Open. RH/MellinZetaDigammaFormalization20261007.md records exact domains,
+proof strategy, declaration inventory, and verification evidence.
+
 ### Recovered Beurling, CRT weight, and optimized gain continuation (2026-10-07)
 
 Five additional modules contain 64 theorem declarations. Coherent isolated Lean
@@ -18,11 +44,13 @@ actual optimizer correction square.
 - Analysis/FiniteCRTWeightBounds.lean: literal physical head and two-sided finite
   inverse-square tail bounds, without substitution of a uniform residue law.
 
-Open analytic adapters: Mellin/zeta functional identities, infinite CRT digamma
-and zeta identification, harmonic/trapezoidal norm inputs and named constants.
+The subsequent actual Mellin/zeta and all-order digamma entry above discharges
+the Mellin/zeta, infinite CRT digamma, zeta-coefficient and harmonic adapters.
+Named continuum constants and complete correction-norm assembly remain Open.
 Open arithmetic provider: actual cumulative normalized gain forcing residual
-errors to zero. No new RH proof or full Lean digamma expansion is claimed.
-RH/BeurlingDigammaSalvage20261007.md records the exact scope and paper derivations.
+errors to zero. No new RH proof or formalized approximation converse is claimed.
+RH/BeurlingDigammaSalvage20261007.md retains the five-module verification record;
+its analytic coverage is superseded by RH/MellinZetaDigammaFormalization20261007.md.
 
 ### CRT formalization, physical norms, and actual canonical optimum (2026-10-07)
 

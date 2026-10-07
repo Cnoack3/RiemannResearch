@@ -2,6 +2,12 @@
 
 7 October 2026
 
+**Subsequent verified continuation:** `MellinZetaDigammaFormalization20261007.md`
+formalizes the actual Mellin/zeta identities, complete CRT Laurent series, and
+all-order positive-real digamma expansion with strict signed remainder. The
+five-module verification record below remains historical; analytic coverage
+has been updated to distinguish the now-discharged adapters.
+
 This continuation salvages the mathematical work interrupted by `Session terminated`. The Lean service recovered, and the current project already contains repaired versions of the original CRT drafts. Those existing modules are preserved. Five additional modules develop the optimized gain, exact correction transfer, finite signed tail identity, Beurling obstruction, and literal CRT weight bounds.
 
 The verification and publication record is supplied at the end. A mathematical formula discussed here is a Lean theorem only when the coverage table explicitly says so. The remaining arithmetic provider forcing the actual residual errors to zero is still open.
@@ -64,7 +70,7 @@ For the discrete step space, the same functional is
 \ell_s(g)=\sum_{j\ge1}\frac{g(j)k_s(j)}{j(j+1)},\qquad
 k_s(j)=\frac{j(j+1)}s\bigl(j^{-s}-(j+1)^{-s}\bigr).
 \]
-These Mellin and zeta identifications are paper derivations here. The new Lean module proves their functional-analytic consumer: any actual continuous linear functional with the stated atom and target values separates the target from the closed span.
+These Mellin and zeta identifications are now proved for the actual corrected atoms in `ParetoAtomMellinSignature`. `ParetoBeurlingMellinObstruction` instantiates the functional argument with the actual Bochner integral and complete physical Hilbert norm, including the displayed distance bound. The earlier generic consumer remains available.
 
 ## 2. Digamma: choose the correct regime
 
@@ -97,7 +103,7 @@ In particular,
 <\psi(x)
 <\log x-\frac1{2x}-\frac1{12x^2}+\frac1{120x^4}.
 \]
-Using \(H_n=\psi(n)+\gamma+1/n\) turns these into rigorous harmonic-number bounds. That is the harmonic lower input used by the finite norm-bound consumer formalized below. The integral representation and these analytic remainder estimates are not newly formalized in Lean by this continuation.
+Using \(H_n=\psi(n)+\gamma+1/n\) turns these into rigorous harmonic-number bounds. That is the harmonic lower input used by the finite norm-bound consumer formalized below. The subsequent continuation formalizes these positive-real remainder estimates at every finite order, including strict sign and strict first-omitted-term bound, through complete Bernoulli cell integrals. The Binet integral representation itself is a paper representation here; it is not the formal proof route.
 
 ### Fixed CRT residues are a small-argument problem
 
@@ -151,7 +157,7 @@ This entire finite squeeze, including the head-plus-tail decomposition, is prove
 \]
 It supplies a positive global enclosure and immediately recovers
 \(\rho_L(a)=1/[a(a+1)]+\zeta(2)L^{-2}+O_a(L^{-3})\).
-The infinite summation and identification with \(\zeta(2)\) are paper steps, not hidden assumptions in the finite Lean theorem.
+The displayed global infinite squeeze is a paper consequence of the finite bounds. Separately, the subsequent continuation proves the actual complete CRT digamma identity and convergent Laurent series with analytic zeta coefficients; these are no longer open analytic adapters.
 
 ## 3. Optimized gain and exact error transfer
 
@@ -186,7 +192,7 @@ Both terms on the right are nonnegative. If the denominator is positive, this gi
 \|h\|^2\le
 \frac{\|\rho\|^2}{\|\rho\|^2-\|c\|^2}\|h-\alpha\rho\|^2.
 \]
-Lean also proves an equality witness, the orthogonal split, and scalar consumers translating a supplied complete trapezoidal norm identity and positive tail bounds into finite norm enclosures. Identifying the named constants \(\log(2\pi)-\gamma\), the infinite correction energy, and the full digamma asymptotic remains analytic work.
+Lean also proves an equality witness, the orthogonal split, and scalar consumers translating a supplied complete trapezoidal norm identity and positive tail bounds into finite norm enclosures. Identifying the named constants \(\log(2\pi)-\gamma\) and assembling the infinite correction energy remain analytic work. The all-order positive-real digamma asymptotic and sharp signed remainder are now formalized in the subsequent continuation.
 
 The finite signed source identity keeps its boundary:
 \[
@@ -203,12 +209,12 @@ All new modules use focused Mathlib imports. There are 64 theorem declarations i
 | Module | Theorems | Kernel-checked content | Inputs still required |
 |---|---:|---|---|
 | Analysis/FiniteKrylovGain.lean | 18 | Exact two-direction Schur completion, coefficients, moment bonus, signed variance and centered third moment, Hilbert trial and full optimizer-square adapters | Actual stage moment and pairing instantiation; arithmetic cumulative gain budget |
-| Analysis/StepCorrectionGain.lean | 12 | Sharp generic correction transfer, equality witness, orthogonal split, finite norm-bound and tail consumers | Actual step projection constants; harmonic/digamma/trapezoidal analytic identities |
+| Analysis/StepCorrectionGain.lean | 12 | Sharp generic correction transfer, equality witness, orthogonal split, finite norm-bound and tail consumers | Actual step projection constants and complete trapezoidal norm assembly; harmonic/digamma bounds are now supplied |
 | Analysis/FiniteSignedTailCharge.lean | 10 | Signed finite Abel formula with endpoint, finite tails, exact transported-source splitting | Infinite convergence, endpoint decay, arithmetic cancellation estimates |
-| Analysis/BeurlingAnnihilator.lean | 9 | Positive quantitative functional separation, legal-sequence nonconvergence, span and closed-span obstruction | Actual Mellin continuous linear map and zeta/target values |
-| Analysis/FiniteCRTWeightBounds.lean | 15 | Literal positive CRT terms, physical head, strict domination, pointwise and finite tail squeeze | Infinite-sum digamma and zeta identifications; higher analytic expansion |
+| Analysis/BeurlingAnnihilator.lean | 9 | Positive quantitative functional separation, legal-sequence nonconvergence, span and closed-span obstruction | Discharged by the actual Mellin/zeta continuation; approximation converse remains open |
+| Analysis/FiniteCRTWeightBounds.lean | 15 | Literal positive CRT terms, physical head, strict domination, pointwise and finite tail squeeze | Digamma/zeta identification and convergent CRT expansion now supplied; application estimates retain their domains |
 
-No RH proof, unconditional arithmetic gain divergence, full Lean digamma asymptotic, or formalized new Nyman–Beurling equivalence is claimed.
+No RH proof, unconditional arithmetic gain divergence, or formalized new Nyman–Beurling equivalence is claimed. The subsequent continuation does prove all-order positive-real digamma asymptotics and the sharp strict remainder.
 
 ## 5. Verification record
 
