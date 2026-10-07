@@ -1,5 +1,40 @@
 # Theorem catalog
 
+### Actual source product, derivative, and defect obstruction (2026-10-07)
+
+Unconditional finite identities and actual-source assembly:
+
+- Analysis/FiniteSpectralResolvent.lean preserves the exact full remainder
+  D(t)+(t-1)S-T=(t-1)^2 sum w*lambda/((1+lambda)^2*(t+lambda)).
+  It proves T+S<=q^2+2sqrt(U*S) from a full all-scale trial estimate,
+  including zero cases, and S=F(1)+F'(1), D'(1)=-S.
+- RH/ParetoOriginalSourceCoordinates.lean identifies the original source as
+  b=(3,1,0,...). No later Gram interaction is discarded.
+- RH/ParetoCompactTailProduct.lean reuses the existing exact signed projection
+  identity. For the literal complete compact trial, L_m->delta and
+  L_m^2<=P_m=U_(4m+4)*S_(4m). Every a<delta^2 is eventually below P_m.
+  A positive defect would force (4m+4)*S_(4m)->+infinity using U_N/N->0.
+
+**Conditional research reductions**:
+riemannHypothesis_of_compactFourfold_cofinal_tailProduct and
+riemannHypothesis_of_compactFourfold_arbitrarily_late_small_tailProduct
+require actual product smallness. The more flexible
+riemannHypothesis_of_compactFourfold_cofinal_product_fraction requires
+P_(k_m)<=theta*T_(4k_m)^2+E_m cofinally, theta<1, E_m->0.
+Each arithmetic upper provider remains **Open**. No converse is asserted.
+
+- RH/CanonicalMobiusLogEnvelopeEnergy.lean proves the finite uniform-Mertens
+  transfer: with h=epsilon*(1+log(1/epsilon))<=1/2 and |M(y)|<=epsilon*y
+  for every y>=N, |m_N|<=5h and ||A_N||^2/N<=3/N+260h. The complete
+  infinite physical tail is retained; no RH premise is used.
+
+Paper progress (not new Lean providers): sharper stretched-rate corollaries,
+complete trial constants 5130 and 1122, and full original Gram inverse/Schur
+transport.
+Source, Wolfram record and next steps:
+RH/ParetoSourceProductAdvance20261007.md and
+RH/ParetoUniformMertensEnergyTransfer20261007.md.
+
 ### Actual conductor-scale source escape and bounded-tail consumer (2026-10-07)
 
 Unconditional exact arithmetic and full-source Hilbert geometry:

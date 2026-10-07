@@ -5,6 +5,9 @@ Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.FiniteSpectralMomentUpper
 import RiemannResearch.Analysis.FiniteHeadTailSpectralRealization
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Inv
 
 /-!
 # Complete-source spectral resolvents and exact variational certificates
@@ -237,6 +240,162 @@ theorem doubleLogCapContrast_ge_correction_sub_highMass
     have hgap : doubleLog L - doubleLog r ≤ doubleLog L - doubleLog (lam i) :=
       sub_le_sub_left hphi _
     simpa only [mul_comm] using mul_le_mul_of_nonneg_left hgap hc
+
+/-- Exact full-source tangent remainder. No sign or source component is removed. -/
+theorem sourceDeficit_tangent_remainder
+    (s : Finset ι) (w lam : ι → ℝ) (t : ℝ)
+    (hlam : ∀ i ∈ s, 0 ≤ lam i) (ht : 0 < t) :
+    sourceDeficit s w lam t + (t - 1) * optimizerTail s w lam -
+      correction s w lam =
+      (t - 1) ^ 2 * ∑ i ∈ s,
+        w i * lam i / ((1 + lam i) ^ 2 * (t + lam i)) := by
+  unfold sourceDeficit optimizerTail correction
+  simp only [Finset.mul_sum]
+  rw [← Finset.sum_add_distrib, ← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  have hd₁ : 1 + lam i ≠ 0 := ne_of_gt (by linarith [hlam i hi])
+  have hdt : t + lam i ≠ 0 := ne_of_gt (by linarith [hlam i hi])
+  field_simp [hd₁, hdt]
+  ring
+
+/-- Every positive scale gives a complete optimizer-tail estimate. -/
+theorem correction_add_tail_le_sourceDeficit_add_scaled_tail
+    (s : Finset ι) (w lam : ι → ℝ) (t : ℝ)
+    (hw : ∀ i ∈ s, 0 ≤ w i) (hlam : ∀ i ∈ s, 0 ≤ lam i) (ht : 0 < t) :
+    correction s w lam + optimizerTail s w lam ≤
+      sourceDeficit s w lam t + t * optimizerTail s w lam := by
+  have he := sourceDeficit_tangent_remainder s w lam t hlam ht
+  have hnonneg : 0 ≤ (t - 1) ^ 2 * ∑ i ∈ s,
+      w i * lam i / ((1 + lam i) ^ 2 * (t + lam i)) := by
+    apply mul_nonneg (sq_nonneg _)
+    apply Finset.sum_nonneg
+    intro i hi
+    exact div_nonneg (mul_nonneg (hw i hi) (hlam i hi))
+      (mul_nonneg (sq_nonneg _) (by linarith [hlam i hi]))
+  nlinarith only [he, hnonneg]
+
+theorem correction_add_tail_le_trial_scale
+    (s : Finset ι) (w lam : ι → ℝ) (q U t : ℝ)
+    (hw : ∀ i ∈ s, 0 ≤ w i) (hlam : ∀ i ∈ s, 0 ≤ lam i)
+    (ht : 0 < t)
+    (htrial : sourceDeficit s w lam t ≤ q ^ 2 + U / t) :
+    correction s w lam + optimizerTail s w lam ≤
+      q ^ 2 + U / t + t * optimizerTail s w lam := by
+  have h := correction_add_tail_le_sourceDeficit_add_scaled_tail s w lam t hw hlam ht
+  linarith only [h, htrial]
+
+/-- Optimization without selecting a possibly zero square-root scale.
+The proof covers U=0 and S=0. -/
+private theorem le_two_sqrt_mul_of_forall_div_add
+    (a U S : ℝ) (hU : 0 ≤ U) (hS : 0 ≤ S)
+    (hbound : ∀ t : ℝ, 0 < t → a ≤ U / t + t * S) :
+    a ≤ 2 * Real.sqrt (U * S) := by
+  by_contra hn
+  have haR : 2 * Real.sqrt (U * S) < a := lt_of_not_ge hn
+  have ha : 0 < a := lt_of_le_of_lt (by positivity) haR
+  by_cases hSz : S = 0
+  · have hUp : 0 < U + 1 := by linarith
+    have ht : 0 < (U + 1) / a := div_pos hUp ha
+    have h := hbound ((U + 1) / a) ht
+    rw [hSz, mul_zero, add_zero] at h
+    have he : U / ((U + 1) / a) = U * a / (U + 1) := by
+      field_simp [ne_of_gt hUp, ne_of_gt ha]
+    rw [he] at h
+    have hm := (le_div_iff₀ hUp).mp h
+    nlinarith only [hm, ha]
+  · have hSp : 0 < S := lt_of_le_of_ne hS (Ne.symm hSz)
+    have ht : 0 < a / (2 * S) := div_pos ha (by positivity)
+    have h := hbound (a / (2 * S)) ht
+    have he : U / (a / (2 * S)) + (a / (2 * S)) * S =
+        2 * U * S / a + a / 2 := by
+      field_simp [ne_of_gt ha, ne_of_gt hSp]
+    rw [he] at h
+    have hhalf : a / 2 ≤ 2 * U * S / a := by linarith only [h]
+    have hm := (le_div_iff₀ ha).mp hhalf
+    have hr : 0 ≤ Real.sqrt (U * S) := Real.sqrt_nonneg _
+    have hs := Real.sq_sqrt (mul_nonneg hU hS)
+    have hstrict : 0 < (a - 2 * Real.sqrt (U * S)) *
+        (a + 2 * Real.sqrt (U * S)) :=
+      mul_pos (sub_pos.mpr haR) (by linarith only [ha, hr])
+    nlinarith only [hm, hs, hstrict]
+
+/-- Sharp optimization of the full resolvent/trial inequality, including all zero cases. -/
+theorem correction_add_tail_le_trial_product
+    (s : Finset ι) (w lam : ι → ℝ) (q U : ℝ)
+    (hw : ∀ i ∈ s, 0 ≤ w i) (hlam : ∀ i ∈ s, 0 ≤ lam i)
+    (hU : 0 ≤ U)
+    (htrial : ∀ t : ℝ, 0 < t → sourceDeficit s w lam t ≤ q ^ 2 + U / t) :
+    correction s w lam + optimizerTail s w lam ≤
+      q ^ 2 + 2 * Real.sqrt (U * optimizerTail s w lam) := by
+  have hopt := le_two_sqrt_mul_of_forall_div_add
+    (correction s w lam + optimizerTail s w lam - q ^ 2) U
+    (optimizerTail s w lam) hU (optimizerTail_nonneg s w lam hw hlam)
+    (by
+      intro t ht
+      have h := correction_add_tail_le_trial_scale s w lam q U t hw hlam ht (htrial t ht)
+      linarith only [h])
+  linarith only [hopt]
+
+/-- The full finite source resolvent is differentiable at every positive scale.
+No source-sign hypothesis is needed for this exact calculus identity. -/
+theorem sourceResolvent_hasDerivAt
+    (s : Finset ι) (w lam : ι → ℝ) (t : ℝ)
+    (hlam : ∀ i ∈ s, 0 ≤ lam i) (ht : 0 < t) :
+    HasDerivAt (sourceResolvent s w lam)
+      (-(∑ i ∈ s, w i / (t + lam i) ^ 2)) t := by
+  have hterm : ∀ i ∈ s,
+      HasDerivAt (fun x : ℝ => w i / (x + lam i))
+        (-(w i / (t + lam i) ^ 2)) t := by
+    intro i hi
+    have hden : t + lam i ≠ 0 := ne_of_gt (by linarith [hlam i hi])
+    have h := (hasDerivAt_const t (w i)).fun_div
+      ((hasDerivAt_id' t).add_const (lam i)) hden
+    simpa only [zero_mul, mul_one, zero_sub, neg_div] using h
+  have hsum := HasDerivAt.fun_sum hterm
+  unfold sourceResolvent
+  simpa only [Finset.sum_neg_distrib] using hsum
+
+theorem sourceResolvent_deriv
+    (s : Finset ι) (w lam : ι → ℝ) (t : ℝ)
+    (hlam : ∀ i ∈ s, 0 ≤ lam i) (ht : 0 < t) :
+    deriv (sourceResolvent s w lam) t =
+      -(∑ i ∈ s, w i / (t + lam i) ^ 2) :=
+  (sourceResolvent_hasDerivAt s w lam t hlam ht).deriv
+
+/-- The complete physical optimizer-tail square is F(1)+F'(1).
+Every source weight and eigenvalue remains present. -/
+theorem optimizerTail_eq_sourceResolvent_add_deriv
+    (s : Finset ι) (w lam : ι → ℝ)
+    (hlam : ∀ i ∈ s, 0 ≤ lam i) :
+    optimizerTail s w lam =
+      sourceResolvent s w lam 1 + deriv (sourceResolvent s w lam) 1 := by
+  rw [sourceResolvent_deriv s w lam 1 hlam (by norm_num)]
+  unfold optimizerTail sourceResolvent
+  rw [← sub_eq_add_neg, ← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  have hden : 1 + lam i ≠ 0 := ne_of_gt (by linarith [hlam i hi])
+  field_simp [hden]
+  ring
+
+/-- The literal regularization deficit has the complete negative tail slope. -/
+theorem sourceDeficit_hasDerivAt
+    (s : Finset ι) (w lam : ι → ℝ) (t : ℝ)
+    (hlam : ∀ i ∈ s, 0 ≤ lam i) (ht : 0 < t) :
+    HasDerivAt (sourceDeficit s w lam)
+      (-(∑ i ∈ s, w i * lam i / (t + lam i) ^ 2)) t := by
+  have h := sourceResolvent_hasDerivAt s (fun i => w i * lam i) lam t hlam ht
+  change HasDerivAt (sourceResolvent s (fun i => w i * lam i) lam) _ t
+  exact h
+
+theorem sourceDeficit_deriv_one
+    (s : Finset ι) (w lam : ι → ℝ)
+    (hlam : ∀ i ∈ s, 0 ≤ lam i) :
+    deriv (sourceDeficit s w lam) 1 = - optimizerTail s w lam := by
+  simpa only [optimizerTail] using
+    (sourceDeficit_hasDerivAt s w lam 1 hlam (by norm_num)).deriv
+
 
 end RiemannResearch.Analysis.FiniteSpectralBudget
 

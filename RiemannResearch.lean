@@ -1,3 +1,6 @@
+import RiemannResearch.RH.CanonicalMobiusLogEnvelopeEnergy
+import RiemannResearch.RH.ParetoOriginalSourceCoordinates
+import RiemannResearch.RH.ParetoCompactTailProduct
 import RiemannResearch.Analysis.FiniteSpectralResolvent
 import RiemannResearch.RH.ParetoCompactTrialEnergy
 import RiemannResearch.RH.ParetoActualSpectralResolvent
