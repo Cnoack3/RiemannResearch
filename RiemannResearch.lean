@@ -21,6 +21,8 @@ import RiemannResearch.RH.DigammaBernoulliRemainderBounds
 import RiemannResearch.RH.DigammaBernoulliRemainderEstimates
 import RiemannResearch.Analysis.BernoulliEndpointDefect
 import RiemannResearch.RH.DigammaBernoulliSignedRemainder
+import RiemannResearch.RH.DigammaBernoulliDifferences
+import RiemannResearch.RH.ParetoProgressionBernoulliBounds
 import RiemannResearch.Analysis.PrimeGainRecursion
 import RiemannResearch.Analysis.FiniteProjectedDilationCertificates
 import RiemannResearch.Analysis.FiniteProjectedDilationHierarchy

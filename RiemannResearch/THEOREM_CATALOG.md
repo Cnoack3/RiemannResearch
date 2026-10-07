@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Recovered analytic proofs and cancellation-preserving digamma differences (2026-10-07)
+
+The prior thirteen Mellin/zeta/digamma modules and their validation survived
+at published commit 04db1cc. Two additional modules contain 20 public theorems
+and one private helper. Their coherent Lean check passes; all 20 new public
+axiom reports and three recovered provider reports use standard foundations only.
+
+- RH/DigammaBernoulliDifferences.lean: exact common-kernel cell differences,
+  complete signed HasSum subtraction, strict monotonicity of every signed
+  positive-real digamma error, exact next-order remainder difference, sharp
+  first-omitted DIFFERENCE bounds, and exact actual digamma difference formulas.
+- RH/ParetoProgressionBernoulliBounds.lean: complete actual CRT weight enclosures
+  with the first physical-site mass retained exactly, full error identity,
+  all-order strict signed and absolute bounds, and certified even/odd brackets.
+
+For every N and 0 < x < y, 0 < (-1)^(N+1)*(E_N(x)-E_N(y))
+< |B_(2N+2)|/(2N+2)*(x^(-2N-2)-y^(-2N-2)). No summand, boundary or full
+remainder is discarded. The CRT application covers 1 <= r <= Q, including
+r=Q and Q=1. Arithmetic residual-vanishing providers remain Open.
+RH/LeanSalvageDigammaDifferences20261007.md records formulas and verification.
+
 ### Actual Mellin/zeta and all-order digamma formalization (2026-10-07)
 
 Thirteen new modules contain 124 public theorem declarations and 13 private
