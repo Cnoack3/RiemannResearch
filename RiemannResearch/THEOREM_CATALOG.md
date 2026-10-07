@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### CRT formalization, physical norms, and actual canonical optimum (2026-10-07)
+
+Nineteen new modules contain 208 theorem/lemma declarations. Each passes isolated
+Lean error diagnostics; selected axiom reports contain only standard foundations.
+RH/RH_CRT_Formalization_Audit_20261007.md records attachment coverage and scope.
+
+Established structural results include native projection/adjoint compression,
+actual finite conductor-span dilation legality, bounded finite certificates and
+summable fixed-compression sources, optimal final-ray bonuses, exact quadratic
+reciprocal completion, the complete physical atom norm with its convergent
+covariance correction, a sharper integrable reflected-cell bound, and a constructed
+actual canonical residual Gram inverse with unique weights and monotonicity.
+Exact squarefree step energy transfer and weighted Mellin signature decay are proved.
+
+**Conditional research reductions and Open providers**:
+- Canonical inverse-normal-mass RH consumer: Open cofinal subpolynomial optimized
+  energy bound. Actual finite inverse geometry is discharged.
+- Bounded-prefix-floor signed RH consumer: Open actual cumulative signed tail and
+  normalized-head budget. Its exact negative-prefix correction is retained.
+- Prime gain consumers: Open unbounded cumulative normalized actual arithmetic gain
+  or the stated signed-window budget.
+- Squarefree converse: Open formal proof of the published RH-conditional damped
+  approximation theorem. Finite support and complete step energy transfer are proved.
+- Named continuum constant log(2*pi)-gamma and its full cell regrouping, finer global
+  bounds, and asymptotic: Open analytic formalization.
+- Actual spectral-moment and signature providers from Four Improvements: Open.
+
+
 ### Actual source product, derivative, and defect obstruction (2026-10-07)
 
 Unconditional finite identities and actual-source assembly:
