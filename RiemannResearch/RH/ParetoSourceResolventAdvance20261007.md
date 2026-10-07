@@ -173,6 +173,10 @@ The coherent candidate containing all four developments passed Lean with
 exit 0 and no warnings. Decisive source-escape, threshold-contrast and cofinal
 RH-consumer axiom audits reported only propext, Classical.choice, Quot.sound.
 Local hypotheses in the conditional consumer remain visible in its type.
+The first checkpoint built all four affected modules and pushed commit
+90ed245b911a38dc7bd8652f9b42049162114f8f. Its whitespace warnings prompted
+source-formatting cleanup. This validation scope is the affected modules;
+it is not an assertion that a separate full-project GitHub CI run succeeded.
 
 Wolfram independently checked the fourfold sequence identity for m=1,...,8
 and physical sites j=0,...,80; all checks returned True. Scalar resolvent
@@ -180,12 +184,12 @@ and signed completion computations were also checked. These computations
 were development checks; Lean supplies the proofs.
 
 Literature consulted for strategy and context:
-- W. Ehm, On the Nyman-Beurling criterion for the Riemann hypothesis,
+- W. Ehm, On certain Gram matrices and their associated series,
   https://arxiv.org/abs/2405.06349, full Gram analysis in Section 8.
 - T. Tao, A remark on partial sums involving the Mobius function,
   https://arxiv.org/abs/0908.4323, unconditional reciprocal Mobius context.
-- F. Alouges, S. Darses and E. Hillion, A probabilistic Nyman-Beurling
-  criterion for the Riemann hypothesis,
+- F. Alouges, S. Darses and E. Hillion, Polynomial approximations in a
+  generalized Nyman-Beurling criterion,
   https://doi.org/10.5802/jtnb.1227, approximation versus coefficient control.
 
 The new exact decomposition and assembly were developed for the requested

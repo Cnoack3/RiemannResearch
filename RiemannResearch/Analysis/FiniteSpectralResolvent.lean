@@ -20,7 +20,7 @@ noncomputable section
 open scoped BigOperators
 
 namespace RiemannResearch.Analysis.FiniteSpectralBudget
-variable {ι : Type*}
+variable {ι : Type* }
 
 def sourceResolvent (s : Finset ι) (w lam : ι → ℝ) (t : ℝ) : ℝ :=
   ∑ i ∈ s, w i / (t + lam i)
@@ -182,10 +182,10 @@ theorem doubleLogCapContrast_ge_resolvent_certificate
 theorem sourceResolvent_trial_completion
     (s : Finset ι) (a c lam : ι → ℝ) (t : ℝ)
     (hlam : ∀ i ∈ s, 0 ≤ lam i) (ht : 0 < t) :
-    sourceResolvent s (fun i => (a i)^2) lam t -
+    sourceResolvent s (fun i => (a i) ^ 2) lam t -
       2 * (∑ i ∈ s, a i * c i) +
-      (∑ i ∈ s, (t + lam i) * (c i)^2) =
-        ∑ i ∈ s, (t + lam i) * (a i / (t + lam i) - c i)^2 := by
+      (∑ i ∈ s, (t + lam i) * (c i) ^ 2) =
+        ∑ i ∈ s, (t + lam i) * (a i / (t + lam i) - c i) ^ 2 := by
   unfold sourceResolvent
   rw [Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
   apply Finset.sum_congr rfl
@@ -198,10 +198,10 @@ theorem sourceResolvent_ge_signed_trial
     (s : Finset ι) (a c lam : ι → ℝ) (t : ℝ)
     (hlam : ∀ i ∈ s, 0 ≤ lam i) (ht : 0 < t) :
     2 * (∑ i ∈ s, a i * c i) -
-      (∑ i ∈ s, (t + lam i) * (c i)^2) ≤
-        sourceResolvent s (fun i => (a i)^2) lam t := by
+      (∑ i ∈ s, (t + lam i) * (c i) ^ 2) ≤
+        sourceResolvent s (fun i => (a i) ^ 2) lam t := by
   have h := sourceResolvent_trial_completion s a c lam t hlam ht
-  have hn : 0 ≤ ∑ i ∈ s, (t + lam i) * (a i / (t + lam i) - c i)^2 := by
+  have hn : 0 ≤ ∑ i ∈ s, (t + lam i) * (a i / (t + lam i) - c i) ^ 2 := by
     apply Finset.sum_nonneg
     intro i hi
     exact mul_nonneg (by linarith [hlam i hi]) (sq_nonneg _)
@@ -241,7 +241,7 @@ theorem doubleLogCapContrast_ge_correction_sub_highMass
 end RiemannResearch.Analysis.FiniteSpectralBudget
 
 namespace RiemannResearch.Analysis.FiniteHeadTailSpectralRealization
-variable {E H : Type*}
+variable {E H : Type* }
   [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [FiniteDimensional ℝ E] [CompleteSpace E]
   [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -250,7 +250,7 @@ def regularizedHead (A : E →L[ℝ] H) (t : ℝ) (x : E) : E :=
   ∑ i, (inner ℝ (eigenBasis A i) x / (t + eigenvalue A i)) • eigenBasis A i
 
 def regularizedEnergy (A : E →L[ℝ] H) (t : ℝ) (c : E) : ℝ :=
-  t * ‖c‖^2 + ‖A c‖^2
+  t * ‖c‖ ^ 2 + ‖A c‖ ^ 2
 
 def headResolvent (A : E →L[ℝ] H) (t : ℝ) (x : E) : ℝ :=
   inner ℝ x (regularizedHead A t x)
@@ -259,7 +259,7 @@ theorem headResolvent_eq_sourceResolvent
     (A : E →L[ℝ] H) (t : ℝ) (x : E) :
     headResolvent A t x =
       FiniteSpectralBudget.sourceResolvent Finset.univ
-        (fun i => (inner ℝ (eigenBasis A i) x)^2) (eigenvalue A) t := by
+        (fun i => (inner ℝ (eigenBasis A i) x) ^ 2) (eigenvalue A) t := by
   unfold headResolvent regularizedHead FiniteSpectralBudget.sourceResolvent
   rw [inner_sum]
   simp only [real_inner_smul_right]
@@ -286,7 +286,7 @@ theorem headResolvent_eq_frame_sourceResolvent
   rw [hh]
 
 theorem headResolvent_smul (A : E →L[ℝ] H) (t q : ℝ) (x : E) :
-    headResolvent A t (q • x) = q^2 * headResolvent A t x := by
+    headResolvent A t (q • x) = q ^ 2 * headResolvent A t x := by
   rw [headResolvent_eq_sourceResolvent, headResolvent_eq_sourceResolvent]
   unfold FiniteSpectralBudget.sourceResolvent
   rw [Finset.mul_sum]
@@ -341,11 +341,11 @@ theorem headResolvent_trial_completion
     (A : E →L[ℝ] H) (t : ℝ) (x c : E) (ht : 0 < t) :
     headResolvent A t x - 2 * inner ℝ x c + regularizedEnergy A t c =
       regularizedEnergy A t (regularizedHead A t x - c) := by
-  have hnorm (u v : E) : ‖u-v‖^2 = ‖u‖^2 + ‖v‖^2 - 2 * inner ℝ u v := by
+  have hnorm (u v : E) : ‖u - v‖ ^ 2 = ‖u‖ ^ 2 + ‖v‖ ^ 2 - 2 * inner ℝ u v := by
     rw [sub_eq_add_neg, norm_add_sq_real]
     simp only [norm_neg, inner_neg_right]
     ring
-  have hnormH (u v : H) : ‖u-v‖^2 = ‖u‖^2 + ‖v‖^2 - 2 * inner ℝ u v := by
+  have hnormH (u v : H) : ‖u - v‖ ^ 2 = ‖u‖ ^ 2 + ‖v‖ ^ 2 - 2 * inner ℝ u v := by
     rw [sub_eq_add_neg, norm_add_sq_real]
     simp only [norm_neg, inner_neg_right]
     ring
@@ -369,11 +369,11 @@ retains both the head error square and the whole physical-tail square. -/
 theorem physical_regularized_loss_identity
     (J : E →ₗᵢ[ℝ] H) (A : E →L[ℝ] H) (t : ℝ) (v : H) (c : E)
     (ht : 0 < t) :
-    t * ‖v - J c‖^2 + ‖A c‖^2 =
-      t * ‖v‖^2 - headResolvent A t (t • J.toContinuousLinearMap.adjoint v) +
+    t * ‖v - J c‖ ^ 2 + ‖A c‖ ^ 2 =
+      t * ‖v‖ ^ 2 - headResolvent A t (t • J.toContinuousLinearMap.adjoint v) +
         regularizedEnergy A t
           (regularizedHead A t (t • J.toContinuousLinearMap.adjoint v) - c) := by
-  have hnorm : ‖v - J c‖^2 = ‖v‖^2 + ‖c‖^2 - 2 * inner ℝ v (J c) := by
+  have hnorm : ‖v - J c‖ ^ 2 = ‖v‖ ^ 2 + ‖c‖ ^ 2 - 2 * inner ℝ v (J c) := by
     rw [sub_eq_add_neg, norm_add_sq_real]
     simp only [norm_neg, inner_neg_right, J.norm_map]
     ring

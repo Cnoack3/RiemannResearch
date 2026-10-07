@@ -90,24 +90,24 @@ theorem compactCorrectedTrial_floor_expansion_all (N j : ℕ) (hN : 0 < N) :
 
 /-- The last shifted-Mobius term cancels the exact boundary charge increment. -/
 theorem compactCorrectedTrial_succ_floor_expansion (Y j : ℕ) :
-    compactCorrectedTrial (Y+1) j =
+    compactCorrectedTrial (Y + 1) j =
       (∑ d ∈ Finset.Icc 1 Y, compactShiftedMobius d * ((j / d : ℕ) : ℝ)) -
-        ((Y+1 : ℕ) : ℝ) * compactReciprocalSum Y * ((j / (Y+1) : ℕ) : ℝ) := by
-  have hcharge : compactReciprocalSum (Y+1) = compactReciprocalSum Y +
-      compactShiftedMobius (Y+1) / ((Y+1 : ℕ) : ℝ) := by
+        ((Y + 1 : ℕ) : ℝ) * compactReciprocalSum Y * ((j / (Y + 1) : ℕ) : ℝ) := by
+  have hcharge : compactReciprocalSum (Y + 1) = compactReciprocalSum Y +
+      compactShiftedMobius (Y + 1) / ((Y + 1 : ℕ) : ℝ) := by
     unfold compactReciprocalSum
     rw [Finset.sum_Icc_succ_top (by omega)]
-  rw [compactCorrectedTrial_floor_expansion_all (Y+1) j (by omega),
+  rw [compactCorrectedTrial_floor_expansion_all (Y + 1) j (by omega),
     Finset.sum_Icc_succ_top (by omega), hcharge]
-  have hYR : ((Y+1 : ℕ) : ℝ) ≠ 0 := by positivity
+  have hYR : ((Y + 1 : ℕ) : ℝ) ≠ 0 := by positivity
   field_simp [hYR]
   ring
 
 /-- Exact cofinal arithmetic decomposition into three existing full canonical families. -/
 theorem compactCorrectedHilbert_fourfold_eq_canonical (m : ℕ) :
-    compactCorrectedHilbert (4*m+4) (by omega) =
-      (14 : ℝ) • canonicalMobiusHilbert (4*m+3) -
-        (13 : ℝ) • hilbertDilation 2 (by decide) (canonicalMobiusHilbert (2*m+1)) +
+    compactCorrectedHilbert (4 * m + 4) (by omega) =
+      (14 : ℝ) • canonicalMobiusHilbert (4 * m + 3) -
+        (13 : ℝ) • hilbertDilation 2 (by decide) (canonicalMobiusHilbert (2 * m + 1)) +
         (3 : ℝ) • hilbertDilation 4 (by decide) (canonicalMobiusHilbert m) := by
   apply hilbertSequence_injective
   rw [compactCorrectedHilbert_sequence]
@@ -115,21 +115,21 @@ theorem compactCorrectedHilbert_fourfold_eq_canonical (m : ℕ) :
     hilbertDilation_sequence, canonicalMobiusHilbert_sequence]
   funext j
   simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, dilation]
-  have hN : 4*m+3+1 = 4*m+4 := by omega
-  have h2 : (4*m+3) / 2 = 2*m+1 := by omega
-  have h4 : (4*m+3) / 4 = m := by omega
-  have hu := compactCorrectedTrial_succ_floor_expansion (4*m+3) j
+  have hN : 4 * m + 3 + 1 = 4 * m + 4 := by omega
+  have h2 : (4 * m + 3) / 2 = 2 * m + 1 := by omega
+  have h4 : (4 * m + 3) / 4 = m := by omega
+  have hu := compactCorrectedTrial_succ_floor_expansion (4 * m + 3) j
   rw [hN, compactShiftedMobius_floor_sum_eq_dilations,
     compactReciprocalSum_eq_dilations, h2, h4] at hu
   rw [hu]
-  rw [canonicalMobiusHead_floor_expansion (4*m+3) j,
-    canonicalMobiusHead_floor_expansion (2*m+1) (j/2),
-    canonicalMobiusHead_floor_expansion m (j/4)]
-  have hdiv2 : (j/2)/(2*m+1+1) = j/(4*m+4) := by
+  rw [canonicalMobiusHead_floor_expansion (4 * m + 3) j,
+    canonicalMobiusHead_floor_expansion (2 * m + 1) (j / 2),
+    canonicalMobiusHead_floor_expansion m (j / 4)]
+  have hdiv2 : (j / 2) / (2 * m + 1 + 1) = j / (4 * m + 4) := by
     rw [Nat.div_div_eq_div_mul]
     congr 1
     omega
-  have hdiv4 : (j/4)/(m+1) = j/(4*m+4) := by
+  have hdiv4 : (j / 4) / (m + 1) = j / (4 * m + 4) := by
     rw [Nat.div_div_eq_div_mul]
     congr 1
   rw [hN, hdiv2, hdiv4]
@@ -138,15 +138,15 @@ theorem compactCorrectedHilbert_fourfold_eq_canonical (m : ℕ) :
 
 /-- Complete signed norm expansion before any upper estimate. -/
 theorem compactCorrectedHilbert_fourfold_norm_sq_exact (m : ℕ) :
-    ‖compactCorrectedHilbert (4*m+4) (by omega)‖^2 =
-      196 * ‖canonicalMobiusHilbert (4*m+3)‖^2 +
-      338 * ‖canonicalMobiusHilbert (2*m+1)‖^2 +
-      36 * ‖canonicalMobiusHilbert m‖^2 -
-      364 * inner ℝ (canonicalMobiusHilbert (4*m+3))
-        (hilbertDilation 2 (by decide) (canonicalMobiusHilbert (2*m+1))) +
-      84 * inner ℝ (canonicalMobiusHilbert (4*m+3))
+    ‖compactCorrectedHilbert (4 * m + 4) (by omega)‖ ^ 2 =
+      196 * ‖canonicalMobiusHilbert (4 * m + 3)‖ ^ 2 +
+      338 * ‖canonicalMobiusHilbert (2 * m + 1)‖ ^ 2 +
+      36 * ‖canonicalMobiusHilbert m‖ ^ 2 -
+      364 * inner ℝ (canonicalMobiusHilbert (4 * m + 3))
+        (hilbertDilation 2 (by decide) (canonicalMobiusHilbert (2 * m + 1))) +
+      84 * inner ℝ (canonicalMobiusHilbert (4 * m + 3))
         (hilbertDilation 4 (by decide) (canonicalMobiusHilbert m)) -
-      78 * inner ℝ (hilbertDilation 2 (by decide) (canonicalMobiusHilbert (2*m+1)))
+      78 * inner ℝ (hilbertDilation 2 (by decide) (canonicalMobiusHilbert (2 * m + 1)))
         (hilbertDilation 4 (by decide) (canonicalMobiusHilbert m)) := by
   rw [compactCorrectedHilbert_fourfold_eq_canonical, norm_add_sq_real, norm_sub_sq_real]
   simp only [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
@@ -156,20 +156,20 @@ theorem compactCorrectedHilbert_fourfold_norm_sq_exact (m : ℕ) :
 
 /-- All three complete squares dominate the complete signed expression. -/
 theorem compactCorrectedHilbert_fourfold_norm_sq_le (m : ℕ) :
-    ‖compactCorrectedHilbert (4*m+4) (by omega)‖^2 ≤
-      3 * (196 * ‖canonicalMobiusHilbert (4*m+3)‖^2 +
-        338 * ‖canonicalMobiusHilbert (2*m+1)‖^2 +
-        36 * ‖canonicalMobiusHilbert m‖^2) := by
+    ‖compactCorrectedHilbert (4 * m + 4) (by omega)‖ ^ 2 ≤
+      3 * (196 * ‖canonicalMobiusHilbert (4 * m + 3)‖ ^ 2 +
+        338 * ‖canonicalMobiusHilbert (2 * m + 1)‖ ^ 2 +
+        36 * ‖canonicalMobiusHilbert m‖ ^ 2) := by
   rw [compactCorrectedHilbert_fourfold_eq_canonical]
-  let a := (14 : ℝ) • canonicalMobiusHilbert (4*m+3)
-  let b := (13 : ℝ) • hilbertDilation 2 (by decide) (canonicalMobiusHilbert (2*m+1))
+  let a := (14 : ℝ) • canonicalMobiusHilbert (4 * m + 3)
+  let b := (13 : ℝ) • hilbertDilation 2 (by decide) (canonicalMobiusHilbert (2 * m + 1))
   let c := (3 : ℝ) • hilbertDilation 4 (by decide) (canonicalMobiusHilbert m)
-  have hn : ‖a-b+c‖ ≤ ‖a‖+‖b‖+‖c‖ :=
-    (norm_add_le (a-b) c).trans
+  have hn : ‖a - b + c‖ ≤ ‖a‖ + ‖b‖ + ‖c‖ :=
+    (norm_add_le (a - b) c).trans
       (by nlinarith [norm_sub_le a b])
-  have hs := mul_self_le_mul_self (norm_nonneg (a-b+c)) hn
-  have h3 : ‖a-b+c‖^2 ≤ 3*(‖a‖^2+‖b‖^2+‖c‖^2) := by
-    nlinarith [sq_nonneg (‖a‖-‖b‖), sq_nonneg (‖a‖-‖c‖), sq_nonneg (‖b‖-‖c‖)]
+  have hs := mul_self_le_mul_self (norm_nonneg (a - b + c)) hn
+  have h3 : ‖a - b + c‖ ^ 2 ≤ 3 * (‖a‖ ^ 2 + ‖b‖ ^ 2 + ‖c‖ ^ 2) := by
+    nlinarith [sq_nonneg (‖a‖ - ‖b‖), sq_nonneg (‖a‖ - ‖c‖), sq_nonneg (‖b‖ - ‖c‖)]
   dsimp [a, b, c] at h3
   simp only [norm_smul, Real.norm_eq_abs, mul_pow,
     show |(14 : ℝ)| = 14 by norm_num,
@@ -183,7 +183,7 @@ open Filter
 open scoped Topology
 
 private theorem affine_cutoff_tendsto (a b : ℕ) (ha : 0 < a) :
-    Tendsto (fun m : ℕ => a*m+b) atTop atTop := by
+    Tendsto (fun m : ℕ => a * m + b) atTop atTop := by
   apply tendsto_atTop.2
   intro n
   filter_upwards [eventually_ge_atTop n] with m hm
@@ -193,7 +193,7 @@ private theorem affine_cutoff_tendsto (a b : ℕ) (ha : 0 < a) :
 on a specified cofinal sequence; no norm or arithmetic provider is assumed. -/
 theorem compactCorrectedHilbert_fourfold_sublinear :
     Tendsto (fun m : ℕ =>
-      ‖compactCorrectedHilbert (4*m+4) (by omega)‖^2 / (4*m+4 : ℕ))
+      ‖compactCorrectedHilbert (4 * m + 4) (by omega)‖ ^ 2 / (4 * m + 4 : ℕ))
       atTop (𝓝 0) := by
   have h4 := canonicalMobiusHilbert_sublinear.comp
     (affine_cutoff_tendsto 4 3 (by decide))
@@ -201,39 +201,39 @@ theorem compactCorrectedHilbert_fourfold_sublinear :
     (affine_cutoff_tendsto 2 1 (by decide))
   have h1 := canonicalMobiusHilbert_sublinear
   have hlim : Tendsto (fun m : ℕ =>
-      3 * (196 * (‖canonicalMobiusHilbert (4*m+3)‖^2 / (4*m+3 : ℕ)) +
-        338 * (‖canonicalMobiusHilbert (2*m+1)‖^2 / (2*m+1 : ℕ)) +
-        36 * (‖canonicalMobiusHilbert m‖^2 / (m : ℝ)))) atTop (𝓝 0) := by
+      3 * (196 * (‖canonicalMobiusHilbert (4 * m + 3)‖ ^ 2 / (4 * m + 3 : ℕ)) +
+        338 * (‖canonicalMobiusHilbert (2 * m + 1)‖ ^ 2 / (2 * m + 1 : ℕ)) +
+        36 * (‖canonicalMobiusHilbert m‖ ^ 2 / (m : ℝ)))) atTop (𝓝 0) := by
     simpa only [Function.comp_def, mul_zero, add_zero] using
       (((h4.const_mul 196).add (h2.const_mul 338)).add (h1.const_mul 36)).const_mul 3
   apply squeeze_zero' (Eventually.of_forall (fun m =>
     div_nonneg (sq_nonneg _) (Nat.cast_nonneg _))) _ hlim
   filter_upwards [eventually_ge_atTop (1 : ℕ)] with m hm
-  have hN : (0 : ℝ) < (4*m+4 : ℕ) := by positivity
-  have h4pos : (0 : ℝ) < (4*m+3 : ℕ) := by positivity
-  have h2pos : (0 : ℝ) < (2*m+1 : ℕ) := by positivity
+  have hN : (0 : ℝ) < (4 * m + 4 : ℕ) := by positivity
+  have h4pos : (0 : ℝ) < (4 * m + 3 : ℕ) := by positivity
+  have h2pos : (0 : ℝ) < (2 * m + 1 : ℕ) := by positivity
   have h1pos : (0 : ℝ) < m := by exact_mod_cast (show 0 < m by omega)
-  have h4le : (4*m+3 : ℕ) ≤ 4*m+4 := by omega
-  have h2le : (2*m+1 : ℕ) ≤ 4*m+4 := by omega
-  have h1le : m ≤ 4*m+4 := by omega
-  have h4div : ‖canonicalMobiusHilbert (4*m+3)‖^2 / (4*m+4 : ℕ) ≤
-      ‖canonicalMobiusHilbert (4*m+3)‖^2 / (4*m+3 : ℕ) :=
+  have h4le : (4 * m + 3 : ℕ) ≤ 4 * m + 4 := by omega
+  have h2le : (2 * m + 1 : ℕ) ≤ 4 * m + 4 := by omega
+  have h1le : m ≤ 4 * m + 4 := by omega
+  have h4div : ‖canonicalMobiusHilbert (4 * m + 3)‖ ^ 2 / (4 * m + 4 : ℕ) ≤
+      ‖canonicalMobiusHilbert (4 * m + 3)‖ ^ 2 / (4 * m + 3 : ℕ) :=
     div_le_div_of_nonneg_left (sq_nonneg _) h4pos (by exact_mod_cast h4le)
-  have h2div : ‖canonicalMobiusHilbert (2*m+1)‖^2 / (4*m+4 : ℕ) ≤
-      ‖canonicalMobiusHilbert (2*m+1)‖^2 / (2*m+1 : ℕ) :=
+  have h2div : ‖canonicalMobiusHilbert (2 * m + 1)‖ ^ 2 / (4 * m + 4 : ℕ) ≤
+      ‖canonicalMobiusHilbert (2 * m + 1)‖ ^ 2 / (2 * m + 1 : ℕ) :=
     div_le_div_of_nonneg_left (sq_nonneg _) h2pos (by exact_mod_cast h2le)
-  have h1div : ‖canonicalMobiusHilbert m‖^2 / (4*m+4 : ℕ) ≤
-      ‖canonicalMobiusHilbert m‖^2 / (m : ℝ) :=
+  have h1div : ‖canonicalMobiusHilbert m‖ ^ 2 / (4 * m + 4 : ℕ) ≤
+      ‖canonicalMobiusHilbert m‖ ^ 2 / (m : ℝ) :=
     div_le_div_of_nonneg_left (sq_nonneg _) h1pos (by exact_mod_cast h1le)
   have hnorm := div_le_div_of_nonneg_right
     (compactCorrectedHilbert_fourfold_norm_sq_le m) hN.le
   calc
-    _ ≤ (3 * (196 * ‖canonicalMobiusHilbert (4*m+3)‖^2 +
-        338 * ‖canonicalMobiusHilbert (2*m+1)‖^2 +
-        36 * ‖canonicalMobiusHilbert m‖^2)) / (4*m+4 : ℕ) := hnorm
-    _ = 3 * (196 * (‖canonicalMobiusHilbert (4*m+3)‖^2 / (4*m+4 : ℕ)) +
-        338 * (‖canonicalMobiusHilbert (2*m+1)‖^2 / (4*m+4 : ℕ)) +
-        36 * (‖canonicalMobiusHilbert m‖^2 / (4*m+4 : ℕ))) := by ring
+    _ ≤ (3 * (196 * ‖canonicalMobiusHilbert (4 * m + 3)‖ ^ 2 +
+        338 * ‖canonicalMobiusHilbert (2 * m + 1)‖ ^ 2 +
+        36 * ‖canonicalMobiusHilbert m‖ ^ 2)) / (4 * m + 4 : ℕ) := hnorm
+    _ = 3 * (196 * (‖canonicalMobiusHilbert (4 * m + 3)‖ ^ 2 / (4 * m + 4 : ℕ)) +
+        338 * (‖canonicalMobiusHilbert (2 * m + 1)‖ ^ 2 / (4 * m + 4 : ℕ)) +
+        36 * (‖canonicalMobiusHilbert m‖ ^ 2 / (4 * m + 4 : ℕ))) := by ring
     _ ≤ _ := by nlinarith
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization
