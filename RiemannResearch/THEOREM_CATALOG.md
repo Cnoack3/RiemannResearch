@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Actual complete-source double-log upper budgets (2026-10-07)
+
+Unconditional arithmetic conditioning, source identities and moment estimates:
+- Analysis/FiniteSpectralMomentUpper.lean retains the exact complete identity
+  M=Phi(L)T-C+P. The cap contrast C is nonnegative; the full source remainder
+  satisfies P^2<=B*S, P<=T and P<=(1+Phi(L))*S. A correction-weighted
+  outer-log Jensen bound is proved by exact tangent cancellation.
+- RH/ParetoActualSpectralMomentUpper.lean discharges every stage eigenvalue
+  cap from the actual Mobius repair: lambda_i<=144(n+3)^2-1, preserving the
+  unit head square. The literal mass is exactly 134-headError and tends to 134.
+  It proves P<=sqrt(134S)->0, the full signed upper bound
+  M<=Phi(L)T-C+sqrt(134S), and the conductor-scale endpoint upper floor:
+  for every c>delta, eventually M/log(1+log(n+3))<c.
+- Seven isolated axiom audits use only propext, Classical.choice, Quot.sound.
+  The final coherent source passed Lean with exit 0 and no warnings.
+
+Conditional research reduction:
+riemannHypothesis_of_actual_compactSpectrum_cofinal_contrast constructs
+the canonical feedback error epsilon+P/D internally. Its SINGLE Open
+arithmetic provider is C_(k_n)>=(Phi(L_(k_n))-theta*D_(k_n))*T_(k_n)
+-D_(k_n)*epsilon_n, with k_n cofinal, theta<1 and epsilon_n->0.
+The exact finite equivalence to the original complete-source budget retains P.
+No strict fraction, RH or source tightness is inferred from a polynomial cap.
+Source and continuation: RH/ParetoCompleteSourceMomentBudget20261007.md.
+
 ### Explicit complete-tail Mobius head repair (2026-10-07)
 
 Unconditional finite arithmetic and Hilbert geometry; no RH premise.
