@@ -1,5 +1,29 @@
 # Theorem catalog
 
+### Recovered Beurling, CRT weight, and optimized gain continuation (2026-10-07)
+
+Five additional modules contain 64 theorem declarations. Coherent isolated Lean
+compilation and eight selected axiom reports pass with standard foundations only.
+The recovered proofs retain complete signed sources, finite endpoints, and the
+actual optimizer correction square.
+
+- Analysis/FiniteKrylovGain.lean: exact two-direction Schur optimum, source-moment
+  variance bonus, positive centered third moment, and Hilbert trial adapters.
+- Analysis/StepCorrectionGain.lean: sharp structural error transfer, equality
+  witness and orthogonal split; scalar consumers of supplied complete norm identities.
+- Analysis/FiniteSignedTailCharge.lean: signed finite Abel summation with endpoint
+  and exact transport retaining the finite old source.
+- Analysis/BeurlingAnnihilator.lean: quantitative continuous-functional separation,
+  nonconvergence, and closed-span obstruction for an actual annihilating functional.
+- Analysis/FiniteCRTWeightBounds.lean: literal physical head and two-sided finite
+  inverse-square tail bounds, without substitution of a uniform residue law.
+
+Open analytic adapters: Mellin/zeta functional identities, infinite CRT digamma
+and zeta identification, harmonic/trapezoidal norm inputs and named constants.
+Open arithmetic provider: actual cumulative normalized gain forcing residual
+errors to zero. No new RH proof or full Lean digamma expansion is claimed.
+RH/BeurlingDigammaSalvage20261007.md records the exact scope and paper derivations.
+
 ### CRT formalization, physical norms, and actual canonical optimum (2026-10-07)
 
 Nineteen new modules contain 208 theorem/lemma declarations. Each passes isolated
