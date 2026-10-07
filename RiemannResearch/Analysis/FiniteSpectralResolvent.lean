@@ -20,7 +20,7 @@ noncomputable section
 open scoped BigOperators
 
 namespace RiemannResearch.Analysis.FiniteSpectralBudget
-variable {ι : Type* }
+variable {ι : Type*}
 
 def sourceResolvent (s : Finset ι) (w lam : ι → ℝ) (t : ℝ) : ℝ :=
   ∑ i ∈ s, w i / (t + lam i)
@@ -241,7 +241,7 @@ theorem doubleLogCapContrast_ge_correction_sub_highMass
 end RiemannResearch.Analysis.FiniteSpectralBudget
 
 namespace RiemannResearch.Analysis.FiniteHeadTailSpectralRealization
-variable {E H : Type* }
+variable {E H : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [FiniteDimensional ℝ E] [CompleteSpace E]
   [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
