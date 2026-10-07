@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Explicit complete-tail Mobius head repair (2026-10-07)
+
+Unconditional finite arithmetic and Hilbert geometry; no RH premise.
+
+- RH/ParetoMobiusHeadInterpolation.lean constructs unit steps by full
+  canonical Mobius dilation and exact boundary relocation to conductor H+1.
+  Every physical coordinate through H is interpolated, every conductor is
+  retained, and the entire infinite norm obeys ||T_H y||<=12H ||Q_H y||.
+  The linear map and its bounded continuous version are constructed.
+- finiteSpace_norm_le_head: ||f||<=12H ||Q_H f|| for every f in the entire
+  H-dimensional legal stage; interpolation is the actual inverse of its head.
+- RH/ParetoMobiusConstrainedEnergy.lean constructs a complete legal repaired
+  projection with exact error ||r_M||^2+||T_H r_M||^2. For H<=M the actual
+  exact-head error infimum satisfies
+  ||r_M||^2+||Q_H r_M||^2<=E_HM<=||r_M||^2+144H^2||Q_H r_M||^2.
+  No repair cap is left as an assumption.
+
+Open arithmetic: literal source tightness or the strict cofinal spectral
+moment feedback. Open formalization: RH -> BaezDuarte.CenteredApproximation.
+The centered/Pareto norm and closure transfer already exist in
+BaezDuarteCenteredBridge. Source and next steps:
+RH/GreenParetoHeadRepairAdvance20261007.md.
+
 ### Actual canonical-envelope spectral consumer (2026-10-06)
 
 Unconditional geometric providers and a **conditional research reduction**.
@@ -51,7 +74,9 @@ and every signed interaction remain explicit. Eight new focused modules:
 Open arithmetic: actual source tightness or strict normalized moment feedback;
 actual cumulative signed budget and normalized numerator with relative floor;
 concrete optimized complete-error decay and support schedule.
-Open formalization: concrete Mobius O(H) repair operator/cap; RH-to-density converse.
+Closed finite formalization: concrete Mobius O(H) repair with cap 12H and
+the actual complete constrained-energy comparison; see the 2026-10-07 entry.
+Open formalization: RH -> BaezDuarte.CenteredApproximation.
 The previously open unconditional actual spectral sequence assembly is closed.
 Decisive isolated check and seven axiom audits passed with only standard
 foundations. See RH/GreenParetoSpectralLimitsAdvance20261006.md.
@@ -95,10 +120,10 @@ Closed by ParetoCompactCutoffLimits, ParetoCompactSourceLimits and
 ParetoActualSpectralLimits: cutoff convergence, actual compact head-error
 decay, optimizer-tail decay and the actual sequence-to-RH spectral consumer.
 The normalized double-log lower-floor obstruction >=delta is also formalized.
-Open (formalization): the RH-to-density converse and the concrete O(H)
-Mobius head-repair operator with its proposed cap C_H<=12H+4.
-FiniteConstrainedProjection proves the stronger exact constrained-energy
-comparison conditional on an explicit legal repair norm cap.
+Open (formalization): RH -> BaezDuarte.CenteredApproximation.
+Closed by ParetoMobiusHeadInterpolation and ParetoMobiusConstrainedEnergy:
+the concrete complete O(H) repair with cap 12H and the actual exact-head
+error infimum comparison, with no repair norm assumption remaining.
 Earlier source status was stale: reciprocal-charge nonvanishing, complete
 canonical affine exhaustion and continuous head repair were already proved.
 See RH/GreenParetoGitHubAdvance20261006.md for exact hypotheses, proof

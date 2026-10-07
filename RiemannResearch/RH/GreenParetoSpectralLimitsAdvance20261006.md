@@ -195,10 +195,13 @@ The new complete optimum comparison for any contractive head map is
 \]
 
 provided an actual legal repair `t` has `Qt=Qr` and `||t||<=C||Qr||`.
-The repair norm bound is an explicit hypothesis; the concrete Möbius
-interpolation operator and its proposed `O(H)` norm constant are not
-formalized by this generic comparison. No asymptotic support schedule or
-optimal-energy decay is inferred.
+The generic result takes the repair norm as an explicit hypothesis.
+The 2026-10-07 continuation now constructs the concrete complete Möbius
+interpolation operator with cap 12H and proves the actual exact-head
+error infimum comparison for every H<=M, removing that finite assumption.
+See GreenParetoHeadRepairAdvance20261007.md and the focused modules
+ParetoMobiusHeadInterpolation and ParetoMobiusConstrainedEnergy.
+No asymptotic support schedule or optimal-energy decay is inferred.
 
 ## 5. Verification evidence and literature scope
 
