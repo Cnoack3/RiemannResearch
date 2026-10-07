@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Actual conductor-scale source escape and bounded-tail consumer (2026-10-07)
+
+Unconditional exact arithmetic and full-source Hilbert geometry:
+
+- Analysis/FiniteSpectralResolvent.lean proves the complete-source resolvent
+  relation, cap-gap identity, rational and threshold contrast certificates,
+  literal head-adjoint source realization and exact signed variational
+  completion with both full physical energy squares retained.
+- RH/ParetoCompactTrialEnergy.lean proves, for N=4m+4, the exact identity
+  u_N=14 A_(4m+3)-13 D_2 A_(2m+1)+3 D_4 A_m. The complete squared norm
+  retains all three signed cross terms. Existing unconditional canonical
+  Mobius sublinear energy then gives ||u_N||^2/N->0.
+- RH/ParetoActualSpectralResolvent.lean applies the actual full-stage
+  variational completion: sourceDeficit(t)<=headTrial^2+tailTrial^2/t-e_N.
+  For every c>0, sourceDeficit_(4m)(c(4m+4))->0 and the entire actual
+  source highMass_(4m)(c(4m+4))->0. No fixed-threshold tightness is inferred.
+- The coherent isolated candidate passed Lean with exit 0 and no warnings;
+  the source escape, threshold contrast and cofinal RH consumer axiom audits
+  use only propext, Classical.choice and Quot.sound.
+
+**Conditional research reduction**:
+RH/ParetoConductorTailCriterion.lean proves
+riemannHypothesis_of_compactSpectrum_fourfold_cofinal_bounded_tail.
+Its Open arithmetic provider is eventual (4k_m+4) S_(4k_m)<=B for some
+finite B>=0 and cofinal k_m. Source escape and all geometric limits are
+internally supplied. The whole-fourfold version is also proved.
+This bound, fixed-threshold tightness and the previous strict cofinal
+double-log contrast remain Open; none follows from the linear moving cutoff.
+Source and precise continuation: RH/ParetoSourceResolventAdvance20261007.md.
+
 ### Actual complete-source double-log upper budgets (2026-10-07)
 
 Unconditional arithmetic conditioning, source identities and moment estimates:
