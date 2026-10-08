@@ -192,7 +192,7 @@ Both terms on the right are nonnegative. If the denominator is positive, this gi
 \|h\|^2\le
 \frac{\|\rho\|^2}{\|\rho\|^2-\|c\|^2}\|h-\alpha\rho\|^2.
 \]
-Lean also proves an equality witness, the orthogonal split, and scalar consumers translating a supplied complete trapezoidal norm identity and positive tail bounds into finite norm enclosures. Identifying the named constants \(\log(2\pi)-\gamma\) and assembling the infinite correction energy remain analytic work. The all-order positive-real digamma asymptotic and sharp signed remainder are now formalized in the subsequent continuation.
+Lean also proves an equality witness, the orthogonal split, and scalar consumers translating a supplied complete trapezoidal norm identity and positive tail bounds into finite norm enclosures. The six-module correction-norm continuation now proves the named constant `log(2*pi) - gamma`, the literal complete continuum integral, every signed source and residual cell variance, sharp transfer and its actual Hilbert-space optimality. See [CompleteCorrectionNorm20261007.md](CompleteCorrectionNorm20261007.md). The separate convergent trapezoidal atom-norm identity remains a further analytic target. The all-order positive-real digamma asymptotic and sharp signed remainder are already formalized.
 
 The finite signed source identity keeps its boundary:
 \[
@@ -209,7 +209,7 @@ All new modules use focused Mathlib imports. There are 64 theorem declarations i
 | Module | Theorems | Kernel-checked content | Inputs still required |
 |---|---:|---|---|
 | Analysis/FiniteKrylovGain.lean | 18 | Exact two-direction Schur completion, coefficients, moment bonus, signed variance and centered third moment, Hilbert trial and full optimizer-square adapters | Actual stage moment and pairing instantiation; arithmetic cumulative gain budget |
-| Analysis/StepCorrectionGain.lean | 12 | Sharp generic correction transfer, equality witness, orthogonal split, finite norm-bound and tail consumers | Actual step projection constants and complete trapezoidal norm assembly; harmonic/digamma bounds are now supplied |
+| Analysis/StepCorrectionGain.lean | 12 | Sharp generic correction transfer, equality witness, orthogonal split, finite norm-bound and tail consumers | Actual complete structural projection/norm inputs now proved in the six-module correction-norm continuation; separate trapezoidal atom-norm identity remains open |
 | Analysis/FiniteSignedTailCharge.lean | 10 | Signed finite Abel formula with endpoint, finite tails, exact transported-source splitting | Infinite convergence, endpoint decay, arithmetic cancellation estimates |
 | Analysis/BeurlingAnnihilator.lean | 9 | Positive quantitative functional separation, legal-sequence nonconvergence, span and closed-span obstruction | Discharged by the actual Mellin/zeta continuation; approximation converse remains open |
 | Analysis/FiniteCRTWeightBounds.lean | 15 | Literal positive CRT terms, physical head, strict domination, pointwise and finite tail squeeze | Digamma/zeta identification and convergent CRT expansion now supplied; application estimates retain their domains |
