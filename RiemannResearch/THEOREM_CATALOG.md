@@ -34,9 +34,9 @@ normal equation, solve it exactly, cancel both complete rank-two logarithmic
 terms under mean one, retain the full core quadratic remainder, and identify
 the exact correction-square penalty and signed error numerator.
 
-The actual arithmetic Gram identity, inertia, constrained-mean closure, and
-analytic applications are paper arguments in
-RH/CriticalZeroMeanOneAdvance20261008.md, not new Lean provider declarations.
+The original continuation treated arithmetic Gram identity, inertia and
+constrained-mean closure on paper. The physical advance below now supplies
+their Lean applications; other claims in that paper retain their stated status.
 The paper proves that the proposed coarse stretched-tail saving
 N exp(-a h(N)) S_N -> 0 for 0<a<eta is impossible: a critical-line zero and
 the unconditional trial-energy envelope force this quantity to infinity.
@@ -48,6 +48,40 @@ Conditional research reductions: actual strict source feedback, actual trial
 energy-tail product saving, algebraic-core saturation gamma_L -> 4*pi, and the
 formal RH-to-squarefree approximation converse remain Open. No RH proof is
 claimed, and the invalid coarse stretched upper envelope is not a provider.
+
+### Physical arithmetic core and mean-one optimizer (2026-10-08)
+
+Sixteen new modules passed one coherent isolated Lean compilation (exit code 0).
+All 227 public declarations passed a transitive axiom audit restricted to
+propext, Classical.choice and Quot.sound. The publication checkpoint separately
+validates actual module imports and affected project dependents.
+
+RH/CotangentBridge, CotangentMultiplication, ArithmeticPacketCore and
+CotangentContraction identify the actual full Pareto Gram with the originally
+specified double-cotangentV core. Signed Mobius, single-conductor and
+simultaneous-divisibility corrections are retained until their proved cancellation.
+LinearAlgebra/MeanOneCoreInertia and RH/PhysicalPacketCore, ArithmeticCoreInertia
+prove nonsingularity, negative charge and exact Lorentz decomposition for every
+squarefree divisor stage L>2, then actual ordinary mean-one optimization and
+uniqueness. RH/MeanOneSix proves C_6=-8*sqrt(3), coefficients (2/3,1/2,1/6),
+and minimum 1-pi/(2*sqrt(3)). RH/MeanOneRepair proves equality of the full
+squarefree packet closure and its ordinary mean-one subfamily.
+
+LinearAlgebra/MeanOneSchur and MeanOneBlockSchur retain the signed mixed update
+and negative mean-tangent correction. RH/MeanOnePeriodObstruction and
+PhysicalPeriodObstruction prove complete-period completion and reflection
+floors, including E>=2/(L^2-1). RH/PhysicalCoreMonotonicity and MeanOneChargeBounds
+prove actual error antitonicity and charge monotonicity. For 6 dividing L>2,
+-8*sqrt(3)<=C_L<-4*pi. Every nested such divisor chain converges to a value
+in [-8*sqrt(3),-4*pi]; identifying it with -4*pi remains Open.
+
+RH/ArithmeticCoreRHCriterion proves the charge-limit-to-RH implication with
+the endpoint as an explicit unproved hypothesis. The RH-to-squarefree converse
+and rational-angle algebraicity remain separate formalization tasks. The mixed
+Schur Cauchy/source-limit investigation is informal, not a new Lean provider.
+See RH/PhysicalMeanOneAdvance20261008.md and its verification JSON manifest.
+No RH proof is claimed; the invalid coarse stretched-tail estimate is excluded.
+
 
 ### Recovered analytic proofs and cancellation-preserving digamma differences (2026-10-07)
 
