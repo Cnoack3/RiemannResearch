@@ -1,3 +1,6 @@
+import RiemannResearch.Analysis.RadicalDifferenceTotality
+import RiemannResearch.RH.SquarefreeRadicalDifference
+import RiemannResearch.RH.ReciprocalHeadCertificate
 import RiemannResearch.RH.PhysicalMeanRepairProjection
 import RiemannResearch.RH.PhysicalSourceRates
 import RiemannResearch.NumberTheory.Transcendence.SubsetSumEsymm

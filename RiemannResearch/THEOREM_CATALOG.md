@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Radical dual common kernel and rational reciprocal head certificate (2026-10-08)
+
+Thirty-five public theorems passed coherent full-body checks. The actual
+inverse-square common-kernel theorem uses only the two displayed radical
+difference families and inverse-square summability, which is supplied
+internally by QHilbert. No RH hypothesis is used.
+
+- Analysis/RadicalDifferenceTotality.lean: exact adjacent-value recovery,
+  affine power amplification, normalized summability decay, and the complete
+  power/radical-invariance common-kernel theorems.
+- RH/SquarefreeRadicalDifference.lean: exact residue jumps and radical
+  reduction, the literal legal squarefree residue-span and target-residual
+  identities, continuous physical evaluations and strong-limit preservation,
+  complete signed reciprocal-row recovery, and the actual QHilbert trivial
+  common kernel.
+- RH/ReciprocalHeadCertificate.lean: exact rational 34-site head bounds,
+  residue trace control, signed Young inequality, and full-tail scalar
+  certificate with coefficient 4137/4160 < 1.
+
+The accompanying paper argument gives the actual screened-moment cap
+9/49 < 3/16. Its infinite weighted-Cauchy and operator specialization remain
+paper proofs; only the finite arithmetic/inequality certificate is formalized.
+Bundled augmented-dual density also remains paper-level assembly of the
+checked common kernel. The cofinal positive correction saving remains Open.
+See RH/RadicalDualAdvance20261008.md and
+RH/ReciprocalHeadCertificate20261008.md for proofs and scope.
+
 ### Exact inverse-square optimizer cancellation and cofinal RH criterion (2026-10-08)
 
 Twenty modules formalize the exact optimizer continuation, with 242 public
