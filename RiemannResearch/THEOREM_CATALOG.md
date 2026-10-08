@@ -1,5 +1,29 @@
 # Theorem catalog
 
+### Actual inverse-square integer probability and prime independence (2026-10-08)
+
+Established: RH/ZetaTwoProbability.lean, RH/PrimeValuationIndependence.lean,
+and RH/ZetaTwoPrimeConsumers.lean add 41 public theorems (7 + 10 + 24).
+The coherent full-body check succeeds; all 41 public axiom reports use only
+propext, Classical.choice, and Quot.sound. Native publication is checkpoint-gated.
+
+- Actual normalized PMF and measure on positive integers, with positive summable
+  normalizer identified with riemannZeta 2; measure_dvd gives Q(m divides K)=m^-2.
+- Exact prime-power tails and geometric valuation masses; iIndepFun_primeValuation
+  proves independence for any injective family of actual primes.
+- Exact finite Boolean and valuation pushforward masses, and actual expectation
+  transfer to FinitePrimeLikelihood and FinitePrimeDivisibilityMoments.
+- All finite-configuration observables belong to every L^r(Q); exact likelihood
+  mean, second moment, tilt, divisibility moments and complete derivative Gram.
+- Actual conductors are squarefree; union equals lcm. Normalized residue differences
+  equal 1/d minus the divisibility indicator. The existing CRT reference kernel
+  divided by zetaTwo is the actual Gram kernel of scaled divisibility indicators.
+
+This closes the integer-law bridge left separate in the salvage49 status note.
+Squarefree approximation, bounded discrete integration, small-damping energy,
+and RH remain separate Open research obligations. No independence-to-RH inference.
+See RH/ActualZetaTwoPrimeBridge20261008.md and its verification JSON manifest.
+
 ### Rank-two mean optimization and critical-zero audit (2026-10-08)
 
 LinearAlgebra/RankTwoResidualMean.lean contains eight finite algebraic theorems

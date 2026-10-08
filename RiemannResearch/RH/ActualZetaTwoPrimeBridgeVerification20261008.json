@@ -1,0 +1,98 @@
+{
+  "base_commit": "9d216a284767a4bb302e444297cc3e6b5cc8f000",
+  "lean_version": "v4.33.0-rc2",
+  "public_theorem_count": 41,
+  "modules": [
+    {
+      "file": "RiemannResearch/RH/ZetaTwoProbability.lean",
+      "sha256": "5d06950c6c12fedce98041a0a7740793d069b3be6e1f618b613a60aec47ae435",
+      "public_theorem_count": 7,
+      "public_theorems": [
+        "inverseSquare_summable",
+        "zetaTwo_pos",
+        "zetaTwo_eq_nat_sum",
+        "zetaTwo_eq_riemannZeta",
+        "pmf_apply",
+        "measure_singleton",
+        "measure_dvd"
+      ]
+    },
+    {
+      "file": "RiemannResearch/RH/PrimeValuationIndependence.lean",
+      "sha256": "be2c9c8f846fc62401c4d645a79120a7fafc882afcc60b324a6c2da08ba19975",
+      "public_theorem_count": 10,
+      "public_theorems": [
+        "measure_primePower_dvd",
+        "measure_primeValuation_ge",
+        "measure_primeValuation_eq",
+        "primePower_product_dvd_iff",
+        "measure_primeValuation_joint_ge",
+        "iIndepFun_primeValuation",
+        "iIndepFun_divisibilityBool",
+        "measure_divisibilityBool",
+        "measure_boolean_configuration",
+        "measure_primeValuation_configuration"
+      ]
+    },
+    {
+      "file": "RiemannResearch/RH/ZetaTwoPrimeConsumers.lean",
+      "sha256": "aa5cab908ce491d0fcf6b6ec22b2456156f346287026d45e23b98afed51d9059",
+      "public_theorem_count": 24,
+      "public_theorems": [
+        "memLp_primeConfiguration",
+        "integrable_primeConfiguration",
+        "integral_primeConfiguration",
+        "integral_finiteLikelihood",
+        "integral_finiteLikelihood_sq",
+        "integral_finiteLikelihood_tilt",
+        "subsetProduct_eq_conductor",
+        "conductor_squarefree",
+        "conductor_pos",
+        "conductor_dvd_iff",
+        "conductor_union_eq_lcm",
+        "finiteMonomial_primeConfiguration",
+        "integral_conductor_indicator",
+        "integral_conductor_indicator_mul",
+        "integral_finiteLikelihood_conductor_indicator",
+        "residueFraction_difference",
+        "finiteDerivativeAtom_primeConfiguration",
+        "integral_divisibilityDerivative",
+        "integral_divisibilityDerivative_mul",
+        "integral_divisibilityDerivative_sq",
+        "integral_finiteLikelihood_divisibilityDerivative",
+        "zetaTwoSeries_eq_zetaTwo",
+        "gcdReferenceKernel_div_zetaTwo",
+        "integral_scaled_conductorIndicators"
+      ]
+    }
+  ],
+  "verified_axiom_union": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "proof_body_check": {
+    "job_id": "job_Wg129Mq7aC4N373CewMnwvnP5-q-ea1u",
+    "verified": true,
+    "exit_code": 0,
+    "code_sha256": "e72b99a32cc34eea34547bfe5633a1f85acdf29a5555c165cffa3ccb433f1dfd"
+  },
+  "axiom_checks": [
+    {
+      "job_id": "job_cDAuG2z7ij6wK01nOPIT1CIId3FWm57N",
+      "verified": true,
+      "exit_code": 0,
+      "retrieved_public_reports": 17,
+      "scope": "All public declarations of probability and independence modules"
+    },
+    {
+      "job_id": "job_cQ-DL-xG3cZfbUVExBETa4cQLBNy7nYt",
+      "verified": true,
+      "exit_code": 0,
+      "code_sha256": "08b4ca95c3e217485810d1b69905b14b0b6b84b8fd438b6b96f36a0993ddec8f",
+      "scope": "All bodies plus all 41 axiom queries; output truncated at the start, but all 24 consumer reports retrieved; missing foundation prefix supplied by preceding check"
+    }
+  ],
+  "native_validation": "Required by final checkpoint with push enabled; terminal checkpoint result is authoritative. Coherent checks inline exact existing support bodies and do not alone constitute native publication.",
+  "native_preparation": "Initial native check identified a missing local ENNReal notation scope in the consumer. The scope was added; final native validation is required before commit."
+}

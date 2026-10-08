@@ -1,5 +1,7 @@
 # Independent-prime continuation: 49-theorem salvage status
 
+**Subsequent bridge completion (2026-10-08):** The separate integer-law obligation recorded below is now supplied by `ZetaTwoProbability.lean`, `PrimeValuationIndependence.lean`, and `ZetaTwoPrimeConsumers.lean`. These construct the actual normalized inverse-square measure, prove actual prime-valuation independence and the finite Boolean law, and instantiate the likelihood, divisibility, residue-derivative and CRT identities. See `ActualZetaTwoPrimeBridge20261008.md` for scope and verification. The historical eight-module audit below remains unchanged; squarefree approximation and RH are not established by the new bridge.
+
 Date: 2026-10-08. This note records source fidelity, successful kernel verification, and the exact mathematical scope of eight modules.
 
 ## Kernel verification and publication procedure
