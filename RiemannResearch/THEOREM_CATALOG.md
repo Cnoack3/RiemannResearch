@@ -47,6 +47,35 @@ approximation converse/squarefree provider, and named continuum norm assembly
 remain Open. RH/MellinZetaDigammaFormalization20261007.md records exact domains,
 proof strategy, declaration inventory, and verification evidence.
 
+### Verified independent-prime and zeta-weighted continuation (2026-10-08)
+
+Eight modules contain 73 checked public theorems and 20 definitions. All 49
+previously unverified theorem statements are preserved. Coherent Lean checks
+pass, and the complete 73-declaration axiom audit uses standard foundations only.
+
+- RH/FinitePrimeLikelihood and FinitePrimeDivisibilityMoments: exact explicit
+  finite Boolean product law, likelihood/change-of-law identities, monomial
+  moments, complete differentiated Gram entries, diagonal and orthogonality.
+- RH/PrimeSieveSecantAlgebra: exact signed secants, convex bounds and full
+  coefficient variation. Prime arithmetic/asymptotic specialization remains Open.
+- RH/ZetaTwoPeriodMeanBounds: actual residue coefficient mean bound from the
+  first period, with both signed coefficient moments and explicit summability.
+  The stronger all-period bound is not supplied by this module.
+- RH/ExactHeadMeanGap, PrimeSieveTwoCutoffHead and PrimeSieveTwoCutoffMean:
+  complete tail mean-gap lower bound, actual signed factorial-sieve interpolation,
+  full rough-count residual, actual divisor-logarithmic mean and exact secant.
+- RH/ZetaTwoDampedEnergyTransfer: complete inverse-square/Pareto membership
+  equivalence, inclusive half-damping endpoint, and existing Burnol RH consumers.
+
+Conditional research reductions: admissible arbitrarily small damping energy
+remains Open; RH is not proved. The integer-law probability bridge, complete
+finite derivative optimizer, prime-sum/Mertens specialization, and formal
+RH-to-squarefree-approximation provider also remain Open in this continuation.
+The squarefree-seed/dilation span is not identified with the literal squarefree
+dictionary. RH/Salvage49ResearchStatus20261008.md records exact assumptions and
+verification; RH/IndependentPrimeResearchContinuation20261007.md preserves the
+research development and agenda.
+
 ### Recovered Beurling, CRT weight, and optimized gain continuation (2026-10-07)
 
 Five additional modules contain 64 theorem declarations. Coherent isolated Lean
