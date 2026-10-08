@@ -94,7 +94,8 @@ matrix inverse, actual arithmetic/physical charge and coefficient algebraicity.
 Total Matrix.inv algebraicity does not assert nonsingularity. Existing odd-prime
 inertia providers discharge genuine squarefree L>2 constrained-minimum premises.
 RH/ArithmeticMinimumTranscendence proves the minimum has the same algebraicity
-status as pi; its transcendental corollary explicitly assumes pi transcendence.
+status as pi; NumberTheory/Transcendence now discharges pi transcendence for
+the actual finite-minimum corollary, with no supplied hpi premise.
 
 LinearAlgebra/MeanOneSchurCoupling proves complete signed Schur Cauchy, its
 solved-block specialization, and source-limit bounds under explicit positivity
@@ -184,6 +185,40 @@ floor delta=(2*Re(rho)-1)/norm(rho)^2. Passing to the actual limit gives
 delta<=1-4*pi/(-C_infinity) and
 C_infinity<=-4*pi/(1-delta)<-4*pi. No existence of such a zero is asserted.
 The arithmetic endpoint C_infinity=-4*pi remains Open. No RH proof is claimed.
+
+### Exact physical mean repair, source rates, and π premise discharge (2026-10-08)
+
+Established: RH/PhysicalMeanRepairProjection and PhysicalSourceRates add
+18 theorems; five NumberTheory/Transcendence modules add 27 attributed
+Lindemann-assembly declarations. The existing physical-minimum transcendence
+theorem now discharges pi transcendence internally and has no hpi premise.
+
+All 540 listed public declarations across the combined 37-module source set
+pass a coherent Lean body check and transitive axiom audit restricted to
+propext, Classical.choice and Quot.sound. Publication additionally checks
+actual imports and affected dependents. See
+RH/PhysicalSourceVerificationAdvance20261008.md and its verification JSON.
+
+The actual full Gram projection is unique, its charge is monotone, and the
+ordinary mean-one optimizer equals its exact signed mean-dual repair:
+c0 = u + ((2*pi+B)/C)*v. Its complete error penalty is
+(2-phi dot u)^2/(phi dot v) = 4*pi*(2*pi+B)^2/((-C)*T).
+On primorials it is at most 4*pi/C_n-4*pi/C_infinity.
+
+For prime p in a legal physical set, -A<4*(-C)*p/(3*(p-1)^2) and
+(2*pi+B)^2<4*C^2*p/(3*(p-1)^2), with simpler inverse-prime bounds.
+The actual primorial application discharges membership and all geometry:
+-A_n<128*sqrt(3)/(3*p), (2*pi+B_n)^2<1024/p for prime p<=n+3.
+These unnormalized source rates supply no normalized-correction rate or
+arithmetic charge endpoint.
+
+The five pi modules adapt Trevor Morris's Apache-2.0 formalization at
+gotrevor/lean-formalizations commit bad0e21a37874f09f45072dad6225de55742e6c5.
+The concrete RH consumer is ArithmeticMinimumTranscendence; provenance is
+retained in each module. No novelty claim is made for this known theorem.
+
+Unconditional arithmetic C_infinity=-4*pi and the Lean analytic
+RH-to-squarefree approximation provider remain Open. No RH proof is claimed.
 
 ### Recovered analytic proofs and cancellation-preserving digamma differences (2026-10-07)
 

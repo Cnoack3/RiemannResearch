@@ -4,17 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.ArithmeticCoreAlgebraicity
+import RiemannResearch.NumberTheory.Transcendence.PiTranscendental
 import Mathlib.RingTheory.Algebraic.Integral
 
 /-!
 # Algebraicity transfer for the finite constrained physical minimum
 
 An algebraic nonzero inverse charge makes the exact constrained minimum
-`1 + 4 * π / C` algebraic if and only if π is algebraic.  Thus a proof of
-π's transcendence transfers to this minimum without any algebraicity
-assumption on logarithms.  The transcendence corollaries below explicitly
-retain that premise: this file supplies no proof of π's transcendence and
-no statement about the arithmetic limit of inverse charges.
+`1 + 4 * π / C` algebraic if and only if π is algebraic. The verified
+π-transcendence declaration in NumberTheory.Transcendence discharges that
+premise for the actual physical minimum, with no assumption on logarithms.
+This file supplies no statement about the arithmetic limit of inverse charges.
 -/
 
 noncomputable section
@@ -53,12 +53,13 @@ theorem constrainedOptimizer_error_isAlgebraic_iff (s : Finset ℕ)
   exact isAlgebraic_affine_quotient_iff _ _ (inverseCharge_algebraic s hs)
     (ne_of_lt (inverseCharge_neg s hs hodd))
 
-/-- Conditional only on an independently supplied transcendence theorem for π. -/
+/-- The actual finite minimum is transcendental, with π's transcendence
+supplied by the verified Lindemann assembly. -/
 theorem constrainedOptimizer_error_transcendental (s : Finset ℕ)
-    (hs : ∀ q ∈ s, 1 < q) (hodd : ∃ p ∈ s, p.Prime ∧ 2 < p)
-    (hpi : Transcendental ℚ Real.pi) :
+    (hs : ∀ q ∈ s, 1 < q) (hodd : ∃ p ∈ s, p.Prime ∧ 2 < p) :
     Transcendental ℚ (paretoError (synthesis s (constrainedOptimizer s))) := by
   intro hE
-  exact hpi ((constrainedOptimizer_error_isAlgebraic_iff s hs hodd).mp hE)
+  exact RiemannResearch.NumberTheory.Transcendence.transcendental_pi
+    ((constrainedOptimizer_error_isAlgebraic_iff s hs hodd).mp hE)
 
 end RiemannResearch.RH.Pareto.ArithmeticMinimumTranscendence

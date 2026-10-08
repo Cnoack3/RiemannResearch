@@ -1,5 +1,10 @@
 # Actual optimizer limits and quantitative endpoint obstruction
 
+Follow-up: `PhysicalSourceVerificationAdvance20261008.md` adds exact signed
+mean repair and quantitative source bounds, verifies the combined declarations,
+and discharges the optional pi-transcendence premise. The original verification
+record below is retained as a historical snapshot.
+
 The actual source limits published at `efc020d` now give complete physical
 agreement of the ordinary mean-one optimizer and the unconstrained projection.
 This advance identifies both limiting errors exactly. It does **not** prove
