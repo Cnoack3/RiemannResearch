@@ -77,10 +77,58 @@ in [-8*sqrt(3),-4*pi]; identifying it with -4*pi remains Open.
 
 RH/ArithmeticCoreRHCriterion proves the charge-limit-to-RH implication with
 the endpoint as an explicit unproved hypothesis. The RH-to-squarefree converse
-and rational-angle algebraicity remain separate formalization tasks. The mixed
-Schur Cauchy/source-limit investigation is informal, not a new Lean provider.
+remains Open. Rational-angle algebraicity and the complete signed Schur
+investigation are formalized in the following advance.
 See RH/PhysicalMeanOneAdvance20261008.md and its verification JSON manifest.
 No RH proof is claimed; the invalid coarse stretched-tail estimate is excluded.
+
+### Arithmetic observations, squarefree geometry and improved trial (2026-10-08)
+
+Nine new modules and all 192 public declarations passed one coherent isolated
+Lean check and transitive axiom audit: only propext, Classical.choice and
+Quot.sound. The publication checkpoint validates actual imports and affected
+project dependents. See RH/PhysicalArithmeticObservations20261008.md and JSON.
+
+RH/ArithmeticCoreAlgebraicity proves rational-angle, original signed core,
+matrix inverse, actual arithmetic/physical charge and coefficient algebraicity.
+Total Matrix.inv algebraicity does not assert nonsingularity. Existing odd-prime
+inertia providers discharge genuine squarefree L>2 constrained-minimum premises.
+RH/ArithmeticMinimumTranscendence proves the minimum has the same algebraicity
+status as pi; its transcendental corollary explicitly assumes pi transcendence.
+
+LinearAlgebra/MeanOneSchurCoupling proves complete signed Schur Cauchy, its
+solved-block specialization, and source-limit bounds under explicit positivity
+and limit premises. The corrected charge equals the existing 4*pi/Q bound.
+An abstract positive rank-one source model has limit -5*pi; it is not physical
+arithmetic and does not refute saturation of the actual packet system.
+
+RH/PhysicalSchurReindex and PhysicalSchurCoupling identify the actual old,
+cross and fresh blocks, prove the full mean-tangent and ordinary Schur forms
+positive, and discharge genuine inverse-Schur positivity. Actual A/B/C signed
+updates and Cauchy need only nested legal packets and an old odd prime.
+Actual A<0, B<-pi and T=A*C-(2*pi+B)^2>0 are proved; finite denominator
+premises in the corrected source-charge formula are internally discharged.
+The defined source projection charge is a scalar expression, not independently
+identified here with an actual inverse-Gram projection norm.
+
+RH/SquarefreePacketBasis proves both original physical finite basis transforms,
+complete error equality and ordinary-mean transfer with both endpoints retained.
+RH/SquarefreeStageExhaustion supplies actual nested exhaustive squarefree
+primorial periods. RH/SquarefreeArithmeticSaturation proves global centered
+approximation iff mean-one packets iff actual stage minima arbitrarily small
+iff vanishing errors iff charge saturation on every exhaustive divisor chain.
+These are equivalences of unproved approximation/endpoint assertions.
+
+RH/MeanOneThirtyTrial proves an exact ordinary mean-one trial at conductors
+(2,3,5,6), coefficients (1/2,1/3,1/5,1/60), with complete error 1-pi*K/10800,
+K=797*sqrt(3)+1224*cot(pi/5)+648*cot(2*pi/5). The actual minimum is at most
+this value, strictly below the L=6 minimum. Every physical 30|L>2 has charge
+at least -43200/K. The actual primorial arithmetic charge converges to a value
+in [-43200/K,-4*pi]; equality with -4*pi remains Open.
+
+Conditional research reductions: RH-to-squarefree centered approximation remains
+Open as hReverse; actual A->0 and B->-2*pi source-limit realization remains Open;
+unconditional arithmetic C_infinity=-4*pi remains Open. No RH proof is claimed.
 
 
 ### Recovered analytic proofs and cancellation-preserving digamma differences (2026-10-07)
