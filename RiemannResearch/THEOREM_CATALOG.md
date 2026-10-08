@@ -108,8 +108,9 @@ positive, and discharge genuine inverse-Schur positivity. Actual A/B/C signed
 updates and Cauchy need only nested legal packets and an old odd prime.
 Actual A<0, B<-pi and T=A*C-(2*pi+B)^2>0 are proved; finite denominator
 premises in the corrected source-charge formula are internally discharged.
-The defined source projection charge is a scalar expression, not independently
-identified here with an actual inverse-Gram projection norm.
+At this earlier snapshot the source projection charge was only a scalar
+expression. PhysicalSourceProjection now identifies it with the actual
+inverse-Gram solve, as recorded in the following established advance.
 
 RH/SquarefreePacketBasis proves both original physical finite basis transforms,
 complete error equality and ordinary-mean transfer with both endpoints retained.
@@ -127,9 +128,33 @@ at least -43200/K. The actual primorial arithmetic charge converges to a value
 in [-43200/K,-4*pi]; equality with -4*pi remains Open.
 
 Conditional research reductions: RH-to-squarefree centered approximation remains
-Open as hReverse; actual A->0 and B->-2*pi source-limit realization remains Open;
-unconditional arithmetic C_infinity=-4*pi remains Open. No RH proof is claimed.
+Open as hReverse; unconditional arithmetic C_infinity=-4*pi remains Open.
+Actual A->0 and B->-2*pi are discharged by PhysicalSourceLimits below.
+No RH proof is claimed.
 
+
+### Actual physical source limits and complete signed correction (2026-10-08)
+
+Established: RH/PhysicalSourceProjection.lean and PhysicalSourceLimits.lean
+contain 38 theorems and 6 definitions. All 44 public declarations pass one
+coherent full-body Lean check and a compact transitive axiom audit restricted
+to propext, Classical.choice and Quot.sound. Publication validates actual
+imports and affected dependents. See RH/PhysicalSourceLimits20261008.md and JSON.
+
+PhysicalSourceProjection proves actual projection and ordinary-mean dual normal
+equations, identifies Q with the existing actual inverse-Gram solve, and retains
+the complete Gram displacement square and exact ordinary-mean error penalty.
+The large-prime physical norm implies T<16*pi*(-C)*p/(3*(p-1)^2), hence T->0,
+A->0 and B->-2*pi on the actual primorial chain, with no RH hypothesis.
+PhysicalSourceLimits supplies all legal, inertia, bounded-charge and
+prime-exhaustion premises. The previous physical Schur limit theorem now yields
+0<=(2*pi+B_n)^2/(-A_n)<=C_infinity-C_n, so the normalized signed square tends
+to zero. The corrected charge tends to -C_infinity, and the actual projection
+charge Q_n tends to 4*pi/(-C_infinity).
+
+The actual source-limit realization and physical Q identification are now
+Established. Unconditional endpoint C_infinity=-4*pi and the analytic
+RH-to-squarefree reverse remain Open. No RH proof is claimed.
 
 ### Recovered analytic proofs and cancellation-preserving digamma differences (2026-10-07)
 

@@ -1,5 +1,12 @@
 # Physical arithmetic observations: checked finite and geometric completion
 
+Follow-up: `PhysicalSourceLimits20261008.md` supplies the actual unconditional
+source limits and identifies the source charge with the actual inverse-Gram
+projection. It also proves that the complete normalized signed correction tends
+to zero. The nine-module verification below records the earlier finite snapshot;
+the follow-up has its own two-module verification manifest. Charge saturation
+and the analytic RH reverse remain open.
+
 Date: 2026-10-08. Continuation of `PhysicalMeanOneAdvance20261008.md` and
 `CriticalZeroMeanOneAdvance20261008.md`. The latter's stretched-scale
 optimizer-tail estimate remains excluded as an RH provider.
@@ -200,6 +207,7 @@ additionally validates actual module imports and affected project dependents.
 | Mean-one repair, both physical basis transforms and stage geometry | Established |
 | Concrete squarefree exhaustive chain and charge-limit existence | Established |
 | Exact period-thirty trial and stronger unconditional limit interval | Established |
+| Actual source limits and inverse-Gram projection identification | Established in `PhysicalSourceLimits20261008.md` |
 | RH-to-squarefree analytic approximation provider | **Open** in Lean |
 | Unconditional arithmetic endpoint `C∞=−4π` | **Open** |
 | Minimum transcendence without a supplied π-transcendence theorem | Separate formal premise |
