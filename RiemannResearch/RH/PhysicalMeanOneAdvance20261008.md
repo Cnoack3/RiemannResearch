@@ -61,7 +61,7 @@ only the Lean declarations constitute their formal proof.
 The genuine normalized-residue repair a_d=2d*g_d/(d−1) has ordinary mean one.
 Its complete physical norm satisfies
 
-    ||a_d||^2 < 16d/[3(d−1)^2] < 64/(3d).
+    ||a_d||^2 < 16d/[3(d−1)^2] <= 64/(3d),  d>1.
 
 An arbitrarily large fresh prime conductor repairs each fixed squarefree
 finite packet with arbitrarily small norm. Thus the closure of mean-one
@@ -133,5 +133,7 @@ All sixteen new modules passed one coherent isolated Lean check (exit code 0).
 A transitive axiom audit of all 227 public definitions and theorems permitted
 only propext, Classical.choice and Quot.sound. The accompanying
 PhysicalMeanOneVerification20261008.json records source hashes, declarations
-and the verification job. The publication checkpoint additionally validates
-the actual module imports and affected project dependents before committing.
+and the verification job. The publication checkpoint successfully built all
+16 affected modules and pushed Lean commit
+81ae700c5360cc443d093ff1c829d5c9e3fb102d. The only integration repair was a
+direct ParetoNoiseSignal import for paretoError; theorem bodies were unchanged.
