@@ -1,5 +1,57 @@
 # Theorem catalog
 
+### Exact inverse-square optimizer cancellation and cofinal RH criterion (2026-10-08)
+
+Twenty modules formalize the exact optimizer continuation, with 242 public
+theorems. Coherent source checks and every public theorem's axiom audit use
+only propext, Classical.choice, and Quot.sound; native publication remains
+checkpoint-gated. The positive signed cancellation estimate is an explicit
+remaining arithmetic hypothesis.
+
+- LinearAlgebra/RankOneAnnihilatorSchur.lean,
+  LinearAlgebra/WeightedOptimizerResolvent.lean, and
+  LinearAlgebra/TwoVectorGramCompletion.lean: 23 theorems retain complete block
+  squares, ambient positivity, exact inverse action and the signed two-vector
+  cross term. No coupling bound or inverse existence is silently assumed.
+- Analysis/SignedOptimizerMoment.lean and
+  Analysis/CompressedMomentZeroCriterion.lean: 24 theorems give literal norm
+  floors, optimizer mismatches, screening, the twice-compressed moment,
+  signed/positive-part equivalences and a genuine cofinal limiting-residual
+  consumer without monotonicity assumptions.
+- Analysis/NormalizedProjectionWeakConvergence.lean,
+  Analysis/FiniteHeadWeakContinuity.lean, and
+  Analysis/CompactWeightedFloorNormalization.lean: 12 theorems prove canonical
+  unit residuals are weak-zero and assemble normalized-floor convergence from
+  absolute floor decay and finite-head operator geometry.
+- Analysis/FiniteResolventRadau.lean and
+  Analysis/ResolventRadauIntegral.lean: 34 theorems retain complete-square and
+  both endpoint Radau remainders, literal infinite-support integrals, remainder
+  integrability, four-moment equations and exact finite Cramer coefficients.
+  Physical spectral measures and the proposed rational caps are not supplied.
+- RH/ZetaTwoConductorFour.lean, RH/ZetaTwoDualBlock.lean, and
+  RH/ZetaTwoPolygammaResidues.lean: 43 theorems prove complete finite-support
+  infinite-sum pairings, exact marked Gram rows/determinants, actual all-order
+  polygamma residue weights, shifted tails and full periodic mixed moments.
+- RH/ZetaTwoMobiusQuarticFloor.lean and
+  RH/ZetaTwoMobiusQuarticFloorDecay.lean: 22 theorems prove exact full floor-tail
+  identities, the actual squarefree quartic variational bound and unconditional
+  saving by every fixed logarithmic power using the existing Mertens provider.
+- RH/ZetaTwoHilbertSpace.lean, RH/ZetaTwoReciprocalCompactness.lean,
+  RH/ZetaTwoWeightedFloorNormalization.lean, RH/ZetaTwoOptimizerStage.lean, and
+  RH/ZetaTwoParetoTransfer.lean: 84 theorems realize the actual inverse-square
+  Hilbert space and reciprocal operator, prove strong stage limits, finite
+  error positivity, the complete signed identity, unconditional normalized
+  quartic-floor and negative-part decay, exact closure/positive-correction
+  criteria, and bounded physical transfer into the established Mellin theorem.
+
+Key actual consumer:
+`RiemannResearch.RH.ZetaTwoParetoTransfer.riemannHypothesis_of_cofinal_positiveCorrection_decay`.
+Its remaining input is cofinal decay of the actual positive signed correction
+`max (signedCorrection (κ j)) 0 / error (κ j)`. RH itself is not established.
+The inverse-log error lower bound remains an open formal provider for relative
+logarithmic rates, and the RH-to-squarefree-approximation converse is not added.
+See RH/ExactOptimizerLeanStatus20261008.md for the precise provider ledger.
+
 ### Actual inverse-square integer probability and prime independence (2026-10-08)
 
 Established: RH/ZetaTwoProbability.lean, RH/PrimeValuationIndependence.lean,
