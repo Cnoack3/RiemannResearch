@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Rank-two mean optimization and critical-zero audit (2026-10-08)
+
+LinearAlgebra/RankTwoResidualMean.lean contains eight finite algebraic theorems
+and one definition. A coherent isolated Lean check passes with exit code zero;
+all eight axiom reports use only propext, Classical.choice, and Quot.sound.
+Theorems derive the residual mean and energy system from an actual matrix
+normal equation, solve it exactly, cancel both complete rank-two logarithmic
+terms under mean one, retain the full core quadratic remainder, and identify
+the exact correction-square penalty and signed error numerator.
+
+The actual arithmetic Gram identity, inertia, constrained-mean closure, and
+analytic applications are paper arguments in
+RH/CriticalZeroMeanOneAdvance20261008.md, not new Lean provider declarations.
+The paper proves that the proposed coarse stretched-tail saving
+N exp(-a h(N)) S_N -> 0 for 0<a<eta is impossible: a critical-line zero and
+the unconditional trial-energy envelope force this quantity to infinity.
+It also improves the finite optimizer tail term from M^3/N to M^2/N using the
+classical large sieve, and proves the exact mean-one algebraic-core criterion
+and unconditional logarithmic coupling cancellation o(L^(-1/2)).
+
+Conditional research reductions: actual strict source feedback, actual trial
+energy-tail product saving, algebraic-core saturation gamma_L -> 4*pi, and the
+formal RH-to-squarefree approximation converse remain Open. No RH proof is
+claimed, and the invalid coarse stretched upper envelope is not a provider.
+
 ### Recovered analytic proofs and cancellation-preserving digamma differences (2026-10-07)
 
 The prior thirteen Mellin/zeta/digamma modules and their validation survived
