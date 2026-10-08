@@ -156,6 +156,35 @@ The actual source-limit realization and physical Q identification are now
 Established. Unconditional endpoint C_infinity=-4*pi and the analytic
 RH-to-squarefree reverse remain Open. No RH proof is claimed.
 
+### Actual optimizer limits and quantitative endpoint obstruction (2026-10-08)
+
+Established: RH/PhysicalOptimizerLimits.lean adds 13 theorems;
+RH/PhysicalZeroObstruction.lean adds 9 theorems and one definition.
+All 23 public declarations pass one coherent full-body Lean check and a
+transitive axiom audit restricted to propext, Classical.choice and Quot.sound.
+Publication separately validates actual imports and affected dependents.
+See RH/PhysicalOptimizerCompletion20261008.md and its verification JSON.
+
+The complete physical displacement between actual mean-one and projection
+optimizers is exactly 4*pi*D^2/(gamma*T)=R*Q/gamma. Both complete errors tend
+unconditionally to 1+4*pi/C_infinity; their full physical displacement square
+tends to zero, and their values agree asymptotically at every fixed site.
+An unconditional existence bundle supplies the actual negative charge limit.
+Pointwise agreement does not assert convergence of either optimizer to one.
+
+Actual Q_n->1 iff physical charge saturation iff complete centered squarefree
+approximation. The Q_n->1-to-RH theorem is a conditional research reduction:
+its actual saturation provider remains Open; the equivalence supplies neither
+assertion. The analytic RH-to-squarefree reverse remains separately Open.
+
+For every hypothetical zeta zero rho with Re(rho)>1/2 and rho!=1, the existing
+actual Mellin separation transfers to the complete physical synthesis.
+The Gram displacement and full signed mean-one penalty remain beside its
+floor delta=(2*Re(rho)-1)/norm(rho)^2. Passing to the actual limit gives
+delta<=1-4*pi/(-C_infinity) and
+C_infinity<=-4*pi/(1-delta)<-4*pi. No existence of such a zero is asserted.
+The arithmetic endpoint C_infinity=-4*pi remains Open. No RH proof is claimed.
+
 ### Recovered analytic proofs and cancellation-preserving digamma differences (2026-10-07)
 
 The prior thirteen Mellin/zeta/digamma modules and their validation survived

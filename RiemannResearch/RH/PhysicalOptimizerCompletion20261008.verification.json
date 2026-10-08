@@ -1,0 +1,87 @@
+{
+  "base_commit": "efc020d57c11ab2614f850473376c6ec6498f35f",
+  "modules": {
+    "RiemannResearch/RH/PhysicalOptimizerLimits.lean": {
+      "sha256": "185e86d3757b7e088bf8f886f9a8f0f973ce5317602494c80e09a368799ea1ab",
+      "public_declarations": [
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.meanOne_projection_norm_gap",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.meanOne_projection_norm_gap_eq_signedCorrection",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.primorial_meanOne_error_tendsto",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.primorial_projection_error_tendsto",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.primorial_optimizer_norm_gap_tendsto_zero",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.primorial_projectionCharge_tendsto_one_iff_endpoint",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.primorial_projection_error_tendsto_zero_iff_endpoint",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.primorial_meanOne_error_tendsto_zero_iff_endpoint",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.primorial_optimizer_pointwise_gap_tendsto_zero",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.primorial_projectionCharge_saturation_iff_physical_charge",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.primorial_projectionCharge_saturation_iff_squarefreeCenteredApproximation",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.riemannHypothesis_of_primorial_projectionCharge_saturation",
+        "RiemannResearch.RH.Pareto.PhysicalOptimizerLimits.exists_primorial_complete_optimizer_limits"
+      ]
+    },
+    "RiemannResearch/RH/PhysicalZeroObstruction.lean": {
+      "sha256": "a35b7cdeb51f3399e9b59f09f687840bfe9df92f2091958bc7136435827464b2",
+      "public_declarations": [
+        "RiemannResearch.RH.Pareto.PhysicalZeroObstruction.zeroDefect",
+        "RiemannResearch.RH.Pareto.PhysicalZeroObstruction.zeroDefect_pos",
+        "RiemannResearch.RH.Pareto.PhysicalZeroObstruction.synthesis_zero_floor",
+        "RiemannResearch.RH.Pareto.PhysicalZeroObstruction.projection_zero_floor",
+        "RiemannResearch.RH.Pareto.PhysicalZeroObstruction.complete_projection_zero_obstruction",
+        "RiemannResearch.RH.Pareto.PhysicalZeroObstruction.meanOne_zero_floor_with_signed_penalty",
+        "RiemannResearch.RH.Pareto.PhysicalZeroObstruction.primorial_limiting_zero_floor",
+        "RiemannResearch.RH.Pareto.PhysicalZeroObstruction.zeroDefect_lt_one_of_primorial_limit",
+        "RiemannResearch.RH.Pareto.PhysicalZeroObstruction.primorial_charge_limit_le_of_zeta_zero",
+        "RiemannResearch.RH.Pareto.PhysicalZeroObstruction.primorial_charge_limit_lt_endpoint_of_zeta_zero"
+      ]
+    }
+  },
+  "verification": {
+    "job_id": "job_z_aXEwtQday9sj6jZs50i6qL-yQn4K_c",
+    "verified": true,
+    "exit_code": 0,
+    "code_sha256": "70e49228c6fa2147b3281371e6c507025802cc2b156531ae5272113f23311fd8",
+    "request_sha256": "e864fac9c9fa9016346bfecdb230115cdde5194ef4a0265b7e699bf3c2156aa0",
+    "output": "AXIOM AUDIT PASSED: 23 public declarations; only propext, Classical.choice, Quot.sound",
+    "output_truncated": false
+  },
+  "axiom_audit": {
+    "public_declarations": 23,
+    "allowed": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "transitive": true
+  },
+  "unconditional": [
+    "actual full optimizer norm-square agreement tends to zero",
+    "actual pointwise optimizer agreement at every site",
+    "both complete physical errors tend to 1+4*pi/Cinf",
+    "Cinf and its negative sign supplied by actual primorial charge limit"
+  ],
+  "established_equivalence": "projectionCharge -> 1 iff complete centered squarefree approximation",
+  "conditional_research_reduction": {
+    "conclusion": "RiemannHypothesis",
+    "open_provider": "actual projectionCharge -> 1; equivalently Cinf=-4*pi"
+  },
+  "quantitative_obstruction": {
+    "hypotheses": [
+      "1/2 < rho.re",
+      "rho != 1",
+      "riemannZeta rho = 0"
+    ],
+    "conclusion": "Cinf <= -4*pi/(1-zeroDefect rho) < -4*pi"
+  },
+  "publication_validation": {
+    "mechanism": "agent_workspace_checkpoint(push=true)",
+    "target_modules": [
+      "RiemannResearch.RH.PhysicalOptimizerLimits",
+      "RiemannResearch.RH.PhysicalZeroObstruction"
+    ]
+  },
+  "remaining_open": [
+    "unconditional arithmetic endpoint Cinf=-4*pi",
+    "Lean analytic RH-to-squarefree approximation reverse",
+    "explicit Real.pi transcendence premise"
+  ]
+}
