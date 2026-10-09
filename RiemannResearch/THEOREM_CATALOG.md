@@ -1,5 +1,29 @@
 # Theorem catalog
 
+### CRT escape, exact reversal, and every fixed sampling factor (2026-10-09)
+
+- RH/ArgumentSamplingClosure.lean constructs the actual factor-a sampling
+  operator, retains its exact physical weight correction, and proves its sharp
+  norm a for every positive natural a. For every a>=2 the complete sampled
+  residue sequence converges to the constant in the physical Hilbert norm.
+- The generator test, invariance iff constant membership, and invariance iff
+  full residue density are unconditional closure equivalences. The theorem
+  riemannHypothesis_of_argumentSampling is a conditional research reduction:
+  ArgumentSamplingInvariant a remains Open for every fixed a>=2. The
+  literature RH-to-closure converse is not introduced as an axiom.
+- RH/ReversedResidueComplement.lean retains the full divisibility-site
+  correction in pointwise, square, infinite-series, and actual Hilbert norm
+  equalities. The finite conductor-four functional certificates distinguish
+  full-residue invariance from squarefree-only invariance.
+- NumberTheory/FactorialCRTSeparation.lean proves all-factorial residue
+  separation, escaping witnesses, arbitrarily large finite-prefix witnesses,
+  and the exact forall-exists versus exists-forall counterexample.
+- These three modules contain 43 checked theorem bodies and 8 definitions.
+  The central axiom checks use only propext, Classical.choice, and Quot.sound.
+  Quantitative DPP leverage and finite Gram defect decay are paper results in
+  RH/CRTOrbitSamplingContinuation20261009.md; the decay provider remains Open.
+
+
 ### Bagchi squarefree closure: formal bridges and open analytic limits (2026-10-09)
 
 - RH/SquarefreeArithmeticSaturation.lean now defines the actual finite
