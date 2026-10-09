@@ -336,6 +336,39 @@ theorem reciprocal_form_cauchy (f g : QHilbert) :
       (sub_neg.mpr (lt_of_not_ge hbad))
     nlinarith
 
+/-- A mixed reciprocal-form estimate applying the cap only to the complete
+screened image. The input need not lie in the complement or satisfy a
+radical relation. Source: target-only assembly in
+`RH/ConductorRecoveryStatus20261009.md`, section 4. -/
+theorem screened_sq_le_firstMoment (τ : ℝ) (hτ : 0 ≤ τ)
+    (V : Submodule ℝ QHilbert) [V.HasOrthogonalProjection]
+    (hcap : ∀ s : QHilbert, s ∈ Vᗮ →
+      inner ℝ s (reciprocalD s) ≤ τ * ‖s‖ ^ 2)
+    (f : QHilbert) :
+    ‖reciprocalD f - V.starProjection (reciprocalD f)‖ ^ 2 ≤
+      τ * inner ℝ f (reciprocalD f) := by
+  let s := reciprocalD f - V.starProjection (reciprocalD f)
+  have hs : s ∈ Vᗮ := Submodule.sub_starProjection_mem_orthogonal _
+  have hnorm : ‖s‖ ^ 2 = inner ℝ s (reciprocalD f) := by
+    have hz : inner ℝ s (V.starProjection (reciprocalD f)) = 0 := by
+      rw [real_inner_comm]
+      exact (V.mem_orthogonal _).mp hs _ (V.starProjection_apply_mem _)
+    have he : inner ℝ s s = inner ℝ s (reciprocalD f) := by
+      change inner ℝ s (reciprocalD f - V.starProjection (reciprocalD f)) = _
+      rw [inner_sub_right, hz, sub_zero]
+    simpa only [real_inner_self_eq_norm_sq] using he
+  have hcs := reciprocal_form_cauchy s f
+  rw [← hnorm] at hcs
+  have hp := mul_le_mul_of_nonneg_right (hcap s hs) (reciprocalD_positive f)
+  change ‖s‖ ^ 2 ≤ τ * inner ℝ f (reciprocalD f)
+  by_cases hz : ‖s‖ ^ 2 = 0
+  · rw [hz]
+    exact mul_nonneg hτ (reciprocalD_positive f)
+  · have hspos : 0 < ‖s‖ ^ 2 := lt_of_le_of_ne (sq_nonneg _) (Ne.symm hz)
+    by_contra hbad
+    have hlt := mul_lt_mul_of_pos_left (lt_of_not_ge hbad) hspos
+    nlinarith
+
 /-- A universal actual-Q compression theorem for any subspace admitting
 orthogonal projection. The final stage theorems discharge the first-moment
 provider with the complete rational arithmetic certificates. -/
