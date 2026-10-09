@@ -1,5 +1,21 @@
 # Theorem catalog
 
+### Bagchi squarefree closure: formal bridges and open analytic limits (2026-10-09)
+
+- RH/SquarefreeArithmeticSaturation.lean now defines the actual finite
+  damped Möbius cutoff, proves exact squarefree support and packet membership,
+  and transfers the two strong limits in Bagchi's proof to
+  SquarefreeCenteredApproximation.
+- The limit-transfer theorem keeps the cutoff-length and damping-to-zero
+  limits as explicit hypotheses. The fresh-prime repair also yields the
+  corresponding exact mean-one squarefree packet approximation.
+- RH/ZetaTwoParetoTransfer.lean now proves both complete weight comparisons
+  between the inverse-square and Pareto Hilbert norms.
+- Bagchi's RH-dependent Littlewood, Lindelöf, and Hadamard/Gamma domination
+  estimates remain Open as Lean providers. The exact implication
+  RiemannHypothesis → SquarefreeCenteredApproximation is not yet proved.
+  Optimizer cancellation and RH remain separate open problems.
+
 ### Complete resolvent recovery and stronger permanent obstruction (2026-10-09)
 
 - RH/ZetaTwoResolvent.lean proves complete infinite weighted resolvent Cauchy,

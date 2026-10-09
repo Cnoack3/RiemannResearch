@@ -436,3 +436,92 @@ theorem exists_primorial_arithmetic_charge_limit_improved :
 
 end
 end RiemannResearch.RH.Pareto.SquarefreeArithmeticSaturation
+noncomputable section
+open Filter
+open scoped BigOperators Topology
+namespace RiemannResearch.RH.Pareto.SquarefreeArithmeticSaturation
+open MeanOneRepair BaezDuarte SquarefreeTransfer ArithmeticCoreInertia
+open SquarefreePacketBasis
+
+/-- Bagchi's finite damped Möbius trial in the repository's discrete Pareto
+residue model. The sign matches the Fourier--Mellin transfer
+Φ(g_d) = -G_d; the term at d = 1 is the zero residue vector. -/
+def bagchiMobiusCutoff (N : ℕ) (ε : ℝ) : ThresholdHilbert :=
+  finiteResidueSum (Finset.Icc 1 N) (fun d =>
+    -(ArithmeticFunction.moebius d : ℝ) * (d : ℝ) ^ (-ε))
+
+/-- The same cutoff with its squarefree support displayed explicitly. -/
+def bagchiSquarefreeMobiusCutoff (N : ℕ) (ε : ℝ) : ThresholdHilbert :=
+  finiteResidueSum ((Finset.Icc 1 N).filter Squarefree) (fun d =>
+    -(ArithmeticFunction.moebius d : ℝ) * (d : ℝ) ^ (-ε))
+
+/-- Möbius vanishing gives exact squarefree support before any limit or norm
+estimate. -/
+theorem bagchiMobiusCutoff_eq_squarefree (N : ℕ) (ε : ℝ) :
+    bagchiMobiusCutoff N ε = bagchiSquarefreeMobiusCutoff N ε := by
+  classical
+  unfold bagchiMobiusCutoff bagchiSquarefreeMobiusCutoff finiteResidueSum
+  symm
+  rw [Finset.sum_filter]
+  apply Finset.sum_congr rfl
+  intro d hd
+  by_cases hsq : Squarefree d
+  · simp [hsq]
+  · simp [hsq, ArithmeticFunction.moebius_eq_zero_of_not_squarefree hsq]
+
+/-- Every finite Bagchi cutoff is an admissible squarefree packet in the
+actual Pareto Hilbert space. -/
+theorem bagchiSquarefreeMobiusCutoff_mem (N : ℕ) (ε : ℝ) :
+    bagchiSquarefreeMobiusCutoff N ε ∈ squarefreePackets := by
+  classical
+  unfold bagchiSquarefreeMobiusCutoff
+  refine ⟨(Finset.Icc 1 N).filter Squarefree,
+    (fun d => -(ArithmeticFunction.moebius d : ℝ) * (d : ℝ) ^ (-ε)),
+    ?_, ?_, rfl⟩
+  · intro d hd
+    have hd' : d ∈ Finset.Icc 1 N := (Finset.mem_filter.mp hd).1
+    simp only [Finset.mem_Icc] at hd'
+    omega
+  · intro d hd
+    exact (Finset.mem_filter.mp hd).2
+
+/-- Bagchi's two strong-limit steps imply the squarefree target closure.
+The inner limit is the cutoff-length limit at each positive damping; the
+outer limit is the damping-to-zero endpoint. The theorem supplies only the
+Hilbert-space and closure transfer: both displayed analytic limits remain
+separate hypotheses. -/
+theorem squarefreeCenteredApproximation_of_bagchi_two_stage_limit
+    (ε : ℕ → ℝ) (F : ℕ → ThresholdHilbert)
+    (_hε : ∀ j, 0 < ε j)
+    (_hεzero : Tendsto ε atTop (𝓝 0))
+    (hinner : ∀ j, Tendsto (fun N => bagchiMobiusCutoff N (ε j))
+      atTop (𝓝 (F j)))
+    (houter : Tendsto F atTop (𝓝 hilbertOne)) :
+    SquarefreeCenteredApproximation := by
+  have hF : ∀ j, F j ∈ closure squarefreePackets := by
+    intro j
+    apply isClosed_closure.mem_of_tendsto (hinner j)
+    exact Filter.Eventually.of_forall fun N => by
+      rw [bagchiMobiusCutoff_eq_squarefree]
+      exact subset_closure (bagchiSquarefreeMobiusCutoff_mem N (ε j))
+  have hone : hilbertOne ∈ closure squarefreePackets :=
+    isClosed_closure.mem_of_tendsto houter (Filter.Eventually.of_forall hF)
+  exact squarefreeCenteredApproximation_iff_packetApproximation.mpr
+    (one_mem_squarefree_closure_iff_packetApproximation.mp hone)
+
+/-- The same two-stage limit transfer includes the repository's exact
+fresh-prime repair to ordinary mean one. Thus Bagchi's uncentered Hilbert
+closure is not silently identified with a mean-one finite trial. -/
+theorem meanOneSquarefreePacketApproximation_of_bagchi_two_stage_limit
+    (ε : ℕ → ℝ) (F : ℕ → ThresholdHilbert)
+    (hε : ∀ j, 0 < ε j)
+    (hεzero : Tendsto ε atTop (𝓝 0))
+    (hinner : ∀ j, Tendsto (fun N => bagchiMobiusCutoff N (ε j))
+      atTop (𝓝 (F j)))
+    (houter : Tendsto F atTop (𝓝 hilbertOne)) :
+    MeanOneSquarefreePacketApproximation :=
+  squarefreeCenteredApproximation_iff_meanOne.mp
+    (squarefreeCenteredApproximation_of_bagchi_two_stage_limit
+      ε F hε hεzero hinner houter)
+
+end RiemannResearch.RH.Pareto.SquarefreeArithmeticSaturation

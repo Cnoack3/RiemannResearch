@@ -10,6 +10,63 @@ repository. No reviewed source establishes positive signed-correction decay
 for the actual optimizer stages. No citation is used as a Lean hypothesis
 discharged by literature alone.
 
+## Bagchi proof reconstruction and formal status
+
+Bagchi's RH-to-closure proof uses two strong limits in the Hardy space. Set
+`G_d(s)=(d^(-s)-d^(-1))*zeta(s)/s` and `E(s)=1/s), and form
+`H_{L,epsilon}=sum_{d<=L} mu(d)*d^(-epsilon)*G_d`. Its Mellin transform is
+
+```text
+H_{L,epsilon}(s) = zeta(s)/s *
+  (sum_{d<=L} mu(d)*d^(-s-epsilon) - sum_{d<=L} mu(d)*d^(-1-epsilon)).
+```
+
+For each fixed positive epsilon, RH is used through Littlewood's uniform
+estimate
+`sum_{d<=L} mu(d)*d^(-s) = O((|t|+1)^delta)`, uniformly in L and
+Re(s) > 1/2 + eta, together with the RH Lindelof bound for zeta(s). These
+give an integrable majorant on the critical line. Dominated convergence
+then yields H_{L,epsilon} -> H_epsilon in H², where
+
+```text
+H_epsilon(s) = zeta(s)/s *
+  (1/zeta(s+epsilon) - 1/zeta(1+epsilon)).
+```
+
+For epsilon down to zero, the proof uses the RH Hadamard product inequality
+|xi(s)| <= |xi(s+epsilon)|, Stirling's bound for the Gamma ratio, and
+Lindelof again to obtain |H_epsilon(s)| <= C*|s|^(-3/4), a
+square-integrable majorant. This gives H_epsilon -> E in H². Bagchi's
+Remark 4 restricts each finite cutoff to squarefree d because mu(d)=0
+off squarefree support. Theorem 7's Mellin isometry and Remark 8 transfer the
+limit to the discrete squarefree residue closure.
+
+The repository now has unconditional formal bridges for the finite and
+Hilbert-space parts:
+
+- `bagchiMobiusCutoff` is the explicit finite cutoff in the actual Pareto
+  residue Hilbert space; `bagchiMobiusCutoff_eq_squarefree` proves its exact
+  squarefree support, and `bagchiSquarefreeMobiusCutoff_mem` proves packet
+  membership.
+- `squarefreeCenteredApproximation_of_bagchi_two_stage_limit` transfers the
+  two displayed strong limits to the exact repository target. The limits
+  themselves remain explicit theorem premises; no analytic estimate is an
+  axiom.
+- The Pareto and inverse-square weights now have both pointwise and complete
+  norm comparisons: `P(k) <= zeta(2)*Q(k) <= 2*P(k)`.
+- The finite Bagchi cutoffs need not have ordinary mean one individually.
+  The existing fresh-prime repair proves equality of unrestricted and
+  mean-one squarefree closures, and the new limit transfer also concludes
+  `MeanOneSquarefreePacketApproximation`.
+
+A repository search found no checked provider for Littlewood's uniform
+truncated reciprocal-zeta estimate, the RH Lindelof bounds, or the uniform
+Hadamard/Gamma domination needed for the two limits. The required
+`RiemannHypothesis -> SquarefreeCenteredApproximation` theorem therefore
+remains Open. This work does not address optimizer cancellation or prove RH.
+See Bagchi, proof of Theorem 2, Lemma 3 and Remarks 4 and 8:
+<https://arxiv.org/pdf/math/0607733>.
+
 ## Integer-dilation criterion
 
 Luis Báez-Duarte, “A strengthening of the Nyman-Beurling criterion for the

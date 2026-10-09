@@ -197,3 +197,53 @@ theorem riemannHypothesis_of_cofinal_squarefree_reciprocal_differences
       κ hκ hbase)
 
 end RiemannResearch.RH.ZetaTwoParetoTransfer
+noncomputable section
+open scoped BigOperators Topology
+namespace RiemannResearch.RH.ZetaTwoParetoTransfer
+open ZetaTwoProbability ZetaTwoHilbert
+open Pareto
+open Pareto.CoefficientStabilization
+open RiemannResearch.Analysis.ExhaustiveWalk
+
+/-- Converse pointwise comparison of the two complete weights. -/
+theorem zetaTwo_mul_QWeight_le_two_mul_paretoWeight (k : ℕ) :
+    zetaTwo * positiveQWeight k ≤ 2 * positiveWeight k := by
+  by_cases hk : k = 0
+  · subst k
+    simp [positiveWeight, positiveQWeight]
+  · have hkR : (0 : ℝ) < k := by exact_mod_cast Nat.pos_of_ne_zero hk
+    have hkR1 : (1 : ℝ) ≤ k := by
+      exact_mod_cast (Nat.one_le_iff_ne_zero.mpr hk)
+    have he : zetaTwo * positiveQWeight k = 1 / (k : ℝ) ^ 2 := by
+      unfold positiveQWeight
+      field_simp [ne_of_gt zetaTwo_pos, ne_of_gt hkR]
+    rw [he]
+    unfold positiveWeight
+    change 1 / (k : ℝ) ^ 2 ≤ 2 * (1 / ((k : ℝ) * ((k : ℝ) + 1)))
+    rw [show 2 * (1 / ((k : ℝ) * ((k : ℝ) + 1))) =
+      2 / ((k : ℝ) * ((k : ℝ) + 1)) by ring]
+    apply (div_le_div_iff₀ (sq_pos_of_pos hkR)
+      (mul_pos hkR (by positivity : (0 : ℝ) < (k : ℝ) + 1))).mpr
+    nlinarith
+
+/-- The reverse complete norm comparison. Together with
+toPareto_norm_sq_le, this gives
+‖x‖_P² ≤ ζ(2) ‖x‖_Q² ≤ 2 ‖x‖_P² for the same physical sequence. -/
+theorem zetaTwo_mul_norm_sq_le_two_toPareto_norm_sq (f : QHilbert) :
+    zetaTwo * ‖f‖ ^ 2 ≤ 2 * ‖toPareto f‖ ^ 2 := by
+  rw [qNorm_weighted_sq, hilbert_norm_weighted_sq, toPareto_sequence]
+  rw [← tsum_mul_left]
+  rw [← tsum_mul_left]
+  apply Summable.tsum_le_tsum _
+    ((qSequence_square_summable f).mul_left zetaTwo)
+    ((qSequence_pareto_square_summable f).mul_left 2)
+  intro k
+  calc
+    zetaTwo * (positiveQWeight k * (qSequence f k) ^ 2) =
+        (zetaTwo * positiveQWeight k) * (qSequence f k) ^ 2 := by ring
+    _ ≤ (2 * positiveWeight k) * (qSequence f k) ^ 2 :=
+      mul_le_mul_of_nonneg_right (zetaTwo_mul_QWeight_le_two_mul_paretoWeight k)
+        (sq_nonneg (qSequence f k))
+    _ = 2 * (positiveWeight k * (qSequence f k) ^ 2) := by ring
+
+end RiemannResearch.RH.ZetaTwoParetoTransfer
