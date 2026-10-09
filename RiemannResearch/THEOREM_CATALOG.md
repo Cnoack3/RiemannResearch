@@ -59,7 +59,7 @@ and RH/ReciprocalOperatorLeanStatus20261009.md for proofs and scope.
 
 ### Exact inverse-square optimizer cancellation and cofinal RH criterion (2026-10-08)
 
-Twenty modules formalize the exact optimizer continuation, with 242 public
+Twenty modules formalize the exact optimizer continuation, with 243 public
 theorems. Coherent source checks and every public theorem's axiom audit use
 only propext, Classical.choice, and Quot.sound; native publication remains
 checkpoint-gated. The positive signed cancellation estimate is an explicit
@@ -95,11 +95,18 @@ remaining arithmetic hypothesis.
   saving by every fixed logarithmic power using the existing Mertens provider.
 - RH/ZetaTwoHilbertSpace.lean, RH/ZetaTwoReciprocalCompactness.lean,
   RH/ZetaTwoWeightedFloorNormalization.lean, RH/ZetaTwoOptimizerStage.lean, and
-  RH/ZetaTwoParetoTransfer.lean: 84 theorems realize the actual inverse-square
+  RH/ZetaTwoParetoTransfer.lean: 85 theorems realize the actual inverse-square
   Hilbert space and reciprocal operator, prove strong stage limits, finite
   error positivity, the complete signed identity, unconditional normalized
   quartic-floor and negative-part decay, exact closure/positive-correction
-  criteria, and bounded physical transfer into the established Mellin theorem.
+  criteria, the exact positive limiting second moment off closure, and bounded
+  physical transfer into the established Mellin theorem.
+
+New all-stage limit:
+`RiemannResearch.RH.ZetaTwoOptimizerStage.secondMoment_tendsto_exact_positive_limit_of_not_mem_closure`.
+Under the explicit nonclosure hypothesis, the normalized second moment converges
+to the exact positive residual-norm quotient. This does not discharge positive
+signed-correction decay or prove RH.
 
 Key actual consumer:
 `RiemannResearch.RH.ZetaTwoParetoTransfer.riemannHypothesis_of_cofinal_positiveCorrection_decay`.
@@ -107,7 +114,8 @@ Its remaining input is cofinal decay of the actual positive signed correction
 `max (signedCorrection (κ j)) 0 / error (κ j)`. RH itself is not established.
 The inverse-log error lower bound remains an open formal provider for relative
 logarithmic rates, and the RH-to-squarefree-approximation converse is not added.
-See RH/ExactOptimizerLeanStatus20261008.md for the precise provider ledger.
+See RH/ExactOptimizerLeanStatus20261008.md for the precise provider ledger and
+RH/LiteratureClosureRoutes20261009.md for sourced closure routes and their gaps.
 
 ### Actual compensated source, constructive horizons, and complete quartic tails (2026-10-09)
 
