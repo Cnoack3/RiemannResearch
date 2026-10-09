@@ -1,5 +1,24 @@
 # Theorem catalog
 
+### Complete resolvent recovery and stronger permanent obstruction (2026-10-09)
+
+- RH/ZetaTwoResolvent.lean proves complete infinite weighted resolvent Cauchy,
+  the exact integer mass H_M/zetaTwo through finite telescoping including its
+  terminal remainder, and the actual-stage recovery bound
+  error n <= (H_M/zetaTwo)*(sqrt(secondMoment n)+1/M), for every n and M>0.
+  Its complete correction form keeps quarticFloor + weightedMismatch - screening.
+- RH/ZetaTwoDualEightObstruction.lean realizes the literal radical dual at
+  8 -> 2 in QHilbert. The rational mixed witness 16*f4+f8 proves that every
+  universal first-moment cap is at least 1337/3979 and every universal
+  compressed-square cap is at least (1337/3979)^2, at every actual stage.
+  It retains the exact signed two-dual cross term and the entire positive
+  remainder in the complete optimizer correction identity.
+- These are unconditional estimates and structural limitations. No actual
+  moment decay or positive signed-correction decay provider is established.
+  RH remains Open. The arbitrary-conductor digamma parameterization and
+  geometry-sharpness argument are paper results in
+  RH/ConductorRecoveryStatus20261009.md, not new formal analytic providers.
+
 ### Target-specific reciprocal bases and permanent universal-cap obstruction (2026-10-09)
 
 Twenty-five structural theorems pass coherent source-body checks and axiom audits

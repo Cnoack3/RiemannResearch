@@ -1,3 +1,5 @@
+import RiemannResearch.RH.ZetaTwoResolvent
+import RiemannResearch.RH.ZetaTwoDualEightObstruction
 import RiemannResearch.RH.ZetaTwoReciprocalObstruction
 import RiemannResearch.RH.ZetaTwoRadicalRowCriterion
 import RiemannResearch.Analysis.RadicalDifferenceTotality
