@@ -259,4 +259,68 @@ theorem tangent_core_quadratic
   field_simp [hC0]
   ring
 
+/-! Source: complete prime-adjunction source calculation in the user's
+RH_Actual_Arithmetic_Advances_2026-10-07.pdf, Section 6. The identities
+retain both signed rank-two terms and require only the genuine old left inverse.
+-/
+omit [Fintype κ] [DecidableEq κ] in
+/-- The complete actual rank-two screened source. `Cross` is the actual Gram
+cross block, `J` is the algebraic core cross block, and `hCross` is the exact
+cross action inherited from the Gram decomposition. No signed term is dropped.
+Only a left old-core inverse is needed; no Schur inverse is assumed. -/
+theorem rankTwo_residual_screenedSource
+    (p : ℝ) (F R Xi : Matrix ι ι ℝ) (J : Matrix ι κ ℝ)
+    (Cross : Matrix κ ι ℝ) (lam phi y : ι → ℝ)
+    (lamNew phiNew : κ → ℝ)
+    (hRF : R * F = 1)
+    (hXi : Xi = rankTwoMatrix p F lam phi)
+    (hy : Xi *ᵥ y = lam)
+    (hCross : Cross *ᵥ y = p • (Jᵀ *ᵥ y) +
+      ((phi ⬝ᵥ y) / 2) • lamNew + ((lam ⬝ᵥ y) / 2) • phiNew) :
+    lamNew - Cross *ᵥ y =
+      (1 - (phi ⬝ᵥ y) / 2) • screenedSource R J lam lamNew -
+        ((lam ⬝ᵥ y) / 2) • screenedSource R J phi phiNew := by
+  have hleft (x : ι → ℝ) : R *ᵥ (F *ᵥ x) = x := by
+    rw [Matrix.mulVec_mulVec, hRF, Matrix.one_mulVec]
+  have hold := congrArg (fun x : ι → ℝ => Jᵀ *ᵥ (R *ᵥ x)) hy
+  rw [hXi, rankTwoMatrix_mulVec] at hold
+  simp only [Matrix.mulVec_add, Matrix.mulVec_smul, hleft] at hold
+  ext j
+  have ho := congrFun hold j
+  have hn := congrFun hCross j
+  simp only [screenedSource, Pi.add_apply, Pi.sub_apply,
+    Pi.smul_apply, smul_eq_mul] at ho hn ⊢
+  nlinarith only [ho, hn]
+
+omit [Fintype κ] [DecidableEq κ] in
+/-- Entrywise rank-two cross decomposition discharges the cross-action input.
+This rectangular statement retains both logarithmic rank-one terms. -/
+theorem rankTwo_residual_screenedSource_of_cross_matrix
+    (p : ℝ) (F R Xi : Matrix ι ι ℝ) (J : Matrix ι κ ℝ)
+    (Cross : Matrix κ ι ℝ) (lam phi y : ι → ℝ)
+    (lamNew phiNew : κ → ℝ)
+    (hRF : R * F = 1)
+    (hXi : Xi = rankTwoMatrix p F lam phi)
+    (hy : Xi *ᵥ y = lam)
+    (hCross : Cross = p • Jᵀ + (1/2 : ℝ) •
+      (vecMulVec lamNew phi + vecMulVec phiNew lam)) :
+    lamNew - Cross *ᵥ y =
+      (1 - (phi ⬝ᵥ y) / 2) • screenedSource R J lam lamNew -
+        ((lam ⬝ᵥ y) / 2) • screenedSource R J phi phiNew := by
+  apply rankTwo_residual_screenedSource p F R Xi J Cross lam phi y
+    lamNew phiNew hRF hXi hy
+  have houter (a : κ → ℝ) (b : ι → ℝ) :
+      vecMulVec a b *ᵥ y = (b ⬝ᵥ y) • a := by
+    ext j
+    simp only [Matrix.mulVec, dotProduct, Matrix.vecMulVec_apply,
+      Pi.smul_apply, smul_eq_mul, mul_assoc]
+    rw [← Finset.mul_sum]
+    ring
+  rw [hCross, Matrix.add_mulVec, Matrix.smul_mulVec,
+    Matrix.smul_mulVec, Matrix.add_mulVec, houter, houter,
+    smul_add, smul_smul, smul_smul]
+  ext j
+  simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  ring
+
 end RiemannResearch.LinearAlgebra.MeanOneBlockSchur

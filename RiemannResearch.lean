@@ -3,6 +3,14 @@ import RiemannResearch.RH.SquarefreeRadicalDifference
 import RiemannResearch.RH.ReciprocalHeadCertificate
 import RiemannResearch.RH.PhysicalMeanRepairProjection
 import RiemannResearch.RH.PhysicalSourceRates
+import RiemannResearch.RH.PhysicalCompensatedSource
+import RiemannResearch.Analysis.CompensatedSourceCertificate
+import RiemannResearch.Analysis.ProjectionTailSummability
+import RiemannResearch.LinearAlgebra.FiniteIndependentSource
+import RiemannResearch.RH.ParetoOptimizerTailGeometricBudget
+import RiemannResearch.RH.ParetoOptimizerTailSummability
+import RiemannResearch.RH.PhysicalResidualMean
+import RiemannResearch.RH.PhysicalScreenedSource
 import RiemannResearch.NumberTheory.Transcendence.SubsetSumEsymm
 import RiemannResearch.NumberTheory.Transcendence.FactorialPrimeSmallness
 import RiemannResearch.NumberTheory.Transcendence.PiLindemann

@@ -310,4 +310,103 @@ theorem unsaturated_source_model :
 
 end AbstractModel
 
+section SignedSourceEnergy
+variable {κ : Type*} [Fintype κ]
+/-! Source: elementary completion of the complete physical signed source
+eta = m U - (Q/2) V. The mixed pairing and parallel square remain in the exact
+identity. Strictness of the actual two-source determinant is a separate input.
+-/
+/-- The complete signed quadratic source, with its mixed term retained. -/
+theorem signedSource_quadratic (Z : Matrix κ κ ℝ) (u v : κ → ℝ)
+    (m Q : ℝ) (hZsym : Zᵀ = Z) :
+    (m • u - (Q / 2) • v) ⬝ᵥ
+        (Z *ᵥ (m • u - (Q / 2) • v)) =
+      m ^ 2 * (u ⬝ᵥ (Z *ᵥ u)) -
+        m * Q * (u ⬝ᵥ (Z *ᵥ v)) +
+        (Q ^ 2 / 4) * (v ⬝ᵥ (Z *ᵥ v)) := by
+  have hpair : v ⬝ᵥ (Z *ᵥ u) = u ⬝ᵥ (Z *ᵥ v) := by
+    simpa only [hZsym] using Matrix.dotProduct_transpose_mulVec Z v u
+  simp only [Matrix.mulVec_sub, Matrix.mulVec_smul, sub_dotProduct,
+    dotProduct_sub, smul_dotProduct, dotProduct_smul, smul_eq_mul]
+  rw [hpair]
+  ring
+
+/-- Exact orthogonal and parallel source decomposition. The parallel square
+is part of the equality; no actual source lower bound is hidden here. -/
+theorem signedSource_quadratic_completeSquare (Z : Matrix κ κ ℝ)
+    (u v : κ → ℝ) (m Q : ℝ) (hZsym : Zᵀ = Z)
+    (hC : v ⬝ᵥ (Z *ᵥ v) ≠ 0) :
+    (m • u - (Q / 2) • v) ⬝ᵥ
+        (Z *ᵥ (m • u - (Q / 2) • v)) =
+      m ^ 2 * (u ⬝ᵥ (Z *ᵥ u) -
+        (u ⬝ᵥ (Z *ᵥ v)) ^ 2 / (v ⬝ᵥ (Z *ᵥ v))) +
+      (v ⬝ᵥ (Z *ᵥ v)) *
+        (Q / 2 - m * (u ⬝ᵥ (Z *ᵥ v)) / (v ⬝ᵥ (Z *ᵥ v))) ^ 2 := by
+  rw [signedSource_quadratic Z u v m Q hZsym]
+  field_simp [hC]
+  ring
+
+/-- A positive norm for the second source isolates a uniform-in-`Q` lower
+bound. Strictness of the actual arithmetic determinant is still an input. -/
+theorem signedSource_quadratic_ge_orthogonal (Z : Matrix κ κ ℝ)
+    (u v : κ → ℝ) (m Q : ℝ) (hZsym : Zᵀ = Z)
+    (hC : 0 < v ⬝ᵥ (Z *ᵥ v)) :
+    m ^ 2 * (u ⬝ᵥ (Z *ᵥ u) -
+      (u ⬝ᵥ (Z *ᵥ v)) ^ 2 / (v ⬝ᵥ (Z *ᵥ v))) ≤
+      (m • u - (Q / 2) • v) ⬝ᵥ
+        (Z *ᵥ (m • u - (Q / 2) • v)) := by
+  rw [signedSource_quadratic_completeSquare Z u v m Q hZsym (ne_of_gt hC)]
+  exact le_add_of_nonneg_right (mul_nonneg hC.le (sq_nonneg _))
+
+/-- The orthogonal lower bound is attained at the exact compensating charge.
+Thus no stronger bound uniform in `Q` follows from these three pairings alone. -/
+theorem signedSource_quadratic_orthogonal_sharp (Z : Matrix κ κ ℝ)
+    (u v : κ → ℝ) (m : ℝ) (hZsym : Zᵀ = Z)
+    (hC : v ⬝ᵥ (Z *ᵥ v) ≠ 0) :
+    (m • u - ((2 * m * (u ⬝ᵥ (Z *ᵥ v)) /
+        (v ⬝ᵥ (Z *ᵥ v))) / 2) • v) ⬝ᵥ
+      (Z *ᵥ (m • u - ((2 * m * (u ⬝ᵥ (Z *ᵥ v)) /
+        (v ⬝ᵥ (Z *ᵥ v))) / 2) • v)) =
+      m ^ 2 * (u ⬝ᵥ (Z *ᵥ u) -
+        (u ⬝ᵥ (Z *ᵥ v)) ^ 2 / (v ⬝ᵥ (Z *ᵥ v))) := by
+  rw [signedSource_quadratic_completeSquare Z u v m
+    (2 * m * (u ⬝ᵥ (Z *ᵥ v)) / (v ⬝ᵥ (Z *ᵥ v))) hZsym hC]
+  have hparallel : (2 * m * (u ⬝ᵥ (Z *ᵥ v)) /
+      (v ⬝ᵥ (Z *ᵥ v))) / 2 -
+      m * (u ⬝ᵥ (Z *ᵥ v)) / (v ⬝ᵥ (Z *ᵥ v)) = 0 := by ring
+  rw [hparallel]
+  ring
+
+/-- The actual source gain is positive whenever a nonzero residual mean and
+a strict two-source Gram determinant have both been supplied. -/
+theorem signedSource_quadratic_pos_of_determinant (Z : Matrix κ κ ℝ)
+    (u v : κ → ℝ) (m Q : ℝ) (hZsym : Zᵀ = Z)
+    (hC : 0 < v ⬝ᵥ (Z *ᵥ v)) (hm : m ≠ 0)
+    (hdet : (u ⬝ᵥ (Z *ᵥ v)) ^ 2 <
+      (u ⬝ᵥ (Z *ᵥ u)) * (v ⬝ᵥ (Z *ᵥ v))) :
+    0 < (m • u - (Q / 2) • v) ⬝ᵥ
+      (Z *ᵥ (m • u - (Q / 2) • v)) := by
+  have horth : 0 < u ⬝ᵥ (Z *ᵥ u) -
+      (u ⬝ᵥ (Z *ᵥ v)) ^ 2 / (v ⬝ᵥ (Z *ᵥ v)) := by
+    apply sub_pos.mpr
+    exact (div_lt_iff₀ hC).2 hdet
+  exact lt_of_lt_of_le (mul_pos (sq_pos_of_ne_zero hm) horth)
+    (signedSource_quadratic_ge_orthogonal Z u v m Q hZsym hC)
+
+/-- At the zero second-source endpoint, positivity forces the entire mixed
+pairing to vanish; the finite formula remains valid without a quotient. -/
+theorem signedSource_quadratic_of_zero_second_source (Z : Matrix κ κ ℝ)
+    (u v : κ → ℝ) (m Q : ℝ) (hZsym : Zᵀ = Z)
+    (hZpos : ∀ w : κ → ℝ, 0 ≤ w ⬝ᵥ (Z *ᵥ w))
+    (hC : v ⬝ᵥ (Z *ᵥ v) = 0) :
+    (m • u - (Q / 2) • v) ⬝ᵥ
+        (Z *ᵥ (m • u - (Q / 2) • v)) =
+      m ^ 2 * (u ⬝ᵥ (Z *ᵥ u)) := by
+  have hc := source_pair_cauchy Z u v hZsym hZpos
+  rw [hC, mul_zero] at hc
+  have hB : u ⬝ᵥ (Z *ᵥ v) = 0 := by nlinarith only [hc]
+  rw [signedSource_quadratic Z u v m Q hZsym, hC, hB]
+  ring
+
+end SignedSourceEnergy
 end RiemannResearch.LinearAlgebra.MeanOneSchurCoupling

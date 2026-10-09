@@ -417,5 +417,221 @@ def mobiusHeadInterpolationContinuous (H : ℕ) :
   (mobiusHeadInterpolationLinear H).mkContinuous (12*(H : ℝ))
     (mobiusHeadInterpolation_norm_le_full H)
 
+private theorem residueFraction_abs_le_one_for_head_tail
+    (d j : ℕ) (hd : 0 < d) : |residueFraction d j| ≤ 1 := by
+  have hdR : (0 : ℝ) < d := Nat.cast_pos.mpr hd
+  have hm : ((j % d : ℕ) : ℝ) ≤ d := by
+    exact_mod_cast (Nat.mod_lt j hd).le
+  unfold residueFraction
+  rw [abs_of_nonneg (by positivity)]
+  apply (div_le_iff₀ hdR).2
+  simpa using hm
+
+private theorem moebius_abs_le_one_for_head_tail (q : ℕ) :
+    |(ArithmeticFunction.moebius q : ℝ)| ≤ 1 := by
+  rcases ArithmeticFunction.moebius_eq_or q with h | h | h <;> simp [h]
+
+/-- Every site, including the infinite tail, of the literal legal unit
+step is bounded by (2H+1)/k. -/
+theorem mobiusHeadStep_sequence_abs_le (H k : ℕ) (hk : 0 < k)
+    (hkH : k ≤ H) (j : ℕ) :
+    |hilbertSequence (mobiusHeadStep H k hk) j| ≤
+      (2 * (H : ℝ) + 1) / (k : ℝ) := by
+  have hkR : (0 : ℝ) < k := Nat.cast_pos.mpr hk
+  have hL : 0 < H / k := Nat.div_pos hkH hk
+  have hm := mobiusReciprocalSum_abs_le_one (H / k) hL
+  have hsum :
+      |∑ q ∈ Finset.Icc 1 (H / k),
+        (ArithmeticFunction.moebius q : ℝ) * residueFraction (k*q) j| ≤
+        (H / k : ℕ) := by
+    calc
+      _ ≤ ∑ q ∈ Finset.Icc 1 (H / k),
+          |(ArithmeticFunction.moebius q : ℝ) * residueFraction (k*q) j| :=
+        Finset.abs_sum_le_sum_abs _ _
+      _ ≤ ∑ q ∈ Finset.Icc 1 (H / k), (1 : ℝ) := by
+        apply Finset.sum_le_sum
+        intro q hq
+        have hqpos : 0 < q := by
+          have := (Finset.mem_Icc.mp hq).1
+          omega
+        rw [abs_mul]
+        calc
+          _ ≤ 1 * 1 := mul_le_mul
+            (moebius_abs_le_one_for_head_tail q)
+            (residueFraction_abs_le_one_for_head_tail (k*q) j
+              (Nat.mul_pos hk hqpos))
+            (abs_nonneg _) (by norm_num)
+          _ = 1 := by ring
+      _ = _ := by simp
+  have hb :
+      |(((H+1 : ℕ) : ℝ) / (k : ℝ) * mobiusReciprocalSum (H/k)) *
+        residueFraction (H+1) j| ≤ ((H+1 : ℕ) : ℝ) / (k : ℝ) := by
+    rw [abs_mul, abs_mul, abs_div,
+      abs_of_nonneg (Nat.cast_nonneg (α := ℝ) (H+1)), abs_of_pos hkR]
+    calc
+      _ = (((H+1 : ℕ) : ℝ) / (k : ℝ)) *
+          (|mobiusReciprocalSum (H/k)| * |residueFraction (H+1) j|) := by ring
+      _ ≤ (((H+1 : ℕ) : ℝ) / (k : ℝ)) * (1 * 1) := by
+        apply mul_le_mul_of_nonneg_left _ (by positivity)
+        exact mul_le_mul hm
+          (residueFraction_abs_le_one_for_head_tail (H+1) j (Nat.succ_pos _))
+          (abs_nonneg _) (by norm_num)
+      _ = _ := by ring
+  have hquot : (H / k : ℕ) ≤ (H : ℝ) / (k : ℝ) := by
+    apply (le_div_iff₀ hkR).2
+    exact_mod_cast Nat.div_mul_le_self H k
+  rw [mobiusHeadStep_sequence]
+  calc
+    _ ≤ |∑ q ∈ Finset.Icc 1 (H/k),
+        (ArithmeticFunction.moebius q : ℝ) * residueFraction (k*q) j| +
+        |(((H+1 : ℕ) : ℝ)/(k : ℝ)*mobiusReciprocalSum (H/k)) *
+          residueFraction (H+1) j| := by
+      simpa only [abs_neg] using abs_add_le
+        (-(∑ q ∈ Finset.Icc 1 (H/k),
+          (ArithmeticFunction.moebius q : ℝ) * residueFraction (k*q) j))
+        ((((H+1 : ℕ) : ℝ)/(k : ℝ)*mobiusReciprocalSum (H/k)) *
+          residueFraction (H+1) j)
+    _ ≤ (H/k : ℕ) + ((H+1 : ℕ) : ℝ)/(k : ℝ) := add_le_add hsum hb
+    _ ≤ (H : ℝ)/(k : ℝ) + ((H+1 : ℕ) : ℝ)/(k : ℝ) :=
+      add_le_add hquot le_rfl
+    _ = _ := by push_cast; ring
+
+/-- Concrete uniform site bound for the complete Möbius lift.  The right
+side involves its input norm and no unknown arithmetic provider. -/
+theorem mobiusHeadInterpolation_sequence_abs_le (H : ℕ)
+    (f : ThresholdHilbert) (j : ℕ) :
+    |hilbertSequence (mobiusHeadInterpolation H f) j| ≤
+      2 * (2 * (H : ℝ) + 1) * Real.sqrt (H : ℝ) * ‖f‖ := by
+  have he : hilbertSequence (mobiusHeadInterpolation H f) j =
+      ∑ k ∈ (Finset.Icc 1 H).attach,
+        (hilbertSequence f k - hilbertSequence f ((k : ℕ)-1)) *
+          hilbertSequence (mobiusHeadStep H k
+            (by have := (Finset.mem_Icc.mp k.property).1; omega)) j := by
+    change hilbertSequenceLinear (mobiusHeadInterpolation H f) j = _
+    unfold mobiusHeadInterpolation
+    simp only [map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+    rfl
+  rw [he]
+  calc
+    _ ≤ ∑ k ∈ (Finset.Icc 1 H).attach,
+        |(hilbertSequence f k - hilbertSequence f ((k : ℕ)-1)) *
+          hilbertSequence (mobiusHeadStep H k _) j| :=
+      Finset.abs_sum_le_sum_abs _ _
+    _ ≤ ∑ k ∈ (Finset.Icc 1 H).attach,
+        (2 * (H : ℝ) + 1) * |normalizedDifference f k| := by
+      apply Finset.sum_le_sum
+      intro k hk
+      rw [abs_mul]
+      have hkpos : 0 < (k : ℕ) := by
+        have := (Finset.mem_Icc.mp k.property).1
+        omega
+      have hkR : (0 : ℝ) < (k : ℕ) := Nat.cast_pos.mpr hkpos
+      have hb := mul_le_mul_of_nonneg_left
+        (mobiusHeadStep_sequence_abs_le H k hkpos
+          (Finset.mem_Icc.mp k.property).2 j)
+        (abs_nonneg (hilbertSequence f k - hilbertSequence f ((k : ℕ)-1)))
+      convert hb using 1
+      rw [normalizedDifference, abs_div, abs_of_pos hkR]
+      ring
+    _ = (2 * (H : ℝ) + 1) *
+        (∑ k ∈ Finset.Icc 1 H, |normalizedDifference f k|) := by
+      rw [← Finset.mul_sum, Finset.sum_attach (Finset.Icc 1 H)
+        (fun k : ℕ => |normalizedDifference f k|)]
+    _ ≤ (2 * (H : ℝ) + 1) * (2 * Real.sqrt (H : ℝ) * ‖f‖) :=
+      mul_le_mul_of_nonneg_left (normalizedDifference_abs_sum_le H f) (by positivity)
+    _ = _ := by ring
+
+/-- An actual finite legal vector has a universal uniform sequence bound. -/
+theorem finiteSpace_sequence_abs_le (H : ℕ) (f : ThresholdHilbert)
+    (hf : f ∈ finiteSpace H) (j : ℕ) :
+    |hilbertSequence f j| ≤
+      2 * (2 * (H : ℝ) + 1) * Real.sqrt (H : ℝ) * ‖f‖ := by
+  have h := mobiusHeadInterpolation_sequence_abs_le H f j
+  rwa [mobiusHeadInterpolation_eq_of_mem H f hf] at h
+
+/-- Exact complete physical tail; the cutoff through N is removed before
+the infinite sum is estimated. -/
+theorem compactHead_complete_tail_norm_sq (N : ℕ) (f : ThresholdHilbert) :
+    ‖f - compactHead N f‖^2 =
+      ∑' j : ℕ, positiveWeight (j+(N+1)) *
+        hilbertSequence f (j+(N+1))^2 := by
+  rw [hilbert_norm_weighted_sq]
+  have hs := hilbertSequence_square_summable (f - compactHead N f)
+  rw [← hs.sum_add_tsum_nat_add (N+1)]
+  have hz : (∑ k ∈ Finset.range (N+1), positiveWeight k *
+      hilbertSequence (f - compactHead N f) k ^ 2) = 0 := by
+    apply Finset.sum_eq_zero
+    intro k hk
+    rw [hilbertSequence_sub]
+    simp only [Pi.sub_apply, compactHead_sequence,
+      if_pos (by have := Finset.mem_range.mp hk; omega : k ≤ N),
+      sub_self, zero_pow (by decide : 2 ≠ 0), mul_zero]
+  rw [hz, zero_add]
+  apply tsum_congr
+  intro j
+  rw [hilbertSequence_sub]
+  simp only [Pi.sub_apply, compactHead_sequence,
+    if_neg (by omega : ¬ j+(N+1) ≤ N), sub_zero]
+
+/-- A uniform physical sequence bound controls the entire infinite tail,
+with the exact physical Pareto factor 1/(N+1). -/
+theorem compactHead_complete_tail_norm_sq_le_of_sequence_bound
+    (N : ℕ) (f : ThresholdHilbert) (C : ℝ)
+    (hbound : ∀ j, |hilbertSequence f j| ≤ C) :
+    ‖f - compactHead N f‖^2 ≤ C^2 / ((N : ℝ) + 1) := by
+  rw [compactHead_complete_tail_norm_sq]
+  have hle (j : ℕ) :
+      positiveWeight (j+(N+1)) * hilbertSequence f (j+(N+1))^2 ≤
+        positiveWeight (j+(N+1)) * C^2 := by
+    apply mul_le_mul_of_nonneg_left _ (positiveWeight_nonneg _)
+    have hh := mul_self_le_mul_self (abs_nonneg _) (hbound (j+(N+1)))
+    simpa only [← pow_two, sq_abs] using hh
+  have hm := (positiveWeight_summable.comp_injective
+    (fun a b h => Nat.add_right_cancel h :
+      Function.Injective (fun j : ℕ => j+(N+1)))).mul_right (C^2)
+  have hs := Summable.of_nonneg_of_le
+    (fun j => mul_nonneg (positiveWeight_nonneg (j+(N+1)))
+      (sq_nonneg (hilbertSequence f (j+(N+1))))) hle hm
+  calc
+    _ ≤ ∑' j : ℕ, positiveWeight (j+(N+1)) * C^2 := by
+      apply Summable.tsum_le_tsum _ hs hm
+      intro j
+      apply mul_le_mul_of_nonneg_left _ (positiveWeight_nonneg _)
+      have hh := mul_self_le_mul_self (abs_nonneg _)
+        (hbound (j+(N+1)))
+      simpa only [← pow_two, sq_abs] using hh
+    _ = _ := by
+      rw [tsum_mul_right, positiveWeight_tail_tsum (N+1) (by omega)]
+      push_cast
+      ring
+
+/-- Unconditional complete physical leakage bound for every finite legal
+stage.  H indexes the complete dictionary through conductor H+1. -/
+theorem finiteSpace_complete_tail_norm_sq_le (H N : ℕ)
+    (f : ThresholdHilbert) (hf : f ∈ finiteSpace H) :
+    ‖f - compactHead N f‖^2 ≤
+      4 * (2 * (H : ℝ) + 1)^2 * (H : ℝ) * ‖f‖^2 /
+        ((N : ℝ) + 1) := by
+  have h := compactHead_complete_tail_norm_sq_le_of_sequence_bound N f
+    (2 * (2 * (H : ℝ) + 1) * Real.sqrt (H : ℝ) * ‖f‖)
+    (finiteSpace_sequence_abs_le H f hf)
+  have hsqrt := Real.sq_sqrt (Nat.cast_nonneg (α := ℝ) H)
+  have hC : (2 * (2 * (H : ℝ) + 1) * Real.sqrt (H : ℝ) * ‖f‖)^2 =
+      4 * (2 * (H : ℝ) + 1)^2 * (H : ℝ) * ‖f‖^2 := by
+    simp only [mul_pow, hsqrt]
+    ring
+  simpa only [hC] using h
+
+/-- Paper-compatible form in the conductor parameter M=H+1. -/
+theorem finiteSpace_complete_tail_norm_sq_le_cubic (H N : ℕ)
+    (f : ThresholdHilbert) (hf : f ∈ finiteSpace H) :
+    ‖f - compactHead N f‖^2 ≤
+      16 * ((H+1 : ℕ) : ℝ)^3 * ‖f‖^2 / ((N : ℝ) + 1) := by
+  apply (finiteSpace_complete_tail_norm_sq_le H N f hf).trans
+  apply div_le_div_of_nonneg_right _ (by positivity)
+  apply mul_le_mul_of_nonneg_right _ (sq_nonneg ‖f‖)
+  have hH : (0 : ℝ) ≤ H := Nat.cast_nonneg H
+  push_cast
+  nlinarith [sq_nonneg (H : ℝ)]
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization

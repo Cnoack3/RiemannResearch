@@ -79,6 +79,50 @@ The inverse-log error lower bound remains an open formal provider for relative
 logarithmic rates, and the RH-to-squarefree-approximation converse is not added.
 See RH/ExactOptimizerLeanStatus20261008.md for the precise provider ledger.
 
+### Actual compensated source, constructive horizons, and complete quartic tails (2026-10-09)
+
+138 public theorems formalize exact finite geometry and unconditional complete
+physical tail bounds. Substantive arithmetic hypotheses remain explicit; the
+Riemann Hypothesis is not established. See
+RH/ActualCompensatedTailLeanStatus20261009.md for the provider ledger.
+
+- Analysis/CompensatedSourceCertificate.lean and
+  Analysis/FiniteGramSourceTranslation.lean: 49 theorems give sharp scalar
+  certificates, weighted summability/divergence transfer, constructive cofinal
+  normalized-error horizons, scalar zero-defect/divergence equivalence, and
+  the exact observed inverse-Gram radius. The entire unobserved residual square
+  is subtracted rather than omitted.
+- Analysis/ProjectionTailSummability.lean and
+  LinearAlgebra/FiniteIndependentSource.lean: 7 theorems preserve complete
+  projection-energy telescoping and give the finite signed-source independence
+  consumer. Its actual Baker and trace providers remain Open.
+- LinearAlgebra/MeanOneBlockSchur.lean and
+  LinearAlgebra/MeanOneSchurCoupling.lean: 8 theorems retain both rank-two source
+  terms and the exact signed energy completion, its sharp orthogonal lower
+  bound, and the division-free zero-second-source endpoint.
+- RH/PhysicalSourceProjection.lean, RH/PhysicalResidualMean.lean and
+  RH/PhysicalScreenedSource.lean: 15 theorems prove actual finite error-floor
+  normalization, exact residual means and full physical source identities.
+  Nonzero residual mean and strict mean-one penalty are conditional research
+  reductions with BakerVonMangoldtSeparation as an Open formal provider.
+- RH/PhysicalCompensatedSource.lean: 21 theorems construct the whole tail-old
+  target, actual innovations and observed radius; identify source capacity with
+  E_old-E_new and the translated source with the head plus complete tail-fit
+  observations; and prove the actual nested-chain certificate divergence
+  equivalence with no supplied source-radius, gain-sign or summability input.
+- RH/ParetoMobiusHeadInterpolation.lean,
+  RH/ParetoOptimizerTailSummability.lean and
+  RH/ParetoOptimizerTailGeometricBudget.lean: 38 theorems supply unconditional
+  finite-stage full-tail leakage, actual quartic optimizer-tail summability and
+  the sharper allowance 16 norm(v)^2 [1/B+B^8/(B^12-1)]. The exact limiting
+  projection defect and the complete final square-root cross contribution
+  remain in every total budget; positive defect is still allowed.
+
+Open: the prescribed-stage actual optimizer-tail/trial-energy product saving,
+actual normalized cumulative gain/certificate divergence, and the quantitative
+moving-stage signed-source estimates that would force it. Clean axiom reports
+verify only the exact theorem types, including their explicit hypotheses.
+
 ### Actual inverse-square integer probability and prime independence (2026-10-08)
 
 Established: RH/ZetaTwoProbability.lean, RH/PrimeValuationIndependence.lean,
