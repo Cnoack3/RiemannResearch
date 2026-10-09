@@ -6,7 +6,7 @@
 ## Result and verification scope
 
 For the actual inverse-square squarefree optimizer stages defined in
-`RH/ZetaTwoOptimizerStage.lean`, the following paper theorem holds for every
+`RH/ZetaTwoOptimizerStage.lean`, the following theorem holds for every
 stage containing the atoms at conductors two and three (the repository index
 condition is `n ≥ 2`):
 
@@ -16,16 +16,19 @@ condition is `n ≥ 2`):
 \]
 
 This is an unconditional fixed cap. It does not prove that the normalized
-moment tends to zero and therefore does not prove RH. It supplies an actual
-operator estimate that the current status document leaves open, with a cap
-stronger than the displayed `3/16` candidate.
+moment tends to zero and therefore does not prove RH. The complete infinite
+assembly and actual operator specialization were formalized on 9 October
+2026, with stronger fixed caps and a conductor-five improvement.
 
-The companion `ReciprocalHeadCertificate.lean` has passed a complete
-Lean source check for the exact finite rational certificate and its
-Young-inequality assembly. The audited declarations depend only on
-`propext`, `Classical.choice`, and `Quot.sound`. The infinite
-weighted-Cauchy assembly and the actual stage specialization below remain
-paper proofs; they are not claimed as kernel-verified operator theorems.
+The companion `ReciprocalHeadCertificate.lean` verifies the exact finite
+rational certificate and its Young-inequality assembly. The new
+`ReciprocalInfiniteCertificate.lean`, `Analysis/InfiniteWeightedCauchy.lean`,
+and `ZetaTwoReciprocalBound.lean` complete the infinite positive tail,
+weighted-Cauchy assembly, and actual stage theorem. All 73 public theorems
+in the five-module continuation passed a coherent Lean check and a transitive
+axiom audit using only `propext`, `Classical.choice`, and `Quot.sound`.
+See `ReciprocalOperatorLeanStatus20261009.md` for the precise declaration
+ledger, complete-tail certificates, stronger bounds, and remaining RH input.
 
 Mathematica independently evaluated the rational 34-site head sum and returned
 `True` for all three displayed certificate inequalities. No floating point

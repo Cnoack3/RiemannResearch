@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Complete actual reciprocal-operator bounds (2026-10-09)
+
+73 public theorems in five modules complete the infinite reciprocal certificate
+and its specialization to the existing inverse-square Hilbert-space optimizer.
+The coherent full-body check and transitive public-theorem axiom audit use only
+propext, Classical.choice, and Quot.sound. No moment cap is an assumption of the
+actual stage theorems.
+
+- Analysis/InfiniteWeightedCauchy.lean: one theorem passes from the exact finite
+  Cauchy inequalities to complete summable signed pairings.
+- RH/ReciprocalInfiniteCertificate.lean: 16 theorems prove the complete positive
+  tail from site 37, retain the signed 34-site Gram cross term, and assemble the
+  original coefficient 4137/4160 < 1 and a sharper rational head certificate.
+- RH/ReciprocalConductorFiveCertificate.lean: 14 theorems verify adjusted signed
+  recovery rows, all thirty residue channels, and the complete head-tail
+  coefficient 3329/3708 < 1.
+- RH/ZetaTwoReciprocalBound.lean: 25 theorems prove actual residue normal equations,
+  both head squares, infinite weighted Cauchy assembly, positive reciprocal-form
+  Cauchy, and the actual projection compression. For 2 <= n the unconditional
+  second-moment caps are 9/49 and the stronger 11449/62500.
+- RH/ZetaTwoConductorFiveBound.lean: 17 theorems add the exact complete zero charge
+  from conductors three and five. For 4 <= n the second-moment cap improves to
+  9/64, then to (10745/28906)^2 by retaining the strict positive tail remainder.
+  Both mismatch and screening squares and the full quartic floor are preserved.
+
+These are fixed positive bounds. The moving-stage cofinal saving of the actual
+normalized positive signed correction remains Open; RH is not established.
+See RH/ReciprocalOperatorLeanStatus20261009.md for exact declarations,
+certificates, retained remainders, and the remaining provider.
+
 ### Radical dual common kernel and rational reciprocal head certificate (2026-10-08)
 
 Thirty-five public theorems passed coherent full-body checks. The actual
@@ -19,13 +49,13 @@ internally by QHilbert. No RH hypothesis is used.
   residue trace control, signed Young inequality, and full-tail scalar
   certificate with coefficient 4137/4160 < 1.
 
-The accompanying paper argument gives the actual screened-moment cap
-9/49 < 3/16. Its infinite weighted-Cauchy and operator specialization remain
-paper proofs; only the finite arithmetic/inequality certificate is formalized.
-Bundled augmented-dual density also remains paper-level assembly of the
-checked common kernel. The cofinal positive correction saving remains Open.
-See RH/RadicalDualAdvance20261008.md and
-RH/ReciprocalHeadCertificate20261008.md for proofs and scope.
+The complete reciprocal-operator formalization above now supplies the actual
+screened-moment cap 9/49 < 3/16, its infinite weighted-Cauchy assembly, and its
+operator specialization, with stronger exact rational and conductor-five caps.
+Bundled augmented-dual density remains paper-level assembly of the checked
+common kernel. The cofinal positive correction saving remains Open.
+See RH/RadicalDualAdvance20261008.md, RH/ReciprocalHeadCertificate20261008.md,
+and RH/ReciprocalOperatorLeanStatus20261009.md for proofs and scope.
 
 ### Exact inverse-square optimizer cancellation and cofinal RH criterion (2026-10-08)
 
