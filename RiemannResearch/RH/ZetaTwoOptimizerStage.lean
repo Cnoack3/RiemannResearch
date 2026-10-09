@@ -548,4 +548,108 @@ theorem mem_closure_iff_cofinal_positiveCorrection :
   · rintro ⟨κ, hκ, hcorrection⟩
     exact mem_closure_of_cofinal_positiveCorrection_decay κ hκ hcorrection
 
+/-- If the target is outside the closed squarefree span, the actual normalized
+screened moment converges to its exact positive limiting-residual quotient.
+This describes the obstruction across all stages; it is not a finite-stage
+criterion for RH. -/
+theorem secondMoment_tendsto_exact_positive_limit_of_not_mem_closure
+    (hnot : qOne ∉ closure) :
+    Tendsto secondMoment atTop
+      (𝓝 (‖reciprocalD limitingResidual -
+        closure.starProjection (reciprocalD limitingResidual)‖ ^ 2 /
+        ‖limitingResidual‖ ^ 2)) ∧
+      0 < ‖reciprocalD limitingResidual -
+        closure.starProjection (reciprocalD limitingResidual)‖ ^ 2 /
+        ‖limitingResidual‖ ^ 2 := by
+  let r : QHilbert := limitingResidual
+  let z : QHilbert := reciprocalD r - closure.starProjection (reciprocalD r)
+  have hrne : r ≠ 0 := by
+    intro hz
+    apply hnot
+    have hq : closure.starProjection qOne = qOne := by
+      have hres : qOne - closure.starProjection qOne = 0 := by
+        simpa [r, limitingResidual] using hz
+      exact (sub_eq_zero.mp hres).symm
+    exact (Submodule.starProjection_eq_self_iff.mp hq)
+  have hrnorm : 0 < ‖r‖ ^ 2 :=
+    sq_pos_of_pos (norm_pos_iff.mpr hrne)
+  have hrorth : r ∈ closureᗮ := by
+    change qOne - closure.starProjection qOne ∈ closureᗮ
+    exact Submodule.sub_starProjection_mem_orthogonal qOne
+  have hzne : z ≠ 0 := by
+    intro hz
+    have hD : reciprocalD r = closure.starProjection (reciprocalD r) :=
+      sub_eq_zero.mp hz
+    have hmem : reciprocalD r ∈ closure := by
+      rw [hD]
+      exact closure.starProjection_apply_mem _
+    have hpair := ((closure).mem_orthogonal _).mp hrorth _ hmem
+    rw [real_inner_comm] at hpair
+    exact hrne (reciprocalD_faithful r hpair)
+  have hzpos : 0 < ‖z‖ ^ 2 :=
+    sq_pos_of_pos (norm_pos_iff.mpr hzne)
+  have hDres : Tendsto (fun n => reciprocalD (residual n)) atTop (𝓝 (reciprocalD r)) := by
+    simpa only [Function.comp_def] using
+      (reciprocalD.continuous.tendsto r).comp residual_tendsto
+  have hinputDiff : Tendsto
+      (fun n => ‖reciprocalD (residual n) - reciprocalD r‖) atTop (𝓝 0) := by
+    have hconst : Tendsto (fun _ : ℕ => reciprocalD r) atTop (𝓝 (reciprocalD r)) :=
+      tendsto_const_nhds
+    simpa using (hDres.sub hconst).norm
+  have hprojFixed : Tendsto
+      (fun n => (stage n).starProjection (reciprocalD r)) atTop
+      (𝓝 (closure.starProjection (reciprocalD r))) := by
+    change Tendsto
+      (fun n => (walkSpan squarefreeAtom id n).starProjection (reciprocalD r)) atTop
+      (𝓝 ((dictionaryClosure squarefreeAtom).starProjection (reciprocalD r)))
+    exact walkProjection_tendsto squarefreeAtom id Function.surjective_id
+      (reciprocalD r)
+  have hprojMoveNorm : Tendsto
+      (fun n => ‖(stage n).starProjection (reciprocalD (residual n)) -
+        (stage n).starProjection (reciprocalD r)‖) atTop (𝓝 0) := by
+    apply squeeze_zero (fun n => norm_nonneg _)
+      (fun n =>
+        calc
+          ‖(stage n).starProjection (reciprocalD (residual n)) -
+              (stage n).starProjection (reciprocalD r)‖ =
+              ‖(stage n).starProjection
+                (reciprocalD (residual n) - reciprocalD r)‖ := by
+                  rw [map_sub]
+          _ ≤ ‖reciprocalD (residual n) - reciprocalD r‖ :=
+            Submodule.norm_starProjection_apply_le (stage n) _)
+      hinputDiff
+  have hprojMove : Tendsto
+      (fun n => (stage n).starProjection (reciprocalD (residual n)) -
+        (stage n).starProjection (reciprocalD r)) atTop (𝓝 0) :=
+    tendsto_zero_iff_norm_tendsto_zero.mpr hprojMoveNorm
+  have hproj : Tendsto
+      (fun n => (stage n).starProjection (reciprocalD (residual n))) atTop
+      (𝓝 (closure.starProjection (reciprocalD r))) := by
+    have hsum := hprojMove.add hprojFixed
+    have heq : (fun n => (stage n).starProjection (reciprocalD (residual n))) =
+        (fun n => ((stage n).starProjection (reciprocalD (residual n)) -
+          (stage n).starProjection (reciprocalD r)) +
+          (stage n).starProjection (reciprocalD r)) := by
+      funext n
+      abel
+    rw [heq]
+    simpa only [zero_add] using hsum
+  have hscreen : Tendsto screenedResidual atTop (𝓝 z) := by
+    change Tendsto (fun n => reciprocalD (residual n) -
+      (stage n).starProjection (reciprocalD (residual n))) atTop
+      (𝓝 (reciprocalD r - closure.starProjection (reciprocalD r)))
+    exact hDres.sub hproj
+  have hnum : Tendsto (fun n => ‖screenedResidual n‖ ^ 2) atTop
+      (𝓝 (‖z‖ ^ 2)) := by
+    simpa using hscreen.norm.pow 2
+  have hden : Tendsto error atTop (𝓝 (‖r‖ ^ 2)) := by
+    change Tendsto (fun n => ‖residual n‖ ^ 2) atTop (𝓝 (‖r‖ ^ 2))
+    simpa [r] using residual_tendsto.norm.pow 2
+  have hquot : Tendsto secondMoment atTop (𝓝 (‖z‖ ^ 2 / ‖r‖ ^ 2)) := by
+    change Tendsto (fun n => ‖screenedResidual n‖ ^ 2 / error n) atTop
+      (𝓝 (‖z‖ ^ 2 / ‖r‖ ^ 2))
+    exact hnum.div hden (ne_of_gt hrnorm)
+  refine ⟨?_, ?_⟩
+  · simpa [r, z] using hquot
+  · simpa [r, z] using div_pos hzpos hrnorm
 end RiemannResearch.RH.ZetaTwoOptimizerStage

@@ -122,6 +122,15 @@ qOne\in\overline{\operatorname{span}\{g_d:d\ge2,\ d\text{ squarefree}\}}
 and its cofinal version has the same conclusion. No monotonicity of the
 normalized moments or signed correction is used.
 
+On the other side of the criterion, `RiemannResearch.RH.ZetaTwoOptimizerStage.secondMoment_tendsto_exact_positive_limit_of_not_mem_closure` proves that failure of squarefree closure forces the actual normalized screened moment to converge, over all stages, to
+
+\[
+\frac{\|D r_\infty-P_C D r_\infty\|^2}{\|r_\infty\|^2}>0,
+\qquad r_\infty=qOne-P_CqOne.
+\]
+
+Here `C` is the closed squarefree span. This exact limit makes the all-stage obstruction explicit; it supplies neither the positive-correction decay nor an RH proof. Finite-stage measurements remain insufficient to establish the limit.
+
 `RH/ZetaTwoParetoTransfer.lean` preserves the entire physical sequence under
 the bounded map to Pareto space, with full norm comparison
 `||toPareto f||² <= zetaTwo * ||f||²`. It preserves the target and residue
@@ -156,7 +165,7 @@ precise. They do not supply the target's positive cancellation estimate.
 
 ## Verification and scope
 
-The continuation adds 20 Lean modules and 242 public theorems. Coherent
+The continuation adds 20 Lean modules and 243 public theorems. Coherent
 full-body source checks verify the complete proofs. The axiom audit visits
 every public declaration, checks that it exists in the environment, and
 rejects every dependency outside `propext`, `Classical.choice`, and
