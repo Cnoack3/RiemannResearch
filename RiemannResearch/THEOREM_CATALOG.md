@@ -63,6 +63,32 @@ kernel-verified analytic provider is kept separate. The full trigamma-tail
 error certificate and gradient noncoercivity are paper results, not newly
 formalized Hilbert applications. See RH/TargetSpecificReciprocalAdvance20261009.md.
 
+### Target-only moments and radical first-moment saving (2026-10-09)
+
+66 new public theorem bodies passed coherent source check
+`job_P2B73ELz1Fwm918oQYI3VSs8fXWNjMTa`, exit code 0.
+The decisive transitive audits use only propext, Classical.choice and Quot.sound.
+
+- RH/ZetaTwoReciprocalBound.screened_sq_le_firstMoment applies the universal
+  cap only to the complete screened image, without radical compatibility.
+- RH/ZetaTwoTargetFirstMoment.secondMoment_le_firstMoment proves the requested
+  actual-stage bound m2 <= (10745/28906)*(a/e) for every n>=4.
+  Its bracket (a/e)^2 <= m2 and exact Mobius displacement identities retain
+  all signed pairings, complete tails and optimizer correction terms.
+- RH/ReciprocalRadicalFourCertificate.lean and RH/ZetaTwoRadicalFourBound.lean
+  use the proved four-site identity only for the actual residual. The complete
+  signed normal equations and rational infinite-tail certificate give
+  a/e <= 39138061/126426000. Thus the actual m2 cap improves unconditionally
+  to 84107693089/730893991200 for all n>=4.
+- The first-moment closure criterion and the direct harmonic resolvent recovery
+  are established. riemannHypothesis_of_cofinal_firstMoment is a conditional
+  research reduction: its cofinal normalized first-moment decay provider is
+  Open. A positive constant saving is not asymptotic decay.
+- The finite-head escape characterization is a paper consequence, not another
+  formal declaration. See RH/TargetFirstMomentStatus20261009.md for the exact
+  certificate, correction formula, verification scope and remaining obligation.
+
+
 ### Complete actual reciprocal-operator bounds (2026-10-09)
 
 73 public theorems in five modules complete the infinite reciprocal certificate

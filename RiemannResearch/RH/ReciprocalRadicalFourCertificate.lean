@@ -140,6 +140,7 @@ theorem trace_summable : Summable (fun i : ℕ => traceTerm (i + 5)) := by
 
 set_option maxRecDepth 4096 in
 set_option maxHeartbeats 1000000 in
+-- Expanding all 34 rational summands requires more arithmetic reduction steps.
 theorem finite_trace_le : (∑ i : Fin 34, traceTerm (i.val + 5)) ≤ (17 / 20 : ℝ) := by
   norm_num [traceTerm, traceNumerator_signed, gap, Fin.sum_univ_succ]
 

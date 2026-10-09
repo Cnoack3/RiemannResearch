@@ -311,10 +311,15 @@ first-moment cap. Positive-form Cauchy on the complete signed pairing
 m_2(n)\le\beta\frac{a_n}{e_n}.
 \]
 
-Thus a target-specific saving for `a_n/e_n` would suffice without asserting
-that `s_n` remains radical-compatible. That normalized arithmetic saving
-has not been supplied; the assembly is a paper consequence of existing
-positive-form inequalities, not a new verified declaration in this update.
+The target-only assembly is now a checked declaration:
+`ZetaTwoTargetFirstMoment.secondMoment_le_firstMoment`.
+The actual normal equations and the proved four-site residual identity also
+give the unconditional fixed saving
+`a_n/e_n <= 39138061/126426000` for every `n>=4`.
+This uses compatibility only for the input residual, never for its screened
+image. The cofinal normalized first-moment decay needed for closure remains
+Open. See `TargetFirstMomentStatus20261009.md` for the exact complete-tail
+certificate, Mobius correction identity and coherent Lean verification record.
 
 There is no unconditional moment-decay provider here, and no RH claim.
 
