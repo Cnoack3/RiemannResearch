@@ -5,6 +5,7 @@ No real proof, canonical repository, network, or publication is touched.
 """
 
 import hashlib
+import errno
 import json
 import os
 import re
@@ -86,6 +87,14 @@ class VerificationJobsTests(unittest.TestCase):
             "LEAN_SHARED_PROJECT_BUILDS_ROOT": str(self.root / "project-builds"),
             "LEAN_NUM_THREADS": "2",
             "LEAN_LAKE_BUILD_THREADS": "2",
+            "LEAN_STORAGE_POLICY": "preserve",
+            # These tiny fixtures run a fake Lake executable and create no
+            # Mathlib artifacts. Keep admission checks active without requiring
+            # production-sized free space on the GitHub Actions runner.
+            "LEAN_STORAGE_RESERVE_BYTES": str(1024 ** 3),
+            "LEAN_NEW_CLONE_BUDGET_BYTES": str(64 * 1024 ** 2),
+            "LEAN_NEW_DEPS_BUDGET_BYTES": str(1024 ** 3),
+            "LEAN_BUILD_GROWTH_BUDGET_BYTES": str(64 * 1024 ** 2),
             "PATH": str(self.fake_bin) + os.pathsep + os.environ["PATH"],
         })
         self.environment.start()
@@ -122,6 +131,13 @@ class VerificationJobsTests(unittest.TestCase):
         (module / "Other.lean").write_text("theorem other : True := by trivial\n")
         (project / "RiemannResearch.lean").write_text("import RiemannResearch.Basic\n")
         (project / "README.md").write_text("test\n")
+        # Managed clones have a real source revision; verification reports its
+        # provenance even when all Lean execution in this suite is simulated.
+        subprocess.run(["git", "add", "--all"], cwd=project, check=True, capture_output=True)
+        subprocess.run([
+            "git", "-c", "user.name=Offline Fixture", "-c", "user.email=fixture@example.invalid",
+            "commit", "-q", "-m", "Create verification fixture",
+        ], cwd=project, check=True, capture_output=True)
         self.manager._write_meta({
             "token": token, "path": str(project), "state": "active",
             "needs_rehydrate": False, "last_activity": time.time(),
@@ -143,6 +159,281 @@ class VerificationJobsTests(unittest.TestCase):
         submission = self.manager.submit_build(token)
         self.assertTrue(self.manager.worker_entered.wait(2))
         return submission
+
+    def test_startup_metadata_error_does_not_kill_worker_or_execute_job(self):
+        held = self.hold_worker()
+        queued = self.manager.submit_run_code(self.token, "-- must not execute")
+        original = self.manager._write_job
+
+        def fail_start(job):
+            if job["job_id"] == queued["job_id"] and job["state"] == "running":
+                raise OSError(errno.ENOSPC, "simulated full state mount")
+            return original(job)
+
+        with patch.object(self.manager, "_write_job", side_effect=fail_start):
+            self.manager.worker_release.set()
+            self.terminal(held)
+            status = self.terminal(queued)
+        self.manager._job_queue.join()
+        self.assertEqual(status["state"], "failed")
+        self.assertIn("Errno 28", status["error"])
+        self.assertEqual(self.manager.executions, ["build"])
+        self.assertTrue(self.manager._job_worker_threads[0].is_alive())
+        self.assertNotIn(queued["job_id"], self.manager._active_jobs)
+
+    def test_terminal_metadata_error_is_nondurable_and_worker_continues(self):
+        held = self.hold_worker()
+        queued = self.manager.submit_run_code(self.token, "-- success but state disk full")
+        original = self.manager._write_job
+
+        def fail_finish(job):
+            if job["job_id"] == queued["job_id"] and job["state"] == "succeeded":
+                raise OSError(errno.ENOSPC, "simulated full state mount")
+            return original(job)
+
+        with patch.object(self.manager, "_write_job", side_effect=fail_finish):
+            self.manager.worker_release.set()
+            self.terminal(held)
+            status = self.terminal(queued)
+            self.manager._job_queue.join()
+            self.assertTrue(status["result"]["verified"])
+            self.assertFalse(status["metadata_durable"])
+            self.assertIn("Errno 28", status["metadata_persistence_error"])
+            self.assertIsNone(self.manager._pending_job_for_workspace(self.token))
+            next_job = self.manager.submit_run_code(self.token, "-- next simulated proof")
+            self.assertEqual(self.terminal(next_job)["state"], "succeeded")
+        recovered = self.manager.job_status(queued["job_id"])
+        self.assertTrue(recovered["metadata_durable"])
+        self.assertNotIn("metadata_persistence_error", recovered)
+        self.assertTrue(self.manager._job_worker_threads[0].is_alive())
+
+    def test_partial_metadata_temporary_file_is_removed(self):
+        job = {
+            "job_id": "job_" + secrets.token_hex(16), "state": "queued",
+            "submitted_at": time.time(),
+        }
+        self.manager._write_job(job)
+        original = Path.write_text
+
+        def partial_write(path, data, **kwargs):
+            if ".tmp." in path.name:
+                original(path, "partial", **kwargs)
+                raise OSError(errno.ENOSPC, "simulated partial write")
+            return original(path, data, **kwargs)
+
+        with patch.object(Path, "write_text", partial_write):
+            with self.assertRaises(OSError):
+                self.manager._write_job({**job, "state": "running"})
+        self.assertEqual(self.manager._read_job(job["job_id"])["state"], "queued")
+        self.assertEqual(list(self.manager.jobs.glob("*.tmp.*")), [])
+
+    def assert_process_exited(self, pid):
+        deadline = time.monotonic() + 2
+        while time.monotonic() < deadline:
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                return
+            identity = self.manager._process_identity(pid)
+            if identity is not None and identity["state"] == "Z":
+                return
+            time.sleep(0.01)
+        self.fail(f"Disposable child {pid} did not exit")
+
+    def test_streaming_timeout_kills_child_session(self):
+        code = (
+            "import subprocess,sys,time; "
+            "p=subprocess.Popen([sys.executable,'-c','import time; time.sleep(60)']); "
+            "print('CHILD_PID='+str(p.pid),flush=True); time.sleep(60)"
+        )
+        with self.assertRaises(subprocess.TimeoutExpired) as caught:
+            self.manager._run_streaming(
+                [sys.executable, "-c", code], cwd=self.project, timeout=1, phase="building",
+            )
+        pid = int(re.search(r"CHILD_PID=(\d+)", caught.exception.output).group(1))
+        self.assert_process_exited(pid)
+
+    def test_progress_metadata_failure_kills_live_child_session(self):
+        pid_file = self.root / "child.pid"
+        code = (
+            "import subprocess,sys,time; from pathlib import Path; "
+            "p=subprocess.Popen([sys.executable,'-c','import time; time.sleep(60)']); "
+            "Path(sys.argv[1]).write_text(str(p.pid)); "
+            "print('[1/2] Active',flush=True); time.sleep(60)"
+        )
+        original = self.manager._set_job_progress
+
+        def progress(phase, **kwargs):
+            if kwargs.get("detail") == "Active":
+                raise OSError(errno.ENOSPC, "simulated progress metadata error")
+            return original(phase, **kwargs)
+
+        with patch.object(self.manager, "_set_job_progress", side_effect=progress):
+            with self.assertRaises(OSError):
+                self.manager._run_streaming(
+                    [sys.executable, "-c", code, str(pid_file)],
+                    cwd=self.project, timeout=3, phase="building",
+                )
+        self.assert_process_exited(int(pid_file.read_text()))
+
+    def test_orphaned_live_process_blocks_replay_until_process_exits(self):
+        process = subprocess.Popen(
+            [sys.executable, "-c", "import time; time.sleep(60)"], start_new_session=True,
+        )
+        try:
+            job = {
+                "job_id": "job_" + secrets.token_hex(16), "workspace_token": self.token,
+                "kind": "build", "arguments": {}, "state": "running",
+                "submitted_at": time.time(), "owner_id": secrets.token_hex(16),
+                # Some isolated test runtimes expose host /proc with namespace
+                # PIDs. An unidentifiable child must also block unsafe replay.
+                "process": self.manager._process_identity(process.pid) or {"pid": process.pid},
+            }
+            self.manager._write_job(job)
+            status = self.manager.job_status(job["job_id"])
+            self.assertFalse(status["liveness"]["owner_alive"])
+            self.assertIsNot(status["liveness"]["process_alive"], False)
+            self.assertFalse(status["terminal"])
+            with self.assertRaises(RuntimeError):
+                self.manager.submit_run_code(self.token, "-- forbidden replay")
+        finally:
+            self.manager._kill_verification_group(process)
+        self.assertEqual(self.manager.job_status(job["job_id"])["state"], "interrupted")
+
+    def test_silent_live_job_heartbeat_is_not_a_progress_or_failure_claim(self):
+        held = self.hold_worker()
+        process = subprocess.Popen(
+            [sys.executable, "-c", "import time; time.sleep(60)"], start_new_session=True,
+        )
+        try:
+            self.manager._job_local.job_id = held["job_id"]
+            before = self.manager._read_job(held["job_id"])["progress"]
+            self.manager._job_command_heartbeat(process, force=True)
+            status = self.manager.job_status(held["job_id"])
+            self.assertTrue(status["liveness"]["process_alive"])
+            self.assertLess(status["liveness"]["heartbeat_age_seconds"], 1)
+            self.assertEqual(status["progress"]["updated_at"], before["updated_at"])
+            self.assertEqual(status["state"], "running")
+        finally:
+            self.manager._kill_verification_group(process)
+            self.manager._clear_job_command()
+            self.manager._job_local.job_id = None
+            self.manager.worker_release.set()
+        self.terminal(held)
+
+    def test_diagnostics_is_read_only_and_reports_server_mounts(self):
+        with patch.object(self.manager, "_get", side_effect=AssertionError("must not restore")):
+            result = self.manager.diagnostics(self.token)
+        self.assertIn("temporary_files", result["filesystems"])
+        self.assertEqual(result["filesystems"]["workspace"]["path"], str(self.project))
+        self.assertGreaterEqual(result["filesystems"]["job_state"]["available_bytes"], 0)
+        self.assertGreaterEqual(result["filesystems"]["job_state"]["available_inodes"], 0)
+        self.assertEqual(result["worker_threads_alive"], self.manager.job_workers)
+
+    def test_legacy_running_record_cannot_certify_children_stopped(self):
+        job = {
+            "job_id": "job_" + secrets.token_hex(16), "workspace_token": self.token,
+            "kind": "build", "arguments": {}, "state": "running",
+            "submitted_at": time.time(), "owner_id": secrets.token_hex(16),
+        }
+        self.manager._write_job(job)
+        status = self.manager.job_status(job["job_id"])
+        self.assertFalse(status["liveness"]["owner_alive"])
+        self.assertIsNone(status["liveness"]["process_alive"])
+        self.assertFalse(status["terminal"])
+        with self.assertRaises(RuntimeError):
+            self.manager.submit_run_code(self.token, "-- unsafe legacy replay")
+
+    def test_launch_marker_is_durable_before_popen_and_start_failure_clears_it(self):
+        held = self.hold_worker()
+        queued = self.manager.submit_run_code(self.token, "-- simulated launch failure")
+        observed = []
+        real_popen = subprocess.Popen
+
+        def before_launch(*args, **kwargs):
+            if args[0][0] != "lake":
+                return real_popen(*args, **kwargs)
+            job = self.manager._read_job(queued["job_id"])
+            observed.append(job["process"])
+            raise FileNotFoundError("simulated unavailable executable")
+
+        with patch("agent_workspaces.subprocess.Popen", side_effect=before_launch):
+            self.manager.worker_release.set()
+            self.terminal(held)
+            status = self.terminal(queued)
+        self.assertEqual(observed, [{"launch_in_progress": True}])
+        self.assertIsNone(status["process"])
+        self.assertEqual(status["result"]["classification"], "process_error")
+
+    def test_launch_window_orphan_blocks_other_workspace_and_queued_execution(self):
+        held = self.hold_worker()
+        queued = self.manager.submit_run_code(self.token, "-- wait behind orphan")
+        orphan_token, _ = self.workspace()
+        orphan = {
+            "job_id": "job_" + secrets.token_hex(16), "workspace_token": orphan_token,
+            "kind": "build", "arguments": {}, "state": "running",
+            "submitted_at": time.time(), "owner_id": secrets.token_hex(16),
+            "process_tracking_version": 1, "process": {"launch_in_progress": True},
+        }
+        self.manager._write_job(orphan)
+        try:
+            status = self.manager.job_status(orphan["job_id"])
+            self.assertIsNone(status["liveness"]["process_alive"])
+            third_token, _ = self.workspace()
+            with self.assertRaisesRegex(RuntimeError, "shared caches"):
+                self.manager.submit_run_code(third_token, "-- unsafe second build")
+            self.manager.worker_release.set()
+            self.terminal(held)
+            deadline = time.monotonic() + 2
+            while time.monotonic() < deadline:
+                waiting = self.manager.job_status(queued["job_id"])
+                if waiting["progress"]["phase"] == "waiting_for_orphan":
+                    break
+                time.sleep(0.01)
+            self.assertEqual(waiting["progress"]["phase"], "waiting_for_orphan")
+            self.assertEqual(self.manager.executions, ["build"])
+        finally:
+            # Simulate an administrator's confirmed termination; no child exists
+            # in this fixture. Never infer this from old progress in production.
+            self.manager._write_job({**orphan, "state": "interrupted", "finished_at": time.time()})
+            self.manager.worker_release.set()
+        self.assertEqual(self.terminal(queued)["state"], "succeeded")
+
+    def test_recorded_pid_reuse_does_not_identify_new_process_as_old_job(self):
+        job = {"job_id": "job_" + secrets.token_hex(16), "state": "running", "process": {
+            "pid": 123, "start_ticks": "100", "boot_id": "old-boot",
+        }}
+        current = {"pid": 123, "start_ticks": "200", "boot_id": "new-boot", "state": "R"}
+        with patch.object(self.manager, "_process_identity", return_value=current):
+            with patch.object(self.manager, "_process_group_alive", return_value=False):
+                self.assertIs(self.manager._job_process_alive(job), False)
+            with patch.object(self.manager, "_process_group_alive", return_value=True):
+                self.assertIsNone(self.manager._job_process_alive(job))
+
+    def test_heavy_slot_rechecks_orphan_after_lock_acquisition(self):
+        orphan = {"job_id": "job_" + secrets.token_hex(16)}
+        # Owner exits between first scan and flock acquisition. Work must wait
+        # through the second scan and another orphan scan before it can enter.
+        scans = [None, orphan, orphan, None, None]
+        delays = []
+        with patch.object(self.manager, "_orphaned_running_job", side_effect=scans) as probe:
+            with patch("agent_workspaces.time.sleep", side_effect=delays.append):
+                with self.manager._heavy_worker_slot():
+                    self.assertEqual(probe.call_count, 5)
+        self.assertEqual(delays, [0.05, 0.05])
+
+    def test_synchronous_command_timeout_also_closes_child_session(self):
+        pid_file = self.root / "ordinary-child.pid"
+        code = (
+            "import subprocess,sys,time; from pathlib import Path; "
+            "p=subprocess.Popen([sys.executable,'-c','import time; time.sleep(60)']); "
+            "Path(sys.argv[1]).write_text(str(p.pid)); time.sleep(60)"
+        )
+        with self.assertRaises(subprocess.TimeoutExpired):
+            self.manager._run(
+                [sys.executable, "-c", code, str(pid_file)], cwd=self.project, timeout=1,
+            )
+        self.assert_process_exited(int(pid_file.read_text()))
 
     def test_prompt_enqueue_poll_and_exact_code_identity(self):
         self.assertEqual(self.manager.job_workers, 1)
@@ -207,7 +498,8 @@ class VerificationJobsTests(unittest.TestCase):
 
         def tracked_popen(*args, **kwargs):
             child = real_popen(*args, **kwargs)
-            children.append(child)
+            if args[0][0] == "lake":
+                children.append(child)
             return child
 
         with patch("agent_workspaces.subprocess.Popen", side_effect=tracked_popen):
@@ -219,17 +511,12 @@ class VerificationJobsTests(unittest.TestCase):
         self.assertTrue(result["temporary_file_removed"])
         self.assertGreaterEqual(result["elapsed_seconds"], 1)
         self.assertLess(result["elapsed_seconds"], 3)
+        self.assertEqual(len(children), 1)
         self.assertEqual(children[0].returncode, -9)
         with self.assertRaises(ChildProcessError):
             os.waitpid(children[0].pid, os.WNOHANG)
         descendant = int(re.search(r"CHILD_PID=(\d+)", result["output"])[1])
-        proc = Path(f"/proc/{descendant}/stat")
-        deadline = time.monotonic() + 1
-        while proc.exists() and time.monotonic() < deadline:
-            if proc.read_text().split()[2] == "Z":
-                break  # Host init, not the manager, reaps orphan descendants.
-            time.sleep(0.01)
-        self.assertTrue(not proc.exists() or proc.read_text().split()[2] == "Z")
+        self.assert_process_exited(descendant)
         self.assertFalse(list((self.project / ".lake" / "agent-scratch").glob("*.lean")))
 
     def test_cleanup_failure_is_not_reported_as_removed(self):
@@ -251,7 +538,14 @@ class VerificationJobsTests(unittest.TestCase):
         result = self.terminal(self.manager.submit_run_code(self.token, "-- SIGNAL"))["result"]
         self.assertEqual(result["classification"], "process_error")
         self.assertEqual(result["exit_code"], -9)
-        with patch("agent_workspaces.subprocess.Popen", side_effect=FileNotFoundError("missing lake")):
+        real_popen = subprocess.Popen
+
+        def missing_lake(*args, **kwargs):
+            if args[0][0] == "lake":
+                raise FileNotFoundError("missing lake")
+            return real_popen(*args, **kwargs)
+
+        with patch("agent_workspaces.subprocess.Popen", side_effect=missing_lake):
             result = self.terminal(self.manager.submit_run_code(self.token, "-- cannot start"))["result"]
         self.assertEqual(result["classification"], "process_error")
         self.assertIsNone(result["exit_code"])
@@ -286,8 +580,11 @@ class VerificationJobsTests(unittest.TestCase):
         meta = self.manager._read_meta(self.token)
         meta["needs_rehydrate"] = True
         self.manager._write_meta(meta)
-        with self.assertRaisesRegex(ValueError, "Resume"):
-            self.manager.submit_run_code(self.token, "-- fine")
+        # Opt-in retention still requires replacement-based restoration;
+        # preserve mode instead verifies the retained local source revision.
+        with patch.object(self.manager, "storage_policy", "retention"):
+            with self.assertRaisesRegex(ValueError, "Resume"):
+                self.manager.submit_run_code(self.token, "-- fine")
         self.assertEqual(list(self.manager.jobs.glob("job_*.json")), [])
 
     def test_invalid_file_paths_and_size_rejected_before_enqueue(self):
@@ -386,6 +683,7 @@ class VerificationJobsTests(unittest.TestCase):
                 "job_id": "job_" + secrets.token_hex(16), "workspace_token": self.token,
                 "kind": "checkpoint", "arguments": {"message": "Never publish", "push": True},
                 "state": state, "submitted_at": time.time(), "owner_id": secrets.token_hex(16),
+                "process_tracking_version": 1,
             }
             self.manager._write_job(job)
             abandoned.append(job["job_id"])
@@ -418,6 +716,7 @@ class VerificationJobsTests(unittest.TestCase):
                     "job_id": "job_" + secrets.token_hex(16), "workspace_token": token,
                     "kind": "checkpoint", "arguments": {"message": "Never publish", "push": True},
                     "state": "running", "submitted_at": time.time(), "owner_id": owner,
+                    "process_tracking_version": 1,
                 }
                 self.manager._write_job(job)
                 jobs.append(job)

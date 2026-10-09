@@ -6,6 +6,7 @@ confined to a registered clone and every publication is serialized.
 
 from __future__ import annotations
 
+import copy
 import fcntl
 import fnmatch
 import hashlib
@@ -21,7 +22,7 @@ import subprocess
 import tempfile
 import threading
 import time
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from functools import wraps
 from pathlib import Path
 from typing import Callable, Iterator
@@ -36,6 +37,7 @@ DEFAULT_READ_CHARS = 20_000
 MAX_METRICS_BYTES = 5_000_000
 PROGRESS_UPDATE_SECONDS = 60
 MAX_VERIFICATION_OUTPUT_BYTES = 32_000
+GIB = 1024 ** 3
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
     ".gitignore", "AGENTS.md", "README.md", "RiemannResearch.lean", "lakefile.toml"
@@ -44,6 +46,22 @@ ROOT_READABLE = ROOT_WRITABLE | {
     "lake-manifest.json", "lakefile.toml", "lean-toolchain"
 }
 WRITABLE_SUFFIXES = {".lean", ".md", ".toml", ".yml", ".yaml", ".json"}
+
+
+class StorageAdmissionError(RuntimeError):
+    """A bounded storage refusal, never permission to delete existing data."""
+
+    def __init__(self, details: dict) -> None:
+        self.details = details
+        super().__init__(json.dumps(details, sort_keys=True, separators=(",", ":")))
+
+
+class WorkspaceContinuationRequired(RuntimeError):
+    """An explicit handoff; the retained source checkout is not overwritten."""
+
+    def __init__(self, details: dict) -> None:
+        self.details = details
+        super().__init__(json.dumps(details, sort_keys=True, separators=(",", ":")))
 
 
 def _workspace_operation(method):
@@ -56,6 +74,15 @@ def _workspace_operation(method):
             self._ensure_workspace_idle(token, method.__name__)
         with self._operation_lock(token):
             return method(self, token, *args, **kwargs)
+    return locked
+
+
+def _storage_operation(method):
+    """Hold the shared storage lease from admission through completion."""
+    @wraps(method)
+    def locked(self, *args, **kwargs):
+        with self._storage_operation_lock():
+            return method(self, *args, **kwargs)
     return locked
 
 
@@ -75,6 +102,23 @@ class AgentWorkspaceManager:
         self.before_replace = before_replace
         self.can_archive = can_archive
         self.retention_days = retention_days
+        self.storage_policy = os.environ.get("LEAN_STORAGE_POLICY", "preserve")
+        if self.storage_policy not in {"preserve", "retention"}:
+            raise ValueError("LEAN_STORAGE_POLICY must be preserve or retention")
+        # Estimates are admission floors, not guarantees about Lake's future
+        # output size. Keep an administrative reserve in addition to them.
+        self.storage_reserve_bytes = self._storage_setting(
+            "LEAN_STORAGE_RESERVE_BYTES", 10 * GIB, GIB
+        )
+        self.clone_budget_bytes = self._storage_setting(
+            "LEAN_NEW_CLONE_BUDGET_BYTES", GIB, 64 * 1024 ** 2
+        )
+        self.dependency_budget_bytes = self._storage_setting(
+            "LEAN_NEW_DEPS_BUDGET_BYTES", 32 * GIB, GIB
+        )
+        self.build_budget_bytes = self._storage_setting(
+            "LEAN_BUILD_GROWTH_BUDGET_BYTES", 8 * GIB, 64 * 1024 ** 2
+        )
         try:
             self.lean_num_threads = int(os.environ.get("LEAN_NUM_THREADS", "8"))
         except ValueError as exc:
@@ -125,7 +169,12 @@ class AgentWorkspaceManager:
         self._metrics_guard = threading.Lock()
         self._job_local = threading.local()
         self._operation_local = threading.local()
+        self._storage_local = threading.local()
         self._active_jobs: set[str] = set()
+        # Terminal results remain observable if the filesystem fills. Admission
+        # still requires a durable write; this fallback never accepts new work.
+        self._volatile_jobs: dict[str, dict] = {}
+        self._job_processes: dict[str, subprocess.Popen] = {}
         # A lifetime lease distinguishes another live manager from an actual
         # restart. The OS releases it on process exit, including SIGKILL.
         self._owner_id = secrets.token_hex(16)
@@ -144,6 +193,68 @@ class AgentWorkspaceManager:
         ]
         for worker in self._job_worker_threads:
             worker.start()
+
+    @staticmethod
+    def _storage_setting(name: str, default: int, minimum: int) -> int:
+        try:
+            value = int(os.environ.get(name, str(default)))
+        except ValueError as exc:
+            raise ValueError(f"{name} must be an integer") from exc
+        if not minimum <= value <= 1024 * GIB:
+            raise ValueError(f"{name} must be between {minimum} and {1024 * GIB}")
+        return value
+
+    def _require_storage_space(
+        self, operation: str, *paths: Path,
+        additional_bytes: int = 0, additional_inodes: int = 0,
+    ) -> None:
+        """Inspect destination mounts; do not mutate paths to make space.
+
+        This is repeated immediately before expensive operations, since an
+        earlier admission check is not a reservation against external writers.
+        A filesystem with no inode accounting is checked for blocks only.
+        """
+        required = self.storage_reserve_bytes + additional_bytes
+        seen = set()
+        for configured_path in paths:
+            path = configured_path.resolve(strict=False)
+            while not path.exists():
+                parent = path.parent
+                if parent == path:
+                    break
+                path = parent
+            try:
+                device = path.stat().st_dev
+                if device in seen:
+                    continue
+                seen.add(device)
+                facts = os.statvfs(path)
+            except OSError as exc:
+                raise StorageAdmissionError({
+                    "error": "storage_admission_denied", "operation": operation,
+                    "reason": "destination filesystem could not be inspected",
+                    "path": str(configured_path)[-256:],
+                }) from exc
+            available = facts.f_bavail * facts.f_frsize
+            inode_requirement = 4096 + additional_inodes
+            if available < required or (
+                facts.f_files and facts.f_favail < inode_requirement
+            ):
+                raise StorageAdmissionError({
+                    "error": "storage_admission_denied", "operation": operation,
+                    "path": str(configured_path)[-256:],
+                    "available_bytes": available, "required_bytes": required,
+                    "reserve_bytes": self.storage_reserve_bytes,
+                    "available_inodes": facts.f_favail,
+                    "required_inodes": inode_requirement if facts.f_files else None,
+                    "instruction": "Preserve existing data; reuse an existing workspace or add capacity.",
+                })
+
+    def _admit_new_clone(self, destination: Path) -> None:
+        self._require_storage_space(
+            "new workspace clone", destination, self.state,
+            additional_bytes=self.clone_budget_bytes, additional_inodes=20_000,
+        )
 
     def _record_metric(self, event: str, **fields: object) -> None:
         record = {"time": time.time(), "event": event, **fields}
@@ -177,32 +288,55 @@ class AgentWorkspaceManager:
         lean_num_threads: int | None = None,
     ) -> str:
         started = time.monotonic()
-        result = subprocess.run(
-            args,
-            cwd=cwd,
-            input=input_text,
-            text=True,
-            capture_output=True,
-            timeout=timeout,
-            check=False,
-            env={
-                **os.environ,
-                "GIT_TERMINAL_PROMPT": "0",
-                "LEAN_NUM_THREADS": str(lean_num_threads or self.lean_num_threads),
-            },
-        )
-        output = (result.stdout + result.stderr).strip()
+        self._prepare_job_command()
+        try:
+            process = subprocess.Popen(
+                args, cwd=cwd, stdin=subprocess.PIPE if input_text is not None else None,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                start_new_session=True,
+                env={
+                    **os.environ, "GIT_TERMINAL_PROMPT": "0",
+                    "LEAN_NUM_THREADS": str(lean_num_threads or self.lean_num_threads),
+                },
+            )
+        except OSError:
+            self._clear_job_command()
+            raise
+        deadline = started + timeout
+        try:
+            self._job_command_heartbeat(process, force=True)
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise subprocess.TimeoutExpired(args, timeout)
+                try:
+                    stdout, stderr = process.communicate(
+                        input=input_text, timeout=min(PROGRESS_UPDATE_SECONDS, remaining),
+                    )
+                    break
+                except subprocess.TimeoutExpired:
+                    input_text = None  # communicate has already accepted its input.
+                    if time.monotonic() >= deadline:
+                        raise subprocess.TimeoutExpired(args, timeout)
+                    self._job_command_heartbeat(process)
+        finally:
+            self._kill_verification_group(process)
+            self._clear_job_command()
+            for handle in (process.stdin, process.stdout, process.stderr):
+                if handle is not None:
+                    handle.close()
+        output = (stdout + stderr).strip()
         self._record_metric(
             "command",
             program=args[0],
             action=args[1] if len(args) > 1 else "",
             elapsed_seconds=round(time.monotonic() - started, 3),
-            exit_code=result.returncode,
+            exit_code=process.returncode,
             output_chars=len(output),
         )
-        if result.returncode:
+        if process.returncode:
             raise RuntimeError(
-                f"Command failed ({result.returncode}): {' '.join(args)}\n{output[-8000:]}"
+                f"Command failed ({process.returncode}): {' '.join(args)}\n{output[-8000:]}"
             )
         return output
 
@@ -268,31 +402,38 @@ class AgentWorkspaceManager:
         """Run a long command while publishing bounded Lake-style progress."""
         started = time.monotonic()
         self._set_job_progress(phase, detail="Starting " + " ".join(args), force=True)
-        process = subprocess.Popen(
-            args,
-            cwd=cwd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            bufsize=0,
-            env={
-                **os.environ,
-                "GIT_TERMINAL_PROMPT": "0",
-                "LEAN_NUM_THREADS": str(self.lake_build_threads),
-            },
-        )
+        self._prepare_job_command()
+        try:
+            process = subprocess.Popen(
+                args,
+                cwd=cwd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                bufsize=0,
+                start_new_session=True,
+                env={
+                    **os.environ,
+                    "GIT_TERMINAL_PROMPT": "0",
+                    "LEAN_NUM_THREADS": str(self.lake_build_threads),
+                },
+            )
+        except OSError:
+            self._clear_job_command()
+            raise
         if process.stdout is None:
             raise RuntimeError("Failed to capture command output")
         selector = selectors.DefaultSelector()
-        selector.register(process.stdout, selectors.EVENT_READ)
         output = ""
         pending = ""
         deadline = started + timeout
         try:
+            selector.register(process.stdout, selectors.EVENT_READ)
+            self._job_command_heartbeat(process, force=True)
             while True:
                 if time.monotonic() > deadline:
-                    process.kill()
-                    process.wait()
+                    self._kill_verification_group(process)
                     raise subprocess.TimeoutExpired(args, timeout, output=output[-8000:])
+                self._job_command_heartbeat(process)
                 events = selector.select(timeout=1.0)
                 for key, _ in events:
                     chunk = os.read(key.fileobj.fileno(), 65536)
@@ -301,7 +442,7 @@ class AgentWorkspaceManager:
                         continue
                     text = chunk.decode("utf-8", errors="replace")
                     output = (output + text)[-100_000:]
-                    pending += text
+                    pending = (pending + text)[-100_000:]
                     records = re.split(r"[\r\n]+", pending)
                     pending = records.pop()
                     for record in records:
@@ -329,6 +470,11 @@ class AgentWorkspaceManager:
                         force=True,
                     )
         finally:
+            # A progress/metadata write can raise ENOSPC while Lake is alive.
+            # Close the entire session on every exit, including a parent that
+            # exited while a descendant still holds its output pipe.
+            self._kill_verification_group(process)
+            self._clear_job_command()
             selector.close()
             process.stdout.close()
         elapsed = round(time.monotonic() - started, 3)
@@ -347,6 +493,7 @@ class AgentWorkspaceManager:
             )
         return output
 
+    @_storage_operation
     def _dependency_cache_preflight(self, project: Path) -> tuple[str, dict]:
         """Populate exact dependency binaries before a build.
 
@@ -364,6 +511,27 @@ class AgentWorkspaceManager:
             force=True,
         )
         with self._lock(self.shared / ".cache-get.lock"):
+            ready = self.shared / key / "READY.json"
+            try:
+                ready_meta = json.loads(ready.read_text(encoding="utf-8"))
+                if not isinstance(ready_meta, dict):
+                    ready_meta = {}
+                complete = ready_meta.get(
+                    "binary_cache_complete"
+                ) is True
+            except (OSError, ValueError, TypeError):
+                ready_meta = {}
+                complete = False
+            # This refusal must remain outside the fallback-build catch below.
+            # Incomplete cache preparation may otherwise download a full set.
+            self._require_storage_space(
+                "dependency binary-cache preparation", project, self.shared,
+                Path(os.environ.get("MATHLIB_CACHE_DIR", Path.home() / ".cache/mathlib")),
+                additional_bytes=(
+                    self.build_budget_bytes if complete else self.dependency_budget_bytes
+                ),
+                additional_inodes=50_000 if complete else 200_000,
+            )
             try:
                 output = self._run_streaming(
                     ["lake", "exe", "cache", "get"],
@@ -371,6 +539,11 @@ class AgentWorkspaceManager:
                     timeout=1800,
                     phase="dependency_cache",
                 )
+                if ready.is_file():
+                    ready_meta.update(binary_cache_complete=True, binary_cache_error=None)
+                    temporary = ready.with_name(f"READY.json.tmp.{os.getpid()}.{secrets.token_hex(4)}")
+                    temporary.write_text(json.dumps(ready_meta, sort_keys=True) + "\n", encoding="utf-8")
+                    os.replace(temporary, ready)
             except (RuntimeError, subprocess.TimeoutExpired) as exc:
                 error = str(exc)[-2000:]
         result = {
@@ -383,10 +556,21 @@ class AgentWorkspaceManager:
             result["warning"] = error
         return key, result
 
+    @_storage_operation
     def _run_lake_build(
-        self, project: Path, args: list[str], *, timeout: int = 3600
+        self, project: Path, args: list[str], *, timeout: int = 10800
     ) -> tuple[str, dict]:
+        self._require_storage_space(
+            "Lean build", project, self.shared, self.state,
+            additional_bytes=self.build_budget_bytes, additional_inodes=50_000,
+        )
         key, cache = self._dependency_cache_preflight(project)
+        # Cache preparation may have consumed significant space since the
+        # earlier check. Recheck before either normal or fallback compilation.
+        self._require_storage_space(
+            "Lean build after cache preparation", project, self.shared, self.state,
+            additional_bytes=self.build_budget_bytes, additional_inodes=50_000,
+        )
         if cache["status"] == "complete":
             output = self._run_streaming(
                 args, cwd=project, timeout=timeout, phase="building"
@@ -399,17 +583,18 @@ class AgentWorkspaceManager:
         return output, cache
 
     @contextmanager
-    def _lock(self, path: Path, *, shared: bool = False) -> Iterator[None]:
+    def _lock(self, path: Path, *, shared: bool = False, blocking: bool = True) -> Iterator[None]:
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("a+", encoding="utf-8") as handle:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_SH if shared else fcntl.LOCK_EX)
+            mode = fcntl.LOCK_SH if shared else fcntl.LOCK_EX
+            fcntl.flock(handle.fileno(), mode if blocking else mode | fcntl.LOCK_NB)
             try:
                 yield
             finally:
                 fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
     @contextmanager
-    def _operation_lock(self, token: str) -> Iterator[None]:
+    def _operation_lock(self, token: str, *, blocking: bool = True) -> Iterator[None]:
         """Cross-process, same-thread-reentrant lease for managed workspace operations.
 
         Admission/status never take this potentially long-held lock. External
@@ -422,12 +607,34 @@ class AgentWorkspaceManager:
         if token in held:
             yield
             return
-        with self._lock(self.state / f"{token}.operation.lock"):
+        with self._lock(self.state / f"{token}.operation.lock", blocking=blocking):
             held.add(token)
             try:
                 yield
             finally:
                 held.remove(token)
+
+    @contextmanager
+    def _storage_operation_lock(self) -> Iterator[None]:
+        """Serialize managed growth across threads and processes using this state root.
+
+        The lease covers clones, dependency downloads, builds, verification,
+        checkpoint integration and cache copies. Nested helpers are reentrant.
+        External writers and raw Lean/LSP sessions do not take this lease.
+        """
+        if getattr(self._storage_local, "held", False):
+            yield
+            return
+        self._set_job_progress(
+            "waiting_for_storage", detail="Waiting for the shared storage-operation lease",
+            force=True,
+        )
+        with self._lock(self.state / ".storage-operation.lock"):
+            self._storage_local.held = True
+            try:
+                yield
+            finally:
+                self._storage_local.held = False
 
     def _meta_path(self, token: str) -> Path:
         if not TOKEN_RE.fullmatch(token):
@@ -456,10 +663,12 @@ class AgentWorkspaceManager:
         if expected.parent.parent != self.root:
             raise RuntimeError("Workspace path escapes the managed root")
 
+    @_storage_operation
     def _clone(self, destination: Path, commit: str | None = None) -> dict:
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        if destination.exists():
+        if destination.exists() or destination.is_symlink():
             raise RuntimeError(f"Clone destination already exists: {destination}")
+        self._admit_new_clone(destination)
+        destination.parent.mkdir(parents=True, exist_ok=True)
         self._run(
             ["git", "clone", "--single-branch", "--branch", "main", self.remote, str(destination)],
             cwd=destination.parent,
@@ -481,6 +690,7 @@ class AgentWorkspaceManager:
             digest.update(b"\0")
         return digest.hexdigest()[:24]
 
+    @_storage_operation
     def _attach_dependencies(self, project: Path) -> str:
         key = self._dependency_key(project)
         env_root = self.shared / key
@@ -488,7 +698,32 @@ class AgentWorkspaceManager:
         ready = env_root / "READY.json"
         local_packages = project / ".lake" / "packages"
         with self._lock(self.shared / ".provision.lock"):
+            if self.storage_policy == "preserve":
+                occupied = local_packages.exists() or local_packages.is_symlink()
+                correct_link = (
+                    local_packages.is_symlink()
+                    and local_packages.resolve(strict=False) == packages.resolve(strict=False)
+                    and ready.is_file() and packages.is_dir()
+                )
+                if occupied and not correct_link:
+                    raise RuntimeError(
+                        "Preservation policy refused to replace existing dependency files or links. "
+                        "Their contents were retained; use an admitted new workspace for a new environment."
+                    )
+                if not ready.is_file() and (env_root.exists() or env_root.is_symlink()):
+                    raise RuntimeError(
+                        "Preservation policy retained an incomplete dependency environment. "
+                        "Inspect it before selecting a different provision destination."
+                    )
+                if ready.is_file() and not packages.is_dir():
+                    raise RuntimeError("Preservation policy retained an inconsistent dependency environment")
             if not ready.is_file():
+                self._require_storage_space(
+                    "new dependency environment", project, self.shared,
+                    Path(os.environ.get("MATHLIB_CACHE_DIR", Path.home() / ".cache/mathlib")),
+                    additional_bytes=self.dependency_budget_bytes,
+                    additional_inodes=200_000,
+                )
                 if local_packages.is_symlink():
                     local_packages.unlink()
                 elif local_packages.exists():
@@ -509,8 +744,10 @@ class AgentWorkspaceManager:
                     # binary releases. Lake will fill missing artifacts during
                     # a per-dependency serialized fallback build.
                     cache_error = str(exc)[-2000:]
-                temp = self.shared / f".{key}.tmp.{os.getpid()}"
+                temp = self.shared / f".{key}.tmp.{os.getpid()}.{secrets.token_hex(8)}"
                 if temp.exists():
+                    if self.storage_policy == "preserve":
+                        raise RuntimeError("Preservation policy retained existing dependency staging")
                     shutil.rmtree(temp)
                 temp.mkdir(parents=True)
                 if not local_packages.is_dir():
@@ -529,12 +766,18 @@ class AgentWorkspaceManager:
                     encoding="utf-8",
                 )
                 if env_root.exists():
+                    if self.storage_policy == "preserve":
+                        raise RuntimeError("Preservation policy retained a conflicting dependency environment")
                     shutil.rmtree(env_root)
                 os.replace(temp, env_root)
             if local_packages.is_symlink():
                 if local_packages.resolve() != packages.resolve():
+                    if self.storage_policy == "preserve":
+                        raise RuntimeError("Preservation policy retained a conflicting dependency link")
                     local_packages.unlink()
             elif local_packages.exists():
+                if self.storage_policy == "preserve":
+                    raise RuntimeError("Preservation policy retained an existing private dependency directory")
                 shutil.rmtree(local_packages)
             local_packages.parent.mkdir(parents=True, exist_ok=True)
             if not local_packages.exists():
@@ -546,9 +789,27 @@ class AgentWorkspaceManager:
             raise ValueError("Project cache requires a full Git commit SHA")
         return self.project_cache / dependency_key / commit
 
+    @_storage_operation
     def _copy_build_tree(self, source: Path, destination: Path) -> None:
-        if destination.exists():
-            shutil.rmtree(destination)
+        if self.storage_policy == "preserve":
+            raise RuntimeError("Preservation policy disables full build-tree copying")
+        # Even in opt-in retention mode, never replace an existing destination
+        # or retry a failed large copy. A partial new staging tree is retained.
+        if destination.exists() or destination.is_symlink():
+            raise RuntimeError(f"Build-copy destination already exists: {destination}")
+        byte_count, inode_count = 0, 1
+        for directory, subdirectories, filenames in os.walk(source, followlinks=False):
+            inode_count += len(subdirectories) + len(filenames)
+            for name in filenames:
+                path = Path(directory) / name
+                if not path.is_symlink():
+                    byte_count += path.stat().st_size
+        self._require_storage_space(
+            "full build-tree copy", destination,
+            additional_bytes=byte_count, additional_inodes=inode_count,
+        )
+        if destination.exists() or destination.is_symlink():
+            raise RuntimeError(f"Build-copy destination appeared during admission: {destination}")
         destination.mkdir(parents=True)
         result = subprocess.run(
             ["cp", "--archive", "--reflink=auto", f"{source}/.", str(destination)],
@@ -557,11 +818,19 @@ class AgentWorkspaceManager:
             check=False,
         )
         if result.returncode:
-            shutil.rmtree(destination, ignore_errors=True)
-            shutil.copytree(source, destination)
+            raise RuntimeError(
+                f"Build copy failed; partial staging was retained at {destination}: "
+                f"{result.stderr[-1000:]}"
+            )
 
+    @_storage_operation
     def _restore_project_cache(self, project: Path, dependency_key: str) -> dict:
         commit = self._run(["git", "rev-parse", "HEAD"], cwd=project)
+        if self.storage_policy == "preserve":
+            return {
+                "restored": False, "commit": commit, "dependency_key": dependency_key,
+                "reason": "preservation policy disables full build-tree seeding; reuse the original workspace",
+            }
         cache = self._project_cache_dir(dependency_key, commit)
         source = cache / "build"
         ready = cache / "READY.json"
@@ -572,13 +841,10 @@ class AgentWorkspaceManager:
             temporary = (
                 destination.parent / f".build.restore.{os.getpid()}.{secrets.token_hex(4)}"
             )
-            try:
-                self._copy_build_tree(source, temporary)
-                if destination.exists():
-                    shutil.rmtree(destination)
-                os.replace(temporary, destination)
-            finally:
-                shutil.rmtree(temporary, ignore_errors=True)
+            self._copy_build_tree(source, temporary)
+            if destination.exists():
+                shutil.rmtree(destination)
+            os.replace(temporary, destination)
         return {
             "restored": True,
             "commit": commit,
@@ -586,7 +852,13 @@ class AgentWorkspaceManager:
             "cache_path": str(cache),
         }
 
+    @_storage_operation
     def _publish_project_cache(self, project: Path) -> dict:
+        if self.storage_policy == "preserve":
+            return {
+                "published": False,
+                "reason": "preservation policy retains the original build without making another full snapshot",
+            }
         status = self._run(["git", "status", "--porcelain"], cwd=project)
         if status:
             return {"published": False, "reason": "workspace source is dirty"}
@@ -609,9 +881,8 @@ class AgentWorkspaceManager:
             temporary = cache.parent / f".{commit}.tmp.{os.getpid()}.{secrets.token_hex(4)}"
             shutil.rmtree(temporary, ignore_errors=True)
             temporary.mkdir(parents=True)
-            try:
-                self._copy_build_tree(source, temporary / "build")
-                (temporary / "READY.json").write_text(
+            self._copy_build_tree(source, temporary / "build")
+            (temporary / "READY.json").write_text(
                     json.dumps(
                         {
                             "commit": commit,
@@ -623,11 +894,9 @@ class AgentWorkspaceManager:
                     + "\n",
                     encoding="utf-8",
                 )
-                if cache.exists():
-                    shutil.rmtree(cache)
-                os.replace(temporary, cache)
-            finally:
-                shutil.rmtree(temporary, ignore_errors=True)
+            if cache.exists():
+                shutil.rmtree(cache)
+            os.replace(temporary, cache)
         self._prune_project_cache(dependency_key)
         return {
             "published": True,
@@ -637,6 +906,8 @@ class AgentWorkspaceManager:
         }
 
     def _prune_project_cache(self, dependency_key: str) -> None:
+        if self.storage_policy == "preserve":
+            return
         with self._lock(self.project_cache / ".cache.lock"):
             root = self.project_cache / dependency_key
             entries = []
@@ -658,6 +929,12 @@ class AgentWorkspaceManager:
         token = meta["token"]
         project = Path(meta["path"])
         self._validate_workspace_path(token, project)
+        if self.storage_policy == "preserve" and (project.exists() or project.is_symlink()):
+            raise RuntimeError(
+                "Preservation policy refused to replace an existing workspace. "
+                "Sources and ignored build files were retained and remain readable. "
+                "Use an admitted new workspace when a different source revision is required."
+            )
         if project.exists():
             status = self._run(["git", "status", "--porcelain"], cwd=project)
             head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
@@ -691,39 +968,90 @@ class AgentWorkspaceManager:
         self._write_meta(meta)
         return project
 
+    def _register_workspace(self) -> dict:
+        with self._lock(self.state / ".registry.lock"):
+            token = "ws_" + secrets.token_urlsafe(24)
+            project = self._workspace_dir(token)
+            self._admit_new_clone(project)
+            meta = {
+                "token": token, "path": str(project),
+                "created_at": time.time(), "last_activity": time.time(),
+                "base_commit": None, "published_commit": None,
+                "state": "provisioning", "needs_rehydrate": False,
+            }
+            self._write_meta(meta)
+            return meta
+
+    def _provision_workspace(self, meta: dict, commit: str | None = None) -> Path:
+        """Finish an admitted clone without deleting any retained partial output."""
+        project = Path(meta["path"])
+        self._validate_workspace_path(meta["token"], project)
+        try:
+            if not project.exists() and not project.is_symlink():
+                project_cache = self._clone(project, commit=commit)
+            else:
+                # A clone whose dependency admission failed is a valid local
+                # repository. Finish it in place once capacity is restored.
+                head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
+                if commit and head != commit:
+                    raise RuntimeError("Retained partial workspace has a different HEAD; inspect it before recovery")
+                key = self._attach_dependencies(project)
+                project_cache = self._restore_project_cache(project, key)
+            head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
+            meta.update(
+                base_commit=head,
+                state=("continuation_validation" if meta.get("continuation_target") else "active"),
+                project_cache=project_cache,
+            )
+            meta.pop("provisioning_error", None)
+            self._write_meta(meta)
+            return project
+        except Exception as exc:
+            details = dict(exc.details) if isinstance(exc, StorageAdmissionError) else {
+                "error": "workspace_provisioning_incomplete", "reason": str(exc)[-2000:],
+            }
+            details.update(
+                workspace_token=meta["token"], project_root=str(project),
+                retained=True,
+                instruction=(
+                    "Add capacity, then resume this token to finish this same clone. Existing files are retained."
+                    if isinstance(exc, StorageAdmissionError) else
+                    "Inspect the retained partial clone, then resume this token. Existing files are retained."
+                ),
+            )
+            meta.update(state="provisioning", provisioning_error=details, last_activity=time.time())
+            try:
+                self._write_meta(meta)
+            except OSError:
+                details["metadata_durable"] = False
+            if isinstance(exc, StorageAdmissionError):
+                raise StorageAdmissionError(details) from exc
+            raise RuntimeError(json.dumps(details, sort_keys=True)) from exc
+
     def open(self, resume_token: str = "") -> dict:
-        self.cleanup(retention_days=self.retention_days, dry_run=False)
+        if self.storage_policy != "preserve":
+            self.cleanup(retention_days=self.retention_days, dry_run=False)
         if resume_token:
             self._meta_path(resume_token)
             with self._operation_lock(resume_token), self._lock(self.state / f"{resume_token}.lock"):
                 meta = self._read_meta(resume_token)
                 project = Path(meta["path"])
-                if not project.is_dir() or meta.get("needs_rehydrate"):
+                if meta.get("state") == "provisioning":
+                    self._ensure_workspace_idle(resume_token, "finish workspace provisioning")
+                    project = self._provision_workspace(meta, commit=meta.get("continuation_target"))
+                elif not project.is_dir() or (
+                    meta.get("needs_rehydrate") and self.storage_policy != "preserve"
+                ):
                     self._ensure_workspace_idle(resume_token, "restore workspace")
                     project = self._rehydrate(meta)
                 resumed = True
                 meta["last_activity"] = time.time()
                 self._write_meta(meta)
         else:
-            with self._lock(self.state / ".registry.lock"):
-                token = "ws_" + secrets.token_urlsafe(24)
-                project = self._workspace_dir(token)
-                meta = {
-                    "token": token,
-                    "path": str(project),
-                    "created_at": time.time(),
-                    "last_activity": time.time(),
-                    "base_commit": None,
-                    "published_commit": None,
-                    "state": "provisioning",
-                    "needs_rehydrate": False,
-                }
-                self._write_meta(meta)
+            meta = self._register_workspace()
+            token = meta["token"]
             with self._operation_lock(token), self._lock(self.state / f"{token}.lock"):
-                project_cache = self._clone(project)
-                head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
-                meta.update(base_commit=head, state="active", project_cache=project_cache)
-                self._write_meta(meta)
+                self._provision_workspace(meta)
                 resumed = False
         return self.describe(meta, resumed=resumed)
 
@@ -734,7 +1062,13 @@ class AgentWorkspaceManager:
             meta = self._read_meta(token)
             project = Path(meta["path"])
             self._validate_workspace_path(token, project)
-            if rehydrate and (not project.is_dir() or meta.get("needs_rehydrate")):
+            if meta.get("state") == "provisioning":
+                raise RuntimeError("Resume this token with agent_workspace_open to finish retained provisioning")
+            if rehydrate and meta.get("state") == "continuation_validation":
+                raise RuntimeError("Continuation validation is pending; repeat the pushed checkpoint on its original token")
+            if rehydrate and (not project.is_dir() or (
+                meta.get("needs_rehydrate") and self.storage_policy != "preserve"
+            )):
                 self._ensure_workspace_idle(token, "restore workspace")
                 project = self._rehydrate(meta)
             if not project.is_dir():
@@ -756,6 +1090,25 @@ class AgentWorkspaceManager:
             "shared_dependency_key": self._dependency_key(project),
             "project_cache": meta.get("project_cache", {"restored": False}),
             "retention_days": self.retention_days,
+            "storage_policy": self.storage_policy,
+            "needs_source_sync": bool(meta.get("needs_rehydrate")),
+            "local_head": self._run(["git", "rev-parse", "HEAD"], cwd=project),
+            "published_commit": meta.get("published_commit"),
+            "continuation_workspace_token": meta.get("continuation_workspace_token"),
+            "continuation_project_root": meta.get("continuation_project_root"),
+            "validation_pending": (
+                meta.get("state") == "continuation_validation"
+                or bool(meta.get("integration_validation_pending"))
+            ),
+            "validation_resume_workspace_token": meta.get("continuation_from"),
+            "continuation_instruction": (
+                "This retained checkout can be read and kernel-verified at local_head. "
+                "Continue source edits and checkpoints in the existing continuation workspace."
+                if meta.get("continuation_workspace_token") else
+                "This retained checkout can be read and kernel-verified at local_head. "
+                "A pushed checkpoint admits and validates one continuation workspace for the published source."
+                if meta.get("needs_rehydrate") and self.storage_policy == "preserve" else None
+            ),
             "usage": (
                 "Pass workspace_token to every agent_workspace_* tool. Pass absolute paths "
                 "under project_root to Lean file tools. Do not use relative paths or lean_run_code."
@@ -953,7 +1306,8 @@ class AgentWorkspaceManager:
     @_workspace_operation
     def apply_patch(self, token: str, patch: str) -> dict:
         self._ensure_workspace_idle(token, "apply a patch")
-        _, project = self._get(token)
+        meta, project = self._get(token)
+        self._require_source_continuation(meta)
         paths = self._patch_paths(project, patch)
         self._run(["git", "apply", "--check", "--whitespace=error-all", "-"], cwd=project, input_text=patch)
         self._run(["git", "apply", "--whitespace=error-all", "-"], cwd=project, input_text=patch)
@@ -987,6 +1341,11 @@ class AgentWorkspaceManager:
     @_workspace_operation
     def sync(self, token: str) -> dict:
         self._ensure_workspace_idle(token, "synchronize")
+        if self.storage_policy == "preserve":
+            raise RuntimeError(
+                "Preservation policy disables replacement-based synchronization. "
+                "The existing workspace remains readable; use an admitted new workspace for a new source revision."
+            )
         meta, project = self._get(token, rehydrate=False)
         status = self._run(["git", "status", "--porcelain"], cwd=project)
         if status:
@@ -1001,11 +1360,17 @@ class AgentWorkspaceManager:
         return {"before": head, "after": after, "changed": head != after, "project_root": str(project)}
 
     @_workspace_operation
+    @_storage_operation
     def update_dependencies(self, token: str, package: str = "") -> dict:
         self._ensure_workspace_idle(token, "update dependencies")
         if package and not PACKAGE_RE.fullmatch(package):
             raise ValueError("Invalid Lake package name")
-        _, project = self._get(token)
+        if self.storage_policy == "preserve":
+            raise RuntimeError(
+                "Preservation policy retains the current dependency environment. "
+                "Use an admitted new workspace for a different dependency configuration."
+            )
+        meta, project = self._get(token)
         self._set_job_progress(
             "updating_dependencies",
             detail=f"Updating {package or 'all exact dependencies'}",
@@ -1044,14 +1409,15 @@ class AgentWorkspaceManager:
         project = Path(meta["path"])
         self._validate_workspace_path(token, project)
         if (
-            meta.get("state") not in {"active", "published"} or not project.is_dir()
+            meta.get("state") not in {"active", "published", "continuation_validation"}
+            or not project.is_dir()
         ):
             raise ValueError("Resume this workspace with agent_workspace_open before reading or verification")
         return meta, project
 
     def _verification_project(self, token: str) -> Path:
         meta, project = self._read_project(token)
-        if meta.get("needs_rehydrate"):
+        if meta.get("needs_rehydrate") and self.storage_policy != "preserve":
             raise ValueError("Resume this workspace with agent_workspace_open before verification")
         return project
 
@@ -1088,10 +1454,16 @@ class AgentWorkspaceManager:
             pass
         process.wait()
 
+    @_storage_operation
     def _run_verification(self, project: Path, path: Path, timeout_seconds: int) -> dict:
         """Bound memory and wall time independently of Lean's logical limits."""
         started = time.monotonic()
+        self._require_storage_space(
+            "Lean verification", project, self.shared, self.state,
+            additional_bytes=self.build_budget_bytes, additional_inodes=50_000,
+        )
         self._set_job_progress("verifying", detail="Checking Lean source", force=True)
+        self._prepare_job_command()
         try:
             process = subprocess.Popen(
                 ["lake", "env", "lean", str(path)],
@@ -1107,6 +1479,7 @@ class AgentWorkspaceManager:
                 },
             )
         except OSError as exc:
+            self._clear_job_command()
             return {
                 "verified": False, "classification": "process_error", "exit_code": None,
                 "error": f"{type(exc).__name__}: {exc}"[-1000:],
@@ -1122,7 +1495,9 @@ class AgentWorkspaceManager:
         try:
             assert process.stdout is not None
             selector.register(process.stdout, selectors.EVENT_READ)
+            self._job_command_heartbeat(process, force=True)
             while selector.get_map() or process.poll() is None:
+                self._job_command_heartbeat(process)
                 now = time.monotonic()
                 if now >= deadline:
                     if timed_out:
@@ -1139,8 +1514,8 @@ class AgentWorkspaceManager:
                         tail = (tail + chunk)[-MAX_VERIFICATION_OUTPUT_BYTES:]
             process.wait()
         finally:
-            if process.poll() is None:
-                self._kill_verification_group(process)
+            self._kill_verification_group(process)
+            self._clear_job_command()
             selector.close()
             if process.stdout is not None:
                 process.stdout.close()
@@ -1166,13 +1541,15 @@ class AgentWorkspaceManager:
         """Synchronous execution primitive; MCP callers should submit_run_code."""
         self._ensure_workspace_idle(token, "run Lean code")
         self._validate_code(code, timeout_seconds)
-        _, project = self._get(token)
+        meta, project = self._get(token, rehydrate=self.storage_policy != "preserve")
         scratch = project / ".lake" / "agent-scratch"
         scratch.mkdir(parents=True, exist_ok=True)
         path = scratch / f"Run_{secrets.token_hex(12)}.lean"
         response = {
             "workspace_token": token,
             "project_root": str(project),
+            "local_head": self._run(["git", "rev-parse", "HEAD"], cwd=project),
+            "published_commit": meta.get("published_commit"),
             "request_sha256": self._request_sha256(
                 token, "run_code", {"code": code, "timeout_seconds": timeout_seconds}
             ),
@@ -1202,13 +1579,15 @@ class AgentWorkspaceManager:
     def _check_file(self, token: str, path: str, timeout_seconds: int, file_sha256: str) -> dict:
         self._ensure_workspace_idle(token, "check Lean file")
         self._validate_verification_timeout(timeout_seconds)
-        _, project = self._get(token)
+        meta, project = self._get(token, rehydrate=self.storage_policy != "preserve")
         normalized, resolved, checked_sha256 = self._verification_file(project, path)
         if checked_sha256 != file_sha256:
             raise RuntimeError("Lean file changed after submission; submit its current contents again")
         result = {
             "workspace_token": token,
             "project_root": str(project),
+            "local_head": self._run(["git", "rev-parse", "HEAD"], cwd=project),
+            "published_commit": meta.get("published_commit"),
             "path": normalized,
             "file_sha256": file_sha256,
             "checked_file_sha256": checked_sha256,
@@ -1312,14 +1691,18 @@ class AgentWorkspaceManager:
         output, dependency_cache = self._run_lake_build(
             project,
             ["lake", "build", "RiemannResearch", "--quiet"],
-            timeout=3600,
+            timeout=10800,
         )
         result = {
             "command": "lake build RiemannResearch --quiet",
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "lean_num_threads": self.lake_build_threads,
             "output": "\n".join(output.splitlines()[-20:]),
-            "cache": "shared dependencies and commit-keyed seed; private per-clone .lake/build",
+            "cache": (
+                "shared dependencies; original workspace build retained without full snapshots"
+                if self.storage_policy == "preserve"
+                else "shared dependencies and commit-keyed seed; private per-clone .lake/build"
+            ),
             "dependency_cache": dependency_cache,
         }
         result["project_cache"] = self._publish_project_cache(project)
@@ -1447,7 +1830,7 @@ class AgentWorkspaceManager:
         output, dependency_cache = self._run_lake_build(
             project,
             ["lake", "build", *lake_targets, "--quiet"],
-            timeout=3600,
+            timeout=10800,
         )
         result = {
             "command": f"lake build <{len(targets)} affected module(s)> --quiet",
@@ -1480,19 +1863,107 @@ class AgentWorkspaceManager:
         _, project = self._get(token)
         return self._build(project)
 
+    def _require_source_continuation(self, meta: dict) -> None:
+        if self.storage_policy != "preserve" or not meta.get("needs_rehydrate"):
+            return
+        raise WorkspaceContinuationRequired({
+            "error": "workspace_continuation_required",
+            "workspace_token": meta["token"], "project_root": meta["path"],
+            "local_head": self._run(["git", "rev-parse", "HEAD"], cwd=Path(meta["path"])),
+            "published_commit": meta.get("published_commit"),
+            "continuation_workspace_token": meta.get("continuation_workspace_token"),
+            "continuation_project_root": meta.get("continuation_project_root"),
+            "instruction": (
+                "Continue edits and checkpoints in the existing continuation workspace. "
+                "This source checkout and its builds remain available for reading and exact local verification."
+                if meta.get("continuation_workspace_token") else
+                "Submit a pushed checkpoint on this token to admit and validate one continuation workspace. "
+                "This source checkout and its builds remain available for reading and exact local verification."
+            ),
+        })
+
+    def _ensure_continuation(self, meta: dict) -> dict:
+        """Recover an older stale publication with one durable, validated handoff."""
+        token = meta.get("continuation_workspace_token")
+        if token:
+            continuation = self._read_meta(token)
+            if (
+                continuation.get("state") in {"active", "published"}
+                and continuation.get("continuation_validated_commit")
+            ):
+                return continuation
+        else:
+            continuation = self._register_workspace()
+            continuation.update(
+                continuation_from=meta["token"], continuation_target=meta["published_commit"],
+            )
+            self._write_meta(continuation)
+            meta.update(
+                continuation_workspace_token=continuation["token"],
+                continuation_project_root=continuation["path"],
+            )
+            self._write_meta(meta)
+        token = continuation["token"]
+        # Checkpoint already holds the storage lease. Never wait on a child
+        # operation whose owner may itself be waiting for that storage lease.
+        try:
+            with self._operation_lock(token, blocking=False):
+                continuation = self._read_meta(token)
+                if (
+                    continuation.get("state") in {"active", "published"}
+                    and continuation.get("continuation_validated_commit")
+                ):
+                    return continuation
+                if continuation.get("state") == "provisioning":
+                    project = self._provision_workspace(continuation, commit=meta["published_commit"])
+                else:
+                    project = Path(continuation["path"])
+                self._validate_workspace_path(token, project)
+                validation = self._build(project)
+                head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
+                if head != meta["published_commit"]:
+                    raise RuntimeError("Continuation source changed during validation; all work was retained")
+                continuation.update(
+                    base_commit=head, published_commit=head, source_commit=head,
+                    state="published", needs_rehydrate=False, continuation_validation=validation,
+                    continuation_validated_commit=head,
+                )
+                self._write_meta(continuation)
+                return continuation
+        except Exception as exc:
+            details = dict(exc.details) if isinstance(exc, StorageAdmissionError) else {
+                "error": "continuation_validation_pending", "reason": str(exc)[-2000:],
+            }
+            details.update(
+                workspace_token=meta["token"], project_root=meta["path"],
+                continuation_workspace_token=token, continuation_project_root=continuation["path"],
+                instruction="All content was retained. Once the failure or busy operation is resolved, repeat the pushed checkpoint on workspace_token to finish this same continuation.",
+            )
+            if isinstance(exc, StorageAdmissionError):
+                raise StorageAdmissionError(details) from exc
+            raise WorkspaceContinuationRequired(details) from exc
+
     @_workspace_operation
+    @_storage_operation
     def checkpoint(self, token: str, message: str, push: bool = True) -> dict:
         self._ensure_workspace_idle(token, "checkpoint")
         message = message.strip()
         if not 5 <= len(message) <= 120 or "\n" in message:
             raise ValueError("Commit message must be one line containing 5-120 characters")
         meta, project = self._get(token)
+        if self.storage_policy == "preserve" and meta.get("needs_rehydrate"):
+            if push:
+                self._ensure_continuation(meta)
+            self._require_source_continuation(meta)
         self._set_job_progress("auditing", detail="Auditing changed source", force=True)
         warnings = self._scan(project)
         warnings.extend(self._architecture_audit(project))
         if warnings:
             raise ValueError("Lean source audit failed:\n" + "\n".join(warnings[:100]))
-        build = self._checkpoint_validation(project)
+        build = (
+            self._build(project) if meta.get("integration_validation_pending")
+            else self._checkpoint_validation(project)
+        )
         self._set_job_progress("committing", detail="Creating local checkpoint", force=True)
         self._run([
             "git", "add", "--", "RiemannResearch", "RiemannResearch.lean", "README.md",
@@ -1538,41 +2009,86 @@ class AgentWorkspaceManager:
                         detail="Validating changes against newer origin/main",
                         force=True,
                     )
-                    integration_parent = self.root / "_integration"
-                    integration_parent.mkdir(parents=True, exist_ok=True)
-                    integration = Path(tempfile.mkdtemp(prefix="publish-", dir=integration_parent))
+                    if self.storage_policy == "preserve":
+                        integration_meta = self._register_workspace()
+                        integration_meta["integration_validation_pending"] = True
+                        self._write_meta(integration_meta)
+                        integration = Path(integration_meta["path"])
+                    else:
+                        integration_meta = None
+                        integration_parent = self.root / "_integration"
+                        self._admit_new_clone(integration_parent / "pending-integration")
+                        integration_parent.mkdir(parents=True, exist_ok=True)
+                        integration = Path(tempfile.mkdtemp(prefix="publish-", dir=integration_parent))
                     try:
-                        integration.rmdir()
-                        self._clone(integration)
-                        self._run(["git", "fetch", str(project), local_head], cwd=integration)
-                        for commit in commits:
-                            self._run(["git", "cherry-pick", commit], cwd=integration)
-                        self._attach_dependencies(integration)
-                        integrated_build = self._checkpoint_validation(
-                            integration, base_ref="origin/main", include_untracked=False
+                        lease = (
+                            self._operation_lock(integration_meta["token"], blocking=False)
+                            if integration_meta is not None else nullcontext()
                         )
-                        self._run(["git", "push", "origin", "HEAD:main"], cwd=integration, timeout=600)
-                        published = self._run(["git", "rev-parse", "HEAD"], cwd=integration)
-                        build["integrated_build"] = integrated_build
-                        integrated = True
+                        with lease:
+                            if integration_meta is not None:
+                                self._provision_workspace(integration_meta)
+                            else:
+                                integration.rmdir()
+                                self._clone(integration)
+                            self._run(["git", "fetch", str(project), local_head], cwd=integration)
+                            for commit in commits:
+                                self._run(["git", "cherry-pick", commit], cwd=integration)
+                            self._attach_dependencies(integration)
+                            integrated_build = self._checkpoint_validation(
+                                integration, base_ref="origin/main", include_untracked=False
+                            )
+                            self._run(["git", "push", "origin", "HEAD:main"], cwd=integration, timeout=600)
+                            published = self._run(["git", "rev-parse", "HEAD"], cwd=integration)
+                            build["integrated_build"] = integrated_build
+                            if self.storage_policy == "preserve":
+                                build["preserved_integration_project_root"] = str(integration)
+                                integration_meta.update(
+                                    base_commit=published, published_commit=published,
+                                    source_commit=published, state="published", needs_rehydrate=False,
+                                    continuation_from=token, continuation_validation=integrated_build,
+                                    continuation_validated_commit=published,
+                                    integration_validation_pending=False,
+                                )
+                                self._write_meta(integration_meta)
+                                meta.update(
+                                    continuation_workspace_token=integration_meta["token"],
+                                    continuation_project_root=str(integration),
+                                )
+                            integrated = True
+                    except Exception as exc:
+                        if self.storage_policy == "preserve":
+                            raise RuntimeError(
+                                f"Integration workspace preserved at {integration}; "
+                                f"workspace_token={integration_meta['token']}: {str(exc)[-2000:]}"
+                            ) from exc
+                        raise
                     finally:
-                        shutil.rmtree(integration, ignore_errors=True)
+                        if self.storage_policy != "preserve":
+                            shutil.rmtree(integration, ignore_errors=True)
 
             meta.update(
                 published_commit=published,
-                base_commit=published,
+                base_commit=(local_head if self.storage_policy == "preserve" else published),
                 source_commit=local_head,
                 state="published",
                 needs_rehydrate=(published != local_head),
                 last_activity=time.time(),
+                integration_validation_pending=False,
             )
             self._write_meta(meta)
+            if self.storage_policy == "preserve" and meta["needs_rehydrate"]:
+                self._ensure_continuation(meta)
         if not meta["needs_rehydrate"]:
             project_cache = self._publish_project_cache(project)
         else:
             project_cache = {
                 "published": False,
-                "reason": "integrated commit cache was produced by the clean integration build",
+                "reason": (
+                    "preservation policy retained the validated integration workspace without a full snapshot"
+                    if self.storage_policy == "preserve"
+                    else "integrated commit cache was produced by the clean integration build"
+                ),
             }
         return {
             "committed": bool(staged),
@@ -1580,7 +2096,12 @@ class AgentWorkspaceManager:
             "source_commit": local_head,
             "commit": published,
             "integrated_with_newer_main": integrated,
-            "rehydrate_on_next_workspace_call": meta["needs_rehydrate"],
+            "rehydrate_on_next_workspace_call": (
+                meta["needs_rehydrate"] and self.storage_policy != "preserve"
+            ),
+            "source_checkout_retained": self.storage_policy == "preserve",
+            "continuation_workspace_token": meta.get("continuation_workspace_token"),
+            "continuation_project_root": meta.get("continuation_project_root"),
             "files": staged.splitlines(),
             "build": build,
             "project_cache": project_cache,
@@ -1593,6 +2114,8 @@ class AgentWorkspaceManager:
 
     def _read_job(self, job_id: str) -> dict:
         path = self._job_path(job_id)
+        if job_id in self._volatile_jobs:
+            return copy.deepcopy(self._volatile_jobs[job_id])
         if not path.is_file():
             raise ValueError("Unknown job ID")
         return json.loads(path.read_text(encoding="utf-8"))
@@ -1600,21 +2123,146 @@ class AgentWorkspaceManager:
     def _write_job(self, job: dict) -> None:
         path = self._job_path(job["job_id"])
         temporary = path.with_suffix(f".tmp.{os.getpid()}.{secrets.token_hex(4)}")
-        temporary.write_text(
-            json.dumps(job, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
-        )
-        os.replace(temporary, path)
+        try:
+            temporary.write_text(
+                json.dumps(job, indent=2, sort_keys=True) + "\n", encoding="utf-8",
+            )
+            os.replace(temporary, path)
+        finally:
+            # A partial temporary file must not amplify disk exhaustion.
+            temporary.unlink(missing_ok=True)
+        self._volatile_jobs.pop(job["job_id"], None)
 
-    def _job_owner_alive(self, job: dict) -> bool:
+    def _persist_job_state(self, job: dict) -> None:
+        """Keep the worker alive after a failed state write; report nondurability."""
+        try:
+            durable = copy.deepcopy(job)
+            durable.pop("metadata_persistence_error", None)
+            self._write_job(durable)
+        except OSError as exc:
+            saved = copy.deepcopy(job)
+            saved["metadata_persistence_error"] = f"{type(exc).__name__}: {exc}"[-1000:]
+            self._volatile_jobs[job["job_id"]] = saved
+            self._record_metric("job_metadata_error", job_id=job["job_id"], error=str(exc)[-500:])
+
+    @staticmethod
+    def _process_identity(pid: int) -> dict | None:
+        """Linux identity guards against PID reuse; absence is not proof of death."""
+        try:
+            # Some hosted runtimes virtualize syscalls but expose host /proc.
+            # Never attach an unrelated host PID's identity to a child record.
+            if int(Path("/proc/self/stat").read_text().split(" ", 1)[0]) != os.getpid():
+                return None
+            stat = Path(f"/proc/{pid}/stat").read_text()
+            fields = stat[stat.rindex(")") + 2:].split()
+            return {
+                "pid": pid, "state": fields[0], "start_ticks": fields[19],
+                "boot_id": Path("/proc/sys/kernel/random/boot_id").read_text().strip(),
+            }
+        except (OSError, ValueError, IndexError):
+            return None
+
+    def _job_process_alive(self, job: dict) -> bool | None:
+        process = self._job_processes.get(job["job_id"])
+        if process is not None:
+            if process.poll() is None:
+                return True
+            return self._process_group_alive(process.pid)
+        recorded = job.get("process")
+        if not isinstance(recorded, dict):
+            # Legacy running records did not track child identity. Restarting
+            # the service alone cannot certify that their subprocesses stopped.
+            return None if job.get("state") == "running" and job.get("process_tracking_version") != 1 else False
+        pid = recorded.get("pid")
+        if type(pid) is not int or pid <= 0:
+            return None
+        current = self._process_identity(pid)
+        if current is None:
+            group_alive = self._process_group_alive(pid)
+            if group_alive is not False:
+                return group_alive
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                return False
+            except PermissionError:
+                return None
+            return None
+        if not recorded.get("start_ticks") or not recorded.get("boot_id"):
+            return None
+        matches = (
+            recorded["start_ticks"] == current["start_ticks"]
+            and recorded["boot_id"] == current["boot_id"]
+            and current["state"] != "Z"
+        )
+        if matches:
+            return True
+        return None if self._process_group_alive(pid) is not False else False
+
+    @staticmethod
+    def _process_group_alive(pid: int) -> bool | None:
+        try:
+            os.killpg(pid, 0)
+        except ProcessLookupError:
+            return False
+        except PermissionError:
+            return None
+        return True
+
+    def _job_command_heartbeat(self, process: subprocess.Popen, *, force: bool = False) -> None:
+        job_id = getattr(self._job_local, "job_id", None)
+        if not job_id:
+            return
+        self._job_processes[job_id] = process
+        now = time.time()
+        last = getattr(self._job_local, "last_heartbeat_write", 0.0)
+        if not force and now - last < PROGRESS_UPDATE_SECONDS:
+            return
+        with self._job_guard:
+            job = self._read_job(job_id)
+            job["heartbeat_at"] = now
+            job["process"] = self._process_identity(process.pid) or {"pid": process.pid}
+            self._write_job(job)  # Abort safely if monitoring cannot be persisted.
+        self._job_local.last_heartbeat_write = now
+
+    def _prepare_job_command(self) -> None:
+        # Close the fork-to-metadata crash window. A restart must treat this
+        # durable marker as unknown until child identity or cleanup is recorded.
+        job_id = getattr(self._job_local, "job_id", None)
+        if job_id:
+            with self._job_guard:
+                job = self._read_job(job_id)
+                job["process"] = {"launch_in_progress": True}
+                self._write_job(job)
+
+    def _clear_job_command(self) -> None:
+        job_id = getattr(self._job_local, "job_id", None)
+        if not job_id:
+            return
+        with self._job_guard:
+            self._job_processes.pop(job_id, None)
+            job = self._read_job(job_id)
+            job["process"] = None
+            job["heartbeat_at"] = time.time()
+            self._persist_job_state(job)
+
+    def _job_owner_alive(self, job: dict) -> bool | None:
         owner = job.get("owner_id", "")
         if not isinstance(owner, str) or not re.fullmatch(r"[0-9a-f]{32}", owner):
             return False  # Legacy records have no liveness lease.
-        with (self._owner_directory / owner).open("a+") as handle:
+        try:
+            handle = (self._owner_directory / owner).open("r")
+        except FileNotFoundError:
+            return False
+        except OSError:
+            return None  # Unknown: do not interrupt potentially live work.
+        with handle:
             try:
                 fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
                 return True
+            except OSError:
+                return None
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
         return False
 
@@ -1632,7 +2280,11 @@ class AgentWorkspaceManager:
 
     def _interrupt_abandoned_job(self, job: dict) -> dict:
         """Caller holds admission lock and has read a fresh job record."""
-        if job.get("state") in {"queued", "running"} and not self._job_owner_alive(job):
+        if job.get("state") in {"queued", "running"} and self._job_owner_alive(job) is False:
+            if self._job_process_alive(job) is not False:
+                # A dead service can leave a live Lake/Lean child. Do not release
+                # its slot or replay a possibly published checkpoint.
+                return job
             job.update(
                 state="interrupted",
                 finished_at=time.time(),
@@ -1641,12 +2293,17 @@ class AgentWorkspaceManager:
                     "and Git status before submitting it again; it was not replayed."
                 ),
             )
-            self._write_job(job)
+            self._persist_job_state(job)
+            return self._read_job(job["job_id"])
         return job
 
     def _read_live_job(self, job_id: str) -> dict:
         job = self._read_job(job_id)
-        if job.get("state") in {"queued", "running"} and not self._job_owner_alive(job):
+        if job_id in self._volatile_jobs:
+            with self._job_guard:
+                self._persist_job_state(job)
+                job = self._read_job(job_id)
+        if job.get("state") in {"queued", "running"} and self._job_owner_alive(job) is False:
             with self._lock(self.state / ".jobs-admission.lock"):
                 job = self._interrupt_abandoned_job(self._read_job(job_id))
         return job
@@ -1662,7 +2319,18 @@ class AgentWorkspaceManager:
         self._set_job_progress(
             "waiting_for_worker", detail="Waiting for a shared heavy-worker slot", force=True
         )
+        last_orphan = None
         while True:
+            orphan = self._orphaned_running_job()
+            if orphan is not None:
+                self._set_job_progress(
+                    "waiting_for_orphan",
+                    detail=f"Operator must resolve orphan job {orphan['job_id']} before shared-cache work",
+                    force=last_orphan != orphan["job_id"],
+                )
+                last_orphan = orphan["job_id"]
+                time.sleep(0.05)
+                continue
             for index in range(self.job_workers):
                 handle = (self.state / f".heavy-worker-{index}.lock").open("a+")
                 try:
@@ -1671,12 +2339,30 @@ class AgentWorkspaceManager:
                     handle.close()
                     continue
                 try:
+                    # Recheck after acquiring the slot: its previous owner may
+                    # have exited between the precheck and lock acquisition.
+                    if self._orphaned_running_job() is not None:
+                        continue
                     yield
                 finally:
                     fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
                     handle.close()
                 return
             time.sleep(0.05)
+
+    def _orphaned_running_job(self) -> dict | None:
+        """A dead owner's unknown/live child may still write shared caches."""
+        for path in self.jobs.glob("job_*.json"):
+            try:
+                job = self._read_job(path.stem)
+            except (OSError, ValueError):
+                continue
+            if (
+                job.get("state") == "running" and self._job_owner_alive(job) is not True
+                and self._job_process_alive(job) is not False
+            ):
+                return job
+        return None
 
     def _queue_position(self, job_id: str) -> int | None:
         with self._job_guard:
@@ -1693,7 +2379,7 @@ class AgentWorkspaceManager:
     def _existing_job(self, token: str, kind: str, arguments: dict) -> dict | None:
         for path in self.jobs.glob("job_*.json"):
             try:
-                job = json.loads(path.read_text(encoding="utf-8"))
+                job = self._read_job(path.stem)
             except (OSError, ValueError, json.JSONDecodeError):
                 continue
             if (
@@ -1708,7 +2394,7 @@ class AgentWorkspaceManager:
     def _pending_job_for_workspace(self, token: str) -> dict | None:
         for path in self.jobs.glob("job_*.json"):
             try:
-                job = json.loads(path.read_text(encoding="utf-8"))
+                job = self._read_job(path.stem)
             except (OSError, ValueError, json.JSONDecodeError):
                 continue
             if (
@@ -1765,6 +2451,12 @@ class AgentWorkspaceManager:
                     f"Workspace already has {pending['kind']} job {pending['job_id']} "
                     f"{pending['state']}; poll it until terminal before submitting {kind}."
                 )
+            orphan = self._orphaned_running_job()
+            if orphan is not None:
+                raise RuntimeError(
+                    f"Orphan job {orphan['job_id']} may still be writing shared caches; "
+                    "resolve its actual process state before admitting more verification."
+                )
             job_id = "job_" + secrets.token_urlsafe(24)
             job = {
                 "job_id": job_id,
@@ -1773,6 +2465,7 @@ class AgentWorkspaceManager:
                 "arguments": arguments,
                 "request_sha256": self._request_sha256(token, kind, arguments),
                 "owner_id": self._owner_id,
+                "process_tracking_version": 1,
                 "state": "queued",
                 "submitted_at": time.time(),
                 "progress": {
@@ -1893,15 +2586,17 @@ class AgentWorkspaceManager:
     def _job_worker(self) -> None:
         while True:
             job_id = self._job_queue.get()
-            with self._job_guard:
-                self._active_jobs.add(job_id)
-                job = self._read_job(job_id)
-                job.update(state="running", started_at=time.time())
-                self._write_job(job)
+            job = None
             self._job_local.job_id = job_id
             self._job_local.last_progress_write = 0.0
+            self._job_local.last_heartbeat_write = 0.0
             self._job_local.progress = {}
             try:
+                with self._job_guard:
+                    self._active_jobs.add(job_id)
+                    job = self._read_job(job_id)
+                    job.update(state="running", started_at=time.time())
+                    self._write_job(job)
                 with self._heavy_worker_slot():
                     self._set_job_progress(
                         "waiting_for_workspace", detail="Waiting for the workspace operation lock",
@@ -1911,11 +2606,13 @@ class AgentWorkspaceManager:
                         result = self._execute_job(job)
                 result["request_sha256"] = job["request_sha256"]
             except Exception as exc:
-                job.update(
-                    state="failed",
-                    finished_at=time.time(),
-                    error=f"{type(exc).__name__}: {exc}"[-8000:],
-                )
+                if job is not None:
+                    job.update(
+                        state="failed", finished_at=time.time(),
+                        error=f"{type(exc).__name__}: {exc}"[-8000:],
+                    )
+                else:
+                    self._record_metric("unreadable_job", job_id=job_id, error=str(exc)[-500:])
             else:
                 verification_failed = (
                     job["kind"] in {"run_code", "check_file"} and not result.get("verified")
@@ -1925,34 +2622,38 @@ class AgentWorkspaceManager:
                     finished_at=time.time(), result=result,
                 )
             finally:
-                with self._job_guard:
-                    current = self._read_job(job_id)
-                    current.update(
-                        {key: value for key, value in job.items() if key != "progress"}
-                    )
-                    progress = current.get("progress", {})
-                    progress.update(
-                        phase="complete" if job.get("state") == "succeeded" else "failed",
-                        percent=100.0 if job.get("state") == "succeeded" else progress.get("percent"),
-                        updated_at=time.time(),
-                    )
-                    current["progress"] = progress
-                    self._write_job(current)
-                    self._active_jobs.discard(job_id)
-                self._record_metric(
-                    "job_finished",
-                    job_id=job_id,
-                    kind=job.get("kind"),
-                    state=job.get("state"),
-                    elapsed_seconds=round(
-                        job.get("finished_at", time.time())
-                        - job.get("started_at", job.get("submitted_at", time.time())),
-                        3,
-                    ),
-                )
-                self._job_local.job_id = None
-                self._job_local.progress = {}
-                self._job_queue.task_done()
+                try:
+                    if job is not None:
+                        with self._job_guard:
+                            try:
+                                current = self._read_job(job_id)
+                            except (OSError, ValueError):
+                                current = copy.deepcopy(job)
+                            current.update(
+                                {key: value for key, value in job.items() if key != "progress"}
+                            )
+                            progress = current.get("progress", {})
+                            progress.update(
+                                phase="complete" if job.get("state") == "succeeded" else "failed",
+                                percent=100.0 if job.get("state") == "succeeded" else progress.get("percent"),
+                                updated_at=time.time(),
+                            )
+                            current["progress"] = progress
+                            self._persist_job_state(current)
+                        self._record_metric(
+                            "job_finished", job_id=job_id, kind=job.get("kind"), state=job.get("state"),
+                            elapsed_seconds=round(
+                                job.get("finished_at", time.time())
+                                - job.get("started_at", job.get("submitted_at", time.time())), 3,
+                            ),
+                        )
+                finally:
+                    with self._job_guard:
+                        self._active_jobs.discard(job_id)
+                        self._job_processes.pop(job_id, None)
+                    self._job_local.job_id = None
+                    self._job_local.progress = {}
+                    self._job_queue.task_done()
 
     @staticmethod
     def _compact_result(value: object, *, include_logs: bool) -> object:
@@ -2005,6 +2706,16 @@ class AgentWorkspaceManager:
         response["queue_position"] = self._queue_position(job_id)
         response["worker_count"] = self.job_workers
         response["active_job_count"] = len(self._active_jobs)
+        response["liveness"] = {
+            "owner_alive": self._job_owner_alive(job),
+            "process_alive": self._job_process_alive(job),
+            "worker_threads_alive": sum(worker.is_alive() for worker in self._job_worker_threads),
+            "heartbeat_age_seconds": (
+                round(max(0.0, now - job["heartbeat_at"]), 3) if job.get("heartbeat_at") else None
+            ),
+            "note": "Quiet or old progress alone does not establish a stalled or dead process.",
+        }
+        response["metadata_durable"] = "metadata_persistence_error" not in job
         response["elapsed_seconds"] = round(
             (job.get("finished_at", now) - job.get("started_at", job["submitted_at"])),
             3,
@@ -2023,16 +2734,20 @@ class AgentWorkspaceManager:
         response["retry_after_seconds"] = retry_after
         progress = response.get("progress")
         if job["state"] == "running" and isinstance(progress, dict):
+            progress_age = max(0.0, now - progress.get("updated_at", now))
+            progress["sample_age_seconds"] = round(progress_age, 3)
             current = progress.get("current")
             total = progress.get("total")
             phase_started = progress.get("phase_started_at")
-            if current and total and phase_started and current < total:
+            if current and total and phase_started and current < total and progress_age <= 120:
                 phase_elapsed = max(0.0, now - float(phase_started))
                 estimated_total = phase_elapsed * total / current
                 progress["estimated_remaining_seconds"] = round(
                     max(0.0, estimated_total - phase_elapsed), 1
                 )
                 progress["estimate_note"] = "Task-count estimate; Lean tasks vary in cost."
+            elif progress_age > 120:
+                progress["estimate_note"] = "Progress sample is old; no remaining-time estimate is inferred."
         if "result" in response:
             response["result"] = self._compact_result(
                 response["result"], include_logs=include_logs
@@ -2047,9 +2762,44 @@ class AgentWorkspaceManager:
         )
         return response
 
+    def diagnostics(self, token: str = "") -> dict:
+        """Bounded, read-only server filesystem and worker facts; never restores a clone."""
+        paths = {
+            "workspaces": self.root, "job_state": self.state,
+            "dependencies": self.shared, "project_cache": self.project_cache,
+            "temporary_files": Path(tempfile.gettempdir()),
+        }
+        if token:
+            meta = self._read_meta(token)
+            project = Path(meta["path"])
+            self._validate_workspace_path(token, project)
+            paths["workspace"] = project
+        filesystems = {}
+        for label, path in paths.items():
+            try:
+                stat = os.statvfs(path)
+                filesystems[label] = {
+                    "path": str(path), "device": path.stat().st_dev,
+                    "total_bytes": stat.f_blocks * stat.f_frsize,
+                    "available_bytes": stat.f_bavail * stat.f_frsize,
+                    "free_bytes": stat.f_bfree * stat.f_frsize,
+                    "total_inodes": stat.f_files, "available_inodes": stat.f_favail,
+                }
+            except OSError as exc:
+                filesystems[label] = {"path": str(path), "error": f"{type(exc).__name__}: {exc}"[-500:]}
+        return {
+            "filesystems": filesystems,
+            "worker_threads_alive": sum(worker.is_alive() for worker in self._job_worker_threads),
+            "configured_workers": self.job_workers, "active_jobs": len(self._active_jobs),
+            "nondurable_job_records": len(self._volatile_jobs),
+            "note": "Available blocks/inodes do not measure quotas or space held by deleted open files.",
+        }
+
     @_workspace_operation
     def reset(self, token: str, confirmation_token: str = "") -> dict:
         self._ensure_workspace_idle(token, "reset")
+        if self.storage_policy == "preserve":
+            raise RuntimeError("Preservation policy disables destructive workspace reset")
         meta, project = self._get(token, rehydrate=False)
         status = self._run(["git", "status", "--porcelain"], cwd=project)
         head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
@@ -2096,6 +2846,9 @@ class AgentWorkspaceManager:
     def cleanup(self, retention_days: int = 14, dry_run: bool = True, _already_locked: bool = False) -> dict:
         if not 7 <= retention_days <= 3650:
             raise ValueError("Retention must be between 7 and 3650 days")
+        requested_dry_run = dry_run
+        if self.storage_policy == "preserve":
+            dry_run = True
         cutoff = time.time() - retention_days * 86400
         archived, preserved = [], []
 
@@ -2138,23 +2891,27 @@ class AgentWorkspaceManager:
                 )
                 self._write_meta(meta)
 
-        def perform() -> None:
-            for path in self.state.glob("ws_*.json"):
+        def perform(paths: list[Path]) -> None:
+            for path in paths:
                 meta = json.loads(path.read_text(encoding="utf-8"))
                 if meta.get("last_activity", 0) >= cutoff:
                     continue
                 with self._operation_lock(meta["token"]):
                     inspect_workspace(path)
 
-        if _already_locked:
-            perform()
-        else:
-            with self._lock(self.state / ".registry.lock"):
-                perform()
+        # Snapshot the registry without holding its lock while waiting for a
+        # workspace operation. Checkpoint registration uses the opposite edge.
+        perform(list(self.state.glob("ws_*.json")))
         return {
             "dry_run": dry_run,
+            "requested_dry_run": requested_dry_run,
+            "storage_policy": self.storage_policy,
             "retention_days": retention_days,
             "archived_or_eligible": archived,
             "preserved_unpublished": preserved,
-            "policy": "Dirty or unpublished workspaces are never automatically deleted.",
+            "policy": (
+                "Preservation policy retains all workspace and build trees, including ignored files."
+                if self.storage_policy == "preserve"
+                else "Dirty or unpublished workspaces are never automatically deleted."
+            ),
         }

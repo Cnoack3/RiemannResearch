@@ -63,6 +63,7 @@ class AsyncHandlerTests(unittest.IsolatedAsyncioTestCase):
             ("agent_workspace_checkpoint", ("ws", "checkpoint"), "submit_checkpoint",
              ("ws", "checkpoint", True)),
             ("agent_workspace_job_status", ("job",), "job_status", ("job", False)),
+            ("agent_workspace_diagnostics", (), "diagnostics", ("",)),
             ("agent_workspace_list_jobs", ("ws",), "list_jobs", ("ws", 20)),
             ("agent_workspace_reset", ("ws",), "reset", ("ws", "")),
             ("agent_workspace_run_code", ("ws", "example : True := True.intro"), "submit_run_code",
