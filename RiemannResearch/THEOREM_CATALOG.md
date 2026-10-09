@@ -76,10 +76,18 @@ The decisive transitive audits use only propext, Classical.choice and Quot.sound
   Its bracket (a/e)^2 <= m2 and exact Mobius displacement identities retain
   all signed pairings, complete tails and optimizer correction terms.
 - RH/ReciprocalRadicalFourCertificate.lean and RH/ZetaTwoRadicalFourBound.lean
-  use the proved four-site identity only for the actual residual. The complete
-  signed normal equations and rational infinite-tail certificate give
-  a/e <= 39138061/126426000. Thus the actual m2 cap improves unconditionally
-  to 84107693089/730893991200 for all n>=4.
+  use the proved four-site identity only for the actual residual. The strengthened
+  196-site head plus complete infinite tail gives trace <= 8358527/9196500 < 10/11.
+  Thus a/e <= 3/10 and m2 <= 6447/57812 for every n>=4. These replace the earlier
+  caps 39138061/126426000 and 84107693089/730893991200.
+- radical_threeTenths_gap_lower retains the positive complete-tail remainder
+  (21203/101161500)*radicalTailEnergy. complete_trace_cap_lt_ten_elevenths
+  exposes the rational threshold. target_secondMoment_cap_lt_permanent_floor
+  proves 6447/57812 < (1337/3979)^2: the actual target cap is strictly below
+  the permanent lower bound for caps on every orthogonal-complement vector.
+  The strengthened infinite certificate passed coherent check
+  job_e5D6gpDX8UJ8PaoJLRgDBBdExlij0bw0 with only standard foundations.
+  See RH/TargetMomentCapSeparation20261009.md for the continuation.
 - The first-moment closure criterion and the direct harmonic resolvent recovery
   are established. riemannHypothesis_of_cofinal_firstMoment is a conditional
   research reduction: its cofinal normalized first-moment decay provider is

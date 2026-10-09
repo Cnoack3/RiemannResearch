@@ -8,7 +8,7 @@ import Mathlib.Tactic.Linarith
 Source: independently developed exact signed normal-equation calculation,
 9 October 2026. The only additional head identity is radical compatibility
 at site four. This module retains the complete signed quadratic form, proves
-a rational 34-site head certificate, and controls every remaining tail site.
+a rational 196-site head certificate, and controls every remaining tail site.
 It asserts no asymptotic decay and no compatibility of screened vectors.
 -/
 
@@ -138,67 +138,101 @@ theorem trace_summable : Summable (fun i : ℕ => traceTerm (i + 5)) := by
   intro i
   simpa only [mul_one_div] using traceTerm_le 5 (i + 5) le_rfl (by omega)
 
-set_option maxRecDepth 4096 in
-set_option maxHeartbeats 1000000 in
--- Expanding all 34 rational summands requires more arithmetic reduction steps.
-theorem finite_trace_le : (∑ i : Fin 34, traceTerm (i.val + 5)) ≤ (17 / 20 : ℝ) := by
-  norm_num [traceTerm, traceNumerator_signed, gap, Fin.sum_univ_succ]
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 8000000 in
+-- Seven short blocks avoid one excessively large simplifier expansion.
+theorem finite_trace_le :
+    (∑ i : Fin 196, traceTerm (i.val + 5)) ≤ (883 / 1000 : ℝ) := by
+  have h0 : (∑ i ∈ Finset.range 28, traceTerm (0 + i + 5)) ≤ (840429 / 1000000 : ℝ) := by
+    rw [← Fin.sum_univ_eq_sum_range]
+    norm_num [traceTerm, traceNumerator_signed, gap, Fin.sum_univ_succ]
+  have h1 : (∑ i ∈ Finset.range 28, traceTerm (28 + i + 5)) ≤ (23560 / 1000000 : ℝ) := by
+    rw [← Fin.sum_univ_eq_sum_range]
+    norm_num [traceTerm, traceNumerator_signed, gap, Fin.sum_univ_succ]
+  have h2 : (∑ i ∈ Finset.range 28, traceTerm (56 + i + 5)) ≤ (8787 / 1000000 : ℝ) := by
+    rw [← Fin.sum_univ_eq_sum_range]
+    norm_num [traceTerm, traceNumerator_signed, gap, Fin.sum_univ_succ]
+  have h3 : (∑ i ∈ Finset.range 28, traceTerm (84 + i + 5)) ≤ (4383 / 1000000 : ℝ) := by
+    rw [← Fin.sum_univ_eq_sum_range]
+    norm_num [traceTerm, traceNumerator_signed, gap, Fin.sum_univ_succ]
+  have h4 : (∑ i ∈ Finset.range 28, traceTerm (112 + i + 5)) ≤ (2470 / 1000000 : ℝ) := by
+    rw [← Fin.sum_univ_eq_sum_range]
+    norm_num [traceTerm, traceNumerator_signed, gap, Fin.sum_univ_succ]
+  have h5 : (∑ i ∈ Finset.range 28, traceTerm (140 + i + 5)) ≤ (1751 / 1000000 : ℝ) := by
+    rw [← Fin.sum_univ_eq_sum_range]
+    norm_num [traceTerm, traceNumerator_signed, gap, Fin.sum_univ_succ]
+  have h6 : (∑ i ∈ Finset.range 28, traceTerm (168 + i + 5)) ≤ (1299 / 1000000 : ℝ) := by
+    rw [← Fin.sum_univ_eq_sum_range]
+    norm_num [traceTerm, traceNumerator_signed, gap, Fin.sum_univ_succ]
+  rw [Fin.sum_univ_eq_sum_range (fun i : ℕ => traceTerm (i + 5)) 196]
+  rw [show 196 = 168 + 28 by omega, Finset.sum_range_add]
+  rw [show 168 = 140 + 28 by omega, Finset.sum_range_add]
+  rw [show 140 = 112 + 28 by omega, Finset.sum_range_add]
+  rw [show 112 = 84 + 28 by omega, Finset.sum_range_add]
+  rw [show 84 = 56 + 28 by omega, Finset.sum_range_add]
+  rw [show 56 = 28 + 28 by omega, Finset.sum_range_add]
+  simp only [Nat.zero_add] at h0
+  linarith only [h0, h1, h2, h3, h4, h5, h6]
 
 /-- The terminal remainder is retained in the finite telescoping comparison. -/
 theorem inverseSquare_tail_partial (M : ℕ) :
-    (∑ i ∈ Finset.range M, 1 / ((i + 39 : ℕ) : ℝ) ^ 2) ≤
-      1 / 38 - 1 / ((M : ℝ) + 38) := by
+    (∑ i ∈ Finset.range M, 1 / ((i + 201 : ℕ) : ℝ) ^ 2) ≤
+      1 / 200 - 1 / ((M : ℝ) + 200) := by
   induction M with
   | zero => norm_num
   | succ M ih =>
     rw [Finset.sum_range_succ]
-    have hM : (0 : ℝ) < (M : ℝ) + 38 := by positivity
-    have hM' : (0 : ℝ) < (M : ℝ) + 39 := by positivity
-    have hstep : 1 / ((M : ℝ) + 39) ^ 2 ≤
-        1 / ((M : ℝ) + 38) - 1 / ((M : ℝ) + 39) := by
-      have he : 1 / ((M : ℝ) + 38) - 1 / ((M : ℝ) + 39) =
-          1 / (((M : ℝ) + 38) * ((M : ℝ) + 39)) := by
+    have hM : (0 : ℝ) < (M : ℝ) + 200 := by positivity
+    have hM' : (0 : ℝ) < (M : ℝ) + 201 := by positivity
+    have hstep : 1 / ((M : ℝ) + 201) ^ 2 ≤
+        1 / ((M : ℝ) + 200) - 1 / ((M : ℝ) + 201) := by
+      have he : 1 / ((M : ℝ) + 200) - 1 / ((M : ℝ) + 201) =
+          1 / (((M : ℝ) + 200) * ((M : ℝ) + 201)) := by
         field_simp [ne_of_gt hM, ne_of_gt hM']
         ring
       rw [he]
       apply div_le_div_of_nonneg_left (by norm_num) (mul_pos hM hM')
       nlinarith [Nat.cast_nonneg (α := ℝ) M]
     push_cast at ih ⊢
-    rw [show (M : ℝ) + 1 + 38 = (M : ℝ) + 39 by ring]
+    rw [show (M : ℝ) + 1 + 200 = (M : ℝ) + 201 by ring]
     linarith
 
 theorem inverseSquare_tail_le :
-    (∑' i : ℕ, 1 / ((i + 39 : ℕ) : ℝ) ^ 2) ≤ 1 / 38 := by
-  have hs := (summable_nat_add_iff 39).mpr
+    (∑' i : ℕ, 1 / ((i + 201 : ℕ) : ℝ) ^ 2) ≤ 1 / 200 := by
+  have hs := (summable_nat_add_iff 201).mpr
     (Real.summable_one_div_nat_pow.mpr (by norm_num : 1 < (2 : ℕ)))
   apply le_of_tendsto' hs.hasSum.tendsto_sum_nat
   intro M
   exact (inverseSquare_tail_partial M).trans (sub_le_self _ (by positivity))
 
 theorem complete_tail_le :
-    (∑' i : ℕ, traceTerm (i + 39)) ≤ (18473 / 126426 : ℝ) := by
-  have hs := (summable_nat_add_iff 34).mpr trace_summable
+    (∑' i : ℕ, traceTerm (i + 201)) ≤ (95207 / 3678600 : ℝ) := by
+  have hs := (summable_nat_add_iff 196).mpr trace_summable
   simp only [Nat.add_assoc] at hs
-  have hbase := (summable_nat_add_iff 39).mpr
+  have hbase := (summable_nat_add_iff 201).mpr
     (Real.summable_one_div_nat_pow.mpr (by norm_num : 1 < (2 : ℕ)))
-  have hC : 0 ≤ (1421 / 900 : ℝ) / gap (31 / 100) 39 := by norm_num [gap]
+  have hC : 0 ≤ (1421 / 900 : ℝ) / gap (31 / 100) 201 := by norm_num [gap]
   calc
-    _ ≤ ∑' i : ℕ, ((1421 / 900 : ℝ) / gap (31 / 100) 39) *
-        (1 / ((i + 39 : ℕ) : ℝ) ^ 2) := by
+    _ ≤ ∑' i : ℕ, ((1421 / 900 : ℝ) / gap (31 / 100) 201) *
+        (1 / ((i + 201 : ℕ) : ℝ) ^ 2) := by
       apply Summable.tsum_le_tsum _ hs (hbase.mul_left _)
       intro i
-      simpa only [mul_one_div] using traceTerm_le 39 (i + 39) (by norm_num) (by omega)
-    _ = _ * (∑' i : ℕ, 1 / ((i + 39 : ℕ) : ℝ) ^ 2) := by rw [tsum_mul_left]
-    _ ≤ _ * (1 / 38) := mul_le_mul_of_nonneg_left inverseSquare_tail_le hC
+      simpa only [mul_one_div] using traceTerm_le 201 (i + 201) (by norm_num) (by omega)
+    _ = _ * (∑' i : ℕ, 1 / ((i + 201 : ℕ) : ℝ) ^ 2) := by rw [tsum_mul_left]
+    _ ≤ _ * (1 / 200) := mul_le_mul_of_nonneg_left inverseSquare_tail_le hC
     _ = _ := by norm_num [gap]
 
 theorem complete_trace_le :
-    (∑' i : ℕ, traceTerm (i + 5)) ≤ (1259351 / 1264260 : ℝ) := by
-  have he := trace_summable.sum_add_tsum_nat_add 34
+    (∑' i : ℕ, traceTerm (i + 5)) ≤ (8358527 / 9196500 : ℝ) := by
+  have he := trace_summable.sum_add_tsum_nat_add 196
   rw [← Fin.sum_univ_eq_sum_range] at he
   simp only [Nat.add_assoc] at he
   linarith [finite_trace_le, complete_tail_le]
 
-theorem complete_trace_cap_lt_one : (1259351 / 1264260 : ℝ) < 1 := by norm_num
+theorem complete_trace_cap_lt_one : (8358527 / 9196500 : ℝ) < 1 := by norm_num
+
+/-- The complete trace is small enough to retain a full one-percent norm margin. -/
+theorem complete_trace_cap_lt_ten_elevenths :
+    (8358527 / 9196500 : ℝ) < 10 / 11 := by norm_num
 
 end RiemannResearch.RH.ReciprocalRadicalFourCertificate

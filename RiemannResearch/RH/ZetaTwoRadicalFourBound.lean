@@ -191,7 +191,7 @@ theorem radical_headForm_le_tail (f : QHilbert)
     (h5 : inner ℝ (qResidue 5) f = 0)
     (h4 : qSequence f 4 = -qSequence f 1 + qSequence f 2 + qSequence f 3) :
     headForm (qSequence f 1) (qSequence f 2) (qSequence f 3) ≤
-      (1259351 / 1264260 : ℝ) * radicalTailEnergy f := by
+      (8358527 / 9196500 : ℝ) * radicalTailEnergy f := by
   have hn := radical_signed_normal_equations f h2 h3 h5 h4
   have hc1 (k : ℕ) (hk : 5 ≤ k) :
       componentGram (223 / 320) transformedOne k ≤ traceTerm k := by
@@ -296,19 +296,30 @@ theorem radicalTail_controls_rawTail (f : QHilbert) :
     (show 0 ≤ rawSquare f (i + 5) by unfold rawSquare; positivity)
   simpa only [gap, Nat.cast_add, Nat.cast_ofNat, one_div] using hp
 
-/-- Retaining both the strict tail margin and the head margin sharpens 31/100. -/
-theorem radical_firstMoment_le_margin (f : QHilbert)
+/-- The exact signed gap retains a positive multiple of the complete tail. -/
+theorem radical_threeTenths_gap_lower (f : QHilbert)
     (h2 : inner ℝ (qResidue 2) f = 0) (h3 : inner ℝ (qResidue 3) f = 0)
     (h5 : inner ℝ (qResidue 5) f = 0)
     (h4 : qSequence f 4 = -qSequence f 1 + qSequence f 2 + qSequence f 3) :
-    inner ℝ f (reciprocalD f) ≤ (39138061 / 126426000 : ℝ) * ‖f‖ ^ 2 := by
+    (21203 / 101161500 : ℝ) * radicalTailEnergy f ≤
+      zetaTwo * ((3 / 10 : ℝ) * ‖f‖ ^ 2 - inner ℝ f (reciprocalD f)) := by
   have he := radical_gap_exact f h4
   have hJ := radical_headForm_le_tail f h2 h3 h5 h4
   have ht := radicalTail_controls_rawTail f
   have hn := radical_norm_exact f h4
-  have hh := headNorm_nonneg (qSequence f 1) (qSequence f 2) (qSequence f 3)
-  have hz : 0 ≤ zetaTwo * ((39138061 / 126426000 : ℝ) * ‖f‖ ^ 2 -
-      inner ℝ f (reciprocalD f)) := by nlinarith
+  nlinarith
+
+/-- Retaining the full positive tail margin sharpens 31/100 to 3/10. -/
+theorem radical_firstMoment_le_margin (f : QHilbert)
+    (h2 : inner ℝ (qResidue 2) f = 0) (h3 : inner ℝ (qResidue 3) f = 0)
+    (h5 : inner ℝ (qResidue 5) f = 0)
+    (h4 : qSequence f 4 = -qSequence f 1 + qSequence f 2 + qSequence f 3) :
+    inner ℝ f (reciprocalD f) ≤ (3 / 10 : ℝ) * ‖f‖ ^ 2 := by
+  have hg := radical_threeTenths_gap_lower f h2 h3 h5 h4
+  have hT := radicalTail_nonneg f
+  have hz : 0 ≤ zetaTwo * ((3 / 10 : ℝ) * ‖f‖ ^ 2 -
+      inner ℝ f (reciprocalD f)) :=
+    (mul_nonneg (by norm_num : (0 : ℝ) ≤ 21203 / 101161500) hT).trans hg
   have hgap := (mul_nonneg_iff_of_pos_left zetaTwo_pos).mp hz
   linarith
 
@@ -343,7 +354,7 @@ theorem residual_firstMoment_normalized_le (n : ℕ) (hn : 4 ≤ n) :
 
 theorem residual_firstMoment_le_margin (n : ℕ) (hn : 4 ≤ n) :
     inner ℝ (residual n) (reciprocalD (residual n)) ≤
-      (39138061 / 126426000 : ℝ) * error n := by
+      (3 / 10 : ℝ) * error n := by
   have hg := stage_contains_two_three n (by omega)
   have hg5 := ZetaTwoConductorFiveBound.stage_contains_five n hn
   exact radical_firstMoment_le_margin (residual n)
@@ -354,7 +365,7 @@ theorem residual_firstMoment_le_margin (n : ℕ) (hn : 4 ≤ n) :
 
 theorem residual_firstMoment_normalized_le_margin (n : ℕ) (hn : 4 ≤ n) :
     inner ℝ (residual n) (reciprocalD (residual n)) / error n ≤
-      (39138061 / 126426000 : ℝ) := by
+      (3 / 10 : ℝ) := by
   exact (div_le_iff₀ (error_pos n)).mpr (residual_firstMoment_le_margin n hn)
 
 theorem target_cap_below_permanent_floor : (31 / 100 : ℝ) < 1337 / 3979 := by norm_num

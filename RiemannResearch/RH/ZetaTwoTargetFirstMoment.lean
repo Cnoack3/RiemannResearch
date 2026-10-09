@@ -281,21 +281,26 @@ theorem firstMoment_eq_mobius_signed_displacement (n : ℕ) :
 /-- The actual residual has its proved radical constraint. This cap is not
 asserted for the screened reciprocal image. -/
 theorem firstMoment_le_radical_margin (n : ℕ) (hn : 4 ≤ n) :
-    firstMoment n ≤ (39138061 / 126426000 : ℝ) :=
+    firstMoment n ≤ (3 / 10 : ℝ) :=
   ZetaTwoRadicalFourBound.residual_firstMoment_normalized_le_margin n hn
 
 theorem secondMoment_le_radical_margin (n : ℕ) (hn : 4 ≤ n) :
-    secondMoment n ≤ (84107693089 / 730893991200 : ℝ) := by
+    secondMoment n ≤ (6447 / 57812 : ℝ) := by
   calc
     _ ≤ (10745 / 28906 : ℝ) * firstMoment n := secondMoment_le_firstMoment n hn
-    _ ≤ (10745 / 28906 : ℝ) * (39138061 / 126426000 : ℝ) :=
+    _ ≤ (10745 / 28906 : ℝ) * (3 / 10 : ℝ) :=
       mul_le_mul_of_nonneg_left (firstMoment_le_radical_margin n hn) (by norm_num)
     _ = _ := by norm_num
+
+/-- The actual target cap is strictly below the permanent lower bound for a
+cap covering the entire squarefree-stage orthogonal complement. -/
+theorem target_secondMoment_cap_lt_permanent_floor :
+    (6447 / 57812 : ℝ) < (1337 / 3979 : ℝ) ^ 2 := by norm_num
 
 /-- The fixed saving bounds the entire signed correction assembly. -/
 theorem completeCorrection_le_radical_margin (n : ℕ) (hn : 4 ≤ n) :
     (quarticFloor n + weightedMismatch n - screening n) / error n ≤
-      (84107693089 / 730893991200 : ℝ) := by
+      (6447 / 57812 : ℝ) := by
   have h := secondMoment_le_radical_margin n hn
   rw [secondMoment, screenedResidual_energy_exact, signedCorrection,
     ← add_sub_assoc] at h

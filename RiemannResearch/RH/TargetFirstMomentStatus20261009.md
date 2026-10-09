@@ -1,5 +1,13 @@
 # Target-specific reciprocal moments and an unconditional first-moment saving
 
+> Later continuation, 9 October 2026: the current Lean statements sharpen
+> the all-stage bounds to a/e <= 3/10 and m2 <= 6447/57812 for n>=4.
+> The complete trace is at most 8358527/9196500 < 10/11, retaining every
+> tail site. The actual second-moment cap is strictly below the permanent
+> universal floor (1337/3979)^2. See `TargetMomentCapSeparation20261009.md`.
+> The previous certificate and its verification record are preserved below
+> as the historical calculation. Cofinal decay and RH remain open.
+
 Research date: 9 October 2026. Starting point:
 `d14989c6eb04be046707e69c72d4e1431e43e1ec`.
 
