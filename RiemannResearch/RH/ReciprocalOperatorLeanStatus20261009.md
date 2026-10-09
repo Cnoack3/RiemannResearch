@@ -180,9 +180,13 @@ provider
  \qquad\kappa_j\longrightarrow\infty.
 \]
 
-Larger conductor sets can provide further exact zero charges, but a uniform
-sequence of quantitative head-recovery certificates tending to zero is not
-supplied here. No unconditional proof of RH is claimed.
+Larger conductor sets can provide further exact zero charges. However,
+ZetaTwoReciprocalObstruction.lean now proves universal first-moment caps on
+the entire squarefree-stage orthogonal complement are at least 1/3, and
+universal compressed-square caps are at least 1/9, at every stage. Such caps
+cannot tend to zero, including under RH. The actual target residual's moment
+can still vanish; its estimate needs target-specific arithmetic cancellation.
+No unconditional proof of RH is claimed. See TargetSpecificReciprocalAdvance20261009.md.
 
 Web documentation was consulted for Mathlib's infinite-sum, Cauchy, and
 projection APIs. Wolfram Language exact arithmetic independently checked the

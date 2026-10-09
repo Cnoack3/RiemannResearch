@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.ZetaTwoOptimizerStage
+import RiemannResearch.RH.ZetaTwoRadicalRowCriterion
 import RiemannResearch.RH.SquarefreeParetoTransfer
 
 /-!
@@ -179,5 +180,20 @@ theorem riemannHypothesis_of_cofinal_positiveCorrection_decay
   riemannHypothesis_of_qOne_mem_squarefree_closure
     (ZetaTwoOptimizerStage.mem_closure_of_cofinal_positiveCorrection_decay
       κ hκ hcorrection)
+
+/-- Conditional research reduction: all fixed squarefree signed reciprocal
+base differences vanish along one common cofinal sequence. The actual strong
+limit, inverse-square summability, and Mellin transfer are supplied internally.
+The base-decay hypothesis remains an Open arithmetic provider. -/
+theorem riemannHypothesis_of_cofinal_squarefree_reciprocal_differences
+    (κ : ℕ → ℕ) (hκ : Tendsto κ atTop atTop)
+    (hbase : ∀ a : ℕ, 2 ≤ a → Squarefree a →
+      Tendsto (fun j =>
+        SquarefreeRadicalDifference.qDifference
+          (reciprocalD (ZetaTwoOptimizerStage.residual (κ j))) a)
+        atTop (𝓝 0)) : RiemannHypothesis :=
+  riemannHypothesis_of_qOne_mem_squarefree_closure
+    (ZetaTwoRadicalRowCriterion.mem_closure_of_cofinal_squarefree_reciprocal_differences
+      κ hκ hbase)
 
 end RiemannResearch.RH.ZetaTwoParetoTransfer

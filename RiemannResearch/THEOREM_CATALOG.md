@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Target-specific reciprocal bases and permanent universal-cap obstruction (2026-10-09)
+
+Twenty-five structural theorems pass coherent source-body checks and axiom audits
+using only propext, Classical.choice, and Quot.sound. A twenty-sixth theorem
+assembles their cofinal consumer with the existing Mellin RH transfer; native
+validation and publication remain checkpoint-gated.
+
+- Analysis/RadicalDifferenceTotality.lean adds squarefree-base linear rigidity,
+  zero detection from inverse-index decay or summability, and finite stability
+  of both coordinate and backward-difference errors.
+- RH/ZetaTwoRadicalRowCriterion.lean proves the actual projection-residual
+  radical relation and exact squarefree closure criterion using signed
+  reciprocal differences only at fixed squarefree bases, with a cofinal
+  consumer requiring no division by the moving error.
+- RH/ZetaTwoReciprocalObstruction.lean realizes the literal four-site dual in
+  QHilbert and proves all-stage universal first-moment and compressed-square
+  caps are at least 1/3 and 1/9. Its complete signed reciprocal row survives
+  screening. These lower bounds concern all-direction caps, not the target
+  residual's moment.
+- RH/ZetaTwoParetoTransfer.riemannHypothesis_of_cofinal_squarefree_reciprocal_differences
+  is a conditional research reduction. Its infinitely many fixed-base decay
+  inputs remain Open. RH is not proved.
+
+Bagchi's squarefree converse is established in the literature; the missing
+kernel-verified analytic provider is kept separate. The full trigamma-tail
+error certificate and gradient noncoercivity are paper results, not newly
+formalized Hilbert applications. See RH/TargetSpecificReciprocalAdvance20261009.md.
+
 ### Complete actual reciprocal-operator bounds (2026-10-09)
 
 73 public theorems in five modules complete the infinite reciprocal certificate

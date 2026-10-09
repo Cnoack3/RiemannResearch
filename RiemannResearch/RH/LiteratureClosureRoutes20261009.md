@@ -4,11 +4,11 @@ Search date: 2026-10-09.
 
 ## Search result
 
-The reviewed literature supplies nearby RH criteria and lower bounds, but no
-source located here proves the repository's remaining squarefree-only converse
-or the positive signed-correction decay for its actual optimizer stages. The
-references below therefore guide provider work; none is treated as a Lean
-hypothesis discharged by citation.
+Bagchi's Remarks 4 and 8 establish the squarefree-only converse at paper
+level. The missing dependency is its kernel-verified analytic provider in this
+repository. No reviewed source establishes positive signed-correction decay
+for the actual optimizer stages. No citation is used as a Lean hypothesis
+discharged by literature alone.
 
 ## Integer-dilation criterion
 
@@ -20,7 +20,24 @@ using all positive integer dilations of the fractional-part function.
 The repository's target is closure under its squarefree residue family.
 The all-integer theorem does not by itself imply membership in the smaller
 squarefree-generated closure. Thus it cannot close the formal
-RH-to-squarefree-approximation direction; that direction stays Open.
+RH-to-squarefree-approximation direction; that formal provider stays Open.
+
+## Published squarefree converse
+
+B. Bagchi, *On Nyman, Beurling and Baez-Duarte's Hilbert space reformulation
+of the Riemann hypothesis*, <https://arxiv.org/pdf/math/0607733>, Remark 4
+(PDF p.6) identifies squarefree support of the damped Mobius approximants;
+Remark 8 (PDF p.9) states the squarefree target-closure equivalence for the
+exact Pareto residue model. Real coefficients suffice by taking real parts.
+
+For Q(k)=1/(zeta(2) k^2), the full norms obey
+||x||_P^2 <= zeta(2)||x||_Q^2 <= 2||x||_P^2. Thus identical squarefree
+approximants converge in either norm. Their Gram matrices are not identified.
+The published analytic converse is established; its unconditional kernel
+provider remains Open. Squarefree target membership does not assert
+squarefree totality in the ambient Hilbert space.
+
+See RH/TargetSpecificReciprocalAdvance20261009.md.
 
 ## Burnol's approximation lower bound
 

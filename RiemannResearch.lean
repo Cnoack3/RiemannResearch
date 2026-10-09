@@ -1,3 +1,5 @@
+import RiemannResearch.RH.ZetaTwoReciprocalObstruction
+import RiemannResearch.RH.ZetaTwoRadicalRowCriterion
 import RiemannResearch.Analysis.RadicalDifferenceTotality
 import RiemannResearch.RH.SquarefreeRadicalDifference
 import RiemannResearch.RH.ReciprocalHeadCertificate
