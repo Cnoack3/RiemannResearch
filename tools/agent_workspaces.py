@@ -59,6 +59,22 @@ def _workspace_operation(method):
     return locked
 
 
+def _lake_cache_operation(method):
+    @wraps(method)
+    def locked(self, args, **kwargs):
+        cache = os.environ.get("LAKE_CACHE_DIR")
+        if not os.environ.get("LEAN_REMOTE_CACHE_SERVICE") or not cache or args[0] != "lake":
+            return method(self, args, **kwargs)
+        root = Path(cache).expanduser().resolve()
+        try:
+            with self._lock(root.parent / f".{root.name}.lock", shared=True):
+                return method(self, args, **kwargs)
+        finally:
+            if args[:2] == ["lake", "build"] and "-o" not in args:
+                self._prune_native_cache()
+    return locked
+
+
 class AgentWorkspaceManager:
     def __init__(
         self,
@@ -167,6 +183,7 @@ class AgentWorkspaceManager:
     def _workspace_label(token: str) -> str:
         return hashlib.sha256(token.encode("utf-8")).hexdigest()[:12]
 
+    @_lake_cache_operation
     def _run(
         self,
         args: list[str],
@@ -257,6 +274,7 @@ class AgentWorkspaceManager:
             return None
         return int(match.group(1)), int(match.group(2)), match.group(3).strip()
 
+    @_lake_cache_operation
     def _run_streaming(
         self,
         args: list[str],
@@ -286,6 +304,8 @@ class AgentWorkspaceManager:
                     ["lake", "cache", "put", mappings, *options],
                     cwd=cwd, timeout=timeout, phase="remote_cache_upload",
                 )
+                if self.can_archive is None or self.can_archive(cwd):
+                    self._remove_setup_files(cwd)
                 return output
         started = time.monotonic()
         self._set_job_progress(phase, detail="Starting " + " ".join(args), force=True)
@@ -295,6 +315,7 @@ class AgentWorkspaceManager:
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             bufsize=0,
+            start_new_session=True,
             env={
                 **os.environ,
                 "GIT_TERMINAL_PROMPT": "0",
@@ -311,8 +332,7 @@ class AgentWorkspaceManager:
         try:
             while True:
                 if time.monotonic() > deadline:
-                    process.kill()
-                    process.wait()
+                    self._kill_verification_group(process)
                     raise subprocess.TimeoutExpired(args, timeout, output=output[-8000:])
                 events = selector.select(timeout=1.0)
                 for key, _ in events:
@@ -418,6 +438,37 @@ class AgentWorkspaceManager:
                     args, cwd=project, timeout=timeout, phase="building"
                 )
         return output, cache
+
+    @staticmethod
+    def _remove_setup_files(project: Path) -> None:
+        for path in (project / ".lake" / "build" / "ir").rglob("*.setup.json"):
+            path.unlink(missing_ok=True)
+
+    def _prune_native_cache(self) -> None:
+        cache = os.environ.get("LAKE_CACHE_DIR")
+        if not os.environ.get("LEAN_REMOTE_CACHE_SERVICE") or not cache:
+            return
+        root = Path(cache).expanduser().resolve()
+        with self._lock(root.parent / f".{root.name}.lock"):
+            files = []
+            for name in ("artifacts", "outputs", "revisions"):
+                for path in (root / name).rglob("*"):
+                    if path.is_file() and not path.is_symlink():
+                        stat = path.stat()
+                        files.append((stat.st_mtime_ns, str(path), stat.st_size))
+            size = sum(item[2] for item in files)
+            for _, path, length in sorted(files):
+                if size <= 20 * 1024**3:
+                    break
+                Path(path).unlink()
+                size -= length
+                parent = Path(path).parent
+                while parent != root:
+                    try:
+                        parent.rmdir()
+                    except OSError:
+                        break
+                    parent = parent.parent
 
     @contextmanager
     def _lock(self, path: Path, *, shared: bool = False) -> Iterator[None]:
@@ -600,6 +651,8 @@ class AgentWorkspaceManager:
                 os.replace(temporary, destination)
             finally:
                 shutil.rmtree(temporary, ignore_errors=True)
+        if os.environ.get("LEAN_REMOTE_CACHE_SERVICE"):
+            self._remove_setup_files(project)
         return {
             "restored": True,
             "commit": commit,
@@ -608,6 +661,8 @@ class AgentWorkspaceManager:
         }
 
     def _publish_project_cache(self, project: Path) -> dict:
+        if os.environ.get("LEAN_REMOTE_CACHE_SERVICE"):
+            return {"published": False, "reason": "native remote cache replaces commit snapshots"}
         status = self._run(["git", "status", "--porcelain"], cwd=project)
         if status:
             return {"published": False, "reason": "workspace source is dirty"}
@@ -2179,3 +2234,4 @@ class AgentWorkspaceManager:
             "preserved_unpublished": preserved,
             "policy": "Dirty or unpublished workspaces are never automatically deleted.",
         }
+
