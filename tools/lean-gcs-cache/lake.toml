@@ -1,8 +1,0 @@
-cache.defaultService = "lean-gcs"
-cache.defaultUploadService = "lean-gcs"
-
-[[cache.service]]
-name = "lean-gcs"
-kind = "s3"
-artifactEndpoint = "http://127.0.0.1:8765/a0"
-revisionEndpoint = "http://127.0.0.1:8765/r0"

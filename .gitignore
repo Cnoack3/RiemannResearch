@@ -1,5 +1,2 @@
 /.lake
 __pycache__/
-
-# GCS cache credentials belong outside the repository.
-hmac.json

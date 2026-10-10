@@ -124,11 +124,6 @@ RESETTABLE_UNTRACKED_ROOT_SUFFIXES = WRITABLE_SUFFIXES | {".txt"}
 
 
 def _run(args: list[str], *, input_text: str | None = None, timeout: int = 60) -> str:
-    if args[:2] == ["lake", "build"] and os.environ.get("LEAN_REMOTE_CACHE_URL"):
-        if input_text is not None:
-            raise ValueError("Cached Lake builds do not accept stdin")
-        output, _ = AGENT_WORKSPACES._run_lake_build(PROJECT_ROOT, args, timeout=timeout)
-        return output
     completed = subprocess.run(
         args,
         cwd=PROJECT_ROOT,
