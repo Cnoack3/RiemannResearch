@@ -386,6 +386,9 @@ class AgentWorkspaceManager:
     def _run_lake_build(
         self, project: Path, args: list[str], *, timeout: int = 3600
     ) -> tuple[str, dict]:
+        if os.environ.get("LEAN_REMOTE_CACHE_URL"):
+            from lean_remote_cache import run_cached_build
+            return run_cached_build(self, project, args, timeout=timeout)
         key, cache = self._dependency_cache_preflight(project)
         if cache["status"] == "complete":
             output = self._run_streaming(
