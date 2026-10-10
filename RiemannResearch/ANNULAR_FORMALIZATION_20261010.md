@@ -6,6 +6,13 @@ theorems. This establishes their stated propositions with their stated
 hypotheses; it does not establish the hypotheses of the remaining arithmetic
 providers or prove RH.
 
+Later continuation: five exported lattice/energy modules add 49 public
+theorems, including the sharp actual lattice bound `10/(27*x^2)`, actual
+weighted membership for `a>-2`, analytic correction control on `Re(z)>-2`,
+and bounded, convergent critical-energy transfer. `ActualLatticeDecay` is
+now discharged. See `RH/AnnularLatticeContinuation20261010.md` for its
+separate verification scope.
+
 ## Exact verification evidence
 
 | Item | Recorded value |
@@ -78,8 +85,10 @@ in `research/paper_claim_coverage.md`.
 5. **Kernel, spline, and lattice analysis:** evaluated Riesz/background kernels,
    annular diagonal transformations and endpoint weights, weighted-PNT
    diagonal asymptotics, `C^1`/distributional spline properties, actual Fourier
-   formulas, Poisson lattice corrections and constants, additive Parseval,
-   high-frequency envelopes, central-window reduction, and `ActualLatticeDecay`.
+   formulas, Fourier/Poisson lattice identities, additive Parseval,
+   high-frequency envelopes, and central-window reduction.
+   The scalar `ActualLatticeDecay` obligation is discharged by the later
+   annular lattice continuation; the separate Fourier identities remain open.
 6. **Actual model asymptotics:** `TriangularSingularSeriesProvider`, real
    interpolation, exact convolution transport, weighted-PNT model estimates,
    integral identification of `I` and `J`, `ModelConvergentRemainder`, and

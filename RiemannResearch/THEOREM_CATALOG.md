@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Exact annular lattice decay and arithmetic energy transfer (2026-10-10)
+
+- RH/AnnularLatticeCorrection.lean proves the exact all-positive-real-cutoff
+  Bernoulli remainder, including fractional endpoints. RH/AnnularLatticeBounds
+  proves the sharp bound |delta(x)| <= 10/(27*x^2), equality at x=8/3, and
+  optimality of the global coefficient. No prime-correlation premise is used.
+- Analysis/SignedLatticeEnergy.lean retains the full signed cross term and
+  correction square. RH/AnnularCriticalEnergyTransfer proves the actual
+  ActualLatticeDecay provider, all-real-cutoff energy difference bound
+  1105/5832, and convergence to the absolutely convergent signed integral.
+  The actual prime and centered O(log X) critical-energy bounds are equivalent.
+- Analysis/ActualAnnularLatticeWeighted.lean proves actual global measurability,
+  lattice membership in H_a for a>-2, norm square <=100/(729*(2a+4)), and
+  equivalence of actual prime/centered membership on that range. Its Mellin
+  transform is analytic on Re(z)>-2, with square norm bound
+  100/(729*(Re(z)+2)^2), and uniform square bound 25/729 on Re(z)>0.
+- These five modules contain 49 public theorems. The combined server source
+  check succeeded; final project validation is the introducing checkpoint.
+  See RH/AnnularLatticeContinuation20261010.md for declarations and evidence.
+- The RH and signed-residual wrappers are conditional research reductions:
+  ActualRHEnergyCriterion and ActualModelLogBound remain Open as stated.
+  ActualSignedResidualUpperBound and infinite prime-vector control remain Open.
+
 ### Annular arithmetic, Mellin evaluations, and exact residuals (2026-10-10)
 
 - RH/AnnularArithmeticWeight and AnnularArithmeticIntegrals prove the actual

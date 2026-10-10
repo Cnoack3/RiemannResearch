@@ -229,7 +229,8 @@ theorem riemannHypothesis_iff_signedResidualUpperBound
     RiemannHypothesis ↔ ActualSignedResidualUpperBound :=
   hcriterion.trans (actualEnergyUpperBound_iff_signedResidualUpperBound hmodel)
 
-/-- Open Poisson/spline obligation for the actual lattice correction. -/
+/-- Inverse-square lattice property, discharged by the companion theorem
+`AnnularCriticalEnergy.actualLatticeDecay`. -/
 def ActualLatticeDecay : Prop :=
   ∃ C : ℝ, ∀ x : ℝ, 1 ≤ x →
     |actualLatticeCorrection x| ≤ C / x ^ 2
