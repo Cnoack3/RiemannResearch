@@ -10,6 +10,7 @@ import asyncio
 import hashlib
 import os
 import re
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -21,7 +22,7 @@ from lean_lsp_mcp.server import mcp
 from mcp.server.fastmcp import Context
 from pydantic import BaseModel, ConfigDict
 
-from agent_workspaces import AgentWorkspaceManager
+from agent_workspaces import AgentWorkspaceManager, TOKEN_RE
 
 
 WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive, sensibly named modules with focused imports; checkpoint rejects umbrella `import Mathlib` and unexported root-level modules. A long cohesive theorem may remain in one file; split by mathematical responsibility, not an arbitrary line count. Checkpoints skip Lean for documentation-only changes and otherwise build changed modules plus local reverse dependents; lean_build remains an explicit queued full-project validation and should not run immediately before checkpoint. If lakefile.toml changes, queue agent_workspace_update_deps once before further validation. Exact dependency configurations and binary artifacts are shared by content key; cache preparation is protected and project builds are clone-local. Poll queued work no sooner than retry_after_seconds and never resubmit it; running status includes phase and Lake task progress. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
@@ -91,9 +92,23 @@ lean_client_utils._MAX_SHARED_CLIENTS = MAX_SHARED_LEAN_CLIENTS
 MAX_READ_BYTES = 1_000_000
 MAX_PATCH_BYTES = 2_000_000
 
+# Keep closing/detached clients visible until their process has actually exited.
+# A None value claims a workspace before the language server starts.
+_cache_clients: dict[Path, object | None] = {}
+
+
+def _client_process_running(client) -> bool:
+    process = getattr(getattr(client, "_transport", None), "_proc", None)
+    return client.alive or (process is not None and process.returncode is None)
+
 
 def _workspace_can_archive(project: Path) -> bool:
     key = project.resolve(strict=False)
+    client = _cache_clients.get(key)
+    if key in _cache_clients:
+        if client is None or _client_process_running(client):
+            return False
+        _cache_clients.pop(key)
     return (
         key not in lean_client_utils._shared_clients
         and key not in lean_client_utils._builds_in_progress
@@ -106,6 +121,83 @@ AGENT_WORKSPACES = AgentWorkspaceManager(
     can_archive=_workspace_can_archive,
     retention_days=WORKSPACE_RETENTION_DAYS,
 )
+
+_original_start_client = lean_client_utils._start_client
+_original_evict_client = lean_client_utils._evict_oldest_client
+
+
+async def _start_cached_client(project: Path):
+    if not os.environ.get("LEAN_REMOTE_CACHE_SERVICE"):
+        return await _original_start_client(project)
+    project = project.resolve(strict=False)
+    with AGENT_WORKSPACES._outputs_guard:
+        previous = _cache_clients.get(project)
+        if previous is not None and _client_process_running(previous):
+            raise ValueError("The previous Lean server is still closing; retry shortly")
+        _cache_clients[project] = None
+    client = None
+    try:
+        wrapper = Path(__file__).with_name("lean_cache_lake.py")
+        lake = shutil.which("lake")
+        if not lake:
+            raise ValueError("Lake executable was not found")
+        client = lean_client_utils.AsyncLeanLSPClient(
+            str(project), max_workers=lean_client_utils._max_opened_files(),
+            server_command=[
+                # Lake sets LAKE itself. Override it after its environment is
+                # applied, so the server's setup-file children reach our wrapper.
+                lake, "env", "env", "-u", "LEAN_NATIVE_CACHE_LOCK_HELD", f"LAKE={wrapper}",
+                f"LEAN_CACHE_LAKE_BINARY={lake}", "LAKE_RESTORE_ARTIFACTS=true",
+                "lean", "--server", "-Dserver.reportDelayMs=0",
+            ],
+        )
+        await client.start()
+        return client
+    except BaseException:
+        if client is not None:
+            try:
+                await client.close()
+            except Exception:
+                lean_client_utils.logger.exception("Failed Lean client cleanup for %s", project)
+        raise
+    finally:
+        with AGENT_WORKSPACES._outputs_guard:
+            if client is not None and _client_process_running(client):
+                _cache_clients[project] = client
+            else:
+                _cache_clients.pop(project, None)
+
+
+def _cleanup_closed_client_outputs(project: Path) -> None:
+    token = project.parent.name
+    if project.parent.parent != AGENT_WORKSPACES.root or not TOKEN_RE.fullmatch(token):
+        return
+    try:
+        AGENT_WORKSPACES._ensure_workspace_idle(token, "clean generated outputs")
+    except (ValueError, RuntimeError):
+        return
+    with AGENT_WORKSPACES._operation_lock(token), AGENT_WORKSPACES._native_cache_lock():
+        try:
+            AGENT_WORKSPACES._ensure_workspace_idle(token, "clean generated outputs")
+        except RuntimeError:
+            return
+        AGENT_WORKSPACES._cleanup_workspace_outputs(project)
+        AGENT_WORKSPACES._prune_native_cache()
+
+
+async def _evict_cached_client() -> None:
+    project = next(iter(lean_client_utils._shared_clients))
+    client = lean_client_utils._shared_clients[project]
+    await _original_evict_client()
+    if not _client_process_running(client):
+        try:
+            await asyncio.to_thread(_cleanup_closed_client_outputs, project)
+        except OSError:
+            lean_client_utils.logger.exception("Deferred output cleanup failed for %s", project)
+
+
+lean_client_utils._start_client = _start_cached_client
+lean_client_utils._evict_oldest_client = _evict_cached_client
 
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
@@ -1017,3 +1109,4 @@ for _tool in mcp._tool_manager.list_tools():
 
 if __name__ == "__main__":
     raise SystemExit(lean_lsp_main())
+

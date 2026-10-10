@@ -36,6 +36,7 @@ DEFAULT_READ_CHARS = 20_000
 MAX_METRICS_BYTES = 5_000_000
 PROGRESS_UPDATE_SECONDS = 60
 MAX_VERIFICATION_OUTPUT_BYTES = 32_000
+NATIVE_CACHE_MAX_BYTES = 100 * 1024**3
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
     ".gitignore", "AGENTS.md", "README.md", "RiemannResearch.lean", "lakefile.toml"
@@ -44,6 +45,13 @@ ROOT_READABLE = ROOT_WRITABLE | {
     "lake-manifest.json", "lakefile.toml", "lean-toolchain"
 }
 WRITABLE_SUFFIXES = {".lean", ".md", ".toml", ".yml", ".yaml", ".json"}
+
+
+class LakeCommandError(RuntimeError):
+    def __init__(self, args: list[str], returncode: int, output: str) -> None:
+        self.returncode = returncode
+        self.output = output
+        super().__init__(f"Command failed ({returncode}): {' '.join(args)}\n{output[-8000:]}")
 
 
 def _workspace_operation(method):
@@ -65,9 +73,8 @@ def _lake_cache_operation(method):
         cache = os.environ.get("LAKE_CACHE_DIR")
         if not os.environ.get("LEAN_REMOTE_CACHE_SERVICE") or not cache or args[0] != "lake":
             return method(self, args, **kwargs)
-        root = Path(cache).expanduser().resolve()
         try:
-            with self._lock(root.parent / f".{root.name}.lock", shared=True):
+            with self._native_cache_lock():
                 return method(self, args, **kwargs)
         finally:
             if args[:2] == ["lake", "build"] and "-o" not in args:
@@ -141,6 +148,8 @@ class AgentWorkspaceManager:
         self._metrics_guard = threading.Lock()
         self._job_local = threading.local()
         self._operation_local = threading.local()
+        self._cache_local = threading.local()
+        self._outputs_guard = threading.RLock()
         self._active_jobs: set[str] = set()
         # A lifetime lease distinguishes another live manager from an actual
         # restart. The OS releases it on process exit, including SIGKILL.
@@ -202,11 +211,7 @@ class AgentWorkspaceManager:
             capture_output=True,
             timeout=timeout,
             check=False,
-            env={
-                **os.environ,
-                "GIT_TERMINAL_PROMPT": "0",
-                "LEAN_NUM_THREADS": str(lean_num_threads or self.lean_num_threads),
-            },
+            env=self._child_env(lean_num_threads or self.lean_num_threads),
         )
         output = (result.stdout + result.stderr).strip()
         self._record_metric(
@@ -290,22 +295,29 @@ class AgentWorkspaceManager:
             with tempfile.TemporaryDirectory(prefix="lake-cache-") as tmp:
                 mappings = str(Path(tmp) / "outputs.jsonl")
                 try:
-                    self._run_streaming(
-                        ["lake", "cache", "get", "--mappings-only", *options],
-                        cwd=cwd, timeout=timeout, phase="remote_cache_restore",
+                    output = self._run_streaming(
+                        ["lake", "--no-build", *args[1:], "-o", mappings],
+                        cwd=cwd, timeout=timeout, phase=phase,
                     )
-                except RuntimeError as exc:
-                    if "no outputs found" not in str(exc):
+                except LakeCommandError as exc:
+                    if exc.returncode != 3:
                         raise
-                output = self._run_streaming(
-                    [*args, "-o", mappings], cwd=cwd, timeout=timeout, phase=phase,
-                )
+                    try:
+                        self._run_streaming(
+                            ["lake", "cache", "get", "--mappings-only", *options],
+                            cwd=cwd, timeout=timeout, phase="remote_cache_restore",
+                        )
+                    except RuntimeError as restore_error:
+                        if "no outputs found" not in str(restore_error):
+                            raise
+                    output = self._run_streaming(
+                        [*args, "-o", mappings], cwd=cwd, timeout=timeout, phase=phase,
+                    )
                 self._run_streaming(
                     ["lake", "cache", "put", mappings, *options],
                     cwd=cwd, timeout=timeout, phase="remote_cache_upload",
                 )
-                if self.can_archive is None or self.can_archive(cwd):
-                    self._remove_setup_files(cwd)
+                self._cleanup_workspace_outputs(cwd)
                 return output
         started = time.monotonic()
         self._set_job_progress(phase, detail="Starting " + " ".join(args), force=True)
@@ -316,11 +328,7 @@ class AgentWorkspaceManager:
             stderr=subprocess.STDOUT,
             bufsize=0,
             start_new_session=True,
-            env={
-                **os.environ,
-                "GIT_TERMINAL_PROMPT": "0",
-                "LEAN_NUM_THREADS": str(self.lake_build_threads),
-            },
+            env=self._child_env(self.lake_build_threads),
         )
         if process.stdout is None:
             raise RuntimeError("Failed to capture command output")
@@ -383,9 +391,7 @@ class AgentWorkspaceManager:
             output_chars=len(output),
         )
         if process.returncode:
-            raise RuntimeError(
-                f"Command failed ({process.returncode}): {' '.join(args)}\n{output[-8000:]}"
-            )
+            raise LakeCommandError(args, process.returncode, output)
         return output
 
     def _dependency_cache_preflight(self, project: Path) -> tuple[str, dict]:
@@ -439,17 +445,51 @@ class AgentWorkspaceManager:
                 )
         return output, cache
 
-    @staticmethod
-    def _remove_setup_files(project: Path) -> None:
-        for path in (project / ".lake" / "build" / "ir").rglob("*.setup.json"):
-            path.unlink(missing_ok=True)
+    def _cleanup_workspace_outputs(self, project: Path) -> None:
+        if not os.environ.get("LEAN_REMOTE_CACHE_SERVICE"):
+            return
+        with self._outputs_guard:
+            if self.can_archive is not None and not self.can_archive(project):
+                return
+            lake = project / ".lake"
+            build = lake / "build"
+            if not lake.is_symlink() and not build.is_symlink() and build.is_dir():
+                shutil.rmtree(build)
+
+    @contextmanager
+    def _native_cache_lock(self) -> Iterator[None]:
+        cache = os.environ.get("LAKE_CACHE_DIR")
+        if not os.environ.get("LEAN_REMOTE_CACHE_SERVICE") or not cache:
+            yield
+            return
+        root = Path(cache).expanduser().resolve()
+        held = getattr(self._cache_local, "held", None)
+        if held is None:
+            held = self._cache_local.held = set()
+        if root in held:
+            yield
+            return
+        with self._lock(root.parent / f".{root.name}.lock"):
+            held.add(root)
+            try:
+                yield
+            finally:
+                held.remove(root)
+
+    def _child_env(self, lean_num_threads: int) -> dict[str, str]:
+        env = {**os.environ, "GIT_TERMINAL_PROMPT": "0", "LEAN_NUM_THREADS": str(lean_num_threads)}
+        env.pop("LEAN_NATIVE_CACHE_LOCK_HELD", None)
+        cache = os.environ.get("LAKE_CACHE_DIR")
+        if cache and Path(cache).expanduser().resolve() in getattr(self._cache_local, "held", ()):
+            env["LEAN_NATIVE_CACHE_LOCK_HELD"] = "1"
+        return env
 
     def _prune_native_cache(self) -> None:
         cache = os.environ.get("LAKE_CACHE_DIR")
         if not os.environ.get("LEAN_REMOTE_CACHE_SERVICE") or not cache:
             return
         root = Path(cache).expanduser().resolve()
-        with self._lock(root.parent / f".{root.name}.lock"):
+        with self._native_cache_lock():
             files = []
             for name in ("artifacts", "outputs", "revisions"):
                 for path in (root / name).rglob("*"):
@@ -458,7 +498,7 @@ class AgentWorkspaceManager:
                         files.append((stat.st_mtime_ns, str(path), stat.st_size))
             size = sum(item[2] for item in files)
             for _, path, length in sorted(files):
-                if size <= 20 * 1024**3:
+                if size <= NATIVE_CACHE_MAX_BYTES:
                     break
                 Path(path).unlink()
                 size -= length
@@ -634,6 +674,11 @@ class AgentWorkspaceManager:
 
     def _restore_project_cache(self, project: Path, dependency_key: str) -> dict:
         commit = self._run(["git", "rev-parse", "HEAD"], cwd=project)
+        if os.environ.get("LEAN_REMOTE_CACHE_SERVICE"):
+            return {
+                "restored": False, "commit": commit, "dependency_key": dependency_key,
+                "reason": "native remote cache replaces commit snapshots",
+            }
         cache = self._project_cache_dir(dependency_key, commit)
         source = cache / "build"
         ready = cache / "READY.json"
@@ -651,8 +696,6 @@ class AgentWorkspaceManager:
                 os.replace(temporary, destination)
             finally:
                 shutil.rmtree(temporary, ignore_errors=True)
-        if os.environ.get("LEAN_REMOTE_CACHE_SERVICE"):
-            self._remove_setup_files(project)
         return {
             "restored": True,
             "commit": commit,
@@ -1165,22 +1208,59 @@ class AgentWorkspaceManager:
         process.wait()
 
     def _run_verification(self, project: Path, path: Path, timeout_seconds: int) -> dict:
+        service = os.environ.get("LEAN_REMOTE_CACHE_SERVICE")
+        if not service:
+            return self._run_verification_command(
+                project, path, timeout_seconds, ["lake", "env", "lean", str(path)]
+            )
+        with self._native_cache_lock():
+            started = time.monotonic()
+            result = self._run_verification_command(
+                project, path, timeout_seconds, ["lake", "--no-build", "lean", str(path)]
+            )
+            if result["exit_code"] == 3 and result["classification"] != "wall_timeout":
+                remaining = timeout_seconds - (time.monotonic() - started)
+                if remaining > 0:
+                    try:
+                        self._run_streaming(
+                            ["lake", "cache", "get", "--mappings-only", f"--service={service}",
+                             "--repo=Cnoack3/RiemannResearch"],
+                            cwd=project, timeout=remaining, phase="remote_cache_restore",
+                        )
+                    except RuntimeError as exc:
+                        if "no outputs found" not in str(exc):
+                            raise
+                    remaining = timeout_seconds - (time.monotonic() - started)
+                if remaining > 0:
+                    result = self._run_verification_command(
+                        project, path, remaining, ["lake", "lean", str(path)]
+                    )
+                else:
+                    result.update(verified=False, classification="wall_timeout")
+            if result["verified"]:
+                self._cleanup_workspace_outputs(project)
+                self._prune_native_cache()
+            result.update(
+                elapsed_seconds=round(time.monotonic() - started, 3),
+                timeout_seconds=timeout_seconds,
+            )
+            return result
+
+    def _run_verification_command(
+        self, project: Path, path: Path, timeout_seconds: float, args: list[str]
+    ) -> dict:
         """Bound memory and wall time independently of Lean's logical limits."""
         started = time.monotonic()
         self._set_job_progress("verifying", detail="Checking Lean source", force=True)
         try:
             process = subprocess.Popen(
-                ["lake", "env", "lean", str(path)],
+                args,
                 cwd=project,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 bufsize=0,
                 start_new_session=True,
-                env={
-                    **os.environ,
-                    "GIT_TERMINAL_PROMPT": "0",
-                    "LEAN_NUM_THREADS": str(self.lean_num_threads),
-                },
+                env=self._child_env(self.lean_num_threads),
             )
         except OSError as exc:
             return {
@@ -1395,7 +1475,11 @@ class AgentWorkspaceManager:
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "lean_num_threads": self.lake_build_threads,
             "output": "\n".join(output.splitlines()[-20:]),
-            "cache": "shared dependencies and commit-keyed seed; private per-clone .lake/build",
+            "cache": (
+                "shared dependencies and native artifacts; idle workspace outputs cleaned"
+                if os.environ.get("LEAN_REMOTE_CACHE_SERVICE") else
+                "shared dependencies and commit-keyed seed; private per-clone .lake/build"
+            ),
             "dependency_cache": dependency_cache,
         }
         result["project_cache"] = self._publish_project_cache(project)
@@ -2234,4 +2318,5 @@ class AgentWorkspaceManager:
             "preserved_unpublished": preserved,
             "policy": "Dirty or unpublished workspaces are never automatically deleted.",
         }
+
 
