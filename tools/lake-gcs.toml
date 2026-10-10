@@ -1,0 +1,8 @@
+cache.defaultService = "gcs"
+cache.defaultUploadService = "gcs"
+
+[[cache.service]]
+name = "gcs"
+kind = "s3"
+artifactEndpoint = "https://storage.googleapis.com/riemann_lean_cache/lake/a0"
+revisionEndpoint = "https://storage.googleapis.com/riemann_lean_cache/lake/r0"

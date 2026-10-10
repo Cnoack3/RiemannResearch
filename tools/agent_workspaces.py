@@ -266,6 +266,27 @@ class AgentWorkspaceManager:
         phase: str,
     ) -> str:
         """Run a long command while publishing bounded Lake-style progress."""
+        service = os.environ.get("LEAN_REMOTE_CACHE_SERVICE")
+        if service and args[:2] == ["lake", "build"] and "-o" not in args:
+            options = [f"--service={service}", "--repo=Cnoack3/RiemannResearch"]
+            with tempfile.TemporaryDirectory(prefix="lake-cache-") as tmp:
+                mappings = str(Path(tmp) / "outputs.jsonl")
+                try:
+                    self._run_streaming(
+                        ["lake", "cache", "get", "--mappings-only", *options],
+                        cwd=cwd, timeout=timeout, phase="remote_cache_restore",
+                    )
+                except RuntimeError as exc:
+                    if "no outputs found" not in str(exc):
+                        raise
+                output = self._run_streaming(
+                    [*args, "-o", mappings], cwd=cwd, timeout=timeout, phase=phase,
+                )
+                self._run_streaming(
+                    ["lake", "cache", "put", mappings, *options],
+                    cwd=cwd, timeout=timeout, phase="remote_cache_upload",
+                )
+                return output
         started = time.monotonic()
         self._set_job_progress(phase, detail="Starting " + " ".join(args), force=True)
         process = subprocess.Popen(
