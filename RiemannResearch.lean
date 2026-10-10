@@ -5,6 +5,8 @@ import RiemannResearch.RH.AnnularMellinContinuation
 import RiemannResearch.RH.AnnularEnergyRH
 import RiemannResearch.Analysis.SubpowerPrefixMellin
 import RiemannResearch.RH.AnnularSubpowerEnergy
+import RiemannResearch.Analysis.LogarithmicGrowth
+import RiemannResearch.RH.AnnularEnergyGrowth
 import RiemannResearch.RH.AnnularLatticeCorrection
 import RiemannResearch.RH.AnnularLatticeBounds
 import RiemannResearch.Analysis.SignedLatticeEnergy

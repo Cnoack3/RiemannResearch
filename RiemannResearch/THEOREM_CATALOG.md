@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Actual annular limsup exponents and complete residual transfer (2026-10-10)
+
+- Analysis/LogarithmicGrowth.lean proves the exact equivalence between zero
+  logarithmic growth exponent and eventual subpower upper growth, including
+  signed functions. Absolute subpower perturbations preserve the exponent.
+  The extended-real definition requires no assumed boundedness.
+- RH/AnnularEnergyGrowth.lean retains the complete equality E_A=M+R+T,
+  including the full lattice signed cross term and square. The actual prime
+  and centered energy exponents agree and belong to [0,1] unconditionally.
+- Every strip zero with real part beta forces exponent >=2*beta-1. This is
+  the actual limsup obstruction; it assumes no zero simplicity or all-cutoff
+  lower bound. Zero actual energy exponent implies RH through the proved
+  membership and Mellin continuation dependencies.
+- Under the explicitly Open absolute-subpower model bound, the complete
+  signed residual has exactly the same exponent. Its subpower upper bound
+  then implies RH. These are conditional research reductions: the actual
+  model bound and signed-residual cancellation bound remain Open.
+- The two new modules contain 31 public theorems. The combined application
+  passed server source job job_0V_cGnOYYHmRKVvPbso7uzPNTPa4dGPr with exit
+  code 0, verified true, and no warnings. Final project acceptance is the
+  introducing checkpoint. See RH/AnnularGrowthContinuation20261010.md.
+- All 31 printed theorem foundation reports use only propext,
+  Classical.choice, and Quot.sound. These reports do not discharge the
+  actual zero-exponent, model, or residual hypotheses.
+
 ### Subpower annular energy and cofinal zero-growth obstruction (2026-10-10)
 
 - Analysis/SubpowerPrefixMellin.lean proves eventual prefix-power weighted
