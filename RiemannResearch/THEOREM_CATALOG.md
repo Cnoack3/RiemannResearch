@@ -1,5 +1,54 @@
 # Theorem catalog
 
+### Annular arithmetic, Mellin evaluations, and exact residuals (2026-10-10)
+
+- RH/AnnularArithmeticWeight and AnnularArithmeticIntegrals prove the actual
+  weight support, sharp maximum 7/24, exact centering, mass 7/64, and square
+  mass 35/1536. LinearAlgebra/FinitePrimePairResidual and FiniteIntegralGram
+  provide ordered signed decompositions and the genuine integral Gram identity.
+- RH/ActualAnnularKernel proves local integrability, all-cutoff nonnegative
+  actual energy, Q=M+R, exact diagonal/triangle splits, and ratio-eight boundary
+  vanishing. Prime powers and both singleton terms are retained.
+- RH/ActualRieszTwoConvolution, ActualRieszTwoAnnularCutoff,
+  ActualRieszTwoMellin, and ActualAnnularMellin prove the actual second-Riesz
+  convolution and the centered Riesz and annular Mellin identities on Re(s)>1.
+  Critical-strip integral convergence or continuation is not assumed.
+- Analysis/WeightedMellinTopologyTargets, WeightedMellinLogarithmicKernel,
+  WeightedMellinDerivativeTopology, WeightedMellinDerivativeSharpness, and
+  WeightedMellinDerivativeCauchy prove all derivative evaluations, their sharp
+  factorial coefficient, actual extremizers, difference bounds, and full-zero
+  uniform bounds under genuine weighted energy membership. The truncation
+  Membership/Envelope modules prove every-weight membership, entire transforms,
+  and explicit finite arithmetic norm control; infinite-vector control is Open.
+- Analysis/AnnularMellinMultiplier and RH/AnnularMellinRH and
+  AnnularMellinPoleOrder retain every strip zero and prove multiplier
+  nonannihilation, the exact simple-pole order, and the meromorphic analytic RH
+  criterion. Analysis/WeightedMellinPoleObstruction retains its local identity
+  premise. RH/AnnularZeroSpectralTargets records complete multiplicities and
+  explicitly Open full-zero formula, spectral limit, and growth obligations.
+- Analysis/TwistedRieszFilterAlgebra, TwistedRieszFilterOrder,
+  RieszOrderUniformCoupling, and RieszOrderMidpointCoupling prove every finite
+  smoothing-order response and a strictly improving uniform Gaussian family,
+  with coefficients 5, 89/18, 1111/225. HigherRieszLocalization proves scalar
+  summability transport; its actual Fourier envelope premise remains Open.
+- NumberTheory/PrimePairEulerProduct and PrimePairEulerProductTail prove
+  positive convergence, 1/2 <= C2 <= 11011/16384, and an explicit tail enclosure.
+  RH/AnnularPrimePairTargets uses that actual product and proves parity signs.
+  RH/AnnularModelCoefficientBounds proves cW < -51611/1536000 < -1/32 without
+  extra logarithm bounds. Identification as a model slope still requires the
+  Open singular-series/PNT asymptotic. CenteredResidualTransfer exposes every
+  model and energy premise needed to transport actual signed estimates.
+- RH/RawPrimePowerEnumeration constructs the infinite increasing complete
+  enumeration of actual prime powers. RawPrimePowerContinuationTargets proves
+  exact raw cell assembly including initial energy 1 and endpoint corrections.
+  The quantitative prime-gap, arithmetic grid, and signed residual bounds are
+  Open. The residual RH equivalence retains ActualModelLogBound and
+  ActualRHEnergyCriterion; neither is supplied by proposition definitions.
+
+The combined source check audited all 320 public theorems and used only
+propext, Classical.choice, and Quot.sound. See ANNULAR_FORMALIZATION_20261010.md
+for exact evidence, scope, and the remaining paper obligations.
+
 ### CRT escape, exact reversal, and every fixed sampling factor (2026-10-09)
 
 - RH/ArgumentSamplingClosure.lean constructs the actual factor-a sampling
