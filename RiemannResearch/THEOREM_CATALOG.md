@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### Subpower annular energy and cofinal zero-growth obstruction (2026-10-10)
+
+- Analysis/SubpowerPrefixMellin.lean proves eventual prefix-power weighted
+  integrability without a coefficient-sign premise, and exact finite-prefix
+  comparisons from weighted energy without a continuity premise.
+- RH/AnnularSubpowerEnergy.lean proves that eventual subpower critical energy
+  is equivalent to every actual H_a membership with a>1/2, and implies RH
+  through the proved actual Mellin continuation. This weakens the preceding
+  logarithmic arithmetic premise. The actual subpower estimate remains Open.
+- Actual prime and centered subpower targets are equivalent using the full
+  signed lattice correction and its square. No prime-pair cancellation is
+  asserted. These RH implications are conditional research reductions.
+- Every strip zero with real part beta>1/2 forces arbitrarily distant
+  violations of every C*X^p envelope for 0<=p<2*beta-1. No simplicity premise
+  or all-cutoff lower bound is used; the endpoint is not claimed.
+- All 13 public theorem axiom reports passed combined server job
+  job_6XWki38R7C8-rPF7nxIr_DUz8NdueN8W with only propext, Classical.choice,
+  and Quot.sound. Final project/module acceptance is the introducing
+  checkpoint. See RH/AnnularSubpowerContinuation20261010.md.
+
 ### Actual annular energy implies RH (2026-10-10)
 
 - Analysis/LogarithmicPrefixMellin.lean proves complete finite integration
@@ -28,8 +48,9 @@
   checkpoint. See RH/AnnularEnergyContinuation20261010.md.
 - RH/AnnularLatticeMellinPaper20261010.md gives a separate paper proof of
   the deterministic lattice Mellin entire continuation and exact moments.
-  That appendix and the specialized subpower/energy-exponent corollaries
-  are not claimed as Lean formalized by this continuation.
+  That appendix remains a paper proof. The later specialized subpower and
+  cofinal energy-exponent corollaries are now formalized in
+  RH/AnnularSubpowerEnergy.lean, as recorded above.
 
 ### Exact annular lattice decay and arithmetic energy transfer (2026-10-10)
 
