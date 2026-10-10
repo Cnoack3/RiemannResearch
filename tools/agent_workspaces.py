@@ -1391,7 +1391,11 @@ class AgentWorkspaceManager:
             "axiom declaration": re.compile(r"^\s*axiom\b", re.MULTILINE),
             "unsafe declaration": re.compile(r"^\s*unsafe\b", re.MULTILINE),
         }
-        for path in (project / "RiemannResearch").rglob("*.lean"):
+        paths = list((project / "RiemannResearch").rglob("*.lean"))
+        aggregate = project / "RiemannResearch.lean"
+        if aggregate.is_file():
+            paths.append(aggregate)
+        for path in paths:
             text = path.read_text(encoding="utf-8")
             for label, pattern in patterns.items():
                 for match in pattern.finditer(text):
@@ -1400,9 +1404,9 @@ class AgentWorkspaceManager:
         return warnings
 
     @staticmethod
-    def _head_text(project: Path, relative: str) -> str | None:
+    def _head_text(project: Path, relative: str, base_ref: str = "HEAD") -> str | None:
         result = subprocess.run(
-            ["git", "show", f"HEAD:{relative}"],
+            ["git", "show", f"{base_ref}:{relative}"],
             cwd=project,
             text=True,
             capture_output=True,
@@ -1410,10 +1414,12 @@ class AgentWorkspaceManager:
         )
         return result.stdout if result.returncode == 0 else None
 
-    def _architecture_audit(self, project: Path) -> list[str]:
+    def _architecture_audit(
+        self, project: Path, base_ref: str = "HEAD", include_untracked: bool = True
+    ) -> list[str]:
         changed = self._run(
             [
-                "git", "diff", "--name-only", "--diff-filter=ACMR", "HEAD", "--",
+                "git", "diff", "--name-only", "--diff-filter=ACMR", base_ref, "--",
                 "RiemannResearch", "RiemannResearch.lean",
             ],
             cwd=project,
@@ -1424,7 +1430,7 @@ class AgentWorkspaceManager:
                 "RiemannResearch", "RiemannResearch.lean",
             ],
             cwd=project,
-        ).splitlines()
+        ).splitlines() if include_untracked else []
         relative_files = sorted(
             {path for path in changed + untracked if path.endswith(".lean")}
         )
@@ -1434,7 +1440,7 @@ class AgentWorkspaceManager:
         for relative in relative_files:
             path = project / relative
             text = path.read_text(encoding="utf-8")
-            baseline = self._head_text(project, relative)
+            baseline = self._head_text(project, relative, base_ref)
             is_new = baseline is None
             match = umbrella.search(text)
             if match is not None:
@@ -1445,7 +1451,7 @@ class AgentWorkspaceManager:
                 )
 
             parts = Path(relative).parts
-            if is_new and len(parts) < 3:
+            if is_new and relative != "RiemannResearch.lean" and len(parts) < 3:
                 problems.append(
                     f"{relative}: new modules must live in a named subject directory "
                     "under RiemannResearch/"
@@ -1516,31 +1522,6 @@ class AgentWorkspaceManager:
             return None
         return relative.removesuffix(".lean").replace("/", ".")
 
-    def _affected_lean_targets(self, project: Path, changed_modules: set[str]) -> list[str]:
-        reverse_imports: dict[str, set[str]] = {}
-        import_pattern = re.compile(
-            r"^\s*import\s+([A-Za-z_][A-Za-z0-9_'.]*)\s*(?:--.*)?$",
-            re.MULTILINE,
-        )
-        for path in (project / "RiemannResearch").rglob("*.lean"):
-            module = self._lean_module(str(path.relative_to(project)))
-            if module is None:
-                continue
-            text = path.read_text(encoding="utf-8")
-            for imported in import_pattern.findall(text):
-                if imported.startswith("RiemannResearch."):
-                    reverse_imports.setdefault(imported, set()).add(module)
-
-        affected = set(changed_modules)
-        pending = list(changed_modules)
-        while pending:
-            imported = pending.pop()
-            for dependent in reverse_imports.get(imported, set()):
-                if dependent not in affected:
-                    affected.add(dependent)
-                    pending.append(dependent)
-        return sorted(affected)
-
     def _checkpoint_validation(
         self,
         project: Path,
@@ -1550,6 +1531,13 @@ class AgentWorkspaceManager:
         changed_paths = self._checkpoint_changed_paths(
             project, base_ref=base_ref, include_untracked=include_untracked
         )
+        unsupported_lean = [
+            path for path in changed_paths
+            if path.endswith(".lean") and path != "RiemannResearch.lean"
+            and self._lean_module(path) is None
+        ]
+        if unsupported_lean:
+            raise ValueError("Unsupported Lean source scope; publication blocked: " + ", ".join(unsupported_lean))
         dependency_files = {"lakefile.toml", "lake-manifest.json", "lean-toolchain"}
         changed_project_lean = {
             path for path in changed_paths if self._lean_module(path) is not None
@@ -1558,33 +1546,18 @@ class AgentWorkspaceManager:
             path for path in changed_project_lean if not (project / path).is_file()
         }
 
-        if dependency_files.intersection(changed_paths) or deleted_project_lean:
-            result = self._build(project)
-            result.update(
-                scope="full",
-                reason=(
-                    "dependency configuration changed"
-                    if dependency_files.intersection(changed_paths)
-                    else "a project Lean module was deleted or moved"
-                ),
-                changed_paths=changed_paths,
-            )
-            return result
-
         changed_modules = {
             module
             for path in changed_project_lean
-            if (module := self._lean_module(path)) is not None
+            if (project / path).is_file() and (module := self._lean_module(path)) is not None
         }
-        if not changed_modules:
-            if "RiemannResearch.lean" in changed_paths:
-                result = self._build(project)
-                result.update(
-                    scope="full",
-                    reason="the aggregate project module changed without a changed child module",
-                    changed_paths=changed_paths,
-                )
-                return result
+        full_reason = (
+            "dependency configuration changed" if dependency_files.intersection(changed_paths)
+            else "a project Lean module was deleted or moved" if deleted_project_lean
+            else "the aggregate project module changed" if "RiemannResearch.lean" in changed_paths
+            else None
+        )
+        if not changed_modules and not full_reason:
             result = {
                 "command": None,
                 "scope": "skipped",
@@ -1601,7 +1574,10 @@ class AgentWorkspaceManager:
             )
             return result
 
-        targets = self._affected_lean_targets(project, changed_modules)
+        # Validate the aggregate import graph with Lake, rather than assuming a
+        # text regex found every reverse import. Explicit targets also cover any
+        # changed existing child module not exported by the aggregate.
+        targets = ["RiemannResearch", *sorted(changed_modules)]
         lake_targets = [f"+{module}" for module in targets]
         started = time.monotonic()
         output, dependency_cache = self._run_lake_build(
@@ -1610,8 +1586,8 @@ class AgentWorkspaceManager:
             timeout=3600,
         )
         result = {
-            "command": f"lake build <{len(targets)} affected module(s)> --quiet",
-            "scope": "affected_modules",
+            "command": f"lake build +RiemannResearch <{len(changed_modules)} changed module(s)> --quiet",
+            "scope": "full" if full_reason else "project_and_changed_modules",
             "changed_paths": changed_paths,
             "changed_modules": sorted(changed_modules),
             "target_count": len(targets),
@@ -1620,12 +1596,14 @@ class AgentWorkspaceManager:
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "lean_num_threads": self.lake_build_threads,
             "output": "\n".join(output.splitlines()[-20:]),
-            "cache": "shared dependencies; private per-clone affected-module build",
+            "cache": "incremental project validation with shared dependencies and native artifacts",
             "dependency_cache": dependency_cache,
         }
+        if full_reason:
+            result["reason"] = full_reason
         self._record_metric(
             "checkpoint_validation",
-            scope="affected_modules",
+            scope=result["scope"],
             changed_path_count=len(changed_paths),
             changed_module_count=len(changed_modules),
             target_count=len(targets),
@@ -1640,6 +1618,13 @@ class AgentWorkspaceManager:
         _, project = self._get(token)
         return self._build(project)
 
+    def _checkpoint_tree(self, project: Path) -> str:
+        self._run([
+            "git", "add", "--", "RiemannResearch", "RiemannResearch.lean", "README.md",
+            "lakefile.toml", "lake-manifest.json", "lean-toolchain", ".gitignore", "AGENTS.md",
+        ], cwd=project)
+        return self._run(["git", "write-tree"], cwd=project)
+
     @_workspace_operation
     def checkpoint(self, token: str, message: str, push: bool = True) -> dict:
         self._ensure_workspace_idle(token, "checkpoint")
@@ -1647,21 +1632,22 @@ class AgentWorkspaceManager:
         if not 5 <= len(message) <= 120 or "\n" in message:
             raise ValueError("Commit message must be one line containing 5-120 characters")
         meta, project = self._get(token)
+        checked_tree = self._checkpoint_tree(project)
         self._set_job_progress("auditing", detail="Auditing changed source", force=True)
         warnings = self._scan(project)
-        warnings.extend(self._architecture_audit(project))
+        warnings.extend(self._architecture_audit(project, base_ref=meta["base_commit"]))
         if warnings:
             raise ValueError("Lean source audit failed:\n" + "\n".join(warnings[:100]))
-        build = self._checkpoint_validation(project)
+        build = self._checkpoint_validation(project, base_ref=meta["base_commit"])
+        if self._checkpoint_tree(project) != checked_tree:
+            raise RuntimeError("Source changed during checkpoint validation; work was preserved, publication blocked")
         self._set_job_progress("committing", detail="Creating local checkpoint", force=True)
-        self._run([
-            "git", "add", "--", "RiemannResearch", "RiemannResearch.lean", "README.md",
-            "lakefile.toml", "lake-manifest.json", "lean-toolchain", ".gitignore", "AGENTS.md",
-        ], cwd=project)
         staged = self._run(["git", "diff", "--cached", "--name-only"], cwd=project)
         if staged:
             self._run(["git", "commit", "-m", message], cwd=project)
         local_head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
+        if self._run(["git", "rev-parse", f"{local_head}^{{tree}}"], cwd=project) != checked_tree:
+            raise RuntimeError("Committed source differs from validated source; publication blocked")
         if not push:
             project_cache = self._publish_project_cache(project)
             return {
@@ -1680,7 +1666,7 @@ class AgentWorkspaceManager:
             base = meta["base_commit"]
             if origin == base:
                 self._run(["git", "merge-base", "--is-ancestor", origin, local_head], cwd=project)
-                self._run(["git", "push", "origin", "HEAD:main"], cwd=project, timeout=600)
+                self._run(["git", "push", "origin", f"{local_head}:main"], cwd=project, timeout=600)
                 published = local_head
                 integrated = False
             else:
@@ -1708,11 +1694,22 @@ class AgentWorkspaceManager:
                         for commit in commits:
                             self._run(["git", "cherry-pick", commit], cwd=integration)
                         self._attach_dependencies(integration)
+                        integrated_tree = self._checkpoint_tree(integration)
+                        warnings = self._scan(integration)
+                        warnings.extend(self._architecture_audit(
+                            integration, base_ref="origin/main", include_untracked=False
+                        ))
+                        if warnings:
+                            raise ValueError("Integrated Lean source audit failed:\n" + "\n".join(warnings[:100]))
                         integrated_build = self._checkpoint_validation(
                             integration, base_ref="origin/main", include_untracked=False
                         )
-                        self._run(["git", "push", "origin", "HEAD:main"], cwd=integration, timeout=600)
+                        if self._checkpoint_tree(integration) != integrated_tree:
+                            raise RuntimeError("Integrated source changed during validation; publication blocked")
                         published = self._run(["git", "rev-parse", "HEAD"], cwd=integration)
+                        if self._run(["git", "rev-parse", f"{published}^{{tree}}"], cwd=integration) != integrated_tree:
+                            raise RuntimeError("Integrated commit differs from validated source; publication blocked")
+                        self._run(["git", "push", "origin", f"{published}:main"], cwd=integration, timeout=600)
                         build["integrated_build"] = integrated_build
                         integrated = True
                     finally:

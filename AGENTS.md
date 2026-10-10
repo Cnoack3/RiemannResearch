@@ -78,17 +78,24 @@
   and poll `agent_workspace_job_status` no sooner than `retry_after_seconds`;
   never resubmit a pending job. Running status reports the current phase, Lake
   task percentage when available, and a rough task-count ETA.
-- `agent_workspace_checkpoint` performs the source audit and change-aware
-  validation before commit and serialized publication. It skips Lean for
-  documentation-only changes and otherwise builds changed modules plus local
-  reverse dependents; dependency configuration changes and structural module
-  removals trigger full validation. `lean_build` is the explicit incremental
-  full-project validation; do not run it immediately before checkpoint. After
+- `agent_workspace_checkpoint` audits and validates the entire unpublished
+  delta from the workspace base before commit and serialized publication.
+  It skips Lean only when that delta contains no Lean source or dependency
+  changes. Otherwise Lake incrementally builds the aggregate project plus
+  explicitly changed child modules; unchanged artifacts are reused. Source
+  changes during validation block publication. Integrated source is audited
+  and validated again before pushing its exact commit. `lean_build` is the
+  explicit incremental full-project validation; do not run it immediately
+  before checkpoint. After
   an intentional `lakefile.toml` change, queue `agent_workspace_update_deps`
   once and wait for it before validation.
-- Dependency artifacts are shared read-mostly. Each clone has its own writable
-  project build directory, seeded by exact commit and dependency environment.
-  Up to two isolated jobs may build concurrently, each with at most eight Lean
+- Dependency artifacts are shared read-mostly. Native project artifacts use a
+  shared content-addressed cache backed by private GCS storage. Each clone has
+  its own writable project build directory, restored through native Lake
+  artifacts and cleaned after successful verification when no editor uses it.
+  Native cache writes and pruning share an exclusive reentrant lease; its
+  retention budget is 100 GiB, excluding dependency artifacts and active
+  workspace links. One managed worker runs by default, with at most eight Lean
   threads; publication remains serialized. Before each build, a protected
   `lake exe cache get` preflight fills available binary artifacts. If that
   preflight is incomplete, builds for the same dependency key serialize while
@@ -162,3 +169,4 @@ Local cost telemetry is written as bounded JSON Lines to
 `~/.local/state/lean-agent-workspaces/metrics.jsonl`; it records durations,
 response sizes, queue polling, and cache/build events without proof text or
 workspace tokens.
+
