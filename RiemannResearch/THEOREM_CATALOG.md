@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Actual annular energy implies RH (2026-10-10)
+
+- Analysis/LogarithmicPrefixMellin.lean proves complete finite integration
+  by parts, prefix-power weighted integrability, and that an all-cutoff
+  logarithmic critical-energy bound supplies every H_a with a>1/2.
+- Analysis/ActualAnnularContinuity.lean proves global continuity and
+  measurability of the actual infinite prime vector by locally finite sums.
+- RH/AnnularMellinContinuation.lean proves meromorphic germ continuation
+  from the actual Re(s)>1 identity throughout a punctured half-plane.
+  It removes the local identity provider and proves that actual H_a
+  membership excludes every zero with Re(s)>a, for 0<=a<1. Every
+  positive zero multiplicity is retained; no simplicity premise is used.
+- RH/AnnularEnergyRH.lean proves ActualPrimeEnergyUpperBound implies RH
+  and, by exact signed lattice transfer, ActualEnergyUpperBound implies RH.
+  The signed-residual implication needs only ActualModelLogBound and
+  ActualSignedResidualUpperBound. These are conditional research reductions.
+- The sufficient energy-to-RH analytic direction is discharged.
+  ActualPrimeEnergyUpperBound, ActualEnergyUpperBound, ActualModelLogBound,
+  and ActualSignedResidualUpperBound remain Open arithmetic obligations.
+  The converse RH-to-logarithmic-energy direction and the full
+  ActualRHEnergyCriterion equivalence remain Open.
+- These four exported modules contain 17 public theorems. The assembled
+  import passed server job job_8TUk4RtxzD0U48hNcmUmsvFZFTX6EC0F; nine
+  decisive axiom reports use only propext, Classical.choice, and Quot.sound.
+  Final aggregate-project and changed-module validation is the introducing
+  checkpoint. See RH/AnnularEnergyContinuation20261010.md.
+- RH/AnnularLatticeMellinPaper20261010.md gives a separate paper proof of
+  the deterministic lattice Mellin entire continuation and exact moments.
+  That appendix and the specialized subpower/energy-exponent corollaries
+  are not claimed as Lean formalized by this continuation.
+
 ### Exact annular lattice decay and arithmetic energy transfer (2026-10-10)
 
 - RH/AnnularLatticeCorrection.lean proves the exact all-positive-real-cutoff
