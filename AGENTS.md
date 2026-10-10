@@ -9,6 +9,33 @@
   `serre-ii-archive-20260904`. Do not reconstruct or publish Serre II modules on
   `main`; future Serre II work requires an explicitly branch-aware workspace.
 
+## Mandatory server verification before publication
+
+- The private repository uses GitHub for source hosting. GitHub-hosted CI is
+  unavailable because its runner quota is exhausted; it has been broken since
+  setup. Do not rely on it, wait for it, rerun it, or propose paid runners as
+  the verification path. This is the user's explicit requirement, reaffirmed
+  2026-10-09.
+- Verify every Lean source or dependency change on the user's Lean server
+  through the Lean plugin before pushing. Publish only through
+  `agent_workspace_checkpoint` with push enabled, after its server source
+  audit and required Lean validation succeed. If publication integrates newer
+  `main` changes, the integrated source must pass server validation before
+  that source is pushed.
+- A queued job, an accepted request, an isolated successful proof snippet,
+  a source scan, or a GitHub commit is not evidence that the final project
+  changes passed verification. Wait for the checkpoint's terminal successful
+  result and inspect its validation scope and publication result.
+- If server verification fails, times out, is interrupted, or is unavailable,
+  retain the work and block publication. Do not bypass the gate with direct
+  `git push`, GitHub file/commit APIs, an unverified integration, or a fallback
+  to hosted CI. Report the blocker and the exact verification status.
+- Report the server verification job, validation scope, and published commit
+  for Lean changes. Documentation-only checkpoints may skip Lean compilation;
+  explicitly describe them as documentation changes, never as freshly checked
+  mathematical results. A server check of a snippet does not certify unchanged
+  repository modules or an entire repository build.
+
 ## Mathematical and verification policy
 
 - For RH research, keep complete exact identities as the primary results.
