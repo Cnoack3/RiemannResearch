@@ -1,5 +1,6 @@
 # Also share eligible repository contents through the remote cache (Bazel 9.2).
-startup --experimental_remote_repo_contents_cache
+# DO NOT ENABLE - this is unstable and causes hangs
+# startup --experimental_remote_repo_contents_cache
 
 # Keep native repository caches at Bazel's persistent per-user defaults.
 common --repo_contents_cache_gc_max_age=14d
