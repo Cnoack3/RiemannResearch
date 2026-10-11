@@ -433,6 +433,28 @@ Incomplete, unsupported, and malformed input is reported explicitly.
 It reads the one-line task and counter subset emitted by Bazel 9.2; multiline
 metadata is skipped. It is not a validator for every record in the JSON trace.
 
+The 80-job profile's initial summary reported 4.642 cores on average and a
+13.159-core peak, with 7,942 MiB maximum used Java heap plus nonheap memory.
+The JVM's four-processor hint sizes automatic pools; it does not impose an OS
+CPU quota. The merged analysis/execution phase spans most of this build, so its
+large outer scopes cannot isolate the remaining cost. Only 94 named Merkle
+records and 90 remote-cache-check records survive as distinct records in this
+slim trace, versus 2,512 cached actions; those duration sums are incomplete.
+
+To inspect finer recorded operation names in the same saved file:
+
+```sh
+python3 bazel/rbe_profile_summary.py --operations \
+  "$HOME/.cache/riemann-rbe-diagnostics/cache-only-20261011T221733Z-93354"
+```
+
+This ranks recorded intervals by operation and category, excluding the outer
+whole-build scopes. It retains at most 4,096 bounded name groups and explicitly
+reports overflow. Names are capped at 140 characters and categories at 80, so
+long names sharing a prefix can be grouped together. The intervals still include
+nested work and waits; this is not a sampled CPU stack profile or exclusive
+execution time. Slim-profile merging can hide short operations altogether.
+
 Its output summarizes recorded trace intervals. Durations can overlap between
 threads and nested tasks, so their sums are not build wall time or CPU time.
 CPU counter values use cores (1 means one core); displayed averages are recorded

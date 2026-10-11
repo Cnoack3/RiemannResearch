@@ -9,6 +9,12 @@ import heapq, json, math
 from pathlib import Path
 import sys, zlib
 MAX_LINE = 1024 * 1024
+MAX_OPERATIONS = 4096
+OUTER_SCOPES = {
+    "buildTargets", "runAnalysisAndExecutionPhase", "runAnalysisPhase",
+    "runExecutionPhase", "skyframeExecutor.evaluateBuildDriverKeys",
+    "ParallelEvaluator.eval",
+}
 SELECTED = {"Remote execution setup", "Local parse to prepare for remote execution",
             "remote action cache check", "remote output download", "remote network",
             "thread wait", "gc notification", "general information", "VFS md5",
@@ -32,10 +38,12 @@ def numeric(value):
         return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
     except OverflowError:
         return False
-def summarize(path):
+def summarize(path, operations=False):
     totals = collections.defaultdict(lambda: [0.0, 0, 0.0])
     phases = collections.defaultdict(lambda: [0.0, 0, 0.0])
     counters = collections.defaultdict(lambda: [0.0, 0, 0.0])
+    operation_totals = {}
+    operation_overflow = outer_records = 0
     longest, markers = [], []
     parsed = instant = skipped = malformed = oversized = unknown = 0
     first = last = None
@@ -88,6 +96,19 @@ def summarize(path):
                 parsed += 1
                 seconds = duration / 1_000_000
                 if category == "Unknown event": unknown += 1; continue
+                if operations:
+                    operation_name = " ".join(name.split())[:140]
+                    if operation_name in OUTER_SCOPES:
+                        outer_records += 1
+                    else:
+                        key = (category[:80], operation_name)
+                        if key not in operation_totals and len(operation_totals) >= MAX_OPERATIONS:
+                            operation_overflow += 1
+                        else:
+                            row = operation_totals.setdefault(key, [0.0, 0, 0.0])
+                            row[0] += seconds
+                            row[1] += 1
+                            row[2] = max(row[2], seconds)
                 if name in PHASES:
                     row = phases[name]
                     row[0] += seconds; row[1] += 1; row[2] = max(row[2], seconds)
@@ -107,14 +128,15 @@ def summarize(path):
     if first is not None:
         print(f"Recorded event span: {(last-first)/1_000_000:.3f}s (first start to last end; not command wall time)")
     print(f"Skipped: non-task/multiline={skipped}, oversized={oversized}; malformed={malformed}; Unknown={unknown} excluded from rankings; footer={'present' if footer else 'missing'}")
-    for name, label in PHASES.items():
-        total, count, maximum = phases[name]
-        print(f"Named {label}: records={count}, sum={total:.3f}s, max={maximum:.3f}s" if count else f"Named {label}: not recorded")
-    ordered = sorted(markers)
-    relevant = [(i, t, n) for i, (t, n) in enumerate(ordered) if "analy" in n.lower() or "build" in n.lower()]
-    for i, ts, name in relevant[:2]:
-        span = f"{(ordered[i+1][0]-ts)/1_000_000:.3f}s to next marker" if i+1 < len(ordered) else "no next marker"
-        print(f"Phase marker: {name[:65]}: {span}")
+    if not operations:
+        for name, label in PHASES.items():
+            total, count, maximum = phases[name]
+            print(f"Named {label}: records={count}, sum={total:.3f}s, max={maximum:.3f}s" if count else f"Named {label}: not recorded")
+        ordered = sorted(markers)
+        relevant = [(i, t, n) for i, (t, n) in enumerate(ordered) if "analy" in n.lower() or "build" in n.lower()]
+        for i, ts, name in relevant[:2]:
+            span = f"{(ordered[i+1][0]-ts)/1_000_000:.3f}s to next marker" if i+1 < len(ordered) else "no next marker"
+            print(f"Phase marker: {name[:65]}: {span}")
     for name in COUNTERS:
         total, count, maximum = counters[name]
         if not count:
@@ -122,17 +144,29 @@ def summarize(path):
             continue
         print(f"{name}: sample mean/max={total/count:.3f}/{maximum:.3f} cores (not time-weighted, n={count})" if name.startswith("CPU") else
               f"{name}: max={maximum:.1f} MiB used heap+nonheap, not RSS (n={count})")
-    ranked = sorted(totals.items(), key=lambda x: x[1][0], reverse=True)[:5]
-    shown = {category for category, _ in ranked}
-    for category in ("remote action cache check", "gc notification"):
-        if category in totals and category not in shown:
-            ranked.append((category, totals[category]))
-    print("Selected categories: records / inclusive sum s / max s (top five plus cache/GC):")
-    for category, (total, count, maximum) in ranked:
-        print(f"  {category}: {count} / {total:.3f} / {maximum:.3f}")
-    print("Longest relevant recorded events (s / name):")
-    for seconds, name in sorted(longest, reverse=True):
-        print(f"  {seconds:.3f} / {name}")
+    if operations:
+        print(f"Operation groups: {len(operation_totals)}; outer build records excluded={outer_records}; name-limit overflow records={operation_overflow}")
+        print("Recorded operations: records / inclusive sum s / max s / category / name (top 15):")
+        ranked_operations = sorted(operation_totals.items(), key=lambda x: (-x[1][0], x[0]))[:15]
+        for (category, name), (total, count, maximum) in ranked_operations:
+            print(f"  {count} / {total:.3f} / {maximum:.3f} / {category} / {name}")
+        if not ranked_operations:
+            print("  No duration records remain after excluding outer build scopes and merged Unknown records.")
+        if operation_overflow:
+            print(f"Name limit reached ({MAX_OPERATIONS}); rankings omit new groups after that limit.")
+        print("These are inclusive scope intervals, including possible waits, not CPU hotspots or exclusive self time.")
+    else:
+        ranked = sorted(totals.items(), key=lambda x: x[1][0], reverse=True)[:5]
+        shown = {category for category, _ in ranked}
+        for category in ("remote action cache check", "gc notification"):
+            if category in totals and category not in shown:
+                ranked.append((category, totals[category]))
+        print("Selected categories: records / inclusive sum s / max s (top five plus cache/GC):")
+        for category, (total, count, maximum) in ranked:
+            print(f"  {category}: {count} / {total:.3f} / {maximum:.3f}")
+        print("Longest relevant recorded events (s / name):")
+        for seconds, name in sorted(longest, reverse=True):
+            print(f"  {seconds:.3f} / {name}")
     print("Inclusive sums overlap; not wall/CPU. Slim profiles merge short events+gaps: records != calls; Unknown excluded from rankings.")
     print("Setup can include semaphore wait. GC durations are reported collector durations; timestamps approximate, not exact pause/causality proof.")
     if read_error:
@@ -147,13 +181,15 @@ def summarize(path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--operations", action="store_true", help="Show bounded per-operation aggregates, excluding whole-build scopes")
     parser.add_argument("profile", help="profile.gz or a benchmark report directory")
-    path = Path(parser.parse_args().profile).expanduser()
+    arguments = parser.parse_args()
+    path = Path(arguments.profile).expanduser()
     path = path / "profile.gz" if path.is_dir() else path
     if not path.is_file():
         print(f"Profile is missing or is not a file: {path}", file=sys.stderr)
         return 2
-    return summarize(path)
+    return summarize(path, operations=arguments.operations)
 
 if __name__ == "__main__":
     sys.exit(main())
