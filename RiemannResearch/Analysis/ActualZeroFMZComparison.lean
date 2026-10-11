@@ -20,8 +20,9 @@ Lemma 2. https://www.ford126.web.illinois.edu/wwwpapers/fz.pdf
 https://www.ford126.web.illinois.edu/wwwpapers/FMZ.pdf
 
 The exact actual-zero reflection identity and finite layer cake are imported.
-The classical Selberg exponential zero-density theorem remains an explicit
-actual-count hypothesis. It is neither replaced by RH nor declared as an axiom.
+The classical Selberg exponential zero-density theorem is unconditional for
+zeta, but remains an explicit actual-count input because its analytic proof
+is not yet formalized here. It is neither replaced by RH nor declared as an axiom.
 The new deduction retains the finite endpoint formula before deriving the
 uniform rational majorant and the explicit small-frequency constant.
 -/

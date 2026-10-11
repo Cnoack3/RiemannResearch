@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Precise Selberg density input and strengthened actual-zero deductions (2026-10-11)
+
+Analysis/ActualZeroSelbergDensity adds twelve theorems:
+the exact power/exponential equivalence; inclusive-to-strict actual count
+transfer; reflected two-sided and normalized tail bounds; the real-exponent
+loglog/log window rate; general-exponent FMZ comparison and every fractional
+frequency band; the classical 128 C / 3 specialization; and the uniform-input
+fixed-mode limit. Existing Riemann--von Mangoldt supplies the count normalizer.
+
+Classification: **conditional research reduction** when a Selberg input is
+required. Selberg's one-quarter bound is an established unconditional theorem
+on paper; a checked provider of UniformSelbergDensity (1/4) is **Open as a Lean
+formalization**. No RH assumption or project-local axiom is introduced.
+Five selected axiom reports in server job
+job_g_2EoPheTC2qaVQM4c7q5f5fwp51Dpne contain only standard foundations.
+Final publication requires the server checkpoint.
+See RH/SelbergDensityStatus20261011.md for exact scope and provenance.
+
 ### Recovered actual-zero FMZ, circle Poisson, and Pareto bridges (2026-10-11)
 
 Eight new modules and the strengthened existing ActualZeroCoshMass passed the

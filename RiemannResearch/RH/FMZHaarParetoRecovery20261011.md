@@ -64,8 +64,11 @@ Hadamard product is introduced. All thirteen selected transitive axiom reports c
 
 ## Open obligations
 
-The Selberg zero-density provider and Landau arithmetic main-term providers
-are not proved by this recovery. The circle Poisson theorem and generic
+The classical Selberg zero-density theorem is unconditional on paper; its Lean
+provider and the Landau arithmetic main-term providers are not proved by this
+recovery. The precise density input and strengthened consequences are now in
+Analysis/ActualZeroSelbergDensity; see RH/SelbergDensityStatus20261011.md.
+The circle Poisson theorem and generic
 weighted Fourier aggregation do not establish a full prime-torus law, actual
 mixed-mode arithmetic limits, or a full-prime signed density. Pareto residual
 convergence and vanishing of the detecting cosh mass remain open; these

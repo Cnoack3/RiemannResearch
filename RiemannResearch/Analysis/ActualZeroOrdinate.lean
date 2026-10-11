@@ -14,7 +14,8 @@ import RiemannResearch.RH.WeilExplicitFormula.WeilEF.ZeroSummability
 
 All zeros, multiplicities and cutoffs below are those of Mathlib's actual
 `riemannZeta`. The finite identities and estimates have no analytic assumptions.
-The sufficient Landau estimate is in ActualUniformRationalLandau; exponential density remains open.
+The sufficient Landau estimate is in ActualUniformRationalLandau. The classical
+unconditional Selberg exponential density theorem is not yet formalized here.
 -/
 
 noncomputable section
