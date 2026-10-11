@@ -26,6 +26,7 @@ From the repository root on the Ubuntu MCP server, start with the tiny probe:
 ```sh
 bazel --output_base="$HOME/.cache/bazel-buildbuddy-smoke" build \
   --config=buildbuddy --remote_accept_cached=false \
+  --action_env=LEAN_RBE_PROBE_NONCE="$(date +%s%N)" \
   --remote_download_outputs=toplevel //bazel:rbe_probe
 cat bazel-bin/bazel/rbe-probe.txt
 ```
@@ -33,6 +34,9 @@ cat bazel-bin/bazel/rbe-probe.txt
 Expect `Linux x86_64` and an actual `remote` process in the build summary.
 This checks authentication, image pulling, and execution without fetching
 Mathlib or uploading the Lean SDK. A cache hit alone does not prove execution.
+`--remote_accept_cached=false` bypasses remote cache hits but does not force
+locally up-to-date actions to rerun. The nonce changes the probe action's key
+so repeated probes exercise execution without cleaning the workspace.
 
 Then test actual Lean compilation and the compiled-sorry audit:
 
