@@ -1,5 +1,41 @@
 # Theorem catalog
 
+### Unconditional ordinate kernels, second energy, and growing Fourier tests (2026-10-11)
+
+Established without RH:
+- Analysis/FrequencySensitiveGramBounds.lean: exact weighted frequency spread,
+  including its negative square; translation invariance; variance-sensitive
+  complex Gram error bounds and exact signed three-term splitting.
+- Analysis/SummableOrdinateKernel.lean: absolutely convergent positive-definite
+  kernels, exact finite-plus-tail identity, full uniform tails, and moving-test
+  convergence under the actual coefficient-times-tail budget.
+- Analysis/ActualZeroSecondEnergy.lean: convergence of the actual multiplicity-
+  weighted second horizontal energy E2; E4 <= E2; exact curvature moment
+  sum gamma^2*w4 = E2-E4; individual displacement bounds; E2=0 iff RH.
+- Analysis/ActualHorizontalEnergyKernel.lean: actual beta-sensitive kernel,
+  K(0)=E4, positivity, all-frequency height-tail bound E2/(1+H^2), and growing
+  coefficient tail control. These results do not establish E2=0 or E4=0.
+- Analysis/ActualDirichletPolynomialGram.lean: exact squared-polynomial sum over
+  actual zeros equals its full integer-frequency Gram form, with multiplicity.
+
+Conditional research reductions:
+- growingGram_signed_remainder_tendsto_zero: Open analytic entrywise provider
+  for the chosen family and its vanishing weighted budget.
+- sampledSquare_prime_remainder_bound: Open formal sharp actual-ordinate FMZ
+  remainder provider; signed von Mangoldt prime-power matrix is preserved.
+- riemannHypothesis_of_detecting_height_tests: Open construction of one family
+  satisfying strict energy detection and finite arithmetic cancellation. Its
+  tail is supplied under an explicit geometric cutoff/coefficient-growth
+  budget. No such detecting/cancelling arithmetic provider is proved here.
+
+RH/MovingFrequencyMobiusLaws20261011.md contains independently audited PAPER
+proofs from FMZ Lemmas 1-2: positive Mobius secondary law, full polynomial L2
+tails, random analytic laws, and empirical reciprocal compatibility. These
+analytic statements are not completely Lean-formalized. Actual shifted-zeta
+identification, BSY vanishing and Bagchi recurrence remain Open.
+See RH/UnconditionalHarmonicContinuation20261011.md for the precise boundary.
+
+
 ### Actual squarefree residual laws, full inverse Gram, and variation (2026-10-11)
 
 Established structural identities and conditional geometric branches:
