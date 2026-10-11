@@ -19,9 +19,10 @@ explicit import dependencies are the next step for fine-grained caching.
 That split must also preserve Lean module sidecar artifacts between targets.
 
 The Lake extension reads the existing `lean-toolchain` and `lake-manifest.json`.
-`bazel/lakefile.toml` lists only the project dependencies so bootstrap cannot
-accidentally build the project. Keep its direct requirements synchronized with
-the root Lake file. Transitive package labels come from the extension.
+Tomato's extension expects a dependencies-only Lakefile and stages metadata
+plus a placeholder source, rather than project sources. `bazel/lakefile.toml`
+follows that contract. Keep its direct requirements synchronized with the root
+Lake file. Transitive package labels come from the extension.
 
 The first bootstrap downloads the Lean distribution and Mathlib's public cache,
 then builds only the external modules listed in `source_build_targets` and their
