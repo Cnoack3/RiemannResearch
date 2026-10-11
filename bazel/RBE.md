@@ -34,20 +34,34 @@ cat bazel-bin/bazel/rbe-probe.txt
 Expect `Linux x86_64` and an actual `remote` process in the build summary.
 This checks authentication, image pulling, and execution without fetching
 Mathlib or uploading the Lean SDK. A cache hit alone does not prove execution.
-`--remote_accept_cached=false` bypasses remote cache hits but does not force
-locally up-to-date actions to rerun. The nonce changes the probe action's key
-so repeated probes exercise execution without cleaning the workspace.
+`--remote_accept_cached=false` bypasses remote action and repository contents
+cache reads in Bazel 9.2, but does not force locally up-to-date actions to rerun.
+Use it only for this tiny executor probe. The nonce changes the probe action's
+key so repeated probes exercise execution without cleaning the workspace.
 
-Then test actual Lean compilation and the compiled-sorry audit:
+Then build the Lean smoke target and its compiled-sorry audit, keeping caches
+enabled:
 
 ```sh
 bazel --output_base="$HOME/.cache/bazel-buildbuddy-smoke" build \
-  --config=buildbuddy --remote_accept_cached=false //:smoke
+  --config=buildbuddy //:smoke
 ```
 
-The smoke target imports `Mathlib.Tactic.NormNum`. Its first run may fetch
-dependency repositories locally and upload the Lean SDK and imported artifacts
-to BuildBuddy. It does not build the full RiemannResearch target.
+The smoke target imports `Mathlib.Tactic.NormNum`, but `MODULE.bazel` prepares
+the entire Mathlib repository (`modules = ["Mathlib"]`) for all project targets.
+If neither the shared local nor remote repository contents cache has a matching
+entry, its first population runs `lake exe cache get Mathlib` locally before
+remote Lean actions can start. This can take several minutes. It may also need
+to upload the Lean SDK and imported artifacts to BuildBuddy. It does not compile
+the full RiemannResearch target.
+
+Fresh workspaces on the same Ubuntu server should reuse the completed repository
+through the shared local contents cache under the same `output_user_root`.
+A local hit links the completed directory; it does not repeat the Mathlib
+bootstrap or copy its compiled bundles into every workspace. RBE itself does
+not execute repository rules. Changed dependency inputs, cache eviction, or a
+different cache location can still cause a cold fetch. Confirm reuse with the
+fresh output base below before relying on this for agent workspaces.
 
 Test remote cache reuse from a second output base, allowing cached results:
 
@@ -56,8 +70,8 @@ bazel --output_base="$HOME/.cache/bazel-buildbuddy-warm" build \
   --config=buildbuddy //:smoke
 ```
 
-Compare the linked invocation pages: remote actions on the forced run, cache
-hits on the fresh repeat, and uploaded/downloaded bytes. Stored artifact size is
+Compare the linked invocation pages: remote actions when compilation is needed,
+cache hits on the fresh repeat, and uploaded/downloaded bytes. Stored artifact size is
 not the same as transfer per invocation. Keep the account on the free Personal
 plan; its public pricing does not specify exactly how internal executor traffic
 counts toward the advertised transfer allowance.
@@ -138,13 +152,13 @@ bazel --output_base="$HOME/.cache/bazel-rbe-smoke" build --config=rbe \
 cat bazel-bin/bazel/rbe-probe.txt
 
 bazel --output_base="$HOME/.cache/bazel-rbe-smoke" build --config=rbe \
-  --remote_accept_cached=false //:smoke
+  //:smoke
 ```
 
 The first command tests the executor without fetching Mathlib or uploading the
 Lean toolchain. Look for an actual `remote` process in the build summary.
 `remote cache hit` alone does not prove execution. The second command tests Lean
-and its compiled-sorry audit. Repository fetching and analysis still run locally;
+and its compiled-sorry audit with repository and action cache reads enabled. Repository fetching and analysis still run locally;
 Lean compilation and its audit run remotely. The first Lean test must upload its
 SDK and imported artifacts to the execution service's CAS. Later actions reuse
 those blobs.

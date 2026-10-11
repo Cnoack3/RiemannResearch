@@ -92,8 +92,11 @@ cache or change Lake's separate cache budget.
 The first Mathlib population downloads its public cache locally. Bootstrap uses
 isolated temporary Home, Lake, and Mathlib cache directories. It retains only
 compiled import bundles and deterministic metadata, then removes the temporary
-state. Later workspaces can reuse the completed repository without repeating
-bootstrap.
+state. Later workspaces with matching dependency inputs and the same
+`output_user_root` can reuse the completed repository through a directory
+symlink, without repeating bootstrap or copying its bundles. This reuse must
+still be confirmed on the Ubuntu server with the hosted BuildBuddy profile.
+RBE executes compilation actions; repository bootstrap still runs locally.
 
 `.bazelrc` also enables experimental remote repository contents caching:
 
@@ -106,6 +109,9 @@ Eligible completed repositories can use the configured remote cache as well.
 Cached action outputs download when needed by local actions; outputs compiled
 locally still occupy disk. Repository contents caching is experimental in
 Bazel 9.2. The downloaded-archive cache remains separate.
+`--remote_accept_cached=false` also disables remote repository contents cache
+reads, so omit it from normal builds and fresh-workspace reuse tests. It does
+not disable an already populated shared local repository contents cache.
 
 ## Private GCS cache on the Ubuntu server
 
