@@ -23,7 +23,8 @@ def geometricPrefix (r : ℝ) (a : ℕ → ℝ) (N : ℕ) : ℝ :=
     prefixSum a (N + 1) = prefixSum a N + a N := by
   simp [prefixSum, Finset.sum_range_succ]
 
-/-- Finite summation by parts, with the boundary term retained. -/
+/-- Finite summation by parts for any real ratio and signed sequence, retaining
+the terminal correction `r^N * prefixSum a N`. -/
 theorem geometricPrefix_eq (r : ℝ) (a : ℕ → ℝ) (N : ℕ) :
     geometricPrefix r a N =
       (1-r) * (∑ n ∈ Finset.range N, r^n * prefixSum a (n+1)) +
