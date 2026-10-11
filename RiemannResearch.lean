@@ -1,3 +1,7 @@
+import RiemannResearch.Analysis.OrdinateWindowVariance
+import RiemannResearch.Analysis.OrdinateTriangleSecants
+import RiemannResearch.Analysis.CosinePolynomialMeanSquare
+import RiemannResearch.Analysis.ActualZeroWindowVariance
 import RiemannResearch.Analysis.ActualConsecutiveGapWindows
 import RiemannResearch.Analysis.ActualConsecutivePhase
 import RiemannResearch.Analysis.ConsecutivePhaseAsymptotics

@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Exact ordinate counting windows and pair-correlation reductions (2026-10-11)
+
+Four principal finite results and actual-zero assembly passed the combined server
+candidate in `job_PR_vKXrffVXh4S7Sk0zbCHyXnY3GkstC`; final project verification
+and publication are gated by checkpoint. See RH/OrdinatePairCorrelationVerification20261011.md.
+
+Established finite results (no RH or simplicity assumption):
+- OrdinateWindowVariance: exact clipped first/second counting moments, support
+  specialization, and triangle = squared mean + centered count variance.
+- OrdinateTriangleSecants: hinge convexity, inclusive/strict secant counts,
+  collision-atom lower bound, and quantitative transfer of three energy errors.
+- CosinePolynomialMeanSquare: complete signed finite cosine mean square with
+  difference and sum frequencies retained; zero and even cosine kernels.
+- ActualZeroWindowVariance: actual multiplicity-copy count and variance identity
+  with explicit geometric lower-support and exact mean normalization.
+
+Conditional research reduction and Open obligations:
+- Paper: prime polynomial mean square reaches cutoff X=T by the classical
+  Montgomery--Vaughan theorem; actual beta-sensitive contour residual is exact.
+  These analytic inputs, PNT/Fujii and vague/asymptotic transfer are not newly
+  formalized by the four finite modules.
+- Open: signed actual prime/residual covariance plus residual energy converges
+  to the high-frequency sine-variance tail for every fixed positive window.
+  RH/OrdinatePairCorrelation20261011.md (5.7)--(5.8) gives the exact target.
+- Open: a usable uniform microscopic Selberg-type analytic approximation.
+  No ordinate PCC or global RH conclusion is asserted.
+
 ### Consecutive zeta ordinates, gap weights, and empty windows (2026-10-11)
 
 Twelve Analysis modules add exact finite phase transport, signed quadratic,
