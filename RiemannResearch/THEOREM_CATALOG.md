@@ -1,5 +1,47 @@
 # Theorem catalog
 
+### Recovered harmonic analysis and analytic reciprocal developments (2026-10-11)
+
+Twenty recovered modules passed the combined server import check in
+`job_qLV5LgK5vCeCoU--RBHGL-2xcKlhEXoH`; publication is gated by the final
+server checkpoint. Validation and interrupted jobs are recorded in
+RH/LeanRecoveryStatus20261011.md. Exact signed identities and explicit analytic
+premises are retained throughout.
+
+Structural results verified by the combined server check:
+- LagPhase and PrimePhaseTorus: exact lag-boundary cancellation, quotient-metric
+  estimates, actual prime-phase characters and two-prime injectivity.
+- ActualPhaseGramExpansion: complete signed actual phase Gram expansion and
+  equivalence of residual decay to decay of its displayed cosh correction.
+- ActualZeroCoshMass: convergent regularized cosh mass, its two-sided comparison
+  with horizontal fourth energy, and its zero criterion equivalent to RH.
+- BalancedPowerTransfer, BalancedTuplePhase, FrequencySpreadInterval: exact
+  power-error transfer, balanced tuple identities and interval spread bounds.
+- FiniteCollisionCertificates: finite collision excess and injectivity tests;
+  ActualZeroBalancedTuplePhase and ActualOrdinateCollisionCertificates provide
+  actual-zero specializations with analytic multiplicity preserved.
+- AnalyticCircleSquareBounds, EmpiricalCompactCircleControl and
+  ActualAnalyticPolynomialControl: scalar-to-compact analytic control, entire
+  Dirichlet polynomials and exact actual-zero weighted averaging.
+- TruncatedMobiusConvolution, AnalyticDirichletPolynomial and
+  ProductFrequencyDispersion: exact product coefficients, signed residual
+  polynomial and product/fiber frequency-dispersion identities.
+- EmpiricalReciprocalTransfer and ReciprocalRateBalance: finite empirical
+  product-error identities, moment/density transfers and rate balancing.
+- AbsoluteReciprocalCompatibility and AnalyticAbsoluteReciprocal: unconditional
+  quantitative reciprocal compatibility on half-planes Re(s) >= sigma > 1.
+
+Conditional research reductions and Open obligations:
+- Actual phase/lag limiting laws: Open analytic equidistribution and decay
+  providers in the displayed theorems; no Haar or Poisson law is assumed proved.
+- Cosh-mass RH criterion: Open proof that the nonnegative mass vanishes.
+- Collision-based global criticality: Open cofinal small-excess certificates;
+  finite conditional tests do not prove RH or simplicity globally.
+- Actual compact reciprocal laws in 1/2 < Re(s) < 1: Open the requisite scalar
+  empirical second-moment/FMZ estimates and divisor-tail/counting providers.
+  Compactness and rate transfers alone do not discharge these obligations.
+
+
 ### Quantitative sampling and finite collision certificates (2026-10-11)
 
 Prior local validation: the 31 modules compiled under Lean 4.33.0-rc2;
