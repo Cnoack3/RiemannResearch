@@ -1,0 +1,137 @@
+diff --git a/lean/lake.bzl b/lean/lake.bzl
+index de64008..5813e40 100644
+--- a/lean/lake.bzl
++++ b/lean/lake.bzl
+@@ -367,7 +367,8 @@ def _lake_workspace_impl(rctx):
+     # (which call `lean_toolchain/bin/lake`) work unchanged. lean_dist_lake points at
+     # `<dist>/lean_toolchain/bin/lake`; its grandparent is the toolchain root.
+     dist_lake = rctx.path(rctx.attr.lean_dist_lake)
+-    rctx.symlink(dist_lake.dirname.dirname, "lean_toolchain")
++    if not rctx.path("lean_toolchain").exists:
++        rctx.symlink(dist_lake.dirname.dirname, "lean_toolchain")
+     _stage_lake_workspace(rctx)
+ 
+     env = _lake_env(rctx)
+@@ -428,6 +429,17 @@ def _lake_workspace_impl(rctx):
+     # upstream cache (e.g. cslib) instead of source-building them below.
+     _fetch_prebuilt_oleans(rctx)
+ 
++    if rctx.attr.source_build_targets:
++        build = _run_lake(
++            rctx,
++            ["build"] + ["+" + module for module in rctx.attr.source_build_targets],
++            timeout = 7200,
++            env = env,
++        )
++        if build.return_code != 0:
++            fail("rules_lean: building dependency modules failed.\nstdout:\n%s\nstderr:\n%s" %
++                 (build.stdout, build.stderr))
++
+     # For any package whose oleans aren't yet on disk (no mathlib cache hit, no
+     # prebuilt-olean cache, or non-mathlib workspace), source-build via `lake build
+     # <pkg>`. Skipped unless allow_source_build (slow); otherwise the missing-oleans
+@@ -600,6 +612,11 @@ lake_workspace = repository_rule(
+                   "(mathlib from source is ~30 min); fast and necessary for custom " +
+                   "Lake deps that have no upstream cache.",
+         ),
++        "source_build_targets": attr.string_list(
++            default = [],
++            doc = "Dependency module names to build with `lake build +Module`. " +
++                  "Builds their import closures even when allow_source_build is False.",
++        ),
+         "cache_roots": attr.string_list(
+             default = [],
+             doc = "Module specs to TREE-SHAKE mathlib's olean download to — the roots " +
+@@ -690,6 +707,7 @@ def _lake_extension_impl(mctx):
+             lakefile = tag.lakefile,
+             lake_manifest = tag.lake_manifest,
+             allow_source_build = tag.allow_source_build,
++            source_build_targets = tag.source_build_targets,
+             cache_roots = tag.cache_roots,
+             olean_cache = tag.olean_cache,
+             olean_cache_packages = tag.olean_cache_packages,
+@@ -704,6 +722,7 @@ _workspace_tag = tag_class(attrs = {
+     "lakefile": attr.label(mandatory = True),
+     "lake_manifest": attr.label(mandatory = True),
+     "allow_source_build": attr.bool(default = False),
++    "source_build_targets": attr.string_list(default = []),
+     "cache_roots": attr.string_list(
+         default = [],
+         doc = "Module specs to tree-shake mathlib's olean download to (the roots this " +
+diff --git a/lean/lean.bzl b/lean/lean.bzl
+index 2700ca1..b74b45c 100644
+--- a/lean/lean.bzl
++++ b/lean/lean.bzl
+@@ -651,6 +651,7 @@ def _lean_library_impl(ctx):
+         "work\t" + name + ".topo_work",
+         "marker\t" + marker.path,
+     ]
++    lines += ["flag\t" + flag for flag in ctx.attr.extra_flags]
+     for src, rel, olean in units:
+         lines.append("stage\t" + src.path + "\t" + rel)
+         lines.append("module\t" + rel)
+@@ -696,6 +697,9 @@ lean_library = rule(
+             doc = "Compiled Lean libraries this one imports. Same-top-namespace deps are staged into the compile root; disjoint ones are on LEAN_PATH. All propagate transitively in this library's LeanInfo.",
+         ),
+         "forbid_sorry": _FORBID_SORRY_ATTR,
++        "extra_flags": attr.string_list(
++            doc = "Compiler flags passed to each source module, such as Lake leanOptions.",
++        ),
+         "_driver": attr.label(
+             default = "@rules_lean//lean/private:topo_compile.lean",
+             allow_single_file = True,
+diff --git a/lean/private/known_lean_versions.bzl b/lean/private/known_lean_versions.bzl
+index bad9a22..b71a065 100644
+--- a/lean/private/known_lean_versions.bzl
++++ b/lean/private/known_lean_versions.bzl
+@@ -33,6 +33,12 @@ KNOWN_LEAN_VERSIONS = {
+         "linux_x86_64": "fb97c65730b22927951dadae964f06b2b0e6cfb2cc60f3abe26d8c99f27aa02b",
+         "linux_aarch64": "593f5d95f6c37fd54e871b683d8efbb42c4224bdfe8ac0170592c30f1321798c",
+     },
++    "v4.33.0-rc2": {
++        "darwin_aarch64": "e68c112bdea1cd5f64d97acaf4873f558aa3084d4cb0457e39cf92abec67902e",
++        "darwin_x86_64": "7fd0cd763a3578009f2999ed9f5b321949fa904f33b30aced411edd2159c2b35",
++        "linux_x86_64": "1a4f7d72eebd062f67477daa65b5d50e819103e524f9c14890c891ced8212e94",
++        "linux_aarch64": "06a186c7c6dedfd7115f42c80a307a93dd5a9ead752e38656c780506a89ab100",
++    },
+ }
+ 
+ # Per-platform asset filename template. Lean release naming has shifted
+diff --git a/lean/private/topo_compile.lean b/lean/private/topo_compile.lean
+index dcafd4d..1aae5bd 100644
+--- a/lean/private/topo_compile.lean
++++ b/lean/private/topo_compile.lean
+@@ -20,6 +20,7 @@ at the exec root or the run step `cwd`s into the work dir.
+   lean      <lean compiler binary>
+   work      <writable scratch root to create>
+   leanpath  <dir>                 (0+; disjoint-namespace dep roots)
++  flag      <compiler argument>   (0+; passed to every module compilation)
+   stage     <file>\t<rel>         (0+; copied to <work>/<rel>, not compiled)
+   module    <rel>                 (1+; a staged .lean to compile, topo-ordered)
+   output    <rel>\t<dest .olean>  (0+; publish a compiled module's olean)
+@@ -108,6 +109,7 @@ structure Job where
+   entry : Option String := none
+   stdout : Option String := none
+   forbidSorry : Bool := false
++  flags : List String := []
+   leanPaths : List String := []
+   stages : List (String × String) := []   -- (src, rel)
+   modules : List String := []              -- rels to compile
+@@ -123,6 +125,7 @@ private def parseManifest (content : String) : Job := Id.run do
+     | ["entry", v] => j := { j with entry := some v }
+     | ["stdout", v] => j := { j with stdout := some v }
+     | ["forbid_sorry", v] => j := { j with forbidSorry := v == "1" }
++    | ["flag", v] => j := { j with flags := j.flags ++ [v] }
+     | ["leanpath", v] => j := { j with leanPaths := j.leanPaths ++ [v] }
+     | ["stage", src, rel] => j := { j with stages := j.stages ++ [(src, rel)] }
+     | ["module", rel] => j := { j with modules := j.modules ++ [rel] }
+@@ -165,7 +168,8 @@ def main (args : List String) : IO UInt32 := do
+       if let some (_, rel) := nameToRel.find? (·.1 == m) then
+         let r ← IO.Process.output {
+           cmd := leanBin
+-          args := #["--root=" ++ work, "-o", work ++ "/" ++ oleanRel rel, work ++ "/" ++ rel]
++          args := #["--root=" ++ work, "-o", work ++ "/" ++ oleanRel rel] ++
++            j.flags.toArray ++ #[work ++ "/" ++ rel]
+           env := #[("LEAN_PATH", some leanPath)]
+         }
+         -- ALWAYS forward diagnostics, not just on failure. `lean` exits 0 on a

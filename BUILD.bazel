@@ -1,0 +1,33 @@
+load("@rules_lean//lean:lean.bzl", "lean_library")
+load("@lake_deps//:packages.bzl", "LAKE_PACKAGES")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files([
+    "MODULE.bazel",
+    "lake-manifest.json",
+    "lakefile.toml",
+    "lean-toolchain",
+])
+
+_LEAN_FLAGS = [
+    "-Dpp.unicode.fun=true",
+    "-DrelaxedAutoImplicit=false",
+    "-Dweak.linter.mathlibStandardSet=true",
+    "-DmaxSynthPendingDepth=3",
+]
+
+# Coarse baseline; split this into per-module libraries for finer action caching.
+lean_library(
+    name = "RiemannResearch",
+    srcs = glob(["RiemannResearch.lean", "RiemannResearch/**/*.lean"]),
+    deps = LAKE_PACKAGES,
+    extra_flags = _LEAN_FLAGS,
+)
+
+lean_library(
+    name = "smoke",
+    srcs = ["RiemannResearch/Basic.lean"],
+    deps = LAKE_PACKAGES,
+    extra_flags = _LEAN_FLAGS,
+)

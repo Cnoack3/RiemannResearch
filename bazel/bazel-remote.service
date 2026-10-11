@@ -1,0 +1,10 @@
+[Unit]
+Description=Bazel remote cache backed by GCS
+
+[Service]
+ExecStart=%h/.local/bin/bazel-remote --config_file %h/.config/bazel-remote/config.yaml
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

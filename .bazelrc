@@ -1,0 +1,5 @@
+# Stock bazel-remote signs GCS requests with the server's private HMAC key.
+# Bucket: riemann_lean_cache; object prefix: bazel/.
+build --remote_cache=http://127.0.0.1:9090
+
+try-import %workspace%/.bazelrc.local

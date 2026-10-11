@@ -1,0 +1,4 @@
+exports_files([
+    "lakefile.toml",
+    "rules_lean_compat.patch",
+])

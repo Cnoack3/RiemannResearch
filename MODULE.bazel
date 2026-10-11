@@ -1,0 +1,32 @@
+module(
+    name = "riemann_research",
+    version = "0.1.0",
+    bazel_compatibility = [">=9.0.0", "<10.0.0"],
+)
+
+bazel_dep(name = "rules_lean", version = "0.7.0")
+git_override(
+    module_name = "rules_lean",
+    remote = "https://github.com/tomato-bazel/rules_lean.git",
+    commit = "e3b343ff799554a1e1a1d158d4a96eac5cdaa3ea",
+    patches = ["//bazel:rules_lean_compat.patch"],
+    patch_strip = 1,
+)
+
+lake = use_extension("@rules_lean//lean:lake.bzl", "lake")
+lake.workspace(
+    name = "lake_deps",
+    lean_toolchain = "//:lean-toolchain",
+    lakefile = "//bazel:lakefile.toml",
+    lake_manifest = "//:lake-manifest.json",
+    cache_roots = ["Mathlib"],
+    allow_source_build = False,
+    source_build_targets = [
+        "Architect",
+        "PrimeNumberTheoremAnd.SmoothExistence",
+        "PrimeNumberTheoremAnd.Mathlib.Analysis.Asymptotics.Asymptotics",
+        "Batteries.Tactic.Lemma",
+    ],
+)
+use_repo(lake, "lake_deps")
+register_toolchains("@lake_deps//:lean_toolchain_def")
