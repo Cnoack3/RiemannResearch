@@ -98,34 +98,6 @@ theorem paretoError_optimal_scale_minimizes {f : ℕ → ℝ} {C : ℝ}
     mul_nonneg (add_nonneg (paretoVariance_nonneg f) (sq_nonneg _)) (sq_nonneg _)
   linarith
 
-theorem primePowerCombination_noiseSignal_floor (s : Finset ℕ) (c : ℕ → ℝ)
-    (hs : ∀ q ∈ s, ∃ p a, p.Prime ∧ q = p^a)
-    (hm : paretoMean (fun k => ∑ q ∈ s, c q * ramanujanPacket q k) ≠ 0) :
-    (1 : ℝ)/91 ≤ noiseSignalRatio (fun k => ∑ q ∈ s, c q * ramanujanPacket q k) := by
-  let f : ℕ → ℝ := fun k => ∑ q ∈ s, c q * ramanujanPacket q k
-  obtain ⟨C, hC⟩ := packetCombination_bounded s c
-  let a : ℝ := paretoMean f / (paretoVariance f + (paretoMean f)^2)
-  have hbound := primePowerCombination_full_error_floor s (fun q => a * c q) hs
-  have heq : (fun k => ∑ q ∈ s, (a * c q) * ramanujanPacket q k) =
-      (fun k => a * f k) := by
-    funext k
-    simp only [f, Finset.mul_sum, mul_assoc]
-  simp_rw [congrFun heq] at hbound
-  have herr : (1 : ℝ)/92 ≤ paretoError (fun k => a * f k) := by
-    change (1 : ℝ)/92 ≤ ∑' k, positiveWeight k * ((1 - a*f k)*(1 - a*f k))
-    simp only [← sq]
-    linarith
-  have hop := paretoError_scale_completion (f := f) hC hm a
-  change paretoError (fun k => a * f k) = _ at hop
-  simp only [a, sub_self, zero_pow (by decide : 2 ≠ 0), mul_zero, add_zero] at hop
-  rw [hop] at herr
-  have hmpos : 0 < (paretoMean f)^2 := sq_pos_of_ne_zero hm
-  have hdpos : 0 < paretoVariance f + (paretoMean f)^2 :=
-    add_pos_of_nonneg_of_pos (paretoVariance_nonneg f) hmpos
-  have hb := (le_div_iff₀ hdpos).mp herr
-  change (1 : ℝ)/91 ≤ paretoVariance f / (paretoMean f)^2
-  apply (le_div_iff₀ hmpos).mpr
-  nlinarith
 
 end
 end RiemannResearch.RH.Pareto

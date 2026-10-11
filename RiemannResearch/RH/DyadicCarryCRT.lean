@@ -2,6 +2,7 @@ import RiemannResearch.RH.DyadicCarryBlocks
 import RiemannResearch.RH.OddCarryJointHead
 import RiemannResearch.RH.ParetoPeriodicRegrouping
 import RiemannResearch.RH.ParetoLegalStructure
+import RiemannResearch.RH.ParetoCovariance
 
 /-!
 # Exact whole-dyadic-block CRT certificates

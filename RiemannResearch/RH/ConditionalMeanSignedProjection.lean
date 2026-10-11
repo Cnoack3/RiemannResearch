@@ -1,5 +1,6 @@
 import RiemannResearch.RH.ConditionalMeanHeadMinimum
 import RiemannResearch.RH.ConditionalMeanTailNonattainment
+import RiemannResearch.RH.ConditionalMeanSubpolynomial
 
 /-!
 # Signed projection for the actual infinite conditional energy

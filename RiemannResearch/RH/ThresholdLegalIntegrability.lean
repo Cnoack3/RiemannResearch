@@ -1,5 +1,6 @@
 import RiemannResearch.RH.ThresholdDilationAlgebra
-import RiemannResearch.RH.ParetoSequenceCertificates
+import RiemannResearch.RH.ParetoDilation
+import RiemannResearch.RH.ParetoResidueDuality
 
 /-!
 # Integrability of every finite legal seed synthesis

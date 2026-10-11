@@ -1,5 +1,6 @@
 import RiemannResearch.RH.ArithmeticMellinPositiveHalfPlane
-import RiemannResearch.RH.ParetoSequenceCertificates
+import RiemannResearch.RH.ParetoDilation
+import RiemannResearch.RH.ParetoResidueDuality
 import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 
 /-!

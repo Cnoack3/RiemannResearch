@@ -17,8 +17,6 @@ open Pareto
 
 def allPositiveSeeds : Set ℕ := {d | 0 < d}
 
-def fullSquaredNorm (F : ℕ → ℝ) : ℝ := ∑' n, weight n * F n ^ 2
-
 /-- Full cumulative energy, used on the square-summable domain. -/
 def cumulativeEnergy (f : ℕ → ℝ) : ℝ := fullSquaredNorm (cumulative f)
 

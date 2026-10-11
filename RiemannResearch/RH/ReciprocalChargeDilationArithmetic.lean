@@ -1,5 +1,6 @@
 import RiemannResearch.RH.MobiusReciprocalChargeBridge
 import RiemannResearch.NumberTheory.SquarefreeEulerSeries
+import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusReciprocal
 
 /-! Arithmetic identities for the sum of reciprocal-charge vectors at
 cutoffs `N` and `h*N`. This file retains the signed mixed term exactly. -/

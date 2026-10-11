@@ -2,6 +2,7 @@ import RiemannResearch.RH.ConditionalMeanHeadMinimum
 import RiemannResearch.RH.CesaroResidueMean
 import RiemannResearch.RH.ParetoResidueDuality
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import RiemannResearch.NumberTheory.MobiusReciprocalSum
 
 /-!
 # Canonical Möbius exact heads with unconditional linear conditional energy
@@ -20,10 +21,6 @@ set_option backward.isDefEq.respectTransparency false
 namespace RiemannResearch.RH.Pareto
 open Analysis.Cesaro ArithmeticCumulative Probability.ConditionalIID
 open ArithmeticCumulative.CesaroResidue
-
-/-- The actual finite reciprocal Möbius sum; its support is positive. -/
-def mobiusReciprocalSum (Y : ℕ) : ℝ :=
-  ∑ d ∈ Finset.Icc 1 Y, (ArithmeticFunction.moebius d : ℝ) / (d : ℝ)
 
 /-- The manuscript's canonical legal witness. The d=1 residue is identically zero. -/
 def canonicalMobiusHead (Y : ℕ) (n : ℕ) : ℝ :=

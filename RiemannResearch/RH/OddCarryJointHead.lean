@@ -2,6 +2,7 @@ import RiemannResearch.RH.OddCarryArithmetic
 import RiemannResearch.RH.FiniteResidueHeadSurjectivity
 import RiemannResearch.RH.ExactHeadCharges
 import RiemannResearch.RH.ThresholdLegalIntegrability
+import RiemannResearch.RH.ParetoCovariance
 
 /-!
 # Simultaneous arithmetic boundary correction for odd carries

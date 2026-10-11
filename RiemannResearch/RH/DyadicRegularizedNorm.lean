@@ -1,6 +1,6 @@
 import Mathlib.Analysis.PSeries
 import RiemannResearch.RH.ThresholdHilbertProjection
-import RiemannResearch.RH.ParetoSequenceCertificates
+import RiemannResearch.RH.ParetoResidueDuality
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic.Linarith

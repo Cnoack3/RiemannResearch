@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Broader structural Lake dependency cleanup (2026-10-11)
+
+Thirty-two existing declarations, including one private helper, are relocated
+with their statement and proof/definition text preserved. Public names and
+mathematical status are unchanged. The new ownership is:
+
+- `NumberTheory/MobiusReciprocalSum.lean`: the reciprocal Möbius sum and four
+  scalar finite-sum/Cesàro identities formerly in canonical Hilbert applications.
+- `NumberTheory/PrimeNumberTheorem/MobiusReciprocal.lean`: the existing PNT
+  limit `RiemannResearch.RH.Pareto.mobiusReciprocalSum_tendsto_zero` and its
+  private range-conversion helper.
+- `RH/ConditionalMeanEnergy.lean`: `conditionalMeanError`,
+  `conditionalMeanSquare`, their nonnegativity lemmas, `mean_eq_one_of_head`,
+  and `legal_conditionalMeanSquare_summable` in `RiemannResearch.RH.Pareto`.
+  Its RH criterion `riemannHypothesis_of_bounded_conditionalHeadMinimum`
+  now belongs to `RH/ConditionalMeanMinimumCriteria.lean`.
+- `RH/MellinCriticalPoint.lean`: `criticalPoint` and its three basic lemmas in
+  `RiemannResearch.RH.Pareto.MellinFrequency`.
+- `RH/MobiusDifferenceCLM.lean`: anchored evaluation and Möbius-difference
+  continuous linear maps, with their two application lemmas.
+- `RH/ParetoResidueDuality.lean`: residue/packet boundedness lemmas;
+  `RH/ParetoDilation.lean`: bounded-error and weighted-summability lemmas;
+  `RH/ParetoSequenceCertificates.lean`: the specialized
+  `primePowerCombination_noiseSignal_floor` theorem formerly in `ParetoNoiseSignal`.
+- `RH/DilationWaveletAlgebra.lean`: `hilbertDilation_digit_one_sequence`;
+  `RH/ArithmeticCumulativeEnergy.lean`: `fullSquaredNorm`.
+- `RH/WeilExplicitFormula/GammaFacts/DigammaGrowthWide.lean`:
+  `Zeta23.ThmE.digamma_growth_wide`, formerly in the character explicit formula.
+
+No result or open research obligation changes. See
+[the broader dependency audit](RH/LakeDependencyAuditBroader20261011.md) for
+the complete relocation record, graph measurements, and validation scope.
+
 ### Structural Lake dependency cleanup (2026-10-11)
 
 Sixteen existing declarations move verbatim with their fully qualified names,

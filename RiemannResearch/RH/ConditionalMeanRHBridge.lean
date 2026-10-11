@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.MellinCesaroSummability
+import RiemannResearch.RH.ConditionalMeanEnergy
 import RiemannResearch.Probability.ConditionalIIDReplica
 import RiemannResearch.RH.ParetoLegalApproximationClosure
 
@@ -22,13 +23,6 @@ set_option backward.isDefEq.respectTransparency false
 
 namespace RiemannResearch.RH.Pareto
 open Analysis.Cesaro Probability.ConditionalIID ArithmeticCumulative
-
-/-- Error in the weaker, exact conditional-mean Hilbert norm. -/
-def conditionalMeanError (g : ℕ → ℝ) : ℝ :=
-  ∑' k : ℕ, mixtureWeight (k + 1) * (1 - cesaro g (k + 1)) ^ 2
-
-theorem conditionalMeanError_nonneg (g : ℕ → ℝ) : 0 ≤ conditionalMeanError g :=
-  tsum_nonneg (fun k => mul_nonneg (mixtureWeight_nonneg _) (sq_nonneg _))
 
 /-- At a right-half-plane zero, even the weaker conditional-mean error has a positive obstruction. -/
 theorem conditionalMeanError_obstruction_of_zeta

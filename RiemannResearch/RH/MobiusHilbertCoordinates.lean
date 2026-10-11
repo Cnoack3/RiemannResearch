@@ -1,6 +1,6 @@
-import RiemannResearch.RH.BalancedContinuousCoordinates
+import RiemannResearch.RH.MobiusDifferenceCLM
 import RiemannResearch.RH.ExactHeadCharges
-import RiemannResearch.RH.ParetoSequenceCertificates
+import RiemannResearch.RH.ParetoDilation
 import RiemannResearch.RH.ParetoGibbsTailBasis
 import RiemannResearch.RH.ParetoNormalizedResidueHilbert
 import Mathlib.Analysis.InnerProductSpace.Dual

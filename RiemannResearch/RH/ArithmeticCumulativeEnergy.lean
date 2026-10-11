@@ -1,5 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Topology.Algebra.InfiniteSum.Defs
 import Mathlib.Tactic
 
 /-!
@@ -26,6 +27,8 @@ def residueFraction (d n : ℕ) : ℝ := (n % d : ℕ) / (d : ℝ)
 
 /-- At zero this is zero; at positive `n` it is the NB/Pareto weight. -/
 def weight (n : ℕ) : ℝ := 1 / ((n : ℝ) * ((n : ℝ) + 1))
+
+def fullSquaredNorm (F : ℕ → ℝ) : ℝ := ∑' n, weight n * F n ^ 2
 
 def energyPrefix (f : ℕ → ℝ) (R : ℕ) : ℝ :=
   ∑ k ∈ Finset.range R, weight (k + 1) * (cumulative f (k + 1)) ^ 2

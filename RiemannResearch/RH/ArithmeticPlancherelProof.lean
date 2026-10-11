@@ -1,6 +1,7 @@
 import RiemannResearch.Analysis.FourierL1L2Plancherel
 import RiemannResearch.RH.ArithmeticMellinPositiveHalfPlane
-import RiemannResearch.RH.ParetoSequenceCertificates
+import RiemannResearch.RH.ParetoDilation
+import RiemannResearch.RH.ParetoResidueDuality
 import Mathlib.MeasureTheory.Integral.IntegralEqImproper
 import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 import Mathlib.Tactic.LinearCombination

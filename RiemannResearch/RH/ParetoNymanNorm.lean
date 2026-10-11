@@ -1,6 +1,6 @@
 import RiemannResearch.RH.ParetoUniformLaw
 import RiemannResearch.RH.ParetoNymanPointwise
-import RiemannResearch.RH.ParetoSequenceCertificates
+import RiemannResearch.RH.ParetoDilation
 
 /-!
 # Exact Nyman--Pareto norm identification

@@ -1,6 +1,6 @@
 import RiemannResearch.RH.ParetoSignedTails
 import RiemannResearch.Analysis.SummableDiscreteAbel
-import RiemannResearch.RH.ParetoSequenceCertificates
+import RiemannResearch.RH.ParetoResidueDuality
 
 /-!
 # The exact finite signed Pareto sieve boundary

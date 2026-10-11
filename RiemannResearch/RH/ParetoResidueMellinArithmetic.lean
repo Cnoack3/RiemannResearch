@@ -1,7 +1,7 @@
 import RiemannResearch.RH.ParetoMellinDilation
 import RiemannResearch.RH.DilationWaveletAlgebra
 import RiemannResearch.RH.NymanConductorContinuation
-import RiemannResearch.RH.ParetoSequenceCertificates
+import RiemannResearch.RH.ParetoResidueDuality
 import Mathlib.NumberTheory.LSeries.SumCoeff
 
 /-!

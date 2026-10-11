@@ -1,5 +1,5 @@
 import RiemannResearch.RH.BalancedArithmeticCuts
-import RiemannResearch.RH.ParetoCoordinateEvaluation
+import RiemannResearch.RH.MobiusDifferenceCLM
 import RiemannResearch.RH.DilationWaveletAlgebra
 import RiemannResearch.Analysis.ContinuousBiorthogonalDeletion
 import Mathlib.LinearAlgebra.LinearIndependent.Defs
@@ -65,23 +65,6 @@ theorem hilbertSequence_balancedIndex (i : BalancedArithmeticIndex) :
     have hm : (balancedIndexValue i : ℝ) ≠ 0 := by
       exact_mod_cast ne_of_gt (balancedIndexValue_pos i)
     simp only [smul_smul, one_div, mul_inv_cancel₀ hm, one_smul] <;> rfl
-
-def anchoredEvaluationCLM (n : ℕ) : ThresholdHilbert →L[ℝ] ℝ :=
-  match n with
-  | 0 => 0
-  | k + 1 => physicalEvaluationCLM k
-
-@[simp] theorem anchoredEvaluationCLM_apply (n : ℕ) (f : ThresholdHilbert) :
-    anchoredEvaluationCLM n f = hilbertSequence f n := by
-  cases n <;> simp [anchoredEvaluationCLM]
-
-def mobiusDifferenceCLM (n : ℕ) : ThresholdHilbert →L[ℝ] ℝ :=
-  ∑ d ∈ n.divisors, (ArithmeticFunction.moebius (n / d) : ℝ) •
-    (anchoredEvaluationCLM d - anchoredEvaluationCLM (d - 1))
-
-@[simp] theorem mobiusDifferenceCLM_apply (n : ℕ) (f : ThresholdHilbert) :
-    mobiusDifferenceCLM n f = mobiusDifference n (hilbertSequence f) := by
-  simp [mobiusDifferenceCLM, mobiusDifference, smul_eq_mul]
 
 def balancedCoefficientCLM (i : BalancedArithmeticIndex) : ThresholdHilbert →L[ℝ] ℝ :=
   ∑ n ∈ balancedArithmeticCut i.u i.a i.b, (1 / (n : ℝ)) • mobiusDifferenceCLM n

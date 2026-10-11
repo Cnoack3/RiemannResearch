@@ -1,4 +1,5 @@
 import RiemannResearch.RH.ConditionalMeanHeadMinimum
+import RiemannResearch.RH.ConditionalMeanHeadObstruction
 
 /-!
 # Compulsory head mass plus the signed Mellin tail obstruction

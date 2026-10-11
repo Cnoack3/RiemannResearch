@@ -5,6 +5,8 @@ Authors: RiemannResearch contributors
 -/
 import RiemannResearch.RH.ReciprocalChargeDilationArithmetic
 import RiemannResearch.NumberTheory.QuotientKernelEnergyLimit
+import RiemannResearch.RH.CanonicalMobiusConditionalHead
+import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusReciprocal
 
 /-!
 # Quotient energy for every finite signed integer-dilation kernel

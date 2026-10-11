@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.RH.WeilExplicitFormula.WeilEF.GoodHeights
-import RiemannResearch.RH.WeilExplicitFormula.ThmE.FullLineChiProof
+import RiemannResearch.RH.WeilExplicitFormula.GammaFacts.DigammaGrowthWide
 import RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.TwoLine
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum

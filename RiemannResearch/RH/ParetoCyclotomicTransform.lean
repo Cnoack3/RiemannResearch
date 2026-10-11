@@ -1,5 +1,5 @@
 import RiemannResearch.RH.ParetoGeometricTransform
-import RiemannResearch.RH.ParetoSequenceCertificates
+import RiemannResearch.RH.ParetoResidueDuality
 import Mathlib.Tactic.Linarith
 
 /-!

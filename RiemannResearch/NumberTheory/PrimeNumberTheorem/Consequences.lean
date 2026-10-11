@@ -11,7 +11,7 @@ Source: the PNT+ project, `PrimeNumberTheoremAnd/Consequences.lean`, commit
 `a5154676af9aa3095150ee410cdda80555aa0642` (Apache 2.0):
 https://github.com/AlexKontorovich/PrimeNumberTheoremAnd/blob/a5154676af9aa3095150ee410cdda80555aa0642/PrimeNumberTheoremAnd/Consequences.lean
 The statements and proofs below are adapted from that source. The concrete
-consumer is `RH/CanonicalMobiusPNT.mobiusReciprocalSum_tendsto_zero`.
+consumer is `NumberTheory/PrimeNumberTheorem/MobiusReciprocal.mobiusReciprocalSum_tendsto_zero`.
 
 This local port keeps the project's Lean/Mathlib version. It isolates upstream
 declarations in a project namespace and locally restores the unit-circle norm

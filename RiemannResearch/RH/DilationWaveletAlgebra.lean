@@ -1,4 +1,4 @@
-import RiemannResearch.RH.ThresholdHilbertLegal
+import RiemannResearch.RH.ThresholdHilbertDilation
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Positivity
@@ -221,6 +221,13 @@ theorem digitHilbert_wavelet_error_sq (a m N : ℕ) (ha : 0 < a) (hm : 0 < m) :
   push_cast
   rw [one_div_pow]
   ring
+
+theorem hilbertDilation_digit_one_sequence (a m : ℕ) (ha : 0 < a) (hm : 0 < m) :
+    hilbertSequence (hilbertDilation m hm (digitHilbert a 1 ha (by omega))) =
+      dilation m (residue a) := by
+  rw [hilbertDilation_sequence, hilbertSequence_digitHilbert]
+  funext k
+  simp [digitSequence, residue, dilation]
 
 end
 end RiemannResearch.RH.Pareto

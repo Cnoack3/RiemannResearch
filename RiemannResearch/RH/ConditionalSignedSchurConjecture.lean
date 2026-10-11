@@ -1,5 +1,6 @@
 import RiemannResearch.RH.ConditionalMeanGram
 import RiemannResearch.RH.ConditionalResidueGram
+import RiemannResearch.RH.ConditionalMeanMinimumCriteria
 
 /-!
 # Assertion (11.7) and its conjectured RH equivalence

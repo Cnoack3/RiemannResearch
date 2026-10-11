@@ -1,5 +1,6 @@
 import RiemannResearch.NumberTheory.QuotientWindowSquareBound
-import RiemannResearch.RH.CanonicalMobiusPNT
+import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusReciprocal
+import RiemannResearch.RH.CanonicalMobiusConditionalHead
 
 /-!
 # The actual reciprocal Mobius quotient kernel

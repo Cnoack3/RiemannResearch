@@ -1,5 +1,6 @@
 import RiemannResearch.RH.ReciprocalChargeDilationArithmetic
 import RiemannResearch.NumberTheory.QuotientKernelEnergyLimit
+import RiemannResearch.RH.CanonicalMobiusConditionalHead
 
 /-!
 # The scalar energy limit for a pair of dilated reciprocal-charge kernels

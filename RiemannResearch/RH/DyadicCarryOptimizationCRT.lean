@@ -1,4 +1,5 @@
 import RiemannResearch.RH.DyadicCarryOptimization
+import RiemannResearch.RH.ParetoCovariance
 
 /-!
 # Full CRT certificates for finite optimized dyadic repairs

@@ -1,6 +1,5 @@
 import RiemannResearch.RH.ThresholdHilbertDilation
 import RiemannResearch.RH.ThresholdSeedEuclidean
-import RiemannResearch.RH.ThresholdPrimePackets
 import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic
 
 /-!

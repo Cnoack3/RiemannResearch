@@ -26,13 +26,6 @@ theorem paretoMellin_step_integrable (f : ThresholdHilbert) (s : ℂ)
   unfold mellinWeightedStep paretoMellinKernel
   ring
 
-theorem hilbertDilation_digit_one_sequence (a m : ℕ) (ha : 0 < a) (hm : 0 < m) :
-    hilbertSequence (hilbertDilation m hm (digitHilbert a 1 ha (by omega))) =
-      dilation m (residue a) := by
-  rw [hilbertDilation_sequence, hilbertSequence_digitHilbert]
-  funext k
-  simp [digitSequence, residue, dilation]
-
 theorem arithmetic_generator_integrable (a m : ℕ) (ha : 0 < a) (hm : 0 < m)
     (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) :
     IntegrableOn (fun x : ℝ => (dilation m (residue a) ⌊x⌋₊ : ℂ) *

@@ -22,7 +22,6 @@ the repository, not paper inputs); (3) states Theorems A, B, C in ε-form (fixed
 constant H(λ), F(λ), then the 2/3, 1/2, 3/4 liminf wrappers via λ → 1⁻);
 (4) proves the sanity anchors connecting to Mathlib's RiemannHypothesis and [eq:trivialchain].
 -/
-import RiemannResearch.RH.WeilExplicitFormula.Hypotheses
 import RiemannResearch.RH.WeilExplicitFormula.Defs.Counting
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Analysis.Analytic.Order

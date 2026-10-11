@@ -4,6 +4,7 @@ import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Linarith
 
 /-!
 Source: user-provided argument in RH_Pareto_CRT_Enlargement_and_Dual_Obstruction_2026-09-07.md
@@ -191,6 +192,45 @@ theorem paretoInner_dilation {f g : ℕ → ℝ} {C D : ℝ}
   change (p : ℝ) * paretoMean (dilation p (fun j => f j * g j)) = _
   rw [paretoMean_dilation hprod (by simp [hf0]) p hp]
   rfl
+
+theorem error_square_bounded {f : ℕ → ℝ} {C : ℝ} (hC : ∀ k, |f k| ≤ C) :
+    ∀ k, |(1-f k)^2| ≤ (1+C)^2 := by
+  intro k
+  have hC0 : 0 ≤ C := le_trans (abs_nonneg _) (hC k)
+  rw [abs_of_nonneg (sq_nonneg _)]
+  have hb : |1-f k| ≤ 1+C := by
+    calc
+      _ ≤ |(1 : ℝ)| + |f k| := by simpa only [sub_zero, zero_sub, abs_neg] using abs_sub_le (1 : ℝ) 0 (f k)
+      _ ≤ _ := by simpa using add_le_add (le_refl (1 : ℝ)) (hC k)
+  nlinarith [sq_abs (1-f k), abs_nonneg (1-f k)]
+
+/-- Full-tail finite real packet combinations always have a finite squared error. -/
+theorem packetCombination_error_summable (s : Finset ℕ) (c : ℕ → ℝ) :
+    Summable (fun k => positiveWeight k * (1-∑ q ∈ s, c q*ramanujanPacket q k)^2) := by
+  obtain ⟨C,hC⟩ := packetCombination_bounded s c
+  exact weighted_summable_of_bounded (error_square_bounded hC)
+
+/-- A square-summable linear sequence for the Pareto weights must be zero. -/
+theorem linear_square_summable_iff (c : ℝ) :
+    Summable (fun k => positiveWeight k * (c * (k : ℝ))^2) ↔ c = 0 := by
+  constructor
+  · intro hs
+    have hshift := (summable_nat_add_iff 1).mpr hs
+    have hconst : Summable (fun _ : ℕ => c^2 / 2) := by
+      apply Summable.of_nonneg_of_le (fun _ => by positivity) _ hshift
+      intro k
+      unfold positiveWeight
+      push_cast
+      have hk1 : (k : ℝ)+1 > 0 := by positivity
+      have hk2 : (k : ℝ)+2 > 0 := by positivity
+      rw [show (k : ℝ)+1+1 = (k : ℝ)+2 by ring]
+      rw [one_div_mul_eq_div]
+      apply (le_div_iff₀ (mul_pos hk1 hk2)).mpr
+      nlinarith [mul_nonneg (sq_nonneg c) (mul_nonneg (Nat.cast_nonneg (α := ℝ) k) hk1.le)]
+    have hz : c^2 / 2 = 0 := (summable_const_iff (c^2 / 2)).mp hconst
+    nlinarith [sq_nonneg c]
+  · rintro rfl
+    simp
 
 end
 end RiemannResearch.RH.Pareto

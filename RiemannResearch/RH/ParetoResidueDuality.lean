@@ -176,5 +176,30 @@ def dualCoeff (m k : ℕ) : ℤ :=
   (if k ∣ m then ArithmeticFunction.moebius (m/k) else 0) -
     (if k+1 ∣ m then ArithmeticFunction.moebius (m/(k+1)) else 0)
 
+theorem residue_abs_le (n k : ℕ) (hn : 0 < n) : |residue n k| ≤ (n : ℝ) := by
+  unfold residue
+  rw [abs_of_nonneg (Nat.cast_nonneg _)]
+  exact_mod_cast (Nat.mod_lt k hn).le
+
+theorem ramanujanPacket_abs_le (q k : ℕ) :
+    |ramanujanPacket q k| ≤ ∑ d ∈ q.divisors,
+      |(ArithmeticFunction.moebius (q/d) : ℝ)| * (d : ℝ) := by
+  unfold ramanujanPacket
+  apply le_trans (Finset.abs_sum_le_sum_abs _ _) (Finset.sum_le_sum ?_)
+  intro d hd
+  rw [abs_mul]
+  exact mul_le_mul_of_nonneg_left (residue_abs_le d k (Nat.pos_of_mem_divisors hd))
+    (abs_nonneg _)
+
+theorem packetCombination_bounded (s : Finset ℕ) (c : ℕ → ℝ) :
+    ∃ C : ℝ, ∀ k, |∑ q ∈ s, c q * ramanujanPacket q k| ≤ C := by
+  refine ⟨∑ q ∈ s, |c q| * (∑ d ∈ q.divisors,
+    |(ArithmeticFunction.moebius (q/d) : ℝ)| * (d : ℝ)), ?_⟩
+  intro k
+  apply le_trans (Finset.abs_sum_le_sum_abs _ _) (Finset.sum_le_sum ?_)
+  intro q hq
+  rw [abs_mul]
+  exact mul_le_mul_of_nonneg_left (ramanujanPacket_abs_le q k) (abs_nonneg _)
+
 end
 end RiemannResearch.RH.Pareto

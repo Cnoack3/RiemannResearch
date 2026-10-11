@@ -1,4 +1,5 @@
-import RiemannResearch.RH.ParetoSequenceCertificates
+import RiemannResearch.RH.ParetoDilation
+import RiemannResearch.RH.ParetoResidueDuality
 import RiemannResearch.RH.ParetoNoiseSignal
 import RiemannResearch.LinearAlgebra.NoiseSignalQuadratic
 

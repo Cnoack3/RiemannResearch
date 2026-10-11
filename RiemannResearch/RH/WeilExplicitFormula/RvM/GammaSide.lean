@@ -18,6 +18,7 @@ because Γℝ'/Γℝ is holomorphic on Re s > 0 (Cauchy–Goursat on [½,2]×[T�
 segment) and Re Γℝ'/Γℝ(½+it) = ½ Re ψ(¼+it/2) − ½ log π = π·μ(t)  (Γℝ(s) = π^{−s/2}Γ(s/2), μ = Zeta23.mu).
 -/
 import RiemannResearch.RH.WeilExplicitFormula.RvM.Defs
+import RiemannResearch.RH.WeilExplicitFormula.Hypotheses
 import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.Analysis.SpecialFunctions.Gamma.Deligne
 import Mathlib.Analysis.SpecialFunctions.Gamma.Digamma

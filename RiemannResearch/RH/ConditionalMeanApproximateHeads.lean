@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.ConditionalMeanHeadMinimum
+import RiemannResearch.RH.ConditionalMeanHeadObstruction
+import RiemannResearch.RH.RiemannHypothesisStrip
+import RiemannResearch.RH.WeilExplicitFormula.ZetaReflect
 
 /-!
 # Approximate heads, sparse energy bounds, and zeta zero locations

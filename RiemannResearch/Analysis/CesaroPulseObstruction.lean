@@ -3,8 +3,8 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
-import RiemannResearch.RH.ConditionalMeanSubpolynomial
-import RiemannResearch.RH.CoupledCorrectionRHBridge
+import RiemannResearch.RH.ConditionalMeanEnergy
+import RiemannResearch.RH.ArithmeticCumulativeEnergy
 
 /-!
 # Actual adjacent-pulse obstruction to a bounded inverse of Cesaro averaging

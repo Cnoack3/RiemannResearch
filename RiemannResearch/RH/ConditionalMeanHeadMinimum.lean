@@ -1,4 +1,4 @@
-import RiemannResearch.RH.ConditionalMeanSubpolynomial
+import RiemannResearch.RH.ConditionalMeanEnergy
 import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-!
@@ -6,8 +6,9 @@ import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 Source: user-provided `Conditional_IID_Cesaro_Mathematical_Completion_2026-09-17.md`,
 Sections 7 and 10. We prove finite interpolation, define the genuine infimum,
-and derive actual mathlib RH from its uniform bound. No RH-to-NB provider or
-bounded arithmetic interpolation family is assumed as an axiom.
+and retain exact energy and tail identities. The RH implication from a uniform
+bound is assembled in `ConditionalMeanMinimumCriteria`. No bounded arithmetic
+interpolation family is assumed as an axiom.
 -/
 noncomputable section
 open Filter
@@ -118,16 +119,6 @@ theorem bounded_minimum_iff_bounded_legal_heads :
     intro N
     obtain ⟨g, hg, he⟩ := hC N
     exact (conditionalHeadMinimum_le N hg).trans he
-
-/-- The new infimum formulation implies actual mathlib RH, without an assumed NB bridge. -/
-theorem riemannHypothesis_of_bounded_conditionalHeadMinimum
-    (h : ∃ C : ℝ, ∀ N, conditionalHeadMinimum N ≤ C) : RiemannHypothesis := by
-  obtain ⟨C, hC⟩ := bounded_minimum_iff_bounded_legal_heads.mp h
-  choose g hg hbound using hC
-  apply riemannHypothesis_of_bounded_conditionalMean_heads (Set.Ici 1)
-    (by intro a ha; exact ha) g id
-    (fun N => (hg N).1) (fun j n hn hnj => (hg j).2 n hn hnj)
-    tendsto_id C hbound
 
 /-- Exact mass of the first `N` positive latent endpoints. -/
 theorem conditionalWeight_sum_range (N : ℕ) :
@@ -282,5 +273,4 @@ theorem conditionalMeanError_le_eight_div_of_head_energy_le_one (N : ℕ) {g : �
     ring
   linarith
 
-#print axioms RiemannResearch.RH.Pareto.riemannHypothesis_of_bounded_conditionalHeadMinimum
 end RiemannResearch.RH.Pareto

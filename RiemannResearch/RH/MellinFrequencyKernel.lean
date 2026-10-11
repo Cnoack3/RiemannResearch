@@ -1,6 +1,7 @@
 import RiemannResearch.Analysis.ComplexKernelPairCorrelation
 import RiemannResearch.RH.IntegerDPPGramDeterminant
 import RiemannResearch.Analysis.MellinNormalizedResidue
+import RiemannResearch.RH.MellinCriticalPoint
 
 /-!
 # Exact arithmetic Mellin frequency kernel
@@ -20,21 +21,6 @@ namespace RiemannResearch.RH.Pareto.MellinFrequency
 open CoefficientStabilization
 open IntegerDPP
 open RiemannResearch.Analysis.ComplexKernel
-
-def criticalPoint (t : ℝ) : ℂ := (1 / 2 : ℂ) + (t : ℂ) * Complex.I
-
-@[simp] theorem criticalPoint_re (t : ℝ) : (criticalPoint t).re = 1 / 2 := by
-  simp [criticalPoint]
-
-theorem criticalPoint_ne_zero (t : ℝ) : criticalPoint t ≠ 0 := by
-  intro h
-  have := congrArg Complex.re h
-  simp at this
-
-theorem criticalPoint_ne_one (t : ℝ) : criticalPoint t ≠ 1 := by
-  intro h
-  have := congrArg Complex.re h
-  simp at this
 
 def zetaEnvelope (t : ℝ) : ℂ := riemannZeta (criticalPoint t) / criticalPoint t
 

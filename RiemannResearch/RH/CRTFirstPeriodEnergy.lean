@@ -1,5 +1,6 @@
 import RiemannResearch.RH.CRTExactSignedEnergy
 import RiemannResearch.RH.ConditionalMeanHeadMinimum
+import RiemannResearch.RH.ConditionalMeanSubpolynomial
 /-!
 # First-period control of exact signed CRT energy
 

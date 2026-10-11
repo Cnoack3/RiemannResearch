@@ -1,4 +1,5 @@
 import RiemannResearch.RH.ConditionalMeanHeadMinimum
+import RiemannResearch.RH.ConditionalMeanSubpolynomial
 
 /-!
 # Cofinal and subpolynomial criteria for actual legal minimum energies
@@ -12,6 +13,17 @@ open Filter
 open scoped Topology
 set_option backward.isDefEq.respectTransparency false
 namespace RiemannResearch.RH.Pareto
+
+/-- The new infimum formulation implies actual mathlib RH, without an assumed NB bridge. -/
+theorem riemannHypothesis_of_bounded_conditionalHeadMinimum
+    (h : ∃ C : ℝ, ∀ N, conditionalHeadMinimum N ≤ C) : RiemannHypothesis := by
+  obtain ⟨C, hC⟩ := bounded_minimum_iff_bounded_legal_heads.mp h
+  choose g hg hbound using hC
+  apply riemannHypothesis_of_bounded_conditionalMean_heads (Set.Ici 1)
+    (by intro a ha; exact ha) g id
+    (fun N => (hg N).1) (fun j n hn hnj => (hg j).2 n hn hnj)
+    tendsto_id C hbound
+
 
 /-- Cofinal eventual bounds already bound every exact-head infimum. -/
 theorem conditionalHeadMinimum_bound_of_cofinal_eventually
@@ -93,4 +105,5 @@ theorem conditionalHeadMinimum_polynomial_obstruction_eventually
   rintro x ⟨g, hg, rfl⟩
   exact hN g hg.1 hg.2
 
+#print axioms RiemannResearch.RH.Pareto.riemannHypothesis_of_bounded_conditionalHeadMinimum
 end RiemannResearch.RH.Pareto

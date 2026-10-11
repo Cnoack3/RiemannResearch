@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ThresholdHilbertLegal
 import RiemannResearch.RH.DilationWaveletClosure
 import RiemannResearch.RH.ThresholdHilbertMean
 import RiemannResearch.RH.ParetoResidueMoments

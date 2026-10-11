@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ThresholdHilbertLegal
 import RiemannResearch.RH.OptimizedResiduePackets
 import RiemannResearch.RH.GibbsLegalSeed
 

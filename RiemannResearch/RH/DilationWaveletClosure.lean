@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ThresholdHilbertLegal
 import RiemannResearch.RH.DilationWaveletAlgebra
 
 /-!

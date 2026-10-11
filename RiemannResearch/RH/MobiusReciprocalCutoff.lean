@@ -1,5 +1,5 @@
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusFloorTailReindex
-import RiemannResearch.RH.CanonicalMobiusPNT
+import RiemannResearch.NumberTheory.MobiusReciprocalSum
 import Mathlib.NumberTheory.Harmonic.Bounds
 
 /-!

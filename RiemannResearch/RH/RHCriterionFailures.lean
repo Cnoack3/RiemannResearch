@@ -6,6 +6,7 @@ import RiemannResearch.RH.ParetoGibbsSpectralGap
 import RiemannResearch.RH.DyadicBoundaryLegalRecovery
 import RiemannResearch.RH.BalancedMinimalTarget
 import RiemannResearch.RH.TwoSeedExactHeadEnergy
+import RiemannResearch.RH.ConditionalMeanMinimumCriteria
 
 /-!
 # Necessary criterion failures under the negation of actual RH

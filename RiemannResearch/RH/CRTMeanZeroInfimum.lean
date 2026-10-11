@@ -1,6 +1,7 @@
 import RiemannResearch.RH.CRTMeanRepair
 import RiemannResearch.RH.CRTPositiveMExpansion
 import RiemannResearch.RH.ParetoLegalStructure
+import RiemannResearch.RH.ConditionalMeanSubpolynomial
 
 /-!
 # Zero period mean does not change the legal exact-head energy infimum

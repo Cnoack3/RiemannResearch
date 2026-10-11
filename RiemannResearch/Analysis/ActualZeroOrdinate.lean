@@ -6,7 +6,7 @@ Authors: RiemannResearch contributors
 import RiemannResearch.Analysis.ZeroOrdinateEquidistribution
 import RiemannResearch.RH.WeilExplicitFormula.Statement.SeamClosed
 import RiemannResearch.RH.WeilExplicitFormula.RvM.LocalCount
-import RiemannResearch.RH.WeilExplicitFormula.RvM.CountByIntegral
+import RiemannResearch.RH.WeilExplicitFormula.RvM.CompletedZeta
 import RiemannResearch.RH.WeilExplicitFormula.WeilEF.ZeroSummability
 
 /-!

@@ -1,5 +1,5 @@
 import RiemannResearch.RH.MobiusHilbertCoordinates
-import RiemannResearch.RH.CanonicalMobiusPNT
+import RiemannResearch.NumberTheory.MobiusReciprocalSum
 
 /-!
 # Finite reciprocal-charge Riesz bridge

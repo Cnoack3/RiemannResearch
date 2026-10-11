@@ -1,6 +1,6 @@
 import RiemannResearch.RH.ResidueGramModeIdentities
 import RiemannResearch.RH.ResidueGramMobiusCorrection
-import RiemannResearch.RH.CanonicalMobiusPNT
+import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusReciprocal
 
 /-!
 # A scalar limit of the growing inverse-Gram correction
