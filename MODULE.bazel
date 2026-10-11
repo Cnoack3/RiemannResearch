@@ -4,36 +4,75 @@ module(
     bazel_compatibility = [">=9.0.0", "<10.0.0"],
 )
 
-bazel_dep(name = "rules_lean", version = "0.7.0")
-# Temporary compatibility patch for the pinned upstream revision:
-# - Forward the existing Lake math-template compiler options to lean_library.
-# - Bootstrap only required external modules; whole-library builds hit unrelated
-#   upstream errors with our pinned Lean/dependency versions.
-# - Pin Lean 4.33.0-rc2 archive checksums and make bootstrap retries safe.
-# Drop the override when an upstream release provides equivalent support.
+bazel_dep(name = "rules_lean", version = "0.0.0")
+# Atvrager supplies one action per module and execution-platform toolchains.
+# The patch fixes consumer labels/version selection, complete import closures,
+# Lean 4.33 module artifacts, and native shared repository cache eligibility.
+# Keep this revision pinned while upstream is pre-0.1; the patch can move to a fork.
 git_override(
     module_name = "rules_lean",
-    remote = "https://github.com/tomato-bazel/rules_lean.git",
-    commit = "e3b343ff799554a1e1a1d158d4a96eac5cdaa3ea",
+    remote = "https://github.com/atvrager/rules_lean.git",
+    commit = "2cf9d007003ff73374e0082a82342e3f4723fc65",
     patches = ["//bazel:rules_lean_compat.patch"],
     patch_strip = 1,
 )
 
-lake = use_extension("@rules_lean//lean:lake.bzl", "lake")
-# Dependency repository setup runs on the local client, even with RBE.
-lake.workspace(
-    name = "lake_deps",
-    lean_toolchain = "//:lean-toolchain",
-    lakefile = "//:lakefile.toml",
-    lake_manifest = "//:lake-manifest.json",
-    cache_roots = ["Mathlib"],
-    allow_source_build = False,
-    source_build_targets = [
-        "Architect",
-        "PrimeNumberTheoremAnd.SmoothExistence",
-        "PrimeNumberTheoremAnd.Mathlib.Analysis.Asymptotics.Asymptotics",
-        "Batteries.Tactic.Lemma",
-    ],
+lean = use_extension("@rules_lean//lean:extensions.bzl", "lean")
+lean.toolchain(
+    toolchain_file = "//:lean-toolchain",
+    platforms = ["linux_x86_64"],
 )
-use_repo(lake, "lake_deps")
-register_toolchains("@lake_deps//:lean_toolchain_def")
+# First population uses Mathlib's published cache. Bazel then shares the portable
+# result across workspaces; the remaining external modules are normal actions.
+lean.mathlib(
+    manifest = "//:lake-manifest.json",
+    sha256 = "0d44640e4a47b76187c0d6d31800a2e8c05001629c75010cff4c21031f5fa8b3",
+    modules = ["Mathlib"],
+)
+use_repo(lean, "lean_imports", "lean_toolchains", "mathlib")
+register_toolchains("@lean_toolchains//:all")
+
+lake = use_extension("@rules_lean//lake:extensions.bzl", "lake")
+inject_repo(lake, mathlib = "mathlib")
+lake.manifest(
+    manifest = "//:lake-manifest.json",
+    packages = ["PrimeNumberTheoremAnd", "LeanArchitect"],
+    archive_sha256 = {
+        "PrimeNumberTheoremAnd": "fa6ef0be5059493bf6b027dc7c8e31bcf4a4eae02f371761ade16d220005299c",
+        "LeanArchitect": "7f61c67fb5f80ddbd376383374bc2305e002cbb4b4ee97aa5389363639c124d5",
+    },
+    modules = {
+        "PrimeNumberTheoremAnd": [
+            "PrimeNumberTheoremAnd.SmoothExistence",
+            "PrimeNumberTheoremAnd.Mathlib.Analysis.Asymptotics.Asymptotics",
+        ],
+        "LeanArchitect": ["Architect"],
+    },
+    namespaces = {
+        "Architect": "LeanArchitect",
+        "PrimeNumberTheoremAnd": "PrimeNumberTheoremAnd",
+        "Mathlib": "mathlib",
+        "Batteries": "mathlib",
+        "Aesop": "mathlib",
+        "Qq": "mathlib",
+        "Plausible": "mathlib",
+        "LeanSearchClient": "mathlib",
+        "ProofWidgets": "mathlib",
+        "ImportGraph": "mathlib",
+    },
+    extra_flags = {
+        "PrimeNumberTheoremAnd": [
+            "-Dpp.unicode.fun=true",
+            "-Dpp.proofs.withType=false",
+            "-DautoImplicit=false",
+            "-DrelaxedAutoImplicit=false",
+            "-Dlinter.mathlibStandardSet=true",
+            "-Dlinter.style.header=false",
+            "-Dlinter.style.openClassical=false",
+            "-Dlinter.style.longLine=false",
+            "-Dlinter.style.emptyLine=false",
+            "-Dlinter.flexible=true",
+        ],
+    },
+)
+use_repo(lake, "LeanArchitect", "PrimeNumberTheoremAnd")

@@ -1,137 +1,1750 @@
-diff --git a/lean/lake.bzl b/lean/lake.bzl
-index de64008..5813e40 100644
---- a/lean/lake.bzl
-+++ b/lean/lake.bzl
-@@ -367,7 +367,8 @@ def _lake_workspace_impl(rctx):
-     # (which call `lean_toolchain/bin/lake`) work unchanged. lean_dist_lake points at
-     # `<dist>/lean_toolchain/bin/lake`; its grandparent is the toolchain root.
-     dist_lake = rctx.path(rctx.attr.lean_dist_lake)
--    rctx.symlink(dist_lake.dirname.dirname, "lean_toolchain")
-+    if not rctx.path("lean_toolchain").exists:
-+        rctx.symlink(dist_lake.dirname.dirname, "lean_toolchain")
-     _stage_lake_workspace(rctx)
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 5140837..b415078 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -9,7 +9,11 @@ bazel_dep(name = "buildifier_prebuilt", version = "8.2.1", dev_dependency = True
  
-     env = _lake_env(rctx)
-@@ -428,6 +429,17 @@ def _lake_workspace_impl(rctx):
-     # upstream cache (e.g. cslib) instead of source-building them below.
-     _fetch_prebuilt_oleans(rctx)
- 
-+    if rctx.attr.source_build_targets:
-+        build = _run_lake(
-+            rctx,
-+            ["build"] + ["+" + module for module in rctx.attr.source_build_targets],
-+            timeout = 7200,
-+            env = env,
-+        )
-+        if build.return_code != 0:
-+            fail("rules_lean: building dependency modules failed.\nstdout:\n%s\nstderr:\n%s" %
-+                 (build.stdout, build.stderr))
+ lean = use_extension("//lean:extensions.bzl", "lean")
+ lean.toolchain(toolchain_file = "//:lean-toolchain")
+-lean.mathlib(
++use_repo(lean, "lean_imports", "lean_toolchains")
 +
-     # For any package whose oleans aren't yet on disk (no mathlib cache hit, no
-     # prebuilt-olean cache, or non-mathlib workspace), source-build via `lake build
-     # <pkg>`. Skipped unless allow_source_build (slow); otherwise the missing-oleans
-@@ -600,6 +612,11 @@ lake_workspace = repository_rule(
-                   "(mathlib from source is ~30 min); fast and necessary for custom " +
-                   "Lake deps that have no upstream cache.",
-         ),
-+        "source_build_targets": attr.string_list(
-+            default = [],
-+            doc = "Dependency module names to build with `lake build +Module`. " +
-+                  "Builds their import closures even when allow_source_build is False.",
-+        ),
-         "cache_roots": attr.string_list(
-             default = [],
-             doc = "Module specs to TREE-SHAKE mathlib's olean download to — the roots " +
-@@ -690,6 +707,7 @@ def _lake_extension_impl(mctx):
-             lakefile = tag.lakefile,
-             lake_manifest = tag.lake_manifest,
-             allow_source_build = tag.allow_source_build,
-+            source_build_targets = tag.source_build_targets,
-             cache_roots = tag.cache_roots,
-             olean_cache = tag.olean_cache,
-             olean_cache_packages = tag.olean_cache_packages,
-@@ -704,6 +722,7 @@ _workspace_tag = tag_class(attrs = {
-     "lakefile": attr.label(mandatory = True),
-     "lake_manifest": attr.label(mandatory = True),
-     "allow_source_build": attr.bool(default = False),
-+    "source_build_targets": attr.string_list(default = []),
-     "cache_roots": attr.string_list(
-         default = [],
-         doc = "Module specs to tree-shake mathlib's olean download to (the roots this " +
-diff --git a/lean/lean.bzl b/lean/lean.bzl
-index 2700ca1..b74b45c 100644
---- a/lean/lean.bzl
-+++ b/lean/lean.bzl
-@@ -651,6 +651,7 @@ def _lean_library_impl(ctx):
-         "work\t" + name + ".topo_work",
-         "marker\t" + marker.path,
-     ]
-+    lines += ["flag\t" + flag for flag in ctx.attr.extra_flags]
-     for src, rel, olean in units:
-         lines.append("stage\t" + src.path + "\t" + rel)
-         lines.append("module\t" + rel)
-@@ -696,6 +697,9 @@ lean_library = rule(
-             doc = "Compiled Lean libraries this one imports. Same-top-namespace deps are staged into the compile root; disjoint ones are on LEAN_PATH. All propagate transitively in this library's LeanInfo.",
-         ),
-         "forbid_sorry": _FORBID_SORRY_ATTR,
-+        "extra_flags": attr.string_list(
-+            doc = "Compiler flags passed to each source module, such as Lake leanOptions.",
-+        ),
-         "_driver": attr.label(
-             default = "@rules_lean//lean/private:topo_compile.lean",
-             allow_single_file = True,
-diff --git a/lean/private/known_lean_versions.bzl b/lean/private/known_lean_versions.bzl
-index bad9a22..b71a065 100644
---- a/lean/private/known_lean_versions.bzl
-+++ b/lean/private/known_lean_versions.bzl
-@@ -33,6 +33,12 @@ KNOWN_LEAN_VERSIONS = {
-         "linux_x86_64": "fb97c65730b22927951dadae964f06b2b0e6cfb2cc60f3abe26d8c99f27aa02b",
-         "linux_aarch64": "593f5d95f6c37fd54e871b683d8efbb42c4224bdfe8ac0170592c30f1321798c",
-     },
-+    "v4.33.0-rc2": {
-+        "darwin_aarch64": "e68c112bdea1cd5f64d97acaf4873f558aa3084d4cb0457e39cf92abec67902e",
-+        "darwin_x86_64": "7fd0cd763a3578009f2999ed9f5b321949fa904f33b30aced411edd2159c2b35",
-+        "linux_x86_64": "1a4f7d72eebd062f67477daa65b5d50e819103e524f9c14890c891ced8212e94",
-+        "linux_aarch64": "06a186c7c6dedfd7115f42c80a307a93dd5a9ead752e38656c780506a89ab100",
-+    },
- }
++# Mathlib is used by this ruleset's tests. Consumers select their own revision.
++lean_dev = use_extension("//lean:extensions.bzl", "lean", dev_dependency = True)
++lean_dev.mathlib(
+     modules = [
+         "Mathlib.Data.Finsupp.Basic",
+         "Mathlib.Data.Nat.Basic",
+@@ -17,6 +21,6 @@ lean.mathlib(
+         "Mathlib.Logic.Function.Basic",
+     ],
+ )
+-use_repo(lean, "lean_imports", "lean_toolchains", "mathlib")
++use_repo(lean_dev, "mathlib")
  
- # Per-platform asset filename template. Lean release naming has shifted
-diff --git a/lean/private/topo_compile.lean b/lean/private/topo_compile.lean
-index dcafd4d..1aae5bd 100644
---- a/lean/private/topo_compile.lean
-+++ b/lean/private/topo_compile.lean
-@@ -20,6 +20,7 @@ at the exec root or the run step `cwd`s into the work dir.
-   lean      <lean compiler binary>
-   work      <writable scratch root to create>
-   leanpath  <dir>                 (0+; disjoint-namespace dep roots)
-+  flag      <compiler argument>   (0+; passed to every module compilation)
-   stage     <file>\t<rel>         (0+; copied to <work>/<rel>, not compiled)
-   module    <rel>                 (1+; a staged .lean to compile, topo-ordered)
-   output    <rel>\t<dest .olean>  (0+; publish a compiled module's olean)
-@@ -108,6 +109,7 @@ structure Job where
-   entry : Option String := none
-   stdout : Option String := none
-   forbidSorry : Bool := false
-+  flags : List String := []
-   leanPaths : List String := []
-   stages : List (String × String) := []   -- (src, rel)
-   modules : List String := []              -- rels to compile
-@@ -123,6 +125,7 @@ private def parseManifest (content : String) : Job := Id.run do
-     | ["entry", v] => j := { j with entry := some v }
-     | ["stdout", v] => j := { j with stdout := some v }
-     | ["forbid_sorry", v] => j := { j with forbidSorry := v == "1" }
-+    | ["flag", v] => j := { j with flags := j.flags ++ [v] }
-     | ["leanpath", v] => j := { j with leanPaths := j.leanPaths ++ [v] }
-     | ["stage", src, rel] => j := { j with stages := j.stages ++ [(src, rel)] }
-     | ["module", rel] => j := { j with modules := j.modules ++ [rel] }
-@@ -165,7 +168,8 @@ def main (args : List String) : IO UInt32 := do
-       if let some (_, rel) := nameToRel.find? (·.1 == m) then
-         let r ← IO.Process.output {
-           cmd := leanBin
--          args := #["--root=" ++ work, "-o", work ++ "/" ++ oleanRel rel, work ++ "/" ++ rel]
-+          args := #["--root=" ++ work, "-o", work ++ "/" ++ oleanRel rel] ++
-+            j.flags.toArray ++ #[work ++ "/" ++ rel]
-           env := #[("LEAN_PATH", some leanPath)]
-         }
-         -- ALWAYS forward diagnostics, not just on failure. `lean` exits 0 on a
+ register_toolchains("@lean_toolchains//:all")
+diff --git a/lake/extensions.bzl b/lake/extensions.bzl
+index c81966d..ed44d2d 100644
+--- a/lake/extensions.bzl
++++ b/lake/extensions.bzl
+@@ -1,68 +1,78 @@
+-"""Bzlmod extension for Lake packages defined in lake-manifest.json."""
++"""Import pinned Lake source packages as per-module Bazel targets."""
+ 
+ load("//lake:repositories.bzl", "lake_package_repo")
+ 
+ _MANIFEST_TAG = tag_class(
+     attrs = {
+-        "manifest": attr.label(
+-            doc = "Label to lake-manifest.json file.",
++        "archive_sha256": attr.string_dict(
++            doc = "SHA256 of each selected package's GitHub commit archive.",
+             mandatory = True,
+         ),
++        "extra_flags": attr.string_list_dict(
++            doc = "Compiler flags for each source package.",
++        ),
++        "manifest": attr.label(mandatory = True),
++        "module_overrides": attr.string_dict(
++            doc = "Exact module name to dependency label, before namespace lookup.",
++        ),
++        "modules": attr.string_list_dict(
++            doc = "Module roots per package. Includes their local import closure.",
++        ),
++        "namespaces": attr.string_dict(
++            doc = "Top-level Lean namespace to apparent repository name.",
++        ),
+         "packages": attr.string_list(
+-            doc = "Optional subset of packages to import. If empty, imports all packages.",
++            doc = "Package names to import from the manifest.",
++            mandatory = True,
++        ),
++        "source_dirs": attr.string_dict(
++            doc = "Source directory per package, relative to its manifest subDir.",
+         ),
+     },
+ )
+ 
+ def _lake_impl(mctx):
+-    repos = {}
++    repo_names = []
+     for mod in mctx.modules:
++        # A dependency's examples must not select the consumer's packages.
++        if not mod.is_root:
++            continue
+         for tag in mod.tags.manifest:
+-            manifest_content = mctx.read(tag.manifest)
+-            manifest_json = json.decode(manifest_content)
+-            packages = manifest_json.get("packages", [])
+-            allowed = tag.packages
+-            for pkg in packages:
+-                name = pkg.get("name")
+-                if not name:
+-                    continue
+-                if allowed and name not in allowed:
+-                    continue
+-                url = pkg.get("url", "")
+-                rev = pkg.get("rev", "")
+-                sub_dir = pkg.get("subDir")
+-                config_file = pkg.get("configFile", "")
+-                pkg_type = pkg.get("type", "git")
+-                if name not in repos:
+-                    repos[name] = {
+-                        "url": url,
+-                        "rev": rev,
+-                        "sub_dir": sub_dir,
+-                        "config_file": config_file,
+-                        "type": pkg_type,
+-                    }
+-
+-    repo_names = []
+-    for name, info in repos.items():
+-        lake_package_repo(
+-            name = name,
+-            pkg_name = name,
+-            url = info["url"],
+-            commit = info["rev"],
+-            sub_dir = info["sub_dir"] or "",
+-            config_file = info["config_file"] or "",
+-            manifest_packages = list(repos.keys()),
+-        )
+-        repo_names.append(name)
++            manifest = json.decode(mctx.read(tag.manifest))
++            packages = {pkg["name"]: pkg for pkg in manifest.get("packages", [])}
++            for name in tag.packages:
++                if name in repo_names:
++                    fail("duplicate Lake source package: %s" % name)
++                if name not in packages:
++                    fail("Lake manifest has no package named %s" % name)
++                pkg = packages[name]
++                if pkg.get("type") != "git":
++                    fail("Lake source package %s must use a pinned git dependency" % name)
++                sha256 = tag.archive_sha256.get(name, "")
++                if not sha256:
++                    fail("archive_sha256 must pin the GitHub archive for %s" % name)
++                lake_package_repo(
++                    name = name,
++                    pkg_name = name,
++                    url = pkg["url"],
++                    commit = pkg["rev"],
++                    sha256 = sha256,
++                    sub_dir = pkg.get("subDir") or "",
++                    source_dir = tag.source_dirs.get(name, ""),
++                    modules = tag.modules.get(name, []),
++                    namespaces = tag.namespaces,
++                    module_overrides = tag.module_overrides,
++                    extra_flags = tag.extra_flags.get(name, []),
++                )
++                repo_names.append(name)
+ 
+     return mctx.extension_metadata(
+         root_module_direct_deps = repo_names,
+         root_module_direct_dev_deps = [],
++        reproducible = True,
+     )
+ 
+ lake = module_extension(
+     implementation = _lake_impl,
+-    tag_classes = {
+-        "manifest": _MANIFEST_TAG,
+-    },
++    tag_classes = {"manifest": _MANIFEST_TAG},
+ )
+diff --git a/lake/repositories.bzl b/lake/repositories.bzl
+index fbf932a..b4f0fc3 100644
+--- a/lake/repositories.bzl
++++ b/lake/repositories.bzl
+@@ -1,210 +1,137 @@
+-"""Repository rule for Lake packages from lake-manifest.json."""
++"""Fetch source archives and expose one Lean compile target per module."""
+ 
+-def _parse_imports(text):
+-    """The module names the `import` lines of a file mention."""
+-    modules = []
+-    for line in text.split("\n"):
+-        line = line.strip()
+-        if "--" in line:
+-            line = line.split("--")[0].strip()
+-        words = [w for w in line.replace("\t", " ").split(" ") if w]
+-        if "import" in words:
+-            idx = words.index("import")
+-            if all([w in ["public", "meta", "scoped", "open", "all"] for w in words[:idx]]):
+-                modules += words[idx + 1:]
+-    return modules
++load("//lean/private:repositories.bzl", "parse_header")
+ 
+-def _find_src_dir(rctx):
+-    if rctx.attr.sub_dir:
+-        return rctx.attr.sub_dir
+-    config_file = rctx.attr.config_file or "lakefile.toml"
+-    p = rctx.path(config_file)
+-    if not p.exists:
+-        return ""
+-    content = rctx.read(p)
+-    for line in content.split("\n"):
+-        line = line.strip()
+-        if line.startswith("srcDir"):
+-            parts = line.split("=")
+-            if len(parts) == 2:
+-                return parts[1].strip().strip('"').strip("'")
+-    return ""
++_DEFS = str(Label("//lean:defs.bzl"))
++_SDK_NAMESPACES = ["Init", "Lean", "Std", "Lake"]
+ 
+-def _find_test_driver(rctx):
+-    config_file = rctx.attr.config_file or "lakefile.toml"
+-    p = rctx.path(config_file)
+-    if not p.exists:
+-        return ""
+-    content = rctx.read(p)
+-    for line in content.split("\n"):
+-        line = line.strip()
+-        if line.startswith("testDriver"):
+-            parts = line.split("=")
+-            if len(parts) == 2:
+-                return parts[1].strip().strip('"').strip("'")
+-    return ""
+-
+-def _scan_lean_files(rctx, src_dir_str, test_driver):
+-    root = rctx.path(src_dir_str) if src_dir_str else rctx.path("")
+-    root_str = str(root)
+-    queue = [root]
++def _source_files(rctx, src_dir):
++    """Read source paths without depending on host programs."""
++    root = rctx.path(src_dir)
++    root_prefix = str(root) + "/"
++    pending = [root]
+     files = []
+-    for _ in range(5000):
+-        if not queue:
++    # Bound directory depth, not file count. Reject excess depth explicitly.
++    for _ in range(256):
++        if not pending:
+             break
+-        curr = queue.pop()
+-        for entry in curr.readdir():
+-            base = entry.basename
+-            if base.startswith(".") or base in ["test", "tests", "scripts", ".lake", test_driver]:
+-                continue
+-            if base.endswith("Test") or base.endswith("test"):
+-                continue
+-            if entry.is_dir:
+-                queue.append(entry)
+-            elif base.endswith(".lean"):
+-                entry_str = str(entry)
+-                rel = entry_str[len(root_str) + 1:] if root_str else entry_str
+-                files.append(rel)
++        next_level = []
++        for directory in pending:
++            for entry in directory.readdir():
++                if entry.basename.startswith("."):
++                    continue
++                if entry.is_dir:
++                    next_level.append(entry)
++                elif entry.basename.endswith(".lean"):
++                    files.append(str(entry)[len(root_prefix):])
++        pending = next_level
++    if pending:
++        fail("Lake source directory nesting exceeds 256 levels")
+     return sorted(files)
+ 
+ def _download_package(rctx):
+-    url = rctx.attr.url
++    url = rctx.attr.url.rstrip("/")
++    if url.endswith(".git"):
++        url = url[:-4]
++    if not url.startswith("https://github.com/") or len(url.split("/")) != 5:
++        fail("Lake source packages require a GitHub HTTPS repository URL: %s" % url)
+     commit = rctx.attr.commit
++    if len(commit) != 40 or any([c not in "0123456789abcdef" for c in commit.elems()]):
++        fail("Lake source packages require a full lowercase commit SHA: %s" % commit)
++    rctx.download_and_extract(
++        url = url + "/archive/" + commit + ".tar.gz",
++        sha256 = rctx.attr.sha256,
++        strip_prefix = url.split("/")[-1] + "-" + commit,
++    )
+ 
+-    if url.startswith("https://github.com/"):
+-        clean_url = url
+-        if clean_url.endswith(".git"):
+-            clean_url = clean_url[:-4]
+-        clean_url = clean_url.rstrip("/")
+-        parts = clean_url.split("/")
+-        if len(parts) >= 5:
+-            owner = parts[3]
+-            repo = parts[4]
+-            archive_url = "https://github.com/%s/%s/archive/%s.tar.gz" % (owner, repo, commit)
+-            strip_prefix = "%s-%s" % (repo, commit)
+-            res = rctx.download_and_extract(
+-                url = archive_url,
+-                strip_prefix = strip_prefix,
+-                allow_fail = True,
+-            )
+-            if res.success:
+-                return
+-
+-    # Fallback to git
+-    git = rctx.which("git")
+-    if not git:
+-        fail("git is required to fetch %s from %s" % (rctx.attr.pkg_name, url))
+-
+-    res = rctx.execute([str(git), "init", "."])
+-    if res.return_code != 0:
+-        fail("git init failed for %s: %s" % (rctx.attr.pkg_name, res.stderr))
+-    res = rctx.execute([str(git), "remote", "add", "origin", url])
+-    if res.return_code != 0:
+-        fail("git remote add failed for %s: %s" % (rctx.attr.pkg_name, res.stderr))
+-    res = rctx.execute([str(git), "fetch", "--depth", "1", "origin", commit])
+-    if res.return_code != 0:
+-        res = rctx.execute([str(git), "fetch", "origin"])
+-        if res.return_code != 0:
+-            fail("git fetch failed for %s: %s" % (rctx.attr.pkg_name, res.stderr))
+-    res = rctx.execute([str(git), "checkout", commit])
+-    if res.return_code != 0:
+-        fail("git checkout failed for %s: %s" % (rctx.attr.pkg_name, res.stderr))
++def _dependency_label(rctx, module, local_modules):
++    if module in local_modules:
++        return ":" + module
++    if module in rctx.attr.module_overrides:
++        return rctx.attr.module_overrides[module]
++    namespace = module.split(".")[0]
++    if namespace in _SDK_NAMESPACES:
++        return None
++    repo = rctx.attr.namespaces.get(namespace)
++    if not repo:
++        fail("%s: no repository mapping for imported module %s" % (rctx.attr.pkg_name, module))
++    return "@%s//:%s" % (repo, module)
+ 
+ def _lake_package_repo_impl(rctx):
+     _download_package(rctx)
+-    src_dir_str = _find_src_dir(rctx)
+-    test_driver = _find_test_driver(rctx)
+-    files = _scan_lean_files(rctx, src_dir_str, test_driver)
+-
+-    modules = {}
+-    for f in files:
+-        if f.endswith(".lean"):
+-            mod = f[:-5].replace("/", ".")
+-            modules[mod] = f
+-
+-    internal_imports = {}
+-    external_deps = []
+-
+-    for mod, f in modules.items():
+-        file_path = rctx.path(src_dir_str).get_child(f) if src_dir_str else rctx.path(f)
+-        content = rctx.read(file_path)
+-        imps = _parse_imports(content)
+-        int_imps = []
+-        for imp in imps:
+-            if imp in modules:
+-                int_imps.append(imp)
+-            else:
+-                top = imp.split(".")[0]
+-                for p in rctx.attr.manifest_packages:
+-                    if p != rctx.attr.pkg_name and top.lower() == p.lower():
+-                        dep_label = "@%s//:%s" % (p, p)
+-                        if dep_label not in external_deps:
+-                            external_deps.append(dep_label)
+-        if int_imps:
+-            internal_imports[mod] = int_imps
++    parts = [part for part in [rctx.attr.sub_dir, rctx.attr.source_dir] if part]
++    src_dir = "/".join(parts)
++    for part in parts:
++        if part.startswith("/") or ".." in part.split("/"):
++            fail("Lake source paths must stay inside the archive")
++    sources = {path[:-5].replace("/", "."): path for path in _source_files(rctx, src_dir)}
++    roots = rctx.attr.modules or sorted(sources.keys())
++    pending = {module: True for module in roots}
++    imports = {}
++    module_system = {}
++    # Each iteration removes one unseen source from a finite source set.
++    for _ in range(len(sources)):
++        if not pending:
++            break
++        module = pending.keys()[0]
++        pending.pop(module)
++        if module not in sources:
++            fail("%s: no source for selected module %s" % (rctx.attr.pkg_name, module))
++        path = "/".join([part for part in [src_dir, sources[module]] if part])
++        header = parse_header(rctx.read(path))
++        imports[module] = header.imports
++        module_system[module] = header.module_system
++        for dep in imports[module]:
++            if dep in sources and dep not in imports:
++                pending[dep] = True
++    if pending:
++        fail("unresolved Lake source modules: %s" % sorted(pending.keys()))
+ 
+     lines = [
+-        'load("@rules_lean//lean:defs.bzl", "lean_library")',
++        "load(%s, \"lean_library\")" % repr(_DEFS),
+         "",
+         'package(default_visibility = ["//visibility:public"])',
+         "",
+-        "lean_library(",
+-        '    name = "%s",' % rctx.attr.pkg_name,
+-        "    srcs = [",
+     ]
+-    for f in files:
+-        lines.append('        "%s",' % f)
+-    lines.append("    ],")
+-
+-    if internal_imports:
+-        lines.append("    internal_imports = {")
+-        for m, imps in sorted(internal_imports.items()):
+-            lines.append('        "%s": %s,' % (m, repr(imps)))
+-        lines.append("    },")
+-
+-    if external_deps:
+-        lines.append("    deps = [")
+-        for d in sorted(external_deps):
+-            lines.append('        "%s",' % d)
+-        lines.append("    ],")
+-
+-    lines.append(")")
+-    lines.append("")
+-
+-    build_content = "\n".join(lines)
+-    if src_dir_str:
+-        rctx.file(src_dir_str + "/BUILD.bazel", build_content)
+-        root_build = """package(default_visibility = ["//visibility:public"])
+-
+-alias(
+-    name = "{name}",
+-    actual = "//{src_dir}:{name}",
+-)
+-""".format(name = rctx.attr.pkg_name, src_dir = src_dir_str)
+-        rctx.file("BUILD.bazel", root_build)
+-    else:
+-        rctx.file("BUILD.bazel", build_content)
+-
+-_lake_package_repo = repository_rule(
++    for module in sorted(imports):
++        deps = {}
++        for imp in imports[module]:
++            label = _dependency_label(rctx, imp, imports)
++            if label:
++                deps[label] = True
++        lines.extend([
++            "lean_library(",
++            "    name = %s," % repr(module),
++            "    srcs = [%s]," % repr(sources[module]),
++            "    deps = %s," % repr(sorted(deps.keys())),
++            "    internal_imports = {%s: %s}," % (repr(module), repr(imports[module])),
++            "    module_system = %s," % repr([module] if module_system[module] else []),
++            "    extra_flags = %s," % repr(rctx.attr.extra_flags),
++            ")",
++            "",
++        ])
++    build_path = (src_dir + "/" if src_dir else "") + "BUILD.bazel"
++    rctx.file(build_path, "\n".join(lines))
++    if src_dir:
++        aliases = ['package(default_visibility = ["//visibility:public"])', ""]
++        for module in sorted(imports):
++            aliases.append("alias(name = %s, actual = %s)" % (repr(module), repr("//%s:%s" % (src_dir, module))))
++        rctx.file("BUILD.bazel", "\n".join(aliases) + "\n")
++    return rctx.repo_metadata(reproducible = True)
++
++lake_package_repo = repository_rule(
+     implementation = _lake_package_repo_impl,
+     attrs = {
+         "commit": attr.string(mandatory = True),
+-        "config_file": attr.string(default = ""),
+-        "manifest_packages": attr.string_list(),
++        "extra_flags": attr.string_list(),
++        "module_overrides": attr.string_dict(),
++        "modules": attr.string_list(),
++        "namespaces": attr.string_dict(),
+         "pkg_name": attr.string(mandatory = True),
+-        "sub_dir": attr.string(default = ""),
++        "sha256": attr.string(mandatory = True),
++        "source_dir": attr.string(),
++        "sub_dir": attr.string(),
+         "url": attr.string(mandatory = True),
+     },
+-    doc = "Fetches a git dependency defined in lake-manifest.json and builds it with lean_library.",
++    doc = "Fetch a pinned GitHub source archive and generate per-module Lean targets.",
+ )
+-
+-def lake_package_repo(name, pkg_name, url, commit, sub_dir = "", config_file = "", manifest_packages = []):
+-    _lake_package_repo(
+-        name = name,
+-        commit = commit,
+-        config_file = config_file,
+-        manifest_packages = manifest_packages,
+-        pkg_name = pkg_name,
+-        sub_dir = sub_dir,
+-        url = url,
+-    )
+diff --git a/lean/extensions.bzl b/lean/extensions.bzl
+index 5230051..f9fcf94 100644
+--- a/lean/extensions.bzl
++++ b/lean/extensions.bzl
+@@ -26,9 +26,16 @@ _MATHLIB_TAG = tag_class(
+             doc = "Backend to fetch Mathlib oleans: 'lake' or 'direct'.",
+             values = ["lake", "direct"],
+         ),
++        "manifest": attr.label(
++            allow_single_file = True,
++            doc = "Lake manifest whose Mathlib git revision is used.",
++        ),
+         "modules": attr.string_list(
+             doc = "Optional list of modules to fetch. Empty means all modules.",
+         ),
++        "rev": attr.string(
++            doc = "Optional pinned Mathlib commit. Takes precedence over version.",
++        ),
+         "sha256": attr.string(
+             doc = "SHA256 of Mathlib release tarball.",
+         ),
+@@ -99,10 +106,12 @@ def _shas_for(tag, version):
+     return shas
+ 
+ def _lean_impl(mctx):
+-    # Deduplicate: two modules may request the same version.
++    # A project's compiler version takes precedence over the ruleset's demos.
++    root_mods = [mod for mod in mctx.modules if mod.is_root]
++    toolchain_mods = [mod for mod in root_mods if mod.tags.toolchain] or mctx.modules
+     requested = {}
+ 
+-    for mod in mctx.modules:
++    for mod in toolchain_mods:
+         for tag in mod.tags.toolchain:
+             version = _resolve_version(mctx, mod, tag)
+             for platform, sha256 in _shas_for(tag, version).items():
+@@ -113,6 +122,10 @@ def _lean_impl(mctx):
+                     fail("two sha256 values for Lean %s on %s" % (version, platform))
+                 requested[key] = sha256
+ 
++    versions = sorted({version: True for version, _ in requested})
++    if len(versions) != 1:
++        fail("select exactly one Lean version with lean.toolchain; got %s" % versions)
++
+     entries = []
+     toolchain_lakes = {}
+     for (version, platform) in sorted(requested.keys()):
+@@ -124,57 +137,60 @@ def _lean_impl(mctx):
+             version = version,
+         )
+         entries.append("%s %s %s" % (version, platform, repo))
+-        toolchain_lakes[platform] = Label("@@+lean+" + repo + "//:bin/lake")
++        # Strings in repository attributes resolve in this extension's namespace.
++        toolchain_lakes[platform] = "@" + repo + "//:bin/lake"
+ 
+     lean_toolchains_repo(name = _HUB, entries = entries)
+ 
+-    root_mod = [mod for mod in mctx.modules if mod.is_root]
+-    root_module_name = root_mod[0].name if root_mod else ""
++    root_module_name = root_mods[0].name if root_mods else ""
+ 
+     root_labels = [Label("@@//:MODULE.bazel")]
+-    if Label("@@//:MODULE.bazel") != Label("//:MODULE.bazel"):
+-        root_labels.append(Label("//:MODULE.bazel"))
+     lean_imports_repo(
+         name = "lean_imports",
+         roots = root_labels,
+         root_module_name = root_module_name,
+     )
+ 
+-    mathlib_version = "4.34.1"
+-    mathlib_sha256 = ""
+-    mathlib_modules = []
+-    mathlib_fetcher = "lake"
+-    has_mathlib_tag = False
+-    for mod in mctx.modules:
+-        for tag in mod.tags.mathlib:
+-            has_mathlib_tag = True
+-            if tag.version:
+-                mathlib_version = tag.version
+-            if tag.sha256:
+-                mathlib_sha256 = tag.sha256
+-            if tag.modules:
+-                mathlib_modules = tag.modules
+-            if tag.fetcher:
+-                mathlib_fetcher = tag.fetcher
+-
+-    if not has_mathlib_tag and requested:
+-        mathlib_version = sorted(requested.keys())[0][0]
+-
+-    mathlib_repo(
+-        name = "mathlib",
+-        fetcher = mathlib_fetcher,
+-        modules = mathlib_modules,
+-        sha256 = mathlib_sha256,
+-        toolchain_lakes = toolchain_lakes,
+-        version = mathlib_version,
+-    )
++    mathlib_tags = [tag for mod in root_mods for tag in mod.tags.mathlib]
++    if len(mathlib_tags) > 1:
++        fail("declare at most one lean.mathlib tag in the root module")
++    if mathlib_tags:
++        tag = mathlib_tags[0]
++        if tag.version and tag.version != versions[0]:
++            fail("Mathlib version %s must match Lean %s" % (tag.version, versions[0]))
++        revision = tag.rev
++        if tag.manifest:
++            manifest = json.decode(mctx.read(tag.manifest))
++            packages = [pkg for pkg in manifest.get("packages", []) if pkg.get("name") == "mathlib"]
++            if len(packages) != 1 or packages[0].get("type") != "git" or not packages[0].get("rev"):
++                fail("%s must contain exactly one pinned Mathlib git package" % tag.manifest)
++            package = packages[0]
++            if package.get("url", "").removesuffix(".git") != "https://github.com/leanprover-community/mathlib4":
++                fail("Mathlib manifest URL must name leanprover-community/mathlib4")
++            if revision and revision != package["rev"]:
++                fail("lean.mathlib rev disagrees with %s" % tag.manifest)
++            revision = package["rev"]
++        mathlib_repo(
++            name = "mathlib",
++            fetcher = tag.fetcher,
++            modules = tag.modules,
++            rev = revision,
++            sha256 = tag.sha256,
++            toolchain_lakes = toolchain_lakes,
++            version = tag.version or versions[0],
++        )
+ 
+-    is_rules_lean_root = any([mod.is_root and mod.name == "rules_lean" for mod in mctx.modules])
+-    root_deps = [_HUB, "lean_imports", "mathlib"] if is_rules_lean_root else [_HUB]
++    root_deps = [_HUB, "lean_imports"]
++    root_dev_deps = []
++    if mathlib_tags:
++        if mctx.is_dev_dependency(mathlib_tags[0]):
++            root_dev_deps.append("mathlib")
++        else:
++            root_deps.append("mathlib")
+ 
+     return mctx.extension_metadata(
+         root_module_direct_deps = root_deps,
+-        root_module_direct_dev_deps = [],
++        root_module_direct_dev_deps = root_dev_deps,
+         reproducible = True,
+     )
+ 
+diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
+index 2ad2ce9..cf1a1f1 100644
+--- a/lean/private/lean_rules.bzl
++++ b/lean/private/lean_rules.bzl
+@@ -22,13 +22,15 @@ directory, the output directory of the package, and that directory is the
+ directory holds exactly those files.
+ """
+ 
+-load("@lean_imports//:imports.bzl", "IMPORTS")
++load("@lean_imports//:imports.bzl", "IMPORTS", "MODULES")
+ load("//lean:toolchain.bzl", "TOOLCHAIN_TYPE")
+ 
+ LeanLibraryInfo = provider(
+     doc = "Oleans of one `lean_library`, and the directories that hold them.",
+     fields = {
++        "module_artifacts": "depset[tuple[str, tuple[File, ...]]]: module name to compiled files, transitive.",
+         "module_imports": "depset[tuple[str, tuple[str, ...]]]: module name to imports, transitive.",
++        "opaque_oleans": "depset[File]: files whose complete module import graph is unavailable.",
+         "module_sources": "depset[tuple[str, str, File]]: module path, module name, " +
+                           "and source file, transitive.",
+         "olean_dirs": "depset[str]: `LEAN_PATH` entries for actions, transitive.",
+@@ -124,6 +126,62 @@ def _stdlib_dir(tc, attribute):
+ def _transitive(deps, field):
+     return depset(transitive = [getattr(dep[LeanLibraryInfo], field) for dep in deps if hasattr(dep[LeanLibraryInfo], field)])
+ 
++def _opaque_oleans(deps):
++    return depset(transitive = [
++        getattr(dep[LeanLibraryInfo], "opaque_oleans", dep[LeanLibraryInfo].oleans)
++        for dep in deps
++    ])
++
++def _artifact_closures(label, artifacts, imports, mapped_modules):
++    """Build file closures in dependency order, with one step per graph node."""
++    remaining = {}
++    importers = {}
++    for mod in artifacts:
++        direct = {imp: True for imp in imports.get(mod, []) if imp in artifacts}
++        remaining[mod] = len(direct)
++        for imp in direct:
++            importers.setdefault(imp, []).append(mod)
++
++    ready = [mod for mod, count in remaining.items() if count == 0]
++    closures = {}
++    mapped_closures = {}
++    for _ in range(len(artifacts)):
++        if not ready:
++            cycle = [mod for mod in artifacts if mod not in closures]
++            fail("%s: import cycle among modules: %s" % (label, ", ".join(cycle[:10])))
++        mod = ready.pop()
++        closures[mod] = depset(
++            direct = artifacts[mod],
++            transitive = [closures[imp] for imp in imports.get(mod, []) if imp in closures],
++        )
++        mapped_closures[mod] = depset(
++            direct = [mod] if mod in mapped_modules else [],
++            transitive = [mapped_closures[imp] for imp in imports.get(mod, []) if imp in mapped_closures],
++        )
++        for importer in importers.get(mod, []):
++            remaining[importer] -= 1
++            if remaining[importer] == 0:
++                ready.append(importer)
++    return struct(files = closures, mapped_modules = mapped_closures)
++
++def _ambiguous_modules(tc, artifacts):
++    # An SDK namespace comes first in LEAN_PATH. Custom modules in that namespace
++    # need explicit paths, while SDK imports retain their normal lookup path.
++    sdk_root = _stdlib_dir(tc, "path")
++    roots = {namespace: {sdk_root: True} for namespace in ["Init", "Lean", "Std", "Lake"]}
++    for mod, files in artifacts.items():
++        suffix = mod.replace(".", "/") + ".olean"
++        for file in files:
++            if file.path.endswith(".olean"):
++                root = _dir_of(file.path, suffix).rstrip("/")
++                roots.setdefault(mod.partition(".")[0], {})[root] = True
++                break
++    return {
++        mod: True
++        for mod in artifacts
++        if len(roots[mod.partition(".")[0]]) > 1
++    }
++
+ def _compile_modules(
+         ctx,
+         tc,
+@@ -137,6 +195,14 @@ def _compile_modules(
+     """Compile one action per source. Returns the oleans and their directory."""
+     dep_oleans = _transitive(deps, "oleans")
+ 
++    pkg = ctx.label.package
++    pkg_imports = dict(IMPORTS.get(pkg, {}))
++    if hasattr(ctx.attr, "internal_imports") and ctx.attr.internal_imports:
++        pkg_imports.update(ctx.attr.internal_imports)
++    module_system = {mod: True for mod in MODULES.get(pkg, [])}
++    if hasattr(ctx.attr, "module_system"):
++        module_system.update({mod: True for mod in ctx.attr.module_system})
++
+     olean_dir = None
+     runfiles_olean_dir = None
+     oleans_by_mod = {}
+@@ -147,11 +213,14 @@ def _compile_modules(
+         rel = _module_rel(ctx, src)
+         mod = rel.replace("/", ".")
+         out = ctx.actions.declare_file("%s%s" % (rel, _OLEAN_SUFFIX))
+-        out_server = ctx.actions.declare_file("%s%s.server" % (rel, _OLEAN_SUFFIX))
+-        out_private = ctx.actions.declare_file("%s%s.private" % (rel, _OLEAN_SUFFIX))
+-        out_ir = ctx.actions.declare_file("%s.ir" % rel)
+-        out_ir_sig = ctx.actions.declare_file("%s.ir.sig" % rel)
+-        files = [out, out_server, out_private, out_ir, out_ir_sig]
++        files = [out]
++        if mod in module_system:
++            files.extend([
++                ctx.actions.declare_file("%s%s.server" % (rel, _OLEAN_SUFFIX)),
++                ctx.actions.declare_file("%s%s.private" % (rel, _OLEAN_SUFFIX)),
++                ctx.actions.declare_file("%s.ir" % rel),
++                ctx.actions.declare_file("%s.ir.sig" % rel),
++            ])
+         if generate_c:
+             out_c = ctx.actions.declare_file("%s.c/%s.c" % (ctx.label.name, rel))
+             files.append(out_c)
+@@ -166,11 +235,10 @@ def _compile_modules(
+ 
+     # Lean searches LEAN_PATH in order and replaces its built-in path, so the
+     # package output directory and standard library must be explicit entries.
+-    action_dirs = []
++    action_dirs = [_stdlib_dir(tc, "path")]
+     if olean_dir != None:
+         action_dirs.append(olean_dir)
+     action_dirs.extend(_transitive(deps, "olean_dirs").to_list())
+-    action_dirs.append(_stdlib_dir(tc, "path"))
+     lean_path = ":".join(action_dirs)
+ 
+     # The upstream test driver runs a test with the environment of its
+@@ -178,38 +246,27 @@ def _compile_modules(
+     env = {"LEAN_PATH": lean_path}
+     env.update(extra_env)
+ 
+-    pkg = ctx.label.package
+-    pkg_imports = dict(IMPORTS.get(pkg, {}))
+-    if hasattr(ctx.attr, "internal_imports") and ctx.attr.internal_imports:
+-        pkg_imports.update(ctx.attr.internal_imports)
+-
+-    # Compute direct internal dependencies (modules in the same target)
+-    direct_internal = {}
+-    for mod in oleans_by_mod:
+-        direct_internal[mod] = [
+-            dep_mod
+-            for dep_mod in pkg_imports.get(mod, [])
+-            if dep_mod in oleans_by_mod
+-        ]
+-
+-    # Compute transitive internal dependencies
+-    transitive_internal = {}
+-    for mod in oleans_by_mod:
+-        visited = {}
+-        queue = list(direct_internal[mod])
+-        for _ in range(1000):
+-            if not queue:
+-                break
+-            curr = queue.pop()
+-            if curr in visited:
+-                continue
+-            visited[curr] = True
+-            for next_dep in direct_internal.get(curr, []):
+-                if next_dep not in visited:
+-                    queue.append(next_dep)
+-        if mod in visited:
+-            fail("%s: import cycle detected involving module '%s'" % (ctx.label, mod))
+-        transitive_internal[mod] = visited.keys()
++    # Providers carry module identity and import edges across package boundaries.
++    # Unindexed prebuilt libraries keep their full input set for compatibility.
++    all_artifacts = {}
++    for mod, files in _transitive(deps, "module_artifacts").to_list():
++        if mod in all_artifacts and all_artifacts[mod] != files:
++            fail("%s: deps supply different artifacts for module '%s'" % (ctx.label, mod))
++        all_artifacts[mod] = files
++    all_imports = dict(_transitive(deps, "module_imports").to_list())
++    for mod, files in oleans_by_mod.items():
++        if mod in all_artifacts:
++            fail("%s: module '%s' is also supplied by deps" % (ctx.label, mod))
++        all_artifacts[mod] = files
++        all_imports[mod] = pkg_imports.get(mod, [])
++    opaque_oleans = _opaque_oleans(deps)
++    opaque_files = {file: True for file in opaque_oleans.to_list()}
++    opaque_modules = []
++    for mod, files in all_artifacts.items():
++        if any([file in opaque_files for file in files]):
++            opaque_modules.append(mod)
++    mapped_modules = all_artifacts if opaque_files else _ambiguous_modules(tc, all_artifacts)
++    closures = _artifact_closures(ctx.label, all_artifacts, all_imports, mapped_modules)
+ 
+     plugin_flags = ["--plugin=" + p.path for p in plugins]
+     c_snippet = '-c "$LEAN_C"' if generate_c else ""
+@@ -218,12 +275,12 @@ def _compile_modules(
+     for mod, src in src_by_mod.items():
+         out_files = oleans_by_mod[mod]
+         out = out_files[0]
+-        out_ir = out_files[3]
+-        out_ir_sig = out_files[4]
+         module_rel = rel_by_mod[mod]
+-        internal_dep_oleans = []
+-        for dep_mod in transitive_internal[mod]:
+-            internal_dep_oleans.extend(oleans_by_mod[dep_mod])
++        imported_artifacts = [
++            closures.files[imp]
++            for imp in all_imports[mod]
++            if imp in closures.files
++        ]
+ 
+         sorry_check = ""
+         if forbid_sorry:
+@@ -238,14 +295,46 @@ fi
+         action_env = dict(
+             env,
+             LEAN_OUT = out.path,
+-            LEAN_OUT_IR = out_ir.path,
+-            LEAN_OUT_IR_SIG = out_ir_sig.path,
+             LEAN_MODREL = module_rel,
+             LEAN_SRC = src.path,
+         )
+         if generate_c:
+             action_env["LEAN_C"] = cfiles_by_mod[mod].path
+ 
++        imported_modules = depset(
++            direct = opaque_modules,
++            transitive = [
++                closures.mapped_modules[imp]
++                for imp in all_imports[mod]
++                if imp in closures.mapped_modules
++            ],
++        ).to_list()
++        import_arts = {}
++        for imported in imported_modules:
++            paths = {}
++            for file in all_artifacts[imported]:
++                for suffix in [".olean.private", ".olean.server", ".olean", ".ir.sig", ".ir"]:
++                    if file.path.endswith(suffix):
++                        paths[suffix] = file.path
++                        break
++            import_arts[imported] = [
++                [paths[suffix] for suffix in [".olean", ".olean.server", ".olean.private"] if suffix in paths],
++                [paths[suffix] for suffix in [".ir.sig", ".ir"] if suffix in paths],
++            ]
++        setup = ctx.actions.args()
++        setup.add(json.encode({
++            "name": mod,
++            "isModule": mod in module_system,
++            "importArts": import_arts,
++            "options": {},
++            "plugins": [],
++            "dynlibs": [],
++        }))
++        setup.set_param_file_format("multiline")
++        setup.use_param_file("--setup=%s", use_always = True)
++        flags = ctx.actions.args()
++        flags.add_all(plugin_flags + extra_flags)
++
+         ctx.actions.run_shell(
+             command = "set -euo pipefail\n\n" + _ROOT_SNIPPET + """
+ tmp_log="$(mktemp)"
+@@ -255,19 +344,11 @@ if ! "{lean}" -o "$LEAN_OUT" {c_snippet} -R "$root" "$LEAN_SRC" "$@" 2>&1 | tee
+ fi
+ {sorry_check}
+ rm -f "$tmp_log"
+-touch "$LEAN_OUT.server" "$LEAN_OUT.private"
+-if [ ! -f "$LEAN_OUT_IR" ]; then
+-    empty_tmp="$(mktemp -d)/e"
+-    echo "module" | "{lean}" -R "$root" -o "$empty_tmp.olean" --stdin
+-    mv "$empty_tmp.ir" "$LEAN_OUT_IR"
+-    mv "$empty_tmp.ir.sig" "$LEAN_OUT_IR_SIG"
+-    rm -rf "$(dirname "$empty_tmp")"
+-fi
+ """.format(lean = tc.lean.path, sorry_check = sorry_check, c_snippet = c_snippet),
+-            arguments = plugin_flags + extra_flags,
++            arguments = [setup, flags],
+             inputs = depset(
+-                direct = [src] + internal_dep_oleans + plugins,
+-                transitive = [tc.stdlib, dep_oleans],
++                direct = [src] + plugins,
++                transitive = [tc.stdlib, opaque_oleans] + imported_artifacts,
+             ),
+             outputs = out_files,
+             tools = [tc.lean],
+@@ -279,6 +360,7 @@ fi
+ 
+     return struct(
+         cfiles = [cfiles_by_mod[m] for m in src_by_mod if m in cfiles_by_mod],
++        module_artifacts = [(mod, tuple(files)) for mod, files in oleans_by_mod.items()],
+         module_imports = [
+             (
+                 _module_rel(ctx, src).replace("/", "."),
+@@ -291,6 +373,7 @@ fi
+             for src in srcs
+         ],
+         olean_dir = olean_dir,
++        opaque_oleans = opaque_oleans,
+         oleans = depset(direct = oleans, transitive = [dep_oleans]),
+         runfiles_olean_dir = runfiles_olean_dir,
+     )
+@@ -312,6 +395,11 @@ def _lean_library_impl(ctx):
+     return [
+         DefaultInfo(files = result.oleans),
+         LeanLibraryInfo(
++            module_artifacts = depset(
++                direct = result.module_artifacts,
++                transitive = [_transitive(ctx.attr.deps, "module_artifacts")],
++            ),
++            opaque_oleans = result.opaque_oleans,
+             module_imports = depset(
+                 direct = result.module_imports,
+                 transitive = [_transitive(ctx.attr.deps, "module_imports")],
+@@ -321,12 +409,12 @@ def _lean_library_impl(ctx):
+                 transitive = [_transitive(ctx.attr.deps, "module_sources")],
+             ),
+             olean_dirs = depset(
+-                direct = [result.olean_dir],
++                direct = [result.olean_dir] if result.olean_dir != None else [],
+                 transitive = [_transitive(ctx.attr.deps, "olean_dirs")],
+             ),
+             oleans = result.oleans,
+             runfiles_olean_dirs = depset(
+-                direct = [result.runfiles_olean_dir],
++                direct = [result.runfiles_olean_dir] if result.runfiles_olean_dir != None else [],
+                 transitive = [_transitive(ctx.attr.deps, "runfiles_olean_dirs")],
+             ),
+         ),
+@@ -353,6 +441,9 @@ lean_library = rule(
+         "internal_imports": attr.string_list_dict(
+             doc = "Internal import graph edges between modules in this library.",
+         ),
++        "module_system": attr.string_list(
++            doc = "Modules with a module header, in addition to the scanned source headers.",
++        ),
+         "plugins": attr.label_list(
+             providers = [LeanPluginInfo],
+             doc = "Lean compiler plugins to load with --plugin.",
+@@ -370,37 +461,69 @@ lean_library = rule(
+ def _lean_prebuilt_library_impl(ctx):
+     direct_olean_dirs = []
+     direct_runfiles_dirs = []
++    artifacts = {}
++    indexed_files = {}
+ 
+     roots = list(ctx.attr.roots)
+     if ctx.attr.root and ctx.attr.root not in roots:
+         roots.append(ctx.attr.root)
+ 
+-    if ctx.files.srcs:
+-        first = ctx.files.srcs[0]
+-        if roots:
+-            for r in roots:
+-                idx = first.path.find(r)
+-                if idx != -1:
+-                    d = first.path[:idx + len(r)]
+-                    if d not in direct_olean_dirs:
+-                        direct_olean_dirs.append(d)
+-                sidx = first.short_path.find(r)
+-                if sidx != -1:
+-                    sd = first.short_path[:sidx + len(r)]
+-                    if sd not in direct_runfiles_dirs:
+-                        direct_runfiles_dirs.append(sd)
+-        else:
+-            direct_olean_dirs.append(first.dirname)
+-            direct_runfiles_dirs.append(_parent_of(first.short_path, first.basename))
++    for src in ctx.files.srcs:
++        rel = src.short_path
++        if rel.startswith("../"):
++            rel = rel[3:].partition("/")[2]
++        if ctx.label.package:
++            prefix = ctx.label.package + "/"
++            if rel.startswith(prefix):
++                rel = rel[len(prefix):]
++        for root in roots:
++            prefix = root.rstrip("/") + "/"
++            if not rel.startswith(prefix):
++                continue
++            mod_path = rel[len(prefix):]
++            directory = _dir_of(src.path, "/" + mod_path)
++            runfiles_directory = _dir_of(src.short_path, "/" + mod_path)
++            if directory not in direct_olean_dirs:
++                direct_olean_dirs.append(directory)
++            if runfiles_directory not in direct_runfiles_dirs:
++                direct_runfiles_dirs.append(runfiles_directory)
++            for suffix in [".olean.private", ".olean.server", ".olean", ".ir.sig", ".ir", ".ilean"]:
++                if mod_path.endswith(suffix):
++                    mod = mod_path[:-len(suffix)].replace("/", ".")
++                    artifacts.setdefault(mod, []).append(src)
++                    indexed_files[src] = True
++                    break
++            break
+ 
++    if ctx.files.srcs and not roots:
++        first = ctx.files.srcs[0]
++        direct_olean_dirs.append(first.dirname)
++        direct_runfiles_dirs.append(_parent_of(first.short_path, first.basename))
++
++    # A partial graph cannot establish the full input closure. Keep all files
++    # until the caller supplies an entry, including empty imports, for each module.
++    complete_graph = len(indexed_files) == len(ctx.files.srcs)
++    for mod in artifacts:
++        if mod not in ctx.attr.internal_imports:
++            complete_graph = False
++    opaque_oleans = depset(
++        direct = [] if complete_graph else ctx.files.srcs,
++        transitive = [_opaque_oleans(ctx.attr.deps)],
++    )
+     all_files = depset(direct = ctx.files.srcs, transitive = [_transitive(ctx.attr.deps, "oleans")])
+ 
+     return [
+         DefaultInfo(files = depset(ctx.files.srcs)),
+         LeanLibraryInfo(
++            module_artifacts = depset(
++                direct = [(mod, tuple(files)) for mod, files in artifacts.items()],
++                transitive = [_transitive(ctx.attr.deps, "module_artifacts")],
++            ),
+             module_imports = depset(
++                direct = [(mod, tuple(imps)) for mod, imps in ctx.attr.internal_imports.items()],
+                 transitive = [_transitive(ctx.attr.deps, "module_imports")],
+             ),
++            opaque_oleans = opaque_oleans,
+             olean_dirs = depset(
+                 direct = direct_olean_dirs,
+                 transitive = [_transitive(ctx.attr.deps, "olean_dirs")],
+@@ -423,6 +546,9 @@ lean_prebuilt_library = rule(
+             providers = [LeanLibraryInfo],
+             doc = "Lean libraries that these prebuilt modules import.",
+         ),
++        "internal_imports": attr.string_list_dict(
++            doc = "Complete import graph for prebuilt modules. Enables per-module action inputs.",
++        ),
+         "root": attr.string(
+             default = "",
+             doc = "Directory containing the root modules, relative to package (e.g. 'lib/lean').",
+@@ -522,6 +648,9 @@ lean_test = rule(
+         "extra_flags": attr.string_list(
+             doc = "Extra flags for `lean`.",
+         ),
++        "module_system": attr.string_list(
++            doc = "Modules with a module header, in addition to the scanned source headers.",
++        ),
+         "plugins": attr.label_list(
+             providers = [LeanPluginInfo],
+             doc = "Lean compiler plugins to load with --plugin.",
+@@ -901,17 +1030,15 @@ def _lean_binary_impl(ctx):
+         for mod_name, imps in ctx.attr.internal_imports.items():
+             all_imports[mod_name] = list(imps)
+ 
+-    needed = {}
++    needed = {main_mod: True}
+     queue = [main_mod]
+-    for _ in range(10000):
++    for _ in range(len(modules)):
+         if not queue:
+             break
+         curr = queue.pop()
+-        if curr in needed:
+-            continue
+-        needed[curr] = True
+         for imp in all_imports.get(curr, []):
+             if imp in modules and imp not in needed:
++                needed[imp] = True
+                 queue.append(imp)
+ 
+     compile_modules = [modules[name] for name in sorted(needed.keys()) if name in modules]
+@@ -1075,6 +1202,11 @@ def _lean_plugin_impl(ctx):
+         DefaultInfo(files = depset([shared_lib])),
+         LeanPluginInfo(plugin = shared_lib),
+         LeanLibraryInfo(
++            module_artifacts = depset(
++                direct = result.module_artifacts,
++                transitive = [_transitive(ctx.attr.deps, "module_artifacts")],
++            ),
++            opaque_oleans = result.opaque_oleans,
+             module_imports = depset(
+                 direct = result.module_imports,
+                 transitive = [_transitive(ctx.attr.deps, "module_imports")],
+@@ -1117,6 +1249,9 @@ lean_plugin = rule(
+         "main": attr.string(
+             doc = "The entry module of the plugin (determines initialize_<main> symbol). Defaults to the single src module or target name.",
+         ),
++        "module_system": attr.string_list(
++            doc = "Modules with a module header, in addition to the scanned source headers.",
++        ),
+         "plugins": attr.label_list(
+             providers = [LeanPluginInfo],
+             doc = "Other plugins loaded during compilation.",
+diff --git a/lean/private/repositories.bzl b/lean/private/repositories.bzl
+index bb65173..1512a97 100644
+--- a/lean/private/repositories.bzl
++++ b/lean/private/repositories.bzl
+@@ -20,7 +20,10 @@ _STDLIB_GLOBS = [
+     "lib/lean/**/*.ir",
+     "lib/lean/**/*.ir.sig",
+     "lib/lean/**/*.olean*",
++    "lib/*.so*",
++    "lib/*.dylib",
+     "lib/lean/*.so*",
++    "lib/lean/*.dylib",
+ ]
+ 
+ _PLATFORM_REPO_TEMPLATE = """load("{toolchain_bzl}", "lean_toolchain")
+@@ -94,6 +97,7 @@ def _lean_toolchain_repo_impl(rctx):
+         toolchain_bzl = _TOOLCHAIN_BZL,
+         version = version,
+     ))
++    return rctx.repo_metadata(reproducible = True)
+ 
+ _lean_toolchain_repo = repository_rule(
+     implementation = _lean_toolchain_repo_impl,
+@@ -121,7 +125,7 @@ def _lean_toolchains_repo_impl(rctx):
+ 
+     # One `toolchain` target per (version, platform). A `toolchain` target holds
+     # the constraints that select it: Bazel picks the entry whose execution
+-    # platform matches the host.
++    # platform matches the execution platform.
+     for entry in rctx.attr.entries:
+         version, platform, repo = entry.split(" ")
+         constraints = ", ".join(['"%s"' % c for c in PLATFORM_CONSTRAINTS[platform]])
+@@ -140,6 +144,7 @@ toolchain(
+         ))
+ 
+     rctx.file("BUILD.bazel", "".join(lines))
++    return rctx.repo_metadata(reproducible = True)
+ 
+ _lean_toolchains_repo = repository_rule(
+     implementation = _lean_toolchains_repo_impl,
+@@ -158,34 +163,12 @@ def lean_toolchains_repo(name, entries):
+     """
+     _lean_toolchains_repo(name = name, entries = entries)
+ 
+-_DECL_KEYWORDS = [
+-    "def",
+-    "theorem",
+-    "lemma",
+-    "inductive",
+-    "structure",
+-    "class",
+-    "instance",
+-    "namespace",
+-    "section",
+-    "variable",
+-    "universe",
+-    "axiom",
+-    "opaque",
+-    "macro",
+-    "syntax",
+-    "elab",
+-    "notation",
+-    "infix",
+-    "prefix",
+-    "postfix",
+-    "initialize",
+-    "builtin_initialize",
+-]
+-
+-def _parse_imports(text):
+-    """The module names the `import` lines of a file mention."""
++def parse_header(text):
++    """Return imports and the module-system flag from a Lean source header."""
+     modules = []
++    module_system = False
++    expect_module = False
++    allow_all = False
+     lines = text.split("\n")
+     depth = 0
+     in_string = False
+@@ -216,6 +199,7 @@ def _parse_imports(text):
+             elif ch2 == "/-":
+                 depth += 1
+                 i = idx + 2
++                out.append(" ")
+             elif ch2 == "--":
+                 break
+             elif ch == '"':
+@@ -231,30 +215,56 @@ def _parse_imports(text):
+         words = [w for w in cleaned.replace("\t", " ").split(" ") if w]
+         if not words:
+             continue
+-        if words[0] in _DECL_KEYWORDS:
+-            break
+-        if "import" in words:
+-            idx = words.index("import")
+-            if all([w in ["public", "meta", "scoped", "open", "all"] for w in words[:idx]]):
+-                modules += words[idx + 1:]
+-    return modules
++        for word in words:
++            if expect_module:
++                if allow_all and word == "all":
++                    allow_all = False
++                    continue
++                modules.append(word)
++                expect_module = False
++            elif word == "module":
++                module_system = True
++            elif word in ["prelude", "public", "meta"]:
++                continue
++            elif word == "import":
++                expect_module = True
++                allow_all = True
++            else:
++                return struct(imports = modules, module_system = module_system)
++    return struct(imports = modules, module_system = module_system)
++
++def parse_imports(text):
++    """Return header imports, including public/meta and `import all` forms."""
++    return parse_header(text).imports
+ 
+ def _lean_imports_repo_impl(rctx):
+     imports_by_pkg = {}
++    modules_by_pkg = {}
+ 
+     for root_lbl in rctx.attr.roots:
+         root_dir = rctx.path(root_lbl).dirname
+         root_dir_str = str(root_dir)
+ 
++        rctx.watch(root_dir.get_child("BUILD.bazel"))
++        rctx.watch(root_dir.get_child("BUILD"))
+         root_has_build = (root_dir.get_child("BUILD.bazel").exists or
+                           root_dir.get_child("BUILD").exists)
+         queue = [(root_dir, "" if root_has_build else None)]
++        visited = {}
+ 
+-        for _ in range(5000):
++        # Starlark has no while loop. Fail if the guard is reached; never emit a
++        # partial import graph. Track real paths to terminate directory cycles.
++        for _ in range(1000000):
+             if not queue:
+                 break
+             curr_dir, curr_pkg = queue.pop()
++            real_dir = str(curr_dir.realpath)
++            if real_dir in visited:
++                continue
++            visited[real_dir] = True
+ 
++            rctx.watch(curr_dir.get_child("BUILD.bazel"))
++            rctx.watch(curr_dir.get_child("BUILD"))
+             is_pkg = (curr_dir.get_child("BUILD.bazel").exists or
+                       curr_dir.get_child("BUILD").exists)
+             if is_pkg:
+@@ -265,12 +275,14 @@ def _lean_imports_repo_impl(rctx):
+                     curr_pkg = curr_str[len(root_dir_str) + 1:]
+                 if curr_pkg not in imports_by_pkg:
+                     imports_by_pkg[curr_pkg] = {}
++                    modules_by_pkg[curr_pkg] = []
+ 
+-            for entry in curr_dir.readdir():
++            for entry in sorted(curr_dir.readdir(watch = "yes"), key = str):
+                 base = entry.basename
+                 if base.startswith(".") or base.startswith("bazel-") or base in ["build", "out", "external"]:
+                     continue
+                 if entry.is_dir:
++                    rctx.watch(entry.get_child("MODULE.bazel"))
+                     if entry != root_dir and entry.get_child("MODULE.bazel").exists:
+                         continue
+                     queue.append((entry, curr_pkg))
+@@ -286,13 +298,21 @@ def _lean_imports_repo_impl(rctx):
+                         module_rel = rel_in_pkg[:-len(".lean")]
+                         module_name = module_rel.replace("/", ".")
+                         content = rctx.read(entry)
+-                        imports_by_pkg[curr_pkg][module_name] = _parse_imports(content)
++                        header = parse_header(content)
++                        imports_by_pkg[curr_pkg][module_name] = header.imports
++                        if header.module_system:
++                            modules_by_pkg[curr_pkg].append(module_name)
++
++        if queue:
++            fail("Lean source tree exceeds 1000000 directories: %s" % root_lbl)
+ 
+     header = ""
+     if rctx.attr.root_module_name:
+         header = "# Root module: " + rctx.attr.root_module_name + "\n"
+     rctx.file("BUILD.bazel", "exports_files(['imports.bzl'])\n")
+-    rctx.file("imports.bzl", header + "IMPORTS = " + repr(imports_by_pkg) + "\n")
++    rctx.file("imports.bzl", header + "IMPORTS = " + repr(imports_by_pkg) +
++              "\nMODULES = " + repr(modules_by_pkg) + "\n")
++    return rctx.repo_metadata(reproducible = True)
+ 
+ _lean_imports_repo = repository_rule(
+     implementation = _lean_imports_repo_impl,
+diff --git a/lean/private/versions.bzl b/lean/private/versions.bzl
+index 8ceccc5..92d42ec 100644
+--- a/lean/private/versions.bzl
++++ b/lean/private/versions.bzl
+@@ -59,6 +59,12 @@ KNOWN_VERSIONS = {
+         "linux_aarch64": "79aee7ec90f721757d43f75d75fe2e659ded07f0b4e5f1569e92ac9a183e3f81",
+         "linux_x86_64": "5f2069e6f5db73780f374ccb49ce8ea649aa20a0cebf0116816744c999ce72aa",
+     },
++    "4.33.0-rc2": {
++        "darwin_aarch64": "136b2710bc6bbcd02a13701176873e0ae6021c41f1ab6daf0db9376ff27f7a1f",
++        "darwin_x86_64": "602eb586105449a04b11f90cfd3a7df995e8f2d59e82795b5588916998a96ec5",
++        "linux_aarch64": "d4998d73411a8a45e3b1ee3eba2710eae03efcbfc7be3e96abb82ed09217646e",
++        "linux_x86_64": "48010c7d6264dc992574e9b0e09ece1f9c648e8f5106066b2cdb6834a6a60a6c",
++    },
+     "4.34.0-rc1": {
+         "darwin_aarch64": "ae1f70cd5a72eeb93f8600edfeaed8550b9c9b073f04162ab6d721ab801ed709",
+         "darwin_x86_64": "c011bf88cd984cab01d2be5b0ed98e1a23aa744ad5f8cf77e6f5c8cec82e63f9",
+diff --git a/mathlib/BUILD.bazel b/mathlib/BUILD.bazel
+index b07966c..a95c7ea 100644
+--- a/mathlib/BUILD.bazel
++++ b/mathlib/BUILD.bazel
+@@ -1 +1 @@
+-# Package mathlib
++exports_files(["normalize.py"])
+diff --git a/mathlib/normalize.py b/mathlib/normalize.py
+new file mode 100644
+index 0000000..e54fa5c
+--- /dev/null
++++ b/mathlib/normalize.py
+@@ -0,0 +1,163 @@
++#!/usr/bin/env python3
++"""Turn an isolated Lake cache fetch into a portable prebuilt-module repository.
++
++Only the requested import closure survives. In particular, Lake's locally built
++cache executable, traces, setup JSON, Git checkouts and download cache do not.
++"""
++
++import argparse
++import json
++from pathlib import Path
++import re
++import shutil
++
++SUFFIXES = (".olean", ".olean.private", ".olean.server", ".ir", ".ir.sig")
++STDLIB = {"Init", "Lean", "Std", "Lake"}
++
++
++def strip_comments(text):
++    """Remove nested Lean comments while preserving header line boundaries."""
++    out = []
++    i = depth = 0
++    quoted = False
++    while i < len(text):
++        pair = text[i:i + 2]
++        if depth:
++            if pair == "/-":
++                depth += 1
++                i += 2
++            elif pair == "-/":
++                depth -= 1
++                i += 2
++            else:
++                if text[i] == "\n":
++                    out.append("\n")
++                i += 1
++        elif quoted:
++            out.append(text[i])
++            if text[i] == "\\" and i + 1 < len(text):
++                i += 1
++                out.append(text[i])
++            elif text[i] == '"':
++                quoted = False
++            i += 1
++        elif pair == "/-":
++            out.append(" ")
++            depth = 1
++            i += 2
++        elif pair == "--":
++            end = text.find("\n", i)
++            i = len(text) if end < 0 else end
++        else:
++            quoted = text[i] == '"'
++            out.append(text[i])
++            i += 1
++    if depth:
++        raise ValueError("unterminated Lean block comment")
++    return "".join(out)
++
++
++def header(text):
++    imports = []
++    module_system = expect_module = allow_all = False
++    for token in strip_comments(text).split():
++        if expect_module:
++            if allow_all and token == "all":
++                allow_all = False
++                continue
++            imports.append(token)
++            expect_module = False
++        elif token == "module":
++            module_system = True
++        elif token in ("prelude", "public", "meta"):
++            continue
++        elif token == "import":
++            expect_module = allow_all = True
++        else:
++            break
++    return list(dict.fromkeys(imports)), module_system
++
++
++def normalize(bootstrap, output, modules, packages_dir=None):
++    bootstrap, output = Path(bootstrap), Path(output)
++    manifest = json.loads((bootstrap / "lake-manifest.json").read_text())
++    packages_dir = Path(packages_dir) if packages_dir else bootstrap / manifest.get("packagesDir", ".lake/packages")
++    roots = [bootstrap]
++    for package in manifest.get("packages", []):
++        root = packages_dir / package["name"]
++        if package.get("subDir"):
++            root /= package["subDir"]
++        roots.append(root)
++
++    graph, artifacts = {}, {}
++    pending = list(modules or ["Mathlib"])
++    while pending:
++        mod = pending.pop()
++        if mod in graph or mod.split(".")[0] in STDLIB:
++            continue
++        if not re.fullmatch(r"[^\s/\\]+(?:\.[^\s/\\]+)*", mod):
++            raise ValueError("invalid module name: " + mod)
++        relative = Path(*mod.split("."))
++        matches = [(root, root / relative.with_suffix(".lean")) for root in roots]
++        matches = [(root, source) for root, source in matches if source.is_file()]
++        if len(matches) != 1:
++            raise ValueError("expected one source for %s, found %d" % (mod, len(matches)))
++        root, source = matches[0]
++        imports, module_system = header(source.read_text())
++        graph[mod] = imports
++        pending.extend(imports)
++        prefix = root / ".lake/build/lib/lean" / relative
++        files = [(suffix, Path(str(prefix) + suffix)) for suffix in SUFFIXES]
++        required = SUFFIXES if module_system else (".olean",)
++        missing = [suffix for suffix, path in files if suffix in required and not path.is_file()]
++        if missing:
++            raise ValueError("cache is missing compiled outputs for %s: %s" % (mod, ", ".join(missing)))
++        artifacts[mod] = [(suffix, path) for suffix, path in files if path.is_file()]
++
++    lines = ['load("@rules_lean//lean:defs.bzl", "lean_prebuilt_library")',
++             'package(default_visibility = ["//visibility:public"])', ""]
++    q = lambda value: json.dumps(value, ensure_ascii=False, sort_keys=True)
++    all_files = []
++    for mod in sorted(graph):
++        files = []
++        for suffix, source in artifacts[mod]:
++            relative = "lib/lean/" + mod.replace(".", "/") + suffix
++            target = output / relative
++            target.parent.mkdir(parents=True, exist_ok=True)
++            # A real file keeps this repository independent of its bootstrap and
++            # other external repositories. File modes are intentionally normalized.
++            shutil.copyfile(source, target)
++            target.chmod(0o644)
++            files.append(relative)
++        all_files.extend(files)
++        deps = [":" + dep for dep in graph[mod] if dep in graph]
++        lines.extend([
++            "lean_prebuilt_library(", "    name = %s," % q(mod),
++            "    srcs = %s," % q(files), '    root = "lib/lean",',
++            "    internal_imports = %s," % q({mod: graph[mod]}),
++            "    deps = %s," % q(deps), ")", "",
++        ])
++    # The aggregate also carries exact module metadata, so consumers can select
++    # just their own transitive imports instead of declaring all Mathlib inputs.
++    lines.extend([
++        "lean_prebuilt_library(", '    name = "mathlib",',
++        "    srcs = %s," % q(all_files), '    root = "lib/lean",',
++        "    internal_imports = %s," % q(graph), ")", "",
++    ])
++    (output / "BUILD.bazel").write_text("\n".join(lines))
++    (output / "modules.json").write_text(q(graph) + "\n")
++    print("Prepared %d modules (%d compiled files)" % (len(graph), len(all_files)))
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--bootstrap", required=True)
++    parser.add_argument("--output", required=True)
++    parser.add_argument("--packages-dir")
++    parser.add_argument("modules", nargs="*")
++    args = parser.parse_args()
++    normalize(args.bootstrap, args.output, args.modules, args.packages_dir)
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/mathlib/repositories.bzl b/mathlib/repositories.bzl
+index fa9c940..e674478 100644
+--- a/mathlib/repositories.bzl
++++ b/mathlib/repositories.bzl
+@@ -1,48 +1,6 @@
+-"""Repository rule for prebuilt Mathlib oleans."""
++"""Cacheable Mathlib repositories containing portable, complete module bundles."""
+ 
+-_BUILD_TEMPLATE = """load("@rules_lean//lean:defs.bzl", "lean_prebuilt_library")
+-
+-package(default_visibility = ["//visibility:public"])
+-
+-lean_prebuilt_library(
+-    name = "mathlib",
+-    srcs = glob([
+-        "lib/lean/**/*.olean*",
+-        "lib/lean/**/*.ir*",
+-        "lib/lean/**/*.ilean*",
+-    ]),
+-    root = "lib/lean",
+-)
+-"""
+-
+-_LINK_SCRIPT = """
+-import os, sys
+-
+-target = sys.argv[1]
+-lib = os.path.join(target, "lib", "lean")
+-os.makedirs(lib, exist_ok=True)
+-
+-src_dir = os.path.join(target, ".lake", "build", "lib", "lean")
+-if os.path.isdir(src_dir):
+-    for item in os.listdir(src_dir):
+-        src = os.path.join(src_dir, item)
+-        dst = os.path.join(lib, item)
+-        if not os.path.exists(dst):
+-            os.symlink(os.path.relpath(src, lib), dst)
+-
+-pkgs_dir = os.path.join(target, ".lake", "packages")
+-if os.path.isdir(pkgs_dir):
+-    for pkg in os.listdir(pkgs_dir):
+-        pkg_build = os.path.join(pkgs_dir, pkg, ".lake", "build", "lib", "lean")
+-        if os.path.isdir(pkg_build):
+-            for item in os.listdir(pkg_build):
+-                src = os.path.join(pkg_build, item)
+-                dst = os.path.join(lib, item)
+-                if not os.path.exists(dst):
+-                    os.symlink(os.path.relpath(src, lib), dst)
+-"""
+-
+-# Known Mathlib release tarball SHA256 hashes
++# Known Mathlib release tarball SHA256 hashes.
+ MATHLIB_SHAS = {
+     "4.34.1": "c586ce5d3f83f85903826b613347b81e9eb6da885ecbbf22f72b2a3197a2904e",
+ }
+@@ -60,119 +18,123 @@ def _mathlib_repo_impl(rctx):
+     lake_label = rctx.attr.toolchain_lakes.get(platform)
+     if not lake_label:
+         fail("No lake toolchain for platform %s" % platform)
+-
++    # Resolve label inputs before downloading or running Lake: a repository-rule
++    # restart at a late label lookup would repeat the expensive bootstrap.
++    normalizer = rctx.path(rctx.attr._normalizer)
++    rctx.watch(normalizer)
+     lake_path = rctx.path(lake_label)
+     bin_dir = lake_path.dirname
+ 
+     version = rctx.attr.version
+-    tag = "v" + version if not version.startswith("v") else version
+     raw_version = version[1:] if version.startswith("v") else version
+-
+-    sha256 = rctx.attr.sha256 or MATHLIB_SHAS.get(raw_version, "")
++    revision = rctx.attr.rev or ("v" + raw_version)
++    sha256 = rctx.attr.sha256 or (MATHLIB_SHAS.get(raw_version, "") if not rctx.attr.rev else "")
+     if not sha256:
+-        fail("No sha256 known for Mathlib version %s. Specify sha256 attribute." % version)
++        fail("Specify sha256 for Mathlib revision %s." % revision)
++    python = rctx.which("python3")
++    if not python:
++        fail("python3 is required to prepare the Mathlib module repository")
+ 
+-    rctx.report_progress("Downloading Mathlib %s source" % tag)
++    rctx.report_progress("Downloading Mathlib %s source" % revision)
+     rctx.download_and_extract(
+-        url = "https://github.com/leanprover-community/mathlib4/archive/refs/tags/%s.tar.gz" % tag,
++        url = "https://github.com/leanprover-community/mathlib4/archive/%s.tar.gz" % revision,
+         sha256 = sha256,
+-        strip_prefix = "mathlib4-%s" % raw_version,
++        strip_prefix = "mathlib4-%s" % (rctx.attr.rev or raw_version),
++        output = "_bootstrap",
+     )
+ 
+-    python = rctx.which("python3") or rctx.which("python")
+-    if not python:
+-        fail("python3 or python required in PATH to link Mathlib oleans")
+-
++    # Concurrent fetches use independent writable directories. Nothing touches
++    # the user's Lake/Mathlib caches, and none of this mutable state survives.
++    scratch = rctx.path("_bootstrap/.bazel-bootstrap")
++    rctx.file("_bootstrap/.bazel-bootstrap/home/.keep", "")
++    env = {name: None for name in [
++        "LEAN", "LEAN_SYSROOT", "LEAN_GITHASH", "LEAN_PATH", "LEAN_SRC_PATH",
++        "LEAN_CC", "LEAN_AR", "ELAN", "ELAN_HOME", "ELAN_TOOLCHAIN",
++        "LAKE_HOME", "LAKE_OVERRIDE_LEAN", "LAKE_CONFIG", "LAKE_PKG_URL_MAP",
++        "LAKE_CACHE_ARTIFACT_ENDPOINT", "LAKE_CACHE_REVISION_ENDPOINT",
++        "LAKE_CACHE_SERVICE", "LAKE_CACHE_KEY", "LAKE_RESTORE_ARTIFACTS", "LAKE_NO_CACHE",
++        "RESERVOIR_API_URL", "RESERVOIR_API_BASE_URL",
++        "MATHLIB_CACHE_GET_URL", "MATHLIB_CACHE_FROM", "MATHLIB_CACHE_REPO_SCOPE",
++    ]}
++    env.update({
++        "LAKE_ARTIFACT_CACHE": "false",
++        "HOME": str(scratch) + "/home",
++        "LAKE_CACHE_DIR": str(scratch) + "/lake-cache",
++        "MATHLIB_CACHE_DIR": str(scratch) + "/mathlib-cache",
++        "XDG_CACHE_HOME": str(scratch) + "/xdg-cache",
++        "PATH": str(bin_dir) + ":/bin:/usr/bin:/usr/local/bin",
++    })
++    modules = rctx.attr.modules or ["Mathlib"]
++    command = "get-" if rctx.attr.fetcher == "direct" else "get"
++    rctx.report_progress("Fetching Mathlib compiled import closure")
++    result = rctx.execute(
++        [str(lake_path), "exe", "cache", command] + modules,
++        working_directory = str(rctx.path("_bootstrap")),
++        environment = env,
++        timeout = 1800,
++    )
++    if result.return_code:
++        fail("Mathlib cache fetch failed:\n%s\n%s" % (result.stdout, result.stderr))
+     if rctx.attr.fetcher == "direct":
+-        cache_dir = rctx.path(".cache")
+-        cache_cmd = [str(lake_path), "exe", "cache", "get-"]
+-        if rctx.attr.modules:
+-            cache_cmd.extend(rctx.attr.modules)
+-        rctx.report_progress("Downloading Mathlib .ltar archives")
+-        res = rctx.execute(
+-            cache_cmd,
+-            environment = {
+-                "HOME": str(rctx.os.environ.get("HOME", "/tmp")),
+-                "MATHLIB_CACHE_DIR": str(cache_dir),
+-                "PATH": str(bin_dir) + ":/bin:/usr/bin:/usr/local/bin",
+-            },
+-            timeout = 900,
+-        )
+-        if res.return_code != 0:
+-            fail("Direct cache download failed (exit code %d):\n%s\n%s" % (res.return_code, res.stdout, res.stderr))
+-
+-        rctx.report_progress("Extracting Mathlib archives with leantar")
+-        leantar_path = str(bin_dir) + "/leantar"
+-        res = rctx.execute([
+-            str(python),
+-            "-c",
+-            """
+-import os, subprocess, sys
+-td = sys.argv[1]
+-leantar = sys.argv[2]
+-ltars = [os.path.join(td, f) for f in os.listdir(td) if f.endswith('.ltar')]
+-for ltar in ltars:
+-    subprocess.check_call([leantar, '-x', '-f', ltar])
+-""",
+-            str(cache_dir),
+-            leantar_path,
+-        ])
+-        if res.return_code != 0:
+-            fail("leantar extraction failed:\n%s\n%s" % (res.stdout, res.stderr))
+-    else:
+-        cache_cmd = [str(lake_path), "exe", "cache", "get"]
+-        if rctx.attr.modules:
+-            cache_cmd.extend(rctx.attr.modules)
+-
+-        rctx.report_progress("Fetching Mathlib oleans with lake cache get")
+-        res = rctx.execute(
+-            cache_cmd,
+-            environment = {
+-                "HOME": str(rctx.os.environ.get("HOME", "/tmp")),
+-                "PATH": str(bin_dir) + ":/bin:/usr/bin:/usr/local/bin",
+-            },
+-            timeout = 900,
++        result = rctx.execute(
++            [str(python), "-c", """import pathlib, subprocess, sys
++for archive in sorted(pathlib.Path(sys.argv[1]).glob('*.ltar')):
++    subprocess.run([sys.argv[2], '-x', '-f', str(archive)], check=True)
++""", str(scratch) + "/mathlib-cache", str(bin_dir) + "/leantar"],
++            working_directory = str(rctx.path("_bootstrap")),
++            environment = env,
++            timeout = 1800,
+         )
+-        if res.return_code != 0:
+-            fail("lake exe cache get failed (exit code %d):\n%s\n%s" % (res.return_code, res.stdout, res.stderr))
+-
+-    res = rctx.execute([str(python), "-c", _LINK_SCRIPT, str(rctx.path(""))])
+-    if res.return_code != 0:
+-        fail("Failed to link Mathlib oleans:\n%s\n%s" % (res.stdout, res.stderr))
++        if result.return_code:
++            fail("Mathlib archive extraction failed:\n%s\n%s" % (result.stdout, result.stderr))
++
++    result = rctx.execute(
++        [str(python), str(normalizer),
++         "--bootstrap", str(rctx.path("_bootstrap")),
++         "--output", str(rctx.path(""))] + modules,
++        environment = env,
++        timeout = 600,
++    )
++    if result.return_code:
++        fail("Mathlib repository normalization failed:\n%s\n%s" % (result.stdout, result.stderr))
++    rctx.delete("_bootstrap")
+ 
+-    rctx.file("BUILD.bazel", _BUILD_TEMPLATE)
++    # The tree now contains only deterministic BUILD/metadata and downloaded
++    # compiled bundles: no Git state, host paths, or cross-repository symlinks.
++    # Bazel 9 can publish it once and share it through its native contents cache.
++    return rctx.repo_metadata(reproducible = True)
+ 
+ _mathlib_repo = repository_rule(
+     implementation = _mathlib_repo_impl,
+     attrs = {
+         "fetcher": attr.string(
+             default = "lake",
+-            doc = "Backend to fetch Mathlib oleans: 'lake' or 'direct'.",
++            doc = "Use Lake cache extraction, or download then extract with leantar.",
+             values = ["lake", "direct"],
+         ),
+         "modules": attr.string_list(
+-            doc = "Optional subset of modules to fetch. If empty, fetches all cache files.",
++            doc = "Module roots whose compiled import closure to retain; defaults to Mathlib.",
+         ),
+-        "sha256": attr.string(
+-            doc = "SHA256 of Mathlib release tarball.",
++        "rev": attr.string(
++            doc = "Exact Mathlib Git revision. Overrides version; requires sha256.",
+         ),
++        "sha256": attr.string(doc = "SHA256 of the Mathlib source archive."),
+         "toolchain_lakes": attr.string_keyed_label_dict(
+             mandatory = True,
+-            doc = "Mapping from platform to lake binary label.",
+-        ),
+-        "version": attr.string(
+-            default = "4.34.1",
+-            doc = "Mathlib version tag.",
++            doc = "Mapping from host platform to the pinned Lake executable.",
+         ),
++        "version": attr.string(default = "4.34.1", doc = "Mathlib release version."),
++        "_normalizer": attr.label(default = "//mathlib:normalize.py", allow_single_file = True),
+     },
+-    doc = "Downloads Mathlib source, runs lake cache get, and provides prebuilt oleans.",
++    doc = "Fetches Mathlib caches once, then exposes exact per-module prebuilt targets.",
+ )
+ 
+-def mathlib_repo(name, toolchain_lakes, version = "4.34.1", sha256 = "", modules = [], fetcher = "lake"):
++def mathlib_repo(name, toolchain_lakes, version = "4.34.1", rev = "", sha256 = "", modules = [], fetcher = "lake"):
+     _mathlib_repo(
+         name = name,
+         fetcher = fetcher,
+         modules = modules,
++        rev = rev,
+         sha256 = sha256,
+         toolchain_lakes = toolchain_lakes,
+         version = version,

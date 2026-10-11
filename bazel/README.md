@@ -1,7 +1,7 @@
 # Bazel baseline
 
-Bazelisk reads `.bazelversion`, which pins Bazel 9.2.0. Tomato's `rules_lean`
-is pinned to commit `e3b343ff799554a1e1a1d158d4a96eac5cdaa3ea`.
+Bazelisk reads `.bazelversion`, which pins Bazel 9.2.0. Atvrager's `rules_lean`
+is pinned to commit `2cf9d007003ff73374e0082a82342e3f4723fc65`.
 
 From the repository root:
 
@@ -13,34 +13,40 @@ bazel build //:RiemannResearch
 
 `smoke` compiles the existing `RiemannResearch/Basic.lean` arithmetic check.
 `--nobuild` resolves dependencies and analyzes targets without compiling project
-sources. The full project target currently uses a glob and one compilation
-action; changing a source invalidates that action. Smaller libraries with
-explicit import dependencies are the next step for fine-grained caching.
-That split must also preserve Lean module sidecar artifacts between targets.
+sources. The project glob selects sources; each source has its own compilation
+action. Parsed imports determine the exact transitive artifact inputs, including
+Lean module sidecars. A source edit invalidates its action and affected importers.
 
-The Lake extension reads the existing root `lakefile.toml`, `lean-toolchain`,
-and `lake-manifest.json`. Its bootstrap uses explicit dependency targets and
-Mathlib cache roots, so the root project's library and default targets are not
-built there. Lake and Bazel share one set of dependency declarations.
-Transitive package labels come from the extension.
+The extensions read the root `lean-toolchain` and `lake-manifest.json`.
+`MODULE.bazel` selects external source packages and module roots; their local
+import closures become normal Bazel compilation actions. Mathlib and its
+published dependency artifacts are prebuilt targets with complete import graphs.
 
-The first bootstrap downloads the Lean distribution and Mathlib's public cache,
-then builds only the external modules listed in `source_build_targets` and their
-import closures. These repository setup steps run locally, outside Bazel's
-action cache. Update the target list when adding other external module imports.
+When dependency pins change, update the archive SHA-256 values in
+`MODULE.bazel`. Extend its package/module root lists when adding external
+imports. Keep namespace mappings, module overrides, source directories, and
+package compiler flags aligned with those dependencies. Keep `BUILD.bazel`'s
+compiler flags aligned with the root Lake file. A new Lean version may also
+need its archive checksums added to the ruleset patch.
 
-The small upstream compatibility patch adds the pinned Lean 4.33.0-rc2 archive
-checksums, passes through the same compiler options as the root Lake file, and
-allows dependency bootstrap to select module targets instead of whole libraries.
-Keep `BUILD.bazel`'s flags synchronized with those options.
+The upstream patch fixes consumer repository labels and version selection,
+complete import closures, Lean 4.33 module outputs, and portable repository
+contents. It also exposes selected source dependencies as per-module targets.
 
 MCP verification continues using Lake unchanged. Remote execution is not
 configured.
 
+Validation covers `Basic.lean`, the 12 selected external source modules,
+full-project analysis without compilation, incremental import fixtures, large
+import closures and cycle rejection, concurrent source repository reuse, and a
+70-module Mathlib cold fetch followed by fresh offline reuse. A fresh Bazel output
+directory restored the smoke action from a stock HTTP cache without compiling.
+The full project compilation, private GCS reuse, and RBE have not been tested.
+
 ## Shared local repository caches
 
-Bazel 9.2 enables both native repository caches by default. Workspaces using
-the same `output_user_root` share these persistent locations:
+Bazel 9.2 provides two native repository caches. Workspaces using the same
+`output_user_root` share these persistent locations:
 
 - Downloaded archives: `{output_user_root}/cache/repos/v1`.
 - Completed reproducible repositories: `{repository_cache}/contents`.
@@ -49,19 +55,31 @@ Run `bazel info output_user_root` on the Ubuntu server to locate them. No
 additional service or authentication is required; the directories survive
 reboots. Eligible completed repositories are shared through directory symlinks,
 with native filesystem locks for concurrent readers and garbage collection.
-Keep any custom cache location outside the checkout.
+The patched rules normalize fetched repositories into portable trees and mark
+them reproducible. Keep any custom cache location outside the checkout.
 
 `.bazelrc` explicitly retains completed repositories for 14 days after last use
 and runs their garbage collection after 5 minutes idle. This is age-based
 retention, not a 100 GiB size limit; it does not prune the downloaded-archive
 cache or change Lake's separate cache budget.
 
-The current Tomato adapter does not make its prepared Lake dependency
-repository eligible for the completed-repository cache. Its repository output
-must first be made reproducible and portable. Native archive reuse works now,
-but repeated dependency bootstrap across fresh workspaces is not yet solved.
-Any adapter change must also isolate writable Lake/Mathlib bootstrap caches;
-native repository locks do not protect those nested tools' shared cache files.
+The first Mathlib population downloads its public cache locally. Bootstrap uses
+isolated temporary Home, Lake, and Mathlib cache directories. It retains only
+compiled import bundles and deterministic metadata, then removes the temporary
+state. Later workspaces can reuse the completed repository without repeating
+bootstrap.
+
+`.bazelrc` also enables experimental remote repository contents caching:
+
+```bazelrc
+startup --experimental_remote_repo_contents_cache
+build --remote_download_outputs=minimal
+```
+
+Eligible completed repositories can use the configured remote cache as well.
+Cached action outputs download when needed by local actions; outputs compiled
+locally still occupy disk. Repository contents caching is experimental in
+Bazel 9.2. The downloaded-archive cache remains separate.
 
 ## Private GCS cache on the Ubuntu server
 

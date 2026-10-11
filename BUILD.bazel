@@ -1,5 +1,4 @@
-load("@rules_lean//lean:lean.bzl", "lean_library")
-load("@lake_deps//:packages.bzl", "LAKE_PACKAGES")
+load("@rules_lean//lean:defs.bzl", "lean_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -17,17 +16,30 @@ _LEAN_FLAGS = [
     "-DmaxSynthPendingDepth=3",
 ]
 
-# Coarse baseline; split this into per-module libraries for finer action caching.
+# The rule creates one action per source and follows its exact import closure.
 lean_library(
     name = "RiemannResearch",
-    srcs = glob(["RiemannResearch.lean", "RiemannResearch/**/*.lean"]),
-    deps = LAKE_PACKAGES,
+    srcs = glob(
+        ["RiemannResearch.lean", "RiemannResearch/**/*.lean"],
+        exclude = ["RiemannResearch/Basic.lean"],
+    ),
+    deps = [
+        ":basic",
+        "@mathlib//:mathlib",
+        "@LeanArchitect//:Architect",
+        "@PrimeNumberTheoremAnd//:PrimeNumberTheoremAnd.SmoothExistence",
+        "@PrimeNumberTheoremAnd//:PrimeNumberTheoremAnd.Mathlib.Analysis.Asymptotics.Asymptotics",
+    ],
     extra_flags = _LEAN_FLAGS,
+    forbid_sorry = True,
 )
 
 lean_library(
-    name = "smoke",
+    name = "basic",
     srcs = ["RiemannResearch/Basic.lean"],
-    deps = LAKE_PACKAGES,
+    deps = ["@mathlib//:Mathlib.Tactic.NormNum"],
     extra_flags = _LEAN_FLAGS,
+    forbid_sorry = True,
 )
+
+alias(name = "smoke", actual = ":basic")
