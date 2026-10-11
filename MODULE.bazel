@@ -17,7 +17,7 @@ lake = use_extension("@rules_lean//lean:lake.bzl", "lake")
 lake.workspace(
     name = "lake_deps",
     lean_toolchain = "//:lean-toolchain",
-    lakefile = "//bazel:lakefile.toml",
+    lakefile = "//:lakefile.toml",
     lake_manifest = "//:lake-manifest.json",
     cache_roots = ["Mathlib"],
     allow_source_build = False,
