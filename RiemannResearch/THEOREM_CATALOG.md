@@ -27,8 +27,10 @@
   job job_js_Ll8edCU-zOCwibn5RDWIAC-r9NpPi compiled all five standalone modules
   with verified=true; nine important
   foundation reports use only propext, Classical.choice and Quot.sound.
-  Final aggregate-project and changed-module acceptance is the introducing
-  server checkpoint. See RH/InfiniteGaussianAnalyticBridge20261011.md.
+  Publication checkpoint job_e7YbE5E25oK0rxrUNAhso2UY87rzwOdY passed with
+  validation scope affected_modules for the five new modules and published
+  commit 09109d452e6a1e6d6b5862072fb6a08fc242bf8d.
+  See RH/InfiniteGaussianAnalyticBridge20261011.md.
 
 ### E4 vanishing attempt: exact ordinate-information obstruction (2026-10-10)
 
