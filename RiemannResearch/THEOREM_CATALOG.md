@@ -1,5 +1,29 @@
 # Theorem catalog
 
+### Consecutive zeta ordinates, gap weights, and empty windows (2026-10-11)
+
+Twelve Analysis modules add exact finite phase transport, signed quadratic,
+cubic and quartic remainders, endpoint corrections, controlled-lag diagonal
+Haar convergence for all continuous pair tests, gap-weighted Haar and selected
+normalized-gap means, and the finite marked stop-loss/empty-window mechanism.
+
+ActualConsecutiveOrdinates constructs sorted actual-zero copies with their
+analytic multiplicities, without RH or simplicity. ActualConsecutivePhase
+identifies the chronological diagonal sums with the existing actual FMZ sums;
+ActualConsecutiveGapWindows specializes the exact geometric identities to
+actual chronological gaps. The final padded endpoint at T and the omitted
+initial interval remain explicit.
+
+Classification of the actual asymptotic conclusions: **conditional research
+reductions**. **Open:** a Lean provider of UniformSelbergDensity (1/4).
+**Open:** actual Fujii squared/cubic/quartic gap-moment providers and rates.
+**Open:** actual global-sequence/triangular-row assembly for the abstract
+continuous distribution laws. **Open:** positive-threshold marked stop-loss
+factorization; zero-threshold/first-moment results do not prove independence.
+No RH assumption, project-local axiom, or placeholder proof is introduced.
+See RH/ConsecutiveOrdinateHarmonicAnalysis20261011.md for theorem scope,
+provenance, exact normalization and the complete obligation ledger.
+
 ### Complete finite-prime FMZ assembly conditional on Selberg (2026-10-11)
 
 Thirteen new Analysis modules culminate in
