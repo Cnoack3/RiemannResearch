@@ -177,6 +177,69 @@ persistent machine authentication remain untested.
 
 ## RBE performance diagnostics
 
+### Local client limits and artifact uploads
+
+The repository sets an 8 GiB maximum Java heap, four loading/analysis threads,
+and a four-CPU budget for locally scheduled actions. `ActiveProcessorCount=4`
+also reduces automatically sized JVM pools, including garbage collection.
+The heap ceiling excludes native memory, thread stacks, and child processes.
+The CPU settings are scheduling and pool-size controls, not an operating-system
+CPU quota; explicitly sized remote callback pools can still run more threads.
+The normal BuildBuddy profile continues to allow 80 remote jobs.
+
+The JVM also exits immediately on heap exhaustion via
+`-XX:+ExitOnOutOfMemoryError`, including when a background callback encounters
+it. This prevents an exhausted server from continuing to run; it does not
+prevent OOM. Immediate exit can leave the final event/profile diagnostics
+incomplete and outstanding remote actions may finish independently.
+
+Allow memory headroom beyond the 8 GiB heap; this default is intended for a host
+with at least 16 GiB available to Ubuntu/WSL. For a smaller machine, set a suitable
+heap limit in the imported `.bazelrc.local`, for example
+`startup --host_jvm_args=-Xmx4g`. A smaller heap may still be insufficient for
+the full analysis graph. An explicit heap size may raise or lower the previous
+runtime-selected default; it is not evidence that the out-of-memory condition
+has been solved.
+
+BuildBuddy now uses
+`--experimental_build_event_upload_strategy=local`.
+This bypasses the remote BEP artifact uploader's file-metadata digest pass,
+which appeared in the reported Java heap exhaustion. Build events still go to
+BuildBuddy, and remote execution and action-cache transfers continue normally.
+Artifact, test-log, and profile references in those events become local file
+URLs, so BuildBuddy cannot retrieve those files from the dashboard. With minimal
+output downloads, a referenced artifact may also be absent from the local disk.
+The diagnostic script retains its profiles and logs locally.
+
+Restore hosted artifact uploads explicitly when needed:
+
+```sh
+bazel build --config=buildbuddy-artifacts //:smoke
+```
+
+That profile still uses 80 jobs and may reproduce the uploader memory pressure.
+Do not add `--build_event_upload_max_threads`: Bazel removed it in version 8.
+Changing `--bes_upload_mode` does not limit metadata concurrency.
+
+After stopping any currently running build and pulling these changes, the next
+Bazel invocation restarts that output base's server because its startup
+arguments changed. Start with the bounded analysis and smoke commands below;
+there is no need to clean the cache. Local overrides or command-line options
+can change these limits.
+
+The option names and uploader behavior were checked against Bazel 9.2.0 source.
+The memory/CPU effect and a successful full build remain unverified on the
+Ubuntu server.
+
+Sources: [JVM OOM exit implementation](https://github.com/openjdk/jdk/blob/jdk-21%2B35/src/hotspot/share/utilities/debug.cpp),
+[JVM heap and processor options](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html),
+[Bazel 9.2 loading threads](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/runtime/LoadingPhaseThreadsOption.java),
+[local action resources](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/exec/ExecutionOptions.java),
+[BEP upload strategies](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/buildeventstream/BuildEventProtocolOptions.java),
+and [local artifact uploader](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/buildeventstream/LocalFilesArtifactUploader.java).
+
+### Bounded measurements
+
 The BuildBuddy profile enables Bazel 9.2's `--remote_cache_compression`.
 This compresses client-to-cache transfers. It does not remove required inputs
 or guarantee a decrease in the internal-download usage counter.

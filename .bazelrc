@@ -1,3 +1,13 @@
+# Bound the local Bazel client while retaining remote execution concurrency.
+# 8 GiB caps the Java heap, not process RSS; leave room for native memory and tools.
+# ActiveProcessorCount sizes automatic JVM pools; it is not an OS CPU quota.
+startup --host_jvm_args=-Xmx8g
+startup --host_jvm_args=-XX:ActiveProcessorCount=4
+# A heap OOM must terminate the server, including failures on background threads.
+startup --host_jvm_args=-XX:+ExitOnOutOfMemoryError
+build --loading_phase_threads=4
+build --local_resources=cpu=4
+
 # Also share eligible repository contents through the remote cache (Bazel 9.2).
 # DO NOT ENABLE - this is unstable and causes hangs
 # startup --experimental_remote_repo_contents_cache
@@ -35,6 +45,14 @@ build:buildbuddy --noremote_local_fallback
 build:buildbuddy --remote_timeout=600s
 build:buildbuddy --jobs=80
 build:buildbuddy --remote_cache_compression
+
+# Bypass BEP artifact metadata hashing; dashboard events and RBE remain enabled.
+# Artifact/test-log/profile links are local files. Opt in to uploads below.
+build:buildbuddy --experimental_build_event_upload_strategy=local
+
+# Restore hosted artifact uploads when needed; this may recreate the uploader OOM.
+build:buildbuddy-artifacts --config=buildbuddy
+build:buildbuddy-artifacts --experimental_build_event_upload_strategy=remote
 
 # Bounded eight-job diagnostic profile; normal BuildBuddy concurrency is unchanged.
 build:buildbuddy-benchmark --config=buildbuddy
