@@ -98,20 +98,20 @@ symlink, without repeating bootstrap or copying its bundles. This reuse must
 still be confirmed on the Ubuntu server with the hosted BuildBuddy profile.
 RBE executes compilation actions; repository bootstrap still runs locally.
 
-`.bazelrc` also enables experimental remote repository contents caching:
+`.bazelrc` keeps `--experimental_remote_repo_contents_cache` disabled after
+hangs on the Ubuntu server. Keep it disabled. The native local repository
+contents cache above is independent of that experiment and remains available
+across fresh workspaces. Remote action caching and RBE also remain enabled by
+their respective profiles. With the experiment off, a local repository cache
+miss runs bootstrap locally; there is no remote repository contents fallback.
 
-```bazelrc
-startup --experimental_remote_repo_contents_cache
-build --remote_download_outputs=minimal
-```
-
-Eligible completed repositories can use the configured remote cache as well.
+`--remote_download_outputs=minimal` still limits action output downloads.
 Cached action outputs download when needed by local actions; outputs compiled
-locally still occupy disk. Repository contents caching is experimental in
-Bazel 9.2. The downloaded-archive cache remains separate.
-`--remote_accept_cached=false` also disables remote repository contents cache
-reads, so omit it from normal builds and fresh-workspace reuse tests. It does
-not disable an already populated shared local repository contents cache.
+locally still occupy disk. The downloaded-archive cache remains separate.
+Omit `--remote_accept_cached=false` from normal builds and reuse tests: it
+bypasses remote action cache hits, and would also bypass remote repository
+cache reads if that experiment were enabled. It does not disable the native
+local repository contents cache.
 
 ## Private GCS cache on the Ubuntu server
 

@@ -34,8 +34,10 @@ cat bazel-bin/bazel/rbe-probe.txt
 Expect `Linux x86_64` and an actual `remote` process in the build summary.
 This checks authentication, image pulling, and execution without fetching
 Mathlib or uploading the Lean SDK. A cache hit alone does not prove execution.
-`--remote_accept_cached=false` bypasses remote action and repository contents
-cache reads in Bazel 9.2, but does not force locally up-to-date actions to rerun.
+`--remote_accept_cached=false` bypasses remote action cache reads, but does not
+force locally up-to-date actions to rerun. It also bypasses remote repository
+contents reads if that experiment is enabled; our configuration keeps that
+experiment disabled after hangs on the Ubuntu server.
 Use it only for this tiny executor probe. The nonce changes the probe action's
 key so repeated probes exercise execution without cleaning the workspace.
 
@@ -49,9 +51,10 @@ bazel --output_base="$HOME/.cache/bazel-buildbuddy-smoke" build \
 
 The smoke target imports `Mathlib.Tactic.NormNum`, but `MODULE.bazel` prepares
 the entire Mathlib repository (`modules = ["Mathlib"]`) for all project targets.
-If neither the shared local nor remote repository contents cache has a matching
-entry, its first population runs `lake exe cache get Mathlib` locally before
-remote Lean actions can start. This can take several minutes. It may also need
+If the shared local repository contents cache has no matching entry, its first
+population runs `lake exe cache get Mathlib` locally before remote Lean actions
+can start. Experimental remote repository contents caching is disabled, so
+this stage has no remote repository cache fallback. This can take several minutes. It may also need
 to upload the Lean SDK and imported artifacts to BuildBuddy. It does not compile
 the full RiemannResearch target.
 
@@ -63,7 +66,8 @@ not execute repository rules. Changed dependency inputs, cache eviction, or a
 different cache location can still cause a cold fetch. Confirm reuse with the
 fresh output base below before relying on this for agent workspaces.
 
-Test remote cache reuse from a second output base, allowing cached results:
+Test shared local repository reuse and remote action cache reuse from a second
+output base, allowing cached results:
 
 ```sh
 bazel --output_base="$HOME/.cache/bazel-buildbuddy-warm" build \
