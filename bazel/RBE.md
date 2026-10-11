@@ -194,7 +194,8 @@ Restore the full console output when diagnosing warnings:
 bazel build --config=buildbuddy --config=verbose //:smoke
 ```
 
-Structured build events, profiles, and execution logs remain available. Raw
+Structured build events and profiles remain available; execution logs can be
+enabled separately for an input audit. Raw
 worker action output can still be recorded and transferred; quieter console logs
 are not evidence of a measured performance or transfer reduction.
 
@@ -337,10 +338,18 @@ compilation. Leave `parallel` and full-project compilation for later.
 The analysis mode defaults to the full aggregate with `--nobuild`; it does not
 compile project modules. Other modes default to `//:smoke`, and accept a target
 as the second argument. The build phase has a ten-minute limit; override it with
-`RBE_BENCH_TIMEOUT`. Profiles, execution logs, command output, revision and
+`RBE_BENCH_TIMEOUT`. Profiles, command output, revision and
 dirty-tree metadata, client resource reports, and JVM samples are retained beneath
 `$HOME/.cache/riemann-rbe-diagnostics` (or `RBE_DIAGNOSTICS_DIR`).
 The script does not clean existing workspaces or force cache misses.
+Execution logging is disabled by default, including any inherited compact,
+JSON, or binary execution-log setting. It walks action inputs and uses a shared
+serialization lock, so enabling it can distort cache-hit timing. The separate
+JSON trace profile remains enabled. For a deliberate input-manifest audit,
+use `RBE_BENCH_EXECUTION_LOG=1`; non-analysis modes then retain `execution.log`
+locally. That audit run adds logging overhead and should not be compared with
+logging-disabled timing runs. Analysis mode always disables execution logging.
+The console summary and `run.txt` record the effective execution-log setting.
 It captures INFO in `build.log` for its summary while keeping warnings filtered.
 Those INFO events also reach the BuildBuddy console during benchmarks. Use
 `--config=verbose` on an ordinary build to inspect the full console diagnostics.
@@ -416,6 +425,30 @@ remaining cause. Cleanup also changed between the two-job and four-job trials,
 so their entire speed difference cannot be attributed to job count. These
 fresh-output-base checks measure cache-check throughput, not worker compilation
 or an unchanged repeat in a persistent client workspace.
+
+All of the cache-only timings above used a benchmark version that enabled
+`--execution_log_compact_file` unconditionally. The later 80-job trace reported
+2,458 `logSpawn` records totaling 5,289.015 inclusive seconds, with a 6.927-second
+maximum. It also recorded long nested `logEntry` scopes. These overlapping
+durations are not wall time or CPU time, and their sums cannot be added together
+or subtracted from the build duration. They identify execution logging as a
+significant candidate for the measured delay; they do not establish the speedup
+from disabling it. The compact logger traverses action input sets and emits
+entries through synchronized methods. Normal repository builds do not enable
+an execution-log file in `.bazelrc`; this overhead was introduced by the
+diagnostic script. The script now defaults to logging disabled. Measure that
+default before attributing the old three-minute result to ordinary cache lookup.
+This change does not shrink remote worker inputs or their download size.
+
+For one comparable full-project timing at 80 jobs:
+
+```sh
+RBE_BENCH_JOBS=80 bash bazel/rbe_benchmark.sh cache-only //:RiemannResearch
+```
+
+Sources: [compact spawn logger](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/exec/CompactSpawnLogContext.java),
+[execution-log options](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/exec/ExecutionOptions.java),
+and [empty paths disable logging](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/util/OptionsUtils.java).
 
 ### Inspect an existing profile without another build
 

@@ -37,6 +37,11 @@ output_base="$diag_root/client"
 target="${2:-//:smoke}"
 jobs="${RBE_BENCH_JOBS:-2}"
 time_limit="${RBE_BENCH_TIMEOUT:-10m}"
+execution_log="${RBE_BENCH_EXECUTION_LOG:-0}"
+case "$execution_log" in
+  0|1) ;;
+  *) echo "RBE_BENCH_EXECUTION_LOG must be 0 (disabled) or 1 (enabled)." >&2; exit 2 ;;
+esac
 case "$jobs" in
   ''|*[!0-9]*) echo "RBE_BENCH_JOBS must be an integer from 1 to 80." >&2; exit 2 ;;
 esac
@@ -50,6 +55,7 @@ case "$mode" in
   analysis)
     target="${2:-//:RiemannResearch}"
     flags+=(--nobuild)
+    execution_log=0
     ;;
   cache-only)
     # Fresh local action state; native repository caches still remain shared.
@@ -65,7 +71,11 @@ esac
 # quiet. These UI options do not change action cache keys.
 flags+=(--ui_event_filters=+info --color=no --curses=no --noshow_progress)
 flags+=(--profile="$report_dir/profile.gz")
-if [[ "$mode" != analysis ]]; then
+# Spawn logging walks action inputs and serializes entries under a shared
+# lock. Keep timing runs free of that overhead, including inherited rc flags.
+# Empty paths disable these options in Bazel 9.2. Opt in only for input audits.
+flags+=(--execution_log_compact_file= --execution_log_json_file= --execution_log_binary_file=)
+if [[ "$execution_log" == 1 ]]; then
   flags+=(--execution_log_compact_file="$report_dir/execution.log")
 fi
 
@@ -144,7 +154,7 @@ trap 'exit 143' TERM
 
 git rev-parse HEAD > "$report_dir/commit.txt"
 git status --porcelain > "$report_dir/git-status.txt"
-printf '%s\n' "mode=$mode" "target=$target" "jobs=$jobs" "output_base=$output_base" "timeout=$time_limit" > "$report_dir/run.txt"
+printf '%s\n' "mode=$mode" "target=$target" "jobs=$jobs" "execution_log=$execution_log" "output_base=$output_base" "timeout=$time_limit" > "$report_dir/run.txt"
 if [[ "$mode" == cache-only ]]; then
   declare -A live_current_bases=()
   declare -A completed_bases=()
@@ -288,6 +298,11 @@ fi
   printf '\n--- RBE summary: paste this block ---\n'
   printf 'Mode: %s\nTarget: %s\nRevision: %.12s (%s)\n' "$mode" "$target" "$revision" "$tree_state"
   printf 'Jobs: %s\n' "$jobs"
+  if [[ "$execution_log" == 1 ]]; then
+    printf 'Execution log: enabled (input audit; adds overhead)\n'
+  else
+    printf 'Execution log: disabled\n'
+  fi
   printf 'Result: %s (exit %s)\nBuild wall time: %s\n' "$result" "$build_status" "$wall_time"
   printf 'JVM peak sampled RSS: %s\n' "$server_rss"
   awk '/^INFO: (Analyzed |Elapsed time: |[0-9]+ processes:)/ {
