@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Recovered actual-zero FMZ, circle Poisson, and Pareto bridges (2026-10-11)
+
+Eight new modules and the strengthened existing ActualZeroCoshMass passed the
+combined server import check `job_sOL1L-tn_natEbX91GhBXduzZZD9XHAh`.
+Thirteen selected transitive axiom reports contain only `propext`,
+`Classical.choice`, and `Quot.sound`. Publication uses the final server
+checkpoint's audit and affected-module validation of the integrated delta.
+Precise scope and recovery provenance are in RH/FMZHaarParetoRecovery20261011.md.
+
+- ActualZeroFMZComparison: actual ordinate/Landau comparison conditional on the
+  displayed Selberg right-tail bound; complete finite endpoints, rational
+  majorant, both frequency signs, and the explicit small-frequency constant.
+- PoissonHaarSpecialization: actual normalized-circle Poisson kernel, both
+  Fourier signs, real rational density, strict positivity, mass one, centering,
+  and even-power multipliers for the displayed legal radii.
+- ArithmeticWeightedFourierRemainder: exact signed deterministic Fourier
+  aggregation with explicit modewise and summability premises.
+- ParetoHorizontalZeroBridge and ActualZeroReciprocalConstant: actual signed
+  legal candidates and inverse-Gram optimizer, all-sign multiplicity-weighted
+  reciprocal sum, positive explicit C0, E4 <= e S2 / 4, S2 <= C0, and
+  Qn <= 1 - 4 E4 / C0; no RH or simplicity premise.
+- ParetoResidualBoundaryEnergy and ParetoFiniteMellinHalfPlane: full signed
+  finite Mellin identity on Re(s) > 0, s != 1, and the exact critical-line zeta
+  energy with denominator 1/4 + t^2, target cross term, and complete norm square.
+- ActualZeroCoshMass and ActualZeroParetoCoshBridge: sharp two-sided bounds for
+  the existing convergent regularized cosh mass and its actual Pareto-error bound.
+
+Open obligations remain explicit: classical Selberg/Landau providers, actual
+mixed-mode arithmetic limits and full prime-torus Haar/Poisson specialization,
+and Pareto residual convergence or cosh-mass vanishing. The circle theorem and
+conditional Fourier aggregation do not close those obligations or prove RH.
+
 ### Recovered harmonic analysis and analytic reciprocal developments (2026-10-11)
 
 Twenty recovered modules passed the combined server import check in

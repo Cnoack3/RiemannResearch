@@ -40,6 +40,61 @@ theorem sq_div_two_le_cosh_sub_one (q : ℝ) : q ^ 2 / 2 ≤ cosh q - 1 := by
   norm_num at h
   exact h
 
+private theorem cosh_even_power_le_scaled_half (u d : ℝ)
+    (hd : d ^ 2 ≤ 1 / 4) (k : ℕ) :
+    (u * d) ^ (2 * (k + 1)) ≤
+      (4 * d ^ 2) * (u / 2) ^ (2 * (k + 1)) := by
+  have hbase : (u * d) ^ 2 ≤ (u / 2) ^ 2 := by
+    nlinarith only [mul_le_mul_of_nonneg_left hd (sq_nonneg u)]
+  have hpow : ((u * d) ^ 2) ^ k ≤ ((u / 2) ^ 2) ^ k :=
+    pow_le_pow_left₀ (sq_nonneg (u * d)) hbase k
+  have hsplit (x : ℝ) : x ^ (2 * (k + 1)) = x ^ 2 * (x ^ 2) ^ k := by
+    rw [Nat.mul_add, Nat.mul_one, pow_add, pow_mul]
+    ring
+  calc
+    (u * d) ^ (2 * (k + 1)) =
+        (u * d) ^ 2 * ((u * d) ^ 2) ^ k := hsplit _
+    _ ≤ (u * d) ^ 2 * ((u / 2) ^ 2) ^ k :=
+      mul_le_mul_of_nonneg_left hpow (sq_nonneg _)
+    _ = (4 * d ^ 2) * (u / 2) ^ (2 * (k + 1)) := by
+      rw [hsplit]
+      ring
+
+/-- The sharp uniform strip coefficient follows termwise from the complete
+even series. Equality at `d = ±1/2` prevents a smaller uniform coefficient. -/
+theorem cosh_mul_sub_one_le_sharp (u d : ℝ) (hd : d ^ 2 ≤ 1 / 4) :
+    cosh (u * d) - 1 ≤ (4 * (cosh (|u| / 2) - 1)) * d ^ 2 := by
+  let a : ℕ → ℝ := fun k =>
+    (u * d) ^ (2 * (k + 1)) / (Nat.factorial (2 * (k + 1)) : ℝ)
+  let b : ℕ → ℝ := fun k =>
+    (4 * d ^ 2) *
+      ((u / 2) ^ (2 * (k + 1)) / (Nat.factorial (2 * (k + 1)) : ℝ))
+  have hs : Summable a :=
+    RiemannResearch.Analysis.HorizontalPhaseBootstrap.cosh_tail_summable (u * d)
+  have ht : Summable b :=
+    (RiemannResearch.Analysis.HorizontalPhaseBootstrap.cosh_tail_summable
+      (u / 2)).mul_left (4 * d ^ 2)
+  have hb (k : ℕ) : a k ≤ b k := by
+    dsimp [a, b]
+    calc
+      _ ≤ ((4 * d ^ 2) * (u / 2) ^ (2 * (k + 1))) /
+          (Nat.factorial (2 * (k + 1)) : ℝ) :=
+        div_le_div_of_nonneg_right (cosh_even_power_le_scaled_half u d hd k)
+          (Nat.cast_nonneg _)
+      _ = _ := by ring
+  have h := Summable.tsum_le_tsum hb hs ht
+  dsimp [a, b] at h
+  rw [RiemannResearch.Analysis.HorizontalPhaseBootstrap.cosh_tail_tsum,
+    tsum_mul_left,
+    RiemannResearch.Analysis.HorizontalPhaseBootstrap.cosh_tail_tsum] at h
+  have heven : cosh (u / 2) = cosh (|u| / 2) := by
+    by_cases hu : 0 ≤ u
+    · rw [abs_of_nonneg hu]
+    · have hu' : u < 0 := lt_of_not_ge hu
+      rw [abs_of_neg hu', neg_div, cosh_neg]
+  rw [heven] at h
+  simpa only [mul_assoc, mul_comm, mul_left_comm] using h
+
 end Real
 
 namespace RiemannResearch.Analysis.ActualZeroCoshMass
@@ -224,6 +279,16 @@ theorem actual_coshDefect_le (u : ℝ) (ρ : ActualZero) :
       mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr ha) (sq_nonneg _)
     _ = _ := by ring
 
+/-- The optimal strip-envelope coefficient improves the exponential majorant. -/
+theorem actual_coshDefect_le_sharp (u : ℝ) (ρ : ActualZero) :
+    coshDefect u (ρ : ℂ) ≤
+      (4 * (Real.cosh (|u| / 2) - 1)) * ((ρ : ℂ).re - 1 / 2) ^ 2 := by
+  have hd : ((ρ : ℂ).re - 1 / 2) ^ 2 ≤ 1 / 4 := by
+    have hstrip : IsNontrivialZero (ρ : ℂ) := ρ.property
+    nlinarith only [hstrip.2.1, hstrip.2.2,
+      mul_nonneg hstrip.2.1.le (sub_nonneg.mpr hstrip.2.2.le)]
+  exact Real.cosh_mul_sub_one_le_sharp u ((ρ : ℂ).re - 1 / 2) hd
+
 /-- Each actual zero keeps its analytic multiplicity and horizontal defect. -/
 def regularizedTerm (u : ℝ) (ρ : ActualZero) : ℝ :=
   (zeroMult (ρ : ℂ) : ℝ) * coshDefect u (ρ : ℂ) /
@@ -248,6 +313,20 @@ theorem regularizedTerm_le_horizontalTerm (u : ℝ) (ρ : ActualZero) :
         (by positivity)
     _ = _ := by ring
 
+/-- Sharp domination retains the actual zero, multiplicity and fourth weight. -/
+theorem regularizedTerm_le_horizontalTerm_sharp (u : ℝ) (ρ : ActualZero) :
+    regularizedTerm u ρ ≤
+      (4 * (Real.cosh (|u| / 2) - 1)) * horizontalTerm ρ := by
+  unfold regularizedTerm horizontalTerm
+  calc
+    _ ≤ (zeroMult (ρ : ℂ) : ℝ) *
+        ((4 * (Real.cosh (|u| / 2) - 1)) * ((ρ : ℂ).re - 1 / 2) ^ 2) /
+          (1 + (ρ : ℂ).im ^ 2) ^ 2 :=
+      div_le_div_of_nonneg_right
+        (mul_le_mul_of_nonneg_left (actual_coshDefect_le_sharp u ρ)
+          (Nat.cast_nonneg _)) (by positivity)
+    _ = _ := by ring
+
 theorem regularizedTerm_summable (u : ℝ) : Summable (regularizedTerm u) := by
   have hs := horizontalTerm_summable.mul_left (u ^ 2 * Real.exp (|u| / 2))
   exact Summable.of_nonneg_of_le (regularizedTerm_nonneg u)
@@ -265,6 +344,15 @@ theorem regularizedCoshMass_le_fourthEnergy (u : ℝ) :
   have hs := horizontalTerm_summable.mul_left (u ^ 2 * Real.exp (|u| / 2))
   have h := (regularizedTerm_summable u).tsum_le_tsum
     (regularizedTerm_le_horizontalTerm u) hs
+  simpa only [regularizedCoshMass, horizontalFourthEnergy, tsum_mul_left] using h
+
+/-- Sharp upper control uses the already defined convergent actual-zero mass. -/
+theorem regularizedCoshMass_le_fourthEnergy_sharp (u : ℝ) :
+    regularizedCoshMass u ≤
+      (4 * (Real.cosh (|u| / 2) - 1)) * horizontalFourthEnergy := by
+  have hs := horizontalTerm_summable.mul_left (4 * (Real.cosh (|u| / 2) - 1))
+  have h := (regularizedTerm_summable u).tsum_le_tsum
+    (regularizedTerm_le_horizontalTerm_sharp u) hs
   simpa only [regularizedCoshMass, horizontalFourthEnergy, tsum_mul_left] using h
 
 /-- Quantitative lower detection keeps the second Taylor term explicitly. -/
@@ -293,6 +381,14 @@ theorem regularizedCoshMass_two_bounds (u : ℝ) :
   have h := hs.tsum_le_tsum
     (half_sq_mul_horizontalTerm_le_regularizedTerm u) (regularizedTerm_summable u)
   simpa only [regularizedCoshMass, horizontalFourthEnergy, tsum_mul_left] using h
+
+/-- The sharp two-sided strip bound adds no analytic or RH premise. -/
+theorem regularizedCoshMass_two_bounds_sharp (u : ℝ) :
+    (u ^ 2 / 2) * horizontalFourthEnergy ≤ regularizedCoshMass u ∧
+      regularizedCoshMass u ≤
+        (4 * (Real.cosh (|u| / 2) - 1)) * horizontalFourthEnergy :=
+  ⟨(regularizedCoshMass_two_bounds u).1,
+    regularizedCoshMass_le_fourthEnergy_sharp u⟩
 
 theorem regularizedTerm_le_mass (u : ℝ) (ρ : ActualZero) :
     regularizedTerm u ρ ≤ regularizedCoshMass u := by
