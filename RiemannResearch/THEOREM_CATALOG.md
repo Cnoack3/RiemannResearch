@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Ordinate spectral kernels and sharp Hankel certificates (2026-10-10)
+
+- Analysis/OrdinateSpectralKernel.lean proves positive finite spectral Gram
+  forms, exact zero-energy detection, unitary modulation, collision-energy
+  limits and fixed-support coefficient-uniform Parseval and strict detection.
+  FourierCancellation is explicit; its actual-zeta provider remains Open.
+- Analysis/SharpSpectralGram.lean preserves the diagonal exactly and improves
+  the quadratic-error factor from card to card minus one.
+- Analysis/HankelMomentPositivity.lean proves the singular 2-by-2 PSD criterion,
+  negative directions, entrywise-limit closure, atomic Hankel squares,
+  moment log-convexity and ratio monotonicity.
+- Analysis/ActualOrdinateSpectralKernel.lean proves finite Gaussian spectral
+  positivity and moment log-convexity for the actual riemannZeta zeros, with
+  analytic multiplicities. It assumes neither RH nor simplicity.
+- Full-zero Gaussian growth, the explicit formula and all-orders RH criteria
+  remain paper proofs in RH/OrdinateHarmonicTheory20261010.md. Their analytic
+  Lean formalization is Open; all-orders arithmetic positivity is Open.
+  These ordinate-only finite results do not prove RH.
+- Final source acceptance is the introducing server checkpoint. Foundation
+  axiom reports do not discharge analytic hypotheses.
+
 ### Actual annular limsup exponents and complete residual transfer (2026-10-10)
 
 - Analysis/LogarithmicGrowth.lean proves the exact equivalence between zero
