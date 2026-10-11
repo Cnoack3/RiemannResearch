@@ -1,5 +1,45 @@
 # Theorem catalog
 
+### Quantitative sampling and finite collision certificates (2026-10-11)
+
+Prior local validation: the 31 modules compiled under Lean 4.33.0-rc2;
+the combined import and selected transitive axiom reports passed.
+Repository integration and publication are subject to the mandatory server
+checkpoint, which validates the integrated source tree before publication.
+
+Established finite results:
+- RationalLogSeparation, LogarithmicTailCounting, LogarithmicMatrixMoments:
+  rational nonresonance separation and factorial logarithmic matrix moments.
+- ZeroSamplingErrorTransfer, ZeroSamplingHilbertSchmidt, WeightedSamplingSchur,
+  HigherPowerErrorTransfer, BalancedSamplingErrorTransfer,
+  WeightedBalancedSampling and logarithmic specializations: exact signed
+  perturbation identities and weighted Schur/Hilbert-Schmidt transfers,
+  retaining the mixed square remainder.
+- ActualPrimePowerWeightedRows: exact directed-entry identification and
+  unconditional weighted rows from the existing elementary Mertens theorem.
+- OccurrenceCollisionMultiplicity, OccurrenceCollisionWeightedEnergy,
+  OrdinateTriangularIntegral, ActualZeroCollisionMultiplicity,
+  ActualZeroTriangularIntegral: exact occurrence/multiplicity aggregation,
+  triangular integral, even collision excess and finite criticality/simplicity
+  certificates. Their small-energy premise is not proved globally.
+- OrdinateCollisionSharpRemainder, OrdinateCollisionConsecutiveSpacing:
+  4*pi^2*C/(3*R^2*delta^2) remainder for ranked finite families with the
+  displayed positive consecutive spacing. No actual height-only gap bound.
+- PrimeThirdMomentIntegral: exact cubic-logarithm improper tail integral.
+
+Conditional actual-zero conclusions:
+- ActualZeroDensityTransfer and ActualZeroLogarithmicEntryBound: the 128*C_D/3
+  correction and actual rational entry bounds, retaining exponential density.
+- ActualLogarithmicCovarianceAssembly and ActualLogarithmicPairCovariance:
+  exact sampled diagonal subtraction and coefficient-uniform actual single
+  and pair covariance. Actual Landau and arithmetic providers are discharged;
+  the displayed exponential strict-tail density hypothesis remains.
+
+Open formalization obligations: a Selberg exponential density provider; the sharp paper
+FMZ height error; actual balanced-tuple/little-o assembly; the complete
+prime-tail/Haar/Gaussian theorems; or a proof of the global collision-energy
+condition. The current height remainder is the proved coarser Landau envelope.
+
 ### Unconditional ordinate kernels, second energy, and growing Fourier tests (2026-10-11)
 
 Established without RH:
