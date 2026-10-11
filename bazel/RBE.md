@@ -177,6 +177,29 @@ persistent machine authentication remain untested.
 
 ## RBE performance diagnostics
 
+### Quiet build logs
+
+Normal builds hide Bazel INFO/WARNING events, progress updates, and output-file
+lists. This also hides warning and informational text from successful Lean
+actions in the terminal and BuildBuddy console. Failed-action diagnostics and
+failed-test logs remain visible. The Lean compiler and compiled-sorry audit still
+run unchanged; only console rendering changes, so this does not invalidate Lean
+action cache entries or shrink worker input downloads.
+
+Restore the full console output when diagnosing warnings:
+
+```sh
+bazel build --config=buildbuddy --config=verbose //:smoke
+```
+
+Structured build events, profiles, and execution logs remain available. Raw
+worker action output can still be recorded and transferred; quieter console logs
+are not evidence of a measured performance or transfer reduction.
+
+Sources: [Bazel 9.2 UI filters](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/runtime/UiOptions.java),
+[UI output handling](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/runtime/UiEventHandler.java),
+and [successful versus failed action output](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/skyframe/SkyframeActionExecutor.java).
+
 ### Local client limits and artifact uploads
 
 The repository sets an 8 GiB maximum Java heap, four loading/analysis threads,
@@ -289,14 +312,23 @@ bazel build --config=buildbuddy-benchmark //:smoke
 Additional execution concurrency only helps when compilation actions actually need to run.
 It can increase input staging, memory use, and executor queuing.
 
-Run the bounded diagnostic script from the repository root:
+Start with one bounded measurement from the repository root:
 
 ```sh
 bash bazel/rbe_benchmark.sh analysis
-bash bazel/rbe_benchmark.sh smoke
-bash bazel/rbe_benchmark.sh repeat
-bash bazel/rbe_benchmark.sh cache-only
 ```
+
+Paste the final **RBE summary** block into chat. It includes the exit code, build
+wall time, sampled JVM memory, available Bazel analysis/action statistics, and
+the BuildBuddy invocation link. No files need to be copied out of WSL for this
+first pass. The script captures its detailed output locally instead of streaming
+successful-action log spam. On failure it also prints the last 40 log lines and
+up to three diagnostic lines in the summary.
+
+If analysis succeeds, run `bash bazel/rbe_benchmark.sh cache-only` next. Only if
+that fails specifically because of a cache miss, run `smoke`, then `repeat`, then
+`cache-only` again. Stop and report an analysis OOM or timeout before attempting
+compilation. Leave `parallel` and full-project compilation for later.
 
 The analysis mode defaults to the full aggregate with `--nobuild`; it does not
 compile project modules. Other modes default to `//:smoke`, and accept a target
@@ -305,13 +337,16 @@ as the second argument. The build phase has a ten-minute limit; override it with
 dirty-tree metadata, client resource reports, and JVM samples are retained beneath
 `$HOME/.cache/riemann-rbe-diagnostics` (or `RBE_DIAGNOSTICS_DIR`).
 The script does not clean existing workspaces or force cache misses.
+It captures INFO in `build.log` for its summary while keeping warnings filtered.
+Those INFO events also reach the BuildBuddy console during benchmarks. Use
+`--config=verbose` on an ordinary build to inspect the full console diagnostics.
 Server startup/PID discovery is capped at 30 seconds before the timed build.
 Termination grace periods can extend the timeout bounds. `resources.txt`
 measures the client and wrapper. `server-resources.txt` samples the persistent
 JVM every two seconds;
 its CPU percentage is a lifetime average, and sampling can miss brief RSS peaks.
 
-Bazel 9 no longer has the `analyze-profile` subcommand. The script retains
+Bazel 9.2 has no `analyze-profile` subcommand. The script retains
 `profile.gz` and writes `profile-viewing.txt` with viewing instructions instead
 of invoking that command or parsing a large trace locally. In Chrome, open
 `chrome://tracing`, click **Load**, and select the compressed profile.
@@ -341,10 +376,12 @@ An already cached target does not benchmark execution concurrency.
 Use `RBE_BENCH_JOBS=4` to try four jobs first. Do not use cache-bypass flags,
 nonces, or a full-project forced rebuild for this experiment.
 
-Record dashboard external and internal transfer deltas separately around
-each run. Compare client analysis time, RSS, remote hits/misses, worker input
-fetching, queue time, and actual execution time. Cache-only profiles isolate
-warm-cache lookup work without paying for another remote compilation.
+The console summary is sufficient for the initial review. When investigating
+worker transfers, use the linked dashboard to compare external and internal
+transfer deltas separately, worker input fetching, queue time, and execution
+time. Cache-only profiles isolate warm-cache lookup work without paying for
+another remote compilation. Detailed local files are only needed if the summary
+and dashboard cannot explain the result.
 
 Follow-up work is provider-level dependency metadata sharing and a reusable
 compiled audit tool. Bazel's performance guidance warns that repeatedly
