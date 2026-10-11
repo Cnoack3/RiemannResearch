@@ -27,12 +27,12 @@ open ActualZeroOrdinate PrimePhaseTorus PrimeTorusHaar
 def primeModeWeight (P : Finset ℕ) (k : ℕ → ℤ) : ℝ :=
   rationalModeWeight (primeNumerator P k) (primeDenominator P k)
 
-/-- The rational weight is exactly the square of the natural prime-logarithm
+/-- The rational weight is exactly one plus the natural prime-logarithm
 Fourier height, with no Diophantine denominator hidden in the test norm. -/
 theorem primeModeWeight_eq (P : Finset ℕ) (k : ℕ → ℤ)
     (hP : ∀ p ∈ P, p.Prime) :
     primeModeWeight P k =
-      1 + (∑ p ∈ P, |(k p : ℝ)| * Real.log p) ^ 2 := by
+      1 + (∑ p ∈ P, |(k p : ℝ)| * Real.log p) := by
   have hheight : Real.log (primeNumerator P k : ℝ) +
       Real.log (primeDenominator P k : ℝ) =
       ∑ p ∈ P, |(k p : ℝ)| * Real.log p := by
@@ -54,12 +54,14 @@ theorem primeModeWeight_eq (P : Finset ℕ) (k : ℕ → ℤ)
         simp [hpos, hcast, abs_of_neg hkR]
     rw [← add_mul, hi]
   unfold primeModeWeight rationalModeWeight
-  rw [hheight]
+  rw [hheight, abs_of_nonneg]
+  exact Finset.sum_nonneg (fun p hp => mul_nonneg (abs_nonneg _)
+    (Real.log_nonneg (by exact_mod_cast (hP p hp).one_lt.le)))
 
 theorem one_le_primeModeWeight (P : Finset ℕ) (k : ℕ → ℤ) :
     1 ≤ primeModeWeight P k := by
   unfold primeModeWeight rationalModeWeight
-  linarith [sq_nonneg (Real.log (primeNumerator P k : ℝ) +
+  linarith [abs_nonneg (Real.log (primeNumerator P k : ℝ) +
     Real.log (primeDenominator P k : ℝ))]
 
 theorem summable_norm_of_primeModeWeight {ι : Type*}

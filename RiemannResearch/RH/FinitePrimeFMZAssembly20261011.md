@@ -14,7 +14,7 @@ Let P be any finite set of primes, d = card(P), and let f be a continuous
 complex-valued function on (R/Z)^P. Assume its conventional Fourier
 coefficients satisfy
 
-    norm(fhat(k)) <= C * (1 + norm(k))^(-B),   C >= 0,   B > d + 2.
+    norm(fhat(k)) <= C * (1 + norm(k))^(-B),   C >= 0,   B > d + 1.
 
 Here the norm on integer modes is the maximum-coordinate norm. The theorem
 proves, with actual analytic zero multiplicities,
@@ -44,6 +44,10 @@ N^+ counts all actual positive-height nontrivial zeros with beta >= sigma,
 including analytic multiplicity. No RH, zero simplicity, assumed Landau
 limit, assumed Haar coefficient, or assumed FMZ conclusion is used.
 
+The linear-envelope strengthening lowers the previous sufficient threshold
+from B > d + 2 to B > d + 1. See RH/FMZStrengtheningWeil20261011.md
+for the proof, quantitative paper deductions and precise remaining RH bridge.
+
 ## Newly proved components
 
 - ActualRationalFMZLimits: unconditional actual rational Landau limits;
@@ -52,7 +56,7 @@ limit, assumed Haar coefficient, or assumed FMZ conclusion is used.
   the corresponding bound for every ordinate character.
 - ActualRationalFMZDomination: an unconditional uniformly bounded rational
   Landau remainder when log(n) <= log(T)/8; under Selberg, one simultaneous
-  bound K[1 + (log n + log m)^2] for every centered rational mode;
+  bound K[1 + log n + log m] for every centered rational mode;
   infinite Fourier synthesis by dominated convergence.
 - FinitePrimeModeArithmetic and FinitePrimeModeCoefficients: exact reduced
   prime numerator/denominator products, independence of prime logarithms,
@@ -65,13 +69,13 @@ limit, assumed Haar coefficient, or assumed FMZ conclusion is used.
 - ActualPrimeTorusFMZ and ActualPrimeTorusFMZPoisson: the literal centered
   finite polynomial theorem with the actual Poisson integral.
 - ActualPrimeTorusFMZSeries: infinite weighted absolutely convergent series,
-  with weight exactly 1 + (sum_p abs(k_p) log p)^2.
-- PrimeTorusFourierDecay: the original strict threshold B > d + 2 implies
+  with weight exactly 1 + sum_p abs(k_p) log p.
+- PrimeTorusFourierDecay: the strengthened strict threshold B > d + 1 implies
   this weighted summability by integer-lattice rpow summability.
 - PrimeTorusFourierInversion: mathlib's multidimensional Fourier inversion
   identifies the series with the original arbitrary continuous function.
 - ActualPrimeTorusFMZContinuous: the complete finite-prime specialization
-  in the original Fourier-decay class, retaining only the Selberg premise.
+  in the strengthened Fourier-decay class, retaining only the Selberg premise.
 
 No Baker-type input is needed in this prime specialization: the explicit
 reduced rational frequencies and the proved uniform rational contour estimate
@@ -106,7 +110,7 @@ All arithmetic, Haar, summability and reconstruction obligations in the
 finite-prime specialization are discharged.
 
 The full final theorem passed server job
-`job_OtQVX0ftHIlDEPaKhFxqe0TSPsH7hZA5`, and its transitive axiom
+`job_bXTEotl9WOMZJz3Wm35qHgWyJYJaLFLp`, and its transitive axiom
 report contains only propext, Classical.choice and Quot.sound. This axiom
 report does not remove the displayed Selberg hypothesis. Publication is
 gated by the task's final server checkpoint, which audits the source and

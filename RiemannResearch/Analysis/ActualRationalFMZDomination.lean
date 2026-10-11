@@ -11,9 +11,17 @@ import RiemannResearch.Analysis.ActualZeroCountUpper
 
 The logarithmic rational Landau band is proved unconditionally. Combined with
 the explicit Selberg density input and the unconditional total-count upper
-bound, it gives one quadratic log-height majorant for every rational mode.
+bound, it gives one linear log-height majorant for every rational mode.
 Dominated convergence then proves weighted absolutely summable Fourier
-synthesis. Selberg remains an explicit, unproved analytic input.
+synthesis with one frequency moment. Selberg remains an explicit, unproved
+analytic input.
+
+Source: Ford--Meng--Zaharescu, Theorem 1 and Corollary 1.1,
+https://arxiv.org/abs/1511.06814, support the classical target and comparison
+strategy. The linear envelope is a refinement of this project's rational
+Landau and reflection estimates; no novelty claim is made. Its concrete RH
+consumer is signed prime Gram analysis and the full Weil positivity problem,
+as explained in RH/FMZStrengtheningWeil20261011.md. This does not prove RH.
 -/
 
 noncomputable section
@@ -130,13 +138,14 @@ theorem eventually_rational_landau_error_le_const :
     _ ≤ C := by simpa using mul_le_mul_of_nonneg_left henv hC.le
 
 /-- A single polynomial envelope controls all rational modes simultaneously.
-The only analytic premise is the explicit classical Selberg density theorem. -/
+The small-band factor `H ^ 2 / log T` is bounded by `H`, retaining the
+logarithmic denominator. The only analytic premise is classical Selberg. -/
 theorem eventually_rational_ordinate_log_envelope
     (hD : UniformSelbergDensity (1 / 4)) :
     ∃ K : ℝ, 0 < K ∧ ∀ᶠ T : ℝ in atTop, ∀ n m : ℕ,
       1 ≤ m → m < n →
       ‖ordinateSum T (Real.log ((n : ℝ) / (m : ℝ))) / (T : ℂ)‖ ≤
-        K * (1 + (Real.log (n : ℝ)) ^ 2) := by
+        K * (1 + Real.log (n : ℝ)) := by
   obtain ⟨CD, TD, hCD, hTD, hden⟩ := hD
   obtain ⟨CL, hCL, hland⟩ := eventually_rational_landau_error_le_const
   obtain ⟨CN, hCN, hcount⟩ := exists_normalized_ordinate_bound
@@ -152,20 +161,20 @@ theorem eventually_rational_ordinate_log_envelope
   have hT1 : 1 < T := by linarith
   have hn : 1 ≤ n := by omega
   have hH : 0 ≤ H := Real.log_nonneg (by exact_mod_cast hn)
-  have hHH : H ≤ 1 + H ^ 2 := by nlinarith [sq_nonneg (H - 1)]
   have hu := rational_frequency_bounds hm hmn (le_refl (n : ℝ))
   change 0 < u ∧ u ≤ H ∧ _ at hu
   by_cases hband : H ≤ Real.log T / 8
   · have herr := normalized_ordinate_landau_error_of_classical_selberg
       T u CD hT1 hCD (by rw [abs_of_pos hu.1]; exact hu.2.1.trans hband) (hden T hT)
-    have herr' : ‖(ordinateSum T u - landauSum T u) / (T : ℂ)‖ ≤ D * H ^ 2 := by
+    have herr' : ‖(ordinateSum T u - landauSum T u) / (T : ℂ)‖ ≤ D * H := by
       apply herr.trans
-      change D * u ^ 2 / Real.log T ≤ D * H ^ 2
+      change D * u ^ 2 / Real.log T ≤ D * H
       apply (div_le_iff₀ (by linarith : 0 < Real.log T)).2
       have hs : u ^ 2 ≤ H ^ 2 := by nlinarith [hu.1, hu.2.1]
-      have hmul := mul_le_mul_of_nonneg_left hs hD0
-      have hlogmul := mul_le_mul_of_nonneg_left hL1 (mul_nonneg hD0 (sq_nonneg H))
-      nlinarith
+      have hHL : H ≤ Real.log T := by linarith
+      have hprod : H ^ 2 ≤ H * Real.log T := by
+        nlinarith [mul_nonneg hH (sub_nonneg.mpr hHL)]
+      simpa only [mul_assoc] using mul_le_mul_of_nonneg_left (hs.trans hprod) hD0
     have hmain : ‖(rationalLandauMain n m : ℂ)‖ ≤ H := by
       rw [Complex.norm_real, Real.norm_eq_abs,
         abs_of_nonneg (rationalLandauMain_nonneg n m)]
@@ -187,20 +196,18 @@ theorem eventually_rational_ordinate_log_envelope
         ‖(landauSum T u + ((T * rationalLandauMain n m : ℝ) : ℂ)) / (T : ℂ)‖) +
         ‖(rationalLandauMain n m : ℂ)‖ := (norm_sub_le _ _).trans
           (add_le_add (norm_add_le _ _) le_rfl)
-      _ ≤ D * H ^ 2 + CL + H := by linarith
-      _ ≤ _ := by nlinarith [sq_nonneg H, mul_nonneg (le_of_lt hCL) (sq_nonneg H),
-          mul_nonneg (le_of_lt hCN) (sq_nonneg H)]
+      _ ≤ D * H + CL + H := by linarith
+      _ ≤ _ := by nlinarith [mul_nonneg hCL.le hH, mul_nonneg hCN.le hH]
   · have hb := hcount T u hT9
     have hLH : Real.log T ≤ 8 * H := by linarith
     calc
       _ ≤ CN * Real.log T := hb
       _ ≤ 8 * CN * H := by nlinarith
-      _ ≤ _ := by nlinarith [mul_nonneg (le_of_lt hCN) (sub_nonneg.mpr hHH),
-          mul_nonneg hD0 (sq_nonneg H), mul_nonneg (le_of_lt hCL) (sq_nonneg H)]
+      _ ≤ _ := by nlinarith [mul_nonneg hD0 hH, mul_nonneg hCL.le hH]
 
 /-- Symmetric log-height weight for a rational Fourier frequency. -/
 def rationalModeWeight (n m : ℕ) : ℝ :=
-  1 + (Real.log (n : ℝ) + Real.log (m : ℝ)) ^ 2
+  1 + |Real.log (n : ℝ) + Real.log (m : ℝ)|
 
 theorem eventually_centeredRationalOrdinate_envelope
     (hD : UniformSelbergDensity (1 / 4)) :
@@ -214,12 +221,14 @@ theorem eventually_centeredRationalOrdinate_envelope
   have hm0 : (m : ℝ) ≠ 0 := by positivity
   have hln : 0 ≤ Real.log (n : ℝ) := Real.log_nonneg (by exact_mod_cast hn)
   have hlm : 0 ≤ Real.log (m : ℝ) := Real.log_nonneg (by exact_mod_cast hm)
-  have hnW : 1 + (Real.log (n : ℝ)) ^ 2 ≤ rationalModeWeight n m := by
+  have hnW : 1 + Real.log (n : ℝ) ≤ rationalModeWeight n m := by
     unfold rationalModeWeight
-    nlinarith [mul_nonneg hln hlm, sq_nonneg (Real.log (m : ℝ))]
-  have hmW : 1 + (Real.log (m : ℝ)) ^ 2 ≤ rationalModeWeight n m := by
+    rw [abs_of_nonneg (add_nonneg hln hlm)]
+    linarith
+  have hmW : 1 + Real.log (m : ℝ) ≤ rationalModeWeight n m := by
     unfold rationalModeWeight
-    nlinarith [mul_nonneg hln hlm, sq_nonneg (Real.log (n : ℝ))]
+    rw [abs_of_nonneg (add_nonneg hln hlm)]
+    linarith
   rcases lt_trichotomy m n with hmn | hmn | hnm
   · have hne : n ≠ m := by omega
     simp only [centeredRationalOrdinate, if_neg hne, sub_zero]

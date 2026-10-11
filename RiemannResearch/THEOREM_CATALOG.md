@@ -51,24 +51,30 @@ No RH assumption, project-local axiom, or placeholder proof is introduced.
 See RH/ConsecutiveOrdinateHarmonicAnalysis20261011.md for theorem scope,
 provenance, exact normalization and the complete obligation ledger.
 
-### Complete finite-prime FMZ assembly conditional on Selberg (2026-10-11)
+### Strengthened finite-prime FMZ conditional on Selberg (2026-10-11)
 
-Thirteen new Analysis modules culminate in
+The finite-prime Analysis assembly culminates in
 ActualPrimeTorusFMZContinuous.tendsto_centered_continuous_div_poisson_of_selberg.
 For arbitrary continuous f on the actual finite prime torus, conventional
-Fourier decay B > card(P) + 2 implies the actual multiplicity-weighted FMZ
+Fourier decay B > card(P) + 1 implies the actual multiplicity-weighted FMZ
 limit with product-Haar centering and the explicit sum of centered Poisson
-kernels. Uniform rational Landau limits, zero-count bounds, prime arithmetic,
-all mixed modes, weighted Fourier domination, lattice summability and actual
-Fourier reconstruction are proved. No arithmetic or Haar provider is assumed.
+kernels. The simultaneous rational majorant is now linear in log height.
+The weighted Wiener condition is exactly sum_k norm(fhat(k)) *
+[1 + sum_p abs(k_p) log(p)] < infinity, improving the former quadratic weight
+and sufficient B > card(P) + 2 threshold. Uniform rational Landau limits,
+zero-count bounds, prime arithmetic, mixed modes, product Haar coefficients,
+lattice summability and actual Fourier reconstruction are proved.
 
 The sole remaining analytic premise is UniformSelbergDensity (1/4).
 Classification: **conditional research reduction**. The classical Selberg
-provider is still **Open as a Lean formalization**; its substantial twisted
-zeta mean-square analysis was not completed. No RH premise, placeholder or
-project-local axiom is introduced. The complete final theorem passed server
-job_OtQVX0ftHIlDEPaKhFxqe0TSPsH7hZA5 with only standard foundational axioms.
-See RH/FinitePrimeFMZAssembly20261011.md for exact scope and dependencies.
+provider is still **Open as a Lean formalization**. No RH premise, placeholder
+or project-local axiom is introduced. The strengthened full theorem passed
+server job_bXTEotl9WOMZJz3Wm35qHgWyJYJaLFLp with only standard foundational
+axioms. Publication is gated by the final checkpoint's exported-project build.
+See RH/FinitePrimeFMZAssembly20261011.md for exact formal scope and
+RH/FMZStrengtheningWeil20261011.md for the quantitative paper deductions,
+signed prime Gram and fourth-moment identities, infinite-prime measure
+obstruction, and full Weil/Pareto obligations still needed for RH.
 
 ### Precise Selberg density input and strengthened actual-zero deductions (2026-10-11)
 
@@ -115,10 +121,10 @@ Precise scope and recovery provenance are in RH/FMZHaarParetoRecovery20261011.md
 - ActualZeroCoshMass and ActualZeroParetoCoshBridge: sharp two-sided bounds for
   the existing convergent regularized cosh mass and its actual Pareto-error bound.
 
-Open obligations remain explicit: classical Selberg/Landau providers, actual
-mixed-mode arithmetic limits and full prime-torus Haar/Poisson specialization,
-and Pareto residual convergence or cosh-mass vanishing. The circle theorem and
-conditional Fourier aggregation do not close those obligations or prove RH.
+Open obligations remain explicit: the classical Selberg Lean provider,
+and Pareto residual convergence or cosh-mass vanishing. The later finite-prime
+assembly discharges the rational Landau, mixed-mode and Haar/Poisson tasks.
+The resulting conditional Fourier theorem does not prove RH.
 
 ### Recovered harmonic analysis and analytic reciprocal developments (2026-10-11)
 

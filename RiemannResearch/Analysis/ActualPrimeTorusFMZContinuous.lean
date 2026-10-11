@@ -9,8 +9,8 @@ import RiemannResearch.Analysis.PrimeTorusFourierInversion
 /-!
 # Joint prime-torus FMZ for continuous functions with Fourier decay
 
-This is the classical finite-prime specialization with the original strict
-Fourier-decay threshold B > card(P) + 2. Arithmetic limits, product Haar,
+This is the classical finite-prime specialization with the strengthened strict
+Fourier-decay threshold B > card(P) + 1. Arithmetic limits, product Haar,
 Poisson coefficients, uniform Fourier domination and Fourier reconstruction
 are proved in the imported development. The remaining analytic premise is
 exactly UniformSelbergDensity (1/4), whose unconditional provider is not yet
@@ -25,10 +25,10 @@ namespace RiemannResearch.Analysis.ActualPrimeTorusFMZ
 open ActualZeroOrdinate PrimeTorusHaar
 
 /-- The full finite-prime-torus FMZ conclusion for an arbitrary continuous
-test function with the classical Fourier decay. Selberg remains explicit. -/
+test function with the strengthened Fourier decay. Selberg remains explicit. -/
 theorem tendsto_centered_continuous_div_poisson_of_selberg
     (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime) (f : C(Torus P, ℂ))
-    (C B : ℝ) (hC : 0 ≤ C) (hB : (P.card : ℝ) + 2 < B)
+    (C B : ℝ) (hC : 0 ≤ C) (hB : (P.card : ℝ) + 1 < B)
     (hf : ∀ k : P → ℤ,
       ‖UnitAddTorus.mFourierCoeff (f : Torus P → ℂ) k‖ ≤ C * (1 + ‖k‖) ^ (-B))
     (hD : UniformSelbergDensity (1 / 4)) :

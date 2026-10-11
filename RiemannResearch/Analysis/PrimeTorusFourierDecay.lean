@@ -11,7 +11,7 @@ import RiemannResearch.Analysis.ActualPrimeTorusFMZSeries
 /-!
 # Classical Fourier decay implies the prime-torus weighted summability bound
 
-The sharp dimension condition B > d + 2 follows from integer-lattice rpow
+The sufficient dimension condition B > d + 1 follows from integer-lattice rpow
 summability and the exact prime-logarithm Fourier height. This supplies the
 summability premise in the actual infinite-series FMZ assembly.
 -/
@@ -88,14 +88,14 @@ theorem weighted_logheight_le_norm {ι : Type*} [Fintype ι]
 
 theorem summable_weighted_of_fourierDecay {ι : Type*} [Fintype ι]
     [DecidableEq ι] (a : (ι → ℤ) → ℂ) (c : ι → ℝ) (hc : ∀ i, 0 ≤ c i)
-    (C B : ℝ) (hC : 0 ≤ C) (hB : (Fintype.card ι : ℝ) + 2 < B)
+    (C B : ℝ) (hC : 0 ≤ C) (hB : (Fintype.card ι : ℝ) + 1 < B)
     (ha : ∀ k, ‖a k‖ ≤ C * (1 + ‖k‖) ^ (-B)) :
     Summable (fun k : ι → ℤ =>
-      ‖a k‖ * (1 + (∑ i, |(k i : ℝ)| * c i) ^ 2)) := by
+      ‖a k‖ * (1 + (∑ i, |(k i : ℝ)| * c i))) := by
   let L : ℝ := ∑ i, c i
   have hL : 0 ≤ L := Finset.sum_nonneg (fun i hi => hc i)
-  have hs := (summable_pi_int_one_add_norm_rpow (ι := ι) (2 - B)
-    (by linarith)).mul_left (C * (1 + L ^ 2))
+  have hs := (summable_pi_int_one_add_norm_rpow (ι := ι) (1 - B)
+    (by linarith)).mul_left (C * (1 + L))
   apply Summable.of_norm_bounded hs
   intro k
   have hkn : 0 ≤ ‖k‖ := norm_nonneg k
@@ -103,14 +103,12 @@ theorem summable_weighted_of_fourierDecay {ι : Type*} [Fintype ι]
     weighted_logheight_le_norm c hc k
   have hheight0 : 0 ≤ (∑ i, |(k i : ℝ)| * c i) :=
     Finset.sum_nonneg (fun i hi => mul_nonneg (abs_nonneg _) (hc i))
-  have hweight : 1 + (∑ i, |(k i : ℝ)| * c i) ^ 2 ≤
-      (1 + L ^ 2) * (1 + ‖k‖) ^ 2 := by
-    have hsq : (∑ i, |(k i : ℝ)| * c i) ^ 2 ≤ (‖k‖ * L) ^ 2 := by
-      nlinarith
-    nlinarith [sq_nonneg L, sq_nonneg ‖k‖,
-      mul_nonneg hkn (sq_nonneg L)]
-  have hpow : (1 + ‖k‖) ^ (-B) * (1 + ‖k‖) ^ (2 : ℕ) =
-      (1 + ‖k‖) ^ (2 - B) := by
+  have hweight : 1 + (∑ i, |(k i : ℝ)| * c i) ≤
+      (1 + L) * (1 + ‖k‖) ^ (1 : ℕ) := by
+    simp only [pow_one]
+    nlinarith
+  have hpow : (1 + ‖k‖) ^ (-B) * (1 + ‖k‖) ^ (1 : ℕ) =
+      (1 + ‖k‖) ^ (1 - B) := by
     rw [← Real.rpow_natCast, ← Real.rpow_add (by positivity)]
     congr 1
     norm_num
@@ -118,12 +116,12 @@ theorem summable_weighted_of_fourierDecay {ι : Type*} [Fintype ι]
   rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (norm_nonneg _) (by positivity))]
   calc
     _ ≤ (C * (1 + ‖k‖) ^ (-B)) *
-        ((1 + L ^ 2) * (1 + ‖k‖) ^ (2 : ℕ)) :=
+        ((1 + L) * (1 + ‖k‖) ^ (1 : ℕ)) :=
       mul_le_mul (ha k) hweight (by positivity) (by positivity)
-    _ = C * (1 + L ^ 2) * (1 + ‖k‖) ^ (2 - B) := by
+    _ = C * (1 + L) * (1 + ‖k‖) ^ (1 - B) := by
       rw [show (C * (1 + ‖k‖) ^ (-B)) *
-          ((1 + L ^ 2) * (1 + ‖k‖) ^ (2 : ℕ)) =
-          C * (1 + L ^ 2) * ((1 + ‖k‖) ^ (-B) * (1 + ‖k‖) ^ (2 : ℕ)) by ring,
+          ((1 + L) * (1 + ‖k‖) ^ (1 : ℕ)) =
+          C * (1 + L) * ((1 + ‖k‖) ^ (-B) * (1 + ‖k‖) ^ (1 : ℕ)) by ring,
         hpow]
 
 def ambientPrimeMode (P : Finset ℕ) (k : P → ℤ) : ℕ → ℤ :=
@@ -135,7 +133,7 @@ def ambientPrimeMode (P : Finset ℕ) (k : P → ℤ) : ℕ → ℤ :=
 theorem summable_primeModeWeight_of_fourierDecay
     (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
     (a : (P → ℤ) → ℂ) (C B : ℝ) (hC : 0 ≤ C)
-    (hB : (P.card : ℝ) + 2 < B)
+    (hB : (P.card : ℝ) + 1 < B)
     (ha : ∀ k, ‖a k‖ ≤ C * (1 + ‖k‖) ^ (-B)) :
     Summable (fun k : P → ℤ =>
       ‖a k‖ * primeModeWeight P (ambientPrimeMode P k)) := by
