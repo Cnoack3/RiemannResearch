@@ -5,6 +5,12 @@ module(
 )
 
 bazel_dep(name = "rules_lean", version = "0.7.0")
+# Temporary compatibility patch for the pinned upstream revision:
+# - Forward the existing Lake math-template compiler options to lean_library.
+# - Bootstrap only required external modules; whole-library builds hit unrelated
+#   upstream errors with our pinned Lean/dependency versions.
+# - Pin Lean 4.33.0-rc2 archive checksums and make bootstrap retries safe.
+# Drop the override when an upstream release provides equivalent support.
 git_override(
     module_name = "rules_lean",
     remote = "https://github.com/tomato-bazel/rules_lean.git",
@@ -14,6 +20,7 @@ git_override(
 )
 
 lake = use_extension("@rules_lean//lean:lake.bzl", "lake")
+# Dependency repository setup runs on the local client, even with RBE.
 lake.workspace(
     name = "lake_deps",
     lean_toolchain = "//:lean-toolchain",
