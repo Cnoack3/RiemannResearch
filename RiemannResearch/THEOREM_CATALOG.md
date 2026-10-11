@@ -11425,3 +11425,27 @@ provider, and any actual-zero enumeration/counting/marginal instantiation
 used for the moving-lag application. Uniform Landau/zero-density providers
 from the original handoff and reverse two-seed density are not discharged.
 See RH/ZeroOrdinateResidualGainContinuation20261011.md.
+
+
+### Chebyshev midpoint, actual Pareto energy and endpoint obstruction (2026-10-11)
+
+Seven modules formalize exact finite algebra and actual Chebyshev energy.
+Established: midpoint bijection and weighted squares with the terminal term;
+prime-power projection and multiplicative twisting; local exp/log through degree
+three; signed harmonic identity H_N = R_N^2/(N+1) + D_N; exact unit-cell and global
+continuous/Pareto energy; finite comparison bounds; strict and endpoint off-line
+zero energy obstructions.
+
+`RH/ChebyshevEnergyCriterion.lean` supplies
+`ChebyshevMellin.offLineZeroDampedEnergyDivergence`, discharging
+`OffLineZeroDampedEnergyDivergenceTarget`, including the endpoint s = 2 Re rho.
+`ChebyshevMellin.riemannHypothesis_of_all_chebyshev_damping` is a
+**conditional research reduction**. Open: the actual arithmetic conditions
+`forall epsilon > 0, ErrorFiniteEnergy (1+epsilon)` without assuming RH.
+The full handoff is only partly formalized; the actual B2 expansion and full
+coefficientwise exp/log are not claimed to have been proved by this task.
+
+The seven-module import and ten selected transitive axiom checks passed server
+job `job_uK7mcrCfduM7ynT0dmh3asLdW-k8794f`; all selected checks reported only
+`propext`, `Classical.choice`, and `Quot.sound`.
+See `RH/ChebyshevHandoffVerification20261011.md` for precise scope and obligations.

@@ -2487,3 +2487,10 @@ import RiemannResearch.Analysis.PrimePhaseTorus
 import RiemannResearch.Analysis.ProductFrequencyDispersion
 import RiemannResearch.Analysis.ReciprocalRateBalance
 import RiemannResearch.Analysis.TruncatedMobiusConvolution
+import RiemannResearch.Analysis.ChebyshevCellEnergy
+import RiemannResearch.Analysis.SequenceMidpoint
+import RiemannResearch.NumberTheory.PrimePowerLocalCoordinates
+import RiemannResearch.NumberTheory.PrimePowerTwist
+import RiemannResearch.RH.ChebyshevEnergyCriterion
+import RiemannResearch.RH.ChebyshevMidpoint
+import RiemannResearch.RH.ChebyshevParetoEnergy
