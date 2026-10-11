@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Actual squarefree residual laws, full inverse Gram, and variation (2026-10-11)
+
+Established structural identities and conditional geometric branches:
+
+- Analysis/ProjectionResidualSampling.lean proves exact nested residual
+  covariance and projection-enlargement finite-head bounds.
+- Analysis/CoordinateSquareVariation.lean and ProjectionResidualVariation.lean
+  prove the complete countable coordinate-square total-variation bound from
+  the Hilbert angle, then specialize it to genuine nested residuals.
+- RH/SquarefreeResidualSampling.lean uses every squarefree conductor in the
+  actual Pareto dictionary. It proves positive finite-stage residual energy,
+  normalized physical site masses, the exact limiting/enlargement energy
+  identity, escape iff target membership iff zero limiting energy, and the
+  filtered full-inverse Gram projection. Its closure is identified exactly
+  with all original squarefree conductors d>1; no target approximation follows.
+- Analysis/FiniteWeightedResidualGram.lean and RH/SquarefreeResidualHeadGram.lean
+  preserve the complete signed finite-head numerator W-2*c.B+c.H.c and its
+  actual denominator 1-b.(G^-1 b). Coefficients come from the full Hilbert
+  Gram inverse before any head restriction, including composite conductors.
+- RH/SquarefreeResidualVariation.lean proves TV^2 <= (e_n-e_m)/e_n for n<=m,
+  the limiting version under explicit nonzero limiting energy, normalized
+  limiting masses and full TV convergence in that branch. Its exact site-law
+  decomposition retains the signed cross charge and the enlargement square.
+
+The RH consumer is a **conditional research reduction**. Open: actual
+finite-head escape (equivalently squarefree constant-target membership or
+zero limiting energy). The formal RH-to-squarefree-membership direction,
+primorial finite-stage cofinal comparison, countable DPP coupling, and the
+analytic Mellin/Gram obstructions are not supplied by these modules. The
+compensated two-three cofinal arithmetic provider remains Open. RH is not proved.
+
 ### Infinite actual Gaussian Laplace bridge and sharp tail reductions (2026-10-11)
 
 - Analysis/GaussianLaplaceBridge.lean proves exact complex exponential
