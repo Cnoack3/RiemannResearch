@@ -12,6 +12,7 @@ if [[ ! -f MODULE.bazel || ! -f .bazelrc ]]; then
   echo "Run this script from the RiemannResearch repository root." >&2
   exit 2
 fi
+benchmark_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 
 bazel_bin="${BAZEL_BIN:-bazel}"
 command -v "$bazel_bin" >/dev/null || { echo "Bazel is unavailable: $bazel_bin" >&2; exit 2; }
@@ -38,6 +39,13 @@ target="${2:-//:smoke}"
 jobs="${RBE_BENCH_JOBS:-2}"
 time_limit="${RBE_BENCH_TIMEOUT:-10m}"
 execution_log="${RBE_BENCH_EXECUTION_LOG:-0}"
+source_revision="${RBE_BENCH_REVISION:-}"
+if [[ -n "$source_revision" ]]; then
+  if [[ "$mode" != cache-only || ! "$source_revision" =~ ^[0-9a-f]{7,40}$ ]]; then
+    echo "RBE_BENCH_REVISION requires cache-only mode and a 7-40 character commit SHA." >&2
+    exit 2
+  fi
+fi
 case "$execution_log" in
   0|1) ;;
   *) echo "RBE_BENCH_EXECUTION_LOG must be 0 (disabled) or 1 (enabled)." >&2; exit 2 ;;
@@ -152,9 +160,29 @@ trap cleanup_on_exit EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
+if [[ -n "$source_revision" ]]; then
+  if ! source_revision="$(git rev-parse --verify "${source_revision}^{commit}" 2> "$report_dir/source-checkout.log")"; then
+    echo "Benchmark source commit is unavailable locally. See $report_dir/source-checkout.log." >&2
+    exit 2
+  fi
+  # Keep comparison inputs fixed while other work advances main. Retain this
+  # detached source snapshot with the report; never alter the user's checkout.
+  if ! timeout --signal=TERM --kill-after=2s 30s git -c core.hooksPath=/dev/null \
+      worktree add --detach "$report_dir/source" "$source_revision" \
+      >> "$report_dir/source-checkout.log" 2>&1; then
+    echo "Could not prepare the benchmark source snapshot. See $report_dir/source-checkout.log." >&2
+    exit 2
+  fi
+  cd "$report_dir/source"
+  if [[ ! -f MODULE.bazel || ! -f .bazelrc ]]; then
+    echo "The selected source commit lacks MODULE.bazel or .bazelrc." >&2
+    exit 2
+  fi
+fi
+
 git rev-parse HEAD > "$report_dir/commit.txt"
 git status --porcelain > "$report_dir/git-status.txt"
-printf '%s\n' "mode=$mode" "target=$target" "jobs=$jobs" "execution_log=$execution_log" "output_base=$output_base" "timeout=$time_limit" > "$report_dir/run.txt"
+printf '%s\n' "mode=$mode" "target=$target" "jobs=$jobs" "execution_log=$execution_log" "source_revision=$source_revision" "output_base=$output_base" "timeout=$time_limit" > "$report_dir/run.txt"
 if [[ "$mode" == cache-only ]]; then
   declare -A live_current_bases=()
   declare -A completed_bases=()
@@ -256,6 +284,19 @@ Reference: https://bazel.build/versions/9.2.0/advanced/performance/json-trace-pr
 EOF
 fi
 
+# Inventory only file metadata after the timed build. These SDK runtime globs
+# are currently attached to every LeanOlean action; no extra Bazel command or
+# input download is needed. A missing inventory must not change build status.
+sdk_inventory=unavailable
+if command -v python3 >/dev/null && [[ -f "$benchmark_dir/rbe_sdk_summary.py" ]]; then
+  if timeout --signal=TERM --kill-after=2s 15s python3 "$benchmark_dir/rbe_sdk_summary.py" "$output_base" \
+      > "$report_dir/sdk-inventory.txt" 2> "$report_dir/sdk-inventory-error.txt"; then
+    sdk_inventory=available
+  else
+    printf 'SDK inventory exited with status %s.\n' "$?" >> "$report_dir/sdk-inventory-error.txt"
+  fi
+fi
+
 if [[ "$build_status" != 0 ]]; then
   printf '\nLast build diagnostics:\n' >&2
   tail -n 40 "$report_dir/build.log" >&2
@@ -297,6 +338,9 @@ fi
 {
   printf '\n--- RBE summary: paste this block ---\n'
   printf 'Mode: %s\nTarget: %s\nRevision: %.12s (%s)\n' "$mode" "$target" "$revision" "$tree_state"
+  if [[ -n "$source_revision" ]]; then
+    printf 'Source snapshot: %.12s (retained locally)\n' "$source_revision"
+  fi
   printf 'Jobs: %s\n' "$jobs"
   if [[ "$execution_log" == 1 ]]; then
     printf 'Execution log: enabled (input audit; adds overhead)\n'
@@ -305,6 +349,11 @@ fi
   fi
   printf 'Result: %s (exit %s)\nBuild wall time: %s\n' "$result" "$build_status" "$wall_time"
   printf 'JVM peak sampled RSS: %s\n' "$server_rss"
+  if [[ "$sdk_inventory" == available ]]; then
+    cat "$report_dir/sdk-inventory.txt"
+  else
+    printf 'Lean SDK runtime input inventory: unavailable\n'
+  fi
   awk '/^INFO: (Analyzed |Elapsed time: |[0-9]+ processes:)/ {
     sub(/^INFO: /, ""); print
   }' "$report_dir/build.log"

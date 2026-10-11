@@ -350,6 +350,19 @@ use `RBE_BENCH_EXECUTION_LOG=1`; non-analysis modes then retain `execution.log`
 locally. That audit run adds logging overhead and should not be compared with
 logging-disabled timing runs. Analysis mode always disables execution logging.
 The console summary and `run.txt` record the effective execution-log setting.
+After the timed build, the script also inventories the selected SDK's runtime
+files using file metadata, and includes the total plus namespace/artifact size
+breakdowns in the same paste-ready summary. It needs only Python's standard
+library and does not invoke Bazel again or download inputs. The existing rules
+include this full SDK runtime filegroup in every `LeanOlean` action. Native
+static libraries, headers, and `.ilean` files are excluded from this inventory,
+matching that filegroup. The Lean executable, Mathlib/project inputs, and
+plugins are separate and are not included in the reported SDK runtime total.
+Logical file sizes are not BuildBuddy download or billing measurements; shared
+digests, compression, and worker reuse can change transferred bytes. The size
+scan runs after timing and resource sampling finish, with a 15-second timeout
+and up to two seconds of termination grace. A missing, ambiguous, incomplete,
+or timed-out SDK inventory does not change the build's exit code.
 It captures INFO in `build.log` for its summary while keeping warnings filtered.
 Those INFO events also reach the BuildBuddy console during benchmarks. Use
 `--config=verbose` on an ordinary build to inspect the full console diagnostics.
@@ -440,15 +453,52 @@ diagnostic script. The script now defaults to logging disabled. Measure that
 default before attributing the old three-minute result to ordinary cache lookup.
 This change does not shrink remote worker inputs or their download size.
 
-For one comparable full-project timing at 80 jobs:
+The large worker payload still needs a separate reduction. The current rules
+select all SDK `.olean*`, `.ir`, and `.ir.sig` files plus runtime shared
+libraries for every compilation, rather than the SDK import closure of that
+module. The compiled-sorry audit also runs an interpreted helper with
+`import Lean`, which needs its own SDK dependency closure. Measure the SDK's
+share of the input payload before pruning it, and preserve the audit's imports,
+Lean's implicit imports, all required module artifacts, and runtime libraries.
+No SDK inputs have been removed by these diagnostic changes.
+
+For one full-project timing at 80 jobs with the source revision from the previous
+80-job run, use the current harness against a detached source snapshot:
 
 ```sh
-RBE_BENCH_JOBS=80 bash bazel/rbe_benchmark.sh cache-only //:RiemannResearch
+RBE_BENCH_REVISION=0c67f6bd595d RBE_BENCH_JOBS=80 \
+  bash bazel/rbe_benchmark.sh cache-only //:RiemannResearch
 ```
+
+`RBE_BENCH_REVISION` accepts a locally available 7-40 character commit SHA and
+only applies to cache-only mode. It prepares a detached Git worktree under the
+new report's `source` directory, uses that revision's sources and Bazel config,
+and retains the snapshot for review. The original checkout stays on its existing
+revision and retains any edits. Snapshot preparation is capped at 30 seconds
+plus up to two seconds of termination grace, before build timing starts; checkout
+hooks are disabled for that operation. The current script and SDK inventory
+helper still run, even if the old revision lacks them. The summary records the
+source revision, and the build remains cache-only. Keep the platform, instance,
+action environment, and other cache-key settings fixed for the comparison.
+Omit `RBE_BENCH_REVISION` to benchmark the current checkout.
 
 Sources: [compact spawn logger](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/exec/CompactSpawnLogContext.java),
 [execution-log options](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/exec/ExecutionOptions.java),
 and [empty paths disable logging](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/util/OptionsUtils.java).
+
+To inventory an existing benchmark's SDK without any build:
+
+```sh
+python3 bazel/rbe_sdk_summary.py \
+  "$HOME/.cache/riemann-rbe-diagnostics/cache-only-20261011T221733Z-93354"
+```
+
+The SDK inventory mirrors the pinned [SDK runtime globs](https://github.com/atvrager/rules_lean/blob/2cf9d007003ff73374e0082a82342e3f4723fc65/lean/private/repositories.bzl)
+and this repository's [runtime-library patch](rules_lean_compat.patch). It accepts
+an output base directly or reads `output_base` from the saved report's `run.txt`.
+It uses bounded scans and fixed-size categories; unsupported directory symlinks,
+missing selected files, multiple SDK roots, and limit failures report an
+unavailable inventory instead of printing a partial total.
 
 ### Inspect an existing profile without another build
 
