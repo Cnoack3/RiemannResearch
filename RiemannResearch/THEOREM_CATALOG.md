@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Exact actual-zero horizontal defects (2026-10-10)
+
+- Analysis/ActualZeroHorizontalEnergy.lean proves unconditional summability
+  of the multiplicity-weighted all-zero energy E4=sum m*(re-1/2)^2/(1+im^2)^2,
+  nonnegativity, singleton detection, and E4=0 iff Mathlib RiemannHypothesis.
+  The equality E4=0 is Open; the equivalence assumes no domain-specific input.
+- Analysis/ResolventHorizontalDefect.lean proves the complete reflected
+  rational gap identity and explicit two-sided constants 1/5 and 9. The sign
+  and height conditions remain visible in each estimate.
+- Analysis/DeterminantHorizontalDefect.lean proves the exact positive
+  polynomial certificate and maximum-ratio square remainder; factor equality
+  detects displacement without a lower-height hypothesis.
+- Analysis/ActualZeroHorizontalDefect.lean assembles reflection before any
+  estimate, retains actual analytic multiplicities, and proves finite and
+  cofinal determinant-gap detection for all positive-height actual zeros.
+- Analysis/ConjugatePairHankel.lean proves an isolated conjugate-pair
+  determinant is -4*normSq(v)*im(z)^2 and supplies negative directions plus
+  an explicit tail-error budget. No infinite-tail provider is asserted.
+- Five modules contain 37 supporting public theorems. Actual-source bundle
+  job_xB9pfBSLHvCFL_byfhyyt1jqM5C9lybW succeeded with exit code 0 and verified
+  true. Important printed foundations use only propext, Classical.choice,
+  and Quot.sound. Final project acceptance is the introducing checkpoint.
+- Infinite xi-product/resolvent/Laplace identifications are paper proofs in
+  RH/OrdinateHorizontalDefects20261010.md. Their assembled Lean bridge is
+  Open; reverse determinant/resolvent comparisons and E4=0 remain Open
+  arithmetic obligations. These are conditional research reductions toward
+  RH, not unconditional proofs of RH or new zero-density estimates.
+
 ### Ordinate spectral kernels and sharp Hankel certificates (2026-10-10)
 
 - Analysis/OrdinateSpectralKernel.lean proves positive finite spectral Gram
