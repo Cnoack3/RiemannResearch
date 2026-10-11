@@ -3,9 +3,13 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
-import RiemannResearch.RH.ArithmeticCumulativeEnergy
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Ring
 import Mathlib.Analysis.Normed.Group.InfiniteSum
-import Mathlib.Data.Complex.Basic
+import Mathlib.Analysis.Complex.Basic
 
 /-! A signed complex pairing with the exact weighted dual square norm. -/
 noncomputable section

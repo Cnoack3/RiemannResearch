@@ -175,3 +175,15 @@ theorem cesaro_mellin_pairing (f : ThresholdHilbert) (s : ℂ)
   exact tendsto_nhds_unique hsecond (by simpa only [sub_zero, partialSum, F] using hfirst.sub hboundary)
 
 end RiemannResearch.Analysis.Cesaro
+
+namespace RiemannResearch.RH.Pareto
+open Analysis.Cesaro
+
+/-- This constant is finite by the proved weighted dual summability theorem. -/
+def conditionalMellinDualSquare (s : ℂ) : ℝ :=
+  ∑' k : ℕ, ‖mellinSecond s (k + 1)‖ ^ 2 / conditionalWeight k
+
+theorem conditionalMellinDualSquare_nonneg (s : ℂ) : 0 ≤ conditionalMellinDualSquare s :=
+  tsum_nonneg (fun k => div_nonneg (sq_nonneg _) (conditionalWeight_pos k).le)
+
+end RiemannResearch.RH.Pareto

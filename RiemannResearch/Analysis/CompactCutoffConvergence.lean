@@ -1,4 +1,5 @@
 import RiemannResearch.Analysis.SmoothCompactCutoff
+import RiemannResearch.Analysis.SmoothSuperexponentialDecay
 import RiemannResearch.Analysis.BilateralLaplaceDecay
 import Mathlib.MeasureTheory.Integral.DominatedConvergence
 

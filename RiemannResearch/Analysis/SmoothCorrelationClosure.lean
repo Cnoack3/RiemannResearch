@@ -1,5 +1,5 @@
 import RiemannResearch.Analysis.CrossCorrelationDerivative
-import RiemannResearch.RH.NymanCompletionAdmissibility
+import RiemannResearch.Analysis.SmoothSuperexponentialDecay
 
 /- Source argument: user-provided
 RH_Nyman_Weil_Null_Channels_and_Exact_Prime_Compensation_2026-09-07.md,

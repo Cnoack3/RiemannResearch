@@ -1,5 +1,5 @@
 import RiemannResearch.Analysis.SuperexponentialPrimitive
-import RiemannResearch.RH.NymanCompletionAdmissibility
+import RiemannResearch.Analysis.SmoothSuperexponentialDecay
 
 /-!
 # Removing transform zeros preserves the full smooth Weil test class

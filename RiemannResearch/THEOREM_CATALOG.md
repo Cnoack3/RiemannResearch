@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Structural Lake dependency cleanup (2026-10-11)
+
+Sixteen existing declarations move verbatim with their fully qualified names,
+statements, hypotheses, attributes, and proof or definition bodies preserved:
+
+- `RH/WeilExplicitFormula/RvM/CompletedZeta.lean` now owns the six completed-zeta
+  analyticity, factorization, zero-equivalence, and nonvanishing lemmas formerly
+  in `RvM/CountByIntegral.lean`, under the unchanged `Zeta23.RvM` namespace.
+- `RH/ZetaStripReflection.lean` now owns
+  `RiemannResearch.RH.riemannZeta_one_sub_eq_zero_of_strip`, formerly in
+  `RH/NymanAutocorrelationNullity.lean`.
+- `Analysis/SmoothSuperexponentialDecay.lean` now owns the smooth decay class
+  and its six general closure/accessor lemmas, formerly in
+  `RH/NymanCompletionAdmissibility.lean`, under `RiemannResearch.Analysis`.
+- `Analysis/MellinCesaroSummability.lean` now owns
+  `RiemannResearch.RH.Pareto.conditionalMellinDualSquare` and
+  `conditionalMellinDualSquare_nonneg`, formerly in `RH/ConditionalMeanRHBridge.lean`.
+
+No mathematical result or research-obligation status changes. Consumers use
+narrower imports. See [the follow-up dependency audit](RH/LakeDependencyAuditFollowup20261011.md)
+for exact declaration names, source-preservation evidence, and validation scope.
+
 ### Exact ordinate counting windows and pair-correlation reductions (2026-10-11)
 
 Four principal finite results and actual-zero assembly passed the combined server

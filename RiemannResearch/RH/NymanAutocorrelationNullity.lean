@@ -1,4 +1,5 @@
 import RiemannResearch.RH.NymanTransformNullity
+import RiemannResearch.RH.ZetaStripReflection
 import RiemannResearch.RH.NymanCompletionAdmissibility
 import RiemannResearch.RH.WeilCorrelationTransform
 
@@ -20,21 +21,6 @@ open MeasureTheory.BilateralLaplace
 open RiemannResearch.Analysis
 
 namespace RiemannResearch.RH
-
-theorem riemannZeta_one_sub_eq_zero_of_strip {s : ℂ}
-    (hz : riemannZeta s = 0) (h0 : 0 < s.re) (h1 : s.re < 1) :
-    riemannZeta (1 - s) = 0 := by
-  have hneg (n : ℕ) : s ≠ -(n : ℂ) := by
-    intro h
-    have hr := congrArg Complex.re h
-    norm_num at hr
-    have hn : (0 : ℝ) ≤ n := Nat.cast_nonneg n
-    linarith
-  have hs1 : s ≠ 1 := by
-    intro h
-    subst s
-    norm_num at h1
-  rw [riemannZeta_one_sub hneg hs1, hz, mul_zero]
 
 private theorem one_sub_ne_one_of_re_pos {s : ℂ} (h0 : 0 < s.re) : 1 - s ≠ 1 := by
   intro h

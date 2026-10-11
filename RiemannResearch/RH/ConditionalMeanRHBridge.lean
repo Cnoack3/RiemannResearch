@@ -27,15 +27,8 @@ open Analysis.Cesaro Probability.ConditionalIID ArithmeticCumulative
 def conditionalMeanError (g : ℕ → ℝ) : ℝ :=
   ∑' k : ℕ, mixtureWeight (k + 1) * (1 - cesaro g (k + 1)) ^ 2
 
-/-- This constant is finite by the proved weighted dual summability theorem. -/
-def conditionalMellinDualSquare (s : ℂ) : ℝ :=
-  ∑' k : ℕ, ‖mellinSecond s (k + 1)‖ ^ 2 / conditionalWeight k
-
 theorem conditionalMeanError_nonneg (g : ℕ → ℝ) : 0 ≤ conditionalMeanError g :=
   tsum_nonneg (fun k => mul_nonneg (mixtureWeight_nonneg _) (sq_nonneg _))
-
-theorem conditionalMellinDualSquare_nonneg (s : ℂ) : 0 ≤ conditionalMellinDualSquare s :=
-  tsum_nonneg (fun k => div_nonneg (sq_nonneg _) (conditionalWeight_pos k).le)
 
 /-- At a right-half-plane zero, even the weaker conditional-mean error has a positive obstruction. -/
 theorem conditionalMeanError_obstruction_of_zeta

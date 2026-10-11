@@ -96,7 +96,7 @@ miss the improvement. All 2,500 child modules remain exported after the split.
 
 The pinned Lean/Lake version is `v4.33.0-rc2`. In its
 [`Lake/Build/Module.lean`](https://github.com/leanprover/lean4/blob/v4.33.0-rc2/src/lake/Lake/Build/Module.lean),
-`recFetchInput` hashes source text, `ModuleImportInfo.add` mixes import traces
+`recFetchInput` hashes source text, `ModuleImportInfo.addImport` mixes import traces
 and artifact traces, and `recFetchPreSetup` combines these with the compiler,
 options, module name, package identity, and arguments. Narrowing actual import
 closures therefore removes real dependencies from Lake's build traces.
@@ -130,6 +130,9 @@ and conditional-obstruction modules. A warm-cache before/after workload is
 needed to quantify elapsed-time and transfer savings.
 
 ## Remaining candidates
+
+These candidates are examined in the [follow-up audit](LakeDependencyAuditFollowup20261011.md).
+The measurements above describe this first refactor only.
 
 The graph still has broad foundations: `WeilExplicitFormula.Defs` reaches
 1,145 importers after this refactor. Large reverse closures are not inherently

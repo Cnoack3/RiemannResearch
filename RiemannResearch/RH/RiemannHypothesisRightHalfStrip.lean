@@ -1,5 +1,5 @@
 import RiemannResearch.RH.RiemannHypothesisStrip
-import RiemannResearch.RH.NymanAutocorrelationNullity
+import RiemannResearch.RH.ZetaStripReflection
 
 /-!
 # An unconditional right-half-strip criterion for actual RH

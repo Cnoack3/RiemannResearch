@@ -1,10 +1,10 @@
-import RiemannResearch.RH.NymanCompletionAdmissibility
+import RiemannResearch.Analysis.SmoothSuperexponentialDecay
 
 /-!
 # Translation of the smooth superexponential test class
 
 Elementary translation closure, used by the actual Weil reflection kernel.
-The smooth class is currently defined in `RH.NymanCompletionAdmissibility`.
+The smooth class is defined in `Analysis.SmoothSuperexponentialDecay`.
 Source: direct proof from the decay definition and the derivative chain rule.
 -/
 

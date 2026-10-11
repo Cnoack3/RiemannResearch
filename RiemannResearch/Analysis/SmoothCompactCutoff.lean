@@ -1,4 +1,3 @@
-import RiemannResearch.RH.NymanCompletionAdmissibility
 import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 import Mathlib.Analysis.Distribution.SchwartzSpace.Basic

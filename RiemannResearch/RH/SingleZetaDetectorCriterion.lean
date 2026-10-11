@@ -1,6 +1,6 @@
 import RiemannResearch.Analysis.SubpowerTailObstruction
 import RiemannResearch.Analysis.BilateralLaplaceTranslation
-import RiemannResearch.RH.WeilSpectralPairing
+import RiemannResearch.RH.WeilExplicitFormula.ZetaReflect
 import RiemannResearch.RH.RiemannHypothesisStrip
 
 /-!

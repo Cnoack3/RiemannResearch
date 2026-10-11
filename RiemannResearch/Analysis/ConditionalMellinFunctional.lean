@@ -1,6 +1,6 @@
 import RiemannResearch.Analysis.CesaroHilbertAdjoint
 import RiemannResearch.Analysis.MellinCesaroHilbert
-import RiemannResearch.RH.ConditionalMeanRHBridge
+import RiemannResearch.Analysis.MellinCesaroSummability
 
 /-!
 # Bundled conditional Mellin functionals on real and complex J

@@ -1,5 +1,5 @@
 import RiemannResearch.RH.ArithmeticMellinIdentity
-import RiemannResearch.RH.WeilSpectralPairing
+import RiemannResearch.RH.WeilExplicitFormula.ZetaReflect
 import RiemannResearch.RH.RiemannHypothesisStrip
 /-!
 # Two-seed approximation implies the actual Riemann hypothesis

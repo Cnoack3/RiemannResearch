@@ -1,4 +1,4 @@
-import RiemannResearch.RH.WeilExplicitFormula.RvM.CountByIntegral
+import RiemannResearch.RH.WeilExplicitFormula.RvM.CompletedZeta
 
 /-!
 # Mathlib's Riemann hypothesis and its open-strip formulation

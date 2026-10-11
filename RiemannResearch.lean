@@ -1948,6 +1948,7 @@ import RiemannResearch.Analysis.SuperexponentialLaplace
 import RiemannResearch.Analysis.BilateralLaplaceDifferential
 import RiemannResearch.RH.PoleCancellationTransform
 import RiemannResearch.RH.NymanTransformNullity
+import RiemannResearch.Analysis.SmoothSuperexponentialDecay
 import RiemannResearch.RH.NymanCompletionAdmissibility
 import RiemannResearch.RH.NymanTailTransform
 import RiemannResearch.Analysis.BilateralLaplaceDecay
@@ -2001,6 +2002,7 @@ import RiemannResearch.RH.WeilExplicitFormula.WeilEF.VerticalLine
 import RiemannResearch.RH.WeilExplicitFormula.WeilEF.Landau
 import RiemannResearch.RH.WeilExplicitFormula.WeilEF.GoodHeights
 import RiemannResearch.RH.WeilExplicitFormula.Analytic.RectangleLogDeriv
+import RiemannResearch.RH.WeilExplicitFormula.RvM.CompletedZeta
 import RiemannResearch.RH.WeilExplicitFormula.RvM.CountByIntegral
 import RiemannResearch.RH.WeilExplicitFormula.WeilEF.Contour
 import RiemannResearch.RH.WeilExplicitFormula.WeilEF.FullLine
@@ -2026,6 +2028,7 @@ import RiemannResearch.Analysis.SmoothCorrelationClosure
 import RiemannResearch.RH.DigammaQuarter
 import RiemannResearch.RH.GammaLaplaceInversion
 import RiemannResearch.RH.NymanActualZeroSumNullity
+import RiemannResearch.RH.ZetaStripReflection
 import RiemannResearch.RH.NymanAutocorrelationNullity
 import RiemannResearch.RH.NymanFullReturnWeilNullity
 import RiemannResearch.RH.NymanMixedSpectralNullity

@@ -144,6 +144,19 @@
   in their statements; keep application modules focused on assembly.
 - Use focused Mathlib or project-module imports; exact `import Mathlib` is
   forbidden in every new or modified module. Keep the import graph acyclic.
+- Follow import-what-you-use (IWYU): import the narrow owning modules for
+  directly used declarations, including required tactics, notation, instances,
+  and attributes. Avoid relying on an unrelated application module to bring
+  these into scope transitively. An import with no visibly named declaration
+  can still be required for elaboration.
+- Keep reusable definitions and general lemmas below their application and
+  theorem-assembly modules. Split a mixed module when identified consumers can
+  import only the reusable part.
+- Judge dependency cleanups by transitive import paths and the modules affected
+  by an edit, accounting for alternate paths. Removing an already-implied import
+  does not itself improve cache isolation. Distinguish graph reductions from
+  measured build-time/cache-hit gains, and use the existing server validation
+  gate to check consumers after import changes.
 - Split by mathematical responsibility, not an arbitrary line count. File size
   is a review signal; a long file is appropriate when it contains one cohesive
   complex theorem and its tightly coupled support.
