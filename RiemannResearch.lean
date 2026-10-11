@@ -1,5 +1,6 @@
 import RiemannResearch.Analysis.ActualZeroHorizontalDefect
 import RiemannResearch.Analysis.ActualZeroHorizontalEnergy
+import RiemannResearch.Analysis.FiniteQuartetOrdinateBlindness
 import RiemannResearch.Analysis.ResolventHorizontalDefect
 import RiemannResearch.Analysis.DeterminantHorizontalDefect
 import RiemannResearch.Analysis.ConjugatePairHankel

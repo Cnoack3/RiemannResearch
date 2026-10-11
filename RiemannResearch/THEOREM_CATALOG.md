@@ -1,5 +1,22 @@
 # Theorem catalog
 
+### E4 vanishing attempt: exact ordinate-information obstruction (2026-10-10)
+
+- Analysis/FiniteQuartetOrdinateBlindness.lean proves identical signed
+  ordinate lists and all real ordinate observables for the line/displaced
+  quartets, exact positive horizontal energy, open-strip membership,
+  exactly zero cutoff tails, and isolated Gaussian heat Hankel negativity.
+  Lists retain analytic-copy multiplicity. Eleven public theorem declarations.
+- These are artificial spectral models, not alternate actual zeta zeros.
+  The complete arithmetic explicit formula is not preserved.
+- RH/E4ProofAttempt20261010.md records the exact signed-argument/prime
+  cancellation needed for E4=0, plus a complete interpolation/tail paper
+  proof. These infinite analytic bridges are not newly formalized.
+- Actual E4=0 and independent arithmetic positivity remain Open.
+  Source bundle job_hE8Tg0r-DAL-F8TpPC6upyPoYvnB3JXb passed, verified=true;
+  printed foundations use only propext, Classical.choice and Quot.sound.
+  Final acceptance and publication are the introducing server checkpoint.
+
 ### Exact actual-zero horizontal defects (2026-10-10)
 
 - Analysis/ActualZeroHorizontalEnergy.lean proves unconditional summability
