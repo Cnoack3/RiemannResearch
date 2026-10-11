@@ -1,6 +1,4 @@
-load("@rules_lean//lean:defs.bzl", "lean_library")
-
-package(default_visibility = ["//visibility:public"])
+load("//bazel:lean_modules.bzl", "lean_project")
 
 exports_files([
     "MODULE.bazel",
@@ -9,37 +7,17 @@ exports_files([
     "lean-toolchain",
 ])
 
-_LEAN_FLAGS = [
-    "-Dpp.unicode.fun=true",
-    "-DrelaxedAutoImplicit=false",
-    "-Dweak.linter.mathlibStandardSet=true",
-    "-DmaxSynthPendingDepth=3",
-]
+# Recursive globs stop at nested BUILD files. Unpackaged sources stay covered.
+lean_project()
 
-# The rule creates one action per source and follows its exact import closure.
-lean_library(
-    name = "RiemannResearch",
-    srcs = glob(
-        ["RiemannResearch.lean", "RiemannResearch/**/*.lean"],
-        exclude = ["RiemannResearch/Basic.lean"],
-    ),
-    deps = [
-        ":basic",
-        "@mathlib//:mathlib",
-        "@LeanArchitect//:Architect",
-        "@PrimeNumberTheoremAnd//:PrimeNumberTheoremAnd.SmoothExistence",
-        "@PrimeNumberTheoremAnd//:PrimeNumberTheoremAnd.Mathlib.Analysis.Asymptotics.Asymptotics",
-    ],
-    extra_flags = _LEAN_FLAGS,
-    forbid_sorry = True,
-)
-
-lean_library(
+alias(
     name = "basic",
-    srcs = ["RiemannResearch/Basic.lean"],
-    deps = ["@mathlib//:Mathlib.Tactic.NormNum"],
-    extra_flags = _LEAN_FLAGS,
-    forbid_sorry = True,
+    actual = "//RiemannResearch:Basic",
+    visibility = ["//visibility:public"],
 )
 
-alias(name = "smoke", actual = ":basic")
+alias(
+    name = "smoke",
+    actual = ":basic",
+    visibility = ["//visibility:public"],
+)

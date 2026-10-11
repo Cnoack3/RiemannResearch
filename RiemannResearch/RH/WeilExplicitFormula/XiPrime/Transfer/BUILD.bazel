@@ -1,0 +1,3 @@
+load("//bazel:lean_modules.bzl", "lean_modules")
+
+lean_modules()

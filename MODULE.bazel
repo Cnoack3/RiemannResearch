@@ -8,6 +8,8 @@ bazel_dep(name = "rules_lean", version = "0.0.0")
 # Atvrager supplies one action per module and execution-platform toolchains.
 # The patch fixes consumer labels/version selection, complete import closures,
 # Lean 4.33 module artifacts, and native shared repository cache eligibility.
+# It also retains Lean namespaces across Bazel packages, keeps the checkout's
+# import index local, and checks compiled declarations for suppressed sorries.
 # Keep this revision pinned while upstream is pre-0.1; the patch can move to a fork.
 git_override(
     module_name = "rules_lean",

@@ -7,15 +7,35 @@ From the repository root:
 
 ```sh
 bazel build //:smoke
+bazel build //RiemannResearch:Basic
+bazel build //RiemannResearch/Analysis:AbelCoboundary
 bazel build --nobuild //:RiemannResearch
 bazel build //:RiemannResearch
 ```
 
 `smoke` compiles the existing `RiemannResearch/Basic.lean` arithmetic check.
 `--nobuild` resolves dependencies and analyzes targets without compiling project
-sources. The project glob selects sources; each source has its own compilation
-action. Parsed imports determine the exact transitive artifact inputs, including
+sources. Each Lean source has a named target and its own compilation action.
+Each source directory has a short `BUILD.bazel` that calls `lean_modules()`.
+The shared macro derives exact dependencies from the watched import index.
+Parsed imports determine the exact transitive artifact inputs, including
 Lean module sidecars. A source edit invalidates its action and affected importers.
+
+Recursive globs stop at nested Bazel packages. A new directory without a BUILD
+file is covered by its nearest ancestor package, including the root fallback.
+For example, `RiemannResearch/NewArea/Foo.lean` initially has the target
+`//RiemannResearch:NewArea.Foo`. Adding `NewArea/BUILD.bazel` changes its target
+to `//RiemannResearch/NewArea:Foo`; the import index updates dependencies.
+Copy any existing three-line module BUILD file to give a new directory its own
+package. `//:RiemannResearch` includes every project source, even if it is not
+exported by `RiemannResearch.lean`.
+
+Every project target sets `forbid_sorry = True`. The patched rule checks warnings
+and compiled declaration types and bodies, including private module declarations.
+It rejects `sorry` and `admit` even with `set_option warn.sorry false`.
+Lean compilation checks proof terms; no executable `lean_test` is needed for this.
+This is not a general axiom allowlist audit. MCP's source-policy audit and
+publication gate continue unchanged.
 
 The extensions read the root `lean-toolchain` and `lake-manifest.json`.
 `MODULE.bazel` selects external source packages and module roots; their local
@@ -25,13 +45,15 @@ published dependency artifacts are prebuilt targets with complete import graphs.
 When dependency pins change, update the archive SHA-256 values in
 `MODULE.bazel`. Extend its package/module root lists when adding external
 imports. Keep namespace mappings, module overrides, source directories, and
-package compiler flags aligned with those dependencies. Keep `BUILD.bazel`'s
+package compiler flags aligned with those dependencies. Keep `lean_modules.bzl`'s
 compiler flags aligned with the root Lake file. A new Lean version may also
 need its archive checksums added to the ruleset patch.
 
 The upstream patch fixes consumer repository labels and version selection,
 complete import closures, Lean 4.33 module outputs, and portable repository
 contents. It also exposes selected source dependencies as per-module targets.
+The checkout import index stays local. Only portable external repositories use
+the shared repository contents cache.
 
 MCP verification continues using Lake unchanged. Remote execution is not
 configured.
@@ -41,6 +63,9 @@ full-project analysis without compilation, incremental import fixtures, large
 import closures and cycle rejection, concurrent source repository reuse, and a
 70-module Mathlib cold fetch followed by fresh offline reuse. A fresh Bazel output
 directory restored the smoke action from a stock HTTP cache without compiling.
+Package-split validation covers the project smoke build, full-project analysis,
+cross-package legacy/module imports, unpackaged fallback sources, addition of a
+package, and rejection of normal, suppressed, private sorries and `admit`.
 The full project compilation, private GCS reuse, and RBE have not been tested.
 
 ## Shared local repository caches
