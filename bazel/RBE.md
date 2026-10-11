@@ -62,11 +62,13 @@ not the same as transfer per invocation. Keep the account on the free Personal
 plan; its public pricing does not specify exactly how internal executor traffic
 counts toward the advertised transfer allowance.
 
-Validation: Bazel 9.2.0 accepted the profile, and action analysis selected the
-pinned Linux platform for the probe and Lean smoke action, including its
-compiled-sorry audit. Live hosted execution remains unverified: the authoring
-environment could not resolve `remote.buildbuddy.io`. Run the probe above on
-the Ubuntu server before treating the executor as working.
+Validation: The forced remote probe passed on the Ubuntu server. Bazel 9.2.0
+accepted the profile and selected the pinned Linux platform for the Lean smoke
+action, including its compiled-sorry audit. The compatibility patch permits
+absent macOS `.dylib` files in the Linux SDK while keeping its required globs
+strict. The generated SDK BUILD file reproduced the original empty-glob error
+before that fix and passed smoke-target analysis afterward, using the real
+Linux SDK. Hosted Lean compilation and remote-cache reuse remain unverified.
 
 Sources: [RBE setup](https://www.buildbuddy.io/docs/rbe-setup/),
 [authentication](https://www.buildbuddy.io/docs/guide-auth/),

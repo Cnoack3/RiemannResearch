@@ -1201,21 +1201,31 @@ index 2ad2ce9..a03b4f4 100644
              providers = [LeanPluginInfo],
              doc = "Other plugins loaded during compilation.",
 diff --git a/lean/private/repositories.bzl b/lean/private/repositories.bzl
-index bb65173..8fbbb58 100644
+index bb65173..43fd510 100644
 --- a/lean/private/repositories.bzl
 +++ b/lean/private/repositories.bzl
-@@ -20,7 +20,10 @@ _STDLIB_GLOBS = [
+@@ -20,6 +20,7 @@ _STDLIB_GLOBS = [
      "lib/lean/**/*.ir",
      "lib/lean/**/*.ir.sig",
      "lib/lean/**/*.olean*",
 +    "lib/*.so*",
-+    "lib/*.dylib",
      "lib/lean/*.so*",
-+    "lib/lean/*.dylib",
  ]
  
- _PLATFORM_REPO_TEMPLATE = """load("{toolchain_bzl}", "lean_toolchain")
-@@ -94,6 +97,7 @@ def _lean_toolchain_repo_impl(rctx):
+@@ -34,6 +35,12 @@ filegroup(
+ {stdlib_globs}
+         ],
+         allow_empty = False,
++    ) + glob(
++        [
++            "lib/*.dylib",
++            "lib/lean/*.dylib",
++        ],
++        allow_empty = True,
+     ),
+     visibility = ["//visibility:public"],
+ )
+@@ -94,6 +101,7 @@ def _lean_toolchain_repo_impl(rctx):
          toolchain_bzl = _TOOLCHAIN_BZL,
          version = version,
      ))
@@ -1223,7 +1233,7 @@ index bb65173..8fbbb58 100644
  
  _lean_toolchain_repo = repository_rule(
      implementation = _lean_toolchain_repo_impl,
-@@ -121,7 +125,7 @@ def _lean_toolchains_repo_impl(rctx):
+@@ -121,7 +129,7 @@ def _lean_toolchains_repo_impl(rctx):
  
      # One `toolchain` target per (version, platform). A `toolchain` target holds
      # the constraints that select it: Bazel picks the entry whose execution
@@ -1232,7 +1242,7 @@ index bb65173..8fbbb58 100644
      for entry in rctx.attr.entries:
          version, platform, repo = entry.split(" ")
          constraints = ", ".join(['"%s"' % c for c in PLATFORM_CONSTRAINTS[platform]])
-@@ -140,6 +144,7 @@ toolchain(
+@@ -140,6 +148,7 @@ toolchain(
          ))
  
      rctx.file("BUILD.bazel", "".join(lines))
@@ -1240,7 +1250,7 @@ index bb65173..8fbbb58 100644
  
  _lean_toolchains_repo = repository_rule(
      implementation = _lean_toolchains_repo_impl,
-@@ -158,34 +163,12 @@ def lean_toolchains_repo(name, entries):
+@@ -158,34 +167,12 @@ def lean_toolchains_repo(name, entries):
      """
      _lean_toolchains_repo(name = name, entries = entries)
  
@@ -1280,7 +1290,7 @@ index bb65173..8fbbb58 100644
      lines = text.split("\n")
      depth = 0
      in_string = False
-@@ -216,6 +199,7 @@ def _parse_imports(text):
+@@ -216,6 +203,7 @@ def _parse_imports(text):
              elif ch2 == "/-":
                  depth += 1
                  i = idx + 2
@@ -1288,7 +1298,7 @@ index bb65173..8fbbb58 100644
              elif ch2 == "--":
                  break
              elif ch == '"':
-@@ -231,30 +215,56 @@ def _parse_imports(text):
+@@ -231,30 +219,56 @@ def _parse_imports(text):
          words = [w for w in cleaned.replace("\t", " ").split(" ") if w]
          if not words:
              continue
@@ -1353,7 +1363,7 @@ index bb65173..8fbbb58 100644
              is_pkg = (curr_dir.get_child("BUILD.bazel").exists or
                        curr_dir.get_child("BUILD").exists)
              if is_pkg:
-@@ -265,12 +275,14 @@ def _lean_imports_repo_impl(rctx):
+@@ -265,12 +279,14 @@ def _lean_imports_repo_impl(rctx):
                      curr_pkg = curr_str[len(root_dir_str) + 1:]
                  if curr_pkg not in imports_by_pkg:
                      imports_by_pkg[curr_pkg] = {}
@@ -1369,7 +1379,7 @@ index bb65173..8fbbb58 100644
                      if entry != root_dir and entry.get_child("MODULE.bazel").exists:
                          continue
                      queue.append((entry, curr_pkg))
-@@ -286,16 +298,26 @@ def _lean_imports_repo_impl(rctx):
+@@ -286,16 +302,26 @@ def _lean_imports_repo_impl(rctx):
                          module_rel = rel_in_pkg[:-len(".lean")]
                          module_name = module_rel.replace("/", ".")
                          content = rctx.read(entry)
