@@ -86,7 +86,9 @@ action, including its compiled-sorry audit. The compatibility patch permits
 absent macOS `.dylib` files in the Linux SDK while keeping its required globs
 strict. The generated SDK BUILD file reproduced the original empty-glob error
 before that fix and passed smoke-target analysis afterward, using the real
-Linux SDK. Hosted Lean compilation and remote-cache reuse remain unverified.
+Linux SDK. Hosted Lean compilation remains unverified in these diagnostics.
+Smoke and full-project action-cache reuse have since passed the user-run
+checks below.
 
 Sources: [RBE setup](https://www.buildbuddy.io/docs/rbe-setup/),
 [authentication](https://www.buildbuddy.io/docs/guide-auth/),
@@ -309,8 +311,10 @@ A bounded diagnostic profile permits eight:
 bazel build --config=buildbuddy-benchmark //:smoke
 ```
 
-Additional execution concurrency only helps when compilation actions actually need to run.
-It can increase input staging, memory use, and executor queuing.
+The job limit affects cached builds too: Bazel 9.2 uses it for execution-side
+work and remote callback handling. Increasing it may improve cache-check
+throughput, but can also increase client memory use. Compilation concurrency
+can additionally increase input staging and executor queuing.
 
 Start with one bounded measurement from the repository root:
 
@@ -318,7 +322,7 @@ Start with one bounded measurement from the repository root:
 bash bazel/rbe_benchmark.sh analysis
 ```
 
-Paste the final **RBE summary** block into chat. It includes the exit code, build
+Paste the final **RBE summary** block into chat. It includes the job count, exit code, build
 wall time, sampled JVM memory, available Bazel analysis/action statistics, and
 the BuildBuddy invocation link. No files need to be copied out of WSL for this
 first pass. The script captures its detailed output locally instead of streaming
@@ -360,9 +364,65 @@ incomplete. Existing profiles can be inspected without rerunning the build.
 The repeat mode reuses the same client output base as smoke. Cache-only
 uses a fresh output base and `--experimental_remote_require_cached`: an
 action-cache miss fails instead of dispatching remote compilation.
+The harness uses `flock` to serialize benchmarks sharing a diagnostics root.
+Before a cache-only run, it shuts down idle servers recorded by completed
+benchmark runs, including the shared diagnostic client. It validates the
+recorded base and PID and uses nonblocking Bazel shutdown; a selected live base
+without matching completed PID metadata, or a busy server, stops the new check.
+Unrecognized paths are not selected for cleanup. The new
+cache-only server is also shut down on exit. These bounded shutdowns are outside
+the reported build wall time and preserve output directories, caches, and
+reports. Other ordinary Bazel output bases are not selected for cleanup.
 Repository bootstrap can still run locally on a native repository-cache miss.
 Hold source revision, platform, instance name, and action environment fixed.
 A timeout or bootstrap error is not proof of a remote-cache miss.
+
+### Recorded cache-check baseline
+
+The user reported these successful runs on the NucBoxK6 WSL checkout at
+`785e2a8273ccd2c403d3f4f1c54950faa3d7d43c`, using the two-job default:
+
+| Measurement | Bazel elapsed time | Peak sampled JVM RSS | Remote action-cache hits |
+| --- | ---: | ---: | ---: |
+| Full project, analysis only | 42.512 s | 5.73 GiB | Execution skipped |
+| Smoke, cache only | 10.894 s | 0.57 GiB | 1 |
+| Full project, cache only | 506.001 s | 8.52 GiB | 2,512 |
+
+Full cache-only analysis configured 43,222 targets; its critical path was
+15.97 seconds. All 2,512 external actions were cache hits. The additional
+`1 internal` process counts a Bazel action, not BuildBuddy download bytes.
+This verifies remote cache reuse at full-project scale, but it does not measure
+worker input downloads or establish the cause of the cache-check delay.
+
+The 8 GiB limit applies to Java heap, so 8.52 GiB of process RSS does not
+indicate that the heap limit was ignored. Earlier benchmark versions left their
+servers running after cache-only checks; those servers could add memory
+pressure between trials. That possibility is not evidence of observed swapping.
+
+After pulling the benchmark cleanup fix, compare the full cached target at
+four jobs, leaving the JVM's four-CPU hint and other build settings unchanged:
+
+```sh
+RBE_BENCH_JOBS=4 bash bazel/rbe_benchmark.sh cache-only //:RiemannResearch
+```
+
+Paste its summary block. This preserves action keys and the required-cache
+guard; a miss cannot dispatch remote compilation. More jobs can still increase
+local memory use. A cached target tests cache-check throughput rather than
+worker compilation throughput.
+
+Bazel 9.2 constructs each action's input-root and action digest before its
+remote cache lookup. Ordinary input files are flattened and sorted for that
+construction; their file digests can come from metadata, so this does not imply
+that all input bytes are reread for every action. Its automatic Merkle subtree
+caches cover aggregate artifacts, not arbitrary SDK depsets. The obsolete
+`experimental_remote_merkle_tree_cache` and size flags are unavailable in this
+version; keep the default Merkle-tree discard/throttle behavior while measuring.
+
+Sources: [Merkle input preparation](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/remote/merkletree/MerkleTreeComputer.java),
+[action preparation before cache lookup](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/remote/RemoteSpawnRunner.java),
+[remote options](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/remote/options/RemoteOptions.java),
+and [remote callback executor](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/remote/RemoteModule.java).
 
 The diagnostic script uses two jobs by default to bound the baseline; it does
 not lower the ordinary profile's 80-job setting. For a deliberate concurrency experiment on a bounded target that still
@@ -392,5 +452,6 @@ Do not narrow SDK inputs solely from explicit source imports: the audit imports
 modules can require additional SDK artifacts.
 
 These changes have been checked for patch application and script behavior.
-Live Bazel analysis, hosted Lean compilation, and measured performance changes
-remain to be verified on the Ubuntu server.
+The user-run measurements above verify full-project analysis and remote
+action-cache reuse. Hosted Lean compilation, worker input-transfer reductions,
+and performance effects of the next concurrency comparison remain unverified.
