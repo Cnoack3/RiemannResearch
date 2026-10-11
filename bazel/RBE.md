@@ -352,7 +352,7 @@ its CPU percentage is a lifetime average, and sampling can miss brief RSS peaks.
 
 Bazel 9.2 has no `analyze-profile` subcommand. The script retains
 `profile.gz` and writes `profile-viewing.txt` with viewing instructions instead
-of invoking that command or parsing a large trace locally. In Chrome, open
+of invoking that command. In Chrome, open
 `chrome://tracing`, click **Load**, and select the compressed profile.
 Look for `runAnalysisPhase`, remote setup/cache events, and garbage collection.
 See [Bazel's JSON trace profile guide](https://bazel.build/versions/9.2.0/advanced/performance/json-trace-profile).
@@ -399,17 +399,57 @@ indicate that the heap limit was ignored. Earlier benchmark versions left their
 servers running after cache-only checks; those servers could add memory
 pressure between trials. That possibility is not evidence of observed swapping.
 
-After pulling the benchmark cleanup fix, compare the full cached target at
-four jobs, leaving the JVM's four-CPU hint and other build settings unchanged:
+Further user-run full-project cache-only checks at
+`0c67f6bd595d0cb43492e00e7fb58b5e0dfe0d58` used the corrected JVM cleanup:
+
+| Jobs | Bazel elapsed time | Peak sampled JVM RSS | Critical path |
+| ---: | ---: | ---: | ---: |
+| 4 | 300.676 s | 8.53 GiB | 18.76 s |
+| 8 | 198.227 s | 8.50 GiB | 24.24 s |
+| 80 | 180.656 s | 8.53 GiB | 94.26 s |
+
+Each run passed with the same 2,512 remote action-cache hits and 43,222
+configured targets. Eight to 80 jobs improved elapsed time by only about 9%,
+with essentially unchanged RSS. That shows diminishing returns at this point;
+the summary alone cannot identify input preparation, RPC waits, or GC as the
+remaining cause. Cleanup also changed between the two-job and four-job trials,
+so their entire speed difference cannot be attributed to job count. These
+fresh-output-base checks measure cache-check throughput, not worker compilation
+or an unchanged repeat in a persistent client workspace.
+
+### Inspect an existing profile without another build
+
+For the recorded 80-job run, after pulling the reader:
 
 ```sh
-RBE_BENCH_JOBS=4 bash bazel/rbe_benchmark.sh cache-only //:RiemannResearch
+python3 bazel/rbe_profile_summary.py \
+  "$HOME/.cache/riemann-rbe-diagnostics/cache-only-20261011T221733Z-93354"
 ```
 
-Paste its summary block. This preserves action keys and the required-cache
-guard; a miss cannot dispatch remote compilation. More jobs can still increase
-local memory use. A cached target tests cache-check throughput rather than
-worker compilation throughput.
+Paste its final summary block. The reader also accepts a `profile.gz` path.
+It uses Python's standard library and streams the compressed trace with bounded
+record reads; it does not start Bazel or load the entire profile into memory.
+Incomplete, unsupported, and malformed input is reported explicitly.
+It reads the one-line task and counter subset emitted by Bazel 9.2; multiline
+metadata is skipped. It is not a validator for every record in the JSON trace.
+
+Its output summarizes recorded trace intervals. Durations can overlap between
+threads and nested tasks, so their sums are not build wall time or CPU time.
+CPU counter values use cores (1 means one core); displayed averages are recorded
+sample means. Memory counters measure used Java heap plus nonheap memory, not
+process RSS. Neither counter should be silently inferred when absent.
+Profiler thresholds and slim-profile merging mean record counts are not counts
+of all calls. `Unknown event` merged spans may include gaps. Remote setup events
+named `acquiring semaphore` measure waiting for the preparation throttle.
+GC notification durations come from JVM GC reports with approximate timestamps;
+they are not exact measurements of stop-the-world pause time or proof that GC
+caused the delay. The full Chrome trace remains available when the compact
+summary cannot resolve these distinctions.
+
+Sources: [trace records and counters](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/profiler/CounterSeriesTraceData.java),
+[CPU and memory units](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/profiler/CollectLocalResourceUsage.java),
+[GC duration recording](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/metrics/PostGCMemoryUseRecorder.java),
+and [profile merging](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/profiler/JsonTraceFileWriter.java).
 
 Bazel 9.2 constructs each action's input-root and action digest before its
 remote cache lookup. Ordinary input files are flattened and sorted for that
@@ -454,4 +494,5 @@ modules can require additional SDK artifacts.
 These changes have been checked for patch application and script behavior.
 The user-run measurements above verify full-project analysis and remote
 action-cache reuse. Hosted Lean compilation, worker input-transfer reductions,
-and performance effects of the next concurrency comparison remain unverified.
+and performance effects of changes beyond these measured concurrency trials
+remain unverified.
