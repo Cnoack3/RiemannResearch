@@ -55,8 +55,9 @@ contents. It also exposes selected source dependencies as per-module targets.
 The checkout import index stays local. Only portable external repositories use
 the shared repository contents cache.
 
-MCP verification continues using Lake unchanged. Remote execution is not
-configured.
+MCP verification continues using Lake unchanged. An opt-in Google RBE smoke
+profile is described in [RBE.md](RBE.md). Cloud provisioning and authentication
+must succeed before that profile can run.
 
 Validation covers `Basic.lean`, the 12 selected external source modules,
 full-project analysis without compilation, incremental import fixtures, large

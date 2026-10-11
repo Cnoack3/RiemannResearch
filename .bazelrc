@@ -10,5 +10,16 @@ common --repo_contents_cache_gc_idle_delay=5m
 build --remote_cache=http://127.0.0.1:9090
 build --remote_download_outputs=minimal
 
+# Opt-in Google RBE smoke profile. Requires an instance and private ADC credentials.
+build:rbe --remote_executor=grpcs://remotebuildexecution.googleapis.com
+build:rbe --remote_cache=grpcs://remotebuildexecution.googleapis.com
+build:rbe --remote_instance_name=projects/project-c5cfd87b-fbe8-47ea-9d0/instances/lean-test
+build:rbe --google_default_credentials
+build:rbe --extra_execution_platforms=//bazel:rbe_linux_x86_64
+build:rbe --spawn_strategy=remote
+build:rbe --noremote_local_fallback
+build:rbe --remote_timeout=600s
+build:rbe --jobs=2
+
 try-import %workspace%/.bazelrc.local
 
