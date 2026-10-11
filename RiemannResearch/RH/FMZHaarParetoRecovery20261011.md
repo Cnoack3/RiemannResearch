@@ -65,14 +65,15 @@ Hadamard product is introduced. All thirteen selected transitive axiom reports c
 ## Open obligations
 
 The classical Selberg zero-density theorem is unconditional on paper; its Lean
-provider and the Landau arithmetic main-term providers are not proved by this
-recovery. The precise density input and strengthened consequences are now in
-Analysis/ActualZeroSelbergDensity; see RH/SelbergDensityStatus20261011.md.
-The circle Poisson theorem and generic
-weighted Fourier aggregation do not establish a full prime-torus law, actual
-mixed-mode arithmetic limits, or a full-prime signed density. Pareto residual
-convergence and vanishing of the detecting cosh mass remain open; these
-bridges do not prove RH.
+provider is still unfinished. Subsequent work derives the actual rational
+Landau limits and completes the finite-prime arithmetic, mixed-mode,
+product-Haar/Poisson, Fourier-decay and reconstruction assembly conditional
+only on that Selberg provider. This supersedes the earlier finite-prime
+assembly gap; see RH/FinitePrimeFMZAssembly20261011.md and
+Analysis/ActualPrimeTorusFMZContinuous. The precise density input is in
+Analysis/ActualZeroSelbergDensity. No infinite-prime torus law is claimed.
+Pareto residual convergence and vanishing of the detecting cosh mass remain
+open; these bridges do not prove RH.
 
 Source provenance is retained in the Lean module docstrings, including the
 Ford--Zaharescu and Ford--Meng--Zaharescu comparison references.

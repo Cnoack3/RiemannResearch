@@ -82,12 +82,15 @@ finite endpoint formula remain in the imported comparison module.
 
 ## Scope of Haar/Poisson and RH statements
 
-FMZ Corollary 1.1 already gives an unconditional finite prime-torus
-specialization for its stated smooth Fourier-decay test class; Baker supplies
-the required Diophantine condition for prime logarithms. The repository's
-unfinished assembly of that theorem is a formalization gap. Stronger
-infinite-prime or unrestricted test-space claims require their own precise
-statements and proofs. Source: https://arxiv.org/abs/1511.06814 .
+FMZ Corollary 1.1 gives an unconditional finite prime-torus specialization
+for its stated Fourier-decay test class. Subsequent work now assembles that
+full finite-prime conclusion in Analysis/ActualPrimeTorusFMZContinuous, for
+arbitrary continuous test functions with B > card(P) + 2, conditional only on
+UniformSelbergDensity (1/4). The actual arithmetic limits, product Haar,
+Poisson coefficients, Fourier summability and reconstruction are proved.
+The unconditional Selberg provider remains unfinished. See
+RH/FinitePrimeFMZAssembly20261011.md for the exact new theorem and scope.
+Source: https://arxiv.org/abs/1511.06814 .
 
 Sparse off-line zeros remain compatible with density concentration and phase
 averages. The actual Pareto residual convergence and vanishing horizontal

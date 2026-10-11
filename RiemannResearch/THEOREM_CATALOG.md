@@ -1,5 +1,24 @@
 # Theorem catalog
 
+### Complete finite-prime FMZ assembly conditional on Selberg (2026-10-11)
+
+Thirteen new Analysis modules culminate in
+ActualPrimeTorusFMZContinuous.tendsto_centered_continuous_div_poisson_of_selberg.
+For arbitrary continuous f on the actual finite prime torus, conventional
+Fourier decay B > card(P) + 2 implies the actual multiplicity-weighted FMZ
+limit with product-Haar centering and the explicit sum of centered Poisson
+kernels. Uniform rational Landau limits, zero-count bounds, prime arithmetic,
+all mixed modes, weighted Fourier domination, lattice summability and actual
+Fourier reconstruction are proved. No arithmetic or Haar provider is assumed.
+
+The sole remaining analytic premise is UniformSelbergDensity (1/4).
+Classification: **conditional research reduction**. The classical Selberg
+provider is still **Open as a Lean formalization**; its substantial twisted
+zeta mean-square analysis was not completed. No RH premise, placeholder or
+project-local axiom is introduced. The complete final theorem passed server
+job_OtQVX0ftHIlDEPaKhFxqe0TSPsH7hZA5 with only standard foundational axioms.
+See RH/FinitePrimeFMZAssembly20261011.md for exact scope and dependencies.
+
 ### Precise Selberg density input and strengthened actual-zero deductions (2026-10-11)
 
 Analysis/ActualZeroSelbergDensity adds twelve theorems:
