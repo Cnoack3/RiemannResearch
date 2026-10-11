@@ -453,6 +453,37 @@ diagnostic script. The script now defaults to logging disabled. Measure that
 default before attributing the old three-minute result to ordinary cache lookup.
 This change does not shrink remote worker inputs or their download size.
 
+The follow-up user run on the same clean `0c67f6bd595d` source snapshot, with
+80 jobs and execution logging disabled, passed with all 2,512 remote cache
+hits and the same 43,222 configured targets:
+
+| Execution logging | Bazel elapsed | Build wall time | Peak sampled JVM RSS | Critical path |
+| --- | ---: | ---: | ---: | ---: |
+| Enabled, previous run | 180.656 s | 182.04 s | 8.53 GiB | 94.26 s |
+| Disabled, follow-up | 100.114 s | 101.55 s | 8.51 GiB | 19.58 s |
+
+The follow-up elapsed time is 80.542 seconds (44.58%) lower. This is one
+user-run comparison; machine load and filesystem cache state were not fully
+controlled. Removing execution logging was a material improvement, while the
+roughly 100-second cache check and essentially unchanged RSS still need work.
+Invocation: [logging-disabled run](https://app.buildbuddy.io/invocation/e5d3d207-8fbc-4b44-af5a-c6317483e6b5).
+
+The same run inventoried 12,444 SDK runtime files totaling 2.526 GiB (about
+2.712 GB decimal). By namespace: Lean 1.190 GiB, runtime libraries 0.566 GiB,
+Init 0.362 GiB, Std 0.306 GiB, Lake 0.099 GiB, and other modules 0.002 GiB.
+By artifact kind, `.olean.private` accounts for 1.254 GiB, shared libraries
+0.566 GiB, `.ir` 0.346 GiB, `.olean` 0.330 GiB, `.olean.server` 0.030 GiB,
+and `.ir.sig` rounds to 0.000 GiB. These are declared file sizes, not actual
+worker downloads. They cannot simply be subtracted from a BuildBuddy download
+counter to infer the remaining input composition.
+
+Lean 4.33's default module loader reads the `.olean`, `.olean.server`, and
+`.olean.private` parts for module-system imports, and can also load `.ir.sig`
+and `.ir` together. Dropping a whole artifact suffix is not a safe SDK pruning
+strategy. A smaller SDK input set must preserve all required parts of each
+selected module and the compiled-sorry audit's dependency closure.
+Source: [Lean 4.33 module loader](https://github.com/leanprover/lean4/blob/v4.33.0-rc2/src/Lean/Environment.lean).
+
 The large worker payload still needs a separate reduction. The current rules
 select all SDK `.olean*`, `.ir`, and `.ir.sig` files plus runtime shared
 libraries for every compilation, rather than the SDK import closure of that
@@ -501,6 +532,40 @@ missing selected files, multiple SDK roots, and limit failures report an
 unavailable inventory instead of printing a partial total.
 
 ### Inspect an existing profile without another build
+
+For the latest logging-disabled profile, also retrieve input-byte/file-count
+metrics from the existing earlier logged run with the same clean source
+revision, mode, target, and jobs:
+
+```sh
+python3 bazel/rbe_profile_summary.py --operations --input-metrics \
+  "$HOME/.cache/riemann-rbe-diagnostics/cache-only-20261011T232359Z-244708"
+```
+
+This performs no build and does not enable execution logging. The operation
+timings describe the specified new profile; the input metrics explicitly name
+the older execution-log file they describe. Automatic matching rejects dirty
+or incomplete source identities, and does not assert that all environment or
+platform settings were identical. Input sizes are not worker transfer or
+billing measurements. The compact-log reader uses the system `libzstd` shared
+library and Python's standard library; no Python packages are needed. It streams
+bounded protobuf records, decodes only recorded `LeanOlean` spawn metrics, and
+reports counts, min/median/max sizes and file counts, and up to five largest
+targets. Zero byte/file metrics mean unavailable in Bazel's schema, and are
+excluded from these distributions. Corrupt, truncated, empty, or oversized logs
+produce an unavailable result without publishing partial metrics. The reader
+caps compressed/decoded bytes at 256 MiB, individual records at 16 MiB, total
+records at one million, and Lean spawns at 100,000.
+
+To read a known saved execution log independently:
+
+```sh
+python3 bazel/rbe_input_metrics.py \
+  "$HOME/.cache/riemann-rbe-diagnostics/cache-only-20261011T221733Z-93354"
+```
+
+Sources: [compact log schema and input metric meanings](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/protobuf/spawn.proto)
+and [input metrics set before remote cache lookup](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/remote/RemoteSpawnRunner.java).
 
 For the recorded 80-job run, after pulling the reader:
 

@@ -182,6 +182,7 @@ def summarize(path, operations=False):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--operations", action="store_true", help="Show bounded per-operation aggregates, excluding whole-build scopes")
+    parser.add_argument("--input-metrics", action="store_true", help="Also read an existing execution log matching the clean benchmark revision, target, mode, and jobs")
     parser.add_argument("profile", help="profile.gz or a benchmark report directory")
     arguments = parser.parse_args()
     path = Path(arguments.profile).expanduser()
@@ -189,7 +190,18 @@ def main():
     if not path.is_file():
         print(f"Profile is missing or is not a file: {path}", file=sys.stderr)
         return 2
-    return summarize(path, operations=arguments.operations)
+    profile_status = summarize(path, operations=arguments.operations)
+    if not arguments.input_metrics:
+        return profile_status
+    import rbe_input_metrics
+    try:
+        log = rbe_input_metrics.find_log(path.parent)
+    except (OSError, ValueError, UnicodeError) as error:
+        print(f"Recorded input metrics unavailable: {error}", file=sys.stderr)
+        return profile_status or 1
+    print("\nInput metrics below describe the saved logged invocation named in their file path.")
+    input_status = rbe_input_metrics.summarize(log)
+    return profile_status or input_status
 
 if __name__ == "__main__":
     sys.exit(main())
