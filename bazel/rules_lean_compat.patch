@@ -699,7 +699,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
  
  def _dir_of(path, suffix):
      """Strip a known suffix from a path, leaving the directory."""
-@@ -124,6 +128,62 @@
+@@ -124,6 +128,72 @@
  def _transitive(deps, field):
      return depset(transitive = [getattr(dep[LeanLibraryInfo], field) for dep in deps if hasattr(dep[LeanLibraryInfo], field)])
  
@@ -741,17 +741,27 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
 +                ready.append(importer)
 +    return struct(files = closures, mapped_modules = mapped_closures)
 +
-+def _ambiguous_modules(tc, artifacts):
-+    # An SDK namespace comes first in LEAN_PATH. Custom modules in that namespace
-+    # need explicit paths, while SDK imports retain their normal lookup path.
++def _ambiguous_modules(tc, artifacts, action_dirs):
++    # Lean stops at the first namespace directory/root file. Bazel child-package
++    # outputs can create such a directory under another module's search root.
++    # Map those imports explicitly instead of relying on the shadowed LEAN_PATH.
 +    sdk_root = _stdlib_dir(tc, "path")
 +    roots = {namespace: {sdk_root: True} for namespace in ["Init", "Lean", "Std", "Lake"]}
++    action_roots = {("" if root == "." else root.rstrip("/")): True for root in action_dirs}
 +    for mod, files in artifacts.items():
 +        suffix = mod.replace(".", "/") + ".olean"
 +        for file in files:
 +            if file.path.endswith(".olean"):
 +                root = _dir_of(file.path, suffix).rstrip("/")
 +                roots.setdefault(mod.partition(".")[0], {})[root] = True
++                visible_root = ""
++                for component in file.path.split("/"):
++                    if visible_root in action_roots:
++                        roots.setdefault(component, {})[visible_root] = True
++                        if component.endswith(_OLEAN_SUFFIX):
++                            namespace = component[:-len(_OLEAN_SUFFIX)]
++                            roots.setdefault(namespace, {})[visible_root] = True
++                    visible_root = (visible_root + "/" if visible_root else "") + component
 +                break
 +    return {
 +        mod: True
@@ -762,7 +772,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
  def _compile_modules(
          ctx,
          tc,
-@@ -137,6 +197,16 @@
+@@ -137,6 +207,16 @@
      """Compile one action per source. Returns the oleans and their directory."""
      dep_oleans = _transitive(deps, "oleans")
  
@@ -779,7 +789,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
      olean_dir = None
      runfiles_olean_dir = None
      oleans_by_mod = {}
-@@ -147,11 +217,14 @@
+@@ -147,11 +227,14 @@
          rel = _module_rel(ctx, src)
          mod = rel.replace("/", ".")
          out = ctx.actions.declare_file("%s%s" % (rel, _OLEAN_SUFFIX))
@@ -799,7 +809,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
          if generate_c:
              out_c = ctx.actions.declare_file("%s.c/%s.c" % (ctx.label.name, rel))
              files.append(out_c)
-@@ -166,11 +239,10 @@
+@@ -166,11 +249,10 @@
  
      # Lean searches LEAN_PATH in order and replaces its built-in path, so the
      # package output directory and standard library must be explicit entries.
@@ -812,7 +822,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
      lean_path = ":".join(action_dirs)
  
      # The upstream test driver runs a test with the environment of its
-@@ -178,38 +250,27 @@
+@@ -178,38 +260,27 @@
      env = {"LEAN_PATH": lean_path}
      env.update(extra_env)
  
@@ -867,12 +877,12 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
 +    for mod, files in all_artifacts.items():
 +        if any([file in opaque_files for file in files]):
 +            opaque_modules.append(mod)
-+    mapped_modules = all_artifacts if opaque_files else _ambiguous_modules(tc, all_artifacts)
++    mapped_modules = all_artifacts if opaque_files else _ambiguous_modules(tc, all_artifacts, action_dirs)
 +    closures = _artifact_closures(ctx.label, all_artifacts, all_imports, mapped_modules)
  
      plugin_flags = ["--plugin=" + p.path for p in plugins]
      c_snippet = '-c "$LEAN_C"' if generate_c else ""
-@@ -218,12 +279,12 @@
+@@ -218,12 +289,12 @@
      for mod, src in src_by_mod.items():
          out_files = oleans_by_mod[mod]
          out = out_files[0]
@@ -890,7 +900,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
  
          sorry_check = ""
          if forbid_sorry:
-@@ -233,18 +294,61 @@
+@@ -233,18 +304,61 @@
      rm -f "$tmp_log"
      exit 1
  fi
@@ -955,7 +965,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
  
          ctx.actions.run_shell(
              command = "set -euo pipefail\n\n" + _ROOT_SNIPPET + """
-@@ -255,19 +359,11 @@
+@@ -255,19 +369,11 @@
  fi
  {sorry_check}
  rm -f "$tmp_log"
@@ -978,7 +988,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
              ),
              outputs = out_files,
              tools = [tc.lean],
-@@ -279,6 +375,8 @@
+@@ -279,6 +385,8 @@
  
      return struct(
          cfiles = [cfiles_by_mod[m] for m in src_by_mod if m in cfiles_by_mod],
@@ -987,7 +997,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
          module_imports = [
              (
                  _module_rel(ctx, src).replace("/", "."),
-@@ -291,6 +389,7 @@
+@@ -291,6 +399,7 @@
              for src in srcs
          ],
          olean_dir = olean_dir,
@@ -995,7 +1005,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
          oleans = depset(direct = oleans, transitive = [dep_oleans]),
          runfiles_olean_dir = runfiles_olean_dir,
      )
-@@ -310,8 +409,13 @@
+@@ -310,8 +419,13 @@
      )
  
      return [
@@ -1010,7 +1020,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
              module_imports = depset(
                  direct = result.module_imports,
                  transitive = [_transitive(ctx.attr.deps, "module_imports")],
-@@ -321,12 +425,12 @@
+@@ -321,12 +435,12 @@
                  transitive = [_transitive(ctx.attr.deps, "module_sources")],
              ),
              olean_dirs = depset(
@@ -1025,7 +1035,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
                  transitive = [_transitive(ctx.attr.deps, "runfiles_olean_dirs")],
              ),
          ),
-@@ -335,6 +439,10 @@
+@@ -335,6 +449,10 @@
  lean_library = rule(
      implementation = _lean_library_impl,
      attrs = {
@@ -1036,7 +1046,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
          "deps": attr.label_list(
              providers = [LeanLibraryInfo],
              doc = "Lean libraries that these sources import.",
-@@ -350,8 +458,14 @@
+@@ -350,8 +468,14 @@
              default = False,
              doc = "Fail compilation if any declaration in the target uses `sorry`.",
          ),
@@ -1051,7 +1061,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
          ),
          "plugins": attr.label_list(
              providers = [LeanPluginInfo],
-@@ -370,37 +484,69 @@
+@@ -370,37 +494,69 @@
  def _lean_prebuilt_library_impl(ctx):
      direct_olean_dirs = []
      direct_runfiles_dirs = []
@@ -1138,7 +1148,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
              olean_dirs = depset(
                  direct = direct_olean_dirs,
                  transitive = [_transitive(ctx.attr.deps, "olean_dirs")],
-@@ -422,6 +568,9 @@
+@@ -422,6 +578,9 @@
          "deps": attr.label_list(
              providers = [LeanLibraryInfo],
              doc = "Lean libraries that these prebuilt modules import.",
@@ -1148,7 +1158,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
          ),
          "root": attr.string(
              default = "",
-@@ -521,6 +670,9 @@
+@@ -521,6 +680,9 @@
          ),
          "extra_flags": attr.string_list(
              doc = "Extra flags for `lean`.",
@@ -1158,7 +1168,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
          ),
          "plugins": attr.label_list(
              providers = [LeanPluginInfo],
-@@ -901,17 +1053,15 @@
+@@ -901,17 +1063,15 @@
          for mod_name, imps in ctx.attr.internal_imports.items():
              all_imports[mod_name] = list(imps)
  
@@ -1179,7 +1189,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
                  queue.append(imp)
  
      compile_modules = [modules[name] for name in sorted(needed.keys()) if name in modules]
-@@ -1075,6 +1225,11 @@
+@@ -1075,6 +1235,11 @@
          DefaultInfo(files = depset([shared_lib])),
          LeanPluginInfo(plugin = shared_lib),
          LeanLibraryInfo(
@@ -1191,7 +1201,7 @@ diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
              module_imports = depset(
                  direct = result.module_imports,
                  transitive = [_transitive(ctx.attr.deps, "module_imports")],
-@@ -1117,6 +1272,9 @@
+@@ -1117,6 +1282,9 @@
          "main": attr.string(
              doc = "The entry module of the plugin (determines initialize_<main> symbol). Defaults to the single src module or target name.",
          ),

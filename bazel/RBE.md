@@ -238,6 +238,35 @@ Sources: [JVM OOM exit implementation](https://github.com/openjdk/jdk/blob/jdk-2
 [BEP upload strategies](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/buildeventstream/BuildEventProtocolOptions.java),
 and [local artifact uploader](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/buildeventstream/LocalFilesArtifactUploader.java).
 
+### Imported module lookup errors
+
+A missing object path beneath a project package, such as
+`FromPNTPlus/Mathlib/MeasureTheory/Function/Floor.olean`, can result from
+namespace shadowing. Lean chooses the first search root containing a
+`Mathlib` directory and does not continue to later roots when the requested
+file is absent. Bazel's output tree for vendored project modules can create
+that directory even though their actual namespace begins with
+`RiemannResearch`.
+
+The compatibility patch detects these physical namespace directories and
+supplies explicit artifact paths for affected import closures. The pinned
+Mathlib revision includes `Mathlib.MeasureTheory.Function.Floor`; this fix
+does not change its import, project proofs, dependency versions, or action
+inputs. Unaffected namespaces continue to use ordinary search paths.
+
+After pulling the fix, retry the affected target with the bounded script:
+
+```sh
+bash bazel/rbe_benchmark.sh smoke \
+  //RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus:ZetaBounds
+```
+
+There is no need to clean the cache. Patch application and a filesystem model
+of the reported lookup failure have been checked locally. Live Bazel
+compilation of this target remains to be verified on the Ubuntu server.
+
+Source: [Lean 4.33 module lookup](https://github.com/leanprover/lean4/blob/v4.33.0-rc2/src/Lean/Util/Path.lean).
+
 ### Bounded measurements
 
 The BuildBuddy profile enables Bazel 9.2's `--remote_cache_compression`.
