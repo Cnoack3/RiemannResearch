@@ -8911,6 +8911,16 @@ coefficients satisfy exact full and smoothed expected-loss decompositions.
 Previous exact finite correction obstructions and finite constraint closure remain.
 The continuation adds 28 modules and extends `Analysis/MellinStepSeries`.
 
+**Structural relocation (2026-10-11):** `RH/ParetoNormalizedResidueHilbert`
+now owns `RiemannResearch.RH.Pareto.normalizedResidueHilbert` and
+`RiemannResearch.RH.Pareto.normalizedResidueHilbert_sequence`.
+`RiemannResearch.RH.Pareto.one_le_conditionalMellinDualSquare` now lives in
+`RH/ConditionalMeanHeadObstruction`. All three names, statements, and declaration
+bodies are unchanged. Arithmetic consumers import the Hilbert construction
+directly; analytic consumers retain explicit Mellin imports. See
+`RH/LakeDependencyAudit20261011.md` for the measured dependency changes and
+verification scope. This relocation adds no mathematical assertion.
+
 **Open mathematics:** the actual uniform/cofinal-subpolynomial signed energy bound.
 **Open formalization:** the classical `PositiveResidueDensityFromRH` provider,
 its converse/minimum-closure consumers, and the explicitly itemized stronger

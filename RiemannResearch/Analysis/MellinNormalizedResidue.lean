@@ -5,7 +5,7 @@ Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.MellinCesaroHilbert
 import RiemannResearch.RH.ParetoResidueMellinContinuation
-import RiemannResearch.RH.ConditionalMeanHeadObstruction
+import RiemannResearch.RH.ParetoNormalizedResidueHilbert
 
 /-!
 # Normalized residue Mellin identities with the removable value retained
@@ -27,19 +27,6 @@ set_option backward.isDefEq.respectTransparency false
 
 namespace RiemannResearch.RH.Pareto
 open Analysis.Cesaro ArithmeticCumulative
-
-/-- The physical generator g_d(n) = (n mod d)/d in the actual Hilbert space. -/
-def normalizedResidueHilbert (d : ℕ) (hd : 0 < d) : ThresholdHilbert :=
-  (1 / (d : ℝ)) • digitHilbert d 1 hd (by omega)
-
-theorem normalizedResidueHilbert_sequence (d : ℕ) (hd : 0 < d) :
-    hilbertSequence (normalizedResidueHilbert d hd) = residueFraction d := by
-  change hilbertSequenceLinear ((1 / (d : ℝ)) • digitHilbert d 1 hd (by omega)) = _
-  rw [map_smul]
-  change (1 / (d : ℝ)) • hilbertSequence (digitHilbert d 1 hd (by omega)) = _
-  rw [hilbertSequence_digitHilbert]
-  funext n
-  simp [residueFraction, digitSequence, smul_eq_mul, div_eq_mul_inv, mul_comm]
 
 /-- The normalized analytic Mellin transform equals the actual entire conductor. -/
 theorem normalizedResidue_mellin_conductor (d : ℕ) [NeZero d] (hd : 0 < d)
@@ -155,19 +142,5 @@ theorem residueFraction_second_pairing_one (d : ℕ) (hd : 0 < d) :
   letI : NeZero d := ⟨ne_of_gt hd⟩
   rw [residueFraction_second_pairing_conductor d hd 1 (by norm_num),
     nymanConductorLFunction_one]
-
-/-- Total coefficient mass one forces the actual dual-square constant to be at least one. -/
-theorem one_le_conditionalMellinDualSquare (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) :
-    1 ≤ conditionalMellinDualSquare s := by
-  have hone : Summable (fun k : ℕ => conditionalWeight k * ‖(1 : ℂ)‖ ^ 2) := by
-    simpa only [norm_one, one_pow, mul_one, conditionalWeight] using
-      hasSum_mixtureWeight.summable
-  have hb := Analysis.WeightedPairing.pairing_norm_sq_le
-    conditionalWeight conditionalWeight_pos
-    (fun k => mellinSecond s (k + 1)) (fun _ => (1 : ℂ))
-    (mellinSecond_dual_summable s hs) hone
-  have hq : (∑' k : ℕ, conditionalWeight k) = 1 := hasSum_mixtureWeight.tsum_eq
-  simpa only [mul_one, (mellinSecond_hasSum_one s hs).tsum_eq,
-    norm_one, one_pow, hq, conditionalMellinDualSquare] using hb
 
 end RiemannResearch.RH.Pareto

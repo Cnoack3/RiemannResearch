@@ -1,7 +1,7 @@
 import RiemannResearch.Analysis.OrthogonalDilationCompression
 import RiemannResearch.RH.ThresholdHilbertProjection
 import RiemannResearch.RH.ParetoUnscaledDilation
-import RiemannResearch.Analysis.MellinNormalizedResidue
+import RiemannResearch.RH.ParetoNormalizedResidueHilbert
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!

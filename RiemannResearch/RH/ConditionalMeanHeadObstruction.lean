@@ -68,6 +68,20 @@ theorem mellinSecond_hasSum_one (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) :
   have hsum := (mellinSecond_norm_summable s (by linarith)).of_norm
   simpa only [hone] using hsum.hasSum
 
+/-- Total coefficient mass one forces the actual dual-square constant to be at least one. -/
+theorem one_le_conditionalMellinDualSquare (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) :
+    1 ≤ conditionalMellinDualSquare s := by
+  have hone : Summable (fun k : ℕ => conditionalWeight k * ‖(1 : ℂ)‖ ^ 2) := by
+    simpa only [norm_one, one_pow, mul_one, conditionalWeight] using
+      hasSum_mixtureWeight.summable
+  have hb := Analysis.WeightedPairing.pairing_norm_sq_le
+    conditionalWeight conditionalWeight_pos
+    (fun k => mellinSecond s (k + 1)) (fun _ => (1 : ℂ))
+    (mellinSecond_dual_summable s hs) hone
+  have hq : (∑' k : ℕ, conditionalWeight k) = 1 := hasSum_mixtureWeight.tsum_eq
+  simpa only [mul_one, (mellinSecond_hasSum_one s hs).tsum_eq,
+    norm_one, one_pow, hq, conditionalMellinDualSquare] using hb
+
 /-- Prefix mass stays bounded away from zero for all sufficiently large heads. -/
 theorem mellinSecond_prefix_eventually (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) :
     ∀ᶠ N : ℕ in atTop, (1 / 4 : ℝ) ≤ ‖partialSum (mellinSecond s) N‖ ^ 2 := by

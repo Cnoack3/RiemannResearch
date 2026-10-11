@@ -1,6 +1,6 @@
 import RiemannResearch.RH.CanonicalMobiusExactCellEndpoint
 import RiemannResearch.RH.NearbyDilationGram
-import RiemannResearch.Analysis.MellinNormalizedResidue
+import RiemannResearch.RH.ParetoNormalizedResidueHilbert
 
 /-!
 # Full endpoint energy of the boundary residue correction

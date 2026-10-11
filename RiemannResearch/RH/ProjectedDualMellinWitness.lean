@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.MellinNormalizedResidue
 import RiemannResearch.RH.ProjectedDualProjectionError
 import RiemannResearch.Analysis.MellinStepSeries
 import RiemannResearch.RH.ParetoBoundedMellinLinearity

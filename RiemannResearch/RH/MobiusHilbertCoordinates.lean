@@ -2,7 +2,7 @@ import RiemannResearch.RH.BalancedContinuousCoordinates
 import RiemannResearch.RH.ExactHeadCharges
 import RiemannResearch.RH.ParetoSequenceCertificates
 import RiemannResearch.RH.ParetoGibbsTailBasis
-import RiemannResearch.Analysis.MellinNormalizedResidue
+import RiemannResearch.RH.ParetoNormalizedResidueHilbert
 import Mathlib.Analysis.InnerProductSpace.Dual
 
 /-!

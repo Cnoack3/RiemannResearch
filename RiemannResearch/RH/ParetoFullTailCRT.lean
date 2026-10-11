@@ -1,6 +1,7 @@
 import RiemannResearch.RH.ParetoProgressionDigamma
 import RiemannResearch.RH.ParetoFiniteGram
-import RiemannResearch.Analysis.MellinNormalizedResidue
+import RiemannResearch.RH.ThresholdHilbertMean
+import RiemannResearch.RH.ParetoNormalizedResidueHilbert
 
 /-!
 # Exact CRT formulas after removing only the first physical coordinate
