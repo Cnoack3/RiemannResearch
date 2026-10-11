@@ -103,9 +103,17 @@ cleanup_sampler
 printf '%s\n' "$build_status" > "$report_dir/exit-code.txt"
 
 if [[ -f "$report_dir/profile.gz" ]]; then
-  timeout --signal=INT --kill-after=30s 2m \
-    "$bazel_bin" --output_base="$output_base" analyze-profile "$report_dir/profile.gz" \
-    > "$report_dir/profile-summary.txt" 2>&1 || true
+  # Bazel 9 removed analyze-profile. Keep the raw trace without starting
+  # another Bazel command or loading a potentially large profile into memory.
+  cat > "$report_dir/profile-viewing.txt" <<EOF
+Profile: $report_dir/profile.gz
+Open chrome://tracing in Chrome, click Load, and select profile.gz.
+Inspect runAnalysisPhase, remote setup/cache events, and Garbage Collector.
+Build result: exit-code.txt; build output: build.log.
+A profile from an interrupted build or OOM may be incomplete.
+Reference: https://bazel.build/versions/9.2.0/advanced/performance/json-trace-profile
+EOF
+  printf 'Profile: %s\n' "$report_dir/profile.gz"
 fi
 
 if [[ "$mode" == cache-only && "$build_status" != 0 ]]; then

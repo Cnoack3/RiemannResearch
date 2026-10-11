@@ -276,11 +276,22 @@ as the second argument. The build phase has a ten-minute limit; override it with
 dirty-tree metadata, client resource reports, and JVM samples are retained beneath
 `$HOME/.cache/riemann-rbe-diagnostics` (or `RBE_DIAGNOSTICS_DIR`).
 The script does not clean existing workspaces or force cache misses.
-Server startup/PID discovery is capped at 30 seconds before the timed build;
-profile-summary generation is capped at two minutes after it. Termination
-grace periods can extend those bounds. `resources.txt` measures the client and
-wrapper. `server-resources.txt` samples the persistent JVM every two seconds;
+Server startup/PID discovery is capped at 30 seconds before the timed build.
+Termination grace periods can extend the timeout bounds. `resources.txt`
+measures the client and wrapper. `server-resources.txt` samples the persistent
+JVM every two seconds;
 its CPU percentage is a lifetime average, and sampling can miss brief RSS peaks.
+
+Bazel 9 no longer has the `analyze-profile` subcommand. The script retains
+`profile.gz` and writes `profile-viewing.txt` with viewing instructions instead
+of invoking that command or parsing a large trace locally. In Chrome, open
+`chrome://tracing`, click **Load**, and select the compressed profile.
+Look for `runAnalysisPhase`, remote setup/cache events, and garbage collection.
+See [Bazel's JSON trace profile guide](https://bazel.build/versions/9.2.0/advanced/performance/json-trace-profile).
+Use `exit-code.txt` and `build.log` to determine whether the build passed;
+an error from the old post-processing command did not change the recorded
+Bazel build exit code. Profiles from an interrupted build or OOM may be
+incomplete. Existing profiles can be inspected without rerunning the build.
 
 The repeat mode reuses the same client output base as smoke. Cache-only
 uses a fresh output base and `--experimental_remote_require_cached`: an
