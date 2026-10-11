@@ -1,4 +1,80 @@
-# Google RBE smoke setup
+# RBE smoke setup
+
+## BuildBuddy Personal trial
+
+`bazel build --config=buildbuddy` selects BuildBuddy's hosted executors and
+artifact cache. It also sends build events to the authenticated BuildBuddy
+organization so its invocation page can show execution and transfer statistics.
+Ordinary builds keep the GCS cache. MCP verification continues using Lake.
+Use either `--config=buildbuddy` or `--config=rbe`, not both.
+
+The BuildBuddy profile uses the existing pinned Ubuntu 24.04 Linux x86-64
+platform, two jobs, minimal output downloads, and remote execution only.
+An executor failure fails the build rather than compiling on the MCP server.
+BuildBuddy's hosted workers use its CAS; this profile does not attach our GCS
+bucket to those workers.
+
+The API key is scoped to `common:buildbuddy` in this private repository's
+`.bazelrc`, as authorized by the repository owner. No additional authentication
+setup is needed in each checkout. The key supports unattended builds across
+reboots until it is revoked or disabled; no Google login is needed for this
+profile. A replacement key can be set under the same config in the git-ignored
+`.bazelrc.local`, which is imported last.
+
+From the repository root on the Ubuntu MCP server, start with the tiny probe:
+
+```sh
+bazel --output_base="$HOME/.cache/bazel-buildbuddy-smoke" build \
+  --config=buildbuddy --remote_accept_cached=false \
+  --remote_download_outputs=toplevel //bazel:rbe_probe
+cat bazel-bin/bazel/rbe-probe.txt
+```
+
+Expect `Linux x86_64` and an actual `remote` process in the build summary.
+This checks authentication, image pulling, and execution without fetching
+Mathlib or uploading the Lean SDK. A cache hit alone does not prove execution.
+
+Then test actual Lean compilation and the compiled-sorry audit:
+
+```sh
+bazel --output_base="$HOME/.cache/bazel-buildbuddy-smoke" build \
+  --config=buildbuddy --remote_accept_cached=false //:smoke
+```
+
+The smoke target imports `Mathlib.Tactic.NormNum`. Its first run may fetch
+dependency repositories locally and upload the Lean SDK and imported artifacts
+to BuildBuddy. It does not build the full RiemannResearch target.
+
+Test remote cache reuse from a second output base, allowing cached results:
+
+```sh
+bazel --output_base="$HOME/.cache/bazel-buildbuddy-warm" build \
+  --config=buildbuddy //:smoke
+```
+
+Compare the linked invocation pages: remote actions on the forced run, cache
+hits on the fresh repeat, and uploaded/downloaded bytes. Stored artifact size is
+not the same as transfer per invocation. Keep the account on the free Personal
+plan; its public pricing does not specify exactly how internal executor traffic
+counts toward the advertised transfer allowance.
+
+Validation: Bazel 9.2.0 accepted the profile, and action analysis selected the
+pinned Linux platform for the probe and Lean smoke action, including its
+compiled-sorry audit. Live hosted execution remains unverified: the authoring
+environment could not resolve `remote.buildbuddy.io`. Run the probe above on
+the Ubuntu server before treating the executor as working.
+
+Sources: [RBE setup](https://www.buildbuddy.io/docs/rbe-setup/),
+[authentication](https://www.buildbuddy.io/docs/guide-auth/),
+[execution platforms](https://www.buildbuddy.io/docs/rbe-platforms/), and
+[Personal pricing](https://www.buildbuddy.io/pricing/).
+
+## Google RBE profile
+
+Instance creation for this project returned `FAILED_PRECONDITION`: the project
+is not allowlisted for Google Remote Build Execution. The profile below remains
+available if managed-service access is granted; enabling the API alone is not
+sufficient.
 
 `bazel build --config=rbe` selects Google Remote Build Execution at
 `remotebuildexecution.googleapis.com`, instance
