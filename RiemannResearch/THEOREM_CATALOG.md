@@ -11216,3 +11216,37 @@ bound, or equivalent Schur saturation. None is asserted unconditionally.
 explicit in `projection_norm_iff_riemannHypothesis_of_baez_duarte`.
 This missing provider for a known classical theorem is distinct from
 the open mathematical assertion `limitEnergy = 0`.
+
+### Actual prime sensors, coefficient mass and moving ordinate lags (2026-10-11)
+
+Established structural results and conditional arithmetic consumers:
+
+- RH/CombinedPrimeSensors.lean proves the actual correlated prime Gram
+  inner(k_q,k_r)=2+2*q^2*1_{q=r}, the complete aggregate remainder identity,
+  and the finite-prime actual distance floor s/(2*(1+s)).
+- RH/TwoSeedPrimeCoefficients.lean proves exact prime coefficient recovery,
+  the full one-prime error decomposition, quantitative error bounds, and
+  necessary coefficient sums tending to -1/q under legal norm convergence.
+- RH/PrimeCoefficientStability.lean retains the exact normalized sensor
+  synthesis square 2*sum(c^2)+2*(sum(c/q))^2 and proves the joint finite
+  coefficient error bound sum(A_q+1/q)^2 <= 2*(1+s)*||1-F||^2.
+- RH/ResidualCutoffSchedule.lean extends the exact residual product and
+  zero-energy iff nonsummable relative-gain endpoint to every monotone
+  cutoff schedule, with no prescribed dilation factor.
+- RH/PrimeCoefficientGain.lean proves that actual full-optimizer new-prime
+  coefficient energy E is at most 2*(1+s)*(D_A-D_B). It provides an RH
+  consumer for a nonnegative nonsummable minorant of E/(2*(1+s)*D_A).
+- Analysis/OrdinateLagPhase.lean proves exact lag-gap boundary strips,
+  finite and moving-lag phase displacement bounds, and correlation transfer.
+  Same-frequency correlation tends to one under the endpoint counting
+  premise alone.
+
+Six modules add 48 public supporting theorems. Exact-module import/audit
+job job_tuoD2lCM0tuG4R0nzrxDxe0gR6sTRVEI completed with verified=true.
+These are not unconditional RH or actual-zero equidistribution results.
+The RH applications are **conditional research reductions**. Open:
+actual nonsummable prime-fit-energy minorant, actual relative-gain/cost
+provider, and any actual-zero enumeration/counting/marginal instantiation
+used for the moving-lag application. Uniform Landau/zero-density providers
+from the original handoff and reverse two-seed density are not discharged.
+See RH/ZeroOrdinateResidualGainContinuation20261011.md.
