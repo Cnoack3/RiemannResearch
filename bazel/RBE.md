@@ -9,7 +9,7 @@ Ordinary builds keep the GCS cache. MCP verification continues using Lake.
 Use either `--config=buildbuddy` or `--config=rbe`, not both.
 
 The BuildBuddy profile uses the existing pinned Ubuntu 24.04 Linux x86-64
-platform, two jobs, minimal output downloads, and remote execution only.
+platform, 80 jobs, minimal output downloads, and remote execution only.
 An executor failure fails the build rather than compiling on the MCP server.
 BuildBuddy's hosted workers use its CAS; this profile does not attach our GCS
 bucket to those workers.
@@ -174,3 +174,83 @@ from a fresh Bazel output base, without `--remote_accept_cached=false`.
 Validation so far covers Bazel flag parsing, action analysis, and selection of
 the Linux execution platform. Live Google RBE execution, instance access, and
 persistent machine authentication remain untested.
+
+## RBE performance diagnostics
+
+The BuildBuddy profile enables Bazel 9.2's `--remote_cache_compression`.
+This compresses client-to-cache transfers. It does not remove required inputs
+or guarantee a decrease in the internal-download usage counter.
+
+Lean library default outputs contain only that library's compiled files.
+The Lean provider still supplies its full transitive import artifacts, and
+compilation inputs and the compiled-declaration audit remain unchanged.
+This reduces the exposed default-output set; with minimal downloads already
+enabled, it is not evidence of a measured internal-transfer reduction.
+
+The ordinary BuildBuddy profile retains the checkout's 80-job setting.
+A bounded diagnostic profile permits eight:
+
+```sh
+bazel build --config=buildbuddy-benchmark //:smoke
+```
+
+Additional execution concurrency only helps when compilation actions actually need to run.
+It can increase input staging, memory use, and executor queuing.
+
+Run the bounded diagnostic script from the repository root:
+
+```sh
+bash bazel/rbe_benchmark.sh analysis
+bash bazel/rbe_benchmark.sh smoke
+bash bazel/rbe_benchmark.sh repeat
+bash bazel/rbe_benchmark.sh cache-only
+```
+
+The analysis mode defaults to the full aggregate with `--nobuild`; it does not
+compile project modules. Other modes default to `//:smoke`, and accept a target
+as the second argument. The build phase has a ten-minute limit; override it with
+`RBE_BENCH_TIMEOUT`. Profiles, execution logs, command output, revision and
+dirty-tree metadata, client resource reports, and JVM samples are retained beneath
+`$HOME/.cache/riemann-rbe-diagnostics` (or `RBE_DIAGNOSTICS_DIR`).
+The script does not clean existing workspaces or force cache misses.
+Server startup/PID discovery is capped at 30 seconds before the timed build;
+profile-summary generation is capped at two minutes after it. Termination
+grace periods can extend those bounds. `resources.txt` measures the client and
+wrapper. `server-resources.txt` samples the persistent JVM every two seconds;
+its CPU percentage is a lifetime average, and sampling can miss brief RSS peaks.
+
+The repeat mode reuses the same client output base as smoke. Cache-only
+uses a fresh output base and `--experimental_remote_require_cached`: an
+action-cache miss fails instead of dispatching remote compilation.
+Repository bootstrap can still run locally on a native repository-cache miss.
+Hold source revision, platform, instance name, and action environment fixed.
+A timeout or bootstrap error is not proof of a remote-cache miss.
+
+The diagnostic script uses two jobs by default to bound the baseline; it does
+not lower the ordinary profile's 80-job setting. For a deliberate concurrency experiment on a bounded target that still
+needs compilation:
+
+```sh
+bash bazel/rbe_benchmark.sh parallel //RiemannResearch/Analysis:AbelCoboundary
+```
+
+An already cached target does not benchmark execution concurrency.
+Use `RBE_BENCH_JOBS=4` to try four jobs first. Do not use cache-bypass flags,
+nonces, or a full-project forced rebuild for this experiment.
+
+Record dashboard external and internal transfer deltas separately around
+each run. Compare client analysis time, RSS, remote hits/misses, worker input
+fetching, queue time, and actual execution time. Cache-only profiles isolate
+warm-cache lookup work without paying for another remote compilation.
+
+Follow-up work is provider-level dependency metadata sharing and a reusable
+compiled audit tool. Bazel's performance guidance warns that repeatedly
+flattening overlapping depsets can produce quadratic analysis work:
+https://bazel.build/rules/performance.
+Do not narrow SDK inputs solely from explicit source imports: the audit imports
+`Lean`, ordinary modules implicitly import `Init`, and imported prebuilt
+modules can require additional SDK artifacts.
+
+These changes have been checked for patch application and script behavior.
+Live Bazel analysis, hosted Lean compilation, and measured performance changes
+remain to be verified on the Ubuntu server.

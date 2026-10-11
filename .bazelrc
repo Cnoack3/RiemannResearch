@@ -34,6 +34,11 @@ build:buildbuddy --spawn_strategy=remote
 build:buildbuddy --noremote_local_fallback
 build:buildbuddy --remote_timeout=600s
 build:buildbuddy --jobs=80
+build:buildbuddy --remote_cache_compression
+
+# Bounded eight-job diagnostic profile; normal BuildBuddy concurrency is unchanged.
+build:buildbuddy-benchmark --config=buildbuddy
+build:buildbuddy-benchmark --jobs=8
 
 try-import %workspace%/.bazelrc.local
 
