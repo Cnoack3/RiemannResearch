@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Infinite actual Gaussian Laplace bridge and sharp tail reductions (2026-10-11)
+
+- Analysis/GaussianLaplaceBridge.lean proves exact complex exponential
+  integrals, countable absolute Fubini, explicit infinite integrability,
+  positive-time summability and summability of the full reciprocal spectrum.
+- Analysis/ActualZeroGaussianLaplace.lean assembles the complete actual-zero
+  H/R Laplace identity for every x>1/2, with both signs and analytic
+  multiplicities. Critical-strip bounds and existing reciprocal-square
+  summability discharge its analytic inputs; neither RH nor zero-height
+  or additional zero-counting hypotheses are assumed.
+- Analysis/GaussianHankelInterpolation.lean constructs real quadratic
+  interpolants for arbitrary finite cutoffs and proves exact negative cores
+  plus sharp signed and absolute-complex infinite-tail budgets.
+- Analysis/GaussianGrowingDegreeTail.lean retains the full numerical
+  prefactor and proves decay under d(T)*log(T)/T^2 -> 0, including the
+  concrete O(T*log(T+2)) sufficient condition.
+- Analysis/GaussianHankelTailBridge.lean connects that limit to full infinite
+  polynomial-square negativity. This is a conditional research reduction:
+  actual distinct-node cutoffs, absolute Gaussian-polynomial summability,
+  uniform interpolation normalization and growth, and the complete numerical
+  shell-tail provider remain Open. Ordinary Gaussian moment/Hankel
+  identification, the centered xi'/xi identity, and independent actual
+  arithmetic positivity or E4=0 remain Open.
+- Five modules contain 77 supporting public theorems. Exact-module import
+  job job_js_Ll8edCU-zOCwibn5RDWIAC-r9NpPi compiled all five standalone modules
+  with verified=true; nine important
+  foundation reports use only propext, Classical.choice and Quot.sound.
+  Final aggregate-project and changed-module acceptance is the introducing
+  server checkpoint. See RH/InfiniteGaussianAnalyticBridge20261011.md.
+
 ### E4 vanishing attempt: exact ordinate-information obstruction (2026-10-10)
 
 - Analysis/FiniteQuartetOrdinateBlindness.lean proves identical signed
@@ -11,7 +41,9 @@
   The complete arithmetic explicit formula is not preserved.
 - RH/E4ProofAttempt20261010.md records the exact signed-argument/prime
   cancellation needed for E4=0, plus a complete interpolation/tail paper
-  proof. These infinite analytic bridges are not newly formalized.
+  proof. The new Laplace bridge and conditional Gaussian components are
+  recorded in the 2026-10-11 continuation above; the full actual Hankel
+  identification and numerical tail provider remain Open.
 - Actual E4=0 and independent arithmetic positivity remain Open.
   Source bundle job_hE8Tg0r-DAL-F8TpPC6upyPoYvnB3JXb passed, verified=true;
   printed foundations use only propext, Classical.choice and Quot.sound.
@@ -40,8 +72,9 @@
   true. Important printed foundations use only propext, Classical.choice,
   and Quot.sound. Final project acceptance is the introducing checkpoint.
 - Infinite xi-product/resolvent/Laplace identifications are paper proofs in
-  RH/OrdinateHorizontalDefects20261010.md. Their assembled Lean bridge is
-  Open; reverse determinant/resolvent comparisons and E4=0 remain Open
+  RH/OrdinateHorizontalDefects20261010.md. The all-zero Laplace exchange is
+  now proved in Analysis/ActualZeroGaussianLaplace.lean; the centered
+  xi-product identification and reverse comparisons and E4=0 remain Open
   arithmetic obligations. These are conditional research reductions toward
   RH, not unconditional proofs of RH or new zero-density estimates.
 
