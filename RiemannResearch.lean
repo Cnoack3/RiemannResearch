@@ -1053,7 +1053,9 @@ import RiemannResearch.Analysis.ResidualSpectralGain
 import RiemannResearch.RH.ConductorProjectionChain
 import RiemannResearch.Analysis.FiniteParetoAffineEnergy
 import RiemannResearch.RH.DyadicGainEndpoint
+import RiemannResearch.RH.DyadicGainZeroBudget
 import RiemannResearch.RH.TwoSeedContrastObstruction
+import RiemannResearch.RH.MultiPrimeContrastObstruction
 import RiemannResearch.RH.MultiRangeFiniteMinimum
 import RiemannResearch.RH.MultiRangeGainBudget
 import RiemannResearch.RH.MultiRangeRationalCertificates
@@ -1769,6 +1771,7 @@ import RiemannResearch.RH.ParetoTailOrthogonalization
 import RiemannResearch.RH.ParetoFiniteTailProjection
 import RiemannResearch.RH.ParetoRepairAnchorCancellation
 import RiemannResearch.Analysis.ResidualGainProduct
+import RiemannResearch.Analysis.ResidualGainBudget
 import RiemannResearch.Analysis.ResidualGainTermination
 import RiemannResearch.Analysis.HalfHarmonicLog
 import RiemannResearch.RH.ParetoEulerProduct

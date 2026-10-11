@@ -27,6 +27,33 @@ Conditional research reduction and Open obligations:
 - Open: a usable uniform microscopic Selberg-type analytic approximation.
   No ordinate PCC or global RH conclusion is asserted.
 
+### Two-seed zero budgets and sharp joint-prime contrast certificates (2026-10-11)
+
+Established without assuming RH:
+
+- Analysis/ResidualGainBudget.lean: exact finite log-ratio accounting and
+  ordinary/logarithmic gain budgets from a positive finite residual floor.
+- RH/DyadicGainZeroBudget.lean: the actual two-seed projection distance obeys
+  the Mellin floor of each hypothetical zero with Re(s)>1/2 and s!=1.
+  This supplies finite and infinite explicit gain budgets, summability, and
+  finite zero-exclusion certificates from actual gains or legal screened costs.
+- RH/MultiPrimeContrastObstruction.lean: actual prime-coordinate Riesz Gram
+  entries, the complete finite quadratic form including its rank-one term,
+  a joint completed-square contrast error identity, an explicit feasible
+  minimum-norm coordinate model, and the actual finite-budget distance floor.
+  The model's feasibility is for the finite coordinate constraints only.
+
+Conditional research reductions:
+
+- zeta_ne_zero_of_dyadic_log_cost: Open construction of finite legal screened
+  witnesses whose exact log-cost charge exceeds the stated zero budget.
+- Actual dyadic gain divergence and the note's logarithmic gain lower bound
+  remain Open. No actual-zero Haar cancellation, two-seed density, RH converse,
+  or unconditional RH provider is added.
+
+See RH/HaarResidualGainContinuation20261011.md for the exact formulas and
+the distinction between complete legal gains and contrast-only corrections.
+
 ### Consecutive zeta ordinates, gap weights, and empty windows (2026-10-11)
 
 Twelve Analysis modules add exact finite phase transport, signed quadratic,
