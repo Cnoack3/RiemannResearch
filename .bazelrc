@@ -1,3 +1,7 @@
+# Keep native repository caches at Bazel's persistent per-user defaults.
+common --repo_contents_cache_gc_max_age=14d
+common --repo_contents_cache_gc_idle_delay=5m
+
 # Stock bazel-remote signs GCS requests with the server's private HMAC key.
 # Bucket: riemann_lean_cache; object prefix: bazel/.
 build --remote_cache=http://127.0.0.1:9090

@@ -37,6 +37,32 @@ Keep `BUILD.bazel`'s flags synchronized with those options.
 MCP verification continues using Lake unchanged. Remote execution is not
 configured.
 
+## Shared local repository caches
+
+Bazel 9.2 enables both native repository caches by default. Workspaces using
+the same `output_user_root` share these persistent locations:
+
+- Downloaded archives: `{output_user_root}/cache/repos/v1`.
+- Completed reproducible repositories: `{repository_cache}/contents`.
+
+Run `bazel info output_user_root` on the Ubuntu server to locate them. No
+additional service or authentication is required; the directories survive
+reboots. Eligible completed repositories are shared through directory symlinks,
+with native filesystem locks for concurrent readers and garbage collection.
+Keep any custom cache location outside the checkout.
+
+`.bazelrc` explicitly retains completed repositories for 14 days after last use
+and runs their garbage collection after 5 minutes idle. This is age-based
+retention, not a 100 GiB size limit; it does not prune the downloaded-archive
+cache or change Lake's separate cache budget.
+
+The current Tomato adapter does not make its prepared Lake dependency
+repository eligible for the completed-repository cache. Its repository output
+must first be made reproducible and portable. Native archive reuse works now,
+but repeated dependency bootstrap across fresh workspaces is not yet solved.
+Any adapter change must also isolate writable Lake/Mathlib bootstrap caches;
+native repository locks do not protect those nested tools' shared cache files.
+
 ## Private GCS cache on the Ubuntu server
 
 `.bazelrc` uses `http://127.0.0.1:9090`. Stock
