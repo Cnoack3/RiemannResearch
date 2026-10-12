@@ -4,6 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.CanonicalMobiusHeadRepair
+import RiemannResearch.RH.ParetoExactHeadClosure
+import RiemannResearch.RH.CanonicalMobiusCovarianceMinimum
+import RiemannResearch.RH.CanonicalMobiusSignedAverages
+import RiemannResearch.RH.ResidueClosureDensity
+import RiemannResearch.RH.CanonicalMobiusWindowMinimum
 
 /-!
 # Fixed-head capacity under residue density

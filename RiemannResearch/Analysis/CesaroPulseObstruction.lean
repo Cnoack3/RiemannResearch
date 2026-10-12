@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.ConditionalMeanEnergy
-import RiemannResearch.RH.ArithmeticCumulativeEnergy
+import RiemannResearch.RH.ArithmeticCumulativeBasic
 
 /-!
 # Actual adjacent-pulse obstruction to a bounded inverse of Cesaro averaging

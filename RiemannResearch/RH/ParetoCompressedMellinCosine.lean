@@ -1,4 +1,4 @@
-import RiemannResearch.RH.ParetoGeometricMixture
+import RiemannResearch.RH.ParetoWeights
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic.FieldSimp

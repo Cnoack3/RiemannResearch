@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.ArithmeticPacketCore
-import RiemannResearch.RH.ParetoFiniteCertificates
 import Mathlib.Tactic.FinCases
 
 /-! Exact physical mean-one optimizer at conductor six. -/

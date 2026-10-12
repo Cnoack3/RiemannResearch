@@ -1,5 +1,6 @@
 import RiemannResearch.RH.MellinProjectionDPP
 import RiemannResearch.RH.ResidueGramDigamma
+import RiemannResearch.RH.MellinFrequencyKernel
 /-!
 # Uniform Mellin intensity and its exact critical-line zero set
 

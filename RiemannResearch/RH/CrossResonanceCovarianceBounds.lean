@@ -5,7 +5,6 @@ Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.FiniteHarmonicBounds
 import RiemannResearch.RH.ResonantHarmonicHead
-import RiemannResearch.RH.AdjacentPacketCovarianceTransfer
 
 /-!
 # Uniform cross-seed covariance in a two-three resonance cell

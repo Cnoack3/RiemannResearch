@@ -1,5 +1,4 @@
 import RiemannResearch.Probability.DeterminantalExistence
-import RiemannResearch.Probability.FiniteDeterminantalGenerating
 
 /-!
 # Finite-window laws and gap determinants of discrete DPPs

@@ -1,5 +1,6 @@
 import RiemannResearch.RH.MultiRangeFiniteMinimum
 import RiemannResearch.LinearAlgebra.FiniteConstrainedMatrixInverse
+import RiemannResearch.RH.ConditionalResidueGram
 
 /-! Exact signed old-range screening of new ranges. These are the actual
 arithmetic Schur entries and source, with the old inverse constructed. -/

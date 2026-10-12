@@ -1,4 +1,5 @@
-import RiemannResearch.RH.ReciprocalChargeDilationArithmetic
+import RiemannResearch.NumberTheory.PositiveDilationSum
+import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusReciprocal
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.Consequences
 import RiemannResearch.RH.DampedMobiusSeed
 import Mathlib.Tactic.FieldSimp
@@ -16,9 +17,8 @@ The intended route uses B_N = sum_{n <= N} (Lambda(n)-1)/n, its convergent Abel
 expansion, and mu * (Lambda-1) = -mu log - delta. It does not assume RH or an
 unproved logarithmic Mertens estimate.
 
-The positive-multiple reindexing provider currently lives in an RH module but
-has namespace RiemannResearch.NumberTheory. That provider can be moved down in
-the import graph during a future architectural cleanup if desired.
+The positive-multiple reindexing provider is shared through the general
+`NumberTheory/PositiveDilationSum` foundation.
 -/
 
 noncomputable section

@@ -1,4 +1,5 @@
 import RiemannResearch.RH.MultiRangeCompleteness
+import RiemannResearch.RH.CRTLegalCoordinates
 
 /-!
 # Balanced finite floor coordinates

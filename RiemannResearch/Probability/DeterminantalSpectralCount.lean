@@ -1,4 +1,5 @@
 import RiemannResearch.Probability.DeterminantalWindowGenerating
+import RiemannResearch.Probability.FiniteDeterminantalGenerating
 import Mathlib.Analysis.Matrix.PosDef
 
 /-!

@@ -1,5 +1,5 @@
 import RiemannResearch.RH.ParetoResidueDuality
-import RiemannResearch.RH.ParetoGeometricMixture
+import RiemannResearch.RH.ParetoWeights
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Tactic.FieldSimp

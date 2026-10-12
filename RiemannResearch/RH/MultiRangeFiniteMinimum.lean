@@ -2,6 +2,7 @@ import RiemannResearch.RH.MultiRangeIndependence
 import RiemannResearch.RH.MultiRangeEnergyCertificates
 import RiemannResearch.LinearAlgebra.FiniteConstrainedMatrixMinimum
 import RiemannResearch.Analysis.FiniteSignedQuadratic
+import RiemannResearch.RH.ConditionalResidueGram
 
 /-! Actual signed finite anchor Gram matrices and their unconditional optimizer.
 Source: RH_Multi_Range_Divisor_Corrections_2026-09-18.md, Section 4.

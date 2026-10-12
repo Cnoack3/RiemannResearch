@@ -1,5 +1,6 @@
 import RiemannResearch.Analysis.FiniteHilbertGram
 import RiemannResearch.RH.BalancedExactHeadEnergy
+import RiemannResearch.RH.TwoSeedExactHeadEnergy
 
 /-!
 # Exact signed tail optimization for the minimal-support RH criterion

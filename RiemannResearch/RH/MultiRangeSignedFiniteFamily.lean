@@ -1,5 +1,6 @@
 import RiemannResearch.RH.MultiRangeFiniteMinimum
 import RiemannResearch.LinearAlgebra.FiniteConstrainedMatrixInverse
+import RiemannResearch.RH.ConditionalResidueGram
 
 /-! Exact signed minimization for finite legal families, used for screened ranges. -/
 noncomputable section

@@ -1,4 +1,4 @@
-import RiemannResearch.RH.ParetoGibbsHilbert
+import RiemannResearch.RH.ParetoHilbertPhysical
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.Analysis.InnerProductSpace.Orthonormal
 

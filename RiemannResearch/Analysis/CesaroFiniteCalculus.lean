@@ -3,13 +3,23 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
-import RiemannResearch.Probability.ConditionalIIDUniformMoments
 import Mathlib.Analysis.SpecialFunctions.Pow.Complex
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
+import Lean.Elab.Tactic.Omega
 
 /-! Exact Cesaro inversion and finite Mellin summation by parts, with boundary terms. -/
 noncomputable section
 open scoped BigOperators
 set_option backward.isDefEq.respectTransparency false
+
+namespace RiemannResearch.Probability.ConditionalIID
+
+def cesaro (F : ℕ → ℝ) (t : ℕ) : ℝ := (∑ n ∈ Finset.Icc 1 t, F n) / (t : ℝ)
+
+end RiemannResearch.Probability.ConditionalIID
 
 namespace RiemannResearch.Analysis.Cesaro
 

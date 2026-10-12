@@ -25,7 +25,6 @@ import Mathlib.MeasureTheory.Order.Group.Lattice
 import Mathlib.NumberTheory.Harmonic.Bounds
 import Mathlib.NumberTheory.LSeries.Nonvanishing
 import RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Auxiliary
-import RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Fourier
 import RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Mathlib.Analysis.SpecialFunctions.Log.Basic
 import RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.ResidueCalcOnRectangles
 import RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.EulerMaclaurin

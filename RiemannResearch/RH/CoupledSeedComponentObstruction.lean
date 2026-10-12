@@ -1,3 +1,4 @@
+import Mathlib.Algebra.BigOperators.Field
 import RiemannResearch.RH.PositiveSeedCone
 import RiemannResearch.LinearAlgebra.WeightedDualCertificate
 import Mathlib.Tactic.FinCases

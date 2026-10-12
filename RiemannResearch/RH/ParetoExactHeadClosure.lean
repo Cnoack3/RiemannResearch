@@ -1,6 +1,6 @@
 import RiemannResearch.Analysis.WeakConvergenceDenseTests
 import RiemannResearch.RH.ParetoGibbsTailBasis
-import RiemannResearch.RH.TwoSeedExactHeadEnergy
+import RiemannResearch.RH.ThresholdHilbertMean
 
 /-!
 # Bounded exact heads imply membership in the actual Pareto closure
@@ -8,8 +8,8 @@ import RiemannResearch.RH.TwoSeedExactHeadEnergy
 Source: user-provided argument, `RH_Minimal_Seeds_Continuation_20260916.md`,
 Section 13. This proof uses dense physical-coordinate tests to pass to the
 closed subspace, without an abstract compactness-provider hypothesis.
-The last theorem is a conditional research reduction: the uniform bound
-on actual exact-head witnesses remains an explicit hypothesis.
+The RH implication from bounded exact-subspace heads is assembled in
+`BalancedExactHeadEnergy`; this module contains the general closure facts.
 -/
 
 open Filter
@@ -92,24 +92,6 @@ theorem hilbertOne_mem_closure_of_bounded_exact_head_energy
   have := hbounded N
   nlinarith [sq_nonneg (‖f N‖ - 1)]
 
-theorem riemannHypothesis_of_bounded_exact_subspace_heads
-    (S : Submodule ℝ ThresholdHilbert)
-    (hS : S ≤ hilbertLegalSubspace ({2, 3} : Set ℕ))
-    (f : ℕ → ThresholdHilbert)
-    (hmem : ∀ N, f N ∈ S)
-    (hhead : ∀ N k, 0 < k → k ≤ N → hilbertSequence (f N) k = 1)
-    {C : ℝ} (hbounded : ∀ N, ‖f N‖ ^ 2 ≤ C) :
-    RiemannHypothesis := by
-  have h1 := hilbertOne_mem_closure_of_bounded_exact_head_energy
-    S f hmem hhead hbounded
-  have hlegal : hilbertOne ∈ hilbertLegalClosure ({2, 3} : Set ℕ) :=
-    Submodule.topologicalClosure_mono hS h1
-  have hpos : ∀ a ∈ ({2, 3} : Set ℕ), 0 < a := by
-    intro a ha
-    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at ha
-    rcases ha with rfl | rfl <;> omega
-  exact riemannHypothesis_of_legal_paretoError ({2, 3} : Set ℕ) hpos
-    ((hilbertOne_mem_legalClosure_iff_paretoError ({2, 3} : Set ℕ) hpos).mp hlegal)
 
 end
 end RiemannResearch.RH.Pareto

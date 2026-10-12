@@ -21,7 +21,8 @@ j ≥ 7, σ ∈ [1/2, 2], bound in log((j:ℝ)+3).
 -/
 import RiemannResearch.RH.WeilExplicitFormula.WeilEF.Landau
 import RiemannResearch.RH.WeilExplicitFormula.RvM.LocalCount
-import RiemannResearch.RH.WeilExplicitFormula.Tail
+import RiemannResearch.RH.WeilExplicitFormula.Tail.WindowCount
+import RiemannResearch.RH.WeilExplicitFormula.Tail.Count
 
 noncomputable section
 

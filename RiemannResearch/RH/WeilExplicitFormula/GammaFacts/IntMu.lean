@@ -18,6 +18,7 @@ via "(eq:muints) follows from (eq:mufacts) … and ∫_T^{2T} log²(τ/2π) dτ 
 Both theorems take the Stirling field as a hypothesis (hst); the Stirling asymptotic itself is
 proved elsewhere in the repository, so GammaFacts assembles with no Γ-hypothesis beyond it.
 -/
+import RiemannResearch.RH.WeilExplicitFormula.GammaFacts
 import RiemannResearch.RH.WeilExplicitFormula.GammaFacts.Mu
 
 noncomputable section

@@ -1,7 +1,7 @@
 import RiemannResearch.RH.PrimeValuationIndependence
 import RiemannResearch.RH.FinitePrimeDivisibilityMoments
 import RiemannResearch.RH.ParetoResidueDuality
-import RiemannResearch.RH.ArithmeticCumulativeEnergy
+import RiemannResearch.RH.ArithmeticCumulativeBasic
 import RiemannResearch.RH.CRTGCDGram
 import Mathlib.Algebra.GCDMonoid.FinsetLemmas
 import Mathlib.Data.Nat.Squarefree

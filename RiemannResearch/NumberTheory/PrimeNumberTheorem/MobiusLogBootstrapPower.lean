@@ -1,5 +1,4 @@
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusLogBootstrapFinite
-import RiemannResearch.NumberTheory.PrimeNumberTheorem.PrimeErrorInverseLogPower
 
 noncomputable section
 open Filter Finset

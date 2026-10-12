@@ -1,5 +1,6 @@
 import RiemannResearch.RH.MultiRangeCertificateConvergence
 import Mathlib.Topology.Instances.Matrix
+import RiemannResearch.RH.ConditionalResidueGram
 
 /-! Fixed-family truncated Gram optimizers converge to the full optimizer.
 Source: Section 7 of the multi-range research note. Nondegeneracy of the full

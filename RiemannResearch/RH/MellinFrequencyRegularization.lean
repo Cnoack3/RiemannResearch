@@ -1,6 +1,6 @@
 import RiemannResearch.Analysis.FrequencyCutoffMatrix
-import RiemannResearch.RH.MellinFrequencyKernel
 import RiemannResearch.RH.ResidueOrthonormalCoordinates
+import RiemannResearch.RH.MellinCriticalPoint
 
 /-!
 # Actual residue-mode frequency regularizations

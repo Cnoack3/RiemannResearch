@@ -24,6 +24,7 @@ import RiemannResearch.RH.WeilExplicitFormula.ThmE.GzGpChi
 import RiemannResearch.RH.WeilExplicitFormula.WeilEF.GoodHeights
 import RiemannResearch.RH.WeilExplicitFormula.ThmE.LandauChi
 import RiemannResearch.RH.WeilExplicitFormula.WeilEF.ZeroSummabilityGen
+import RiemannResearch.RH.WeilExplicitFormula.Tail.WindowCount
 
 noncomputable section
 

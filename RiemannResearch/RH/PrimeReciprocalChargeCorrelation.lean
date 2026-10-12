@@ -1,6 +1,7 @@
 import RiemannResearch.RH.ReciprocalChargeDilationArithmetic
 import RiemannResearch.RH.ReciprocalChargeDilationSeries
 import RiemannResearch.Analysis.BoundedSquareEnergy
+import RiemannResearch.NumberTheory.SquarefreeEulerSeries
 
 /-!
 # Exact reciprocal Möbius correlation at a prime dilation

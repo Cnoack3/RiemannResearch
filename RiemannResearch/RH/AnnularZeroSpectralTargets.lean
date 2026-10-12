@@ -1,6 +1,5 @@
 import RiemannResearch.RH.AnnularPrimePairTargets
 import RiemannResearch.Analysis.TwistedRieszFilterAlgebra
-import RiemannResearch.RH.AnnularMellinRH
 import Mathlib.Analysis.SpecialFunctions.Pow.Complex
 import Mathlib.Order.ConditionallyCompleteLattice.Basic
 

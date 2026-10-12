@@ -1,3 +1,4 @@
+import RiemannResearch.RH.FiniteSeedComponentCharge
 import RiemannResearch.RH.ExactHeadCharges
 import RiemannResearch.RH.SmoothRepairAntichain
 

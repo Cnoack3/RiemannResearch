@@ -1,6 +1,7 @@
 import RiemannResearch.RH.MultiRangeOptimizerConvergence
 import RiemannResearch.RH.MultiRangeFiniteMinimum
 import RiemannResearch.LinearAlgebra.FiniteConstrainedMatrixInverse
+import RiemannResearch.RH.ConditionalResidueGram
 
 /-! Unconditional convergence for each fixed finite anchored divisor family.
 The limit is the actual attained infinite-energy minimum, with full signed

@@ -1,4 +1,5 @@
-import RiemannResearch.RH.FiniteSeedComponentCharge
+import RiemannResearch.RH.ParetoResidueDuality
+import Mathlib.Tactic.Linarith
 
 /-!
 # Uniqueness and arithmetic determination of exact-head charges
@@ -46,14 +47,6 @@ theorem exact_head_normalized_charge {F : ℕ → ℝ} {N n : ℕ}
     mobiusDifference n F / (n : ℝ) =
       (ArithmeticFunction.moebius n : ℝ) / (n : ℝ) := by
   rw [exact_head_mobiusDifference hzero hhead hn hnN]
-
-/-- Divisor inversion reconstructs the ordinary jump from its charges. -/
-theorem sum_mobiusDifference (F : ℕ → ℝ) (n : ℕ) (hn : 0 < n) :
-    (∑ d ∈ n.divisors, mobiusDifference d F) = F n - F (n - 1) := by
-  exact (mobius_inversion (fun d => mobiusDifference d F)
-    (fun k => F k - F (k - 1))).mpr (by
-      intro k hk
-      rfl) n hn
 
 /-- Anchoring at zero removes the sole additive ambiguity of jump inversion. -/
 theorem mobiusDifference_injective_anchored {F G : ℕ → ℝ}

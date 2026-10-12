@@ -1,5 +1,5 @@
 import RiemannResearch.RH.ZetaTwoProbability
-import RiemannResearch.RH.ArithmeticCumulativeEnergy
+import RiemannResearch.RH.ArithmeticCumulativeBasic
 import Mathlib.Analysis.InnerProductSpace.l2Space
 import Mathlib.Analysis.Normed.Operator.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real

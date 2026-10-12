@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.DilationWaveletAlgebra
-import RiemannResearch.RH.ArithmeticCumulativeEnergy
+import RiemannResearch.RH.ArithmeticCumulativeBasic
 
 /-!
 # Normalized residue vectors in the Pareto Hilbert space

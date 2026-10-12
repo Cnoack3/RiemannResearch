@@ -1,5 +1,6 @@
 import RiemannResearch.RH.MultiRangeFiniteMinimum
 import RiemannResearch.RH.MultiRangeOptimizerConvergence
+import RiemannResearch.RH.ConditionalResidueGram
 
 /-! Finite-horizon positivity for the actual anchored arithmetic dictionary.
 Source: Section 7 of RH_Multi_Range_Divisor_Corrections_2026-09-18.md.

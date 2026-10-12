@@ -24,6 +24,7 @@ import Mathlib.Topology.ContinuousMap.Bounded.Basic
 import Mathlib.Order.Filter.ZeroAndBoundedAtFilter
 import Mathlib.Analysis.Fourier.FourierTransformDeriv
 import RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev
+import RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Auxiliary
 
 open FourierTransform Real Complex MeasureTheory Filter Topology BoundedContinuousFunction
   SchwartzMap VectorFourier BigOperators
@@ -85,9 +86,6 @@ theorem fourierIntegral_self_add_deriv_deriv (f : W21) (u : ℝ) :
   have l5 : Differentiable ℝ (deriv f) := f.deriv.differentiable
   simp [f.hf, l1, add_mul, Real.fourier_deriv f.hf' l5 f.hf'', Real.fourier_deriv f.hf l4 f.hf']
   field_simp [pi_ne_zero] ; ring_nf ; simp
-
-@[simp] lemma deriv_ofReal : deriv ofReal = fun _ => 1 := by
-  ext x ; exact ((hasDerivAt_id x).ofReal_comp).deriv
 
 /-- If, eventually in `T`, the integrand `f T` is bounded on `uIoc lo hi` by `B T`
 and `B T * |hi - lo| → 0`, then the interval integral `∫ x in lo..hi, f T x → 0`. -/

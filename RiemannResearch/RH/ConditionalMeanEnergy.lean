@@ -3,7 +3,7 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
-import RiemannResearch.Analysis.MellinCesaroSummability
+import RiemannResearch.Analysis.CesaroMeanEnergy
 import RiemannResearch.RH.ThresholdLegalIntegrability
 
 /-!
@@ -17,7 +17,7 @@ Source: existing `ConditionalMeanRHBridge` and `ConditionalMeanHeadObstruction`
 declarations, moved without changing their statements or proofs.
 -/
 noncomputable section
-open Filter MeasureTheory
+open Filter
 open scoped BigOperators Topology
 set_option backward.isDefEq.respectTransparency false
 

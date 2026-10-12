@@ -5,7 +5,6 @@ Authors: Christian Noack
 -/
 import RiemannResearch.RH.DilationWaveletAlgebra
 import RiemannResearch.RH.ParetoResidueMellinContinuation
-import RiemannResearch.Analysis.ProjectionSourceImprovement
 
 /-!
 # Ordinary adjacent-dilation packets and their source correlations

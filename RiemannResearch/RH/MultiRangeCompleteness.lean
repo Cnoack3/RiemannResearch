@@ -1,5 +1,6 @@
 import RiemannResearch.RH.MultiRangeDivisorCorrections
 import RiemannResearch.RH.ConditionalConductorExhaustion
+import RiemannResearch.RH.CRTLegalCoordinates
 
 /-!
 # Completeness of balanced divisor-range corrections

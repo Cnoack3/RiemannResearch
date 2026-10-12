@@ -1,5 +1,6 @@
 import RiemannResearch.Analysis.PowerDifferenceDeterminant
 import RiemannResearch.RH.MellinDPPIntensity
+import RiemannResearch.RH.MellinFrequencyKernel
 
 /-!
 # Exact dyadic Mellin minors and their zero sets

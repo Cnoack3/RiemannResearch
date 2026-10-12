@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ParetoGibbsHilbert
 import RiemannResearch.RH.ParetoGibbsTailBasis
 import RiemannResearch.RH.ParetoGibbsSchur
 

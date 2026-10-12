@@ -44,6 +44,11 @@ lemma differentiableAt_ofReal (x : ℝ) : DifferentiableAt ℝ ofReal x :=
 
 end Complex
 
+open Complex in
+@[simp] lemma deriv_ofReal : deriv ofReal = fun _ => 1 := by
+  ext x ; exact ((hasDerivAt_id x).ofReal_comp).deriv
+
+
 lemma DifferentiableAt.comp_ofReal {e : ℂ → ℂ} {z : ℝ} (hf : DifferentiableAt ℂ e z) :
     DifferentiableAt ℝ (fun x : ℝ ↦ e x) z :=
   hf.hasDerivAt.comp_ofReal.differentiableAt

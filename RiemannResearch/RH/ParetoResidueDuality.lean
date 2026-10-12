@@ -69,6 +69,14 @@ theorem mobius_inversion (f g : ℕ → ℝ) :
     (fun a b => (ArithmeticFunction.moebius a : ℝ) * g b)] using
     (ArithmeticFunction.sum_eq_iff_sum_mul_moebius_eq (f := f) (g := g))
 
+/-- Divisor inversion reconstructs the ordinary jump from its charges. -/
+theorem sum_mobiusDifference (F : ℕ → ℝ) (n : ℕ) (hn : 0 < n) :
+    (∑ d ∈ n.divisors, mobiusDifference d F) = F n - F (n - 1) := by
+  exact (mobius_inversion (fun d => mobiusDifference d F)
+    (fun k => F k - F (k - 1))).mpr (by
+      intro k hk
+      rfl) n hn
+
 theorem mobiusDifference_residue (m n : ℕ) (hm : 1 < m) :
     mobiusDifference m (residue n) = if m = n then -(n : ℝ) else 0 := by
   let f : ℕ → ℝ := fun d => (if d = 1 then 1 else 0) -

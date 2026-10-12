@@ -1,4 +1,4 @@
-import RiemannResearch.RH.ArithmeticCumulativeEnergy
+import RiemannResearch.RH.ArithmeticCumulativeBasic
 import Mathlib.Algebra.Order.Floor.Ring
 
 /-!

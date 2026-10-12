@@ -19,6 +19,7 @@ All four fields of Zeta23.ZetaSeam are theorems of Mathlib:
 Hence the abstract ZeroConfig of ζ's nontrivial zeros and [eq:trivialchain] are hypothesis-free.
 -/
 import RiemannResearch.RH.WeilExplicitFormula.Statement.Seam
+import RiemannResearch.RH.WeilExplicitFormula.Defs.Counting
 import RiemannResearch.RH.WeilExplicitFormula.ZetaReflect
 
 noncomputable section
@@ -43,6 +44,14 @@ def zetaZeroConfig : ZeroConfig := zetaZeros zetaSeam
   zetaZeros_N0s _ _ _
 @[simp] lemma zetaZeroConfig_Nd (T₁ T₂ : ℝ) : zetaZeroConfig.Nd T₁ T₂ = Ndist T₁ T₂ :=
   zetaZeros_Nd _ _ _
+
+/-- Sanity anchor 2 [eq:trivialchain], verbatim: "trivially N₀ˢ ≤ N₀* ≤ N₀ ≤ N,
+N₀ˢ ≤ Nˢ ≤ N_d ≤ N". Needs the seam facts (finiteness of the window; m_ρ ≥ 1), nothing from the
+paper. -/
+theorem trivial_chain (hs : ZetaSeam) (T₁ T₂ : ℝ) :
+    N0simple T₁ T₂ ≤ N0star T₁ T₂ ∧ N0star T₁ T₂ ≤ N0 T₁ T₂ ∧ N0 T₁ T₂ ≤ Ncount T₁ T₂ ∧
+    N0simple T₁ T₂ ≤ Nsimple T₁ T₂ ∧ Nsimple T₁ T₂ ≤ Ndist T₁ T₂ ∧ Ndist T₁ T₂ ≤ Ncount T₁ T₂ := by
+  simpa using (zetaZeros hs).trivial_chain T₁ T₂
 
 /-- [eq:trivialchain] for ζ, hypothesis-free: N₀ˢ ≤ N₀* ≤ N₀ ≤ N and N₀ˢ ≤ Nˢ ≤ N_d ≤ N. -/
 theorem trivial_chain₀ (T₁ T₂ : ℝ) :

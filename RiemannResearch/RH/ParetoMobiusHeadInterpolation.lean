@@ -2,6 +2,7 @@ import RiemannResearch.RH.CanonicalMobiusHeadRepair
 import RiemannResearch.RH.ParetoCompactHead
 import RiemannResearch.RH.ParetoInversePolynomial
 import RiemannResearch.RH.ParetoPrimeSourceDivergence
+import RiemannResearch.RH.ThresholdHilbertAdjoint
 
 /-!
 # Explicit full-tail Möbius head interpolation

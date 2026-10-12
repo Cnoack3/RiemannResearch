@@ -1,5 +1,5 @@
 import RiemannResearch.RH.MobiusDifferenceCLM
-import RiemannResearch.RH.ExactHeadCharges
+import RiemannResearch.RH.ParetoResidueDuality
 import RiemannResearch.RH.ParetoDilation
 import RiemannResearch.RH.ParetoGibbsTailBasis
 import RiemannResearch.RH.ParetoNormalizedResidueHilbert

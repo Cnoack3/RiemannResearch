@@ -6,6 +6,7 @@ Authors: Christian Noack
 import RiemannResearch.RH.CanonicalMobiusWindowRecursion
 import RiemannResearch.RH.ParetoFiniteHeadDilation
 import RiemannResearch.RH.CanonicalMobiusWindowDuality
+import RiemannResearch.RH.ResidueClosureDensity
 
 /-!
 # Fixed-head capacity and membership of its indicator

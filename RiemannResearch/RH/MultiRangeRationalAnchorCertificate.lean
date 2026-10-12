@@ -1,5 +1,6 @@
 import RiemannResearch.RH.MultiRangeRationalOptimizer
 import RiemannResearch.RH.MultiRangeFiniteMinimum
+import RiemannResearch.RH.ConditionalResidueGram
 
 /-! Exact rational certificates for the actual anchored finite optimizer
 candidates, including their infinite tails. The coefficients are chosen once

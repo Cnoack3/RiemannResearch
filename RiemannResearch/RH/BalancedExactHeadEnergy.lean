@@ -1,5 +1,7 @@
 import RiemannResearch.RH.BalancedHeadInterpolation
 import RiemannResearch.RH.ParetoExactHeadClosure
+import RiemannResearch.RH.ParetoLegalApproximationClosure
+import RiemannResearch.RH.ParetoMellinHeadObstruction
 
 /-!
 # The unrestricted exact-head optimum for the proposed minimal support
@@ -12,6 +14,32 @@ is characterized, not asserted. In particular support thinning remains open.
 -/
 
 open Filter
+namespace RiemannResearch.RH.Pareto
+noncomputable section
+
+theorem riemannHypothesis_of_bounded_exact_subspace_heads
+    (S : Submodule ℝ ThresholdHilbert)
+    (hS : S ≤ hilbertLegalSubspace ({2, 3} : Set ℕ))
+    (f : ℕ → ThresholdHilbert)
+    (hmem : ∀ N, f N ∈ S)
+    (hhead : ∀ N k, 0 < k → k ≤ N → hilbertSequence (f N) k = 1)
+    {C : ℝ} (hbounded : ∀ N, ‖f N‖ ^ 2 ≤ C) :
+    RiemannHypothesis := by
+  have h1 := hilbertOne_mem_closure_of_bounded_exact_head_energy
+    S f hmem hhead hbounded
+  have hlegal : hilbertOne ∈ hilbertLegalClosure ({2, 3} : Set ℕ) :=
+    Submodule.topologicalClosure_mono hS h1
+  have hpos : ∀ a ∈ ({2, 3} : Set ℕ), 0 < a := by
+    intro a ha
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at ha
+    rcases ha with rfl | rfl <;> omega
+  exact riemannHypothesis_of_legal_paretoError ({2, 3} : Set ℕ) hpos
+    ((hilbertOne_mem_legalClosure_iff_paretoError ({2, 3} : Set ℕ) hpos).mp hlegal)
+
+
+end
+end RiemannResearch.RH.Pareto
+
 namespace RiemannResearch.RH.Pareto.BalancedExactHeadEnergy
 open RiemannResearch.Analysis
 noncomputable section

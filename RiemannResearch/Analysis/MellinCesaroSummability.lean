@@ -3,6 +3,7 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
+import RiemannResearch.Analysis.CesaroMeanEnergy
 import RiemannResearch.Analysis.MellinDifferenceBounds
 import RiemannResearch.Analysis.MellinStepSeries
 import RiemannResearch.Analysis.WeightedComplexPairing
@@ -22,13 +23,6 @@ set_option backward.isDefEq.respectTransparency false
 
 namespace RiemannResearch.Analysis.Cesaro
 open RH.ArithmeticCumulative RH.Pareto
-
-/-- Positive latent-endpoint weights in zero-based sequence coordinates. -/
-def conditionalWeight (k : ℕ) : ℝ := mixtureWeight (k + 1)
-
-theorem conditionalWeight_pos (k : ℕ) : 0 < conditionalWeight k := by
-  unfold conditionalWeight mixtureWeight
-  positivity
 
 /-- The inverse mixture weight has the exact quadratic upper bound needed for the dual. -/
 theorem mixtureWeight_inv_le (n : ℕ) (hn : 0 < n) :
@@ -88,19 +82,6 @@ theorem mellinSecond_norm_summable (s : ℂ) (hs : 0 < s.re) :
   apply (hp.mul_left ‖s * (s + 1)‖).of_norm_bounded
   intro k
   simpa only [norm_norm] using mellinSecond_norm_le s hs (k + 1) (Nat.succ_pos k)
-
-/-- Each bounded arithmetic function has a summable conditional-mean square energy. -/
-theorem bounded_mean_energy_summable (F : ℕ → ℂ) (B : ℝ)
-    (hB : ∀ n, 0 < n → ‖F n‖ ≤ B) :
-    Summable (fun k : ℕ => conditionalWeight k * ‖mean F (k + 1)‖ ^ 2) := by
-  have hB0 : 0 ≤ B := (norm_nonneg (F 1)).trans (hB 1 (by omega))
-  apply (hasSum_mixtureWeight.summable.mul_right (B ^ 2)).of_norm_bounded
-  intro k
-  rw [Real.norm_eq_abs,
-    abs_of_nonneg (mul_nonneg (conditionalWeight_pos k).le (sq_nonneg _))]
-  apply mul_le_mul_of_nonneg_left _ (conditionalWeight_pos k).le
-  have h := mean_norm_le F B hB (k + 1) (Nat.succ_pos k)
-  nlinarith [norm_nonneg (mean F (k + 1))]
 
 /-- Convergence of the signed second-difference pairing for every bounded arithmetic function. -/
 theorem bounded_second_pairing_summable (s : ℂ) (hs : 0 < s.re)

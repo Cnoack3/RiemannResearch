@@ -6,6 +6,7 @@ Authors: Christian Noack
 import RiemannResearch.RH.CanonicalMobiusCapacityDensity
 import RiemannResearch.RH.MobiusResidualFirstCoordinate
 import RiemannResearch.RH.CanonicalMobiusCapacityBounds
+import RiemannResearch.RH.ResidueClosureDensity
 
 /-!
 # Finite-head dilation and quantitative residual positivity

@@ -1,3 +1,4 @@
+import RiemannResearch.RH.FiniteSeedComponentCharge
 import RiemannResearch.RH.RoughComponentExhaustion
 import RiemannResearch.RH.ParetoBoundedInteraction
 

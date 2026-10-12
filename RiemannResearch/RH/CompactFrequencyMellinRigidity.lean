@@ -1,5 +1,5 @@
 import RiemannResearch.RH.MellinCriticalPoint
-import RiemannResearch.RH.ParetoGeometricMixture
+import RiemannResearch.RH.ParetoWeights
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Analysis.SpecialFunctions.Pow.Complex
 import Mathlib.MeasureTheory.Integral.Bochner.Basic

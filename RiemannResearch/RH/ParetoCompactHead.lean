@@ -1,4 +1,4 @@
-import RiemannResearch.RH.ParetoGibbsHilbert
+import RiemannResearch.RH.ParetoHilbertPhysical
 import RiemannResearch.RH.ParetoGibbsTailBasis
 import RiemannResearch.RH.MobiusCoefficientStabilization
 import Mathlib.Tactic.Abel

@@ -41,6 +41,7 @@ Hypotheses taken (all proved elsewhere in the repository; none are Lean axioms):
 import RiemannResearch.RH.WeilExplicitFormula.Defs
 import RiemannResearch.RH.WeilExplicitFormula.Assembly.Inputs
 import RiemannResearch.RH.WeilExplicitFormula.Tail.Basic
+import RiemannResearch.RH.WeilExplicitFormula.Tail.WindowCount
 import RiemannResearch.RH.WeilExplicitFormula.Tail.Grid
 import RiemannResearch.RH.WeilExplicitFormula.Tail.Count
 import RiemannResearch.RH.WeilExplicitFormula.Tail.RankOne
@@ -117,31 +118,6 @@ theorem theta0_le (P : Params) (hP : P.Valid) {T A₀ C₁ R : ℝ} (hT : T₀ �
         apply mul_le_mul _ hlog (by linarith [one_le_log_four_mul hT]) (by positivity)
         exact mul_le_mul_of_nonneg_left hK2 (by positivity)
     _ = 32 * A₀ * R ^ 2 * l T * T ^ (P.lam / 2 - 1) * T := by rw [mul_assoc _ _ T, hTpow]; ring
-
-/-! ### The local count from PaperInputs.RvM.local -/
-
-/-- From the two-sided local count on Z.N (PaperInputs.RvM.local) to the
-finite-sub-family form LocalCount used by Zeta23/Tail/Count.lean, for the family of all
-distinct zeros ρ ∈ Z.carrier with ordinate γ_ρ = Im ρ and multiplicity m_ρ = Z.mult ρ. -/
-theorem LocalCount.ofWindowCount (Z : ZeroConfig) {A₀ : ℝ} (hA₀ : 1 ≤ A₀)
-    (hloc : ∀ t : ℝ, (Z.N t (t + 1) : ℝ) ≤ A₀ * Real.log (|t| + 3)) :
-    LocalCount (fun ρ : Z.carrier => (ρ : ℂ).im) (fun ρ : Z.carrier => Z.mult ρ) A₀ where
-  one_le := hA₀
-  window t s hs := by
-    classical
-    refine le_trans ?_ (hloc t)
-    have hfin : (Z.window t (t + 1)).Finite := Z.finite_window t (t + 1)
-    unfold ZeroConfig.N
-    rw [finsum_mem_eq_finite_toFinset_sum _ hfin]
-    have hsub : s.map (Function.Embedding.subtype _) ⊆ hfin.toFinset := by
-      intro x hx
-      rw [Finset.mem_map] at hx
-      obtain ⟨ρ, hρ, rfl⟩ := hx
-      rw [Set.Finite.mem_toFinset]
-      exact ⟨ρ.2, hs ρ hρ⟩
-    have h := Finset.sum_le_sum_of_subset (f := Z.mult) hsub
-    rw [Finset.sum_map] at h
-    exact_mod_cast h
 
 /-! ### The vectors u_ρ and their decay from [eq:hfbound] -/
 

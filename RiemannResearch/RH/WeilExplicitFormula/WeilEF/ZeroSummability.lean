@@ -10,7 +10,7 @@ Copyright (c) 2026 Anthropic, PBC. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 SPDX-License-Identifier: Apache-2.0
 -/
-import RiemannResearch.RH.WeilExplicitFormula.Tail
+import RiemannResearch.RH.WeilExplicitFormula.Tail.WindowCount
 import RiemannResearch.RH.WeilExplicitFormula.RvM.LocalCount
 import RiemannResearch.RH.WeilExplicitFormula.ExplicitFormula
 import RiemannResearch.RH.WeilExplicitFormula.Poisson.PaperFT

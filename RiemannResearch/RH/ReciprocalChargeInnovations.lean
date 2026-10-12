@@ -5,7 +5,6 @@ Authors: RiemannResearch contributors
 -/
 import RiemannResearch.RH.BalazardReciprocalCharge
 import RiemannResearch.RH.CanonicalMobiusTriangular
-import RiemannResearch.RH.CanonicalMobiusSingleHeadCapacity
 
 /-!
 # Reciprocal charges dual to adjacent residue innovations

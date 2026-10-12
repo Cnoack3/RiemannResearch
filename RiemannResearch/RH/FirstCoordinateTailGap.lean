@@ -1,5 +1,4 @@
 import RiemannResearch.RH.TailCapacityJointCorrections
-import RiemannResearch.RH.CanonicalTailCapacityGeometry
 
 /-!
 # The exact first-coordinate tail gap

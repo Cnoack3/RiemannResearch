@@ -1,4 +1,5 @@
 import RiemannResearch.RH.MobiusHilbertCoordinates
+import RiemannResearch.RH.ResidueTailCertificate
 import RiemannResearch.RH.ParetoFirstMomentUniqueness
 
 /-!
@@ -94,50 +95,6 @@ theorem normalizedResidue_orthogonal_eq_zero_of_firstMoment (h : ThresholdHilber
     have hz := legalAnnihilator_eq_zero_of_first_absolute_moment
       (show 2 ∈ {n : ℕ | 0 < n} by norm_num) ha hm (Nat.succ_pos n)
     simpa [hilbertSequence] using hz
-
-/-- A tail certificate is represented inside H with first coordinate zero.
-Its pairings are precisely the reciprocal source from Section 15.3. -/
-def IsResidueTailCertificate (z : ThresholdHilbert) : Prop :=
-  hilbertSequence z 1 = 0 ∧
-    ∀ (d : ℕ) (hd : 1 < d),
-      inner ℝ z (normalizedResidueHilbert d (by omega)) = 1 / (d : ℝ)
-
-/-- Extending the tail by value -2 at physical coordinate one. -/
-def tailCertificateAnnihilator (z : ThresholdHilbert) : ThresholdHilbert :=
-  z - (2 : ℝ) • paretoPointHilbert 0
-
-theorem tailCertificateAnnihilator_first (z : ThresholdHilbert)
-    (hz : IsResidueTailCertificate z) :
-    hilbertSequence (tailCertificateAnnihilator z) 1 = -2 := by
-  simp only [tailCertificateAnnihilator, hilbertSequence_sub, hilbertSequence_smul,
-    Pi.sub_apply, Pi.smul_apply, smul_eq_mul, hilbertSequence_paretoPoint,
-    paretoPointSequence, Nat.zero_add, ite_true, hz.1]
-  norm_num
-
-theorem tailCertificateAnnihilator_tail (z : ThresholdHilbert) (n : ℕ) (hn : 2 ≤ n) :
-    hilbertSequence (tailCertificateAnnihilator z) n = hilbertSequence z n := by
-  have hn1 : n ≠ 1 := by omega
-  simp [tailCertificateAnnihilator, hilbertSequence_sub, hilbertSequence_smul,
-    hilbertSequence_paretoPoint, paretoPointSequence, hn1]
-
-theorem tailCertificateAnnihilator_orthogonal (z : ThresholdHilbert)
-    (hz : IsResidueTailCertificate z) (d : ℕ) (hd : 1 < d) :
-    inner ℝ (tailCertificateAnnihilator z)
-      (normalizedResidueHilbert d (by omega)) = 0 := by
-  have hpoint : inner ℝ (paretoPointHilbert 0)
-      (normalizedResidueHilbert d (by omega)) = 1 / (2 * (d : ℝ)) := by
-    have hd0 : (d : ℝ) ≠ 0 := by positivity
-    rw [real_inner_comm, inner_paretoPoint, hilbertGibbsPhysical_eq,
-      normalizedResidueHilbert_sequence]
-    simp only [Nat.zero_add, residueFraction, Nat.mod_eq_of_lt hd, Nat.cast_one]
-    norm_num [paretoWeight]
-    <;> field_simp
-    <;> ring
-  rw [tailCertificateAnnihilator, inner_sub_left, real_inner_smul_left, hz.2 d hd,
-    hpoint]
-  have hd0 : (d : ℝ) ≠ 0 := by positivity
-  field_simp
-  <;> ring
 
 theorem tailCertificateAnnihilator_legal (z : ThresholdHilbert)
     (hz : IsResidueTailCertificate z) :

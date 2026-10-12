@@ -3,6 +3,7 @@ import RiemannResearch.RH.ParetoFiniteGram
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
+import RiemannResearch.RH.CanonicalMobiusConditionalHead
 
 /-!
 # Full Pareto obstruction for single-prime sieve extrapolation

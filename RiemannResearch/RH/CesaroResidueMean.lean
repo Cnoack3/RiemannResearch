@@ -1,5 +1,5 @@
 import RiemannResearch.Probability.ConditionalIIDUniformMoments
-import RiemannResearch.RH.ArithmeticCumulativeEnergy
+import RiemannResearch.RH.ArithmeticCumulativeBasic
 import Mathlib.Tactic
 
 /-!

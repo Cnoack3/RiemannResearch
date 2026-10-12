@@ -1,5 +1,6 @@
 import RiemannResearch.RH.MultiRangeTruncatedGram
 import RiemannResearch.LinearAlgebra.FiniteConstrainedMatrixInverse
+import RiemannResearch.RH.ConditionalResidueGram
 
 /-! The rational inverse coefficients minimize the actual finite prefix objective.
 Source: Section 7 of RH_Multi_Range_Divisor_Corrections_2026-09-18.md.

@@ -1,4 +1,5 @@
 import RiemannResearch.Probability.DeterminantalSpectralCount
+import RiemannResearch.Probability.FiniteDeterminantalGenerating
 import Mathlib.Algebra.Polynomial.Roots
 import Mathlib.Probability.Independence.Basic
 

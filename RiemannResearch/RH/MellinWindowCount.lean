@@ -3,6 +3,7 @@ import RiemannResearch.Probability.ContinuousProjectionGenerating
 import RiemannResearch.Probability.ContinuousProjectionWindowEnergy
 import RiemannResearch.Probability.BoundedCountGenerating
 import RiemannResearch.Probability.BoundedCountLaw
+import RiemannResearch.RH.MellinFrequencyKernel
 
 /-!
 # Exact window laws, moments, and concentration of the Mellin DPP

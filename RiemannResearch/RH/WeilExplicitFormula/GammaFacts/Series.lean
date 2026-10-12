@@ -26,7 +26,15 @@ sin → cot):
   4. logDeriv via Complex.logDeriv_tprod_eq_tsum          [digamma series].
 This file has steps 1–3; step 4 is `digamma_series` at the bottom.
 -/
-import RiemannResearch.RH.WeilExplicitFormula.GammaFacts
+import Mathlib.Analysis.SpecialFunctions.Gamma.Digamma
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FunProp
+import Mathlib.Tactic.GCongr
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
 import Mathlib.Analysis.Calculus.LogDerivUniformlyOn
 import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
 import Mathlib.NumberTheory.Harmonic.EulerMascheroni

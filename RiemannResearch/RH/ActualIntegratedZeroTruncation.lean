@@ -7,6 +7,7 @@ import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 import Lean.Elab.Tactic.Omega
+import RiemannResearch.RH.WeilExplicitFormula.Tail.WindowCount
 
 /-!
 # An explicit truncation rate for the actual integrated zeta-zero series

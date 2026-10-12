@@ -1,4 +1,4 @@
-import RiemannResearch.RH.ParetoGeometricMixture
+import RiemannResearch.RH.ParetoWeights
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.EulerSineProd
 import Mathlib.Tactic.Linarith
 

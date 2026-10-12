@@ -1,5 +1,41 @@
 # Theorem catalog
 
+### Stable foundations and wider dependency cleanup (2026-10-11)
+
+Fifty-five existing declarations (53 public and two private helpers) move
+verbatim into narrower mathematical owners. Public names, statements, proof
+bodies, attributes, and research-obligation status remain unchanged.
+
+- `RH/ArithmeticCumulativeBasic.lean` owns the 19 arithmetic primitives and
+  cumulative-sum identities previously mixed with signed Green-energy proofs.
+- `RH/ParetoWeights.lean` owns the Pareto weight, its normalization and limiting
+  lemmas, and square-to-absolute summability. Geometric-mixture and Gibbs
+  operator proofs import this foundation.
+- `RH/ParetoHilbertPhysical.lean` owns ten physical-coordinate definitions and
+  identities previously in `ParetoGibbsHilbert`; `sum_mobiusDifference` now
+  belongs to the existing `ParetoResidueDuality` inversion foundation.
+- `RH/ResidueTailCertificate.lean` owns the certificate predicate and four
+  elementary annihilator declarations; tail regularity remains separate.
+- `Analysis/CesaroMeanEnergy.lean` owns `conditionalWeight`, its positivity,
+  and `bounded_mean_energy_summable`. The existing
+  `Analysis/CesaroFiniteCalculus.lean` now owns
+  `RiemannResearch.Probability.ConditionalIID.cesaro`.
+- `Analysis/ActualZeroOrdinateSummability.lean` owns
+  `RiemannResearch.Analysis.ActualZeroOrdinate.reciprocal_ordinate_summable`.
+- `NumberTheory/PositiveDilationSum.lean` owns `positive_dilation_sum`.
+- `RH/WeilExplicitFormula/Tail/WindowCount.lean` owns
+  `Zeta23.Tail.LocalCount.ofWindowCount`. The existing `Statement/SeamClosed`
+  owns `Zeta23.trivial_chain`; `FromPNTPlus/Auxiliary` owns root `deriv_ofReal`.
+- The RH application `riemannHypothesis_of_bounded_exact_subspace_heads`
+  moves to existing `RH/BalancedExactHeadEnergy.lean` under its original
+  `RiemannResearch.RH.Pareto` namespace. `ParetoExactHeadClosure` retains its
+  three general closed-subspace theorems.
+
+The wider import-only cleanup names actual declaration owners and removes
+unrelated application paths. See
+[the foundation dependency audit](RH/LakeDependencyAuditFoundations20261011.md)
+for preservation hashes, combined graph effects, and verification scope.
+
 ### Broader structural Lake dependency cleanup (2026-10-11)
 
 Thirty-two existing declarations, including one private helper, are relocated

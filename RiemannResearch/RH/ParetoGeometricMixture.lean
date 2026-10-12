@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ParetoWeights
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.Topology.Algebra.InfiniteSum.Real
@@ -20,12 +21,9 @@ open Filter MeasureTheory
 namespace RiemannResearch.RH.Pareto
 noncomputable section
 
-def paretoWeight (n : ℕ) : ℝ := 1 / (((n : ℝ) + 1) * ((n : ℝ) + 2))
 def geometricKernel (n m : ℕ) : ℝ :=
   2 / (((n : ℝ) + m + 1) * ((n : ℝ) + m + 2) * ((n : ℝ) + m + 3))
 def geometricProbability (n : ℕ) (t : ℝ) : ℝ := (1 - t) * t ^ n
-
-theorem paretoWeight_pos (n : ℕ) : 0 < paretoWeight n := by unfold paretoWeight; positivity
 
 theorem geometricKernel_pos (n m : ℕ) : 0 < geometricKernel n m := by unfold geometricKernel; positivity
 
@@ -110,42 +108,6 @@ theorem geometricKernel_partial_sum (n N : ℕ) :
       simp only [Nat.succ_eq_add_one, Nat.add_assoc]
       ring
 
-/-- The Pareto marginal itself is a first difference. -/
-theorem paretoWeight_eq_inv_sub (n : ℕ) :
-    paretoWeight n = 1 / ((n : ℝ) + 1) - 1 / ((n : ℝ) + 2) := by
-  unfold paretoWeight
-  have h1 : (n : ℝ) + 1 ≠ 0 := by positivity
-  have h2 : (n : ℝ) + 2 ≠ 0 := by positivity
-  field_simp
-  <;> ring
-
-theorem paretoWeight_partial_sum (N : ℕ) :
-    (∑ n ∈ Finset.range N, paretoWeight n) = 1 - 1 / ((N : ℝ) + 1) := by
-  induction N with
-  | zero => simp
-  | succ N ih =>
-      rw [Finset.sum_range_succ, ih, paretoWeight_eq_inv_sub]
-      push_cast
-      ring
-
-private theorem reciprocal_shift_tendsto (a : ℕ) :
-    Tendsto (fun n : ℕ => 1 / ((n : ℝ) + a)) atTop (nhds 0) := by
-  have h := tendsto_inv_atTop_zero.comp
-    (tendsto_natCast_atTop_atTop : Tendsto (fun n : ℕ => (n : ℝ)) atTop atTop)
-  simpa only [Function.comp_def, Nat.cast_add, one_div] using h.comp (tendsto_add_atTop_nat a)
-
-theorem paretoWeight_tendsto_zero : Tendsto paretoWeight atTop (nhds 0) := by
-  have h := (reciprocal_shift_tendsto 1).sub (reciprocal_shift_tendsto 2)
-  change Tendsto (fun n => paretoWeight n) atTop (nhds 0)
-  simp_rw [paretoWeight_eq_inv_sub]
-  simpa only [Nat.cast_one, Nat.cast_ofNat, sub_self] using h
-
-/-- The full Pareto sequence is normalized; no truncation hypothesis is used. -/
-theorem paretoWeight_hasSum : HasSum paretoWeight 1 := by
-  apply (hasSum_iff_tendsto_nat_of_nonneg (fun n => (paretoWeight_pos n).le) 1).mpr
-  simp_rw [paretoWeight_partial_sum]
-  simpa using tendsto_const_nhds.sub (reciprocal_shift_tendsto 1)
-
 /-- Exact infinite row marginal of the beta-geometric two-copy kernel. -/
 theorem geometricKernel_hasSum (n : ℕ) : HasSum (geometricKernel n) (paretoWeight n) := by
   apply (hasSum_iff_tendsto_nat_of_nonneg
@@ -159,8 +121,6 @@ theorem geometricKernel_tsum (n : ℕ) :
     (∑' m, geometricKernel n m) = paretoWeight n :=
   (geometricKernel_hasSum n).tsum_eq
 
-theorem paretoWeight_tsum : (∑' n, paretoWeight n) = 1 :=
-  paretoWeight_hasSum.tsum_eq
 
 end
 end RiemannResearch.RH.Pareto

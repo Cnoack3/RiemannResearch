@@ -1,5 +1,5 @@
 import RiemannResearch.RH.ParetoTailCapacity
-import RiemannResearch.RH.ResidueTailCertificateRegularity
+import RiemannResearch.RH.ResidueTailCertificate
 
 /-!
 # Actual dual tail certificates and nested minimum-energy vectors

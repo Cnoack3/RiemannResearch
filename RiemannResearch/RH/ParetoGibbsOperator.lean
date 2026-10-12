@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ParetoWeights
 import RiemannResearch.RH.ParetoGeometricEnergy
 import Mathlib.Tactic.Linarith
 
@@ -67,19 +68,6 @@ theorem geometricKernel_le_paretoWeight_right (n m : ℕ) :
   exact (geometricKernel_hasSum m).tsum_eq ▸
     (geometricKernel_hasSum m).summable.le_tsum n
       (fun j hj => (geometricKernel_pos m j).le)
-
-private theorem abs_le_square_add_one (x : ℝ) : |x| ≤ x ^ 2 + 1 := by
-  nlinarith [sq_nonneg (|x| - 1), sq_abs x]
-
-/-- The full Hilbert-space square condition implies absolute Pareto summability. -/
-theorem pareto_abs_summable_of_square {f : ℕ → ℝ}
-    (hf : Summable (fun n => paretoWeight n * f n ^ 2)) :
-    Summable (fun n => paretoWeight n * |f n|) := by
-  apply Summable.of_nonneg_of_le
-    (fun n => mul_nonneg (paretoWeight_pos n).le (abs_nonneg _))
-    (fun n => ?_) (hf.add paretoWeight_hasSum.summable)
-  nlinarith [mul_le_mul_of_nonneg_left (abs_le_square_add_one (f n))
-    (paretoWeight_pos n).le]
 
 /-- Each row converges absolutely for every weighted L1 input. -/
 theorem gibbs_row_summable {f : ℕ → ℝ}

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.Probability.ConditionalIIDUniformModel
+import RiemannResearch.Analysis.CesaroFiniteCalculus
 import Mathlib.Probability.CondVar
 
 /-! Actual conditional coordinate distributions and arithmetic conditional means. -/
@@ -44,8 +45,6 @@ theorem uniform_integrable (k : ℕ) (F : ℕ → ℝ) : Integrable F (uniformLa
   have h : IntegrableOn F (↑(Finset.Icc 1 (k + 1)) : Set ℕ) (uniformLaw k) :=
     IntegrableOn.finset
   simpa only [IntegrableOn, uniformLaw_restrict] using h
-
-def cesaro (F : ℕ → ℝ) (t : ℕ) : ℝ := (∑ n ∈ Finset.Icc 1 t, F n) / (t : ℝ)
 
 /-- Uniform-fiber integration is exactly arithmetic Cesaro averaging. -/
 theorem uniform_integral (k : ℕ) (F : ℕ → ℝ) :

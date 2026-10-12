@@ -20,9 +20,10 @@ It (1) defines nontrivial zeros, multiplicity (via analyticOrderAt) and the six 
 Zeta23.ZeroConfig (structure ZetaSeam — classical facts about ζ, established from Mathlib elsewhere in
 the repository, not paper inputs); (3) states Theorems A, B, C in ε-form (fixed λ ∈ (0,1) with
 constant H(λ), F(λ), then the 2/3, 1/2, 3/4 liminf wrappers via λ → 1⁻);
-(4) proves the sanity anchors connecting to Mathlib's RiemannHypothesis and [eq:trivialchain].
+(4) proves the sanity anchors connecting to Mathlib's RiemannHypothesis.
+The [eq:trivialchain] counting anchor is in Statement/SeamClosed.lean.
 -/
-import RiemannResearch.RH.WeilExplicitFormula.Defs.Counting
+import RiemannResearch.RH.WeilExplicitFormula.Defs
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Analysis.Analytic.Order
 
@@ -156,14 +157,6 @@ theorem RH_implies_all_on_line (hRH : RiemannHypothesis) (T₁ T₂ : ℝ) :
   unfold N0 Ncount N0star Ndist
   rw [hset]
   exact ⟨rfl, rfl⟩
-
-/-- Sanity anchor 2 [eq:trivialchain], verbatim: "trivially N₀ˢ ≤ N₀* ≤ N₀ ≤ N,
-N₀ˢ ≤ Nˢ ≤ N_d ≤ N". Needs the seam facts (finiteness of the window; m_ρ ≥ 1), nothing from the
-paper. -/
-theorem trivial_chain (hs : ZetaSeam) (T₁ T₂ : ℝ) :
-    N0simple T₁ T₂ ≤ N0star T₁ T₂ ∧ N0star T₁ T₂ ≤ N0 T₁ T₂ ∧ N0 T₁ T₂ ≤ Ncount T₁ T₂ ∧
-    N0simple T₁ T₂ ≤ Nsimple T₁ T₂ ∧ Nsimple T₁ T₂ ≤ Ndist T₁ T₂ ∧ Ndist T₁ T₂ ≤ Ncount T₁ T₂ := by
-  simpa using (zetaZeros hs).trivial_chain T₁ T₂
 
 /-! ## 4. Theorems A, B, C
 

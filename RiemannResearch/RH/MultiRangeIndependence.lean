@@ -1,4 +1,5 @@
 import RiemannResearch.RH.MultiRangeDivisorCorrections
+import RiemannResearch.RH.CRTLegalCoordinates
 
 /-!
 # Uniqueness of balanced divisor coordinates

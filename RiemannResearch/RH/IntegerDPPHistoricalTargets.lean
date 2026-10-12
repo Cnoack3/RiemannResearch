@@ -1,5 +1,4 @@
 import RiemannResearch.RH.IntegerDPPDampedConvergence
-import RiemannResearch.RH.IntegerDPPCardinality
 
 /-!
 # Explicit open DPP targets from the historical not-RH catalogue
