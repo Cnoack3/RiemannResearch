@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Exact two-zero Pareto Mellin obstructions (2026-10-12)
+
+`RH/ParetoMellinTwoKernel.lean` adds nine declarations: conjugation of the
+literal kernel and physical transform, cross-kernel integrability and its
+exact Gram entry, the two-kernel test and its L² membership, exact pairing,
+complete signed energy, and exact completed-square remainder.
+
+`RH/ParetoMellinZeroPairObstruction.lean` adds eleven declarations. For
+`q = (2 Re s - 1) / |s|²`, the explicit conjugate-pair coefficient has both
+target signature and continuous energy equal to `2q - q²`. This charge is
+positive and strictly greater than `q` for nonreal `Re s > 1/2`. An actual
+zero then gives the exact physical error identity
+`||one - f||² = 2q - q² + integral(remainder norm²)` for every vector in the
+actual legal residue closure. The corresponding lower bound and a
+witness-based zero-free certificate follow. The unrestricted two-zero
+variational identity and bound preserve the complete signed cross term.
+
+The coherent development check `job_hUW7HoyY-_Bt6Ba8i7ZVT1dAT5bwJmlC`
+succeeded (exit 0); axiom output for the decisive theorems is only
+`propext`, `Classical.choice`, and `Quot.sound`. Publication requires the
+server checkpoint's validation of the final modules and integrated source.
+
+Established: these exact analytic identities and implications use actual
+zeta zeros and actual legal-closure membership as stated antecedents.
+Open: unconditional decay of the actual optimizer errors; RH is unresolved.
+See [the proof record](RH/ConjugateZeroMellinObstruction20261012.md).
+Provenance: finite Mellin Gram specialization of the classical Burnol
+obstruction strategy; no mathematical novelty claim is made.
+
 ### Stable foundations and wider dependency cleanup (2026-10-11)
 
 Fifty-five existing declarations (53 public and two private helpers) move

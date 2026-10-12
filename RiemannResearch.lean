@@ -2519,3 +2519,5 @@ import RiemannResearch.RH.ParetoHilbertPhysical
 import RiemannResearch.RH.ParetoWeights
 import RiemannResearch.RH.ResidueTailCertificate
 import RiemannResearch.RH.WeilExplicitFormula.Tail.WindowCount
+import RiemannResearch.RH.ParetoMellinTwoKernel
+import RiemannResearch.RH.ParetoMellinZeroPairObstruction
