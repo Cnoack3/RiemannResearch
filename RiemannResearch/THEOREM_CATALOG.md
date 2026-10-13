@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Subpolynomial CRT tails and explicit prime windows (2026-10-13)
+
+Established: `RH/CRTReciprocalPowerObstruction.lean` proves the sharp
+zeta(2) Pareto/finite-energy comparison and the explicit positive-power
+lower bound forced by any actual off-critical zero.
+`RH/ParetoReciprocalWindow.lean` preserves the exact window/tail split
+and controls the infinite remainder by an amplitude envelope.
+`RH/CanonicalPrimeSubpolynomialWindow.lean` proves squarefree support
+for the canonical Mobius trial at a prime boundary and full error <= E(p)+1,
+where E(p) is the explicit reciprocal-square sum from p through 4*p^2.
+
+Conditional research reductions: `RH/CRTSubpolynomialTail.lean` weakens
+uniform boundedness to logarithmic subpolynomial growth, a sparse infimum
+criterion, or one finite reciprocal-exponent certificate per stage.
+The canonical prime module proves RH from the corresponding explicit E(p)
+growth provider. `Analysis/VanishingExponentBudget.lean` supplies the
+generic vanishing-exponent-to-log-growth implication.
+Open: the original bounded family and the weaker finite-energy providers.
+No unconditional RH proof is claimed.
+[Exact formulas, quantifiers, and remaining arithmetic goal](RH/CRTSubpolynomialPrimeWindow20261013.md).
+
 ### Sharp Q comparison and squarefree geometric converse (2026-10-13)
 
 Established: `RH/ZetaTwoCRTReciprocalEnergy.lean` proves
