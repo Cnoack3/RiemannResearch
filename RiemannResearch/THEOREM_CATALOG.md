@@ -11741,3 +11741,43 @@ The seven-module import and ten selected transitive axiom checks passed server
 job `job_uK7mcrCfduM7ynT0dmh3asLdW-k8794f`; all selected checks reported only
 `propext`, `Classical.choice`, and `Quot.sound`.
 See `RH/ChebyshevHandoffVerification20261011.md` for precise scope and obligations.
+
+### Backwards RH implication audit: innovations, endpoint, and critical feedback (2026-10-13)
+
+`RH/OptimalDilationInnovation.lean` retains exact signed floor-dilation
+correlations and column norms for the actual full projection spaces. It proves
+both the ordinary gain bound and the stronger adjacent-gain product bound.
+Every-scale quadratic-source feedback forces geometric decay. The scalar
+contraction is isolated in `Analysis/AdjacentGainContraction.lean`.
+
+`Analysis/FiniteSpectralJensen.lean` proves the finite correction-weighted
+Jensen lower bound, positive-tail fact, and positive-envelope version.
+`Analysis/FiniteSpectralCriticalFeedback.lean` proves the critical moving-margin
+limit argument. `RH/ParetoActualSpectralCriticalFeedback.lean` connects it to
+the actual compact spectral system and existing RH bridge, retaining all
+source weights and the complete contrast.
+
+`RH/FiniteEndpointGram.lean` proves the actual cross-scale signed pairing and
+first-site-subtracted Gram bound. `Analysis/ResidualEndpointFeedback.lean`
+proves the endpoint coefficient, cofinal limit argument, and reciprocal
+quadratic-recurrence bound, including possible zero iterates.
+
+Conditional research reductions:
+- `riemannHypothesis_of_cofinal_twoSource`: Open — a fixed positive quadratic
+  lower bound for the actual two-dilation source on a cofinal set.
+- `riemannHypothesis_of_cofinal_quarticSource`: Open — the weaker quartic
+  lower bound on a cofinal set. Its scale is suggested by adjacent gains;
+  no arithmetic provider is asserted.
+- `riemannHypothesis_of_actual_compactSpectrum_cofinal_critical_contrast`:
+  Open — the displayed actual critical-margin contrast estimate with an
+  additive error satisfying inner-log-scale times error tending to zero.
+- `riemannHypothesis_of_cofinal_endpoint_feedback`: Open — the stated actual
+  first-coordinate endpoint bound, up to an error tending to zero.
+
+The exact implications do not prove RH or the feasibility of their open
+hypotheses. The external Burnol lower-bound comparison is discussed in the
+[audit note](RH/BackwardRHVerification20261013.md), and is not newly formalized
+by this checkpoint. Provenance: the user's request to verify the preceding
+argument before attacking A and then B. These are independently formalized
+deductions; no novelty claim is made. Final server checkpoint acceptance is
+required before publication.
