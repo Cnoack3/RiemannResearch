@@ -1,5 +1,22 @@
 # Theorem catalog
 
+### Finite Weil normalization and shift-aware Schur certificates (2026-10-13)
+
+Established: `RH/FiniteWeilNormalization.lean` proves the finite integral
+normalization discrepancy, its closed formula, strict positivity, and the
+lower bound Delta(L) >= L/2 through L = 2 log 2. It transfers whole-form
+lower bounds with the exact scalar loss. Integrability is explicit.
+`LinearAlgebra/ShiftedSchurCertificate.lean` proves an exact sum-of-squares
+certificate, the changed inverse-tail contribution to a scalar Schur margin,
+and rational counterexamples to two invalid margin transfers (21 theorems total).
+
+Conditional research reduction: `finite_weil_lower_bound_of_block_envelope`
+applies the corrected certificate to the actual finite gamma-integral formulas.
+Open: Fourier coefficient identification, validated corrected core/tail and
+coupling bounds, a fresh endpoint positivity certificate, and cofinal arithmetic
+positivity. No RH claim or old endpoint-certificate validity is inferred.
+[Scope, verification evidence, and remaining obligations](RH/FiniteWeilNormalizationAudit20261013.md).
+
 ### Innovation exponents and the Burnol logarithmic barrier (2026-10-13)
 
 Established scalar implications: `Analysis/InnovationLogBarrier.lean` proves the
