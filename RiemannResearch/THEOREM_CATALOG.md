@@ -1,5 +1,54 @@
 # Theorem catalog
 
+### Q floor Euler calculus and an undamped-prime obstruction (2026-10-13)
+
+Established: `Analysis/ClosedInvariantCalculus.lean` constructs the closed
+algebra of bounded operators preserving a closed real subspace. Exponentials
+preserve membership in both directions. The explicit log(I-T) series preserves
+the subspace; convergence is separately proved from summable power norms.
+Summable Neumann powers give exact two-sided inverses of I-T.
+
+`RH/QFloorDilation.lean` realizes T_m f(n)=f(floor(n/m)) on the actual
+Q Hilbert space, with T_m T_d=T_(md), squared norm bound 2/m, and the exact
+identity T_m g_d=g_(md)-g_m/d. Both the legal span and its closure are invariant.
+`RH/QFloorEulerOperators.lean` proves convergence of every nontrivial
+integer Neumann series, including m=2; each Euler factor and every finite
+prime product preserve legal-closure membership in both directions.
+`RH/QFloorEulerCalculus.lean` proves actual convergence of the local
+logarithm series and closure preservation for logarithms and exponentials.
+`RH/QFloorEulerVonMangoldt.lean` identifies that convergent series as
+log(I-T_p)=-sum_(k>=1) Lambda(p^k)/log(p^k) T_(p^k).
+No exp/log inverse identity or undamped infinite-prime product is asserted.
+
+`RH/QFloorEulerCandidates.lean` constructs literal legal residue sums
+E_(P,m)=sum_(d|P) mu(d)(g_(md)-g_d/m), with exact physical value
+C_P(n)/m-C_P(floor(n/m)); C_P counts positive integers coprime to P.
+`RH/QFiniteEulerAction.lean` identifies this with the finite Euler
+product applied to g_m for distinct primes. At factorial cutoff Y!, the
+candidate agrees through coordinate Y with (1/m)qOne-T_m qOne, hence
+converges pointwise by eventual equality.
+Established obstruction: `RH/QFloorEulerEscape.lean` proves
+norm(E_(Y!,m))_Q tends to infinity for every fixed m>1. The proof retains
+the exact Pareto decomposition and uses the existing primitive-sieve escape
+plus the scaled-isometry gap (sqrt(m)-1)/m. It uses no PNT or open hypothesis.
+
+`RH/QFloorZetaEscape.lean` separately treats coefficient truncations
+Z_N=sum_(d<=N)T_d, retaining the exact full energy
+norm(Z_N qOne)^2=N/zetaTwo+sum_(n outside [1,N]) Q(n) N^2.
+It also proves norm(Z_N g_2)^2 >= N/(16*zetaTwo) and unboundedness on
+this fixed legal atom. These coefficient truncations are not identified
+with finite prime products.
+`RH/QPrimeProductEnergy.lean` and `RH/QPrimeProductTarget.lean`
+give complete actual-Q finite-prime mixed moments and derivative-target
+errors, including all cross terms and the singleton mass 1/zetaTwo.
+Divisor observables are not asserted to be legal residue primitives.
+
+Open: the global capacity/supremum statement and convergence of legal
+candidates to qOne. Neither local functional calculus nor pointwise
+convergence supplies the missing full-Q bound. The established divergence
+excludes the displayed undamped Euler family, not every possible legal
+family, damped construction, or exact-head averaging method.
+
 ### Explicit Q candidates, Ramanujan coordinates, and exact-head averages (2026-10-13)
 
 Established finite identities: `RH/QRamanujanPackets.lean` represents the
