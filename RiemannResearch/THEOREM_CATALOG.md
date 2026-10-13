@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### Primewise zero-ordinate twists and Euler corrections (2026-10-13)
+
+Established local results: `Analysis/PrimeOrdinateTwist.lean` proves 13 results
+on the completely multiplicative extension of independently prescribed prime
+phases, unit modulus, and the exact absolute-convergence boundary Re(s) > 1.
+`Analysis/PrimePhasePerturbation.lean` proves 15 results on power discrepancies,
+prime-power convolution, the exact finite remainder, the local Euler correction
+bound, and its convergent geometric generating series.
+
+Paper-level research reduction (not a Lean theorem): selecting distinct actual
+zero ordinates with prime phases within p^(-2) of -1 gives a nonvanishing
+analytic correction to zeta(2s)/zeta(s). Its holomorphic continuation to
+Re(s) > 1/2 and its square-root summatory bound are RH-equivalent.
+Open formalization obligations: zero-ordinate density and selection; global
+multiplicative convolution and normally convergent correction product; classical
+Liouville/RH transfer. Open arithmetic obligation: square-root cancellation
+for the selected coefficients. No proof of RH or an unconditional density
+improvement is asserted.
+[Paper proof, exact status, and handoff corrections](RH/PrimeOrdinateTwistResearch20261013.md).
+
 ### Finite Weil normalization and shift-aware Schur certificates (2026-10-13)
 
 Established: `RH/FiniteWeilNormalization.lean` proves the finite integral
