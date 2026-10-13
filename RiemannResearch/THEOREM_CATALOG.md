@@ -81,6 +81,52 @@ Open: the original bounded family and the weaker finite-energy providers.
 No unconditional RH proof is claimed.
 [Exact formulas, quantifiers, and remaining arithmetic goal](RH/CRTSubpolynomialPrimeWindow20261013.md).
 
+### Actual Q residue covariance, prime coordinates, and sieve obstruction (2026-10-13)
+
+Established finite algebra: `LinearAlgebra/CenteredNormalEquations.lean`
+preserves the exact rank-one normalization, mean-one variance remainder,
+solution-independent information and full block Schur solve/update.
+
+Established actual-Q consumers: `RH/QCovarianceInverse.lean` identifies
+covariance forms with Hilbert norms and computes the full Q error.
+`RH/QCovarianceInvertibility.lean` proves positive definiteness for distinct
+conductors greater than one, genuine inverse formulas, the determinant update,
+and optimal error `det V / det G`. `RH/QSquarefreeCapacity.lean` proves
+capacity divergence iff actual squarefree closure iff the established exact-head
+bounded-tail property, its unconditional RH consequence, and exact monotone
+capacity increments. Masked stages use solvable systems without a false inverse.
+
+Established exact moments: `RH/QResidueMoments.lean`,
+`RH/QDilationMoments.lean`, and `RH/QDivisibilityResidueCoefficients.lean`
+give finite trigamma means/Gram entries, actual inverse-square divisibility
+conditioning, and the signed Mobius divisor-coordinate formula.
+
+Established prime and CRT tools: `RH/QPrimeOrthogonal.lean` and
+`RH/QPrimePowerOrthogonal.lean` prove finite squarefree and full-exponent tensor
+orthogonality under actual Q, including local telescoping inversion.
+`RH/QDivisibilityDensity.lean` transfers Noor totality to all actual Q
+divisibility indicators. `RH/QResidueRefinement.lean` gives exact atom
+refinement, weighted finite extensions, and density-factor updates.
+`RH/QPrimeSieve.lean` proves the Mobius sieve identity, finite Euler product,
+exact head error, and an unconditional full-error lower bound `1/(4*zetaTwo)`
+excluding naive primorial Mobius convergence to one in L2(Q).
+
+Established full assembly: `RH/QCovarianceMatrixInverse.lean` proves the
+literal Sherman--Morrison inverse. `RH/QExpectationIntegral.lean` supplies the
+actual Bochner-integral/weighted-series bridge. `RH/QDivisorWaveletDensity.lean`
+and `RH/QDivisorWaveletFactorization.lean` provide unconditional dense span and
+the exact arithmetic Jordan Gram diagonal. `RH/QDivisorHilbertBasis.lean`
+assembles the complete orthonormal basis and full residue Gram/error Parseval
+identities. `RH/QArithmeticCapacity.lean` identifies the complete Jordan-weighted
+arithmetic energy with the actual squarefree stage error.
+
+Conditional research reduction: `capacity_tendsto_iff_riemannHypothesis`
+retains an explicit analytic RH-to-squarefree-Q-density provider.
+Open: prove that provider and derive global residue-capacity or weighted-sieve
+tail estimates. Finite invertibility or divisibility totality does not discharge
+these obligations. Wolfram calculations are not part of this formalization.
+[Exact scope and research agenda](RH/QPrimeStructureResearch20261013.md).
+
 ### Sharp Q comparison and squarefree geometric converse (2026-10-13)
 
 Established: `RH/ZetaTwoCRTReciprocalEnergy.lean` proves
