@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### Sharp Q comparison and squarefree geometric converse (2026-10-13)
+
+Established: `RH/ZetaTwoCRTReciprocalEnergy.lean` proves
+B_L/zeta(2) <= full Q squared error <= B_L, together with both
+boundedness and zero-limit equivalences for varying periods.
+`Analysis/FiniteObservationApproximation.lean` preserves finite continuous
+linear observations exactly during subspace approximation.
+`RH/CRTSquarefreeConverse.lean` identifies the literal squarefree span and
+proves closure membership equivalent to uniformly bounded exact-head tails;
+closure also supplies arbitrarily small tails at each fixed head.
+`RH/ZetaTwoCRTSquarefreeConverse.lean` proves the identical criterion in Q,
+including both directions of the actual P/Q squarefree closure transfer.
+
+Conditional research reduction: `RH/CRTSquarefreeBoundedTail.lean`,
+`riemannHypothesis_of_squarefree_span_bounded_tail`, formalizes the
+literal cofinal squarefree divisor-span sufficient goal with a finite Icc tail.
+Open: construction of the uniformly bounded family and the separate analytic
+RH-to-squarefree-density implication. No proof of RH is claimed.
+[Exact statements and scope](RH/CRTSquarefreeQConverse20261013.md).
+
 ### Reciprocal-square CRT exact-head criterion (2026-10-13)
 
 Established: `RH/ParetoCRTReciprocalEnergy.lean` bounds the complete
@@ -19,7 +39,7 @@ RiemannHypothesis. Legality, boundedness of each finite sum, periodicity,
 and the Mellin closure-to-RH implication are proved dependencies.
 Open: a provider for the uniform arithmetic energy bound.
 The theorem permits all divisor supports, including squarefree periods.
-No squarefree converse, prescribed primorial schedule, or RH proof is claimed.
+The geometric converse is supplied above; the analytic RH converse remains Open.
 [Scope and research obligation](RH/CRTReciprocalExactHead20261013.md).
 
 ### Exact-prefix CRT reduction to one tail moment (2026-10-13)

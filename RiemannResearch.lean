@@ -1303,6 +1303,11 @@ import RiemannResearch.RH.ParetoCRTReciprocalEnergy
 import RiemannResearch.RH.CRTReciprocalExactHeadRH
 import RiemannResearch.RH.CRTReciprocalCertificate
 import RiemannResearch.RH.NormalizedResidueExactHeadCharges
+import RiemannResearch.Analysis.FiniteObservationApproximation
+import RiemannResearch.RH.ZetaTwoCRTReciprocalEnergy
+import RiemannResearch.RH.CRTSquarefreeBoundedTail
+import RiemannResearch.RH.CRTSquarefreeConverse
+import RiemannResearch.RH.ZetaTwoCRTSquarefreeConverse
 import RiemannResearch.RH.BalancedHeadInterpolation
 import RiemannResearch.RH.BalancedExactHeadEnergy
 import RiemannResearch.RH.BalancedFiniteTailGram
