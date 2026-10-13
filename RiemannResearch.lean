@@ -2445,6 +2445,7 @@ import RiemannResearch.RH.PrimeCoefficientStability
 import RiemannResearch.RH.PrimeCoefficientGain
 import RiemannResearch.RH.PrimeSensorProjection
 import RiemannResearch.RH.PrimeSensorGain
+import RiemannResearch.RH.PrimeSensorGainRateBarrier
 
 -- Quantitative ordinate sampling and collision certificates.
 import RiemannResearch.Analysis.ZeroDensityTransfer

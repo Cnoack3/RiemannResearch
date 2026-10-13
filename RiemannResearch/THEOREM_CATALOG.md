@@ -1,5 +1,39 @@
 # Theorem catalog
 
+### Rate obstruction to prime-only gain certificates (2026-10-12)
+
+Five theorems and two definitions extend `RH/PrimeSensorGain.lean`.
+The actual dyadic relative gain is exactly the normalized prime observation
+plus the normalized remainder square. If the prime observation schedule is
+summable, distance decay to zero is equivalent to nonsummability of that
+actual remainder schedule. No decay or nonsummability provider is proved.
+
+`RH/PrimeSensorGainRateBarrier.lean` adds eight theorems and one definition.
+The actual new-prime block has at most `2^n` indices. A bound `|c_q| ≤ C/q`
+gives observation energy at most `C²/(2*2^n)`. Combined with the explicit
+distance floor `D_(2^n) ≥ L/(n+1)`, the normalized observation is bounded
+by the summable schedule `C²/(2L)*(n+1)*2^(-n)`. Every nonnegative
+minorant is then summable. This limits one possible use of the preceding
+prime-only sufficient criterion; it does not invalidate that criterion.
+
+Established: finite cardinality/energy estimates, the complete actual
+gain split, and the summability/convergence equivalences as stated.
+Conditional rate obstruction:
+`dyadicNewPrime_minorant_summable_of_mobius_scale`.
+Open: uniform actual moving-prime coefficient control.
+Analytic formalization pending: the classical logarithmic distance floor
+and its actual two-seed comparison.
+Open: actual full-gain or remainder nonsummability.
+
+Persisted-module check `job_krVfzyikEMLyr9lpPh3n0fpw4iL8-7HO` passed
+(exit 0); decisive axioms are only `propext`, `Classical.choice`,
+and `Quot.sound`. Final server checkpoint acceptance precedes publication.
+[Gap attempt and finite tests](RH/PrimeSensorGapAudit20261012.md) documents
+the reviewed RH-dependent approximation theorem, the explicit hypotheses,
+and complete-tail numerical checks through cutoff 64. RH remains unresolved.
+Provenance: the supplied handoff and the request to attack its actual gap;
+the finite rate obstruction is derived here without a novelty claim.
+
 ### Sharp finite prime observations and actual legal gain (2026-10-12)
 
 `RH/PrimeSensorProjection.lean` adds nineteen proved theorems and three

@@ -6,11 +6,14 @@ Authors: RiemannResearch contributors
 import RiemannResearch.RH.PrimeCoefficientGain
 import RiemannResearch.RH.PrimeSensorProjection
 import RiemannResearch.RH.ResidualCutoffSchedule
+import RiemannResearch.RH.DyadicGainEndpoint
 import RiemannResearch.RH.DyadicGainZeroBudget
 import RiemannResearch.RH.CoupledResidualCorrections
 import RiemannResearch.RH.TwoSeedContrastObstruction
 import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Topology.Algebra.InfiniteSum.Basic
 import Mathlib.Tactic.Linarith
+import Lean.Elab.Tactic.Omega
 
 /-!
 # Exact prime observation energy in the actual legal projection gain
@@ -26,7 +29,8 @@ The finite zero-exclusion implications also require their stated numerical
 gain inequalities. None of these theorems proves such an arithmetic provider.
 -/
 
-open scoped BigOperators
+open Filter
+open scoped BigOperators Topology
 noncomputable section
 namespace RiemannResearch.RH.Pareto.CoupledResidual
 open ContrastObstruction FiniteTwoSeedCompletion RamanujanLaguerre
@@ -124,5 +128,52 @@ theorem zeta_ne_zero_of_primeObservedFitEnergy
   intro hz
   exact (not_le_of_gt hgain)
     (primeObservedFitEnergy_sum_le_of_zeta_zero M hM P hP N s hs hs1 hz)
+
+def dyadicPrimeObservedGain (P : ℕ → Finset ℕ) (n : ℕ) : ℝ :=
+  primeObservedFitEnergy (P n) (2 ^ (n + 1)) / distance (2 ^ n)
+
+def dyadicPrimeRemainderGain (P : ℕ → Finset ℕ) (n : ℕ) : ℝ :=
+  ‖fit (2 ^ (n + 1)) - fit (2 ^ n) -
+    primeDebiasedSynthesis (P n) (primeSensorValues (fit (2 ^ (n + 1))))‖ ^ 2 /
+      distance (2 ^ n)
+
+theorem dyadicPrimeObservedGain_nonneg (P : ℕ → Finset ℕ) (n : ℕ) :
+    0 ≤ dyadicPrimeObservedGain P n :=
+  div_nonneg (primeObservedEnergy_nonneg _ _) (distance_pos _).le
+
+theorem dyadicPrimeRemainderGain_nonneg (P : ℕ → Finset ℕ) (n : ℕ) :
+    0 ≤ dyadicPrimeRemainderGain P n :=
+  div_nonneg (sq_nonneg _) (distance_pos _).le
+
+theorem dyadicRelativeGain_prime_split (P : ℕ → Finset ℕ)
+    (hP : ∀ n, ∀ q ∈ P n, q.Prime ∧ 3 < q ∧ 2 ^ n < q) (n : ℕ) :
+    dyadicRelativeGain 0 n = dyadicPrimeObservedGain P n + dyadicPrimeRemainderGain P n := by
+  have hAB : (2 ^ n : ℕ) ≤ 2 ^ (n + 1) := by rw [pow_succ]; omega
+  have htwo : (2 * 2 ^ n : ℕ) = 2 ^ (n + 1) := by rw [pow_succ, Nat.mul_comm]
+  unfold dyadicRelativeGain gain dyadicPrimeObservedGain dyadicPrimeRemainderGain
+  simp only [Nat.zero_add]
+  rw [htwo, primeObservedFitEnergy_distance_drop_identity _ _ hAB (P n) (hP n)]
+  exact add_div _ _ _
+
+theorem dyadic_gain_summable_iff_primeRemainder (P : ℕ → Finset ℕ)
+    (hP : ∀ n, ∀ q ∈ P n, q.Prime ∧ 3 < q ∧ 2 ^ n < q)
+    (hobs : Summable (dyadicPrimeObservedGain P)) :
+    Summable (dyadicRelativeGain 0) ↔ Summable (dyadicPrimeRemainderGain P) := by
+  constructor
+  · intro hs
+    have ht : Summable (fun n => dyadicPrimeObservedGain P n + dyadicPrimeRemainderGain P n) :=
+      hs.congr (fun n => dyadicRelativeGain_prime_split P hP n)
+    simpa using ht.sub hobs
+  · intro hs
+    exact (hobs.add hs).congr (fun n => (dyadicRelativeGain_prime_split P hP n).symm)
+
+theorem dyadic_distance_zero_iff_primeRemainder_not_summable (P : ℕ → Finset ℕ)
+    (hP : ∀ n, ∀ q ∈ P n, q.Prime ∧ 3 < q ∧ 2 ^ n < q)
+    (hobs : Summable (dyadicPrimeObservedGain P)) :
+    Tendsto (fun n => distance (2 ^ n)) atTop (𝓝 0) ↔
+      ¬ Summable (dyadicPrimeRemainderGain P) := by
+  simpa only [Nat.zero_add] using
+    (dyadic_distance_tendsto_zero_iff 0).trans
+      (not_congr (dyadic_gain_summable_iff_primeRemainder P hP hobs))
 
 end RiemannResearch.RH.Pareto.CoupledResidual
