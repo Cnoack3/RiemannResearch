@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### CRT exact heads, escaping Q energy, and optimizer parity (2026-10-13)
+
+Established: `RH/QExactHeadEscape.lean` constructs legal exact-head candidates
+with every fixed coefficient eventually equal to -mu(d), pointwise limit one,
+but squared Q error at least (N+1)^2. The same lower bound is retained in
+the complete Jordan-weighted Parseval sum. This rules out inferring norm
+convergence from exact finite cancellation and coefficient limits alone.
+
+`RH/QCRTDivisorHead.lean` constructs the density-repaired full-divisor
+CRT candidate, proves its exact coprime-count identity, covered heads,
+periodicity, reflection constant L*rho_L, exact period variance identity,
+and full-Q error >= (1-L*rho_L/2)^2/(zeta(2)*L).
+
+`RH/QRamanujanCoefficientInversion.lean` proves finite multiple-transform
+inversion for actual packetCoefficient values and distinguishes them from
+orthogonal Q-wavelet coefficients using the single atom g_2.
+`RH/QOptimizerParity.lean` proves the actual optimizer parity coordinate
+equals three times its complete residual energy, is positive at every
+nonempty finite stage, and tends to zero iff one is in the full legal closure.
+
+Conditional research reduction: `RH/QOptimizerParityRH.lean` transfers
+full Q closure to the Pareto Mellin theorem and derives RH from vanishing
+optimizer energy, parity coordinate, or the literal arithmetic Parseval sum.
+Open: the vanishing limit or a uniformly bounded legal exact-head family.
+No unconditional RH proof or RH-to-approximation assumption is used.
+The lcm-family divergence deduction and two-atom mean repair are written
+mathematics in `RH/QCRTParsevalConstruction20261013.md`, distinguished
+there from the checked finite declarations.
+
 ### Q floor Euler calculus and an undamped-prime obstruction (2026-10-13)
 
 Established: `Analysis/ClosedInvariantCalculus.lean` constructs the closed
