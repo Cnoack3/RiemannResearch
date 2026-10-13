@@ -22,6 +22,35 @@ The theorem permits all divisor supports, including squarefree periods.
 No squarefree converse, prescribed primorial schedule, or RH proof is claimed.
 [Scope and research obligation](RH/CRTReciprocalExactHead20261013.md).
 
+### Exact-prefix CRT reduction to one tail moment (2026-10-13)
+
+Four recovered modules passed server check
+`job_CfF-ItEXLk9irhbBIdf40jU-kB3HtFhC` (exit 0, verified true).
+Ten axiom checks returned only `propext`, `Classical.choice`,
+and `Quot.sound`. Final publication requires the server checkpoint.
+
+- `Analysis/AffineObservationProjection.lean`: affine optimizer with
+  one scalar observation, exact minimum, full square remainder, uniqueness.
+- `RH/ExactHeadTailMoment.lean`: exact prefix iff one reciprocal tail
+  moment after the Mobius head is fixed; finite legality, positive
+  denominator, attained complete minimum, dictionary monotonicity.
+- `RH/ExactHeadCRTExample.lean`: three complete-energy M=1 formulas.
+- `RH/CanonicalMobiusErrorEnergy.lean`: unconditional PNT-backed
+  complete error-energy limit E_N/N -> 0.
+
+**Conditional research reduction**:
+`riemannHypothesis_of_cofinally_bounded_tailMinimum`.
+**Open provider**: a uniform bound on the complete optimized error at
+cofinally many prefixes for a nonempty finite dictionary schedule.
+The sublinear canonical error does not supply this bound.
+
+The manuscript's literal determinant, fixed-anchor representation,
+unrestricted-infimum dichotomy, and constant-12 estimate are not newly
+certified here. The existing RH-to-natural-density assembly retains its
+analytic Baez-Duarte provider; the new bounded-minimum-to-RH implication
+does not use it. Provenance: user-supplied CRT record of 2026-09-30.
+[Verification and recovery record](RH/ExactHeadCRTVerification20261013.md).
+
 ### Resonance-cell nullspace and actual logarithmic boundary gain (2026-10-12)
 
 `LinearAlgebra/ResonanceCellPotentials.lean` adds eighteen public theorems:

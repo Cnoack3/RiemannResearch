@@ -6,6 +6,10 @@ import RiemannResearch.RH.FiniteEndpointGram
 import RiemannResearch.RH.OptimalDilationInnovation
 import RiemannResearch.RH.ParetoActualSpectralCriticalFeedback
 import RiemannResearch.Analysis.OrdinateWindowVariance
+import RiemannResearch.Analysis.AffineObservationProjection
+import RiemannResearch.RH.ExactHeadTailMoment
+import RiemannResearch.RH.ExactHeadCRTExample
+import RiemannResearch.RH.CanonicalMobiusErrorEnergy
 import RiemannResearch.Analysis.OrdinateTriangleSecants
 import RiemannResearch.Analysis.CosinePolynomialMeanSquare
 import RiemannResearch.Analysis.ActualZeroWindowVariance
