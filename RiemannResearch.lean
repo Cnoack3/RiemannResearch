@@ -1315,7 +1315,9 @@ import RiemannResearch.RH.TwoSeedFarDilationBlindSpot
 import RiemannResearch.RH.AdjacentDigitCovariance
 import RiemannResearch.RH.AdjacentDilationPackets
 import RiemannResearch.LinearAlgebra.TwoThreeResonanceCell
+import RiemannResearch.LinearAlgebra.ResonanceCellPotentials
 import RiemannResearch.RH.TwoThreePacketRelations
+import RiemannResearch.RH.ResonanceCellBoundary
 import RiemannResearch.RH.FiniteResidueIndependence
 import RiemannResearch.RH.TwoThreeCanonicalBudget
 import RiemannResearch.Analysis.FiniteHarmonicBounds

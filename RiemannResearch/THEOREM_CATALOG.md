@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Resonance-cell nullspace and actual logarithmic boundary gain (2026-10-12)
+
+`LinearAlgebra/ResonanceCellPotentials.lean` adds eighteen public theorems:
+exact selected-cell interval, simultaneous common-potential classification,
+signed chain reconstruction, short boundary anchors, and the complete
+source-displacement square certificate with coefficient 6/5.
+
+`RH/ResonanceCellBoundary.lean` adds sixteen public theorems and three
+private proof helpers. The old-anchor and commuting providers are discharged
+for the actual Pareto constant-target residual. The legal root correction
+uses one or two ternary boundary packets and has complete norm at most
+`B_M = 8 log(M+1) + 8 ||digitHilbert 3 1||^2 + 996`.
+The exact enlarged projection gain satisfies `lambda_M^2 <= B_M Delta_M`.
+No RH assumption or source minorant is used. Both modules are exported.
+
+Established: the stated finite identities, actual-source specialization,
+and logarithmic common-mode gain. The geometric rank formula in the proof
+record is proved on paper and checked finitely, not a Lean rank declaration.
+Open: control of the uncovered canonical sources and a noncircular actual
+residual minorant sufficient for the global logarithmic gain target.
+
+Persisted-module audit `job_eQvm3yiuapEa53Pcga6IUGNLXLCbhXUV` passed
+(exit 0); decisive axiom output is only `propext`, `Classical.choice`,
+and `Quot.sound`. Publication requires the final server checkpoint.
+[Proof and finite Wolfram record](RH/ResonanceCellBoundary20261012.md).
+Provenance: the supplied global approximation/resonance-blind-pattern
+handoff and existing exact generator identities; no novelty claim.
+
 ### Rate obstruction to prime-only gain certificates (2026-10-12)
 
 Five theorems and two definitions extend `RH/PrimeSensorGain.lean`.
