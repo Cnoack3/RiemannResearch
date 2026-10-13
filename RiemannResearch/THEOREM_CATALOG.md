@@ -62,6 +62,40 @@ and complete-tail numerical checks through cutoff 64. RH remains unresolved.
 Provenance: the supplied handoff and the request to attack its actual gap;
 the finite rate obstruction is derived here without a novelty claim.
 
+### Closed endpoint for the Pareto first-coordinate budget (2026-10-13)
+
+`Analysis/RealCofinalLimits.lean` records elementary cofinal limit lemmas.
+`RH/FirstCoordinateEndpoint.lean` reuses the existing exact normalized
+dyadic identity and retains its first-coordinate contribution:
+`(2-sqrt 2)*limitEnergy + (sqrt 2/4)*r(1)^2 <= r(1)`.
+Thus a nonzero residual has a strict detector gap. The endpoint upper bound
+`r(1) <= (2-sqrt 2)*limitEnergy` forces the actual residual to vanish.
+
+The cofinal conditions `F_n(1) >= 1-epsilon` and
+`1-F_n(1) <= (2-sqrt 2)*energy n + epsilon` are each equivalent to residual
+vanishing. Their RH consumers are conditional research reductions.
+Open: supply either bound for the actual projections at arbitrarily late stages.
+
+`RH/FiniteDyadicEndpoint.lean` retains the entire normalized mismatch square
+and the actual energy gain in a mixed-scale identity and quadratic bound.
+`RH/GramEndpointCriterion.lean` gives the concrete finite statistic
+`v^T G^-1 b - (2-sqrt 2)*b^T G^-1 b`, its exact unconditional limit, and
+the cofinal threshold `sqrt 2-1`.
+Open: prove that arithmetic cofinal threshold. Matrix positivity alone does
+not supply it. The classical RH converse is not newly formalized here.
+
+Source: Christian Noack's Pareto parity agenda and direct deductions from the
+existing `firstCoordinate_eq_energy_add_dyadicRemainder`; no novelty claim.
+The stronger quadratic bound and endpoint consumer passed isolated server
+job `job_yJ7mmCx1osxECbpjg-eg_HuZmLj-IJAb`; selected dependencies use only
+`propext`, `Classical.choice`, and `Quot.sound`. The final targeted module
+and six-theorem axiom check passed in `job_s4ANi3y_gdYxmNKog7JoD_cH462L0WN1`
+(exit 0), with only the same standard foundations. The four modules contain
+24 theorems and one definition. Automatic approval review blocked the
+push-enabled checkpoint pending explicit user authorization to publish to
+shared main. No published commit or full aggregate checkpoint is claimed.
+The actual finite cofinal arithmetic budget remains Open.
+
 ### Sharp finite prime observations and actual legal gain (2026-10-12)
 
 `RH/PrimeSensorProjection.lean` adds nineteen proved theorems and three
