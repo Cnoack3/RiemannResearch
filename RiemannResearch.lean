@@ -92,6 +92,7 @@ import RiemannResearch.RH.QResidueMoments
 import RiemannResearch.RH.QDilationMoments
 import RiemannResearch.RH.QDivisibilityResidueCoefficients
 import RiemannResearch.RH.QResidueRefinement
+import RiemannResearch.RH.QWeightedRefinementEnergy
 import RiemannResearch.RH.QPrimeSieve
 import RiemannResearch.RH.QDivisibilityDensity
 import RiemannResearch.RH.QCovarianceMatrixInverse

@@ -91,6 +91,27 @@ provider of the uniform actual Q error / finite arithmetic tail bound.
 The ordinary Hilbert, legality, inversion, and finite-error identities
 require neither RH nor those open arithmetic inputs.
 
+### Weighted Q-refinement energy and greedy obstruction (2026-10-13)
+
+`RH/QWeightedRefinementEnergy.lean` proves the exact full-Q quadratic
+`paired_fullError_quadratic`, its infinite-sum form, all signed direction
+cross terms, completed square, optimal finite weight, zero-direction case,
+and `optimized_telescoping`. It reuses the actual QHilbert residue vectors,
+the published paired refinement identity, and QPrimeSieve.fullError.
+
+Unconditional arithmetic obstruction: `first_step_unique_minimum` gives
+u_2=2 for the canonical first step. `greedy_seed` and
+`zero_reciprocal_preserved` identify its absorbing zero reciprocal mass.
+`frozen_fullError_lower` and `frozen_not_tendsto_zero` show that every
+subsequent sequence of real weights and multipliers greater than 2 leaves
+error at least 1/(4*zetaTwo). Summability is proved, not assumed.
+This rules out that greedy construction, not the full legal span.
+
+Open for repaired constructions: full infinite-tail control and exhaustion
+of the initial error by exact increments. The infinite exhaustion criterion
+is a paper-level consequence here, not a newly formalized convergence theorem.
+[Research record and scope](RH/QWeightedRefinementResearch20261013.md).
+
 ### Primewise zero-ordinate twists and Euler corrections (2026-10-13)
 
 Established local results: `Analysis/PrimeOrdinateTwist.lean` proves 13 results
