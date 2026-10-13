@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Reciprocal-square CRT exact-head criterion (2026-10-13)
+
+Established: `RH/ParetoCRTReciprocalEnergy.lean` bounds the complete
+periodic Pareto energy by twice its finite reciprocal-square certificate
+and gives exact removal of initial zero coordinates.
+`RH/NormalizedResidueExactHeadCharges.lean` extracts normalized coefficients
+and proves the exact-head identities c_m=-mu(m) and sum c_d/d=1.
+`RH/CRTReciprocalCertificate.lean` certifies the period-six error
+1669/27684<1/16 by exact arithmetic.
+
+Conditional research reduction:
+`RH/CRTReciprocalExactHeadRH.lean`,
+`riemannHypothesis_of_cofinal_divisor_reciprocal_bound`.
+Actual finite divisor-supported sums, cofinal exact initial intervals,
+and one uniform reciprocal-square certificate bound imply Mathlib's
+RiemannHypothesis. Legality, boundedness of each finite sum, periodicity,
+and the Mellin closure-to-RH implication are proved dependencies.
+Open: a provider for the uniform arithmetic energy bound.
+The theorem permits all divisor supports, including squarefree periods.
+No squarefree converse, prescribed primorial schedule, or RH proof is claimed.
+[Scope and research obligation](RH/CRTReciprocalExactHead20261013.md).
+
 ### Resonance-cell nullspace and actual logarithmic boundary gain (2026-10-12)
 
 `LinearAlgebra/ResonanceCellPotentials.lean` adds eighteen public theorems:

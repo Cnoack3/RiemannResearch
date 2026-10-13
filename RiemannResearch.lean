@@ -1295,6 +1295,10 @@ import RiemannResearch.RH.ParetoSignedSchurRemainder
 import RiemannResearch.RH.CommonScaleApproximationCharge
 import RiemannResearch.Analysis.FiniteHilbertGram
 import RiemannResearch.RH.ParetoExactHeadClosure
+import RiemannResearch.RH.ParetoCRTReciprocalEnergy
+import RiemannResearch.RH.CRTReciprocalExactHeadRH
+import RiemannResearch.RH.CRTReciprocalCertificate
+import RiemannResearch.RH.NormalizedResidueExactHeadCharges
 import RiemannResearch.RH.BalancedHeadInterpolation
 import RiemannResearch.RH.BalancedExactHeadEnergy
 import RiemannResearch.RH.BalancedFiniteTailGram
