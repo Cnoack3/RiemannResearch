@@ -1,5 +1,47 @@
 # Theorem catalog
 
+### Explicit Q candidates, Ramanujan coordinates, and exact-head averages (2026-10-13)
+
+Established finite identities: `RH/QRamanujanPackets.lean` represents the
+integrated Ramanujan packets as actual Q Hilbert vectors, proves divisor
+inversion, and gives the exact finite coefficient transform
+a_q = sum_{q | d_i} c_i / d_i for arbitrary positive conductor lists.
+`RH/QFullResidueProjection.lean` defines the full-conductor candidate by
+the genuine inverse Gram matrix on conductors 2 through n+1, proves legal
+stage membership and equality with the actual orthogonal projection, and
+proves its unconditional limit is the projection onto the legal closure.
+
+`RH/QExplicitCandidates.lean` gives the same candidate in finite Ramanujan
+coordinates and proves the exact full error 1/(1+capacity_n), where capacity
+is computed from the genuine covariance inverse. Convergence to qOne is
+equivalent to capacity divergence. Any legal exact-head family with a
+uniform actual Q error bound supplies convergence of this fixed explicit
+matrix sequence.
+
+`RH/QExactHeadAverages.lean` proves coordinate totality, weak residual
+convergence, complete signed Gram and infinite weighted error identities,
+and constructs legal finite equal-weight averages of a sparse subsequence
+with squared error at most B/m + 4/m^2. Its arithmetic-tail entry point
+uses positive periods, exact physical heads, and a uniform finite sum
+sum_{a=N+1}^{L_N} |1-F_N(a)|^2/a^2 <= B.
+
+`RH/QMobiusExactHead.lean` supplies the explicit arithmetic family
+H_N = -sum_{d<=N} mu(d) g_d + (N+1) (sum_{d<=N} mu(d)/d) g_{N+1},
+its actual Q encoding, legality, and exact agreement with one through N.
+A uniform full Q error bound for this specific family supplies both the
+sparse-average and fixed inverse-Gram convergence conclusions.
+
+Established obstruction: `RH/QMixedConductorObstruction.lean` retains
+an exact six-square identity and proves the fixed squared Q gap
+1/(74*zetaTwo) for conductor-six charge zero, including prime-power-only
+integrated Ramanujan packets and residue sums omitting conductor six.
+
+Conditional research reductions, not unconditional approximation of one.
+Open: divergence of the displayed covariance information, or a checked
+provider of the uniform actual Q error / finite arithmetic tail bound.
+The ordinary Hilbert, legality, inversion, and finite-error identities
+require neither RH nor those open arithmetic inputs.
+
 ### Primewise zero-ordinate twists and Euler corrections (2026-10-13)
 
 Established local results: `Analysis/PrimeOrdinateTwist.lean` proves 13 results

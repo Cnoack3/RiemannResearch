@@ -89,6 +89,12 @@ import RiemannResearch.RH.QDivisorWaveletDensity
 import RiemannResearch.RH.QDivisorWaveletFactorization
 import RiemannResearch.RH.QDivisorHilbertBasis
 import RiemannResearch.RH.QArithmeticCapacity
+import RiemannResearch.RH.QExactHeadAverages
+import RiemannResearch.RH.QExplicitCandidates
+import RiemannResearch.RH.QFullResidueProjection
+import RiemannResearch.RH.QMixedConductorObstruction
+import RiemannResearch.RH.QRamanujanPackets
+import RiemannResearch.RH.QMobiusExactHead
 import RiemannResearch.Analysis.GaussianLaplaceBridge
 import RiemannResearch.Analysis.ActualZeroGaussianLaplace
 import RiemannResearch.Analysis.GaussianGrowingDegreeTail
