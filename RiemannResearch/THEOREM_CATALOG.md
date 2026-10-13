@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Innovation exponents and the Burnol logarithmic barrier (2026-10-13)
+
+Established scalar implications: `Analysis/InnovationLogBarrier.lean` proves the
+sharp parameterized late quartic cap, excludes every eventually uniform real
+exponent 0 < p < 4 under an explicit reciprocal-index envelope, bounds the
+number of quadratic contraction stages, and proves the sharp quartic constant
+restriction eta*c^2 <= 2. A reciprocal model certifies rate compatibility of
+exponent four. A sparse cofinal linear lower bound is impossible for positive
+antitone convergent residuals.
+
+Established transfer: `RH/BurnolParetoTransfer.lean` maps a lower bound on
+literal continuous fractional-part functions to the actual full-residue
+optimizer, preserving cutoff and squared norm exactly.
+`RH/ActualInnovationLogBarrier.lean` specializes the obstructions to the
+existing actual optimizer and assembles the continuous-input contradiction.
+
+Conditional research reduction: the actual logarithmic envelope still requires
+a provider of the published Burnol analytic theorem. Open: that analytic Lean
+provider and any cofinal positive quartic arithmetic innovation lower bound.
+The older two-seed budget distance is distinguished from the full-residue energy.
+No RH claim is made.
+[Proofs, schedule audit, analytic boundary, and exploratory numerics](RH/InnovationLogBarrierAudit20261013.md).
+
 ### Subpolynomial CRT tails and explicit prime windows (2026-10-13)
 
 Established: `RH/CRTReciprocalPowerObstruction.lean` proves the sharp
