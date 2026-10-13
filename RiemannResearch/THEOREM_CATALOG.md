@@ -1,5 +1,41 @@
 # Theorem catalog
 
+### Q divisor DPPs and positive spectral determinant limits (2026-10-13)
+
+Established structural results:
+
+- `RH/QDivisorDPP.lean`: the complete Q divisor basis defines actual finite-rank
+  projection DPP laws. The kernel is an explicit wavelet sum, vacancy is exact
+  projection-error energy, kernels converge to the identity, and every fixed
+  finite window fills in probability.
+- `Probability/DeterminantalComplexGenerating.lean`: actual complex generating
+  expectations for finite DPP laws and countable-law finite windows; original-Gram
+  determinant ratios; positive weighted feature matrices and real-zero consumers.
+- `Probability/ContinuousProjectionCompression.lean`: zeros of
+  `det(I-z^2 A)` are real when the finite complex matrix A is positive semidefinite.
+- `Analysis/PositiveSpectralNonvanishing.lean`: an exact imaginary-part identity,
+  dimension-independent compensated nonvanishing, and nonreal nonvanishing for
+  moving nonnegative spectra with pointwise limits at z and i/4.
+- `Analysis/PositiveSpectralProduct.lean`: fixed summable positive-spectrum
+  partial products converge and determine any pointwise or locally uniform limit.
+- `Analysis/LogarithmicHeatSum.lean`: the scalar logarithmic heat sum equals
+  zeta in Re(s)>1; no unbounded operator or operator trace is asserted.
+
+Conditional research reductions:
+
+- `RH/HilbertPolyaPositiveProduct.lean`: fixed-spectrum finite-product
+  identification is equivalent to the existing infinite-product representation
+  and implies Mathlib RH.
+- `RH/HilbertPolyaMovingSpectralLimit.lean`:
+  `riemannHypothesis_of_strip_positive_matrix_limit` and its locally uniform
+  corollary allow changing positive matrices and ranks.
+
+Open: construct the required identification with
+`s*(s-1)*completedRiemannZeta s`; construct sampled exact interpolants and prove
+their mean is the optimizer; establish any required infinite-product passage or
+operator realization. Full-basis filling alone proves neither legal-residue
+density nor a GUE scaling limit. See `RH/QDPPHilbertPolyaResearch20261013.md`.
+
 ### CRT exact heads, escaping Q energy, and optimizer parity (2026-10-13)
 
 Established: `RH/QExactHeadEscape.lean` constructs legal exact-head candidates
