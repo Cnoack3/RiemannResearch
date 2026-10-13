@@ -162,10 +162,47 @@ job `job_yJ7mmCx1osxECbpjg-eg_HuZmLj-IJAb`; selected dependencies use only
 `propext`, `Classical.choice`, and `Quot.sound`. The final targeted module
 and six-theorem axiom check passed in `job_s4ANi3y_gdYxmNKog7JoD_cH462L0WN1`
 (exit 0), with only the same standard foundations. The four modules contain
-24 theorems and one definition. Automatic approval review blocked the
-push-enabled checkpoint pending explicit user authorization to publish to
-shared main. No published commit or full aggregate checkpoint is claimed.
+24 theorems and one definition. An earlier automatic approval review blocked
+publication. Subsequent server checkpoint
+`job_jTimVyxmc7257OMYXJ8nOuhIWMSzv9_e` validated the aggregate, all four changed
+modules, and integrated source, then published commit
+`c62d051c28fc6edaf6c68231acf4ce75d8a591c3`.
 The actual finite cofinal arithmetic budget remains Open.
+
+### Quadratic Pareto endpoint and odd-coordinate signs (2026-10-13)
+
+Fifteen theorems and one definition extend the actual Pareto endpoint program:
+`Analysis/QuadraticDetectorBudget.lean` (2 theorems),
+`RH/FirstCoordinateQuadraticBudget.lean` (5 theorems, one definition), and
+`RH/ParetoOddCoordinateSignCriterion.lean` (8 theorems).
+
+The existing quadratic detector permits the larger closed cofinal allowance
+`c*energy n + (sqrt 2/4)*(c*energy n)^2`, where `c=2-sqrt 2`.
+This cofinal upper budget is exactly equivalent to actual residual vanishing.
+The qualitative condition `limitProjection(k) <= 1` at every odd `k >= 3`
+is also equivalent to zero residual. A surviving defect therefore has an odd
+overshoot witness. The sign criterion needs no uniform rate in the coordinates.
+
+Established: scalar detector strictness, the stated actual residual
+equivalences, and their conditional RH consumers.
+Open: the actual cofinal optimizer upper budget.
+Open: the odd-coordinate limiting upper-bound provider.
+The larger `3/2` quadratic allowance remains a paper resolvent argument;
+it is not formalized by these three modules. RH remains unresolved.
+
+The coherent 15-theorem check `job_QCvb8j5dfISo7GrOxLZtP7OWrK-d7ZmV` passed
+(exit 0). Both decisive RH consumers depend only on `propext`,
+`Classical.choice`, and `Quot.sound`. Persisted modules and reverse dependents
+must pass the mandatory server checkpoint before publication.
+Persisted-module audit `job_0rW7Z15dBT_ovJ8MItFrPvnnG-lBqhUn` also passed
+(exit 0): all three owning modules compiled, and six selected theorem
+dependency reports contained only the same standard foundations.
+Aggregate server build `job_22cwq7Byye1a8jDMFPprVmOwQvFvXC7i` passed
+(`lake build RiemannResearch --quiet`, 58.6 seconds). Publication remains
+subject to the mandatory push-enabled server checkpoint.
+Source: Christian Noack's supplied Pareto parity continuation, Section 6,
+and direct scalar deductions from `firstCoordinate_energy_quadratic_lower`;
+no novelty claim is made.
 
 ### Sharp finite prime observations and actual legal gain (2026-10-12)
 

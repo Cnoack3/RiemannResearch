@@ -508,6 +508,9 @@ import RiemannResearch.RH.WeilPrimeTranslationKernel
 import RiemannResearch.RH.FiniteDyadicDefect
 import RiemannResearch.Analysis.RealCofinalLimits
 import RiemannResearch.RH.FirstCoordinateEndpoint
+import RiemannResearch.Analysis.QuadraticDetectorBudget
+import RiemannResearch.RH.FirstCoordinateQuadraticBudget
+import RiemannResearch.RH.ParetoOddCoordinateSignCriterion
 import RiemannResearch.RH.FiniteDyadicEndpoint
 import RiemannResearch.RH.GramEndpointCriterion
 import RiemannResearch.Analysis.FiniteTransformZeroRemoval
