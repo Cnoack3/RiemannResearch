@@ -68,7 +68,14 @@ The geometric converse is supplied above; the analytic RH converse remains Open.
 Four recovered modules passed server check
 `job_CfF-ItEXLk9irhbBIdf40jU-kB3HtFhC` (exit 0, verified true).
 Ten axiom checks returned only `propext`, `Classical.choice`,
-and `Quot.sound`. Final publication requires the server checkpoint.
+and `Quot.sound`. Final checkpoint
+`job_E8SG2DV7UeuZtjtHgYh3lbPhsF5Krxan` succeeded on 2026-10-13
+at 07:27:49 UTC and published
+`85f1a6f673381dbde48f418a8b532e11d95b9c9b` (`pushed: true`).
+Its full-scope incremental validation built the aggregate project and all
+four changed-module targets in 58.617 seconds. The four recovered sources
+match the published files exactly; the integrated publication gate is
+satisfied. This status reconciliation is documentation-only.
 
 - `Analysis/AffineObservationProjection.lean`: affine optimizer with
   one scalar observation, exact minimum, full square remainder, uniqueness.
