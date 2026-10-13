@@ -1,5 +1,45 @@
 # Theorem catalog
 
+### Sharp finite prime observations and actual legal gain (2026-10-12)
+
+`RH/PrimeSensorProjection.lean` adds nineteen proved theorems and three
+definitions. It explicitly inverts the normalized actual prime sensor Gram
+`2I + 2vvᵀ`, where `v_q = 1/q`, without a matrix inverse dependency.
+For `E = sum c_q²`, `t = sum c_q/q`, and `S = sum 1/q²`, the exact
+minimum observation energy is `J = (E - t²/(1+S))/2`. The interpolation
+and complete physical error identity retain the remainder square.
+The improvement over `E/(2(1+S))` is the exact nonnegative pair sum
+`sum_(q,r) (c_q/r - c_r/q)² / (4(1+S))`; its harmonic specialization
+also identifies a pattern with zero improvement.
+
+`RH/PrimeSensorGain.lean` adds ten proved theorems and one definition.
+The exact energy is applied to the actual full-budget optimizer increment,
+with complete stage and finite cumulative remainder identities. A
+hypothetical off-line zero imposes a finite observation budget; exceeding
+it gives an explicit conditional zero-exclusion certificate.
+Both modules are exported from `RiemannResearch.lean`.
+
+Established: the exact finite interpolation, optimality, completed squares,
+sharp observation bounds, actual distance-drop identities and stated
+finite zero-exclusion implications.
+Conditional research reduction:
+`riemannHypothesis_of_primeObservedFitEnergy_minorant`.
+Open: a proved lower schedule for the normalized actual observed energies.
+Open: nonsummability of that successful nonnegative schedule.
+No provider for either obligation or for the logarithmic gain target is
+claimed. The sensor interpolant is not claimed to be a legal correction.
+
+Persisted-module audit `job_r9V0YdnK2ntci3DdvRfjZ7pv9u8GvE0X` passed
+(exit 0). Decisive theorem axiom output is only `propext`,
+`Classical.choice`, and `Quot.sound`. Final publication requires the
+server checkpoint's validation of the changed modules and dependents.
+The proof record includes 50/80-digit Wolfram checks with complete
+periodic infinite-tail weights and singular Gram pseudoinverses:
+[Prime sensor proof record](RH/PrimeSensorProjection20261012.md).
+Provenance: the supplied consolidated Pareto/zero-ordinate handoff supports
+the problem and prime-coordinate strategy; the finite refinements are
+derived here from existing exact sensor identities, with no novelty claim.
+
 ### Exact two-zero Pareto Mellin obstructions (2026-10-12)
 
 `RH/ParetoMellinTwoKernel.lean` adds nine declarations: conjugation of the

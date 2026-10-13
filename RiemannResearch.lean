@@ -2443,6 +2443,8 @@ import RiemannResearch.RH.CombinedPrimeSensors
 import RiemannResearch.Analysis.OrdinateLagPhase
 import RiemannResearch.RH.PrimeCoefficientStability
 import RiemannResearch.RH.PrimeCoefficientGain
+import RiemannResearch.RH.PrimeSensorProjection
+import RiemannResearch.RH.PrimeSensorGain
 
 -- Quantitative ordinate sampling and collision certificates.
 import RiemannResearch.Analysis.ZeroDensityTransfer
