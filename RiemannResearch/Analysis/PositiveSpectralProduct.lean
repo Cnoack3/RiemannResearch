@@ -1,5 +1,7 @@
 import RiemannResearch.Analysis.PositiveSpectralPolynomial
 import Mathlib.Analysis.SpecialFunctions.Log.Summable
+import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+import Mathlib.Topology.UniformSpace.LocallyUniformConvergence
 
 /-!
 # Infinite positive spectral products have only real zeros
@@ -57,5 +59,45 @@ theorem product_zero_im_eq_zero (τ : ι → ℝ)
     (hz : product τ z = 0) : z.im = 0 := by
   by_contra hnonreal
   exact product_ne_zero_of_nonreal τ hτ hs z hnonreal hz
+
+
+open Filter
+open scoped Topology
+
+/-- Ordered finite factors of a fixed nonnegative summable spectrum. -/
+def partialProduct (τ : ℕ → ℝ) (N : ℕ) (z : ℂ) : ℂ :=
+  ∏ j ∈ Finset.range N, (1 - z ^ 2 * (τ j : ℂ))
+
+theorem tendsto_partialProduct (τ : ℕ → ℝ)
+    (hτ : ∀ j, 0 ≤ τ j) (hs : Summable τ) (z : ℂ) :
+    Tendsto (fun N => partialProduct τ N z) atTop (𝓝 (product τ z)) := by
+  simpa only [partialProduct, product] using
+    (multipliable τ hτ hs z).tendsto_prod_tprod_nat
+
+/-- Pointwise convergence identifies the limit; positivity alone does not
+identify it with any independently specified entire function. -/
+theorem partialProduct_limit_eq_product (τ : ℕ → ℝ)
+    (hτ : ∀ j, 0 ≤ τ j) (hs : Summable τ) (z w : ℂ)
+    (hw : Tendsto (fun N => partialProduct τ N z) atTop (𝓝 w)) :
+    w = product τ z := by
+  exact tendsto_nhds_unique hw (tendsto_partialProduct τ hτ hs z)
+
+theorem partialProduct_limit_zero_im_eq_zero (τ : ℕ → ℝ)
+    (hτ : ∀ j, 0 ≤ τ j) (hs : Summable τ) (z : ℂ)
+    (hz : Tendsto (fun N => partialProduct τ N z) atTop (𝓝 0)) :
+    z.im = 0 := by
+  exact product_zero_im_eq_zero τ hτ hs z
+    (partialProduct_limit_eq_product τ hτ hs z 0 hz).symm
+
+/-- A locally uniform limit of these fixed-spectrum truncations is their
+infinite product. This does not assert the general Hurwitz theorem for
+arbitrary moving positive matrices. -/
+theorem eq_product_of_locallyUniformLimit (τ : ℕ → ℝ)
+    (hτ : ∀ j, 0 ≤ τ j) (hs : Summable τ)
+    (F : ℂ → ℂ) (S : Set ℂ)
+    (hF : TendstoLocallyUniformlyOn (partialProduct τ) F atTop S) :
+    Set.EqOn F (product τ) S := by
+  intro z hz
+  exact partialProduct_limit_eq_product τ hτ hs z (F z) (hF.tendsto_at hz)
 
 end RiemannResearch.Analysis.PositiveSpectralProduct

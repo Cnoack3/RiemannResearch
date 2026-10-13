@@ -1,4 +1,5 @@
 import RiemannResearch.Probability.ContinuousProjectionKernel
+import RiemannResearch.Analysis.PositiveSpectralPolynomial
 import Mathlib.Analysis.InnerProductSpace.GramMatrix
 import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.MeasureTheory.Function.L2Space
@@ -115,6 +116,28 @@ theorem IsHermitian.sum_eigenvalue_variance_eq_trace_sub_hilbertSchmidt
       Q.trace - ((∑ i, ∑ j, ‖Q i j‖ ^ 2 : ℝ) : ℂ) := by
   rw [← hQ.trace_mul_self_eq_sum_norm_sq]
   exact hQ.trace_sub_square_eq_sum_eigenvalue_variance.symm
+
+
+/-- The even determinant of a positive matrix has only real zeros.
+This is the finite self-adjoint step of the Hilbert--Polya proposal;
+it does not identify this determinant with the completed zeta function. -/
+theorem PosSemidef.det_one_sub_sq_smul_zero_im_eq_zero
+    (hQ : Q.PosSemidef) (z : ℂ)
+    (hz : (1 - z ^ 2 • Q).det = 0) : z.im = 0 := by
+  have he : (1 - z ^ 2 • Q).det =
+      ∏ i, (1 - z ^ 2 * (hQ.isHermitian.eigenvalues i : ℂ)) := by
+    simpa only [sub_eq_add_neg, neg_smul, neg_mul] using
+      hQ.isHermitian.det_one_add_smul_eq_prod_complex (-(z ^ 2))
+  rw [he] at hz
+  obtain ⟨i, _, hi⟩ := Finset.prod_eq_zero_iff.mp hz
+  exact RiemannResearch.Analysis.PositiveSpectralPolynomial.factor_zero_im_eq_zero
+    (hQ.isHermitian.eigenvalues i) (hQ.eigenvalues_nonneg i) z hi
+
+theorem PosSemidef.det_one_sub_sq_smul_ne_zero_of_nonreal
+    (hQ : Q.PosSemidef) (z : ℂ) (hz : z.im ≠ 0) :
+    (1 - z ^ 2 • Q).det ≠ 0 := by
+  intro h
+  exact hz (hQ.det_one_sub_sq_smul_zero_im_eq_zero z h)
 
 end Matrix
 

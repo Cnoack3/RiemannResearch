@@ -15,6 +15,11 @@ import RiemannResearch.RH.QFloorZetaEscape
 import RiemannResearch.RH.QPrimeProductEnergy
 import RiemannResearch.RH.QPrimeProductTarget
 import RiemannResearch.Analysis.PrimeOrdinateTwist
+import RiemannResearch.Probability.DeterminantalComplexGenerating
+import RiemannResearch.RH.QDivisorDPP
+import RiemannResearch.Analysis.PositiveSpectralNonvanishing
+import RiemannResearch.Analysis.LogarithmicHeatSum
+import RiemannResearch.RH.HilbertPolyaMovingSpectralLimit
 import RiemannResearch.Analysis.PrimePhasePerturbation
 import RiemannResearch.LinearAlgebra.ShiftedSchurCertificate
 import RiemannResearch.RH.FiniteWeilNormalization
