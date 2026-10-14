@@ -1,4 +1,8 @@
 import RiemannResearch.Analysis.BoundedMomentAverages
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Module
+import Lean.Elab.Tactic.Omega
 import RiemannResearch.Analysis.WeakConvergenceDenseTests
 import RiemannResearch.RH.ZetaTwoHilbertSpace
 import RiemannResearch.RH.ZetaTwoReciprocalCompactness
@@ -202,5 +206,73 @@ theorem exists_legal_averages_of_periodic_exact_head_tail_bound
   rw [Pareto.crtReciprocalEnergy_eq_Icc_tail N (L N) _
     (by intro n hn hnN; rw [hhead N n hn hnN]; ring)] at hb
   exact hb.trans (htail N)
+
+/-- Equal-weight averages over the moving index block [m, 2m).
+Source: the user's CRT/Parseval bounded-tail request, 13 October 2026.
+The new block discards the fixed early candidates so exact heads keep growing. -/
+def blockAverage (F : ℕ → QHilbert) (q : ℕ → ℕ) (m : ℕ) : QHilbert :=
+  ((m : ℝ)⁻¹) • ∑ i ∈ Finset.range m, F (q (m + i))
+
+theorem blockAverage_mem (S : Submodule ℝ QHilbert)
+    (F : ℕ → QHilbert) (q : ℕ → ℕ)
+    (hlegal : ∀ n, F n ∈ S) (m : ℕ) :
+    blockAverage F q m ∈ S := by
+  exact S.smul_mem _ <| S.sum_mem (fun i _ => hlegal (q (m + i)))
+
+theorem blockAverage_head (F : ℕ → QHilbert) (q : ℕ → ℕ)
+    (hq : StrictMono q)
+    (hhead : ∀ N k, 0 < k → k ≤ N → qSequence (F N) k = 1)
+    {m k : ℕ} (hm : 0 < m) (hk : 0 < k) (hkm : k ≤ m) :
+    qSequence (blockAverage F q m) k = 1 := by
+  have hm' : (m : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hm)
+  have hv (i : ℕ) : qSequence (F (q (m + i))) k = 1 :=
+    hhead _ _ hk (hkm.trans ((Nat.le_add_right m i).trans (hq.id_le _)))
+  change qSequenceLinear (((m : ℝ)⁻¹) • ∑ i ∈ Finset.range m, F (q (m + i))) k = 1
+  simp only [map_smul, map_sum, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
+  change (m : ℝ)⁻¹ * (∑ i ∈ Finset.range m, qSequence (F (q (m + i))) k) = 1
+  simp [hv, hm']
+
+/-- Exact moving-block identity; no norm estimate or signed term is discarded. -/
+theorem blockAverage_eq_prefix_difference (F : ℕ → QHilbert)
+    (q : ℕ → ℕ) {m : ℕ} (hm : 0 < m) :
+    blockAverage F q m = (2 : ℝ) • average F q (2 * m) - average F q m := by
+  have hm' : (m : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hm)
+  have hi : (2 : ℝ) * ((2 * m : ℕ) : ℝ)⁻¹ = (m : ℝ)⁻¹ := by
+    push_cast
+    field_simp
+  unfold blockAverage average
+  rw [smul_smul, hi, two_mul, Finset.sum_range_add]
+  module
+
+theorem blockAverage_tendsto (F : ℕ → QHilbert) (q : ℕ → ℕ)
+    (havg : Tendsto (average F q) atTop (𝓝 qOne)) :
+    Tendsto (blockAverage F q) atTop (𝓝 qOne) := by
+  have hdouble : Tendsto (fun m : ℕ => 2 * m) atTop atTop :=
+    tendsto_atTop_mono (fun m => by change m ≤ 2 * m; omega) tendsto_id
+  have hh := ((havg.comp hdouble).const_smul (2 : ℝ)).sub havg
+  have he : (2 : ℝ) • qOne - qOne = qOne := by module
+  rw [he] at hh
+  apply hh.congr'
+  filter_upwards [eventually_gt_atTop 0] with m hm
+  exact (blockAverage_eq_prefix_difference F q hm).symm
+
+/-- Conditional research reduction: a uniform actual Q error bound and exact
+physical heads provide legal block averages with exact growing heads and
+strong convergence. The arithmetic bound remains an explicit hypothesis. -/
+theorem exists_legal_exact_head_block_averages
+    (S : Submodule ℝ QHilbert) (F : ℕ → QHilbert)
+    (hlegal : ∀ n, F n ∈ S) {B : ℝ}
+    (hbound : ∀ N, ‖qOne - F N‖ ^ 2 ≤ B)
+    (hhead : ∀ N k, 0 < k → k ≤ N → qSequence (F N) k = 1) :
+    ∃ q : ℕ → ℕ, StrictMono q ∧
+      (∀ m, blockAverage F q m ∈ S) ∧
+      (∀ m k, 0 < m → 0 < k → k ≤ m →
+        qSequence (blockAverage F q m) k = 1) ∧
+      Tendsto (blockAverage F q) atTop (𝓝 qOne) := by
+  obtain ⟨q, hq, _, _, ht⟩ :=
+    exists_legal_averages_of_bounded_exact_heads S F hlegal hbound hhead
+  exact ⟨q, hq, blockAverage_mem S F q hlegal,
+    fun m k hm hk hkm => blockAverage_head F q hq hhead hm hk hkm,
+    blockAverage_tendsto F q ht⟩
 
 end RiemannResearch.RH.QExactHeadAverages

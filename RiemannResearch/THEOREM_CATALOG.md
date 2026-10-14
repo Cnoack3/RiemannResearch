@@ -1,5 +1,19 @@
 # Theorem catalog
 
+### Q block averages preserve growing exact heads (2026-10-13)
+
+Conditional research reduction: `RH/QExactHeadAverages.lean` now defines
+`blockAverage` and proves `exists_legal_exact_head_block_averages`.
+Given legal Q candidates with exact heads through N and one uniform bound
+on their full squared Q residuals, a strictly increasing subsequence has
+moving equal-weight block averages that remain legal, equal one through
+the block length, and converge strongly to `qOne`.
+`blockAverage_eq_prefix_difference` retains the exact identity with two
+prefix averages. `blockAverage_head` verifies the literal physical values.
+Open: construct the uniformly bounded legal candidate family. No new RH
+proof, bound provider, or verification of the paper's sharper block rate is
+claimed. Source: the user-supplied CRT carry note and bounded-tail request.
+
 ### Q divisor DPPs and positive spectral determinant limits (2026-10-13)
 
 Established structural results:
