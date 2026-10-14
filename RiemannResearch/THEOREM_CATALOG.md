@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Q divisor DPP finite rank and moving windows (2026-10-14 UTC)
+
+Server source builds and the 21-theorem axiom audit passed on 14 October 2026
+in `job_p4TWFKadHYuhQO_T8qA9lu0lh8EBGj5c` (exit code 0, `verified: true`).
+All new declarations use only `propext`, `Classical.choice`, and `Quot.sound`.
+
+- `Analysis/FiniteFeatureKernel.lean`: every finite feature-kernel matrix
+  factors through its feature space, has rank at most the feature count,
+  and has zero determinant when its size exceeds that count.
+- `RH/QDivisorDPPWindows.lean`: exact Q-DPP zero occupation probability for
+  more than N distinct sites; moving-window count and vacancy expectations,
+  gap determinant, pair covariance, and count variance.
+- `RH/QDivisorDPPArithmeticWindows.lean`: the exact physical arithmetic kernel;
+  identical finite divisor signatures force zero two-point occupation.
+
+Written unconditional analysis in `RH/QDPPMovingWindowsResearch20261014.md`
+proves an exact prime-product occupation law, moving-head saturation budgets,
+far-tail bounds, and an absolute-overlap Euler product. The overlap bounds
+rule out nontrivial unit-lattice sine limits. They also exclude specified
+continuum regimes and give conditional Poisson count limits when the stated
+mean and rarity conditions hold, including holes on the square-root head scale.
+These analytic estimates and limits are not newly Lean-verified declarations.
+
+Open: formalize the prime-product and overlap providers; analyze continuum
+scales outside the proved obstructions; supply any zeta-identification bridge.
+No RH or Hilbert–Pólya realization is asserted. Publication uses the server-gated
+aggregate checkpoint; its final result is reported with task completion.
+
 ### Q block averages preserve growing exact heads (2026-10-13)
 
 Conditional research reduction: `RH/QExactHeadAverages.lean` now defines

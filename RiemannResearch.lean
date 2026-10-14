@@ -16,7 +16,10 @@ import RiemannResearch.RH.QPrimeProductEnergy
 import RiemannResearch.RH.QPrimeProductTarget
 import RiemannResearch.Analysis.PrimeOrdinateTwist
 import RiemannResearch.Probability.DeterminantalComplexGenerating
+import RiemannResearch.Analysis.FiniteFeatureKernel
 import RiemannResearch.RH.QDivisorDPP
+import RiemannResearch.RH.QDivisorDPPWindows
+import RiemannResearch.RH.QDivisorDPPArithmeticWindows
 import RiemannResearch.Analysis.PositiveSpectralNonvanishing
 import RiemannResearch.Analysis.LogarithmicHeatSum
 import RiemannResearch.RH.HilbertPolyaMovingSpectralLimit
