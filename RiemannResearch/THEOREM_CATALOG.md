@@ -1,5 +1,42 @@
 # Theorem catalog
 
+### Q divisor DPP growing windows and Poisson counts (2026-10-14)
+
+Established source results: eight modules with 60 public theorems, one private
+helper, and eight definitions. All eight saved source modules and the six
+central-declaration axiom audit passed job_uzS396cvn-4Ce2Dchm3bbXZf888j2a6u
+(exit code 0, verified true, 31.686 seconds). Every inspected declaration uses
+only propext, Classical.choice, and Quot.sound. Final publication uses the
+server checkpoint and its required project validation.
+
+- NumberTheory/GcdWindowMoments.lean: exact gcd-fiber grouping and the
+  real-exponent window moment bound for every exponent greater than one.
+- RH/QDivisorDPPOverlapPower.lean and RH/QDivisorDPPGrowingWindows.lean:
+  reuse the existing exact overlap to prove, without arithmetic hypotheses,
+  an off-diagonal square-sum bound D_e h^(5-4e)/(x+1)^(4-4e), 0<e<3/4,
+  uniform in the projection rank, plus its geometric-budget limit consumer.
+- Probability/DeterminantalPoissonLimit.lean: exact spectral square identity,
+  signed logarithmic remainder, conditional PGF and vacancy limits, and the
+  exact diagonal/off-diagonal square-sum decomposition.
+- Probability/ProbabilityGeneratingCoefficients.lean and
+  Probability/DeterminantalCountPoissonLimit.lean: PGF coefficient convergence
+  and actual DPP count masses tending to exp(-lambda)*lambda^k/k! for all k.
+- RH/QDivisorDPPPoisson.lean: actual Q-law count and vacancy consumers;
+  consecutive-window specialization retaining mean, rank-cube, and geometric
+  budgets explicitly. These are conditional research reductions.
+- Analysis/PeriodicWeightedMean.lean: exact finite Abel identity and weighted
+  remainder bound, with a generic nonnegative periodic discrepancy theorem.
+
+Open formal providers: Q-wavelet period averages and their weighted-mean
+specialization; concrete positive-mean arithmetic windows; finite Fourier
+norm estimates for location-comparable windows. Written proofs in
+RH/QDPPGrowingWindowsResearch20261014.md construct rank=t^5, x=t^8,
+h=floor(lambda*zeta(2)*x^2/S_rank), and additional x,h of order rank^2,
+with positive-mean Poisson limits. These analytic constructions are not newly
+checked Lean specializations. Superquadratic locations force empty tails in
+the written analysis. Other continuum regimes and zeta spectral connections
+remain unresolved; no RH or universal continuum-exclusion theorem is claimed.
+
 ### Legal-residue projection DPPs and the constant-parity RH target (2026-10-14)
 
 Established: 53 new theorems in five exported modules. All five saved source
