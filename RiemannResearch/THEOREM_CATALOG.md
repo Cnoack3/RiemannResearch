@@ -1,5 +1,39 @@
 # Theorem catalog
 
+### Q divisor DPP spectral tails and arithmetic window bounds (2026-10-14)
+
+Established: 53 new theorems in five exported modules. Targeted source and axiom
+audit job_zX7LwpDDPKzHBQ1dSU4ELkkn3l8Dqa5I succeeded (18.051 seconds);
+supplemental job_PswJuw8N32hUmQbI1s_YMgJ-NVcde599 displayed the 22 initially
+truncated axiom results (4.839 seconds). All use only propext, Classical.choice,
+and Quot.sound.
+
+- RH/QPrimeWaveletOverlap.lean: exact prime-local reverse spectral masses,
+  their positivity, support and normalization, and full local absolute overlap.
+- RH/QDivisorWaveletBounds.lean: absolute wavelet <= Jordan weight <= conductor
+  squared, and the resulting arithmetic energy bound.
+- RH/QDivisorDPPSpectralTails.lean: actual signed Parseval tails; a normalized
+  auxiliary PMF whose CDF and tail are occupancy and vacancy; actual kernel trace
+  N and almost-sure particle count N; complementary-kernel Cauchy--Schwarz.
+- Probability/DeterminantalWindowBudgets.lean: moving finite-window occupation
+  and gap convergence from vanishing vacancy or occupation budgets.
+- RH/QDivisorDPPArithmeticBounds.lean: the exact arithmetic diagonal,
+  K_N(n,n) <= N(N+1)(2N+1)/(6 zeta(2)n^2), exact rough-site diagonal scaling,
+  prime-above-cutoff bound, H_N --> zeta(2), and far-window emptiness when
+  h_N N^3/x_N^2 --> 0.
+
+The asymptotic window theorem assumes its explicit geometric budget. These
+providers use the complete divisor basis including the constant mode; they
+prove no legal-residue approximation estimate and no new RH theorem.
+
+Open in Lean: global independent-prime identification of the auxiliary PMF;
+the 2n/N vacancy estimate and sharper entire-tail estimate; the global overlap
+Euler product and gcd bounds; the continuum and Poisson-limit arguments;
+any legal-residue or zeta-identification bridge. See
+RH/QDPPArithmeticVerification20261014.md for exact declarations, checked scope,
+and continuation targets. Publication uses the final server-gated aggregate
+checkpoint, reported separately from the targeted checks.
+
 ### Q divisor DPP finite rank and moving windows (2026-10-14 UTC)
 
 Server source builds and the 21-theorem axiom audit passed on 14 October 2026
