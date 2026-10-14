@@ -71,6 +71,36 @@ RH/QDPPArithmeticVerification20261014.md for the earlier checked scope and
 RH/QDPPOverlapVerification20261014.md for the new providers.
 Publication uses the final server-gated aggregate checkpoint.
 
+### Real squarefree residue matrices and the unbounded limit (2026-10-14)
+
+Established: 37 new theorems in three exported modules.
+Analysis/MatrixMaximalRayleigh.lean supplies the genuine maximal Rayleigh
+eigenvalue for a nonempty real symmetric matrix.
+RH/SquarefreeResidueMatrix.lean constructs the complete squarefree conductor
+Gram kernel and its real square heads, proves positivity, a non-integer entry,
+conductor convergence, the exact H_N=D_N M_N D_N normalization, and the
+signed row relation H(1,m)-H(2,m)-H(3,m)+H(4,m)=0.
+RH/SquarefreeResidueMatrixGrowth.lean proves a largest eigenvalue of the
+odd-site principal submatrix is at least N/(4 zeta(2)) and tends to infinity.
+It also proves the first infinite column is not l2, no operator with that
+literal column can include e_1 in its domain, and the truncated columns have
+no l2 coordinatewise limit.
+
+Persisted-module verification job_sAK4VAYu7k81gOtygxJgY4AyU4PsXv5q passed
+(exit 0, verified=true, 15.878 seconds). Publication uses the final
+server-gated aggregate checkpoint; its terminal result is reported separately.
+See RH/SquarefreeRealMatrixInfinity20261014.md for exact scope and interpretation.
+
+Complete axiom audit job_bHVZoZl1jkRJldh_n0fEC8J5MYvIqKSh passed for all 37
+theorems (exit 0, verified=true, 5.053 seconds), using only propext,
+Classical.choice, and Quot.sound.
+
+Open: a densely defined selfadjoint operator, a discrete spectrum with ordered
+eigenvalue convergence, an exact completed-zeta determinant/zero identification,
+and an arithmetic reason for the 2 pi scaling. No Hilbert--Polya realization
+or new RH theorem is asserted. The domain obstruction does not exclude every
+smaller domain or a different operator construction.
+
 ### Q divisor DPP finite rank and moving windows (2026-10-14 UTC)
 
 Server source builds and the 21-theorem axiom audit passed on 14 October 2026

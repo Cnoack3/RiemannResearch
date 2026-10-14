@@ -2623,3 +2623,6 @@ import RiemannResearch.RH.ResidueTailCertificate
 import RiemannResearch.RH.WeilExplicitFormula.Tail.WindowCount
 import RiemannResearch.RH.ParetoMellinTwoKernel
 import RiemannResearch.RH.ParetoMellinZeroPairObstruction
+import RiemannResearch.Analysis.MatrixMaximalRayleigh
+import RiemannResearch.RH.SquarefreeResidueMatrix
+import RiemannResearch.RH.SquarefreeResidueMatrixGrowth
