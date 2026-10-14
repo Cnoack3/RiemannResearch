@@ -1,5 +1,45 @@
 # Theorem catalog
 
+### Legal-residue projection DPPs and the constant-parity RH target (2026-10-14)
+
+Established: 53 new theorems in five exported modules. All five saved source
+modules and the 16 central-declaration axiom audit passed
+job_ckDopHaizfaW5vhguVHyDNs2Q-emhH2S (11.578 seconds, exit code 0,
+verified true). Every inspected declaration uses only propext,
+Classical.choice and Quot.sound. Publication uses the final server checkpoint.
+
+- RH/QDivisorProjectionDPP.lean (13 theorems): actual positive-contraction
+  DPP for any Q subspace in the complete divisor-wavelet coordinates;
+  exact constant occupation/vacancy, trial-error Pythagoras and nested diagonals.
+- RH/QDivisorProjectionParity.lean (6 theorems): exact normalized parity
+  residual, constant-parity kernel block, actual joint occupation 4p-3,
+  and p >= 3/4 whenever the conductor-2 residue belongs to the subspace.
+- RH/QLegalResidueDPP.lean (30 theorems): actual full and masked squarefree
+  legal laws; constant vacancy equals full optimizer error; p = I/(1+I);
+  monotonicity, strict finite p<1, closure and CRT equivalences; full trial-error
+  consumer; exact parity zero-limit equivalence; real reweighted law invariance.
+- Analysis/AtomSpanReweighting.lean (1 theorem): independent nonzero scalar
+  weights preserve every atom span over a division ring.
+- Analysis/PrimeOrdinateFloorPhase.lean (3 theorems): exact cancellation of
+  integer parts from normalized unit-circle phases, prime-log specialization,
+  and fixed complex-dictionary span invariance under arbitrary ordinate phases.
+
+Conditional research reductions: legal p_n --> 1 or legal L_n(1,2) --> 0
+implies Mathlib RiemannHypothesis, by reusing the actual legal-closure/Mellin
+consumers. Neither limit is proved here. The squarefree p_n --> 1 equivalence
+with SquarefreeExactHeadTailBound retains the substantive uniformly bounded
+weighted-tail obligation. That arithmetic provider remains Open.
+Zero-phase/equidistribution-to-capacity or trial-energy estimates remain Open.
+The inspected FMZ continuous-test consumer retains its explicit classical
+UniformSelbergDensity(1/4) provider, not formalized in that development.
+
+Sites are divisor-wavelet labels: site 1 is qOne. The earlier complete-basis
+moving-physical-site overlap theorem does not bound this dense legal
+projection's fixed-mode parity entry. No RH converse, continuum-unfolding
+exclusion, or Hilbert--Polya/zeta spectral identification is claimed.
+See RH/QLegalDPPResearch20261014.md for the exact CRT budget, tested sieve
+obstructions, phase limitations, theorem inventory, and verification scope.
+
 ### Q divisor DPP global overlap and independent moving windows (2026-10-14)
 
 Established: 54 new theorems in four exported modules. Final source-module
