@@ -1,5 +1,12 @@
 # Q divisor DPP: finite rank, moving windows, and arithmetic obstructions
 
+Formalization update (14 October 2026): the global overlap identity, finite
+Euler-product limits, uniform gcd estimates, fixed-offset Bernoulli limits,
+and unit-lattice sine exclusion are now source-verified in the continuation
+[QDPPOverlapVerification20261014.md](QDPPOverlapVerification20261014.md).
+The original verification ledger below records the earlier publication stage.
+Broader continuum unfoldings and Hilbert--Polya identification remain unresolved.
+
 Research date: 13 October 2026 in America/New_York / 14 October UTC.
 
 ## Status and scope

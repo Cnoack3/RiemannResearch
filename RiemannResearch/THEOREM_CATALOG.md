@@ -1,5 +1,41 @@
 # Theorem catalog
 
+### Q divisor DPP global overlap and independent moving windows (2026-10-14)
+
+Established: 54 new theorems in four exported modules. Final source-module
+verification and the 11 central-declaration axiom audit passed in
+job_XVI1iRRut29tJv5d814MWJ3dEtOXDb6Z (18.002 seconds, exit code 0,
+verified true). The inspected central declarations use only propext,
+Classical.choice, and Quot.sound. Final publication uses the server checkpoint.
+
+- RH/QDivisorWaveletOverlap.lean (25 theorems): actual multiplicative overlap
+  arithmetic function; prime-power bridge; exact finite divisor Euler products
+  and saturated ratio identities; finite prime correction and gcd budgets.
+- RH/QDivisorDPPOverlap.lean (14 theorems): absolute summability; the exact
+  global overlap (g^2/(nm)) product_(p in D) 2(1-p^(-2)); Euler limits along
+  exhaustive factorial prime sets; actual kernel bound (g^2/(nm))2^card(D)
+  and K_N(n,m)^2 <= 4g^2/(nm); arbitrary finite basis subsets and diagonal tapers.
+- Probability/DeterminantalIndependentLimit.lean (5 theorems): exact occupied/
+  vacant finite configurations, their complete independent Bernoulli limit
+  from diagonal kernel convergence, and compact marginal subsequences.
+- RH/QDivisorDPPIndependentWindows.lean (10 theorems): explicit fixed-offset
+  bound, uniform off-diagonal decay for arbitrary rank sequences, all-pattern
+  Bernoulli convergence, automatic Bernoulli subsequences, and probability-level
+  exclusion of nontrivial unit-lattice sine limits.
+
+The limit consumer assumes marginal convergence; the subsequence theorem
+supplies it from compactness of the actual finite marginal cube. The sine
+exclusion assumes adjacent marginals tend to rho with 0<rho<1 and rules out
+the sine two-point law. No RH, stationarity, or inter-rank coupling is assumed.
+
+Conditional research reduction: basisKernel_scaled_tendsto_zero_of_gcd_budget
+retains the explicit obligation 4 a_N^2 gcd(n_N,m_N)^2/(n_Nm_N) --> 0.
+A general continuum unfolding satisfying this budget remains Open.
+Unresolved continuum regimes and Hilbert--Polya/zeta identification remain Open.
+The complete basis includes the constant mode and proves no legal-residue
+approximation result. See RH/QDPPOverlapVerification20261014.md for exact
+declarations, proof structure, verification scope, and remaining API packaging.
+
 ### Q divisor DPP spectral tails and arithmetic window bounds (2026-10-14)
 
 Established: 53 new theorems in five exported modules. Targeted source and axiom
@@ -26,13 +62,14 @@ The asymptotic window theorem assumes its explicit geometric budget. These
 providers use the complete divisor basis including the constant mode; they
 prove no legal-residue approximation estimate and no new RH theorem.
 
-Open in Lean: global independent-prime identification of the auxiliary PMF;
-the 2n/N vacancy estimate and sharper entire-tail estimate; the global overlap
-Euler product and gcd bounds; the continuum and Poisson-limit arguments;
+The global overlap, Euler limits, gcd bounds, and fixed-offset Bernoulli/sine
+results are now checked by the continuation above. Open in Lean: independent-
+prime identification of the auxiliary PMF; the 2n/N vacancy estimate and
+sharper entire-tail estimate; the remaining continuum and Poisson providers;
 any legal-residue or zeta-identification bridge. See
-RH/QDPPArithmeticVerification20261014.md for exact declarations, checked scope,
-and continuation targets. Publication uses the final server-gated aggregate
-checkpoint, reported separately from the targeted checks.
+RH/QDPPArithmeticVerification20261014.md for the earlier checked scope and
+RH/QDPPOverlapVerification20261014.md for the new providers.
+Publication uses the final server-gated aggregate checkpoint.
 
 ### Q divisor DPP finite rank and moving windows (2026-10-14 UTC)
 
