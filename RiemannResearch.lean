@@ -72,6 +72,7 @@ import RiemannResearch.Analysis.AffineObservationProjection
 import RiemannResearch.RH.ExactHeadTailMoment
 import RiemannResearch.RH.ExactHeadCRTExample
 import RiemannResearch.RH.CanonicalMobiusErrorEnergy
+import RiemannResearch.RH.CanonicalMobiusCovarianceDecay
 import RiemannResearch.Analysis.OrdinateTriangleSecants
 import RiemannResearch.Analysis.CosinePolynomialMeanSquare
 import RiemannResearch.Analysis.ActualZeroWindowVariance

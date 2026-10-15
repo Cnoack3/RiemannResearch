@@ -1,5 +1,9 @@
 import RiemannResearch.RH.MobiusResidualFirstCoordinate
+import RiemannResearch.RH.NearbyDilationGram
 import Mathlib.Analysis.InnerProductSpace.l2Space
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
+import Lean.Elab.Tactic.Omega
 
 
 /-!
@@ -85,6 +89,44 @@ theorem hilbertTailShift_inner_sq_le (r e : ThresholdHilbert) (N : ℕ)
   have hs := (sq_le_sq₀ (abs_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _))).mpr h
   rw [sq_abs, mul_pow, hn] at hs
   exact hs
+
+/-- A bounded physical sequence has a complete Pareto tail of energy at most
+`A² / (N+1)`. The proof starts from the exact weighted tail and telescoping mass. -/
+theorem hilbertTailShift_norm_sq_le_of_bounded (f : ThresholdHilbert) (N : ℕ)
+    (A : ℝ) (hA : 0 ≤ A)
+    (hf : ∀ n, 0 < n → |hilbertSequence f n| ≤ A) :
+    ‖hilbertTailShift f N‖ ^ 2 ≤ A ^ 2 / ((N : ℝ) + 1) := by
+  have hs : Summable (fun k : ℕ => positiveWeight (k + N + 1) *
+      hilbertSequence f (k + N + 1) ^ 2) := by
+    simpa only [Nat.add_assoc] using
+      (summable_nat_add_iff (N + 1)).mpr (hilbertSequence_square_summable f)
+  have hw : Summable (fun k : ℕ => positiveWeight (k + N + 1)) := by
+    simpa only [Nat.add_assoc] using
+      (summable_nat_add_iff (N + 1)).mpr positiveWeight_summable
+  calc
+    ‖hilbertTailShift f N‖ ^ 2 =
+        ∑' k : ℕ, positiveWeight (k + N + 1) *
+          hilbertSequence f (k + N + 1) ^ 2 := by
+      rw [hilbert_norm_sq]
+      apply tsum_congr
+      intro k
+      exact (hilbertSequence_weighted_square f (k + N)).symm
+    _ ≤ ∑' k : ℕ, positiveWeight (k + N + 1) * A ^ 2 := by
+      apply Summable.tsum_le_tsum _ hs (hw.mul_right _)
+      intro k
+      apply mul_le_mul_of_nonneg_left _ (positiveWeight_nonneg _)
+      simpa only [sq_abs] using
+        (sq_le_sq₀ (abs_nonneg (hilbertSequence f (k + N + 1))) hA).mpr
+          (hf (k + N + 1) (by omega))
+    _ = A ^ 2 / ((N : ℝ) + 1) := by
+      rw [tsum_mul_right]
+      have ht : (∑' k : ℕ, positiveWeight (k + N + 1)) =
+          1 / ((N + 1 : ℕ) : ℝ) := by
+        simpa only [Nat.add_assoc] using
+          positiveWeight_tail_tsum (N + 1) (Nat.succ_pos _)
+      rw [ht]
+      push_cast
+      ring
 
 namespace CoefficientStabilization
 

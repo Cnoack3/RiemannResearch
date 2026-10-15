@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Fixed-test canonical covariance decay (2026-10-14)
+
+Established: RH/ExactHeadResidualTail.lean adds
+`hilbertTailShift_norm_sq_le_of_bounded`, bounding the complete Pareto tail
+by A^2/(N+1) for a physical sequence bounded by A. The exact weighted tail
+identity is retained before the estimate.
+
+RH/CanonicalMobiusCovarianceDecay.lean proves a complete squared-pairing
+bound and convergence to zero against every fixed bounded physical test.
+In particular, every fixed canonical residual decorrelates from later
+canonical residuals. The proof uses the existing unconditional PNT
+sublinear energy theorem, with no RH or squarefree-closure assumption.
+
+Open: a uniform bound for the complete covariance energy of cofinal signed
+or convex averages. The first test remains fixed in the established limit;
+no uniform moving-matrix bound or weak convergence against every Hilbert
+vector is asserted.
+
 ### Squarefree finite-coordinate tests (2026-10-14)
 
 Established: RH/SquarefreeFiniteObservation.lean proves
