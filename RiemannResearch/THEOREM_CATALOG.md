@@ -1,5 +1,41 @@
 # Theorem catalog
 
+### Canonical Q/P affine minima and optimizer stability (2026-10-15)
+
+Established: RH/QParetoAffineMinimum.lean proves exact P/Q affine
+Pythagoras, the correction balance
+R(x_P)=R(x_Q)+2||x_Q-x_P||_P^2+R(x_Q-x_P), and the complete minimum gap
+zeta(2)*D_Q-D_P=R(x_Q)+||x_Q-x_P||_P^2.
+The common-head displacement bound is
+||x_Q-x_P||_P^2 <= R(x_P)/(H+1) <= D_P/(H+1)^2.
+Generic finite normal equations are explicit; singular families are permitted
+when those equations have solutions.
+
+RH/QCanonicalWindowMinimum.lean constructs the actual Q inverse-Gram
+normal vector from the proved independence of complete canonical residuals.
+It proves positive normal mass, the exact affine energy completion and
+uniqueness of the minimizing coefficients. Both finite normal equations
+are discharged by actual inverse constructions.
+
+With delta_N=||r_N||_P^2/(N+1), the unconditional bounds for every
+M >= N >= 1 are 0 <= zeta(2)*D_Q-D_P <= delta_N and
+||x_Q-x_P||_P^2 <= delta_N/(N+1).
+The actual Q optimum also has correction at most delta_N; two independently
+selected windows have squared mixed correction at most delta_N*delta_K.
+Cofinal energy-gap and strong displacement limits allow arbitrary
+dimension growth and require no coefficient-mass bound.
+
+Conditional research reductions: riemannHypothesis_of_bounded_optimized_energy
+consumes a uniform bound on actual Q minimum energies with growing heads.
+riemannHypothesis_of_normalQ_mass_lower consumes a single positive lower
+bound on 1^T G_Q^-1 1 along those growing heads. This uniform arithmetic
+lower bound remains Open; positivity of each separate finite normal mass
+is already established. No bound on the full minimizing energy, convergence
+of raw coefficients, or RH is concluded by the unconditional comparisons.
+
+The development adds 31 theorem declarations and five definitions.
+Research record: RH/QCanonicalWindowMinimumResearch20261015.md.
+
 ### Uniform canonical Q/P Gram and covariance comparison (2026-10-15)
 
 Established: RH/QMetricCorrectionBounds.lean realizes the full signed

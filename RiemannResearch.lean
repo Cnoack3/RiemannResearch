@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QParetoAffineMinimum
+import RiemannResearch.RH.QCanonicalWindowMinimum
 import RiemannResearch.RH.QMetricCorrectionBounds
 import RiemannResearch.RH.QCanonicalCofinalGram
 import RiemannResearch.Analysis.FiniteGramMetricComparison
