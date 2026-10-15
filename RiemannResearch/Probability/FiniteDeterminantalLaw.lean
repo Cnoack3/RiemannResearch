@@ -144,6 +144,13 @@ def finiteLaw (K : Matrix ι ι ℝ) (hpos : ∀ S, 0 ≤ exactWeight K S) :
   PMF.ofFintype (fun S => ENNReal.ofReal (exactWeight K S))
     (sum_ofReal_exactWeight K hpos)
 
+/-- The real mass of a finite configuration is its exact determinant weight. -/
+@[simp] theorem finiteLaw_apply_toReal (K : Matrix ι ι ℝ)
+    (hpos : ∀ S, 0 ≤ exactWeight K S) (S : Finset ι) :
+    ((finiteLaw K hpos) S).toReal = exactWeight K S := by
+  change (ENNReal.ofReal (exactWeight K S)).toReal = _
+  exact ENNReal.toReal_ofReal (hpos S)
+
 variable [MeasurableSpace (Finset ι)] [MeasurableSingletonClass (Finset ι)]
 
 theorem finiteLaw_inclusion (K : Matrix ι ι ℝ)

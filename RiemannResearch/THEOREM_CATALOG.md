@@ -1,5 +1,48 @@
 # Theorem catalog
 
+### Random legal-conductor selection and exact expected projection errors (2026-10-14)
+
+Established: 35 public theorems across four new exported modules and the
+existing finite DPP law module. The general nested identity is reused from
+Analysis/NestedProjectionEnergy.lean, rather than duplicated.
+
+- Analysis/RandomSubspaceProjection.lean: exact finite expectations and
+  Bochner integrals; equality precisely on supported subspaces containing
+  the full optimizer, or almost surely; deterministic extraction below the
+  mean; exact trial-gap remainder; convergence iff both nonnegative terms
+  vanish.
+- Analysis/FiniteAtomSelection.lean: literal finite atom spans, actual
+  orthogonal projections, nested inclusions, and exact selected errors.
+- Probability/DeterminantalAtomSelection.lean: the existing actual finite
+  positive-contraction DPP PMF specialized to atom selection, exact expected
+  error/equality, and supported deterministic witnesses with optional
+  cardinality caps. FiniteDeterminantalLaw adds finiteLaw_apply_toReal.
+- RH/QLegalAtomSelection.lean: full and actual squarefree conductor
+  selections, exact errors relative to 1-p_n, equality conditions,
+  conductor-DPP specializations, explicit two-stage wavelet vacancy
+  averages, and both legal-family convergence equivalences.
+
+Conditional research reductions: mean-square sampled error tending to zero
+implies Mathlib RH. Its exact equivalent obligations are full legal p_n
+tending to one and expected selection gap tending to zero. Both arithmetic
+providers remain Open. A wavelet-label DPP is not a conductor-selection law;
+the formal weighted vacancy averages describe an explicit two-stage
+connection and do not assert the mixture is determinantal.
+
+Saved source checks and eleven central axiom inspections passed
+job_GQ4fG-Ed695fkJy-1L92RKQimyPqubeo (14.092 seconds) and
+job_AUqHp7LhY04S_SNgWv_gpespYcZ-VqW0 (16.676 seconds), both exit code 0,
+verified true. Inspected axioms are propext, Classical.choice, and Quot.sound.
+Publication additionally requires the final server checkpoint.
+
+RH/QLegalAtomSelectionResearch20261014.md gives analytic determinant proofs
+for the conductor Gram L-ensemble: exact ridge mean coefficients, target
+spectral leakage, sample-size formula, and finite equality obstructions.
+These resolvent specializations are written analytic results, not new Lean
+declarations. Target-weighted growing-Gram leakage, sparse sample-size
+bounds, and the full legal-density/CRT expected-tail arithmetic providers
+remain Open.
+
 ### Q divisor DPP growing windows and Poisson counts (2026-10-14)
 
 Established source results: eight modules with 60 public theorems, one private

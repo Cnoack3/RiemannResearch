@@ -9,6 +9,10 @@ import RiemannResearch.Analysis.PeriodicWeightedMean
 import RiemannResearch.RH.QDivisorProjectionDPP
 import RiemannResearch.RH.QDivisorProjectionParity
 import RiemannResearch.RH.QLegalResidueDPP
+import RiemannResearch.Analysis.RandomSubspaceProjection
+import RiemannResearch.Analysis.FiniteAtomSelection
+import RiemannResearch.Probability.DeterminantalAtomSelection
+import RiemannResearch.RH.QLegalAtomSelection
 import RiemannResearch.Analysis.AtomSpanReweighting
 import RiemannResearch.Analysis.PrimeOrdinateFloorPhase
 import RiemannResearch.Probability.DeterminantalIndependentLimit
