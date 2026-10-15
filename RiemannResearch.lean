@@ -73,6 +73,10 @@ import RiemannResearch.RH.ExactHeadTailMoment
 import RiemannResearch.RH.ExactHeadCRTExample
 import RiemannResearch.RH.CanonicalMobiusErrorEnergy
 import RiemannResearch.RH.CanonicalMobiusCovarianceDecay
+import RiemannResearch.RH.CanonicalMobiusMovingCovariance
+import RiemannResearch.RH.CanonicalMobiusMovingCutoff
+import RiemannResearch.RH.QCanonicalMovingCovariance
+import RiemannResearch.RH.QCanonicalAverageEnergy
 import RiemannResearch.Analysis.OrdinateTriangleSecants
 import RiemannResearch.Analysis.CosinePolynomialMeanSquare
 import RiemannResearch.Analysis.ActualZeroWindowVariance

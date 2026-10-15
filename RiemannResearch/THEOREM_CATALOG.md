@@ -1,5 +1,37 @@
 # Theorem catalog
 
+### Moving canonical covariance and complete Q-energy gap (2026-10-15)
+
+Established: RH/CanonicalMobiusMovingCovariance.lean proves
+'moving_test_tendsto' from the exact moving physical-bound budget,
+'moving_canonical_tendsto', and the complete initial-column bound
+B(K,N) <= K*(1+2*K)^2*delta_N, where delta_N = ||r_N||_P^2/(N+1).
+Finite Cauchy--Schwarz controls signed block tests with bounded squared
+coefficient mass; convex coefficients are included.
+
+Established: RH/CanonicalMobiusMovingCutoff.lean uses the existing checked
+stretched PNT provider to prove 'energyRate_eventual_log_square':
+delta_N <= D/(6+log N)^2 eventually. The concrete positive cutoff
+K_N = 1 + floor(sqrt(6+log N)) tends to infinity and its full column energy
+tends to zero. 'exists_growing_canonical_tests' and the signed/convex
+block-pairing limits are unconditional. Constants and onset remain existential.
+
+Established: RH/QCanonicalMovingCovariance.lean constructs the actual
+Q-weighted canonical family and proves moving-test and growing-column decay
+with the complete Q/P comparison constants. RH/QCanonicalAverageEnergy.lean
+proves exact full Q residual Gram and infinite weighted-sum energy identities.
+
+Conditional research reductions:
+'squarefree_closure_of_bounded_residual_gram' and
+'riemannHypothesis_of_bounded_residual_gram' consume a uniform upper bound
+on the complete signed Q-Gram energy of cofinal sum-one averages whose
+boundary conductors k+1 are squarefree. This arithmetic budget is Open.
+Column decay does not establish bounded average norms, squarefree closure,
+or RH. The research record CanonicalMovingCovarianceResearch20261015.md
+gives the exact missing estimate and an explicitly informal diagnostic
+countermodel showing why the abstract sublinear-energy bounds alone
+cannot imply that estimate.
+
 ### Fixed-test canonical covariance decay (2026-10-14)
 
 Established: RH/ExactHeadResidualTail.lean adds
