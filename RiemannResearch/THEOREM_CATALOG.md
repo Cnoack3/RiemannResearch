@@ -32,6 +32,53 @@ gives the exact missing estimate and an explicitly informal diagnostic
 countermodel showing why the abstract sublinear-energy bounds alone
 cannot imply that estimate.
 
+### Certified finite inverse-Gram ceilings and radius monotonicity (2026-10-14)
+
+Established: Analysis/TruncatedGramEnvelope.lean constructs the normal
+solution of an augmented finite Gram system with a positive diagonal
+allowance. It proves positive normal mass, normalized selected coefficients,
+the exact affine energy completion, and transfer of ceiling comparisons
+from comparisons of the complete penalized quadratic objectives.
+
+RH/CanonicalMobiusTruncatedCeiling.lean specializes to actual positive
+canonical cutoffs k_i, residuals e_i=1-F_(k_i), physical Pareto weights,
+Q=sum_i(1+2k_i)^2, and penalty Q/R. It retains the exact finite-energy
+plus infinite-tail split, proves the complete tail allowance, and bounds
+the selected actual Hilbert residual norm by the constructed inverse
+normal-mass ceiling. Normalization preserves every common exact head.
+
+The exact radius difference is
+w_R*((sum_i a_i e_i(R))^2-Q*sum_i a_i^2).
+Cauchy-Schwarz makes it nonpositive, proving that the constructed ceiling
+is antitone in R for each fixed family. No matrix inverse, normal
+solvability, or tail-boundedness provider is assumed.
+
+Open: a uniform ceiling for selected cofinal squarefree boundary supports.
+Taking all k_i+1 squarefree ensures legality by the existing membership
+theorem, but the present estimates do not bound the ceiling as the
+smallest cutoff grows. Increasing the support also changes Q, so fixed
+radius support monotonicity does not follow. No RH or squarefree-closure
+hypothesis is used or discharged by these finite results.
+
+### Exact arithmetic quotient-cell covariance identities (2026-10-14)
+
+Established: RH/CanonicalMobiusQuotientCells.lean gives the exact canonical
+residual as H_q(n) + q b_Y, where q = floor(n/(Y+1)),
+H_q(n) = sum_{k<=q} M(floor(n/k)), and b_Y = (Y+1)S_Y - M(Y).
+The signed two-cutoff product retains both cutoff correction terms.
+
+On a common quotient cell, normalized real signed averaging changes only
+the constant offset. The exact cell energy is its weighted Mertens-profile
+variance plus a mean square. The full Hilbert norm equality retains the
+entire complementary infinite energy. Concrete interval conditions give
+the actual Pareto mass 1/L - 1/U, with no analytic provider assumed.
+
+Open: uniform upper control of these terms for cofinal prime-cutoff
+families. These are arithmetic identities and a local lower constraint,
+not a uniform covariance estimate or an RH proof. Common cells may be
+empty for widely separated cutoffs; general cofinal averages are not
+excluded. No RH or squarefree-closure hypothesis is introduced.
+
 ### Fixed-test canonical covariance decay (2026-10-14)
 
 Established: RH/ExactHeadResidualTail.lean adds
