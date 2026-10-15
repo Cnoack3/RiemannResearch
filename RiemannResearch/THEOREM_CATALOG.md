@@ -1,5 +1,19 @@
 # Theorem catalog
 
+### Squarefree finite-coordinate tests (2026-10-14)
+
+Established: RH/SquarefreeFiniteObservation.lean proves
+`squarefree_finite_observation_annihilator`. If a finite linear combination
+of positive-coordinate evaluations vanishes on every squarefree residue
+atom, then its coefficients sum to zero, so it also vanishes on the
+constant-one sequence. The proof uses existing canonical Mobius trials at
+a prime boundary to match the entire prescribed finite head exactly.
+
+Open: constant-one membership in the norm closure of the squarefree atom
+span. The finite-coordinate theorem does not cover arbitrary continuous
+functionals involving infinitely many coordinates, and supplies no bound
+on the interpolants' tail energies. It is not an unconditional proof of RH.
+
 ### Random legal-conductor selection and exact expected projection errors (2026-10-14)
 
 Established: 35 public theorems across four new exported modules and the

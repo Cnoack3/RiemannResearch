@@ -219,6 +219,7 @@ import RiemannResearch.RH.ZetaTwoReciprocalObstruction
 import RiemannResearch.RH.ZetaTwoRadicalRowCriterion
 import RiemannResearch.Analysis.RadicalDifferenceTotality
 import RiemannResearch.RH.SquarefreeRadicalDifference
+import RiemannResearch.RH.SquarefreeFiniteObservation
 import RiemannResearch.RH.ReciprocalHeadCertificate
 import RiemannResearch.Analysis.InfiniteWeightedCauchy
 import RiemannResearch.RH.ReciprocalInfiniteCertificate
