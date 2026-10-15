@@ -146,4 +146,75 @@ theorem optimizer_error_bounds {v : ι → QHilbert} (hv : LinearIndependent ℝ
   exact ⟨hpmin.trans hpq,
     (mul_le_mul_of_nonneg_left hqmin zetaTwo_pos.le).trans hqp⟩
 
+
+/-- Any signed synthesis of vectors with a common zero head keeps that head. -/
+theorem synthesis_head_zero (v : ι → QHilbert) (c : ι → ℝ) (H : ℕ)
+    (hhead : ∀ i k, 0 < k → k ≤ H → qSequence (v i) k = 0) :
+    ∀ k, 0 < k → k ≤ H →
+      qSequence (Fintype.linearCombination ℝ v c) k = 0 := by
+  intro k hk hkH
+  change qSequenceLinear (∑ i, c i • v i) k = 0
+  rw [map_sum]
+  simp only [map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+  change (∑ i, c i * qSequence (v i) k) = 0
+  apply Finset.sum_eq_zero
+  intro i _
+  rw [hhead i k hk hkH, mul_zero]
+
+/-- Dimension-independent, asymptotically exact Gram comparison on any
+common physical tail. Singular finite Gram matrices are also permitted. -/
+theorem gram_energy_bounds_of_head_zero (v : ι → QHilbert) (c : ι → ℝ) (H : ℕ)
+    (hhead : ∀ i k, 0 < k → k ≤ H → qSequence (v i) k = 0) :
+    ‖Fintype.linearCombination ℝ (paretoFamily v) c‖ ^ 2 ≤
+        zetaTwo * ‖Fintype.linearCombination ℝ v c‖ ^ 2 ∧
+      zetaTwo * ‖Fintype.linearCombination ℝ v c‖ ^ 2 ≤
+        (1 + 1 / ((H : ℝ) + 1)) *
+          ‖Fintype.linearCombination ℝ (paretoFamily v) c‖ ^ 2 := by
+  rw [← toPareto_synthesis]
+  exact ⟨toPareto_norm_sq_le _,
+    norm_sq_le_of_head_zero _ H (synthesis_head_zero v c H hhead)⟩
+
+/-- The inverse-Gram lower factor zeta(2)/2 improves to
+zeta(2)/(1+1/(H+1)), for every source and every finite dimension. -/
+theorem capacity_bounds_of_head_zero {v : ι → QHilbert}
+    (hv : LinearIndependent ℝ v) (H : ℕ)
+    (hhead : ∀ i k, 0 < k → k ≤ H → qSequence (v i) k = 0) (b : ι → ℝ) :
+    (zetaTwo / (1 + 1 / ((H : ℝ) + 1))) *
+        capacity (paretoFamily_independent hv) b ≤ capacity hv b ∧
+      capacity hv b ≤ zetaTwo * capacity (paretoFamily_independent hv) b := by
+  have hα : 0 < 1 + 1 / ((H : ℝ) + 1) := by positivity
+  have henergy (c : ι → ℝ) :
+      ‖Fintype.linearCombination ℝ v c‖ ^ 2 ≤
+        ((1 + 1 / ((H : ℝ) + 1)) / zetaTwo) *
+          ‖Fintype.linearCombination ℝ (paretoFamily v) c‖ ^ 2 := by
+    rw [div_mul_eq_mul_div]
+    apply (le_div_iff₀ zetaTwo_pos).mpr
+    simpa only [mul_comm] using (gram_energy_bounds_of_head_zero v c H hhead).2
+  have hlower := capacity_le_mul_of_energy_le hv (paretoFamily_independent hv)
+    (show 0 ≤ (1 + 1 / ((H : ℝ) + 1)) / zetaTwo by positivity [zetaTwo_pos])
+    henergy b
+  refine ⟨?_, (capacity_bounds hv b).2⟩
+  rw [div_mul_eq_mul_div] at hlower ⊢
+  have hh := (le_div_iff₀ zetaTwo_pos).mp hlower
+  apply (div_le_iff₀ hα).mpr
+  nlinarith only [hh]
+
+theorem inverse_matrix_quadratic_bounds_of_head_zero [DecidableEq ι]
+    {v : ι → QHilbert} (hv : LinearIndependent ℝ v) (H : ℕ)
+    (hhead : ∀ i k, 0 < k → k ≤ H → qSequence (v i) k = 0) (b : ι → ℝ) :
+    (zetaTwo / (1 + 1 / ((H : ℝ) + 1))) *
+        dotProduct b ((gramMatrix (paretoFamily v))⁻¹.mulVec b) ≤
+          dotProduct b ((gramMatrix v)⁻¹.mulVec b) ∧
+      dotProduct b ((gramMatrix v)⁻¹.mulVec b) ≤
+        zetaTwo * dotProduct b ((gramMatrix (paretoFamily v))⁻¹.mulVec b) := by
+  have he {w : ι → QHilbert} (hw : LinearIndependent ℝ w) :
+      dotProduct b ((gramMatrix w)⁻¹.mulVec b) = capacity hw b := by
+    rw [gramMatrix_inverseSource hw]
+    unfold dotProduct capacity
+    apply Finset.sum_congr rfl
+    intro i _
+    ring
+  simpa only [he hv, he (paretoFamily_independent hv)] using
+    capacity_bounds_of_head_zero hv H hhead b
+
 end RiemannResearch.RH.QParetoGramComparison

@@ -1,5 +1,45 @@
 # Theorem catalog
 
+### Uniform canonical Q/P Gram and covariance comparison (2026-10-15)
+
+Established: RH/QMetricCorrectionBounds.lean realizes the full signed
+metric correction as an actual Hilbert Gram form, using halfReciprocal
+and correctionVector. It proves the inverse-density equality, the sharp
+head bound R(f) <= zeta(2)*||f||_Q^2/(H+2), mixed Cauchy--Schwarz,
+weighted signed l1 and l2/trace bounds, and covariance-change control
+for arbitrary Hilbert tests.
+
+Established: RH/QCanonicalCofinalGram.lean proves that the entire canonical
+Gram discrepancy C(M,N)=zeta(2)*<r_M,r_N>_Q-<r_M,r_N>_P is a positive Gram
+kernel, with C(M,N)^2 <= R_M*R_N <= delta_M*delta_N.
+The discrepancy tends to zero uniformly on M,N >= H as H tends to infinity.
+correctionVector(r_N) tends strongly to zero.
+
+The exact signed quadratic identity is retained for every finite block.
+Bounded-l1 cofinal signed averages have vanishing absolute Q/P energy
+discrepancy even when dimension grows arbitrarily and their full energies
+are unbounded. A weighted correction budget also permits unbounded l1 mass;
+the l2/trace bound controls all l2-unit sources simultaneously.
+
+The covariance-change estimate is
+|zeta(2)*<f,r_N>_Q-<f,r_N>_P|^2 <= ||f||_P^2*R_N/(N+1).
+It yields unconditional covariance transfer for moving tests with
+||f_N||_P^2 <= C*(N+1), without pointwise physical bounds.
+The complete stretched Mertens profile bounds R_N with the retained
+8/(N+1) boundary and N/(N+1) factor.
+
+RH/QParetoGramComparison.lean adds dimension-independent common-head
+Gram bounds G_P <= zeta(2)*G_Q <= ((H+2)/(H+1))*G_P and genuine inverse
+quadratic bounds with lower factor zeta(2)*(H+1)/(H+2).
+Gram inequalities permit singular families; inverse claims state finite
+linear independence explicitly.
+
+This adds 40 theorem declarations and six definitions. No bounded full
+legal energy, canonical norm convergence, or RH is concluded. The missing
+full-energy arithmetic budget remains Open. Exact statements, proofs,
+rates, and verification evidence are in
+RH/QCanonicalCofinalGramResearch20261015.md.
+
 ### Pareto-to-Q transfer and sharper metric asymptotics (2026-10-15)
 
 Established: eight modules add 87 theorem declarations and 11 definitions.
