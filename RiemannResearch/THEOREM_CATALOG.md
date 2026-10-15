@@ -1,5 +1,51 @@
 # Theorem catalog
 
+### Pareto-to-Q transfer and sharper metric asymptotics (2026-10-15)
+
+Established: eight modules add 87 theorem declarations and 11 definitions.
+RH/QParetoEquivalence.lean constructs the inverse physical-sequence map toQ
+and the continuous linear equivalence paretoEquiv. Strong convergence,
+uniform boundedness, arbitrary subspace closure, and every indexed positive
+conductor closure problem transfer with identical physical sequences.
+
+RH/QParetoMetric.lean proves the exact equality
+zeta(2)*||f||_Q^2 = ||f||_P^2 + R(f), where
+R(f)=sum_{n>=1}|f(n)|^2/(n^2*(n+1)), its signed polarization, positivity,
+and faithfulness. If f vanishes through H, then
+0 <= R(f) <= ||f||_P^2/(H+1), improving the global factor 2 to 1+1/(H+1).
+
+Analysis/FiniteGramMetricComparison.lean proves inverse-Gram comparison
+from full synthesis-energy comparison. RH/QParetoGramComparison.lean
+specializes it to genuine Q/P matrices for every finite independent family:
+(zeta(2)/2)*b^T G_P^-1 b <= b^T G_Q^-1 b <= zeta(2)*b^T G_P^-1 b.
+The same b is used on both sides. The actual minimum errors satisfy
+D_P <= zeta(2)*D_Q <= 2*D_P, using each metric's own optimizer.
+
+RH/QParetoOperatorTransfer.lean transports bounded operator algebra,
+real eigenvector identities, and continuous annihilators by similarity.
+RH/QMellinTransfer.lean retains the physical step integral and the actual
+normalized-residue zeta signature. Its off-line-zero lower estimate is
+(2*Re(s)-1)/|s|^2 + R(1-F) <= zeta(2)*||1-F||_Q^2.
+
+RH/QCanonicalMetricAsymptotics.lean uses the checked exact heads and
+stretched-PNT normalized-energy provider to prove, unconditionally,
+zeta(2)*||r_N||_Q^2 - ||r_N||_P^2 -> 0.
+The positive discrepancy is bounded by delta_N=||r_N||_P^2/(N+1), and
+eventually by D/(6+log N)^2. The Q covariance constant (2/zeta(2))^2
+improves to ((1+1/(N+1))/zeta(2))^2.
+
+Conditional research reductions: RH/QBoundedCoordinateClosure.lean
+transfers bounded physical coordinate limits and growing exact heads to
+arbitrary Q subspace closure. Its legal-head and full-divisor-Parseval RH
+consumers retain a uniform complete-energy bound as an Open arithmetic
+hypothesis. No canonical error convergence, bounded legal family, or RH
+is established. Q-specific means, Gram entries, and self-adjoint spectral
+data must use their actual Q formulas.
+
+Research record: RH/QParetoTransferResearch20261015.md includes the
+theorem-family coverage, exact identities, existing Q arithmetic providers,
+verification evidence, and the remaining arithmetic obligation.
+
 ### Moving canonical covariance and complete Q-energy gap (2026-10-15)
 
 Established: RH/CanonicalMobiusMovingCovariance.lean proves
