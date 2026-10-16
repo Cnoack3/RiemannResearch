@@ -4,6 +4,9 @@ import RiemannResearch.RH.QSignedDivisorLegality
 import RiemannResearch.RH.ZetaTwoCoordinateDual
 import RiemannResearch.RH.QSquarefreeJumpDistance
 import RiemannResearch.RH.QDivisorLegality
+import RiemannResearch.RH.DampedMobiusSquarefreeClosure
+import RiemannResearch.RH.ParetoMellinHardyNorm
+import RiemannResearch.RH.DampedMobiusHardyBridge
 import RiemannResearch.RH.QParetoAffineMinimum
 import RiemannResearch.RH.QCanonicalWindowMinimum
 import RiemannResearch.Analysis.FiniteGramSchurBounds

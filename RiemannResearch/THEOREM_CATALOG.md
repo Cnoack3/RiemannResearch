@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Squarefree damped Hardy norm bridge (2026-10-16)
+
+Established: RH/DampedMobiusSquarefreeClosure.lean proves literal squarefree
+legality of -sum_(d<=N) mu(d)*d^(-epsilon)*g_d and squarefree closure
+membership of every norm limit. Existing unconditional cutoff convergence
+for epsilon>=1/2 supplies actual squarefree legal P and Q limits with exact
+arithmetic coordinates. The finite physical bound is not asserted uniform
+in conductor cutoff or damping.
+
+Established: RH/ParetoMellinHardyNorm.lean identifies the complete Pareto
+norm squared with the supremum of actual Mellin line energies over
+Re(s)>1/2, as an IsLUB. For bounded physical vectors it proves the ordinary
+critical-line Plancherel identity, with the factor 1/(2*pi).
+RH/DampedMobiusHardyBridge.lean proves the exact finite damped zeta formula,
+residual Mellin formula, and equivalence of complete norm bounds with
+uniform interior-line integral bounds. Its ordinary critical-line norm
+identity applies to actual finite residuals, with boundedness proved internally.
+
+Conditional research reduction: DampedHardyApproximation is a concrete
+epsilon-cutoff uniform line-error assertion. The three checked consumers
+prove Pareto squarefree constant closure, Q squarefree constant closure,
+and actual Mathlib RiemannHypothesis from this explicit analytic premise.
+
+Open: formalize RiemannHypothesis -> DampedHardyApproximation from actual
+RH-dependent estimates and the two limiting steps. No RH-to-density axiom
+or provider is introduced, no small-damping global estimate is proved,
+and neither actual constant closure membership nor RH is asserted.
+The finite signed indicator classification in the following section is
+reused from concurrently published commit 79f8396; no duplicate module is added.
+Research record: RH/QDivisorLegalityContinuationResearch20261016.md.
+
 ### Finite signed divisor legality classification (2026-10-16)
 
 Established: Analysis/EvenPeriodicSquareJump.lean proves that an even
