@@ -12821,3 +12821,24 @@ legal families. No uniform complete-energy bound, squarefree closure, or RH
 is asserted. The Baker--Harman--Pintz consequence and Python numerical
 enclosures in the research record are not Lean-verified arithmetic providers.
 Research record: RH/CanonicalMobiusCommonCellResearch20261015.md.
+
+### Squarefree Q exact-head blocks and complete Parseval convergence (2026-10-16)
+
+Conditional research reduction: `RH/QSquarefreeExactHeadAverages.lean`
+specializes the actual block-average theorem to the algebraic squarefree span.
+`squarefree_span_iff_common_period` proves that every legal squarefree vector
+has a squarefree common-period divisor-span representation, and conversely.
+`exists_squarefree_exact_head_block_averages` provides increasing selections,
+finite squarefree-legal blocks, squarefree common periods, exact growing heads,
+strong convergence to one, and vanishing complete arithmetic Parseval energy.
+The Parseval sum remains over all positive integers, not just squarefree indices.
+`squarefree_full_error_bound_of_periodic_tail_bound` obtains both legality and
+the full Q bound from the literal finite-period tail, deriving periodicity and
+boundedness from the divisor span. The theorem
+`squarefree_closure_capacity_and_rh_of_bounded_exact_heads` assembles actual
+squarefree closure, capacity divergence, and Mathlib RH under the same hypothesis.
+
+Open: construct the squarefree legal exact-head family with one uniform full-Q
+error bound, or its uniformly bounded literal finite-period tail provider.
+This entry does not establish that arithmetic bound or unconditional RH.
+See `RH/QSquarefreeExactHeadAveragesResearch20261016.md`.

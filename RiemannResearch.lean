@@ -163,6 +163,7 @@ import RiemannResearch.RH.QDivisorWaveletFactorization
 import RiemannResearch.RH.QDivisorHilbertBasis
 import RiemannResearch.RH.QArithmeticCapacity
 import RiemannResearch.RH.QExactHeadAverages
+import RiemannResearch.RH.QSquarefreeExactHeadAverages
 import RiemannResearch.RH.QExplicitCandidates
 import RiemannResearch.RH.QFullResidueProjection
 import RiemannResearch.RH.QMixedConductorObstruction
