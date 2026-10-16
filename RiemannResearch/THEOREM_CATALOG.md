@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### LCM squarefree constrained Q minimum and normalization capacity (2026-10-16)
+
+Established: Analysis/FiniteGramScalarConstraint.lean proves the actual scalar
+constrained inverse-Gram optimizer, its exact energy, unique coefficients,
+and full nonnegative squared-norm remainder. RH/QLargeConductorCapacity.lean
+proves the exact identity C=(H/zeta(2))*C^2+Tail_Q(U), its inverse-capacity
+identity, and C<=zeta(2)/H for independent conductors above a positive head.
+A bounded normalization penalty, or bounded complete constrained energy,
+forces H*mismatch^2<=zeta(2)*B. This is the large-conductor normalization
+capacity, distinct from the centered target capacity in QSquarefreeCapacity.
+
+Established: RH/QSquarefreeConstrainedMinimum.lean constructs the actual
+signed Mobius seed, proves squarefree legality and its exact linear head,
+and assembles the exact squarefree optimizer and constrained energy formula.
+
+Conditional research reduction: riemannHypothesis_of_bounded_minimumError
+derives Mathlib RH from a uniform bound for these actual optimized errors
+along finite nonempty distinct squarefree families above growing heads.
+Open: the uniform minimumError bound. No RH-to-density bridge, LCM/radical
+arithmetic, or refined repeated-period harmonic comparison is proved here.
+Research record: RH/QLCMConstrainedMinimumResearch20261016.md.
+
 ### Q-squarefree primorial cofinality and capacity (2026-10-16)
 
 Established: RH/QSquarefreePrimorialCofinality.lean proves both finite-stage
