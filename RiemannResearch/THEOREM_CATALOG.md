@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Genuine squarefree inverse covariance capacity (2026-10-16)
+
+Established: RH/QSquarefreeInverseCapacity.lean removes the zero entries
+from the masked squarefree stage, retaining exactly the distinct squarefree
+conductors 2 <= d <= n+1. Existing positivity proves that its actual
+covariance matrix C_n is positive definite. The normalized coefficients
+C_n^{-1} b_n / (1 + b_n^T C_n^{-1} b_n) synthesize exactly the existing
+orthogonal optimizer, and inverseCapacity equals the geometric capacity.
+
+The module proves the exact error 1/(1+inverseCapacity), the determinant
+ratio det(C_n)/det(G_n), and the full arithmetic-wavelet Parseval identity.
+Completion of the square retains the entire squared-norm displacement
+for arbitrary legal coefficients. Capacity is monotone. Literal squarefree
+closure is equivalent to divergence of this genuine inverse capacity and
+to the epsilon criterion with arbitrary finite legal coefficients.
+There are 18 public theorem declarations.
+
+Conditional research reductions: riemannHypothesis_of_inverseCapacity_tendsto
+and riemannHypothesis_of_forall_epsilon conclude Mathlib's RiemannHypothesis.
+Open: an arithmetic proof of inverse-capacity divergence, equivalently the
+stated arbitrarily small actual error. This development proves neither
+that estimate nor the RH-to-squarefree-density converse.
+
 ### Canonical Q-window capacity and complete Schur arithmetic (2026-10-16)
 
 Established: Analysis/FiniteGramSchurBounds.lean bounds the actual screened

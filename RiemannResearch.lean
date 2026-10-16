@@ -145,6 +145,7 @@ import RiemannResearch.LinearAlgebra.CenteredNormalEquations
 import RiemannResearch.RH.QCovarianceInverse
 import RiemannResearch.RH.QCovarianceInvertibility
 import RiemannResearch.RH.QSquarefreeCapacity
+import RiemannResearch.RH.QSquarefreeInverseCapacity
 import RiemannResearch.RH.QPrimeOrthogonal
 import RiemannResearch.RH.QPrimePowerOrthogonal
 import RiemannResearch.RH.QResidueMoments
