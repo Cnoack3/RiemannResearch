@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Exact von Mangoldt–LCM arithmetic (2026-10-16)
+
+Established: NumberTheory/VonMangoldtLCM.lean reuses Mathlib's actual
+Nat.lcmUpto, Nat.factorization_lcmUpto, and
+Chebyshev.psi_eq_log_lcmUpto. It counts the LCM's p-adic exponent by the
+positive prime powers p^k <= N, proves the exact log increment Lambda(n),
+the multiplication-by-p identity at p^k, and the equivalence between
+unchanged running LCM and a non-prime-power index.
+
+The complete signed finite identity is
+  psi(N) = log(lcm(1,...,N))
+         = -sum_(1<=d<=N) mu(d)*log(d)*floor(N/d).
+The natural quotient is formed before casting to the reals. Its proof
+uses the exact arithmetic-function convolution summation identity.
+Exponentiation recovers the actual positive integer LCM.
+
+No RH assumption is used. The pointwise damping derivative, its signed
+Taylor remainder, the global Hilbert estimate, and the RH-to-Hardy
+approximation provider remain separate obligations.
+Research record: NumberTheory/VonMangoldtLCMResearch20261016.md.
+
 ### Complete-tail constrained Q minimum and conductor-gap arithmetic (2026-10-16)
 
 Established: Analysis/FiniteGramRankOne.lean proves actual Gram inverse
