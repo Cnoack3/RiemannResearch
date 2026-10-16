@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Canonical Q-window capacity and complete Schur arithmetic (2026-10-16)
+
+Established: Analysis/FiniteGramSchurBounds.lean bounds the actual screened
+Hilbert energy and proves it positive for an independent enlarged family.
+RH/QCanonicalWindowCapacity.lean specializes to the actual inverse-Gram
+normal mass m_Q(N,M), proving the exact recurrence
+m_Q(N,M+1)-m_Q(N,M)=defect(N,M)^2/schur(N,M), the full signed Schur expansion,
+finite telescoping, and the strict-gain criterion. At each fixed positive
+head there is no terminal plateau: every finite window has a larger window
+with strictly greater mass. Explicit moving-normal amplitude budgets yield
+quantitative step gains; fixed-test decay is not asserted uniformly for
+changing normal vectors.
+
+RH/QCanonicalWindowSchurArithmetic.lean identifies the complete weighted
+Schur energy and the signed common quotient-cell profile. Its cell-energy
+identity retains the entire infinite complement. The development contains
+29 public theorem declarations and five private reindexing lemmas.
+
+Conditional research reduction: riemannHypothesis_of_cumulative_gain_lower
+consumes one common positive lower threshold on the diagonal normal mass
+plus finitely many actual signed Schur gains for each growing head.
+Open: an arithmetic provider for this common threshold. Finite positivity,
+monotonicity, and arbitrarily late strict gains do not discharge it.
+Research and verification record: RH/QCanonicalWindowCapacityResearch20261015.md.
+
 ### Canonical Q/P affine minima and optimizer stability (2026-10-15)
 
 Established: RH/QParetoAffineMinimum.lean proves exact P/Q affine
