@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Quantitative squarefree jump distance (2026-10-16)
+
+Established: RH/ZetaTwoCoordinateDual.lean constructs the actual
+single-site Q-Riesz vectors with their exact physical amplitudes, pairings,
+and squared norms. RH/QSquarefreeJumpDistance.lean constructs the four-site
+square-jump witness h_a and the continuous linear functional Lambda_a.
+The exact squared witness and operator norms are
+D_a = 2*zetaTwo*(a^4-a+1) > 0 for a >= 2.
+
+For every target x and every F in the closed squarefree legal span,
+the complete identity is
+norm(x-F)^2 = Lambda_a(x)^2/D_a
+  + norm(x-F-(Lambda_a(x)/D_a)*h_a)^2.
+The signed defect and the entire norm-square remainder are retained.
+For m >= 3, the actual indicator defect is -1 at a=m-1, giving
+norm(qDivisor m-F)^2 = 1/D_(m-1)
+  + norm(qDivisor m-F+h_(m-1)/D_(m-1))^2.
+In particular, the m=3 squared error is at least 1/(30*zetaTwo).
+
+The finite signed-indicator formula retains all coefficients and all four
+site contributions. For m >= 3,
+alpha*qOne+beta*qDivisor m belongs to the closed squarefree span iff
+beta=0 and alpha*qOne belongs to that span.
+There are 17 new public theorem declarations across the two modules.
+No unresolved domain-specific hypothesis is used.
+
+Open: use the complete multi-witness Gram matrix for stronger bounds;
+classify signed combinations satisfying all radical tests; prove a global
+norm, tail, or inverse-capacity estimate for actual legal approximants to
+qOne. The constant has zero square-jump defect. Neither sufficiency of the
+tests, actual constant closure membership, nor RH is proved.
+Research record: RH/QSquarefreeJumpDistanceResearch20261016.md.
+
 ### Divisibility indicators and squarefree legality (2026-10-16)
 
 Established: RH/QDivisorLegality.lean treats the actual Q-Hilbert
