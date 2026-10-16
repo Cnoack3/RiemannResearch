@@ -1,3 +1,4 @@
+import RiemannResearch.RH.QDivisorLegality
 import RiemannResearch.RH.QParetoAffineMinimum
 import RiemannResearch.RH.QCanonicalWindowMinimum
 import RiemannResearch.Analysis.FiniteGramSchurBounds

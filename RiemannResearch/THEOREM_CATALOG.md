@@ -1,5 +1,22 @@
 # Theorem catalog
 
+### Divisibility indicators and squarefree legality (2026-10-16)
+
+Established: RH/QDivisorLegality.lean treats the actual Q-Hilbert
+divisibility indicators. No positive-conductor indicator is any finite
+legal residue combination. For every m >= 3, the indicator is excluded
+even from the closed squarefree residue span, without an RH assumption.
+
+The complete signed jump identity is Delta f(a^2) = Delta f(a) throughout
+that closed span. At a = m-1, the indicator's jump defect is exactly -1.
+The exact exceptional identity is qDivisor 2 = qOne - 2 * qResidue 2;
+hence conductor-two indicator membership is equivalent to constant
+membership in the same closed squarefree span.
+
+There are nine public theorem declarations. The checked proofs require
+no unresolved mathematical hypothesis. No RH-to-squarefree-density
+bridge or actual constant closure membership is asserted by this module.
+
 ### Genuine squarefree inverse covariance capacity (2026-10-16)
 
 Established: RH/QSquarefreeInverseCapacity.lean removes the zero entries
