@@ -17,6 +17,40 @@ There are nine public theorem declarations. The checked proofs require
 no unresolved mathematical hypothesis. No RH-to-squarefree-density
 bridge or actual constant closure membership is asserted by this module.
 
+### Squarefree legal Parseval coordinates and research agenda (2026-10-16)
+
+Established: RH/QSquarefreeCoordinates.lean restricts the actual complete
+divisor-wavelet Parseval isometry to the literal closed squarefree residue span.
+The restriction is a linear isometric equivalence onto its closed image
+coordinateSpace. It preserves norms and inner products; its ambient-ell2
+adjoint is legal orthogonal projection after inverse reconstruction. The
+adjoint compositions are the identity on the legal domain and the orthogonal
+projection on its coordinate image. The exact squared approximation error is
+the squared first-coordinate mismatch plus the complete nonconstant energy.
+
+RH/QSquarefreeCoordinateLegality.lean passes the actual radical difference
+identities to every vector in the legal closure. The four-point constraint
+excludes qResidue 4 and proves coordinateSpace is proper. These necessary
+constraints are not claimed to characterize the entire image or exclude qOne.
+
+RH/QSquarefreeCoordinateApproximation.lean gives the exact finite arithmetic
+columns, legal finite synthesis, and preserved full error. Target membership
+is equivalent to divergence of the actual distinct-squarefree inverse capacity.
+Optimizer coordinates converge to the legal orthogonal projection of the
+first unit vector. The modules have 35 public theorem declarations in total.
+
+Conditional research reduction: riemannHypothesis_of_target_mem concludes
+Mathlib's RiemannHypothesis from explicit membership of the constant target
+in coordinateSpace. Open: an arithmetic proof of that membership, inverse
+capacity divergence, collective coordinate-tail decay, or elimination of
+the target-relevant dual obstruction. RH-to-squarefree-density is also a
+separate formalization obligation.
+
+RH/USquarefreeResearch20261016.md records the precise conventions, declaration
+map, provenance, and prioritized arithmetic, coordinate-tail, dual, and
+coefficient-topology research tasks. Raw ordinary-ell2 synthesis operator
+claims are follow-up work, not consequences asserted by the new Lean modules.
+
 ### Genuine squarefree inverse covariance capacity (2026-10-16)
 
 Established: RH/QSquarefreeInverseCapacity.lean removes the zero entries

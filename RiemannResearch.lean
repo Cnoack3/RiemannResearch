@@ -161,6 +161,9 @@ import RiemannResearch.RH.QExpectationIntegral
 import RiemannResearch.RH.QDivisorWaveletDensity
 import RiemannResearch.RH.QDivisorWaveletFactorization
 import RiemannResearch.RH.QDivisorHilbertBasis
+import RiemannResearch.RH.QSquarefreeCoordinates
+import RiemannResearch.RH.QSquarefreeCoordinateLegality
+import RiemannResearch.RH.QSquarefreeCoordinateApproximation
 import RiemannResearch.RH.QArithmeticCapacity
 import RiemannResearch.RH.QExactHeadAverages
 import RiemannResearch.RH.QSquarefreeExactHeadAverages
