@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Q-squarefree primorial cofinality and capacity (2026-10-16)
+
+Established: RH/QSquarefreePrimorialCofinality.lean proves both finite-stage
+inclusions, equality of the algebraic and closed squarefree legal spans,
+and a common limiting optimal Q error. Its divisor covariance and mean
+are principal restrictions of the exhaustive system. The finite primorial
+optimizer uses normalized inverse-covariance coefficients; its geometric
+capacity equals the genuine covariance information.
+
+The primorial and exhaustive capacity divergences are equivalent. Exact
+successive and cross-index gains retain the complete squared
+optimizer-displacement term divided by both positive errors.
+
+Open: no lower bound forces these gains to accumulate without bound.
+Cofinality does not establish target closure or RH. A principal block
+inverse is generally not a block of the larger inverse. CRT carries are
+not discarded. Research agenda: RH/USquarefreeResearch20261016.md.
+
 ### Squarefree damped Hardy norm bridge (2026-10-16)
 
 Established: RH/DampedMobiusSquarefreeClosure.lean proves literal squarefree

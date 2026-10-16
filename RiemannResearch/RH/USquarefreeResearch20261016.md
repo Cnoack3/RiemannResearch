@@ -148,6 +148,39 @@ A sufficient next theorem is a lower bound forcing the sum of these actual
 increments to diverge. The numerator is a screened, signed arithmetic mismatch;
 prime independence alone does not control it.
 
+### Primorial cofinality and the block-screening target
+
+The checked QSquarefreePrimorialCofinality module establishes both finite
+inclusions, equality of closed legal spans, a common limiting optimal Q
+error, and equivalence of capacity divergence. It uses Mathlib's shifted
+primorialPeriod(M)=primorial(M+3); reindexing to the product of the first
+M primes leaves cofinality unchanged.
+
+The primorial mean and covariance are principal restrictions of a containing
+exhaustive system. The divisor-list optimizer has coefficients
+c_D=C_D^(-1)b_D/(1+kappa_D), but is generally not the restriction of the
+larger optimizer. The checked exact cross-index gain is
+
+    kappa_E-kappa_D
+      = ||F_E-F_D||_Q^2 / (error_D * error_E).
+
+For a prime-adjunction packet, D_new=D_old disjoint-union T with
+T={p_new*d : d|L_old}. In the centered block covariance, write
+
+    C_new=[C V; V^T S],  b_new=[b; beta],
+    R=S-V^T C^(-1)V,  delta=beta-V^T C^(-1)b.
+
+Block inversion gives kappa_new-kappa_old=delta^T R^(-1) delta,
+u_T=R^(-1)delta, u_D=C^(-1)b-C^(-1)V u_T, and
+c_new=u/(1+kappa_new). This specific packet formula remains an
+analytic research target, not a new checked primorial theorem. The checked
+geometric gain and the general finite screened-capacity library support
+its formalization. CRT carries remain inside the actual Q covariance.
+
+Next: control the signed screened source delta sufficiently often to force
+the sum of packet gains to diverge. Packet size and prime independence
+alone do not supply that estimate. Cofinality alone does not prove RH.
+
 ## Priority 2: control the collective divisor-coordinate tail
 
 For a chosen finite legal sequence F_j, prove both the required fixed-coordinate
