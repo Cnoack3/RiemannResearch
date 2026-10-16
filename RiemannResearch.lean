@@ -2667,3 +2667,6 @@ import RiemannResearch.RH.ParetoMellinZeroPairObstruction
 import RiemannResearch.Analysis.MatrixMaximalRayleigh
 import RiemannResearch.RH.SquarefreeResidueMatrix
 import RiemannResearch.RH.SquarefreeResidueMatrixGrowth
+import RiemannResearch.Analysis.FiniteWeightedVariance
+import RiemannResearch.RH.CanonicalMobiusPrimeCells
+import RiemannResearch.RH.CanonicalMobiusCellCeiling

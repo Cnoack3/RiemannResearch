@@ -12755,3 +12755,29 @@ by this checkpoint. Provenance: the user's request to verify the preceding
 argument before attacking A and then B. These are independently formalized
 deductions; no novelty claim is made. Final server checkpoint acceptance is
 required before publication.
+
+### Common quotient-cell variance and inverse-Gram certificates (2026-10-16)
+
+Established: Analysis/FiniteWeightedVariance.lean proves exact centered moments,
+translation and pairwise variance identities, monotonicity in sets and weights,
+the diameter bound, two-coordinate lower bounds, and scalar two-offset completion.
+
+RH/CanonicalMobiusPrimeCells.lean proves the concrete boundary cell condition
+q*b <= n < (q+1)*a, the equivalence q*(b-a)<a for a<=b, and the Mertens-profile
+increment and Lipschitz estimate. Its interval variance bound specializes to
+V_P([b,2a)) <= (2a-b)*(2a-b-1)^2/(8ab). Exact coordinate moments, the full
+first-cell residual split, and the two-cell mean incompatibility term retain
+the entire complementary infinite energy.
+
+RH/CanonicalMobiusCellCeiling.lean proves the exact finite-envelope split and
+the bounds cell variance <= complete selected energy <= inverseCeiling.
+Every normalized witness gives the upper certificate consisting of cell
+variance, the cell mean square, the full finite complement, and the explicit
+diagonal tail allowance. All signed cross terms remain in residual squares.
+
+The development adds 32 public theorem declarations and three definitions.
+Open: uniform arithmetic bounds for the cell mean and complement along growing
+legal families. No uniform complete-energy bound, squarefree closure, or RH
+is asserted. The Baker--Harman--Pintz consequence and Python numerical
+enclosures in the research record are not Lean-verified arithmetic providers.
+Research record: RH/CanonicalMobiusCommonCellResearch20261015.md.
