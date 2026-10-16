@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Complete-tail constrained Q minimum and conductor-gap arithmetic (2026-10-16)
+
+Established: Analysis/FiniteGramRankOne.lean proves actual Gram inverse
+rank-one updates for arbitrary nonnegative head cost, simultaneous source
+updates, mismatch and penalty identities, and unchanged constrained
+coefficients. RH/QTailGram.lean constructs the complete physical tail with
+original Q weights and proves positive definiteness by periodicity and
+residue independence.
+
+Established: RH/QTailConstrainedMinimum.lean identifies the actual tail
+optimizer coefficientwise with the existing complete-Q optimizer, proves
+C_full=C_tail/(1+(H/zeta(2))*C_tail), its reciprocal identity, the actual
+matrix inverse action, and the exact tail formula and completion for
+the original minimumError. The smaller full mismatch is accompanied
+by an exact increase in the unconstrained residual.
+
+Established: RH/QTailConductorGap.lean proves the complete inverse-capacity
+gap identity and C_tail<=zeta(2)/(J-H) when all free conductors exceed J>H.
+For squarefree free families, a nonsquarefree H+1 forces C_tail<=zeta(2).
+It also proves the forced signed floor residual before the first wrap,
+its exact Mertens-increment form on H<n<=2H+1, and the complete minimum's
+arithmetic block plus full physical tail remainder.
+
+Open: a uniform bound on the actual complete minimum along growing heads.
+These exact identities and finite numerical probes do not supply it.
+Research record: RH/QTailConstrainedResearch20261016.md.
+
 ### LCM squarefree constrained Q minimum and normalization capacity (2026-10-16)
 
 Established: Analysis/FiniteGramScalarConstraint.lean proves the actual scalar

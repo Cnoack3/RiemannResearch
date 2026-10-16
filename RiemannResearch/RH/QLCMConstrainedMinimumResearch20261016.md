@@ -164,10 +164,13 @@ job result and commit are reported in the accompanying session.
 1. Prove an arithmetic estimate for the signed mismatch m together with a
    lower bound for C on a chosen cofinal family. The proved capacity ceiling
    cannot provide this lower bound. Retain both terms in the exact minimum.
-2. Remove the mandatory head rank-one form (H/zeta(2))ww^T before exploring
-   tail capacities, preserving the simultaneous corresponding changes to
-   beta and the seed energy. Any tail-matrix inverse requires its own actual
-   independence proof. Tail capacity and full-Q capacity must remain distinct.
+2. Completed in QTailConstrainedResearch20261016.md: construct the actual
+   complete-tail Gram matrix, prove independence by periodicity, establish
+   the rank-one inverse and simultaneous source identities, and identify
+   the tail optimizer with the complete optimizer. Open: useful arithmetic
+   bounds on the coupled tail residual and normalization penalty. The new
+   conductor-gap ceiling rules out universal tail-capacity divergence over
+   all growing squarefree heads.
 3. Instantiate the finite family by the free squarefree divisors of
    rad(lcm(1,...,M)); prove the conductor-set equality and stage quantifiers.
    Permit M to grow independently of H.
