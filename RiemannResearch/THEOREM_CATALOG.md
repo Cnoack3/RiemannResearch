@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Finite signed divisor legality classification (2026-10-16)
+
+Established: Analysis/EvenPeriodicSquareJump.lean proves that an even
+real integer sequence invariant modulo a positive integer and satisfying
+all positive square-jump identities is two-periodic.
+RH/QParityGeometry.lean reconstructs the exact Hilbert vector as
+F = F(2)*qOne + 2*(F(1)-F(2))*qResidue 2.
+RH/QSignedDivisorLegality.lean applies this to arbitrary finite signed
+sums F of positive-conductor divisibility indicators.
+
+For such F, closure membership is equivalent to two-periodicity on
+positive coordinates together with
+F(2)=0 or qOne belonging to the closed squarefree legal span.
+Finite squarefree span membership is equivalent to two-periodicity and
+F(2)=0; these vectors are precisely the multiples of qResidue 2.
+Passing every square-jump test is equivalent to two-periodicity within
+this finite signed dictionary. All coefficient signs are allowed.
+
+There are 16 new public theorem declarations, with no unresolved
+hypothesis in the unconditional classification. Two of these declarations
+specialize under qOne membership or nonmembership as an
+explicit hypothesis; neither is supplied by this development.
+The local tests are not asserted sufficient for general legal closure
+membership. Actual qOne membership and RH remain open.
+Research record: RH/QSignedDivisorLegalityResearch20261016.md.
+
 ### Quantitative squarefree jump distance (2026-10-16)
 
 Established: RH/ZetaTwoCoordinateDual.lean constructs the actual
@@ -27,10 +53,11 @@ There are 17 new public theorem declarations across the two modules.
 No unresolved domain-specific hypothesis is used.
 
 Open: use the complete multi-witness Gram matrix for stronger bounds;
-classify signed combinations satisfying all radical tests; prove a global
-norm, tail, or inverse-capacity estimate for actual legal approximants to
-qOne. The constant has zero square-jump defect. Neither sufficiency of the
-tests, actual constant closure membership, nor RH is proved.
+prove a global norm, tail, or inverse-capacity estimate for actual legal
+approximants to qOne. The finite signed square-jump classification is
+now established in RH/QSignedDivisorLegality.lean. The constant has zero
+square-jump defect. General sufficiency for legal closure membership,
+actual constant closure membership, and RH remain unproved.
 Research record: RH/QSquarefreeJumpDistanceResearch20261016.md.
 
 ### Divisibility indicators and squarefree legality (2026-10-16)
