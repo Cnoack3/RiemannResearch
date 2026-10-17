@@ -1,3 +1,5 @@
+import RiemannResearch.NumberTheory.SquarefreeCumulantPair
+import RiemannResearch.RH.QSquarefreeLatticePackets
 import RiemannResearch.NumberTheory.VonMangoldtLCM
 import RiemannResearch.Analysis.FiniteGramRankOne
 import RiemannResearch.RH.QTailGram

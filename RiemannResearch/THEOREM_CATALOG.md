@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Squarefree convolution cumulants and legal physical packets (2026-10-16)
+
+Established: NumberTheory/SquarefreeCumulantPair.lean proves inverse
+normalized two-prime convolution log/exp coordinates, logarithmic
+additivity, exponential multiplicativity, product associativity and
+commutativity, and the exact reciprocal-slope balance and defect formulas.
+
+Established: RH/QSquarefreeLatticePackets.lean proves divisor-stage
+transport by actual Q floor dilations, squarefree legality under explicit
+coprime support hypotheses, compensated zero-head directions and their
+reciprocal-zero synthesis, and the actual two-prime cumulant packet.
+Its complete error identity retains all signed correlations and mixed
+terms. Its composite-cumulant completion gives the exact optimum and
+nonnegative excess square, with the nonzero direction stated explicitly.
+
+Open: a cofinal uniform or subpolynomial bound for the complete exact-head
+error. No RH conclusion or such estimate is asserted. The all-order
+nilpotent algebra and exhaustive affine characterization remain paper
+arguments; only the stated two-prime and physical packet results are
+formalized here. Research record:
+RH/QSquarefreeLatticePacketsResearch20261016.md.
+
 ### Exact von Mangoldt–LCM arithmetic (2026-10-16)
 
 Established: NumberTheory/VonMangoldtLCM.lean reuses Mathlib's actual
