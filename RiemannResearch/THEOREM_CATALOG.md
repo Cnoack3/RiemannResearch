@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### All-order squarefree cumulants and physical projective realization (2026-10-17)
+
+Established: NumberTheory/SquarefreeCumulantTower.lean constructs iterated
+square-zero algebras with actual Boolean-subset convolution, coefficient
+equivalence, augmentation nilpotence, all-order inverse log/exp transforms,
+additive/multiplicative identities, and the existing two-prime specialization.
+NumberTheory/SquarefreeCumulantLimit.lean proves compatible arbitrary-mask
+restrictions, constructs the inverse-limit ring with universal property and
+levelwise inverse transforms, and gives finite approximations with eventual
+exact agreement at every fixed projection.
+
+Established: RH/QSquarefreeFormalSynthesis.lean gives legal synthesis by
+literal residues, complete atomic-Q norm and signed Gram error/difference
+identities, separate exact boundedness and strong-realization tests, and
+equality of finite cumulant and moment synthesis ranges. Strong and weak
+physical limits remain in the existing closed legal span. A compatible
+singleton family with moment c_p=p has F_n(1)=n and norm squared at least
+n^2/zeta(2), proving that formal completion does not imply physical bounds.
+Continuous finite-site Mobius functionals recover the legal coefficients,
+separate all Q vectors, and characterize the target one by -mu(m).
+
+Conditional research reduction:
+riemannHypothesis_of_bounded_cumulant_heads uses the existing exact-head
+averaging bridge. Open: its growing exact heads and one uniform complete
+signed Q-error budget. No unconditional RH claim is made. Partition-sum
+formulas, a quotient-polynomial equivalence, and a separate topological-ring
+instance are not newly formalized.
+Research record: RH/QSquarefreeCumulantCompletionResearch20261017.md.
+
 ### Exhaustive squarefree exact-head affine minimum (2026-10-17)
 
 Established: RH/NormalizedResidueExactHeadCharges.lean characterizes a
@@ -21,8 +50,9 @@ Conditional research reduction:
 riemannHypothesis_of_bounded_affine_minima derives Mathlib RH from the
 actual squarefree optimizers with growing exact heads.
 Open: one uniform bound on these complete optimized Q errors.
-The all-order convolution log/exp algebra, RH-to-density direction, and
-subpolynomial zero-witness consumer are not newly formalized.
+The RH-to-density direction and subpolynomial zero-witness consumer are
+not newly formalized here. The all-order log/exp algebra is now supplied by
+SquarefreeCumulantTower and SquarefreeCumulantLimit above.
 Research record: RH/QSquarefreeAffineHeadResearch20261017.md.
 
 ### Squarefree convolution cumulants and legal physical packets (2026-10-16)
@@ -41,7 +71,8 @@ terms. Its composite-cumulant completion gives the exact optimum and
 nonnegative excess square, with the nonzero direction stated explicitly.
 
 Open: a cofinal uniform or subpolynomial bound for the complete exact-head
-error. The all-order nilpotent algebra remains a paper argument.
+error. The all-order nilpotent algebra and projective completion are now
+formalized in SquarefreeCumulantTower and SquarefreeCumulantLimit above.
 The exhaustive affine characterization and complete minimum are now
 formalized in QResidueHeadSpace and QSquarefreeAffineHead above.
 The original packet research record is
