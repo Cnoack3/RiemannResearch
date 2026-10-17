@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### Squarefree Q infinite duality and sparse power costs (2026-10-17)
+
+Established: RH/QSquarefreeDualClosure.lean proves squarefree closure iff
+every full-Q squarefree annihilator has mean zero, with literal weighted
+series, a normalized separator if closure fails, and the complete bound
+1 <= norm(h)^2 * norm(qOne-F)^2 for every finite legal F.
+It proves unconditionally that finite-support annihilators have mean zero
+and any normalized separator has a nonzero coordinate beyond each cutoff.
+
+Established: RH/QExactHeadSubpolynomial.lean now permits arbitrarily sparse
+power-cost comparisons with different legal exact heads for each exponent,
+constant, and cutoff. No uniform error bound or fixed family is required.
+
+Conditional research reductions: riemannHypothesis_of_annihilator_mean_zero
+and riemannHypothesis_of_arbitrarily_small_power_cost retain their complete
+infinite dual uniqueness or power-cost provider explicitly.
+Open: both arithmetic providers and the requested squarefree constant closure.
+The literature RH-to-squarefree-density implication is not newly formalized.
+Research record: RH/QSquarefreeNoUniformBoundResearch20261017.md.
+
 ### Squarefree Pareto/Q coefficient and gain conversion (2026-10-17)
 
 Established: Analysis/CoordinateProjectionCriterion.lean characterizes target

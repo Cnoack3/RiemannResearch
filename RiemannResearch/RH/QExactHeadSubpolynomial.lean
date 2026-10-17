@@ -157,4 +157,25 @@ theorem riemannHypothesis_of_subpolynomial_affine_minima
     linarith
   · exact hsub
 
+/-- Conditional research reduction with arbitrarily sparse exact heads.
+For every positive power and positive constant, a sufficiently cheap legal
+head exists beyond each cutoff. There is no fixed approximating family,
+uniform error bound, or prescribed relation between the chosen heads.
+The displayed power-cost provider remains Open. -/
+theorem riemannHypothesis_of_arbitrarily_small_power_cost
+    (hslow : ∀ a : ℝ, 0 < a → ∀ c : ℝ, 0 < c → ∀ N : ℕ,
+      ∃ (n : ℕ) (F : QHilbert), 1 ≤ n ∧ N ≤ n ∧ F ∈ qSquarefreeCRTSpan ∧
+        (∀ k, 0 < k → k < n → qSequence F k = 1) ∧
+          ‖qOne - F‖ ^ 2 < c * (n : ℝ) ^ a) : RiemannHypothesis := by
+  apply RiemannResearch.RH.riemannHypothesis_iff_right_half_strip_zero_free.mpr
+  intro s hs hslt hz
+  have hs1 : s ≠ 1 := by intro he; norm_num [he] at hslt
+  have hs0 : s ≠ 0 := by intro he; norm_num [he] at hs
+  have hc : 0 < (2 * s.re - 1) / (zetaTwo * ‖s‖ ^ 2) :=
+    div_pos (by linarith) (mul_pos zetaTwo_pos (pow_pos (norm_pos_iff.mpr hs0) 2))
+  obtain ⟨n, F, hn, _, hF, hh, he⟩ :=
+    hslow (2 * s.re - 1) (by linarith) _ hc 1
+  exact (not_lt_of_ge
+    (exact_head_residual_power_lower hF n hn hh s hs hs1 hz)) he
+
 end RiemannResearch.RH.QExactHeadSubpolynomial

@@ -1,3 +1,4 @@
+import RiemannResearch.RH.QSquarefreeDualClosure
 import RiemannResearch.RH.QExactHeadSubpolynomial
 import RiemannResearch.RH.QConductorLimits
 import RiemannResearch.RH.QConductorEscape
