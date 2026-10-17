@@ -164,6 +164,9 @@ import RiemannResearch.RH.QCovarianceInvertibility
 import RiemannResearch.RH.QSquarefreeCapacity
 import RiemannResearch.RH.QSquarefreeInverseCapacity
 import RiemannResearch.RH.QSquarefreePrimorialCofinality
+import RiemannResearch.Analysis.FiniteGramScreenedInverse
+import RiemannResearch.RH.QCovarianceScreening
+import RiemannResearch.RH.QSquarefreePrimePacket
 import RiemannResearch.RH.QPrimeOrthogonal
 import RiemannResearch.RH.QPrimePowerOrthogonal
 import RiemannResearch.RH.QResidueMoments

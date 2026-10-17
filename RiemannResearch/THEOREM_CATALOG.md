@@ -88,6 +88,31 @@ Cofinality does not establish target closure or RH. A principal block
 inverse is generally not a block of the larger inverse. CRT carries are
 not discarded. Research agenda: RH/USquarefreeResearch20261016.md.
 
+### Q-squarefree prime packets and actual covariance screening (2026-10-16)
+
+Established: Analysis/FiniteGramScreenedInverse.lean proves the exact block
+inverse action with all old coefficient corrections. RH/QCovarianceScreening.lean
+specializes the general screening theorem to the actual full-Q residue
+means and centered covariances. It proves R=S-V^T*C^(-1)*V,
+delta=beta-V^T*C^(-1)*b, positive definiteness of R, the exact capacity
+gain delta^T*R^(-1)*delta, both corrected inverse-source blocks, and the
+actual normalized Gram-inverse least-squares coefficients.
+
+Established: RH/QSquarefreePrimePacket.lean proves the complete disjoint
+old/new divisor partition for a fresh prime adjoined to an actual primorial,
+including the new prime from the divisor one. It proves squarefree legality,
+the actual primorial capacity gain, the exact signed residual-correlation
+identity, and delta(j)^2<=gain*R(j,j). A bijective conductor reindexing
+identifies prime cutoff steps with the existing next primorial stage.
+Composite cutoff steps are unchanged. The exact finite telescope retains
+the initial capacity.
+
+Conditional research reduction: riemannHypothesis_of_packetGain_sum_tendsto
+concludes Mathlib RiemannHypothesis from divergence of the actual cutoff-gain
+partial sums. Open: an arithmetic provider of that divergence. Finite
+screening identities and nonnegative gains alone do not discharge it.
+Research record: RH/QSquarefreePrimePacketResearch20261016.md.
+
 ### Squarefree damped Hardy norm bridge (2026-10-16)
 
 Established: RH/DampedMobiusSquarefreeClosure.lean proves literal squarefree

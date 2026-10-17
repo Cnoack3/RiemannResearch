@@ -128,8 +128,8 @@ For L_M=product_(i<=M)p_i and D_M={m|L_M:m>=2}, the analytic target is
 
     kappa_(D_M) -> infinity.
 
-A useful formal follow-up is to prove cofinal equivalence of these primorial
-families with the exhaustive distinct-squarefree stages already implemented.
+QSquarefreePrimorialCofinality proves cofinal equivalence for its cutoff-indexed
+primorial(n+3) family and the exhaustive distinct-squarefree stages.
 Here L_M is squarefree; lcm(1,...,n) usually is not. Its pairwise coprime
 factors are the maximal prime powers p^floor(log_p n), not just the primes.
 CRT decomposes the residue domain and must not be used to infer an additive
@@ -172,10 +172,19 @@ T={p_new*d : d|L_old}. In the centered block covariance, write
 
 Block inversion gives kappa_new-kappa_old=delta^T R^(-1) delta,
 u_T=R^(-1)delta, u_D=C^(-1)b-C^(-1)V u_T, and
-c_new=u/(1+kappa_new). This specific packet formula remains an
-analytic research target, not a new checked primorial theorem. The checked
-geometric gain and the general finite screened-capacity library support
-its formalization. CRT carries remain inside the actual Q covariance.
+c_new=u/(1+kappa_new). These exact finite identities are implemented in
+QCovarianceScreening and specialized in QSquarefreePrimePacket. The latter
+proves the literal old/new divisor partition, squarefree legality, the next
+prime cutoff reindexing, zero increments at composite cutoffs, and the exact
+capacity telescope with its initial term. It also identifies the signed
+source with (1+kappa_old) times the actual optimal residual correlation
+and proves delta(j)^2<=gain*R(j,j). CRT carries remain in the Q covariance.
+
+Conditional research reduction: riemannHypothesis_of_packetGain_sum_tendsto
+uses divergence of the actual gain partial sums to conclude Mathlib RH.
+Open: an arithmetic provider of that divergence. The new finite identities
+do not supply the provider. Detailed record and an informal Mobius sieve
+trial: QSquarefreePrimePacketResearch20261016.md.
 
 Next: control the signed screened source delta sufficiently often to force
 the sum of packet gains to diverge. Packet size and prime independence
