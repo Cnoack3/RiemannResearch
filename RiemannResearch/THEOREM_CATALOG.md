@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Complete Q screened variance and finite common-quotient region (2026-10-17)
+
+Established: RH/QCanonicalSchurVariance.lean proves
+schur_quotient_variance_full_energy, schur_quotient_variance_le, and
+schur_gain_le_inverse_quotient_variance in RH.QCanonicalWindowCapacity.
+The exact complete Q Schur energy retains defect-squared profile variance,
+the mean square, and the entire infinite complement. A positive cell variance
+caps the signed source-squared/Schur gain by its reciprocal. This is an upper
+gain obstruction, not an upper energy or lower gain certificate. Contiguous
+windows are not asserted squarefree legal; the legal two-anchor case is included.
+
+Established: Analysis.FiniteWeightedVariance.affine_energy gives generic
+scalar-affine completion including zero slope. NumberTheory/CommonFloorQuotient.lean
+proves common_floor_quotient_bound: equal floor quotients at 0<a<b force
+n*(b-a)<a*b, so common-quotient simplification leaves an infinite complement.
+
+Open: a complete mixed-quotient arithmetic estimate supplying any SPC(a),
+0<a<1, and the full infinite squarefree annihilator implication.
+Research: RH/QSparsePowerCostResearch20261017.md, iteration 3/5.
+Next: cumulative anchor charges and signed mixed Mertens quotient correlations.
+
 ### Canonical squarefree Q correlations and an affine-cost obstruction (2026-10-17)
 
 Established: RH/QExactHeadCorrelations.lean proves the complete Q bounded-test

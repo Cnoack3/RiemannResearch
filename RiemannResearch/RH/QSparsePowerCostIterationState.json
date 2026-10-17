@@ -1,15 +1,16 @@
 {
   "program_id": "sparse-power-cost-20261017",
   "iteration_limit": 5,
-  "completed_iterations": 2,
+  "completed_iterations": 3,
   "counting_rule": "The count is durable only in checkpoint-published main; unpushed work is not a completed publication.",
   "research_record": "RiemannResearch/RH/QSparsePowerCostResearch20261017.md",
-  "previous_base_commit": "e1e77d99da036cfa01b3e8bbe2fa4712c51796f8",
-  "last_iteration_result": "Proved unconditional complete-Q fixed-row residual Gram decay, a quantitative mixed-entry bound, and exact legal signed-mixture energy. Proved a geometric diagonal countermodel showing that sublinear diagonal costs plus zero cross entries do not force vanishing affine cost. SPC(a) for 0<a<1 and infinite annihilator mean-zero remain open.",
-  "next_best_idea": "Use exact Mobius tail-floor identities on prime quotient blocks to control the growing signed Gram matrix or actual screened gains. Attempt reciprocal-charge cancellation while retaining all other blocks; seek a real exponent below one rather than fixed-row decay.",
-  "last_workspace_token": "ws_deHsvbndbPe5UvYDIRB3vOGt7kcjDfXo",
-  "last_project_root": "/home/cri_2025/lean-agent-workspaces/ws_deHsvbndbPe5UvYDIRB3vOGt7kcjDfXo/RiemannResearch",
-  "last_successful_snippet_job": "job_hBp7zpkSuoYzUu8X_s0QPlNdqkV6XVqE",
+  "previous_base_commit": "8ad676eb44d25858f77b394f54522af96426d260",
+  "last_iteration_result": "Proved complete-Q screened quotient-cell variance decomposition and reciprocal-variance upper cap for the signed Schur gain, retaining the mean square and full infinite complement. Proved the finite support bound n*(b-a)<a*b for equal quotients at distinct anchors. These precisely limit common-quotient charge cancellation; no SPC exponent below one or infinite annihilator provider was obtained.",
+  "next_best_idea": "Use differing quotient profiles through cumulative anchor charges C(t),D(t), retaining the exact floor-convolution and complete Q energy. First examine the mixed q=1/2 strip for two nearby legal anchors and its signed M(n)M(floor(n/2)) correlations, then compare full screened gains with high-composite legal affine directions. Seek a genuine upper cost estimate below exponent one; do not reprove common-cell identities or infer gains from local variance.",
+  "last_workspace_token": "ws_0xvbFi66ZglBxMPwBl0qRd1jrPP9CtIx",
+  "last_project_root": "/home/cri_2025/lean-agent-workspaces/ws_0xvbFi66ZglBxMPwBl0qRd1jrPP9CtIx/RiemannResearch",
+  "last_successful_snippet_job": "job_PAU-maMn3xwGUFCqRDomiUPzEQOAGg4R",
   "publication_gate": "Server checkpoint with push=true, including required validation of the actual integrated source.",
-  "stop_after_limit": true
+  "stop_after_limit": true,
+  "previous_successful_checkpoint_job": "job_pH1aJnRlC96QTy3Tpxc958jQktqxF4Xl"
 }

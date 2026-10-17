@@ -1,4 +1,4 @@
-# Sparse squarefree power costs: iterations 1–2 of 5
+# Sparse squarefree power costs: iterations 1–3 of 5
 
 Research for Christian Noack. 17 October 2026.
 Program identifier: sparse-power-cost-20261017.
@@ -300,3 +300,130 @@ directions and their exact Schur gains.
 Do not replace growing-block control by an unjustified uniform Bessel bound.
 The countermodel and the quadratic fixed-row constant must remain visible
 in future attempts.
+
+## Iteration 3 of 5: screened variance and the finite common-quotient region
+
+17 October 2026. Base published revision:
+8ad676eb44d25858f77b394f54522af96426d260. This is exactly the third pass;
+the finite program still stops after five published iterations.
+
+### Discovery and arithmetic attempt
+
+The proposed Mobius tail interface was already available, with all boundary
+terms, in CanonicalMobiusQuotientCells.canonicalMobiusResidual_quotient_identity.
+CanonicalMobiusPrimeCells already supplies the common-cell variance and
+two-cell offset incompatibility for Pareto weights. These identities were
+not reproved or counted as this iteration's result.
+
+Write A_Y=(Y+1)S(Y)-M(Y), H(q,n)=sum_(k<=q) M(floor(n/k)).
+The exact physical residual is r_Y(n)=H(q,n)+q*A_Y with
+q=floor(n/(Y+1)). In particular r_(p-1)(n)=M(n)-M(p-1)+p*S(p-1)
+on p<=n<2p, as requested. This is the existing checked interface.
+
+The attempted arithmetic improvement was to cancel reciprocal charge after
+screening against an old window. Its common profile has coefficient
+delta=1-sum(screening coefficients), precisely the signed Schur source
+defect, rather than coefficient one. Canceling the constant alone therefore
+does not remove the nonconstant profile. Canceling delta makes the numerator
+of the capacity gain zero as well.
+
+### Newly proved complete Q identity and gain obstruction
+
+In RH/QCanonicalSchurVariance.lean, let s be any finite physical cell of
+positive integers on which the new anchor T+1 and every old window anchor
+N+i+1 share quotient q. Let W, m, V be respectively the mass, weighted mean
+and unnormalized variance of H(q,n) on s for the actual Q weights
+1/(zeta(2)*n^2). Let Bscr=A_T-sum_i screening_i*A_(N+i).
+The new exact identity is
+
+    schur = delta^2*V + W*(delta*m+q*Bscr)^2
+              + sum_(n outside s) Q(n)*screenedResidual(n)^2.
+
+Every screening coefficient is signed. The complementary series is the
+entire infinite Q complement, not a finite period or an omitted error term.
+No limit is interchanged. In particular, when V>0,
+
+    delta^2*V <= schur,
+    delta^2/schur <= 1/V.
+
+The zero-Schur case is included using Lean's total division. For a genuinely
+new independent anchor the existing positive-Schur theorem gives the usual
+positive denominator. These are upper caps on a gain, not lower gain
+certificates or upper error estimates. The identity by itself does not
+exclude successful canonical mixtures; it identifies exactly what local
+charge cancellation leaves behind.
+
+Exact declarations in namespace RH.QCanonicalWindowCapacity:
+- schur_quotient_variance_full_energy
+- schur_quotient_variance_le
+- schur_gain_le_inverse_quotient_variance
+
+The generic scalar-affine completion, including zero slope, is now
+Analysis.FiniteWeightedVariance.affine_energy in the owning variance module.
+No new RH consumer or assumed arithmetic provider was added.
+
+The Q application concerns actual contiguous canonical windows. Such a
+window is not asserted to be squarefree legal. It includes the legal
+two-anchor screening case N=M, with N+1 and T+1 squarefree; arbitrary
+contiguous-window gains must not be inserted into the squarefree consumer
+without a legality proof.
+
+### Why the common-profile simplification cannot cover the tail
+
+NumberTheory/CommonFloorQuotient.lean proves
+NumberTheory.common_floor_quotient_bound:
+
+    0<a<b and floor(n/a)=floor(n/b) imply n*(b-a)<a*b.
+
+Thus all common quotient cells for two distinct anchors lie below a finite
+explicit cutoff. Even taking their union leaves every sufficiently large
+physical coordinate in the complement. Reciprocal-charge cancellation on
+common cells supplies no bound at all on that infinite mixed-quotient tail.
+This is a concrete limitation of the attempted simplification, not a
+refutation of SPC or a contradiction in the actual Q space.
+
+### Verification and publication scope
+
+The coherent candidate passed server snippet job
+job_PAU-maMn3xwGUFCqRDomiUPzEQOAGg4R. The printed axiom reports for the
+gain cap and the common-quotient bound contain only propext,
+Classical.choice and Quot.sound. Two earlier candidate checks failed on
+elementary Nat rewriting, were repaired, and supplied no mathematical
+counterexample. No admitted proof was persisted.
+
+The final checkpoint must audit and compile the actual aggregate project
+and all changed child modules before publishing this iteration. Snippet
+success alone is not that gate. The terminal checkpoint job and published
+commit are reported in the run report; the state records this workspace and
+successful snippet for recovery. The state count becomes durable only with
+a successful checkpoint publication.
+
+### Remaining gap and concrete next idea
+
+No exponent in (0,1) is provided. SPC(a) remains proved here only for a>=1.
+The full infinite squarefree annihilator mean-zero implication remains open.
+The variance lower bound and reciprocal gain upper cap cannot substitute
+for the missing upper cost estimate.
+
+The next attempt should use differing quotient profiles rather than assume
+that a common cell controls the tail. A precise paper interface to investigate
+is the cumulative anchor transform. For finite signed weights b_Y of sum one,
+define
+
+    C(t)=sum_(Y in support, Y+1<=t) b_Y,
+    D(t)=sum_(Y in support, Y+1<=t) b_Y*A_Y.
+
+Finite reordering of the checked quotient identity proposes, for n>0,
+
+    sum_Y b_Y*r_Y(n)
+      = sum_(k=1..n) [C(floor(n/k))*M(floor(n/k))+D(floor(n/k))].
+
+This displayed transform is a paper argument, not a new checked declaration.
+Both cumulative charges vanish below the smallest anchor; above the largest,
+C=1 and D is the total offset. Investigate the first mixed q=1/2 strip
+between two nearby legal anchors: it exposes signed M(n)M(floor(n/2))
+correlations absent from a constant-offset calculation. The target is an
+actual complete-Q screened-gain or cost bound, retaining all other quotient
+blocks, then comparison with high-composite squarefree affine directions.
+Do not claim that a finite rearrangement, local cancellation, fixed-row
+decay, or o(n) alone gives a power saving.

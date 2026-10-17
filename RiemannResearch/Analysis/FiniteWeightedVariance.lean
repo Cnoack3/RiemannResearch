@@ -206,5 +206,24 @@ theorem variance_le_mul_of_weights (s : Finset ι) (w v f : ι → ℝ) (C : ℝ
       simpa only [mul_assoc] using
         mul_le_mul_of_nonneg_right (hvw i hi) (sq_nonneg (f i + -mean s w f))
     _ = _ := by simp [variance, sub_eq_add_neg, Finset.mul_sum]
+
+/-- Exact scalar-affine completion, including the zero-slope case. -/
+theorem affine_energy (s : Finset ι) (w f : ι → ℝ) (a b : ℝ)
+    (hW : mass s w ≠ 0) :
+    (∑ i ∈ s, w i * (a * f i + b) ^ 2) =
+      a ^ 2 * variance s w f + mass s w * (a * mean s w f + b) ^ 2 := by
+  have hc := centered_sum s w f hW
+  calc
+    _ = ∑ i ∈ s, (a ^ 2 * (w i * (f i - mean s w f) ^ 2) +
+        (2 * a * (a * mean s w f + b)) * (w i * (f i - mean s w f)) +
+        w i * (a * mean s w f + b) ^ 2) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      ring
+    _ = _ := by
+      rw [Finset.sum_add_distrib, Finset.sum_add_distrib, ← Finset.mul_sum,
+        ← Finset.mul_sum, hc, ← Finset.sum_mul]
+      simp [variance, mass]
+
 end
 end RiemannResearch.Analysis.FiniteWeightedVariance
