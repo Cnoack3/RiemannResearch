@@ -174,6 +174,9 @@ import RiemannResearch.RH.QCovarianceInverse
 import RiemannResearch.RH.QCovarianceInvertibility
 import RiemannResearch.RH.QSquarefreeCapacity
 import RiemannResearch.RH.QSquarefreeInverseCapacity
+import RiemannResearch.Analysis.CoordinateProjectionCriterion
+import RiemannResearch.RH.SquarefreeMobiusProjection
+import RiemannResearch.RH.QSquarefreeRelativeGain
 import RiemannResearch.RH.QSquarefreePrimorialCofinality
 import RiemannResearch.Analysis.FiniteGramScreenedInverse
 import RiemannResearch.RH.QCovarianceScreening

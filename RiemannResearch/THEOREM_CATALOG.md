@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Squarefree Pareto/Q coefficient and gain conversion (2026-10-17)
+
+Established: Analysis/CoordinateProjectionCriterion.lean characterizes target
+membership through retained continuous coordinates when omitted coordinates
+vanish on the dictionary and target, and the complete coordinates separate
+the ambient Hilbert space.
+
+Established: RH/SquarefreeMobiusProjection.lean applies this criterion to
+actual squarefree Pareto and Q projections. It proves unconditional fixed
+coefficient stabilization, the equivalent squarefree Mobius-target and
+closure conditions, P/Q equivalence of those conditions, genuine finite
+inverse-covariance coefficient recovery, and the inverse-capacity criterion.
+Omitted nonsquarefree coordinates vanish throughout the legal closure;
+nonsquarefree atoms are outside that closure. The exact limiting residual
+correction and quantitative stabilization retain the full defect.
+
+Established: RH/QSquarefreeRelativeGain.lean gives complete additive and
+product identities, zero gains at masked-out nonsquarefree stages, and the
+equivalence between squarefree Q closure and nonsummability of actual gains.
+All 29 public theorem axiom reports list only the ordinary Mathlib foundations.
+
+Conditional research reductions: the RH consumers retain simultaneous
+squarefree Mobius-limit or relative-gain nonsummability hypotheses explicitly.
+Open: actual target identification/capacity divergence/gain nonsummability.
+The classical RH-to-squarefree-density direction is not newly formalized.
+
+Research record: RH/SquarefreeParetoQTransferResearch20261017.md.
+
 ### Infinite CRT Q limits and subpolynomial exact-head energy (2026-10-17)
 
 Established: RH/QConductorLimits.lean proves dominated convergence in the
