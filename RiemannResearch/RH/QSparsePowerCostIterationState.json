@@ -1,0 +1,15 @@
+{
+  "program_id": "sparse-power-cost-20261017",
+  "iteration_limit": 5,
+  "completed_iterations": 1,
+  "counting_rule": "The count is durable only in checkpoint-published main; unpushed work is not a completed publication.",
+  "research_record": "RiemannResearch/RH/QSparsePowerCostResearch20261017.md",
+  "previous_base_commit": "8b382951737e8d935d0adb652942a35c581451c7",
+  "last_iteration_result": "SPC(a) proved unconditionally for a >= 1 using prime-anchor canonical Mobius heads and full Q norm transfer. All a in (0,1) and full infinite annihilator mean-zero remain open.",
+  "next_best_idea": "Estimate the complete signed Gram of multiple prime-anchor heads with one fixed exact head; compare with the exhaustive high-conductor squarefree affine minimum. Seek an actual exponent gain or a rigorous obstruction.",
+  "last_workspace_token": "ws_ijGnv1a7TPM6k8c16Lkqj2PpBLzJUG3X",
+  "last_project_root": "/home/cri_2025/lean-agent-workspaces/ws_ijGnv1a7TPM6k8c16Lkqj2PpBLzJUG3X/RiemannResearch",
+  "last_successful_snippet_job": "job_-kVpIudQXb1nXXGlvmXy2dWeIHvukHkw",
+  "publication_gate": "Server checkpoint with push=true, including required validation of the actual integrated source.",
+  "stop_after_limit": true
+}

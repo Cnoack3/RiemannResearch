@@ -1,5 +1,22 @@
 # Theorem catalog
 
+### Sparse squarefree power costs: unconditional exponent-one baseline (2026-10-17)
+
+Established: RH/QSquarefreeSublinearHeads.lean proves canonical exact-head
+squarefree legality when the anchor is squarefree, complete Q primitive and
+residual energy o(H), and arbitrarily cheap cofinal linear-cost heads with
+prime anchors. RH/QSquarefreeSparsePowerCost.lean defines SparsePowerCost(a)
+and proves it unconditionally for every a>=1.
+
+Conditional research reductions: zero_free_of_sparsePowerCost excludes
+Re(s)>1/2, s!=1, with 2*Re(s)-1>=a from SparsePowerCost(a).
+riemannHypothesis_of_sparsePowerCost_tendsto_zero proves actual Mathlib RH
+from a sequence of available cost exponents tending to zero.
+Open: an arithmetic provider for any exponent a in (0,1), and for a sequence
+of exponents tending to zero. The o(H) baseline is not such a provider.
+Research and bounded continuation: RH/QSparsePowerCostResearch20261017.md;
+RH/QSparsePowerCostIterationState.json counts this as published iteration 1/5.
+
 ### Squarefree Q infinite duality and sparse power costs (2026-10-17)
 
 Established: RH/QSquarefreeDualClosure.lean proves squarefree closure iff
