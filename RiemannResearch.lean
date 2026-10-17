@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QResidueHeadSpace
+import RiemannResearch.RH.QSquarefreeAffineHead
 import RiemannResearch.NumberTheory.SquarefreeCumulantPair
 import RiemannResearch.RH.QSquarefreeLatticePackets
 import RiemannResearch.NumberTheory.VonMangoldtLCM

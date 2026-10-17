@@ -79,4 +79,42 @@ theorem residueFraction_exact_head_charge (s : Finset ℕ) (c : ℕ → ℝ)
       simp [residueFraction, Nat.mod_eq_of_lt (hs d hd), div_eq_mul_inv]
     _ = 1 := hhead 1 (by omega) hN
 
+/-- A finite residue combination vanishes on a positive head exactly when
+its reciprocal slope and all low-conductor coefficients vanish. -/
+theorem residueFraction_zero_head_iff (s : Finset ℕ) (c : ℕ → ℝ)
+    (hs : ∀ d ∈ s, 1 < d) (H : ℕ) (hH : 0 < H) :
+    (∀ n, 0 < n → n ≤ H → (∑ d ∈ s, c d * residueFraction d n) = 0) ↔
+      (∑ d ∈ s, c d / (d : ℝ)) = 0 ∧
+        ∀ d ∈ s, d ≤ H → c d = 0 := by
+  constructor
+  · intro hh
+    constructor
+    · calc
+        _ = ∑ d ∈ s, c d * residueFraction d 1 := by
+          apply Finset.sum_congr rfl
+          intro d hd
+          simp [residueFraction, Nat.mod_eq_of_lt (hs d hd), div_eq_mul_inv]
+        _ = 0 := hh 1 (by omega) hH
+    · intro d hd hdH
+      have he := mobiusDifference_congr_initial (F := fun n =>
+        ∑ e ∈ s, c e * residueFraction e n) (G := fun _ => 0) hdH
+        (by
+          intro n hn
+          by_cases hn0 : n = 0
+          · subst n; simp [residueFraction]
+          · exact hh n (Nat.pos_of_ne_zero hn0) hn)
+      rw [residueFraction_sum_mobiusDifference s c d (hs d hd)] at he
+      simpa [hd, mobiusDifference] using he
+  · rintro ⟨hz, hc⟩ n hn hnH
+    calc
+      _ = (n : ℝ) * ∑ d ∈ s, c d / (d : ℝ) := by
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro d hd
+        by_cases hdH : d ≤ H
+        · simp [hc d hd hdH]
+        · simp only [residueFraction, Nat.mod_eq_of_lt (show n < d by omega)]
+          ring
+      _ = 0 := by rw [hz, mul_zero]
+
 end RiemannResearch.RH.Pareto

@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Exhaustive squarefree exact-head affine minimum (2026-10-17)
+
+Established: RH/NormalizedResidueExactHeadCharges.lean characterizes a
+finite zero head by zero reciprocal slope and vanishing low coefficients.
+RH/QResidueHeadSpace.lean identifies the entire finite zero-head subspace
+with the span of all compensated high-conductor directions, proves their
+independence, and constructs the actual affine Gram optimizer with exact
+complete-error formula, Pythagorean remainder, and uniqueness.
+
+Established: RH/QSquarefreeAffineHead.lean proves the exact Mobius baseline
+head and finite divisor-stage membership, the exhaustive affine feasible
+set, and forced period support for nonzero low Mobius coefficients.
+Its actual minimum has a complete norm-square remainder. Period
+enlargement gains exactly the squared optimizer displacement, and both
+the minimum and optimizer are independent of the normalization anchor.
+Large composite conductors and refitting of old coefficients are retained.
+
+Conditional research reduction:
+riemannHypothesis_of_bounded_affine_minima derives Mathlib RH from the
+actual squarefree optimizers with growing exact heads.
+Open: one uniform bound on these complete optimized Q errors.
+The all-order convolution log/exp algebra, RH-to-density direction, and
+subpolynomial zero-witness consumer are not newly formalized.
+Research record: RH/QSquarefreeAffineHeadResearch20261017.md.
+
 ### Squarefree convolution cumulants and legal physical packets (2026-10-16)
 
 Established: NumberTheory/SquarefreeCumulantPair.lean proves inverse
@@ -16,10 +41,10 @@ terms. Its composite-cumulant completion gives the exact optimum and
 nonnegative excess square, with the nonzero direction stated explicitly.
 
 Open: a cofinal uniform or subpolynomial bound for the complete exact-head
-error. No RH conclusion or such estimate is asserted. The all-order
-nilpotent algebra and exhaustive affine characterization remain paper
-arguments; only the stated two-prime and physical packet results are
-formalized here. Research record:
+error. The all-order nilpotent algebra remains a paper argument.
+The exhaustive affine characterization and complete minimum are now
+formalized in QResidueHeadSpace and QSquarefreeAffineHead above.
+The original packet research record is
 RH/QSquarefreeLatticePacketsResearch20261016.md.
 
 ### Exact von Mangoldt–LCM arithmetic (2026-10-16)
