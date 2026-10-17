@@ -1,15 +1,15 @@
 {
   "program_id": "sparse-power-cost-20261017",
   "iteration_limit": 5,
-  "completed_iterations": 1,
+  "completed_iterations": 2,
   "counting_rule": "The count is durable only in checkpoint-published main; unpushed work is not a completed publication.",
   "research_record": "RiemannResearch/RH/QSparsePowerCostResearch20261017.md",
-  "previous_base_commit": "8b382951737e8d935d0adb652942a35c581451c7",
-  "last_iteration_result": "SPC(a) proved unconditionally for a >= 1 using prime-anchor canonical Mobius heads and full Q norm transfer. All a in (0,1) and full infinite annihilator mean-zero remain open.",
-  "next_best_idea": "Estimate the complete signed Gram of multiple prime-anchor heads with one fixed exact head; compare with the exhaustive high-conductor squarefree affine minimum. Seek an actual exponent gain or a rigorous obstruction.",
-  "last_workspace_token": "ws_ijGnv1a7TPM6k8c16Lkqj2PpBLzJUG3X",
-  "last_project_root": "/home/cri_2025/lean-agent-workspaces/ws_ijGnv1a7TPM6k8c16Lkqj2PpBLzJUG3X/RiemannResearch",
-  "last_successful_snippet_job": "job_-kVpIudQXb1nXXGlvmXy2dWeIHvukHkw",
+  "previous_base_commit": "e1e77d99da036cfa01b3e8bbe2fa4712c51796f8",
+  "last_iteration_result": "Proved unconditional complete-Q fixed-row residual Gram decay, a quantitative mixed-entry bound, and exact legal signed-mixture energy. Proved a geometric diagonal countermodel showing that sublinear diagonal costs plus zero cross entries do not force vanishing affine cost. SPC(a) for 0<a<1 and infinite annihilator mean-zero remain open.",
+  "next_best_idea": "Use exact Mobius tail-floor identities on prime quotient blocks to control the growing signed Gram matrix or actual screened gains. Attempt reciprocal-charge cancellation while retaining all other blocks; seek a real exponent below one rather than fixed-row decay.",
+  "last_workspace_token": "ws_deHsvbndbPe5UvYDIRB3vOGt7kcjDfXo",
+  "last_project_root": "/home/cri_2025/lean-agent-workspaces/ws_deHsvbndbPe5UvYDIRB3vOGt7kcjDfXo/RiemannResearch",
+  "last_successful_snippet_job": "job_hBp7zpkSuoYzUu8X_s0QPlNdqkV6XVqE",
   "publication_gate": "Server checkpoint with push=true, including required validation of the actual integrated source.",
   "stop_after_limit": true
 }

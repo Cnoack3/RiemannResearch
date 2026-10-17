@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QExactHeadCorrelations
+import RiemannResearch.Analysis.OrthogonalAffineCostObstruction
 import RiemannResearch.RH.QSquarefreeSublinearHeads
 import RiemannResearch.RH.QSquarefreeSparsePowerCost
 import RiemannResearch.RH.QSquarefreeDualClosure

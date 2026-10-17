@@ -1,4 +1,4 @@
-# Sparse squarefree power costs: iteration 1 of 5
+# Sparse squarefree power costs: iterations 1–2 of 5
 
 Research for Christian Noack. 17 October 2026.
 Program identifier: sparse-power-cost-20261017.
@@ -154,7 +154,7 @@ if they offer a stronger arithmetic handle. Preserve complete signed terms,
 normalization, support restrictions, and all boundary contributions.
 Exclude the trigamma convergence route.
 
-## Bounded autonomous continuation
+## Original bounded continuation authorization (after iteration 1)
 
 The user authorized publication followed by the best next idea and a halt
 after five total iterations. This published pass is iteration 1; four further
@@ -167,3 +167,136 @@ hypotheses to claim success. A failed verification blocks publication.
 
 Stop once the published count is five. Do not create a second continuation,
 extend its recurrence, reset the count, or modify unrelated scheduled tasks.
+
+## Iteration 2 of 5: exact correlations and the sparse-averaging obstruction
+
+Date: 17 October 2026.
+Starting published commit: e1e77d99da036cfa01b3e8bbe2fa4712c51796f8.
+The preceding pass's full project checkpoint
+job_8n30Xd35RsquYRQUqZPDlPlQy8YGG6a1 succeeded and pushed that exact revision.
+
+### What was attempted
+
+Try to select increasingly distant prime-anchor canonical heads with very
+small cross correlations, then average their residuals to improve SPC(1).
+This pass proves the available correlation decay and identifies why that
+selection-and-averaging deduction stops. No SPC(a) for 0<a<1 is proved.
+The infinite annihilator mean-zero provider remains Open.
+
+Write r_N=1-B_N and K(M,N)=<r_M,r_N>_Q. Before estimating, the complete
+arithmetic entry is
+    K(M,N)=sum_(k>=1) Q(k)
+       (1-B_M(k))(1-B_N(k)).
+The auxiliary zero coordinate contributes zero, as in the actual Lean model.
+
+For any physically bounded Q vector f with |f(k)|<=C, and a Q vector u
+vanishing on 1,...,N, N>=1, the newly checked bound is
+    |<f,u>_Q|^2 <= [2*C^2/zeta(2)] * ||u||_Q^2/N.
+It follows from the exact physical tail representation and
+    zeta(2)*||tail_(>N) f||_Q^2 <= 2*C^2/(N+1),
+followed by complete-tail Cauchy--Schwarz. No finite physical tail is discarded.
+
+Since |r_M(k)|<=1+2M for M>=1, this gives the actual mixed-entry estimate
+    |K(M,N)|^2 <= [2*(1+2M)^2/zeta(2)] * ||r_N||_Q^2/N.
+Iteration 1 supplied ||r_N||_Q^2/N -> 0. Therefore, for every fixed M>=1,
+    K(M,N) -> 0 as N -> infinity.
+In particular it holds along every sequence of prime anchors escaping to
+infinity. It is not a uniform bound in M.
+
+For finite signed weights b_i with sum b_i=1, put F=sum_i b_i B_i.
+The checked complete identity is
+    ||1-F||_Q^2 = sum_(i,j) b_i*b_j*K(i,j).
+If all i+1 are squarefree, F is squarefree legal. If every i>=H, then
+F(k)=1 for 1<=k<=H. The sign of b_i is unrestricted.
+
+### A precise obstruction to the proposed deduction
+
+Vanishing fixed rows do not control the growing diagonal energies of
+a recursively selected sparse family. Even perfect orthogonality does not
+make arbitrary signed affine averages cheap.
+
+Consider the explicit positive diagonal Gram model
+    G_ij = 0 for i!=j,    G_ii=4^(i+1).
+Its exact energy is
+    E_m(b)=sum_(0<=i<m) (2^(i+1)*b_i)^2.
+The assigned heads H_i=16^(i+1) have
+    G_ii/H_i=(1/4)^(i+1) -> 0.
+Every cross term is identically zero. Nevertheless, the exact reciprocal sum is
+    S_m=sum_(0<=i<m) 4^(-(i+1))=(1-4^(-m))/3 <= 1/3.
+For sum b_i=1, finite Cauchy--Schwarz gives
+    1 <= E_m(b)*S_m,
+and hence the checked conclusion
+    E_m(b)>=3
+for every finite signed affine choice. The result also covers negative weights.
+
+The diagonal Gram matrix can be realized by orthogonal coordinate vectors
+of norms 2^(i+1), placed at physical site H_i+1. This
+realization is an explanatory paper construction; the module verifies
+the scalar Gram energy, reciprocal sum, affine lower bound, and sublinear
+diagonal/head limit. These vectors are not asserted to be legal residue
+errors. Thus this is not a counterexample to SPC(a) or to RH.
+
+It is a counterexample to deducing vanishing affine cost merely from
+sublinear individual energy and small/zero pairwise cross entries.
+The issue is finite total reciprocal energy after sparse selection.
+The selection threshold can depend on every earlier head and force diagonal
+costs to grow too quickly. Sublinear energy along all primes does not
+preserve a divergent reciprocal-energy sum on an adaptively sparse selection.
+
+### Exact formal declarations and scope
+
+RH/QExactHeadCorrelations.lean:
+- tail_norm_sq_bounded;
+- inner_sq_le_sublinear_energy;
+- inner_tendsto_zero_of_sublinear_head_zero;
+- residual, residual_sequence, residual_head_zero, residual_bounded;
+- residual_pairing_weighted, residual_mixed_sq_le;
+- residual_fixed_row_tendsto_zero;
+- signedHeadAverage, signedHeadAverage_mem, signedHeadAverage_head;
+- signedHeadAverage_error_exact.
+
+Analysis/OrthogonalAffineCostObstruction.lean:
+- modelEnergy;
+- reciprocal_square_sum;
+- affine_cost_lower;
+- model_diagonal_sublinear.
+
+All these results are unconditional in their displayed types. The generic
+correlation theorem has explicit bounded-test, zero-head, and sublinear
+hypotheses; its canonical specialization supplies those inputs internally.
+There is no new RH consumer and no asserted provider below exponent one.
+
+Server snippet job job_hBp7zpkSuoYzUu8X_s0QPlNdqkV6XVqE succeeded with
+verified=true and exit code 0. Axiom inspection of fixed-row decay, the
+full signed energy identity, the model floor, and the model sublinear limit
+lists only propext, Classical.choice, and Quot.sound.
+Final module publication is subject to the current checkpoint; its terminal
+result and exact commit accompany delivery.
+
+### Best next idea after this obstruction
+
+Obtain quantitative arithmetic control of a growing block of the actual
+signed Gram entries, or of the actual screened capacity gains. Fixed-row
+limits alone are no longer an adequate target.
+
+Use the canonical floor expansion to express r_(p-1)(n), for a prime p and positive n,
+as exact Mobius tail sums and reciprocal charges:
+    r_(p-1)(n)
+      = sum_(p<=d<=n) mu(d)*floor(n/d)
+          + p*s_(p-1)*floor(n/p).
+For p<=n<2p this becomes
+    r_(p-1)(n)=M(n)-M(p-1)+p*s_(p-1).
+These are proposed paper arithmetic interfaces for the next pass, not
+additional newly checked declarations in this module.
+
+Investigate signed weights that cancel the reciprocal-charge contribution
+on specified quotient blocks, while retaining the complete remaining
+Mobius correlations and all other physical blocks. Seek an actual bound
+at exponent a<1. An identity, positivity of the Gram matrix, or a formal
+inverse is not such a bound. If prime-only canonical mixtures are too
+restrictive, compare against exhaustive high-composite squarefree affine
+directions and their exact Schur gains.
+
+Do not replace growing-block control by an unjustified uniform Bessel bound.
+The countermodel and the quadratic fixed-row constant must remain visible
+in future attempts.

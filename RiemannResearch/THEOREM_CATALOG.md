@@ -1,5 +1,23 @@
 # Theorem catalog
 
+### Canonical squarefree Q correlations and an affine-cost obstruction (2026-10-17)
+
+Established: RH/QExactHeadCorrelations.lean proves the complete Q bounded-test
+tail inequality, actual canonical residual Gram entries tending to zero
+for each fixed row, a quantitative mixed-entry estimate, and the full signed
+mixture energy identity with squarefree legality and exact-head support.
+No growing-matrix uniform bound is inferred from the fixed-row limit.
+
+Established: Analysis/OrthogonalAffineCostObstruction.lean gives the
+geometric diagonal model G_ii=4^(i+1), assigned heads 16^(i+1), exact finite
+reciprocal-energy sum, and affine cost at least 3 for all signed weights
+of total one, despite sublinear diagonal/head cost and zero cross entries.
+This refutes a generic averaging shortcut, not the squarefree RH assertion.
+
+Open: a quantitative signed growing-block Gram or screened-gain estimate
+providing any SPC(a) with 0<a<1. See RH/QSparsePowerCostResearch20261017.md.
+Published iteration state advances to 2/5 in QSparsePowerCostIterationState.json.
+
 ### Sparse squarefree power costs: unconditional exponent-one baseline (2026-10-17)
 
 Established: RH/QSquarefreeSublinearHeads.lean proves canonical exact-head
