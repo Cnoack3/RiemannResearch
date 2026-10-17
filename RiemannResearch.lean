@@ -10,6 +10,7 @@ import RiemannResearch.RH.QSquarefreeSublinearHeads
 import RiemannResearch.RH.QSquarefreeSparsePowerCost
 import RiemannResearch.RH.QSquarefreeDualClosure
 import RiemannResearch.RH.QExactHeadSubpolynomial
+import RiemannResearch.RH.QSquarefreeLinearBenchmark
 import RiemannResearch.RH.QConductorLimits
 import RiemannResearch.RH.QConductorEscape
 import RiemannResearch.RH.QSquarefreeJumpApplications

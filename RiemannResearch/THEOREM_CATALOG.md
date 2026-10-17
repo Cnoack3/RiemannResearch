@@ -176,6 +176,25 @@ periods and all signed Gram terms remain available. No RH-to-squarefree-
 density implication is newly formalized.
 Research record: RH/QInfiniteCRTContinuationResearch20261017.md.
 
+### Unconditional squarefree exact-head linear Q-error (2026-10-17)
+
+Established: RH/QSquarefreeLinearBenchmark.lean reuses the squarefree
+legality and exact physical Q/P identification in QSquarefreeSublinearHeads.
+The complete Pareto bound and full norm transfer give
+||F_N||_Q^2 < 8*N/zeta(2) and
+||1-F_N||_Q^2 <= 2 + 16*N/zeta(2).
+
+For every positive requested head H, exists_exactHead_linear_error uses
+Bertrand's postulate to choose H <= N < 2H with N+1 prime. The trial equals
+one through H and has complete error at most 2 + 32*H/zeta(2).
+No RH or unproved energy hypothesis occurs in these benchmark declarations.
+All infinite physical tails are retained. The existing asymptotic o(N)
+result remains available; this benchmark gives an explicit all-head bound.
+
+Open: a bounded or subpolynomial complete-energy provider. The linear
+benchmark does not discharge the RH reduction's subpolynomial premise.
+Research record: RH/QSquarefreeLinearBenchmarkResearch20261017.md.
+
 ### Complete physical Q primitive-penalty regularization (2026-10-17)
 
 Established: Analysis/PrimitiveRegularization.lean proves the exact objective
