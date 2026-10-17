@@ -1,5 +1,22 @@
 # Theorem catalog
 
+### Certified complete-Q composite-anchor gain (2026-10-17)
+
+- `RH/QSignedEnergyCertificate.lean`:
+  `QSignedEnergyCertificate.signedEnergy_summable`,
+  `energy_difference_series`, `energy_difference_prefix_tail`,
+  `energy_difference_lower`: signed full-Q differences with an exact
+  prefix/tail split and a one-sided complete-tail certificate.
+- `RH/QCompositeSixGain.lean`:
+  `QCompositeSixGain.trial_gain_lower`, `gain_lower` certify a gain at
+  least `1/(10000*zetaTwo)` from B_4 toward the legal composite-anchor
+  B_5; `trial_legal`, `trial_exact`, `line_legal`, `line_exact`
+  retain squarefree legality and the exact head through coordinate 4.
+  `denominator_pos` and `line_completion` use the actual Q source
+  and complete denominator. `physicalGain_prefix` and
+  `physicalGain_lower` supply kernel-checked signed arithmetic.
+  Finite provider only; no SPC exponent below one or infinite annihilator claim.
+
 ### Exhaustive squarefree canonical exact heads and prime-only incompleteness (2026-10-17)
 
 Established: RH/SquarefreeCanonicalCoordinates.lean proves

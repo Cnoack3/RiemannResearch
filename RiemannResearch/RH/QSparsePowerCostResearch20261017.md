@@ -1,4 +1,4 @@
-# Sparse squarefree power costs: iterations 1–4 of 5
+# Sparse squarefree power costs: iterations 1–5 of 5
 
 Research for Christian Noack. 17 October 2026.
 Program identifier: sparse-power-cost-20261017.
@@ -562,3 +562,121 @@ If no such arithmetic estimate emerges, record its precise failure and the
 strongest verified partial result. The next pass is iteration five and must
 halt the program after publication, even if both full targets remain open.
 Do not extend the recurrence or restart the count.
+
+## Iteration 5 of 5: certified complete-Q composite gain (17 October 2026)
+
+### Outcome and scope
+
+The fifth and final pass produced a concrete arithmetic gain, not an
+asymptotic provider. In the full dyadic squarefree anchor block (3,6],
+the anchors are 5 and 6; the prime-only family has just anchor 5.
+Write B_Y = QMobiusExactHead.exactHead Y and set
+
+F = (3/4) B_4 + (1/4) B_5.
+
+Both B_4 and B_5 are squarefree-legal; F is exact on coordinates 1,...,4.
+The complete infinite Q norm satisfies
+
+||1-B_4||_Q^2 - ||1-F||_Q^2 >= 1/(10000*zeta(2)) > 0.
+
+Thus anchor 6 supplies a useful composite direction in this finite block,
+beyond iteration 4's algebraic incompleteness result. This does not prove
+a gain for general blocks, a cofinal saving, or SPC(a) for any a<1.
+It is not a lower cost obstruction to either restricted or full families.
+
+### Signed arithmetic certificate and infinite complement
+
+For positive physical n, the old residual and change are exactly
+
+r(n) = 1 - (n mod 2)/2 - (n mod 3)/3 - (n mod 5)/6,
+e(n) = ((n mod 6) - (n mod 5))/30.
+
+The subtraction in e is real signed subtraction, not natural subtraction.
+The trial residual is r+e/4. Define the signed gain
+
+h(n) = r(n)^2 - (r(n)+e(n)/4)^2.
+
+The verification retains every negative term. By checking all 30 residue
+classes, h(n)>=-41/900 globally. Exact kernel-checked rational
+normalization of the entire prefix gives
+
+sum_(0<=n<=240) h(n)/n^2 >= 3/10000,
+
+with the zero coordinate interpreted as zero as in the Q space.
+For n>240 the complete adverse tail is bounded below using
+
+1/n^2 <= 1/((n-1)*n),
+sum_(n>240) 1/((n-1)*n) = 1/240.
+
+Consequently the full normalized gain is at least
+3/10000 - 41/(900*240), which exceeds 1/10000.
+No quotient strip, physical complement, or negative gain is omitted.
+No numerical integration, external floating-point certificate, trigamma
+convergence, analytic continuation, or limit interchange is used.
+
+### Actual source and full denominator
+
+Let v=B_5-B_4, s=<1-B_4,v>_Q, D=||v||_Q^2, G=s^2/D.
+The physical value v(5)=-1/6 proves D>0. For every real t the verified
+identity is
+
+||1-(B_4+t*v)||_Q^2
+ = ||1-B_4||_Q^2 - G + D*(t-s/D)^2.
+
+The actual optimized gain therefore satisfies G>=1/(10000*zeta(2)).
+All real choices of t remain squarefree-legal and exact on 1,...,4.
+The source s and full Q denominator D are the actual Hilbert quantities;
+the certificate does not replace either with a local surrogate.
+The uniform tail majorant bounds their combined energy difference.
+
+### Reusable declarations and validation
+
+New module RH/QSignedEnergyCertificate.lean, namespace
+RiemannResearch.RH.QSignedEnergyCertificate:
+
+- signedEnergy and signedEnergy_summable;
+- energy_difference_series;
+- energy_difference_prefix_tail;
+- energy_difference_lower.
+
+The last theorem certifies a complete energy lower difference from a
+signed prefix and a global one-sided bound on the remaining physical sites.
+It uses the existing telescoping Pareto tail identity.
+
+New module RH/QCompositeSixGain.lean, namespace
+RiemannResearch.RH.QCompositeSixGain:
+
+- physicalGain_mod, physicalGain_lower, physicalGain_abs, physicalGain_prefix;
+- oldError_sequence, freshError_sequence, trial_error_sequence, signedEnergy_eq;
+- old_legal, fresh_legal, trial_legal, trial_exact;
+- trial_gain_lower;
+- line_legal, line_exact, denominator_pos, line_completion, gain_lower.
+
+Both modules are exported by the aggregate and cataloged.
+The complete candidate was checked by terminal successful snippet job
+job_49b39DAbHsWAkn_sBI2HYD_-G2EjuToF. Printed axioms for gain_lower
+and trial_legal are only propext, Classical.choice, and Quot.sound.
+This snippet is not the publication gate: durable completion requires
+the subsequent server source audit and successful actual integrated
+aggregate/affected-module checkpoint with push=true.
+
+### Exact remaining failure and final halt
+
+The attempted growing-block Schur estimate did not close. The signed
+sources and full denominators for varying H are not controlled uniformly
+by this finite certificate, and its error majorant is not a bound for
+arbitrary blocks or optimized growing families. A fixed positive saving
+at H=3 says nothing by itself about a cofinal cost exponent.
+No estimate of cost o(H^a) for a<1 was proved. The infinite Q-annihilator
+mean-zero implication was not proved either. Both full targets remain open.
+
+The concrete next idea, only for separately authorized future research,
+is to scale these signed prefix-tail certificates across growing complete
+squarefree blocks, tracking the actual source defects, full Gram
+denominators, mixed quotient blocks, and uniform infinite remainder.
+A block certificate must demonstrate a growing quantitative saving, not
+merely positivity, invertibility, independence, or an equivalent condition.
+
+This is publication five of five. After its successful checkpoint, halt
+all proof work for this program and disable the existing automation.
+Do not create a replacement, extend the recurrence, or restart the counter.

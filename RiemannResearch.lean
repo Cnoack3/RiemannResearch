@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QCompositeSixGain
+import RiemannResearch.RH.QSignedEnergyCertificate
 import RiemannResearch.RH.QSquarefreeCanonicalExhaustion
 import RiemannResearch.RH.SquarefreeCanonicalCoordinates
 import RiemannResearch.RH.QCanonicalSchurVariance
