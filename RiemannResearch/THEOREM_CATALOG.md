@@ -99,6 +99,34 @@ Taylor remainder, the global Hilbert estimate, and the RH-to-Hardy
 approximation provider remain separate obligations.
 Research record: NumberTheory/VonMangoldtLCMResearch20261016.md.
 
+### Mobius prime-packet arithmetic and complete screened trials (2026-10-17)
+
+Established finite results: RH/QMobiusPrimePacketArithmetic.lean proves
+coprime inclusion-exclusion with every integer quotient, identifies the
+actual totient density, and proves h_(L,p)(k)=k*phi(L)/(p*L)-A_L(floor(k/p))
+for all positive L,p. It also proves the short head, full p*L period, and
+h_(6,5)(7)=-8/15.
+
+Established finite results: RH/QCovarianceTrial.lean retains the signed
+source t^T delta, every mixed entry of t^T R t, and the exact equality
+Gamma=alpha^2/E+||v_star-(alpha/E)*w_t||^2. Positive energy and the trial
+lower bound follow for independent complete families and nonzero t.
+
+Established finite results: RH/QMobiusPrimePacket.lean supplies actual
+squarefree primorial packet weights mu(d), including d=1, literal legal
+membership, the physical coprime-count formula, the pairing with the actual
+primorialOptimizer residual, positive screened energy, and
+moebius_trial_lower_bound for the existing actual packetGain.
+
+Conditional research reduction: moebius_gain_lower_of_bounds consumes the
+explicit finite estimates a^2<=alpha^2, E<=e, 0<e. It supplies no uniform
+arithmetic provider. Open: sufficiently strong next-prime source and
+screened-energy estimates. Open: divergence of accumulated actual gains;
+the existing capacity telescope retains its initial capacity. No RH
+conclusion is claimed. External interval experiments are not Lean certificates.
+
+Research record: RH/QMobiusPrimePacketResearch20261017.md.
+
 ### Complete-tail constrained Q minimum and conductor-gap arithmetic (2026-10-16)
 
 Established: Analysis/FiniteGramRankOne.lean proves actual Gram inverse

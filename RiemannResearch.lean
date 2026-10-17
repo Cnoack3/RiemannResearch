@@ -174,6 +174,9 @@ import RiemannResearch.RH.QSquarefreePrimorialCofinality
 import RiemannResearch.Analysis.FiniteGramScreenedInverse
 import RiemannResearch.RH.QCovarianceScreening
 import RiemannResearch.RH.QSquarefreePrimePacket
+import RiemannResearch.RH.QMobiusPrimePacketArithmetic
+import RiemannResearch.RH.QCovarianceTrial
+import RiemannResearch.RH.QMobiusPrimePacket
 import RiemannResearch.RH.QPrimeOrthogonal
 import RiemannResearch.RH.QPrimePowerOrthogonal
 import RiemannResearch.RH.QResidueMoments
