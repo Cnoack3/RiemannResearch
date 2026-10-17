@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Infinite CRT Q limits and subpolynomial exact-head energy (2026-10-17)
+
+Established: RH/QConductorLimits.lean proves dominated convergence in the
+complete atomic Q norm, residue and divisibility atoms tending to zero as
+their conductors escape, and reflected residue vectors tending to one.
+RH/QConductorEscape.lean retains the exact linear-head energy and proves
+weak convergence to zero for uniformly norm-bounded finite combinations
+whose entire conductor support escapes; coefficient signs and support sizes
+are unrestricted.
+
+Established: RH/QSquarefreeJumpApplications.lean gives exact singleton and
+g_3-squared error decompositions with full norm-square remainders, the lower
+bounds 1/(30*zeta(2)) and 2/(1215*zeta(2)), and nonmembership results.
+Each reflected squarefree atom with d >= 3 has defect one and is outside
+the legal closure. Their legal distances tend to zero if and only if the
+constant belongs to the squarefree Q closure; no distance decay is supplied.
+
+Established: RH/QExactHeadSubpolynomial.lean transfers the existing
+localized Mellin zero-power obstruction to the complete Q error, with
+constant (2*Re(s)-1)/(zeta(2)*norm(s)^2) and cutoff 1 <= k < n.
+
+Conditional research reductions:
+riemannHypothesis_of_cofinal_exact_head_subpolynomial and
+riemannHypothesis_of_subpolynomial_affine_minima derive actual Mathlib RH
+from cofinal exact legal heads and log(1+E)/log(n) tending to zero.
+Open: the subpolynomial complete Q-energy provider, including its
+specialization to the exhaustive affine minima. Independent squarefree
+periods and all signed Gram terms remain available. No RH-to-squarefree-
+density implication is newly formalized.
+Research record: RH/QInfiniteCRTContinuationResearch20261017.md.
+
 ### All-order squarefree cumulants and physical projective realization (2026-10-17)
 
 Established: NumberTheory/SquarefreeCumulantTower.lean constructs iterated
