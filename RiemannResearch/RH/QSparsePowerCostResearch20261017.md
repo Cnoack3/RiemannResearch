@@ -1,4 +1,4 @@
-# Sparse squarefree power costs: iterations 1–3 of 5
+# Sparse squarefree power costs: iterations 1–4 of 5
 
 Research for Christian Noack. 17 October 2026.
 Program identifier: sparse-power-cost-20261017.
@@ -427,3 +427,138 @@ actual complete-Q screened-gain or cost bound, retaining all other quotient
 blocks, then comparison with high-composite squarefree affine directions.
 Do not claim that a finite rearrangement, local cancellation, fixed-row
 decay, or o(n) alone gives a power saving.
+
+## Iteration 4 of 5: exhaustive legal canonical coordinates and prime-only incompleteness
+
+17 October 2026. Base published revision:
+855d4ce719b07c988e9072f22009463a3b4cb751. The preceding terminal checkpoint
+job_OW1P7OC4wbAGCbosys3YG8NoacGCsA9B succeeded and pushed; no prior
+verification or publication was left pending. This is exactly pass four.
+
+### Arithmetic attempt and change of direction
+
+The cumulative C,D transform from iteration 3 remains a valid proposed finite
+reordering, not a new power-cost provider. On the first mixed strip for
+anchors a<b<2a, where floor(n/a)=2 and floor(n/b)=1, the two profiles differ
+by M(floor(n/2)). For signed weights t and 1-t the residual is exactly
+
+    M(n)+t*M(floor(n/2))+2*t*A_(a-1)+(1-t)*A_(b-1).
+
+Squaring retains a signed M(n)M(floor(n/2)) cross term. No useful uniform
+bound for this cross term together with every other quotient block was
+obtained. Cauchy--Schwarz and the existing PNT sublinear estimates alone did
+not produce an exponent below one. This failed estimate is not a refutation
+of the mixed-quotient method.
+
+Before committing further to prime anchors, this pass checked whether that
+family loses legal candidates. The existing CanonicalMobiusTriangular
+exhaustion uses all conductors, so its canonical windows cannot simply be
+declared squarefree legal. The new results supply the exact missing support
+elimination and identify the difference between prime-only and exhaustive
+squarefree canonical families.
+
+### Proved support elimination
+
+Let B_Y be the canonical head and c_m the continuous coefficient functional
+that extracts the coefficient of g_m. For m>=2 nonsquarefree, every low
+Mobius term at g_m vanishes. Therefore the new exact identity is
+
+    c_m(B_Y) = if m=Y+1 then (Y+1)*S(Y) else 0.
+
+Every c_m vanishes on the algebraic squarefree residue span. Apply it to a
+finite canonical expansion indexed by Y=H,...,M, H>=1. At a nonsquarefree
+anchor m=Y+1, the entire sum reduces to the one term
+
+    b_Y * (Y+1)*S(Y) = 0.
+
+The already proved unconditional finite reciprocal-sum nonvanishing,
+S(Y)!=0 for Y>=1, forces b_Y=0. This uses integer denominator clearing and
+Bertrand's postulate through the existing provider, not RH or a uniform
+asymptotic estimate.
+
+RH/SquarefreeCanonicalCoordinates.lean proves, in
+Pareto.CoefficientStabilization:
+- coefficient_canonical_nonsquarefree;
+- coefficient_squarefree_zero;
+- canonical_expansion_squarefree_mask;
+- exists_finiteSpace_of_squarefree;
+- exists_squarefree_canonical_affine_expansion.
+
+The final theorem keeps the original fixed conductor budget M+1 from the
+full triangular expansion and forces every illegal anchor coefficient to
+zero. Its positive-head assumption H>=1 is explicit.
+
+The generic coefficient_normalizedResidue helper is placed in its owning
+RH/MobiusCoefficientStabilization.lean module. It also covers the harmless
+conductor-one atom.
+
+### Exhaustion in the actual Q space
+
+RH/QSquarefreeCanonicalExhaustion.lean proves exists_affine_expansion:
+for every f in the algebraic squarefree Q span, if f(n)=1 for 1<=n<=H,
+H>=1, there are M>=H and finite signed coefficients b_i with
+
+    sum_i b_i = 1,
+    b_i = 0 whenever H+i+1 is not squarefree,
+    f = sum_i b_i * exactHead(H+i).
+
+Thus allowing every legal squarefree canonical anchor beyond the head
+loses no finite exact-head candidate, including those constructed from high
+composite conductors. This is a vector identity in the full Q Hilbert space:
+the physical sequence and complete norm are unchanged. No physical tail,
+signed term, boundary contribution, or support restriction is discarded.
+
+This is an unconditional algebraic exhaustion theorem, not an RH consumer
+with a renamed missing estimate. It gives no quantitative bound on the
+coefficients, Gram inverse, minimum energy, or asymptotic power cost.
+
+### A concrete obstruction to prime-only exhaustion
+
+The same Q module proves six_not_prime_expansion. For every M>=5 and every
+coefficient vector on B_1,...,B_M that vanishes at all nonprime anchors,
+
+    exactHead(5) != sum_i b_i * exactHead(i+1).
+
+The target has anchor 6, which is squarefree and composite, and it is exact
+on 1,...,5. The existing finite full canonical linear independence makes its
+unique coefficient at B_5 equal one. Prime-only support forces that same
+coefficient to zero, a contradiction. Every finite prime-anchor expansion
+fits some such budget, so prime-only canonical heads omit a real legal
+candidate even when signed coefficients are allowed.
+
+This does not prove a cost lower bound for prime-only mixtures, nor that
+any composite direction gives a nonzero or quantitatively useful source
+gain. Independence and a positive Schur denominator alone cannot establish
+such a gain.
+
+### Verification and remaining gap
+
+Coherent snippet job job__eDhUGZZIDqPULK5LMf0N3SbKyg8FqdM succeeded,
+verified=true, exit code zero. Axiom reports for the Q exhaustion and the
+anchor-6 obstruction contain only propext, Classical.choice, and Quot.sound.
+An earlier candidate failed only on rewriting between toPareto and its
+linear-map encoding; the repaired candidate passed. No admitted proof or
+project-local axiom was saved.
+
+Final publication is gated by source audit and the actual aggregate project
+plus changed-module checkpoint validation. The terminal checkpoint and
+published commit accompany the run report. The count advances only when
+the checkpoint has actually pushed.
+
+SPC(a) remains proved here only for a>=1. Neither an exponent in (0,1) nor
+the full infinite squarefree annihilator mean-zero implication was proved.
+
+### Best next idea: fifth and final pass
+
+Use the now exhaustive legal canonical coordinates to compare a prime
+trial family with the full block of squarefree anchors H<d<=2H, including
+composites. Inspect the actual signed source defects and complete Q Schur
+denominators of those additions. Seek a block estimate giving a genuine
+power saving; do not infer a gain from the incompleteness theorem itself.
+Cumulative C,D may organize differing quotient profiles, but every other
+physical block and the infinite complement must remain.
+
+If no such arithmetic estimate emerges, record its precise failure and the
+strongest verified partial result. The next pass is iteration five and must
+halt the program after publication, even if both full targets remain open.
+Do not extend the recurrence or restart the count.

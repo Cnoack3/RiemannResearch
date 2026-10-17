@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QSquarefreeCanonicalExhaustion
+import RiemannResearch.RH.SquarefreeCanonicalCoordinates
 import RiemannResearch.RH.QCanonicalSchurVariance
 import RiemannResearch.NumberTheory.CommonFloorQuotient
 import RiemannResearch.RH.QExactHeadCorrelations

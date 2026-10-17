@@ -2,6 +2,7 @@ import RiemannResearch.RH.MobiusHilbertCoordinates
 import RiemannResearch.Analysis.ContinuousBiorthogonalDeletion
 import RiemannResearch.Analysis.ExhaustiveProjectionWalk
 import RiemannResearch.RH.ThresholdRiemannHypothesis
+import Mathlib.Tactic.NormNum
 
 /-!
 # Stabilization and exact characterization of residue coefficients
@@ -32,6 +33,13 @@ def residueAtom (i : ℕ) : ThresholdHilbert :=
 /-- The continuous coefficient functional, with the sign required by g_d. -/
 def coefficientCLM (m : ℕ) : ThresholdHilbert →L[ℝ] ℝ :=
   -mobiusDifferenceCLM m
+
+/-- The normalized residue coordinate, including conductor one. -/
+theorem coefficient_normalizedResidue (m d : ℕ) (hm : 1 < m) (hd : 0 < d) :
+    coefficientCLM m (normalizedResidueHilbert d hd) = if m = d then 1 else 0 := by
+  simp only [coefficientCLM, neg_apply, mobius_normalizedResidue m d hm hd]
+  split_ifs <;> norm_num
+
 
 theorem coefficientCLM_biorthogonal (i j : ℕ) :
     coefficientCLM (i + 2) (residueAtom j) = if i = j then 1 else 0 := by

@@ -1,5 +1,29 @@
 # Theorem catalog
 
+### Exhaustive squarefree canonical exact heads and prime-only incompleteness (2026-10-17)
+
+Established: RH/SquarefreeCanonicalCoordinates.lean proves
+coefficient_canonical_nonsquarefree, coefficient_squarefree_zero,
+canonical_expansion_squarefree_mask, exists_finiteSpace_of_squarefree, and
+exists_squarefree_canonical_affine_expansion in Pareto.CoefficientStabilization.
+Nonsquarefree anchors in the full triangular expansion have zero coefficients
+for squarefree-legal vectors, by the finite reciprocal-sum nonvanishing theorem.
+The generic coefficient_normalizedResidue helper is in its owning
+RH/MobiusCoefficientStabilization.lean module.
+
+Established: RH/QSquarefreeCanonicalExhaustion.lean proves exists_affine_expansion:
+every finite legal Q exact-head vector with H>=1 is a finite signed affine
+combination of squarefree canonical anchors beyond H, with the full vector
+unchanged. It also proves six_not_prime_expansion: the legal anchor-6 canonical
+head is absent from every finite prime-anchor canonical linear family.
+
+These are unconditional algebraic results. Prime-only incompleteness is not a
+cost lower bound, and full squarefree exhaustion is not an upper energy bound.
+Open: any SPC(a) provider for 0<a<1 and the infinite annihilator provider.
+Research record: RH/QSparsePowerCostResearch20261017.md, iteration 4/5.
+Next: actual signed complete-Q block gains from composite squarefree anchors;
+the next research pass is the fifth and final pass.
+
 ### Complete Q screened variance and finite common-quotient region (2026-10-17)
 
 Established: RH/QCanonicalSchurVariance.lean proves

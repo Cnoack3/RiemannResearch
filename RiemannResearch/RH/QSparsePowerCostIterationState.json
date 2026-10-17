@@ -1,16 +1,16 @@
 {
   "program_id": "sparse-power-cost-20261017",
   "iteration_limit": 5,
-  "completed_iterations": 3,
+  "completed_iterations": 4,
   "counting_rule": "The count is durable only in checkpoint-published main; unpushed work is not a completed publication.",
   "research_record": "RiemannResearch/RH/QSparsePowerCostResearch20261017.md",
-  "previous_base_commit": "8ad676eb44d25858f77b394f54522af96426d260",
-  "last_iteration_result": "Proved complete-Q screened quotient-cell variance decomposition and reciprocal-variance upper cap for the signed Schur gain, retaining the mean square and full infinite complement. Proved the finite support bound n*(b-a)<a*b for equal quotients at distinct anchors. These precisely limit common-quotient charge cancellation; no SPC exponent below one or infinite annihilator provider was obtained.",
-  "next_best_idea": "Use differing quotient profiles through cumulative anchor charges C(t),D(t), retaining the exact floor-convolution and complete Q energy. First examine the mixed q=1/2 strip for two nearby legal anchors and its signed M(n)M(floor(n/2)) correlations, then compare full screened gains with high-composite legal affine directions. Seek a genuine upper cost estimate below exponent one; do not reprove common-cell identities or infer gains from local variance.",
-  "last_workspace_token": "ws_0xvbFi66ZglBxMPwBl0qRd1jrPP9CtIx",
-  "last_project_root": "/home/cri_2025/lean-agent-workspaces/ws_0xvbFi66ZglBxMPwBl0qRd1jrPP9CtIx/RiemannResearch",
-  "last_successful_snippet_job": "job_PAU-maMn3xwGUFCqRDomiUPzEQOAGg4R",
+  "previous_base_commit": "855d4ce719b07c988e9072f22009463a3b4cb751",
+  "last_iteration_result": "Proved squarefree support elimination in canonical coordinates and exact affine exhaustion of every finite legal positive exact-head Q vector by squarefree canonical anchors beyond its head. Proved the legal anchor-6 canonical vector has no finite prime-anchor canonical linear expansion. No SPC exponent below one and no infinite annihilator provider was obtained.",
+  "next_best_idea": "Attempt a complete-Q block Schur estimate when adjoining all squarefree composite anchors H<d<=2H to a prime-anchor trial family, using the exact legal canonical exhaustion. Keep the actual signed source defect and full denominator, and use cumulative C,D only as exact mixed-quotient bookkeeping. Seek an actual below-linear power estimate or a precise obstruction; do not infer useful gain from independence or prime-family incompleteness. The next pass is the fifth and final pass.",
+  "last_workspace_token": "ws_3z4KYyDdOuqdJu5fiuqh5M8etOaPrdtm",
+  "last_project_root": "/home/cri_2025/lean-agent-workspaces/ws_3z4KYyDdOuqdJu5fiuqh5M8etOaPrdtm/RiemannResearch",
+  "last_successful_snippet_job": "job__eDhUGZZIDqPULK5LMf0N3SbKyg8FqdM",
   "publication_gate": "Server checkpoint with push=true, including required validation of the actual integrated source.",
   "stop_after_limit": true,
-  "previous_successful_checkpoint_job": "job_pH1aJnRlC96QTy3Tpxc958jQktqxF4Xl"
+  "previous_successful_checkpoint_job": "job_OW1P7OC4wbAGCbosys3YG8NoacGCsA9B"
 }
