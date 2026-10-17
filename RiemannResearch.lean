@@ -40,6 +40,9 @@ import RiemannResearch.RH.QParetoGramComparison
 import RiemannResearch.RH.QParetoOperatorTransfer
 import RiemannResearch.RH.QMellinTransfer
 import RiemannResearch.RH.QBoundedCoordinateClosure
+import RiemannResearch.Analysis.PrimitiveRegularization
+import RiemannResearch.RH.QPhysicalDifference
+import RiemannResearch.RH.QPrimitiveEnergyClosure
 import RiemannResearch.RH.QCanonicalMetricAsymptotics
 import RiemannResearch.NumberTheory.GcdWindowMoments
 import RiemannResearch.RH.QDivisorDPPGrowingWindows

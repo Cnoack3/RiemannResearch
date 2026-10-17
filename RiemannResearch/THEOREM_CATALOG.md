@@ -59,6 +59,33 @@ periods and all signed Gram terms remain available. No RH-to-squarefree-
 density implication is newly formalized.
 Research record: RH/QInfiniteCRTContinuationResearch20261017.md.
 
+### Complete physical Q primitive-penalty regularization (2026-10-17)
+
+Established: Analysis/PrimitiveRegularization.lean proves the exact objective
+completion, signed two-penalty and zero-penalty cross identities, energy difference,
+energy and derivative-error monotonicity, exact-target identity, and Galerkin
+Pythagoras. Lax--Milgram gives unconditional existence and uniqueness of a
+normal solution and minimizer for a bounded Hilbert-space map and positive
+penalty.
+
+Established: RH/QPhysicalDifference.lean constructs the actual physical
+unilateral shift as a Q contraction and the bounded injective difference
+operator with boundary F(0)=0. RH/QPrimitiveEnergyClosure.lean proves
+bounded-difference closure, an O(penalty) complete-energy closure consumer,
+unconditional existence of the unique squarefree regularized minimizer,
+and squarefree constant closure if and only if the canonical normal family
+has a uniform critical objective budget along positive penalties tending
+to zero.
+
+Conditional research reduction:
+riemannHypothesis_of_regularized_legal_budget yields actual Mathlib RH.
+Open: its uniform complete primitive-energy budget. No arithmetic O(penalty)
+provider or new RH-to-squarefree-density implication is formalized here.
+The original Markdown appendix required syntax and namespace repairs before
+checking. The divisor-coordinate finite optimizer and its divergent period
+mean are additional paper derivations, not claims certified by these modules.
+
+
 ### All-order squarefree cumulants and physical projective realization (2026-10-17)
 
 Established: NumberTheory/SquarefreeCumulantTower.lean constructs iterated
