@@ -1,3 +1,6 @@
+import RiemannResearch.RH.QCompositeGainProfile
+import RiemannResearch.RH.QMeanTailEnergyCertificate
+import RiemannResearch.Analysis.InverseSquareAbelTail
 import RiemannResearch.RH.QCompositeSixGain
 import RiemannResearch.RH.QSignedEnergyCertificate
 import RiemannResearch.RH.QSquarefreeCanonicalExhaustion

@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Signed inverse-square tails and composite-gain location (2026-10-18)
+
+- `Analysis/InverseSquareAbelTail.lean`:
+  `InverseSquareAbelTail.centered_identity`,
+  `centered_error_bound`, `periodic_centered_error_bound`,
+  `finite_signed_error_bound` retain the exact signed mean and bound
+  the complete centered tail by `B/(K+1)^2`. The two mass bounds and
+  `weighted_sum_neg` give explicit complete-series sign certificates.
+- `RH/QMeanTailEnergyCertificate.lean`:
+  `QMeanTailEnergyCertificate.energy_difference_centered_tail` applies
+  the estimate to actual Q-Hilbert norms with the prefix and full tail retained.
+- `RH/QCompositeGainProfile.lean`:
+  `QCompositeGainProfile.profile_period_mean` gives
+  `-(10*t+31*t^2)/5400`;
+  `positive_profile_translation_negative` proves strict negativity of
+  every positive-step translated profile for `K>=110`;
+  `quarter_translation_negative` gives `K>=63`.
+  `profile_signedEnergy`, `profile_energy_series` connect the original
+  profile to the actual legal B_4,B_5 Q line.
+  `trial_gain_lower_refined`, `optimized_gain_lower_refined` improve the
+  complete-Q finite saving to `1/(3100*zetaTwo)`.
+  These translations are not asserted legal growing canonical heads.
+  No below-one SPC exponent or infinite annihilator provider is obtained.
+- Research record: `RH/QSignedTailScalingResearch20261018.md`.
+  Separately authorized continuation; the original five-pass program stays closed.
+
 ### Certified complete-Q composite-anchor gain (2026-10-17)
 
 - `RH/QSignedEnergyCertificate.lean`:
