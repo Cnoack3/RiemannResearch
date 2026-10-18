@@ -165,13 +165,13 @@ J_(1/10)(F)
 =3715960194137/38587500000000
 <963/10000<1/10.
 
-All certificate arithmetic is exact. The numerical minimizer was only used to discover the rational coefficients. The infinite-series inequalities are elementary integral-tail proofs; they have not been submitted to Lean by this agent. This certifies one finite regularization budget and does not supply lambda_N→0 or prove RH.
+All certificate arithmetic is exact. The numerical minimizer was only used to discover the rational coefficients. The complete certificate has now passed Lean-server verification in `QPeriod210Certificate.lean`, including the infinite-tail and normalization inequalities. The signed correction `F+(1/3)g_11` is also verified to have objective below 469/5000 in `QPeriod210AffineCorrection.lean`. See `QPeriod210CertificateResearch20261018.md` for declarations, verification jobs, and the remaining vanishing-penalty inequality. This certifies one finite regularization budget and does not supply lambda_N→0 or prove RH.
 
 ## Suggested research route
 
 1. Formalize incidence matrix exp/log and weighted Mobius transform as linear finite basis changes.
 2. Formalize the product counterexample to prevent accidental pointwise-functional-calculus closure claims.
-3. Formalize an interval-free rational certificate consumer: periodic finite values, norm tail bound, normalization brackets, then J<lambda.
+3. Completed: `QFiniteEnergyBounds.lean` and `QPeriod210Certificate.lean` formalize rational finite heads, complete tail bounds, normalization brackets, and J<lambda.
 4. Search larger prime sets using sparse cover operators/CRT derivative coordinates while preserving exact full primitive Gram.
 5. Seek a scalable rule giving bounded primitive energy as lambda→0, e.g. signed cancellation estimates stable under adjoining primes. This is the essential open analytic/arithmetic result.
 6. Do not call exp/log novel: incidence algebra and Boolean cumulant calculus are established. Potential novelty must reside in a quantitative Q-norm estimate or uniform strict-budget provider.

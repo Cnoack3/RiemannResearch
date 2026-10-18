@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Explicit period-210 strict budget and signed improvement (2026-10-18)
+
+Established, unconditional: `RH/QPeriod210Certificate.lean` kernel-checks all
+15 rational coefficients, squarefree legality, period 210, the exact maximum,
+first value, rational derivative energy, normalization brackets, and complete
+infinite primitive tail. `candidate_strict_certificate` proves
+J_(1/10)(F)<3715960194137/38587500000000<1/10 in the actual Q-Hilbert space.
+`stage_four_strict_budget` transfers this to the actual stage minimizer.
+
+`RH/QPeriod210AffineCorrection.lean` retains the signed primitive cross term
+and proves J_(1/10)(F+(1/3)g_11)<469/5000. The corrected trial is squarefree
+legal at period 2310. Support modules `RH/QDifferenceGram.lean` and
+`RH/QFiniteEnergyBounds.lean` provide complete derivative Gram identities
+and rigorous square/mixed finite-head plus infinite-tail bounds.
+
+Open: a cofinal legal family at lambda_N>0 tending to zero with
+b_N²>q_N(J_(lambda_N)(u_N)-lambda_N), or the exact rational-step variant
+b_N²-(q_N t_N-b_N)²>q_N(J_(lambda_N)(u_N)-lambda_N).
+These are finite positive-penalty results, not a proof of RH.
+Research record: `RH/QPeriod210CertificateResearch20261018.md`.
+
 ### Complete-Q exact-head energy audit (2026-10-18)
 
 - `Analysis/InverseSquareTailCertificates.lean`: exact rational upper/lower
@@ -60,9 +81,10 @@ that finite span, not the full closed squarefree space.
 Conditional research reduction: `strict_value_of_correction_certificate`.
 Open: complete signed certificates at vanishing penalties, general finite
 Boolean convolution formalization, and an appropriate infinite-transform
-norm bound. A separate Wolfram exact rational full-tail certificate at period
-210 gives J_(1/10)<0.0963; this numerical-to-Hilbert certificate is not itself
-newly formalized. The general cover-matrix exponential and weighted coefficient
+norm bound. The period-210 rational full-tail certificate is now formalized in
+`RH/QPeriod210Certificate.lean`, and its signed prime-eleven improvement is
+formalized in `RH/QPeriod210AffineCorrection.lean` (see the entry above).
+The general cover-matrix exponential and weighted coefficient
 Banach-algebra arguments are paper results, not new Lean declarations.
 Research record and reproducible Wolfram code:
 `RH/QLatticeRegularizationResearch20261018.md`,
