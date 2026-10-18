@@ -1,6 +1,12 @@
 # Burnol: discrete transfer and an improved off-critical Q witness
 
-Date: 2026-10-18. Status: independently derived mathematical proof, **not Lean verified**. This is the analytic appendix to the research record. No claim of historical novelty is made.
+Date: 2026-10-18. Status update: the central discrete witness bound through
+B(beta), its actual QHilbert series, genuine summability, and 1/2 < B(beta) < 1
+are now formalized in `QMellinWitness.lean` and its supporting modules.
+See `QMellinWitnessResearch20261018.md` for the exact declarations and
+retained cell-remainder refinement. The closed-span extension, complex-space
+operator-norm equality, additional elementary factor, and tail refinements
+below remain ordinary mathematical proofs. No historical novelty is claimed.
 
 ## 1. Strongest statement first
 

@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Complete Q Mellin witness and strict B-factor improvement (2026-10-18)
+
+Established: `Analysis/ReciprocalCellAbel.lean` proves the exact finite and
+infinite Abel identities, shifted boundaries, and complete remainder
+identities. `RH/WeightedPowerCellMass.lean` discharges summability and the
+vanishing boundary for actual power cells, proves their exact B(beta)/(2 beta-1)
+sum, identifies B(beta)=sum n^(-2 beta)/(n+1), and proves 1/2 < B(beta) < 1.
+
+Established: `RH/QMellinCellEnergy.lean` proves the actual Q/P cell-energy
+identity, complete positive correction, sharp B-factor upper envelope,
+and equality with the entire nonnegative cell remainder retained.
+`RH/QMellinWitness.lean` represents the signed functional by a convergent
+series on actual QHilbert, proves its weighted norm bound and positive
+energy, and proves the resulting finite legal-error lower bounds at a
+hypothetical zeta zero Re(s)>1/2, s != 1. These are zero-obstruction
+theorems, with the zero hypothesis explicit; no analytic provider is assumed.
+The B-factor lower constant strictly exceeds the old global-transfer
+constant. Finite prefixes of actual cell slack give further certified bounds.
+
+Open: the complete unconditional legal-error upper estimate needed for RH.
+The real Q-to-complex functional is bounded; equality with its real operator
+norm is not claimed. The closed-span extension and the appendix's additional
+elementary bound B(beta)<=(2 beta+1)/(4 beta) are not new Lean theorems here.
+Research record: `RH/QMellinWitnessResearch20261018.md`.
+
 ### Burnol exact finite rates and Q cutoff transfer (2026-10-18)
 
 Established unconditionally: `Analysis/FiniteTwoMomentEnergy.lean` proves
@@ -18,8 +43,10 @@ for squarefree subsets. Open: a Lean provider of Burnol's analytic envelope.
 
 Ordinary proofs, not Lean-verified here: general target-jet rates, exact
 repeated-root factorial formula, fixed-zero-family second-order bound,
-and sharper Q Mellin cell-witness bound. Open: the unconditional complete
-legal error upper estimate needed for RH. No RH proof is claimed.
+and additional elementary Q-envelope and tail refinements. The central
+Q Mellin B-factor witness bound is now established in the entry above.
+Open: the unconditional complete legal error upper estimate needed for RH.
+No RH proof is claimed.
 Research record: `RH/BurnolRatesResearch20261018.md` and its two appendices.
 
 ### Baez-Duarte 2002 audit and Bombieri smoothing (2026-10-18)

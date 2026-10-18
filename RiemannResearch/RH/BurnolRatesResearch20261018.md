@@ -14,11 +14,12 @@ The work sharpens finite polynomial rates and discrete lower-bound certificates.
 | Arbitrary legal finite-candidate cutoff transfer | Lean: `RH/BurnolParetoTransfer.lean`, given `ContinuousCutoffLowerBound` |
 | Q cutoff transfer retaining the complete metric correction | Lean: `RH/BurnolQCutoffTransfer.lean`, same analytic input, actual Q norms |
 | Polynomial divisibility, complex Parseval interpretation, general vanishing-jet hierarchy, repeated-root factorial formula | Ordinary proofs in `BurnolPolynomialRefinements20261018.md`; not claimed as Lean-verified bridges |
-| Fixed finite zero-family second-order bound and improved off-critical Q witness | Ordinary analytic proofs in the two appendices; not yet formalized |
+| Fixed finite zero-family second-order bound | Ordinary analytic proof in the appendices; not yet formalized |
+| Off-critical Q witness through the B(beta) factor, exact cell remainder, and strict improvement | Lean: `RH/QMellinWitness.lean` and supporting modules; see `QMellinWitnessResearch20261018.md` |
 | Burnol analytic lower-envelope provider | Open formal integration; the published theorem is not re-proved in Lean here |
 | Unconditional legal constant-approximation upper bound tending to zero | Open RH-level obligation |
 
-The coherent precursor snippet passed in job `job_RRfNCSrLWQum2Udpj-sYGHSgwXWHzUnD`. The final split module imports and axiom inspection then passed on the server in job `job_-PHx92YJ8T3gtaXhaeRbdWnAO9cN6sQC`, exit code 0, `verified: true`. The inspected two-moment identity, cubic exact minimum, and Q correction theorem depend only on `propext`, `Classical.choice`, and `Quot.sound`. Publication remains gated by the final checkpoint of changed modules and their local reverse dependents. No local axiom, proof hole, or RH assumption was introduced into the unconditional coefficient identities. The cutoff-transfer theorems explicitly retain their analytic hypothesis.
+The coherent precursor snippet passed in job `job_RRfNCSrLWQum2Udpj-sYGHSgwXWHzUnD`. The final split module imports and axiom inspection then passed on the server in job `job_-PHx92YJ8T3gtaXhaeRbdWnAO9cN6sQC`, exit code 0, `verified: true`. The inspected two-moment identity, cubic exact minimum, and Q correction theorem depend only on `propext`, `Classical.choice`, and `Quot.sound`. That original update passed server checkpoint `job_zmUUO2iG7KiqCMKaQu0WxFq-625SPf1y` and was published as `a69f923ec9baadde792b04a11fd100accdffccad`. The subsequent Q-witness formalization is documented separately in `QMellinWitnessResearch20261018.md`. No local axiom, proof hole, or RH assumption was introduced into the unconditional coefficient identities. The cutoff-transfer theorems explicitly retain their analytic hypothesis.
 
 ## 1. What Burnol proves
 
