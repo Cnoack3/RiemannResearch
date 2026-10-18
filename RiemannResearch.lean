@@ -12,6 +12,8 @@ import RiemannResearch.Analysis.OrthogonalAffineCostObstruction
 import RiemannResearch.RH.QSquarefreeSublinearHeads
 import RiemannResearch.RH.QSquarefreeSparsePowerCost
 import RiemannResearch.RH.QSquarefreeDualClosure
+import RiemannResearch.RH.QDivisibilityHilbertMoments
+import RiemannResearch.RH.QReflectedFiniteStage
 import RiemannResearch.RH.QExactHeadSubpolynomial
 import RiemannResearch.RH.QSquarefreeLinearBenchmark
 import RiemannResearch.RH.QConductorLimits

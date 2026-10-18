@@ -26,6 +26,38 @@
 - Research record: `RH/QSignedTailScalingResearch20261018.md`.
   Separately authorized continuation; the original five-pass program stays closed.
 
+### Quantitative reflected trials and escaping-support obstruction (2026-10-18)
+
+Established: RH/QDivisibilityHilbertMoments.lean proves the full divisor
+progression moment, divisor mass and norm d^(-2), exact lcm overlap, and
+orthogonality of residue atoms to divisible progressions.
+
+Established: RH/QReflectedFiniteStage.lean proves the exact shifted
+reflected error with its signed mixed term; on the own-period divisor stage
+the full error improves by exactly d^(-2), and the shifted trial stays in
+that stage. Its binaryTrial is squarefree legal and has complete squared
+error 1/4 + d^(-2) - 2/lcm(2,d)^2. It also proves the exact two-site
+completed square and the complete-error lower bound
+(c_2 - 1)^2/(8*zeta(2)); packets using only conductors at least three
+therefore have error at least 1/(8*zeta(2)) for every d >= 3.
+All these declarations passed a complete-module server check; the final
+checkpoint is the separate publication gate.
+
+External certificates, not Lean proofs: rational trials in divisor stages
+6, 30, 210, 2310 have complete squared errors below
+0.026990, 0.024290, 0.016848, 0.013550, respectively.
+The research record preserves exact coefficients, integer-only checks,
+and outward bounds on the entire periodic tails. Its general-H
+escaping-support limit, Gram/projection corollaries, sharp distance
+estimate, and primorial-sieve divergence arguments are mathematical
+derivations, not newly formalized declarations.
+
+Open: complete signed screened-packet gains sufficient for reflected
+distance decay, or subpolynomial complete energy for the exhaustive
+exact-head affine minima. Ambient convergence gives no legality.
+The singleton approximation route remains excluded. No RH proof is claimed.
+Research record: RH/QReflectedFiniteStageResearch20261017.md.
+
 ### Certified complete-Q composite-anchor gain (2026-10-17)
 
 - `RH/QSignedEnergyCertificate.lean`:
