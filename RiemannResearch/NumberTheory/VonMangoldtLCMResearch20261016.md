@@ -139,3 +139,31 @@ before push. GitHub CI is not used.
 The running LCM is generally not squarefree. None of these arithmetic identities
 asserts that a prime-power conductor, an LCM conductor, or a divisibility
 indicator is a squarefree legal atom.
+
+## Archive re-verification: 18 October 2026
+
+Recovered the saved version 4 of
+`VonMangoldt_LCM_Target2_UNVERIFIED_2026-10-16.zip` after the direct attachment
+transfer failed. The archived `VonMangoldtLCM_UNVERIFIED.lean` is byte-for-byte
+identical to `RiemannResearch/NumberTheory/VonMangoldtLCM.lean` at base commit
+`744e821453a3702b7f4665eb3f303f1003beb1e4`. Its source SHA-256 remains
+`bf7c35106aab842491ec94a4a7cbb2eb5f6be92acc41445fc1d035e75fc93624`.
+The aggregate project already imports this module.
+
+Fresh server job `job_euS2Cq_pzufAVGBaUrW7WphpfAei6thv` re-elaborated the
+complete source, followed by `#print axioms` for each of its ten declarations.
+It reached terminal state `succeeded`: classification `success`, exit code 0,
+`verified: true`, elapsed 17.058 seconds. The checked snippet SHA-256, including
+the appended axiom commands, is
+`d06703264ec78360aed8d47be622e739d0ae01fa0375ea00bb76ac9183cda4c8`.
+
+For every declaration, the complete axiom list was exactly `propext`,
+`Classical.choice`, and `Quot.sound`. A source scan found no `sorry`, `admit`,
+project-local `axiom`, or `unsafe` declaration. No proof repair was needed.
+
+Scope: this fresh check verifies all ten proof bodies from the archived module
+in the current project environment. It is not a fresh full-project build.
+Only this research record is changed by the verification handoff, so its
+publication checkpoint is documentation-only and does not supply additional
+Lean compilation evidence. The RH-dependent analytic obligations listed above
+are unaffected.
