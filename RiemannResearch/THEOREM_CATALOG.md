@@ -21,6 +21,35 @@
   connected in Lean. Bounded/subpolynomial complete energy remains Open.
   The halted five-iteration sparse power-cost program remains closed.
 
+### Unit-signal all-conductor optimizer limit (2026-10-18)
+
+`Analysis/UnitSignalProjection.lean` constructs the normalized optimizer from
+Mathlib's orthogonal projection and gives its exact Pythagorean remainder,
+uniqueness, defect formula, nested-stage difference, and norm convergence.
+`RH/ZetaTwoParitySignal.lean` supplies the complete inverse-square multiples
+mass, actual parity vectors, quarter target energy, and positive conductor-3
+pairing. `RH/ZetaTwoUnitSignal.lean` instantiates the model on the actual
+all-conductor stages (conductors 2 through n+3) and closed residue span.
+`allConductorOptimizer_tendsto` gives unconditional norm convergence;
+`allConductorLimit_error` identifies the limiting error as delta/(1-4*delta).
+These statements do not assume or prove that delta vanishes.
+
+Conditional research reduction: `Analysis/UnitSignalTwoScale.lean` gives
+additive and quarter-allowance estimates from an explicit squared two-scale
+hypothesis and a limit-zero criterion from an explicit polynomial detector.
+Open: the actual inverse-square dilation/detector provider and the actual
+scalar lower estimate forcing the limiting coordinate to vanish. The latter
+is a substantive RH-strength obligation. Uniform strict contraction at every
+dyadic stage is obstructed by an external logarithmic lower bound; that
+paper argument is recorded but is not formalized by these modules.
+
+The four separate modules passed server job `job_gz3QFNBGiQj80LxZBDsVlHlig5_Dd4HE`
+(exit 0); eight selected axiom reports used only `propext`,
+`Classical.choice`, and `Quot.sound`. Final publication is gated by server
+validation of the integrated source and exports.
+[Scope, exact identities, and open obligations](RH/UnitSignalLimit20261013.md).
+Provenance: supplied unit-signal manuscript, Sections 1--6; no novelty claim.
+
 ### Signed inverse-square tails and composite-gain location (2026-10-18)
 
 - `Analysis/InverseSquareAbelTail.lean`:
