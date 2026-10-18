@@ -1,4 +1,5 @@
 import RiemannResearch.RH.ThresholdHilbertMean
+import Mathlib.Tactic.Linarith
 /-!
 # The full Pareto L1 norm on the sequence Hilbert space
 
@@ -202,5 +203,41 @@ theorem hilbertNegativeMass_tendsto_zero_iff {U : ℕ → ThresholdHilbert} {p :
         atTop (𝓝 ((p - p) / 2)) :=
       (h.sub tendsto_const_nhds).div_const 2
     simpa only [hilbertNegativeMass_eq, hmean, sub_self, zero_div] using ht
+
+section NegativeMassContinuity
+set_option backward.isDefEq.respectTransparency false
+
+theorem hilbertL1Norm_neg (f : ThresholdHilbert) :
+    hilbertL1Norm (-f) = hilbertL1Norm f := by
+  have hs : hilbertSequence (-f) = -hilbertSequence f :=
+    hilbertSequenceLinear.map_neg f
+  simp only [hilbertL1Norm, hs, Pi.neg_apply, abs_neg]
+
+theorem hilbertNegativeMass_abs_sub_le (f g : ThresholdHilbert) :
+    |hilbertNegativeMass f - hilbertNegativeMass g| ≤ hilbertL1Norm (f - g) := by
+  have ha := hilbertL1Norm_abs_sub_le f g
+  have hu := inner_one_le_hilbertL1Norm (f - g)
+  have hl := inner_one_le_hilbertL1Norm (-(f - g))
+  rw [inner_neg_left, hilbertL1Norm_neg] at hl
+  rw [inner_sub_left] at hu hl
+  rw [hilbertNegativeMass_eq, hilbertNegativeMass_eq]
+  exact abs_le.mpr ⟨by linarith [(abs_le.mp ha).1], by linarith [(abs_le.mp ha).2]⟩
+
+theorem hilbertNegativeMass_lipschitz : LipschitzWith 1 hilbertNegativeMass := by
+  apply LipschitzWith.of_dist_le_mul
+  intro f g
+  simpa [Real.dist_eq, dist_eq_norm] using
+    (hilbertNegativeMass_abs_sub_le f g).trans (hilbertL1Norm_le_norm (f - g))
+
+theorem hilbertNegativeMass_continuous : Continuous hilbertNegativeMass := by
+  have hi : Continuous (fun f : ThresholdHilbert => inner ℝ f hilbertOne) :=
+    continuous_id.inner continuous_const
+  have heq : hilbertNegativeMass =
+      (fun f => (hilbertL1Norm f - inner ℝ f hilbertOne) / 2) :=
+    funext hilbertNegativeMass_eq
+  rw [heq]
+  exact (hilbertL1Norm_continuous.sub hi).div_const 2
+
+end NegativeMassContinuity
 
 end RiemannResearch.RH.Pareto

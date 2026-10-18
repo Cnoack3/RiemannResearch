@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Full-Pareto overshoot and signed innovation criteria (2026-10-18)
+
+Established: `RH/ThresholdHilbertL1.lean` proves the complete negative mass is
+1-Lipschitz, including its L1 difference bound. `RH/ParetoProjectionOvershoot.lean`
+retains the exact residual-mean/overshoot identities, gives the finite
+first-coordinate lower bound and limiting two-sided bounds, and proves
+vanishing overshoot and residual L1 excess equivalent to zero limiting defect
+and constant closure. The first nonempty finite stage has zero overshoot
+and positive error, so only the limiting criterion is asserted.
+
+`Analysis/ProjectionPairingVariation.lean` proves finite and infinite
+two-gap pairing budgets and absolute summability for nested projections.
+`RH/ParetoSignedInnovations.lean` retains each signed Schur summand, proves
+absolute summability and its complete tail budget, and identifies the total
+as minus the limiting first residual coordinate. Its vanishing is equivalent
+to zero limiting residual.
+
+Conditional research reductions: complete overshoot upper bounds with
+coefficient below 1-sqrt(2)/2; ordinary residual or parity-optimizer first
+coordinate upper bounds with coefficient below 2-sqrt(2); or a vanishing
+signed innovation endpoint. Open: providers of these arithmetic estimates.
+The optimizer dyadic specialization uses n -> 2*n+3 because n denotes M-3.
+These reductions imply the project's RiemannHypothesis statement when their
+explicit hypotheses are supplied. The classical RH-to-closure converse is
+not newly formalized here. The floating-point Gram table remains exploratory.
+Research record: `RH/ParetoOvershootSignedInnovationsResearch20261018.md`.
+
 ### Explicit period-210 strict budget and signed improvement (2026-10-18)
 
 Established, unconditional: `RH/QPeriod210Certificate.lean` kernel-checks all

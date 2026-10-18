@@ -10,6 +10,9 @@ import RiemannResearch.Analysis.SingleObservationProjection
 import RiemannResearch.RH.MobiusResidualFirstCoordinate
 import RiemannResearch.RH.ResidueGramDigamma
 import RiemannResearch.RH.ThresholdHilbertL1
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
 
 /-!
 # Full-Pareto parity-normalized least-squares optimizers
@@ -756,5 +759,95 @@ theorem riemannHypothesis_of_cofinal_optimizer_first_nonneg
   intro ε hε n₀
   obtain ⟨n, hn, hnonneg⟩ := h n₀
   exact ⟨n, hn, le_trans (by linarith) hnonneg⟩
+
+/-- The full odd indicator, including the anchored zero coordinate. -/
+theorem oddIndicator_sequence (k : ℕ) :
+    hilbertSequence oddIndicator k = ((k % 2 : ℕ) : ℝ) := by
+  have he := even_sequence k
+  have hs : hilbertSequence evenIndicator k =
+      hilbertSequence hilbertOne k - hilbertSequence oddIndicator k := by
+    exact congrFun (hilbertSequence_sub _ _) k
+  rw [hilbertOne_sequence] at hs
+  linarith
+
+/-- The existing dilation bound gives this sharper first-coordinate lower bound. -/
+theorem limitOptimizer_first_lower_sqrt_two :
+    (2 - Real.sqrt 2) * ‖limitOptimizer - evenIndicator‖ ^ 2 ≤
+      -hilbertSequence limitOptimizer 1 := by
+  have hp : 0 ≤ evenMass / ‖limitProjected‖ ^ 2 :=
+    le_of_lt (div_pos evenMass_pos limitProjected_energy_pos)
+  have hr : (2 - Real.sqrt 2) * limitEnergy ≤
+      hilbertSequence limitResidual 1 := by
+    have h := firstCoordinate_energy_bounds.1
+    nlinarith
+  calc
+    _ = (evenMass / ‖limitProjected‖ ^ 2) *
+        ((2 - Real.sqrt 2) * limitEnergy) := by
+      rw [limitOptimizer_error_sq]
+      ring
+    _ ≤ (evenMass / ‖limitProjected‖ ^ 2) *
+        hilbertSequence limitResidual 1 :=
+      mul_le_mul_of_nonneg_left hr hp
+    _ = _ := by rw [limitOptimizer_first]; ring
+
+theorem limitResidual_zero_of_relative_first_bound
+    (θ : ℝ) (hθ : θ < 2 - Real.sqrt 2)
+    (j : ℕ → ℕ) (hj : Tendsto j atTop atTop)
+    (β : ℕ → ℝ) (hβ : Tendsto β atTop (𝓝 0))
+    (hbound : ∀ᶠ n in atTop,
+      -hilbertSequence (optimizer (j n)) 1 ≤
+        θ * ‖optimizer n - evenIndicator‖ ^ 2 + β n) :
+    limitResidual = 0 := by
+  have he : Tendsto (fun n => ‖optimizer n - evenIndicator‖ ^ 2)
+      atTop (𝓝 (‖limitOptimizer - evenIndicator‖ ^ 2)) :=
+    (optimizer_tendsto.sub tendsto_const_nhds).norm.pow 2
+  have hb := le_of_tendsto_of_tendsto
+    (optimizer_first_tendsto.comp hj |>.neg)
+    ((tendsto_const_nhds.mul he).add hβ) hbound
+  simp only [add_zero] at hb
+  have hl := limitOptimizer_first_lower_sqrt_two
+  have hz : ‖limitOptimizer - evenIndicator‖ ^ 2 = 0 := by
+    have hm : ((2 - Real.sqrt 2) - θ) *
+        ‖limitOptimizer - evenIndicator‖ ^ 2 ≤ 0 := by linarith
+    have hn : ‖limitOptimizer - evenIndicator‖ ^ 2 ≤ 0 :=
+      le_of_not_gt (fun he => (not_lt_of_ge hm) (mul_pos (sub_pos.mpr hθ) he))
+    exact le_antisymm hn (sq_nonneg _)
+  have heq := limitOptimizer_error_sq
+  have hp := div_pos evenMass_pos limitProjected_energy_pos
+  have hh : ‖limitOptimizer - evenIndicator‖ ^ 2 =
+      (evenMass / ‖limitProjected‖ ^ 2) * limitEnergy := by
+    rw [heq]; ring
+  apply limitResidual_zero_iff_energy_zero.mpr
+  have hm : (evenMass / ‖limitProjected‖ ^ 2) * limitEnergy = 0 := by
+    linarith
+  exact (mul_eq_zero.mp hm).resolve_left (ne_of_gt hp)
+
+/-- Conditional RH consumers. The relative arithmetic upper bound remains Open.
+For manuscript doubling M -> 2M, the optimizer index is n -> 2*n+3. -/
+theorem riemannHypothesis_of_relative_first_bound
+    (θ : ℝ) (hθ : θ < 2 - Real.sqrt 2)
+    (j : ℕ → ℕ) (hj : Tendsto j atTop atTop)
+    (β : ℕ → ℝ) (hβ : Tendsto β atTop (𝓝 0))
+    (hbound : ∀ᶠ n in atTop,
+      -hilbertSequence (optimizer (j n)) 1 ≤
+        θ * ‖optimizer n - evenIndicator‖ ^ 2 + β n) :
+    RiemannHypothesis :=
+  riemannHypothesis_of_limitCoefficients
+    (limitCoefficients_eq_mobius_iff_residual_zero.mpr
+      (limitResidual_zero_of_relative_first_bound θ hθ j hj β hβ hbound))
+
+theorem riemannHypothesis_of_relative_dyadic_first_bound
+    (θ : ℝ) (hθ : θ < 2 - Real.sqrt 2)
+    (β : ℕ → ℝ) (hβ : Tendsto β atTop (𝓝 0))
+    (hbound : ∀ᶠ n in atTop,
+      -hilbertSequence (optimizer (2 * n + 3)) 1 ≤
+        θ * ‖optimizer n - evenIndicator‖ ^ 2 + β n) :
+    RiemannHypothesis := by
+  have hj : Tendsto (fun n : ℕ => 2 * n + 3) atTop atTop := by
+    refine tendsto_atTop.2 fun b => Filter.eventually_atTop.2 ⟨b, ?_⟩
+    intro n hn
+    omega
+  exact riemannHypothesis_of_relative_first_bound θ hθ
+    (fun n => 2 * n + 3) hj β hβ hbound
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization.ParityOptimizer

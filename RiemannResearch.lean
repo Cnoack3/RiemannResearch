@@ -1848,6 +1848,9 @@ import RiemannResearch.RH.ParetoNormClosure
 import RiemannResearch.RH.MobiusResidualFirstCoordinate
 import RiemannResearch.RH.FiniteResidueDilation
 import RiemannResearch.RH.ParetoParityOptimizer
+import RiemannResearch.RH.ParetoProjectionOvershoot
+import RiemannResearch.Analysis.ProjectionPairingVariation
+import RiemannResearch.RH.ParetoSignedInnovations
 import RiemannResearch.RH.OptimalTwoCoefficientCriterion
 import RiemannResearch.RH.OptimalProjectionDilationGaps
 import RiemannResearch.RH.ArgumentDoublingClosure
