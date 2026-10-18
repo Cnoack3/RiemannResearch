@@ -13596,3 +13596,60 @@ Open: construct the squarefree legal exact-head family with one uniform full-Q
 error bound, or its uniformly bounded literal finite-period tail provider.
 This entry does not establish that arithmetic bound or unconditional RH.
 See `RH/QSquarefreeExactHeadAveragesResearch20261016.md`.
+
+### Full-Pareto parity-normalized optimizer L1 criterion (2026-10-18)
+
+Current-main imported-module and eight axiom checks passed
+`job__TKW3JuTSDLUYSAnDOBhp-_XucQVpLvi` (2026-10-18).
+Final project validation and publication remain gated by checkpoint.
+
+Earlier server Lean verification: `job_KLC6tRtfgzFA8tJxNO_O6Ly9wK01PzEp` passed the
+integrated module, optimizer characterization and theorem axiom checks.
+The checked declarations use only `propext`, `Classical.choice` and `Quot.sound`.
+
+The combined quantitative extension passed server job
+`job_fY-hwuPB0JcXS0v3H1ZourWi2xhAxArJ`, including the finite dyadic
+identity and recurrence. Its axiom checks report only the same three foundations.
+
+Established identities and constructions:
+- RH/ParetoParityOptimizer.lean constructs the unique minimizer in the full
+  Pareto norm over g₂,...,g_M (M=n+3), with even conditional mean 1 and odd
+  conditional mean 0. The legal expansion, both observations, exact distance
+  completion, uniqueness and unconditional Hilbert convergence are proved.
+- The even indicator has mean, squared L2 norm and L1 norm 1-log(2).
+- Analysis/SingleObservationProjection.lean supplies reusable orthogonal
+  observation and exact target-distance completion lemmas.
+- RH/ThresholdHilbertL1.lean proves L1 continuity and the exact negative-mass
+  identity (L1 norm minus mean)/2.
+- RH/MobiusResidualFirstCoordinate.lean adds the exact positive identity
+  r(1)=limitEnergy/2 + ||r-(1/2) hilbertDilation₂ r||², including its lower bound.
+
+- RH/FiniteResidueDilation.lean proves actual legal finite-span dilation and the
+  exact identity r_{2M}(1)=delta_{2M}-delta_M/2+||r_{2M}-D2 r_M||^2.
+  The repository's unscaled D2 is (1/2) times hilbertDilation 2.
+- ParetoParityOptimizer proves e_M=p*delta_M/(p-delta_M), p=1-log(2),
+  and the exact dyadic optimizer completion with both norm-square and energy
+  difference corrections retained. It implies e_{2M} <= e_M/2 + (||U_{2M}||_1-p).
+- The limiting excess satisfies (2-sqrt(2))*e_infinity <= ||U_infinity||_1-p
+  <= sqrt(e_infinity), with an exact first-coordinate square completion.
+  These same-stage lower bounds are asserted for the limit, not finite cutoffs.
+
+Conditional research reduction:
+- ParetoParityOptimizer.riemannHypothesis_of_l1Norm_tendsto proves that the
+  concrete optimizer L1 norms tending to 1-log(2) imply RiemannHypothesis.
+  Its sole hypothesis is this scalar limit.
+- The scalar limit, L1 convergence to the indicator of divisibility by 2,
+  and negative mass tending to zero are proved equivalent for this sequence;
+  each therefore suffices for RH. No RH-to-limit converse is asserted.
+- Vanishing first-coordinate negative part, U_M(1) tending to zero, and the
+  original L1-norm target are proved equivalent; each suffices for actual RH.
+- The L1-norm target along any cofinal selection of stages suffices for RH.
+- One-point refinements (2026-10-18): `optimizer_error_dyadic_first_bound`
+  proves e_{2M} <= e_M/2 - U_{2M}(1), using the exact completion above.
+  `riemannHypothesis_of_cofinal_optimizer_first_lower` needs only:
+  for every epsilon > 0 and M0, some M >= M0 has U_M(1) >= -epsilon.
+  This is a sufficient conditional reduction; the one-sided bound remains Open.
+  The imported candidate and five axiom checks passed
+  `job_zbKfieMvF_8p93VhgbklZi5owu4kq0vU` with only the standard foundations.
+- **Open:** prove any of these equivalent convergence conditions for the
+  actual optimizers. The reduction does not discharge this analytic input.

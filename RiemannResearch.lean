@@ -1846,6 +1846,8 @@ import RiemannResearch.RH.MobiusHilbertCoordinates
 import RiemannResearch.RH.MobiusCoefficientStabilization
 import RiemannResearch.RH.ParetoNormClosure
 import RiemannResearch.RH.MobiusResidualFirstCoordinate
+import RiemannResearch.RH.FiniteResidueDilation
+import RiemannResearch.RH.ParetoParityOptimizer
 import RiemannResearch.RH.OptimalTwoCoefficientCriterion
 import RiemannResearch.RH.OptimalProjectionDilationGaps
 import RiemannResearch.RH.ArgumentDoublingClosure

@@ -241,4 +241,25 @@ theorem riemannHypothesis_of_firstPoint_error_tendsto_zero
     RiemannHypothesis :=
   riemannHypothesis_of_limitCoefficients (firstPoint_error_tendsto_zero_iff.mp h)
 
+theorem firstCoordinate_exact_positive_identity :
+    hilbertSequence limitResidual 1 =
+      limitEnergy / 2 +
+        ‖limitResidual - (1 / 2 : ℝ) •
+          hilbertDilation 2 (by omega) limitResidual‖ ^ 2 := by
+  have h := firstCoordinate_energy_identity
+  rw [norm_sub_sq_real, inner_smul_right, norm_smul,
+    Real.norm_eq_abs, mul_pow, hilbertDilation_norm_sq]
+  change hilbertSequence limitResidual 1 =
+    limitEnergy / 2 + (limitEnergy -
+      2 * ((1 / 2 : ℝ) * inner ℝ limitResidual
+        (hilbertDilation 2 (by omega) limitResidual)) +
+      |(1 / 2 : ℝ)| ^ 2 * (2 * limitEnergy))
+  rw [abs_of_pos (by norm_num : (0 : ℝ) < 1 / 2)]
+  linarith
+
+theorem firstCoordinate_energy_half_le :
+    limitEnergy / 2 ≤ hilbertSequence limitResidual 1 := by
+  rw [firstCoordinate_exact_positive_identity]
+  exact le_add_of_nonneg_right (sq_nonneg _)
+
 end RiemannResearch.RH.Pareto.CoefficientStabilization

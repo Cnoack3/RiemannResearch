@@ -135,4 +135,29 @@ theorem observationOptimizer_error (e : H)
   field_simp [hpne]
   ring
 
+theorem observationOptimizer_orthogonal (S : Submodule ℝ H)
+    [S.HasOrthogonalProjection] (y z : H) (a : ℝ)
+    (hz : z ∈ S) (hyz : inner ℝ y z = 0) :
+    inner ℝ (observationOptimizer S y a) z = 0 := by
+  rw [real_inner_comm, observationOptimizer, inner_smul_right]
+  have hpz : inner ℝ z (S.starProjection y) = 0 := by
+    rw [real_inner_comm, ← projection_pairing S y z hz]
+    exact hyz
+  rw [hpz, mul_zero]
+
+theorem observation_distance_completion (S : Submodule ℝ H)
+    [S.HasOrthogonalProjection] (y f : H) (a : ℝ)
+    (hq : ‖S.starProjection y‖ ^ 2 ≠ 0)
+    (hf : f ∈ S) (hfy : inner ℝ f y = a) :
+    ‖f - y‖ ^ 2 = ‖observationOptimizer S y a - y‖ ^ 2 +
+      ‖f - observationOptimizer S y a‖ ^ 2 := by
+  have hyf : inner ℝ y f = a := by rw [real_inner_comm]; exact hfy
+  have huy : inner ℝ (observationOptimizer S y a) y = a := by
+    rw [real_inner_comm]
+    exact observationOptimizer_observation S y a hq
+  have hc := observation_energy_completion S y f a hq hf hyf
+  have hu := observationOptimizer_energy S y a hq
+  rw [norm_sub_sq_real, norm_sub_sq_real, hfy, huy]
+  linarith
+
 end RiemannResearch.Analysis.SingleObservationProjection
