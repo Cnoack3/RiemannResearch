@@ -13,8 +13,9 @@ discharged by literature alone.
 ## Bagchi proof reconstruction and formal status
 
 Bagchi's RH-to-closure proof uses two strong limits in the Hardy space. Set
-`G_d(s)=(d^(-s)-d^(-1))*zeta(s)/s` and `E(s)=1/s), and form
-`H_{L,epsilon}=sum_{d<=L} mu(d)*d^(-epsilon)*G_d`. Its Mellin transform is
+`G_d(s)=(d^(-s)-d^(-1))*zeta(s)/s` and `E(s)=1/s`, and form
+`H_{L,epsilon}=sum_{d<=L} mu(d)*d^(-epsilon)*G_d`. These are the Mellin
+transforms of the negatives of the corresponding residue sums, and satisfy
 
 ```text
 H_{L,epsilon}(s) = zeta(s)/s *
@@ -35,9 +36,16 @@ H_epsilon(s) = zeta(s)/s *
 
 For epsilon down to zero, the proof uses the RH Hadamard product inequality
 |xi(s)| <= |xi(s+epsilon)|, Stirling's bound for the Gamma ratio, and
-Lindelof again to obtain |H_epsilon(s)| <= C*|s|^(-3/4), a
-square-integrable majorant. This gives H_epsilon -> E in H². Bagchi's
-Remark 4 restricts each finite cutoff to squarefree d because mu(d)=0
+Lindelof again to obtain |H_epsilon(s)| <= C*|s|^(-3/4) on the critical
+line, a square-integrable majorant. Pointwise convergence holds almost
+everywhere there: at zeta zeros H_epsilon(s)=0, not 1/s. The intermediate
+zeta-ratio bound must also be restricted to the critical line, or away from
+the pole at s=1; it is not uniform on the entire closed half-plane as printed.
+These qualifications suffice for dominated convergence and give
+H_epsilon -> E in H². The full audit and quantitative Q dilation extension
+are recorded in `BagchiDilationEnergyResearch20261018.md`.
+
+Bagchi's Remark 4 restricts each finite cutoff to squarefree d because mu(d)=0
 off squarefree support. Theorem 7's Mellin isometry and Remark 8 transfer the
 limit to the discrete squarefree residue closure.
 

@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Bagchi audit and exact Q dilation energy (2026-10-18)
+
+Established, unconditional: `RH/QFloorDilationEnergy.lean` retains exact
+finite and infinite quotient-block energy and its nonnegative remainder.
+`floorDilation_norm_sq_le_sharp` improves the previous 2/m Q bound to 1/m.
+`floorDilation_pareto_defect_le` and its half-bound quantify recovery of
+the Pareto quadratic form with complete infinite tails and O(1/m) error.
+`floorDilation_normalized_energy_tendsto` proves the resulting limit.
+`floorDilation_relative_energy_tendsto` shows that dilation preserves the
+limiting relative error against the simultaneously dilated constant.
+
+The source is Bagchi (2006), Theorem 7, for the dilation strategy; the Q
+estimates are an elementary extension, with no novelty claim. The audit
+also records the squarefree target/totality distinction and the needed
+almost-everywhere and critical-line qualifications in the analytic proof.
+The existing Burnol finite-energy criterion is identified, not duplicated.
+
+Open: RH-to-squarefree-closure analytic providers and an unconditional
+arithmetic estimate forcing vanishing constant-approximation error.
+No RH conclusion follows from these dilation identities alone.
+Research record: `RH/BagchiDilationEnergyResearch20261018.md`.
+
 ### Full-Pareto overshoot and signed innovation criteria (2026-10-18)
 
 Established: `RH/ThresholdHilbertL1.lean` proves the complete negative mass is
