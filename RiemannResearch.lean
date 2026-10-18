@@ -63,6 +63,8 @@ import RiemannResearch.Analysis.PrimitiveRegularization
 import RiemannResearch.RH.QPhysicalDifference
 import RiemannResearch.RH.QPrimitiveEnergyClosure
 import RiemannResearch.RH.QPrimorialRegularization
+import RiemannResearch.Analysis.SquarefreeCumulantCoordinates
+import RiemannResearch.RH.QLatticeRegularization
 import RiemannResearch.RH.QCanonicalMetricAsymptotics
 import RiemannResearch.NumberTheory.GcdWindowMoments
 import RiemannResearch.RH.QDivisorDPPGrowingWindows

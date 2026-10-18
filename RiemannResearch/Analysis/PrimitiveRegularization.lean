@@ -359,3 +359,51 @@ theorem exists_strict_budget_of_unit_target (T : E →L[ℝ] Y) (S : Submodule �
     (S.topologicalClosure.smul_mem c hmem) hobj
 
 end RiemannResearch.Analysis.PrimitiveRegularization
+
+namespace RiemannResearch.Analysis.PrimitiveRegularization
+variable {E Y : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+
+/-- Exact affine correction identity, retaining the signed primitive cross term. -/
+theorem correction_objective_identity (T : E →ₗ[ℝ] Y) (e : Y)
+    (lam : ℝ) (u v : E) (t : ℝ) :
+    let q := ‖T v‖ ^ 2 + lam * ‖v‖ ^ 2
+    let b := inner ℝ (e - T u) (T v) - lam * inner ℝ u v
+    q * (‖T (u + t • v) - e‖ ^ 2 + lam * ‖u + t • v‖ ^ 2) =
+      q * (‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2) - b ^ 2 + (q * t - b) ^ 2 := by
+  dsimp only
+  have ht : T (u + t • v) - e = (T u - e) + t • T v := by
+    rw [map_add, map_smul]
+    abel
+  rw [ht, norm_add_sq_real, norm_add_sq_real]
+  simp only [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
+    real_inner_smul_right, inner_sub_left]
+  ring
+
+/-- A signed affine correction certificate gives an actual legal strict budget. -/
+theorem exists_strict_budget_of_correction_certificate (T : E →ₗ[ℝ] Y)
+    (S : Submodule ℝ E) (e : Y) (lam : ℝ) (u v : E)
+    (hu : u ∈ S) (hv : v ∈ S)
+    (hq : 0 < ‖T v‖ ^ 2 + lam * ‖v‖ ^ 2)
+    (hcert : (‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2 - lam) *
+      (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) <
+      (inner ℝ (e - T u) (T v) - lam * inner ℝ u v) ^ 2) :
+    ∃ w ∈ S, ‖T w - e‖ ^ 2 + lam * ‖w‖ ^ 2 < lam := by
+  let q := ‖T v‖ ^ 2 + lam * ‖v‖ ^ 2
+  let b := inner ℝ (e - T u) (T v) - lam * inner ℝ u v
+  have hc : q * (b / q) - b = 0 := by
+    field_simp [show q ≠ 0 from ne_of_gt hq]
+    ring
+  have hi := correction_objective_identity T e lam u v (b / q)
+  change q * (‖T (u + (b/q) • v) - e‖ ^ 2 + lam * ‖u + (b/q) • v‖ ^ 2) =
+    q * (‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2) - b ^ 2 + (q * (b/q) - b) ^ 2 at hi
+  rw [hc, zero_pow (by decide : 2 ≠ 0), add_zero] at hi
+  refine ⟨u + (b/q) • v, S.add_mem hu (S.smul_mem _ hv), ?_⟩
+  have hp : q * (‖T (u + (b/q) • v) - e‖ ^ 2 + lam * ‖u + (b/q) • v‖ ^ 2) <
+      q * lam := by
+    change (_ - lam) * q < b ^ 2 at hcert
+    nlinarith only [hi, hcert]
+  by_contra hn
+  have hm := mul_le_mul_of_nonneg_left (le_of_not_gt hn) hq.le
+  linarith only [hp, hm]
+end RiemannResearch.Analysis.PrimitiveRegularization

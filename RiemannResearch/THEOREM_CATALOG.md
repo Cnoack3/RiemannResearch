@@ -42,6 +42,32 @@ server job `job_P_eLBEpaKz8ssfTu89mTobUdIdHLDMKx`; all six selected axiom
 reports contain only standard foundations. Final publication uses the checkpoint. Research record:
 `RH/QPrimorialRegularizationResearch20261018.md`.
 
+### Lattice cumulant coordinates and complete correction budgets (2026-10-18)
+
+Established: `Analysis/SquarefreeCumulantCoordinates.lean` proves the exact
+three-prime triangular composition and inverse laws, convolution exp/log
+polynomial inverses, synthesized-range invariance, and legal synthesis.
+`Analysis/PrimitiveRegularization.lean` adds the exact affine correction
+identity q*J(u+t*v)=q*J(u)-b^2+(q*t-b)^2 and its strict-budget consumer,
+including the signed primitive cross term in b.
+
+`RH/QLatticeRegularization.lean` transfers the squarefree closure criterion
+through arbitrary surjective finite-stage coordinates, proves three-prime
+physical range/closure and objective invariance, and checks a four-site
+counterexample to representing g2*g3 by g2,g3,g6. The counterexample concerns
+that finite span, not the full closed squarefree space.
+
+Conditional research reduction: `strict_value_of_correction_certificate`.
+Open: complete signed certificates at vanishing penalties, general finite
+Boolean convolution formalization, and an appropriate infinite-transform
+norm bound. A separate Wolfram exact rational full-tail certificate at period
+210 gives J_(1/10)<0.0963; this numerical-to-Hilbert certificate is not itself
+newly formalized. The general cover-matrix exponential and weighted coefficient
+Banach-algebra arguments are paper results, not new Lean declarations.
+Research record and reproducible Wolfram code:
+`RH/QLatticeRegularizationResearch20261018.md`,
+`RH/QLatticeFinitePatterns20261018.md`.
+
 ### Unit-signal all-conductor optimizer limit (2026-10-18)
 
 `Analysis/UnitSignalProjection.lean` constructs the normalized optimizer from
