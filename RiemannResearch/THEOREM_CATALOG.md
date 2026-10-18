@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Complete-Q exact-head energy audit (2026-10-18)
+
+- `Analysis/InverseSquareTailCertificates.lean`: exact rational upper/lower
+  step identities, finite telescoping bounds, summability, complete infinite
+  inverse-square tail enclosures, and positive scaling. These certify the
+  analytic remainder used by the exact-arithmetic Q-Gram calculator.
+- `RH/QExactHeadEnergyCertificates.lean`: `exactHead_one`,
+  `two_residue_error_sq`, `exactHead_one_error_sq` identify the actual H=1
+  canonical trial and its complete error 1/4. `exactHead_residual_floor_tail`
+  retains the signed Mobius tail and prime-anchor term at every tail site.
+  `exactHead_error_window_budget` gives a quantified complete-Q budget with
+  ordinary and reciprocal Mobius cancellation bounds explicit in its type.
+- Accompanying calculation bundle: reproducible integer/rational numerical
+  certificates for H=1 through 64 at selected stages. These numerical
+  intervals are not individual Lean-verified numerical declarations.
+- Research record: `RH/QExactHeadEnergyAuditResearch20261018.md`. The
+  unconditional logarithmic rate improvement is derived mathematically
+  from classical cancellation; the quantitative provider is not newly
+  connected in Lean. Bounded/subpolynomial complete energy remains Open.
+  The halted five-iteration sparse power-cost program remains closed.
+
 ### Signed inverse-square tails and composite-gain location (2026-10-18)
 
 - `Analysis/InverseSquareAbelTail.lean`:

@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.InverseSquareTailCertificates
+import RiemannResearch.RH.QExactHeadEnergyCertificates
 import RiemannResearch.RH.QCompositeGainProfile
 import RiemannResearch.RH.QMeanTailEnergyCertificate
 import RiemannResearch.Analysis.InverseSquareAbelTail
