@@ -81,12 +81,22 @@ all-conductor stages (conductors 2 through n+3) and closed residue span.
 `allConductorLimit_error` identifies the limiting error as delta/(1-4*delta).
 These statements do not assume or prove that delta vanishes.
 
+Established continuation: `RH/QFloorDyadicEnergy.lean` reuses the existing
+floor dilation and proves its exact complete even/odd energy decomposition
+and the sharper squared-norm bound 1/2. `RH/ZetaTwoUnitSignalDilation.lean`
+connects the unrestricted legal closure and finite cutoff doubling, proves
+the signed head identity and complete two-scale slack decomposition, and
+establishes `allConductorLimit_polynomial_detector` without additional
+arithmetic hypotheses. The first-coordinate inverse-Gram formulas identify
+the actual signed coefficient functional in the remaining scalar allowance.
+
 Conditional research reduction: `Analysis/UnitSignalTwoScale.lean` gives
 additive and quarter-allowance estimates from an explicit squared two-scale
 hypothesis and a limit-zero criterion from an explicit polynomial detector.
-Open: the actual inverse-square dilation/detector provider and the actual
-scalar lower estimate forcing the limiting coordinate to vanish. The latter
-is a substantive RH-strength obligation. Uniform strict contraction at every
+The new actual finite and cofinal-subsequence consumers retain the scalar
+lower allowance as a hypothesis. Open: its arithmetic provider. The limiting
+quarter allowance is equivalent to zero error and constant closure, so it
+remains a substantive RH-strength obligation. Uniform strict contraction at every
 dyadic stage is obstructed by an external logarithmic lower bound; that
 paper argument is recorded but is not formalized by these modules.
 
@@ -95,6 +105,7 @@ The four separate modules passed server job `job_gz3QFNBGiQj80LxZBDsVlHlig5_Dd4H
 `Classical.choice`, and `Quot.sound`. Final publication is gated by server
 validation of the integrated source and exports.
 [Scope, exact identities, and open obligations](RH/UnitSignalLimit20261013.md).
+[Actual detector and inverse-Gram obligation](RH/UnitSignalDilationResearch20261018.md).
 Provenance: supplied unit-signal manuscript, Sections 1--6; no novelty claim.
 
 ### Signed inverse-square tails and composite-gain location (2026-10-18)

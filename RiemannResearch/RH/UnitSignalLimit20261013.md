@@ -3,6 +3,11 @@
 Source: user-provided `Final_Limit_Unit_Signal_Residues_2026-10-11 (1).md`.
 Date: 2026-10-13 (verification resumed).
 
+Continuation on 2026-10-18: the actual dilation/detector bridge and the
+inverse-Gram first-coordinate formulas are now supplied by
+`QFloorDyadicEnergy.lean` and `ZetaTwoUnitSignalDilation.lean`.
+See [the exact identities and remaining scalar obligation](UnitSignalDilationResearch20261018.md).
+
 ## Scope and verification
 
 This continuation separates the general Hilbert-space normalization, the
@@ -62,8 +67,9 @@ Indeed, with t=1-4*delta>0, e=delta/t and ell=-r(1)/t, its left side is
 2*(kappa*delta-r(1))^2/t^2. The bound before normalization is
 2*(kappa*delta-r(1))^2 <= kappa^2*delta^2.
 For kappa>0 and e>=0, the normalized polynomial inequality implies ell<=0
-and (ell=0 iff e=0). The Lean scalar results retain the polynomial inequality
-as an explicit hypothesis until the concrete dilation provider is assembled.
+and (ell=0 iff e=0). The abstract scalar module retains the polynomial
+inequality as a hypothesis. The concrete provider is now established by
+`allConductorLimit_polynomial_detector` in `ZetaTwoUnitSignalDilation.lean`.
 
 An eventual or subsequential bound
 
@@ -109,16 +115,22 @@ The absolute vanishing-error condition in manuscript (25), and sparse
 nonchained subsequence conditions, must be distinguished from such an
 impossible uniform contraction schedule.
 
-## Remaining concrete obligations
+## Concrete obligations after the 2026-10-18 continuation
 
-- Construct the bounded floor-dilation operator in the inverse-square norm,
-  including zero extension, atom invariance, and the full weighted tail.
-- Instantiate the one-coordinate polynomial detector for the actual limit.
-- Connect the finite coefficients and covariance numerator to point evaluation.
+- Established: reuse of the existing bounded `QFloorDilation.floorDilation`,
+  unrestricted legal invariance, and exact finite cutoff doubling.
+- Established: a direct complete-Q dyadic energy identity and the sharper
+  squared-norm bound 1/2, needed beyond the old 2/m transfer bound.
+- Established: the actual limiting polynomial detector, exact signed head
+  identity, finite normalized two-scale estimate, and both loss terms.
+- Established: physical first-coordinate formulas for the actual inverse-Gram
+  coefficients, and the equivalent finite signed coefficient allowance.
 - Formalize the harmonic basis portion separately; it is not required for
   the projection/dilation route.
 - Prove the actual scalar lower estimate needed to force ell=0. This is the
   substantive RH-strength open step, not supplied by convergence.
+  The new cofinal-subsequence theorem keeps this allowance explicit.
+  The limiting quarter lower bound is itself equivalent to zero error.
 
 The existing `ZetaTwoOptimizerStage.lean` uses a squarefree-only dictionary.
 It must not be substituted for the all-conductor span in this argument:

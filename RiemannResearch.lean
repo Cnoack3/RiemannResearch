@@ -132,6 +132,8 @@ import RiemannResearch.Analysis.UnitSignalProjection
 import RiemannResearch.Analysis.UnitSignalTwoScale
 import RiemannResearch.RH.ZetaTwoParitySignal
 import RiemannResearch.RH.ZetaTwoUnitSignal
+import RiemannResearch.RH.QFloorDyadicEnergy
+import RiemannResearch.RH.ZetaTwoUnitSignalDilation
 import RiemannResearch.Analysis.AdjacentGainContraction
 import RiemannResearch.Analysis.FiniteSpectralCriticalFeedback
 import RiemannResearch.Analysis.FiniteSpectralJensen
