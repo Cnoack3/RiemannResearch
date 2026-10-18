@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Burnol exact finite rates and Q cutoff transfer (2026-10-18)
+
+Established unconditionally: `Analysis/FiniteTwoMomentEnergy.lean` proves
+exact two-moment energy decomposition, its lower bound and attainment.
+`RH/BurnolDoubleRootModel.lean` proves the real coefficient-space
+double-root identity and the attained cubic target minimum
+12/[L(L+1)(L+2)], preserving the complete nonnegative remainder.
+The polynomial divisibility and circle-Parseval bridge remains an ordinary
+proof in the research record, not a specialized Lean theorem.
+
+Conditional research reduction: `RH/BurnolParetoTransfer.lean` now handles
+arbitrary finite legal candidates; `RH/BurnolQCutoffTransfer.lean` transfers
+the continuous cutoff lower envelope to actual Q error while retaining the
+exact metric correction. The maximal conductor is unchanged, including
+for squarefree subsets. Open: a Lean provider of Burnol's analytic envelope.
+
+Ordinary proofs, not Lean-verified here: general target-jet rates, exact
+repeated-root factorial formula, fixed-zero-family second-order bound,
+and sharper Q Mellin cell-witness bound. Open: the unconditional complete
+legal error upper estimate needed for RH. No RH proof is claimed.
+Research record: `RH/BurnolRatesResearch20261018.md` and its two appendices.
+
 ### Baez-Duarte 2002 audit and Bombieri smoothing (2026-10-18)
 
 Established, unconditional: `RH/BombieriSmoothing.lean` proves the exact

@@ -102,4 +102,20 @@ theorem energy_log_envelope (c : ℝ) (K : ℕ)
       c / Real.log (n + 1 : ℕ) ≤ energy n := by
   intro n hn hn2
   exact energy_lower_of_continuous n _ (h (n+1) hn hn2)
+/-- Every finite legal candidate inherits the continuous cutoff bound.
+The analytic lower bound is an explicit input; no estimate for it is asserted. -/
+theorem finite_error_lower_of_continuous (N : ℕ) (hN : 1 ≤ N) (L : ℝ)
+    (h : ContinuousCutoffLowerBound N L) (s : Finset ℕ) (a : ℕ → ℝ)
+    (hs : ∀ d ∈ s, 0 < d ∧ d ≤ N) :
+    L ≤ ‖hilbertOne - finiteResidueSum s a‖ ^ 2 := by
+  have hs' : ∀ d ∈ insert 1 s, 0 < d ∧ d ≤ N := by
+    intro d hd
+    rcases Finset.mem_insert.mp hd with hd | hd
+    · subst d
+      exact ⟨Nat.zero_lt_one, hN⟩
+    · exact hs d hd
+  have hh := naturalError_lower N L h (insert 1 s) (correctedCoefficient s a) hs'
+  rw [corrected_naturalError_eq s a (fun d hd => (hs d hd).1),
+    centeredError_eq_hilbert_norm_sq s a (fun d hd => (hs d hd).1)] at hh
+  exact (ENNReal.ofReal_le_ofReal_iff (sq_nonneg _)).mp hh
 end RiemannResearch.RH.Pareto.BurnolTransfer
