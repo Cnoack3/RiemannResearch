@@ -62,6 +62,7 @@ import RiemannResearch.RH.QBoundedCoordinateClosure
 import RiemannResearch.Analysis.PrimitiveRegularization
 import RiemannResearch.RH.QPhysicalDifference
 import RiemannResearch.RH.QPrimitiveEnergyClosure
+import RiemannResearch.RH.QPrimorialRegularization
 import RiemannResearch.RH.QCanonicalMetricAsymptotics
 import RiemannResearch.NumberTheory.GcdWindowMoments
 import RiemannResearch.RH.QDivisorDPPGrowingWindows

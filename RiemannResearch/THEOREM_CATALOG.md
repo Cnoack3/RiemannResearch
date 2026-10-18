@@ -21,6 +21,27 @@
   connected in Lean. Bounded/subpolynomial complete energy remains Open.
   The halted five-iteration sparse power-cost program remains closed.
 
+### Strict finite primorial regularization certificates (2026-10-18)
+
+Established: `Analysis/PrimitiveRegularization.lean` adds exact scalar-target
+and signed line completions, strict-budget transfer through closure, and the
+finite signed correlation certificate. `RH/QPrimorialRegularization.lean`
+constructs the actual finite-stage normal solutions, retains every complete
+regularized displacement square in stage comparisons, and proves strong
+fixed-positive-penalty convergence to the closed-space normal solution.
+Its `squarefree_constant_mem_iff_strict_primorial_budget` proves that squarefree
+constant closure is equivalent to cofinal finite-stage values strictly below
+the penalty, for any positive penalty sequence tending to zero.
+
+Conditional research reductions: `riemannHypothesis_of_strict_primorial_budget`
+and `riemannHypothesis_of_primorial_ray_certificates`. Open: a provider of the
+strict complete-energy budgets or the signed certificates
+b²>(a-lambda)(||Delta v||²+lambda||v||²). RH-to-squarefree-closure is an
+external Bagchi Remark 8 input, not newly formalized. Project source passed
+server job `job_P_eLBEpaKz8ssfTu89mTobUdIdHLDMKx`; all six selected axiom
+reports contain only standard foundations. Final publication uses the checkpoint. Research record:
+`RH/QPrimorialRegularizationResearch20261018.md`.
+
 ### Unit-signal all-conductor optimizer limit (2026-10-18)
 
 `Analysis/UnitSignalProjection.lean` constructs the normalized optimizer from

@@ -6,8 +6,12 @@ Authors: Christian Noack
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.LaxMilgram
+import Mathlib.Topology.Algebra.Module.Basic
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FunProp
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 
 /-!
 # Complete primitive-penalty regularization
@@ -267,5 +271,91 @@ theorem zero_penalty_cross_identity (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
   have h2 := objective_cross_difference T S e 0 lam u v hu hv hnu hnv
   simp only [zero_mul, add_zero, sub_zero] at h1 h2
   nlinarith
+
+end RiemannResearch.Analysis.PrimitiveRegularization
+
+namespace RiemannResearch.Analysis.PrimitiveRegularization
+variable {E Y : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+
+
+/-- Density preserves any strict complete-objective upper bound. -/
+theorem exists_objective_lt_of_mem_closure (T : E →L[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam : ℝ) (u : E) (hu : u ∈ S.topologicalClosure)
+    {bound : ℝ} (hbound : ‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2 < bound) :
+    ∃ v ∈ S, ‖T v - e‖ ^ 2 + lam * ‖v‖ ^ 2 < bound := by
+  have hcont : Continuous (fun v : E => ‖T v - e‖ ^ 2 + lam * ‖v‖ ^ 2) := by
+    fun_prop
+  have hopen : IsOpen {v : E | ‖T v - e‖ ^ 2 + lam * ‖v‖ ^ 2 < bound} :=
+    isOpen_lt hcont continuous_const
+  obtain ⟨v, hvobj, hvS⟩ := (mem_closure_iff.mp hu) _ hopen hbound
+  exact ⟨v, hvS, hvobj⟩
+
+/-- Exact signed line completion; no inverse matrix or discarded remainder. -/
+theorem ray_objective_identity (T : E →ₗ[ℝ] Y) (e : Y) (lam : ℝ) (v : E) (c : ℝ) :
+    (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) *
+      (‖T (c • v) - e‖ ^ 2 + lam * ‖c • v‖ ^ 2) =
+    (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) * ‖e‖ ^ 2 - (inner ℝ e (T v)) ^ 2 +
+      ((‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) * c - inner ℝ e (T v)) ^ 2 := by
+  rw [map_smul, norm_sub_sq_real]
+  simp only [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
+    real_inner_smul_left, real_inner_comm (T v) e]
+  ring
+
+/-- A finite signed correlation certificate supplies a scaled legal strict budget. -/
+theorem exists_strict_budget_of_ray_certificate (T : E →ₗ[ℝ] Y)
+    (S : Submodule ℝ E) (e : Y) (lam : ℝ) (v : E) (hv : v ∈ S)
+    (hq : 0 < ‖T v‖ ^ 2 + lam * ‖v‖ ^ 2)
+    (hcert : (‖e‖ ^ 2 - lam) * (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) <
+      (inner ℝ e (T v)) ^ 2) :
+    ∃ u ∈ S, ‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2 < lam := by
+  let c := inner ℝ e (T v) / (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2)
+  have hcancel : (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) * c - inner ℝ e (T v) = 0 := by
+    dsimp [c]
+    field_simp [ne_of_gt hq]
+    ring
+  have hi := ray_objective_identity T e lam v c
+  rw [hcancel, zero_pow (by decide : 2 ≠ 0), add_zero] at hi
+  refine ⟨c • v, S.smul_mem c hv, ?_⟩
+  have hprod : (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) *
+      (‖T (c • v) - e‖ ^ 2 + lam * ‖c • v‖ ^ 2) <
+      (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) * lam := by
+    nlinarith only [hi, hcert]
+  by_contra hnot
+  have hm := mul_le_mul_of_nonneg_left (le_of_not_gt hnot) hq.le
+  linarith only [hprod, hm]
+
+/-- Exact scalar completion for a unit exact target, including its strict margin. -/
+theorem scalar_target_completion (T : E →ₗ[ℝ] Y) (x : E)
+    (hx : ‖x‖ ^ 2 = 1) {lam : ℝ} (hlam : 0 < lam) (c : ℝ) :
+    ‖T (c • x) - T x‖ ^ 2 + lam * ‖c • x‖ ^ 2 =
+      (‖T x‖ ^ 2 + lam) * (c - ‖T x‖ ^ 2 / (‖T x‖ ^ 2 + lam)) ^ 2 +
+        ‖T x‖ ^ 2 * lam / (‖T x‖ ^ 2 + lam) := by
+  have hden : ‖T x‖ ^ 2 + lam ≠ 0 := ne_of_gt (by
+    linarith [sq_nonneg ‖T x‖])
+  have ht : T (c • x) - T x = (c - 1) • T x := by
+    simp only [map_smul, sub_smul, one_smul]
+  rw [ht, norm_smul, mul_pow, Real.norm_eq_abs, sq_abs,
+    norm_smul, mul_pow, Real.norm_eq_abs, sq_abs, hx, mul_one]
+  field_simp [hden]
+  ring
+
+/-- A unit target in the closure gives a finite algebraic trial below the unit budget. -/
+theorem exists_strict_budget_of_unit_target (T : E →L[ℝ] Y) (S : Submodule ℝ E)
+    (x : E) (hx : ‖x‖ ^ 2 = 1) (hmem : x ∈ S.topologicalClosure)
+    {lam : ℝ} (hlam : 0 < lam) :
+    ∃ u ∈ S, ‖T u - T x‖ ^ 2 + lam * ‖u‖ ^ 2 < lam := by
+  let c := ‖T x‖ ^ 2 / (‖T x‖ ^ 2 + lam)
+  have hden : 0 < ‖T x‖ ^ 2 + lam := by linarith [sq_nonneg ‖T x‖]
+  have hobj : ‖T (c • x) - T x‖ ^ 2 + lam * ‖c • x‖ ^ 2 < lam := by
+    have hh := scalar_target_completion T.toLinearMap x hx hlam c
+    simp only [ContinuousLinearMap.coe_coe] at hh
+    rw [hh]
+    simp only [c, sub_self, zero_pow (by decide : 2 ≠ 0),
+      mul_zero, zero_add]
+    apply (div_lt_iff₀ hden).mpr
+    nlinarith [sq_pos_of_pos hlam]
+  exact exists_objective_lt_of_mem_closure T S (T x) lam (c • x)
+    (S.topologicalClosure.smul_mem c hmem) hobj
 
 end RiemannResearch.Analysis.PrimitiveRegularization
