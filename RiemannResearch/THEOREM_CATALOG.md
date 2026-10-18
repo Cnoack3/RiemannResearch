@@ -274,9 +274,11 @@ head is absent from every finite prime-anchor canonical linear family.
 These are unconditional algebraic results. Prime-only incompleteness is not a
 cost lower bound, and full squarefree exhaustion is not an upper energy bound.
 Open: any SPC(a) provider for 0<a<1 and the infinite annihilator provider.
-Research record: RH/QSparsePowerCostResearch20261017.md, iteration 4/5.
-Next: actual signed complete-Q block gains from composite squarefree anchors;
-the next research pass is the fifth and final pass.
+Research record: RH/QSparsePowerCostResearch20261017.md, historical iteration 4/5.
+The fifth and final pass subsequently certified a finite complete-Q
+composite-anchor gain (see the entry above). The five-pass program is complete
+and halted; RH/QSparsePowerCostIterationState.json records its durable status.
+Neither an exponent below one nor the infinite annihilator provider was obtained.
 
 ### Complete Q screened variance and finite common-quotient region (2026-10-17)
 
@@ -296,8 +298,10 @@ n*(b-a)<a*b, so common-quotient simplification leaves an infinite complement.
 
 Open: a complete mixed-quotient arithmetic estimate supplying any SPC(a),
 0<a<1, and the full infinite squarefree annihilator implication.
-Research: RH/QSparsePowerCostResearch20261017.md, iteration 3/5.
-Next: cumulative anchor charges and signed mixed Mertens quotient correlations.
+Research: RH/QSparsePowerCostResearch20261017.md, historical iteration 3/5.
+Cumulative anchor charges and signed mixed Mertens quotient correlations were
+proposed at this stage; the bounded program subsequently completed all five
+passes and is halted, as recorded in RH/QSparsePowerCostIterationState.json.
 
 ### Canonical squarefree Q correlations and an affine-cost obstruction (2026-10-17)
 
@@ -315,7 +319,8 @@ This refutes a generic averaging shortcut, not the squarefree RH assertion.
 
 Open: a quantitative signed growing-block Gram or screened-gain estimate
 providing any SPC(a) with 0<a<1. See RH/QSparsePowerCostResearch20261017.md.
-Published iteration state advances to 2/5 in QSparsePowerCostIterationState.json.
+This was published iteration 2/5. RH/QSparsePowerCostIterationState.json now
+records all five completed publications and the halted program status.
 
 ### Sparse squarefree power costs: unconditional exponent-one baseline (2026-10-17)
 
@@ -331,8 +336,9 @@ riemannHypothesis_of_sparsePowerCost_tendsto_zero proves actual Mathlib RH
 from a sequence of available cost exponents tending to zero.
 Open: an arithmetic provider for any exponent a in (0,1), and for a sequence
 of exponents tending to zero. The o(H) baseline is not such a provider.
-Research and bounded continuation: RH/QSparsePowerCostResearch20261017.md;
-RH/QSparsePowerCostIterationState.json counts this as published iteration 1/5.
+Research record: RH/QSparsePowerCostResearch20261017.md, historical iteration 1/5.
+RH/QSparsePowerCostIterationState.json now records all five completed
+publications and the halted program status.
 
 ### Squarefree Q infinite duality and sparse power costs (2026-10-17)
 
