@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Baez-Duarte 2002 audit and Bombieri smoothing (2026-10-18)
+
+Established, unconditional: `RH/BombieriSmoothing.lean` proves the exact
+arbitrary-damping linear-cutoff head identity, squarefree coefficient
+support, signed finite-head Q energy, and variance-plus-square formulas.
+It retains the damping defect, mixed term, and moment square.
+`divisorMoment_three` and `divisorMoment_ninetyFive` certify -2 and 67;
+the divisor moment has no fixed sign. `seed_two_eq_zero` shows why smoothing
+cannot be assumed to improve every finite cutoff.
+
+`RH/BaezDuarteCellEnergy.lean` proves 0 <= m(n) <= 1/2 for the actual
+reciprocal-cell first moment, its integral identification, the exact
+nonnegative polynomial remainder, and the infinite weighted factor-5/4
+energy comparison under ordinary moment and summability hypotheses.
+
+Open formal integration: the complete reciprocal partition and variance
+identity connecting that model to `naturalError`. The full factor-5/4
+continuous-to-Pareto transfer has an ordinary proof in the research record,
+but is not yet claimed as a specialized Lean theorem.
+Open analytic obligation: finite canonical damped energy for arbitrarily
+small positive damping, or a complete smoothing error bound including the
+infinite tail. Neither follows from these finite identities.
+
+Historical RH-dependent rate improvements are documented with their original
+hypotheses; they are not asserted as newly formalized analytic providers.
+Research record: `RH/BaezDuarte2002Research20261018.md`.
+
 ### Bagchi audit and exact Q dilation energy (2026-10-18)
 
 Established, unconditional: `RH/QFloorDilationEnergy.lean` retains exact

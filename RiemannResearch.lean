@@ -1,3 +1,5 @@
+import RiemannResearch.RH.BaezDuarteCellEnergy
+import RiemannResearch.RH.BombieriSmoothing
 import RiemannResearch.RH.QFloorDilationEnergy
 import RiemannResearch.RH.QDifferenceGram
 import RiemannResearch.RH.QFiniteEnergyBounds
