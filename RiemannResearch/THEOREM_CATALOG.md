@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Squarefree LCM block balance and sublinear affine energy (2026-10-19)
+
+Established:
+- `RH/QSquarefreeHeadSchedule.lean`: feasible natural primorial head chain,
+  nearby divisor anchors H<r<=2H, and the missing-prime obstruction.
+- `RH/QSquarefreeBlockBalance.lean`: actual inverse-Gram head costs evaluated
+  in the exact cost-minus-gain telescope, the signed weighted-defect bound,
+  and equivalence of a uniform energy bound with the exact signed budget.
+- `RH/QPeriodicBlockComparison.lean`: exact first-period refinement and
+  compensating complete-tail decrease for the same residual, two-sided
+  complete-energy bounds, and the signed tail mixed term for changed profiles.
+- `RH/QSquarefreeAffineEnergy.lean`: complete quantitative comparison with
+  canonical exact heads; unconditional actual constrained energy E_H=o(H)
+  and signed cumulative cost minus gain o(H). Reuses the checked PNT-based
+  cancellation and the October 19 complete-Q conductor estimate.
+
+Conditional research reductions: `rh_of_signed_budget`,
+`rh_of_weighted_defect_budget`, `rh_of_weighted_partial_sums`, and
+`rh_of_cofinal_signed_budget`. Open: provide the displayed uniform signed
+budget, at least along cofinal endpoints. Sublinear energy does not give it.
+The fixed primorial diagonal is not proved equivalent to RH in both directions.
+Exact rational complete-tail certificates cover twelve finite heads; these
+host computations are distinct from Lean kernel checks of the general results.
+See `RH/QPrimorialBlockBalanceResearch20261019.md`.
+
 ### Balazard triangular dual refinement (2026-10-19)
 
 Established:

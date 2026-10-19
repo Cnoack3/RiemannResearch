@@ -1,0 +1,272 @@
+{
+  "method": "exact rational variational enclosures with integral progression tails",
+  "scale_bits": 100,
+  "terms_per_progression": 256,
+  "zeta_interval": [
+    "1.644934037058",
+    "1.644934096649"
+  ],
+  "stages": [
+    {
+      "head": 1,
+      "period": 6,
+      "energy": [
+        "0.055024959",
+        "0.055025387"
+      ]
+    },
+    {
+      "head": 2,
+      "period": 6,
+      "energy": [
+        "0.056496513",
+        "0.056496956"
+      ],
+      "period_gain": [
+        "0",
+        "0"
+      ],
+      "head_cost": [
+        "0.001471127",
+        "0.001471997"
+      ],
+      "signed_balance_from_start": [
+        "0.001471127",
+        "0.001471997"
+      ],
+      "delta_enclosure_radius": "256/78125",
+      "near_anchor": 3,
+      "near_anchor_inequality_certified_by_intervals": true
+    },
+    {
+      "head": 3,
+      "period": 6,
+      "energy": [
+        "0.064251534",
+        "0.064252051"
+      ],
+      "period_gain": [
+        "0",
+        "0"
+      ],
+      "head_cost": [
+        "0.007754578",
+        "0.007755537"
+      ],
+      "signed_balance_from_start": [
+        "0.009226147",
+        "0.009227092"
+      ],
+      "delta_enclosure_radius": "256/78125",
+      "near_anchor": 6,
+      "near_anchor_inequality_certified_by_intervals": true
+    },
+    {
+      "head": 4,
+      "period": 6,
+      "energy": [
+        "0.064251534",
+        "0.064252051"
+      ],
+      "period_gain": [
+        "0",
+        "0"
+      ],
+      "head_cost": [
+        "0",
+        "0"
+      ],
+      "signed_balance_from_start": [
+        "0.009226147",
+        "0.009227092"
+      ],
+      "delta_enclosure_radius": "512/78125",
+      "near_anchor": 6,
+      "near_anchor_inequality_certified_by_intervals": true
+    },
+    {
+      "head": 5,
+      "period": 30,
+      "energy": [
+        "0.026570451",
+        "0.026570518"
+      ],
+      "period_gain": [
+        "0.038213777",
+        "0.038214358"
+      ],
+      "head_cost": [
+        "0.000532694",
+        "0.000532826"
+      ],
+      "signed_balance_from_start": [
+        "-0.028454936",
+        "-0.028454441"
+      ],
+      "delta_enclosure_radius": "128/78125",
+      "near_anchor": 6,
+      "near_anchor_inequality_certified_by_intervals": true
+    },
+    {
+      "head": 6,
+      "period": 30,
+      "energy": [
+        "0.060631490",
+        "0.060631632"
+      ],
+      "period_gain": [
+        "0",
+        "0"
+      ],
+      "head_cost": [
+        "0.034060973",
+        "0.034061181"
+      ],
+      "signed_balance_from_start": [
+        "0.005606103",
+        "0.005606673"
+      ],
+      "delta_enclosure_radius": "256/78125",
+      "near_anchor": 10,
+      "near_anchor_inequality_certified_by_intervals": true
+    },
+    {
+      "head": 7,
+      "period": 210,
+      "energy": [
+        "0.022425784",
+        "0.022425797"
+      ],
+      "period_gain": [
+        "0.038217165",
+        "0.038217319"
+      ],
+      "head_cost": [
+        "0.000011459",
+        "0.000011484"
+      ],
+      "signed_balance_from_start": [
+        "-0.032599602",
+        "-0.032599162"
+      ],
+      "delta_enclosure_radius": "128/78125",
+      "near_anchor": 10,
+      "near_anchor_inequality_certified_by_intervals": true
+    },
+    {
+      "head": 8,
+      "period": 210,
+      "energy": [
+        "0.022425784",
+        "0.022425797"
+      ],
+      "period_gain": [
+        "0",
+        "0"
+      ],
+      "head_cost": [
+        "0",
+        "0"
+      ],
+      "signed_balance_from_start": [
+        "-0.032599602",
+        "-0.032599162"
+      ],
+      "delta_enclosure_radius": "128/78125",
+      "near_anchor": 10,
+      "near_anchor_inequality_certified_by_intervals": true
+    },
+    {
+      "head": 9,
+      "period": 210,
+      "energy": [
+        "0.022425784",
+        "0.022425797"
+      ],
+      "period_gain": [
+        "0",
+        "0"
+      ],
+      "head_cost": [
+        "0",
+        "0"
+      ],
+      "signed_balance_from_start": [
+        "-0.032599602",
+        "-0.032599162"
+      ],
+      "delta_enclosure_radius": "128/78125",
+      "near_anchor": 10,
+      "near_anchor_inequality_certified_by_intervals": true
+    },
+    {
+      "head": 10,
+      "period": 210,
+      "energy": [
+        "0.042502167",
+        "0.042502187"
+      ],
+      "period_gain": [
+        "0",
+        "0"
+      ],
+      "head_cost": [
+        "0.020076370",
+        "0.020076402"
+      ],
+      "signed_balance_from_start": [
+        "-0.012523220",
+        "-0.012522772"
+      ],
+      "delta_enclosure_radius": "128/78125",
+      "near_anchor": 14,
+      "near_anchor_inequality_certified_by_intervals": true
+    },
+    {
+      "head": 11,
+      "period": 2310,
+      "energy": [
+        "0.019629920",
+        "0.019629924"
+      ],
+      "period_gain": [
+        "0.023594112",
+        "0.023594135"
+      ],
+      "head_cost": [
+        "0.000721866",
+        "0.000721871"
+      ],
+      "signed_balance_from_start": [
+        "-0.035395466",
+        "-0.035395036"
+      ],
+      "delta_enclosure_radius": "64/78125",
+      "near_anchor": 14,
+      "near_anchor_inequality_certified_by_intervals": true
+    },
+    {
+      "head": 12,
+      "period": 2310,
+      "energy": [
+        "0.019629920",
+        "0.019629924"
+      ],
+      "period_gain": [
+        "0",
+        "0"
+      ],
+      "head_cost": [
+        "0",
+        "0"
+      ],
+      "signed_balance_from_start": [
+        "-0.035395466",
+        "-0.035395036"
+      ],
+      "delta_enclosure_radius": "64/78125",
+      "near_anchor": 14,
+      "near_anchor_inequality_certified_by_intervals": true
+    }
+  ]
+}

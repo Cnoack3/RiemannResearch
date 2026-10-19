@@ -1,3 +1,7 @@
+import RiemannResearch.RH.QSquarefreeAffineEnergy
+import RiemannResearch.RH.QSquarefreeBlockBalance
+import RiemannResearch.RH.QSquarefreeHeadSchedule
+import RiemannResearch.RH.QPeriodicBlockComparison
 import RiemannResearch.RH.QSquarefreeHeadStep
 import RiemannResearch.RH.QPeriodicTailEnergy
 import RiemannResearch.RH.ParetoBoundedMellin
