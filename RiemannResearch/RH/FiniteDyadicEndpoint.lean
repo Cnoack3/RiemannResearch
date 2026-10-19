@@ -3,9 +3,15 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Positivity
+import Lean.Elab.Tactic.Omega
 import RiemannResearch.RH.FirstCoordinateEndpoint
 import RiemannResearch.RH.FiniteDyadicDefect
 
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
 /-!
 # Finite mixed-scale endpoint identities
 
@@ -100,5 +106,63 @@ theorem mixedDyadicResidual_first_endpoint_deficit (n : ℕ) :
       hilbertSequence (projectionResidual (doubleStage n)) 1 := by
   have h := mixedDyadicResidual_first_endpoint_quadratic n
   linarith
+
+/-- Exact completion at any real scaling. The full mismatch square is retained.
+Source: polarization of the agenda's finite dyadic pairing, 2026-10-13. -/
+theorem mixedDyadicResidual_scaled_completion (n : ℕ) (t : ℝ) :
+    (2 * t - 1) * energy (doubleStage n) =
+      (t ^ 2 / 2) * energy n +
+        t * hilbertSequence (projectionResidual (doubleStage n)) 1 -
+        ‖projectionResidual (doubleStage n) -
+          (t / 2) • doubleDilation (projectionResidual n)‖ ^ 2 := by
+  have hd : ‖doubleDilation (projectionResidual n)‖ ^ 2 =
+      2 * energy n := by
+    rw [← real_inner_self_eq_norm_sq, doubleDilation_inner, real_inner_self_eq_norm_sq]
+    rfl
+  have hn : ‖(t / 2) • doubleDilation (projectionResidual n)‖ ^ 2 =
+      (t ^ 2 / 2) * energy n := by
+    rw [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs, hd]
+    ring
+  have hp := norm_sub_sq_real (projectionResidual (doubleStage n))
+    ((t / 2) • doubleDilation (projectionResidual n))
+  rw [hn, inner_smul_right] at hp
+  have he : ‖projectionResidual (doubleStage n)‖ ^ 2 = energy (doubleStage n) := rfl
+  rw [he] at hp
+  have hi := mixedDyadicResidual_first_pairing n
+  rw [hp, hi]
+  ring
+
+/-- A rational completion with no square-root constants. -/
+theorem mixedDyadicResidual_rational_completion (n : ℕ) :
+    energy (doubleStage n) = (9 / 16 : ℝ) * energy n +
+      (3 / 4 : ℝ) * hilbertSequence (projectionResidual (doubleStage n)) 1 -
+      (1 / 2 : ℝ) * ‖projectionResidual (doubleStage n) -
+        (3 / 4 : ℝ) • doubleDilation (projectionResidual n)‖ ^ 2 := by
+  have h := mixedDyadicResidual_scaled_completion n (3 / 2)
+  norm_num only at h
+  linarith
+
+/-- The rational bound obtained by discarding only the displayed nonnegative square. -/
+theorem mixedDyadicResidual_rational_bound (n : ℕ) :
+    energy (doubleStage n) ≤ (9 / 16 : ℝ) * energy n +
+      (3 / 4 : ℝ) * hilbertSequence (projectionResidual (doubleStage n)) 1 := by
+  rw [mixedDyadicResidual_rational_completion]
+  nlinarith [sq_nonneg ‖projectionResidual (doubleStage n) -
+    (3 / 4 : ℝ) • doubleDilation (projectionResidual n)‖]
+
+/-- Insert an actual first-coordinate provider into the rational finite bound.
+The provider is an explicit hypothesis; its arithmetic validity is not proved here. -/
+theorem mixedDyadicResidual_rational_provider_bound (n : ℕ) (θ α : ℝ)
+    (h : hilbertSequence (projectionResidual (doubleStage n)) 1 ≤ θ * energy n + α) :
+    energy (doubleStage n) ≤
+      (9 / 16 + (3 / 4 : ℝ) * θ) * energy n + (3 / 4 : ℝ) * α := by
+  calc
+    _ ≤ (9 / 16 : ℝ) * energy n +
+        (3 / 4 : ℝ) * hilbertSequence (projectionResidual (doubleStage n)) 1 :=
+      mixedDyadicResidual_rational_bound n
+    _ ≤ (9 / 16 : ℝ) * energy n + (3 / 4 : ℝ) * (θ * energy n + α) :=
+      add_le_add (le_refl ((9 / 16 : ℝ) * energy n))
+        (mul_le_mul_of_nonneg_left h (by norm_num : (0 : ℝ) ≤ 3 / 4))
+    _ = _ := by ring
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization

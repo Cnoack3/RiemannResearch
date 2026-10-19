@@ -3,11 +3,16 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
+import Lean.Elab.Tactic.Omega
+import Mathlib.Tactic.Ring
+import RiemannResearch.Analysis.RealCofinalLimits
+import RiemannResearch.RH.FirstCoordinateEndpoint
 import RiemannResearch.RH.ParetoParityOptimizer
 import RiemannResearch.RH.MobiusResidualFirstCoordinate
 import RiemannResearch.RH.FiniteDyadicDefect
 import RiemannResearch.RH.ResidueProjectionSchur
 import RiemannResearch.RH.ThresholdHilbertL1
+import RiemannResearch.RH.ParetoL1DualTest
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
 
@@ -32,56 +37,43 @@ namespace RiemannResearch.RH.Pareto.CoefficientStabilization
 open RiemannResearch.RH.ArithmeticCumulative
 open ParityOptimizer
 
+/-- The explicit bounded sign test from the recovered publication continuation.
+It equals +1 at the first point and even integers, and -1 at other odd integers. -/
+def firstPointSignTest : ThresholdHilbert :=
+  hilbertOne + (2 : ℝ) • paretoPointHilbert 0 - (4 : ℝ) • residueAtom 0
+
+theorem firstPointSignTest_abs_le_one (k : ℕ) :
+    |hilbertSequence firstPointSignTest k| ≤ 1 := by
+  change |hilbertSequenceLinear (hilbertOne + (2 : ℝ) • paretoPointHilbert 0 -
+    (4 : ℝ) • residueAtom 0) k| ≤ 1
+  rw [map_sub, map_add, map_smul, map_smul]
+  change |hilbertSequence hilbertOne k + 2 * hilbertSequence (paretoPointHilbert 0) k -
+    4 * hilbertSequence (residueAtom 0) k| ≤ 1
+  rw [hilbertOne_sequence, hilbertSequence_paretoPoint, residueAtom,
+    normalizedResidueHilbert_sequence]
+  by_cases hk0 : k = 0
+  · subst k; norm_num [zeroAnchor, paretoPointSequence, residueFraction]
+  by_cases hk1 : k = 1
+  · subst k; norm_num [zeroAnchor, paretoPointSequence, residueFraction]
+  rcases Nat.mod_two_eq_zero_or_one k with hm | hm
+  all_goals norm_num [zeroAnchor, paretoPointSequence, residueFraction, hk0, hk1, hm]
+
 theorem odd_orthogonal_first_le_negativeMass
     (f : ThresholdHilbert) (ho : inner ℝ f oddIndicator = 0) :
     hilbertSequence f 1 ≤ 2 * hilbertNegativeMass f := by
-  have hs := weighted_summable_of_square (hilbertSequence_square_summable f)
-  have hp := weighted_product_summable_of_square
-    (hilbertSequence_square_summable f)
-    (hilbertSequence_square_summable oddIndicator)
-  have hi : Summable (fun k : ℕ => if k = 1 then hilbertSequence f 1 else 0) := by
-    apply (summable_nat_add_iff 2).mp
-    have he : (fun k : ℕ => if k + 2 = 1 then hilbertSequence f 1 else 0) =
-        (fun _ : ℕ => (0 : ℝ)) := by
-      funext k
-      rw [if_neg (by omega)]
-    rw [he]
-    exact summable_zero
-  have hb := Summable.tsum_le_tsum
-    (f := fun k => positiveWeight k * hilbertSequence f k -
-      2 * (positiveWeight k *
-        (hilbertSequence f k * hilbertSequence oddIndicator k)) +
-      (if k = 1 then hilbertSequence f 1 else 0))
-    (g := fun k => positiveWeight k * |hilbertSequence f k|)
-    (fun k => by
-      rw [oddIndicator_sequence]
-      by_cases hk : k = 1
-      · subst k
-        rw [if_pos (show (1 : ℕ) = 1 from rfl)]
-        simp only [show 1 % 2 = (1 : ℕ) by norm_num, Nat.cast_one, mul_one]
-        rw [show positiveWeight 1 = (1 / 2 : ℝ) by norm_num [positiveWeight]]
-        linarith [le_abs_self (hilbertSequence f 1)]
-      · simp only [if_neg hk, add_zero]
-        have hmod : k % 2 = 0 ∨ k % 2 = 1 := by omega
-        rcases hmod with hmod | hmod
-        · rw [hmod]
-          simp only [Nat.cast_zero, mul_zero, sub_zero]
-          exact mul_le_mul_of_nonneg_left (le_abs_self _)
-            (positiveWeight_nonneg k)
-        · rw [hmod]
-          simp only [Nat.cast_one, mul_one]
-          have hh := mul_le_mul_of_nonneg_left
-            (neg_le_abs (hilbertSequence f k)) (positiveWeight_nonneg k)
-          linarith)
-    ((hs.sub (hp.mul_left 2)).add hi) (hilbertL1Norm_summable f)
-  rw [(hs.sub (hp.mul_left 2)).tsum_add hi,
-    hs.tsum_sub (hp.mul_left 2), tsum_mul_left] at hb
-  have hh : (∑' k, positiveWeight k *
-      (hilbertSequence f k * hilbertSequence oddIndicator k)) = 0 := by
-    simpa only [hilbert_inner_weighted, paretoInner] using ho
-  simp only [hh, mul_zero, sub_zero, tsum_ite_eq] at hb
-  rw [hilbertNegativeMass_eq, hilbert_inner_one]
-  unfold paretoMean hilbertL1Norm
+  have hb := inner_le_l1_of_sequence_abs_le_one f firstPointSignTest
+    firstPointSignTest_abs_le_one
+  have hz : inner ℝ f (residueAtom 0) = 0 := by
+    have hh := ho
+    rw [oddIndicator, inner_smul_right] at hh
+    linarith
+  rw [firstPointSignTest, inner_sub_right, inner_add_right,
+    inner_smul_right, inner_smul_right, hz, mul_zero, sub_zero,
+    inner_paretoPoint, hilbertGibbsPhysical_eq] at hb
+  rw [show paretoWeight 0 = (1 / 2 : ℝ) by norm_num [paretoWeight]] at hb
+  change inner ℝ f hilbertOne + 2 * ((1 / 2 : ℝ) * hilbertSequence f 1) ≤
+    hilbertL1Norm f at hb
+  rw [hilbertNegativeMass_eq]
   linarith
 
 theorem limitResidual_odd_inner :
@@ -262,5 +254,76 @@ theorem projectionOvershoot_zero_iff_one_mem :
     atTop (𝓝 0) ↔ hilbertOne ∈ closedSpace
   exact overshoot_tendsto_iff_residual_zero.trans
     (limitResidual_zero_iff_energy_zero.trans limitEnergy_zero_iff_mem)
+
+/-- The positive-index first coordinate of the actual finite residual. -/
+theorem projectionResidual_first_eq_one_sub_projection (n : ℕ) :
+    hilbertSequence (projectionResidual n) 1 =
+      1 - hilbertSequence (projection n) 1 := by
+  change hilbertSequenceLinear (hilbertOne - projection n) 1 = _
+  rw [map_sub]
+  change hilbertSequence hilbertOne 1 - hilbertSequence (projection n) 1 = _
+  rw [hilbertOne_sequence]
+  norm_num [zeroAnchor]
+
+/-- The overshoot sum uses the complete infinite Pareto distribution. -/
+theorem projectionOvershoot_eq_tsum_positive_projection (n : ℕ) :
+    projectionOvershoot n =
+      ∑' k, positiveWeight k * max (hilbertSequence (projection n) k - 1) 0 := by
+  unfold projectionOvershoot hilbertNegativeMass
+  apply tsum_congr
+  intro k
+  by_cases hk : k = 0
+  · subst k
+    simp [positiveWeight]
+  · have he : hilbertSequence hilbertOne k = 1 := by
+      rw [hilbertOne_sequence]
+      simp [zeroAnchor, hk]
+    have hs := congrFun (hilbertSequence_sub hilbertOne (projection n)) k
+    simp only [Pi.sub_apply] at hs
+    rw [hs, he]
+    congr 2
+    ring
+
+/-- The critical coefficient is included, by the quadratic first-coordinate
+detector. The cofinal upper estimate is an explicit arithmetic hypothesis.
+Source: the previously checked Pareto parity publication continuation. -/
+theorem projectionOvershoot_cofinal_endpoint_iff_residual_zero :
+    (∀ ε : ℝ, 0 < ε → ∀ N : ℕ, ∃ n, N ≤ n ∧
+      projectionOvershoot n ≤ (1 - Real.sqrt 2 / 2) * energy n + ε) ↔
+      limitResidual = 0 := by
+  have ht := projectionOvershoot_tendsto.sub
+    (energy_tendsto.const_mul (1 - Real.sqrt 2 / 2))
+  constructor
+  · intro h
+    have hb : limitOvershoot - (1 - Real.sqrt 2 / 2) * limitEnergy ≤ 0 := by
+      apply RiemannResearch.Analysis.limit_le_of_cofinal_le_add ht
+      intro ε hε N
+      obtain ⟨n, hn, hb⟩ := h ε hε N
+      exact ⟨n, hn, by linarith⟩
+    have hx := odd_orthogonal_first_le_negativeMass
+      limitResidual limitResidual_odd_inner
+    change hilbertSequence limitResidual 1 ≤ 2 * limitOvershoot at hx
+    apply limitResidual_zero_of_firstCoordinate_le_sharp_energy
+    linarith
+  · intro h ε hε N
+    have he := limitResidual_zero_iff_energy_zero.mp h
+    have ho : limitOvershoot = 0 := by
+      unfold limitOvershoot
+      rw [h]
+      have hs : hilbertSequence (0 : ThresholdHilbert) = 0 :=
+        hilbertSequenceLinear.map_zero
+      simp [hilbertNegativeMass, hs]
+    rw [ho, he, mul_zero, sub_zero] at ht
+    obtain ⟨n, hn, hb⟩ :=
+      RiemannResearch.Analysis.cofinal_le_add_of_tendsto ht ε hε N
+    exact ⟨n, hn, by linarith⟩
+
+theorem riemannHypothesis_of_projectionOvershoot_cofinal_endpoint
+    (h : ∀ ε : ℝ, 0 < ε → ∀ N : ℕ, ∃ n, N ≤ n ∧
+      projectionOvershoot n ≤ (1 - Real.sqrt 2 / 2) * energy n + ε) :
+    RiemannHypothesis := by
+  apply riemannHypothesis_of_firstCoordinate_zero
+  exact firstCoordinate_zero_iff_residual_zero.mpr
+    (projectionOvershoot_cofinal_endpoint_iff_residual_zero.mp h)
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization

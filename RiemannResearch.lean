@@ -1888,6 +1888,7 @@ import RiemannResearch.RH.MobiusResidualFirstCoordinate
 import RiemannResearch.RH.FiniteResidueDilation
 import RiemannResearch.RH.ParetoParityOptimizer
 import RiemannResearch.RH.ParetoProjectionOvershoot
+import RiemannResearch.RH.ParetoOvershootEndpointGap
 import RiemannResearch.Analysis.ProjectionPairingVariation
 import RiemannResearch.RH.ParetoSignedInnovations
 import RiemannResearch.RH.OptimalTwoCoefficientCriterion
@@ -2012,6 +2013,7 @@ import RiemannResearch.RH.ThresholdHilbertDilation
 import RiemannResearch.RH.ThresholdHilbertLegal
 import RiemannResearch.RH.ThresholdHilbertMean
 import RiemannResearch.RH.ThresholdHilbertL1
+import RiemannResearch.RH.ParetoL1DualTest
 import RiemannResearch.RH.ThresholdHilbertAdjoint
 import RiemannResearch.RH.ThresholdHilbertProjection
 import RiemannResearch.RH.ThresholdUniformAffineOperator

@@ -77,4 +77,23 @@ theorem riemannHypothesis_of_endpointGram_cofinal_lower
   exact firstCoordinate_zero_iff_residual_zero.mpr
     (endpointGram_cofinal_lower_iff_residual_zero.mp h)
 
+/-- The original signed statistic v^T G^-1 b, without the endpoint energy allowance.
+Source: the user-provided Pareto parity agenda, Sections 12 and 17. -/
+theorem projectionGram_cofinal_lower_iff_residual_zero :
+    (∀ ε : ℝ, 0 < ε → ∀ N : ℕ, ∃ n, N ≤ n ∧
+      1 - ε ≤ dotProduct (reciprocalSource n)
+        ((fullGram n)⁻¹.mulVec (logarithmicSource n))) ↔ limitResidual = 0 := by
+  simp_rw [← projection_firstCoordinate_eq_inverseGram, anchoredEvaluationCLM_apply]
+  exact projection_cofinal_lower_iff_residual_zero
+
+/-- Conditional Nyman--Beurling consumer: the actual signed Gram lower bound
+is the unresolved arithmetic input. -/
+theorem riemannHypothesis_of_projectionGram_cofinal_lower
+    (h : ∀ ε : ℝ, 0 < ε → ∀ N : ℕ, ∃ n, N ≤ n ∧
+      1 - ε ≤ dotProduct (reciprocalSource n)
+        ((fullGram n)⁻¹.mulVec (logarithmicSource n))) : RiemannHypothesis := by
+  apply riemannHypothesis_of_firstCoordinate_zero
+  exact firstCoordinate_zero_iff_residual_zero.mpr
+    (projectionGram_cofinal_lower_iff_residual_zero.mp h)
+
 end RiemannResearch.RH.Pareto.CoefficientStabilization

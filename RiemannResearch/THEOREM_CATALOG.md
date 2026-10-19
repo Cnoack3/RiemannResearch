@@ -14013,3 +14013,42 @@ Conditional research reduction:
   `job_zbKfieMvF_8p93VhgbklZi5owu4kq0vU` with only the standard foundations.
 - **Open:** prove any of these equivalent convergence conditions for the
   actual optimizers. The reduction does not discharge this analytic input.
+
+### Recovered Pareto parity continuation integration (2026-10-19)
+
+Established identities and interfaces integrated from the preserved checked
+source commit `3e698b7e48af90aae6d91bb159333f83cbb8ec35`:
+- `RH/ParetoL1DualTest.lean`: complete-L1 bounded physical dual tests.
+- `RH/ParetoProjectionOvershoot.lean`: explicit first-point sign test,
+  full positive-projection sum, and critical cofinal overshoot endpoint.
+- `RH/FiniteDyadicEndpoint.lean`: the all-real scaled completion retains
+  the full signed coordinate and norm-square remainder; rational specialization
+  and the explicit arithmetic-provider estimate are separate consequences.
+- `RH/GramEndpointCriterion.lean`: raw mixed inverse-Gram cofinal criterion.
+
+The integration adds 12 theorems and one definition; the rest of the original
+20-statement inventory uses existing canonical definitions and results rather
+than duplicate theorem spellings. No second overshoot module is exported.
+Conditional research reductions: the cofinal overshoot and raw-Gram RH
+consumers. Open: prove the actual arithmetic upper/lower bounds in their types.
+See `RH/ParetoParityIntegrationResearch20261019.md` for source recovery,
+original verification evidence, and the statement-by-statement coverage map.
+
+### Exact Pareto overshoot endpoint gaps (2026-10-19)
+
+Established identities and inequalities in `RH/ParetoOvershootEndpointGap.lean`:
+- Exact bounded-sign-test slack and the limiting endpoint-gap decomposition.
+- The finite equality retains the signed dyadic defect at each positive stage.
+- Finite and limiting first-coordinate quadratic lower bounds.
+- The energy-only refinement `omega >= (1 - sqrt(2)/2) delta +
+  ((3 sqrt(2) - 4)/4) delta^2` for the actual limiting residual.
+
+The new module adds seven theorems. Together with the 12 recovered additions
+above, this continuation contributes 19 new theorems and one definition.
+The seven declarations and axiom checks passed
+`job_qiE3BO2Vyy78TlZUs_CXtOgzC3Vp75NW` with only standard foundations.
+Conditional quantitative consumer: an actual upper bound
+`omega <= (1 - sqrt(2)/2) delta + eta` gives
+`((3 sqrt(2) - 4)/4) delta^2 <= eta`.
+Open: obtain a vanishing arithmetic endpoint error for the actual optimizers.
+See `RH/ParetoParityIntegrationResearch20261019.md` for the exact identities.
