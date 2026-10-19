@@ -298,10 +298,29 @@ The concrete formalization bridge is now completed. The Lean modules prove:
   bound from Section 7 is formalized for any finite distinct dictionary
   with 2 <= d <= N. It applies in particular to squarefree dictionaries.
 
-The native-Q Riesz energy equality involving W_N and the exact
-inverse-Gram projection decompositions remain ordinary mathematical
-proofs in this note. The checked Q functional estimate does not require
-constructing that Riesz vector or equating P and Q projections.
+- `RH/QTriangularRieszEnergy.lean`: `riesz_sequence` constructs the
+  correctly rescaled native-Q Riesz vector. `riesz_inner` proves its
+  actual pairing, `riesz_metric_identity` retains W_N, and
+  `riesz_energy_identity` retains both V_N and W_N exactly.
+  `riesz_tendsto_zero` is unconditional strong native-Q convergence.
+  `charge_sq_le_exact` subtracts both remainders in the moving-test bound.
+- `RH/QTriangularInverseGram.lean`: `direction_residual_orthogonal`
+  verifies the actual finite projection; `inverseGram_energy_identity`
+  retains all three nonnegative remainders.
+  `inverseGram_direction_le_exact` improves the previous upper bound by
+  subtracting V_N and W_N. `target_charge_residual_certificate` proves
+  the lower error certificate, with the exact orthogonal remainder.
+  `direction_target_gram_cauchy` proves the mixed target-direction bound.
+  `target_mean_tendsto_zero`, `direction_tendsto_one`, and
+  `scalar_identification_forces_zero` distinguish the two directions.
+
+The Lean Riesz vector `riesz N` is minus the paper's D_N, because the
+existing Pareto `triangularChargeRiesz N` is minus S_N. Its pairing equals
+Lambda_N with a positive sign. All norm identities are unchanged.
+The exact Q energy and inverse-Gram norm decompositions are now formalized.
+The target residual certificate uses `charge N qOne`; the replacement
+of that expression by the explicit arithmetic tau_N is an ordinary finite
+Abel calculation in this note, not a new declaration in this follow-up.
 
 ## 10. Attempt to use the result for squarefree closure
 
@@ -332,3 +351,57 @@ not the squarefree Nyman--Beurling closure problem. The next substantive
 estimate must control complete legal synthesis energy, or connect the
 target-mean direction b to enough controlled Gram directions to force
 b^T G^{-1} b -> 1. No such estimate is assumed or claimed here.
+
+## 11. Exact Q follow-up and target-direction investigation
+
+Write R_N=-D_N for the repository's Q Riesz vector, U_D for
+`directionFit d`, and A_D=v^T G^{-1}v for `directionCapacity d`.
+All conductors of the finite distinct dictionary must satisfy 2<=d<=N.
+The checked exact identity is
+\[
+ \zeta(2)N^2e_N
+ =A_D+N^2\|R_N-N^{-1}U_D\|_Q^2
+   +\zeta(2)N^2V_N+\zeta(2)N^2W_N.
+\]
+The displayed scaled fit is actually orthogonal: no projection provider is
+assumed. Thus the finite bound strengthens to
+\[
+ A_D\le\zeta(2)N^2(e_N-V_N-W_N).
+\]
+This is a sharper bound on the same collective direction. The exact
+identity also subtracts the nonnegative projection remainder. Neither
+statement substitutes the target mean b for v.
+
+For c=G^{-1}b and E=1-b^TG^{-1}b, Lean proves
+\[
+ [N\Lambda_N(1)-v^TG^{-1}b]^2
+ \le E\,[N^2\|R_N\|_Q^2-A_D].
+\]
+The bracket is exactly N^2 times the orthogonal dual remainder energy.
+It is nonnegative, and this inequality certifies a lower bound on E
+when the denominator is positive. It supplies no upper bound on E.
+
+There is also the checked finite inverse-Gram Cauchy--Schwarz inequality
+\[
+ (v^TG^{-1}b)^2\le A_D\,(b^TG^{-1}b).
+\]
+Consequently a potentially useful remaining arithmetic target is a cofinal
+lower estimate forcing (v^TG^{-1}b)^2/A_D to one, with A_D>0.
+The sufficiency of that limit follows by squeezing b^TG^{-1}b between
+the ratio and one. This is an ordinary conditional research observation,
+not a newly verified asymptotic provider. Triangular cancellation and the
+upper bound on A_D do not provide the required lower estimate.
+
+A simple identification of the directions fails even at the coordinate
+level: along every sequence of conductors tending to infinity,
+b_d tends to zero whereas v_d tends to one. Lean proves that
+b_d=a v_d along such a sequence forces the fixed scalar a to be zero.
+This does not rule out conductor-dependent scaling or useful comparisons
+in the inverse-Gram metric; those would require separate proofs.
+
+All new exact energy identities and finite inequalities use actual complete
+Q norms. They assume only the stated finite dictionary conditions, not RH,
+target closure, or vanishing coefficient defects. The dual strong limits
+use the existing unconditional PNT-based reciprocal-Mobius cancellation.
+The uniform bound on complete squarefree legal exact-head energies, the
+vanishing of target coefficient defects, and b^TG^{-1}b -> 1 remain Open.

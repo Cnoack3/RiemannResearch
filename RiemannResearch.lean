@@ -1,3 +1,4 @@
+import RiemannResearch.RH.QTriangularRieszEnergy
 import RiemannResearch.RH.QSquarefreeAffineEnergy
 import RiemannResearch.RH.QSquarefreeBlockBalance
 import RiemannResearch.RH.QSquarefreeHeadSchedule

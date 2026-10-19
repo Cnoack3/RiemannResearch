@@ -47,11 +47,23 @@ Established:
   the actual bound v^T G^{-1} v <= zeta(2) N^2 e_N for every finite
   distinct dictionary with 2 <= d <= N, where v_d = 1-1/d.
 
-The former overlap/actual-Riesz formalization obligation is discharged.
-The exact native-Q Riesz discrepancy and inverse-Gram projection
-decompositions in `RH/BalazardTriangularResearch20261019.md`
-remain ordinary mathematical proofs, beyond the checked coefficient
-inequality, Q functional bound, and inverse-Gram upper bound.
+- `RH/QTriangularRieszEnergy.lean`: actual Q Riesz coordinates and
+  pairing, exact metric-change remainder W_N, full zeta(2)e_N energy
+  identity with V_N and W_N, unconditional strong Q convergence, and
+  the sharp moving-test inequality retaining both remainders.
+- `RH/QTriangularInverseGram.lean`: `inverseGram_energy_identity`
+  retains the orthogonal projection remainder as well as V_N and W_N;
+  `inverseGram_direction_le_exact` sharpens the finite bound to
+  v^T G^{-1}v <= zeta(2)N^2(e_N-V_N-W_N).
+  `target_charge_residual_certificate` is a lower target-error certificate,
+  and `direction_target_gram_cauchy` bounds the mixed inverse-Gram pairing.
+  Escaping target means tend to zero while v_d tends to one, ruling out a
+  fixed nonzero scalar identification along escaping conductors.
+
+The native-Q Riesz and inverse-Gram norm-decomposition obligations are
+discharged. The arithmetic evaluation of charge N qOne as tau_N and
+the asymptotic mixed-correlation research target in the memorandum
+are ordinary mathematical observations, not newly checked providers.
 
 RH research Open: bounded complete energy of legal exact-head candidates,
 or another argument forcing the optimal residual energy to zero.
