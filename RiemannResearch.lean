@@ -687,6 +687,11 @@ import RiemannResearch.RH.DerivativeMobiusCRT
 import RiemannResearch.RH.MobiusPrimitiveCharge
 import RiemannResearch.Analysis.FiniteKernelEnergy
 import RiemannResearch.RH.MobiusTriangularCharge
+import RiemannResearch.Analysis.TriangularOverlapKernel
+import RiemannResearch.Analysis.QuotientFiberRamps
+import RiemannResearch.RH.MobiusTriangularEnergy
+import RiemannResearch.RH.QTriangularCharge
+import RiemannResearch.RH.QTriangularInverseGram
 import RiemannResearch.RH.DerivativeAbelChargeBounds
 import RiemannResearch.RH.GeometricDerivativeMoments
 import RiemannResearch.RH.DerivativeCRTPowerMoments

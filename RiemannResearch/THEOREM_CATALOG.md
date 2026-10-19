@@ -3,23 +3,35 @@
 ### Balazard triangular dual refinement (2026-10-19)
 
 Established:
-- `Analysis/FiniteKernelEnergy.lean`: `finite_kernel_variance_identity`
-  preserves the full finite variance remainder; `finite_kernel_energy_le`
-  drops only its nonnegative summands.
-- `RH/MobiusTriangularCharge.lean`: exact averaged reciprocal Riesz
-  pairing, de-averaging decomposition, nonnegativity and unconditional
-  decay of `reciprocalMobiusCesaroEnergy`.
+- `Analysis/FiniteKernelEnergy.lean`: exact finite variance identity.
+- `Analysis/TriangularOverlapKernel.lean`: actual nonnegative
+  reciprocal overlap matrix with exact row and column masses.
+- `Analysis/QuotientFiberRamps.lean`: finite integer quotient
+  regrouping and its exact real ramp representation.
+- `RH/MobiusTriangularEnergy.lean`:
+  `triangularChargeRiesz_energy_identity` retains the complete variance;
+  `triangularChargeRiesz_norm_sq_le` bounds the actual norm by e_N;
+  `triangularChargeRiesz_tendsto_zero` proves unconditional strong
+  convergence. Bounded moving tests, and the more general vanishing
+  e_N times squared test-norm condition, are covered.
+- `RH/QTriangularCharge.lean`: actual Q coefficient pairing,
+  sharp zeta(2) squared-norm comparison, arbitrary moving squarefree
+  optimizer/residual stages, exact legal finite-sum evaluation, and
+  `coefficient_direction_sq_le` for the direction 1-1/d.
+- `RH/QTriangularInverseGram.lean`: `inverseGram_direction_le` proves
+  the actual bound v^T G^{-1} v <= zeta(2) N^2 e_N for every finite
+  distinct dictionary with 2 <= d <= N, where v_d = 1-1/d.
 
-Ordinary mathematical proof, not yet a checked application:
-`RH/BalazardTriangularResearch20261019.md` proves strong triangular
-dual convergence with exact variance and P/Q remainders, uniform moving
-test control, and a finite inverse-Gram directional bound.
-Formalization Open: concrete overlap row/column and actual Riesz
-identification, then the strong bound and Q/Gram assembly.
+The former overlap/actual-Riesz formalization obligation is discharged.
+The exact native-Q Riesz discrepancy and inverse-Gram projection
+decompositions in `RH/BalazardTriangularResearch20261019.md`
+remain ordinary mathematical proofs, beyond the checked coefficient
+inequality, Q functional bound, and inverse-Gram upper bound.
+
 RH research Open: bounded complete energy of legal exact-head candidates,
 or another argument forcing the optimal residual energy to zero.
-The dual estimates alone do not discharge this obligation.
-
+Uniform triangular cancellation is automatic for bounded ambient tests
+and does not discharge this obligation.
 
 ### Damped Möbius signed P/Q discrepancy (2026-10-19)
 

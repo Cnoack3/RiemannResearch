@@ -15,8 +15,8 @@ a claimed source for this general algebraic identity.
 
 The exact equality retains the entire variance remainder. The concrete
 triangular-dual application is explained in
-RH/BalazardTriangularResearch20261019.md; its overlap identification is
-not a formal theorem of this module.
+RH/BalazardTriangularResearch20261019.md and its overlap identification
+is established in RH/MobiusTriangularEnergy.
 -/
 
 open scoped BigOperators

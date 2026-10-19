@@ -16,9 +16,9 @@ supplies the reciprocal Riesz kernels. This module proves their exact
 triangular pairing and the unconditional decay of the arithmetic
 mean-square energy proposed as their majorant.
 
-Formal boundary: this module does not assert the actual norm bound by
-that energy. Its ordinary mathematical proof and the still-unformalized
-overlap identification are recorded in BalazardTriangularResearch20261019.md.
+The actual sharp norm bound and strong convergence are assembled in
+MobiusTriangularEnergy from the proved finite overlap identification.
+The full research argument is in BalazardTriangularResearch20261019.md.
 The repository Riesz sign is opposite to the paper's dual vectors.
 -/
 

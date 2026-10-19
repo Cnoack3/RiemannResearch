@@ -66,7 +66,7 @@ is zero. The repository's triangularChargeRiesz is \(-S_N\).
 
 ## 3. Exact coordinates, with endpoints retained
 
-Regrouping the finite divisor sum gives
+For x>=1, regrouping the finite divisor sum gives
 \[
  S_N=\sum_{d\le N}a_N(d)\phi_d,\qquad
  a_N(x)=\frac{m(N/x)}x-\frac{M(N/x)}N
@@ -272,17 +272,63 @@ The present inverse-Gram inequality controls v^TG^{-1}v. A further argument
 would need to connect this direction to b^TG^{-1}b, or furnish a stable
 legal synthesis estimate. No such connection is proved here.
 
-## 9. Formal verification boundary
+## 9. Formal verification boundary after the follow-up
 
-The accompanying Lean modules formalize:
-- the general finite weighted-variance identity and its contraction;
-- the exact triangular-charge pairing and de-averaging decomposition;
-- nonnegativity and unconditional convergence of e_N.
+The concrete formalization bridge is now completed. The Lean modules prove:
 
-They do not yet formalize the concrete overlap-matrix row/column
-identification, its equality with the actual triangular Riesz vector,
-the resulting strong norm bound, or the Q/Gram consequences. Those are
-ordinary mathematical proofs in this note, not claimed to be
-kernel-verified application theorems. The remaining formalization bridge
-must be completed before labeling the whole extension as a checked Lean
-result. RH-level approximation energy remains open independently.
+- `Analysis/TriangularOverlapKernel.lean`: nonnegativity and both
+  marginals of the actual reciprocal overlap matrix.
+- `Analysis/QuotientFiberRamps.lean`: exact finite grouping of quotient
+  fibers and their identification with real ramps.
+- `RH/MobiusTriangularEnergy.lean`:
+  `triangularChargeRiesz_energy_identity` identifies the complete actual
+  Hilbert energy and finite variance; `triangularChargeRiesz_norm_sq_le`
+  and `triangularChargeRiesz_tendsto_zero` prove the sharp bound and
+  unconditional strong convergence. No overlap or cancellation provider
+  remains as a hypothesis.
+- The moving-test conclusion also allows unbounded vectors whenever
+  e_N times their squared norms tends to zero.
+- `RH/QTriangularCharge.lean`: the actual Q functional equals the native
+  coefficient sum, satisfies the zeta(2) squared-norm bound, and tends to
+  zero for bounded moving Q tests. The squarefree optimizer and residual
+  applications permit an arbitrary stage function, without cofinality.
+  The legal finite-sum evaluation and coefficient-direction inequality
+  from Section 7 are also formalized.
+- `RH/QTriangularInverseGram.lean`: the actual inverse-Gram upper
+  bound from Section 7 is formalized for any finite distinct dictionary
+  with 2 <= d <= N. It applies in particular to squarefree dictionaries.
+
+The native-Q Riesz energy equality involving W_N and the exact
+inverse-Gram projection decompositions remain ordinary mathematical
+proofs in this note. The checked Q functional estimate does not require
+constructing that Riesz vector or equating P and Q projections.
+
+## 10. Attempt to use the result for squarefree closure
+
+The intended remaining target is a cofinal squarefree legal exact-head
+family with uniformly bounded complete Q energy. The repository already
+has unconditional sublinear-in-head energy bounds
+(`QSquarefreeSublinearHeads.lean`); repeating the prime-number-theorem
+argument does not turn those bounds into a uniform bound.
+
+There is a concrete reason triangular cancellation alone cannot supply
+the missing upper estimate. If F equals one at every integer 1 through N,
+then all w(d;F) for d<=N equal mu(d), and hence
+\[
+ \Lambda_N(F)=\tau_N:=\frac1N\sum_{j=0}^{N-1}m(j).
+\]
+Our estimate yields only
+\[
+ \tau_N^2\le \zeta(2)e_N\|F\|_Q^2.
+\]
+When e_N>0 this is a lower bound on the candidate norm. Moreover,
+finite Cauchy--Schwarz gives tau_N^2<=e_N, so its lower certificate is
+at most 1/zeta(2). When e_N=0, tau_N=0 and the inequality supplies no
+constraint. This calculation is an ordinary mathematical diagnostic,
+not a new Lean theorem.
+
+Thus the update closes the technical strong-dual formalization gap,
+not the squarefree Nyman--Beurling closure problem. The next substantive
+estimate must control complete legal synthesis energy, or connect the
+target-mean direction b to enough controlled Gram directions to force
+b^T G^{-1} b -> 1. No such estimate is assumed or claimed here.
