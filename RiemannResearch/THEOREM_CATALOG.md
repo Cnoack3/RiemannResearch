@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Balazard--de Roton signed critical-line error (2026-10-19)
+
+Established: `RH/ParetoBoundedMellin.lean` supplies bounded-vector Mellin
+integrability and finite linearity on Re(s)>0, including the critical line.
+`RH/BalazardDeRotonCriticalEnergy.lean` proves the actual finite damped
+Möbius residual formula with its reciprocal charge, the complete
+critical-line norm identity `critical_energy`, and
+`criticalApproximation_iff_hardy`. The signed identity `signed_energy`
+retains the mixed integral, and `factor_two_exact_gap` retains the entire
+nonnegative remainder. Component L2 assumptions are explicit in both.
+
+Conditional research reductions:
+`riemannHypothesis_of_criticalApproximation`,
+`qSquarefreeClosure_of_criticalApproximation`, and
+`riemannHypothesis_of_signed_budget` consume an arbitrarily small complete
+boundary-energy budget. Open: a provider proving that budget, or the signed
+version with its component L2 conditions, without RH. The paper's
+RH-conditional analytic estimates are not formalized or assumed as axioms.
+See `RH/BalazardDeRotonResearch20261019.md` for the paper audit,
+normalization, exact formulas, source corrections, and research agenda.
+
 ### Complete Q Mellin witness and strict B-factor improvement (2026-10-18)
 
 Established: `Analysis/ReciprocalCellAbel.lean` proves the exact finite and
