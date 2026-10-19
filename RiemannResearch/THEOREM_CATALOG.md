@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Q conductor coefficient mass and scaled signed carries (2026-10-19)
+
+Established:
+- `RH/QConductorCoefficientMass.lean`: exact complete-Q conductor
+  head/tail split; `qResidue_norm_sq_le_two_div` proves
+  ||g_d||_Q^2 <= 2/(zeta(2)d). `qResidue_sum_norm_le_mass` and
+  `qResidue_sum_mass_lower` give the finite signed-combination bound and
+  necessary mass (1-epsilon)sqrt(zeta(2)D/2), without squarefree assumptions.
+- `RH/QCarryCoefficientEnergy.lean`: upper bound for unscaled step
+  carries, normalized-carry two-sided energy bounds, squarefree legality,
+  pointwise and weak zero limits, and the error-minus-energy limit one.
+  Scaled packets with both conductors escaping have uniformly bounded
+  complete Q energy and coefficient mass of order sqrt(D); the existing
+  general conductor-escape theorem proves their zero weak limit.
+
+Open: a growing squarefree legal exact-head family with uniformly bounded
+physical Q energy has not been constructed. The new packets accommodate
+coefficient growth but do not approach one. Exact conditional and Fourier
+identities retain signed cancellations; the required arithmetic estimate
+on the selected combined profiles remains Open.
+See `RH/QCoefficientMassCarryResearch20261019.md`.
+
+
 ### RH next-head costs and complete periodic tails (2026-10-19)
 
 Established:

@@ -37,6 +37,8 @@ import RiemannResearch.RH.QReflectedFiniteStage
 import RiemannResearch.RH.QExactHeadSubpolynomial
 import RiemannResearch.RH.QSquarefreeLinearBenchmark
 import RiemannResearch.RH.QConductorLimits
+import RiemannResearch.RH.QConductorCoefficientMass
+import RiemannResearch.RH.QCarryCoefficientEnergy
 import RiemannResearch.RH.QConductorEscape
 import RiemannResearch.RH.QSquarefreeJumpApplications
 import RiemannResearch.NumberTheory.SquarefreeCumulantTower
