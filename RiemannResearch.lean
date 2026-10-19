@@ -237,6 +237,11 @@ import RiemannResearch.RH.QResidueMoments
 import RiemannResearch.RH.QDilationMoments
 import RiemannResearch.RH.QDivisibilityResidueCoefficients
 import RiemannResearch.RH.QResidueRefinement
+import RiemannResearch.RH.QResidueConditional
+import RiemannResearch.RH.QPrimeCRTCarries
+import RiemannResearch.RH.QFourierKernel
+import RiemannResearch.RH.QUniformNormalizedAverages
+import RiemannResearch.NumberTheory.ResidueRelationLattice
 import RiemannResearch.RH.QWeightedRefinementEnergy
 import RiemannResearch.RH.QPrimeSieve
 import RiemannResearch.RH.QDivisibilityDensity

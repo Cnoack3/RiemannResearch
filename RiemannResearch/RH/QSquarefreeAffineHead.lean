@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QResidueHeadSpace
+import RiemannResearch.RH.SquarefreeRadicalDifference
+import Mathlib.RingTheory.Radical.Basic
+import Mathlib.RingTheory.Radical.NatInt
 import RiemannResearch.RH.QSquarefreeLatticePackets
 import RiemannResearch.RH.QSquarefreeConstrainedMinimum
 import RiemannResearch.RH.QSquarefreeExactHeadAverages
@@ -245,4 +248,124 @@ theorem riemannHypothesis_of_bounded_affine_minima
   exact (QSquarefreeExactHeadAverages.squarefree_closure_capacity_and_rh_of_bounded_exact_heads
     F hl hb hh).2.2
 
+/-! The following exact head/period accounting addresses Targets 2 and 3 in the
+user-provided squarefree profinite lattice research agenda, 16 October 2026.
+The identities retain both actual period gains and head-extension costs.
+They do not supply a uniform bound on their cumulative difference. -/
+
+theorem minimumError_head_cost (H J L r : ℕ) (hH : 0 < H) (hHJ : H ≤ J)
+    (hL : 0 < L) (hr : r ∈ conductors L) (hrJ : J < r)
+    (hsmall : ∀ d, 1 < d → d ≤ J → Squarefree d → d ∣ L) :
+    minimumError J L r hr = minimumError H L r hr +
+      ‖optimizer J L r hr - optimizer H L r hr‖ ^ 2 := by
+  have hf := optimizer_feasible J L r (lt_of_lt_of_le hH hHJ) hL hr hrJ hsmall
+  exact minimumError_completion H L r hH hL hr (lt_of_le_of_lt hHJ hrJ)
+    (fun d hd hdH hsf => hsmall d hd (hdH.trans hHJ) hsf)
+    (optimizer J L r hr) hf.1 (fun n hn hnH => hf.2 n hn (hnH.trans hHJ))
+
+theorem minimumError_head_period_balance (H J L K r a : ℕ)
+    (hH : 0 < H) (hHJ : H ≤ J) (hL : 0 < L) (hK : 0 < K) (hLK : L ∣ K)
+    (hrL : r ∈ conductors L) (hrK : r ∈ conductors K) (haK : a ∈ conductors K)
+    (hrH : H < r) (haJ : J < a)
+    (hsmallL : ∀ d, 1 < d → d ≤ H → Squarefree d → d ∣ L)
+    (hsmallK : ∀ d, 1 < d → d ≤ J → Squarefree d → d ∣ K) :
+    minimumError J K a haK +
+        ‖optimizer H L r hrL - optimizer H K r hrK‖ ^ 2 =
+      minimumError H L r hrL +
+        ‖optimizer J K a haK - optimizer H K a haK‖ ^ 2 := by
+  have hp := minimumError_period_gain H L K r hH hL hK hLK hrL hrK hrH hsmallL
+  have hh := minimumError_head_cost H J K a hH hHJ hK haK haJ hsmallK
+  have he := minimumError_anchor_independent H K r a hH hK hrK haK hrH
+    (lt_of_le_of_lt hHJ haJ)
+    (fun d hd hdH hsf => hsmallK d hd (hdH.trans hHJ) hsf)
+  rw [he] at hp
+  linarith
+
+/-- Telescope retains both actual period gains and exact-head costs. -/
+theorem minimumError_head_period_telescope
+    (H L r : ℕ → ℕ) (hH : ∀ i, 0 < H i) (hmono : ∀ i, H i ≤ H (i + 1))
+    (hL : ∀ i, 0 < L i) (hLK : ∀ i, L i ∣ L (i + 1))
+    (hr : ∀ i, r i ∈ conductors (L i))
+    (hrNext : ∀ i, r i ∈ conductors (L (i + 1)))
+    (hrH : ∀ i, H i < r i)
+    (hsmall : ∀ i d, 1 < d → d ≤ H i → Squarefree d → d ∣ L i) (n : ℕ) :
+    minimumError (H n) (L n) (r n) (hr n) +
+        (∑ i ∈ Finset.range n,
+          ‖optimizer (H i) (L i) (r i) (hr i) -
+            optimizer (H i) (L (i + 1)) (r i) (hrNext i)‖ ^ 2) =
+      minimumError (H 0) (L 0) (r 0) (hr 0) +
+        (∑ i ∈ Finset.range n,
+          ‖optimizer (H (i + 1)) (L (i + 1)) (r (i + 1)) (hr (i + 1)) -
+            optimizer (H i) (L (i + 1)) (r (i + 1)) (hr (i + 1))‖ ^ 2) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [Finset.sum_range_succ, Finset.sum_range_succ]
+      have hs := minimumError_head_period_balance (H n) (H (n + 1)) (L n)
+        (L (n + 1)) (r n) (r (n + 1)) (hH n) (hmono n) (hL n) (hL (n + 1))
+        (hLK n) (hr n) (hrNext n) (hr (n + 1)) (hrH n) (hrH (n + 1))
+        (hsmall n) (hsmall (n + 1))
+      linarith
+
+open ZetaTwoProbability SquarefreeRadicalDifference UniqueFactorizationMonoid
+open QSquarefreeLatticePackets
+
+/-- A nonsquarefree boundary adds no new interpolation condition. -/
+theorem exact_head_extend_nonsquarefree (n : ℕ) (hn : 2 ≤ n)
+    (hns : ¬ Squarefree n) (f : QHilbert) (hf : f ∈ qSquarefreeCRTSpan)
+    (hh : ∀ k, 0 < k → k < n → qSequence f k = 1) :
+    qSequence f n = 1 := by
+  have hrad2 : 2 ≤ radical n := Nat.two_le_radical_iff.mpr hn
+  have hradle : radical n ≤ n := Nat.le_of_dvd (by omega) radical_dvd_self
+  have hradsf : Squarefree (radical n) := squarefree_radical
+  have hradlt : radical n < n := by
+    by_contra h
+    have he : radical n = n := by omega
+    exact hns (he ▸ hradsf)
+  have hspan : qSquarefreeCRTSpan ≤
+      Submodule.span ℝ (qResidue '' {d : ℕ | 2 ≤ d ∧ Squarefree d}) := by
+    apply Submodule.span_le.mpr
+    rintro x ⟨d, rfl⟩
+    exact Submodule.subset_span ⟨d.val, d.property, rfl⟩
+  have hdif := span_difference_radical {d : ℕ | 2 ≤ d ∧ Squarefree d}
+    (fun d hd => ⟨hd.2, hd.1⟩) n hn f (hspan hf)
+  unfold qDifference at hdif
+  rw [hh (n - 1) (by omega) (by omega),
+    hh (radical n) (by omega) hradlt,
+    hh (radical n - 1) (by omega) (by omega)] at hdif
+  linarith
+
+/-- At a nonsquarefree next site, the optimizer and complete Q minimum agree. -/
+theorem nonsquarefree_boundary_no_cost (n L r : ℕ) (hn : 2 ≤ n)
+    (hns : ¬ Squarefree n) (hL : 0 < L) (hsf : Squarefree L)
+    (hr : r ∈ conductors L) (hrn : n < r)
+    (hsmall : ∀ d, 1 < d → d ≤ n - 1 → Squarefree d → d ∣ L) :
+    optimizer n L r hr = optimizer (n - 1) L r hr ∧
+      minimumError n L r hr = minimumError (n - 1) L r hr := by
+  have hsmalln : ∀ d, 1 < d → d ≤ n → Squarefree d → d ∣ L := by
+    intro d hd hdn hdsf
+    have hne : d ≠ n := by intro he; subst d; exact hns hdsf
+    exact hsmall d hd (by omega) hdsf
+  have hold := optimizer_feasible (n - 1) L r (by omega) hL hr (by omega) hsmall
+  have hnvalue : qSequence (optimizer (n - 1) L r hr) n = 1 := by
+    apply exact_head_extend_nonsquarefree n hn hns _
+      (divisorStage_le_squarefreeSpan L hL hsf hold.1)
+    intro k hk hkn
+    exact hold.2 k hk (by omega)
+  have hheadn : ∀ k, 0 < k → k ≤ n →
+      qSequence (optimizer (n - 1) L r hr) k = 1 := by
+    intro k hk hkn
+    by_cases he : k = n
+    · simpa only [he] using hnvalue
+    · exact hold.2 k hk (by omega)
+  have hupper := minimumError_le n L r (by omega) hL hr hrn hsmalln
+    (optimizer (n - 1) L r hr) hold.1 hheadn
+  change minimumError n L r hr ≤ minimumError (n - 1) L r hr at hupper
+  have hcost := minimumError_head_cost (n - 1) n L r (by omega) (by omega)
+    hL hr hrn hsmalln
+  have hz : ‖optimizer n L r hr - optimizer (n - 1) L r hr‖ ^ 2 = 0 := by
+    nlinarith [sq_nonneg ‖optimizer n L r hr - optimizer (n - 1) L r hr‖]
+  have he : optimizer n L r hr = optimizer (n - 1) L r hr :=
+    sub_eq_zero.mp (norm_eq_zero.mp (sq_eq_zero_iff.mp hz))
+  exact ⟨he, congrArg (fun f : QHilbert => ‖qOne - f‖ ^ 2) he⟩
 end RiemannResearch.RH.QSquarefreeAffineHead

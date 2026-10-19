@@ -1,5 +1,39 @@
 # Theorem catalog
 
+### Squarefree profinite Q targets: finite arithmetic and open estimates (2026-10-19)
+
+Established:
+- `RH/QResidueConditional.lean`: complete progression-weight consistency,
+  positive normalized alpha weights, old-modulus conditional means for every
+  new divisor conductor and integer step carry, exact signed conditional Gram
+  decomposition, multiples scaling, and the zero-fiber leakage floor.
+- `RH/QPrimeCRTCarries.lean`: constructed canonical prime CRT coefficients,
+  their bounds and modular certificate, exact integer floor carries, literal
+  legal Q representatives, and their complete finite conditional formula.
+- `NumberTheory/ResidueRelationLattice.lean`: actual kernel, quotient/index L,
+  and existence/uniqueness of integral coordinates in the full-period basis.
+- `RH/QUniformNormalizedAverages.lean`: exact uniform common-period error
+  and its 1/M bound; physical identification of the same Q averages; uniform
+  error tending to zero and complete-Q error tending to one.
+- `RH/QFourierKernel.lean`: absolutely convergent linear-first Fourier Gram,
+  finite DFT legal-residue Gram formula, entrywise bound, and exact complete
+  frequency-block cancellation.
+- `RH/QSquarefreeAffineHead.lean`: exact head costs and period gains with
+  their joint telescope; a nonsquarefree next head site changes neither the
+  feasible constraints nor the optimizer or its complete Q minimum.
+
+Conditional research reductions and Open obligations:
+the existing bounded-exact-head RH consumer still requires a uniform
+complete-Q bound on an actual legal family. The new cost/gain telescope
+does not provide that bound. Legal Schur exhaustion and growing legal-block
+estimates remain Open. The complete Fourier block includes its constant
+frequency and is not asserted to be a legal approximation. The source's
+prime-coordinate lattice-basis conversion and optional inverse-limit
+formalization are not supplied here.
+
+See `RH/QProfiniteTargetsResearch20261019.md` for exact scope, provenance,
+declaration names, and the distinction between finite uniform and Q geometry.
+
 ### Balazard--de Roton signed critical-line error (2026-10-19)
 
 Established: `RH/ParetoBoundedMellin.lean` supplies bounded-vector Mellin
