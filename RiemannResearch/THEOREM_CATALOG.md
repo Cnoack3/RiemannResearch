@@ -28,6 +28,10 @@ See `RH/QPrimorialBlockBalanceResearch20261019.md`.
 ### Balazard triangular dual refinement (2026-10-19)
 
 Established:
+- `RH/QTriangularRayleigh.lean`: exact legal scalar fit from G^{-1}v;
+  its complete target error is 1-B^2/A, the scalar optimization retains
+  A(a-B/A)^2, and comparison with the actual target projection retains
+  the full squared-norm gap. No asymptotic Rayleigh provider is assumed.
 - `Analysis/FiniteKernelEnergy.lean`: exact finite variance identity.
 - `Analysis/TriangularOverlapKernel.lean`: actual nonnegative
   reciprocal overlap matrix with exact row and column masses.
