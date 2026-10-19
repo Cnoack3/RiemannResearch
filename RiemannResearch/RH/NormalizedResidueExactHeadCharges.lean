@@ -7,6 +7,9 @@ import RiemannResearch.RH.ExactHeadCharges
 import RiemannResearch.RH.ArithmeticCumulativeBasic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
+import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import Mathlib.NumberTheory.Divisors
+import Lean.Elab.Tactic.Omega
 
 /-!
 # Coefficients forced by exact heads of normalized residue sums
@@ -116,5 +119,47 @@ theorem residueFraction_zero_head_iff (s : Finset ℕ) (c : ℕ → ℝ)
         · simp only [residueFraction, Nat.mod_eq_of_lt (show n < d by omega)]
           ring
       _ = 0 := by rw [hz, mul_zero]
+
+private theorem mobiusDifference_next {F G : ℕ → ℝ} (n : ℕ) (hn : 0 < n)
+    (hhead : ∀ k < n, F k = G k) :
+    mobiusDifference n F = mobiusDifference n G + (F n - G n) := by
+  have he : mobiusDifference n F - mobiusDifference n G = F n - G n := by
+    unfold mobiusDifference
+    rw [← Finset.sum_sub_distrib]
+    calc
+      _ = ∑ d ∈ n.divisors, if d = n then F n - G n else 0 := by
+        apply Finset.sum_congr rfl
+        intro d hd
+        have hdle : d ≤ n := Nat.le_of_dvd hn (Nat.dvd_of_mem_divisors hd)
+        have hprev : F (d - 1) = G (d - 1) := hhead _ (by
+          have := Nat.pos_of_mem_divisors hd
+          omega)
+        by_cases hdn : d = n
+        · subst d
+          simp [Nat.div_self hn, hprev]
+        · rw [hhead d (by omega), hprev, if_neg hdn, sub_self]
+      _ = F n - G n := by simp [Nat.mem_divisors, ne_of_gt hn]
+  linarith
+
+/-- The next physical mismatch is precisely the error in the next Möbius
+coefficient. This retains its sign and includes absent conductors. -/
+theorem residueFraction_exact_head_next_coefficient (s : Finset ℕ) (c : ℕ → ℝ) (n : ℕ)
+    (hn : 1 < n)
+    (hhead : ∀ k, 0 < k → k < n →
+      (∑ d ∈ s, c d * residueFraction d k) = 1) :
+    1 - (∑ d ∈ s, c d * residueFraction d n) =
+      (if n ∈ s then c n else 0) + (ArithmeticFunction.moebius n : ℝ) := by
+  have he := mobiusDifference_next
+    (F := fun k => ∑ d ∈ s, c d * residueFraction d k)
+    (G := fun k => if k = 0 then 0 else 1) n (by omega) (by
+      intro k hkn
+      by_cases hk : k = 0
+      · subst k
+        simp [residueFraction]
+      · rw [if_neg hk]
+        exact hhead k (Nat.pos_of_ne_zero hk) hkn)
+  rw [residueFraction_sum_mobiusDifference s c n hn,
+    mobiusDifference_one n (by omega), if_neg (show n ≠ 0 by omega)] at he
+  linarith
 
 end RiemannResearch.RH.Pareto

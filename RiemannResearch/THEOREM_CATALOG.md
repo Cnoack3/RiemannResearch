@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### RH next-head costs and complete periodic tails (2026-10-19)
+
+Established:
+- `RH/QSquarefreeHeadStep.lean`: exact physical one-site observation,
+  positive actual inverse-Gram capacity, correction completion with its norm
+  remainder, and exact finite-stage cost `minimumError_single_head_cost`.
+  `minimumError_single_head_near_anchor_bound` bounds that actual cost by
+  4 delta_n^2 / (zeta(2)(n-1)) for n<r<=2n. The full inverse Gram form retains
+  every old zero-head conductor and its signed interactions.
+- `RH/NormalizedResidueExactHeadCharges.lean`:
+  `residueFraction_exact_head_next_coefficient` identifies delta_n=c_n+mu(n).
+  The head-step module specializes its cost bound to actual optimizer
+  coefficients.
+- `RH/QPeriodicTailEnergy.lean`: exact first-period plus complete-tail
+  decomposition, two-sided bounds by the unweighted period energy over L^2,
+  and `periodicTailEnergy_tendsto_zero_iff`.
+- `RH/QResidueConditional.lean`: `carry_square_atom` and
+  `carry_norm_sq_lower` give the linear-in-p lower bound for a fixed-d
+  individual unscaled step carry; combinations retain signed mixed terms.
+- `Analysis/FiniteGramCapacity.lean`: scalar constrained completion for an
+  arbitrary prescribed value and the energy of its scaled minimum vector.
+
+Conditional research reduction / Open: the bounded-affine-minima RH
+consumer still needs an actual uniformly bounded squarefree legal family.
+Neither a uniform signed cost/gain balance nor a sufficient coefficient-
+defect budget along growing feasible stages has been proved. These local
+bounds do not close RH. See `RH/QHeadStepTailResearch20261019.md`.
+
 ### Squarefree profinite Q targets: finite arithmetic and open estimates (2026-10-19)
 
 Established:

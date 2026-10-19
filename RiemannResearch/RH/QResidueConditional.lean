@@ -457,4 +457,41 @@ theorem conditional_leakage_floor (L p : ℕ) (hL : 0 < L)
     div_eq_mul_inv, one_mul, mul_one, mul_comm] using hs
 
 
+/-- Each nonzero first-period multiple of d contributes the same positive
+amount to the complete Q energy of the unscaled step carry. -/
+theorem carry_square_atom (d p k : ℕ) (hd : 0 < d) (hk : 0 < k) (hkp : k < p) :
+    positiveQWeight (d * k) * (qSequence (carry d p) (d * k))^2 =
+      1 / (zetaTwo * (d : ℝ)^2) := by
+  rw [carry_sequence d p (d * k) hd (by omega),
+    Nat.mul_div_right k hd, Nat.mod_eq_of_lt hkp]
+  have hdR : (d : ℝ) ≠ 0 := by exact_mod_cast (ne_of_gt hd)
+  have hkR : (k : ℝ) ≠ 0 := by exact_mod_cast (ne_of_gt hk)
+  unfold positiveQWeight
+  push_cast
+  field_simp [ne_of_gt zetaTwo_pos, hdR, hkR]
+
+/-- A finite positive subseries gives an unconditional linear obstruction
+for a single unscaled carry as p grows with fixed d. Signed combinations
+may cancel; this theorem makes no claim about their cross terms. -/
+theorem carry_norm_sq_lower (d p : ℕ) (hd : 0 < d) :
+    ((p - 1 : ℕ) : ℝ) / (zetaTwo * (d : ℝ)^2) ≤ ‖carry d p‖^2 := by
+  let s := (Finset.range (p - 1)).image (fun k => d * (k + 1))
+  have hsum : (∑ n ∈ s, positiveQWeight n * (qSequence (carry d p) n)^2) =
+      ((p - 1 : ℕ) : ℝ) / (zetaTwo * (d : ℝ)^2) := by
+    unfold s
+    rw [Finset.sum_image]
+    · calc
+        _ = ∑ k ∈ Finset.range (p - 1), 1 / (zetaTwo * (d : ℝ)^2) := by
+          apply Finset.sum_congr rfl
+          intro k hk
+          exact carry_square_atom d p (k + 1) hd (by omega)
+            (by have := Finset.mem_range.mp hk; omega)
+        _ = _ := by simp [div_eq_mul_inv]
+    · intro a ha b hb hab
+      have hab' : a + 1 = b + 1 := Nat.eq_of_mul_eq_mul_left hd hab
+      omega
+  rw [← hsum, qNorm_weighted_sq]
+  exact (qSequence_square_summable (carry d p)).sum_le_tsum s
+    (fun n _ => mul_nonneg (positiveQWeight_nonneg n) (sq_nonneg _))
+
 end RiemannResearch.RH.QResidueConditional

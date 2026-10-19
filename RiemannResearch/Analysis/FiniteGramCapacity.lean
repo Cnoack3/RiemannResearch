@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 Christian Noack. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Christian Noack
+-/
 import RiemannResearch.Analysis.FiniteHilbertConstraints
 import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Ring
 
 /-!
 # Capacities of actual finite Hilbert Gram forms
@@ -206,6 +212,28 @@ theorem normalized_inverseSource_rank_one_half {v : ι → H} {w : ι → K}
   funext i
   simp only [Pi.smul_apply, smul_eq_mul]
   field_simp [hτ, hden]
+
+/-- Exact scalar-observation completion, with arbitrary prescribed value. -/
+theorem constrained_value_completion {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b c : ι → ℝ) (hb : b ≠ 0) (δ : ℝ)
+    (hc : (∑ i, c i * b i) = δ) :
+    ‖Fintype.linearCombination ℝ v c‖ ^ 2 =
+      δ ^ 2 / capacity hv b +
+        ‖Fintype.linearCombination ℝ v c -
+          (δ / capacity hv b) • minimumVector hv b‖ ^ 2 := by
+  have hp := capacity_pos hv b hb
+  rw [norm_sub_sq_real, norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
+    inner_smul_right, inner_synthesis_minimumVector, hc, ← capacity_eq_norm_sq]
+  field_simp [ne_of_gt hp]
+  ring
+
+/-- Energy of the minimum-norm vector at an arbitrary scalar observation. -/
+theorem scaled_source_energy {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b : ι → ℝ) (hb : b ≠ 0) (δ : ℝ) :
+    ‖(δ / capacity hv b) • minimumVector hv b‖ ^ 2 =
+      δ ^ 2 / capacity hv b := by
+  rw [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs, ← capacity_eq_norm_sq]
+  field_simp [ne_of_gt (capacity_pos hv b hb)]
 
 end
 end RiemannResearch.Analysis.FiniteGramCapacity
