@@ -274,3 +274,105 @@ of the *normalized error energy* from every finite head, not just pointwise
 convergence of the errors. A future formalization can reuse
 `critical_energy` and the existing exact P/Q weight identities; the
 RH-conditional providers from the paper still need separate formalization.
+
+## Further ordinary theorem: second-order P/Q discrepancy
+
+This follow-up is an ordinary mathematical proof, not a Lean declaration.
+It assumes RH explicitly and uses the same damping diagonal and exact
+squarefree finite vectors as the preceding section. It does not improve
+the paper's logarithmic exponent or provide an unconditional RH argument.
+The Chebyshev-function estimate used below is the classical consequence
+of RH recalled in Section 1 of Balazard--de Roton; the finite divisor
+identities and the P/Q comparison below are derived directly here.
+
+Write epsilon=epsilon_N, A=A_(N,epsilon_N), r(n)=1-F_(N,epsilon_N)(n),
+and retain the exact nonnegative discrepancy
+
+    D_N=zeta(2)*E_Q(N)-E_P(N)
+       =sum_(n>=1) r(n)^2/[n^2(n+1)].
+
+Then, under RH,
+
+    D_N/epsilon_N^2 -> C_psi,
+    C_psi=sum_(n>=1) (n-psi(n))^2/[n^2(n+1)],
+    1/2 <= C_psi < infinity.
+
+In particular,
+
+    zeta(2)*E_Q(N)=E_P(N)+C_psi*epsilon_N^2+o(epsilon_N^2),
+    zeta(2)*E_Q(N)/E_P(N)=1+O(epsilon_N).
+
+The coefficient of epsilon_N in the last ratio is not identified: that
+would additionally require information about E_P(N)/epsilon_N. The
+second-order statement concerns the difference of the two energies.
+
+Proof. For epsilon>0 define
+
+    h_epsilon(k)=sum_(d|k) mu(d)d^(-epsilon)
+               =product_(p|k) (1-p^(-epsilon)).
+
+For 1<=n<=N the exact finite floor identity gives
+
+    r(n)=n*A-sum_(2<=k<=n) h_epsilon(k).
+
+If k=p^a is a prime power, h_epsilon(k)=1-exp(-epsilon*log p),
+so the elementary exponential remainder gives
+
+    |h_epsilon(k)-epsilon*Lambda(k)|
+       <= (epsilon^2/2)*(log k)^2.
+
+If k has at least two distinct prime factors p,q, positivity of all
+factors, 1-exp(-x)<=x, and log(p)+log(q)<=log(k) give
+
+    0<=h_epsilon(k)<=epsilon^2*log(p)*log(q)
+                     <=(epsilon^2/4)*(log k)^2.
+
+Here Lambda(k)=0. Summing these bounds and using the already established
+A=epsilon+O(epsilon^2) yields, uniformly for 1<=n<=N,
+
+    r(n)=epsilon*(n-psi(n))
+          +O(epsilon^2*n*log^2(e*n)).
+
+Let w(n)=1/[n^2(n+1)] and a(n)=n-psi(n). RH implies, for example,
+|a(n)|=O(n^(3/4)); consequently sum a(n)^2*w(n)<infinity.
+The term n=1 equals 1/2, proving the stated positivity of C_psi.
+
+Set H_N=floor(epsilon_N^(-2)). Eventually 1<=H_N<=N, because
+epsilon_N->0 and N*epsilon_N^2->infinity on the displayed diagonal.
+The uniform finite expansion implies
+
+    sum_(n<=H_N) |r(n)/epsilon_N-a(n)|^2*w(n)
+       =O(epsilon_N^2*log^5(e*H_N)) -> 0.
+
+The complete tail of the normalized actual residual satisfies
+
+    sum_(n>H_N) |r(n)/epsilon_N|^2*w(n)
+       <= E_P(N)/[(H_N+1)*epsilon_N^2]
+       <= E_P(N) -> 0.
+
+The last step uses the preceding RH-conditional E_P(N) of order
+epsilon_N; the target tail sum_(n>H_N) a(n)^2*w(n) also tends to zero.
+The inequality |x-y|^2<=2|x|^2+2|y|^2 therefore proves strong convergence
+of r/epsilon_N to a in this weighted sequence space. Taking squared norms
+gives D_N/epsilon_N^2->C_psi. Finally E_P(N) is bounded below by a positive
+multiple of epsilon_N, giving the claimed relative O(epsilon_N) estimate.
+
+This convergence uses the stronger-decaying weight w(n), not the original
+P or Q norm. It therefore does not establish an unconditional bounded or
+convergent family in the RH approximation space.
+
+### An unconditional finite comparison retained along the way
+
+For every epsilon>0 and integers 1<=H<=N, without RH,
+
+    0<=zeta(2)*E_Q(N,epsilon)-E_P(N,epsilon)
+      <= (|A_(N,epsilon)|+epsilon*log H)^2*log(H+1)
+           +E_P(N,epsilon)/(H+1).
+
+Indeed, for k>=2 choose any prime divisor in the product for h_epsilon(k)
+to obtain 0<=h_epsilon(k)<=epsilon*log k. Hence for n<=H,
+|r(n)|<=n*(|A|+epsilon*log H). Sum with w(n), using
+sum_(1<=n<=H) 1/(n+1)<=log(H+1). For n>H, each discrepancy summand is
+1/n times the corresponding P-energy summand, proving the tail bound.
+The exact equality defining D_N remains the primary statement; this
+finite estimate does not assert decay of E_P itself.
