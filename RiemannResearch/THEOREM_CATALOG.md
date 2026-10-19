@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Balazard triangular dual refinement (2026-10-19)
+
+Established:
+- `Analysis/FiniteKernelEnergy.lean`: `finite_kernel_variance_identity`
+  preserves the full finite variance remainder; `finite_kernel_energy_le`
+  drops only its nonnegative summands.
+- `RH/MobiusTriangularCharge.lean`: exact averaged reciprocal Riesz
+  pairing, de-averaging decomposition, nonnegativity and unconditional
+  decay of `reciprocalMobiusCesaroEnergy`.
+
+Ordinary mathematical proof, not yet a checked application:
+`RH/BalazardTriangularResearch20261019.md` proves strong triangular
+dual convergence with exact variance and P/Q remainders, uniform moving
+test control, and a finite inverse-Gram directional bound.
+Formalization Open: concrete overlap row/column and actual Riesz
+identification, then the strong bound and Q/Gram assembly.
+RH research Open: bounded complete energy of legal exact-head candidates,
+or another argument forcing the optimal residual energy to zero.
+The dual estimates alone do not discharge this obligation.
+
+
 ### Damped Möbius signed P/Q discrepancy (2026-10-19)
 
 Established:
