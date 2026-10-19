@@ -26,6 +26,10 @@ def targetCorrelation (d : ι → ℕ) : ℝ :=
   dotProduct (direction d) ((residueGramMatrix d)⁻¹.mulVec (qMean d))
 def rayleighFit (d : ι → ℕ) : QHilbert :=
   (targetCorrelation d / directionCapacity d) • directionFit d
+
+/-- Target energy captured by the optimally rescaled collective direction. -/
+def rayleighGain (d : ι → ℕ) : ℝ :=
+  targetCorrelation d ^ 2 / directionCapacity d
 theorem qOne_directionFit_inner (d : ι → ℕ) (hd : ∀ i, 1 < d i)
     (hinj : Function.Injective d) :
     inner ℝ qOne (directionFit d) = targetCorrelation d := by
@@ -37,21 +41,34 @@ theorem qOne_directionFit_inner (d : ι → ℕ) (hd : ∀ i, 1 < d i)
     inner ℝ (directionFit d) (targetFit d) from real_inner_comm _ _,
     direction_target_inner d hd hinj] at ho
   exact sub_eq_zero.mp ho
+/-- Complete norm identity, including the zero-capacity case. -/
+theorem rayleighFit_norm_sq (d : ι → ℕ) (hd : ∀ i, 1 < d i)
+    (hinj : Function.Injective d) :
+    ‖rayleighFit d‖ ^ 2 = rayleighGain d := by
+  rw [rayleighFit, norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
+    directionFit_norm_sq d hd hinj]
+  unfold rayleighGain
+  by_cases hA : directionCapacity d = 0
+  · simp [hA]
+  · field_simp [hA]
+
 theorem rayleighFit_error (d : ι → ℕ) (hd : ∀ i, 1 < d i)
-    (hinj : Function.Injective d) (hA : directionCapacity d ≠ 0) :
+    (hinj : Function.Injective d) :
     ‖qOne - rayleighFit d‖ ^ 2 =
       1 - targetCorrelation d ^ 2 / directionCapacity d := by
-  rw [rayleighFit, norm_sub_sq_real, qOne_norm_sq, norm_smul,
-    Real.norm_eq_abs, mul_pow, sq_abs, directionFit_norm_sq d hd hinj,
-    real_inner_smul_right, qOne_directionFit_inner d hd hinj]
-  field_simp [hA]
+  rw [norm_sub_sq_real, qOne_norm_sq, rayleighFit_norm_sq d hd hinj]
+  unfold rayleighFit
+  rw [real_inner_smul_right, qOne_directionFit_inner d hd hinj]
+  unfold rayleighGain
+  simp only [div_eq_mul_inv]
   ring
+
 theorem rayleighFit_scalar_error (d : ι → ℕ) (hd : ∀ i, 1 < d i)
     (hinj : Function.Injective d) (hA : directionCapacity d ≠ 0) (a : ℝ) :
     ‖qOne - a • directionFit d‖ ^ 2 =
       ‖qOne - rayleighFit d‖ ^ 2 +
         directionCapacity d * (a - targetCorrelation d / directionCapacity d)^2 := by
-  rw [rayleighFit_error d hd hinj hA, norm_sub_sq_real, qOne_norm_sq,
+  rw [rayleighFit_error d hd hinj, norm_sub_sq_real, qOne_norm_sq,
     norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
     directionFit_norm_sq d hd hinj, real_inner_smul_right,
     qOne_directionFit_inner d hd hinj]

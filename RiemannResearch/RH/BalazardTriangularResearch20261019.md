@@ -318,9 +318,9 @@ The Lean Riesz vector `riesz N` is minus the paper's D_N, because the
 existing Pareto `triangularChargeRiesz N` is minus S_N. Its pairing equals
 Lambda_N with a positive sign. All norm identities are unchanged.
 The exact Q energy and inverse-Gram norm decompositions are now formalized.
-The target residual certificate uses `charge N qOne`; the replacement
-of that expression by the explicit arithmetic tau_N is an ordinary finite
-Abel calculation in this note, not a new declaration in this follow-up.
+`QTriangularTargetMean.lean` now proves `charge_qOne`, evaluates it as
+the arithmetic tau_N, and retains the exact arithmetic variance in
+e_N=tau_N^2+variance. This target-evaluation obligation is discharged.
 
 ## 10. Attempt to use the result for squarefree closure
 
@@ -343,8 +343,8 @@ Our estimate yields only
 When e_N>0 this is a lower bound on the candidate norm. Moreover,
 finite Cauchy--Schwarz gives tau_N^2<=e_N, so its lower certificate is
 at most 1/zeta(2). When e_N=0, tau_N=0 and the inequality supplies no
-constraint. This calculation is an ordinary mathematical diagnostic,
-not a new Lean theorem.
+constraint. The inequality tau_N^2<=e_N is now checked in
+`QTriangularTargetMean.lean`; it still supplies no upper synthesis bound.
 
 Thus the update closes the technical strong-dual formalization gap,
 not the squarefree Nyman--Beurling closure problem. The next substantive
@@ -385,12 +385,14 @@ There is also the checked finite inverse-Gram Cauchy--Schwarz inequality
 \[
  (v^TG^{-1}b)^2\le A_D\,(b^TG^{-1}b).
 \]
-Consequently a potentially useful remaining arithmetic target is a cofinal
-lower estimate forcing (v^TG^{-1}b)^2/A_D to one, with A_D>0.
-The sufficiency of that limit follows by squeezing b^TG^{-1}b between
-the ratio and one. This is an ordinary conditional research observation,
-not a newly verified asymptotic provider. Triangular cancellation and the
-upper bound on A_D do not provide the required lower estimate.
+The later `QPrimorialChargeDirection.lean` follow-up rules out convergence
+of this ratio to one along the natural primorial divisor dictionaries:
+`primorial_rayleighGain_tendsto_zero` proves that it tends to zero.
+The exact optimally rescaled target error therefore tends to one.
+The full target projection retains the extra squared gap already proved
+in `QTriangularRayleigh.lean`. See
+`QTriangularDirectionEscapeResearch20261019.md` for the checked escape
+argument and the updated multi-direction/signed-energy agenda.
 
 A simple identification of the directions fails even at the coordinate
 level: along every sequence of conductors tending to infinity,

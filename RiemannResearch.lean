@@ -2789,3 +2789,7 @@ import RiemannResearch.RH.SquarefreeResidueMatrixGrowth
 import RiemannResearch.Analysis.FiniteWeightedVariance
 import RiemannResearch.RH.CanonicalMobiusPrimeCells
 import RiemannResearch.RH.CanonicalMobiusCellCeiling
+import RiemannResearch.RH.QTriangularTargetMean
+import RiemannResearch.Analysis.EscapingRieszDirections
+import RiemannResearch.RH.QTriangularTargetDirection
+import RiemannResearch.RH.QPrimorialChargeDirection

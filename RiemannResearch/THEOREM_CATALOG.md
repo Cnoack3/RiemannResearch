@@ -65,9 +65,21 @@ Established:
   fixed nonzero scalar identification along escaping conductors.
 
 The native-Q Riesz and inverse-Gram norm-decomposition obligations are
-discharged. The arithmetic evaluation of charge N qOne as tau_N and
-the asymptotic mixed-correlation research target in the memorandum
-are ordinary mathematical observations, not newly checked providers.
+discharged.
+- `RH/QTriangularTargetMean.lean`: exact target charge tau_N, finite
+  Abel evaluation, exact e_N=tau_N^2+variance, and unconditional tau_N->0.
+- `Analysis/EscapingRieszDirections.lean`: norm escape from vanishing
+  tests and weak zero of normalized representers with fixed generator pairings.
+- `RH/QTriangularTargetDirection.lean`: normalized Rayleigh gain tends
+  to zero for retained dictionaries with an escaping conductor.
+- `RH/QPrimorialChargeDirection.lean`: actual squarefree primorial divisor
+  dictionaries discharge all retention and escape hypotheses.
+  `primorial_rayleighGain_tendsto_zero` and
+  `primorial_rayleighFit_error_tendsto_one` rule out the single-direction
+  gain->1 route. The full legal approximation problem remains open.
+- `RH/QTriangularRayleigh.lean`: the norm and error identities now also
+  cover zero capacity, without a nonvanishing hypothesis.
+See `RH/QTriangularDirectionEscapeResearch20261019.md`.
 
 RH research Open: bounded complete energy of legal exact-head candidates,
 or another argument forcing the optimal residual energy to zero.
