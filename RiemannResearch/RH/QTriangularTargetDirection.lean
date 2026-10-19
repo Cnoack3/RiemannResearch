@@ -52,6 +52,15 @@ theorem rayleighGain_eq_normalized_inner_sq (d : ι → ℕ) (hd : ∀ i, 1 < d 
   rw [← directionFit_norm_sq d hd hinj]
   simp only [div_eq_mul_inv, mul_pow, inv_pow]
   ring
+/-- Complete-Q capacity lower bound from any one retained legal atom. -/
+theorem directionCapacity_atom_bound (d : ι → ℕ) (hd : ∀ i, 1 < d i)
+    (hinj : Function.Injective d) (i : ι) :
+    direction d i ^ 2 ≤ directionCapacity d * ‖qResidue (d i)‖ ^ 2 := by
+  have h := real_inner_mul_inner_self_le (qResidue (d i)) (directionFit d)
+  rw [← pow_two, real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq,
+    directionFit_inner_atom d hd hinj i, directionFit_norm_sq d hd hinj] at h
+  nlinarith
+
 variable {κ : ℕ → Type*} [∀ n, Fintype (κ n)] [∀ n, DecidableEq (κ n)]
 theorem directionFit_norm_tendsto_atTop (d : (n : ℕ) → κ n → ℕ)
     (hd : ∀ n i, 1 < d n i) (hinj : ∀ n, Function.Injective (d n))
@@ -87,8 +96,14 @@ theorem rayleighGain_tendsto_zero (d : (n : ℕ) → κ n → ℕ)
     filter_upwards [hkeep p.1 p.2] with n hn
     obtain ⟨j, hj⟩ := hn
     simpa only [v, hj, direction] using directionFit_inner_atom (d n) (hd n) (hinj n) j
+  have hpairLimit (p : Σ n, κ n) :
+      Tendsto (fun n => inner ℝ (v p) (directionFit (d n))) atTop
+        (𝓝 (1 - 1 / (d p.1 p.2 : ℝ))) :=
+    tendsto_const_nhds.congr' (by
+      filter_upwards [ha p] with n hn
+      exact hn.symm)
   have ht := RiemannResearch.Analysis.normalized_riesz_weak_zero v
-    (fun n => directionFit (d n)) hu he (fun p => 1 - 1 / (d p.1 p.2 : ℝ)) ha qOne
+    (fun n => directionFit (d n)) hu he (fun p => 1 - 1 / (d p.1 p.2 : ℝ)) hpairLimit qOne
   simpa only [← rayleighGain_eq_normalized_inner_sq _ (hd _) (hinj _),
     zero_pow (by decide : 2 ≠ 0)]
     using ht.pow 2

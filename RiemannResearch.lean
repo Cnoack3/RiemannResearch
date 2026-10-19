@@ -1,3 +1,6 @@
+import RiemannResearch.RH.QSquarefreeTriangularEscape
+import RiemannResearch.RH.QTriangularCoefficientProbe
+import RiemannResearch.RH.QTriangularDualDensity
 import RiemannResearch.RH.QTriangularRayleigh
 import RiemannResearch.RH.QTriangularRieszEnergy
 import RiemannResearch.RH.QSquarefreeAffineEnergy

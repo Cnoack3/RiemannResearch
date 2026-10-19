@@ -28,6 +28,18 @@ See `RH/QPrimorialBlockBalanceResearch20261019.md`.
 ### Balazard triangular dual refinement (2026-10-19)
 
 Established:
+- `Analysis/EscapingRieszDirections.lean`: normalized weak escape
+  now allows convergent fixed generator pairings, extending eventual equality.
+- `RH/QTriangularTargetDirection.lean`: directionCapacity_atom_bound
+  retains the exact complete-Q one-atom capacity lower estimate.
+- `RH/QSquarefreeTriangularEscape.lean`: the actual squarefree prefix
+  dictionaries discharge retention; along escaping squarefree stage indices,
+  gain tends to zero and the complete scalar-fit error tends to one.
+- `RH/QTriangularCoefficientProbe.lean`: exact adjacent second
+  differences recover native-Q coefficient functionals and legal biorthogonality.
+- `RH/QTriangularDualDensity.lean`: the complete triangular dual
+  dictionary is ambient-Q dense and its finite projections converge.
+  Dual density does not assert legal membership or prove RH.
 - `RH/QTriangularRayleigh.lean`: exact legal scalar fit from G^{-1}v;
   its complete target error is 1-B^2/A, the scalar optimization retains
   A(a-B/A)^2, and comparison with the actual target projection retains

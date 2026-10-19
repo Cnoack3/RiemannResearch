@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity
 Source: independently developed elementary Hilbert-space argument during
 the October 19 triangular Gram investigation; no novelty claim is made.
 A nonzero limiting pairing with a vanishing test forces norm escape.
-Normalized representers with eventually fixed generator pairings then
+Normalized representers with convergent fixed generator pairings then
 converge weakly to zero. The RH consumer is QTriangularTargetDirection.
 -/
 
@@ -56,7 +56,7 @@ theorem normalized_riesz_weak_zero [CompleteSpace H]
     (hu : ∀ n, u n ∈ (Submodule.span ℝ (Set.range v)).topologicalClosure)
     (hescape : Tendsto (fun n => ‖u n‖) atTop atTop)
     (a : I → ℝ)
-    (ha : ∀ i, ∀ᶠ n in atTop, inner ℝ (v i) (u n) = a i) (x : H) :
+    (ha : ∀ i, Tendsto (fun n => inner ℝ (v i) (u n)) atTop (𝓝 (a i))) (x : H) :
     Tendsto (fun n => inner ℝ x (‖u n‖⁻¹ • u n)) atTop (𝓝 0) := by
   let K := (Submodule.span ℝ (Set.range v)).topologicalClosure
   let z : ℕ → H := fun n => ‖u n‖⁻¹ • u n
@@ -65,11 +65,8 @@ theorem normalized_riesz_weak_zero [CompleteSpace H]
     apply tendsto_inner_zero_of_mem_closure_span (S := Set.range v) (C := 1)
       (by norm_num) (Eventually.of_forall (fun n => norm_normalize_le_one (u n)))
     · rintro y ⟨i, rfl⟩
-      have hi := ((tendsto_inv_atTop_zero.comp hescape).mul_const (a i))
-      simp only [zero_mul] at hi
-      apply hi.congr'
-      filter_upwards [ha i] with n hn
-      simp only [Function.comp_apply, real_inner_smul_right, hn]
+      have hi := (tendsto_inv_atTop_zero.comp hescape).mul (ha i)
+      simpa only [Function.comp_apply, real_inner_smul_right, zero_mul] using hi
     · exact Submodule.starProjection_apply_mem K x
   have he (n : ℕ) : inner ℝ x (z n) = inner ℝ (K.starProjection x) (z n) := by
     have ho := Submodule.inner_right_of_mem_orthogonal (hz n)

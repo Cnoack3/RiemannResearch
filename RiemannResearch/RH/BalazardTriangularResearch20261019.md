@@ -407,3 +407,12 @@ target closure, or vanishing coefficient defects. The dual strong limits
 use the existing unconditional PNT-based reciprocal-Mobius cancellation.
 The uniform bound on complete squarefree legal exact-head energies, the
 vanishing of target coefficient defects, and b^TG^{-1}b -> 1 remain Open.
+
+The five-iteration continuation also treats the actual squarefree prefix
+dictionaries in QSquarefreeTriangularEscape.lean. Exact adjacent second
+differences recover every native-Q coefficient functional
+(QTriangularCoefficientProbe.lean), and the full triangular dual dictionary
+is dense in ambient Q (QTriangularDualDensity.lean). These are dual
+completeness statements; the legal exact-head energy obligation remains
+open. See QTriangularContinuationResearch20261019.md for all five
+iterations and their integration with the primorial follow-up.
