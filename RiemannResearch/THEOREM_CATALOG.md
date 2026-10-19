@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Damped Möbius signed P/Q discrepancy (2026-10-19)
+
+Established:
+- `RH/QMetricApproximateHeads.lean`: exact correction head/tail split,
+  the full Pareto-tail upper bound, and harmonic/logarithmic control
+  for approximate physical heads.
+- `RH/DampedMobiusMetricDiscrepancy.lean`:
+  `q_residual_head_identity` retains the finite reciprocal charge;
+  `q_residual_head_abs_le_envelope` proves the sharper endpoint bound
+  B=max(|A|,|A-epsilon log H|).
+  `q_residual_discrepancy_le_signed_head_tail` proves
+  D <= B^2 log(H+1)+(E_P-E_head)/(H+1) for actual damped squarefree
+  vectors, without RH. The exact complete discrepancy is retained.
+
+Conditional research reduction:
+`q_residual_norm_ratio_tendsto_one` gives zeta(2) E_Q/E_P -> 1
+when H grows, E_P>0, and B^2 log(H+1)/E_P -> 0.
+Open: supply that relative-head budget for the intended diagonal in Lean.
+Open: prove unconditional complete approximation-error decay sufficient
+for RH. A small discrepancy or asymptotic ratio does not supply decay.
+The second-order Chebyshev discrepancy remains an ordinary RH-conditional
+argument, not a checked theorem here.
+See `RH/DampedMobiusMetricDiscrepancyResearch20261019.md`.
+
+
 ### Q conductor coefficient mass and scaled signed carries (2026-10-19)
 
 Established:

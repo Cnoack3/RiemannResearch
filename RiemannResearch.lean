@@ -63,6 +63,7 @@ import RiemannResearch.RH.ZetaTwoCoordinateDual
 import RiemannResearch.RH.QSquarefreeJumpDistance
 import RiemannResearch.RH.QDivisorLegality
 import RiemannResearch.RH.DampedMobiusSquarefreeClosure
+import RiemannResearch.RH.DampedMobiusMetricDiscrepancy
 import RiemannResearch.RH.ParetoMellinHardyNorm
 import RiemannResearch.RH.DampedMobiusHardyBridge
 import RiemannResearch.RH.QParetoAffineMinimum
@@ -75,6 +76,7 @@ import RiemannResearch.RH.QCanonicalCofinalGram
 import RiemannResearch.Analysis.FiniteGramMetricComparison
 import RiemannResearch.RH.QParetoEquivalence
 import RiemannResearch.RH.QParetoMetric
+import RiemannResearch.RH.QMetricApproximateHeads
 import RiemannResearch.RH.QParetoGramComparison
 import RiemannResearch.RH.QParetoOperatorTransfer
 import RiemannResearch.RH.QMellinTransfer

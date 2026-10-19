@@ -363,6 +363,13 @@ convergent family in the RH approximation space.
 
 ### An unconditional finite comparison retained along the way
 
+Formalization update, 19 October 2026: this finite comparison is now proved
+in `DampedMobiusMetricDiscrepancy.lean` as
+`q_residual_discrepancy_le_charge_log`. The stronger signed theorem replaces
+the triangle envelope by `max(|A|,|A-epsilon log H|)` and retains the exact
+Pareto tail energy. See `DampedMobiusMetricDiscrepancyResearch20261019.md`.
+The second-order asymptotic above remains an ordinary RH-conditional argument.
+
 For every epsilon>0 and integers 1<=H<=N, without RH,
 
     0<=zeta(2)*E_Q(N,epsilon)-E_P(N,epsilon)
