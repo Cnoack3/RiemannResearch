@@ -174,3 +174,103 @@ Publication is gated by server verification of the changed modules and
 their affected dependencies. No project-local axioms or admitted proofs
 are introduced. The terminal checkpoint result, rather than this document,
 is the authoritative record of the verified commit and validation scope.
+
+## Further ordinary theorem: sharp asymptotic P/Q transfer
+
+This section is an ordinary mathematical proof, not an additional Lean
+declaration in this update. It retains RH explicitly.
+
+Fix delta>0, put
+
+    epsilon_N=25*(log log N)^(5/2+delta)/sqrt(log N),
+
+and take the exact squarefree damped finite vector F_(N,epsilon_N).
+Let nu_N be the paper's natural squared error, J_N=J_(epsilon_N), and
+E_P(N), E_Q(N) the complete probability-normalized discrete squared errors.
+Then, assuming RH,
+
+    nu_N/J_N -> 1,
+    E_P(N)/J_N -> 1,
+    zeta(2)*E_Q(N)/J_N -> 1.
+
+Thus the discrete transfer for this particular diagonal has leading
+constant 1 in P and 1/zeta(2) in Q. This does not improve the logarithmic
+exponent or determine a leading constant for J_epsilon/epsilon.
+It is stronger than a fixed global norm-comparison factor for these
+specific errors; no priority claim is made.
+
+Proof:
+
+1. The paper gives J_N asymptotic in order to epsilon_N: its RH upper
+   bound is Proposition 2, and the lower bound J_epsilon >> epsilon is
+   noted on page 8 from a critical-line zero. Proposition 3 gives
+   I_N << N^(-epsilon_N/2). Hence I_N/J_N -> 0, and the triangle and
+   reverse triangle inequalities give nu_N/J_N -> 1.
+
+2. The complete reciprocal charge satisfies, unconditionally for epsilon>0,
+
+       |A_(N,epsilon)-1/zeta(1+epsilon)|
+         <= sum_(d>N) d^(-1-epsilon) <= N^(-epsilon)/epsilon.
+
+   On the displayed diagonal, N^(-epsilon_N)/epsilon_N is smaller than
+   every fixed positive power of epsilon_N. The Laurent expansion at one
+   therefore gives A_(N,epsilon_N)=epsilon_N+O(epsilon_N^2).
+
+3. In the continuous t model set
+
+       R_N(t)=chi(t)+sum_(d<=N) mu(d)d^(-epsilon_N)e_d(t),
+       S_N(t)=R_N(t)-A_(N,epsilon_N)e_1(t).
+
+   For 0<t<1, S_N(t)=0. On each cell n<=t<n+1 with n>=1,
+   S_N(t)=1-F_(N,epsilon_N)(n), apart from irrelevant cell endpoints.
+   Consequently ||S_N||_H^2=E_P(N). Also K=||e_1||_H^2 is finite:
+   the integral on (0,1) is 1 and the integral on (1,infinity) is at most 1.
+   The exact equality, retaining its signed term, is
+
+       E_P(N)=nu_N-2*A_(N,epsilon_N)*<R_N,e_1>_H
+                    +A_(N,epsilon_N)^2*K.
+
+   Cauchy--Schwarz now yields
+   |E_P(N)-nu_N| <= 2*|A_(N,epsilon_N)|*sqrt(K*nu_N)
+                         +A_(N,epsilon_N)^2*K
+                    = O(epsilon_N^(3/2)).
+   Since J_N >> epsilon_N, this proves E_P(N)/J_N -> 1.
+
+4. Write r_N(n)=1-F_(N,epsilon_N)(n). For each fixed positive n and N>=n,
+
+       r_N(n)=1-sum_(d<=n) mu(d)d^(-epsilon_N) floor(n/d)
+                  +n*A_(N,epsilon_N).
+
+   The finite floor sum equals 1 at epsilon=0 and is differentiable there.
+   More precisely, the divisor identity
+   sum_(d|m) mu(d)log(d)=-Lambda(m) gives
+
+       r_N(n)/epsilon_N -> n-psi(n),
+       psi(n)=sum_(m<=n) Lambda(m).
+
+   Indeed the derivative of the finite damped floor sum at zero is psi(n),
+   and A_(N,epsilon_N)/epsilon_N -> 1. This pointwise head limit itself is
+   unconditional for the displayed diagonal; it does not assert an L2
+   limit of the normalized errors. In particular r_N(n)=O_n(epsilon_N),
+   and for each fixed H the contribution of n<=H to either squared error
+   is O_H(epsilon_N^2).
+
+5. The exact difference of the probability weights gives
+
+       zeta(2)*E_Q(N)=E_P(N)+D_N,
+       D_N=sum_(n>=1) r_N(n)^2/[n^2(n+1)].
+
+   For every fixed H>=1,
+
+       0 <= D_N <= O_H(epsilon_N^2)+E_P(N)/(H+1).
+
+   Divide by E_P(N), which has order epsilon_N by step 3.
+   First let N tend to infinity, then H tend to infinity.
+   This proves D_N/E_P(N)->0 and hence
+   zeta(2)*E_Q(N)/E_P(N)->1, completing the proof.
+
+All physical tails remain in these identities. The argument uses escape
+of the *normalized error energy* from every finite head, not just pointwise
+convergence of the errors. A future formalization can reuse
+`critical_energy` and the existing exact P/Q weight identities; the
+RH-conditional providers from the paper still need separate formalization.
