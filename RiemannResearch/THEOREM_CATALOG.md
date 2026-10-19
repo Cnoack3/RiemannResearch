@@ -14052,3 +14052,22 @@ Conditional quantitative consumer: an actual upper bound
 `((3 sqrt(2) - 4)/4) delta^2 <= eta`.
 Open: obtain a vanishing arithmetic endpoint error for the actual optimizers.
 See `RH/ParetoParityIntegrationResearch20261019.md` for the exact identities.
+
+### Finite-head localization of the Pareto overshoot estimate (2026-10-19)
+
+Established in `RH/ParetoNegativeMassHead.lean` and
+`RH/ParetoOvershootHeadCriterion.lean`: the complete negative-part vector,
+exact finite-head/tail pairing, and the unconditional enclosure
+`0 <= omega_M - B_(M,H) <= sqrt(delta_M/(H+1))` for the actual optimizer.
+The diagonal head H=M-1 converges to the complete limiting overshoot.
+
+Conditional research reduction: the cofinal finite positive-part head budget
+`B_(M,M-1) <= (1 - sqrt(2)/2) delta_M + epsilon` is equivalent to vanishing
+of the limiting residual and has a checked RH consumer.
+Open: prove this arithmetic head budget for the actual inverse-Gram coefficients.
+The requested unconditional overshoot upper bound remains unproved.
+
+Twelve public declarations and all axiom checks passed
+`job_lrmajfiqgiMyazUYjWdGWUw8uQAZMnQi` using only standard foundations.
+See `RH/ParetoOvershootArithmeticAttemptResearch20261019.md` for exact
+identities, the remaining obligation, and the primary-literature audit.

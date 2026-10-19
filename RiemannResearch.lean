@@ -1889,6 +1889,8 @@ import RiemannResearch.RH.FiniteResidueDilation
 import RiemannResearch.RH.ParetoParityOptimizer
 import RiemannResearch.RH.ParetoProjectionOvershoot
 import RiemannResearch.RH.ParetoOvershootEndpointGap
+import RiemannResearch.RH.ParetoNegativeMassHead
+import RiemannResearch.RH.ParetoOvershootHeadCriterion
 import RiemannResearch.Analysis.ProjectionPairingVariation
 import RiemannResearch.RH.ParetoSignedInnovations
 import RiemannResearch.RH.OptimalTwoCoefficientCriterion
