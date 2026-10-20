@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Arbitrary signed sieve rows and one-sign-change obstruction (2026-10-20)
+
+New unconditional declarations, subject to this change's final server checkpoint:
+
+- `Analysis/SignedBalancedRows.lean`: exact determinant/mass transport,
+  positive-negative-part probe bounds, and impossibility of reversed slopes.
+- `RH/QPrimePowerSignedObstruction.lean`: exact finite-row Mellin identity,
+  uniform Euler decay, arbitrary-row bounded-TV quantitative complete-Q error
+  lower bound, and divergence of the complete norm for cofinal families.
+- `RH/QPrimePowerOneSignObstruction.lean`: actual equal-slope Euler rigidity,
+  uniform determinant bound including plateaux, and the same quantitative
+  obstruction for negative-before-positive rows with no TV bound. The reverse
+  one-sign orientation is algebraically impossible.
+
+The exact squared-error constant is
+(2sigma-1)/(4 zeta(2) sigma^2 (p^sigma-1)^2), multiplying H^(2sigma-1).
+All finite row lengths and growing support sizes are covered. The existing
+exact head, complete signed Gram energy, and Mellin-tail results are reused.
+No RH or unresolved arithmetic provider is assumed.
+
+Saved-source/axiom audit: job_76IUGeg_G8JQSttSmSc0gDDtB_DbezCN,
+exit 0, verified=true; nine inspected declarations use standard foundations.
+Final integrated publication is separately checkpoint-gated.
+See `RH/SignedSieveRowsObstructionResearch20261020.md` for assumptions,
+proof identities, excluded families, and the remaining alternating-row agenda.
+
+Open: multiple-sign-change rows with growing variation and controlled full
+energy; broader exact-head squarefree constructions; target closure; RH.
+
 ### Unconditional signed ratio, complete metric refinement, and target caps (2026-10-20 UTC)
 
 New unconditional results, accepted through this change's final server checkpoint:
