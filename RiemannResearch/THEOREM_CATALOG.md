@@ -128,6 +128,41 @@ Final integrated publication remains gated by the server checkpoint.
 See `RH/TwoPrimeMellinCriterionResearch20261020.md`.
 
 
+### Parity, dilation separation, and exact-head target equivalences (2026-10-20 UTC)
+
+Established after this change's successful server checkpoint:
+
+- `RH/QEvenClosure.lean`: parity/constant membership equivalence for any
+  submodule containing g_2, exact screened-vector equality, complete
+  squared errors, and actual stage/limiting specializations.
+- `RH/QSquarefreeDilationObstruction.lean`: the full square-jump witness
+  annihilates C=closure(H+R*1); its exact signed energy decomposition gives
+  a squared-error lower bound 1/(30*zetaTwo) for both D1 and Dg_2 against C.
+  D(C) is not contained in C and D(H) is not contained in H.
+  F_2 itself passes the four-site test.
+- `RH/QExactHeadAverages.lean`: arbitrary Q closure vectors admit
+  arbitrarily close finite-head repairs. Closure membership is equivalent
+  to existence of uniformly full-energy-bounded algebraic exact heads.
+- `RH/QPrimePowerHeadClosure.lean`: specializes that genuine equivalence
+  to every F_p (p>1), with or without a real constant, using all squarefree
+  conductors. Supports may depend on the requested head.
+- `Analysis/SignedBalancedRows.lean` and the actual sieve specialization:
+  exact endpoint-slack identity, sharp total-variation lower bound
+  (a+b)/(a-b), endpoint attainment, and a relative-slope constraint
+  under a variation cap. No Hilbert norm bound is inferred from TV.
+
+Conditional research reduction:
+`PrimePowerTarget.riemannHypothesis_of_bounded_two_finite_exact_heads`.
+Open providers: uniform complete-Q energy budgets for both F_2 and F_3
+in the algebraic squarefree span plus constants.
+No membership or RH assertion is supplied unconditionally.
+
+The previous handoff's coalescing two-stage possibility is already excluded
+by newer main's `sieveTwoStageVector_norm_tendsto_atTop`; this continuation
+does not re-prove it. Arbitrary multi-stage bounded-variation norm divergence
+and the proposed sign-ordered decomposition remain separate unformalized
+follow-ups in `RH/QParityHeadContinuationResearch20261020.md`.
+
 ### Actual rational coefficients and cofinal squarefree closure dependencies (2026-10-20 UTC)
 
 Established after this change's successful server checkpoint:

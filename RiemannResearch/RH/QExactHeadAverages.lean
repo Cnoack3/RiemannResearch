@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.FiniteObservationApproximation
+import Mathlib.Tactic.Abel
 import RiemannResearch.Analysis.BoundedMomentAverages
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Tactic.FieldSimp
@@ -316,5 +318,55 @@ theorem mem_closure_of_bounded_target_heads
   have ht := hweak w
   rw [he] at ht
   exact tendsto_nhds_unique tendsto_const_nhds ht
+
+/-- Closure approximation in the actual Q norm can preserve any finite physical head.
+The existing finite-observation section theorem supplies the exact correction. -/
+theorem exists_near_with_same_physical_head
+    (S : Submodule ℝ QHilbert) {f : QHilbert}
+    (hf : f ∈ S.topologicalClosure) (M : ℕ) {ε : ℝ} (hε : 0 < ε) :
+    ∃ g : QHilbert, g ∈ S ∧
+      (∀ n, 0 < n → n ≤ M → qSequence g n = qSequence f n) ∧
+      ‖f - g‖ < ε := by
+  let T : QHilbert →L[ℝ] (Fin M → ℝ) :=
+    ContinuousLinearMap.pi (fun i => innerSL ℝ (qPoint i.val))
+  obtain ⟨g, hg, he, hnear⟩ :=
+    RiemannResearch.Analysis.exists_near_with_same_finite_observations S T hf hε
+  refine ⟨g, hg, ?_, hnear⟩
+  intro n hn hnM
+  let i : Fin M := ⟨n - 1, by omega⟩
+  have hh := congrFun he i
+  change inner ℝ (qPoint (n - 1)) g = inner ℝ (qPoint (n - 1)) f at hh
+  rw [qPoint_inner, qPoint_inner] at hh
+  have heq : n - 1 + 1 = n := by omega
+  rw [heq] at hh
+  exact (mul_left_cancel₀ (ne_of_gt (qWeight_pos (n - 1)))) hh
+
+/-- A genuine equivalence for arbitrary Q targets and algebraic dictionaries.
+The complete energy budget must hold uniformly while the exact head grows.
+The approximating finite supports may depend on the head. -/
+theorem mem_closure_iff_bounded_target_heads
+    (S : Submodule ℝ QHilbert) (z : QHilbert) :
+    z ∈ S.topologicalClosure ↔
+      ∃ B : ℝ, ∀ M : ℕ, ∃ g : QHilbert, g ∈ S ∧
+        (∀ n, 0 < n → n ≤ M → qSequence g n = qSequence z n) ∧
+        ‖g‖ ^ 2 ≤ B := by
+  constructor
+  · intro hz
+    refine ⟨(‖z‖ + 1) ^ 2, ?_⟩
+    intro M
+    obtain ⟨g, hg, hhead, hnear⟩ :=
+      exists_near_with_same_physical_head S hz M (by norm_num : (0 : ℝ) < 1)
+    refine ⟨g, hg, hhead, ?_⟩
+    have htriangle := norm_sub_le z (z - g)
+    have he : z - (z - g) = g := by abel
+    rw [he] at htriangle
+    have hnorm : ‖g‖ ≤ ‖z‖ + 1 := by linarith
+    have hp := mul_nonneg (sub_nonneg.mpr hnorm)
+      (add_nonneg (norm_nonneg g) (show 0 ≤ ‖z‖ + 1 by positivity))
+    nlinarith
+  · rintro ⟨B, hB⟩
+    choose F hlegal hhead hbound using hB
+    exact mem_closure_of_bounded_target_heads S z F hlegal B hbound hhead
+
 
 end RiemannResearch.RH.QExactHeadAverages

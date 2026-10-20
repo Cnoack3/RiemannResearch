@@ -3,6 +3,7 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
+import RiemannResearch.Analysis.SignedBalancedRows
 import RiemannResearch.RH.QPrimePowerSieve
 import RiemannResearch.RH.ZetaTwoHilbertSpace
 import RiemannResearch.RH.QSquarefreeLatticePackets
@@ -118,5 +119,44 @@ theorem balanced_sieve_has_negative_weight (p : ℕ) (hp : p.Prime)
   have hz : ∑ H ∈ S, w H = 0 := Finset.sum_eq_zero hwzero
   rw [hmass] at hz
   exact one_ne_zero hz
+
+open RiemannResearch.Analysis.SignedBalancedRows
+
+/-- Balanced actual sieve coefficients pay the full slope-width penalty. -/
+theorem balanced_sieve_totalVariation_gap
+    (p : ℕ) (S : Finset ℕ) (w : ℕ → ℝ) (a b : ℝ)
+    (hlo : ∀ H ∈ S, b ≤ sieveSlope (primorial H) p)
+    (hhi : ∀ H ∈ S, sieveSlope (primorial H) p ≤ a)
+    (hmass : ∑ H ∈ S, w H = 1)
+    (hdrift : ∑ H ∈ S, w H * sieveSlope (primorial H) p = 0) :
+    a + b ≤ (a - b) * (∑ H ∈ S, |w H|) :=
+  totalVariation_gap S w (fun H => sieveSlope (primorial H) p)
+    a b hlo hhi hmass hdrift
+
+/-- Adding intermediate sieve cutoffs cannot beat the endpoint-pair variation. -/
+theorem balanced_sieve_totalVariation_lower
+    (p : ℕ) (S : Finset ℕ) (w : ℕ → ℝ) (a b : ℝ) (hba : b < a)
+    (hlo : ∀ H ∈ S, b ≤ sieveSlope (primorial H) p)
+    (hhi : ∀ H ∈ S, sieveSlope (primorial H) p ≤ a)
+    (hmass : ∑ H ∈ S, w H = 1)
+    (hdrift : ∑ H ∈ S, w H * sieveSlope (primorial H) p = 0) :
+    (a + b) / (a - b) ≤ ∑ H ∈ S, |w H| :=
+  totalVariation_lower S w (fun H => sieveSlope (primorial H) p)
+    a b hba hlo hhi hmass hdrift
+
+/-- Every bounded-variation actual row must have a definite relative slope spread. -/
+theorem balanced_sieve_slope_ratio_le
+    (p : ℕ) (S : Finset ℕ) (w : ℕ → ℝ) (a b M : ℝ)
+    (ha : 0 < a) (hba : b < a) (hM : 0 ≤ M)
+    (hlo : ∀ H ∈ S, b ≤ sieveSlope (primorial H) p)
+    (hhi : ∀ H ∈ S, sieveSlope (primorial H) p ≤ a)
+    (hmass : ∑ H ∈ S, w H = 1)
+    (hdrift : ∑ H ∈ S, w H * sieveSlope (primorial H) p = 0)
+    (hvar : ∑ H ∈ S, |w H| ≤ M) :
+    b / a ≤ (M - 1) / (M + 1) :=
+  slope_ratio_le_of_totalVariation_le S w
+    (fun H => sieveSlope (primorial H) p) a b M
+    ha hba hM hlo hhi hmass hdrift hvar
+
 
 end RiemannResearch.RH.QPrimePowerSieve
