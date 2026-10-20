@@ -1,5 +1,10 @@
 # Two-prime Mellin criterion and signed-sieve investigation
 
+Follow-up: `TwoStageSieveObstructionResearch20261020.md` gives an ordinary
+Mellin/secant proof ruling out all moving nondegenerate two-stage seeds,
+including near-equal slopes. Its finite secant algebra and actual-vector
+probe specialization are formalized; its asymptotic conclusion is not.
+
 20 October 2026. Source: the user-provided `PrimePowerTargetsResearch20261020.md`,
 Section 2, and the present request. This is a conditional research reduction,
 not a proof of RH.

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QPrimePowerPrimorial
+import RiemannResearch.RH.PrimeSieveSecantAlgebra
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FieldSimp
@@ -180,5 +181,33 @@ theorem exists_squarefree_logarithmic_head (x : ℕ) :
   intro n hn
   exact qSequence_twoStageVector_head (max 2 x) y n (le_max_left 2 x) hxy
     (hn.trans (le_max_right 2 x)) (ne_of_gt hgap)
+
+open RiemannResearch.RH.PrimeSieveSecant
+
+/-- Every real linear probe of the actual two-stage vector is its slope intercept. -/
+theorem linear_twoStage_intercept (L : QHilbert →ₗ[ℝ] ℝ) (x y : ℕ) :
+    L (twoStageVector x y) =
+      intercept (finitePrimeProduct x) (finitePrimeProduct y)
+        (L (primePowerTwoVector x)) (L (primePowerTwoVector y)) := by
+  simp only [twoStageVector, map_smul, map_sub, smul_eq_mul]
+  unfold intercept
+  ring
+
+/-- Exact positive secant subdivision, specialized to actual legal vectors. -/
+theorem linear_twoStage_split (L : QHilbert →ₗ[ℝ] ℝ) (x y z : ℕ)
+    (hxy : finitePrimeProduct x ≠ finitePrimeProduct y)
+    (hyz : finitePrimeProduct y ≠ finitePrimeProduct z)
+    (hxz : finitePrimeProduct x ≠ finitePrimeProduct z) :
+    L (twoStageVector x z) =
+      (finitePrimeProduct z * (finitePrimeProduct x - finitePrimeProduct y) /
+        (finitePrimeProduct y * (finitePrimeProduct x - finitePrimeProduct z))) *
+        L (twoStageVector x y) +
+      (finitePrimeProduct x * (finitePrimeProduct y - finitePrimeProduct z) /
+        (finitePrimeProduct y * (finitePrimeProduct x - finitePrimeProduct z))) *
+        L (twoStageVector y z) := by
+  simp only [linear_twoStage_intercept]
+  exact intercept_split _ _ _ _ _ _ hxy hyz hxz
+    (ne_of_gt (finitePrimeProduct_pos y))
+
 
 end RiemannResearch.RH.QPrimePowerSieve

@@ -1,5 +1,21 @@
 # Theorem catalog
 
+### Moving prime-power sieve secants (2026-10-20 UTC)
+
+Finite results in `RH/PrimeSieveSecantAlgebra.lean`: exact three-stage
+positive secant subdivision, unit coefficient sum, finite adjacent-intercept
+bound, and exact scalar Euler-step cancellation. Actual complete-Q vector
+linear-probe specialization is in `RH/QPrimePowerTwoStage.lean`.
+Coherent job `job_plyXN2GIWDtP2oM300djFafThEoz1jwr` succeeded with
+verified=true, exit 0; inspected axioms were standard foundations only.
+Final staged/integrated publication is gated by the server checkpoint.
+
+The all-moving-two-stage Mellin obstruction and polynomial complete-Q
+error lower bound are ordinary proofs, NOT new Lean theorems.
+Both prime-power target closure memberships and RH remain Open.
+See `RH/TwoStageSieveObstructionResearch20261020.md` for derivations,
+assumptions, circularity audit, and the next actual signed-budget obligation.
+
 ### Two-prime Mellin criterion with real constants (2026-10-20 UTC)
 
 Conditional research reduction:
