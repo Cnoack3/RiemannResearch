@@ -1,5 +1,40 @@
 # Theorem catalog
 
+### CRT carry blocks and actual rational-weight minima (2026-10-19)
+
+Established finite results:
+- `RH/QRationalCoprimeMinimum.lean`: `exists_signed_minimum` constructs an
+  attained minimum for every positive period, with no normal-equation
+  hypothesis. `divisorFit_completion` retains the exact weighted square
+  remainder for every competing divisor fit. Coefficients are real;
+  rationality is not asserted by this formalization.
+- `RH/QRationalCoprimeLegality.lean` and `RH/QRationalCoprimeTail.lean`:
+  actual Mobius/centered-prefix synthesis, endpoint and fitted-vector
+  normal equations, and E+S=5*totient(L)/(3*L^2), with every signed tail
+  and the zero residue retained. All divisors participate.
+- `RH/QCarryScreenedBlock.lean` and `Analysis/FiniteGramBlockTrace.lean`:
+  actual Q screening and representative invariance, complete new-prime
+  block span, exact inverse-Gram gain, and aggregate-score/trace bounds.
+- `Analysis/ConditionalGainGeometry.lean`: exact conditional energy split,
+  I^2 <= D*J, J <= I, and zero gain if conditioning lands in the old legal
+  space, under the displayed projection hypotheses.
+- `Analysis/FiniteWeightedTailCharge.lean` and
+  `Analysis/FiniteIncidenceTailCharge.lean`: finite signed Fubini,
+  absorption algebra, generic incidence inversion, exact Jordan charge,
+  and centered square decomposition.
+- `RH/QBoundedCollapseRate.lean`: complete-Q cutoff/rate estimates from
+  explicit global-amplitude and physical-head-slope bounds.
+
+Open research obligations: actual asymptotic signed absorption or cumulative
+relative-gain divergence; rational-to-Q comparison/convergence assembly;
+full Haar optimizer and product-bound specialization; concrete Q-cylinder
+specialization; screened dictionary independence assembly. The concrete
+all-gcd Mobius specialization remains an ordinary proof and exact finite
+computation, separate from the generic checked inversion theorem.
+No unconditional RH theorem is asserted. The Python and Wolfram checks are
+finite arithmetic evidence, not asymptotic estimates or Lean certificates.
+See `RH/CRTCarryVerificationResearch20261019.md` and its exact experiments.
+
 ### Squarefree LCM block balance and sublinear affine energy (2026-10-19)
 
 Established:
