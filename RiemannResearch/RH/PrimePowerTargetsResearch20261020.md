@@ -1,5 +1,12 @@
 # Prime-power counting targets, radical jump geometry, and a divergent sieve family
 
+Subsequent formalization: the actual complete-Q targets, square-summability,
+and exact Mellin transforms are now in `PrimePowerTargetMellin.lean`.
+The two-target criterion with real constants is formalized in
+`PrimePowerTwoTargetCriterion.lean`; both target memberships remain Open.
+See `TwoPrimeMellinCriterionResearch20261020.md` for current verification
+scope and the separate signed-sieve investigation.
+
 Working research note, 20 October 2026. Sections 1–7 contain ordinary mathematical arguments. Section 8 records the narrower scope of the accompanying Lean development and its verification status. No RH proof is claimed.
 
 ## 1. Concrete nonperiodic elements of the radical-jump space

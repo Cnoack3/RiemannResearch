@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Two-prime Mellin criterion with real constants (2026-10-20 UTC)
+
+Conditional research reduction:
+`PrimePowerTarget.riemannHypothesis_of_two_targets_mem_closureWithConstants`
+in `RH/PrimePowerTwoTargetCriterion.lean` proves
+F_2,F_3 in closure(H + R*1) imply literal Mathlib RiemannHypothesis.
+Open providers: both displayed complete-Q closure memberships.
+No target membership or RH is asserted unconditionally.
+
+The continuous imaginary Mellin annihilator, power reality and conjugation
+rigidity are proved, reusing the existing Q targets, square-summability,
+exact Mellin transforms, and two-three complex-power injectivity.
+`RH/RealZetaNonvanishing.lean` proves positive-real zeta nonvanishing away
+from the pole using the positive normalized-residue first-difference series.
+
+Separate signed investigation in `RH/QPrimePowerSignedSieve.lean` proves
+actual finite signed primorial legality, exact head mass/drift accounting,
+balanced target heads, the full signed complete-Q Gram energy, and the
+necessity of a negative weight. Open: a uniform complete-Q bound as the
+head grows. The bounded-total-variation signed-averaging obstruction in
+the memorandum is ordinary mathematics, not a new Lean declaration.
+
+Criterion import/axiom job `job_ZtiduMFytOiXGO3pUEfgIRraXHMF4N98` and
+coherent signed-sieve job `job_JVh7lckC1sH3Q3a1EWRBSWidRscovVff` succeeded.
+Final integrated publication remains gated by the server checkpoint.
+See `RH/TwoPrimeMellinCriterionResearch20261020.md`.
+
+
 ### Actual rational coefficients and cofinal squarefree closure dependencies (2026-10-20 UTC)
 
 Established after this change's successful server checkpoint:
