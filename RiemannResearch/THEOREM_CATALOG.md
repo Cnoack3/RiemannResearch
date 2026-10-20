@@ -29,6 +29,31 @@ proof identities, excluded families, and the remaining alternating-row agenda.
 Open: multiple-sign-change rows with growing variation and controlled full
 energy; broader exact-head squarefree constructions; target closure; RH.
 
+### Orthonormal parity coordinates and logarithmic rigidity (2026-10-20 UTC)
+
+- `RH/QParityBasis.lean`: `parityFrame_orthonormal` gives the constant and
+  centered parity unit vectors; `parityApproximation_energy_exact` retains the
+  complete residual in the two-coordinate Pythagorean identity.
+- `RH/QPrimePowerParityBasis.lean`: both coordinates and their approximation
+  belong to `closureWithConstants`; `qTarget_two_inner_parityUnit` is exactly
+  `1 / sqrt 3`, and `qTarget_two_parity_energy_exact` captures energy `1/3`
+  with the full remaining norm square.
+- `RH/QPrimePowerTransformRigidity.lean`: power-invariant jumps force any
+  physical sequence `phi (Nat.log p n)` in the enlarged closure to be affine
+  in `Nat.log p n`. A geometric transform in that closure has base one.
+- `RH/FinitePrimeCentered.lean`: exact centered finite Boolean-product Gram
+  identities, isolated-success coefficients, and `unitMonomial_gram` equal
+  to the identity matrix when all parameters lie strictly between zero and one.
+  This finite law is not asserted here to be the actual integer Zipf law.
+
+Open: completeness and the actual-Q bridge for the proposed valuation basis,
+Parseval saturation for the legal squarefree basis, and membership of the full
+F_2 and F_3 targets in `closureWithConstants`. The existing two-target RH
+criterion remains a conditional research reduction; these additions do not
+supply either target-membership provider.
+See `RH/FpOrthonormalBasisResearch20261020.md` for the informal full-basis
+construction and the remaining obligations.
+
 ### Unconditional signed ratio, complete metric refinement, and target caps (2026-10-20 UTC)
 
 New unconditional results, accepted through this change's final server checkpoint:
