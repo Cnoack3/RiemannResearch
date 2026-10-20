@@ -1,5 +1,118 @@
 # Theorem catalog
 
+### Squarefree cylinders, rational variational limits, and exact obstructions (2026-10-20 UTC)
+
+Established results after this change's successful server checkpoint:
+
+- `NumberTheory/SquarefreePowerCongruence.lean`: positive powers identify
+  equal gcd classes modulo a squarefree modulus; positive-periodic,
+  power-invariant functions therefore have gcd-class values.
+- `RH/PeriodicDivisorJumps.lean`: exact finite Mobius reconstruction and
+  integration of gcd-class jumps, retaining the slope before periodicity
+  eliminates it.
+- `RH/QSquarefreePeriodicJump.lean`: the actual complete-Q squarefree legal
+  closure preserves equal-squarefree-divisor jump relations and positive-power
+  jump invariance.
+- `RH/QSquarefreeCylinder.lean`: for squarefree L>0, every physically
+  L-periodic member F of the legal closure has the exact decomposition
+  F=F(L)*qOne+v with v in the full divisor stage V_L. A zero endpoint puts F
+  already in V_L; a nonzero endpoint forces qOne into the legal closure.
+  Conversely, the gcd-jump representation isolates this constant-membership
+  obligation exactly.
+- `RH/QRationalWeightComparison.lean`: exact midpoint telescoping retains
+  the positive defect and endpoint remainder. The complete residue weights
+  satisfy zeta(2)*w <= u <= (5/3)*zeta(2)*w. The rational objective equals
+  the complete-Q objective plus its nonnegative finite weight gap. For each
+  fixed competitor with residual bounded by B, that gap is at most 2*B^2/L.
+- `RH/QRationalMinimumLimit.lean`: actual divisor normal-equation solutions
+  define attained rational minima R_n at the primorial periods L_n. The
+  finite synthesis range is exactly the Q primorial stage. If p_n is the
+  finite Q optimizer and f_n the selected rational optimizer, the full
+  decomposition is
+  R_n=zeta(2)*E_n+zeta(2)*||f_n-p_n||^2+gap_n.
+  Put K=the closed squarefree legal span, P=projection_K(qOne), and
+  D=||qOne-P||^2. The actual minima satisfy R_n -> zeta(2)*D, unconditionally.
+  The proof fixes an earlier legal Q competitor before increasing the period;
+  it assumes no bound on the moving optimizer's coefficients. The condition
+  R_n -> 0 is equivalent to qOne in K.
+- `RH/QRationalMinimizerConvergence.lean`: the rational weight gap at the
+  actual moving minimizer tends to zero, ||f_n-p_n||^2 tends to zero, and
+  f_n -> P in the complete Q norm. The actual Q errors tend to D. Convergence
+  f_n -> qOne is equivalent to qOne in K; neither conclusion assumes it.
+- `RH/QRationalSignedTailLimit.lean`: for every positive L, the selected
+  rational minimizer satisfies the exact signed identity
+  R_L+S_L=5*phi(L)/(3*L^2). The endpoint tends to zero on the primorial chain,
+  so S_n -> -zeta(2)*D. Every finite R_n is positive, and the exact ratio
+  identity S_n/R_n+1=(5*phi(L_n)/(3*L_n^2))/R_n retains the boundary term.
+  Under the explicit hypothesis D>0, S_n/R_n -> -1. Signed-tail convergence
+  to zero is equivalent to qOne in K.
+- `RH/QModThreeConditionalObstruction.lean`: the literal complete-Q
+  conditional image C_3 g_2 has a four-site defect J>=1/3. Its squared
+  distance from every legal closure element is at least 1/(270*zeta(2));
+  the exact witness decomposition retains the orthogonal norm-square
+  remainder. The input g_2 is legal and its actual conditional image is not.
+- `RH/QPrimorialSixConditionalObstruction.lean`: at the actual
+  primorial period six, the complete-Q conditional image C_6 g_5 has signed
+  four-site defect J<=-1/40. Four fiber terms are evaluated exactly and the
+  entire remaining tail is retained before its certified rational bound.
+  Its squared distance from every legal closure element is at least
+  1/(48000*zeta(2)), with the full orthogonal remainder in the exact identity.
+  The input g_5 is legal and its actual conditional image is not. Thus the
+  failure of general conditional-expectation preservation occurs at an
+  actual primorial stage, independently of RH.
+- `RH/QParityProjectionDefect.lean`: for a projection space V containing
+  g_2, the actual parity projection of r=qOne-projection_V(qOne) is exactly
+  4*||r||^2 times the even indicator. The optimizer's exact parity leakage is
+  ||r||^2*(1-4*||r||^2). Containing g_3 gives the strict bound ||r||^2<1/4.
+  For the actual infinite legal optimizer P, physical two-periodicity is
+  therefore equivalent to qOne in K. This is an exact iff, not an established
+  periodicity provider.
+
+- `RH/QSixAtomTrialBound.lean`: the legal trial g_2+g_3+g_6 has exact
+  complete-Q error w_6(5)+1/36 <= 61/900. Thus D<=61/900 and the actual
+  limiting optimizer satisfies (164/225)*D <= ||P-C_2 P||^2 <= D.
+- `Analysis/PrimeProductDyadicGrowth.lean`: the existing elementary finite
+  prime-product cube bound yields (4/225)*4^m <= a_(64^m)^2*64^m. An
+  exponential term absorbs the retained quadratic finite-head error.
+- `Analysis/PrimeProductHeadGrowth.lean`: monotonicity extends this rate
+  to every positive cutoff: a_H^2*H >= 4^(Nat.log 64 H)/900. Consequently
+  a_H^2*H/(2Z)-(Nat.log 2 H)^2 tends to infinity for each fixed Z>0.
+- `RH/QPrimePowerSieve.lean`: actual divisor-incidence coefficients select
+  the gcd-p class and define a legal finite residue synthesis A_(p,L).
+  Its physical sequence is exactly count{m<=n:gcd(m,L)=p}-a_(p,L)*n,
+  with exact slope phi(L/p)/L. Under concrete prime coverage, the count
+  equals Nat.log p n in the finite head and the full Q norm satisfies
+  ||A_(p,L)||^2 >= a_(p,L)^2*H/(2*zeta(2))-(Nat.log p H)^2.
+- `RH/QPrimePowerPrimorial.lean`: all coverage and slope obligations are
+  discharged for the actual gcd-two primorial synthesis A_H. It belongs
+  to the squarefree span, converges at each physical coordinate to
+  Nat.log 2 n, and its complete Q norm tends to infinity as H tends to
+  infinity through ALL natural cutoffs. These are unconditional results.
+  Existing `FinitePrimeProductBounds` is reused; this family differs from
+  the earlier first-coordinate family in `PrimeSievePointEnergy`.
+
+Conditional research reduction:
+
+- `QParityProjectionDefect.riemannHypothesis_of_limiting_optimizer_two_periodic`
+  applies the existing Q-to-Pareto/RH transfer. Its substantive obligation is
+  Open: physical two-periodicity of the actual limiting optimizer. The proved
+  iff shows that this premise already entails the original constant-membership
+  conclusion; the parity calculation does not discharge it.
+
+Open: prove D=0, equivalently qOne in K. The rational-minimum, rational-optimizer,
+weight-gap, and signed-tail limits above are now formal results, but their
+existence does not force the limiting defect to vanish. Signed coprime-tail
+absorption with a fixed coefficient below one, or sufficient divergent
+normalized prime-plus-carry gains, still needs an actual checked provider.
+The C_3 and C_6 counterexamples rule out general preservation of legality by
+residue conditional expectations as such a provider. The concrete pointwise sieve family cannot supply a norm-bounded
+approximation. The broader prime-power target membership, Mellin reduction,
+and positive-averaging discussion in its note are ordinary arguments, not
+new formal provider theorems. No unconditional RH theorem is claimed.
+
+See `RH/QCylinderContinuationResearch20261020.md` and
+`RH/PrimePowerTargetsResearch20261020.md`.
+
 ### All gcd-class rational tail charges (2026-10-20 UTC)
 
 Established finite results:
