@@ -286,4 +286,74 @@ theorem affineOptimizer_unique (s : Finset ℕ) (hs : ∀ d ∈ s, 1 < d)
   have hz : ‖f - affineOptimizer s hs H r hr B t‖ ^ 2 = 0 := by linarith
   exact sub_eq_zero.mp (norm_eq_zero.mp (sq_eq_zero_iff.mp hz))
 
+/-- An arbitrary feasible physical head determines the entire affine set. -/
+theorem same_head_iff_sub_mem_zeroHeadSpan (s : Finset ℕ)
+    (hs : ∀ d ∈ s, 1 < d) (H r : ℕ) (hH : 0 < H)
+    (hr : r ∈ s) (hrH : H < r) (B : QHilbert)
+    (hB : B ∈ dictionary s) (f : QHilbert) :
+    (f ∈ dictionary s ∧ ∀ n, 0 < n → n ≤ H →
+      qSequence f n = qSequence B n) ↔
+      f - B ∈ zeroHeadSpan s H r := by
+  rw [← inf_headNull_eq_zeroHeadSpan s hs H r hH hr hrH]
+  constructor
+  · rintro ⟨hf, hh⟩
+    refine ⟨(dictionary s).sub_mem hf hB, ?_⟩
+    intro n hn hnH
+    change qSequenceLinear (f - B) n = 0
+    simp only [map_sub, Pi.sub_apply]
+    change qSequence f n - qSequence B n = 0
+    rw [hh n hn hnH, sub_self]
+  · rintro ⟨hf, hh⟩
+    refine ⟨?_, ?_⟩
+    · have ha := (dictionary s).add_mem hf hB
+      simpa only [sub_add_cancel] using ha
+    · intro n hn hnH
+      have he := hh n hn hnH
+      change qSequenceLinear (f - B) n = 0 at he
+      simp only [map_sub, Pi.sub_apply] at he
+      exact sub_eq_zero.mp he
+
+/-- The inverse-Gram optimizer preserves every feasible head, not just a constant head. -/
+theorem affineOptimizer_same_head (s : Finset ℕ) (hs : ∀ d ∈ s, 1 < d)
+    (H r : ℕ) (hH : 0 < H) (hr : r ∈ s) (hrH : H < r)
+    (B t : QHilbert) (hB : B ∈ dictionary s) :
+    affineOptimizer s hs H r hr B t ∈ dictionary s ∧
+      ∀ n, 0 < n → n ≤ H →
+        qSequence (affineOptimizer s hs H r hr B t) n = qSequence B n := by
+  apply (same_head_iff_sub_mem_zeroHeadSpan s hs H r hH hr hrH B hB _).mpr
+  simp only [affineOptimizer, add_sub_cancel_left, Fintype.linearCombination_apply]
+  exact (zeroHeadSpan s H r).sum_mem fun d _ =>
+    (zeroHeadSpan s H r).smul_mem _ (Submodule.subset_span ⟨d, rfl⟩)
+
+/-- Exact completion on the entire affine set, for an arbitrary prescribed head. -/
+theorem affineOptimizer_completion_of_mem (s : Finset ℕ)
+    (hs : ∀ d ∈ s, 1 < d) (H r : ℕ) (hr : r ∈ s) (B t f : QHilbert)
+    (hf : f - B ∈ zeroHeadSpan s H r) :
+    ‖t - f‖ ^ 2 = ‖t - affineOptimizer s hs H r hr B t‖ ^ 2 +
+      ‖f - affineOptimizer s hs H r hr B t‖ ^ 2 := by
+  obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun ℝ).mp hf
+  let v := fun d : freeConductors s H r => compensatedResidue (d : ℕ) r
+  let hv := compensated_linearIndependent s hs H r hr
+  have hfc : f = B + Fintype.linearCombination ℝ v c := by
+    change Fintype.linearCombination ℝ v c = f - B at hc
+    rw [hc]
+    abel
+  have hdiff : f - affineOptimizer s hs H r hr B t =
+      Fintype.linearCombination ℝ v (c - inverseCoeff hv (t - B)) := by
+    rw [hfc, affineOptimizer, map_sub]
+    abel
+  rw [hdiff, hfc]
+  simpa only [affineOptimizer, sub_add_eq_sub_sub] using residual_completion hv (t - B) c
+
+/-- Minimum norm and the complete norm-square remainder for every same-head vector. -/
+theorem affineOptimizer_same_head_completion (s : Finset ℕ)
+    (hs : ∀ d ∈ s, 1 < d) (H r : ℕ) (hH : 0 < H)
+    (hr : r ∈ s) (hrH : H < r) (B t : QHilbert)
+    (hB : B ∈ dictionary s) (f : QHilbert) (hf : f ∈ dictionary s)
+    (hhead : ∀ n, 0 < n → n ≤ H → qSequence f n = qSequence B n) :
+    ‖t - f‖ ^ 2 = ‖t - affineOptimizer s hs H r hr B t‖ ^ 2 +
+      ‖f - affineOptimizer s hs H r hr B t‖ ^ 2 := by
+  exact affineOptimizer_completion_of_mem s hs H r hr B t f
+    ((same_head_iff_sub_mem_zeroHeadSpan s hs H r hH hr hrH B hB f).mp ⟨hf, hhead⟩)
+
 end RiemannResearch.RH.QResidueHeadSpace

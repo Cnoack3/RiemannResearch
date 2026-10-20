@@ -275,4 +275,46 @@ theorem exists_legal_exact_head_block_averages
     fun m k hm hk hkm => blockAverage_head F q hq hhead hm hk hkm,
     blockAverage_tendsto F q ht⟩
 
+/-- Bounded complete-Q exact heads force membership of the actual Hilbert target.
+The uniform bound is a substantive hypothesis; it is not supplied by finite feasibility. -/
+theorem mem_closure_of_bounded_target_heads
+    (S : Submodule ℝ QHilbert) (z : QHilbert) (F : ℕ → QHilbert)
+    (hlegal : ∀ N, F N ∈ S) (B : ℝ)
+    (hbound : ∀ N, ‖F N‖ ^ 2 ≤ B)
+    (hhead : ∀ N n, 0 < n → n ≤ N → qSequence (F N) n = qSequence z n) :
+    z ∈ S.topologicalClosure := by
+  have hB : 0 ≤ B := (sq_nonneg ‖F 0‖).trans (hbound 0)
+  have hb : ∀ᶠ N in atTop, ‖z - F N‖ ≤ ‖z‖ + B + 1 := by
+    apply Filter.Eventually.of_forall
+    intro N
+    have hf : ‖F N‖ ≤ B + 1 := by
+      nlinarith [hbound N, sq_nonneg (‖F N‖ - 1)]
+    exact (norm_sub_le z (F N)).trans (by linarith)
+  have hp : ∀ y ∈ Set.range qPoint,
+      Tendsto (fun N => inner ℝ y (z - F N)) atTop (𝓝 0) := by
+    rintro y ⟨n, rfl⟩
+    apply tendsto_const_nhds.congr'
+    filter_upwards [eventually_ge_atTop (n + 1)] with N hN
+    rw [qPoint_inner]
+    change 0 = qWeight n * qSequenceLinear (z - F N) (n + 1)
+    rw [map_sub]
+    change 0 = qWeight n * (qSequence z (n + 1) - qSequence (F N) (n + 1))
+    rw [hhead N (n + 1) (Nat.succ_pos n) hN, sub_self, mul_zero]
+  have hweak (w : QHilbert) :
+      Tendsto (fun N => inner ℝ w (z - F N)) atTop (𝓝 0) :=
+    tendsto_inner_zero_of_mem_closure_span
+      (by positivity) hb hp (by rw [qPoint_span_dense]; trivial)
+  rw [← Submodule.orthogonal_orthogonal_eq_closure]
+  intro w hw
+  have he : (fun N => inner ℝ w (z - F N)) = fun _ : ℕ => inner ℝ w z := by
+    funext N
+    rw [inner_sub_right]
+    have hz : inner ℝ w (F N) = 0 := by
+      rw [real_inner_comm]
+      exact hw _ (hlegal N)
+    rw [hz, sub_zero]
+  have ht := hweak w
+  rw [he] at ht
+  exact tendsto_nhds_unique tendsto_const_nhds ht
+
 end RiemannResearch.RH.QExactHeadAverages

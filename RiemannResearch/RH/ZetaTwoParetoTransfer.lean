@@ -141,6 +141,32 @@ private theorem mapped_squarefreeAtom_mem (i : ℕ) :
     rw [map_zero]
     exact Submodule.zero_mem _
 
+/-- The existing complete Q-to-Pareto map transports every squarefree-closed
+vector, not only the constant target. -/
+theorem toPareto_mem_closedSpace {f : QHilbert}
+    (hf : f ∈ ZetaTwoOptimizerStage.closure) : toPareto f ∈ closedSpace := by
+  let K : Submodule ℝ QHilbert := closedSpace.comap toParetoCLM.toLinearMap
+  have hspan : Submodule.span ℝ (Set.range ZetaTwoOptimizerStage.squarefreeAtom) ≤ K := by
+    apply Submodule.span_le.mpr
+    rintro x ⟨i, rfl⟩
+    change toPareto (ZetaTwoOptimizerStage.squarefreeAtom i) ∈ closedSpace
+    unfold ZetaTwoOptimizerStage.squarefreeAtom
+    split_ifs with hi
+    · rw [toPareto_residueAtom]
+      exact (Submodule.span ℝ (Set.range residueAtom)).le_topologicalClosure
+        (Submodule.subset_span ⟨i, rfl⟩)
+    · change toParetoLinear 0 ∈ closedSpace
+      rw [map_zero]
+      exact Submodule.zero_mem _
+  have hclosed : IsClosed (closedSpace : Set ThresholdHilbert) := by
+    change IsClosed (_root_.closure
+      (Submodule.span ℝ (Set.range residueAtom) : Set ThresholdHilbert))
+    exact isClosed_closure
+  have hKclosed : IsClosed (K : Set QHilbert) := hclosed.preimage toParetoCLM.continuous
+  have hf' : f ∈ _root_.closure
+      (Submodule.span ℝ (Set.range ZetaTwoOptimizerStage.squarefreeAtom) : Set QHilbert) := hf
+  exact (closure_minimal hspan hKclosed) hf'
+
 /-- The inverse-square squarefree approximation transfers into the complete
 Pareto residue closure. -/
 theorem paretoOne_mem_closedSpace_of_qOne_mem_closure

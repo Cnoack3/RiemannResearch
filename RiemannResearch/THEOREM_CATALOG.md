@@ -38,6 +38,67 @@ See `RH/QSquarefreeClosureDependencies20261020.md` and
 `RH/WolframSeventhPrimorialChecks20261020.md`.
 
 
+### Complete-Q metric refinement and actual logarithmic targets (2026-10-20 UTC)
+
+Established results after this change's successful server checkpoint:
+
+- `RH/QRationalPeriodRefinement.lean`: a retained positive midpoint defect
+  gives a two-sided complete rational-weight gap and the coefficient-independent
+  estimate `Gap_(kL)(f) <= (120/k) Gap_L(f)` for every L-periodic vector.
+  Ratios at least 240 halve this gap.
+- `RH/QRationalStageGain.lean`: actual rational normal-equation minima satisfy
+  an exact cross-stage identity retaining signed metric refunds and the full
+  later-metric optimizer displacement. A telescoping finite budget controls
+  half the old gap plus this displacement at ratios at least 240.
+  This displacement is not the complete-Q projection gain.
+- `RH/QParityLegalGain.lean`: exact legal capture of the parity projection in
+  nested spaces; new projection gain is `(1-4D_V)^2 (D_V-D_W)`.
+  The explicitly computed component already in the old space is not new gain.
+- `RH/QPrimePowerTwoStage.lean`: actual legal two-stage logarithmic-head
+  interpolation, complete signed norm and correction identities, feasibility
+  of every finite logarithmic head, and norm divergence with the first cutoff
+  fixed.
+- `RH/QPrimePowerConstrainedHead.lean` and the generic extension in
+  `RH/QResidueHeadSpace.lean`: actual full-divisor-dictionary constrained
+  optimizers, exact inverse-Gram energy, Pythagorean minimality for every
+  feasible vector, and exact fixed-head energy decrease under nested periods.
+- `RH/PrimePowerHilbertTarget.lean`: construction of the actual target
+  `F_p(n)=Nat.log p n` by a Hilbert-space contraction for p>1, with Pareto
+  mean `1/(p-1)` and exact norm square `(p+1)/(p-1)^2`.
+- `RH/PrimePowerTargetMellin.lean`: actual Q target, norm comparison, and
+  normalized Mellin transform `s M_s(F_p)=1/(p^s-1)` for Re(s)>1/2.
+  Membership of this target in the squarefree Q closure implies RH.
+- `RH/QExactHeadAverages.lean` and
+  `RH/QPrimePowerInterpolationClosure.lean`: bounded actual legal target
+  heads imply closure membership. Both flexible periods and an internally
+  feasible selected logarithmic-head optimizer family have conditional RH
+  consumers. The uniform complete-Q energy bound remains an explicit,
+  unproved hypothesis.
+- `RH/QPrimePowerTargetJumps.lean`: squarefree-divisor and positive-power
+  jump constraints for the actual logarithmic target. These are necessary
+  relations, not a sufficiency criterion for closure.
+- `RH/QPrimePowerSieveEnergy.lean`: complete target energy sharpens the raw
+  sieve lower bound to
+  `||A_H||_Q^2 >= a_H^2 H/(2 zeta(2)) - 6/zeta(2)`, with the exact signed
+  finite-head identity retained before the bound.
+- `Analysis/FinitePrimeProductBounds.lean` and
+  `RH/ZetaTwoParetoTransfer.lean`: supporting positivity and generic
+  squarefree-closure-to-Pareto-closure transfer.
+
+**Open:** `1 in H`, vanishing of the projection defect D, a uniform bound
+for the actual moving-head constrained minima, and the signed absorption
+estimate. None of the new conditional consumers proves these hypotheses.
+The earlier published logarithmic-target status is superseded only for
+target construction, its norm and Mellin transform; closure membership
+remains open.
+
+Exact finite symbolic checks covered 41 logarithmic-head coordinates through
+the seventh primorial 510510. They neither compute all seven rational minima
+nor establish an infinite energy bound. See
+`RH/QLogarithmicTargetsAndMetricRefinement20261020.md` for formulas,
+verification scope, provenance, and the remaining analytic obligations.
+
+
 ### Squarefree cylinders, rational variational limits, and exact obstructions (2026-10-20 UTC)
 
 Established results after this change's successful server checkpoint:

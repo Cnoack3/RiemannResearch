@@ -57,6 +57,19 @@ theorem finitePrimeProduct_nonneg (Y : ℕ) : 0 ≤ finitePrimeProduct Y := by
   rw [finitePrimeProduct_eq_range]
   exact Finset.prod_nonneg (fun n _ => primeFactor_nonneg n)
 
+/-- Every finite Euler product is strictly positive. -/
+theorem finitePrimeProduct_pos (x : ℕ) : 0 < finitePrimeProduct x := by
+  unfold finitePrimeProduct
+  apply Finset.prod_pos
+  intro p hp
+  have hprime : Nat.Prime p := by
+    simp only [Nat.primesBelow, Finset.mem_filter, Finset.mem_range] at hp
+    exact hp.2
+  have hpR : (1 : ℝ) < p := by exact_mod_cast hprime.one_lt
+  have hp0 : (0 : ℝ) < p := lt_trans (by norm_num) hpR
+  have hdiv : (1 : ℝ) / p < 1 := (div_lt_one hp0).mpr hpR
+  linarith
+
 theorem finitePrimeProduct_le_one (Y : ℕ) : finitePrimeProduct Y ≤ 1 := by
   rw [finitePrimeProduct_eq_range]
   exact Finset.prod_le_one (fun n _ => primeFactor_nonneg n)
