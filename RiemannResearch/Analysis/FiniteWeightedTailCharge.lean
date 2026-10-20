@@ -126,4 +126,36 @@ theorem signed_limit {E S t : ℕ → ℝ} {D : ℝ}
   rw [he]
   simpa only [zero_sub] using ht.sub hE
 
+/-- A cofinal fixed-factor signed absorption estimate is equivalent to a
+zero nonnegative energy limit. The arithmetic estimate is an explicit input.
+Source: user-directed squarefree closure continuation, 20 October 2026. -/
+theorem cofinal_absorption_iff_zero_limit
+    {E S t : ℕ → ℝ} {D θ : ℝ}
+    (hid : ∀ n, E n + S n = t n)
+    (hE : Tendsto E atTop (𝓝 D)) (ht : Tendsto t atTop (𝓝 0))
+    (hD : 0 ≤ D) (hθ : θ < 1) :
+    (∀ ε > 0, ∀ N : ℕ, ∃ n, N ≤ n ∧ -θ * E n - ε ≤ S n) ↔ D = 0 := by
+  have hlim : Tendsto (fun n => (1 - θ) * E n - t n) atTop
+      (𝓝 ((1 - θ) * D)) := by
+    simpa only [sub_zero] using (tendsto_const_nhds.mul hE).sub ht
+  constructor
+  · intro hc
+    by_contra hne
+    have hpos : 0 < (1 - θ) * D :=
+      mul_pos (sub_pos.mpr hθ) (lt_of_le_of_ne hD (Ne.symm hne))
+    obtain ⟨N, hN⟩ := eventually_atTop.mp
+      (hlim.eventually (Ioi_mem_nhds
+        (show (1 - θ) * D / 2 < (1 - θ) * D by linarith)))
+    obtain ⟨n, hn, habs⟩ := hc ((1 - θ) * D / 2) (by linarith) N
+    have hb := (absorption_iff (hid n)).mp habs
+    have hgt := hN n hn
+    linarith
+  · intro hz ε hε N
+    have hzlim : Tendsto (fun n => (1 - θ) * E n - t n) atTop (𝓝 0) := by
+      simpa only [hz, mul_zero] using hlim
+    obtain ⟨K, hK⟩ := eventually_atTop.mp (hzlim.eventually (Iio_mem_nhds hε))
+    refine ⟨max N K, le_max_left _ _, (absorption_iff (hid _)).mpr ?_⟩
+    have hh := hK (max N K) (le_max_right _ _)
+    linarith
+
 end RiemannResearch.Analysis.FiniteWeightedTailCharge

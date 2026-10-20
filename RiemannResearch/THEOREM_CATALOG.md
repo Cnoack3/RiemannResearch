@@ -1,5 +1,43 @@
 # Theorem catalog
 
+### Actual rational coefficients and cofinal squarefree closure dependencies (2026-10-20 UTC)
+
+Established after this change's successful server checkpoint:
+
+- `RH/QRationalCoefficientLimit.lean`: continuous extraction from the full
+  divisor synthesis, eventual identification of the actual selected rational
+  coefficients at each squarefree m>=2, and unconditional convergence to the
+  existing complete-Q projection coefficient lambda_m. Simultaneous convergence
+  to -mu(m) is equivalent to qOne in the squarefree closed span.
+- `RH/QRationalTailDirichlet.lean`: actual residual-tail first differences,
+  positive site weights, exact weighted difference energy E_L-5/(3L^2),
+  equality with the initial centered tail for a normal solution, an individual
+  difference bound, and specialization to the selected rational minimizer.
+- `Analysis/FiniteWeightedTailCharge.lean` adds
+  `cofinal_absorption_iff_zero_limit`, using an explicitly supplied energy
+  limit and exact signed identity.
+- `RH/QRationalSignedTailClosure.lean`: complete signed identity retaining
+  the Q projection error, optimizer displacement, and rational-weight gap;
+  an explicit full-Q optimizer error bound under a finite signed budget;
+  and equivalence between cofinal fixed-factor signed absorption and closure.
+
+Conditional research reduction: `closure_of_cofinal_signed_budget`.
+Open providers: a fixed theta<1, errors epsilon_n->0, and cofinally valid
+S_(L_n)>=-theta E_(L_n)-epsilon_n for the actual rational minimizers.
+The equivalence theorem does not establish this arithmetic input.
+The alternative identification lambda_m=-mu(m) remains Open.
+
+Targeted job `job_YvilkfIZOAr6G2fp5uYHveRqsPeJe7sm` succeeded with exit 0;
+five principal axiom inspections used only propext, Classical.choice, Quot.sound.
+The final checkpoint determines integrated publication verification.
+Exact Wolfram checks stop at the seventh primorial 510510: all divisor
+incidence/charge identities at seven levels, 543105 full-period Mobius
+synthesis cases, and 543102 canonical CRT-carry cases, with no failures.
+These are finite algebra checks, not optimizer solves or limit estimates.
+See `RH/QSquarefreeClosureDependencies20261020.md` and
+`RH/WolframSeventhPrimorialChecks20261020.md`.
+
+
 ### Squarefree cylinders, rational variational limits, and exact obstructions (2026-10-20 UTC)
 
 Established results after this change's successful server checkpoint:
