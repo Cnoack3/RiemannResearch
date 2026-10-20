@@ -1,5 +1,25 @@
 # Theorem catalog
 
+### All gcd-class rational tail charges (2026-10-20 UTC)
+
+Established finite results:
+- `NumberTheory/DivisorIncidence.lean`: concrete divisor-Mobius left inverse
+  and specialization of the generic finite incidence extractor to gcd labels;
+  positive gcd-class cardinalities phi(L/e); endpoint class C_L={L}.
+- `RH/QRationalGcdTail.lean`: actual divisor normal equations imply every
+  gcd-class charge 5*phi(L/e)/(3*L^2), common literal average 5/(3*L^2),
+  zero centered class sums, exact classwise and full-period square
+  decompositions, and endpoint tail. `exists_all_class_minimum` assembles
+  these for an attained global minimum with no unresolved normal equations.
+- `Analysis/FiniteSignedVariance.lean`: finite signed variance budgets.
+  The actual coprime specialization proves 4*N*(N+phi(L)*c_L)<=phi(L)*V,
+  retaining all signs and the full centered-square sum V.
+
+Open: an actual asymptotic upper bound strong enough to control N-P,
+the signed absorption estimate, and rational-to-complete-Q limiting assembly.
+No unconditional RH theorem follows from finite centering.
+See `RH/QRationalGcdTailResearch20261020.md`.
+
 ### Actual CRT gain and parity-conditional closure (2026-10-20 UTC)
 
 Established:
@@ -54,9 +74,10 @@ Established finite results:
 Open research obligations: actual asymptotic signed absorption or cumulative
 relative-gain divergence; rational-to-Q comparison/convergence assembly;
 full Haar optimizer and product-bound specialization; concrete Q-cylinder
-specialization; screened dictionary independence assembly. The concrete
-all-gcd Mobius specialization remains an ordinary proof and exact finite
-computation, separate from the generic checked inversion theorem.
+specialization; screened dictionary independence assembly. The former concrete
+all-gcd Mobius and class-cardinality gap is discharged by
+`NumberTheory/DivisorIncidence.lean` and `RH/QRationalGcdTail.lean`, including
+an attained-minimum assembly; see the 20 October all-class entry above.
 No unconditional RH theorem is asserted. The Python and Wolfram checks are
 finite arithmetic evidence, not asymptotic estimates or Lean certificates.
 See `RH/CRTCarryVerificationResearch20261019.md` and its exact experiments.

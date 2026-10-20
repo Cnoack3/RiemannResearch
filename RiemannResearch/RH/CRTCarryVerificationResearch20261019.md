@@ -68,7 +68,9 @@ has been formally established; no asymptotic estimate is assumed here.
 
 ## Complete gcd-class charges and the location of the remaining error
 
-An ordinary finite proof extends the last identity to every divisor e of L:
+The finite proof extends the last identity to every divisor e of L.
+The 20 October continuation now formalizes this proof; see
+`QRationalGcdTailResearch20261020.md` and `QRationalGcdTail.lean`:
 
     B_e := sum_{1<=k<=L, gcd(k,L)=e} T_L(k)
          = 5 phi(L/e)/(3L^2).
@@ -79,9 +81,12 @@ Indeed, finite Fubini and each g_d normal equation give
 
 Divisor Möbius inversion gives B_e=(M/e) sum_{j|L/e} mu(j)/j, hence the
 formula. The d=1 equation is direct; the e=L class retains T_L(L).
-The generic finite inversion theorem is formalized. **The concrete all-gcd
-Möbius specialization and its class-cardinality assembly are not yet Lean
-bridges in this change.** The case e=1 is the concrete signed identity above.
+The original 19 October change supplied the generic finite inverse and the
+e=1 signed identity. The 20 October continuation completes the concrete
+divisor-Möbius specialization and class-cardinality assembly in
+`NumberTheory/DivisorIncidence.lean` and `RH/QRationalGcdTail.lean`.
+Its `exists_all_class_minimum` supplies every class identity for an attained
+global finite minimum. The asymptotic obligation below remains open.
 
 Each class contains phi(L/e) positions, so all its tail averages equal
 c_L=5/(3L^2). Set U_L(k)=T_L(k)-c_L. Then
