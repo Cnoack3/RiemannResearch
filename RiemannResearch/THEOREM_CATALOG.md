@@ -14106,3 +14106,26 @@ Twelve public declarations and all axiom checks passed
 `job_lrmajfiqgiMyazUYjWdGWUw8uQAZMnQi` using only standard foundations.
 See `RH/ParetoOvershootArithmeticAttemptResearch20261019.md` for exact
 identities, the remaining obligation, and the primary-literature audit.
+
+### Direct floor encodings and orthogonal CRT projection identities (2026-10-19)
+
+Established:
+- `RH/CRTCarryArithmetic.lean`: actual integer floor, unconditional bounds,
+  exact quotient and real-floor formulas, general valid representatives,
+  integer gauge shifts, periodicity, symmetry, jumps, head drift, and Bezout existence.
+- `Analysis/ScreenedCarry.lean`: literal I-minus-starProjection, signed raw
+  Gram energy, Pythagoras, membership, invariant screened Gram/source data,
+  equal spans and actual target projections, exact distance gains, and finite blocks.
+- `RH/QCRTCarry.lean`: directly encodes the floor sequence using encodeQ;
+  proves its synthesis identity, representative independence, conductor bound,
+  and complete-Q energy, projection and finite-block results.
+- `RH/QCRTPrimorialCarry.lean`: application to the existing all-divisor
+  primorialStage and the complete new-prime block, including composite old divisors.
+- `RH/QCRTCarryBlockBridge.lean`: identifies the direct floor encoding with
+  the existing QCarryScreenedBlock.pairVector, fullBlock and their screen;
+  transfers the complete divisor-stage equality and full trace estimate.
+
+No residual-exhaustion estimate is proved. The ordinary explicit hypotheses
+are positive conductors, integral valid CRT coefficients, and old-space membership.
+Seven central axiom checks use only standard Lean foundations.
+See `RH/QCRTCarryResearch20261019.md` for the scope and mathematical boundary.
