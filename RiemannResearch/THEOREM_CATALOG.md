@@ -1,5 +1,31 @@
 # Theorem catalog
 
+### Actual CRT gain and parity-conditional closure (2026-10-20 UTC)
+
+Established:
+- `Analysis/ScreenedBlockGain.lean`: actual nested projection score/trace
+  inequality and its positive-denominator consequence, with no independence
+  or inverse Gram assumptions. Reuses the existing Pythagorean identity.
+- `RH/QCRTCarryGain.lean`: literal floor-carry full-divisor block scores
+  bounded by actual complete-Q stage gains; exact separation of prime and
+  carry increments; `prime_gain_add_score_div_le_total_gain` retains both.
+  Empty blocks are covered by the division-free statements.
+- `RH/QParityConditionalTarget.lean`: complete parity conditional image
+  of legal `g_6`; positive constant coefficient; exact screen/energy scaling;
+  its membership in the squarefree closed span iff `qOne` membership;
+  preservation of that closure by the fiber-mean parity map iff the same
+  constant membership. Finite-stage error identity included.
+
+Conditional research reduction:
+- `riemannHypothesis_of_paritySix_mem_closure` consumes the unresolved
+  membership of that one conditional image. This hypothesis remains Open.
+- Actual divergence of combined prime-plus-carry normalized scores remains
+  Open. No unconditional RH theorem or new RH-to-closure provider is claimed.
+
+`RH/QCRTProfiniteResearch20261020.md` records the theorem scope, exact rational
+Wolfram checks, complete-Q high-precision checks, and ordinary (not Lean)
+proofs of quantitative full-cylinder approximation and Haar/Q density growth.
+
 ### CRT carry blocks and actual rational-weight minima (2026-10-19)
 
 Established finite results:
