@@ -64,13 +64,25 @@
 
 ## Efficient isolated workflow
 
-- Open one isolated workspace per task and retain its token. Reopen that token
-  to resume an archived clone. Old tokens remain resumable after server updates.
+- Retain the active workspace token and absolute project root across turns of
+  an ongoing task. Pass the token directly to subsequent workspace tools; do
+  not call `agent_workspace_open` again merely to confirm connectivity or reuse
+  an already active workspace. Create a new isolated workspace only when a new
+  task actually needs one. Reopen a retained token to resume an archived clone
+  or when the server explicitly reports that restoration is needed. Old tokens
+  remain resumable after server updates.
 - Pass absolute paths beneath its `project_root` to Lean tools. Use
   `agent_workspace_run_code` for a coherent ephemeral proof candidate. Inspect
   goals or diagnostics after failure rather than checking every tactic
   separately. When several local tactic repairs are plausible in an existing
   file, send 2--5 alternatives together with `lean_multi_attempt`.
+- Batch related declaration checks and proof candidates into coherent
+  submissions, and batch independent read-only searches and file reads.
+  Across cooperating agents on the same server, allow at most one queued or
+  running Lean verification job at a time. A timeout does not free that slot:
+  recover the job status before submitting more verification. Do not repeat a
+  connectivity smoke test when a successful task-relevant operation already
+  establishes access.
 - Read only relevant source ranges. Use targeted diagnostics or verification
   during development. Diagnostics are compact by default; request full details
   only when the bounded result omits evidence needed to repair the proof.
@@ -78,6 +90,10 @@
   and poll `agent_workspace_job_status` no sooner than `retry_after_seconds`;
   never resubmit a pending job. Running status reports the current phase, Lake
   task percentage when available, and a rough task-count ETA.
+- Report workspace-opening request time, queue/polling delay, and the server's
+  reported verification duration separately. A request round trip is not a
+  measurement of kernel proof-checking time. Do not attribute a delay to disk,
+  cache, networking, or Lean startup without supporting timing evidence.
 - `agent_workspace_checkpoint` audits and validates the entire unpublished
   delta from the workspace base before commit and serialized publication.
   It skips Lean only when that delta contains no Lean source or dependency
