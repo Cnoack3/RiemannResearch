@@ -1,5 +1,32 @@
 # Theorem catalog
 
+### Uniform complete-Q two-stage obstruction (2026-10-20 UTC)
+
+New unconditional declarations in `RH/QPrimePowerTwoStageObstruction.lean`:
+`sieveTwoStageVector_mellin_uniform`,
+`sieveTwoStageVector_quantitative_lower`, and
+`sieveTwoStageVector_norm_tendsto_atTop`.
+They cover every prime p, 1/2<sigma<1, and every sufficiently large first
+integer cutoff, uniformly over all nondegenerate later cutoffs, including
+arbitrarily close slopes. The exact positive squared-error constant is
+(2sigma-1)/(4 zeta(2) sigma^2 (p^sigma-1)^2).
+
+Providers: `Analysis/PrimePowerEulerDecay.lean` (elementary actual Euler
+decay), `RH/QPrimePowerSieveMellin.lean` and
+`RH/QPrimePowerSievePrimeStep.lean` (actual finite arithmetic),
+`RH/PrimeSieveSecantLimits.lean` and `RH/QPrimePowerSieveUniform.lean`
+(uniformity with unchanged stages), `RH/QPrimePowerSieveTwoStage.lean`
+(all-prime actual synthesis), `RH/ParetoMellinTail.lean`,
+`RH/QMellinTail.lean`, and `RH/PrimePowerTargetMellinLower.lean`.
+Separately, `Analysis/ReducedResiduePowerSum.lean` proves the requested
+fixed-positive-modulus reduced-residue asymptotic.
+
+Final source/import/axiom audit: job_3vRdgkwYETp-cBXwh7lK3XpJAWryflzA,
+verified=true, exit 0; standard foundations only.
+Final publication is separately checkpoint-gated.
+See `RH/TwoStageSieveFormalizationResearch20261020.md` for exact scope.
+Squarefree target closure, general signed energy providers, and RH remain Open.
+
 ### Moving prime-power sieve secants (2026-10-20 UTC)
 
 Finite results in `RH/PrimeSieveSecantAlgebra.lean`: exact three-stage
@@ -11,7 +38,7 @@ verified=true, exit 0; inspected axioms were standard foundations only.
 Final staged/integrated publication is gated by the server checkpoint.
 
 The all-moving-two-stage Mellin obstruction and polynomial complete-Q
-error lower bound are ordinary proofs, NOT new Lean theorems.
+error lower bound are now formalized in the completion listed above.
 Both prime-power target closure memberships and RH remain Open.
 See `RH/TwoStageSieveObstructionResearch20261020.md` for derivations,
 assumptions, circularity audit, and the next actual signed-budget obligation.

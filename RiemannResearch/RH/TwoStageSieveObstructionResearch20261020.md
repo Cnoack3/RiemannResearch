@@ -1,5 +1,10 @@
 # Moving two-stage prime-power sieves: a uniform obstruction
 
+**Completion:** `TwoStageSieveFormalizationResearch20261020.md` records the
+kernel-checked infinite limits, explicit lower bound, and moving norm divergence.
+The proof uses integer cutoff steps and a simpler elementary Euler comparison.
+Original status statements later in this note are historical and superseded.
+
 20 October 2026. Baseline: main `497c83d7c88a323b617ebccc6b7394fe2077b39e`.
 This continues Section 4 of `TwoPrimeMellinCriterionResearch20261020.md`.
 There is no earlier weekly report in this conversation to compare; current
@@ -12,7 +17,7 @@ argument below. The new Lean results certify the finite secant identities,
 the uniform finite adjacent-intercept bound, the exact Euler step, and the
 specialization to real linear probes of the actual gcd-two sieve vectors.
 The infinite Euler-product decay, Mellin-tail estimate, and full moving-cutoff
-norm-divergence theorem below are **not yet formalized**.
+norm-divergence theorem are now formalized in the linked completion.
 
 This extends the earlier bounded-total-variation obstruction for these
 prime-power targets. It adapts, rather than claims novelty for, the reciprocal
