@@ -1,5 +1,34 @@
 # Theorem catalog
 
+### Unconditional signed ratio, complete metric refinement, and target caps (2026-10-20 UTC)
+
+New unconditional results, accepted through this change's final server checkpoint:
+
+- `NumberTheory/PrimorialPolynomialLower.lean`: the elementary cubic primorial
+  lower bound from three Bertrand intervals, with no prime number theorem.
+- `RH/QRationalSignedTailRatio.lean`:
+  `rationalSignedTail_div_minimum_tendsto_unconditional` proves S/R -> -1 at
+  every exhaustive cutoff, including repeated periods, without assuming D>0.
+  The explicit normalized-boundary bound is 1280/[3 floor((n+3)/8)] for n>=21.
+- `RH/QRationalAbsorptionError.lean`: the least signed absorption error is
+  A_theta=(1-theta)R-B; A_theta/R -> 1-theta. Errors o(R), and any fixed
+  multiple of the explicit endpoint B, cannot yield cofinal absorption for theta<1.
+- `RH/PrimePowerTargetCap.lean`: exact Pareto capped-target error
+  (p+1)/[p^K(p-1)^2], complete-Q error bounds and convergence, and nonlegality
+  of every positive cap from its unequal jumps at p and p^(K+1).
+- `RH/QResiduePowerRefinement.lean`: exact residue refinement for every
+  reciprocal power of order s+2.
+- `RH/QRationalQuarticRefinement.lean`: complete quartic-tail control yields
+  Gap_(kL)(f) <= [20/(3k)]Gap_L(f), uniformly over all periodic coefficients.
+- `RH/QRationalStageGain.lean`: the exact stage identity now gives the actual
+  refund factor 1-20/(3k), retaining the full displacement square. Existing
+  stage and cumulative-budget thresholds improve from 120/240 to 7/14.
+
+Open: constant membership in the complete-Q squarefree closure, an independent
+upper bound R_n -> 0, and RH. Neither the unconditional signed ratio nor the
+surrogate-metric contraction supplies this missing upper bound.
+See `RH/QSignedRatioAndTargetCapsResearch20261020.md`.
+
 ### Rational tail fluctuations and absorption obstruction (2026-10-20 UTC)
 
 Established finite declarations after this change's successful server checkpoint:
@@ -15,10 +44,10 @@ Established finite declarations after this change's successful server checkpoint
   `seventh_primorial_signed_absorption_fails`: S_510510 < -(1999/2000) R_510510.
 
 No unresolved normal-equation or closure provider is assumed in these results.
-The research memo derives S/R -> -1 along distinct primorials using the finite
-bound and Bertrand's postulate. That final prime-indexed assembly is not a Lean
-declaration here. It rules out error-free fixed-factor absorption; it does not
-rule out absolute error decay, squarefree closure, or RH.
+The original research memo derived S/R -> -1 along distinct primorials using the
+finite bound and Bertrand's postulate. The continuation listed above now proves
+it in Lean for every cutoff. It rules out error-free fixed-factor absorption;
+it does not rule out absolute error decay, squarefree closure, or RH.
 
 Open: an arithmetic upper bound R_(L_n)->0, equivalently a vanishing upper bound
 for every constrained dual objective. A valid signed absorption error may tend

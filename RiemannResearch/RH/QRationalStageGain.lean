@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QRationalPeriodRefinement
+import RiemannResearch.RH.QRationalQuarticRefinement
+import RiemannResearch.RH.QRationalWeightComparison
 import RiemannResearch.RH.QRationalMinimumLimit
 import RiemannResearch.RH.QRationalCoprimeMinimum
 import RiemannResearch.RH.QSquarefreePrimorialCofinality
@@ -84,13 +86,30 @@ theorem rationalMinimum_drop_exact {n m : ℕ} (hnm : n ≤ m) :
   rw [hval] at heL
   linarith
 
+/-- The exact stage identity and complete quartic bound give the actual
+arithmetic refund factor, with the full displacement square retained. -/
+theorem rationalMinimum_drop_ge_quartic_refund {n m k : ℕ} (hnm : n ≤ m)
+    (hperiod : primorialPeriod m = primorialPeriod n * k) (hk : 2 ≤ k) :
+    (1 - 20 / (3 * (k : ℝ))) *
+        rationalGap (primorialPeriod n)
+          (qSequence (rationalMinimizer (primorialPeriod n))) +
+      rationalStageDisplacement n m ≤
+        rationalMinimum (primorialPeriod n) - rationalMinimum (primorialPeriod m) := by
+  have hg := rationalGap_mul_le_quartic (primorialPeriod n) k
+    (primorialPeriod_pos n) hk
+    (qSequence (rationalMinimizer (primorialPeriod n)))
+    (qSequence_periodic_of_mem (rationalMinimizer_mem n))
+  rw [← hperiod] at hg
+  rw [rationalMinimum_drop_exact hnm]
+  linarith
+
 /-- Large cofinal steps decrease the actual rational minimum, and the full
 weighted displacement square is paid for by that decrease. -/
 theorem rationalMinimum_drop_ge_displacement {n m k : ℕ} (hnm : n ≤ m)
-    (hperiod : primorialPeriod m = primorialPeriod n * k) (hk : 120 ≤ k) :
+    (hperiod : primorialPeriod m = primorialPeriod n * k) (hk : 7 ≤ k) :
     rationalStageDisplacement n m ≤
       rationalMinimum (primorialPeriod n) - rationalMinimum (primorialPeriod m) := by
-  have hg := rationalGap_mul_le_self (primorialPeriod n) k
+  have hg := rationalGap_mul_le_self_quartic (primorialPeriod n) k
     (primorialPeriod_pos n) hk
     (qSequence (rationalMinimizer (primorialPeriod n)))
     (qSequence_periodic_of_mem (rationalMinimizer_mem n))
@@ -99,22 +118,22 @@ theorem rationalMinimum_drop_ge_displacement {n m k : ℕ} (hnm : n ≤ m)
   linarith
 
 theorem rationalMinimum_le_of_large_refinement {n m k : ℕ} (hnm : n ≤ m)
-    (hperiod : primorialPeriod m = primorialPeriod n * k) (hk : 120 ≤ k) :
+    (hperiod : primorialPeriod m = primorialPeriod n * k) (hk : 7 ≤ k) :
     rationalMinimum (primorialPeriod m) ≤ rationalMinimum (primorialPeriod n) := by
   have h := rationalMinimum_drop_ge_displacement hnm hperiod hk
   have hn := rationalStageDisplacement_nonneg n m
   linarith
 
 /-- The metric part alone refunds at least half the coarse discrepancy
-at a factor-240 refinement, independently of the optimizer coefficients. -/
+at a factor-14 refinement, independently of the optimizer coefficients. -/
 theorem rationalMinimum_drop_ge_half_gap_add_displacement {n m k : ℕ}
     (hnm : n ≤ m) (hperiod : primorialPeriod m = primorialPeriod n * k)
-    (hk : 240 ≤ k) :
+    (hk : 14 ≤ k) :
     rationalGap (primorialPeriod n)
         (qSequence (rationalMinimizer (primorialPeriod n))) / 2 +
       rationalStageDisplacement n m ≤
         rationalMinimum (primorialPeriod n) - rationalMinimum (primorialPeriod m) := by
-  have hg := rationalGap_mul_le_half (primorialPeriod n) k
+  have hg := rationalGap_mul_le_half_quartic (primorialPeriod n) k
     (primorialPeriod_pos n) hk
     (qSequence (rationalMinimizer (primorialPeriod n)))
     (qSequence_periodic_of_mem (rationalMinimizer_mem n))
@@ -141,10 +160,10 @@ theorem rationalMinimum_chain_exact (σ : ℕ → ℕ) (hσ : Monotone σ) (N : 
       linarith
 
 /-- Uniform finite budget along any actual stage chain whose successive
-period ratios are at least 240. It controls moving coefficients directly. -/
+period ratios are at least 14. It controls moving coefficients directly. -/
 theorem rationalMinimum_chain_budget (σ k : ℕ → ℕ) (hσ : Monotone σ)
     (hperiod : ∀ j, primorialPeriod (σ (j + 1)) = primorialPeriod (σ j) * k j)
-    (hk : ∀ j, 240 ≤ k j) (N : ℕ) :
+    (hk : ∀ j, 14 ≤ k j) (N : ℕ) :
     (∑ j ∈ Finset.range N, (
       rationalGap (primorialPeriod (σ j))
           (qSequence (rationalMinimizer (primorialPeriod (σ j)))) / 2 +
@@ -161,7 +180,7 @@ theorem rationalMinimum_chain_budget (σ k : ℕ → ℕ) (hσ : Monotone σ)
 
 theorem rationalMinimum_chain_budget_le_initial (σ k : ℕ → ℕ) (hσ : Monotone σ)
     (hperiod : ∀ j, primorialPeriod (σ (j + 1)) = primorialPeriod (σ j) * k j)
-    (hk : ∀ j, 240 ≤ k j) (N : ℕ) :
+    (hk : ∀ j, 14 ≤ k j) (N : ℕ) :
     (∑ j ∈ Finset.range N, (
       rationalGap (primorialPeriod (σ j))
           (qSequence (rationalMinimizer (primorialPeriod (σ j)))) / 2 +
