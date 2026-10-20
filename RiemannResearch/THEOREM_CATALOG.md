@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Rational tail fluctuations and absorption obstruction (2026-10-20 UTC)
+
+Established finite declarations after this change's successful server checkpoint:
+
+- `Analysis/FiniteClassDirichlet.lean`: weighted Cauchy--Schwarz, exact pairwise
+  centered variance, class Poincare/negative-mass bounds, and dual square completion.
+- `RH/QRationalTailPoincare.lean`: actual pairwise tail and all gcd-class bounds,
+  including `rational_negative_mass_path_budget`.
+- `RH/QRationalTailDuality.lean`: actual residual admissibility, exact dual gap,
+  sharp Cauchy--Schwarz, attained objective, and `rational_tail_bound_iff_dual_bound`.
+- `RH/QRationalCoprimeLower.lean`: actual coprime three-site and polynomial
+  lower bounds, `rationalSignedTail_near_negative_minimum`, and
+  `seventh_primorial_signed_absorption_fails`: S_510510 < -(1999/2000) R_510510.
+
+No unresolved normal-equation or closure provider is assumed in these results.
+The research memo derives S/R -> -1 along distinct primorials using the finite
+bound and Bertrand's postulate. That final prime-indexed assembly is not a Lean
+declaration here. It rules out error-free fixed-factor absorption; it does not
+rule out absolute error decay, squarefree closure, or RH.
+
+Open: an arithmetic upper bound R_(L_n)->0, equivalently a vanishing upper bound
+for every constrained dual objective. A valid signed absorption error may tend
+to zero but cannot be o(R) along valid cofinal stages. Completed exact minimizer
+experiments cover L=2,6,30,210; cheap three-site certificates stop at the seventh
+primorial 510510. No logarithmic-head computations were duplicated.
+See `RH/QRationalTailFluctuationResearch20261020.md` and
+`RH/QRationalTailExactChecks20261020.md`.
+
 ### Uniform complete-Q two-stage obstruction (2026-10-20 UTC)
 
 New unconditional declarations in `RH/QPrimePowerTwoStageObstruction.lean`:
