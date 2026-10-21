@@ -1,5 +1,38 @@
 # Theorem catalog
 
+### Factorial cutoffs, anchored targets, and sampled gains (2026-10-21)
+
+Established identities and obstructions, subject to the containing commit's checkpoint:
+
+- `NumberTheory/PrimeFactorialBlockJumps.lean`: exact actual factorial-valuation
+  jumps, complete signed compensated jumps, and prime pairing to floor quotients.
+- `RH/QFactorialCutoffObstruction.lean`: the actual D=3, p=2 cutoff has
+  incompatible jumps at 6 and 36 after every real linear compensation.
+  Its complete error against the constant-enlarged squarefree legal closure
+  equals `1/(2582 ζ(2))` plus an explicit norm square.
+- `RH/QPrimeAnchoredTarget.lean`: a continuous three-site charge extracts
+  constants from the full squarefree dictionary restricted to p-divisible
+  conductors. Exact heads through p+1 force the constant to be zero.
+- `Analysis/FiniteSampledGain.lean` and `Analysis/SampledScreenedGain.lean`:
+  exact signed source identities, fully sampled squared error budgets, and
+  certified lower bounds for actual one-direction and nested projection gains.
+  True screening annihilates old-approximant displacement in the source.
+- `Analysis/ActualZeroFixedStripConcentration.lean`: finite head/tail and
+  Markov estimates; fixed-strip concentration is equivalent to vanishing
+  normalized horizontal energy, including empty cutoffs and multiplicities.
+
+Conditional research reductions:
+
+- `riemannHypothesis_of_bounded_anchored_exact_heads` gives RH from a uniform
+  complete-Q energy budget for actual anchored exact-head approximants.
+- `tendsto_normalized_ordinate_of_fixedStrip` transfers separately provided
+  fixed-strip concentration and normalized Landau cancellation to actual phases.
+
+Open: the anchored arithmetic energy budget (or sufficient cumulative legal
+gains), the actual fixed-strip density provider, and the null-boundary passage
+to half-open phase bins. None is supplied by the conditional reductions.
+See `RH/MobiusSamplingContinuationResearch20261021.md`.
+
 ### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
 
 Established finite and Hilbert-space identities:
