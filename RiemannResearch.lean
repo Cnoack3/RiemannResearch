@@ -46,6 +46,11 @@ import RiemannResearch.RH.QPrimePowerConstrainedHead
 import RiemannResearch.RH.QParityLegalGain
 import RiemannResearch.RH.QRationalPeriodRefinement
 import RiemannResearch.RH.QRationalStageGain
+import RiemannResearch.RH.QRationalStageCorrelation
+import RiemannResearch.RH.QRationalReoptimization
+import RiemannResearch.RH.QRationalDisplacementComparison
+import RiemannResearch.Analysis.GainBudgetConsumer
+import RiemannResearch.RH.QRationalGainProvider
 import RiemannResearch.RH.PrimePowerHilbertTarget
 import RiemannResearch.RH.PrimePowerTargetMellin
 import RiemannResearch.RH.QPrimePowerInterpolationClosure

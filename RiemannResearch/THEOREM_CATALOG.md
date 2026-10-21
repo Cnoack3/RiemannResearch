@@ -119,6 +119,36 @@ upper bound R_n -> 0, and RH. Neither the unconditional signed ratio nor the
 surrogate-metric contraction supplies this missing upper bound.
 See `RH/QSignedRatioAndTargetCapsResearch20261020.md`.
 
+### Recovered actual signed and screened rational gains (2026-10-21)
+
+Established finite and complete-Q identities, subject to the final successful
+server checkpoint for this change:
+
+- `RH/QRationalStageCorrelation.lean`: actual signed correlation equals the
+  correlation with optimizer displacement; exact one-direction square completion,
+  its lower certificate, divisor instantiation, and the quartic refund bound.
+- `RH/QRationalReoptimization.lean`: actual old-space projection in the later
+  rational metric; exact displacement = metric drift + genuine legal gain;
+  actual screened directions and their target-charge certificates.
+  `rationalScreened_residue_energy_pos` proves positive screened energy for every
+  e>=2 dividing the later period but not the old period, using the site L_n.
+  `rationalLegalGain_ge_new_divisor_charge` therefore has no assumed positive
+  denominator.
+- `RH/QRationalDisplacementComparison.lean`: complete-Q comparison with factors
+  1 and 5/3, and exact Q projection-gain comparison retaining signed mismatch.
+- `Analysis/GainBudgetConsumer.lean`: finite terminal gain estimate
+  `(1 + sum c_j) R_N <= R_0 + sum epsilon_j`, and summable-error zero-limit consumer.
+
+Conditional research reduction:
+`RH/QRationalGainProvider.lean` specializes the consumer to actual rational
+minima on cofinal chains with period ratios >=14 and concludes squarefree
+constant closure from its explicit arithmetic provider.
+
+Open: prove `hprovider` for actual gains, with divergent cumulative c_j and
+summable nonnegative errors. The positive screened denominator does not supply
+a lower bound for the signed numerator. Constant closure and RH remain open.
+See `RH/QRationalScreenedGainResearch20261021.md`.
+
 ### Rational tail fluctuations and absorption obstruction (2026-10-20 UTC)
 
 Established finite declarations after this change's successful server checkpoint:
