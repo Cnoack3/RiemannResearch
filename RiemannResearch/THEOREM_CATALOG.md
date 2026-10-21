@@ -1,5 +1,24 @@
 # Theorem catalog
 
+### Five actual squarefree legal directions (2026-10-21)
+
+- `RH/QResidueThreeMoments.lean`: exact conductor-three even/parity moments
+  and complete-Q second moment, with full weighted reindexing.
+- `RH/QSquarefreeLegalBasis.lean`: nonzero innovations at conductors 3,5,6;
+  `legalFrame_orthonormal`, legal closure membership, exact energy and
+  least-squares gap, and nonzero finite residuals for both logarithmic targets.
+- `RH/QPrimePowerLegalCoefficients.lean`: complete target moments, exact
+  `residueMoment_head_tail`, coefficients at all three new directions,
+  `qTarget_five_direction_energy`, and strictly positive remaining energy.
+
+These statements have no RH or assumed target-closure hypothesis. Publication
+is subject to the server checkpoint. Numerical evaluations and informal
+AP-series/explicit coordinate bounds are distinguished from Lean declarations
+in `RH/LegalBasisContinuationResearch20261021.md`.
+
+Open: infinite legal-basis completeness and Parseval saturation of the remaining
+F2 and F3 energy. Ambient prime-valuation completeness is not a substitute.
+
 ### Arbitrary signed sieve rows and one-sign-change obstruction (2026-10-20)
 
 New unconditional declarations, subject to this change's final server checkpoint:
