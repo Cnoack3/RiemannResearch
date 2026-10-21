@@ -239,6 +239,43 @@ theorem primePowerEulerProduct_scaled_tendsto_zero (σ : ℝ)
         dsimp [τ]
         ring
 
+/-- Finite Euler products below one decay faster than every fixed real power.
+The proof uses only the existing finite Euler expansion and exponent comparison. -/
+theorem primePowerEulerProduct_any_power_tendsto_zero (σ A : ℝ)
+    (hσ : 0 < σ) (hσ1 : σ < 1) :
+    Tendsto (fun H : ℕ => (H : ℝ) ^ A * primePowerEulerProduct σ H)
+      atTop (𝓝 0) := by
+  let τ : ℝ := (1 + σ) / 2
+  have hστ : σ < τ := by dsimp [τ]; linarith
+  have hτ : 0 < τ := hσ.trans hστ
+  have hτ1 : 0 < 1 - τ := by dsimp [τ]; linarith
+  obtain ⟨m, hm⟩ := exists_nat_gt (A / (1 - τ))
+  have hexp : A + (τ - 1) * (m : ℝ) < 0 := by
+    have hh := (div_lt_iff₀ hτ1).mp hm
+    nlinarith
+  obtain ⟨C, hC, hbound⟩ := primePowerEulerProduct_eventually_le_pow σ τ hσ hστ m
+  have ht : Tendsto (fun H : ℕ => C * (H : ℝ) ^ (A + (τ - 1) * (m : ℝ))) atTop (𝓝 0) := by
+    have h := ((tendsto_rpow_neg_atTop (neg_pos.mpr hexp)).comp
+      (tendsto_natCast_atTop_atTop : Tendsto (fun H : ℕ => (H : ℝ)) atTop atTop)).const_mul C
+    simpa only [neg_neg, Function.comp_def, mul_zero] using h
+  apply squeeze_zero' ?_ ?_ ht
+  · exact Filter.Eventually.of_forall (fun H =>
+      mul_nonneg (Real.rpow_nonneg (Nat.cast_nonneg H) _)
+        (primePowerEulerProduct_pos σ hσ H).le)
+  · filter_upwards [hbound, eventually_ge_atTop 1] with H hH hH1
+    have hHR : (0 : ℝ) < H := by exact_mod_cast (show 0 < H by omega)
+    have hbase := primePowerEulerProduct_le_rpow τ hτ H hH1
+    have hpow := pow_le_pow_left₀ (primePowerEulerProduct_pos τ hτ H).le hbase m
+    calc
+      _ ≤ (H : ℝ) ^ A * (C * primePowerEulerProduct τ H ^ m) :=
+        mul_le_mul_of_nonneg_left hH (Real.rpow_nonneg hHR.le _)
+      _ ≤ (H : ℝ) ^ A * (C * ((H : ℝ) ^ (τ - 1)) ^ m) :=
+        mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hpow hC.le)
+          (Real.rpow_nonneg hHR.le _)
+      _ = C * (H : ℝ) ^ (A + (τ - 1) * (m : ℝ)) := by
+        rw [← Real.rpow_mul_natCast hHR.le, mul_left_comm, ← Real.rpow_add hHR]
+
+
 end RiemannResearch.Analysis
 
 

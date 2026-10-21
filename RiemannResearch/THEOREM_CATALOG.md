@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Three-stage interpolation and prime-jump energy obstruction (2026-10-21)
+
+- `Analysis/ThreeStageSieveAlgebra.lean`: exact 3x3 determinant, Cramer solution
+  and uniqueness, singular compatibility, both alternating sign patterns,
+  variation identity, and full Gram and target-error identities.
+- `Analysis/PrimePowerEulerDecay.lean` and `RH/QPrimePowerSieveUniform.lean`:
+  arbitrary-real-power Euler decay; actual fixed-prime probes and monotonicity.
+- `RH/QSievePrimeJump.lean`: exact semiprime jumps of arbitrary finite
+  zero-drift sieve rows and complete-Q bounds on cumulative coefficients.
+- `Analysis/VanishingProbeCost.lean`: scalar norm-divergence consumer.
+- `RH/QThreeStageSieveEnergy.lean`: actual three-stage probe/energy bounds;
+  `threeStage_prime_cutoffs_norm_tendsto_atTop` rules out bounded complete
+  norm for cofinal increasing prime-cutoff rows matching any fixed nonzero
+  Euler signature. Bertrand discharges the short-prime witnesses. No sign,
+  variation, determinant-gap, RH, or assumed energy hypothesis is used.
+
+The coherent candidate passed server job `job_glGMgJ9jle0g9AD2X0YuRw3pTIXboR3d`,
+exit 0, verified=true. Saved-source audit and publication remain checkpoint-gated.
+See `RH/ThreeStageSieveResearch20261021.md` for exact hypotheses and evidence.
+
+The extension to arbitrary row lengths and the continuous separator of the
+entire fixed-p raw-sieve span plus constants are ordinary proved arguments
+recorded in the note; their infinite-series Lean assembly remains Open.
+Full squarefree-divisor target closure and RH remain Open.
+
 ### Five actual squarefree legal directions (2026-10-21)
 
 - `RH/QResidueThreeMoments.lean`: exact conductor-three even/parity moments
@@ -45,8 +70,10 @@ Final integrated publication is separately checkpoint-gated.
 See `RH/SignedSieveRowsObstructionResearch20261020.md` for assumptions,
 proof identities, excluded families, and the remaining alternating-row agenda.
 
-Open: multiple-sign-change rows with growing variation and controlled full
-energy; broader exact-head squarefree constructions; target closure; RH.
+Update (2026-10-21): cofinal three-stage rows matching a fixed nonzero signature
+are excluded by the prime-jump energy theorem above. The broader arbitrary-row
+obstruction has an ordinary proof awaiting its infinite-series Lean assembly.
+Open: broader squarefree-divisor constructions, full target closure, and RH.
 
 ### Orthonormal parity coordinates and logarithmic rigidity (2026-10-20 UTC)
 

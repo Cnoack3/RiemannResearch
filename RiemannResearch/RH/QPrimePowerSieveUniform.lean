@@ -28,6 +28,40 @@ open scoped Topology
 namespace RiemannResearch.RH.QPrimePowerSieve
 open RiemannResearch.Analysis PrimeSieveSecant
 
+/-- The actual fixed-prime Euler probes inherit arbitrary-power decay. -/
+theorem primePowerEulerFactor_any_power_tendsto_zero (p : ℕ) (hp : p.Prime)
+    (σ A : ℝ) (hσ : 0 < σ) (hσ1 : σ < 1) :
+    Tendsto (fun H : ℕ => (H : ℝ) ^ A * primePowerEulerFactor p H σ) atTop (𝓝 0) := by
+  have h := (primePowerEulerProduct_any_power_tendsto_zero σ A hσ hσ1).const_mul
+    ((p : ℝ) ^ (-σ) / (1 - (p : ℝ) ^ (-σ)))
+  simp only [mul_zero] at h
+  apply h.congr'
+  filter_upwards [eventually_ge_atTop p] with H hH
+  change _ = (H : ℝ) ^ A * ((p : ℝ) ^ (-σ) *
+    ∏ q ∈ H.primesLE.erase p, (1 - (q : ℝ) ^ (-σ)))
+  rw [show H.primesLE = H.succ.primesBelow by rfl,
+    primePowerEulerProduct_erase σ hσ p H hp hH]
+  ring
+
+theorem primePowerEulerFactor_le_of_le (p H K : ℕ) (hp : p.Prime)
+    (hpH : p ≤ H) (hHK : H ≤ K) (σ : ℝ) (hσ : 0 < σ) :
+    primePowerEulerFactor p K σ ≤ primePowerEulerFactor p H σ := by
+  have ha : Antitone (fun n => primePowerEulerFactor p (p + n) σ) := by
+    apply antitone_nat_of_succ_le
+    intro n
+    by_cases hprime : (p + n + 1).Prime
+    · rw [show p + (n + 1) = p + n + 1 by omega,
+        primePowerEulerFactor_succ_prime p (p + n) (by omega) hprime σ]
+      have he := primePowerEulerFactor_pos p (p + n) hp.pos σ hσ
+      have hr := Real.rpow_nonneg (Nat.cast_nonneg (p + n + 1)) (-σ)
+      nlinarith
+    · rw [show p + (n + 1) = p + n + 1 by omega,
+        primePowerEulerFactor_succ_not_prime p (p + n) hprime σ]
+  have hh := ha (show H - p ≤ K - p by omega)
+  simpa only [Nat.add_sub_of_le hpH, Nat.add_sub_of_le (hpH.trans hHK)] using hh
+
+
+
 theorem primePowerEulerFactor_scaled_tendsto_zero (p : ℕ) (hp : p.Prime)
     (σ : ℝ) (hσ : 0 < σ) (hσ1 : σ < 1) :
     Tendsto (fun H : ℕ => (H : ℝ) ^ (1 - σ) * primePowerEulerFactor p H σ)
