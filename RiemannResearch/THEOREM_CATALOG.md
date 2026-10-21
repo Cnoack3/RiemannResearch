@@ -1,5 +1,49 @@
 # Theorem catalog
 
+### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
+
+Established finite and Hilbert-space identities:
+
+- `Analysis/FiniteCellSampling.lean`: exact regrouping and importance-weighted
+  sample limits for a finite cell partition, plus relabeling invariance.
+- `Analysis/FiniteWeightedSampling.lean`: exact signed form/energy differences,
+  relative energy comparison, signed source error, quadratic optimizer
+  displacement and true residual bounds, and sampled-minimum comparison.
+- `Analysis/FiniteSamplingDiagonal.lean`: a strictly increasing diagonal with
+  prescribed positive errors, conditional on each fixed finite stage converging.
+- `Analysis/PrimePhaseCRTCells.lean`: literal fractional-log prime phases,
+  floor bins, unique CRT coding, and the correct positive representative;
+  physical zero residue is represented by L. Frequency inputs remain explicit.
+- `RH/QZeroPhaseSampling.lean` and `RH/QPrimePhaseSampling.lean`: complete
+  periodic Q inner products, norm comparisons, and exact CRT-phase sampling.
+  The weights retain every arithmetic-progression tail. Physical agreement is
+  required only at positive coordinates, avoiding an auxiliary-zero mismatch.
+- `NumberTheory/PrimeLogValuationMobius.lean`: the actual `Nat.log` jump is the
+  positive-power indicator; its divisor sum is `Nat.factorization`; actual
+  Moebius inversion and cumulative summation recover `Nat.log` exactly.
+- `RH/PrimeValuationClosureObstruction.lean`: any actual Q representative of
+  the prime valuation is outside `closureWithConstants`, because its jumps at
+  p and p² are 1 and 2. This does not exclude the floor-logarithm target.
+
+Conditional research reduction:
+
+- `RH/QZeroPhaseSamplingRH.lean`:
+  `riemannHypothesis_of_weighted_sampled_error` derives Mathlib RH from
+  genuine squarefree-legal approximants, bounded periodic residual realizations,
+  cell-frequency relative errors at most one half, and sampled errors tending
+  to zero. The simpler norm-square closure criterion is also supplied.
+
+Open obligations: (1) an actual multiplicity-preserving zeta-zero analytic
+provider for the joint bin frequencies; (2) an independent arithmetic estimate
+forcing the complete legal approximation errors to zero. Classical fixed-stage
+zero equidistribution is known; its provider chain is not completed here.
+Finite inversion alone does not give a bounded closure-preserving transform.
+
+See `RH/QZeroPhaseSamplingResearch20261021.md` and
+`RH/PrimeLogValuationResearch20261021.md` for proofs, precise hypotheses,
+verification evidence, and a coordinated RH agenda. Publication is certified
+only by the containing commit's successful Lean-server checkpoint.
+
 ### Three-stage interpolation and prime-jump energy obstruction (2026-10-21)
 
 - `Analysis/ThreeStageSieveAlgebra.lean`: exact 3x3 determinant, Cramer solution
