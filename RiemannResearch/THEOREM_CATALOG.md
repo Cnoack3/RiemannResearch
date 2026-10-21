@@ -177,6 +177,28 @@ primorial 510510. No logarithmic-head computations were duplicated.
 See `RH/QRationalTailFluctuationResearch20261020.md` and
 `RH/QRationalTailExactChecks20261020.md`.
 
+### Simultaneous coprime-pair energy certificates (2026-10-21 UTC)
+
+New finite results for the actual complete-divisor rational minimizer:
+
+- `Analysis/CoprimePairEnergy.lean`: exact pair and shared-coordinate square
+  completions, the finite-sum energy gap, and strict improvement over every
+  selected single pair when a second positive pair is present.
+- `RH/QRationalCoprimePairs.lean`: `rational_coprime_pairs_gap` retains all
+  unused-site, shared-coordinate, and pair-mean squares. With
+  A=sum w_(q-1)w_q/(w_(q-1)+w_q), it gives
+  R >= b+w_1 A/(w_1+A) for any disjoint family of coprime pairs.
+- `rationalSignedTail_coprime_pairs_ratio_bound` retains the full endpoint
+  in the denominator. `seventh_primorial_twenty_pair_absorption_fails` proves
+  S_510510 < -(9999/10000)R_510510 with no hypotheses or optimizer solve.
+
+The general application assumes only finite site ranges, coprimality, and
+pair disjointness. The concrete theorem discharges them by exact computation.
+Open: an independent upper estimate forcing the primorial minimum to zero.
+These lower certificates and upper bounds on S do not establish constant
+squarefree closure or RH. See `RH/QRationalCoprimePairResearch20261021.md`
+for the exact identity, verification provenance, and reproducible Fraction checks.
+
 ### Uniform complete-Q two-stage obstruction (2026-10-20 UTC)
 
 New unconditional declarations in `RH/QPrimePowerTwoStageObstruction.lean`:
