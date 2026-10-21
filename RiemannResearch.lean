@@ -20,6 +20,8 @@ import RiemannResearch.RH.QThreeStageSieveEnergy
 import RiemannResearch.RH.QPrimePowerHilbertFrame
 import RiemannResearch.RH.QPrimePowerWaveletCoefficients
 import RiemannResearch.RH.QFinitePrimeBasis
+import RiemannResearch.RH.QPrimePowerMixedWavelet
+import RiemannResearch.RH.QPrimePowerMixedCoefficients
 import RiemannResearch.RH.QParityBasis
 import RiemannResearch.RH.QPrimePowerParityBasis
 import RiemannResearch.RH.QResidueThreeMoments

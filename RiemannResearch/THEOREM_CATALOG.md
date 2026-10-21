@@ -185,6 +185,17 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   `qTarget_primePower_energy_exact` and `qTarget_primePower_error_exact`
   retain the full residual and every signed trial-coefficient discrepancy.
   This is an ambient wavelet expansion, not a legal-membership provider.
+- `RH/QPrimePowerMixedWavelet.lean` (2026-10-21 UTC):
+  `divisorWavelet_primePower_mul` gives the exact coprime factorization
+  into adjacent p-power tails, with every signed Moebius coefficient.
+- `RH/QPrimePowerMixedCoefficients.lean` (2026-10-21 UTC):
+  `qTarget_scaled_primePower_divisor` computes the exact dilation moment.
+  `qTarget_inner_mixed_divisorWavelet` and its normalized version vanish
+  for prime p and nontrivial p-coprime cofactor.
+  `qTarget_mixed_modes_error_exact` retains the complete norm-square
+  residual and signed coefficients. Legal closure preservation is not asserted.
+  Saved-source/axiom check `job_BkDWoFzxSF1ltu_DvyDoKvPsQrHn_huG`:
+  exit 0, standard foundations only. Final publication is checkpoint-gated.
 
 Open: Meixner orthogonality and completeness for the full valuation basis,
 Parseval saturation for the legal squarefree basis, and membership of the full

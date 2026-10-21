@@ -34,7 +34,8 @@ open scoped BigOperators RealInnerProductSpace
 namespace RiemannResearch.RH.PrimePowerTarget
 open ZetaTwoHilbert ZetaTwoProbability QDivisibilityDensity QDivisorHilbert
 
-private theorem log_mul_power (p k n : ℕ) (hp : 1 < p) (hn : n ≠ 0) :
+/-- Multiplication by a base power shifts the floor logarithm exactly. -/
+theorem log_mul_power (p k n : ℕ) (hp : 1 < p) (hn : n ≠ 0) :
     Nat.log p (p ^ k * n) = Nat.log p n + k := by
   induction k with
   | zero => simp

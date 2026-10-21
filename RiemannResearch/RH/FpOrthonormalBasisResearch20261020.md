@@ -120,6 +120,49 @@ mixed-prime target coefficients, and legal Parseval saturation are not
 discharged by these results. The first dyadic coefficient remains
 \(1/\sqrt3\), with captured energy \(1/3\).
 
+## Exact mixed-prime cancellation (21 October 2026 UTC)
+
+The modules QPrimePowerMixedWavelet and QPrimePowerMixedCoefficients prove
+the coprime factorization and exact target cancellation. Write V_t for the
+raw divisor wavelet, U_t for its normalization, and D_d for divisibility by d.
+For prime p, k at least zero, r>1, and (p,r)=1,
+\[
+ V_{p^{k+1}r}=\sum_{d\mid r}\mu(r/d)d^2
+ \left(p^{2(k+1)}D_{p^{k+1}d}-p^{2k}D_{p^kd}\right).
+\]
+Every signed Moebius term is retained. The exact dilation identity is
+\[
+ p^{2k}\langle F_p,D_{p^kd}\rangle_Q
+ =\langle F_p,D_d\rangle_Q+k/d^2\qquad(d>0).
+\]
+Consequently,
+\[
+ \boxed{\langle F_p,V_{p^{k+1}r}\rangle_Q
+ =\sum_{d\mid r}\mu(r/d)=0.}
+\]
+Normalization preserves this cancellation. It applies to both F_2 and F_3;
+the target remains Nat.log p n, not the prime valuation.
+
+For any finite collection S of these mixed conductors and arbitrary f,
+the theorem qTarget_mixed_modes_error_exact gives
+\[
+ \boxed{\|F_p-f\|_Q^2
+ =\sum_{t\in S}\langle f,U_t\rangle_Q^2+
+ \left\|F_p-f+\sum_{t\in S}\langle f,U_t\rangle_Q U_t\right\|_Q^2.}
+\]
+The signed coefficients and full residual are retained.
+Ambient removal of these modes has not been shown to preserve C.
+
+Saved-source check job_BkDWoFzxSF1ltu_DvyDoKvPsQrHn_huG succeeded
+(exit 0, 39.785 seconds), importing both modules. Axiom inspection of the
+factorization, cancellation, and exact-error theorems reported only
+propext, Classical.choice, and Quot.sound. Earlier timeout jobs are
+terminal and superseded by this successful check.
+Final project acceptance and publication remain subject to the checkpoint.
+The existing log_mul_power proof is now public for reuse.
+Meixner completeness, legal Parseval saturation, and membership of F_2 and
+F_3 in closureWithConstants remain open.
+
 ## Formal rigidity of functions of F_p
 
 For \(\Delta f(n)=f(n)-f(n-1)\), every f in C satisfies
