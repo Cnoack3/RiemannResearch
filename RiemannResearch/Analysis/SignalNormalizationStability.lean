@@ -175,4 +175,22 @@ theorem normalized_error_orthogonal (u e : E) (hu : 0 < ‖u‖ ^ 2)
   rw [normalized_error_exact u e hu h, orthogonalError_norm_sq u e hu]
   ring
 
+/-- Exact vector identity retaining only the orthogonal source component. -/
+theorem normalized_sub_eq_smul_orthogonalError (u v : E)
+    (hd : inner ℝ u v ≠ 0) :
+    normalized u v - normalized u u =
+      (inner ℝ u v)⁻¹ • orthogonalError u v := by
+  have hs : (inner ℝ u v)⁻¹ * (inner ℝ u v / ‖u‖ ^ 2) = (‖u‖ ^ 2)⁻¹ := by
+    rw [div_eq_mul_inv, ← mul_assoc, inv_mul_cancel₀ hd, one_mul]
+  simp only [normalized, orthogonalError, smul_sub, smul_smul,
+    real_inner_self_eq_norm_sq, hs]
+
+/-- The parallel component cancels even when the sample has a large radial bias. -/
+theorem normalized_error_screened (u v : E) (hd : inner ℝ u v ≠ 0) :
+    ‖normalized u v - normalized u u‖ ^ 2 =
+      ‖orthogonalError u v‖ ^ 2 / (inner ℝ u v) ^ 2 := by
+  rw [normalized_sub_eq_smul_orthogonalError u v hd,
+    norm_smul, Real.norm_eq_abs, mul_pow, sq_abs, inv_pow]
+  ring
+
 end RiemannResearch.Analysis.SignalNormalizationStability

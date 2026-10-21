@@ -327,4 +327,164 @@ theorem inverseNorm_sq_le_entrywise [DecidableEq ι] {v : ι → H}
         (mul_le_mul (he i) (he j) (abs_nonneg _) (hη i)) (abs_nonneg _)
     _ = _ := by ring
 
+/-- Remove exactly the component parallel to the signal in the true dual metric. -/
+def screenedSource {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b z : ι → ℝ) : ι → ℝ :=
+  z - (inversePair hv b z / capacity hv b) • b
+
+theorem minimumVector_screenedSource {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) :
+    minimumVector hv (screenedSource hv b z) =
+      orthogonalError (minimumVector hv b) (minimumVector hv z) := by
+  change sourceLinear hv (z - (inversePair hv b z / capacity hv b) • b) = _
+  rw [map_sub, map_smul, sourceLinear_apply, sourceLinear_apply]
+  simp only [orthogonalError, inversePair, capacity_eq_norm_sq]
+
+theorem inversePair_screenedSource {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) (hb : b ≠ 0) :
+    inversePair hv b (screenedSource hv b z) = 0 := by
+  unfold inversePair
+  rw [minimumVector_screenedSource]
+  exact orthogonalError_pairing _ _
+    (by simpa only [← capacity_eq_norm_sq] using capacity_pos hv b hb)
+
+/-- Complete signed rank-one correction, with no entrywise absolute values. -/
+theorem inverseNorm_screenedSource_sq {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) (hb : b ≠ 0) :
+    inverseNorm hv (screenedSource hv b z) ^ 2 =
+      inverseNorm hv z ^ 2 - inversePair hv b z ^ 2 / capacity hv b := by
+  have hp : 0 < ‖minimumVector hv b‖ ^ 2 := by
+    simpa only [← capacity_eq_norm_sq] using capacity_pos hv b hb
+  rw [inverseNorm, minimumVector_screenedSource,
+    orthogonalError_norm_sq _ _ hp]
+  simp only [inverseNorm, inversePair, capacity_eq_norm_sq]
+  have hn : ‖minimumVector hv b‖ ≠ 0 := by
+    intro h
+    rw [h] at hp
+    norm_num at hp
+  field_simp [hn]
+
+/-- Exact normalized error depends only on the screened source. -/
+theorem normalized_error_screenedSource {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ)
+    (hd : inversePair hv b z ≠ 0) :
+    ‖Fintype.linearCombination ℝ v
+      (normalizedCoefficients hv b z - normalizedCoefficients hv b b)‖ ^ 2 =
+      inverseNorm hv (screenedSource hv b z) ^ 2 / inversePair hv b z ^ 2 := by
+  rw [map_sub, synthesis_normalizedCoefficients, synthesis_normalizedCoefficients,
+    normalized_error_screened _ _ hd]
+  rw [inverseNorm, minimumVector_screenedSource]
+  rfl
+
+theorem normalized_target_error_screenedSource {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ)
+    (hb : b ≠ 0) (hd : inversePair hv b z ≠ 0)
+    (target : H) (ht : ‖target‖ ^ 2 = 1)
+    (hobs : ∀ i, inner ℝ (v i) target = b i) :
+    ‖target - Fintype.linearCombination ℝ v (normalizedCoefficients hv b z)‖ ^ 2 =
+      1 / capacity hv b - 1 +
+        inverseNorm hv (screenedSource hv b z) ^ 2 / inversePair hv b z ^ 2 := by
+  rw [normalized_target_error_exact hv b z hb hd target ht hobs,
+    normalized_error_screenedSource hv b z hd]
+
+/-- A screened relative budget suffices; radial signal error can be arbitrary. -/
+theorem normalized_target_error_le_of_screenedSource {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ)
+    (hb : b ≠ 0) (hd : inversePair hv b z ≠ 0)
+    (target : H) (ht : ‖target‖ ^ 2 = 1)
+    (hobs : ∀ i, inner ℝ (v i) target = b i)
+    (η : ℝ) (hη : 0 ≤ η)
+    (he : inverseNorm hv (screenedSource hv b z) ≤ η * |inversePair hv b z|) :
+    ‖target - Fintype.linearCombination ℝ v (normalizedCoefficients hv b z)‖ ^ 2 ≤
+      1 / capacity hv b - 1 + η ^ 2 := by
+  rw [normalized_target_error_screenedSource hv b z hb hd target ht hobs]
+  apply add_le_add le_rfl
+  apply (div_le_iff₀ (sq_pos_of_ne_zero hd)).mpr
+  have hsq := (sq_le_sq₀ (norm_nonneg (minimumVector hv (screenedSource hv b z)))
+    (mul_nonneg hη (abs_nonneg _))).mpr he
+  simpa only [mul_pow, sq_abs, inverseNorm] using hsq
+
+theorem inverseNorm_sq_add {v : ι → H} (hv : LinearIndependent ℝ v)
+    (x y : ι → ℝ) :
+    inverseNorm hv (x + y) ^ 2 =
+      inverseNorm hv x ^ 2 + 2 * inversePair hv x y + inverseNorm hv y ^ 2 := by
+  change ‖sourceLinear hv (x + y)‖ ^ 2 = _
+  rw [map_add, sourceLinear_apply, sourceLinear_apply, norm_add_sq_real]
+  rfl
+
+
+theorem normalized_error_screenedSource_norm {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ)
+    (hd : inversePair hv b z ≠ 0) :
+    ‖Fintype.linearCombination ℝ v
+      (normalizedCoefficients hv b z - normalizedCoefficients hv b b)‖ =
+      inverseNorm hv (screenedSource hv b z) / |inversePair hv b z| := by
+  rw [map_sub, synthesis_normalizedCoefficients, synthesis_normalizedCoefficients,
+    normalized_sub_eq_smul_orthogonalError _ _ hd,
+    norm_smul, Real.norm_eq_abs, abs_inv, inverseNorm, minimumVector_screenedSource]
+  unfold inversePair
+  ring
+
+
+/-- Literal full inverse-matrix formula for the screened energy. -/
+theorem inverseNorm_screenedSource_sq_eq_matrix [DecidableEq ι] {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) (hb : b ≠ 0) :
+    inverseNorm hv (screenedSource hv b z) ^ 2 =
+      dotProduct z ((gramMatrix v)⁻¹.mulVec z) -
+        (dotProduct b ((gramMatrix v)⁻¹.mulVec z)) ^ 2 /
+          dotProduct b ((gramMatrix v)⁻¹.mulVec b) := by
+  have hc : capacity hv b = dotProduct b ((gramMatrix v)⁻¹.mulVec b) := by
+    rw [← inversePair_self hv b, inversePair_eq_matrix]
+  rw [inverseNorm_screenedSource_sq hv b z hb, inverseNorm_sq_eq_matrix,
+    inversePair_eq_matrix, hc]
+
+/-- Projective convergence in the actual inverse metric is exactly sufficient
+for convergence of the normalized synthesis. -/
+theorem normalized_synthesis_tendsto_iff_screenedRatio {v : ι → H}
+    (hv : LinearIndependent ℝ v) {α : Type*} {l : Filter α}
+    (b : ι → ℝ) (z : α → ι → ℝ)
+    (hd : ∀ᶠ t in l, inversePair hv b (z t) ≠ 0) :
+    Tendsto (fun t => Fintype.linearCombination ℝ v (normalizedCoefficients hv b (z t))) l
+      (𝓝 (Fintype.linearCombination ℝ v (normalizedCoefficients hv b b))) ↔
+    Tendsto (fun t => inverseNorm hv (screenedSource hv b (z t)) /
+      |inversePair hv b (z t)|) l (𝓝 0) := by
+  rw [tendsto_iff_norm_sub_tendsto_zero]
+  apply tendsto_congr'
+  filter_upwards [hd] with t ht
+  rw [← map_sub, normalized_error_screenedSource_norm hv b (z t) ht]
+
+/-- Growing families need capacity saturation and vanishing screened ratios.
+There is no uniform inverse-condition-number or radial-error assumption. -/
+theorem target_tendsto_of_capacity_screenedRatio
+    {J : ℕ → Type*} [∀ j, Fintype (J j)]
+    (v : (j : ℕ) → J j → H) (hv : ∀ j, LinearIndependent ℝ (v j))
+    (b z : (j : ℕ) → J j → ℝ) (hb : ∀ j, b j ≠ 0)
+    (hd : ∀ j, inversePair (hv j) (b j) (z j) ≠ 0)
+    (target : H) (ht : ‖target‖ ^ 2 = 1)
+    (hobs : ∀ j i, inner ℝ (v j i) target = b j i)
+    (hcap : Tendsto (fun j => capacity (hv j) (b j)) atTop (𝓝 1))
+    (hratio : Tendsto (fun j =>
+      inverseNorm (hv j) (screenedSource (hv j) (b j) (z j)) /
+        |inversePair (hv j) (b j) (z j)|) atTop (𝓝 0)) :
+    Tendsto (fun j => Fintype.linearCombination ℝ (v j)
+      (normalizedCoefficients (hv j) (b j) (z j))) atTop (𝓝 target) := by
+  have hlim : Tendsto (fun j => 1 / capacity (hv j) (b j) - 1 +
+      (inverseNorm (hv j) (screenedSource (hv j) (b j) (z j)) /
+        |inversePair (hv j) (b j) (z j)|) ^ 2) atTop (𝓝 0) := by
+    have hc := (tendsto_const_nhds : Tendsto (fun _ : ℕ => (1 : ℝ))
+      atTop (𝓝 1)).div hcap (by norm_num)
+    simpa using (hc.sub_const 1).add (hratio.pow 2)
+  have hsq : Tendsto (fun j => ‖target - Fintype.linearCombination ℝ (v j)
+      (normalizedCoefficients (hv j) (b j) (z j))‖ ^ 2) atTop (𝓝 0) := by
+    apply hlim.congr'
+    apply Eventually.of_forall
+    intro j
+    dsimp only
+    rw [normalized_target_error_screenedSource (hv j) (b j) (z j) (hb j)
+      (hd j) target ht (hobs j), div_pow, sq_abs]
+  have hn := Real.continuous_sqrt.continuousAt.tendsto.comp hsq
+  apply tendsto_iff_norm_sub_tendsto_zero.mpr
+  simpa only [Function.comp_def, Real.sqrt_sq_eq_abs, abs_norm,
+    Real.sqrt_zero, norm_sub_rev] using hn
+
 end RiemannResearch.Analysis.FiniteGramSignalStability

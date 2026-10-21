@@ -1,42 +1,53 @@
 # Theorem catalog
 
-### Ramanujan zero signals and inverse-Gram stability (2026-10-21)
+### Ramanujan zero signals, relaxed density, and inverse-Gram stability (2026-10-21)
 
 Established finite and Hilbert-space results:
 
-- `Analysis/SignalNormalizationStability.lean`: exact orthogonal error and
-  Gram-determinant remainder; relative sampling error below one gives the
-  dimension-free quadratic normalization bound.
-- `Analysis/FiniteGramSignalStability.lean`: the literal actual inverse matrix
-  realizes the dual norm and pairing; exact true-signal normalization,
-  optimizer convergence, complete target error, anisotropic entrywise metric
-  certificates, and increasing stagewise sampling cutoffs. No uniform bound
-  on growing inverse Gram operators is assumed.
-- `RH/RamanujanZeroSignal.lean`: exact Radon--Nikodym weighted Q packet mean,
-  genuine finite packet independence and weighted Q Gram entries, sparse
-  squarefree prime signal, and exact normalized prime coefficients from a
-  certified inverse-metric error.
+- `Analysis/SignalNormalizationStability.lean`: exact normalization,
+  orthogonal vector identity and Gram-determinant remainder.
+- `Analysis/FiniteGramSignalStability.lean`: the literal actual inverse
+  matrix realizes the dual norm and pairing. Its full signed screened
+  rank-one formula gives the exact normalized error, projective convergence
+  criterion, complete target error, and anisotropic metric certificates.
+- `RH/RamanujanZeroSignal.lean`: exact weighted-Q/P packet mean and Gram
+  entries, finite packet independence, sparse squarefree prime signal,
+  signed Landau/density energy decomposition, and actual inverse-Gram
+  density budgets. Finite screened-error certificates give exact prime
+  normalization and complete unit-target error bounds without RH or density.
 
 Conditional research reductions:
 
+- `Analysis/ActualZeroSublinearEnergy.lean` proves that one shrinking strip
+  suffices: delta(T)^2 log T -> 0 and its actual inclusive right-half count
+  divided by T -> 0 imply E(T)/T -> 0. Actual Riemann--von Mangoldt supplies
+  the total-count upper bound. The moving-strip analytic count provider is Open.
+- `UniformLogLossDensity a b`, for every a > 0 and every fixed real b,
+  implies that weaker sublinear horizontal moment. A loglog/log window
+  absorbs every fixed log loss; the analytic density provider remains Open.
+- General exponential profiles have the explicit finite-band budget
+  M(T)/(T decay(T)^2), including their actual inverse-Gram coordinate cost.
 - `sampledSignal_tendsto`, `sampled_inverseNorm_error_tendsto`,
-  `coefficients_tendsto`, and `exists_strictMono_zero_cutoffs` use the existing
-  explicit `ActualZeroOrdinate.UniformSelbergDensity (1/4)` proposition.
-  Its unconditional classical analytic provider remains Open in Lean.
-- Fixed-stage coordinate convergence does suffice for arbitrarily accurate
-  increasing cutoffs in each actual inverse metric. Effective uniform cutoff
-  rates are not supplied and are not required for the existence theorem.
+  `coefficients_tendsto`, and `exists_strictMono_zero_cutoffs` now take
+  `SublinearHorizontalEnergy`; UniformSelbergDensity (1/4) is no longer
+  required in those theorem types. A checked transfer from every positive
+  UniformSelbergDensity exponent remains available; its classical provider is Open.
+- The growing-family target consumer requires capacity saturation and
+  vanishing screened ratios. It requires no uniform bound on inverse Gram
+  operators and no radial-error convergence.
 
-Open arithmetic obligation: prove saturation of the complete squarefree
-packet capacities, κ_D → 1. Equidistribution and normalization do not establish
-that assertion. The weighted Q/P Gram must not be replaced by an unweighted
-Q Gram or a diagonal phase-average matrix.
+Open arithmetic obligation: prove saturation of complete squarefree packet
+capacities, kappa_D -> 1. Neither density relaxation nor prime normalization
+supplies this assertion. Effective growing cutoffs require the actual Gram
+budgets or sharper signed screening. The weighted-Q/P Gram must be retained.
 
-The full source passed targeted job `job_rA4fzZsTPMLhf7Y-i5iUeFwZ7MF2XI72`,
-exit 0, verified=true; the containing commit's successful checkpoint is the
-publication certificate. See
-`RH/RamanujanInverseMetricResearch20261021.md` for exact identities,
-hypotheses, sources, verification evidence, and the remaining RH agenda.
+Targeted server job `job_uf5iCmx68d_G_97lUaLH3vpOpDfI5k5D` passed,
+exit 0, verified=true, reported execution 16.249 seconds. Six central new
+declarations had only ordinary foundations in their axiom lists; domain
+premises remain visible in their types. The containing commit's successful
+checkpoint validates publication. See
+`RH/RamanujanDensityRelaxationResearch20261021.md` for the proof chain,
+source references, exact Gram identities, and Open obligations.
 
 ### Factorial cutoffs, anchored targets, and sampled gains (2026-10-21)
 

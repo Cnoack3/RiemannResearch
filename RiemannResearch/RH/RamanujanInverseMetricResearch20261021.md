@@ -1,5 +1,12 @@
 # Ramanujan zero signals and inverse-Gram stability — 2026-10-21
 
+> Continuation: [relaxed density and screened inverse-Gram control](RamanujanDensityRelaxationResearch20261021.md)
+> strengthens the initial analytic premise in this note. The current Ramanujan
+> consumers take E(T)/T -> 0. A single shrinking strip, or every positive
+> exponential rate with any fixed logarithmic loss, is sufficient.
+> The analytic count provider and capacity saturation remain Open.
+
+
 ## Status and scope
 
 The containing commit's successful Lean-server checkpoint is the publication

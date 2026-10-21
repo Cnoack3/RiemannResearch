@@ -5,6 +5,7 @@ Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.FiniteGramSignalStability
 import RiemannResearch.Analysis.ActualRationalFMZLimits
+import RiemannResearch.Analysis.ActualZeroSublinearEnergy
 import RiemannResearch.RH.RamanujanFiniteSpanBridge
 import RiemannResearch.RH.ParetoResidueMean
 import RiemannResearch.RH.ZetaTwoHilbertSpace
@@ -20,11 +21,13 @@ The source supports the fixed-conductor analytic limit.
 The inverse-metric normalization and diagonal selection follow the
 user-directed research calculation of 21 October 2026.
 
-Formalization boundary: the zero-limit results explicitly take the
-repository's UniformSelbergDensity (1/4) proposition. Its classical
-analytic proof is not supplied here. The packet means, actual Gram
-identification, exact normalization and inverse-metric stability need
-no density or RH hypothesis. No growing-capacity saturation is asserted.
+Formalization boundary: the zero-limit results use SublinearHorizontalEnergy.
+ActualZeroSublinearEnergy derives this from a single shrinking-strip condition,
+or from every fixed logarithmic loss and every positive exponential rate in
+UniformLogLossDensity. The analytic count provider itself is not supplied.
+The packet means, actual Gram identification, exact normalization and
+inverse-metric stability need no density or RH hypothesis.
+No growing-capacity saturation is asserted.
 -/
 
 noncomputable section
@@ -138,7 +141,7 @@ theorem sampledSignal_eq_cos_sum (q : ℕ) (T : ℝ) :
   have hphase (u t : ℝ) : (ZeroOrdinate.phase u t).re = Real.cos (u * t) := by
     simp only [ZeroOrdinate.phase, Complex.exp_re, Complex.mul_re, Complex.mul_im,
       Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
-      mul_zero, zero_mul, sub_zero, add_zero, mul_one, Real.exp_zero, one_mul]
+      mul_zero, sub_zero, add_zero, mul_one, Real.exp_zero, one_mul]
   have hr : (ordinateSum T (Real.log (q : ℝ))).re =
       realSum T (fun ρ => Real.cos (Real.log (q : ℝ) * ρ.im)) := by
     simp [ordinateSum, ActualZeroOrdinate.sum, realSum, Complex.mul_re, hphase]
@@ -146,14 +149,14 @@ theorem sampledSignal_eq_cos_sum (q : ℕ) (T : ℝ) :
   congr 1
   rw [Complex.div_re]
   simp only [Complex.ofReal_re, Complex.ofReal_im, Complex.normSq_apply,
-    mul_zero, zero_mul, add_zero, hr]
+    mul_zero, add_zero, hr]
   by_cases hT : T = 0
   · simp [hT]
   · field_simp [hT]
     <;> ring
 
 theorem sampledSignal_tendsto (q : ℕ) (hq : 1 < q)
-    (hD : UniformSelbergDensity (1 / 4)) :
+    (hE : SublinearHorizontalEnergy) :
     Tendsto (sampledSignal q) atTop (𝓝 (ArithmeticFunction.vonMangoldt q)) := by
   change Tendsto (fun T : ℝ => -(2 * Real.pi * Real.sqrt (q : ℝ)) *
     (ordinateSum T (Real.log (q : ℝ)) / (T : ℂ)).re) atTop
@@ -162,9 +165,22 @@ theorem sampledSignal_tendsto (q : ℕ) (hq : 1 < q)
       (fun T : ℝ => ordinateSum T (Real.log (q : ℝ)) / (T : ℂ)) atTop
       (𝓝 (-((ArithmeticFunction.vonMangoldt q /
         ((2 * Real.pi) * Real.sqrt (q : ℝ)) : ℝ) : ℂ))) := by
-    simpa using
-      tendsto_rational_ordinate_div_vonMangoldt_of_uniformSelberg
-        (n := q) (m := 1) (by norm_num) hq hD
+    have hL : Tendsto
+        (fun T : ℝ => landauSum T (Real.log (q : ℝ)) / (T : ℂ)) atTop
+        (𝓝 (-(rationalLandauMain q 1 : ℂ))) := by
+      simpa using tendsto_rational_landau_div (n := q) (m := 1) (by norm_num) hq
+    have hsum := (tendsto_ordinate_landau_error_of_sublinear_horizontal
+      (Real.log (q : ℝ)) hE).add hL
+    simp only [zero_add] at hsum
+    have h' : Tendsto
+        (fun T : ℝ => ordinateSum T (Real.log (q : ℝ)) / (T : ℂ)) atTop
+        (𝓝 (-(rationalLandauMain q 1 : ℂ))) := by
+      convert hsum using 1
+      funext T
+      ring
+    simpa only [rationalLandauMain_eq_vonMangoldt_div_sqrt
+      (n := q) (m := 1) (by norm_num) hq, Nat.one_dvd, if_true,
+      Nat.div_one, Nat.cast_one, div_one] using h'
   have hr := (Complex.continuous_re.tendsto _).comp h
   simp only [Complex.neg_re, Complex.ofReal_re] at hr
   have hs : Real.sqrt (q : ℝ) ≠ 0 := by
@@ -193,19 +209,19 @@ theorem packetCapacity_le_one (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q) :
     hilbertOne_norm_sq (signal_observation s)
 
 theorem sampled_inverseNorm_error_tendsto (s : Finset ℕ)
-    (hs : ∀ q ∈ s, 1 < q) (hD : UniformSelbergDensity (1 / 4)) :
+    (hs : ∀ q ∈ s, 1 < q) (hE : SublinearHorizontalEnergy) :
     Tendsto (fun T => inverseNorm (family_independent s hs)
       (sampledVector s T - signal s)) atTop (𝓝 0) :=
   inverseNorm_error_tendsto (family_independent s hs) (signal s) (sampledVector s)
-    (fun i => sampledSignal_tendsto i.val (hs i.val i.property) hD)
+    (fun i => sampledSignal_tendsto i.val (hs i.val i.property) hE)
 
 theorem coefficients_tendsto (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q)
-    (h2 : 2 ∈ s) (hD : UniformSelbergDensity (1 / 4)) :
+    (h2 : 2 ∈ s) (hE : SublinearHorizontalEnergy) :
     Tendsto (coefficients s hs) atTop
       (𝓝 (normalizedCoefficients (family_independent s hs) (signal s) (signal s))) :=
   normalizedCoefficients_tendsto (family_independent s hs) (signal s)
     (signal_nonzero_of_two_mem s h2) (sampledVector s)
-    (fun i => sampledSignal_tendsto i.val (hs i.val i.property) hD)
+    (fun i => sampledSignal_tendsto i.val (hs i.val i.property) hE)
 
 /-- Exact prime-only normalization from a certified inverse-metric error. -/
 theorem coefficients_prime_signal (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q)
@@ -244,7 +260,7 @@ No uniform condition-number or fixed-stage convergence rate is needed. -/
 theorem exists_strictMono_zero_cutoffs
     (s : ℕ → Finset ℕ) (hs : ∀ j q, q ∈ s j → 1 < q)
     (h2 : ∀ j, 2 ∈ s j) (ε : ℕ → ℝ) (hε : ∀ j, 0 < ε j)
-    (hD : UniformSelbergDensity (1 / 4)) :
+    (hE : SublinearHorizontalEnergy) :
     ∃ τ : ℕ → ℕ, StrictMono τ ∧ (∀ j, j ≤ τ j) ∧
       ∀ j, inverseNorm (family_independent (s j) (hs j))
         (sampledVector (s j) (τ j : ℝ) - signal (s j)) ≤
@@ -254,7 +270,175 @@ theorem exists_strictMono_zero_cutoffs
     (fun j => signal (s j)) (fun j => signal_nonzero_of_two_mem (s j) (h2 j))
     (fun j n => sampledVector (s j) (n : ℝ)) ε hε
   intro j i
-  exact (sampledSignal_tendsto i.val (hs j i.val i.property) hD).comp
+  exact (sampledSignal_tendsto i.val (hs j i.val i.property) hE).comp
     tendsto_natCast_atTop_atTop
+
+/-- The centered Landau signal, including every actual zero and its multiplicity. -/
+def landauSignal (q : ℕ) (T : ℝ) : ℝ :=
+  -(2 * Real.pi * Real.sqrt (q : ℝ)) *
+    (landauSum T (Real.log (q : ℝ)) / (T : ℂ)).re
+
+def landauVector (s : Finset ℕ) (T : ℝ) (i : s) : ℝ := landauSignal i.val T
+
+def densityDefect (s : Finset ℕ) (T : ℝ) : s → ℝ :=
+  sampledVector s T - landauVector s T
+
+/-- Exact signed horizontal correction, before a norm majorant is used. -/
+theorem sampledSignal_sub_landauSignal (q : ℕ) (T : ℝ) :
+    sampledSignal q T - landauSignal q T =
+      (2 * Real.pi * Real.sqrt (q : ℝ)) *
+        (coshCorrection T (Real.log (q : ℝ)) / (T : ℂ)).re := by
+  rw [sampledSignal, landauSignal, exact_signed_correction, sub_div, Complex.sub_re]
+  ring
+
+/-- The total signal error retains the signed interaction of its two sources. -/
+theorem signal_error_decomposition (s : Finset ℕ) (T : ℝ) :
+    sampledVector s T - signal s =
+      (landauVector s T - signal s) + densityDefect s T := by
+  unfold densityDefect
+  abel
+
+theorem signal_error_energy_exact (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q) (T : ℝ) :
+    inverseNorm (family_independent s hs) (sampledVector s T - signal s) ^ 2 =
+      inverseNorm (family_independent s hs) (landauVector s T - signal s) ^ 2 +
+      2 * inversePair (family_independent s hs)
+        (landauVector s T - signal s) (densityDefect s T) +
+      inverseNorm (family_independent s hs) (densityDefect s T) ^ 2 := by
+  rw [signal_error_decomposition, inverseNorm_sq_add]
+
+/-- A coordinate weight for the moment-only density certificate. -/
+def horizontalSignalWeight (q : ℕ) : ℝ :=
+  (2 * Real.pi * Real.sqrt (q : ℝ)) *
+    ((Real.log (q : ℝ)) ^ 2 * Real.exp (|Real.log (q : ℝ)| / 2))
+
+theorem horizontalSignalWeight_nonneg (q : ℕ) : 0 ≤ horizontalSignalWeight q := by
+  unfold horizontalSignalWeight
+  positivity
+
+theorem sampledSignal_sub_landauSignal_abs_le (q : ℕ) (T : ℝ) (hT : 0 < T) :
+    |sampledSignal q T - landauSignal q T| ≤
+      horizontalSignalWeight q * (horizontalEnergy T / T) := by
+  have hc : 0 ≤ 2 * Real.pi * Real.sqrt (q : ℝ) := by positivity
+  have he : sampledSignal q T - landauSignal q T =
+      -(2 * Real.pi * Real.sqrt (q : ℝ)) *
+        ((ordinateSum T (Real.log (q : ℝ)) -
+          landauSum T (Real.log (q : ℝ))) / (T : ℂ)).re := by
+    rw [sampledSignal, landauSignal, sub_div, Complex.sub_re]
+    ring
+  rw [he, abs_mul, abs_neg, abs_of_nonneg hc]
+  calc
+    _ ≤ (2 * Real.pi * Real.sqrt (q : ℝ)) *
+        ‖(ordinateSum T (Real.log (q : ℝ)) -
+          landauSum T (Real.log (q : ℝ))) / (T : ℂ)‖ :=
+      mul_le_mul_of_nonneg_left (Complex.abs_re_le_norm _) hc
+    _ ≤ (2 * Real.pi * Real.sqrt (q : ℝ)) *
+        (((Real.log (q : ℝ)) ^ 2 * Real.exp (|Real.log (q : ℝ)| / 2)) *
+          horizontalEnergy T / T) := by
+      apply mul_le_mul_of_nonneg_left _ hc
+      rw [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hT]
+      exact div_le_div_of_nonneg_right (ordinate_landau_error T _) hT.le
+    _ = _ := by unfold horizontalSignalWeight; ring
+
+/-- An explicit cost computed from the actual full inverse Gram matrix. -/
+def inverseGramWeightBudget (s : Finset ℕ) (weight : ℕ → ℝ) : ℝ :=
+  ∑ i : s, ∑ j : s, |(gramMatrix (family s))⁻¹ i j| * weight i.val * weight j.val
+
+/-- Scaled anisotropic errors preserve the actual inverse matrix in their certificate. -/
+theorem densityDefect_metric_sq_le (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q)
+    (T E : ℝ) (weight : ℕ → ℝ) (hE : 0 ≤ E)
+    (hw : ∀ q ∈ s, 0 ≤ weight q)
+    (he : ∀ q ∈ s, |sampledSignal q T - landauSignal q T| ≤ weight q * E) :
+    inverseNorm (family_independent s hs) (densityDefect s T) ^ 2 ≤
+      E ^ 2 * inverseGramWeightBudget s weight := by
+  classical
+  have h := inverseNorm_sq_le_entrywise (family_independent s hs) (densityDefect s T)
+    (fun i => weight i.val * E)
+    (fun i => mul_nonneg (hw i.val i.property) hE)
+    (fun i => he i.val i.property)
+  apply h.trans_eq
+  simp only [inverseGramWeightBudget, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i _
+  apply Finset.sum_congr rfl
+  intro j _
+  ring
+
+theorem densityDefect_metric_sq_le_horizontalEnergy
+    (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q) (T : ℝ) (hT : 0 < T) :
+    inverseNorm (family_independent s hs) (densityDefect s T) ^ 2 ≤
+      (horizontalEnergy T / T) ^ 2 * inverseGramWeightBudget s horizontalSignalWeight := by
+  exact densityDefect_metric_sq_le s hs T (horizontalEnergy T / T) horizontalSignalWeight
+    (div_nonneg (horizontalEnergy_nonneg T) hT.le)
+    (fun q _ => horizontalSignalWeight_nonneg q)
+    (fun q _ => sampledSignal_sub_landauSignal_abs_le q T hT)
+
+def bandSignalWeight (q : ℕ) : ℝ :=
+  (2 * Real.pi * Real.sqrt (q : ℝ)) * (Real.log (q : ℝ)) ^ 2
+
+/-- The finite frequency band supplies a Gram-aware quantitative density budget. -/
+theorem densityDefect_metric_sq_le_tailProfile
+    (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q)
+    (T M decay θ : ℝ) (hT : 0 < T) (hM : 0 ≤ M) (hdecay : 0 < decay)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ < 1)
+    (hband : ∀ q ∈ s, |Real.log (q : ℝ)| ≤ θ * decay)
+    (htail : ∀ t ∈ Set.Icc (0 : ℝ) (1 / 2),
+      rightStrictTail T t ≤ M * Real.exp (-decay * t)) :
+    inverseNorm (family_independent s hs) (densityDefect s T) ^ 2 ≤
+      ((2 / (1 - θ ^ 2)) * (M / (T * decay ^ 2))) ^ 2 *
+        inverseGramWeightBudget s bandSignalWeight := by
+  have hθsq : 0 < 1 - θ ^ 2 := by
+    nlinarith [mul_pos (sub_pos.mpr hθ1) (by linarith : 0 < 1 + θ)]
+  apply densityDefect_metric_sq_le s hs T _ bandSignalWeight
+  · positivity
+  · intro q hq
+    unfold bandSignalWeight
+    positivity
+  · intro q hq
+    have hc : 0 ≤ 2 * Real.pi * Real.sqrt (q : ℝ) := by positivity
+    have he : sampledSignal q T - landauSignal q T =
+        -(2 * Real.pi * Real.sqrt (q : ℝ)) *
+          ((ordinateSum T (Real.log (q : ℝ)) -
+            landauSum T (Real.log (q : ℝ))) / (T : ℂ)).re := by
+      rw [sampledSignal, landauSignal, sub_div, Complex.sub_re]
+      ring
+    rw [he, abs_mul, abs_neg, abs_of_nonneg hc]
+    calc
+      _ ≤ (2 * Real.pi * Real.sqrt (q : ℝ)) *
+          ‖(ordinateSum T (Real.log (q : ℝ)) -
+            landauSum T (Real.log (q : ℝ))) / (T : ℂ)‖ :=
+        mul_le_mul_of_nonneg_left (Complex.abs_re_le_norm _) hc
+      _ ≤ (2 * Real.pi * Real.sqrt (q : ℝ)) *
+          ((2 * (Real.log (q : ℝ)) ^ 2 / (1 - θ ^ 2)) *
+            (M / (T * decay ^ 2))) :=
+        mul_le_mul_of_nonneg_left
+          (normalized_ordinate_landau_error_of_right_expTail_band T _ M decay θ
+            hT hM hdecay hθ0 hθ1 (hband q hq) htail) hc
+      _ = _ := by unfold bandSignalWeight; ring
+
+/-- The exact target formula uses only the screened actual sampled signal. -/
+theorem sampled_target_error_screened (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q)
+    (h2 : 2 ∈ s) (T : ℝ)
+    (hd : inversePair (family_independent s hs) (signal s) (sampledVector s T) ≠ 0) :
+    ‖hilbertOne - Fintype.linearCombination ℝ (family s) (coefficients s hs T)‖ ^ 2 =
+      1 / packetCapacity s hs - 1 +
+        inverseNorm (family_independent s hs)
+          (screenedSource (family_independent s hs) (signal s) (sampledVector s T)) ^ 2 /
+        inversePair (family_independent s hs) (signal s) (sampledVector s T) ^ 2 :=
+  normalized_target_error_screenedSource (family_independent s hs) (signal s)
+    (sampledVector s T) (signal_nonzero_of_two_mem s h2) hd
+    hilbertOne hilbertOne_norm_sq (signal_observation s)
+
+theorem sampled_target_error_le_of_screened (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q)
+    (h2 : 2 ∈ s) (T η : ℝ) (hη : 0 ≤ η)
+    (hd : inversePair (family_independent s hs) (signal s) (sampledVector s T) ≠ 0)
+    (he : inverseNorm (family_independent s hs)
+      (screenedSource (family_independent s hs) (signal s) (sampledVector s T)) ≤
+      η * |inversePair (family_independent s hs) (signal s) (sampledVector s T)|) :
+    ‖hilbertOne - Fintype.linearCombination ℝ (family s) (coefficients s hs T)‖ ^ 2 ≤
+      1 / packetCapacity s hs - 1 + η ^ 2 :=
+  normalized_target_error_le_of_screenedSource (family_independent s hs) (signal s)
+    (sampledVector s T) (signal_nonzero_of_two_mem s h2) hd
+    hilbertOne hilbertOne_norm_sq (signal_observation s) η hη he
+
 
 end RiemannResearch.RH.RamanujanZeroSignal
