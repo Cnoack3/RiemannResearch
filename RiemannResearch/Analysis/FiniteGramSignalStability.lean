@@ -1,0 +1,330 @@
+/-
+Copyright (c) 2026 Christian Noack. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Christian Noack
+-/
+import RiemannResearch.Analysis.FiniteGramCapacity
+import RiemannResearch.Analysis.FiniteHilbertGramMatrix
+import RiemannResearch.Analysis.SignalNormalizationStability
+import RiemannResearch.Analysis.FiniteSamplingDiagonal
+import Mathlib.Topology.Algebra.Module.FiniteDimension
+
+/-!
+# Sampling a signal in the actual inverse-Gram metric
+
+Source: the user-directed Ramanujan/zero-equidistribution argument,
+21 October 2026. The inverse is the existing actual Hilbert Gram inverse,
+constructed from linear independence. The inverse metric is represented
+isometrically by the minimum-observation vector, so no diagonal or
+independent-phase replacement of the original Gram form occurs.
+
+The exact mixed remainder precedes the relative-error bound. The final
+diagonal selection needs only fixed-stage coordinate convergence; no
+uniform bound on growing inverse Gram operators is assumed.
+-/
+
+noncomputable section
+open Filter
+open scoped BigOperators Topology
+
+namespace RiemannResearch.Analysis.FiniteGramSignalStability
+open FiniteHilbertGram FiniteHilbertConstraints FiniteGramCapacity
+open SignalNormalizationStability
+
+variable {ι H : Type*} [Fintype ι]
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+
+/-- The Riesz realization of the actual inverse Gram map. -/
+def sourceLinear {v : ι → H} (hv : LinearIndependent ℝ v) :
+    (ι → ℝ) →ₗ[ℝ] H :=
+  (Fintype.linearCombination ℝ v).comp (gramEquiv hv).symm.toLinearMap
+
+@[simp] theorem sourceLinear_apply {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b : ι → ℝ) : sourceLinear hv b = minimumVector hv b := rfl
+
+theorem minimumVector_sub {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b c : ι → ℝ) :
+    minimumVector hv (b - c) = minimumVector hv b - minimumVector hv c :=
+  (sourceLinear hv).map_sub b c
+
+/-- Exactly bᵀ H⁻¹ c, retaining every signed mixed term. -/
+def inversePair {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b c : ι → ℝ) : ℝ :=
+  inner ℝ (minimumVector hv b) (minimumVector hv c)
+
+/-- Exactly the H⁻¹ norm of the source vector. -/
+def inverseNorm {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b : ι → ℝ) : ℝ := ‖minimumVector hv b‖
+
+theorem inversePair_eq {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b c : ι → ℝ) :
+    inversePair hv b c = ∑ i, inverseSource hv b i * c i := by
+  change inner ℝ (Fintype.linearCombination ℝ v (inverseSource hv b))
+    (minimumVector hv c) = _
+  exact inner_synthesis_minimumVector hv c (inverseSource hv b)
+
+theorem inversePair_self {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b : ι → ℝ) : inversePair hv b b = capacity hv b := by
+  rw [inversePair, real_inner_self_eq_norm_sq, ← capacity_eq_norm_sq]
+
+theorem inverseNorm_sq {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b : ι → ℝ) : inverseNorm hv b ^ 2 = capacity hv b :=
+  (capacity_eq_norm_sq hv b).symm
+
+/-- Exact normalization uses the true source b, not its sampled estimate z. -/
+def normalizedCoefficients {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b z : ι → ℝ) : ι → ℝ :=
+  (inversePair hv b z)⁻¹ • inverseSource hv z
+
+theorem synthesis_normalizedCoefficients {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) :
+    Fintype.linearCombination ℝ v (normalizedCoefficients hv b z) =
+      normalized (minimumVector hv b) (minimumVector hv z) := by
+  rw [normalizedCoefficients, map_smul]
+  rfl
+
+theorem normalizedCoefficients_signal {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ)
+    (hd : inversePair hv b z ≠ 0) :
+    (∑ i, normalizedCoefficients hv b z i * b i) = 1 := by
+  have hp : (∑ i, inverseSource hv z i * b i) = inversePair hv b z := by
+    rw [← inversePair_eq]
+    exact real_inner_comm (minimumVector hv b) (minimumVector hv z)
+  simp only [normalizedCoefficients, Pi.smul_apply, smul_eq_mul, mul_assoc,
+    ← Finset.mul_sum, hp, inv_mul_cancel₀ hd]
+
+theorem normalized_energy_exact {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ)
+    (hb : b ≠ 0) (hd : inversePair hv b z ≠ 0) :
+    ‖Fintype.linearCombination ℝ v (normalizedCoefficients hv b z)‖ ^ 2 =
+      1 / capacity hv b +
+        ‖Fintype.linearCombination ℝ v
+          (normalizedCoefficients hv b z - normalizedCoefficients hv b b)‖ ^ 2 := by
+  rw [map_sub, synthesis_normalizedCoefficients, synthesis_normalizedCoefficients]
+  simpa only [capacity_eq_norm_sq] using
+    normalized_pythagoras (minimumVector hv b) (minimumVector hv z)
+      (by simpa only [← capacity_eq_norm_sq] using capacity_pos hv b hb) hd
+
+/-- Exact inverse-metric Gram-determinant remainder. -/
+theorem normalized_error_exact {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ)
+    (hb : b ≠ 0) (hd : inversePair hv b z ≠ 0) :
+    ‖Fintype.linearCombination ℝ v
+      (normalizedCoefficients hv b z - normalizedCoefficients hv b b)‖ ^ 2 =
+      (capacity hv b * capacity hv (z - b) - inversePair hv b (z - b) ^ 2) /
+        (capacity hv b * inversePair hv b z ^ 2) := by
+  have he : minimumVector hv b + minimumVector hv (z - b) =
+      minimumVector hv z := by
+    rw [minimumVector_sub]
+    abel
+  have hd' : inner ℝ (minimumVector hv b)
+      (minimumVector hv b + minimumVector hv (z - b)) ≠ 0 := by
+    rw [he]
+    exact hd
+  have h := SignalNormalizationStability.normalized_error_exact
+    (minimumVector hv b) (minimumVector hv (z - b))
+    (by simpa only [← capacity_eq_norm_sq] using capacity_pos hv b hb) hd'
+  rw [map_sub, synthesis_normalizedCoefficients, synthesis_normalizedCoefficients]
+  simpa only [he, capacity_eq_norm_sq, inversePair] using h
+
+theorem normalized_pairing_pos {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) (hb : b ≠ 0)
+    {ε : ℝ} (hε : ε < 1)
+    (he : inverseNorm hv (z - b) ≤ ε * inverseNorm hv b) :
+    0 < inversePair hv b z := by
+  have h := pairing_pos (minimumVector hv b)
+    (minimumVector hv z - minimumVector hv b)
+    (by simpa only [← capacity_eq_norm_sq] using capacity_pos hv b hb) hε
+    (by simpa only [inverseNorm, minimumVector_sub] using he)
+  simpa only [add_sub_cancel, inversePair] using h
+
+/-- A dimension-free quadratic stability bound in the actual inverse metric. -/
+theorem normalized_error_le {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) (hb : b ≠ 0)
+    {ε : ℝ} (hε0 : 0 ≤ ε) (hε : ε < 1)
+    (he : inverseNorm hv (z - b) ≤ ε * inverseNorm hv b) :
+    ‖Fintype.linearCombination ℝ v
+      (normalizedCoefficients hv b z - normalizedCoefficients hv b b)‖ ^ 2 ≤
+      ε ^ 2 / (capacity hv b * (1 - ε) ^ 2) := by
+  have h := SignalNormalizationStability.normalized_error_le
+    (minimumVector hv b) (minimumVector hv z - minimumVector hv b)
+    (by simpa only [← capacity_eq_norm_sq] using capacity_pos hv b hb)
+    hε0 hε (by simpa only [inverseNorm, minimumVector_sub] using he)
+  rw [map_sub, synthesis_normalizedCoefficients, synthesis_normalizedCoefficients]
+  simpa only [add_sub_cancel, capacity_eq_norm_sq] using h
+
+theorem minimumVector_tendsto {v : ι → H} (hv : LinearIndependent ℝ v)
+    {α : Type*} {l : Filter α} (b : ι → ℝ) (z : α → ι → ℝ)
+    (hz : ∀ i, Tendsto (fun t => z t i) l (𝓝 (b i))) :
+    Tendsto (fun t => minimumVector hv (z t)) l (𝓝 (minimumVector hv b)) := by
+  have h := ((sourceLinear hv).continuous_of_finiteDimensional.tendsto b).comp
+    (tendsto_pi_nhds.2 hz)
+  exact h
+
+/-- Finite coordinate convergence implies convergence in H⁻¹, with no
+hypothesis controlling the inverse uniformly across different stages. -/
+theorem inverseNorm_error_tendsto {v : ι → H} (hv : LinearIndependent ℝ v)
+    {α : Type*} {l : Filter α} (b : ι → ℝ) (z : α → ι → ℝ)
+    (hz : ∀ i, Tendsto (fun t => z t i) l (𝓝 (b i))) :
+    Tendsto (fun t => inverseNorm hv (z t - b)) l (𝓝 0) := by
+  have h := (minimumVector_tendsto hv b z hz).sub
+    (tendsto_const_nhds : Tendsto (fun _ : α => minimumVector hv b)
+      l (𝓝 (minimumVector hv b)))
+  have h' : Tendsto (fun t => minimumVector hv (z t - b)) l (𝓝 0) := by
+    simpa only [minimumVector_sub, sub_self] using h
+  simpa only [inverseNorm, norm_zero] using h'.norm
+
+theorem normalizedCoefficients_tendsto {v : ι → H}
+    (hv : LinearIndependent ℝ v) {α : Type*} {l : Filter α}
+    (b : ι → ℝ) (hb : b ≠ 0) (z : α → ι → ℝ)
+    (hz : ∀ i, Tendsto (fun t => z t i) l (𝓝 (b i))) :
+    Tendsto (fun t => normalizedCoefficients hv b (z t)) l
+      (𝓝 (normalizedCoefficients hv b b)) := by
+  have hz' := tendsto_pi_nhds.2 hz
+  have hs : Tendsto (fun t => inverseSource hv (z t)) l
+      (𝓝 (inverseSource hv b)) :=
+    (((gramEquiv hv).symm.toLinearMap.continuous_of_finiteDimensional).tendsto b).comp hz'
+  have hd : Tendsto (fun t => inversePair hv b (z t)) l
+      (𝓝 (inversePair hv b b)) :=
+    tendsto_const_nhds.inner (minimumVector_tendsto hv b z hz)
+  have hn : inversePair hv b b ≠ 0 := by
+    rw [inversePair_self]
+    exact ne_of_gt (capacity_pos hv b hb)
+  have hc := (tendsto_const_nhds :
+    Tendsto (fun _ : α => (1 : ℝ)) l (𝓝 1)).div hd hn
+  simpa only [normalizedCoefficients, Pi.div_apply, one_div] using hc.smul hs
+
+/-- Growing finite inverse metrics allow arbitrarily accurate increasing
+sample cutoffs. Fixed-stage convergence suffices, without a uniform rate. -/
+theorem exists_strictMono_diagonal_relative_error
+    {J : ℕ → Type*} [∀ j, Fintype (J j)]
+    (v : (j : ℕ) → J j → H) (hv : ∀ j, LinearIndependent ℝ (v j))
+    (b : (j : ℕ) → J j → ℝ) (hb : ∀ j, b j ≠ 0)
+    (z : (j : ℕ) → ℕ → J j → ℝ) (ε : ℕ → ℝ)
+    (hε : ∀ j, 0 < ε j)
+    (hz : ∀ j i, Tendsto (fun n => z j n i) atTop (𝓝 (b j i))) :
+    ∃ τ : ℕ → ℕ, StrictMono τ ∧ (∀ j, j ≤ τ j) ∧
+      ∀ j, inverseNorm (hv j) (z j (τ j) - b j) ≤
+        ε j * inverseNorm (hv j) (b j) := by
+  have hp : ∀ j, 0 < inverseNorm (hv j) (b j) := by
+    intro j
+    have h := capacity_pos (hv j) (b j) (hb j)
+    rw [← inverseNorm_sq] at h
+    have hn : 0 ≤ inverseNorm (hv j) (b j) := norm_nonneg _
+    nlinarith
+  obtain ⟨τ, hτ, hi, he⟩ :=
+    FiniteSamplingDiagonal.exists_strictMono_diagonal_abs_le
+      (fun j n => inverseNorm (hv j) (z j n - b j))
+      (fun j => ε j * inverseNorm (hv j) (b j))
+      (fun j => inverseNorm_error_tendsto (hv j) (b j) (z j) (hz j))
+      (fun j => mul_pos (hε j) (hp j))
+  refine ⟨τ, hτ, hi, fun j => ?_⟩
+  exact (le_abs_self _).trans (he j)
+
+/-- The true source is the observation vector of a unit target. -/
+theorem capacity_le_one {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b : ι → ℝ) (target : H) (ht : ‖target‖ ^ 2 = 1)
+    (hobs : ∀ i, inner ℝ (v i) target = b i) :
+    capacity hv b ≤ 1 := by
+  have he : inverseCoeff hv target = inverseSource hv b := by
+    unfold inverseCoeff inverseSource
+    congr 1
+    funext i
+    exact hobs i
+  have hn := sq_nonneg
+    ‖target - Fintype.linearCombination ℝ v (inverseCoeff hv target)‖
+  rw [residual_schur_value, ht, he] at hn
+  simp only [cross, hobs] at hn
+  change 0 ≤ 1 - capacity hv b at hn
+  linarith
+
+/-- Exact target error, including the entire sampled-optimizer displacement. -/
+theorem normalized_target_error_exact {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ)
+    (hb : b ≠ 0) (hd : inversePair hv b z ≠ 0)
+    (target : H) (ht : ‖target‖ ^ 2 = 1)
+    (hobs : ∀ i, inner ℝ (v i) target = b i) :
+    ‖target - Fintype.linearCombination ℝ v (normalizedCoefficients hv b z)‖ ^ 2 =
+      1 / capacity hv b - 1 +
+        ‖Fintype.linearCombination ℝ v
+          (normalizedCoefficients hv b z - normalizedCoefficients hv b b)‖ ^ 2 := by
+  have hm : inner ℝ target
+      (Fintype.linearCombination ℝ v (normalizedCoefficients hv b z)) = 1 := by
+    rw [real_inner_comm, inner_synthesis_left]
+    simp_rw [hobs]
+    exact normalizedCoefficients_signal hv b z hd
+  rw [norm_sub_sq_real, ht, hm, normalized_energy_exact hv b z hb hd]
+  ring
+
+theorem normalized_target_error_le {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) (hb : b ≠ 0)
+    (target : H) (ht : ‖target‖ ^ 2 = 1)
+    (hobs : ∀ i, inner ℝ (v i) target = b i)
+    {ε : ℝ} (hε0 : 0 ≤ ε) (hε : ε < 1)
+    (he : inverseNorm hv (z - b) ≤ ε * inverseNorm hv b) :
+    ‖target - Fintype.linearCombination ℝ v (normalizedCoefficients hv b z)‖ ^ 2 ≤
+      1 / capacity hv b - 1 +
+        ε ^ 2 / (capacity hv b * (1 - ε) ^ 2) := by
+  rw [normalized_target_error_exact hv b z hb
+    (ne_of_gt (normalized_pairing_pos hv b z hb hε he)) target ht hobs]
+  linarith [normalized_error_le hv b z hb hε0 hε he]
+
+/-- Literal inverse-matrix interpretation of the complete dual pairing. -/
+theorem inversePair_eq_matrix [DecidableEq ι] {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b c : ι → ℝ) :
+    inversePair hv b c =
+      dotProduct b ((FiniteHilbertGram.gramMatrix v)⁻¹.mulVec c) := by
+  calc
+    inversePair hv b c = inversePair hv c b :=
+      real_inner_comm (minimumVector hv c) (minimumVector hv b)
+    _ = ∑ i, inverseSource hv c i * b i := inversePair_eq hv c b
+    _ = _ := by
+      rw [FiniteHilbertGram.gramMatrix_inverseSource hv]
+      unfold dotProduct
+      apply Finset.sum_congr rfl
+      intro i _
+      ring
+
+theorem inverseNorm_sq_eq_matrix [DecidableEq ι] {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b : ι → ℝ) :
+    inverseNorm hv b ^ 2 =
+      dotProduct b ((FiniteHilbertGram.gramMatrix v)⁻¹.mulVec b) := by
+  rw [inverseNorm_sq, ← inversePair_self, inversePair_eq_matrix]
+
+/-- The coefficient formula is precisely H⁻¹ z / (bᵀ H⁻¹ z). -/
+theorem normalizedCoefficients_eq_inverseMatrix [DecidableEq ι] {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) :
+    normalizedCoefficients hv b z =
+      (dotProduct b ((FiniteHilbertGram.gramMatrix v)⁻¹.mulVec z))⁻¹ •
+        (FiniteHilbertGram.gramMatrix v)⁻¹.mulVec z := by
+  rw [normalizedCoefficients, inversePair_eq_matrix,
+    FiniteHilbertGram.gramMatrix_inverseSource hv]
+
+/-- Anisotropic entrywise sampling budgets certify the actual H⁻¹ error.
+No mixed inverse entry is discarded before taking its absolute majorant. -/
+theorem inverseNorm_sq_le_entrywise [DecidableEq ι] {v : ι → H}
+    (hv : LinearIndependent ℝ v) (e η : ι → ℝ)
+    (hη : ∀ i, 0 ≤ η i) (he : ∀ i, |e i| ≤ η i) :
+    inverseNorm hv e ^ 2 ≤
+      ∑ i, ∑ j, |(gramMatrix v)⁻¹ i j| * η i * η j := by
+  rw [inverseNorm_sq_eq_matrix]
+  let A : Matrix ι ι ℝ := (gramMatrix v)⁻¹
+  change (∑ i, e i * (∑ j, A i j * e j)) ≤
+    ∑ i, ∑ j, |A i j| * η i * η j
+  simp_rw [Finset.mul_sum]
+  apply Finset.sum_le_sum
+  intro i _
+  apply Finset.sum_le_sum
+  intro j _
+  calc
+    e i * ((gramMatrix v)⁻¹ i j * e j) ≤
+        |e i * ((gramMatrix v)⁻¹ i j * e j)| := le_abs_self _
+    _ = |(gramMatrix v)⁻¹ i j| * (|e i| * |e j|) := by
+      rw [abs_mul, abs_mul]
+      ring
+    _ ≤ |(gramMatrix v)⁻¹ i j| * (η i * η j) :=
+      mul_le_mul_of_nonneg_left
+        (mul_le_mul (he i) (he j) (abs_nonneg _) (hη i)) (abs_nonneg _)
+    _ = _ := by ring
+
+end RiemannResearch.Analysis.FiniteGramSignalStability

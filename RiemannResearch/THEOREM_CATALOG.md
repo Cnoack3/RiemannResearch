@@ -1,5 +1,43 @@
 # Theorem catalog
 
+### Ramanujan zero signals and inverse-Gram stability (2026-10-21)
+
+Established finite and Hilbert-space results:
+
+- `Analysis/SignalNormalizationStability.lean`: exact orthogonal error and
+  Gram-determinant remainder; relative sampling error below one gives the
+  dimension-free quadratic normalization bound.
+- `Analysis/FiniteGramSignalStability.lean`: the literal actual inverse matrix
+  realizes the dual norm and pairing; exact true-signal normalization,
+  optimizer convergence, complete target error, anisotropic entrywise metric
+  certificates, and increasing stagewise sampling cutoffs. No uniform bound
+  on growing inverse Gram operators is assumed.
+- `RH/RamanujanZeroSignal.lean`: exact Radon--Nikodym weighted Q packet mean,
+  genuine finite packet independence and weighted Q Gram entries, sparse
+  squarefree prime signal, and exact normalized prime coefficients from a
+  certified inverse-metric error.
+
+Conditional research reductions:
+
+- `sampledSignal_tendsto`, `sampled_inverseNorm_error_tendsto`,
+  `coefficients_tendsto`, and `exists_strictMono_zero_cutoffs` use the existing
+  explicit `ActualZeroOrdinate.UniformSelbergDensity (1/4)` proposition.
+  Its unconditional classical analytic provider remains Open in Lean.
+- Fixed-stage coordinate convergence does suffice for arbitrarily accurate
+  increasing cutoffs in each actual inverse metric. Effective uniform cutoff
+  rates are not supplied and are not required for the existence theorem.
+
+Open arithmetic obligation: prove saturation of the complete squarefree
+packet capacities, κ_D → 1. Equidistribution and normalization do not establish
+that assertion. The weighted Q/P Gram must not be replaced by an unweighted
+Q Gram or a diagonal phase-average matrix.
+
+The full source passed targeted job `job_rA4fzZsTPMLhf7Y-i5iUeFwZ7MF2XI72`,
+exit 0, verified=true; the containing commit's successful checkpoint is the
+publication certificate. See
+`RH/RamanujanInverseMetricResearch20261021.md` for exact identities,
+hypotheses, sources, verification evidence, and the remaining RH agenda.
+
 ### Factorial cutoffs, anchored targets, and sampled gains (2026-10-21)
 
 Established identities and obstructions, subject to the containing commit's checkpoint:
