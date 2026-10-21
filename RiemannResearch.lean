@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QPrimePowerHilbertFrame
+import RiemannResearch.RH.QPrimePowerWaveletCoefficients
 import RiemannResearch.RH.QFinitePrimeBasis
 import RiemannResearch.RH.QParityBasis
 import RiemannResearch.RH.QPrimePowerParityBasis

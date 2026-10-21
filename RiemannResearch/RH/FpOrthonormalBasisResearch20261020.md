@@ -72,7 +72,53 @@ For every actual QHilbert vector f and every finite collection S of subsets,
 \]
 There is no closure-membership or residual-vanishing hypothesis hidden in this identity. It applies to both logarithmic targets as actual QHilbert vectors.
 
-These coordinates observe only whether each valuation is positive. They do not resolve higher valuation levels, prove completeness in the full Q space, or assert that the vectors belong to C. The next basis step is to incorporate all valuation levels and establish the geometric/Meixner expansion and its completeness; legal Parseval saturation remains a separate arithmetic obligation.
+These Boolean coordinates observe only whether each valuation is positive. They do not resolve higher valuation levels, prove completeness in the full Q space, or assert that the vectors belong to C. The following continuation computes all same-prime wavelet levels; Meixner expansion and legal Parseval saturation remain separate obligations.
+
+## Exact same-prime wavelet coefficients (21 October 2026 UTC)
+
+The existing `QDivisorHilbertBasis.lean` already supplies a complete ambient
+arithmetic wavelet basis. This continuation reuses that basis rather than
+reproving its orthogonality or claiming that it is a legal basis for C.
+
+Put \(D_{p,k}(n)=\mathbf1_{\{p^k\mid n\}}\), \(W_{p,0}=1\), and
+\[
+ W_{p,k+1}
+ =\frac{p^{2(k+1)}D_{p,k+1}-p^{2k}D_{p,k}}
+        {p^k\sqrt{p^2-1}}.
+\]
+`QPrimePowerHilbertFrame.lean` identifies the numerator with the existing
+arithmetic divisor wavelet and proves that all \(W_{p,k}\) form an actual
+orthonormal family. It does not claim that this one-prime subfamily spans
+the entire ambient space.
+
+For \(\mu_p=\langle F_p,1\rangle_Q\),
+`QPrimePowerWaveletCoefficients.lean` proves
+\[
+ \langle F_p,D_{p,k}\rangle_Q=p^{-2k}(\mu_p+k),\qquad
+ \boxed{\langle F_p,W_{p,k+1}\rangle_Q
+   =\frac1{p^k\sqrt{p^2-1}}.}
+\]
+These are coefficients of the floor logarithm `Nat.log p n`; the target
+has not been replaced by the valuation. In particular the dyadic
+coefficients are \(2^{-k}/\sqrt3\), and the triadic coefficients are
+\(3^{-k}/\sqrt8\). These wavelets differ from the informal Meixner
+polynomials below, so their coefficient lists differ.
+
+Write \(a_{p,0}=\mu_p\) and
+\(a_{p,k+1}=1/(p^k\sqrt{p^2-1})\). For any finite set S of mode indices and
+any real, possibly signed trial coefficients \(c_k\), the checked theorem
+`qTarget_primePower_error_exact` retains the complete identity
+\[
+ \boxed{\left\|F_p-\sum_{k\in S}c_kW_{p,k}\right\|_Q^2
+ =\sum_{k\in S}(a_{p,k}-c_k)^2+
+   \left\|F_p-\sum_{k\in S}a_{p,k}W_{p,k}\right\|_Q^2.}
+\]
+`qTarget_primePower_energy_exact` gives the corresponding captured-energy
+identity with the same residual. No residual is asserted to vanish.
+Membership of the wavelets in C, Meixner orthogonality/completeness,
+mixed-prime target coefficients, and legal Parseval saturation are not
+discharged by these results. The first dyadic coefficient remains
+\(1/\sqrt3\), with captured energy \(1/3\).
 
 ## Formal rigidity of functions of F_p
 

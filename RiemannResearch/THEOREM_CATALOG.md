@@ -70,6 +70,17 @@ energy; broader exact-head squarefree constructions; target closure; RH.
   and `primeUnitVector_energy_exact` establish actual orthonormal centered
   products and the complete finite expansion with its residual norm square.
   No legality or completeness of the full valuation basis is asserted.
+- `RH/QPrimePowerHilbertFrame.lean` (2026-10-21 UTC):
+  `divisorWavelet_prime_pow_succ` identifies adjacent scaled divisibility tails;
+  `primePowerFrame_orthonormal` reuses the established ambient divisor basis
+  for all powers of one prime, including the constant mode.
+- `RH/QPrimePowerWaveletCoefficients.lean` (2026-10-21 UTC):
+  `qTarget_inner_primePowerDivisor` computes the full dilation moment;
+  `qTarget_inner_primePowerFrame_succ` gives exactly
+  `1 / (p^k * sqrt (p^2 - 1))` for the floor-log target's mode k+1.
+  `qTarget_primePower_energy_exact` and `qTarget_primePower_error_exact`
+  retain the full residual and every signed trial-coefficient discrepancy.
+  This is an ambient wavelet expansion, not a legal-membership provider.
 
 Open: Meixner orthogonality and completeness for the full valuation basis,
 Parseval saturation for the legal squarefree basis, and membership of the full
