@@ -50,6 +50,30 @@ For arbitrary f, put \(a=\langle f,1\rangle_Q\) and \(b=\langle f,\eta_2\rangle_
 \]
 Thus the first nonconstant legal direction contributes exactly 1/3 to the captured variance. The remaining nonnegative term is retained; it is not asserted to vanish.
 
+## Actual finite-prime Hilbert transfer (21 October 2026 UTC)
+
+The pre-existing module `PrimeValuationIndependence.lean` already proves the actual geometric marginal, independence of prime valuations, and finite Boolean configuration probabilities. These are not new results of this continuation.
+
+The new module `QFinitePrimeBasis.lean` uses that law to prove
+`integral_boolean_observable` and `booleanLift_inner`: every real observable of finitely many distinct-prime divisibility indicators has exactly its finite-product expectation and Gram form under the actual integer Q law. `booleanLift` constructs the corresponding QHilbert vector, with the physical zero coordinate removed and boundedness discharged.
+
+For a finite injective family of primes \(p_i\), let \(q_i=p_i^{-2}\) and let
+\(U_A\) be the actual lift of `FinitePrimeCentered.unitMonomial q A`.
+`primeUnitVector_orthonormal` proves
+\[
+ \langle U_A,U_B\rangle_Q=\mathbf1_{\{A=B\}}.
+\]
+For every actual QHilbert vector f and every finite collection S of subsets,
+`primeUnitVector_energy_exact` proves the complete identity
+\[
+ \boxed{\|f\|_Q^2
+ =\sum_{A\in S}|\langle f,U_A\rangle_Q|^2+
+ \left\|f-\sum_{A\in S}\langle f,U_A\rangle_Q U_A\right\|_Q^2.}
+\]
+There is no closure-membership or residual-vanishing hypothesis hidden in this identity. It applies to both logarithmic targets as actual QHilbert vectors.
+
+These coordinates observe only whether each valuation is positive. They do not resolve higher valuation levels, prove completeness in the full Q space, or assert that the vectors belong to C. The next basis step is to incorporate all valuation levels and establish the geometric/Meixner expansion and its completeness; legal Parseval saturation remains a separate arithmetic obligation.
+
 ## Formal rigidity of functions of F_p
 
 For \(\Delta f(n)=f(n)-f(n-1)\), every f in C satisfies
@@ -91,7 +115,7 @@ Tensoring the local bases gives the ambient basis indexed by positive integers
 \[
  E_a(n)=\prod_{q^m\parallel a} e_m^{(q^{-2})}(v_q(n)),\qquad E_1=1.
 \]
-Its completeness also uses convergence of finite-prime conditional expectations. Neither that tensor completeness nor the actual valuation independence bridge is supplied by a finite abstract Bernoulli product model. The addition `unitMonomial_gram` establishes the normalized finite Boolean product Gram matrix; its scope is that finite abstract model, with final project acceptance determined by checkpoint.
+Its completeness also uses convergence of finite-prime conditional expectations. The actual valuation independence and geometric marginals are already established in `PrimeValuationIndependence.lean`; tensor completeness and Meixner orthogonality are not yet formalized here. `unitMonomial_gram` is the finite abstract Boolean calculation, and `QFinitePrimeBasis.lean` now transfers it into the actual QHilbert space as described above.
 
 Write \(N=p^{V_p}M_p\). Independence of \(V_p\) and \(M_p\), together with
 \(F_p(N)=V_p+F_p(M_p)\), gives the informal expansion

@@ -45,8 +45,14 @@ energy; broader exact-head squarefree constructions; target closure; RH.
   identities, isolated-success coefficients, and `unitMonomial_gram` equal
   to the identity matrix when all parameters lie strictly between zero and one.
   This finite law is not asserted here to be the actual integer Zipf law.
+- `RH/QFinitePrimeBasis.lean` (2026-10-21 UTC): `booleanLift_inner` transfers
+  every finite distinct-prime Boolean observable's Gram form to actual QHilbert,
+  using the existing actual configuration law. `primeUnitVector_orthonormal`
+  and `primeUnitVector_energy_exact` establish actual orthonormal centered
+  products and the complete finite expansion with its residual norm square.
+  No legality or completeness of the full valuation basis is asserted.
 
-Open: completeness and the actual-Q bridge for the proposed valuation basis,
+Open: Meixner orthogonality and completeness for the full valuation basis,
 Parseval saturation for the legal squarefree basis, and membership of the full
 F_2 and F_3 targets in `closureWithConstants`. The existing two-target RH
 criterion remains a conditional research reduction; these additions do not
