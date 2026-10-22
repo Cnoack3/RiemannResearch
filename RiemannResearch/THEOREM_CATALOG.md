@@ -375,6 +375,19 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   This is not a distance-to-legal-closure bound or a target membership provider.
   Audit job_N4o66XJr8nz6ncuK5mBkF_FW4tgnS-PP passed; standard foundations only.
 
+- `RH/QPrimePowerCofactorExpansion.lean` (2026-10-22, Pacific time):
+  `primeCofactorResidual_inner_basis` proves exact coefficient support at
+  nonconstant p-coprime conductors in the complete ambient divisor basis.
+  `primeCofactorResidual_hasSum_coprime` reconstructs the full residual;
+  `primeCofactorResidual_parseval_coprime` retains its complete coefficient energy.
+  `qTarget_eq_mean_projection_coprime_tsum` and `qTarget_coprime_energy_exact`
+  assemble the full target expansion and exact energy, with no vanished residual.
+  `qTarget_coprime_expansion_error_exact` retains all signed discrepancies,
+  including every conductor outside the target's cofactor support.
+  Remaining coefficient evaluation, higher Meixner completeness, and legal
+  closure membership remain open; no legal-preservation claim is made.
+  Audit job_DNkLbnBu24d0gJ_Hm4zVpcN_5yEK5Otx passed; standard foundations only.
+
 Open: higher Meixner orthogonality and completeness for the full valuation basis,
 Parseval saturation for the legal squarefree basis, and membership of the full
 F_2 and F_3 targets in `closureWithConstants`. The existing two-target RH

@@ -290,6 +290,59 @@ and Quot.sound. Final project publication is checkpoint-gated.
 Open: higher Meixner orthogonality/completeness, the remaining cofactor
 coefficients, legal Parseval saturation, and F_2/F_3 closure membership.
 
+## Complete coprime-conductor expansion (22 October 2026, Pacific time)
+
+`QPrimePowerCofactorExpansion.lean` uses the previously proved complete
+ambient arithmetic divisor basis \(B_t=\mathrm{normalizedDivisorWavelet}(t)\).
+It does not assume or establish a full Meixner basis. Put
+\(S_p=\{t>1:\gcd(p,t)=1\}\) and \(\alpha_{p,t}=\langle F_p,B_t\rangle_Q\).
+Exact dilation moments cancel every residual coefficient with p dividing t;
+orthogonality removes the mean and valuation terms at every t in S_p:
+\[
+ \langle R_p,B_t\rangle_Q=\mathbf1_{S_p}(t)\alpha_{p,t}.
+\]
+`primeCofactorResidual_inner_basis` proves this formula for every
+positive conductor, including the constant and all pure prime powers.
+
+Completeness then gives the unconditionally convergent Hilbert-space expansion
+and its full Parseval energy:
+\[
+ \boxed{R_p=\sum_{t\in S_p}\alpha_{p,t}B_t,\qquad
+ \|R_p\|_Q^2=\sum_{t\in S_p}\alpha_{p,t}^2.}
+\]
+These are `primeCofactorResidual_hasSum_coprime` and
+`primeCofactorResidual_parseval_coprime`. Lean represents the restricted
+series by zero coefficients outside S_p. The full target is therefore
+\[
+ \boxed{F_p=\mu_p1+P_p+\sum_{t\in S_p}\alpha_{p,t}B_t,\qquad
+ \|F_p\|_Q^2=\mu_p^2+\frac{p^2}{(p^2-1)^2}
+                  +\sum_{t\in S_p}\alpha_{p,t}^2.}
+\]
+The complete previously retained residual is now expressed by its exact
+infinite coefficient energy; it has not been set to zero.
+
+For arbitrary actual Q-Hilbert trial vector f, put \(g=f-\mu_p1-P_p\).
+`qTarget_coprime_expansion_error_exact` proves
+\[
+ \boxed{\|F_p-f\|_Q^2
+ =\sum_{t\ge1}
+  [\mathbf1_{S_p}(t)\alpha_{p,t}-\langle g,B_t\rangle_Q]^2.}
+\]
+Every signed discrepancy and every coefficient outside S_p remains present.
+No sign condition, finite support, or legal-closure membership is assumed.
+
+The theorem applies to F_2 and F_3, which remain floor-logarithm targets.
+Their existing same-prime unit coefficients remain 2/3 and 3/8; the parity
+coefficient remains 1/sqrt(3), with energy 1/3. Explicit evaluation of the
+remaining alpha coefficients is still Open. Higher Meixner completeness,
+legal Parseval saturation, and F_2/F_3 membership in closureWithConstants
+also remain Open. Ambient coefficient restriction has not been proved to
+preserve that legal closure.
+
+Saved-source audit job_DNkLbnBu24d0gJ_Hm4zVpcN_5yEK5Otx passed (exit 0,
+13.484 seconds). All six inspected declarations use only propext,
+Classical.choice, and Quot.sound. Final project publication is checkpoint-gated.
+
 ## Formal rigidity of functions of F_p
 
 For \(\Delta f(n)=f(n)-f(n-1)\), every f in C satisfies
