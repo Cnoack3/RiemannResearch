@@ -2,6 +2,11 @@
 
 Date: 2026-10-21. Continuation of commit 0213254f44792aae8e0d0bb3b3d3e7f6153efdfc.
 
+Continuation, 2026-10-22: see [the zero/prime Gram note](RamanujanZeroPrimeGramResearch20261022.md).
+The current horizontal signal weight is sharper than the earlier coefficient
+recorded below. New screened and prime-coordinate certificates retain the
+actual Gram form; the density provider and capacity obligations remain open.
+
 ## 1. Scope and formalization boundary
 
 The earlier Ramanujan sampling theorems took the explicit proposition

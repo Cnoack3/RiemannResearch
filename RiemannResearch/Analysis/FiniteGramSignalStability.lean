@@ -487,4 +487,145 @@ theorem target_tendsto_of_capacity_screenedRatio
   simpa only [Function.comp_def, Real.sqrt_sq_eq_abs, abs_norm,
     Real.sqrt_zero, norm_sub_rev] using hn
 
+
+theorem inversePair_add_right {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b x y : ι → ℝ) :
+    inversePair hv b (x + y) = inversePair hv b x + inversePair hv b y := by
+  simp only [inversePair, ← sourceLinear_apply, map_add, inner_add_right]
+
+theorem inversePair_sub_right {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b x y : ι → ℝ) :
+    inversePair hv b (x - y) = inversePair hv b x - inversePair hv b y := by
+  simp only [inversePair, ← sourceLinear_apply, map_sub, inner_sub_right]
+
+theorem inversePair_smul_right {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b x : ι → ℝ) (c : ℝ) :
+    inversePair hv b (c • x) = c * inversePair hv b x := by
+  simp only [inversePair, ← sourceLinear_apply, map_smul, real_inner_smul_right]
+
+theorem inverseNorm_add_le {v : ι → H} (hv : LinearIndependent ℝ v)
+    (x y : ι → ℝ) :
+    inverseNorm hv (x + y) ≤ inverseNorm hv x + inverseNorm hv y := by
+  change ‖sourceLinear hv (x + y)‖ ≤ ‖sourceLinear hv x‖ + ‖sourceLinear hv y‖
+  rw [map_add]
+  exact norm_add_le _ _
+
+theorem screenedSource_add {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b x y : ι → ℝ) :
+    screenedSource hv b (x + y) = screenedSource hv b x + screenedSource hv b y := by
+  unfold screenedSource
+  rw [inversePair_add_right, add_div, add_smul]
+  abel
+
+theorem screenedSource_sub {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b x y : ι → ℝ) :
+    screenedSource hv b (x - y) = screenedSource hv b x - screenedSource hv b y := by
+  unfold screenedSource
+  rw [inversePair_sub_right, sub_div, sub_smul]
+  abel
+
+theorem screenedSource_smul {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b x : ι → ℝ) (c : ℝ) :
+    screenedSource hv b (c • x) = c • screenedSource hv b x := by
+  simp only [screenedSource, inversePair_smul_right, smul_sub, smul_smul, mul_div_assoc]
+
+theorem screenedSource_self {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b : ι → ℝ) (hb : b ≠ 0) : screenedSource hv b b = 0 := by
+  rw [screenedSource, inversePair_self,
+    div_self (ne_of_gt (capacity_pos hv b hb)), one_smul, sub_self]
+
+theorem screenedSource_sub_smul_self {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b z : ι → ℝ) (hb : b ≠ 0) (c : ℝ) :
+    screenedSource hv b (z - c • b) = screenedSource hv b z := by
+  rw [screenedSource_sub, screenedSource_smul, screenedSource_self hv b hb,
+    smul_zero, sub_zero]
+
+theorem inverseNorm_screenedSource_le {v : ι → H} (hv : LinearIndependent ℝ v)
+    (b z : ι → ℝ) (hb : b ≠ 0) :
+    inverseNorm hv (screenedSource hv b z) ≤ inverseNorm hv z := by
+  apply (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mp
+  change inverseNorm hv (screenedSource hv b z) ^ 2 ≤ inverseNorm hv z ^ 2
+  rw [inverseNorm_screenedSource_sq hv b z hb]
+  exact sub_le_self _ (div_nonneg (sq_nonneg _) (capacity_pos hv b hb).le)
+
+/-- Any radial correction may be removed before bounding the density defect. -/
+theorem inverseNorm_screenedSource_le_sub_smul {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) (hb : b ≠ 0) (c : ℝ) :
+    inverseNorm hv (screenedSource hv b z) ≤ inverseNorm hv (z - c • b) := by
+  have h := inverseNorm_screenedSource_le hv b (z - c • b) hb
+  simpa only [screenedSource_sub_smul_self hv b z hb c] using h
+
+/-- Exact signed interaction survives after radial screening. -/
+theorem inverseNorm_screenedSource_sq_add {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b x y : ι → ℝ) :
+    inverseNorm hv (screenedSource hv b (x + y)) ^ 2 =
+      inverseNorm hv (screenedSource hv b x) ^ 2 +
+      2 * inversePair hv (screenedSource hv b x) (screenedSource hv b y) +
+      inverseNorm hv (screenedSource hv b y) ^ 2 := by
+  rw [screenedSource_add, inverseNorm_sq_add]
+
+/-- Exact least-squares split over every radial correction. -/
+theorem inverseNorm_sub_smul_sq_eq_screened {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b z : ι → ℝ) (hb : b ≠ 0) (c : ℝ) :
+    inverseNorm hv (z - c • b) ^ 2 =
+      inverseNorm hv (screenedSource hv b z) ^ 2 +
+        capacity hv b * (c - inversePair hv b z / capacity hv b) ^ 2 := by
+  have hm : minimumVector hv (z - c • b) =
+      minimumVector hv z - c • minimumVector hv b := by
+    change sourceLinear hv (z - c • b) = _
+    rw [map_sub, map_smul, sourceLinear_apply, sourceLinear_apply]
+  have hx : inverseNorm hv (z - c • b) ^ 2 =
+      inverseNorm hv z ^ 2 - 2 * c * inversePair hv b z + c ^ 2 * capacity hv b := by
+    rw [inverseNorm, hm, norm_sub_sq_real, real_inner_smul_right,
+      norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
+      real_inner_comm (minimumVector hv b) (minimumVector hv z)]
+    simp only [inverseNorm, inversePair, capacity_eq_norm_sq]
+    ring
+  rw [hx, inverseNorm_screenedSource_sq hv b z hb]
+  field_simp [ne_of_gt (capacity_pos hv b hb)]
+  ring
+
+/-- The actual inverse Gram form with its signal direction removed. -/
+def screenedInverseMatrix [DecidableEq ι] {v : ι → H}
+    (hv : LinearIndependent ℝ v) (b : ι → ℝ) : Matrix ι ι ℝ :=
+  fun i j => (gramMatrix v)⁻¹ i j -
+    inverseSource hv b i * inverseSource hv b j / capacity hv b
+
+theorem inverseNorm_screenedSource_sq_eq_screenedMatrix [DecidableEq ι]
+    {v : ι → H} (hv : LinearIndependent ℝ v) (b z : ι → ℝ) (hb : b ≠ 0) :
+    inverseNorm hv (screenedSource hv b z) ^ 2 =
+      ∑ i, ∑ j, screenedInverseMatrix hv b i j * z i * z j := by
+  rw [inverseNorm_screenedSource_sq hv b z hb, inverseNorm_sq_eq_matrix,
+    inversePair_eq]
+  simp only [dotProduct, Matrix.mulVec, screenedInverseMatrix]
+  simp_rw [pow_two, Finset.sum_mul, Finset.mul_sum, Finset.sum_div]
+  rw [← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro i _
+  rw [← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro j _
+  ring
+
+theorem inverseNorm_screenedSource_sq_le_entrywise [DecidableEq ι]
+    {v : ι → H} (hv : LinearIndependent ℝ v) (b e η : ι → ℝ) (hb : b ≠ 0)
+    (hη : ∀ i, 0 ≤ η i) (he : ∀ i, |e i| ≤ η i) :
+    inverseNorm hv (screenedSource hv b e) ^ 2 ≤
+      ∑ i, ∑ j, |screenedInverseMatrix hv b i j| * η i * η j := by
+  rw [inverseNorm_screenedSource_sq_eq_screenedMatrix hv b e hb]
+  apply Finset.sum_le_sum
+  intro i _
+  apply Finset.sum_le_sum
+  intro j _
+  calc
+    screenedInverseMatrix hv b i j * e i * e j ≤
+        |screenedInverseMatrix hv b i j * e i * e j| := le_abs_self _
+    _ = |screenedInverseMatrix hv b i j| * (|e i| * |e j|) := by
+      rw [abs_mul, abs_mul]
+      ring
+    _ ≤ |screenedInverseMatrix hv b i j| * (η i * η j) :=
+      mul_le_mul_of_nonneg_left
+        (mul_le_mul (he i) (he j) (abs_nonneg _) (hη i)) (abs_nonneg _)
+    _ = _ := by ring
+
 end RiemannResearch.Analysis.FiniteGramSignalStability

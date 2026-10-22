@@ -245,6 +245,41 @@ theorem norm_coshCorrection_le_mass (T u : ℝ) :
         Complex.norm_real, Real.norm_eq_abs,
         abs_of_nonneg (coshDefect_nonneg u ρ)]
 
+/-- Sharp finite-cutoff control, retaining all actual multiplicities. -/
+theorem coshMass_le_horizontalEnergy_sharp (T u : ℝ) :
+    coshMass T u ≤ (4 * (Real.cosh (|u| / 2) - 1)) * horizontalEnergy T := by
+  calc
+    _ ≤ realSum T (fun ρ => (ρ.re - 1 / 2) ^ 2 *
+        (4 * (Real.cosh (|u| / 2) - 1))) := by
+      apply realSum_mono
+      intro ρ hρ
+      have hd := displacement_lt_half hρ
+      have hsq : (ρ.re - 1 / 2) ^ 2 ≤ 1 / 4 := by
+        nlinarith [sq_abs (ρ.re - 1 / 2), abs_nonneg (ρ.re - 1 / 2)]
+      simpa only [coshDefect, mul_comm] using
+        Real.cosh_mul_sub_one_le_sharp u (ρ.re - 1 / 2) hsq
+    _ = _ := by rw [realSum_mul_const]; exact mul_comm _ _
+theorem ordinate_landau_error_sharp (T u : ℝ) :
+    ‖ordinateSum T u - landauSum T u‖ ≤
+      (4 * (Real.cosh (|u| / 2) - 1)) * horizontalEnergy T := by
+  have he : ordinateSum T u - landauSum T u = -coshCorrection T u := by
+    rw [exact_signed_correction]
+    abel
+  rw [he, norm_neg]
+  exact (norm_coshCorrection_le_mass T u).trans
+    (coshMass_le_horizontalEnergy_sharp T u)
+theorem sharp_coefficient_le_exponential (u : ℝ) :
+    4 * (Real.cosh (|u| / 2) - 1) ≤ u ^ 2 * Real.exp (|u| / 2) := by
+  have h := cosh_sub_one_bound (|u| / 2)
+  have he : ‖(Real.cosh (|u| / 2) : ℂ) - 1‖ = Real.cosh (|u| / 2) - 1 := by
+    rw [← Complex.ofReal_one, ← Complex.ofReal_sub, Complex.norm_real,
+      Real.norm_eq_abs, abs_of_nonneg (sub_nonneg.mpr (Real.one_le_cosh _))]
+  rw [he, abs_of_nonneg (by positivity : 0 ≤ |u| / 2)] at h
+  calc
+    _ ≤ 4 * ((|u| / 2) ^ 2 * Real.exp (|u| / 2)) :=
+      mul_le_mul_of_nonneg_left h (by norm_num)
+    _ = _ := by rw [div_pow, sq_abs]; ring
+
 /-! ## Regularized mass over all actual zeros
 
 This uses every actual nontrivial zero, including both ordinate signs and

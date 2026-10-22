@@ -6,6 +6,7 @@ Authors: Christian Noack
 import RiemannResearch.Analysis.FiniteGramSignalStability
 import RiemannResearch.Analysis.ActualRationalFMZLimits
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
+import RiemannResearch.Analysis.ActualZeroCoshMass
 import RiemannResearch.RH.RamanujanFiniteSpanBridge
 import RiemannResearch.RH.ParetoResidueMean
 import RiemannResearch.RH.ZetaTwoHilbertSpace
@@ -38,7 +39,7 @@ namespace RiemannResearch.RH.RamanujanZeroSignal
 open Pareto ZetaTwoHilbert ZetaTwoProbability
 open RiemannResearch.Analysis
 open FiniteHilbertGram FiniteGramCapacity FiniteGramSignalStability
-open ActualZeroOrdinate
+open ActualZeroOrdinate ActualZeroCoshMass
 
 /-- The exact Radon--Nikodym weighted Q mean, on physical positive integers. -/
 def weightedQMean (f : ℕ → ℝ) : ℝ :=
@@ -309,11 +310,38 @@ theorem signal_error_energy_exact (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q) (T 
 /-- A coordinate weight for the moment-only density certificate. -/
 def horizontalSignalWeight (q : ℕ) : ℝ :=
   (2 * Real.pi * Real.sqrt (q : ℝ)) *
-    ((Real.log (q : ℝ)) ^ 2 * Real.exp (|Real.log (q : ℝ)| / 2))
+    (4 * (Real.cosh (|Real.log (q : ℝ)| / 2) - 1))
 
 theorem horizontalSignalWeight_nonneg (q : ℕ) : 0 ≤ horizontalSignalWeight q := by
   unfold horizontalSignalWeight
+  have h := Real.one_le_cosh (|Real.log (q : ℝ)| / 2)
   positivity
+
+theorem horizontalSignalWeight_eq (q : ℕ) (hq : 1 ≤ q) :
+    horizontalSignalWeight q = 4 * Real.pi * (Real.sqrt (q : ℝ) - 1) ^ 2 := by
+  have hx1 : (1 : ℝ) ≤ (q : ℝ) := by exact_mod_cast hq
+  have hx : (0 : ℝ) < (q : ℝ) := by linarith
+  have hs : Real.sqrt (q : ℝ) ≠ 0 := ne_of_gt (Real.sqrt_pos.2 hx)
+  have he_sq : Real.exp (Real.log (q : ℝ) / 2) ^ 2 = (q : ℝ) := by
+    calc
+      _ = Real.exp (Real.log (q : ℝ) / 2 + Real.log (q : ℝ) / 2) := by
+        rw [Real.exp_add]; ring
+      _ = (q : ℝ) := by
+        rw [show Real.log (q : ℝ) / 2 + Real.log (q : ℝ) / 2 = Real.log (q : ℝ) by ring]
+        exact Real.exp_log hx
+  have he : Real.exp (Real.log (q : ℝ) / 2) = Real.sqrt (q : ℝ) := by
+    nlinarith [Real.sq_sqrt hx.le, Real.exp_pos (Real.log (q : ℝ) / 2),
+      Real.sqrt_nonneg (q : ℝ)]
+  unfold horizontalSignalWeight
+  rw [abs_of_nonneg (Real.log_nonneg hx1), Real.cosh_eq, Real.exp_neg, he]
+  field_simp [hs]
+  ring
+
+theorem horizontalSignalWeight_le_exponential (q : ℕ) :
+    horizontalSignalWeight q ≤ (2 * Real.pi * Real.sqrt (q : ℝ)) *
+      ((Real.log (q : ℝ)) ^ 2 * Real.exp (|Real.log (q : ℝ)| / 2)) := by
+  exact mul_le_mul_of_nonneg_left
+    (sharp_coefficient_le_exponential (Real.log (q : ℝ))) (by positivity)
 
 theorem sampledSignal_sub_landauSignal_abs_le (q : ℕ) (T : ℝ) (hT : 0 < T) :
     |sampledSignal q T - landauSignal q T| ≤
@@ -332,11 +360,11 @@ theorem sampledSignal_sub_landauSignal_abs_le (q : ℕ) (T : ℝ) (hT : 0 < T) :
           landauSum T (Real.log (q : ℝ))) / (T : ℂ)‖ :=
       mul_le_mul_of_nonneg_left (Complex.abs_re_le_norm _) hc
     _ ≤ (2 * Real.pi * Real.sqrt (q : ℝ)) *
-        (((Real.log (q : ℝ)) ^ 2 * Real.exp (|Real.log (q : ℝ)| / 2)) *
+        ((4 * (Real.cosh (|Real.log (q : ℝ)| / 2) - 1)) *
           horizontalEnergy T / T) := by
       apply mul_le_mul_of_nonneg_left _ hc
       rw [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hT]
-      exact div_le_div_of_nonneg_right (ordinate_landau_error T _) hT.le
+      exact div_le_div_of_nonneg_right (ordinate_landau_error_sharp T _) hT.le
     _ = _ := by unfold horizontalSignalWeight; ring
 
 /-- An explicit cost computed from the actual full inverse Gram matrix. -/
@@ -440,5 +468,164 @@ theorem sampled_target_error_le_of_screened (s : Finset ℕ) (hs : ∀ q ∈ s, 
     (sampledVector s T) (signal_nonzero_of_two_mem s h2) hd
     hilbertOne hilbertOne_norm_sq (signal_observation s) η hη he
 
+
+/-- Exact prime normalization needs only a nonzero actual pairing. -/
+theorem coefficients_prime_signal_of_pairing (s : Finset ℕ)
+    (hs : ∀ q ∈ s, 1 < q) (hsf : ∀ q ∈ s, Squarefree q) (T : ℝ)
+    (hd : inversePair (family_independent s hs) (signal s) (sampledVector s T) ≠ 0) :
+    (∑ i : s, if i.val.Prime then
+      coefficients s hs T i * Real.log (i.val : ℝ) else 0) = 1 := by
+  have hn := normalizedCoefficients_signal (family_independent s hs)
+    (signal s) (sampledVector s T) hd
+  calc
+    _ = ∑ i : s, coefficients s hs T i * signal s i := by
+      apply Finset.sum_congr rfl
+      intro i _
+      rw [signal_eq_prime_of_squarefree s i (hsf i.val i.property)]
+      split_ifs <;> simp
+    _ = 1 := hn
+
+/-- The two signed errors are screened in the same actual inverse metric. -/
+theorem screened_signal_error_decomposition (s : Finset ℕ)
+    (hs : ∀ q ∈ s, 1 < q) (h2 : 2 ∈ s) (T : ℝ) :
+    screenedSource (family_independent s hs) (signal s) (sampledVector s T) =
+      screenedSource (family_independent s hs) (signal s) (landauVector s T - signal s) +
+      screenedSource (family_independent s hs) (signal s) (densityDefect s T) := by
+  have h := congrArg (screenedSource (family_independent s hs) (signal s))
+    (signal_error_decomposition s T)
+  rw [screenedSource_sub,
+    screenedSource_self _ _ (signal_nonzero_of_two_mem s h2), sub_zero,
+    screenedSource_add] at h
+  exact h
+
+theorem screened_signal_error_energy_exact (s : Finset ℕ)
+    (hs : ∀ q ∈ s, 1 < q) (h2 : 2 ∈ s) (T : ℝ) :
+    inverseNorm (family_independent s hs)
+        (screenedSource (family_independent s hs) (signal s) (sampledVector s T)) ^ 2 =
+      inverseNorm (family_independent s hs)
+        (screenedSource (family_independent s hs) (signal s) (landauVector s T - signal s)) ^ 2 +
+      2 * inversePair (family_independent s hs)
+        (screenedSource (family_independent s hs) (signal s) (landauVector s T - signal s))
+        (screenedSource (family_independent s hs) (signal s) (densityDefect s T)) +
+      inverseNorm (family_independent s hs)
+        (screenedSource (family_independent s hs) (signal s) (densityDefect s T)) ^ 2 := by
+  rw [screened_signal_error_decomposition s hs h2 T, inverseNorm_sq_add]
+
+/-- The density budget may first discard any coherent radial bias c times Lambda. -/
+theorem sampled_target_error_le_of_split_screened (s : Finset ℕ)
+    (hs : ∀ q ∈ s, 1 < q) (h2 : 2 ∈ s) (T η c : ℝ) (hη : 0 ≤ η)
+    (hd : inversePair (family_independent s hs) (signal s) (sampledVector s T) ≠ 0)
+    (he : inverseNorm (family_independent s hs)
+        (screenedSource (family_independent s hs) (signal s) (landauVector s T - signal s)) +
+      inverseNorm (family_independent s hs) (densityDefect s T - c • signal s) ≤
+        η * |inversePair (family_independent s hs) (signal s) (sampledVector s T)|) :
+    ‖hilbertOne - Fintype.linearCombination ℝ (family s) (coefficients s hs T)‖ ^ 2 ≤
+      1 / packetCapacity s hs - 1 + η ^ 2 := by
+  apply sampled_target_error_le_of_screened s hs h2 T η hη hd
+  rw [screened_signal_error_decomposition s hs h2 T]
+  exact (inverseNorm_add_le _ _ _).trans
+    ((add_le_add le_rfl
+      (inverseNorm_screenedSource_le_sub_smul (family_independent s hs) (signal s)
+        (densityDefect s T) (signal_nonzero_of_two_mem s h2) c)).trans he)
+
+/-- The exact screened inverse matrix determines this coordinate budget. -/
+def screenedGramWeightBudget (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q)
+    (weight : ℕ → ℝ) : ℝ :=
+  ∑ i : s, ∑ j : s,
+    |screenedInverseMatrix (family_independent s hs) (signal s) i j| *
+      weight i.val * weight j.val
+
+theorem densityDefect_screened_metric_sq_le (s : Finset ℕ)
+    (hs : ∀ q ∈ s, 1 < q) (h2 : 2 ∈ s) (T E c : ℝ)
+    (weight : ℕ → ℝ) (hE : 0 ≤ E) (hw : ∀ q ∈ s, 0 ≤ weight q)
+    (he : ∀ q ∈ s,
+      |sampledSignal q T - landauSignal q T - c * ArithmeticFunction.vonMangoldt q| ≤
+        weight q * E) :
+    inverseNorm (family_independent s hs)
+      (screenedSource (family_independent s hs) (signal s) (densityDefect s T)) ^ 2 ≤
+        E ^ 2 * screenedGramWeightBudget s hs weight := by
+  classical
+  have h := inverseNorm_screenedSource_sq_le_entrywise (family_independent s hs)
+    (signal s) (densityDefect s T - c • signal s) (fun i => weight i.val * E)
+    (signal_nonzero_of_two_mem s h2)
+    (fun i => mul_nonneg (hw i.val i.property) hE)
+    (fun i => he i.val i.property)
+  rw [screenedSource_sub_smul_self] at h
+  · apply h.trans_eq
+    simp only [screenedGramWeightBudget, Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    apply Finset.sum_congr rfl
+    intro j _
+    ring
+  · exact signal_nonzero_of_two_mem s h2
+
+/-- Coordinate weight monotonicity certifies an improvement of the full budget. -/
+theorem inverseGramWeightBudget_mono (s : Finset ℕ) (v w : ℕ → ℝ)
+    (hv : ∀ q ∈ s, 0 ≤ v q) (hle : ∀ q ∈ s, v q ≤ w q) :
+    inverseGramWeightBudget s v ≤ inverseGramWeightBudget s w := by
+  classical
+  apply Finset.sum_le_sum
+  intro i _
+  apply Finset.sum_le_sum
+  intro j _
+  have h := mul_le_mul (hle i.val i.property) (hle j.val j.property)
+    (hv j.val j.property) ((hv i.val i.property).trans (hle i.val i.property))
+  simpa only [mul_assoc] using
+    mul_le_mul_of_nonneg_left h (abs_nonneg ((gramMatrix (family s))⁻¹ i j))
+
+theorem inverseGramWeightBudget_horizontal_le_exponential (s : Finset ℕ) :
+    inverseGramWeightBudget s horizontalSignalWeight ≤
+      inverseGramWeightBudget s (fun q => (2 * Real.pi * Real.sqrt (q : ℝ)) *
+        ((Real.log (q : ℝ)) ^ 2 * Real.exp (|Real.log (q : ℝ)| / 2))) :=
+  inverseGramWeightBudget_mono s _ _
+    (fun q _ => horizontalSignalWeight_nonneg q)
+    (fun q _ => horizontalSignalWeight_le_exponential q)
+
+/-- Keep each frequency's exact exponential-tail denominator. -/
+def tailSignalWeight (decay : ℝ) (q : ℕ) : ℝ :=
+  (4 * Real.pi * Real.sqrt (q : ℝ)) * (Real.log (q : ℝ)) ^ 2 /
+    (decay ^ 2 - (Real.log (q : ℝ)) ^ 2)
+
+theorem densityDefect_metric_sq_le_tailProfile_anisotropic
+    (s : Finset ℕ) (hs : ∀ q ∈ s, 1 < q)
+    (T M decay : ℝ) (hT : 0 < T) (hM : 0 ≤ M)
+    (hband : ∀ q ∈ s, |Real.log (q : ℝ)| < decay)
+    (htail : ∀ t ∈ Set.Icc (0 : ℝ) (1 / 2),
+      rightStrictTail T t ≤ M * Real.exp (-decay * t)) :
+    inverseNorm (family_independent s hs) (densityDefect s T) ^ 2 ≤
+      (M / T) ^ 2 * inverseGramWeightBudget s (tailSignalWeight decay) := by
+  apply densityDefect_metric_sq_le s hs T (M / T) (tailSignalWeight decay)
+    (div_nonneg hM hT.le)
+  · intro q hq
+    have hdec : 0 < decay := lt_of_le_of_lt (abs_nonneg _) (hband q hq)
+    have hden : 0 < decay ^ 2 - (Real.log (q : ℝ)) ^ 2 := by
+      nlinarith [sq_abs (Real.log (q : ℝ)),
+        mul_pos (sub_pos.mpr (hband q hq)) (by positivity :
+          0 < decay + |Real.log (q : ℝ)|)]
+    unfold tailSignalWeight
+    positivity
+  · intro q hq
+    have hc : 0 ≤ 2 * Real.pi * Real.sqrt (q : ℝ) := by positivity
+    have he : sampledSignal q T - landauSignal q T =
+        -(2 * Real.pi * Real.sqrt (q : ℝ)) *
+          ((ordinateSum T (Real.log (q : ℝ)) -
+            landauSum T (Real.log (q : ℝ))) / (T : ℂ)).re := by
+      rw [sampledSignal, landauSignal, sub_div, Complex.sub_re]
+      ring
+    rw [he, abs_mul, abs_neg, abs_of_nonneg hc]
+    calc
+      _ ≤ (2 * Real.pi * Real.sqrt (q : ℝ)) *
+          ‖(ordinateSum T (Real.log (q : ℝ)) -
+            landauSum T (Real.log (q : ℝ))) / (T : ℂ)‖ :=
+        mul_le_mul_of_nonneg_left (Complex.abs_re_le_norm _) hc
+      _ ≤ (2 * Real.pi * Real.sqrt (q : ℝ)) *
+          ((2 * M * (Real.log (q : ℝ)) ^ 2 /
+            (decay ^ 2 - (Real.log (q : ℝ)) ^ 2)) / T) := by
+        apply mul_le_mul_of_nonneg_left _ hc
+        rw [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hT]
+        exact div_le_div_of_nonneg_right
+          (ordinate_landau_error_of_right_expTail T _ M decay hM (hband q hq) htail) hT.le
+      _ = _ := by unfold tailSignalWeight; ring
 
 end RiemannResearch.RH.RamanujanZeroSignal

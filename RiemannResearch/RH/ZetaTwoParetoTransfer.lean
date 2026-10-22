@@ -272,4 +272,53 @@ theorem zetaTwo_mul_norm_sq_le_two_toPareto_norm_sq (f : QHilbert) :
         (sq_nonneg (qSequence f k))
     _ = 2 * (positiveWeight k * (qSequence f k) ^ 2) := by ring
 
+
+/-- Exact positive change-of-law correction, including the infinite tail. -/
+def normCorrection (f : QHilbert) : ℝ :=
+  ∑' k, (positiveQWeight k / ((k : ℝ) + 1)) * (qSequence f k) ^ 2
+
+theorem normCorrection_summable (f : QHilbert) :
+    Summable (fun k => (positiveQWeight k / ((k : ℝ) + 1)) * (qSequence f k) ^ 2) := by
+  apply Summable.of_nonneg_of_le
+    (fun k => mul_nonneg (div_nonneg (positiveQWeight_nonneg k) (by positivity))
+      (sq_nonneg _)) _ (qSequence_square_summable f)
+  intro k
+  apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
+  exact div_le_self (positiveQWeight_nonneg k) (by
+    have hk : (0 : ℝ) ≤ k := Nat.cast_nonneg k
+    linarith)
+
+theorem paretoWeight_eq_zetaTwo_QWeight_sub (k : ℕ) :
+    positiveWeight k = zetaTwo * positiveQWeight k -
+      zetaTwo * (positiveQWeight k / ((k : ℝ) + 1)) := by
+  by_cases hk : k = 0
+  · subst k
+    simp [positiveWeight, positiveQWeight]
+  · have hkR : (k : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hk
+    have hk1 : (k : ℝ) + 1 ≠ 0 := by positivity
+    unfold positiveWeight positiveQWeight
+    field_simp [hkR, hk1, ne_of_gt zetaTwo_pos]
+    ring
+
+theorem toPareto_norm_sq_exact (f : QHilbert) :
+    ‖toPareto f‖ ^ 2 = zetaTwo * ‖f‖ ^ 2 - zetaTwo * normCorrection f := by
+  calc
+    ‖toPareto f‖ ^ 2 = ∑' k,
+        (zetaTwo * (positiveQWeight k * (qSequence f k) ^ 2) -
+          zetaTwo * ((positiveQWeight k / ((k : ℝ) + 1)) *
+            (qSequence f k) ^ 2)) := by
+      rw [hilbert_norm_weighted_sq, toPareto_sequence]
+      apply tsum_congr
+      intro k
+      rw [paretoWeight_eq_zetaTwo_QWeight_sub]
+      ring
+    _ = (∑' k, zetaTwo * (positiveQWeight k * (qSequence f k) ^ 2)) -
+        ∑' k, zetaTwo * ((positiveQWeight k / ((k : ℝ) + 1)) *
+          (qSequence f k) ^ 2) :=
+      ((qSequence_square_summable f).mul_left zetaTwo).tsum_sub
+        ((normCorrection_summable f).mul_left zetaTwo)
+    _ = zetaTwo * ‖f‖ ^ 2 - zetaTwo * normCorrection f := by
+      rw [tsum_mul_left, tsum_mul_left, ← qNorm_weighted_sq]
+      rfl
+
 end RiemannResearch.RH.ZetaTwoParetoTransfer

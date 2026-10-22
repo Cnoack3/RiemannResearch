@@ -1,3 +1,6 @@
+import RiemannResearch.RH.RamanujanPrimeCoordinates
+import RiemannResearch.RH.PrimePacketIncrementIndependence
+import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
 import RiemannResearch.Analysis.SignalNormalizationStability
 import RiemannResearch.Analysis.FiniteGramSignalStability

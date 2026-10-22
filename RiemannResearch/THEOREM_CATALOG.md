@@ -1,5 +1,48 @@
 # Theorem catalog
 
+### Sharper zero contributions and actual prime-coordinate Gram certificates (2026-10-22)
+
+Established finite and Hilbert-space results:
+
+- `Analysis/ActualZeroCoshMass.lean` now propagates the sharp strip coefficient
+  through every actual finite cutoff: ||S-L|| <= 4(cosh(|u|/2)-1) E(T).
+- `RH/RamanujanZeroSignal.lean` sharpens the existing horizontal signal weight
+  to 4 pi (sqrt(q)-1)^2 for q >= 1, proves improvement of the full inverse-Gram
+  budget, and retains individual exponential-tail frequency denominators.
+- `Analysis/FiniteGramSignalStability.lean` proves the exact radial
+  least-squares remainder, screening linearity and contraction, and the literal
+  screened matrix K = A - (A b)(A b)^T/kappa with an entrywise certificate.
+- `RH/RamanujanZeroSignal.lean` retains the signed Landau/density interaction
+  after screening, allows arbitrary radial correction before bounding the
+  density residual, and gives prime normalization from a nonzero pairing.
+- `RH/ZetaTwoParetoTransfer.lean` now includes the exact convergent
+  Radon--Nikodym norm correction, before its use in new prime-coordinate bounds.
+- `RH/QPrimeParetoGram.lean` uses the existing proved Q independence and
+  orthonormal prime modes to obtain actual Pareto Gram bounds zetaTwo/2 I <= G <=
+  zetaTwo I, retaining the complete correction and projection residual.
+- `RH/PrimePacketIncrementIndependence.lean` proves mutual independence of
+  actual prime-packet increments under Q by the exact affine divisibility identity.
+- `RH/RamanujanPrimeCoordinates.lean` connects these modes to actual packet
+  synthesis and unit-target error, with all residuals retained; it proves the
+  quadratic-form lower certificate H >= zetaTwo/2 C^T C.
+
+Open domain-specific obligations remain separate:
+
+- Actual classical density/sublinear-energy provider: still unformalized.
+- Squarefree packet capacity saturation: still an unresolved mathematical target.
+- Vanishing nonradial actual zero defect or a growing-family effective budget:
+  not supplied merely by the new finite screening theorem.
+- Rank/smallest-singular-value estimates for the prime observation matrix C:
+  needed before inferring packet inverse conditioning from the auxiliary modes.
+- No independence of zero ordinates or integrated packets is asserted.
+
+Targeted job `job_IftM-8dWigpEFiUvcWkCzVs6Hd9kEWrg` succeeded, exit 0,
+verified=true, reported execution 15.057 seconds. Ten central axiom audits
+showed only ordinary foundations; substantive local hypotheses remain in
+their types. The containing commit's checkpoint certifies final publication.
+See `RH/RamanujanZeroPrimeGramResearch20261022.md` for exact formulas,
+declaration names, proof interpretation, and the remaining obligations.
+
 ### Ramanujan zero signals, relaxed density, and inverse-Gram stability (2026-10-21)
 
 Established finite and Hilbert-space results:
