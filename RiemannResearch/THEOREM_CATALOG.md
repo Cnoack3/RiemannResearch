@@ -1,5 +1,36 @@
 # Theorem catalog
 
+### Microscopic consecutive-gap transfers and collision criteria (2026-10-22)
+
+Established finite statements:
+- `Analysis/FiniteGapVariance.lean` proves exact shortfall/stop-loss duality,
+  the finite weighted Cantelli bound, an integer-count quadratic refinement,
+  and arbitrary central-moment bounds for the empty-window probability.
+- It proves the complete second-factorial-moment identity, retaining the
+  nonnegative higher-occupancy remainder, and large/small consecutive-gap
+  frequency transfers with the geometric void identity explicit.
+- `Analysis/ActualConsecutiveGapCriterion.lean` proves that positivity of
+  every genuine interior actual-zero gap is equivalent to criticality and
+  simplicity at that cutoff, including empty/singleton cutoffs.
+  The artificial final gap to T is excluded. The equivalent zero-gap count
+  and cofinal criterion are also established.
+
+Conditional research reductions and open providers:
+- Open in Lean: the finite count-law/geometric assembly for circular windows.
+  Existing truncated actual-gap volume identities remain available.
+- Open in Lean: Tsang/Fujii analytic high-moment providers. The memo derives
+  an unconditional exponential limiting upper tail from cited Tsang moments
+  in ordinary mathematics; it is not a fully formalized zeta theorem.
+- Open mathematically: the precise fixed-microscopic sine-kernel variance,
+  the full consecutive-gap law, and the prior uniform arithmetic repair bound.
+- The adjacent-gap positivity criterion is not a provider of its own
+  hypothesis; it includes simplicity and is stronger than RH alone.
+
+Combined candidate verified by job `job_IpGcQZW2IkOT9za93zjDg6Xr8LIymrzy`
+(exit 0, verified=true). Seven central axiom audits used ordinary foundations.
+Research detail: `RH/MicroscopicConsecutiveGapResearch20261022.md`.
+
+
 ### Feasible complete-Gram head repair and weighted physical frames (2026-10-22)
 
 Established finite and actual-Q statements:

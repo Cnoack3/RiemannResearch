@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.FiniteGapVariance
+import RiemannResearch.Analysis.ActualConsecutiveGapCriterion
 import RiemannResearch.RH.QSquarefreeHeadFrame
 import RiemannResearch.Analysis.FiniteFeasibleGramRepair
 import RiemannResearch.Analysis.FiniteSampledRepairStability
