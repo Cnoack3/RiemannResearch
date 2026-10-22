@@ -9,6 +9,9 @@ import RiemannResearch.Analysis.FiniteFeasibleGramRepair
 import RiemannResearch.Analysis.FiniteSampledRepairStability
 import RiemannResearch.RH.QSquarefreeHeadRepair
 import RiemannResearch.RH.QSquarefreeHeadRank
+import RiemannResearch.RH.QSquarefreeHeadCompression
+import RiemannResearch.RH.QSquarefreeReducedGram
+import RiemannResearch.RH.QSquarefreeHeadCompressionExamples
 import RiemannResearch.Analysis.FiniteStrictTailSecondMoment
 import RiemannResearch.Analysis.ActualZeroHorizontalMomentRate
 import RiemannResearch.Analysis.ContractionScreening

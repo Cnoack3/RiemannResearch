@@ -1,5 +1,40 @@
 # Theorem catalog
 
+### Independent squarefree-head compression and reduced complete Gram (2026-10-22)
+
+Established finite and actual-Q statements:
+- `RH/QSquarefreeHeadCompression.lean` proves exact physical-head rank
+  `card {n in [1,M] : Squarefree n}`, for a legal squarefree dictionary
+  containing every low squarefree conductor and one conductor above M.
+- `observations_iff_head` proves complete equivalence of the independent
+  value observations F(1), F(s)-F(1) and all physical-head constraints for
+  radical-compatible vectors. `interpolate_observations` supplies every
+  compressed source; `projected_observations_independent` discharges rank.
+- `exists_physical_reconstruction` provides the entire physical head from
+  compressed coordinates, preserving nonsquarefree-site probability weights.
+- `RH/QSquarefreeReducedGram.lean` proves complete A G^{-1} A^T entries,
+  the exact constrained completion and infinite-tail identity, retains the
+  signed arbitrary-correction cross term, and transports the full head metric.
+- `Analysis/FiniteFeasibleGramRepair.normal_repair_le_of_probe_comparison`
+  proves E <= delta*(K-1) from a comparison in the actual normal-solution
+  direction only; `normal_repair_target_rayleigh` gives its unconditional
+  nonzero-repair Rayleigh-quotient specialization.
+- `RH/QSquarefreeHeadCompressionExamples.lean` proves the rational determinant
+  1/5, exact heads through sites 4 and 6, and actual four-site rank 3.
+
+Conditional research reduction:
+- `RH/QSquarefreeReducedGram.closure_capacity_rh_of_uniform_reduced_cost`
+  reuses the bounded-exact-head consumer to obtain squarefree closure,
+  capacity divergence, and RH from uniformly bounded reduced repair costs.
+
+Open arithmetic provider: `sup_M r_M^T W_M^{-1} r_M < infinity` for a
+specified legal dictionary schedule. A uniform bound on the target-direction
+`delta_M*(K_M-1)` also suffices. No such estimate or RH is asserted.
+Compression preserves the exact constrained minimum; it does not lower it.
+Exact-rational interval calculations and floating-point eigenvalue examples
+in the memorandum are explicitly separated from Lean theorem claims.
+Research detail: `RH/QSquarefreeHeadCompressionResearch20261022.md`.
+
 ### Continuous prime-polynomial high moments (2026-10-22)
 
 Established analytic statements:

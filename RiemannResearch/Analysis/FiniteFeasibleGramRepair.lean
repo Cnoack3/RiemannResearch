@@ -348,4 +348,50 @@ theorem headMismatch_sq_le_complement_energy {v : ι → H}
   simpa only [headMismatch_eq_complement_pairing hv h x c,
     real_inner_self_eq_norm_sq, ← pow_two, hrem, mul_comm] using hc
 
+/-- Source: the user-directed reduced-head investigation, 22 October 2026.
+Only the actual normal-solution probe needs a comparison estimate. This can
+be strictly sharper than a smallest-eigenvalue bound over every direction. -/
+theorem normal_repair_le_of_probe_comparison {v : ι → H}
+    (hv : LinearIndependent ℝ v) (h : κ → H) (x : H) (d : κ → ℝ)
+    (hn : ∀ i, inner ℝ (projectedRow hv h i)
+      (Fintype.linearCombination ℝ (projectedRow hv h) d) = headMismatch hv h x i)
+    (K : ℝ) (hK : 1 ≤ K)
+    (hprobe : ‖Fintype.linearCombination ℝ h d‖ ^ 2 ≤
+      K * ‖Fintype.linearCombination ℝ (projectedRow hv h) d‖ ^ 2) :
+    ‖Fintype.linearCombination ℝ (projectedRow hv h) d‖ ^ 2 ≤
+      ‖projectionResidual hv x‖ ^ 2 * (K - 1) := by
+  have he := normal_energy (projectedRow hv h) (headMismatch hv h x) d hn
+  have hb := headMismatch_sq_le_complement_energy hv h x d
+  rw [← he] at hb
+  have hδ := sq_nonneg ‖projectionResidual hv x‖
+  have hE := sq_nonneg ‖Fintype.linearCombination ℝ (projectedRow hv h) d‖
+  by_cases hz : ‖Fintype.linearCombination ℝ (projectedRow hv h) d‖ ^ 2 = 0
+  · rw [hz]
+    exact mul_nonneg hδ (by linarith)
+  · have hp : 0 < ‖Fintype.linearCombination ℝ (projectedRow hv h) d‖ ^ 2 :=
+      lt_of_le_of_ne hE (Ne.symm hz)
+    apply (mul_le_mul_iff_left₀ hp).mp
+    have hc := mul_le_mul_of_nonneg_left hprobe hδ
+    nlinarith
+
+
+/-- An unconditional estimate in the actual nonzero repair direction.
+Uniform control of this Rayleigh quotient is not asserted. -/
+theorem normal_repair_target_rayleigh {v : ι → H}
+    (hv : LinearIndependent ℝ v) (h : κ → H) (x : H) (d : κ → ℝ)
+    (hn : ∀ i, inner ℝ (projectedRow hv h i)
+      (Fintype.linearCombination ℝ (projectedRow hv h) d) = headMismatch hv h x i)
+    (hE : 0 < ‖Fintype.linearCombination ℝ (projectedRow hv h) d‖ ^ 2) :
+    ‖Fintype.linearCombination ℝ (projectedRow hv h) d‖ ^ 2 ≤
+      ‖projectionResidual hv x‖ ^ 2 *
+        (‖Fintype.linearCombination ℝ h d‖ ^ 2 /
+          ‖Fintype.linearCombination ℝ (projectedRow hv h) d‖ ^ 2 - 1) := by
+  apply normal_repair_le_of_probe_comparison hv h x d hn
+  · apply (le_div_iff₀ hE).mpr
+    have he := headProbe_projection_completion hv h d
+    nlinarith [sq_nonneg ‖Fintype.linearCombination ℝ h d -
+      Fintype.linearCombination ℝ (projectedRow hv h) d‖]
+  · rw [div_mul_cancel₀ _ (ne_of_gt hE)]
+
+
 end RiemannResearch.Analysis.FiniteFeasibleGramRepair
