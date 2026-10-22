@@ -388,6 +388,30 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   closure membership remain open; no legal-preservation claim is made.
   Audit job_DNkLbnBu24d0gJ_Hm4zVpcN_5yEK5Otx passed; standard foundations only.
 
+- `RH/QDivisorDilationCoefficients.lean` (2026-10-22, Pacific time):
+  `normalizedDivisorWavelet_inner_dilation` gives the exact signed dilation
+  formula for any Q-Hilbert vector; `normalizedDivisorWavelet_residue_coefficient`
+  supplies legal atom columns. `divisorBasis_error_finite_exact` retains signed
+  discrepancies and the complete orthogonal remainder.
+
+- `RH/QPrimePowerCoprimeCoefficients.lean` (2026-10-22, Pacific time):
+  `qTarget_inner_basis_moebius` and `qTarget_inner_primePower_mean_difference`
+  give exact arithmetic coefficients. Dilated means are summable, with exact
+  head-tail identities. `qTarget_inner_primePower_bounds` gives adjacent-integer
+  bounds. Explicit conductors 2, 3, 4, 5, 9 are checked.
+  `primeCofactorResidual_two_energy_ge_eighth` and
+  `primeCofactorResidual_three_energy_ge_twentyFourth` give 1/8 and 1/24,
+  improving ambient residual bounds; these are not legal distance bounds.
+
+- `RH/QDivisorModeLegality.lean` (2026-10-22, Pacific time):
+  `residue_three_single_mode_defect` gives 9 E_Q[g_3]/8 > 0.
+  `ambient_single_mode_not_legal_preserving` exhibits legal g_3 whose ambient
+  single-mode projection lies outside closureWithConstants.
+  Saved-source audit job_KKzufSXky1fZEHuoYg_hE31wTjIgZjzv passed:
+  16 inspected declarations use only standard foundations.
+  RH/FpCoprimeCoefficientsResearch20261022.md records exact arithmetic series,
+  exploratory numerical Gram comparisons, reproduction code, and open tasks.
+
 Open: higher Meixner orthogonality and completeness for the full valuation basis,
 Parseval saturation for the legal squarefree basis, and membership of the full
 F_2 and F_3 targets in `closureWithConstants`. The existing two-target RH

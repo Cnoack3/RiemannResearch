@@ -333,11 +333,14 @@ No sign condition, finite support, or legal-closure membership is assumed.
 
 The theorem applies to F_2 and F_3, which remain floor-logarithm targets.
 Their existing same-prime unit coefficients remain 2/3 and 3/8; the parity
-coefficient remains 1/sqrt(3), with energy 1/3. Explicit evaluation of the
-remaining alpha coefficients is still Open. Higher Meixner completeness,
+coefficient remains 1/sqrt(3), with energy 1/3. The continuation
+FpCoprimeCoefficientsResearch20261022.md gives exact convergent arithmetic
+coefficient formulas and first numerical evaluations. Elementary constant-only
+closed forms are not obtained. Higher Meixner completeness,
 legal Parseval saturation, and F_2/F_3 membership in closureWithConstants
-also remain Open. Ambient coefficient restriction has not been proved to
-preserve that legal closure.
+remain Open. A concrete single-mode ambient projection now fails to preserve
+that legal closure (QDivisorModeLegality.lean); no whole-support preservation
+claim is used.
 
 Saved-source audit job_DNkLbnBu24d0gJ_Hm4zVpcN_5yEK5Otx passed (exit 0,
 13.484 seconds). All six inspected declarations use only propext,

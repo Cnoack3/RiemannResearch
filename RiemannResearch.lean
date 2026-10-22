@@ -37,6 +37,9 @@ import RiemannResearch.RH.QPrimePowerInfiniteProjection
 import RiemannResearch.RH.QPrimePowerValuationProjection
 import RiemannResearch.RH.QPrimePowerCofactorResidual
 import RiemannResearch.RH.QPrimePowerCofactorExpansion
+import RiemannResearch.RH.QDivisorDilationCoefficients
+import RiemannResearch.RH.QPrimePowerCoprimeCoefficients
+import RiemannResearch.RH.QDivisorModeLegality
 import RiemannResearch.RH.QParityBasis
 import RiemannResearch.RH.QPrimePowerParityBasis
 import RiemannResearch.RH.QResidueThreeMoments
