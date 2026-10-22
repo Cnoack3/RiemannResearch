@@ -1,5 +1,30 @@
 # Theorem catalog
 
+### Zero-displacement and finite Mellin Gram certificates (2026-10-21)
+
+Established by targeted server verification, subject to the containing
+commit's final publication checkpoint:
+
+- `RH/ParetoMellinFiniteGram.lean`: actual finite continuous Mellin kernel
+  integrability, exact signed Cauchy Gram energy, the complete squared
+  integral remainder, and normal-equation / inverse-Gram lower certificates.
+- `RH/QZeroGramObstruction.lean`: sharper actual Q single-zero floor,
+  reflected displacement throughout the open critical strip, finite-height
+  zero-free rectangle certificates, and actual optimizer / limiting floors.
+- The actual finite zero-Gram inverse formula explicitly assumes nonzero
+  Gram determinant. A stronger exact Q energy identity and its variational
+  bound require no nonsingularity or distinctness and retain the full
+  positive law-change correction.
+
+Job `job_7_KqBemftXQhWCvxQGqLiZ6UMYKWAnDt` passed, exit 0,
+verified=true, reported execution 14.531 seconds. Seven central axiom
+audits showed only ordinary foundations. No RH or density premise occurs.
+
+Distinct-node nonsingularity, the Cauchy determinant product and infinite
+zero-product comparison, and the Burnol asymptotic rate remain unformalized.
+Capacity saturation remains an unresolved arithmetic target. Exact scope
+and source references: `RH/QZeroGramResearch20261021.md`.
+
 ### Sharper zero contributions and actual prime-coordinate Gram certificates (2026-10-22)
 
 Established finite and Hilbert-space results:
