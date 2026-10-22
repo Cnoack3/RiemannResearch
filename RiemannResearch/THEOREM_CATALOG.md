@@ -263,8 +263,20 @@ is subject to the server checkpoint. Numerical evaluations and informal
 AP-series/explicit coordinate bounds are distinguished from Lean declarations
 in `RH/LegalBasisContinuationResearch20261021.md`.
 
-Open: infinite legal-basis completeness and Parseval saturation of the remaining
-F2 and F3 energy. Ambient prime-valuation completeness is not a substitute.
+Continuation (2026-10-22): `RH/QSquarefreeCompleteBasis.lean` supplies the
+complete legal basis, with zeros removed from the exhaustive Gram–Schmidt
+dictionary. `legalVector_closed_span` identifies its closed span with
+`closureWithConstants`, and `legalHilbertBasis` bundles the complete basis.
+`legalProjection_hasSum` proves unconditional reconstruction of the legal
+projection. `legalBasis_energy_exact` and `legalBasis_error_exact` retain
+the full orthogonal legal residual and every signed coefficient discrepancy.
+`mem_closureWithConstants_iff_parseval` proves the exact saturation equivalence.
+The first vectors are qOne and positive parityUnit; the F2 parity coefficient
+remains 1/sqrt(3), with captured energy 1/3. No independence of the input
+dictionary or target-membership hypothesis is assumed for the construction.
+
+Open: Parseval saturation for F2 and F3, hence their actual legal membership.
+Higher Meixner completeness is a separate open task.
 
 ### Arbitrary signed sieve rows and one-sign-change obstruction (2026-10-20)
 

@@ -18,7 +18,7 @@ All closures and inner products use the complete Q norm. In Lean the targets are
 
 **Open:** both `qTarget 2 _ ∈ closureWithConstants` and `qTarget 3 _ ∈ closureWithConstants`. The existing two-target RH criterion remains a conditional research reduction. No orthonormal-basis calculation below supplies either membership automatically.
 
-The additions formalize an orthonormal pair inside C, its exact F₂ coefficient and complete energy decomposition, and an obstruction to nonlinear functions of F_p belonging to C. They do not formalize the full Meixner tensor basis or the complete Gram–Schmidt basis of C. Acceptance of these additions is determined by the server checkpoint, rather than the existence of this note.
+The additions formalize the legal parity pair, exact target coefficients and residual identities, and the complete legal Gram–Schmidt Hilbert basis described below. The full Meixner tensor basis and target Parseval saturation remain open. Acceptance of each addition is determined by its server checkpoint, rather than the existence of this note.
 
 ## Formal parity component and full remainder
 
@@ -412,19 +412,50 @@ For any f with coefficients \(\widehat f(a)=\langle f,E_a\rangle_Q\), the full P
 All four terms are required. In particular, projecting onto the target's nonzero coefficient support has not been shown to preserve C. The ambient basis vector
 \(E_p=((p^2-1)V_p-1)/p\) itself violates the legal square-jump relation; its defect is \((p^2-1)/p\).
 
-## Remaining legal-basis obligation
+## Complete legal basis and remaining saturation obligation
 
-Informally, apply Gram–Schmidt to the exhaustive dictionary
-\(1,g_2,g_3,g_5,g_6,g_7,g_{10},\ldots\), choosing the first two vectors to be 1 and \(\eta_2\). This produces a complete orthonormal basis \((\psi_j)\) of C. Finite independence follows by evaluating a relation at a common multiple, then at 1, and then examining jumps at its conductors in increasing order.
+The module QSquarefreeCompleteBasis.lean formalizes the exhaustive legal
+construction (22 October 2026, Pacific time). Its dictionary begins with 1
+and the positive parity unit eta_2, then includes every squarefreeAtom in
+conductor order. Nonsquarefree slots and dependent innovations are omitted
+by indexing the normalized Gram–Schmidt sequence at its nonzero entries.
+No unproved independence assumption is used.
 
-The exact membership condition is Parseval saturation:
+legalVector_closed_span proves that these actual Q-Hilbert vectors have
+closed span exactly C. legalHilbertBasis is a complete Hilbert basis of C,
+indexed by a subtype of the natural numbers. This establishes legal
+completeness, separately from ambient divisor or Meixner completeness.
+The first two retained vectors are exactly 1 and eta_2, and the F_2 parity
+coefficient remains 1/sqrt(3), with energy 1/3.
+
+Write psi_i for these vectors and P_C for the actual orthogonal projection
+onto C. legalProjection_hasSum gives unconditional convergence in Q norm:
+\[
+ P_C f=\sum_i\langle f,\psi_i\rangle_Q\psi_i.
+\]
+legalBasis_energy_exact and legalBasis_error_exact retain the full identities
+\[
+ \boxed{\|x\|_Q^2=\sum_i\langle x,\psi_i\rangle_Q^2+\|x-P_Cx\|_Q^2,}
+\]
+\[
+ \boxed{\|x-f\|_Q^2
+ =\sum_i(\langle x,\psi_i\rangle_Q-\langle f,\psi_i\rangle_Q)^2
+   +\|x-P_Cx\|_Q^2\quad(f\in C).}
+\]
+Every signed discrepancy remains present. The last norm is the genuine
+orthogonal legal residual, distinct from the previously studied ambient
+same-prime/cofactor residual.
+
+mem_closureWithConstants_iff_parseval establishes
 \[
  F_p\in C\quad\Longleftrightarrow\quad
- \sum_{j\ge0}|\langle F_p,\psi_j\rangle_Q|^2=\|F_p\|_Q^2.
+ \sum_i|\langle F_p,\psi_i\rangle_Q|^2=\|F_p\|_Q^2.
 \]
-For F₂ the outstanding equality becomes
-\[
- \boxed{\sum_{j\ge2}|\langle F_2,\psi_j\rangle_Q|^2
-       =\operatorname{Var}_Q(F_2)-\frac13.}
-\]
-This equality remains **Open**. Bessel's inequality, ambient orthonormality, and the first parity coefficient do not discharge it. Further formalization should retain the complete remainder while constructing legal approximants or proving this saturation identity.
+The equivalence is now formal; its right-hand equality for F_2 and F_3 is
+still **Open**. No target-membership provider or RH conclusion is supplied.
+Higher Meixner orthogonality/completeness also remains Open.
+
+Candidate job_e3oq28sN_Vq0cgJpLb5SW_0L-43fRiIY passed (exit 0; 8.481 seconds).
+Saved-source audit job_-47gYwRlpprwYA2v7t3qWmpxZZRdOH7k passed (exit 0;
+14.440 seconds). All six inspected declarations use only propext,
+Classical.choice, and Quot.sound. Final project publication is checkpoint-gated.

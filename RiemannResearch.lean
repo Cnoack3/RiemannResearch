@@ -44,6 +44,7 @@ import RiemannResearch.RH.QParityBasis
 import RiemannResearch.RH.QPrimePowerParityBasis
 import RiemannResearch.RH.QResidueThreeMoments
 import RiemannResearch.RH.QSquarefreeLegalBasis
+import RiemannResearch.RH.QSquarefreeCompleteBasis
 import RiemannResearch.RH.QPrimePowerLegalCoefficients
 import RiemannResearch.RH.QPrimePowerTransformRigidity
 import RiemannResearch.RH.FinitePrimeCentered

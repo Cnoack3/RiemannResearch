@@ -251,5 +251,7 @@ AP-series and explicit coordinate-bound derivations.
 3. Seek an upper bound on the exhaustive residual tending to zero, or a
    checkable cofinal energy budget. Finite nondegeneracy and Bessel bounds alone
    do not supply this.
-4. Formalize infinite legal-basis completeness and the saturation equivalence
-   separately from ambient valuation completeness.
+4. Completed in QSquarefreeCompleteBasis.lean (22 October 2026): the exhaustive
+   legal Gram–Schmidt Hilbert basis, norm-convergent legal projection series,
+   exact full residual and signed-error identities, and saturation equivalence.
+   Saturation for F2 and F3 remains open; see FpOrthonormalBasisResearch20261020.md.
