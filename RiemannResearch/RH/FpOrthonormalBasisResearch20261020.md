@@ -459,3 +459,14 @@ Candidate job_e3oq28sN_Vq0cgJpLb5SW_0L-43fRiIY passed (exit 0; 8.481 seconds).
 Saved-source audit job_-47gYwRlpprwYA2v7t3qWmpxZZRdOH7k passed (exit 0;
 14.440 seconds). All six inspected declarations use only propext,
 Classical.choice, and Quot.sound. Final project publication is checkpoint-gated.
+
+## Threshold evaluation of the remaining coefficients
+
+QPrimePowerThresholdSeries.lean now proves exact threshold expansions of the
+dilated means and the full signed Moebius threshold remainder. For prime-power
+conductors it gives convergent finite integer-interval sums, with the entire
+nonnegative level tail retained. See the checked-threshold section of
+FpCoprimeCoefficientsResearch20261022.md for formulas and the remaining
+quantitative-tail obligation. These coefficient identities apply to the
+actual Zipf law and Nat.log targets. They provide no legal Parseval saturation
+or membership provider and do not change any full norm residual above.

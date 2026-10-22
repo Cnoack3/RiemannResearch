@@ -425,3 +425,35 @@ if __name__=='__main__':
     targets=[dict(p=p,mean=mean(p,1),energy=energy(p),cofactor_energy=energy(p)-mean(p,1)**2-p*p/(p*p-1)**2) for p in [2,3]]
     print(json.dumps(dict(status='Floating-point exploration, not a Lean or interval certificate',level_cutoff=K,targets=targets,coefficients=rows,projections=projections),indent=2))
 ```
+
+## Checked threshold decomposition (22 October 2026, Pacific time)
+
+QPrimePowerThresholdSeries.lean now proves the threshold-series identity
+above, including its summability justification under the actual integer Zipf
+law. Set c(p,d,j) = (p^(j+1)-1)/d + 1, using natural division. For d>0 this
+is exactly ceil(p^(j+1)/d). With w(n)=positiveQWeight(n), define
+A(p,d,j) = sum over n>=c(p,d,j) of w(n). Then
+M_p(d) = sum over j>=0 of A(p,d,j), with a proved convergent nonnegative series.
+
+For K levels, the exact remainder is sum_j A(p,d,j+K), not zero.
+qTarget_basis_threshold_error_exact retains the signed coefficient error
+as the finite divisor sum of mu(t/d) times these tails, divided by sqrt(J_2(t)).
+No absolute-value replacement or deletion of negative terms is made.
+
+For prime q and k>=0, primePowerThresholdTerm is the finite sum
+  sum_{c(p,q^(k+1),j) <= n < c(p,q^k,j)} w(n) / sqrt(J_2(q^(k+1))).
+qTarget_primePower_threshold_hasSum proves that its infinite sum is exactly
+the coefficient of F_p at conductor q^(k+1). Each term is nonnegative.
+The finite threshold heads converge to the coefficient, and
+qTarget_primePower_threshold_head_tail retains the complete remaining series.
+This specializes to F_2 and F_3 without identifying either with a valuation.
+
+The candidate passed job_sE262lEumMs6e9EXL0mk4e18ygw_PjaJ (exit 0,
+7.808 seconds). Saved-source audit job_oTO6qC6_CMPG0m8nNqSFWrFRBbsTPQza
+passed (exit 0, 16.285 seconds; module build 4.9 seconds). All six inspected
+declarations use only propext, Classical.choice, and Quot.sound.
+The explicit geometric tail-rate inequality stated earlier in this note is
+still not formalized; neither finite-precision interval evaluation nor a
+numerical saturation certificate is supplied by this module. All full
+ambient/legal Parseval residuals remain present. Higher Meixner completeness
+and actual F_2/F_3 legal Parseval saturation and membership remain open.

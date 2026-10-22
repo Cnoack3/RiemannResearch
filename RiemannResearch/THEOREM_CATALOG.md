@@ -507,6 +507,17 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   `primeCofactorResidual_three_energy_ge_twentyFourth` give 1/8 and 1/24,
   improving ambient residual bounds; these are not legal distance bounds.
 
+- `RH/QPrimePowerThresholdSeries.lean` (2026-10-22, Pacific time):
+  `dilatedTargetMean_threshold_series` exchanges the actual Zipf threshold
+  sums using proved double summability. Exact integer ceilings have no rounding.
+  `qTarget_basis_threshold_error_exact` retains every signed Moebius tail.
+  `qTarget_primePower_threshold_hasSum` expresses each prime-power conductor
+  coefficient as a convergent series of finite nonnegative interval sums.
+  `qTarget_primePower_threshold_head_tail` retains the complete level tail;
+  `qTarget_primePower_threshold_tendsto` certifies convergence of finite heads.
+  Quantitative tail rates, higher Meixner completeness, and legal saturation
+  remain open. F_p is Nat.log p n throughout; no membership provider is supplied.
+
 - `RH/QDivisorModeLegality.lean` (2026-10-22, Pacific time):
   `residue_three_single_mode_defect` gives 9 E_Q[g_3]/8 > 0.
   `ambient_single_mode_not_legal_preserving` exhibits legal g_3 whose ambient
