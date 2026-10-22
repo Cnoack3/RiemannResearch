@@ -1,5 +1,24 @@
 # Theorem catalog
 
+### Explicit horizontal second-moment logarithmic rate (2026-10-22)
+
+Established finite identities and transfers:
+- Analysis/FiniteStrictTailSecondMoment.lean proves the exact second-moment
+  layer cake, the truncated exponential integral with its endpoint retained,
+  and the finite estimate sum x_i^2 <= 2 M/a^2 from an exponential strict tail.
+- Analysis/ActualZeroHorizontalMomentRate.lean specializes the identity and
+  tail transfer to every actual positive-height zeta-zero occurrence,
+  retaining analytic multiplicity. Any eventual E(T)/T <= K/log T implies
+  SublinearHorizontalEnergy.
+
+Conditional research reduction:
+- SelbergDensityBound T C a, with T>1, C>=0 and a>0, gives
+  0 <= E(T)/T <= 4 C/(a^2 log T); a=1/4 gives 64 C/log T.
+- UniformSelbergDensity a gives E(T)/T = O(1/log T).
+- Open formalization obligation: a checked analytic provider for the classical
+  unconditional Selberg density theorem. These deductions introduce no RH
+  premise or project-local axiom and do not assert that provider.
+
 ### Contractive complete-Q CRT carry screening (2026-10-22)
 
 Established Hilbert and actual Q finite-synthesis results:
