@@ -1,5 +1,47 @@
 # Theorem catalog
 
+### Feasible complete-Gram head repair and weighted physical frames (2026-10-22)
+
+Established finite and actual-Q statements:
+- `Analysis/FiniteFeasibleGramRepair.lean` proves arbitrary-source normal
+  solvability from feasibility, exact HEAD/REPAIR completions without row
+  independence, and bounded normal solvability iff the directional inequality.
+  It also proves frame-to-energy bounds and the complementary signed
+  covariance estimate `(y^T r)^2 <= delta * y^T(D-W)y`.
+- `Analysis/FiniteSampledRepairStability.lean` proves the exact sampled
+  repair decomposition: the complete constrained optimum plus one
+  nonnegative screened sampling-error square. The removed sampling-error
+  square is retained in an exact companion identity.
+- `RH/QSquarefreeHeadRank.lean` derives the physical four-row relation and
+  proves projected head rows dependent for every legal dictionary when M>=4.
+  Constant heads remain compatible; full row rank is unnecessary.
+- `RH/QSquarefreeHeadFrame.lean` proves head probability mass <=1 and
+  candidate norm squared <=1/c from feasibility and the stated weighted
+  lower frame estimate.
+
+Conditional research reductions:
+- `RH/QSquarefreeHeadRepair.closure_capacity_rh_of_uniform_directional_repairs`
+  derives feasibility, complete bounded residuals, squarefree closure,
+  capacity divergence, and RH from a uniform actual-Q directional bound.
+- `RH/QSquarefreeHeadFrame.closure_capacity_rh_of_uniform_head_frame`
+  gives the same conclusions from a positive uniform physical frame constant
+  and explicit finite head feasibility.
+
+Open arithmetic obligations:
+- Uniform target-direction repair bound for actual legal dictionary families.
+- Alternatively, a uniform lower weighted frame bound for a prescribed
+  feasible dictionary family.
+- A quantitative zero-statistic-to-physical-head map, with its means,
+  complete signed covariance, and correct P/Q change of law.
+
+The reductions do not prove these providers or RH. Core and extension
+candidates passed jobs `job_J3EsWCrx8r5PV3GerVTGR1GCZBWxSRP9` and
+`job_R9o_ZtxHDeOgoLZd_AIl8BaRiT2YwzMQ`, both exit 0, verified=true.
+Eight central axiom audits used only ordinary foundations. Final publication
+is subject to the containing server checkpoint.
+Research detail: `RH/QSquarefreeHeadRepairResearch20261022.md`.
+
+
 ### Explicit horizontal second-moment logarithmic rate (2026-10-22)
 
 Established finite identities and transfers:
