@@ -1,0 +1,16 @@
+# Copy to ~/.config/bazel-remote/config.yaml and keep the filled file private.
+dir: /home/cri_2025/.cache/bazel-remote
+max_size: 5 # GiB of local disk cache
+http_address: 127.0.0.1:9090
+grpc_address: none
+
+s3_proxy:
+  endpoint: storage.googleapis.com
+  bucket: riemann_lean_cache
+  prefix: bazel
+  bucket_lookup_type: path
+  auth_method: access_key
+  access_key_id: REPLACE_WITH_GCS_HMAC_ACCESS_ID
+  secret_access_key: REPLACE_WITH_GCS_HMAC_SECRET
+  signature_type: v4
+  region: us-east-1

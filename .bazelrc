@@ -1,0 +1,76 @@
+# Bound the local Bazel client while retaining remote execution concurrency.
+# 8 GiB caps the Java heap, not process RSS; leave room for native memory and tools.
+# ActiveProcessorCount sizes automatic JVM pools; it is not an OS CPU quota.
+startup --host_jvm_args=-Xmx8g
+startup --host_jvm_args=-XX:ActiveProcessorCount=4
+# A heap OOM must terminate the server, including failures on background threads.
+startup --host_jvm_args=-XX:+ExitOnOutOfMemoryError
+build --loading_phase_threads=4
+build --local_resources=cpu=4
+
+# Keep normal console and BuildBuddy logs focused on failures.
+# These UI options do not alter Lean action commands or their cache keys.
+common --ui_event_filters=-info,-warning
+common --noshow_progress
+build --noshow_loading_progress
+build --show_result=0
+test --test_output=errors
+
+# Restore informational output, warnings, and progress for diagnosis.
+common:verbose --ui_event_filters=+info,+warning
+common:verbose --show_progress
+build:verbose --show_loading_progress
+build:verbose --show_result=1
+
+# Also share eligible repository contents through the remote cache (Bazel 9.2).
+# DO NOT ENABLE - this is unstable and causes hangs
+# startup --experimental_remote_repo_contents_cache
+
+# Keep native repository caches at Bazel's persistent per-user defaults.
+common --repo_contents_cache_gc_max_age=14d
+common --repo_contents_cache_gc_idle_delay=5m
+
+# Stock bazel-remote signs GCS requests with the server's private HMAC key.
+# Bucket: riemann_lean_cache; object prefix: bazel/.
+build --remote_cache=http://127.0.0.1:9090
+build --remote_download_outputs=minimal
+
+# Opt-in Google RBE smoke profile. Requires an instance and private ADC credentials.
+build:rbe --remote_executor=grpcs://remotebuildexecution.googleapis.com
+build:rbe --remote_cache=grpcs://remotebuildexecution.googleapis.com
+build:rbe --remote_instance_name=projects/project-c5cfd87b-fbe8-47ea-9d0/instances/lean-test
+build:rbe --google_default_credentials
+build:rbe --extra_execution_platforms=//bazel:rbe_linux_x86_64
+build:rbe --spawn_strategy=remote
+build:rbe --noremote_local_fallback
+build:rbe --remote_timeout=600s
+build:rbe --jobs=2
+
+# Opt-in BuildBuddy Personal trial; this repository is private.
+common:buildbuddy --remote_header=x-buildbuddy-api-key=U0k7vCJ40gnlyrO0249u
+build:buildbuddy --remote_executor=grpcs://remote.buildbuddy.io
+build:buildbuddy --remote_cache=grpcs://remote.buildbuddy.io
+build:buildbuddy --remote_instance_name=riemann-research
+build:buildbuddy --bes_backend=grpcs://remote.buildbuddy.io
+build:buildbuddy --bes_results_url=https://app.buildbuddy.io/invocation/
+build:buildbuddy --extra_execution_platforms=//bazel:rbe_linux_x86_64
+build:buildbuddy --spawn_strategy=remote
+build:buildbuddy --noremote_local_fallback
+build:buildbuddy --remote_timeout=600s
+build:buildbuddy --jobs=80
+build:buildbuddy --remote_cache_compression
+
+# Bypass BEP artifact metadata hashing; dashboard events and RBE remain enabled.
+# Artifact/test-log/profile links are local files. Opt in to uploads below.
+build:buildbuddy --experimental_build_event_upload_strategy=local
+
+# Restore hosted artifact uploads when needed; this may recreate the uploader OOM.
+build:buildbuddy-artifacts --config=buildbuddy
+build:buildbuddy-artifacts --experimental_build_event_upload_strategy=remote
+
+# Bounded eight-job diagnostic profile; normal BuildBuddy concurrency is unchanged.
+build:buildbuddy-benchmark --config=buildbuddy
+build:buildbuddy-benchmark --jobs=8
+
+try-import %workspace%/.bazelrc.local
+

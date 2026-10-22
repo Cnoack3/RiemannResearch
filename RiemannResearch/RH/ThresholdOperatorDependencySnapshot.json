@@ -1,0 +1,1191 @@
+{
+  "created_utc": "2026-09-08T10:14:47.641862+00:00",
+  "requested_roots": [
+    "RiemannResearch/RH/ThresholdHilbertProjection.lean",
+    "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean",
+    "RiemannResearch/RH/ThresholdHilbertLegal.lean",
+    "RiemannResearch/RH/ThresholdLegalIntegrability.lean",
+    "RiemannResearch/RH/ThresholdInfiniteCertificate.lean"
+  ],
+  "all_topological_order": [
+    "RiemannResearch/RH/ParetoResidueDuality.lean",
+    "RiemannResearch/RH/ParetoGeometricMixture.lean",
+    "RiemannResearch/RH/ParetoDilation.lean",
+    "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+    "RiemannResearch/RH/ThresholdDilationEnergy.lean",
+    "RiemannResearch/RH/ThresholdHilbertSpace.lean",
+    "RiemannResearch/RH/ThresholdHilbertDilation.lean",
+    "RiemannResearch/RH/ThresholdHilbertMean.lean",
+    "RiemannResearch/RH/ThresholdHilbertAdjoint.lean",
+    "RiemannResearch/RH/ThresholdHilbertProjection.lean",
+    "RiemannResearch/RH/ThresholdAffineBranches.lean",
+    "RiemannResearch/LinearAlgebra/RankOneProjectionDistance.lean",
+    "RiemannResearch/RH/ThresholdAffineProjectionBlocks.lean",
+    "RiemannResearch/RH/ParetoProgressionTails.lean",
+    "RiemannResearch/RH/ThresholdPhaseConstant.lean",
+    "RiemannResearch/RH/ThresholdPhaseSharpBound.lean",
+    "RiemannResearch/RH/ThresholdAffineTailBounds.lean",
+    "RiemannResearch/RH/ThresholdPhaseLowerBound.lean",
+    "RiemannResearch/RH/ThresholdPhaseTail.lean",
+    "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean",
+    "RiemannResearch/RH/ThresholdSeedEuclidean.lean",
+    "RiemannResearch/RH/ThresholdPrimePackets.lean",
+    "RiemannResearch/RH/ThresholdHilbertLegal.lean",
+    "RiemannResearch/RH/ParetoPrimePackets.lean",
+    "RiemannResearch/LinearAlgebra/FiniteWeightedEnergy.lean",
+    "RiemannResearch/RH/ParetoFiniteCertificates.lean",
+    "RiemannResearch/RH/ParetoPrimorialObstruction.lean",
+    "RiemannResearch/RH/ParetoSequenceCertificates.lean",
+    "RiemannResearch/RH/ThresholdLegalIntegrability.lean",
+    "RiemannResearch/RH/ThresholdFiniteCertificate.lean",
+    "RiemannResearch/RH/ThresholdInfiniteCertificate.lean"
+  ],
+  "root_closures": {
+    "RiemannResearch/RH/ThresholdHilbertProjection.lean": [
+      "RiemannResearch/RH/ParetoResidueDuality.lean",
+      "RiemannResearch/RH/ParetoGeometricMixture.lean",
+      "RiemannResearch/RH/ParetoDilation.lean",
+      "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+      "RiemannResearch/RH/ThresholdDilationEnergy.lean",
+      "RiemannResearch/RH/ThresholdHilbertSpace.lean",
+      "RiemannResearch/RH/ThresholdHilbertDilation.lean",
+      "RiemannResearch/RH/ThresholdHilbertMean.lean",
+      "RiemannResearch/RH/ThresholdHilbertAdjoint.lean",
+      "RiemannResearch/RH/ThresholdHilbertProjection.lean"
+    ],
+    "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean": [
+      "RiemannResearch/RH/ParetoResidueDuality.lean",
+      "RiemannResearch/RH/ParetoGeometricMixture.lean",
+      "RiemannResearch/RH/ParetoDilation.lean",
+      "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+      "RiemannResearch/RH/ThresholdAffineBranches.lean",
+      "RiemannResearch/LinearAlgebra/RankOneProjectionDistance.lean",
+      "RiemannResearch/RH/ThresholdAffineProjectionBlocks.lean",
+      "RiemannResearch/RH/ParetoProgressionTails.lean",
+      "RiemannResearch/RH/ThresholdPhaseConstant.lean",
+      "RiemannResearch/RH/ThresholdPhaseSharpBound.lean",
+      "RiemannResearch/RH/ThresholdAffineTailBounds.lean",
+      "RiemannResearch/RH/ThresholdPhaseLowerBound.lean",
+      "RiemannResearch/RH/ThresholdPhaseTail.lean",
+      "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean"
+    ],
+    "RiemannResearch/RH/ThresholdHilbertLegal.lean": [
+      "RiemannResearch/RH/ParetoResidueDuality.lean",
+      "RiemannResearch/RH/ParetoGeometricMixture.lean",
+      "RiemannResearch/RH/ParetoDilation.lean",
+      "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+      "RiemannResearch/RH/ThresholdDilationEnergy.lean",
+      "RiemannResearch/RH/ThresholdHilbertSpace.lean",
+      "RiemannResearch/RH/ThresholdHilbertDilation.lean",
+      "RiemannResearch/RH/ThresholdSeedEuclidean.lean",
+      "RiemannResearch/RH/ThresholdPrimePackets.lean",
+      "RiemannResearch/RH/ThresholdHilbertLegal.lean"
+    ],
+    "RiemannResearch/RH/ThresholdLegalIntegrability.lean": [
+      "RiemannResearch/RH/ParetoResidueDuality.lean",
+      "RiemannResearch/RH/ParetoGeometricMixture.lean",
+      "RiemannResearch/RH/ParetoDilation.lean",
+      "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+      "RiemannResearch/RH/ParetoPrimePackets.lean",
+      "RiemannResearch/LinearAlgebra/FiniteWeightedEnergy.lean",
+      "RiemannResearch/RH/ParetoFiniteCertificates.lean",
+      "RiemannResearch/RH/ParetoPrimorialObstruction.lean",
+      "RiemannResearch/RH/ParetoSequenceCertificates.lean",
+      "RiemannResearch/RH/ThresholdLegalIntegrability.lean"
+    ],
+    "RiemannResearch/RH/ThresholdInfiniteCertificate.lean": [
+      "RiemannResearch/RH/ThresholdFiniteCertificate.lean",
+      "RiemannResearch/RH/ParetoResidueDuality.lean",
+      "RiemannResearch/RH/ParetoGeometricMixture.lean",
+      "RiemannResearch/RH/ParetoDilation.lean",
+      "RiemannResearch/RH/ParetoProgressionTails.lean",
+      "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+      "RiemannResearch/RH/ThresholdInfiniteCertificate.lean"
+    ]
+  },
+  "sources": {
+    "RiemannResearch/LinearAlgebra/FiniteWeightedEnergy.lean": {
+      "sha256": "d6e0f4a2b1120754be72c4f8337f36cd65976b895668b899d7b5b611098b22b4",
+      "bytes": 7682,
+      "lines": 201,
+      "imports": [
+        "Mathlib.Algebra.Order.BigOperators.Ring.Finset",
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.Tactic.FieldSimp",
+        "Mathlib.Tactic.Linarith",
+        "Mathlib.Tactic.Ring"
+      ],
+      "project_dependencies": [],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/LinearAlgebra/RankOneProjectionDistance.lean": {
+      "sha256": "e371bdfc82c7f9db5b64978883f871c19e85044edbd9837de1922081b5674a3d",
+      "bytes": 2211,
+      "lines": 59,
+      "imports": [
+        "Mathlib.Algebra.BigOperators.Ring.Finset",
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.Tactic.Ring",
+        "Mathlib.Tactic.SimpRw"
+      ],
+      "project_dependencies": [],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ParetoDilation.lean": {
+      "sha256": "546a557feb5b19007301366cb6a95d0d576e2a1b0de888e6382c0a8b81be4f4e",
+      "bytes": 8480,
+      "lines": 196,
+      "imports": [
+        "RiemannResearch.RH.ParetoResidueDuality",
+        "RiemannResearch.RH.ParetoGeometricMixture",
+        "Mathlib.Algebra.BigOperators.Intervals",
+        "Mathlib.Topology.Algebra.InfiniteSum.Real",
+        "Mathlib.Tactic.FieldSimp",
+        "Mathlib.Tactic.Positivity"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ParetoResidueDuality.lean",
+        "RiemannResearch/RH/ParetoGeometricMixture.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ParetoFiniteCertificates.lean": {
+      "sha256": "17235f20c4ac4eda69f5b5806cbb5504b869406f14b456a830194592ad816977",
+      "bytes": 9699,
+      "lines": 222,
+      "imports": [
+        "RiemannResearch.RH.ParetoPrimePackets",
+        "RiemannResearch.LinearAlgebra.FiniteWeightedEnergy",
+        "Mathlib.LinearAlgebra.Matrix.Notation",
+        "Mathlib.Tactic.FinCases",
+        "Mathlib.Tactic.Linarith",
+        "Mathlib.Tactic.FieldSimp",
+        "Mathlib.Tactic.Positivity"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ParetoPrimePackets.lean",
+        "RiemannResearch/LinearAlgebra/FiniteWeightedEnergy.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ParetoGeometricMixture.lean": {
+      "sha256": "7974652fb4caeedfc0d49438f7eed10e607ddcadfe73286de6cbb2d0aed73fab",
+      "bytes": 7152,
+      "lines": 166,
+      "imports": [
+        "Mathlib.Analysis.SpecialFunctions.Integrals.Basic",
+        "Mathlib.Analysis.SpecificLimits.Normed",
+        "Mathlib.Topology.Algebra.InfiniteSum.Real",
+        "Mathlib.Tactic.FieldSimp",
+        "Mathlib.Tactic.Positivity",
+        "Mathlib.Tactic.Push",
+        "Mathlib.Tactic.Ring"
+      ],
+      "project_dependencies": [],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ParetoPrimePackets.lean": {
+      "sha256": "80f7886d7d7ae59de554e2c4ae1597ac76c0c77cae11a9f1bfcb89705aba0c31",
+      "bytes": 5918,
+      "lines": 134,
+      "imports": [
+        "RiemannResearch.RH.ParetoResidueDuality"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ParetoResidueDuality.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ParetoPrimorialObstruction.lean": {
+      "sha256": "bafc7cc90355dc17c29a6ffa16058909e955a802d697e3529ebe87727596e32d",
+      "bytes": 6692,
+      "lines": 153,
+      "imports": [
+        "RiemannResearch.RH.ParetoFiniteCertificates",
+        "Mathlib.NumberTheory.Primorial"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ParetoFiniteCertificates.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ParetoProgressionTails.lean": {
+      "sha256": "9f45e018dbe3ed55cdcc5e741fe40c21e9c887fec3153529a6d49310dad528e7",
+      "bytes": 7141,
+      "lines": 187,
+      "imports": [
+        "RiemannResearch.RH.ParetoDilation",
+        "Mathlib.Tactic.Linarith"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ParetoDilation.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ParetoResidueDuality.lean": {
+      "sha256": "50ca8884a01f0a567ba4c546108fa026f558ff304df396b23ea60e3fb913595b",
+      "bytes": 7259,
+      "lines": 180,
+      "imports": [
+        "Mathlib.NumberTheory.ArithmeticFunction.Moebius",
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.Tactic.Ring",
+        "Mathlib.Tactic.NormNum"
+      ],
+      "project_dependencies": [],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ParetoSequenceCertificates.lean": {
+      "sha256": "795171aa50a2ed98cef33d3d904991c66fb1b5f2fb1425fbd3c8186f22666e2d",
+      "bytes": 4415,
+      "lines": 103,
+      "imports": [
+        "RiemannResearch.RH.ParetoDilation",
+        "RiemannResearch.RH.ParetoFiniteCertificates",
+        "RiemannResearch.RH.ParetoPrimorialObstruction"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ParetoDilation.lean",
+        "RiemannResearch/RH/ParetoFiniteCertificates.lean",
+        "RiemannResearch/RH/ParetoPrimorialObstruction.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdAffineBranches.lean": {
+      "sha256": "f1ef4cdcec3be315be69e8678b3a4bf5b6b1b93d83d0e98b749ba51d3f417c2a",
+      "bytes": 6871,
+      "lines": 164,
+      "imports": [
+        "RiemannResearch.RH.ThresholdDilationAlgebra",
+        "Mathlib.Analysis.SpecialFunctions.Sqrt"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdDilationAlgebra.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean": {
+      "sha256": "0dd9c1e22adbf8a00a1dc8d85b30bc589261196e9ef6f99fd38e5b2e28378ced",
+      "bytes": 14856,
+      "lines": 323,
+      "imports": [
+        "RiemannResearch.RH.ThresholdAffineTailBounds",
+        "RiemannResearch.RH.ThresholdPhaseTail"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdAffineTailBounds.lean",
+        "RiemannResearch/RH/ThresholdPhaseTail.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdAffineProjectionBlocks.lean": {
+      "sha256": "870df8f418162dd758089f5bfc55b2737da8b17a04945f79c79d075e8d325a31",
+      "bytes": 2069,
+      "lines": 46,
+      "imports": [
+        "RiemannResearch.RH.ThresholdAffineBranches",
+        "RiemannResearch.LinearAlgebra.RankOneProjectionDistance"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdAffineBranches.lean",
+        "RiemannResearch/LinearAlgebra/RankOneProjectionDistance.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdAffineTailBounds.lean": {
+      "sha256": "42816373663265a3b8a9638735282b1889330327f5f27c3d068c88242a20c7a3",
+      "bytes": 11663,
+      "lines": 273,
+      "imports": [
+        "RiemannResearch.RH.ThresholdAffineProjectionBlocks",
+        "RiemannResearch.RH.ThresholdPhaseSharpBound"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdAffineProjectionBlocks.lean",
+        "RiemannResearch/RH/ThresholdPhaseSharpBound.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdDilationAlgebra.lean": {
+      "sha256": "9b5e3954360ef50c84892c6fe874ef533c61cc75b37e42d21b7c5896035fe4cf",
+      "bytes": 10177,
+      "lines": 239,
+      "imports": [
+        "RiemannResearch.RH.ParetoDilation",
+        "Mathlib.LinearAlgebra.Span.Defs"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ParetoDilation.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdDilationEnergy.lean": {
+      "sha256": "79a680b34d8ca477da0bdd8e08445d009e88c566cede21286f6b8a175be777fb",
+      "bytes": 8414,
+      "lines": 172,
+      "imports": [
+        "RiemannResearch.RH.ThresholdDilationAlgebra",
+        "Mathlib.Tactic.Linarith"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdDilationAlgebra.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdFiniteCertificate.lean": {
+      "sha256": "86490e3e6f3044c84c791d72a2e953e581b41f1abc72ab2bdb549ed36595c744",
+      "bytes": 4726,
+      "lines": 105,
+      "imports": [
+        "Mathlib.Algebra.BigOperators.Fin",
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.LinearAlgebra.Matrix.Notation",
+        "Mathlib.Tactic.FinCases",
+        "Mathlib.Tactic.NormNum",
+        "Mathlib.Tactic.Positivity"
+      ],
+      "project_dependencies": [],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdHilbertAdjoint.lean": {
+      "sha256": "5dc87fd75cf7ae7da99b4ce21f197076bb83c0394a6051b1903f6207bb306827",
+      "bytes": 7459,
+      "lines": 173,
+      "imports": [
+        "RiemannResearch.RH.ThresholdHilbertMean",
+        "Mathlib.Tactic.Linarith"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdHilbertMean.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdHilbertDilation.lean": {
+      "sha256": "57407873a74699e755ceb2f739add1943ed5b052228c33f13e212bfca0569261",
+      "bytes": 4722,
+      "lines": 103,
+      "imports": [
+        "RiemannResearch.RH.ThresholdHilbertSpace",
+        "Mathlib.Analysis.InnerProductSpace.Adjoint"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdHilbertSpace.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdHilbertLegal.lean": {
+      "sha256": "8b4ebbee3613b420cc7c7626839896058bbf3b9a01a81c3e4a6d0c2d48383020",
+      "bytes": 2342,
+      "lines": 51,
+      "imports": [
+        "RiemannResearch.RH.ThresholdHilbertDilation",
+        "RiemannResearch.RH.ThresholdSeedEuclidean",
+        "RiemannResearch.RH.ThresholdPrimePackets",
+        "Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdHilbertDilation.lean",
+        "RiemannResearch/RH/ThresholdSeedEuclidean.lean",
+        "RiemannResearch/RH/ThresholdPrimePackets.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdHilbertMean.lean": {
+      "sha256": "b075aedef50870d2d5b745d046644e9a33d5663b4b3dea9983e299458eb1ddd5",
+      "bytes": 3069,
+      "lines": 79,
+      "imports": [
+        "RiemannResearch.RH.ThresholdHilbertDilation"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdHilbertDilation.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdHilbertProjection.lean": {
+      "sha256": "cee83b27da19d86e44caaeed1173b0b7c2c46072957e090b3efd70983f9bef9c",
+      "bytes": 7853,
+      "lines": 171,
+      "imports": [
+        "RiemannResearch.RH.ThresholdHilbertAdjoint"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdHilbertAdjoint.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdHilbertSpace.lean": {
+      "sha256": "0ac8de4e04068058eb04f0a0beb6ad048944cab383e6086e5f694e0dd494ec74",
+      "bytes": 4763,
+      "lines": 119,
+      "imports": [
+        "RiemannResearch.RH.ThresholdDilationEnergy",
+        "Mathlib.Analysis.InnerProductSpace.l2Space",
+        "Mathlib.Analysis.SpecialFunctions.Pow.Real"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdDilationEnergy.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdInfiniteCertificate.lean": {
+      "sha256": "ed196ba3ea3d9392e5c2ad20c822311ef6712fd30d0873e97420254563917f1a",
+      "bytes": 4916,
+      "lines": 120,
+      "imports": [
+        "RiemannResearch.RH.ThresholdFiniteCertificate",
+        "RiemannResearch.RH.ParetoProgressionTails",
+        "RiemannResearch.RH.ThresholdDilationAlgebra",
+        "Mathlib.Analysis.SumOverResidueClass",
+        "Mathlib.Data.Nat.Periodic",
+        "Mathlib.Tactic.IntervalCases"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdFiniteCertificate.lean",
+        "RiemannResearch/RH/ParetoProgressionTails.lean",
+        "RiemannResearch/RH/ThresholdDilationAlgebra.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdLegalIntegrability.lean": {
+      "sha256": "24af06ae601a5eb64d1a360c97011eb2cd241385b2f1c14f0d54d9c18a12960a",
+      "bytes": 2688,
+      "lines": 60,
+      "imports": [
+        "RiemannResearch.RH.ThresholdDilationAlgebra",
+        "RiemannResearch.RH.ParetoSequenceCertificates"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+        "RiemannResearch/RH/ParetoSequenceCertificates.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdPhaseConstant.lean": {
+      "sha256": "99f0f5406aaefbfc20586e1def06b58e7b3301b655c65ccb216edc2ee3be5449",
+      "bytes": 8947,
+      "lines": 219,
+      "imports": [
+        "RiemannResearch.RH.ParetoProgressionTails",
+        "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+        "Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp",
+        "Mathlib.Tactic.Linarith",
+        "Mathlib.Tactic.FieldSimp",
+        "Mathlib.Tactic.Positivity"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ParetoProgressionTails.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdPhaseLowerBound.lean": {
+      "sha256": "41315ff99a5ff720d545d879fec0120b40016e186dcc72de6446f7759bdcde61",
+      "bytes": 5502,
+      "lines": 140,
+      "imports": [
+        "RiemannResearch.RH.ThresholdPhaseSharpBound"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdPhaseSharpBound.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdPhaseSharpBound.lean": {
+      "sha256": "bc13c36ec361af514eacadb9d1d2a0da4838006eb5da77f7b9afe536aa5b9c20",
+      "bytes": 3944,
+      "lines": 98,
+      "imports": [
+        "RiemannResearch.RH.ThresholdPhaseConstant"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdPhaseConstant.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdPhaseTail.lean": {
+      "sha256": "f7e502b9ba48ceb8c22d6f2407229062dc6c6e9eced52731b91ac6a82686c28d",
+      "bytes": 3282,
+      "lines": 76,
+      "imports": [
+        "RiemannResearch.RH.ThresholdPhaseLowerBound"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdPhaseLowerBound.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdPrimePackets.lean": {
+      "sha256": "ed4804e3c816688ceef2e1d9078bc754ac68a2ecdc352c70ac53d822f9d65186",
+      "bytes": 6897,
+      "lines": 152,
+      "imports": [
+        "RiemannResearch.RH.ThresholdDilationAlgebra",
+        "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+        "Mathlib.Tactic.Linarith"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdDilationAlgebra.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    },
+    "RiemannResearch/RH/ThresholdSeedEuclidean.lean": {
+      "sha256": "fcf553f0f6c6662a6e07dc7d6e142c174cfe7713ae5c1e99cace325b0f4c9fbc",
+      "bytes": 7764,
+      "lines": 182,
+      "imports": [
+        "RiemannResearch.RH.ThresholdDilationAlgebra"
+      ],
+      "project_dependencies": [
+        "RiemannResearch/RH/ThresholdDilationAlgebra.lean"
+      ],
+      "scope_check": {
+        "balance": 0,
+        "minimum": 0
+      }
+    }
+  },
+  "assemblies": [
+    {
+      "path": "ExistingDependencies.lean",
+      "roots": [
+        "RiemannResearch/RH/ThresholdHilbertProjection.lean",
+        "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean",
+        "RiemannResearch/RH/ThresholdHilbertLegal.lean",
+        "RiemannResearch/RH/ThresholdLegalIntegrability.lean",
+        "RiemannResearch/RH/ThresholdInfiniteCertificate.lean"
+      ],
+      "topological_order": [
+        "RiemannResearch/RH/ParetoResidueDuality.lean",
+        "RiemannResearch/RH/ParetoGeometricMixture.lean",
+        "RiemannResearch/RH/ParetoDilation.lean",
+        "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+        "RiemannResearch/RH/ThresholdDilationEnergy.lean",
+        "RiemannResearch/RH/ThresholdHilbertSpace.lean",
+        "RiemannResearch/RH/ThresholdHilbertDilation.lean",
+        "RiemannResearch/RH/ThresholdHilbertMean.lean",
+        "RiemannResearch/RH/ThresholdHilbertAdjoint.lean",
+        "RiemannResearch/RH/ThresholdHilbertProjection.lean",
+        "RiemannResearch/RH/ThresholdAffineBranches.lean",
+        "RiemannResearch/LinearAlgebra/RankOneProjectionDistance.lean",
+        "RiemannResearch/RH/ThresholdAffineProjectionBlocks.lean",
+        "RiemannResearch/RH/ParetoProgressionTails.lean",
+        "RiemannResearch/RH/ThresholdPhaseConstant.lean",
+        "RiemannResearch/RH/ThresholdPhaseSharpBound.lean",
+        "RiemannResearch/RH/ThresholdAffineTailBounds.lean",
+        "RiemannResearch/RH/ThresholdPhaseLowerBound.lean",
+        "RiemannResearch/RH/ThresholdPhaseTail.lean",
+        "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean",
+        "RiemannResearch/RH/ThresholdSeedEuclidean.lean",
+        "RiemannResearch/RH/ThresholdPrimePackets.lean",
+        "RiemannResearch/RH/ThresholdHilbertLegal.lean",
+        "RiemannResearch/RH/ParetoPrimePackets.lean",
+        "RiemannResearch/LinearAlgebra/FiniteWeightedEnergy.lean",
+        "RiemannResearch/RH/ParetoFiniteCertificates.lean",
+        "RiemannResearch/RH/ParetoPrimorialObstruction.lean",
+        "RiemannResearch/RH/ParetoSequenceCertificates.lean",
+        "RiemannResearch/RH/ThresholdLegalIntegrability.lean",
+        "RiemannResearch/RH/ThresholdFiniteCertificate.lean",
+        "RiemannResearch/RH/ThresholdInfiniteCertificate.lean"
+      ],
+      "mathlib_imports": [
+        "Mathlib.Algebra.BigOperators.Fin",
+        "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+        "Mathlib.Algebra.BigOperators.Intervals",
+        "Mathlib.Algebra.BigOperators.Ring.Finset",
+        "Mathlib.Algebra.Order.BigOperators.Ring.Finset",
+        "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "Mathlib.Analysis.InnerProductSpace.l2Space",
+        "Mathlib.Analysis.SpecialFunctions.Integrals.Basic",
+        "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+        "Mathlib.Analysis.SpecialFunctions.Pow.Real",
+        "Mathlib.Analysis.SpecialFunctions.Sqrt",
+        "Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp",
+        "Mathlib.Analysis.SpecificLimits.Normed",
+        "Mathlib.Analysis.SumOverResidueClass",
+        "Mathlib.Data.Nat.Periodic",
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.LinearAlgebra.Matrix.Notation",
+        "Mathlib.LinearAlgebra.Span.Defs",
+        "Mathlib.NumberTheory.ArithmeticFunction.Moebius",
+        "Mathlib.NumberTheory.Primorial",
+        "Mathlib.Tactic.FieldSimp",
+        "Mathlib.Tactic.FinCases",
+        "Mathlib.Tactic.IntervalCases",
+        "Mathlib.Tactic.Linarith",
+        "Mathlib.Tactic.NormNum",
+        "Mathlib.Tactic.Positivity",
+        "Mathlib.Tactic.Push",
+        "Mathlib.Tactic.Ring",
+        "Mathlib.Tactic.SimpRw",
+        "Mathlib.Topology.Algebra.InfiniteSum.Real",
+        "Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic"
+      ],
+      "wrapped_sections": true,
+      "source_map": [
+        {
+          "source": "RiemannResearch/RH/ParetoResidueDuality.lean",
+          "body_start_line": 37,
+          "body_end_line": 212
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoGeometricMixture.lean",
+          "body_start_line": 218,
+          "body_end_line": 376
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoDilation.lean",
+          "body_start_line": 382,
+          "body_end_line": 571
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+          "body_start_line": 577,
+          "body_end_line": 813
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdDilationEnergy.lean",
+          "body_start_line": 819,
+          "body_end_line": 988
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertSpace.lean",
+          "body_start_line": 994,
+          "body_end_line": 1109
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertDilation.lean",
+          "body_start_line": 1115,
+          "body_end_line": 1215
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertMean.lean",
+          "body_start_line": 1221,
+          "body_end_line": 1298
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertAdjoint.lean",
+          "body_start_line": 1304,
+          "body_end_line": 1474
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertProjection.lean",
+          "body_start_line": 1480,
+          "body_end_line": 1649
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdAffineBranches.lean",
+          "body_start_line": 1655,
+          "body_end_line": 1816
+        },
+        {
+          "source": "RiemannResearch/LinearAlgebra/RankOneProjectionDistance.lean",
+          "body_start_line": 1822,
+          "body_end_line": 1876
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdAffineProjectionBlocks.lean",
+          "body_start_line": 1882,
+          "body_end_line": 1925
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoProgressionTails.lean",
+          "body_start_line": 1931,
+          "body_end_line": 2115
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdPhaseConstant.lean",
+          "body_start_line": 2121,
+          "body_end_line": 2333
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdPhaseSharpBound.lean",
+          "body_start_line": 2339,
+          "body_end_line": 2435
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdAffineTailBounds.lean",
+          "body_start_line": 2441,
+          "body_end_line": 2711
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdPhaseLowerBound.lean",
+          "body_start_line": 2717,
+          "body_end_line": 2855
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdPhaseTail.lean",
+          "body_start_line": 2861,
+          "body_end_line": 2935
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean",
+          "body_start_line": 2941,
+          "body_end_line": 3261
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdSeedEuclidean.lean",
+          "body_start_line": 3267,
+          "body_end_line": 3447
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdPrimePackets.lean",
+          "body_start_line": 3453,
+          "body_end_line": 3601
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertLegal.lean",
+          "body_start_line": 3607,
+          "body_end_line": 3653
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoPrimePackets.lean",
+          "body_start_line": 3659,
+          "body_end_line": 3791
+        },
+        {
+          "source": "RiemannResearch/LinearAlgebra/FiniteWeightedEnergy.lean",
+          "body_start_line": 3797,
+          "body_end_line": 3992
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoFiniteCertificates.lean",
+          "body_start_line": 3998,
+          "body_end_line": 4212
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoPrimorialObstruction.lean",
+          "body_start_line": 4218,
+          "body_end_line": 4368
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoSequenceCertificates.lean",
+          "body_start_line": 4374,
+          "body_end_line": 4473
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdLegalIntegrability.lean",
+          "body_start_line": 4479,
+          "body_end_line": 4536
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdFiniteCertificate.lean",
+          "body_start_line": 4542,
+          "body_end_line": 4640
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdInfiniteCertificate.lean",
+          "body_start_line": 4646,
+          "body_end_line": 4759
+        }
+      ],
+      "sha256": "6d1f4996397a37bc61c66fe67c28c1df08cb5926acfc41816c169ce32ef71660",
+      "lines": 4761
+    },
+    {
+      "path": "OperatorDependencies.lean",
+      "roots": [
+        "RiemannResearch/RH/ThresholdHilbertProjection.lean",
+        "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean"
+      ],
+      "topological_order": [
+        "RiemannResearch/RH/ParetoResidueDuality.lean",
+        "RiemannResearch/RH/ParetoGeometricMixture.lean",
+        "RiemannResearch/RH/ParetoDilation.lean",
+        "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+        "RiemannResearch/RH/ThresholdDilationEnergy.lean",
+        "RiemannResearch/RH/ThresholdHilbertSpace.lean",
+        "RiemannResearch/RH/ThresholdHilbertDilation.lean",
+        "RiemannResearch/RH/ThresholdHilbertMean.lean",
+        "RiemannResearch/RH/ThresholdHilbertAdjoint.lean",
+        "RiemannResearch/RH/ThresholdHilbertProjection.lean",
+        "RiemannResearch/RH/ThresholdAffineBranches.lean",
+        "RiemannResearch/LinearAlgebra/RankOneProjectionDistance.lean",
+        "RiemannResearch/RH/ThresholdAffineProjectionBlocks.lean",
+        "RiemannResearch/RH/ParetoProgressionTails.lean",
+        "RiemannResearch/RH/ThresholdPhaseConstant.lean",
+        "RiemannResearch/RH/ThresholdPhaseSharpBound.lean",
+        "RiemannResearch/RH/ThresholdAffineTailBounds.lean",
+        "RiemannResearch/RH/ThresholdPhaseLowerBound.lean",
+        "RiemannResearch/RH/ThresholdPhaseTail.lean",
+        "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean"
+      ],
+      "mathlib_imports": [
+        "Mathlib.Algebra.BigOperators.Intervals",
+        "Mathlib.Algebra.BigOperators.Ring.Finset",
+        "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "Mathlib.Analysis.InnerProductSpace.l2Space",
+        "Mathlib.Analysis.SpecialFunctions.Integrals.Basic",
+        "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+        "Mathlib.Analysis.SpecialFunctions.Pow.Real",
+        "Mathlib.Analysis.SpecialFunctions.Sqrt",
+        "Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp",
+        "Mathlib.Analysis.SpecificLimits.Normed",
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.LinearAlgebra.Span.Defs",
+        "Mathlib.NumberTheory.ArithmeticFunction.Moebius",
+        "Mathlib.Tactic.FieldSimp",
+        "Mathlib.Tactic.Linarith",
+        "Mathlib.Tactic.NormNum",
+        "Mathlib.Tactic.Positivity",
+        "Mathlib.Tactic.Push",
+        "Mathlib.Tactic.Ring",
+        "Mathlib.Tactic.SimpRw",
+        "Mathlib.Topology.Algebra.InfiniteSum.Real"
+      ],
+      "wrapped_sections": true,
+      "source_map": [
+        {
+          "source": "RiemannResearch/RH/ParetoResidueDuality.lean",
+          "body_start_line": 27,
+          "body_end_line": 202
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoGeometricMixture.lean",
+          "body_start_line": 208,
+          "body_end_line": 366
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoDilation.lean",
+          "body_start_line": 372,
+          "body_end_line": 561
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+          "body_start_line": 567,
+          "body_end_line": 803
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdDilationEnergy.lean",
+          "body_start_line": 809,
+          "body_end_line": 978
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertSpace.lean",
+          "body_start_line": 984,
+          "body_end_line": 1099
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertDilation.lean",
+          "body_start_line": 1105,
+          "body_end_line": 1205
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertMean.lean",
+          "body_start_line": 1211,
+          "body_end_line": 1288
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertAdjoint.lean",
+          "body_start_line": 1294,
+          "body_end_line": 1464
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertProjection.lean",
+          "body_start_line": 1470,
+          "body_end_line": 1639
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdAffineBranches.lean",
+          "body_start_line": 1645,
+          "body_end_line": 1806
+        },
+        {
+          "source": "RiemannResearch/LinearAlgebra/RankOneProjectionDistance.lean",
+          "body_start_line": 1812,
+          "body_end_line": 1866
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdAffineProjectionBlocks.lean",
+          "body_start_line": 1872,
+          "body_end_line": 1915
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoProgressionTails.lean",
+          "body_start_line": 1921,
+          "body_end_line": 2105
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdPhaseConstant.lean",
+          "body_start_line": 2111,
+          "body_end_line": 2323
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdPhaseSharpBound.lean",
+          "body_start_line": 2329,
+          "body_end_line": 2425
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdAffineTailBounds.lean",
+          "body_start_line": 2431,
+          "body_end_line": 2701
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdPhaseLowerBound.lean",
+          "body_start_line": 2707,
+          "body_end_line": 2845
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdPhaseTail.lean",
+          "body_start_line": 2851,
+          "body_end_line": 2925
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdAffinePhaseLimit.lean",
+          "body_start_line": 2931,
+          "body_end_line": 3251
+        }
+      ],
+      "sha256": "769a3176e02317a64164e86f0cc33e1dbc94eea5ef1c5b1f0b1c043f42c1f9a1",
+      "lines": 3253
+    },
+    {
+      "path": "LegalDependencies.lean",
+      "roots": [
+        "RiemannResearch/RH/ThresholdHilbertLegal.lean",
+        "RiemannResearch/RH/ThresholdLegalIntegrability.lean",
+        "RiemannResearch/RH/ThresholdInfiniteCertificate.lean"
+      ],
+      "topological_order": [
+        "RiemannResearch/RH/ParetoResidueDuality.lean",
+        "RiemannResearch/RH/ParetoGeometricMixture.lean",
+        "RiemannResearch/RH/ParetoDilation.lean",
+        "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+        "RiemannResearch/RH/ThresholdDilationEnergy.lean",
+        "RiemannResearch/RH/ThresholdHilbertSpace.lean",
+        "RiemannResearch/RH/ThresholdHilbertDilation.lean",
+        "RiemannResearch/RH/ThresholdSeedEuclidean.lean",
+        "RiemannResearch/RH/ThresholdPrimePackets.lean",
+        "RiemannResearch/RH/ThresholdHilbertLegal.lean",
+        "RiemannResearch/RH/ParetoPrimePackets.lean",
+        "RiemannResearch/LinearAlgebra/FiniteWeightedEnergy.lean",
+        "RiemannResearch/RH/ParetoFiniteCertificates.lean",
+        "RiemannResearch/RH/ParetoPrimorialObstruction.lean",
+        "RiemannResearch/RH/ParetoSequenceCertificates.lean",
+        "RiemannResearch/RH/ThresholdLegalIntegrability.lean",
+        "RiemannResearch/RH/ThresholdFiniteCertificate.lean",
+        "RiemannResearch/RH/ParetoProgressionTails.lean",
+        "RiemannResearch/RH/ThresholdInfiniteCertificate.lean"
+      ],
+      "mathlib_imports": [
+        "Mathlib.Algebra.BigOperators.Fin",
+        "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+        "Mathlib.Algebra.BigOperators.Intervals",
+        "Mathlib.Algebra.Order.BigOperators.Ring.Finset",
+        "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "Mathlib.Analysis.InnerProductSpace.l2Space",
+        "Mathlib.Analysis.SpecialFunctions.Integrals.Basic",
+        "Mathlib.Analysis.SpecialFunctions.Pow.Real",
+        "Mathlib.Analysis.SpecificLimits.Normed",
+        "Mathlib.Analysis.SumOverResidueClass",
+        "Mathlib.Data.Nat.Periodic",
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.LinearAlgebra.Matrix.Notation",
+        "Mathlib.LinearAlgebra.Span.Defs",
+        "Mathlib.NumberTheory.ArithmeticFunction.Moebius",
+        "Mathlib.NumberTheory.Primorial",
+        "Mathlib.Tactic.FieldSimp",
+        "Mathlib.Tactic.FinCases",
+        "Mathlib.Tactic.IntervalCases",
+        "Mathlib.Tactic.Linarith",
+        "Mathlib.Tactic.NormNum",
+        "Mathlib.Tactic.Positivity",
+        "Mathlib.Tactic.Push",
+        "Mathlib.Tactic.Ring",
+        "Mathlib.Topology.Algebra.InfiniteSum.Real",
+        "Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic"
+      ],
+      "wrapped_sections": true,
+      "source_map": [
+        {
+          "source": "RiemannResearch/RH/ParetoResidueDuality.lean",
+          "body_start_line": 32,
+          "body_end_line": 207
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoGeometricMixture.lean",
+          "body_start_line": 213,
+          "body_end_line": 371
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoDilation.lean",
+          "body_start_line": 377,
+          "body_end_line": 566
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdDilationAlgebra.lean",
+          "body_start_line": 572,
+          "body_end_line": 808
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdDilationEnergy.lean",
+          "body_start_line": 814,
+          "body_end_line": 983
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertSpace.lean",
+          "body_start_line": 989,
+          "body_end_line": 1104
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertDilation.lean",
+          "body_start_line": 1110,
+          "body_end_line": 1210
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdSeedEuclidean.lean",
+          "body_start_line": 1216,
+          "body_end_line": 1396
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdPrimePackets.lean",
+          "body_start_line": 1402,
+          "body_end_line": 1550
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdHilbertLegal.lean",
+          "body_start_line": 1556,
+          "body_end_line": 1602
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoPrimePackets.lean",
+          "body_start_line": 1608,
+          "body_end_line": 1740
+        },
+        {
+          "source": "RiemannResearch/LinearAlgebra/FiniteWeightedEnergy.lean",
+          "body_start_line": 1746,
+          "body_end_line": 1941
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoFiniteCertificates.lean",
+          "body_start_line": 1947,
+          "body_end_line": 2161
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoPrimorialObstruction.lean",
+          "body_start_line": 2167,
+          "body_end_line": 2317
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoSequenceCertificates.lean",
+          "body_start_line": 2323,
+          "body_end_line": 2422
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdLegalIntegrability.lean",
+          "body_start_line": 2428,
+          "body_end_line": 2485
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdFiniteCertificate.lean",
+          "body_start_line": 2491,
+          "body_end_line": 2589
+        },
+        {
+          "source": "RiemannResearch/RH/ParetoProgressionTails.lean",
+          "body_start_line": 2595,
+          "body_end_line": 2779
+        },
+        {
+          "source": "RiemannResearch/RH/ThresholdInfiniteCertificate.lean",
+          "body_start_line": 2785,
+          "body_end_line": 2898
+        }
+      ],
+      "sha256": "9d1eb5a40353ce3b0beb8fb2e65c66c1a2436daff0bddee270bfede6662be7b6",
+      "lines": 2900
+    }
+  ],
+  "status": "Source snapshot only; no Lean execution or verification by assembler.",
+  "base_commit": "dcb61e8462bb9fc173c1bc9931ff8ebacdf8dee1"
+}

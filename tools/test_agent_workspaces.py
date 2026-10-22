@@ -218,16 +218,6 @@ with tempfile.TemporaryDirectory() as raw:
     assert docs_validation["command"] is None
     readme.write_text(original_readme)
 
-    consumer = first_root / "RiemannResearch" / "Test" / "Consumer.lean"
-    consumer.parent.mkdir(parents=True, exist_ok=True)
-    consumer.write_text(
-        "import RiemannResearch.Basic\n\ntheorem consumer : True := by trivial\n"
-    )
-    assert manager._affected_lean_targets(
-        first_root, {"RiemannResearch.Basic"}
-    ) == ["RiemannResearch.Basic", "RiemannResearch.Test.Consumer"]
-    consumer.unlink()
-
     lakefile = first_root / "lakefile.toml"
     original_lakefile = lakefile.read_text()
     lakefile.write_text(original_lakefile + "\n# dependency configuration change\n")
@@ -269,9 +259,9 @@ new file mode 100644
     ).exists()
     first_publish = manager.checkpoint(first_token, "Publish first")
     assert first_publish["pushed"]
-    assert first_publish["build"]["scope"] == "affected_modules"
+    assert first_publish["build"]["scope"] == "project_and_changed_modules"
     assert first_publish["build"]["changed_modules"] == ["RiemannResearch.Test.One"]
-    assert first_publish["build"]["targets"] == ["RiemannResearch.Test.One"]
+    assert first_publish["build"]["targets"] == ["RiemannResearch", "RiemannResearch.Test.One"]
 
     patch_two = """diff --git a/RiemannResearch/Test/Two.lean b/RiemannResearch/Test/Two.lean
 new file mode 100644
@@ -331,3 +321,4 @@ new file mode 100644
     assert first_token not in metrics
 
 print("isolated workspace lifecycle ok")
+

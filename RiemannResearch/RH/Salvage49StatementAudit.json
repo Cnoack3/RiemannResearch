@@ -1,0 +1,710 @@
+{
+  "audit_kind": "Source-level theorem statement fidelity; no Lean kernel check by the auditor",
+  "audit_completed_utc": "2026-10-08T00:39:19.182636+00:00",
+  "original_bundle": "output/lean/IndependentPrime_Lean_20261007",
+  "current_candidates": "lean_work/RiemannResearch/RH",
+  "comparison_method": "Independently strip nested block comments and line comments; compare every public theorem declaration before := by after whitespace normalization, including attributes, hypotheses and conclusion; also compare namespace/variable/include/omit/section context.",
+  "expected_public_theorems": 49,
+  "actual_public_theorems": 49,
+  "all_49_statements_unchanged": true,
+  "all_explicit_section_contexts_unchanged": true,
+  "lean_checks_submitted_by_this_audit": false,
+  "source_modules_edited_by_this_audit": false,
+  "limitations": "This compares source declarations and explicit section context, not kernel-elaborated signatures or dependency identity. The additional open ArithmeticCumulative fixes name resolution in one module; definitions and theorem declaration text there are unchanged.",
+  "modules": [
+    {
+      "module": "RiemannResearch/RH/ExactHeadMeanGap.lean",
+      "public_theorem_count": 5,
+      "theorem_names": [
+        "tailOne_norm_sq",
+        "error_coordinate_eq_zero",
+        "error_sq_ge_mean_gap",
+        "normalizedEnergy_ge_pareto",
+        "normalizedError_ge_mean_gap"
+      ],
+      "unchanged_statement": true,
+      "implicit_section_context_unchanged": true,
+      "material_difference": null,
+      "source_change_notes": [
+        "Removed the obsolete unverified-source header comment.",
+        "Proof repair in tailOne_norm_sq: replaced a simp-based transport by an explicit hilbertOne coordinate equality and rewrites.",
+        "Proof repair in error_sq_ge_mean_gap: used a typed real-inner commutativity equality and included mul_one in normalization.",
+        "Proof repair in normalizedEnergy_ge_pareto: supplied weightedEnergy_ge proof holes and its final vector argument explicitly; included mul_one in normalization."
+      ],
+      "original_source_sha256": "45d39d58be055f1c1876f8a93207ccf77c08286cb3c25d08f5260fd93f8e0bf4",
+      "current_source_sha256": "d9fd58902eacaff2dfe343c0eceaed9d28a497ff97f2730b40d6c0af620cab4d",
+      "theorems": [
+        {
+          "name": "tailOne_norm_sq",
+          "qualified_name": "RiemannResearch.RH.Pareto.ExactHeadMeanGap.tailOne_norm_sq",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem tailOne_norm_sq (N : ℕ) : ‖hilbertTailShift hilbertOne N‖ ^ 2 = 1 / ((N : ℝ) + 1)",
+          "original_statement_sha256": "79ea5e52b43c95d6386da83857bfcd1e120ab1456c3cfab741011b77b762b68f",
+          "current_statement_sha256": "79ea5e52b43c95d6386da83857bfcd1e120ab1456c3cfab741011b77b762b68f",
+          "original_line": 29,
+          "current_line": 25
+        },
+        {
+          "name": "error_coordinate_eq_zero",
+          "qualified_name": "RiemannResearch.RH.Pareto.ExactHeadMeanGap.error_coordinate_eq_zero",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem error_coordinate_eq_zero (N : ℕ) (f : ThresholdHilbert) (hhead : ∀ k, 0 < k → k ≤ N → hilbertSequence f k = 1) : ∀ n < N, (hilbertOne - f) n = 0",
+          "original_statement_sha256": "24bfe1573e816a0d8b45e233fde0786825a88596bc3e79abb34e191ce4692fe0",
+          "current_statement_sha256": "24bfe1573e816a0d8b45e233fde0786825a88596bc3e79abb34e191ce4692fe0",
+          "original_line": 43,
+          "current_line": 42
+        },
+        {
+          "name": "error_sq_ge_mean_gap",
+          "qualified_name": "RiemannResearch.RH.Pareto.ExactHeadMeanGap.error_sq_ge_mean_gap",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem error_sq_ge_mean_gap (N : ℕ) (f : ThresholdHilbert) (hhead : ∀ k, 0 < k → k ≤ N → hilbertSequence f k = 1) : ((N : ℝ) + 1) * (1 - paretoMean (hilbertSequence f)) ^ 2 ≤ ‖hilbertOne - f‖ ^ 2",
+          "original_statement_sha256": "6fd9f822437f4f9904603da57f3d80e793a6902c3f6af03335919537e5b37fde",
+          "current_statement_sha256": "6fd9f822437f4f9904603da57f3d80e793a6902c3f6af03335919537e5b37fde",
+          "original_line": 64,
+          "current_line": 63
+        },
+        {
+          "name": "normalizedEnergy_ge_pareto",
+          "qualified_name": "RiemannResearch.RH.Pareto.ExactHeadMeanGap.normalizedEnergy_ge_pareto",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem normalizedEnergy_ge_pareto (Z : ℝ) (hZ : 0 < Z) (e : ThresholdHilbert) : (1 / Z) * ‖e‖ ^ 2 ≤ ComparableWeights.weightedEnergy (normalizedInverseSquareWeight Z) e",
+          "original_statement_sha256": "f8a7c244aa783494edda1851fa1ce64a7375fcab735a0d86f8bead193cc1f3fa",
+          "current_statement_sha256": "f8a7c244aa783494edda1851fa1ce64a7375fcab735a0d86f8bead193cc1f3fa",
+          "original_line": 85,
+          "current_line": 86
+        },
+        {
+          "name": "normalizedError_ge_mean_gap",
+          "qualified_name": "RiemannResearch.RH.Pareto.ExactHeadMeanGap.normalizedError_ge_mean_gap",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem normalizedError_ge_mean_gap (Z : ℝ) (hZ : 0 < Z) (N : ℕ) (f : ThresholdHilbert) (hhead : ∀ k, 0 < k → k ≤ N → hilbertSequence f k = 1) : (((N : ℝ) + 1) / Z) * (1 - paretoMean (hilbertSequence f)) ^ 2 ≤ ComparableWeights.weightedEnergy (normalizedInverseSquareWeight Z) (hilbertOne - f)",
+          "original_statement_sha256": "81885d638404982d8560978e10aac7e4fa5d1fb49cee5b7cc6ef10ac61afd0de",
+          "current_statement_sha256": "81885d638404982d8560978e10aac7e4fa5d1fb49cee5b7cc6ef10ac61afd0de",
+          "original_line": 107,
+          "current_line": 108
+        }
+      ]
+    },
+    {
+      "module": "RiemannResearch/RH/FinitePrimeDivisibilityMoments.lean",
+      "public_theorem_count": 13,
+      "theorem_names": [
+        "expect_boolIndicator",
+        "tensorExpectation_add",
+        "tensorExpectation_sub",
+        "tensorExpectation_smul",
+        "tensorExpectation_const",
+        "expect_finiteMonomial",
+        "finiteMonomial_mul",
+        "expect_prime_finiteMonomial",
+        "expect_prime_finiteMonomial_mul",
+        "expect_finiteDerivativeAtom",
+        "finiteDerivativeGram",
+        "expect_finiteDerivativeAtom_sq",
+        "likelihood_orthogonal_finiteDerivativeAtom"
+      ],
+      "unchanged_statement": true,
+      "implicit_section_context_unchanged": true,
+      "material_difference": null,
+      "source_change_notes": [
+        "Removed the obsolete unverified-source header comment.",
+        "Proof repair in tensorExpectation_sub: typed-target simp rewriting replaces an underconstrained exact application of Finset.sum_sub_distrib.",
+        "Removed an unused equation/simp argument from the Boolean union proof.",
+        "Replaced unnecessary multi-goal sequencing by sequential field_simp and ring in the diagonal identity."
+      ],
+      "original_source_sha256": "5a10244c75ab591b85561b87c0e35d335a0193e7b9c0542e590f938a3fcf4e03",
+      "current_source_sha256": "0435cc0fafad7609bf3f9c209e026eb57b97b931c4dbab74d87b7932a3daa36d",
+      "theorems": [
+        {
+          "name": "expect_boolIndicator",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.expect_boolIndicator",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "@[simp] theorem expect_boolIndicator (q : ℝ) : bernoulliExpectation q boolIndicator = q",
+          "original_statement_sha256": "0a97fb0623de6620c5a77b795cc576e14f5b55c7e2f305d3a23e70a193f8eebc",
+          "current_statement_sha256": "0a97fb0623de6620c5a77b795cc576e14f5b55c7e2f305d3a23e70a193f8eebc",
+          "original_line": 31,
+          "current_line": 27
+        },
+        {
+          "name": "tensorExpectation_add",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_add",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem tensorExpectation_add (q : ι → ℝ) (f g : (ι → Bool) → ℝ) : tensorExpectation q (fun b => f b + g b) = tensorExpectation q f + tensorExpectation q g",
+          "original_statement_sha256": "c7ac1d8d263c235c5bafc99b9ed6eb9ccce30fb6bdfd086fc6c707ca3c13d3c5",
+          "current_statement_sha256": "c7ac1d8d263c235c5bafc99b9ed6eb9ccce30fb6bdfd086fc6c707ca3c13d3c5",
+          "original_line": 41,
+          "current_line": 37
+        },
+        {
+          "name": "tensorExpectation_sub",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_sub",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem tensorExpectation_sub (q : ι → ℝ) (f g : (ι → Bool) → ℝ) : tensorExpectation q (fun b => f b - g b) = tensorExpectation q f - tensorExpectation q g",
+          "original_statement_sha256": "fa258e26ada1d88909d5acbdd3ff6c40ab04bb5e965e428c67032163d2853683",
+          "current_statement_sha256": "fa258e26ada1d88909d5acbdd3ff6c40ab04bb5e965e428c67032163d2853683",
+          "original_line": 48,
+          "current_line": 44
+        },
+        {
+          "name": "tensorExpectation_smul",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_smul",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem tensorExpectation_smul (q : ι → ℝ) (c : ℝ) (f : (ι → Bool) → ℝ) : tensorExpectation q (fun b => c * f b) = c * tensorExpectation q f",
+          "original_statement_sha256": "b05d7faf66826943ddbb14bbb6b3de96aa7d0b6b5257bc3d4141940dda870a0a",
+          "current_statement_sha256": "b05d7faf66826943ddbb14bbb6b3de96aa7d0b6b5257bc3d4141940dda870a0a",
+          "original_line": 55,
+          "current_line": 50
+        },
+        {
+          "name": "tensorExpectation_const",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_const",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem tensorExpectation_const (q : ι → ℝ) (c : ℝ) : tensorExpectation q (fun _ => c) = c",
+          "original_statement_sha256": "5ddccdde82baf6cfa24fad7c3baad18f15ecff9b67ea686b9e24214a9db04818",
+          "current_statement_sha256": "5ddccdde82baf6cfa24fad7c3baad18f15ecff9b67ea686b9e24214a9db04818",
+          "original_line": 63,
+          "current_line": 58
+        },
+        {
+          "name": "expect_finiteMonomial",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.expect_finiteMonomial",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem expect_finiteMonomial (q : ι → ℝ) (A : Finset ι) : tensorExpectation q (finiteMonomial A) = ∏ i ∈ A, q i",
+          "original_statement_sha256": "14725740b279f9bbccd30e310f58f50002bccfd4ea87d7761afee7934f78990c",
+          "current_statement_sha256": "14725740b279f9bbccd30e310f58f50002bccfd4ea87d7761afee7934f78990c",
+          "original_line": 69,
+          "current_line": 64
+        },
+        {
+          "name": "finiteMonomial_mul",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.finiteMonomial_mul",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem finiteMonomial_mul (A B : Finset ι) (b : ι → Bool) : finiteMonomial A b * finiteMonomial B b = finiteMonomial (A ∪ B) b",
+          "original_statement_sha256": "88f50d3af0a3507ff546704749f9c31e316d5fa16eee3c01f1e902f8b31e6675",
+          "current_statement_sha256": "88f50d3af0a3507ff546704749f9c31e316d5fa16eee3c01f1e902f8b31e6675",
+          "original_line": 85,
+          "current_line": 80
+        },
+        {
+          "name": "expect_prime_finiteMonomial",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.expect_prime_finiteMonomial",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem expect_prime_finiteMonomial (p : ι → ℝ) (A : Finset ι) : tensorExpectation (fun i => primeParameter (p i)) (finiteMonomial A) = 1 / subsetProduct p A ^ 2",
+          "original_statement_sha256": "7438a49a03359da4ae6f647e0186de7fb5a3fdfd2d796fd673914ef61685f0b1",
+          "current_statement_sha256": "7438a49a03359da4ae6f647e0186de7fb5a3fdfd2d796fd673914ef61685f0b1",
+          "original_line": 94,
+          "current_line": 89
+        },
+        {
+          "name": "expect_prime_finiteMonomial_mul",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.expect_prime_finiteMonomial_mul",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem expect_prime_finiteMonomial_mul (p : ι → ℝ) (A B : Finset ι) : tensorExpectation (fun i => primeParameter (p i)) (fun b => finiteMonomial A b * finiteMonomial B b) = 1 / subsetProduct p (A ∪ B) ^ 2",
+          "original_statement_sha256": "c291f7da137139bb4c11a04af95c7071a47bdeb2104a77d0ff0b89ba80b63509",
+          "current_statement_sha256": "c291f7da137139bb4c11a04af95c7071a47bdeb2104a77d0ff0b89ba80b63509",
+          "original_line": 102,
+          "current_line": 97
+        },
+        {
+          "name": "expect_finiteDerivativeAtom",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.expect_finiteDerivativeAtom",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem expect_finiteDerivativeAtom (p : ι → ℝ) (A : Finset ι) : tensorExpectation (fun i => primeParameter (p i)) (finiteDerivativeAtom p A) = 1 / subsetProduct p A - 1 / subsetProduct p A ^ 2",
+          "original_statement_sha256": "9fa2cd62b807a564effcbcfe8ec0efc3af75fe62b373e22cd740017748d9e912",
+          "current_statement_sha256": "9fa2cd62b807a564effcbcfe8ec0efc3af75fe62b373e22cd740017748d9e912",
+          "original_line": 116,
+          "current_line": 111
+        },
+        {
+          "name": "finiteDerivativeGram",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.finiteDerivativeGram",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem finiteDerivativeGram (p : ι → ℝ) (A B : Finset ι) : tensorExpectation (fun i => primeParameter (p i)) (fun b => finiteDerivativeAtom p A b * finiteDerivativeAtom p B b) = 1 / (subsetProduct p A * subsetProduct p B) - 1 / (subsetProduct p A * subsetProduct p B ^ 2) - 1 / (subsetProduct p A ^ 2 * subsetProduct p B) + 1 / subsetProduct p (A ∪ B) ^ 2",
+          "original_statement_sha256": "76ba7e8701a0f4040ed68064148ad19d0c6482a1d2b484e117cf91a38d26a674",
+          "current_statement_sha256": "76ba7e8701a0f4040ed68064148ad19d0c6482a1d2b484e117cf91a38d26a674",
+          "original_line": 123,
+          "current_line": 118
+        },
+        {
+          "name": "expect_finiteDerivativeAtom_sq",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.expect_finiteDerivativeAtom_sq",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem expect_finiteDerivativeAtom_sq (p : ι → ℝ) (A : Finset ι) : tensorExpectation (fun i => primeParameter (p i)) (fun b => finiteDerivativeAtom p A b ^ 2) = 2 * (subsetProduct p A - 1) / subsetProduct p A ^ 3",
+          "original_statement_sha256": "57d542cd5ae0e6da68f72b1058b6f2fe074ebcd55fe06949b0b05643518084c8",
+          "current_statement_sha256": "57d542cd5ae0e6da68f72b1058b6f2fe074ebcd55fe06949b0b05643518084c8",
+          "original_line": 149,
+          "current_line": 144
+        },
+        {
+          "name": "likelihood_orthogonal_finiteDerivativeAtom",
+          "qualified_name": "RiemannResearch.RH.FinitePrimeLikelihood.likelihood_orthogonal_finiteDerivativeAtom",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem likelihood_orthogonal_finiteDerivativeAtom (p : ι → ℝ) (hp0 : ∀ i, p i ≠ 0) (hp1 : ∀ i, p i + 1 ≠ 0) (A : Finset ι) : tensorExpectation (fun i => primeParameter (p i)) (fun b => finiteLikelihood p b * finiteDerivativeAtom p A b) = 0",
+          "original_statement_sha256": "f89f3f048d6f172d8d486354eb960413335f6f633fd4a3109c4edcfebae2cfc8",
+          "current_statement_sha256": "f89f3f048d6f172d8d486354eb960413335f6f633fd4a3109c4edcfebae2cfc8",
+          "original_line": 161,
+          "current_line": 157
+        }
+      ]
+    },
+    {
+      "module": "RiemannResearch/RH/PrimeSieveTwoCutoffHead.lean",
+      "public_theorem_count": 10,
+      "theorem_names": [
+        "twoCutoffSievePrimitive_zero",
+        "derivativeSievePrimitive_rough_exact",
+        "twoCutoffSievePrimitive_rough_exact",
+        "twoCutoffSievePrimitive_mem_legal",
+        "twoCutoffSievePrimitive_head",
+        "twoCutoffSievePrimitive_intermediate_residual",
+        "twoCutoffSievePrimitive_eventually_eq_one",
+        "twoCutoffSieveHilbert_sequence",
+        "twoCutoffSieveHilbert_head",
+        "twoCutoffSieveHilbert_normalized_error_lower"
+      ],
+      "unchanged_statement": true,
+      "implicit_section_context_unchanged": true,
+      "material_difference": null,
+      "source_change_notes": [
+        "Removed the obsolete unverified-source header comment.",
+        "Added open ArithmeticCumulative for existing unqualified name resolution; definition and theorem declaration text remains unchanged.",
+        "Normalized field_simp/ring sequencing in the intermediate-residual proof."
+      ],
+      "original_source_sha256": "18e078c7020c927fca1c98f70de66d69161019c33df00774fb93106760f25882",
+      "current_source_sha256": "a00111e276edc787f1da07a3f99ede328050f1b07ca8ee1febebf2eb5898c73e",
+      "theorems": [
+        {
+          "name": "twoCutoffSievePrimitive_zero",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_zero",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "@[simp] theorem twoCutoffSievePrimitive_zero (Y W : ℕ) : twoCutoffSievePrimitive Y W 0 = 0",
+          "original_statement_sha256": "4d70f8d5217a39a2987d08082e4fea565728e58b5f1a1c7291783fb4af6386c8",
+          "current_statement_sha256": "4d70f8d5217a39a2987d08082e4fea565728e58b5f1a1c7291783fb4af6386c8",
+          "original_line": 35,
+          "current_line": 32
+        },
+        {
+          "name": "derivativeSievePrimitive_rough_exact",
+          "qualified_name": "RiemannResearch.RH.Pareto.derivativeSievePrimitive_rough_exact",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem derivativeSievePrimitive_rough_exact (Y k : ℕ) : derivativeSievePrimitive Y k = sieveRoughCount Y.factorial k - sieveReciprocal Y.factorial * (k : ℝ)",
+          "original_statement_sha256": "8bc34c4c3ee3db2ba32a5ae5b58295544e6e818cad26e4548088aefc55584503",
+          "current_statement_sha256": "8bc34c4c3ee3db2ba32a5ae5b58295544e6e818cad26e4548088aefc55584503",
+          "original_line": 40,
+          "current_line": 37
+        },
+        {
+          "name": "twoCutoffSievePrimitive_rough_exact",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_rough_exact",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSievePrimitive_rough_exact (Y W k : ℕ) : twoCutoffSievePrimitive Y W k = (sieveReciprocal Y.factorial * sieveRoughCount W.factorial k - sieveReciprocal W.factorial * sieveRoughCount Y.factorial k) / (sieveReciprocal Y.factorial - sieveReciprocal W.factorial)",
+          "original_statement_sha256": "01c1e3ba301b52bad92ef4e860e19c7c9cbe8c376f97fcfb86b234489fca2464",
+          "current_statement_sha256": "01c1e3ba301b52bad92ef4e860e19c7c9cbe8c376f97fcfb86b234489fca2464",
+          "original_line": 49,
+          "current_line": 46
+        },
+        {
+          "name": "twoCutoffSievePrimitive_mem_legal",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_mem_legal",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSievePrimitive_mem_legal (Y W : ℕ) : twoCutoffSievePrimitive Y W ∈ legalSeedSpan allPositiveSeeds",
+          "original_statement_sha256": "5bfba63c91b6a1ccc07bb1b794a8815827deba1bec6ed1edeb0b81df0069b470",
+          "current_statement_sha256": "5bfba63c91b6a1ccc07bb1b794a8815827deba1bec6ed1edeb0b81df0069b470",
+          "original_line": 60,
+          "current_line": 57
+        },
+        {
+          "name": "twoCutoffSievePrimitive_head",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_head",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSievePrimitive_head (Y W k : ℕ) (hYW : Y ≤ W) (hk : 0 < k) (hkY : k ≤ Y) (hneq : sieveReciprocal Y.factorial ≠ sieveReciprocal W.factorial) : twoCutoffSievePrimitive Y W k = 1",
+          "original_statement_sha256": "98a662cdc00029bdf37e3caad1bde6eb59cdc2c67f33d9ab89bf6ec75ec6d165",
+          "current_statement_sha256": "98a662cdc00029bdf37e3caad1bde6eb59cdc2c67f33d9ab89bf6ec75ec6d165",
+          "original_line": 78,
+          "current_line": 75
+        },
+        {
+          "name": "twoCutoffSievePrimitive_intermediate_residual",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_intermediate_residual",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSievePrimitive_intermediate_residual (Y W k : ℕ) (hk : 0 < k) (hkW : k ≤ W) (hneq : sieveReciprocal Y.factorial ≠ sieveReciprocal W.factorial) : 1 - twoCutoffSievePrimitive Y W k = sieveReciprocal W.factorial * (sieveRoughCount Y.factorial k - 1) / (sieveReciprocal Y.factorial - sieveReciprocal W.factorial)",
+          "original_statement_sha256": "37b94389b5e481e48a20db1930a09534bba199583ad68f67fd951d036efcd31c",
+          "current_statement_sha256": "37b94389b5e481e48a20db1930a09534bba199583ad68f67fd951d036efcd31c",
+          "original_line": 89,
+          "current_line": 86
+        },
+        {
+          "name": "twoCutoffSievePrimitive_eventually_eq_one",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_eventually_eq_one",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSievePrimitive_eventually_eq_one (W : ℕ → ℕ) (hW : ∀ Y, Y ≤ W Y) (hneq : ∀ Y, sieveReciprocal Y.factorial ≠ sieveReciprocal (W Y).factorial) (k : ℕ) (hk : 0 < k) : ∀ᶠ Y in atTop, twoCutoffSievePrimitive Y (W Y) k = 1",
+          "original_statement_sha256": "986aa63cb98d58c7be1478f26441f31bc27c9217a2c4bb77f7b202f97193cca0",
+          "current_statement_sha256": "986aa63cb98d58c7be1478f26441f31bc27c9217a2c4bb77f7b202f97193cca0",
+          "original_line": 101,
+          "current_line": 97
+        },
+        {
+          "name": "twoCutoffSieveHilbert_sequence",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSieveHilbert_sequence",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSieveHilbert_sequence (Y W : ℕ) : hilbertSequence (twoCutoffSieveHilbert Y W) = twoCutoffSievePrimitive Y W",
+          "original_statement_sha256": "3b71d570f11b1cfc664781df7e46a2e369e9510fea9d676d12b14f894addfe30",
+          "current_statement_sha256": "3b71d570f11b1cfc664781df7e46a2e369e9510fea9d676d12b14f894addfe30",
+          "original_line": 118,
+          "current_line": 114
+        },
+        {
+          "name": "twoCutoffSieveHilbert_head",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSieveHilbert_head",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSieveHilbert_head (Y W k : ℕ) (hYW : Y ≤ W) (hk : 0 < k) (hkY : k ≤ Y) (hneq : sieveReciprocal Y.factorial ≠ sieveReciprocal W.factorial) : hilbertSequence (twoCutoffSieveHilbert Y W) k = 1",
+          "original_statement_sha256": "230247a02d2b34a4ccdd3b7aec0f9e4daaaa7933be58a226efc38e7403c284a2",
+          "current_statement_sha256": "230247a02d2b34a4ccdd3b7aec0f9e4daaaa7933be58a226efc38e7403c284a2",
+          "original_line": 127,
+          "current_line": 123
+        },
+        {
+          "name": "twoCutoffSieveHilbert_normalized_error_lower",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSieveHilbert_normalized_error_lower",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSieveHilbert_normalized_error_lower (Z : ℝ) (hZ : 0 < Z) (Y W : ℕ) (hYW : Y ≤ W) (hneq : sieveReciprocal Y.factorial ≠ sieveReciprocal W.factorial) : (((Y : ℝ) + 1) / Z) * (1 - paretoMean (twoCutoffSievePrimitive Y W)) ^ 2 ≤ ComparableWeights.weightedEnergy (ExactHeadMeanGap.normalizedInverseSquareWeight Z) (hilbertOne - twoCutoffSieveHilbert Y W)",
+          "original_statement_sha256": "f96ff462aa8aa134dc10e96fa461d2ff14cfc1e8a703429c30ec30e1c7016f0e",
+          "current_statement_sha256": "f96ff462aa8aa134dc10e96fa461d2ff14cfc1e8a703429c30ec30e1c7016f0e",
+          "original_line": 136,
+          "current_line": 132
+        }
+      ]
+    },
+    {
+      "module": "RiemannResearch/RH/PrimeSieveTwoCutoffMean.lean",
+      "public_theorem_count": 5,
+      "theorem_names": [
+        "derivativeSieveHilbert_inner_one",
+        "derivativeSievePrimitive_paretoMean",
+        "twoCutoffSieveHilbert_inner_one",
+        "twoCutoffSievePrimitive_paretoMean",
+        "twoCutoffSievePrimitive_paretoMean_secant"
+      ],
+      "unchanged_statement": true,
+      "implicit_section_context_unchanged": true,
+      "material_difference": null,
+      "source_change_notes": [
+        "Only the obsolete unverified-source header comment was removed; definitions, declarations and proof bodies match the original bundle."
+      ],
+      "original_source_sha256": "295435d52d77963571e1527d68ffc0f892369c87cec1b7de8f641ab5ce3c3bd7",
+      "current_source_sha256": "943093897309c7375790d44dfe2b44ce8958cd879b8e025e7d9911735421234e",
+      "theorems": [
+        {
+          "name": "derivativeSieveHilbert_inner_one",
+          "qualified_name": "RiemannResearch.RH.Pareto.derivativeSieveHilbert_inner_one",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem derivativeSieveHilbert_inner_one (Y : ℕ) : inner ℝ (derivativeSieveHilbert Y) hilbertOne = sieveLogarithmicMass Y",
+          "original_statement_sha256": "9ee263dd0393de1c0d3435818825c80700399c56c2b3e5b436481024323d69e7",
+          "current_statement_sha256": "9ee263dd0393de1c0d3435818825c80700399c56c2b3e5b436481024323d69e7",
+          "original_line": 41,
+          "current_line": 37
+        },
+        {
+          "name": "derivativeSievePrimitive_paretoMean",
+          "qualified_name": "RiemannResearch.RH.Pareto.derivativeSievePrimitive_paretoMean",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem derivativeSievePrimitive_paretoMean (Y : ℕ) : paretoMean (derivativeSievePrimitive Y) = sieveLogarithmicMass Y",
+          "original_statement_sha256": "fb3036567c061bbcbd13e62c01bc549d653ba01899fe301b90f5cc90abc70cdb",
+          "current_statement_sha256": "fb3036567c061bbcbd13e62c01bc549d653ba01899fe301b90f5cc90abc70cdb",
+          "original_line": 58,
+          "current_line": 54
+        },
+        {
+          "name": "twoCutoffSieveHilbert_inner_one",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSieveHilbert_inner_one",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSieveHilbert_inner_one (Y W : ℕ) : inner ℝ (twoCutoffSieveHilbert Y W) hilbertOne = (sieveReciprocal Y.factorial * sieveLogarithmicMass W - sieveReciprocal W.factorial * sieveLogarithmicMass Y) / (sieveReciprocal Y.factorial - sieveReciprocal W.factorial)",
+          "original_statement_sha256": "bbaca6225ce6c95a6f65d3aef3be9a531256ab6e1b08567ffb7210e338f6c8b1",
+          "current_statement_sha256": "bbaca6225ce6c95a6f65d3aef3be9a531256ab6e1b08567ffb7210e338f6c8b1",
+          "original_line": 64,
+          "current_line": 60
+        },
+        {
+          "name": "twoCutoffSievePrimitive_paretoMean",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_paretoMean",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSievePrimitive_paretoMean (Y W : ℕ) : paretoMean (twoCutoffSievePrimitive Y W) = (sieveReciprocal Y.factorial * sieveLogarithmicMass W - sieveReciprocal W.factorial * sieveLogarithmicMass Y) / (sieveReciprocal Y.factorial - sieveReciprocal W.factorial)",
+          "original_statement_sha256": "8c9a117f169c5260d7634cd05f1505a59221da7f0c02615db7a959013ed3a499",
+          "current_statement_sha256": "8c9a117f169c5260d7634cd05f1505a59221da7f0c02615db7a959013ed3a499",
+          "original_line": 74,
+          "current_line": 70
+        },
+        {
+          "name": "twoCutoffSievePrimitive_paretoMean_secant",
+          "qualified_name": "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_paretoMean_secant",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem twoCutoffSievePrimitive_paretoMean_secant (Y W : ℕ) (hneq : sieveReciprocal Y.factorial ≠ sieveReciprocal W.factorial) : paretoMean (twoCutoffSievePrimitive Y W) = (sieveNormalizedLogarithmicMass W - sieveNormalizedLogarithmicMass Y) / (1 / sieveReciprocal W.factorial - 1 / sieveReciprocal Y.factorial)",
+          "original_statement_sha256": "f95148ce2be9d4835f606437b2fb591e73132addced8b412d5bad21c95ae45e6",
+          "current_statement_sha256": "f95148ce2be9d4835f606437b2fb591e73132addced8b412d5bad21c95ae45e6",
+          "original_line": 89,
+          "current_line": 85
+        }
+      ]
+    },
+    {
+      "module": "RiemannResearch/RH/ZetaTwoDampedEnergyTransfer.lean",
+      "public_theorem_count": 12,
+      "theorem_names": [
+        "reciprocalSquareWeight_nonneg",
+        "positiveWeight_le_reciprocalSquareWeight",
+        "reciprocalSquareWeight_le_twice_positiveWeight",
+        "summable_reciprocalSquareEnergy_iff",
+        "summable_normalizedEnergy_iff_reciprocalSquareEnergy",
+        "summable_normalizedEnergy_iff_pareto",
+        "canonical_damped_normalizedEnergy_of_half_le",
+        "centered_damped_normalizedEnergy_iff_of_half_le",
+        "riemannHypothesis_of_centered_damped_normalizedEnergy_sequence",
+        "riemannHypothesis_of_canonical_damped_normalizedEnergy_sequence",
+        "riemannHypothesis_of_arbitrarily_small_centered_damped_normalizedEnergy",
+        "right_half_zero_eventually_not_centered_damped_normalizedEnergy"
+      ],
+      "unchanged_statement": true,
+      "implicit_section_context_unchanged": true,
+      "material_difference": null,
+      "source_change_notes": [
+        "Replaced the obsolete verification comment by a source/research-context comment.",
+        "Proof repair in summable_normalizedEnergy_iff_reciprocalSquareEnergy: used an explicitly typed scaled Summable intermediate and pointwise congruence instead of simp transport."
+      ],
+      "original_source_sha256": "cfabb12708e1ca85544ff57c6f0ec82c9cc25c48ad18fcffe69682f169571333",
+      "current_source_sha256": "3e7540232ddd9199347cc8931269ec17166ae929e8548fb4b9774c07a7dfe75f",
+      "theorems": [
+        {
+          "name": "reciprocalSquareWeight_nonneg",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.reciprocalSquareWeight_nonneg",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem reciprocalSquareWeight_nonneg (n : ℕ) : 0 ≤ reciprocalSquareWeight n",
+          "original_statement_sha256": "4b2ae2b6326dfc7a0873b6174766c49140e72c07410d140413d59f275d00b084",
+          "current_statement_sha256": "4b2ae2b6326dfc7a0873b6174766c49140e72c07410d140413d59f275d00b084",
+          "original_line": 32,
+          "current_line": 33
+        },
+        {
+          "name": "positiveWeight_le_reciprocalSquareWeight",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.positiveWeight_le_reciprocalSquareWeight",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem positiveWeight_le_reciprocalSquareWeight (n : ℕ) : positiveWeight n ≤ reciprocalSquareWeight n",
+          "original_statement_sha256": "eb62b7b0d1899510e2d520b8a59a75834cce22f16b05ac99af43736e1f0dd065",
+          "current_statement_sha256": "eb62b7b0d1899510e2d520b8a59a75834cce22f16b05ac99af43736e1f0dd065",
+          "original_line": 38,
+          "current_line": 39
+        },
+        {
+          "name": "reciprocalSquareWeight_le_twice_positiveWeight",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.reciprocalSquareWeight_le_twice_positiveWeight",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem reciprocalSquareWeight_le_twice_positiveWeight (n : ℕ) : reciprocalSquareWeight n ≤ 2 * positiveWeight n",
+          "original_statement_sha256": "d8dfa882b2239ab4e13918f392eb57a85917a8373cbfb3ccd7b602d7b7dbd01a",
+          "current_statement_sha256": "d8dfa882b2239ab4e13918f392eb57a85917a8373cbfb3ccd7b602d7b7dbd01a",
+          "original_line": 49,
+          "current_line": 50
+        },
+        {
+          "name": "summable_reciprocalSquareEnergy_iff",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.summable_reciprocalSquareEnergy_iff",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem summable_reciprocalSquareEnergy_iff (f : ℕ → ℝ) : Summable (fun n => reciprocalSquareWeight n * (f n) ^ 2) ↔ Summable (fun n => positiveWeight n * (f n) ^ 2)",
+          "original_statement_sha256": "e5a0d2bcc873f8fc6e207e2a6b74a633de10fa6095efc2b3bf6481ecffb05f1b",
+          "current_statement_sha256": "e5a0d2bcc873f8fc6e207e2a6b74a633de10fa6095efc2b3bf6481ecffb05f1b",
+          "original_line": 64,
+          "current_line": 65
+        },
+        {
+          "name": "summable_normalizedEnergy_iff_reciprocalSquareEnergy",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.summable_normalizedEnergy_iff_reciprocalSquareEnergy",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem summable_normalizedEnergy_iff_reciprocalSquareEnergy {Z : ℝ} (hZ : 0 < Z) (f : ℕ → ℝ) : Summable (normalizedEnergy Z f) ↔ Summable (fun n => reciprocalSquareWeight n * (f n) ^ 2)",
+          "original_statement_sha256": "a2a14717cc4adf804817e3a1d39b719f260839b94cba2758916fea7abb02e3de",
+          "current_statement_sha256": "a2a14717cc4adf804817e3a1d39b719f260839b94cba2758916fea7abb02e3de",
+          "original_line": 87,
+          "current_line": 88
+        },
+        {
+          "name": "summable_normalizedEnergy_iff_pareto",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.summable_normalizedEnergy_iff_pareto",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem summable_normalizedEnergy_iff_pareto {Z : ℝ} (hZ : 0 < Z) (f : ℕ → ℝ) : Summable (normalizedEnergy Z f) ↔ Summable (fun n => positiveWeight n * (f n) ^ 2) := (summable_normalizedEnergy_iff_reciprocalSquareEnergy hZ f).trans (summable_reciprocalSquareEnergy_iff f) theorem canonical_damped_normalizedEnergy_of_half_le {Z ε : ℝ} (hZ : 0 < Z) (hε : (1 / 2 : ℝ) ≤ ε) : Summable (normalizedEnergy Z (fun n => dampedMobiusPrefix ε n - (n : ℝ) * (1 / riemannZeta (1 + (ε : ℂ))).re))",
+          "original_statement_sha256": "e6541c7956339458e206fca5d3826165a01ced09faec66f8b9ffe57622aa98aa",
+          "current_statement_sha256": "e6541c7956339458e206fca5d3826165a01ced09faec66f8b9ffe57622aa98aa",
+          "original_line": 99,
+          "current_line": 102
+        },
+        {
+          "name": "canonical_damped_normalizedEnergy_of_half_le",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.canonical_damped_normalizedEnergy_of_half_le",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem canonical_damped_normalizedEnergy_of_half_le {Z ε : ℝ} (hZ : 0 < Z) (hε : (1 / 2 : ℝ) ≤ ε) : Summable (normalizedEnergy Z (fun n => dampedMobiusPrefix ε n - (n : ℝ) * (1 / riemannZeta (1 + (ε : ℂ))).re))",
+          "original_statement_sha256": "facc7b0eca6323103626f5d971be8b0469f0b1146e9fc8c828d5b236723eb714",
+          "current_statement_sha256": "facc7b0eca6323103626f5d971be8b0469f0b1146e9fc8c828d5b236723eb714",
+          "original_line": 107,
+          "current_line": 110
+        },
+        {
+          "name": "centered_damped_normalizedEnergy_iff_of_half_le",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.centered_damped_normalizedEnergy_iff_of_half_le",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem centered_damped_normalizedEnergy_iff_of_half_le {Z ε : ℝ} (hZ : 0 < Z) (hε : (1 / 2 : ℝ) ≤ ε) (C : ℝ) : Summable (normalizedEnergy Z (fun n => dampedMobiusPrefix ε n - (n : ℝ) * C)) ↔ C = (1 / riemannZeta (1 + (ε : ℂ))).re := (summable_normalizedEnergy_iff_pareto hZ _).trans (centered_dampedMobius_square_summable_iff_of_half_le hε C) theorem riemannHypothesis_of_centered_damped_normalizedEnergy_sequence {Z : ℝ} (hZ : 0 < Z) (ε : ℕ → ℝ) (hpos : ∀ j, 0 < ε j) (hlim : Tendsto ε atTop (𝓝 0)) (henergy : ∀ j, ∃ C : ℝ, Summable (normalizedEnergy Z (fun n => dampedMobiusPrefix (ε j) n - (n : ℝ) * C))) : RiemannHypothesis",
+          "original_statement_sha256": "63bc7c789ce8928732f27d621276b3517a94f3f48bf2f2d98e9512cb95310ecc",
+          "current_statement_sha256": "63bc7c789ce8928732f27d621276b3517a94f3f48bf2f2d98e9512cb95310ecc",
+          "original_line": 116,
+          "current_line": 119
+        },
+        {
+          "name": "riemannHypothesis_of_centered_damped_normalizedEnergy_sequence",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.riemannHypothesis_of_centered_damped_normalizedEnergy_sequence",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem riemannHypothesis_of_centered_damped_normalizedEnergy_sequence {Z : ℝ} (hZ : 0 < Z) (ε : ℕ → ℝ) (hpos : ∀ j, 0 < ε j) (hlim : Tendsto ε atTop (𝓝 0)) (henergy : ∀ j, ∃ C : ℝ, Summable (normalizedEnergy Z (fun n => dampedMobiusPrefix (ε j) n - (n : ℝ) * C))) : RiemannHypothesis",
+          "original_statement_sha256": "01745e6942389006af4e667b7e22fbb7ffda93471f64432b5e3da8f982831cee",
+          "current_statement_sha256": "01745e6942389006af4e667b7e22fbb7ffda93471f64432b5e3da8f982831cee",
+          "original_line": 126,
+          "current_line": 129
+        },
+        {
+          "name": "riemannHypothesis_of_canonical_damped_normalizedEnergy_sequence",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.riemannHypothesis_of_canonical_damped_normalizedEnergy_sequence",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem riemannHypothesis_of_canonical_damped_normalizedEnergy_sequence {Z : ℝ} (hZ : 0 < Z) (ε : ℕ → ℝ) (hpos : ∀ j, 0 < ε j) (hlim : Tendsto ε atTop (𝓝 0)) (henergy : ∀ j, Summable (normalizedEnergy Z (fun n => dampedMobiusPrefix (ε j) n - (n : ℝ) * (1 / riemannZeta (1 + (ε j : ℂ))).re))) : RiemannHypothesis",
+          "original_statement_sha256": "3d39d95021c02cb40672f277f0eff19de58256c0b917e6eda27f543cb2a92575",
+          "current_statement_sha256": "3d39d95021c02cb40672f277f0eff19de58256c0b917e6eda27f543cb2a92575",
+          "original_line": 141,
+          "current_line": 144
+        },
+        {
+          "name": "riemannHypothesis_of_arbitrarily_small_centered_damped_normalizedEnergy",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.riemannHypothesis_of_arbitrarily_small_centered_damped_normalizedEnergy",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem riemannHypothesis_of_arbitrarily_small_centered_damped_normalizedEnergy {Z : ℝ} (hZ : 0 < Z) (henergy : ∀ δ : ℝ, 0 < δ → ∃ ε C : ℝ, 0 < ε ∧ ε < δ ∧ Summable (normalizedEnergy Z (fun n => dampedMobiusPrefix ε n - (n : ℝ) * C))) : RiemannHypothesis",
+          "original_statement_sha256": "ebf26019c4229471f069696147dddf25c8d6a21824fc7f3fe73b1c172271966f",
+          "current_statement_sha256": "ebf26019c4229471f069696147dddf25c8d6a21824fc7f3fe73b1c172271966f",
+          "original_line": 154,
+          "current_line": 157
+        },
+        {
+          "name": "right_half_zero_eventually_not_centered_damped_normalizedEnergy",
+          "qualified_name": "RiemannResearch.RH.Pareto.ZetaTwo.right_half_zero_eventually_not_centered_damped_normalizedEnergy",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem right_half_zero_eventually_not_centered_damped_normalizedEnergy {Z : ℝ} (hZ : 0 < Z) (ρ : ℂ) (hhalf : (1 / 2 : ℝ) < ρ.re) (hone : ρ.re < 1) (hz : riemannZeta ρ = 0) : ∃ δ : ℝ, 0 < δ ∧ ∀ ε : ℝ, 0 < ε → ε < δ → ∀ C : ℝ, ¬ Summable (normalizedEnergy Z (fun n => dampedMobiusPrefix ε n - (n : ℝ) * C))",
+          "original_statement_sha256": "4793e26adce0829648743835b20ccd6b8d60b2d1b1f56b335dcd1ca25f311a20",
+          "current_statement_sha256": "4793e26adce0829648743835b20ccd6b8d60b2d1b1f56b335dcd1ca25f311a20",
+          "original_line": 168,
+          "current_line": 171
+        }
+      ]
+    },
+    {
+      "module": "RiemannResearch/RH/ZetaTwoPeriodMeanBounds.lean",
+      "public_theorem_count": 4,
+      "theorem_names": [
+        "weighted_periodMean_square_le",
+        "inverseSquare_periodMean_lower",
+        "periodMean_one_sub",
+        "normalizedResidueSynthesis_inverseSquare_error_lower"
+      ],
+      "unchanged_statement": true,
+      "implicit_section_context_unchanged": true,
+      "material_difference": null,
+      "source_change_notes": [
+        "Removed the obsolete unverified-source header comment.",
+        "Removed redundant ring tactic steps after field_simp had closed goals in the period-mean identities."
+      ],
+      "original_source_sha256": "213c1f3051618e0dae2abe3d558bff8161a9007282d0c8cd60cd5b801e320846",
+      "current_source_sha256": "6753367dfc8308d40c104f464547b7f551cb978c8d136884f7a5779692969400",
+      "theorems": [
+        {
+          "name": "weighted_periodMean_square_le",
+          "qualified_name": "RiemannResearch.RH.CRTBlock.weighted_periodMean_square_le",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem weighted_periodMean_square_le (P : ℕ) (hP : 0 < P) (u w : ℕ → ℝ) (a : ℝ) (ha : 0 ≤ a) (hw : ∀ k ∈ Finset.range P, a ≤ w (k + 1)) : a * (P : ℝ) * (periodMean u P)^2 ≤ ∑ k ∈ Finset.range P, w (k + 1) * (u (k + 1))^2",
+          "original_statement_sha256": "7d6e6eba280a443ec99b7781914a92a0f647da10c97edae827f9c9be73be31a9",
+          "current_statement_sha256": "7d6e6eba280a443ec99b7781914a92a0f647da10c97edae827f9c9be73be31a9",
+          "original_line": 25,
+          "current_line": 21
+        },
+        {
+          "name": "inverseSquare_periodMean_lower",
+          "qualified_name": "RiemannResearch.RH.CRTBlock.inverseSquare_periodMean_lower",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem inverseSquare_periodMean_lower (Z : ℝ) (hZ : 0 < Z) (P : ℕ) (hP : 0 < P) (u : ℕ → ℝ) (hs : Summable (fun k : ℕ => (1 / (Z * ((k + 1 : ℕ) : ℝ)^2)) * (u (k + 1))^2)) : (periodMean u P)^2 / (Z * (P : ℝ)) ≤ ∑' k : ℕ, (1 / (Z * ((k + 1 : ℕ) : ℝ)^2)) * (u (k + 1))^2",
+          "original_statement_sha256": "0448334c3b570e82863a6915a226a9e81ebf01b5755f383ff0b9606d017a4e80",
+          "current_statement_sha256": "0448334c3b570e82863a6915a226a9e81ebf01b5755f383ff0b9606d017a4e80",
+          "original_line": 62,
+          "current_line": 57
+        },
+        {
+          "name": "periodMean_one_sub",
+          "qualified_name": "RiemannResearch.RH.CRTBlock.periodMean_one_sub",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem periodMean_one_sub (u : ℕ → ℝ) (P : ℕ) (hP : 0 < P) : periodMean (fun k => 1 - u k) P = 1 - periodMean u P",
+          "original_statement_sha256": "eee7092fe90d21af923e8f746ffb15f26b91da9a2784c1968dc85c030353f357",
+          "current_statement_sha256": "eee7092fe90d21af923e8f746ffb15f26b91da9a2784c1968dc85c030353f357",
+          "original_line": 88,
+          "current_line": 82
+        },
+        {
+          "name": "normalizedResidueSynthesis_inverseSquare_error_lower",
+          "qualified_name": "RiemannResearch.RH.CRTBlock.normalizedResidueSynthesis_inverseSquare_error_lower",
+          "unchanged_statement": true,
+          "material_difference": null,
+          "normalized_statement": "theorem normalizedResidueSynthesis_inverseSquare_error_lower (Z : ℝ) (hZ : 0 < Z) (s : Finset ℕ) (c : ℕ → ℝ) (P : ℕ) (hP : 0 < P) (hs : ∀ d ∈ s, 2 ≤ d) (hdiv : ∀ d ∈ s, d ∣ P) (henergy : Summable (fun k : ℕ => (1 / (Z * ((k + 1 : ℕ) : ℝ)^2)) * (1 - normalizedResidueSynthesis s c (k + 1))^2)) : (1 - ((∑ d ∈ s, c d) - (∑ d ∈ s, c d / (d : ℝ))) / 2)^2 / (Z * (P : ℝ)) ≤ ∑' k : ℕ, (1 / (Z * ((k + 1 : ℕ) : ℝ)^2)) * (1 - normalizedResidueSynthesis s c (k + 1))^2",
+          "original_statement_sha256": "328b527dddb62e361846aeaf097c57d97a6b7ece35cb7b9c7ebb5e29682c4c64",
+          "current_statement_sha256": "328b527dddb62e361846aeaf097c57d97a6b7ece35cb7b9c7ebb5e29682c4c64",
+          "original_line": 98,
+          "current_line": 91
+        }
+      ]
+    }
+  ]
+}

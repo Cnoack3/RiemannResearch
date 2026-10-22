@@ -1,0 +1,1891 @@
+{
+  "schema": 1,
+  "upstream_repository": "https://github.com/anthropics/formal-math",
+  "upstream_commit": "fbdc36bbf17d20af3fd0447c6d1a8a02773c9844",
+  "lean_toolchain": "v4.33.0-rc2",
+  "mathlib_commit": "51e6992efd06126df61a496bebf8f49482a4e129",
+  "existing_modules": 140,
+  "added_modules": 171,
+  "total_modules": 311,
+  "transformations": [
+    "Relocate import Zeta23.X to import RiemannResearch.RH.WeilExplicitFormula.X",
+    "Preserve declarations, proof bodies and namespaces",
+    "Preserve original copyright and license notices",
+    "Add local provenance header and trim trailing whitespace",
+    "NumericCert comment: describe native evaluation without an executable tactic token"
+  ],
+  "excluded": [
+    "Challenge and Solution scaffolding",
+    "Zeta23.Unconditional alias-only interface; underlying stronger results already available",
+    "Four unused FromPNTPlus source files outside the selected dependency closure",
+    "Fermat's Last Theorem package: different toolchain and no concrete RH consumer identified"
+  ],
+  "files": [
+    {
+      "upstream_path": "zeta23/Zeta23/Analytic/RectangleLogDeriv.lean",
+      "upstream_git_blob_sha": "db30df619c414827f45a20b95fd173edd3600ee1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Analytic/RectangleLogDeriv.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Analytic/Stirling.lean",
+      "upstream_git_blob_sha": "6d8da4241ef2a5831e8cb120a4c195ee75c6297f",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Analytic/Stirling.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Assembly.lean",
+      "upstream_git_blob_sha": "3e08238ba18d831cfa7ecdcbddda6ee5b1e8df26",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Assembly.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Assembly/Certificate.lean",
+      "upstream_git_blob_sha": "9264619347e998173efe785f60f559088636afc1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Assembly/Certificate.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Assembly/CertificateC3.lean",
+      "upstream_git_blob_sha": "ae9d1d3ae43d01b3cd8daab6271ffae92e292f10",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Assembly/CertificateC3.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Assembly/Inputs.lean",
+      "upstream_git_blob_sha": "f07e04a2a9f636874853c5b4769662d6882d3ca5",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Assembly/Inputs.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Assembly/SeamMult.lean",
+      "upstream_git_blob_sha": "78c291cd4623486dfc4cbe20df83195979b7d771",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Assembly/SeamMult.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Chebyshev.lean",
+      "upstream_git_blob_sha": "5f527e07a44c44619e45eb142a7aa0d20a239b39",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Chebyshev.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Defs.lean",
+      "upstream_git_blob_sha": "8024700cbfefb54d763b487afa84c03fef58a550",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Defs.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Defs/Counting.lean",
+      "upstream_git_blob_sha": "fdd946ca26170f088b8f7ad50480b815f57c058c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Defs/Counting.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Defs/LeafIntegrals.lean",
+      "upstream_git_blob_sha": "a5efa2fe3e7ab9ab30ea42b6298fc43fb95667a1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Defs/LeafIntegrals.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Defs/Profile.lean",
+      "upstream_git_blob_sha": "5a1345a9f27d89461ff8e768585f9f93789e5fae",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Defs/Profile.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ExplicitFormula.lean",
+      "upstream_git_blob_sha": "11119489556113fd419d7b6fb45ccbaa2e493e2a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ExplicitFormula.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ExplicitFormula/Bridge.lean",
+      "upstream_git_blob_sha": "faa550820f77d9a30084b43fcb1b073ae5550001",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ExplicitFormula/Bridge.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Final.lean",
+      "upstream_git_blob_sha": "7d1309e6d3bbc3e3f3c6b093f07af257dbe40b82",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Final.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FinalMult.lean",
+      "upstream_git_blob_sha": "c2034d2311be8eb2687b5f7c7cd2d7a1f9ada422",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FinalMult.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/Auxiliary.lean",
+      "upstream_git_blob_sha": "eb99dba6c696d3e360c1a32cd3fc2900c53b5eaf",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Auxiliary.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/EulerMaclaurin.lean",
+      "upstream_git_blob_sha": "f3ca3c690fab42b9c3dacef30669f66259bf826f",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/EulerMaclaurin.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/Fourier.lean",
+      "upstream_git_blob_sha": "4e3f24af43b78dfe109a344c5517956c1cd4fbfe",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Fourier.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/Mathlib/Analysis/SpecialFunctions/Log/Basic.lean",
+      "upstream_git_blob_sha": "1ad929811e6b59b1a8c853d2243f4b568aa753e6",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Mathlib/Analysis/SpecialFunctions/Log/Basic.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/Mertens.lean",
+      "upstream_git_blob_sha": "fa1774ae9ecb334b91d963bbfdadd6ead018e022",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Mertens.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/Rectangle.lean",
+      "upstream_git_blob_sha": "fbb1fb510c9ec1697495975294055607e5d38d9b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Rectangle.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/ResidueCalcOnRectangles.lean",
+      "upstream_git_blob_sha": "1f0119d42de0d67b003b84a66cb7eddc6e16d6d7",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/ResidueCalcOnRectangles.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/Sobolev.lean",
+      "upstream_git_blob_sha": "4cc5a5a46d98f4b603b44282490fa1d35ff2de56",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Sobolev.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/StrongPNTPrefix.lean",
+      "upstream_git_blob_sha": "3edad168ab314e283c54b58da800fcc076946b18",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/StrongPNTPrefix.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/Tactic/AdditiveCombination.lean",
+      "upstream_git_blob_sha": "2832808d7b80914afed648efe8cae5b860ea9b85",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Tactic/AdditiveCombination.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/ZetaBounds.lean",
+      "upstream_git_blob_sha": "978d953c0490ba116c4d3fadefd50215a07807a7",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/ZetaBounds.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/FromPNTPlus/ZetaConj.lean",
+      "upstream_git_blob_sha": "668254545fdc393b51e5c2e0fa26d68f2f53f356",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/ZetaConj.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/GammaFacts.lean",
+      "upstream_git_blob_sha": "893f83b41d3989ec7d7ab68ec0f82819158a6bcc",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/GammaFacts.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/GammaFacts/Complete.lean",
+      "upstream_git_blob_sha": "d4916d3b649443aee891a9beb7c6cd4ba89bd563",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/Complete.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/GammaFacts/IntMu.lean",
+      "upstream_git_blob_sha": "4e74f60e72515bed2145c42853ff667980b03105",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/IntMu.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/GammaFacts/Mu.lean",
+      "upstream_git_blob_sha": "744e30031e69bfe25e10559ca71b12a53ccc1c14",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/Mu.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/GammaFacts/Series.lean",
+      "upstream_git_blob_sha": "2c6cf90050c2e6d5cbef0745d0445e3a8d02394a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/Series.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/GammaFacts/StirlingVert.lean",
+      "upstream_git_blob_sha": "21a325dbb2d6adf4ffe058ef03674bd9c1b03cc5",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/StirlingVert.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Hypotheses.lean",
+      "upstream_git_blob_sha": "9f5b868e26ecc1e9d33afd56b11b123c931c3638",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Hypotheses.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Hypotheses/GzGp.lean",
+      "upstream_git_blob_sha": "1d2f4b6cb9a60cd0a1a29c4c32fe8f2ed9d804b8",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Hypotheses/GzGp.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/LinAlg.lean",
+      "upstream_git_blob_sha": "bbf60ec4d0141d4619db0cbb8ed2040dd3734bec",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/LinAlg.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/LinAlg/HermitianPosPart.lean",
+      "upstream_git_blob_sha": "c900970be167f7a4cc091518a508d02c0649ef7e",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/LinAlg/HermitianPosPart.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/LinAlg/Inertia.lean",
+      "upstream_git_blob_sha": "0d1de40376288d80e4938f69d81479c62835bf16",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/LinAlg/Inertia.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/LinAlg/PosIndex.lean",
+      "upstream_git_blob_sha": "7c04c5ff371bf6b1ef722a0188a1740aeedd7ac2",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/LinAlg/PosIndex.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/LinAlg/RankTrace.lean",
+      "upstream_git_blob_sha": "abc3f005da0c5daf59e22884d7d03757bfb27856",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/LinAlg/RankTrace.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/LinAlg/Sylvester.lean",
+      "upstream_git_blob_sha": "f7ecf0e44a0da217c6168ba13eb381cd20b74dba",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/LinAlg/Sylvester.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/LinAlg/VonNeumann.lean",
+      "upstream_git_blob_sha": "193d1bb8afafe0e94b4372d9d941df70e7561d31",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/LinAlg/VonNeumann.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/LinAlg/Weyl.lean",
+      "upstream_git_blob_sha": "4ba23d82fbd9c1d512145361a109ee57a293bfcd",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/LinAlg/Weyl.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/MV.lean",
+      "upstream_git_blob_sha": "9766f4d9aa789d375046b1349d51cf038a79ebdf",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/MV.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/MV/Duality.lean",
+      "upstream_git_blob_sha": "c6f84251a398dd8c52cebec115b57c366c25ff8b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/MV/Duality.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/MV/Eigen.lean",
+      "upstream_git_blob_sha": "a9c00efa5b715543b0be5ac0425c952600f8196a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/MV/Eigen.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/MV/EigenIdentity.lean",
+      "upstream_git_blob_sha": "416af410b7c55fb0e5208ea1a66c9e531ab4f651",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/MV/EigenIdentity.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/MV/Final.lean",
+      "upstream_git_blob_sha": "fc132a213b3d46212ac4b3251e9d55403460a7c7",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/MV/Final.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/MV/Quadratic.lean",
+      "upstream_git_blob_sha": "413ebcc32145e53d933c64c1a39b51396b46a0c3",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/MV/Quadratic.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/MV/Spacing.lean",
+      "upstream_git_blob_sha": "d1dc640c83577c69f29c1e55e9581e5e13a2c40a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/MV/Spacing.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Main.lean",
+      "upstream_git_blob_sha": "2166ec31b9b6a6d1e7ad3355a36a1f24dafd27e9",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Main.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/Bridge.lean",
+      "upstream_git_blob_sha": "e7d0d26e944e626559e985530a2ec6d3e3e97b70",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/Bridge.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/Ceiling.lean",
+      "upstream_git_blob_sha": "4e9807583ebb83de51133d43b45db7d668f254af",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/Ceiling.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/CeilingLaw256.lean",
+      "upstream_git_blob_sha": "b470b5b2a90ce807792c8358412478838f2ac62f",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/CeilingLaw256.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/Defs.lean",
+      "upstream_git_blob_sha": "3fdcd8d9a29c50d22f51f0de13a3cdffa2101594",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/Defs.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/Grid.lean",
+      "upstream_git_blob_sha": "56a88165815718a2b4fae75a5150097103446bbd",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/Grid.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/LawN256.lean",
+      "upstream_git_blob_sha": "02f51f3377a70cf9f0c50e0aa2b0526b7f59425b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/LawN256.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/NearCUE.lean",
+      "upstream_git_blob_sha": "b654e8cb36264ab066d261168879ca5f94e91fc8",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/NearCUE.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/NumericCert.lean",
+      "upstream_git_blob_sha": "2c34ebf406adcf64d891fdb369f7cdcd9e52100f",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/NumericCert.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/RowCert.lean",
+      "upstream_git_blob_sha": "14e0cdf58aef84f0eee74e4f54275339f5fd3d30",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/RowCert.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/Signed.lean",
+      "upstream_git_blob_sha": "0ccc342ba3ca646fa37062c25a163634ff1a56ea",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/Signed.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PairCeiling/Stability.lean",
+      "upstream_git_blob_sha": "6d3ece8d57d60fa3ab47657e589d10dc8d18d12e",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PairCeiling/Stability.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PiFacts.lean",
+      "upstream_git_blob_sha": "cfc6ff9dc2649b5928f3bbed3e2fbcc702bc3b71",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PiFacts.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Poisson.lean",
+      "upstream_git_blob_sha": "78a61f9d425c3c55b23c4ddb612b986f0bcb34f3",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Poisson.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Poisson/PaperFT.lean",
+      "upstream_git_blob_sha": "aa04095239f60ef3d8c99923a5bdea966357d234",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Poisson/PaperFT.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Prelude/InstancePriorities.lean",
+      "upstream_git_blob_sha": "84abeb8ef59a2b184dc6f9e9a5943bb6feac37e1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Prelude/InstancePriorities.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA.lean",
+      "upstream_git_blob_sha": "86845fc27b863a2b3c433d644666cb46aa375705",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/Basic.lean",
+      "upstream_git_blob_sha": "7555aaf5deacab10b78c258feefd3537a539fd36",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/Basic.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/Bridge.lean",
+      "upstream_git_blob_sha": "71066668de15a1b0af347366b8276fbcf84325ec",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/Bridge.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/CrossMuP.lean",
+      "upstream_git_blob_sha": "b91d8da0f439e5f83a78f1470e7f57f02cb779c5",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/CrossMuP.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/CrossMuPCore.lean",
+      "upstream_git_blob_sha": "e010fcb4ea1553e1e0e674f05839954799b6061d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/CrossMuPCore.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/Defs.lean",
+      "upstream_git_blob_sha": "33ddda1630f077a612cd639d28b7d43b183a53a4",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/Defs.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/Ends.lean",
+      "upstream_git_blob_sha": "dc87104549a5f19b01b85d510c1b958b6f52132c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/Ends.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/EndsCore.lean",
+      "upstream_git_blob_sha": "a25c85d7b9ce75b04c4a0e1b913105f1afcabe0c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/EndsCore.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/EndsE1.lean",
+      "upstream_git_blob_sha": "2ffe779b70efce4c0c54915abcb2286eaa0edfca",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/EndsE1.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/EndsE2.lean",
+      "upstream_git_blob_sha": "2d6fd06e00cad8d39301d7f9084d8c358b8400b2",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/EndsE2.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/EndsNu.lean",
+      "upstream_git_blob_sha": "592d4fb46536da54f3f44c17fa380bb8f4c19d10",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/EndsNu.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/EndsWeighted.lean",
+      "upstream_git_blob_sha": "2278475a5def48b05af157cb9bfffefd6023b35b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/EndsWeighted.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideA/MuMu.lean",
+      "upstream_git_blob_sha": "6f5f8e530f86783026d26a6a32bf33740922896a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideA/MuMu.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideB.lean",
+      "upstream_git_blob_sha": "562865ec2246891b67f3fba67e897c39c83cdf16",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideB.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideB/Concrete.lean",
+      "upstream_git_blob_sha": "3a3642f991c3ec1a1c56344e77fd7e7689e5dc4b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideB/Concrete.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideB/Final.lean",
+      "upstream_git_blob_sha": "d1be90b44d73d76792d9d2c4197b92f759b873bf",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideB/Final.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideB/PP.lean",
+      "upstream_git_blob_sha": "ee8ffe11d7c3b3f45bcdd4ab1996dcb657ef18cb",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideB/PP.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideB/PPKernel.lean",
+      "upstream_git_blob_sha": "58f64603997f6b0032f476beef11592a3c6ffce1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideB/PPKernel.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideB/PPOffDiag.lean",
+      "upstream_git_blob_sha": "cea7b4898e0cc9c777b1a0aad8adb748c7ab3f61",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideB/PPOffDiag.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideB/Traces.lean",
+      "upstream_git_blob_sha": "69edbb47e546d3d15e15be67cc1cce5684e873d5",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideB/Traces.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/PrimeSideTemp.lean",
+      "upstream_git_blob_sha": "f9e2839242bf849085c73292751c344fc7e53ea6",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/PrimeSideTemp.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/Backlund.lean",
+      "upstream_git_blob_sha": "824f9aa7e3b29ce2a6cbe5c78f7815aec8ab0ab0",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/Backlund.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/BacklundDefs.lean",
+      "upstream_git_blob_sha": "745e89a1bd9e1bdd600de1d171787372f78ffa8c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/BacklundDefs.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/CountByIntegral.lean",
+      "upstream_git_blob_sha": "c6dc0b19f21a4a031573ad63c3edd2c75c193e00",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/CountByIntegral.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/Defs.lean",
+      "upstream_git_blob_sha": "fb25ee7a60454f9a3da00c22994b3ee5fdb86cd4",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/Defs.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/Fold.lean",
+      "upstream_git_blob_sha": "5ffac60c4659efa429b8d07d54b13c30acc5c845",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/Fold.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/GammaSide.lean",
+      "upstream_git_blob_sha": "de2771c636a6e2f4353dc63ba44fc32c62b63779",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/GammaSide.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/Halving.lean",
+      "upstream_git_blob_sha": "f3a8f429bde3e9038d31f492f3404b52e1c2f3a0",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/Halving.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/LocalCount.lean",
+      "upstream_git_blob_sha": "42f9e1e712587991f2b9ea6e8edf074c9055375c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/LocalCount.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/MainTerm.lean",
+      "upstream_git_blob_sha": "54bffbb76eda3bf06bc919689e7c5010a9e830d2",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/MainTerm.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/NcountWindow.lean",
+      "upstream_git_blob_sha": "b35d7be1a49f3bc3d178b5e80fe81e60398cce72",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/NcountWindow.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/ReZeroCount.lean",
+      "upstream_git_blob_sha": "2c603bf0886048e1f6fa4431aeb1e4d24af16658",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/ReZeroCount.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/Statement.lean",
+      "upstream_git_blob_sha": "0218a9fe6adaef4168726eb84dd0ecb659c51786",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/Statement.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/RvM/ZetaGrowth.lean",
+      "upstream_git_blob_sha": "79523c00f44c58bd648d60906369762e89044d27",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/RvM/ZetaGrowth.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Statement.lean",
+      "upstream_git_blob_sha": "b8a95eb20cbade61a33f165004c34d1ce1674947",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Statement.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Statement/Seam.lean",
+      "upstream_git_blob_sha": "2fd6c9d89e9da4a6c3810a5e4a0f4d033e72fd40",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Statement/Seam.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Statement/SeamClosed.lean",
+      "upstream_git_blob_sha": "16935e20a02d7d650344428eef2912c6f7fc0c65",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Statement/SeamClosed.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Tail.lean",
+      "upstream_git_blob_sha": "b4d913b40612a2af4d950b0c83ce59cb7d7a0ff3",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Tail.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Tail/Basic.lean",
+      "upstream_git_blob_sha": "ef90f43b624f1781980bbc8da3f4b0128781e363",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Tail/Basic.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Tail/Count.lean",
+      "upstream_git_blob_sha": "3b9921557758c132db22727b91adfc063f9ca5a3",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Tail/Count.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Tail/Grid.lean",
+      "upstream_git_blob_sha": "d6153778406ddd1c251d3e3d2d5b354acad63114",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Tail/Grid.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Tail/Package.lean",
+      "upstream_git_blob_sha": "2d01ee7d839940b3ad4c1a92250a18f45c51e176",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Tail/Package.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Tail/RankOne.lean",
+      "upstream_git_blob_sha": "dd65943f873b3960a7f3e6b510c440bf77910cd1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Tail/RankOne.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Taper.lean",
+      "upstream_git_blob_sha": "b7dd4ff5b00d71035db1d3311007d19148004f78",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Taper.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Taper/Basic.lean",
+      "upstream_git_blob_sha": "46c2dd65ed6917a6d31195e4e2c4c3edd7a1e208",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Taper/Basic.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Taper/Decay.lean",
+      "upstream_git_blob_sha": "67c96e7c3575ca2a9acaf1f66e4172a190ed7a42",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Taper/Decay.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Taper/Fourier.lean",
+      "upstream_git_blob_sha": "41ef273659adeaf754c97c5613253e7bfe5be01f",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Taper/Fourier.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Taper/Gevrey.lean",
+      "upstream_git_blob_sha": "df944f8bb21f78243c91cc7bbfdd5d03ccac1987",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Taper/Gevrey.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Taper/GevreyPhi.lean",
+      "upstream_git_blob_sha": "a684395a18eab9a81fea0f66170b2ccae941ac7b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Taper/GevreyPhi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Taper/GevreyRamps.lean",
+      "upstream_git_blob_sha": "7b826885dbe6402f5cf219920a1667afaffb4f06",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Taper/GevreyRamps.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Taper/Norms.lean",
+      "upstream_git_blob_sha": "bacc3dc794637292679c0c4fe4e9f2ed74c05b70",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Taper/Norms.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Taper/Params.lean",
+      "upstream_git_blob_sha": "bec20859e5d0cc8da838a0deb71b503e3502857a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Taper/Params.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/Taper/Strip.lean",
+      "upstream_git_blob_sha": "c9f0745b73ec50906dafebaea1a31c78b55b8066",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/Taper/Strip.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/AssemblyD.lean",
+      "upstream_git_blob_sha": "023fb03749c1a0900e9ac80655da273b9117fb2a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/AssemblyD.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/BridgeD.lean",
+      "upstream_git_blob_sha": "fa363dd3573b33ba3b7fb9269a4fd75598007132",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/BridgeD.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/Concrete.lean",
+      "upstream_git_blob_sha": "e8092bef6bbccba1b112de5e1c7f83dc8c767c04",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/Concrete.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/Endgame.lean",
+      "upstream_git_blob_sha": "1f4c561d05d5e2c091254ac15d92baf18b0ab628",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/Endgame.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/Final.lean",
+      "upstream_git_blob_sha": "abd5c3c9d4cc24df82a4209a913e7e6cb289bdbc",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/Final.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/Functional.lean",
+      "upstream_git_blob_sha": "41cc13afae8e4e068f991ab1a0d14908c398e1e3",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/Functional.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/Limit.lean",
+      "upstream_git_blob_sha": "6013bdd232f102af31e856f1e0116e42e3ff01b6",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/Limit.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/Mult.lean",
+      "upstream_git_blob_sha": "a36b073fd6b04b568aac377026eafcce129946d1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/Mult.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/PP.lean",
+      "upstream_git_blob_sha": "a6e31fd189e82edf2b54f95f5fd74a990f917cfe",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/PP.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/ParamsD.lean",
+      "upstream_git_blob_sha": "cae614e55a9a7222bd2e16749cd70e535734594d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/ParamsD.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/PsiC.lean",
+      "upstream_git_blob_sha": "9776201c0bb8454ae8f607c7f90145cf34db5a53",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/PsiC.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/Traces.lean",
+      "upstream_git_blob_sha": "0bfd1870e7ee5227d0d98bdea570bfc4853c9ca4",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/Traces.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/Window.lean",
+      "upstream_git_blob_sha": "749ca9b7ad43eb4a407475d2aa8aa7c8324b5f67",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/Window.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/WindowCore.lean",
+      "upstream_git_blob_sha": "ee3be51a876222c3617067f2992ab85393e4e40a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/WindowCore.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/WindowLocalHyps.lean",
+      "upstream_git_blob_sha": "32cd11676436af642e4d7233d21364d70bcbb8c5",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/WindowLocalHyps.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmD/ZeroSideD.lean",
+      "upstream_git_blob_sha": "7cf0e9a21cebd097e515b16a20b1c80c5ff1854d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmD/ZeroSideD.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmDE/Concrete.lean",
+      "upstream_git_blob_sha": "c01dda163263b4af9bf107adba3dd84f9297a0e1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmDE/Concrete.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmDE/Endgame.lean",
+      "upstream_git_blob_sha": "2880863db6ffe2d682e9a5608058b1cc61eca6ee",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmDE/Endgame.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmDE/Final.lean",
+      "upstream_git_blob_sha": "bcdb9d9ee9dee46e1561b8d82834056b298fff37",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmDE/Final.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmDE/Limit.lean",
+      "upstream_git_blob_sha": "f886a98137d460fdf95b4fcd7300cb2478876706",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmDE/Limit.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmDE/Mult.lean",
+      "upstream_git_blob_sha": "c76052f9810171e7781c852c9137792e5eae2faa",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmDE/Mult.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmDE/PP.lean",
+      "upstream_git_blob_sha": "77cc60966b6d701d5da44f6f15e291e64976cbc6",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmDE/PP.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmDE/Traces.lean",
+      "upstream_git_blob_sha": "6b9eb56351a9d22d380fc5c786127e9098671597",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmDE/Traces.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmDE/TracesHyp.lean",
+      "upstream_git_blob_sha": "9965c30438a48b4140b365d9a1a3439f8be9cdaf",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmDE/TracesHyp.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmDE/ZeroSide.lean",
+      "upstream_git_blob_sha": "ad5b0f7c9fb6f8baee77eec39120a88b41918075",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmDE/ZeroSide.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/AssemblyQ.lean",
+      "upstream_git_blob_sha": "97133fcbca06259ea84eb596e061c03b52f484d9",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/AssemblyQ.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/BacklundChi.lean",
+      "upstream_git_blob_sha": "3e9a7b0ff894a2eec2d58f7cd0fc09a7c51e9738",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/BacklundChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/ChebCoprime.lean",
+      "upstream_git_blob_sha": "242ddd0dc8878e093738083a2baf71fbd53260a1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/ChebCoprime.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/ContourChi.lean",
+      "upstream_git_blob_sha": "174a65a6e6ac9c6b2cced65086223424ca61151d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/ContourChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/CountByIntegralChi.lean",
+      "upstream_git_blob_sha": "924cc5c863b9429d18c53faf2ddb99bf66010592",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/CountByIntegralChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/CrossMuPChi.lean",
+      "upstream_git_blob_sha": "72aadaadc7e2f50ecb19bfc695fb68f4d9b7ab11",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/CrossMuPChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/EFLitChi.lean",
+      "upstream_git_blob_sha": "d205e0cebae5970e1f9ff2b11c203999f6b75b9c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/EFLitChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/Final.lean",
+      "upstream_git_blob_sha": "70fa805abaa2c73a650dc04556a813934b97d3de",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/Final.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/FoldChi.lean",
+      "upstream_git_blob_sha": "593eaa2bea3a05cdd7384cc7689a231513b63e82",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/FoldChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/FullLineChi.lean",
+      "upstream_git_blob_sha": "b7bb191530c723adbf736cc86475dfc886f394ad",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/FullLineChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/FullLineChiAssembly.lean",
+      "upstream_git_blob_sha": "d2b8da4f4226a668cb8a6102ad529304e7ba7452",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/FullLineChiAssembly.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/FullLineChiFold.lean",
+      "upstream_git_blob_sha": "0091aebaa9bb2aedbbde68bbb5b12377654cc3d0",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/FullLineChiFold.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/FullLineChiProof.lean",
+      "upstream_git_blob_sha": "9416a67313657b74c4c490f7fc262e07c4d0ce9c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/FullLineChiProof.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/GammaFactsChiProof.lean",
+      "upstream_git_blob_sha": "ffde98d45c12e4fe47fc916d8fb3b1ec5fd77b0a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/GammaFactsChiProof.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/GammaSideChi.lean",
+      "upstream_git_blob_sha": "07b64e0a553cf16d7498fb2ec52901ec7537d4ab",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/GammaSideChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/GzGpChi.lean",
+      "upstream_git_blob_sha": "7a9e4eee8176d095c9c019ce1873c280358ce2c9",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/GzGpChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/HorizontalChi.lean",
+      "upstream_git_blob_sha": "941f67dbe9db753d63cf1bc01c609caebcee2ea8",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/HorizontalChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/Hypotheses.lean",
+      "upstream_git_blob_sha": "65062889f76af387d3e9feebf0d972e482aa4e16",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/Hypotheses.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/IntMuChi.lean",
+      "upstream_git_blob_sha": "8b2456f220cacdefa91b0e945a06455de9992333",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/IntMuChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/LGrowth.lean",
+      "upstream_git_blob_sha": "5ff8a852835dd7a8f90a4ecfbe2f6fd058563dff",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/LGrowth.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/LandauChi.lean",
+      "upstream_git_blob_sha": "9b9f9a330778f58c963002e2b488fb5d6661669b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/LandauChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/LocalCountChi.lean",
+      "upstream_git_blob_sha": "603d34e2374063f482905e72c84e5666f23275ad",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/LocalCountChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/Main.lean",
+      "upstream_git_blob_sha": "04b1fb17f416b15ab6948debfd8585a9821e2d24",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/Main.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/MainChi.lean",
+      "upstream_git_blob_sha": "8152319d611d6a0fa0144ce96ad28b81750e9b34",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/MainChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/MainTermChi.lean",
+      "upstream_git_blob_sha": "be2de34516f6248636513b16bb9571ab47c39d3f",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/MainTermChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/MuMuChi.lean",
+      "upstream_git_blob_sha": "f1166eda0c9f917460939fab9809839d538c53e2",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/MuMuChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/Mult.lean",
+      "upstream_git_blob_sha": "5cd648bfc6d095b350048a2f9aadaad3219b6219",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/Mult.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/PPChi.lean",
+      "upstream_git_blob_sha": "db2e3d52969f93d93f479a49e8e0c273da06f899",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/PPChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/PrimeSideChi.lean",
+      "upstream_git_blob_sha": "bdfbbe56c3098980c3d63ba72430b2e80671deeb",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/PrimeSideChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/ReZeroCountChi.lean",
+      "upstream_git_blob_sha": "af934bdf53717e621ad3fd60f957561b546fffe6",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/ReZeroCountChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/RvMChi.lean",
+      "upstream_git_blob_sha": "dbd208e727e5661db1e9d99034de7f06ab55fa04",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/RvMChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/RvMChiDefs.lean",
+      "upstream_git_blob_sha": "779bda1ffe67ea937e705b465d9a69f400a48d0d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/RvMChiDefs.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/SeamL.lean",
+      "upstream_git_blob_sha": "a3ea63e64d7797979babbd0b3690aa95ded64f2b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/SeamL.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/Statement.lean",
+      "upstream_git_blob_sha": "1aaec6accad36bad8fb204a4b974a58524d3bc98",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/Statement.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/TracesChi.lean",
+      "upstream_git_blob_sha": "27944502232eac80c7f2ae0c95bbd1998c72d40a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/TracesChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/TracesHypChi.lean",
+      "upstream_git_blob_sha": "c8dfa95eeb6b427582bfac10cceaa16f7400d322",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/TracesHypChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ThmE/VerticalLineChi.lean",
+      "upstream_git_blob_sha": "59b02623e04e65e37288e68b82a1ed1d32090612",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ThmE/VerticalLineChi.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/TracesBoundsE.lean",
+      "upstream_git_blob_sha": "2cc51f3ef9cbfeee4e3f33622df0053e74d2907e",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/TracesBoundsE.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/Contour.lean",
+      "upstream_git_blob_sha": "a97c1b07b45089293901d09fa7ab9034b0c1ac6c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/Contour.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/Effective.lean",
+      "upstream_git_blob_sha": "401f1318bdac29d95211200b7315ce03b0c8f64d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/Effective.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/FullLine.lean",
+      "upstream_git_blob_sha": "a2ae92dfd3852a435f3b7d5adc13cdde73073280",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/FullLine.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/FullLineAssembly.lean",
+      "upstream_git_blob_sha": "a6f27d0578ca8007771b7694f2bd24a8556ba14b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/FullLineAssembly.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/GammaRBracket.lean",
+      "upstream_git_blob_sha": "48eba58762cccfc47ac06b7af5c386b68fdba20c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/GammaRBracket.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/GoodHeights.lean",
+      "upstream_git_blob_sha": "dba3f39a75f2bde58693a7099808443cac7773ca",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/GoodHeights.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/Horizontal.lean",
+      "upstream_git_blob_sha": "837c38c48d64d88a392eeb6876cb93bdaa540bec",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/Horizontal.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/Landau.lean",
+      "upstream_git_blob_sha": "5b6d356d64a6e7a1bf6bc0e98406d3dfe5a7f4d6",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/Landau.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/Main.lean",
+      "upstream_git_blob_sha": "75a3ef8d5ea39205412e007bc80b22ba17993e04",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/Main.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/VerticalLine.lean",
+      "upstream_git_blob_sha": "cfc4a8b030c00845c3242faa3dbec21eaae5522b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/VerticalLine.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/XiLogDeriv.lean",
+      "upstream_git_blob_sha": "71b1eaed44eee2f700c68453a76ff012a30a5717",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/XiLogDeriv.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/ZeroSumLimit.lean",
+      "upstream_git_blob_sha": "703785534b5ac7080fcc0dfefb9c333e15196c6a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/ZeroSumLimit.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/ZeroSummability.lean",
+      "upstream_git_blob_sha": "7b5e1595f7828376f08754258199dc4ab042d175",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/ZeroSummability.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/WeilEF/ZeroSummabilityGen.lean",
+      "upstream_git_blob_sha": "d755fbae5a38c7daaa93c6f7a5437090b9c696be",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/WeilEF/ZeroSummabilityGen.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Assembly.lean",
+      "upstream_git_blob_sha": "48f192ac51d33c4dd49f21a3ece15426538bd026",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Assembly.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Certificate.lean",
+      "upstream_git_blob_sha": "716cda2053282e8b337617a95bee367f23eeb9be",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Certificate.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Certificate/AtOne.lean",
+      "upstream_git_blob_sha": "6db8fb465fa0825bd9faecbe00918f00c3fd95d9",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Certificate/AtOne.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Certificate/D1.lean",
+      "upstream_git_blob_sha": "9e457cd652649fe9d66c7b561b2fa80e2a99b145",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Certificate/D1.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Certificate/Poly.lean",
+      "upstream_git_blob_sha": "f702f4975646ede439df49e223b8e83266f8dca3",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Certificate/Poly.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/CertificateFn.lean",
+      "upstream_git_blob_sha": "af2ad3b0304d08df30f43054cf799a50b9c84ad4",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/CertificateFn.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff.lean",
+      "upstream_git_blob_sha": "9b414760c03b68a15245d0d25e99e5a9d08d1330",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/Abel.lean",
+      "upstream_git_blob_sha": "dd5cc13ad2b370435d0c41571df10828d325d823",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/Abel.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/Basic.lean",
+      "upstream_git_blob_sha": "c09349957b62a9be3d79786a903b80e6048ac221",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/Basic.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/DiagLaw.lean",
+      "upstream_git_blob_sha": "5a1ead751faa8933ff3be87e4e7713190b476296",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/DiagLaw.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/H3.lean",
+      "upstream_git_blob_sha": "ca268656ef06a4e31a52fffb2a0eac51aa4beb2a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/H3.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/LSeries.lean",
+      "upstream_git_blob_sha": "da9c0a5732be3b22f84ae924d4f18e9332658251",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/LSeries.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/LT.lean",
+      "upstream_git_blob_sha": "0ab55b45baabea0bbf3b43dcb104900ab981777e",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/LT.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/LayerOne.lean",
+      "upstream_git_blob_sha": "5627e313051e182825d48bb489edc6d136a21ed1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/LayerOne.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/MainTerm/Asymp.lean",
+      "upstream_git_blob_sha": "9a8a36520d32d1ef8fed9e0bb77c79640cd6edd0",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/MainTerm/Asymp.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/MainTerm/Squarefree.lean",
+      "upstream_git_blob_sha": "1b432b40601406036d22e5331727584d8c3c0dfb",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/MainTerm/Squarefree.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/NonSquarefree.lean",
+      "upstream_git_blob_sha": "668f6e396659b6f207692e888320091a765ab18c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/NonSquarefree.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/Param.lean",
+      "upstream_git_blob_sha": "cbbb95d893ed0ab4dc5cdd58e9f09650fba8f682",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/Param.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/PowerSums.lean",
+      "upstream_git_blob_sha": "9bf05b03b9bd492f525ac242ba339d7bae1fb443",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/PowerSums.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/PrimeSums.lean",
+      "upstream_git_blob_sha": "17da169e0814ca6cf64425c8276565660731d843",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/PrimeSums.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/Reexpansion.lean",
+      "upstream_git_blob_sha": "c106d05fb29d6e3903ac9ec5d8181d5f8fbf804a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/Reexpansion.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/ReexpansionGen.lean",
+      "upstream_git_blob_sha": "1d233844ceff2b99cb3dff48e4a49b6c3e2b3fb3",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/ReexpansionGen.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/ReexpansionW.lean",
+      "upstream_git_blob_sha": "f40f64aeb310c587566007634733abeacf67176f",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/ReexpansionW.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/Tail.lean",
+      "upstream_git_blob_sha": "92d81b3c5b3310a472f99bfde088821dc9db1328",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/Tail.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Coeff/Upper.lean",
+      "upstream_git_blob_sha": "c60e8d08effd98dcb500b7a5c4ae72c83888fac1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Coeff/Upper.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Defs.lean",
+      "upstream_git_blob_sha": "16460e4d68013c156e91012fcdc6cb72b028ef9f",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Defs.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula.lean",
+      "upstream_git_blob_sha": "753bc765e763ed45428d1f6152c33f98c08de1ba",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/Contour.lean",
+      "upstream_git_blob_sha": "a006417c0697e9b1bd346a546679415672b8b7b5",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/Contour.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/DirichletLine.lean",
+      "upstream_git_blob_sha": "623d2728545fdcf928c20af733ee17858b74c2d8",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/DirichletLine.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/EntryError.lean",
+      "upstream_git_blob_sha": "4f8720428b276926fb1310827167a982a1006e88",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/EntryError.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/Expansion.lean",
+      "upstream_git_blob_sha": "73d287e15c2b4042e99aa14e63e405cf8c577743",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/Expansion.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/FamilyFacts.lean",
+      "upstream_git_blob_sha": "ec9036881886eb1597f9fc4fe58c48bc127df65f",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/FamilyFacts.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/FullLine.lean",
+      "upstream_git_blob_sha": "c153464c65a1419b366735889c1f9cc641239cb3",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/FullLine.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/GramBridge.lean",
+      "upstream_git_blob_sha": "3366cab977b88a81cbafd150f4f705ebce00768d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/GramBridge.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/JTerm.lean",
+      "upstream_git_blob_sha": "e275a6048927d61fe39cbccf371f484f0b334c51",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/JTerm.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/LineBound.lean",
+      "upstream_git_blob_sha": "93df6faaf4d5ea7b62f0ed9f4447dc646eafe17b",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/LineBound.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/LitCorr.lean",
+      "upstream_git_blob_sha": "6642936e98187cf5821a3af9634301cceee123fa",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/LitCorr.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/Main.lean",
+      "upstream_git_blob_sha": "dad48c2ecd554aae3f8a4d3f721f4438f23368ec",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/Main.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/PrimeTermJ.lean",
+      "upstream_git_blob_sha": "f24bafedc67ad05f8029cd7507b5989ae3f7db16",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/PrimeTermJ.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/TestWeight.lean",
+      "upstream_git_blob_sha": "545614fe9736c8813f20df2657488a97b4f6ec48",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/TestWeight.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/XiEFAssembly.lean",
+      "upstream_git_blob_sha": "cf03915a109a2b9b107a3ad56259ade850ccbc13",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/XiEFAssembly.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ExplicitFormula/ZeroFree.lean",
+      "upstream_git_blob_sha": "9b486018e86ff3fab9a3e0bcf36e9d28c00063a5",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ExplicitFormula/ZeroFree.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/FamilyFlat.lean",
+      "upstream_git_blob_sha": "b37f71bf4f4eb930e3f8ec89b185a7f51ac803b4",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/FamilyFlat.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/FamilyHyps.lean",
+      "upstream_git_blob_sha": "e8809a5400e3378f2b0ff197da0aa74786efc02a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/FamilyHyps.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/FamilyHypsV.lean",
+      "upstream_git_blob_sha": "cda9409e7d4b7818fe8c522c8ddda6ed8180fc54",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/FamilyHypsV.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Final.lean",
+      "upstream_git_blob_sha": "e977c23ce5839e0cbd49741cf48f80606e3e8071",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Final.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/Basic.lean",
+      "upstream_git_blob_sha": "4d33d26edcbb986938c335bb99f43dedafa396fb",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/Basic.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/Contour.lean",
+      "upstream_git_blob_sha": "a887d946c92892bd16d61d6efc4d295ace8245ae",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/Contour.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/Count.lean",
+      "upstream_git_blob_sha": "91b42d31544152997406a974300dcd4454a01c43",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/Count.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFBasic.lean",
+      "upstream_git_blob_sha": "3be1b63d6b73cf535968d8bb367401c8ae167f3d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFBasic.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFContour.lean",
+      "upstream_git_blob_sha": "2cf2d75db2f44cb0dd99e2160fd273caf639f807",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFContour.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFContour/Analytic.lean",
+      "upstream_git_blob_sha": "1c011999da1dd9eabfb77cb1ac6ab523a4f6b0e4",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFContour/Analytic.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFContour/Limit.lean",
+      "upstream_git_blob_sha": "66105030b2ad462e8a841993cd691e95e785ed36",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFContour/Limit.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFContour/Poles.lean",
+      "upstream_git_blob_sha": "edc5c5039aad733ad0afb8dda12029f6595dc25c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFContour/Poles.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFContour/Rectangle.lean",
+      "upstream_git_blob_sha": "96bd1bc274ce2ce54309784184b38eeb568d6650",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFContour/Rectangle.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFExpansion.lean",
+      "upstream_git_blob_sha": "2dfd7f9c0da96f5740c52033032152259e5a67eb",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFExpansion.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFFinal.lean",
+      "upstream_git_blob_sha": "1a81ae71b1f1d22884f80350d974243a628aa228",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFFinal.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFJTermW.lean",
+      "upstream_git_blob_sha": "78e33bd9eac267eae7841a9776c68083ca01bf89",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFJTermW.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFLitCorrW.lean",
+      "upstream_git_blob_sha": "7e784373cdb1ae478234d41ed95a5fbe029cd140",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFLitCorrW.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFMain.lean",
+      "upstream_git_blob_sha": "269b3177e0c20517884d2f537ea9802e25e06d96",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFMain.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/EFWeights.lean",
+      "upstream_git_blob_sha": "71a45b411c154e05a52f3a8952886c53a6dd6e09",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/EFWeights.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/GoodHeightsW.lean",
+      "upstream_git_blob_sha": "a0d193b60f2347616e6583c075d03ad029d33582",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/GoodHeightsW.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/GramBridgeW.lean",
+      "upstream_git_blob_sha": "ad4155c89a793180a9154d0a3735ec021b6b0932",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/GramBridgeW.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/Omega.lean",
+      "upstream_git_blob_sha": "e9565d414385077f8d935726eee8ac85859b825c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/Omega.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/Seam.lean",
+      "upstream_git_blob_sha": "aa2ca10c56ecc0787023bb2455ed5603653b2814",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/Seam.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/TwoLine.lean",
+      "upstream_git_blob_sha": "b1e7070a1eaf13e0fff8bb3b6e83a86e3be7a21a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/TwoLine.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/ZFunction.lean",
+      "upstream_git_blob_sha": "dc2399d604cba333cc3cd93c2755c0a9960273fa",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/ZFunction.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Hardy/ZeroFree.lean",
+      "upstream_git_blob_sha": "0bf0396dd18bbd64fbbbbda7263d8add161afe60",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Hardy/ZeroFree.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Inputs.lean",
+      "upstream_git_blob_sha": "eec9cecd4a86639ea8e55727b1f2a01d92758af7",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Inputs.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/PrimeSide/Abel.lean",
+      "upstream_git_blob_sha": "78282e146fb5b1865535228f66f1e6864d0f4bfc",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/PrimeSide/Abel.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/PrimeSide/Concrete.lean",
+      "upstream_git_blob_sha": "164f6f3185ff95d6357bc7b46819ba8a6e294823",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/PrimeSide/Concrete.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/PrimeSide/Cross.lean",
+      "upstream_git_blob_sha": "dbd51e50e7f34ac94e479fa362e9a2e5295f1c7e",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/PrimeSide/Cross.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/PrimeSide/Density.lean",
+      "upstream_git_blob_sha": "e74f9fd90272fe3385a64aa959fca5432822eb30",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/PrimeSide/Density.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/PrimeSide/Final.lean",
+      "upstream_git_blob_sha": "29e0adc8f7c08fc7fb9053a45620403942e640c6",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/PrimeSide/Final.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/PrimeSide/Moments.lean",
+      "upstream_git_blob_sha": "2b5ce24d2b678336f44cab3cd309621829ae60ad",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/PrimeSide/Moments.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/PrimeSide/PP.lean",
+      "upstream_git_blob_sha": "53f44380c7a4ec8099d45d329c081f43824d4a9e",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/PrimeSide/PP.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/PrimeSide/PPUpper.lean",
+      "upstream_git_blob_sha": "a8fb46792d7bc884492129a2913c8034583c480a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/PrimeSide/PPUpper.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/PrimeSide/Trace.lean",
+      "upstream_git_blob_sha": "c998f5b65d3f23b8c6d530068e9af4d4b2e1b0ca",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/PrimeSide/Trace.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/PrimeSide/Traces.lean",
+      "upstream_git_blob_sha": "29d12a9fe1b528ebf619cae5991a5f852ed80f9e",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/PrimeSide/Traces.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/QuarticWindow.lean",
+      "upstream_git_blob_sha": "ee89a16234978f01a8b0dcbc6a1d507ebea45ce9",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/QuarticWindow.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/QuarticWindow/Family.lean",
+      "upstream_git_blob_sha": "a5fd33334e3ede49eea3c1d4c6b34cf9f2fdab1d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/QuarticWindow/Family.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/QuarticWindow/ModWindow.lean",
+      "upstream_git_blob_sha": "401612063d52225f560f886499cc0e07a3c7ba67",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/QuarticWindow/ModWindow.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/QuarticWindow/Moments.lean",
+      "upstream_git_blob_sha": "3b986f9e1d27b12f03120458974c03cff4d8dd46",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/QuarticWindow/Moments.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/QuarticWindow/Params.lean",
+      "upstream_git_blob_sha": "23d868be196375b10f81f0ade17ed2a9230275bc",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/QuarticWindow/Params.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/QuarticWindow/Quartic.lean",
+      "upstream_git_blob_sha": "4af68999694eed7a92ae7ce5929aa3a6582582b6",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/QuarticWindow/Quartic.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/QuarticWindow/ZeroSide.lean",
+      "upstream_git_blob_sha": "df7fe234ca4ee0815795e5b1e3a8e278742112a3",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/QuarticWindow/ZeroSide.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Seam.lean",
+      "upstream_git_blob_sha": "f3cf3101f93dfcf07bb85e48e647927410a6ff1e",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Seam.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Statement.lean",
+      "upstream_git_blob_sha": "b1339c09f5e7b9f07de9a533850183e905d8c138",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Statement.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/StatementW.lean",
+      "upstream_git_blob_sha": "7f646e74fde41a5405bf5718bf76234c9d1f0f9c",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/StatementW.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Transfer.lean",
+      "upstream_git_blob_sha": "469a31ec055d6db903e9095cdca737f5b904f019",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Transfer.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Transfer/Abstract.lean",
+      "upstream_git_blob_sha": "5a42f917d626b73389cf92ccd34f949a5e813862",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Transfer/Abstract.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Transfer/Dependence.lean",
+      "upstream_git_blob_sha": "192647ee4b2e7d3959d3e8bb09e974a7200c7616",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Transfer/Dependence.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Transfer/Inputs.lean",
+      "upstream_git_blob_sha": "9ccd29e1f0da1d7dd9b903e981b7bd614578b74a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Transfer/Inputs.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Transfer/InputsW.lean",
+      "upstream_git_blob_sha": "5eb3ce21271c67183d51f5b3279e6a408b66e069",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Transfer/InputsW.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Transfer/W.lean",
+      "upstream_git_blob_sha": "812c26bf4f3b41e667569f13aaee85f1df82df1d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Transfer/W.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Window.lean",
+      "upstream_git_blob_sha": "335299492dfbf25c3a74e8acfbe583f84ebb2a9a",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Window.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Window/FlatAdm.lean",
+      "upstream_git_blob_sha": "55f571e40a0700960db0c211e4247c0ae9c16ac6",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Window/FlatAdm.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/Window/Quartic.lean",
+      "upstream_git_blob_sha": "282effa9c3758192cbef75f8323437363b039b6d",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/Window/Quartic.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ZeroCount.lean",
+      "upstream_git_blob_sha": "9fa8e4703df69d60e537b5ecef1c3888d474e904",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ZeroCount.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ZeroCount/ArgBound.lean",
+      "upstream_git_blob_sha": "d423497ad4094e1b0ce85926c78132fbe710c7ba",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ZeroCount/ArgBound.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ZeroCount/Basic.lean",
+      "upstream_git_blob_sha": "40c1d93d03d90b2f90cb3141269af9bd2208fe9e",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ZeroCount/Basic.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ZeroCount/Contour.lean",
+      "upstream_git_blob_sha": "81548e1e7a17365f261fff763ed955ceca997060",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ZeroCount/Contour.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ZeroCount/Generic.lean",
+      "upstream_git_blob_sha": "58012f458575d1efeb286634aea144124e4207a3",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ZeroCount/Generic.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ZeroCount/GenericRvM.lean",
+      "upstream_git_blob_sha": "29a5022721d4c466f23a8bb07e519816e03e05cd",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ZeroCount/GenericRvM.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ZeroCount/GoodHeights.lean",
+      "upstream_git_blob_sha": "21fb495a9c82c83f518106e78f53edc662a44be5",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ZeroCount/GoodHeights.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ZeroCount/Landau.lean",
+      "upstream_git_blob_sha": "adba6ba7d0a59f3d93a138ec46716cab2aac3df1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ZeroCount/Landau.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ZeroCount/Sides.lean",
+      "upstream_git_blob_sha": "c6befe86b10230e4d760832461349890375289e1",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ZeroCount/Sides.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/XiPrime/ZeroCount/Y.lean",
+      "upstream_git_blob_sha": "fe197cb5f0b3d92c9227c55fc92283fd0b26dfbb",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/XiPrime/ZeroCount/Y.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ZeroSide.lean",
+      "upstream_git_blob_sha": "6314b10374daf4ea5582a3010bce0fb4ec4813d5",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ZeroSide.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ZeroSide/Final.lean",
+      "upstream_git_blob_sha": "1c18086f00d8fe080e16210ef4ef9a48f0662cf9",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ZeroSide/Final.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ZeroSide/Mult.lean",
+      "upstream_git_blob_sha": "f53b61b1cf916bf7d51eed333567a22bb011e0d4",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ZeroSide/Mult.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ZeroSide/RankTraceMult.lean",
+      "upstream_git_blob_sha": "56727106c5990a07e3f7e29eae3122be737a1cbc",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ZeroSide/RankTraceMult.lean",
+      "new_in_this_extension": false
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ZeroSide/TightMult.lean",
+      "upstream_git_blob_sha": "78d32636c75713a9abf67ded8af47bd416e4dc00",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ZeroSide/TightMult.lean",
+      "new_in_this_extension": true
+    },
+    {
+      "upstream_path": "zeta23/Zeta23/ZetaReflect.lean",
+      "upstream_git_blob_sha": "5e279fcf45f11c687d78384dbea40a6ffa3f21ac",
+      "local_path": "RiemannResearch/RH/WeilExplicitFormula/ZetaReflect.lean",
+      "new_in_this_extension": false
+    }
+  ]
+}

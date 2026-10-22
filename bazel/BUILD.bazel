@@ -1,0 +1,24 @@
+exports_files([
+    "rules_lean_compat.patch",
+])
+
+platform(
+    name = "rbe_linux_x86_64",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    exec_properties = {
+        "container-image": "docker://gcr.io/bazel-public/ubuntu2404@sha256:a5e969f2208ae4ab3cbe18cd85971f1f602345a650495674736a66b3ef9a55d1",
+    },
+    visibility = ["//visibility:public"],
+)
+
+# Check the executor before uploading the Lean toolchain and Mathlib artifacts.
+genrule(
+    name = "rbe_probe",
+    outs = ["rbe-probe.txt"],
+    cmd = "uname -s -m > $@",
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
+)

@@ -1,7 +1,48 @@
 # RiemannResearch agent instructions
 
+## Branch scope
+
+- `main` is the RH-focused development branch. Add Lean modules here only when they
+  are part of the RH program or have a concrete identified RH consumer.
+- The complete Serre II development at commit
+  `0d8199086f808671b3f61460fab7864b46915bce` is preserved on
+  `serre-ii-archive-20260904`. Do not reconstruct or publish Serre II modules on
+  `main`; future Serre II work requires an explicitly branch-aware workspace.
+
+## Mandatory server verification before publication
+
+- The private repository uses GitHub for source hosting. GitHub-hosted CI is
+  unavailable because its runner quota is exhausted; it has been broken since
+  setup. Do not rely on it, wait for it, rerun it, or propose paid runners as
+  the verification path. This is the user's explicit requirement, reaffirmed
+  2026-10-09.
+- Verify every Lean source or dependency change on the user's Lean server
+  through the Lean plugin before pushing. Publish only through
+  `agent_workspace_checkpoint` with push enabled, after its server source
+  audit and required Lean validation succeed. If publication integrates newer
+  `main` changes, the integrated source must pass server validation before
+  that source is pushed.
+- A queued job, an accepted request, an isolated successful proof snippet,
+  a source scan, or a GitHub commit is not evidence that the final project
+  changes passed verification. Wait for the checkpoint's terminal successful
+  result and inspect its validation scope and publication result.
+- If server verification fails, times out, is interrupted, or is unavailable,
+  retain the work and block publication. Do not bypass the gate with direct
+  `git push`, GitHub file/commit APIs, an unverified integration, or a fallback
+  to hosted CI. Report the blocker and the exact verification status.
+- Report the server verification job, validation scope, and published commit
+  for Lean changes. Documentation-only checkpoints may skip Lean compilation;
+  explicitly describe them as documentation changes, never as freshly checked
+  mathematical results. A server check of a snippet does not certify unchanged
+  repository modules or an entire repository build.
+
 ## Mathematical and verification policy
 
+- For RH research, keep complete exact identities as the primary results.
+  Preserve all signed summands, boundary terms, and norm-square remainders.
+  When an estimate is useful, give the full equality first and identify the
+  terms being estimated. Do not treat a lossy bound as closing an RH argument.
+  This is the user's explicit research preference, reaffirmed 2026-09-29.
 - Treat this repository as the persistent source of truth. A successful Lean
   check verifies a declaration's exact type, not the truth of hypotheses in
   that type or an informal interpretation of it.
@@ -23,13 +64,25 @@
 
 ## Efficient isolated workflow
 
-- Open one isolated workspace per task and retain its token. Reopen that token
-  to resume an archived clone. Old tokens remain resumable after server updates.
+- Retain the active workspace token and absolute project root across turns of
+  an ongoing task. Pass the token directly to subsequent workspace tools; do
+  not call `agent_workspace_open` again merely to confirm connectivity or reuse
+  an already active workspace. Create a new isolated workspace only when a new
+  task actually needs one. Reopen a retained token to resume an archived clone
+  or when the server explicitly reports that restoration is needed. Old tokens
+  remain resumable after server updates.
 - Pass absolute paths beneath its `project_root` to Lean tools. Use
   `agent_workspace_run_code` for a coherent ephemeral proof candidate. Inspect
   goals or diagnostics after failure rather than checking every tactic
   separately. When several local tactic repairs are plausible in an existing
   file, send 2--5 alternatives together with `lean_multi_attempt`.
+- Batch related declaration checks and proof candidates into coherent
+  submissions, and batch independent read-only searches and file reads.
+  Across cooperating agents on the same server, allow at most one queued or
+  running Lean verification job at a time. A timeout does not free that slot:
+  recover the job status before submitting more verification. Do not repeat a
+  connectivity smoke test when a successful task-relevant operation already
+  establishes access.
 - Read only relevant source ranges. Use targeted diagnostics or verification
   during development. Diagnostics are compact by default; request full details
   only when the bounded result omits evidence needed to repair the proof.
@@ -37,17 +90,28 @@
   and poll `agent_workspace_job_status` no sooner than `retry_after_seconds`;
   never resubmit a pending job. Running status reports the current phase, Lake
   task percentage when available, and a rough task-count ETA.
-- `agent_workspace_checkpoint` performs the source audit and change-aware
-  validation before commit and serialized publication. It skips Lean for
-  documentation-only changes and otherwise builds changed modules plus local
-  reverse dependents; dependency configuration changes and structural module
-  removals trigger full validation. `lean_build` is the explicit incremental
-  full-project validation; do not run it immediately before checkpoint. After
+- Report workspace-opening request time, queue/polling delay, and the server's
+  reported verification duration separately. A request round trip is not a
+  measurement of kernel proof-checking time. Do not attribute a delay to disk,
+  cache, networking, or Lean startup without supporting timing evidence.
+- `agent_workspace_checkpoint` audits and validates the entire unpublished
+  delta from the workspace base before commit and serialized publication.
+  It skips Lean only when that delta contains no Lean source or dependency
+  changes. Otherwise Lake incrementally builds the aggregate project plus
+  explicitly changed child modules; unchanged artifacts are reused. Source
+  changes during validation block publication. Integrated source is audited
+  and validated again before pushing its exact commit. `lean_build` is the
+  explicit incremental full-project validation; do not run it immediately
+  before checkpoint. After
   an intentional `lakefile.toml` change, queue `agent_workspace_update_deps`
   once and wait for it before validation.
-- Dependency artifacts are shared read-mostly. Each clone has its own writable
-  project build directory, seeded by exact commit and dependency environment.
-  Up to two isolated jobs may build concurrently, each with at most eight Lean
+- Dependency artifacts are shared read-mostly. Native project artifacts use a
+  shared content-addressed cache backed by private GCS storage. Each clone has
+  its own writable project build directory, restored through native Lake
+  artifacts and cleaned after successful verification when no editor uses it.
+  Native cache writes and pruning share an exclusive reentrant lease; its
+  retention budget is 100 GiB, excluding dependency artifacts and active
+  workspace links. One managed worker runs by default, with at most eight Lean
   threads; publication remains serialized. Before each build, a protected
   `lake exe cache get` preflight fills available binary artifacts. If that
   preflight is incomplete, builds for the same dependency key serialize while
@@ -96,6 +160,19 @@
   in their statements; keep application modules focused on assembly.
 - Use focused Mathlib or project-module imports; exact `import Mathlib` is
   forbidden in every new or modified module. Keep the import graph acyclic.
+- Follow import-what-you-use (IWYU): import the narrow owning modules for
+  directly used declarations, including required tactics, notation, instances,
+  and attributes. Avoid relying on an unrelated application module to bring
+  these into scope transitively. An import with no visibly named declaration
+  can still be required for elaboration.
+- Keep reusable definitions and general lemmas below their application and
+  theorem-assembly modules. Split a mixed module when identified consumers can
+  import only the reusable part.
+- Judge dependency cleanups by transitive import paths and the modules affected
+  by an edit, accounting for alternate paths. Removing an already-implied import
+  does not itself improve cache isolation. Distinguish graph reductions from
+  measured build-time/cache-hit gains, and use the existing server validation
+  gate to check consumers after import changes.
 - Split by mathematical responsibility, not an arbitrary line count. File size
   is a review signal; a long file is appropriate when it contains one cohesive
   complex theorem and its tightly coupled support.
@@ -121,3 +198,4 @@ Local cost telemetry is written as bounded JSON Lines to
 `~/.local/state/lean-agent-workspaces/metrics.jsonl`; it records durations,
 response sizes, queue polling, and cache/build events without proof text or
 workspace tokens.
+

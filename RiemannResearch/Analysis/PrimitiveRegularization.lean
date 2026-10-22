@@ -1,0 +1,409 @@
+/-
+Copyright (c) 2026 Christian Noack. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Christian Noack
+-/
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.InnerProductSpace.LaxMilgram
+import Mathlib.Topology.Algebra.Module.Basic
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FunProp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+
+/-!
+# Complete primitive-penalty regularization
+
+Source: user-provided Squarefree_Primitive_Energy_Regularization_2026-10-17,
+Sections 4--6. The standard quadratic method is also described in Albani,
+Elbau, de Hoop and Scherzer, https://arxiv.org/abs/1511.02950, introduction.
+The existence proof uses Mathlib's Lax--Milgram theorem. These references
+support the method; the exact signed identities are derived here.
+
+The concrete RH consumer is `RH.QPrimitiveEnergyClosure`. Both norm-square
+remainders and every signed cross term are retained. A positive penalty
+supplies existence and uniqueness without any arithmetic density assumption.
+-/
+
+noncomputable section
+namespace RiemannResearch.Analysis.PrimitiveRegularization
+variable {E Y : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+
+/-- Normality in the actual signed primitive and derivative forms. -/
+def IsNormal (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E) (e : Y)
+    (lam : ℝ) (u : E) : Prop :=
+  ∀ h ∈ S, inner ℝ (T u - e) (T h) + lam * inner ℝ u h = 0
+
+/-- Complete objective difference, including both norm-square remainders. -/
+theorem objective_completion (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam : ℝ) (u v : E) (hu : u ∈ S) (hv : v ∈ S)
+    (hn : IsNormal T S e lam u) :
+    ‖T v - e‖ ^ 2 + lam * ‖v‖ ^ 2 =
+      ‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2 +
+        ‖T (v-u)‖ ^ 2 + lam * ‖v-u‖ ^ 2 := by
+  have h := hn (v-u) (S.sub_mem hv hu)
+  have ht : T (v-u) = (T v-e) - (T u-e) := by rw [map_sub]; abel
+  rw [ht, inner_sub_right] at h
+  rw [inner_sub_right u v u, real_inner_self_eq_norm_sq,
+    real_inner_self_eq_norm_sq] at h
+  rw [ht, norm_sub_sq_real (T v-e) (T u-e), norm_sub_sq_real v u]
+  rw [real_inner_comm (T u-e) (T v-e), real_inner_comm u v]
+  nlinarith only [h]
+
+/-- Exact two-parameter primitive-energy identity. -/
+theorem energy_difference_exact (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam mu : ℝ) (u v : E) (hu : u ∈ S) (hv : v ∈ S)
+    (hnlam : IsNormal T S e lam u) (hnmu : IsNormal T S e mu v) :
+    (mu-lam) * (‖u‖ ^ 2 - ‖v‖ ^ 2) =
+      2 * ‖T (u-v)‖ ^ 2 + (lam+mu) * ‖u-v‖ ^ 2 := by
+  have hlam := objective_completion T S e lam u v hu hv hnlam
+  have hmu := objective_completion T S e mu v u hv hu hnmu
+  have he : ‖T (v-u)‖ ^ 2 = ‖T (u-v)‖ ^ 2 := by
+    rw [← neg_sub u v, map_neg, norm_neg]
+  have he' : ‖v-u‖ ^ 2 = ‖u-v‖ ^ 2 := by
+    rw [norm_sub_rev]
+  rw [he, he'] at hlam
+  nlinarith
+
+end RiemannResearch.Analysis.PrimitiveRegularization
+
+
+
+namespace RiemannResearch.Analysis.PrimitiveRegularization
+variable {E Y : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+
+/-- The normal equation gives a signed formula for the optimized value. -/
+theorem objective_at_normal (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam : ℝ) (u : E) (hu : u ∈ S)
+    (hn : IsNormal T S e lam u) :
+    ‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2 = ‖e‖ ^ 2 - inner ℝ e (T u) := by
+  have h := hn u hu
+  rw [inner_sub_left, real_inner_self_eq_norm_sq,
+    real_inner_self_eq_norm_sq] at h
+  rw [norm_sub_sq_real]
+  nlinarith [real_inner_comm (T u) e]
+
+/-- Changing the penalty retains the complete signed cross inner product. -/
+theorem objective_cross_difference (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam mu : ℝ) (u v : E) (hu : u ∈ S) (hv : v ∈ S)
+    (hnlam : IsNormal T S e lam u) (hnmu : IsNormal T S e mu v) :
+    (‖T v - e‖ ^ 2 + mu * ‖v‖ ^ 2) -
+      (‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2) =
+      (mu - lam) * inner ℝ u v := by
+  have h1 := hnlam v hv
+  have h2 := hnmu u hu
+  rw [inner_sub_left] at h1 h2
+  rw [objective_at_normal T S e mu v hv hnmu,
+    objective_at_normal T S e lam u hu hnlam]
+  rw [real_inner_comm (T u) (T v), real_inner_comm u v] at h2
+  nlinarith only [h1, h2]
+
+/-- The complete derivative-error difference. -/
+theorem derivative_error_difference_exact
+    (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam : ℝ) (u v : E) (hu : u ∈ S) (hv : v ∈ S)
+    (hn : IsNormal T S e lam u) :
+    ‖T v - e‖ ^ 2 - ‖T u - e‖ ^ 2 =
+      lam * (‖u‖ ^ 2 - ‖v‖ ^ 2) +
+        ‖T (v-u)‖ ^ 2 + lam * ‖v-u‖ ^ 2 := by
+  have h := objective_completion T S e lam u v hu hv hn
+  nlinarith
+
+/-- Primitive energy decreases when a positive penalty is increased. -/
+theorem energy_antitone (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam mu : ℝ) (u v : E) (hu : u ∈ S) (hv : v ∈ S)
+    (hlam : 0 ≤ lam) (hlt : lam < mu)
+    (hnlam : IsNormal T S e lam u) (hnmu : IsNormal T S e mu v) :
+    ‖v‖ ^ 2 ≤ ‖u‖ ^ 2 := by
+  have h := energy_difference_exact T S e lam mu u v hu hv hnlam hnmu
+  have hp := mul_nonneg (show 0 ≤ lam + mu by linarith) (sq_nonneg ‖u-v‖)
+  nlinarith [sq_nonneg ‖T (u-v)‖]
+
+/-- Derivative error increases when a positive penalty is increased. -/
+theorem derivative_error_monotone (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam mu : ℝ) (u v : E) (hu : u ∈ S) (hv : v ∈ S)
+    (hlam : 0 ≤ lam) (hlt : lam < mu)
+    (hnlam : IsNormal T S e lam u) (hnmu : IsNormal T S e mu v) :
+    ‖T u-e‖ ^ 2 ≤ ‖T v-e‖ ^ 2 := by
+  have he := energy_antitone T S e lam mu u v hu hv hlam hlt hnlam hnmu
+  have h := derivative_error_difference_exact T S e lam u v hu hv hnlam
+  have hp := mul_nonneg hlam (sub_nonneg.mpr he)
+  have hp' := mul_nonneg hlam (sq_nonneg ‖v-u‖)
+  nlinarith [sq_nonneg ‖T (v-u)‖]
+
+/-- A positive penalty makes a normal solution the unique minimizer. -/
+theorem normal_unique (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam : ℝ) (u v : E) (hu : u ∈ S) (hv : v ∈ S)
+    (hlam : 0 < lam) (hnu : IsNormal T S e lam u)
+    (hnv : IsNormal T S e lam v) : u = v := by
+  have h1 := objective_completion T S e lam u v hu hv hnu
+  have h2 := objective_completion T S e lam v u hv hu hnv
+  have hp := mul_nonneg hlam.le (sq_nonneg ‖u-v‖)
+  have hp' := mul_nonneg hlam.le (sq_nonneg ‖v-u‖)
+  have hz : ‖v-u‖ ^ 2 = 0 := by
+    nlinarith [sq_nonneg ‖T (v-u)‖, sq_nonneg ‖T (u-v)‖, sq_nonneg ‖v-u‖]
+  exact (sub_eq_zero.mp (norm_eq_zero.mp (sq_eq_zero_iff.mp hz))).symm
+
+/-- An exact target gives the three-term primitive/error energy identity. -/
+theorem exact_target_identity (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam : ℝ) (u x : E) (hu : u ∈ S) (hx : x ∈ S)
+    (htarget : T x = e) (hn : IsNormal T S e lam u) :
+    lam * ‖x‖ ^ 2 = lam * ‖u‖ ^ 2 +
+      2 * ‖T u-e‖ ^ 2 + lam * ‖x-u‖ ^ 2 := by
+  have h := objective_completion T S e lam u x hu hx hn
+  have he : ‖T (x-u)‖ ^ 2 = ‖T u-e‖ ^ 2 := by
+    rw [map_sub, htarget, norm_sub_rev]
+  rw [htarget, sub_self, norm_zero, zero_pow (by decide : 2 ≠ 0), zero_add, he] at h
+  linarith
+
+end RiemannResearch.Analysis.PrimitiveRegularization
+
+
+namespace RiemannResearch.Analysis.PrimitiveRegularization
+variable {E Y : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+  [CompleteSpace E] [CompleteSpace Y]
+
+/-- The coercive normal operator for a strictly positive primitive penalty. -/
+def penaltyOperator (T : E →L[ℝ] Y) (lam : ℝ) : E →L[ℝ] E :=
+  T.adjoint.comp T + lam • ContinuousLinearMap.id ℝ E
+
+def penaltyForm (T : E →L[ℝ] Y) (lam : ℝ) : E →L[ℝ] E →L[ℝ] ℝ :=
+  (innerSL ℝ).comp (penaltyOperator T lam)
+
+theorem penaltyForm_apply (T : E →L[ℝ] Y) (lam : ℝ) (u v : E) :
+    penaltyForm T lam u v = inner ℝ (T u) (T v) + lam * inner ℝ u v := by
+  change inner ℝ ((T.adjoint) (T u) + lam • u) v = _
+  rw [inner_add_left, real_inner_smul_left, ContinuousLinearMap.adjoint_inner_left]
+
+theorem penaltyForm_coercive (T : E →L[ℝ] Y) {lam : ℝ} (hlam : 0 < lam) :
+    IsCoercive (penaltyForm T lam) := by
+  refine ⟨lam, hlam, ?_⟩
+  intro u
+  rw [penaltyForm_apply, real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq]
+  nlinarith [sq_nonneg ‖T u‖]
+
+/-- Lax--Milgram supplies a normal solution without a range or density assumption. -/
+theorem exists_normal (T : E →L[ℝ] Y) (e : Y) {lam : ℝ} (hlam : 0 < lam) :
+    ∃ u : E, IsNormal T.toLinearMap ⊤ e lam u := by
+  let hB := penaltyForm_coercive T hlam
+  obtain ⟨u, hu⟩ := hB.continuousLinearEquivOfBilin.surjective (T.adjoint e)
+  refine ⟨u, ?_⟩
+  intro w _
+  have h := hB.continuousLinearEquivOfBilin_apply u w
+  rw [hu, ContinuousLinearMap.adjoint_inner_left, penaltyForm_apply] at h
+  change inner ℝ (T u - e) (T w) + lam * inner ℝ u w = 0
+  rw [inner_sub_left]
+  linarith
+
+theorem exists_unique_normal (T : E →L[ℝ] Y) (e : Y) {lam : ℝ} (hlam : 0 < lam) :
+    ∃! u : E, IsNormal T.toLinearMap ⊤ e lam u := by
+  obtain ⟨u, hu⟩ := exists_normal T e hlam
+  refine ⟨u, hu, ?_⟩
+  intro v hv
+  exact normal_unique T.toLinearMap ⊤ e lam v u (by simp) (by simp) hlam hv hu
+
+end RiemannResearch.Analysis.PrimitiveRegularization
+
+
+namespace RiemannResearch.Analysis.PrimitiveRegularization
+variable {E Y : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+
+/-- Every normal solution minimizes the complete penalized objective. -/
+theorem normal_minimizes (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam : ℝ) (u v : E) (hu : u ∈ S) (hv : v ∈ S)
+    (hlam : 0 ≤ lam) (hn : IsNormal T S e lam u) :
+    ‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2 ≤ ‖T v - e‖ ^ 2 + lam * ‖v‖ ^ 2 := by
+  have h := objective_completion T S e lam u v hu hv hn
+  have hp := mul_nonneg hlam (sq_nonneg ‖v-u‖)
+  nlinarith [sq_nonneg ‖T (v-u)‖]
+
+/-- Exact Galerkin Pythagoras in the complete penalty norm. -/
+theorem galerkin_identity (T : E →ₗ[ℝ] Y) (S R : Submodule ℝ E)
+    (hRS : R ≤ S) (e : Y) (lam : ℝ) (u v w : E)
+    (hu : u ∈ S) (hv : v ∈ R) (hw : w ∈ R)
+    (hnu : IsNormal T S e lam u) (hnv : IsNormal T R e lam v) :
+    ‖T (w-u)‖ ^ 2 + lam * ‖w-u‖ ^ 2 =
+      ‖T (v-u)‖ ^ 2 + lam * ‖v-u‖ ^ 2 +
+        ‖T (w-v)‖ ^ 2 + lam * ‖w-v‖ ^ 2 := by
+  have h1 := objective_completion T S e lam u w hu (hRS hw) hnu
+  have h2 := objective_completion T S e lam u v hu (hRS hv) hnu
+  have h3 := objective_completion T R e lam v w hv hw hnv
+  linarith
+
+variable [CompleteSpace E] [CompleteSpace Y]
+
+/-- A complete Hilbert domain and a positive penalty give a unique minimizer. -/
+theorem exists_unique_minimizer (T : E →L[ℝ] Y) (e : Y)
+    {lam : ℝ} (hlam : 0 < lam) :
+    ∃! u : E, ∀ v : E,
+      ‖T u-e‖ ^ 2 + lam * ‖u‖ ^ 2 ≤ ‖T v-e‖ ^ 2 + lam * ‖v‖ ^ 2 := by
+  obtain ⟨u, hu⟩ := exists_normal T e hlam
+  refine ⟨u, fun v => normal_minimizes T.toLinearMap ⊤ e lam u v
+    (by simp) (by simp) hlam.le hu, ?_⟩
+  intro v hv
+  have hcomp := objective_completion T.toLinearMap ⊤ e lam u v
+    (by simp) (by simp) hu
+  simp only [ContinuousLinearMap.coe_coe] at hcomp
+  have hmin := hv u
+  have hz : ‖v-u‖ ^ 2 = 0 := by
+    nlinarith [sq_nonneg ‖T (v-u)‖, sq_nonneg ‖v-u‖]
+  exact sub_eq_zero.mp (norm_eq_zero.mp (sq_eq_zero_iff.mp hz))
+
+end RiemannResearch.Analysis.PrimitiveRegularization
+
+namespace RiemannResearch.Analysis.PrimitiveRegularization
+variable {E Y : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+
+/-- The signed correlation with the unpenalized optimizer contains the entire
+penalized primitive energy and the derivative-displacement remainder. -/
+theorem zero_penalty_cross_identity (T : E →ₗ[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam : ℝ) (u v : E) (hu : u ∈ S) (hv : v ∈ S)
+    (hnu : IsNormal T S e 0 u) (hnv : IsNormal T S e lam v) :
+    lam * inner ℝ u v = lam * ‖v‖ ^ 2 + ‖T (v-u)‖ ^ 2 := by
+  have h1 := objective_completion T S e 0 u v hu hv hnu
+  have h2 := objective_cross_difference T S e 0 lam u v hu hv hnu hnv
+  simp only [zero_mul, add_zero, sub_zero] at h1 h2
+  nlinarith
+
+end RiemannResearch.Analysis.PrimitiveRegularization
+
+namespace RiemannResearch.Analysis.PrimitiveRegularization
+variable {E Y : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+
+
+/-- Density preserves any strict complete-objective upper bound. -/
+theorem exists_objective_lt_of_mem_closure (T : E →L[ℝ] Y) (S : Submodule ℝ E)
+    (e : Y) (lam : ℝ) (u : E) (hu : u ∈ S.topologicalClosure)
+    {bound : ℝ} (hbound : ‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2 < bound) :
+    ∃ v ∈ S, ‖T v - e‖ ^ 2 + lam * ‖v‖ ^ 2 < bound := by
+  have hcont : Continuous (fun v : E => ‖T v - e‖ ^ 2 + lam * ‖v‖ ^ 2) := by
+    fun_prop
+  have hopen : IsOpen {v : E | ‖T v - e‖ ^ 2 + lam * ‖v‖ ^ 2 < bound} :=
+    isOpen_lt hcont continuous_const
+  obtain ⟨v, hvobj, hvS⟩ := (mem_closure_iff.mp hu) _ hopen hbound
+  exact ⟨v, hvS, hvobj⟩
+
+/-- Exact signed line completion; no inverse matrix or discarded remainder. -/
+theorem ray_objective_identity (T : E →ₗ[ℝ] Y) (e : Y) (lam : ℝ) (v : E) (c : ℝ) :
+    (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) *
+      (‖T (c • v) - e‖ ^ 2 + lam * ‖c • v‖ ^ 2) =
+    (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) * ‖e‖ ^ 2 - (inner ℝ e (T v)) ^ 2 +
+      ((‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) * c - inner ℝ e (T v)) ^ 2 := by
+  rw [map_smul, norm_sub_sq_real]
+  simp only [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
+    real_inner_smul_left, real_inner_comm (T v) e]
+  ring
+
+/-- A finite signed correlation certificate supplies a scaled legal strict budget. -/
+theorem exists_strict_budget_of_ray_certificate (T : E →ₗ[ℝ] Y)
+    (S : Submodule ℝ E) (e : Y) (lam : ℝ) (v : E) (hv : v ∈ S)
+    (hq : 0 < ‖T v‖ ^ 2 + lam * ‖v‖ ^ 2)
+    (hcert : (‖e‖ ^ 2 - lam) * (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) <
+      (inner ℝ e (T v)) ^ 2) :
+    ∃ u ∈ S, ‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2 < lam := by
+  let c := inner ℝ e (T v) / (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2)
+  have hcancel : (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) * c - inner ℝ e (T v) = 0 := by
+    dsimp [c]
+    field_simp [ne_of_gt hq]
+    ring
+  have hi := ray_objective_identity T e lam v c
+  rw [hcancel, zero_pow (by decide : 2 ≠ 0), add_zero] at hi
+  refine ⟨c • v, S.smul_mem c hv, ?_⟩
+  have hprod : (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) *
+      (‖T (c • v) - e‖ ^ 2 + lam * ‖c • v‖ ^ 2) <
+      (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) * lam := by
+    nlinarith only [hi, hcert]
+  by_contra hnot
+  have hm := mul_le_mul_of_nonneg_left (le_of_not_gt hnot) hq.le
+  linarith only [hprod, hm]
+
+/-- Exact scalar completion for a unit exact target, including its strict margin. -/
+theorem scalar_target_completion (T : E →ₗ[ℝ] Y) (x : E)
+    (hx : ‖x‖ ^ 2 = 1) {lam : ℝ} (hlam : 0 < lam) (c : ℝ) :
+    ‖T (c • x) - T x‖ ^ 2 + lam * ‖c • x‖ ^ 2 =
+      (‖T x‖ ^ 2 + lam) * (c - ‖T x‖ ^ 2 / (‖T x‖ ^ 2 + lam)) ^ 2 +
+        ‖T x‖ ^ 2 * lam / (‖T x‖ ^ 2 + lam) := by
+  have hden : ‖T x‖ ^ 2 + lam ≠ 0 := ne_of_gt (by
+    linarith [sq_nonneg ‖T x‖])
+  have ht : T (c • x) - T x = (c - 1) • T x := by
+    simp only [map_smul, sub_smul, one_smul]
+  rw [ht, norm_smul, mul_pow, Real.norm_eq_abs, sq_abs,
+    norm_smul, mul_pow, Real.norm_eq_abs, sq_abs, hx, mul_one]
+  field_simp [hden]
+  ring
+
+/-- A unit target in the closure gives a finite algebraic trial below the unit budget. -/
+theorem exists_strict_budget_of_unit_target (T : E →L[ℝ] Y) (S : Submodule ℝ E)
+    (x : E) (hx : ‖x‖ ^ 2 = 1) (hmem : x ∈ S.topologicalClosure)
+    {lam : ℝ} (hlam : 0 < lam) :
+    ∃ u ∈ S, ‖T u - T x‖ ^ 2 + lam * ‖u‖ ^ 2 < lam := by
+  let c := ‖T x‖ ^ 2 / (‖T x‖ ^ 2 + lam)
+  have hden : 0 < ‖T x‖ ^ 2 + lam := by linarith [sq_nonneg ‖T x‖]
+  have hobj : ‖T (c • x) - T x‖ ^ 2 + lam * ‖c • x‖ ^ 2 < lam := by
+    have hh := scalar_target_completion T.toLinearMap x hx hlam c
+    simp only [ContinuousLinearMap.coe_coe] at hh
+    rw [hh]
+    simp only [c, sub_self, zero_pow (by decide : 2 ≠ 0),
+      mul_zero, zero_add]
+    apply (div_lt_iff₀ hden).mpr
+    nlinarith [sq_pos_of_pos hlam]
+  exact exists_objective_lt_of_mem_closure T S (T x) lam (c • x)
+    (S.topologicalClosure.smul_mem c hmem) hobj
+
+end RiemannResearch.Analysis.PrimitiveRegularization
+
+namespace RiemannResearch.Analysis.PrimitiveRegularization
+variable {E Y : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+
+/-- Exact affine correction identity, retaining the signed primitive cross term. -/
+theorem correction_objective_identity (T : E →ₗ[ℝ] Y) (e : Y)
+    (lam : ℝ) (u v : E) (t : ℝ) :
+    let q := ‖T v‖ ^ 2 + lam * ‖v‖ ^ 2
+    let b := inner ℝ (e - T u) (T v) - lam * inner ℝ u v
+    q * (‖T (u + t • v) - e‖ ^ 2 + lam * ‖u + t • v‖ ^ 2) =
+      q * (‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2) - b ^ 2 + (q * t - b) ^ 2 := by
+  dsimp only
+  have ht : T (u + t • v) - e = (T u - e) + t • T v := by
+    rw [map_add, map_smul]
+    abel
+  rw [ht, norm_add_sq_real, norm_add_sq_real]
+  simp only [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
+    real_inner_smul_right, inner_sub_left]
+  ring
+
+/-- A signed affine correction certificate gives an actual legal strict budget. -/
+theorem exists_strict_budget_of_correction_certificate (T : E →ₗ[ℝ] Y)
+    (S : Submodule ℝ E) (e : Y) (lam : ℝ) (u v : E)
+    (hu : u ∈ S) (hv : v ∈ S)
+    (hq : 0 < ‖T v‖ ^ 2 + lam * ‖v‖ ^ 2)
+    (hcert : (‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2 - lam) *
+      (‖T v‖ ^ 2 + lam * ‖v‖ ^ 2) <
+      (inner ℝ (e - T u) (T v) - lam * inner ℝ u v) ^ 2) :
+    ∃ w ∈ S, ‖T w - e‖ ^ 2 + lam * ‖w‖ ^ 2 < lam := by
+  let q := ‖T v‖ ^ 2 + lam * ‖v‖ ^ 2
+  let b := inner ℝ (e - T u) (T v) - lam * inner ℝ u v
+  have hc : q * (b / q) - b = 0 := by
+    field_simp [show q ≠ 0 from ne_of_gt hq]
+    ring
+  have hi := correction_objective_identity T e lam u v (b / q)
+  change q * (‖T (u + (b/q) • v) - e‖ ^ 2 + lam * ‖u + (b/q) • v‖ ^ 2) =
+    q * (‖T u - e‖ ^ 2 + lam * ‖u‖ ^ 2) - b ^ 2 + (q * (b/q) - b) ^ 2 at hi
+  rw [hc, zero_pow (by decide : 2 ≠ 0), add_zero] at hi
+  refine ⟨u + (b/q) • v, S.add_mem hu (S.smul_mem _ hv), ?_⟩
+  have hp : q * (‖T (u + (b/q) • v) - e‖ ^ 2 + lam * ‖u + (b/q) • v‖ ^ 2) <
+      q * lam := by
+    change (_ - lam) * q < b ^ 2 at hcert
+    nlinarith only [hi, hcert]
+  by_contra hn
+  have hm := mul_le_mul_of_nonneg_left (le_of_not_gt hn) hq.le
+  linarith only [hp, hm]
+end RiemannResearch.Analysis.PrimitiveRegularization

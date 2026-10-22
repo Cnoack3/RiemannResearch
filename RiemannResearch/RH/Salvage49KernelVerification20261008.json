@@ -1,0 +1,427 @@
+{
+  "verified_theorems": 73,
+  "salvaged_theorems": 49,
+  "all_source_statements_unchanged": true,
+  "lean_toolchain": "v4.33.0-rc2",
+  "checked_base_commit": "04db1cc3090d06e1abd30261b4a5f4d27df8e189",
+  "kernel_checks": [
+    {
+      "batch": "A",
+      "job_id": "job_wk41K91c4aQH2-EAPpt39Q8T4XEg3IW4",
+      "verified": true,
+      "exit_code": 0,
+      "code_sha256": "896cfa8e76eb956c930ddca896c6ccc2c5ff4f40fc46ee2f40a28a7c7934a10b",
+      "elapsed_seconds": 5.028,
+      "output_bytes": 4797,
+      "output_truncated": true,
+      "warning": false
+    },
+    {
+      "batch": "B",
+      "job_id": "job_C_INejVCm7_Dqt6daXQYLVzl9gQKWwgr",
+      "verified": true,
+      "exit_code": 0,
+      "code_sha256": "32d8aa76b7d0b84edffd5b1d11b04ac1ca0c89f6bdba3920a14603028146b7ec",
+      "elapsed_seconds": 5.035,
+      "output_bytes": 2506,
+      "output_truncated": false,
+      "warning": false
+    },
+    {
+      "batch": "C",
+      "job_id": "job_G85sDFx8acfOV0DwWvosDbvwmYZQ8n4L",
+      "verified": true,
+      "exit_code": 0,
+      "code_sha256": "2f630e04ff0a95ebc20d409c69818ec58136b7ac9b46c070715d2d4d2dae1015",
+      "elapsed_seconds": 4.738,
+      "output_bytes": 2249,
+      "output_truncated": false,
+      "warning": false
+    },
+    {
+      "batch": "D",
+      "job_id": "job_cBsr1B2TI7BHymD_4yeLT87DI4-2CDJt",
+      "verified": true,
+      "exit_code": 0,
+      "code_sha256": "4fa6911d1574610ed513f681f53771757d87d412df1d6442eeeab6629b79d6b6",
+      "elapsed_seconds": 4.961,
+      "output_bytes": 2003,
+      "output_truncated": false,
+      "warning": false
+    }
+  ],
+  "axiom_reports": {
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_primeLikelihood_indicator": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.bernoulliMass_mul_primeLikelihood": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_tensorFunction": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_one": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.productMass_sum_one": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.productMass_nonneg": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_finiteLikelihood": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_finiteLikelihood_sq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_finiteLikelihood_monomial": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.productMass_mul_finiteLikelihood": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_tilt": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_boolIndicator": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_add": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_sub": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_smul": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.tensorExpectation_const": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_finiteMonomial": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.finiteMonomial_mul": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_prime_finiteMonomial": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_prime_finiteMonomial_mul": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_finiteDerivativeAtom": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.finiteDerivativeGram": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_finiteDerivativeAtom_sq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.likelihood_orthogonal_finiteDerivativeAtom": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.PrimeSieveSecant.two_cutoff_secant_identity": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.PrimeSieveSecant.finite_secant_as_weighted_average": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.PrimeSieveSecant.prime_increment_normalization": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.PrimeSieveSecant.affine_mean_deviation_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.PrimeSieveSecant.convex_mean_deviation_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.PrimeSieveSecant.signed_variation_necessary": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.reciprocalSquareWeight_nonneg": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.positiveWeight_le_reciprocalSquareWeight": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.reciprocalSquareWeight_le_twice_positiveWeight": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.summable_reciprocalSquareEnergy_iff": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.summable_normalizedEnergy_iff_reciprocalSquareEnergy": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.summable_normalizedEnergy_iff_pareto": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.canonical_damped_normalizedEnergy_of_half_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.centered_damped_normalizedEnergy_iff_of_half_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.riemannHypothesis_of_centered_damped_normalizedEnergy_sequence": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.riemannHypothesis_of_canonical_damped_normalizedEnergy_sequence": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.riemannHypothesis_of_arbitrarily_small_centered_damped_normalizedEnergy": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ZetaTwo.right_half_zero_eventually_not_centered_damped_normalizedEnergy": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.CRTBlock.weighted_periodMean_square_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.CRTBlock.inverseSquare_periodMean_lower": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.CRTBlock.periodMean_one_sub": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.CRTBlock.normalizedResidueSynthesis_inverseSquare_error_lower": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ExactHeadMeanGap.tailOne_norm_sq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ExactHeadMeanGap.error_coordinate_eq_zero": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ExactHeadMeanGap.error_sq_ge_mean_gap": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ExactHeadMeanGap.normalizedEnergy_ge_pareto": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.ExactHeadMeanGap.normalizedError_ge_mean_gap": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_zero": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.derivativeSievePrimitive_rough_exact": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_rough_exact": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_mem_legal": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_head": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_intermediate_residual": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_eventually_eq_one": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSieveHilbert_sequence": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSieveHilbert_head": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSieveHilbert_normalized_error_lower": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.derivativeSieveHilbert_inner_one": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.derivativeSievePrimitive_paretoMean": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSieveHilbert_inner_one": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_paretoMean": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.Pareto.twoCutoffSievePrimitive_paretoMean_secant": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.bernoulliExpectation_eq_sum": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.bernoulliExpectation_one": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.bernoulliMass_nonneg": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.primeParameter_mem_unitInterval": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.primeLikelihood_factor": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_primeLikelihood": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RiemannResearch.RH.FinitePrimeLikelihood.expect_primeLikelihood_sq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "axiom_union": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "native_import_validation": "Performed by the final publication checkpoint",
+  "publication": null
+}

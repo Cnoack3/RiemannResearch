@@ -1,2 +1,6 @@
 /.lake
 __pycache__/
+/bazel-*
+/.bazelrc.local
+/MODULE.bazel.lock
+

@@ -1,0 +1,23 @@
+load("//bazel:lean_modules.bzl", "lean_project")
+
+exports_files([
+    "MODULE.bazel",
+    "lake-manifest.json",
+    "lakefile.toml",
+    "lean-toolchain",
+])
+
+# Recursive globs stop at nested BUILD files. Unpackaged sources stay covered.
+lean_project()
+
+alias(
+    name = "basic",
+    actual = "//RiemannResearch:Basic",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "smoke",
+    actual = ":basic",
+    visibility = ["//visibility:public"],
+)

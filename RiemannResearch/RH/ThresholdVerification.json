@@ -1,0 +1,49 @@
+{
+  "source_paper_sha256": "76ccf4ff222b633e41779a8a80052743549b80fd8a2206ee0260222f8de7e21a",
+  "scope": "Partial formalization; see ThresholdAffineCoverage.md for unresolved substantive obligations.",
+  "verification_kind": "Combined Lean proof check with exact project dependency bodies inlined; checkpoint separately validates real imports.",
+  "job_id": "job_02lJqvW03kvAk9rjjNhbJf3lzssIVPJW",
+  "verified": true,
+  "code_sha256": "96fa197992f9a1cc37a242562a13ea66751ee822d497709a0c0077fad1747e9c",
+  "exit_code": 0,
+  "axiom_audit_output": "'StarRing.compression_square_defect_finite_gram' depends on axioms: [propext, Classical.choice, Quot.sound]\n'RiemannResearch.Analysis.PhaseWitness.error_eq_floor_iff' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Real.unit_rankOne_difference_sum_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'RiemannResearch.LinearAlgebra.SpectralCutoff.certified_half_cutoff_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'RiemannResearch.LinearAlgebra.SpectralCutoff.diagonal_half_cutoff' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'RiemannResearch.LinearAlgebra.SpectralCutoff.coarse_residual_nonincreasing_step' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'RiemannResearch.RH.Pareto.affineBranchCoefficient_uniform_defect' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'RiemannResearch.RH.Pareto.affineProjection_block_discrepancy' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'RiemannResearch.RH.Pareto.hilbertDilation_mean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'RiemannResearch.RH.Pareto.hilbertLegalClosure_power_list' depends on axioms: [propext, Classical.choice, Quot.sound]\n'RiemannResearch.RH.Pareto.hilbertDilationAdjoint_one' depends on axioms: [propext, Classical.choice, Quot.sound]\n'RiemannResearch.RH.Pareto.hilbertSequence_range' depends on axioms: [propext, Classical.choice, Quot.sound]\n'RiemannResearch.RH.Pareto.legalSeedSpan_error_summable' depends on axioms: [propext, Classical.choice, Quot.sound]\n'RiemannResearch.RH.TwoSeedThreshold.phaseFloor_lt_one' depends on axioms: [propext, Classical.choice, Quot.sound]\n'RiemannResearch.RH.TwoSeedThreshold.phase_sum_lower_telescoping' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'RiemannResearch.RH.TwoSeedThreshold.universalPhaseConstant_le_twelfth' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'RiemannResearch.RH.TwoSeedThreshold.universalPhaseConstant_rational_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'RiemannResearch.RH.Pareto.legalSeedSpan_prime_pair' depends on axioms: [propext, Classical.choice, Quot.sound]\n'RiemannResearch.RH.Pareto.legalSeedSpan_list_gcd_one' depends on axioms: [propext, Classical.choice, Quot.sound]\n'RiemannResearch.RH.Pareto.progressionWeight_refinement_tower' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'RiemannResearch.LinearAlgebra.WeightedFiniteQuotient.error_decomposition' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'RiemannResearch.LinearAlgebra.WeightedFiniteQuotient.defect_finrank' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+  "module_sha256": {
+    "RiemannResearch/LinearAlgebra/CompressionProductDefect.lean": "d7f9ef929c6147c338c94249ae8f4dd76beb467e8ee0e4afdf40916c09f56050",
+    "RiemannResearch/Analysis/PhaseWitnessGeometry.lean": "d358b7b1e26190e0653224189dc67bd818c0dcab36648ef320a56ef7b049488b",
+    "RiemannResearch/LinearAlgebra/RankOneProjectionDistance.lean": "e371bdfc82c7f9db5b64978883f871c19e85044edbd9837de1922081b5674a3d",
+    "RiemannResearch/LinearAlgebra/SpectralCutoffRepair.lean": "bf69ce2cb3310539febba9a35c02bd701fafc629c9c6c9df5f81dbea3a0fda1b",
+    "RiemannResearch/LinearAlgebra/SpectralDiagonalRealization.lean": "d2a0193665bc030a6199a80b3d2985d42379eabe40d060bada6bb7d30b740099",
+    "RiemannResearch/LinearAlgebra/SpectralRepeatedFit.lean": "80e2381a035cae94682b5cf03b078beff272d7e9aa9e46bd05f2ca1243186202",
+    "RiemannResearch/RH/ThresholdAffineBranches.lean": "f1ef4cdcec3be315be69e8678b3a4bf5b6b1b93d83d0e98b749ba51d3f417c2a",
+    "RiemannResearch/RH/ThresholdAffineProjectionBlocks.lean": "870df8f418162dd758089f5bfc55b2737da8b17a04945f79c79d075e8d325a31",
+    "RiemannResearch/RH/ThresholdHilbertDilation.lean": "57407873a74699e755ceb2f739add1943ed5b052228c33f13e212bfca0569261",
+    "RiemannResearch/RH/ThresholdHilbertLegal.lean": "8b4ebbee3613b420cc7c7626839896058bbf3b9a01a81c3e4a6d0c2d48383020",
+    "RiemannResearch/RH/ThresholdHilbertMean.lean": "b075aedef50870d2d5b745d046644e9a33d5663b4b3dea9983e299458eb1ddd5",
+    "RiemannResearch/RH/ThresholdHilbertSpace.lean": "0ac8de4e04068058eb04f0a0beb6ad048944cab383e6086e5f694e0dd494ec74",
+    "RiemannResearch/RH/ThresholdLegalIntegrability.lean": "24af06ae601a5eb64d1a360c97011eb2cd241385b2f1c14f0d54d9c18a12960a",
+    "RiemannResearch/RH/ThresholdPhaseConstant.lean": "99f0f5406aaefbfc20586e1def06b58e7b3301b655c65ccb216edc2ee3be5449",
+    "RiemannResearch/RH/ThresholdPhaseLowerBound.lean": "41315ff99a5ff720d545d879fec0120b40016e186dcc72de6446f7759bdcde61",
+    "RiemannResearch/RH/ThresholdPhaseSharpBound.lean": "bc13c36ec361af514eacadb9d1d2a0da4838006eb5da77f7b9afe536aa5b9c20",
+    "RiemannResearch/RH/ThresholdPhaseTail.lean": "f7e502b9ba48ceb8c22d6f2407229062dc6c6e9eced52731b91ac6a82686c28d",
+    "RiemannResearch/RH/ThresholdPrimePackets.lean": "ed4804e3c816688ceef2e1d9078bc754ac68a2ecdc352c70ac53d822f9d65186",
+    "RiemannResearch/RH/ThresholdSeedEuclidean.lean": "fcf553f0f6c6662a6e07dc7d6e142c174cfe7713ae5c1e99cace325b0f4c9fbc",
+    "RiemannResearch/RH/ThresholdWeightedCRT.lean": "62624c314bc2aed8a6a2af8f833c9df120f48374e25360d5057f757a9aee75e0",
+    "RiemannResearch/LinearAlgebra/WeightedFiniteQuotient.lean": "f6a88c0f9c4e3c3081e4b6969227db64bacadef946872509514794f71217b9ad",
+    "RiemannResearch/LinearAlgebra/WeightedQuotientDefectRank.lean": "fac574ca1f7380d2f763ffd5cf8cec81ddd775d4f5b665456a6169c3f21788cb"
+  },
+  "import_isolation_repair": {
+    "module": "RiemannResearch/LinearAlgebra/WeightedFiniteQuotient.lean",
+    "change": "Explicit Mathlib.Algebra.BigOperators.Field import for Finset.sum_div; all declaration statements and proof bodies unchanged.",
+    "targeted_check_job": "job_s7iYoMc9FtWsJARujzKnYbaNliOswT2W",
+    "targeted_check_verified": true,
+    "targeted_check_exit_code": 0,
+    "acceptance": "Targeted check receipt and final publication checkpoint govern saved-file acceptance."
+  },
+  "rank_import_isolation_repair": {
+    "module": "RiemannResearch/LinearAlgebra/WeightedQuotientDefectRank.lean",
+    "change": "Explicit Mathlib.LinearAlgebra.FiniteDimensional.Lemmas import for rank-nullity; all declaration statements and proof bodies unchanged.",
+    "targeted_check_job": "job_sRmLQannQrp8dLFrcrwarBEgV5UcYk4R",
+    "targeted_check_verified": true,
+    "targeted_check_exit_code": 0
+  }
+}

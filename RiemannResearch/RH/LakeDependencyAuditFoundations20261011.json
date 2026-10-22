@@ -1,0 +1,5488 @@
+{
+  "base_commit": "18e90ef30ba6d699a6033623d564a110e87fcf3f",
+  "project_modules_before": 2510,
+  "project_modules_after": 2518,
+  "local_import_edges_before": 7015,
+  "local_import_edges_after": 7072,
+  "reachable_pairs_before": 102993,
+  "reachable_pairs_after": 87397,
+  "modules_with_smaller_closure": 1038,
+  "cycles": 0,
+  "missing_project_imports": 0,
+  "aggregate_exports_all_children": true,
+  "changed_closures": {
+    "RiemannResearch": {
+      "before": 2509,
+      "after": 2517
+    },
+    "RiemannResearch.Analysis.ActualPrimeTorusFMZContinuous": {
+      "before": 115,
+      "after": 108
+    },
+    "RiemannResearch.Analysis.ActualZeroDensityLogExcess": {
+      "before": 47,
+      "after": 28
+    },
+    "RiemannResearch.Analysis.ActualZeroLogarithmicEntryBound": {
+      "before": 87,
+      "after": 79
+    },
+    "RiemannResearch.Analysis.ActualZeroHeightTransfer": {
+      "before": 42,
+      "after": 23
+    },
+    "RiemannResearch.Analysis.ActualZeroCollisionMultiplicity": {
+      "before": 44,
+      "after": 25
+    },
+    "RiemannResearch.Analysis.ActualMollifierDensityTransfer": {
+      "before": 183,
+      "after": 182
+    },
+    "RiemannResearch.Analysis.ConditionalMellinFunctional": {
+      "before": 25,
+      "after": 24
+    },
+    "RiemannResearch.Analysis.ActualAnnularContinuity": {
+      "before": 26,
+      "after": 19
+    },
+    "RiemannResearch.Analysis.ActualPrimePowerWeightedRows": {
+      "before": 99,
+      "after": 91
+    },
+    "RiemannResearch.Analysis.ActualHyperbolicGramLowerBounds": {
+      "before": 110,
+      "after": 103
+    },
+    "RiemannResearch.Analysis.ActualZeroPhaseOperators": {
+      "before": 47,
+      "after": 28
+    },
+    "RiemannResearch.Analysis.ActualZeroHorizontalExpansion": {
+      "before": 42,
+      "after": 23
+    },
+    "RiemannResearch.Analysis.ActualZeroDensityTransfer": {
+      "before": 44,
+      "after": 25
+    },
+    "RiemannResearch.Analysis.ActualZeroHorizontalDefect": {
+      "before": 46,
+      "after": 27
+    },
+    "RiemannResearch.Analysis.ActualZeroCollisionCertificate": {
+      "before": 42,
+      "after": 23
+    },
+    "RiemannResearch.Analysis.SquarePartitionLocalization": {
+      "before": 3,
+      "after": 0
+    },
+    "RiemannResearch.Analysis.ActualLandauLeftLine": {
+      "before": 72,
+      "after": 67
+    },
+    "RiemannResearch.Analysis.ActualMollifierSignedBoundaryBudget": {
+      "before": 194,
+      "after": 193
+    },
+    "RiemannResearch.Analysis.PrimeTorusFourierInversion": {
+      "before": 48,
+      "after": 29
+    },
+    "RiemannResearch.Analysis.ActualMollifierRightBoundary": {
+      "before": 46,
+      "after": 27
+    },
+    "RiemannResearch.Analysis.ActualLogarithmicPairSampling": {
+      "before": 96,
+      "after": 88
+    },
+    "RiemannResearch.Analysis.MellinNormalizedResidue": {
+      "before": 32,
+      "after": 31
+    },
+    "RiemannResearch.Analysis.ActualZeroPhaseMoments": {
+      "before": 43,
+      "after": 24
+    },
+    "RiemannResearch.Analysis.ActualMobiusZeroDetector": {
+      "before": 42,
+      "after": 23
+    },
+    "RiemannResearch.Analysis.ActualRationalFMZDomination": {
+      "before": 100,
+      "after": 93
+    },
+    "RiemannResearch.Analysis.CesaroFiniteCalculus": {
+      "before": 4,
+      "after": 0
+    },
+    "RiemannResearch.Analysis.ActualZeroTailReflection": {
+      "before": 43,
+      "after": 24
+    },
+    "RiemannResearch.Analysis.ActualZeroNonlinearDensityTransfer": {
+      "before": 55,
+      "after": 36
+    },
+    "RiemannResearch.Analysis.ActualZeroPhaseBootstrap": {
+      "before": 48,
+      "after": 29
+    },
+    "RiemannResearch.Analysis.ActualRationalFMZLimits": {
+      "before": 98,
+      "after": 91
+    },
+    "RiemannResearch.Analysis.WeightedMellinPoleObstruction": {
+      "before": 25,
+      "after": 24
+    },
+    "RiemannResearch.Analysis.ActualMollifierRectangleContour": {
+      "before": 50,
+      "after": 31
+    },
+    "RiemannResearch.Analysis.PrimeTorusFourierSeries": {
+      "before": 47,
+      "after": 28
+    },
+    "RiemannResearch.Analysis.ActualZeroHorizontalEnergy": {
+      "before": 39,
+      "after": 25
+    },
+    "RiemannResearch.Analysis.ActualLandauOperatorResidual": {
+      "before": 104,
+      "after": 97
+    },
+    "RiemannResearch.Analysis.CesaroHilbertAdjoint": {
+      "before": 16,
+      "after": 14
+    },
+    "RiemannResearch.Analysis.ActualAnnularTruncationEnvelope": {
+      "before": 26,
+      "after": 19
+    },
+    "RiemannResearch.Analysis.ActualHyperbolicLogRemainder": {
+      "before": 68,
+      "after": 58
+    },
+    "RiemannResearch.Analysis.ActualPrimeTorusFMZ": {
+      "before": 106,
+      "after": 99
+    },
+    "RiemannResearch.Analysis.ActualZeroFMZComparison": {
+      "before": 45,
+      "after": 26
+    },
+    "RiemannResearch.Analysis.ActualZeroSelbergDensity": {
+      "before": 72,
+      "after": 62
+    },
+    "RiemannResearch.Analysis.ResidualZeroSensors": {
+      "before": 67,
+      "after": 48
+    },
+    "RiemannResearch.Analysis.CesaroDenseRange": {
+      "before": 12,
+      "after": 10
+    },
+    "RiemannResearch.Analysis.ActualZeroParetoCoshBridge": {
+      "before": 184,
+      "after": 130
+    },
+    "RiemannResearch.Analysis.ActualZeroCountAsymptotics": {
+      "before": 65,
+      "after": 55
+    },
+    "RiemannResearch.Analysis.LandauHilbertSchmidtResidual": {
+      "before": 112,
+      "after": 105
+    },
+    "RiemannResearch.Analysis.ActualZeroCountUpper": {
+      "before": 42,
+      "after": 23
+    },
+    "RiemannResearch.Analysis.ActualZeroTailDensityTransfer": {
+      "before": 43,
+      "after": 24
+    },
+    "RiemannResearch.Analysis.MellinStepSeries": {
+      "before": 16,
+      "after": 12
+    },
+    "RiemannResearch.Analysis.ActualAnnularTruncationMembership": {
+      "before": 25,
+      "after": 18
+    },
+    "RiemannResearch.Analysis.FinitePrimeModeCoefficients": {
+      "before": 101,
+      "after": 94
+    },
+    "RiemannResearch.Analysis.ActualZeroBalancedTuplePhase": {
+      "before": 43,
+      "after": 24
+    },
+    "RiemannResearch.Analysis.MellinDifferenceBounds": {
+      "before": 5,
+      "after": 1
+    },
+    "RiemannResearch.Analysis.ActualZeroLogDiagonal": {
+      "before": 45,
+      "after": 26
+    },
+    "RiemannResearch.Analysis.ActualOrdinateCollisionCertificates": {
+      "before": 42,
+      "after": 23
+    },
+    "RiemannResearch.Analysis.ActualZeroDensityWindow": {
+      "before": 44,
+      "after": 25
+    },
+    "RiemannResearch.Analysis.ActualDirichletPolynomialGram": {
+      "before": 48,
+      "after": 29
+    },
+    "RiemannResearch.Analysis.ActualZeroTailLayerCake": {
+      "before": 42,
+      "after": 23
+    },
+    "RiemannResearch.Analysis.ActualZeroTriangularIntegral": {
+      "before": 44,
+      "after": 25
+    },
+    "RiemannResearch.Analysis.CesaroPulseObstruction": {
+      "before": 22,
+      "after": 10
+    },
+    "RiemannResearch.Analysis.ActualZeroWindowVariance": {
+      "before": 42,
+      "after": 23
+    },
+    "RiemannResearch.Analysis.ActualZetaGoodLandauHorizontals": {
+      "before": 65,
+      "after": 60
+    },
+    "RiemannResearch.Analysis.ActualZeroCriticalLineTailFraction": {
+      "before": 134,
+      "after": 133
+    },
+    "RiemannResearch.Analysis.ActualAnalyticPolynomialControl": {
+      "before": 53,
+      "after": 34
+    },
+    "RiemannResearch.Analysis.ActualOrdinateSpectralKernel": {
+      "before": 44,
+      "after": 25
+    },
+    "RiemannResearch.Analysis.CesaroDualTail": {
+      "before": 20,
+      "after": 19
+    },
+    "RiemannResearch.Analysis.ActualZeroOrdinate": {
+      "before": 40,
+      "after": 21
+    },
+    "RiemannResearch.Analysis.CesaroWeightedContraction": {
+      "before": 11,
+      "after": 9
+    },
+    "RiemannResearch.Analysis.ActualZeroCoshMass": {
+      "before": 44,
+      "after": 30
+    },
+    "RiemannResearch.Analysis.ActualZeroGaussianLaplace": {
+      "before": 41,
+      "after": 27
+    },
+    "RiemannResearch.Analysis.WeightedMellinDerivativeTopology": {
+      "before": 25,
+      "after": 18
+    },
+    "RiemannResearch.Analysis.ActualPhaseGramExpansion": {
+      "before": 105,
+      "after": 98
+    },
+    "RiemannResearch.Analysis.ActualZeroReciprocalConstant": {
+      "before": 221,
+      "after": 178
+    },
+    "RiemannResearch.Analysis.ActualPrimeTorusFMZSeries": {
+      "before": 112,
+      "after": 105
+    },
+    "RiemannResearch.Analysis.ActualMollifierBoundaryAvoidance": {
+      "before": 55,
+      "after": 36
+    },
+    "RiemannResearch.Analysis.MellinCesaroHilbert": {
+      "before": 20,
+      "after": 19
+    },
+    "RiemannResearch.Analysis.ActualZeroBadPhaseTail": {
+      "before": 48,
+      "after": 29
+    },
+    "RiemannResearch.Analysis.ActualZeroLandauContour": {
+      "before": 42,
+      "after": 23
+    },
+    "RiemannResearch.Analysis.CesaroKernelOperator": {
+      "before": 17,
+      "after": 15
+    },
+    "RiemannResearch.Analysis.ActualHorizontalEnergyKernel": {
+      "before": 46,
+      "after": 32
+    },
+    "RiemannResearch.Analysis.ActualPrimeTorusFMZPoisson": {
+      "before": 108,
+      "after": 101
+    },
+    "RiemannResearch.Analysis.ActualUniformRationalLandau": {
+      "before": 82,
+      "after": 74
+    },
+    "RiemannResearch.Analysis.ActualLogarithmicCovarianceAssembly": {
+      "before": 95,
+      "after": 87
+    },
+    "RiemannResearch.Analysis.ActualHyperbolicHarmonicTail": {
+      "before": 171,
+      "after": 170
+    },
+    "RiemannResearch.Analysis.ActualZeroSecondEnergy": {
+      "before": 40,
+      "after": 26
+    },
+    "RiemannResearch.Analysis.ActualLogarithmicPairCovariance": {
+      "before": 101,
+      "after": 93
+    },
+    "RiemannResearch.Analysis.PrimeTorusFourierDecay": {
+      "before": 113,
+      "after": 106
+    },
+    "RiemannResearch.Analysis.ActualAnnularLatticeWeighted": {
+      "before": 26,
+      "after": 19
+    },
+    "RiemannResearch.Analysis.MellinCesaroSummability": {
+      "before": 19,
+      "after": 18
+    },
+    "RiemannResearch.Analysis.ActualConsecutiveGapWindows": {
+      "before": 44,
+      "after": 25
+    },
+    "RiemannResearch.Analysis.ActualZeroDensityCutoff": {
+      "before": 70,
+      "after": 60
+    },
+    "RiemannResearch.Analysis.ActualZeroBadTailDensity": {
+      "before": 52,
+      "after": 33
+    },
+    "RiemannResearch.Analysis.ActualConsecutivePhase": {
+      "before": 103,
+      "after": 96
+    },
+    "RiemannResearch.Analysis.ActualHyperbolicTailFrames": {
+      "before": 113,
+      "after": 106
+    },
+    "RiemannResearch.Analysis.ActualHyperbolicShrinkingTail": {
+      "before": 178,
+      "after": 177
+    },
+    "RiemannResearch.Analysis.ActualConsecutiveOrdinates": {
+      "before": 41,
+      "after": 22
+    },
+    "RiemannResearch.Analysis.WeightedMellinDerivativeCauchy": {
+      "before": 24,
+      "after": 17
+    },
+    "RiemannResearch.Analysis.WeightedMellinTopologyTargets": {
+      "before": 23,
+      "after": 16
+    },
+    "RiemannResearch.Analysis.ActualHyperbolicDensityBudget": {
+      "before": 173,
+      "after": 172
+    },
+    "RiemannResearch.RH.ActualRieszTwoMellin": {
+      "before": 20,
+      "after": 14
+    },
+    "RiemannResearch.RH.CrossResonanceCovarianceBounds": {
+      "before": 34,
+      "after": 15
+    },
+    "RiemannResearch.RH.ParetoOddMomentHeadNormalization": {
+      "before": 113,
+      "after": 88
+    },
+    "RiemannResearch.RH.MellinFrequencyRegularization": {
+      "before": 133,
+      "after": 66
+    },
+    "RiemannResearch.RH.PolynomialSplineRH": {
+      "before": 138,
+      "after": 122
+    },
+    "RiemannResearch.RH.ParetoLegalCompleteness": {
+      "before": 49,
+      "after": 44
+    },
+    "RiemannResearch.RH.MultiPrimeContrastObstruction": {
+      "before": 72,
+      "after": 63
+    },
+    "RiemannResearch.RH.CommonScaleRepairObstruction": {
+      "before": 20,
+      "after": 16
+    },
+    "RiemannResearch.RH.MellinFrequencyScalingTargets": {
+      "before": 132,
+      "after": 89
+    },
+    "RiemannResearch.RH.OddCarryArithmetic": {
+      "before": 53,
+      "after": 43
+    },
+    "RiemannResearch.RH.ParetoTailAverages": {
+      "before": 19,
+      "after": 15
+    },
+    "RiemannResearch.RH.MultiRangeGainBudget": {
+      "before": 90,
+      "after": 85
+    },
+    "RiemannResearch.RH.ThresholdJointAdjointRigidity": {
+      "before": 34,
+      "after": 32
+    },
+    "RiemannResearch.RH.ActualZeroSpectralWindows": {
+      "before": 47,
+      "after": 28
+    },
+    "RiemannResearch.RH.RHFalseScreenedSurvivorRigidity": {
+      "before": 179,
+      "after": 151
+    },
+    "RiemannResearch.RH.CompactFrequencyRigidity": {
+      "before": 41,
+      "after": 40
+    },
+    "RiemannResearch.RH.AutocorrelationHalfMass": {
+      "before": 23,
+      "after": 20
+    },
+    "RiemannResearch.RH.ZetaTwoReciprocalBound": {
+      "before": 87,
+      "after": 77
+    },
+    "RiemannResearch.RH.PhysicalScreenedSource": {
+      "before": 184,
+      "after": 146
+    },
+    "RiemannResearch.RH.ReciprocalChargeDilationKernelLimit": {
+      "before": 58,
+      "after": 32
+    },
+    "RiemannResearch.RH.NaturalMobiusCenteredPrimitiveTests": {
+      "before": 148,
+      "after": 137
+    },
+    "RiemannResearch.RH.ParetoShapeThreshold": {
+      "before": 14,
+      "after": 10
+    },
+    "RiemannResearch.RH.ResidualTailPNT": {
+      "before": 99,
+      "after": 86
+    },
+    "RiemannResearch.RH.PhysicalPacketCore": {
+      "before": 127,
+      "after": 92
+    },
+    "RiemannResearch.RH.ParetoTrialTailConditions": {
+      "before": 126,
+      "after": 88
+    },
+    "RiemannResearch.RH.ProjectedDualSchurMass": {
+      "before": 219,
+      "after": 177
+    },
+    "RiemannResearch.RH.ParetoWaveletTransform": {
+      "before": 11,
+      "after": 12
+    },
+    "RiemannResearch.RH.OptimizedCorrectionNormAsymptotic": {
+      "before": 27,
+      "after": 25
+    },
+    "RiemannResearch.RH.IntegerDPPConditionalLifts": {
+      "before": 121,
+      "after": 83
+    },
+    "RiemannResearch.RH.BalancedSpineSeries": {
+      "before": 30,
+      "after": 26
+    },
+    "RiemannResearch.RH.MultiRangeRationalCertificateLimit": {
+      "before": 93,
+      "after": 88
+    },
+    "RiemannResearch.RH.IntegerDPPMaximum": {
+      "before": 121,
+      "after": 82
+    },
+    "RiemannResearch.RH.DyadicResidueFourierBounds": {
+      "before": 103,
+      "after": 102
+    },
+    "RiemannResearch.RH.ParetoGibbsTailMatrix": {
+      "before": 15,
+      "after": 17
+    },
+    "RiemannResearch.RH.CRTPolygammaSigns": {
+      "before": 18,
+      "after": 16
+    },
+    "RiemannResearch.RH.ParetoInverseGramDual": {
+      "before": 76,
+      "after": 49
+    },
+    "RiemannResearch.RH.TwoThreeChordObservability": {
+      "before": 59,
+      "after": 57
+    },
+    "RiemannResearch.RH.SquarefreeStageExhaustion": {
+      "before": 140,
+      "after": 103
+    },
+    "RiemannResearch.RH.ParetoPointClosure": {
+      "before": 38,
+      "after": 33
+    },
+    "RiemannResearch.RH.ParetoBesselClusters": {
+      "before": 21,
+      "after": 20
+    },
+    "RiemannResearch.RH.ZetaTwoOptimizerStage": {
+      "before": 83,
+      "after": 73
+    },
+    "RiemannResearch.RH.PhysicalCompensatedSource": {
+      "before": 233,
+      "after": 186
+    },
+    "RiemannResearch.RH.DyadicArithmeticBoundaryBlocks": {
+      "before": 67,
+      "after": 66
+    },
+    "RiemannResearch.RH.FixedZetaDetectorCriterion": {
+      "before": 23,
+      "after": 22
+    },
+    "RiemannResearch.RH.CriticalMellinCellAsymptotics": {
+      "before": 10,
+      "after": 6
+    },
+    "RiemannResearch.RH.MultiRangePrimorialCoordinates": {
+      "before": 94,
+      "after": 89
+    },
+    "RiemannResearch.RH.MeanOneRepair": {
+      "before": 63,
+      "after": 54
+    },
+    "RiemannResearch.RH.ParetoMomentRepair": {
+      "before": 43,
+      "after": 42
+    },
+    "RiemannResearch.RH.CanonicalMobiusTriangular": {
+      "before": 76,
+      "after": 63
+    },
+    "RiemannResearch.RH.DyadicRegularizedBoundaryCoefficients": {
+      "before": 66,
+      "after": 65
+    },
+    "RiemannResearch.RH.ParetoBeurlingMellinObstruction": {
+      "before": 37,
+      "after": 36
+    },
+    "RiemannResearch.RH.ParetoFirstSiteAdjacentContrasts": {
+      "before": 156,
+      "after": 112
+    },
+    "RiemannResearch.RH.GeometricDifferentialProofs": {
+      "before": 4,
+      "after": 5
+    },
+    "RiemannResearch.RH.RandomizedCesaroCorrection": {
+      "before": 14,
+      "after": 12
+    },
+    "RiemannResearch.RH.RawMobiusSignedGramEnergy": {
+      "before": 237,
+      "after": 203
+    },
+    "RiemannResearch.RH.CompensatedTwoCoefficientCriterion": {
+      "before": 122,
+      "after": 84
+    },
+    "RiemannResearch.RH.ProjectedDualMassObstructionUnconditional": {
+      "before": 344,
+      "after": 309
+    },
+    "RiemannResearch.RH.PrimePowerRamanujanSchur": {
+      "before": 31,
+      "after": 22
+    },
+    "RiemannResearch.RH.PrimeCoefficientStability": {
+      "before": 74,
+      "after": 65
+    },
+    "RiemannResearch.RH.ParetoPrimePivotCertificates": {
+      "before": 89,
+      "after": 65
+    },
+    "RiemannResearch.RH.CanonicalMobiusCapacityIncrement": {
+      "before": 80,
+      "after": 67
+    },
+    "RiemannResearch.RH.ParetoCoprimePrimeUpdates": {
+      "before": 88,
+      "after": 64
+    },
+    "RiemannResearch.RH.ParetoSieveBoundaryGrowth": {
+      "before": 66,
+      "after": 53
+    },
+    "RiemannResearch.RH.MobiusSignCrossingBridge": {
+      "before": 115,
+      "after": 88
+    },
+    "RiemannResearch.RH.BurnolFiniteEnergyReduction": {
+      "before": 32,
+      "after": 31
+    },
+    "RiemannResearch.RH.ParetoPhysicalDualTransfer": {
+      "before": 77,
+      "after": 50
+    },
+    "RiemannResearch.RH.CanonicalMobiusCapacityDensity": {
+      "before": 106,
+      "after": 77
+    },
+    "RiemannResearch.RH.CanonicalMobiusStretchedCorrection": {
+      "before": 201,
+      "after": 160
+    },
+    "RiemannResearch.RH.ParetoCoprimeDefectVariational": {
+      "before": 112,
+      "after": 87
+    },
+    "RiemannResearch.RH.ParetoOccurrenceGreen": {
+      "before": 13,
+      "after": 11
+    },
+    "RiemannResearch.RH.ReciprocalChargeDilationArithmetic": {
+      "before": 36,
+      "after": 11
+    },
+    "RiemannResearch.RH.WeilExtension": {
+      "before": 9,
+      "after": 6
+    },
+    "RiemannResearch.RH.UniformTrigammaMeanPoint": {
+      "before": 19,
+      "after": 17
+    },
+    "RiemannResearch.RH.FiniteCriticalMellinMixtureEnergy": {
+      "before": 14,
+      "after": 10
+    },
+    "RiemannResearch.RH.IntegerDPPCoupling": {
+      "before": 114,
+      "after": 73
+    },
+    "RiemannResearch.RH.ParetoConductorTailCriterion": {
+      "before": 192,
+      "after": 161
+    },
+    "RiemannResearch.RH.ParetoFactorialRefinementArithmetic": {
+      "before": 102,
+      "after": 78
+    },
+    "RiemannResearch.RH.IntegerDPPSpatialVacancy": {
+      "before": 121,
+      "after": 80
+    },
+    "RiemannResearch.RH.ZetaTwoPolygammaResidues": {
+      "before": 20,
+      "after": 18
+    },
+    "RiemannResearch.RH.MobiusResidualEscape": {
+      "before": 51,
+      "after": 41
+    },
+    "RiemannResearch.RH.MellinProjectionKernel": {
+      "before": 137,
+      "after": 97
+    },
+    "RiemannResearch.RH.ResidualPhysicalSignMass": {
+      "before": 95,
+      "after": 87
+    },
+    "RiemannResearch.RH.DyadicRegularizationPhaseKernel": {
+      "before": 119,
+      "after": 118
+    },
+    "RiemannResearch.RH.ArithmeticCoreRHCriterion": {
+      "before": 136,
+      "after": 103
+    },
+    "RiemannResearch.RH.OptimizedTransferAsymptotic": {
+      "before": 42,
+      "after": 36
+    },
+    "RiemannResearch.RH.DyadicCenteredSeedRepair": {
+      "before": 50,
+      "after": 46
+    },
+    "RiemannResearch.RH.ParetoTailMartingale": {
+      "before": 18,
+      "after": 14
+    },
+    "RiemannResearch.RH.IntegerDPPPowerWeightedHoles": {
+      "before": 108,
+      "after": 67
+    },
+    "RiemannResearch.RH.ConditionalResidueGram": {
+      "before": 29,
+      "after": 17
+    },
+    "RiemannResearch.RH.CRTPeriodicEnergy": {
+      "before": 22,
+      "after": 21
+    },
+    "RiemannResearch.RH.ExactHeadCharges": {
+      "before": 7,
+      "after": 1
+    },
+    "RiemannResearch.RH.ConditionalMeanApproximateHeads": {
+      "before": 52,
+      "after": 50
+    },
+    "RiemannResearch.RH.ParetoGibbsHilbert": {
+      "before": 12,
+      "after": 14
+    },
+    "RiemannResearch.RH.ParetoCoprimeModulusRefinement": {
+      "before": 83,
+      "after": 59
+    },
+    "RiemannResearch.RH.CanonicalMobiusCapacityHardy": {
+      "before": 115,
+      "after": 102
+    },
+    "RiemannResearch.RH.DyadicResidueStepApproximation": {
+      "before": 86,
+      "after": 85
+    },
+    "RiemannResearch.RH.ResidueCorrectionAbelLimits": {
+      "before": 211,
+      "after": 170
+    },
+    "RiemannResearch.RH.ConditionalMeanHeadMinimum": {
+      "before": 22,
+      "after": 10
+    },
+    "RiemannResearch.RH.IntegerDPPPacketRankTwo": {
+      "before": 147,
+      "after": 106
+    },
+    "RiemannResearch.RH.ParetoFirstSitePrimeBlockContrast": {
+      "before": 113,
+      "after": 89
+    },
+    "RiemannResearch.RH.ResidualMellinZeroConditions": {
+      "before": 92,
+      "after": 40
+    },
+    "RiemannResearch.RH.ExactHeadMeanGap": {
+      "before": 63,
+      "after": 54
+    },
+    "RiemannResearch.RH.IntegerDPPOffsiteTrialBounds": {
+      "before": 148,
+      "after": 103
+    },
+    "RiemannResearch.RH.RawMobiusFiniteWindowEnergy": {
+      "before": 90,
+      "after": 82
+    },
+    "RiemannResearch.RH.ParetoPrimeSourceDivergence": {
+      "before": 92,
+      "after": 68
+    },
+    "RiemannResearch.RH.CauchyMixtureEscape": {
+      "before": 43,
+      "after": 42
+    },
+    "RiemannResearch.RH.NymanFullReturnWeilNullity": {
+      "before": 129,
+      "after": 113
+    },
+    "RiemannResearch.RH.ParetoAdjacentRepairCalculus": {
+      "before": 14,
+      "after": 12
+    },
+    "RiemannResearch.RH.MobiusReciprocalNonvanishing": {
+      "before": 27,
+      "after": 17
+    },
+    "RiemannResearch.RH.ParetoBesselSmoothObstruction": {
+      "before": 25,
+      "after": 24
+    },
+    "RiemannResearch.RH.DampedMobiusPolynomialHeadCriterion": {
+      "before": 54,
+      "after": 49
+    },
+    "RiemannResearch.RH.PhysicalOptimizerLimits": {
+      "before": 208,
+      "after": 173
+    },
+    "RiemannResearch.RH.IntegerDPPConductorCutoff": {
+      "before": 340,
+      "after": 305
+    },
+    "RiemannResearch.RH.ArithmeticCoreInertia": {
+      "before": 135,
+      "after": 100
+    },
+    "RiemannResearch.RH.ParetoGibbsGammaTruncation": {
+      "before": 4,
+      "after": 5
+    },
+    "RiemannResearch.RH.MultiRangeSignedFiniteFamily": {
+      "before": 87,
+      "after": 82
+    },
+    "RiemannResearch.RH.ParetoFirstSitePrimeBudget": {
+      "before": 96,
+      "after": 72
+    },
+    "RiemannResearch.RH.AnnularEnergyGrowth": {
+      "before": 46,
+      "after": 45
+    },
+    "RiemannResearch.RH.GeometricDerivativeMoments": {
+      "before": 237,
+      "after": 206
+    },
+    "RiemannResearch.RH.DivisorBoxLocalEnergy": {
+      "before": 59,
+      "after": 33
+    },
+    "RiemannResearch.RH.ReciprocalChargeInnovations": {
+      "before": 132,
+      "after": 78
+    },
+    "RiemannResearch.RH.CanonicalMobiusSublinearEnergy": {
+      "before": 69,
+      "after": 56
+    },
+    "RiemannResearch.RH.DigammaLaurentSeries": {
+      "before": 16,
+      "after": 14
+    },
+    "RiemannResearch.RH.ResidueDerivativeOptimization": {
+      "before": 23,
+      "after": 21
+    },
+    "RiemannResearch.RH.NymanBroadCorrelationBounds": {
+      "before": 43,
+      "after": 40
+    },
+    "RiemannResearch.RH.IntegerDPPGramDeterminant": {
+      "before": 117,
+      "after": 75
+    },
+    "RiemannResearch.RH.ActualMarkedRationalTail": {
+      "before": 55,
+      "after": 36
+    },
+    "RiemannResearch.RH.ParetoDigammaDerivative": {
+      "before": 15,
+      "after": 13
+    },
+    "RiemannResearch.RH.ExactHeadResidualTail": {
+      "before": 51,
+      "after": 41
+    },
+    "RiemannResearch.RH.ConditionalMeanTailNonattainment": {
+      "before": 25,
+      "after": 13
+    },
+    "RiemannResearch.RH.ParetoFullTailCRT": {
+      "before": 22,
+      "after": 20
+    },
+    "RiemannResearch.RH.ResidueDerivativeCompatibility": {
+      "before": 147,
+      "after": 102
+    },
+    "RiemannResearch.RH.ThresholdAnnihilatorInjection": {
+      "before": 35,
+      "after": 33
+    },
+    "RiemannResearch.RH.FiniteTwoSeedHeadRepair": {
+      "before": 41,
+      "after": 40
+    },
+    "RiemannResearch.RH.ParetoShapeEnergyBlowup": {
+      "before": 16,
+      "after": 12
+    },
+    "RiemannResearch.RH.CriticalLineZeros": {
+      "before": 136,
+      "after": 135
+    },
+    "RiemannResearch.RH.ZetaTwoConductorFiveBound": {
+      "before": 89,
+      "after": 79
+    },
+    "RiemannResearch.RH.ConditionalResidueNormalization": {
+      "before": 35,
+      "after": 23
+    },
+    "RiemannResearch.RH.ZetaTwoMobiusQuarticFloorDecay": {
+      "before": 70,
+      "after": 60
+    },
+    "RiemannResearch.RH.WeilGammaFourierAdapter": {
+      "before": 73,
+      "after": 57
+    },
+    "RiemannResearch.RH.MellinDyadicVandermonde": {
+      "before": 162,
+      "after": 121
+    },
+    "RiemannResearch.RH.ParetoShapeEndpoint": {
+      "before": 103,
+      "after": 77
+    },
+    "RiemannResearch.RH.IntegerDPPFiniteDamping": {
+      "before": 121,
+      "after": 80
+    },
+    "RiemannResearch.RH.CRTTrigammaBounds": {
+      "before": 16,
+      "after": 14
+    },
+    "RiemannResearch.RH.ProjectedDualMassObstruction": {
+      "before": 220,
+      "after": 183
+    },
+    "RiemannResearch.RH.FiniteResidueTemplateObstruction": {
+      "before": 63,
+      "after": 57
+    },
+    "RiemannResearch.RH.BaezDuarteCenteredBridge": {
+      "before": 53,
+      "after": 43
+    },
+    "RiemannResearch.RH.DigammaSmallArgument": {
+      "before": 15,
+      "after": 13
+    },
+    "RiemannResearch.RH.IntegerDPPAllSiteObstruction": {
+      "before": 104,
+      "after": 63
+    },
+    "RiemannResearch.RH.BurnolQuadraticZeroDefect": {
+      "before": 46,
+      "after": 32
+    },
+    "RiemannResearch.RH.ScreeningSourceMass": {
+      "before": 152,
+      "after": 125
+    },
+    "RiemannResearch.RH.ParetoBinaryApproximation": {
+      "before": 12,
+      "after": 10
+    },
+    "RiemannResearch.RH.RawMobiusFirstWindow": {
+      "before": 185,
+      "after": 154
+    },
+    "RiemannResearch.RH.NymanBroadCorrectionLimits": {
+      "before": 46,
+      "after": 43
+    },
+    "RiemannResearch.RH.ParetoPhysicalDualProjection": {
+      "before": 79,
+      "after": 52
+    },
+    "RiemannResearch.RH.ActualAnnularMellin": {
+      "before": 22,
+      "after": 16
+    },
+    "RiemannResearch.RH.CanonicalAffineExhaustion": {
+      "before": 78,
+      "after": 65
+    },
+    "RiemannResearch.RH.CanonicalTailCapacityGeometry": {
+      "before": 74,
+      "after": 50
+    },
+    "RiemannResearch.RH.ChebyshevZeroObstruction": {
+      "before": 15,
+      "after": 14
+    },
+    "RiemannResearch.RH.PrimeSieveTwoCutoffHead": {
+      "before": 97,
+      "after": 76
+    },
+    "RiemannResearch.RH.ParetoHorizontalZeroBridge": {
+      "before": 178,
+      "after": 124
+    },
+    "RiemannResearch.RH.ParetoFirstSiteAngularTwoChannels": {
+      "before": 113,
+      "after": 89
+    },
+    "RiemannResearch.RH.ParetoConductorInnovationBasis": {
+      "before": 71,
+      "after": 62
+    },
+    "RiemannResearch.RH.MidpointTailEnergy": {
+      "before": 108,
+      "after": 95
+    },
+    "RiemannResearch.RH.AdjacentPacketNormBounds": {
+      "before": 28,
+      "after": 25
+    },
+    "RiemannResearch.RH.ProjectedDualColumnConcentration": {
+      "before": 209,
+      "after": 168
+    },
+    "RiemannResearch.RH.ParetoCumulativeSignedGapCofinal": {
+      "before": 131,
+      "after": 93
+    },
+    "RiemannResearch.RH.ArithmeticPacketCore": {
+      "before": 134,
+      "after": 99
+    },
+    "RiemannResearch.RH.MobiusHilbertCoordinates": {
+      "before": 24,
+      "after": 15
+    },
+    "RiemannResearch.RH.MultiRangeDelayedFloors": {
+      "before": 91,
+      "after": 86
+    },
+    "RiemannResearch.RH.ResidualDyadicFactor": {
+      "before": 257,
+      "after": 186
+    },
+    "RiemannResearch.RH.CRTLegalCoordinates": {
+      "before": 49,
+      "after": 33
+    },
+    "RiemannResearch.RH.DyadicCarryOptimization": {
+      "before": 79,
+      "after": 65
+    },
+    "RiemannResearch.RH.CanonicalMobiusConditionalHead": {
+      "before": 25,
+      "after": 15
+    },
+    "RiemannResearch.RH.DyadicCarryBlocks": {
+      "before": 53,
+      "after": 43
+    },
+    "RiemannResearch.RH.IntegerDPPWindowGenerating": {
+      "before": 115,
+      "after": 74
+    },
+    "RiemannResearch.RH.PrimeReciprocalChargeCorrelation": {
+      "before": 39,
+      "after": 15
+    },
+    "RiemannResearch.RH.ParetoWeightedCells": {
+      "before": 92,
+      "after": 80
+    },
+    "RiemannResearch.RH.ParetoPrimeNormalizedCancellation": {
+      "before": 94,
+      "after": 70
+    },
+    "RiemannResearch.RH.ActualPrimePowerErrorSummability": {
+      "before": 13,
+      "after": 11
+    },
+    "RiemannResearch.RH.IntegerDPPArithmeticExclusion": {
+      "before": 112,
+      "after": 71
+    },
+    "RiemannResearch.RH.ResidueClosureDensity": {
+      "before": 72,
+      "after": 45
+    },
+    "RiemannResearch.RH.ActualIntegratedZeroRealTruncation": {
+      "before": 40,
+      "after": 27
+    },
+    "RiemannResearch.RH.ParetoAffineStationary": {
+      "before": 104,
+      "after": 96
+    },
+    "RiemannResearch.RH.WeilNoncompactExplicitFormula": {
+      "before": 92,
+      "after": 76
+    },
+    "RiemannResearch.RH.PrimeCoefficientGain": {
+      "before": 105,
+      "after": 94
+    },
+    "RiemannResearch.RH.WeilCutoffArchimedeanConvergence": {
+      "before": 75,
+      "after": 59
+    },
+    "RiemannResearch.RH.SplineWeilMatrixTargets": {
+      "before": 135,
+      "after": 119
+    },
+    "RiemannResearch.RH.ParetoCompactTrialEnergy": {
+      "before": 181,
+      "after": 150
+    },
+    "RiemannResearch.RH.CanonicalResidualGramMinimum": {
+      "before": 109,
+      "after": 101
+    },
+    "RiemannResearch.RH.ParetoOddMomentDyadicObstruction": {
+      "before": 125,
+      "after": 99
+    },
+    "RiemannResearch.RH.ThresholdInterpolationCompleteness": {
+      "before": 18,
+      "after": 14
+    },
+    "RiemannResearch.RH.NoorShiftedSource": {
+      "before": 114,
+      "after": 78
+    },
+    "RiemannResearch.RH.ParetoSieveFullEnergy": {
+      "before": 121,
+      "after": 96
+    },
+    "RiemannResearch.RH.FiniteDilationFamilyGap": {
+      "before": 17,
+      "after": 13
+    },
+    "RiemannResearch.RH.IntegerDPPWeightedWindow": {
+      "before": 110,
+      "after": 69
+    },
+    "RiemannResearch.RH.RHFalseRawCorrelationGrowth": {
+      "before": 239,
+      "after": 207
+    },
+    "RiemannResearch.RH.CriticalMellinGramLimits": {
+      "before": 13,
+      "after": 9
+    },
+    "RiemannResearch.RH.NymanActualZeroSumNullity": {
+      "before": 102,
+      "after": 86
+    },
+    "RiemannResearch.RH.DyadicTentFourierPackets": {
+      "before": 100,
+      "after": 99
+    },
+    "RiemannResearch.RH.ParetoAdjacentMomentCorrection": {
+      "before": 136,
+      "after": 91
+    },
+    "RiemannResearch.RH.BurnolCriticalLine": {
+      "before": 45,
+      "after": 31
+    },
+    "RiemannResearch.RH.ParetoSieveMobiusBridge": {
+      "before": 119,
+      "after": 94
+    },
+    "RiemannResearch.RH.ParetoStretchedAnnihilatorTail": {
+      "before": 149,
+      "after": 120
+    },
+    "RiemannResearch.RH.PointTargetLogarithmicBarrier": {
+      "before": 60,
+      "after": 50
+    },
+    "RiemannResearch.RH.ParetoInversePolynomial": {
+      "before": 77,
+      "after": 50
+    },
+    "RiemannResearch.RH.ParetoCumulativeRelativeFloor": {
+      "before": 131,
+      "after": 93
+    },
+    "RiemannResearch.RH.ParetoReflectionConvergence": {
+      "before": 51,
+      "after": 49
+    },
+    "RiemannResearch.RH.MobiusResidualOneSidedMass": {
+      "before": 55,
+      "after": 45
+    },
+    "RiemannResearch.RH.LiCoefficientObstructions": {
+      "before": 114,
+      "after": 113
+    },
+    "RiemannResearch.RH.CanonicalMobiusExchangeCertificate": {
+      "before": 78,
+      "after": 65
+    },
+    "RiemannResearch.RH.DampedMobiusSubhalfNormalization": {
+      "before": 105,
+      "after": 100
+    },
+    "RiemannResearch.RH.NaturalMobiusResidualCriterion": {
+      "before": 93,
+      "after": 85
+    },
+    "RiemannResearch.RH.ActualPrimePowerParetoEnergy": {
+      "before": 14,
+      "after": 12
+    },
+    "RiemannResearch.RH.CRTTrigammaMeanValue": {
+      "before": 18,
+      "after": 16
+    },
+    "RiemannResearch.RH.CanonicalMobiusHeadErrorCriterion": {
+      "before": 107,
+      "after": 66
+    },
+    "RiemannResearch.RH.ParetoCompactHead": {
+      "before": 50,
+      "after": 40
+    },
+    "RiemannResearch.RH.RawMobiusFiniteWindowCriterion": {
+      "before": 167,
+      "after": 131
+    },
+    "RiemannResearch.RH.BurnolDyadicComparison": {
+      "before": 90,
+      "after": 88
+    },
+    "RiemannResearch.RH.ParetoMobiusSieveBoundary": {
+      "before": 62,
+      "after": 49
+    },
+    "RiemannResearch.RH.DampedMobiusFourierSymbol": {
+      "before": 105,
+      "after": 104
+    },
+    "RiemannResearch.RH.RHFalseEnergyConsequences": {
+      "before": 32,
+      "after": 31
+    },
+    "RiemannResearch.RH.ResidualDilationPartialSums": {
+      "before": 51,
+      "after": 41
+    },
+    "RiemannResearch.RH.FiniteResidueHeadSurjectivity": {
+      "before": 26,
+      "after": 14
+    },
+    "RiemannResearch.RH.ParetoCoordinateBounds": {
+      "before": 15,
+      "after": 11
+    },
+    "RiemannResearch.RH.BalancedScalarBasis": {
+      "before": 28,
+      "after": 24
+    },
+    "RiemannResearch.RH.DeBruijnNewmanObstructions": {
+      "before": 115,
+      "after": 114
+    },
+    "RiemannResearch.RH.ParetoActualSpectralLimits": {
+      "before": 187,
+      "after": 156
+    },
+    "RiemannResearch.RH.IntegerDPPExistence": {
+      "before": 111,
+      "after": 70
+    },
+    "RiemannResearch.RH.RawMobiusPrimitiveEnergy": {
+      "before": 94,
+      "after": 86
+    },
+    "RiemannResearch.RH.ResidueProjectionCorrectionTail": {
+      "before": 147,
+      "after": 106
+    },
+    "RiemannResearch.RH.DyadicSignedFrequencyTailCriterion": {
+      "before": 124,
+      "after": 123
+    },
+    "RiemannResearch.RH.ClassicalArithmeticObstructions": {
+      "before": 113,
+      "after": 112
+    },
+    "RiemannResearch.RH.ConditionalConductorExhaustion": {
+      "before": 35,
+      "after": 23
+    },
+    "RiemannResearch.RH.ResidueGramModeIdentities": {
+      "before": 120,
+      "after": 81
+    },
+    "RiemannResearch.RH.ReciprocalChargeNormLimit": {
+      "before": 60,
+      "after": 46
+    },
+    "RiemannResearch.RH.ParetoPrimeCancellation": {
+      "before": 93,
+      "after": 69
+    },
+    "RiemannResearch.RH.ArithmeticFloorTruncationBounds": {
+      "before": 31,
+      "after": 27
+    },
+    "RiemannResearch.RH.IntegerDPPCertificateCutoffBridge": {
+      "before": 140,
+      "after": 95
+    },
+    "RiemannResearch.RH.DyadicTentFourierReconstruction": {
+      "before": 97,
+      "after": 96
+    },
+    "RiemannResearch.RH.ParetoConductorSpectrum": {
+      "before": 73,
+      "after": 64
+    },
+    "RiemannResearch.RH.RootComponentUnbounded": {
+      "before": 85,
+      "after": 80
+    },
+    "RiemannResearch.RH.DampedMobiusCenteredHeadGrowth": {
+      "before": 107,
+      "after": 102
+    },
+    "RiemannResearch.RH.BalancedHeadInterpolation": {
+      "before": 33,
+      "after": 29
+    },
+    "RiemannResearch.RH.ParetoResidualTailDichotomy": {
+      "before": 83,
+      "after": 71
+    },
+    "RiemannResearch.RH.ParetoMobiusHeadInterpolation": {
+      "before": 147,
+      "after": 102
+    },
+    "RiemannResearch.RH.ResidueExhaustiveFamilies": {
+      "before": 100,
+      "after": 59
+    },
+    "RiemannResearch.RH.MellinFrequencyKernel": {
+      "before": 130,
+      "after": 87
+    },
+    "RiemannResearch.RH.ParetoFirstHeadDefect": {
+      "before": 130,
+      "after": 102
+    },
+    "RiemannResearch.RH.CanonicalMobiusWindowGainBounds": {
+      "before": 119,
+      "after": 90
+    },
+    "RiemannResearch.RH.CompactCriticalMixtureTriviality": {
+      "before": 49,
+      "after": 48
+    },
+    "RiemannResearch.RH.ParetoMellinHardyEndpoint": {
+      "before": 88,
+      "after": 76
+    },
+    "RiemannResearch.RH.ProjectedDualSchurAsymptotics": {
+      "before": 230,
+      "after": 190
+    },
+    "RiemannResearch.RH.CompactTargetMellinObstruction": {
+      "before": 127,
+      "after": 93
+    },
+    "RiemannResearch.RH.IntegerDPPResidueAccounting": {
+      "before": 151,
+      "after": 111
+    },
+    "RiemannResearch.RH.TailCapacityJointCorrections": {
+      "before": 77,
+      "after": 53
+    },
+    "RiemannResearch.RH.ReversedResidueComplement": {
+      "before": 74,
+      "after": 47
+    },
+    "RiemannResearch.RH.ParetoCompactCutoffLimits": {
+      "before": 51,
+      "after": 41
+    },
+    "RiemannResearch.RH.MobiusPrimitiveCharge": {
+      "before": 55,
+      "after": 41
+    },
+    "RiemannResearch.RH.ParetoOriginalSourceCoordinates": {
+      "before": 123,
+      "after": 85
+    },
+    "RiemannResearch.RH.ParetoPrimeRawChargeModels": {
+      "before": 125,
+      "after": 101
+    },
+    "RiemannResearch.RH.MeanOneThirtyTrial": {
+      "before": 179,
+      "after": 141
+    },
+    "RiemannResearch.RH.IntegerDPPWindow": {
+      "before": 114,
+      "after": 72
+    },
+    "RiemannResearch.RH.ParetoGibbsOptimality": {
+      "before": 31,
+      "after": 33
+    },
+    "RiemannResearch.RH.ZetaTwoResolvent": {
+      "before": 85,
+      "after": 75
+    },
+    "RiemannResearch.RH.ParetoWeightedGram": {
+      "before": 101,
+      "after": 89
+    },
+    "RiemannResearch.RH.CanonicalMobiusHeadRepair": {
+      "before": 105,
+      "after": 64
+    },
+    "RiemannResearch.RH.MellinWindowCount": {
+      "before": 170,
+      "after": 130
+    },
+    "RiemannResearch.RH.ParetoFiniteMellinHalfPlane": {
+      "before": 194,
+      "after": 138
+    },
+    "RiemannResearch.RH.IntegerDPPDampedLimit": {
+      "before": 121,
+      "after": 80
+    },
+    "RiemannResearch.RH.ParetoNormClosure": {
+      "before": 50,
+      "after": 40
+    },
+    "RiemannResearch.RH.ZetaTwoRadicalFourBound": {
+      "before": 93,
+      "after": 83
+    },
+    "RiemannResearch.RH.ParetoFirstSiteRHConsequences": {
+      "before": 110,
+      "after": 86
+    },
+    "RiemannResearch.RH.ResidualDilationTailBounds": {
+      "before": 54,
+      "after": 44
+    },
+    "RiemannResearch.RH.MultiRangeRationalAnchorCertificate": {
+      "before": 90,
+      "after": 85
+    },
+    "RiemannResearch.RH.DyadicResidueTerminalOctave": {
+      "before": 87,
+      "after": 86
+    },
+    "RiemannResearch.RH.DyadicBoundaryUniformCriterion": {
+      "before": 78,
+      "after": 77
+    },
+    "RiemannResearch.RH.ParetoMovingRemainderTransfer": {
+      "before": 120,
+      "after": 96
+    },
+    "RiemannResearch.RH.ResidueOrthonormalCoordinates": {
+      "before": 101,
+      "after": 63
+    },
+    "RiemannResearch.RH.DyadicResidueFourierKernel": {
+      "before": 101,
+      "after": 100
+    },
+    "RiemannResearch.RH.DyadicFourierFrequencyDomination": {
+      "before": 126,
+      "after": 125
+    },
+    "RiemannResearch.RH.PrimeCompensationLimits": {
+      "before": 8,
+      "after": 5
+    },
+    "RiemannResearch.RH.DyadicGainEndpoint": {
+      "before": 84,
+      "after": 82
+    },
+    "RiemannResearch.RH.ActualResidualLaplace": {
+      "before": 93,
+      "after": 91
+    },
+    "RiemannResearch.RH.ParetoAnnihilatorTail": {
+      "before": 118,
+      "after": 90
+    },
+    "RiemannResearch.RH.PrimeOnlyDyadicErrorBudget": {
+      "before": 19,
+      "after": 17
+    },
+    "RiemannResearch.RH.NymanBroadCorrelationScaling": {
+      "before": 53,
+      "after": 50
+    },
+    "RiemannResearch.RH.ResidueCorrectionAbel": {
+      "before": 149,
+      "after": 108
+    },
+    "RiemannResearch.RH.WeilPrimeCutoffConvergence": {
+      "before": 18,
+      "after": 15
+    },
+    "RiemannResearch.RH.ParetoTailAverageArithmetic": {
+      "before": 79,
+      "after": 66
+    },
+    "RiemannResearch.RH.ParetoHiddenConditioningLimit": {
+      "before": 9,
+      "after": 10
+    },
+    "RiemannResearch.RH.ParetoFirstSitePrimeAngular": {
+      "before": 111,
+      "after": 87
+    },
+    "RiemannResearch.RH.PrimePowerSectorDecomposition": {
+      "before": 12,
+      "after": 9
+    },
+    "RiemannResearch.RH.MovingReciprocalCharge": {
+      "before": 147,
+      "after": 107
+    },
+    "RiemannResearch.RH.ParetoConductorEnergy": {
+      "before": 63,
+      "after": 54
+    },
+    "RiemannResearch.RH.CanonicalMobiusSignedAverages": {
+      "before": 73,
+      "after": 60
+    },
+    "RiemannResearch.RH.DampedMobiusExactSignedHeadLimits": {
+      "before": 94,
+      "after": 89
+    },
+    "RiemannResearch.RH.WeilDigammaSeries": {
+      "before": 17,
+      "after": 14
+    },
+    "RiemannResearch.RH.CoupledResidualAnalyticTargets": {
+      "before": 86,
+      "after": 84
+    },
+    "RiemannResearch.RH.ParetoGibbsRepair": {
+      "before": 19,
+      "after": 21
+    },
+    "RiemannResearch.RH.CanonicalMobiusSharpResidualEnergy": {
+      "before": 67,
+      "after": 54
+    },
+    "RiemannResearch.RH.MultiRangeDivisorCorrections": {
+      "before": 80,
+      "after": 60
+    },
+    "RiemannResearch.RH.NoorMixedGramArithmetic": {
+      "before": 118,
+      "after": 82
+    },
+    "RiemannResearch.RH.ParetoTailPivotEnergy": {
+      "before": 16,
+      "after": 12
+    },
+    "RiemannResearch.RH.MultiRangeExhaustion": {
+      "before": 88,
+      "after": 83
+    },
+    "RiemannResearch.RH.DyadicSignedBoundaryNormCriterion": {
+      "before": 84,
+      "after": 83
+    },
+    "RiemannResearch.RH.DampedMobiusLoglogStretchedMovingBand": {
+      "before": 119,
+      "after": 114
+    },
+    "RiemannResearch.RH.NymanConductorTailObstruction": {
+      "before": 37,
+      "after": 36
+    },
+    "RiemannResearch.RH.CanonicalMobiusPNT": {
+      "before": 82,
+      "after": 70
+    },
+    "RiemannResearch.RH.DampedMobiusArbitraryLogNorm": {
+      "before": 107,
+      "after": 102
+    },
+    "RiemannResearch.RH.ParetoOddMomentNormalizedSchur": {
+      "before": 115,
+      "after": 90
+    },
+    "RiemannResearch.RH.DampedMobiusSignedDiniEnergy": {
+      "before": 56,
+      "after": 51
+    },
+    "RiemannResearch.RH.DerivativeMobiusCRT": {
+      "before": 290,
+      "after": 230
+    },
+    "RiemannResearch.RH.BurnolFixedDampingObstruction": {
+      "before": 33,
+      "after": 32
+    },
+    "RiemannResearch.RH.ParetoMeanOneApproximation": {
+      "before": 48,
+      "after": 43
+    },
+    "RiemannResearch.RH.BalancedFourthDeletion": {
+      "before": 20,
+      "after": 16
+    },
+    "RiemannResearch.RH.ParetoParityBlockEnergy": {
+      "before": 135,
+      "after": 114
+    },
+    "RiemannResearch.RH.ZetaTwoDualEightObstruction": {
+      "before": 88,
+      "after": 78
+    },
+    "RiemannResearch.RH.OmittedPrimePacketObstruction": {
+      "before": 73,
+      "after": 64
+    },
+    "RiemannResearch.RH.DerivativeMobiusAggregate": {
+      "before": 289,
+      "after": 229
+    },
+    "RiemannResearch.RH.MellinModeEnergyBounds": {
+      "before": 12,
+      "after": 8
+    },
+    "RiemannResearch.RH.ParetoShapeCapacity": {
+      "before": 101,
+      "after": 75
+    },
+    "RiemannResearch.RH.ParetoLegalApproximationClosure": {
+      "before": 38,
+      "after": 37
+    },
+    "RiemannResearch.RH.ParetoCoprimePrimeObservation": {
+      "before": 83,
+      "after": 59
+    },
+    "RiemannResearch.RH.IntegerDPPResidueSymbolic": {
+      "before": 144,
+      "after": 102
+    },
+    "RiemannResearch.RH.MultiRangeFixedFamilyCertificates": {
+      "before": 89,
+      "after": 84
+    },
+    "RiemannResearch.RH.TwoSeedHeadEnergyGeometry": {
+      "before": 55,
+      "after": 50
+    },
+    "RiemannResearch.RH.FirstCoordinateTailGap": {
+      "before": 79,
+      "after": 54
+    },
+    "RiemannResearch.RH.AdjacentPacketCovarianceTransfer": {
+      "before": 31,
+      "after": 28
+    },
+    "RiemannResearch.RH.ParetoHiddenConditioning": {
+      "before": 8,
+      "after": 9
+    },
+    "RiemannResearch.RH.ArithmeticCoreAlgebraicity": {
+      "before": 176,
+      "after": 138
+    },
+    "RiemannResearch.RH.WeilCorrelationTransform": {
+      "before": 15,
+      "after": 12
+    },
+    "RiemannResearch.RH.ZetaTwoMobiusQuarticFloor": {
+      "before": 28,
+      "after": 18
+    },
+    "RiemannResearch.RH.IntegerDPPResidueSmallValues": {
+      "before": 146,
+      "after": 106
+    },
+    "RiemannResearch.RH.ResidueGramCorrectionPairing": {
+      "before": 124,
+      "after": 85
+    },
+    "RiemannResearch.RH.MultiRangeOptimizerConvergence": {
+      "before": 83,
+      "after": 65
+    },
+    "RiemannResearch.RH.ParetoNoiseResearchTargets": {
+      "before": 19,
+      "after": 18
+    },
+    "RiemannResearch.RH.MobiusReciprocalChargeBridge": {
+      "before": 26,
+      "after": 17
+    },
+    "RiemannResearch.RH.MellinCoordinateScaling": {
+      "before": 151,
+      "after": 111
+    },
+    "RiemannResearch.RH.FiniteDilationReciprocalCharge": {
+      "before": 62,
+      "after": 48
+    },
+    "RiemannResearch.RH.DampedMobiusMovingSubhalfBand": {
+      "before": 138,
+      "after": 133
+    },
+    "RiemannResearch.RH.CRTFirstPeriodEnergy": {
+      "before": 70,
+      "after": 69
+    },
+    "RiemannResearch.RH.MobiusDifferenceCLM": {
+      "before": 15,
+      "after": 11
+    },
+    "RiemannResearch.RH.CanonicalMobiusCesaro": {
+      "before": 73,
+      "after": 60
+    },
+    "RiemannResearch.RH.MultiRangeRationalOptimizer": {
+      "before": 85,
+      "after": 67
+    },
+    "RiemannResearch.RH.MultiRangeIndependence": {
+      "before": 81,
+      "after": 76
+    },
+    "RiemannResearch.RH.ParetoSublinearResidualTail": {
+      "before": 72,
+      "after": 59
+    },
+    "RiemannResearch.RH.CanonicalMobiusCapacityBounds": {
+      "before": 80,
+      "after": 67
+    },
+    "RiemannResearch.RH.MeanOneSix": {
+      "before": 137,
+      "after": 100
+    },
+    "RiemannResearch.RH.CanonicalMobiusWindowRecursion": {
+      "before": 112,
+      "after": 83
+    },
+    "RiemannResearch.RH.PhysicalSourceRates": {
+      "before": 151,
+      "after": 114
+    },
+    "RiemannResearch.RH.PrimeSievePrimitiveEscape": {
+      "before": 82,
+      "after": 60
+    },
+    "RiemannResearch.RH.ParetoAtomMellinSignature": {
+      "before": 36,
+      "after": 35
+    },
+    "RiemannResearch.RH.PhysicalPeriodObstruction": {
+      "before": 137,
+      "after": 102
+    },
+    "RiemannResearch.RH.ParetoGibbsTailBasis": {
+      "before": 13,
+      "after": 9
+    },
+    "RiemannResearch.RH.MultiRangeScreening": {
+      "before": 87,
+      "after": 82
+    },
+    "RiemannResearch.RH.WeightedDivisorCorrectionLimit": {
+      "before": 239,
+      "after": 208
+    },
+    "RiemannResearch.RH.ResidueTailAdditiveCancellation": {
+      "before": 43,
+      "after": 35
+    },
+    "RiemannResearch.RH.PrimeOnlyArithmeticBridge": {
+      "before": 17,
+      "after": 15
+    },
+    "RiemannResearch.RH.DerivativeAbelChargeBounds": {
+      "before": 292,
+      "after": 232
+    },
+    "RiemannResearch.RH.ParetoCoordinateEvaluation": {
+      "before": 14,
+      "after": 10
+    },
+    "RiemannResearch.RH.ConductorProjectionChain": {
+      "before": 42,
+      "after": 33
+    },
+    "RiemannResearch.RH.NymanWeilRadicalNullity": {
+      "before": 121,
+      "after": 105
+    },
+    "RiemannResearch.RH.MobiusJointHeadCorrections": {
+      "before": 74,
+      "after": 60
+    },
+    "RiemannResearch.RH.NoorShiftedDefect": {
+      "before": 115,
+      "after": 79
+    },
+    "RiemannResearch.RH.ParetoNormalizedOddOptimizer": {
+      "before": 115,
+      "after": 90
+    },
+    "RiemannResearch.RH.ParetoOptimizerTailGeometricBudget": {
+      "before": 216,
+      "after": 181
+    },
+    "RiemannResearch.RH.SubcriticalShapeCoercivity": {
+      "before": 234,
+      "after": 208
+    },
+    "RiemannResearch.RH.MultiRangeBlockGain": {
+      "before": 89,
+      "after": 84
+    },
+    "RiemannResearch.RH.DyadicFourierAnalyticTargets": {
+      "before": 104,
+      "after": 103
+    },
+    "RiemannResearch.RH.DyadicResidueFourierCocycle": {
+      "before": 117,
+      "after": 116
+    },
+    "RiemannResearch.RH.DyadicSignedBoundaryTightness": {
+      "before": 122,
+      "after": 121
+    },
+    "RiemannResearch.RH.WeilArithmeticAdapter": {
+      "before": 79,
+      "after": 63
+    },
+    "RiemannResearch.RH.DampedMobiusHalfHilbertRate": {
+      "before": 105,
+      "after": 100
+    },
+    "RiemannResearch.RH.MultiRangePrefixOptimization": {
+      "before": 90,
+      "after": 85
+    },
+    "RiemannResearch.RH.TwoSeedSchurCandidates": {
+      "before": 76,
+      "after": 71
+    },
+    "RiemannResearch.RH.IntegerDPPClosure": {
+      "before": 99,
+      "after": 58
+    },
+    "RiemannResearch.RH.DyadicTentLogMajorant": {
+      "before": 95,
+      "after": 94
+    },
+    "RiemannResearch.RH.ParetoWeightedApproximationRH": {
+      "before": 91,
+      "after": 79
+    },
+    "RiemannResearch.RH.ParetoIndependentEvenCorrection": {
+      "before": 140,
+      "after": 119
+    },
+    "RiemannResearch.RH.DampedMobiusSignedGram": {
+      "before": 48,
+      "after": 43
+    },
+    "RiemannResearch.RH.CanonicalTailHistoricalTargets": {
+      "before": 108,
+      "after": 99
+    },
+    "RiemannResearch.RH.MobiusCoefficientStabilization": {
+      "before": 49,
+      "after": 39
+    },
+    "RiemannResearch.RH.CombinedPrimeSensors": {
+      "before": 72,
+      "after": 63
+    },
+    "RiemannResearch.RH.GibbsLegalSeed": {
+      "before": 19,
+      "after": 17
+    },
+    "RiemannResearch.RH.ArithmeticFloorProfileCriterion": {
+      "before": 58,
+      "after": 53
+    },
+    "RiemannResearch.RH.ArchimedeanCorrectionLimit": {
+      "before": 9,
+      "after": 6
+    },
+    "RiemannResearch.RH.IntegerDPPWindowPositivity": {
+      "before": 130,
+      "after": 85
+    },
+    "RiemannResearch.RH.DampedMobiusNormGrowthZeroFree": {
+      "before": 55,
+      "after": 50
+    },
+    "RiemannResearch.RH.PrimeSieveTwoCutoffMean": {
+      "before": 168,
+      "after": 159
+    },
+    "RiemannResearch.RH.ChebyshevEnergyCriterion": {
+      "before": 16,
+      "after": 15
+    },
+    "RiemannResearch.RH.DyadicCarryOptimizationCRT": {
+      "before": 80,
+      "after": 66
+    },
+    "RiemannResearch.RH.MultiRangeCompleteness": {
+      "before": 87,
+      "after": 82
+    },
+    "RiemannResearch.RH.ParetoAffineHeadTrials": {
+      "before": 103,
+      "after": 95
+    },
+    "RiemannResearch.RH.CommonScaleApproximationCharge": {
+      "before": 43,
+      "after": 39
+    },
+    "RiemannResearch.RH.SquarefreeResidualHeadGram": {
+      "before": 59,
+      "after": 49
+    },
+    "RiemannResearch.RH.ParetoFirstPointHeadObstruction": {
+      "before": 102,
+      "after": 61
+    },
+    "RiemannResearch.RH.WeilArchimedeanNormalization": {
+      "before": 8,
+      "after": 5
+    },
+    "RiemannResearch.RH.ParetoParitySieveMass": {
+      "before": 81,
+      "after": 57
+    },
+    "RiemannResearch.RH.CRTExactSignedEnergy": {
+      "before": 26,
+      "after": 25
+    },
+    "RiemannResearch.RH.BalancedContinuousCoordinates": {
+      "before": 27,
+      "after": 23
+    },
+    "RiemannResearch.RH.NaturalMobiusPhysicalTests": {
+      "before": 87,
+      "after": 79
+    },
+    "RiemannResearch.RH.SquarefreePacketBasis": {
+      "before": 148,
+      "after": 114
+    },
+    "RiemannResearch.RH.SquarefreeResidualVariation": {
+      "before": 60,
+      "after": 50
+    },
+    "RiemannResearch.RH.RawMobiusBudgetQuantitative": {
+      "before": 202,
+      "after": 170
+    },
+    "RiemannResearch.RH.ConditionalFiniteMatrixMinimum": {
+      "before": 34,
+      "after": 22
+    },
+    "RiemannResearch.RH.PhysicalZeroObstruction": {
+      "before": 153,
+      "after": 118
+    },
+    "RiemannResearch.RH.BaezDuarteNaturalApproximation": {
+      "before": 54,
+      "after": 44
+    },
+    "RiemannResearch.RH.CRTPrimitiveEscape": {
+      "before": 16,
+      "after": 14
+    },
+    "RiemannResearch.RH.CesaroResidueMean": {
+      "before": 4,
+      "after": 5
+    },
+    "RiemannResearch.RH.WeilFailureConditions": {
+      "before": 27,
+      "after": 23
+    },
+    "RiemannResearch.RH.DampedMobiusCriticalSignedGrowth": {
+      "before": 55,
+      "after": 50
+    },
+    "RiemannResearch.RH.FiniteDilationInnovationCertificates": {
+      "before": 141,
+      "after": 87
+    },
+    "RiemannResearch.RH.CanonicalMobiusSourceProjection": {
+      "before": 123,
+      "after": 94
+    },
+    "RiemannResearch.RH.ParetoCoprimeCompositeObservation": {
+      "before": 84,
+      "after": 60
+    },
+    "RiemannResearch.RH.BalancedExactHeadEnergy": {
+      "before": 73,
+      "after": 62
+    },
+    "RiemannResearch.RH.PhysicalSourceLimits": {
+      "before": 150,
+      "after": 113
+    },
+    "RiemannResearch.RH.ResidualGainObstruction": {
+      "before": 110,
+      "after": 101
+    },
+    "RiemannResearch.RH.ExactHeadMovingHardyRH": {
+      "before": 92,
+      "after": 80
+    },
+    "RiemannResearch.RH.ParetoCyclotomicTransform": {
+      "before": 4,
+      "after": 5
+    },
+    "RiemannResearch.RH.ParetoFirstSiteAdjacentRegression": {
+      "before": 154,
+      "after": 110
+    },
+    "RiemannResearch.RH.DyadicBoundaryEscape": {
+      "before": 47,
+      "after": 46
+    },
+    "RiemannResearch.RH.ZetaTwoTargetFirstMoment": {
+      "before": 141,
+      "after": 128
+    },
+    "RiemannResearch.RH.ParetoOscillatoryRegularityGap": {
+      "before": 48,
+      "after": 40
+    },
+    "RiemannResearch.RH.ParetoFiniteWindowEnergy": {
+      "before": 91,
+      "after": 83
+    },
+    "RiemannResearch.RH.MellinModeOrthonormality": {
+      "before": 141,
+      "after": 74
+    },
+    "RiemannResearch.RH.ParetoIndependentEvenDefect": {
+      "before": 160,
+      "after": 127
+    },
+    "RiemannResearch.RH.ParetoDiagonalCardinal": {
+      "before": 27,
+      "after": 15
+    },
+    "RiemannResearch.RH.TwoThreePacketRelations": {
+      "before": 26,
+      "after": 23
+    },
+    "RiemannResearch.RH.ReciprocalSchurVariation": {
+      "before": 168,
+      "after": 158
+    },
+    "RiemannResearch.RH.ParetoActualHeadSpectrum": {
+      "before": 55,
+      "after": 45
+    },
+    "RiemannResearch.RH.IntegerDPPResiduePrimePowers": {
+      "before": 152,
+      "after": 112
+    },
+    "RiemannResearch.RH.ParetoRoughTailCertificates": {
+      "before": 80,
+      "after": 56
+    },
+    "RiemannResearch.RH.WeilZeroSumConvergence": {
+      "before": 68,
+      "after": 55
+    },
+    "RiemannResearch.RH.ZetaTwoParetoTransfer": {
+      "before": 129,
+      "after": 116
+    },
+    "RiemannResearch.RH.ResidualEnergyHistoricalTargets": {
+      "before": 209,
+      "after": 202
+    },
+    "RiemannResearch.RH.CompactMixtureResidueSummation": {
+      "before": 36,
+      "after": 35
+    },
+    "RiemannResearch.RH.CanonicalMobiusLogEnvelopeEnergy": {
+      "before": 94,
+      "after": 81
+    },
+    "RiemannResearch.RH.ParetoTailAverageCriterion": {
+      "before": 107,
+      "after": 71
+    },
+    "RiemannResearch.RH.MellinProjectionDPP": {
+      "before": 151,
+      "after": 111
+    },
+    "RiemannResearch.RH.CauchyAnnihilatorRH": {
+      "before": 51,
+      "after": 49
+    },
+    "RiemannResearch.RH.CRTPositiveRemainder": {
+      "before": 19,
+      "after": 17
+    },
+    "RiemannResearch.RH.GeometricHilbertRealizationProof": {
+      "before": 17,
+      "after": 19
+    },
+    "RiemannResearch.RH.ParetoInverseMobiusHarmonic": {
+      "before": 78,
+      "after": 51
+    },
+    "RiemannResearch.RH.ThresholdTwoSeedEquivalence": {
+      "before": 70,
+      "after": 64
+    },
+    "RiemannResearch.RH.ResidueGramDigamma": {
+      "before": 109,
+      "after": 70
+    },
+    "RiemannResearch.RH.DyadicCanonicalLeakage": {
+      "before": 207,
+      "after": 170
+    },
+    "RiemannResearch.RH.NonnegativeResidueObstruction": {
+      "before": 50,
+      "after": 34
+    },
+    "RiemannResearch.RH.RawMobiusFirstWindowQuantitative": {
+      "before": 201,
+      "after": 169
+    },
+    "RiemannResearch.RH.BurnolMellinContinuation": {
+      "before": 10,
+      "after": 9
+    },
+    "RiemannResearch.RH.TailCertificateCancellationEndpoint": {
+      "before": 77,
+      "after": 68
+    },
+    "RiemannResearch.RH.ParetoHiddenConditioningSubstitution": {
+      "before": 10,
+      "after": 11
+    },
+    "RiemannResearch.RH.MellinCapacityBarrier": {
+      "before": 110,
+      "after": 69
+    },
+    "RiemannResearch.RH.IntegerDPPDampedMinimum": {
+      "before": 118,
+      "after": 77
+    },
+    "RiemannResearch.RH.NymanWeilNullity": {
+      "before": 128,
+      "after": 112
+    },
+    "RiemannResearch.RH.SameScaleCovarianceBounds": {
+      "before": 33,
+      "after": 30
+    },
+    "RiemannResearch.RH.AnnularZeroSpectralTargets": {
+      "before": 18,
+      "after": 11
+    },
+    "RiemannResearch.RH.ProjectedDualStretchedTail": {
+      "before": 207,
+      "after": 166
+    },
+    "RiemannResearch.RH.BurnolZeroProductConvergence": {
+      "before": 44,
+      "after": 30
+    },
+    "RiemannResearch.RH.SmallDualCriticalZeros": {
+      "before": 336,
+      "after": 301
+    },
+    "RiemannResearch.RH.ParetoAdjacentKernelBounds": {
+      "before": 16,
+      "after": 14
+    },
+    "RiemannResearch.RH.TailCapacityDilationCorrection": {
+      "before": 51,
+      "after": 41
+    },
+    "RiemannResearch.RH.ParetoCompactSourceLimits": {
+      "before": 180,
+      "after": 149
+    },
+    "RiemannResearch.RH.IntegerDPPCardinality": {
+      "before": 116,
+      "after": 78
+    },
+    "RiemannResearch.RH.NaturalMobiusSourceLimits": {
+      "before": 139,
+      "after": 128
+    },
+    "RiemannResearch.RH.ParetoFiniteHeadDilation": {
+      "before": 108,
+      "after": 79
+    },
+    "RiemannResearch.RH.CanonicalMobiusCovarianceMinimum": {
+      "before": 78,
+      "after": 65
+    },
+    "RiemannResearch.RH.ParetoFullContrastEnergy": {
+      "before": 122,
+      "after": 97
+    },
+    "RiemannResearch.RH.AnnularSubpowerEnergy": {
+      "before": 44,
+      "after": 43
+    },
+    "RiemannResearch.RH.DyadicGainZeroBudget": {
+      "before": 85,
+      "after": 83
+    },
+    "RiemannResearch.RH.ParetoProgressionCalculus": {
+      "before": 14,
+      "after": 12
+    },
+    "RiemannResearch.RH.TwoSeedAnnihilatorCharge": {
+      "before": 55,
+      "after": 53
+    },
+    "RiemannResearch.RH.ActualMarkedRationalWindows": {
+      "before": 51,
+      "after": 32
+    },
+    "RiemannResearch.RH.ParetoResidualDilation": {
+      "before": 132,
+      "after": 104
+    },
+    "RiemannResearch.RH.ActualIntegratedZeroSeries": {
+      "before": 37,
+      "after": 23
+    },
+    "RiemannResearch.RH.CanonicalMobiusWindowCancellation": {
+      "before": 68,
+      "after": 55
+    },
+    "RiemannResearch.RH.PhysicalSchurReindex": {
+      "before": 128,
+      "after": 93
+    },
+    "RiemannResearch.RH.SignedWeilCorrelation": {
+      "before": 7,
+      "after": 4
+    },
+    "RiemannResearch.RH.ParetoIndependentEvenRH": {
+      "before": 141,
+      "after": 120
+    },
+    "RiemannResearch.RH.PrimeSievePointEnergy": {
+      "before": 57,
+      "after": 44
+    },
+    "RiemannResearch.RH.RawMobiusBudgetZeroFree": {
+      "before": 185,
+      "after": 154
+    },
+    "RiemannResearch.RH.WeilSingleZeroTest": {
+      "before": 136,
+      "after": 120
+    },
+    "RiemannResearch.RH.NaturalMobiusLogarithmicTests": {
+      "before": 96,
+      "after": 88
+    },
+    "RiemannResearch.RH.ParetoLegalHeadGrowth": {
+      "before": 42,
+      "after": 37
+    },
+    "RiemannResearch.RH.ConductorDegreeObstruction": {
+      "before": 29,
+      "after": 20
+    },
+    "RiemannResearch.RH.MultiRangeMinimumExhaustion": {
+      "before": 89,
+      "after": 84
+    },
+    "RiemannResearch.RH.ParetoGibbsSpectralGap": {
+      "before": 28,
+      "after": 30
+    },
+    "RiemannResearch.RH.ParetoTailCertificateEscape": {
+      "before": 52,
+      "after": 42
+    },
+    "RiemannResearch.RH.AnnularMellinPoleOrder": {
+      "before": 12,
+      "after": 11
+    },
+    "RiemannResearch.RH.ParetoPhysicalDualSupportRate": {
+      "before": 81,
+      "after": 54
+    },
+    "RiemannResearch.RH.MellinDPPIntensity": {
+      "before": 160,
+      "after": 119
+    },
+    "RiemannResearch.RH.ParetoDilationTailLocalization": {
+      "before": 52,
+      "after": 42
+    },
+    "RiemannResearch.RH.LocalizedMellinHeadSignature": {
+      "before": 59,
+      "after": 49
+    },
+    "RiemannResearch.RH.CommonScaleRoughPackets": {
+      "before": 23,
+      "after": 19
+    },
+    "RiemannResearch.RH.ParetoGeometricMixture": {
+      "before": 0,
+      "after": 1
+    },
+    "RiemannResearch.RH.ParetoPhysicalDualSupportLimit": {
+      "before": 80,
+      "after": 53
+    },
+    "RiemannResearch.RH.MultiRangePrimorialRebase": {
+      "before": 95,
+      "after": 90
+    },
+    "RiemannResearch.RH.AnnularMellinRH": {
+      "before": 11,
+      "after": 10
+    },
+    "RiemannResearch.RH.PointTargetDilationSynthesis": {
+      "before": 52,
+      "after": 42
+    },
+    "RiemannResearch.RH.DyadicCarrySignedTransport": {
+      "before": 87,
+      "after": 73
+    },
+    "RiemannResearch.RH.ResidueDivisorReciprocalLimit": {
+      "before": 224,
+      "after": 183
+    },
+    "RiemannResearch.RH.ConditionalMeanTailObstruction": {
+      "before": 52,
+      "after": 50
+    },
+    "RiemannResearch.RH.BalancedCoefficientTargets": {
+      "before": 28,
+      "after": 24
+    },
+    "RiemannResearch.RH.RawMobiusBudgetSublinear": {
+      "before": 185,
+      "after": 154
+    },
+    "RiemannResearch.RH.WeilCorrelationAdmissibility": {
+      "before": 11,
+      "after": 8
+    },
+    "RiemannResearch.RH.CanonicalMobiusTailIndependence": {
+      "before": 79,
+      "after": 66
+    },
+    "RiemannResearch.RH.CanonicalMobiusFixedHeadLimit": {
+      "before": 117,
+      "after": 88
+    },
+    "RiemannResearch.RH.IntegerDPPMultiplicativeGram": {
+      "before": 120,
+      "after": 79
+    },
+    "RiemannResearch.RH.WeilPrimeTranslationKernel": {
+      "before": 140,
+      "after": 124
+    },
+    "RiemannResearch.RH.CanonicalMobiusMovingBoundary": {
+      "before": 107,
+      "after": 94
+    },
+    "RiemannResearch.RH.ConditionalMeanGram": {
+      "before": 25,
+      "after": 15
+    },
+    "RiemannResearch.RH.DyadicRemainderConvexRepair": {
+      "before": 130,
+      "after": 129
+    },
+    "RiemannResearch.RH.ParetoCompactTailProduct": {
+      "before": 192,
+      "after": 161
+    },
+    "RiemannResearch.RH.DerivativeZetaGeometricBridge": {
+      "before": 244,
+      "after": 213
+    },
+    "RiemannResearch.RH.DampedMobiusProfileNorm": {
+      "before": 106,
+      "after": 101
+    },
+    "RiemannResearch.RH.ResidueDualDifferences": {
+      "before": 211,
+      "after": 170
+    },
+    "RiemannResearch.RH.DampedMobiusFiniteEnergy": {
+      "before": 47,
+      "after": 42
+    },
+    "RiemannResearch.RH.IntegerDPPSchurCanonicalEnergy": {
+      "before": 83,
+      "after": 59
+    },
+    "RiemannResearch.RH.PhysicalSchurCoupling": {
+      "before": 131,
+      "after": 96
+    },
+    "RiemannResearch.RH.ParetoPrimeRefinementCancellation": {
+      "before": 98,
+      "after": 74
+    },
+    "RiemannResearch.RH.IntegerDPPReduction": {
+      "before": 105,
+      "after": 64
+    },
+    "RiemannResearch.RH.OptimizedResidueSubstitution": {
+      "before": 23,
+      "after": 21
+    },
+    "RiemannResearch.RH.CanonicalMobiusTailNondegeneracy": {
+      "before": 74,
+      "after": 61
+    },
+    "RiemannResearch.RH.NaturalMobiusPeriodicTests": {
+      "before": 109,
+      "after": 101
+    },
+    "RiemannResearch.RH.DerivativeCRTPowerMoments": {
+      "before": 242,
+      "after": 211
+    },
+    "RiemannResearch.RH.ExactHeadWeightedEnergy": {
+      "before": 90,
+      "after": 78
+    },
+    "RiemannResearch.RH.OptimizedResidueHilbert": {
+      "before": 22,
+      "after": 20
+    },
+    "RiemannResearch.RH.DyadicCarryCRT": {
+      "before": 75,
+      "after": 61
+    },
+    "RiemannResearch.RH.CanonicalMobiusExactCellEndpoint": {
+      "before": 84,
+      "after": 72
+    },
+    "RiemannResearch.RH.RealAutocorrelationSquare": {
+      "before": 26,
+      "after": 23
+    },
+    "RiemannResearch.RH.NymanBroadPrimeAsymptotic": {
+      "before": 157,
+      "after": 141
+    },
+    "RiemannResearch.RH.DerivativeSignedCorrection": {
+      "before": 236,
+      "after": 205
+    },
+    "RiemannResearch.RH.DyadicDampedConductorFourier": {
+      "before": 106,
+      "after": 105
+    },
+    "RiemannResearch.RH.Smooth35RepairCompletion": {
+      "before": 26,
+      "after": 25
+    },
+    "RiemannResearch.RH.DerivativeCRT": {
+      "before": 239,
+      "after": 208
+    },
+    "RiemannResearch.RH.DyadicBoundaryLegalRecovery": {
+      "before": 46,
+      "after": 45
+    },
+    "RiemannResearch.RH.MobiusQuotientEnergy": {
+      "before": 35,
+      "after": 26
+    },
+    "RiemannResearch.RH.BurnolDampingZeroShift": {
+      "before": 9,
+      "after": 8
+    },
+    "RiemannResearch.RH.CompactCorrectedTrialWindow": {
+      "before": 173,
+      "after": 141
+    },
+    "RiemannResearch.RH.ArithmeticFloorSinglePrefixConvergence": {
+      "before": 67,
+      "after": 62
+    },
+    "RiemannResearch.RH.ResidueProjectionSchur": {
+      "before": 130,
+      "after": 90
+    },
+    "RiemannResearch.RH.ReciprocalChargeDilationSeries": {
+      "before": 38,
+      "after": 14
+    },
+    "RiemannResearch.RH.MeanOneResidualFloor": {
+      "before": 54,
+      "after": 44
+    },
+    "RiemannResearch.RH.DyadicRegularizedBoundaryEnergy": {
+      "before": 60,
+      "after": 59
+    },
+    "RiemannResearch.RH.ParetoShapeMellinEnergy": {
+      "before": 13,
+      "after": 9
+    },
+    "RiemannResearch.RH.NymanBroadPrimeSquareCompensation": {
+      "before": 144,
+      "after": 128
+    },
+    "RiemannResearch.RH.ParetoSieveContrastClosure": {
+      "before": 121,
+      "after": 96
+    },
+    "RiemannResearch.RH.TwoThreeChordGram": {
+      "before": 45,
+      "after": 43
+    },
+    "RiemannResearch.RH.MellinModeResiduePairing": {
+      "before": 35,
+      "after": 34
+    },
+    "RiemannResearch.RH.DampedMobiusHeadApproximation": {
+      "before": 51,
+      "after": 46
+    },
+    "RiemannResearch.RH.RamanujanFiniteSpanBridge": {
+      "before": 145,
+      "after": 104
+    },
+    "RiemannResearch.RH.ParetoFirstSitePrimeAlignment": {
+      "before": 104,
+      "after": 80
+    },
+    "RiemannResearch.RH.MellinDeficitRHTest": {
+      "before": 151,
+      "after": 85
+    },
+    "RiemannResearch.RH.TailMinimumConvergence": {
+      "before": 75,
+      "after": 51
+    },
+    "RiemannResearch.RH.CanonicalSieveAbelTargets": {
+      "before": 109,
+      "after": 100
+    },
+    "RiemannResearch.RH.PrimorialExtrapolationObstruction": {
+      "before": 59,
+      "after": 56
+    },
+    "RiemannResearch.RH.TwoSeedContrastObstruction": {
+      "before": 71,
+      "after": 62
+    },
+    "RiemannResearch.RH.ParetoExactHeadResidual": {
+      "before": 31,
+      "after": 30
+    },
+    "RiemannResearch.RH.ParetoGibbsConvergence": {
+      "before": 15,
+      "after": 17
+    },
+    "RiemannResearch.RH.DyadicCarryQuantitative": {
+      "before": 80,
+      "after": 66
+    },
+    "RiemannResearch.RH.DampedMobiusAllLogProviders": {
+      "before": 103,
+      "after": 98
+    },
+    "RiemannResearch.RH.MultiRangeTruncatedGram": {
+      "before": 88,
+      "after": 83
+    },
+    "RiemannResearch.RH.ParetoCrossGramRowEnergy": {
+      "before": 101,
+      "after": 77
+    },
+    "RiemannResearch.RH.ResidueSchurLimits": {
+      "before": 156,
+      "after": 145
+    },
+    "RiemannResearch.RH.RawMobiusSubpowerCriterion": {
+      "before": 184,
+      "after": 153
+    },
+    "RiemannResearch.RH.ParetoActualSpectralMomentUpper": {
+      "before": 213,
+      "after": 178
+    },
+    "RiemannResearch.RH.WeilSpectralPairing": {
+      "before": 128,
+      "after": 112
+    },
+    "RiemannResearch.RH.ResidueProjectionL1": {
+      "before": 158,
+      "after": 147
+    },
+    "RiemannResearch.RH.ProgressionMidpointInverse": {
+      "before": 21,
+      "after": 19
+    },
+    "RiemannResearch.RH.SingleTestTailCriterion": {
+      "before": 10,
+      "after": 9
+    },
+    "RiemannResearch.RH.ZetaTwoPeriodMeanBounds": {
+      "before": 50,
+      "after": 34
+    },
+    "RiemannResearch.RH.SingleZetaDetectorCriterion": {
+      "before": 10,
+      "after": 9
+    },
+    "RiemannResearch.RH.LogarithmicPowerMeans": {
+      "before": 12,
+      "after": 8
+    },
+    "RiemannResearch.RH.TwoThreeChordTargets": {
+      "before": 60,
+      "after": 58
+    },
+    "RiemannResearch.RH.OmittedPrimeResidueBarrier": {
+      "before": 56,
+      "after": 46
+    },
+    "RiemannResearch.RH.RHFalseJointObstruction": {
+      "before": 371,
+      "after": 367
+    },
+    "RiemannResearch.RH.ConditionalMeanRegularizedHeads": {
+      "before": 53,
+      "after": 51
+    },
+    "RiemannResearch.RH.DampedMobiusAllLogMovingBand": {
+      "before": 125,
+      "after": 120
+    },
+    "RiemannResearch.RH.IntegerDPPSchur": {
+      "before": 77,
+      "after": 53
+    },
+    "RiemannResearch.RH.AnnularMellinContinuation": {
+      "before": 32,
+      "after": 31
+    },
+    "RiemannResearch.RH.ParetoGibbsHankel": {
+      "before": 2,
+      "after": 3
+    },
+    "RiemannResearch.RH.ParetoPhysicalDualSequenceCriterion": {
+      "before": 83,
+      "after": 56
+    },
+    "RiemannResearch.RH.NymanActualTailWeilAccounting": {
+      "before": 130,
+      "after": 114
+    },
+    "RiemannResearch.RH.EndpointResidueCorrection": {
+      "before": 85,
+      "after": 73
+    },
+    "RiemannResearch.RH.MultiRangeTailObstruction": {
+      "before": 53,
+      "after": 51
+    },
+    "RiemannResearch.RH.ParetoFirstSitePrimeThreeSeries": {
+      "before": 113,
+      "after": 89
+    },
+    "RiemannResearch.RH.CanonicalMobiusWindowDuality": {
+      "before": 116,
+      "after": 87
+    },
+    "RiemannResearch.RH.RawMobiusSignedGramMovingExponent": {
+      "before": 239,
+      "after": 205
+    },
+    "RiemannResearch.RH.ActualZeroGaussianCells": {
+      "before": 43,
+      "after": 24
+    },
+    "RiemannResearch.RH.PrimeSieveDerivativeApproximation": {
+      "before": 60,
+      "after": 47
+    },
+    "RiemannResearch.RH.CanonicalMobiusWindowMinimum": {
+      "before": 83,
+      "after": 70
+    },
+    "RiemannResearch.RH.ReciprocalChargeDilationNorm": {
+      "before": 62,
+      "after": 48
+    },
+    "RiemannResearch.RH.MobiusResidualInfiniteDefects": {
+      "before": 50,
+      "after": 40
+    },
+    "RiemannResearch.RH.CanonicalMobiusQuantitativeEnergy": {
+      "before": 93,
+      "after": 80
+    },
+    "RiemannResearch.RH.DyadicCarryOptimizationLimit": {
+      "before": 85,
+      "after": 71
+    },
+    "RiemannResearch.RH.SquarefreeResidualSampling": {
+      "before": 57,
+      "after": 47
+    },
+    "RiemannResearch.RH.ParetoOddMomentDyadicRepair": {
+      "before": 126,
+      "after": 100
+    },
+    "RiemannResearch.RH.MultiRangeFloorCoordinates": {
+      "before": 88,
+      "after": 83
+    },
+    "RiemannResearch.RH.NoorRegularizedApproximation": {
+      "before": 109,
+      "after": 73
+    },
+    "RiemannResearch.RH.CRTMeanRepair": {
+      "before": 66,
+      "after": 62
+    },
+    "RiemannResearch.RH.MultiRangeFiniteMinimum": {
+      "before": 85,
+      "after": 80
+    },
+    "RiemannResearch.RH.ParetoFirstSitePrimeContrastPerturbations": {
+      "before": 117,
+      "after": 93
+    },
+    "RiemannResearch.RH.ParetoFirstSitePrimeBlocks": {
+      "before": 112,
+      "after": 88
+    },
+    "RiemannResearch.RH.DerivativeCorrectionWeilBridge": {
+      "before": 357,
+      "after": 313
+    },
+    "RiemannResearch.RH.ParetoGibbsOperator": {
+      "before": 2,
+      "after": 3
+    },
+    "RiemannResearch.RH.ResidueDivisorZeroExclusion": {
+      "before": 225,
+      "after": 184
+    },
+    "RiemannResearch.RH.BalancedPowerDamping": {
+      "before": 34,
+      "after": 30
+    },
+    "RiemannResearch.RH.SquarefreeArithmeticSaturation": {
+      "before": 200,
+      "after": 165
+    },
+    "RiemannResearch.RH.MultiRangeRationalCertificates": {
+      "before": 83,
+      "after": 65
+    },
+    "RiemannResearch.RH.ParetoGeometricTransform": {
+      "before": 2,
+      "after": 3
+    },
+    "RiemannResearch.RH.MellinCoordinateDefect": {
+      "before": 148,
+      "after": 82
+    },
+    "RiemannResearch.RH.ProjectedDualProjectionError": {
+      "before": 208,
+      "after": 167
+    },
+    "RiemannResearch.RH.GeometricHilbertRealizationResearchTargets": {
+      "before": 14,
+      "after": 16
+    },
+    "RiemannResearch.RH.BurnolProjectionConsequences": {
+      "before": 47,
+      "after": 33
+    },
+    "RiemannResearch.RH.IntegerDPPHazards": {
+      "before": 76,
+      "after": 52
+    },
+    "RiemannResearch.RH.CotangentContraction": {
+      "before": 174,
+      "after": 136
+    },
+    "RiemannResearch.RH.ParetoHeadMeanEnergy": {
+      "before": 14,
+      "after": 10
+    },
+    "RiemannResearch.RH.LogarithmicCorrectionTarget": {
+      "before": 83,
+      "after": 81
+    },
+    "RiemannResearch.RH.ParetoGeometricEnergy": {
+      "before": 1,
+      "after": 2
+    },
+    "RiemannResearch.RH.NoorRegularizedGram": {
+      "before": 113,
+      "after": 77
+    },
+    "RiemannResearch.RH.DerivativeAdjointRows": {
+      "before": 224,
+      "after": 189
+    },
+    "RiemannResearch.RH.ResidueCorrectionDivisorAbel": {
+      "before": 216,
+      "after": 175
+    },
+    "RiemannResearch.RH.LocalizedMellinObstruction": {
+      "before": 41,
+      "after": 36
+    },
+    "RiemannResearch.RH.MobiusResidualSignOscillation": {
+      "before": 54,
+      "after": 44
+    },
+    "RiemannResearch.RH.ReciprocalChargeGeometricInnovation": {
+      "before": 146,
+      "after": 93
+    },
+    "RiemannResearch.RH.TwoThreeHilbertBudget": {
+      "before": 47,
+      "after": 44
+    },
+    "RiemannResearch.RH.ParetoExhaustiveWalk": {
+      "before": 34,
+      "after": 33
+    },
+    "RiemannResearch.RH.CriticalMellinCountableEnergy": {
+      "before": 14,
+      "after": 10
+    },
+    "RiemannResearch.RH.ResidueTailCertificateRegularity": {
+      "before": 40,
+      "after": 32
+    },
+    "RiemannResearch.RH.DyadicResidueFourierBridge": {
+      "before": 104,
+      "after": 103
+    },
+    "RiemannResearch.RH.ZetaTwoReciprocalObstruction": {
+      "before": 85,
+      "after": 75
+    },
+    "RiemannResearch.RH.MultiRangeEnergyCertificates": {
+      "before": 81,
+      "after": 63
+    },
+    "RiemannResearch.RH.CanonicalMobiusFullEnergy": {
+      "before": 66,
+      "after": 53
+    },
+    "RiemannResearch.RH.IntegerDPPVacancyCertificates": {
+      "before": 100,
+      "after": 59
+    },
+    "RiemannResearch.RH.RHCriterionFailures": {
+      "before": 136,
+      "after": 138
+    },
+    "RiemannResearch.RH.ParetoStochasticHitting": {
+      "before": 31,
+      "after": 30
+    },
+    "RiemannResearch.RH.NymanAutocorrelationNullity": {
+      "before": 37,
+      "after": 34
+    },
+    "RiemannResearch.RH.ActualAnnularKernel": {
+      "before": 13,
+      "after": 12
+    },
+    "RiemannResearch.RH.NoorShiftedResidueDensity": {
+      "before": 106,
+      "after": 70
+    },
+    "RiemannResearch.RH.DampedMobiusSparseHeadDichotomy": {
+      "before": 100,
+      "after": 95
+    },
+    "RiemannResearch.RH.DampedMobiusPositiveAbelObstruction": {
+      "before": 121,
+      "after": 116
+    },
+    "RiemannResearch.RH.DyadicTentCoordinateEnergy": {
+      "before": 96,
+      "after": 95
+    },
+    "RiemannResearch.RH.TwoSeedFarDilationBlindSpot": {
+      "before": 18,
+      "after": 14
+    },
+    "RiemannResearch.RH.ParetoProgressionDigamma": {
+      "before": 12,
+      "after": 10
+    },
+    "RiemannResearch.RH.PhysicalHeadResidualLift": {
+      "before": 71,
+      "after": 70
+    },
+    "RiemannResearch.RH.DyadicSignedDampingPackets": {
+      "before": 121,
+      "after": 120
+    },
+    "RiemannResearch.RH.ActualArithmeticTailExistence": {
+      "before": 132,
+      "after": 116
+    },
+    "RiemannResearch.RH.ArgumentDoublingGenerators": {
+      "before": 52,
+      "after": 42
+    },
+    "RiemannResearch.RH.ArithmeticMinimumTranscendence": {
+      "before": 182,
+      "after": 144
+    },
+    "RiemannResearch.RH.CanonicalMobiusStretchedEnergy": {
+      "before": 107,
+      "after": 94
+    },
+    "RiemannResearch.RH.ResidualGeometricInnovations": {
+      "before": 55,
+      "after": 45
+    },
+    "RiemannResearch.RH.MobiusJointHeadProjection": {
+      "before": 76,
+      "after": 62
+    },
+    "RiemannResearch.RH.IntegerDPPReflection": {
+      "before": 102,
+      "after": 61
+    },
+    "RiemannResearch.RH.SquarefreeWindowSubpolynomial": {
+      "before": 102,
+      "after": 94
+    },
+    "RiemannResearch.RH.IntegerDPPEdgeScalingTargets": {
+      "before": 112,
+      "after": 71
+    },
+    "RiemannResearch.RH.WeightedDivisorCorrection": {
+      "before": 238,
+      "after": 207
+    },
+    "RiemannResearch.RH.ParetoGibbsPositive": {
+      "before": 4,
+      "after": 5
+    },
+    "RiemannResearch.RH.FixedWidthWeilDiscrepancy": {
+      "before": 19,
+      "after": 16
+    },
+    "RiemannResearch.RH.ParetoConductorSchurGain": {
+      "before": 64,
+      "after": 55
+    },
+    "RiemannResearch.RH.ParetoPacketCoordinates": {
+      "before": 17,
+      "after": 13
+    },
+    "RiemannResearch.RH.IntegerDPPDampedConvergence": {
+      "before": 122,
+      "after": 81
+    },
+    "RiemannResearch.RH.ConditionalResidueHeadMatrix": {
+      "before": 31,
+      "after": 19
+    },
+    "RiemannResearch.RH.WeilEnergyNormalization": {
+      "before": 13,
+      "after": 10
+    },
+    "RiemannResearch.RH.DyadicResidueConductorBounds": {
+      "before": 105,
+      "after": 104
+    },
+    "RiemannResearch.RH.FiniteDilationMobiusKernel": {
+      "before": 58,
+      "after": 32
+    },
+    "RiemannResearch.RH.WeilPositiveDiagonal": {
+      "before": 130,
+      "after": 114
+    },
+    "RiemannResearch.RH.NaturalMobiusDerivativeConvergence": {
+      "before": 174,
+      "after": 144
+    },
+    "RiemannResearch.RH.MellinZeroProfile": {
+      "before": 150,
+      "after": 84
+    },
+    "RiemannResearch.RH.ChebyshevMellinRH": {
+      "before": 9,
+      "after": 8
+    },
+    "RiemannResearch.RH.NaturalMobiusResidualEscape": {
+      "before": 129,
+      "after": 90
+    },
+    "RiemannResearch.RH.ConditionalNormalizedMatrixMinimum": {
+      "before": 36,
+      "after": 24
+    },
+    "RiemannResearch.RH.ParetoFirstPointSubpower": {
+      "before": 103,
+      "after": 64
+    },
+    "RiemannResearch.RH.DampedMobiusHalfHilbertAllLogRates": {
+      "before": 119,
+      "after": 114
+    },
+    "RiemannResearch.RH.MobiusReciprocalCutoff": {
+      "before": 9,
+      "after": 10
+    },
+    "RiemannResearch.RH.HardyMobiusFamily": {
+      "before": 86,
+      "after": 78
+    },
+    "RiemannResearch.RH.CRTPositiveMExpansion": {
+      "before": 27,
+      "after": 26
+    },
+    "RiemannResearch.RH.ResidueModeGramInverse": {
+      "before": 120,
+      "after": 81
+    },
+    "RiemannResearch.RH.ParetoComparableWeights": {
+      "before": 55,
+      "after": 45
+    },
+    "RiemannResearch.RH.AnnularCriticalEnergyTransfer": {
+      "before": 20,
+      "after": 19
+    },
+    "RiemannResearch.RH.ParetoHaarCoordinates": {
+      "before": 18,
+      "after": 14
+    },
+    "RiemannResearch.RH.DampedDiagonalCompactness": {
+      "before": 71,
+      "after": 44
+    },
+    "RiemannResearch.RH.ArgumentDoublingClosure": {
+      "before": 51,
+      "after": 41
+    },
+    "RiemannResearch.RH.DyadicTriadicComplementObstruction": {
+      "before": 44,
+      "after": 40
+    },
+    "RiemannResearch.RH.MellinModeTailCauchy": {
+      "before": 98,
+      "after": 72
+    },
+    "RiemannResearch.RH.OptimalTwoCoefficientCriterion": {
+      "before": 53,
+      "after": 43
+    },
+    "RiemannResearch.RH.NaturalMobiusVariation": {
+      "before": 88,
+      "after": 80
+    },
+    "RiemannResearch.RH.DampedMobiusSignedAbelGrowth": {
+      "before": 52,
+      "after": 47
+    },
+    "RiemannResearch.RH.DyadicTentFourierSamples": {
+      "before": 98,
+      "after": 97
+    },
+    "RiemannResearch.RH.ParetoTailCapacity": {
+      "before": 56,
+      "after": 46
+    },
+    "RiemannResearch.RH.DyadicArithmeticAbelReduction": {
+      "before": 108,
+      "after": 107
+    },
+    "RiemannResearch.RH.ConditionalMeanEnergy": {
+      "before": 21,
+      "after": 9
+    },
+    "RiemannResearch.RH.DampedMobiusUniformHalfRange": {
+      "before": 103,
+      "after": 98
+    },
+    "RiemannResearch.RH.BalancedMinimalTarget": {
+      "before": 31,
+      "after": 27
+    },
+    "RiemannResearch.RH.DampedMobiusHalfHilbertConvergence": {
+      "before": 100,
+      "after": 95
+    },
+    "RiemannResearch.RH.ParetoSchurTransfer": {
+      "before": 36,
+      "after": 30
+    },
+    "RiemannResearch.RH.ResidueGramMobiusCorrection": {
+      "before": 121,
+      "after": 82
+    },
+    "RiemannResearch.RH.OptimizedPacketRecursion": {
+      "before": 33,
+      "after": 27
+    },
+    "RiemannResearch.RH.ParetoMobiusConstrainedEnergy": {
+      "before": 149,
+      "after": 104
+    },
+    "RiemannResearch.RH.DampedMobiusLoglogStretchedProviders": {
+      "before": 99,
+      "after": 94
+    },
+    "RiemannResearch.RH.DampedMobiusSignedHeadClosure": {
+      "before": 50,
+      "after": 45
+    },
+    "RiemannResearch.RH.ParetoGibbsSchurGamma": {
+      "before": 2,
+      "after": 3
+    },
+    "RiemannResearch.RH.ResidualCutoffSchedule": {
+      "before": 84,
+      "after": 82
+    },
+    "RiemannResearch.RH.AdjacentDilationPackets": {
+      "before": 24,
+      "after": 21
+    },
+    "RiemannResearch.RH.BurnolBoundaryCoordinates": {
+      "before": 47,
+      "after": 33
+    },
+    "RiemannResearch.RH.NaturalMobiusPrimitiveTests": {
+      "before": 92,
+      "after": 84
+    },
+    "RiemannResearch.RH.ParetoBalancedSchurTrial": {
+      "before": 97,
+      "after": 73
+    },
+    "RiemannResearch.RH.ParetoResidueMoments": {
+      "before": 9,
+      "after": 7
+    },
+    "RiemannResearch.RH.LegalExactHeadSubpolynomial": {
+      "before": 45,
+      "after": 40
+    },
+    "RiemannResearch.RH.ArithmeticFloorLoglogStretchedEnvelope": {
+      "before": 38,
+      "after": 34
+    },
+    "RiemannResearch.RH.CotangentBridge": {
+      "before": 116,
+      "after": 79
+    },
+    "RiemannResearch.RH.ParetoFinitePivotLimit": {
+      "before": 15,
+      "after": 11
+    },
+    "RiemannResearch.RH.IntegratedRamanujanHilbert": {
+      "before": 27,
+      "after": 18
+    },
+    "RiemannResearch.RH.DampedMobiusHalfEndpoint": {
+      "before": 90,
+      "after": 85
+    },
+    "RiemannResearch.RH.ParetoOddMomentSignObstruction": {
+      "before": 113,
+      "after": 88
+    },
+    "RiemannResearch.RH.ParetoProgressionIntegral": {
+      "before": 4,
+      "after": 5
+    },
+    "RiemannResearch.RH.PhysicalMeanRepairProjection": {
+      "before": 151,
+      "after": 114
+    },
+    "RiemannResearch.RH.CanonicalMobiusSingleHeadCapacity": {
+      "before": 119,
+      "after": 90
+    },
+    "RiemannResearch.RH.IntegerDPPSpatialCoupling": {
+      "before": 116,
+      "after": 75
+    },
+    "RiemannResearch.RH.RawMobiusPrimitivePeriodMean": {
+      "before": 113,
+      "after": 104
+    },
+    "RiemannResearch.RH.ConditionalMeanHeadObstruction": {
+      "before": 50,
+      "after": 48
+    },
+    "RiemannResearch.RH.PhysicalResidualMean": {
+      "before": 183,
+      "after": 145
+    },
+    "RiemannResearch.RH.ParetoDyadicShellCriterion": {
+      "before": 151,
+      "after": 122
+    },
+    "RiemannResearch.RH.ResidueCorrectionCovariance": {
+      "before": 127,
+      "after": 88
+    },
+    "RiemannResearch.RH.SmoothWeilMatrix": {
+      "before": 131,
+      "after": 115
+    },
+    "RiemannResearch.RH.ResidueSmallGram": {
+      "before": 110,
+      "after": 71
+    },
+    "RiemannResearch.RH.CRTExactDigamma": {
+      "before": 17,
+      "after": 15
+    },
+    "RiemannResearch.RH.ArithmeticCumulativeEnergy": {
+      "before": 0,
+      "after": 1
+    },
+    "RiemannResearch.RH.TwoSeedExactHeadEnergy": {
+      "before": 53,
+      "after": 48
+    },
+    "RiemannResearch.RH.CanonicalMobiusWeightedEndpoint": {
+      "before": 83,
+      "after": 71
+    },
+    "RiemannResearch.RH.ParetoReflectionLegalPackets": {
+      "before": 26,
+      "after": 24
+    },
+    "RiemannResearch.RH.CRTConductorRefinement": {
+      "before": 24,
+      "after": 23
+    },
+    "RiemannResearch.RH.RootComponentExactHeadEnergy": {
+      "before": 73,
+      "after": 68
+    },
+    "RiemannResearch.RH.ParetoActualSpectralResolvent": {
+      "before": 191,
+      "after": 160
+    },
+    "RiemannResearch.RH.ArgumentSamplingClosure": {
+      "before": 73,
+      "after": 46
+    },
+    "RiemannResearch.RH.ParetoHiddenConditioningVerified": {
+      "before": 25,
+      "after": 24
+    },
+    "RiemannResearch.RH.ResidualDerivativeCoercivity": {
+      "before": 281,
+      "after": 216
+    },
+    "RiemannResearch.RH.ParetoFirstSitePrimeSourceFloors": {
+      "before": 153,
+      "after": 109
+    },
+    "RiemannResearch.RH.HardyMobiusEndpoint": {
+      "before": 108,
+      "after": 99
+    },
+    "RiemannResearch.RH.DyadicCenteredRepairRigidity": {
+      "before": 59,
+      "after": 54
+    },
+    "RiemannResearch.RH.ScreeningSourcePrediction": {
+      "before": 153,
+      "after": 126
+    },
+    "RiemannResearch.RH.CanonicalMobiusScreeningBridge": {
+      "before": 151,
+      "after": 124
+    },
+    "RiemannResearch.RH.ArithmeticFloorLogConvergence": {
+      "before": 63,
+      "after": 58
+    },
+    "RiemannResearch.RH.ArithmeticChargeHilbertLimits": {
+      "before": 30,
+      "after": 26
+    },
+    "RiemannResearch.RH.BalazardReciprocalCharge": {
+      "before": 54,
+      "after": 40
+    },
+    "RiemannResearch.RH.ParetoCumulativeSignedGap": {
+      "before": 129,
+      "after": 91
+    },
+    "RiemannResearch.RH.RiemannHypothesisStrip": {
+      "before": 4,
+      "after": 3
+    },
+    "RiemannResearch.RH.ArithmeticFloorHilbertSeries": {
+      "before": 25,
+      "after": 21
+    },
+    "RiemannResearch.RH.MultiRangeCertifiedMinimum": {
+      "before": 94,
+      "after": 89
+    },
+    "RiemannResearch.RH.IntegerDPPWeightedHoles": {
+      "before": 107,
+      "after": 66
+    },
+    "RiemannResearch.RH.AnnularPrimePairTargets": {
+      "before": 10,
+      "after": 9
+    },
+    "RiemannResearch.RH.DyadicFourierZeroDamping": {
+      "before": 123,
+      "after": 122
+    },
+    "RiemannResearch.RH.DyadicTriadicFourierComparison": {
+      "before": 111,
+      "after": 110
+    },
+    "RiemannResearch.RH.ConditionalMeanMinimumCriteria": {
+      "before": 53,
+      "after": 51
+    },
+    "RiemannResearch.RH.CanonicalMobiusOneStepCapacity": {
+      "before": 87,
+      "after": 74
+    },
+    "RiemannResearch.RH.ProjectedDualMellinWitness": {
+      "before": 212,
+      "after": 175
+    },
+    "RiemannResearch.RH.ParetoBoundedCoordinateClosure": {
+      "before": 70,
+      "after": 43
+    },
+    "RiemannResearch.RH.RHFalseTailConstraints": {
+      "before": 106,
+      "after": 97
+    },
+    "RiemannResearch.RH.LegalApproximateHeadSubpolynomial": {
+      "before": 60,
+      "after": 50
+    },
+    "RiemannResearch.RH.TwoSeedSchurConvergence": {
+      "before": 80,
+      "after": 75
+    },
+    "RiemannResearch.RH.IntegerDPPResidueProbability": {
+      "before": 137,
+      "after": 96
+    },
+    "RiemannResearch.RH.MellinZeroQuantitativeGap": {
+      "before": 99,
+      "after": 73
+    },
+    "RiemannResearch.RH.AnnularModelCoefficientBounds": {
+      "before": 11,
+      "after": 10
+    },
+    "RiemannResearch.RH.ExactHeadCoefficientCounterexample": {
+      "before": 67,
+      "after": 54
+    },
+    "RiemannResearch.RH.IntegerDPPMellinObstruction": {
+      "before": 100,
+      "after": 59
+    },
+    "RiemannResearch.RH.ParetoTailRateCompatibility": {
+      "before": 52,
+      "after": 42
+    },
+    "RiemannResearch.RH.OddCarryJointHead": {
+      "before": 71,
+      "after": 57
+    },
+    "RiemannResearch.RH.NymanPrimeSquareCompensation": {
+      "before": 132,
+      "after": 116
+    },
+    "RiemannResearch.RH.ExactHeadCofinalBounds": {
+      "before": 52,
+      "after": 42
+    },
+    "RiemannResearch.RH.MultiRangeCertificateConvergence": {
+      "before": 82,
+      "after": 64
+    },
+    "RiemannResearch.RH.ParetoGibbsHilbertEnergy": {
+      "before": 14,
+      "after": 16
+    },
+    "RiemannResearch.RH.FiniteDyadicDefect": {
+      "before": 260,
+      "after": 190
+    },
+    "RiemannResearch.RH.ParetoFirstSitePrimeMultiscale": {
+      "before": 114,
+      "after": 90
+    },
+    "RiemannResearch.RH.ParetoTailCapacityDuality": {
+      "before": 73,
+      "after": 49
+    },
+    "RiemannResearch.RH.ConditionalMeanSubpolynomial": {
+      "before": 51,
+      "after": 49
+    },
+    "RiemannResearch.RH.ThresholdRiemannHypothesis": {
+      "before": 30,
+      "after": 29
+    },
+    "RiemannResearch.RH.ParetoOptimizerTailSummability": {
+      "before": 215,
+      "after": 180
+    },
+    "RiemannResearch.RH.ParetoHiddenConditioningConstant": {
+      "before": 11,
+      "after": 12
+    },
+    "RiemannResearch.RH.IntegerDPPHistoricalTargets": {
+      "before": 128,
+      "after": 82
+    },
+    "RiemannResearch.RH.MobiusCoefficientDefect": {
+      "before": 102,
+      "after": 64
+    },
+    "RiemannResearch.RH.IntegerSeedExplicitGap": {
+      "before": 39,
+      "after": 35
+    },
+    "RiemannResearch.RH.ParetoResidualBoundaryEnergy": {
+      "before": 192,
+      "after": 136
+    },
+    "RiemannResearch.RH.RiemannHypothesisRightHalfStrip": {
+      "before": 6,
+      "after": 5
+    },
+    "RiemannResearch.RH.WeilGammaLimits": {
+      "before": 66,
+      "after": 50
+    },
+    "RiemannResearch.RH.DyadicResidueBinaryLogMean": {
+      "before": 92,
+      "after": 91
+    },
+    "RiemannResearch.RH.CRTCoordinateLegality": {
+      "before": 86,
+      "after": 82
+    },
+    "RiemannResearch.RH.ParetoReversePivotExpansion": {
+      "before": 15,
+      "after": 11
+    },
+    "RiemannResearch.RH.CompactMixtureResidueIdentity": {
+      "before": 38,
+      "after": 37
+    },
+    "RiemannResearch.RH.ParetoCoprimeCertificateEscape": {
+      "before": 85,
+      "after": 61
+    },
+    "RiemannResearch.RH.ParetoGibbsGammaDefect": {
+      "before": 5,
+      "after": 6
+    },
+    "RiemannResearch.RH.FiniteSeedMellinObstruction": {
+      "before": 38,
+      "after": 34
+    },
+    "RiemannResearch.RH.IntegerDPPWeightedVacancy": {
+      "before": 135,
+      "after": 90
+    },
+    "RiemannResearch.RH.ResidueGramCofactors": {
+      "before": 119,
+      "after": 80
+    },
+    "RiemannResearch.RH.ComplexTailCoercivity": {
+      "before": 80,
+      "after": 55
+    },
+    "RiemannResearch.RH.ArithmeticFloorPowerConvergence": {
+      "before": 62,
+      "after": 57
+    },
+    "RiemannResearch.RH.ParetoPhysicalDualCoefficients": {
+      "before": 80,
+      "after": 53
+    },
+    "RiemannResearch.RH.TwoSeedPrimeCoefficients": {
+      "before": 72,
+      "after": 63
+    },
+    "RiemannResearch.RH.BalancedFiniteTailGram": {
+      "before": 75,
+      "after": 70
+    },
+    "RiemannResearch.RH.ZetaTwoDampedEnergyTransfer": {
+      "before": 92,
+      "after": 87
+    },
+    "RiemannResearch.RH.IntegerDPPVacancyDuality": {
+      "before": 101,
+      "after": 60
+    },
+    "RiemannResearch.RH.ParetoPrimeCrossStageCancellation": {
+      "before": 99,
+      "after": 75
+    },
+    "RiemannResearch.RH.CountableZetaDetector": {
+      "before": 15,
+      "after": 14
+    },
+    "RiemannResearch.RH.CompensatedTwoCoefficientSchur": {
+      "before": 160,
+      "after": 149
+    },
+    "RiemannResearch.RH.IntegerDPPLiftFactorization": {
+      "before": 119,
+      "after": 81
+    },
+    "RiemannResearch.RH.MeanOneChargeBounds": {
+      "before": 139,
+      "after": 102
+    },
+    "RiemannResearch.RH.IntegerDPPTrace": {
+      "before": 103,
+      "after": 65
+    },
+    "RiemannResearch.RH.ThresholdTwoSeedConverse": {
+      "before": 21,
+      "after": 19
+    },
+    "RiemannResearch.RH.BalancedSquarefreeCrossing": {
+      "before": 74,
+      "after": 61
+    },
+    "RiemannResearch.RH.DyadicTentMellinCoefficients": {
+      "before": 94,
+      "after": 93
+    },
+    "RiemannResearch.RH.ReciprocalChargeDyadicAverages": {
+      "before": 67,
+      "after": 54
+    },
+    "RiemannResearch.RH.ResidualCorrectionCertificate": {
+      "before": 125,
+      "after": 86
+    },
+    "RiemannResearch.RH.GeometricDifferentialResearchTargets": {
+      "before": 3,
+      "after": 4
+    },
+    "RiemannResearch.RH.PhysicalCoreMonotonicity": {
+      "before": 128,
+      "after": 93
+    },
+    "RiemannResearch.RH.PrimeSieveDerivativeClosure": {
+      "before": 81,
+      "after": 59
+    },
+    "RiemannResearch.RH.MellinFrequencyMeasure": {
+      "before": 142,
+      "after": 75
+    },
+    "RiemannResearch.RH.ConductorProjectionRH": {
+      "before": 68,
+      "after": 58
+    },
+    "RiemannResearch.RH.NymanBroadSquareAsymptotic": {
+      "before": 55,
+      "after": 52
+    },
+    "RiemannResearch.RH.ParetoClosedRepairTails": {
+      "before": 14,
+      "after": 10
+    },
+    "RiemannResearch.RH.HilbertPolyaPositiveProduct": {
+      "before": 8,
+      "after": 7
+    },
+    "RiemannResearch.RH.ParetoAdjacentSchurBound": {
+      "before": 139,
+      "after": 95
+    },
+    "RiemannResearch.RH.ParetoMovingSignedGap": {
+      "before": 128,
+      "after": 90
+    },
+    "RiemannResearch.RH.NaturalMobiusDerivativeTests": {
+      "before": 172,
+      "after": 142
+    },
+    "RiemannResearch.RH.NymanMixedSpectralNullity": {
+      "before": 105,
+      "after": 89
+    },
+    "RiemannResearch.RH.ArithmeticFloorAllLogEnvelope": {
+      "before": 64,
+      "after": 59
+    },
+    "RiemannResearch.RH.WeilConverse": {
+      "before": 138,
+      "after": 122
+    },
+    "RiemannResearch.RH.ActualIntegratedZeroTruncation": {
+      "before": 39,
+      "after": 26
+    },
+    "RiemannResearch.RH.CotangentMultiplication": {
+      "before": 117,
+      "after": 80
+    },
+    "RiemannResearch.RH.DyadicTentFourierSummability": {
+      "before": 95,
+      "after": 94
+    },
+    "RiemannResearch.RH.IntegerDPPKernel": {
+      "before": 100,
+      "after": 59
+    },
+    "RiemannResearch.RH.DampedMobiusJointHeadLimits": {
+      "before": 97,
+      "after": 92
+    },
+    "RiemannResearch.RH.ParetoSignedSchurRemainder": {
+      "before": 51,
+      "after": 45
+    },
+    "RiemannResearch.RH.ParetoGibbsSchurEnergy": {
+      "before": 3,
+      "after": 4
+    },
+    "RiemannResearch.RH.WeilExplicitFormula": {
+      "before": 58,
+      "after": 45
+    },
+    "RiemannResearch.RH.ParetoReflectionVariance": {
+      "before": 20,
+      "after": 18
+    },
+    "RiemannResearch.RH.ParetoResidualShell": {
+      "before": 74,
+      "after": 61
+    },
+    "RiemannResearch.RH.IntegerDPPWeightedDeterminant": {
+      "before": 136,
+      "after": 91
+    },
+    "RiemannResearch.RH.MobiusResidualFirstCoordinate": {
+      "before": 50,
+      "after": 40
+    },
+    "RiemannResearch.RH.RealAutocorrelationAdmissibility": {
+      "before": 13,
+      "after": 10
+    },
+    "RiemannResearch.RH.ReciprocalChargeDilationCorrelation": {
+      "before": 66,
+      "after": 53
+    },
+    "RiemannResearch.RH.ParetoOddMomentParity": {
+      "before": 113,
+      "after": 88
+    },
+    "RiemannResearch.RH.ProjectedDualMassEndpoint": {
+      "before": 347,
+      "after": 312
+    },
+    "RiemannResearch.RH.AnnularEnergyRH": {
+      "before": 42,
+      "after": 41
+    },
+    "RiemannResearch.RH.ReciprocalGramCorrection": {
+      "before": 132,
+      "after": 94
+    },
+    "RiemannResearch.RH.ReflectionFailureConditions": {
+      "before": 52,
+      "after": 50
+    },
+    "RiemannResearch.RH.ConditionalMeanSignedProjection": {
+      "before": 56,
+      "after": 54
+    },
+    "RiemannResearch.RH.LocalizedMellinSignatureDecay": {
+      "before": 60,
+      "after": 50
+    },
+    "RiemannResearch.RH.SquarefreeParetoTransfer": {
+      "before": 55,
+      "after": 45
+    },
+    "RiemannResearch.RH.DampedMobiusHalfHilbertLoglogStretchedRate": {
+      "before": 115,
+      "after": 110
+    },
+    "RiemannResearch.RH.ParetoMellinHeadObstruction": {
+      "before": 21,
+      "after": 17
+    },
+    "RiemannResearch.RH.ParetoCoprimeDefectScreening": {
+      "before": 104,
+      "after": 80
+    },
+    "RiemannResearch.RH.ParetoGibbsEnergy": {
+      "before": 3,
+      "after": 4
+    },
+    "RiemannResearch.RH.ParetoParityContrast": {
+      "before": 114,
+      "after": 89
+    },
+    "RiemannResearch.RH.DyadicFourierBoundaryEnergy": {
+      "before": 87,
+      "after": 86
+    },
+    "RiemannResearch.RH.DigammaComplexLaurent": {
+      "before": 17,
+      "after": 15
+    },
+    "RiemannResearch.RH.ParetoGibbsSpectrumTarget": {
+      "before": 13,
+      "after": 15
+    },
+    "RiemannResearch.RH.ParetoGibbsSchur": {
+      "before": 1,
+      "after": 2
+    },
+    "RiemannResearch.RH.ParetoExactHeadClosure": {
+      "before": 55,
+      "after": 11
+    },
+    "RiemannResearch.RH.ConditionalMeanCorrectionObstruction": {
+      "before": 5,
+      "after": 6
+    },
+    "RiemannResearch.RH.OptimalProjectionDilationGaps": {
+      "before": 71,
+      "after": 58
+    },
+    "RiemannResearch.RH.ParetoInfiniteRoughTailCertificates": {
+      "before": 82,
+      "after": 58
+    },
+    "RiemannResearch.RH.PhysicalSourceProjection": {
+      "before": 133,
+      "after": 98
+    },
+    "RiemannResearch.RH.DyadicArithmeticFourierBridge": {
+      "before": 120,
+      "after": 119
+    },
+    "RiemannResearch.RH.ParetoUniformJordanIdentification": {
+      "before": 23,
+      "after": 21
+    },
+    "RiemannResearch.RH.ZetaTwoRadicalRowCriterion": {
+      "before": 86,
+      "after": 76
+    },
+    "RiemannResearch.RH.PolynomialWeilCriterion": {
+      "before": 26,
+      "after": 22
+    },
+    "RiemannResearch.Probability.ConditionalIIDMarginal": {
+      "before": 4,
+      "after": 5
+    },
+    "RiemannResearch.Probability.ConditionalIIDSampleMean": {
+      "before": 5,
+      "after": 6
+    },
+    "RiemannResearch.Probability.ConditionalIIDStrongLaw": {
+      "before": 8,
+      "after": 9
+    },
+    "RiemannResearch.Probability.ConditionalIIDPrimeRows": {
+      "before": 4,
+      "after": 5
+    },
+    "RiemannResearch.Probability.ConditionalIIDDivisibility": {
+      "before": 4,
+      "after": 5
+    },
+    "RiemannResearch.Probability.ConditionalIIDSampleRates": {
+      "before": 6,
+      "after": 7
+    },
+    "RiemannResearch.Probability.ConditionalIIDLatentSupport": {
+      "before": 5,
+      "after": 6
+    },
+    "RiemannResearch.Probability.ConditionalIIDReplica": {
+      "before": 8,
+      "after": 9
+    },
+    "RiemannResearch.Probability.ConditionalIIDUniformMoments": {
+      "before": 3,
+      "after": 4
+    },
+    "RiemannResearch.Probability.ConditionalIIDWeightedEnergy": {
+      "before": 7,
+      "after": 8
+    },
+    "RiemannResearch.Probability.DeterminantalWindow": {
+      "before": 7,
+      "after": 6
+    },
+    "RiemannResearch.NumberTheory.LogarithmicKernelConvolution": {
+      "before": 8,
+      "after": 9
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.Final": {
+      "before": 117,
+      "after": 116
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.Statement": {
+      "before": 2,
+      "after": 1
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.Main": {
+      "before": 42,
+      "after": 43
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.FinalMult": {
+      "before": 135,
+      "after": 134
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ZetaReflect": {
+      "before": 3,
+      "after": 2
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.Tail": {
+      "before": 14,
+      "after": 15
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.Analytic.Stirling": {
+      "before": 3,
+      "after": 1
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.Tail.Package": {
+      "before": 25,
+      "after": 26
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.RvM.ReZeroCount": {
+      "before": 21,
+      "after": 19
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.RvM.ZetaGrowth": {
+      "before": 9,
+      "after": 7
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.RvM.CompletedZeta": {
+      "before": 3,
+      "after": 2
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.RvM.Backlund": {
+      "before": 22,
+      "after": 20
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.RvM.MainTerm": {
+      "before": 33,
+      "after": 31
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.RvM.Statement": {
+      "before": 34,
+      "after": 32
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.RvM.LocalCount": {
+      "before": 19,
+      "after": 17
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.GammaFacts.Series": {
+      "before": 2,
+      "after": 0
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.FullLineChiProof": {
+      "before": 85,
+      "after": 81
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.LandauChi": {
+      "before": 22,
+      "after": 20
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.HorizontalChi": {
+      "before": 86,
+      "after": 82
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.MainTermChi": {
+      "before": 64,
+      "after": 62
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.VerticalLineChi": {
+      "before": 34,
+      "after": 32
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.FullLineChi": {
+      "before": 69,
+      "after": 65
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.MainChi": {
+      "before": 107,
+      "after": 103
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.BacklundChi": {
+      "before": 23,
+      "after": 21
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.ReZeroCountChi": {
+      "before": 30,
+      "after": 28
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.RvMChi": {
+      "before": 65,
+      "after": 63
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.Final": {
+      "before": 145,
+      "after": 144
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.Mult": {
+      "before": 175,
+      "after": 174
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.ContourChi": {
+      "before": 37,
+      "after": 35
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.Main": {
+      "before": 122,
+      "after": 121
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.FullLineChiFold": {
+      "before": 78,
+      "after": 74
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.LGrowth": {
+      "before": 18,
+      "after": 16
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.FullLineChiAssembly": {
+      "before": 91,
+      "after": 87
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmE.LocalCountChi": {
+      "before": 27,
+      "after": 25
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmD.ZeroSideD": {
+      "before": 42,
+      "after": 43
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmD.Final": {
+      "before": 132,
+      "after": 131
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmD.Mult": {
+      "before": 140,
+      "after": 139
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.ZeroSumLimit": {
+      "before": 53,
+      "after": 40
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.GoodHeights": {
+      "before": 35,
+      "after": 22
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.GammaRBracket": {
+      "before": 3,
+      "after": 1
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.ZeroSummability": {
+      "before": 36,
+      "after": 22
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.ZeroSummabilityGen": {
+      "before": 37,
+      "after": 23
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.Effective": {
+      "before": 36,
+      "after": 34
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.Horizontal": {
+      "before": 53,
+      "after": 40
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.FullLineAssembly": {
+      "before": 56,
+      "after": 43
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.Contour": {
+      "before": 51,
+      "after": 38
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.Landau": {
+      "before": 15,
+      "after": 12
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.Main": {
+      "before": 57,
+      "after": 44
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.FullLine": {
+      "before": 52,
+      "after": 39
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.VerticalLine": {
+      "before": 14,
+      "after": 13
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.XiLogDeriv": {
+      "before": 3,
+      "after": 2
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmDE.Final": {
+      "before": 170,
+      "after": 169
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmDE.Mult": {
+      "before": 187,
+      "after": 186
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.ThmDE.ZeroSide": {
+      "before": 50,
+      "after": 51
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.Statement.Seam": {
+      "before": 3,
+      "after": 2
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.ZetaBounds": {
+      "before": 8,
+      "after": 6
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Fourier": {
+      "before": 1,
+      "after": 2
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.FamilyHypsV": {
+      "before": 153,
+      "after": 152
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount": {
+      "before": 72,
+      "after": 67
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.FamilyHyps": {
+      "before": 151,
+      "after": 150
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Final": {
+      "before": 254,
+      "after": 253
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.FamilyFlat": {
+      "before": 149,
+      "after": 148
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Assembly": {
+      "before": 139,
+      "after": 138
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Seam": {
+      "before": 53,
+      "after": 51
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Inputs": {
+      "before": 179,
+      "after": 178
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula": {
+      "before": 72,
+      "after": 67
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.QuarticWindow": {
+      "before": 157,
+      "after": 156
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFMain": {
+      "before": 115,
+      "after": 111
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.GramBridgeW": {
+      "before": 77,
+      "after": 72
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.GoodHeightsW": {
+      "before": 79,
+      "after": 74
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFJTermW": {
+      "before": 104,
+      "after": 99
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.Count": {
+      "before": 78,
+      "after": 73
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.Contour": {
+      "before": 61,
+      "after": 59
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.Omega": {
+      "before": 58,
+      "after": 56
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.ZeroFree": {
+      "before": 83,
+      "after": 79
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFWeights": {
+      "before": 76,
+      "after": 71
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFLitCorrW": {
+      "before": 101,
+      "after": 96
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.Seam": {
+      "before": 57,
+      "after": 55
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.TwoLine": {
+      "before": 56,
+      "after": 54
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFFinal": {
+      "before": 135,
+      "after": 131
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFBasic": {
+      "before": 77,
+      "after": 72
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFContour": {
+      "before": 102,
+      "after": 97
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFExpansion": {
+      "before": 78,
+      "after": 73
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount.GoodHeights": {
+      "before": 73,
+      "after": 68
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount.Generic": {
+      "before": 63,
+      "after": 58
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount.Y": {
+      "before": 54,
+      "after": 52
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount.Contour": {
+      "before": 56,
+      "after": 54
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount.Landau": {
+      "before": 65,
+      "after": 60
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount.Basic": {
+      "before": 54,
+      "after": 52
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount.Sides": {
+      "before": 71,
+      "after": 66
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount.GenericRvM": {
+      "before": 55,
+      "after": 53
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.QuarticWindow.ZeroSide": {
+      "before": 146,
+      "after": 145
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.LitCorr": {
+      "before": 92,
+      "after": 87
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.JTerm": {
+      "before": 94,
+      "after": 89
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.TestWeight": {
+      "before": 74,
+      "after": 69
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.FamilyFacts": {
+      "before": 73,
+      "after": 68
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.Contour": {
+      "before": 73,
+      "after": 68
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.ZeroFree": {
+      "before": 81,
+      "after": 77
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.GramBridge": {
+      "before": 74,
+      "after": 69
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.Expansion": {
+      "before": 73,
+      "after": 68
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.Main": {
+      "before": 114,
+      "after": 110
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.XiEFAssembly": {
+      "before": 103,
+      "after": 99
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.DirichletLine": {
+      "before": 58,
+      "after": 45
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.LineBound": {
+      "before": 74,
+      "after": 69
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.EntryError": {
+      "before": 73,
+      "after": 68
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.FullLine": {
+      "before": 90,
+      "after": 85
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFContour.Poles": {
+      "before": 58,
+      "after": 56
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFContour.Rectangle": {
+      "before": 95,
+      "after": 90
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFContour.Analytic": {
+      "before": 57,
+      "after": 55
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFContour.Limit": {
+      "before": 91,
+      "after": 86
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.LogarithmicMobiusConvergence": {
+      "before": 39,
+      "after": 30
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.MangoldtHarmonicAbel": {
+      "before": 44,
+      "after": 19
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.Wiener": {
+      "before": 3,
+      "after": 4
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusLogBootstrapFinite": {
+      "before": 15,
+      "after": 16
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.MertensLogThreeHalvesAssembly": {
+      "before": 18,
+      "after": 19
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusLogBootstrapPower": {
+      "before": 27,
+      "after": 17
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusFloorTailReindex": {
+      "before": 7,
+      "after": 8
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.Fourier": {
+      "before": 2,
+      "after": 3
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusReciprocal": {
+      "before": 8,
+      "after": 9
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusLogarithmicRateBridge": {
+      "before": 7,
+      "after": 8
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.LogarithmicMobiusConvolution": {
+      "before": 42,
+      "after": 17
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.LogarithmicMobiusMean": {
+      "before": 79,
+      "after": 51
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.Defs": {
+      "before": 2,
+      "after": 3
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.Consequences": {
+      "before": 6,
+      "after": 7
+    },
+    "RiemannResearch.NumberTheory.PrimeNumberTheorem.Quantitative.MediumPNT": {
+      "before": 11,
+      "after": 9
+    }
+  },
+  "selected_modules": {
+    "RiemannResearch.RH.ArithmeticCumulativeEnergy": {
+      "dependencies_before": 0,
+      "dependencies_after": 1,
+      "importers_before": 600,
+      "importers_after": 39
+    },
+    "RiemannResearch.RH.ParetoGeometricMixture": {
+      "dependencies_before": 0,
+      "dependencies_after": 1,
+      "importers_before": 1119,
+      "importers_after": 43
+    },
+    "RiemannResearch.RH.ParetoGibbsHilbert": {
+      "dependencies_before": 12,
+      "dependencies_after": 14,
+      "importers_before": 555,
+      "importers_after": 14
+    },
+    "RiemannResearch.RH.ParetoGibbsTailBasis": {
+      "dependencies_before": 13,
+      "dependencies_after": 9,
+      "importers_before": 548,
+      "importers_after": 540
+    },
+    "RiemannResearch.RH.ExactHeadCharges": {
+      "dependencies_before": 7,
+      "dependencies_after": 1,
+      "importers_before": 500,
+      "importers_after": 52
+    },
+    "RiemannResearch.RH.FiniteSeedComponentCharge": {
+      "dependencies_before": 6,
+      "dependencies_after": 6,
+      "importers_before": 520,
+      "importers_after": 40
+    },
+    "RiemannResearch.RH.ResidueTailCertificateRegularity": {
+      "dependencies_before": 40,
+      "dependencies_after": 32,
+      "importers_before": 266,
+      "importers_after": 15
+    },
+    "RiemannResearch.RH.ParetoTailCapacityDuality": {
+      "dependencies_before": 73,
+      "dependencies_after": 49,
+      "importers_before": 263,
+      "importers_after": 263
+    },
+    "RiemannResearch.RH.ParetoExactHeadClosure": {
+      "dependencies_before": 55,
+      "dependencies_after": 11,
+      "importers_before": 231,
+      "importers_after": 226
+    },
+    "RiemannResearch.RH.ThresholdRiemannHypothesis": {
+      "dependencies_before": 30,
+      "dependencies_after": 29,
+      "importers_before": 551,
+      "importers_after": 550
+    },
+    "RiemannResearch.Analysis.MellinCesaroSummability": {
+      "dependencies_before": 19,
+      "dependencies_after": 18,
+      "importers_before": 300,
+      "importers_after": 141
+    },
+    "RiemannResearch.RH.ConditionalMeanEnergy": {
+      "dependencies_before": 21,
+      "dependencies_after": 9,
+      "importers_before": 260,
+      "importers_after": 246
+    },
+    "RiemannResearch.Probability.ConditionalIIDUniformMoments": {
+      "dependencies_before": 3,
+      "dependencies_after": 4,
+      "importers_before": 339,
+      "importers_after": 239
+    },
+    "RiemannResearch.Analysis.ActualZeroOrdinate": {
+      "dependencies_before": 40,
+      "dependencies_after": 21,
+      "importers_before": 81,
+      "importers_after": 75
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.ZeroSummability": {
+      "dependencies_before": 36,
+      "dependencies_after": 22,
+      "importers_before": 180,
+      "importers_after": 108
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.WeilEF.GoodHeights": {
+      "dependencies_before": 35,
+      "dependencies_after": 22,
+      "importers_before": 124,
+      "importers_after": 124
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.Tail": {
+      "dependencies_before": 14,
+      "dependencies_after": 15,
+      "importers_before": 202,
+      "importers_after": 34
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.GammaFacts.Series": {
+      "dependencies_before": 2,
+      "dependencies_after": 0,
+      "importers_before": 323,
+      "importers_after": 317
+    },
+    "RiemannResearch.RH.WeilExplicitFormula.Defs.Counting": {
+      "dependencies_before": 1,
+      "dependencies_after": 1,
+      "importers_before": 886,
+      "importers_after": 267
+    }
+  },
+  "source_preservation": {
+    "moved_blocks": [
+      {
+        "from": "RiemannResearch/Analysis/ActualZeroOrdinate.lean",
+        "to": "RiemannResearch/Analysis/ActualZeroOrdinateSummability.lean",
+        "sha256": "8bb1e9866feac5acc1745f411f7028127600ff90fa40fdfc661839fce11ded56",
+        "declarations": [
+          "RiemannResearch.Analysis.ActualZeroOrdinate.reciprocal_ordinate_summable"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/Probability/ConditionalIIDUniformMoments.lean",
+        "to": "RiemannResearch/Analysis/CesaroFiniteCalculus.lean",
+        "sha256": "82bd1d8b5cd630a9c95cbf0e3350e95e805ea599ac527dcf4afc7e8342397e1c",
+        "declarations": [
+          "RiemannResearch.Probability.ConditionalIID.cesaro"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ReciprocalChargeDilationArithmetic.lean",
+        "to": "RiemannResearch/NumberTheory/PositiveDilationSum.lean",
+        "sha256": "edbbd14fd69af77d617e501fb8319418c556e2a892ae04fa9655c65f9899e0c5",
+        "declarations": [
+          "RiemannResearch.NumberTheory.positive_dilation_sum"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ParetoExactHeadClosure.lean",
+        "to": "RiemannResearch/RH/BalancedExactHeadEnergy.lean",
+        "sha256": "65d364d38fdcb7b279dba5cfbdf4b14df10a57e00379efcd19efc169fca50690",
+        "declarations": [
+          "riemannHypothesis_of_bounded_exact_subspace_heads"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ArithmeticCumulativeEnergy.lean",
+        "to": "RiemannResearch/RH/ArithmeticCumulativeBasic.lean",
+        "sha256": "a7546029dc2e18a5e00f5978c331c210351eb3c173acd2fe8efead390f7bbe84",
+        "declarations": [
+          "cumulative",
+          "divisorIndicator",
+          "balancedDivisor",
+          "residueFraction",
+          "weight",
+          "fullSquaredNorm"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ArithmeticCumulativeEnergy.lean",
+        "to": "RiemannResearch/RH/ArithmeticCumulativeBasic.lean",
+        "sha256": "885b35056b430ab74d3a2f2a78d84c17d849a6fd2a878efcd27cd8ed42e72200",
+        "declarations": [
+          "cumulative_zero",
+          "cumulative_succ",
+          "cumulative_add",
+          "cumulative_sub",
+          "cumulative_const",
+          "cumulative_mul",
+          "nat_div_succ",
+          "real_div_succ",
+          "cumulative_divisorIndicator",
+          "cumulative_balancedDivisor"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ArithmeticCumulativeEnergy.lean",
+        "to": "RiemannResearch/RH/ArithmeticCumulativeBasic.lean",
+        "sha256": "5472be554bd762dd1fb08dea9e0eac4e1965da297db2dd33fb9b2a8d48cb1538",
+        "declarations": [
+          "weight_eq_sub"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ArithmeticCumulativeEnergy.lean",
+        "to": "RiemannResearch/RH/ArithmeticCumulativeBasic.lean",
+        "sha256": "26f37c0ace2ce7d6f7ecea405c6880161bdd9befb7dba91799ee3e1ee2d920b1",
+        "declarations": [
+          "weight_nonneg"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ArithmeticCumulativeEnergy.lean",
+        "to": "RiemannResearch/RH/ArithmeticCumulativeBasic.lean",
+        "sha256": "9c3e25fcb4ac0212c8215dcd34d3a2b615916a235bd2bf35bed62965e2e9cc3c",
+        "declarations": [
+          "cumulative_delta_one"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ParetoGeometricMixture.lean",
+        "to": "RiemannResearch/RH/ParetoWeights.lean",
+        "sha256": "53badd840d648b6796d1422ac3bec8161cf4671611879fd7ab56c91e1a35f3b5",
+        "declarations": [
+          "paretoWeight"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ParetoGeometricMixture.lean",
+        "to": "RiemannResearch/RH/ParetoWeights.lean",
+        "sha256": "ab11519d8adc214d643e4acab7a77dc777fff00b43e19e381d9311c1652fadbb",
+        "declarations": [
+          "paretoWeight_pos"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ParetoGeometricMixture.lean",
+        "to": "RiemannResearch/RH/ParetoWeights.lean",
+        "sha256": "2ed1decda4373b0f1e6a3a961df088fa63463642a763320fba213d393200b31a",
+        "declarations": [
+          "paretoWeight_eq_inv_sub",
+          "paretoWeight_partial_sum",
+          "reciprocal_shift_tendsto",
+          "paretoWeight_tendsto_zero",
+          "paretoWeight_hasSum"
+        ],
+        "private_declarations": [
+          "reciprocal_shift_tendsto"
+        ]
+      },
+      {
+        "from": "RiemannResearch/RH/ParetoGeometricMixture.lean",
+        "to": "RiemannResearch/RH/ParetoWeights.lean",
+        "sha256": "72643b490b9e7abbbe15136c5fccfc8d6b4c08d6dd079e10cce776c51ce3f061",
+        "declarations": [
+          "paretoWeight_tsum"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ParetoGibbsOperator.lean",
+        "to": "RiemannResearch/RH/ParetoWeights.lean",
+        "sha256": "f405d536e8d4c65ae7f490fec95fe259f932f6663f4b4982c2eb9029e8b40b4d",
+        "declarations": [
+          "abs_le_square_add_one",
+          "pareto_abs_summable_of_square"
+        ],
+        "private_declarations": [
+          "abs_le_square_add_one"
+        ]
+      },
+      {
+        "from": "RiemannResearch/RH/ParetoGibbsHilbert.lean",
+        "to": "RiemannResearch/RH/ParetoHilbertPhysical.lean",
+        "sha256": "e82fe27b64a1d6ac9c64d0c5de9951a88191d50be6a1cb8068f180e78a533d72",
+        "declarations": [
+          "hilbertGibbsPhysical",
+          "hilbertGibbsPhysical_eq",
+          "hilbertGibbsPhysical_square",
+          "hilbertGibbsPhysical_square_summable",
+          "hilbertGibbsPhysical_abs_summable"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ParetoGibbsHilbert.lean",
+        "to": "RiemannResearch/RH/ParetoHilbertPhysical.lean",
+        "sha256": "e3db35d0e804e4fdc1eabebf73d0a0b1ca2418c37f166866caabcc2cc27117cc",
+        "declarations": [
+          "hilbertGibbsPhysical_add",
+          "hilbertGibbsPhysical_smul"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ParetoGibbsHilbert.lean",
+        "to": "RiemannResearch/RH/ParetoHilbertPhysical.lean",
+        "sha256": "802bc13220eebdda35e43845015939de3ab26fbb8be63914bafb18710f7d1707",
+        "declarations": [
+          "hilbertGibbs_one_physical"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ParetoGibbsHilbert.lean",
+        "to": "RiemannResearch/RH/ParetoHilbertPhysical.lean",
+        "sha256": "ccca8432e52fcef75de1f07f4e3186abee67480465e70ef88a1b5463c5430970",
+        "declarations": [
+          "hilbertGibbs_inner_physical",
+          "hilbertGibbs_inner_one"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ExactHeadCharges.lean",
+        "to": "RiemannResearch/RH/ParetoResidueDuality.lean",
+        "sha256": "03cec5cd909d89740ebe32fefad9ac30e5e42b217b63443b42c62d8c8cd69a8a",
+        "declarations": [
+          "sum_mobiusDifference"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/Analysis/MellinCesaroSummability.lean",
+        "to": "RiemannResearch/Analysis/CesaroMeanEnergy.lean",
+        "sha256": "1b5c7e6e456e0137c33692392000e2900e0b69d1799ac9a20b8242dfaedfd8d7",
+        "declarations": [
+          "conditionalWeight",
+          "conditionalWeight_pos"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/Analysis/MellinCesaroSummability.lean",
+        "to": "RiemannResearch/Analysis/CesaroMeanEnergy.lean",
+        "sha256": "9ba843741b97595a72bc1e383f10124ea5756f96fe25152fb8e790fc958eca7c",
+        "declarations": [
+          "bounded_mean_energy_summable"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/ResidueTailCertificateRegularity.lean",
+        "to": "RiemannResearch/RH/ResidueTailCertificate.lean",
+        "sha256": "85266bda0511abd4fe91885abf0d8ad414540bfeef67d6a95c9ec2fecb227f25",
+        "declarations": [
+          "IsResidueTailCertificate",
+          "tailCertificateAnnihilator",
+          "tailCertificateAnnihilator_first",
+          "tailCertificateAnnihilator_tail",
+          "tailCertificateAnnihilator_orthogonal"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/WeilExplicitFormula/Tail.lean",
+        "to": "RiemannResearch/RH/WeilExplicitFormula/Tail/WindowCount.lean",
+        "sha256": "8de111094335f2c6f1f22b34acaffd1c36831651f7451d662071ce7b736b7256",
+        "declarations": [
+          "Zeta23.Tail.LocalCount.ofWindowCount"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/WeilExplicitFormula/Statement.lean",
+        "to": "RiemannResearch/RH/WeilExplicitFormula/Statement/SeamClosed.lean",
+        "sha256": "a89e412c51ed67e1d393542243925dbfc4f541f42bbff75ba41e479a7a3c6c44",
+        "declarations": [
+          "Zeta23.trivial_chain"
+        ],
+        "private_declarations": []
+      },
+      {
+        "from": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Fourier.lean",
+        "to": "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Auxiliary.lean",
+        "sha256": "0339773c79096a1fcb84c99f2f6e4d083b1c0c9c869a8094a73df26b8af4247f",
+        "declarations": [
+          "deriv_ofReal"
+        ],
+        "private_declarations": []
+      }
+    ],
+    "declaration_count": 55,
+    "all_moved_blocks_byte_identical": true,
+    "remaining_existing_code_unchanged": [
+      "RiemannResearch.lean",
+      "RiemannResearch/Analysis/ActualZeroOrdinate.lean",
+      "RiemannResearch/Analysis/CesaroFiniteCalculus.lean",
+      "RiemannResearch/Analysis/CesaroPulseObstruction.lean",
+      "RiemannResearch/Analysis/MellinCesaroSummability.lean",
+      "RiemannResearch/Analysis/SquarePartitionLocalization.lean",
+      "RiemannResearch/NumberTheory/PrimeNumberTheorem/LogarithmicMobiusConvolution.lean",
+      "RiemannResearch/NumberTheory/PrimeNumberTheorem/MertensAllLogPowers.lean",
+      "RiemannResearch/NumberTheory/PrimeNumberTheorem/MobiusLogBootstrapPower.lean",
+      "RiemannResearch/Probability/ConditionalIIDUniformMoments.lean",
+      "RiemannResearch/Probability/DeterminantalBernoulliCount.lean",
+      "RiemannResearch/Probability/DeterminantalSpectralCount.lean",
+      "RiemannResearch/Probability/DeterminantalWindow.lean",
+      "RiemannResearch/Probability/DeterminantalWindowGenerating.lean",
+      "RiemannResearch/RH/ActualIntegratedZeroTruncation.lean",
+      "RiemannResearch/RH/AdjacentDilationPackets.lean",
+      "RiemannResearch/RH/AnnularZeroSpectralTargets.lean",
+      "RiemannResearch/RH/ArithmeticChargeEscape.lean",
+      "RiemannResearch/RH/ArithmeticCumulativeEnergy.lean",
+      "RiemannResearch/RH/BalancedExactHeadEnergy.lean",
+      "RiemannResearch/RH/BalancedFiniteTailGram.lean",
+      "RiemannResearch/RH/BoundedSeedConductorObstruction.lean",
+      "RiemannResearch/RH/CRTGCDGram.lean",
+      "RiemannResearch/RH/CanonicalMobiusCapacityDensity.lean",
+      "RiemannResearch/RH/CanonicalMobiusFixedHeadLimit.lean",
+      "RiemannResearch/RH/CanonicalMobiusHeadRepair.lean",
+      "RiemannResearch/RH/CesaroResidueMean.lean",
+      "RiemannResearch/RH/CompactFrequencyMellinRigidity.lean",
+      "RiemannResearch/RH/ConditionalMeanEnergy.lean",
+      "RiemannResearch/RH/ConditionalUniformMixture.lean",
+      "RiemannResearch/RH/CoupledSeedComponentObstruction.lean",
+      "RiemannResearch/RH/CrossResonanceCovarianceBounds.lean",
+      "RiemannResearch/RH/DigammaAsymptotic.lean",
+      "RiemannResearch/RH/ExactHeadCharges.lean",
+      "RiemannResearch/RH/FirstCoordinateTailGap.lean",
+      "RiemannResearch/RH/FixedPrefixIncidence.lean",
+      "RiemannResearch/RH/IntegerDPPHistoricalTargets.lean",
+      "RiemannResearch/RH/MeanOneSix.lean",
+      "RiemannResearch/RH/MeanOneThirtyTrial.lean",
+      "RiemannResearch/RH/MellinDPPIntensity.lean",
+      "RiemannResearch/RH/MellinDyadicVandermonde.lean",
+      "RiemannResearch/RH/MellinFrequencyRegularization.lean",
+      "RiemannResearch/RH/MellinProjectionKernel.lean",
+      "RiemannResearch/RH/MellinWindowCount.lean",
+      "RiemannResearch/RH/MobiusHilbertCoordinates.lean",
+      "RiemannResearch/RH/MultiRangeCompleteness.lean",
+      "RiemannResearch/RH/MultiRangeDivisorCorrections.lean",
+      "RiemannResearch/RH/MultiRangeEnergyCertificates.lean",
+      "RiemannResearch/RH/MultiRangeFiniteMinimum.lean",
+      "RiemannResearch/RH/MultiRangeFixedFamilyCertificates.lean",
+      "RiemannResearch/RH/MultiRangeFloorCoordinates.lean",
+      "RiemannResearch/RH/MultiRangeIndependence.lean",
+      "RiemannResearch/RH/MultiRangeOptimizerConvergence.lean",
+      "RiemannResearch/RH/MultiRangePrefixOptimization.lean",
+      "RiemannResearch/RH/MultiRangeRationalAnchorCertificate.lean",
+      "RiemannResearch/RH/MultiRangeScreening.lean",
+      "RiemannResearch/RH/MultiRangeSignedFiniteFamily.lean",
+      "RiemannResearch/RH/MultiRangeTruncatedGram.lean",
+      "RiemannResearch/RH/NearbyDilationGram.lean",
+      "RiemannResearch/RH/ParetoAdjacentMomentCorrection.lean",
+      "RiemannResearch/RH/ParetoCompactHead.lean",
+      "RiemannResearch/RH/ParetoCompressedMellinCosine.lean",
+      "RiemannResearch/RH/ParetoDilation.lean",
+      "RiemannResearch/RH/ParetoExactHeadClosure.lean",
+      "RiemannResearch/RH/ParetoFiniteHeadDilation.lean",
+      "RiemannResearch/RH/ParetoGeometricMixture.lean",
+      "RiemannResearch/RH/ParetoGibbsHilbert.lean",
+      "RiemannResearch/RH/ParetoGibbsOperator.lean",
+      "RiemannResearch/RH/ParetoGibbsTailBasis.lean",
+      "RiemannResearch/RH/ParetoGibbsTailMatrix.lean",
+      "RiemannResearch/RH/ParetoMobiusHeadInterpolation.lean",
+      "RiemannResearch/RH/ParetoNormalizedResidueHilbert.lean",
+      "RiemannResearch/RH/ParetoProductBenchmark.lean",
+      "RiemannResearch/RH/ParetoResidueDuality.lean",
+      "RiemannResearch/RH/ParetoTailCapacityDuality.lean",
+      "RiemannResearch/RH/PrimeReciprocalChargeCorrelation.lean",
+      "RiemannResearch/RH/PrimeSievePointEnergy.lean",
+      "RiemannResearch/RH/PrimorialExtrapolationObstruction.lean",
+      "RiemannResearch/RH/RamanujanLaguerreResearchTargets.lean",
+      "RiemannResearch/RH/ReciprocalChargeDilationArithmetic.lean",
+      "RiemannResearch/RH/ReciprocalChargeDilationSeries.lean",
+      "RiemannResearch/RH/ReciprocalChargeInnovations.lean",
+      "RiemannResearch/RH/ResidualMellinZeroConditions.lean",
+      "RiemannResearch/RH/ResidueTailCertificateRegularity.lean",
+      "RiemannResearch/RH/RoughComponentHead.lean",
+      "RiemannResearch/RH/RoughComponentProjection.lean",
+      "RiemannResearch/RH/RoughDilationMassLimits.lean",
+      "RiemannResearch/RH/SingleCorrectionObstruction.lean",
+      "RiemannResearch/RH/ThresholdAffineBranches.lean",
+      "RiemannResearch/RH/ThresholdConductor360DualLower.lean",
+      "RiemannResearch/RH/ThresholdConductor36DualLower.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Auxiliary.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Fourier.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/ZetaBounds.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/IntMu.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/Mu.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/Series.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/Statement.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/Statement/SeamClosed.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/Tail.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/ThmE/FullLineChi.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/WeilEF/GoodHeights.lean",
+      "RiemannResearch/RH/WeilExplicitFormula/WeilEF/ZeroSummability.lean",
+      "RiemannResearch/RH/ZetaTwoHilbertSpace.lean",
+      "RiemannResearch/RH/ZetaTwoPrimeConsumers.lean"
+    ],
+    "normalization": "Comments, whitespace and import lines; explicitly checked added/removed namespace/section frames for moved cesaro, dilation sum, and RH criterion, declaration-scoped open Complex for moved deriv_ofReal, and removal of the unused MeasureTheory namespace opening in ConditionalMeanEnergy.",
+    "public_declaration_count": 53,
+    "private_declaration_count": 2,
+    "private_name_note": "Generated private names follow the new module; all public names are preserved."
+  },
+  "lexical_screen": {
+    "raw_candidates": 59,
+    "reviewed_false_positives": [
+      {
+        "module": "RiemannResearch.Analysis.ActualHyperbolicGramLowerBounds",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg",
+          "smul_apply"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualMollifierRightBoundary",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualZeroPhaseMoments",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualRationalFMZDomination",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.PrimeTorusFourierSeries",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualLandauOperatorResidual",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualPrimeTorusFMZ",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "smul_apply"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualZeroFMZComparison",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.LandauHilbertSchmidtResidual",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualZetaGoodLandauHorizontals",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualPhaseGramExpansion",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualZeroReciprocalConstant",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "hasDerivAt"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualPrimeTorusFMZSeries",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualHorizontalEnergyKernel",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualUniformRationalLandau",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualHyperbolicHarmonicTail",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.PrimeTorusFourierDecay",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.Analysis.ActualHyperbolicShrinkingTail",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.NymanFullReturnWeilNullity",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "differentiable"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilNoncompactExplicitFormula",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "differentiable"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.ParetoFiniteMellinHalfPlane",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "smul_apply"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilArithmeticAdapter",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.ActualIntegratedZeroSeries",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.BurnolProjectionConsequences",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.NymanPrimeSquareCompensation",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "differentiable"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.ParetoResidualBoundaryEnergy",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "smul_apply"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilGammaLimits",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.RvM.ReZeroCount",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.RvM.Backlund",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "hasDerivAt"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.RvM.LocalCount",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.ThmE.FullLineChiProof",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.ThmE.HorizontalChi",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.ThmE.VerticalLineChi",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.ThmE.BacklundChi",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "hasDerivAt"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.ThmE.ReZeroCountChi",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.ThmE.LGrowth",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.ThmE.LocalCountChi",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.WeilEF.ZeroSummability",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.WeilEF.Effective",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "differentiable",
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.WeilEF.Horizontal",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.WeilEF.Landau",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.WeilEF.FullLine",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.ZetaBounds",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "hasDerivAt",
+          "neg_apply",
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Seam",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "hasDerivAt"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFWeights",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.TwoLine",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFBasic",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "hasDerivAt"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFExpansion",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "hasDerivAt",
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount.Generic",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ZeroCount.Y",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.LitCorr",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.TestWeight",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "differentiable",
+          "hasDerivAt",
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.ZeroFree",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "hasDerivAt",
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.Expansion",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "hasDerivAt",
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.EntryError",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.ExplicitFormula.FullLine",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFContour.Poles",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "hasDerivAt"
+        ]
+      },
+      {
+        "module": "RiemannResearch.RH.WeilExplicitFormula.XiPrime.Hardy.EFContour.Limit",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      },
+      {
+        "module": "RiemannResearch.NumberTheory.PrimeNumberTheorem.Quantitative.MediumPNT",
+        "lost_module": "RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.Sobolev",
+        "names": [
+          "norm_nonneg"
+        ]
+      }
+    ],
+    "unresolved_candidates": [],
+    "review_note": "Reviewed Sobolev short-name collisions: consumers use Mathlib root, Pi, ContinuousMap, ContinuousLinearMap, DifferentiableAt, Complex.ofRealCLM, or ContDiff declarations; none use the removed CS/W1/W21 names."
+  },
+  "scope": "Import and declaration placement changes only; statements and proof/definition bodies preserved.",
+  "metric_definitions": {
+    "reachable_pairs": "Ordered project module-to-transitive-dependency pairs; excludes self and external packages.",
+    "importers": "Transitive project importers; includes aggregate.",
+    "performance_limit": "Graph and edit-scope measurements; no timing or cache-hit benchmark."
+  },
+  "modules_with_larger_closure": 63,
+  "changed_lean_paths": [
+    "RiemannResearch.lean",
+    "RiemannResearch/Analysis/ActualZeroOrdinate.lean",
+    "RiemannResearch/Analysis/ActualZeroOrdinateSummability.lean",
+    "RiemannResearch/Analysis/CesaroFiniteCalculus.lean",
+    "RiemannResearch/Analysis/CesaroMeanEnergy.lean",
+    "RiemannResearch/Analysis/CesaroPulseObstruction.lean",
+    "RiemannResearch/Analysis/MellinCesaroSummability.lean",
+    "RiemannResearch/Analysis/SquarePartitionLocalization.lean",
+    "RiemannResearch/NumberTheory/PositiveDilationSum.lean",
+    "RiemannResearch/NumberTheory/PrimeNumberTheorem/LogarithmicMobiusConvolution.lean",
+    "RiemannResearch/NumberTheory/PrimeNumberTheorem/MertensAllLogPowers.lean",
+    "RiemannResearch/NumberTheory/PrimeNumberTheorem/MobiusLogBootstrapPower.lean",
+    "RiemannResearch/Probability/ConditionalIIDUniformMoments.lean",
+    "RiemannResearch/Probability/DeterminantalBernoulliCount.lean",
+    "RiemannResearch/Probability/DeterminantalSpectralCount.lean",
+    "RiemannResearch/Probability/DeterminantalWindow.lean",
+    "RiemannResearch/Probability/DeterminantalWindowGenerating.lean",
+    "RiemannResearch/RH/ActualIntegratedZeroTruncation.lean",
+    "RiemannResearch/RH/AdjacentDilationPackets.lean",
+    "RiemannResearch/RH/AnnularZeroSpectralTargets.lean",
+    "RiemannResearch/RH/ArithmeticChargeEscape.lean",
+    "RiemannResearch/RH/ArithmeticCumulativeBasic.lean",
+    "RiemannResearch/RH/ArithmeticCumulativeEnergy.lean",
+    "RiemannResearch/RH/BalancedExactHeadEnergy.lean",
+    "RiemannResearch/RH/BalancedFiniteTailGram.lean",
+    "RiemannResearch/RH/BoundedSeedConductorObstruction.lean",
+    "RiemannResearch/RH/CRTGCDGram.lean",
+    "RiemannResearch/RH/CanonicalMobiusCapacityDensity.lean",
+    "RiemannResearch/RH/CanonicalMobiusFixedHeadLimit.lean",
+    "RiemannResearch/RH/CanonicalMobiusHeadRepair.lean",
+    "RiemannResearch/RH/CesaroResidueMean.lean",
+    "RiemannResearch/RH/CompactFrequencyMellinRigidity.lean",
+    "RiemannResearch/RH/ConditionalMeanEnergy.lean",
+    "RiemannResearch/RH/ConditionalUniformMixture.lean",
+    "RiemannResearch/RH/CoupledSeedComponentObstruction.lean",
+    "RiemannResearch/RH/CrossResonanceCovarianceBounds.lean",
+    "RiemannResearch/RH/DigammaAsymptotic.lean",
+    "RiemannResearch/RH/ExactHeadCharges.lean",
+    "RiemannResearch/RH/FirstCoordinateTailGap.lean",
+    "RiemannResearch/RH/FixedPrefixIncidence.lean",
+    "RiemannResearch/RH/IntegerDPPHistoricalTargets.lean",
+    "RiemannResearch/RH/MeanOneSix.lean",
+    "RiemannResearch/RH/MeanOneThirtyTrial.lean",
+    "RiemannResearch/RH/MellinDPPIntensity.lean",
+    "RiemannResearch/RH/MellinDyadicVandermonde.lean",
+    "RiemannResearch/RH/MellinFrequencyRegularization.lean",
+    "RiemannResearch/RH/MellinProjectionKernel.lean",
+    "RiemannResearch/RH/MellinWindowCount.lean",
+    "RiemannResearch/RH/MobiusHilbertCoordinates.lean",
+    "RiemannResearch/RH/MultiRangeCompleteness.lean",
+    "RiemannResearch/RH/MultiRangeDivisorCorrections.lean",
+    "RiemannResearch/RH/MultiRangeEnergyCertificates.lean",
+    "RiemannResearch/RH/MultiRangeFiniteMinimum.lean",
+    "RiemannResearch/RH/MultiRangeFixedFamilyCertificates.lean",
+    "RiemannResearch/RH/MultiRangeFloorCoordinates.lean",
+    "RiemannResearch/RH/MultiRangeIndependence.lean",
+    "RiemannResearch/RH/MultiRangeOptimizerConvergence.lean",
+    "RiemannResearch/RH/MultiRangePrefixOptimization.lean",
+    "RiemannResearch/RH/MultiRangeRationalAnchorCertificate.lean",
+    "RiemannResearch/RH/MultiRangeScreening.lean",
+    "RiemannResearch/RH/MultiRangeSignedFiniteFamily.lean",
+    "RiemannResearch/RH/MultiRangeTruncatedGram.lean",
+    "RiemannResearch/RH/NearbyDilationGram.lean",
+    "RiemannResearch/RH/ParetoAdjacentMomentCorrection.lean",
+    "RiemannResearch/RH/ParetoCompactHead.lean",
+    "RiemannResearch/RH/ParetoCompressedMellinCosine.lean",
+    "RiemannResearch/RH/ParetoDilation.lean",
+    "RiemannResearch/RH/ParetoExactHeadClosure.lean",
+    "RiemannResearch/RH/ParetoFiniteHeadDilation.lean",
+    "RiemannResearch/RH/ParetoGeometricMixture.lean",
+    "RiemannResearch/RH/ParetoGibbsHilbert.lean",
+    "RiemannResearch/RH/ParetoGibbsOperator.lean",
+    "RiemannResearch/RH/ParetoGibbsTailBasis.lean",
+    "RiemannResearch/RH/ParetoGibbsTailMatrix.lean",
+    "RiemannResearch/RH/ParetoHilbertPhysical.lean",
+    "RiemannResearch/RH/ParetoMobiusHeadInterpolation.lean",
+    "RiemannResearch/RH/ParetoNormalizedResidueHilbert.lean",
+    "RiemannResearch/RH/ParetoProductBenchmark.lean",
+    "RiemannResearch/RH/ParetoResidueDuality.lean",
+    "RiemannResearch/RH/ParetoTailCapacityDuality.lean",
+    "RiemannResearch/RH/ParetoWeights.lean",
+    "RiemannResearch/RH/PrimeReciprocalChargeCorrelation.lean",
+    "RiemannResearch/RH/PrimeSievePointEnergy.lean",
+    "RiemannResearch/RH/PrimorialExtrapolationObstruction.lean",
+    "RiemannResearch/RH/RamanujanLaguerreResearchTargets.lean",
+    "RiemannResearch/RH/ReciprocalChargeDilationArithmetic.lean",
+    "RiemannResearch/RH/ReciprocalChargeDilationSeries.lean",
+    "RiemannResearch/RH/ReciprocalChargeInnovations.lean",
+    "RiemannResearch/RH/ResidualMellinZeroConditions.lean",
+    "RiemannResearch/RH/ResidueTailCertificate.lean",
+    "RiemannResearch/RH/ResidueTailCertificateRegularity.lean",
+    "RiemannResearch/RH/RoughComponentHead.lean",
+    "RiemannResearch/RH/RoughComponentProjection.lean",
+    "RiemannResearch/RH/RoughDilationMassLimits.lean",
+    "RiemannResearch/RH/SingleCorrectionObstruction.lean",
+    "RiemannResearch/RH/ThresholdAffineBranches.lean",
+    "RiemannResearch/RH/ThresholdConductor360DualLower.lean",
+    "RiemannResearch/RH/ThresholdConductor36DualLower.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Auxiliary.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/Fourier.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/FromPNTPlus/ZetaBounds.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/IntMu.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/Mu.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/GammaFacts/Series.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/Statement.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/Statement/SeamClosed.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/Tail.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/Tail/WindowCount.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/ThmE/FullLineChi.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/WeilEF/GoodHeights.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/WeilEF/ZeroSummability.lean",
+    "RiemannResearch/RH/ZetaTwoHilbertSpace.lean",
+    "RiemannResearch/RH/ZetaTwoPrimeConsumers.lean"
+  ],
+  "changed_child_modules": 112,
+  "new_modules": [
+    "RiemannResearch/Analysis/ActualZeroOrdinateSummability.lean",
+    "RiemannResearch/Analysis/CesaroMeanEnergy.lean",
+    "RiemannResearch/NumberTheory/PositiveDilationSum.lean",
+    "RiemannResearch/RH/ArithmeticCumulativeBasic.lean",
+    "RiemannResearch/RH/ParetoHilbertPhysical.lean",
+    "RiemannResearch/RH/ParetoWeights.lean",
+    "RiemannResearch/RH/ResidueTailCertificate.lean",
+    "RiemannResearch/RH/WeilExplicitFormula/Tail/WindowCount.lean"
+  ],
+  "focused_verification": {
+    "job_id": "job_OBChImCni9nz0X4OLxLRW1PRn95BSE8z",
+    "state": "succeeded",
+    "code_sha256": "9cad35c664eb87948d24712155727922a4d7ed5ec034283f9a8809b337fc5d56",
+    "classification": "success",
+    "verified": true,
+    "exit_code": 0,
+    "changed_child_modules": 112,
+    "printed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "publication_validation": "Checkpoint must validate aggregate and changed child modules, including upstream integration; terminal result, scope and commit reported with delivery."
+}

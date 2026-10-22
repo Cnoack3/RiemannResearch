@@ -14,8 +14,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - name: Install ripgrep for workspace tests
-        run: sudo apt-get update && sudo apt-get install -y ripgrep
+      - name: Install ripgrep for workspace tests and MCP tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ripgrep
       - name: Validate MCP workspace tooling
         run: |
           python3 -m py_compile tools/lean_workspace_mcp.py tools/agent_workspaces.py

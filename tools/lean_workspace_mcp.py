@@ -6,9 +6,11 @@ filesystem operation to one configured Lean project.
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import os
 import re
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -20,10 +22,26 @@ from lean_lsp_mcp.server import mcp
 from mcp.server.fastmcp import Context
 from pydantic import BaseModel, ConfigDict
 
-from agent_workspaces import AgentWorkspaceManager
+from agent_workspaces import AgentWorkspaceManager, TOKEN_RE
 
 
-WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive, sensibly named modules with focused imports; checkpoint rejects umbrella `import Mathlib` and unexported root-level modules. A long cohesive theorem may remain in one file; split by mathematical responsibility, not an arbitrary line count. Checkpoints skip Lean for documentation-only changes and otherwise build changed modules plus local reverse dependents; lean_build remains an explicit queued full-project validation and should not run immediately before checkpoint. If lakefile.toml changes, queue agent_workspace_update_deps once before further validation. Exact dependency configurations and binary artifacts are shared by content key; cache preparation is protected and project builds are clone-local. Poll queued work no sooner than retry_after_seconds and never resubmit it; running status includes phase and Lake task progress. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
+WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive, sensibly named modules with focused imports; checkpoint rejects umbrella `import Mathlib` and unexported root-level modules. A long cohesive theorem may remain in one file; split by mathematical responsibility, not an arbitrary line count. Checkpoints audit and validate the entire unpublished delta from the workspace base. They skip Lean only when no Lean source or dependency changes are being published; otherwise Lake incrementally builds the aggregate project plus explicitly changed modules; lean_build remains an explicit queued full-project validation and should not run immediately before checkpoint. If lakefile.toml changes, queue agent_workspace_update_deps once before further validation. Exact dependency configurations and binary artifacts are shared by content key; cache preparation is protected and project builds are clone-local. Poll queued work no sooner than retry_after_seconds and never resubmit it; running status includes phase and Lake task progress. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Publish Lean/dependency changes only through a terminal successful agent_workspace_checkpoint; failed, timed-out or unavailable verification blocks publication. GitHub-hosted CI has no runner quota: never rely on it or bypass verification with direct git push or GitHub commit APIs. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
+
+WORKFLOW_INSTRUCTIONS += (
+    " agent_workspace_run_code and agent_workspace_check_file are asynchronous "
+    "verification jobs: acceptance is NOT verification. Retain the job_id, poll "
+    "agent_workspace_job_status at retry_after_seconds, and inspect the terminal "
+    "result. Do not resubmit a timed-out HTTP request blindly: recover the "
+    "job ID using agent_workspace_list_jobs, including completed jobs. Exact "
+    "duplicate submission reuses only a queued/running job, not a terminal one. "
+    "A Lean error, heartbeat limit, "
+    "or recursion limit is a proof/compiler result, not evidence that the MCP "
+    "transport is down. wall_timeout is a per-job execution deadline. HTTP 504 "
+    "and Session terminated are transport/session failures; neither proves the "
+    "underlying job failed. Interrupted jobs are not automatically replayed, "
+    "especially publication jobs. Only one heavy queue worker runs by default; "
+    "keep direct upstream LSP proof operations sequential as well."
+)
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
 mcp._mcp_server.instructions = (
@@ -61,10 +79,10 @@ LEAN_LAKE_BUILD_THREADS = min(
     _bounded_env_int("LEAN_LAKE_BUILD_THREADS", 8, 1, 8),
     LEAN_WORKSPACE_THREADS,
 )
-LEAN_JOB_WORKERS = _bounded_env_int("LEAN_JOB_WORKERS", 2, 1, 4)
+LEAN_JOB_WORKERS = _bounded_env_int("LEAN_JOB_WORKERS", 1, 1, 4)
 # Cap the Lean runtime task pool inherited by LSP clients and every Lake/Lean
-# child process. Two isolated builds may run concurrently; publication and
-# shared-cache mutation remain separately locked.
+# child process. Queue one heavy job by default; explicit higher concurrency
+# remains available to host operators. This does not limit upstream LSP tools.
 os.environ["LEAN_NUM_THREADS"] = str(LEAN_WORKSPACE_THREADS)
 os.environ["LEAN_LAKE_BUILD_THREADS"] = str(LEAN_LAKE_BUILD_THREADS)
 os.environ["LEAN_JOB_WORKERS"] = str(LEAN_JOB_WORKERS)
@@ -74,9 +92,23 @@ lean_client_utils._MAX_SHARED_CLIENTS = MAX_SHARED_LEAN_CLIENTS
 MAX_READ_BYTES = 1_000_000
 MAX_PATCH_BYTES = 2_000_000
 
+# Keep closing/detached clients visible until their process has actually exited.
+# A None value claims a workspace before the language server starts.
+_cache_clients: dict[Path, object | None] = {}
+
+
+def _client_process_running(client) -> bool:
+    process = getattr(getattr(client, "_transport", None), "_proc", None)
+    return client.alive or (process is not None and process.returncode is None)
+
 
 def _workspace_can_archive(project: Path) -> bool:
     key = project.resolve(strict=False)
+    client = _cache_clients.get(key)
+    if key in _cache_clients:
+        if client is None or _client_process_running(client):
+            return False
+        _cache_clients.pop(key)
     return (
         key not in lean_client_utils._shared_clients
         and key not in lean_client_utils._builds_in_progress
@@ -89,6 +121,83 @@ AGENT_WORKSPACES = AgentWorkspaceManager(
     can_archive=_workspace_can_archive,
     retention_days=WORKSPACE_RETENTION_DAYS,
 )
+
+_original_start_client = lean_client_utils._start_client
+_original_evict_client = lean_client_utils._evict_oldest_client
+
+
+async def _start_cached_client(project: Path):
+    if not os.environ.get("LEAN_REMOTE_CACHE_SERVICE"):
+        return await _original_start_client(project)
+    project = project.resolve(strict=False)
+    with AGENT_WORKSPACES._outputs_guard:
+        previous = _cache_clients.get(project)
+        if previous is not None and _client_process_running(previous):
+            raise ValueError("The previous Lean server is still closing; retry shortly")
+        _cache_clients[project] = None
+    client = None
+    try:
+        wrapper = Path(__file__).with_name("lean_cache_lake.py")
+        lake = shutil.which("lake")
+        if not lake:
+            raise ValueError("Lake executable was not found")
+        client = lean_client_utils.AsyncLeanLSPClient(
+            str(project), max_workers=lean_client_utils._max_opened_files(),
+            server_command=[
+                # Lake sets LAKE itself. Override it after its environment is
+                # applied, so the server's setup-file children reach our wrapper.
+                lake, "env", "env", "-u", "LEAN_NATIVE_CACHE_LOCK_HELD", f"LAKE={wrapper}",
+                f"LEAN_CACHE_LAKE_BINARY={lake}", "LAKE_RESTORE_ARTIFACTS=true",
+                "lean", "--server", "-Dserver.reportDelayMs=0",
+            ],
+        )
+        await client.start()
+        return client
+    except BaseException:
+        if client is not None:
+            try:
+                await client.close()
+            except Exception:
+                lean_client_utils.logger.exception("Failed Lean client cleanup for %s", project)
+        raise
+    finally:
+        with AGENT_WORKSPACES._outputs_guard:
+            if client is not None and _client_process_running(client):
+                _cache_clients[project] = client
+            else:
+                _cache_clients.pop(project, None)
+
+
+def _cleanup_closed_client_outputs(project: Path) -> None:
+    token = project.parent.name
+    if project.parent.parent != AGENT_WORKSPACES.root or not TOKEN_RE.fullmatch(token):
+        return
+    try:
+        AGENT_WORKSPACES._ensure_workspace_idle(token, "clean generated outputs")
+    except (ValueError, RuntimeError):
+        return
+    with AGENT_WORKSPACES._operation_lock(token), AGENT_WORKSPACES._native_cache_lock():
+        try:
+            AGENT_WORKSPACES._ensure_workspace_idle(token, "clean generated outputs")
+        except RuntimeError:
+            return
+        AGENT_WORKSPACES._cleanup_workspace_outputs(project)
+        AGENT_WORKSPACES._prune_native_cache()
+
+
+async def _evict_cached_client() -> None:
+    project = next(iter(lean_client_utils._shared_clients))
+    client = lean_client_utils._shared_clients[project]
+    await _original_evict_client()
+    if not _client_process_running(client):
+        try:
+            await asyncio.to_thread(_cleanup_closed_client_outputs, project)
+        except OSError:
+            lean_client_utils.logger.exception("Deferred output cleanup failed for %s", project)
+
+
+lean_client_utils._start_client = _start_cached_client
+lean_client_utils._evict_oldest_client = _evict_cached_client
 
 DENIED_PARTS = {".git", ".lake", ".elan", ".ssh", "tools", "__pycache__"}
 ROOT_WRITABLE = {
@@ -107,6 +216,11 @@ RESETTABLE_UNTRACKED_ROOT_SUFFIXES = WRITABLE_SUFFIXES | {".txt"}
 
 
 def _run(args: list[str], *, input_text: str | None = None, timeout: int = 60) -> str:
+    if args[:2] == ["lake", "build"] and os.environ.get("LEAN_REMOTE_CACHE_SERVICE"):
+        if input_text is not None:
+            raise ValueError("Cached Lake builds do not accept stdin")
+        output, _ = AGENT_WORKSPACES._run_lake_build(PROJECT_ROOT, args, timeout=timeout)
+        return output
     completed = subprocess.run(
         args,
         cwd=PROJECT_ROOT,
@@ -644,22 +758,26 @@ def workspace_checkpoint(message: str, push: bool = True) -> dict:
     }
 
 
+# FastMCP 1.28.1 invokes synchronous tool functions on its event loop. Project
+# I/O, Git, cache locks and clone creation must therefore run in threads. Do not
+# wrap mutations in wait_for: cancelling an await does not stop the thread and
+# must not be reported as rollback. Long compilations have durable jobs below.
 @mcp.tool(
     name="agent_workspace_open",
     description="Open a fresh isolated Lean clone, or resume one by token.",
 )
-def agent_workspace_open(resume_token: str = "") -> dict:
-    return AGENT_WORKSPACES.open(resume_token)
+async def agent_workspace_open(resume_token: str = "") -> dict:
+    return await asyncio.to_thread(AGENT_WORKSPACES.open, resume_token)
 
 
 @mcp.tool(
     name="agent_workspace_list_files",
     description="List matching project files with a bounded result count.",
 )
-def agent_workspace_list_files(
+async def agent_workspace_list_files(
     workspace_token: str, pattern: str = "", limit: int = 200
 ) -> dict:
-    return AGENT_WORKSPACES.list_files(workspace_token, pattern, limit)
+    return await asyncio.to_thread(AGENT_WORKSPACES.list_files, workspace_token, pattern, limit)
 
 
 @mcp.tool(
@@ -669,7 +787,7 @@ def agent_workspace_list_files(
         "declaration search and filename filtering are insufficient."
     ),
 )
-def agent_workspace_search_files(
+async def agent_workspace_search_files(
     workspace_token: str,
     query: str,
     file_glob: str = "*.lean",
@@ -677,7 +795,8 @@ def agent_workspace_search_files(
     case_sensitive: bool = False,
     max_match_chars: int = 500,
 ) -> dict:
-    return AGENT_WORKSPACES.search_files(
+    return await asyncio.to_thread(
+        AGENT_WORKSPACES.search_files,
         workspace_token,
         query,
         file_glob,
@@ -691,14 +810,15 @@ def agent_workspace_search_files(
     name="agent_workspace_read_file",
     description="Read a bounded line range from an approved project file.",
 )
-def agent_workspace_read_file(
+async def agent_workspace_read_file(
     workspace_token: str,
     path: str,
     start_line: int = 1,
     end_line: int = 0,
     max_chars: int = 20_000,
 ) -> dict:
-    return AGENT_WORKSPACES.read_file(
+    return await asyncio.to_thread(
+        AGENT_WORKSPACES.read_file,
         workspace_token, path, start_line, end_line, max_chars
     )
 
@@ -707,32 +827,32 @@ def agent_workspace_read_file(
     name="agent_workspace_apply_patch",
     description="Apply a non-destructive patch and report publication architecture blockers.",
 )
-def agent_workspace_apply_patch(workspace_token: str, patch: str) -> dict:
-    return AGENT_WORKSPACES.apply_patch(workspace_token, patch)
+async def agent_workspace_apply_patch(workspace_token: str, patch: str) -> dict:
+    return await asyncio.to_thread(AGENT_WORKSPACES.apply_patch, workspace_token, patch)
 
 
 @mcp.tool(
     name="agent_workspace_git_status",
     description="Show concise Git and publication status for an isolated clone.",
 )
-def agent_workspace_git_status(workspace_token: str) -> dict:
-    return AGENT_WORKSPACES.git_status(workspace_token)
+async def agent_workspace_git_status(workspace_token: str) -> dict:
+    return await asyncio.to_thread(AGENT_WORKSPACES.git_status, workspace_token)
 
 
 @mcp.tool(
     name="agent_workspace_git_diff",
     description="Show staged and unstaged clone changes.",
 )
-def agent_workspace_git_diff(workspace_token: str) -> dict:
-    return AGENT_WORKSPACES.git_diff(workspace_token)
+async def agent_workspace_git_diff(workspace_token: str) -> dict:
+    return await asyncio.to_thread(AGENT_WORKSPACES.git_diff, workspace_token)
 
 
 @mcp.tool(
     name="agent_workspace_sync",
     description="Safely refresh a clean clone from published main.",
 )
-def agent_workspace_sync(workspace_token: str) -> dict:
-    return AGENT_WORKSPACES.sync(workspace_token)
+async def agent_workspace_sync(workspace_token: str) -> dict:
+    return await asyncio.to_thread(AGENT_WORKSPACES.sync, workspace_token)
 
 
 @mcp.tool(
@@ -742,10 +862,12 @@ def agent_workspace_sync(workspace_token: str) -> dict:
         "the resulting exact dependency environment is shared by content key."
     ),
 )
-def agent_workspace_update_deps(
+async def agent_workspace_update_deps(
     workspace_token: str, package: str = ""
 ) -> dict:
-    return AGENT_WORKSPACES.submit_update_dependencies(workspace_token, package)
+    return await asyncio.to_thread(
+        AGENT_WORKSPACES.submit_update_dependencies, workspace_token, package
+    )
 
 
 mcp.remove_tool("lean_build")
@@ -758,23 +880,25 @@ mcp.remove_tool("lean_build")
         "do not call immediately before checkpoint."
     ),
 )
-def queued_lean_build(lean_project_path: str) -> dict:
+async def queued_lean_build(lean_project_path: str) -> dict:
     if not lean_project_path:
         raise ValueError(
             "lean_project_path is required and must equal project_root from "
             "agent_workspace_open"
         )
-    return AGENT_WORKSPACES.submit_build_for_project(lean_project_path)
+    return await asyncio.to_thread(AGENT_WORKSPACES.submit_build_for_project, lean_project_path)
 
 
 @mcp.tool(
     name="agent_workspace_checkpoint",
-    description="Queue audit, affected-module validation, commit, and publication.",
+    description="Queue source audit, incremental project validation, commit, and publication; failed validation blocks pushes.",
 )
-def agent_workspace_checkpoint(
+async def agent_workspace_checkpoint(
     workspace_token: str, message: str, push: bool = True
 ) -> dict:
-    return AGENT_WORKSPACES.submit_checkpoint(workspace_token, message, push)
+    return await asyncio.to_thread(
+        AGENT_WORKSPACES.submit_checkpoint, workspace_token, message, push
+    )
 
 
 @mcp.tool(
@@ -784,8 +908,19 @@ def agent_workspace_checkpoint(
         "obey retry_after_seconds and request logs only if needed."
     ),
 )
-def agent_workspace_job_status(job_id: str, include_logs: bool = False) -> dict:
-    return AGENT_WORKSPACES.job_status(job_id, include_logs)
+async def agent_workspace_job_status(job_id: str, include_logs: bool = False) -> dict:
+    return await asyncio.to_thread(AGENT_WORKSPACES.job_status, job_id, include_logs)
+
+
+@mcp.tool(
+    name="agent_workspace_list_jobs",
+    description=(
+        "List bounded recent job summaries for a workspace without starting Lean; "
+        "recover a lost job ID after an HTTP timeout before submitting again."
+    ),
+)
+async def agent_workspace_list_jobs(workspace_token: str, limit: int = 20) -> dict:
+    return await asyncio.to_thread(AGENT_WORKSPACES.list_jobs, workspace_token, limit)
 
 
 @mcp.tool(
@@ -802,20 +937,42 @@ def agent_workspace_job_status(job_id: str, include_logs: bool = False) -> dict:
         "openWorldHint": False,
     },
 )
-def agent_workspace_reset(
+async def agent_workspace_reset(
     workspace_token: str, confirmation_token: str = ""
 ) -> dict:
-    return AGENT_WORKSPACES.reset(workspace_token, confirmation_token)
+    return await asyncio.to_thread(AGENT_WORKSPACES.reset, workspace_token, confirmation_token)
 
 
 @mcp.tool(
     name="agent_workspace_run_code",
-    description="Compile one coherent ephemeral Lean snippet and return bounded diagnostics.",
+    description=(
+        "Queue one ephemeral Lean snippet and return its job ID immediately; "
+        "poll agent_workspace_job_status for bounded diagnostics and verification. "
+        "An accepted job is not a verified theorem."
+    ),
 )
-def agent_workspace_run_code(
+async def agent_workspace_run_code(
     workspace_token: str, code: str, timeout_seconds: int = 300
 ) -> dict:
-    return AGENT_WORKSPACES.run_code(workspace_token, code, timeout_seconds)
+    return await asyncio.to_thread(
+        AGENT_WORKSPACES.submit_run_code, workspace_token, code, timeout_seconds
+    )
+
+
+@mcp.tool(
+    name="agent_workspace_check_file",
+    description=(
+        "Queue compilation of an existing approved project-relative .lean file; "
+        "return a job ID, then poll agent_workspace_job_status. "
+        "Use this for full-file verification instead of a long LSP diagnostic request."
+    ),
+)
+async def agent_workspace_check_file(
+    workspace_token: str, path: str, timeout_seconds: int = 300
+) -> dict:
+    return await asyncio.to_thread(
+        AGENT_WORKSPACES.submit_check_file, workspace_token, path, timeout_seconds
+    )
 
 
 # Replace the two highest-volume discovery tools with bounded defaults while
@@ -952,3 +1109,4 @@ for _tool in mcp._tool_manager.list_tools():
 
 if __name__ == "__main__":
     raise SystemExit(lean_lsp_main())
+

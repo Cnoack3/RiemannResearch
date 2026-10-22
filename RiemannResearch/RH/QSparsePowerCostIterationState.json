@@ -1,0 +1,19 @@
+{
+  "program_id": "sparse-power-cost-20261017",
+  "iteration_limit": 5,
+  "completed_iterations": 5,
+  "counting_rule": "The count is durable only in checkpoint-published main; unpushed work is not a completed publication.",
+  "research_record": "RiemannResearch/RH/QSparsePowerCostResearch20261017.md",
+  "previous_base_commit": "a7daeea58384c1b522d034192ab8c2d0a3b3e7a2",
+  "last_iteration_result": "Certified a strictly positive complete-Q composite-anchor gain in the full dyadic squarefree block (3,6]. The legal quarter-mixture of B_4 and B_5 is exact on 1,...,4 and saves at least 1/(10000*zeta(2)); the actual source^2/denominator gain has the same lower bound. Proved a reusable signed finite-prefix/infinite-tail energy certificate. No SPC exponent below one and no infinite annihilator provider was obtained.",
+  "next_best_idea": "Program halted at five completed publications. Only under separate future authorization: scale signed prefix-tail gain certificates to growing squarefree blocks and prove uniform control of the actual signed sources, full denominators, and infinite remainder. A finite positive gain does not imply a cofinal power saving.",
+  "last_workspace_token": "ws_llqn7sLOL9O6qS0mgPhg54BtNKRoieaI",
+  "last_project_root": "/home/cri_2025/lean-agent-workspaces/ws_llqn7sLOL9O6qS0mgPhg54BtNKRoieaI/RiemannResearch",
+  "last_successful_snippet_job": "job_49b39DAbHsWAkn_sBI2HYD_-G2EjuToF",
+  "publication_gate": "Server checkpoint with push=true, including required validation of the actual integrated source.",
+  "stop_after_limit": true,
+  "previous_successful_checkpoint_job": "job_cQp9OfJT4VwOXhhxX316kLDVF96LBYZU",
+  "program_status": "completed_iteration_limit",
+  "automatic_continuation": false,
+  "full_targets": "Both remain open; no RH claim."
+}

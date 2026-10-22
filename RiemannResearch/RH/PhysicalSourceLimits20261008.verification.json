@@ -1,0 +1,105 @@
+{
+  "date_utc": "2026-10-08",
+  "baseline_commit": "5b1a7a72430424bc4f8bff7b4ffd04dab2ea32ef",
+  "modules": [
+    {
+      "path": "RiemannResearch/RH/PhysicalSourceProjection.lean",
+      "sha256": "c47a37d979f495c19267e933138cbd769ea22cbba9b9b49b4013530a6dc606f5",
+      "public_declarations": [
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.coreLambda",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.coreTotient",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.projectionCoefficients",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.totientDual",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.coreLambda_totient_pair",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.coreLambda_action",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.coreTotient_action",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.projection_normalEquation",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.totientDual_normalEquation",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.projection_pairing",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.totientDual_pairing",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.gram_transpose",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.gram_pair_symm",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.gram_quadratic_nonneg",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.projection_error",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.projection_error_decomposition",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.sourceProjectionCharge_le_one",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.logarithmicCharge_control",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.totient_cauchy",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.projection_eq_actual_gramSolve",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.projectionCharge_eq_actual_inverse_gram",
+        "RiemannResearch.RH.Pareto.PhysicalSourceProjection.meanOne_projection_error_gap"
+      ],
+      "theorems": 18,
+      "definitions": 4
+    },
+    {
+      "path": "RiemannResearch/RH/PhysicalSourceLimits.lean",
+      "sha256": "3b4b9ba3e03529bc8d864205bb79dc584e90e45c92208ead0ae8a1f8a033c0d4",
+      "public_declarations": [
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primePacket_norm_lt",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.determinant_prime_bound",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.determinant_prime_inv_bound",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.determinant_tendsto_zero_of_prime_exhaustion",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.logarithmicCharge_tendsto_zero_of_determinant",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.mixedCharge_tendsto_neg_two_pi_of_logarithmic",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorialPackets",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorialPackets_legal",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorialPackets_odd",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorialPackets_charge_bound",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.prime_eventually_mem_primorialPackets",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorial_determinant_tendsto_zero",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorial_logarithmicCharge_tendsto_zero",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorial_mixedCharge_tendsto_neg_two_pi",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorialPackets_nested",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.signedSourceCorrection",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorial_signedCorrection_le_charge_gap",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorial_signedCorrection_tendsto_zero",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorial_sourceCorrectedCharge_tendsto",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.sourceProjectionCharge_eq_div_corrected",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.primorial_projectionCharge_tendsto",
+        "RiemannResearch.RH.Pareto.PhysicalSourceLimits.exists_primorial_complete_source_limits"
+      ],
+      "theorems": 20,
+      "definitions": 2
+    }
+  ],
+  "public_declaration_count": 44,
+  "theorem_count": 38,
+  "definition_count": 6,
+  "verification": {
+    "job_id": "job_gou_P_ebp0X_h-rK77SwMb-QsdpZi2jO",
+    "status": "succeeded",
+    "verified": true,
+    "exit_code": 0,
+    "elapsed_seconds": 4.656,
+    "coherent_code_sha256": "9b6486bee751839a7c27036991b7d11242202784a88fdc46edefc18fde9be9a3",
+    "request_sha256": "5f65470729d9d267348473905c8fce2b6ce62b771664e9569c36f3e04219cb47",
+    "output": "AXIOM AUDIT PASSED: 44 public declarations; only propext, Classical.choice, Quot.sound",
+    "output_truncated": false
+  },
+  "axiom_audit": {
+    "method": "Lean.collectAxioms on all listed declarations with compile-time rejection of forbidden axioms",
+    "allowed": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "public_declarations_checked": 44,
+    "status": "passed"
+  },
+  "source_scan": {
+    "sorry": 0,
+    "admit": 0,
+    "project_axiom": 0,
+    "unsafe": 0
+  },
+  "publication_validation": {
+    "method": "agent_workspace_checkpoint(push=true)",
+    "required": true
+  },
+  "remaining_open": [
+    "unconditional actual charge endpoint C_infinity=-4*pi",
+    "formal RH-to-squarefree-centered-approximation analytic provider",
+    "separate explicit pi-transcendence premise"
+  ]
+}
