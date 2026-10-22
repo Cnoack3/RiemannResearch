@@ -324,11 +324,20 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   `primePowerProjectionUnit_norm_sq` and
   `qTarget_inner_primePowerProjectionUnit` give a unit direction with target
   coefficient p/(p^2-1), specifically 2/3 and 3/8.
-  Its identification with a centered valuation/Meixner polynomial remains Open.
+  Its physical valuation identification is established in the following module.
   Saved-source audit `job_X7L7Pa-gdRGA1ipw_C70373N-JKbpJT4` passed;
   six inspected declarations use standard foundations only.
+- `RH/QPrimePowerValuationProjection.lean` (2026-10-21, Pacific time):
+  `primePower_projection_partial_sequence` proves coordinate stabilization;
+  `primePowerProjection_sequence` identifies P_p with v_p-1/(p^2-1), and
+  `primePowerProjectionUnit_sequence` identifies U_p with ((p^2-1)v_p-1)/p.
+  `primeValuationVector_sequence` constructs the actual valuation representative.
+  Both centered and normalized projections are proved outside
+  `closureWithConstants`, using the existing prime-valuation obstruction.
+  This does not decide membership of the floor-logarithm target.
+  Audit `job_Le-uksdxS3DuX7sdeqv8fBrU3_jxoPyz` passed with standard foundations.
 
-Open: Meixner orthogonality and completeness for the full valuation basis,
+Open: higher Meixner orthogonality and completeness for the full valuation basis,
 Parseval saturation for the legal squarefree basis, and membership of the full
 F_2 and F_3 targets in `closureWithConstants`. The existing two-target RH
 criterion remains a conditional research reduction; these additions do not

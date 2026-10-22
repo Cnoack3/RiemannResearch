@@ -32,6 +32,7 @@ import RiemannResearch.RH.QFinitePrimeBasis
 import RiemannResearch.RH.QPrimePowerMixedWavelet
 import RiemannResearch.RH.QPrimePowerMixedCoefficients
 import RiemannResearch.RH.QPrimePowerInfiniteProjection
+import RiemannResearch.RH.QPrimePowerValuationProjection
 import RiemannResearch.RH.QParityBasis
 import RiemannResearch.RH.QPrimePowerParityBasis
 import RiemannResearch.RH.QResidueThreeMoments

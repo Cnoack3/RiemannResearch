@@ -25,8 +25,8 @@ Source: user-provided orthonormal-basis research direction, 20 October 2026.
 We sum the previously checked wavelet coefficients in the actual Q Hilbert
 space, compute their total energy, and retain the exact residual. The target
 is Nat.log p n, never the prime valuation. The normalized sum has coefficients
-2/3 and 3/8 for bases two and three, but identifying its physical coordinates
-with the first Meixner valuation polynomial is a separate obligation.
+2/3 and 3/8 for bases two and three. QPrimePowerValuationProjection identifies
+its physical coordinates with the first Meixner valuation polynomial.
 No legal squarefree-closure membership or residual vanishing is assumed.
 -/
 

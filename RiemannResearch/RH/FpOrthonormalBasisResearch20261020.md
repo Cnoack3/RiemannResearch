@@ -200,16 +200,51 @@ their normalized sum directions have target coefficients 2/3 and 3/8.
 These infinite-sum directions differ from the individual first wavelets.
 The already established parity coefficient remains 1/sqrt(3), with energy 1/3.
 
-Open: identify P_p pointwise with the centered valuation
-\(v_p-1/(p^2-1)\), identify U_p with the first Meixner polynomial,
-formalize higher Meixner orthogonality/completeness, and establish legal
-Parseval saturation. None of these projection statements supplies membership
+Established below: P_p is the centered valuation and U_p is the first
+Meixner polynomial. Higher Meixner orthogonality/completeness and legal
+Parseval saturation remain Open. Neither projection supplies membership
 of F_2 or F_3 in closureWithConstants.
 
 The coherent extended candidate passed job_xhIgmpEinD3yDG8yCzNc1X4Vw9CJL1Xl
 (exit 0, 8.177 seconds). Saved-source audit job_X7L7Pa-gdRGA1ipw_C70373N-JKbpJT4 also passed
 (exit 0, 14.589 seconds); six inspected declarations use only propext,
 Classical.choice, and Quot.sound. Final project publication is checkpoint-gated.
+
+## Pointwise valuation and first Meixner identification (21 October 2026, Pacific time)
+
+`QPrimePowerValuationProjection.lean` proves the exact adjacent-tail
+identity for each weighted wavelet and stabilization at every positive
+integer n once the cutoff exceeds v_p(n). Continuity of physical coordinate
+evaluation then gives
+\[
+ \boxed{P_p(n)=v_p(n)-\frac1{p^2-1},\qquad
+ U_p(n)=\frac{(p^2-1)v_p(n)-1}{p}.}
+\]
+The physical coordinate at zero remains anchored to zero.
+The first identity is `primePowerProjection_sequence`; the second is
+`primePowerProjectionUnit_sequence`. The vector
+`primeValuationVector` now supplies an actual Q-Hilbert representative
+of v_p, with no assumed square-integrability provider.
+
+Thus the previously checked unit norm, zero mean, and target coefficient
+p/(p^2-1) belong to the explicit first Meixner polynomial for parameter
+p^(-2). Its F_2/F_3 coefficients are 2/3 and 3/8. The target itself remains
+Nat.log p n. Its parity coefficient 1/sqrt(3), energy 1/3, and the full
+infinite-projection residual identities are unchanged.
+
+The existing square-jump obstruction now yields unconditional checked
+nonmembership of both P_p and U_p in closureWithConstants. This is a
+restriction on these ambient basis directions; it is not a nonmembership
+theorem for F_p. In particular, separating the centered valuation component
+does not prove that either component of a putative legal F_p stays legal.
+
+Saved-source audit job_Le-uksdxS3DuX7sdeqv8fBrU3_jxoPyz passed (exit 0,
+12.434 seconds). Six inspected declarations use only propext, Classical.choice,
+and Quot.sound. Final project publication is checkpoint-gated.
+
+Open: higher Meixner orthogonality, tensor completeness, exact remaining
+cofactor coefficients, legal Parseval saturation, and F_2/F_3 closure membership.
+
 ## Formal rigidity of functions of F_p
 
 For \(\Delta f(n)=f(n)-f(n-1)\), every f in C satisfies
