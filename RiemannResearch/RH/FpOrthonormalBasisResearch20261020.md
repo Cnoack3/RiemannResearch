@@ -245,6 +245,51 @@ and Quot.sound. Final project publication is checkpoint-gated.
 Open: higher Meixner orthogonality, tensor completeness, exact remaining
 cofactor coefficients, legal Parseval saturation, and F_2/F_3 closure membership.
 
+## Prime-free cofactor residual (22 October 2026, Pacific time)
+
+The module `QPrimePowerCofactorResidual.lean` identifies the complete
+remaining vector without replacing the floor logarithm by a valuation.
+Put \(M_p(n)=n/p^{v_p(n)}\) for \(n>0\), and
+\(\mu_p=\langle F_p,1\rangle_Q\). The checked arithmetic split and actual
+Q-Hilbert representative give
+\[
+ F_p(n)=v_p(n)+F_p(M_p(n)),\qquad
+ \mathbb E_Q F_p(M_p)=\mu_p-\frac1{p^2-1}.
+\]
+Consequently the full projection residual is
+\[
+ \boxed{R_p(n)=F_p(M_p(n))-\left(\mu_p-\frac1{p^2-1}\right),\qquad
+ R_p=F_p-\mu_p1-P_p.}
+\]
+Its physical zero coordinate stays anchored to zero. The declarations
+`primeCofactorResidual_sequence` and `primeCofactorResidual_sequence_mul_power`
+prove this formula and \(R_p(p^k n)=R_p(n)\) for every positive n.
+
+The exact complete energy and weighted residual are retained:
+\[
+ \|F_p\|_Q^2=\mu_p^2+\frac{p^2}{(p^2-1)^2}+\|R_p\|_Q^2,\qquad
+ \|R_p\|_Q^2=\frac1{\zeta(2)}\sum_{n\ge1}
+ \frac{[F_p(M_p(n))-(\mu_p-1/(p^2-1))]^2}{n^2}.
+\]
+The second equality is `primeCofactorResidual_norm_sq_series`.
+Since \(R_p(p+1)-R_p(1)=1\), completing the two weighted squares gives
+`primeCofactorResidual_energy_lower_bound`:
+\[
+ \boxed{\|R_p\|_Q^2\ge\frac1{\zeta(2)(1+(p+1)^2)}>0.}
+\]
+Thus the respective residual energies for F_2 and F_3 are at least
+\(1/(10\zeta(2))\) and \(1/(17\zeta(2))\). These are lower bounds for the
+ambient same-prime residual, not distances to the legal squarefree closure.
+The parity coefficient and all previously proved signed error identities
+remain unchanged. Neither closure membership nor nonmembership of F_p
+follows from a nonzero ambient cofactor residual.
+
+Saved-source audit job_N4o66XJr8nz6ncuK5mBkF_FW4tgnS-PP passed (exit 0,
+12.964 seconds). Six inspected declarations use only propext, Classical.choice,
+and Quot.sound. Final project publication is checkpoint-gated.
+Open: higher Meixner orthogonality/completeness, the remaining cofactor
+coefficients, legal Parseval saturation, and F_2/F_3 closure membership.
+
 ## Formal rigidity of functions of F_p
 
 For \(\Delta f(n)=f(n)-f(n-1)\), every f in C satisfies

@@ -337,6 +337,16 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   This does not decide membership of the floor-logarithm target.
   Audit `job_Le-uksdxS3DuX7sdeqv8fBrU3_jxoPyz` passed with standard foundations.
 
+- `RH/QPrimePowerCofactorResidual.lean` (2026-10-22, Pacific time):
+  `primeCofactorResidual_sequence` identifies the full residual with the centered
+  floor logarithm of n/p^(v_p(n)); `primeCofactorTarget_mean` computes its mean.
+  `primeCofactorResidual_sequence_mul_power` proves invariance under p-powers.
+  `primeCofactorResidual_norm_sq_series` retains the complete weighted series.
+  `primeCofactorResidual_energy_lower_bound` gives 1/(zeta(2)*(1+(p+1)^2));
+  `qTarget_primePower_captured_energy_lt` proves strict residual positivity.
+  This is not a distance-to-legal-closure bound or a target membership provider.
+  Audit job_N4o66XJr8nz6ncuK5mBkF_FW4tgnS-PP passed; standard foundations only.
+
 Open: higher Meixner orthogonality and completeness for the full valuation basis,
 Parseval saturation for the legal squarefree basis, and membership of the full
 F_2 and F_3 targets in `closureWithConstants`. The existing two-target RH
