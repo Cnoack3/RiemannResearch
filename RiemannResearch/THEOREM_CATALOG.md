@@ -1,5 +1,35 @@
 # Theorem catalog
 
+### Continuous prime-polynomial high moments (2026-10-22)
+
+Established analytic statements:
+- `Analysis/PrimeMomentDiagonal.lean` proves the prime-tuple fiber bound `k!`,
+  the coefficient square-sum bound, and exact grouped polynomial expansion.
+- `Analysis/DirichletMeanSquare.lean` retains the complete signed Gram identity
+  and both endpoint Hilbert forms. The proved Montgomery–Vaughan provider
+  gives weighted error `26 * sum (norm(a)^2 / delta)` and integer-log error
+  `52 * N * sum norm(a)^2`, with no assumed mean-value theorem.
+- `Analysis/PrimeDirichletHighMoment.lean` proves the ordinary interval bound
+  `integral |P|^(2*k) <= (B-A+52*X^k) * k! * (sum |a|^2)^k`, including
+  arbitrary complex coefficients, and the exact signed companion identity.
+  If `52*X^k <= B-A`, the factor is at most `2*(B-A)`.
+- `Analysis/HighMomentTransfer.lean` proves integral transfer for integrable
+  powers, permitting functions with jumps, and the coarse all-k assembly
+  `T * (9*C*k*(L+k))^k` from explicitly supplied component estimates.
+
+Conditional research reductions and open providers:
+- Open: the actual continued-argument interface and Selberg prime
+  approximation, including the actual unconditional zero-density provider.
+- Open: the prime-variance asymptotic and large-k estimate needed for the
+  exact uniform Tsang theorem. `TsangHighMomentAsymptotic` states the target
+  as a proposition only; no declaration asserts it for the actual zeta S.
+- The prime-polynomial theorem has no RH or zeta-specific hypotheses.
+
+Candidate job `job_b1mERBtaZPfFm_jSPqCcmKiK7p0do4eR` verified all four
+developments. Standalone module build and five central axiom audits passed
+in `job_RRcFxliqlBKvrMMeo2zTbO61l10bm7AN`, using only ordinary foundations.
+Research detail: `RH/AnalyticHighMomentResearch20261022.md`.
+
 ### Microscopic consecutive-gap transfers and collision criteria (2026-10-22)
 
 Established finite statements:
