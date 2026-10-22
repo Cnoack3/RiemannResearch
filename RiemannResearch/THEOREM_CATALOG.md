@@ -245,6 +245,20 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   residual and signed coefficients. Legal closure preservation is not asserted.
   Saved-source/axiom check `job_BkDWoFzxSF1ltu_DvyDoKvPsQrHn_huG`:
   exit 0, standard foundations only. Final publication is checkpoint-gated.
+- `RH/QPrimePowerInfiniteProjection.lean` (2026-10-21, Pacific time):
+  `primePower_nonconstant_summable` and `primePowerProjection_tendsto`
+  construct the norm-convergent sum of all nonconstant same-prime modes.
+  `primePowerProjection_norm_sq` sums the captured energy exactly to
+  p^2/(p^2-1)^2, giving 4/9 and 9/64 for bases two and three.
+  `qTarget_primePower_centered_energy_exact` retains the mean and full residual;
+  `qTarget_primePower_series_error_exact` handles arbitrary convergent signed
+  trial series without discarding either residual.
+  `primePowerProjectionUnit_norm_sq` and
+  `qTarget_inner_primePowerProjectionUnit` give a unit direction with target
+  coefficient p/(p^2-1), specifically 2/3 and 3/8.
+  Its identification with a centered valuation/Meixner polynomial remains Open.
+  Saved-source audit `job_X7L7Pa-gdRGA1ipw_C70373N-JKbpJT4` passed;
+  six inspected declarations use standard foundations only.
 
 Open: Meixner orthogonality and completeness for the full valuation basis,
 Parseval saturation for the legal squarefree basis, and membership of the full

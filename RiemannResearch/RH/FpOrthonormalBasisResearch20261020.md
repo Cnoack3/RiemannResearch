@@ -163,6 +163,53 @@ The existing log_mul_power proof is now public for reuse.
 Meixner completeness, legal Parseval saturation, and membership of F_2 and
 F_3 in closureWithConstants remain open.
 
+## Infinite same-prime projection (21 October 2026, Pacific time)
+
+The module `QPrimePowerInfiniteProjection.lean` now sums the nonconstant
+same-prime modes in the actual complete Q Hilbert space. With
+\(a_{p,k}=1/(p^k\sqrt{p^2-1})\), define
+\[
+ P_p=\sum_{k\ge0}a_{p,k}W_{p,k+1}.
+\]
+The vector series is absolutely summable in norm, its initial finite sums
+converge to P_p, and every coefficient is retained:
+\[
+ \langle P_p,W_{p,k+1}\rangle_Q=a_{p,k},\qquad
+ \langle1,P_p\rangle_Q=0,\qquad
+ \boxed{\|P_p\|_Q^2=\frac{p^2}{(p^2-1)^2}.}
+\]
+The residual F_p-P_p is orthogonal to every nonconstant same-prime mode.
+Writing \(\mu_p=\langle F_p,1\rangle_Q\), the full exact identity is
+\[
+ \boxed{\|F_p\|_Q^2=\mu_p^2+\frac{p^2}{(p^2-1)^2}
+       +\|F_p-\mu_p1-P_p\|_Q^2.}
+\]
+For any real signed coefficients c_k whose vector series
+\(T_c=\sum_{k\ge0}c_kW_{p,k+1}\) converges unconditionally in QHilbert,
+\[
+ \boxed{\|F_p-T_c\|_Q^2
+       =\|P_p-T_c\|_Q^2+\|F_p-P_p\|_Q^2.}
+\]
+Both full residuals are retained; no sign restriction or assumed legality
+is imposed on the trial coefficients.
+
+The normalized vector \(U_p=(p^2-1)P_p/p\) has unit norm square and
+\(\langle F_p,U_p\rangle_Q=p/(p^2-1)\).
+Thus all dyadic modes capture 4/9 and all triadic modes capture 9/64;
+their normalized sum directions have target coefficients 2/3 and 3/8.
+These infinite-sum directions differ from the individual first wavelets.
+The already established parity coefficient remains 1/sqrt(3), with energy 1/3.
+
+Open: identify P_p pointwise with the centered valuation
+\(v_p-1/(p^2-1)\), identify U_p with the first Meixner polynomial,
+formalize higher Meixner orthogonality/completeness, and establish legal
+Parseval saturation. None of these projection statements supplies membership
+of F_2 or F_3 in closureWithConstants.
+
+The coherent extended candidate passed job_xhIgmpEinD3yDG8yCzNc1X4Vw9CJL1Xl
+(exit 0, 8.177 seconds). Saved-source audit job_X7L7Pa-gdRGA1ipw_C70373N-JKbpJT4 also passed
+(exit 0, 14.589 seconds); six inspected declarations use only propext,
+Classical.choice, and Quot.sound. Final project publication is checkpoint-gated.
 ## Formal rigidity of functions of F_p
 
 For \(\Delta f(n)=f(n)-f(n-1)\), every f in C satisfies
