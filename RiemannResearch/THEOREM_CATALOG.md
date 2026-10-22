@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Contractive complete-Q CRT carry screening (2026-10-22)
+
+Established Hilbert and actual Q finite-synthesis results:
+
+- `Analysis/ContractionScreening.lean` proves the exact contraction-screening
+  identity with both nonnegative remainders retained, the relative screened
+  energy bound, and control of total energy by retained projection energy.
+- `RH/QCarryContraction.lean` proves the finite zero-charge identity
+  h = (T_p - I) f for the actual complete Q residue vectors. Using the
+  existing sharp squared floor-dilation contraction 1/p, it gives
+  ||(I-P)C||^2 <= ||h||^2/p and
+  ||h||^2 <= p/(p-1) ||L-PC||^2 for every exact carry decomposition L-C,
+  provided the source f and the lower part L belong to the screening space.
+- The actual complete-Q exact identity retains the projection square and the
+  full nonnegative quotient-block defect. No independence assumption is used.
+
+The uniform retained-energy provider for growing exact heads remains
+**Open**. Its RH application is a **conditional research reduction**:
+the bound would give uniformly bounded legal exact-head vectors, then
+constant closure and RH. No unconditional RH conclusion is claimed.
+
+The coherent candidate passed job `job_TbqRqhx3JJsy8lm0cQhO97h-RqgIHp3l`,
+exit 0, verified=true, reported execution 7.246 seconds. Eight central axiom
+audits used only ordinary foundations. Final module validation and publication
+are gated by the server checkpoint. Details:
+`RH/QCarryContractionResearch20261022.md`.
+
+
 ### Zero-displacement and finite Mellin Gram certificates (2026-10-21)
 
 Established by targeted server verification, subject to the containing
