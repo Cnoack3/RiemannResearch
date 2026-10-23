@@ -38,6 +38,7 @@ import RiemannResearch.RH.RamanujanBlockEnlargement
 import RiemannResearch.RH.QParetoInverseMetricDefect
 import RiemannResearch.RH.RamanujanInverseMetric
 import RiemannResearch.RH.RamanujanCoefficientConstraints
+import RiemannResearch.RH.RamanujanCoefficientInversion
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

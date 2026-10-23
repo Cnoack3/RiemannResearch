@@ -22,6 +22,10 @@
     automatic positive capacity, full feasibility iff, explicit unique constrained
     optimizer, exact minimum and complete Gram remainder. The negative-Moebius
     target has its exact squared-discrepancy/inverse-capacity penalty.
+16. Established: RamanujanCoefficientInversion constructs the full finite
+    residue/packet linear equivalence, explicit divisor-sum inverse and both
+    inverse laws. Actual P and Q optimizer formulas and finite reference-vector
+    decompositions follow without asserting individual infinite packet limits.
 
 ## Ten Ramanujan dual transfers — 23 October 2026
 

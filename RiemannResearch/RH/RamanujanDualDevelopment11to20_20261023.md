@@ -70,3 +70,15 @@ the full squared synthesis norm of its coefficient displacement.
 Feasibility holds exactly when m<=n+1 or t=0 (for m>1).
 For t=-mu(m), the exact cost is (C_n(m)+mu(m))^2/K.
 Module: RH/RamanujanCoefficientConstraints.lean.
+
+## Transfer 16: exact two-sided legal coefficient linear equivalence
+
+For every finite coefficient vector, the signed multiple transform
+C(m)=m*sum_(m|q) mu(q/m)*a(q) has the explicit inverse
+a(q)=sum_(q|m) C(m)/m over the same finite conductor range.
+Both inverse laws and equality of the corresponding Hilbert syntheses are
+proved. coefficientEquiv packages the result as a linear equivalence.
+The actual P and Q packet optimizers each satisfy their own inverse formula,
+and arbitrary finite reference vectors give exact correction decompositions.
+No infinite multiple sum or exchange of an infinite sum with a limit is used.
+Module: RH/RamanujanCoefficientInversion.lean.
