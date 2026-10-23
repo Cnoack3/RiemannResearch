@@ -505,3 +505,53 @@ declarations use only propext, Classical.choice, and Quot.sound.
 Final project publication is checkpoint-gated.
 These analytic truncation bounds do not certify floating-point arithmetic,
 saturation of a legal Gram/Parseval calculation, or either membership provider.
+
+## Checked rational coefficient intervals (22 October 2026, Pacific time)
+
+QPrimePowerRationalCertificates.lean now evaluates the finite prime-power
+threshold head as an exact rational number H(p,q,k,K). Its numerator is
+the double finite sum of 1/n^2 over the previously checked integer intervals;
+there is no zeta or square root inside this rational computation. Write
+T(p,d,K)=d/((p-1)p^K)+d^2/((p^2-1)p^(2K)), also rational.
+For alpha = <F_p,B_(q^(k+1))> and D=zeta(2)*sqrt(J_2(q^(k+1))),
+the primary equality is
+\[
+ \alpha = H/D + \sum_{j\ge0}\operatorname{primePowerThresholdTerm}(p,q,k,j+K).
+\]
+The complete series on the right is retained, with error in [0,T/D].
+
+The theorem qTarget_primePower_rational_certificate accepts rational positive
+lower bounds zL,sL and upper bounds zU,sU for the two normalizer factors.
+Squared rational inequalities certify the square-root bounds. For nonnegative
+rational endpoints lo,hi, the finite rational checks
+\[
+ \mathrm{lo}\,(z_U s_U)\le H,\qquad H+T\le \mathrm{hi}\,(z_L s_L)
+\]
+prove lo <= alpha <= hi. This provides sound outward rational rounding,
+including decimal-grid endpoints, without assuming a coefficient estimate.
+The parametric theorem's normalizer hypotheses are explicit; the following
+concrete applications discharge all of them.
+
+| Target and ambient conductor | Threshold levels | Checked interval |
+| --- | ---: | --- |
+| F_2, B_3 | 7 | [397/1000, 403/1000] |
+| F_3, B_2 | 4 | [141/1000, 146/1000] |
+
+The zeta bounds are the existing checked 1028/625 < zeta(2) < 329/200.
+The square-root intervals are [2828/1000,2829/1000] for sqrt(8) and
+[1732/1000,1733/1000] for sqrt(3). Every finite rational inequality is proved
+by decide +kernel; no floating-point computation or native_decide result
+enters the proof. These are theorems about actual integer-Zipf coefficients
+of Nat.log targets, not independent finite Boolean variables or valuations.
+
+Candidate job_74YZQKqwUeH4WQq2rbpYvowIDsTI6rXw passed without diagnostics
+(exit 0, 7.512 seconds). Saved-source audit
+job_TqBrT8wsiZR1pnec1anrcqCky4-g3_8L passed (exit 0, 15.612 seconds,
+new-module build 4.6 seconds). All six inspected declarations use only
+propext, Classical.choice, and Quot.sound. Final aggregate-project publication
+remains checkpoint-gated.
+
+Open: efficient arbitrary-precision automation and general signed composite-
+conductor interval evaluation, higher Meixner orthogonality/completeness,
+and actual legal Parseval saturation and F_2/F_3 membership. The rational
+intervals above do not remove any signed term or full ambient/legal residual.

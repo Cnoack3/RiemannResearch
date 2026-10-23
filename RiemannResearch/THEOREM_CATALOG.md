@@ -750,8 +750,20 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   remainder identity from QPrimePowerThresholdSeries.
   `qTarget_primePower_threshold_error_bounds` certifies finite interval
   coefficient heads with an error between zero and tau/sqrt(J_2).
-  Finite-precision rounding certification, higher Meixner completeness,
-  and actual legal Parseval saturation remain open.
+  Exact rational endpoint certification for prime-power conductors is supplied
+  by QPrimePowerRationalCertificates. Higher Meixner completeness and actual
+  legal Parseval saturation remain open.
+
+- `RH/QPrimePowerRationalCertificates.lean` (2026-10-22, Pacific time):
+  `primePowerRationalHead_cast` identifies the exact finite rational numerator.
+  `qTarget_primePower_rational_head_tail` retains the entire original level tail.
+  `qTarget_primePower_rational_certificate` transfers rational normalizer bounds
+  and finite rational inequalities to certified outward coefficient endpoints.
+  `qTarget_two_conductor_three_interval` proves [397/1000, 403/1000];
+  `qTarget_three_conductor_two_interval` proves [141/1000, 146/1000].
+  Both use exact kernel-checked rational arithmetic, not floating-point estimates.
+  No hypotheses remain in these two concrete theorems. These ambient coefficients
+  supply neither legal Parseval saturation nor a target-membership provider.
 
 - `RH/QDivisorModeLegality.lean` (2026-10-22, Pacific time):
   `residue_three_single_mode_defect` gives 9 E_Q[g_3]/8 > 0.

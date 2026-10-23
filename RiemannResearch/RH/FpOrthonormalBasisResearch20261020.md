@@ -469,7 +469,10 @@ nonnegative level tail retained. See the checked-threshold section of
 FpCoprimeCoefficientsResearch20261022.md for formulas.
 QPrimePowerThresholdTail.lean now proves the explicit geometric truncation
 bound, the signed Moebius coefficient-error interval, and a certified error
-bound for the finite prime-power interval sums. Finite-precision rounding
-certification remains open. These coefficient identities apply to the
+bound for the finite prime-power interval sums. QPrimePowerRationalCertificates
+now certifies exact rational evaluation and outward rational endpoints for
+prime-power conductors, with fully discharged examples [0.397, 0.403] for
+<F_2,B_3> and [0.141, 0.146] for <F_3,B_2>. General signed composite-conductor
+numerical evaluation and legal Gram/Parseval certification remain open. These coefficient identities apply to the
 actual Zipf law and Nat.log targets. They provide no legal Parseval saturation
 or membership provider and do not change any full norm residual above.
