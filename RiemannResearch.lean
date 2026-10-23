@@ -240,6 +240,8 @@ import RiemannResearch.RH.QParetoOperatorTransfer
 import RiemannResearch.RH.QMellinTransfer
 import RiemannResearch.RH.QBoundedCoordinateClosure
 import RiemannResearch.RH.QFiniteSupportDualCriterion
+import RiemannResearch.RH.QFiniteSupportDualEstimates
+import RiemannResearch.RH.QNonnegativeDualBound
 import RiemannResearch.RH.QUnitSignalTargetTest
 import RiemannResearch.Analysis.PrimitiveRegularization
 import RiemannResearch.RH.QPhysicalDifference

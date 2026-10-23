@@ -20,6 +20,11 @@ two further formal reductions. Neither supplies an unconditional RH proof.
 The missing arithmetic provider remains Open. Compactness, a fixed competitor,
 and increasingly accurate sampling do not provide that provider.
 
+A subsequent uniform-bound attempt is recorded in
+UniformDualBoundResearch20261022.md. It proves a genuine uniform estimate for
+nonnegative tests and sublinear squared constants for signed finite heads;
+the uniform estimate for arbitrary signed tests remains Open.
+
 ## 1. Exact identities
 
 Let y be the target, m = ||y||^2, p its projection onto a legal trial space,

@@ -8,6 +8,7 @@ import RiemannResearch.RH.QFullResidueProjection
 import RiemannResearch.RH.QOptimizerParityRH
 import RiemannResearch.RH.ZetaTwoHilbertSpace
 import Mathlib.Analysis.Normed.Lp.lpSpace
+import Mathlib.Analysis.InnerProductSpace.l2Space
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Push
 import Lean.Elab.Tactic.Omega
@@ -35,6 +36,29 @@ open RiemannResearch.Analysis.DenseProjectionTesting
 
 def finiteHead (M : ℕ) (a : QHilbert) : QHilbert :=
   ∑ n ∈ Finset.range M, lp.single 2 n (a n)
+
+/-- The exact finite-coordinate pairing formula. -/
+theorem inner_finiteHead_eq_sum (x a : QHilbert) (M : ℕ) :
+    inner ℝ x (finiteHead M a) = ∑ n ∈ Finset.range M, a n * x n := by
+  simp only [finiteHead, inner_sum, lp.inner_single_right, RCLike.inner_apply, conj_trivial]
+
+/-- Agreement on the physical head suffices for equality against every test on that head. -/
+theorem inner_finiteHead_eq_of_matching_head
+    (M : ℕ) (f x a : QHilbert)
+    (hh : ∀ k, 0 < k → k ≤ M → qSequence f k = qSequence x k) :
+    inner ℝ f (finiteHead M a) = inner ℝ x (finiteHead M a) := by
+  simp only [finiteHead, inner_sum]
+  apply Finset.sum_congr rfl
+  intro n hn
+  rw [lp.inner_single_right, lp.inner_single_right]
+  have he := hh (n + 1) (Nat.succ_pos _) (by
+    have := Finset.mem_range.mp hn
+    omega)
+  have hne : Real.sqrt (qWeight n) ≠ 0 :=
+    ne_of_gt (Real.sqrt_pos.mpr (qWeight_pos n))
+  have hc : f n = x n := by
+    simpa only [qSequence_succ, div_left_inj' hne] using he
+  rw [hc]
 
 theorem finiteHead_tendsto (a : QHilbert) :
     Tendsto (fun M => finiteHead M a) atTop (𝓝 a) := by

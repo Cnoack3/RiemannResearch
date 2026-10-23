@@ -1,5 +1,27 @@
 # Theorem catalog
 
+### Uniform nonnegative dual bound and signed finite-head estimates (2026-10-22)
+
+Established:
+- RH/QFiniteSupportDualCriterion.lean adds the exact finite-coordinate sum
+  and pairing identity for matching physical heads.
+- RH/QFiniteSupportDualEstimates.lean proves the exact signed pairing with
+  the concrete legal Möbius head, then finiteHead_dual_bound for all signed
+  tests. Its constant C_M is the complete norm of that head;
+  dualHeadConstant_sq_sublinear gives C_M^2/M -> 0, and
+  dualHeadConstant_sq_lt gives C_M^2 < 8M/zeta(2) for M>0.
+- RH/QNonnegativeDualBound.lean constructs finite legal fourMajorant K,
+  proves its exact sequence, domination on 0<n<4^K, and the complete norm
+  bound 4 sqrt(2/zeta(2)). nonnegative_finite_test_uniform_dual_bound and
+  nonnegative_uniform_dual_bound give that common constant for all
+  nonnegative finite and arbitrary Q tests, respectively.
+
+Open: the uniform dual bound for arbitrary signed tests. Support-dependent
+constants and uniform nonnegative testing do not discharge the conditional
+RH consumer. The majorants need not be exact heads.
+Research note: RH/UniformDualBoundResearch20261022.md.
+
+
 ### Single-test normalization and finite-support dual testing (2026-10-22)
 
 Established:
