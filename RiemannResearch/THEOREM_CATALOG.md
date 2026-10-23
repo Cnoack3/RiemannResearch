@@ -1,5 +1,28 @@
 # Theorem catalog
 
+### Sampled optimizer norm and Möbius limit identification (2026-10-22)
+
+Established finite and actual-Q statements:
+- `Analysis/FiniteWeightedSampling.sampled_projection_energy_mul_bound`
+  proves `(1-delta^2) E(f) <= E(y)` from relative metric control and
+  the sampled normal equation in direction f. The divided form is
+  `sampled_projection_energy_le`; no target-closure assumption occurs.
+- `sampled_projection_two_cell_sharpness` verifies a rational equality
+  example with delta=1/2, unit target energy and candidate energy 4/3.
+- `RH/QZeroPhaseSampling.weighted_normal_projection_norm_mul_bound`
+  realizes the same bound in complete Q, with all periodic tail weights.
+- `RH/QSquarefreeFormalSynthesis.strong_limit_eq_one_iff_coefficients_tendsto`
+  reuses continuous coefficient extraction and coefficient totality:
+  for a strongly convergent physical sequence, its limit is qOne iff
+  every fixed residue coefficient tends to minus Moebius.
+
+Open arithmetic provider: identify the unconstrained optimizer's limiting
+coefficients as minus Moebius, equivalently its limiting projection as qOne.
+The new bound concerns a linear trial space's normal equation; it does not
+supply the uniform bound for affine exact-head repair costs. Sampling heights
+remove metric discrepancy but do not change the exhaustive projection limit.
+Research detail: `RH/QOptimalSamplingMobiusResearch20261022.md`.
+
 ### Independent squarefree-head compression and reduced complete Gram (2026-10-22)
 
 Established finite and actual-Q statements:

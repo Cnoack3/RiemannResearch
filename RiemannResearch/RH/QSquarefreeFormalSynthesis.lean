@@ -391,4 +391,24 @@ theorem coefficients_eq_mobius_iff (f : QHilbert) :
   · rintro rfl m hm
     exact coefficientCLM_one m (by omega)
 
+
+/-- Once a physical strong limit exists, identifying every fixed residue
+coefficient limit as minus Moebius is equivalent to identifying that limit
+as the constant target. This does not supply the arithmetic identification. -/
+theorem strong_limit_eq_one_iff_coefficients_tendsto
+    (F : ℕ → QHilbert) (f : QHilbert)
+    (hF : Tendsto F atTop (𝓝 f)) :
+    f = qOne ↔ ∀ m, 1 < m →
+      Tendsto (fun n => coefficientCLM m (F n)) atTop
+        (𝓝 (-(ArithmeticFunction.moebius m : ℝ))) := by
+  constructor
+  · rintro rfl m hm
+    simpa only [coefficientCLM_one m (by omega)] using
+      coefficient_tendsto_of_strong F qOne hF m
+  · intro h
+    apply (coefficients_eq_mobius_iff f).mp
+    intro m hm
+    exact tendsto_nhds_unique
+      (coefficient_tendsto_of_strong F f hF m) (h m hm)
+
 end RiemannResearch.RH.QSquarefreeFormalSynthesis

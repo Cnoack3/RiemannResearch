@@ -8,6 +8,7 @@ import RiemannResearch.RH.ZetaTwoHilbertSpace
 import RiemannResearch.RH.ZetaTwoPolygammaResidues
 import RiemannResearch.Analysis.FiniteWeightedSampling
 import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.NormNum
 import RiemannResearch.Analysis.FiniteCellSampling
 
 /-!
@@ -152,5 +153,39 @@ theorem weighted_norm_sample_comparison {κ : Type*}
     exact (residuePowerWeight_pos 0 (by exact_mod_cast hL) (by positivity)).le
   · intro a ha
     exact hfreq a
+
+
+/-- Complete-Q norm bound for a sampled normal projection of the constant.
+The weights include every periodic tail. The normal equation is explicit:
+it holds for unconstrained minimization in a linear legal trial space,
+but need not hold under affine exact-head constraints. -/
+theorem weighted_normal_projection_norm_mul_bound {κ : Type*}
+    (L : ℕ) (hL : 0 < L) (s : Finset κ) (A : κ → Fin L)
+    (f : QHilbert) (F : ℕ → ℝ) {C : ℝ}
+    (hF : ∀ k, |F k| ≤ C) (hpF : ∀ k, F (k + L) = F k)
+    (hf : ∀ k, qSequence f (k + 1) = F (k + 1))
+    (δ : ℝ)
+    (hfreq : ∀ a : Fin L, |(L : ℝ) * cellFrequency s A a - 1| ≤ δ)
+    (hnormal : form Finset.univ
+      (fun a : Fin L => residuePowerWeight 0 L (a.val + 1) *
+        ((L : ℝ) * cellFrequency s A a))
+      (fun a => 1 - F (a.val + 1)) (fun a => F (a.val + 1)) = 0) :
+    (1 - δ ^ 2) * ‖f‖ ^ 2 ≤ 1 := by
+  have hone : energy Finset.univ
+      (fun a : Fin L => residuePowerWeight 0 L (a.val + 1))
+      (fun _ => (1 : ℝ)) = 1 := by
+    have h := qNorm_sq_eq_periodic_energy L hL qOne (fun _ => 1)
+      (C := 1) (by intro k; norm_num) (by intro k; rfl)
+      (by intro k; rw [qSequence_qOne]; simp [qOneSequence])
+    simpa only [qOne_norm_sq] using h.symm
+  rw [qNorm_sq_eq_periodic_energy L hL f F hF hpF hf]
+  apply le_trans _ (le_of_eq hone)
+  exact sampled_projection_energy_mul_bound Finset.univ
+    (fun a : Fin L => residuePowerWeight 0 L (a.val + 1))
+    (fun a => (L : ℝ) * cellFrequency s A a)
+    (fun _ => 1) (fun a => F (a.val + 1)) δ
+    (fun a _ => (residuePowerWeight_pos 0
+      (by exact_mod_cast hL) (by positivity)).le)
+    (fun a _ => hfreq a) hnormal
 
 end RiemannResearch.RH.QZeroPhaseSampling

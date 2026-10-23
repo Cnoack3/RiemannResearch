@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.FiniteClassDirichlet
+import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Ring
 
 /-!
@@ -245,5 +248,69 @@ theorem sampled_minimum_comparison (s : Finset α) (w q r rhat : α → ℝ)
   · exact (mul_le_mul_of_nonneg_left htrueMin (by linarith)).trans
       (sampled_energy_comparison s w q rhat δ hw hq).1
   · exact hsampledMin.trans (sampled_energy_comparison s w q r δ hw hq).2
+
+
+/-- Weighted normality in the direction of the candidate itself controls its
+true energy. The signed cross term is estimated only after the exact
+energy identity; no target-closure assumption is used. -/
+theorem sampled_projection_energy_mul_bound {α : Type*}
+    (s : Finset α) (w q y f : α → ℝ) (δ : ℝ)
+    (hw : ∀ a ∈ s, 0 ≤ w a)
+    (hq : ∀ a ∈ s, |q a - 1| ≤ δ)
+    (hnormal : form s (fun a => w a * q a) (fun a => y a - f a) f = 0) :
+    (1 - δ ^ 2) * energy s w f ≤ energy s w y := by
+  have hcross := sampled_form_sub_sq_le s w q (fun a => y a - f a) f δ hw hq
+  rw [hnormal, zero_sub, neg_sq] at hcross
+  have cross_lower (e d t : ℝ) (he : 0 ≤ e) (hd : 0 ≤ d)
+      (ht : t ^ 2 ≤ e * d) : 0 ≤ e + d + 2 * t := by
+    by_contra h
+    have hn : e + d + 2 * t < 0 := lt_of_not_ge h
+    have hp : 0 < e + d - 2 * t := by linarith
+    have hprod := mul_neg_of_neg_of_pos hn hp
+    nlinarith [sq_nonneg (e - d)]
+  have hnonneg := cross_lower
+    (energy s w (fun a => y a - f a))
+    (δ ^ 2 * energy s w f)
+    (form s w (fun a => y a - f a) f)
+    (energy_nonneg s w _ hw)
+    (mul_nonneg (sq_nonneg δ) (energy_nonneg s w f hw))
+    (by nlinarith [hcross])
+  have he := energy_sub_exact s w y f
+  rw [form_sub_left, form_self] at hnonneg
+  nlinarith [hnonneg, he]
+
+/-- A sampled projection of a unit-energy target has true energy at most
+`1 / (1 - δ^2)`. This bounds the unconstrained optimizer, not a candidate
+subject to additional affine head constraints. -/
+theorem sampled_projection_energy_le {α : Type*}
+    (s : Finset α) (w q y f : α → ℝ) (δ : ℝ)
+    (hδ0 : 0 ≤ δ) (hδ1 : δ < 1)
+    (hw : ∀ a ∈ s, 0 ≤ w a)
+    (hq : ∀ a ∈ s, |q a - 1| ≤ δ)
+    (hnormal : form s (fun a => w a * q a) (fun a => y a - f a) f = 0) :
+    energy s w f ≤ energy s w y / (1 - δ ^ 2) := by
+  have hden : 0 < 1 - δ ^ 2 := by
+    nlinarith [mul_pos (sub_pos.mpr hδ1) (show 0 < 1 + δ by linarith)]
+  apply (le_div_iff₀ hden).mpr
+  simpa only [mul_comm] using
+    sampled_projection_energy_mul_bound s w q y f δ hw hq hnormal
+
+/-- Exact rational equality case at relative discrepancy one half.
+The factor `1 / (1 - δ^2)` cannot be improved using only these hypotheses. -/
+theorem sampled_projection_two_cell_sharpness :
+    let w : Fin 2 → ℝ := fun a => if a.val = 0 then 1 / 4 else 3 / 4
+    let q : Fin 2 → ℝ := fun a => if a.val = 0 then 1 / 2 else 3 / 2
+    let f : Fin 2 → ℝ := fun a => if a.val = 0 then 2 else 2 / 3
+    (∀ a, 0 ≤ w a) ∧ (∀ a, |q a - 1| ≤ 1 / 2) ∧
+      form Finset.univ (fun a => w a * q a) (fun a => 1 - f a) f = 0 ∧
+      energy Finset.univ w (fun _ => 1) = 1 ∧
+      energy Finset.univ w f = 4 / 3 := by
+  dsimp
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · intro a; fin_cases a <;> norm_num
+  · intro a; fin_cases a <;> norm_num
+  · norm_num [form, Fin.sum_univ_two]
+  · norm_num [energy, Fin.sum_univ_two]
+  · norm_num [energy, Fin.sum_univ_two]
 
 end RiemannResearch.Analysis.FiniteWeightedSampling
