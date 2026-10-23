@@ -10,6 +10,10 @@
     into exact displacement and metric-correction terms for arbitrary targets.
     Equality holds precisely at exact interpolation. RamanujanMetricOptimizer
     gives the actual P/Q arithmetic identity and strict finite-stage comparison.
+13. Established: RamanujanBlock proves arbitrary finite conductor independence,
+    automatic screened Gram positivity, both exact inverse coefficient blocks,
+    exact capacity gain with its strictness iff, and the full constant-target
+    error identity for arbitrary finite block enlargement.
 
 ## Ten Ramanujan dual transfers — 23 October 2026
 

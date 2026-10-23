@@ -35,3 +35,15 @@ comparison holds exactly at exact interpolation. Applied to the actual
 Ramanujan constant-target optimizers, the comparison is strict at every finite
 stage. No equality of the two source vectors or metric optimizers is assumed.
 Modules: RH/QParetoOptimizerError.lean; RH/RamanujanMetricOptimizer.lean.
+
+## Transfer 13: arbitrary conductor blocks and exact screened inverse updates
+
+Every finite family of distinct conductors greater than one is independent.
+For any disjoint old/new conductor blocks, independence and positive determinant
+of the entire screened Gram matrix follow automatically. For arbitrary source
+vectors the joined inverse solution includes both new screened coefficients and
+the signed correction to every old coefficient. Capacity is exactly old capacity
+plus full screened capacity, with strict gain iff the screened source is nonzero.
+For the actual constant target the source is Lambda at each conductor, and the
+complete new error is one minus both capacities.
+Module: RH/RamanujanBlockEnlargement.lean.
