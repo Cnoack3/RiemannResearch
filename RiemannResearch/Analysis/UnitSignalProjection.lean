@@ -245,6 +245,58 @@ theorem optimizer_tendsto {ι : Type*} {l : Filter ι}
   have hc := hm.div he M.energy_ne_zero
   simpa only [optimizer, Pi.div_apply] using hc.smul hprojection
 
+/-- Exact norm/error identity for unit-signal admissibility.
+Source: user-provided boundedness-to-RH argument, 22 October 2026. -/
+theorem admissible_norm_sq {f : E} (hf : M.Admissible f) :
+    ‖f‖ ^ 2 = M.mass + ‖f - M.target‖ ^ 2 := by
+  have hy : ‖M.target‖ ^ 2 = M.mass := by
+    rw [← real_inner_self_eq_norm_sq]
+    exact M.target_energy
+  rw [norm_sub_sq_real, hf.2.1, hy]
+  ring
+
+/-- A fixed admissible competitor bounds every optimizer that admits it.
+This does not assert target membership in the trial-space closure. -/
+theorem optimizer_norm_sq_le_admissible {f : E} (hf : M.Admissible f) :
+    ‖M.optimizer‖ ^ 2 ≤ ‖f‖ ^ 2 := by
+  rw [M.admissible_norm_sq M.optimizer_admissible,
+    M.admissible_norm_sq hf]
+  linarith [M.optimizer_minimizes hf]
+
+/-- Target identification requires saturation of the projection energy.
+A positive lower bound only bounds the normalized optimizer. -/
+theorem optimizer_eq_target_iff_energy_eq_mass :
+    M.optimizer = M.target ↔ M.energy = M.mass := by
+  constructor
+  · intro h
+    have hm : M.target ∈ M.space := h ▸ M.optimizer_admissible.1
+    have hp := M.projection_pairing M.target hm
+    calc
+      M.energy = inner ℝ M.projection M.target := M.projection_inner_target.symm
+      _ = inner ℝ M.target M.projection := real_inner_comm _ _
+      _ = M.mass := hp.trans M.target_energy
+  · intro h
+    have hn : ‖M.optimizer - M.target‖ ^ 2 = 0 := by
+      rw [M.optimizer_error, ← h]
+      field_simp [M.energy_ne_zero]
+      ring
+    have hz : ‖M.optimizer - M.target‖ = 0 := by
+      nlinarith [norm_nonneg (M.optimizer - M.target)]
+    exact sub_eq_zero.mp (norm_eq_zero.mp hz)
+
+/-- The normalized residual is generally not orthogonal to the trial space.
+This keeps the signed term absent from the unnormalized projection residual. -/
+theorem normalized_residual_pairing {f : E} (hf : f ∈ M.space) :
+    inner ℝ (M.target - M.optimizer) f =
+      (1 - M.mass / M.energy) * inner ℝ M.target f := by
+  have hp : inner ℝ M.projection f = inner ℝ M.target f := by
+    calc
+      inner ℝ M.projection f = inner ℝ f M.projection := real_inner_comm _ _
+      _ = inner ℝ f M.target := M.projection_pairing f hf
+      _ = inner ℝ M.target f := real_inner_comm _ _
+  rw [inner_sub_left, optimizer, real_inner_smul_left, hp]
+  ring
+
 end ProjectionSignalModel
 
 end RiemannResearch.Analysis.UnitSignalProjection

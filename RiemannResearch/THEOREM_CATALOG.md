@@ -1,5 +1,20 @@
 # Theorem catalog
 
+### Unit-signal boundedness versus target identification (2026-10-22)
+
+Established in `Analysis/UnitSignalProjection.lean`, namespace
+`Analysis.UnitSignalProjection.ProjectionSignalModel`:
+- `admissible_norm_sq` gives the exact norm/error identity.
+- `optimizer_norm_sq_le_admissible` proves the fixed-competitor norm bound.
+- `optimizer_eq_target_iff_energy_eq_mass` identifies the necessary saturation.
+- `normalized_residual_pairing` retains the signed nonorthogonality term.
+
+Open arithmetic obligation: identify the bounded sampled optimizer's limit
+as the constant target, equivalently saturate its projection capacity.
+The existing `RH.QBoundedCoordinateClosure` RH consumer also requires
+coordinate convergence to one; boundedness alone does not supply it.
+Research detail: `RH/UnitSignalBoundednessAudit20261022.md`.
+
 ### Sampled optimizer norm and Möbius limit identification (2026-10-22)
 
 Established finite and actual-Q statements:
