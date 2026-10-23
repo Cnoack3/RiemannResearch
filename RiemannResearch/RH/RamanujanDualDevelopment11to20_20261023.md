@@ -47,3 +47,13 @@ plus full screened capacity, with strict gain iff the screened source is nonzero
 For the actual constant target the source is Lambda at each conductor, and the
 complete new error is one minus both capacities.
 Module: RH/RamanujanBlockEnlargement.lean.
+
+## Transfer 14: complete inverse-metric defects and sharp strictness
+
+For every independent finite Q dictionary and every common source b, the
+complete upper inverse-capacity gap is the sum of a squared P displacement and
+the reciprocal metric correction. The upper bound is strict iff b is nonzero.
+An exact identity for the lower comparison retains its displacement and full
+correction defect as well. The actual finite Ramanujan Gram inverse quadratic
+forms therefore satisfy strict upper comparison at precisely nonzero sources.
+Modules: RH/QParetoInverseMetricDefect.lean; RH/RamanujanInverseMetric.lean.

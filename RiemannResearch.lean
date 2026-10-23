@@ -35,6 +35,8 @@ import RiemannResearch.RH.RamanujanUnitMean
 import RiemannResearch.RH.QParetoOptimizerError
 import RiemannResearch.RH.RamanujanMetricOptimizer
 import RiemannResearch.RH.RamanujanBlockEnlargement
+import RiemannResearch.RH.QParetoInverseMetricDefect
+import RiemannResearch.RH.RamanujanInverseMetric
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

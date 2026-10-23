@@ -14,6 +14,10 @@
     automatic screened Gram positivity, both exact inverse coefficient blocks,
     exact capacity gain with its strictness iff, and the full constant-target
     error identity for arbitrary finite block enlargement.
+14. Established: QParetoInverseMetricDefect gives exact upper and lower inverse
+    capacity gaps and upper strictness iff the source is nonzero, for every
+    finite independent Q dictionary. RamanujanInverseMetric specializes the
+    strictness iff to the actual arithmetic inverse Gram quadratic forms.
 
 ## Ten Ramanujan dual transfers — 23 October 2026
 
