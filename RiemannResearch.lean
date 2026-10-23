@@ -239,6 +239,8 @@ import RiemannResearch.RH.QParetoGramComparison
 import RiemannResearch.RH.QParetoOperatorTransfer
 import RiemannResearch.RH.QMellinTransfer
 import RiemannResearch.RH.QBoundedCoordinateClosure
+import RiemannResearch.RH.QFiniteSupportDualCriterion
+import RiemannResearch.RH.QUnitSignalTargetTest
 import RiemannResearch.Analysis.PrimitiveRegularization
 import RiemannResearch.RH.QPhysicalDifference
 import RiemannResearch.RH.QPrimitiveEnergyClosure
@@ -309,6 +311,7 @@ import RiemannResearch.RH.CRTSubpolynomialTail
 import RiemannResearch.RH.ParetoReciprocalWindow
 import RiemannResearch.RH.CanonicalPrimeSubpolynomialWindow
 import RiemannResearch.Analysis.UnitSignalProjection
+import RiemannResearch.Analysis.DenseProjectionTesting
 import RiemannResearch.Analysis.UnitSignalTwoScale
 import RiemannResearch.RH.ZetaTwoParitySignal
 import RiemannResearch.RH.ZetaTwoUnitSignal

@@ -22,6 +22,7 @@ has been supplied. No hypothesis here asserts vanishing of the limiting defect.
 
 noncomputable section
 
+open Filter
 open scoped Topology
 
 namespace RiemannResearch.Analysis.UnitSignalProjection
@@ -318,6 +319,125 @@ theorem optimizer_weak_target_iff_energy_eq_mass
     have hid := M.optimizer_eq_target_iff_energy_eq_mass.mpr he
     simpa only [hid] using
       (M.optimizer_tendsto Ms hmass hp).inner (tendsto_const_nhds (x := v))
+
+/-- A single legal test with nonzero target signal detects energy saturation.
+Source: continuation of the user-provided boundedness audit, 22 October 2026. -/
+theorem normalized_residual_single_test_iff_energy_eq_mass
+    {f : E} (hf : f ∈ M.space) (hsignal : inner ℝ M.target f ≠ 0) :
+    inner ℝ (M.target - M.optimizer) f = 0 ↔ M.energy = M.mass := by
+  rw [M.normalized_residual_pairing hf]
+  constructor
+  · intro h
+    have hz : 1 - M.mass / M.energy = 0 :=
+      (mul_eq_zero.mp h).resolve_right hsignal
+    have hd : M.mass / M.energy = 1 := by linarith
+    have hm : M.mass = M.energy := by
+      simpa using (div_eq_iff M.energy_ne_zero).mp hd
+    exact hm.symm
+  · intro he
+    rw [← he, div_self M.energy_ne_zero, sub_self, zero_mul]
+
+/-- Once the projection limit is known, one nonzero legal test identifies it.
+The convergence of this scalar test remains an arithmetic obligation. -/
+theorem optimizer_single_test_iff_energy_eq_mass
+    {ι : Type*} {l : Filter ι} [Filter.NeBot l]
+    (Ms : ι → ProjectionSignalModel E)
+    (hmass : ∀ i, (Ms i).mass = M.mass)
+    (hp : Filter.Tendsto (fun i => (Ms i).projection) l (𝓝 M.projection))
+    {f : E} (hf : f ∈ M.space) (hsignal : inner ℝ M.target f ≠ 0) :
+    Filter.Tendsto (fun i => inner ℝ (Ms i).optimizer f) l
+      (𝓝 (inner ℝ M.target f)) ↔ M.energy = M.mass := by
+  have hactual : Filter.Tendsto (fun i => inner ℝ (Ms i).optimizer f) l
+      (𝓝 (inner ℝ M.optimizer f)) :=
+    (M.optimizer_tendsto Ms hmass hp).inner (tendsto_const_nhds (x := f))
+  constructor
+  · intro htest
+    have heq : inner ℝ M.optimizer f = inner ℝ M.target f :=
+      tendsto_nhds_unique hactual htest
+    apply (M.normalized_residual_single_test_iff_energy_eq_mass hf hsignal).mp
+    rw [inner_sub_left, heq, sub_self]
+  · intro he
+    have hid := M.optimizer_eq_target_iff_energy_eq_mass.mpr he
+    simpa only [hid] using hactual
+
+/-- Exact recovery of optimizer error from one legal scalar test. -/
+theorem optimizer_error_eq_single_test
+    {f : E} (hf : f ∈ M.space) (hsignal : inner ℝ M.target f ≠ 0) :
+    ‖M.optimizer - M.target‖ ^ 2 =
+      (M.mass / inner ℝ M.target f) * inner ℝ (M.optimizer - M.target) f := by
+  have hsign : inner ℝ (M.optimizer - M.target) f =
+      -(inner ℝ (M.target - M.optimizer) f) := by
+    simp only [inner_sub_left]
+    ring
+  rw [M.optimizer_error, hsign, M.normalized_residual_pairing hf]
+  field_simp [M.energy_ne_zero, hsignal]
+  ring
+
+/-- Exact sampled error identity, retaining the signed testing correction
+and the full squared displacement from the true optimizer. -/
+theorem admissible_error_eq_single_test
+    {F f : E} (hF : M.Admissible F) (hf : f ∈ M.space)
+    (hsignal : inner ℝ M.target f ≠ 0) :
+    ‖F - M.target‖ ^ 2 =
+      (M.mass / inner ℝ M.target f) * inner ℝ (F - M.target) f +
+        ‖F - M.optimizer‖ ^ 2 -
+      (M.mass / inner ℝ M.target f) * inner ℝ (F - M.optimizer) f := by
+  have hsplit : inner ℝ (F - M.target) f =
+      inner ℝ (F - M.optimizer) f + inner ℝ (M.optimizer - M.target) f := by
+    simp only [inner_sub_left]
+    ring
+  rw [M.admissible_pythagorean hF,
+    M.optimizer_error_eq_single_test hf hsignal, hsplit]
+  ring
+
+/-- One legal test and vanishing sampling error imply strong target convergence.
+No projection-limit or uniform-norm hypothesis is assumed. -/
+theorem admissible_tendsto_of_single_test
+    {ι : Type*} {l : Filter ι} (Ms : ι → ProjectionSignalModel E)
+    (F : ι → E) (y v : E) (m : ℝ)
+    (htarget : ∀ i, (Ms i).target = y) (hmass : ∀ i, (Ms i).mass = m)
+    (hF : ∀ i, (Ms i).Admissible (F i))
+    (hv : ∀ i, v ∈ (Ms i).space) (hsignal : inner ℝ y v ≠ 0)
+    (htest : Tendsto (fun i => inner ℝ (F i - y) v) l (𝓝 0))
+    (happrox : Tendsto (fun i => F i - (Ms i).optimizer) l (𝓝 0)) :
+    Tendsto F l (𝓝 y) := by
+  have hid (i) : ‖F i - y‖ ^ 2 =
+      (m / inner ℝ y v) * inner ℝ (F i - y) v +
+        ‖F i - (Ms i).optimizer‖ ^ 2 -
+      (m / inner ℝ y v) * inner ℝ (F i - (Ms i).optimizer) v := by
+    have hs : inner ℝ (Ms i).target v ≠ 0 := by rwa [htarget]
+    simpa only [htarget, hmass] using
+      (Ms i).admissible_error_eq_single_test (hF i) (hv i) hs
+  have hpair : Tendsto (fun i => inner ℝ (F i - (Ms i).optimizer) v) l (𝓝 0) := by
+    simpa using happrox.inner (tendsto_const_nhds (x := v))
+  have hsquare : Tendsto (fun i => ‖F i - (Ms i).optimizer‖ ^ 2) l (𝓝 0) := by
+    simpa using happrox.norm.pow 2
+  have hsq : Tendsto (fun i => ‖F i - y‖ ^ 2) l (𝓝 0) := by
+    simpa only [← hid, mul_zero, zero_add, sub_zero] using
+      ((htest.const_mul (m / inner ℝ y v)).add hsquare).sub
+        (hpair.const_mul (m / inner ℝ y v))
+  apply Metric.tendsto_nhds.mpr
+  intro ε hε
+  have he := hsq.eventually (gt_mem_nhds (sq_pos_of_pos hε))
+  filter_upwards [he] with i hi
+  rw [dist_eq_norm]
+  nlinarith [norm_nonneg (F i - y)]
+
+
+/-- Exact split of a sampled testing discrepancy into normalization bias and
+sampling error. No admissibility assumption on the sampled vector is needed. -/
+theorem sampled_single_test_bias_split {F f : E} (hf : f ∈ M.space) :
+    inner ℝ (F - M.target) f =
+      (M.mass / M.energy - 1) * inner ℝ M.target f +
+        inner ℝ (F - M.optimizer) f := by
+  calc
+    inner ℝ (F - M.target) f =
+        inner ℝ (F - M.optimizer) f - inner ℝ (M.target - M.optimizer) f := by
+      simp only [inner_sub_left]
+      ring
+    _ = _ := by
+      rw [M.normalized_residual_pairing hf]
+      ring
 
 end ProjectionSignalModel
 

@@ -1,5 +1,33 @@
 # Theorem catalog
 
+### Single-test normalization and finite-support dual testing (2026-10-22)
+
+Established:
+- Analysis/UnitSignalProjection.lean: optimizer_error_eq_single_test,
+  admissible_error_eq_single_test, and sampled_single_test_bias_split keep the
+  exact signed identities. admissible_tendsto_of_single_test gives strong
+  convergence from one testing limit plus vanishing sampling displacement,
+  without a prior projection limit or norm bound.
+- Analysis/DenseProjectionTesting.lean: mem_iff_dense_test_bound characterizes
+  target membership by one uniform projected-test bound on a dense set.
+- RH/QFiniteSupportDualCriterion.lean: finiteHeads are dense finite-support
+  tests; mem_closure_iff_finite_test_bound and qOne_mem_iff_unit_finite_test_bound
+  characterize the actual full legal Q closure.
+
+Conditional research reductions:
+- RH/QUnitSignalTargetTest.riemannHypothesis_of_sampled_single_test requires
+  genuine Q models, true admissibility, actual legality, one nonzero legal
+  test, its discrepancy limit, and vanishing sampling displacement.
+- RH/QFiniteSupportDualCriterion.riemannHypothesis_of_finite_test_bound
+  requires a common bound on all finite-support tests.
+- not_RH_finite_test_violation produces a violating finite test for each
+  proposed bound if RH is false.
+
+Open: the arithmetic scalar-limit or uniform dual-bound provider. Increased
+sampling accuracy controls displacement but does not remove normalization bias.
+Research note: RH/UnitSignalFiniteTestResearch20261022.md.
+
+
 ### Weak-star compactness completion and target identification (2026-10-22)
 
 Established:

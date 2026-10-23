@@ -181,3 +181,10 @@ had tactic/elaboration errors; they were corrected before persistence.
 
 The final source check and publication are governed by the checkpoint receipt.
 No RH proof is claimed.
+
+## Further Lean continuation
+
+The single-test error identity, signed sampling-bias split, and finite-support
+dual testing criterion are developed in
+[UnitSignalFiniteTestResearch20261022.md](UnitSignalFiniteTestResearch20261022.md).
+The new RH endpoints retain explicit Open arithmetic hypotheses.
