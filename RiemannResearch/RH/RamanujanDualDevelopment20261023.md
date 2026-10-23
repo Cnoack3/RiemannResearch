@@ -92,3 +92,17 @@ filter, strengthening the original sequence statements. Each implies RH.
 The complete RH iff package takes the explicit analytic converse provider
 RH -> BaezDuarte.NaturalApproximation. That provider remains Open.
 See RH/RamanujanSaturationCriteria.lean.
+
+## Transfer 6: the actual Q-measure dual optimizer
+
+The Q packet Gram matrix is positive definite on every finite initial family.
+Its inverse applied to the actual Q source moments defines the unique finite
+projection. The source is the divisor sum of Q residue means, not Lambda.
+The full error has the same exact inverse-Gram minimum plus squared excess.
+The signed multiple coordinates equal the original Q residue coefficients,
+stabilize unconditionally, and reach -mu(m) exactly when the Q target lies in
+the closed legal span. Full-norm convergence and Q mass tending to one are
+equivalent to that condition, and hence to the corresponding Pareto tests.
+A three-way Q RH iff package records the explicit Baez-Duarte converse
+hypothesis; no equality of the different finite-measure optimizers is assumed.
+See RH/QRamanujanCanonicalOptimizer.lean.

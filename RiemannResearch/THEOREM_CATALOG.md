@@ -26,6 +26,11 @@
    cofinal maps on nontrivial filters. Every test implies RH.
    Conditional RH iff: the explicit Baez-Duarte analytic converse remains Open.
 
+6. Established: RH/QRamanujanCanonicalOptimizer.lean constructs the actual Q
+   inverse-Gram optimizer and source, exact completion, signed multiple-coordinate
+   limits, and norm/mass/coordinate closure equivalences. These tests match the
+   Pareto approximation criterion. RH iff retains the explicit analytic converse.
+
 The ten-transfer development and the exact RH converse boundary are recorded in
 RH/RamanujanDualDevelopment20261023.md.
 
