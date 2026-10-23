@@ -1,5 +1,12 @@
 # Theorem catalog
 
+## Ramanujan dual transfers 11–20 — 23 October 2026
+
+11. Established: ProjectionMeanOne gives full-Hilbert one-signal completion,
+    uniqueness and nested reciprocal-energy distance. RamanujanUnitMean proves
+    positive arithmetic mass, unconditional normalized convergence, and an
+    exact attained closed-space variance floor. RH iff retains hBaezDuarte.
+
 ## Ten Ramanujan dual transfers — 23 October 2026
 
 1. Established: RamanujanMeanOptimizer.combination_zero_at_common_multiple and
