@@ -1,5 +1,17 @@
 # Theorem catalog
 
+## Ten Ramanujan dual transfers — 23 October 2026
+
+1. Established: RamanujanMeanOptimizer.combination_zero_at_common_multiple and
+   mass_le_one_sub_common_multiple give an explicit finite-conductor error floor.
+   The unrestricted mass_lt_one_general now belongs to the optimizer module;
+   optimizer_variance_pos no longer assumes divisibility by 2 or 3.
+   RamanujanSignalNoise uses this strengthened common result.
+
+The ten-transfer development and the exact RH converse boundary are recorded in
+RH/RamanujanDualDevelopment20261023.md.
+
+
 ## Universal Pareto/Q and dual Ramanujan transfer — 23 October 2026
 
 Established in RH/RamanujanHilbertTransfer.lean:

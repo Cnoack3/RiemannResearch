@@ -2,6 +2,8 @@ import RiemannResearch.RH.IntegratedRamanujanGram
 import RiemannResearch.RH.ParetoGramMeanOptimizer
 import RiemannResearch.RH.ParetoResidueMean
 import RiemannResearch.RH.ParetoFiniteErrorObstruction
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Positivity
 
 /-!
 # The actual finite Ramanujan inverse-mean optimizer
@@ -144,24 +146,40 @@ theorem optimizer_legal (s : Finset ℕ) (hs : ∀ d ∈ s, 1 < d)
   exact (legalSeedSpan ({2, 3} : Set ℕ)).smul_mem _
     (combination_legal s hs ha (coefficients s hs))
 
-theorem mass_lt_one (s : Finset ℕ) (hs : ∀ d ∈ s, 1 < d)
-    (ha : ∀ d ∈ s, 2 ∣ d ∨ 3 ∣ d) : mass s hs < 1 := by
-  have hpos := legalSeedSpan_error_pos ({2, 3} : Set ℕ)
-    (by intro a ha; simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at ha
-        rcases ha with rfl | rfl <;> omega)
-    (combination_legal s hs ha (coefficients s hs))
-  change 0 < paretoError (projection s hs) at hpos
-  rw [projection_error] at hpos
+/-- Every packet combination vanishes at every common multiple of its conductors. -/
+theorem combination_zero_at_common_multiple (s : Finset ℕ) (b : s → ℝ)
+    (Q : ℕ) (hQ : ∀ d ∈ s, d ∣ Q) :
+    combination (family s) b Q = 0 := by
+  unfold combination family
+  apply Finset.sum_eq_zero
+  intro i _
+  rw [ramanujanPacket_eq_zero_of_dvd (hQ i i.property), mul_zero]
+/-- Quantitative finite-space obstruction, uniform over the optimizer coefficients. -/
+theorem mass_le_one_sub_common_multiple (s : Finset ℕ)
+    (hs : ∀ d ∈ s, 1 < d) (Q : ℕ) (hQ : ∀ d ∈ s, d ∣ Q) :
+    mass s hs ≤ 1 - positiveWeight Q := by
+  have hf := positiveWeight_le_error_of_zero
+    (combination_bounded (family_bounded s) (coefficients s hs))
+    (combination_zero_at_common_multiple s (coefficients s hs) Q hQ)
+  change positiveWeight Q ≤ paretoError (projection s hs) at hf
+  rw [projection_error] at hf
   linarith
-
-theorem optimizer_variance_pos (s : Finset ℕ) (hs : ∀ d ∈ s, 1 < d)
-    (ha : ∀ d ∈ s, 2 ∣ d ∨ 3 ∣ d)
-    (hm : ∃ i : s, meanVector s i ≠ 0) :
+/-- Every finite positive conductor family has strictly positive full error. -/
+theorem mass_lt_one_general (s : Finset ℕ)
+    (hs : ∀ d ∈ s, 1 < d) : mass s hs < 1 := by
+  have hQ : 0 < ∏ d ∈ s, d := Finset.prod_pos (fun d hd => lt_trans Nat.zero_lt_one (hs d hd))
+  have hQR : 0 < ((∏ d ∈ s, d : ℕ) : ℝ) := by exact_mod_cast hQ
+  have hw : 0 < positiveWeight (∏ d ∈ s, d) := by unfold positiveWeight; positivity
+  have := mass_le_one_sub_common_multiple s hs (∏ d ∈ s, d)
+    (fun d hd => Finset.dvd_prod_of_mem id hd)
+  linarith
+theorem optimizer_variance_pos (s : Finset ℕ)
+    (hs : ∀ d ∈ s, 1 < d) (hm : ∃ i : s, meanVector s i ≠ 0) :
     0 < paretoVariance (optimizer s hs) := by
-  exact legalSeedSpan_variance_pos ({2, 3} : Set ℕ)
-    (by intro a ha; simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at ha
-        rcases ha with rfl | rfl <;> omega)
-    (optimizer_legal s hs ha) (optimizer_mean s hs hm)
+  rw [optimizer_variance s hs hm]
+  apply sub_pos.mpr
+  rw [inv_eq_one_div, lt_div_iff₀ (mass_pos s hs hm)]
+  simpa using mass_lt_one_general s hs
 
 /-- Every finite allowed conductor set containing 2 has an explicit legal
 mean-one optimizer. All analytic quantities refer to the complete Pareto law.

@@ -18,31 +18,6 @@ namespace RiemannResearch.RH.Pareto.RamanujanOptimizer
 open FiniteSchur
 noncomputable section
 
-/-- Every finite conductor family has error strictly greater than zero, without
-restricting its conductors to multiples of either seed. -/
-theorem mass_lt_one_general (s : Finset ℕ) (hs : ∀ d ∈ s, 1 < d) :
-    mass s hs < 1 := by
-  let Q : ℕ := ∏ d ∈ s, d
-  have hQ : 0 < Q := Finset.prod_pos (by
-    intro d hd
-    have := hs d hd
-    omega)
-  have hzero : projection s hs Q = 0 := by
-    unfold projection combination
-    apply Finset.sum_eq_zero
-    intro i _
-    have hiQ : i.val ∣ Q := Finset.dvd_prod_of_mem id i.property
-    simp only [family, ramanujanPacket_eq_zero_of_dvd hiQ, mul_zero]
-  have hfloor := positiveWeight_le_error_of_zero
-    (combination_bounded (family_bounded s) (coefficients s hs)) hzero
-  have hw : 0 < positiveWeight Q := by
-    unfold positiveWeight
-    have hQR : 0 < (Q : ℝ) := by exact_mod_cast hQ
-    positivity
-  change positiveWeight Q ≤ paretoError (projection s hs) at hfloor
-  rw [projection_error] at hfloor
-  linarith
-
 theorem mass_nonneg (s : Finset ℕ) (hs : ∀ d ∈ s, 1 < d) :
     0 ≤ mass s hs := by
   rw [← projection_energy]
