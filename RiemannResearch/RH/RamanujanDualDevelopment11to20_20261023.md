@@ -57,3 +57,16 @@ An exact identity for the lower comparison retains its displacement and full
 correction defect as well. The actual finite Ramanujan Gram inverse quadratic
 forms therefore satisfy strict upper comparison at precisely nonzero sources.
 Modules: RH/QParetoInverseMetricDefect.lean; RH/RamanujanInverseMetric.lean.
+
+## Transfer 15: exact optimizers with prescribed original coefficients
+
+The arithmetic source r_m(q)=m*mu(q/m) when m divides q, and zero otherwise,
+represents the original legal coefficient at m. Its inverse-Gram capacity K is
+strictly positive whenever 1<m<=n+1, with no separate positivity assumption.
+Prescribing coefficient t has the unique optimizer
+a_constrained=a_n+(t-C_n(m))/K * H_n^(-1)r_m.
+The full error is 1-M_n+(t-C_n(m))^2/K, and every feasible trial vector adds
+the full squared synthesis norm of its coefficient displacement.
+Feasibility holds exactly when m<=n+1 or t=0 (for m>1).
+For t=-mu(m), the exact cost is (C_n(m)+mu(m))^2/K.
+Module: RH/RamanujanCoefficientConstraints.lean.

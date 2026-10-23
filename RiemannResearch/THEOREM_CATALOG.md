@@ -18,6 +18,10 @@
     capacity gaps and upper strictness iff the source is nonzero, for every
     finite independent Q dictionary. RamanujanInverseMetric specializes the
     strictness iff to the actual arithmetic inverse Gram quadratic forms.
+15. Established: RamanujanCoefficientConstraints gives the arithmetic source,
+    automatic positive capacity, full feasibility iff, explicit unique constrained
+    optimizer, exact minimum and complete Gram remainder. The negative-Moebius
+    target has its exact squared-discrepancy/inverse-capacity penalty.
 
 ## Ten Ramanujan dual transfers — 23 October 2026
 
