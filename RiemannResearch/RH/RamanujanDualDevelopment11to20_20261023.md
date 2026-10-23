@@ -123,3 +123,77 @@ retains both the canonical error and complete Gram excess:
 E_inf^2 <= T_N * (1-M_L+||synthesis(a-a_L)||^2).
 If E_inf>0, every growing exact-head family has full errors tending to infinity.
 Module: RH/RamanujanResidualTail.lean.
+
+## Transfer 20: exact finite Mellin optimization and complete zero certificates
+
+For arbitrary finite complex test families, every normal-equation solution d
+gives charge(d)=charge(c)+Re Gram(c-d,c-d). In the open right half-plane this
+proves maximality; equality is exactly zero Gram displacement. No determinant
+assumption is needed for this normal-solution branch, including repeated or
+singular families. The explicit inverse branch names its nonzero determinant
+hypothesis. Its capacity equals the complete kernel energy and is nonnegative.
+The original Pareto normal lower bound strengthens to an exact full-integral
+completion. For Ramanujan packet errors, the optimized finite-zero certificate
+retains both the full Mellin remainder and every trial coefficient's complete
+Gram excess. Optimized zero capacity is bounded above by E_inf.
+Modules: RH/ParetoMellinGramOptimization.lean; RH/RamanujanMellinOptimization.lean.
+
+## Resulting convergence chain and remaining analytic input
+
+With the explicit provider hBaezDuarte: RH -> NaturalApproximation, the proved
+criteria identify RH with P and Q mass saturation, convergence of every original
+signed-multiple coordinate to -mu(m), nonsummability of relative gains,
+canonical packet-residual TailRegular, and frequent boundedness of the normalized
+complete residual tail along any cofinal map from a nontrivial filter.
+The implications from saturation or packet tail regularity to actual RH do not
+require that converse provider. The project has not proved saturation,
+TailRegular of the canonical residual, or RH by making these transfers.
+No individual packet-coefficient limit is inferred from finite inversion.
+P and Q retain different source moments and finite optimizers.
+
+## Verification and publication record
+
+Every numbered transfer was checked by Lean before its own main checkpoint.
+Each successful checkpoint validates the full aggregate plus every changed Lean
+module, then commits and pushes. Server build times below exclude tool/network
+round trips and are not estimates of wall-clock workspace preparation.
+
+| Transfer | Commit | Checkpoint job | Server build seconds |
+| --- | --- | --- | --- |
+| 11 | b640279d09ebd49b4b8aae3da2127aad219d65cd | job_hg8DPihAScYKjHTzBgwbkmdo6r_hLMJ6 | 41.696 |
+| 12 | a04e867a02e3551775010271e4204f4f47eed08c | job_aIoe8OuVqgmOMcwlwRhwFfgK6nM-ufwR | 43.242 |
+| 13 | ebcc5501f607fd875fc262c5328f2c1db7bbbe38 | job_Ar2lc8__19x9I4v_kh1k3455WBDkKK88 | 40.313 |
+| 14 | a48f7de8b08105b881dd11508538014f2ba170dd | job_9rFtsQoso6vqHQQsp_caoXANkKycGRUx | 40.430 |
+| 15 | 554fd7453aece1d24886b1d04986b446bd28a363 | job_vJhkkPsvq0KvD1KPbL6GoHkXa4bpNoKe | 36.314 |
+| 16 | 85d808f99e59538629551d312eb3eeb44d1a70ff | job_0uuVeQ0HhmIHK8aNECUjfqio41jbkQA- | 41.516 |
+| 17 | a15cfe938aeb0fb09ec9c9773929f147c40a8e6b | job_HbUUGB0c62Ms6xsWZlic7VCjnYn0GWF2 | 37.149 |
+| 18 | 7ac820298a2dc484f13da0a531f5f4547f99d8e1 | job_4-7Mc1hk8dBKddNyBux7LxWxqmLojO5z | 37.947 |
+| 19 | 2ee51000a21441ed380327c5e608276870901cf0 | job_7UTINpkO9tGinzORJrcTznmy43RQu3Pt | 36.405 |
+
+Transfer 20's complete source and the representative dependency audit passed
+run_code job job_jDG0QG-r2h9-H6HNwnn9KyVmt2olujr5, server verification
+5.966 seconds. This ledger and both modules are included in its
+subsequent aggregate-build checkpoint; that checkpoint's commit identifies this
+revision. There are exactly ten numbered transfers in this continuation.
+
+The following fourteen declarations were checked with #print axioms. Each
+reported only propext, Classical.choice and Quot.sound:
+- RamanujanCanonicalOptimizer.packetUnitMeanLimit_variance_completion
+- RamanujanMetricOptimizer.packet_error_metric_identity
+- RamanujanBlock.coefficients_block_exact
+- RamanujanInverseMetric.packet_inverse_quadratic_strict_iff
+- RamanujanCoefficientConstraints.constrained_completion
+- RamanujanCoefficientInversion.coefficientEquiv
+- QRamanujanCanonicalOptimizer.packet_cofinal_rh_equivalences
+- RamanujanCanonicalOptimizer.packet_annihilator_eq_zero_of_tailRegular
+- RamanujanCanonicalOptimizer.riemannHypothesis_of_packet_tailRegular
+- RamanujanCanonicalOptimizer.packet_cofinal_tail_bounded_iff
+- RamanujanCanonicalOptimizer.packet_exact_head_errors_tendsto
+- Pareto.mellinCharge_completion
+- Pareto.mellinInverseCapacity_nonneg
+- RamanujanZeroCertificates.packet_zeroInverse_completion
+
+The types of packet_tailRegular_iff_riemannHypothesis and
+packet_cofinal_tail_bounded_iff_rh were checked separately and explicitly show
+hBaezDuarte. A standard dependency audit does not erase that mathematical
+hypothesis. No new project axiom or unfinished proof was introduced.

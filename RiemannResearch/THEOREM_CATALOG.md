@@ -39,6 +39,12 @@
     iff saturation, and the exact-head obstruction retaining the full Gram excess.
     Positive limiting energy forces every growing exact-head error to diverge;
     the RH iff retains hBaezDuarte.
+20. Established: ParetoMellinGramOptimization strengthens normal Mellin bounds
+    to exact completion and charge maximization, including singular families
+    with normal solutions. Its inverse capacity is complete kernel energy and
+    nonnegative under the explicit determinant hypothesis. RamanujanMellinOptimization
+    retains full optimized Mellin remainder and full trial Gram excess, with
+    optimized zero capacity bounded by limiting energy. Transfers 11–20 complete.
 
 ## Ten Ramanujan dual transfers — 23 October 2026
 

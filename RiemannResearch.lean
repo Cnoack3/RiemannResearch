@@ -42,6 +42,8 @@ import RiemannResearch.RH.RamanujanCoefficientInversion
 import RiemannResearch.RH.QRamanujanSaturationCriteria
 import RiemannResearch.RH.RamanujanTailRegularity
 import RiemannResearch.RH.RamanujanResidualTail
+import RiemannResearch.RH.ParetoMellinGramOptimization
+import RiemannResearch.RH.RamanujanMellinOptimization
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
