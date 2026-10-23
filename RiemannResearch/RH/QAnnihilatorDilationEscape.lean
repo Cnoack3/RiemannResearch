@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QAnnihilatorTailEscape
+import RiemannResearch.RH.QCanonicalMovingCovariance
+import RiemannResearch.RH.ExactHeadResidualTail
 import RiemannResearch.RH.QFloorDilation
 import RiemannResearch.RH.QFloorZetaEscape
 import RiemannResearch.RH.ZetaTwoHilbertSpace
@@ -26,7 +28,7 @@ The actual residual-tail bound required to conclude RH remains Open.
 -/
 noncomputable section
 open Filter
-open scoped Topology
+open scoped Topology BigOperators
 namespace RiemannResearch.RH.QAnnihilatorDilationEscape
 open ZetaTwoHilbert QFiniteSupportDualCriterion QAnnihilatorTailEscape
 open QFloorDilation
@@ -180,5 +182,57 @@ theorem annihilator_eq_zero_of_cofinal_log_tail_bound
   have ht := (nonzero_annihilator_log_scaled_tail_tendsto_atTop u hu hne k).comp hq
   obtain ⟨j, hj⟩ := (ht.eventually (eventually_gt_atTop B)).exists
   exact not_lt_of_ge (hbound j) hj
+
+private theorem tail_norm_sq_eq_shift (N : ℕ) (u : QHilbert) :
+    ‖tail N u‖ ^ 2 = ‖Pareto.hilbertTailShift u N‖ ^ 2 := by
+  have hh : ‖finiteHead N u‖ ^ 2 =
+      ∑ n ∈ Finset.range N, (u n) ^ 2 := by
+    rw [← real_inner_self_eq_norm_sq, finiteHead_inner, finiteHead_idem,
+      inner_finiteHead_eq_sum]
+    simp only [pow_two]
+  rw [Pareto.hilbertTailShift_norm_sq, ← hh]
+  have hs := finiteHead_norm_sq_split N u
+  change ‖u - finiteHead N u‖ ^ 2 = _
+  linarith
+
+/-- A full-span annihilator with uniformly bounded physical values is zero.
+The bound is in the physical sup norm, not the complete Q Hilbert norm.
+Source: the user's residual-divergence question, 23 October 2026. -/
+theorem annihilator_eq_zero_of_bounded_physical
+    (u : QHilbert) (hu : u ∈ QFullResidueProjection.closureᗮ)
+    (A : ℝ) (hA : 0 ≤ A)
+    (hf : ∀ n, 0 < n → |qSequence u n| ≤ A) : u = 0 := by
+  let C : ℝ := (2 / ZetaTwoProbability.zetaTwo) * A ^ 2
+  have hC : 0 ≤ C := by
+    have hZ := ZetaTwoProbability.zetaTwo_pos
+    dsimp [C]
+    positivity
+  apply QAnnihilatorDilationEscape.annihilator_eq_zero_of_cofinal_log_tail_bound
+    u hu 0 id tendsto_id C
+  intro N
+  have hb := QCanonicalMovingCovariance.tail_norm_sq_le_of_bounded u N A hA hf
+  have hs : (N : ℝ) * ‖tail N u‖ ^ 2 ≤ C := by
+    rw [tail_norm_sq_eq_shift]
+    calc
+      _ ≤ (N : ℝ) * (C / ((N : ℝ) + 1)) :=
+        mul_le_mul_of_nonneg_left hb (Nat.cast_nonneg N)
+      _ ≤ C := by
+        have hden : (0 : ℝ) < (N : ℝ) + 1 := by positivity
+        have hnum : (N : ℝ) * C ≤ C * ((N : ℝ) + 1) := by nlinarith
+        simpa only [mul_div_assoc] using (div_le_iff₀ hden).mpr hnum
+  simpa using hs
+
+/-- A nonzero full-span annihilator has unbounded physical magnitude, even
+though its complete Q norm is finite. This does not assert a signed limit. -/
+theorem nonzero_annihilator_physical_unbounded
+    (u : QHilbert) (hu : u ∈ QFullResidueProjection.closureᗮ)
+    (hne : u ≠ 0) (A : ℝ) :
+    ∃ n, 0 < n ∧ A < |qSequence u n| := by
+  by_contra h
+  have hf : ∀ n, 0 < n → |qSequence u n| ≤ A := by
+    intro n hn
+    exact le_of_not_gt (fun hlt => h ⟨n, hn, hlt⟩)
+  have hA : 0 ≤ A := (abs_nonneg _).trans (hf 1 Nat.zero_lt_one)
+  exact hne (annihilator_eq_zero_of_bounded_physical u hu A hA hf)
 
 end RiemannResearch.RH.QAnnihilatorDilationEscape

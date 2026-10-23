@@ -1,5 +1,19 @@
 # Theorem catalog
 
+## Physical residual unboundedness — 23 October 2026
+
+Established in `RH/QAnnihilatorDilationEscape.lean`:
+- `annihilator_eq_zero_of_bounded_physical`: a full legal-span annihilator with
+  uniformly bounded physical coordinates vanishes.
+- `nonzero_annihilator_physical_unbounded`: every nonzero full-span annihilator
+  has unbounded physical magnitude.
+
+These use the complete inverse-square tail estimate and the existing scaled-tail
+divergence theorem. They do not assert divergence of the Hilbert norm or a signed
+coordinate limit. In particular, for r = P_V(1) - 1, its complete Q norm is at most
+one; the physical-coordinate bound that would force r = 0 remains Open.
+
+
 ## Original Möbius heads: complete-tail and cofinal-energy criteria — 23 October 2026
 
 Established:
