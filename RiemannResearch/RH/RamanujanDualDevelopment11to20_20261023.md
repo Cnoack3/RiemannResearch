@@ -95,3 +95,18 @@ nontrivial filter, mass tending to one and all signed-multiple coordinates
 tending to -mu(m) are each equivalent to E_inf=0. The RH package retains
 hBaezDuarte explicitly. These are the Q optimizer's own coefficients and source.
 Module: RH/QRamanujanSaturationCriteria.lean.
+
+## Transfer 18: complete packet annihilators and Noor tail regularity
+
+The canonical limiting residual is defined directly from the full closed
+Ramanujan packet span and identified with the existing Pareto residual.
+Every full P packet annihilator satisfying TailRegular is zero. Every Q
+annihilator is zero when its correctly weighted inverse-adjoint P image is
+TailRegular. For the canonical residual, zero residual, zero limiting energy,
+TailRegular, square summability of centered complete tail averages, and full
+packet mass saturation are equivalent. The exact tail-difference Parseval
+identity retains its endpoint term E_inf-E_inf^2. TailRegular implies actual RH;
+the reverse direction keeps the explicit hBaezDuarte provider.
+Primary source for the existing shifted-density strategy: Noor,
+https://arxiv.org/abs/1809.09577, Theorems 9 and 12.
+Module: RH/RamanujanTailRegularity.lean.

@@ -30,6 +30,10 @@
     exact limiting-error and coordinate-rate identities, mass increments,
     finite gain sums, exact products/logarithms and relative-gain nonsummability
     iff. Arbitrary cofinal mass/coordinate RH iff statements retain hBaezDuarte.
+18. Established: RamanujanTailRegularity gives complete P/Q packet-annihilator
+    regularity tests, the intrinsic canonical residual, full tail Parseval
+    identity, and regularity/summability/saturation equivalences. Regularity
+    implies RH; RH iff retains the explicit analytic converse provider.
 
 ## Ten Ramanujan dual transfers — 23 October 2026
 

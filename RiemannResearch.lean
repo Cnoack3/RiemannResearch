@@ -40,6 +40,7 @@ import RiemannResearch.RH.RamanujanInverseMetric
 import RiemannResearch.RH.RamanujanCoefficientConstraints
 import RiemannResearch.RH.RamanujanCoefficientInversion
 import RiemannResearch.RH.QRamanujanSaturationCriteria
+import RiemannResearch.RH.RamanujanTailRegularity
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
