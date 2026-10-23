@@ -82,3 +82,16 @@ The actual P and Q packet optimizers each satisfy their own inverse formula,
 and arbitrary finite reference vectors give exact correction decompositions.
 No infinite multiple sum or exchange of an infinite sum with a limit is used.
 Module: RH/RamanujanCoefficientInversion.lean.
+
+## Transfer 17: actual Q gains, complete error products, and cofinal RH criteria
+
+For the actual Q optimizer, E_n=1-M_n is strictly positive at every finite
+stage (the candidate vanishes at a common factorial multiple). The exact
+identity E_n=E_inf+||F_inf-F_n||_Q^2 gives coordinate rates in the energy excess.
+The innovation gain is M_(n+1)-M_n; its finite sum is M_n. With r_n=gain_n/E_n,
+0<=r_n<1 and E_n=product_(j<n)(1-r_j), including the exact logarithmic identity.
+Nonsummability of r is equivalent to E_inf=0. Along every cofinal map from a
+nontrivial filter, mass tending to one and all signed-multiple coordinates
+tending to -mu(m) are each equivalent to E_inf=0. The RH package retains
+hBaezDuarte explicitly. These are the Q optimizer's own coefficients and source.
+Module: RH/QRamanujanSaturationCriteria.lean.

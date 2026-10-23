@@ -26,6 +26,10 @@
     residue/packet linear equivalence, explicit divisor-sum inverse and both
     inverse laws. Actual P and Q optimizer formulas and finite reference-vector
     decompositions follow without asserting individual infinite packet limits.
+17. Established: QRamanujanSaturationCriteria gives positive finite errors,
+    exact limiting-error and coordinate-rate identities, mass increments,
+    finite gain sums, exact products/logarithms and relative-gain nonsummability
+    iff. Arbitrary cofinal mass/coordinate RH iff statements retain hBaezDuarte.
 
 ## Ten Ramanujan dual transfers — 23 October 2026
 
