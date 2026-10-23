@@ -73,6 +73,35 @@ Exact-rational interval calculations and floating-point eigenvalue examples
 in the memorandum are explicitly separated from Lean theorem claims.
 Research detail: `RH/QSquarefreeHeadCompressionResearch20261022.md`.
 
+### Actual zero-count discrepancy and moment-transfer interface (2026-10-22)
+
+Established in `Analysis/ActualZeroDiscrepancy.lean`:
+- `discrepancy_sub` and `discrepancy_increment` give the exact actual
+  centered-window identity, with upper-inclusive analytic multiplicities.
+- `discrepancy_sub_eq_zeta_halfContour` identifies increments at good
+  heights with the full signed zeta logarithmic-derivative contour.
+- The discrepancy, its translates, increments, and remainders against
+  continuous approximants have integrable powers of every natural order.
+- Bad heights are countable. Endpoint modifications and fixed additive
+  normalization do not affect increment moments.
+- `centered_window_evenMoment_eq` identifies actual window-count moments.
+- `discrepancy_sub_log_bound` reuses the existing Backlund and vertical
+  argument estimates, with both horizontal endpoints retained first.
+- `HighMomentTransfer.norm_sub_pow_intervalIntegrable` is the reusable
+  elementary subtraction lemma.
+
+Conditional research reduction:
+`increment_evenMoment_le_of_continuous_budgets` needs only quantitative
+polynomial, shifted-remainder, and remainder budgets; all regularity and
+decomposition obligations are discharged for the actual discrepancy.
+
+Open formalization: Selberg's approximation and density providers, uniform
+remainder estimates, prime variance and exact polynomial moment asymptotics,
+and uniform asymptotic assembly. These are established unconditional analytic
+results in ordinary mathematics, not new conjectures. No independently
+normalized argument lift, Tsang theorem specialization, or RH is claimed.
+Details: `RH/ActualZeroDiscrepancyResearch20261022.md`.
+
 ### Continuous prime-polynomial high moments (2026-10-22)
 
 Established analytic statements:
@@ -91,11 +120,13 @@ Established analytic statements:
   `T * (9*C*k*(L+k))^k` from explicitly supplied component estimates.
 
 Conditional research reductions and open providers:
-- Open: the actual continued-argument interface and Selberg prime
-  approximation, including the actual unconditional zero-density provider.
-- Open: the prime-variance asymptotic and large-k estimate needed for the
-  exact uniform Tsang theorem. `TsangHighMomentAsymptotic` states the target
-  as a proposition only; no declaration asserts it for the actual zeta S.
+- Completed: `ActualZeroDiscrepancy` supplies the exact discrepancy interface,
+  integrable increment powers, null exceptional ordinates, and logarithmic
+  increment bounds from Backlund's theorem.
+- Open: Selberg's prime approximation and actual zero-density providers,
+  quantitative shifted remainders, prime variance, and uniform asymptotic
+  assembly. `TsangHighMomentAsymptotic` still states a target proposition only;
+  no declaration asserts it for the actual zeta S.
 - The prime-polynomial theorem has no RH or zeta-specific hypotheses.
 
 Candidate job `job_b1mERBtaZPfFm_jSPqCcmKiK7p0do4eR` verified all four

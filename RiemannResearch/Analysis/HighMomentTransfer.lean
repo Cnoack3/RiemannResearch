@@ -90,6 +90,25 @@ theorem norm_add_sub_pow_le {E : Type*} [SeminormedAddCommGroup E]
   exact (pow_le_pow_left₀ (norm_nonneg _) htriangle n).trans
     (three_add_pow_le (norm_nonneg x) (norm_nonneg y) (norm_nonneg z) n hn)
 
+/-- Finite-power integrability is stable under subtraction. This discharges
+regularity obligations for discontinuous counting-function approximations. -/
+theorem norm_sub_pow_intervalIntegrable {f g : ℝ → ℝ} (hf : Measurable f)
+    (hg : Measurable g) (a b : ℝ) (n : ℕ)
+    (hfi : IntervalIntegrable (fun t => ‖f t‖ ^ n) volume a b)
+    (hgi : IntervalIntegrable (fun t => ‖g t‖ ^ n) volume a b) :
+    IntervalIntegrable (fun t => ‖f t - g t‖ ^ n) volume a b := by
+  by_cases hn : n = 0
+  · simp only [hn, pow_zero]
+    exact intervalIntegrable_const
+  have hbound := (hfi.add hgi).const_mul ((3 : ℝ) ^ (n - 1))
+  apply hbound.mono_fun ((hf.sub hg).norm.pow_const n).aestronglyMeasurable
+  filter_upwards [] with t
+  change |‖f t - g t‖ ^ n| ≤ |(3 : ℝ) ^ (n - 1) * (‖f t‖ ^ n + ‖g t‖ ^ n)|
+  rw [abs_of_nonneg (pow_nonneg (norm_nonneg _) _), abs_of_nonneg (by positivity)]
+  simpa only [add_zero, norm_zero, zero_pow hn, add_zero] using
+    RiemannResearch.HighMomentTransfer.norm_add_sub_pow_le (f t) (0 : ℝ) (g t) n
+      (by omega)
+
 /-- Actual interval integral of the even norm power. -/
 noncomputable def evenMoment (f : ℝ → ℝ) (k : ℕ) (a b : ℝ) : ℝ :=
   ∫ t in a..b, ‖f t‖ ^ (2 * k)

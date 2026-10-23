@@ -78,17 +78,22 @@ microscopic h=A/log T, the safe bound grows as T(C_A k²)^k.
 
 Open formalization obligations:
 
-- **Open:** define the actual continuously continued zeta argument (or prove
-  an equivalent Riemann–von Mangoldt discrepancy interface). Principal
-  `Complex.arg` is not this function.
+- **Completed by the subsequent discrepancy development:** the exact actual
+  zero-count interface, its zeta-contour increment identity, integrability of
+  all finite powers, and invariance of moments under zero-height conventions
+  are in `Analysis/ActualZeroDiscrepancy.lean`. It uses the exact gamma
+  primitive; it does not identify principal `Complex.arg` with S.
+  See `RH/ActualZeroDiscrepancyResearch20261022.md`.
 - **Open:** Selberg's high-moment prime approximation, including the actual
   unconditional zero-density provider. `ActualZeroSelbergDensity.lean`
   currently exposes density as an explicit hypothesis.
 - **Open:** the prime-variance asymptotic needed for the exact Gaussian main
   term. Chebyshev's prime bound would suffice for a coarse variance upper
   bound, but not the exact main term.
-- **Open:** the complementary large-k S(t)=O(log t) estimate and exact
-  asymptotic assembly with uniform quantifiers.
+- **Partly completed:** the new discrepancy module reuses Backlund's theorem
+  to prove logarithmic increment control at good endpoints; the exceptional
+  heights are proved null. The complementary large-k and exact asymptotic
+  assembly with uniform quantifiers remain to be formalized.
 
 STTB Corollaries 1–2 provide, in ordinary mathematics, a remainder bound
 T(ω₀k)^(2k) at cutoff X=T^(3/(88k)), with ω₀=exp(12.8471), for
