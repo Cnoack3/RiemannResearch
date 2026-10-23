@@ -441,6 +441,7 @@ import RiemannResearch.RH.QFullResidueProjection
 import RiemannResearch.RH.QMixedConductorObstruction
 import RiemannResearch.RH.QRamanujanPackets
 import RiemannResearch.RH.QMobiusExactHead
+import RiemannResearch.RH.QMobiusHeadClosure
 import RiemannResearch.Analysis.GaussianLaplaceBridge
 import RiemannResearch.Analysis.ActualZeroGaussianLaplace
 import RiemannResearch.Analysis.GaussianGrowingDegreeTail

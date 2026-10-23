@@ -1,5 +1,33 @@
 # Theorem catalog
 
+## Original Möbius heads: complete-tail and cofinal-energy criteria — 23 October 2026
+
+Established:
+- `RH/QBoundedCoordinateClosure.mem_closure_of_eventually_bounded_cofinal_heads`:
+  arbitrary cofinal head sizes and an eventual bound on the complete squared norm
+  imply closed-span membership.
+- `RH/QMobiusHeadClosure.error_sq_eq_weighted_tail`: the original Möbius
+  exact-head error equals its entire inverse-square weighted infinite tail.
+- `RH/QMobiusHeadClosure.exactHead_tendsto_of_error_epsilon`: the positive-epsilon
+  criterion gives strong convergence of the original family.
+
+Conditional research reductions:
+- `qOne_mem_closure_of_cofinal_energy_bound` and
+  `riemannHypothesis_of_cofinal_energy_bound` use the original family and require
+  one full-energy bound attained at arbitrarily large head sizes.
+- `riemannHypothesis_of_error_epsilon` and
+  `riemannHypothesis_of_tail_epsilon` implement the user's full-error and
+  full-infinite-tail convergence criteria.
+
+Open: a checked provider of either the cofinal complete-energy bound or the
+vanishing complete-tail estimate for the original Möbius heads. Finite-head
+exactness alone supplies neither. Bounded heads give membership, not necessarily
+strong convergence of that same sequence; existing `QExactHeadAverages` supplies
+strongly convergent averages under a uniform bound. The existing
+`QExactHeadEscape` counterexample concerns general legal heads and does not
+refute the original Möbius family. This addition does not prove unconditional RH.
+
+
 ## Optimal exact heads and harmonic sign rigidity — 23 October 2026
 
 Established in the continuation:

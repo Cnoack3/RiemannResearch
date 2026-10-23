@@ -140,4 +140,23 @@ theorem riemannHypothesis_of_uniform_legal_head_ball_nonempty
   intro k hk hkM
   simpa only [qSequence_qOne, qOneSequence, if_neg (Nat.ne_of_gt hk)] using hh k hk hkM
 
+/-- An eventual complete-energy bound along arbitrary cofinal exact heads
+suffices. Neither consecutive heads nor monotonicity of the head sizes is needed. -/
+theorem mem_closure_of_eventually_bounded_cofinal_heads
+    (S : Submodule ℝ QHilbert) (F : ℕ → QHilbert) (x : QHilbert)
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop)
+    (hmem : ∀ j, F j ∈ S)
+    (hhead : ∀ j k, 0 < k → k ≤ H j → qSequence (F j) k = qSequence x k)
+    {C : ℝ} (hbounded : ∀ᶠ j : ℕ in atTop, ‖F j‖ ^ 2 ≤ C) :
+    x ∈ S.topologicalClosure := by
+  apply mem_closure_of_uniform_head_ball_nonempty S x
+  refine ⟨C + 1, ?_⟩
+  intro M
+  obtain ⟨j, hjH, hjC⟩ :=
+    ((hH.eventually (eventually_ge_atTop M)).and hbounded).exists
+  refine ⟨F j, hmem j, ?_, ?_⟩
+  · nlinarith [sq_nonneg (‖F j‖ - 1)]
+  · intro k hk hkM
+    exact hhead j k hk (hkM.trans hjH)
+
 end RiemannResearch.RH.QBoundedCoordinateClosure
