@@ -110,3 +110,16 @@ the reverse direction keeps the explicit hBaezDuarte provider.
 Primary source for the existing shifted-density strategy: Noor,
 https://arxiv.org/abs/1809.09577, Theorems 9 and 12.
 Module: RH/RamanujanTailRegularity.lean.
+
+## Transfer 19: complete residual-tail dichotomy and arbitrary exact-head obstruction
+
+The full physical tail energy T_N tends to zero unconditionally. If the packet
+residual is nonzero, N*T_N tends to infinity. For every cofinal map from any
+nontrivial filter, frequent boundedness of N*T_N is equivalent to zero residual,
+and hence to full mass saturation; RH iff retains hBaezDuarte.
+Every finite packet synthesis is proved legal in the full closed space.
+For every candidate matching one through site N, the exact product obstruction
+retains both the canonical error and complete Gram excess:
+E_inf^2 <= T_N * (1-M_L+||synthesis(a-a_L)||^2).
+If E_inf>0, every growing exact-head family has full errors tending to infinity.
+Module: RH/RamanujanResidualTail.lean.

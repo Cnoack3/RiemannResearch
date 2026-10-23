@@ -34,6 +34,11 @@
     regularity tests, the intrinsic canonical residual, full tail Parseval
     identity, and regularity/summability/saturation equivalences. Regularity
     implies RH; RH iff retains the explicit analytic converse provider.
+19. Established: RamanujanResidualTail gives full physical tail identities,
+    zero-or-normalized-divergence dichotomy, arbitrary cofinal frequent-boundedness
+    iff saturation, and the exact-head obstruction retaining the full Gram excess.
+    Positive limiting energy forces every growing exact-head error to diverge;
+    the RH iff retains hBaezDuarte.
 
 ## Ten Ramanujan dual transfers — 23 October 2026
 
