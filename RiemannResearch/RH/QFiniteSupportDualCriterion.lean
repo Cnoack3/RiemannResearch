@@ -11,6 +11,8 @@ import Mathlib.Analysis.Normed.Lp.lpSpace
 import Mathlib.Analysis.InnerProductSpace.l2Space
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Push
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -125,5 +127,36 @@ theorem qOne_mem_iff_unit_finite_test_bound :
   · intro h
     apply (mem_closure_iff_finite_test_bound qOne).mpr
     exact ⟨1, by simpa only [one_mul] using h⟩
+
+theorem finiteHead_apply_of_lt (M : ℕ) (a : QHilbert) (n : ℕ) (hn : n < M) :
+    finiteHead M a n = a n := by
+  simp only [finiteHead, lp.coeFn_sum]
+  simp [lp.single_apply, Finset.mem_range.mpr hn]
+theorem finiteHead_inner (M : ℕ) (a b : QHilbert) :
+    inner ℝ (finiteHead M a) b = inner ℝ a (finiteHead M b) := by
+  rw [real_inner_comm, inner_finiteHead_eq_sum, inner_finiteHead_eq_sum]
+  apply Finset.sum_congr rfl
+  intro n hn
+  ring
+theorem finiteHead_idem (M : ℕ) (a : QHilbert) :
+    finiteHead M (finiteHead M a) = finiteHead M a := by
+  apply lp.ext
+  funext n
+  by_cases hn : n < M
+  · rw [finiteHead_apply_of_lt M _ n hn]
+  · rw [finiteHead_apply_eq_zero M _ n (by omega),
+      finiteHead_apply_eq_zero M _ n (by omega)]
+theorem inner_finiteHead_tail (M : ℕ) (a b : QHilbert) :
+    inner ℝ (finiteHead M a) (b - finiteHead M b) = 0 := by
+  rw [inner_sub_right, finiteHead_inner, finiteHead_inner, finiteHead_idem, sub_self]
+theorem finiteHead_norm_sq_split (M : ℕ) (a : QHilbert) :
+    ‖a‖ ^ 2 = ‖finiteHead M a‖ ^ 2 + ‖a - finiteHead M a‖ ^ 2 := by
+  have h := inner_finiteHead_tail M a a
+  rw [inner_sub_right, real_inner_self_eq_norm_sq] at h
+  rw [norm_sub_sq_real, real_inner_comm]
+  nlinarith
+theorem finiteHead_norm_le (M : ℕ) (a : QHilbert) : ‖finiteHead M a‖ ≤ ‖a‖ := by
+  have h := finiteHead_norm_sq_split M a
+  nlinarith [sq_nonneg ‖a - finiteHead M a‖, norm_nonneg a, norm_nonneg (finiteHead M a)]
 
 end RiemannResearch.RH.QFiniteSupportDualCriterion

@@ -1,5 +1,31 @@
 # Theorem catalog
 
+## Optimal exact heads and harmonic sign rigidity — 23 October 2026
+
+Established in the continuation:
+- `RH/QFullHeadRepair.lean`: continuous repair into the finite legal span,
+  preserving each exact finite head while approximating a closed-span vector.
+- `RH/QOptimalExactHead.lean`: unique optimal exact heads, positive definite
+  compressed projection matrices, the attained least dual constant, finite
+  legal energy infima, orthogonal increments, and the strong convergence versus
+  divergent energy dichotomy. Unconditionally the optimal energy is o(M).
+- `RH/QExactHeadTailEnergy.lean`: the exact signed head-tail identity and the
+  bound retaining the remainder energy minus the head mass.
+- `RH/QAnnihilatorDilationEscape.lean`: every nonzero full-span annihilator,
+  including those with zero mean, has divergent logarithmically scaled tails.
+- `Analysis/SummableMultiplesRigidity.lean`: factorial-Mobius inversion for
+  summable real sequences whose sums over all positive multiples vanish.
+- `RH/QSignedTailRigidity.lean` and `RH/QOneSidedHarmonicRigidity.lean`:
+  complete-Q annihilators with either finite harmonic sign mass vanish.
+  Nonzero annihilators have both signs arbitrarily far out.
+
+The RH conclusions remain conditional: bounded optimal energies, finite harmonic
+mass of either sign of the actual residual, an eventual residual sign, or the
+previous cofinal scaled-tail bound would suffice. None is supplied for the actual
+residual. See `RH/UniformDualOptimalRigidityResearch20261023.md` for exact scope,
+finite checks, sources, and the remaining open obligations.
+
+
 ## Complete-Q dual continuation — 22 October 2026
 
 Established in the companion checkpoint: `RH/QMobiusStretchedEnergy.lean`
@@ -16,8 +42,8 @@ declaration names, proof scope, and ordinary mathematical extensions.
 Conditional research reduction: `riemannHypothesis_of_cofinal_log_tail_bound`.
 Open obligation: a cofinal polylogarithmic scaled-tail bound for the actual
 orthogonal residual. The uniform signed dual bound remains Open. The sign
-rigidity, optimal inverse-energy formulas, and classical 3/5-profile refinement
-in the memorandum are ordinary proofs, not newly Lean-certified declarations.
+rigidity and optimal inverse-energy formulas are now formalized in the newer
+continuation above; the classical 3/5-profile refinement remains an ordinary proof.
 
 ### Uniform nonnegative dual bound and signed finite-head estimates (2026-10-22)
 

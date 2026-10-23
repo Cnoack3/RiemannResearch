@@ -244,6 +244,13 @@ import RiemannResearch.RH.QFiniteSupportDualCriterion
 import RiemannResearch.RH.QFiniteSupportDualEstimates
 import RiemannResearch.RH.QMobiusStretchedEnergy
 import RiemannResearch.RH.QAnnihilatorTailEscape
+import RiemannResearch.RH.QAnnihilatorDilationEscape
+import RiemannResearch.RH.QExactHeadTailEnergy
+import RiemannResearch.RH.QFullHeadRepair
+import RiemannResearch.RH.QOptimalExactHead
+import RiemannResearch.Analysis.SummableMultiplesRigidity
+import RiemannResearch.RH.QSignedTailRigidity
+import RiemannResearch.RH.QOneSidedHarmonicRigidity
 import RiemannResearch.RH.QFullHeadControllability
 import RiemannResearch.RH.QNonnegativeDualBound
 import RiemannResearch.RH.QUnitSignalTargetTest
