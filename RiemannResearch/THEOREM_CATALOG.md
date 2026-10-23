@@ -580,8 +580,19 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   coefficient as a convergent series of finite nonnegative interval sums.
   `qTarget_primePower_threshold_head_tail` retains the complete level tail;
   `qTarget_primePower_threshold_tendsto` certifies convergence of finite heads.
-  Quantitative tail rates, higher Meixner completeness, and legal saturation
-  remain open. F_p is Nat.log p n throughout; no membership provider is supplied.
+  The quantitative tail bound is now supplied by QPrimePowerThresholdTail.
+  F_p remains Nat.log p n; no membership provider is supplied.
+
+- `RH/QPrimePowerThresholdTail.lean` (2026-10-22, Pacific time):
+  `dilatedTargetMean_threshold_error_bounds` proves the explicit bound
+  tau = [d/((p-1)p^K) + d^2/((p^2-1)p^(2K))]/zeta(2).
+  `qTarget_basis_threshold_error_interval` retains separate signed
+  Moebius contributions to the lower and upper errors, using the exact
+  remainder identity from QPrimePowerThresholdSeries.
+  `qTarget_primePower_threshold_error_bounds` certifies finite interval
+  coefficient heads with an error between zero and tau/sqrt(J_2).
+  Finite-precision rounding certification, higher Meixner completeness,
+  and actual legal Parseval saturation remain open.
 
 - `RH/QDivisorModeLegality.lean` (2026-10-22, Pacific time):
   `residue_three_single_mode_defect` gives 9 E_Q[g_3]/8 > 0.

@@ -466,7 +466,10 @@ QPrimePowerThresholdSeries.lean now proves exact threshold expansions of the
 dilated means and the full signed Moebius threshold remainder. For prime-power
 conductors it gives convergent finite integer-interval sums, with the entire
 nonnegative level tail retained. See the checked-threshold section of
-FpCoprimeCoefficientsResearch20261022.md for formulas and the remaining
-quantitative-tail obligation. These coefficient identities apply to the
+FpCoprimeCoefficientsResearch20261022.md for formulas.
+QPrimePowerThresholdTail.lean now proves the explicit geometric truncation
+bound, the signed Moebius coefficient-error interval, and a certified error
+bound for the finite prime-power interval sums. Finite-precision rounding
+certification remains open. These coefficient identities apply to the
 actual Zipf law and Nat.log targets. They provide no legal Parseval saturation
 or membership provider and do not change any full norm residual above.

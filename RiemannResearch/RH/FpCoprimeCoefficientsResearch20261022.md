@@ -452,8 +452,56 @@ The candidate passed job_sE262lEumMs6e9EXL0mk4e18ygw_PjaJ (exit 0,
 7.808 seconds). Saved-source audit job_oTO6qC6_CMPG0m8nNqSFWrFRBbsTPQza
 passed (exit 0, 16.285 seconds; module build 4.9 seconds). All six inspected
 declarations use only propext, Classical.choice, and Quot.sound.
-The explicit geometric tail-rate inequality stated earlier in this note is
-still not formalized; neither finite-precision interval evaluation nor a
-numerical saturation certificate is supplied by this module. All full
-ambient/legal Parseval residuals remain present. Higher Meixner completeness
-and actual F_2/F_3 legal Parseval saturation and membership remain open.
+The geometric tail-rate inequality in section 3 is now formalized in
+QPrimePowerThresholdTail.lean. Finite-precision interval evaluation and
+numerical legal saturation certification remain open. All full ambient/legal
+Parseval residuals remain present. Higher Meixner completeness and actual
+F_2/F_3 legal Parseval saturation and membership remain open.
+
+## Checked geometric tail certificates (22 October 2026, Pacific time)
+
+Write H(p,d,K) = sum_{j<K} logThresholdMass(p,d,j), and let
+R(p,d,K) = sum_{j>=0} logThresholdMass(p,d,j+K).
+The previously proved equality M_p(d)=H(p,d,K)+R(p,d,K) is retained.
+The new theorem dilatedTargetMean_threshold_error_bounds proves
+\[
+ 0\le R(p,d,K)\le
+ \tau_{p,d,K}:=\frac1{\zeta(2)}
+ \left(\frac d{(p-1)p^K}+
+       \frac{d^2}{(p^2-1)p^{2K}}\right)
+\]
+for every natural p>1, d>0, and K>=0. The proof uses the checked
+InverseSquareTailCertificates bound at the exact integer ceiling, then
+sums the two geometric majorants. No asymptotic or unproved tail hypothesis
+is used. In the Lean definition, (p^2)^K equals p^(2K).
+
+For a positive conductor t, set m_d=mu(t/d). The exact coefficient error is
+\[
+ \alpha_{p,t}-\frac{\sum_{d\mid t}m_d H(p,d,K)}{\sqrt{J_2(t)}}
+ =\frac{\sum_{d\mid t}m_d R(p,d,K)}{\sqrt{J_2(t)}}.
+\]
+qTarget_basis_threshold_error_interval places this full signed error in
+\[
+ \left[
+ \frac{\sum_{d\mid t}\min(m_d,0)\tau_{p,d,K}}{\sqrt{J_2(t)}},
+ \frac{\sum_{d\mid t}\max(m_d,0)\tau_{p,d,K}}{\sqrt{J_2(t)}}
+ \right].
+\]
+Thus negative and positive divisor contributions are both retained.
+
+For prime q and k>=0, let S_K be the finite head of primePowerThresholdTerm
+at conductor q^(k+1). qTarget_primePower_threshold_error_bounds proves
+\[
+ 0\le\alpha_{p,q^{k+1}}-S_K
+ \le \frac{\tau_{p,q^{k+1},K}}{\sqrt{J_2(q^{k+1})}}.
+\]
+The full remaining interval series is still the exact error. This applies
+in particular to the F_2/F_3 coprime prime-power coefficients.
+
+Candidate job_I035HLKb8-YCnCDyBM_XCgfUkEy9Yy3K passed (exit 0, 7.216 seconds).
+Saved-source audit job_yeKStL4XNMyD8RVIKqo8SoDJL20Mu4uq passed
+(exit 0, 16.406 seconds; module build 5.1 seconds). All six inspected
+declarations use only propext, Classical.choice, and Quot.sound.
+Final project publication is checkpoint-gated.
+These analytic truncation bounds do not certify floating-point arithmetic,
+saturation of a legal Gram/Parseval calculation, or either membership provider.
