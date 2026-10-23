@@ -551,7 +551,61 @@ new-module build 4.6 seconds). All six inspected declarations use only
 propext, Classical.choice, and Quot.sound. Final aggregate-project publication
 remains checkpoint-gated.
 
-Open: efficient arbitrary-precision automation and general signed composite-
-conductor interval evaluation, higher Meixner orthogonality/completeness,
-and actual legal Parseval saturation and F_2/F_3 membership. The rational
-intervals above do not remove any signed term or full ambient/legal residual.
+The signed composite-conductor extension is recorded below. Efficient
+arbitrary-precision automation, higher Meixner orthogonality/completeness,
+and actual legal Parseval saturation and F_2/F_3 membership remain open.
+
+## Checked signed composite-conductor certificates (23 October 2026, Pacific time)
+
+QDivisorRationalCertificates.lean extends rational certification to every
+nonconstant ambient conductor t>1, including composite conductors and
+intervals crossing zero. Put c(p,d,j)=ceil(p^(j+1)/d), A=logThresholdMass,
+and alpha=<F_p,B_t>_Q. The exact rational head is
+\[
+ H=\sum_{d\mid t}\mu(t/d)\sum_{j<K}
+   \sum_{c(p,d,j)\le n<c(p,1,j)}\frac1{n^2}.
+\]
+Möbius cancellation of the dilation-one head gives the primary identity
+qTarget_divisor_rational_error_exact:
+\[
+ \alpha-\frac H{\zeta(2)\sqrt{J_2(t)}}=
+ \frac{\sum_{d\mid t}\mu(t/d)\sum_{j\ge0}A(p,d,j+K)}{\sqrt{J_2(t)}}.
+\]
+Every signed infinite tail remains. With the proved rational geometric-tail
+numerator T, define L=sum min(mu,0)*T and U=sum max(mu,0)*T.
+qTarget_divisor_rational_error_bounds encloses the error between L/D and U/D,
+where D=zeta(2)*sqrt(J_2(t))>0. Given checked factor bounds D in [D_L,D_U],
+qTarget_divisor_rational_certificate uses the finite rational tests
+\[
+ \max(\ell D_L,\ell D_U)\le H+L,\qquad
+ H+U\le\min(uD_L,uD_U)
+\]
+to prove ell <= alpha <= u. No sign of alpha, ell, or u is assumed.
+Normalizer hypotheses remain explicit in the general theorem and are fully
+discharged in both applications:
+
+| Actual Q coefficient | Levels K | Checked interval |
+| --- | ---: | --- |
+| <F_2,B_15> | 7 | [-4/1000,5/1000] |
+| <F_3,B_10> | 4 | [59/1000,68/1000] |
+
+The first interval does not determine the coefficient's sign.
+The examples use 1028/625 < zeta(2) < 329/200, J_2(15)=192, J_2(10)=72,
+and square-root bounds [13856/1000,13857/1000] and [8485/1000,8486/1000].
+All finite endpoint tests use decide +kernel. No native_decide, floating-point
+estimate, or unproved coefficient bound enters either theorem.
+
+Verification recovery: the earlier 120-, 300-, 600-, and 300-second wall
+timeouts supplied no candidate verdict. The retained editor session subsequently
+completed, exposing one antidiagonal reindexing mismatch and four positive-
+integer numeral coercion mismatches. The repaired complete source finishes
+elaboration with success=true, no errors, no timeout, and no pending lines.
+Axiom/source audits of the general certificate and both concrete examples
+report only propext, Classical.choice, and Quot.sound, with no warnings.
+Publication and aggregate-project acceptance remain final-checkpoint gated.
+
+F_p means Nat.log p n, never v_p(n). These are actual integer-Zipf ambient
+divisor coefficients. They do not show that these wavelets preserve the legal
+closure, establish higher Meixner completeness, or prove legal Parseval
+saturation. Both F_2/F_3 membership obligations remain Open. All full ambient
+and legal residual identities remain unchanged.

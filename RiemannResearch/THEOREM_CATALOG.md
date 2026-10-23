@@ -833,6 +833,20 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   No hypotheses remain in these two concrete theorems. These ambient coefficients
   supply neither legal Parseval saturation nor a target-membership provider.
 
+- `RH/QDivisorRationalCertificates.lean` (2026-10-23, Pacific time):
+  `divisorRationalHead_cast` evaluates the exact finite rational head at every
+  nonconstant conductor via Moebius cancellation.
+  `qTarget_divisor_rational_error_exact` retains the full signed infinite tail;
+  `qTarget_divisor_rational_error_bounds` keeps both Moebius signs.
+  `qTarget_divisor_rational_certificate` uses max/min endpoint tests valid for
+  coefficients and intervals of either sign.
+  `qTarget_two_conductor_fifteen_interval` proves [-4/1000,5/1000];
+  `qTarget_three_conductor_ten_interval` proves [59/1000,68/1000].
+  Both concrete theorems discharge all hypotheses by exact kernel arithmetic.
+  The general certificate and both examples use only standard foundations.
+  These actual integer-Zipf ambient coefficients do not supply legal closure
+  membership or Parseval saturation. All full residuals remain unchanged.
+
 - `RH/QDivisorModeLegality.lean` (2026-10-22, Pacific time):
   `residue_three_single_mode_defect` gives 9 E_Q[g_3]/8 > 0.
   `ambient_single_mode_not_legal_preserving` exhibits legal g_3 whose ambient
