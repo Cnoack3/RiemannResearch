@@ -36,6 +36,12 @@
    The explicit legal Schur update equals the actual enlarged optimizer;
    exact mass gain and strict-gain iff nonzero screened score follow.
 
+8. Established: RH/RamanujanGramDeterminants.lean transfers arbitrary-target
+   projections, positive complete Gram determinants, all-parameter first-site
+   and finite-window determinant identities, and actual gap probabilities.
+   Determinant decay iff density/natural approximation/Lambda-mass saturation
+   is unconditional; the RH converse retains the explicit analytic provider.
+
 The ten-transfer development and the exact RH converse boundary are recorded in
 RH/RamanujanDualDevelopment20261023.md.
 

@@ -118,3 +118,21 @@ Consequently M_(S union {q})=M_S+score^2/pivot exactly, and the actual mass
 increases strictly if and only if the screened score is nonzero.
 The complete error and all Pareto tails remain in the formula.
 See RH/RamanujanSchurEnlargement.lean.
+
+## Transfer 8: complete determinant and determinantal probability structure
+
+For every Hilbert target, packet inverse-Gram regression is the actual finite
+projection. The complete packet Gram determinant is strictly positive.
+The first-site determinant polynomial equals 1-z*fullCapacity/2 for every real z
+and equals the original residue determinant polynomial. Its value at z=1 is
+the actual first-site vacancy probability. Tending to zero is equivalent to
+tailCapacity tending to infinity, constant-target approximation, full legal
+span density, natural approximation, and constant-target packet mass tending
+to one. Thus the Moebius-marked and Lambda-marked finite quantities have the
+same limiting criterion, without being identified at finite stages.
+
+The complete finite-window kernel is U H^{-1} U^T. For every real z, its
+characteristic determinant equals det(H-z*U^T U)/det(H), including repeated
+observations. For injective windows, z=1 is the actual law's gap probability.
+The determinant-zero criterion implies RH unconditionally; its converse is
+stated with the explicit analytic provider. See RH/RamanujanGramDeterminants.lean.
