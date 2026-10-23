@@ -101,4 +101,43 @@ theorem riemannHypothesis_of_bounded_divisor_energy
   apply riemannHypothesis_of_bounded_legal_heads f hmem hhead
   simpa only [divisorWavelet_parseval_norm] using hbudget
 
+/-- Finite-head feasibility inside one common full-norm ball puts the target
+in the closed subspace. This is the nested weakly compact head-ball conclusion,
+proved using the existing bounded-coordinate closure theorem.
+Source: user-requested weak-star compactness completion, 22 October 2026. -/
+theorem mem_closure_of_uniform_head_ball_nonempty
+    (S : Submodule ℝ QHilbert) (x : QHilbert)
+    (h : ∃ C : ℝ, ∀ M : ℕ, ∃ f : QHilbert,
+      f ∈ S ∧ ‖f‖ ≤ C ∧
+        ∀ k, 0 < k → k ≤ M → qSequence f k = qSequence x k) :
+    x ∈ S.topologicalClosure := by
+  classical
+  obtain ⟨C, hC⟩ := h
+  choose F hF using hC
+  apply mem_closure_of_bounded_coordinate_limits S F x
+    (fun N => (hF N).1) _ (fun N => (hF N).2.1)
+  intro k hk
+  apply tendsto_const_nhds.congr'
+  filter_upwards [eventually_ge_atTop k] with N hN
+  exact ((hF N).2.2 k hk hN).symm
+
+/-- Conditional RH endpoint for nonempty legal head balls with one common
+radius. The uniform feasibility hypothesis is an Open arithmetic obligation;
+bounded unit-signal optimizers do not supply it. -/
+theorem riemannHypothesis_of_uniform_legal_head_ball_nonempty
+    (h : ∃ C : ℝ, ∀ M : ℕ, ∃ f : QHilbert,
+      f ∈ QFullResidueProjection.legalSpan ∧ ‖f‖ ≤ C ∧
+        ∀ k, 0 < k → k ≤ M → qSequence f k = 1) :
+    RiemannHypothesis := by
+  apply QFullResidueProjection.riemannHypothesis_of_qOne_mem_full_closure
+  apply mem_closure_of_uniform_head_ball_nonempty
+    QFullResidueProjection.legalSpan qOne
+  obtain ⟨C, hC⟩ := h
+  refine ⟨C, ?_⟩
+  intro M
+  obtain ⟨f, hf, hn, hh⟩ := hC M
+  refine ⟨f, hf, hn, ?_⟩
+  intro k hk hkM
+  simpa only [qSequence_qOne, qOneSequence, if_neg (Nat.ne_of_gt hk)] using hh k hk hkM
+
 end RiemannResearch.RH.QBoundedCoordinateClosure

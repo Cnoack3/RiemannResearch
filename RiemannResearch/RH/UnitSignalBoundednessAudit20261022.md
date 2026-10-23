@@ -110,6 +110,63 @@ All four are Open for the family at issue. A finite upper bound greater than
 one, convergence to an unidentified projection, and arbitrarily accurate
 sampling do not discharge them.
 
+## Weak-star compactness completion
+
+For H=L2(P) or L2(Q), identify H with its continuous dual by Riesz.
+Banach-Alaoglu then gives weak compactness of closed bounded balls.
+The spaces here are separable, so bounded sequences also have weakly
+convergent subsequences. Mathlib supplies
+`WeakDual.isCompact_closedBall` and `WeakDual.isSeqCompact_closedBall`
+in `Mathlib.Analysis.Normed.Module.WeakDual`.
+These existing declarations were checked in development job
+job_wjeydXPr0FN_x9Fz0XS0KDhSDUTUZzbU; they are not new project declarations.
+
+For a closed legal subspace V and one fixed C, define
+
+    K_M = {f in V : ||f|| <= C and f(n)=1 for 1<=n<=M}.
+
+Coordinate evaluation is bounded by ||f||/sqrt(P(n)), or its Q analogue.
+Thus K_M is weakly closed inside a weakly compact ball, and the sets are
+nested. If every K_M is nonempty, the finite intersection property gives
+a vector equal to 1 at every positive integer. It follows that 1 belongs to V.
+
+The new Lean implementation verifies this closure consequence through the
+existing bounded-coordinate theorem, rather than duplicating the
+Banach-Alaoglu and compact-intersection machinery. Specifically:
+
+- `Analysis.weak_limit_eq_strong_limit` proves uniqueness against all
+  inner-product tests for any nontrivial filter. This includes subnets.
+- `Analysis.UnitSignalProjection.ProjectionSignalModel.optimizer_weak_target_iff_energy_eq_mass`
+  proves an exact equivalence: given fixed mass and strong convergence of
+  projections, normalized optimizers converge weakly to the target iff the
+  limiting projection energy equals the target mass.
+- `RH.QBoundedCoordinateClosure.mem_closure_of_uniform_head_ball_nonempty`
+  allows an arbitrary target and subspace, and assumes
+  exists C, for every M there is a subspace vector of norm at most C matching
+  that target through M. Its conclusion is norm-closure membership.
+- `RH.QBoundedCoordinateClosure.riemannHypothesis_of_uniform_legal_head_ball_nonempty`
+  specializes the argument to legal constant heads and concludes Mathlib RH.
+
+The last assertion is a conditional research reduction. The common bound
+precedes the head length in its quantifiers. Independent bounds C_M do not
+suffice. No provider of this arithmetic uniform bound has been proved.
+
+For the already bounded sampled family, the known strong limit h/kappa
+is also its only possible weak cluster point. Testing a putative weak limit 1
+against r=1-h gives
+
+    <F_j,r>=0,     <1,r>=||r||^2.
+
+Thus identifying that weak limit as 1 would already force r=0. Compactness
+does not independently establish this equality.
+
+The four saved statements passed coherent development verification in
+job_CTcf_bUk2mYRutVmlbHmnUhTrgwla1yd, exit code 0, with only propext,
+Classical.choice, and Quot.sound. The server reported 6.619 seconds;
+queue delay was below 0.01 seconds. Workspace opening was not repeated.
+Polling followed the 30-second guidance and is separate from checking time.
+Final saved-source validation and publication are recorded by the checkpoint.
+
 ## Verification record
 
 The coherent development snippet and audits of the existing RH criterion

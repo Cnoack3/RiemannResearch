@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.WeakConvergenceDenseTests
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.Analysis.Normed.Group.Continuity
 import Mathlib.Topology.Algebra.GroupWithZero
@@ -296,6 +297,27 @@ theorem normalized_residual_pairing {f : E} (hf : f ∈ M.space) :
       _ = inner ℝ M.target f := real_inner_comm _ _
   rw [inner_sub_left, optimizer, real_inner_smul_left, hp]
   ring
+
+/-- Weak convergence to the target requires exactly full limiting projection
+energy. Compactness cannot replace this target-identification condition.
+The filter version also covers subnets. Source: user-requested compactness audit,
+22 October 2026. -/
+theorem optimizer_weak_target_iff_energy_eq_mass
+    {ι : Type*} {l : Filter ι} [Filter.NeBot l]
+    (Ms : ι → ProjectionSignalModel E)
+    (hmass : ∀ i, (Ms i).mass = M.mass)
+    (hp : Filter.Tendsto (fun i => (Ms i).projection) l (𝓝 M.projection)) :
+    (∀ v : E, Filter.Tendsto (fun i => inner ℝ (Ms i).optimizer v) l
+      (𝓝 (inner ℝ M.target v))) ↔ M.energy = M.mass := by
+  constructor
+  · intro hw
+    exact M.optimizer_eq_target_iff_energy_eq_mass.mp
+      (RiemannResearch.Analysis.weak_limit_eq_strong_limit
+        (M.optimizer_tendsto Ms hmass hp) hw)
+  · intro he v
+    have hid := M.optimizer_eq_target_iff_energy_eq_mass.mpr he
+    simpa only [hid] using
+      (M.optimizer_tendsto Ms hmass hp).inner (tendsto_const_nhds (x := v))
 
 end ProjectionSignalModel
 

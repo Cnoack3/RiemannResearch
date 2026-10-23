@@ -76,4 +76,20 @@ theorem tendsto_dual_zero_of_inner [CompleteSpace E]
   simpa only [InnerProductSpace.toDual_symm_apply] using
     hconv ((InnerProductSpace.toDual ℝ E).symm φ)
 
+/-- A strong limit is the only possible limit of all inner-product tests.
+The nontrivial filter covers weakly convergent subnets as well as sequences.
+Source: user-requested weak-star compactness audit, 22 October 2026. -/
+theorem weak_limit_eq_strong_limit
+    {l : Filter I} [NeBot l] {u : I → E} {x y : E}
+    (hs : Tendsto u l (𝓝 x))
+    (hw : ∀ v : E, Tendsto (fun i => inner ℝ (u i) v) l
+      (𝓝 (inner ℝ y v))) : x = y := by
+  have hpair (v : E) : inner ℝ x v = inner ℝ y v :=
+    tendsto_nhds_unique (hs.inner tendsto_const_nhds) (hw v)
+  have hz : inner ℝ (x - y) (x - y) = 0 := by
+    rw [inner_sub_left, hpair, sub_self]
+  rw [real_inner_self_eq_norm_sq] at hz
+  have hn : ‖x - y‖ = 0 := by nlinarith [norm_nonneg (x - y)]
+  exact sub_eq_zero.mp (norm_eq_zero.mp hn)
+
 end RiemannResearch.Analysis

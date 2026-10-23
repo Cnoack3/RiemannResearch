@@ -1,5 +1,26 @@
 # Theorem catalog
 
+### Weak-star compactness completion and target identification (2026-10-22)
+
+Established:
+- `Analysis.weak_limit_eq_strong_limit` identifies inner-product weak limits
+  with an existing strong limit for any nontrivial filter, including subnets.
+- `Analysis.UnitSignalProjection.ProjectionSignalModel.optimizer_weak_target_iff_energy_eq_mass`
+  proves weak target convergence iff full limiting projection energy, under
+  fixed signal mass and strong projection convergence.
+- `RH.QBoundedCoordinateClosure.mem_closure_of_uniform_head_ball_nonempty`
+  obtains target closure from finite-head feasibility in one common norm ball.
+
+Conditional research reduction:
+- `RH.QBoundedCoordinateClosure.riemannHypothesis_of_uniform_legal_head_ball_nonempty`
+  obtains Mathlib RH from the same complete-Q bound for legal constant heads.
+  The quantifier order is `exists C, forall M, exists f`.
+
+Open: establish that uniform finite-head feasibility for the arithmetic legal
+span. Bounded normalized optimizers alone do not discharge it. The implementation
+reuses bounded-coordinate closure; it does not reprove Banach-Alaoglu.
+Research detail: `RH/UnitSignalBoundednessAudit20261022.md`.
+
 ### Unit-signal boundedness versus target identification (2026-10-22)
 
 Established in `Analysis/UnitSignalProjection.lean`, namespace
