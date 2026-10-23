@@ -6,6 +6,10 @@
     uniqueness and nested reciprocal-energy distance. RamanujanUnitMean proves
     positive arithmetic mass, unconditional normalized convergence, and an
     exact attained closed-space variance floor. RH iff retains hBaezDuarte.
+12. Established: QParetoOptimizerError resolves both complete optimizer errors
+    into exact displacement and metric-correction terms for arbitrary targets.
+    Equality holds precisely at exact interpolation. RamanujanMetricOptimizer
+    gives the actual P/Q arithmetic identity and strict finite-stage comparison.
 
 ## Ten Ramanujan dual transfers — 23 October 2026
 

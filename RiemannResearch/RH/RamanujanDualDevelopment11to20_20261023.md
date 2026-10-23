@@ -22,3 +22,16 @@ floor strengthens to the exact attained identity
 ||f-1||^2=E_inf/(1-E_inf)+||f-U_inf||^2.
 Energy(U_n)->1 iff E_inf=0, with the explicit analytic provider for RH iff.
 Generic theorem: Analysis/ProjectionMeanOne.lean; consumer: RH/RamanujanUnitMean.lean.
+
+
+## Transfer 12: exact error budgets for the actual P and Q optimizers
+
+For every independent finite Q dictionary and every target x, both optimizers
+retain their own inverse-Gram source. The full scaled Q error equals the full
+P optimal error plus the P norm squared of the optimizer displacement plus the
+exact reciprocal metric correction of the Q residual. The reversed identity
+retains the Q displacement with its zeta(2) scale. Equality in the lower scaled
+comparison holds exactly at exact interpolation. Applied to the actual
+Ramanujan constant-target optimizers, the comparison is strict at every finite
+stage. No equality of the two source vectors or metric optimizers is assumed.
+Modules: RH/QParetoOptimizerError.lean; RH/RamanujanMetricOptimizer.lean.

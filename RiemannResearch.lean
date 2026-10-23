@@ -32,6 +32,8 @@ import RiemannResearch.RH.RamanujanDualCertificates
 import RiemannResearch.RH.RamanujanZeroCertificates
 import RiemannResearch.Analysis.ProjectionMeanOne
 import RiemannResearch.RH.RamanujanUnitMean
+import RiemannResearch.RH.QParetoOptimizerError
+import RiemannResearch.RH.RamanujanMetricOptimizer
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
