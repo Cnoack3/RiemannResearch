@@ -8,6 +8,10 @@
    optimizer_variance_pos no longer assumes divisibility by 2 or 3.
    RamanujanSignalNoise uses this strengthened common result.
 
+2. Established: RH/RamanujanDualInterpolation.lean constructs arbitrary-moment
+   packet representers and their exact inverse metric. Full-Hilbert interpolation
+   completion proves minimality and uniqueness without boundedness assumptions.
+
 The ten-transfer development and the exact RH converse boundary are recorded in
 RH/RamanujanDualDevelopment20261023.md.
 

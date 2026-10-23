@@ -33,3 +33,18 @@ inequality from RH/RamanujanSignalNoise.lean is consolidated into that lower
 module, so downstream covariance results use the same quantitative argument.
 This finite-support lower bound tends to zero when the common multiple grows;
 it does not preclude RH approximation.
+
+## Transfer 2: arbitrary dual moments and their exact inverse metric
+
+For every finite set S of conductors greater than one and every moment vector y,
+the actual arithmetic Gram solve defines a Hilbert representer D_S(y).
+Its packet moments are exactly y and
+inverseMetric(y,z) = <D_S(y),D_S(z)>.
+The metric is symmetric and strictly positive on nonzero vectors.
+Every Hilbert vector f with those same moments satisfies the exact identity
+
+||f||^2 = inverseMetric(y,y) + ||f-D_S(y)||^2.
+
+This proves minimality and an equality-if-and-only-if uniqueness statement.
+It strengthens the bounded-sequence formulation to all Hilbert vectors and
+retains the full orthogonal remainder. See RH/RamanujanDualInterpolation.lean.
