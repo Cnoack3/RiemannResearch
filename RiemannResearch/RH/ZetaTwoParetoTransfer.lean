@@ -6,6 +6,10 @@ Authors: Christian Noack
 import RiemannResearch.RH.ZetaTwoOptimizerStage
 import RiemannResearch.RH.ZetaTwoRadicalRowCriterion
 import RiemannResearch.RH.SquarefreeParetoTransfer
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
 
 /-!
 # Actual inverse-square to Pareto closure transfer
@@ -320,5 +324,74 @@ theorem toPareto_norm_sq_exact (f : QHilbert) :
     _ = zetaTwo * ‖f‖ ^ 2 - zetaTwo * normCorrection f := by
       rw [tsum_mul_left, tsum_mul_left, ← qNorm_weighted_sq]
       rfl
+
+/-- The exact change-of-law correction is smaller when the finite head vanishes. -/
+theorem normCorrection_le_of_head_zero (f : QHilbert) (M : ℕ)
+    (hhead : ∀ k < M, qSequence f k = 0) :
+    normCorrection f ≤ ‖f‖ ^ 2 / ((M : ℝ) + 1) := by
+  rw [normCorrection, qNorm_weighted_sq, ← tsum_div_const]
+  apply Summable.tsum_le_tsum _ (normCorrection_summable f)
+    ((qSequence_square_summable f).div_const ((M : ℝ) + 1))
+  intro k
+  by_cases hk : k < M
+  · simp [hhead k hk]
+  · have hMk : (M : ℝ) ≤ (k : ℝ) := by
+      exact_mod_cast Nat.le_of_not_gt hk
+    have hw : positiveQWeight k / ((k : ℝ) + 1) ≤
+        positiveQWeight k / ((M : ℝ) + 1) := by
+      apply (div_le_div_iff₀ (by positivity) (by positivity)).mpr
+      exact mul_le_mul_of_nonneg_left (by linarith) (positiveQWeight_nonneg k)
+    calc
+      _ ≤ (positiveQWeight k / ((M : ℝ) + 1)) * (qSequence f k) ^ 2 :=
+        mul_le_mul_of_nonneg_right hw (sq_nonneg _)
+      _ = _ := by ring
+
+theorem toPareto_norm_sq_lower_of_head_zero (f : QHilbert) (M : ℕ)
+    (hhead : ∀ k < M, qSequence f k = 0) :
+    zetaTwo * (M : ℝ) / ((M : ℝ) + 1) * ‖f‖ ^ 2 ≤ ‖toPareto f‖ ^ 2 := by
+  rw [toPareto_norm_sq_exact]
+  have hc := mul_le_mul_of_nonneg_left
+    (normCorrection_le_of_head_zero f M hhead) zetaTwo_pos.le
+  have he : zetaTwo * (M : ℝ) / ((M : ℝ) + 1) * ‖f‖ ^ 2 =
+      zetaTwo * ‖f‖ ^ 2 - zetaTwo * (‖f‖ ^ 2 / ((M : ℝ) + 1)) := by
+    field_simp
+    ring
+  rw [he]
+  linarith
+
+theorem norm_gap_bounds_of_head_zero (f : QHilbert) (M : ℕ)
+    (hhead : ∀ k < M, qSequence f k = 0) :
+    0 ≤ zetaTwo * ‖f‖ ^ 2 - ‖toPareto f‖ ^ 2 ∧
+      zetaTwo * ‖f‖ ^ 2 - ‖toPareto f‖ ^ 2 ≤
+        zetaTwo * (‖f‖ ^ 2 / ((M : ℝ) + 1)) := by
+  constructor
+  · exact sub_nonneg.mpr (toPareto_norm_sq_le f)
+  · rw [toPareto_norm_sq_exact]
+    have hc := mul_le_mul_of_nonneg_left
+      (normCorrection_le_of_head_zero f M hhead) zetaTwo_pos.le
+    linarith
+
+/-- The global reverse factor two improves to one plus one over the first
+possibly nonzero physical coordinate. All infinite tails are retained. -/
+theorem zetaTwo_mul_norm_sq_le_head_toPareto_norm_sq (f : QHilbert) (M : ℕ)
+    (hM : 0 < M) (hhead : ∀ k < M, qSequence f k = 0) :
+    zetaTwo * ‖f‖ ^ 2 ≤
+      (1 + 1 / (M : ℝ)) * ‖toPareto f‖ ^ 2 := by
+  have hMR : (0 : ℝ) < M := by exact_mod_cast hM
+  have hh := toPareto_norm_sq_lower_of_head_zero f M hhead
+  have hh' : zetaTwo * (M : ℝ) * ‖f‖ ^ 2 ≤
+      ((M : ℝ) + 1) * ‖toPareto f‖ ^ 2 := by
+    have hhdiv : (zetaTwo * (M : ℝ) * ‖f‖ ^ 2) / ((M : ℝ) + 1) ≤
+        ‖toPareto f‖ ^ 2 := by
+      simpa only [div_mul_eq_mul_div] using hh
+    have hhprod := (div_le_iff₀
+      (by positivity : (0 : ℝ) < (M : ℝ) + 1)).mp hhdiv
+    nlinarith
+  have he : (1 + 1 / (M : ℝ)) * ‖toPareto f‖ ^ 2 =
+      (((M : ℝ) + 1) * ‖toPareto f‖ ^ 2) / (M : ℝ) := by
+    field_simp
+  rw [he]
+  apply (le_div_iff₀ hMR).mpr
+  nlinarith
 
 end RiemannResearch.RH.ZetaTwoParetoTransfer

@@ -1,5 +1,32 @@
 # Theorem catalog
 
+## Universal Pareto/Q and dual Ramanujan transfer — 23 October 2026
+
+Established in RH/RamanujanHilbertTransfer.lean:
+- q_span_eq and p_span_eq: exact algebraic span equality for arbitrary positive
+  conductor families closed under divisors above one; no finiteness or
+  independence assumption.
+- packet_closure_transfer and legal_closure_iff_ramanujan: arbitrary-target
+  complete closure transfer between both measures and both dictionaries.
+- q_dual_observations_iff and p_dual_observations_iff: all affine dual constraints
+  transfer for every linear functional.
+- q_projection_eq and p_projection_eq: projections agree within each metric.
+- q_moments_eq_projection and q_dual_error_exact: legal moments retain the
+  complete ambient orthogonal residual.
+
+Strengthened original results:
+- Analysis/FiniteGramBasisInvariance.observations_iff_of_span_eq removes
+  finiteness and independence from the general dual observation transfer.
+- RH/ZetaTwoParetoTransfer.normCorrection_le_of_head_zero and
+  zetaTwo_mul_norm_sq_le_head_toPareto_norm_sq improve the global factor two
+  to 1+1/M for vectors vanishing below physical coordinate M>0.
+- norm_gap_bounds_of_head_zero bounds the entire exact change-of-law gap.
+
+No arithmetic closure bound or RH provider is asserted. Pareto and Q topology
+agree, while their numerical metrics remain distinct. See
+RH/RamanujanHilbertTransfer20261023.md for the exact hypotheses and identities.
+
+
 ## Physical residual unboundedness — 23 October 2026
 
 Established in `RH/QAnnihilatorDilationEscape.lean`:

@@ -47,6 +47,25 @@ theorem observation_of_mem_span
   | smul c x hx hi =>
       simp only [real_inner_smul_left, map_smul, smul_eq_mul, hi]
 
+omit [Fintype ι] [Fintype κ] in
+/-- Exact dual observation transfer for arbitrary families spanning the same space.
+No finiteness, independence, completeness, or continuity assumption is needed. -/
+theorem observations_iff_of_span_eq
+    (v : ι → H) (w : κ → H) (ℓ : H →ₗ[ℝ] ℝ) (z : H)
+    (hspan : Submodule.span ℝ (Set.range v) =
+      Submodule.span ℝ (Set.range w)) :
+    (∀ i, inner ℝ (v i) z = ℓ (v i)) ↔
+      (∀ j, inner ℝ (w j) z = ℓ (w j)) := by
+  constructor
+  · intro hz j
+    apply observation_of_mem_span v ℓ z hz
+    rw [hspan]
+    exact Submodule.subset_span (Set.mem_range_self j)
+  · intro hz i
+    apply observation_of_mem_span w ℓ z hz
+    rw [← hspan]
+    exact Submodule.subset_span (Set.mem_range_self i)
+
 theorem capacity_evaluation_eq_of_span_eq
     {v : ι → H} {w : κ → H}
     (hv : LinearIndependent ℝ v) (hw : LinearIndependent ℝ w)
@@ -57,14 +76,6 @@ theorem capacity_evaluation_eq_of_span_eq
       capacity hw (fun j => ℓ (w j)) := by
   apply capacity_eq_of_same_observations hv hw
   intro z
-  constructor
-  · intro hz j
-    apply observation_of_mem_span v ℓ z hz
-    rw [hspan]
-    exact Submodule.subset_span (Set.mem_range_self j)
-  · intro hz i
-    apply observation_of_mem_span w ℓ z hz
-    rw [← hspan]
-    exact Submodule.subset_span (Set.mem_range_self i)
+  exact observations_iff_of_span_eq v w ℓ z hspan
 
 end RiemannResearch.Analysis.FiniteGramCapacity
