@@ -16,6 +16,11 @@
    packet Gram coefficients H^{-1}Lambda, their legal synthesis, normal equations,
    exact captured mass, and the unique full-error minimizer.
 
+4. Established: RH/RamanujanCoefficientLimits.lean proves exact signed multiple
+   inversion for arbitrary packet syntheses, identifies actual optimizer
+   coefficients, and transfers unconditional limits, exact defects, rates,
+   and simultaneous Mobius-target iff zero-residual/full-norm convergence.
+
 The ten-transfer development and the exact RH converse boundary are recorded in
 RH/RamanujanDualDevelopment20261023.md.
 

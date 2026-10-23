@@ -59,3 +59,16 @@ The captured mass is Lambda_n^T H_n^{-1} Lambda_n and the full error is
 minimum plus the squared norm of the synthesis of b-a_n. Equality occurs
 exactly when b=a_n. All signed mixed-conductor terms remain present.
 See RH/RamanujanCanonicalOptimizer.lean.
+
+## Transfer 4: coefficient stabilization in actual dual coordinates
+
+Define C_n(m)=m sum_{q<=n+1, m|q} mu(q/m) a_n(q), with q>=2.
+Lean proves C_n(m)=c_n(m) for every m>1, without any infinite sum interchange.
+Thus these finite multiple transforms stabilize unconditionally. Their exact
+correction C_n(m)+mu(m) is the Mobius test of the full residual.
+The squared convergence error is at most
+||MobiusTest_m||^2 (1-mass_n-limitEnergy).
+All limits equal -mu(m) if and only if the limiting residual is zero, if and
+only if the full packet approximation error tends to zero.
+Individual a_n(q) convergence is not claimed.
+See RH/RamanujanCoefficientLimits.lean.
