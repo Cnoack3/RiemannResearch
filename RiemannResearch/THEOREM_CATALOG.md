@@ -21,6 +21,11 @@
    coefficients, and transfers unconditional limits, exact defects, rates,
    and simultaneous Mobius-target iff zero-residual/full-norm convergence.
 
+5. Established: RH/RamanujanSaturationCriteria.lean gives intrinsic packet gain
+   sums/products, finite variation, and saturation equivalences along arbitrary
+   cofinal maps on nontrivial filters. Every test implies RH.
+   Conditional RH iff: the explicit Baez-Duarte analytic converse remains Open.
+
 The ten-transfer development and the exact RH converse boundary are recorded in
 RH/RamanujanDualDevelopment20261023.md.
 

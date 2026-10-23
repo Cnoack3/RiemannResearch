@@ -72,3 +72,23 @@ All limits equal -mu(m) if and only if the limiting residual is zero, if and
 only if the full packet approximation error tends to zero.
 Individual a_n(q) convergence is not claimed.
 See RH/RamanujanCoefficientLimits.lean.
+
+## Transfer 5: a cofinal equivalence chain and exact gain structure
+
+Let M_n=Lambda_n^T H_n^{-1}Lambda_n,
+g_n=M_(n+1)-M_n, and r_n=g_n/(1-M_n).
+Lean proves 0<=M_n<1, monotonicity, sum(g_n)=1-limitEnergy, and the exact
+finite product 1-M_n=product_{j<n}(1-r_j).
+Each fixed signed multiple coordinate has summable total variation.
+The following are equivalent:
+- M_n tends to 1;
+- the full packet error norm tends to 0;
+- every signed multiple coefficient tends to -mu(m);
+- sum(g_n)=1;
+- the relative gains r_n are not summable.
+
+The first three tests may be sampled along ANY cofinal map from a nontrivial
+filter, strengthening the original sequence statements. Each implies RH.
+The complete RH iff package takes the explicit analytic converse provider
+RH -> BaezDuarte.NaturalApproximation. That provider remains Open.
+See RH/RamanujanSaturationCriteria.lean.
