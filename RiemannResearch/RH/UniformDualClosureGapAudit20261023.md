@@ -172,9 +172,183 @@ also requires an additional invariant-subspace property.
 The established floor-dilation invariance is not that property, and no
 unproved transfer of its Hardy-space operators to complete \(Q\) was used.
 
+## 4.1 Signed averaging of optimal heads
+
+The following is an ordinary Hilbert-space calculation from the existing
+`QOptimalExactHead.optimizer_inner_later` and `energy_increment` identities,
+not a new Lean-checked declaration.
+
+Write \(u_M\) for the actual optimal exact head and \(E_M=\|u_M\|_Q^2\).
+For \(M_1<\cdots<M_k\) and real \(a_i\) with \(\sum_i a_i=1\),
+\[
+\boxed{
+\left\|\sum_{i=1}^k a_i u_{M_i}\right\|_Q^2
+=E_{M_1}+
+\sum_{j=1}^{k-1}
+\left(\sum_{i=j+1}^k a_i\right)^2
+(E_{M_{j+1}}-E_{M_j}).
+}
+\]
+Indeed write the linear combination as
+\(u_{M_1}+\sum_{j<k}(\sum_{i>j}a_i)(u_{M_{j+1}}-u_{M_j})\).
+The increments are pairwise orthogonal and orthogonal to \(u_{M_1}\);
+their squared norms are the displayed energy differences.
+Thus even signed averaging of later optimal heads cannot improve on the earliest
+optimal energy. Averaging nonoptimal heads can help, but its gain depends on
+signed cross terms not controlled by individual norm upper bounds.
+
+## 4.2 A dilation-invariant comparison space with polynomial cost
+
+**Status: ordinary mathematics; this comparison has not been formalized or
+verified in Lean.** The argument uses the physical step-function Mellin transform
+appearing in `QMellinTransfer.lean` and elementary Hilbert-space minimization.
+No novelty claim is made.
+
+Fix \(s=\beta+i\gamma\), \(1/2<\beta<1\), \(\gamma\ne0\), without assuming
+that \(s\) is a zeta zero. Work in the real Hilbert space \(L^2(Q)\). Set
+\[
+a_n=\int_n^{n+1}x^{-s-1}\,dx
+=\frac{n^{-s}-(n+1)^{-s}}s,\qquad
+L_s(f)=\sum_{n\ge1}f(n)a_n,\qquad W_s=\ker L_s.
+\]
+This is a real-linear map into \(\mathbb C\simeq\mathbb R^2\).
+Since \(a_n=n^{-s-1}(1+O_s(n^{-1}))\),
+\[
+\sum_{n\ge1}\frac{|a_n|^2}{Q(n)}<\infty.
+\]
+Cauchy--Schwarz therefore makes \(L_s\) continuous and its defining series
+absolutely convergent for every \(f\in L^2(Q)\). In particular \(W_s\) is closed.
+Telescoping gives \(L_s(1)=1/s\ne0\), so \(1\notin W_s\).
+
+For every positive integer \(d\), define \(S_df(n)=f(\lfloor n/d\rfloor)\),
+with \(f(0)=0\). Directly,
+\[
+\|S_df\|_Q^2
+=\frac1Z\sum_{k\ge1}|f(k)|^2
+  \sum_{n=dk}^{dk+d-1}n^{-2}
+\le\frac1d\|f\|_Q^2.
+\]
+For the physical step-function extension \(\widetilde f(x)=f(\lfloor x\rfloor)\),
+including zero below 1, substitution \(x=dy\) gives the exact identity
+\[
+L_s(S_df)=\int_1^\infty \widetilde f(x/d)x^{-s-1}\,dx
+=d^{-s}L_s(f).
+\]
+Thus \(W_s\) is invariant under every established floor dilation.
+
+The phases of \(a_n\) approach \(-\gamma\log n\) modulo \(2\pi\).
+Every open arc of the unit circle contains phases from arbitrarily late
+coordinates: round an exponential sequence whose logarithmic phases approach
+the desired angle. Consequently, beyond any finite head there are two
+real-linearly independent \(a_n\). Corrections at those coordinates repair
+the Mellin value of any prescribed finite head. This also proves that \(L_s\)
+has real rank two.
+
+There is even a bounded positive majorant in \(W_s\).
+Choose three late \(a_{n_j}\) whose phases are close to three equally spaced
+points of the unit circle. Their positive cone is all of \(\mathbb C\).
+Hence there exist \(t_j\ge0\) with \(\sum_jt_ja_{n_j}=-1/s\), and
+\[
+B=1+\sum_{j=1}^3 t_j\mathbf1_{\{n_j\}}\in W_s,\qquad B\ge1.
+\]
+The finitely many coefficients make \(B\) bounded and square-integrable.
+
+Here is the complete exact constrained energy, including its infinite tail.
+The minimum is over all vectors of \(W_s\) with the prescribed head.
+Let
+\[
+v_n=(\Re a_n,\Im a_n)^{\mathsf T},\quad
+b_M=\sum_{n\le M}v_n,\quad
+G_M=Z\sum_{n>M}n^2v_nv_n^{\mathsf T},\quad
+m_M=\sum_{n\le M}Q(n).
+\]
+Every \(G_M\) is positive definite by the late-coordinate independence.
+The minimizing tail subject to \(\sum_{n>M}f(n)v_n=-b_M\) is
+\[
+f_M(n)=-Zn^2v_n^{\mathsf T}G_M^{-1}b_M\quad(n>M).
+\]
+It belongs to \(L^2(Q)\) because the two dual vectors do.
+Taking \(f_M(n)=1\) on the head yields
+\[
+\boxed{\mathcal E_M(W_s)=m_M+b_M^{\mathsf T}G_M^{-1}b_M.}
+\]
+To check optimality, every other feasible tail differs from this tail by an
+element of the tail map's kernel, orthogonal to the displayed minimizing tail.
+Pythagoras gives its energy plus the exact nonnegative squared difference.
+If competitors are required to have finite support, the same value is an
+infimum, not generally an attained minimum. To see equality of the infima,
+truncate the minimizing vector and repair its vanishing Mellin error at two
+fixed independent coordinates beyond the head; the repairs tend to zero in norm.
+
+Put \(\alpha=2\beta-1\in(0,1)\), and define
+\[
+A_M=Z\sum_{n>M}n^2|a_n|^2,\qquad
+C_M=Z\sum_{n>M}n^2a_n^2.
+\]
+Then, exactly,
+\[
+G_M=\frac12
+\begin{pmatrix}
+A_M+\Re C_M&\Im C_M\\
+\Im C_M&A_M-\Re C_M
+\end{pmatrix},
+\qquad \lambda_\pm(G_M)=\frac{A_M\pm|C_M|}{2}.
+\]
+Integral comparison with a derivative remainder for the complex power series
+and the expansion of \(a_n\) give
+\[
+A_M=\frac Z\alpha M^{-\alpha}+O_s(M^{-\alpha-1}),\qquad
+C_M=\frac Z{\alpha+2i\gamma}M^{-\alpha-2i\gamma}
+       +O_s(M^{-\alpha-1}).
+\]
+Thus
+\[
+\lambda_\pm(G_M)\sim
+\frac Z2\left(\frac1\alpha
+\pm\frac1{\sqrt{\alpha^2+4\gamma^2}}\right)M^{-\alpha}.
+\]
+Both constants are strictly positive. Since
+\(b_M=(\Re((1-(M+1)^{-s})/s),\Im((1-(M+1)^{-s})/s))^{\mathsf T}\)
+tends to a nonzero vector, the exact minimum satisfies
+\[
+\boxed{\mathcal E_M(W_s)=\Theta_s(M^\alpha).}
+\]
+A single asymptotic constant for \(\mathcal E_M/M^\alpha\) is not asserted;
+the Gram eigendirections rotate with \(\log M\).
+
+For every fixed logarithmic power, these energies are eventually smaller
+than the corresponding \(M/(\log M)^k\) allowance. They are also smaller
+than the current stretched-sublinear allowance, since
+\[
+\log\!\left(
+\frac{M\exp[-a\{(6+\log M)\log(6+\log M)\}^{1/11}]}{M^\alpha}
+\right)\longrightarrow+\infty
+\quad(a>0).
+\]
+Nevertheless, these energies are not subpolynomial.
+
+The absent arithmetic information is explicit. The existing
+`QMellinTransfer.qMellin_residue_zeta` identity is
+\[
+L_s(g_d)=\frac{\zeta(s)}s(d^{-1}-d^{-s}).
+\]
+For the chosen strip, the factor at \(d=2\) is nonzero, so the actual residue
+dictionary lies in \(W_s\) if and only if \(\zeta(s)=0\).
+No such zero is asserted. This comparison shows that floor-dilation invariance,
+finite-head feasibility, bounded positive majorants, and the present
+sublinear upper allowances alone do not supply the missing arithmetic bound.
+
 ## 5. Verification status
 
 These arguments are ordinary mathematics, not newly Lean-checked declarations.
+The additions in Sections 4.1--4.2 received an independent mathematical review;
+Wolfram confirmed the displayed two-by-two characteristic polynomial and the
+strict positivity of its asymptotic lower eigenvalue constant. These checks do
+not replace formal verification. A separate conditional residual-bound Lean
+snippet and axiom audit timed out at server limits of 240 and 600 seconds; a
+narrower proof-only attempt also timed out at 180 seconds. No new Lean result or
+successful axiom audit is claimed. Only this documentation was changed.
+
 The rational certificate below was executed successfully. Its rounded diagnostic
 intervals were approximately
 \[
