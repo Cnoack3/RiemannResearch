@@ -12,6 +12,10 @@
    packet representers and their exact inverse metric. Full-Hilbert interpolation
    completion proves minimality and uniqueness without boundedness assumptions.
 
+3. Established: RH/RamanujanCanonicalOptimizer.lean identifies actual inverse
+   packet Gram coefficients H^{-1}Lambda, their legal synthesis, normal equations,
+   exact captured mass, and the unique full-error minimizer.
+
 The ten-transfer development and the exact RH converse boundary are recorded in
 RH/RamanujanDualDevelopment20261023.md.
 

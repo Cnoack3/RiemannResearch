@@ -48,3 +48,14 @@ Every Hilbert vector f with those same moments satisfies the exact identity
 This proves minimality and an equality-if-and-only-if uniqueness statement.
 It strengthens the bounded-sequence formulation to all Hilbert vectors and
 retains the full orthogonal remainder. See RH/RamanujanDualInterpolation.lean.
+
+## Transfer 3: actual canonical legal packet optimizers
+
+Stage n uses conductors 2 through n+1. The actual packet coefficients are
+a_n=H_n^{-1} Lambda_n. Their synthesis is exactly the original Pareto
+projection, with no assumed normal equation or invertibility witness.
+The captured mass is Lambda_n^T H_n^{-1} Lambda_n and the full error is
+1-mass_n. For arbitrary trial coefficients b, the full error equals this
+minimum plus the squared norm of the synthesis of b-a_n. Equality occurs
+exactly when b=a_n. All signed mixed-conductor terms remain present.
+See RH/RamanujanCanonicalOptimizer.lean.
