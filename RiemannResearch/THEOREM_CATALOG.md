@@ -31,6 +31,11 @@
    limits, and norm/mass/coordinate closure equivalences. These tests match the
    Pareto approximation criterion. RH iff retains the explicit analytic converse.
 
+7. Established: RH/RamanujanSchurEnlargement.lean proves positive pivots for
+   every new conductor outside a finite set, with no ordering restriction.
+   The explicit legal Schur update equals the actual enlarged optimizer;
+   exact mass gain and strict-gain iff nonzero screened score follow.
+
 The ten-transfer development and the exact RH converse boundary are recorded in
 RH/RamanujanDualDevelopment20261023.md.
 

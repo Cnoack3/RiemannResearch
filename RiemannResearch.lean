@@ -25,6 +25,7 @@ import RiemannResearch.RH.RamanujanCanonicalOptimizer
 import RiemannResearch.RH.RamanujanCoefficientLimits
 import RiemannResearch.RH.RamanujanSaturationCriteria
 import RiemannResearch.RH.QRamanujanCanonicalOptimizer
+import RiemannResearch.RH.RamanujanSchurEnlargement
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

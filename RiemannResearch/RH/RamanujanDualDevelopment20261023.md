@@ -106,3 +106,15 @@ equivalent to that condition, and hence to the corresponding Pareto tests.
 A three-way Q RH iff package records the explicit Baez-Duarte converse
 hypothesis; no equality of the different finite-measure optimizers is assumed.
 See RH/QRamanujanCanonicalOptimizer.lean.
+
+## Transfer 7: arbitrary-conductor exact Schur enlargement
+
+For every finite S of conductors greater than one, every q>1 outside S has
+strictly positive Schur pivot. The former ordering condition q>max(S) is
+unnecessary. The signed score is the old residual's correlation with R_q.
+The Schur update has an explicit legal coefficient vector and equals the
+independently constructed inverse-Gram optimizer on S union {q}.
+Consequently M_(S union {q})=M_S+score^2/pivot exactly, and the actual mass
+increases strictly if and only if the screened score is nonzero.
+The complete error and all Pareto tails remain in the formula.
+See RH/RamanujanSchurEnlargement.lean.
