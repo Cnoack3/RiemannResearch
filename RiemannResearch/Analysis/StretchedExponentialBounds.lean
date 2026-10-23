@@ -211,4 +211,50 @@ theorem linear_le_stretched_of_terminal_band
       _ = s ^ β := by congr 1; ring
   simpa only [mul_assoc, he] using hm
 
+/-- Any positive stretched exponential is bounded by every fixed inverse
+natural power. This generalizes `stretchedExp_le_inverse_square`. -/
+theorem stretchedExp_le_inverse_nat_power
+    (a β : ℝ) (ha : 0 < a) (hβ : 0 < β) (k : ℕ) :
+    ∃ B : ℝ, 0 ≤ B ∧ ∀ s : ℝ, 1 ≤ s →
+      Real.exp (-a * s ^ β) ≤ B / s ^ k := by
+  obtain ⟨m, hm⟩ := exists_nat_gt ((k : ℝ) / β)
+  have hmβ : (k : ℝ) ≤ β * (m : ℝ) := by
+    have h := (div_lt_iff₀ hβ).mp hm
+    nlinarith
+  refine ⟨(m.factorial : ℝ) / a ^ m, by positivity, fun s hs => ?_⟩
+  have hs0 : 0 < s := by linarith
+  have hp : s ^ k ≤ (s ^ β) ^ m := by
+    calc
+      s ^ k = s ^ (k : ℝ) := by rw [Real.rpow_natCast]
+      _ ≤ s ^ (β * (m : ℝ)) :=
+        Real.rpow_le_rpow_of_exponent_le hs hmβ
+      _ = (s ^ β) ^ m := by rw [Real.rpow_mul hs0.le, Real.rpow_natCast]
+  have ht : 0 ≤ a * s ^ β := mul_nonneg ha.le (Real.rpow_nonneg hs0.le _)
+  have he := Real.pow_div_factorial_le_exp (a * s ^ β) ht m
+  have hf : 0 < (m.factorial : ℝ) := by positivity
+  have he' : (a * s ^ β) ^ m ≤ (m.factorial : ℝ) * Real.exp (a * s ^ β) := by
+    have h := (div_le_iff₀ hf).mp he
+    nlinarith
+  have hb : a ^ m * s ^ k ≤ (m.factorial : ℝ) * Real.exp (a * s ^ β) := by
+    calc
+      a ^ m * s ^ k ≤ a ^ m * (s ^ β) ^ m :=
+        mul_le_mul_of_nonneg_left hp (by positivity)
+      _ = (a * s ^ β) ^ m := (mul_pow _ _ _).symm
+      _ ≤ _ := he'
+  rw [show -a * s ^ β = -(a * s ^ β) by ring, Real.exp_neg,
+    inv_eq_one_div, div_div]
+  exact (div_le_div_iff₀ (Real.exp_pos _) (by positivity)).mpr (by simpa using hb)
+
+theorem logProductExp_le_inverse_nat_power
+    (a β : ℝ) (ha : 0 < a) (hβ : 0 < β) (k : ℕ) :
+    ∃ B : ℝ, 0 ≤ B ∧ ∀ s : ℝ, 6 ≤ s →
+      Real.exp (-a * logProductPower β s) ≤ B / s ^ k := by
+  obtain ⟨B, hB, hb⟩ := stretchedExp_le_inverse_nat_power a β ha hβ k
+  refine ⟨B, hB, fun s hs => ?_⟩
+  have hpower := logProductPower_lower β hβ.le hs
+  have he : Real.exp (-a * logProductPower β s) ≤ Real.exp (-a * s ^ β) := by
+    apply Real.exp_le_exp.mpr
+    nlinarith
+  exact he.trans (hb s (by linarith))
+
 end RiemannResearch.Analysis

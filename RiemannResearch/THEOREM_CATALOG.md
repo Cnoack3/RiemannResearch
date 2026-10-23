@@ -1,5 +1,24 @@
 # Theorem catalog
 
+## Complete-Q dual continuation — 22 October 2026
+
+Established in the companion checkpoint: `RH/QMobiusStretchedEnergy.lean`
+transfers the unconditional complete Pareto stretched-energy provider to Q and
+proves every fixed logarithmic saving for exact-head and error energies.
+`RH/QAnnihilatorTailEscape.lean` proves the exact defect-tail identity, arbitrary
+weighted escape, and logarithmic scaled-tail divergence for every annihilator
+with nonzero mean. `RH/QFullHeadControllability.lean` proves arbitrary finite-head
+interpolation and trivial projection kernel on finite heads.
+`Analysis/StretchedExponentialBounds.lean` now includes domination by every
+inverse natural power. See `RH/UniformDualStrongerContinuation20261022.md` for
+declaration names, proof scope, and ordinary mathematical extensions.
+
+Conditional research reduction: `riemannHypothesis_of_cofinal_log_tail_bound`.
+Open obligation: a cofinal polylogarithmic scaled-tail bound for the actual
+orthogonal residual. The uniform signed dual bound remains Open. The sign
+rigidity, optimal inverse-energy formulas, and classical 3/5-profile refinement
+in the memorandum are ordinary proofs, not newly Lean-certified declarations.
+
 ### Uniform nonnegative dual bound and signed finite-head estimates (2026-10-22)
 
 Established:
