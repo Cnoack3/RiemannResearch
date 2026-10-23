@@ -156,3 +156,85 @@ For the full legal conductor set, triviality of the annihilator under either
 measure is equivalent to natural approximation and implies RH. The reverse
 RH implication explicitly requires the Baez-Duarte provider.
 See Analysis/HilbertAnnihilatorCertificate.lean and RH/RamanujanDualCertificates.lean.
+
+## Transfer 10: exact finite-zero obstructions and forced coefficient defects
+
+Every arbitrary finite family of actual zeta zeros with Re(z)>1/2 and z!=1
+gives a signed Cauchy-Gram charge. The exact canonical error is that charge
+plus the complete Mellin integral remainder. Repeated zeros and singular
+families are allowed; no inverse or nondegeneracy assumption is inserted.
+For every legal trial coefficient vector, the exact identity additionally
+retains its squared full-Gram displacement from the canonical optimizer.
+
+The conjugate-pair certificate strictly improves the single-zero floor.
+All finite-zero charges also bound the limiting energy. In particular an
+actual right-hand zero forces positive limiting energy and the existence
+of m>1 for which the stabilized coefficient differs from -mu(m).
+Consequently the corresponding signed packet multiple coordinate cannot
+converge to its Mobius target. Its unconditional convergence to the actual
+limit remains valid. No individual packet synthesis-coordinate limit is claimed.
+See RH/RamanujanZeroCertificates.lean.
+
+The Mellin obstruction strategy is consistent with J.-F. Burnol,
+"A note on Nyman's equivalent formulation of the Riemann Hypothesis",
+https://arxiv.org/abs/math/9910055. The actual statements above are Lean proofs
+from the project's exact complete-residual identities.
+
+## Combined criterion and remaining proof target
+
+Let R_q=sum_{d|q} mu(q/d)*d*g_d, with g_d(k)=(k mod d)/d.
+For S_n={2,...,n+1}, let H_n be the complete Pareto packet Gram matrix,
+a_n=H_n^{-1}Lambda_n, F_n=sum a_n(q)R_q, and
+M_n=Lambda_n^T H_n^{-1}Lambda_n.
+Let C_n(m)=m*sum_{q in S_n,m|q} mu(q/m)*a_n(q).
+The exact error is ||1-F_n||^2=1-M_n.
+
+The following conditions are equivalent WITHOUT the external analytic provider:
+- M_n tends to one;
+- the full error norm tends to zero;
+- every C_n(m), m>1, tends to -mu(m);
+- the sum of successive packet mass gains equals one;
+- the relative gains are not summable;
+- the first-site packet determinant tends to zero;
+- tailCapacity tends to infinity;
+- the full legal packet span is dense;
+- every complete Pareto packet annihilator is zero;
+- every complete Q packet annihilator is zero;
+- actual Q optimizer mass tends to one;
+- actual Q optimizer error tends to zero;
+- every actual Q signed multiple coordinate reaches its Mobius target;
+- BaezDuarte.NaturalApproximation holds.
+
+The P norm/mass/coordinate tests are valid along arbitrary cofinal maps from
+nontrivial filters. Q uses its own complete Gram metric and source moments.
+
+Every condition implies RH in Lean. The full RH iff packages take the named
+provider RH -> BaezDuarte.NaturalApproximation. No provider proof or RH proof
+has been supplied by these transfers. An intrinsic remaining Ramanujan goal
+is to prove full packet annihilator rigidity, equivalently mass saturation.
+
+## Verification and publication record
+
+Each transfer is separately audited, built with the root aggregate and its
+changed modules, committed, and pushed to main. The first nine publication
+records are below; transfer 10 is the commit containing this completed ledger.
+
+| Transfer | Commit | Successful checkpoint job | Build seconds |
+| --- | --- | --- | --- |
+| 1 | `3d5579d247b254cfa89fc87f45bdb8fe2cd2361e` | `job_uhjTWAq54pnmdzisg5LdJyJplogbgyLx` | 45.943 |
+| 2 | `9df994eaa6cdb7b36c8481f04a25f953ac8e8e81` | `job_dbkjBdyy5FQkodDx4HwpupuG7KbNoFBa` | 44.758 |
+| 3 | `b53ff8b0a6c0a85ff7ebc6855ab984b38a3792fa` | `job__Y3MgN60VC0w5zLM5EF5zVEPY0xBS6Ta` | 38.264 |
+| 4 | `01c1324dc9aac1128e24efd4b3d5f4d51337a959` | `job_xHqYIGbdOBeTDi-MtxqdXHVCfKzpdHrr` | 38.765 |
+| 5 | `1a534fbc8e5f4231dffbace47c2ffefabfb3fae4` | `job_gwhuxd-UkbpCUk_qiD0ma7iWShxcYeKw` | 39.361 |
+| 6 | `9f0b6f28f93637552bf95e8f7e7481cbad58a2bd` | `job_zCCQBZZYmuC6nWYNE-FJPwzUGj2luLhB` | 39.154 |
+| 7 | `860c15bedd01fb1a26474581044357b3871fcfba` | `job_TThlqCOxdHvlDq3gYCIRqzDSoDaa-plz` | 40.475 |
+| 8 | `ce09b678cc21b131c2ed1cb21b51345ad46db737` | `job_SiTLDGdX6OviIKgNXCOZfRC2e_j6pAjX` | 37.274 |
+| 9 | `279da8b57f2157c27a16d621ceccb836e90fafa5` | `job_gdhX5lGppmeGOkq5G8myXMUCMWs3Kpo5` | 41.23 |
+
+Transfer 10 and representative results from all ten transfers passed snippet
+job `job_dHQ_59JtsPZEds36ZzROYyi4QcHF7hQn` in 5.958 seconds.
+The 13 representative axiom audits returned only propext, Classical.choice,
+and Quot.sound. Conditional RH theorem hypotheses remain explicit despite
+that axiom result. No project axiom or proof placeholder was introduced.
+
+This requested development stops after transfer 10.

@@ -49,6 +49,13 @@
    annihilator rigidity iff natural approximation. Rigidity implies RH;
    the RH converse retains the explicit analytic provider.
 
+10. Established: RH/RamanujanZeroCertificates.lean transfers arbitrary finite
+    zero tests with exact full Mellin remainders and complete competitor excess,
+    permits singular/repeated zero families, strengthens single-zero bounds with
+    conjugate pairs, and passes the charges to limiting energy. Any actual
+    right-hand zero forces positive limiting energy and a signed multiple
+    coefficient defect. The ten-transfer development stops here.
+
 The ten-transfer development and the exact RH converse boundary are recorded in
 RH/RamanujanDualDevelopment20261023.md.
 
