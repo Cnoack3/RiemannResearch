@@ -761,6 +761,20 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   This does not decide membership of the floor-logarithm target.
   Audit `job_Le-uksdxS3DuX7sdeqv8fBrU3_jxoPyz` passed with standard foundations.
 
+- `RH/QPrimePowerMeixnerTwo.lean` (2026-10-23, Pacific time):
+  `primePower_weighted_summable` constructs the actual Q-norm convergent
+  weighted wavelet sum T_p, with exact first and second coefficient moments.
+  `primeMeixnerTwo_sequence` identifies the normalized second mode as
+  ((p^2-1)^2 v_p(v_p-1)/2 - 2(p^2-1)v_p + 1)/p^2 for positive integers.
+  `primeMeixnerTwo_norm_sq` and `primeMeixnerTriple_orthonormal` establish
+  the actual constant/linear/quadratic valuation Gram identity.
+  `qTarget_inner_primeMeixnerTwo` proves its exact target coefficient is zero
+  for every prime, hence for F_2 and F_3. The target remains Nat.log p n.
+  `qTarget_meixner_two_signed_error` retains the full centered cofactor
+  residual plus a^2 for every signed trial coefficient a.
+  Open: higher-degree Meixner orthogonality/completeness, tensor completeness,
+  and legal Parseval saturation. This finite family is no membership provider.
+
 - `RH/QPrimePowerCofactorResidual.lean` (2026-10-22, Pacific time):
   `primeCofactorResidual_sequence` identifies the full residual with the centered
   floor logarithm of n/p^(v_p(n)); `primeCofactorTarget_mean` computes its mean.

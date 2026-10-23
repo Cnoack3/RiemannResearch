@@ -364,7 +364,7 @@ In particular, `PrimePowerTarget.geometric_log_transform_base_eq_one` proves tha
 
 ## Informal valuation basis and sparse target expansion
 
-This section is an ordinary mathematical argument, **not a Lean formalization**. For each prime q, the valuation \(V_q=v_q(N)\) has geometric law
+The general infinite-basis argument in this section remains informal. The first three local modes are now checked in Lean, as detailed below. For each prime q, the valuation \(V_q=v_q(N)\) has geometric law
 \[
  Q(V_q=v)=(1-q^{-2})q^{-2v},
 \]
@@ -387,7 +387,7 @@ Tensoring the local bases gives the ambient basis indexed by positive integers
 \[
  E_a(n)=\prod_{q^m\parallel a} e_m^{(q^{-2})}(v_q(n)),\qquad E_1=1.
 \]
-Its completeness also uses convergence of finite-prime conditional expectations. The actual valuation independence and geometric marginals are already established in `PrimeValuationIndependence.lean`; tensor completeness and Meixner orthogonality are not yet formalized here. `unitMonomial_gram` is the finite abstract Boolean calculation, and `QFinitePrimeBasis.lean` now transfers it into the actual QHilbert space as described above.
+Its completeness also uses convergence of finite-prime conditional expectations. The actual valuation independence and geometric marginals are already established in `PrimeValuationIndependence.lean`; tensor completeness and general Meixner orthogonality remain open; the degree-zero, degree-one and degree-two family is checked below. `unitMonomial_gram` is the finite abstract Boolean calculation, and `QFinitePrimeBasis.lean` now transfers it into the actual QHilbert space as described above.
 
 Write \(N=p^{V_p}M_p\). Independence of \(V_p\) and \(M_p\), together with
 \(F_p(N)=V_p+F_p(M_p)\), gives the informal expansion
@@ -411,6 +411,50 @@ For any f with coefficients \(\widehat f(a)=\langle f,E_a\rangle_Q\), the full P
 \]
 All four terms are required. In particular, projecting onto the target's nonzero coefficient support has not been shown to preserve C. The ambient basis vector
 \(E_p=((p^2-1)V_p-1)/p\) itself violates the legal square-jump relation; its defect is \((p^2-1)/p\).
+
+## Checked quadratic Meixner mode (23 October 2026)
+
+QPrimePowerMeixnerTwo.lean proves the degree-two part of the valuation
+proposal in the actual integer Zipf Hilbert space. Put \(x=p^2\),
+\(d=x-1\), and \(v=v_p(n)\). The already checked first mode is
+\(U_{p,1}=(dv-1)/p\). The new vector has physical coordinates
+\[
+ U_{p,2}(n)=\frac{d^2v(v-1)/2-2dv+1}{x}\qquad(n>0).
+\]
+This matches \(e_2^{(p^{-2})}\) in the normalization above.
+
+The construction first sums
+\(T_p=\sum_{k\ge0}k\,a_kW_{p,k+1}\), where
+\(a_k=1/(p^k\sqrt d)\) and \(W\) is the already checked prime-power
+wavelet frame. Absolute Q-norm convergence is proved. Its physical
+coordinates are \(v(v-1)/2-v/d\), and the exact identities are
+\[
+ \langle F_p,T_p\rangle_Q=\langle P_p,T_p\rangle_Q=x/d^3,
+ \qquad \|T_p\|_Q^2=x(x+1)/d^4.
+\]
+The normalized difference \(U_{p,2}=(d^2/x)(T_p-P_p/d)\) is therefore
+a unit vector orthogonal to the constant and the first mode.
+primeMeixnerTriple_orthonormal proves orthonormality of
+\((1,U_{p,1},U_{p,2})\), without an abstract Boolean-law assumption.
+
+qTarget_inner_primeMeixnerTwo gives the exact coefficient
+\(\langle F_p,U_{p,2}\rangle_Q=0\) for every prime p, hence for p=2
+and p=3. With \(\mu_p=\langle F_p,1\rangle_Q\), the theorem
+qTarget_meixner_two_signed_error retains the entire signed trial error:
+\[
+ \|F_p-(\mu_p1+P_p+aU_{p,2})\|_Q^2
+   =\|F_p-\mu_p1-P_p\|_Q^2+a^2
+ \qquad(a\in\mathbb R).
+\]
+Thus this additional valuation mode captures no additional target energy.
+The remaining norm is the full previously constructed cofactor residual;
+it has not been discarded or identified with a legal distance.
+
+Established here: the quadratic mode, its unit norm, the three-mode Gram
+identity, and its zero target coefficient. Open: degrees three and higher,
+full local Meixner completeness, tensor completeness, and actual legal
+Parseval saturation for F_2 and F_3. No legal-closure membership provider
+is supplied, and F_p continues to mean Nat.log p n.
 
 ## Complete legal basis and remaining saturation obligation
 
@@ -453,7 +497,7 @@ mem_closureWithConstants_iff_parseval establishes
 \]
 The equivalence is now formal; its right-hand equality for F_2 and F_3 is
 still **Open**. No target-membership provider or RH conclusion is supplied.
-Higher Meixner orthogonality/completeness also remains Open.
+Meixner degrees three and higher, and full completeness, remain Open.
 
 Candidate job_e3oq28sN_Vq0cgJpLb5SW_0L-43fRiIY passed (exit 0; 8.481 seconds).
 Saved-source audit job_-47gYwRlpprwYA2v7t3qWmpxZZRdOH7k passed (exit 0;
@@ -472,7 +516,8 @@ bound, the signed Moebius coefficient-error interval, and a certified error
 bound for the finite prime-power interval sums. QPrimePowerRationalCertificates
 now certifies exact rational evaluation and outward rational endpoints for
 prime-power conductors, with fully discharged examples [0.397, 0.403] for
-<F_2,B_3> and [0.141, 0.146] for <F_3,B_2>. General signed composite-conductor
-numerical evaluation and legal Gram/Parseval certification remain open. These coefficient identities apply to the
+<F_2,B_3> and [0.141, 0.146] for <F_3,B_2>. QDivisorRationalCertificates now also proves general signed composite-conductor
+rational certification, with examples [-0.004, 0.005] for <F_2,B_15> and
+[0.059, 0.068] for <F_3,B_10>. Legal Gram/Parseval saturation remains open. These coefficient identities apply to the
 actual Zipf law and Nat.log targets. They provide no legal Parseval saturation
 or membership provider and do not change any full norm residual above.
