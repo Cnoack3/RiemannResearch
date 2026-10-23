@@ -136,3 +136,23 @@ characteristic determinant equals det(H-z*U^T U)/det(H), including repeated
 observations. For injective windows, z=1 is the actual law's gap probability.
 The determinant-zero criterion implies RH unconditionally; its converse is
 stated with the explicit analytic provider. See RH/RamanujanGramDeterminants.lean.
+
+## Transfer 9: complete annihilators, sharp certificates, and adjoint duality
+
+For every packet set S and every Hilbert target x, membership in the complete
+closed packet span is equivalent to every packet annihilator pairing to zero
+with x. Outside that span, the normalized projection residual is a separator
+with pairing one and exactly ||h||^2 * distance(x,span)^2 = 1.
+For every competitor in the full closed span, the sharp Cauchy certificate is
+< h,x >^2 <= ||h||^2 ||x-v||^2; the canonical residual attains equality.
+No finiteness, divisor closure, independence, or arithmetic sign hypothesis
+is imposed on these arbitrary-set certificates.
+
+The adjoints of the P/Q continuous equivalences are explicit inverse maps
+on dual vectors, preserve every target pairing, and transfer individual
+annihilators bijectively. A sequence-preserving primal map is not substituted
+for this dual map, and equality of the two metric norms is not asserted.
+For the full legal conductor set, triviality of the annihilator under either
+measure is equivalent to natural approximation and implies RH. The reverse
+RH implication explicitly requires the Baez-Duarte provider.
+See Analysis/HilbertAnnihilatorCertificate.lean and RH/RamanujanDualCertificates.lean.

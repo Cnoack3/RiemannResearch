@@ -42,6 +42,13 @@
    Determinant decay iff density/natural approximation/Lambda-mass saturation
    is unconditional; the RH converse retains the explicit analytic provider.
 
+9. Established: Analysis/HilbertAnnihilatorCertificate.lean gives arbitrary
+   closed-span certificates and canonical normalized separators attaining the
+   exact distance bound. RH/RamanujanDualCertificates.lean instantiates both
+   measures, constructs inverse adjoint dual maps, and proves full-packet
+   annihilator rigidity iff natural approximation. Rigidity implies RH;
+   the RH converse retains the explicit analytic provider.
+
 The ten-transfer development and the exact RH converse boundary are recorded in
 RH/RamanujanDualDevelopment20261023.md.
 

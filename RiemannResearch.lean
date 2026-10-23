@@ -27,6 +27,8 @@ import RiemannResearch.RH.RamanujanSaturationCriteria
 import RiemannResearch.RH.QRamanujanCanonicalOptimizer
 import RiemannResearch.RH.RamanujanSchurEnlargement
 import RiemannResearch.RH.RamanujanGramDeterminants
+import RiemannResearch.Analysis.HilbertAnnihilatorCertificate
+import RiemannResearch.RH.RamanujanDualCertificates
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
