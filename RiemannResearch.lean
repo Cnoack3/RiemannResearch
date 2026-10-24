@@ -44,6 +44,8 @@ import RiemannResearch.RH.RamanujanTailRegularity
 import RiemannResearch.RH.RamanujanResidualTail
 import RiemannResearch.RH.ParetoMellinGramOptimization
 import RiemannResearch.RH.RamanujanMellinOptimization
+import RiemannResearch.Analysis.FiniteGramMultipleConstraint
+import RiemannResearch.RH.RamanujanMultipleConstraints
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
