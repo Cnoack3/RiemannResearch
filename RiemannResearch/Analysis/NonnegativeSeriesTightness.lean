@@ -1,5 +1,7 @@
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Topology.Algebra.InfiniteSum.Group
+import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+import Mathlib.Data.Finset.Lattice.Fold
 import Mathlib.Tactic.Linarith
 
 /-!
@@ -86,6 +88,83 @@ theorem complementary_tsum_eventually_ge_of_total_lower
     with a ha hhead hsum
   have hsplit := hsum.sum_add_tsum_subtype_compl s
   linarith
+
+
+/-- Strengthened full criterion, with arbitrary coordinate index type and only
+eventual row hypotheses. Vanishing of the complete nonnegative sum itself
+forces each coordinate to vanish. -/
+theorem nonnegative_tsum_tendsto_zero_iff_coordinates_and_tail_tight
+    {α ι : Type*} {l : Filter α} {f : α → ι → ℝ}
+    (hpos : ∀ᶠ a in l, ∀ i, 0 ≤ f a i)
+    (hsum : ∀ᶠ a in l, Summable (f a)) :
+    Tendsto (fun a => ∑' i, f a i) l (nhds 0) ↔
+      (∀ i, Tendsto (fun a => f a i) l (nhds 0)) ∧
+        NonnegativeSeriesTailTightAt f l := by
+  classical
+  constructor
+  · intro h
+    have hcoord (i : ι) : Tendsto (fun a => f a i) l (nhds 0) := by
+      apply squeeze_zero' (hpos.mono (fun a ha => ha i)) _ h
+      filter_upwards [hpos, hsum] with a ha hs
+      simpa only [Finset.sum_singleton] using
+        hs.sum_le_tsum ({i} : Finset ι) (fun j hj => ha j)
+    exact ⟨hcoord, (nonnegative_tsum_tendsto_zero_iff_tail_tight hpos hsum hcoord).mp h⟩
+  · rintro ⟨hcoord, htight⟩
+    exact (nonnegative_tsum_tendsto_zero_iff_tail_tight hpos hsum hcoord).mpr htight
+
+namespace NonnegativeSeriesTightness
+
+/-- Natural-prefix version of the existing arbitrary finite-complement notion. -/
+def UniformTails {α : Type*} (a : α → ℕ → ℝ) (l : Filter α) : Prop :=
+  ∀ ε : ℝ, 0 < ε → ∃ N : ℕ, ∀ᶠ i in l, (∑' n, a i (n + N)) < ε
+
+/-- Natural prefixes are cofinal among finite coordinate sets. Thus both
+complete-tail notions agree under the same eventual row hypotheses. -/
+theorem uniformTails_iff_finiteTails {α : Type*} {l : Filter α}
+    (a : α → ℕ → ℝ) (hpos : ∀ᶠ i in l, ∀ n, 0 ≤ a i n)
+    (hsum : ∀ᶠ i in l, Summable (a i)) :
+    UniformTails a l ↔ NonnegativeSeriesTailTightAt a l := by
+  classical
+  constructor
+  · intro h ε hε
+    obtain ⟨N, hN⟩ := h ε hε
+    refine ⟨Finset.range N, ?_⟩
+    filter_upwards [hN, hsum] with i hi hs
+    have hnat := hs.sum_add_tsum_nat_add N
+    have hfin := hs.sum_add_tsum_subtype_compl (Finset.range N)
+    linarith
+  · intro h ε hε
+    obtain ⟨s, hs⟩ := h ε hε
+    let N : ℕ := s.sup id + 1
+    have hsub : s ⊆ Finset.range N := by
+      intro n hn
+      apply Finset.mem_range.mpr
+      exact Nat.lt_succ_of_le (Finset.le_sup (f := id) hn)
+    refine ⟨N, ?_⟩
+    filter_upwards [hs, hpos, hsum] with i hi hp hsum
+    have hhead : (∑ n ∈ s, a i n) ≤ ∑ n ∈ Finset.range N, a i n :=
+      Finset.sum_le_sum_of_subset_of_nonneg hsub (fun n hn hnot => hp n)
+    have hnat := hsum.sum_add_tsum_nat_add N
+    have hfin := hsum.sum_add_tsum_subtype_compl s
+    linarith
+
+/-- Natural-prefix specialization of the stronger existing-owner criterion. -/
+theorem tsum_tendsto_zero_iff_eventually {α : Type*} {l : Filter α}
+    (a : α → ℕ → ℝ) (ha : ∀ᶠ i in l, ∀ n, 0 ≤ a i n)
+    (hs : ∀ᶠ i in l, Summable (a i)) :
+    Tendsto (fun i => ∑' n, a i n) l (nhds 0) ↔
+      (∀ n, Tendsto (fun i => a i n) l (nhds 0)) ∧ UniformTails a l :=
+  (nonnegative_tsum_tendsto_zero_iff_coordinates_and_tail_tight ha hs).trans
+    (and_congr Iff.rfl (uniformTails_iff_finiteTails a ha hs).symm)
+
+/-- Convenient globally summable-row specialization for Hilbert consumers. -/
+theorem tsum_tendsto_zero_iff {α : Type*} {l : Filter α}
+    (a : α → ℕ → ℝ) (ha : ∀ i n, 0 ≤ a i n) (hs : ∀ i, Summable (a i)) :
+    Tendsto (fun i => ∑' n, a i n) l (nhds 0) ↔
+      (∀ n, Tendsto (fun i => a i n) l (nhds 0)) ∧ UniformTails a l :=
+  tsum_tendsto_zero_iff_eventually a (Eventually.of_forall ha) (Eventually.of_forall hs)
+
+end NonnegativeSeriesTightness
 
 end
 end RiemannResearch.Analysis

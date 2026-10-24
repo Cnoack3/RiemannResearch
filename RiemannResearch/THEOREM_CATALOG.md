@@ -14,6 +14,8 @@
 
 46. Established: FiniteRegularizedConstraints constructs the unique penalized optimizer with positive augmented Gram H plus rho-squared B-transpose B for arbitrary observation rows, including zero penalty and infeasible or dependent requests. It retains the exact physical-error and observation-defect completion, gives the full two-penalty identity and opposite monotonicity of mismatch and fit error. RamanujanRegularizedConstraints interprets arbitrary repeated or offstage requests as actual original coefficients, recovers the canonical packet optimizer at zero penalty, and bounds the full repair plus penalty by the sharp hard-constraint cost when feasible.
 
+47. Established: NonnegativeSeriesTightness characterizes decay of full nonnegative series by coordinate decay and eventual uniform tail control along arbitrary filters. RamanujanTailTightness retains the exact signed tail-subtraction identity, proves stability of tightness under subtracting a fixed target, and characterizes strong Pareto/Q convergence by physical pointwise convergence plus complete-energy tightness; the two tightness tests agree for corresponding physical families.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.
