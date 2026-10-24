@@ -69,3 +69,9 @@ Modules: `RiemannResearch/Analysis/WeightedObservationPairing.lean`, `RiemannRes
 WeightedCoordinateTopology proves that complete positive admissible observation-energy decay forces every coordinate limit without boundedness, and that the converse holds on eventually bounded physical families along arbitrary filters. All positive admissible weights induce the same bounded-set convergence without comparison constants. RamanujanCoordinateTopology gives the actual Pareto/Q conductor-coordinate equivalences for arbitrary physical families, not only canonical approximants.
 
 Modules: `RiemannResearch/Analysis/WeightedCoordinateTopology.lean`, `RiemannResearch/RH/RamanujanCoordinateTopology.lean`.
+
+## Transfer 72
+
+WeightedCoordinateTruncation retains the exact full head–tail identity and bounds omitted tails by the weighted operator-norm tail times complete physical energy. Independently cofinal finite observation heads retain the full energy limit on bounded families. Actual finite Pareto/Q Moebius-defect sums therefore give saturation and conditional RH iff criteria with no rate coupling between conductor-head depth and packet stage.
+
+Modules: `RiemannResearch/Analysis/WeightedCoordinateTruncation.lean`, `RiemannResearch/RH/RamanujanFiniteWeightedDefect.lean`.
