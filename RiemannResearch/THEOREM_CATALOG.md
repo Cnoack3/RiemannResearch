@@ -1,5 +1,36 @@
 # Theorem catalog
 
+## Exact-head agenda audit — 24 October 2026
+
+Established identities and conditional implications:
+- `Analysis/ConstrainedGramCertificates.lean`: full constrained lower-Gram
+  square completion, primal/dual minimum certificates, and repair intervals.
+- `Analysis/FiniteSignedQuadratic.lean`: signed source expansion with
+  two-sided coordinate-interval error bounds.
+- `Analysis/ParetoPeriodicAbelTail.lean`: exact complete Pareto tail mass,
+  signed centered identity, shift-invariant periodic means and full tail bounds.
+- `Analysis/ExplicitSamplingHeights.lean`: executable integer height recurrence,
+  strict growth, inverse-budget bounds and finite scalar tolerance certificates.
+- `RH/ActualSamplingHeights.lean`: actual unconditional Landau-error provider
+  from the existing rational contour theorem; explicit inverse-Gram schedule
+  conditional only on the displayed horizontal-energy and weight certificates.
+  The strict-tail numerical reduction keeps its density provider explicit.
+- `RH/QOnlineExactHeadConvergence.lean`: online complete-Q convergence,
+  sharp P-to-Q block rate, physical exact heads, legality and epsilon stopping,
+  conditional on the complete-P energy/amplitude inputs.
+- `RH/QNormalRepairMellinObstruction.lean`: actual off-line-zero power lower
+  bound for signed normal cost and directional budgets, preserving Q correction.
+- `RH/QNormalRepairSubpolynomial.lean`: actual RH from cofinal physical heads
+  and subpolynomial normal costs or directional budgets.
+
+Conditional research reduction: the uniform or subpolynomial arithmetic
+repair-growth provider is **Open**. The actual zero-density provider and a
+numerical Landau constant remain **Open**. Finite Python rational certificates
+through head 32 are not kernel certificates or asymptotic upper bounds.
+See `RH/ConstructiveApproximantsAgendaAudit20261024.md`,
+`RH/ExpandedRepairCostCertificates20261024.md`, and
+`RH/EffectiveSamplingAnalyticAudit20261024.md`. No unconditional RH is asserted.
+
 ## Constructive exact-head continuation — 24 October 2026
 
 Established finite/Hilbert identities:

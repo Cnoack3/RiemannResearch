@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 Christian Noack. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Christian Noack
+-/
 import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Tactic
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith
+import Mathlib.Analysis.Normed.Field.Basic
 
 /-!
 # Signed finite quadratic completion
@@ -106,5 +113,86 @@ theorem correction_quadratic {D r : ℕ} (T : Matrix (Fin D) (Fin D) ℝ)
     quadratic T (N.mulVec z) = quadratic (correctionMatrix T N) z := by
   rw [quadratic_mulVec, transpose_pairing, quadratic_mulVec]
   simp only [correctionMatrix, Matrix.mulVec_mulVec, Matrix.mul_assoc]
+
+/-! Source: user-directed exact-head certificate calculations, 24 October 2026.
+The following bounds propagate logarithmic source intervals through the complete
+signed quadratic expansion above. -/
+
+/-- Coordinate intervals bound a finite quadratic expression without any
+positivity or symmetry assumption on its matrix. -/
+theorem abs_quadratic_le_of_abs_le {D : ℕ}
+    (B : Matrix (Fin D) (Fin D) ℝ) (e ε : Fin D → ℝ)
+    (he : ∀ i, |e i| ≤ ε i) :
+    |quadratic B e| ≤ ∑ i, ∑ j, |B i j| * ε i * ε j := by
+  simp only [← Real.norm_eq_abs] at he ⊢
+  have hε (i) : 0 ≤ ε i := (norm_nonneg _).trans (he i)
+  unfold quadratic
+  calc
+    _ ≤ ∑ i, ∑ j, ‖e i * B i j * e j‖ :=
+      (norm_sum_le _ _).trans (Finset.sum_le_sum (fun i _ => norm_sum_le _ _))
+    _ ≤ ∑ i, ∑ j, ‖B i j‖ * ε i * ε j := by
+      apply Finset.sum_le_sum
+      intro i hi
+      apply Finset.sum_le_sum
+      intro j hj
+      rw [norm_mul, norm_mul]
+      calc
+        ‖e i‖ * ‖B i j‖ * ‖e j‖ = ‖B i j‖ * ‖e i‖ * ‖e j‖ := by ring
+        _ ≤ ‖B i j‖ * ε i * ‖e j‖ :=
+          mul_le_mul_of_nonneg_right
+            (mul_le_mul_of_nonneg_left (he i) (norm_nonneg _)) (norm_nonneg _)
+        _ ≤ ‖B i j‖ * ε i * ε j :=
+          mul_le_mul_of_nonneg_left (he j) (mul_nonneg (norm_nonneg _) (hε i))
+
+/-- Two-sided source interval error, retaining both terms of the exact
+symmetric quadratic expansion: the linear error and the quadratic remainder. -/
+theorem quadratic_source_error_bound {D : ℕ}
+    (B : Matrix (Fin D) (Fin D) ℝ)
+    (hB : ∀ i j, B i j = B j i) (h e ε : Fin D → ℝ)
+    (he : ∀ i, |e i| ≤ ε i) :
+    |quadratic B (h + e) - quadratic B h| ≤
+      2 * (∑ i, |B.mulVec h i| * ε i) +
+        ∑ i, ∑ j, |B i j| * ε i * ε j := by
+  have hquad := abs_quadratic_le_of_abs_le B e ε he
+  simp only [← Real.norm_eq_abs] at he hquad ⊢
+  have hlin : ‖∑ i, ∑ j, e i * B i j * h j‖ ≤
+      ∑ i, ‖B.mulVec h i‖ * ε i := by
+    have hcross : (∑ i, ∑ j, e i * B i j * h j) =
+        ∑ i, e i * B.mulVec h i := by
+      simp [Matrix.mulVec, dotProduct, Finset.mul_sum, mul_assoc]
+    rw [hcross]
+    calc
+      _ ≤ ∑ i, ‖e i * B.mulVec h i‖ := norm_sum_le _ _
+      _ ≤ ∑ i, ‖B.mulVec h i‖ * ε i := by
+        apply Finset.sum_le_sum
+        intro i hi
+        rw [norm_mul, mul_comm]
+        exact mul_le_mul_of_nonneg_left (he i) (norm_nonneg _)
+  have hexact : quadratic B (h + e) - quadratic B h =
+      2 * (∑ i, ∑ j, e i * B i j * h j) + quadratic B e := by
+    rw [quadratic_add B hB h e]
+    ring
+  rw [hexact]
+  calc
+    _ ≤ ‖2 * (∑ i, ∑ j, e i * B i j * h j)‖ + ‖quadratic B e‖ :=
+      norm_add_le _ _
+    _ = 2 * ‖∑ i, ∑ j, e i * B i j * h j‖ + ‖quadratic B e‖ := by
+      rw [norm_mul]
+      norm_num
+    _ ≤ _ := add_le_add (mul_le_mul_of_nonneg_left hlin (by norm_num)) hquad
+
+/-- An upper certificate suitable for exact rational enclosures of a real
+source vector. No positive definiteness of the matrix is required. -/
+theorem quadratic_source_upper_bound {D : ℕ}
+    (B : Matrix (Fin D) (Fin D) ℝ)
+    (hB : ∀ i j, B i j = B j i) (h e ε : Fin D → ℝ)
+    (he : ∀ i, |e i| ≤ ε i) :
+    quadratic B (h + e) ≤ quadratic B h +
+      2 * (∑ i, |B.mulVec h i| * ε i) +
+        ∑ i, ∑ j, |B i j| * ε i * ε j := by
+  have herr := quadratic_source_error_bound B hB h e ε he
+  have hle := le_abs_self (quadratic B (h + e) - quadratic B h)
+  linarith
+
 
 end RiemannResearch.Analysis.FiniteSignedQuadratic

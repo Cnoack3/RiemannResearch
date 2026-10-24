@@ -1,5 +1,7 @@
 # Constructive exact-head approximation: verified continuation
 
+Follow-up: [agenda audit and expanded results](ConstructiveApproximantsAgendaAudit20261024.md) adds actual sampling heights, complete-Q online convergence, normal-cost Mellin and subpolynomial criteria, and larger primal/dual certificates. The uniform arithmetic provider remains open.
+
 Date: 24 October 2026.
 
 Source: the user-provided `RH_Constructive_Approximants_Research_Agenda_2026-10-24(1).md`, especially Sections 6, 8, and 10. This continuation implements the averaging construction in the actual complete Pareto Hilbert space, strengthens its quantitative block bound, and removes unnecessary rank hypotheses from sampled repair. It does not prove RH.
