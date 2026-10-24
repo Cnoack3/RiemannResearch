@@ -74,6 +74,8 @@ import RiemannResearch.RH.ApproximateHeadResidualTail
 import RiemannResearch.RH.RamanujanPointwiseCriterion
 import RiemannResearch.Analysis.FiniteGramBackwardError
 import RiemannResearch.RH.RamanujanBackwardError
+import RiemannResearch.LinearAlgebra.CenteredCauchyInverseProduct
+import RiemannResearch.RH.ParetoMellinCenteredProduct
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

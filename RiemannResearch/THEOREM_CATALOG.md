@@ -14,6 +14,8 @@
 
 36. Established: FiniteGramBackwardError decomposes the true normal defect into solver residual, source error and Gram-action error for arbitrary computed matrices. Its exact inverse-Gram budget retains all three diagonal energies and all three signed cross pairings, characterizes cancellation and optimality, and yields moving-dimension component controls. RamanujanBackwardError gives the actual P/Q trial identities and convergence iff RH plus vanishing full signed budget, with the explicit Open hBaezDuarte converse provider.
 
+37. Established: CenteredCauchyInverseProduct proves the full mixed centered inverse-Cauchy identity over every field, including zero center sum in the weighted form. ParetoMellinCenteredProduct evaluates the complete kernel-source capacity at every strict-half-plane center as (1 minus the centered product)/(2 Re(center) minus 1), removes determinant assumptions using distinctness, and allows the center to coincide with an existing node.
+
 ## Ramanujan dual transfers 21–30 — 23 October 2026
 
 21. Established: FiniteGramMultipleConstraint gives the unique simultaneous affine optimizer with full inverse-source Gram cost and exact feasible completion. RamanujanMultipleConstraints proves automatic arithmetic constraint independence and determinant positivity for every finite selection of legal coordinates.

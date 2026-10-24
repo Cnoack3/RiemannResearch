@@ -39,3 +39,9 @@ Modules: `RiemannResearch/RH/RamanujanPointwiseCriterion.lean`.
 FiniteGramBackwardError decomposes the true normal defect into solver residual, source error and Gram-action error for arbitrary computed matrices. Its exact inverse-Gram budget retains all three diagonal energies and all three signed cross pairings, characterizes cancellation and optimality, and yields moving-dimension component controls. RamanujanBackwardError gives the actual P/Q trial identities and convergence iff RH plus vanishing full signed budget, with the explicit Open hBaezDuarte converse provider.
 
 Modules: `RiemannResearch/Analysis/FiniteGramBackwardError.lean`, `RiemannResearch/RH/RamanujanBackwardError.lean`.
+
+## Transfer 37
+
+CenteredCauchyInverseProduct proves the full mixed centered inverse-Cauchy identity over every field, including zero center sum in the weighted form. ParetoMellinCenteredProduct evaluates the complete kernel-source capacity at every strict-half-plane center as (1 minus the centered product)/(2 Re(center) minus 1), removes determinant assumptions using distinctness, and allows the center to coincide with an existing node.
+
+Modules: `RiemannResearch/LinearAlgebra/CenteredCauchyInverseProduct.lean`, `RiemannResearch/RH/ParetoMellinCenteredProduct.lean`.
