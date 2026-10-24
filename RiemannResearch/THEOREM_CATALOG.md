@@ -40,6 +40,8 @@
 
 59. Established: RamanujanConditionedZeroBudget factors an actual zero head from a disjoint tail and replaces the global captured-mass budget by the stronger remaining mass divided by the head product. Exact packet and limiting-mass logarithmic identities retain all individual threshold slack and unused mass; conditioned finite counts and exterior-disk exclusions follow without identifying any zero product with captured mass.
 
+60. Established: RamanujanZeroBudgetLimits proves decay of individual zero charges, finiteness above every positive charge threshold and escape from bounded off-line windows. It identifies the exact prefix-product minus packet-mass gap with the full Mellin remainder and proves its limit along independently cofinal zero depths and packet stages, together with exact logarithmic slack decompositions. Vanishing of these remainders is equivalent to the explicit unresolved equality between the zero-product limit and captured mass, not an assertion that this equality or RH holds.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.

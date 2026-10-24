@@ -117,3 +117,37 @@ Modules: `RiemannResearch/Analysis/ContractiveCountBudget.lean`, `RiemannResearc
 RamanujanConditionedZeroBudget factors an actual zero head from a disjoint tail and replaces the global captured-mass budget by the stronger remaining mass divided by the head product. Exact packet and limiting-mass logarithmic identities retain all individual threshold slack and unused mass; conditioned finite counts and exterior-disk exclusions follow without identifying any zero product with captured mass.
 
 Modules: `RiemannResearch/RH/RamanujanConditionedZeroBudget.lean`.
+
+## Transfer 60
+
+RamanujanZeroBudgetLimits proves decay of individual zero charges, finiteness above every positive charge threshold and escape from bounded off-line windows. It identifies the exact prefix-product minus packet-mass gap with the full Mellin remainder and proves its limit along independently cofinal zero depths and packet stages, together with exact logarithmic slack decompositions. Vanishing of these remainders is equivalent to the explicit unresolved equality between the zero-product limit and captured mass, not an assertion that this equality or RH holds.
+
+Modules: `RiemannResearch/RH/RamanujanZeroBudgetLimits.lean`.
+
+## Prior checkpoint receipts
+
+Each listed successful checkpoint audited source and incrementally built the aggregate project plus explicitly changed modules before committing and pushing its exact source to main. Times below are server-reported validation durations, excluding workspace opening and client queue/poll delays.
+
+| Transfer | Commit | Checkpoint job | Server validation seconds |
+| --- | --- | --- | --- |
+| 41 | `d8562b1bfaf2c8147d1053361ff00bc351ec0f17` | `job_mqdo3EJSQ6h6TiE0DBvVFoXTEdmiE5ui` | 41.1 |
+| 42 | `7039ad82bdada0956f893ef24d50977027631bae` | `job_EvEh_s0POlsd6N09w7kLOK9N1CIxnFFQ` | 40.671 |
+| 43 | `14c9600ce61cda6e73f790666a5a641688161a88` | `job_SpShVuOReDfJ5t5V2olOQCVg-HKI99Xi` | 40.346 |
+| 44 | `6c06fb45212f8ae36c014ae0347d64ec53c34ce7` | `job_C1bg9mgBRa7Sf4FC7FVyKx1ixSWFBxUA` | 45.873 |
+| 45 | `b116dc9a4a30894508cd7b0de5e6ea344fb95599` | `job_MTQdQ-vJjnpNQE2SVaFHjgx91AkmVINA` | 65.215 |
+| 46 | `7fcc6c65d679509464b7a23c4256d050443e2112` | `job_NWyjvXSvN8Cl3Vs4NPYYE7nFkMYEpgpO` | 67.195 |
+| 47 | `90b999547f13e70f85d983e7fd8d1bed18394275` | `job_-Tj5HoaAXmYlfA852dcfaw7Ppir8Lex1` | 45.191 |
+| 48 | `bdb29be815928009ce9a1f1726fd7c6106134a0d` | `job_yoOLitQLZQY0SjmJF9ZH1A_vKJ5YDDiz` | 40.645 |
+| 49 | `6b5732b88f496816153d25c9c115a08f15b9ec76` | `job_Vx35WI8DZwykncaiccat5KtQLt-8rISb` | 47.125 |
+| 50 | `19a6f1ed6cb476fdc74e49b375854685f4c97874` | `job_5ZxGtnpdGsKcgEg2s2jKaog7rYscfQee` | 59.417 |
+| 51 | `f5503e27033eadf67b20fbed901f32ae0336e834` | `job_nvadvFDNqpnozhPE1eC5J72yUKngXwc1` | 39.984 |
+| 52 | `35dc63bef4ee5b206d3bc52f7596dd40b8cf9c54` | `job_GR-mJb45os-orwfOsLOgZ-Piz9PkhwwE` | 40.947 |
+| 53 | `2d40429223362f45e96bf722d2efa11e351ee762` | `job_3Xtfz_atRtOZFQzFXVjcFuDtes7Cg1iI` | 36.664 |
+| 54 | `82c2505a5533bab65e6e10dc20dbb8f868b9068c` | `job_np--8fZmkUMK3ZLOfSfUC3a8PP9Jpapw` | 37.773 |
+| 55 | `21b09dad1af7d04dbaed462eac972156098725c3` | `job_U253f8OZ_TV8-YLumRJZTsm8Iui1C128` | 39.931 |
+| 56 | `c91518a5957db6f8f5d2512551fea347ee9bdd79` | `job_atrBb62gwSZXKsvpekqz2mPMnxsI0Iv0` | 39.793 |
+| 57 | `ee616b2c237c9ff03897897503247e381f5d625c` | `job_TIHuDddyWgVKeaaPznEGXGg_CFp9g1Ap` | 40.821 |
+| 58 | `cb7c684edfc9eba721ce4b48e4be27aeb3a90604` | `job_MIUxG4iTgRNOju5aeyBvr8Ek64eW2Cbh` | 39.843 |
+| 59 | `3b889cb2ee1698953bb4dac9799d1cd39e18df78` | `job_kCVj0VkCH9LcIV74bNt1g9J4YjItOZ_Q` | 36.575 |
+
+Transfer 60 is validated and published by its own checkpoint; its receipt is reported in the completion message.
