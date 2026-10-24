@@ -27,3 +27,9 @@ Modules: `RiemannResearch/Analysis/HardPenaltyGeometry.lean`, `RiemannResearch/R
 RegularizedPathAction identifies every decrease of mismatch with the complete physical-plus-observation action, proves an exact finite telescoping identity, unconditional summability and a full total-action formula. Actual P/Q penalty paths inherit these laws for arbitrary requests, and equal mismatch at any two penalties is equivalent to exactly the same coefficient optimizer.
 
 Modules: `RiemannResearch/Analysis/RegularizedPathAction.lean`, `RiemannResearch/RH/RamanujanPenaltyPath.lean`.
+
+## Transfer 65
+
+AttainableObservations constructs the exact feasible projection of arbitrary dependent or inconsistent observation requests. It proves the complete Pythagorean mismatch/objective decomposition, optimizer invariance, feasibility iff zero irreducible cost, and uniform excess-objective comparison. Actual Pareto/Q conductor requests share the same arithmetic impossibility cost and exact corrected minimum.
+
+Modules: `RiemannResearch/Analysis/AttainableObservations.lean`, `RiemannResearch/RH/RamanujanAttainableObservations.lean`.

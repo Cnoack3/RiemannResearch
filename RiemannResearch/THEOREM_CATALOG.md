@@ -12,6 +12,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 64. Established: RegularizedPathAction identifies every decrease of mismatch with the complete physical-plus-observation action, proves an exact finite telescoping identity, unconditional summability and a full total-action formula. Actual P/Q penalty paths inherit these laws for arbitrary requests, and equal mismatch at any two penalties is equivalent to exactly the same coefficient optimizer.
 
+65. Established: AttainableObservations constructs the exact feasible projection of arbitrary dependent or inconsistent observation requests. It proves the complete Pythagorean mismatch/objective decomposition, optimizer invariance, feasibility iff zero irreducible cost, and uniform excess-objective comparison. Actual Pareto/Q conductor requests share the same arithmetic impossibility cost and exact corrected minimum.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.
