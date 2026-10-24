@@ -81,6 +81,8 @@ import RiemannResearch.RH.ParetoMellinSchurProduct
 import RiemannResearch.RH.RamanujanMellinSignature
 import RiemannResearch.RH.ParetoMellinSourcePerturbation
 import RiemannResearch.RH.RamanujanOffzeroMellinCertificates
+import RiemannResearch.Analysis.ContractiveLogBudget
+import RiemannResearch.RH.RamanujanZeroLogBudget
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

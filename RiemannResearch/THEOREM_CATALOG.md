@@ -20,6 +20,8 @@
 
 39. Established: RamanujanMellinSignature proves actual arithmetic packet and synthesis transforms on Re(s)>0, including the removable point s=1 where every packet source equals von Mangoldt and canonical correction equals captured mass. ParetoMellinSourcePerturbation and RamanujanOffzeroMellinCertificates extend the zero-product certificates to arbitrary probes: exact signed source cross terms, full correction capacity, complete Mellin remainder and packet Gram excess all remain. Approximate-zeta-value bounds follow with explicit arithmetic budgets and keep correction capacity on the left.
 
+40. Established: ContractiveLogBudget derives logarithmic summability from positivity of a contractive product limit and proves exact finite, infinite and tail budgets retaining all nonlinear slack and unused mass. RamanujanZeroLogBudget identifies each first-order charge as (2 Re(z) minus 1)/norm(z) squared. Actual injective right-zero families have summable charges and logarithmic losses bounded by minus log of the positive limiting captured mass 1 minus limitEnergy; every finite packet mass supplies a weaker bound. Exact finite-family, countable-family and cutoff-tail identities retain all slack and the unresolved product/captured-mass gap, without asserting it vanishes.
+
 ## Ramanujan dual transfers 21–30 — 23 October 2026
 
 21. Established: FiniteGramMultipleConstraint gives the unique simultaneous affine optimizer with full inverse-source Gram cost and exact feasible completion. RamanujanMultipleConstraints proves automatic arithmetic constraint independence and determinant positivity for every finite selection of legal coordinates.
