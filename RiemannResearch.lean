@@ -161,6 +161,8 @@ import RiemannResearch.Analysis.ProjectionInnovationSeries
 import RiemannResearch.RH.RamanujanInnovationSeries
 import RiemannResearch.Analysis.ProjectionWalkComparison
 import RiemannResearch.RH.RamanujanWalkComparison
+import RiemannResearch.Analysis.ProjectionWalkMovingTargets
+import RiemannResearch.RH.RamanujanMovingTargets
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

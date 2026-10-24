@@ -165,3 +165,9 @@ Modules: `RiemannResearch/Analysis/ProjectionInnovationSeries.lean`, `RiemannRes
 Two non-nested explored subspaces satisfy an exact signed common-core discrepancy identity and a sharp square-root radius bound. Independently cofinal walks agree precisely when their target projections agree, which is weaker than equality of visited spans; equal visited conductor ranges certify agreement for actual Pareto/Q walks despite arbitrary order and repetitions.
 
 Modules: `RiemannResearch/Analysis/ProjectionWalkComparison.lean`, `RiemannResearch/RH/RamanujanWalkComparison.lean`.
+
+## Transfer 88
+
+Target perturbations split exactly between fitted and residual components, with the full signed residual cross term and a uniform energy sensitivity bound. Arbitrary cofinal dictionary stages and strongly convergent sources commute without any coupled rates; actual Pareto/Q moving-constant approximants converge to their visited-span target projections.
+
+Modules: `RiemannResearch/Analysis/ProjectionWalkMovingTargets.lean`, `RiemannResearch/RH/RamanujanMovingTargets.lean`.
