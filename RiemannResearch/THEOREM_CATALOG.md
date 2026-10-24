@@ -781,6 +781,25 @@ gains), the actual fixed-strip density provider, and the null-boundary passage
 to half-open phase bins. None is supplied by the conditional reductions.
 See `RH/MobiusSamplingContinuationResearch20261021.md`.
 
+
+### Complete prime-power wavelets in the physical valuation space (2026-10-24)
+
+- `RH/QPrimePowerWaveletCompleteness.lean` proves totality of the existing
+  primePowerFrame inside the actual Q-Hilbert valuationSpace.
+- `valuationWaveletBasis` is a complete Hilbert basis;
+  `valuationWavelet_hasSum` gives unconditional ambient-norm reconstruction.
+- `valuationWavelet_signed_parseval` retains the full infinite series of
+  signed coefficient discrepancies for any two valuation-only vectors.
+- Totality follows from the adjacent divisibility-tail recurrence and the
+  previously complete exact-level indicator basis, without additional
+  arithmetic or independence hypotheses.
+
+This is wavelet completeness, not Meixner polynomial completeness or legal
+target membership. The full cofactor residual in F_p approximation remains.
+General Meixner/tensor completeness and F_2/F_3 legal saturation remain open.
+See `RH/FpOrthonormalBasisResearch20261020.md`; publication is certified only
+by the containing Lean-server checkpoint.
+
 ### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
 
 Established finite and Hilbert-space identities:

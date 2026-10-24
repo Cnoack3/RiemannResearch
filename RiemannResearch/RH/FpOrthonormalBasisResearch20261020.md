@@ -583,3 +583,36 @@ Open: general Meixner polynomial orthogonality and completeness, tensor
 completeness, and F_2/F_3 legal Parseval saturation. Neither V_p nor its
 basis is asserted to be the legal squarefree closure. The positive
 cofactor residual remains fully present; it is not a legal-distance bound.
+
+## Complete prime-power wavelet basis of the physical valuation space (2026-10-24)
+
+QPrimePowerWaveletCompleteness.lean proves that the existing primePowerFrame,
+restricted to the actual Q-Hilbert subspace V_p, is a complete orthonormal
+basis. valuationWaveletBasis bundles this basis. The proof first transfers
+annihilation of the normalized wavelets to every prime-power divisibility
+tail, using the adjacent-tail recurrence and the constant vector. Differences
+of tails then annihilate every exact-level indicator, whose totality was
+already proved. No new distributional or independence hypothesis is assumed.
+
+valuationWavelet_hasSum reconstructs every f in V_p unconditionally in the
+ambient Q norm. valuationWavelet_signed_parseval proves, for all f,g in V_p,
+the exact identity
+\[
+ \|f-g\|_Q^2=\sum_{k\ge0}
+   (\langle f,B_{p^k}\rangle_Q-\langle g,B_{p^k}\rangle_Q)^2.
+\]
+All signed coefficient differences and the entire infinite series remain.
+Combined with the previously proved orthogonality of the cofactor residual,
+this identifies a complete coordinate system for valuation-only approximation;
+it does not remove that residual from the floor-logarithm expansion.
+
+The coherent candidate passed job_twb3lRa6q-iRwQlNRoroHkBdo0REPo8D
+(exit 0, verified=true, 5.454 seconds). Saved-source audit
+job_PFlwyt32G7ptFm604tDTmgQwnPHrfqTU passed in 11.282 seconds; all four
+inspected declarations use only propext, Classical.choice and Quot.sound.
+Aggregate publication validation is required by the containing checkpoint.
+
+This completes the existing wavelet frame inside the physically specified V_p.
+It is not a Meixner polynomial completeness theorem. General Meixner and tensor
+completeness, and actual F_2/F_3 legal Parseval saturation, remain open.
+F_p continues to mean Nat.log p n, not the prime valuation.
