@@ -181,6 +181,11 @@ import RiemannResearch.RH.QRamanujanDPPHoleEnergy
 import RiemannResearch.RH.QRamanujanDPPTarget
 import RiemannResearch.Probability.DeterminantalConditioning
 import RiemannResearch.RH.QRamanujanDPPConditioning
+import RiemannResearch.Probability.DeterminantalInclusionBounds
+import RiemannResearch.LinearAlgebra.DeterminantTraceBounds
+import RiemannResearch.Analysis.ProjectionConditioningBound
+import RiemannResearch.RH.QRamanujanDPPTraceBounds
+import RiemannResearch.RH.QRamanujanDPPAngle
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

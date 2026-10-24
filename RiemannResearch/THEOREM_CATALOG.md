@@ -1,5 +1,17 @@
 # Theorem catalog
 
+## Q conditioning trace and angle bounds — 24 October 2026
+
+Established finite results: `DeterminantalInclusionBounds` proves the finite DPP union lower bound and determinant/trace corollary. `DeterminantTraceBounds` proves exact spectral trace defect, exponential determinant bounds, determinant domination by each eigenvalue, and the varying-size equivalence between positive mass and bounded trace plus a spectral gap.
+
+Established actual-Q results: `QRamanujanDPPTraceBounds` identifies the full signed residual Gram, its trace and summed marginal vacancies, proves `headMass >= 1-headLoss`, specializes the exponential and trace/gap bounds, and proves both captured-stage mass one and zero mass beyond the actual stage rank.
+
+Established geometric comparison: `ProjectionConditioningBound` and `QRamanujanDPPAngle` derive projected independence and `(1-rho)*conditioningCost <= rho*packetError` from uniform loss at most rho<1 on the entire auxiliary span. Therefore `packetError <= conditionedVacancy <= packetError/(1-rho)`, without a uniform mass assumption. Captured legal heads orthogonal to the target reproduce packetError exactly.
+
+Conditional research reductions: growing-family RH equivalences now permit varying auxiliary cardinality and use either a trace budget or a uniform whole-span projection-loss bound. The explicit Baez-Duarte provider remains **Open**. Constant-target legal closure and useful quantitative providers for prescribed growing arithmetic families remain **Open**.
+
+See `RH/QRamanujanConditioningBoundsVerified20261024.md` for exact declaration names and hypothesis boundaries.
+
 ## Ramanujan dual transfers 61–100 — 24 October 2026
 
 RH equivalence clauses are conditional research reductions. Their explicit Baez–Duarte converse provider remains **Open**; unconditional identities and implications are distinguished in each module.
