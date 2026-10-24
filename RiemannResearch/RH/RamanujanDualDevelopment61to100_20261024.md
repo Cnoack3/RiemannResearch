@@ -231,3 +231,9 @@ Modules: `RiemannResearch/Probability/DeterminantalWeightedMoments.lean`, `Riema
 Reconstruct the complete Q Hilbert target defect from all signed complementary-kernel cross terms; physical-head exhaustion, both iterated limits, and exact closure criterion.
 
 Modules: `RiemannResearch/RH/QRamanujanDPPHoleEnergy.lean`.
+
+## Transfer 99
+
+Construct arbitrary finite joint Q observation laws containing the normalized target, retain explicit probe geometry, and prove target-vacancy/limit-occupation/full-hole-energy RH equivalences with the open Baez–Duarte converse stated.
+
+Modules: `RiemannResearch/RH/QRamanujanDPPTarget.lean`.

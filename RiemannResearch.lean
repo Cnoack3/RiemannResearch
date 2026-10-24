@@ -178,6 +178,7 @@ import RiemannResearch.RH.QRamanujanDPPWindows
 import RiemannResearch.Probability.DeterminantalWeightedMoments
 import RiemannResearch.RH.QRamanujanDPPStatistics
 import RiemannResearch.RH.QRamanujanDPPHoleEnergy
+import RiemannResearch.RH.QRamanujanDPPTarget
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
