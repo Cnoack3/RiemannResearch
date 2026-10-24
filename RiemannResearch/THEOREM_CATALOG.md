@@ -24,6 +24,8 @@
 
 51. Established: WeightedCoordinateEnergy constructs an explicit positive summably weighted coordinate energy, proves norm and geometric-tail bounds, zero iff every coordinate vanishes, and arbitrary-filter bounded pointwise convergence of the complete energy. RamanujanWeightedDefect gives actual Pareto/Q weighted negative-Moebius coefficient defects with unconditional convergence and uniform geometric arithmetic tails. Vanishing of a single scalar defect along any cofinal map is equivalent to saturation; RH iff retains the explicit Open hBaezDuarte provider.
 
+52. Established: ComputedGramStability gives exact differing-source and metric capacity identities, the complete signed computed backward budget, sharp relative-form controls and a posteriori full-error intervals. RamanujanComputedGram transfers these certificates to actual Pareto/Q trials, proving convergence equivalences with computed defects under controlled metric perturbations and certified solver/source errors. RH iff statements retain the explicit Open hBaezDuarte converse provider.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.

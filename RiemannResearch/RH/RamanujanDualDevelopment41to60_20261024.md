@@ -69,3 +69,9 @@ Modules: `RiemannResearch/Analysis/ProjectionVariation.lean`, `RiemannResearch/R
 WeightedCoordinateEnergy constructs an explicit positive summably weighted coordinate energy, proves norm and geometric-tail bounds, zero iff every coordinate vanishes, and arbitrary-filter bounded pointwise convergence of the complete energy. RamanujanWeightedDefect gives actual Pareto/Q weighted negative-Moebius coefficient defects with unconditional convergence and uniform geometric arithmetic tails. Vanishing of a single scalar defect along any cofinal map is equivalent to saturation; RH iff retains the explicit Open hBaezDuarte provider.
 
 Modules: `RiemannResearch/Analysis/WeightedCoordinateEnergy.lean`, `RiemannResearch/RH/RamanujanWeightedDefect.lean`.
+
+## Transfer 52
+
+ComputedGramStability gives exact differing-source and metric capacity identities, the complete signed computed backward budget, sharp relative-form controls and a posteriori full-error intervals. RamanujanComputedGram transfers these certificates to actual Pareto/Q trials, proving convergence equivalences with computed defects under controlled metric perturbations and certified solver/source errors. RH iff statements retain the explicit Open hBaezDuarte converse provider.
+
+Modules: `RiemannResearch/Analysis/ComputedGramStability.lean`, `RiemannResearch/RH/RamanujanComputedGram.lean`.
