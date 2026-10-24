@@ -48,6 +48,8 @@ import RiemannResearch.Analysis.FiniteGramMultipleConstraint
 import RiemannResearch.RH.RamanujanMultipleConstraints
 import RiemannResearch.Analysis.FiniteBiorthogonalPinning
 import RiemannResearch.RH.RamanujanFinitePinning
+import RiemannResearch.Analysis.FiniteGramFeasibleSources
+import RiemannResearch.RH.RamanujanConstraintFeasibility
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

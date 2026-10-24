@@ -15,3 +15,9 @@ Isolated Lean verification: `job_2E45CyATyuc2xgr3bfpdhXPhtfFiBuUe`, succeeded, s
 An explicit continuous finite coordinate projection repairs the selected original coefficients to −μ. Once all selected conductors enter the stage, the repaired vector has a genuine same-stage packet expansion. Its error equals `1 − M_n + ‖repair(1 − F_n)‖²` and lies between `1 − M_n` and `(1 + ‖repair‖²)(1 − M_n)`. Thus its zero-error criterion, along any cofinal nontrivial filter, is equivalent to canonical saturation and convergence of all original coefficients to −μ. The forward implication to RH is proved; the RH converse explicitly requires hBaezDuarte.
 
 Isolated Lean verification: `job_iIMPVEIcm0IyhgHNn1zCJV-mSShvsMyb`, succeeded, server 9.289 s.
+
+## 23. Complete arithmetic feasibility, including singular constraint systems
+
+Arbitrary repeated and offstage conductor requests are feasible exactly when duplicate requests agree and offstage targets vanish. The source rows have full rank exactly when the conductors are distinct and all belong to the stage. Feasibility alone constructs a source-Gram normal solution even when that Gram is singular. The signed normal pairing gives the exact minimum; the full Gram displacement gives completion and uniqueness of the optimizing packet array (multipliers need not be unique). For targets −μ, feasibility reduces exactly to vanishing of every offstage Möbius value.
+
+Isolated Lean verification: `job_YBlm1lhRYXjuEzH9qKerqpNmzAX2iDRo`, succeeded, server 5.766 s.

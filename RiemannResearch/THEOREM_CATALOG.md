@@ -6,6 +6,8 @@
 
 22. Established: FiniteBiorthogonalPinning gives continuous idempotent finite coordinate repair and exact energy. RamanujanFinitePinning pins any fixed finite set exactly to −μ, preserves genuine legal same-stage synthesis and every cofinal saturation criterion; forward RH is unconditional, reverse RH retains hBaezDuarte.
 
+23. Established: FiniteGramFeasibleSources constructs normal solutions and unique constrained coefficient optimizers even for singular source Grams. RamanujanConstraintFeasibility characterizes all finite requests: duplicate conductors agree and offstage requests vanish; rank is exactly injectivity plus stage inclusion. Exact −μ requests are feasible iff every offstage μ vanishes.
+
 ## Ramanujan dual transfers 11–20 — 23 October 2026
 
 11. Established: ProjectionMeanOne gives full-Hilbert one-signal completion,
