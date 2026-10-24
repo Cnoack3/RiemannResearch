@@ -51,3 +51,9 @@ Modules: `RiemannResearch/LinearAlgebra/CenteredCauchyInverseProduct.lean`, `Rie
 OptionSchurDeterminant supplies the general one-point determinant factorization. ParetoMellinSchurProduct replaces the Mellin Schur inverse quadratic by an exact centered finite product, proves vanishing iff the new test repeats an old node, and gives positive new-point denominators, determinant ratios, explicit coefficient updates and full complex-innovation capacity gains. Actual-zero packet completions retain the entire enlarged Mellin integral and packet Gram excess.
 
 Modules: `RiemannResearch/LinearAlgebra/OptionSchurDeterminant.lean`, `RiemannResearch/RH/ParetoMellinSchurProduct.lean`.
+
+## Transfer 39
+
+RamanujanMellinSignature proves actual arithmetic packet and synthesis transforms on Re(s)>0, including the removable point s=1 where every packet source equals von Mangoldt and canonical correction equals captured mass. ParetoMellinSourcePerturbation and RamanujanOffzeroMellinCertificates extend the zero-product certificates to arbitrary probes: exact signed source cross terms, full correction capacity, complete Mellin remainder and packet Gram excess all remain. Approximate-zeta-value bounds follow with explicit arithmetic budgets and keep correction capacity on the left.
+
+Modules: `RiemannResearch/RH/RamanujanMellinSignature.lean`, `RiemannResearch/RH/ParetoMellinSourcePerturbation.lean`, `RiemannResearch/RH/RamanujanOffzeroMellinCertificates.lean`.

@@ -18,6 +18,8 @@
 
 38. Established: OptionSchurDeterminant supplies the general one-point determinant factorization. ParetoMellinSchurProduct replaces the Mellin Schur inverse quadratic by an exact centered finite product, proves vanishing iff the new test repeats an old node, and gives positive new-point denominators, determinant ratios, explicit coefficient updates and full complex-innovation capacity gains. Actual-zero packet completions retain the entire enlarged Mellin integral and packet Gram excess.
 
+39. Established: RamanujanMellinSignature proves actual arithmetic packet and synthesis transforms on Re(s)>0, including the removable point s=1 where every packet source equals von Mangoldt and canonical correction equals captured mass. ParetoMellinSourcePerturbation and RamanujanOffzeroMellinCertificates extend the zero-product certificates to arbitrary probes: exact signed source cross terms, full correction capacity, complete Mellin remainder and packet Gram excess all remain. Approximate-zeta-value bounds follow with explicit arithmetic budgets and keep correction capacity on the left.
+
 ## Ramanujan dual transfers 21–30 — 23 October 2026
 
 21. Established: FiniteGramMultipleConstraint gives the unique simultaneous affine optimizer with full inverse-source Gram cost and exact feasible completion. RamanujanMultipleConstraints proves automatic arithmetic constraint independence and determinant positivity for every finite selection of legal coordinates.
