@@ -1,5 +1,11 @@
 # Theorem catalog
 
+## Ramanujan dual transfers 61–100 — 24 October 2026
+
+RH equivalence clauses are conditional research reductions. Their explicit Baez–Duarte converse provider remains **Open**; unconditional identities and implications are distinguished in each module.
+
+61. Established: Genuine Q soft-constrained Ramanujan optimizers for arbitrary finite conductor requests, including repeated/offstage and inconsistent rows. The actual Q source and inverse Gram, full normal equations, exact penalized minimum, physical and coordinate completion remainders, uniqueness, hard-cost comparison and exact two-penalty law are retained.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.
