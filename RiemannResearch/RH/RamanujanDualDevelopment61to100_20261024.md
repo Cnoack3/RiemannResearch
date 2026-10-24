@@ -81,3 +81,9 @@ Modules: `RiemannResearch/Analysis/WeightedCoordinateTruncation.lean`, `RiemannR
 MovingWeightedObservationEnergy retains the complete signed change-of-weight/change-of-state identity and proves arbitrary-filter convergence for signed moving weights under a single eventual summable operator-norm majorant. Admissibility of nonnegative limiting weights is derived. Actual Pareto/Q adaptive weighted defects retain scalar saturation and conditional RH iff criteria when limiting weights are positive, even if finite-stage weights are signed.
 
 Modules: `RiemannResearch/Analysis/MovingWeightedObservationEnergy.lean`, `RiemannResearch/RH/RamanujanMovingWeights.lean`.
+
+## Transfer 74
+
+Complete signed measurement-noise decomposition, sharp weighted cross bound and two-sided stability; arbitrary nonnegative moving weights preserve zero-convergence under vanishing full noise energy, with actual Pareto/Q saturation and conditional RH equivalents.
+
+Modules: `RiemannResearch/Analysis/NoisyWeightedCoordinates.lean`, `RiemannResearch/RH/RamanujanNoisyWeightedDefect.lean`.

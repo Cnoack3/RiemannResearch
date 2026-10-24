@@ -141,6 +141,8 @@ import RiemannResearch.Analysis.WeightedCoordinateTruncation
 import RiemannResearch.RH.RamanujanFiniteWeightedDefect
 import RiemannResearch.Analysis.MovingWeightedObservationEnergy
 import RiemannResearch.RH.RamanujanMovingWeights
+import RiemannResearch.Analysis.NoisyWeightedCoordinates
+import RiemannResearch.RH.RamanujanNoisyWeightedDefect
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
