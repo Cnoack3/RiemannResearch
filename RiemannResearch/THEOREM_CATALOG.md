@@ -28,6 +28,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 72. Established: WeightedCoordinateTruncation retains the exact full head–tail identity and bounds omitted tails by the weighted operator-norm tail times complete physical energy. Independently cofinal finite observation heads retain the full energy limit on bounded families. Actual finite Pareto/Q Moebius-defect sums therefore give saturation and conditional RH iff criteria with no rate coupling between conductor-head depth and packet stage.
 
+73. Established: MovingWeightedObservationEnergy retains the complete signed change-of-weight/change-of-state identity and proves arbitrary-filter convergence for signed moving weights under a single eventual summable operator-norm majorant. Admissibility of nonnegative limiting weights is derived. Actual Pareto/Q adaptive weighted defects retain scalar saturation and conditional RH iff criteria when limiting weights are positive, even if finite-stage weights are signed.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.
