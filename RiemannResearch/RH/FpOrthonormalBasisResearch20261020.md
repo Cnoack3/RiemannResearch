@@ -679,3 +679,32 @@ in 5.344 seconds. Saved-source audit job_fodTgTKwaLxIGGvOODLiJeK2qQzrLwwS
 passed in 11.380 seconds. All six inspected declarations use only propext,
 Classical.choice and Quot.sound. Final publication remains gated by
 aggregate-project validation in the containing server checkpoint.
+
+## All-order monomial-weighted valuation lifts (2026-10-24)
+
+QPrimePowerMonomialLift.lean constructs S_(p,m) for every natural m as the
+absolutely Q-norm summable series sum_k k^m c_(p,k) B_(p^(k+1)), with the
+already computed c_(p,k)=<F_p,B_(p^(k+1))>. Its physical coordinates are
+S_(p,m)(n)=sum_(k<v_p(n)) k^m-v_p(n)^m/(p^2-1), for n>0.
+The convention at m=0 is the usual Lean power convention 0^0=1.
+Every lift is centered and lies in the physically defined valuationSpace.
+
+The exact complete Gram series is
+<S_(p,m),S_(p,r)>_Q=sum_k k^(m+r)c_(p,k)^2.
+primePowerMonomialLift_gram_hasSum proves convergence, using the previously
+established all-order moment summability. The exact target pairing is
+<F_p,S_(p,m)>_Q=sum_k k^m c_(p,k)^2, with no truncated tail or dropped term.
+
+For m=2 the checked physical formula is the centered cubic
+v(v-1)(2v-1)/6-v^2/(p^2-1).
+This is a raw vector for subsequent cubic Meixner orthogonalization, not a
+normalized third Meixner mode. More generally the finite power-sum formula
+provides all raw orders for higher polynomial Gram calculations.
+No polynomial-family orthogonality or completeness has been assumed.
+
+The coherent candidate passed job_T7H0Fn2HBfLaokZCZ4GECZlZyrH7WGlc
+in 6.886 seconds. Saved-source audit and aggregate publication validation
+remain required by the containing checkpoint.
+Open: higher Meixner normalization/orthogonality, polynomial and tensor
+completeness, and actual F_2/F_3 legal saturation. All earlier cofactor and
+legal residuals remain; F_p still means Nat.log p n.

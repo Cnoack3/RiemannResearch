@@ -844,6 +844,15 @@ approximant as the mean constant. `valuation_intersection_constant`
 shows that two distinct physical valuation spaces share only constants.
 This is complete-space geometry, not tensor completeness or F_p membership.
 
+Continuation: `RH/QPrimePowerMonomialLift.lean` constructs absolutely
+Q-norm summable monomial-weighted wavelet lifts of every order. It proves
+their physical finite-power-sum formula with its endpoint correction,
+centeredness, physical valuation-space membership, exact coefficients,
+full convergent Gram moments, and exact floor-log target pairings.
+`primePowerMonomialLift_two_sequence` identifies the raw centered cubic.
+These are inputs for higher Meixner orthogonalization, not an orthonormal
+polynomial family or a completeness theorem; legal saturation remains Open.
+
 ### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
 
 Established finite and Hilbert-space identities:

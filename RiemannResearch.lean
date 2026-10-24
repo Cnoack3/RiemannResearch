@@ -170,6 +170,7 @@ import RiemannResearch.RH.QPrimePowerMixedCoefficients
 import RiemannResearch.RH.QPrimePowerInfiniteProjection
 import RiemannResearch.RH.QPrimePowerValuationProjection
 import RiemannResearch.RH.QPrimePowerMeixnerTwo
+import RiemannResearch.RH.QPrimePowerMonomialLift
 import RiemannResearch.RH.PrimeValuationHilbertBasis
 import RiemannResearch.RH.QPrimePowerWaveletCompleteness
 import RiemannResearch.RH.QPrimePowerCoordinateTransform
