@@ -800,6 +800,14 @@ General Meixner/tensor completeness and F_2/F_3 legal saturation remain open.
 See `RH/FpOrthonormalBasisResearch20261020.md`; publication is certified only
 by the containing Lean-server checkpoint.
 
+Continuation: `RH/QPrimePowerCoordinateTransform.lean` gives the explicit
+signed exact-level/wavelet matrix, convergent row and column orthogonality,
+and both coefficient transforms. `valuationCoordinateEquiv` is an invertible
+linear isometry on all real l2 sequences; `valuationCoordinateEquiv_apply`
+identifies its full infinite matrix series. Negative boundary entries remain.
+This supports future Meixner comparisons; polynomial completeness and legal
+F_2/F_3 saturation remain Open.
+
 ### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
 
 Established finite and Hilbert-space identities:

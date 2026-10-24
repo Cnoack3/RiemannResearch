@@ -616,3 +616,35 @@ This completes the existing wavelet frame inside the physically specified V_p.
 It is not a Meixner polynomial completeness theorem. General Meixner and tensor
 completeness, and actual F_2/F_3 legal Parseval saturation, remain open.
 F_p continues to mean Nat.log p n, not the prime valuation.
+
+## Explicit invertible level/wavelet coordinate transform (2026-10-24)
+
+QPrimePowerCoordinateTransform.lean defines
+C_p(k,j)=<B_{p^k},L_{p,j}>_Q, where L is the normalized exact-level basis.
+Writing m_j=valuationMass p j and J_2=qJordanTwo, it proves
+C_p(0,j)=sqrt(m_j) and, for k>=0,
+C_p(k+1,j)=sqrt(m_j)/sqrt(J_2(p^(k+1))) times
+[p^(2(k+1))*1_{k+1<=j}-p^(2k)*1_{k<=j}].
+The negative boundary contribution is retained.
+
+Both infinite matrix identities are checked with HasSum:
+sum_j C_p(k,j) C_p(l,j)=delta(k,l), and
+sum_k C_p(k,j) C_p(k,l)=delta(j,l).
+For every actual valuation observable f, the forward transform takes
+a_j=sqrt(m_j)f(p^j) to its wavelet coefficients; the transpose recovers a_j.
+valuationCoordinateEquiv bundles an invertible linear isometry on all real
+l2 sequences, and valuationCoordinateEquiv_apply proves its matrix series.
+Thus this is a complete infinite transform, without an unproved summability
+assumption or a finite-dimensional replacement.
+
+Consumer: candidate Meixner coefficient sequences can now be compared in
+either complete basis. This does not prove the proposed polynomials are
+orthonormal or complete. General Meixner/tensor completeness and F_2/F_3 legal
+saturation remain open. F_p is Nat.log p n, not v_p(n); its existing cofactor
+residual is not removed by changing valuation coordinates.
+
+Candidate job_wov3AlEeilkJAQfcrvLW7V7orvO7kzcs passed (5.556 seconds).
+Saved-source audit job_o88GHUlOZT-uhBv7aZJdzLcLgb9Q5tro passed in 11.810
+seconds. All six inspected declarations use only propext, Classical.choice
+and Quot.sound. Aggregate validation and publication are certified by the
+containing server checkpoint.
