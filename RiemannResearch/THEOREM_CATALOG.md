@@ -911,6 +911,20 @@ full convergent Gram moments, and exact floor-log target pairings.
 These are inputs for higher Meixner orthogonalization, not an orthonormal
 polynomial family or a completeness theorem; legal saturation remains Open.
 
+Continuation: `RH/QPrimePowerPolynomialOrthonormal.lean` proves linear
+independence of all raw lifts and constructs a nonvanishing normalized
+Gram-Schmidt family at every order. `valuationPolynomialFrame_orthonormal`
+includes qOne; `valuationPolynomialMode_span_Iic` preserves each finite
+initial span. All modes are centered physical valuation vectors.
+`valuationPolynomialMode_zero` identifies the first mode with the positive
+normalized valuation, and `qTarget_valuationPolynomialMode_coefficient`
+gives p/(p^2-1) at index zero and zero at every higher index.
+`qTarget_valuationPolynomial_signed_error` retains the full cofactor
+residual plus every signed mean, linear, and higher-mode discrepancy.
+All-order Gram-Schmidt orthonormality is now established. Closed Meixner
+formula identification, polynomial/tensor completeness, and legal F_2/F_3
+saturation remain Open. No density or legal-closure provider is assumed.
+
 ### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
 
 Established finite and Hilbert-space identities:

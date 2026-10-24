@@ -708,3 +708,46 @@ remain required by the containing checkpoint.
 Open: higher Meixner normalization/orthogonality, polynomial and tensor
 completeness, and actual F_2/F_3 legal saturation. All earlier cofactor and
 legal residuals remain; F_p still means Nat.log p n.
+
+## All-order orthonormal polynomial innovations (2026-10-24)
+
+QPrimePowerPolynomialOrthonormal.lean now proves that the entire raw family
+S_(p,m) is linearly independent. A finite dependence has wavelet coordinates
+c_(p,k) times a real polynomial evaluated at k. Since c_(p,k) is nonzero,
+that polynomial vanishes at every natural number and hence is zero.
+
+Let E_(p,j)=gramSchmidtNormed(S_(p,*))(j). All innovations have unit norm:
+valuationPolynomialMode_orthonormal proves actual-Q orthonormality at every
+order, without deleting zero indices or assuming independence.
+valuationPolynomialFrame includes qOne followed by every E_(p,j) and is
+orthonormal. Every mode is centered and belongs to the physical valuation
+space V_p. valuationPolynomialMode_span_Iic preserves each finite initial
+span, so the j-th mode uses only raw lifts with indices at most j.
+This is an algebraic-span result, not a density theorem.
+
+The positive first mode E_(p,0) is exactly primePowerProjectionUnit.
+qTarget_valuationPolynomialMode_coefficient proves
+<F_p,E_(p,j)> = if j=0 then p/(p^2-1) else 0.
+Thus every higher Gram-Schmidt mode has its zero target coefficient proved
+with all orthogonality obligations discharged, for every prime p and hence
+for F_2 and F_3. F_p remains Nat.log p n throughout.
+
+For arbitrary real mu, b, all signed coefficients a_j, and every finite s,
+qTarget_valuationPolynomial_signed_error proves the complete equality
+||F_p - (mu*1 + b*E_(p,0) + sum_(j in s) a_j E_(p,j+1))||^2
+= ||R_p||^2 + (mu_p-mu)^2 + (p/(p^2-1)-b)^2 + sum_(j in s) a_j^2.
+The full cofactor residual remains. No positivity restriction is imposed on
+trial coefficients and no missing mode or tail is declared to vanish.
+
+This discharges all-order normalization and orthogonality for the explicitly
+defined Gram-Schmidt family. Open: identification of this family with
+classical closed Meixner formulas, polynomial density/completeness in V_p,
+tensor completeness, and actual F_2/F_3 legal Parseval saturation.
+It does not replace the existing complete wavelet or level-indicator bases,
+and it does not assert membership in closureWithConstants.
+
+Coherent candidate job_mb3Iqw9ghMVT9yXTyUS5MlZWljHo4TfZ passed in 7.654 seconds.
+Saved-source audit job_UaIovSIcEKbvmxruIk57tpsRmGi6DY5x passed in 14.286
+seconds. All six inspected declarations use only propext, Classical.choice,
+and Quot.sound. Aggregate-project validation and publication are certified
+by the containing Lean-server checkpoint.
