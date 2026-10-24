@@ -12,6 +12,8 @@
 
 25. Established: RamanujanTrialConvergence characterizes arbitrary cofinal dependent trial arrays by saturation plus full inverse-Gram defect decay, for both P and Q. The same physical trial converges in P iff Q without cofinality; an exact metric-correction identity is retained. RH-and-defect equivalences explicitly retain hBaezDuarte.
 
+26. Established: RamanujanCoordinateCapacityLimits identifies capacities with projected explicit Möbius Riesz vectors, proves monotone convergence to positive finite limits with exact missing-capacity norm and divisor upper bound, and gives moving-value/cofinal convergence to the unique closed affine legal optimizer with complete error remainder.
+
 ## Ramanujan dual transfers 11–20 — 23 October 2026
 
 11. Established: ProjectionMeanOne gives full-Hilbert one-signal completion,

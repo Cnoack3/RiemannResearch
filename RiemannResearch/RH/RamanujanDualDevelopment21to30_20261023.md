@@ -33,3 +33,9 @@ Isolated Lean verification: `job_BQOGehNw_RyxljlwDZx2zOnas4E7lbbZ`, succeeded, s
 Stages and trial coefficients may vary along any cofinal nontrivial filter. Trial norm tends to zero iff canonical limiting energy is zero and the complete inverse-Gram defect tends to zero, separately for P and Q. For the same physical trial, P and Q convergence are equivalent without cofinality or optimality, and the exact metric-correction budget is proved. Conditional RH-and-defect versions keep hBaezDuarte explicit. The underlying nonnegative-budget convergence lemmas are reusable Analysis declarations.
 
 Isolated Lean verification: `job_wHo0xWb1-Ei7SRxqom5JLKbnl907hRYn` (25–26 together), succeeded, server 6.516 s.
+
+## 26. Positive limiting coordinate capacity and the full closed affine optimum
+
+The actual coordinate representer is the projection of −mobiusRieszHilbert. Its capacity increases to a strictly positive finite limit, with an explicit divisor-sum upper bound and exact missing-capacity squared norm. Along any cofinal filter, varying prescribed values tending to t produce candidates tending to `P∞1 + (t − c∞(m))/κ∞(m) · P∞R_m`. Over the entire closed legal space with coefficient m fixed to t, the exact error is `E∞ + (t − c∞(m))²/κ∞(m) + ‖y − candidate∞‖²`. Thus the displayed limit is the unique global affine optimizer. No RH hypothesis is used.
+
+Isolated Lean verification: `job_wHo0xWb1-Ei7SRxqom5JLKbnl907hRYn` (25–26 together), succeeded, server 6.516 s.
