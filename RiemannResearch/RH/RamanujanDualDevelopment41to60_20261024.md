@@ -99,3 +99,9 @@ Modules: `RiemannResearch/RH/ParetoMellinSourceMetric.lean`, `RiemannResearch/RH
 ParetoMellinInnovationRemainder splits the complete old Mellin integral remainder into the exact one-point complex innovation gain and full new remainder, with strict improvement precisely for nonzero innovation. RamanujanOffzeroInnovation supplies actual arbitrary-probe packet and competitor identities, preserving signed arithmetic source-correction polarization and the complete Gram excess, including the regularized point one.
 
 Modules: `RiemannResearch/RH/ParetoMellinInnovationRemainder.lean`, `RiemannResearch/RH/RamanujanOffzeroInnovation.lean`.
+
+## Transfer 57
+
+QRamanujanMellinCertificates develops Mellin signatures and optimized arbitrary-probe certificates for the genuine Q inverse-Gram optimizer. The exact identities retain the full Radon-Nikodym metric correction, signed arithmetic source correction, complete Mellin integral and every Q competitor's Gram excess; sharp correction-metric floors and actual-zero product bounds follow.
+
+Modules: `RiemannResearch/RH/QRamanujanMellinCertificates.lean`.

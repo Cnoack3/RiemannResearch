@@ -34,6 +34,8 @@
 
 56. Established: ParetoMellinInnovationRemainder splits the complete old Mellin integral remainder into the exact one-point complex innovation gain and full new remainder, with strict improvement precisely for nonzero innovation. RamanujanOffzeroInnovation supplies actual arbitrary-probe packet and competitor identities, preserving signed arithmetic source-correction polarization and the complete Gram excess, including the regularized point one.
 
+57. Established: QRamanujanMellinCertificates develops Mellin signatures and optimized arbitrary-probe certificates for the genuine Q inverse-Gram optimizer. The exact identities retain the full Radon-Nikodym metric correction, signed arithmetic source correction, complete Mellin integral and every Q competitor's Gram excess; sharp correction-metric floors and actual-zero product bounds follow.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.
