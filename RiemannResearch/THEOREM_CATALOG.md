@@ -82,6 +82,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 99. Established: Construct arbitrary finite joint Q observation laws containing the normalized target, retain explicit probe geometry, and prove target-vacancy/limit-occupation/full-hole-energy RH equivalences with the open Baez–Duarte converse stated.
 
+100. Established: Exact Schur inclusion conditioning and Q target vacancy = canonical defect + full source capacity; moving-event RH iff from uniform positive head mass, and an unconditional full-defect limit for fixed legal heads yielding a stronger RH iff without probability/rank assumptions.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.
