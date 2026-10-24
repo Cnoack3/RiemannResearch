@@ -1,5 +1,30 @@
 # Theorem catalog
 
+## 2026-10-24: spectral chord bounds and positive-contraction dependencies
+
+Established finite-dimensional results (no RH hypothesis):
+- `LinearAlgebra/PositiveContractionSpectrum.lean` now owns
+  `Matrix.PosSemidef.eigenvalues_le_one` and `eigenvalues_mem_Icc`;
+  the declarations were moved from the probability layer without aliases.
+- `LinearAlgebra/DeterminantTraceBounds.lean`:
+  `trace_chord_le_log`, `logChordGap_nonneg`, `logChordGap_endpoints`,
+  `prod_eq_exp_trace_chord_add_gap`, `exp_trace_chord_le_prod`,
+  `exp_neg_defect_div_le_exp_trace_chord`,
+  `Matrix.PosSemidef.det_eq_exp_trace_chord_add_gap`,
+  `Matrix.PosSemidef.exp_trace_chord_le_det`.
+  For eigenvalues in [epsilon,1], 0<epsilon<1, the determinant is
+  exp(trace(I-A)/(1-epsilon)*log(epsilon) + sum of nonnegative logChordGap).
+- `RH/QRamanujanDPPTraceBounds.lean`:
+  `headMass_eq_exp_trace_chord_add_gap`, `headMass_chord_lower_bound`,
+  `conditionedVacancy_le_chord`, using the actual complete-Q stage.
+
+Open obligations remain: arithmetic spectral/whole-span estimates for a
+specified growing family, target vacancy decay, and the explicit
+RH-to-Baez-Duarte provider in the existing conditional reductions.
+Details: `RH/QRamanujanSpectralChordAudit20261024.md`.
+
+
+
 ## Q conditioning trace and angle bounds — 24 October 2026
 
 Established finite results: `DeterminantalInclusionBounds` proves the finite DPP union lower bound and determinant/trace corollary. `DeterminantTraceBounds` proves exact spectral trace defect, exponential determinant bounds, determinant domination by each eigenvalue, and the varying-size equivalence between positive mass and bounded trace plus a spectral gap.

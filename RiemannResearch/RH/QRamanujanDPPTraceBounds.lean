@@ -183,6 +183,45 @@ theorem headMass_exp_upper_bound (e : Option ι → QHilbert)
   rw [headLoss_eq_trace_defect e he n, headMass_eq_gramDet]
   exact (headGram_posSemidef e n).det_le_exp_neg_trace_defect
 
+
+/-- Exact actual-Q mass identity, retaining every spectral chord remainder. -/
+theorem headMass_eq_exp_trace_chord_add_gap (e : Option ι → QHilbert)
+    (he : ∀ i j, inner ℝ (e i) (e j) = if i = j then 1 else 0) (n : ℕ)
+    {ε : ℝ} (hε : 0 < ε)
+    (hgap : ∀ i, ε ≤ (headGram_posSemidef e n).isHermitian.eigenvalues i) :
+    headMass e he n = Real.exp (headLoss e n / (1 - ε) * Real.log ε +
+      ∑ i, RiemannResearch.LinearAlgebra.DeterminantTrace.logChordGap
+        ε ((headGram_posSemidef e n).isHermitian.eigenvalues i)) := by
+  rw [headLoss_eq_trace_defect e he n, headMass_eq_gramDet]
+  exact (headGram_posSemidef e n).det_eq_exp_trace_chord_add_gap hε hgap
+
+/-- The sharper gap/trace lower bound for genuine Q conditioning mass. -/
+theorem headMass_chord_lower_bound (e : Option ι → QHilbert)
+    (he : ∀ i j, inner ℝ (e i) (e j) = if i = j then 1 else 0) (n : ℕ)
+    {ε : ℝ} (hε : 0 < ε) (hε1 : ε < 1)
+    (hgap : ∀ i, ε ≤ (headGram_posSemidef e n).isHermitian.eigenvalues i) :
+    Real.exp (headLoss e n / (1 - ε) * Real.log ε) ≤ headMass e he n := by
+  rw [headLoss_eq_trace_defect e he n, headMass_eq_gramDet]
+  exact (headGram_posSemidef e n).exp_trace_chord_le_det
+    (headDefect_posSemidef e he n) hε hε1 hgap
+
+/-- Explicit conditioning amplification with the improved mass constant. -/
+theorem conditionedVacancy_le_chord (e : Option ι → QHilbert)
+    (he : ∀ i j, inner ℝ (e i) (e j) = if i = j then 1 else 0)
+    (ht : e none = qOne) (n : ℕ) {ε : ℝ} (hε : 0 < ε) (hε1 : ε < 1)
+    (hgap : ∀ i, ε ≤ (headGram_posSemidef e n).isHermitian.eigenvalues i) :
+    conditionedVacancy e he n ≤
+      Real.exp (-(headLoss e n / (1 - ε) * Real.log ε)) * packetError n := by
+  have hm := headMass_chord_lower_bound e he n hε hε1 hgap
+  have hi := projectedHead_independent_of_headMass_pos e he n
+    ((Real.exp_pos _).trans_le hm)
+  calc
+    conditionedVacancy e he n ≤ packetError n / headMass e he n :=
+      (conditionedVacancy_bounds e he ht n hi).2
+    _ ≤ packetError n / Real.exp (headLoss e n / (1 - ε) * Real.log ε) :=
+      div_le_div_of_nonneg_left (packetError_pos n).le (Real.exp_pos _) hm
+    _ = _ := by rw [div_eq_mul_inv, ← Real.exp_neg]; ring
+
 theorem headMass_trace_gap_iff
     {α : Type*} {l : Filter α} (m N : α → ℕ)
     (e : ∀ a, Option (Fin (m a)) → QHilbert)

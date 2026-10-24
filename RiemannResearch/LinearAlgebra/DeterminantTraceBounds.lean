@@ -1,6 +1,7 @@
 import Mathlib.Order.Filter.Basic
 import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
-import RiemannResearch.Probability.DeterminantalSpectralCount
+import RiemannResearch.LinearAlgebra.PositiveContractionSpectrum
+import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic.FieldSimp
@@ -68,6 +69,80 @@ theorem prod_le_exp_neg_defect {ι : Type*} [Fintype ι]
     have h := Real.add_one_le_exp (x i - 1)
     linarith
 
+
+/-- Concavity gives the sharp chord below logarithm on the spectral interval. -/
+theorem trace_chord_le_log {ε x : ℝ} (hε : 0 < ε) (hε1 : ε < 1)
+    (hx : ε ≤ x) (hx1 : x ≤ 1) :
+    (1 - x) / (1 - ε) * Real.log ε ≤ Real.log x := by
+  have hd : 0 < 1 - ε := sub_pos.mpr hε1
+  have ha : 0 ≤ (1 - x) / (1 - ε) :=
+    div_nonneg (sub_nonneg.mpr hx1) hd.le
+  have hb : 0 ≤ (x - ε) / (1 - ε) :=
+    div_nonneg (sub_nonneg.mpr hx) hd.le
+  have hab : (1 - x) / (1 - ε) + (x - ε) / (1 - ε) = 1 := by
+    field_simp
+    ring
+  have h := strictConcaveOn_log_Ioi.concaveOn.2
+    hε (show (0 : ℝ) < 1 from zero_lt_one) ha hb hab
+  have he : (1 - x) / (1 - ε) * ε + (x - ε) / (1 - ε) * 1 = x := by
+    field_simp
+    ring
+  simpa only [smul_eq_mul, Real.log_one, mul_zero, add_zero, he] using h
+
+/-- The complete nonnegative remainder of the logarithmic chord bound. -/
+def logChordGap (ε x : ℝ) : ℝ :=
+  Real.log x - (1 - x) / (1 - ε) * Real.log ε
+
+theorem logChordGap_nonneg {ε x : ℝ} (hε : 0 < ε) (hε1 : ε < 1)
+    (hx : ε ≤ x) (hx1 : x ≤ 1) : 0 ≤ logChordGap ε x :=
+  sub_nonneg.mpr (trace_chord_le_log hε hε1 hx hx1)
+
+theorem logChordGap_endpoints {ε : ℝ} (hε1 : ε < 1) :
+    logChordGap ε ε = 0 ∧ logChordGap ε 1 = 0 := by
+  simp [logChordGap, ne_of_gt (sub_pos.mpr hε1)]
+
+/-- Exact product identity: the full chord remainder is retained in the exponent. -/
+theorem prod_eq_exp_trace_chord_add_gap {ι : Type*} [Fintype ι]
+    (x : ι → ℝ) {ε : ℝ} (hε : 0 < ε) (hx : ∀ i, ε ≤ x i) :
+    (∏ i, x i) =
+      Real.exp ((∑ i, (1 - x i)) / (1 - ε) * Real.log ε +
+        ∑ i, logChordGap ε (x i)) := by
+  have hs : (∑ i, (1 - x i)) / (1 - ε) * Real.log ε =
+      ∑ i, ((1 - x i) / (1 - ε) * Real.log ε) := by
+    rw [Finset.sum_div, Finset.sum_mul]
+  have he : (∑ i, (1 - x i)) / (1 - ε) * Real.log ε +
+      ∑ i, logChordGap ε (x i) = ∑ i, Real.log (x i) := by
+    rw [hs]
+    simp only [logChordGap, Finset.sum_sub_distrib]
+    ring
+  rw [he, Real.exp_sum]
+  apply Finset.prod_congr rfl
+  intro i _
+  exact (Real.exp_log (hε.trans_le (hx i))).symm
+
+/-- Sharp dimension-free exponential improvement of the earlier reciprocal-gap bound. -/
+theorem exp_trace_chord_le_prod {ι : Type*} [Fintype ι]
+    (x : ι → ℝ) {ε : ℝ} (hε : 0 < ε) (hε1 : ε < 1)
+    (hx : ∀ i, ε ≤ x i) (hx1 : ∀ i, x i ≤ 1) :
+    Real.exp ((∑ i, (1 - x i)) / (1 - ε) * Real.log ε) ≤ ∏ i, x i := by
+  rw [prod_eq_exp_trace_chord_add_gap x hε hx]
+  apply Real.exp_le_exp.mpr
+  exact le_add_of_nonneg_right
+    (Finset.sum_nonneg (fun i _ => logChordGap_nonneg hε hε1 (hx i) (hx1 i)))
+
+/-- This compares the two lower bounds without hiding the gap-dependent constant. -/
+theorem exp_neg_defect_div_le_exp_trace_chord {ε τ : ℝ}
+    (hε : 0 < ε) (hε1 : ε < 1) (hτ : 0 ≤ τ) :
+    Real.exp (-τ / ε) ≤ Real.exp (τ / (1 - ε) * Real.log ε) := by
+  apply Real.exp_le_exp.mpr
+  have hlog := Real.one_sub_inv_le_log_of_pos hε
+  have hid : τ / (1 - ε) * (1 - ε⁻¹) = -τ / ε := by
+    field_simp [ne_of_gt hε, ne_of_gt (sub_pos.mpr hε1)]
+    ring
+  rw [← hid]
+  exact mul_le_mul_of_nonneg_left hlog
+    (div_nonneg hτ (sub_pos.mpr hε1).le)
+
 end RiemannResearch.LinearAlgebra.DeterminantTrace
 
 namespace Matrix
@@ -95,6 +170,28 @@ theorem PosSemidef.det_le_exp_neg_trace_defect (hA : A.PosSemidef) :
   rw [hA.isHermitian.trace_defect_eq_sum, hA.isHermitian.det_eq_prod_eigenvalues]
   exact RiemannResearch.LinearAlgebra.DeterminantTrace.prod_le_exp_neg_defect
     _ hA.eigenvalues_nonneg
+
+
+/-- The determinant equals the chord contribution times its complete spectral remainder. -/
+theorem PosSemidef.det_eq_exp_trace_chord_add_gap
+    (hA : A.PosSemidef) {ε : ℝ} (hε : 0 < ε)
+    (hgap : ∀ i, ε ≤ hA.isHermitian.eigenvalues i) :
+    A.det = Real.exp ((1 - A).trace / (1 - ε) * Real.log ε +
+      ∑ i, RiemannResearch.LinearAlgebra.DeterminantTrace.logChordGap
+        ε (hA.isHermitian.eigenvalues i)) := by
+  rw [hA.isHermitian.trace_defect_eq_sum, hA.isHermitian.det_eq_prod_eigenvalues]
+  exact RiemannResearch.LinearAlgebra.DeterminantTrace.prod_eq_exp_trace_chord_add_gap
+    _ hε hgap
+
+/-- The logarithmic chord gives a sharper spectral-gap lower bound. -/
+theorem PosSemidef.exp_trace_chord_le_det
+    (hA : A.PosSemidef) (hI : (1 - A).PosSemidef)
+    {ε : ℝ} (hε : 0 < ε) (hε1 : ε < 1)
+    (hgap : ∀ i, ε ≤ hA.isHermitian.eigenvalues i) :
+    Real.exp ((1 - A).trace / (1 - ε) * Real.log ε) ≤ A.det := by
+  rw [hA.isHermitian.trace_defect_eq_sum, hA.isHermitian.det_eq_prod_eigenvalues]
+  exact RiemannResearch.LinearAlgebra.DeterminantTrace.exp_trace_chord_le_prod
+    _ hε hε1 hgap (hA.eigenvalues_le_one hI)
 
 /-- Uniformly positive determinant forces a bounded trace defect. -/
 theorem PosSemidef.trace_defect_le_neg_log_of_det_ge

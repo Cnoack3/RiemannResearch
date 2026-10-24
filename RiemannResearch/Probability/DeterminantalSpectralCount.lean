@@ -1,6 +1,6 @@
 import RiemannResearch.Probability.DeterminantalWindowGenerating
 import RiemannResearch.Probability.FiniteDeterminantalGenerating
-import Mathlib.Analysis.Matrix.PosDef
+import RiemannResearch.LinearAlgebra.PositiveContractionSpectrum
 
 /-!
 # Spectral factorization of finite-window determinantal counts
@@ -45,29 +45,6 @@ theorem IsHermitian.det_one_add_smul_eq_prod (hQ : Q.IsHermitian) (t : ℝ) :
     ← Matrix.mul_assoc, Unitary.coe_star_mul_self, Matrix.one_mul,
     Matrix.det_diagonal]
 
-/-- Every eigenvalue of a positive contraction is at most one. -/
-theorem PosSemidef.eigenvalues_le_one (hQ : Q.PosSemidef)
-    (hI : (1 - Q).PosSemidef) (i : ι) :
-    hQ.isHermitian.eigenvalues i ≤ 1 := by
-  let U := hQ.isHermitian.eigenvectorUnitary
-  let f := Unitary.conjStarAlgAut ℝ (Matrix ι ι ℝ) U
-  have hQ' : Q = f (Matrix.diagonal hQ.isHermitian.eigenvalues) := by
-    simpa [f, U, Function.comp_def] using hQ.isHermitian.spectral_theorem
-  have he : (1 : Matrix ι ι ℝ) - Q =
-      f (1 - Matrix.diagonal hQ.isHermitian.eigenvalues) := by
-    rw [map_sub, map_one, ← hQ']
-  rw [he] at hI
-  have hd : ((1 : Matrix ι ι ℝ) - Matrix.diagonal hQ.isHermitian.eigenvalues).PosSemidef := by
-    simpa only [f, Unitary.conjStarAlgAut_apply,
-      Unitary.isUnit_coe.posSemidef_star_right_conjugate_iff] using hI
-  have hn := hd.diag_nonneg (i := i)
-  simpa [sub_nonneg] using hn
-
-/-- The spectral parameters of a positive contraction are Bernoulli parameters. -/
-theorem PosSemidef.eigenvalues_mem_Icc (hQ : Q.PosSemidef)
-    (hI : (1 - Q).PosSemidef) (i : ι) :
-    hQ.isHermitian.eigenvalues i ∈ Set.Icc (0 : ℝ) 1 :=
-  ⟨hQ.eigenvalues_nonneg i, hQ.eigenvalues_le_one hI i⟩
 
 end Matrix
 

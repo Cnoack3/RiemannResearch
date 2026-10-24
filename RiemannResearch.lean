@@ -182,6 +182,7 @@ import RiemannResearch.RH.QRamanujanDPPTarget
 import RiemannResearch.Probability.DeterminantalConditioning
 import RiemannResearch.RH.QRamanujanDPPConditioning
 import RiemannResearch.Probability.DeterminantalInclusionBounds
+import RiemannResearch.LinearAlgebra.PositiveContractionSpectrum
 import RiemannResearch.LinearAlgebra.DeterminantTraceBounds
 import RiemannResearch.Analysis.ProjectionConditioningBound
 import RiemannResearch.RH.QRamanujanDPPTraceBounds
