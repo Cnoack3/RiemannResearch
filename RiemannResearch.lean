@@ -63,6 +63,8 @@ import RiemannResearch.RH.ParetoMellinSchur
 import RiemannResearch.RH.RamanujanExactHeadFilterCriteria
 import RiemannResearch.LinearAlgebra.CauchyInverseProduct
 import RiemannResearch.RH.RamanujanMellinProduct
+import RiemannResearch.Analysis.NestedProjectionGram
+import RiemannResearch.RH.RamanujanMultipleCapacityLimits
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

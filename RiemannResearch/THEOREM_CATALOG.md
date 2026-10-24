@@ -1,5 +1,9 @@
 # Theorem catalog
 
+## Ramanujan dual transfers 31–40 — 23 October 2026
+
+31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.
+
 ## Ramanujan dual transfers 21–30 — 23 October 2026
 
 21. Established: FiniteGramMultipleConstraint gives the unique simultaneous affine optimizer with full inverse-source Gram cost and exact feasible completion. RamanujanMultipleConstraints proves automatic arithmetic constraint independence and determinant positivity for every finite selection of legal coordinates.
