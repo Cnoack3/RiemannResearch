@@ -143,6 +143,8 @@ import RiemannResearch.Analysis.MovingWeightedObservationEnergy
 import RiemannResearch.RH.RamanujanMovingWeights
 import RiemannResearch.Analysis.NoisyWeightedCoordinates
 import RiemannResearch.RH.RamanujanNoisyWeightedDefect
+import RiemannResearch.Analysis.CompactObservationMap
+import RiemannResearch.RH.RamanujanCompactCoordinates
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

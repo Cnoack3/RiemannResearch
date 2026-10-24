@@ -87,3 +87,9 @@ Modules: `RiemannResearch/Analysis/MovingWeightedObservationEnergy.lean`, `Riema
 Complete signed measurement-noise decomposition, sharp weighted cross bound and two-sided stability; arbitrary nonnegative moving weights preserve zero-convergence under vanishing full noise energy, with actual Pareto/Q saturation and conditional RH equivalents.
 
 Modules: `RiemannResearch/Analysis/NoisyWeightedCoordinates.lean`, `RiemannResearch/RH/RamanujanNoisyWeightedDefect.lean`.
+
+## Transfer 75
+
+Construct arbitrary-index compact weighted coefficient maps into l2 under only the weighted squared operator-norm moment; exact full tail energy, finite-rank operator-norm approximation, supported kernel, whole-space P/Q injectivity, uniform canonical residual approximation, and complete-vector RH criteria.
+
+Modules: `RiemannResearch/Analysis/CompactObservationMap.lean`, `RiemannResearch/RH/RamanujanCompactCoordinates.lean`.
