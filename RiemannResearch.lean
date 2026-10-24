@@ -122,6 +122,8 @@ import RiemannResearch.Analysis.RegularizedDataGeometry
 import RiemannResearch.RH.RamanujanRegularizedData
 import RiemannResearch.Analysis.HardPenaltyGeometry
 import RiemannResearch.RH.RamanujanHardPenalty
+import RiemannResearch.Analysis.RegularizedPathAction
+import RiemannResearch.RH.RamanujanPenaltyPath
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

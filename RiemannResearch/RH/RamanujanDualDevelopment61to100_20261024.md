@@ -21,3 +21,9 @@ Modules: `RiemannResearch/Analysis/RegularizedDataGeometry.lean`, `RiemannResear
 HardPenaltyGeometry constructs the actual hard Lagrange multiplier and proves signed soft/hard balance plus two exact multiplier-square completions. RamanujanHardPenalty transfers them to the genuine P/Q optimizers, with physical displacement bounds and fourth-power decay of squared coordinate mismatch, strengthening the earlier second-power hard-cost estimate. An explicit scalar quadratic model proves that the universal one-quarter displacement constant is optimal.
 
 Modules: `RiemannResearch/Analysis/HardPenaltyGeometry.lean`, `RiemannResearch/RH/RamanujanHardPenalty.lean`.
+
+## Transfer 64
+
+RegularizedPathAction identifies every decrease of mismatch with the complete physical-plus-observation action, proves an exact finite telescoping identity, unconditional summability and a full total-action formula. Actual P/Q penalty paths inherit these laws for arbitrary requests, and equal mismatch at any two penalties is equivalent to exactly the same coefficient optimizer.
+
+Modules: `RiemannResearch/Analysis/RegularizedPathAction.lean`, `RiemannResearch/RH/RamanujanPenaltyPath.lean`.
