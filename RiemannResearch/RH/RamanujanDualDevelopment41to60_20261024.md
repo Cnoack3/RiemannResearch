@@ -111,3 +111,9 @@ Modules: `RiemannResearch/RH/QRamanujanMellinCertificates.lean`.
 ContractiveCountBudget gives exact threshold-count budgets with individual logarithmic slack and unused product mass. RamanujanZeroCountBounds derives distinct-zero logarithmic and multiplicative count bounds at the positive limiting packet mass, quantitative bounded-window counts, and exact exterior-disk reformulations of finite packet zero certificates. No multiplicity assertion or identification of captured mass with the zero product is made.
 
 Modules: `RiemannResearch/Analysis/ContractiveCountBudget.lean`, `RiemannResearch/RH/RamanujanZeroCountBounds.lean`.
+
+## Transfer 59
+
+RamanujanConditionedZeroBudget factors an actual zero head from a disjoint tail and replaces the global captured-mass budget by the stronger remaining mass divided by the head product. Exact packet and limiting-mass logarithmic identities retain all individual threshold slack and unused mass; conditioned finite counts and exterior-disk exclusions follow without identifying any zero product with captured mass.
+
+Modules: `RiemannResearch/RH/RamanujanConditionedZeroBudget.lean`.
