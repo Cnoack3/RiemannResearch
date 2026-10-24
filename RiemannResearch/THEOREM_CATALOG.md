@@ -8,6 +8,8 @@
 
 43. Established: AffineObservationSensitivity identifies exact optimizer displacement with the full inverse-Gram metric on target perturbations, gives the all-real interpolation energy identity, strict convexity and a sharp residual norm radius. RamanujanTargetSensitivity applies these to actual finite and closed multiple-coefficient optimizers, including the exact finite-to-closed sensitivity gap and its monotone improvement under dictionary enlargement.
 
+44. Established: FiniteGramDeterminantCertificates identifies bordered determinant signs with attained norm-budget feasibility and normalized determinants with complete optimizer-displacement energy. RamanujanConstraintDeterminants gives exact finite and closed legal error-budget tests for simultaneous coefficient constraints, including zero-determinant uniqueness and the full source determinant polynomial for every real update parameter.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.

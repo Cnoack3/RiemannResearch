@@ -21,3 +21,9 @@ Modules: `RiemannResearch/Analysis/AffineConstraintBlock.lean`, `RiemannResearch
 AffineObservationSensitivity identifies exact optimizer displacement with the full inverse-Gram metric on target perturbations, gives the all-real interpolation energy identity, strict convexity and a sharp residual norm radius. RamanujanTargetSensitivity applies these to actual finite and closed multiple-coefficient optimizers, including the exact finite-to-closed sensitivity gap and its monotone improvement under dictionary enlargement.
 
 Modules: `RiemannResearch/Analysis/AffineObservationSensitivity.lean`, `RiemannResearch/RH/RamanujanTargetSensitivity.lean`.
+
+## Transfer 44
+
+FiniteGramDeterminantCertificates identifies bordered determinant signs with attained norm-budget feasibility and normalized determinants with complete optimizer-displacement energy. RamanujanConstraintDeterminants gives exact finite and closed legal error-budget tests for simultaneous coefficient constraints, including zero-determinant uniqueness and the full source determinant polynomial for every real update parameter.
+
+Modules: `RiemannResearch/Analysis/FiniteGramDeterminantCertificates.lean`, `RiemannResearch/RH/RamanujanConstraintDeterminants.lean`.
