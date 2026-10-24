@@ -105,3 +105,9 @@ Modules: `RiemannResearch/Analysis/SignedInverseTails.lean`, `RiemannResearch/RH
 Exact finite Mellin reindexing preserves inverse coefficients, optimized kernels, capacities and complete remainders. Full Q enlargement certificates retain the entire signed Gram gain, Mellin integral remainder, measure correction and competitor excess for arbitrary finite probe enlargements, without zero hypotheses.
 
 Modules: `RiemannResearch/RH/ParetoMellinReindexing.lean`, `RiemannResearch/RH/QRamanujanMellinEnlargement.lean`.
+
+## Transfer 78
+
+The full half-plane pair identity gives an exact pseudohyperbolic defect, strict contraction of every nonempty screening product, a complete Mellin Gram-volume upper bound including singular node families, and an exact off-diagonal screened-kernel energy. These provide the geometric constants in the actual Ramanujan probe certificates.
+
+Modules: `RiemannResearch/RH/ParetoMellinProbeGeometry.lean`.
