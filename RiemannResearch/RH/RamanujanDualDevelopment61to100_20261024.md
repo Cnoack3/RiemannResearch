@@ -201,3 +201,9 @@ Modules: `RiemannResearch/Analysis/ProjectionWalkSaturation.lean`, `RiemannResea
 Actual Q packet projection and complementary kernels, inverse-Gram matrices, positive contractions, and all principal determinant limits.
 
 Modules: `RiemannResearch/RH/QRamanujanDPPKernel.lean`.
+
+## Transfer 94
+
+Construct the actual complete Q countable DPP and limit law; exact occupations, vacancies, signed correlations, and finite-inclusion limits.
+
+Modules: `RiemannResearch/RH/QRamanujanDPPLaw.lean`.
