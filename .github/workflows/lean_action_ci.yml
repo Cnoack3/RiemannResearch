@@ -1,8 +1,8 @@
 name: Lean Action CI
 
+# Verification and publication run on the Lean server (see AGENTS.md).
+# Keep hosted CI opt-in while its runner quota is unavailable.
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 
 permissions:
