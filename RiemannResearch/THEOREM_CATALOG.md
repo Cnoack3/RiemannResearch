@@ -24,6 +24,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 70. Established: WeightedObservationPairing constructs the complete signed bilinear series for arbitrary admissible observation weights, proves polarization, sharp Cauchy–Schwarz, the exact all-real affine interpolation law and its kernel. RamanujanWeightedPairing specializes these to actual Pareto/Q conductor defects, retaining their complete signed mixed coefficient series and exact inter-stage/interpolation energies.
 
+71. Established: WeightedCoordinateTopology proves that complete positive admissible observation-energy decay forces every coordinate limit without boundedness, and that the converse holds on eventually bounded physical families along arbitrary filters. All positive admissible weights induce the same bounded-set convergence without comparison constants. RamanujanCoordinateTopology gives the actual Pareto/Q conductor-coordinate equivalences for arbitrary physical families, not only canonical approximants.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.

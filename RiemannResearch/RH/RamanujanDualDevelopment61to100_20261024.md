@@ -63,3 +63,9 @@ Modules: `RiemannResearch/Analysis/WeightedCoordinateEnergy.lean`, `RiemannResea
 WeightedObservationPairing constructs the complete signed bilinear series for arbitrary admissible observation weights, proves polarization, sharp Cauchy–Schwarz, the exact all-real affine interpolation law and its kernel. RamanujanWeightedPairing specializes these to actual Pareto/Q conductor defects, retaining their complete signed mixed coefficient series and exact inter-stage/interpolation energies.
 
 Modules: `RiemannResearch/Analysis/WeightedObservationPairing.lean`, `RiemannResearch/RH/RamanujanWeightedPairing.lean`.
+
+## Transfer 71
+
+WeightedCoordinateTopology proves that complete positive admissible observation-energy decay forces every coordinate limit without boundedness, and that the converse holds on eventually bounded physical families along arbitrary filters. All positive admissible weights induce the same bounded-set convergence without comparison constants. RamanujanCoordinateTopology gives the actual Pareto/Q conductor-coordinate equivalences for arbitrary physical families, not only canonical approximants.
+
+Modules: `RiemannResearch/Analysis/WeightedCoordinateTopology.lean`, `RiemannResearch/RH/RamanujanCoordinateTopology.lean`.

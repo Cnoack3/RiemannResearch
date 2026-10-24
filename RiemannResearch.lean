@@ -135,6 +135,8 @@ import RiemannResearch.RH.RamanujanRegularizationCriteria
 import RiemannResearch.RH.RamanujanAdmissibleWeights
 import RiemannResearch.Analysis.WeightedObservationPairing
 import RiemannResearch.RH.RamanujanWeightedPairing
+import RiemannResearch.Analysis.WeightedCoordinateTopology
+import RiemannResearch.RH.RamanujanCoordinateTopology
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
