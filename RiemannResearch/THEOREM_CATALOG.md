@@ -18,6 +18,8 @@
 
 48. Established: HilbertWeakNorm retains the exact signed norm-target-pairing identity and proves strong convergence from weak convergence and a matching one-sided asymptotic norm bound, with weak closed-subspace preservation. RamanujanWeakConvergence proves arbitrary-filter eventually bounded physical pointwise families converge weakly in the actual Pareto and Q spaces by complete-tail estimates; the matching norm bound upgrades them to strong convergence.
 
+49. Established: HilbertTailConvexification proves that every filter-large subset of a weakly convergent Hilbert family has finite convex combinations arbitrarily close in norm to its limit. RamanujanConvexification applies this to bounded physically pointwise-convergent Pareto/Q families and actual legal packet families, retaining nonnegative finitely supported convex coefficients, their sum-one normalization, tail support and the complete physical approximation norm.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.

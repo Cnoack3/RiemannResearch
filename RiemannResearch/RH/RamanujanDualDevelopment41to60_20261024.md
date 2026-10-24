@@ -51,3 +51,9 @@ Modules: `RiemannResearch/Analysis/NonnegativeSeriesTightness.lean`, `RiemannRes
 HilbertWeakNorm retains the exact signed norm-target-pairing identity and proves strong convergence from weak convergence and a matching one-sided asymptotic norm bound, with weak closed-subspace preservation. RamanujanWeakConvergence proves arbitrary-filter eventually bounded physical pointwise families converge weakly in the actual Pareto and Q spaces by complete-tail estimates; the matching norm bound upgrades them to strong convergence.
 
 Modules: `RiemannResearch/Analysis/HilbertWeakNorm.lean`, `RiemannResearch/RH/RamanujanWeakConvergence.lean`.
+
+## Transfer 49
+
+HilbertTailConvexification proves that every filter-large subset of a weakly convergent Hilbert family has finite convex combinations arbitrarily close in norm to its limit. RamanujanConvexification applies this to bounded physically pointwise-convergent Pareto/Q families and actual legal packet families, retaining nonnegative finitely supported convex coefficients, their sum-one normalization, tail support and the complete physical approximation norm.
+
+Modules: `RiemannResearch/Analysis/HilbertTailConvexification.lean`, `RiemannResearch/RH/RamanujanConvexification.lean`.
