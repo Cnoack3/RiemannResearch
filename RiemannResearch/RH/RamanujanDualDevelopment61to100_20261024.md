@@ -171,3 +171,9 @@ Modules: `RiemannResearch/Analysis/ProjectionWalkComparison.lean`, `RiemannResea
 Target perturbations split exactly between fitted and residual components, with the full signed residual cross term and a uniform energy sensitivity bound. Arbitrary cofinal dictionary stages and strongly convergent sources commute without any coupled rates; actual Pareto/Q moving-constant approximants converge to their visited-span target projections.
 
 Modules: `RiemannResearch/Analysis/ProjectionWalkMovingTargets.lean`, `RiemannResearch/RH/RamanujanMovingTargets.lean`.
+
+## Transfer 89
+
+Exact target-specific adaptive completeness: residual correlations with every dictionary atom tend to zero iff the visited projection equals the full legal projection, equivalently iff the missed-span error vanishes. Actual Pareto/Q packet versions require neither exhaustive draws nor equality of the visited and full closed spans.
+
+Modules: `RiemannResearch/Analysis/ProjectionCorrelationCompleteness.lean`, `RiemannResearch/RH/RamanujanCorrelationCompleteness.lean`.
