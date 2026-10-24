@@ -50,6 +50,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 83. Established: Uniform physical convergence survives arbitrarily changing finite Mellin families. For every independent cofinal probe depth, capacities and full integral remainders converge to the complete captured/unobserved energies, for both Pareto and genuine Q approximants. The exact vanishing criterion retains both terms and imposes no zero-test completeness hypothesis.
 
+84. Established: Actual canonical Pareto/Q residuals split into captured Mellin energy plus the full unobserved integral energy, retaining Q metric correction. Independently cofinal packet and probe stages give a complete two-part RH iff, with the open RH-to-Baez-Duarte direction explicit. Exact limiting zero signatures identify the previous zero-product residual gap with unobserved energy, and give its full corrected genuine Q counterpart.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.

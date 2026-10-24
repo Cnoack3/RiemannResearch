@@ -141,3 +141,9 @@ Modules: `RiemannResearch/RH/ParetoMellinCapacityStability.lean`.
 Uniform physical convergence survives arbitrarily changing finite Mellin families. For every independent cofinal probe depth, capacities and full integral remainders converge to the complete captured/unobserved energies, for both Pareto and genuine Q approximants. The exact vanishing criterion retains both terms and imposes no zero-test completeness hypothesis.
 
 Modules: `RiemannResearch/RH/RamanujanMellinMovingProbes.lean`.
+
+## Transfer 84
+
+Actual canonical Pareto/Q residuals split into captured Mellin energy plus the full unobserved integral energy, retaining Q metric correction. Independently cofinal packet and probe stages give a complete two-part RH iff, with the open RH-to-Baez-Duarte direction explicit. Exact limiting zero signatures identify the previous zero-product residual gap with unobserved energy, and give its full corrected genuine Q counterpart.
+
+Modules: `RiemannResearch/RH/RamanujanMellinExhaustion.lean`.
