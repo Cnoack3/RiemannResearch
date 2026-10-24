@@ -195,3 +195,9 @@ Modules: `RiemannResearch/Analysis/ProjectionWalkInexact.lean`, `RiemannResearch
 Arbitrary visited-walk norm convergence, captured norm saturation, and total innovation energy saturation are exactly equivalent. Actual adaptive Pareto/Q walks with vanishing atom correlations acquire RH iff chains including every signed Mobius coordinate; inexact legal iterates satisfy RH plus solver-defect iff criteria. Successful walks imply RH unconditionally; all converses retain explicit open Baez-Duarte provider.
 
 Modules: `RiemannResearch/Analysis/ProjectionWalkSaturation.lean`, `RiemannResearch/RH/RamanujanAdaptiveRH.lean`.
+
+## Transfer 93
+
+Actual Q packet projection and complementary kernels, inverse-Gram matrices, positive contractions, and all principal determinant limits.
+
+Modules: `RiemannResearch/RH/QRamanujanDPPKernel.lean`.

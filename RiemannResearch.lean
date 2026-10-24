@@ -171,6 +171,7 @@ import RiemannResearch.Analysis.ProjectionWalkInexact
 import RiemannResearch.RH.RamanujanInexactWalk
 import RiemannResearch.Analysis.ProjectionWalkSaturation
 import RiemannResearch.RH.RamanujanAdaptiveRH
+import RiemannResearch.RH.QRamanujanDPPKernel
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
