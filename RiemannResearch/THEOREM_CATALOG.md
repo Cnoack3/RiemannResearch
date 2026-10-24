@@ -30,6 +30,8 @@
 
 54. Established: ParetoMellinGramDeterminant evaluates the full complex Mellin Gram determinant as an exact squared-Vandermonde quotient and equivalent pairwise product, without assuming distinct nodes. Repeated nodes automatically produce zero; the determinant is real and nonnegative, and positive exactly for an injective family. The finite-order formula extends to arbitrary finite index types through enumeration.
 
+55. Established: ParetoMellinSourceMetric identifies the full complex inverse-source pairing with its continuous mixed kernel integral and proves sharp capacity Cauchy-Schwarz and reverse-triangle bounds. RamanujanSourceMetric converts complete arithmetic correction-capacity budgets into robust approximate-zero error floors and contrapositive certificates, retaining the exact complex source geometry before estimating it.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.

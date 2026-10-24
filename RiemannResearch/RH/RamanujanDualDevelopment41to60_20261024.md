@@ -87,3 +87,9 @@ Modules: `RiemannResearch/RH/ParetoMellinScreenedKernel.lean`.
 ParetoMellinGramDeterminant evaluates the full complex Mellin Gram determinant as an exact squared-Vandermonde quotient and equivalent pairwise product, without assuming distinct nodes. Repeated nodes automatically produce zero; the determinant is real and nonnegative, and positive exactly for an injective family. The finite-order formula extends to arbitrary finite index types through enumeration.
 
 Modules: `RiemannResearch/RH/ParetoMellinGramDeterminant.lean`.
+
+## Transfer 55
+
+ParetoMellinSourceMetric identifies the full complex inverse-source pairing with its continuous mixed kernel integral and proves sharp capacity Cauchy-Schwarz and reverse-triangle bounds. RamanujanSourceMetric converts complete arithmetic correction-capacity budgets into robust approximate-zero error floors and contrapositive certificates, retaining the exact complex source geometry before estimating it.
+
+Modules: `RiemannResearch/RH/ParetoMellinSourceMetric.lean`, `RiemannResearch/RH/RamanujanSourceMetric.lean`.
