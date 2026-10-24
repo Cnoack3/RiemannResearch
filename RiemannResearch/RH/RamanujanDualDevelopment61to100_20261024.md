@@ -135,3 +135,9 @@ Modules: `RiemannResearch/RH/RamanujanMellinInfiniteInnovations.lean`.
 Sharp physical norm contraction for square-root Mellin capacity and probe-independent local Lipschitz stability for finite and infinite capacities. The genuine Q perturbation bound retains the exact positive measure correction, and no probe-separation constant or completeness hypothesis is imposed.
 
 Modules: `RiemannResearch/RH/ParetoMellinCapacityStability.lean`.
+
+## Transfer 83
+
+Uniform physical convergence survives arbitrarily changing finite Mellin families. For every independent cofinal probe depth, capacities and full integral remainders converge to the complete captured/unobserved energies, for both Pareto and genuine Q approximants. The exact vanishing criterion retains both terms and imposes no zero-test completeness hypothesis.
+
+Modules: `RiemannResearch/RH/RamanujanMellinMovingProbes.lean`.

@@ -154,6 +154,7 @@ import RiemannResearch.RH.RamanujanMellinScreenedResidual
 import RiemannResearch.RH.RamanujanMellinInnovationSeries
 import RiemannResearch.RH.RamanujanMellinInfiniteInnovations
 import RiemannResearch.RH.ParetoMellinCapacityStability
+import RiemannResearch.RH.RamanujanMellinMovingProbes
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

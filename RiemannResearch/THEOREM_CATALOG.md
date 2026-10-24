@@ -48,6 +48,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 82. Established: Sharp physical norm contraction for square-root Mellin capacity and probe-independent local Lipschitz stability for finite and infinite capacities. The genuine Q perturbation bound retains the exact positive measure correction, and no probe-separation constant or completeness hypothesis is imposed.
 
+83. Established: Uniform physical convergence survives arbitrarily changing finite Mellin families. For every independent cofinal probe depth, capacities and full integral remainders converge to the complete captured/unobserved energies, for both Pareto and genuine Q approximants. The exact vanishing criterion retains both terms and imposes no zero-test completeness hypothesis.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.
