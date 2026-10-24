@@ -27,3 +27,9 @@ Modules: `RiemannResearch/Analysis/AffineObservationSensitivity.lean`, `RiemannR
 FiniteGramDeterminantCertificates identifies bordered determinant signs with attained norm-budget feasibility and normalized determinants with complete optimizer-displacement energy. RamanujanConstraintDeterminants gives exact finite and closed legal error-budget tests for simultaneous coefficient constraints, including zero-determinant uniqueness and the full source determinant polynomial for every real update parameter.
 
 Modules: `RiemannResearch/Analysis/FiniteGramDeterminantCertificates.lean`, `RiemannResearch/RH/RamanujanConstraintDeterminants.lean`.
+
+## Transfer 45
+
+FiniteConstrainedMetricComparison gives exact same-constraint optimizer identities in two Hilbert metrics, preserving the signed measure correction and both displacement squares. QRamanujanMultipleConstraints constructs the actual Q multiple-coordinate optimizer with automatic positive source Gram, full completion and uniqueness, then proves exact Pareto/Q correction balance, equality iff all optimizer coefficients agree, two-sided error bounds and equivalence of vanishing constrained errors under arbitrary moving stages and targets.
+
+Modules: `RiemannResearch/Analysis/FiniteConstrainedMetricComparison.lean`, `RiemannResearch/RH/QRamanujanMultipleConstraints.lean`.

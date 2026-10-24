@@ -91,6 +91,8 @@ import RiemannResearch.Analysis.AffineObservationSensitivity
 import RiemannResearch.RH.RamanujanTargetSensitivity
 import RiemannResearch.Analysis.FiniteGramDeterminantCertificates
 import RiemannResearch.RH.RamanujanConstraintDeterminants
+import RiemannResearch.Analysis.FiniteConstrainedMetricComparison
+import RiemannResearch.RH.QRamanujanMultipleConstraints
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
