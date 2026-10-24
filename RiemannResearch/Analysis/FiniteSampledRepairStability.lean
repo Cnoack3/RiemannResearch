@@ -5,6 +5,7 @@ Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.FiniteHilbertGram
 import RiemannResearch.Analysis.FiniteConstrainedProjection
+import RiemannResearch.Analysis.FiniteFeasibleGramRepair
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
 
@@ -194,5 +195,109 @@ theorem projected_sampled_repair_error_completion
   exact result
 
 end ProjectionApplication
+
+end RiemannResearch.Analysis.FiniteSampledRepairStability
+
+noncomputable section
+open scoped BigOperators
+
+namespace RiemannResearch.Analysis.FiniteSampledRepairStability
+
+open FiniteHilbertGram FiniteConstrainedProjection FiniteFeasibleGramRepair
+
+variable {ι κ H : Type*} [Fintype ι] [Fintype κ]
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+
+omit [Fintype κ] in
+/-- A single feasible vector supplies a minimum-energy normal correction for
+ every sampled baseline, including dependent observation rows. The exact
+ Pythagorean identity records the part of the sampling error removed by repair. -/
+theorem exists_sampled_normals_of_feasible (v : ι → H) (b : ι → ℝ)
+    (y : H) (hy : ∀ i, inner ℝ (v i) y = b i) :
+    ∃ d₀ : ι → ℝ,
+      (∀ i, inner ℝ (v i) (Fintype.linearCombination ℝ v d₀) = b i) ∧
+      ∀ e : H, ∃ d : ι → ℝ,
+        (∀ i, inner ℝ (v i) (e + Fintype.linearCombination ℝ v d) = b i) ∧
+        ‖e‖ ^ 2 =
+          ‖e + Fintype.linearCombination ℝ v d -
+            Fintype.linearCombination ℝ v d₀‖ ^ 2 +
+          ‖Fintype.linearCombination ℝ v d -
+            Fintype.linearCombination ℝ v d₀‖ ^ 2 := by
+  obtain ⟨d₀, h₀⟩ := exists_normal_of_feasible v b y hy
+  refine ⟨d₀, h₀, ?_⟩
+  intro e
+  obtain ⟨d, hd⟩ := exists_normal_of_feasible v
+    (fun i => b i - inner ℝ (v i) e) (y - e) (by
+      intro i
+      rw [inner_sub_right, hy i])
+  have hds : ∀ i, inner ℝ (v i)
+      (e + Fintype.linearCombination ℝ v d) = b i := by
+    intro i
+    rw [inner_add_right, hd i]
+    ring
+  exact ⟨d, hds, repair_distance_completion v b d₀ d e h₀ hds⟩
+
+/-- A finite legal exact-head interpolant is sufficient to construct the
+ normal corrections required for sampled repair. Neither observation-row
+ independence nor a supplied head-Gram inverse is required. -/
+theorem exists_projected_sampled_normals_of_feasible
+    {v : ι → H} (hv : LinearIndependent ℝ v) (h : κ → H)
+    (x : H) (cExact : ι → ℝ)
+    (hExact : ∀ i, inner ℝ (h i) (Fintype.linearCombination ℝ v cExact) =
+      inner ℝ (h i) x) :
+    ∃ d₀ : κ → ℝ,
+      (∀ i, inner ℝ (projectedRow hv h i)
+        (Fintype.linearCombination ℝ (projectedRow hv h) d₀) =
+          headMismatch hv h x i) ∧
+      ∀ c : ι → ℝ, ∃ d : κ → ℝ,
+        (∀ i, inner ℝ (h i)
+          (Fintype.linearCombination ℝ v c +
+            Fintype.linearCombination ℝ (projectedRow hv h) d) =
+              inner ℝ (h i) x) ∧
+        ‖Fintype.linearCombination ℝ v (c - inverseCoeff hv x)‖ ^ 2 =
+          ‖(Fintype.linearCombination ℝ v c +
+              Fintype.linearCombination ℝ (projectedRow hv h) d) -
+            (Fintype.linearCombination ℝ v (inverseCoeff hv x) +
+              Fintype.linearCombination ℝ (projectedRow hv h) d₀)‖ ^ 2 +
+          ‖Fintype.linearCombination ℝ (projectedRow hv h) d -
+            Fintype.linearCombination ℝ (projectedRow hv h) d₀‖ ^ 2 := by
+  have hy : ∀ i, inner ℝ (projectedRow hv h i)
+      (Fintype.linearCombination ℝ v (cExact - inverseCoeff hv x)) =
+        headMismatch hv h x i := by
+    intro i
+    rw [← projectedRow_pairing hv h (cExact - inverseCoeff hv x) i,
+      map_sub, inner_sub_right, hExact i]
+    simp only [headMismatch, projectionResidual, inner_sub_right]
+  obtain ⟨d₀, h₀, hsample⟩ := exists_sampled_normals_of_feasible
+    (projectedRow hv h) (headMismatch hv h x)
+    (Fintype.linearCombination ℝ v (cExact - inverseCoeff hv x)) hy
+  refine ⟨d₀, h₀, ?_⟩
+  intro c
+  obtain ⟨d, hd, he⟩ := hsample
+    (Fintype.linearCombination ℝ v (c - inverseCoeff hv x))
+  have hobs : ∀ i, inner ℝ (h i)
+      (Fintype.linearCombination ℝ v c +
+        Fintype.linearCombination ℝ (projectedRow hv h) d) =
+          inner ℝ (h i) x := by
+    intro i
+    have hi := hd i
+    rw [inner_add_right, ← projectedRow_pairing hv h (c - inverseCoeff hv x) i,
+      ← projectedRow_pairing_rowSynthesis hv h d i, map_sub,
+      inner_sub_right] at hi
+    simp only [headMismatch, projectionResidual, inner_sub_right] at hi
+    rw [inner_add_right]
+    linarith
+  refine ⟨d, hobs, ?_⟩
+  have hk :
+      Fintype.linearCombination ℝ v (c - inverseCoeff hv x) +
+        Fintype.linearCombination ℝ (projectedRow hv h) d -
+        Fintype.linearCombination ℝ (projectedRow hv h) d₀ =
+      (Fintype.linearCombination ℝ v c +
+        Fintype.linearCombination ℝ (projectedRow hv h) d) -
+      (Fintype.linearCombination ℝ v (inverseCoeff hv x) +
+        Fintype.linearCombination ℝ (projectedRow hv h) d₀) := by
+    rw [map_sub]
+    abel
+  rwa [hk] at he
 
 end RiemannResearch.Analysis.FiniteSampledRepairStability

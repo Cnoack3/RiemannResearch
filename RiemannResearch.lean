@@ -1954,6 +1954,10 @@ import RiemannResearch.RH.ParetoSignedTails
 import RiemannResearch.RH.ParetoSummableTailRigidity
 import RiemannResearch.RH.ParetoFirstMomentUniqueness
 import RiemannResearch.Analysis.BoundedMomentAverages
+import RiemannResearch.Analysis.QuantitativeBlockAverages
+import RiemannResearch.Analysis.GeometricHeadSelection
+import RiemannResearch.RH.QQuantitativeExactHeadAverages
+import RiemannResearch.RH.ParetoExactHeadPairings
 import RiemannResearch.Analysis.BoundedMomentRepair
 import RiemannResearch.Analysis.LaguerreMomentTransform
 import RiemannResearch.RH.IntegratedRamanujanBasis

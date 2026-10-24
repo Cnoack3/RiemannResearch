@@ -1,5 +1,26 @@
 # Theorem catalog
 
+## Constructive exact-head continuation — 24 October 2026
+
+Established finite/Hilbert identities:
+- `Analysis/GeometricHeadSelection.lean`: executable integer head selection,
+  strict growth, and certified geometric amplitude inequalities.
+- `Analysis/QuantitativeBlockAverages.lean`: exact signed block energy and
+  the finite geometric boundary correction.
+- `RH/ParetoExactHeadPairings.lean`: actual complete-P tail pairings and
+  `online_exact_head_block_average_bound` with explicit full-energy hypotheses.
+- `RH/QQuantitativeExactHeadAverages.lean`: complete-Q rate and preservation
+  of the entire first selected physical head.
+- `Analysis/SignalNormalizationStability.lean`: denominator-safe legal
+  normalization, exact target error, and a global sampling-discrepancy bound.
+- `Analysis/FiniteSampledRepairStability.lean`: optimal and sampled normal
+  corrections from one feasible legal interpolant, without independent rows.
+
+Conditional research reduction: a uniform complete exact-head energy bound
+or uniform directional repair bound for the actual arithmetic family remains
+**Open**. See `RH/ConstructiveApproximantsContinuation20261024.md`.
+No unconditional RH result is asserted.
+
 ## 2026-10-24: spectral chord bounds and positive-contraction dependencies
 
 Established finite-dimensional results (no RH hypothesis):
