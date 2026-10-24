@@ -45,3 +45,9 @@ Modules: `RiemannResearch/Analysis/RegularizedDuality.lean`, `RiemannResearch/RH
 InconsistentPenaltyLimits proves quantitative excess bounds and exact hard-penalty limits for arbitrary redundant or inconsistent observation systems: both mismatch and normalized minimum converge to the irreducible inconsistency. Zero limiting mismatch is equivalent to feasibility. The complete infinite path action is initial mismatch minus the impossible cost, with actual Pareto/Q conductor consumers. The finite action identity is strengthened to completely arbitrary penalty paths, and infinite summability and exact total action allow all nondecreasing squared penalties, including plateaus.
 
 Modules: `RiemannResearch/Analysis/InconsistentPenaltyLimits.lean`, `RiemannResearch/RH/RamanujanInconsistentPenaltyLimits.lean`.
+
+## Transfer 68
+
+RegularizationBudget retains the entire canonical observation budget, proves a new centered-square identity and improves physical bias control to one quarter of that budget. Actual Pareto/Q families permit arbitrary growing, moving and repeated conductor requests. Penalized approximation is equivalent to saturation plus the exact soft cost; vanishing canonical budget gives physical and penalized RH iff criteria with the Baez-Duarte provider explicit. The complete original continuous-coefficient limits to negative Moebius also join the moving-stage RH iff chain under the same budget. An exact scalar slack identity and a scalar extremizer prove that the uniform quarter-budget bias constant is optimal.
+
+Modules: `RiemannResearch/Analysis/RegularizationBudget.lean`, `RiemannResearch/RH/RamanujanRegularizationCriteria.lean`.

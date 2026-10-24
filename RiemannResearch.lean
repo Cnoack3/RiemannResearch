@@ -130,6 +130,8 @@ import RiemannResearch.Analysis.RegularizedDuality
 import RiemannResearch.RH.RamanujanRegularizedDuality
 import RiemannResearch.Analysis.InconsistentPenaltyLimits
 import RiemannResearch.RH.RamanujanInconsistentPenaltyLimits
+import RiemannResearch.Analysis.RegularizationBudget
+import RiemannResearch.RH.RamanujanRegularizationCriteria
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
