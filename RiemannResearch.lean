@@ -96,6 +96,8 @@ import RiemannResearch.RH.QRamanujanMultipleConstraints
 import RiemannResearch.Analysis.FiniteRegularizedConstraints
 import RiemannResearch.RH.RamanujanRegularizedConstraints
 import RiemannResearch.RH.RamanujanTailTightness
+import RiemannResearch.Analysis.HilbertWeakNorm
+import RiemannResearch.RH.RamanujanWeakConvergence
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

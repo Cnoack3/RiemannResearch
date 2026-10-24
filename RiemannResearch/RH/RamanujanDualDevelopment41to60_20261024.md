@@ -45,3 +45,9 @@ Modules: `RiemannResearch/Analysis/FiniteRegularizedConstraints.lean`, `RiemannR
 NonnegativeSeriesTightness characterizes decay of full nonnegative series by coordinate decay and eventual uniform tail control along arbitrary filters. RamanujanTailTightness retains the exact signed tail-subtraction identity, proves stability of tightness under subtracting a fixed target, and characterizes strong Pareto/Q convergence by physical pointwise convergence plus complete-energy tightness; the two tightness tests agree for corresponding physical families.
 
 Modules: `RiemannResearch/Analysis/NonnegativeSeriesTightness.lean`, `RiemannResearch/RH/RamanujanTailTightness.lean`.
+
+## Transfer 48
+
+HilbertWeakNorm retains the exact signed norm-target-pairing identity and proves strong convergence from weak convergence and a matching one-sided asymptotic norm bound, with weak closed-subspace preservation. RamanujanWeakConvergence proves arbitrary-filter eventually bounded physical pointwise families converge weakly in the actual Pareto and Q spaces by complete-tail estimates; the matching norm bound upgrades them to strong convergence.
+
+Modules: `RiemannResearch/Analysis/HilbertWeakNorm.lean`, `RiemannResearch/RH/RamanujanWeakConvergence.lean`.

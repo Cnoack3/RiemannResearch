@@ -16,6 +16,8 @@
 
 47. Established: NonnegativeSeriesTightness characterizes decay of full nonnegative series by coordinate decay and eventual uniform tail control along arbitrary filters. RamanujanTailTightness retains the exact signed tail-subtraction identity, proves stability of tightness under subtracting a fixed target, and characterizes strong Pareto/Q convergence by physical pointwise convergence plus complete-energy tightness; the two tightness tests agree for corresponding physical families.
 
+48. Established: HilbertWeakNorm retains the exact signed norm-target-pairing identity and proves strong convergence from weak convergence and a matching one-sided asymptotic norm bound, with weak closed-subspace preservation. RamanujanWeakConvergence proves arbitrary-filter eventually bounded physical pointwise families converge weakly in the actual Pareto and Q spaces by complete-tail estimates; the matching norm bound upgrades them to strong convergence.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.
