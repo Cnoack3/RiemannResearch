@@ -14,6 +14,8 @@
 
 26. Established: RamanujanCoordinateCapacityLimits identifies capacities with projected explicit Möbius Riesz vectors, proves monotone convergence to positive finite limits with exact missing-capacity norm and divisor upper bound, and gives moving-value/cofinal convergence to the unique closed affine legal optimizer with complete error remainder.
 
+27. Established: CauchyNonsingular proves over every field that a finite nonpole Cauchy matrix is nonsingular iff both node maps are injective. ParetoMellinNonsingular removes the old determinant provider: in Re(s)>1/2, the Mellin Gram is nonsingular iff its test points are distinct.
+
 ## Ramanujan dual transfers 11–20 — 23 October 2026
 
 11. Established: ProjectionMeanOne gives full-Hilbert one-signal completion,

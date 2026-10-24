@@ -39,3 +39,9 @@ Isolated Lean verification: `job_wHo0xWb1-Ei7SRxqom5JLKbnl907hRYn` (25–26 toge
 The actual coordinate representer is the projection of −mobiusRieszHilbert. Its capacity increases to a strictly positive finite limit, with an explicit divisor-sum upper bound and exact missing-capacity squared norm. Along any cofinal filter, varying prescribed values tending to t produce candidates tending to `P∞1 + (t − c∞(m))/κ∞(m) · P∞R_m`. Over the entire closed legal space with coefficient m fixed to t, the exact error is `E∞ + (t − c∞(m))²/κ∞(m) + ‖y − candidate∞‖²`. Thus the displayed limit is the unique global affine optimizer. No RH hypothesis is used.
 
 Isolated Lean verification: `job_wHo0xWb1-Ei7SRxqom5JLKbnl907hRYn` (25–26 together), succeeded, server 6.516 s.
+
+## 27. Automatic Cauchy and Mellin nonsingularity
+
+Over an arbitrary field, with all denominators nonzero, the Cauchy matrix has nonzero determinant iff both node and pole maps are injective. The proof constructs the polynomial numerator of a kernel vector and recovers its coefficients at the poles. In the strict complex half-plane the Mellin Cauchy-Gram is nonsingular exactly when the test-point map is injective. Thus repeated points are its only singularity mechanism, and all later distinct-point certificates discharge the old determinant hypothesis internally.
+
+Isolated Lean verification: `job_L48JqQKbkn2KsFejsPnWTJtbwR1PE_Mu` (27 and 30 together), succeeded, server 6.054 s.

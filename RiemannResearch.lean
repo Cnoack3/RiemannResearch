@@ -55,6 +55,8 @@ import RiemannResearch.RH.RamanujanNormalDefect
 import RiemannResearch.Analysis.NonnegativeErrorConvergence
 import RiemannResearch.RH.RamanujanTrialConvergence
 import RiemannResearch.RH.RamanujanCoordinateCapacityLimits
+import RiemannResearch.LinearAlgebra.CauchyNonsingular
+import RiemannResearch.RH.ParetoMellinNonsingular
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
