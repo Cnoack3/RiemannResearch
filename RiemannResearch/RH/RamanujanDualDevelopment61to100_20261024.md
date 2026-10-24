@@ -33,3 +33,9 @@ Modules: `RiemannResearch/Analysis/RegularizedPathAction.lean`, `RiemannResearch
 AttainableObservations constructs the exact feasible projection of arbitrary dependent or inconsistent observation requests. It proves the complete Pythagorean mismatch/objective decomposition, optimizer invariance, feasibility iff zero irreducible cost, and uniform excess-objective comparison. Actual Pareto/Q conductor requests share the same arithmetic impossibility cost and exact corrected minimum.
 
 Modules: `RiemannResearch/Analysis/AttainableObservations.lean`, `RiemannResearch/RH/RamanujanAttainableObservations.lean`.
+
+## Transfer 66
+
+RegularizedDuality constructs rank-free observation multipliers, derives exact representer recovery, the full two-square primal/dual gap, strong duality and the complete dual error identity. The dual maximizer is unique even with redundant rows or zero penalty. Actual Pareto/Q duals identify their multipliers with signed Ramanujan coefficient defects and inherit full certificates.
+
+Modules: `RiemannResearch/Analysis/RegularizedDuality.lean`, `RiemannResearch/RH/RamanujanRegularizedDuality.lean`.
