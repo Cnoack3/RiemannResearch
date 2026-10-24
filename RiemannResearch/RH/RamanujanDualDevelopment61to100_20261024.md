@@ -123,3 +123,9 @@ Modules: `RiemannResearch/RH/RamanujanMellinScreenedResidual.lean`.
 Exact ordered Mellin Schur innovations telescope to the entire finite inverse-Gram capacity. Their total is invariant under every finite reordering of the same nodes and complex sources. Actual Pareto and Q vectors satisfy complete finite innovation-plus-remainder identities, with the Q metric correction retained.
 
 Modules: `RiemannResearch/RH/RamanujanMellinInnovationSeries.lean`.
+
+## Transfer 81
+
+For every actual physical Hilbert vector, all positive Schur innovation energies are unconditionally summable. Their sum is the full capacity limit, each finite remainder is exactly the infinite innovation tail plus an explicit unobserved energy, and the complete remainders converge monotonically. The genuine Q identity retains its full metric correction; no completeness of the selected probes is assumed.
+
+Modules: `RiemannResearch/RH/RamanujanMellinInfiniteInnovations.lean`.

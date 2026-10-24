@@ -44,6 +44,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 80. Established: Exact ordered Mellin Schur innovations telescope to the entire finite inverse-Gram capacity. Their total is invariant under every finite reordering of the same nodes and complex sources. Actual Pareto and Q vectors satisfy complete finite innovation-plus-remainder identities, with the Q metric correction retained.
 
+81. Established: For every actual physical Hilbert vector, all positive Schur innovation energies are unconditionally summable. Their sum is the full capacity limit, each finite remainder is exactly the infinite innovation tail plus an explicit unobserved energy, and the complete remainders converge monotonically. The genuine Q identity retains its full metric correction; no completeness of the selected probes is assumed.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.

@@ -152,6 +152,7 @@ import RiemannResearch.RH.QRamanujanMellinEnlargement
 import RiemannResearch.RH.ParetoMellinProbeGeometry
 import RiemannResearch.RH.RamanujanMellinScreenedResidual
 import RiemannResearch.RH.RamanujanMellinInnovationSeries
+import RiemannResearch.RH.RamanujanMellinInfiniteInnovations
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
