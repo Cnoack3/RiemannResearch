@@ -8,6 +8,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 62. Established: RegularizedDataGeometry proves exact linear response to simultaneous physical/observation data changes, the full signed normal pairing and an orthogonal sensitivity decomposition. RamanujanRegularizedData applies it in both actual metrics, preserving the physical, coordinate and full augmented residual energies; moving stages, conductor requests and penalties require only vanishing actual weighted target perturbation.
 
+63. Established: HardPenaltyGeometry constructs the actual hard Lagrange multiplier and proves signed soft/hard balance plus two exact multiplier-square completions. RamanujanHardPenalty transfers them to the genuine P/Q optimizers, with physical displacement bounds and fourth-power decay of squared coordinate mismatch, strengthening the earlier second-power hard-cost estimate. An explicit scalar quadratic model proves that the universal one-quarter displacement constant is optimal.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.

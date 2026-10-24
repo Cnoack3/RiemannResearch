@@ -15,3 +15,9 @@ Modules: `RiemannResearch/RH/QRamanujanRegularizedConstraints.lean`.
 RegularizedDataGeometry proves exact linear response to simultaneous physical/observation data changes, the full signed normal pairing and an orthogonal sensitivity decomposition. RamanujanRegularizedData applies it in both actual metrics, preserving the physical, coordinate and full augmented residual energies; moving stages, conductor requests and penalties require only vanishing actual weighted target perturbation.
 
 Modules: `RiemannResearch/Analysis/RegularizedDataGeometry.lean`, `RiemannResearch/RH/RamanujanRegularizedData.lean`.
+
+## Transfer 63
+
+HardPenaltyGeometry constructs the actual hard Lagrange multiplier and proves signed soft/hard balance plus two exact multiplier-square completions. RamanujanHardPenalty transfers them to the genuine P/Q optimizers, with physical displacement bounds and fourth-power decay of squared coordinate mismatch, strengthening the earlier second-power hard-cost estimate. An explicit scalar quadratic model proves that the universal one-quarter displacement constant is optimal.
+
+Modules: `RiemannResearch/Analysis/HardPenaltyGeometry.lean`, `RiemannResearch/RH/RamanujanHardPenalty.lean`.
