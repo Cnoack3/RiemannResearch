@@ -45,3 +45,9 @@ Isolated Lean verification: `job_wHo0xWb1-Ei7SRxqom5JLKbnl907hRYn` (25–26 toge
 Over an arbitrary field, with all denominators nonzero, the Cauchy matrix has nonzero determinant iff both node and pole maps are injective. The proof constructs the polynomial numerator of a kernel vector and recovers its coefficients at the poles. In the strict complex half-plane the Mellin Cauchy-Gram is nonsingular exactly when the test-point map is injective. Thus repeated points are its only singularity mechanism, and all later distinct-point certificates discharge the old determinant hypothesis internally.
 
 Isolated Lean verification: `job_L48JqQKbkn2KsFejsPnWTJtbwR1PE_Mu` (27 and 30 together), succeeded, server 6.054 s.
+
+## 28. Full Mellin enlargement and explicit complex Schur updates
+
+Finite pushforward preserves the complete sesquilinear quadratic form. Enlarging any nonsingular test family changes its capacity by exactly the full Gram quadratic of the inverse-coefficient displacement. Strict-half-plane prefix capacities are monotone for every injective sequence and arbitrary complex source signature. A new point has an explicit complex coefficient update and exact capacity gain `‖innovation‖² / Re(Schur)`, with positive denominator and strict gain iff the innovation is nonzero. The actual-zero packet specialization discharges determinants from distinctness and retains the entire Mellin integral remainder.
+
+Isolated Lean verification: `job_RB5nSR-HYdTriPJIvjqurfo9bEHDqlim` (28–29 together), succeeded, server 6.102 s.

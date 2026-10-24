@@ -16,6 +16,8 @@
 
 27. Established: CauchyNonsingular proves over every field that a finite nonpole Cauchy matrix is nonsingular iff both node maps are injective. ParetoMellinNonsingular removes the old determinant provider: in Re(s)>1/2, the Mellin Gram is nonsingular iff its test points are distinct.
 
+28. Established: finite Mellin enlargement has an exact full Gram displacement and monotone prefix capacities. ParetoMellinSchur gives explicit complex coefficient updates, positive Schur denominators, and exact gain |innovation|²/Schur; strict gain iff innovation≠0. Actual-zero packet identities retain full integrals and remove determinant assumptions using distinctness.
+
 ## Ramanujan dual transfers 11–20 — 23 October 2026
 
 11. Established: ProjectionMeanOne gives full-Hilbert one-signal completion,

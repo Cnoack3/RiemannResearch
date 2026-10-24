@@ -57,6 +57,9 @@ import RiemannResearch.RH.RamanujanTrialConvergence
 import RiemannResearch.RH.RamanujanCoordinateCapacityLimits
 import RiemannResearch.LinearAlgebra.CauchyNonsingular
 import RiemannResearch.RH.ParetoMellinNonsingular
+import RiemannResearch.Analysis.FiniteComplexPushforward
+import RiemannResearch.RH.ParetoMellinEnlargement
+import RiemannResearch.RH.ParetoMellinSchur
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
