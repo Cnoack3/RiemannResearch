@@ -159,3 +159,9 @@ Modules: `RiemannResearch/Analysis/ExhaustiveProjectionWalk.lean`, `RiemannResea
 Actual increment subspaces of every arbitrary projection walk form an orthogonal family. The full vector innovation series is unconditionally summable to the visited projection, its complete squared-norm tail is exactly the remaining visited-space displacement, and arbitrary finite signed filters satisfy a diagonal Parseval identity. Both genuine Pareto and Q packet walks inherit these identities without exhaustive ordering.
 
 Modules: `RiemannResearch/Analysis/ProjectionInnovationSeries.lean`, `RiemannResearch/RH/RamanujanInnovationSeries.lean`.
+
+## Transfer 87
+
+Two non-nested explored subspaces satisfy an exact signed common-core discrepancy identity and a sharp square-root radius bound. Independently cofinal walks agree precisely when their target projections agree, which is weaker than equality of visited spans; equal visited conductor ranges certify agreement for actual Pareto/Q walks despite arbitrary order and repetitions.
+
+Modules: `RiemannResearch/Analysis/ProjectionWalkComparison.lean`, `RiemannResearch/RH/RamanujanWalkComparison.lean`.
