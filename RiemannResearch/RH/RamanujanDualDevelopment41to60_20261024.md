@@ -105,3 +105,9 @@ Modules: `RiemannResearch/RH/ParetoMellinInnovationRemainder.lean`, `RiemannRese
 QRamanujanMellinCertificates develops Mellin signatures and optimized arbitrary-probe certificates for the genuine Q inverse-Gram optimizer. The exact identities retain the full Radon-Nikodym metric correction, signed arithmetic source correction, complete Mellin integral and every Q competitor's Gram excess; sharp correction-metric floors and actual-zero product bounds follow.
 
 Modules: `RiemannResearch/RH/QRamanujanMellinCertificates.lean`.
+
+## Transfer 58
+
+ContractiveCountBudget gives exact threshold-count budgets with individual logarithmic slack and unused product mass. RamanujanZeroCountBounds derives distinct-zero logarithmic and multiplicative count bounds at the positive limiting packet mass, quantitative bounded-window counts, and exact exterior-disk reformulations of finite packet zero certificates. No multiplicity assertion or identification of captured mass with the zero product is made.
+
+Modules: `RiemannResearch/Analysis/ContractiveCountBudget.lean`, `RiemannResearch/RH/RamanujanZeroCountBounds.lean`.

@@ -36,6 +36,8 @@
 
 57. Established: QRamanujanMellinCertificates develops Mellin signatures and optimized arbitrary-probe certificates for the genuine Q inverse-Gram optimizer. The exact identities retain the full Radon-Nikodym metric correction, signed arithmetic source correction, complete Mellin integral and every Q competitor's Gram excess; sharp correction-metric floors and actual-zero product bounds follow.
 
+58. Established: ContractiveCountBudget gives exact threshold-count budgets with individual logarithmic slack and unused product mass. RamanujanZeroCountBounds derives distinct-zero logarithmic and multiplicative count bounds at the positive limiting packet mass, quantitative bounded-window counts, and exact exterior-disk reformulations of finite packet zero certificates. No multiplicity assertion or identification of captured mass with the zero product is made.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.
