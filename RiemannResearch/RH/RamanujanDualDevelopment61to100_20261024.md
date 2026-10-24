@@ -117,3 +117,9 @@ Modules: `RiemannResearch/RH/ParetoMellinProbeGeometry.lean`.
 Sharp screened physical Mellin innovation bounds retain the exact complete remainder and characterize equality by exhaustion of the enlarged integral. Every nonempty old probe set strictly improves the unscreened residual bound when residual energy is positive. The actual Q identity subtracts its full metric correction and already observed capacity exactly.
 
 Modules: `RiemannResearch/RH/RamanujanMellinScreenedResidual.lean`.
+
+## Transfer 80
+
+Exact ordered Mellin Schur innovations telescope to the entire finite inverse-Gram capacity. Their total is invariant under every finite reordering of the same nodes and complex sources. Actual Pareto and Q vectors satisfy complete finite innovation-plus-remainder identities, with the Q metric correction retained.
+
+Modules: `RiemannResearch/RH/RamanujanMellinInnovationSeries.lean`.
