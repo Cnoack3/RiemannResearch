@@ -81,6 +81,8 @@ import RiemannResearch.RH.QPrimePowerMixedCoefficients
 import RiemannResearch.RH.QPrimePowerInfiniteProjection
 import RiemannResearch.RH.QPrimePowerValuationProjection
 import RiemannResearch.RH.QPrimePowerMeixnerTwo
+import RiemannResearch.RH.PrimeValuationHilbertBasis
+import RiemannResearch.RH.QPrimePowerValuationBasisProjection
 import RiemannResearch.RH.QPrimePowerCofactorResidual
 import RiemannResearch.RH.QPrimePowerCofactorExpansion
 import RiemannResearch.RH.QDivisorDilationCoefficients

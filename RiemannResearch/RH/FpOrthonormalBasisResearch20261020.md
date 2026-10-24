@@ -521,3 +521,65 @@ rational certification, with examples [-0.004, 0.005] for <F_2,B_15> and
 [0.059, 0.068] for <F_3,B_10>. Legal Gram/Parseval saturation remains open. These coefficient identities apply to the
 actual Zipf law and Nat.log targets. They provide no legal Parseval saturation
 or membership provider and do not change any full norm residual above.
+
+## Complete valuation-level basis and exact target projection (23 October 2026)
+
+PrimeValuationHilbertBasis.lean defines the actual closed subspace \(V_p\)
+of Q-Hilbert vectors satisfying
+\(f(n)=f(p^{v_p(n)})\) for every positive n. This is a physical coordinate
+condition; it does not assume the desired dictionary is dense.
+
+Put \(m_{p,k}=p^{-2k}-p^{-2(k+1)}>0\). The normalized exact-level vectors
+\[
+ L_{p,k}(n)=\frac{\mathbf 1_{\{v_p(n)=k\}}}{\sqrt{m_{p,k}}}
+ \qquad(n>0)
+\]
+form a complete Hilbert basis of \(V_p\).
+valuationUnit_orthonormal proves the Gram identity under the actual integer
+Zipf law. eq_zero_of_orthogonal_valuationUnit proves totality: pairing with
+each level determines the value at \(p^k\), hence every positive coordinate.
+valuationHilbertBasis packages completeness, and valuation_hasSum and
+valuation_parseval give unconditional reconstruction and the full energy:
+\[
+ f=\sum_{k\ge0}\sqrt{m_{p,k}}\,f(p^k)L_{p,k},
+ \qquad
+ \|f\|_Q^2=\sum_{k\ge0}m_{p,k}f(p^k)^2
+ \quad(f\in V_p).
+\]
+
+QPrimePowerValuationBasisProjection.lean proves that the existing
+\(A_p=\mu_p1+P_p\) is optimal among **all** square-integrable valuation-only
+approximants, not just finite polynomial or wavelet trials. With
+\(\mu_p=\langle F_p,1\rangle_Q\), its coordinates are
+\(A_p(n)=v_p(n)+\mu_p-1/(p^2-1)\).
+The complete cofactor residual \(R_p=F_p-A_p\) is orthogonal to \(V_p\).
+For every \(f\in V_p\), qTarget_valuation_error_exact and
+qTarget_valuation_signed_parseval retain the exact identities
+\[
+ \boxed{\|F_p-f\|_Q^2=\|R_p\|_Q^2+\|A_p-f\|_Q^2}
+\]
+and
+\[
+ \boxed{\|F_p-f\|_Q^2=\|R_p\|_Q^2+
+ \sum_{k\ge0}m_{p,k}
+ \left(k+\mu_p-\frac1{p^2-1}-f(p^k)\right)^2.}
+\]
+qTarget_valuation_level_coefficient explicitly gives
+\[
+ \langle F_p,L_{p,k}\rangle_Q
+ =\sqrt{m_{p,k}}\left(k+\mu_p-\frac1{p^2-1}\right).
+\]
+These formulas apply to p=2 and p=3 without replacing Nat.log by valuation.
+
+Finally, qTarget_inner_valuation_higher proves that every \(f\in V_p\)
+orthogonal to both 1 and the first normalized valuation mode has
+\(\langle F_p,f\rangle_Q=0\). This supplies a general zero-coefficient
+criterion for future higher Meixner modes; their orthogonality hypotheses
+must still be proved for the proposed polynomials.
+
+Established: a complete **indicator** basis of the physically defined
+valuation space and the exact best-approximation error on that space.
+Open: general Meixner polynomial orthogonality and completeness, tensor
+completeness, and F_2/F_3 legal Parseval saturation. Neither V_p nor its
+basis is asserted to be the legal squarefree closure. The positive
+cofactor residual remains fully present; it is not a legal-distance bound.

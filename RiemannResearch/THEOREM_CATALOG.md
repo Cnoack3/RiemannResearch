@@ -914,6 +914,23 @@ Open: broader squarefree-divisor constructions, full target closure, and RH.
   Open: higher-degree Meixner orthogonality/completeness, tensor completeness,
   and legal Parseval saturation. This finite family is no membership provider.
 
+- `RH/PrimeValuationHilbertBasis.lean` (2026-10-23, Pacific time):
+  `valuationSpace` is the closed subspace defined by physical dependence on v_p.
+  `valuationHilbertBasis` is a complete actual Q-Hilbert basis of normalized
+  exact-level indicators, with masses p^(-2k)-p^(-2(k+1)).
+  `valuation_hasSum` and `valuation_parseval` retain unconditional
+  reconstruction and all geometric-weighted energy. This is an indicator
+  basis; no Meixner polynomial density or legal membership is assumed.
+- `RH/QPrimePowerValuationBasisProjection.lean` (2026-10-23, Pacific time):
+  `primeCofactorResidual_inner_valuationSpace` annihilates every actual
+  square-integrable valuation observable. `qTarget_valuation_error_exact`
+  proves optimality of mean plus centered valuation over this entire space.
+  `qTarget_valuation_level_coefficient` computes every normalized level
+  coefficient. `qTarget_valuation_signed_parseval` retains the complete
+  cofactor residual and every signed level discrepancy for arbitrary trials.
+  `qTarget_inner_valuation_higher` proves zero coefficient for any valuation
+  vector orthogonal to the constant and first normalized mode.
+  Open: general Meixner and tensor completeness, and actual legal saturation.
 - `RH/QPrimePowerCofactorResidual.lean` (2026-10-22, Pacific time):
   `primeCofactorResidual_sequence` identifies the full residual with the centered
   floor logarithm of n/p^(v_p(n)); `primeCofactorTarget_mean` computes its mean.
