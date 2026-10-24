@@ -225,3 +225,9 @@ Modules: `RiemannResearch/RH/QRamanujanDPPWindows.lean`.
 General signed weighted DPP means, mixed moments, exact covariance and variance; actual Q covariance, variance, and limiting variance with every off-diagonal term retained.
 
 Modules: `RiemannResearch/Probability/DeterminantalWeightedMoments.lean`, `RiemannResearch/RH/QRamanujanDPPStatistics.lean`.
+
+## Transfer 98
+
+Reconstruct the complete Q Hilbert target defect from all signed complementary-kernel cross terms; physical-head exhaustion, both iterated limits, and exact closure criterion.
+
+Modules: `RiemannResearch/RH/QRamanujanDPPHoleEnergy.lean`.
