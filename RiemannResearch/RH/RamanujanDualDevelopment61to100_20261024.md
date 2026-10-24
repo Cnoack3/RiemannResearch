@@ -177,3 +177,9 @@ Modules: `RiemannResearch/Analysis/ProjectionWalkMovingTargets.lean`, `RiemannRe
 Exact target-specific adaptive completeness: residual correlations with every dictionary atom tend to zero iff the visited projection equals the full legal projection, equivalently iff the missed-span error vanishes. Actual Pareto/Q packet versions require neither exhaustive draws nor equality of the visited and full closed spans.
 
 Modules: `RiemannResearch/Analysis/ProjectionCorrelationCompleteness.lean`, `RiemannResearch/RH/RamanujanCorrelationCompleteness.lean`.
+
+## Transfer 90
+
+Full signed residual comparator identity, quantitative error bound with complete approximation error and weighted l1 cost, and target completeness under precise weak-greedy gain control. Even atom-dependent eventual gain constants suffice; actual Pareto/Q bounds retain comparator costs and assert no unproved universal rate.
+
+Modules: `RiemannResearch/Analysis/ProjectionGreedyComparator.lean`, `RiemannResearch/RH/RamanujanGreedyComparator.lean`.

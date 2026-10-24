@@ -165,6 +165,8 @@ import RiemannResearch.Analysis.ProjectionWalkMovingTargets
 import RiemannResearch.RH.RamanujanMovingTargets
 import RiemannResearch.Analysis.ProjectionCorrelationCompleteness
 import RiemannResearch.RH.RamanujanCorrelationCompleteness
+import RiemannResearch.Analysis.ProjectionGreedyComparator
+import RiemannResearch.RH.RamanujanGreedyComparator
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
