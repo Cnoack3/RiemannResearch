@@ -57,3 +57,9 @@ Modules: `RiemannResearch/Analysis/RegularizationBudget.lean`, `RiemannResearch/
 WeightedCoordinateEnergy now allows arbitrary coordinate index types and nonnegative weights assuming only summability of weighted squared operator norms. It proves the exact supported kernel, norm bound, and arbitrary-filter dominated convergence. RamanujanAdmissibleWeights gives unconditional limits and equivalent scalar saturation criteria for every positive admissible Pareto/Q weight family; RH converses retain the explicit Open hBaezDuarte provider.
 
 Modules: `RiemannResearch/Analysis/WeightedCoordinateEnergy.lean`, `RiemannResearch/RH/RamanujanAdmissibleWeights.lean`.
+
+## Transfer 70
+
+WeightedObservationPairing constructs the complete signed bilinear series for arbitrary admissible observation weights, proves polarization, sharp Cauchy–Schwarz, the exact all-real affine interpolation law and its kernel. RamanujanWeightedPairing specializes these to actual Pareto/Q conductor defects, retaining their complete signed mixed coefficient series and exact inter-stage/interpolation energies.
+
+Modules: `RiemannResearch/Analysis/WeightedObservationPairing.lean`, `RiemannResearch/RH/RamanujanWeightedPairing.lean`.

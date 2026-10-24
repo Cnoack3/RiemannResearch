@@ -133,6 +133,8 @@ import RiemannResearch.RH.RamanujanInconsistentPenaltyLimits
 import RiemannResearch.Analysis.RegularizationBudget
 import RiemannResearch.RH.RamanujanRegularizationCriteria
 import RiemannResearch.RH.RamanujanAdmissibleWeights
+import RiemannResearch.Analysis.WeightedObservationPairing
+import RiemannResearch.RH.RamanujanWeightedPairing
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
