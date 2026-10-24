@@ -102,6 +102,8 @@ import RiemannResearch.Analysis.HilbertTailConvexification
 import RiemannResearch.RH.RamanujanConvexification
 import RiemannResearch.Analysis.ProjectionVariation
 import RiemannResearch.RH.RamanujanCoordinateVariation
+import RiemannResearch.Analysis.WeightedCoordinateEnergy
+import RiemannResearch.RH.RamanujanWeightedDefect
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

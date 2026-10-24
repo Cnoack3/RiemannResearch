@@ -63,3 +63,9 @@ Modules: `RiemannResearch/Analysis/HilbertTailConvexification.lean`, `RiemannRes
 ProjectionVariation proves exact nested increment pairings and bounds the square of full absolute scalar variation by the product of both projection-energy decrements, giving unconditional summability and exhaustive infinite-tail bounds. RamanujanCoordinateVariation supplies the sharp coordinate-capacity-gap times canonical-error-gap bound for actual Pareto coefficients and constructs the corresponding Q Riesz capacities and unconditional absolute-variation bounds.
 
 Modules: `RiemannResearch/Analysis/ProjectionVariation.lean`, `RiemannResearch/RH/RamanujanCoordinateVariation.lean`.
+
+## Transfer 51
+
+WeightedCoordinateEnergy constructs an explicit positive summably weighted coordinate energy, proves norm and geometric-tail bounds, zero iff every coordinate vanishes, and arbitrary-filter bounded pointwise convergence of the complete energy. RamanujanWeightedDefect gives actual Pareto/Q weighted negative-Moebius coefficient defects with unconditional convergence and uniform geometric arithmetic tails. Vanishing of a single scalar defect along any cofinal map is equivalent to saturation; RH iff retains the explicit Open hBaezDuarte provider.
+
+Modules: `RiemannResearch/Analysis/WeightedCoordinateEnergy.lean`, `RiemannResearch/RH/RamanujanWeightedDefect.lean`.

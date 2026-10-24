@@ -22,6 +22,8 @@
 
 50. Established: ProjectionVariation proves exact nested increment pairings and bounds the square of full absolute scalar variation by the product of both projection-energy decrements, giving unconditional summability and exhaustive infinite-tail bounds. RamanujanCoordinateVariation supplies the sharp coordinate-capacity-gap times canonical-error-gap bound for actual Pareto coefficients and constructs the corresponding Q Riesz capacities and unconditional absolute-variation bounds.
 
+51. Established: WeightedCoordinateEnergy constructs an explicit positive summably weighted coordinate energy, proves norm and geometric-tail bounds, zero iff every coordinate vanishes, and arbitrary-filter bounded pointwise convergence of the complete energy. RamanujanWeightedDefect gives actual Pareto/Q weighted negative-Moebius coefficient defects with unconditional convergence and uniform geometric arithmetic tails. Vanishing of a single scalar defect along any cofinal map is equivalent to saturation; RH iff retains the explicit Open hBaezDuarte provider.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.
