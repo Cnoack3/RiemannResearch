@@ -145,6 +145,8 @@ import RiemannResearch.Analysis.NoisyWeightedCoordinates
 import RiemannResearch.RH.RamanujanNoisyWeightedDefect
 import RiemannResearch.Analysis.CompactObservationMap
 import RiemannResearch.RH.RamanujanCompactCoordinates
+import RiemannResearch.Analysis.SignedInverseTails
+import RiemannResearch.RH.RamanujanRawInversionTails
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

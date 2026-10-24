@@ -93,3 +93,9 @@ Modules: `RiemannResearch/Analysis/NoisyWeightedCoordinates.lean`, `RiemannResea
 Construct arbitrary-index compact weighted coefficient maps into l2 under only the weighted squared operator-norm moment; exact full tail energy, finite-rank operator-norm approximation, supported kernel, whole-space P/Q injectivity, uniform canonical residual approximation, and complete-vector RH criteria.
 
 Modules: `RiemannResearch/Analysis/CompactObservationMap.lean`, `RiemannResearch/RH/RamanujanCompactCoordinates.lean`.
+
+## Transfer 76
+
+Distinguish raw packet coefficients from continuous signed-multiple coordinates; prove exact finite-support inverse head/tail identities, and characterize raw coefficient convergence by complete asymptotic signed tails under merely ordered (possibly conditional) convergence of the inverse limit series. Supply actual P/Q consumers and explicit dominated sufficient criteria.
+
+Modules: `RiemannResearch/Analysis/SignedInverseTails.lean`, `RiemannResearch/RH/RamanujanRawInversionTails.lean`.
