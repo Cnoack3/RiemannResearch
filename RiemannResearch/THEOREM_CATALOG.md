@@ -1,5 +1,47 @@
 # Theorem catalog
 
+## Averaging-limit continuation — 24 October 2026
+
+Source: user-provided averaging-limit agenda.
+Audit: [RH/AveragingLimitAgendaContinuation20261024.md](RH/AveragingLimitAgendaContinuation20261024.md).
+
+Established finite/analytic results, with displayed hypotheses:
+- `RH/QPrimeBalancedExactHead.lean`: explicit `primeHead` and `nextPrimeHead`,
+  sequence identities, exact heads, squarefree legality, coefficient and integer
+  amplitude bounds, and least-prime anchor specification.
+- `Analysis/FiniteRepairComparison.lean`: constraint monotonicity of normal energy,
+  competitor upper bound subtracting projection defect, target-direction estimate,
+  antitonicity of total constrained error under dictionary enlargement, and
+  repair-cost variation bounded by projection gain.
+- `Analysis/SignedEnergyAverages.lean`: complete signed block budgets, strong
+  convergence from combined/separate budgets, inverse-energy weighting,
+  finite tail-mass existence and least-length specification/minimality,
+  normalized finite synthesis, positive mass, affine residual identity and legality.
+- `RH/ParetoVariableEnergyAverages.lean`: automatic variable-norm pairing bound,
+  exact block diagonal retained in the estimate, and convergence from
+  subquadratic selected diagonal energy.
+- `RH/ParetoReciprocalEnergyAverages.lean`: automatic complete weighted
+  mixed-term bounds, arbitrary tail-block bound and prefix convergence.
+- `Analysis/SubpolynomialCofinalGrowth.lean`: positive-power floors exclude
+  arbitrarily small relative-log growth occurring cofinally.
+
+Conditional research reductions:
+- `RH/ParetoReciprocalLegalClosure.lean`: `online_reciprocal_legal_closure`
+  and `riemannHypothesis_of_online_reciprocal_energy`.
+  **Open:** divergence of selected reciprocal complete-energy certificates
+  for the actual arithmetic family. Legality, heads and amplitudes are explicit.
+- `RH/QNormalRepairCofinalSmallGrowth.lean`:
+  `riemannHypothesis_of_cofinally_small_normal_cost`.
+  **Open:** the actual cofinal small-growth estimate for feasible normal repairs.
+- **Open:** subquadratic selected diagonal energy; uniform complete energy;
+  uniform actual normal repair cost.
+
+Rational experiments: `RH/experiments/exact_head_averaging_20261024/`.
+Program sources and exact outputs were independently checked in Python;
+they are candidate certificates, not Lean kernel instances or optimizer intervals.
+The companion large-anchor squarefree obstruction is an ordinary proof.
+Server checkpoint validation is required before publication.
+
 ## Exact-head agenda audit — 24 October 2026
 
 Established identities and conditional implications:
