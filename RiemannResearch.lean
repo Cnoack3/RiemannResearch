@@ -50,6 +50,8 @@ import RiemannResearch.Analysis.FiniteBiorthogonalPinning
 import RiemannResearch.RH.RamanujanFinitePinning
 import RiemannResearch.Analysis.FiniteGramFeasibleSources
 import RiemannResearch.RH.RamanujanConstraintFeasibility
+import RiemannResearch.Analysis.FiniteGramNormalDefect
+import RiemannResearch.RH.RamanujanNormalDefect
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

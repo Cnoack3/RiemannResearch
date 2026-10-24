@@ -21,3 +21,9 @@ Isolated Lean verification: `job_iIMPVEIcm0IyhgHNn1zCJV-mSShvsMyb`, succeeded, s
 Arbitrary repeated and offstage conductor requests are feasible exactly when duplicate requests agree and offstage targets vanish. The source rows have full rank exactly when the conductors are distinct and all belong to the stage. Feasibility alone constructs a source-Gram normal solution even when that Gram is singular. The signed normal pairing gives the exact minimum; the full Gram displacement gives completion and uniqueness of the optimizing packet array (multipliers need not be unique). For targets −μ, feasibility reduces exactly to vanishing of every offstage Möbius value.
 
 Isolated Lean verification: `job_YBlm1lhRYXjuEzH9qKerqpNmzAX2iDRo`, succeeded, server 5.766 s.
+
+## 24. Exact inverse-Gram normal-defect certificates
+
+For every finite independent dictionary, arbitrary target and arbitrary trial, δ = G a − b satisfies `error(a) = error(a*) + δᵀG⁻¹δ`. The defect equals the full squared synthesis displacement, vanishes exactly at the optimizer, and has an exact dual completion and directionwise Cauchy–Schwarz certificate. The actual Pareto packet source is Λ; Q uses its distinct actual source. Both arithmetic normal defects and full trial error identities are exposed.
+
+Isolated Lean verification: `job_BQOGehNw_RyxljlwDZx2zOnas4E7lbbZ`, succeeded, server 6.316 s.

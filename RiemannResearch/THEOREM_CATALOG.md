@@ -8,6 +8,8 @@
 
 23. Established: FiniteGramFeasibleSources constructs normal solutions and unique constrained coefficient optimizers even for singular source Grams. RamanujanConstraintFeasibility characterizes all finite requests: duplicate conductors agree and offstage requests vanish; rank is exactly injectivity plus stage inclusion. Exact −μ requests are feasible iff every offstage μ vanishes.
 
+24. Established: FiniteGramNormalDefect gives exact arbitrary-target trial error as canonical error plus the full inverse-Gram normal defect, with dual completion and uniqueness. RamanujanNormalDefect supplies actual P and Q arithmetic defects using their respective sources, including Λ for P.
+
 ## Ramanujan dual transfers 11–20 — 23 October 2026
 
 11. Established: ProjectionMeanOne gives full-Hilbert one-signal completion,
