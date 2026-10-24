@@ -83,6 +83,8 @@ import RiemannResearch.RH.ParetoMellinSourcePerturbation
 import RiemannResearch.RH.RamanujanOffzeroMellinCertificates
 import RiemannResearch.Analysis.ContractiveLogBudget
 import RiemannResearch.RH.RamanujanZeroLogBudget
+import RiemannResearch.Analysis.NestedAffineObservationProjection
+import RiemannResearch.RH.RamanujanNestedAffineGeometry
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

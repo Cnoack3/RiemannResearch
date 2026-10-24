@@ -1,5 +1,9 @@
 # Theorem catalog
 
+## Ramanujan dual transfers 41–60 — 24 October 2026
+
+41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.
