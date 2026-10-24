@@ -64,6 +64,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 90. Established: Full signed residual comparator identity, quantitative error bound with complete approximation error and weighted l1 cost, and target completeness under precise weak-greedy gain control. Even atom-dependent eventual gain constants suffice; actual Pareto/Q bounds retain comparator costs and assert no unproved universal rate.
 
+91. Established: Exact four-part error budget for arbitrary legal inexact solves: full legal floor, missed-span defect, visited projection tail, and solver defect. Cofinal strong convergence to the visited fit is exactly solver accuracy; reaching the target additionally requires visited saturation. Actual Pareto/Q legal trials are included.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.

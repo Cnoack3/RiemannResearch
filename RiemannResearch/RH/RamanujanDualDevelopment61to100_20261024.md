@@ -183,3 +183,9 @@ Modules: `RiemannResearch/Analysis/ProjectionCorrelationCompleteness.lean`, `Rie
 Full signed residual comparator identity, quantitative error bound with complete approximation error and weighted l1 cost, and target completeness under precise weak-greedy gain control. Even atom-dependent eventual gain constants suffice; actual Pareto/Q bounds retain comparator costs and assert no unproved universal rate.
 
 Modules: `RiemannResearch/Analysis/ProjectionGreedyComparator.lean`, `RiemannResearch/RH/RamanujanGreedyComparator.lean`.
+
+## Transfer 91
+
+Exact four-part error budget for arbitrary legal inexact solves: full legal floor, missed-span defect, visited projection tail, and solver defect. Cofinal strong convergence to the visited fit is exactly solver accuracy; reaching the target additionally requires visited saturation. Actual Pareto/Q legal trials are included.
+
+Modules: `RiemannResearch/Analysis/ProjectionWalkInexact.lean`, `RiemannResearch/RH/RamanujanInexactWalk.lean`.
