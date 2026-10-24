@@ -110,6 +110,8 @@ import RiemannResearch.RH.ParetoMellinScreenedKernel
 import RiemannResearch.RH.ParetoMellinGramDeterminant
 import RiemannResearch.RH.ParetoMellinSourceMetric
 import RiemannResearch.RH.RamanujanSourceMetric
+import RiemannResearch.RH.ParetoMellinInnovationRemainder
+import RiemannResearch.RH.RamanujanOffzeroInnovation
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

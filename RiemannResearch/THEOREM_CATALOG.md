@@ -32,6 +32,8 @@
 
 55. Established: ParetoMellinSourceMetric identifies the full complex inverse-source pairing with its continuous mixed kernel integral and proves sharp capacity Cauchy-Schwarz and reverse-triangle bounds. RamanujanSourceMetric converts complete arithmetic correction-capacity budgets into robust approximate-zero error floors and contrapositive certificates, retaining the exact complex source geometry before estimating it.
 
+56. Established: ParetoMellinInnovationRemainder splits the complete old Mellin integral remainder into the exact one-point complex innovation gain and full new remainder, with strict improvement precisely for nonzero innovation. RamanujanOffzeroInnovation supplies actual arbitrary-probe packet and competitor identities, preserving signed arithmetic source-correction polarization and the complete Gram excess, including the regularized point one.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.
