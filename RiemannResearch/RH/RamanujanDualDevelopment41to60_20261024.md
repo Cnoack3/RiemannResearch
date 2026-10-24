@@ -81,3 +81,9 @@ Modules: `RiemannResearch/Analysis/ComputedGramStability.lean`, `RiemannResearch
 ParetoMellinScreenedKernel evaluates the complete mixed screened kernel at two independent half-plane centers as the original kernel times the two complex screening products, preserving both phases. It proves the diagonal centered-product formula and exact annihilation at existing interpolation nodes, allowing the centers to coincide with those nodes.
 
 Modules: `RiemannResearch/RH/ParetoMellinScreenedKernel.lean`.
+
+## Transfer 54
+
+ParetoMellinGramDeterminant evaluates the full complex Mellin Gram determinant as an exact squared-Vandermonde quotient and equivalent pairwise product, without assuming distinct nodes. Repeated nodes automatically produce zero; the determinant is real and nonnegative, and positive exactly for an injective family. The finite-order formula extends to arbitrary finite index types through enumeration.
+
+Modules: `RiemannResearch/RH/ParetoMellinGramDeterminant.lean`.
