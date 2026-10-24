@@ -16,6 +16,8 @@
 
 37. Established: CenteredCauchyInverseProduct proves the full mixed centered inverse-Cauchy identity over every field, including zero center sum in the weighted form. ParetoMellinCenteredProduct evaluates the complete kernel-source capacity at every strict-half-plane center as (1 minus the centered product)/(2 Re(center) minus 1), removes determinant assumptions using distinctness, and allows the center to coincide with an existing node.
 
+38. Established: OptionSchurDeterminant supplies the general one-point determinant factorization. ParetoMellinSchurProduct replaces the Mellin Schur inverse quadratic by an exact centered finite product, proves vanishing iff the new test repeats an old node, and gives positive new-point denominators, determinant ratios, explicit coefficient updates and full complex-innovation capacity gains. Actual-zero packet completions retain the entire enlarged Mellin integral and packet Gram excess.
+
 ## Ramanujan dual transfers 21–30 — 23 October 2026
 
 21. Established: FiniteGramMultipleConstraint gives the unique simultaneous affine optimizer with full inverse-source Gram cost and exact feasible completion. RamanujanMultipleConstraints proves automatic arithmetic constraint independence and determinant positivity for every finite selection of legal coordinates.

@@ -45,3 +45,9 @@ Modules: `RiemannResearch/Analysis/FiniteGramBackwardError.lean`, `RiemannResear
 CenteredCauchyInverseProduct proves the full mixed centered inverse-Cauchy identity over every field, including zero center sum in the weighted form. ParetoMellinCenteredProduct evaluates the complete kernel-source capacity at every strict-half-plane center as (1 minus the centered product)/(2 Re(center) minus 1), removes determinant assumptions using distinctness, and allows the center to coincide with an existing node.
 
 Modules: `RiemannResearch/LinearAlgebra/CenteredCauchyInverseProduct.lean`, `RiemannResearch/RH/ParetoMellinCenteredProduct.lean`.
+
+## Transfer 38
+
+OptionSchurDeterminant supplies the general one-point determinant factorization. ParetoMellinSchurProduct replaces the Mellin Schur inverse quadratic by an exact centered finite product, proves vanishing iff the new test repeats an old node, and gives positive new-point denominators, determinant ratios, explicit coefficient updates and full complex-innovation capacity gains. Actual-zero packet completions retain the entire enlarged Mellin integral and packet Gram excess.
+
+Modules: `RiemannResearch/LinearAlgebra/OptionSchurDeterminant.lean`, `RiemannResearch/RH/ParetoMellinSchurProduct.lean`.

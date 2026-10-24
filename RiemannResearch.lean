@@ -76,6 +76,8 @@ import RiemannResearch.Analysis.FiniteGramBackwardError
 import RiemannResearch.RH.RamanujanBackwardError
 import RiemannResearch.LinearAlgebra.CenteredCauchyInverseProduct
 import RiemannResearch.RH.ParetoMellinCenteredProduct
+import RiemannResearch.LinearAlgebra.OptionSchurDeterminant
+import RiemannResearch.RH.ParetoMellinSchurProduct
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
