@@ -219,3 +219,9 @@ Modules: `RiemannResearch/RH/QRamanujanDPPVolume.lean`.
 Identify actual finite Q DPP restrictions, all exact configuration limits, finite gap determinants, and generating function convergence for arbitrary signed real activities.
 
 Modules: `RiemannResearch/RH/QRamanujanDPPWindows.lean`.
+
+## Transfer 97
+
+General signed weighted DPP means, mixed moments, exact covariance and variance; actual Q covariance, variance, and limiting variance with every off-diagonal term retained.
+
+Modules: `RiemannResearch/Probability/DeterminantalWeightedMoments.lean`, `RiemannResearch/RH/QRamanujanDPPStatistics.lean`.
