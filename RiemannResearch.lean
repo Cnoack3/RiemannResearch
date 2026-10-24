@@ -60,6 +60,7 @@ import RiemannResearch.RH.ParetoMellinNonsingular
 import RiemannResearch.Analysis.FiniteComplexPushforward
 import RiemannResearch.RH.ParetoMellinEnlargement
 import RiemannResearch.RH.ParetoMellinSchur
+import RiemannResearch.RH.RamanujanExactHeadFilterCriteria
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

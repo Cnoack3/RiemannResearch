@@ -18,6 +18,8 @@
 
 28. Established: finite Mellin enlargement has an exact full Gram displacement and monotone prefix capacities. ParetoMellinSchur gives explicit complex coefficient updates, positive Schur denominators, and exact gain |innovation|²/Schur; strict gain iff innovation≠0. Actual-zero packet identities retain full integrals and remove determinant assumptions using distinctness.
 
+29. Established: RamanujanExactHeadFilterCriteria proves frequent simultaneous exact-head/small-full-tail-product iff zero residual plus frequent head trials, for arbitrary filters without cofinality or NeBot. Eventual-head convergence gives saturation and conditional RH iff; moving-budget, cofinal divergence, and frequent bounded-error implications retain the full physical tail and Gram excess.
+
 ## Ramanujan dual transfers 11–20 — 23 October 2026
 
 11. Established: ProjectionMeanOne gives full-Hilbert one-signal completion,

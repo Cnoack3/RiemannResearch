@@ -51,3 +51,9 @@ Isolated Lean verification: `job_L48JqQKbkn2KsFejsPnWTJtbwR1PE_Mu` (27 and 30 to
 Finite pushforward preserves the complete sesquilinear quadratic form. Enlarging any nonsingular test family changes its capacity by exactly the full Gram quadratic of the inverse-coefficient displacement. Strict-half-plane prefix capacities are monotone for every injective sequence and arbitrary complex source signature. A new point has an explicit complex coefficient update and exact capacity gain `‖innovation‖² / Re(Schur)`, with positive denominator and strict gain iff the innovation is nonzero. The actual-zero packet specialization discharges determinants from distinctness and retains the entire Mellin integral remainder.
 
 Isolated Lean verification: `job_RB5nSR-HYdTriPJIvjqurfo9bEHDqlim` (28–29 together), succeeded, server 6.102 s.
+
+## 29. Strong arbitrary-filter exact-head and full-tail-product criteria
+
+For arbitrary filters, with neither cofinality nor NeBot, frequent simultaneous exact-head trials and arbitrarily small full tail products are equivalent to zero canonical residual together with frequent exact-head trials. This gives RH in the forward direction without a converse provider. Under eventual exact heads on a nontrivial filter, product convergence to zero is equivalent to saturation and, with hBaezDuarte, RH. Moving budgets only need dominate the full trial error frequently; nonzero residual forces cofinal exact-head trial error to diverge. Frequent bounded-error and divergence statements also avoid unnecessary NeBot assumptions. The full physical residual tail and entire packet Gram displacement are preserved. No existence of the required trial families is asserted.
+
+Isolated Lean verification: `job_7GTWHa9Qm893S0OwfyXUgT5-_3sJ3AX7` (strengthened 29–30 together), succeeded, server 6.281 s.
