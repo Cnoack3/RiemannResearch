@@ -189,3 +189,9 @@ Modules: `RiemannResearch/Analysis/ProjectionGreedyComparator.lean`, `RiemannRes
 Exact four-part error budget for arbitrary legal inexact solves: full legal floor, missed-span defect, visited projection tail, and solver defect. Cofinal strong convergence to the visited fit is exactly solver accuracy; reaching the target additionally requires visited saturation. Actual Pareto/Q legal trials are included.
 
 Modules: `RiemannResearch/Analysis/ProjectionWalkInexact.lean`, `RiemannResearch/RH/RamanujanInexactWalk.lean`.
+
+## Transfer 92
+
+Arbitrary visited-walk norm convergence, captured norm saturation, and total innovation energy saturation are exactly equivalent. Actual adaptive Pareto/Q walks with vanishing atom correlations acquire RH iff chains including every signed Mobius coordinate; inexact legal iterates satisfy RH plus solver-defect iff criteria. Successful walks imply RH unconditionally; all converses retain explicit open Baez-Duarte provider.
+
+Modules: `RiemannResearch/Analysis/ProjectionWalkSaturation.lean`, `RiemannResearch/RH/RamanujanAdaptiveRH.lean`.
