@@ -33,3 +33,9 @@ Modules: `RiemannResearch/Analysis/SequenceHeadTail.lean`, `RiemannResearch/RH/A
 RamanujanPointwiseCriterion proves that a positive canonical residual forces full errors to infinity for every physically pointwise-convergent legal family along any filter; merely frequently bounded errors force saturation and RH. For actual packet arrays, the Pareto and Q existential pointwise/frequently-bounded criteria are equivalent to each other and to saturation. Their RH iff retains the explicit Open hBaezDuarte provider, with no exact-head or cofinal-stage premise on the forward criterion.
 
 Modules: `RiemannResearch/RH/RamanujanPointwiseCriterion.lean`.
+
+## Transfer 36
+
+FiniteGramBackwardError decomposes the true normal defect into solver residual, source error and Gram-action error for arbitrary computed matrices. Its exact inverse-Gram budget retains all three diagonal energies and all three signed cross pairings, characterizes cancellation and optimality, and yields moving-dimension component controls. RamanujanBackwardError gives the actual P/Q trial identities and convergence iff RH plus vanishing full signed budget, with the explicit Open hBaezDuarte converse provider.
+
+Modules: `RiemannResearch/Analysis/FiniteGramBackwardError.lean`, `RiemannResearch/RH/RamanujanBackwardError.lean`.
