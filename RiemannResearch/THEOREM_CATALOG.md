@@ -4,6 +4,8 @@
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.
 
+32. Established: FiniteGramContinuity proves moving-row/source inverse-Gram continuity assuming independence only at the limit. MultipleAffineObservationProjection gives the unique optimizer of every finite independent affine observation slice in any complemented Hilbert subspace. RamanujanMultipleAffineLimits constructs the actual closed legal multiple-coefficient optimizer, its complete inverse-Gram cost and completion, and strong convergence of finite optimizers for arbitrary moving targets along cofinal filters.
+
 ## Ramanujan dual transfers 21–30 — 23 October 2026
 
 21. Established: FiniteGramMultipleConstraint gives the unique simultaneous affine optimizer with full inverse-source Gram cost and exact feasible completion. RamanujanMultipleConstraints proves automatic arithmetic constraint independence and determinant positivity for every finite selection of legal coordinates.
