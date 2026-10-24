@@ -57,3 +57,9 @@ Modules: `RiemannResearch/Analysis/HilbertWeakNorm.lean`, `RiemannResearch/RH/Ra
 HilbertTailConvexification proves that every filter-large subset of a weakly convergent Hilbert family has finite convex combinations arbitrarily close in norm to its limit. RamanujanConvexification applies this to bounded physically pointwise-convergent Pareto/Q families and actual legal packet families, retaining nonnegative finitely supported convex coefficients, their sum-one normalization, tail support and the complete physical approximation norm.
 
 Modules: `RiemannResearch/Analysis/HilbertTailConvexification.lean`, `RiemannResearch/RH/RamanujanConvexification.lean`.
+
+## Transfer 50
+
+ProjectionVariation proves exact nested increment pairings and bounds the square of full absolute scalar variation by the product of both projection-energy decrements, giving unconditional summability and exhaustive infinite-tail bounds. RamanujanCoordinateVariation supplies the sharp coordinate-capacity-gap times canonical-error-gap bound for actual Pareto coefficients and constructs the corresponding Q Riesz capacities and unconditional absolute-variation bounds.
+
+Modules: `RiemannResearch/Analysis/ProjectionVariation.lean`, `RiemannResearch/RH/RamanujanCoordinateVariation.lean`.
