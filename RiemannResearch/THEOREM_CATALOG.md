@@ -54,6 +54,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 85. Established: Arbitrary-draw projections converge unconditionally to their actually visited closed span, without surjectivity, with exact full-dictionary and missed-span losses. Actual Pareto/Q Ramanujan walks allow repeated and omitted conductors, and their visited error splits into the existing saturation floor plus the full missed-vector norm.
 
+86. Established: Actual increment subspaces of every arbitrary projection walk form an orthogonal family. The full vector innovation series is unconditionally summable to the visited projection, its complete squared-norm tail is exactly the remaining visited-space displacement, and arbitrary finite signed filters satisfy a diagonal Parseval identity. Both genuine Pareto and Q packet walks inherit these identities without exhaustive ordering.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.

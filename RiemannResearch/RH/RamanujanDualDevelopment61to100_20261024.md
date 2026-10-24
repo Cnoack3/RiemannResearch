@@ -153,3 +153,9 @@ Modules: `RiemannResearch/RH/RamanujanMellinExhaustion.lean`.
 Arbitrary-draw projections converge unconditionally to their actually visited closed span, without surjectivity, with exact full-dictionary and missed-span losses. Actual Pareto/Q Ramanujan walks allow repeated and omitted conductors, and their visited error splits into the existing saturation floor plus the full missed-vector norm.
 
 Modules: `RiemannResearch/Analysis/ExhaustiveProjectionWalk.lean`, `RiemannResearch/RH/RamanujanVisitedWalk.lean`.
+
+## Transfer 86
+
+Actual increment subspaces of every arbitrary projection walk form an orthogonal family. The full vector innovation series is unconditionally summable to the visited projection, its complete squared-norm tail is exactly the remaining visited-space displacement, and arbitrary finite signed filters satisfy a diagonal Parseval identity. Both genuine Pareto and Q packet walks inherit these identities without exhaustive ordering.
+
+Modules: `RiemannResearch/Analysis/ProjectionInnovationSeries.lean`, `RiemannResearch/RH/RamanujanInnovationSeries.lean`.
