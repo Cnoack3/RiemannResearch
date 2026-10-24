@@ -10,6 +10,8 @@
 
 24. Established: FiniteGramNormalDefect gives exact arbitrary-target trial error as canonical error plus the full inverse-Gram normal defect, with dual completion and uniqueness. RamanujanNormalDefect supplies actual P and Q arithmetic defects using their respective sources, including Λ for P.
 
+25. Established: RamanujanTrialConvergence characterizes arbitrary cofinal dependent trial arrays by saturation plus full inverse-Gram defect decay, for both P and Q. The same physical trial converges in P iff Q without cofinality; an exact metric-correction identity is retained. RH-and-defect equivalences explicitly retain hBaezDuarte.
+
 ## Ramanujan dual transfers 11–20 — 23 October 2026
 
 11. Established: ProjectionMeanOne gives full-Hilbert one-signal completion,

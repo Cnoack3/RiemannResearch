@@ -27,3 +27,9 @@ Isolated Lean verification: `job_YBlm1lhRYXjuEzH9qKerqpNmzAX2iDRo`, succeeded, s
 For every finite independent dictionary, arbitrary target and arbitrary trial, δ = G a − b satisfies `error(a) = error(a*) + δᵀG⁻¹δ`. The defect equals the full squared synthesis displacement, vanishes exactly at the optimizer, and has an exact dual completion and directionwise Cauchy–Schwarz certificate. The actual Pareto packet source is Λ; Q uses its distinct actual source. Both arithmetic normal defects and full trial error identities are exposed.
 
 Isolated Lean verification: `job_BQOGehNw_RyxljlwDZx2zOnas4E7lbbZ`, succeeded, server 6.316 s.
+
+## 25. Arbitrary trial arrays and the two-measure convergence criterion
+
+Stages and trial coefficients may vary along any cofinal nontrivial filter. Trial norm tends to zero iff canonical limiting energy is zero and the complete inverse-Gram defect tends to zero, separately for P and Q. For the same physical trial, P and Q convergence are equivalent without cofinality or optimality, and the exact metric-correction budget is proved. Conditional RH-and-defect versions keep hBaezDuarte explicit. The underlying nonnegative-budget convergence lemmas are reusable Analysis declarations.
+
+Isolated Lean verification: `job_wHo0xWb1-Ei7SRxqom5JLKbnl907hRYn` (25–26 together), succeeded, server 6.516 s.

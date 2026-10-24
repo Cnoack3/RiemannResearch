@@ -52,6 +52,8 @@ import RiemannResearch.Analysis.FiniteGramFeasibleSources
 import RiemannResearch.RH.RamanujanConstraintFeasibility
 import RiemannResearch.Analysis.FiniteGramNormalDefect
 import RiemannResearch.RH.RamanujanNormalDefect
+import RiemannResearch.Analysis.NonnegativeErrorConvergence
+import RiemannResearch.RH.RamanujanTrialConvergence
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
