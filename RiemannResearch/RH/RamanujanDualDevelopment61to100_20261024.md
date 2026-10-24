@@ -51,3 +51,9 @@ Modules: `RiemannResearch/Analysis/InconsistentPenaltyLimits.lean`, `RiemannRese
 RegularizationBudget retains the entire canonical observation budget, proves a new centered-square identity and improves physical bias control to one quarter of that budget. Actual Pareto/Q families permit arbitrary growing, moving and repeated conductor requests. Penalized approximation is equivalent to saturation plus the exact soft cost; vanishing canonical budget gives physical and penalized RH iff criteria with the Baez-Duarte provider explicit. The complete original continuous-coefficient limits to negative Moebius also join the moving-stage RH iff chain under the same budget. An exact scalar slack identity and a scalar extremizer prove that the uniform quarter-budget bias constant is optimal.
 
 Modules: `RiemannResearch/Analysis/RegularizationBudget.lean`, `RiemannResearch/RH/RamanujanRegularizationCriteria.lean`.
+
+## Transfer 69
+
+WeightedCoordinateEnergy now allows arbitrary coordinate index types and nonnegative weights assuming only summability of weighted squared operator norms. It proves the exact supported kernel, norm bound, and arbitrary-filter dominated convergence. RamanujanAdmissibleWeights gives unconditional limits and equivalent scalar saturation criteria for every positive admissible Pareto/Q weight family; RH converses retain the explicit Open hBaezDuarte provider.
+
+Modules: `RiemannResearch/Analysis/WeightedCoordinateEnergy.lean`, `RiemannResearch/RH/RamanujanAdmissibleWeights.lean`.
