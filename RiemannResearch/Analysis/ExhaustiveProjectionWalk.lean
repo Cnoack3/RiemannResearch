@@ -222,3 +222,94 @@ theorem limitingProjection_map_target_bound (v : ι → H) (x : H)
 
 
 end RiemannResearch.Analysis.ExhaustiveWalk
+
+/-! Arbitrary draws converge to the closure of the vectors actually visited.
+Source: independently developed strengthening of the exhaustive-walk result,
+for the sixth Ramanujan transfer program, 24 October 2026. -/
+namespace RiemannResearch.Analysis.ExhaustiveWalk
+open Filter
+open scoped Topology
+variable {H ι : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+  [CompleteSpace H]
+
+/-- Closed span of the visited dictionary, with no coverage assumption. -/
+def visitedClosure (v : ι → H) (draw : ℕ → ι) : Submodule ℝ H :=
+  dictionaryClosure (fun n => v (draw n))
+
+instance visitedClosure_hasOrthogonalProjection (v : ι → H) (draw : ℕ → ι) :
+    (visitedClosure v draw).HasOrthogonalProjection := by
+  unfold visitedClosure
+  infer_instance
+
+def visitedProjection (v : ι → H) (draw : ℕ → ι) (x : H) : H :=
+  (visitedClosure v draw).starProjection x
+
+def visitedError (v : ι → H) (draw : ℕ → ι) (x : H) : ℝ :=
+  ‖x - visitedProjection v draw x‖ ^ 2
+
+/-- Surjectivity is unnecessary when the limit is the actual visited span. -/
+theorem walkProjection_tendsto_visited (v : ι → H) (draw : ℕ → ι) (x : H) :
+    Tendsto (fun n => (walkSpan v draw n).starProjection x) atTop
+      (𝓝 (visitedProjection v draw x)) := by
+  simpa only [walkSpan, visitedProjection, visitedClosure, id_eq] using
+    walkProjection_tendsto (fun k => v (draw k)) id Function.surjective_id x
+
+theorem walkError_tendsto_visited (v : ι → H) (draw : ℕ → ι) (x : H) :
+    Tendsto (walkError v draw x) atTop (𝓝 (visitedError v draw x)) :=
+  (tendsto_const_nhds.sub (walkProjection_tendsto_visited v draw x)).norm.pow 2
+
+theorem walkSpan_le_visited (v : ι → H) (draw : ℕ → ι) (n : ℕ) :
+    walkSpan v draw n ≤ visitedClosure v draw :=
+  (walkSpan_le (fun k => v (draw k)) id n).trans
+    (Submodule.span ℝ (Set.range (fun k => v (draw k)))).le_topologicalClosure
+
+theorem visitedClosure_le_dictionaryClosure (v : ι → H) (draw : ℕ → ι) :
+    visitedClosure v draw ≤ dictionaryClosure v := by
+  have hs : Submodule.span ℝ (Set.range (fun k => v (draw k))) ≤
+      Submodule.span ℝ (Set.range v) := by
+    apply Submodule.span_mono
+    rintro _ ⟨k, rfl⟩
+    exact ⟨draw k, rfl⟩
+  exact closure_mono hs
+
+/-- The error consists of the full-dictionary floor and exact missed-span loss. -/
+theorem visitedError_eq_full_add (v : ι → H) (draw : ℕ → ι) (x : H) :
+    visitedError v draw x = limitingError v x +
+      ‖(dictionaryClosure v).starProjection x - visitedProjection v draw x‖ ^ 2 :=
+  nested_projection_energy _ _ (visitedClosure_le_dictionaryClosure v draw) x
+
+/-- Complete finite-to-visited remainder; no selected conductors are discarded. -/
+theorem walkError_eq_visited_add (v : ι → H) (draw : ℕ → ι) (x : H) (n : ℕ) :
+    walkError v draw x n = visitedError v draw x +
+      ‖visitedProjection v draw x - (walkSpan v draw n).starProjection x‖ ^ 2 :=
+  nested_projection_energy _ _ (walkSpan_le_visited v draw n) x
+
+theorem visitedError_eq_full_iff (v : ι → H) (draw : ℕ → ι) (x : H) :
+    visitedError v draw x = limitingError v x ↔
+      visitedProjection v draw x = (dictionaryClosure v).starProjection x := by
+  rw [visitedError_eq_full_add]
+  constructor
+  · intro h
+    have hz : ‖(dictionaryClosure v).starProjection x - visitedProjection v draw x‖ ^ 2 = 0 := by
+      linarith
+    exact (sub_eq_zero.mp (norm_eq_zero.mp (sq_eq_zero_iff.mp hz))).symm
+  · intro h
+    simp only [h, sub_self, norm_zero, zero_pow (by decide : 2 ≠ 0), add_zero]
+
+theorem visitedError_eq_zero_iff (v : ι → H) (draw : ℕ → ι) (x : H) :
+    visitedError v draw x = 0 ↔ x ∈ visitedClosure v draw := by
+  unfold visitedError visitedProjection
+  rw [sq_eq_zero_iff, norm_eq_zero, sub_eq_zero, eq_comm,
+    Submodule.starProjection_eq_self_iff]
+
+theorem walkError_zero_iff_visited (v : ι → H) (draw : ℕ → ι) (x : H) :
+    Tendsto (walkError v draw x) atTop (𝓝 0) ↔ x ∈ visitedClosure v draw := by
+  constructor
+  · intro h
+    exact (visitedError_eq_zero_iff v draw x).mp
+      (tendsto_nhds_unique (walkError_tendsto_visited v draw x) h)
+  · intro h
+    simpa only [(visitedError_eq_zero_iff v draw x).mpr h] using
+      walkError_tendsto_visited v draw x
+
+end RiemannResearch.Analysis.ExhaustiveWalk

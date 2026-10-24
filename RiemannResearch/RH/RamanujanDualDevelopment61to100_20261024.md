@@ -147,3 +147,9 @@ Modules: `RiemannResearch/RH/RamanujanMellinMovingProbes.lean`.
 Actual canonical Pareto/Q residuals split into captured Mellin energy plus the full unobserved integral energy, retaining Q metric correction. Independently cofinal packet and probe stages give a complete two-part RH iff, with the open RH-to-Baez-Duarte direction explicit. Exact limiting zero signatures identify the previous zero-product residual gap with unobserved energy, and give its full corrected genuine Q counterpart.
 
 Modules: `RiemannResearch/RH/RamanujanMellinExhaustion.lean`.
+
+## Transfer 85
+
+Arbitrary-draw projections converge unconditionally to their actually visited closed span, without surjectivity, with exact full-dictionary and missed-span losses. Actual Pareto/Q Ramanujan walks allow repeated and omitted conductors, and their visited error splits into the existing saturation floor plus the full missed-vector norm.
+
+Modules: `RiemannResearch/Analysis/ExhaustiveProjectionWalk.lean`, `RiemannResearch/RH/RamanujanVisitedWalk.lean`.
