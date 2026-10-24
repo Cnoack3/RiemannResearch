@@ -21,3 +21,9 @@ Modules: `RiemannResearch/Analysis/FiniteGramContinuity.lean`, `RiemannResearch/
 RamanujanGrowingPinning gives exact full signed Gram costs for arbitrarily growing and moving finite coordinate sets. Error decay is equivalent to saturation plus vanishing repair cost; a weighted coefficient-defect budget suffices. For any prescribed growing sets and positive tolerances tending to zero, an increasing legal-stage diagonal meeting all exact negative-Moebius pins exists iff saturation. The RH iff versions retain the explicit Open hBaezDuarte provider.
 
 Modules: `RiemannResearch/RH/RamanujanGrowingPinning.lean`.
+
+## Transfer 34
+
+SequenceHeadTail and ApproximateHeadResidualTail replace exact head interpolation by the complete signed head/tail pairing identity. Every closed legal vector satisfies the sharp bound (limitEnergy minus signed head pairing) squared ≤ full residual-tail energy times full error minus head error. Complementary head bounds, exact physical weighted head energy, and quantitative tolerance criteria retain every full-tail term.
+
+Modules: `RiemannResearch/Analysis/SequenceHeadTail.lean`, `RiemannResearch/RH/ApproximateHeadResidualTail.lean`.
