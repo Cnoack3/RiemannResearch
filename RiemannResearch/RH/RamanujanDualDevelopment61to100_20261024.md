@@ -99,3 +99,9 @@ Modules: `RiemannResearch/Analysis/CompactObservationMap.lean`, `RiemannResearch
 Distinguish raw packet coefficients from continuous signed-multiple coordinates; prove exact finite-support inverse head/tail identities, and characterize raw coefficient convergence by complete asymptotic signed tails under merely ordered (possibly conditional) convergence of the inverse limit series. Supply actual P/Q consumers and explicit dominated sufficient criteria.
 
 Modules: `RiemannResearch/Analysis/SignedInverseTails.lean`, `RiemannResearch/RH/RamanujanRawInversionTails.lean`.
+
+## Transfer 77
+
+Exact finite Mellin reindexing preserves inverse coefficients, optimized kernels, capacities and complete remainders. Full Q enlargement certificates retain the entire signed Gram gain, Mellin integral remainder, measure correction and competitor excess for arbitrary finite probe enlargements, without zero hypotheses.
+
+Modules: `RiemannResearch/RH/ParetoMellinReindexing.lean`, `RiemannResearch/RH/QRamanujanMellinEnlargement.lean`.
