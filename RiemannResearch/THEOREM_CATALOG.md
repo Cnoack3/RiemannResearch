@@ -6,6 +6,8 @@
 
 32. Established: FiniteGramContinuity proves moving-row/source inverse-Gram continuity assuming independence only at the limit. MultipleAffineObservationProjection gives the unique optimizer of every finite independent affine observation slice in any complemented Hilbert subspace. RamanujanMultipleAffineLimits constructs the actual closed legal multiple-coefficient optimizer, its complete inverse-Gram cost and completion, and strong convergence of finite optimizers for arbitrary moving targets along cofinal filters.
 
+33. Established: RamanujanGrowingPinning gives exact full signed Gram costs for arbitrarily growing and moving finite coordinate sets. Error decay is equivalent to saturation plus vanishing repair cost; a weighted coefficient-defect budget suffices. For any prescribed growing sets and positive tolerances tending to zero, an increasing legal-stage diagonal meeting all exact negative-Moebius pins exists iff saturation. The RH iff versions retain the explicit Open hBaezDuarte provider.
+
 ## Ramanujan dual transfers 21–30 — 23 October 2026
 
 21. Established: FiniteGramMultipleConstraint gives the unique simultaneous affine optimizer with full inverse-source Gram cost and exact feasible completion. RamanujanMultipleConstraints proves automatic arithmetic constraint independence and determinant positivity for every finite selection of legal coordinates.

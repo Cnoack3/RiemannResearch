@@ -15,3 +15,9 @@ Modules: `RiemannResearch/Analysis/NestedProjectionGram.lean`, `RiemannResearch/
 FiniteGramContinuity proves moving-row/source inverse-Gram continuity assuming independence only at the limit. MultipleAffineObservationProjection gives the unique optimizer of every finite independent affine observation slice in any complemented Hilbert subspace. RamanujanMultipleAffineLimits constructs the actual closed legal multiple-coefficient optimizer, its complete inverse-Gram cost and completion, and strong convergence of finite optimizers for arbitrary moving targets along cofinal filters.
 
 Modules: `RiemannResearch/Analysis/FiniteGramContinuity.lean`, `RiemannResearch/Analysis/MultipleAffineObservationProjection.lean`, `RiemannResearch/RH/RamanujanMultipleAffineLimits.lean`.
+
+## Transfer 33
+
+RamanujanGrowingPinning gives exact full signed Gram costs for arbitrarily growing and moving finite coordinate sets. Error decay is equivalent to saturation plus vanishing repair cost; a weighted coefficient-defect budget suffices. For any prescribed growing sets and positive tolerances tending to zero, an increasing legal-stage diagonal meeting all exact negative-Moebius pins exists iff saturation. The RH iff versions retain the explicit Open hBaezDuarte provider.
+
+Modules: `RiemannResearch/RH/RamanujanGrowingPinning.lean`.

@@ -68,6 +68,7 @@ import RiemannResearch.RH.RamanujanMultipleCapacityLimits
 import RiemannResearch.Analysis.FiniteGramContinuity
 import RiemannResearch.Analysis.MultipleAffineObservationProjection
 import RiemannResearch.RH.RamanujanMultipleAffineLimits
+import RiemannResearch.RH.RamanujanGrowingPinning
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
