@@ -111,3 +111,9 @@ Modules: `RiemannResearch/RH/ParetoMellinReindexing.lean`, `RiemannResearch/RH/Q
 The full half-plane pair identity gives an exact pseudohyperbolic defect, strict contraction of every nonempty screening product, a complete Mellin Gram-volume upper bound including singular node families, and an exact off-diagonal screened-kernel energy. These provide the geometric constants in the actual Ramanujan probe certificates.
 
 Modules: `RiemannResearch/RH/ParetoMellinProbeGeometry.lean`.
+
+## Transfer 79
+
+Sharp screened physical Mellin innovation bounds retain the exact complete remainder and characterize equality by exhaustion of the enlarged integral. Every nonempty old probe set strictly improves the unscreened residual bound when residual energy is positive. The actual Q identity subtracts its full metric correction and already observed capacity exactly.
+
+Modules: `RiemannResearch/RH/RamanujanMellinScreenedResidual.lean`.
