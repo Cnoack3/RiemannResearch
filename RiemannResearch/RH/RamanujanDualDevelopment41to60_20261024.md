@@ -33,3 +33,9 @@ Modules: `RiemannResearch/Analysis/FiniteGramDeterminantCertificates.lean`, `Rie
 FiniteConstrainedMetricComparison gives exact same-constraint optimizer identities in two Hilbert metrics, preserving the signed measure correction and both displacement squares. QRamanujanMultipleConstraints constructs the actual Q multiple-coordinate optimizer with automatic positive source Gram, full completion and uniqueness, then proves exact Pareto/Q correction balance, equality iff all optimizer coefficients agree, two-sided error bounds and equivalence of vanishing constrained errors under arbitrary moving stages and targets.
 
 Modules: `RiemannResearch/Analysis/FiniteConstrainedMetricComparison.lean`, `RiemannResearch/RH/QRamanujanMultipleConstraints.lean`.
+
+## Transfer 46
+
+FiniteRegularizedConstraints constructs the unique penalized optimizer with positive augmented Gram H plus rho-squared B-transpose B for arbitrary observation rows, including zero penalty and infeasible or dependent requests. It retains the exact physical-error and observation-defect completion, gives the full two-penalty identity and opposite monotonicity of mismatch and fit error. RamanujanRegularizedConstraints interprets arbitrary repeated or offstage requests as actual original coefficients, recovers the canonical packet optimizer at zero penalty, and bounds the full repair plus penalty by the sharp hard-constraint cost when feasible.
+
+Modules: `RiemannResearch/Analysis/FiniteRegularizedConstraints.lean`, `RiemannResearch/RH/RamanujanRegularizedConstraints.lean`.

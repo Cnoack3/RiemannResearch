@@ -12,6 +12,8 @@
 
 45. Established: FiniteConstrainedMetricComparison gives exact same-constraint optimizer identities in two Hilbert metrics, preserving the signed measure correction and both displacement squares. QRamanujanMultipleConstraints constructs the actual Q multiple-coordinate optimizer with automatic positive source Gram, full completion and uniqueness, then proves exact Pareto/Q correction balance, equality iff all optimizer coefficients agree, two-sided error bounds and equivalence of vanishing constrained errors under arbitrary moving stages and targets.
 
+46. Established: FiniteRegularizedConstraints constructs the unique penalized optimizer with positive augmented Gram H plus rho-squared B-transpose B for arbitrary observation rows, including zero penalty and infeasible or dependent requests. It retains the exact physical-error and observation-defect completion, gives the full two-penalty identity and opposite monotonicity of mismatch and fit error. RamanujanRegularizedConstraints interprets arbitrary repeated or offstage requests as actual original coefficients, recovers the canonical packet optimizer at zero penalty, and bounds the full repair plus penalty by the sharp hard-constraint cost when feasible.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.

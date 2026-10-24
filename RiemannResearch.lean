@@ -93,6 +93,8 @@ import RiemannResearch.Analysis.FiniteGramDeterminantCertificates
 import RiemannResearch.RH.RamanujanConstraintDeterminants
 import RiemannResearch.Analysis.FiniteConstrainedMetricComparison
 import RiemannResearch.RH.QRamanujanMultipleConstraints
+import RiemannResearch.Analysis.FiniteRegularizedConstraints
+import RiemannResearch.RH.RamanujanRegularizedConstraints
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
