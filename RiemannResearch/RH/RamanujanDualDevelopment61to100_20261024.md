@@ -207,3 +207,9 @@ Modules: `RiemannResearch/RH/QRamanujanDPPKernel.lean`.
 Construct the actual complete Q countable DPP and limit law; exact occupations, vacancies, signed correlations, and finite-inclusion limits.
 
 Modules: `RiemannResearch/RH/QRamanujanDPPLaw.lean`.
+
+## Transfer 95
+
+Exact Q packet rank and trace; almost sure cardinality; complete physical configuration probabilities equal squared evaluation determinants divided by packet Gram determinant.
+
+Modules: `RiemannResearch/RH/QRamanujanDPPVolume.lean`.
