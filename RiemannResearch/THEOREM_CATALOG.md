@@ -4,6 +4,8 @@
 
 21. Established: FiniteGramMultipleConstraint gives the unique simultaneous affine optimizer with full inverse-source Gram cost and exact feasible completion. RamanujanMultipleConstraints proves automatic arithmetic constraint independence and determinant positivity for every finite selection of legal coordinates.
 
+22. Established: FiniteBiorthogonalPinning gives continuous idempotent finite coordinate repair and exact energy. RamanujanFinitePinning pins any fixed finite set exactly to −μ, preserves genuine legal same-stage synthesis and every cofinal saturation criterion; forward RH is unconditional, reverse RH retains hBaezDuarte.
+
 ## Ramanujan dual transfers 11–20 — 23 October 2026
 
 11. Established: ProjectionMeanOne gives full-Hilbert one-signal completion,

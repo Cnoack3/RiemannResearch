@@ -46,6 +46,8 @@ import RiemannResearch.RH.ParetoMellinGramOptimization
 import RiemannResearch.RH.RamanujanMellinOptimization
 import RiemannResearch.Analysis.FiniteGramMultipleConstraint
 import RiemannResearch.RH.RamanujanMultipleConstraints
+import RiemannResearch.Analysis.FiniteBiorthogonalPinning
+import RiemannResearch.RH.RamanujanFinitePinning
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
