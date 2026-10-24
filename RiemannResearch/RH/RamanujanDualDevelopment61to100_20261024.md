@@ -213,3 +213,9 @@ Modules: `RiemannResearch/RH/QRamanujanDPPLaw.lean`.
 Exact Q packet rank and trace; almost sure cardinality; complete physical configuration probabilities equal squared evaluation determinants divided by packet Gram determinant.
 
 Modules: `RiemannResearch/RH/QRamanujanDPPVolume.lean`.
+
+## Transfer 96
+
+Identify actual finite Q DPP restrictions, all exact configuration limits, finite gap determinants, and generating function convergence for arbitrary signed real activities.
+
+Modules: `RiemannResearch/RH/QRamanujanDPPWindows.lean`.
