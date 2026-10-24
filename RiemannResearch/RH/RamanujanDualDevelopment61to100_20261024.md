@@ -39,3 +39,9 @@ Modules: `RiemannResearch/Analysis/AttainableObservations.lean`, `RiemannResearc
 RegularizedDuality constructs rank-free observation multipliers, derives exact representer recovery, the full two-square primal/dual gap, strong duality and the complete dual error identity. The dual maximizer is unique even with redundant rows or zero penalty. Actual Pareto/Q duals identify their multipliers with signed Ramanujan coefficient defects and inherit full certificates.
 
 Modules: `RiemannResearch/Analysis/RegularizedDuality.lean`, `RiemannResearch/RH/RamanujanRegularizedDuality.lean`.
+
+## Transfer 67
+
+InconsistentPenaltyLimits proves quantitative excess bounds and exact hard-penalty limits for arbitrary redundant or inconsistent observation systems: both mismatch and normalized minimum converge to the irreducible inconsistency. Zero limiting mismatch is equivalent to feasibility. The complete infinite path action is initial mismatch minus the impossible cost, with actual Pareto/Q conductor consumers. The finite action identity is strengthened to completely arbitrary penalty paths, and infinite summability and exact total action allow all nondecreasing squared penalties, including plateaus.
+
+Modules: `RiemannResearch/Analysis/InconsistentPenaltyLimits.lean`, `RiemannResearch/RH/RamanujanInconsistentPenaltyLimits.lean`.

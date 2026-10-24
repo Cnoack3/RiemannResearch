@@ -16,6 +16,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 66. Established: RegularizedDuality constructs rank-free observation multipliers, derives exact representer recovery, the full two-square primal/dual gap, strong duality and the complete dual error identity. The dual maximizer is unique even with redundant rows or zero penalty. Actual Pareto/Q duals identify their multipliers with signed Ramanujan coefficient defects and inherit full certificates.
 
+67. Established: InconsistentPenaltyLimits proves quantitative excess bounds and exact hard-penalty limits for arbitrary redundant or inconsistent observation systems: both mismatch and normalized minimum converge to the irreducible inconsistency. Zero limiting mismatch is equivalent to feasibility. The complete infinite path action is initial mismatch minus the impossible cost, with actual Pareto/Q conductor consumers. The finite action identity is strengthened to completely arbitrary penalty paths, and infinite summability and exact total action allow all nondecreasing squared penalties, including plateaus.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.
