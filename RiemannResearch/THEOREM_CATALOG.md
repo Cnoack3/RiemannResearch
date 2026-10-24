@@ -6,6 +6,8 @@
 
 42. Established: AffineConstraintBlock gives the exact Schur correction for adding finitely many affine observations within any projected Hilbert subspace, including full cost and error decompositions and equality precisely when the old optimizer already meets the new constraints. RamanujanConstraintBlocks proves automatic independence and positive Schur determinants for arbitrary disjoint finite sets of original coefficient constraints in the closed legal packet space, and explicitly identifies the innovation with their unmet coefficients.
 
+43. Established: AffineObservationSensitivity identifies exact optimizer displacement with the full inverse-Gram metric on target perturbations, gives the all-real interpolation energy identity, strict convexity and a sharp residual norm radius. RamanujanTargetSensitivity applies these to actual finite and closed multiple-coefficient optimizers, including the exact finite-to-closed sensitivity gap and its monotone improvement under dictionary enlargement.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.

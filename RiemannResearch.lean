@@ -87,6 +87,8 @@ import RiemannResearch.Analysis.NestedAffineObservationProjection
 import RiemannResearch.RH.RamanujanNestedAffineGeometry
 import RiemannResearch.Analysis.AffineConstraintBlock
 import RiemannResearch.RH.RamanujanConstraintBlocks
+import RiemannResearch.Analysis.AffineObservationSensitivity
+import RiemannResearch.RH.RamanujanTargetSensitivity
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

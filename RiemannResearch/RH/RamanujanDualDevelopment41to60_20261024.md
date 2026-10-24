@@ -15,3 +15,9 @@ Modules: `RiemannResearch/Analysis/NestedAffineObservationProjection.lean`, `Rie
 AffineConstraintBlock gives the exact Schur correction for adding finitely many affine observations within any projected Hilbert subspace, including full cost and error decompositions and equality precisely when the old optimizer already meets the new constraints. RamanujanConstraintBlocks proves automatic independence and positive Schur determinants for arbitrary disjoint finite sets of original coefficient constraints in the closed legal packet space, and explicitly identifies the innovation with their unmet coefficients.
 
 Modules: `RiemannResearch/Analysis/AffineConstraintBlock.lean`, `RiemannResearch/RH/RamanujanConstraintBlocks.lean`.
+
+## Transfer 43
+
+AffineObservationSensitivity identifies exact optimizer displacement with the full inverse-Gram metric on target perturbations, gives the all-real interpolation energy identity, strict convexity and a sharp residual norm radius. RamanujanTargetSensitivity applies these to actual finite and closed multiple-coefficient optimizers, including the exact finite-to-closed sensitivity gap and its monotone improvement under dictionary enlargement.
+
+Modules: `RiemannResearch/Analysis/AffineObservationSensitivity.lean`, `RiemannResearch/RH/RamanujanTargetSensitivity.lean`.
