@@ -648,3 +648,34 @@ Saved-source audit job_o88GHUlOZT-uhBv7aZJdzLcLgb9Q5tro passed in 11.810
 seconds. All six inspected declarations use only propext, Classical.choice
 and Quot.sound. Aggregate validation and publication are certified by the
 containing server checkpoint.
+
+## Complete cross-prime valuation geometry (2026-10-24)
+
+QPrimeValuationCrossGeometry.lean extends cross-prime wavelet orthogonality
+to every pair f in V_p and g in V_q, for distinct primes p and q:
+<f,g>_Q=<f,1>_Q<1,g>_Q. No boundedness, finite polynomial degree, or finite
+wavelet-support hypothesis is imposed. The proof maps each complete wavelet
+HasSum through the continuous inner product, rather than exchanging
+unjustified infinite sums. Existing measure-theoretic prime independence
+remains available separately.
+
+Writing mu_f=<f,1>_Q and mu_g=<g,1>_Q, the exact identities are
+||f-g||_Q^2=||f-mu_f*1||_Q^2+||g-mu_g*1||_Q^2+(mu_f-mu_g)^2
+and
+||f-g||_Q^2=||f-mu_f*1||_Q^2+||g-mu_f*1||_Q^2.
+Thus mu_f*1 (which belongs to V_q) is the unique best approximation to f
+from the entire V_q. The centered spaces are orthogonal, and any vector
+belonging to both physical spaces equals its constant mean. All norm
+remainders and the signed mean discrepancy are retained.
+
+This supplies complete-space geometry for future tensor/Meixner work.
+It is not a full tensor basis theorem. In particular F_p=Nat.log p n is
+not substituted for an arbitrary vector of V_p: its cofactor residual
+remains, and neither F_2 nor F_3 legal membership is decided here.
+General Meixner/tensor completeness and legal saturation remain Open.
+
+The coherent candidate passed job_mQH4D2WWBp02lwHa3kZkZ8b2KQ6XXVjn
+in 5.344 seconds. Saved-source audit job_fodTgTKwaLxIGGvOODLiJeK2qQzrLwwS
+passed in 11.380 seconds. All six inspected declarations use only propext,
+Classical.choice and Quot.sound. Final publication remains gated by
+aggregate-project validation in the containing server checkpoint.

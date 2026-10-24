@@ -153,6 +153,7 @@ import RiemannResearch.RH.QPrimePowerMeixnerTwo
 import RiemannResearch.RH.PrimeValuationHilbertBasis
 import RiemannResearch.RH.QPrimePowerWaveletCompleteness
 import RiemannResearch.RH.QPrimePowerCoordinateTransform
+import RiemannResearch.RH.QPrimeValuationCrossGeometry
 import RiemannResearch.RH.QPrimePowerValuationBasisProjection
 import RiemannResearch.RH.QPrimePowerCofactorResidual
 import RiemannResearch.RH.QPrimePowerCofactorExpansion

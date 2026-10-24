@@ -808,6 +808,16 @@ identifies its full infinite matrix series. Negative boundary entries remain.
 This supports future Meixner comparisons; polynomial completeness and legal
 F_2/F_3 saturation remain Open.
 
+Continuation: `RH/QPrimeValuationCrossGeometry.lean` extends cross-prime
+orthogonality to arbitrary square-integrable physical valuation vectors.
+`valuation_inner_distinct` factors their pairing into means;
+`valuation_cross_error_exact` retains both centered norm squares and the
+signed mean discrepancy. `valuation_cross_pythagoras` and
+`valuation_cross_unique_best` identify the unique best other-prime
+approximant as the mean constant. `valuation_intersection_constant`
+shows that two distinct physical valuation spaces share only constants.
+This is complete-space geometry, not tensor completeness or F_p membership.
+
 ### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
 
 Established finite and Hilbert-space identities:
