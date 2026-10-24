@@ -129,3 +129,9 @@ Modules: `RiemannResearch/RH/RamanujanMellinInnovationSeries.lean`.
 For every actual physical Hilbert vector, all positive Schur innovation energies are unconditionally summable. Their sum is the full capacity limit, each finite remainder is exactly the infinite innovation tail plus an explicit unobserved energy, and the complete remainders converge monotonically. The genuine Q identity retains its full metric correction; no completeness of the selected probes is assumed.
 
 Modules: `RiemannResearch/RH/RamanujanMellinInfiniteInnovations.lean`.
+
+## Transfer 82
+
+Sharp physical norm contraction for square-root Mellin capacity and probe-independent local Lipschitz stability for finite and infinite capacities. The genuine Q perturbation bound retains the exact positive measure correction, and no probe-separation constant or completeness hypothesis is imposed.
+
+Modules: `RiemannResearch/RH/ParetoMellinCapacityStability.lean`.
