@@ -75,3 +75,9 @@ Modules: `RiemannResearch/Analysis/WeightedCoordinateEnergy.lean`, `RiemannResea
 ComputedGramStability gives exact differing-source and metric capacity identities, the complete signed computed backward budget, sharp relative-form controls and a posteriori full-error intervals. RamanujanComputedGram transfers these certificates to actual Pareto/Q trials, proving convergence equivalences with computed defects under controlled metric perturbations and certified solver/source errors. RH iff statements retain the explicit Open hBaezDuarte converse provider.
 
 Modules: `RiemannResearch/Analysis/ComputedGramStability.lean`, `RiemannResearch/RH/RamanujanComputedGram.lean`.
+
+## Transfer 53
+
+ParetoMellinScreenedKernel evaluates the complete mixed screened kernel at two independent half-plane centers as the original kernel times the two complex screening products, preserving both phases. It proves the diagonal centered-product formula and exact annihilation at existing interpolation nodes, allowing the centers to coincide with those nodes.
+
+Modules: `RiemannResearch/RH/ParetoMellinScreenedKernel.lean`.

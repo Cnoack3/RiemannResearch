@@ -26,6 +26,8 @@
 
 52. Established: ComputedGramStability gives exact differing-source and metric capacity identities, the complete signed computed backward budget, sharp relative-form controls and a posteriori full-error intervals. RamanujanComputedGram transfers these certificates to actual Pareto/Q trials, proving convergence equivalences with computed defects under controlled metric perturbations and certified solver/source errors. RH iff statements retain the explicit Open hBaezDuarte converse provider.
 
+53. Established: ParetoMellinScreenedKernel evaluates the complete mixed screened kernel at two independent half-plane centers as the original kernel times the two complex screening products, preserving both phases. It proves the diagonal centered-product formula and exact annihilation at existing interpolation nodes, allowing the centers to coincide with those nodes.
+
 ## Ramanujan dual transfers 31–40 — 23 October 2026
 
 31. Established: NestedProjectionGram retains the complete bilinear Gram increment for nested projections. RamanujanMultipleCapacityLimits identifies finite arithmetic rows with projected coordinate Riesz vectors, proves unconditional positive definiteness of the limiting multiple-coordinate Gram, full matrix convergence, and exact positive Gram defects at every finite stage.
