@@ -6,6 +6,8 @@ RH equivalence clauses are conditional research reductions. Their explicit Baez�
 
 61. Established: Genuine Q soft-constrained Ramanujan optimizers for arbitrary finite conductor requests, including repeated/offstage and inconsistent rows. The actual Q source and inverse Gram, full normal equations, exact penalized minimum, physical and coordinate completion remainders, uniqueness, hard-cost comparison and exact two-penalty law are retained.
 
+62. Established: RegularizedDataGeometry proves exact linear response to simultaneous physical/observation data changes, the full signed normal pairing and an orthogonal sensitivity decomposition. RamanujanRegularizedData applies it in both actual metrics, preserving the physical, coordinate and full augmented residual energies; moving stages, conductor requests and penalties require only vanishing actual weighted target perturbation.
+
 ## Ramanujan dual transfers 41–60 — 24 October 2026
 
 41. Established: NestedAffineObservationProjection proves exact constrained-error and inverse observation-Gram decreases for nested Hilbert subspaces, with equality precisely when minimizers coincide. RamanujanNestedAffineGeometry specializes these identities to actual finite and closed packet dictionaries under fixed simultaneous original-coefficient constraints, yielding full optimizer-displacement remainders, constrained-error monotonicity and inverse-capacity Loewner monotonicity in every source direction.

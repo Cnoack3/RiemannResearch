@@ -118,6 +118,8 @@ import RiemannResearch.RH.RamanujanZeroCountBounds
 import RiemannResearch.RH.RamanujanConditionedZeroBudget
 import RiemannResearch.RH.RamanujanZeroBudgetLimits
 import RiemannResearch.RH.QRamanujanRegularizedConstraints
+import RiemannResearch.Analysis.RegularizedDataGeometry
+import RiemannResearch.RH.RamanujanRegularizedData
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
