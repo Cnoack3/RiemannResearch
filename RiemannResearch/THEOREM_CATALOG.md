@@ -20,6 +20,8 @@
 
 29. Established: RamanujanExactHeadFilterCriteria proves frequent simultaneous exact-head/small-full-tail-product iff zero residual plus frequent head trials, for arbitrary filters without cofinality or NeBot. Eventual-head convergence gives saturation and conditional RH iff; moving-budget, cofinal divergence, and frequent bounded-error implications retain the full physical tail and Gram excess.
 
+30. Established: CauchyInverseProduct proves the exact mixed inverse Cauchy product over any field. RamanujanMellinProduct gives determinant-free finite zero capacities 1−∏|(z−1)/z|², complete packet error identities, finite zero exclusions, decreasing prefix products and their limit bounds. Actual countable injective right-zero families have strictly positive product limit bounding every finite and limiting captured mass.
+
 ## Ramanujan dual transfers 11–20 — 23 October 2026
 
 11. Established: ProjectionMeanOne gives full-Hilbert one-signal completion,

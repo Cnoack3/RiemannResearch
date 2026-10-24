@@ -61,6 +61,8 @@ import RiemannResearch.Analysis.FiniteComplexPushforward
 import RiemannResearch.RH.ParetoMellinEnlargement
 import RiemannResearch.RH.ParetoMellinSchur
 import RiemannResearch.RH.RamanujanExactHeadFilterCriteria
+import RiemannResearch.LinearAlgebra.CauchyInverseProduct
+import RiemannResearch.RH.RamanujanMellinProduct
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
