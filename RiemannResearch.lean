@@ -71,6 +71,7 @@ import RiemannResearch.RH.RamanujanMultipleAffineLimits
 import RiemannResearch.RH.RamanujanGrowingPinning
 import RiemannResearch.Analysis.SequenceHeadTail
 import RiemannResearch.RH.ApproximateHeadResidualTail
+import RiemannResearch.RH.RamanujanPointwiseCriterion
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy

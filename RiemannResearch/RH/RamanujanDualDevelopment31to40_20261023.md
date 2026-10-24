@@ -27,3 +27,9 @@ Modules: `RiemannResearch/RH/RamanujanGrowingPinning.lean`.
 SequenceHeadTail and ApproximateHeadResidualTail replace exact head interpolation by the complete signed head/tail pairing identity. Every closed legal vector satisfies the sharp bound (limitEnergy minus signed head pairing) squared ≤ full residual-tail energy times full error minus head error. Complementary head bounds, exact physical weighted head energy, and quantitative tolerance criteria retain every full-tail term.
 
 Modules: `RiemannResearch/Analysis/SequenceHeadTail.lean`, `RiemannResearch/RH/ApproximateHeadResidualTail.lean`.
+
+## Transfer 35
+
+RamanujanPointwiseCriterion proves that a positive canonical residual forces full errors to infinity for every physically pointwise-convergent legal family along any filter; merely frequently bounded errors force saturation and RH. For actual packet arrays, the Pareto and Q existential pointwise/frequently-bounded criteria are equivalent to each other and to saturation. Their RH iff retains the explicit Open hBaezDuarte provider, with no exact-head or cofinal-stage premise on the forward criterion.
+
+Modules: `RiemannResearch/RH/RamanujanPointwiseCriterion.lean`.

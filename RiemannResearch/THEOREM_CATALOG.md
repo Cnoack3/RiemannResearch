@@ -10,6 +10,8 @@
 
 34. Established: SequenceHeadTail and ApproximateHeadResidualTail replace exact head interpolation by the complete signed head/tail pairing identity. Every closed legal vector satisfies the sharp bound (limitEnergy minus signed head pairing) squared ≤ full residual-tail energy times full error minus head error. Complementary head bounds, exact physical weighted head energy, and quantitative tolerance criteria retain every full-tail term.
 
+35. Established: RamanujanPointwiseCriterion proves that a positive canonical residual forces full errors to infinity for every physically pointwise-convergent legal family along any filter; merely frequently bounded errors force saturation and RH. For actual packet arrays, the Pareto and Q existential pointwise/frequently-bounded criteria are equivalent to each other and to saturation. Their RH iff retains the explicit Open hBaezDuarte provider, with no exact-head or cofinal-stage premise on the forward criterion.
+
 ## Ramanujan dual transfers 21–30 — 23 October 2026
 
 21. Established: FiniteGramMultipleConstraint gives the unique simultaneous affine optimizer with full inverse-source Gram cost and exact feasible completion. RamanujanMultipleConstraints proves automatic arithmetic constraint independence and determinant positivity for every finite selection of legal coordinates.
