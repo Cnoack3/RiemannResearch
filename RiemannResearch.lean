@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.FinitePairBlockProjection
 import RiemannResearch.Analysis.OrthogonalKernelScreening
 import RiemannResearch.RH.QPrimeSquareKernelScreening
 import RiemannResearch.RH.QSquarefreeKernelScreening

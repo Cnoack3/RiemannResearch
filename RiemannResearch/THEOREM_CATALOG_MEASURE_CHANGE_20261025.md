@@ -196,3 +196,24 @@ RH/PrimeSquareScreeningAndRadicalPulses20261025.md records a separate
 ordinary complete-tail proof for F_p-F_q and the resulting obstruction to
 a generic sublinear evaluation bound on the local radical space W.
 That pulse argument and its use of bounded prime gaps are not Lean-verified.
+
+## Finite odd-pair constraint projection
+
+Analysis/FinitePairBlockProjection.lean, namespace FinitePairBlockProjection:
+- block_common_difference and block_mean_preserved establish the projected values.
+- block_residual_norm, block_orthogonal, and block_pythagorean prove the exact
+  weighted orthogonal minimizer for a finite common-difference block.
+- block_sup_bound_of_ratios gives the physical bound (1+2A)M.
+- inverseSquare_pair_identities and inverseSquare_block_sup_bound give the
+  explicit physical bound (31/13)M for inverse-square adjacent-pair weights,
+  uniformly in finite block size and in all real sites j>=3.
+
+These are unconditional finite weighted-array results. The arithmetic embedding
+and complete infinite odd-radical projection are ordinary arguments recorded in
+RH/OddRadicalProjectionAndActualResponse20261025.md, not Lean formalizations.
+That report gives R=I-P_U, ||R f||_infinity <= (31/13)||f||_infinity and
+b_N=P_N(RBr_N), and explains why the latter does not bound b_N.
+
+Open: stability of the actual stage projection on the specific bounded family
+RBr_N; the original uniform signed-response and surviving-energy providers.
+No unconditional RH theorem was obtained.
