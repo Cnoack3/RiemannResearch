@@ -771,3 +771,36 @@ containing publication checkpoint.
 Open: closed identification from the cubic onward, polynomial/tensor
 completeness, and actual F_2/F_3 legal membership. The complete residual and
 signed error identities are unchanged; F_p remains Nat.log p n.
+
+## Explicit normalized cubic Meixner mode (2026-10-24)
+
+QPrimePowerMeixnerThree.lean now closes the cubic identification step.
+Write d=p^2-1, P_p=S_(p,0), T_p=S_(p,1), and v=v_p(n). The exact
+unnormalized innovation is
+C_p=S_(p,2)-(1+4/d)*T_p+(2/d^2)*P_p.
+Its checked squared norm is 4*p^6/d^6. Thus the positive normalization
+U_(p,3)=d^3/(2*p^3)*C_p has unit norm. For n>0 its full physical formula is
+[d^3*v*(v-1)*(v-2)/6 - 3*d^2*v*(v-1)/2 + 3*d*v - 1]/p^3.
+
+valuationPolynomial_gramSchmidt_two identifies the raw innovation with C_p;
+valuationPolynomialMode_two identifies E_(p,2) with U_(p,3), including sign.
+Consequently the general orthonormal family agrees with the explicit
+linear, quadratic, and cubic modes. The proof also supplies exact third
+and fourth moments of the squared same-prime wavelet coefficients, using
+convergent binomial-geometric HasSum identities with no omitted tail.
+
+qTarget_inner_primeMeixnerThree proves <F_p,U_(p,3)>=0 for every prime p.
+For arbitrary real mu,b,c,a, qTarget_meixner_three_signed_error retains
+||F_p-(mu*1+b*U_(p,1)+c*U_(p,2)+a*U_(p,3))||^2
+=||R_p||^2+(mu_p-mu)^2+(p/d-b)^2+c^2+a^2.
+This is the actual integer Q law, and F_p remains Nat.log p n.
+
+Coherent candidate job_ersLHNGROlRBwTWhpnpMlgGqiS8542kN passed in 7.701
+seconds. Saved-source audit job_6ZSbUXPUhl6ZRmIgJHc4vu5i9Ws2GCFa passed
+in 14.879 seconds; all seven inspected declarations use only propext,
+Classical.choice and Quot.sound. Aggregate-project validation and
+publication are certified by the containing server checkpoint.
+Open: closed formulas from degree four onward, polynomial/tensor
+completeness, and actual F_2/F_3 legal Parseval saturation and membership.
+The full cofactor residual is retained and is not a distance to the legal
+closure; no legal membership follows from this polynomial calculation.

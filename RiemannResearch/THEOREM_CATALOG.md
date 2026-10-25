@@ -1085,8 +1085,18 @@ saturation remain Open. No density or legal-closure provider is assumed.
 The same module now proves `valuationPolynomial_gramSchmidt_one` and
 `valuationPolynomialMode_one`: the second raw innovation is exactly
 T_p-P_p/(p^2-1), and its normalized vector is the explicit primeMeixnerTwo,
-with the same positive orientation. Closed identification from degree three
-onward, polynomial/tensor completeness, and legal saturation remain Open.
+with the same positive orientation.
+
+The explicit cubic is now established in
+`RiemannResearch/RH/QPrimePowerMeixnerThree.lean`.
+`valuationPolynomial_gramSchmidt_two` gives
+S_(p,2)-(1+4/d)*T_p+(2/d^2)*P_p, d=p^2-1, with squared norm 4*p^6/d^6.
+`valuationPolynomialMode_two` identifies its positive normalization with
+`primeMeixnerThree`; `primeMeixnerThree_sequence` gives the full physical
+cubic, including every alternating lower term. Exact third/fourth wavelet
+moments, zero F_p cubic coefficient, and the complete signed error through
+the cubic are proved. Closed formulas from degree four onward,
+polynomial/tensor completeness, and legal F_2/F_3 saturation remain Open.
 
 ### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
 
