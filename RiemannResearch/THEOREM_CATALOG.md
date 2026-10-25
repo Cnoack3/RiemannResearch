@@ -1,5 +1,42 @@
 # Theorem catalog
 
+## Squarefree CRT indicators, boundary, and weak compactness — 25 October 2026
+
+Source: user-provided CRT, compactness, and canonical-projection discussion.
+Research note: `RH/QSquarefreeCompactnessResearch20261025.md`.
+
+Established:
+- `Analysis/HilbertWeakCompactness.lean`: actual weak compactness of every
+  real Hilbert closed ball, and weak subsequence extraction under separability.
+- `RH/QSquarefreeWeakCompactness.lean`: `weakBall_isCompact`,
+  `weakBall_isSeqCompact`, `bounded_legal_sequence_has_weak_subsequence`;
+  zero and negative radius cases; canonical optimizer legality and norm bound;
+  exact `optimizer_residual_pythagoras` and `optimizer_error_decomposition`;
+  full `optimizer_weak_tendsto`, unique weak limit, and
+  `optimizer_weak_tendsto_one_iff`. The existing strong limit remains
+  the projection of qOne onto the squarefree closed span.
+- `RH/QSquarefreeBoundary.lean`: explicit continuous four-site functional,
+  properness, empty ambient norm interior, boundary equal to the subspace,
+  and noncompactness of the boundary.
+- `RH/QSquarefreeDimension.lean`: infinitely many independent prime atoms,
+  `closure_not_finiteDimensional`, and noncompactness of intrinsic norm balls
+  of positive radius.
+- `RH/QCRTIndicatorClosure.lean`: the legal modulo-six CRT carry indicator,
+  its exact support, and the full binary error/missing-mass identity.
+- `RH/QCRTIndicatorProduct.lean`: two legal binary indicators whose product
+  and union indicators lie outside the squarefree closure. The omitted
+  conductor-25 coefficient is an explicit continuous separating certificate.
+  This is a counterexample to algebra/union closure, not to qOne membership.
+- The general floor-carry decomposition was already established in
+  `RH/CRTCarryArithmetic.lean` and `RH/QCRTCarry.lean`.
+
+Conditional research reduction:
+`QCRTIndicatorClosure.one_mem_closure_of_binary_mean_tendsto_one`.
+**Open:** construct a sequence of legal binary vectors whose actual complete-Q
+mass tends to one. Equivalently for the original projection problem,
+qOne membership and zero residual limit remain **Open**.
+Weak compactness and properness alone discharge neither obligation.
+
 ## Squarefree residual limits and progression obstructions — 25 October 2026
 
 New module: `RH/QSquarefreeResidualLimit.lean`; research note:
