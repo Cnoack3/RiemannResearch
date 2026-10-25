@@ -1,3 +1,6 @@
+import RiemannResearch.Analysis.FiniteCoordinateConvergence
+import RiemannResearch.RH.FiniteHeadHilbertConvergence
+import RiemannResearch.RH.FiniteHeadProjectionConvergence
 import RiemannResearch.RH.QHilbertConvergence
 import RiemannResearch.RH.QProjectionMoments
 import RiemannResearch.RH.QSquarefreeProjectionSigns
