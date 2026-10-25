@@ -1,4 +1,5 @@
 import RiemannResearch.Analysis.OrthogonalKernelScreening
+import RiemannResearch.RH.QPrimeSquareKernelScreening
 import RiemannResearch.RH.QSquarefreeKernelScreening
 import RiemannResearch.RH.QAdjacentConductorPacket
 import RiemannResearch.Analysis.ResidualizedProjectionKernel

@@ -168,3 +168,31 @@ Conditional research reduction: riemannHypothesis_of_fourSiteEnergy_bound.
 Open: a common C>=0 with error N * fourSiteEnergy N n <= C^2 for 1<=n<=N.
 No uniform provider or unconditional RH theorem was obtained.
 See RH/ArithmeticKernelScreening20261025.md and its diagnostic companion.
+
+## Complete prime-square screening and effective truncation
+
+Unconditional results in RH/QPrimeSquareKernelScreening.lean:
+- Odd-prime-square radical rows annihilate the actual stage and residual;
+  both their original supports and their B-images are pairwise orthogonal.
+- primeSquareVector_norm_sq: zeta(2)*(2p^4-2p+2).
+- finite_primeSquare_screening: exact finite norm subtraction and coupled bound.
+- primeSquareGain_summable, completePrimeSquareEnergy_nonneg,
+  completePrimeSquareEnergy_exact, movingCorrection_sq_le_completePrimeSquare:
+  complete infinite screening with every Schur subtraction retained.
+- primeSquareGain_complete_tail: complete gain above P is <=4*||k||^2/P^4.
+- kernel_primeSquareGain_complete_tail: actual kernel bound <=4*zeta(2)*n^2/P^4.
+- primeSquareGain_truncation, finite_complete_energy_gap,
+  finite_complete_energy_gap_le_constant: an explicit finite prime cutoff
+  differs from complete screening by <=4*zeta(2) when n^2<=P^4.
+
+Analysis/OrthogonalKernelScreening.lean adds weighted finite/complete Bessel
+bounds and exact orthogonal-family screening.
+
+Open: a common bound on error N * completePrimeSquareEnergy N n, or on the
+corresponding finite-cutoff energy, for every 1<=n<=N. The truncation estimate
+does not discharge that obligation. No unconditional RH theorem was obtained.
+
+RH/PrimeSquareScreeningAndRadicalPulses20261025.md records a separate
+ordinary complete-tail proof for F_p-F_q and the resulting obstruction to
+a generic sublinear evaluation bound on the local radical space W.
+That pulse argument and its use of bounded prime gaps are not Lean-verified.
