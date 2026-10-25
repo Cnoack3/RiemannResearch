@@ -56,7 +56,7 @@ No theorem discharges the listed regularity obligations.
   correction_signed_scalar, error_signed, kernelEnergy_signed, signed_scalar_sq_le;
   exact metric Gram identities and forcing_rank_one_bound.
 - RH/QSmoothedResidueAsymptotic.lean: exact conductor-scaled atom error and
-  complete energy bound zeta(2)||d B g_d-(1-B1)||^2 <= 2/d;
+  complete energy bound zeta(2)||d B g_d-(1-B1)||^2 <= 1/d;
   signed_forcing_sq_bound for every Q vector and positive conductor.
 - RH/QShiftedReciprocalBounds.lean: centered quarter contraction, half multiplier
   bound, quarter projected correction bound, and the factor-eight displacement estimate.
@@ -73,3 +73,44 @@ The new forcing expansion does not prove inverse-Gram regularity. The common
 physical head bound and cofinal scaled-tail bound remain Open. See
 RH/SignedRegularityDevelopment20261025.md for exact statements, numerical
 diagnostics, verification boundary, and the narrowed arithmetic agenda.
+
+## Signed forcing and lower-site localization continuation
+
+Unconditional declarations (exact hypotheses remain visible in source):
+
+- RH/QSquarefreeForcingDecomposition.lean: masked site-1 leadingCoordinate,
+  leadingCoordinate_eq_evaluation, leading_response, signed_decomposition,
+  remainder_eq_inner, inactive_remainder, exists_separated_systems,
+  remainder_choice_independent, remainder_response_choice_independent,
+  active_remainder_sq_bound, residual_forcing_uniform_little_o.
+- RH/QSmoothedResidueAsymptotic.lean: atomError_sequence_abs_le_ratio,
+  atomError_weighted_square_le; atomError_energy_le now has constant 1/d,
+  signed_forcing_sq_bound has constant one. New inner_atomError_eq_tail and
+  signed_forcing_tail_sq_bound use the complete residual tail.
+  QSquarefreeSignedNormal.forcing_rank_one_bound is correspondingly strengthened.
+- RH/QUniformTail.lean: tail_norm_le, tail_norm_le_sub_add,
+  uniform_tail_tightness_of_tendsto, without a scaled-tail rate.
+- Analysis/DiscreteTailHardy.lean: weighted_square_difference_sum,
+  tail_recurrence_energy_le_four, truncatedTail, truncatedTail_energy_le_four,
+  triangular_matrix_bessel, retaining exact finite endpoints.
+- RH/QSmoothedResidueBessel.lean (namespace QSmoothedResidueAsymptotic):
+  atomError_finite_bessel, signed_forcing_finite_bessel,
+  atomError_pairing_square_summable, atomError_bessel. For every Q vector r,
+  zeta(2)*sum_d |<r,E_(d+1)>|^2 <= 4*||r||^2, including the complete conductor sum.
+- RH/QSquarefreeCorrectionKernel.lean: kernel_physical_symmetry,
+  residualizedKernel_centered, kernelEnergy_centered_exact,
+  movingCorrection_eq_centered_pairing, centeredKernel_physical,
+  centeredKernel_diagonal_zero, kernelEnergy_centered_complement_exact.
+- RH/QShiftedReciprocalTail.lean: centered_upperTail_energy_le.
+- RH/QSquarefreeKernelLocalization.lean (namespace QSquarefreeCorrectionKernel):
+  evaluation_norm_sq, kernel_norm_sq_le, centeredKernel_upperTail_energy_le,
+  centeredKernel_upperTail_pairing_sq_le, movingCorrection_lowerHead_upperTail,
+  movingCorrection_lowerHead_remainder_sq_le,
+  kernelEnergy_lowerHead_upperTail_exact, kernelEnergy_le_lowerHead_add_zeta,
+  lowerHead_response_uniform_error.
+
+Open: a common bound for the actual signed finite lower-site response on
+1<=n<=N, or the corresponding error-weighted kernel-energy provider retaining
+its Schur subtraction. The complete upper-site response is uniformly negligible;
+this does not bound the finite lower-site response. No unconditional RH theorem
+was obtained. See RH/SignedRegularityLocalization20261025.md.

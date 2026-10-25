@@ -127,4 +127,70 @@ theorem riemannHypothesis_of_head_kernel_product_bound (C : ℝ) (hC : 0 ≤ C)
     simpa only [sq_abs] using h
   nlinarith [abs_nonneg (qSequence (movingCorrection N) n)]
 
+/-- Physical reproducing-kernel symmetry, including the convention at zero. -/
+theorem kernel_physical_symmetry (N n m : ℕ) :
+    qSequence (kernel N n) m = qSequence (kernel N m) n := by
+  rw [← inner_evaluation, ← inner_evaluation]
+  change inner ℝ ((stage N).starProjection (evaluation n)) (evaluation m) =
+    inner ℝ ((stage N).starProjection (evaluation m)) (evaluation n)
+  rw [projection_inner]
+  exact real_inner_comm _ _
+
+/-- Every scalar shift retains the same residualized kernel. -/
+theorem residualizedKernel_centered (N n : ℕ) (a : ℝ) :
+    residualizedKernel N n =
+      (B (kernel N n) - a • kernel N n) -
+        (stage N).starProjection (B (kernel N n) - a • kernel N n) := by
+  exact (residualized_shift (stage N) B (evaluation n) a).symm
+
+/-- Exact centered Schur subtraction; its second square must be retained. -/
+theorem kernelEnergy_centered_exact (N n : ℕ) (a : ℝ) :
+    kernelEnergy N n =
+      ‖B (kernel N n) - a • kernel N n‖ ^ 2 -
+        ‖(stage N).starProjection (B (kernel N n) - a • kernel N n)‖ ^ 2 := by
+  rw [kernelEnergy, residualizedKernel_centered, residual_norm_sq]
+
+/-- Center the signed pairing before applying any Cauchy--Schwarz estimate. -/
+theorem movingCorrection_eq_centered_pairing (N n : ℕ) (a : ℝ) :
+    qSequence (movingCorrection N) n =
+      inner ℝ (residual N) (B (kernel N n) - a • kernel N n) := by
+  have hk : inner ℝ (residual N) (kernel N n) = 0 :=
+    orthogonal_inner_projection (stage N) (residual_mem_orthogonal N) (evaluation n)
+  have hB : inner ℝ (residual N)
+      ((stage N).starProjection (B (kernel N n))) = 0 :=
+    orthogonal_inner_projection (stage N) (residual_mem_orthogonal N) _
+  rw [movingCorrection_eq_pairing, residualizedKernel,
+    inner_sub_right, inner_sub_right, real_inner_smul_right, hk, hB]
+  ring
+
+/-- The centered kernel has a physical multiplier difference at every site. -/
+theorem centeredKernel_physical (N n m : ℕ) (a : ℝ) :
+    qSequence (B (kernel N n) - a • kernel N n) m =
+      (1 / ((m : ℝ) + 1) - a) * qSequence (kernel N n) m := by
+  have hsub := congrFun (qSequenceLinear.map_sub
+    (B (kernel N n)) (a • kernel N n)) m
+  have hsmul := congrFun (qSequenceLinear.map_smul a (kernel N n)) m
+  change qSequence (B (kernel N n) - a • kernel N n) m =
+    qSequence (B (kernel N n)) m - qSequence (a • kernel N n) m at hsub
+  change qSequence (a • kernel N n) m = a * qSequence (kernel N n) m at hsmul
+  rw [hsub, hsmul, qSequence_B]
+  ring
+
+/-- Centering at the evaluation site's multiplier cancels its diagonal exactly. -/
+theorem centeredKernel_diagonal_zero (N n : ℕ) :
+    qSequence (B (kernel N n) -
+      (1 / ((n : ℝ) + 1)) • kernel N n) n = 0 := by
+  rw [centeredKernel_physical, sub_self, zero_mul]
+
+/-- Complete complementary localization identity, retaining the projected square. -/
+theorem kernelEnergy_centered_complement_exact (N n : ℕ) :
+    kernelEnergy N (n + 1) =
+      ‖(1 / ((n : ℝ) + 2)) • (evaluation (n + 1) - kernel N (n + 1)) -
+        B (evaluation (n + 1) - kernel N (n + 1))‖ ^ 2 -
+      ‖(stage N).starProjection
+        ((1 / ((n : ℝ) + 2)) • (evaluation (n + 1) - kernel N (n + 1)) -
+          B (evaluation (n + 1) - kernel N (n + 1)))‖ ^ 2 := by
+  rw [kernelEnergy, residualizedKernel_centered_complement, residual_norm_sq]
+
+
 end RiemannResearch.RH.QSquarefreeCorrectionKernel

@@ -290,7 +290,7 @@ theorem forcing_rank_one_bound {N : ℕ} {c : Fin N → ℝ}
     (hc : Normal N qOne c) (i : Fin N) (hi : Squarefree (i.val + 2)) :
     ZetaTwoProbability.zetaTwo * ((i.val + 2 : ℕ) : ℝ) *
       (((i.val + 2 : ℕ) : ℝ) * forcing N c i -
-        inner ℝ (residual N) QSmoothedResidueAsymptotic.leading) ^ 2 ≤ 2 * error N := by
+        inner ℝ (residual N) QSmoothedResidueAsymptotic.leading) ^ 2 ≤ error N := by
   have he : inner ℝ (squarefreeAtom i) (B (residual N)) =
       inner ℝ (residual N) (B (qResidue (i.val + 2))) := by
     rw [squarefreeAtom, if_pos hi, ← B_symmetric, real_inner_comm]

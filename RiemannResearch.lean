@@ -1,5 +1,10 @@
 import RiemannResearch.Analysis.ResidualizedProjectionKernel
+import RiemannResearch.RH.QSmoothedResidueBessel
 import RiemannResearch.RH.QSquarefreeCorrectionKernel
+import RiemannResearch.RH.QUniformTail
+import RiemannResearch.RH.QShiftedReciprocalTail
+import RiemannResearch.RH.QSquarefreeForcingDecomposition
+import RiemannResearch.RH.QSquarefreeKernelLocalization
 import RiemannResearch.LinearAlgebra.FiniteHilbertNormalUniqueness
 import RiemannResearch.RH.QSquarefreeSignedNormal
 import RiemannResearch.RH.QSquarefreeFiniteDisplacement
