@@ -473,6 +473,10 @@ divergence theorem. They do not assert divergence of the Hilbert norm or a signe
 coordinate limit. In particular, for r = P_V(1) - 1, its complete Q norm is at most
 one; the physical-coordinate bound that would force r = 0 remains Open.
 
+## Signed quadratic agenda, 25 October 2026
+
+See [the declaration ledger and explicit open obligations](THEOREM_CATALOG_SIGNED_20261025.md).
+
 
 ## Original Möbius heads: complete-tail and cofinal-energy criteria — 23 October 2026
 
