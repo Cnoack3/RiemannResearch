@@ -218,4 +218,33 @@ theorem strict_limitingProjection_physically_unbounded
   exact hF (limitingProjection_eq_one_iff_physically_bounded.mpr ⟨C, hC, h⟩)
 
 
+/-- Every bounded squarefree annihilator has mean zero. It need not itself vanish. -/
+theorem bounded_annihilator_mean_eq_zero (u : QHilbert)
+    (hu : u ∈ ZetaTwoOptimizerStage.closureᗮ) (C : ℝ) (hC : 0 ≤ C)
+    (hb : ∀ k : ℕ, |qSequence u k| ≤ C) :
+    inner ℝ qOne u = 0 := by
+  by_contra hm
+  have ht := squarefree_annihilator_scaled_tail_tendsto u hu hm
+  have hg := ht.eventually (eventually_gt_atTop (2 * C ^ 2 / zetaTwo))
+  obtain ⟨N, hN⟩ := hg.exists
+  exact (not_lt_of_ge (scaled_tail_energy_le_of_bounded u N C hC hb)) hN
+
+/-- A bounded faithful test of the actual residual cannot remain orthogonal
+unless the residual is zero. The arithmetic work is establishing orthogonality
+for the specific test supplied by a change of measure. -/
+theorem limitingResidual_eq_zero_of_bounded_faithful_test
+    (T : QHilbert → QHilbert)
+    (hfaithful : ∀ u : QHilbert, inner ℝ u (T u) = 0 → u = 0)
+    (ho : T limitingResidual ∈ ZetaTwoOptimizerStage.closureᗮ)
+    (C : ℝ) (hC : 0 ≤ C)
+    (hb : ∀ k : ℕ, |qSequence (T limitingResidual) k| ≤ C) :
+    limitingResidual = 0 := by
+  apply hfaithful limitingResidual
+  have hm := bounded_annihilator_mean_eq_zero (T limitingResidual) ho C hC hb
+  have hp := Submodule.inner_right_of_mem_orthogonal
+    (ZetaTwoOptimizerStage.closure.starProjection_apply_mem qOne) ho
+  change inner ℝ (qOne - ZetaTwoOptimizerStage.closure.starProjection qOne)
+    (T limitingResidual) = 0
+  rw [inner_sub_left, hm, hp, sub_self]
+
 end RiemannResearch.RH.QSquarefreeResidualTail

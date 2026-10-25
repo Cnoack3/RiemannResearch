@@ -3230,3 +3230,6 @@ import RiemannResearch.Analysis.UnitVectorVariance
 import RiemannResearch.RH.QL1Equality
 import RiemannResearch.RH.ParetoL1Equality
 import RiemannResearch.RH.QSquarefreeNormEquality
+import RiemannResearch.RH.QShiftedReciprocal
+import RiemannResearch.RH.QParetoClosedProjectionComparison
+import RiemannResearch.RH.QSquarefreeMeasureRigidity

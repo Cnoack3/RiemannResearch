@@ -16238,3 +16238,37 @@ No residual-exhaustion estimate is proved. The ordinary explicit hypotheses
 are positive conductors, integral valid CRT coefficients, and old-space membership.
 Seven central axiom checks use only standard Lean foundations.
 See `RH/QCRTCarryResearch20261019.md` for the scope and mathematical boundary.
+
+
+## Change of measure and actual squarefree projection rigidity — 25 October 2026
+
+Source: user's proposed comparison of the Q and Pareto projections of one.
+Research note: `RH/ProjectionMeasureChangeResearch20261025.md`.
+
+Established:
+- `RH/QParetoClosedProjectionComparison.lean`: exact two-competitor projection
+  energies, both metric-correction budgets, correction decrease with the
+  squared displacement retained, strict scaled residual comparison, equivalence
+  of exact fits, and weak/strong change-of-measure normal equations. The two
+  closed subspaces must satisfy an explicit same-function membership equivalence.
+- `RH/QShiftedReciprocal.lean`: the physical multiplier Bf(n)=f(n)/(n+1),
+  its boundedness, symmetry, positivity and faithfulness; physical boundedness
+  of Bf for every Q vector; exact inverse measure identity
+  <Tf,Tg>_P=zeta(2)(<f,g>_Q-<f,Bg>_Q).
+- `RH/QSquarefreeResidualTail.lean`: `bounded_annihilator_mean_eq_zero`
+  and `limitingResidual_eq_zero_of_bounded_faithful_test` extend the existing
+  actual squarefree tail theorem, without replacing its dictionary.
+- `RH/QSquarefreeMeasureRigidity.lean`: the transported Pareto squarefree
+  closure and its membership equivalence; `shiftedResidual_mem_orthogonal_iff`;
+  `projections_agree_iff_limitingResidual_eq_zero` and
+  `projections_agree_iff_one_mem_squarefreeClosure`; a strict squarefree
+  projection necessarily differs between the two measures.
+- `qOptimizers_tendsto_pareto_realization` transfers the existing sequence's
+  actual limit; `qOptimizers_tendsto_paretoProjection_iff` proves that its
+  convergence to the other metric's optimizer is equivalent to residual zero.
+
+Open: equality of the two actual squarefree projections, equivalently extra
+Pareto orthogonality of the Q residual. Equivalent norms and convergence
+transfer do not provide this step. No contradiction, target membership or
+counterexample to target membership is asserted. The named all-conductor
+Pareto projection is not substituted for the transported squarefree one.
