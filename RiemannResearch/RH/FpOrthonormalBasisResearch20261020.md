@@ -830,3 +830,47 @@ Open: polynomial/tensor completeness, higher closed formulas, and actual
 F_2/F_3 legal Parseval saturation. This result describes infinite trials
 in the polynomial closed span, not an identification of that span with
 all of the valuation space or the legal squarefree closure.
+
+## Polynomial completeness in the physical valuation space (2026-10-25)
+
+The generating-function argument is made rigorous in
+[ValuationPolynomialDensity20261025.md](ValuationPolynomialDensity20261025.md).
+For c_k = p^(-k)/sqrt(p^2-1), every square-summable sequence annihilating
+all c_k k^m vanishes. Consequently these weighted monomials span a dense
+subspace of the full wavelet coordinate space. The existing complete
+physical wavelet basis and the Gram-Schmidt span identity transfer this
+density to the physically defined valuationSpace p.
+
+The new modules are Analysis/GeometricPolynomialDensity.lean,
+Analysis/GeometricMonomialCoordinates.lean, and
+RH/QPrimePowerPolynomialCompleteness.lean. The geometric atomic measure
+has all required square-integrable exponentials; no analytic provider or
+density assumption remains in the prime-specialized theorem.
+valuationPolynomialHilbertBasis includes qOne at frame index zero and
+valuationPolynomialMode p hp j at frame index j+1. It yields unconditional
+reconstruction and complete signed Parseval for every physical valuation
+observable. Final formal acceptance is certified by the containing server
+checkpoint. The general exponential-weight theorem and explicit product
+approximation rate in the note are ordinary mathematical proofs.
+
+This resolves one-prime polynomial completeness. Finite/infinite tensor
+completeness, higher closed formulas, and legal saturation are distinct.
+For the actual floor-log target the entire decomposition remains
+F_p = mu_p*1 + p/(p^2-1)*E_(p,0) + R_p, with R_p perpendicular to V_p.
+The higher polynomial coefficients vanish and the cofactor residual has
+strictly positive energy. Thus polynomial completeness does not improve
+the already-optimal valuation-only target error.
+
+RH/QPrimePowerLegalCancellation.lean records the exact remaining arithmetic
+condition. With C=closureWithConstants and D=I-P_C, the known nonmembership
+of E_(p,0) gives D(E_(p,0)) != 0, and
+F_p in C iff D(R_p) = -p/(p^2-1)*D(E_(p,0)).
+The complete legal defect energy retains the signed cross term.
+If the target is legal, the cofactor defect is nonzero and its pairing with
+the valuation defect is strictly negative. Separate membership of the two
+components is ruled out by the existing first-mode nonmembership theorem.
+
+Conditional research reduction: the existing two-target RH bridge applies
+once the identities D(R_2)=-(2/3)*D(E_(2,0)) and
+D(R_3)=-(3/8)*D(E_(3,0)) are proved. Both arithmetic cancellation providers
+remain Open. No RH converse or unconditional RH conclusion is asserted.

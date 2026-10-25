@@ -1107,8 +1107,31 @@ synthesis iff the real coefficients are square-summable, exact signed
 coefficient recovery, and synthesis equal to zero iff every coefficient
 vanishes. `qTarget_valuationPolynomial_infinite_error` extends the finite
 signed error to arbitrary square-summable trials, retaining the complete
-cofactor residual and infinite coefficient energy. Polynomial/tensor
-completeness and actual legal saturation remain Open.
+cofactor residual and infinite coefficient energy. The series theorem by
+itself does not assert polynomial density.
+
+Continuation (25 October 2026): one-prime polynomial completeness is
+established by Analysis/GeometricPolynomialDensity.lean,
+Analysis/GeometricMonomialCoordinates.lean, and
+RH/QPrimePowerPolynomialCompleteness.lean. The scalar geometric-moment
+annihilator is trivial; the weighted monomial span is dense in actual l2,
+including every nonzero common normalization. The existing physical
+wavelet basis transfers totality to valuationSpace p, and
+valuationPolynomialHilbertBasis provides unconditional reconstruction and
+complete signed Parseval. No unresolved density or exponential-moment
+provider appears in the prime-specialized declarations. Formal acceptance
+is certified by the containing server checkpoint.
+
+RH/QPrimePowerLegalCancellation.lean proves the full signed legal-defect
+identity and its exact cancellation/saturation equivalence, retaining the
+cofactor remainder and cross term. The first valuation defect is nonzero.
+Conditional research reduction: the two-target RH bridge still requires
+D(R_2)=-(2/3)D(E_(2,0)) and D(R_3)=-(3/8)D(E_(3,0)).
+Both arithmetic provider obligations remain Open. Tensor completeness and
+higher closed formulas remain separate. The general exponential-weight
+density theorem, explicit product approximation rate, and strengthened
+cofactor bound in RH/ValuationPolynomialDensity20261025.md are ordinary
+mathematical proofs rather than newly formalized declarations.
 
 ### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
 
