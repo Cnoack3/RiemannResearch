@@ -1,3 +1,4 @@
+import RiemannResearch.RH.DenseHarmonicLocalization
 import RiemannResearch.RH.DensePrimeHeadSignedCriterion
 import RiemannResearch.RH.CountermodelExactHeads
 import RiemannResearch.RH.ActualPrimeHeadSignedCriterion

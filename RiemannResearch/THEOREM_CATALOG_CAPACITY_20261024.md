@@ -25,3 +25,19 @@ Conditional research reductions:
 Unconditional squarefree saturation and RH remain unproved. No reverse RH-to-squarefree-saturation provider is introduced. Standard axiom audits do not discharge theorem hypotheses.
 
 ---
+
+## Harmonic cross localization — 25 October 2026
+
+Research memorandum: [HarmonicCrossLocalization20261025.md](RH/HarmonicCrossLocalization20261025.md).
+
+Established reusable results:
+
+- `RH/ParetoAmplitudeCertificates.lean`: `quadratic_tail_le`, `quadratic_tail_tendsto`, and `energy_tendsto_iff_quadratic_head` control complete tails beyond the square of a family index.
+- `RH/DenseHarmonicLocalization.lean`: exact physical support truncation; pointwise and fixed-head convergence; head bound 9K/H_M²; complete tail beyond M² bounded by 9/H_M²; exact identity X_M − A_M = T_M − D_M; quantitative bounds and unconditional convergence X_M − A_M → 0.
+- `harmonicCross_tendsto_iff_quadratic_head`: the actual signed cross limit is equivalent to vanishing finite physical energy through M².
+
+Conditional research reduction:
+
+- `riemannHypothesis_of_harmonic_quadratic_window`: RH follows from the actual finite-window limit. **Open:** A_M → 0, equivalently X_M → 0. The new module does not prove that input or a reverse implication from RH.
+
+Exploratory floating-point values and covariance-decay proposals in the memorandum are not Lean proofs or certified asymptotic estimates.

@@ -182,4 +182,49 @@ theorem reciprocal_summable_iff (r : ℕ → ℕ → ℝ) (U : ℕ → ℕ)
     exact Summable.of_nonneg_of_le (fun j => (inv_pos.mpr (hc j)).le)
       (fun j => (unitCertificate_reciprocal_bounds (r j) (U j) (hr j)).2) hs
 
+/-- An amplitude of B times the family index leaves at most B² energy beyond its square. -/
+theorem quadratic_tail_le (r : ℕ → ℝ) (m : ℕ) (B : ℝ) (hB : 0 ≤ B)
+    (hr : ∀ n, |r (n + 1)| ≤ B * (m : ℝ)) :
+    tail r (m ^ 2) ≤ B ^ 2 := by
+  have ht := tail_le r (B * (m : ℝ)) (mul_nonneg hB (Nat.cast_nonneg _)) hr (m ^ 2)
+  apply ht.trans
+  apply (div_le_iff₀ (by positivity : (0 : ℝ) < ((m ^ 2 : ℕ) : ℝ) + 1)).mpr
+  push_cast
+  nlinarith [sq_nonneg B]
+theorem quadratic_tail_tendsto (r : ℕ → ℕ → ℝ) (B : ℕ → ℝ)
+    (hB : ∀ m, 0 ≤ B m)
+    (hr : ∀ m n, |r m (n + 1)| ≤ B m * (m : ℝ))
+    (hlim : Tendsto B atTop (𝓝 0)) :
+    Tendsto (fun m => tail (r m) (m ^ 2)) atTop (𝓝 0) := by
+  have hh : Tendsto (fun m => (B m) ^ 2) atTop (𝓝 (0 : ℝ)) := by
+    simpa using hlim.pow 2
+  exact tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hh
+    (fun m => tail_nonneg (r m) (m ^ 2))
+    (fun m => quadratic_tail_le (r m) m (B m) (hB m) (hr m))
+theorem energy_tendsto_iff_quadratic_head (r : ℕ → ℕ → ℝ) (B : ℕ → ℝ)
+    (hB : ∀ m, 0 ≤ B m)
+    (hr : ∀ m n, |r m (n + 1)| ≤ B m * (m : ℝ))
+    (hlim : Tendsto B atTop (𝓝 0)) :
+    Tendsto (fun m => energy (r m)) atTop (𝓝 0) ↔
+    Tendsto (fun m => head (r m) (m ^ 2)) atTop (𝓝 0) := by
+  have ht := quadratic_tail_tendsto r B hB hr hlim
+  have he (m : ℕ) : head (r m) (m ^ 2) + tail (r m) (m ^ 2) = energy (r m) :=
+    head_add_tail_exact (r m) (B m * (m : ℝ))
+      (mul_nonneg (hB m) (Nat.cast_nonneg _)) (hr m) (m ^ 2)
+  constructor
+  · intro h
+    have eqf : (fun m => head (r m) (m ^ 2)) =
+        (fun m => energy (r m) - tail (r m) (m ^ 2)) := by
+      funext m
+      linarith [he m]
+    rw [eqf]
+    simpa using h.sub ht
+  · intro h
+    have eqf : (fun m => energy (r m)) =
+        (fun m => head (r m) (m ^ 2) + tail (r m) (m ^ 2)) := by
+      funext m
+      exact (he m).symm
+    rw [eqf]
+    simpa using h.add ht
+
 end RiemannResearch.RH.Pareto.AmplitudeCertificates
