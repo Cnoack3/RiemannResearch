@@ -1,5 +1,48 @@
 # Theorem catalog
 
+## Squarefree projection moments and the actual residual-tail dichotomy — 25 October 2026
+
+Source: user's projection-limit, CRT, primorial, and moment discussion.
+Research note: `RH/ProjectionLimitResearch20261025.md`.
+
+Established:
+- `RH/QHilbertConvergence.lean`: continuous physical evaluations, whole-sequence
+  pointwise convergence, actual weighted L1 summability and convergence, squared
+  functions converging in L1, and first/second moment convergence.
+- `RH/QProjectionMoments.lean`: exact projection and residual means equal their
+  squared norms, Pythagorean error identity, and variance delta*(1-delta).
+- `RH/QSquarefreeProjectionLimits.lean`: actual optimizer/residual applications,
+  monotone second moments, and strict-case bounds 0 < delta < 1/4.
+- `RH/QSquarefreeProjectionSigns.lean`: one-sign squarefree orthogonal vectors
+  vanish; a strict limiting projection must overshoot and undershoot one.
+- `RH/QSquarefreeFirstCoordinate.lean`: the actual first-coordinate deviation
+  squared is at most (zeta(2)-4/3)/16. No first-coordinate zero detector is claimed.
+- `RH/QPhysicalTailEnergy.lean`: exact complete weighted physical tail and
+  scaled-tail upper bound for bounded physical vectors.
+- `RH/QSquarefreeResidualTail.lean`: exact signed defect/tail identity using
+  legal squarefree prime cutoffs; `actual_squarefree_tail_dichotomy` proves
+  r=0 or N*T_N(r) tends to infinity, while the unscaled tail tends to zero.
+  `limitingProjection_eq_one_iff_physically_bounded` and
+  `strict_limitingProjection_physically_unbounded` apply to the actual
+  squarefree Q projection, not a full-conductor or Pareto residual.
+- `RH/QStrictProjectionCountermodel.lean`: projection onto span(g_2) is the odd
+  indicator, a strict projection with matching first/second moments 3/4.
+  This is not a separator of the full squarefree space.
+- `RH/QPrimorialExactHeadObstruction.lean`: the user's explicit primorial
+  Mobius exact heads are legal and exact on each finite head, but
+  `synthesis_not_eventually_norm_le` and `synthesis_not_tendsto` exclude
+  uniform norm boundedness and any Q-norm limit for this specific family.
+- `RH/QCRTIndicatorClosure.lean`: a legal carry for 3 and 5 has value two at
+  coordinate two; `fifteenCarry_not_binary` excludes the indicator claim.
+
+Conditional research reduction:
+`QSquarefreeResidualTail.residual_zero_iff_frequently_bounded_scaled_tail`.
+**Open:** bound N*T_N(r) along arbitrarily large cutoffs, or prove actual
+F_infinity is physically bounded. Either provider forces the residual to zero.
+Moment convergence, Hilbert norm boundedness, and weak compactness do not supply
+either provider. Constant membership in Hsf and an actual counterexample to it
+remain unresolved; the primorial-family obstruction is not such a counterexample.
+
 ## Simultaneous CRT and unordered atom-series obstruction — 25 October 2026
 
 Source: user's request to apply the most general CRT to every squarefree atom.

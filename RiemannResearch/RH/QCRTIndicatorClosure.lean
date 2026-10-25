@@ -147,4 +147,60 @@ theorem one_mem_closure_of_binary_mean_tendsto_one (F : ℕ → QHilbert)
     tendsto_const_nhds.sub hmass
   simpa using h
 
+open ZetaTwoHilbert ZetaTwoProbability ArithmeticCumulative
+
+/-- The ordinary canonical carry for 3 and 5 is not binary-valued. -/
+theorem fifteenCarry_eq_linear :
+    QCRTCarry.qCarry 3 5 2 2 =
+      (2 : ℝ) • qResidue 3 + (2 : ℝ) • qResidue 5 - qResidue 15 := by
+  simpa using QCRTCarry.qCarry_eq_linear 3 5 2 2 1
+    (by norm_num) (by norm_num) (by norm_num)
+
+theorem fifteenCarry_sequence (n : ℕ) :
+    qSequence (QCRTCarry.qCarry 3 5 2 2) n =
+      2 * residueFraction 3 n + 2 * residueFraction 5 n - residueFraction 15 n := by
+  rw [fifteenCarry_eq_linear]
+  change qSequenceLinear
+    ((2 : ℝ) • qResidue 3 + (2 : ℝ) • qResidue 5 - qResidue 15) n = _
+  rw [map_sub, map_add, map_smul, map_smul]
+  change 2 * qSequence (qResidue 3) n +
+    2 * qSequence (qResidue 5) n - qSequence (qResidue 15) n = _
+  simp only [qSequence_qResidue]
+
+theorem fifteenCarry_mem_closure :
+    QCRTCarry.qCarry 3 5 2 2 ∈ ZetaTwoOptimizerStage.closure := by
+  rw [QSquarefreeCapacity.optimizer_closure_eq_squarefree_closure]
+  apply qSquarefreeCRTSpan.le_topologicalClosure
+  have hs15 : Squarefree (15 : ℕ) := by
+    change Squarefree (3 * 5 : ℕ)
+    exact Nat.squarefree_mul_iff.mpr
+      ⟨by decide, Nat.prime_three.squarefree, (by norm_num : Nat.Prime 5).squarefree⟩
+  have h3 : qResidue 3 ∈ qSquarefreeCRTSpan :=
+    Submodule.subset_span ⟨⟨3, by decide, Nat.prime_three.squarefree⟩, rfl⟩
+  have h5 : qResidue 5 ∈ qSquarefreeCRTSpan :=
+    Submodule.subset_span ⟨⟨5, by decide, (by norm_num : Nat.Prime 5).squarefree⟩, rfl⟩
+  have h15 : qResidue 15 ∈ qSquarefreeCRTSpan :=
+    Submodule.subset_span ⟨⟨15, by decide, hs15⟩, rfl⟩
+  rw [fifteenCarry_eq_linear]
+  exact qSquarefreeCRTSpan.sub_mem
+    (qSquarefreeCRTSpan.add_mem (qSquarefreeCRTSpan.smul_mem 2 h3)
+      (qSquarefreeCRTSpan.smul_mem 2 h5)) h15
+
+theorem fifteenCarry_values :
+    qSequence (QCRTCarry.qCarry 3 5 2 2) 1 = 1 ∧
+    qSequence (QCRTCarry.qCarry 3 5 2 2) 2 = 2 ∧
+    qSequence (QCRTCarry.qCarry 3 5 2 2) 15 = 0 := by
+  simp only [fifteenCarry_sequence]
+  norm_num [residueFraction]
+
+theorem fifteenCarry_not_binary :
+    ¬ (∀ n : ℕ, 0 < n →
+      qSequence (QCRTCarry.qCarry 3 5 2 2) n = 0 ∨
+      qSequence (QCRTCarry.qCarry 3 5 2 2) n = 1) := by
+  intro h
+  have hh := h 2 (by norm_num)
+  rw [fifteenCarry_values.2.1] at hh
+  norm_num at hh
+
+
 end RiemannResearch.RH.QCRTIndicatorClosure
