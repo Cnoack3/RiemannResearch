@@ -146,3 +146,25 @@ An ordinary mathematical proof now rules out the uniform bare weighted
 coefficient-response norm; its full infinite/asymptotic argument is not yet
 Lean-formalized. Only the listed finite packet estimates are checked source.
 See RH/ShrinkingHeadAndInverseResponse20261025.md for proofs and exact limits.
+
+## Arithmetic screening of correction kernels
+
+Unconditional declarations in RH/QSquarefreeKernelScreening.lean:
+- fourSiteVector_norm_sq: the exact denominator is 30*zeta(2).
+- residual_inner_fourSiteVector and residualized_inner_fourSiteVector.
+- movingCorrection_sq_le_fourSite: an extra arithmetic square is subtracted.
+- fourSiteScreenedKernel_norm_sq and fourSiteScreenedKernel_pairing:
+  exact energy subtraction and preservation of the signed response.
+- fourSiteEnergy_nonneg, fourSiteEnergy_le, fourSiteScore_physical.
+- omittedVector_inner, omitted_stage, residual_inner_omitted,
+  residualized_inner_omitted.
+- exists_omitted_screening: actual finite-family normal solutions, exact energy,
+  and coupled bound. Repeated indices are allowed; no inverse hypothesis.
+
+Analysis/OrthogonalKernelScreening.lean supplies rankOne_norm_sq,
+pairing_sq_le_rankOne, and pairing_sq_le_finite.
+
+Conditional research reduction: riemannHypothesis_of_fourSiteEnergy_bound.
+Open: a common C>=0 with error N * fourSiteEnergy N n <= C^2 for 1<=n<=N.
+No uniform provider or unconditional RH theorem was obtained.
+See RH/ArithmeticKernelScreening20261025.md and its diagnostic companion.
