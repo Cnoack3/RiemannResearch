@@ -804,3 +804,29 @@ Open: closed formulas from degree four onward, polynomial/tensor
 completeness, and actual F_2/F_3 legal Parseval saturation and membership.
 The full cofactor residual is retained and is not a distance to the legal
 closure; no legal membership follows from this polynomial calculation.
+
+## Infinite signed polynomial trials (2026-10-25)
+
+QPrimePowerPolynomialSeries.lean extends the finite-trial result to every
+real sequence a with sum_j a_j^2 finite. valuationPolynomial_summable_iff
+proves this is exactly the condition for unconditional Q-norm convergence
+of sum_j a_j E_(p,j+1), without requiring absolute coefficient summability.
+valuationPolynomial_tsum_coefficient recovers every signed coefficient;
+valuationPolynomial_tsum_eq_zero_iff proves injectivity at zero.
+
+For all real mu,b and square-summable a, the exact identity is
+||F_p-(mu*1+b*E_(p,0)+sum_j a_j E_(p,j+1))||^2
+=||R_p||^2+(mu_p-mu)^2+(p/(p^2-1)-b)^2+sum_j a_j^2.
+The proof passes the finite identity through norm-continuous limits.
+The entire infinite coefficient energy and the full cofactor residual
+are retained; no finite-head truncation or missing tail is asserted zero.
+
+Candidate job_lKXDhf7qO7Bt4tXOCG1YOkHUTuLvUqk3 passed in 6.307 seconds.
+Saved-source audit job_si85VkzFYY-13ibGes1B__Vx2Vs-tLtL passed in 13.177
+seconds; all four declarations use only propext, Classical.choice and
+Quot.sound. Final aggregate validation is certified by the containing
+publication checkpoint.
+Open: polynomial/tensor completeness, higher closed formulas, and actual
+F_2/F_3 legal Parseval saturation. This result describes infinite trials
+in the polynomial closed span, not an identification of that span with
+all of the valuation space or the legal squarefree closure.

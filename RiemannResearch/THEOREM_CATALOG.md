@@ -1098,6 +1098,14 @@ moments, zero F_p cubic coefficient, and the complete signed error through
 the cubic are proved. Closed formulas from degree four onward,
 polynomial/tensor completeness, and legal F_2/F_3 saturation remain Open.
 
+`QPrimePowerPolynomialSeries.lean` proves unconditional higher-polynomial
+synthesis iff the real coefficients are square-summable, exact signed
+coefficient recovery, and synthesis equal to zero iff every coefficient
+vanishes. `qTarget_valuationPolynomial_infinite_error` extends the finite
+signed error to arbitrary square-summable trials, retaining the complete
+cofactor residual and infinite coefficient energy. Polynomial/tensor
+completeness and actual legal saturation remain Open.
+
 ### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
 
 Established finite and Hilbert-space identities:
