@@ -43,6 +43,35 @@ Moment convergence, Hilbert norm boundedness, and weak compactness do not supply
 either provider. Constant membership in Hsf and an actual counterexample to it
 remain unresolved; the primorial-family obstruction is not such a counterexample.
 
+## Sharp L1/L2 equality cases for Q and Pareto — 25 October 2026
+
+Source: user's norm-convergence and equality-case discussion.
+Research note: `RH/NormEqualityResearch20261025.md`.
+
+Established:
+- `Analysis/UnitVectorVariance.lean`: exact centered energy and equality
+  against a normalized real Hilbert vector, with scalar-span characterization.
+- `RH/QL1Equality.lean` and `RH/ParetoL1Equality.lean`: absolute mean <= L1 <= L2;
+  L1=L2 iff physical absolute value is constant; absolute mean=L2 iff the
+  signed physical function is constant; exact two variance defects.
+  Statements quantify every positive integer for the actual measures.
+- `QL1Equality.qL1_equality_nonconstant_example`: the parity sign function
+  has constant magnitude and equal norms but is not a constant function.
+- `QStrictProjectionCountermodel.oddSpace_secondMoment_ne_mean_sq`:
+  the odd-indicator projection has second moment 3/4 but squared mean 9/16.
+- `QProjectionMoments.qResidual_variance_eq` and the new residual/projection
+  variance declarations in `RH/ResidueProjectionL1.lean`: delta*(1-delta)
+  remains when first and second residual moments both equal delta.
+- `ParetoL1Equality.hilbertL1Norm_sub_tendsto_zero`: the general Pareto
+  L2-to-L1 norm-convergence implication, complementing existing Q results.
+
+Conditional research reductions in `RH/QSquarefreeNormEquality.lean`:
+`limitingResidual_l1_eq_norm_iff_zero`,
+`limitingProjection_l1_eq_norm_iff_one`, and their strict-gap contrapositives.
+**Open:** prove either norm equality for the actual squarefree limit.
+Constant magnitude would imply boundedness and hence zero residual by the
+established squarefree tail criterion, but no equality provider is asserted.
+
 ## Simultaneous CRT and unordered atom-series obstruction — 25 October 2026
 
 Source: user's request to apply the most general CRT to every squarefree atom.

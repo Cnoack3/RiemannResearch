@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ParetoL1Equality
 import RiemannResearch.RH.ResidueSchurLimits
 import RiemannResearch.RH.ThresholdHilbertL1
 
@@ -170,5 +171,60 @@ theorem convergence_chain_of_coefficients_tendsto_mobius
   · simpa only [hD, sub_zero] using inner_one_projection_tendsto
   · simpa only [hD, sub_zero] using projection_norm_sq_tendsto
   · simpa only [hD] using expanded_energy_tendsto
+
+open RiemannResearch.Analysis.UnitVectorVariance
+
+/-- The mean of the actual full-conductor Pareto residual is its complete energy. -/
+theorem limitResidual_mean_eq_energy :
+    inner ℝ hilbertOne limitResidual = limitEnergy := by
+  change inner ℝ hilbertOne (hilbertOne - limitProjection) = limitEnergy
+  rw [inner_sub_right, real_inner_self_eq_norm_sq, hilbertOne_norm_sq,
+    inner_one_limitProjection]
+  ring
+
+theorem limitResidual_norm_sq : ‖limitResidual‖ ^ 2 = limitEnergy := rfl
+
+/-- Exact residual variance; matching first and second moments does not remove it. -/
+theorem limitResidual_variance_eq :
+    ‖limitResidual - limitEnergy • hilbertOne‖ ^ 2 =
+      limitEnergy * (1 - limitEnergy) := by
+  have h := centered_norm_sq hilbertOne limitResidual hilbertOne_norm_sq
+  rw [limitResidual_mean_eq_energy, limitResidual_norm_sq] at h
+  rw [h]
+  ring
+
+theorem limitProjection_variance_eq :
+    ‖limitProjection - (1 - limitEnergy) • hilbertOne‖ ^ 2 =
+      limitEnergy * (1 - limitEnergy) := by
+  have hn : ‖limitProjection‖ ^ 2 = 1 - limitEnergy :=
+    tendsto_nhds_unique (projection_tendsto.norm.pow 2) projection_norm_sq_tendsto
+  have h := centered_norm_sq hilbertOne limitProjection hilbertOne_norm_sq
+  rw [inner_one_limitProjection, hn] at h
+  rw [h]
+  ring
+
+/-- First-moment/second-moment agreement is not Cauchy--Schwarz equality. -/
+theorem limitResidual_cs_equality_iff :
+    |inner ℝ hilbertOne limitResidual| = ‖limitResidual‖ ↔
+      limitEnergy = 0 ∨ limitEnergy = 1 := by
+  rw [limitResidual_mean_eq_energy]
+  have hn := limitResidual_norm_sq
+  constructor
+  · intro h
+    have hs := congrArg (fun t : ℝ => t ^ 2) h
+    rw [sq_abs, hn] at hs
+    have hz : limitEnergy * (1 - limitEnergy) = 0 := by
+      nlinarith only [hs]
+    rcases mul_eq_zero.mp hz with h0 | h1
+    · exact Or.inl h0
+    · exact Or.inr (by linarith)
+  · intro h
+    rcases h with h | h
+    · rw [h] at hn ⊢
+      have hz : ‖limitResidual‖ = 0 := sq_eq_zero_iff.mp hn
+      simp [hz]
+    · rw [h] at hn ⊢
+      have hone : ‖limitResidual‖ = 1 := by nlinarith [norm_nonneg limitResidual]
+      simp [hone]
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization.ProjectionSchur

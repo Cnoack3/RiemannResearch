@@ -85,4 +85,11 @@ theorem strict_projection_matching_moments :
   exact ⟨oddSpace_projection_ne_one,
     oddSpace_projection_mean.trans oddSpace_projection_norm_sq.symm⟩
 
+/-- The proposed extra squaring step fails even for a nonnegative projection. -/
+theorem oddSpace_secondMoment_ne_mean_sq :
+    ‖oddSpace.starProjection qOne‖ ^ 2 ≠
+      (inner ℝ qOne (oddSpace.starProjection qOne)) ^ 2 := by
+  rw [oddSpace_projection_norm_sq, oddSpace_projection_mean]
+  norm_num
+
 end RiemannResearch.RH.QStrictProjectionCountermodel

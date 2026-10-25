@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
+import RiemannResearch.Analysis.UnitVectorVariance
 import RiemannResearch.RH.ZetaTwoHilbertSpace
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.Tactic.Ring
@@ -60,6 +61,24 @@ theorem qProjection_variance_eq :
   rw [hm, norm_sub_sq_real, real_inner_smul_right, qProjection_inner_qOne V,
     norm_smul, Real.norm_eq_abs, mul_pow, sq_abs, qOne_norm_sq]
   simp only [qProjection_error_eq V]
+  ring
+
+
+/-- Matching residual first and second moments leaves the exact variance delta*(1-delta). -/
+theorem qResidual_variance_eq (V : Submodule ℝ QHilbert) [V.HasOrthogonalProjection] :
+    ‖(qOne - V.starProjection qOne) -
+      ‖qOne - V.starProjection qOne‖ ^ 2 • qOne‖ ^ 2 =
+      ‖qOne - V.starProjection qOne‖ ^ 2 *
+        (1 - ‖qOne - V.starProjection qOne‖ ^ 2) := by
+  have h := RiemannResearch.Analysis.UnitVectorVariance.centered_norm_sq
+    qOne (qOne - V.starProjection qOne) qOne_norm_sq
+  have hm : inner ℝ qOne (qOne - V.starProjection qOne) =
+      ‖qOne - V.starProjection qOne‖ ^ 2 := by
+    calc
+      _ = inner ℝ (qOne - V.starProjection qOne) qOne := real_inner_comm _ _
+      _ = _ := qResidual_inner_qOne V
+  rw [hm] at h
+  rw [h]
   ring
 
 end RiemannResearch.RH.ZetaTwoHilbert

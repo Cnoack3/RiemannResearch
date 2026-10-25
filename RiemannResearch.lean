@@ -3226,3 +3226,7 @@ import RiemannResearch.Analysis.ScreenedCarry
 import RiemannResearch.RH.QCRTCarry
 import RiemannResearch.RH.QCRTPrimorialCarry
 import RiemannResearch.RH.QCRTCarryBlockBridge
+import RiemannResearch.Analysis.UnitVectorVariance
+import RiemannResearch.RH.QL1Equality
+import RiemannResearch.RH.ParetoL1Equality
+import RiemannResearch.RH.QSquarefreeNormEquality
