@@ -114,3 +114,35 @@ Open: a common bound for the actual signed finite lower-site response on
 its Schur subtraction. The complete upper-site response is uniformly negligible;
 this does not bound the finite lower-site response. No unconditional RH theorem
 was obtained. See RH/SignedRegularityLocalization20261025.md.
+
+## Shrinking-head and complete forcing-tail continuation
+
+Unconditional formal declarations:
+- RH/QSmoothedResidueBessel.lean: inner_atomError_eq_cutoff_tail,
+  atomError_block_bessel, atomError_selected_tail_bessel, atomError_tail_bessel,
+  atomError_difference_bessel, forcing_blocks_uniformly_tight_of_tendsto,
+  forcing_tails_uniformly_tight_of_tendsto.
+- RH/QSquarefreeForcingDecomposition.lean:
+  residual_forcing_tails_uniformly_tight, residual_forcing_blocks_uniformly_tight.
+- RH/QShiftedReciprocalTail.lean: centered_tail_energy_le_of_interval,
+  centered_relativeTail_energy_le, midpoint_tail_energy_le.
+- RH/QSquarefreeKernelLocalization.lean: centeredKernel_relativeTail_energy_le,
+  movingCorrection_head_tail, movingCorrection_relativeHead_remainder_sq_le,
+  relativeHead_response_uniform_error, shrinkingHead_response_uniform_error,
+  kernelEnergy_head_tail_exact, kernelEnergy_relativeHead_le.
+- RH/QAdjacentConductorPacket.lean: packet_block, packet_block_abs,
+  packet_block_abs_sum, packet_block_abs_sum_le, packet_abs_le,
+  packet_weighted_block_le, packet_eq_residue_combination,
+  packet_eq_zero_of_lt, packet_first_site.
+
+Conditional research reduction:
+- QSquarefreeCorrectionKernel.riemannHypothesis_of_lowerHead_bound.
+  Open: its common signed lower-head bound.
+
+The shrinking-head result applies to every sufficiently large evaluation site.
+It does not bound the response inside the selected head. The complete forcing
+tail is uniformly small, but Gram amplification is still uncontrolled.
+An ordinary mathematical proof now rules out the uniform bare weighted
+coefficient-response norm; its full infinite/asymptotic argument is not yet
+Lean-formalized. Only the listed finite packet estimates are checked source.
+See RH/ShrinkingHeadAndInverseResponse20261025.md for proofs and exact limits.

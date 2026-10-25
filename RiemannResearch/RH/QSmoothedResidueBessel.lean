@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QFiniteSupportDualCriterion
+import RiemannResearch.RH.QUniformTail
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Positivity
@@ -30,6 +31,7 @@ open scoped Topology BigOperators
 namespace RiemannResearch.RH.QSmoothedResidueAsymptotic
 open ZetaTwoHilbert ZetaTwoProbability QShiftedReciprocal
 open QFiniteSupportDualCriterion
+open QAnnihilatorTailEscape
 open RiemannResearch.Analysis.DiscreteTailHardy
 
 private theorem error_coordinate_zero (d n : ℕ) (hn : n < d) :
@@ -144,5 +146,127 @@ theorem atomError_bessel (r : QHilbert) :
   apply le_of_tendsto
     ((atomError_pairing_square_summable r).hasSum.tendsto_sum_nat.const_mul zetaTwo)
   exact Filter.Eventually.of_forall (atomError_finite_bessel r)
+
+/-- The error at conductor d+1 ignores every physical site at most H whenever H≤d. -/
+theorem inner_atomError_eq_cutoff_tail (r : QHilbert) (H d : ℕ) (hHd : H ≤ d) :
+    inner ℝ r (atomError (d + 1)) =
+      inner ℝ (tail H r) (atomError (d + 1)) := by
+  have hz : inner ℝ (finiteHead H r) (atomError (d + 1)) = 0 := by
+    rw [real_inner_comm, inner_finiteHead_eq_sum]
+    apply Finset.sum_eq_zero
+    intro n hn
+    have hzero := atomError_sequence_eq_zero (d + 1) (n + 1)
+      (Nat.succ_pos d) (by have := Finset.mem_range.mp hn; omega)
+    have hne : Real.sqrt (qWeight n) ≠ 0 :=
+      ne_of_gt (Real.sqrt_pos.mpr (qWeight_pos n))
+    have hc : atomError (d + 1) n = 0 := by
+      simpa only [qSequence_succ, div_eq_zero_iff, hne, or_false] using hzero
+    rw [hc, mul_zero]
+  rw [tail, inner_sub_left, hz, sub_zero]
+
+/-- Every finite conductor block is controlled by the corresponding complete physical tail. -/
+theorem atomError_block_bessel (r : QHilbert) (H L : ℕ) :
+    zetaTwo * (∑ d ∈ Finset.Ico H L, (inner ℝ r (atomError (d + 1))) ^ 2) ≤
+      4 * ‖tail H r‖ ^ 2 := by
+  have heq : (∑ d ∈ Finset.Ico H L, (inner ℝ r (atomError (d + 1))) ^ 2) =
+      ∑ d ∈ Finset.Ico H L, (inner ℝ (tail H r) (atomError (d + 1))) ^ 2 := by
+    apply Finset.sum_congr rfl
+    intro d hd
+    rw [inner_atomError_eq_cutoff_tail r H d (Finset.mem_Ico.mp hd).1]
+  rw [heq]
+  calc
+    _ ≤ zetaTwo * (∑ d ∈ Finset.range L,
+        (inner ℝ (tail H r) (atomError (d + 1))) ^ 2) := by
+      apply mul_le_mul_of_nonneg_left _ zetaTwo_pos.le
+      apply Finset.sum_le_sum_of_subset_of_nonneg
+      · intro d hd
+        exact Finset.mem_range.mpr (Finset.mem_Ico.mp hd).2
+      · intro d hd hnot
+        exact sq_nonneg _
+    _ ≤ 4 * ‖tail H r‖ ^ 2 := atomError_finite_bessel (tail H r) L
+
+/-- The block estimate controls arbitrary selected conductors, not just consecutive blocks. -/
+theorem atomError_selected_tail_bessel (r : QHilbert) (H : ℕ) (s : Finset ℕ)
+    (hs : ∀ d ∈ s, H ≤ d) :
+    zetaTwo * (∑ d ∈ s, (inner ℝ r (atomError (d + 1))) ^ 2) ≤
+      4 * ‖tail H r‖ ^ 2 := by
+  have heq : (∑ d ∈ s, (inner ℝ r (atomError (d + 1))) ^ 2) =
+      ∑ d ∈ s, (inner ℝ (tail H r) (atomError (d + 1))) ^ 2 := by
+    apply Finset.sum_congr rfl
+    intro d hd
+    rw [inner_atomError_eq_cutoff_tail r H d (hs d hd)]
+  rw [heq]
+  calc
+    _ ≤ zetaTwo * (∑ d ∈ Finset.range (s.sup id + 1),
+        (inner ℝ (tail H r) (atomError (d + 1))) ^ 2) := by
+      apply mul_le_mul_of_nonneg_left _ zetaTwo_pos.le
+      apply Finset.sum_le_sum_of_subset_of_nonneg
+      · intro d hd
+        exact Finset.mem_range.mpr (Nat.lt_succ_of_le (Finset.le_sup (f := id) hd))
+      · intro d hd hnot
+        exact sq_nonneg _
+    _ ≤ 4 * ‖tail H r‖ ^ 2 := atomError_finite_bessel (tail H r) _
+
+/-- The same constant controls the complete infinite conductor tail. -/
+theorem atomError_tail_bessel (r : QHilbert) (H : ℕ) :
+    zetaTwo * (∑' d : ℕ, (inner ℝ r (atomError (d + H + 1))) ^ 2) ≤
+      4 * ‖tail H r‖ ^ 2 := by
+  have heq : (∑' d : ℕ, (inner ℝ r (atomError (d + H + 1))) ^ 2) =
+      ∑' d : ℕ, (inner ℝ (tail H r) (atomError (d + H + 1))) ^ 2 := by
+    apply tsum_congr
+    intro d
+    rw [inner_atomError_eq_cutoff_tail r H (d + H) (by omega)]
+  have hsplit := Summable.sum_add_tsum_nat_add H
+    (atomError_pairing_square_summable (tail H r))
+  have hnonneg : 0 ≤ ∑ d ∈ Finset.range H,
+      (inner ℝ (tail H r) (atomError (d + 1))) ^ 2 :=
+    Finset.sum_nonneg (fun _ _ => sq_nonneg _)
+  have hle : (∑' d : ℕ, (inner ℝ (tail H r) (atomError (d + H + 1))) ^ 2) ≤
+      ∑' d : ℕ, (inner ℝ (tail H r) (atomError (d + 1))) ^ 2 := by
+    linarith
+  rw [heq]
+  exact (mul_le_mul_of_nonneg_left hle zetaTwo_pos.le).trans
+    (atomError_bessel (tail H r))
+
+/-- Complete forcing analysis is Lipschitz in Hilbert norm. -/
+theorem atomError_difference_bessel (r s : QHilbert) :
+    zetaTwo * (∑' d : ℕ,
+      (inner ℝ r (atomError (d + 1)) - inner ℝ s (atomError (d + 1))) ^ 2) ≤
+      4 * ‖r - s‖ ^ 2 := by
+  simpa only [inner_sub_left] using atomError_bessel (r - s)
+
+/-- Uniform conductor-block tightness for every norm-convergent input sequence. -/
+theorem forcing_blocks_uniformly_tight_of_tendsto
+    (f : ℕ → QHilbert) (g : QHilbert) (hf : Tendsto f atTop (𝓝 g))
+    (ε : ℝ) (hε : 0 < ε) :
+    ∃ H₀ : ℕ, ∀ H ≥ H₀, ∀ N L : ℕ,
+      zetaTwo * (∑ d ∈ Finset.Ico H L,
+        (inner ℝ (f N) (atomError (d + 1))) ^ 2) ≤ ε := by
+  obtain ⟨H₀, hH₀⟩ := uniform_tail_tightness_of_tendsto f g hf
+    (Real.sqrt (ε / 4)) (Real.sqrt_pos.mpr (by positivity))
+  refine ⟨H₀, ?_⟩
+  intro H hH N L
+  have hsmall := hH₀ H hH N
+  have hsq : 4 * ‖tail H (f N)‖ ^ 2 ≤ ε := by
+    have hsqrt := Real.sq_sqrt (show 0 ≤ ε / 4 by positivity)
+    nlinarith [norm_nonneg (tail H (f N)), Real.sqrt_nonneg (ε / 4)]
+  exact (atomError_block_bessel (f N) H L).trans hsq
+
+/-- Uniform complete conductor tails for every norm-convergent input sequence. -/
+theorem forcing_tails_uniformly_tight_of_tendsto
+    (f : ℕ → QHilbert) (g : QHilbert) (hf : Tendsto f atTop (𝓝 g))
+    (ε : ℝ) (hε : 0 < ε) :
+    ∃ H₀ : ℕ, ∀ H ≥ H₀, ∀ N : ℕ,
+      zetaTwo * (∑' d : ℕ,
+        (inner ℝ (f N) (atomError (d + H + 1))) ^ 2) ≤ ε := by
+  obtain ⟨H₀, hH₀⟩ := uniform_tail_tightness_of_tendsto f g hf
+    (Real.sqrt (ε / 4)) (Real.sqrt_pos.mpr (by positivity))
+  refine ⟨H₀, ?_⟩
+  intro H hH N
+  have hsmall := hH₀ H hH N
+  have hsq : 4 * ‖tail H (f N)‖ ^ 2 ≤ ε := by
+    have hsqrt := Real.sq_sqrt (show 0 ≤ ε / 4 by positivity)
+    nlinarith [norm_nonneg (tail H (f N)), Real.sqrt_nonneg (ε / 4)]
+  exact (atomError_tail_bessel (f N) H).trans hsq
 
 end RiemannResearch.RH.QSmoothedResidueAsymptotic

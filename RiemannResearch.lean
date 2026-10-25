@@ -1,3 +1,4 @@
+import RiemannResearch.RH.QAdjacentConductorPacket
 import RiemannResearch.Analysis.ResidualizedProjectionKernel
 import RiemannResearch.RH.QSmoothedResidueBessel
 import RiemannResearch.RH.QSquarefreeCorrectionKernel

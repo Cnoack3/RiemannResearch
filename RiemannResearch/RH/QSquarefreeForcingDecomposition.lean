@@ -5,6 +5,7 @@ Authors: Christian Noack
 -/
 import RiemannResearch.RH.QSquarefreeCorrectionKernel
 import RiemannResearch.RH.QSmoothedResidueAsymptotic
+import RiemannResearch.RH.QSmoothedResidueBessel
 import RiemannResearch.RH.ZetaTwoOptimizerStage
 import RiemannResearch.RH.QShiftedReciprocal
 import Mathlib.Tactic.Linarith
@@ -28,6 +29,7 @@ noncomputable section
 open scoped BigOperators
 namespace RiemannResearch.RH.QSquarefreeForcingDecomposition
 open ZetaTwoHilbert ZetaTwoOptimizerStage QShiftedReciprocal
+open ZetaTwoProbability
 open QSquarefreeSmoothedProjection QSquarefreeCorrectionKernel QSquarefreeSignedNormal
 open QSmoothedResidueAsymptotic
 
@@ -155,5 +157,29 @@ theorem residual_forcing_uniform_little_o (ε : ℝ) (hε : 0 < ε) :
       Real.sqrt_nonneg (ε)]
   exact (signed_forcing_tail_sq_bound (ZetaTwoOptimizerStage.residual N) d hdpos).trans hsq
 
+
+/-- Uniform complete weighted forcing tails for the actual squarefree residuals. -/
+theorem residual_forcing_tails_uniformly_tight (ε : ℝ) (hε : 0 < ε) :
+    ∃ H₀ : ℕ, ∀ H ≥ H₀, ∀ N : ℕ,
+      zetaTwo * (∑' d : ℕ,
+        (((d + H + 1 : ℕ) : ℝ) *
+          inner ℝ (ZetaTwoOptimizerStage.residual N) (B (qResidue (d + H + 1))) -
+          inner ℝ (ZetaTwoOptimizerStage.residual N) leading) ^ 2) ≤ ε := by
+  simp_rw [signed_forcing_expansion]
+  exact forcing_tails_uniformly_tight_of_tendsto
+    ZetaTwoOptimizerStage.residual ZetaTwoOptimizerStage.limitingResidual
+    ZetaTwoOptimizerStage.residual_tendsto ε hε
+
+/-- All moving squarefree residuals have uniformly small weighted forcing blocks. -/
+theorem residual_forcing_blocks_uniformly_tight (ε : ℝ) (hε : 0 < ε) :
+    ∃ H₀ : ℕ, ∀ H ≥ H₀, ∀ N L : ℕ,
+      zetaTwo * (∑ d ∈ Finset.Ico H L,
+        (((d + 1 : ℕ) : ℝ) *
+          inner ℝ (ZetaTwoOptimizerStage.residual N) (B (qResidue (d + 1))) -
+          inner ℝ (ZetaTwoOptimizerStage.residual N) leading) ^ 2) ≤ ε := by
+  simp_rw [signed_forcing_expansion]
+  exact forcing_blocks_uniformly_tight_of_tendsto
+    ZetaTwoOptimizerStage.residual ZetaTwoOptimizerStage.limitingResidual
+    ZetaTwoOptimizerStage.residual_tendsto ε hε
 
 end RiemannResearch.RH.QSquarefreeForcingDecomposition
