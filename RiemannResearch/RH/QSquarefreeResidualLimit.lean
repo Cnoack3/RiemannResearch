@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.RH.ZetaTwoOptimizerStage
+import RiemannResearch.RH.QSquarefreeWeakCompactness
+import Mathlib.Topology.Order.Basic
 import RiemannResearch.RH.QDivisibilityHilbertMoments
 import RiemannResearch.RH.QSquarefreeCapacity
 import RiemannResearch.Analysis.ExhaustiveProjectionWalk
@@ -169,5 +171,45 @@ theorem riemannHypothesis_of_residual_tendsto_zero
   apply QSquarefreeCapacity.riemannHypothesis_of_capacity_tendsto
   apply QSquarefreeCapacity.capacity_tendsto_iff_optimizer_closure.mpr
   exact residual_tendsto_zero_iff_mem.mp h
+
+/-- The user's full epsilon formulation is exactly target membership, still Open. -/
+theorem epsilon_approximation_iff_mem :
+    (∀ ε : ℝ, 0 < ε → ∃ M0 : ℕ, ∀ M, M0 ≤ M → error M ≤ ε) ↔
+      qOne ∈ closure := by
+  rw [← error_tendsto_zero_iff_mem_closure]
+  constructor
+  · intro h
+    apply tendsto_order.2
+    constructor
+    · intro a ha
+      exact Filter.Eventually.of_forall (fun M => ha.trans_le (sq_nonneg ‖residual M‖))
+    · intro b hb
+      obtain ⟨M0, hM0⟩ := h (b / 2) (by linarith)
+      exact Filter.eventually_atTop.2
+        ⟨M0, fun M hM => (hM0 M hM).trans_lt (by linarith)⟩
+  · intro h ε hε
+    obtain ⟨M0, hM0⟩ := Filter.eventually_atTop.1
+      (h.eventually (Iio_mem_nhds hε))
+    exact ⟨M0, fun M hM => (hM0 M hM).le⟩
+
+/-- Unconditional convergence retains the complete limiting residual energy. -/
+theorem eventual_error_le_limitingResidual_add (ε : ℝ) (hε : 0 < ε) :
+    ∃ M0 : ℕ, ∀ M, M0 ≤ M → error M ≤ ‖limitingResidual‖ ^ 2 + ε := by
+  have ht : Tendsto error atTop (𝓝 (‖limitingResidual‖ ^ 2)) :=
+    residual_tendsto.norm.pow 2
+  have hb : ‖limitingResidual‖ ^ 2 < ‖limitingResidual‖ ^ 2 + ε := by linarith
+  obtain ⟨M0, hM0⟩ := Filter.eventually_atTop.1
+    (ht.eventually (Iio_mem_nhds hb))
+  exact ⟨M0, fun M hM => (hM0 M hM).le⟩
+
+/-- Any finite legal competitor bounds every subsequent optimizer. -/
+theorem later_error_le_competitor (N M : ℕ) (hNM : N ≤ M)
+    (f : QHilbert) (hf : f ∈ stage N) :
+    error M ≤ ‖qOne - f‖ ^ 2 := by
+  have hfm : f ∈ stage M :=
+    walkSpan_mono squarefreeAtom id hNM hf
+  have he := QSquarefreeWeakCompactness.optimizer_error_decomposition M f hfm
+  change ‖residual M‖ ^ 2 ≤ ‖qOne - f‖ ^ 2
+  linarith [sq_nonneg ‖optimizer M - f‖]
 
 end RiemannResearch.RH.QSquarefreeResidualLimit

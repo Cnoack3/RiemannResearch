@@ -166,3 +166,80 @@ A real separator is \(u_s(k)=\zeta(2)k^2\Re\Delta_s(k)\). It has mean 1 and is o
 - Properness of the squarefree subspace does not separate the constant target. A separating vector must have nonzero pairing with 1, not merely be nonzero.
 
 The remaining arithmetic task is to prove squarefree closure, or construct an actual continuous annihilator with nonzero mean. Neither has been accomplished here.
+
+
+## 6. The precise epsilon request and the remaining CRT estimate
+
+Source: user's follow-up request on 25 October 2026 to use finite or infinite
+CRT to prove that every sufficiently late canonical optimizer has squared
+complete-Q error at most epsilon.
+
+The newly checked quantifier statement is
+\[
+[\forall\varepsilon>0\ \exists M_0\ \forall M\ge M_0,\
+  \|1-F_M\|_Q^2\le\varepsilon]
+\quad\Longleftrightarrow\quad 1\in H_{\mathrm{sf}}.
+\]
+It is an established equivalence, not an established assertion of either side.
+Declaration: `epsilon_approximation_iff_mem`.
+
+Unconditionally, for every epsilon > 0, all sufficiently late M satisfy
+\[
+\|1-F_M\|_Q^2\le \|1-P_{H_{\mathrm{sf}}}1\|_Q^2+\varepsilon.
+\]
+Declaration: `eventual_error_le_limitingResidual_add`.
+The exact equality behind this estimate retains the full residual:
+\[
+\|1-F_M\|_Q^2=
+\|1-P_{H_{\mathrm{sf}}}1\|_Q^2+
+\|P_{H_{\mathrm{sf}}}1-F_M\|_Q^2.
+\]
+
+The constructive finite-certificate bridge is now explicit:
+\[
+G\in V_N,\ M\ge N
+\quad\Longrightarrow\quad
+\|1-F_M\|_Q^2\le\|1-G\|_Q^2.
+\]
+Declaration: `later_error_le_competitor`. It follows from the existing exact
+least-squares identity
+\[
+\|1-G\|_Q^2=\|1-F_M\|_Q^2+\|F_M-G\|_Q^2.
+\]
+Consequently, a single complete-Q CRT certificate G for each epsilon would give
+the requested threshold M_0=N. No cofinal or monotone choice of these
+certificate indices is required.
+
+### Concrete arithmetic provider still Open
+
+The following calculation is ordinary mathematics, not a new Lean theorem in
+this update. Let G_H be a finite squarefree legal combination with
+G_H(n)=1 for 1 <= n <= H. Then exactly
+\[
+\|1-G_H\|_Q^2=
+\frac1{\zeta(2)}\sum_{n>H}\frac{|1-G_H(n)|^2}{n^2}.
+\]
+If B_H = sup_n |G_H(n)|, then for H >= 1,
+\[
+\|1-G_H\|_Q^2
+\le \frac{(1+B_H)^2}{\zeta(2)}
+        \sum_{n>H}\frac1{n^2}
+\le \frac{(1+B_H)^2}{\zeta(2)H}.
+\]
+Thus B_H=o(sqrt(H)) would be one sufficient provider. It is a sufficient,
+potentially lossy estimate; the exact signed tail energy remains the primary
+target. The current CRT identities do not supply this amplitude bound or
+vanishing complete tail energy.
+
+The explicit exact-head formula from Section 5 is legal, but its coefficients
+alone do not establish the required complete-Q control. Simultaneous CRT
+rewrites these finite sums into prime atoms and carries without changing their
+energy. The ambient cylinders h_L=1-I_L are not admissible replacements:
+h_6 is already separated from H_sf by the checked conductor-25 functional.
+Projected cylinders converge to P_Hsf(1), with the same unresolved residual
+energy retained.
+
+**Open:** construct actual finite legal CRT combinations with complete-Q error
+arbitrarily small, or otherwise prove the constant target lies in H_sf.
+This update does not prove the requested unconditional convergence and does
+not provide a counterexample to it.

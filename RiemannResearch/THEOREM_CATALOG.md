@@ -78,6 +78,12 @@ Established: `residual_tendsto_zero_iff_mem`,
 `qDivisor_mem_stage_orthogonal`, `residual_inner_qDivisor`,
 `error_eq_progression_mass_add`, `error_ge_progression_mass`, and
 `residual_not_uniformly_small`.
+Follow-up epsilon formulation: `epsilon_approximation_iff_mem` identifies the
+user's quantified bound with squarefree target membership;
+`eventual_error_le_limitingResidual_add` proves the unconditional eventual
+bound retaining the residual energy; `later_error_le_competitor` transfers a
+complete-Q certificate in stage N to every later canonical optimizer.
+**Open:** producing such finite CRT certificates at arbitrarily small error.
 The exact complete-Q energy is L^(-2) plus the squared residual after
 subtracting the common-multiple indicator. The uniform-convergence
 obstruction is not an L2 counterexample.
