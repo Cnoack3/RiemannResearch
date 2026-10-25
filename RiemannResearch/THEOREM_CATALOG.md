@@ -1,5 +1,36 @@
 # Theorem catalog
 
+## Simultaneous CRT and unordered atom-series obstruction — 25 October 2026
+
+Source: user's request to apply the most general CRT to every squarefree atom.
+Research note: `RH/QSimultaneousCRTResearch20261025.md`.
+
+Established:
+- `RH/QSimultaneousCRT.lean`: literal canonical floor carries;
+  `squarefreeSpan_eq_prime_sup_carry` and equality of norm closures;
+  `finite_synthesis_identity` retaining every signed carry;
+  `separated_prime_carry_difference_ne_one`.
+- `RH/QUnconditionalAtomSeries.lean`: continuous coordinates force coefficients
+  to be minus Mobius; `no_hasSum_qOne`, `no_hasSum_squarefree_qOne`, and
+  `no_hasSum_squarefree_subtype_qOne` exclude an unordered fixed-coefficient
+  atomic sum equal to qOne. This does not exclude ordered conditional limits,
+  block limits, or varying finite approximants, and does not refute RH.
+- `RH/QCRTCylinderProjection.lean`: ambient cylinder error exactly L^(-2);
+  signed legal-projection error vector; exact residual energy plus projected
+  indicator square; excess between zero and L^(-2); convergence to the legal
+  projection of qOne; target convergence iff squarefree target membership.
+
+Ordinary analysis, not newly formalized: the infinite-product tensor obstruction
+and non-descendability of the product of all prime fields, deduced from Mathew's
+uniform nilpotence criterion. The note also identifies the failure of a natural
+CRT-cylinder module structure on Hsf using the previously verified product
+counterexample. The primorial Mobius error obstruction uses existing QPrimeSieve
+declarations.
+
+**Open:** constant-target membership and complete-Q error decay for actual
+stage-dependent legal finite combinations. CRT span identities and algebraic
+descent do not supply this estimate. No unconditional RH claim.
+
 ## Squarefree CRT indicators, boundary, and weak compactness — 25 October 2026
 
 Source: user-provided CRT, compactness, and canonical-projection discussion.
