@@ -217,3 +217,40 @@ b_N=P_N(RBr_N), and explains why the latter does not bound b_N.
 Open: stability of the actual stage projection on the specific bounded family
 RBr_N; the original uniform signed-response and surviving-energy providers.
 No unconditional RH theorem was obtained.
+
+## Finite head boundary and solved tail response
+
+- RH/QSquarefreeHeadBoundary.lean: headSynthesis_prefix and
+  exists_stage_head_match_iff characterize actual stage heads by omitted
+  Mobius coordinates plus one explicit charge. stage_head_injective gives
+  uniqueness; residual_headCharge and movingCorrection_headCharge give the
+  actual residual defect and zero correction defect.
+- RH/QSquarefreeTailResponse.lean: tailStage, tailResponse, headResponse;
+  response_split and response_pythagorean; headResponse_minimum_identity;
+  tailResponse_pairing retains every signed term. tailResponse_norm_le and
+  tailResponse_physical_bound bound the already projected legal zero-head
+  response by ||tail_H r_N||/[2(H+2)] in norm and sqrt(zeta(2))*n times this
+  bound physically. tailResponse_uniform_window gives uniform decay on
+  n<=A(H+2), with stage N unrestricted.
+  normalized_contrast_mem_tailStage and headResponse_normalized_moments_eq
+  give the exact common normalized high-conductor normal moment.
+
+## Weighted Bessel after head orthogonalization
+
+- Analysis/TriangularWeightedBessel.lean: layered_bessel combines finite
+  nonnegative support layers for orthogonal families of norm at most one.
+- RH/QTriangularWeightedBessel.lean: reciprocal_layer_energy_le,
+  reciprocal_onset_bessel, reciprocal_onset_tail_bessel prove exact-constant
+  weighted bounds with physical weight (s_i+1)^2. The actual-stage
+  movingCorrection_onset_bessel bounds coefficient energy by error N;
+  movingCorrection_onset_tail_bessel bounds high-onset coefficient energy
+  by the complete residual-tail norm squared.
+
+All new estimates are unconditional for their stated structural data.
+Open: uniform actual physical response, the minimum-norm head extension,
+or a bound for the weighted physical reconstruction diagonal jointly with
+error N. Basis construction and the physical diagonal Cauchy--Schwarz
+corollary are ordinary mathematics in the report, not separately formalized.
+The original B/KPS/KF providers and the infinite odd-radical construction
+retain their previous statuses. RH is not proved.
+See RH/HeadBoundaryTailResponseAndWeightedBessel20261025.md.
