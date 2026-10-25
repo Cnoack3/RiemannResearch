@@ -1,5 +1,28 @@
 # Theorem catalog
 
+## Squarefree residual limits and progression obstructions — 25 October 2026
+
+New module: `RH/QSquarefreeResidualLimit.lean`; research note:
+`RH/QSquarefreeResidualLimitResearch20261025.md`.
+
+Established: `residual_tendsto_zero_iff_mem`,
+`stage_coordinate_zero_of_dvd`, `residual_coordinate_one_of_dvd`,
+`qDivisor_mem_stage_orthogonal`, `residual_inner_qDivisor`,
+`error_eq_progression_mass_add`, `error_ge_progression_mass`, and
+`residual_not_uniformly_small`.
+The exact complete-Q energy is L^(-2) plus the squared residual after
+subtracting the common-multiple indicator. The uniform-convergence
+obstruction is not an L2 counterexample.
+
+Conditional research reduction:
+`riemannHypothesis_of_residual_tendsto_zero` concludes Mathlib's RH
+from zero convergence of the actual squarefree projection residuals.
+Open: prove that convergence, equivalently qOne membership in the
+closed squarefree span, or construct an actual L2 separator of qOne.
+The literature-based converse RH-to-squarefree-density and the explicit
+off-line-zero Mellin witness are ordinary arguments in the note, not
+newly formalized declarations.
+
 ## Squarefree capacity five-attempt audit — 24 October 2026
 
 Source: user-requested capacity saturation investigation.
