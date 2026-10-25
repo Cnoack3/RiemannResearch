@@ -1,5 +1,31 @@
 # Theorem catalog
 
+## Squarefree capacity five-attempt audit — 24 October 2026
+
+Source: user-requested capacity saturation investigation.
+Audit: [RH/SquarefreeCapacityFiveAttempts20261024.md](RH/SquarefreeCapacityFiveAttempts20261024.md).
+
+Established results:
+- RH/SquarefreePacketCapacity.lean: actual squarefree cutoff Gram positivity,
+  inverse-Gram capacity identity, exact complete error, monotonicity,
+  positive finite capacities below one, supremum convergence, exact projection
+  increments, repeated nonsquarefree stages, and common legal error floor.
+- Analysis/ReciprocalEnergyGap.lean: a positive error gap bounds controlled
+  reciprocal mass by max(1,(1+c)/delta); cofinal mass excludes a positive gap.
+- Analysis/GeometricHeadCertificateObstruction.lean and
+  RH/PrimeHeadCertificateObstruction.lean: amplitude-derived Pareto certificates
+  for the specified prime-balanced family have summable reciprocals under the
+  actual geometric head selector. This concerns the specified upper
+  certificates, not reciprocals of the actual residual energies.
+
+Conditional research reductions:
+- SquarefreePacketCapacity.riemannHypothesis_of_saturation:
+  Open arithmetic obligation is squarefree kappa tending to one.
+- RH/SquarefreeCapacityReciprocalCriterion.lean: saturation and RH follow from
+  actual legal trials with complete inverse-mass error control and cofinal
+  reciprocal mass. Open: simultaneous providers of these arithmetic estimates.
+- No unconditional RH or capacity saturation was proved.
+
 ## Averaging-limit continuation — 24 October 2026
 
 Source: user-provided averaging-limit agenda.
