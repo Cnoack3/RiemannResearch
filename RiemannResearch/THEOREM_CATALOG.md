@@ -1056,6 +1056,12 @@ All-order Gram-Schmidt orthonormality is now established. Closed Meixner
 formula identification, polynomial/tensor completeness, and legal F_2/F_3
 saturation remain Open. No density or legal-closure provider is assumed.
 
+The same module now proves `valuationPolynomial_gramSchmidt_one` and
+`valuationPolynomialMode_one`: the second raw innovation is exactly
+T_p-P_p/(p^2-1), and its normalized vector is the explicit primeMeixnerTwo,
+with the same positive orientation. Closed identification from degree three
+onward, polynomial/tensor completeness, and legal saturation remain Open.
+
 ### Zero-phase sampling and floor-logarithm/valuation inversion (2026-10-21)
 
 Established finite and Hilbert-space identities:

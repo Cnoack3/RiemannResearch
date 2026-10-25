@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QPrimePowerMonomialLift
+import RiemannResearch.RH.QPrimePowerMeixnerTwo
 import RiemannResearch.RH.QPrimePowerValuationBasisProjection
 import RiemannResearch.RH.QPrimePowerInfiniteProjection
 import RiemannResearch.RH.QPrimePowerWaveletCoefficients
@@ -13,6 +14,7 @@ import RiemannResearch.RH.PrimeValuationHilbertBasis
 import RiemannResearch.RH.PrimePowerTargetMellin
 import RiemannResearch.RH.ZetaTwoHilbertSpace
 import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
+import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.Algebra.Polynomial.Roots
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Linarith
@@ -273,5 +275,55 @@ theorem valuationPolynomialFrame_orthonormal (p : ℕ) (hp : p.Prime) :
         rw [real_inner_comm]
         exact valuationPolynomialMode_centered p hp i
       | succ j => exact (valuationPolynomialMode_orthonormal p hp).2 (by omega)
+
+/-- The second raw innovation is the exact quadratic residual, with its signed correction. -/
+theorem valuationPolynomial_gramSchmidt_one (p : ℕ) (hp : p.Prime) :
+    gramSchmidt ℝ (primePowerMonomialLift p hp) 1 =
+      primePowerWeightedProjection p hp -
+        (1 / ((p : ℝ)^2-1)) • primePowerProjection p hp := by
+  have h0 : primePowerMonomialLift p hp 0 = primePowerProjection p hp := by
+    simp [primePowerMonomialLift, primePowerProjection]
+  have h1 : primePowerMonomialLift p hp 1 = primePowerWeightedProjection p hp := by
+    simp [primePowerMonomialLift, primePowerWeightedProjection]
+  rw [gramSchmidt_def]
+  simp only [show Finset.Iio (1 : ℕ) = {0} by decide, Finset.sum_singleton]
+  rw [show gramSchmidt ℝ (primePowerMonomialLift p hp) 0 =
+    primePowerMonomialLift p hp 0 from gramSchmidt_bot _ _, h0, h1,
+    Submodule.starProjection_singleton, projection_inner_primePowerWeightedProjection,
+    primePowerProjection_norm_sq]
+  congr 2
+  change ((p : ℝ)^2 / ((p : ℝ)^2-1)^3) /
+    ((p : ℝ)^2 / ((p : ℝ)^2-1)^2) = 1 / ((p : ℝ)^2-1)
+  have hp1 : (1 : ℝ) < p := by exact_mod_cast hp.one_lt
+  have hp0 : (p : ℝ) ≠ 0 := by linarith
+  have hd : (p : ℝ)^2-1 ≠ 0 := by nlinarith
+  field_simp
+
+/-- Gram-Schmidt chooses exactly the positive normalization of the explicit quadratic Meixner mode. -/
+theorem valuationPolynomialMode_one (p : ℕ) (hp : p.Prime) :
+    valuationPolynomialMode p hp 1 = primeMeixnerTwo p hp := by
+  have hp1 : (1 : ℝ) < p := by exact_mod_cast hp.one_lt
+  have ha : (0 : ℝ) < ((p : ℝ)^2-1)^2 / (p : ℝ)^2 := by
+    have hd : (0 : ℝ) < (p : ℝ)^2-1 := by nlinarith
+    positivity
+  let R := primePowerWeightedProjection p hp -
+    (1 / ((p : ℝ)^2-1)) • primePowerProjection p hp
+  have hn : ‖primeMeixnerTwo p hp‖ = 1 := by
+    have h := primeMeixnerTwo_norm_sq p hp
+    nlinarith [norm_nonneg (primeMeixnerTwo p hp)]
+  rw [primeMeixnerTwo, norm_smul, Real.norm_eq_abs, abs_of_pos ha] at hn
+  change ((p : ℝ)^2-1)^2 / (p : ℝ)^2 * ‖R‖ = 1 at hn
+  have hne : ‖R‖ ≠ 0 := by
+    intro hz
+    rw [hz, mul_zero] at hn
+    norm_num at hn
+  have hi : ‖R‖⁻¹ = ((p : ℝ)^2-1)^2 / (p : ℝ)^2 := by
+    apply mul_right_cancel₀ hne
+    rw [inv_mul_cancel₀ hne]
+    exact hn.symm
+  rw [valuationPolynomialMode, gramSchmidtNormed, valuationPolynomial_gramSchmidt_one]
+  change ‖R‖⁻¹ • R = _
+  rw [hi]
+  rfl
 
 end RiemannResearch.RH.PrimePowerTarget

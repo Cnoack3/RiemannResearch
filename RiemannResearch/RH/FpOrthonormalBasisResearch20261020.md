@@ -751,3 +751,23 @@ Saved-source audit job_UaIovSIcEKbvmxruIk57tpsRmGi6DY5x passed in 14.286
 seconds. All six inspected declarations use only propext, Classical.choice,
 and Quot.sound. Aggregate-project validation and publication are certified
 by the containing Lean-server checkpoint.
+
+## Quadratic Meixner identification of the general family (2026-10-24)
+
+The already exported QPrimePowerPolynomialOrthonormal module now proves
+valuationPolynomial_gramSchmidt_one: the second unnormalized innovation is
+exactly T_p - P_p/(p^2-1), retaining the signed linear correction.
+valuationPolynomialMode_one identifies E_(p,1) with primeMeixnerTwo in the
+actual Q Hilbert space, including its positive normalization and sign.
+Thus the general family agrees with the explicit normalized valuation
+and quadratic Meixner constructions at its first two centered indices.
+The physical quadratic formula follows from primeMeixnerTwo_sequence.
+
+The coherent candidate passed job_q49Nuhfk4oHt2RegzIRA-4MbBVkWlOGV
+in 7.803 seconds. Saved-source audit job_Z8IObjdhLqmaw4quM78GSpnSY5PO1Pno
+passed in 16.667 seconds; both declarations use only propext,
+Classical.choice and Quot.sound. Aggregate validation is certified by the
+containing publication checkpoint.
+Open: closed identification from the cubic onward, polynomial/tensor
+completeness, and actual F_2/F_3 legal membership. The complete residual and
+signed error identities are unchanged; F_p remains Nat.log p n.
