@@ -43,3 +43,33 @@ in these identities or equivalences.
 The concluding proposition is Mathlib's RiemannHypothesis, supplied by the
 existing QSquarefreeCapacity bridge after target membership is established.
 No theorem discharges the listed regularity obligations.
+
+## Signed regularity continuation
+
+- Analysis/ResidualizedProjectionKernel.lean: exact signed residualized pairing,
+  Schur norm subtraction, squared Cauchy--Schwarz, complementary centered kernel.
+- LinearAlgebra/FiniteHilbertNormalUniqueness.lean: finite normal solutions
+  have unique synthesized vectors, including singular dictionaries.
+- RH/QSquarefreeCorrectionKernel.lean: actual physical evaluation kernels,
+  movingCorrection_eq_pairing, kernelEnergy_exact and centered-complement bounds.
+- RH/QSquarefreeSignedNormal.lean: exists_signed_system, exists_kernel_system,
+  correction_signed_scalar, error_signed, kernelEnergy_signed, signed_scalar_sq_le;
+  exact metric Gram identities and forcing_rank_one_bound.
+- RH/QSmoothedResidueAsymptotic.lean: exact conductor-scaled atom error and
+  complete energy bound zeta(2)||d B g_d-(1-B1)||^2 <= 2/d;
+  signed_forcing_sq_bound for every Q vector and positive conductor.
+- RH/QShiftedReciprocalBounds.lean: centered quarter contraction, half multiplier
+  bound, quarter projected correction bound, and the factor-eight displacement estimate.
+- RH/QSquarefreeFiniteDisplacement.lean: matched squarefree Pareto stages,
+  finiteDisplacement_tendsto, finite_resolvent, finiteDisplacement_energy_bound,
+  finitePareto_residual_energy_bound; also the limiting displacement energy bound.
+
+Additional conditional reductions (premises remain Open):
+- QSquarefreeCorrectionKernel.riemannHypothesis_of_head_kernel_product_bound.
+- QSquarefreeSignedNormal.riemannHypothesis_of_signed_normal_head_bound.
+- QSquarefreeFiniteDisplacement.riemannHypothesis_of_finiteDisplacement_head_bound.
+
+The new forcing expansion does not prove inverse-Gram regularity. The common
+physical head bound and cofinal scaled-tail bound remain Open. See
+RH/SignedRegularityDevelopment20261025.md for exact statements, numerical
+diagnostics, verification boundary, and the narrowed arithmetic agenda.
