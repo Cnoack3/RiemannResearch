@@ -3233,3 +3233,7 @@ import RiemannResearch.RH.QSquarefreeNormEquality
 import RiemannResearch.RH.QShiftedReciprocal
 import RiemannResearch.RH.QParetoClosedProjectionComparison
 import RiemannResearch.RH.QSquarefreeMeasureRigidity
+import RiemannResearch.RH.QScaledTailPerturbation
+import RiemannResearch.RH.QSquarefreeSmoothedProjection
+import RiemannResearch.RH.QSquarefreeDisplacementRigidity
+import RiemannResearch.RH.QSquarefreeReciprocalObstruction
