@@ -3,6 +3,8 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
+import RiemannResearch.Analysis.ExhaustiveProjectionWalk
+import Mathlib.Tactic.Positivity
 import RiemannResearch.RH.QSquarefreeHeadBoundary
 import RiemannResearch.RH.SquarefreeMobiusProjection
 import RiemannResearch.RH.MobiusDifferenceCLM
@@ -162,5 +164,141 @@ theorem orderedVector_eq_zero_of_nonsquarefree (N : ℕ) (i : Fin (N + 1))
   have hnorm : ‖orderedVector N i‖ ^ 2 = 0 := by
     simpa only [real_inner_self_eq_norm_sq] using hz
   exact norm_eq_zero.mp (by nlinarith [norm_nonneg (orderedVector N i)])
+
+open QSquarefreeHeadBoundary SquarefreeMobiusProjection
+open RiemannResearch.Analysis.ExhaustiveWalk
+
+/-- A literal onset witness forces its ordered evaluation pivot to survive. -/
+theorem orderedVector_ne_zero_of_onset_witness
+    (N : ℕ) (i : Fin (N + 1)) (f : QHilbert)
+    (hf : f ∈ tailStage N i.val)
+    (hm : qSequence f (i.val + 1) ≠ 0) : orderedVector N i ≠ 0 := by
+  classical
+  intro hi
+  apply hm
+  rw [stage_physical_synthesis N (i.val + 1) f hf.1]
+  apply Finset.sum_eq_zero
+  intro j hj
+  rcases lt_trichotomy j.val i.val with hji | hji | hji
+  · rw [low_coefficient_zero_of_tailStage N i.val f hf j hji, zero_mul]
+  · have he : j = i := Fin.ext hji
+    subst j
+    simp [hi]
+  · rw [orderedVector_physical_zero N j (i.val + 1) (by omega), mul_zero]
+
+/-- Every active squarefree conductor below another active conductor supplies
+a nonzero pivot, by their normalized contrast. -/
+theorem orderedVector_ne_zero_of_active_lt
+    (N : ℕ) (a d : Fin N)
+    (ha : Squarefree (a.val + 2)) (hd : Squarefree (d.val + 2))
+    (had : a.val < d.val) :
+    orderedVector N ⟨a.val + 1, by omega⟩ ≠ 0 := by
+  let f : QHilbert := ((a.val + 2 : ℕ) : ℝ) • qResidue (a.val + 2) -
+    ((d.val + 2 : ℕ) : ℝ) • qResidue (d.val + 2)
+  apply orderedVector_ne_zero_of_onset_witness N ⟨a.val + 1, by omega⟩ f
+  · exact normalized_contrast_mem_tailStage N (a.val + 1) a d ha hd
+      (by omega) (by omega)
+  · change qSequenceLinear f (a.val + 1 + 1) ≠ 0
+    dsimp only [f]
+    rw [map_sub, map_smul, map_smul]
+    change ((a.val + 2 : ℕ) : ℝ) * qSequence (qResidue (a.val + 2)) (a.val + 2) -
+      ((d.val + 2 : ℕ) : ℝ) * qSequence (qResidue (d.val + 2)) (a.val + 2) ≠ 0
+    rw [qSequence_qResidue, qSequence_qResidue]
+    simp only [ArithmeticCumulative.residueFraction, Nat.mod_self,
+      Nat.mod_eq_of_lt (show a.val + 2 < d.val + 2 by omega),
+      Nat.cast_zero, zero_div, mul_zero, zero_sub]
+    have hd0 : ((d.val + 2 : ℕ) : ℝ) ≠ 0 := by positivity
+    have ha0 : ((a.val + 2 : ℕ) : ℝ) ≠ 0 := by positivity
+    exact neg_ne_zero.mpr (mul_ne_zero hd0 (div_ne_zero ha0 hd0))
+
+theorem orderedVector_first_ne_zero (N : ℕ) (d : Fin N)
+    (hd : Squarefree (d.val + 2)) :
+    orderedVector N ⟨0, by omega⟩ ≠ 0 := by
+  apply orderedVector_ne_zero_of_onset_witness N ⟨0, by omega⟩ (qResidue (d.val + 2))
+  · refine ⟨active_qResidue_mem_stage N d hd, ?_⟩
+    intro i hi
+    change i < 0 at hi
+    exact (Nat.not_lt_zero i hi).elim
+  · rw [qSequence_qResidue]
+    simp only [ArithmeticCumulative.residueFraction,
+      Nat.mod_eq_of_lt (show 1 < d.val + 2 by omega), Nat.cast_one]
+    exact div_ne_zero one_ne_zero (by positivity)
+
+theorem orderedVector_zero_stage (i : Fin 1) : orderedVector 0 i = 0 := by
+  simpa [stage, walkSpan] using orderedVector_mem_stage 0 i
+
+/-- All pivots at or beyond a conductor cutoff vanish once every active
+conductor is at most that cutoff. This includes the final active pivot. -/
+theorem orderedVector_eq_zero_of_active_cutoff (N D : ℕ) (hD : 2 ≤ D)
+    (hcut : ∀ a : Fin N, Squarefree (a.val + 2) → a.val + 2 ≤ D)
+    (i : Fin (N + 1)) (hi : D ≤ i.val + 1) : orderedVector N i = 0 := by
+  apply stage_eq_zero_of_head_zero (D - 1) (by omega)
+  · exact stage_le_of_active_cutoff N D hD hcut (orderedVector_mem_stage N i)
+  · intro n hn
+    exact orderedVector_physical_zero N i n (by omega)
+
+/-- With a largest active conductor D, the nonzero pivots are exactly the
+squarefree physical sites strictly below D (including site 1). -/
+theorem orderedVector_ne_zero_iff (N : ℕ) (d : Fin N)
+    (hd : Squarefree (d.val + 2))
+    (hmax : ∀ a : Fin N, Squarefree (a.val + 2) → a.val ≤ d.val)
+    (i : Fin (N + 1)) :
+    orderedVector N i ≠ 0 ↔
+      Squarefree (i.val + 1) ∧ i.val + 1 < d.val + 2 := by
+  constructor
+  · intro hi
+    constructor
+    · by_cases hi0 : i.val = 0
+      · simp [hi0]
+      · by_contra hsf
+        exact hi (orderedVector_eq_zero_of_nonsquarefree N i (by omega) hsf)
+    · by_contra hlt
+      apply hi
+      apply orderedVector_eq_zero_of_active_cutoff N (d.val + 2) (by omega)
+      · intro a ha
+        have := hmax a ha
+        omega
+      · omega
+  · rintro ⟨hsf, hlt⟩
+    by_cases hi0 : i.val = 0
+    · have he : i = ⟨0, by omega⟩ := Fin.ext hi0
+      rw [he]
+      exact orderedVector_first_ne_zero N d hd
+    · let a : Fin N := ⟨i.val - 1, by omega⟩
+      have ha : a.val + 2 = i.val + 1 := by dsimp [a]; omega
+      have hsf' : Squarefree (a.val + 2) := by simpa only [ha] using hsf
+      have had : a.val < d.val := by dsimp [a]; omega
+      have h := orderedVector_ne_zero_of_active_lt N a d hsf' hd had
+      have he : (⟨a.val + 1, by omega⟩ : Fin (N + 1)) = i := by
+        apply Fin.ext
+        dsimp [a]
+        omega
+      rwa [he] at h
+
+theorem exists_largest_active (N : ℕ) (hN : 0 < N) :
+    ∃ d : Fin N, Squarefree (d.val + 2) ∧
+      ∀ a : Fin N, Squarefree (a.val + 2) → a.val ≤ d.val := by
+  induction N with
+  | zero => omega
+  | succ N ih =>
+      by_cases hs : Squarefree (N + 2)
+      · refine ⟨⟨N, by omega⟩, hs, ?_⟩
+        intro a ha
+        exact Nat.le_of_lt_succ a.isLt
+      · have hNp : 0 < N := by
+          by_contra h
+          have hN0 : N = 0 := by omega
+          subst N
+          exact hs Nat.prime_two.squarefree
+        obtain ⟨d, hd, hm⟩ := ih hNp
+        refine ⟨⟨d.val, by omega⟩, hd, ?_⟩
+        intro a ha
+        have haN : a.val < N := by
+          have hne : a.val ≠ N := by
+            intro he
+            apply hs
+            simpa only [he] using ha
+          omega
+        exact hm ⟨a.val, haN⟩ ha
 
 end RiemannResearch.RH.QSquarefreeResponseBasis

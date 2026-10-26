@@ -1,3 +1,4 @@
+import RiemannResearch.RH.QResidualScreeningSeries
 import RiemannResearch.RH.QSquarefreeResponseBasis
 import RiemannResearch.RH.QSquarefreeEvaluationBasis
 import RiemannResearch.RH.QSquarefreeHeadPrediction

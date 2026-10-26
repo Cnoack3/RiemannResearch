@@ -286,3 +286,35 @@ unconditional type RiemannHypothesis has been obtained. The complete-gain
 infinite sum and its truncation bound are ordinary arguments, not separately
 formalized in this continuation. Numerical tables are not certificates.
 See RH/OrderedBasisHeadPredictionResidualScreening20261025.md.
+
+## Complete residual screening and exact pivot classification
+
+- RH/QResidualScreeningSeries.lean: weightedResidualLayerGain_summable,
+  completeResidualGain_eq_finite_add_tail, completeResidualGain_sub_finite_nonneg,
+  completeResidualGain_sub_finite_le_tail. The complete omitted gain lies
+  between zero and the full residual-tail norm squared.
+- reciprocalLayerRemainder_eq_tsum retains the explicit complete coordinate
+  remainder. residualLayerSlack_nonneg and residual_screening_full_identity
+  retain coefficient energy, screening gain, every layer slack, and the remainder.
+- RH/QSquarefreeEvaluationBasis.lean: stage_physical_synthesis;
+  movingCorrection_screening_full_identity, movingCorrection_layerSlack_nonneg;
+  completeScreeningGain and residualScreeningGain_tendsto;
+  movingCorrection_weighted_coefficients_complete_screened and
+  movingCorrection_sq_le_complete_screened_diagonal; exists_screening_cutoff
+  realizes the complete product to arbitrary positive tolerance at a cutoff
+  beyond any requested lower bound.
+- RH/QSquarefreeHeadBoundary.lean: stage_eq_zero_of_head_zero sharpens the
+  necessary prefix to N sites; stage_le_of_active_cutoff restricts stages to
+  their largest active conductor.
+- RH/QSquarefreeResponseBasis.lean: orderedVector_ne_zero_of_onset_witness,
+  orderedVector_ne_zero_of_active_lt, orderedVector_first_ne_zero,
+  orderedVector_zero_stage, orderedVector_eq_zero_of_active_cutoff,
+  orderedVector_ne_zero_iff, exists_largest_active. The nonzero physical pivots
+  are exactly the squarefree sites below the largest active conductor, including 1.
+
+This completes the complete-gain/cutoff construction and exact pivot classification.
+Open: the uniform actual screened product, the sharper actual-coefficient product,
+or direct signed-response provider. RH is not proved. The exact arbitrary-data
+prediction amplification and variance/strict-budget arguments in the research
+report are ordinary proofs, not separately formalized Lean results.
+See RH/CompleteResidualScreeningAndPivots20261025.md.

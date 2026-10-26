@@ -3,6 +3,8 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
+import RiemannResearch.Analysis.ExhaustiveProjectionWalk
+import Mathlib.Tactic.Positivity
 import RiemannResearch.RH.MobiusResidualEscape
 import RiemannResearch.RH.MobiusCoefficientStabilization
 import RiemannResearch.RH.SquarefreeMobiusProjection
@@ -242,5 +244,72 @@ theorem movingCorrection_headCharge (N : ℕ) :
     headCharge N (QSquarefreeSmoothedProjection.movingCorrection N) = 0 := by
   apply headCharge_eq_zero_of_mem_stage
   exact (ZetaTwoOptimizerStage.stage N).starProjection_apply_mem _
+
+open ZetaTwoOptimizerStage
+
+/-- The finite boundary charge removes the seemingly last free head value:
+the first N physical sites determine the stage with conductors through N+1. -/
+theorem stage_eq_zero_of_head_zero (N : ℕ) (hN : 0 < N) (f : QHilbert)
+    (hf : f ∈ stage N)
+    (hzero : ∀ n : ℕ, n ≤ N → qSequence f n = 0) : f = 0 := by
+  classical
+  let last : Fin N := ⟨N - 1, by omega⟩
+  have hcoef (j : Fin N) (hj : j ≠ last) :
+      qCoefficientCLM (j.val + 2) f = 0 := by
+    have hjlt : j.val < N - 1 := by
+      have hneq : j.val ≠ N - 1 := by
+        intro he
+        apply hj
+        exact Fin.ext he
+      omega
+    have he := coefficient_eq_of_head_eq (N - 1) f 0
+      (fun k hk => by
+        rw [hzero k (by omega)]
+        change (0 : ℝ) = qSequenceLinear 0 k
+        simp)
+      (⟨j.val, hjlt⟩ : Fin (N - 1))
+    simpa using he
+  have hlast : last.val + 2 = N + 1 := by dsimp [last]; omega
+  have hs : headSynthesis N f =
+      qCoefficientCLM (N + 1) f • qResidue (N + 1) := by
+    unfold headSynthesis
+    rw [Finset.sum_eq_single last]
+    · rw [hlast]
+    · intro j hj hjlast
+      rw [hcoef j hjlast, zero_smul]
+    · simp
+  have he : f = qCoefficientCLM (N + 1) f • qResidue (N + 1) :=
+    (headSynthesis_eq_self_of_mem_stage N f hf).symm.trans hs
+  have hz := hzero 1 (by omega)
+  rw [he] at hz
+  change qSequenceLinear (qCoefficientCLM (N + 1) f • qResidue (N + 1)) 1 = 0 at hz
+  rw [map_smul] at hz
+  change qCoefficientCLM (N + 1) f * qSequence (qResidue (N + 1)) 1 = 0 at hz
+  rw [qSequence_qResidue] at hz
+  simp only [ArithmeticCumulative.residueFraction,
+    Nat.mod_eq_of_lt (show 1 < N + 1 by omega), Nat.cast_one] at hz
+  have hc : qCoefficientCLM (N + 1) f = 0 :=
+    (mul_eq_zero.mp hz).resolve_right (by positivity)
+  simpa [hc] using he
+
+theorem stage_le_of_active_cutoff (N D : ℕ) (hD : 2 ≤ D)
+    (hcut : ∀ a : Fin N, Squarefree (a.val + 2) → a.val + 2 ≤ D) :
+    stage N ≤ stage (D - 1) := by
+  change Submodule.span ℝ
+    (Set.range (fun a : Fin N => ZetaTwoOptimizerStage.squarefreeAtom a.val)) ≤
+      ZetaTwoOptimizerStage.stage (D - 1)
+  apply Submodule.span_le.mpr
+  rintro f ⟨a, rfl⟩
+  change ZetaTwoOptimizerStage.squarefreeAtom a.val ∈
+    ZetaTwoOptimizerStage.stage (D - 1)
+  by_cases ha : Squarefree (a.val + 2)
+  · have haD := hcut a ha
+    rw [ZetaTwoOptimizerStage.squarefreeAtom, if_pos ha]
+    change qResidue (a.val + 2) ∈ walkSpan ZetaTwoOptimizerStage.squarefreeAtom id (D - 1)
+    apply Submodule.subset_span
+    refine ⟨(⟨a.val, by omega⟩ : Fin (D - 1)), ?_⟩
+    simp [ZetaTwoOptimizerStage.squarefreeAtom, ha, id_eq]
+  · rw [ZetaTwoOptimizerStage.squarefreeAtom, if_neg ha]
+    exact (stage (D - 1)).zero_mem
 
 end RiemannResearch.RH.QSquarefreeHeadBoundary
