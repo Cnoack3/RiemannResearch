@@ -563,3 +563,34 @@ See RH/RawPositiveMomentResearch20261026.md for the full statements,
 proofs, diagnostics, and continuation agenda. The single-atom smoothing and
 parity-preserving infinite-dimensional example in
 RH/OneAtomSmoothingAndParityObstruction20261026.md are explicitly paper-only.
+
+## Probabilistic control: additive estimate and research criteria (2026-10-26)
+
+Established unconditional deterministic results:
+
+- Analysis/PolylogAbelBudget.lean: polylog_two_shifted_multiplier_le proves
+  a(n)/(n+1) <= 1/64 for the k=2 profile.
+- RH/QReciprocalWeightedEnergy.lean: layer_abs_tail_inner_B_le,
+  positiveCrossVariation_sub_layer_B_product_le, and
+  positiveCrossVariation_sub_layer_B_le bound the absolute layer discrepancy
+  by the complete absolute mixed product, then by ||b||^2/32 + ||r||^2/512.
+  The previously established full signed identity remains in force.
+- RH/QSquarefreeRawMomentCriterion.lean:
+  raw_positiveCrossVariation_sub_layer_abs_le proves
+  |Phi-plus - X| <= e_N/256 for every actual stage and physical head.
+  raw_layer_bound_of_relative_gap is strengthened to
+  X <= (C + e_N/256)/(1-theta), for theta < 1.
+  Its conditional RH consumer now uses (C+1/256)/(1-theta).
+
+The strict-gap provider remains Open. The additive estimate bounds the
+discrepancy, not either energy separately, and does not prove RH.
+
+RH/ProbabilisticRawMomentResearch20261026.md contains explicitly paper-only
+probability arguments: a fixed-Q nonnegative expectation approximating Phi
+within e_N/1024; one-sided uniform integrability; a three-series equivalence
+to zero residual; fourth-moment and Berry--Esseen retained-mass criteria;
+and a countable Efron--Stein prime-resampling sufficient condition.
+Open: the common retained-mass bound, the weighted negative-part expectation
+bound, or the cofinal prime-resampling influence budget. No provider is
+asserted, no independence of the arithmetic moments is assumed, and no
+RH-to-squarefree-density implication is claimed.

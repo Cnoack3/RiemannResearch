@@ -145,10 +145,11 @@ One may replace the absolute bound by a relative-gap hypothesis. If fixed
 \[
 \Phi_N^+(H(N))\le\theta X_{H(N)}(b_N)+C,
 \]
-then the quadratic comparison, with \(\delta=1-\theta>0\), gives
+then the additive comparison established in the probabilistic continuation,
+with \(\delta=1-\theta>0\), gives
 \[
 \boxed{X_{H(N)}(b_N)\le
-\frac{2\delta C+1/256}{\delta^2},}
+\frac{C+e_N/256}{\delta}\le\frac{C+1/256}{\delta}.}
 \]
 and hence RH. No nonnegativity premise on \(\theta\) or \(C\) is needed.
 This condition permits a growing quantity on the right, but still requires

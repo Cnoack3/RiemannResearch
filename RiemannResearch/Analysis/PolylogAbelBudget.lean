@@ -112,4 +112,19 @@ theorem polylog_two_reciprocal_multiplier_le (n : ℕ) :
   apply (div_le_iff₀ (by positivity : 0 < ((n : ℝ) + 1) ^ 2)).mpr
   nlinarith [sq_nonneg ((n : ℝ) - 1)]
 
+/-- Single reciprocal smoothing gives a bounded logarithmic multiplier. -/
+theorem polylog_two_shifted_multiplier_le (n : ℕ) :
+    polylogTailProfile 2 n / ((n : ℝ) + 1) ≤ (1 / 64 : ℝ) := by
+  by_cases hn : n = 0
+  · simp [hn, polylogTailProfile_eq]
+  have hn1 : (1 : ℝ) ≤ n := by exact_mod_cast Nat.one_le_iff_ne_zero.mpr hn
+  have hlog : 0 ≤ Real.log (n : ℝ) := Real.log_nonneg hn1
+  have hden : (64 : ℝ) ≤ (8 + Real.log (n : ℝ)) ^ 2 := by nlinarith
+  have ha : polylogTailProfile 2 n ≤ (n : ℝ) / 64 := by
+    rw [polylogTailProfile_eq]
+    norm_num only [Nat.cast_ofNat]
+    exact div_le_div_of_nonneg_left (Nat.cast_nonneg n) (by norm_num) hden
+  apply (div_le_iff₀ (by positivity : 0 < (n : ℝ) + 1)).mpr
+  linarith
+
 end RiemannResearch.Analysis.LogTailWeights

@@ -15,6 +15,7 @@ import RiemannResearch.RH.QAnnihilatorTailEscape
 import RiemannResearch.RH.QPolylogTailEnergy
 import RiemannResearch.RH.QPolylogMovingHeadEnergy
 import RiemannResearch.RH.QShiftedReciprocal
+import RiemannResearch.RH.QShiftedReciprocalBounds
 import RiemannResearch.RH.QSquarefreeResidualTail
 import RiemannResearch.RH.QSquarefreeLogResidualTail
 import RiemannResearch.RH.QHilbertConvergence
@@ -49,6 +50,17 @@ theorem raw_source_layer_le (N H : ℕ) :
   (cappedTailEnergy_le_total 2 H (B (residual N))
     (reciprocal_weightedEnergy_summable (residual N))).trans
       (reciprocal_weightedEnergy_le (residual N))
+
+theorem raw_positiveCrossVariation_sub_layer_abs_le (N H : ℕ) :
+    |positiveCrossVariation 2 H (movingCorrection N)
+      (B (residual N) - movingCorrection N) -
+        cappedTailEnergy 2 H (movingCorrection N)| ≤ ‖residual N‖ ^ 2 / 256 := by
+  have h := positiveCrossVariation_sub_layer_B_le H
+    (movingCorrection N) (residual N) (raw_remainder_orthogonal N)
+  have hq := movingCorrection_norm_le_quarter N
+  have hs := mul_le_mul hq hq (norm_nonneg (movingCorrection N))
+    (by positivity : 0 ≤ (1 / 4 : ℝ) * ‖residual N‖)
+  nlinarith
 
 theorem raw_positiveCrossVariation_sub_layer_sq_le (N H : ℕ) :
     (positiveCrossVariation 2 H (movingCorrection N)
@@ -119,16 +131,9 @@ theorem raw_layer_bound_of_relative_gap (N H : ℕ) (θ C : ℝ) (hθ : θ < 1)
     (hb : positiveCrossVariation 2 H (movingCorrection N)
       (B (residual N) - movingCorrection N) ≤
         θ * cappedTailEnergy 2 H (movingCorrection N) + C) :
-    cappedTailEnergy 2 H (movingCorrection N) ≤
-      (2*(1-θ)*C+1/256)/(1-θ)^2 := by
-  have hδ : 0 < 1-θ := sub_pos.mpr hθ
-  have hq := positiveCrossVariation_sub_layer_quadratic 2 H
-    (movingCorrection N) (B (residual N)) (raw_remainder_orthogonal N) (θ-1)
-  have hs := raw_source_layer_le N H
-  have hn := QTriangularCharge.residual_norm_le_one N
-  have he : ‖residual N‖ ^ 2 ≤ 1 := by nlinarith [norm_nonneg (residual N)]
-  have hm := mul_le_mul_of_nonneg_left hb (by positivity : 0 ≤ 2*(1-θ))
-  apply (le_div_iff₀ (sq_pos_of_pos hδ)).2
+    cappedTailEnergy 2 H (movingCorrection N) ≤ (C + ‖residual N‖ ^ 2 / 256) / (1 - θ) := by
+  have ha := (abs_le.mp (raw_positiveCrossVariation_sub_layer_abs_le N H)).1
+  apply (le_div_iff₀ (sub_pos.mpr hθ)).2
   nlinarith
 
 /-- Conditional research reduction. The strict relative-gap premise is Open. -/
@@ -141,11 +146,17 @@ theorem riemannHypothesis_of_frequently_raw_relative_gap
           θ * cappedTailEnergy 2 (H N) (movingCorrection N) + C) :
     RiemannHypothesis := by
   apply riemannHypothesis_of_frequently_moving_head_energy_bound 2 H hH
-    ((2*(1-θ)*C+1/256)/(1-θ)^2)
+    ((C + 1 / 256) / (1 - θ))
   apply hb.mono
   intro N hN
   have he := cappedTailEnergy_exact 2 (H N) (movingCorrection N)
   have hx := raw_layer_bound_of_relative_gap N (H N) θ C hθ hN
+  have hr := QTriangularCharge.residual_norm_le_one N
+  have hr2 : ‖residual N‖ ^ 2 ≤ 1 := by nlinarith [norm_nonneg (residual N)]
+  have hden : 0 ≤ 1 - θ := (sub_pos.mpr hθ).le
+  have hbound : (C + ‖residual N‖ ^ 2 / 256) / (1 - θ) ≤
+      (C + 1 / 256) / (1 - θ) :=
+    div_le_div_of_nonneg_right (by linarith) hden
   have hn : 0 ≤ polylogTailProfile 2 (H N) * ‖tail (H N) (movingCorrection N)‖ ^ 2 :=
     mul_nonneg (polylogTailProfile_nonneg _ _) (sq_nonneg _)
   linarith
