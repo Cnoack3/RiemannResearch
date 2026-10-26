@@ -5,6 +5,8 @@ Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.OrthogonalKernelScreening
 import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith
 
 /-!
 # Layered weighted Bessel estimates

@@ -246,11 +246,43 @@ No unconditional RH theorem was obtained.
   movingCorrection_onset_tail_bessel bounds high-onset coefficient energy
   by the complete residual-tail norm squared.
 
-All new estimates are unconditional for their stated structural data.
+All estimates are unconditional for their stated structural data.
 Open: uniform actual physical response, the minimum-norm head extension,
 or a bound for the weighted physical reconstruction diagonal jointly with
-error N. Basis construction and the physical diagonal Cauchy--Schwarz
-corollary are ordinary mathematics in the report, not separately formalized.
-The original B/KPS/KF providers and the infinite odd-radical construction
-retain their previous statuses. RH is not proved.
+error N. The following continuation formalizes basis construction and the
+physical diagonal inequality. The original B/KPS/KF providers and infinite
+odd-radical construction retain their previous statuses. RH is not proved.
 See RH/HeadBoundaryTailResponseAndWeightedBessel20261025.md.
+
+## Ordered basis, signed prediction, and residual-screened onset energy
+
+- RH/QSquarefreeCorrectionKernel.lean: inner_kernel_of_stage.
+- RH/QSquarefreeEvaluationBasis.lean: span_evaluationFamily, innovation_mem_stage,
+  orderedVector_physical_zero and orderedVector_onset; orderedBasis after
+  removing zero pivots; stage_synthesis and movingCorrection_physical_synthesis;
+  movingCorrection_sq_le_diagonal. The actual complete Q stage is used.
+- RH/QSquarefreeHeadPrediction.lean: headKernelSpace_eq, headResponse_eq_projection,
+  exists_headResponse_prediction, prediction_normal, response_prediction,
+  response_prediction_error_bound. Redundant and singular heads are permitted.
+- RH/QSquarefreeResponseBasis.lean: headResponse_synthesis and tailResponse_synthesis
+  identify the exact existing response split with low/high-onset basis expansions.
+  orderedVector_eq_zero_of_nonsquarefree proves exact arithmetic pivot sparsity:
+  every nonsquarefree physical pivot m>=2 is zero.
+- Analysis/TriangularWeightedBessel.lean: layered_screened_bessel retains a
+  nonnegative rank-one subtraction from every support layer.
+- RH/QTriangularWeightedBessel.lean: residualLayerGain,
+  reciprocal_onset_screened_bessel, movingCorrection_onset_screened_bessel.
+- RH/QSquarefreeEvaluationBasis.lean: residualScreeningGain N M and
+  movingCorrection_weighted_coefficients_screened for every M>=N+1;
+  movingCorrection_sq_le_screened_diagonal proves
+  |b_N(n)|^2 <= (error N - residualScreeningGain N M) * reconstructionDiagonal N n.
+
+These are unconditional constructions and inequalities with only structural
+index, support, and orthogonality hypotheses. R1 and R2 of the incoming handoff
+are implemented. The uniform arithmetic provider remains Open: a common C
+such that for every 1<=n<=N some M>=N+1 makes the displayed product <=C^2,
+or a direct uniform signed minimum-norm head-response bound. No theorem of
+unconditional type RiemannHypothesis has been obtained. The complete-gain
+infinite sum and its truncation bound are ordinary arguments, not separately
+formalized in this continuation. Numerical tables are not certificates.
+See RH/OrderedBasisHeadPredictionResidualScreening20261025.md.

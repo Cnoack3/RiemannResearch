@@ -17,6 +17,8 @@ Incoming published baseline: `696712b892ece6346a84fd956a635487432e3109`.
 
 The basis construction uses the Mathlib Gram–Schmidt API, specifically the span, orthogonality, normalization, and inverse-triangular identities documented at https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/InnerProductSpace/GramSchmidtOrtho.html. The actual stage application and the screening refinement are direct developments from the user's handoff; no novelty claim is made.
 
+`QSquarefreeResponseBasis.orderedVector_eq_zero_of_nonsquarefree` additionally proves exact arithmetic sparsity: a nonsquarefree physical pivot m>=2 has zero ordered vector. At an onset, its omitted Mobius coefficient is minus its physical value, which must vanish; head/tail orthogonality then forces the vector itself to vanish. This does not bound the norms of the surviving squarefree pivots. The isolated server audit `job_93X0XMDXg9dkM786zDmdxSmIsOskqzsj` passed in 47.561 reported seconds with only the standard foundational axioms.
+
 R1 and R2 now have concrete source implementations. R3/R4's uniform arithmetic estimates and the original B/KPS/KF providers remain Open. The infinite odd-radical projection remains at its inherited status.
 
 ## Actual quantities
@@ -78,7 +80,7 @@ E_k=\|q_k\|^2-C_k^2/T_k-
 \sum_{i:\,s_i-1\ge k}a_i^2\ge0.
 \]
 
-For an orthonormal family,
+For M>=1 and an orthonormal family,
 
 \[
 \sum_i(s_i+1)^2a_i^2+G_{N,M}
@@ -177,6 +179,8 @@ At `N=128,n=114,H=57`, the minimum l1 is approximately `9.958213873`, while the 
 
 The largest prediction identity discrepancy is below `8.1e-17`; the largest LP equality residual in this run is `2.6e-11`. Negative predictor coefficients occur, so positivity must not be assumed.
 
+The numerical diagnostics were computed with NumPy and SciPy from the complete moment formulas above; they do not provide certificates.
+
 ## Next concrete research steps
 
 1. Use the newly formalized basis, prediction, and layered screening results; do not redo R1/R2. If pursuing the complete gain, formalize its summability and truncation gap first.
@@ -188,12 +192,17 @@ The largest prediction identity discrepancy is below `8.1e-17`; the largest LP e
 
 ## Verification boundary and continuation
 
-The combined source candidate passed server check `job_qEj54MbhslHKsVfq1d677Q8zaDA7Effb` (reported verification duration 11.396 seconds). Its audited central declarations used only `propext`, `Classical.choice`, and `Quot.sound`. This check covered basis/support/synthesis, head prediction and split, and the initial finite-layer screened estimate. The subsequent persisted-module audit and final checkpoint govern the published code, including the explicit `OrthonormalBasis` packaging and arbitrary layer cutoff.
+The combined source candidate passed server check `job_qEj54MbhslHKsVfq1d677Q8zaDA7Effb` (reported verification duration 11.396 seconds). Its audited central declarations used only `propext`, `Classical.choice`, and `Quot.sound`. This check covered basis/support/synthesis, head prediction and split, and the initial finite-layer screened estimate. The persisted modules, including explicit `OrthonormalBasis` packaging, passed `job_l2NR8wnygsr4F0IUZcBVpJnujnUClC3h` (34.842 seconds reported). The final arbitrary-cutoff estimate passed `job_CKIEboH3UnwQGCMIhXXK-fg_9gkBSCy2` (22.153 seconds reported), with the same standard axiom list. Opening round-trip and polling durations were not separately retained; these are server-reported verification durations, not pure kernel timings. The final checkpoint governs whole-project publication.
 
-Publication is through the required server checkpoint with push enabled. Its final job, validation scope, and commit are reported in the accompanying chat; this document is prepared before that final publication step. No `sorry`, `admit`, project-local axiom, or unsafe declaration is intended or permitted.
+Publication is through the required server checkpoint with push enabled. Its final job, validation scope, and commit are reported in the accompanying chat; this document is prepared before that final publication step. No `sorry`, `admit`, project-local axiom, or unsafe declaration was introduced.
 
 Retained workspace token: `ws_WVVQ_Rp9qSUC9afF2Orx6DfamIRxdQDj`.
 Project root: `/home/cri_2025/lean-agent-workspaces/ws_WVVQ_Rp9qSUC9afF2Orx6DfamIRxdQDj/RiemannResearch`.
 Follow any continuation token returned by the checkpoint. Preserve newer main.
 
 The final RH consumer remains `QSquarefreeSmoothedProjection.riemannHypothesis_of_moving_head_bound`. No newly proved declaration supplies its uniform bound. A proof of the displayed uniform screened product, or the actual signed minimum-norm head-extension bound, would supply it. Compactness, coefficient-energy improvement, and finite numerical tables do not establish that provider.
+
+
+### Completed core publication
+
+The first full checkpoint, `job_lXg3gYZzEPF_Td0HhvucCfzfzsTy-N9f`, succeeded and published commit `b7ee0ca331087ac0fc3ff1fcfc27172110fb9178`. Validation scope was full (aggregate plus six changed modules), reported build validation was 177.138 seconds and total checkpoint duration was 180.559 seconds. Dependency-cache preflight was complete, with 12.796 seconds reported. No integration with newer main was required. This is server-reported timing, not a measurement of pure kernel time. The final continuation checkpoint also validates the explicit-import cleanup and any subsequent arithmetic pivot refinement before publication.

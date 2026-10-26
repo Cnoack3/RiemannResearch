@@ -4,6 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QSquarefreeCorrectionKernel
+import RiemannResearch.RH.ZetaTwoHilbertSpace
+import RiemannResearch.RH.ZetaTwoOptimizerStage
+import RiemannResearch.RH.QSquarefreeSmoothedProjection
+import Mathlib.Analysis.InnerProductSpace.PiL2
 import RiemannResearch.RH.QSquarefreeHeadBoundary
 import RiemannResearch.RH.QTriangularWeightedBessel
 import RiemannResearch.LinearAlgebra.FiniteHilbertSchur

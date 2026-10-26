@@ -14,6 +14,7 @@ import Mathlib.Topology.Algebra.InfiniteSum.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Positivity
 import Lean.Elab.Tactic.Omega
 
 /-!
