@@ -5,6 +5,7 @@ Authors: Christian Noack
 -/
 import RiemannResearch.RH.QShiftedReciprocal
 import RiemannResearch.RH.QSquarefreeSmoothedProjection
+import RiemannResearch.LinearAlgebra.FiniteHilbertSchur
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NormNum
@@ -102,5 +103,54 @@ theorem sharp_displacement_energy_bound (r d : QHilbert)
     ring
   nlinarith [hs]
 
+
+/-- Exact residual-dependent variance decomposition, with every square retained. -/
+theorem movingCorrection_variance_exact (N : ℕ) (t : ℝ) :
+  ‖B (residual N)‖ ^ 2 =
+    ‖movingCorrection N‖ ^ 2 +
+    2 * t * inner ℝ (residual N) (B (residual N)) - t ^ 2 * error N +
+    ‖B (residual N) - movingCorrection N - t • residual N‖ ^ 2 := by
+  have ho : inner ℝ (residual N) (movingCorrection N) = 0 := by
+    rw [real_inner_comm]
+    exact Submodule.inner_right_of_mem_orthogonal
+      ((stage N).starProjection_apply_mem _) (residual_mem_orthogonal N)
+  have he : inner ℝ (B (residual N) - movingCorrection N) (residual N) =
+      inner ℝ (residual N) (B (residual N)) := by
+    rw [real_inner_comm, inner_sub_right, ho, sub_zero]
+  have hp := RiemannResearch.LinearAlgebra.inner_residualized_eq_schur
+    (stage N) (B (residual N)) (B (residual N))
+  simp only [real_inner_self_eq_norm_sq] at hp
+  change ‖B (residual N) - movingCorrection N‖ ^ 2 =
+    ‖B (residual N)‖ ^ 2 - ‖movingCorrection N‖ ^ 2 at hp
+  rw [norm_sub_sq_real, norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
+    real_inner_smul_right, he, hp, error]
+  ring
+
+/-- The squared residual multiplier moment is an unconditional energy subtraction. -/
+theorem movingCorrection_variance_bound (N : ℕ) :
+  error N * ‖movingCorrection N‖ ^ 2 +
+      (inner ℝ (residual N) (B (residual N))) ^ 2 ≤
+    error N * ‖B (residual N)‖ ^ 2 := by
+  have ho : inner ℝ (residual N) (movingCorrection N) = 0 := by
+    rw [real_inner_comm]
+    exact Submodule.inner_right_of_mem_orthogonal
+      ((stage N).starProjection_apply_mem _) (residual_mem_orthogonal N)
+  have he : inner ℝ (residual N) (B (residual N) - movingCorrection N) =
+      inner ℝ (residual N) (B (residual N)) := by
+    rw [inner_sub_right, ho, sub_zero]
+  have hp := RiemannResearch.LinearAlgebra.inner_residualized_eq_schur
+    (stage N) (B (residual N)) (B (residual N))
+  simp only [real_inner_self_eq_norm_sq] at hp
+  change ‖B (residual N) - movingCorrection N‖ ^ 2 =
+    ‖B (residual N)‖ ^ 2 - ‖movingCorrection N‖ ^ 2 at hp
+  have hc := abs_real_inner_le_norm (residual N)
+    (B (residual N) - movingCorrection N)
+  have hs := mul_le_mul hc hc (abs_nonneg _)
+    (mul_nonneg (norm_nonneg _) (norm_nonneg _))
+  rw [← pow_two, sq_abs, he, ← pow_two, mul_pow, hp] at hs
+  change ‖residual N‖ ^ 2 * ‖movingCorrection N‖ ^ 2 +
+    (inner ℝ (residual N) (B (residual N))) ^ 2 ≤
+    ‖residual N‖ ^ 2 * ‖B (residual N)‖ ^ 2
+  nlinarith
 
 end RiemannResearch.RH.QShiftedReciprocal

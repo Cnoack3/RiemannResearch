@@ -318,3 +318,19 @@ or direct signed-response provider. RH is not proved. The exact arbitrary-data
 prediction amplification and variance/strict-budget arguments in the research
 report are ordinary proofs, not separately formalized Lean results.
 See RH/CompleteResidualScreeningAndPivots20261025.md.
+
+## Certified finite moving corrections and residual variance
+
+- RH/QShiftedReciprocalBounds.lean: movingCorrection_variance_exact retains
+  the arbitrary scalar shift and the complete nonnegative remainder;
+  movingCorrection_variance_bound proves rho*||b_N||^2+e^2 <= rho*v,
+  where rho=||r_N||^2, e=<r_N,B r_N>, and v=||B r_N||^2.
+  These declarations have no RH or open arithmetic premise.
+- RH/FiniteMovingCorrectionInvestigation20261025.md records exact-rational
+  complete-tail finite-system certificates, singular-dictionary handling,
+  reproducible numerical code, and a separate floating scan through N=255.
+  The numerical certificates are not a Lean-verified implementation.
+
+Open: a stage-independent physical-head bound. Total Hilbert-energy control,
+finite certificates, and signed source asymptotics do not discharge this
+obligation. No unconditional RH theorem is claimed.
