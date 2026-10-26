@@ -39,9 +39,22 @@ in these identities or equivalences.
   QSquarefreeLogDisplacement.riemannHypothesis_of_frequent_log_displacement_tail.
   Open: for some fixed k, bounded N/(6+log N)^k times the complete squared
   displacement tail along arbitrarily large N. No provider is supplied.
-- TwoResidualLogRegularity20261026.md gives ordinary paper proofs of
-  the physical polylogarithmic corollary and a stretched-exponential relaxation.
-  Those additional corollaries are not Lean declarations in this checkpoint.
+- Analysis/PolylogTailProfile.lean: logProfile_antitoneOn,
+  logProfile_sqrt_le, log_pow_div_sq_le prove the analytic majorant.
+- RH/QPolylogTailEnergy.lean: polylog_tail_energy_le gives the sharp
+  complete-tail constant 2*C^2/zeta(2) for natural logarithmic exponents;
+  eventually_polylog_scaled_tail_le handles an eventual physical envelope.
+- RH/QSquarefreeLogDisplacement.lean:
+  residual_zero_iff_eventually_polylog_displacement is an equivalence for
+  each fixed natural exponent. Conditional research reductions
+  riemannHypothesis_of_eventually_polylog_displacement and
+  riemannHypothesis_of_eventually_real_polylog_displacement cover natural
+  and arbitrary real exponents, respectively.
+  Open: the eventual physical envelope for the actual displacement.
+- TwoResidualLogRegularity20261026.md records the remaining paper
+  stretched-exponential extension, the actual signed kernel localization
+  (paper only), and reproducible Wolfram finite-stage/CRT computations.
+  These computations do not discharge the open displacement envelope.
 
 ## Conditional research reductions
 

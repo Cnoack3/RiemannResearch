@@ -8,6 +8,7 @@ import RiemannResearch.RH.QSquarefreeDisplacementRigidity
 import RiemannResearch.RH.QAnnihilatorTailEscape
 import RiemannResearch.RH.QScaledTailPerturbation
 import RiemannResearch.RH.QPhysicalTailEnergy
+import RiemannResearch.RH.QPolylogTailEnergy
 import RiemannResearch.RH.QShiftedReciprocal
 import RiemannResearch.RH.QSquarefreeCapacity
 import RiemannResearch.RH.ZetaTwoOptimizerStage
@@ -35,8 +36,10 @@ forces target membership and Mathlib's RiemannHypothesis.
 The displayed tail bound remains an OPEN arithmetic premise.
 
 The exact signed tail identity is retained in QScaledTailPerturbation.
-The physical polylogarithmic corollary is proved on paper in
-TwoResidualLogRegularity20261026.md; it is not a declaration in this module.
+The physical polylogarithmic corollary is formalized below, including
+arbitrary fixed real exponents. Its physical envelope remains OPEN.
+The stronger stretched-exponential extension in
+TwoResidualLogRegularity20261026.md remains a paper argument.
 -/
 
 noncomputable section
@@ -174,5 +177,40 @@ theorem riemannHypothesis_of_frequent_log_displacement_tail (k : ℕ)
   exact QSquarefreeCapacity.riemannHypothesis_of_capacity_tendsto
     (QSquarefreeCapacity.capacity_tendsto_iff_optimizer_closure.mpr hm)
 
+
+theorem residual_zero_iff_eventually_polylog_displacement (m : ℕ) :
+    limitingResidual = 0 ↔ ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ n : ℕ in atTop,
+      |qSequence displacement n| ≤ C * (6 + Real.log (n : ℝ)) ^ m := by
+  constructor
+  · intro hr
+    refine ⟨0, le_rfl, Eventually.of_forall ?_⟩
+    intro n
+    rw [displacement_eq_zero_of_residual_eq_zero hr]
+    cases n <;> simp [qSequence]
+  · rintro ⟨C, hC, hb⟩
+    exact (residual_zero_iff_frequent_log_displacement_tail (2 * m)).mpr
+      ⟨_, (eventually_polylog_scaled_tail_le displacement C hC m hb).frequently⟩
+
+theorem riemannHypothesis_of_eventually_polylog_displacement
+    (m : ℕ) (C : ℝ) (hC : 0 ≤ C)
+    (hb : ∀ᶠ n : ℕ in atTop,
+      |qSequence displacement n| ≤ C * (6 + Real.log (n : ℝ)) ^ m) :
+    RiemannHypothesis := by
+  exact riemannHypothesis_of_frequent_log_displacement_tail (2 * m)
+    ⟨_, (eventually_polylog_scaled_tail_le displacement C hC m hb).frequently⟩
+
+theorem riemannHypothesis_of_eventually_real_polylog_displacement
+    (β C : ℝ) (hC : 0 ≤ C)
+    (hb : ∀ᶠ n : ℕ in atTop,
+      |qSequence displacement n| ≤ C * (6 + Real.log (n : ℝ)) ^ β) :
+    RiemannHypothesis := by
+  obtain ⟨m, hm⟩ := exists_nat_ge β
+  apply riemannHypothesis_of_eventually_polylog_displacement m C hC
+  filter_upwards [hb, eventually_ge_atTop (1 : ℕ)] with n hn hn1
+  have hn1r : (1 : ℝ) ≤ n := by exact_mod_cast hn1
+  have hL : 1 ≤ 6 + Real.log (n : ℝ) := by linarith [Real.log_nonneg hn1r]
+  have hp : (6 + Real.log (n : ℝ)) ^ β ≤ (6 + Real.log (n : ℝ)) ^ m := by
+    simpa only [Real.rpow_natCast] using Real.rpow_le_rpow_of_exponent_le hL hm
+  exact hn.trans (mul_le_mul_of_nonneg_left hp hC)
 
 end RiemannResearch.RH.QSquarefreeLogDisplacement

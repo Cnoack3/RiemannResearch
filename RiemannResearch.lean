@@ -35,6 +35,8 @@ import RiemannResearch.RH.QPrimorialExactHeadObstruction
 import RiemannResearch.RH.QSquarefreeProjectionLimits
 import RiemannResearch.RH.QSquarefreeResidualTail
 import RiemannResearch.RH.QSquarefreeLogDisplacement
+import RiemannResearch.Analysis.PolylogTailProfile
+import RiemannResearch.RH.QPolylogTailEnergy
 import RiemannResearch.RH.QPhysicalTailEnergy
 import RiemannResearch.RH.QUnconditionalAtomSeries
 import RiemannResearch.RH.QSimultaneousCRT

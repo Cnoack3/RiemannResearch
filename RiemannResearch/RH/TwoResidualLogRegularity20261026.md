@@ -2,9 +2,9 @@
 
 26 October 2026.
 
-The Q/Pareto argument now has a freshly checked logarithmic-tail extension.
-It proves a conditional RH criterion; it does not supply the regularity bound
-and does not prove RH.
+The Q/Pareto argument has a checked logarithmic-tail extension and a checked
+physical polylogarithmic implication. These are conditional RH criteria:
+they do not supply the actual displacement envelope and do not prove RH.
 
 ## Setting and exact comparison
 
@@ -79,9 +79,29 @@ namespace. It permits any eventually nonnegative weight and an eventual
 weighted-tail bound on the perturbation. Applying it to B r_P and d transfers
 the annihilator escape to the displacement. B r_P is physically bounded.
 
-## Paper corollary: any fixed polylogarithmic growth suffices
+## Polylogarithmic corollary: Lean verification and paper derivation
 
-This section is an ordinary proof, not a further Lean declaration.
+The implication in this section is now formalized. The modules
+Analysis/PolylogTailProfile.lean and RH/QPolylogTailEnergy.lean prove, for
+every QHilbert vector v and natural m, the complete tail estimate
+
+    ||tail_N v||_Q^2 <= [2 C^2/zeta(2)] (6+log N)^(2m)/N,
+
+assuming N>=1, 6+log N>=4m, and |v(n)|<=C(6+log n)^m for every n>N.
+The exact full-series equality is tail_energy_physical; no finite tail is
+substituted. eventually_polylog_scaled_tail_le handles eventual envelopes.
+
+QSquarefreeLogDisplacement.residual_zero_iff_eventually_polylog_displacement
+proves the equivalence with residual zero for each fixed natural exponent.
+riemannHypothesis_of_eventually_real_polylog_displacement covers every fixed
+real exponent by rounding it upward to a natural exponent. Its envelope
+hypothesis is still OPEN. All new proof bodies checked with only propext,
+Classical.choice, and Quot.sound; there are no additional domain axioms.
+
+The following real-exponent quantitative derivation remains the paper
+presentation. The exact displayed tail constant has been formalized for
+natural exponents; the arbitrary-real-exponent RH implication is formalized
+via rounding, rather than asserting that this whole derivation is Lean code.
 
 Suppose eventually |d(n)|<=D L_n^beta, where D,beta>=0 are fixed.
 The actual Pareto residual satisfies ||r_P||_P<=1, hence
@@ -229,3 +249,131 @@ background: Bhaskar Bagchi, “On Nyman, Beurling and Baez-Duarte's Hilbert spac
 reformulation of the Riemann hypothesis,” 2006, https://arxiv.org/abs/math/0607733.
 That reference supports background only; no novelty claim is made for this
 continuation. Neither residual vanishing nor RH is proved unconditionally.
+
+## Actual displacement: signed kernel localization (paper result)
+
+This subsection is an independently checked paper derivation, not a Lean
+declaration. It applies to the actual full squarefree span and to each
+matched finite span.
+
+Let e_n^P(m)=1_{m=n}/P(n) and K_n^P=Pi_V^P e_n^P. Then
+< v,K_n^P >_P=v(n) for v in V. Set Df(m)=f(m)/m.
+Here r always means the Q residual r_Q, even in a P norm.
+Since Q/P=(1+D)/zeta(2), the normal equations give exactly
+
+    <d,v>_P = <r,Dv>_P,
+    <r,(I+D)v>_P = 0       (v in V).
+
+Subtracting 1/(n+1) times the second equation from the first, with
+v=K_n^P, retains every signed term:
+
+    d(n) = sum_{m>=1} P(m) r(m) [(n-m)/(m(n+1))] K_n^P(m).
+
+The diagonal coefficient is zero. All sums converge absolutely by weighted
+Cauchy--Schwarz; the multiplier has absolute value at most one.
+
+Define the signed lower response
+
+    L(n) = sum_{1<=m<n} P(m) r(m) [(n-m)/(m(n+1))] K_n^P(m).
+
+On m>=n the multiplier is at most 1/(n+1) in absolute value.
+Projection contractivity gives ||K_n^P||_P^2<=1/P(n)=n(n+1).
+Consequently the complete remainder satisfies
+
+    |d(n)-L(n)|^2
+      <= [n/(n+1)] sum_{m>=n} P(m) r_Q(m)^2
+      <= zeta(2) sum_{m>=n} Q(m) r_Q(m)^2 -> 0.
+
+Thus d(n)=L(n)+o(1). This does not bound L(n).
+For finite stages the same formula uses r_{Q,N}, K_{N,n}^P and d_N.
+Convergence r_{Q,N}->r_Q gives uniform tail tightness, hence the remainder
+is o(1) uniformly in N.
+
+OPEN arithmetic obligation:
+
+    |sum_{m<n} P(m) r_{Q,N}(m)
+          [(n-m)/(m(n+1))] K_{N,n}^P(m)|
+      <= C (6+log n)^a,
+
+with common C,a over the required growing stages and heads. Neither generic
+Hilbert estimates nor the CRT carry identities prove this signed bound.
+
+## Wolfram finite checks and pattern search
+
+These computations are exploratory finite evidence, not a certified numerical
+enclosure or a proof for the limiting displacement.
+
+Exact generalized CRT, noncoprime example a=6,b=10,L=30:
+
+    2*(L/a)-3*(L/b)=1,
+    g_30(n)=2*g_6(n)-3*g_10(n)-floor(2*g_6(n)-3*g_10(n)).
+
+Wolfram checked every residue 0<=n<30 with exact rational arithmetic:
+all errors were zero. The carry values range from -3 to 1, with counts
+{-3:2,-2:10,-1:6,0:10,1:2}. A further exact search checked all 19
+nonnested noncoprime pairs of squarefree moduli <=30; all residues passed,
+with largest lcm 390. The repository already proves the general signed
+identity in QPrimeCRTCarries.residue_eq_sum_sub_carry_of_modular.
+
+For squarefree L, let V_L be generated by all divisors d>1 of L.
+Full infinite-tail progression weights are
+
+    q_r = PolyGamma(1,r/L)/(zeta(2)*L^2),
+    p_r = [PolyGamma(0,(r+1)/L)-PolyGamma(0,r/L)]/L,
+
+for 1<=r<=L. These exactly sum the physical Q and P weights over each
+residue class. At 60-digit arithmetic, the actual finite Q/P projection
+systems give:
+
+| L | dimension | squared Q residual | squared P residual | max over a period of abs(d_L) |
+|---:|---:|---:|---:|---:|
+| 6 | 3 | 0.0547669433703 | 0.0782932540023 | 0.0233323658130 |
+| 30 | 7 | 0.0254002254357 | 0.0374838245596 | 0.0249619740620 |
+| 210 | 15 | 0.0168704360610 | 0.0254339725834 | 0.0308038063721 |
+
+Both weight sums were one; normal-equation errors were numerically zero
+at approximately 59-digit working precision. The maximum is not decreasing.
+No uniform envelope follows from these three stages.
+
+Reproducible Wolfram Language code:
+
+```wl
+Module[{calc},
+ calc[L_Integer] := Module[{ds,a,q,p,gq,gp,bq,bp,cq,cp,dv},
+  ds=Rest[Divisors[L]];
+  a=N[Table[Mod[r,d]/d,{r,1,L},{d,ds}],60];
+  q=N[Table[PolyGamma[1,r/L]/(Zeta[2] L^2),{r,1,L}],60];
+  p=N[Table[(PolyGamma[0,(r+1)/L]-PolyGamma[0,r/L])/L,{r,1,L}],60];
+  gq=Transpose[a].(q a); gp=Transpose[a].(p a);
+  bq=Transpose[a].q; bp=Transpose[a].p;
+  cq=LinearSolve[gq,bq]; cp=LinearSolve[gp,bp];
+  dv=a.(cq-cp);
+  N[{L,Length[ds],Total[q],Total[p],1-bq.cq,1-bp.cp,
+    Max[Abs[dv]],Max[Abs[Join[gq.cq-bq,gp.cp-bp]]]},12]
+ ]; calc /@ {6,30,210}]
+```
+
+## Generalized CRT and primary-source context
+
+The generalized CRT suggestion is compatible with the existing legal carry
+formalization: no pairwise-coprimality assumption is needed when an explicit
+modular coefficient certificate is provided. For a=gA,b=gB and gcd(A,B)=1,
+Bezout coefficients xB+yA=1 give the signed carry at L=gAB. Once the old
+span contains g_a and g_b, its screened carry is exactly -screen(g_L).
+This changes coordinates without supplying an inverse-Gram estimate.
+
+The primary article by Baez-Duarte, Berrizbeitia and Iribarren (2002),
+[Sobre el teorema chino del resto](https://acfiman.org/boletines_articulos/sobre-el-teorema-chino-del-resto/),
+provides congruence compatibility and an abstract-ring CRT. It supplies no
+projection coefficient estimate used to discharge the open bound here.
+
+The primary article by Alouges, Darses and Hillion (2022),
+[Polynomial approximations in a generalized Nyman--Beurling criterion](https://www.numdam.org/articles/10.5802/jtnb.1227/),
+separates approximation and coefficient-control requirements in a related
+generalized criterion. It is contextual, not a provider for our displacement.
+
+The repository's QCRTCylinderProjection.legalCylinderApprox_error_sq
+retains the unknown residual floor after legal projection.
+QResidueConditional.conditional_leakage_floor prevents replacing that legal
+projection by a contractive conditional expectation without proof.
+The actual displacement envelope remains OPEN.
