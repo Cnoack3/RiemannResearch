@@ -1,5 +1,30 @@
 # Theorem catalog
 
+## Raw reciprocal source and negative cross moments — 26 October 2026
+
+Source: the user's request to prove the squarefree CRT bounds.
+Research note: `RH/RawSourceBoundsResearch20261026.md`.
+
+Established unconditional results:
+- `Analysis/PolylogAbelBudget.lean`: scalar reciprocal weighted multiplier at most 1/256.
+- `RH/QReciprocalWeightedEnergy.lean`: complete weighted source summability and
+  energy at most the input Q energy divided by 256.
+- `RH/QHeadTailLayerEnergy.lean`: exact capped tail/head identity, exact signed
+  positive/negative variation decomposition, and bounded negative variation.
+- `RH/QSquarefreeRawSourceBounds.lean`: for the actual residual and raw source,
+  M_N(t) ≥ -||r_N||²/[4(t+2)²], negative variation ≤ ||r_N||²/1024,
+  and E_2(H,b_N) ≤ 2 Phi_N^+(H) + ||r_N||²/256.
+- `RH/QShiftedReciprocalTail.lean`: quadratic source-tail decay and exact
+  two-coordinate spectral deficit with complete nonnegative tail.
+- `RH/QParityReciprocalForm.lean`: for N > 0, the actual intrinsic reciprocal
+  form plus its named tail deficit is at most error(N)/3.
+
+Open arithmetic obligations: the uniform positive cross-moment envelope,
+cofinal positive-variation bound, and uniform moving correction energy bound
+are still Open. Raw-source moments differ from the CRT-conditioned moments.
+No RH criterion is discharged by these estimates. The previous RH implications
+remain conditional research reductions.
+
 ## Squarefree CRT signed cancellation and cumulative moments — 26 October 2026
 
 Source: the user's infinite-CRT weighted-energy handoff.

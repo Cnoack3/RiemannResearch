@@ -7,6 +7,9 @@ import RiemannResearch.RH.QAnnihilatorTailEscape
 import RiemannResearch.RH.QFiniteSupportDualCriterion
 import RiemannResearch.RH.QShiftedReciprocal
 import RiemannResearch.RH.QPhysicalTailEnergy
+import RiemannResearch.RH.ZetaTwoHilbertSpace
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
@@ -121,5 +124,88 @@ theorem midpoint_tail_energy_le (f : QHilbert) (H : ℕ) :
     apply le_of_eq
     field_simp
     ring
+
+open scoped BigOperators
+
+/-- The complete raw-source tail has a quadratic gain at every cutoff. -/
+theorem reciprocal_tail_energy_le (f : QHilbert) (H : ℕ) :
+    ‖tail H (B f)‖ ^ 2 ≤ ‖f‖ ^ 2 / ((H : ℝ) + 2) ^ 2 := by
+  have h := centered_tail_energy_le_of_interval f H 0
+    (1 / ((H : ℝ) + 2)) (by positivity) (by positivity) (by simp)
+  simpa only [zero_smul, sub_zero, one_div, inv_pow, div_eq_mul_inv, one_mul, mul_comm] using h
+
+/-- The complete nonnegative deficit after isolating physical sites one and two. -/
+def B_twoCoordinate_tailDefect (f : QHilbert) : ℝ :=
+  ∑' n : ℕ, ((1 / 4 : ℝ) - 1 / ((n : ℝ) + 4)) * (f (n + 2)) ^ 2
+
+private theorem B_twoCoordinate_tailDefect_term (f : QHilbert) (n : ℕ) :
+    ((1 / 4 : ℝ) - 1 / ((n : ℝ) + 4)) * (f (n + 2)) ^ 2 =
+      (f (n + 2)) ^ 2 / 4 - (f (n + 2)) ^ 2 / (((n + 2 : ℕ) : ℝ) + 2) := by
+  push_cast
+  ring
+
+theorem B_twoCoordinate_tailDefect_summable (f : QHilbert) :
+    Summable (fun n : ℕ =>
+      ((1 / 4 : ℝ) - 1 / ((n : ℝ) + 4)) * (f (n + 2)) ^ 2) := by
+  have hs := (summable_nat_add_iff 2).mpr (qCoordinate_square_summable f)
+  have hsB : Summable (fun n : ℕ => (f n) ^ 2 / ((n : ℝ) + 2)) := by
+    apply Summable.of_nonneg_of_le (fun n => by positivity) _
+      (qCoordinate_square_summable f)
+    intro n
+    apply div_le_self (sq_nonneg _)
+    have hn := Nat.cast_nonneg (α := ℝ) n
+    linarith
+  have hb := (summable_nat_add_iff 2).mpr hsB
+  apply ((hs.div_const 4).sub hb).congr
+  intro n
+  exact (B_twoCoordinate_tailDefect_term f n).symm
+
+theorem B_twoCoordinate_tailDefect_nonneg (f : QHilbert) :
+    0 ≤ B_twoCoordinate_tailDefect f := by
+  apply tsum_nonneg
+  intro n
+  apply mul_nonneg _ (sq_nonneg _)
+  apply sub_nonneg.mpr
+  apply div_le_div_of_nonneg_left (by norm_num) (by norm_num)
+  have hn := Nat.cast_nonneg (α := ℝ) n
+  linarith
+
+/-- Exact complete-tail decomposition before any nonnegative remainder is dropped. -/
+theorem B_inner_two_coordinate_exact (f : QHilbert) :
+    inner ℝ f (B f) = ‖f‖ ^ 2 / 4 + (f 0) ^ 2 / 4 + (f 1) ^ 2 / 12 -
+      B_twoCoordinate_tailDefect f := by
+  have hs := qCoordinate_square_summable f
+  have hsB : Summable (fun n : ℕ => (f n) ^ 2 / ((n : ℝ) + 2)) := by
+    apply Summable.of_nonneg_of_le (fun n => by positivity) _ hs
+    intro n
+    apply div_le_self (sq_nonneg _)
+    have hn := Nat.cast_nonneg (α := ℝ) n
+    linarith
+  have hsTail : Summable (fun n : ℕ => (f (n + 2)) ^ 2) :=
+    (summable_nat_add_iff 2).mpr hs
+  have hsBTail : Summable (fun n : ℕ =>
+      (f (n + 2)) ^ 2 / (((n + 2 : ℕ) : ℝ) + 2)) :=
+    (summable_nat_add_iff 2).mpr hsB
+  have hd : B_twoCoordinate_tailDefect f =
+      (∑' n : ℕ, (f (n + 2)) ^ 2) / 4 -
+        ∑' n : ℕ, (f (n + 2)) ^ 2 / (((n + 2 : ℕ) : ℝ) + 2) := by
+    unfold B_twoCoordinate_tailDefect
+    simp_rw [B_twoCoordinate_tailDefect_term]
+    rw [(hsTail.div_const 4).tsum_sub hsBTail, tsum_div_const]
+  have hf := hs.sum_add_tsum_nat_add 2
+  have hb := hsB.sum_add_tsum_nat_add 2
+  rw [← qNorm_sq] at hf
+  rw [← B_inner_tsum] at hb
+  norm_num [Finset.sum_range_succ] at hf hb
+  norm_num only [Nat.cast_add, Nat.cast_ofNat] at hd
+  linarith
+
+/-- The inequality discards only the named nonnegative complete tail. -/
+theorem B_inner_le_two_coordinate_split (f : QHilbert) :
+    inner ℝ f (B f) ≤ ‖f‖ ^ 2 / 4 + (f 0) ^ 2 / 4 + (f 1) ^ 2 / 12 := by
+  have he := B_inner_two_coordinate_exact f
+  have hn := B_twoCoordinate_tailDefect_nonneg f
+  linarith
+
 
 end RiemannResearch.RH.QShiftedReciprocal
