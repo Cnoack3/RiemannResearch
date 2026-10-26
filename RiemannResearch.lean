@@ -1,6 +1,14 @@
 import RiemannResearch.RH.QResidueConditionalBounds
 import RiemannResearch.RH.QReciprocalConditioning
 import RiemannResearch.RH.QSquarefreeCRTResponse
+import RiemannResearch.RH.QSquarefreeCRTCrossCriterion
+import RiemannResearch.Analysis.FiniteAbelSummation
+import RiemannResearch.RH.QHeadCrossMoments
+import RiemannResearch.Analysis.PolylogAbelBudget
+import RiemannResearch.RH.QHeadCrossEnvelope
+import RiemannResearch.RH.QSquarefreeCRTAbelCriterion
+import RiemannResearch.RH.QReciprocalVariational
+import RiemannResearch.RH.QSquarefreeIntrinsicEnergy
 import RiemannResearch.Analysis.LogTailWeights
 import RiemannResearch.Analysis.WeightedHeadEnergy
 import RiemannResearch.RH.QSquarefreeLogResidualTail

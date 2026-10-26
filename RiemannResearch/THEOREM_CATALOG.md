@@ -1,5 +1,41 @@
 # Theorem catalog
 
+## Squarefree CRT signed cancellation and cumulative moments — 26 October 2026
+
+Source: the user's infinite-CRT weighted-energy handoff.
+Research note: `RH/CRTCrossMomentResearch20261026.md`.
+
+Established unconditional infrastructure:
+- `Analysis/FiniteAbelSummation.lean`: exact finite Abel identity over any
+  commutative ring, including the endpoint and every signed increment.
+- `Analysis/PolylogAbelBudget.lean`: discrete profile increment bound and
+  complete reciprocal logarithmic budget at most 1/3.
+- `RH/QHeadCrossMoments.lean`: exact head/tail cross-moment identity,
+  nonnegative completed-square remainder, Abel identity, positive-variation
+  lower bound for weighted cross terms.
+- `RH/QHeadCrossEnvelope.lean`: a one-sided C/(t+1) cumulative upper envelope
+  gives positive variation at most C/3. Negative moments are unrestricted.
+- `RH/QReciprocalVariational.lean` and `RH/QSquarefreeIntrinsicEnergy.lean`:
+  exact reciprocal variational identity and unconditional intrinsic dual bound
+  for the actual correction, including its homogeneous B-Cauchy inequality.
+
+Conditional research reductions:
+- `RH/QSquarefreeCRTCrossCriterion.lean`: cofinal correction-energy bounds
+  are equivalent to cofinal constant lower bounds on the combined signed
+  remainder or the cross term. Either bound, or the stated relative absorption,
+  implies Mathlib RH on a divergent head. Under a nonzero actual residual,
+  both signed quantities tend to minus infinity.
+- `RH/QSquarefreeCRTAbelCriterion.lean`: cofinal bounded positive Abel
+  variation implies RH. The modulus (N+1)! discharges conductor divisibility.
+  A one-sided bound M_N(t)<=C/(t+1) for 0<t<H(N), cofinally in N, gives the
+  explicit energy bound (4+2C)/3 and RH. A nonzero limiting residual forces
+  positive variation to diverge along every divergent head/common modulus.
+
+**Open:** prove any displayed cofinal arithmetic bound for the actual
+squarefree corrections, or transfer the intrinsic reciprocal dual energy to
+the logarithmic head energy. No unconditional closure of one or RH proof is
+claimed. Wolfram finite signed diagnostics are not proof certificates.
+
 ## Squarefree projection moments and the actual residual-tail dichotomy — 25 October 2026
 
 Source: user's projection-limit, CRT, primorial, and moment discussion.
