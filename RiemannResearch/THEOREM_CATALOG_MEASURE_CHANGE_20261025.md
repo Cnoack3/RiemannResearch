@@ -364,3 +364,96 @@ See RH/CompleteResidualScreeningAndPivots20261025.md.
 Open: a stage-independent physical-head bound. Total Hilbert-energy control,
 finite certificates, and signed source asymptotics do not discharge this
 obligation. No unconditional RH theorem is claimed.
+
+## Squarefree logarithmic tail escape and arithmetic correction bounds
+
+- Analysis/LogTailWeights.lean: comparable logarithmic weights and monotone
+  polylogarithmic tail profiles, independent of Hilbert and RH hypotheses.
+- RH/QPolylogTailEnergy.lean: exists_log_scaled_tail_bound_of_polylog converts
+  a complete physical polylogarithmic envelope into a finite weighted-tail bound.
+- RH/QScaledTailPerturbation.lean: reuses the upstream weighted_tail_transfer_sub
+  with eventual nonnegativity and an eventually bounded perturbation.
+- RH/QSquarefreeLogResidualTail.lean:
+  squarefree_annihilator_log_scaled_tail_tendsto proves that every squarefree
+  annihilator with nonzero mean escapes N/(6+log N)^k for every fixed k.
+  squarefree_annihilator_eventual_stretched_tail_bound gives uniform arithmetic
+  constants over the actual squarefree annihilator space. Prime anchors make
+  the existing exact heads squarefree legal without assuming full-conductor
+  orthogonality. correction_log_scaled_tail_tendsto transfers this to b.
+  Frequent-tail equivalences characterize limitingResidual=0, and cofinal
+  bounded-tail hypotheses imply RH via the existing squarefree capacity bridge.
+  riemannHypothesis_of_polylog_moving_head_bound weakens the physical head
+  target to C(6+log n)^m for one fixed finite m. Its zero-exponent specialization recovers the original criterion.
+- RH/QSquarefreeReciprocalGap.lean: reciprocal_gap_exact retains the full
+  spectral deficit and a finite sum of squares; parameter_two_coercive gives
+  the constant 1/60 on the four-site kernel; movingCorrection_norm_le_squarefree
+  gives ||b_N|| <= (59/240)||r_N||.
+- RH/QParityReciprocalBounds.lean: B_centered_oneSixth_exact retains the full
+  nonnegative tail. movingCorrection_actual_parity_energy_bound proves, for
+  N>=1, 9*zeta(2)*||b_N||^2 <= (zeta(2)-1)*rho_N-(3*zeta(2)-4)*rho_N^2;
+  correction_actual_parity_energy_bound supplies the limiting version.
+  residual_first_sq_actual_parity_bound gives the refined first-coordinate bound.
+
+The finite-stage head hypotheses are sufficient conditions; no converse from
+RH to these envelopes is claimed. The original uniform bound and the weaker
+polylogarithmic envelope remain Open. No unconditional RH theorem has been
+obtained. Arbitrary-partition quadratic variation and the scalar 1/12 norm
+corollary are ordinary arguments, not additional formalized theorems here.
+See RH/SquarefreeLogTailRegularity20261026.md for proofs and verification status.
+
+### Weaker cofinal head-energy and stretched-tail criteria
+
+- Analysis/PointwiseEnergyDivergence.lean: fixed_prefix_le_of_frequently_head_bound
+  and summable_of_frequently_head_bound transfer frequent bounds on growing
+  nonnegative finite sums to summability of their pointwise limit.
+- RH/QPolylogTailEnergy.lean: polylogWeightedEnergyTerm_eq gives the exact
+  positive-site physical formula; the single-coordinate majorant is shared
+  by the full-energy and finite-head envelope arguments.
+- RH/QPolylogMovingHeadEnergy.lean: weightedHeadEnergy,
+  polylog_head_envelope_implies_uniform_head_budget, and
+  weightedEnergy_summable_of_frequently_moving_head_bound.
+- RH/QSquarefreeMovingHeadEnergy.lean:
+  residual_zero_of_frequently_moving_head_energy_bound and
+  riemannHypothesis_of_frequently_moving_head_energy_bound require only a
+  frequent finite budget of sum |b_N(n)|^2/[zeta(2)*n*(k+6+log n)^k] on any
+  prescribed head H(N)->infinity. The old all-stage pointwise polylog bound
+  implies this hypothesis with k=2m+2 and H(N)=N.
+  moving_head_energy_tendsto_atTop_of_residual_ne_zero proves divergence for
+  every divergent head schedule when the actual squarefree residual is nonzero.
+- Analysis/StretchedTailWeights.lean and RH/QStretchedTailEnergy.lean: scalar
+  decay/weight and the complete reciprocal-source tail limit.
+- RH/QSquarefreeStretchedTailCriterion.lean: a fixed unconditional a>0 gives
+  critical cofinal residual/correction tail criteria at
+  W_a(N)=N*exp(-a*((6+log N)*log(6+log N))^(1/11)).
+  exists_stretched_annihilator_tail_escape and
+  exists_stretched_correction_tail_escape strengthen logarithmic divergence
+  to one fixed stretched scale on the nonzero-mean/nonzero-residual branch.
+
+The weighted head budget and critical-tail vanishing remain Open arithmetic
+providers. These reductions do not claim RH=>squarefree residual vanishing.
+Targeted import/axiom checks passed for the saved sources; publication is
+controlled by the final server checkpoint. The explicit physical envelope
+exp(A*(6+log n)^(1/11)) is justified in ordinary analysis in the report but is
+not a separately formalized declaration here.
+
+
+### Unconditional normalized moving-head growth
+
+- Analysis/WeightedHeadEnergy.lean: normalized_weighted_head_tendsto_zero,
+  normalized_weighted_head_le_tsum, and
+  normalized_weighted_head_tendsto_zero_of_l1. These general finite-sum
+  estimates use a nonnegative increasing divergent weight and l1 convergence
+  of nonnegative energies; no weighted summability hypothesis is imposed.
+- Analysis/LogTailWeights.lean: polylogTailProfile_tendsto_atTop.
+- RH/QPolylogMovingHeadEnergy.lean:
+  weightedHeadEnergy_div_profile_tendsto_zero applies to every norm-convergent
+  sequence in the actual Q Hilbert space, via qSquareL1Dist_tendsto_zero.
+- RH/QSquarefreeMovingHeadEnergy.lean:
+  moving_head_energy_div_profile_tendsto_zero and
+  moving_head_energy_isLittleO_profile prove, for every fixed k and every
+  H(N)->infinity, E_{k,H}(N)=o(H(N)/(k+6+log H(N))^k) for the actual corrections.
+
+The specialized theorem has only the structural cutoff-divergence hypothesis.
+It assumes neither RH nor residual vanishing nor a finite weighted-energy
+budget. The cofinal constant-budget provider sufficient for RH remains Open:
+little-o relative to this divergent profile still permits unbounded energy.

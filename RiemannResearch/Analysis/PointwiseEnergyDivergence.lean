@@ -63,5 +63,50 @@ theorem total_nonnegative_energy_tendsto_atTop_filter
   filter_upwards [hlarge, hE, hs] with j hj hEj hsj
   exact hj.le.trans (hsj.sum_le_tsum s (fun n _ => hEj n))
 
+/-- Source: the user-provided squarefree moving-head continuation.
+Fixed finite-prefix convergence transfers cofinal growing-head bounds. -/
+theorem fixed_prefix_le_of_frequently_head_bound
+    (f : ℕ → ℕ → ℝ) (g : ℕ → ℝ)
+    (hf : ∀ j n, 0 ≤ f j n)
+    (hlim : ∀ n, Tendsto (fun j => f j n) atTop (𝓝 (g n)))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop)
+    (C : ℝ) (hbound : ∃ᶠ j : ℕ in atTop,
+      (∑ n ∈ Finset.range (H j), f j n) ≤ C)
+    (M : ℕ) : (∑ n ∈ Finset.range M, g n) ≤ C := by
+  have hfinite (L : ℕ) : Tendsto
+      (fun j => ∑ n ∈ Finset.range L, f j n) atTop
+      (𝓝 (∑ n ∈ Finset.range L, g n)) := by
+    induction L with
+    | zero => simpa using (tendsto_const_nhds : Tendsto (fun _ : ℕ => (0 : ℝ)) atTop (𝓝 0))
+    | succ L ih =>
+        simpa only [Finset.sum_range_succ] using ih.add (hlim L)
+  by_contra hbad
+  have hgt := (hfinite M).eventually (Ioi_mem_nhds (lt_of_not_ge hbad))
+  have hlarge := hH.eventually (eventually_ge_atTop M)
+  obtain ⟨j, hj⟩ := ((hbound.and_eventually hlarge).and_eventually hgt).exists
+  rcases hj with ⟨⟨hb, hM⟩, hstrict⟩
+  have hmono : (∑ n ∈ Finset.range M, f j n) ≤
+      ∑ n ∈ Finset.range (H j), f j n :=
+    Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono hM)
+      (fun n _ _ => hf j n)
+  exact (not_lt_of_ge (hmono.trans hb)) hstrict
+
+/-- A frequent uniform bound on expanding finite heads suffices for full
+summability of the pointwise limit, with the same total-energy bound. -/
+theorem summable_of_frequently_head_bound
+    (f : ℕ → ℕ → ℝ) (g : ℕ → ℝ)
+    (hf : ∀ j n, 0 ≤ f j n)
+    (hlim : ∀ n, Tendsto (fun j => f j n) atTop (𝓝 (g n)))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop)
+    (C : ℝ) (hbound : ∃ᶠ j : ℕ in atTop,
+      (∑ n ∈ Finset.range (H j), f j n) ≤ C) :
+    Summable g ∧ (∑' n : ℕ, g n) ≤ C := by
+  have hg : ∀ n, 0 ≤ g n := by
+    intro n
+    exact ge_of_tendsto (hlim n) (Eventually.of_forall (fun j => hf j n))
+  have hprefix := fixed_prefix_le_of_frequently_head_bound f g hf hlim H hH C hbound
+  exact ⟨summable_of_sum_range_le hg hprefix, Real.tsum_le_of_sum_range_le hg hprefix⟩
+
+
 end
 end RiemannResearch.Analysis
