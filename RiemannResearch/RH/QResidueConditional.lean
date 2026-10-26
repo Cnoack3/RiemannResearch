@@ -494,4 +494,79 @@ theorem carry_norm_sq_lower (d p : ℕ) (hd : 0 < d) :
   exact (qSequence_square_summable (carry d p)).sum_le_tsum s
     (fun n _ => mul_nonneg (positiveQWeight_nonneg n) (sq_nonneg _))
 
+/-- A complete positive residue-fiber average preserves a physical bound. -/
+theorem conditionalValue_abs_le
+    (L a : ℕ) (hL : 0 < L) (ha : 0 < a)
+    (f : ℕ → ℝ) (C : ℝ) (_hC : 0 ≤ C)
+    (hf : ∀ n, |f n| ≤ C) :
+    |conditionalValue L a f| ≤ C := by
+  have hw : Summable (fun j : ℕ => positiveQWeight (a + L * j)) := by
+    convert residuePowerWeight_summable 0
+      (show (0 : ℝ) < L by exact_mod_cast hL)
+      (show (0 : ℝ) < a by exact_mod_cast ha) using 1
+    simp only [positiveQWeight, Nat.cast_add, Nat.cast_mul, Nat.zero_add, mul_comm]
+  have hmass : (∑' j : ℕ, positiveQWeight (a + L * j)) =
+      residuePowerWeight 0 L a := by
+    unfold residuePowerWeight
+    apply tsum_congr
+    intro j
+    simp only [positiveQWeight, Nat.cast_add, Nat.cast_mul, Nat.zero_add, mul_comm]
+  have hs := fiber_terms_summable L a hL ha f hf
+  have hupper : fiberSum L a f ≤ residuePowerWeight 0 L a * C := by
+    have hh := hs.tsum_le_tsum
+      (fun j => mul_le_mul_of_nonneg_left
+        ((le_abs_self (f (a + L * j))).trans (hf _))
+        (positiveQWeight_nonneg _)) (hw.mul_right C)
+    simpa only [fiberSum, tsum_mul_right, hmass] using hh
+  have hlower : -(residuePowerWeight 0 L a * C) ≤ fiberSum L a f := by
+    have hterm (j : ℕ) : -(positiveQWeight (a + L * j) * C) ≤
+        positiveQWeight (a + L * j) * f (a + L * j) := by
+      have hh : -C ≤ f (a + L * j) := (abs_le.mp (hf _)).1
+      have hm := mul_le_mul_of_nonneg_left hh (positiveQWeight_nonneg (a + L * j))
+      simpa only [mul_neg] using hm
+    have hh := ((hw.mul_right C).neg).tsum_le_tsum hterm hs
+    simpa only [fiberSum, tsum_neg, tsum_mul_right, hmass] using hh
+  have habs : |fiberSum L a f| ≤ residuePowerWeight 0 L a * C :=
+    abs_le.mpr ⟨hlower, hupper⟩
+  have hmasspos : 0 < residuePowerWeight 0 L a :=
+    residuePowerWeight_pos 0 (by exact_mod_cast hL) (by exact_mod_cast ha)
+  unfold conditionalValue
+  rw [abs_div, abs_of_pos hmasspos]
+  apply (div_le_iff₀ hmasspos).mpr
+  simpa only [mul_comm] using habs
+
+/-- Pull out the old-period factor before conditioning. No independence is used. -/
+theorem fiberSum_mul_of_periodic (L a : ℕ) (f g : ℕ → ℝ)
+    (hf : ∀ n, f (n + L) = f n) :
+    fiberSum L a (fun n => f n * g n) = f a * fiberSum L a g := by
+  unfold fiberSum
+  simp_rw [Pareto.periodic_add_mul L f hf]
+  rw [← tsum_mul_left]
+  apply tsum_congr
+  intro j
+  ring
+
+theorem conditionalValue_mul_of_periodic (L a : ℕ) (f g : ℕ → ℝ)
+    (hf : ∀ n, f (n + L) = f n) :
+    conditionalValue L a (fun n => f n * g n) =
+      f a * conditionalValue L a g := by
+  unfold conditionalValue
+  rw [fiberSum_mul_of_periodic L a f g hf]
+  ring
+
+/-- A periodic test is constant along each positive residue fiber.
+The auxiliary site zero is never used. -/
+theorem fiberSum_mul_pos_periodic
+    (L a : ℕ) (ha : 0 < a) (f g : ℕ → ℝ)
+    (hg : ∀ n, 0 < n → g (n + L) = g n) :
+    fiberSum L a (fun n => f n * g n) = fiberSum L a f * g a := by
+  have hfiber (j : ℕ) : g (a + L * j) = g a := by
+    induction j with
+    | zero => simp
+    | succ j ih =>
+        rw [Nat.mul_succ, ← Nat.add_assoc, hg (a + L * j) (by omega), ih]
+  unfold fiberSum
+  simp_rw [hfiber, ← mul_assoc]
+  exact tsum_mul_right
+
 end RiemannResearch.RH.QResidueConditional

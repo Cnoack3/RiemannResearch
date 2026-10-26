@@ -484,3 +484,38 @@ little-o relative to this divergent profile still permits unbounded energy.
 The bounded zero-head response is only one component of the actual correction.
 The full cofinal constant-energy budget remains Open and no RH conclusion is
 claimed. See RH/SquarefreeLogTailRegularity20261026.md for the exact distinction.
+
+## Complete-Q CRT source estimates and infinite-modulus passage (2026-10-26)
+
+Established, unconditional source results:
+
+- RH/QResidueConditional.lean: conditionalValue_abs_le and the complete-fiber
+  periodic-factor identities preserve signed data and use the full Q law.
+- RH/QResidueConditionalBounds.lean: fiberSum_first_tail separates the first
+  atom exactly; conditionalValue_deviation_tail_bound,
+  conditionalValue_deviation_mass_bound, and conditionalValue_deviation_bound
+  control the remaining complete progression by an O(L^(-2)) anchor bound.
+- RH/QReciprocalConditioning.lean: reciprocalMean_defect_exact retains every
+  signed tail summand; reciprocalMean_defect_bound gives the quantitative
+  bias. conditionalReciprocal_energy_summable and
+  conditionalReciprocal_energy_le give a complete k=2 source-energy budget.
+  conditionalReciprocal_weighted_error_tendsto_zero proves convergence in
+  that complete energy for arbitrary norm-bounded moving inputs and any
+  positive moduli tending to infinity. No periodicity or input convergence
+  hypothesis is required.
+- RH/QSquarefreeCRTResponse.lean:
+  conditionalReciprocal_residual_head_energy_le bounds every finite head
+  uniformly over all stages and positive moduli.
+  movingCorrection_eq_conditioned_projection identifies the actual correction
+  with the legal projection of the conditioned source when every active
+  conductor divides the modulus. conditionedRemainder_mem_orthogonal records
+  ordinary Q orthogonality; conditioned_source_weighted_energy_exact retains
+  the weighted cross term instead of setting it to zero.
+  conditionalReciprocal_residual_weighted_error_tendsto_zero specializes the
+  infinite-modulus result to any schedule of actual squarefree residuals.
+
+Open: the cofinal constant-energy bound for the actual correction after
+legal projection. The source budget and convergence do not establish weighted
+stability of that projection. There is no unconditional RH conclusion.
+See RH/CRTReciprocalConditioningResearch20261026.md for exact statements,
+proofs, finite Wolfram diagnostics, literature boundaries, and verification.
