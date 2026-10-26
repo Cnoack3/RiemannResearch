@@ -1,6 +1,8 @@
 import RiemannResearch.RH.QReciprocalWeightedEnergy
 import RiemannResearch.RH.QHeadTailLayerEnergy
 import RiemannResearch.RH.QSquarefreeRawSourceBounds
+import RiemannResearch.RH.QSquarefreeRawMomentCriterion
+import RiemannResearch.Analysis.CoupledProjectionWeightedObstruction
 import RiemannResearch.RH.QParityReciprocalForm
 import RiemannResearch.RH.QResidueConditionalBounds
 import RiemannResearch.RH.QReciprocalConditioning

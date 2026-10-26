@@ -519,3 +519,47 @@ legal projection. The source budget and convergence do not establish weighted
 stability of that projection. There is no unconditional RH conclusion.
 See RH/CRTReciprocalConditioningResearch20261026.md for exact statements,
 proofs, finite Wolfram diagnostics, literature boundaries, and verification.
+
+## Raw positive moments: exact comparison and arithmetic boundary (2026-10-26)
+
+Established comparisons and equivalences:
+
+- RH/QHeadTailLayerEnergy.lean: positiveCrossVariation_sub_layer_quadratic,
+  positiveCrossVariation_sub_layer_sq_le, positiveCrossVariation_le_layer_add_source,
+  weightedEnergy_summable_iff_frequently_positiveCrossVariation_bounded,
+  uniform_cappedTailEnergy_iff_positiveCrossVariation,
+  cappedTailEnergy_le_profile_norm_sq.
+  These retain the existing exact signed layer identity and endpoint tail.
+- RH/QSquarefreeRawMomentCriterion.lean: raw_source_layer_le,
+  raw_positiveCrossVariation_sub_layer_sq_le,
+  raw_positive_variation_fixed_head_tendsto_zero,
+  residual_zero_iff_fixed_head_frequently_positive_variation_bounded,
+  raw_positive_tendsto_atTop_of_residual_ne_zero, raw_layer_bound_of_relative_gap.
+  The exact equivalence has quantifiers exists C, forall H, frequently N.
+  It characterizes zero squarefree residual; no RH-to-squarefree-density
+  implication is assumed or newly proved.
+- Analysis/CoupledProjectionWeightedObstruction.lean:
+  projection_idempotent, projection_orthogonality, correction_exact,
+  residual_energy_exact, correction_energy_exact, reciprocal_energy_le,
+  source_energy_le, correction_coordinate_lower, correction_energy_lower,
+  correction_energy_tendsto_atTop.
+  This finite two-site model has uniformly bounded raw-source energy and
+  divergent weighted correction energy. Its ranges are not squarefree stages;
+  it obstructs only arguments based on abstract coupling plus smoothing.
+
+Conditional research reductions in QSquarefreeRawMomentCriterion:
+
+- residual_zero_of_frequently_raw_positive_bound and
+  riemannHypothesis_of_frequently_raw_positive_bound.
+  Open: one finite common raw positive-variation bound along a cofinal
+  sequence of stages with expanding physical heads.
+- riemannHypothesis_of_frequently_raw_relative_gap.
+  Open: fixed theta < 1 and C with Phi-plus <= theta * cappedTailEnergy + C
+  at cofinally many stages on expanding heads.
+
+Neither open provider is supplied. The sharp squared comparison is
+(Phi-plus - X)^2 <= e_N * X / 256, not an upper bound on X alone.
+See RH/RawPositiveMomentResearch20261026.md for the full statements,
+proofs, diagnostics, and continuation agenda. The single-atom smoothing and
+parity-preserving infinite-dimensional example in
+RH/OneAtomSmoothingAndParityObstruction20261026.md are explicitly paper-only.
