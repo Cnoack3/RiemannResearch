@@ -66,4 +66,24 @@ theorem scaled_tail_transfer_sub (f g : QHilbert) (C : ℝ)
   nlinarith
 
 
+/-- Transfer divergent weighted tails through an eventually bounded perturbation. -/
+theorem weighted_tail_transfer_sub (f g : QHilbert) (w : ℕ → ℝ)
+    (hw : ∀ᶠ N in atTop, 0 ≤ w N) (C : ℝ)
+    (hf : ∀ᶠ N in atTop, w N * ‖tail N f‖ ^ 2 ≤ C)
+    (hfg : Tendsto (fun N => w N * ‖tail N (f - g)‖ ^ 2) atTop atTop) :
+    Tendsto (fun N => w N * ‖tail N g‖ ^ 2) atTop atTop := by
+  apply tendsto_atTop.2
+  intro A
+  have ht := hfg.eventually (eventually_ge_atTop (2 * C + 2 * A))
+  filter_upwards [ht, hw, hf] with N hN hwN hfN
+  have hn : ‖tail N (f - g)‖ ≤ ‖tail N f‖ + ‖tail N g‖ := by
+    rw [tail_sub]
+    exact norm_sub_le _ _
+  have hs : ‖tail N (f - g)‖ ^ 2 ≤
+      2 * ‖tail N f‖ ^ 2 + 2 * ‖tail N g‖ ^ 2 := by
+    nlinarith [norm_nonneg (tail N (f - g)), norm_nonneg (tail N f),
+      norm_nonneg (tail N g), sq_nonneg (‖tail N f‖ - ‖tail N g‖)]
+  have hmul := mul_le_mul_of_nonneg_left hs hwN
+  nlinarith
+
 end RiemannResearch.RH.QAnnihilatorTailEscape

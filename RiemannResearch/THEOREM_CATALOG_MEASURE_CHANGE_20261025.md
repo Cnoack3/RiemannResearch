@@ -26,6 +26,23 @@ All four modules use actual QHilbert vectors. Pareto projections use the same
 physical squarefree closed span. No RH or target-membership premise is hidden
 in these identities or equivalences.
 
+## Logarithmic two-residual continuation (26 October 2026)
+
+- RH/QSquarefreeLogDisplacement.lean: squarefree_annihilator_log_tail,
+  displacement_log_scaled_tail_tendsto,
+  residual_zero_iff_frequent_log_displacement_tail.
+  These use the complete exact-head energy provider and prime-anchored
+  squarefree legality, without a full-conductor annihilator assumption.
+- RH/QScaledTailPerturbation.lean: weighted_tail_transfer_sub permits
+  any eventually nonnegative weight and eventually bounded perturbation tails.
+- Conditional research reduction:
+  QSquarefreeLogDisplacement.riemannHypothesis_of_frequent_log_displacement_tail.
+  Open: for some fixed k, bounded N/(6+log N)^k times the complete squared
+  displacement tail along arbitrarily large N. No provider is supplied.
+- TwoResidualLogRegularity20261026.md gives ordinary paper proofs of
+  the physical polylogarithmic corollary and a stretched-exponential relaxation.
+  Those additional corollaries are not Lean declarations in this checkpoint.
+
 ## Conditional research reductions
 
 - QSquarefreeDisplacementRigidity.riemannHypothesis_of_displacement_bounded.
