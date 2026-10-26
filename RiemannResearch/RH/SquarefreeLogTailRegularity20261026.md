@@ -398,3 +398,95 @@ little-o theorem type, and audited the generic l1 theorem, the Q theorem,
 and both actual-correction conclusions. All four axiom reports contained
 only propext, Classical.choice, and Quot.sound. Publication is determined
 separately by the final checkpoint.
+
+## Constant-energy attempt: verified partial bounds
+
+The full constant-energy obligation remains Open. The following unconditional
+results strengthen the available estimates without assuming the desired budget,
+squarefree residual vanishing, or RH.
+
+### Uniformity over all stages
+
+For every fixed natural k and every epsilon>0, there is H0 such that
+
+    for every H>=H0 and every stage N,
+    E_k(H,b_N) <= epsilon * a_k(H),
+    a_k(H)=H/(k+6+log H)^k.
+
+The cutoff H is independent of N. This is
+QSquarefreeMovingHeadEnergy.moving_head_energy_uniform_subprofile.
+The generic proof first controls the normalized finite-head perturbation by
+the complete l1 difference of the squared Q coordinates. Late stages are close
+to the limiting vector; the finitely many early stages have individual
+normalized-head limits zero. One cutoff then works for every stage.
+This is a uniform formulation of the compactness consequence, not a new
+arithmetic cancellation estimate. The divergent profile still permits
+unbounded unnormalized energy.
+
+### A constant bound for the zero-head response
+
+For L>=0 let W_(N,L) be the actual squarefree stage directions that vanish on
+physical sites 1 through L. Set
+
+    T_(N,L)=P_(W_(N,L)) B r_N,
+    A_(N,L)=b_N-T_(N,L).
+
+These are the existing tailResponse and headResponse, respectively; A is the
+minimum-Q-norm legal extension of the prescribed correction head.
+QSquarefreeResponseEnergy retains the exact finite weighted identity
+
+    E_k(H,b_N)=E_k(H,A_(N,L))+E_k(H,T_(N,L))
+      +2 sum_(n<=H) a_k(n) Q(n) A_(N,L)(n) T_(N,L)(n).
+
+Q orthogonality does not set this new weighted cross term to zero.
+The proved centered tail-response estimate gives
+
+    E_k(H,T_(N,L))
+      <= a_k(H)/(4(L+2)^2) * ||tail_L r_N||_Q^2.
+
+Since a_k(H)<=H and ||r_N||_Q<=1, this gives the common numerical budget
+
+    H<=(L+2)^2 => E_k(H,T_(N,L))<=1/4.
+
+More strongly, for every real A>=0 and epsilon>0 there is L0 such that for
+every L>=L0, every N,H,k, and H<=A(L+2)^2,
+
+    E_k(H,T_(N,L))<epsilon.
+
+This last estimate is uniform in the stage N and in the natural exponent k.
+It uses uniform unweighted tail tightness of the actual convergent residuals.
+The constant 1/4 and the uniform vanishing apply only to T, not to b_N.
+
+### Exact remaining obligation
+
+After the signed identity, the squared triangle estimate gives, whenever
+H<=(L+2)^2,
+
+    E_k(H,b_N) <= 2 E_k(H,A_(N,L)) + 1/2,
+    E_k(H,A_(N,L)) <= 2 E_k(H,b_N) + 1/2.
+
+Consequently common cofinal budgets for these two energies are equivalent on
+such windows, up to the displayed constants. The unresolved estimate is the
+weighted energy of the actual complementary headResponse. The forcing Bessel
+bounds and the ordinary Q-norm bounds do not supply it; they do not control the
+weighted inverse-Gram response. No constant budget for the full correction,
+unconditional residual vanishing, or RH has been proved.
+
+### Verification
+
+- Uniform candidate: job_6RO9dps9gL4B9dUXHVBoaWhR3g6IDWl4, verified true,
+  exit code 0, 5.712 server seconds.
+- Tail-response candidate: job_Ba0xlVDR883SLzZC-SC1_gjjUVaSyOMC, verified true,
+  exit code 0, 6.068 server seconds.
+- Both candidate checks reported only propext, Classical.choice, and Quot.sound
+  for their principal conclusions. The saved-source check and final checkpoint
+  determine the integrated proof and publication status.
+
+Saved-source verification job__ymiu6-rtpnDgK7-yEHP_xrQTfKgJR2D succeeded:
+verified true, exit code 0, 17.950 server seconds. It imported both permanent
+actual-correction modules and their changed dependencies, checked the displayed
+uniform and constant-bound theorem types, and audited seven principal generic
+and actual declarations. Every axiom report contained only propext,
+Classical.choice, and Quot.sound. The signed identity, constant partial bound,
+uniform vanishing, and both complementary budget transfers are thus checked
+from their saved source files. Publication remains the final checkpoint's job.

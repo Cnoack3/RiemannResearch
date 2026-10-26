@@ -108,6 +108,30 @@ theorem normalized_weighted_head_le_tsum
         (hs.sum_le_tsum (Finset.range (H + 1)) (fun n _ => he n)) (ha H)
     _ = (∑' n, e n) * a H := mul_comm _ _
 
+/-- A normalized weighted head is Lipschitz in the complete l1 distance.
+No summability of the weighted energies is needed. -/
+theorem normalized_weighted_head_le_l1_add
+    (a u v : ℕ → ℝ) (ha : ∀ n, 0 ≤ a n) (hmono : Monotone a)
+    (hd : Summable (fun n => |u n - v n|)) (H : ℕ) :
+    (∑ n ∈ Finset.range (H + 1), a n * u n) / a H ≤
+      (∑' n, |u n - v n|) +
+        (∑ n ∈ Finset.range (H + 1), a n * v n) / a H := by
+  have hsum : (∑ n ∈ Finset.range (H + 1), a n * u n) ≤
+      (∑ n ∈ Finset.range (H + 1), a n * |u n - v n|) +
+        (∑ n ∈ Finset.range (H + 1), a n * v n) := by
+    calc
+      _ ≤ ∑ n ∈ Finset.range (H + 1), a n * (|u n - v n| + v n) := by
+        apply Finset.sum_le_sum
+        intro n hn
+        apply mul_le_mul_of_nonneg_left _ (ha n)
+        linarith [le_abs_self (u n - v n)]
+      _ = _ := by simp_rw [mul_add]; rw [Finset.sum_add_distrib]
+  have hdiv := div_le_div_of_nonneg_right hsum (ha H)
+  rw [add_div] at hdiv
+  exact hdiv.trans (add_le_add
+    (normalized_weighted_head_le_tsum a (fun n => |u n - v n|)
+      ha hmono (fun n => abs_nonneg _) hd H) le_rfl)
+
 /-- A convergent sequence of nonnegative energies in l1 has sub-profile
 growth on every divergent finite head. No weighted summability is assumed. -/
 theorem normalized_weighted_head_tendsto_zero_of_l1
@@ -129,25 +153,54 @@ theorem normalized_weighted_head_tendsto_zero_of_l1
   have hbound (j : ℕ) :
       (∑ n ∈ Finset.range (H j + 1), a n * u j n) / a (H j) ≤
       (∑' n, |u j n - v n|) +
-        (∑ n ∈ Finset.range (H j + 1), a n * v n) / a (H j) := by
-    have hsum : (∑ n ∈ Finset.range (H j + 1), a n * u j n) ≤
-        (∑ n ∈ Finset.range (H j + 1), a n * |u j n - v n|) +
-          (∑ n ∈ Finset.range (H j + 1), a n * v n) := by
-      calc
-        _ ≤ ∑ n ∈ Finset.range (H j + 1), a n * (|u j n - v n| + v n) := by
-          apply Finset.sum_le_sum
-          intro n hn
-          apply mul_le_mul_of_nonneg_left _ (ha n)
-          linarith [le_abs_self (u j n - v n)]
-        _ = _ := by simp_rw [mul_add]; rw [Finset.sum_add_distrib]
-    have hdiv := div_le_div_of_nonneg_right hsum (ha (H j))
-    rw [add_div] at hdiv
-    exact hdiv.trans (add_le_add
-      (normalized_weighted_head_le_tsum a (fun n => |u j n - v n|)
-        ha hmono (fun n => abs_nonneg _) (hd j) (H j)) le_rfl)
+        (∑ n ∈ Finset.range (H j + 1), a n * v n) / a (H j) :=
+    normalized_weighted_head_le_l1_add a (u j) v ha hmono (hd j) (H j)
   exact squeeze_zero
     (fun j => div_nonneg
       (Finset.sum_nonneg (fun n _ => mul_nonneg (ha n) (hu j n))) (ha (H j)))
     hbound (by simpa using hlim.add hfixed)
+
+/-- The sub-profile estimate is uniform over an entire l1-convergent family,
+including the finitely many stages before the convergence estimate applies. -/
+theorem normalized_weighted_head_uniformly_small_of_l1
+    (a : ℕ → ℝ) (ha : ∀ n, 0 ≤ a n) (hmono : Monotone a)
+    (hatop : Tendsto a atTop atTop)
+    (u : ℕ → ℕ → ℝ) (v : ℕ → ℝ)
+    (hu : ∀ j n, 0 ≤ u j n) (hv : ∀ n, 0 ≤ v n) (hs : Summable v)
+    (hd : ∀ j, Summable (fun n => |u j n - v n|))
+    (hlim : Tendsto (fun j => ∑' n, |u j n - v n|) atTop (𝓝 0))
+    (ε : ℝ) (hε : 0 < ε) :
+    ∀ᶠ H : ℕ in atTop, ∀ j : ℕ,
+      (∑ n ∈ Finset.range (H + 1), a n * u j n) / a H ≤ ε := by
+  have hus (j : ℕ) : Summable (u j) := by
+    apply Summable.of_nonneg_of_le (hu j) _ ((hd j).add hs)
+    intro n
+    linarith [le_abs_self (u j n - v n)]
+  have hfixed := (normalized_weighted_head_tendsto_zero
+    a v ha hmono hatop hv hs).eventually
+      (Iio_mem_nhds (show (0 : ℝ) < ε / 2 by linarith))
+  have hlarge := hlim.eventually
+    (Iio_mem_nhds (show (0 : ℝ) < ε / 2 by linarith))
+  obtain ⟨J, hJ⟩ := eventually_atTop.1 hlarge
+  have hfinite (K : ℕ) : ∀ᶠ H : ℕ in atTop, ∀ j < K,
+      (∑ n ∈ Finset.range (H + 1), a n * u j n) / a H ≤ ε := by
+    induction K with
+    | zero =>
+        exact Eventually.of_forall (fun H j hj => False.elim (Nat.not_lt_zero j hj))
+    | succ K ih =>
+        have hK := (normalized_weighted_head_tendsto_zero
+          a (u K) ha hmono hatop (hu K) (hus K)).eventually (Iio_mem_nhds hε)
+        filter_upwards [ih, hK] with H hH hHK
+        intro j hj
+        rcases lt_or_eq_of_le (Nat.le_of_lt_succ hj) with hj | rfl
+        · exact hH j hj
+        · exact hHK.le
+  filter_upwards [hfixed, hfinite J] with H hHv hHearly
+  intro j
+  by_cases hj : j < J
+  · exact hHearly j hj
+  · have hdist := hJ j (Nat.le_of_not_gt hj)
+    have hbound := normalized_weighted_head_le_l1_add a (u j) v ha hmono (hd j) H
+    linarith
 
 end RiemannResearch.Analysis

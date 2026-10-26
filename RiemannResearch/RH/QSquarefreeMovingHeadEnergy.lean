@@ -45,7 +45,7 @@ theorem residual_zero_of_frequently_moving_head_energy_bound
   obtain ⟨hs, htotal⟩ :=
     weightedEnergy_summable_of_frequently_moving_head_bound k
       movingCorrection correction movingCorrection_tendsto H hH C hbound
-  have htail (N : ℕ) : logWeight k N * ‖tail N correction‖^2 ≤
+  have htail (N : ℕ) : logWeight k N * ‖tail N correction‖ ^ 2 ≤
       ((k : ℝ)+6)^k * C := by
     have hprofile := (profile_mul_tail_energy_le k N correction hs).trans htotal
     have h1 := mul_le_mul_of_nonneg_right
@@ -104,5 +104,14 @@ theorem moving_head_energy_isLittleO_profile
   filter_upwards [((polylogTailProfile_tendsto_atTop k).comp hH).eventually
     (eventually_gt_atTop (0 : ℝ))] with N hN
   exact fun hz => False.elim ((ne_of_gt hN) hz)
+
+/-- The normalized energy vanishes uniformly over every squarefree stage.
+The unnormalized constant-energy bound sufficient for RH is not asserted. -/
+theorem moving_head_energy_uniform_subprofile
+    (k : ℕ) (ε : ℝ) (hε : 0 < ε) :
+    ∀ᶠ H : ℕ in atTop, ∀ N : ℕ,
+      weightedHeadEnergy k H (movingCorrection N) ≤ ε * polylogTailProfile k H :=
+  weightedHeadEnergy_uniform_subprofile k movingCorrection correction
+    movingCorrection_tendsto ε hε
 
 end RiemannResearch.RH.QSquarefreeMovingHeadEnergy

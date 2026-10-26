@@ -8,6 +8,7 @@ import RiemannResearch.RH.QStretchedTailEnergy
 import RiemannResearch.RH.QSquarefreeStretchedTailCriterion
 import RiemannResearch.RH.QPolylogMovingHeadEnergy
 import RiemannResearch.RH.QSquarefreeMovingHeadEnergy
+import RiemannResearch.RH.QSquarefreeResponseEnergy
 import RiemannResearch.RH.QResidualScreeningSeries
 import RiemannResearch.RH.QSquarefreeResponseBasis
 import RiemannResearch.RH.QSquarefreeEvaluationBasis

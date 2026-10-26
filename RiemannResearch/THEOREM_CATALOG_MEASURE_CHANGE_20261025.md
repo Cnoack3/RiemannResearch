@@ -457,3 +457,30 @@ The specialized theorem has only the structural cutoff-divergence hypothesis.
 It assumes neither RH nor residual vanishing nor a finite weighted-energy
 budget. The cofinal constant-budget provider sufficient for RH remains Open:
 little-o relative to this divergent profile still permits unbounded energy.
+
+### Uniform head growth and the bounded zero-head response
+
+- Analysis/WeightedHeadEnergy.lean: normalized_weighted_head_le_l1_add and
+  normalized_weighted_head_uniformly_small_of_l1.
+- RH/QPolylogMovingHeadEnergy.lean: weightedHeadCross,
+  weightedHeadEnergy_add_exact, weightedHeadEnergy_neg,
+  weightedHeadEnergy_add_le, weightedHeadEnergy_le_profile_norm_sq,
+  weightedHeadEnergy_div_profile_uniformly_small,
+  weightedHeadEnergy_uniform_subprofile.
+- RH/QSquarefreeMovingHeadEnergy.lean:
+  moving_head_energy_uniform_subprofile makes the normalized estimate uniform
+  over every actual squarefree stage, for each fixed natural exponent.
+- RH/QSquarefreeResponseEnergy.lean:
+  movingCorrection_weighted_energy_exact retains the weighted cross term;
+  tailResponse_weighted_energy_le and tailResponse_weighted_energy_quadratic
+  control the actual zero-head response's energy on quadratic windows;
+  tailResponse_weighted_energy_le_quarter gives the numerical budget 1/4;
+  tailResponse_weighted_energy_uniform_quadratic gives uniform vanishing.
+  movingCorrection_weighted_energy_le_twice_head_add_half and
+  headResponse_weighted_energy_le_twice_correction_add_half identify the
+  remaining complementary-response obligation without assuming weighted
+  orthogonality.
+
+The bounded zero-head response is only one component of the actual correction.
+The full cofinal constant-energy budget remains Open and no RH conclusion is
+claimed. See RH/SquarefreeLogTailRegularity20261026.md for the exact distinction.
