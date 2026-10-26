@@ -77,4 +77,38 @@ theorem layered_bessel
     _ ≤ _ := Finset.sum_le_sum (fun k _ =>
       mul_le_mul_of_nonneg_left (hb k) (hδ k))
 
+private theorem screened_layer_norm_sq (v w : E) :
+    ‖v - (inner ℝ v w / ‖w‖ ^ 2) • w‖ ^ 2 =
+      ‖v‖ ^ 2 - (inner ℝ v w) ^ 2 / ‖w‖ ^ 2 := by
+  by_cases hw : w = 0
+  · simp [hw]
+  · exact rankOne_norm_sq v w (pow_ne_zero _ (norm_ne_zero_iff.mpr hw))
+
+/-- Rank-one layer subtraction followed by Bessel. Screening vectors may vanish. -/
+theorem layered_screened_bessel
+    (f : E) (u : ι → E) (v w : κ → E)
+    (selected : κ → ι → Prop) [∀ k i, Decidable (selected k i)]
+    (δ : κ → ℝ) (hδ : ∀ k, 0 ≤ δ k)
+    (ho : ∀ i j, i ≠ j → inner ℝ (u i) (u j) = 0)
+    (hn : ∀ i, ‖u i‖ ^ 2 ≤ 1)
+    (hp : ∀ k i, selected k i → inner ℝ (v k) (u i) = inner ℝ f (u i))
+    (hw : ∀ k i, selected k i → inner ℝ (w k) (u i) = 0) :
+    (∑ i, (∑ k, if selected k i then δ k else 0) *
+      (inner ℝ f (u i)) ^ 2) +
+      (∑ k, δ k * (inner ℝ (v k) (w k)) ^ 2 / ‖w k‖ ^ 2) ≤
+        ∑ k, δ k * ‖v k‖ ^ 2 := by
+  have h := layered_bessel f u
+    (fun k => v k - (inner ℝ (v k) (w k) / ‖w k‖ ^ 2) • w k)
+    selected δ hδ ho hn (by
+      intro k i hki
+      rw [inner_sub_left, real_inner_smul_left, hw k i hki, mul_zero, sub_zero]
+      exact hp k i hki)
+  simp_rw [screened_layer_norm_sq, mul_sub, Finset.sum_sub_distrib] at h
+  have he : (∑ k, δ k * ((inner ℝ (v k) (w k)) ^ 2 / ‖w k‖ ^ 2)) =
+      ∑ k, δ k * (inner ℝ (v k) (w k)) ^ 2 / ‖w k‖ ^ 2 := by
+    apply Finset.sum_congr rfl
+    intro k _
+    ring
+  rw [he] at h
+  linarith
 end RiemannResearch.Analysis.TriangularWeightedBessel

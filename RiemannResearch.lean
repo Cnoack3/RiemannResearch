@@ -1,3 +1,6 @@
+import RiemannResearch.RH.QSquarefreeResponseBasis
+import RiemannResearch.RH.QSquarefreeEvaluationBasis
+import RiemannResearch.RH.QSquarefreeHeadPrediction
 import RiemannResearch.RH.QTriangularWeightedBessel
 import RiemannResearch.Analysis.TriangularWeightedBessel
 import RiemannResearch.RH.QSquarefreeHeadBoundary

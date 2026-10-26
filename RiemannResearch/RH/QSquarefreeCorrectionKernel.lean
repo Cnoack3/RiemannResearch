@@ -58,6 +58,13 @@ theorem B_evaluation_succ (n : ℕ) :
 
 def kernel (N n : ℕ) : QHilbert := (stage N).starProjection (evaluation n)
 
+/-- On an actual stage vector, projected evaluation is physical evaluation. -/
+theorem inner_kernel_of_stage (N n : ℕ) (f : QHilbert) (hf : f ∈ stage N) :
+    inner ℝ f (kernel N n) = qSequence f n := by
+  change inner ℝ f ((stage N).starProjection (evaluation n)) = _
+  rw [← projection_inner,
+    Submodule.starProjection_eq_self_iff.mpr hf, inner_evaluation]
+
 def residualizedKernel (N n : ℕ) : QHilbert :=
   B (kernel N n) - (stage N).starProjection (B (kernel N n))
 

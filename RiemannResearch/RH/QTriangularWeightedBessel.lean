@@ -223,4 +223,77 @@ theorem movingCorrection_onset_tail_bessel {ι : Type*} [Fintype ι]
   simp_rw [he]
   exact reciprocal_onset_tail_bessel (ZetaTwoOptimizerStage.residual N) H M u onset ho hn hu hH
 
+/-- Complete-tail residual-direction energy; zero tails contribute zero. -/
+def residualLayerGain (f : QHilbert) (k : ℕ) : ℝ :=
+  (inner ℝ (tail k (B f)) (tail k f)) ^ 2 / ‖tail k f‖ ^ 2
+
+theorem residualLayerGain_nonneg (f : QHilbert) (k : ℕ) :
+    0 ≤ residualLayerGain f k := by
+  unfold residualLayerGain
+  positivity
+
+/-- Residual orthogonality supplies a nonnegative subtraction in every onset layer. -/
+theorem reciprocal_onset_screened_bessel {ι : Type*} [Fintype ι]
+    (f : QHilbert) (M : ℕ) (u : ι → QHilbert) (onset : ι → Fin M)
+    (ho : ∀ i j, i ≠ j → inner ℝ (u i) (u j) = 0)
+    (hn : ∀ i, ‖u i‖ ^ 2 ≤ 1)
+    (hu : ∀ i n, n < (onset i : ℕ) → u i n = 0)
+    (hf : ∀ i, inner ℝ f (u i) = 0) :
+    (∑ i, (((onset i : ℕ) : ℝ) + 2) ^ 2 *
+      (inner ℝ (B f) (u i)) ^ 2) +
+      (∑ k : Fin M, onsetIncrement k * residualLayerGain f k) ≤ ‖f‖ ^ 2 := by
+  classical
+  have h := layered_screened_bessel (B f) u
+    (fun k : Fin M => tail k (B f)) (fun k : Fin M => tail k f)
+    (fun k i => (k : ℕ) ≤ (onset i : ℕ)) (fun k => onsetIncrement k)
+    (fun k => onsetIncrement_nonneg k) ho hn
+    (by
+      intro k i hki
+      exact tail_pairing_of_onset (B f) (u i) k
+        (fun n hn => hu i n (lt_of_lt_of_le hn hki)))
+    (by
+      intro k i hki
+      rw [tail_pairing_of_onset f (u i) k
+        (fun n hn => hu i n (lt_of_lt_of_le hn hki)), hf i])
+  have he (i : ι) :
+      (∑ k : Fin M, if (k : ℕ) ≤ (onset i : ℕ) then onsetIncrement k else 0) =
+        (((onset i : ℕ) : ℝ) + 2) ^ 2 :=
+    onsetIncrement_selected_eq M (onset i) (onset i).isLt
+  simp only [he] at h
+  have hg : (∑ k : Fin M, onsetIncrement k *
+      (inner ℝ (tail k (B f)) (tail k f)) ^ 2 / ‖tail k f‖ ^ 2) =
+      ∑ k : Fin M, onsetIncrement k * residualLayerGain f k := by
+    apply Finset.sum_congr rfl
+    intro k _
+    unfold residualLayerGain
+    ring
+  rw [hg] at h
+  exact h.trans (reciprocal_layer_energy_le f M)
+
+/-- The refined weighted energy bound for the actual squarefree response. -/
+theorem movingCorrection_onset_screened_bessel {ι : Type*} [Fintype ι]
+    (N M : ℕ) (u : ι → QHilbert) (onset : ι → Fin M)
+    (ho : ∀ i j, i ≠ j → inner ℝ (u i) (u j) = 0)
+    (hn : ∀ i, ‖u i‖ ^ 2 ≤ 1)
+    (hu : ∀ i n, n < (onset i : ℕ) → u i n = 0)
+    (hv : ∀ i, u i ∈ ZetaTwoOptimizerStage.stage N) :
+    (∑ i, (((onset i : ℕ) : ℝ) + 2) ^ 2 *
+      (inner ℝ (QSquarefreeSmoothedProjection.movingCorrection N) (u i)) ^ 2) +
+      (∑ k : Fin M, onsetIncrement k *
+        residualLayerGain (ZetaTwoOptimizerStage.residual N) k) ≤
+        ZetaTwoOptimizerStage.error N := by
+  have he (i : ι) :
+      inner ℝ (QSquarefreeSmoothedProjection.movingCorrection N) (u i) =
+        inner ℝ (B (ZetaTwoOptimizerStage.residual N)) (u i) := by
+    change inner ℝ ((ZetaTwoOptimizerStage.stage N).starProjection
+      (B (ZetaTwoOptimizerStage.residual N))) (u i) = _
+    rw [RiemannResearch.Analysis.ResidualizedProjectionKernel.projection_inner,
+      Submodule.starProjection_eq_self_iff.mpr (hv i)]
+  simp_rw [he]
+  apply reciprocal_onset_screened_bessel _ M u onset ho hn hu
+  intro i
+  rw [real_inner_comm]
+  exact Submodule.inner_right_of_mem_orthogonal (hv i)
+    (ZetaTwoOptimizerStage.residual_mem_orthogonal N)
+
 end RiemannResearch.RH.QTriangularWeightedBessel
