@@ -1,5 +1,32 @@
 # Theorem catalog
 
+## Squarefree moment budgets: resampling obstruction and variation
+
+Source: user-requested investigation of canonical exponential-moment budgets.
+Research note: [RH/SquarefreeMomentBudgetResearch20261027.md](RH/SquarefreeMomentBudgetResearch20261027.md).
+
+Established Lean declarations, subject to the publication checkpoint:
+- RH/QSquarefreeResamplingObstruction.lean: complete dyadic average of g3 has
+  square-jump 2/5; exact separation energy 2/(375 zeta(2)) plus its full
+  remainder; nonpreservation and legal-projector commutator lower bounds,
+  including canonical stages N>=2.
+- Analysis/SingleDirectionResponseDifference.lean: exact orthogonal increment
+  energy and factor-one residual-energy bound for unit innovations.
+- RH/QShiftedReciprocalBessel.lean: complete diagonal square sum zeta(2)-1
+  and finite/countable Bessel budgets for smoothed orthonormal families.
+- RH/QSmoothedResponseVariation.lean: finite response-variation budget
+  R(zeta(2)-1), with explicit orthonormality and residual-energy bounds.
+
+Separate scopes:
+- Canonical infinite variation budget (zeta(2)-1)/4 and unconditional vector
+  summability: paper proof in the note, not a fully instantiated Lean theorem.
+- Diagnostics: directed-Decimal certificates, not Lean proofs, of actual
+  stage-16 exponential contraction failure and stages-1/2 mean nonpreservation.
+  Complete-tail floating-point moments are labeled numerical.
+- **Open:** one common positive exponential finite-test budget for the actual
+  canonical stages. No unconditional residual-zero or RH conclusion.
+
+
 ## Physical doubling drift, DPP obstruction, and change of measure — 27 October 2026
 
 Source: the user's physical-doubling research request, continuing the prime-resampling agenda.

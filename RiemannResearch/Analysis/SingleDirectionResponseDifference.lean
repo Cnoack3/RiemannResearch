@@ -11,6 +11,7 @@ import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith
 
 /-!
 # Exact response change after one orthogonal direction
@@ -121,5 +122,101 @@ theorem response_extension_operator_norm_le
   apply ContinuousLinearMap.opNorm_le_bound _ (by positivity)
   intro f
   exact response_extension_difference_norm_le U v B hB f hv
+
+/-- The signed rank-one update has orthogonal output terms. -/
+theorem response_extension_difference_norm_sq_exact_unit
+    (U : Submodule ℝ H) [U.HasOrthogonalProjection]
+    (u : H) [(U ⊔ Submodule.span ℝ ({u} : Set H)).HasOrthogonalProjection]
+    (hu : u ∈ Uᗮ) (hn : ‖u‖ = 1)
+    (B : H →L[ℝ] H) (f : H) :
+    ‖responseOperator (U ⊔ Submodule.span ℝ ({u} : Set H)) B f -
+      responseOperator U B f‖ ^ 2 =
+      (inner ℝ (B (f - (U ⊔ Submodule.span ℝ ({u} : Set H)).starProjection f)) u)^2 +
+      (inner ℝ f u)^2 * ‖U.starProjection (B u)‖^2 := by
+  have hpu : U.starProjection u = 0 := by
+    have h1 := Submodule.inner_right_of_mem_orthogonal (U.starProjection_apply_mem u) hu
+    have h2 := Submodule.inner_right_of_mem_orthogonal (U.starProjection_apply_mem u)
+      (Submodule.sub_starProjection_mem_orthogonal (K := U) u)
+    rw [inner_sub_right, h1, real_inner_self_eq_norm_sq] at h2
+    apply norm_eq_zero.mp
+    nlinarith [norm_nonneg (U.starProjection u)]
+  have hune : u ≠ 0 := by
+    intro hz
+    rw [hz, norm_zero] at hn
+    norm_num at hn
+  have hv : u - U.starProjection u ≠ 0 := by simpa [hpu] using hune
+  rw [response_extension_difference_eq U u B f hv]
+  simp only [hpu, sub_zero, hn, one_pow, div_one]
+  rw [norm_add_sq_real]
+  simp only [norm_smul, Real.norm_eq_abs, abs_neg, mul_pow, sq_abs,
+    hn, mul_one, real_inner_smul_left, real_inner_smul_right]
+  have hov' : inner ℝ (U.starProjection (B u)) u = 0 :=
+    Submodule.inner_right_of_mem_orthogonal (U.starProjection_apply_mem _) hu
+  rw [hov']
+  ring
+
+/-- The complete input energy bounds one correction increment, with factor one.
+The residual before adding the new direction is used, not the whole input. -/
+theorem response_extension_difference_norm_sq_le_unit
+    (U : Submodule ℝ H) [U.HasOrthogonalProjection]
+    (u : H) [(U ⊔ Submodule.span ℝ ({u} : Set H)).HasOrthogonalProjection]
+    (hu : u ∈ Uᗮ) (hn : ‖u‖ = 1)
+    (B : H →L[ℝ] H)
+    (hB : ∀ x y, inner ℝ (B x) y = inner ℝ x (B y)) (f : H) :
+    ‖responseOperator (U ⊔ Submodule.span ℝ ({u} : Set H)) B f -
+      responseOperator U B f‖ ^ 2 ≤
+      ‖f - U.starProjection f‖^2 * ‖B u‖^2 := by
+  let W := U ⊔ Submodule.span ℝ ({u} : Set H)
+  let r := f - W.starProjection f
+  let a := inner ℝ f u
+  have hpu : U.starProjection u = 0 := by
+    have h1 := Submodule.inner_right_of_mem_orthogonal (U.starProjection_apply_mem u) hu
+    have h2 := Submodule.inner_right_of_mem_orthogonal (U.starProjection_apply_mem u)
+      (Submodule.sub_starProjection_mem_orthogonal (K := U) u)
+    rw [inner_sub_right, h1, real_inner_self_eq_norm_sq] at h2
+    apply norm_eq_zero.mp
+    nlinarith [norm_nonneg (U.starProjection u)]
+  have hune : u ≠ 0 := by
+    intro hz
+    rw [hz, norm_zero] at hn
+    norm_num at hn
+  have hv : u - U.starProjection u ≠ 0 := by simpa [hpu] using hune
+  have hproj : W.starProjection f = U.starProjection f + a • u := by
+    simpa only [hpu, sub_zero, hn, one_pow, div_one] using
+      projection_extension_eq U u f hv
+  have hwu : u ∈ W := by
+    exact (show Submodule.span ℝ ({u} : Set H) ≤ W from le_sup_right)
+      (Submodule.subset_span (by simp))
+  have hru : inner ℝ r u = 0 := by
+    rw [real_inner_comm]
+    exact Submodule.inner_right_of_mem_orthogonal hwu
+      (Submodule.sub_starProjection_mem_orthogonal (K := W) f)
+  have hold : f - U.starProjection f = r + a • u := by
+    dsimp only [r]
+    rw [hproj]
+    abel
+  have he : ‖f - U.starProjection f‖^2 = ‖r‖^2 + a^2 := by
+    rw [hold, norm_add_sq_real, real_inner_smul_right, hru,
+      norm_smul, Real.norm_eq_abs, mul_pow, sq_abs, hn]
+    ring
+  have hc : (inner ℝ (B r) u)^2 ≤ ‖r‖^2 * ‖B u‖^2 := by
+    rw [hB]
+    have h := mul_self_le_mul_self (abs_nonneg (inner ℝ r (B u)))
+      (abs_real_inner_le_norm r (B u))
+    simpa only [← pow_two, sq_abs, mul_pow] using h
+  have hp : ‖U.starProjection (B u)‖ ≤ ‖B u‖ := by
+    calc
+      _ ≤ ‖U.starProjection‖ * ‖B u‖ := U.starProjection.le_opNorm _
+      _ ≤ ‖B u‖ := by
+        simpa using mul_le_mul_of_nonneg_right
+          (Submodule.starProjection_norm_le U) (norm_nonneg (B u))
+  have hp2 : ‖U.starProjection (B u)‖^2 ≤ ‖B u‖^2 := by
+    nlinarith [norm_nonneg (U.starProjection (B u)), norm_nonneg (B u)]
+  rw [response_extension_difference_norm_sq_exact_unit U u hu hn B f]
+  change (inner ℝ (B r) u)^2 + a^2 * ‖U.starProjection (B u)‖^2 ≤ _
+  calc
+    _ ≤ ‖r‖^2 * ‖B u‖^2 + a^2 * ‖B u‖^2 :=
+      add_le_add hc (mul_le_mul_of_nonneg_left hp2 (sq_nonneg a))
+    _ = ‖f - U.starProjection f‖^2 * ‖B u‖^2 := by rw [he]; ring
 
 end RiemannResearch.Analysis.SingleDirectionProjection

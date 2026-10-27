@@ -1,3 +1,6 @@
+import RiemannResearch.RH.QSquarefreeResamplingObstruction
+import RiemannResearch.RH.QShiftedReciprocalBessel
+import RiemannResearch.RH.QSmoothedResponseVariation
 import RiemannResearch.RH.QArgumentDoubling
 import RiemannResearch.RH.QSquarefreeArgumentDoubling
 import RiemannResearch.RH.QArgumentDoublingObstruction
