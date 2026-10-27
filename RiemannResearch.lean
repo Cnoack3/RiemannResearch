@@ -1,3 +1,6 @@
+import RiemannResearch.Analysis.PrimeIncrementEnvelope
+import RiemannResearch.Analysis.ProjectionAveragingDefect
+import RiemannResearch.RH.QSquarefreePrimeIncrement
 import RiemannResearch.Analysis.ReversibleJumpEnergy
 import RiemannResearch.RH.QReciprocalWeightedEnergy
 import RiemannResearch.RH.QHeadTailLayerEnergy
