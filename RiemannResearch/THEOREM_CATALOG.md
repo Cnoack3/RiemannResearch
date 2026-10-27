@@ -1,5 +1,35 @@
 # Theorem catalog
 
+## Physical doubling drift, DPP obstruction, and change of measure — 27 October 2026
+
+Source: the user's physical-doubling research request, continuing the prime-resampling agenda.
+Research note: [RH/PhysicalDoublingResearch20261027.md](RH/PhysicalDoublingResearch20261027.md).
+
+Established results:
+- RH/QArgumentDoubling.lean: actual bounded physical sampling T f(n)=f(2n),
+  T1=1, Tg₂=0, and complete Q mean E[Tf]=4⟨f,1_even⟩.
+- RH/QSquarefreeArgumentDoubling.lean: actual residual drift 3e and exact
+  defect energy 9e² plus its full centered norm-square remainder; stage defect
+  convergence; projected change-of-measure correction identity.
+- RH/QArgumentDoublingObstruction.lean: Tg₃ lies outside even the squarefree
+  closure enlarged by constants, with exact separation energy 1/(30 zeta(2))
+  plus its full remainder. Whole-space doubling invariance and projection
+  commutation are false. Residual-specific invariance is not refuted.
+- RH/QArgumentDoublingDPP.lean: the physically doubled projected parity Gram
+  diagonal is K22+2=3K11≥9/4. This raw Gram family cannot be a DPP kernel.
+- RH/QDoublingMeasureChange.lean: exact Q/P weighted-adjoint formulas and
+  detailed balance; their bounded discrepancy D satisfies ‖Df‖²=‖Bf‖² and
+  T Df=2 Bf. The abstract adjoint-pairing theorem is not asserted here.
+
+Conditional research reductions:
+- riemannHypothesis_of_limiting_mean_nonincrease:
+  **Open:** E_Q[r(2X)]≤E_Q[r(X)] for the actual limiting squarefree residual.
+- riemannHypothesis_of_limiting_pointwise_nonincrease:
+  **Open:** pointwise nonincrease on its doubling edges.
+- Stage doubling defects tending to zero is equivalent to zero residual;
+  the required unconditional upper estimate remains **Open**.
+- These are exact residual-zero criteria, not an unconditional RH proof.
+
 ## Dyadic residual identities and stretched exponential moments — 26 October 2026
 
 Source: user-provided PrimeResamplingFormalization20261027(1).md.

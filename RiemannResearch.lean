@@ -1,3 +1,8 @@
+import RiemannResearch.RH.QArgumentDoubling
+import RiemannResearch.RH.QSquarefreeArgumentDoubling
+import RiemannResearch.RH.QArgumentDoublingObstruction
+import RiemannResearch.RH.QArgumentDoublingDPP
+import RiemannResearch.RH.QDoublingMeasureChange
 import RiemannResearch.RH.QSquarefreeStageExponentialMoment
 import RiemannResearch.RH.QSquarefreeDyadicResampling
 import RiemannResearch.RH.QExponentialMoment
