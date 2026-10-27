@@ -90,6 +90,13 @@ No theorem discharges the listed regularity obligations.
   signed_forcing_sq_bound for every Q vector and positive conductor.
 - RH/QShiftedReciprocalBounds.lean: centered quarter contraction, half multiplier
   bound, quarter projected correction bound, and the factor-eight displacement estimate.
+- RH/QSquarefreeDisplacementResolvent.lean:
+  displacement_eq_projected_pResidual and displacement_fixed_point give the
+  exact response equation d=b+Pi(Bd). displacement_centered_fixed_point,
+  centeredFeedback_norm_le, resolvent_error_succ, and
+  resolvent_error_norm_le give its centered finite Neumann resolvent with
+  contraction factor 1/3 and geometric Q-Hilbert remainder. This does not
+  supply physical weighted-supremum stability for Pi.
 - RH/QSquarefreeFiniteDisplacement.lean: matched squarefree Pareto stages,
   finiteDisplacement_tendsto, finite_resolvent, finiteDisplacement_energy_bound,
   finitePareto_residual_energy_bound; also the limiting displacement energy bound.
