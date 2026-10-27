@@ -17,9 +17,19 @@ Established Lean declarations, subject to the publication checkpoint:
 - RH/QSmoothedResponseVariation.lean: finite response-variation budget
   R(zeta(2)-1), with explicit orthonormality and residual-energy bounds.
 
+- Analysis/InfiniteResponseSeries.lean and RH/QCanonicalInnovation.lean:
+  unconditional signed-series assembly and canonical masked rank-one identities.
+- RH/QSquarefreeResponseSeries.lean: actual infinite variation (zeta(2)-1)/4,
+  exact infinite energy equality, parity-excluded refinement, unconditional
+  summability with every tail HasSum, arbitrary bounded signs, absolute
+  B-smoothed Hilbert variation and absolute physical-coordinate variation.
+  The smoothed total-variation envelope has a complete Q square-summability identity.
+  No residual-zero hypothesis occurs.
+  Follow-up: [RH/InfiniteSquarefreeResponseResearch20261027.md](RH/InfiniteSquarefreeResponseResearch20261027.md).
+
 Separate scopes:
-- Canonical infinite variation budget (zeta(2)-1)/4 and unconditional vector
-  summability: paper proof in the note, not a fully instantiated Lean theorem.
+- Paper-only refinements: explicit logarithmic evaluation of the excluded
+  parity mass, quantitative signed/evaluation tails, and endpoint tail bound.
 - Diagnostics: directed-Decimal certificates, not Lean proofs, of actual
   stage-16 exponential contraction failure and stages-1/2 mean nonpreservation.
   Complete-tail floating-point moments are labeled numerical.
