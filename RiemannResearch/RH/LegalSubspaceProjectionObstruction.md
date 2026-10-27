@@ -1,7 +1,18 @@
 # A projection-stability obstruction inside legal squarefree subspaces
 
-This is a paper proof, not a Lean-verified result. It does **not** refute the
-canonical initial squarefree stages. It rules out an estimate derived solely
+Formal continuation, 27 October 2026: the actual-family ordinary norm
+bounds, every fixed polylogarithmic prime-two increment obstruction,
+complete weighted-energy divergence for a(n)=n/(8+log n)^2, and deterministic
+weighted-energy transfer failure are now formalized in the
+`QLegalMixedConductor*` modules. The proof uses a physical remainder bound 4
+instead of the sharper paper bound 1. See `FormalResearch20261027.md`.
+The countable prime-resampling Dirichlet-form construction, Poincaré theorem,
+and the resulting assertions involving D below remain paper arguments.
+The extension to arbitrary real profile exponents is also not claimed as a
+separate Lean theorem.
+
+This does **not** refute the canonical initial squarefree stages. The
+verified obstruction rules out weighted projection bounds derived solely
 from squarefree legality, inclusion of the parity atom, and actual residual
 forcing.
 

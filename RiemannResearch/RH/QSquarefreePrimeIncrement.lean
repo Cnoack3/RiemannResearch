@@ -20,6 +20,11 @@ the user. The prime - factor telescoping argument extends the proposed
 logarithmic increment bound to arbitrary fixed integer logarithmic losses.
 The arithmetic bound on the actual correction remains Open. These theorems
 do not assert RH or an RH - to - squarefree - density converse.
+
+The 27 October 2026 sparse refinement reduces the requested estimates to one
+prime-factor parent per physical integer, with a separate cofinal set of
+stages allowed for each edge. It changes the sufficient provider, not the
+unresolved arithmetic status of the actual correction.
 -/
 
 noncomputable section
@@ -150,5 +155,87 @@ theorem eventually_large_moving_prime_increment_of_residual_ne_zero
   have ht := ((qSequence_tendsto_of_tendsto movingCorrection_tendsto (p * n)).sub
     (qSequence_tendsto_of_tendsto movingCorrection_tendsto n)).abs
   exact ht.eventually (Ioi_mem_nhds hlarge)
+
+
+/-- Control of one prime-factor parent per physical integer forces the actual
+limiting residual to vanish. The parent may depend on the integer. -/
+theorem residual_zero_of_correction_prime_parent_increments
+    (m : ℕ) (L : ℝ) (hL : 0 ≤ L)
+    (hstep : ∀ n : ℕ, 1 < n → ∃ p q : ℕ,
+      p.Prime ∧ 0 < q ∧ p * q = n ∧
+        |qSequence correction n - qSequence correction q| ≤
+          L * Real.log (p : ℝ) * (6 + Real.log (n : ℝ)) ^ m) :
+    limitingResidual = 0 := by
+  let C := |qSequence correction 1| + L
+  have hC : 0 ≤ C := add_nonneg (abs_nonneg _) hL
+  have henv : ∀ n : ℕ, |qSequence correction n| ≤
+      C * (6 + Real.log (n : ℝ)) ^ (m + 1) := by
+    intro n
+    by_cases hn : n = 0
+    · subst n
+      simp only [qSequence_zero, abs_zero, Nat.cast_zero, Real.log_zero, add_zero]
+      positivity
+    exact abs_le_polylog_of_prime_parent_increments (qSequence correction) L hL m
+      hstep n (Nat.pos_of_ne_zero hn)
+  obtain ⟨D, hD⟩ := exists_log_scaled_tail_bound_of_polylog
+    correction (m + 1) C hC henv
+  exact (residual_zero_iff_correction_frequently_bounded_log_scaled_tail
+    (2 * (m + 1) + 2)).mpr ⟨D, (Eventually.of_forall hD).frequently⟩
+
+/-- Each chosen edge needs control only on its own cofinal set of finite stages;
+no common cofinal subsequence is required. -/
+theorem residual_zero_of_frequently_moving_prime_parent_increments
+    (m : ℕ) (L : ℝ) (hL : 0 ≤ L)
+    (hstep : ∀ n : ℕ, 1 < n → ∃ p q : ℕ,
+      p.Prime ∧ 0 < q ∧ p * q = n ∧ ∃ᶠ N : ℕ in atTop,
+        |qSequence (movingCorrection N) n - qSequence (movingCorrection N) q| ≤
+          L * Real.log (p : ℝ) * (6 + Real.log (n : ℝ)) ^ m) :
+    limitingResidual = 0 := by
+  apply residual_zero_of_correction_prime_parent_increments m L hL
+  intro n hn
+  obtain ⟨p, q, hp, hq, hpq, hbound⟩ := hstep n hn
+  refine ⟨p, q, hp, hq, hpq, ?_⟩
+  by_contra h
+  have ht := ((qSequence_tendsto_of_tendsto movingCorrection_tendsto n).sub
+    (qSequence_tendsto_of_tendsto movingCorrection_tendsto q)).abs
+  have hg := ht.eventually (Ioi_mem_nhds (lt_of_not_ge h))
+  obtain ⟨N, hN, hgt⟩ := (hbound.and_eventually hg).exists
+  exact (not_lt_of_ge hN) hgt
+
+/-- For every fixed positive allowance and logarithmic degree, the sparse
+cofinal criterion is equivalent to vanishing of the actual limiting residual. -/
+theorem residual_zero_iff_frequently_moving_prime_parent_increments
+    (m : ℕ) (L : ℝ) (hL : 0 < L) :
+    limitingResidual = 0 ↔ ∀ n : ℕ, 1 < n → ∃ p q : ℕ,
+      p.Prime ∧ 0 < q ∧ p * q = n ∧ ∃ᶠ N : ℕ in atTop,
+        |qSequence (movingCorrection N) n - qSequence (movingCorrection N) q| ≤
+          L * Real.log (p : ℝ) * (6 + Real.log (n : ℝ)) ^ m := by
+  constructor
+  · intro hr n hn
+    obtain ⟨p, hp, hpdvd⟩ := Nat.exists_prime_and_dvd (by omega : n ≠ 1)
+    obtain ⟨q, hq⟩ := hpdvd
+    have hqpos : 0 < q := by
+      by_contra h
+      have hz : q = 0 := by omega
+      simp [hz] at hq
+      omega
+    refine ⟨p, q, hp, hqpos, hq.symm, ?_⟩
+    have hh := (residual_zero_iff_frequently_moving_prime_increments m L hL).mp hr
+      p q hp hqpos
+    simpa only [← hq] using hh
+  · exact residual_zero_of_frequently_moving_prime_parent_increments m L hL.le
+
+/-- The sparse cofinal prime-parent criterion implies Mathlib's Riemann hypothesis.
+Its arithmetic increment premise remains unproved. -/
+theorem riemannHypothesis_of_frequently_moving_prime_parent_increments
+    (m : ℕ) (L : ℝ) (hL : 0 ≤ L)
+    (hstep : ∀ n : ℕ, 1 < n → ∃ p q : ℕ,
+      p.Prime ∧ 0 < q ∧ p * q = n ∧ ∃ᶠ N : ℕ in atTop,
+        |qSequence (movingCorrection N) n - qSequence (movingCorrection N) q| ≤
+          L * Real.log (p : ℝ) * (6 + Real.log (n : ℝ)) ^ m) :
+    RiemannHypothesis := by
+  have hr := residual_zero_of_frequently_moving_prime_parent_increments m L hL hstep
+  exact ZetaTwoParetoTransfer.riemannHypothesis_of_qOne_mem_squarefree_closure
+    (Submodule.starProjection_eq_self_iff.mp (sub_eq_zero.mp hr).symm)
 
 end RiemannResearch.RH.QSquarefreePrimeIncrement

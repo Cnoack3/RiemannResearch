@@ -1,7 +1,14 @@
 # Uniform control when one conductor is added to a fixed legal space
 
-Paper result; not Lean-verified. The constant depends on the entire fixed
-initial space. It does not supply a bound uniform over canonical stages.
+Formal continuation, 27 October 2026: the physical envelope below is now
+proved in `QSingleConductorUniform.lean`, strengthened to every input f with
+a factor ‖f‖. `QSingleConductorOperatorDecay.lean` also proves operator-norm
+convergence to the fixed-space response. The complete weighted-energy
+consequence is formalized for logarithmic exponent 4. See
+`FormalResearch20261027.md` for exact declarations, scope, and the simplified
+proof. The original proof below is retained as mathematical provenance.
+The constant depends on the entire fixed initial space; it does not supply
+a bound uniform over canonical stages.
 
 Let \(Q(n)=1/(\zeta(2)n^2)\), \(g_d(n)=(n\bmod d)/d\), and
 \(Bf(n)=f(n)/(n+1)\). Fix any finite-dimensional space \(U\) consisting of
@@ -98,7 +105,7 @@ For every orthogonal projection \(P\), if \(r=(I-P)1\), then
 \[
  PBr=P(B-I/4)r,\qquad\|PBr\|\le\|r\|/4\le1/4.
 \]
-Consequently \(\|P_UBr_d\|\le1/4\), since \(P_UBr_d=P_Ub_d\). Finite dimensionality of the fixed
+Consequently \(\|P_UBr_d\|\le1/4\). Finite dimensionality of the fixed
 bounded-function space \(U\) supplies a uniform sup-norm bound on this
 term. Also (1) and (6) imply
 \(\|\beta_dP_Ug_d\|_\infty=O_U(\ell_d^2/d)=O_U(1)\).

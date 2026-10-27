@@ -18,6 +18,10 @@ import Lean.Elab.Tactic.Omega
 The arithmetic increment bound is an explicit hypothesis.  Strong induction
 on the physical integer telescopes it along prime factors, including repeated
 factors.  No independence or Chinese remainder theorem is assumed.
+
+Source of the sparse parent-edge refinement: continuation on 27 October 2026
+of the user-supplied PrimeResamplingResearch20261027.md agenda, Sections 6
+and 8. Only one chosen prime-factor parent per positive integer is needed.
 -/
 
 namespace RiemannResearch.Analysis.PrimeIncrementEnvelope
@@ -110,6 +114,56 @@ theorem abs_le_polylog_of_prime_increments
     _ ≤ |f n - f 1| + |f 1| := abs_add_le _ _
     _ ≤ L * Real.log (n : ℝ) * (6 + Real.log (n : ℝ)) ^ m + |f 1| :=
       add_le_add (sub_one_abs_le_of_prime_increments f L hL m hstep n hn) le_rfl
+    _ ≤ L * (6 + Real.log (n : ℝ)) ^ (m + 1) +
+        |f 1| * (6 + Real.log (n : ℝ)) ^ (m + 1) := add_le_add hsecond hfirst
+    _ = (|f 1| + L) * (6 + Real.log (n : ℝ)) ^ (m + 1) := by ring
+
+
+/-- One chosen descending prime-factor edge per integer suffices for telescoping. -/
+theorem sub_one_abs_le_of_prime_parent_increments
+    (f : ℕ → ℝ) (L : ℝ) (hL : 0 ≤ L) (m : ℕ)
+    (hstep : ∀ n : ℕ, 1 < n → ∃ p q : ℕ,
+      p.Prime ∧ 0 < q ∧ p * q = n ∧
+        |f n - f q| ≤ L * Real.log (p : ℝ) * (6 + Real.log (n : ℝ)) ^ m)
+    (n : ℕ) (hn : 0 < n) :
+    |f n - f 1| ≤ L * Real.log (n : ℝ) * (6 + Real.log (n : ℝ)) ^ m := by
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+      by_cases hn1 : n = 1
+      · simp [hn1]
+      obtain ⟨p, q, hp, hq, hpq, hbound⟩ := hstep n (by omega)
+      have hqlt : q < n := by nlinarith [hp.two_le]
+      have hprev := ih q hqlt hq
+      have hmul := prime_mul_log_envelope_step f L hL m p q hp hq
+        (by simpa only [hpq] using hbound) hprev
+      simpa only [hpq] using hmul
+
+/-- Sparse parent-edge control gives the same global polylogarithmic envelope. -/
+theorem abs_le_polylog_of_prime_parent_increments
+    (f : ℕ → ℝ) (L : ℝ) (hL : 0 ≤ L) (m : ℕ)
+    (hstep : ∀ n : ℕ, 1 < n → ∃ p q : ℕ,
+      p.Prime ∧ 0 < q ∧ p * q = n ∧
+        |f n - f q| ≤ L * Real.log (p : ℝ) * (6 + Real.log (n : ℝ)) ^ m)
+    (n : ℕ) (hn : 0 < n) :
+    |f n| ≤ (|f 1| + L) * (6 + Real.log (n : ℝ)) ^ (m + 1) := by
+  have hn1 : (1 : ℝ) ≤ n := by exact_mod_cast hn
+  have hln : 0 ≤ Real.log (n : ℝ) := Real.log_nonneg hn1
+  have hbase : 1 ≤ 6 + Real.log (n : ℝ) := by linarith
+  have hpow : 1 ≤ (6 + Real.log (n : ℝ)) ^ (m + 1) := one_le_pow₀ hbase
+  have hfirst : |f 1| ≤ |f 1| * (6 + Real.log (n : ℝ)) ^ (m + 1) := by
+    nlinarith [abs_nonneg (f 1)]
+  have hsecond : L * Real.log (n : ℝ) * (6 + Real.log (n : ℝ)) ^ m ≤
+      L * (6 + Real.log (n : ℝ)) ^ (m + 1) := by
+    rw [pow_succ]
+    have hh := mul_le_mul_of_nonneg_left
+      (show Real.log (n : ℝ) ≤ 6 + Real.log (n : ℝ) by linarith)
+      (mul_nonneg hL (pow_nonneg (by linarith : 0 ≤ 6 + Real.log (n : ℝ)) m))
+    nlinarith
+  calc
+    |f n| = |(f n - f 1) + f 1| := by congr 1; ring
+    _ ≤ |f n - f 1| + |f 1| := abs_add_le _ _
+    _ ≤ L * Real.log (n : ℝ) * (6 + Real.log (n : ℝ)) ^ m + |f 1| :=
+      add_le_add (sub_one_abs_le_of_prime_parent_increments f L hL m hstep n hn) le_rfl
     _ ≤ L * (6 + Real.log (n : ℝ)) ^ (m + 1) +
         |f 1| * (6 + Real.log (n : ℝ)) ^ (m + 1) := add_le_add hsecond hfirst
     _ = (|f 1| + L) * (6 + Real.log (n : ℝ)) ^ (m + 1) := by ring

@@ -73,7 +73,67 @@ Three new modules passed targeted server verification; inspected principal
 declarations use only propext, Classical.choice, and Quot.sound.
 See `RH/PrimeIncrementResearch20261026.md` for statements and verification.
 `RH/LegalSubspaceProjectionObstruction.md` and
-`RH/SingleConductorProjectionBound.md` are separate **paper proofs**.
+`RH/SingleConductorProjectionBound.md` were separate **paper proofs** at that checkpoint;
+the formalization status was advanced in the continuation below.
 The first rules out uniform stability over arbitrary legal subspaces
 containing g_2, while the second controls a single added conductor for each
 fixed prior legal space. Neither supplies a stage-uniform canonical bound.
+
+## Formal projection continuation, 27 October 2026
+
+### Established statements
+
+- `Analysis/PrimeIncrementEnvelope.lean` adds sparse prime-parent telescoping:
+  one chosen descending prime edge per integer suffices.
+- `Analysis/OrthogonalPairCorrection.lean`, `SingleDirectionProjection.lean`,
+  and `SingleDirectionResponseDifference.lean` prove exact signed projection,
+  residual, coefficient, and response-difference identities before estimates.
+- `Analysis/ConductorLogEnvelope.lean` supplies physical-log scalar bounds and
+  shifted fixed-log-power domination by square roots.
+- `RH/QBoundedSubspaceEvaluation.lean`, `QBoundedResidueProjection.lean`,
+  `QConductorEstimates.lean`, and `QConductorDecay.lean` provide complete-Q
+  evaluation/mean/norm estimates and actual normalized-conductor decay.
+- `RH/QSingleConductorPrerequisites.lean`, `QSingleConductorProjection.lean`,
+  and `QSingleConductorUniform.lean`: `stage_uniform_response_physical_bound`
+  and `stage_uniform_response_weighted_energy_bound` hold uniformly in the
+  added conductor and all inputs, with constants depending on the fixed stage.
+- `RH/QSingleConductorOperatorDecay.lean`:
+  `stage_response_extension_operator_norm_tendsto_zero` proves convergence
+  to the response operator of the fixed base stage, not necessarily to zero.
+- `RH/QReciprocalQuarterContraction.lean` proves the exact reciprocal
+  quarter-contraction and its compressed orthogonal-residual bound.
+- `RH/QLegalMixedConductor.lean`, `QLegalMixedConductorMoments.lean`,
+  `QLegalMixedConductorAsymptotics.lean`, `QLegalMixedConductorReciprocal.lean`,
+  and `QLegalMixedConductorPhysical.lean` provide the actual two-dimensional
+  legal family, exact coefficient, unconditional eventual positivity,
+  bounded physical remainder, and sharp ordinary norms.
+- `RH/ResidueMidpointIncrement.lean` and `QLegalMixedConductorIncrement.lean`:
+  `exists_prime_actualCorrection_exceeds_polylog` rules out every fixed
+  polylogarithmic prime-two allowance over this noncanonical family.
+- `RH/QLegalMixedConductorWeightedEnergy.lean`:
+  `correctionWeightedEnergy_tendsto_atTop` proves complete summable weighted
+  energy divergence; prime witnesses can be arbitrarily large.
+- `RH/QLegalMixedConductorTransferObstruction.lean`:
+  `exists_prime_weighted_transfer_failure` and
+  `no_uniform_actual_weighted_transfer` discharge all actual-family providers.
+  Raw weighted energy is at most 1/1024 while correction energy diverges.
+
+### Conditional research reduction and open obligations
+
+`RH/QSquarefreePrimeIncrement.lean` adds
+`residual_zero_iff_frequently_moving_prime_parent_increments` for fixed m and
+L>0, and `riemannHypothesis_of_frequently_moving_prime_parent_increments`.
+The latter concludes the literal Mathlib RH proposition.
+
+- **Open:** a common-L,m sparse prime-parent increment provider for the
+  actual canonical moving corrections. The fixed-space theorem allows
+  stage-dependent constants and does not discharge this obligation.
+- **Open:** the actual countable prime-resampling kernel, reversibility,
+  exit-rate/exhaustion providers, and spectral-gap-one Poincaré theorem.
+  The deterministic weighted-energy counterexample does not by itself
+  formalize the paper's Dirichlet-form conclusions. The limiting criterion
+  additionally requires the extended L¹ Poincaré statement.
+
+See `RH/FormalResearch20261027.md` for exact quantifiers, theorem roles,
+proof improvements, and the remaining mathematical boundary. The written
+real-exponent weighted-energy extensions are not independently certified.
