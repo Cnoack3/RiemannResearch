@@ -10,6 +10,16 @@ separate a useful Hilbert-space variation estimate from two invalid shortcuts:
 commuting legal projection with dyadic conditional expectation, and treating
 the actual canonical correction stages as a martingale.
 
+## Infinite-stage formalization update
+
+The continuation in [InfiniteSquarefreeResponseResearch20261027.md](InfiniteSquarefreeResponseResearch20261027.md)
+and QSquarefreeResponseSeries.lean now instantiates the infinite canonical
+variation and unconditional summability arguments below, including zero
+innovations, all complete tails, and the exact constant. It additionally proves
+absolute B-smoothed Hilbert variation and a complete Q total-variation envelope.
+The sharper log-2 evaluation of the excluded parity mass remains a paper
+calculation. The exponential budget and RH remain open.
+
 ## Objects and conventions
 
 Q(n)=1/(zeta(2)n^2), n>=1. Set g_d(n)=(n mod d)/d, and let V_N contain all
@@ -80,7 +90,7 @@ c_j^2<=||r_j||^2||Bu_j||^2. Projection contraction gives
 
 The one-step exact identity and factor-one inequality are formalized in
 Analysis/SingleDirectionResponseDifference.lean. The following infinite-stage
-assembly is a paper proof unless separately identified in the final report.
+assembly is now formalized in QSquarefreeResponseSeries.lean; see the update above.
 
 In normalized physical-coordinate space B is diagonal with eigenvalues
 1/(n+1), n>=1. For any orthonormal family, Bessel's inequality and Tonelli give
@@ -226,8 +236,9 @@ b_N is essential before using this probabilistic route.
 - Saved-module Lean verification: exact resampling obstruction and noncommutation; exact
   one-step response energy and factor-one bound; complete Bessel budget and
   generic finite-family variation budget with displayed hypotheses.
-- Paper proof: the infinite canonical variation budget and unconditional
-  summability, using the actual diagonal multiplier and orthonormal innovations.
+- Formalized continuation: the infinite canonical variation budget and unconditional
+  summability, using the actual diagonal multiplier and canonical masked innovations;
+  see QSquarefreeResponseSeries.lean and the follow-up note.
 - Directed-arithmetic certificates: failure of exponential contraction at
   stage 16, and failure of martingale mean preservation at stages 1 and 2.
 - Floating-point diagnostics: the listed complete moments.

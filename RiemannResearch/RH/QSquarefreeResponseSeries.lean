@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 Christian Noack. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Christian Noack
+-/
 import RiemannResearch.RH.QCanonicalInnovation
 import RiemannResearch.RH.ZetaTwoParitySignal
 import RiemannResearch.RH.QShiftedReciprocalBessel
@@ -355,5 +360,61 @@ theorem movingCorrection_increment_physical_abs_summable (k : ℕ) :
       |qSequence (movingCorrection (n + 1) - movingCorrection n) k|) := by
   have h := movingCorrection_increment_summable.map (qEvalCLM k) (qEvalCLM k).continuous
   simpa only [Function.comp_def, qEvalCLM_apply] using h.abs
+
+end RiemannResearch.RH.QCanonicalInnovation
+
+namespace RiemannResearch.RH.QCanonicalInnovation
+open ZetaTwoHilbert ZetaTwoProbability QShiftedReciprocal QSquarefreeSmoothedProjection
+open Filter
+open scoped Topology BigOperators
+
+/-- The full smoothing-energy tail vanishes without residual vanishing. -/
+theorem smoothingTail_tendsto_zero :
+    Tendsto smoothingTail atTop (𝓝 0) := by
+  have he (N : ℕ) : smoothingTail N =
+      (∑' j, ‖B (direction j)‖ ^ 2) - ∑ j ∈ Finset.range N, ‖B (direction j)‖ ^ 2 := by
+    have h := Summable.sum_add_tsum_nat_add N B_direction_sq_summable
+    dsimp only [smoothingTail]
+    linarith
+  change Tendsto (fun N => smoothingTail N) atTop (𝓝 0)
+  simp_rw [he]
+  have hc : Tendsto (fun _ : ℕ => ∑' j, ‖B (direction j)‖ ^ 2) atTop
+      (𝓝 (∑' j, ‖B (direction j)‖ ^ 2)) := tendsto_const_nhds
+  simpa only [sub_self] using hc.sub B_direction_sq_summable.hasSum.tendsto_sum_nat
+
+/-- A complete-Q Hilbert envelope for absolute temporal variation after B. -/
+noncomputable def smoothedTotalVariation : QHilbert :=
+  ∑' j, qAbs (B (movingCorrection (j + 1) - movingCorrection j))
+
+theorem smoothed_absolute_increment_summable :
+    Summable (fun j => qAbs (B (movingCorrection (j + 1) - movingCorrection j))) := by
+  apply Summable.of_norm
+  simpa only [qAbs_norm] using B_movingCorrection_increment_norm_summable
+
+theorem smoothedTotalVariation_physical (k : ℕ) :
+    qSequence smoothedTotalVariation k =
+      ∑' j, |qSequence (movingCorrection (j + 1) - movingCorrection j) k| /
+        ((k : ℝ) + 1) := by
+  have h := smoothed_absolute_increment_summable.hasSum.map
+    (qEvalCLM k) (qEvalCLM k).continuous
+  have he := h.tsum_eq
+  simp only [Function.comp_def, qEvalCLM_apply, qAbs_sequence, qSequence_B, abs_div,
+    abs_of_pos (by positivity : 0 < (k : ℝ) + 1)] at he
+  exact he.symm
+
+/-- All physical tails of the squared absolute-variation envelope are summable. -/
+theorem smoothedTotalVariation_weighted_summable :
+    Summable (fun k => positiveQWeight k *
+      (∑' j, |qSequence (movingCorrection (j + 1) - movingCorrection j) k| /
+        ((k : ℝ) + 1)) ^ 2) := by
+  simpa only [smoothedTotalVariation_physical] using
+    qSequence_square_summable smoothedTotalVariation
+
+theorem smoothedTotalVariation_weighted_identity :
+    (∑' k, positiveQWeight k *
+      (∑' j, |qSequence (movingCorrection (j + 1) - movingCorrection j) k| /
+        ((k : ℝ) + 1)) ^ 2) = ‖smoothedTotalVariation‖ ^ 2 := by
+  simpa only [smoothedTotalVariation_physical] using
+    (qNorm_weighted_sq smoothedTotalVariation).symm
 
 end RiemannResearch.RH.QCanonicalInnovation
