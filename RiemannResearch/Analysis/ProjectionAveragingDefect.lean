@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
@@ -143,5 +144,92 @@ theorem parity_defect_energy_bound (u h : H) (hh : h ∈ V)
   have he := defect_energy_bound V W u h (3 / 8) hh havg
   rw [henergy] at he
   nlinarith only [he]
+
+/-- The dyadic averaging defect has an exact nonnegative remainder.
+The two numerical averaging identities are explicit premises here. -/
+theorem parity_defect_energy_exact (u h : H) (hh : h ∈ V)
+    (havg : W.starProjection h = (3 / 8 : ℝ) • u)
+    (henergy : ‖h - W.starProjection h‖ ^ 2 = (3 / 64 : ℝ)) :
+    ‖(u - V.starProjection u) - W.starProjection (u - V.starProjection u)‖ ^ 2 =
+      3 * (‖u - V.starProjection u‖ ^ 2) ^ 2 +
+        ‖((u - V.starProjection u) - W.starProjection (u - V.starProjection u)) +
+          (8 * ‖u - V.starProjection u‖ ^ 2) • (h - W.starProjection h)‖ ^ 2 := by
+  let r := u - V.starProjection u
+  let d := r - W.starProjection r
+  let z := h - W.starProjection h
+  let e : ℝ := ‖r‖ ^ 2
+  have hp : inner ℝ d z = -(3 / 8 : ℝ) * e :=
+    defect_pairing V W u h (3 / 8) hh havg
+  have hp' : inner ℝ z d = -(3 / 8 : ℝ) * e :=
+    (real_inner_comm z d).symm.trans hp
+  have hz : ‖z‖ ^ 2 = (3 / 64 : ℝ) := henergy
+  have hexpand := real_inner_self_eq_norm_sq (d + (8 * e) • z)
+  simp only [inner_add_left, inner_add_right, real_inner_smul_left,
+    real_inner_smul_right, real_inner_self_eq_norm_sq, norm_smul, mul_pow, Real.norm_eq_abs,
+    sq_abs, hp, hp', hz] at hexpand
+  change ‖d‖ ^ 2 = 3 * e ^ 2 + ‖d + (8 * e) • z‖ ^ 2
+  nlinarith only [hexpand]
+
+/-- Equality in the sharp dyadic defect bound means precisely that its
+explicit residual remainder vanishes. -/
+theorem parity_defect_energy_eq_iff (u h : H) (hh : h ∈ V)
+    (havg : W.starProjection h = (3 / 8 : ℝ) • u)
+    (henergy : ‖h - W.starProjection h‖ ^ 2 = (3 / 64 : ℝ)) :
+    ‖(u - V.starProjection u) - W.starProjection (u - V.starProjection u)‖ ^ 2 =
+        3 * (‖u - V.starProjection u‖ ^ 2) ^ 2 ↔
+      ((u - V.starProjection u) - W.starProjection (u - V.starProjection u)) +
+        (8 * ‖u - V.starProjection u‖ ^ 2) • (h - W.starProjection h) = 0 := by
+  have he := parity_defect_energy_exact V W u h hh havg henergy
+  constructor
+  · intro hd
+    have hz :
+        ‖((u - V.starProjection u) - W.starProjection (u - V.starProjection u)) +
+          (8 * ‖u - V.starProjection u‖ ^ 2) • (h - W.starProjection h)‖ ^ 2 = 0 := by
+      linarith only [he, hd]
+    exact norm_eq_zero.mp (sq_eq_zero_iff.mp hz)
+  · intro hz
+    simpa only [hz, norm_zero, zero_pow (by decide : 2 ≠ 0), add_zero] using he
+
+/-- With a unit target fixed by the averaging projection, the complete
+residual norm has two explicit nonnegative remainder energies. -/
+theorem parity_residual_energy_exact (u h : H) (hu : ‖u‖ ^ 2 = 1)
+    (huW : u ∈ W) (hh : h ∈ V)
+    (havg : W.starProjection h = (3 / 8 : ℝ) • u)
+    (henergy : ‖h - W.starProjection h‖ ^ 2 = (3 / 64 : ℝ)) :
+    ‖u - V.starProjection u‖ ^ 2 =
+      4 * (‖u - V.starProjection u‖ ^ 2) ^ 2 +
+        ‖((u - V.starProjection u) - W.starProjection (u - V.starProjection u)) +
+          (8 * ‖u - V.starProjection u‖ ^ 2) • (h - W.starProjection h)‖ ^ 2 +
+        ‖W.starProjection (u - V.starProjection u) -
+          (‖u - V.starProjection u‖ ^ 2) • u‖ ^ 2 := by
+  let r := u - V.starProjection u
+  let d := r - W.starProjection r
+  let z := h - W.starProjection h
+  let e : ℝ := ‖r‖ ^ 2
+  have hru : inner ℝ r u = e := by
+    have hz := V.starProjection_inner_eq_zero u (V.starProjection u)
+      (V.starProjection_apply_mem u)
+    have he := real_inner_self_eq_norm_sq (u - V.starProjection u)
+    rw [inner_sub_right, hz, sub_zero] at he
+    exact he
+  have hWu : W.starProjection u = u :=
+    Submodule.starProjection_eq_self_iff.mpr huW
+  have hcru : inner ℝ (W.starProjection r) u = e := by
+    rw [W.inner_starProjection_left_eq_right, hWu]
+    exact hru
+  have hucr : inner ℝ u (W.starProjection r) = e :=
+    (real_inner_comm u (W.starProjection r)).symm.trans hcru
+  have hcenter := real_inner_self_eq_norm_sq (W.starProjection r - e • u)
+  simp only [inner_sub_left, inner_sub_right, real_inner_smul_left,
+    real_inner_smul_right, real_inner_self_eq_norm_sq, norm_smul, mul_pow, Real.norm_eq_abs,
+    sq_abs, hcru, hucr, hu] at hcenter
+  have hsplit : e = ‖W.starProjection r‖ ^ 2 + ‖d‖ ^ 2 := by
+    simpa only [e, d, Submodule.starProjection_orthogonal_val] using
+      Submodule.norm_sq_eq_add_norm_sq_starProjection r W
+  have hdefect : ‖d‖ ^ 2 = 3 * e ^ 2 + ‖d + (8 * e) • z‖ ^ 2 :=
+    parity_defect_energy_exact V W u h hh havg henergy
+  change e = 4 * e ^ 2 + ‖d + (8 * e) • z‖ ^ 2 +
+    ‖W.starProjection r - e • u‖ ^ 2
+  nlinarith only [hsplit, hcenter, hdefect]
 
 end RiemannResearch.Analysis.ProjectionAveragingDefect

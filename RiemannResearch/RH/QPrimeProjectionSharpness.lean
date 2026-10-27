@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QPrimeResampling
+import RiemannResearch.RH.QDivisorLegality
+import RiemannResearch.RH.QDivisibilityHilbertMoments
+import Mathlib.Tactic.Linarith
 import Mathlib.Data.Nat.Prime.Basic
 import RiemannResearch.RH.QPrimeProjectionPoincare
 import RiemannResearch.RH.QPrimeResamplingParity
@@ -65,5 +68,24 @@ theorem prime_projection_poincare_equality_witness :
       primeProjectionEnergy f = ENNReal.ofReal (‖f‖ ^ 2) :=
   ⟨dyadicCenteredAtom, dyadicCenteredAtom_ne_zero, dyadicCenteredAtom_mean_zero,
     primeProjectionEnergy_dyadicCenteredAtom⟩
+
+open QDivisibilityDensity QDivisorLegality
+
+/-- Exact variance of the centered actual dyadic residue atom. -/
+theorem dyadicCenteredAtom_norm_sq : ‖dyadicCenteredAtom‖ ^ 2 = (3 / 64 : ℝ) := by
+  have hm : inner ℝ qOne (qResidue 2) = (3 / 8 : ℝ) := by
+    have h := C_preserves_mean 2 (by norm_num) (qResidue 2)
+    rw [C_two_qResidue_two, real_inner_smul_right, real_inner_self_eq_norm_sq,
+      qOne_norm_sq, mul_one] at h
+    exact h.symm
+  have hg := qDivisor_norm_sq 2 (by norm_num)
+  rw [qDivisor_two_eq, norm_sub_sq_real, real_inner_smul_right, norm_smul,
+    mul_pow, Real.norm_eq_abs, sq_abs, qOne_norm_sq, hm] at hg
+  have he := norm_sub_sq_real (qResidue 2) ((3 / 8 : ℝ) • qOne)
+  rw [real_inner_smul_right, real_inner_comm qOne (qResidue 2), hm,
+    norm_smul, mul_pow, Real.norm_eq_abs, sq_abs, qOne_norm_sq] at he
+  change ‖qResidue 2 - (3 / 8 : ℝ) • qOne‖ ^ 2 = _
+  norm_num at hg
+  nlinarith only [hg, he]
 
 end RiemannResearch.RH.QPrimeResampling

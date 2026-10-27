@@ -1,5 +1,37 @@
 # Theorem catalog
 
+## Dyadic residual identities and stretched exponential moments — 26 October 2026
+
+Source: user-provided PrimeResamplingFormalization20261027(1).md.
+Research note: [RH/DyadicResamplingMomentResearch20261026.md](RH/DyadicResamplingMomentResearch20261026.md).
+
+Established results:
+- Analysis/ProjectionAveragingDefect.lean: exact dyadic defect and two-remainder
+  residual-energy identities, with displayed abstract averaging premises.
+- RH/QPrimeProjectionSharpness.lean: actual centered dyadic variance 3/64.
+- RH/QSquarefreeDyadicResampling.lean: actual arithmetic specialization;
+  dyadic invariance iff zero limiting squarefree residual; norm convergence
+  of finite-stage defects.
+- RH/QExponentialMoment.lean: any positive stretched exponential moment implies
+  an integer polylogarithmic physical envelope.
+- RH/QSquarefreeExponentialMoment.lean: actual correction stretched-moment
+  finiteness iff zero residual, plus an ordinary exponential finite-test
+  criterion with a common budget and grid-dependent cofinal stages.
+- RH/QSquarefreeStageExponentialMoment.lean: each finite stage is physically
+  bounded and its corrections have every ordinary exponential moment;
+  if the limiting residual is nonzero, every positive ordinary exponential
+  moment of moving corrections tends to infinity.
+
+Conditional research reductions:
+- riemannHypothesis_of_limiting_dilation_invariant:
+  **Open:** actual limiting residual invariance under multiplication by two.
+- riemannHypothesis_of_correction_stretchedExponentialMoment_summable:
+  **Open:** one finite stretched exponential moment of the actual correction.
+- riemannHypothesis_of_frequently_exponential_finiteSum_bound:
+  **Open:** one common finite budget in the actual cofinal finite-test criterion.
+- These equivalences concern zero squarefree residual. No unconditional RH
+  proof or RH-to-squarefree-density converse is asserted.
+
 ## Raw reciprocal source and negative cross moments — 26 October 2026
 
 Source: the user's request to prove the squarefree CRT bounds.
