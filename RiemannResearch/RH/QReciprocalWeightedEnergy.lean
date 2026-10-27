@@ -3,6 +3,8 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
+import RiemannResearch.Analysis.ReversibleJumpEnergy
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 import RiemannResearch.RH.QHeadTailLayerEnergy
 import RiemannResearch.RH.QHeadCrossMoments
 import RiemannResearch.RH.QAnnihilatorTailEscape
@@ -66,6 +68,88 @@ theorem reciprocal_weightedEnergy_le (f : QHilbert) :
     ((qSequence_square_summable f).mul_left (1 / 256 : ℝ))
   rw [tsum_mul_left, ← qNorm_weighted_sq] at h
   simpa only [one_div, div_eq_mul_inv, one_mul, mul_comm] using h
+
+theorem reciprocal_rateWeightedEnergyTerm_le (f : QHilbert) (rate : ℕ → ℝ)
+    (hrate : ∀ n, rate n ≤ (n : ℝ) + 1) (n : ℕ) :
+    rate n * polylogWeightedEnergyTerm 2 (B f) n ≤
+      (1 / 64 : ℝ) * (positiveQWeight n * qSequence f n ^ 2) := by
+  have hm := mul_le_mul_of_nonneg_right
+    (polylog_two_rate_reciprocal_multiplier_le n (rate n) (hrate n))
+    (mul_nonneg (positiveQWeight_nonneg n) (sq_nonneg (qSequence f n)))
+  simp only [polylogWeightedEnergyTerm, qSequence_B, div_pow]
+  calc
+    _ = (rate n * polylogTailProfile 2 n / ((n : ℝ) + 1) ^ 2) *
+        (positiveQWeight n * qSequence f n ^ 2) := by ring
+    _ ≤ _ := hm
+
+theorem reciprocal_rateWeightedEnergy_summable (f : QHilbert) (rate : ℕ → ℝ)
+    (hnonneg : ∀ n, 0 ≤ rate n) (hrate : ∀ n, rate n ≤ (n : ℝ) + 1) :
+    Summable (fun n : ℕ => rate n * polylogWeightedEnergyTerm 2 (B f) n) := by
+  apply Summable.of_nonneg_of_le
+    (fun n => mul_nonneg (hnonneg n) (polylogWeightedEnergyTerm_nonneg 2 (B f) n))
+    (reciprocal_rateWeightedEnergyTerm_le f rate hrate)
+  exact (qSequence_square_summable f).mul_left (1 / 64 : ℝ)
+
+/-- Any nonnegative exit rate growing at most linearly has a uniformly bounded
+complete logarithmic energy after one reciprocal multiplication. -/
+theorem reciprocal_rateWeightedEnergy_le (f : QHilbert) (rate : ℕ → ℝ)
+    (hnonneg : ∀ n, 0 ≤ rate n) (hrate : ∀ n, rate n ≤ (n : ℝ) + 1) :
+    (∑' n : ℕ, rate n * polylogWeightedEnergyTerm 2 (B f) n) ≤ ‖f‖ ^ 2 / 64 := by
+  have hs := (reciprocal_rateWeightedEnergy_summable f rate hnonneg hrate).tsum_le_tsum
+    (reciprocal_rateWeightedEnergyTerm_le f rate hrate)
+    ((qSequence_square_summable f).mul_left (1 / 64 : ℝ))
+  rw [tsum_mul_left, ← qNorm_weighted_sq] at hs
+  simpa only [one_div, div_eq_mul_inv, one_mul, mul_comm] using hs
+
+
+open RiemannResearch.Analysis.ReversibleJumpEnergy
+
+/-- Finite-head assembly for an actual reciprocal Q source. The row hypothesis
+is the weighted exit-rate envelope; it does not assert a projection bound. -/
+theorem finiteRawSourceJumpEnergy_le
+    (S : Finset ℕ) (f : QHilbert)
+    (W : {n : ℕ // n ∈ S} → {n : ℕ // n ∈ S} → ℝ)
+    (hW : ∀ x y, 0 ≤ W x y) (hsym : ∀ x y, W x y = W y x)
+    (hrate : ∀ x, finiteExitRate W x ≤
+      positiveQWeight x.val * ((x.val : ℝ) + 1)) :
+    finiteJumpEnergy W (fun x => Real.sqrt (polylogTailProfile 2 x.val) *
+      qSequence (B f) x.val) ≤ ‖f‖ ^ 2 / 32 := by
+  classical
+  let g (x : {n : ℕ // n ∈ S}) : ℝ :=
+    Real.sqrt (polylogTailProfile 2 x.val) * qSequence (B f) x.val
+  let F (n : ℕ) : ℝ := ((n : ℝ) + 1) * polylogWeightedEnergyTerm 2 (B f) n
+  have hsq (x : {n : ℕ // n ∈ S}) :
+      (g x) ^ 2 = polylogTailProfile 2 x.val * (qSequence (B f) x.val) ^ 2 := by
+    dsimp [g]
+    rw [mul_pow, Real.sq_sqrt (polylogTailProfile_nonneg 2 x.val)]
+  have hterm (x : {n : ℕ // n ∈ S}) : finiteExitRate W x * (g x) ^ 2 ≤ F x.val := by
+    calc
+      _ ≤ (positiveQWeight x.val * ((x.val : ℝ) + 1)) *
+          (g x) ^ 2 := mul_le_mul_of_nonneg_right (hrate x) (sq_nonneg (g x))
+      _ = F x.val := by
+        rw [hsq]
+        dsimp [F, polylogWeightedEnergyTerm]
+        ring
+  have hFnonneg (n : ℕ) : 0 ≤ F n :=
+    mul_nonneg (by positivity) (polylogWeightedEnergyTerm_nonneg 2 (B f) n)
+  have hFs : Summable F :=
+    reciprocal_rateWeightedEnergy_summable f (fun n => (n : ℝ) + 1)
+      (fun n => by positivity) (fun n => le_rfl)
+  have hFbound : (∑' n : ℕ, F n) ≤ ‖f‖ ^ 2 / 64 :=
+    reciprocal_rateWeightedEnergy_le f (fun n => (n : ℝ) + 1)
+      (fun n => by positivity) (fun n => le_rfl)
+  have hsub : (∑ x : {n : ℕ // n ∈ S}, F x.val) = ∑ n ∈ S, F n :=
+    (Finset.sum_subtype S (fun n => Iff.rfl) F).symm
+  have hfinite : (∑ x : {n : ℕ // n ∈ S}, finiteExitRate W x * (g x) ^ 2) ≤
+      ∑' n : ℕ, F n := by
+    calc
+      _ ≤ ∑ x : {n : ℕ // n ∈ S}, F x.val :=
+        Finset.sum_le_sum (fun x hx => hterm x)
+      _ = ∑ n ∈ S, F n := hsub
+      _ ≤ _ := Summable.sum_le_tsum S (fun n hn => hFnonneg n) hFs
+  have hD := finiteJumpEnergy_le_twice_exit_rate W g hW hsym
+  change finiteJumpEnergy W g ≤ _
+  linarith
 
 end RiemannResearch.RH.QShiftedReciprocal
 

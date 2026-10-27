@@ -11,6 +11,9 @@ import RiemannResearch.Analysis.ProjectionCompressionDefect
 import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import RiemannResearch.RH.ZetaTwoHilbertSpace
+import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
 # Exact parity leakage of the actual legal projection
@@ -119,6 +122,38 @@ theorem parity_projection_residual_norm_sq (h2 : qResidue 2 ∈ V) :
     mul_pow, sq_abs, qDivisor_norm_sq 2 (by decide)]
   norm_num
   ring
+
+/-- Exact variance of the parity-conditioned residual. -/
+theorem parity_projection_residual_centered_norm_sq (h2 : qResidue 2 ∈ V) :
+    ‖paritySpace.starProjection (qOne - V.starProjection qOne) -
+      (‖qOne - V.starProjection qOne‖ ^ 2) • qOne‖ ^ 2 =
+        3 * (‖qOne - V.starProjection qOne‖ ^ 2) ^ 2 := by
+  have hmean : inner ℝ (qDivisor 2) qOne = (1 / 4 : ℝ) := by
+    rw [real_inner_comm, qOne_inner_qDivisor 2 (by decide)]
+    norm_num
+  rw [norm_sub_sq_real, parity_projection_residual_norm_sq V h2,
+    parity_projection_residual V h2, real_inner_smul_left,
+    real_inner_smul_right, hmean, norm_smul, Real.norm_eq_abs,
+    mul_pow, sq_abs, qOne_norm_sq]
+  ring
+
+/-- Mean-independence from parity is exactly target membership, not a
+consequence of independent prime valuations. -/
+theorem parity_projection_residual_mean_independent_iff (h2 : qResidue 2 ∈ V) :
+    paritySpace.starProjection (qOne - V.starProjection qOne) =
+      (‖qOne - V.starProjection qOne‖ ^ 2) • qOne ↔ qOne ∈ V := by
+  constructor
+  · intro h
+    have hv := parity_projection_residual_centered_norm_sq V h2
+    rw [h, sub_self, norm_zero] at hv
+    have hz : ‖qOne - V.starProjection qOne‖ ^ 2 = 0 := by
+      nlinarith [sq_nonneg (‖qOne - V.starProjection qOne‖ ^ 2)]
+    have hn : ‖qOne - V.starProjection qOne‖ = 0 := by
+      nlinarith [norm_nonneg (qOne - V.starProjection qOne)]
+    exact Submodule.starProjection_eq_self_iff.mp
+      (sub_eq_zero.mp (norm_eq_zero.mp hn)).symm
+  · intro h
+    simp [Submodule.starProjection_eq_self_iff.mpr h]
 
 /-- Exact complete-Q parity leakage of the actual optimizer. -/
 theorem optimizer_parity_leakage_exact (h2 : qResidue 2 ∈ V) :

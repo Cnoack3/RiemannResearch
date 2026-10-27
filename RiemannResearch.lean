@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.ReversibleJumpEnergy
 import RiemannResearch.RH.QReciprocalWeightedEnergy
 import RiemannResearch.RH.QHeadTailLayerEnergy
 import RiemannResearch.RH.QSquarefreeRawSourceBounds

@@ -594,3 +594,39 @@ Open: the common retained-mass bound, the weighted negative-part expectation
 bound, or the cofinal prime-resampling influence budget. No provider is
 asserted, no independence of the arithmetic moments is assumed, and no
 RH-to-squarefree-density implication is claimed.
+
+## Prime-resampling source control and the projection obstruction (2026-10-27)
+
+Established deterministic results:
+
+- Analysis/ReversibleJumpEnergy.lean: finiteJumpEnergy_eq_rate_square_sub_cross
+  retains the exact signed cross term; finiteJumpEnergy_offDiagonal,
+  finiteJumpEnergy_le_twice_total_rate, finiteJumpEnergy_le_twice_exit_rate,
+  finiteJumpEnergy_le_of_exit_rate_le, and geometric_resampling_exit_le
+  provide finite reversible algebra and a geometric-coordinate rate bound.
+- Analysis/PolylogAbelBudget.lean:
+  polylog_two_rate_reciprocal_multiplier_le and
+  polylog_two_log_reciprocal_multiplier_le.
+- RH/QReciprocalWeightedEnergy.lean: reciprocal_rateWeightedEnergyTerm_le,
+  reciprocal_rateWeightedEnergy_summable, reciprocal_rateWeightedEnergy_le,
+  and finiteRawSourceJumpEnergy_le. A nonnegative rate at most n+1 costs
+  at most ||f||^2/64 before the reversible factor 2; the finite jump energy
+  of sqrt(a) Bf is at most ||f||^2/32 under its explicit row-rate hypothesis.
+- RH/QParityProjectionDefect.lean:
+  parity_projection_residual_centered_norm_sq gives exact variance 3 e^2.
+  parity_projection_residual_mean_independent_iff shows that mean-independence
+  from parity already requires constant membership in a space containing g_2.
+
+RH/PrimeResamplingResearch20261027.md proves on paper the countable prime-law
+identification and raw-source Dirichlet bound D(sqrt(a) Br_N) <= e_N/32;
+the extended L1 Poincare criterion r=0 iff D(sqrt(a)b)<infinity;
+the exact cofinal criterion with finite-support heads; and the prime-two
+commutator (C_2 P_N-P_N C_2)g_2 = 3 r_N/8.
+The note also records the log-X series, its moment threshold, the exact
+mixture of zeta laws for weighted energy, and a near-pole covariance provider.
+
+Open: a common bound for the actual projected resampling energy, a sufficient
+prime-increment estimate, or the stated tilted logarithmic covariance bound.
+Independent valuations and almost-sure finite prime support do not establish
+these providers. No RH conclusion is asserted. Countable prime-probability
+constructions and the mixture/covariance arguments remain paper derivations.

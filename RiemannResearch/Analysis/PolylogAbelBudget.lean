@@ -127,4 +127,30 @@ theorem polylog_two_shifted_multiplier_le (n : ℕ) :
   apply (div_le_iff₀ (by positivity : 0 < (n : ℝ) + 1)).mpr
   linarith
 
+/-- A bounded diagonal exit-rate multiplier.  The linear envelope is sufficient;
+no arithmetic independence is used here. -/
+theorem polylog_two_rate_reciprocal_multiplier_le (n : ℕ) (rate : ℝ)
+    (hrate : rate ≤ (n : ℝ) + 1) :
+    rate * polylogTailProfile 2 n / ((n : ℝ) + 1) ^ 2 ≤ (1 / 64 : ℝ) := by
+  have hd : 0 < (n : ℝ) + 1 := by positivity
+  calc
+    _ ≤ ((n : ℝ) + 1) * polylogTailProfile 2 n / ((n : ℝ) + 1) ^ 2 :=
+      div_le_div_of_nonneg_right
+        (mul_le_mul_of_nonneg_right hrate (polylogTailProfile_nonneg 2 n))
+        (sq_nonneg _)
+    _ = polylogTailProfile 2 n / ((n : ℝ) + 1) := by
+      field_simp [ne_of_gt hd]
+    _ ≤ _ := polylog_two_shifted_multiplier_le n
+
+/-- In particular a complete logarithmic moment is harmless before projection. -/
+theorem polylog_two_log_reciprocal_multiplier_le (n : ℕ) :
+    (1 + Real.log (n : ℝ)) * polylogTailProfile 2 n /
+      ((n : ℝ) + 1) ^ 2 ≤ (1 / 64 : ℝ) := by
+  apply polylog_two_rate_reciprocal_multiplier_le
+  by_cases hn : n = 0
+  · simp [hn]
+  · have hnpos : (0 : ℝ) < n := by exact_mod_cast Nat.pos_of_ne_zero hn
+    have hlog := Real.log_le_sub_one_of_pos hnpos
+    linarith
+
 end RiemannResearch.Analysis.LogTailWeights
