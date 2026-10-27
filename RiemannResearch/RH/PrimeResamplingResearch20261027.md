@@ -10,14 +10,19 @@ prime-resampling energy. What remains unproved is a corresponding common
 bound after the legal squarefree projection. Such a bound would force the
 limiting residual to vanish and imply RH.
 
-**Formal verification boundary.** The finite reversible-jump signed identity
-and exit-rate bound are in `Analysis/ReversibleJumpEnergy.lean`. The complete
-rate-weighted reciprocal-source bound and finite-jump assembly are in
-`RH/QReciprocalWeightedEnergy.lean`. The parity centered-norm identity and
-mean-independence equivalence are in `RH/QParityProjectionDefect.lean`.
-These deterministic statements have Lean proofs. All countable prime-probability results in this note,
-including (1), are paper derivations unless explicitly updated otherwise.
-No proof of RH or converse implication from RH to squarefree density is claimed.
+**Formal verification boundary (updated 27 October).** The actual normalized
+prime transitions, detailed balance, stationary Q law, countable flow and
+full Dirichlet identity now have Lean proofs. QPrimeResamplingPoincare proves
+gap one for every real sequence without an integrability premise;
+QPrimeDirichletSharpness proves optimality. QPrimeRawSourceEnergy verifies
+(1) for the complete actual kernel. QSquarefreePrimeDirichletCriterion
+proves finite energy iff zero actual residual and the conditional RH
+implication. QSquarefreePrimeFiniteGrid strengthens the cofinal criterion
+to interior finite grids, with good stages allowed to depend on the grid.
+See PrimeResamplingFormalization20261027.md for precise declarations and
+the actual legal-family transfer obstruction. The mixture and covariance
+arguments remain paper derivations. No unconditional RH proof or converse
+from RH to squarefree density is claimed.
 
 ## 1. Definitions and the unconditional source bound
 
@@ -396,6 +401,7 @@ estimates; proving uniform control requires new arithmetic input.
   1.4.1: independent geometric prime exponents and the logarithmic law.
   https://escholarship.org/uc/item/2df682sh
 
-The arithmetic specializations of the probability operators, clipping extension,
-and mixture and covariance arguments are paper derivations. The explicitly
-identified finite algebra, rate multiplier, and parity identities are formalized.
+The actual arithmetic transitions, averaging operators, all-real clipping
+extension, sharp Poincare inequality and full Dirichlet criterion now have
+Lean proofs; see PrimeResamplingFormalization20261027.md. The mixture and
+covariance arguments remain paper derivations.

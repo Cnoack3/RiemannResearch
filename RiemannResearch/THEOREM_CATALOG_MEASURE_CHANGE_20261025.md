@@ -617,16 +617,52 @@ Established deterministic results:
   parity_projection_residual_mean_independent_iff shows that mean-independence
   from parity already requires constant membership in a space containing g_2.
 
-RH/PrimeResamplingResearch20261027.md proves on paper the countable prime-law
-identification and raw-source Dirichlet bound D(sqrt(a) Br_N) <= e_N/32;
-the extended L1 Poincare criterion r=0 iff D(sqrt(a)b)<infinity;
-the exact cofinal criterion with finite-support heads; and the prime-two
-commutator (C_2 P_N-P_N C_2)g_2 = 3 r_N/8.
-The note also records the log-X series, its moment threshold, the exact
-mixture of zeta laws for weighted energy, and a near-pole covariance provider.
+## Actual countable prime kernel and sharp Poincare (2026-10-27)
 
-Open: a common bound for the actual projected resampling energy, a sufficient
-prime-increment estimate, or the stated tilted logarithmic covariance bound.
-Independent valuations and almost-sure finite prime support do not establish
-these providers. No RH conclusion is asserted. Countable prime-probability
-constructions and the mixture/covariance arguments remain paper derivations.
+Established in the actual Q space:
+- PrimeResamplingCore, PrimeResamplingGeometric, PrimeResamplingExitBound,
+  PrimeResamplingKernel, PrimeResamplingTransition: exact exponent replacement,
+  geometric normalization, detailed balance and Q stationarity; complete
+  symmetric flow with row bound Q(n)(n+1).
+- QPrimeResampling, QPrimeResamplingFormula, QPrimeResamplingCommutation,
+  QPrimeInvariantIntersection: actual orthogonal averaging projections, full
+  geometric formula, commutation, and joint fixed space exactly the constants.
+- Analysis/CommutingProjectionEnergy, DecreasingProjectionLimit,
+  CountableProjectionPoincare and InvariantProjectionCommutation supply the
+  generic countable Hilbert argument without an unproved product-limit premise.
+- Analysis/CountableJumpEnergy and ReversibleCountableEnergyIdentity supply
+  extended nonnegative complete forms and exact signed identities with proved
+  summability. QPrimeJumpEnergyIdentity identifies actual full kernel energy
+  with the full sum of squared projection defects.
+- QPairVariance, Analysis/CountablePairVariance, ClippedEnergyExtension and
+  QPrimeResamplingPoincare: prime_resampling_poincare holds for every real
+  sequence, with no L1 or L2 assumption. QPrimeDirichletSharpness proves
+  optimality through a positive finite equality witness.
+- Analysis/AnchoredPairEnergy and QCountablePairEnergy: finite pair energy
+  forces square integrability using the positive atom at one.
+- QCountableJumpEnergy and QPrimeRawSourceEnergy:
+  rawSourceDirichletEnergy_le gives D(sqrt(a) Bf) <= ||f||^2/32 unconditionally.
+- QSquarefreePrimeDirichletCriterion:
+  correctionDirichletEnergy_ne_top_iff_residual_zero and
+  correctionDirichletEnergy_eq_zero_iff_residual_zero prove the actual
+  weighted limiting correction's zero-or-infinity dichotomy.
+- Analysis/CountableJumpEnergyLimit and QSquarefreePrimeFiniteGrid:
+  residual_zero_iff_frequently_finiteGrid_bound permits different arbitrarily
+  late good stages for each fixed grid. Nonzero residual forces divergence
+  for every physical-head schedule tending to infinity.
+- QPrimeResamplingParity: actual C_2 g_2 = 3/8, exact signed commutator and
+  noncommutation with the dyadic legal space.
+- QLegalMixedConductorJumpObstruction: actual complete prime energy divergence
+  and no_uniform_prime_dirichlet_transfer for the legal mixed-conductor
+  family, whose raw energy <=1/128 and residual norm <=1/2.
+
+Conditional research reductions:
+- riemannHypothesis_of_correctionDirichletEnergy_ne_top.
+- riemannHypothesis_of_frequently_finiteGrid_bound.
+
+Open: finite actual limiting correction energy, or one common finite bound
+on the canonical moving-correction grids at cofinally many stages per grid.
+The legal-family obstruction does not refute a special estimate for canonical
+nested stages. The near-pole covariance provider and mixture argument remain
+paper derivations. No unconditional RH theorem or RH-to-squarefree-density
+converse is asserted. See RH/PrimeResamplingFormalization20261027.md.
