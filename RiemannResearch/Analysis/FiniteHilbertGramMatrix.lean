@@ -140,3 +140,43 @@ theorem det_sub_mul_div (G : Matrix ι ι ℝ) (hG : IsUnit G.det)
   rw [h]
   exact mul_div_cancel_left₀ _ (isUnit_iff_ne_zero.mp hG)
 end Matrix
+
+/-!
+## Literal inverse-matrix form of the finite Hilbert minimizer
+
+Source: the user's minimum-energy exact-head research agenda, Section 10,
+28 October 2026. The matrix entries are the actual Hilbert inner products.
+-/
+namespace RiemannResearch.Analysis.FiniteHilbertGram
+variable {ι H : Type*} [Fintype ι]
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+
+theorem gramMatrix_quadratic (v : ι → H) (c : ι → ℝ) :
+    ‖Fintype.linearCombination ℝ v c‖ ^ 2 =
+      dotProduct c ((gramMatrix v).mulVec c) := by
+  rw [gramMatrix_mulVec, gram_quadratic]
+  rfl
+
+variable [DecidableEq ι]
+
+theorem inverseCoeff_eq_inv_mulVec {v : ι → H} (hv : LinearIndependent ℝ v)
+    (f : H) : inverseCoeff hv f = (gramMatrix v)⁻¹.mulVec (cross v f) := by
+  apply gram_injective hv
+  have hn : gram v (inverseCoeff hv f) = cross v f := by
+    funext i
+    exact inverseCoeff_normal hv f i
+  rw [hn, ← gramMatrix_mulVec, Matrix.mulVec_mulVec,
+    Matrix.mul_nonsing_inv (gramMatrix v)
+      ((Matrix.isUnit_iff_isUnit_det _).mp (gramMatrix_posDef hv).isUnit),
+    Matrix.one_mulVec]
+
+theorem residual_matrix_value {v : ι → H} (hv : LinearIndependent ℝ v) (f : H) :
+    ‖f - Fintype.linearCombination ℝ v
+      ((gramMatrix v)⁻¹.mulVec (cross v f))‖ ^ 2 =
+      ‖f‖ ^ 2 - dotProduct (cross v f) ((gramMatrix v)⁻¹.mulVec (cross v f)) := by
+  rw [← inverseCoeff_eq_inv_mulVec hv f, residual_schur_value hv f]
+  congr 1
+  change (∑ i, inverseCoeff hv f i * cross v f i) =
+    ∑ i, cross v f i * inverseCoeff hv f i
+  exact Finset.sum_congr rfl (fun i _ => mul_comm _ _)
+end RiemannResearch.Analysis.FiniteHilbertGram

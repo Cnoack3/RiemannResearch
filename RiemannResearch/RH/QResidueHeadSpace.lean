@@ -357,3 +357,153 @@ theorem affineOptimizer_same_head_completion (s : Finset ℕ)
     ((same_head_iff_sub_mem_zeroHeadSpan s hs H r hH hr hrH B hB f).mp ⟨hf, hhead⟩)
 
 end RiemannResearch.RH.QResidueHeadSpace
+
+/-!
+## Minimum energy while preserving every prescribed head value
+
+Source: the user's minimum-energy exact-head research agenda, Section 10,
+28 October 2026. The projection construction covers every H, including zero.
+The explicit compensated-basis formula additionally uses 0 < H < r.
+-/
+namespace RiemannResearch.RH.QResidueHeadSpace
+open ZetaTwoHilbert QSquarefreeLatticePackets
+open RiemannResearch.Analysis.FiniteHilbertGram
+
+instance dictionary_finiteDimensional (s : Finset ℕ) :
+    FiniteDimensional ℝ (dictionary s) :=
+  FiniteDimensional.span_of_finite ℝ (Set.finite_range _)
+
+instance headKernel_finiteDimensional (s : Finset ℕ) (H : ℕ) :
+    FiniteDimensional ℝ ↥(dictionary s ⊓ headNull H) := by
+  let i : ↥(dictionary s ⊓ headNull H) →ₗ[ℝ] dictionary s :=
+    { toFun := fun x => ⟨x.val, x.property.1⟩
+      map_add' := by intros; rfl
+      map_smul' := by intros; rfl }
+  exact FiniteDimensional.of_injective i (by
+    intro x y h
+    apply Subtype.ext
+    exact congrArg (fun z : dictionary s => (z : QHilbert)) h)
+
+def exactHeadAdjustment (s : Finset ℕ) (H : ℕ) (F : QHilbert) : QHilbert :=
+  F - (dictionary s ⊓ headNull H).starProjection F
+
+theorem same_head_sub_mem (s : Finset ℕ) (H : ℕ) (F f : QHilbert)
+    (hF : F ∈ dictionary s) (hf : f ∈ dictionary s)
+    (hh : ∀ n, 0 < n → n ≤ H → qSequence f n = qSequence F n) :
+    f - F ∈ dictionary s ⊓ headNull H := by
+  refine ⟨(dictionary s).sub_mem hf hF, ?_⟩
+  intro n hn hnH
+  change qSequenceLinear (f - F) n = 0
+  simp only [map_sub, Pi.sub_apply]
+  change qSequence f n - qSequence F n = 0
+  exact sub_eq_zero.mpr (hh n hn hnH)
+
+theorem exactHeadAdjustment_same_head (s : Finset ℕ) (H : ℕ) (F : QHilbert)
+    (hF : F ∈ dictionary s) :
+    exactHeadAdjustment s H F ∈ dictionary s ∧
+      ∀ n, 0 < n → n ≤ H →
+        qSequence (exactHeadAdjustment s H F) n = qSequence F n := by
+  have hp := (dictionary s ⊓ headNull H).starProjection_apply_mem F
+  refine ⟨(dictionary s).sub_mem hF hp.1, ?_⟩
+  intro n hn hnH
+  change qSequenceLinear (F - (dictionary s ⊓ headNull H).starProjection F) n = _
+  simp only [map_sub, Pi.sub_apply]
+  change qSequence F n - qSequence ((dictionary s ⊓ headNull H).starProjection F) n =
+    qSequence F n
+  rw [hp.2 n hn hnH, sub_zero]
+
+theorem exactHeadAdjustment_completion_of_mem (s : Finset ℕ) (H : ℕ)
+    (F f : QHilbert) (hf : f - F ∈ dictionary s ⊓ headNull H) :
+    ‖f‖ ^ 2 = ‖exactHeadAdjustment s H F‖ ^ 2 +
+      ‖f - exactHeadAdjustment s H F‖ ^ 2 := by
+  let W := dictionary s ⊓ headNull H
+  have hw : f - exactHeadAdjustment s H F ∈ W := by
+    have hm := W.add_mem hf (W.starProjection_apply_mem F)
+    have he : f - exactHeadAdjustment s H F = (f - F) + W.starProjection F := by
+      dsimp [exactHeadAdjustment, W]
+      abel
+    rw [he]
+    exact hm
+  have ho := Submodule.starProjection_inner_eq_zero F
+    (f - exactHeadAdjustment s H F) hw
+  change inner ℝ (exactHeadAdjustment s H F) (f - exactHeadAdjustment s H F) = 0 at ho
+  have he : f = exactHeadAdjustment s H F + (f - exactHeadAdjustment s H F) := by abel
+  calc
+    ‖f‖ ^ 2 = ‖exactHeadAdjustment s H F + (f - exactHeadAdjustment s H F)‖ ^ 2 :=
+      congrArg (fun x : QHilbert => ‖x‖ ^ 2) he
+    _ = _ := by rw [norm_add_sq_real, ho]; ring
+
+theorem exactHeadAdjustment_energy (s : Finset ℕ) (H : ℕ) (F : QHilbert) :
+    ‖exactHeadAdjustment s H F‖ ^ 2 =
+      ‖F‖ ^ 2 - ‖(dictionary s ⊓ headNull H).starProjection F‖ ^ 2 := by
+  have h := exactHeadAdjustment_completion_of_mem s H F F (by simp)
+  have he : F - exactHeadAdjustment s H F =
+      (dictionary s ⊓ headNull H).starProjection F := by
+    dsimp [exactHeadAdjustment]
+    abel
+  rw [he] at h
+  linarith
+
+theorem exactHeadAdjustment_completion (s : Finset ℕ) (H : ℕ) (F f : QHilbert)
+    (hF : F ∈ dictionary s) (hf : f ∈ dictionary s)
+    (hh : ∀ n, 0 < n → n ≤ H → qSequence f n = qSequence F n) :
+    ‖f‖ ^ 2 = ‖exactHeadAdjustment s H F‖ ^ 2 +
+      ‖f - exactHeadAdjustment s H F‖ ^ 2 :=
+  exactHeadAdjustment_completion_of_mem s H F f (same_head_sub_mem s H F f hF hf hh)
+
+theorem exactHeadAdjustment_isLeast (s : Finset ℕ) (H : ℕ)
+    (F : QHilbert) (hF : F ∈ dictionary s) :
+    IsLeast {E : ℝ | ∃ f : QHilbert, f ∈ dictionary s ∧
+      (∀ n, 0 < n → n ≤ H → qSequence f n = qSequence F n) ∧ ‖f‖ ^ 2 = E}
+      (‖exactHeadAdjustment s H F‖ ^ 2) := by
+  constructor
+  · obtain ⟨hm, hh⟩ := exactHeadAdjustment_same_head s H F hF
+    exact ⟨_, hm, hh, rfl⟩
+  · rintro E ⟨f, hf, hh, rfl⟩
+    rw [exactHeadAdjustment_completion s H F f hF hf hh]
+    exact le_add_of_nonneg_right (sq_nonneg _)
+
+theorem exactHeadAdjustment_unique (s : Finset ℕ) (H : ℕ) (F f : QHilbert)
+    (hF : F ∈ dictionary s) (hf : f ∈ dictionary s)
+    (hh : ∀ n, 0 < n → n ≤ H → qSequence f n = qSequence F n)
+    (he : ‖f‖ ^ 2 = ‖exactHeadAdjustment s H F‖ ^ 2) :
+    f = exactHeadAdjustment s H F := by
+  have hc := exactHeadAdjustment_completion s H F f hF hf hh
+  have hz : ‖f - exactHeadAdjustment s H F‖ ^ 2 = 0 := by linarith
+  exact sub_eq_zero.mp (norm_eq_zero.mp (sq_eq_zero_iff.mp hz))
+
+theorem exactHeadAdjustment_seed_independent (s : Finset ℕ) (H : ℕ)
+    (F F' : QHilbert) (hF : F ∈ dictionary s) (hF' : F' ∈ dictionary s)
+    (hh : ∀ n, 0 < n → n ≤ H → qSequence F' n = qSequence F n) :
+    exactHeadAdjustment s H F' = exactHeadAdjustment s H F := by
+  have hm := same_head_sub_mem s H F F' hF hF' hh
+  have hp := Submodule.starProjection_eq_self_iff.mpr hm
+  have he : F' = F + (F' - F) := by abel
+  calc
+    _ = exactHeadAdjustment s H (F + (F' - F)) := congrArg (exactHeadAdjustment s H) he
+    _ = _ := by
+      simp only [exactHeadAdjustment, map_add, hp]
+      abel
+
+instance zeroHeadSpan_finiteDimensional (s : Finset ℕ) (H r : ℕ) :
+    FiniteDimensional ℝ (zeroHeadSpan s H r) :=
+  FiniteDimensional.span_of_finite ℝ (Set.finite_range _)
+
+theorem exactHeadAdjustment_matrix_value (s : Finset ℕ)
+    (hs : ∀ d ∈ s, 1 < d) (H r : ℕ) (hH : 0 < H)
+    (hr : r ∈ s) (hrH : H < r) (F : QHilbert) :
+    let v := fun d : freeConductors s H r => compensatedResidue (d : ℕ) r
+    ‖exactHeadAdjustment s H F‖ ^ 2 =
+      ‖F‖ ^ 2 - dotProduct (cross v F) ((gramMatrix v)⁻¹.mulVec (cross v F)) := by
+  let v := fun d : freeConductors s H r => compensatedResidue (d : ℕ) r
+  let hv := compensated_linearIndependent s hs H r hr
+  dsimp only
+  unfold exactHeadAdjustment
+  simp only [inf_headNull_eq_zeroHeadSpan s hs H r hH hr hrH]
+  have hp : Fintype.linearCombination ℝ v (inverseCoeff hv F) =
+      (zeroHeadSpan s H r).starProjection F :=
+    synthesis_inverseCoeff_eq_projection hv F
+  rw [← hp, inverseCoeff_eq_inv_mulVec hv F]
+  exact residual_matrix_value hv F
+
+end RiemannResearch.RH.QResidueHeadSpace

@@ -3398,3 +3398,7 @@ import RiemannResearch.Analysis.CoshTaylorRemainder
 import RiemannResearch.Analysis.ActualZeroHorizontalRemainder
 import RiemannResearch.Analysis.LogarithmicRemainder
 import RiemannResearch.Analysis.ActualRationalThirdCoefficient
+
+import RiemannResearch.LinearAlgebra.FiniteAffineGramMinimum
+import RiemannResearch.LinearAlgebra.FinitePenroseMinimum
+import RiemannResearch.RH.QCRTMinimumEnergy

@@ -171,3 +171,38 @@ The corrected reduced-residue count also has divergent energy by the
 separate mathematical argument in `RH/CRTLegalApproximants20261028.md`;
 that reflection/plateau proof is not Lean-certified in this change.
 Raw-family divergence and the corrected-family norm identity are checked.
+
+
+## Minimum-energy exact-head continuation, 28 October 2026
+
+### Established statements
+
+- `RH/QResidueHeadSpace.lean` adds the projection adjustment
+  `exactHeadAdjustment`, preservation of every prescribed head,
+  the full Pythagorean remainder, the exact removed energy,
+  attained minimum, uniqueness, and seed independence. These hold for
+  all natural head lengths, including zero.
+- `Analysis/FiniteHilbertGramMatrix.lean` identifies the actual inverse
+  matrix coefficients and gives the exact residual Schur value.
+- `LinearAlgebra/FiniteAffineGramMinimum.lean` proves the literal
+  kernel-basis inverse formula, full signed completion, attained minimum,
+  and uniqueness for arbitrary feasible constraints. The head rows may
+  be dependent; empty correction index types are permitted.
+- `LinearAlgebra/FinitePenroseMinimum.lean` proves the displayed
+  Moore–Penrose formula from two defining Penrose identities, with full
+  remainder and uniqueness. A canonical pseudoinverse is not constructed.
+- `RH/QCRTMinimumEnergy.lean` constructs the actual minimum-energy
+  primorial CRT family and proves squarefree legality, expanding exact
+  heads, pointwise convergence to one, unique stagewise minimality,
+  and the full-Q inverse-Gram value. Its arithmetic feasibility and
+  compensated-basis hypotheses are discharged.
+
+The combined check `job_6WDnuf1bbVMSqqSk5zDR9f07H6zZkwoB` passed.
+Inspected principal declarations use only propext, Classical.choice,
+and Quot.sound. See `RH/MinimumEnergyExactHead20261028.md`.
+
+### Open analytic estimate
+
+A common bound on these complete minimum energies, even along a
+cofinal subsequence, remains open. No uniform bound or RH conclusion
+is supplied by the finite-dimensional minimization.
