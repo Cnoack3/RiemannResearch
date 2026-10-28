@@ -31,6 +31,64 @@ moving responses. These constants do not prove residual vanishing or RH.
 See RH/ParitySmoothingEnergyResearch20261028.md for the exact formulas and
 verification record.
 
+## Rational four-site spectral certificates (28 October 2026)
+
+Unconditional declarations refining the earlier 89/180 estimate:
+
+- RH/QFourSiteReciprocalCertificate.lean: headMatrix_quadratic identifies the
+  matrix of the constrained head gap. headMatrix_59_120 reproduces the user's
+  matrix exactly; headMatrix_leadingMinors_59_120 gives 1/8, 11/600, and
+  53/216000. headGap_sos_59_120 and headMatrix_posDef_59_120 prove its exact
+  sum-of-squares identity and positive definiteness.
+- headGap_sos_29_59 and headMatrix_posDef_29_59 certify the stronger rational
+  spectral bound 29/59. headMatrix_leadingMinors_29_59 gives the positive
+  leading minors 22/177, 125/6962, and 11/205379.
+- headMatrix_det gives the exact determinant
+  (1800 t^3 - 1873 t^2 + 618 t - 65)/60.
+- RH/QSquarefreeDisplacementEnergy.lean: fourSite_gap_head_tail_exact retains
+  the entire infinite tail sum
+  sum_n (t - 1/(n+6)) (f(n+4))^2.
+  fourSite_tail_nonneg controls every tail coordinate for t >= 1/6.
+  B_inner_le_four_site_59_120 and B_inner_le_four_site_29_59 give the
+  corresponding full-Hilbert-space form bounds.
+- arithmetic_displacement_energy_exact_59_120 specializes the existing
+  parameterized identity to a=240/59:
+  ||r||^2 = (29280/3481)||d||^2
+    + (120/59)<r-(122/59)d, B(r-(122/59)d)>
+    + ||r+(240/59)d||^2
+    - (120/59)<r+(240/59)d, B(r+(240/59)d)>.
+- arithmetic_displacement_energy_exact_29_59 specializes it to a=118/29:
+  ||r||^2 = (7080/841)||d||^2
+    + (59/29)<r-(60/29)d, B(r-(60/29)d)>
+    + ||r+(118/29)d||^2
+    - (59/29)<r+(118/29)d, B(r+(118/29)d)>.
+  The corresponding arithmetic_displacement_energy_bound_59_120 and
+  arithmetic_displacement_energy_bound_29_59 retain coefficients 29280/3481
+  and 7080/841. The _strict_59_120 and _strict_29_59 variants are strict
+  when the actual limiting residual is nonzero.
+
+These results reuse residual_fourSite, displacement_fourSite,
+residual_displacement_orthogonal, and displacement_normal. They concern the
+actual limiting squarefree residual and Q/Pareto displacement, with no RH,
+target-membership, projection-agreement, or physical regularity hypothesis.
+
+Sharp-constant investigation (ordinary mathematics, not a Lean declaration):
+the constrained spectral supremum is the largest root of
+1800 t^3 - 1873 t^2 + 618 t - 65 = 0, approximately 0.4914859158522098.
+It is the unique zero in (1/3,1/2) of
+1/(1/2-t) + 4/(1/3-t) + 9/(1/4-t) + 16/(1/5-t).
+The vector f_i = c_i/(d_i-t), with c=(1,-2,-3,4) and
+d=(1/2,1/3,1/4,1/5), attains that quotient, with zero remaining tail.
+The reciprocal secular function is strictly increasing between these poles;
+compression/interlacing identifies its zero as the largest constrained
+eigenvalue. The remaining diagonal tail is at most 1/6. Only the determinant
+polynomial and the two rational upper certificates are formalized here;
+no claim of sharpness of the actual displacement-energy inequality is made.
+
+Open: physical boundedness, eventual polylogarithmic displacement growth, or
+the existing cofinal complete-tail regularity provider. Neither the stronger
+energy constants nor their strict versions prove residual vanishing or RH.
+
 ## Exact arithmetic displacement energy (28 October 2026)
 
 Unconditional results:
