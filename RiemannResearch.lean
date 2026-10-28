@@ -3378,3 +3378,7 @@ import RiemannResearch.RH.QSquarefreeDisplacementRigidity
 import RiemannResearch.RH.QSquarefreeDisplacementResolvent
 import RiemannResearch.RH.QSquarefreeResolventHeads
 import RiemannResearch.RH.QSquarefreeReciprocalObstruction
+import RiemannResearch.Analysis.CoshTaylorRemainder
+import RiemannResearch.Analysis.ActualZeroHorizontalRemainder
+import RiemannResearch.Analysis.LogarithmicRemainder
+import RiemannResearch.Analysis.ActualRationalThirdCoefficient

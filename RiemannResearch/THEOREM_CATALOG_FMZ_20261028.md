@@ -122,3 +122,67 @@ entrywise hypothesis.
   its squared-height mass condition is essential to the stated result.
 - These phase results do not control the real parts of the zeros or prove RH.
 - The source checkpoint determines verification and publication acceptance.
+
+## Horizontal moments and third coefficients (2026-10-28)
+
+### RiemannResearch/Analysis/CoshTaylorRemainder.lean
+
+Unconditional elementary real-series results:
+
+- `coshTaylorRemainder_eq_tsum`: exact positive tail.
+- `coshTaylorRemainder_frequency_le`: all-orders comparison-frequency bound.
+- `coshTaylorHead_one`, `coshTaylorRemainder_one`: explicit quadratic head.
+
+### RiemannResearch/Analysis/ActualZeroHorizontalRemainder.lean
+
+- `evenHorizontalMoment`, `horizontalTaylorPolynomial`,
+  `horizontalTaylorError`: actual multiplicity-weighted definitions.
+- `horizontalTaylorPolynomial_eq_moments`,
+  `horizontalTaylorError_eq_remainder`, `horizontalTaylorError_one`:
+  unconditional exact signed identities.
+- `horizontalTaylorError_of_expTail`: all-orders transfer with explicit
+  strict-tail input.
+- `normalized_horizontalTaylorError_of_selberg`: order J remainder
+  O(T |u|^(2J+2)/(log T)^(2J+1)), uniformly on |u| <= a log T/2.
+- `normalized_horizontalTaylorError_one_of_selberg`: exact quadratic
+  correction and quartic remainder, with constant 32 C/(3 a^4).
+- `finiteFourier_horizontalTaylorError_one_of_selberg`: signed finite
+  Fourier synthesis with quartic frequency budget.
+
+The last three are **conditional research reductions** with the explicit
+actual Selberg density bound. They do not establish fixed limiting
+higher-order coefficients.
+
+### RiemannResearch/Analysis/LogarithmicRemainder.lean
+
+- `log_mul_tendsto_zero_of_inv_log_cube`: elementary next-scale limit
+  comparison from an explicit inverse-cubic-log remainder bound.
+
+### RiemannResearch/Analysis/ActualRationalThirdCoefficient.lean
+
+- `norm_evenHorizontalMoment_one_le`: unconditional horizontal-energy
+  domination of the oscillatory second moment.
+- `normalized_evenHorizontalMoment_one_le`: uniform bound 4 C/a^2 on
+  log T times the height-normalized second moment, from Selberg.
+- `eventually_rational_landau_error_le_inv_log_cube`: unconditional
+  uniform rational Landau rate in log n <= log T/8.
+- `tendsto_log_mul_horizontalTaylorError`: negligible next-scale
+  horizontal remainder, from UniformSelbergDensity a.
+- `tendsto_log_mul_rational_landau_error`: unconditional next-scale
+  rational Landau limit.
+- `tendsto_rational_thirdCoefficient_of_horizontalMoment`: conditional
+  identification of the next coefficient with minus u^2/2 times the
+  rescaled second-moment limit.
+- `rational_thirdCoefficient_iff_horizontalMoment`: necessary-and-sufficient
+  full-height convergence criterion for each rational q > 1.
+- `exists_subseq_rational_thirdCoefficient`: for every divergent height
+  sequence, a subsequence with moment and third-coefficient limits for a
+  fixed rational mode, from UniformSelbergDensity a.
+
+**Open:** a checked provider of UniformSelbergDensity (1/4).
+**Open:** convergence of the rescaled oscillatory second moment along all
+heights; it is not assumed or proved by the subsequence theorem.
+The simultaneous measure-level subsequence theorem, full weighted Fourier
+synthesis, and sharper scalar integral bound have ordinary proofs in
+`Analysis/HorizontalThirdCoefficient.md`; those extensions are not claimed
+as newly kernel-checked declarations.
