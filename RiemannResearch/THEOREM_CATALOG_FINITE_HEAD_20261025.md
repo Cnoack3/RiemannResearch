@@ -137,3 +137,34 @@ The latter concludes the literal Mathlib RH proposition.
 See `RH/FormalResearch20261027.md` for exact quantifiers, theorem roles,
 proof improvements, and the remaining mathematical boundary. The written
 real-exponent weighted-energy extensions are not independently certified.
+
+## CRT coprime approximation, 28 October 2026
+
+### Established statements
+
+Module `RH/QCRTCoprimeApproximation.lean`, namespace
+`RiemannResearch.RH.QCRTCoprimeApproximation`:
+
+- `coprimeApprox_mem_divisorStage`, `coprimeApprox_legal`,
+  `coprimeApprox_sequence`, `coprimeApprox_mod`, and
+  `coprimeApprox_count_mod` construct the legal reduced-residue count.
+- `sieveCount_one_head`, `coprimeApprox_exact_head`,
+  `approximant_legal`, `approximant_exact_head`, and
+  `approximant_pointwise` give an explicit squarefree primorial family,
+  exactly one on expanding initial intervals, hence pointwise convergent.
+- `rawApproximant_legal`, `sieveSlope_primorial_one`,
+  `rawApproximant_head`, `rawApproximant_pointwise`, and
+  `rawApproximant_eq_moebius` identify the raw signed Mobius construction.
+- `rawApproximant_norm_lower`, `rawApproximant_norm_sq_tendsto_atTop`,
+  and `rawApproximant_norm_tendsto_atTop` certify its divergent complete
+  Q energy, despite its pointwise limit one.
+- `coprimeApprox_norm_sq` retains the exact signed correction energy.
+
+### Open goal and nonformalized calculation
+
+No new conditional RH theorem is introduced. The open goal remains a
+different legal approximating family with uniformly bounded full energy.
+The corrected reduced-residue count also has divergent energy by the
+separate mathematical argument in `RH/CRTLegalApproximants20261028.md`;
+that reflection/plateau proof is not Lean-certified in this change.
+Raw-family divergence and the corrected-family norm identity are checked.
