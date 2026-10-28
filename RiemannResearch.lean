@@ -3,6 +3,7 @@ import RiemannResearch.RH.QCanonicalInnovation
 import RiemannResearch.RH.QSquarefreeResponseSeries
 import RiemannResearch.RH.QSquarefreeResamplingObstruction
 import RiemannResearch.RH.QShiftedReciprocalBessel
+import RiemannResearch.RH.QSquarefreeDisplacementEnergy
 import RiemannResearch.RH.QSmoothedResponseVariation
 import RiemannResearch.RH.QArgumentDoubling
 import RiemannResearch.RH.QSquarefreeArgumentDoubling

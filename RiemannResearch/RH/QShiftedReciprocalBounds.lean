@@ -75,6 +75,68 @@ theorem movingCorrection_norm_le_quarter (N : ℕ) :
   projected_B_norm_le_quarter (stage N) (residual_mem_orthogonal N)
 
 
+/-- Exact one-parameter energy certificate for change-of-metric displacement.
+Source: algebraic continuation of the user's two-residual calculation. -/
+theorem displacement_energy_remainder_param (r d : QHilbert) (a : ℝ)
+    (hrd : inner ℝ d r = 0)
+    (hnormal : inner ℝ d (B (r + d)) = ‖d‖ ^ 2) :
+    ‖r‖ ^ 2 = (a ^ 2 - 2 * a) * ‖d‖ ^ 2 +
+      (a / 2) * inner ℝ (r + (2 - a) • d) (B (r + (2 - a) • d)) +
+      (‖r + a • d‖ ^ 2 -
+        (a / 2) * inner ℝ (r + a • d) (B (r + a • d))) := by
+  have hdr : inner ℝ r d = 0 := by rw [real_inner_comm]; exact hrd
+  have hsym : inner ℝ r (B d) = inner ℝ d (B r) := by
+    rw [← B_symmetric, real_inner_comm]
+  rw [map_add, inner_add_right] at hnormal
+  have hc : inner ℝ d (B r) = ‖d‖ ^ 2 - inner ℝ d (B d) := by linarith
+  simp only [map_add, map_smul, inner_add_left, inner_add_right,
+    real_inner_smul_left, inner_smul_right, norm_add_sq_real,
+    norm_smul, hdr, hsym, hc, Real.norm_eq_abs, mul_pow, sq_abs]
+  ring
+
+/-- The shifted reciprocal has quadratic form at most half the identity. -/
+theorem twice_B_inner_le_norm_sq (f : QHilbert) :
+    2 * inner ℝ f (B f) ≤ ‖f‖ ^ 2 := by
+  have h := (real_inner_le_norm f (B f)).trans
+    (mul_le_mul_of_nonneg_left (B_norm_le_half f) (norm_nonneg f))
+  nlinarith
+
+
+/-- At parameter four, both displayed remainder terms are nonnegative. -/
+theorem displacement_energy_remainder (r d : QHilbert)
+    (hrd : inner ℝ d r = 0)
+    (hnormal : inner ℝ d (B (r + d)) = ‖d‖ ^ 2) :
+    ‖r‖ ^ 2 = 8 * ‖d‖ ^ 2 +
+      2 * inner ℝ (r - (2 : ℝ) • d) (B (r - (2 : ℝ) • d)) +
+      (‖r + (4 : ℝ) • d‖ ^ 2 -
+        2 * inner ℝ (r + (4 : ℝ) • d) (B (r + (4 : ℝ) • d))) := by
+  have hdr : inner ℝ r d = 0 := by rw [real_inner_comm]; exact hrd
+  have hsym : inner ℝ r (B d) = inner ℝ d (B r) := by
+    rw [← B_symmetric, real_inner_comm]
+  rw [map_add, inner_add_right] at hnormal
+  simp only [map_sub, map_add, map_smul, inner_sub_left, inner_sub_right,
+    inner_add_left, inner_add_right, real_inner_smul_left, inner_smul_right,
+    norm_add_sq_real, norm_smul, hdr]
+  norm_num
+  nlinarith
+
+theorem strict_displacement_energy_bound (r d : QHilbert)
+    (hrd : inner ℝ d r = 0)
+    (hnormal : inner ℝ d (B (r + d)) = ‖d‖ ^ 2)
+    (hr : r ≠ 0) :
+    8 * ‖d‖ ^ 2 < ‖r‖ ^ 2 := by
+  have hne : r - (2 : ℝ) • d ≠ 0 := by
+    intro h
+    have he := sub_eq_zero.mp h
+    rw [he, inner_smul_right, real_inner_self_eq_norm_sq] at hrd
+    have hd : d = 0 := norm_eq_zero.mp (by nlinarith [norm_nonneg d])
+    exact hr (by simpa [hd] using he)
+  have hpos : 0 < inner ℝ (r - (2 : ℝ) • d) (B (r - (2 : ℝ) • d)) :=
+    lt_of_le_of_ne (B_positive _) (Ne.symm (fun h => hne (B_faithful _ h)))
+  have he := displacement_energy_remainder r d hrd hnormal
+  have hu := twice_B_inner_le_norm_sq (r + (4 : ℝ) • d)
+  linarith
+
 /-- The sharp universal metric-displacement estimate for the Q/P weight ratio.
 It controls Hilbert energy, not the physical supremum norm. -/
 theorem sharp_displacement_energy_bound (r d : QHilbert)

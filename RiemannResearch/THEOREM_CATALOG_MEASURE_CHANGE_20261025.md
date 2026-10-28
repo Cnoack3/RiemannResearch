@@ -2,6 +2,36 @@
 
 25 October 2026. Source: the user's ProjectionMeasureChangeResearch20261025.md.
 
+## Exact arithmetic displacement energy (28 October 2026)
+
+Unconditional results:
+
+- RH/QShiftedReciprocalBounds.lean:
+  displacement_energy_remainder_param is the exact one-parameter certificate.
+  twice_B_inner_le_norm_sq and displacement_energy_remainder identify the
+  nonnegative remainders at parameter four.
+  strict_displacement_energy_bound shows that a nonzero residual makes the
+  factor-eight inequality strict under the displayed orthogonality and normal
+  equations.
+- RH/QSquarefreeDisplacementEnergy.lean:
+  B_inner_le_four_site_coordinates, fourSite_coordinates, and
+  B_inner_le_four_site prove <f,Bf> <= (89/180)||f||^2 on the four-site kernel.
+  residual_fourSite, displacement_fourSite, residual_displacement_orthogonal,
+  and displacement_normal discharge all inputs for the actual limiting vectors.
+  arithmetic_displacement_energy_exact retains the complete equality
+  ||r||^2 = (65520/7921)||d||^2
+    + (180/89)<r-(182/89)d,B(r-(182/89)d)>
+    + ||r+(360/89)d||^2
+    - (180/89)<r+(360/89)d,B(r+(360/89)d)>.
+  arithmetic_displacement_energy_bound and arithmetic_displacement_energy_strict
+  prove the improved coefficient 65520/7921 (strict when r is nonzero).
+
+These results have no RH, target-membership, projection-agreement, or physical
+regularity premise. They do not prove residual vanishing.
+Open: the actual displacement's uniform/eventual polylogarithmic bound, or the
+existing cofinal complete-tail regularity condition. Stronger global Hilbert
+energy constants alone do not discharge those obligations.
+
 ## Established identities, implications, and obstructions
 
 - RH/QScaledTailPerturbation.lean, namespace QAnnihilatorTailEscape:
