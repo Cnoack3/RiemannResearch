@@ -38,8 +38,8 @@ The displayed tail bound remains an OPEN arithmetic premise.
 The exact signed tail identity is retained in QScaledTailPerturbation.
 The physical polylogarithmic corollary is formalized below, including
 arbitrary fixed real exponents. Its physical envelope remains OPEN.
-The stronger stretched-exponential extension in
-TwoResidualLogRegularity20261026.md remains a paper argument.
+The stronger complete stretched-tail displacement extension is formalized in
+QSquarefreeStretchedDisplacement; its physical envelope remains OPEN.
 -/
 
 noncomputable section

@@ -110,10 +110,10 @@ in these identities or equivalences.
   riemannHypothesis_of_eventually_real_polylog_displacement cover natural
   and arbitrary real exponents, respectively.
   Open: the eventual physical envelope for the actual displacement.
-- TwoResidualLogRegularity20261026.md records the remaining paper
-  stretched-exponential extension, the actual signed kernel localization
-  (paper only), and reproducible Wolfram finite-stage/CRT computations.
-  These computations do not discharge the open displacement envelope.
+- The complete stretched-tail displacement and interpolation results are now
+  formalized in QSquarefreeStretchedDisplacement.lean. The physical envelope
+  and signed-kernel localization in TwoResidualLogRegularity20261026.md remain
+  open. Its Wolfram computations do not discharge these obligations.
 
 ## Conditional research reductions
 
@@ -743,3 +743,59 @@ The legal-family obstruction does not refute a special estimate for canonical
 nested stages. The near-pole covariance provider and mixture argument remain
 paper derivations. No unconditional RH theorem or RH-to-squarefree-density
 converse is asserted. See RH/PrimeResamplingFormalization20261027.md.
+
+## Interpolated projections and stretched displacement tails (28 October 2026)
+
+Unconditional constructions and exact identities:
+
+- RH/QMeasureInterpolation.lean constructs the actual displacement for every
+  closed Q-Hilbert subspace and every parameter in [0,1], using Banach's theorem.
+  response_contracting, displacement_fixed_point, displacement_mem,
+  displacement_unique, displacement_zero, weighted_residual_mem_orthogonal,
+  and normal_equation discharge existence and the projection equations.
+  interpolation_trial_exact proves the full minimizing identity for every
+  admissible trial. No interior projection is postulated.
+- energy_comparison_exact and interpolation_energy_exact retain both the
+  signed metric change and the complete metric-square remainder.
+  energy_lower, energy_nonneg, interpolation_energy_antitone,
+  interpolation_energy_lower, and interpolation_energy_upper give the
+  coercive and monotone energy bounds.
+- displacement_expansion and displacement_first_order_remainder retain the
+  feedback exactly. displacement_norm_le and displacement_first_order_bound
+  give ||d_t|| <= (t/2)||r|| and ||d_t-t*Pi(B r)|| <= (t^2/4)||r||.
+  mixtureScale, mixtureParameter, their positivity/endpoint lemmas, and
+  mixture_energy_exact identify the literal probability mixture (1-s)Q+sP.
+- RH/QSquarefreeInterpolationRigidity.lean:
+  interpolationWitness_mem_orthogonal, interpolationWitness_mean_energy, and
+  interpolationWitness_mean_lower give the complete signed identity
+  <1,w_t> = t<r,B r> + ||d_t||^2 - t<d_t,B d_t>
+  and its coercive lower bound t<r,B r> + (1/2)||d_t||^2.
+  pathDisplacement is the constructed squarefree path, its normal equation is
+  discharged, and its endpoints are zero and the existing Pareto displacement.
+  path_bounded_iff_residual_zero, pathDisplacement_eq_zero_iff_residual_zero,
+  and pathDisplacement_unbounded_of_residual_ne_zero show that every positive
+  interpolation parameter has the same physical-boundedness obligation.
+- RH/QSquarefreeStretchedDisplacement.lean:
+  witness_tail_energy_exact retains the signed complete-tail cross term.
+  exists_stretched_displacement_tail_escape and
+  exists_stretched_interpolation_tail_escape transfer the established
+  squarefree annihilator escape to the actual displacements. One arithmetic
+  exponent works at every fixed positive parameter; no uniform convergence
+  as the parameter tends to zero is claimed.
+  The underlying full-to-squarefree exact-head transfer was already proved
+  in QSquarefreeLogResidualTail using Bertrand-prime anchors.
+
+Conditional research reductions:
+
+- residual_zero_of_interpolation_displacement_bounded and
+  path_bounded_iff_residual_zero require the actual physical bound.
+- exists_residual_zero_iff_frequently_bounded_stretched_displacement_tail and
+  exists_path_residual_zero_iff_frequent_stretched_tail require a frequent
+  bound on the complete tail at the supplied stretched scale.
+- exists_critical_stretched_displacement_tail_criterion requires vanishing
+  critical-weight tails along a cofinal sequence.
+
+Open: a provider for any one of these bounds for the actual projection
+displacement. Hilbert-norm bounds, even for arbitrarily small positive
+interpolation parameters, do not establish a physical envelope. No vanishing
+residual or unconditional RH theorem is asserted.
