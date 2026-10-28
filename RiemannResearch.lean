@@ -1,3 +1,4 @@
+import RiemannResearch.RH.QCRTGramMinimizer
 import RiemannResearch.Analysis.PrimeTorusFourierProducts
 import RiemannResearch.Analysis.WeightedFourierFibers
 import RiemannResearch.Analysis.FiniteTorusWiener

@@ -1,5 +1,8 @@
 # Finite-head convergence: theorem catalog supplement
 
+See also [CRT Gram minimizers, 28 October 2026](THEOREM_CATALOG_CRT_GRAM_20261028.md)
+for exact-head norm optimization, complete-Q objective comparison, and the open uniform bound.
+
 25 October 2026. Source: the user's finite-head projection convergence request.
 
 ## Established statements
