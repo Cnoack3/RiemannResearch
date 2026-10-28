@@ -2,6 +2,35 @@
 
 25 October 2026. Source: the user's ProjectionMeasureChangeResearch20261025.md.
 
+## Exact parity energy and initial response budgets (28 October 2026)
+
+Unconditional declarations:
+
+- Analysis/OddReciprocalSquare.lean: hasSum_paired_reciprocal and
+  odd_reciprocal_square_tsum evaluate the complete odd reciprocal-square
+  series as zeta(2)-2 log 2, pairing before summation.
+- RH/QParitySmoothingEnergy.lean: B_direction_zero_norm_sq evaluates the
+  actual canonical first innovation's energy as
+  4(zeta(2)-2 log 2)/(3 zeta(2)). movingCorrection_variation_explicit_parity
+  reuses the existing full variation theorem with this arithmetic constant.
+- RH/QSquarefreeResponsePrefixBudget.lean: movingCorrection_variation_prefix_le,
+  responsePrefixBudget_decrement_exact, responsePrefixBudget_succ_le, and
+  responsePrefixBudget_tendsto retain every initial response cost and the
+  possible limiting residual-energy term.
+- RH/QInitialResponseImprovement.lean: error_two_lt_one and
+  smoothing_prefix_two_complement_ge discharge the actual conductor-three
+  inputs. responsePrefixBudget_one_sub_two_ge proves
+  F_1-F_2 >= (E_1-E_2)/49 > 0, and
+  movingCorrection_variation_lt_explicit_parity gives a strict global
+  improvement over the explicit parity-only cap.
+
+The closed mod-6 evaluation F_2 approximately 0.02387227406261 is an
+ordinary mathematical calculation, not a Lean-certified decimal bound.
+Open: the common positive exponential-moment budget for cofinal finite-site
+moving responses. These constants do not prove residual vanishing or RH.
+See RH/ParitySmoothingEnergyResearch20261028.md for the exact formulas and
+verification record.
+
 ## Exact arithmetic displacement energy (28 October 2026)
 
 Unconditional results:

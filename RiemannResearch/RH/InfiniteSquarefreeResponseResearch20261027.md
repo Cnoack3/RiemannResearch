@@ -73,9 +73,15 @@ The explicit evaluation
 
     ||B u_0||^2 = 4(zeta(2)-2 log 2)/(3 zeta(2))
 
-is a supplementary paper calculation, not a Lean-verified declaration in
-this development. Indeed u_0=(2/sqrt(3))*1_odd and partial fractions give
-sum_(odd n>=1) 1/[n^2(n+1)^2]=zeta(2)-2 log 2.
+was a supplementary paper calculation on 27 October. On 28 October it was
+formalized in QParitySmoothingEnergy.lean as B_direction_zero_norm_sq,
+using the complete odd series in Analysis/OddReciprocalSquare.lean.
+The declaration movingCorrection_variation_explicit_parity inserts this
+arithmetic value into the verified symbolic bound. The subsequent actual
+conductor-three stage gives a further strict improvement, with its response
+cost retained, in QInitialResponseImprovement.lean. See
+ParitySmoothingEnergyResearch20261028.md for exact formulas, verification
+scope, and the distinction between checked declarations and paper evaluations.
 
 ## Both signed series converge unconditionally
 
