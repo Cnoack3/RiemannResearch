@@ -6,6 +6,7 @@ Authors: RiemannResearch contributors
 import Mathlib.Algebra.Module.ZLattice.Summable
 import Mathlib.Analysis.Normed.Group.Int
 import Mathlib.Analysis.Normed.Group.Constructions
+import Mathlib.Tactic.GCongr
 import RiemannResearch.Analysis.ActualPrimeTorusFMZSeries
 
 /-!
@@ -138,6 +139,71 @@ theorem summable_primeModeWeight_of_fourierDecay
     Summable (fun k : P → ℤ =>
       ‖a k‖ * primeModeWeight P (ambientPrimeMode P k)) := by
   have h := summable_weighted_of_fourierDecay a (fun p : P => Real.log p.val)
+    (fun p => Real.log_nonneg (by exact_mod_cast (hP p.val p.property).one_lt.le))
+    C B hC (by simpa using hB) ha
+  convert h using 1
+  funext k
+  rw [primeModeWeight_eq P (ambientPrimeMode P k) hP]
+  congr 2
+  rw [← Finset.sum_coe_sort]
+  simp only [ambientPrimeMode_apply]
+
+/-- Two arithmetic Fourier moments are summable under the strict decay
+threshold B > dimension + 2. This supplies the norm in the quantitative
+O(1 / log T) corrected FMZ remainder. -/
+theorem summable_weighted_sq_of_fourierDecay {ι : Type*} [Fintype ι]
+    (a : (ι → ℤ) → ℂ) (c : ι → ℝ) (hc : ∀ i, 0 ≤ c i)
+    (C B : ℝ) (hC : 0 ≤ C) (hB : (Fintype.card ι : ℝ) + 2 < B)
+    (ha : ∀ k, ‖a k‖ ≤ C * (1 + ‖k‖) ^ (-B)) :
+    Summable (fun k : ι → ℤ =>
+      ‖a k‖ * (1 + (∑ i, |(k i : ℝ)| * c i)) ^ 2) := by
+  classical
+  let L : ℝ := ∑ i, c i
+  have hL : 0 ≤ L := Finset.sum_nonneg (fun i hi => hc i)
+  have hs := (summable_pi_int_one_add_norm_rpow (ι := ι) (2 - B)
+    (by linarith)).mul_left (C * (1 + L) ^ 2)
+  apply Summable.of_norm_bounded hs
+  intro k
+  have hkn : 0 ≤ ‖k‖ := norm_nonneg k
+  have hheight : (∑ i, |(k i : ℝ)| * c i) ≤ ‖k‖ * L :=
+    weighted_logheight_le_norm c hc k
+  have hheight0 : 0 ≤ (∑ i, |(k i : ℝ)| * c i) :=
+    Finset.sum_nonneg (fun i hi => mul_nonneg (abs_nonneg _) (hc i))
+  have hlinear : 1 + (∑ i, |(k i : ℝ)| * c i) ≤
+      (1 + L) * (1 + ‖k‖) := by nlinarith
+  have hweight : (1 + (∑ i, |(k i : ℝ)| * c i)) ^ 2 ≤
+      (1 + L) ^ 2 * (1 + ‖k‖) ^ (2 : ℕ) := by
+    calc
+      _ ≤ ((1 + L) * (1 + ‖k‖)) ^ 2 := by
+        gcongr
+      _ = _ := mul_pow _ _ _
+  have hpow : (1 + ‖k‖) ^ (-B) * (1 + ‖k‖) ^ (2 : ℕ) =
+      (1 + ‖k‖) ^ (2 - B) := by
+    rw [← Real.rpow_natCast, ← Real.rpow_add (by positivity)]
+    congr 1
+    norm_num
+    ring
+  rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (norm_nonneg _) (sq_nonneg _))]
+  calc
+    _ ≤ (C * (1 + ‖k‖) ^ (-B)) *
+        ((1 + L) ^ 2 * (1 + ‖k‖) ^ (2 : ℕ)) :=
+      mul_le_mul (ha k) hweight (sq_nonneg _) (by positivity)
+    _ = C * (1 + L) ^ 2 * (1 + ‖k‖) ^ (2 - B) := by
+      rw [show (C * (1 + ‖k‖) ^ (-B)) *
+          ((1 + L) ^ 2 * (1 + ‖k‖) ^ (2 : ℕ)) =
+          C * (1 + L) ^ 2 * ((1 + ‖k‖) ^ (-B) * (1 + ‖k‖) ^ (2 : ℕ)) by ring,
+        hpow]
+
+/-- Classical B > card(P) + 2 Fourier decay supplies the squared arithmetic
+Wiener norm used by the quantitative actual-zero prime-torus theorem. -/
+theorem summable_primeModeWeight_sq_of_fourierDecay
+    (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
+    (a : (P → ℤ) → ℂ) (C B : ℝ) (hC : 0 ≤ C)
+    (hB : (P.card : ℝ) + 2 < B)
+    (ha : ∀ k, ‖a k‖ ≤ C * (1 + ‖k‖) ^ (-B)) :
+    Summable (fun k : P → ℤ =>
+      ‖a k‖ * (primeModeWeight P (ambientPrimeMode P k)) ^ 2) := by
+  have h := summable_weighted_sq_of_fourierDecay a (fun p : P => Real.log p.val)
     (fun p => Real.log_nonneg (by exact_mod_cast (hP p.val p.property).one_lt.le))
     C B hC (by simpa using hB) ha
   convert h using 1

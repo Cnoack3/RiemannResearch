@@ -223,6 +223,90 @@ theorem character_primeOrbit (P : Finset ℕ) (k : ℕ → ℤ) (t : ℝ) :
   exact Finset.prod_coe_sort P
     (fun p : ℕ => fourier (k p) (PrimePhaseTorus.primePhase p t))
 
+/-- A continuous product window on the actual finite prime torus. -/
+def productTest (f : ι → CircleFunction) : C(Torus ι, ℂ) :=
+  ∏ i, (f i).comp (coordinate i)
+
+omit [DecidableEq ι] in
+@[simp] theorem productTest_apply (f : ι → CircleFunction) (x : Torus ι) :
+    productTest f x = ∏ i, f i (x i) := by
+  simp [productTest, coordinate]
+
+omit [DecidableEq ι] in
+/-- Product-Haar mass factors exactly into the coordinate masses. -/
+theorem haarIntegral_productTest (f : ι → CircleFunction) :
+    haarIntegral (productTest f) = ∏ i, PoissonHaar.haarIntegralCLM (f i) := by
+  classical
+  rw [haarIntegral_apply]
+  simp only [productTest_apply, haar]
+  rw [integral_fintype_prod_eq_prod]
+  rfl
+
+/-- The exact contribution of one centered coordinate kernel. -/
+theorem haarIntegral_productTest_centered (f : ι → CircleFunction)
+    (i : ι) (a : ℝ) :
+    haarIntegral (productTest f * ((poissonKernel a).comp (coordinate i) - 1)) =
+      ∏ j, if j = i then PoissonHaar.haarIntegralCLM (f j * (poissonKernel a - 1))
+        else PoissonHaar.haarIntegralCLM (f j) := by
+  have hprod (x : Torus ι) :
+      productTest f x * (poissonKernel a (x i) - 1) =
+        ∏ j, (f j (x j) * if j = i then poissonKernel a (x j) - 1 else 1) := by
+    rw [Finset.prod_mul_distrib]
+    simp [productTest_apply]
+  rw [haarIntegral_apply]
+  change (∫ x : Torus ι, productTest f x * (poissonKernel a (x i) - 1)
+    ∂haar ι) = _
+  simp_rw [hprod]
+  rw [haar, integral_fintype_prod_eq_prod (fun j (y : CircleSpace) =>
+    f j y * if j = i then poissonKernel a y - 1 else 1)]
+  apply Finset.prod_congr rfl
+  intro j hj
+  by_cases hji : j = i
+  · simp only [hji]
+    rfl
+  · simp only [hji, if_false, mul_one]
+    rfl
+
+/-- Complete signed first correction for a product window. Every unaltered
+coordinate mean is retained, so vanishing means can be used without division. -/
+theorem haarIntegral_productTest_density (f : ι → CircleFunction) (c a : ι → ℝ) :
+    haarIntegral (productTest f * density c a) =
+      ∑ i, -(c i : ℂ) * ∏ j,
+        if j = i then PoissonHaar.haarIntegralCLM (f j * (poissonKernel (a i) - 1))
+        else PoissonHaar.haarIntegralCLM (f j) := by
+  simp only [density, Finset.mul_sum, mul_smul_comm, map_sum, map_smul,
+    smul_eq_mul, haarIntegral_productTest_centered]
+
+omit [DecidableEq ι] in
+/-- One centered coordinate kills the Haar mean of the whole product. -/
+theorem haarIntegral_productTest_eq_zero (f : ι → CircleFunction)
+    (i : ι) (hi : PoissonHaar.haarIntegralCLM (f i) = 0) :
+    haarIntegral (productTest f) = 0 := by
+  rw [haarIntegral_productTest]
+  exact Finset.prod_eq_zero (Finset.mem_univ i) hi
+
+omit [DecidableEq ι] in
+/-- Two distinct centered factors kill the entire signed first correction,
+including every Poisson harmonic on every coordinate. -/
+theorem haarIntegral_productTest_density_eq_zero_of_two_centered
+    (f : ι → CircleFunction) (c a : ι → ℝ) (i l : ι) (hil : i ≠ l)
+    (hi : PoissonHaar.haarIntegralCLM (f i) = 0)
+    (hl : PoissonHaar.haarIntegralCLM (f l) = 0) :
+    haarIntegral (productTest f * density c a) = 0 := by
+  classical
+  rw [haarIntegral_productTest_density]
+  apply Finset.sum_eq_zero
+  intro j hj
+  suffices hz : (∏ q : ι,
+      if q = j then PoissonHaar.haarIntegralCLM (f q * (poissonKernel (a j) - 1))
+      else PoissonHaar.haarIntegralCLM (f q)) = 0 by rw [hz, mul_zero]
+  by_cases hji : j = i
+  · subst j
+    apply Finset.prod_eq_zero (Finset.mem_univ l)
+    simp [Ne.symm hil, hl]
+  · apply Finset.prod_eq_zero (Finset.mem_univ i)
+    simp [Ne.symm hji, hi]
+
 end RiemannResearch.Analysis.PrimeTorusHaar
 
 #print axioms RiemannResearch.Analysis.PrimeTorusHaar.haarIntegral_character_density
