@@ -3366,4 +3366,5 @@ import RiemannResearch.RH.QScaledTailPerturbation
 import RiemannResearch.RH.QSquarefreeSmoothedProjection
 import RiemannResearch.RH.QSquarefreeDisplacementRigidity
 import RiemannResearch.RH.QSquarefreeDisplacementResolvent
+import RiemannResearch.RH.QSquarefreeResolventHeads
 import RiemannResearch.RH.QSquarefreeReciprocalObstruction

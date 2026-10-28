@@ -97,6 +97,13 @@ No theorem discharges the listed regularity obligations.
   resolvent_error_norm_le give its centered finite Neumann resolvent with
   contraction factor 1/3 and geometric Q-Hilbert remainder. This does not
   supply physical weighted-supremum stability for Pi.
+- RH/QSquarefreeResolventHeads.lean: resolvent_error_physical_le and
+  resolvent_error_head_le give the physical evaluation error and simultaneous
+  Nat.clog-depth head error. uniform_head_bound_iff_displacement_bounded and
+  uniform_head_bound_iff_residual_zero show that this is equivalent to the
+  existing regularity criterion. No arithmetic head-bound provider is proved.
+  See RH/QSquarefreeResolventHeadsResearch20261028.md for the signed-kernel
+  investigation, full infinite tails, and verification boundary.
 - RH/QSquarefreeFiniteDisplacement.lean: matched squarefree Pareto stages,
   finiteDisplacement_tendsto, finite_resolvent, finiteDisplacement_energy_bound,
   finitePareto_residual_energy_bound; also the limiting displacement energy bound.
@@ -105,6 +112,10 @@ Additional conditional reductions (premises remain Open):
 - QSquarefreeCorrectionKernel.riemannHypothesis_of_head_kernel_product_bound.
 - QSquarefreeSignedNormal.riemannHypothesis_of_signed_normal_head_bound.
 - QSquarefreeFiniteDisplacement.riemannHypothesis_of_finiteDisplacement_head_bound.
+- QSquarefreeResolventHeads.riemannHypothesis_of_positive_head_bound.
+  Open: for one fixed m, a common C>=0 bounds d_(Nat.clog 3 N + m)(n)
+  for every positive physical site n<=N. The exact closed projection is
+  still used at every finite recursion depth.
 
 The new forcing expansion does not prove inverse-Gram regularity. The common
 physical head bound and cofinal scaled-tail bound remain Open. See
