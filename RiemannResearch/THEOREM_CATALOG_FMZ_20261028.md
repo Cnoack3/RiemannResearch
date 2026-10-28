@@ -1,5 +1,8 @@
 # Quantitative FMZ and product-test cancellation: theorem catalog supplement
 
+For exact Haar Plancherel, the A2 algebra, actual-zero Gram identities, and uniform
+energy sampling, see [the Plancherel supplement](THEOREM_CATALOG_PLANCHEREL_20261028.md).
+
 28 October 2026. This supplement records the strengthening of the current
 prime-phase results, rather than the older saved audit.
 
