@@ -4,10 +4,31 @@
 
 ## Status
 
-The full positive-exponent Selberg density theorem is **not proved in this
-checkpoint**. In particular, the project still has no unconditional provider
-of `ActualZeroOrdinate.UniformSelbergDensity (1 / 4)`.
-The FMZ results therefore retain that hypothesis.
+**User decision, 28 October 2026:** retain the known unconditional density
+theorem as an explicit hypothesis to save formalization time. Its analytic
+proof is intentionally deferred, rather than required for the current
+zero-ordinate research. This is an imported mathematical fact in our
+informal argument, not a conjecture; formally, the Lean results remain
+conditional on the displayed premise.
+
+`ActualZeroOrdinate.ConreyBaluyotDensityHypothesis` is the proposition
+`∀ a : ℝ, 0 < a → a < 8 / 7 → UniformSelbergDensity a`.
+It includes every fixed exponent below 8/7, not the endpoint, and permits
+the constants and height thresholds to depend on a. It is a definition of
+a hypothesis, not a global axiom or an unconditional provider theorem.
+
+The FMZ results retain their weaker `UniformSelbergDensity (1 / 4)` premise.
+The classical exponent may be all we need in the eventual application.
+Given `hDensity : ConreyBaluyotDensityHypothesis`, use
+`hDensity.classical` for that premise, `hDensity.one` for exponent 1,
+or `hDensity a ha_pos ha_lt` for any admissible exponent. For example,
+the existing fixed-mode result is invoked as
+`tendsto_ordinate_landau_error_of_uniformSelberg u hDensity.classical`.
+
+The positive-exponent provider remains **Open (intentionally deferred)**
+in the formal dependency ledger. The proof route below is preserved for
+optional future work; it is not the active task or a claim of a completed
+formal Selberg proof.
 
 New checked components are exact finite mollifier optimization, direct
 uncentered-second-moment to logarithmic-integral transfer, optimal
@@ -16,7 +37,7 @@ unconditional elementary endpoint/narrow-strip bounds. Neither the zero
 exponent nor the narrow-strip bound supplies a positive-exponent global
 density estimate.
 
-## Published targets and a feasible route
+## Published input and an optional future proof route
 
 The conventional strict count satisfies
 N(sigma,T) <<_c T^(1-c(sigma-1/2)) log T for every fixed 0<c<8/7.
@@ -105,7 +126,7 @@ reflection, total zero-count asymptotics, Littlewood's contour identity,
 compatible logarithmic lifts, boundary avoidance, and the right-boundary
 estimate for the existing Mobius quadratic detector.
 
-Open for the classical optimized-mollifier route:
+Open, intentionally deferred for the optional classical optimized-mollifier route:
 
 1. Generalized Jordan-weight divisor identities and the uniform estimates
    for the reciprocal mass G_X, including the cutoff tail.
@@ -119,6 +140,7 @@ Open for the classical optimized-mollifier route:
 The negative secondary main term involving zeta(2-2sigma) must be retained
 before deriving the upper bound. Its sign is part of the classical argument.
 
-No new axiom or placeholder proof is used. This note records a partial
-formalization and an explicit remaining analytic program, not a completed
-Selberg proof or an RH proof.
+No new axiom or placeholder proof is used. This note records proved
+components and a deliberately deferred analytic proof, not a completed
+Selberg proof or an RH proof. Future ordinate developments should use the
+explicit density premise, keeping the classical exponent whenever it suffices.

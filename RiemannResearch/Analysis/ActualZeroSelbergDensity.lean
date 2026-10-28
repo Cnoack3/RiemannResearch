@@ -8,11 +8,12 @@ import RiemannResearch.Analysis.ActualZeroDensityWindow
 import RiemannResearch.Analysis.ActualZeroCountAsymptotics
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 
 /-!
-# Precise classical Selberg density input and actual-zero consequences
+# Explicit literature density hypotheses and actual-zero consequences
 
 Source for the classical density statement: Ford--Zaharescu,
 "On the distribution of imaginary parts of zeros of the Riemann zeta function",
@@ -21,17 +22,36 @@ Source for the ordinate comparison application: Ford--Meng--Zaharescu,
 "Simultaneous distribution of the fractional parts of Riemann zeta zeros",
 Lemma 2 and Corollary 1.1, https://arxiv.org/abs/1511.06814 .
 
+Source for the stronger density statement (not a formalized proof):
+S. A. C. Baluyot, "On the Zeros of Riemann's Zeta-function" (2017),
+Theorem 1.2.1 and Chapter 3, proving the theorem announced by Conrey:
+https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320 .
+See also the author's statement on slide 6 of
+https://maine-quebec.mat.ulaval.ca/CNTA_XV_website/docs/baluyot.pdf .
+The source parameter is theta = a/2, so every fixed 0 < a < 8/7 is allowed.
+There is no endpoint assertion at a = 8/7 and no uniformity in a.
+
 The conventional inclusive count here uses positive ordinates and actual
 analytic multiplicities. The cited all-sign count bounds this count with the
 same constant. Classical Selberg gives the exponent a = 1/4 uniformly over
 1/2 <= sigma <= 1, with C and the height threshold independent of sigma.
 
-Formalization boundary: Selberg's estimate for zeta is an unconditional
-classical theorem, but its analytic proof is not formalized in this module.
-`SelbergDensityBound` and `UniformSelbergDensity` are explicit propositions,
-not provider theorems. No declaration here supplies `UniformSelbergDensity (1/4)`.
-Results requiring that input are conditional research reductions in Lean.
-There is no RH premise and no new axiom.
+Formalization decision (2026-10-28): at the user's request, the known
+unconditional analytic density theorem is intentionally retained as an
+explicit hypothesis to save formalization time. Its proof is deferred;
+formalizing it is not a prerequisite for the current ordinate research.
+`ConreyBaluyotDensityHypothesis` records the full known range above as a
+proposition, never as a global axiom or a proved provider. Constants and
+height thresholds may depend on a. The conventional strict count in the
+source passes to the inclusive convention by left limits above 1/2 and
+the total zero-count bound at 1/2; this analytic input is also deferred.
+
+Existing consumers keep the weaker `UniformSelbergDensity (1/4)` premise:
+the classical exponent may be all the eventual application needs.
+`ConreyBaluyotDensityHypothesis.classical` supplies that premise from the
+stronger explicit hypothesis. Lean verifies these conditional research
+reductions, not the deferred literature theorem. There is no RH premise
+and no new axiom.
 
 The proved deductions include equivalence of the power and exponential
 forms, exact strict/inclusive count transfer, the general FMZ rational majorant
@@ -55,6 +75,28 @@ def SelbergDensityBound (T C a : ℝ) : Prop :=
 def UniformSelbergDensity (a : ℝ) : Prop :=
   ∃ C T₀ : ℝ, 0 ≤ C ∧ 1 < T₀ ∧
     ∀ T : ℝ, T₀ ≤ T → SelbergDensityBound T C a
+
+/-- The known Conrey--Baluyot range, intentionally assumed to save
+formalization time. This is a named proposition to pass as an explicit
+theorem hypothesis, not a provider or an axiom. The analytic proof is
+deliberately deferred. Each exponent has its own constants and height
+threshold; the endpoint `8 / 7` is excluded. See the module sources. -/
+def ConreyBaluyotDensityHypothesis : Prop :=
+  ∀ a : ℝ, 0 < a → a < 8 / 7 → UniformSelbergDensity a
+
+/-- Extract precisely the classical input needed by existing ordinate
+results. Those results do not require the full Conrey--Baluyot range. -/
+theorem ConreyBaluyotDensityHypothesis.classical
+    (hD : ConreyBaluyotDensityHypothesis) :
+    UniformSelbergDensity (1 / 4) :=
+  hD (1 / 4) (by norm_num) (by norm_num)
+
+/-- An admissible stronger exponent for quantitative applications,
+still conditional on the deliberately deferred literature input. -/
+theorem ConreyBaluyotDensityHypothesis.one
+    (hD : ConreyBaluyotDensityHypothesis) :
+    UniformSelbergDensity 1 :=
+  hD 1 (by norm_num) (by norm_num)
 
 /-- Exact power/exponential identity on the positive-height domain. -/
 theorem selberg_power_kernel_eq_exp (T a σ : ℝ) (hT : 0 < T) :
@@ -218,7 +260,7 @@ theorem normalized_ordinate_landau_error_of_classical_selberg
   convert h using 1; ring
 
 /-- Uniform classical density supplies the existing actual fixed-mode limit.
-This theorem still displays the as-yet unformalized Selberg input. -/
+The known Selberg input is deliberately left explicit to save formalization time. -/
 theorem tendsto_ordinate_landau_error_of_uniformSelberg
     (u : ℝ) (hD : UniformSelbergDensity (1 / 4)) :
     Tendsto (fun T : ℝ => (ordinateSum T u - landauSum T u) / (T : ℂ))
@@ -233,6 +275,8 @@ theorem tendsto_ordinate_landau_error_of_uniformSelberg
   simpa only [heq] using h
 
 #print axioms selbergDensityBound_iff_exp
+#print axioms ConreyBaluyotDensityHypothesis.classical
+#print axioms ConreyBaluyotDensityHypothesis.one
 #print axioms normalized_strictTail_loglogWindow
 #print axioms normalized_ordinate_landau_error_of_selbergDensity_band
 #print axioms normalized_ordinate_landau_error_of_classical_selberg

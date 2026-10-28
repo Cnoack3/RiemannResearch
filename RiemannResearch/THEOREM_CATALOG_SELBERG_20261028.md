@@ -2,10 +2,29 @@
 
 28 October 2026. See [proof route and remaining obligations](RH/SelbergDensityFormalization20261028.md).
 
-**Status:** the full positive-exponent Selberg density provider remains open.
-The FMZ theorems retain `UniformSelbergDensity (1 / 4)`. The new endpoint,
-narrow-strip, finite arithmetic and generic integral results below do not
-remove this analytic hypothesis.
+**Status:** the full positive-exponent Selberg density provider is
+**Open (intentionally deferred)**. At the user's request, the known analytic
+theorem is retained as an explicit hypothesis to save formalization time.
+The FMZ theorems keep `UniformSelbergDensity (1 / 4)`, which may be all the
+eventual application needs. No new axiom or unconditional density provider
+is introduced.
+
+## Analysis/ActualZeroSelbergDensity.lean
+
+- `ConreyBaluyotDensityHypothesis`: the explicit proposition
+  `∀ a : ℝ, 0 < a → a < 8 / 7 → UniformSelbergDensity a`, citing Baluyot's
+  proof of the theorem announced by Conrey. The endpoint is excluded and
+  constants may depend on a.
+- `ConreyBaluyotDensityHypothesis.classical`: checked extraction of the
+  classical `UniformSelbergDensity (1 / 4)` premise.
+- `ConreyBaluyotDensityHypothesis.one`: checked extraction of exponent 1.
+
+The selectors and downstream ordinate deductions are **conditional research
+reductions**. The domain-specific density input is Open in Lean and
+deliberately deferred, although it is an unconditional theorem in the
+literature. The classical consumers are not strengthened to require the
+whole range: pass `hDensity.classical` only when the stronger hypothesis
+is available. No proof of the density hypothesis itself is claimed.
 
 ## Analysis/ActualSelbergDensityAssembly.lean
 
@@ -82,7 +101,7 @@ Exact integrated residual and direct uncentered second-moment transfer.
 Nonvanishing and interval integrability are explicit; the actual analytic
 moment upper bound remains open.
 
-## Open
+## Open (intentionally deferred analytic proof)
 
 Uniform generalized-Jordan arithmetic estimates; approximate functional
 equation and twisted zeta second moment; optimized-mollifier moment;
