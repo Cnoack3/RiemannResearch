@@ -5,6 +5,7 @@ Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.FiniteIncidenceTailCharge
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Data.Nat.Totient
 import Mathlib.Order.Interval.Finset.Nat
 import Mathlib.Tactic.NormNum
@@ -216,5 +217,44 @@ theorem gcd_class_endpoint (L : ℕ) (hL : 0 < L) :
     exact le_antisymm hkL (Nat.le_of_dvd (by omega) hLk)
   · rintro rfl
     exact ⟨⟨Nat.succ_le_iff.mpr hL, le_rfl⟩, Nat.gcd_self k⟩
+
+/-- The actual finite divisor incidence matrix also has the Möbius right
+inverse. This converts prescribed divisor coordinates into coefficients. -/
+theorem moebius_right_inverse (L e c : ℕ)
+    (he : e ∈ L.divisors) (hc : c ∈ L.divisors) :
+    (∑ j ∈ L.divisors,
+      (if e ∣ j then (1 : ℝ) else 0) *
+        (if j ∣ c then (ArithmeticFunction.moebius (c / j) : ℝ) else 0)) =
+      if e = c then 1 else 0 := by
+  classical
+  let A : Matrix L.divisors L.divisors ℝ :=
+    fun d f => if (d : ℕ) ∣ (f : ℕ) then 1 else 0
+  let B : Matrix L.divisors L.divisors ℝ :=
+    fun d f => if (d : ℕ) ∣ (f : ℕ)
+      then (ArithmeticFunction.moebius ((f : ℕ) / (d : ℕ)) : ℝ) else 0
+  have hBA : B * A = 1 := by
+    ext d f
+    change (∑ j : L.divisors,
+      (if (d : ℕ) ∣ j then (ArithmeticFunction.moebius ((j : ℕ) / d) : ℝ) else 0) *
+        (if (j : ℕ) ∣ f then (1 : ℝ) else 0)) = if d = f then 1 else 0
+    rw [Finset.sum_coe_sort L.divisors (fun j =>
+      (if (d : ℕ) ∣ j then (ArithmeticFunction.moebius (j / d) : ℝ) else 0) *
+        (if j ∣ (f : ℕ) then (1 : ℝ) else 0))]
+    simpa only [Subtype.ext_iff] using
+      RiemannResearch.NumberTheory.DivisorIncidence.moebius_left_inverse
+        L d f d.property f.property
+  have hAB : A * B = 1 :=
+    (Matrix.mul_eq_one_comm_of_equiv (A := B) (B := A) (Equiv.refl L.divisors)).mp hBA
+  have h := congrArg (fun M : Matrix L.divisors L.divisors ℝ =>
+    M ⟨e, he⟩ ⟨c, hc⟩) hAB
+  change (∑ j : L.divisors,
+    (if e ∣ (j : ℕ) then (1 : ℝ) else 0) *
+      (if (j : ℕ) ∣ c then (ArithmeticFunction.moebius (c / j) : ℝ) else 0)) =
+        if (⟨e, he⟩ : L.divisors) = ⟨c, hc⟩ then 1 else 0 at h
+  rw [Finset.sum_coe_sort L.divisors (fun j =>
+    (if e ∣ j then (1 : ℝ) else 0) *
+      (if j ∣ c then (ArithmeticFunction.moebius (c / j) : ℝ) else 0))] at h
+  simpa only [Subtype.ext_iff] using h
+
 
 end RiemannResearch.NumberTheory.DivisorIncidence
