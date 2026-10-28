@@ -5,6 +5,18 @@ Source: the user-requested continuation of commit
 SquarefreeMomentBudgetResearch20261027.md. This note records the complete
 canonical-stage assembly and its precise limits. It does not prove RH.
 
+## Endpoint and physical-tail formalization, 28 October 2026
+
+The continuation [EndpointResponseResearch20261028.md](EndpointResponseResearch20261028.md)
+now formalizes items 2 and 3 of the stronger quantitative consequences below:
+the exact orthogonal endpoint decomposition and factor-one endpoint bound,
+the complete physical absolute-tail estimate, uniform decay of divided
+absolute tails, and V(n)/n -> 0. The declarations are in
+`QSquarefreeResponseEndpoint.lean` and `QSquarefreeResponsePhysicalTail.lean`.
+Their specialized statements have no arithmetic regularity or residual-zero
+premise. Item 1's quantitative arbitrary-signed finite-tail norm bound remains
+an ordinary mathematical argument. The exponential-moment provider remains open.
+
 ## Objects, indexing, and zero innovations
 
 Work in the actual Q Hilbert space, with Q(n)=1/(zeta(2)n^2) for n>=1.
@@ -144,8 +156,10 @@ in QHilbert, since its term norms equal ||B Delta b_N||. Its physical values
 are exactly V(n)/(n+1), by continuous evaluation. This constructs an actual
 QHilbert total-variation envelope after one smoothing.
 
-The following sharper quantitative consequences are additional paper proofs;
-they are not labeled formalized unless matching declarations are listed:
+The following sharper quantitative consequences were initially recorded as
+paper proofs. Items 2 and 3 are now formalized in the 28 October continuation
+listed above; the arbitrary-signed finite-tail norm bound in item 1 remains
+a paper proof:
 
 1. Put C_N=sum_(j>=N)c_j^2 and A_N=E_N-E_inf=sum_(j>=N)a_j^2.
    Then C_N<=E_N T_N. For arbitrary finite F contained in {j>=N} and

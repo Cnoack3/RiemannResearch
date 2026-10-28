@@ -26,10 +26,22 @@ Established Lean declarations, subject to the publication checkpoint:
   The smoothed total-variation envelope has a complete Q square-summability identity.
   No residual-zero hypothesis occurs.
   Follow-up: [RH/InfiniteSquarefreeResponseResearch20261027.md](RH/InfiniteSquarefreeResponseResearch20261027.md).
+- Analysis/ProjectionResponseEndpoint.lean: exact nested-response signed
+  decomposition, orthogonality, Pythagoras, and self-adjoint tail transfer.
+- RH/QSquarefreeResponseEndpoint.lean: `movingCorrection_endpoint_norm_sq_le`
+  proves ||b-b_N||_Q^2 <= E_N T_N for every canonical stage, after the exact
+  signed and orthogonal energy identities; `targetEnergyTail_eq_error_sub`
+  identifies the complete target-coefficient tail with E_N-E_inf.
+- RH/QSquarefreeResponsePhysicalTail.lean: `physicalAbsoluteTail_le` proves
+  the quantitative complete physical absolute-tail bound; divided tails
+  vanish uniformly and `physicalTotalVariation_div_nat_tendsto_zero` proves
+  V(n)/n -> 0. No residual-zero or independent-innovation premise occurs.
+  Continuation: [RH/EndpointResponseResearch20261028.md](RH/EndpointResponseResearch20261028.md).
 
 Separate scopes:
-- Paper-only refinements: explicit logarithmic evaluation of the excluded
-  parity mass, quantitative signed/evaluation tails, and endpoint tail bound.
+- Paper-only in this continuation: the quantitative arbitrary-signed
+  finite-tail norm bound in item 1 of the infinite-response memorandum.
+  The separate parity-energy development is outside this continuation.
 - Diagnostics: directed-Decimal certificates, not Lean proofs, of actual
   stage-16 exponential contraction failure and stages-1/2 mean nonpreservation.
   Complete-tail floating-point moments are labeled numerical.
