@@ -168,3 +168,26 @@ Open: the universal epsilon provider itself. The formulation avoids assuming
 a bound on the original canonical family; it does not prove existence of
 arbitrarily accurate legal vectors. The external head-23 error <0.3 remains
 computational evidence, separate from the Lean error <0.34 theorem.
+
+## Dyadic cofinal schedules and comparison with Pareto errors
+
+See [the cofinal-schedule memorandum](RH/CofinalCRTAndMeasureComparison20261028.md).
+
+- `RH/QCRTDyadicEpsilonSchedule.lean`: epsilon(n)=2^(-n), head(n)=5*4^n,
+  exact head-tail budgets, and error²≤(1841/2500)*epsilon(n)² under the stated
+  energy budget. The fixed dyadic witness provider is equivalent to the earlier
+  all-epsilon provider. From that open provider, actual minima admit strictly
+  increasing cofinal period indices, energy≤9/8, and norm convergence to qOne.
+  The head-5 and head-20 provider instances are unconditional Lean theorems.
+- `RH/QExactHeadMeasureComparison.lean`: the exact full Q/Pareto operator
+  identity and the matching-head error bounds
+  zetaTwo*(H+1)/(H+2)*normQ²≤normP²≤zetaTwo*normQ².
+
+The [head-80 packet](RH/CofinalScheduleHead80Certificate20261028.md) supplies a
+new external exact-rational complete-energy upper certificate
+13222897792897/13159200000000<129/128 and complete error<0.201. It is independently
+verified computationally, not kernel checked as an actual-vector theorem.
+
+Open: the dyadic provider for every stage. Restricted head-320 searches did
+not meet 513/512; this is numerical evidence, not a full-dictionary obstruction.
+No unconditional convergence to qOne or RH theorem is asserted.
