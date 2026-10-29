@@ -291,3 +291,26 @@ constrained minimizers does not imply either sequence converges to the
 constant or identify the unconstrained Q/P projection residuals. No RH proof
 or constant-membership provider is asserted. Finite-head rank and abstract
 sharpness examples in the memorandum remain paper-level refinements.
+
+## General squarefree-head constraint energies (29 October 2026)
+
+See [the general-d memorandum](RH/GeneralSquarefreeConstraintEnergy20261029.md).
+
+- Analysis/WeightedConstraintEnergy.lean: exact symbolic three-site completion,
+  weighted Cauchy--Schwarz consequence, complete head/selected-sites/complement
+  split, nonnegative omitted series, and exact finite shared-site-family
+  Schur completion. The scalar correction S/(1+aS) strictly increases when
+  positive conductance is added.
+- RH/QSquarefreeConstraintEnergy.lean: arbitrary squarefree radical-square
+  relation; exact complete Q energy identity for every head through d-1;
+  the lower bound with denominator 2d^4-d^2+1; arbitrary radical-fibre
+  complete identities; legal-span and closed-legal-span specializations.
+- RH/SquarefreeParetoConstraintEnergy.lean: sequence-preserving measure transfer,
+  exact complete Pareto identity, the lower bound with denominator
+  2d^4+d^2+d, and its native Pareto Hilbert formulation.
+- The d=5 constants are exact rational checks in both metrics.
+
+No uniform upper bound for complete legal exact-head energies is supplied.
+No residual-vanishing or RH provider is discharged. The arbitrary-family
+physical support assembly and general weighted-window matrix theorem remain
+separate from the checked scalar shared-family identity.

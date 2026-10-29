@@ -14,6 +14,8 @@ import RiemannResearch.RH.QSquarefreeCanonicalFeasibility
 import RiemannResearch.RH.QSquarefreeFiniteDualClosure
 import RiemannResearch.RH.QSquarefreeHeadDimension
 import RiemannResearch.RH.QSquarefreeConstraintEnergy
+import RiemannResearch.Analysis.WeightedConstraintEnergy
+import RiemannResearch.RH.SquarefreeParetoConstraintEnergy
 import RiemannResearch.RH.QSquarefreeUniformHeadDual
 import RiemannResearch.Analysis.ProjectedObservationTests
 import RiemannResearch.RH.ParetoProjectedHeadTests
