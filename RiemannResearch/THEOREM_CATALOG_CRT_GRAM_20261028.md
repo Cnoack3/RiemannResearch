@@ -2,6 +2,46 @@
 
 28 October 2026. See [research memorandum](RH/CRTGramMinimizersResearch20261028.md).
 
+## Moving predictions and capacity-increment cancellation (2026-10-29)
+
+See [the capacity-increment research memorandum](RH/CapacityIncrementCancellation20261029.md).
+
+Established declarations, with complete infinite-Q energies:
+
+- Analysis/OrthogonalObservationInnovation: observation_completion and
+  innovation_completion are exact and include zero observation vectors;
+  innovation_energy subtracts the old projected norm square;
+  innovation_source_sq_le supplies the sharper Cauchy--Schwarz estimate.
+- QSquarefreeHeadStep.stepNormal_pairing identifies the actual next-site
+  Riesz vector on the full compensated tangent space.
+- QCRTInnovationGain: capacity_decomposition, innovation_gain_completion,
+  prediction_shift_sq_le_innovation_gain, prediction_eq_of_zero_innovation,
+  and dense_refined_signed_transition. Prediction shifts are charged against
+  the newly available capacity h rather than the entire capacity kappa.
+  The signed transition retains both the extra penalty (K/h)(b-a)^2 and
+  the complete squared-norm remainder. Only that transition requires the
+  next site to be squarefree; zero h forces b=a and is handled explicitly.
+- QCRTDensePrimeSupport: dense_minimum_eq_of_nonprime,
+  dense_gain_zero_of_nonprime, dense_prediction_eq_of_nonprime,
+  dense_innovation_zero_of_nonprime, and
+  dense_energy_eq_of_nonprime_nonsquarefree. Dictionary gains vanish whenever
+  2i+3 is composite; if i+2 is also nonsquarefree the energy is unchanged.
+- QCRTInnovationBudget: refinedPrediction_le_signedPrediction,
+  innovationBudget_le_cancellationBudget, dense_energy_le_innovationBudget,
+  and trial_error_le_innovationBudget give a smaller literal positive budget.
+
+Conditional research reduction:
+
+- riemannHypothesis_of_subpolynomial_innovationBudget assumes the actual limit
+  log(1+innovationBudget N)/log(N+2) tends to zero. This is Open. All legality,
+  exact-head, and complete-error providers are proved for the actual family.
+
+Paper-level, not additional Lean specialization theorems: exact period-six
+calculations give positive first-stage net energy growth, failure of universal
+favorable alignment, and F_1(3)=F_1(4)<0. The finite prefix does not exclude
+an eventual or averaged estimate. The new-prime raw-tail localization also
+remains paper-level. No cofinal growth provider or RH proof is asserted.
+
 ## Established statements
 
 Module `RH/QCRTGramMinimizer.lean`, namespace `RiemannResearch.RH.QCRTGramMinimizer`:

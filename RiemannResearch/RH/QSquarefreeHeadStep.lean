@@ -124,6 +124,17 @@ theorem stepNormal_sequence (n L r : ℕ) (hn : 0 < n)
   rw [step_sequence n L r hn hrn]
   rfl
 
+/-- The actual normal represents next-site evaluation on the entire tangent. -/
+theorem stepNormal_pairing (n L r : ℕ) (hn : 0 < n)
+    (hr : r ∈ conductors L) (hrn : n < r)
+    (f : QHilbert) (hf : f ∈ zeroHeadSpan (conductors L) (n - 1) r) :
+    inner ℝ f (stepNormal n L r hr) = qSequence f n := by
+  obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun ℝ).mp hf
+  change Fintype.linearCombination ℝ
+    (fun d : freeConductors (conductors L) (n - 1) r =>
+      compensatedResidue (d : ℕ) r) c = f at hc
+  rw [← hc, stepNormal, inner_synthesis_minimumVector, step_sequence n L r hn hrn]
+
 /-- The complete signed inverse Gram form is the exact cost of a physical
 one-site correction in the whole old zero-head tangent space. -/
 theorem correction_completion (n L r : ℕ) (hn : 1 < n) (hL : 0 < L)
