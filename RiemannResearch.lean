@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QSquarefreeExactHeadResidualBarrier
+import RiemannResearch.LinearAlgebra.FiniteConstrainedMatrixReparametrization
 import RiemannResearch.RH.QCRTDyadicEpsilonSchedule
 import RiemannResearch.RH.QExactHeadMeasureComparison
 import RiemannResearch.RH.QExactHeadEpsilonBounds

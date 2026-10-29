@@ -191,3 +191,26 @@ verified computationally, not kernel checked as an actual-vector theorem.
 Open: the dyadic provider for every stage. Restricted head-320 searches did
 not meet 513/512; this is numerical evidence, not a full-dictionary obstruction.
 No unconditional convergence to qOne or RH theorem is asserted.
+
+## Symbolic residual barriers and coefficient transformations
+
+See [the symbolic investigation](RH/SymbolicCRTResidualAndMatrixTransforms20261029.md).
+
+- `RH/QSquarefreeExactHeadResidualBarrier.lean`: exact actual-residual tail
+  pairing and signed completed-square energy identity for every legal exact
+  head, including the full infinite tails. Conditional on the actual residual
+  being nonzero, every cofinal exact-head family has error and energy tending
+  to infinity, including the actual primorial minima. Frequently bounded
+  selected energies suffice to force residual zero. The missing residual
+  moment for weak convergence is equivalent to residual vanishing.
+- `LinearAlgebra/FiniteConstrainedMatrixReparametrization.lean`: exact
+  transformation of the entire signed Gram form and head constraints,
+  equality of feasible-energy sets under surjective coefficient maps, and
+  preservation of the attained constrained minimum and its original
+  minimizing coefficients.
+
+These are symbolic theorems; no numerical certificate was added or promoted.
+Open: eliminate the nonzero-residual branch arithmetically or provide genuine
+all-epsilon witnesses. Choosing epsilon indices, changing legal coordinates,
+or transferring to Ramanujan/Pareto alone does not discharge this obligation.
+No unconditional cofinal convergence or RH theorem is asserted.
