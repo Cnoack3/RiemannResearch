@@ -84,3 +84,30 @@ intervals are separate Python evidence, not Lean numerical theorems.
 Open: the common complete-Q energy bound (or bounded cofinal schedule) required
 by the existing RH criterion. Neither finite block gains nor growing pointwise
 oscillation settle this obligation. No new conditional RH wrapper is asserted.
+
+## Period/head balance, dilation obstruction, and prime repair
+
+Continuation of the exact-head handoff, Sections 9.A and 9.B; see
+[the detailed research memo](RH/PeriodHeadBalanceAndFreshDilation20261028.md).
+
+- `RH/QCRTPeriodHeadBalance.lean`: actual primorial minimum-norm heads,
+  exact period-gain/head-cost Pythagorean identities, and the telescoping
+  signed energy budget for any monotone schedule sigma with n<=sigma(n).
+  The RH consumer is explicitly conditional on the cumulative budget bound.
+- `RH/QFreshDilationObstruction.lean`: the continuous finite divisor
+  charge annihilates V_L and D_m f for every Q vector f whenever m does not
+  divide L. Their closed span cannot have exact head L. At L=6 the complete
+  error is 2/(37*zetaTwo) plus an explicit squared-norm remainder.
+  Compensated residues outside the old period have charge 1/d and escape
+  this restricted obstruction.
+- `RH/QCRTPrimeRepair.lean`: for a missing prime p<L, an exact head
+  through p-1 in V_L admits an explicit optimized repair in V_(pL) with exact
+  head p. The full signed energy is proved, its denominator is nonzero,
+  and squarefree legality is discharged when L is squarefree.
+
+All three modules and ten main declaration axiom audits passed Lean.
+The memo separates a rational complete-tail Python certificate from Lean
+numerical theorems. RH remains open: neither the signed-budget bound nor
+uniform control of the repairs through all composite head coordinates has
+been established. This continuation does not interpret the restricted
+dilation obstruction as an obstruction to the full squarefree dictionary.
