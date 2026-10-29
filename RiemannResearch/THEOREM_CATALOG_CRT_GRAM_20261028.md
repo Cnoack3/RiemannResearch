@@ -111,3 +111,40 @@ numerical theorems. RH remains open: neither the signed-budget bound nor
 uniform control of the repairs through all composite head coordinates has
 been established. This continuation does not interpret the restricted
 dilation obstruction as an obstruction to the full squarefree dictionary.
+
+
+## Delayed-head primorial schedules
+
+See [the delayed-conductor research memorandum](RH/DelayedCRTConductorSchedule20261028.md).
+The earlier fixed-stage minimizers and conductor-gap obstructions are unchanged.
+
+- `RH/QCRTDelayedSchedule.lean`: equality of complete zero-head spaces and
+  minimum-norm adjustments across conductor gaps; concrete head plateaux at
+  periods 510510 and 9699690; exact comparison with the obstructed old period.
+- `RH/QCRTGapRefinement.lean`: after adjoining 17, actual head-15 vectors have
+  one free coordinate in the old twenty-site obstruction. The exact signed
+  square completion gives the complete lower bound
+  32932869651286797001/(20748169979939001600*zetaTwo), and in particular >9649/10000.
+- `RH/QCRTMinimumHeadCost.lean`: for the actual minimum-norm primorial family,
+  the next-conductor cost equals squared mismatch divided by the complete
+  tangent capacity; its exact coefficient form and energy-ceiling acceptance
+  criterion are proved with explicit feasibility and positive-capacity hypotheses.
+- `RH/QCRTPeriod510510Certificate.lean`: a concrete legal 14-atom vector is
+  exactly one through 16 and has complete energy at most
+  3108600811/3125000000<1. Its integer ceiling sum and whole-tail estimate are
+  kernel checked. The actual minimum at period 510510, head 15 is therefore <1.
+
+- `RH/QCRTPeriod9699690Certificate.lean`: a concrete legal 17-atom vector is
+  exactly one through 20 and has complete energy at most
+  311254353881/312500000000<1. The actual period-9699690/head-19 minimum
+  satisfies the same bound. Every prefix ceiling and the full tail are checked.
+
+The [reproducibility packet](RH/DelayedCRTComputations20261028.md) contains
+six exact computational certificates with immutable rational witnesses and a
+standard-library verifier. The tighter 510510/head15 bound <0.975197 and the
+223092870/head23 bound <0.990495 are external arithmetic certificates, not
+Lean numerical theorems. Floating-point discovery values are labeled separately.
+
+Open: the uniform complete-energy bound for an infinite cofinal schedule.
+Finite favorable examples and the exact capacity test do not prove that the
+period-enlargement search terminates at every head. No new RH wrapper is added.
