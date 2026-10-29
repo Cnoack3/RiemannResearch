@@ -311,9 +311,40 @@ See [the general-d memorandum](RH/GeneralSquarefreeConstraintEnergy20261029.md).
 - The d=5 constants are exact rational checks in both metrics.
 
 No uniform upper bound for complete legal exact-head energies is supplied.
-No residual-vanishing or RH provider is discharged. The arbitrary-family
-physical support assembly and general weighted-window matrix theorem remain
-separate from the checked scalar shared-family identity.
+No residual-vanishing or RH provider is discharged. The general
+weighted-window matrix theorem remains separate from these certificates.
+The finite-family physical support assembly is supplied below.
+
+## Complete finite radical-fiber families (29 October 2026)
+
+See [the multi-fiber proof and scope](RH/MultiFiberEnergyCertificates20261029.md).
+
+Established, with no upper-energy or RH hypothesis:
+
+- `Analysis/WeightedSharedFamilyEnergy.lean` proves the disjoint physical
+  support sum and complete infinite energy identity, retaining every square
+  remainder and every omitted coordinate. Adding a fresh positive pair
+  strictly improves the shared-site correction.
+- `NumberTheory/RadicalFiberSeparation.lean` proves disjointness for distinct
+  multiples, arbitrary radical-fiber pairs, and distinct powers d^k;
+  it also proves the positive-power radical identity and head separation.
+- `RH/SquarefreeMultiFiberEnergy.lean` proves general finite-family complete
+  Q and Pareto identities, their inequalities, the native Pareto version,
+  power-family and closed-legal-span specializations, and both d=5
+  two-fiber complete-energy bounds.
+- `five_two_fiber_constants` certifies Q correction 32202/38037251 and
+  improvement 1442401/46633669726, and Pareto correction 13/16015 and
+  improvement 25/819968, exactly.
+- `radical_family_certificates_le_one` proves both lower certificates
+  are at most one, by the compatible unit sequence. This is not a
+  legal-closure membership theorem.
+
+The infinite Pareto correction 1/[d(d+1)(2d^2-2d+1)] for all powers,
+the whole-radical-fiber Euler product, the Q geometric remainder bounds,
+and the exact-head weak-compactness discussion are paper-level in the
+memorandum. The finite-family applications have no unresolved
+disjointness, radical-identity, summability, or omitted-energy provider.
+Uniform complete upper energy for legal exact-head approximants remains Open.
 
 ## Exact-head repair and exponential conductor cost (29 October 2026)
 
