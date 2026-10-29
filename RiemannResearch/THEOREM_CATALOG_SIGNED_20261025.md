@@ -95,3 +95,12 @@ Open: actual Selberg provider; quantitative rational-frequency provider; full sp
 - `RH/QAdditionalLegalDirections.lean`: eighteen complete-Q legal-direction declarations.
 
 The final source checkpoint controls acceptance and publication.
+
+## Gaussian signed-matrix continuation — 29 October 2026
+
+See `RH/GaussianSignedMatricesResearch20261029.md` for exact complete prime and archimedean entries, numerical tail control, and the paper-level signed localization estimates.
+
+- `Analysis/GaussianSignedMatrixAlgebra.lean`: `polynomialFunctional_square`, `poleReduced_quadratic`, `poleReducedMoment_polynomialFunctional`, `quadratic_signed`, `affine_completion`, `affine_lower_bound`, `quadratic_entrywise_lower`, `nonnegative_plus_entrywise_lower`. Established finite algebra; positivity and error hypotheses are explicit.
+- `Analysis/GaussianLocalization.lean`: `weighted_exp_factor_bound`, `norm_tsum_le_exp_rate`, `nonnegative_head_add_tsum_lower`, `gaussian_gap_exponent`, `exponent_below_quarter`. Established summable-series estimates under their stated hypotheses.
+- **Conditional research reduction:** specializing these estimates to actual zeta zeros and the complete Gaussian explicit formula. Open formal providers: exact analytic functional, complete-zero summability, published zero-free/local-criticality inputs. The unconditional paper estimate with rate below 1/4 restates known zero-location information and supplies no new zero exclusion.
+- **Open mathematical obligation:** all-height, all-degree subexponential lower bounds for the negative part of the complete signed form; this remains RH-equivalent. Numerical positivity or incomplete prime sums do not discharge it.

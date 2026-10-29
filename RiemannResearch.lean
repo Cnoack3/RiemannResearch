@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.GaussianSignedMatrixAlgebra
+import RiemannResearch.Analysis.GaussianLocalization
 import RiemannResearch.Analysis.AffineEnergyMinimum
 import RiemannResearch.Analysis.CenteredAffineDisplacement
 import RiemannResearch.RH.QAffineEnergyMinimizers
