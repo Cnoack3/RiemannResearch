@@ -248,3 +248,46 @@ convergence for an actual cofinal exact-head family, or the earlier all-epsilon
 energy provider. Finite packet moments, injectivity of a compact coefficient
 map, and finite interpolation do not discharge this requirement. No RH proof
 or unconditional target-membership theorem is asserted.
+
+
+## Exact-head optimizer coalescence and finite dual closure
+
+See [the symbolic continuation](RH/CRTOptimizerCoalescenceAndDualClosure20261028.md).
+
+Established statements:
+
+- `Analysis/AffineEnergyMinimum.lean`: attained affine norm-energy minima are
+  exactly the vectors orthogonal to their tangent space.
+- `Analysis/CenteredAffineDisplacement.lean`: complete centered signed energy
+  remainder and its sharp displacement bound.
+- `RH/QExactHeadOptimizerComparison.lean`: actual zero-head multiplier bound;
+  sharp constant 4(H+1)(H+2), exact Q/P Pythagoras, and the projected response
+  equation derived from actual affine minimization.
+- `RH/QAffineEnergyMinimizers.lean`: explicit Q and Pareto projection
+  constructors with their common affine membership and minimality proved.
+- `RH/QSquarefreeCanonicalFeasibility.lean`: canonical Mobius competitors in
+  finite primorial dictionaries, actual head-kernel tangent, and its proved
+  finite dimensionality in both metrics.
+- `RH/QExactHeadOptimizerCoalescence.lean` and
+  `RH/QPrimorialOptimizerCoalescence.lean`: the preexisting unconditional
+  sublinear canonical energy supplies H_j times the squared Q/P optimizer
+  displacement tending to zero. The fixed least-prime schedule has finite
+  squarefree legality, exact heads, attained minima, and no unknown energy
+  premise in its coalescence theorem.
+- `RH/QConductorGapEnergy.lean`: exact signed ramp and mixed head-energy
+  identities for arbitrary signed high-conductor blocks; complete-norm delay
+  budget with no restrictions on coefficient signs or squarefreeness.
+- `RH/QMobiusDelayedBlock.lean`: exact forced-prefix floor formula and a finite
+  maximum conductor delay under any fixed-head energy ceiling. The slope's
+  nonvanishing is discharged by the existing Mobius reciprocal theorem.
+- `RH/QSquarefreeFiniteDualClosure.lean`: finite-head compatibility iff;
+  four-site Riesz witnesses; orthogonal complement of the finite-annihilator
+  span equals the radical-compatible subspace; exact residual distance from
+  the finite-annihilator closure and membership iff the residual is zero.
+
+Open: bound the common complete energies on a cofinal subsequence, or prove
+completed projected-point tests for that same family. Coalescence of these
+constrained minimizers does not imply either sequence converges to the
+constant or identify the unconstrained Q/P projection residuals. No RH proof
+or constant-membership provider is asserted. Finite-head rank and abstract
+sharpness examples in the memorandum remain paper-level refinements.
