@@ -314,3 +314,45 @@ No uniform upper bound for complete legal exact-head energies is supplied.
 No residual-vanishing or RH provider is discharged. The arbitrary-family
 physical support assembly and general weighted-window matrix theorem remain
 separate from the checked scalar shared-family identity.
+
+## Exact-head repair and exponential conductor cost (29 October 2026)
+
+See [the paper proof and failed next-stage test](RH/ExactHeadRepairAndConductorGrowth20261029.md).
+
+Established finite symbolic statements:
+
+- `RH/QSquarefreeQuantitativeRepair.lean`: explicit signed finite repair
+  operator; exact head, squarefree legality, complete signed error identity,
+  and error amplification by `1 + norm(repairOperator H p)`.
+  `repaired_energy_of_accuracy` proves the target energy when the input
+  satisfies the displayed complete-error tolerance. Existence of those
+  accurate inputs is not asserted.
+- `RH/QExactHeadConductorBarrier.lean`: exact complete Q-to-Pareto error
+  transfer and the unconditional estimate
+  `zetaTwo * errorQ² <= ((5/4)*zetaTwo+4)/H` under the exact-head energy budget.
+
+Conditional research reduction:
+
+- `log_conductor_lower` and `no_subexponential_family` assume the external
+  `ContinuousCutoffLowerBound`. The former proves a lower bound on
+  `log N`; the latter rules out `log(N_j)/H_j -> 0`, also assuming
+  `N_j -> infinity`. Burnol's analytic theorem supplies the lower envelope
+  in the paper proof; its provider remains Open in Lean.
+
+Separate paper and computational results:
+
+- The paper proves explicit amplification `15 H^(3/2)`. This numerical
+  operator bound is not claimed as a Lean declaration.
+- The checker in `RH/ExactHeadRepair320Check20261029.md` exactly checks two specified
+  direct H=80-to-H=320 repairs, with correction conductors 331 and 326.
+  Both satisfy all head equations but have complete energy above 513/512,
+  already certified by downward-rounded finite prefixes. These are external
+  integer certificates, not Lean numerical theorems or lower bounds on the
+  unrestricted H=320 optimum.
+- The largest individual conductor must eventually grow exponentially in H
+  for any all-stage target family, by the paper application of Burnol.
+  The largest conductor is distinct from the CRT period and prime cutoff.
+
+Open: the all-stage input approximation/provider, an actual H=320 energy
+witness, and kernel verification of the original H=80 actual-vector
+certificate. No RH proof or uniformly bounded cofinal construction follows.
