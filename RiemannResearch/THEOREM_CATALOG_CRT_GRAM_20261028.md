@@ -214,3 +214,37 @@ Open: eliminate the nonzero-residual branch arithmetically or provide genuine
 all-epsilon witnesses. Choosing epsilon indices, changing legal coordinates,
 or transferring to Ramanujan/Pareto alone does not discharge this obligation.
 No unconditional cofinal convergence or RH theorem is asserted.
+
+## Ramanujan/Pareto weak-star tests and compatible finite heads
+
+See [the closure audit and finite reconstruction](RH/RamanujanParetoWeakStarClosure20261028.md).
+
+Established symbolic results:
+
+- `Analysis/ProjectedObservationTests.lean`: exact projected-observation
+  defect, internal-test limits to the target projection, and actual WeakDual
+  restriction with its evaluation theorem.
+- `RH/ParetoRamanujanSquarefreeAnnihilator.lean`: explicit physical witness
+  (2,-6,-12,20,0,...) with Pareto norm squared 40. The squarefree Ramanujan
+  orthogonal complement is nonzero. Its mean is zero, so it does not refute
+  constant membership. Pairing -1 with g4 excludes the full-conductor scope.
+- `RH/QParetoResidualDualTransport.lean`: exact reciprocal correction to
+  dual transport, faithful annihilator transfer, actual residual mean, head/tail
+  commutation, and the complete transported residual-tail certificate.
+- `RH/QSquarefreeCompatibleHeads.lean`: nonsquarefree Möbius charges vanish
+  for radical-compatible jumps; explicit fresh-prime interpolation of every
+  compatible anchored finite head; existential choice of a fresh prime;
+  Pareto legality and exact finite Ramanujan expansion.
+
+Conditional research reduction:
+
+- `RH/ParetoProjectedHeadTests.lean`: cofinal exact heads and genuine WeakDual
+  convergence for the SAME legal family force the target projection to equal
+  the target. Only the countable projected-point tests are needed; their
+  all-epsilon formulation is explicit. No separate norm bound is assumed.
+
+Open: prove those complete projected-point test limits, genuine weak-star
+convergence for an actual cofinal exact-head family, or the earlier all-epsilon
+energy provider. Finite packet moments, injectivity of a compact coefficient
+map, and finite interpolation do not discharge this requirement. No RH proof
+or unconditional target-membership theorem is asserted.

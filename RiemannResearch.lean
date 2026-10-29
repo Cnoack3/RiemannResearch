@@ -1,3 +1,8 @@
+import RiemannResearch.Analysis.ProjectedObservationTests
+import RiemannResearch.RH.ParetoProjectedHeadTests
+import RiemannResearch.RH.ParetoRamanujanSquarefreeAnnihilator
+import RiemannResearch.RH.QParetoResidualDualTransport
+import RiemannResearch.RH.QSquarefreeCompatibleHeads
 import RiemannResearch.RH.QSquarefreeExactHeadResidualBarrier
 import RiemannResearch.LinearAlgebra.FiniteConstrainedMatrixReparametrization
 import RiemannResearch.RH.QCRTDyadicEpsilonSchedule
