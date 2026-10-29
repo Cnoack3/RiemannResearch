@@ -461,3 +461,41 @@ subsequence, or a subpolynomial moving prediction budget for an actual
 specified family. Canonical coefficients and optimized normal equations
 cannot be combined across different vectors. No unconditional RH proof
 or all-stage exact-head energy provider is claimed.
+
+## Complete energy controlled by squarefree conductor gaps (2026-10-29)
+
+Research report: [SquarefreeGapEnergyImprovement20261029.md](RH/SquarefreeGapEnergyImprovement20261029.md).
+
+Established declarations:
+
+- Analysis/DiscreteFloorGap: floor_gap_count is the exact quotient-difference
+  count with all interval multiplicities. band_energy_le and floor_gap_sum_le
+  give finite inverse-square band bounds; gap_majorant_log simplifies the
+  balanced cutoff expression.
+- RH/QCompensatedResidueGap: floor_gap_sq retains the signed residue difference;
+  compensatedResidue_gap_energy includes the complete infinite tail.
+  compensatedResidue_gap_log_bound proves, for 2 <= n < r <= 2n,
+  norm(g_n-(r/n)g_r)^2 <= (r-n)*(7+log(n/(r-n)))/(zetaTwo*n^2).
+  No prime or squarefree gap hypothesis is needed for this norm theorem.
+- RH/QSquarefreeGapHeadCost: minimumAt_single_head_gap_bound and
+  dense_headCost_gap_bound apply the estimate to the actual norm minimizers.
+  squarefreeAnchor is the least squarefree successor of i+2, with verified
+  minimality and membership below 2(i+2). The literal gapBudget takes the
+  minimum of the old and new costs at each site.
+  gapBudget_le_predictionBudget proves it never exceeds the old cost majorant.
+  dense_energy_gapBudget_signed_bound retains every periodGain.
+  trial_error_le_gapBudget controls complete approximation error.
+
+Conditional research reduction:
+
+- QSquarefreeGapHeadCost.riemannHypothesis_of_subpolynomial_gapBudget assumes
+  log(1+gapBudget N)/log(N+2) tends to zero. This actual arithmetic limit is
+  Open; the improved correction cost does not bound moving nextMismatch.
+
+Paper-level applications, not additional Lean theorems: elementary squarefree
+gaps O(sqrt(n)) yield a sufficient moving-prediction threshold O(n^(1/4)).
+Kumchev et al., arXiv:2211.09975, Theorem 1, gives gaps at most
+11*n^(1/5)*log(n), yielding the sufficient threshold O(n^(2/5)).
+The latter theorem is cited as an external ordinary mathematical input;
+neither it nor either prediction-growth provider has been added as an axiom.
+No unconditional RH proof or bounded cofinal optimizer energy is claimed.

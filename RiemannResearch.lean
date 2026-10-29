@@ -1,3 +1,6 @@
+import RiemannResearch.Analysis.DiscreteFloorGap
+import RiemannResearch.RH.QCompensatedResidueGap
+import RiemannResearch.RH.QSquarefreeGapHeadCost
 import RiemannResearch.Analysis.AffineEnergyTransition
 import RiemannResearch.Analysis.AdjointConstraintMinimum
 import RiemannResearch.RH.QPrimorialEnergyTransition
