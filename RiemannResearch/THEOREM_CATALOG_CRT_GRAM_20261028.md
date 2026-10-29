@@ -148,3 +148,23 @@ Lean numerical theorems. Floating-point discovery values are labeled separately.
 Open: the uniform complete-energy bound for an infinite cofinal schedule.
 Finite favorable examples and the exact capacity test do not prove that the
 period-enlargement search terminates at every head. No new RH wrapper is added.
+
+## Epsilon witnesses and complete exact-head errors
+
+See [the epsilon continuation memorandum](RH/EpsilonCRTApproximation20261028.md).
+
+- `RH/QExactHeadEpsilonBounds.lean`: full signed error identity for an exact
+  head, the complete estimate error² ≤ 2(energy−1)+4τH, and
+  τH ≤ 1/(zetaTwo*H) ≤ 76/(125H). The explicit legal period-9699690/head-20
+  vector has complete error <17/50, with all arithmetic kernel checked.
+- `RH/QSquarefreeEpsilonCriterion.lean`: direct forall-epsilon/exists-legal-
+  witness characterization of closure, the conditional RH consequence, and
+  a sufficient provider for actual primorial minima with H*epsilon² ≥608/125
+  and energy ≤1+epsilon²/8. Period enlargement preserves successful energy
+  certificates, and requiring an arbitrarily large period adds no strength.
+  Complete-error witnesses admit a selected sequence with norm <2.
+
+Open: the universal epsilon provider itself. The formulation avoids assuming
+a bound on the original canonical family; it does not prove existence of
+arbitrarily accurate legal vectors. The external head-23 error <0.3 remains
+computational evidence, separate from the Lean error <0.34 theorem.
