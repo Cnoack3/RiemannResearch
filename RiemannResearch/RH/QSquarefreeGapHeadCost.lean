@@ -49,7 +49,7 @@ open ZetaTwoProbability QSquarefreeHeadStep QCRTMinimumHeadCost QCRTPeriodHeadBa
 open QSquarefreeAffineHead QSquarefreeEnergyTransitions
 
 def gapWeight (n r : ℕ) : ℝ :=
-  (1 / zetaTwo) * (((r : ℝ) - n) / (n : ℝ) ^ 2 * (7 + Real.log ((n : ℝ) / ((r : ℝ) - n))))
+  (1 / zetaTwo) * (((r : ℝ) - n) / (n : ℝ) ^ 2 * ((21 / 4 : ℝ) + Real.log ((n : ℝ) / ((r : ℝ) - n))))
 
 theorem minimumAt_single_head_gap_bound (j n r : ℕ) (hn : 1 < n)
     (hnj : n ≤ j + 1) (hnL : n ∣ primorial (j + 2))

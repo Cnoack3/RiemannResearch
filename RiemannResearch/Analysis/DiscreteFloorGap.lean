@@ -106,11 +106,34 @@ theorem floor_gap_sum_le (n r J K : ℕ) (hn : 0 < n) (hnr : n ≤ r)
         subst j
         simp
 
+/-- Sharper complete-tail majorant using the integer cutoff's lower bound two. -/
+theorem gap_tail_sharp (n r j : ℝ) (hn : 1 ≤ n) (hnr : n < r)
+    (hr2 : r ≤ 2 * n) (hj : 2 ≤ j)
+    (hl : n ≤ j * (r - n)) :
+    (r / n) ^ 2 / (j * n) ≤ (9 / 4 : ℝ) * ((r - n) / n ^ 2) := by
+  have hn0 : 0 < n := by linarith
+  have hj0 : 0 < j := by linarith
+  have hd : 0 ≤ r - n := by linarith
+  have hp : r ^ 2 ≤ (9 / 4 : ℝ) * n * (j * (r - n)) := by
+    by_cases hsmall : r ≤ 3 / 2 * n
+    · have hm := mul_le_mul_of_nonneg_left hl hn0.le
+      nlinarith [sq_nonneg (3 / 2 * n - r)]
+    · have hm := mul_le_mul_of_nonneg_right hj hd
+      have hm2 := mul_le_mul_of_nonneg_left hm hn0.le
+      have hx := mul_nonneg (show 0 ≤ (r - n) - n / 2 by linarith)
+        (show 0 ≤ n - (r - n) by linarith)
+      nlinarith
+  apply (div_le_iff₀ (mul_pos hj0 hn0)).mpr
+  rw [div_pow]
+  apply (div_le_iff₀ (sq_pos_of_pos hn0)).mpr
+  field_simp
+  nlinarith
+
 theorem gap_majorant_log (n r j : ℝ) (hn : 1 ≤ n) (hnr : n < r)
-    (hr2 : r ≤ 2 * n) (hj : 0 < j)
+    (hr2 : r ≤ 2 * n) (hj : 0 < j) (hj2 : 2 ≤ j)
     (hl : n ≤ j * (r - n)) (hu : j * (r - n) ≤ r) :
     (r - n) / n ^ 2 * (1 + Real.log j) + (j * n + 1) * ((r - n) / (n * r)) ^ 2 + (r / n) ^ 2 / (j * n) ≤
-        (r - n) / n ^ 2 * (7 + Real.log (n / (r - n))) := by
+        (r - n) / n ^ 2 * ((21 / 4 : ℝ) + Real.log (n / (r - n))) := by
   have hn0 : 0 < n := lt_of_lt_of_le zero_lt_one hn
   have hr0 : 0 < r := hn0.trans hnr
   have hd : 0 < r - n := sub_pos.mpr hnr
@@ -139,15 +162,7 @@ theorem gap_majorant_log (n r j : ℝ) (hn : 1 ≤ n) (hnr : n < r)
         ring
       _ ≤ ((r - n) / n ^ 2) * 1 := h
       _ = (r - n) / n ^ 2 := mul_one _
-  have ht : (r / n) ^ 2 / (j * n) ≤ 4 * ((r - n) / n ^ 2) := by
-    have hratio : r / n ≤ 2 := (div_le_iff₀ hn0).mpr hr2
-    have hsq : (r / n) ^ 2 ≤ 4 := by nlinarith [div_nonneg hr0.le hn0.le]
-    have hfour : (4 : ℝ) ≤ (4 * ((r - n) / n ^ 2)) * (j * n) := by
-      have hnorm : (4 * ((r - n) / n ^ 2)) * (j * n) = 4 * (j * (r - n) / n) := by field_simp
-      rw [hnorm]
-      have := (one_le_div hn0).mpr hl
-      linarith
-    exact (div_le_iff₀ (mul_pos hj hn0)).mpr (hsq.trans hfour)
+  have ht := gap_tail_sharp n r j hn hnr hr2 hj2 hl
   have hh := mul_le_mul_of_nonneg_left hlog hw
   nlinarith
 

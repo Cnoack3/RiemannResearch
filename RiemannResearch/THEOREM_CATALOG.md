@@ -1,5 +1,31 @@
 # Theorem catalog
 
+## Moving Gram predictions and sharper squarefree cancellation budget (2026-10-29)
+
+Research note: [RH/MovingPredictionCancellation20261029.md](RH/MovingPredictionCancellation20261029.md).
+
+Established declarations, subject to the publication checkpoint:
+- Analysis/DiscreteFloorGap.gap_tail_sharp and the strengthened
+  RH/QCompensatedResidueGap.compensatedResidue_gap_log_bound reduce the
+  complete-Q gap constant from 7 to 21/4. The actual integer cutoff
+  discharges the sharper scalar helper's premise J >= 2.
+- RH/QCRTMovingPredictionGain: actual old-minimum inverse-Gram expansion,
+  moving prediction and scalar coefficient formulas, observed gain
+  completion, prediction-shift bound, and exact signed energy transition
+  a(2b-a)/capacity minus the full unobserved norm-square remainder.
+- RH/QCRTCancellationBudget: the nonnegative cancellationBudget is at most
+  gapBudget and bounds the actual dense optimizer energy. The gap term
+  uses max(0,a(2b-a)) <= b^2.
+
+Conditional research reduction:
+- riemannHypothesis_of_subpolynomial_cancellationBudget.
+- **Open:** log(1+cancellationBudget(N))/log(N+2) -> 0 for the actual family.
+- **Open:** sufficient arithmetic control of the moving Schur numerator,
+  predictions, or signed cancellation. No RH claim is discharged.
+- External squarefree short-interval input and its revised thresholds are
+  paper-level, with primary sources in the research note.
+
+
 ## Squarefree moment budgets: resampling obstruction and variation
 
 Source: user-requested investigation of canonical exponential-moment budgets.

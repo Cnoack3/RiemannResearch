@@ -1,5 +1,11 @@
 # Squarefree conductor gaps improve actual minimum-energy costs
 
+Follow-up: [MovingPredictionCancellation20261029.md](MovingPredictionCancellation20261029.md)
+strengthens the complete-Q constant from 7 to 21/4, updates gapWeight and
+gapBudget accordingly, and derives an exact actual inverse-Gram prediction
+formula and a smaller cancellationBudget. The text below records the original
+7-bound. Neither budget's required growth hypothesis is discharged.
+
 29 October 2026. Continuation of the attached minimum-energy remaining-obligations
 handoff, whose baseline is e0784ecfaf37819aa6feccebf67a66e53472ec53.
 

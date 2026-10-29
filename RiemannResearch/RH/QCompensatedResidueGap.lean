@@ -24,7 +24,7 @@ Source: the user - provided minimum - energy remaining - obligations handoff,
 29 October 2026, priorities 1 and 3. The elementary argument here retains
 the actual signed floor identity and bounds the complete infinite tail.
 For 2 <= n < r <= 2n, delta = r - n, the final bound is
-delta * (7 + log(n / delta)) / (zeta(2) * n ^ 2).
+delta * ((21 / 4 : ℝ) + log(n / delta)) / (zeta(2) * n ^ 2).
 No prime or squarefree gap theorem is assumed. Squarefree dictionary
 membership and the actual optimizer application belong to QSquarefreeGapHeadCost.
 -/
@@ -136,11 +136,16 @@ theorem compensatedResidue_gap_energy (n r J : ℕ) (hn : 1 < n)
 theorem compensatedResidue_gap_log_bound (n r : ℕ) (hn : 1 < n)
     (hnr : n < r) (hr2 : r ≤ 2 * n) :
     ‖compensatedResidue n r‖^2 ≤
-      (1 / ZetaTwoProbability.zetaTwo) * (((r : ℝ) - n) / (n : ℝ) ^ 2 * (7 + Real.log ((n : ℝ) / ((r : ℝ) - n)))) := by
+      (1 / ZetaTwoProbability.zetaTwo) * (((r : ℝ) - n) / (n : ℝ) ^ 2 * ((21 / 4 : ℝ) + Real.log ((n : ℝ) / ((r : ℝ) - n)))) := by
   let d := r - n
   let J := n / d + 1
   have hd : 0 < d := by dsimp [d]; omega
   have hJ : 0 < J := Nat.succ_pos _
+  have hJ2 : 2 ≤ J := by
+    have hdle : d ≤ n := by dsimp [d]; omega
+    have hp := Nat.div_pos hdle hd
+    dsimp [J]
+    omega
   have hcast : (d : ℝ) = (r : ℝ) - n := Nat.cast_sub hnr.le
   have hlow : n ≤ J * d := by
     have hm := Nat.mod_lt n hd
@@ -165,11 +170,12 @@ theorem compensatedResidue_gap_log_bound (n r : ℕ) (hn : 1 < n)
     (by exact_mod_cast (show 1 ≤ n by omega))
     (by exact_mod_cast hnr) (by exact_mod_cast hr2)
     (by exact_mod_cast hJ)
+    (by exact_mod_cast hJ2)
     (by rw [← hcast]; exact_mod_cast hlow)
     (by rw [← hcast]; exact_mod_cast hupp)
   have hmajor :
       (((r : ℝ) - n) / (n : ℝ) ^ 2) * (harmonic J : ℝ) + ((J * n + 1 : ℕ) : ℝ) * (((r : ℝ) - n) / ((n : ℝ) * r)) ^ 2 + ((r : ℝ) / n) ^ 2 / ((J * n : ℕ) : ℝ) ≤
-      ((r : ℝ) - n) / (n : ℝ) ^ 2 * (7 + Real.log ((n : ℝ) / ((r : ℝ) - n))) := by
+      ((r : ℝ) - n) / (n : ℝ) ^ 2 * ((21 / 4 : ℝ) + Real.log ((n : ℝ) / ((r : ℝ) - n))) := by
     push_cast
     linarith
   exact he.trans (mul_le_mul_of_nonneg_left hmajor
