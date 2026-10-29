@@ -2,6 +2,13 @@
 
 29 October 2026. Continuation of `LandauSingleZeroDetection20261028.md`.
 
+**Analytic proof completed on paper (29 October 2026).** See
+[GaussianActualZetaExplicitFormula20261029.md](GaussianActualZetaExplicitFormula20261029.md)
+for the full contour proof, Gaussian Fourier normalization, absolute convergence,
+actual multiplicity-weighted zero identity, and summability needed by localization.
+This discharges the ordinary analytic identification, not its Lean formalization.
+The all-height subexponential negative-part estimate remains open.
+
 **Conclusion.** The complete prime–archimedean matrix has an unconditional signed exponential rate strictly below 1/4 at each fixed height. This is proved on paper by localization of the complete zero sum. An explicit published zero-free region makes the improvement quantitative. The rate remains at least the squared displacement of every hypothetical zero it permits, so it supplies no new zero exclusion. The stronger all-height subexponential negative-part estimate remains RH-equivalent.
 
 The work supplies exact matrix entries, pole removal, constrained Schur formulas, 15 numerical cases including every prime power through 20,000,000 with an analytic omitted-tail envelope, and Lean-checked finite algebra and conditional infinite-series localization. The Gaussian Fourier integral, complete zeta explicit-formula instance, zero-count summability and published zero-location theorems are paper-level inputs, not newly Lean-certified providers.
