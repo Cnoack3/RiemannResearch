@@ -1,4 +1,8 @@
 import RiemannResearch.Analysis.OrthogonalObservationInnovation
+import RiemannResearch.RH.QResidueAnchorScreening
+import RiemannResearch.RH.QResidueHeadExtension
+import RiemannResearch.RH.QCRTPrimeInnovation
+import RiemannResearch.RH.QCRTInnovationBlock
 import RiemannResearch.RH.QCRTInnovationGain
 import RiemannResearch.RH.QCRTDensePrimeSupport
 import RiemannResearch.RH.QCRTInnovationBudget

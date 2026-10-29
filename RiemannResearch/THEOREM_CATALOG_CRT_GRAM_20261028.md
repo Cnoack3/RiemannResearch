@@ -2,6 +2,43 @@
 
 28 October 2026. See [research memorandum](RH/CRTGramMinimizersResearch20261028.md).
 
+## Actual screened CRT blocks and arithmetic anchor bounds (2026-10-29)
+
+See [the screened-prime-block memorandum](RH/ScreenedPrimeBlockArithmetic20261029.md).
+
+Established complete-Q declarations:
+
+- QResidueHeadExtension: combined_independent, tangent_extension,
+  screened_added_independent, screened_added_span.
+- QCRTInnovationBlock: added_gt_head, block_independent, block_span,
+  project_normal, project_optimizer, block_observation. All dictionary and head
+  hypotheses are discharged for the actual dense schedule, including empty blocks.
+- gain_inverseGram, capacity_inverseGram, prediction_inverseGram identify the
+  actual gain, new capacity, and signed prediction shift with one complete Gram inverse.
+- dense_block_transition retains the complete signed source quadratic form.
+- dense_old_capacity_completion has explicit squarefree-site and nonzero
+  old/new-capacity hypotheses; it is not a growth provider.
+- QCRTPrimeInnovation: shortAnchor_spec and screened_anchor_change remove the
+  large primorial anchor without changing screened vectors. Bertrand supplies
+  the actual old prime anchor.
+- screened_energy_bound, screened_energy_le_four, screened_trace_bound give
+  complete column energy at most 4/(zetaTwo*p*d) and full divisor trace at most
+  4/(zetaTwo*p) times the reciprocal-divisor sum.
+- actual_raw_energy_lower and actual_screening_ratio show that, when L >= 16p,
+  the screened d=1 energy is at most (32p/L) times its raw energy.
+- QResidueAnchorScreening owns the reusable anchor identity, tangent membership,
+  complete upper estimate, and raw lower estimate.
+- Analysis/OrthogonalObservationInnovation now includes representative invariance,
+  the exact screened-span theorem, and the scalar old-capacity completion.
+
+Paper-level consequence: elementary primorial growth and the checked finite ratio
+exclude a uniform positive lower angle for the raw primorial-anchor family.
+The prime-block reindexing by d dividing L is explained in the memorandum;
+the checked actual basis uses the exact conductor-set difference directly.
+
+Open: source-dependent inverse-Gram cancellation, the literal refined-budget
+dyadic bound, and subpolynomial optimizer energy. No RH growth provider is claimed.
+
 ## Moving predictions and capacity-increment cancellation (2026-10-29)
 
 See [the capacity-increment research memorandum](RH/CapacityIncrementCancellation20261029.md).
