@@ -387,3 +387,77 @@ Separate paper and computational results:
 Open: the all-stage input approximation/provider, an actual H=320 energy
 witness, and kernel verification of the original H=80 actual-vector
 certificate. No RH proof or uniformly bounded cofinal construction follows.
+
+
+## Minimum-energy transitions and moving prediction budgets (2026-10-29)
+
+Research report: [MinimumEnergyOptimizerTransitions20261029.md](RH/MinimumEnergyOptimizerTransitions20261029.md).
+Paper-only repair estimate: [MinimumEnergyLinearRepairBound20261029.md](RH/MinimumEnergyLinearRepairBound20261029.md).
+
+The existing QCRTPeriodHeadBalance already gives the complete-norm signed
+period/head recurrence; QCRTMinimumHeadCost already gives the exact one-site
+capacity cost; QSquarefreeExactHeadResidualBarrier already supplies the
+fixed-residual bounded-subsequence argument. The additions below reuse those
+results rather than claiming the recurrence or residual argument as new.
+
+Unconditional declarations:
+
+- Analysis/AffineEnergyTransition: minimumOff, minimumOff_completion,
+  normal_unique, minimumOff_decomposition, energy_transition, and
+  signed_correction_energy give the actual enlargement projection and
+  least-norm extension with exact signed complete-energy accounting.
+- Analysis/AdjointConstraintMinimum: gram_solution_completion,
+  gram_solution_equal_iff, gram_solution_vector_independent, and
+  gram_solution_isLeast handle any solved adjoint Gram equation;
+  exists_gram_solution_of_feasible proves multiplier existence for feasible
+  data in a finite-dimensional observation space, without row independence.
+- RH/QPrimorialEnergyTransition: primeAnchor_monotone and primeHead_monotone;
+  enlargedTangent, enlargedMinimum, enlargementVector, extensionCorrection;
+  optimizer_energy_transition and optimizer_signed_correction;
+  qOptimizer_eq_minimumAt identifies the agenda's optimizer with the existing
+  minimum in the identical dictionary. energy_telescope and
+  energy_bounded_iff_net_sums_bounded preserve cumulative signed increments.
+  prime_minimum_measure_bounds compares the actual complete Q/P minima.
+- RH/QPrimorialExtensionGram: observation is the physical new-head map on
+  the actual enlarged tangent with its inherited complete-Q norm;
+  correction_observation, exists_multiplier, correction_eq_adjoint,
+  extension_energy_of_gram_solution, and
+  optimizer_transition_of_gram_solution realize the Gram formulation.
+  All feasibility premises are discharged for the squarefree-successor
+  heads of the prime schedule. No pseudoinverse is constructed.
+- RH/QSquarefreeEnergyTransitions: nonsquarefree_next_value and
+  minimumAt_eq_of_nonsquarefree prove zero extension cost at dependent
+  physical sites. denseSchedule i = 2*i gives head H=i+1 in the divisor
+  dictionary of primorial(2H). dense_headCost_bound proves the actual cost
+  is at most 4*nextMismatch(i)^2/(zetaTwo*(i+1)), discharging nearby-prime
+  existence with Bertrand. dense_energy_signed_bound retains all enlargement
+  gains. predictionBudget_le_harmonic and predictionBudget_le_log assume a
+  uniform bound on the actual moving nextMismatch.
+- RH/QCRTPredictionBudget: trial_legal and trial_head give the actual cofinal
+  exact-head family; trial_error_le controls its complete error by the
+  literal predictionBudget.
+
+Conditional research reductions:
+
+- QPrimorialEnergyTransition.residual_eq_zero_of_frequently_bounded:
+  frequently bounded complete energies on the cofinal prime schedule kill
+  the fixed limiting residual.
+- QPrimorialEnergyTransition.riemannHypothesis_of_net_sums_bounded and
+  riemannHypothesis_of_summable_positive_increments: their displayed
+  arithmetic signed-budget premises remain Open.
+- QCRTPredictionBudget.riemannHypothesis_of_subpolynomial_predictionBudget:
+  assumes log(1+predictionBudget N)/log(N+2) tends to zero.
+- QCRTPredictionBudget.riemannHypothesis_of_bounded_nextMismatch: assumes
+  one B >= 0 bounds |nextMismatch i| for every i. This gives logarithmic
+  complete energy, sufficient for the existing Mellin-zero RH consumer.
+  Neither prediction premise is proved.
+
+The separate paper obtains norm(repairOperator H p) <= 17H and complete-error
+amplification <= 18H when 1 <= H < p <= 2H. This numerical bound is not a
+Lean declaration. It does not supply accurate raw legal approximants.
+
+Open: bounded signed cumulative increments, a bounded cofinal energy
+subsequence, or a subpolynomial moving prediction budget for an actual
+specified family. Canonical coefficients and optimized normal equations
+cannot be combined across different vectors. No unconditional RH proof
+or all-stage exact-head energy provider is claimed.
