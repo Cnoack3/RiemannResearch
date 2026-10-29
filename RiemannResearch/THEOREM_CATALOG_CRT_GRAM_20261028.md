@@ -48,3 +48,39 @@ The 23 rational trial-vector certificates in the
 tail. They are not Lean numerical theorems. Trial-vector lower bounds are not
 asserted as lower bounds on the minima; the conductor-gap Lean statements are
 separate actual lower certificates.
+
+## Blocks, complete tails, and half-period oscillation
+
+See [blocks and oscillations memorandum](RH/MinimumEnergyBlocksAndObstructions20261028.md).
+
+- `RH/QResidueWeightEnclosures.lean`: exact periodic finite-prefix identities,
+  followed by two-sided enclosures of the complete inverse-square progression
+  tails. No omitted Q atoms are treated as zero.
+- `RH/QCRTConvexBlocks.lean`: actual canonical finite affine blocks preserve
+  the smallest head and satisfy the full signed double-sum energy identity.
+  A larger-period fixed-head minimum dominates every such block with the exact
+  squared-distance remainder. Mixing a fixed-period plateau adds a squared
+  distance to the earliest-head minimum.
+- `RH/QCRTPeriod210Certificate.lean`: an explicit signed ternary vector with
+  exact head 6 and complete energy <47/50. The same bound holds for the actual
+  canonical stage j=5. Finite arithmetic is kernel checked.
+- `RH/QCRTBinaryBlockGain.lean`: an explicit rational convex block of the
+  period-6 and period-30 binary certificates improves the period-6 certificate
+  by at least 1/1000000 in complete squared norm; its exact head is 2.
+- `RH/QHalfPeriodHeadOscillation.lean`: full signed half-period identities;
+  no squarefree-period exact-head-6 vector has global range [0,1], and no
+  exact-head-14 vector has global range [-1,1]. Period arithmetic is discharged.
+- `RH/QHalfPeriodLogarithmicOscillation.lean`: every prime-covering squarefree
+  period 2m and exact head H<2m force the exact increment
+  f(m+t)-f(m)=Nat.log 2 t when 0<t and 2t<=H. The actual canonical family
+  satisfies this identity and has no finite uniform coordinate-amplitude bound.
+  These are amplitude obstructions, not a proof of unbounded Q energy.
+
+The [additional experiment bundle](https://chatgpt.com/library?file_id=libfile_03406b562cb88191a3558ec2f0aa3edb&account_id=personal)
+contains independently checked rational full-tail convex-block certificates and
+larger-period, slower-head candidates through period 510510. These numerical
+intervals are separate Python evidence, not Lean numerical theorems.
+
+Open: the common complete-Q energy bound (or bounded cofinal schedule) required
+by the existing RH criterion. Neither finite block gains nor growing pointwise
+oscillation settle this obligation. No new conditional RH wrapper is asserted.
