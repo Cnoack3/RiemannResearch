@@ -1,3 +1,5 @@
+import RiemannResearch.NumberTheory.SquarefreeGapSpacing
+import RiemannResearch.NumberTheory.SquarefreeGapConstants
 import RiemannResearch.Analysis.DiscreteFloorGap
 import RiemannResearch.RH.QCompensatedResidueGap
 import RiemannResearch.RH.QSquarefreeGapHeadCost

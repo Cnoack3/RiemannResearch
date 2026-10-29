@@ -499,3 +499,30 @@ Kumchev et al., arXiv:2211.09975, Theorem 1, gives gaps at most
 The latter theorem is cited as an external ordinary mathematical input;
 neither it nor either prediction-growth provider has been added as an axiom.
 No unconditional RH proof or bounded cofinal optimizer energy is claimed.
+
+## Fifth-power squarefree-gap formalization audit (2026-10-29)
+
+Report: [SquarefreeGapFormalizationAudit20261029.md](RH/SquarefreeGapFormalizationAudit20261029.md).
+
+Established in NumberTheory/SquarefreeGapSpacing:
+
+- reciprocal_step_counterexample refutes the algebraic reciprocal inference
+  in equation (4.3) of the inspected paper. It does not refute Theorem 1.
+- paired_divided_difference and the upper/lower magnitude bounds give exact
+  rational identities and inequalities for the reciprocal-square function.
+- corrected_spacing_of_numerator and paired_spacing_of_even_numerator prove
+  the corrected 0.4950 spacing coefficient with explicit numerator premises.
+- paired_numerator_ne_zero and paired_spacing_of_triple_product discharge
+  nonvanishing from the corrected preceding triple-product estimate.
+  Deriving that estimate and the numerator representation from S(M) membership
+  is still Open.
+
+Established in NumberTheory/SquarefreeGapConstants:
+
+- repaired_coefficients and coefficient_inflation check exact rational
+  comparisons for replacement constants, not the full analytic estimates.
+- repaired_sieve_totals and repaired_margins certify the arithmetic totals
+  0.9991 and 0.9952 and their adequacy when h >= 2000.
+
+Open: the requested interval theorem for every real x >= 2. The full counting,
+prime-count, real-power, intermediate-range, and finite-enumeration providers

@@ -168,7 +168,7 @@ The signed gain-retaining bound allows further cancellation arguments.
 
 Kumchev, McCormick, McNew, Park, Scherr and Ziehr,
 *Explicit bounds for large gaps between squarefree integers*,
-Journal of Number Theory (2023), Theorem 1, proves a squarefree integer in
+Journal of Number Theory 254 (2024), Theorem 1, states a squarefree integer in
 
 \[
  (x,\ x+11x^{1/5}\log x]\qquad(x\ge2).
@@ -181,6 +181,13 @@ DOI https://doi.org/10.1016/j.jnt.2023.07.003.
 The citation supports the squarefree-gap input only. It does not state a result
 about these optimizers. This external theorem is not formalized or assumed
 as a custom axiom in the new Lean modules.
+
+Follow-up audit: [SquarefreeGapFormalizationAudit20261029.md](SquarefreeGapFormalizationAudit20261029.md).
+Lean verifies that the reciprocal inference in the cited proof's equation (4.3)
+fails under its displayed numerical premises. A corrected local spacing
+constant and rational repair certificates are now checked. The full interval
+theorem is still not proved in Lean; its analytic and finite-range providers
+remain open. The following application is conditional on that external input.
 
 By minimality of rho_i, delta_i=rho_i-n is at most that gap bound.
 For sufficiently large n, the bound is <=n. Since delta_i>=1, the new
@@ -238,9 +245,9 @@ Useful next targets:
 2. Use the actual normal equations to bound weighted moving coefficients
    b_i=a_{i+2}+mu(i+2). A fixed-conductor limit remains insufficient.
 3. Retain gains in the signed sum if an absolute prediction bound is too weak.
-4. Formalize elementary squarefree successor gaps and the resulting weaker
-   prediction-growth interface; only then consider the stronger published
-   short-interval theorem.
+4. Continue the requested fifth-power squarefree-gap formalization using
+   the corrected spacing argument and explicit remaining obligations in
+   the follow-up audit.
 5. The handoff's 17H repair-operator estimate remains paper-level and unchanged.
 
 Pointwise convergence, complete energy finite at each individual stage,
