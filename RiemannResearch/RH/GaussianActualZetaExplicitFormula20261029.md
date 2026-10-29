@@ -25,10 +25,12 @@ Here \(R>0\), \(\tau\in\mathbb R\), \(d\ge2\), and \(0\le i,j\le d-2\).
 The matrix on the left is defined entirely by the complete prime sum and
 archimedean integral below.
 
-This is an ordinary mathematical proof using classical unconditional analytic
-properties of zeta, not new Lean verification. The remaining universal signed
-lower bound is not proved: Section 8 proves precisely why that additional
-assertion is equivalent to RH. No new zero-free region or RH proof is claimed.
+The actual-zeta identity is an ordinary mathematical proof using classical
+unconditional analytic properties of zeta. The Gaussian Fourier theorem (2.1),
+its first two moments, and polynomial integrability have subsequently been
+formalized in Lean; Section 10 records that separate scope. The remaining
+universal signed lower bound is not proved: Section 8 proves precisely why
+that additional assertion is equivalent to RH. No RH proof is claimed.
 
 ## 1. Conventions and classical inputs
 
@@ -584,11 +586,24 @@ Analysis/GaussianSignedMatrixAlgebra.lean.
 Section 7 supplies the actual-zero inputs to
 Analysis/GaussianLocalization.lean.
 
-Still to formalize in Lean are the actual Gaussian Fourier transform,
-analytic convergence and contour theorem, actual multiplicity-weighted zero
-sum, and their assembly with those existing declarations. No Lean source
-was changed for this paper proof, and a documentation checkpoint does not
-certify these analytic statements in the Lean kernel.
+The Gaussian part now has a separate Lean formalization in
+Analysis/GaussianPolynomialFourier.lean. It proves the Gaussian integral and
+normalization, integrability of all polynomial moments, the differentiation
+identity, the displayed G1 and G2 formulas, and the arbitrary shifted-polynomial
+Fourier theorem (2.1). Its only substantive parameter restriction is R > 0.
+The optional explicit factorial expansion (2.2) is not included.
+
+Analysis/GaussianFourierMatrix.lean instantiates the finite Hankel and
+pole-reduced Hankel algebra with the real part of the actual Fourier integral
+at a fixed frequency. This functional is the Fourier contribution, not the
+complete arithmetic functional (5.1). See the
+[Gaussian Fourier theorem catalog](../THEOREM_CATALOG_GAUSSIAN_FOURIER_20261029.md)
+for exact declarations, assumptions, and verification records.
+
+Still to formalize are the complex-strip and inverse-transform estimates,
+infinite prime/gamma/zero convergence, the contour theorem, the actual
+multiplicity-weighted zero identity, and its assembly with localization.
+The full actual-zeta explicit formula remains paper-level.
 
 References and provenance:
 

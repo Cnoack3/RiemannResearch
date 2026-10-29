@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.GaussianPolynomialFourier
+import RiemannResearch.Analysis.GaussianFourierMatrix
 import RiemannResearch.Analysis.GaussianSignedMatrixAlgebra
 import RiemannResearch.Analysis.GaussianLocalization
 import RiemannResearch.Analysis.AffineEnergyMinimum
