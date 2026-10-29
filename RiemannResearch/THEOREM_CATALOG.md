@@ -1036,6 +1036,30 @@ Exact-rational interval calculations and floating-point eigenvalue examples
 in the memorandum are explicitly separated from Lean theorem claims.
 Research detail: `RH/QSquarefreeHeadCompressionResearch20261022.md`.
 
+### General squarefree head dimension and finite dual energy (2026-10-29)
+
+Established Lean results:
+- `RH/QSquarefreeHeadDimension.lean` proves the unrestricted legal-head dimension
+  for every H, including H=0 and the fixed coordinate at zero. Nonsquarefree
+  radical rows form an explicit basis of the complete finite-head annihilator.
+  Unit triangular pivots and exact biorthogonality to step heads are proved;
+  the constraint rank is the number of nonsquarefree sites through H.
+- `RH/QSquarefreeConstraintEnergy.lean` proves the exact complete-Q energy
+  decomposition for a head equal to one through site four, retaining three
+  completed squares and the entire omitted-site series. In particular the
+  energy is at least `125737 / (88272 * zetaTwo)`. The three-variable
+  Pareto completion is also checked; its full Hilbert assembly is paper-level.
+
+Conditional research reduction:
+- `RH/QSquarefreeUniformHeadDual.lean` proves that one head-independent
+  projected-dual constant exists iff the actual squarefree residual is zero.
+  Residual vanishing supplies constant one. **Open:** prove existence of
+  that uniform bound, or a cofinal bounded complete exact-head energy family.
+- The general positive-weight finite-window Gram identity is proved on paper
+  in the accompanying note; its full matrix assembly is not a new Lean theorem.
+
+Research detail: [RH/SquarefreeHeadDimensionAndEnergy20261029.md](RH/SquarefreeHeadDimensionAndEnergy20261029.md).
+
 ### Actual zero-count discrepancy and moment-transfer interface (2026-10-22)
 
 Established in `Analysis/ActualZeroDiscrepancy.lean`:

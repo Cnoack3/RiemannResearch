@@ -146,7 +146,7 @@ Since finitely supported annihilators form a linear subspace, Hilbert double-ort
 
 In particular r∈closure(A) iff r=0. Thus density of finite-support annihilators cannot be supplied merely by truncating an arbitrary annihilator: truncation need not preserve annihilation. Full density A in L_sf⊥ is equivalent to L_sf=W, a stronger condition than the target constant membership.
 
-Paper-level rank refinement: at head H the attainable dimension is the number of squarefree integers in [1,H]. The count includes 1 as the initial-jump degree of freedom, although conductor 1 is excluded. The witnesses indexed by nonsquarefree m≤H form a triangular basis of finite-head annihilators. This dimension statement is not promoted to a new Lean theorem here.
+Rank refinement, now formalized in the 29 October continuation: at head H the attainable dimension is the number of squarefree integers in [1,H], including H=0. The count includes 1 as the initial-jump degree of freedom, although conductor 1 is excluded. `QSquarefreeHeadDimension.legalHeads_dimension` and `anchoredLegalHeads_dimension` prove the dimension; `constraintBasis` and `constraintSpan_iff_annihilates` give the full triangular dual basis. The step heads are exactly biorthogonal to the nonsquarefree rows. See [SquarefreeHeadDimensionAndEnergy20261029.md](SquarefreeHeadDimensionAndEnergy20261029.md) for the exact energy certificate and the separately identified open uniform-dual estimate.
 
 ## 5. Remaining RH obligation and next useful target
 

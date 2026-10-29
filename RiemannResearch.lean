@@ -10,6 +10,9 @@ import RiemannResearch.RH.QMobiusDelayedBlock
 import RiemannResearch.RH.QPrimorialOptimizerCoalescence
 import RiemannResearch.RH.QSquarefreeCanonicalFeasibility
 import RiemannResearch.RH.QSquarefreeFiniteDualClosure
+import RiemannResearch.RH.QSquarefreeHeadDimension
+import RiemannResearch.RH.QSquarefreeConstraintEnergy
+import RiemannResearch.RH.QSquarefreeUniformHeadDual
 import RiemannResearch.Analysis.ProjectedObservationTests
 import RiemannResearch.RH.ParetoProjectedHeadTests
 import RiemannResearch.RH.ParetoRamanujanSquarefreeAnnihilator
