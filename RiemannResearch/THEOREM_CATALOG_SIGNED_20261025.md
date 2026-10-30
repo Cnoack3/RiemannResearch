@@ -104,3 +104,37 @@ See `RH/GaussianSignedMatricesResearch20261029.md` for exact complete prime and 
 - `Analysis/GaussianLocalization.lean`: `weighted_exp_factor_bound`, `norm_tsum_le_exp_rate`, `nonnegative_head_add_tsum_lower`, `gaussian_gap_exponent`, `exponent_below_quarter`. Established summable-series estimates under their stated hypotheses.
 - **Conditional research reduction:** specializing these estimates to actual zeta zeros and the complete Gaussian explicit formula. Open formal providers: exact analytic functional, complete-zero summability, published zero-free/local-criticality inputs. The unconditional paper estimate with rate below 1/4 restates known zero-location information and supplies no new zero exclusion.
 - **Open mathematical obligation:** all-height, all-degree subexponential lower bounds for the negative part of the complete signed form; this remains RH-equivalent. Numerical positivity or incomplete prime sums do not discharge it.
+
+## Complex squarefree covariance and stability — 30 October 2026
+
+See [research ledger](RH/SignedQuadraticComplexStability20261030.md). The following nineteen additions are finite results with explicit elementary hypotheses; they do not discharge a zeta phase provider or prove RH.
+
+### Analysis/HermitianQuadraticPerturbation.lean
+
+- `kernelMixed_norm_le_action`
+- `kernelQuadratic_linear_remainder_bound`
+- `kernelQuadratic_perturbation_abs_bound`
+- `kernelQuadratic_invariance_iff_kernel`
+
+### Analysis/SquarefreeSignedCovariance.lean
+
+- `moebius_conjugates_squarefree_signedEntry`
+- `squarefree_signedPairing_moebius_twist`
+- `squarefree_moebius_twist_normSq`
+- `squarefree_signedEntry_anticommutes`
+- `squarefree_signedAction_moebius_twist`
+- `squarefree_signed_eigenvalue_reflection`
+- `squarefree_moebius_twist_nonzero_iff`
+- `squarefree_signed_upper_iff_lower`
+- `realSignedCovariance_moebius_pos_of_edge`
+- `squarefree_signed_perturbation_bound`
+
+### Analysis/RationalLogSeparation.lean
+
+- `rational_log_peak_inverse_bound`
+- `sqrt_ratio_weight_exact`
+- `rational_log_peak_sqrt_bound`
+- `rational_log_peak_gap_bound`
+- `rational_log_peak_sqrt_gap_bound`
+
+The complex Möbius transformation reverses the complete squarefree covariance, preserves the coefficient norm and pairs opposite eigenvalues. The Hermitian results characterize exact translation invariance and bound approximate kernel defects; the arithmetic estimates retain the integer mismatch in the nonresonant peak. All support boundaries and the zero-diagonal quadratic remainder remain explicit.

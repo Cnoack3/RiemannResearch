@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.ActualDirichletPolynomialOffDiagonal
+import RiemannResearch.Analysis.HermitianQuadraticPerturbation
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Data.Nat.Squarefree
+import Mathlib.Tactic.LinearCombination
 
 /-!
 # Actual squarefree coefficients in the signed covariance
@@ -182,5 +184,172 @@ theorem sampledSquare_squarefree_moebius_limit_of_phase
   rw [finiteGramErrorPairing_realSignedCovariance,
     realSignedCovariance_moebius s f hs] at h
   exact h
+
+theorem moebius_conjugates_squarefree_signedEntry
+    (n m : ℕ) (hn : Squarefree n) (hm : Squarefree m) :
+    (ArithmeticFunction.moebius n : ℂ) * (ArithmeticFunction.moebius m : ℂ) *
+      primePowerCovarianceSignedEntry n m = -primePowerCovarianceSignedEntry n m := by
+  have h := congrArg (fun x : ℝ => (x : ℂ))
+    (squarefree_covariance_moebius n m hn hm)
+  push_cast at h
+  unfold primePowerCovarianceSignedEntry
+  calc
+    _ = ((-1 / (2 * Real.pi) : ℝ) : ℂ) *
+        ((primePowerCovarianceSymmetricEntry n m : ℂ) * (ArithmeticFunction.moebius n : ℂ) *
+          (ArithmeticFunction.moebius m : ℂ)) := by ring
+    _ = _ := by rw [h]; ring
+
+theorem squarefree_signedPairing_moebius_twist
+    (s : Finset ℕ) (hs : ∀ n ∈ s, Squarefree n) (a : ℕ → ℂ) :
+    finiteGramErrorPairing s (fun n => (ArithmeticFunction.moebius n : ℂ) * a n)
+      primePowerCovarianceSignedEntry =
+      -finiteGramErrorPairing s a primePowerCovarianceSignedEntry := by
+  unfold finiteGramErrorPairing
+  rw [← Finset.sum_neg_distrib]
+  apply Finset.sum_congr rfl
+  intro n hn
+  rw [← Finset.sum_neg_distrib]
+  apply Finset.sum_congr rfl
+  intro m hm
+  simp only [star_mul, star_intCast]
+  calc
+    _ = star (a n) * ((ArithmeticFunction.moebius n : ℂ) *
+      (ArithmeticFunction.moebius m : ℂ) * primePowerCovarianceSignedEntry n m) * a m := by ring
+    _ = _ := by rw [moebius_conjugates_squarefree_signedEntry n m (hs n hn) (hs m hm)]; ring
+
+theorem squarefree_moebius_twist_normSq (s : Finset ℕ)
+    (hs : ∀ n ∈ s, Squarefree n) (a : ℕ → ℂ) :
+    (∑ n ∈ s, ‖(ArithmeticFunction.moebius n : ℂ) * a n‖ ^ 2) =
+      ∑ n ∈ s, ‖a n‖ ^ 2 := by
+  apply Finset.sum_congr rfl
+  intro n hn
+  rw [norm_mul, mul_pow]
+  have hmu : ‖(ArithmeticFunction.moebius n : ℂ)‖ ^ 2 = 1 := by
+    rw [← norm_pow]
+    have hsq : (ArithmeticFunction.moebius n : ℂ) ^ 2 = 1 := by
+      exact_mod_cast ArithmeticFunction.moebius_sq_eq_one_of_squarefree (hs n hn)
+    rw [hsq, norm_one]
+  rw [hmu, one_mul]
+
+theorem squarefree_signedEntry_anticommutes (n m : ℕ)
+    (hn : Squarefree n) (hm : Squarefree m) :
+    primePowerCovarianceSignedEntry n m * (ArithmeticFunction.moebius m : ℂ) =
+      -(ArithmeticFunction.moebius n : ℂ) * primePowerCovarianceSignedEntry n m := by
+  have h := moebius_conjugates_squarefree_signedEntry n m hn hm
+  have hsq : (ArithmeticFunction.moebius n : ℂ) ^ 2 = 1 := by
+    exact_mod_cast ArithmeticFunction.moebius_sq_eq_one_of_squarefree hn
+  calc
+    _ = (ArithmeticFunction.moebius n : ℂ) *
+      ((ArithmeticFunction.moebius n : ℂ) * (ArithmeticFunction.moebius m : ℂ) *
+        primePowerCovarianceSignedEntry n m) := by
+      linear_combination -(primePowerCovarianceSignedEntry n m *
+        (ArithmeticFunction.moebius m : ℂ)) * hsq
+    _ = _ := by rw [h]; ring
+
+theorem squarefree_signedAction_moebius_twist (s : Finset ℕ)
+    (hs : ∀ n ∈ s, Squarefree n) (a : ℕ → ℂ) (n : ℕ) (hn : n ∈ s) :
+    (∑ m ∈ s, primePowerCovarianceSignedEntry n m *
+      ((ArithmeticFunction.moebius m : ℂ) * a m)) =
+      -(ArithmeticFunction.moebius n : ℂ) *
+        ∑ m ∈ s, primePowerCovarianceSignedEntry n m * a m := by
+  rw [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro m hm
+  rw [← mul_assoc, squarefree_signedEntry_anticommutes n m (hs n hn) (hs m hm)]
+  ring
+
+theorem squarefree_signed_eigenvalue_reflection (s : Finset ℕ)
+    (hs : ∀ n ∈ s, Squarefree n) (a : ℕ → ℂ) (ev : ℂ)
+    (ha : ∀ n ∈ s, ∑ m ∈ s, primePowerCovarianceSignedEntry n m * a m = ev * a n) :
+    ∀ n ∈ s, ∑ m ∈ s, primePowerCovarianceSignedEntry n m *
+      ((ArithmeticFunction.moebius m : ℂ) * a m) =
+      (-ev) * ((ArithmeticFunction.moebius n : ℂ) * a n) := by
+  intro n hn
+  rw [squarefree_signedAction_moebius_twist s hs a n hn, ha n hn]
+  ring
+
+
+theorem squarefree_moebius_twist_nonzero_iff (s : Finset ℕ)
+    (hs : ∀ n ∈ s, Squarefree n) (a : ℕ → ℂ) :
+    (∃ n ∈ s, (ArithmeticFunction.moebius n : ℂ) * a n ≠ 0) ↔
+      ∃ n ∈ s, a n ≠ 0 := by
+  constructor
+  · rintro ⟨n, hn, h⟩
+    exact ⟨n, hn, (mul_ne_zero_iff.mp h).2⟩
+  · rintro ⟨n, hn, h⟩
+    refine ⟨n, hn, mul_ne_zero ?_ h⟩
+    exact_mod_cast ArithmeticFunction.moebius_ne_zero_iff_squarefree.mpr (hs n hn)
+
+theorem squarefree_signed_upper_iff_lower (s : Finset ℕ)
+    (hs : ∀ n ∈ s, Squarefree n) (C : ℝ) :
+    (∀ a : ℕ → ℂ,
+      (finiteGramErrorPairing s a primePowerCovarianceSignedEntry).re ≤
+        C * ∑ n ∈ s, ‖a n‖ ^ 2) ↔
+    (∀ a : ℕ → ℂ,
+      -(C * ∑ n ∈ s, ‖a n‖ ^ 2) ≤
+        (finiteGramErrorPairing s a primePowerCovarianceSignedEntry).re) := by
+  constructor
+  · intro h a
+    have ht := h (fun n => (ArithmeticFunction.moebius n : ℂ) * a n)
+    rw [squarefree_signedPairing_moebius_twist s hs,
+      squarefree_moebius_twist_normSq s hs, Complex.neg_re] at ht
+    linarith
+  · intro h a
+    have ht := h (fun n => (ArithmeticFunction.moebius n : ℂ) * a n)
+    rw [squarefree_signedPairing_moebius_twist s hs,
+      squarefree_moebius_twist_normSq s hs, Complex.neg_re] at ht
+    linarith
+
+
+/-- A positive active prime-ratio edge makes a nonnegative Möbius profile strictly positive. -/
+theorem realSignedCovariance_moebius_pos_of_edge (s : Finset ℕ)
+    (hs : ∀ n ∈ s, Squarefree n) (b : ℕ → ℝ)
+    (hb : ∀ n ∈ s, 0 ≤ b n) (n m : ℕ) (hn : n ∈ s) (hm : m ∈ s)
+    (hW : 0 < primePowerCovarianceSymmetricEntry n m)
+    (hbn : 0 < b n) (hbm : 0 < b m) :
+    0 < realSignedCovariance s
+      (fun n => (ArithmeticFunction.moebius n : ℝ) * b n) := by
+  rw [realSignedCovariance_moebius s b hs]
+  apply mul_pos (by positivity)
+  have ht (i : ℕ) (hi : i ∈ s) (j : ℕ) (hj : j ∈ s) :
+      0 ≤ primePowerCovarianceSymmetricEntry i j * b i * b j :=
+    mul_nonneg (mul_nonneg (primePowerCovarianceSymmetricEntry_nonneg i j)
+      (hb i hi)) (hb j hj)
+  have hterm : 0 < primePowerCovarianceSymmetricEntry n m * b n * b m :=
+    mul_pos (mul_pos hW hbn) hbm
+  have hrow := Finset.single_le_sum (fun j hj => ht n hn j hj) hm
+  have hall := Finset.single_le_sum
+    (fun i hi => Finset.sum_nonneg (fun j hj => ht i hi j hj)) hn
+  exact lt_of_lt_of_le (lt_of_lt_of_le hterm hrow) hall
+
+/-- The full squarefree covariance retains the action defect and the exact
+zero-diagonal quadratic remainder under arbitrary complex perturbations. -/
+theorem squarefree_signed_perturbation_bound (s : Finset ℕ)
+    (hs : ∀ n ∈ s, Squarefree n) (a h : ℕ → ℂ) (δ : ℕ → ℝ) (η : ℝ)
+    (ha : ∀ n ∈ s, ‖∑ m ∈ s, primePowerCovarianceSignedEntry n m * a m‖ ≤ δ n)
+    (hR : ∀ n ∈ s, ∀ m ∈ s, n ≠ m → ‖primePowerCovarianceSignedEntry n m‖ ≤ η) :
+    |(finiteGramErrorPairing s (fun n => a n + h n) primePowerCovarianceSignedEntry).re -
+      (finiteGramErrorPairing s a primePowerCovarianceSignedEntry).re| ≤
+      2 * (∑ n ∈ s, ‖h n‖ * δ n) +
+        η * ((∑ n ∈ s, ‖h n‖) ^ 2 - ∑ n ∈ s, ‖h n‖ ^ 2) := by
+  have hstar (x : ℝ) : star (x : ℂ) = (x : ℂ) := by simp
+  have hB : ∀ n ∈ s, ∀ m ∈ s,
+      star (primePowerCovarianceSignedEntry n m) = primePowerCovarianceSignedEntry m n := by
+    intro n hn m hm
+    simp only [primePowerCovarianceSignedEntry, star_mul, hstar]
+    rw [primePowerCovarianceSymmetricEntry_symm n m
+      (Nat.pos_of_ne_zero (hs n hn).ne_zero) (Nat.pos_of_ne_zero (hs m hm).ne_zero)]
+    ring
+  have hdiag : ∀ n ∈ s, primePowerCovarianceSignedEntry n n = 0 := by
+    intro n hn
+    simp [primePowerCovarianceSignedEntry,
+      primePowerCovarianceSymmetricEntry_diag n (Nat.pos_of_ne_zero (hs n hn).ne_zero)]
+  have hquad : |kernelQuadratic s primePowerCovarianceSignedEntry h| ≤
+      η * ((∑ n ∈ s, ‖h n‖) ^ 2 - ∑ n ∈ s, ‖h n‖ ^ 2) :=
+    (Complex.abs_re_le_norm _).trans
+      (finiteGramErrorPairing_norm_le_offDiagonal_mass s h
+        primePowerCovarianceSignedEntry η hdiag hR)
+  exact kernelQuadratic_perturbation_abs_bound s primePowerCovarianceSignedEntry
+    a h δ _ hB ha hquad
 
 end RiemannResearch.Fourier

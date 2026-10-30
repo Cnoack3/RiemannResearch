@@ -1,4 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
@@ -102,5 +104,89 @@ theorem rational_log_separation {m n q : ℕ}
       abs_sub_div_max_le_abs_log_div hnR (mul_pos hmR hqR)
     _ = |Real.log ((n : ℝ) / (m : ℝ) / (q : ℝ))| := by
       rw [div_div]
+
+theorem rational_log_peak_inverse_bound {m n q : ℕ}
+    (hm : 0 < m) (hn : 0 < n) (hq : 0 < q)
+    (hnear : (q : ℝ) ≤ 2 * n / m) (hne : n ≠ m * q) :
+    1 / |Real.log ((n : ℝ) / m / q)| ≤ 2 * n := by
+  have hnR : 0 < (n : ℝ) := by exact_mod_cast hn
+  have hb := rational_log_separation hm hn hq hnear hne
+  have h := one_div_le_one_div_of_le (by positivity : 0 < (1 : ℝ) / (2 * n)) hb
+  simpa using h
+
+/-- Exact square-root weight identity underlying the improved arithmetic remainder. -/
+theorem sqrt_ratio_weight_exact {m n : ℕ} (hm : 0 < m) (hn : 0 < n) :
+    (2 * (n : ℝ)) / Real.sqrt ((n : ℝ) / m) =
+      2 * Real.sqrt (m : ℝ) * Real.sqrt n := by
+  have hmR : 0 < (m : ℝ) := by exact_mod_cast hm
+  have hnR : 0 < (n : ℝ) := by exact_mod_cast hn
+  have hsm : Real.sqrt (m : ℝ) ≠ 0 := (Real.sqrt_pos.mpr hmR).ne'
+  have hsn : Real.sqrt (n : ℝ) ≠ 0 := (Real.sqrt_pos.mpr hnR).ne'
+  rw [Real.sqrt_div hnR.le]
+  field_simp
+  nlinarith [Real.sq_sqrt hnR.le]
+
+theorem rational_log_peak_sqrt_bound {m n q : ℕ}
+    (hm : 0 < m) (hn : 0 < n) (hq : 0 < q)
+    (hnear : (q : ℝ) ≤ 2 * n / m) (hne : n ≠ m * q) :
+    (1 / Real.sqrt ((n : ℝ) / m)) *
+      (1 / |Real.log ((n : ℝ) / m / q)|) ≤
+      2 * Real.sqrt (m : ℝ) * Real.sqrt n := by
+  calc
+    _ ≤ (1 / Real.sqrt ((n : ℝ) / m)) * (2 * n) :=
+      mul_le_mul_of_nonneg_left (rational_log_peak_inverse_bound hm hn hq hnear hne)
+        (by positivity)
+    _ = _ := by
+      rw [one_div, mul_comm, ← div_eq_mul_inv]
+      exact sqrt_ratio_weight_exact hm hn
+
+/-- Retaining the exact integer mismatch sharpens the nonresonant peak bound. -/
+theorem rational_log_peak_gap_bound {m n q : ℕ}
+    (hm : 0 < m) (hn : 0 < n) (hq : 0 < q)
+    (hnear : (q : ℝ) ≤ 2 * n / m) (hne : n ≠ m * q) :
+    1 / |Real.log ((n : ℝ) / m / q)| ≤
+      (2 * n) / |(n : ℝ) - (m : ℝ) * q| := by
+  have hmR : 0 < (m : ℝ) := by exact_mod_cast hm
+  have hnR : 0 < (n : ℝ) := by exact_mod_cast hn
+  have hqR : 0 < (q : ℝ) := by exact_mod_cast hq
+  have hmq : 0 < (m : ℝ) * q := mul_pos hmR hqR
+  have hmqle : (m : ℝ) * q ≤ 2 * n := by
+    have h := (le_div_iff₀ hmR).mp hnear
+    nlinarith
+  have hmax : max (n : ℝ) ((m : ℝ) * q) ≤ 2 * n := by
+    exact max_le (by linarith) hmqle
+  have hmaxpos : 0 < max (n : ℝ) ((m : ℝ) * q) :=
+    lt_of_lt_of_le hnR (le_max_left _ _)
+  have hgap : 0 < |(n : ℝ) - (m : ℝ) * q| := by
+    have h := integer_gap hne
+    linarith
+  have hbase := abs_sub_div_max_le_abs_log_div hnR hmq
+  have hratio : (n : ℝ) / ((m : ℝ) * q) = (n : ℝ) / m / q := by rw [div_div]
+  rw [hratio] at hbase
+  have hsmall : |(n : ℝ) - (m : ℝ) * q| / (2 * n) ≤
+      |(n : ℝ) - (m : ℝ) * q| / max (n : ℝ) ((m : ℝ) * q) :=
+    div_le_div_of_nonneg_left (abs_nonneg _) hmaxpos hmax
+  have hlower := hsmall.trans hbase
+  have hlogpos : 0 < |Real.log ((n : ℝ) / m / q)| :=
+    lt_of_lt_of_le (div_pos hgap (by positivity)) hlower
+  apply (div_le_div_iff₀ hlogpos hgap).mpr
+  have h := (div_le_iff₀ (by positivity : 0 < 2 * (n : ℝ))).mp hlower
+  simpa [mul_comm] using h
+
+theorem rational_log_peak_sqrt_gap_bound {m n q : ℕ}
+    (hm : 0 < m) (hn : 0 < n) (hq : 0 < q)
+    (hnear : (q : ℝ) ≤ 2 * n / m) (hne : n ≠ m * q) :
+    (1 / Real.sqrt ((n : ℝ) / m)) *
+      (1 / |Real.log ((n : ℝ) / m / q)|) ≤
+      (2 * Real.sqrt (m : ℝ) * Real.sqrt n) /
+        |(n : ℝ) - (m : ℝ) * q| := by
+  calc
+    _ ≤ (1 / Real.sqrt ((n : ℝ) / m)) *
+        ((2 * n) / |(n : ℝ) - (m : ℝ) * q|) :=
+      mul_le_mul_of_nonneg_left (rational_log_peak_gap_bound hm hn hq hnear hne)
+        (by positivity)
+    _ = ((2 * (n : ℝ)) / Real.sqrt ((n : ℝ) / m)) /
+        |(n : ℝ) - (m : ℝ) * q| := by ring
+    _ = _ := by rw [sqrt_ratio_weight_exact hm hn]
 
 end RiemannResearch.Analysis.RationalLogSeparation
