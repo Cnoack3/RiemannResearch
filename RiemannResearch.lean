@@ -1,4 +1,10 @@
 import RiemannResearch.Analysis.OrthogonalObservationInnovation
+import RiemannResearch.Analysis.OrthogonalObservationHeadFirst
+import RiemannResearch.Analysis.FiniteHilbertGramHeadFirst
+import RiemannResearch.Analysis.DiscreteGronwall
+import RiemannResearch.RH.QCRTInnovationPairGap
+import RiemannResearch.RH.QCRTHeadFirstSource
+import RiemannResearch.RH.QCRTOptimizerGrowth
 import RiemannResearch.RH.QResidueAnchorScreening
 import RiemannResearch.RH.QResidueHeadExtension
 import RiemannResearch.RH.QCRTPrimeInnovation
