@@ -2,6 +2,14 @@
 
 29 October 2026.
 
+30 October update: the full absolute prime-power sum and the actual
+sum-integral interchange on every line Re(s)>1 are now formalized in
+[GaussianPolynomialPrimePowerSummability20261030.md](GaussianPolynomialPrimePowerSummability20261030.md).
+The open-status table and agenda below record the inversion-stage status;
+the new memorandum and current theorem catalog supersede the prime-power
+summability and right-line interchange entries. The shifted-transform term
+evaluation remains a separate formalization step.
+
 ## Result and scope
 
 For every R > 0, real center τ, real polynomial B (including the zero polynomial),

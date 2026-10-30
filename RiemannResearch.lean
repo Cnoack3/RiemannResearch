@@ -43,6 +43,9 @@ import RiemannResearch.Analysis.GaussianPolynomialStrip
 import RiemannResearch.Analysis.GaussianPolynomialFourierGrowth
 import RiemannResearch.Analysis.GaussianFourierInversion
 import RiemannResearch.Analysis.GaussianPolynomialFourierInversion
+import RiemannResearch.Analysis.GaussianLogDecay
+import RiemannResearch.Analysis.VonMangoldtVerticalIntegral
+import RiemannResearch.Analysis.GaussianPolynomialPrimePower
 import RiemannResearch.Analysis.GaussianFourierMatrix
 import RiemannResearch.Analysis.GaussianSignedMatrixAlgebra
 import RiemannResearch.Analysis.GaussianLocalization

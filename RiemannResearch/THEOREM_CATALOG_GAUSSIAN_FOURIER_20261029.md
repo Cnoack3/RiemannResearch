@@ -241,13 +241,38 @@ which were not measured separately.
 See [GaussianPolynomialFourierInversion20261029.md](RH/GaussianPolynomialFourierInversion20261029.md)
 for the self-contained proof, precise hypothesis map and remaining research agenda.
 
+## Established Gaussian prime-power convergence and right-line interchange
+
+The 30 October 2026 development adds the following modules.
+
+| Module / namespace under RiemannResearch.Analysis | Declarations and exact scope |
+|---|---|
+| GaussianLogDecay | completed_square retains the exact square remainder; polynomial_gaussian_le gives the global explicit Gaussian-to-exponential bound; exp_neg_nat_mul_log converts it to inverse powers. |
+| GaussianPolynomialPrimePower | norm_transform_log_le and norm_transform_neg_log_le bound the actual transform at both signs of log n by C_k/n^k, with C_k=frequencyConstant R B * exp(R*(M+k)^2). |
+| GaussianPolynomialPrimePower | absoluteTerm_le gives the global 2*C_3/n^2 majorant; summable_absoluteTerm proves absolute prime-power convergence over all natural numbers. |
+| GaussianPolynomialPrimePower | summable_term proves summability of the unchanged complex two-sided contribution; term_prime_pow retains every p^k with coefficient log(p)/sqrt(p^k). |
+| VonMangoldtVerticalIntegral | integrable_mul_term_vertical and summable_integral_norm_mul_term discharge the Bochner series-integral hypotheses for any L1 test on Re(s)=sigma>1. |
+| VonMangoldtVerticalIntegral | integral_mul_neg_logDeriv_eq_tsum interchanges the actual -zeta'/zeta Dirichlet series with the real-parameter vertical integral, using Mathlib's actual zeta identification. |
+| GaussianPolynomialPrimePower | integral_right_neg_logDeriv_eq_tsum specializes that interchange to h_B(t+i*(1/2-sigma)); horizontal Gaussian integrability is supplied, not assumed. |
+
+The specialized summability theorems assume only R>0, a real center and a real
+polynomial (zero included). The right-line theorem additionally assumes
+sigma>1. There are no RH or zero-location assumptions. The constants are
+uniform in the real center, not asserted uniform in R or B.
+
+See [GaussianPolynomialPrimePowerSummability20261030.md](RH/GaussianPolynomialPrimePowerSummability20261030.md)
+for the proof, exact hypothesis map, verification records and remaining steps.
+The shifted-transform term evaluation is separate from the proved interchange.
+
 ## Remaining analytic obligations: Open
 
 The following parts of the actual-zeta connection remain outside this
 formalization:
 
-1. Absolute convergence of the infinite prime-power contribution, the
-   archimedean gamma-weighted integral, and the multiplicity-weighted zero sum.
+1. The shifted-transform term evaluation, the archimedean gamma-weighted
+   integral, and the multiplicity-weighted zero sum. Absolute convergence of
+   the full prime-power contribution and the sigma>1 sum-integral interchange
+   are now supplied by the checked Gaussian prime-power modules above.
 2. The completed-zeta contour argument, including good-height estimates,
    vanishing horizontal edges, residues, and legitimate contour shifts.
 3. Identification of the complete arithmetic functional with actual zeta zeros,
