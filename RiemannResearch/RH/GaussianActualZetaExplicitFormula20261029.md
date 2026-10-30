@@ -600,9 +600,22 @@ complete arithmetic functional (5.1). See the
 [Gaussian Fourier theorem catalog](../THEOREM_CATALOG_GAUSSIAN_FOURIER_20261029.md)
 for exact declarations, assumptions, and verification records.
 
-Still to formalize are the complex-strip and inverse-transform estimates,
-infinite prime/gamma/zero convergence, the contour theorem, the actual
-multiplicity-weighted zero identity, and its assembly with localization.
+Analysis/GaussianPolynomialStrip.lean now proves the uniform strip bound (3.1)
+with the explicit coefficient constant, exact Gaussian modulus, entire extension,
+and integrable polynomially weighted majorants. The real extension agrees
+with GaussianPolynomialFourier.test.
+
+Analysis/GaussianPolynomialFourierGrowth.lean gives an exact recursive
+frequency-polynomial representation of the actual transform, its Gaussian
+envelope, and integrable common majorants for all complex inverse kernels
+and all fixed frequency moments on each fixed strip. See
+[GaussianPolynomialStripBounds20261029.md](GaussianPolynomialStripBounds20261029.md)
+for exact statements, verification evidence and the hypothesis map.
+
+Still to formalize are the inverse-transform identity (including frequency
+normalization and holomorphic continuation), infinite prime/gamma/zero
+convergence, the contour theorem, the actual multiplicity-weighted zero identity,
+and its assembly with localization. The estimates alone do not supply these.
 The full actual-zeta explicit formula remains paper-level.
 
 References and provenance:
