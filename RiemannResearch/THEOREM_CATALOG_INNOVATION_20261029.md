@@ -107,3 +107,45 @@ reported only propext, Classical.choice, and Quot.sound.
 Publication remains gated by saved-source checkpoint validation.
 The numerical diagnostic source in the memorandum is exploratory floating-point
 computation; it is not a Lean certificate or an arithmetic provider. RH remains open here.
+
+## Full divisor coordinates and vanishing dyadic overhead — 30 October 2026
+
+See [continuation and research agenda](RH/FullSquarefreeDyadicResearch20261030.md).
+
+Established structural and finite-energy results:
+
+- [QCRTDivisorBlock](RH/QCRTDivisorBlock.lean): primeDivisorEquiv,
+  trialCertificate_arithmetic, divisorTrial_certificate,
+  addedConductors_empty_of_nonprime. Full new-conductor indexing includes 1;
+  source and adjusted Gram transport retains every cross term.
+- [QFloorDilationHeadEnergy](RH/QFloorDilationHeadEnergy.lean):
+  floorDilation_norm_sq_head_defect, floorDilation_norm_sq_le_head,
+  headAdjustedEnergy_pos, headBlockDefect_ge_pareto_gap.
+  Exact complete-Q head-tail defect and a stronger explicit norm denominator.
+- [QCRTFullFloorTrial](RH/QCRTFullFloorTrial.lean): floorDilation_coefficients,
+  floorTrial_completion, selfDilation_step_le, selfDilation_step_le_head.
+  Actual unrestricted old-optimizer trials with exact competitor loss and
+  head-refined gain. No source lower bound or asymptotic budget is assumed.
+- [DyadicGronwall](Analysis/DyadicGronwall.lean):
+  relativeLog_tendsto_zero_of_vanishing_multiplier,
+  relativeLog_dyadic_of_eventual_recurrence.
+  Nonnegative overhead a_m tending to zero suffices for subpolynomial growth
+  in physical dyadic heads; a finite starting index is allowed.
+- [QCRTDyadicBudget](RH/QCRTDyadicBudget.lean): dense_trial_interval,
+  dense_energy_le_interval_certificate. All intervening stages are retained.
+
+Conditional research reductions:
+
+- QCRTDyadicBudget.riemannHypothesis_of_vanishing_dyadic_trial_budget.
+  **Open arithmetic provider:** eventual full signed block certificate sum
+  at most a_m E_(2^m)+B, with a_m nonnegative tending to zero and fixed B>=0.
+- QCRTDyadicBudget.riemannHypothesis_of_harmonic_dyadic_trial_budget.
+  The original handoff target is a special case; its budget remains **Open**.
+
+Candidate checks succeeded in job_L_9qR6if92eUK5UQy2GRV4dLd7KPcBmy,
+job_j-LYflBA8X2wA--fY9fWd7qwGvbyhM5e, and
+job_yKz32OfbJVgtcLGeOZQMGBKwyCsktbLX. Selected audits use only
+propext, Classical.choice, and Quot.sound. Final saved-source validation is
+gated by the single publication checkpoint reported with delivery.
+Complete-period floating diagnostics are saved with the memorandum; they
+are not interval certificates or providers of the open arithmetic budget.
