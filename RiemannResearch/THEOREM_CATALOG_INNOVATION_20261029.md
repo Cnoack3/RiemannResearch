@@ -191,3 +191,25 @@ the single aggregate checkpoint reported with delivery.
 are exploratory. The separate [rational small-period certificate](RH/CertifiedSmallEnergyDiagnostics20261030.md)
 has exact arithmetic assertions but is not Lean-verified. The abstract mean-zero
 comparison in the memorandum is paper-level. RH remains open in this program.
+
+## Signed dyadic arithmetic continuation — 30 October 2026
+
+See [signed arithmetic memorandum](RH/SignedDyadicArithmeticResearch20261030.md)
+and [complete-Q diagnostics](RH/EndpointSourceDiagnostics20261030.md).
+
+Paper-level results, not newly Lean-verified:
+
+- Both mixed sources are expanded in the complete divisor dictionary. Charge
+  normalization fixes the compensated-prime coefficient at minus one.
+- Moving normal equations cancel the charge multiplier and all shared low
+  coefficients, leaving an exact endpoint pairing on the new head band.
+- The signed certificate block equals twice that pairing minus the complete
+  endpoint distance square plus every unused full-family trial loss.
+- Discrete summation by parts gives a finite squarefree-band dual difference
+  energy bound, with an exact head completion square and physical tail square.
+- A positive-part sandwich separates endpoint growth from normalized trial loss.
+
+**Open provider:** the resulting full signed dyadic expression has normalized
+positive excess tending to zero for some fixed additive allowance. No source
+alignment, dual difference-energy rate, or accumulated-loss estimate is proved.
+The numerical checks are exploratory, not interval certificates.
