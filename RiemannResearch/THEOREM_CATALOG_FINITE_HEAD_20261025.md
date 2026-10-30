@@ -206,3 +206,28 @@ and Quot.sound. See `RH/MinimumEnergyExactHead20261028.md`.
 A common bound on these complete minimum energies, even along a
 cofinal subsequence, remains open. No uniform bound or RH conclusion
 is supplied by the finite-dimensional minimization.
+
+
+## Squarefree prefix response analysis, 30 October 2026
+
+### Paper results; no new Lean declarations
+
+- `RH/SquarefreePrefixResponseResearch20261030.md` derives the exact
+  multiplicative-range Abel formula, the full squarefree inverse-Gram and
+  divisor-prefix expansions, and the signed update when a conductor enters.
+- It proves a weighted prefix-energy bound for the actual residual, retaining
+  the projection loss square, and a logarithmic bound for all sites beyond
+  `floor (n / (6 + log n))` in the centered correction.
+- `RH/SquarefreePrefixResponseDiagnostics20261030.md` gives complete-period
+  float64 calculations through stage 240 and standalone reproduction code.
+  All range contributions at the largest sampled response at stage 240 have
+  the same sign; no universal cross-range sign cancellation is established.
+
+### Open arithmetic provider
+
+A uniform polylogarithmic bound for the remaining signed short-head response,
+its weighted prefix energy, or the displayed partial normal-equation errors
+is not proved. The existing conditional polylogarithmic RH implication is
+unchanged. This concerns ordinary canonical projections, not the distinct
+constrained primorial minimum-energy family. The new analysis is on paper;
+no Lean verification or rigorous numerical enclosure is claimed.
