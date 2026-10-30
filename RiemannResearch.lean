@@ -28,6 +28,8 @@ import RiemannResearch.RH.QCRTPredictionBudget
 import RiemannResearch.Analysis.GaussianPolynomialFourier
 import RiemannResearch.Analysis.GaussianPolynomialStrip
 import RiemannResearch.Analysis.GaussianPolynomialFourierGrowth
+import RiemannResearch.Analysis.GaussianFourierInversion
+import RiemannResearch.Analysis.GaussianPolynomialFourierInversion
 import RiemannResearch.Analysis.GaussianFourierMatrix
 import RiemannResearch.Analysis.GaussianSignedMatrixAlgebra
 import RiemannResearch.Analysis.GaussianLocalization

@@ -122,10 +122,10 @@ It is uniform in real τ. The frequency-degree bound L ≤ M is not separately
 formalized; the actual finite degree L is sufficient.
 
 These are unconditional analytic inputs for the inverse theorem. The
-frequency-scaling assembly for Mathlib inversion, holomorphy of the inverse
-parameter integral, and the inverse identity itself remain separate work.
-No actual-zeta identity, zero-sum convergence, contour theorem, or RH conclusion
-is asserted.
+frequency-scaling assembly, holomorphy of the inverse parameter integral,
+and complex inverse identity are now checked in the companion inversion modules
+listed below. The actual-zeta identity, zero-sum convergence, contour theorem,
+and RH conclusion remain separate obligations.
 
 See [GaussianPolynomialStripBounds20261029.md](RH/GaussianPolynomialStripBounds20261029.md)
 for the full argument, exact hypothesis map and remaining obligations.
@@ -199,25 +199,64 @@ Its 5.702-second verification duration is not a workspace-opening or request
 round-trip measurement. Workspace-opening and client polling latency were not
 separately instrumented; no cause for that wall-clock delay is inferred.
 
+## Established complex Gaussian-polynomial inversion
+
+[Analysis/GaussianFourierInversion.lean](Analysis/GaussianFourierInversion.lean)
+adds general results in namespace
+RiemannResearch.Analysis.GaussianPolynomialFourier:
+
+| Declaration | Exact content |
+|---|---|
+| fourier_eq_scaled_transform | Mathlib F f(v) = 2π transform f(2πv). |
+| inverse_integral_eq_fourierInv | Exact inverse-kernel substitution, including its Jacobian. |
+| integrable_fourier_of_integrable_transform | Integrability transfers to Mathlib's transform. |
+| inverse_integral_eq | Real inversion for arbitrary f with f and transform f integrable, at a continuity point. |
+
+[Analysis/GaussianPolynomialFourierInversion.lean](Analysis/GaussianPolynomialFourierInversion.lean)
+assembles the Gaussian-polynomial application in namespace
+RiemannResearch.Analysis.GaussianPolynomialFourierInversion:
+
+| Declaration | Exact content |
+|---|---|
+| inverse | The actual inverse parameter integral. |
+| hasDerivAt_inverse, differentiable_inverse | Derivative under the integral and entire differentiability, with the actual first-moment majorant. |
+| inverse_ofReal | Real inversion using the checked Gaussian providers. |
+| inverse_eq_test, test_eq_inverse_integral | h_B(z) = integral exp(izu) g_B(u) du for every complex z. |
+| test_eq_laplace_integral | h_B((s-1/2)/i) = integral exp((s-1/2)u) g_B(u) du for every complex s. |
+| integrable_laplace_kernel | Absolute integrability of the Laplace kernel for every complex s. |
+
+The specialized statements require only R > 0, real τ and a real polynomial B.
+They include the zero polynomial and all complex arguments. They impose no
+zeta, zero-counting, contour, summation, positivity or RH hypothesis.
+
+The saved modules passed server job job_HqGBlxJ5_GZ3Q2Nwk388PWI7LL87vBwa:
+exit code 0, verified true, reported duration 12.576 seconds. Both modules were
+built, and five inspected declarations reported only propext, Classical.choice
+and Quot.sound. The initial coherent proof candidate passed
+job_0X92M-JVt_H39SKGu7OcNB0GqFgVyJDd (5.268 seconds).
+Final publication is gated separately by checkpoint audit and affected-module
+validation. These durations exclude workspace-opening and client polling latency,
+which were not measured separately.
+
+See [GaussianPolynomialFourierInversion20261029.md](RH/GaussianPolynomialFourierInversion20261029.md)
+for the self-contained proof, precise hypothesis map and remaining research agenda.
+
 ## Remaining analytic obligations: Open
 
 The following parts of the actual-zeta connection remain outside this
 formalization:
 
-1. The complex-argument inverse Fourier identity, including normalization,
-   real inversion and holomorphic continuation. The strip bounds and all
-   Gaussian inverse-kernel domination inputs are now checked as listed above.
-2. Absolute convergence of the infinite prime-power contribution, the
+1. Absolute convergence of the infinite prime-power contribution, the
    archimedean gamma-weighted integral, and the multiplicity-weighted zero sum.
-3. The completed-zeta contour argument, including good-height estimates,
+2. The completed-zeta contour argument, including good-height estimates,
    vanishing horizontal edges, residues, and legitimate contour shifts.
-4. Identification of the complete arithmetic functional with actual zeta zeros,
+3. Identification of the complete arithmetic functional with actual zeta zeros,
    with both pole terms present before the pole-factor restriction.
-5. Assembly of that actual-zero identity with the existing conditional
+4. Assembly of that actual-zero identity with the existing conditional
    localization theorems, supplying their summability and majorant providers.
-6. The independent universal signed lower bound needed for the RH criterion.
+5. The independent universal signed lower bound needed for the RH criterion.
 
-The Fourier, strip, growth and matrix results make no RH assumption.
+The Fourier, strip, growth, inversion and matrix results make no RH assumption.
 The remaining obligations listed here are not discharged by them.
 
 ## Provenance

@@ -612,11 +612,19 @@ and all fixed frequency moments on each fixed strip. See
 [GaussianPolynomialStripBounds20261029.md](GaussianPolynomialStripBounds20261029.md)
 for exact statements, verification evidence and the hypothesis map.
 
-Still to formalize are the inverse-transform identity (including frequency
-normalization and holomorphic continuation), infinite prime/gamma/zero
-convergence, the contour theorem, the actual multiplicity-weighted zero identity,
-and its assembly with localization. The estimates alone do not supply these.
-The full actual-zeta explicit formula remains paper-level.
+Analysis/GaussianFourierInversion.lean now reconciles Mathlib's frequency scale
+and proves real inversion for the repository normalization.
+Analysis/GaussianPolynomialFourierInversion.lean proves holomorphy of the inverse
+parameter integral, the complex inverse identity for every z, and the equivalent
+absolutely convergent Laplace form for every s. See
+[GaussianPolynomialFourierInversion20261029.md](GaussianPolynomialFourierInversion20261029.md)
+for the proof, verification evidence and exact hypothesis map.
+
+Still to formalize are infinite prime/gamma/zero convergence, the contour
+theorem, the actual multiplicity-weighted zero identity, and its assembly with
+localization. Pointwise inversion does not interchange zero sums and integrals
+or prove contour shifts. The independent universal signed lower bound remains
+unproved. The full actual-zeta explicit formula remains paper-level.
 
 References and provenance:
 

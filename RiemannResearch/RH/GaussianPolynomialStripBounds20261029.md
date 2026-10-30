@@ -11,8 +11,10 @@ polynomial representation of the actual Fourier transform and integrable
 majorants for every complex inverse kernel and every fixed frequency moment.
 These results are unconditional for R > 0 and contain no zeta or RH assumption.
 
-The full complex inverse-transform equality and actual-zeta explicit formula
-are not declarations in this development.
+The complex inverse-transform identity has now been completed in the companion
+[GaussianPolynomialFourierInversion20261029.md](GaussianPolynomialFourierInversion20261029.md),
+including normalization, holomorphy and continuation.
+The actual-zeta explicit formula remains outside the checked scope.
 
 ## 1. Definitions and exact identity
 
@@ -180,13 +182,15 @@ Its normalization and ours are related by the already checked identity
 | h_B has an entire extension agreeing with the real test | New differentiable_test and test_ofReal |
 | Complex inverse kernels are absolutely integrable | New integrable_inverse_transform_moment |
 | Common domination on fixed strips, including fixed frequency moments | New inverseMajorant, integrable_inverseMajorant and norm_inverse_transform_moment_le |
-| Conversion to Mathlib's frequency scale and real inversion | Assembly still open; no new real inversion declaration is claimed |
-| Holomorphy/differentiation of the complex parameter integral | Domination inputs supplied; applying the parameter-integral theorem remains open |
-| Equality of the complex inverse integral with h_B | Still open as a project formalization; use real inversion and analytic continuation, or a direct Gaussian proof |
+| Conversion to Mathlib's frequency scale and real inversion | Checked in GaussianFourierInversion: fourier_eq_scaled_transform and inverse_integral_eq |
+| Holomorphy/differentiation of the complex parameter integral | Checked in GaussianPolynomialFourierInversion: hasDerivAt_inverse and differentiable_inverse |
+| Equality of the complex inverse integral with h_B | Checked in GaussianPolynomialFourierInversion: inverse_eq_test and test_eq_inverse_integral |
 
-The last three rows are remaining assembly work. The Gaussian integrability and
-domination estimates are actual checked providers, but do not themselves
-constitute a checked inverse identity.
+The last three rows are now completed by the companion inversion modules.
+The original Gaussian estimates remain their domination providers; the separate
+inversion and identity-theorem arguments supply the equality. See
+[the inversion memorandum](GaussianPolynomialFourierInversion20261029.md)
+for the proof, exact declarations and verification evidence.
 
 ## 7. Remaining actual-zeta obligations
 
@@ -232,16 +236,18 @@ The snippet's queue delay was about 0.002 seconds. Workspace-opening latency
 and client polling delays were not separately instrumented. Server verification
 duration is not end-to-end wall time.
 
-## 9. Next formalization target
+## 9. Completed inverse-Fourier target and next obligations
 
-Prove
+The companion GaussianPolynomialFourierInversion module now proves
 \[
  h_B(z)=\int_{\mathbb R}e^{izu}g_B(u)\,du\quad(z\in\mathbb C).
 \]
-Use inverseMajorant for compact neighborhoods and fixed derivative orders.
-First handle Mathlib's frequency scaling, then verify holomorphy of the
-parameter integral and the analytic-continuation step. Keep the prime-power,
-gamma, zero-counting and contour providers as separately named obligations.
+It uses inverseMajorant on a ball about each complex argument and the N = 1
+moment for differentiation under the integral. GaussianFourierInversion supplies
+the exact scaling and real inversion; analytic continuation gives the complex
+identity. The Laplace form at (s-1/2)/i and its absolute integrability are checked
+for every complex s. Prime-power, gamma, zero-counting, contour and signed
+positivity providers remain separately named obligations.
 
 ## Sources
 
