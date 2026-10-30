@@ -149,3 +149,45 @@ propext, Classical.choice, and Quot.sound. Final saved-source validation is
 gated by the single publication checkpoint reported with delivery.
 Complete-period floating diagnostics are saved with the memorandum; they
 are not interval certificates or providers of the open arithmetic budget.
+
+## Screened mixed trials — 30 October 2026
+
+See [research memorandum](RH/ScreenedMixedTrialResearch20261030.md).
+
+Established finite results:
+
+- [QCRTScreenedFloorTrial](RH/QCRTScreenedFloorTrial.lean):
+  screen_source, screen_energy, screen_gram, jointFamily_eq_screen,
+  headFirst_eq_repair, trialCertificate_physical, jointSynthesis_eq_screen,
+  trialCertificate_screen_transport. Exact next-head screening is transported
+  into the same full adjusted trial certificate, including removed projection energy.
+- [TwoDirectionTrial](Analysis/TwoDirectionTrial.lean): quadratic_completion,
+  gain_sub_first, gain_sub_second, norm_completion, regularized_determinant_pos.
+  Exact two-by-two algebra with all cross terms and diagonal-defect losses.
+- [QCRTMixedFloorTrial](RH/QCRTMixedFloorTrial.lean):
+  exists_oldVector, floorCoefficients_raw, mixedSynthesis, selfFloor_energy,
+  selfFloor_not_prime_multiple, exact_determinant_pos, exact_mixedGain_ge_raw,
+  exact_mixed_step, actualCoefficients_spec, actualCertificate_formula.
+  The actual full-squarefree optimizer supplies the screened dilation.
+  The compensated-prime direction is retained. Exact determinant positivity
+  has no extra spectral premise; exact mixed gain dominates the prior
+  head-refined raw gain at eligible prime stages. Every other stage remains
+  in the global actualTrials certificate.
+
+Conditional research reduction:
+
+- QCRTDyadicBudget.riemannHypothesis_of_normalized_dyadic_excess.
+  **Open provider:** for some fixed B>=0, the positive part of the entire
+  signed dyadic certificate sum minus B, divided by 1+E_(2^m), tends to zero.
+  Apply with QCRTMixedFloorTrial.actualTrials. No provider is proved here.
+
+The complete candidate passed job_DiQ3HsQPTmR_XPaGCwTE9YfIvQsca8ou.
+Selected audits use only propext, Classical.choice, and Quot.sound.
+Saved-source checks passed job_PZEhdEBtvwnDEZzKOFYa5d5d8H834sYQ and
+job_KHvtvCpXyUFCLc9XOsXXK9avJIb5PtIg. Final publication remains subject to
+the single aggregate checkpoint reported with delivery.
+
+[Complete-period floating diagnostics](RH/ScreenedMixedDiagnostics20261030.md)
+are exploratory. The separate [rational small-period certificate](RH/CertifiedSmallEnergyDiagnostics20261030.md)
+has exact arithmetic assertions but is not Lean-verified. The abstract mean-zero
+comparison in the memorandum is paper-level. RH remains open in this program.

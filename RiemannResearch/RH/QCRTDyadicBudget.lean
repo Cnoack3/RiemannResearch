@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.DyadicGronwall
+import Mathlib.Topology.Order.Basic
 import RiemannResearch.RH.QCRTTrialCertificate
 import RiemannResearch.RH.QCRTOptimizerGrowth
 import Mathlib.Algebra.BigOperators.Intervals
@@ -91,4 +92,45 @@ theorem riemannHypothesis_of_harmonic_dyadic_trial_budget
     exact hd.const_div_atTop A
   · exact hbudget
 
+end RiemannResearch.RH.QCRTDyadicBudget
+
+noncomputable section
+open Filter
+open scoped BigOperators Topology
+namespace RiemannResearch.RH.QCRTDyadicBudget
+open QCRTTrialCertificate QCRTInnovationBlock QCRTPeriodHeadBalance
+open QSquarefreeEnergyTransitions
+
+/-- Positive excess is taken after summing the entire signed dyadic block. -/
+def normalizedDyadicExcess (t : ∀ i, addedConductors i → ℝ) (B : ℝ) (m : ℕ) : ℝ :=
+  max ((∑ i ∈ Finset.Ico (2 ^ m) (2 ^ (m + 1)), fullCertificate t i) - B) 0 /
+    (1 + stageEnergy denseSchedule (2 ^ m))
+
+theorem normalizedDyadicExcess_nonneg (t : ∀ i, addedConductors i → ℝ)
+    (B : ℝ) (m : ℕ) : 0 ≤ normalizedDyadicExcess t B m := by
+  apply div_nonneg (le_max_right _ _)
+  have he : 0 ≤ stageEnergy denseSchedule (2 ^ m) := sq_nonneg _
+  linarith
+
+/-- Conditional research reduction: only this normalized signed excess
+must vanish. No arithmetic provider for that limit is asserted. -/
+theorem riemannHypothesis_of_normalized_dyadic_excess
+    (t : ∀ i, addedConductors i → ℝ) (B : ℝ) (hB : 0 ≤ B)
+    (hlim : Tendsto (normalizedDyadicExcess t B) atTop (𝓝 0)) :
+    RiemannHypothesis := by
+  have hlt : ∀ᶠ m in atTop, normalizedDyadicExcess t B m < 1 :=
+    (tendsto_order.1 hlim).2 1 (by norm_num)
+  obtain ⟨m0, hm0⟩ := eventually_atTop.1 hlt
+  apply riemannHypothesis_of_vanishing_dyadic_trial_budget
+    t (normalizedDyadicExcess t B) (B + 1) m0
+    (normalizedDyadicExcess_nonneg t B) (by linarith) hlim
+  intro m hm
+  have he : 0 ≤ stageEnergy denseSchedule (2 ^ m) := sq_nonneg _
+  have hd : 1 + stageEnergy denseSchedule (2 ^ m) ≠ 0 := by linarith
+  have hs : (∑ i ∈ Finset.Ico (2 ^ m) (2 ^ (m + 1)), fullCertificate t i) - B ≤
+      normalizedDyadicExcess t B m * (1 + stageEnergy denseSchedule (2 ^ m)) := by
+    rw [normalizedDyadicExcess, div_mul_cancel₀ _ hd]
+    exact le_max_left _ _
+  have ha := hm0 m hm
+  nlinarith
 end RiemannResearch.RH.QCRTDyadicBudget
