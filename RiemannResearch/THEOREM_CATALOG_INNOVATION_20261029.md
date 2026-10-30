@@ -213,3 +213,24 @@ Paper-level results, not newly Lean-verified:
 positive excess tending to zero for some fixed additive allowance. No source
 alignment, dual difference-energy rate, or accumulated-loss estimate is proved.
 The numerical checks are exploratory, not interval certificates.
+
+## Mixed-trial loss transport and source variation — 30 October 2026
+
+See [the paper continuation](RH/MixedTrialLossTransportResearch20261030.md)
+and [complete-Q diagnostics](RH/MixedTrialLossTransportDiagnostics20261030.md).
+
+Paper-level results, not newly Lean-verified:
+
+- Minimum old-dictionary repairs to the final dyadic head turn the actual
+  unused mixed residuals into mutually orthogonal differences. Their summed
+  squared norm minus the exact old repair squares equals the full loss sum.
+- A signed block identity retains the initial final-head cost, moving repair
+  pairings, and a negative global completion square.
+- Complete divisor normal equations and signed summation by parts isolate the
+  source drift. A common composite anchor and finite Bessel give a uniform
+  bound by an explicit weighted moment of actual coefficient defects.
+- No normalized asymptotic estimate for that moment or the remaining signed
+  head/trial work is proved. The RH provider remains **Open**.
+
+Lean retry job_jaLoqWLh0iqcPljrbo8giEQ0CtW0YGa5 timed out after 180.058 seconds
+with verified=false. This continuation publishes documentation only.
