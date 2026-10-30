@@ -75,3 +75,37 @@ theorem riemannHypothesis_of_stageEnergy_gronwall
     (tendsto_natCast_atTop_atTop.comp (tendsto_add_atTop_nat 2)) hlogα hlogβ
 
 end RiemannResearch.RH.QCRTOptimizerGrowth
+
+
+namespace RiemannResearch.RH.QCRTOptimizerGrowth
+open ZetaTwoHilbert QCRTPeriodHeadBalance QSquarefreeEnergyTransitions
+open QCRTPredictionBudget
+open RiemannResearch.Analysis.SubpolynomialWindow
+
+/-- A cofinal sequence of physical heads suffices; interpolation estimates
+between those heads are unnecessary. The energy limit is an Open provider. -/
+theorem riemannHypothesis_of_cofinal_subpolynomial_stageEnergy
+    (S : ℕ → ℕ) (hS : Tendsto S atTop atTop)
+    (hsub : Tendsto (fun N =>
+      Real.log (1 + stageEnergy denseSchedule (S N)) /
+        Real.log ((S N + 2 : ℕ) : ℝ)) atTop (𝓝 0)) : RiemannHypothesis := by
+  let C : ℕ → ℝ := fun N => 1 + 2 * stageEnergy denseSchedule (S N)
+  have henergy (N : ℕ) : 0 ≤ stageEnergy denseSchedule (S N) := sq_nonneg _
+  have hC (N : ℕ) : 0 ≤ C N := by dsimp [C]; linarith [henergy N]
+  have hn : Tendsto (fun N : ℕ => ((S N + 2 : ℕ) : ℝ)) atTop atTop :=
+    tendsto_natCast_atTop_atTop.comp ((tendsto_add_atTop_nat 2).comp hS)
+  have hcsub := relativeLog_tendsto_zero_of_scaled_budget C
+    (fun N => stageEnergy denseSchedule (S N)) (fun N => ((S N + 2 : ℕ) : ℝ)) 2
+    (by norm_num) hC henergy hn
+    (Eventually.of_forall (fun N => by dsimp [C]; linarith)) hsub
+  apply QExactHeadSubpolynomial.riemannHypothesis_of_cofinal_exact_head_subpolynomial
+    (fun N => trial (S N)) (fun N => S N + 2) C hn
+    (fun N => trial_legal (S N)) (fun N => trial_head (S N)) hC
+  · intro N
+    have hnorm := norm_sub_le qOne (trial (S N))
+    rw [qOne_norm] at hnorm
+    change ‖qOne - trial (S N)‖ ^ 2 ≤ (1 + 2 * ‖trial (S N)‖ ^ 2) + 1
+    nlinarith [norm_nonneg (qOne - trial (S N)), norm_nonneg (trial (S N)),
+      sq_nonneg (‖trial (S N)‖ - 1)]
+  · exact hcsub
+end RiemannResearch.RH.QCRTOptimizerGrowth

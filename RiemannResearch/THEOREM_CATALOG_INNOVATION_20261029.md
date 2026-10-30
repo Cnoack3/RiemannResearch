@@ -56,3 +56,54 @@ The coherent isolated candidate passed job_cfN03C2JXjyISgKnEPsZjN5yO55u-HRA.
 The actual inverse identity and the conditional growth consumer have only
 propext, Classical.choice, and Quot.sound in the selected axiom audit.
 Saved-source validation and publication must pass the final checkpoint.
+
+## Full squarefree trial continuation — 30 October 2026
+
+See [full-squarefree research memorandum](RH/FullSquarefreeTrialResearch20261030.md).
+
+Established finite and structural results:
+
+- [QCRTSquarefreeExhaustion](RH/QCRTSquarefreeExhaustion.lean):
+  squarefree_conductor_mem, every_squarefree_conductor_eventually,
+  every_finite_squarefree_support, dense_iSup_eq_squarefreeSpan,
+  dense_closure_eq_squarefreeClosure.
+  The entire squarefree dictionary, including composite conductors, is exhausted.
+- [FiniteGramTrialCertificate](Analysis/FiniteGramTrialCertificate.lean):
+  capacity_eq_inverseGram, inverseGram_trial_completion,
+  inverseGram_trial_lower, inverseGram_direction_lower.
+  Literal matrix trial identities retain the exact loss square.
+- [QCRTTrialCertificate](RH/QCRTTrialCertificate.lean):
+  jointFamily_independent, jointFamily_gram, dense_trial_completion,
+  dense_step_le_trialCertificate, dense_direction_gain_lower,
+  dense_full_completion, dense_trial_telescope, dense_energy_le_trial_sum.
+  All added squarefree conductors and actual complete-Q moving sources are used.
+- [QCRTPrimePairTrial](RH/QCRTPrimePairTrial.lean):
+  primePair_sequence, primePair_head, primePair_anchor_cancellation,
+  binary_base_norm_sq, primePair_norm_sq_le, primePair_mem_divisorStage.
+  Explicit g_p−2g_(2p) has complete energy at most 3/(4p).
+- [QCRTPrimePairCertificate](RH/QCRTPrimePairCertificate.lean):
+  primePair_completion, primePair_step_le_cost_sub_source_sq,
+  dense_new_prime_pair_bound.
+  The actual old-dictionary next-head optimizer supplies the signed source.
+  This is a finite-stage gain bound, not a cumulative growth estimate.
+- [QCRTPrimeInnovation](RH/QCRTPrimeInnovation.lean):
+  rawDirection_floor_block, screenedDirection_floor_block.
+  Exact floor-block coordinates retain every positive old divisor and all cross terms.
+
+Conditional research reductions:
+
+- QCRTOptimizerGrowth.riemannHypothesis_of_cofinal_subpolynomial_stageEnergy.
+  **Open:** subpolynomial actual energy along physical heads tending to infinity.
+- QCRTTrialCertificate.riemannHypothesis_of_cofinal_trial_budget.
+  **Open:** a full-family signed cofinal trial budget and its physical-head
+  relative-log growth limit.
+
+Selected candidate checks succeeded in job_GDB5Pf7hgyFldirLhkF8EjBEiaHY80rt,
+job_ruHDm8oqDx-6K2CN5q6Y8eTdzxY5GqbU,
+job_dNX3t9eMTc9_pDjexj3ZPTtyIH5o2b0e, and
+job_5yiMw6Df2HEac2b34ki1e1nUIvGID7IP.
+Selected full-trial, cofinal-consumer, prime-pair, and exhaustion axiom audits
+reported only propext, Classical.choice, and Quot.sound.
+Publication remains gated by saved-source checkpoint validation.
+The numerical diagnostic source in the memorandum is exploratory floating-point
+computation; it is not a Lean certificate or an arithmetic provider. RH remains open here.

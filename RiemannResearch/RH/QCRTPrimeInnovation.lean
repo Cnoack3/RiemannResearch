@@ -6,6 +6,7 @@ Authors: Christian Noack
 import RiemannResearch.Analysis.OrthogonalObservationInnovation
 import RiemannResearch.RH.QResidueAnchorScreening
 import RiemannResearch.RH.QCRTInnovationGain
+import RiemannResearch.RH.QFloorDilation
 import RiemannResearch.RH.QSquarefreeEnergyTransitions
 import RiemannResearch.RH.QSquarefreeAffineHead
 import RiemannResearch.RH.QSquarefreeLatticePackets
@@ -16,6 +17,7 @@ import Mathlib.NumberTheory.Bertrand
 import Mathlib.NumberTheory.Primorial
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Module
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 import Lean.Elab.Tactic.Omega
@@ -166,4 +168,35 @@ theorem actual_screening_ratio (i : ℕ) (hlarge : 16 * (2 * i + 3) ≤ oldPerio
   rw [hid] at hh
   exact hu.trans hh
 
+end RiemannResearch.RH.QCRTPrimeInnovation
+
+
+namespace RiemannResearch.RH.QCRTPrimeInnovation
+open QFloorDilation ZetaTwoHilbert QSquarefreeLatticePackets QCRTInnovationGain
+open RiemannResearch.Analysis.OrthogonalObservationInnovation
+/-- Exact arithmetic change of coordinates for EVERY positive old divisor d.
+Together with d=1 this retains the entire new-conductor block. -/
+theorem rawDirection_floor_block (i d : ℕ) (hd : 0 < d) :
+    rawDirection i d =
+      floorDilation (2 * i + 3) (by omega) (qResidue d) +
+        (1 / (d : ℝ)) • rawDirection i 1 := by
+  rw [floorDilation_qResidue (2 * i + 3) d (by omega) hd]
+  have hc : (oldPeriod i : ℝ) / (((2 * i + 3) * d : ℕ) : ℝ) =
+      (1 / (d : ℝ)) * ((oldPeriod i : ℝ) / (2 * i + 3 : ℕ)) := by
+    simp only [Nat.cast_mul, div_eq_mul_inv, mul_inv_rev, one_mul]
+    ring
+  simp only [rawDirection, Nat.mul_one, compensatedResidue]
+  rw [hc]
+  module
+
+/-- Screening preserves that full arithmetic decomposition and all cross terms. -/
+theorem screenedDirection_floor_block (i d : ℕ) (hd : 0 < d) :
+    screenedDirection i d =
+      innovation (oldTangent i)
+        (floorDilation (2 * i + 3) (by omega) (qResidue d)) +
+        (1 / (d : ℝ)) • screenedDirection i 1 := by
+  unfold screenedDirection
+  rw [rawDirection_floor_block i d hd]
+  simp only [innovation, map_add, map_smul]
+  module
 end RiemannResearch.RH.QCRTPrimeInnovation
