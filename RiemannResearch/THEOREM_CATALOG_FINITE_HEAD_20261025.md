@@ -231,3 +231,50 @@ is not proved. The existing conditional polylogarithmic RH implication is
 unchanged. This concerns ordinary canonical projections, not the distinct
 constrained primorial minimum-energy family. The new analysis is on paper;
 no Lean verification or rigorous numerical enclosure is claimed.
+
+## Squarefree short-head formalization and refinements, 31 October 2026
+
+### Established finite identities and inequalities
+
+- `Analysis/FiniteDivisorCoercivity.lean` and `RH/MobiusHeadCoercivity.lean`
+  prove finite signed Mobius recovery and the coefficient energy bound with
+  factor `(2 - 1/H)^2 * L_H^2`, strictly below the earlier `4 * L_H^2`.
+  The slope square includes all high-conductor coefficients.
+- `Analysis/FiniteGramCoercivity.lean`, `RH/QHeadGramCoercivity.lean`,
+  `RH/QDivisorHeadCoercivity.lean`, and `RH/QSquarefreeSchurCoercivity.lean`
+  give an unconditional inverse bound for the complete-Q, full-head-null
+  Schur family. A legal anchor exists when `1 <= H` and `2*H <= N+1`.
+- `Analysis/RankOneCoefficientCoercivity.lean` and `RH/QFullGramRankOne.lean`
+  retain the leading-slope square to subtract `(sum b)^2/(card+1)` from
+  the full normalized inverse-Gram upper bound, with exact deficit identities.
+- `Analysis/CenteredProjectionResponse.lean` and
+  `RH/QSquarefreeShortHeadResponse.lean` give exact source variance,
+  complementary signed response, the joint ellipse, partial normal equations,
+  and two-stage kernel/optimizer energy gaps for the actual canonical residual.
+- `RH/QSquarefreeSchurRepresentation.lean` proves the actual head-space span
+  and literal signed response `y^T S^-1 q`, with original source moments.
+  No omitted composite conductor, truncated Q Gram, or span hypothesis remains.
+- `Analysis/DyadicBlockSummability.lean` and `RH/QPolylogBlockEnergy.lean`
+  transfer physical dyadic mean squares to complete weighted summable energy.
+- `Analysis/WeightedYoungConstant.lean` and
+  `RH/QSquarefreeShortHeadYoung.lean` optimize the actual-block comparison
+  constant to `(sqrt C + 2*sqrt zetaTwo)^2` for `C>0`, retaining the loss square.
+
+### Conditional research reductions
+
+- `RH/QSquarefreeShortHeadCriterion.lean` weakens uniform stagewise bounds
+  to frequently occurring bounds, with separate unbounded stage sets at
+  each fixed physical site.
+- `RH/QSquarefreeDyadicMeanSquare.lean` and
+  `RH/QSquarefreeShortHeadBlocks.lean` prove RH from a common logarithmic
+  mean-square envelope on each dyadic short-head block. The unbounded stage
+  sets may differ between blocks.
+
+**Open:** the common arithmetic signed-source bound, including the weaker
+frequent dyadic mean-square envelope. The unconditional inverse-Gram bound
+does not establish it. The finite-cutoff constant improves, but no new
+asymptotic exponent or unconditional RH conclusion is obtained.
+
+See `RH/SquarefreeShortHeadLean20261031.md` for precise formulas, formal
+scope, and the exploratory stage-240/site-221 checks. Those numerical values
+remain uncertified; the eight lower-range contributions all remain negative.
