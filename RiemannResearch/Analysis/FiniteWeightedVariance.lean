@@ -27,6 +27,22 @@ def mean (s : Finset ι) (w f : ι → ℝ) : ℝ :=
 def variance (s : Finset ι) (w f : ι → ℝ) : ℝ :=
   ∑ i ∈ s, w i * (f i - mean s w f) ^ 2
 
+/-- Exact pairwise moment identity, including zero total mass and signed weights.
+The canonical squarefree prefix response is an additional RH consumer. -/
+theorem pairwise_moment_exact {ι : Type*} (s : Finset ι) (w f : ι → ℝ) :
+    (∑ i ∈ s, w i * f i) ^ 2 +
+      (∑ i ∈ s, ∑ j ∈ s, w i * w j * (f i - f j) ^ 2) / 2 =
+      (∑ i ∈ s, w i) * (∑ i ∈ s, w i * f i ^ 2) := by
+  have ht : ∀ i j, w i * w j * (f i - f j) ^ 2 =
+      (w i * f i ^ 2) * w j + w i * (w j * f j ^ 2) -
+        2 * (w i * f i) * (w j * f j) := by
+    intro i j
+    ring
+  simp_rw [ht, Finset.sum_sub_distrib, Finset.sum_add_distrib,
+    ← Finset.mul_sum, ← Finset.sum_mul]
+  simp_rw [← Finset.mul_sum]
+  ring
+
 theorem centered_sum (s : Finset ι) (w f : ι → ℝ) (hW : mass s w ≠ 0) :
     (∑ i ∈ s, w i * (f i - mean s w f)) = 0 := by
   simp_rw [mul_sub]

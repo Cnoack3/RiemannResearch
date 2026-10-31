@@ -234,3 +234,39 @@ Paper-level results, not newly Lean-verified:
 
 Lean retry job_jaLoqWLh0iqcPljrbo8giEQ0CtW0YGa5 timed out after 180.058 seconds
 with verified=false. This continuation publishes documentation only.
+
+## Canonical squarefree prefix Abel and dispersion — 31 October 2026
+
+See [the exact-prefix memorandum](RH/SquarefreePrefixAbelDispersion20261031.md).
+These use the ordinary canonical full-squarefree projection, including composite
+conductors, and the complete Q inner product.
+
+Established declarations:
+
+- `FiniteWeightedVariance.pairwise_moment_exact`: exact pairwise moment
+  identity, including signed weights and zero mass.
+- `QSquarefreePrefixAbel.prefix_eq_physical_sum`,
+  `prefix_eq_neg_complete_tail`, `response_abel_exact`,
+  `lower_response_abel_exact`, `interval_response_abel_exact`,
+  `movingCorrection_hasSum_prefix`, and `movingCorrection_eq_tsum_prefix`:
+  physical weighted normalization, both endpoints, and the absolutely
+  convergent complete signed Abel sum.
+- `prefix_projected_energy_exact` and `prefix_sq_le_exact_variance`:
+  binary-head residual variance with the complete orthogonal loss square.
+- `response_energy_dispersion_exact`, `abelDispersion_nonneg`,
+  `response_sq_lt_abel_energy_of_pair`, and `block_energy_dispersion_exact`:
+  exact Cauchy loss, nonnegativity for H<n, and a conditional strict finite gain.
+
+Conditional research reduction:
+
+- `QSquarefreePrefixCriterion.riemannHypothesis_of_frequently_dyadic_prefix_dispersion`.
+  **Open provider:** one common C>=0 and natural exponent m such that every
+  dyadic block has arbitrarily large stages satisfying the compensated-prefix
+  energy envelope stated in the theorem. The stage set may depend on the block.
+  `block_bound_iff` proves that this is exactly the previous short-head
+  mean-square condition, not a new weaker hypothesis or a proof of that bound.
+
+Saved-source imports and six selected foundation audits passed
+`job_z4_MIX5cOI4f2YS3q5ZfMqxqdN2kKQDI` (20.766 server seconds).
+Only propext, Classical.choice, and Quot.sound occur in those axiom lists.
+Final publication remains subject to the checkpoint reported with delivery.
