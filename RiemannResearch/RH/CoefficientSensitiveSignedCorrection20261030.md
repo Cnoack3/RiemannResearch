@@ -532,3 +532,14 @@ Primary project sources:
 Provenance: user-requested continuation and the cited project identities.
 The finite inequalities use elementary quadratic identities, Cauchy--Schwarz,
 and harmonic summation. No novelty claim is made.
+
+## Subsequent focused Lean recovery — 30 October 2026
+
+The historical timeout report above describes this memorandum's original
+continuation. A subsequent focused recovery checked 21 finite declarations,
+including positive weighted rows, explicit head-adjoint constraints, and actual
+Mangoldt bounds with the denominator factor and exponential normalization intact.
+See [the verification and application record](CoefficientSensitiveFiniteVerification20261030.md).
+The harmonic summation and improved infinite envelope remain paper-level;
+actual optimizer growth and the separate density premise remain unresolved
+formal providers. Final project acceptance is controlled by the source checkpoint.

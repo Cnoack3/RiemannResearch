@@ -5,6 +5,12 @@ Authors: RiemannResearch contributors
 -/
 import RiemannResearch.RH.WeilExplicitFormula.PrimeSideB.PPKernel
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import RiemannResearch.Analysis.RationalLogSeparation
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
 
 /-!
 # Finite oscillatory kernels and rational frequency separation
@@ -126,5 +132,80 @@ theorem finitePhaseKernel_rational_resonance {n m k : ℕ}
       ((B - A : ℝ) : ℂ) := by
   rw [rationalPhase_frequency_eq hn hm hk, hnmk, sub_self]
   exact finitePhaseKernel_zero A B
+
+/-!
+Coefficient-sensitive continuation. Source for statements and elementary proof
+strategy: RH/CoefficientSensitiveSignedCorrection20261030.md, sections 3 and 7.
+Verification and applications: RH/CoefficientSensitiveFiniteVerification20261030.md.
+The finite statements impose no RH or zero-density hypothesis.
+-/
+
+open RiemannResearch.Analysis.RationalLogSeparation
+
+theorem norm_finitePhaseKernel_rational_gap_le {n m q : ℕ}
+    (hn : 0 < n) (hm : 0 < m) (hq : 0 < q)
+    (hnear : (q : ℝ) ≤ 2 * n / m) (hne : n ≠ m * q) (A B : ℝ) :
+    ‖finitePhaseKernel A B (Real.log ((n : ℝ) / m) - Real.log q)‖ ≤
+      (4 * n) / |(n : ℝ) - (m : ℝ) * q| := by
+  have hnR : 0 < (n : ℝ) := by exact_mod_cast hn
+  have hmR : 0 < (m : ℝ) := by exact_mod_cast hm
+  have hqR : 0 < (q : ℝ) := by exact_mod_cast hq
+  have heq : Real.log ((n : ℝ) / m) - Real.log q =
+      Real.log ((n : ℝ) / m / q) := (Real.log_div (div_pos hnR hmR).ne' hqR.ne').symm
+  have hsep := rational_log_separation hm hn hq hnear hne
+  have hlog : Real.log ((n : ℝ) / m / q) ≠ 0 := by
+    intro hz
+    rw [hz, abs_zero] at hsep
+    have hp : 0 < 1 / (2 * (n : ℝ)) := by positivity
+    linarith
+  rw [heq]
+  calc
+    _ ≤ 2 / |Real.log ((n : ℝ) / m / q)| := norm_finitePhaseKernel_le hlog A B
+    _ = 2 * (1 / |Real.log ((n : ℝ) / m / q)|) := by ring
+    _ ≤ 2 * ((2 * n) / |(n : ℝ) - (m : ℝ) * q|) :=
+      mul_le_mul_of_nonneg_left (rational_log_peak_gap_bound hm hn hq hnear hne) (by norm_num)
+    _ = _ := by ring
+/-- Algebraic right-line normalization: the factor `(n / (m*q))^2` is retained. -/
+theorem rightLine_weight_gap_exact {n m q : ℕ}
+    (hn : 0 < n) (hm : 0 < m) (hq : 0 < q) (L : ℝ) :
+    (((n : ℝ) / m) * Real.sqrt ((n : ℝ) / m) / (2 * Real.pi)) *
+      (L / (q : ℝ)^2) * ((4 * n) / |(n : ℝ) - (m : ℝ) * q|) =
+    (2 * Real.sqrt (m : ℝ) * Real.sqrt n / Real.pi) *
+      (L * (((n : ℝ) / m) / q)^2 / |(n : ℝ) - (m : ℝ) * q|) := by
+  have hmR : 0 < (m : ℝ) := by exact_mod_cast hm
+  have hnR : 0 < (n : ℝ) := by exact_mod_cast hn
+  have hqR : 0 < (q : ℝ) := by exact_mod_cast hq
+  have hs : Real.sqrt ((n : ℝ) / m) ≠ 0 :=
+    (Real.sqrt_pos.mpr (div_pos hnR hmR)).ne'
+  have hweight : ((n : ℝ) / m) * Real.sqrt ((n : ℝ) / m) =
+      (((n : ℝ) / m)^2) / Real.sqrt ((n : ℝ) / m) := by
+    apply (eq_div_iff hs).2
+    calc
+      _ = ((n : ℝ) / m) * (Real.sqrt ((n : ℝ) / m))^2 := by ring
+      _ = ((n : ℝ) / m) * ((n : ℝ) / m) := by
+        rw [Real.sq_sqrt (div_pos hnR hmR).le]
+      _ = _ := by ring
+  rw [hweight, ← sqrt_ratio_weight_exact hm hn]
+  ring
+
+/-- Denominator-preserving bound with the complete actual right-line weight.
+The nonnegative scalar `L` can be specialized to every von Mangoldt value. -/
+theorem rightLine_weighted_kernel_gap_le {n m q : ℕ}
+    (hn : 0 < n) (hm : 0 < m) (hq : 0 < q)
+    (hnear : (q : ℝ) ≤ 2 * n / m) (hne : n ≠ m * q)
+    (L : ℝ) (hL : 0 ≤ L) (A B : ℝ) :
+    (((n : ℝ) / m) * Real.sqrt ((n : ℝ) / m) / (2 * Real.pi)) *
+      (L / (q : ℝ)^2) *
+      ‖finitePhaseKernel A B (Real.log ((n : ℝ) / m) - Real.log q)‖ ≤
+    (2 * Real.sqrt (m : ℝ) * Real.sqrt n / Real.pi) *
+      (L * (((n : ℝ) / m) / q)^2 / |(n : ℝ) - (m : ℝ) * q|) := by
+  calc
+    _ ≤ (((n : ℝ) / m) * Real.sqrt ((n : ℝ) / m) / (2 * Real.pi)) *
+        (L / (q : ℝ)^2) * ((4 * n) / |(n : ℝ) - (m : ℝ) * q|) :=
+      mul_le_mul_of_nonneg_left
+        (norm_finitePhaseKernel_rational_gap_le hn hm hq hnear hne A B)
+        (by positivity)
+    _ = _ := rightLine_weight_gap_exact hn hm hq L
+
 
 end RiemannResearch.Analysis.ZeroOrdinate

@@ -1,8 +1,15 @@
+/-
+Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: RiemannResearch contributors
+-/
 import RiemannResearch.Analysis.FiniteOscillatoryKernel
 import Mathlib.NumberTheory.LSeries.Dirichlet
 import Mathlib.Analysis.Calculus.LogDeriv
 import Mathlib.MeasureTheory.Integral.DominatedConvergence
 import Mathlib.Tactic.FunProp
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Tactic.Ring
 
 /-!
 # The actual finite right line in rational Landau's formula
@@ -415,5 +422,97 @@ theorem norm_rightLandauLine_rational_add_resonance_le {n m : ℕ}
   rw [he, norm_mul, norm_neg, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hc]
   exact mul_le_mul_of_nonneg_left
     (norm_tsum_rationalMangoldtNonresonantTerm_le hn hm A B) hc
+
+/-!
+Coefficient-sensitive continuation. Source for statements and elementary proof
+strategy: RH/CoefficientSensitiveSignedCorrection20261030.md, sections 3 and 7.
+Verification and applications: RH/CoefficientSensitiveFiniteVerification20261030.md.
+The finite statements impose no RH or zero-density hypothesis.
+-/
+
+theorem norm_rationalMangoldtNonresonantTerm_gap_le {n m q : ℕ}
+    (hn : 0 < n) (hm : 0 < m) (hq : 0 < q)
+    (hnear : (q : ℝ) ≤ 2 * n / m) (hne : n ≠ m * q) (A B : ℝ) :
+    ‖rationalMangoldtNonresonantTerm n m A B q‖ ≤
+      mangoldtSquareCoeff q * ((4 * n) / |(n : ℝ) - (m : ℝ) * q|) := by
+  rw [rationalMangoldtNonresonantTerm, if_neg hne,
+    rationalMangoldtPhaseTerm, norm_mul, Complex.norm_real,
+    Real.norm_eq_abs, abs_of_nonneg (mangoldtSquareCoeff_nonneg q)]
+  exact mul_le_mul_of_nonneg_left
+    (norm_finitePhaseKernel_rational_gap_le hn hm hq hnear hne A B)
+    (mangoldtSquareCoeff_nonneg q)
+
+theorem norm_sum_mul_rationalMangoldtNonresonantTerm_gap_le {ι : Type*}
+    (s : Finset ι) (n m q : ι → ℕ) (c : ι → ℂ) (A B : ℝ)
+    (hn : ∀ i ∈ s, 0 < n i) (hm : ∀ i ∈ s, 0 < m i)
+    (hq : ∀ i ∈ s, 0 < q i)
+    (hnear : ∀ i ∈ s, (q i : ℝ) ≤ 2 * n i / m i)
+    (hne : ∀ i ∈ s, n i ≠ m i * q i) :
+    ‖∑ i ∈ s, c i * rationalMangoldtNonresonantTerm (n i) (m i) A B (q i)‖ ≤
+      ∑ i ∈ s, ‖c i‖ * mangoldtSquareCoeff (q i) *
+        ((4 * n i) / |(n i : ℝ) - (m i : ℝ) * q i|) := by
+  calc
+    _ ≤ ∑ i ∈ s, ‖c i * rationalMangoldtNonresonantTerm (n i) (m i) A B (q i)‖ :=
+      norm_sum_le _ _
+    _ ≤ _ := by
+      apply Finset.sum_le_sum
+      intro i hi
+      rw [norm_mul, mul_assoc]
+      exact mul_le_mul_of_nonneg_left
+        (norm_rationalMangoldtNonresonantTerm_gap_le (hn i hi) (hm i hi)
+          (hq i hi) (hnear i hi) (hne i hi) A B) (norm_nonneg _)
+/-- Exact conversion of the exponential normalization used by the actual right line. -/
+theorem rightLine_exp_weight_eq {x : ℝ} (hx : 0 < x) :
+    Real.exp (3 * Real.log x / 2) = x * Real.sqrt x := by
+  have hsquare : (Real.exp (Real.log x / 2))^2 = x := by
+    rw [pow_two, ← Real.exp_add]
+    convert Real.exp_log hx using 1
+    congr 1
+    ring
+  have hhalf : Real.exp (Real.log x / 2) = Real.sqrt x := by
+    nlinarith [Real.exp_pos (Real.log x / 2), Real.sqrt_nonneg x,
+      Real.sq_sqrt hx.le]
+  calc
+    _ = Real.exp (Real.log x + Real.log x / 2) := by congr 1; ring
+    _ = Real.exp (Real.log x) * Real.exp (Real.log x / 2) := Real.exp_add _ _
+    _ = _ := by rw [Real.exp_log hx, hhalf]
+
+/-- The normalized actual Mangoldt summand retains the exact rational denominator. -/
+theorem weighted_rationalMangoldtNonresonantTerm_gap_le {n m q : ℕ}
+    (hn : 0 < n) (hm : 0 < m) (hq : 0 < q)
+    (hnear : (q : ℝ) ≤ 2 * n / m) (hne : n ≠ m * q) (A B : ℝ) :
+    (Real.exp (3 * Real.log ((n : ℝ) / m) / 2) / (2 * Real.pi)) *
+      ‖rationalMangoldtNonresonantTerm n m A B q‖ ≤
+    (2 * Real.sqrt (m : ℝ) * Real.sqrt n / Real.pi) *
+      ((Λ q : ℝ) * (((n : ℝ) / m) / q)^2 / |(n : ℝ) - (m : ℝ) * q|) := by
+  have hx : 0 < (n : ℝ) / m := div_pos (by exact_mod_cast hn) (by exact_mod_cast hm)
+  rw [rightLine_exp_weight_eq hx, rationalMangoldtNonresonantTerm, if_neg hne,
+    rationalMangoldtPhaseTerm, norm_mul, Complex.norm_real,
+    Real.norm_eq_abs, abs_of_nonneg (mangoldtSquareCoeff_nonneg q)]
+  simp only [mangoldtSquareCoeff, ← mul_assoc]
+  exact rightLine_weighted_kernel_gap_le hn hm hq hnear hne
+    (Λ q : ℝ) ArithmeticFunction.vonMangoldt_nonneg A B
+
+/-- Finite coefficient-sensitive assembly of fully weighted nonresonant terms. -/
+theorem sum_weighted_rationalMangoldtNonresonantTerm_gap_le {ι : Type*}
+    (s : Finset ι) (n m q : ι → ℕ) (c : ι → ℂ) (A B : ℝ)
+    (hn : ∀ i ∈ s, 0 < n i) (hm : ∀ i ∈ s, 0 < m i)
+    (hq : ∀ i ∈ s, 0 < q i)
+    (hnear : ∀ i ∈ s, (q i : ℝ) ≤ 2 * n i / m i)
+    (hne : ∀ i ∈ s, n i ≠ m i * q i) :
+    (∑ i ∈ s, ‖c i‖ *
+      ((Real.exp (3 * Real.log ((n i : ℝ) / m i) / 2) / (2 * Real.pi)) *
+        ‖rationalMangoldtNonresonantTerm (n i) (m i) A B (q i)‖)) ≤
+    ∑ i ∈ s, ‖c i‖ *
+      ((2 * Real.sqrt (m i : ℝ) * Real.sqrt (n i) / Real.pi) *
+        ((Λ (q i) : ℝ) * (((n i : ℝ) / m i) / q i)^2 /
+          |(n i : ℝ) - (m i : ℝ) * q i|)) := by
+  apply Finset.sum_le_sum
+  intro i hi
+  exact mul_le_mul_of_nonneg_left
+    (weighted_rationalMangoldtNonresonantTerm_gap_le
+      (hn i hi) (hm i hi) (hq i hi) (hnear i hi) (hne i hi) A B)
+    (norm_nonneg _)
+
 
 end RiemannResearch.Analysis.ZeroOrdinate

@@ -138,3 +138,47 @@ See [research ledger](RH/SignedQuadraticComplexStability20261030.md). The follow
 - `rational_log_peak_sqrt_gap_bound`
 
 The complex Möbius transformation reverses the complete squarefree covariance, preserves the coefficient norm and pairs opposite eigenvalues. The Hermitian results characterize exact translation invariance and bound approximate kernel defects; the arithmetic estimates retain the integer mismatch in the nonresonant peak. All support boundaries and the zero-diagonal quadratic remainder remain explicit.
+
+## Coefficient-sensitive recovery — 30 October 2026
+
+See [verification and growing-support analysis](RH/CoefficientSensitiveFiniteVerification20261030.md).
+All 21 additions below are finite theorems with explicit elementary hypotheses.
+Development checks print only `propext`, `Classical.choice`, and `Quot.sound`;
+the final server checkpoint gates source acceptance and publication.
+The improved infinite harmonic envelope and optimizer coefficient-growth
+estimates are not promoted to verified theorems by these finite checks.
+
+### Analysis/HermitianQuadraticPerturbation.lean
+
+- `symmetric_pairing_le_row_energy`
+- `kernelQuadratic_abs_le_row_energy`
+- `kernelQuadratic_perturbation_row_bound`
+- `kernelMixed_eq_action_sub_annihilator`
+- `kernelMixed_norm_le_action_sub_annihilator`
+- `kernelQuadratic_perturbation_annihilator_bound`
+- `finite_head_adjoint_pairing`
+- `finite_head_adjoint_annihilates`
+- `kernelQuadratic_perturbation_head_constraints`
+- `kernelQuadratic_perturbation_head_row_bound`
+- `symmetric_pairing_le_weighted_row_energy`
+- `kernelQuadratic_abs_le_weighted_row_energy`
+- `kernelQuadratic_perturbation_head_weighted_row_bound`
+
+### Analysis/FiniteOscillatoryKernel.lean
+
+- `norm_finitePhaseKernel_rational_gap_le`
+- `rightLine_weight_gap_exact`
+- `rightLine_weighted_kernel_gap_le`
+
+### Analysis/ActualRationalLandauRightLine.lean
+
+- `norm_rationalMangoldtNonresonantTerm_gap_le`
+- `norm_sum_mul_rationalMangoldtNonresonantTerm_gap_le`
+- `rightLine_exp_weight_eq`
+- `weighted_rationalMangoldtNonresonantTerm_gap_le`
+- `sum_weighted_rationalMangoldtNonresonantTerm_gap_le`
+
+**Open:** actual growing-family weighted action defects and row energies;
+coefficient-weighted Landau budgets; the separately deferred uniform Selberg
+density provider; and the connection to actual subpolynomial physical energy.
+No RH consequence is asserted without those separate providers.
