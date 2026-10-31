@@ -1,5 +1,42 @@
 # Theorem catalog
 
+## Normalized exact heads, persistent squarefree support, and complete spectral energy (2026-10-30)
+
+Research note: [RH/NormalizedExactHeadResearch20261030.md](RH/NormalizedExactHeadResearch20261030.md).
+
+Established declarations, subject to the publication checkpoint:
+
+- Analysis/NormalizedEnergy: nonzero-scalar membership equivalence, exact
+  normalized norm, bounded-perturbation preservation of sublinear and
+  subpolynomial energy, and residual-energy transfer.
+- Analysis/FullSupportPerturbation: finite noncancellation window,
+  arbitrarily small actual norm perturbations, and exact signed energy.
+- RH/QRamanujanFullSupport: squarefree residue/packet span equality,
+  fresh-prime zero-head directions, distinct nonzero packet coefficients,
+  density in every fixed-head fiber, and persistent use of every squarefree
+  q >= 2 at every stage j >= q.
+- RH/QSquarefreeFullSupportHeads: actual unconditional cofinal exact heads
+  with c_j = 1, complete energy o(H_j), all squarefree packets used, and every
+  fixed logarithmic saving. This strengthens the support construction.
+- RH/CanonicalMobiusBoundaryEnergy: actual positive-half-plane finite Mellin
+  identity and exact critical-line zeta-weighted energy of corrected Mobius
+  trials, retaining the entire signed symbol and anchor.
+- RH/QMobiusBoundaryEnergy: exact complete-Q energy including the positive
+  measure-correction term.
+- RH/QSquarefreeOptimizerEnergy: exact trial/minimum/excess equality and
+  transfer of sublinear, stretched, and logarithmic bounds to the actual
+  residual-energy optimizer in every stated feasible divisor stage.
+
+Conditional research reduction:
+
+- RH/QNormalizedExactHead.riemannHypothesis_of_eventually_nonzero_normalized_subpolynomial.
+- Only eventual c_j != 0 is required; a positive liminf is unnecessary.
+- **Open:** the actual normalized energy is H_j^{o(1)}, equivalently the
+  displayed logarithmic quotient tends to zero. Fixed logarithmic savings
+  over exponent one do not discharge this obligation.
+- No unconditional RH or constant-closure conclusion is asserted.
+
+
 ## Moving Gram predictions and sharper squarefree cancellation budget (2026-10-29)
 
 Research note: [RH/MovingPredictionCancellation20261029.md](RH/MovingPredictionCancellation20261029.md).
