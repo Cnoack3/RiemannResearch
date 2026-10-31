@@ -1,0 +1,38 @@
+{
+  "cutoff": 16,
+  "conductors": [
+    2,
+    3,
+    5,
+    6,
+    7,
+    10,
+    11,
+    13,
+    14,
+    15
+  ],
+  "coefficient_numerators": [
+    99,
+    95,
+    82,
+    -58,
+    69,
+    -40,
+    49,
+    47,
+    -35,
+    -12
+  ],
+  "coefficient_denominator": 100,
+  "period": 30030,
+  "residual_common_denominator": 3003000,
+  "dyadic_bits": 70,
+  "head_ceiling_integer": "24842921440734476055",
+  "period_square_numerator": "49130061104844720",
+  "Q_error_upper_bound_numerator": "87640912280977745186713323370986487",
+  "Q_error_upper_bound_denominator": "6660770279259472370356463861760000000",
+  "upper_bound_decimal": 0.013157774342387536,
+  "proved_comparison": "trial Q error < 1/75; hence epsilon_15 < 1/75",
+  "verification": "exact integer/Fraction computation plus paper tail argument; not Lean checked"
+}

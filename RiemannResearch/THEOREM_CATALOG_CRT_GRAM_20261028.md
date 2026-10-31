@@ -2,6 +2,52 @@
 
 28 October 2026. See [research memorandum](RH/CRTGramMinimizersResearch20261028.md).
 
+## Complete-squarefree Ramanujan coefficients (2026-10-30)
+
+See [the coefficient construction and convergence audit](RH/SquarefreeRamanujanCoefficientsResearch20261030.md).
+
+Established in QSquarefreeRamanujanProjection, reusing the canonical objects
+of QSquarefreeInverseCapacity:
+
+- coefficients_eq_inverseGram identifies the existing covariance-defined
+  coefficients with the actual uncentered Q Gram inverse applied to qMean.
+- conductors, mem_conductors, conductor_mem, packetSupport_gt_one_mem,
+  and conductors_subset_packetSupport identify the complete squarefree cutoff,
+  including composites.
+- packetCoefficients_formula and candidate_eq_packets give the exact divisor
+  transform and canonical representation on that cutoff.
+- error_eq_inverseGram identifies the complete infinite Q error with the
+  constant-target inverse-Gram deficit.
+- packet_sum_tendsto_projection is unconditional; its limit is the squarefree
+  closed-span projection, not an asserted constant.
+- inverseGram_tendsto_one_iff_closure and
+  riemannHypothesis_of_inverseGram_tendsto_one are conditional convergence
+  reductions. The actual inverse-Gram saturation is not proved.
+
+Established in QMobiusTrialHeadObstruction:
+
+- head_energy and error_head_tail retain the exact finite physical head and
+  entire infinite Q tail of the raw Mobius trial.
+- head_energy_le_error is a lower bound only for that trial.
+- not_tendsto_error_zero_of_head assumes the explicit arithmetic head-energy
+  nonconvergence provider. The classical Mellin oscillation argument is
+  discussed in the memorandum but is not formalized here.
+
+The memorandum separately proves polynomial conditioning and remote-tail
+bounds on paper, records full-period floating-point experiments through
+cutoff 256, and supplies an external exact rational trial certificate
+epsilon_15 < 1/75. These are not presented as Lean-checked numerical bounds or
+as a proof that the canonical error tends to zero. Programs and data are under
+RH/experiments/squarefree_ramanujan_20261030/.
+
+Pre-publication verification: serialized workspace snippets
+job_VCCyEqpT6PN6YxD5s5nTS0mPJ3btu2rz (6.411 s) and
+job_NjzaB-OTzbml8bhFsXYDieDh33Cmp-dg (5.652 s) succeeded with verified=true.
+Axiom audits of candidate_eq_packets,
+riemannHypothesis_of_inverseGram_tendsto_one, and error_head_tail reported
+only propext, Classical.choice, and Quot.sound. Affected-module validation
+and publication are handled by the final workspace checkpoint.
+
 ## Actual screened CRT blocks and arithmetic anchor bounds (2026-10-29)
 
 See [the screened-prime-block memorandum](RH/ScreenedPrimeBlockArithmetic20261029.md).

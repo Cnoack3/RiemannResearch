@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QSquarefreeRamanujanProjection
+import RiemannResearch.RH.QMobiusTrialHeadObstruction
 import RiemannResearch.Analysis.NormalizedEnergy
 import RiemannResearch.Analysis.FullSupportPerturbation
 import RiemannResearch.RH.QNormalizedExactHead
