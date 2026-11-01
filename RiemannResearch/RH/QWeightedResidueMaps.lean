@@ -38,4 +38,25 @@ theorem residue_pullback_energy (M L : ℕ) (hM : 0 < M) (hL : 0 < L)
     energy (residueWeight L) (f ∘ reduction M L hM) =
       energy (residueWeight M) f := by
   rw [pullback_energy, pushed_residueWeight M L hM hL hML]
+open QWeightedResidues RiemannResearch.Analysis.FiniteWeightedRefinement
+open RiemannResearch.Analysis.FiniteWeightedPushforward
+def residueAverage (M L : ℕ) (hM : 0 < M) (F : Fin L → ℝ) : Fin M → ℝ :=
+  average (residueWeight L) (reduction M L hM) F
+theorem residue_adjoint_identity (M L : ℕ) (hM : 0 < M) (hL : 0 < L)
+    (hML : M ∣ L) (f : Fin M → ℝ) (F : Fin L → ℝ) :
+    pairing (residueWeight L) (f ∘ reduction M L hM) F =
+      pairing (residueWeight M) f (residueAverage M L hM F) := by
+  have hm (a : Fin M) : pushWeight (residueWeight L) (reduction M L hM) a ≠ 0 := by
+    rw [pushed_residueWeight M L hM hL hML]
+    exact ne_of_gt (residueWeight_pos M hM a)
+  simpa only [pushed_residueWeight M L hM hL hML, residueAverage] using
+    adjoint_identity (residueWeight L) (reduction M L hM) hm f F
+theorem residue_average_pullback (M L : ℕ) (hM : 0 < M) (hL : 0 < L)
+    (hML : M ∣ L) (f : Fin M → ℝ) :
+    residueAverage M L hM (f ∘ reduction M L hM) = f := by
+  funext a
+  apply average_pullback
+  intro a
+  rw [pushed_residueWeight M L hM hL hML]
+  exact ne_of_gt (residueWeight_pos M hM a)
 end RiemannResearch.RH.QWeightedResidueMaps

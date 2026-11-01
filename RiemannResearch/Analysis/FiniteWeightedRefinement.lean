@@ -33,4 +33,41 @@ theorem pullback_pairing {α β : Type*} [Fintype α] [Fintype β] [DecidableEq 
     pairing w (f ∘ π) (g ∘ π) = pairing (pushWeight w π) f g := by
   simpa only [pairing, Function.comp_apply, mul_assoc, tsum_fintype] using
     (integral_pushWeight w π ((hasSum_fintype w).summable) (fun a => f a * g a)).symm
+open FiniteWeightedPushforward
+theorem average_pullback {α β : Type*} [Fintype β] [DecidableEq α]
+    (w : β → ℝ) (π : β → α)
+    (hm : ∀ a, pushWeight w π a ≠ 0) (f : α → ℝ) (a : α) :
+    average w π (f ∘ π) a = f a := by
+  have hn : pushWeight (fun b => w b * (f ∘ π) b) π a =
+      pushWeight w π a * f a := by
+    unfold pushWeight
+    rw [← tsum_mul_right]
+    apply tsum_congr
+    intro b
+    by_cases hb : π b = a <;> simp [Function.comp_apply, hb]
+  unfold average
+  rw [hn]
+  field_simp [hm a]
+
+theorem adjoint_identity {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (w : β → ℝ) (π : β → α) (hm : ∀ a, pushWeight w π a ≠ 0)
+    (f : α → ℝ) (F : β → ℝ) :
+    pairing w (f ∘ π) F = pairing (pushWeight w π) f (average w π F) := by
+  have hi := integral_pushWeight (fun b => w b * F b) π
+    ((hasSum_fintype (fun b => w b * F b)).summable) f
+  rw [tsum_fintype] at hi
+  calc
+    _ = ∑ a, pushWeight (fun b => w b * F b) π a * f a := by
+      rw [hi]
+      unfold pairing
+      apply Finset.sum_congr rfl
+      intro b _
+      simp only [Function.comp_apply]
+      ring
+    _ = _ := by
+      unfold pairing
+      apply Finset.sum_congr rfl
+      intro a _
+      unfold average
+      field_simp [hm a]
 end RiemannResearch.Analysis.FiniteWeightedRefinement

@@ -25,6 +25,11 @@ Supporting lemmas are included with their owning result.
    General pullback energy and pairing identities live in
    `Analysis/FiniteWeightedRefinement.lean`.
 
+5. `RH/QWeightedResidueMaps.lean`: `residue_adjoint_identity`, with
+   `residue_average_pullback`. The exact weighted fiber average is the
+   pullback adjoint and satisfies U*U = I. The arithmetic positivity theorem
+   discharges every nonzero-denominator hypothesis.
+
 ## Open arithmetic provider
 
 The existing dyadic lower-growth RH consumer is unchanged. Cofinal zero lower
