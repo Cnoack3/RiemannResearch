@@ -1,3 +1,4 @@
+import RiemannResearch.RH.QWeightedResidues
 import RiemannResearch.Analysis.DyadicBlockDecomposition
 import RiemannResearch.RH.QCesaroDyadic
 import RiemannResearch.RH.QCesaroDyadicCriterion
