@@ -10,6 +10,11 @@ Supporting lemmas are included with their owning result.
    `qCumulativeWeight_pos`. The actual primitive kernel has finite mass and
    every positive index has strictly positive weight. Defines `residueWeight`.
 
+2. `RH/QWeightedResidues.lean`: `periodic_cumulative_energy` and
+   `residue_integral`. The complete latent Q energy is exactly the finite
+   residue sum; all needed summability is proved. Generic regrouping is in
+   `Analysis/FiniteWeightedPushforward.lean`.
+
 ## Open arithmetic provider
 
 The existing dyadic lower-growth RH consumer is unchanged. Cofinal zero lower
