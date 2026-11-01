@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.FiniteWeightedPushforward
+import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FieldSimp
 /-!
@@ -70,4 +71,33 @@ theorem adjoint_identity {α β : Type*} [Fintype α] [Fintype β] [DecidableEq 
       intro a _
       unfold average
       field_simp [hm a]
+open FiniteWeightedPushforward
+theorem energy_sub_exact {ι : Type*} [Fintype ι] (w F P : ι → ℝ) :
+    energy w (fun i => F i - P i) =
+      energy w F + energy w P - 2 * pairing w P F := by
+  unfold energy pairing
+  calc
+    _ = ∑ i, (w i * F i ^ 2 + w i * P i ^ 2 - 2 * (w i * P i * F i)) := by
+      apply Finset.sum_congr rfl
+      intro i _
+      ring
+    _ = _ := by
+      rw [Finset.sum_sub_distrib, Finset.sum_add_distrib, ← Finset.mul_sum]
+theorem pythagorean {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (w : β → ℝ) (π : β → α) (hm : ∀ a, pushWeight w π a ≠ 0)
+    (F : β → ℝ) :
+    energy w F = energy (pushWeight w π) (average w π F) +
+      energy w (fun b => F b - average w π F (π b)) := by
+  have hi := adjoint_identity w π hm (average w π F) F
+  have hself : pairing (pushWeight w π) (average w π F) (average w π F) =
+      energy (pushWeight w π) (average w π F) := by
+    unfold pairing energy
+    apply Finset.sum_congr rfl
+    intro a _
+    ring
+  rw [hself] at hi
+  have he := energy_sub_exact w F (average w π F ∘ π)
+  rw [pullback_energy, hi] at he
+  simp only [Function.comp_apply] at he
+  linarith
 end RiemannResearch.Analysis.FiniteWeightedRefinement

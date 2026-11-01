@@ -30,6 +30,10 @@ Supporting lemmas are included with their owning result.
    pullback adjoint and satisfies U*U = I. The arithmetic positivity theorem
    discharges every nonzero-denominator hypothesis.
 
+6. `RH/QWeightedResidueMaps.lean`: `residue_pythagorean`, with
+   `residue_average_energy_le`. Fine energy equals coarse-average energy plus
+   the full squared residual. No cross term or fiber variance is discarded.
+
 ## Open arithmetic provider
 
 The existing dyadic lower-growth RH consumer is unchanged. Cofinal zero lower

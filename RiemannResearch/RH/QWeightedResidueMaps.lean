@@ -59,4 +59,24 @@ theorem residue_average_pullback (M L : ℕ) (hM : 0 < M) (hL : 0 < L)
   intro a
   rw [pushed_residueWeight M L hM hL hML]
   exact ne_of_gt (residueWeight_pos M hM a)
+open QWeightedResidues RiemannResearch.Analysis.FiniteWeightedRefinement
+open RiemannResearch.Analysis.FiniteWeightedPushforward
+theorem residue_pythagorean (M L : ℕ) (hM : 0 < M) (hL : 0 < L)
+    (hML : M ∣ L) (F : Fin L → ℝ) :
+    energy (residueWeight L) F =
+      energy (residueWeight M) (residueAverage M L hM F) +
+        energy (residueWeight L)
+          (fun b => F b - residueAverage M L hM F (reduction M L hM b)) := by
+  have hm (a : Fin M) : pushWeight (residueWeight L) (reduction M L hM) a ≠ 0 := by
+    rw [pushed_residueWeight M L hM hL hML]
+    exact ne_of_gt (residueWeight_pos M hM a)
+  simpa only [pushed_residueWeight M L hM hL hML, residueAverage] using
+    pythagorean (residueWeight L) (reduction M L hM) hm F
+theorem residue_average_energy_le (M L : ℕ) (hM : 0 < M) (hL : 0 < L)
+    (hML : M ∣ L) (F : Fin L → ℝ) :
+    energy (residueWeight M) (residueAverage M L hM F) ≤
+      energy (residueWeight L) F := by
+  rw [residue_pythagorean M L hM hL hML F]
+  exact le_add_of_nonneg_right (Finset.sum_nonneg (fun b _ =>
+    mul_nonneg (le_of_lt (residueWeight_pos L hL b)) (sq_nonneg _)))
 end RiemannResearch.RH.QWeightedResidueMaps
