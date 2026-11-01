@@ -15,6 +15,11 @@ Supporting lemmas are included with their owning result.
    residue sum; all needed summability is proved. Generic regrouping is in
    `Analysis/FiniteWeightedPushforward.lean`.
 
+3. `RH/QWeightedResidues.lean`: `residueWeight_refinement` and
+   `residueWeight_pos`. Every residue class has positive mass, and refinement
+   pushes the fine arithmetic weights to the coarse weights exactly.
+   The general composition law is `FiniteWeightedPushforward.pushWeight_comp`.
+
 ## Open arithmetic provider
 
 The existing dyadic lower-growth RH consumer is unchanged. Cofinal zero lower

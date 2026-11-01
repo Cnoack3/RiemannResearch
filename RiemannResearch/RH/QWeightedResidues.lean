@@ -82,4 +82,41 @@ theorem periodic_cumulative_energy (g : ℕ → ℝ) (L : ℕ) (hL : 0 < L)
     exact ht.congr (fun k => (q_weight_cumulative g (k + 1)).symm)
   rw [qConditionalMeanSquare_eq_cumulative g hc, residue_integral L hL]
   exact tsum_congr (fun n => by rw [hp.map_mod_nat])
+open QCesaroDyadic
+theorem residueWeight_pos (L : ℕ) (hL : 0 < L) (a : Fin L) :
+    0 < residueWeight L a := by
+  classical
+  let n := if a.val = 0 then L else a.val
+  have hn : 0 < n := by
+    dsimp [n]
+    split_ifs with h
+    · exact hL
+    · exact Nat.pos_of_ne_zero h
+  have hmod : n % L = a.val := by
+    dsimp [n]
+    split_ifs with h
+    · simp [h]
+    · exact Nat.mod_eq_of_lt a.isLt
+  have hs : Summable (fun k => if k % L = a.val then qCumulativeWeight k else 0) := by
+    exact Summable.of_nonneg_of_le
+      (fun k => by split_ifs; exact qCumulativeWeight_nonneg k; exact le_rfl)
+      (fun k => by split_ifs <;> simp [qCumulativeWeight_nonneg])
+      qCumulativeWeight_summable
+  have hge := Summable.sum_le_tsum (f := fun k =>
+    if k % L = a.val then qCumulativeWeight k else 0)
+    {n} (fun k _ => by split_ifs; exact qCumulativeWeight_nonneg k; exact le_rfl) hs
+  have hle : qCumulativeWeight n ≤ residueWeight L a := by
+    simpa [hmod, residueWeight] using hge
+  exact (qCumulativeWeight_pos n hn).trans_le hle
+
+theorem residueWeight_refinement (M L : ℕ) (_hM : 0 < M) (hL : 0 < L)
+    (hML : M ∣ L) (a : Fin M) :
+    residueWeight M a =
+      ∑ b : Fin L, if b.val % M = a.val then residueWeight L b else 0 := by
+  classical
+  symm
+  have h := residue_integral L hL
+    (fun b : Fin L => if b.val % M = a.val then 1 else 0)
+  simpa only [mul_ite, mul_one, mul_zero, residueWeight,
+    Nat.mod_mod_of_dvd _ hML] using h
 end RiemannResearch.RH.QWeightedResidues

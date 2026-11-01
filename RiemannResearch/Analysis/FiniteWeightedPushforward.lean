@@ -44,4 +44,16 @@ theorem summable_weighted_comp (w : α → ℝ) (π : α → β)
     exact hs.mul_right _
   simpa [ite_mul] using summable_sum (s := Finset.univ) (fun b _ => hf b)
 
+variable {α β γ : Type*} [Fintype β] [DecidableEq β] [Fintype γ] [DecidableEq γ]
+theorem pushWeight_comp (w : α → ℝ) (π : α → β) (τ : β → γ)
+    (hw : Summable w) (c : γ) :
+    pushWeight (pushWeight w π) τ c = pushWeight w (τ ∘ π) c := by
+  classical
+  calc
+    _ = ∑ b, pushWeight w π b * (if τ b = c then 1 else 0) := by
+      simp only [pushWeight, tsum_fintype, mul_ite, mul_one, mul_zero]
+    _ = ∑' a, w a * (if τ (π a) = c then 1 else 0) :=
+      integral_pushWeight w π hw _
+    _ = _ := by
+      simp only [pushWeight, Function.comp_apply, mul_ite, mul_one, mul_zero]
 end RiemannResearch.Analysis.FiniteWeightedPushforward
