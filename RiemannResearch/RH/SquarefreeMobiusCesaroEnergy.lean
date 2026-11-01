@@ -375,4 +375,57 @@ theorem meanNeutralMobiusHead_mem_divisorSpan (H D E : ℕ) (hH : 0 < H)
   dsimp [a, b]
   ring
 
+
+/-- The signed cumulative remainder of the mean-neutral two-repair family.
+Composite squarefree conductors remain in the full Möbius prefix. -/
+def meanNeutralMobiusRemainder (H D E n : ℕ) : ℝ :=
+  mobiusPrefixDefect H n - mobiusReciprocalSum H *
+    (mobiusRepairWeightLeft H D E * (D : ℝ) * residueCesaroDefect D n +
+      mobiusRepairWeightRight H D E * (E : ℝ) * residueCesaroDefect E n)
+
+/-- Exact primitive, with the canceled mean separated before taking squares. -/
+theorem meanNeutralMobiusHead_cumulative (H D E n : ℕ)
+    (hH : 0 < H) (hD : H < D) (hDE : D < E) (hn : 0 < n) :
+    cumulative (meanNeutralMobiusHead H D E) n = meanNeutralMobiusRemainder H D E n := by
+  have hw := mobiusRepairWeights_constraints H D E hH hDE
+  have hl : cesaro (meanNeutralMobiusHead H D E) n =
+      mobiusRepairWeightLeft H D E * cesaro (squarefreeMobiusHead H D) n +
+      mobiusRepairWeightRight H D E * cesaro (squarefreeMobiusHead H E) n := by
+    simp only [cesaro, meanNeutralMobiusHead, Finset.sum_add_distrib,
+      Finset.mul_sum, Finset.sum_div, add_div, mul_div_assoc]
+  rw [squarefreeMobiusHead_cesaro_centered H D n (hH.trans hD) hn,
+    squarefreeMobiusHead_cesaro_centered H E n ((hH.trans hD).trans hDE) hn] at hl
+  have hcenter : mobiusRepairWeightLeft H D E * mobiusHeadCesaroCenter H D +
+      mobiusRepairWeightRight H D E * mobiusHeadCesaroCenter H E = 0 := by
+    unfold mobiusHeadCesaroCenter
+    calc
+      _ = (mobiusReciprocalSum H *
+          (mobiusRepairWeightLeft H D E * (D : ℝ) +
+            mobiusRepairWeightRight H D E * (E : ℝ)) -
+          mobiusPrefixSum H *
+            (mobiusRepairWeightLeft H D E + mobiusRepairWeightRight H D E)) / 2 := by ring
+      _ = 0 := by rw [hw.1, hw.2]; ring
+  have hrem : mobiusRepairWeightLeft H D E * mobiusHeadCesaroRemainder H D n +
+      mobiusRepairWeightRight H D E * mobiusHeadCesaroRemainder H E n =
+      meanNeutralMobiusRemainder H D E n := by
+    unfold mobiusHeadCesaroRemainder meanNeutralMobiusRemainder
+    calc
+      _ = (mobiusRepairWeightLeft H D E + mobiusRepairWeightRight H D E) *
+          mobiusPrefixDefect H n - mobiusReciprocalSum H *
+            (mobiusRepairWeightLeft H D E * (D : ℝ) * residueCesaroDefect D n +
+              mobiusRepairWeightRight H D E * (E : ℝ) * residueCesaroDefect E n) := by ring
+      _ = _ := by rw [hw.1]; ring
+  rw [CesaroResidue.cesaro_eq_cumulative] at hl
+  have he : cumulative (meanNeutralMobiusHead H D E) n / (n : ℝ) =
+      meanNeutralMobiusRemainder H D E n / (n : ℝ) := by
+    calc
+      _ = _ := hl
+      _ = (mobiusRepairWeightLeft H D E * mobiusHeadCesaroCenter H D +
+            mobiusRepairWeightRight H D E * mobiusHeadCesaroCenter H E) +
+          (mobiusRepairWeightLeft H D E * mobiusHeadCesaroRemainder H D n +
+            mobiusRepairWeightRight H D E * mobiusHeadCesaroRemainder H E n) / (n : ℝ) := by ring
+      _ = _ := by rw [hcenter, hrem, zero_add]
+  have hn0 : (n : ℝ) ≠ 0 := by positivity
+  field_simp at he
+  exact he
 end RiemannResearch.RH.Pareto

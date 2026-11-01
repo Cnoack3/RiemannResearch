@@ -46,3 +46,43 @@ transition-window energy, or supply a better admissible repair average.
 The memo gives a concrete sufficient dyadic mean-square bound.
 Neither `o(H)`, mean neutrality, cubic decay in a tail cutoff, nor finite
 energy computations discharge that provider.
+
+## Complete dyadic energy continuation
+
+Source agenda: RH Cesàro P/Q squarefree research agenda, 1 November 2026.
+Research memo: [Complete dyadic energy and obstruction](RH/CesaroDyadicEnergyResearch20261101.md).
+
+Development verification: job_yofjhWXBJpzeMrM2t4x5Jz07jeITb4y7,
+verified=true, exit_code=0. Separately saved-module import and 11 principal
+axiom inspections: job_eYXksy5LSirAy-3hCWiRuc2zghXL0Gd9, verified=true,
+exit_code=0. Final publication remains governed by the successful checkpoint.
+
+### Established identities and comparisons
+
+| Owning module | Declarations / interpretation |
+|---|---|
+| Analysis/DyadicBlockDecomposition.lean | scaledDyadicBlock, sum_scaledDyadicBlock, summable_scaledDyadicBlock, tendsto_scaledDyadicEndpoint, tsum_scaledDyadicBlock: complete regrouping with exact head |
+| Analysis/LowerLogGrowthComparability.lean | lowerLogGrowth_eq_zero_of_eventually_le_add_mul: eventual affine comparison |
+| RH/QCesaroDyadic.lean | qCumulativeWeight, q_weight_cumulative, q_kernel_upper, q_kernel_lower, q_kernel_block: exact n^-4 cumulative kernel and block bounds |
+| same | dyadicCumulativeBlock, dyadicCumulativeBudget, cumulative_energy_summable, qConditionalMeanSquare_eq_cumulative, dyadicCumulativeBlock_summable: complete summable budget |
+| same | dyadic_cumulative_block_bounds, dyadic_cumulative_tail_bounds, cumulative_energy_head, q_energy_head_dyadic_identity, q_energy_sub_head_dyadic_bounds |
+| same | normalized_q_energy_sub_head_dyadic_bounds, normalized_dyadic_energy_bounds: normalized tail lies between X/(8*zetaTwo) and 2*X/zetaTwo |
+| RH/SquarefreeMobiusCesaroEnergy.lean | meanNeutralMobiusRemainder, meanNeutralMobiusHead_cumulative: exact signed primitive |
+| RH/QCesaroDyadicCriterion.lean | normalized_dyadic_lowerLogGrowth_zero_iff, normalized_p_dyadic_lowerLogGrowth_zero_iff: same block criterion for P and Q |
+| same | meanNeutral_dyadic_budget_exact: every Möbius and repair cross term retained inside the complete signed square |
+
+The 11 principal audited endpoints use only propext, Classical.choice,
+and Quot.sound. Nonzero head amplitudes need no uniform lower bound.
+
+### Conditional research reductions
+
+- riemannHypothesis_of_dyadic_cumulative_lower_growth
+- riemannHypothesis_of_mobiusHead_dyadic_lower_growth
+- riemannHypothesis_of_meanNeutral_dyadic_lower_growth
+
+**Open:** provide a cofinal actual legal family whose normalized complete
+dyadic cumulative budget has zero lower logarithmic growth. The explicit
+Möbius specializations discharge legality and exact heads, not that growth
+premise. The new equivalence supplies no improved arithmetic exponent for
+the family by itself. Existing cubic tail decay and paper-level o(H)
+energy bounds do not discharge the Open provider.

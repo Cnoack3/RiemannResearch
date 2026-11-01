@@ -67,4 +67,39 @@ theorem lowerLogGrowth_eq_zero_iff_of_comparable
   · exact lowerLogGrowth_eq_zero_of_eventually_le_mul F E H D hH hF hE hFE
   · exact lowerLogGrowth_eq_zero_of_eventually_le_mul E F H C hH hE hF hEF
 
+
+/-- A fixed affine upper bound transfers zero lower logarithmic growth.
+The additive constant accounts for the exact head of an energy. -/
+theorem lowerLogGrowth_eq_zero_of_eventually_le_add_mul
+    (E F H : ℕ → ℝ) (C D : ℝ)
+    (hH : Tendsto H atTop atTop)
+    (hE : ∀ n, 0 ≤ E n) (hF : ∀ n, 0 ≤ F n)
+    (hEF : ∀ᶠ n in atTop, E n ≤ C + D * F n)
+    (hzero : lowerLogGrowth F H = 0) :
+    lowerLogGrowth E H = 0 := by
+  let K : ℝ := max 1 (max (1 + C) D)
+  have hK1 : 1 ≤ K := le_max_left _ _
+  have hCK : 1 + C ≤ K := (le_max_left _ _).trans (le_max_right _ _)
+  have hDK : D ≤ K := (le_max_right _ _).trans (le_max_right _ _)
+  have hK : 0 < K := lt_of_lt_of_le zero_lt_one hK1
+  have hlog : Tendsto (fun n => Real.log (H n)) atTop atTop :=
+    Real.tendsto_log_atTop.comp hH
+  have hconst : Tendsto (fun n => Real.log K / Real.log (H n))
+      atTop (𝓝 0) := hlog.const_div_atTop _
+  apply (lowerLogGrowth_eq_zero_iff E H).mpr
+  intro ε hε
+  have hsmall := (lowerLogGrowth_eq_zero_iff F H).mp hzero (ε / 2) (half_pos hε)
+  have hH1 : ∀ᶠ n in atTop, 1 < H n := hH.eventually (eventually_gt_atTop 1)
+  have hconstsmall := hconst.eventually (Iio_mem_nhds (half_pos hε))
+  apply (hsmall.and_eventually (hH1.and (hconstsmall.and hEF))).mono
+  rintro n ⟨hsn, hHn, hcn, hEn⟩
+  have hbound : 1 + E n ≤ K * (1 + F n) := by
+    have hmul := mul_le_mul_of_nonneg_right hDK (hF n)
+    nlinarith
+  have hlogbound := Real.log_le_log (by linarith [hE n] : 0 < 1 + E n) hbound
+  rw [Real.log_mul (ne_of_gt hK)
+    (ne_of_gt (by linarith [hF n] : 0 < 1 + F n))] at hlogbound
+  have hdiv := div_le_div_of_nonneg_right hlogbound (Real.log_pos hHn).le
+  rw [add_div] at hdiv
+  linarith
 end RiemannResearch.Analysis.SubpolynomialWindow
