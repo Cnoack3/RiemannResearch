@@ -79,4 +79,18 @@ theorem residue_average_energy_le (M L : ℕ) (hM : 0 < M) (hL : 0 < L)
   rw [residue_pythagorean M L hM hL hML F]
   exact le_add_of_nonneg_right (Finset.sum_nonneg (fun b _ =>
     mul_nonneg (le_of_lt (residueWeight_pos L hL b)) (sq_nonneg _)))
+open QWeightedResidues RiemannResearch.Analysis.FiniteWeightedRefinement
+open RiemannResearch.Analysis.FiniteWeightedPushforward
+theorem residue_average_tower (K M L : ℕ) (hK : 0 < K) (hM : 0 < M) (hL : 0 < L)
+    (hKM : K ∣ M) (hML : M ∣ L) (F : Fin L → ℝ) :
+    residueAverage K M hK (residueAverage M L hM F) = residueAverage K L hK F := by
+  have hm (a : Fin M) : pushWeight (residueWeight L) (reduction M L hM) a ≠ 0 := by
+    rw [pushed_residueWeight M L hM hL hML]
+    exact ne_of_gt (residueWeight_pos M hM a)
+  have he : reduction K M hK ∘ reduction M L hM = reduction K L hK := by
+    funext b
+    apply Fin.ext
+    exact Nat.mod_mod_of_dvd b.val hKM
+  simpa only [pushed_residueWeight M L hM hL hML, he, residueAverage] using
+    average_tower (residueWeight L) (reduction M L hM) (reduction K M hK) hm F
 end RiemannResearch.RH.QWeightedResidueMaps

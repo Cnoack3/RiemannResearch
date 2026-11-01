@@ -100,4 +100,20 @@ theorem pythagorean {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
   rw [pullback_energy, hi] at he
   simp only [Function.comp_apply] at he
   linarith
+open FiniteWeightedPushforward
+theorem average_tower {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]
+    [DecidableEq α] [DecidableEq γ] (w : β → ℝ) (π : β → α) (τ : α → γ)
+    (hm : ∀ a, pushWeight w π a ≠ 0) (F : β → ℝ) :
+    average (pushWeight w π) τ (average w π F) = average w (τ ∘ π) F := by
+  have he : (fun a => pushWeight w π a * average w π F a) =
+      pushWeight (fun b => w b * F b) π := by
+    funext a
+    unfold average
+    field_simp [hm a]
+  funext c
+  change pushWeight (fun a => pushWeight w π a * average w π F a) τ c /
+      pushWeight (pushWeight w π) τ c =
+    pushWeight (fun b => w b * F b) (τ ∘ π) c / pushWeight w (τ ∘ π) c
+  rw [he, pushWeight_comp _ π τ ((hasSum_fintype _).summable),
+    pushWeight_comp _ π τ ((hasSum_fintype _).summable)]
 end RiemannResearch.Analysis.FiniteWeightedRefinement

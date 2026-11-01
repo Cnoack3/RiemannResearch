@@ -34,6 +34,10 @@ Supporting lemmas are included with their owning result.
    `residue_average_energy_le`. Fine energy equals coarse-average energy plus
    the full squared residual. No cross term or fiber variance is discarded.
 
+7. `RH/QWeightedResidueMaps.lean`: `residue_average_tower`. Successive
+   weighted averages along K | M | L equal the direct K | L average.
+   `FiniteWeightedRefinement.average_tower` is the generic finite theorem.
+
 ## Open arithmetic provider
 
 The existing dyadic lower-growth RH consumer is unchanged. Cofinal zero lower
