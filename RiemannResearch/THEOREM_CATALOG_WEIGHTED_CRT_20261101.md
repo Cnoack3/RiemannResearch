@@ -20,6 +20,11 @@ Supporting lemmas are included with their owning result.
    pushes the fine arithmetic weights to the coarse weights exactly.
    The general composition law is `FiniteWeightedPushforward.pushWeight_comp`.
 
+4. `RH/QWeightedResidueMaps.lean`: `residue_pullback_energy`. Reduction
+   pullback preserves the complete arithmetic weighted energy exactly.
+   General pullback energy and pairing identities live in
+   `Analysis/FiniteWeightedRefinement.lean`.
+
 ## Open arithmetic provider
 
 The existing dyadic lower-growth RH consumer is unchanged. Cofinal zero lower
