@@ -278,3 +278,29 @@ asymptotic exponent or unconditional RH conclusion is obtained.
 See `RH/SquarefreeShortHeadLean20261031.md` for precise formulas, formal
 scope, and the exploratory stage-240/site-221 checks. Those numerical values
 remain uncertified; the eight lower-range contributions all remain negative.
+
+## Conditional-iid Cesàro continuation, 1 November 2026
+
+The source-level continuation is documented in
+[ConditionalIIDCesaroResearch20261101.md](RH/ConditionalIIDCesaroResearch20261101.md).
+Its new modules are `Analysis/LowerLogGrowth.lean`,
+`RH/ConditionalMeanNormalization.lean`,
+`RH/ConditionalMeanLowerGrowth.lean`, and
+`RH/SquarefreeMobiusCesaroHeads.lean`.
+
+The unconditional results are exact Cesàro energy scaling, the
+extended-liminf/cofinal-smallness equivalence, squarefree Möbius head
+feasibility, literal finite squarefree support, prefix exhaustion, and
+preservation of exact heads under deterministic finite signed averaging.
+
+The RH endpoints are **conditional research reductions**. They require a
+cofinal legal exact-head family whose complete normalized Cesàro energy
+has zero lower logarithmic growth exponent. Only nonzero head values are
+required; no lower bound away from zero is imposed.
+
+**Open:** a checked arithmetic provider of this lower-growth condition for
+the actual explicit family or a deterministic repair average. The localized
+dyadic estimate also remains Open in this continuation. No new RH-to-density
+converse is asserted. All four new modules passed the saved-module import and
+principal axiom audit recorded in the report (exit code 0; standard foundations
+only). The final checkpoint receipt certifies publication of the saved project.
