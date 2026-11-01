@@ -8,6 +8,7 @@ import RiemannResearch.Analysis.DenseProjectionTesting
 import RiemannResearch.Analysis.NestedProjectionPairing
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 
@@ -135,5 +136,27 @@ theorem response_joint_bound (r e z : E) (hr : r ∈ Sᗮ)
     exact sq_nonneg _
   · exact response_sq_le_source_variance S r e z hr hr0
   · exact signed_complement_sq_le S r e z hr hr0 hez
+
+theorem center_add (r z w : E) :
+    center r (z + w) = center r z + center r w := by
+  simp only [center, inner_add_right, add_div, add_smul]
+  abel
+
+theorem sourceLoss_add (r z w : E) :
+    sourceLoss S r (z + w) = sourceLoss S r z + sourceLoss S r w := by
+  simp only [sourceLoss, center_add, map_add]
+  abel
+
+theorem source_covariance_exact (r z w : E) (hr : r ∈ Sᗮ)
+    (hr0 : ‖r‖ ^ 2 ≠ 0) :
+    inner ℝ (S.starProjection z) (S.starProjection w) =
+      inner ℝ z w - inner ℝ r z * inner ℝ r w / ‖r‖ ^ 2 -
+        inner ℝ (sourceLoss S r z) (sourceLoss S r w) := by
+  have hz := source_variance_exact S r z hr hr0
+  have hw := source_variance_exact S r w hr hr0
+  have hzw := source_variance_exact S r (z + w) hr hr0
+  simp only [map_add, sourceLoss_add, norm_add_sq_real, inner_add_right] at hzw
+  ring_nf at hz hw hzw ⊢
+  linarith
 
 end RiemannResearch.Analysis.CenteredProjectionResponse

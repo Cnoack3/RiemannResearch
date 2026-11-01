@@ -247,4 +247,28 @@ theorem prefix_sq_le_exact_variance (N n H : ℕ) :
     (prefixHeadEnergy N H - prefixHeadEnergy N H ^ 2 / error N -
       ‖prefixLoss N H‖ ^ 2) at h
   rwa [heq] at h
+theorem prefix_heads_inner (N H J : ℕ) (hHJ : H ≤ J) :
+    inner ℝ (finiteHead H (residual N)) (finiteHead J (residual N)) =
+      prefixHeadEnergy N H := by
+  unfold prefixHeadEnergy
+  rw [← real_inner_self_eq_norm_sq]
+  conv_lhs => rw [real_inner_comm]
+  rw [inner_finiteHead_eq_sum, inner_finiteHead_eq_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [finiteHead_apply_of_lt J _ i (lt_of_lt_of_le (Finset.mem_range.mp hi) hHJ),
+    finiteHead_apply_of_lt H _ i (Finset.mem_range.mp hi)]
+
+theorem prefix_covariance_exact (N H J : ℕ) (hHJ : H ≤ J) :
+    inner ℝ ((stage N).starProjection (finiteHead H (residual N)))
+      ((stage N).starProjection (finiteHead J (residual N))) =
+      prefixHeadEnergy N H -
+        prefixHeadEnergy N H * prefixHeadEnergy N J / error N -
+        inner ℝ (prefixLoss N H) (prefixLoss N J) := by
+  have h := source_covariance_exact (stage N) (residual N)
+    (finiteHead H (residual N)) (finiteHead J (residual N))
+    (residual_mem_orthogonal N) (ne_of_gt (error_pos N))
+  rw [prefix_heads_inner N H J hHJ, prefix_inner_head, prefix_inner_head] at h
+  exact h
+
 end RiemannResearch.RH.QSquarefreePrefixAbel

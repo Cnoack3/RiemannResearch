@@ -2,6 +2,8 @@ import RiemannResearch.RH.SquarefreeMobiusCesaroEnergy
 import RiemannResearch.RH.QSquarefreePrefixAbel
 import RiemannResearch.RH.QSquarefreePrefixDispersion
 import RiemannResearch.RH.QSquarefreePrefixCriterion
+import RiemannResearch.RH.QSquarefreeHeadLeakage
+import RiemannResearch.RH.QSquarefreeHeadLeakageSchur
 import RiemannResearch.RH.QSquarefreeRamanujanProjection
 import RiemannResearch.RH.QMobiusTrialHeadObstruction
 import RiemannResearch.Analysis.NormalizedEnergy

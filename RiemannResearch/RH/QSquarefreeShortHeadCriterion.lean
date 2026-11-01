@@ -167,4 +167,10 @@ theorem riemannHypothesis_of_frequently_polylog_logarithmicHead_bound
         (mul_le_mul_of_nonneg_left hm hC)
     _ = _ := by dsimp [L]; ring
 
+theorem logarithmicCutoff_le (M : ℕ) (hM : 0 < M) :
+    logarithmicCutoff M ≤ M := by
+  have hM1 : (1 : ℝ) ≤ M := by exact_mod_cast hM
+  apply Nat.floor_le_of_le
+  exact div_le_self (Nat.cast_nonneg M) (by linarith [Real.log_nonneg hM1])
+
 end RiemannResearch.RH.QSquarefreeShortHeadCriterion

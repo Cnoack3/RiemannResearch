@@ -157,4 +157,13 @@ theorem response_sq_lt_abel_energy_of_pair (N H n i j : ℕ) (hn : H < n)
     response N H n ^ 2 < abelMass H n * abelEnergy N H n := by
   linarith [response_energy_dispersion_exact N H n,
     abelDispersion_pos_of_pair N H n i j hn hi hj hwi hwj hij]
+theorem compensated_le_exact_source_variance (N H n : ℕ) :
+    abelMass H n * abelEnergy N H n - abelDispersion N H n ≤
+      ‖QSquarefreeCorrectionKernel.kernel N n‖ ^ 2 *
+        (QSquarefreeShortHeadResponse.variance N H n -
+          ‖QSquarefreeShortHeadResponse.loss N H n‖ ^ 2) := by
+  have he := response_energy_dispersion_exact N H n
+  have hb := QSquarefreeShortHeadResponse.response_sq_le N H n
+  linarith
+
 end RiemannResearch.RH.QSquarefreePrefixAbel

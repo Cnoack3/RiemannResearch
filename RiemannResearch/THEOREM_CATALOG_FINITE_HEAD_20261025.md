@@ -304,3 +304,44 @@ dyadic estimate also remains Open in this continuation. No new RH-to-density
 converse is asserted. All four new modules passed the saved-module import and
 principal axiom audit recorded in the report (exit code 0; standard foundations
 only). The final checkpoint receipt certifies publication of the saved project.
+
+## Signed prefix covariance and head leakage, 1 November 2026
+
+See [SquarefreePrefixCovarianceResearch20261101.md](RH/SquarefreePrefixCovarianceResearch20261101.md)
+for exact identities, proofs, numerical tests, and the remaining arithmetic estimate.
+
+### Established statements
+
+- Analysis/CenteredProjectionResponse.lean: source_covariance_exact polarizes
+  the existing exact variance, keeping every signed loss cross correlation.
+- RH/QSquarefreePrefixAbel.lean: prefix_covariance_exact specializes it to
+  actual nested physical prefix sources, including the complete loss Gram.
+- RH/QSquarefreePrefixDispersion.lean: compensated_le_exact_source_variance
+  connects the existing WJ-D identity to the full source variance.
+- RH/QSquarefreeHeadLeakage.lean: leakage_quarter_exact retains a nonnegative
+  central square; compensated_block_le_leakage bounds the entire physical
+  block by complete off-head output energies; compensated_block_le_quadratic
+  gives an unconditional O(M^2 * error N) bound.
+- RH/QSquarefreeHeadLeakageSchur.lean: leakage_eq_schur_tail reuses the existing
+  complete-squarefree Schur inverse, including all high composite conductors.
+- RH/QSquarefreeShortHeadCriterion.lean: logarithmicCutoff_le supplies the
+  cutoff ordering for the block consumer.
+
+### Conditional research reduction
+
+RH/QSquarefreePrefixCriterion.riemannHypothesis_of_frequently_dyadic_head_leakage
+consumes a common cofinal source-weighted compression-defect budget.
+
+**Open:** leakage of the actual Br_N head must be at most
+O(polylog(M)/M) at arbitrarily large stages for each dyadic block. Full normal
+equations, positivity, and Schur inverse coercivity have not supplied this rate.
+The new identities give no weaker polylogarithmic RH condition on their own.
+The comparison with the old limiting regularity class is proved on paper in
+the report; the forward conditional implication is formalized.
+
+The saved-module import and eight principal axiom audits passed
+job_hbNKi_KRy9KLJFHOAJQtzy7Tq-RLaKmg with verified=true and exit code 0.
+Only propext, Classical.choice, and Quot.sound were reported.
+Final publication is subject to the separately reported checkpoint validation.
+Stage-240/site-221 and block computations remain exploratory float64; all eight
+physical range contributions at that site remain negative.
