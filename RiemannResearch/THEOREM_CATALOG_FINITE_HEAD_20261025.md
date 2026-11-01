@@ -305,6 +305,54 @@ converse is asserted. All four new modules passed the saved-module import and
 principal axiom audit recorded in the report (exit code 0; standard foundations
 only). The final checkpoint receipt certifies publication of the saved project.
 
+## Cesàro under P/Q and squarefree restrictions, 1 November 2026
+
+See [CesaroMeasureSquarefreeResearch20261101.md](RH/CesaroMeasureSquarefreeResearch20261101.md)
+for exact formulas, proof scope, and the remaining arithmetic obligation.
+
+### Established results
+
+- `RH/QUniformMixture.lean`: `qMixtureWeight`, its normalization and complete
+  inverse-square marginal identity; exact positive density differences and
+  uniform/moving-head comparisons with the Pareto latent law.
+- `Probability/QConditionalIIDModel.lean`: actual Q common-path measure,
+  `probability_eq_withDensity`, bounded positive likelihood ratio,
+  `probability_ae_iff`, actual conditional independence,
+  `conditional_coordinate_expectation`, and exact Q coordinate masses.
+- `Probability/QConditionalIIDLimits.lean`: one common probability-one event
+  gives the Cesàro sampling limit for every arithmetic observable, and the
+  running maximum eventually equals the latent endpoint.
+- `RH/QCesaroEnergy.lean`: exact finite Abel/Jensen/boundary decomposition;
+  complete Q contraction; equivalence of latent energy summability;
+  `conditionalMean_change_measure_exact`,
+  `conditionalMean_measure_comparison`, and the stronger
+  `conditionalMean_measure_comparison_of_head_zero`.
+- `Analysis/LowerLogGrowthComparability.lean`: one-sided transfer and
+  two-sided equivalence of zero lower logarithmic growth.
+- `RH/CesaroSameMeasureBounds.lean`: same-marginal squared energy bounds
+  3/2 for P and 4/3 for Q, and a checked pulse proving neither map is a
+  contraction in its marginal norm.
+- `RH/SquarefreeCesaroObstruction.lean`: Cesàro of the conductor-2 residue
+  has square-jump 1/6; complete Q/P error identities and positive separation
+  from the squarefree closure even with constants. A separate pulse proves
+  failure to preserve equality restricted to squarefree sample indices.
+
+### Conditional research reductions
+
+`RH/QCesaroLowerGrowth.lean` proves
+`normalized_lowerLogGrowth_zero_iff`,
+`riemannHypothesis_of_q_lower_growth_normalized`, and
+`riemannHypothesis_of_mobiusHead_q_lower_growth`.
+The normalized RH criterion is the same under either latent law, including
+for legal squarefree-conductor input families; nonzero exact-head amplitudes
+need not be bounded away from zero.
+
+**Open:** a cofinal arithmetic family satisfying the complete normalized
+zero-growth premise. Changing the measure does not provide that bound.
+The ordinary operator is valid on squarefree-conductor inputs but does not
+preserve their unsmoothed closure. Conditioning sample sites to squarefree
+integers requires a different averaging operator.
+
 ## Signed prefix covariance and head leakage, 1 November 2026
 
 See [SquarefreePrefixCovarianceResearch20261101.md](RH/SquarefreePrefixCovarianceResearch20261101.md)
