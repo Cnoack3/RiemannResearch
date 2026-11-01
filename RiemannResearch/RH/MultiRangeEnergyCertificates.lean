@@ -177,4 +177,22 @@ theorem correctedMobiusHead_mean_bound (Y : ℕ) (hY : 0 < Y)
     (divisorRangeCorrection_mean_bound (Y+1) s x (by omega)
       (by intro d hd; have := hs d hd; omega) t))
 
+/-- Centered inverse-endpoint control certifies the complete tail. For L=0
+this gives cubic decay with an explicit coefficient-dependent constant.
+Source: direct application of the existing complete-tail bound. -/
+theorem conditionalMeanTailSquare_le_centered (F : ℕ → ℝ)
+    (hF : F ∈ legalSeedSpan (Set.Ici 1)) (N : ℕ) (L B : ℝ) (hB : 0 ≤ B)
+    (hb : ∀ t, 0 < t → |cesaro F t - L| ≤ B / (t : ℝ)) :
+    conditionalMeanTailSquare N F ≤
+      2 / ((N : ℝ) + 2) * (|L| + B / ((N : ℝ) + 1)) ^ 2 := by
+  apply conditionalMeanTailSquare_le_of_mean_bound F hF N _ (by positivity)
+  intro t ht
+  have htR : (N : ℝ) + 1 ≤ (t : ℝ) := by exact_mod_cast ht
+  have hden : B / (t : ℝ) ≤ B / ((N : ℝ) + 1) :=
+    div_le_div_of_nonneg_left hB (by positivity) htR
+  calc
+    |cesaro F t| = |(cesaro F t - L) + L| := by congr 1; ring
+    _ ≤ |cesaro F t - L| + |L| := abs_add_le _ _
+    _ ≤ _ := by linarith [hb t (by omega)]
+
 end RiemannResearch.RH.Pareto

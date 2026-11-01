@@ -183,5 +183,42 @@ theorem cesaro_residue_complete_periods (d k : ℕ) (hd : 0 < d) (hk : 0 < k) :
   field_simp
   <;> ring
 
+/-- Signed endpoint defect for the positive-index Cesaro convention.
+The factor is d-2-r because the sum starts at one. Source: direct algebra
+from cesaro_residue_exact for the November 1 Mobius energy task. -/
+def residueCesaroDefect (d t : ℕ) : ℝ :=
+  ((t % d : ℕ) : ℝ) * ((d : ℝ) - 2 - ((t % d : ℕ) : ℝ)) / (2 * (d : ℝ))
+
+theorem cesaro_residue_centered (d t : ℕ) (hd : 0 < d) (ht : 0 < t) :
+    cesaro (residueFraction d) t =
+      ((d : ℝ) - 1) / (2 * (d : ℝ)) - residueCesaroDefect d t / (t : ℝ) := by
+  have hdR : (d : ℝ) ≠ 0 := by positivity
+  have htR : (t : ℝ) ≠ 0 := by positivity
+  have he : ((t / d : ℕ) : ℝ) * (d : ℝ) + ((t % d : ℕ) : ℝ) = (t : ℝ) := by
+    exact_mod_cast (show (t / d) * d + t % d = t by
+      simpa only [Nat.mul_comm] using Nat.div_add_mod t d)
+  rw [cesaro_residue_exact d t hd]
+  unfold residueCesaroDefect
+  field_simp
+  nlinarith [congrArg (fun x : ℝ => x * ((d : ℝ) - 1)) he]
+
+theorem residueCesaroDefect_abs_le (d t : ℕ) (hd : 0 < d) :
+    |residueCesaroDefect d t| ≤ (d : ℝ) / 8 := by
+  have hdR : (0 : ℝ) < d := by exact_mod_cast hd
+  have hd1 : (1 : ℝ) ≤ d := by exact_mod_cast hd
+  have hr : (0 : ℝ) ≤ ((t % d : ℕ) : ℝ) := by positivity
+  have hrd : ((t % d : ℕ) : ℝ) ≤ (d : ℝ) - 1 := by
+    have hh : t % d + 1 ≤ d := Nat.mod_lt t hd
+    have hhR : ((t % d : ℕ) : ℝ) + 1 ≤ (d : ℝ) := by exact_mod_cast hh
+    linarith
+  have hp := mul_nonneg hr (sub_nonneg.mpr hrd)
+  unfold residueCesaroDefect
+  apply abs_le.mpr
+  constructor
+  · apply (le_div_iff₀ (by positivity : (0 : ℝ) < 2 * (d : ℝ))).2
+    nlinarith [sq_nonneg ((d : ℝ) - 2)]
+  · apply (div_le_iff₀ (by positivity : (0 : ℝ) < 2 * (d : ℝ))).2
+    nlinarith [sq_nonneg (2 * ((t % d : ℕ) : ℝ) - ((d : ℝ) - 2))]
+
 end
 end RiemannResearch.RH.ArithmeticCumulative.CesaroResidue
