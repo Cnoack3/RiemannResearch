@@ -6,6 +6,9 @@ ending with `e83acbe435711d1197772afe30adb011971041da`. Results 1–9 are
 established declarations; result 10 is a conditional research reduction.
 Supporting lemmas are included with their owning result.
 
+The November 2 legal-projection continuation is cataloged separately in
+[Legal weighted projection](THEOREM_CATALOG_LEGAL_WEIGHTED_PROJECTION_20261102.md).
+
 ## Publication record
 
 | Principal result | Published commit |
