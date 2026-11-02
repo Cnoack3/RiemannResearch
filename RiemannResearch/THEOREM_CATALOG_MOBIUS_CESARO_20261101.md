@@ -86,3 +86,33 @@ Möbius specializations discharge legality and exact heads, not that growth
 premise. The new equivalence supplies no improved arithmetic exponent for
 the family by itself. Existing cubic tail decay and paper-level o(H)
 energy bounds do not discharge the Open provider.
+
+## Certified finite-cutoff continuation — 2 November 2026
+
+Research memo: [Finite-cutoff Cesaro criterion](RH/MeanNeutralFiniteCutoffResearch20261102.md).
+Source: the prior-chat finite-cutoff recovery handoff of 1 November 2026.
+
+### Exact identities and proved cutoff providers
+
+| Owning module | Declarations / scope |
+|---|---|
+| RH/ConditionalMeanFiniteCutoff.lean | conditionalMeanPrefix: existing definition moved unchanged from MultiRangeCertificateConvergence; conditionalMeanPrefix_nonneg, conditionalMeanSquare_eq_prefix_add_tail, conditionalMeanPrefix_le |
+| same | normalized_lowerLogGrowth_zero_iff_finitePrefix: exact summable split and eventual bounded normalized tail imply equivalent zero lower logarithmic growth |
+| RH/MeanNeutralMobiusFiniteCutoff.lean | meanNeutralCubicBudget, meanNeutralMobiusHead_mem_fullLegal, meanNeutralMobiusHead_tail_le_one |
+| same | exists_meanNeutralCubicCutoff, meanNeutralCubicCutoff, meanNeutralCubicCutoff_spec: cutoff existence and canonical choice require no asymptotic growth provider |
+| same | meanNeutral_lowerLogGrowth_zero_iff_finitePrefix, meanNeutralMobiusHead_finite_certificate: complete energy lies between its finite prefix and that prefix plus one |
+
+Saved-module import and 12 principal axiom audits: job_CzE6C_P63il_wqCJLF9KKEz9X-DqeN_-, verified=true, exit_code=0.
+All inspected declarations use only propext, Classical.choice, and Quot.sound.
+Final source and aggregate-project publication require the enclosing successful server checkpoint.
+
+### Conditional research reductions
+
+- riemannHypothesis_of_meanNeutral_finitePrefix_lower_growth: arbitrary cutoffs satisfying the finite cubic certificate.
+- riemannHypothesis_of_meanNeutral_certifiedPrefix_lower_growth: canonical cutoffs discharge that certificate premise.
+
+**Open:** zero lower logarithmic growth of the actual signed finite-prefix
+energy along cofinal positive heads. The canonical cutoff theorem proves no
+growth rate in the head parameter. All Mobius-prefix and repair interactions
+remain inside the squares. These RH endpoints retain their substantive
+finite-prefix growth hypothesis and are not unconditional RH proofs.

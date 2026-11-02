@@ -1,4 +1,5 @@
 import RiemannResearch.RH.MultiRangeEnergyCertificates
+import RiemannResearch.RH.ConditionalMeanFiniteCutoff
 
 /-!
 # Convergent certificates for the actual infinite conditional-mean energy
@@ -14,10 +15,6 @@ open scoped BigOperators Topology
 open Filter
 namespace RiemannResearch.RH.Pareto
 open Probability.ConditionalIID Analysis.Cesaro
-
-/-- The signed candidate is fixed before its conditional means are squared. -/
-def conditionalMeanPrefix (F : ℕ → ℝ) (N : ℕ) : ℝ :=
-  ∑ k ∈ Finset.range N, conditionalWeight k * (cesaro F (k+1))^2
 
 /-- An upper certificate includes the complete, rigorously bounded infinite tail. -/
 def conditionalMeanUpperCertificate (F : ℕ → ℝ) (L : ℝ) (N : ℕ) : ℝ :=
