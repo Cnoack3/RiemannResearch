@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.FiniteTensorTail
 import RiemannResearch.RH.WeightedLegalPrimitiveProjection
 import RiemannResearch.Analysis.FiniteWeightedLegalProjection
 import RiemannResearch.RH.WeightedResidueRHCriterion
