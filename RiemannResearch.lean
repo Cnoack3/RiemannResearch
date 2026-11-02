@@ -1,3 +1,4 @@
+import RiemannResearch.RH.WeightedResidueRHCriterion
 import RiemannResearch.RH.WeightedCRTLegalObstruction
 import RiemannResearch.RH.PeriodicArithmeticCumulative
 import RiemannResearch.RH.SquarefreeWeightedPrimitives

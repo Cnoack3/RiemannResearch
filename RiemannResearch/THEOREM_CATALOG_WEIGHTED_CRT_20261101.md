@@ -51,8 +51,49 @@ Supporting lemmas are included with their owning result.
    -ω₆(2)/ω₂(0), and `average_even_negative` proves strict negativity.
    Every legal primitive has value zero at residue 0.
 
+## Conditional research reduction
+
+10. `RH/WeightedResidueRHCriterion.lean`:
+    `riemannHypothesis_of_legal_residue_lower_growth`. For actual legal
+    divisor-residue primitives with positive exact heads, nonzero amplitudes,
+    and cofinal head lengths, zero lower logarithmic growth of the complete
+    normalized finite-residue energy implies Mathlib's RiemannHypothesis.
+    `Pareto.divisorResidueSpan_mem_legal` supplies the seed-span bridge.
+    The theorem applies in particular to squarefree periods. No uniform
+    lower amplitude bound or independent summability premise is required.
+
 ## Open arithmetic provider
 
 The existing dyadic lower-growth RH consumer is unchanged. Cofinal zero lower
 logarithmic growth of legal exact-head energy remains Open. Finite residue
 identities and ambient weighted projections do not discharge that estimate.
+
+## Recovery validation
+
+The earlier result-8 checkpoint `job_UgqMEoiGJNWK5j0cuHTlhFSCPg3d-le7`
+ended with a 3600-second timeout in `lake cache put`. That publication did
+not succeed. The retained source was resumed without resetting the workspace.
+
+- Coherent recovery proof check and ten principal axiom inspections:
+  `job_CE1lSpWsx9jE2YHVQDeTUAxFKVo6xL8Z`, verified=true, exit_code=0,
+  server verification duration 7.968 seconds.
+- Saved-module import check, ten principal axiom inspections, and exact-type
+  inspection of the final criterion and counterexample:
+  `job_B9BM42ZgkyL63XmHiwWjiySKJfQWxpXQ`, verified=true, exit_code=0,
+  server verification duration 23.270 seconds.
+- Every inspected principal endpoint used only `propext`, `Classical.choice`,
+  and `Quot.sound`. The final criterion still has the substantive growth
+  hypothesis in its type; the axiom audit does not discharge that hypothesis.
+- Result 8 recovery publication: checkpoint
+  `job_XFFdhKUzjFnGDpditVr-0uT5l7p7eQWq`, pushed commit
+  `51459d3fe121aa59c3fdb4e7788953f453f71d2e`. Aggregate project plus
+  PeriodicArithmeticCumulative and SquarefreeWeightedPrimitives passed.
+- Result 9 publication: checkpoint
+  `job_NRWoYiz4Lwx9KUZLIlS6kjv78WSiWQnr`, pushed commit
+  `a043af71799bb45c6c623cfc5d5653a01bf02d14`. Aggregate project plus
+  WeightedCRTLegalObstruction passed.
+
+These durations measure the server-reported verification operation, not the
+workspace-opening request, polling delay, or total publication latency.
+The final saved-source publication is certified by its terminal checkpoint
+receipt; the development checks alone are not publication receipts.
