@@ -1,8 +1,28 @@
 # Weighted CRT declaration catalog — November 1, 2026
 
 Source: user's Cesàro/weighted-CRT manuscript, Priorities 1–3.
-Each numbered principal result is published separately after server validation.
+All ten principal results have been published separately after server validation,
+ending with `e83acbe435711d1197772afe30adb011971041da`. Results 1–9 are
+established declarations; result 10 is a conditional research reduction.
 Supporting lemmas are included with their owning result.
+
+## Publication record
+
+| Principal result | Published commit |
+| --- | --- |
+| 1 | [`a0a8cd7d`](https://github.com/Cnoack3/RiemannResearch/commit/a0a8cd7d79f0e46ef942d94ae18998781b5352cf) |
+| 2 | [`921ce8ee`](https://github.com/Cnoack3/RiemannResearch/commit/921ce8ee5ef18d6bea2830249aa901c6d7ce04ca) |
+| 3 | [`b241317f`](https://github.com/Cnoack3/RiemannResearch/commit/b241317f8b98f75d132d27e64b907f9eb9592892) |
+| 4 | [`a153102b`](https://github.com/Cnoack3/RiemannResearch/commit/a153102b3567fe8487766a8b293e72764dfa3c7f) |
+| 5 | [`f4d93489`](https://github.com/Cnoack3/RiemannResearch/commit/f4d934896b125249d5575a1260553128094c6b85) |
+| 6 | [`e55a2af4`](https://github.com/Cnoack3/RiemannResearch/commit/e55a2af442b819f28352fdd6630cef64c55822ba) |
+| 7 | [`6f47f426`](https://github.com/Cnoack3/RiemannResearch/commit/6f47f426107bf5a48112799290ce03771fc1dc6f) |
+| 8 | [`51459d3f`](https://github.com/Cnoack3/RiemannResearch/commit/51459d3fe121aa59c3fdb4e7788953f453f71d2e) |
+| 9 | [`a043af71`](https://github.com/Cnoack3/RiemannResearch/commit/a043af71799bb45c6c623cfc5d5653a01bf02d14) |
+| 10 | [`e83acbe4`](https://github.com/Cnoack3/RiemannResearch/commit/e83acbe435711d1197772afe30adb011971041da) |
+
+The exact final checkpoint receipt is recorded under Recovery validation below.
+The zero lower logarithmic growth provider remains Open.
 
 ## Established declarations
 
@@ -92,6 +112,16 @@ not succeed. The retained source was resumed without resetting the workspace.
   `job_NRWoYiz4Lwx9KUZLIlS6kjv78WSiWQnr`, pushed commit
   `a043af71799bb45c6c623cfc5d5653a01bf02d14`. Aggregate project plus
   WeightedCRTLegalObstruction passed.
+- Result 10 publication: checkpoint
+  `job_iahNOzjCniy0zTxst4tvilQ2h_u1ZWN8`, terminal state `succeeded`,
+  committed=true and pushed=true, published
+  [`e83acbe435711d1197772afe30adb011971041da`](https://github.com/Cnoack3/RiemannResearch/commit/e83acbe435711d1197772afe30adb011971041da).
+  The server reported full validation scope because the aggregate import
+  module changed. Its explicit targets were `RiemannResearch` and
+  `RiemannResearch.RH.WeightedResidueRHCriterion`; the incremental build
+  reused unchanged artifacts. Reported build duration: 88.012 seconds;
+  total checkpoint elapsed time: 90.685 seconds. No newer-main integration
+  was needed. This terminal receipt was inspected for the documentation update.
 
 These durations measure the server-reported verification operation, not the
 workspace-opening request, polling delay, or total publication latency.

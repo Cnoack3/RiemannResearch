@@ -28,13 +28,38 @@ it has been:
 - `RiemannResearch/GroupTheory/AddSubgroupCRT.lean`: exact CRT support for prime-phase work
 - `RiemannResearch/THEOREM_CATALOG.md`: RH declaration and research-obligation ledger
 
-## Current research status — 18 October 2026
+## Current research status — 1 November 2026
 
-RH remains open. The repository contains unconditional identities and finite
-certificates, together with conditional RH reductions whose arithmetic
-hypotheses still require proofs. The following overview records the published
-scope; the linked research records distinguish Lean declarations from informal
-arguments and numerical experiments.
+RH remains open. The latest weighted CRT series is complete: all ten principal
+results were published individually, ending with
+[`e83acbe4`](https://github.com/Cnoack3/RiemannResearch/commit/e83acbe435711d1197772afe30adb011971041da).
+The [weighted CRT catalog](RiemannResearch/THEOREM_CATALOG_WEIGHTED_CRT_20261101.md)
+records the declarations, publication commits, and recovery verification.
+Nine results establish identities, structural properties, or an obstruction;
+the tenth is a **conditional research reduction**.
+
+| Development | Established scope | Remaining obligation or limitation |
+| --- | --- | --- |
+| [Weighted arithmetic residues and legal primitives](RiemannResearch/THEOREM_CATALOG_WEIGHTED_CRT_20261101.md) | Complete finite-residue energy identity, positive weights, exact refinement, pullback isometry, weighted adjoint and left inverse, full Pythagorean remainder, tower law, and nesting of legal primitives. | Construct a cofinal legal exact-head family with zero lower logarithmic growth of normalized complete residue energy. The checked RH criterion assumes this growth condition. |
+| [Weighted-adjoint obstruction](RiemannResearch/RH/WeightedCRTLegalObstruction.lean) | The legal period-6 primitive of `4 r₂ - 3 r₃` has a weighted period-2 average with a strictly negative zero-residue value, so that average is not legal. | Ambient weighted averaging cannot be assumed to preserve the legal primitive space. A construction using it must prove legality separately. |
+| [Complete dyadic Cesàro energy](RiemannResearch/RH/CesaroDyadicEnergyResearch20261101.md) | Exact complete head/tail decomposition, two-sided dyadic energy comparison, signed mean-neutral Möbius remainder, and conditional RH endpoints under P and Q. | Prove the required cancellation for an actual legal family across the complete moving tail. Sublinear energy alone does not give zero lower logarithmic growth. |
+| [P/Q change of measure and squarefree restrictions](RiemannResearch/RH/CesaroMeasureSquarefreeResearch20261101.md) | Actual conditional-iid models, exact path-measure change, complete energy comparison, and transfer of the normalized growth criterion. A checked counterexample shows Cesàro averaging does not preserve the squarefree conductor closure. | Supply the arithmetic growth estimate. Legality belongs to the input; the smoothed output cannot silently be treated as an element of the unsmoothed squarefree space. |
+
+The remaining growth condition permits nonzero amplitudes tending to zero and
+requires only a zero lower logarithmic exponent along cofinal heads. It does
+not require uniformly bounded energy. Exact finite CRT identities, positive
+weights, and conditional-iid replication do not supply that arithmetic
+estimate. The [final criterion's Lean type](RiemannResearch/RH/WeightedResidueRHCriterion.lean)
+lists legality, positive periods, nonzero amplitudes, exact heads, cofinality,
+and the open growth premise explicitly.
+
+These are previously published results. This overview refresh changes
+documentation only and does not constitute a new Lean verification.
+
+### Earlier milestones — 18 October 2026
+
+The following records distinguish Lean declarations from informal arguments
+and numerical experiments.
 
 | Development | Established scope | Remaining obligation |
 | --- | --- | --- |
