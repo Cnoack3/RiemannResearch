@@ -1,3 +1,5 @@
+import RiemannResearch.RH.PeriodicArithmeticCumulative
+import RiemannResearch.RH.SquarefreeWeightedPrimitives
 import RiemannResearch.Analysis.FiniteWeightedRefinement
 import RiemannResearch.RH.QWeightedResidueMaps
 import RiemannResearch.Analysis.FiniteWeightedPushforward

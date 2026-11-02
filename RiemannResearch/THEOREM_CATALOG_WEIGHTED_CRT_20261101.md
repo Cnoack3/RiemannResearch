@@ -38,6 +38,13 @@ Supporting lemmas are included with their owning result.
    weighted averages along K | M | L equal the direct K | L average.
    `FiniteWeightedRefinement.average_tower` is the generic finite theorem.
 
+8. `RH/SquarefreeWeightedPrimitives.lean`: `legalPrimitive_pullback`.
+   The actual zero-mean divisor-residue primitive space nests under reduction
+   pullback. `legalPrimitive_zero` records its forced zero anchor, and
+   `legalPrimitive_energy` identifies its exact energy with the existing
+   complete Q Cesàro energy. Periodicity is proved from span membership and
+   zero period mean, not assumed as a substitute for legality.
+
 ## Open arithmetic provider
 
 The existing dyadic lower-growth RH consumer is unchanged. Cofinal zero lower
