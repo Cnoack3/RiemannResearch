@@ -45,6 +45,12 @@ Supporting lemmas are included with their owning result.
    complete Q Cesàro energy. Periodicity is proved from span membership and
    zero period mean, not assumed as a substitute for legality.
 
+9. `RH/WeightedCRTLegalObstruction.lean`: `weighted_adjoint_not_legal`.
+   The primitive of 4 r₂ - 3 r₃ is literally legal at period 6, but its
+   weighted average modulo 2 is not legal. `average_even_exact` gives
+   -ω₆(2)/ω₂(0), and `average_even_negative` proves strict negativity.
+   Every legal primitive has value zero at residue 0.
+
 ## Open arithmetic provider
 
 The existing dyadic lower-growth RH consumer is unchanged. Cofinal zero lower
