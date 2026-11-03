@@ -117,3 +117,63 @@ response did not report a duration; the listed jobs started within
 
 See `RH/PrimeTensorSignedCertificates20261102.md` for precise formulas,
 provenance, the finite Wolfram diagnostic, and the remaining RH obligation.
+
+## Infimum RH implicators — 2 November 2026
+
+New module: `RH/QTensorCertificateInfimum.lean`.
+
+The actual sets of complete column-certificate, anchored-certificate, and
+finite squarefree legal-error values are defined explicitly. Each is
+proved nonempty and nonnegative, so each real `sInf` is a genuine
+variational infimum. No minimum or attainment is assumed.
+
+- `columnInfimum_eq_zero_iff`: zero column infimum is equivalent to
+  the already defined arbitrarily-small-column-certificate premise.
+- `anchoredInfimum_eq_zero_iff`: the analogous exact equivalence for
+  the signed anchor certificates.
+- `riemannHypothesis_of_columnInfimum_zero` and
+  `riemannHypothesis_of_anchoredInfimum_zero`: **conditional research
+  reductions** concluding Mathlib's literal `RiemannHypothesis`.
+- `anchoredCertificate_projection_eq_error`: projected anchors recover
+  the exact complete Q error for each fixed synthesis. The target row
+  must be retained and the rows must be distinct.
+- `anchoredInfimum_eq_legalErrorInfimum`: optimizing over anchors is
+  exactly optimizing the actual finite squarefree legal approximation
+  error. The proof of this equality already works with one constant
+  analysis row for the projected-anchor construction.
+- `legalErrorInfimum_le_columnInfimum`: the true-error infimum is no
+  larger than the complete column-certificate infimum.
+- `riemannHypothesis_of_legalErrorInfimum_zero`: the corresponding
+  actual-error criterion, still conditional.
+- `legalErrorInfimum_lt_benchmark` and
+  `anchoredInfimum_lt_benchmark`: unconditional strict upper bound
+  59/1000, using the existing checked rational three-atom certificate.
+  Nonnegativity is also proved.
+
+The implication proof is explicit: infimum zero gives a complete
+certificate below epsilon squared for every epsilon > 0. Its actual
+Q-error norm is then below epsilon, giving squarefree legal closure of one.
+The existing capacity/Mellin consumer supplies RH.
+
+**Open:** `columnInfimum = 0`, equivalently the column epsilon provider,
+or `anchoredInfimum = 0`, equivalently the anchored epsilon provider.
+No theorem in this continuation establishes either equality. In particular,
+the strict 0.059 bound does not imply zero, and projected anchors preserve
+the exact error rather than make it vanish.
+
+Development verification:
+- `job_JyZFHzvvR4mPUk4Ir6nulNN5R3Hm1fvU` succeeded, reported
+  verification 36.859 seconds; audited both certificate-infimum RH endpoints
+  and the exact projection-anchor identity.
+- `job_wrkQUqaUXMSd7bO3FFn4U_QeT_NnR-dv` succeeded, reported
+  verification 6.202 seconds; audited exact infimum equality, the actual
+  error-infimum RH endpoint, and the finite benchmark.
+- All audited endpoints used only `propext`, `Classical.choice`,
+  and `Quot.sound`.
+- The workspace-resume request round trip was 92.011 seconds. This is
+  separate from Lean verification. Both successful jobs had server queue
+  delays below 0.01 seconds. Polling and request latency are not kernel
+  checking time.
+
+Final saved-source validation and publication are provided by the checkpoint
+carrying this catalog update, covering the new module and aggregate export.
