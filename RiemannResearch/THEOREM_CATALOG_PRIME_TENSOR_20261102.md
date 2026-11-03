@@ -77,3 +77,43 @@ No numerical trend is used as an asymptotic arithmetic provider.
 Reproduce changed-source validation with
 `lake build +RiemannResearch.RH.QTensorCertificate --quiet`.
 The aggregate export was validated in both earlier full checkpoints.
+
+## Signed certificate continuation — 2 November 2026
+
+The follow-up to section 4 extends the two existing modules; no new
+aggregate imports or dependency changes are needed.
+
+| Module | New declarations and status |
+|---|---|
+| `Analysis/FiniteTensorTail.lean` | `anchored_split`, `anchored_tail_le`, `anchored_synthesis_split`, `anchored_certificate`: exact anchor-bias remainder and a signed quadratic majorant |
+| Same | `tail_inner_eq`: exact entrywise complete Gram subtraction |
+| Same | `tail_sq_add_row`, `columnCertificate_add_row_le`: exact single-row tail split and certificate monotonicity |
+| Same | `weighted_diagonal_majorant`: a genuine diagonal PSD majorant for every positive weight family |
+| Same | `block_certificate`, `merge_blocks_le`: exact within-block covariance and decreasing block triangle penalty |
+| `RH/QTensorCertificate.lean` | `certificate_add_row_le`: monotonicity for actual normalized Q divisor-wavelet rows |
+| Same | `anchoredCertificate_eq_error_add_bias`, `error_le_anchoredCertificate`: complete-Q exact identity and upper bound |
+| Same | `squarefree_closure_of_anchoredCertificates`, `riemannHypothesis_of_anchoredCertificates`: **conditional research reductions** |
+
+**Open:** `ArbitrarilySmallAnchoredCertificates`. No unconditional
+arithmetic provider has been proved. Anchor membership in the finite
+retained subspace is required explicitly. The actual gcd-anchor membership
+and conditional-cell formulas are not supplied by this continuation.
+
+Successful coherent development checks:
+- `job_eWaehDLrrwqSF_Wf0gmoGMzZX3N-DzXj`: 5.432 seconds reported verification,
+  exact anchors, row monotonicity, and weighted majorant.
+- `job_FwxNFW2Dr7ZlL5vWBzgr1rHe4Y_9tnps`: 5.188 seconds reported verification,
+  also including Gram subtraction and block results.
+- `job_q-UqE1j5vGcQRzaezTkfQd4wzDMPKoms`: 6.917 seconds reported verification,
+  actual-Q assembly and the literal Mathlib RH consumer.
+
+All audited endpoints reported only `propext`, `Classical.choice`,
+and `Quot.sound`. These are development checks; final saved-source
+publication is certified by the checkpoint carrying this update.
+Request round trips, workspace-opening time, and queue/polling delay are
+not included in these reported verification durations. The opening
+response did not report a duration; the listed jobs started within
+0.01 seconds of their server submission timestamps.
+
+See `RH/PrimeTensorSignedCertificates20261102.md` for precise formulas,
+provenance, the finite Wolfram diagnostic, and the remaining RH obligation.

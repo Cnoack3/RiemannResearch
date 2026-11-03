@@ -93,6 +93,90 @@ theorem riemannHypothesis_of_certificates (h : ArbitrarilySmallCertificates) :
     (QSquarefreeCapacity.capacity_tendsto_iff_squarefree_closure.mpr
       (squarefree_closure_of_certificates h))
 
+
+/-- A new divisor-wavelet row cannot worsen the complete column certificate.
+Source: supplied memorandum, section 4. -/
+theorem certificate_add_row_le (r : Option κ → ℕ+) (hr : Function.Injective r)
+    (hone : ∃ k, r (some k) = 1) (d : ι → ℕ) (c : ι → ℝ) :
+    certificate r d c ≤ certificate (fun k => r (some k)) d c := by
+  have h := columnCertificate_add_row_le (rows r) (rows_orthonormal r hr)
+    (fun i => qResidue (d i)) c qOne (one_mem_rows (fun k => r (some k)) hone)
+  have he : (fun k => rows r (some k)) = rows (fun k => r (some k)) := rfl
+  rw [he] at h
+  simpa only [certificate, columnCertificate, qSynthesis,
+    Fintype.linearCombination_apply] using h
+
+/-- Signed anchor certificate: anchors belong to the retained analysis
+space, while synthesis still uses the actual legal residue columns. -/
+def anchoredCertificate (r : κ → ℕ+) (d : ι → ℕ) (c : ι → ℝ)
+    (b : ι → QHilbert) : ℝ :=
+  (∑ k, (inner ℝ (rows r k) (qOne - qSynthesis d c)) ^ 2) +
+    ‖qSynthesis d c - Fintype.linearCombination ℝ b c‖ ^ 2
+
+/-- The certificate's excess is exactly the retained squared anchor bias. -/
+theorem anchoredCertificate_eq_error_add_bias (r : κ → ℕ+)
+    (hr : Function.Injective r) (hone : ∃ k, r k = 1)
+    (d : ι → ℕ) (c : ι → ℝ) (b : ι → QHilbert)
+    (hb : ∀ i, b i ∈ synthesisSpan (rows r)) :
+    anchoredCertificate r d c b = ‖qOne - qSynthesis d c‖ ^ 2 +
+      ∑ k, (inner ℝ (rows r k)
+        (qSynthesis d c - Fintype.linearCombination ℝ b c)) ^ 2 := by
+  have hz : tailMap (rows r) qOne = 0 := by
+    change qOne - (synthesisSpan (rows r)).starProjection qOne = 0
+    rw [Submodule.starProjection_eq_self_iff.mpr (one_mem_rows r hone), sub_self]
+  have he := split_error (rows r) (rows_orthonormal r hr) (qOne - qSynthesis d c)
+  rw [map_sub, hz, zero_sub, norm_neg] at he
+  have ha : ‖qSynthesis d c - Fintype.linearCombination ℝ b c‖ ^ 2 =
+      ‖tailMap (rows r) (qSynthesis d c)‖ ^ 2 +
+      ∑ k, (inner ℝ (rows r k)
+        (qSynthesis d c - Fintype.linearCombination ℝ b c)) ^ 2 := by
+    simpa only [qSynthesis, Fintype.linearCombination_apply] using
+      anchored_synthesis_split (rows r) (rows_orthonormal r hr)
+        (fun i => qResidue (d i)) b hb c
+  unfold anchoredCertificate
+  linarith
+
+theorem error_le_anchoredCertificate (r : κ → ℕ+) (hr : Function.Injective r)
+    (hone : ∃ k, r k = 1) (d : ι → ℕ) (c : ι → ℝ) (b : ι → QHilbert)
+    (hb : ∀ i, b i ∈ synthesisSpan (rows r)) :
+    ‖qOne - qSynthesis d c‖ ^ 2 ≤ anchoredCertificate r d c b := by
+  rw [anchoredCertificate_eq_error_add_bias r hr hone d c b hb]
+  exact le_add_of_nonneg_right (Finset.sum_nonneg (fun k _ => sq_nonneg _))
+
+/-- OPEN arithmetic premise. Every norm is the complete infinite Q norm. -/
+def ArbitrarilySmallAnchoredCertificates : Prop :=
+  ∀ ε : ℝ, 0 < ε → ∃ m n : ℕ, ∃ r : Fin m → ℕ+,
+    ∃ d : Fin n → {d : ℕ // 2 ≤ d ∧ Squarefree d}, ∃ c : Fin n → ℝ,
+    ∃ b : Fin n → QHilbert,
+      Function.Injective r ∧ (∃ k, r k = 1) ∧
+      (∀ i, b i ∈ synthesisSpan (rows r)) ∧
+      anchoredCertificate r (fun i => (d i).val) c b < ε
+
+theorem squarefree_closure_of_anchoredCertificates
+    (h : ArbitrarilySmallAnchoredCertificates) :
+    qOne ∈ qSquarefreeCRTSpan.topologicalClosure := by
+  apply Metric.mem_closure_iff.mpr
+  intro ε hε
+  obtain ⟨m, n, r, d, c, b, hr, hone, hb, hc⟩ := h (ε ^ 2) (sq_pos_of_pos hε)
+  refine ⟨qSynthesis (fun i => (d i).val) c, ?_, ?_⟩
+  · unfold qSynthesis
+    apply qSquarefreeCRTSpan.sum_mem
+    intro i _
+    apply qSquarefreeCRTSpan.smul_mem
+    exact Submodule.subset_span ⟨d i, rfl⟩
+  · rw [dist_eq_norm]
+    have hbound := error_le_anchoredCertificate r hr hone (fun i => (d i).val) c b hb
+    nlinarith [norm_nonneg (qOne - qSynthesis (fun i => (d i).val) c)]
+
+/-- Conditional research reduction. Bagchi (2006), Remark 8, supplies the
+published squarefree-closure context; the checked implication here uses
+the existing repository Mellin/capacity consumer. The arithmetic premise
+above remains OPEN. -/
+theorem riemannHypothesis_of_anchoredCertificates
+    (h : ArbitrarilySmallAnchoredCertificates) : RiemannHypothesis :=
+  QSquarefreeCapacity.riemannHypothesis_of_capacity_tendsto
+    (QSquarefreeCapacity.capacity_tendsto_iff_squarefree_closure.mpr
+      (squarefree_closure_of_anchoredCertificates h))
 end RiemannResearch.RH.QTensorCertificate
 
 /-!
