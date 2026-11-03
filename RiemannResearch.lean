@@ -1,3 +1,7 @@
+import RiemannResearch.Analysis.HeavyAtomVariance
+import RiemannResearch.RH.QDivisorGcdCutoff
+import RiemannResearch.RH.QSquarefreeAnalysisObstruction
+import RiemannResearch.RH.QTensorCertificate
 import RiemannResearch.Analysis.FiniteTensorTail
 import RiemannResearch.RH.WeightedLegalPrimitiveProjection
 import RiemannResearch.Analysis.FiniteWeightedLegalProjection
