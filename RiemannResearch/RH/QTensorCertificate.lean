@@ -9,8 +9,11 @@ import RiemannResearch.RH.QDivisorHilbertBasis
 import RiemannResearch.RH.QCovarianceInverse
 import RiemannResearch.RH.QSquarefreeCapacity
 import RiemannResearch.RH.ZetaTwoCRTSquarefreeConverse
+import RiemannResearch.RH.ZetaTwoCRTReciprocalEnergy
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Lean.Elab.Tactic.Omega
 
 /-!
 # Complete arithmetic tensor certificates and their conditional RH consumer
@@ -91,3 +94,75 @@ theorem riemannHypothesis_of_certificates (h : ArbitrarilySmallCertificates) :
       (squarefree_closure_of_certificates h))
 
 end RiemannResearch.RH.QTensorCertificate
+
+/-!
+## A complete rational three-atom certificate
+
+Source: Prime Tensor CRT RH Research Project (2 November 2026), Appendix B.
+The finite first-period reciprocal energy bounds the full infinite Q norm.
+This Lean bound is deliberately distinguished from the tighter Python
+rational enclosure in the companion research memorandum.
+-/
+noncomputable section
+open scoped BigOperators
+namespace RiemannResearch.RH.QTensorCertificate.Benchmark
+open ZetaTwoHilbert ZetaTwoProbability ArithmeticCumulative Pareto
+
+def errorVector : QHilbert :=
+  qOne - ((1045918/1000000 : ℝ) • qResidue 2 +
+    (1069558/1000000 : ℝ) • qResidue 3 +
+    (604750/1000000 : ℝ) • qResidue 6)
+
+def residual (n : ℕ) : ℝ :=
+  1 - ((1045918/1000000 : ℝ) * residueFraction 2 n +
+    (1069558/1000000 : ℝ) * residueFraction 3 n +
+    (604750/1000000 : ℝ) * residueFraction 6 n)
+
+theorem errorVector_coordinate (n : ℕ) (hn : n ≠ 0) :
+    qSequence errorVector n = residual n := by
+  change qSequenceLinear (qOne - ((1045918/1000000 : ℝ) • qResidue 2 +
+    (1069558/1000000 : ℝ) • qResidue 3 +
+    (604750/1000000 : ℝ) • qResidue 6)) n = _
+  simp only [map_sub, map_add, map_smul, Pi.sub_apply, Pi.add_apply,
+    Pi.smul_apply, smul_eq_mul]
+  change qSequence qOne n - ((1045918/1000000 : ℝ) * qSequence (qResidue 2) n +
+    (1069558/1000000 : ℝ) * qSequence (qResidue 3) n +
+    (604750/1000000 : ℝ) * qSequence (qResidue 6) n) = _
+  simp [qSequence_qOne, qOneSequence, hn, qSequence_qResidue, residual]
+
+theorem residual_bound (n : ℕ) : |residual n| ≤ 4 := by
+  have hb (d : ℕ) (hd : 0 < d) :
+      0 ≤ residueFraction d n ∧ residueFraction d n ≤ 1 := by
+    unfold residueFraction
+    constructor
+    · positivity
+    · apply (div_le_one (show (0 : ℝ) < d by exact_mod_cast hd)).mpr
+      exact_mod_cast (Nat.mod_lt n hd).le
+  have h2 := hb 2 (by decide)
+  have h3 := hb 3 (by decide)
+  have h6 := hb 6 (by decide)
+  rw [abs_le]
+  unfold residual
+  constructor <;> nlinarith
+
+theorem residual_periodic (n : ℕ) : residual (n + 6) = residual n := by
+  simp [residual, residueFraction, Nat.add_mod]
+
+theorem complete_norm_lt : ‖errorVector‖^2 < (59 : ℝ)/1000 := by
+  have hn : ‖errorVector‖^2 = inversePowerMean 0 (fun n => residual n ^ 2) := by
+    rw [qNorm_eq_inversePowerMean]
+    unfold inversePowerMean
+    apply tsum_congr
+    intro n
+    dsimp only
+    rw [errorVector_coordinate (n+1) (by omega)]
+  have hb := (periodic_qEnergy_comparison 6 (by decide)
+    residual residual_bound residual_periodic).2
+  have hr : crtReciprocalEnergy 6 residual =
+      (53001021710221 : ℝ)/900000000000000 := by
+    norm_num [crtReciprocalEnergy, Fin.sum_univ_succ, residual, residueFraction]
+  rw [hr] at hb
+  rw [hn]
+  exact hb.trans_lt (by norm_num)
+
+end RiemannResearch.RH.QTensorCertificate.Benchmark
