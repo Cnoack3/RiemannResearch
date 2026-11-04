@@ -58,3 +58,16 @@ Published `5e6890c8c1b63619417ae9908aca915b9f1dc057` through successful job `job
 - `NumberTheory/PrimeProductEnergyGrowth.lean` proves L/4^m ≥ (3/8)(5/4)^(m−2) for the first m primes and divergence. Its arbitrary-energy consumer retains an explicit period-energy lower-bound premise.
 
 Combined snippet `job_npUihTYbk-DdwslXZXdCxqoxZV8x6jGw` succeeded, verified=true, exit=0, 6.548 s. Four representative theorem axiom reports contain only propext, Classical.choice, Quot.sound. The next checkpoint determines publication.
+
+## Checkpoint 4 publication
+
+Published `d7892b67ff03c20a92f9e07f8be26e9d5dba5adb` through successful job `job_GRtDcKaD03Wu0R5QdNw9B_Qpleq0L_U7`. Aggregate plus four changed modules; build 59.684 s, cache 8.451 s.
+
+## Complete arithmetic no-go and actual finite trial certificates
+
+- `RH/QPrimeDerivativeEnergyNoGo.lean`: **unconditional actual-Hilbert theorem**, not a scalar consumer: the explicit derivative-optimal primitive satisfies ‖F‖² ≥ q³L/(4M²); its complete norm squared tends to infinity along the first primes, and it has no uniform energy budget. Every period-mean and prefix-to-full-norm input is discharged. This closes the formal scope gap previously noted above for the primitive-energy obstruction. It does not constrain arbitrary legal approximants.
+- `RH/ZetaTwoElementaryRationalBounds.lean`: unconditional 29/18 < ζ(2) < 5/3, including the full infinite series.
+- `RH/QPeriodSixActualCertificate.lean`: actual legal trial g₂+g₃+(2/3)g₆ has complete squared Q error <1/16.
+- `RH/QPeriodThirtyActualCertificate.lean`: actual legal trial g₂+g₃+(4/5)g₅−(1/5)g₆+(1/5)g₁₅+(1/5)g₃₀ has complete squared Q error <27/1000, hence <1/32. These are actual Q norm theorems, not finite-head surrogates.
+
+Combined snippet `job_5UXllW1G6BgyvUekVe4TXiH6-i_Vjmtu` succeeded, verified=true, exit=0, 20.188 s. Axiom inspection of both trial norm bounds, both legal memberships, actual primitive norm divergence and no-budget theorem returned only propext, Classical.choice, Quot.sound. Final publication requires the subsequent checkpoint. No RH proof is asserted: actual nonsummable projection gains or a bounded regularized primitive budget remain Open.
