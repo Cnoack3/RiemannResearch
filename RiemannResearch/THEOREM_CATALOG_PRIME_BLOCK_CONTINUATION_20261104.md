@@ -45,3 +45,16 @@ Published `ced6c556be5458ee9b760e4fb01c5124b6497191` through successful job `job
 - `RH/QParityFactorLegality.lean`: a radical-compatible parity factor equals φ(1)1+2(φ(0)−φ(1))g₂. Its legality is equivalent to legality of φ(1)1; nonzero even value of a legal factor gives an RH consumer.
 
 Combined candidate job `job_D3VsOapdufZgUWNgrqsqE5x3Csz0Soic` succeeded, verified=true, exit=0, 8.004 s. Inspected axioms for finite legal membership, the full physical remainder, and parity RH consumer contain only propext, Classical.choice, Quot.sound. Publication requires the next project checkpoint. The complete primitive-energy divergence, derivative-closure identity, and regularization dichotomy are mathematical proofs in the accompanying report, not silently asserted by these finite formal interfaces.
+
+## Checkpoint 3 publication
+
+Published `5e6890c8c1b63619417ae9908aca915b9f1dc057` through successful job `job_RRTZ4P1KaZ-YWhoMA695ofYCbQIwAGHl`. Aggregate plus four changed modules; build 45.800 s, cache 8.779 s.
+
+## Actual period mean, complete tails, and scalar escape
+
+- `RH/QPrimeDerivativePeriodMean.lean` proves the actual cumulative primitive over its full product period equals qL²/(2M); all divisor-sum inputs are discharged for a nonempty finite distinct-prime family.
+- `Analysis/ArithmeticProgressionSquareSeries.lean` proves summability and complete infinite reciprocal-square progression tail bounds from nonnegative finite telescoping bounds.
+- `RH/QPeriodicRationalTail.lean` combines complete tails with the existing exact residue regrouping, yielding an unconditional actual QHilbert error bound for any bounded periodic vector. All omitted mass is retained.
+- `NumberTheory/PrimeProductEnergyGrowth.lean` proves L/4^m ≥ (3/8)(5/4)^(m−2) for the first m primes and divergence. Its arbitrary-energy consumer retains an explicit period-energy lower-bound premise.
+
+Combined snippet `job_npUihTYbk-DdwslXZXdCxqoxZV8x6jGw` succeeded, verified=true, exit=0, 6.548 s. Four representative theorem axiom reports contain only propext, Classical.choice, Quot.sound. The next checkpoint determines publication.
