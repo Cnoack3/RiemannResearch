@@ -20,7 +20,7 @@ Files: Analysis/ResidualPrimeGain.lean and RH/QPrimorialRelativeGain.lean.
   only when n+4 is prime.
 - Candidate verification: job_-B6p9yWKTvDQkR--vrfiakTsYVZIxEPF,
   verified=true, exit_code=0, server elapsed 5.888 seconds.
-  Project publication requires the checkpoint's successful terminal result.
+  Publication is confirmed below under Group 1 publication.
 - Reused results: exact primorial cofinality/projection convergence;
   finite Schur identities; squarefree Q-to-Pareto RH transfer.
 
@@ -62,7 +62,7 @@ Candidate verification:
   verified=true, exit_code=0, server elapsed 16.658 seconds.
 - Inspected axioms of proper closure, common-period identity, and eventual
   RH consumer: propext, Classical.choice, Quot.sound only.
-- Source publication requires a successful full project checkpoint.
+- Source publication is confirmed below under Group 2 publication.
 
 ## Symbolic and numerical diagnostics
 
@@ -101,3 +101,15 @@ Boyd-Vandenberghe (2004), Appendix A.5.5;
 Axler (2020), Chapter 8;
 Albani-Elbau-de Hoop-Scherzer (2016), DOI 10.1080/01630563.2016.1144070,
 with the explicit range hypothesis retained.
+
+## Group 2 publication
+
+- Full-project checkpoint job_XLAuH1vAH26sEihBV7zHW0AUcJpIZIqb succeeded.
+- Build scope: full; aggregate project plus QCommonPeriodError,
+  QModThreeTensorLegality, and QPrimorialRelativeGain.
+- Build duration reported by server: 78.519 seconds; cache preflight 8.558 seconds.
+- Published commit: 61824beb6e3b42c95fe5f9e55fe50be3071063bf.
+- Both groups together add 38 theorem declarations and five definitions.
+- No sorry/admit or additional project axioms were introduced.
+- The numerical prime-gain pattern is not a theorem, and no open arithmetic
+  provider has been discharged by these conditional consumer proofs.
