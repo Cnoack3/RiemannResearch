@@ -82,3 +82,23 @@ the validation scope and the exact publishing commit.
 
 No new RH hypothesis, local axiom, unfinished proof, or unsafe declaration
 is introduced.
+
+## Orthonormal coordinates and prime-block continuation
+
+See RH/QOrthonormalPrimeBlockResearch20261104.md for complete finite examples,
+the exact coefficient-error decomposition, the orthonormal derivative
+normal equations, and the prime-block projection criterion.
+
+The companion Analysis/ResidualPrimeGain.lean adds, in namespace
+RiemannResearch.Analysis.ResidualGain:
+
+- primeReciprocal and primeReciprocal_nonneg;
+- primeReciprocal_not_summable, from Mathlib's Euler divergence theorem;
+- not_summable_of_prime_lower;
+- residual_le_exp_neg_prime_sum, an explicit finite upper bound;
+- residual_tendsto_zero_of_prime_gain, the scalar conditional implication.
+
+Conditional research reduction: the actual block relative gain lower bound
+c/p for a fixed c>0 is **Open**. The first four numerical blocks are consistent
+with c=1, but are not a provider theorem. The residue-projection specialization
+is a mathematical derivation in the memo, not a new Lean RH consumer.
