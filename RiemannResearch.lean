@@ -1,6 +1,9 @@
 import RiemannResearch.NumberTheory.PrimeResidueTopology
 import RiemannResearch.NumberTheory.ModularOscillation
 import RiemannResearch.RH.QSquarefreeCRTContinuity
+import RiemannResearch.RH.QSquarefreeClosedKernel
+import RiemannResearch.RH.QSquarefreeProjectionOrder
+import RiemannResearch.RH.QSquarefreeDisplacementRegularity
 import RiemannResearch.Analysis.SchurDisplacementCountermodel
 import RiemannResearch.RH.QSquarefreeCRTRegularity
 import RiemannResearch.RH.QSquarefreeSchurOperator

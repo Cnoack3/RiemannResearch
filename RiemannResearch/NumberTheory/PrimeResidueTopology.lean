@@ -9,6 +9,8 @@ import Mathlib.Data.Finset.Image
 import Mathlib.Topology.Instances.Real.Lemmas
 import Mathlib.Topology.UniformSpace.Pi
 import Mathlib.Topology.UniformSpace.UniformEmbedding
+import Mathlib.Topology.UniformSpace.AbstractCompletion
+import Mathlib.Topology.UniformSpace.Completion
 import Mathlib.Topology.UniformSpace.HeineCantor
 import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.Data.Nat.ChineseRemainder
@@ -41,7 +43,8 @@ Sources for the standard construction and terminology:
 The factorial recurrence and constant-limit consequence are elementary
 applications of this topology. The product here has factors ZMod p, not Z_p;
 it is the squarefree congruence completion, not the full profinite integers.
-No categorical IsLimit object is asserted by this file.
+The product is packaged as an AbstractCompletion and canonically identified
+with Mathlib's completion. No inverse-system categorical IsLimit is asserted.
 -/
 
 noncomputable section
@@ -164,6 +167,23 @@ local instance : TopologicalSpace {n : ℕ // 1 ≤ n} :=
 def CRTUniformContinuous {Y : Type*} [UniformSpace Y]
     (f : {n : ℕ // 1 ≤ n} → Y) : Prop :=
   UniformContinuous f
+
+/-- The prime-residue product realizes the abstract completion universal object. -/
+def positiveCRTCompletion : AbstractCompletion {n : ℕ // 1 ≤ n} where
+  space := (p : Nat.Primes) → ZMod p.val
+  coe := positiveEmbedding
+  uniformStruct := inferInstance
+  complete := by
+    let (p : Nat.Primes) : NeZero p.val := ⟨p.property.ne_zero⟩
+    infer_instance
+  separation := inferInstance
+  isUniformInducing := ⟨rfl⟩
+  dense := dense_positive_integers
+
+/-- Canonical equivalence with Mathlib's completion, from its universal property. -/
+def positiveCRTCompletionEquiv :
+    UniformSpace.Completion {n : ℕ // 1 ≤ n} ≃ᵤ ((p : Nat.Primes) → ZMod p.val) :=
+  UniformSpace.Completion.cPkg.compareEquiv positiveCRTCompletion
 
 variable {Y : Type*} [UniformSpace Y] [CompleteSpace Y] [T0Space Y]
 
