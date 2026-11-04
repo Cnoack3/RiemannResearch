@@ -5,6 +5,7 @@ Authors: Christian Noack
 -/
 import RiemannResearch.Analysis.ResidualGainProduct
 import Mathlib.NumberTheory.SumPrimeReciprocals
+import Mathlib.Topology.Algebra.InfiniteSum.NatInt
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
@@ -23,7 +24,7 @@ gains. If the relative gain at each prime p is at least c / p for one c > 0,
 the residual tends to zero. This module proves the scalar conditional
 implication and its finite exponential bound. It does not prove the
 arithmetic lower bound, identify a numerical pattern with a theorem, or
-formalize the application to the residue projection family.
+formalize the application here; QPrimorialRelativeGain supplies that application.
 -/
 
 noncomputable section
@@ -89,5 +90,24 @@ theorem residual_tendsto_zero_of_prime_gain {d r : ℕ → ℝ} {c : ℝ}
     Tendsto d atTop (𝓝 0) :=
   (residual_tendsto_zero_iff_not_summable hd h0 h1 hrec).mpr
     (not_summable_of_prime_lower hc h0 hlower)
+
+
+/-- Removing a finite prime prefix does not remove reciprocal-prime divergence. -/
+theorem not_summable_of_shifted_prime_lower {r : ℕ → ℝ} {c : ℝ}
+    (offset : ℕ) (hc : 0 < c) (hr : ∀ n, 0 ≤ r n)
+    (hlower : ∀ n, (n + offset).Prime → c / ((n + offset : ℕ) : ℝ) ≤ r n) :
+    ¬ Summable r := by
+  intro hs
+  have hsmall : Summable (fun n => c * primeReciprocal (n + offset)) := by
+    apply Summable.of_nonneg_of_le
+      (fun n => mul_nonneg hc.le (primeReciprocal_nonneg _)) _ hs
+    intro n
+    by_cases hn : (n + offset).Prime
+    · simpa [primeReciprocal, hn, div_eq_mul_inv] using hlower n hn
+    · simpa [primeReciprocal, hn] using hr n
+  have hall : Summable (fun n => c * primeReciprocal n) :=
+    (summable_nat_add_iff offset).mp hsmall
+  apply primeReciprocal_not_summable
+  simpa [← mul_assoc, ne_of_gt hc] using hall.mul_left c⁻¹
 
 end RiemannResearch.Analysis.ResidualGain
