@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QCommonPeriodError
+import RiemannResearch.RH.QModThreeTensorLegality
 import RiemannResearch.RH.QPrimorialRelativeGain
 import RiemannResearch.Analysis.ResidualPrimeGain
 import RiemannResearch.RH.QDifferenceNoncoercivity

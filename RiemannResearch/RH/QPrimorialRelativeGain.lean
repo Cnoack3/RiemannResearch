@@ -10,6 +10,10 @@ import RiemannResearch.RH.QSquarefreeCapacity
 import RiemannResearch.Analysis.ResidualPrimeGain
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
+import Mathlib.NumberTheory.Primorial
+import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+import RiemannResearch.RH.SquarefreeStageExhaustion
+import Lean.Elab.Tactic.Omega
 
 /-!
 # Relative gains of actual squarefree primorial projections
@@ -115,4 +119,40 @@ theorem riemannHypothesis_of_prime_energy_gain {c : ℝ} (hc : 0 < c)
   intro n hn
   exact (le_div_iff₀ (primorialError_pos n)).mpr (hlower n hn)
 
+end RiemannResearch.RH.QPrimorialRelativeGain
+
+namespace RiemannResearch.RH.QPrimorialRelativeGain
+open Filter
+open scoped Topology
+open QSquarefreePrimorialCofinality
+open Pareto.SquarefreeStageExhaustion
+open RiemannResearch.Analysis.ResidualGain
+
+theorem stage_succ_eq_of_not_prime (n : ℕ) (hn : ¬ (n + 4).Prime) :
+    primorialStage (n + 1) = primorialStage n := by
+  have hnp : ¬ (n + 3 + 1).Prime := by simpa only [Nat.add_assoc] using hn
+  have he : primorialPeriod (n + 1) = primorialPeriod n := by
+    unfold primorialPeriod
+    rw [show n + 1 + 3 = n + 3 + 1 by omega]
+    simp only [primorial_eq_prod_primesLE, Nat.primesLE_succ, if_neg hnp]
+  simp only [primorialStage, he]
+
+theorem relativeGain_eq_zero_of_not_prime (n : ℕ) (hn : ¬ (n + 4).Prime) :
+    relativeGain n = 0 := by
+  simp only [relativeGain, gain, primorialOptimizer, stage_succ_eq_of_not_prime n hn,
+    sub_self, norm_zero, zero_pow (by decide : 2 ≠ 0), zero_div]
+
+/-- Conditional research reduction allowing any finite set of initial exceptions. -/
+theorem riemannHypothesis_of_eventual_prime_gain_lower {c : ℝ} (hc : 0 < c)
+    (N : ℕ) (hlower : ∀ n, N ≤ n → (n + 4).Prime →
+      c / ((n + 4 : ℕ) : ℝ) ≤ relativeGain n) : RiemannHypothesis := by
+  apply riemannHypothesis_of_relativeGain_not_summable
+  intro hs
+  have ht : ¬ Summable (fun n => relativeGain (n + N)) :=
+    not_summable_of_shifted_prime_lower (N + 4) hc
+      (fun n => relativeGain_nonneg (n + N)) (by
+        intro n hn
+        have hp : (n + N + 4).Prime := by simpa only [Nat.add_assoc] using hn
+        simpa only [Nat.add_assoc] using hlower (n + N) (by omega) hp)
+  exact ht ((summable_nat_add_iff N).mpr hs)
 end RiemannResearch.RH.QPrimorialRelativeGain
