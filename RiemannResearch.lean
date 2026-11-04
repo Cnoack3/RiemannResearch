@@ -1,3 +1,7 @@
+import RiemannResearch.RH.FinitePrimeDerivativeExpansion
+import RiemannResearch.RH.QPrimeDerivativeAtoms
+import RiemannResearch.RH.QParityFactorLegality
+import RiemannResearch.RH.QPrimeDerivativePrimitive
 import RiemannResearch.RH.FinitePrimeDerivativeProjection
 import RiemannResearch.RH.QPrimeDerivativeProjection
 import RiemannResearch.RH.QPrimeValuationFactorLegality

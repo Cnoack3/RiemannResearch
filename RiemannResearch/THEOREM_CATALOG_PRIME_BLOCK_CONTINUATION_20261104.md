@@ -32,3 +32,16 @@ Published `d3650c09a38a31e84cd23b5e0ac8f6c849796d25` through successful job `job
 - `RH/QPrimeBlockCertificates.lean`: exact rational finite data for periods6 and30, plus explicitly conditional complete-energy consumers. Full Q-series assembly is separately proved in the research note and is not silently represented by a finite kernel calculation.
 
 The coherent group passed snippet job `job_F_ZW8CGIhdIbBipEQmSz15ShpUAdr4ZF`, verified=true, exit_code=0, 9.300 s. Representative axiom reports for tensor minimization, physical error, rigidity RH consumer, projection nonlegality, rational certificate, and weighted-energy bound contain only propext, Classical.choice, Quot.sound. Final project acceptance requires the following checkpoint.
+
+## Checkpoint 2 publication
+
+Published `ced6c556be5458ee9b760e4fb01c5124b6497191` through successful job `job_8PqEaJmXXCfjsKiqC6vFKKQ71aBWU3Le`. Validation: aggregate plus all eight changed modules; build 38.761 s, cache preflight 8.48 s. Standalone import issue was corrected before this successful checkpoint.
+
+## Explicit finite legal primitive and parity completion
+
+- `RH/FinitePrimeDerivativeExpansion.lean`: full subset expansion and signed coefficient cancellation of the finite product optimizer.
+- `RH/QPrimeDerivativeAtoms.lean`: finite Boolean monomials are actual divisor indicators; lifted derivative atoms equal the physical anchored differences.
+- `RH/QPrimeDerivativePrimitive.lean`: explicit finite residue combination is legal for every distinct prime family; its actual derivative is the tensor optimizer, with exact complete Q-error and full remainder against every coefficient vector. No additional arithmetic premise beyond primality and distinctness.
+- `RH/QParityFactorLegality.lean`: a radical-compatible parity factor equals φ(1)1+2(φ(0)−φ(1))g₂. Its legality is equivalent to legality of φ(1)1; nonzero even value of a legal factor gives an RH consumer.
+
+Combined candidate job `job_D3VsOapdufZgUWNgrqsqE5x3Csz0Soic` succeeded, verified=true, exit=0, 8.004 s. Inspected axioms for finite legal membership, the full physical remainder, and parity RH consumer contain only propext, Classical.choice, Quot.sound. Publication requires the next project checkpoint. The complete primitive-energy divergence, derivative-closure identity, and regularization dichotomy are mathematical proofs in the accompanying report, not silently asserted by these finite formal interfaces.
