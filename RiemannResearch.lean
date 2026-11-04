@@ -1,3 +1,11 @@
+import RiemannResearch.RH.FinitePrimeDerivativeProjection
+import RiemannResearch.RH.QPrimeDerivativeProjection
+import RiemannResearch.RH.QPrimeValuationFactorLegality
+import RiemannResearch.RH.QValuationConditionalLegality
+import RiemannResearch.LinearAlgebra.DerivativeOptimizerPeriodMean
+import RiemannResearch.Analysis.DirectionalGainCertificate
+import RiemannResearch.RH.QPrimeBlockCertificates
+import RiemannResearch.Analysis.ArithmeticProgressionSquareTail
 import RiemannResearch.RH.QPrimorialPacketGain
 import RiemannResearch.Analysis.ResidualGainCounterexample
 import RiemannResearch.RH.QCommonPeriodError
