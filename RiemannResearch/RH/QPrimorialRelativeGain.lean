@@ -155,4 +155,20 @@ theorem riemannHypothesis_of_eventual_prime_gain_lower {c : ℝ} (hc : 0 < c)
         have hp : (n + N + 4).Prime := by simpa only [Nat.add_assoc] using hn
         simpa only [Nat.add_assoc] using hlower (n + N) (by omega) hp)
   exact ht ((summable_nat_add_iff N).mpr hs)
+
+/-- Compared with an eventual lower bound, this permits infinitely many failures
+provided their nonnegative loss is summable. The inequality remains Open. -/
+theorem riemannHypothesis_of_prime_lower_with_summable_defect
+    {c : ℝ} (hc : 0 < c) {ε : ℕ → ℝ}
+    (hε0 : ∀ n, 0 ≤ ε n) (hε : Summable ε)
+    (hlower : ∀ n, (n + 4).Prime →
+      c / ((n + 4 : ℕ) : ℝ) ≤ relativeGain n + ε n) :
+    RiemannHypothesis := by
+  apply riemannHypothesis_of_relativeGain_not_summable
+  intro hs
+  have hdiv : ¬ Summable (fun n => relativeGain n + ε n) :=
+    not_summable_of_shifted_prime_lower 4 hc
+      (fun n => add_nonneg (relativeGain_nonneg n) (hε0 n)) hlower
+  exact hdiv (hs.add hε)
+
 end RiemannResearch.RH.QPrimorialRelativeGain

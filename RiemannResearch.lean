@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QPrimorialPacketGain
+import RiemannResearch.Analysis.ResidualGainCounterexample
 import RiemannResearch.RH.QCommonPeriodError
 import RiemannResearch.RH.QModThreeTensorLegality
 import RiemannResearch.RH.QPrimorialRelativeGain
