@@ -131,4 +131,62 @@ theorem legalCylinderApprox_tendsto_one_iff (d : ℕ → ℕ)
       Submodule.starProjection_eq_self_iff.mpr h
     simpa only [he] using legalCylinderApprox_tendsto d hd
 
+
+
+theorem cylinder_leakage_exact (L : ℕ) :
+    cylinderApprox L - legalCylinderApprox L =
+      limitingResidual - (qDivisor L - closure.starProjection (qDivisor L)) := by
+  unfold legalCylinderApprox cylinderApprox limitingResidual
+  rw [map_sub]
+  abel
+
+theorem cylinder_infDist_eq (L : ℕ) :
+    Metric.infDist (cylinderApprox L) (closure : Set QHilbert) =
+      ‖cylinderApprox L - legalCylinderApprox L‖ := by
+  apply le_antisymm
+  · have h := Metric.infDist_le_dist_of_mem (x := cylinderApprox L) (closure.starProjection_apply_mem (cylinderApprox L))
+    simpa only [dist_eq_norm, legalCylinderApprox] using h
+  · apply (Metric.le_infDist (show (closure : Set QHilbert).Nonempty from
+        ⟨0, closure.zero_mem⟩)).mpr
+    intro y hy
+    have h := Submodule.norm_starProjection_apply_le closureᗮ (cylinderApprox L - y)
+    rw [map_sub, Submodule.starProjection_orthogonal_apply_eq_zero hy, sub_zero,
+      Submodule.starProjection_orthogonal_val] at h
+    simpa only [legalCylinderApprox, dist_eq_norm] using h
+
+/-- The normal part of every cofinal CRT approximation converges to the actual residual. -/
+theorem cylinder_leakage_tendsto (d : ℕ → ℕ) (hd : Tendsto d atTop atTop) :
+    Tendsto (fun j => cylinderApprox (d j) - legalCylinderApprox (d j))
+      atTop (𝓝 limitingResidual) := by
+  exact (cylinderApprox_tendsto_one d hd).sub (legalCylinderApprox_tendsto d hd)
+
+/-- Ambient cylinder convergence does not remove the legal-distance floor. -/
+theorem cylinder_infDist_tendsto (d : ℕ → ℕ) (hd : Tendsto d atTop atTop) :
+    Tendsto (fun j => Metric.infDist (cylinderApprox (d j)) (closure : Set QHilbert))
+      atTop (𝓝 ‖limitingResidual‖) := by
+  simpa only [cylinder_infDist_eq] using (cylinder_leakage_tendsto d hd).norm
+
+theorem cylinder_infDist_tendsto_zero_iff (d : ℕ → ℕ) (hd : Tendsto d atTop atTop) :
+    Tendsto (fun j => Metric.infDist (cylinderApprox (d j)) (closure : Set QHilbert))
+      atTop (𝓝 0) ↔ limitingResidual = 0 := by
+  constructor
+  · intro h
+    exact norm_eq_zero.mp (tendsto_nhds_unique (cylinder_infDist_tendsto d hd) h)
+  · intro h
+    simpa only [h, norm_zero] using cylinder_infDist_tendsto d hd
+
+/-- An explicit full-norm error estimate, retaining the residual floor. -/
+theorem cylinder_infDist_error_le (L : ℕ) :
+    |Metric.infDist (cylinderApprox L) (closure : Set QHilbert) -
+      ‖limitingResidual‖| ≤ ‖qDivisor L‖ := by
+  rw [cylinder_infDist_eq]
+  have h := abs_norm_sub_norm_le
+    (cylinderApprox L - legalCylinderApprox L) limitingResidual
+  have he : (cylinderApprox L - legalCylinderApprox L) - limitingResidual =
+      -(closureᗮ.starProjection (qDivisor L)) := by
+    rw [cylinder_leakage_exact, Submodule.starProjection_orthogonal_val]
+    abel
+  rw [he, norm_neg] at h
+  exact h.trans (Submodule.norm_starProjection_apply_le closureᗮ (qDivisor L))
+
 end RiemannResearch.RH.QCRTCylinderProjection

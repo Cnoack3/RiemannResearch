@@ -362,4 +362,64 @@ theorem arithmetic_displacement_energy_strict_29_59 (hr : limitingResidual ≠ 0
   have he := arithmetic_displacement_energy_exact_29_59
   linarith
 
+
+theorem B_inner_le_four_site_coordinates_983_2000 (f : QHilbert)
+    (hfour : f 0 - 2 * f 1 - 3 * f 2 + 4 * f 3 = 0) :
+    inner ℝ f (B f) ≤ (983 / 2000 : ℝ) * ‖f‖ ^ 2 := by
+  apply B_inner_le_four_site_of_headGap f _ hfour (by norm_num)
+  rw [headGap_sos_983_2000]
+  positivity
+theorem B_inner_le_four_site_983_2000 {f : QHilbert} (hf : fourSiteFunctional f = 0) :
+    inner ℝ f (B f) ≤ (983 / 2000 : ℝ) * ‖f‖ ^ 2 :=
+  B_inner_le_four_site_coordinates_983_2000 f (fourSite_coordinates hf)
+
+
+/-- Improved exact identity; both full-Q energy remainders are retained. -/
+theorem arithmetic_displacement_energy_exact_983_2000 :
+    ‖limitingResidual‖ ^ 2 = (8136000 / 966289 : ℝ) * ‖displacement‖ ^ 2 +
+      (2000 / 983 : ℝ) * inner ℝ
+        (limitingResidual - (2034 / 983 : ℝ) • displacement)
+        (B (limitingResidual - (2034 / 983 : ℝ) • displacement)) +
+      (‖limitingResidual + (4000 / 983 : ℝ) • displacement‖ ^ 2 -
+        (2000 / 983 : ℝ) * inner ℝ
+          (limitingResidual + (4000 / 983 : ℝ) • displacement)
+          (B (limitingResidual + (4000 / 983 : ℝ) • displacement))) := by
+  have h := displacement_energy_remainder_param limitingResidual displacement
+    (4000 / 983 : ℝ) residual_displacement_orthogonal displacement_normal
+  norm_num at h
+  simpa only [neg_smul, ← sub_eq_add_neg, map_add, map_sub, map_smul] using h
+
+theorem arithmetic_displacement_energy_bound_983_2000 :
+    (8136000 / 966289 : ℝ) * ‖displacement‖ ^ 2 ≤ ‖limitingResidual‖ ^ 2 := by
+  have hf : fourSiteFunctional
+      (limitingResidual + (4000 / 983 : ℝ) • displacement) = 0 := by
+    simp only [map_add, map_smul, residual_fourSite, displacement_fourSite,
+      smul_zero, add_zero]
+  have hu := B_inner_le_four_site_983_2000 hf
+  have hp := B_positive (limitingResidual - (2034 / 983 : ℝ) • displacement)
+  have he := arithmetic_displacement_energy_exact_983_2000
+  linarith
+
+theorem arithmetic_displacement_energy_strict_983_2000 (hr : limitingResidual ≠ 0) :
+    (8136000 / 966289 : ℝ) * ‖displacement‖ ^ 2 < ‖limitingResidual‖ ^ 2 := by
+  have hne : limitingResidual - (2034 / 983 : ℝ) • displacement ≠ 0 := by
+    intro h
+    have he := sub_eq_zero.mp h
+    have ho := residual_displacement_orthogonal
+    rw [he, inner_smul_right, real_inner_self_eq_norm_sq] at ho
+    have hd : displacement = 0 := norm_eq_zero.mp
+      (by nlinarith [norm_nonneg displacement])
+    exact hr (by simpa [hd] using he)
+  have hp : 0 < inner ℝ
+      (limitingResidual - (2034 / 983 : ℝ) • displacement)
+      (B (limitingResidual - (2034 / 983 : ℝ) • displacement)) :=
+    lt_of_le_of_ne (B_positive _) (Ne.symm (fun h => hne (B_faithful _ h)))
+  have hf : fourSiteFunctional
+      (limitingResidual + (4000 / 983 : ℝ) • displacement) = 0 := by
+    simp only [map_add, map_smul, residual_fourSite, displacement_fourSite,
+      smul_zero, add_zero]
+  have hu := B_inner_le_four_site_983_2000 hf
+  have he := arithmetic_displacement_energy_exact_983_2000
+  linarith
+
 end RiemannResearch.RH.QSquarefreeDisplacementEnergy

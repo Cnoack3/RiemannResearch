@@ -153,4 +153,14 @@ theorem headMatrix_leadingMinors_29_59 :
   · rw [headMatrix_det]
     norm_num
 
+
+/-- A sharper rational certificate, with its complete positive remainder. -/
+theorem headGap_sos_983_2000 (x y z : ℝ) :
+    headGap (983 / 2000) x y z =
+      (149 / 1200 : ℝ) * (x - 306*y/745 + 408*z/745)^2 +
+      (107319 / 745000 : ℝ) * (y + 32266*z/35773)^2 +
+      (15271 / 14309200 : ℝ) * z^2 := by
+  unfold headGap
+  ring
+
 end RiemannResearch.RH.QFourSiteReciprocalCertificate
