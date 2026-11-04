@@ -105,6 +105,43 @@ they are not asserted to have Euclidean norm one.
   `reverse_table_error`, `eigenvector_table_error`, `diagonal_strict`,
   `explicitEigenvector_hasEigenvector`, and `diagonal_isEigenvalue`.
 
+## Basis, measure and DPP continuation
+
+- `RH/QBasisDPPBridge.lean`: `row_energy`, `row_summable`,
+  `otherModeEnergy_exact`, `otherModeEnergy_zero_iff`,
+  `squarefree_otherModeEnergy_exact`,
+  `squarefree_otherModeEnergy_lower`,
+  `squarefree_otherModeEnergy_tendsto_zero_iff`,
+  `riemannHypothesis_of_squarefree_otherModeEnergy_tendsto_zero`,
+  `squarefree_mode_three_vacancy_lower`.
+  The RH theorem requires a vanishing correlation-energy hypothesis; it does
+  not establish that hypothesis. Every squarefree stage has site-3 vacancy
+  at least 27/(80*zetaTwo).
+- `RH/QDivisorModeVacancyImprovement.lean`: `witness_two_five_inner`,
+  `divisor_three_jump_five`, `pairedJumpWitness_norm_sq`,
+  `pairedJumpWitness_bound`, `squarefree_mode_three_vacancy_improved`,
+  and `paired_bound_strictly_improves`. The full 2x2 witness Gram improves
+  the mode-3 vacancy bound to 12555/(37004*zetaTwo); this is unrelated to
+  proving positive constant-mode vacancy.
+- `RH/QResidueBasisComparison.lean`: `squarefree_stage_le_full_stage`,
+  `squarefree_full_error_gap`, `residue_four_jump`,
+  `residue_four_separation`. For the same conductor cutoff the complete
+  squarefree error is the full-dictionary error plus the squared norm of the
+  difference between optimizers. The g_4 separation bound holds against
+  every element of the squarefree closure.
+- `RH/QParetoOrthonormalTransfer.lean`:
+  `pareto_orthonormal_transfer_bounds`. An arbitrary finite P-orthonormal
+  synthesis, represented by the same physical sequence under Q, has uniform
+  squared norm bounds between 1/zetaTwo and 2/zetaTwo times the coefficient
+  energy. No ambient completeness assumption is used.
+
+The coherent candidate including these declarations passed isolated server
+job `job_vCnfFNL94uXBb-83CuOydV_doiDMIX01` in 8.233 reported seconds.
+Its axiom inspection reported only propext, Classical.choice, and Quot.sound.
+The two-witness improvement passed isolated job
+`job_h7HS1gc-Kcewgi4mYzzTVU82J3bYaEsy` in 6.705 reported seconds, with
+only the standard foundational axioms. Project publication is checkpoint-gated.
+
 ## Scope and open questions
 
 No theorem asserts that the legal squarefree closure equals the ambient Q

@@ -641,6 +641,10 @@ import RiemannResearch.RH.QResidueThreeMoments
 import RiemannResearch.RH.QSquarefreeLegalBasis
 import RiemannResearch.RH.QSquarefreeCompleteBasis
 import RiemannResearch.RH.QSquarefreeResidueBasis
+import RiemannResearch.RH.QBasisDPPBridge
+import RiemannResearch.RH.QDivisorModeVacancyImprovement
+import RiemannResearch.RH.QResidueBasisComparison
+import RiemannResearch.RH.QParetoOrthonormalTransfer
 import RiemannResearch.RH.QPrimePowerLegalCoefficients
 import RiemannResearch.RH.QPrimePowerTransformRigidity
 import RiemannResearch.RH.FinitePrimeCentered
