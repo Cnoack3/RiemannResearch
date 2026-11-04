@@ -1,0 +1,99 @@
+name: Independent Lean verification
+run-name: Lean replay ${{ inputs.scope }} at ${{ inputs.revision }}
+
+# Supplemental independent replay. The existing server publication gate remains.
+on:
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: Exact 40-character source commit SHA
+        type: string
+        required: true
+        default: f7cf4a1a10227ecede3e3c6b9d9e05d734cb58de
+      scope:
+        description: Dependency-closed infimum module, all November modules, or full library
+        type: choice
+        required: true
+        default: infimum
+        options:
+          - infimum
+          - november
+          - full
+
+permissions:
+  contents: read
+
+concurrency:
+  group: independent-lean-verification
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 210
+    env:
+      LEAN_NUM_THREADS: '2'
+    steps:
+      - name: Validate requested commit
+        env:
+          REVISION: ${{ inputs.revision }}
+        shell: bash
+        run: '[[ "$REVISION" =~ ^[0-9a-f]{40}$ ]]'
+
+      # The verifier lives in the approved workflow commit. The subject can be
+      # an older commit that does not yet contain this verification script.
+      - name: Check out approved verifier
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.sha }}
+          path: verifier
+          persist-credentials: false
+      - name: Check out exact source revision
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ inputs.revision }}
+          path: subject
+          persist-credentials: false
+      - name: Install Lean tooling without restoring project artifacts
+        uses: leanprover/lean-action@fe408643ea7367d8c0404a8be3975bb145f5fb64 # v1
+        with:
+          lake-package-directory: subject
+          auto-config: 'false'
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-mathlib-cache: 'false'
+          use-github-cache: 'false'
+      - name: Rebuild source and audit endpoints
+        timeout-minutes: 180
+        env:
+          REVISION: ${{ inputs.revision }}
+          SCOPE: ${{ inputs.scope }}
+        shell: bash
+        run: |
+          bash "$GITHUB_WORKSPACE/verifier/tools/verify_november_research.sh" \
+            "$GITHUB_WORKSPACE/subject" "$REVISION" "$SCOPE" \
+            "$RUNNER_TEMP/lean-verification-evidence"
+      - name: Preserve verification evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: lean-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/lean-verification-evidence/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Record requested and executed revision
+        if: ${{ always() }}
+        env:
+          REVISION: ${{ inputs.revision }}
+          SCOPE: ${{ inputs.scope }}
+        shell: bash
+        run: |
+          {
+            printf 'Requested source: `%s`\n\nScope: `%s`\n\n' "$REVISION" "$SCOPE"
+            if [[ -f "$RUNNER_TEMP/lean-verification-evidence/status.json" ]]; then
+              cat "$RUNNER_TEMP/lean-verification-evidence/status.json"
+            else
+              printf 'No completed verifier receipt; inspect setup/job logs.\n'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
