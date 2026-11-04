@@ -1,5 +1,30 @@
 # Prime tensor CRT verification ledger — 2 November 2026
 
+## Seven-atom rational upper bound — 4 November 2026
+
+`RH/QSquarefreeRationalUpperBounds.lean` proves `complete_norm_lt`,
+`legalErrorInfimum_lt`, and `anchoredInfimum_lt`, with strict bound
+`361/10000` for the complete infinite Q law. The seven squarefree
+conductors are 2, 3, 5, 6, 10, 15, and 30; all coefficients are rational.
+
+- Saved-file check `job_0BXFq4iBPSSYeVblqeP0bxp77beikPg-`: verified=true,
+  exit code 0; reported verification duration 60.222 seconds.
+- Updated saved-module import and axiom audit
+  `job_8dcGsYn_Js5r8oIqES9H3bVFSHqemjYm`: verified=true, exit code 0;
+  reported verification duration 28.203 seconds. All three endpoints use
+  only propext, Classical.choice, and Quot.sound.
+- Final saved-source acceptance and publication are supplied by the
+  checkpoint carrying this ledger entry; neither development check alone
+  is asserted to validate the entire project.
+
+The companion memorandum `RH/SquarefreeRationalUpperBounds20261103.md`
+records the stronger 121-atom bound `5873/1000000` with exact Python
+arithmetic and an on-paper infinite-tail proof. That stronger certificate
+is NOT a Lean theorem. `RH/SquarefreeRationalReproduction20261103.md`
+contains the full scripts and exact data as documentary source. No
+protected tools-directory changes are included. The zero-infimum equality
+and the proposed cofinal Schur-complement gain estimate remain OPEN.
+
 ## Saved-source checkpoint
 
 - Base inspected: `d082427c3a34170c6d35fead5a8d70272978ba20`.
