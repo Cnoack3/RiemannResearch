@@ -896,6 +896,15 @@ import RiemannResearch.RH.QSquarefreeSignedPowerMoments
 import RiemannResearch.RH.QSquarefreeAnnihilatorSignedTails
 import RiemannResearch.RH.QSignedPhysicalPrefix
 import RiemannResearch.RH.QSquarefreeDisplacementSignedTails
+import RiemannResearch.Analysis.CofinalLogCutoffs
+import RiemannResearch.Analysis.CofinalPrimeResiduePairing
+import RiemannResearch.RH.QSignedChargeTail
+import RiemannResearch.RH.QCofinalHarmonicWitness
+import RiemannResearch.RH.QMertensUniformDefectSlope
+import RiemannResearch.RH.QCofinalDisplacementMoments
+import RiemannResearch.RH.QCofinalProfileTransfer
+import RiemannResearch.RH.QCofinalVKDisplacement
+import RiemannResearch.RH.QCofinalStretchedDisplacement
 import RiemannResearch.RH.QFullHeadControllability
 import RiemannResearch.RH.QNonnegativeDualBound
 import RiemannResearch.RH.QUnitSignalTargetTest
