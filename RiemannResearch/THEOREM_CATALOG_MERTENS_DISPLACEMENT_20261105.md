@@ -60,3 +60,48 @@ The same two inputs yield $\mathrm{RH}\iff J_*<\infty$ in `riemannHypothesis_iff
 [MertensShiftedFloorSum](NumberTheory/MertensShiftedFloorSum.lean) counts each divisor through its positive multiples. [MertensShiftedTestIdentity](RH/MertensShiftedTestIdentity.lean) identifies the finite test with its squarefree residue series throughout $\Re(s)>0$, using the absolutely convergent Dirichlet series for $1/\zeta(1+s)$. On $\Re(s)>1$ the actual witness pairs to zero with this finite test.
 
 [MertensShiftedLocalMajorant](RH/MertensShiftedLocalMajorant.lean) gives $|H_s(n)|\le n^{1-\eta}\sum_{k\ge2}k^{-1-\eta}$ for $0<\eta<1$ and $\Re(s)\ge2\eta$. [MertensActualShiftedCriterion](RH/MertensActualShiftedCriterion.lean) supplies the concrete continuation step. The remaining hypotheses for `riemannHypothesis_of_actual_shifted_boundary` are the interior moments of the actual witness charge and one summable boundary dominator. A proof of the sharper uniform shifted Perron estimate and a proof of the required displacement growth would give further progress.
+
+## Critical secondary Lee–Leong coefficient
+
+Put $L(x)=\log\log x$, $S(x)=\Phi(x)/L(x)$, $A=(5/(3\cdot53.99^3))^{1/5}$,
+$\kappa=A\log(53.99)/5$, and $U_t(x)=A\Phi(x)+\kappa S(x)+t\sqrt{\Phi(x)}$.
+The term $\kappa S(x)$ comes from the linear term of the variable coefficient
+in Lee–Leong, Theorem 1.1. Its positive quadratic remainder absorbs the
+factor $25.85\log x$ and every fixed multiple of $\sqrt{\Phi(x)}$.
+
+| Conditional research reduction | Hypotheses and conclusion |
+|---|---|
+| [Critical Mertens estimate](RH/MertensCriticalEstimate.lean) | `mertens_critical_sqrt_of_leeLeong` derives $\lvert M(x)\rvert\le x\exp(-U_t(x))$ eventually, for every fixed real $t$, from the explicit Lee–Leong estimate. |
+| [Critical displacement moment](RH/MertensCriticalDisplacement.lean) | For each $s\ge0$, convergence of $\sum_{n\ge3}\lvert d(n)\rvert e^{-U_s(n)}/n$ implies RH. Under Báez-Duarte's explicit approximation theorem, RH also implies convergence. |
+| Pointwise and exceptional-set forms | For every fixed real $t$, $\lvert d(n)\rvert=O(e^{U_t(n)})$ implies RH. For fixed $s\ge0$ with $s>t$, the same bound may be restricted to $n\notin E$ if $\sum_{n\in E}e^{-2U_s(n)}<\infty$. The proof uses the complete $Q$-energy of $d$ on the exceptional sites. |
+
+The [finite envelope](RH/MertensCriticalEnvelope.lean) controls the variation
+between the cutoff and the physical site. The [pairing theorem](RH/MertensExponentialCutoffPairing.lean)
+uses the existing signed identity along legal squarefree heads.
+**Open in Lean** — providing the Lee–Leong estimate from its published proof,
+and Báez-Duarte's approximation for the reverse implication.
+**Open displacement obligation** — prove one of these bounds for the actual
+projection displacement independently of RH. The generic convergence lemmas
+assume neither of the two external analytic inputs.
+
+## Full variable-coefficient exponent
+
+Write $r_0=\log(53.99)$ and $F(x)=A(1-r_0/L(x))^{-1/5}\Phi(x)$ for sufficiently large $x$. This is the full exponent in Lee–Leong's estimate. Their prefactor is $25.85x\log x$. For each fixed $\delta>0$, put $H_\delta(x)=F(x)-\delta\sqrt{\Phi(x)}$.
+
+| Conditional research reduction | Hypotheses and conclusion |
+|---|---|
+| [Uniform arithmetic bound](RH/MertensFullProfile.lean) | $F-\delta\sqrt{\Phi}$ is eventually increasing. The printed estimate implies $\lvert M(x)\rvert\le x e^{-H_\delta(x)}$ eventually. |
+| [Finite Möbius envelope](RH/MertensFullEnvelope.lean) | In a window close to the cutoff, variation in $F$ costs $O(\Phi^2/\log x)$ in the exponent, and the harmonic factor costs $O(\log\log x)$. Each is $o(\sqrt\Phi)$. The physical bound is uniform over all sufficiently large cutoffs and all sites. |
+| [Full-profile first moment and pointwise criterion](RH/MertensFullDisplacement.lean) | `riemannHypothesis_iff_leeLeong_full_moment` gives $\mathrm{RH}\iff\sum_{n\ge3}\lvert d(n)\rvert e^{-H_\delta(n)}/n<\infty$ under the two stated literature inputs. `riemannHypothesis_of_leeLeong_full_displacement` needs only the Lee–Leong input and $\lvert d(n)\rvert=O(e^{H_\delta(n)})$. |
+| Exceptional sites | Fix $0<\eta<\delta$. The growth bound with margin $\delta$ need only hold outside $E$ if $\sum_{n\in E}e^{-2H_\eta(n)}<\infty$. |
+
+**Open displacement obligation** — establish a convergent moment, or a sufficient bound, for the actual $d$ without assuming RH. The proved full-profile criterion requires a fixed positive square-root margin.
+
+## A sign-count criterion using the repository's arithmetic estimates
+
+For $\varepsilon\in\{-1,1\}$, let $N_\varepsilon(X)$ count the positive integers $n\le X$ with $\varepsilon d(n)>0$. The zero coordinate contributes nothing. [QDisplacementSignCounts](RH/QDisplacementSignCounts.lean) proves
+$$
+\left(\sum_{1\le n\le X}\frac{(\varepsilon d(n))_+}{n}\right)^2
+\le N_\varepsilon(X)\sum_{n\ge1}\frac{|d(n)|^2}{n^2}.
+$$
+The complete sum on the right is finite. For fixed $B,C\ge0$, if arbitrarily large $X$ have $\min(N_+(X),N_-(X))\le C(\log X)^B$, then RH follows by the cofinal harmonic-prefix theorem. The sign may vary with $X$. **Open** — proving that count bound for the actual displacement. This implication requires neither external analytic premise.

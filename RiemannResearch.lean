@@ -40,6 +40,17 @@ import RiemannResearch.RH.MertensLeeLeongCriterion
 import RiemannResearch.RH.MertensEndpointEnvelope
 import RiemannResearch.RH.MertensEndpointPairing
 import RiemannResearch.RH.MertensBaezDuarteConverse
+import RiemannResearch.Analysis.VKSecondProfile
+import RiemannResearch.RH.MertensCriticalDisplacement
+import RiemannResearch.RH.MertensCriticalEnvelope
+import RiemannResearch.RH.MertensCriticalEstimate
+import RiemannResearch.RH.MertensCriticalPairing
+import RiemannResearch.RH.MertensExponentialCutoffPairing
+import RiemannResearch.RH.MertensFullDisplacement
+import RiemannResearch.RH.MertensFullEnvelope
+import RiemannResearch.RH.MertensFullProfile
+import RiemannResearch.RH.QDisplacementSignCounts
+import RiemannResearch.RH.QHarmonicMomentComparison
 import RiemannResearch.Analysis.StretchedLogProductIncrement
 import RiemannResearch.RH.MertensUnconditionalStretched
 import RiemannResearch.RH.MertensStretchedWeightedMoment
