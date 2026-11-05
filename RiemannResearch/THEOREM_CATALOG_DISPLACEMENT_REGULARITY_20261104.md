@@ -270,3 +270,36 @@ Classical.choice, and Quot.sound. Final saved-source validation is performed
 by the publication checkpoint, whose result is recorded in the delivered response.
 Wolfram independently checked the rational calculations 3rho/4, 4rho,
 and C_2g_3(1)=2/5; this diagnostic is not the proof.
+
+## Exact evaluation on the divisor basis
+
+The coefficient question has a finite inverse formula, added to
+RH/QDivisorDilationCoefficients.lean:
+
+- sum_divisorWavelet:
+  sum_(t divides a) W_t = a^2 1_(a divides N), where W_t=sqrt(J_2(t)) psi_t.
+- dilation_mean_eq_sum_divisor_coefficients:
+  E_Q[f(aN)] = sum_(t divides a) <f,W_t>_Q for every positive a.
+- normalizedDivisorWavelet_dilation_mean:
+  E_Q[psi_t(aN)] = sqrt(J_2(t)) 1_(t divides a).
+
+These are unconditional identities using finite Mobius inversion and the
+existing actual-Q divisibility moments. In normalized coordinates,
+E_Q[f(aN)] = sum_(t divides a) sqrt(J_2(t)) c_t(f).
+No infinite expectation/sum interchange is needed.
+
+In particular E_Q[psi_1]=1 and E_Q[psi_t]=0 for t>1.
+This does not force c_t(d)=E_Q[d psi_t] to vanish: d is a function of the
+same prime coordinates. The displayed finite inverse and the previously
+proved coefficient formula are equivalent; substituting one into the other
+does not supply new equations fixing the unknown coefficients of d.
+
+Here rho=||r||_Q^2=E_Q[r]=E_Q[r^2], with r=1-Pi(1).
+It is not assumed positive or assigned a numerical value.
+The known parity coefficients are c_1(r)=rho and c_2(r)=sqrt(3)rho.
+
+The three-declaration candidate passed isolated Lean job
+job_wczegW04WsRx5dWG2PpY3z9AbwrE-b77, exit 0, reported 6.068 seconds.
+All three axiom reports contain only propext, Classical.choice, and Quot.sound.
+The saved-source publication checkpoint is reported separately in the response.
+Wolfram verified the finite gcd/Mobius identity for 1<=a,t<=20 as a diagnostic.

@@ -14,6 +14,7 @@ import RiemannResearch.RH.ZetaTwoProbability
 import Mathlib.Analysis.InnerProductSpace.Orthonormal
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 
 /-!
@@ -96,5 +97,66 @@ theorem divisorBasis_error_finite_lower (f g : QHilbert) (S : Finset ℕ+) :
       inner ℝ g (normalizedDivisorWavelet t)) ^ 2) ≤ ‖f - g‖ ^ 2 := by
   rw [divisorBasis_error_finite_exact f g S]
   exact le_add_of_nonneg_right (sq_nonneg _)
+
+
+/-- Finite Mobius inversion of divisibility indicators in the actual Q Hilbert space.
+Source: user-requested exact expectation calculation; the scalar provider is
+sum_divisorWaveletAF. No limiting interchange or RH hypothesis is used. -/
+theorem sum_divisorWavelet (a : ℕ) :
+    (∑ t ∈ a.divisors, divisorWavelet t) = (a : ℝ) ^ 2 • qDivisor a := by
+  apply qSequence_injective
+  funext n
+  cases n with
+  | zero => simp
+  | succ n =>
+    change qSequenceLinear (∑ t ∈ a.divisors, divisorWavelet t) (n + 1) =
+      qSequenceLinear ((a : ℝ) ^ 2 • qDivisor a) (n + 1)
+    rw [map_sum, map_smul]
+    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+    change (∑ t ∈ a.divisors, qSequence (divisorWavelet t) (n + 1)) =
+      (a : ℝ) ^ 2 * qSequence (qDivisor a) (n + 1)
+    simp_rw [qSequence_divisorWavelet_succ, qSequence_qDivisor]
+    simpa [divisorWaveletAF_apply, scaledDivisorAF, positiveDivisor] using
+      sum_divisorWaveletAF a (n + 1)
+
+/-- The complete dilated expectation is a finite sum of divisor-basis coordinates. -/
+theorem dilation_mean_eq_sum_divisor_coefficients (f : QHilbert) (a : ℕ)
+    (ha : 0 < a) :
+    inversePowerMean 0 (fun n => qSequence f (a * n)) =
+      ∑ t ∈ a.divisors, inner ℝ f (divisorWavelet t) := by
+  have h := congrArg (fun g : QHilbert => inner ℝ f g) (sum_divisorWavelet a)
+  rw [inner_sum, inner_smul_right, inner_qDivisor_eq_dilation f a ha] at h
+  have ha0 : (a : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt ha)
+  field_simp at h
+  nlinarith [sq_pos_of_ne_zero ha0]
+
+/-- Exact expectation of every dilated normalized tensor/divisor wavelet. -/
+theorem normalizedDivisorWavelet_dilation_mean (a : ℕ) (ha : 0 < a) (t : ℕ+) :
+    inversePowerMean 0 (fun n => qSequence (normalizedDivisorWavelet t) (a * n)) =
+      if (t : ℕ) ∣ a then Real.sqrt (qJordanTwo (t : ℕ)) else 0 := by
+  rw [dilation_mean_eq_sum_divisor_coefficients _ a ha]
+  have hi (b : ℕ) (hb : b ∈ a.divisors) :
+      inner ℝ (normalizedDivisorWavelet t) (divisorWavelet b) =
+        if b = (t : ℕ) then Real.sqrt (qJordanTwo (t : ℕ)) else 0 := by
+    have hp := Nat.pos_of_mem_divisors hb
+    have heq : divisorWavelet b =
+        Real.sqrt (qJordanTwo b) • normalizedDivisorWavelet (⟨b, hp⟩ : ℕ+) :=
+      divisorWavelet_eq_normalized_smul (⟨b, hp⟩ : ℕ+)
+    rw [heq, inner_smul_right]
+    rw [(orthonormal_iff_ite.mp normalizedDivisorWavelet_orthonormal) t ⟨b, hp⟩]
+    by_cases he : b = (t : ℕ)
+    · subst b
+      have ht : t = (⟨(t : ℕ), hp⟩ : ℕ+) := Subtype.ext rfl
+      simp only [if_pos ht, ite_true, mul_one]
+    · have hne : t ≠ (⟨b, hp⟩ : ℕ+) := by
+        intro h
+        exact he (congrArg (fun x : ℕ+ => (x : ℕ)) h).symm
+      simp [hne, he]
+  simp_rw [Finset.sum_congr rfl hi]
+  simp [Nat.mem_divisors, Nat.ne_of_gt ha]
+
+#print axioms sum_divisorWavelet
+#print axioms dilation_mean_eq_sum_divisor_coefficients
+#print axioms normalizedDivisorWavelet_dilation_mean
 
 end RiemannResearch.RH.QDivisorHilbert
