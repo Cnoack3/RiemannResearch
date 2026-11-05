@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QSquarefreeClosedKernel
+import RiemannResearch.RH.QSquarefreeLogDisplacement
 import RiemannResearch.RH.QSquarefreeCRTContinuity
 import RiemannResearch.RH.QSquarefreeDisplacementResolvent
 import RiemannResearch.RH.QSquarefreeDisplacementRigidity
@@ -141,5 +142,25 @@ theorem residual_zero_of_smoothed_kernel_bound (C : ℝ)
   intro n
   exact (displacement_abs_le_smoothed_kernel n).trans
     (mul_le_mul_of_nonneg_left (hC n) (norm_nonneg _))
+
+/-- Conditional research reduction. An eventual fixed polylogarithmic bound on the
+smoothed kernels implies residual vanishing by the physical polylogarithmic
+displacement criterion. The kernel growth hypothesis remains open. -/
+theorem residual_zero_of_smoothed_kernel_polylog_bound
+    (m : ℕ) (C : ℝ) (hC : 0 ≤ C)
+    (hK : ∀ᶠ n : ℕ in atTop,
+      ‖B (closedKernel n)‖ ≤ C * (6 + Real.log (n : ℝ)) ^ m) :
+    limitingResidual = 0 := by
+  apply
+    (QSquarefreeLogDisplacement.residual_zero_iff_eventually_polylog_displacement m).mpr
+  refine ⟨‖pResidual‖ * C, mul_nonneg (norm_nonneg _) hC, ?_⟩
+  filter_upwards [hK] with n hn
+  calc
+    |qSequence displacement n| ≤ ‖pResidual‖ * ‖B (closedKernel n)‖ :=
+      displacement_abs_le_smoothed_kernel n
+    _ ≤ ‖pResidual‖ * (C * (6 + Real.log (n : ℝ)) ^ m) :=
+      mul_le_mul_of_nonneg_left hn (norm_nonneg _)
+    _ = (‖pResidual‖ * C) * (6 + Real.log (n : ℝ)) ^ m :=
+      (mul_assoc _ _ _).symm
 
 end RiemannResearch.RH.QSquarefreeDisplacementRegularity

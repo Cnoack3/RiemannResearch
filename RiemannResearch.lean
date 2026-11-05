@@ -15,6 +15,7 @@ import RiemannResearch.NumberTheory.PrimeResidueTopology
 import RiemannResearch.NumberTheory.ModularOscillation
 import RiemannResearch.RH.QSquarefreeCRTContinuity
 import RiemannResearch.RH.QSquarefreeClosedKernel
+import RiemannResearch.RH.QSquarefreeKernelColumnRigidity
 import RiemannResearch.RH.QSquarefreeProjectionOrder
 import RiemannResearch.RH.QSquarefreeDisplacementRegularity
 import RiemannResearch.RH.QSquarefreeResidualDivisibility

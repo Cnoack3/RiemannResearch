@@ -303,3 +303,38 @@ job_wczegW04WsRx5dWG2PpY3z9AbwrE-b77, exit 0, reported 6.068 seconds.
 All three axiom reports contain only propext, Classical.choice, and Quot.sound.
 The saved-source publication checkpoint is reported separately in the response.
 Wolfram verified the finite gcd/Mobius identity for 1<=a,t<=20 as a diagnostic.
+
+## Kernel columns and polylogarithmic growth (5 November 2026)
+
+Let `E_m` represent physical evaluation, and put `K_m = Π E_m` and
+`r = 1 - Π 1`. The following identifiers in `QSquarefreeKernelColumnRigidity`
+refer to the actual squarefree closure.
+
+| Declaration | Conclusion |
+| --- | --- |
+| `kernel_complement_mean` | The Q-inner product of 1 with `E_m - K_m` equals `r(m)` for every coordinate. |
+| `residual_coordinate_zero_of_closedKernel_bounded` | A physical bound on `K_m` implies `r(m) = 0`. |
+| `residual_zero_of_each_closedKernel_bounded` | Physical boundedness of each column, with constants depending on the column, implies `r = 0`. |
+| `closedKernel_unbounded_of_residual_coordinate_ne_zero` | If `r(m) ≠ 0`, the values `abs (K_m(k))` exceed every real threshold. |
+
+In `QSquarefreeDisplacementRegularity`,
+`residual_zero_of_smoothed_kernel_polylog_bound` proves `r = 0` from an
+eventual estimate `‖B K_n‖ ≤ C (6 + log n)^m` for a fixed natural `m`
+and a nonnegative real `C`. It applies the existing signed pairing identity,
+its Cauchy–Schwarz bound, and the polylogarithmic displacement criterion.
+
+**Open.** A polylogarithmic estimate for the actual pairings, an eventual
+polylogarithmic bound on the smoothed kernel norms, and separate bounds
+for every fixed column are three sufficient arithmetic targets. Each would
+imply CRT continuity and RH through the existing residual criterion.
+
+The five declarations passed server job `job_OTk3tvdXtHCL3G04y7Ttq45XHwV9i4vZ`
+(exit 0, 8.281 seconds of server verification). Each axiom report lists
+only `propext`, `Classical.choice`, and `Quot.sound`.
+
+The [kernel investigation](RH/DisplacementKernelInvestigation20261104.md)
+gives analytic proofs of the Hilbert–Schmidt trace identity, the sparse-prime
+legal counterexample, the one-dimensional projection countermodel, and the
+positive increment-kernel norm that repeats at powers of two. The existing
+`QSquarefreePrimeLocalTests.riemannHypothesis_of_difference_tendsto_zero`
+supplies the formal implication from decay of the actual scalar increments.
