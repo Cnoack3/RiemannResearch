@@ -170,7 +170,7 @@ theorem pairPrimitive_zero_of_dvd (p q n : ℕ) (h : p * q ∣ n) :
   simp [pairPrimitive, quad, Nat.mod_eq_zero_of_dvd h, Nat.mod_eq_zero_of_dvd h₁,
     Nat.mod_eq_zero_of_dvd h₂]
 
-private theorem summation_by_parts (f w : ℕ → ℝ) (A t : ℕ) :
+theorem summation_by_parts (f w : ℕ → ℝ) (A t : ℕ) :
     (∑ k ∈ Finset.range t, (f (A + k + 1) - f (A + k)) * w (A + k)) =
       f (A + t) * w (A + t) - f A * w A +
         ∑ k ∈ Finset.range t, f (A + k + 1) * (w (A + k) - w (A + k + 1)) := by
@@ -181,7 +181,7 @@ private theorem summation_by_parts (f w : ℕ → ℝ) (A t : ℕ) :
     rw [ih, ← Nat.add_assoc A t 1]
     ring
 
-private theorem sum_decrements (w : ℕ → ℝ) (A t : ℕ) :
+theorem sum_decrements (w : ℕ → ℝ) (A t : ℕ) :
     (∑ k ∈ Finset.range t, (w (A + k) - w (A + k + 1))) = w A - w (A + t) := by
   induction t with
   | zero => simp

@@ -2,6 +2,31 @@
 
 Write $M(x)=\sum_{n\le x}\mu(n)$ and $\Phi(x)=(\log x)^{3/5}(\log\log x)^{-1/5}$. Let $V$ be the closed legal squarefree span in $L^2(Q)$, $r=1-f_Q$ its projection residual and $d=f_Q-f_P$ the displacement between the two projections. $T_N$ keeps all physical coordinates beyond $N$.
 
+## All-order squarefree carries and the signed Möbius charges
+
+**Unconditional.** The centered residue components at all divisors reconstruct
+each atom. Each squarefree primitive component has a nonpositive prefix given
+by a Ramanujan Gram form. Its complete-period and incomplete signed block bounds
+hold in every order. Its exact Haar variance is $J_2(D)/(12D^2)$. Exact finite
+Ramanujan rows express the physical jump and its antiderivative using the
+signed multiple sums of the charges. Balazard’s scalar limit removes the slope
+in the naturally ordered centered translation formula at each fixed physical site.
+The inverse-square absolute charge mass is finite for every physical vector.
+[Components](RH/QAllOrderCarryPackets.lean) · [Gram sign](RH/QRamanujanContrastGram.lean) ·
+[Block bounds](RH/QAllOrderCarryBlocks.lean) · [Variance](RH/QAllOrderCarryVariance.lean) ·
+[Finite charge rows](RH/QChargeRamanujanPackets.lean) · [Matched Bézout carry](RH/QManyPrimeMatchedCarry.lean) ·
+[Limit formula](RH/QHeadSlopeLimit.lean) · [Absolute charge mass](RH/QAbsoluteChargeMass.lean).
+
+**Conditional research reductions.** Any ordinary finite limit of the unscaled
+physical difference is equivalent to zero displacement. Either asymptotic
+one-sided sign for the difference already implies RH. Bounded partial sums
+of either sign of the actual Möbius charges suffice, as does the stated
+cofinal polylogarithmic harmonic bound on the one-sided charge rows.
+**Open:** establishing any of these sufficient hypotheses for the actual
+displacement, or the uniform eighth moment on growing LCM blocks.
+[Difference limits](RH/QDifferenceLimits.lean) · [Dilation and charge criteria](RH/QChargeDilation.lean) ·
+[Derivations, four- and five-prime examples, infinite GCD rows, and obstruction](RH/AllOrderCarryAndDifferenceResearch20261105.md).
+
 ## LCM blocks and physical CRT carries
 
 **Conditional research reduction.** For distinct increasing LCMs, a uniform
