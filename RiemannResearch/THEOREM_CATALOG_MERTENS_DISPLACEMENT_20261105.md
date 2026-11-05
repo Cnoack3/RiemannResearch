@@ -18,3 +18,7 @@ $$r=0\quad\Longleftrightarrow\quad q_j\eta_j\lVert T_{q_j}d\rVert_Q^2\longrighta
 Residual vanishing implies `RiemannHypothesis` through the existing closure theorem. The outstanding displacement problem is to prove one of these upper bounds for the actual $d$ with no RH assumption.
 
 The unconditional Walfisz estimate is a published analytic input. A Lean proof of the full VK estimate for the actual Mertens function remains open in this development. The repository's unconditional `M_stretched_loglog_bound` has the smaller profile $((6+\log x)\log(6+\log x))^{1/11}$. See [Gerhold, *Acta Arithmetica* 142 (2010), equation (2)](https://doi.org/10.4064/aa142-2-8) for Walfisz's result, and [Lee–Leong, preprint, equation (12)](https://arxiv.org/html/2208.06141v5) for the explicit variable-coefficient bound.
+
+## Displacement at the repository Mertens scale
+
+Let $\Psi(n)=((6+\log n)\log(6+\log n))^{1/11}$. [MertensUnconditionalStretched](RH/MertensUnconditionalStretched.lean) proves that some fixed $b>0$ gives $r=0$ if and only if $|d(n)|=O(\exp(b\Psi(n)))$. Its theorem `riemannHypothesis_of_stretched_log_displacement` proves $\log(2+|d(n)|)=o(\Psi(n))\Rightarrow\mathrm{RH}$. The arithmetic estimate is supplied by the existing project theorem. The displacement estimate is Open. [StretchedLogProductIncrement](Analysis/StretchedLogProductIncrement.lean) provides the real-variable increment estimate.

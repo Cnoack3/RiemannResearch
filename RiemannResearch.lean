@@ -26,6 +26,8 @@ import RiemannResearch.Analysis.VinogradovKorobovProfile
 import RiemannResearch.RH.QProfileTailEnergy
 import RiemannResearch.RH.QSquarefreeMertensProfileCriterion
 import RiemannResearch.RH.QSquarefreeVKDisplacement
+import RiemannResearch.Analysis.StretchedLogProductIncrement
+import RiemannResearch.RH.MertensUnconditionalStretched
 import RiemannResearch.RH.QSquarefreeSchurOperator
 import RiemannResearch.RH.QSquarefreePrimeProductCriterion
 import RiemannResearch.RH.QSquarefreeJointCyclicity
