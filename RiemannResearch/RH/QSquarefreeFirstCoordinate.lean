@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.RH.QSquarefreeProjectionSigns
+import RiemannResearch.RH.QSquarefreeResidualDivisibility
 import RiemannResearch.RH.QDivisorLegality
 import RiemannResearch.RH.QDivisibilityDensity
 import RiemannResearch.RH.QDivisibilityHilbertMoments
@@ -109,23 +110,6 @@ private theorem residual_odd_inner : inner ℝ limitingResidual oddVector = 0 :=
   change inner ℝ limitingResidual (qResidue 2) = 0 at h
   rw [h, mul_zero]
 
-private theorem residual_even_inner :
-    inner ℝ limitingResidual (qDivisor 2) = ‖limitingResidual‖^2 := by
-  have ho := Submodule.starProjection_inner_eq_zero qOne (closure.starProjection qOne)
-    (closure.starProjection_apply_mem qOne)
-  change inner ℝ limitingResidual (closure.starProjection qOne) = 0 at ho
-  have hm : inner ℝ limitingResidual qOne = ‖limitingResidual‖^2 := by
-    calc
-      _ = inner ℝ limitingResidual limitingResidual := by
-        change inner ℝ limitingResidual qOne =
-          inner ℝ limitingResidual (qOne - closure.starProjection qOne)
-        rw [inner_sub_right, ho, sub_zero]
-      _ = _ := real_inner_self_eq_norm_sq _
-  have he : qDivisor 2 = qOne - oddVector := by
-    rw [oddVector_eq]
-    abel
-  rw [he, inner_sub_right, hm, residual_odd_inner, sub_zero]
-
 /-- The sharper bound preserves the odd-mean constraint at the first coordinate. -/
 theorem projection_first_sq_bound :
     (qSequence (closure.starProjection qOne) 1 - 1)^2 ≤
@@ -133,7 +117,7 @@ theorem projection_first_sq_bound :
   let v : QHilbert := (1 / 2 : ℝ) • qDivisor 2 - limitingResidual
   let k : QHilbert := firstEvaluationVector - (4 / 3 : ℝ) • oddVector
   have hrev : inner ℝ (qDivisor 2) limitingResidual = ‖limitingResidual‖^2 := by
-    rw [real_inner_comm, residual_even_inner]
+    rw [real_inner_comm, QSquarefreeResidualDivisibility.residual_even_moment]
   have hvnorm : ‖v‖^2 = (1 / 16 : ℝ) := by
     change ‖(1 / 2 : ℝ) • qDivisor 2 - limitingResidual‖^2 = _
     rw [← real_inner_self_eq_norm_sq]
@@ -141,7 +125,7 @@ theorem projection_first_sq_bound :
       real_inner_smul_right, real_inner_self_eq_norm_sq, norm_smul,
       Real.norm_eq_abs, mul_pow, sq_abs]
     rw [qDivisor_norm_sq 2 (by decide)]
-    nlinarith [residual_even_inner, hrev]
+    nlinarith [QSquarefreeResidualDivisibility.residual_even_moment, hrev]
   have hvodd : inner ℝ v oddVector = 0 := by
     change inner ℝ ((1 / 2 : ℝ) • qDivisor 2 - limitingResidual) oddVector = 0
     rw [inner_sub_left, real_inner_smul_left, even_odd_inner, residual_odd_inner]

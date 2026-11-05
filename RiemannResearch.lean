@@ -4,6 +4,7 @@ import RiemannResearch.RH.QSquarefreeCRTContinuity
 import RiemannResearch.RH.QSquarefreeClosedKernel
 import RiemannResearch.RH.QSquarefreeProjectionOrder
 import RiemannResearch.RH.QSquarefreeDisplacementRegularity
+import RiemannResearch.RH.QSquarefreeResidualDivisibility
 import RiemannResearch.Analysis.SchurDisplacementCountermodel
 import RiemannResearch.RH.QSquarefreeCRTRegularity
 import RiemannResearch.RH.QSquarefreeSchurOperator

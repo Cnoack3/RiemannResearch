@@ -211,3 +211,62 @@ The final publication checkpoint separately validates the project scope
 reported by the server before pushing. The delivered response records that
 checkpoint and exact commit. Workspace-opening and user-facing polling delays
 were not separately instrumented and are not counted as proof-checking time.
+
+## Prime independence and residual divisibility — 5 November continuation
+
+Module: RH/QSquarefreeResidualDivisibility.lean.
+
+The following are unconditional identities for the actual Q residual r=1-Pi(1).
+Set rho=||r||_Q^2. All expectations use the complete Q law.
+
+| Declaration | Exact content |
+| --- | --- |
+| residual_inner_g2 | <r,g_2>=0 |
+| residual_odd_moment | E[r 1_odd]=0 |
+| residual_even_moment | E[r 1_even]=rho |
+| residual_even_covariance | Cov(r,1_even)=3rho/4 |
+| residual_dyadic_dilation_mean | E[r(2N)]=4rho |
+
+The even identity was previously a private proof in QSquarefreeFirstCoordinate.
+That consumer now uses the public theorem; its first-coordinate bound is unchanged.
+Since Q(even)=1/4 and Q(odd)=3/4, the event-conditional means are respectively
+4rho and zero. These interpretations use finite-event conditioning, not an
+additional formal construction of a conditional-expectation random variable.
+
+Conditional research reductions, with their arithmetic premises **Open**:
+- residual_zero_of_parity_uncorrelated: Cov(r,1_even)=0 implies r=0.
+- residual_zero_of_dyadic_invariant: C_2 r=r implies r=0.
+- residual_zero_of_dyadic_scaling: r(2n)=r(n) for every n implies r=0.
+Here C_2 is geometric conditional averaging of the valuation at 2, holding
+the odd cofactor fixed. Independence of input valuations does not supply
+any of these hypotheses.
+
+The existing tensor/divisor identities remain the exact coordinate description:
+Q(a divides N)=a^(-2), and
+< f,1_(a divides N)>_Q=a^(-2) E_Q[f(aN)].
+The complete orthonormal divisor coefficient is
+< f,psi_t>_Q = sum_(a divides t) mu(t/a) E_Q[f(aN)] / sqrt(J_2(t)).
+Sources: RH/QDivisibilityHilbertMoments.lean and
+RH/QDivisorDilationCoefficients.lean. These are applicable to d and r alike;
+they do not annihilate the unknown dilated means.
+
+The independent geometric prime-valuation product is different from the
+squarefree additive-congruence completion X=product_p Z/pZ.
+The existing RH/QSquarefreeResamplingObstruction.lean proves that C_2 g_3
+does not belong even to the squarefree closure with constants adjoined, and
+||C_2 Pi g_3-Pi C_2 g_3||_Q^2 >= 2/(375 zeta(2)).
+Consequently the legal projection cannot be assumed to act coordinate by
+coordinate in the independent-prime product.
+
+For the unit point vector e_m=1_(N=m)/sqrt(Q(m)),
+d(m)=sqrt(zeta(2))*m*<d,e_m>_Q. Thus the tensor representation retains the
+physical evaluation factor m; it does not improve d(m)=o(m) to boundedness
+or CRT uniform continuity.
+
+The seven-theorem candidate passed isolated Lean job
+job_R-c9qNrRWDsqlzEp3O9INqB6Ayq6NaAu, exit 0, server-reported 6.774 seconds.
+The four displayed principal axiom reports contain only propext,
+Classical.choice, and Quot.sound. Final saved-source validation is performed
+by the publication checkpoint, whose result is recorded in the delivered response.
+Wolfram independently checked the rational calculations 3rho/4, 4rho,
+and C_2g_3(1)=2/5; this diagnostic is not the proof.
