@@ -1,5 +1,12 @@
 # Four RH criteria: proof audit and stronger continuation
 
+> Verification update, 5 November 2026: the normalized weighted-test condition,
+> finite-liminf scaled leakage, Chebyshev energy and error, and the full-head
+> averaging criteria are now formalized in Lean. See
+> [the continuation catalog](THEOREM_CATALOG_LEAKAGE_CHEBYSHEV_20261105.md)
+> for exact declarations, open premises, and verification evidence. The
+> paper/Lean labels below describe the earlier checkpoint.
+
 Prepared for Christian Noack. 4 November 2026 Pacific / 5 November 2026 UTC.
 
 ## Outcome and verification boundary
