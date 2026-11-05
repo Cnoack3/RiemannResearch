@@ -20,6 +20,12 @@ import RiemannResearch.RH.QSquarefreeDisplacementRegularity
 import RiemannResearch.RH.QSquarefreeResidualDivisibility
 import RiemannResearch.Analysis.SchurDisplacementCountermodel
 import RiemannResearch.RH.QSquarefreeCRTRegularity
+import RiemannResearch.Analysis.MertensExponentialEntropy
+import RiemannResearch.Analysis.MertensPowerPairing
+import RiemannResearch.Analysis.VinogradovKorobovProfile
+import RiemannResearch.RH.QProfileTailEnergy
+import RiemannResearch.RH.QSquarefreeMertensProfileCriterion
+import RiemannResearch.RH.QSquarefreeVKDisplacement
 import RiemannResearch.RH.QSquarefreeSchurOperator
 import RiemannResearch.RH.QSquarefreePrimeProductCriterion
 import RiemannResearch.RH.QSquarefreeJointCyclicity
