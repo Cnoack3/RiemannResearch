@@ -16,14 +16,14 @@ The [concurrent finite Gram and implicit truncation results](RH/FiniteGramDispla
 
 | Arithmetic input | Sufficient absolute moment on the correction | Where to look |
 |---|---|---|
-| Lee–Leong Theorem 1.1(12) | $\sum_n |b(n)|t^2 e^{-f(t-f(t))}/n<\infty$. The explicit sufficient weight $e^{-F(n)+(3/5)F(n)^2/\log n}$ is also available. | [Translated-moment proof](RH/MertensDelayedMoment.lean) · [Sharp comparison](RH/MertensDelayedSharpEndpoint.lean) |
-| Implicit optimized cutoff obtained from Proposition 5.2 and §5.4 | For **any one fixed** $s\in\mathbb R$, $\sum_n |b(n)|e^{-F(n)-s\sqrt{\Phi(n)}}/n<\infty$. In particular $s=0$ retains the exact printed weight, and $s>0$ gives a still smaller weight. | [First correction and finite heads](RH/QFirstCorrectionImplicitMoment.lean) · [Derivation from the published proposition](RH/MertensImplicitTruncationResearch20261105.md) |
+| Lee–Leong Theorem 1.1(12) | $\sum_n \lvert b(n)\rvert t^2 e^{-f(t-f(t))}/n<\infty$. The explicit sufficient weight $e^{-F(n)+(3/5)F(n)^2/\log n}$ is also available. | [Translated-moment proof](RH/MertensDelayedMoment.lean) · [Sharp comparison](RH/MertensDelayedSharpEndpoint.lean) |
+| Implicit optimized cutoff obtained from Proposition 5.2 and §5.4 | For **any one fixed** $s\in\mathbb R$, $\sum_n \lvert b(n)\rvert e^{-F(n)-s\sqrt{\Phi(n)}}/n<\infty$. In particular $s=0$ retains the exact printed weight, and $s>0$ gives a still smaller weight. | [First correction and finite heads](RH/QFirstCorrectionImplicitMoment.lean) · [Derivation from the published proposition](RH/MertensImplicitTruncationResearch20261105.md) |
 
 The repository records the two analytic inputs as named propositions. The publication supplies the mathematical estimates. A kernel-checked provider for each external input used in the forward argument remains open. With the implicit assumption, the finite-head criterion states that one constant bounds the $e^{-F(n)-s\sqrt{\Phi(n)}}/n$ partial moments of $b_M$ over arbitrarily large conductor stages at each fixed physical cutoff. A pointwise bound $|b(n)|=O(e^{F(n)+s\sqrt{\Phi(n)}})$ also suffices, by using a slightly larger $s$ in the moment.
 
 ## The same vector in both tests
 
-Let $Q(n)=1/(\zeta(2)n^2)$ for positive integers $n$, let $V$ be the closed $L^2(Q)$ span of the residues $g_m(n)=\{n/m\}$ for squarefree $m\ge2$, and write $\Pi$ for its orthogonal projection. Put $r=1-\Pi 1$, $Bf(n)=f(n)/(n+1)$, and $b=\Pi Br$. The centered resolvent approximants to the displacement $d=f_Q-f_P$ start with $u_0=0$ and $u_1=4b/3$. For each closed finite stage $V_M$ let $r_M=1-\Pi_M1$ and $b_M=\Pi_M B r_M$. These are the finite projections appearing in the two tests. Conductor bound and physical cutoff are independent indices.
+Let $Q(n)=1/(\zeta(2)n^2)$ and $P(n)=1/[n(n+1)]$ on the positive integers, let $V$ be the closed $L^2(Q)$ span of the residues $g_m(n)=\{n/m\}$ for squarefree $m\ge2$, and write $\Pi$ for its orthogonal projection. Put $r=1-\Pi 1$, $Bf(n)=f(n)/(n+1)$, and $b=\Pi Br$. The centered resolvent approximants to the displacement $d=f_Q-f_P$ between the two projections of $1$ in the $Q$ and $P$ norms start with $u_0=0$ and $u_1=4b/3$. For each closed finite stage $V_M$ let $r_M=1-\Pi_M1$ and $b_M=\Pi_M B r_M$. These are the finite projections appearing in the two tests. Conductor bound and physical cutoff are independent indices.
 
 The exact identity behind both arguments is
 $$
@@ -130,7 +130,7 @@ $$
 $$
 If all entries (including $Z$) have error at most $\epsilon$, add $\epsilon(1+\|a\|_1)^2$ to the computed numerator and divide by the lower endpoint for $Z$. No accuracy assumption on the trial solve is required. With the script's rational coefficients and $\epsilon=2\cdot10^{-30}$, the following are upper bounds rounded outward:
 
-| $M$ | $\|r_Q\|_Q$ | $\|d\|_Q$ |
+| $M$ | $\lVert r_Q\rVert_Q$ | $\lVert d\rVert_Q$ |
 |---:|---:|---:|
 | 10 | 0.131334324 | 0.046433696 |
 | 20 | 0.107328179 | 0.037946242 |
