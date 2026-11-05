@@ -13,11 +13,21 @@ digit for a child $r$ has full physical eighth-power sum at most $3/r$.
 [Finite recursion](RH/QRecursivePrimeCarry.lean) · [Tree charges](RH/QRecursiveCarryDetection.lean) ·
 [Infinite recursion](RH/QInfiniteRecursiveCarry.lean) · [Digit estimates](RH/QRecursiveDigitBounds.lean).
 
-**Conditional research reduction, paper.** A cofinal bounded negative (or positive)
-part of the signed sums over descendants, weighted by the node conductor, gives
-one-sided boundedness of the matched displacement and hence RH.
-**Open:** establishing this budget or the moving eighth-moment bound for the
-actual projection charges. [Explicit infinite cancellation and the remaining estimate](RH/RecursivePrimeCarryResearch20261105.md).
+**Checked tree criteria.** The signed finite Euler leaf sum extends from $\Re s>1$
+holomorphically to $\Re s>1/2$ exactly under RH. Deleting finitely many fixed primes
+preserves this equivalence. The compact space of prime masks has clopen prefix
+cones. Upward recursion, signed child escape, finite-head pooling and finite-fit
+budget convergence hold as identities or limits. [Theorems, proofs and examples](RH/PrimeTreeCriteria20261105.md).
+
+**Conditional research reductions.** A one-sided pruned budget bounded along
+cofinal horizons at every physical integer, with a common constant, implies RH;
+the same implication holds with a nested cofinal condition on matched finite fits.
+Vanishing of every fixed descendant sum plus a local signed child-tail bound also
+implies RH. **Open:** proving either estimate for the matched displacement, or
+the moving eighth-moment bound. The matched-tree converses take Báez-Duarte's
+published approximation theorem as an explicit parameter. The prime-2 Möbius
+subtree transfer is internal; the arithmetic RH equivalence invokes the
+published Littlewood criterion. [Earlier carry analysis](RH/RecursivePrimeCarryResearch20261105.md).
 
 ## All-order squarefree carries and the signed Möbius charges
 
