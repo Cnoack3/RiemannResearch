@@ -4,10 +4,14 @@ import RiemannResearch.NumberTheory.ApproximateSquareTests
 import RiemannResearch.RH.QSquarefreeApproximateTests
 import RiemannResearch.RH.QSquarefreeMultiplierLeakage
 import RiemannResearch.RH.QSquarefreeWeakLeakage
+import RiemannResearch.RH.QSquarefreeLogLeakage
 import RiemannResearch.Analysis.ChebyshevScale
 import RiemannResearch.Analysis.PrefixWeightedEnergy
 import RiemannResearch.RH.QMeanSquareDisplacement
 import RiemannResearch.RH.QSquarefreeChebyshevAveraging
+import RiemannResearch.RH.QDisplacementPolylogHeadMeans
+import RiemannResearch.RH.QChebyshevPolylogHeadMeans
+import RiemannResearch.RH.QRecenteredChebyshev
 import RiemannResearch.NumberTheory.SquareDifferenceRigidity
 import RiemannResearch.RH.QSquarefreePrimeLocalTests
 import RiemannResearch.RH.QSquarefreeFinitePolylog
@@ -27,6 +31,7 @@ import RiemannResearch.Analysis.VinogradovKorobovProfile
 import RiemannResearch.RH.QProfileTailEnergy
 import RiemannResearch.RH.QSquarefreeMertensProfileCriterion
 import RiemannResearch.RH.QSquarefreeVKDisplacement
+import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusVKSquareSamples
 import RiemannResearch.RH.MertensFirstMomentEnvelope
 import RiemannResearch.RH.MertensVKFirstMoment
 import RiemannResearch.RH.MertensPowerToVK
@@ -936,6 +941,7 @@ import RiemannResearch.RH.QMertensUniformDefectSlope
 import RiemannResearch.RH.QCofinalDisplacementMoments
 import RiemannResearch.RH.QCofinalProfileTransfer
 import RiemannResearch.RH.QCofinalVKDisplacement
+import RiemannResearch.RH.QDisplacementVKSignCount
 import RiemannResearch.RH.QCofinalStretchedDisplacement
 import RiemannResearch.RH.QFullHeadControllability
 import RiemannResearch.RH.QNonnegativeDualBound

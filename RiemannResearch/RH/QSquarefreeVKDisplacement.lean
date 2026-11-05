@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
+import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusVKSquareSamples
 import RiemannResearch.Analysis.VinogradovKorobovProfile
 import RiemannResearch.RH.QSquarefreeMertensProfileCriterion
 import RiemannResearch.Analysis.MertensExponentialEntropy
@@ -185,5 +186,18 @@ theorem riemannHypothesis_of_walfisz_displacement (a b C D : ℝ)
   have h' : a' < a := by dsimp [a']; linarith
   exact riemannHypothesis_of_vk_exponential_displacement a' b D ha' hb hba'
     (mertens_vk_absorb_constant a a' C h' hM) hd
+
+open RiemannResearch.NumberTheory.PrimeNumberTheorem
+
+/-- The boxed little-o criterion needs the published arithmetic bound only on squares. -/
+theorem riemannHypothesis_of_square_sample_vk_log_displacement (a C : ℝ)
+    (ha : 0 < a) (hC : 0 ≤ C)
+    (hM : ∀ᶠ k : ℕ in atTop, |M ((k : ℝ) ^ 2)| ≤
+      C * (Real.exp (-a * vkProfile ((k : ℝ) ^ 2)) * (k : ℝ) ^ 2))
+    (hd : Tendsto (fun n : ℕ => Real.log (2 + |qSequence displacement n|) /
+      vkProfile (n : ℝ)) atTop (𝓝 0)) : RiemannHypothesis := by
+  apply riemannHypothesis_of_vk_log_displacement (a / 2) (by positivity) _ hd
+  exact mertens_vk_absorb_constant a (a / 2) (C+3) (by linarith)
+    (mertens_vk_of_square_samples a C ha hC hM)
 
 end RiemannResearch.RH.QSquarefreeMertensProfileCriterion

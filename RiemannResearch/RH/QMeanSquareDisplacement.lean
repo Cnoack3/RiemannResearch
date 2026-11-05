@@ -270,4 +270,46 @@ theorem riemannHypothesis_of_covered_head_means
       _ ≤ L * (H j : ℝ) := hb j
       _ ≤ L * (K * (N : ℝ)) := mul_le_mul_of_nonneg_left hj2 hL
       _ = _ := by ring
+
+/-- Exact physical energy on (N,M], retaining its signed mixed term. -/
+theorem annular_headEnergy_exact (N M : ℕ) (hNM : N ≤ M) (f g : QHilbert) :
+    headEnergy M f - headEnergy N f =
+      (headEnergy M g - headEnergy N g) +
+      2 * (∑ i ∈ Finset.range (M - N),
+        qSequence g (N + i + 1) * qSequence (f - g) (N + i + 1)) +
+      (headEnergy M (f - g) - headEnergy N (f - g)) := by
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hNM
+  have hM := headEnergy_exact (N + k) f g
+  have hcross : (∑ i ∈ Finset.range (N + k),
+      qSequence g (i + 1) * qSequence (f - g) (i + 1)) =
+      (∑ i ∈ Finset.range N, qSequence g (i + 1) * qSequence (f - g) (i + 1)) +
+      (∑ i ∈ Finset.range k,
+        qSequence g (N + i + 1) * qSequence (f - g) (N + i + 1)) := by
+    rw [Finset.sum_range_add]
+  rw [hcross] at hM
+  have hN := headEnergy_exact N f g
+  rw [show N + k - N = k by omega]
+  linarith
+
+
+/-- Transfer the energy of only the new block, bounding its error by the
+energy of the residual on the entire larger head. -/
+theorem annular_headEnergy_add_error (N M : ℕ) (hNM : N ≤ M) (f g : QHilbert) :
+    headEnergy M f - headEnergy N f ≤
+      2 * (headEnergy M g - headEnergy N g) + 2 * headEnergy M (f - g) := by
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hNM
+  have hphys (i : ℕ) : qSequence (f - g) i = qSequence f i - qSequence g i :=
+    congrFun (map_sub qSequenceLinear f g) i
+  have hsum : (∑ i ∈ Finset.range k, (qSequence f (N + i + 1)) ^ 2) ≤
+      2 * (∑ i ∈ Finset.range k, (qSequence g (N + i + 1)) ^ 2) +
+      2 * (∑ i ∈ Finset.range k, (qSequence (f - g) (N + i + 1)) ^ 2) := by
+    simp only [Finset.mul_sum, ← Finset.sum_add_distrib]
+    apply Finset.sum_le_sum
+    intro i _
+    rw [hphys]
+    nlinarith [sq_nonneg (qSequence f (N + i + 1) - 2 * qSequence g (N + i + 1))]
+  have hnonneg := headEnergy_nonneg N (f - g)
+  simp only [headEnergy, Finset.sum_range_add] at hnonneg ⊢
+  linarith
+
 end RiemannResearch.RH.QMeanSquareDisplacement

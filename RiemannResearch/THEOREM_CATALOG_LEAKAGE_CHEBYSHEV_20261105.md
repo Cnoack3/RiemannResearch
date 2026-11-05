@@ -151,18 +151,14 @@ It uses the exact Pareto tail sum and the existing Q/P weight comparison.
 The existing logarithmic displacement-tail consumer with exponent zero gives
 RH. No finite cutoff replaces the complete tail.
 
-## Formalization boundary
+## Logarithmic leakage and accelerated averaging
 
-These stronger proposals are **not claimed Lean-verified by this continuation**:
+For the actual displacement write $E_m=m(I-\Pi)(dg_m)$ and $L_m=\|E_m\|_Q$.
+`QSquarefreeLogLeakage` proves that failure of RH forces $L_m\ge c\sqrt{\log m}$ eventually for some $c>0$. Hence a zero lower limit of $L_m/\sqrt{\log m}$ suffices. The proof sums four-site tests over powers of a single base with a nonzero first difference. The same module gives a finite bound for all sampled sites with a common radical, and a criterion allowing a separate cofinal sequence of powers and conductors for each squarefree base. Each leakage premise for the actual displacement is **Open**.
 
-- \(\liminf_m m\epsilon_m/\sqrt{\log m}=0\Rightarrow\mathrm{RH}\), including its
-  quantitative disjoint-stencil/Bessel lower bound.
-- The polynomial-budget family \(H_j=a_j^2(j+1)^p\) and
-  \(S_{H_j}(u_j)\le CH_j(j+1)^p\) for arbitrary p.
-- The annular-only averaging variant.
+`ChebyshevEnergy.geometric_head_budget_iff` identifies the sharp real base for the original denominator budget as $17+12\sqrt2$. `QRecenteredChebyshev` defines a different iteration using the existing four-site bound $983/2000$ for the compressed reciprocal. Its rational denominator is $a'_j=((119/20)^j+(20/119)^j)/2$. The signed remainder and conserved energy give $35^j\|d-u'_j\|^2\le4\|d\|^2$. On these heads a physical mean square bounded by any fixed power of the logarithm implies RH. The approximation bound is unconditional. The mean bound is **Open**.
 
-The bounded-liminf improvement and exact \(a_j^2\)-head criterion are fully
-formalized implications. Their actual arithmetic premises remain open.
+`QMeanSquareDisplacement.annular_headEnergy_exact` retains the mixed term on each newly reached interval. For the original accelerated iterates only the energy on $(a_j^2,a_{j+1}^2]$ needs to be bounded by $C a_{j+1}^2$ at stage $j+1$. `QDisplacementPolylogHeadMeans` allows each dyadic block to have its own approximant with fixed polylogarithmic allowances in the block mean and in the scaled squared approximation error. `QChebyshevPolylogHeadMeans` applies the full-head version to the original resolvent at $9^j$ and to the original accelerated heads. For every fixed nonnegative integer $p$ one may use $H_j=a_j^2(j+1)^p$ and the premise $S_{H_j}(u_j)\le C H_j(j+1)^p$. These mean bounds are **Open**.
 
 ## Modules and verification evidence
 

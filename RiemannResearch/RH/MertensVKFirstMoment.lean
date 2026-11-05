@@ -333,4 +333,58 @@ theorem riemannHypothesis_of_vk_displacement_absolute_moment (a c C : ℝ)
   rh_of_zero_projection_residual
     (residual_zero_of_vk_displacement_absolute_moment a c C hc hca hM hd)
 
+/-- A physical growth rate strictly inside the ordinary Mertens saving forces the
+actual squarefree projection residual to vanish. -/
+theorem residual_zero_of_vk_exponential_displacement (a b C D : ℝ)
+    (hb : 0 < b) (hba : b < a)
+    (hM : ∀ᶠ x : ℝ in atTop, |M x| ≤ (C * Real.exp (-a * vkProfile x)) * x)
+    (hd : ∀ᶠ n : ℕ in atTop, |qSequence displacement n| ≤
+      D * Real.exp (b * vkProfile n)) :
+    ZetaTwoOptimizerStage.limitingResidual = 0 := by
+  let c := (a + b) / 2
+  have hbc : b < c := by dsimp only [c]; linarith
+  have hca : c < a := by dsimp only [c]; linarith
+  apply residual_zero_of_vk_displacement_absolute_moment a c C (hb.trans hbc) hca hM
+  apply ((summable_vk_first_moment_constant (c - b) (sub_pos.mpr hbc)).mul_left D).of_norm_bounded_eventually_nat
+  filter_upwards [hd] with n hn
+  let t := vkProfile n
+  have hq := positiveQWeight_nonneg n
+  have hn0 : (0 : ℝ) ≤ n := Nat.cast_nonneg n
+  change ‖positiveQWeight n * ((n : ℝ) * Real.exp (-c * t)) *
+    |qSequence displacement n|‖ ≤ D * (positiveQWeight n * ((n : ℝ) * Real.exp (-(c-b) * t)))
+  rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (mul_nonneg hq
+    (mul_nonneg hn0 (Real.exp_pos _).le)) (abs_nonneg _))]
+  calc
+    _ ≤ (positiveQWeight n * ((n : ℝ) * Real.exp (-c * t))) *
+        (D * Real.exp (b * t)) := mul_le_mul_of_nonneg_left hn
+          (mul_nonneg hq (mul_nonneg hn0 (Real.exp_pos _).le))
+    _ = (D * (positiveQWeight n * (n : ℝ))) *
+        (Real.exp (-c * t) * Real.exp (b * t)) := by ring
+    _ = _ := by
+      rw [← Real.exp_add, show -c * t + b * t = -(c-b) * t by ring]
+      ring
+
+/-- The boxed VK condition is equivalent to zero squarefree projection error
+under the ordinary Mertens bound alone. -/
+theorem residual_zero_iff_vk_log_displacement (a C : ℝ) (ha : 0 < a)
+    (hM : ∀ᶠ x : ℝ in atTop, |M x| ≤ (C * Real.exp (-a * vkProfile x)) * x) :
+    ZetaTwoOptimizerStage.limitingResidual = 0 ↔
+      Tendsto (fun n : ℕ => Real.log (2 + |qSequence displacement n|) /
+        vkProfile (n : ℝ)) atTop (𝓝 0) := by
+  have hV : Tendsto (fun n : ℕ => vkProfile (n : ℝ)) atTop atTop :=
+    vkProfile_tendsto_atTop.comp tendsto_natCast_atTop_atTop
+  constructor
+  · intro hr
+    rw [displacement_eq_zero_of_residual_eq_zero hr]
+    have hz (n : ℕ) : qSequence (0 : QHilbert) n = 0 := by cases n <;> simp [qSequence]
+    simpa only [hz, abs_zero, add_zero] using hV.const_div_atTop (Real.log 2)
+  · intro hd
+    have hb : 0 < a / 2 := by positivity
+    apply residual_zero_of_vk_exponential_displacement a (a/2) C 1 hb (by linarith) hM
+    filter_upwards [hd.eventually (gt_mem_nhds hb), hV.eventually (eventually_gt_atTop (0 : ℝ))]
+      with n hn hp
+    have he := Real.exp_le_exp.mpr ((div_lt_iff₀ hp).mp hn).le
+    rw [Real.exp_log (by positivity)] at he
+    linarith
+
 end RiemannResearch.RH.QMertensFirstMoment

@@ -119,4 +119,47 @@ theorem acceleratedHead_cover (N : ℕ) (hN : 1 ≤ N) :
     have hs := mul_self_le_mul_self (denominator_pos (k + 1)).le hr
     nlinarith
 
+theorem acceleratedHead_le_characteristic_power (j : ℕ) :
+    (acceleratedHead j : ℝ) ≤ (17 + 12 * Real.sqrt 2) ^ j := by
+  have hsq := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)
+  have hnn := Real.sqrt_nonneg (2 : ℝ)
+  have hl : 0 ≤ 3 - 2 * Real.sqrt 2 := by nlinarith
+  have hroot : 3 - 2 * Real.sqrt 2 ≤ 3 + 2 * Real.sqrt 2 := by linarith
+  have ha : denominator j ≤ (3 + 2 * Real.sqrt 2) ^ j := by
+    rw [denominator_closed_form]
+    linarith [pow_le_pow_left₀ hl hroot j]
+  have hroot2 : (3 + 2 * Real.sqrt 2) ^ 2 = 17 + 12 * Real.sqrt 2 := by nlinarith
+  have hs := mul_self_le_mul_self (denominator_pos j).le ha
+  rw [acceleratedHead_cast, ← hroot2, ← pow_mul, Nat.mul_comm 2 j, pow_mul]
+  nlinarith
+
+/-- The exact admissible geometric bases under a fixed multiplicative budget.
+An arithmetic improvement to the actual error can supersede this budget. -/
+theorem geometric_head_budget_iff (r : ℝ) (hr : 0 ≤ r) :
+    (∃ K : ℝ, ∀ j : ℕ, r ^ j ≤ K * (acceleratedHead j : ℝ)) ↔
+      r ≤ 17 + 12 * Real.sqrt 2 := by
+  let L : ℝ := 17 + 12 * Real.sqrt 2
+  have hL : 0 < L := by dsimp [L]; positivity
+  change (∃ K : ℝ, ∀ j : ℕ, r ^ j ≤ K * (acceleratedHead j : ℝ)) ↔ r ≤ L
+  constructor
+  · rintro ⟨K, hK⟩
+    by_contra! hbad
+    have hKpos : 0 ≤ K := by
+      have h0 := hK 0
+      norm_num [acceleratedHead, denominator] at h0
+      linarith
+    have hratio : 1 < r / L := (one_lt_div hL).mpr hbad
+    obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt K hratio
+    rw [div_pow] at hn
+    have hbig := (lt_div_iff₀ (pow_pos hL n)).mp hn
+    have hupper : (acceleratedHead n : ℝ) ≤ L ^ n := acceleratedHead_le_characteristic_power n
+    exact (not_lt_of_ge ((hK n).trans (mul_le_mul_of_nonneg_left hupper hKpos))) hbig
+  · intro h
+    refine ⟨4, fun j => ?_⟩
+    have hpow := pow_le_pow_left₀ hr h j
+    have hhead : L ^ j / 4 ≤ (acceleratedHead j : ℝ) := by
+      rw [acceleratedHead_cast]
+      exact accelerated_head_lower_bound j
+    linarith
+
 end RiemannResearch.Analysis.ChebyshevEnergy

@@ -2,6 +2,16 @@
 
 Write $M(x)=\sum_{n\le x}\mu(n)$ and $\Phi(x)=(\log x)^{3/5}(\log\log x)^{-1/5}$. Let $V$ be the closed legal squarefree span in $L^2(Q)$, $r=1-f_Q$ its projection residual and $d=f_Q-f_P$ the displacement between the two projections. $T_N$ keeps all physical coordinates beyond $N$.
 
+## Square-sampled Mertens estimates and the boxed displacement criterion
+
+`NumberTheory.PrimeNumberTheorem.mertens_vk_of_square_samples` retains the exponent $a>0$ from an eventual bound $|M(k^2)|\le Ck^2e^{-a\Phi(k^2)}$ with $C\ge0$. Filling the gaps between squares gives $|M(x)|\le(C+3)xe^{-a\Phi(x)}$ on the full real half-line beyond a threshold. `riemannHypothesis_of_square_sample_vk_log_displacement` specializes this to the logarithmic displacement criterion. Walfisz supplies the arithmetic estimate in the literature (Gerhold, Acta Arith. 142 (2010), equation (2), DOI 10.4064/aa142-2-8). The square-sampled estimate has **Open** formal-provider status.
+
+`QMertensFirstMoment.residual_zero_iff_vk_log_displacement` identifies zero squarefree projection residual with $\log(2+|d(n)|)=o(\Phi(n))$ under the ordinary VK Mertens bound. The upper-growth condition on the actual displacement is **Open**. Every interior rate $0<b<a$ already forces zero residual under $|d(n)|\le D e^{b\Phi(n)}$ eventually. The equivalence with zero residual uses the signed pairing and needs no reverse implication from RH.
+
+`QDisplacementVKSignCount` gives a separate conditional test. Under the same VK arithmetic input, at arbitrarily large $X$ it suffices that one strict sign of $d$ occurs on at most $D e^{b\Phi(X)}$ sites through $X$, with $0\le b<2^{2/5}a$. The choice of sign may depend on $X$. The sign-count premise for the actual displacement is **Open**.
+
+## Previously catalogued transfers
+
 | Module | Declarations and scope |
 |---|---|
 | [MertensExponentialEntropy](Analysis/MertensExponentialEntropy.lean) | `exponential_entropy_eq`, `exponential_entropy_le`, `exponential_entropy_small`. For $\eta(\varepsilon)=\varepsilon(1+\log(1/\varepsilon))$, one has $\eta(e^{-u})=(1+u)e^{-u}$, at most $1/2$ for $u\ge6$. Every $0\le c<b$ gives $\eta(e^{-bu})\le[b/(b-c)]e^{-cu}$ by the elementary exponential inequality. |
