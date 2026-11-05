@@ -28,6 +28,27 @@ the projected truncated forcing converges in Hilbert norm to the actual
 displacement. Its own aligned cofinal bound is then sufficient under the
 same approximation premise. [Forcing estimates](RH/QFiniteEighthForcing.lean).
 
+**Matched evaluation kernels and reconstruction bounds.** The unconditional identity
+`finiteDisplacement_eq_paretoDual_pairing` expresses each site as a Pareto residual
+pairing after both projections. The aligned bound uses three explicit Gram matrices.
+`full_conductor_forcing_bessel` controls all signed, scaled Gram deficits at once.
+`adjacent_full_data_difference` controls their adjacent differences. The finite prime
+innovation shows that the Euclidean bound on the Gram inputs alone permits diverging
+inverse norms. [Signed forcing](RH/QFiniteForcingData.lean) ·
+[Prime obstruction](RH/QPrimeForcingObstruction.lean) ·
+[Reconstruction diagonal](RH/QFiniteEighthReconstruction.lean) ·
+[Matched evaluation kernels](RH/QFiniteParetoDualKernel.lean).
+
+**Conditional research reductions.** With the same physical subcritical approximation,
+any one of the following suffices: a cofinal bound on the matched kernel product, a
+cofinal bound on the Q error and reconstruction product, a bound on the aligned sum
+after removing at most a fixed number of sites at each good stage, or a separate
+cofinal eighth bound for each projected squarefree physical coordinate. **Open:** the
+corresponding cofinal upper estimates and a project provider for the physical approximation.
+The signed identities and unconditional finite inequalities do not use either input.
+[Trimmed criterion](RH/QFiniteEighthCapped.lean) · [Squarefree columns](RH/QFiniteColumnEighth.lean) ·
+[Derivations, limitations, and numerical tests](RH/MatchedEighthMomentResearch20261105.md).
+
 ## Unconditional ordinary Mertens estimates
 
 There exist $c,B>0$ such that for every real $x\ge1$,

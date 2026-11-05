@@ -138,20 +138,29 @@ private theorem weighted_pairing_eighth (x y : QHilbert)
   apply (norm_tsum_le_tsum_norm (qSequence_product_summable x y).norm).trans
   rwa [show (1 / (8 / 7) : ℝ) = 7 / 8 by norm_num] at H
 
+/-- Physical L^(8/7) approximation kills the mean of each L^8 annihilator. -/
+theorem annihilator_mean_zero_of_eighth (happrox : HasSubcriticalApproximation)
+    (w : QHilbert) (hw : w ∈ closureᗮ)
+    (hsw : Summable fun n => positiveQWeight n * |qSequence w n| ^ 8) :
+    inner ℝ qOne w = 0 := by
+  obtain ⟨G, hG, hs, ht⟩ := happrox
+  let D := (∑' n, positiveQWeight n * |qSequence w n| ^ (8 : ℕ)) ^ (1 / 8 : ℝ)
+  have hle (j : ℕ) := weighted_pairing_eighth (qOne - G j) w (hs j) hsw
+  simp only [inner_sub_left, Submodule.inner_right_of_mem_orthogonal (hG _) hw,
+    sub_zero] at hle
+  have ht' := ht.mul_const D
+  rw [zero_mul] at ht'
+  have hz : |inner ℝ qOne w| ≤ 0 :=
+    le_of_tendsto_of_tendsto' tendsto_const_nhds ht' hle
+  exact abs_nonpos_iff.mp hz
+
 /-- The dual eighth moment suffices under the physical subcritical approximation. -/
 theorem riemannHypothesis_of_displacement_eighth (happrox : HasSubcriticalApproximation)
     (hd : Summable fun n => positiveQWeight n * |qSequence displacement n| ^ 8) :
     RiemannHypothesis := by
-  obtain ⟨G, hG, hs, ht⟩ := happrox
-  let D := (∑' n, positiveQWeight n * |qSequence witness n| ^ (8 : ℕ)) ^ (1 / 8 : ℝ)
-  have hle (j : ℕ) := weighted_pairing_eighth (qOne - G j) witness (hs j) (witness_eighth hd)
-  simp only [inner_sub_left, Submodule.inner_right_of_mem_orthogonal (hG _) witness_mem_orthogonal,
-    sub_zero] at hle
-  have ht' := ht.mul_const D
-  rw [zero_mul] at ht'
-  have hz : |inner ℝ qOne witness| ≤ 0 :=
-    le_of_tendsto_of_tendsto' tendsto_const_nhds ht' hle
-  have hr := residual_eq_zero_of_witness_mean_zero (abs_nonpos_iff.mp hz)
+  have hmean := annihilator_mean_zero_of_eighth happrox witness
+    witness_mem_orthogonal (witness_eighth hd)
+  have hr := residual_eq_zero_of_witness_mean_zero hmean
   exact QSquarefreeCapacity.riemannHypothesis_of_capacity_tendsto
     (QSquarefreeCapacity.capacity_tendsto_iff_optimizer_closure.mpr
       (Submodule.starProjection_eq_self_iff.mp (sub_eq_zero.mp hr).symm))
