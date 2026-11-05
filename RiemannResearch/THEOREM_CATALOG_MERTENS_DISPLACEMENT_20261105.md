@@ -17,6 +17,20 @@ The inverse-square absolute charge mass is finite for every physical vector.
 [Finite charge rows](RH/QChargeRamanujanPackets.lean) · [Matched Bézout carry](RH/QManyPrimeMatchedCarry.lean) ·
 [Limit formula](RH/QHeadSlopeLimit.lean) · [Absolute charge mass](RH/QAbsoluteChargeMass.lean).
 
+The physical first difference has normalized Jordan coefficient
+$\sqrt{J_2(s)}$ times the signed inverse-square charge sum over multiples of $s$.
+Parseval gives its exact squared norm for every physical vector.
+[Jordan charge identities](RH/QJordanChargeRows.lean).
+A composite charge extracts its own carry coefficient from each linear combination
+of prime carries and commutes with fixed-site limits. For noncoprime factors a
+quotient digit recovers the missing modulus.
+[Composite detection](RH/QCompositeCarryDetection.lean) · [Repeated factors](RH/QMixedRadixCarry.lean).
+The one-sided finite charge hypothesis may also be applied after subtracting the
+Möbius profile of any constant (QChargeDilation). Vanishing composite charges
+and a one-sided bound on the actual difference imply RH by testing finite prime
+products. **Open:** either sign bound and the requisite composite cancellation
+for the actual displacement. [Prime support criterion](RH/QPrimeChargeRigidity.lean).
+
 **Conditional research reductions.** Any ordinary finite limit of the unscaled
 physical difference is equivalent to zero displacement. Either asymptotic
 one-sided sign for the difference already implies RH. Bounded partial sums

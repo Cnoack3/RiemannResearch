@@ -172,4 +172,42 @@ theorem riemannHypothesis_of_cofinal_charge_row_harmonic (B C : ℝ)
     (max_le (oneSided_le_of_charge_rows displacement σ (u n) n (hr n hn')) (hu n hn'))
     (Nat.cast_nonneg n)
 
+/-- Either sign of the charges may have finite mass after subtracting a
+constant's Möbius profile. The bound on the displacement shifts by |σc|. -/
+theorem riemannHypothesis_of_shifted_one_sided_charges (c σ C : ℝ) (hσ : |σ| = 1)
+    (hC : ∀ H : ℕ, (∑ m ∈ Finset.Icc 1 H, max (-(σ *
+      (mobiusDifference m (qSequence displacement) - c * (ArithmeticFunction.moebius m : ℝ)))) 0)
+        ≤ C) : RiemannHypothesis := by
+  let f : QHilbert := displacement - c • qOne
+  have hf : qSequence f = fun n => qSequence displacement n - c * qOneSequence n := by
+    funext n
+    change qSequenceLinear (displacement - c • qOne) n = _
+    rw [map_sub, map_smul]
+    change qSequence displacement n - c * qSequence qOne n = _
+    rw [qSequence_qOne]
+  have hmone (m : ℕ) (hm : 0 < m) :
+      mobiusDifference m qOneSequence = (ArithmeticFunction.moebius m : ℝ) := by
+    have h := charges_of_constant_on_positives qOneSequence (by simp [qOneSequence])
+      (fun n hn => by simp [qOneSequence, Nat.ne_of_gt hn]) m hm
+    simpa only [qOneSequence, one_ne_zero, if_false, one_mul] using h
+  have hb (m : ℕ) (hm : 0 < m) :
+      mobiusDifference m (qSequence f) =
+        mobiusDifference m (qSequence displacement) - c * (ArithmeticFunction.moebius m : ℝ) := by
+    rw [hf, mobiusDifference_sub_fn, mobiusDifference_const_mul_fn, hmone m hm]
+  have bound := oneSided_le_of_charge_prefix f σ C (fun H => by
+    apply le_trans _ (hC H)
+    apply Finset.sum_le_sum
+    intro m hm
+    rw [hb m (Finset.mem_Icc.mp hm).1])
+  have hC0 : 0 ≤ C := by simpa using hC 0
+  apply riemannHypothesis_of_one_sided_bounded_displacement σ (C + |σ * c|) hσ
+    (add_nonneg hC0 (abs_nonneg _))
+  intro n
+  by_cases hn : n = 0
+  · simpa only [hn, qSequence_zero, mul_zero] using add_nonneg hC0 (abs_nonneg (σ * c))
+  · have h := bound n
+    rw [hf] at h
+    simp only [qOneSequence, if_neg hn, mul_one, mul_sub] at h
+    linarith [le_abs_self (σ * c)]
+
 end RiemannResearch.RH.QChargeDilation

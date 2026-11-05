@@ -67,7 +67,7 @@ A second partial summation yields a leading term. If $v_n=n^{-2}-(n+1)^{-2}$, th
 $$
 \left|\sum_{A\le n<B}I_D(n)n^{-2}+\frac{J_2(D)}{12D}(A^{-2}-B^{-2})\right|\le\frac{D^2}{8}(v_A-v_B).
 $$
-These estimates concern signed first moments. The Haar variance is $J_2(D)/(12D^2)=\prod_{p\mid D}(1-p^{-2})/12\ge1/[12\zeta(2)]$, by orthogonality and inversion of $\operatorname{Var}(F_D)=(1-D^{-2})/12$. Therefore the eighth moment of the individual pure interaction has a positive lower bound even at high order. For even $D$, all primitive frequencies are odd, so the prefix attains its minimum $-J_2(D)/(6D)$ at $D/2$. The values follow either from the divisor triangles or the primitive cosecant-square sum.
+Even on an arbitrary physical interval with $0<A<B$, summation by parts with the prefix between $-t/2$ and $0$ gives $-(A^{-1}+\sum_{A\le n<B}n^{-2})/2\le\sum_{A\le n<B}I_D(n)/n^2\le1/(2A)$, uniformly in $D$. These estimates concern signed first moments. The Haar variance is $J_2(D)/(12D^2)=\prod_{p\mid D}(1-p^{-2})/12\ge1/[12\zeta(2)]$, by orthogonality and inversion of $\operatorname{Var}(F_D)=(1-D^{-2})/12$. Therefore the eighth moment of the individual pure interaction has a positive lower bound even at high order. For even $D$, all primitive frequencies are odd, so the prefix attains its minimum $-J_2(D)/(6D)$ at $D/2$. The values follow either from the divisor triangles or the primitive cosecant-square sum.
 
 | $D$ | Prime count | Haar variance (exact, Wolfram) | Minimum prefix (exact, Wolfram) |
 |---:|---:|---:|---:|
@@ -142,6 +142,39 @@ $$
  \varepsilon d(n)\le\sum_m c_m g_m(n)
  \le C(n)+n\sum_{m>n}c_m/m,\qquad C(y)=\sum_{m\le y}c_m.
 $$
-This uses a finite signed inequality and a bound by a nonnegative series. If $C(y)\ll(1+\log y)^E$, dyadic splitting bounds the tail by $\sum_{k\ge0}2^{-k}C(2^{k+1}n)\ll_E(1+\log n)^E$. Thus the positive harmonic prefix of $\varepsilon d$ is $O((1+\log X)^{E+1})$, which gives RH by the existing one-sided harmonic criterion. Only one sign of the actual charges needs this estimate. [Cofinal harmonic criterion](QCofinalDisplacementMoments.lean)
+This uses a finite signed inequality and a bound by a nonnegative series. If $C(y)\ll(1+\log y)^E$, dyadic splitting bounds the tail by $\sum_{k\ge0}2^{-k}C(2^{k+1}n)\ll_E(1+\log n)^E$. Thus the positive harmonic prefix of $\varepsilon d$ is $O((1+\log X)^{E+1})$, which gives RH by the existing one-sided harmonic criterion. More generally the same argument applies to $b_m-c\mu(m)$ for any constant $c$, by replacing $d$ on positive sites with $d-c$. The finite one-sided mass criterion for this shifted profile is formalized in QChargeDilation. [Cofinal harmonic criterion](QCofinalDisplacementMoments.lean)
 
-**Status.** The reciprocal scalar, radical recurrence, matched projection identity, and implications from boundedness or a one-sided harmonic bound are established repository results. The accompanying Lean modules extend the finite packet, matched carry and conditional increment calculations; their checked declarations are listed in the theorem catalog. The infinite physical Parseval identity, balanced coefficient bound, legal diverging-packet construction and polylogarithmic deduction above include their paper proofs. The unscaled increment premise, the one-sided charge estimate and the uniform moving-block inequality have not been established for the actual displacement.
+## Fractional parts, repeated factors, and what exact cancellation would imply
+
+For coprime CRT conductors the fractional part is taken after forming the signed linear combination. Write $S_m=\sum_{p\mid m}a_{m,p}g_p$, where $\sum_p a_{m,p}/p=1/m$. Then $g_m=\{S_m\}=S_m-C_m$ with $C_m=\lfloor S_m\rfloor$. For real weights $u_m$ on a finite set of squarefree composite conductors,
+$$
+\sum_m u_m g_m=\sum_p\left(\sum_{m:p\mid m}u_m a_{m,p}\right)g_p-\sum_m u_m C_m .
+$$
+An integer-valued $C_m$ can have a noninteger real multiple $u_m C_m$. Applying an outer fractional part would change the physical displacement.
+
+There is an exact obstruction to cancellation as functions. At every composite $D>1$, $b_D(g_p)=0$ for primes $p$ and $b_D(g_m)=-\mathbf1_{D=m}$. Hence
+$$
+b_D(C_m)=\mathbf1_{D=m},\qquad b_D\!\left(\sum_m u_m C_m\right)=u_D
+$$
+with zero coefficient understood off the support. This holds for every choice of the signed CRT coefficients. The detector uses only $f(k),f(k-1)$ with $k\mid D$. Consequently it passes to a pointwise limit at those sites. In a conductor-ordered infinite series with fixed coefficients, an identically zero carry sum forces every fixed composite coefficient to be zero. For approximate cancellation it gives the head inequality $|u_D|\le2\tau(D)\max_{0\le n\le D}|\sum_m u_m C_m(n)|$. The signed weighted block estimates above concern cancellation after averaging.
+
+For the particular example $135=3\cdot5\cdot9$, the visible period of $(g_3,g_5,g_9)$ is $45$. At $n=1,46,91$ their common tuple is $(1/3,1/5,1/9)$, whereas $g_{135}$ takes the values $1/135,46/135,91/135$. The exact missing digit is
+$$
+ g_{135}(n)=\frac{\{2g_9(n)-g_5(n)\}+(\lfloor n/45\rfloor\bmod3)}3
+           =\{11g_{27}(n)-2g_5(n)\}.
+$$
+The first identity uses $g_{ab}=(g_a+(\lfloor n/a\rfloor\bmod b))/b$. The second applies coprime CRT to $27$ and $5$. Wolfram checked all 135 sites with the mathematical convention $\{x\}=x-\lfloor x\rfloor$. The legal squarefree family uses at most the first digit for each prime.
+
+There is a stronger positive result for the actual displacement if the higher carries do vanish. Suppose $b_D(d)=0$ at every composite $D$ and $\Delta d$ is merely bounded above. For any finite set $S$ of primes having $b_p>0$, take $n=\prod_{p\in S}p$. Then
+$$
+\Delta d(n)=b_1+\sum_{p\in S}b_p.
+$$
+The upper bound gives $\sum_p b_p^+<\infty$, so the one-sided charge theorem gives RH. A lower bound works with the signs reversed. More generally the same reasoning allows $\sum_{D\text{ composite}}|b_D|<\infty$: the negative composite part increases the prime budget by at most its total mass, and the positive composite part has finite mass already.
+
+In fact only one product per prime cutoff is needed. Let $n_X=\prod_{p\le X:\ b_p>0}p$. When the composite charges have finite absolute mass, $\sum_{p\le X}b_p^+\le \Delta d(n_X)-b_1+\sum_{D\,\mathrm{composite}}b_D^-$. A bound $\Delta d(n_X)\ll(1+\log X)^E$ for all $X$ suffices by the preceding one-sided polylog argument. For example $\Delta d(n)\ll(1+\log\log(3n))^E$ suffices on this route, since $n_X\le X^X$ for $X\ge2$.
+
+Even among prime-only series the unrestricted legal class admits large eighth-power blocks. Given any strictly increasing LCM endpoints $A_j$, choose a prime $4A_j<p_j<8A_j$ by Bertrand's theorem. Then $v=\sum_j A_j^{1/4}g_{p_j}$ converges in the physical Hilbert space since $\|g_p\|_Q\ll p^{-1/2}$ and $A_j$ at least doubles. All coefficients are nonnegative. For $A_j\le n<2A_j$, $v(n)\ge A_j^{1/4} n/p_j\ge A_j^{1/4}/8$. The eighth-power block is therefore at least a fixed positive multiple of $A_j$. All composite charges vanish. This example concerns general legal vectors. The matched displacement also satisfies the projection equations in section 4.
+
+[Fractional parts and the missing digit](QMixedRadixCarry.lean) · [Detection and pointwise passage](QCompositeCarryDetection.lean) · [One-sided bounded jumps after composite cancellation](QPrimeChargeRigidity.lean).
+
+**Status.** The reciprocal scalar, radical recurrence, matched projection identity, and implications from boundedness or a one-sided harmonic bound are established repository results. The accompanying Lean modules extend the finite packet, matched carry and conditional increment calculations; their checked declarations are listed in the theorem catalog. The [inverse-square charge coefficients and full physical Parseval identity](QJordanChargeRows.lean) are also formalized for every physical vector. Specializing to squarefree-supported charges deletes the squareful rows. The balanced coefficient bound, legal diverging-packet construction and polylogarithmic deduction above have paper proofs. The unscaled increment premise, the one-sided charge estimate and the uniform moving-block inequality have not been established for the actual displacement.

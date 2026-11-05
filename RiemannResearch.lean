@@ -73,6 +73,10 @@ import RiemannResearch.RH.QChargeDilation
 import RiemannResearch.RH.QChargeRamanujanPackets
 import RiemannResearch.RH.QDifferenceLimits
 import RiemannResearch.RH.QHeadSlopeLimit
+import RiemannResearch.RH.QJordanChargeRows
+import RiemannResearch.RH.QMixedRadixCarry
+import RiemannResearch.RH.QCompositeCarryDetection
+import RiemannResearch.RH.QPrimeChargeRigidity
 import RiemannResearch.RH.QManyPrimeMatchedCarry
 import RiemannResearch.RH.QRamanujanContrastGram
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MertensOddSquareSieve
