@@ -53,20 +53,21 @@ private theorem full_displacement_exponent_lower (δ : ℝ) (hδ : 0 ≤ δ) :
   unfold leeLeongFullDisplacementExponent
   linarith only [hx.1, hq]
 
-/-- A single absolute displacement moment at the full profile with any
-positive square-root loss implies vanishing of the squarefree residual. -/
-theorem residual_zero_of_leeLeong_full_moment (hLL : LeeLeongMertensEstimate)
+/-- The cutoff pairing annihilates the mean of every orthogonal difference
+of a reciprocally smoothed vector and a vector with the given moment. -/
+theorem annihilator_mean_zero_of_leeLeong_full_moment (v z : QHilbert)
+    (horth : QShiftedReciprocal.B v - z ∈ ZetaTwoOptimizerStage.closureᗮ) (hLL : LeeLeongMertensEstimate)
     (δ : ℝ) (hδ : 0 < δ)
     (hd : Summable (fun n : ℕ => positiveQWeight n * ((n : ℝ) *
-      Real.exp (-(leeLeongFullDisplacementExponent δ n))) * |qSequence displacement n|)) :
-    ZetaTwoOptimizerStage.limitingResidual = 0 := by
+      Real.exp (-(leeLeongFullDisplacementExponent δ n))) * |qSequence z n|)) :
+    inner ℝ qOne (QShiftedReciprocal.B v - z) = 0 := by
   have hA : 0 < leeLeongRate := Real.rpow_pos_of_pos
     (by positivity : 0 < 5 / (3 * (53.99 : ℝ) ^ 3)) _
   have hc : 0 < leeLeongRate / 2 := by positivity
   have hquarter : 0 < δ / 4 := by positivity
   let E (x : ℝ) := -(leeLeongFullDisplacementExponent (δ / 4) x)
   let W (n : ℕ) := (n : ℝ) * Real.exp (-(leeLeongFullDisplacementExponent δ n))
-  refine residual_zero_of_exponential_cutoff_moment E W ?_ ?_ ?_ ?_ ?_ hd
+  refine annihilator_mean_zero_of_exponential_cutoff_moment v z horth E W ?_ ?_ ?_ ?_ ?_ hd
   · apply tendsto_atBot.2
     intro B
     filter_upwards [full_displacement_exponent_lower (δ / 4) hquarter.le,
@@ -90,6 +91,17 @@ theorem residual_zero_of_leeLeong_full_moment (hLL : LeeLeongMertensEstimate)
     apply mul_le_mul_of_nonneg_left _ (positiveQWeight_nonneg n)
     apply mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg n)
     exact Real.exp_le_exp.mpr (by linarith only [hn])
+
+/-- A single absolute displacement moment at the full profile with any
+positive square-root loss implies vanishing of the squarefree residual. -/
+theorem residual_zero_of_leeLeong_full_moment (hLL : LeeLeongMertensEstimate)
+    (δ : ℝ) (hδ : 0 < δ)
+    (hd : Summable (fun n : ℕ => positiveQWeight n * ((n : ℝ) *
+      Real.exp (-(leeLeongFullDisplacementExponent δ n))) * |qSequence displacement n|)) :
+    ZetaTwoOptimizerStage.limitingResidual = 0 :=
+  residual_eq_zero_of_witness_mean_zero
+    (annihilator_mean_zero_of_leeLeong_full_moment pResidual displacement witness_mem_orthogonal
+      hLL δ hδ hd)
 
 /-- The full-profile moment suffices for Mathlib's Riemann hypothesis. -/
 theorem riemannHypothesis_of_leeLeong_full_moment (hLL : LeeLeongMertensEstimate)

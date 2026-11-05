@@ -125,3 +125,36 @@ The complete sum on the right is finite. For fixed $B,C\ge0$, if arbitrarily lar
 
 
 **Single-probe reduction and sign obstruction.** With $a_p=\langle g_p,1-f_{P,p}\rangle_Q$ and squarefree conductors through $p+1$, the scaled entry $\zeta(2)p a_p$ tends along primes to the squared limiting Pareto residual norm. **Open:** show $p a_p\to0$ along a cofinal subsequence. The finite norm comparison transfers Burnol’s positive logarithmic lower bound into eventual positivity of the individual entries. The transfer of Burnol from his continuous family to this dictionary is a paper proof. [Finite identity, limit, and positivity comparison](RH/QFiniteSingleResidueTest.lean) · [Paper proof with the matched cutoff](RH/SingleResidueBurnolResearch20261105.md)
+
+## The first projected correction and harmonic resolvent errors
+
+In the notation of the [research note](HarmonicResolventAndFullMoment20261105.md), let $b=\Pi Br_Q$, $b_M=\Pi_M B r_M$, $u_1=4b/3$, and $h$ be the smaller signed harmonic prefix.
+
+| Declaration | Conclusion |
+|---|---|
+| `QSquarefreeDisplacementResolvent.resolvent_error_weighted_energy` | $4\sum_{k<N}9^k\|d-u_k\|^2\le\|r_Q\|^2$ for every $N$. |
+| `QSquarefreeDisplacementRigidity.harmonic_resolvent_sqrt_depth` | The prefix error at depth $j$ is at most $\sqrt{\zeta(2)X}\,3^{-j}\|r_Q\|/(2\sqrt{j+1})$. |
+| `QSquarefreeDisplacementRigidity.harmonic_resolvent_adaptive_div_sqrt_tendsto_zero` | $h(u_{j(X)};X)=o(\sqrt X)$ if $X\le9^{j(X)}$. |
+| `QFixedHarmonic.residual_zero_iff_fixed_firstStep_cofinal_polylog` | For fixed $C,B_1\ge0$, residual zero iff $h(u_1;X)\le C(\log X)^{B_1}$ at cofinal cutoffs. |
+| `QFixedHarmonic.residual_zero_iff_cofinal_moving_harmonic_one` | Residual zero iff arbitrarily large physical cutoffs admit arbitrarily large finite stages with $h(b_M;X)\le1$. |
+| `QMertensFirstMoment.residual_zero_iff_cofinal_full_moving_moment` | Under the Lee–Leong input, residual zero iff a single constant bounds the full-weight finite moments of $b_M$ at arbitrarily large stages for each fixed physical head. |
+| `QMertensFirstMoment.riemannHypothesis_of_first_resolvent_full_moment` | Under the Lee–Leong input the weighted absolute moment of $u_1$ implies RH. |
+| `QMertensFirstMoment.leeLeong_full_moment_iff_resolvent_shells` | Full displacement moment summability equals summability of the moments of $u_j$ on the dyadic shells, independent of the arithmetic premise. |
+
+**Conditional research reductions.** Open — supply a cofinal one-sided estimate for the actual first correction, or the uniform finite weighted moment. Open in Lean — supply `LeeLeongMertensEstimate` for the full-weight forward implication. The harmonic forward implication uses the repository's established arithmetic. The RH-to-residual-zero converse in the equivalence with RH uses `BaezDuarteMobiusApproximation`. The accompanying numerical certificates give finite values and an upper bound for the residual norm.
+
+## A translated full Lee–Leong moment
+
+Let $F$ be the full printed exponent and $G(x)=(\log x)^2\exp[-F(\exp(\log x-F(x)))]$. The full logarithmic prefactor in Lee–Leong's estimate is retained.
+
+| Declaration in `QMertensFirstMoment` | Conclusion |
+|---|---|
+| `errorEnvelope_eventually_le_leeLeongDelayed` | Uniform Möbius defect envelope at relative error $25.85\log N\,e^{-F(N)}$ is at most $2+400nG(n)$ for all sufficiently large cutoffs and every site. |
+| `summable_leeLeongDelayedDamping_Q` | The scalar moment of $G$ is finite. |
+| `leeLeongDelayedDamping_eventually_le_explicit` and `leeLeongDelayedDamping_le_full_margin` | A loss bounded by $(2A)^2\Phi(x)^2/\log x+2\log\log x$ suffices. Each earlier fixed positive square-root margin dominates the translated damping. |
+| `residual_zero_iff_cofinal_delayed_heads` | With the Lee–Leong premise, a uniform constant for finite translated first-correction moments on cofinal conductor stages for each physical cutoff is equivalent to $r_Q=0$. |
+| `riemannHypothesis_of_delayed_displacement_moment` | The translated absolute moment of the actual displacement suffices for RH under the same arithmetic input. |
+
+**Conditional research reductions.** Open — bound the translated moment of the actual correction or displacement. Open in Lean — supply the published arithmetic input as a checked provider. The exact coefficient $3/5$ in the upper bound is proved by `leeLeongDelayedDamping_eventually_sharp_log_reserve`. Optimality for the raw uniform envelope is a paper deduction in the [research note](HarmonicResolventAndFullMoment20261105.md).
+
+The new first-correction result `residual_zero_iff_cofinal_implicit_correction_heads` uses the stronger Proposition 5.2 specialization from the preceding section. At any fixed real $s$, its test uses the mass $|b(n)|e^{-F(n)-s\sqrt{\Phi(n)}}/n$, including the exact printed exponent when $s=0$. Open — prove the uniform finite-moment budget or provide a checked analytic input where required.

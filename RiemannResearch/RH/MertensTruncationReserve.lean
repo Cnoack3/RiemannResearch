@@ -38,14 +38,15 @@ private theorem sqrt_increment_le {p q : ℝ} (hp : 1 ≤ p) (hpq : p ≤ q) :
     linarith only [hs, Real.sqrt_nonneg q]
   nlinarith only [mul_nonneg hd ht, Real.sq_sqrt hp0, Real.sq_sqrt (hp0.trans hpq)]
 
-/-- An absolute first moment at the printed endpoint, or above it by any
-fixed nonnegative multiple of the square-root scale, suffices under the
-arithmetic bound obtained from the implicit truncation. -/
-theorem riemannHypothesis_of_truncationReserve_moment (hM : LeeLeongTruncationReserve)
+/-- The truncation reserve pairs a square-root-weighted moment against any
+orthogonal difference of a reciprocally smoothed source and a physical vector. -/
+theorem annihilator_mean_zero_of_truncationReserve_moment (v z : QHilbert)
+    (horth : QShiftedReciprocal.B v - z ∈ ZetaTwoOptimizerStage.closureᗮ)
+    (hM : LeeLeongTruncationReserve)
     (a : ℝ) (ha : 0 ≤ a)
     (hd : Summable (fun n : ℕ => positiveQWeight n * ((n : ℝ) *
       Real.exp (-(leeLeongFullProfile n + a * Real.sqrt (vkProfile n)))) *
-      |qSequence displacement n|)) : RiemannHypothesis := by
+      |qSequence z n|)) : inner ℝ qOne (QShiftedReciprocal.B v - z) = 0 := by
   let G (x : ℝ) := leeLeongFullProfile x + (a + 1) * Real.sqrt (vkProfile x)
   let E (x : ℝ) := -leeLeongFullProfile x - (a + 3/4) * Real.sqrt (vkProfile x)
   let W (n : ℕ) := (n : ℝ) * Real.exp (-(leeLeongFullProfile n + a * Real.sqrt (vkProfile n)))
@@ -68,8 +69,7 @@ theorem riemannHypothesis_of_truncationReserve_moment (hM : LeeLeongTruncationRe
     linarith only [hx y hxy, mul_le_mul_of_nonneg_left (sqrt_increment_le hv (hm y hxy)) ha1]
   obtain ⟨K, hK, hb⟩ := errorEnvelope_eventually_le_full_profile_of_increment
     G C 1 hc (by norm_num) hbound hinc
-  apply rh_of_zero_projection_residual
-  refine residual_zero_of_exponential_cutoff_moment E W ?_ ?_ (hM (a + 3/4)) ?_ ?_ hd
+  refine annihilator_mean_zero_of_exponential_cutoff_moment v z horth E W ?_ ?_ (hM (a + 3/4)) ?_ ?_ hd
   · apply tendsto_atBot.2
     intro B
     filter_upwards [leeLeongFullProfile_eventually_bounds,
@@ -98,6 +98,18 @@ theorem riemannHypothesis_of_truncationReserve_moment (hM : LeeLeongTruncationRe
     apply mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg n)
     exact Real.exp_le_exp.mpr (by
       linarith only [hn.1, mul_nonneg ha (Real.sqrt_nonneg (vkProfile n))])
+
+/-- An absolute first moment at the printed endpoint, or above it by any
+fixed nonnegative multiple of the square-root scale, suffices under the
+arithmetic bound obtained from the implicit truncation. -/
+theorem riemannHypothesis_of_truncationReserve_moment (hM : LeeLeongTruncationReserve)
+    (a : ℝ) (ha : 0 ≤ a)
+    (hd : Summable (fun n : ℕ => positiveQWeight n * ((n : ℝ) *
+      Real.exp (-(leeLeongFullProfile n + a * Real.sqrt (vkProfile n)))) *
+      |qSequence displacement n|)) : RiemannHypothesis :=
+  rh_of_zero_projection_residual (residual_eq_zero_of_witness_mean_zero
+    (annihilator_mean_zero_of_truncationReserve_moment pResidual displacement witness_mem_orthogonal
+      hM a ha hd))
 
 /-- Relative to the printed Lee–Leong exponent, the pointwise criterion
 admits every fixed signed square-root correction. -/

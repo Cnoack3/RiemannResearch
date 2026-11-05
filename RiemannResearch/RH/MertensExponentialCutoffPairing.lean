@@ -21,16 +21,18 @@ namespace RiemannResearch.RH.QMertensFirstMoment
 open RiemannResearch.Analysis RiemannResearch.NumberTheory.PrimeNumberTheorem
 open ZetaTwoHilbert ZetaTwoProbability QSquarefreeDisplacementRigidity
 
-/-- Pair a uniform exponential Mertens estimate against any common physical weight. -/
-theorem residual_zero_of_exponential_cutoff_moment (E : ℝ → ℝ) (W : ℕ → ℝ)
+/-- The cutoff pairing annihilates the mean of every orthogonal difference
+of a reciprocally smoothed vector and a vector with the given moment. -/
+theorem annihilator_mean_zero_of_exponential_cutoff_moment (v z : QHilbert)
+    (horth : QShiftedReciprocal.B v - z ∈ ZetaTwoOptimizerStage.closureᗮ) (E : ℝ → ℝ) (W : ℕ → ℝ)
     (hE : Tendsto E atTop atBot)
     (hmono : ∀ᶠ x : ℝ in atTop, ∀ y : ℝ, x ≤ y → E y ≤ E x)
     (hM : ∀ᶠ x : ℝ in atTop, |M x| ≤ Real.exp (E x) * x)
     (henv : ∃ K : ℝ, 0 ≤ K ∧ ∀ᶠ N : ℕ in atTop, ∀ n : ℕ,
       errorEnvelope N n (Real.exp (E (N : ℝ))) ≤ 2 + K * W n)
     (hconst : Summable (fun n : ℕ => positiveQWeight n * W n))
-    (hd : Summable (fun n : ℕ => positiveQWeight n * W n * |qSequence displacement n|)) :
-    ZetaTwoOptimizerStage.limitingResidual = 0 := by
+    (hd : Summable (fun n : ℕ => positiveQWeight n * W n * |qSequence z n|)) :
+    inner ℝ qOne (QShiftedReciprocal.B v - z) = 0 := by
   classical
   choose p hp hprime using (fun j : ℕ => Nat.exists_infinite_primes (j + 2))
   let q : ℕ → ℕ := fun j => p j - 1
@@ -62,11 +64,11 @@ theorem residual_zero_of_exponential_cutoff_moment (E : ℝ → ℝ) (W : ℕ �
     exact (hL y (hj.trans hy)).trans (mul_le_mul_of_nonneg_right
       (Real.exp_le_exp.mpr (hm y hy)) ((Nat.cast_nonneg (q j)).trans hy))
   obtain ⟨K, hK, henv⟩ := henv
-  let F : ℕ → ℝ := fun n => positiveQWeight n * (1 + |qSequence displacement n|)
-  let H : ℕ → ℝ := fun n => positiveQWeight n * W n * (1 + |qSequence displacement n|)
+  let F : ℕ → ℝ := fun n => positiveQWeight n * (1 + |qSequence z n|)
+  let H : ℕ → ℝ := fun n => positiveQWeight n * W n * (1 + |qSequence z n|)
   have hF : Summable F := by
     refine (positiveQWeight_summable.add
-      (qSequence_product_summable qOne displacement).abs).congr ?_
+      (qSequence_product_summable qOne z).abs).congr ?_
     intro n
     by_cases hn : n = 0
     · subst n; simp [F, positiveQWeight]
@@ -76,13 +78,27 @@ theorem residual_zero_of_exponential_cutoff_moment (E : ℝ → ℝ) (W : ℕ �
     intro n
     dsimp only [H]
     ring
-  apply residual_zero_of_summable_mertens_first_moment q hq ε hlegal hε htail
+  apply annihilator_mean_zero_of_summable_mertens_first_moment v z horth q hq ε hlegal hε htail
     (fun n => 2 * F n + K * H n) ((hF.mul_left 2).add (hH.mul_left K))
   filter_upwards [hq.eventually henv] with j hj n
   have h := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left (hj n) (positiveQWeight_nonneg n))
-    (show 0 ≤ 1 + |qSequence displacement n| by positivity)
+    (show 0 ≤ 1 + |qSequence z n| by positivity)
   apply h.trans
   dsimp only [F, H]
   exact le_of_eq (by ring)
+
+/-- Pair a uniform exponential Mertens estimate against any common physical weight. -/
+theorem residual_zero_of_exponential_cutoff_moment (E : ℝ → ℝ) (W : ℕ → ℝ)
+    (hE : Tendsto E atTop atBot)
+    (hmono : ∀ᶠ x : ℝ in atTop, ∀ y : ℝ, x ≤ y → E y ≤ E x)
+    (hM : ∀ᶠ x : ℝ in atTop, |M x| ≤ Real.exp (E x) * x)
+    (henv : ∃ K : ℝ, 0 ≤ K ∧ ∀ᶠ N : ℕ in atTop, ∀ n : ℕ,
+      errorEnvelope N n (Real.exp (E (N : ℝ))) ≤ 2 + K * W n)
+    (hconst : Summable (fun n : ℕ => positiveQWeight n * W n))
+    (hd : Summable (fun n : ℕ => positiveQWeight n * W n * |qSequence displacement n|)) :
+    ZetaTwoOptimizerStage.limitingResidual = 0 :=
+  residual_eq_zero_of_witness_mean_zero
+    (annihilator_mean_zero_of_exponential_cutoff_moment pResidual displacement witness_mem_orthogonal
+      E W hE hmono hM henv hconst hd)
 
 end RiemannResearch.RH.QMertensFirstMoment

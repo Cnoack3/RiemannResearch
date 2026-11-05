@@ -50,47 +50,74 @@ theorem exists_best_sign (X : ℕ) :
   · exact ⟨1, abs_one, (min_eq_left h).symm⟩
   · exact ⟨-1, by norm_num, (min_eq_right h).symm⟩
 
-/-- One finite inequality for the actual witness. The prefix takes the cheaper
-sign at the outer cutoff; both error terms retain the full charge tails. -/
-theorem witness_mean_le_local_harmonic_prefix
+private theorem witness_signed_head_budget (X : ℕ) :
+    ∃ ε : ℝ, |ε| = 1 ∧
+      (∑ n ∈ Finset.range (X + 1), max ((-ε) * signedCoefficient witness n) 0 * (n : ℝ)) ≤
+        smoothingMoment + minimumHarmonicPrefix X / zetaTwo := by
+  obtain ⟨ε, hε, hs⟩ := exists_best_sign X
+  exact ⟨ε, hε, by simpa only [hs] using witness_prefix_le ε hε X⟩
+
+/-- Local prime-pairing bound for any annihilator whose signed head admits this budget. -/
+theorem annihilator_mean_le_local_charge_prefix (w : QHilbert) (hw : w ∈ closureᗮ) (K : ℝ) (H : ℕ → ℝ)
+    (hhead : ∀ X : ℕ, ∃ ε : ℝ, |ε| = 1 ∧
+      (∑ n ∈ Finset.range (X + 1), max ((-ε) * signedCoefficient w n) 0 * (n : ℝ)) ≤
+        K + H X / zetaTwo)
     (N p X Y : ℕ) (δ : ℝ) (hN : 0 < N) (hδ : 0 ≤ δ)
     (hs : Squarefree (N + 1)) (hp : p.Prime) (hYX : Y ≤ X) (hYp : Y < p)
     (hlin : ∀ n : ℕ, n ≤ Y → |qSequence (defect N) n| ≤ δ * n) :
-    |inner ℝ qOne witness| ≤ 2 * δ * (smoothingMoment + minimumHarmonicPrefix X / zetaTwo) + (δ * (p : ℝ)) * (∑' n : ℕ, if X < n then |signedCoefficient witness n| else 0) + (3 * (N : ℝ)) * (∑' n : ℕ, if Y < n then |signedCoefficient witness n| else 0) := by
-  obtain ⟨ε, hε, hside⟩ := exists_best_sign X
+    |inner ℝ qOne w| ≤ 2 * δ * (K + H X / zetaTwo) + (δ * (p : ℝ)) * (∑' n : ℕ, if X < n then |signedCoefficient w n| else 0) + (3 * (N : ℝ)) * (∑' n : ℕ, if Y < n then |signedCoefficient w n| else 0) := by
+  obtain ⟨ε, hε, hside⟩ := hhead X
   let c := -ε
   have hc : |c| = 1 := by simpa only [c, abs_neg] using hε
-  let b := signedCoefficient witness
-  have hsumm := (signedCoefficient_summable witness).mul_left c
-  have hm := (annihilator_defect_hasSum witness witness_mem_orthogonal N hs).mul_left c
-  have hz := (annihilator_prime_hasSum witness witness_mem_orthogonal p hp).mul_left c
+  let b := signedCoefficient w
+  have hsumm := (signedCoefficient_summable w).mul_left c
+  have hm := (annihilator_defect_hasSum w hw N hs).mul_left c
+  have hz := (annihilator_prime_hasSum w hw p hp).mul_left c
   have h := pairing_le_local_residue_head (fun n => c * b n) (qSequence (defect N))
-    X Y p (c * inner ℝ qOne witness) δ (3 * (N : ℝ)) hYX hYp hδ hsumm
+    X Y p (c * inner ℝ qOne w) δ (3 * (N : ℝ)) hYX hYp hδ hsumm
     (by simpa only [b, mul_assoc] using hm)
     (by simpa only [b, mul_assoc, mul_zero] using hz) hlin
     (fun n _ => QMertensFirstMoment.abs_defect_le_three_mul N n hN)
   simp only [abs_mul, hc, one_mul] at h
   refine h.trans (add_le_add (add_le_add ?_ le_rfl) le_rfl)
   apply mul_le_mul_of_nonneg_left _ (mul_nonneg zero_le_two hδ)
-  simpa only [c, b, hside] using witness_prefix_le ε hε X
+  simpa only [c, b] using hside
 
-theorem scaled_charge_tail (X : ℕ) (R : ℝ) (hR : R ^ 2 ≤ (X : ℝ) + 1) :
-    R * (∑' n : ℕ, if X < n then |signedCoefficient witness n| else 0) ≤
-      ‖witness‖ ^ 2 + 2 / zetaTwo := by
+/-- One finite inequality for the actual witness. The prefix takes the cheaper
+sign at the outer cutoff; both error terms retain the full charge tails. -/
+theorem witness_mean_le_local_harmonic_prefix
+    (N p X Y : ℕ) (δ : ℝ) (hN : 0 < N) (hδ : 0 ≤ δ)
+    (hs : Squarefree (N + 1)) (hp : p.Prime) (hYX : Y ≤ X) (hYp : Y < p)
+    (hlin : ∀ n : ℕ, n ≤ Y → |qSequence (defect N) n| ≤ δ * n) :
+    |inner ℝ qOne witness| ≤ 2 * δ * (smoothingMoment + minimumHarmonicPrefix X / zetaTwo) + (δ * (p : ℝ)) * (∑' n : ℕ, if X < n then |signedCoefficient witness n| else 0) + (3 * (N : ℝ)) * (∑' n : ℕ, if Y < n then |signedCoefficient witness n| else 0) :=
+  annihilator_mean_le_local_charge_prefix witness witness_mem_orthogonal smoothingMoment minimumHarmonicPrefix
+    witness_signed_head_budget N p X Y δ hN hδ hs hp hYX hYp hlin
+
+/-- Uniform charge-tail estimate for an arbitrary Q-vector. -/
+theorem vector_scaled_charge_tail (w : QHilbert) (X : ℕ) (R : ℝ) (hR : R ^ 2 ≤ (X : ℝ) + 1) :
+    R * (∑' n : ℕ, if X < n then |signedCoefficient w n| else 0) ≤
+      ‖w‖ ^ 2 + 2 / zetaTwo := by
   have e (n : ℕ) :
-      (if n ∈ Finset.range (X + 1) then (0 : ℝ) else |signedCoefficient witness n|) =
-      (if X < n then |signedCoefficient witness n| else 0) := by
+      (if n ∈ Finset.range (X + 1) then (0 : ℝ) else |signedCoefficient w n|) =
+      (if X < n then |signedCoefficient w n| else 0) := by
     by_cases h : X < n
     · simp [Finset.mem_range, not_le.mpr h, h]
     · simp [Finset.mem_range, le_of_not_gt h, h]
-  simpa only [e] using scaled_absoluteCoefficient_tail_le witness X R hR
+  simpa only [e] using scaled_absoluteCoefficient_tail_le w X R hR
 
-/-- At an eighth-power cutoff a legal head of size comparable to k and one
-prime test of size comparable to k ^ 4 control both complete tails. -/
-theorem witness_mean_eighth_power_bound (A : ℕ) :
+theorem scaled_charge_tail (X : ℕ) (R : ℝ) (hR : R ^ 2 ≤ (X : ℝ) + 1) :
+    R * (∑' n : ℕ, if X < n then |signedCoefficient witness n| else 0) ≤
+      ‖witness‖ ^ 2 + 2 / zetaTwo :=
+  vector_scaled_charge_tail witness X R hR
+
+/-- Eighth-power prime cutoffs convert a harmonic budget for an annihilator into a mean estimate. -/
+theorem annihilator_mean_eighth_power_charge_bound (w : QHilbert) (hw : w ∈ closureᗮ) (K : ℝ) (H : ℕ → ℝ)
+    (hhead : ∀ X : ℕ, ∃ ε : ℝ, |ε| = 1 ∧
+      (∑ n ∈ Finset.range (X + 1), max ((-ε) * signedCoefficient w n) 0 * (n : ℝ)) ≤
+        K + H X / zetaTwo) (A : ℕ) :
     ∀ᶠ k : ℕ in atTop,
-      |inner ℝ qOne witness| ≤
-        (2 / (6 + Real.log (k : ℝ)) ^ A) * (smoothingMoment + minimumHarmonicPrefix (k ^ 8) / zetaTwo) + 2 * (‖witness‖ ^ 2 + 2 / zetaTwo) / (6 + Real.log (k : ℝ)) ^ A + 6 * (‖witness‖ ^ 2 + 2 / zetaTwo) / (k : ℝ) := by
+      |inner ℝ qOne w| ≤
+        (2 / (6 + Real.log (k : ℝ)) ^ A) * (K + H (k ^ 8) / zetaTwo) + 2 * (‖w‖ ^ 2 + 2 / zetaTwo) / (6 + Real.log (k : ℝ)) ^ A + 6 * (‖w‖ ^ 2 + 2 / zetaTwo) / (k : ℝ) := by
   obtain ⟨k₀, hk₀⟩ := eventually_atTop.1
     (QMertensFirstMoment.eventually_abs_defect_le_div_shifted_log_pow A)
   filter_upwards [eventually_ge_atTop (max k₀ 1)] with k hk
@@ -112,19 +139,19 @@ theorem witness_mean_eighth_power_bound (A : ℕ) :
       _ ≤ (n : ℝ) / L := div_le_div_of_nonneg_left (Nat.cast_nonneg n) hL hpow
       _ = _ := by ring
   have hXY : k ^ 4 ≤ k ^ 8 := Nat.pow_le_pow_right h1 (by decide)
-  have h := witness_mean_le_local_harmonic_prefix N p (k ^ 8) (k ^ 4) (1 / L)
+  have h := annihilator_mean_le_local_charge_prefix w hw K H hhead N p (k ^ 8) (k ^ 4) (1 / L)
     hN (one_div_nonneg.mpr hL.le) hs.squarefree hp hXY hYp (fun n _ => hlin n)
-  let T := ‖witness‖ ^ 2 + 2 / zetaTwo
-  let tailB (X : ℕ) := ∑' n : ℕ, if X < n then |signedCoefficient witness n| else 0
+  let T := ‖w‖ ^ 2 + 2 / zetaTwo
+  let tailB (X : ℕ) := ∑' n : ℕ, if X < n then |signedCoefficient w n| else 0
   have ht (X : ℕ) : 0 ≤ tailB X :=
     tsum_nonneg (fun n => by split <;> simp [abs_nonneg])
   have h8 : (k : ℝ) ^ 4 * tailB (k ^ 8) ≤ T := by
-    apply scaled_charge_tail
+    apply vector_scaled_charge_tail
     push_cast
     nlinarith only [show 0 ≤ (1 : ℝ) by norm_num,
       show ((k : ℝ) ^ 4) ^ 2 = (k : ℝ) ^ 8 by ring]
   have h4 : (k : ℝ) ^ 2 * tailB (k ^ 4) ≤ T := by
-    apply scaled_charge_tail
+    apply vector_scaled_charge_tail
     push_cast
     nlinarith only [show 0 ≤ (1 : ℝ) by norm_num,
       show ((k : ℝ) ^ 2) ^ 2 = (k : ℝ) ^ 4 by ring]
@@ -148,6 +175,40 @@ theorem witness_mean_eighth_power_bound (A : ℕ) :
   rw [show 2 / L = 2 * (1 / L) by ring]
   exact h.trans (add_le_add (add_le_add le_rfl ht8) ht4)
 
+/-- At an eighth-power cutoff a legal head of size comparable to k and one
+prime test of size comparable to k ^ 4 control both complete tails. -/
+theorem witness_mean_eighth_power_bound (A : ℕ) :
+    ∀ᶠ k : ℕ in atTop,
+      |inner ℝ qOne witness| ≤
+        (2 / (6 + Real.log (k : ℝ)) ^ A) * (smoothingMoment + minimumHarmonicPrefix (k ^ 8) / zetaTwo) + 2 * (‖witness‖ ^ 2 + 2 / zetaTwo) / (6 + Real.log (k : ℝ)) ^ A + 6 * (‖witness‖ ^ 2 + 2 / zetaTwo) / (k : ℝ) :=
+  annihilator_mean_eighth_power_charge_bound witness witness_mem_orthogonal smoothingMoment minimumHarmonicPrefix
+    witness_signed_head_budget A
+
+/-- A monotone cofinal polylog budget for the cheaper signed head forces annihilator mean zero. -/
+theorem annihilator_mean_zero_of_cofinal_charge_polylog (w : QHilbert) (hw : w ∈ closureᗮ) (K : ℝ) (H : ℕ → ℝ)
+    (hhead : ∀ X : ℕ, ∃ ε : ℝ, |ε| = 1 ∧
+      (∑ n ∈ Finset.range (X + 1), max ((-ε) * signedCoefficient w n) 0 * (n : ℝ)) ≤
+        K + H X / zetaTwo)
+    (hK : 0 ≤ K) (hmono : Monotone H) (B C : ℝ) (hB : 0 ≤ B) (hC : 0 ≤ C)
+    (hgood : ∃ᶠ X : ℕ in atTop, H X ≤ C * (Real.log (X : ℝ)) ^ B) :
+    inner ℝ qOne w = 0 := by
+  obtain ⟨A, hBA⟩ := exists_nat_ge B
+  let T := ‖w‖ ^ 2 + 2 / zetaTwo
+  let C' := (C * (16 : ℝ) ^ B) / zetaTwo
+  have hT : 0 ≤ T := add_nonneg (sq_nonneg _) (div_nonneg zero_le_two zetaTwo_pos.le)
+  have hC' : 0 ≤ C' := div_nonneg (mul_nonneg hC (Real.rpow_nonneg (by norm_num) _)) zetaTwo_pos.le
+  apply eq_zero_of_frequently_abs_le (f := fun k : ℕ =>
+    (2 / (6 + Real.log (k : ℝ)) ^ (A + 2)) * (K + C'*(Real.log (k : ℝ)) ^ B) + 2 * T / (6 + Real.log (k : ℝ)) ^ (A + 2) + 6 * T / (k : ℝ)) _ (tendsto_budget A B _ C' T hB hBA
+      hK hC' hT)
+  apply ((frequently_eighth_power_log_bound hmono hB hC hgood).and_eventually
+    ((annihilator_mean_eighth_power_charge_bound w hw K H hhead (A + 2)).and (eventually_ge_atTop 1))).mono
+  rintro k ⟨h, hb, hk⟩
+  have hl : 0 ≤ Real.log (k : ℝ) := Real.log_nonneg (by exact_mod_cast hk)
+  refine hb.trans (add_le_add (add_le_add ?_ le_rfl) le_rfl)
+  apply mul_le_mul_of_nonneg_left _ (by positivity)
+  apply add_le_add le_rfl
+  simpa only [C', div_mul_eq_mul_div] using div_le_div_of_nonneg_right h zetaTwo_pos.le
+
 /-- Vanishing of the faithful residual is equivalent to a polylogarithmic
 bound for the smaller physical harmonic mass at arbitrarily large cutoffs. -/
 theorem residual_zero_iff_cofinal_harmonic_polylog :
@@ -160,23 +221,10 @@ theorem residual_zero_iff_cofinal_harmonic_polylog :
     simp [minimumHarmonicPrefix, harmonicSide, displacement_eq_zero_of_residual_eq_zero hr,
       show qSequence (0:QHilbert) = 0 from map_zero qSequenceLinear]
   · rintro ⟨B, C, hB, hC, hgood⟩
-    obtain ⟨A, hBA⟩ := exists_nat_ge B
-    let T := ‖witness‖ ^ 2 + 2 / zetaTwo
-    let C' := (C * (16 : ℝ) ^ B) / zetaTwo
-    have hT : 0 ≤ T := add_nonneg (sq_nonneg _) (div_nonneg zero_le_two zetaTwo_pos.le)
-    have hC' : 0 ≤ C' := div_nonneg (mul_nonneg hC (Real.rpow_nonneg (by norm_num) _)) zetaTwo_pos.le
-    apply residual_eq_zero_of_witness_mean_zero
-    apply eq_zero_of_frequently_abs_le (f := fun k : ℕ =>
-      (2 / (6 + Real.log (k : ℝ)) ^ (A + 2)) * (smoothingMoment + C'*(Real.log (k : ℝ)) ^ B) + 2 * T / (6 + Real.log (k : ℝ)) ^ (A + 2) + 6 * T / (k : ℝ)) _ (tendsto_budget A B _ C' T hB hBA
-        smoothingMoment_nonneg hC' hT)
-    apply ((frequently_eighth_power_log_bound minimumHarmonicPrefix_mono hB hC hgood).and_eventually
-      ((witness_mean_eighth_power_bound (A + 2)).and (eventually_ge_atTop 1))).mono
-    rintro k ⟨h, hb, hk⟩
-    have hl : 0 ≤ Real.log (k : ℝ) := Real.log_nonneg (by exact_mod_cast hk)
-    refine hb.trans (add_le_add (add_le_add ?_ le_rfl) le_rfl)
-    apply mul_le_mul_of_nonneg_left _ (by positivity)
-    apply add_le_add le_rfl
-    simpa only [C', div_mul_eq_mul_div] using div_le_div_of_nonneg_right h zetaTwo_pos.le
+    exact residual_eq_zero_of_witness_mean_zero
+      (annihilator_mean_zero_of_cofinal_charge_polylog witness witness_mem_orthogonal smoothingMoment minimumHarmonicPrefix
+    witness_signed_head_budget
+        smoothingMoment_nonneg minimumHarmonicPrefix_mono B C hB hC hgood)
 
 /-- A polylogarithmic bound along arbitrary cofinal cutoffs for either sign
 of the actual physical displacement implies Mathlib's Riemann hypothesis. -/
