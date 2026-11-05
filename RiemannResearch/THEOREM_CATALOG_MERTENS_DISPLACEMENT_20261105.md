@@ -2,6 +2,32 @@
 
 Write $M(x)=\sum_{n\le x}\mu(n)$ and $\Phi(x)=(\log x)^{3/5}(\log\log x)^{-1/5}$. Let $V$ be the closed legal squarefree span in $L^2(Q)$, $r=1-f_Q$ its projection residual and $d=f_Q-f_P$ the displacement between the two projections. $T_N$ keeps all physical coordinates beyond $N$.
 
+## Aligned finite eighth moments
+
+The actual displacements are $d_N=f_{Q,N}-f_{P,N}$ on the matched finite spans.
+The cofinal bound is $\liminf_N\sum_{n\le N}|d_N(n)|^8/n^2<\infty$.
+The liminf takes values in the extended nonnegative reals.
+
+**Conditional research reduction.** Given physical $L^{8/7}(Q)$ approximation
+of $1$ by the squarefree closure, the cofinal bound implies RH. The fixed-head
+limit gives $d\in L^8(Q)$, and Hölder makes the actual witness mean vanish.
+**Open in the project:** the subcritical approximation provider and the cofinal
+bound on the actual displacements. The paper provider uses J. Lee's natural
+approximation and the strict margin below $7/8$ in B. Liu's zero-free
+half-plane. [Finite criterion](RH/QFiniteEighthMoment.lean) ·
+[Lee's theorem as recorded by Báez-Duarte](https://arxiv.org/pdf/math/0011254) ·
+[Liu, Theorem 27.1](https://arxiv.org/html/2610.12234v2).
+
+**Unconditional finite forcing estimates.** Project the first $T$ physical
+coordinates of the smoothed finite Pareto residual using the full $Q$ stage.
+The signed error is exactly the projection of the omitted forcing. Its
+$Q$-weighted eighth moment through $N$ tends to zero when $T\to\infty$ and
+$N^6\le(T+2)^8$. Every conductor $m>T$ has truncated forcing $A_{N,T}/m$.
+For the RH implication alone, $T\to\infty$ may be arbitrarily slow because
+the projected truncated forcing converges in Hilbert norm to the actual
+displacement. Its own aligned cofinal bound is then sufficient under the
+same approximation premise. [Forcing estimates](RH/QFiniteEighthForcing.lean).
+
 ## Unconditional ordinary Mertens estimates
 
 There exist $c,B>0$ such that for every real $x\ge1$,

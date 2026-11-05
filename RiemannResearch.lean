@@ -50,6 +50,8 @@ import RiemannResearch.NumberTheory.PrimeNumberTheorem.MertensClassicalContour
 import RiemannResearch.RH.QSquarefreeCubeRootDisplacement
 import RiemannResearch.RH.QSquarefreeSqrtLogDisplacement
 import RiemannResearch.RH.QFiniteMetricGap
+import RiemannResearch.RH.QFiniteEighthForcing
+import RiemannResearch.RH.QFiniteEighthMoment
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MertensOddSquareSieve
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MertensSumVK
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusPowerSamples
