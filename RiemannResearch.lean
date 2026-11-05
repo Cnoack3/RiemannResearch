@@ -75,6 +75,10 @@ import RiemannResearch.RH.QDifferenceLimits
 import RiemannResearch.RH.QHeadSlopeLimit
 import RiemannResearch.RH.QJordanChargeRows
 import RiemannResearch.RH.QMixedRadixCarry
+import RiemannResearch.RH.QRecursivePrimeCarry
+import RiemannResearch.RH.QRecursiveCarryDetection
+import RiemannResearch.RH.QRecursiveDigitBounds
+import RiemannResearch.RH.QInfiniteRecursiveCarry
 import RiemannResearch.RH.QCompositeCarryDetection
 import RiemannResearch.RH.QPrimeChargeRigidity
 import RiemannResearch.RH.QManyPrimeMatchedCarry

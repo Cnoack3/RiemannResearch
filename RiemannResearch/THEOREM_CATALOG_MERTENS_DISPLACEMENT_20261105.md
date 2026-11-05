@@ -2,6 +2,23 @@
 
 Write $M(x)=\sum_{n\le x}\mu(n)$ and $\Phi(x)=(\log x)^{3/5}(\log\log x)^{-1/5}$. Let $V$ be the closed legal squarefree span in $L^2(Q)$, $r=1-f_Q$ its projection residual and $d=f_Q-f_P$ the displacement between the two projections. $T_N$ keeps all physical coordinates beyond $N$.
 
+## Recursive prime carries
+
+**Unconditional.** Along a finite Bézout chain the integer floors telescope
+with exact path multipliers. On a finite tree the charge at a composite equals
+its incoming coefficient less the signed sum from its children. For normalized
+infinite chains with exact Bézout coefficients the identity passes to
+absolutely convergent series at each fixed physical site. The positive radix
+digit for a child $r$ has full physical eighth-power sum at most $3/r$.
+[Finite recursion](RH/QRecursivePrimeCarry.lean) · [Tree charges](RH/QRecursiveCarryDetection.lean) ·
+[Infinite recursion](RH/QInfiniteRecursiveCarry.lean) · [Digit estimates](RH/QRecursiveDigitBounds.lean).
+
+**Conditional research reduction, paper.** A cofinal bounded negative (or positive)
+part of the signed sums over descendants, weighted by the node conductor, gives
+one-sided boundedness of the matched displacement and hence RH.
+**Open:** establishing this budget or the moving eighth-moment bound for the
+actual projection charges. [Explicit infinite cancellation and the remaining estimate](RH/RecursivePrimeCarryResearch20261105.md).
+
 ## All-order squarefree carries and the signed Möbius charges
 
 **Unconditional.** The centered residue components at all divisors reconstruct
