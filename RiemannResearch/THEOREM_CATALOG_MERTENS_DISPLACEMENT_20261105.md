@@ -95,7 +95,7 @@ Write $r_0=\log(53.99)$ and $F(x)=A(1-r_0/L(x))^{-1/5}\Phi(x)$ for sufficiently 
 | [Full-profile first moment and pointwise criterion](RH/MertensFullDisplacement.lean) | `riemannHypothesis_iff_leeLeong_full_moment` gives $\mathrm{RH}\iff\sum_{n\ge3}\lvert d(n)\rvert e^{-H_\delta(n)}/n<\infty$ under the two stated literature inputs. `riemannHypothesis_of_leeLeong_full_displacement` needs only the Lee–Leong input and $\lvert d(n)\rvert=O(e^{H_\delta(n)})$. |
 | Exceptional sites | Fix $0<\eta<\delta$. The growth bound with margin $\delta$ need only hold outside $E$ if $\sum_{n\in E}e^{-2H_\eta(n)}<\infty$. |
 
-**Open displacement obligation** — establish a convergent moment, or a sufficient bound, for the actual $d$ without assuming RH. The proved full-profile criterion requires a fixed positive square-root margin.
+**Open displacement obligation** — establish a convergent moment, or a sufficient bound, for the actual $d$ without assuming RH. This theorem uses the printed Theorem 1.1 as its arithmetic input. The implicit truncation result below uses the stronger intermediate estimate in Proposition 5.2.
 
 ## A sign-count criterion using the repository's arithmetic estimates
 
@@ -105,3 +105,23 @@ $$
 \le N_\varepsilon(X)\sum_{n\ge1}\frac{|d(n)|^2}{n^2}.
 $$
 The complete sum on the right is finite. For fixed $B,C\ge0$, if arbitrarily large $X$ have $\min(N_+(X),N_-(X))\le C(\log X)^B$, then RH follows by the cofinal harmonic-prefix theorem. The sign may vary with $X$. **Open** — proving that count bound for the actual displacement. This implication requires neither external analytic premise.
+
+
+## Finite Gram tests and the implicit truncation
+
+**Conditional research reduction with internal arithmetic.** Set the stage to $2k^4$, so that all squarefree conductors through $2k^4+1$ enter the two Gram systems. At their exact displacement take the smaller of the two signed positive harmonic masses over $n\le k^8$. A bound of $C(\log k)^E$ on arbitrarily large $k$, for fixed nonnegative $C,E$, implies RH. **Open:** prove that bound. The exact finite prime and Möbius tests avoid a convergence-rate assumption. [Proof and scope](RH/FiniteGramDisplacementResearch20261105.md) · [Lean declaration](RH/QFiniteHarmonicProbe.lean) · [Finite computations](RH/FiniteGramDisplacementExperiment20261105.md)
+
+| Result | Declaration or file |
+|---|---|
+| The limiting residual vanishes exactly when arbitrarily large heads admit one matched finite stage beyond the head passing a fixed unit harmonic budget. Grid and iterated polylog tests are also sufficient. | [QFiniteHarmonicPrefix](RH/QFiniteHarmonicPrefix.lean) |
+| Signed harmonic mass identity, prefix stability, and the uniform allowance $\sqrt{61\zeta(2)/7200}$ for the centered iteration when $X\le 9^j$. | [QResolventHarmonicPrefix](RH/QResolventHarmonicPrefix.lean) |
+| On the squarefree closure the quadratic residual polynomial $(18R^2-I)/17$ gives an exact signed remainder and norm factor $1/17$ per two-step cycle. | [QDisplacementChebyshevResolvent](RH/QDisplacementChebyshevResolvent.lean) |
+| A projected finite head of the Pareto residual has vanishing harmonic error on windows $(N+2)^2$. The infinite projector and actual source enter this construction. | [QDisplacementProjectedHead](RH/QDisplacementProjectedHead.lean) |
+| Four legal atoms give opposite plateaux and $h(s_p;5p)\ge1/5$, with $\zeta(2)\|s_p\|_Q^2\le1/(p-1)$. Exact block equalities apply to the actual residual and witness. | [SquarefreeHarmonicPulse](RH/SquarefreeHarmonicPulse.lean) · [SquarefreePulseEquations](RH/SquarefreePulseEquations.lean) |
+| For bounded legal tests supported above physical cutoff $N$, the pairing with $d$ is $o(N^{-3/2})$. The finite-horizon inequality retains the norm of the actual Pareto residual tail. | [QDisplacementTailTests](RH/QDisplacementTailTests.lean) |
+| **Paper counterexample.** Within the closed squarefree span, $h(v;X)\asymp\sqrt X/(\log X)^\beta$ for all large $X$ is attainable for every $\beta>1/2$ and impossible for $\beta=1/2$. | [Construction and sharpness proof](RH/SquarefreeHarmonicObstruction20261105.md) |
+
+**Conditional research reduction with a literature input.** Lee–Leong Proposition 5.2 with its implicit optimized truncation supplies a reserve beyond the printed exponent $F$. The formal transfer accepts every fixed real $s$ in $|d(n)|=O(\exp(F(n)+s\sqrt{\Phi(n)}))$. It also accepts an eventual polynomial bound on the weighted dyadic masses at any fixed signed square-root margin. A finite signed-kernel maximum recovers each block mass exactly. **Open in Lean:** a provider of the specialized published input. **Open for the RH argument:** a growth or moment bound on the actual displacement. The complete asymptotic expansion and stronger logarithmic-scale consequence in the associated note are paper deductions. [Implicit cutoff](RH/MertensImplicitTruncation.lean) · [Reserve transfer](RH/MertensTruncationReserve.lean) · [Signed dyadic blocks](RH/MertensDyadicDisplacement.lean) · [Literature derivation](RH/MertensImplicitTruncationResearch20261105.md)
+
+
+**Single-probe reduction and sign obstruction.** With $a_p=\langle g_p,1-f_{P,p}\rangle_Q$ and squarefree conductors through $p+1$, the scaled entry $\zeta(2)p a_p$ tends along primes to the squared limiting Pareto residual norm. **Open:** show $p a_p\to0$ along a cofinal subsequence. The finite norm comparison transfers Burnol’s positive logarithmic lower bound into eventual positivity of the individual entries. The transfer of Burnol from his continuous family to this dictionary is a paper proof. [Finite identity, limit, and positivity comparison](RH/QFiniteSingleResidueTest.lean) · [Paper proof with the matched cutoff](RH/SingleResidueBurnolResearch20261105.md)

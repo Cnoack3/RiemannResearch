@@ -47,6 +47,9 @@ import RiemannResearch.RH.MertensCriticalEstimate
 import RiemannResearch.RH.MertensCriticalPairing
 import RiemannResearch.RH.MertensExponentialCutoffPairing
 import RiemannResearch.RH.MertensFullDisplacement
+import RiemannResearch.RH.MertensTruncationReserve
+import RiemannResearch.RH.MertensImplicitTruncation
+import RiemannResearch.RH.MertensDyadicDisplacement
 import RiemannResearch.RH.MertensFullEnvelope
 import RiemannResearch.RH.MertensFullProfile
 import RiemannResearch.RH.QDisplacementSignCounts
@@ -3669,6 +3672,15 @@ import RiemannResearch.RH.QScaledTailPerturbation
 import RiemannResearch.RH.QSquarefreeSmoothedProjection
 import RiemannResearch.RH.QSquarefreeDisplacementRigidity
 import RiemannResearch.RH.QSquarefreeDisplacementResolvent
+import RiemannResearch.RH.QResolventHarmonicPrefix
+import RiemannResearch.RH.QFiniteHarmonicPrefix
+import RiemannResearch.RH.QFiniteHarmonicProbe
+import RiemannResearch.RH.QFiniteSingleResidueTest
+import RiemannResearch.RH.QDisplacementChebyshevResolvent
+import RiemannResearch.RH.SquarefreeHarmonicPulse
+import RiemannResearch.RH.SquarefreePulseEquations
+import RiemannResearch.RH.QDisplacementTailTests
+import RiemannResearch.RH.QDisplacementProjectedHead
 import RiemannResearch.RH.QSquarefreeResolventHeads
 import RiemannResearch.RH.QSquarefreeReciprocalObstruction
 import RiemannResearch.Analysis.CoshTaylorRemainder
