@@ -10,6 +10,36 @@ Write $M(x)=\sum_{n\le x}\mu(n)$ and $\Phi(x)=(\log x)^{3/5}(\log\log x)^{-1/5}$
 
 `QDisplacementVKSignCount` gives a separate conditional test. Under the same VK arithmetic input, at arbitrarily large $X$ it suffices that one strict sign of $d$ occurs on at most $D e^{b\Phi(X)}$ sites through $X$, with $0\le b<2^{2/5}a$. The choice of sign may depend on $X$. The sign-count premise for the actual displacement is **Open**.
 
+## Ordinary power estimates and the displacement at the critical exponent
+
+Write $E_N$ for the canonical Möbius head, $m_N=\sum_{k\le N}\mu(k)/k$, and $J=\lfloor n/(N+1)\rfloor$. Its signed defect for positive sites is
+$$1-E_N(n)=\sum_{k=1}^{J}(M(\lfloor n/k\rfloor)-M(N))+(N+1)m_NJ.$$
+The finite identity preserves the reciprocal-charge term. Under $|M(n)|\le Cn^s$, $0\le s<1$, Abel summation in natural order bounds $m_N$. The finite identity then yields $|1-E_N(n)|\ll_{C,s}\min(N,nN^{s-1})$ uniformly. See [the reciprocal sum](RH/MertensPowerReciprocal.lean) and [the finite defect](RH/MertensDefectPowerArithmetic.lean).
+
+The bracket also has an unconditional probabilistic interpretation. Under $P(K=k)=1/[k(k+1)]$, the full Pareto mean of $M(K)$ is zero and
+$$ (N+1)m_N-M(N)=-\mathbb E_P[M(K)\mid K>N]. $$
+The conditional law here is discrete: its weights are $(N+1)/[k(k+1)]$ for $k>N$. The expectation is absolutely convergent. Consequently $1-E_N(n)$ is exactly the sum over $1\le k\le J$ of $M(\lfloor n/k\rfloor)-\mathbb E_P[M(K)\mid K>N]$. See [MertensParetoCorrection](RH/MertensParetoCorrection.lean).
+
+Put $\beta=(1-s)/(2-s)$. Each of the following hypotheses on $d=f_Q-f_P$ suffices for RH under this ordinary Mertens bound.
+
+| Displacement premise | Lean declaration |
+|---|---|
+| $\sum_{n\ge1}\lvert d(n)\rvert\,n^{-1-\beta}<\infty$ | [riemannHypothesis_of_mertens_power_and_displacement_moment](RH/MertensPowerCriterion.lean) |
+| $d(n)=o(n^\beta)$ | [riemannHypothesis_of_mertens_power_and_critical_little_o](RH/MertensCriticalPowerDisplacement.lean) |
+| $\sum_{n\le X}\lvert d(n)\rvert=o(X^{1+\beta})$ | [riemannHypothesis_of_mertens_power_and_critical_prefix](RH/MertensCriticalAverageDisplacement.lean) |
+
+Under the averaged hypothesis, summation by parts against a decreasing weight bounds the signed pairing. The endpoint argument sums the cutoff-dependent minimum. With $a=1-s$ its row against the weight $n^{\beta-2}$ is at most $1/\beta+1/(1-\beta)$, uniformly in $N\ge1$. The vanishing head and the little-o hypothesis force its pairing with the actual witness to vanish. See [the row estimate](Analysis/MertensPowerEndpoint.lean). If Mertens power bounds are supplied only for $s>7/8$, the immediate strict growth range is $\gamma<1/9$.
+
+For a concrete application, `riemannHypothesis_of_mertens_87499_and_ten_ninths_prefix` takes $M(n)=O(n^{87499/100000})$ and $\sum_{n\le X}\lvert d(n)\rvert=O(X^{10/9})$. Since $0.8749570195<0.87499$, the former estimate follows on paper from [Liu, arXiv:2610.12234v2](https://arxiv.org/abs/2610.12234v2) and [Gerhold, Proposition 3](https://doi.org/10.4064/aa142-2-8). The local Lean theorem explicitly accepts the Mertens estimate.
+
+**Conditional research reduction.** The fixed power bound on $M$ is an explicit arithmetic premise. Gerhold, *Acta Arith.* 142 (2010), Proposition 3, relates the family of such bounds above a boundary to the corresponding zero-free half-plane. Its use here as a provider is **Open** in this development. Proving either displayed condition for the actual displacement is **Open**.
+
+An estimate on a sampling set suffices if every $n$ has a lower sample at distance $O(n^s)$. [MobiusPowerSamples](NumberTheory/PrimeNumberTheorem/MobiusPowerSamples.lean) specializes this to perfect $r$th powers, preserving the exponent $s$ for $s\ge1-1/r$.
+
+**Shifted tests.** [MertensHolomorphicPairing](Analysis/MertensHolomorphicPairing.lean) recovers the archive’s abstract interior and boundary continuation arguments. [MertensShiftedLocalMajorant](RH/MertensShiftedLocalMajorant.lean) proves cancellation separately at each admissible shift by absolute summation over conductors and sites. Along shifts approaching zero, a summable lower bound on the real rows and the stated power moments imply vanishing of the projection residual. The signed witness identity supplies its nonnegative mean. For a common arithmetic envelope $E(n)$ dominating every fixed $n^{1-\eta}$ eventually and integrable against $Q$, $\sum Q(n)E(n)\lvert d(n)\rvert<\infty$ suffices when $|H_{s_j}(n)|\le E(n)$ along a sequence approaching zero. A sufficient estimate on those rows for the actual displacement is **Open**.
+
+**Interpolation and exact-head energy.** [MertensSumVK](NumberTheory/PrimeNumberTheorem/MertensSumVK.lean) and [MertensStretchedFloor](NumberTheory/PrimeNumberTheorem/MertensStretchedFloor.lean) transfer bounds from integers to reals with both constants preserved for the stated profiles. [QMobiusMertensProfileEnergy](RH/QMobiusMertensProfileEnergy.lean) keeps $(1+t)e^{-t}$ in the complete exact-head energy. When replacing rate $b>0$ by $c<b$, [MertensEntropyOptimum](Analysis/MertensEntropyOptimum.lean) proves that the optimal scalar multiplier on the real line is $b e^{-c/b}/(b-c)$. Only this scalar maximization is claimed to be optimal.
+
 ## Previously catalogued transfers
 
 | Module | Declarations and scope |
