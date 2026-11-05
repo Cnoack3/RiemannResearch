@@ -58,6 +58,13 @@ import RiemannResearch.RH.QFiniteEighthCapped
 import RiemannResearch.RH.QFiniteColumnEighth
 import RiemannResearch.RH.QFiniteParetoDualKernel
 import RiemannResearch.RH.QPrimeForcingObstruction
+import RiemannResearch.RH.QSubcriticalDisplacementMoment
+import RiemannResearch.RH.QLcmShellMoment
+import RiemannResearch.RH.QLcmDisplacementCriterion
+import RiemannResearch.RH.QFrozenConductorBlocks
+import RiemannResearch.RH.QCRTPairCarryBlocks
+import RiemannResearch.RH.QMatchedCRTCarry
+import RiemannResearch.RH.QDisplacementTranslationCarry
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MertensOddSquareSieve
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MertensSumVK
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.MobiusPowerSamples

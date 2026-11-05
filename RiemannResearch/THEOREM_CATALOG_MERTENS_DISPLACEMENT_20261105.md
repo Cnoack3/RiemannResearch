@@ -2,6 +2,27 @@
 
 Write $M(x)=\sum_{n\le x}\mu(n)$ and $\Phi(x)=(\log x)^{3/5}(\log\log x)^{-1/5}$. Let $V$ be the closed legal squarefree span in $L^2(Q)$, $r=1-f_Q$ its projection residual and $d=f_Q-f_P$ the displacement between the two projections. $T_N$ keeps all physical coordinates beyond $N$.
 
+## LCM blocks and physical CRT carries
+
+**Conditional research reduction.** For distinct increasing LCMs, a uniform
+eighth-power budget on the blocks of the limiting displacement implies RH
+given physical approximation at a pair of conjugate exponents with $q<8$.
+A common bound attained arbitrarily late on each fixed block also suffices.
+**Open:** the actual uniform bound and the in-project physical approximation
+provider at such an exponent. [Block criterion](RH/QLcmDisplacementCriterion.lean) ·
+[Exponent transfer](RH/QSubcriticalDisplacementMoment.lean).
+
+**Unconditional.** The matched fit stopped at conductor $M$ has summable
+block contributions beyond its own LCM, uniformly in the block lengths.
+For the limiting displacement, translation by the LCM removes every carry
+supported only on primes through $M$. The centered identity retains the
+finite boundary slope. The centered pair interaction has a signed
+inverse-square block estimate, and the Bézout carry cancels the common
+energy in the matched projection equations.
+[Frozen fits](RH/QFrozenConductorBlocks.lean) · [Translation](RH/QDisplacementTranslationCarry.lean) ·
+[Physical pair interaction](RH/QCRTPairCarryBlocks.lean) · [Matched equations](RH/QMatchedCRTCarry.lean) ·
+[Exact identities, full-period covariance, signed coefficient tests, and remaining estimate](RH/LcmDisplacementCarryResearch20261105.md).
+
 ## Aligned finite eighth moments
 
 The actual displacements are $d_N=f_{Q,N}-f_{P,N}$ on the matched finite spans.
