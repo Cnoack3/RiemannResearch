@@ -890,6 +890,12 @@ import RiemannResearch.RH.QOptimalExactHead
 import RiemannResearch.Analysis.SummableMultiplesRigidity
 import RiemannResearch.RH.QSignedTailRigidity
 import RiemannResearch.RH.QOneSidedHarmonicRigidity
+import RiemannResearch.Analysis.PositiveTestMoments
+import RiemannResearch.Analysis.PrimeResidueMoments
+import RiemannResearch.RH.QSquarefreeSignedPowerMoments
+import RiemannResearch.RH.QSquarefreeAnnihilatorSignedTails
+import RiemannResearch.RH.QSignedPhysicalPrefix
+import RiemannResearch.RH.QSquarefreeDisplacementSignedTails
 import RiemannResearch.RH.QFullHeadControllability
 import RiemannResearch.RH.QNonnegativeDualBound
 import RiemannResearch.RH.QUnitSignalTargetTest
