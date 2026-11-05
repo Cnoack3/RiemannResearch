@@ -23,16 +23,19 @@ namespace RiemannResearch.RH.QSquarefreeMertensProfileCriterion
 open RiemannResearch.Analysis
 open ZetaTwoHilbert ZetaTwoProbability QSquarefreeDisplacementRigidity
 
-/-- A VK Mertens estimate with exponent `a` permits displacement growth at
-any fixed exponential rate `b < a/2`. The estimate for `M` is an explicit
-arithmetic hypothesis. No uniform lower bound for the displacement is assumed. -/
-theorem riemannHypothesis_of_vk_exponential_displacement
+/-- A growing profile whose increments are eventually arbitrarily small relative to
+the increments of log transfers an ordinary Mertens estimate to the displacement. -/
+theorem riemannHypothesis_of_exponential_profile_displacement
+    (φ : ℝ → ℝ) (hφ : Tendsto φ atTop atTop)
+    (hφ_mono : ∀ᶠ x : ℝ in atTop, ∀ y : ℝ, x ≤ y → φ x ≤ φ y)
+    (hφ_inc : ∀ δ : ℝ, 0 < δ → ∀ᶠ x : ℝ in atTop, ∀ y : ℝ, x ≤ y →
+      φ y - φ x ≤ δ * (Real.log y - Real.log x))
     (a b D : ℝ) (ha : 0 < a) (hb : 0 < b) (hab : 2 * b < a)
     (hM : ∀ᶠ x : ℝ in atTop,
       |RiemannResearch.NumberTheory.PrimeNumberTheorem.M x| ≤
-        Real.exp (-a * vkProfile x) * x)
+        Real.exp (-a * φ x) * x)
     (hd : ∀ᶠ n : ℕ in atTop, |qSequence displacement n| ≤
-        D * Real.exp (b * vkProfile (n : ℝ))) : RiemannHypothesis := by
+        D * Real.exp (b * φ (n : ℝ))) : RiemannHypothesis := by
   classical
   choose p hpl hpp using (fun j : ℕ => Nat.exists_infinite_primes (j + 2))
   let q : ℕ → ℕ := fun j => p j - 1
@@ -49,14 +52,14 @@ theorem riemannHypothesis_of_vk_exponential_displacement
     rw [hqp]; exact (hpp j).squarefree
   have hqr : Tendsto (fun j => (q j : ℝ)) atTop atTop :=
     (tendsto_natCast_atTop_atTop : Tendsto (fun n : ℕ => (n : ℝ)) atTop atTop).comp hq
-  let P : ℕ → ℝ := fun j => vkProfile (q j : ℝ)
+  let P : ℕ → ℝ := fun j => φ (q j : ℝ)
   let ε : ℕ → ℝ := fun j => Real.exp (-a * P j)
-  let H : ℕ → ℝ := fun n => Real.exp (b * vkProfile (n : ℝ))
+  let H : ℕ → ℝ := fun n => Real.exp (b * φ (n : ℝ))
   let c : ℝ := (a + 2 * b) / 2
   have hc : 0 < c := by dsimp [c]; linarith
   have hca : c < a := by dsimp [c]; linarith
   have hbc : 0 < c - 2 * b := by dsimp [c]; linarith
-  have hP : Tendsto P atTop atTop := vkProfile_tendsto_atTop.comp hqr
+  have hP : Tendsto P atTop atTop := hφ.comp hqr
   have hlarge : ∀ᶠ j : ℕ in atTop, 6 ≤ a * P j :=
     (Tendsto.const_mul_atTop ha hP).eventually (eventually_ge_atTop (6 : ℝ))
   have hε : ∀ᶠ j : ℕ in atTop,
@@ -68,13 +71,13 @@ theorem riemannHypothesis_of_vk_exponential_displacement
       |RiemannResearch.NumberTheory.PrimeNumberTheorem.M y| ≤ ε j * y := by
     obtain ⟨x₀, hx₀⟩ := eventually_atTop.1 hM
     filter_upwards [hqr.eventually (eventually_ge_atTop x₀),
-      hqr.eventually vkProfile_eventually_mono] with j hj hmono
+      hqr.eventually hφ_mono] with j hj hmono
     intro y hy
     have hm := mul_le_mul_of_nonneg_left (hmono y hy) ha.le
     apply (hx₀ y (hj.trans hy)).trans
     apply mul_le_mul_of_nonneg_right _ ((Nat.cast_nonneg (q j)).trans hy)
     apply Real.exp_le_exp.mpr
-    change -a * vkProfile y ≤ -a * vkProfile (q j : ℝ)
+    change -a * φ y ≤ -a * φ (q j : ℝ)
     linarith
   have hnon : ∀ᶠ j : ℕ in atTop, 0 ≤ ε j * (1 + Real.log (1 / ε j)) := by
     filter_upwards [hε] with j hj
@@ -91,15 +94,15 @@ theorem riemannHypothesis_of_vk_exponential_displacement
     apply squeeze_zero' hnon (Eventually.of_forall hpoint)
     simpa only [mul_zero] using (hzero c hc).const_mul (a / (a - c))
   have hshape (x : ℝ) (hx : 0 < x) :
-      Real.exp (b * vkProfile x) ^ 2 / Real.sqrt x =
-        Real.exp (2 * b * vkProfile x - Real.log x / 2) := by
+      Real.exp (b * φ x) ^ 2 / Real.sqrt x =
+        Real.exp (2 * b * φ x - Real.log x / 2) := by
     rw [pow_two, ← Real.exp_add, Real.sqrt_eq_rpow, Real.rpow_def_of_pos hx, ← Real.exp_sub]
     congr 1; ring
   have hprofile : ∀ᶠ N : ℕ in atTop, ∀ n : ℕ, N < n →
       H n ^ 2 / Real.sqrt (n : ℝ) ≤ H N ^ 2 / Real.sqrt (N : ℝ) := by
     have hinc := (tendsto_natCast_atTop_atTop :
       Tendsto (fun n : ℕ => (n : ℝ)) atTop atTop).eventually
-        (vkProfile_eventual_log_increment (1 / (4 * b)) (by positivity))
+        (hφ_inc (1 / (4 * b)) (by positivity))
     filter_upwards [hinc, eventually_ge_atTop (1 : ℕ)] with N hN hNp
     intro n hn
     have hNr : (0 : ℝ) < N := by exact_mod_cast (show 0 < N by omega)
@@ -132,6 +135,20 @@ theorem riemannHypothesis_of_vk_exponential_displacement
   exact riemannHypothesis_of_mertens_profile_physical_bound q hq ε hlegal hε hMtail hη H D
     hprofile hd hsmall
 
+/-- A VK Mertens estimate with exponent `a` permits displacement growth at
+any fixed exponential rate `b < a/2`. The estimate for `M` is an explicit
+arithmetic hypothesis. No uniform lower bound for the displacement is assumed. -/
+theorem riemannHypothesis_of_vk_exponential_displacement
+    (a b D : ℝ) (ha : 0 < a) (hb : 0 < b) (hab : 2 * b < a)
+    (hM : ∀ᶠ x : ℝ in atTop,
+      |RiemannResearch.NumberTheory.PrimeNumberTheorem.M x| ≤
+        Real.exp (-a * vkProfile x) * x)
+    (hd : ∀ᶠ n : ℕ in atTop, |qSequence displacement n| ≤
+        D * Real.exp (b * vkProfile (n : ℝ))) : RiemannHypothesis := by
+  exact riemannHypothesis_of_exponential_profile_displacement vkProfile
+    vkProfile_tendsto_atTop vkProfile_eventually_mono vkProfile_eventual_log_increment
+    a b D ha hb hab hM hd
+
 /-- The selected little-o hypothesis supplies the fixed positive coefficient
 required by the stronger constant-exponent theorem. -/
 theorem riemannHypothesis_of_vk_log_displacement
@@ -153,6 +170,24 @@ theorem riemannHypothesis_of_vk_log_displacement
   rw [Real.exp_log (by positivity)] at hh
   linarith
 
+/-- For any growing profile, a multiplicative factor in a Mertens estimate
+can be absorbed at every smaller exponential rate. -/
+theorem mertens_profile_absorb_constant (φ : ℝ → ℝ) (hφ : Tendsto φ atTop atTop) (a a' C : ℝ) (h : a' < a)
+    (hM : ∀ᶠ x : ℝ in atTop,
+      |RiemannResearch.NumberTheory.PrimeNumberTheorem.M x| ≤
+        (C * Real.exp (-a * φ x)) * x) :
+    ∀ᶠ x : ℝ in atTop, |RiemannResearch.NumberTheory.PrimeNumberTheorem.M x| ≤
+      Real.exp (-a' * φ x) * x := by
+  have hlim := Real.tendsto_exp_atTop.comp
+    (Tendsto.const_mul_atTop (sub_pos.mpr h) hφ)
+  filter_upwards [hM, hlim.eventually (eventually_ge_atTop C),
+    eventually_ge_atTop (0 : ℝ)] with x hx hC hx0
+  calc
+    _ ≤ (C * Real.exp (-a * φ x)) * x := hx
+    _ ≤ (Real.exp ((a - a') * φ x) * Real.exp (-a * φ x)) * x :=
+      mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hC (Real.exp_pos _).le) hx0
+    _ = _ := by rw [← Real.exp_add]; congr 2; ring
+
 /-- A fixed multiplicative constant in a published VK Mertens estimate can
 be absorbed at every smaller exponential rate. -/
 theorem mertens_vk_absorb_constant (a a' C : ℝ) (h : a' < a)
@@ -160,16 +195,8 @@ theorem mertens_vk_absorb_constant (a a' C : ℝ) (h : a' < a)
       |RiemannResearch.NumberTheory.PrimeNumberTheorem.M x| ≤
         (C * Real.exp (-a * vkProfile x)) * x) :
     ∀ᶠ x : ℝ in atTop, |RiemannResearch.NumberTheory.PrimeNumberTheorem.M x| ≤
-      Real.exp (-a' * vkProfile x) * x := by
-  have hlim := Real.tendsto_exp_atTop.comp
-    (Tendsto.const_mul_atTop (sub_pos.mpr h) vkProfile_tendsto_atTop)
-  filter_upwards [hM, hlim.eventually (eventually_ge_atTop C),
-    eventually_ge_atTop (0 : ℝ)] with x hx hC hx0
-  calc
-    _ ≤ (C * Real.exp (-a * vkProfile x)) * x := hx
-    _ ≤ (Real.exp ((a - a') * vkProfile x) * Real.exp (-a * vkProfile x)) * x :=
-      mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hC (Real.exp_pos _).le) hx0
-    _ = _ := by rw [← Real.exp_add]; congr 2; ring
+      Real.exp (-a' * vkProfile x) * x :=
+  mertens_profile_absorb_constant vkProfile vkProfile_tendsto_atTop a a' C h hM
 
 /-- The fixed-rate displacement theorem therefore holds literally under the
 usual form of the published Walfisz bound, including its implicit constant. -/

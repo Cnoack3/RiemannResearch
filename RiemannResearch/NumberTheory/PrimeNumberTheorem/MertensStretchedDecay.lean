@@ -76,10 +76,10 @@ theorem mertensTailEnvelope_real_bound (T : ℝ) (Y : ℕ) (hY : 0 < Y)
 
 /-- One finite cutoff estimate, uniform over every N above exp T.
 The cutoff loss L is held fixed as N varies. -/
-theorem mertens_stretched_tail_finite
+theorem mertens_stretched_tail_finite_rpow (α : ℝ) (hα : 0 ≤ α)
     (c D : ℝ) (hc : 0 ≤ c) (hD : 0 ≤ D)
     (hR : ∀ u : ℝ, 1 ≤ u →
-      |R u| ≤ D * u * Real.exp (-c * (Real.log u) ^ ((1 : ℝ) / 10)) /
+      |R u| ≤ D * u * Real.exp (-c * (Real.log u) ^ α) /
         (1 + Real.log u) ^ 2)
     (T L : ℝ) (hT : 0 < T) (hL : 0 ≤ L)
     (hTL : Real.log 2 ≤ T - L)
@@ -88,7 +88,7 @@ theorem mertens_stretched_tail_finite
       ((3 * L + (13 + 7 * Real.log 2)) *
           mertensTailEnvelope (T - L - Real.log 2) +
         3 * Real.exp (-L) +
-        3 * D * Real.exp (-c * L ^ ((1 : ℝ) / 10))) / T := by
+        3 * D * Real.exp (-c * L ^ α)) / T := by
   have hNr : 0 < (N : ℝ) := (Real.exp_pos T).trans_le hNcut
   have hN : 0 < N := by exact_mod_cast hNr
   have hlogN : T ≤ Real.log (N : ℝ) := by
@@ -174,12 +174,12 @@ theorem mertens_stretched_tail_finite
   have hMtail : ∀ u : ℝ, (Y : ℝ) ≤ u → |M u| ≤ A * u := by
     intro u hu
     exact mertensTailEnvelope_real_bound _ Y hY hYcut u hu
-  have hPrime : Real.exp (-c * (Real.log ((N : ℝ) / Y)) ^ ((1 : ℝ) / 10)) ≤
-      Real.exp (-c * L ^ ((1 : ℝ) / 10)) := by
+  have hPrime : Real.exp (-c * (Real.log ((N : ℝ) / Y)) ^ α) ≤
+      Real.exp (-c * L ^ α) := by
     apply Real.exp_le_exp.mpr
-    have hh := Real.rpow_le_rpow hL hLlo (by norm_num : (0 : ℝ) ≤ 1 / 10)
+    have hh := Real.rpow_le_rpow hL hLlo hα
     nlinarith
-  have hf := M_log_bootstrap_finite_stretched N Y J hY hYN hJ A c D hA hc hD hMtail hR
+  have hf := M_log_bootstrap_finite_stretched_rpow α hα N Y J hY hYN hJ A c D hA hc hD hMtail hR
   rw [abs_mul, abs_of_nonneg hlogN0, hlog4] at hf
   have hRecipN := mul_le_mul_of_nonneg_left hRecip hNr.le
   have hRecip2N := mul_le_mul_of_nonneg_left hRecip2 hNr.le
@@ -190,15 +190,57 @@ theorem mertens_stretched_tail_finite
     (show 0 ≤ 3 * D * (N : ℝ) by positivity)
   have hsum : |M (N : ℝ)| * Real.log (N : ℝ) ≤
       (N : ℝ) * ((3 * L + (13 + 7 * Real.log 2)) * A +
-        3 * Real.exp (-L) + 3 * D * Real.exp (-c * L ^ ((1 : ℝ) / 10))) := by
+        3 * Real.exp (-L) + 3 * D * Real.exp (-c * L ^ α)) := by
     change (Y : ℝ) ≤ (N : ℝ) * Real.exp (-L) at hYu
     nlinarith only [hf, hYu, hRecipN, hRecip2N, hHN, hLN, hPN]
   apply (div_le_div_iff₀ hNr hT).2
   have hm := mul_le_mul_of_nonneg_left hlogN (abs_nonneg (M (N : ℝ)))
   exact hm.trans (by simpa only [A, mul_comm] using hsum)
 
+theorem mertens_stretched_tail_finite
+    (c D : ℝ) (hc : 0 ≤ c) (hD : 0 ≤ D)
+    (hR : ∀ u : ℝ, 1 ≤ u →
+      |R u| ≤ D * u * Real.exp (-c * (Real.log u) ^ ((1 : ℝ) / 10)) /
+        (1 + Real.log u) ^ 2)
+    (T L : ℝ) (hT : 0 < T) (hL : 0 ≤ L)
+    (hTL : Real.log 2 ≤ T - L)
+    (N : ℕ) (hNcut : Real.exp T ≤ (N : ℝ)) :
+    |M (N : ℝ)| / (N : ℝ) ≤
+      ((3 * L + (13 + 7 * Real.log 2)) *
+          mertensTailEnvelope (T - L - Real.log 2) +
+        3 * Real.exp (-L) +
+        3 * D * Real.exp (-c * L ^ ((1 : ℝ) / 10))) / T :=
+  mertens_stretched_tail_finite_rpow (1 / 10) (by norm_num) c D hc hD hR T L hT hL hTL N hNcut
+
 /-- Exact uniform tail-envelope recurrence. Holding L fixed while taking
 the supremum avoids all regularity assumptions on a future choice L(T). -/
+theorem mertensTailEnvelope_stretched_recurrence_rpow (α : ℝ) (hα : 0 ≤ α)
+    (c D : ℝ) (hc : 0 ≤ c) (hD : 0 ≤ D)
+    (hR : ∀ u : ℝ, 1 ≤ u →
+      |R u| ≤ D * u * Real.exp (-c * (Real.log u) ^ α) /
+        (1 + Real.log u) ^ 2)
+    (T L : ℝ) (hT : 0 < T) (hL : 0 ≤ L)
+    (hTL : Real.log 2 ≤ T - L) :
+    mertensTailEnvelope T ≤
+      ((3 * L + (13 + 7 * Real.log 2)) *
+          mertensTailEnvelope (T - L - Real.log 2) +
+        3 * Real.exp (-L) +
+        3 * D * Real.exp (-c * L ^ α)) / T := by
+  have hbudget : 0 ≤
+      ((3 * L + (13 + 7 * Real.log 2)) *
+          mertensTailEnvelope (T - L - Real.log 2) +
+        3 * Real.exp (-L) +
+        3 * D * Real.exp (-c * L ^ α)) / T := by
+    have hh := mertensTailEnvelope_nonneg (T - L - Real.log 2)
+    have hl := Real.log_nonneg (by norm_num : (1 : ℝ) ≤ 2)
+    positivity
+  apply csSup_le (Set.range_nonempty _)
+  rintro x ⟨N, rfl⟩
+  unfold mertensTailTerm
+  split_ifs with hN
+  · exact mertens_stretched_tail_finite_rpow α hα c D hc hD hR T L hT hL hTL N hN
+  · exact hbudget
+
 theorem mertensTailEnvelope_stretched_recurrence
     (c D : ℝ) (hc : 0 ≤ c) (hD : 0 ≤ D)
     (hR : ∀ u : ℝ, 1 ≤ u →
@@ -210,21 +252,8 @@ theorem mertensTailEnvelope_stretched_recurrence
       ((3 * L + (13 + 7 * Real.log 2)) *
           mertensTailEnvelope (T - L - Real.log 2) +
         3 * Real.exp (-L) +
-        3 * D * Real.exp (-c * L ^ ((1 : ℝ) / 10))) / T := by
-  have hbudget : 0 ≤
-      ((3 * L + (13 + 7 * Real.log 2)) *
-          mertensTailEnvelope (T - L - Real.log 2) +
-        3 * Real.exp (-L) +
-        3 * D * Real.exp (-c * L ^ ((1 : ℝ) / 10))) / T := by
-    have hh := mertensTailEnvelope_nonneg (T - L - Real.log 2)
-    have hl := Real.log_nonneg (by norm_num : (1 : ℝ) ≤ 2)
-    positivity
-  apply csSup_le (Set.range_nonempty _)
-  rintro x ⟨N, rfl⟩
-  unfold mertensTailTerm
-  split_ifs with hN
-  · exact mertens_stretched_tail_finite c D hc hD hR T L hT hL hTL N hN
-  · exact hbudget
+        3 * D * Real.exp (-c * L ^ ((1 : ℝ) / 10))) / T :=
+  mertensTailEnvelope_stretched_recurrence_rpow (1 / 10) (by norm_num) c D hc hD hR T L hT hL hTL
 
 /-- Passing from natural to real arguments preserves the log-logarithmic
 profile after dividing its positive exponential coefficient by four. -/

@@ -2,6 +2,32 @@
 
 Write $M(x)=\sum_{n\le x}\mu(n)$ and $\Phi(x)=(\log x)^{3/5}(\log\log x)^{-1/5}$. Let $V$ be the closed legal squarefree span in $L^2(Q)$, $r=1-f_Q$ its projection residual and $d=f_Q-f_P$ the displacement between the two projections. $T_N$ keeps all physical coordinates beyond $N$.
 
+## Unconditional ordinary Mertens estimates
+
+There exist $c,B>0$ such that for every real $x\ge1$,
+\[
+ |M(x)|\le Bx\exp(-c\sqrt{\log x}).
+\]
+For the certified classical strip width $a>0$, every $0<c<\sqrt a/2$ works. The declaration `M_sqrt_log_global_of_lt_contourEndpoint` supplies a constant $B(c)$ for the whole interval. The declaration `M_sqrt_log_eventually_of_lt_contourEndpoint` gives prefactor one for all sufficiently large $x$. At the endpoint, write $u=\sqrt{a\log x}$. The more precise theorem `classical_mertens_at_weighted_contourEndpoint` gives
+\[
+ M(x)=O\bigl(x(1+u)e^{-u/2}\bigr).
+\]
+The declaration `M_sqrt_log_weighted_endpoint_global` gives a single multiplicative constant for this endpoint bound for every real $x\ge1$. The proof bounds $1/\zeta$ on an all-height zero-free rectangle and takes $\log T=u$ in the Mellin contour for the smoothed Möbius sum. The exact identity $\int_T^\infty (\log t)^2t^{-2}\,dt=((\log T)^2+2\log T+2)/T$ retains logarithmic powers on the contour edges. Taking the smoothing parameter $(1+\log T)/\sqrt T$ balances the edges with the error in passing to the ordinary sum. The proof supplies existence of $a$ and the big-O constants. The stronger Vinogradov–Korobov and explicit Lee–Leong estimates used below still require a separate proof in this project. [Reciprocal of zeta](NumberTheory/PrimeNumberTheorem/ClassicalReciprocalMertens.lean) · [All-height rectangle](NumberTheory/PrimeNumberTheorem/ClassicalMertensReciprocalRectangle.lean) · [Möbius contour and Mertens theorem](NumberTheory/PrimeNumberTheorem/MertensClassicalContour.lean) · [Bialer's contour formalization](https://github.com/gersh/ternary-goldbach-lean/tree/27df23af6a712895f22204d0d81102baa74f0ebe/MathExtras/NumberTheory/PrimeCounting).
+
+Consequently $\log(2+|d(n)|)=o(\sqrt{\log n})$ implies RH. More generally, for every fixed $0<b<\sqrt a/4$, the eventual estimate $|d(n)|=O(\exp(b\sqrt{\log n}))$ implies RH. Proving this growth condition for the actual projection displacement remains open. [Square-root displacement criterion](RH/QSquarefreeSqrtLogDisplacement.lean).
+
+There is also a general transfer from a Chebyshev error to a Mertens error. Fix $0<\alpha<1$, $a>0$, and assume $\psi(x)-x=O(x\exp[-a(\log x)^\alpha])$. Then every $0<d<a^{1/(1+\alpha)}$ admits a constant $B$ with $|M(x)|\le Bx\exp[-dS(x)^{\alpha/(1+\alpha)}]$ for all real $x\ge1$, where $S(x)=(6+\log x)\log(6+\log x)$. The proof tracks the prime-error coefficient through the finite Möbius recurrence and its choice of cutoff. [Arithmetic transfer](NumberTheory/PrimeNumberTheorem/MertensPrimeErrorTransfer.lean) · [Ramaré and Zuniga Alterman](https://doi.org/10.7169/facm/250121-19-5).
+
+Taking $\alpha=1/2$ in the classical prime number theorem gives $d>0$ and $B\ge0$ such that
+\[
+ |M(x)|\le Bx\exp(-dS(x)^{1/3}) \qquad (x\ge1).
+\]
+`M_cubeRoot_logProduct` supplies this bound without an arithmetic hypothesis. `M_logProduct_eventually_of_lt_one_third` gives eventual prefactor one and every fixed exponential coefficient at each exponent $0\le\beta<1/3$, including the former $1/11$. The exponent follows from the classical Chebyshev error: in logarithmic time $T$, the proof takes $z=((T+6)\log(T+6))^{1/3}$ and a delay $L=\ell z^2$ with fixed $\ell>0$, so $\sqrt L=\sqrt{\ell}z$. The real-cutoff estimate uses the same coefficient as the integer bound. [Mertens theorem](NumberTheory/PrimeNumberTheorem/MertensCubeRoot.lean) · [PNT+ classical prime-error proof](NumberTheory/PrimeNumberTheorem/Quantitative/ClassicalStrongPNT.lean) · [Upstream source](https://github.com/AlexKontorovich/PrimeNumberTheoremAnd/commit/747e480362ef6a0a7341055a84372333d72fa62a).
+
+A separate explicit theorem gives $9|M(x)|\le 2x+8$ for every real $x\ge0$ and $9|M(x)|\le 2x-5$ for $x\ge18$. At the fixed slope $2/9$, the global additive term $8/9$ is sharp since $M(5)=-2$. Odd-pair cancellation first restricts the signed sum to odd indices in $(x/2,x]$. The proof removes multiples of nine, then finds opposite Möbius signs using Bertrand's postulate. [Finite bounds](NumberTheory/PrimeNumberTheorem/MertensOddSquareSieve.lean).
+
+**Conditional research reduction.** For the actual squarefree displacement, $\log(2+|d(n)|)=o(S(n)^{1/3})$ implies RH. **Open:** the displayed growth estimate for the actual displacement. [Cube-root displacement theorem](RH/QSquarefreeCubeRootDisplacement.lean).
+
 ## Square-sampled Mertens estimates and the boxed displacement criterion
 
 `NumberTheory.PrimeNumberTheorem.mertens_vk_of_square_samples` retains the exponent $a>0$ from an eventual bound $|M(k^2)|\le Ck^2e^{-a\Phi(k^2)}$ with $C\ge0$. Filling the gaps between squares gives $|M(x)|\le(C+3)xe^{-a\Phi(x)}$ on the full real half-line beyond a threshold. `riemannHypothesis_of_square_sample_vk_log_displacement` specializes this to the logarithmic displacement criterion. Walfisz supplies the arithmetic estimate in the literature (Gerhold, Acta Arith. 142 (2010), equation (2), DOI 10.4064/aa142-2-8). The square-sampled estimate has **Open** formal-provider status.
@@ -61,7 +87,7 @@ Residual vanishing implies `RiemannHypothesis` through the existing closure theo
 
 Walfisz proved the full VK bound for the ordinary Mertens function. Its proof remains external to this Lean development. [Gerhold, *Acta Arithmetica* 142 (2010), equation (2)](https://doi.org/10.4064/aa142-2-8).
 
-## Displacement criteria at the two Mertens scales
+## Displacement criteria at the VK and $1/11$ scales
 
 Write $Z=\zeta(2)$, $Q(n)=1/(Zn^2)$ for $n\ge1$, and $\Psi(x)=((6+\log x)\log(6+\log x))^{1/11}$. Define the two nonnegative series
 
@@ -72,7 +98,7 @@ The Lean sums run over the naturals. Their terms at zero vanish.
 
 **Vinogradov–Korobov scale.** Assume $|M(x)|\le Cxe^{-a\Phi(x)}$ for all sufficiently large real $x$. For every fixed $0<c<a$, `residual_zero_iff_vk_displacement_absolute_moment` proves $r=0\iff J_c<\infty$ and `riemannHypothesis_of_vk_displacement_absolute_moment` gives $J_c<\infty\Rightarrow\mathrm{RH}$. In particular, for every $0<b<a$ and every constant $D$, an eventual bound $|d(n)|\le D e^{b\Phi(n)}$ implies RH. The pointwise argument chooses an intermediate moment exponent $b<c<a$. An eventual power saving $|M(x)|\le Cx^s$ with $C\ge 0$ and $s<1$ supplies the VK bound, with prefactor one, at every fixed $a>0$. See [MertensVKFirstMoment](RH/MertensVKFirstMoment.lean) and [MertensPowerToVK](RH/MertensPowerToVK.lean).
 
-**Repository Mertens scale.** The project's unconditional `M_stretched_loglog_bound` supplies a fixed $b>0$ such that $r=0$ if and only if there exists $D\in\mathbb R$ with $|d(n)|\le D e^{b\Psi(n)}$ for all sufficiently large $n$. The theorem `riemannHypothesis_of_stretched_log_displacement` gives $\log(2+|d(n)|)=o(\Psi(n))\Rightarrow\mathrm{RH}$. Establishing this bound for the actual displacement remains open. A separate theorem supplies a fixed $a>0$ such that $K_a<\infty\Rightarrow\mathrm{RH}$. Both coefficients are existential and precede the respective displacement test. The profile comparison used in these implications holds for $\Psi_\beta(x)=((6+\log x)\log(6+\log x))^\beta$: for each $0\le\beta<1/2$ and $A\ge0$, eventually in $x$ one has $A(\Psi_\beta(y)-\Psi_\beta(x))\le\log y-\log x$ for every $y\ge x$. See [MertensUnconditionalStretched](RH/MertensUnconditionalStretched.lean), [MertensStretchedWeightedMoment](RH/MertensStretchedWeightedMoment.lean), and [StretchedLogProductIncrement](Analysis/StretchedLogProductIncrement.lean).
+**Earlier unconditional $1/11$ scale.** The project's unconditional `M_stretched_loglog_bound` supplies a fixed $b>0$ such that $r=0$ if and only if there exists $D\in\mathbb R$ with $|d(n)|\le D e^{b\Psi(n)}$ for all sufficiently large $n$. The theorem `riemannHypothesis_of_stretched_log_displacement` gives $\log(2+|d(n)|)=o(\Psi(n))\Rightarrow\mathrm{RH}$. Establishing this bound for the actual displacement remains open. A separate theorem supplies a fixed $a>0$ such that $K_a<\infty\Rightarrow\mathrm{RH}$. Both coefficients are existential and precede the respective displacement test. The profile comparison used in these implications holds for $\Psi_\beta(x)=((6+\log x)\log(6+\log x))^\beta$: for each $0\le\beta<1/2$ and $A\ge0$, eventually in $x$ one has $A(\Psi_\beta(y)-\Psi_\beta(x))\le\log y-\log x$ for every $y\ge x$. See [MertensUnconditionalStretched](RH/MertensUnconditionalStretched.lean), [MertensStretchedWeightedMoment](RH/MertensStretchedWeightedMoment.lean), and [StretchedLogProductIncrement](Analysis/StretchedLogProductIncrement.lean).
 
 **Explicit Lee–Leong scale.** Put $W=53.99$ and $A=(5/(3W^3))^{1/5}$. `LeeLeongMertensEstimate` is the following external premise for every real $x\ge\exp(\exp(10.01))$:
 
