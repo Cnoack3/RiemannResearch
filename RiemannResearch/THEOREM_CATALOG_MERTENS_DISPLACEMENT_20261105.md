@@ -4,6 +4,43 @@ Write $M(x)=\sum_{n\le x}\mu(n)$ and $\Phi(x)=(\log x)^{3/5}(\log\log x)^{-1/5}$
 
 ## Recursive prime carries
 
+### Prime trees: paper verification, November 2026
+
+The following modules separate finite identities, limits for the actual physical readouts, and sufficient conditions for RH. A published converse stated as an input remains a hypothesis of that declaration.
+
+- [PrimeTreeAtomObstruction](RH/PrimeTreeAtomObstruction.lean) — A legal prime atom whose subtree retains mass.
+- [PrimeTreeAtomicReadout](RH/PrimeTreeAtomicReadout.lean) — A finite signed atomic measure and the strong Abel readout.
+- [PrimeTreeCanonicalCarry](RH/PrimeTreeCanonicalCarry.lean) — The successive-prime inverse chain and its pair of zero detectors.
+- [PrimeTreeCarryFactorization](RH/PrimeTreeCarryFactorization.lean) — The physical factorization away from the pole and the derivative endpoint.
+- [PrimeTreeChargeAbsolute](RH/PrimeTreeChargeAbsolute.lean) — Absolute convergence of charge series to the right of three halves.
+- [PrimeTreeChargeContinuation](RH/PrimeTreeChargeContinuation.lean) — Mellin jets and analytic removal of multiple zeros for closed-span vectors.
+- [PrimeTreeChargeDirichlet](RH/PrimeTreeChargeDirichlet.lean) — Identification of the continuation with the charge Dirichlet series.
+- [PrimeTreeConstants](RH/PrimeTreeConstants.lean) — The four-site dual witness and the two fractional-part constant limits.
+- [PrimeTreeFractionalMellin](RH/PrimeTreeFractionalMellin.lean) — Exact weighted deficit and the fractional-part transform.
+- [PrimeTreeGridLaw](RH/PrimeTreeGridLaw.lean) — Prime-grid means and the physical comparison.
+- [PrimeTreeGridLimits](RH/PrimeTreeGridLimits.lean) — Mean-square convergence and simultaneous continuous tests.
+- [PrimeTreeHaarProjection](RH/PrimeTreeHaarProjection.lean) — One-coordinate Haar fit, error energy, and carry variance.
+- [PrimeTreeLifts](RH/PrimeTreeLifts.lean) — Real lifts, integer height, and finite Haar means.
+- [PrimeTreeMellinEndpoint](RH/PrimeTreeMellinEndpoint.lean) — The critical-line evaluation obstruction on single physical cells.
+- [PrimeTreeMellinLaws](RH/PrimeTreeMellinLaws.lean) — The finite scaled residue staircase and its Mellin zero set.
+- [PrimeTreeMertensImplication](NumberTheory/PrimeNumberTheorem/PrimeTreeMertensImplication.lean) — Internal sufficient Mertens growth criterion and explicit converse premise.
+- [PrimeTreeMovingRoot](NumberTheory/PrimeNumberTheorem/PrimeTreeMovingRoot.lean) — The exact prime-cube count for moving roots.
+- [PrimeTreeNormalizedReadout](RH/PrimeTreeNormalizedReadout.lean) — Strong convergence of physical signed tree readouts with power normalization.
+- [PrimeTreeOddLift](RH/PrimeTreeOddLift.lean) — The actual odd first lift and its probability and residue readouts.
+- [PrimeTreeOneSidedEscape](RH/PrimeTreeOneSidedEscape.lean) — Sufficient one-sided estimates on actual escaping child mass.
+- [PrimeTreeOrderedMobius](NumberTheory/PrimeNumberTheorem/PrimeTreeOrderedMobius.lean) — Identification of the actual ordered tree with a rough-prime cylinder.
+- [PrimeTreePolarizedMellin](RH/PrimeTreePolarizedMellin.lean) — Polarized rescaling for finite atom families.
+- [PrimeTreePrimeMixture](RH/PrimeTreePrimeMixture.lean) — The variable-depth probability mixture over primes.
+- [PrimeTreeProbabilityFourier](RH/PrimeTreeProbabilityFourier.lean) — Characteristic function and frequency detector of the actual law.
+- [PrimeTreeProbabilityMixture](RH/PrimeTreeProbabilityMixture.lean) — Finite probability law, translated mixture, and total variation.
+- [PrimeTreeProjectedRows](RH/PrimeTreeProjectedRows.lean) — Exact projection row identity for testing physical subtree mass.
+- [PrimeTreeScalingEnergy](RH/PrimeTreeScalingEnergy.lean) — Strong rescaling and the limiting physical atom energy.
+- [PrimeTreeSignedGrid](RH/PrimeTreeSignedGrid.lean) — Signed CRT permutations and the reduced carry.
+- [PrimeTreeUniformCarry](RH/PrimeTreeUniformCarry.lean) — Uniform tail bound for the normalized carry chain.
+
+**Open.** Obtain the common cofinal pruned budget for the matched projection displacement or prove the needed fixed-subtree and signed child-tail estimates. Neither recognition of zeta zeros nor convergence after physical normalization provides this estimate.
+
+
 **Unconditional.** Along a finite Bézout chain the integer floors telescope
 with exact path multipliers. On a finite tree the charge at a composite equals
 its incoming coefficient less the signed sum from its children. For normalized
