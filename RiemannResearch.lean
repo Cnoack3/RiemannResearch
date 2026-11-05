@@ -1,3 +1,6 @@
+import RiemannResearch.NumberTheory.SquareDifferenceRigidity
+import RiemannResearch.RH.QSquarefreePrimeLocalTests
+import RiemannResearch.RH.QSquarefreeFinitePolylog
 import RiemannResearch.NumberTheory.PrimeResidueTopology
 import RiemannResearch.NumberTheory.ModularOscillation
 import RiemannResearch.RH.QSquarefreeCRTContinuity

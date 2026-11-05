@@ -3,6 +3,7 @@ Copyright (c) 2026 Christian Noack. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
+import Mathlib.Data.Real.Basic
 import Mathlib.Data.Nat.Prime.Infinite
 import Mathlib.Algebra.Field.Basic
 import Mathlib.Tactic.FieldSimp
@@ -123,5 +124,65 @@ theorem constant_of_prime_tests (h : ℕ → K)
     have hh := htail (n-2)
     rw [Nat.sub_add_cancel hn2] at hh
     exact hh.trans h21
+
+end RiemannResearch.NumberTheory.PrimeMultiplierRigidity
+
+namespace RiemannResearch.NumberTheory.PrimeMultiplierRigidity
+/-! Two selected tests suffice when the unweighted square relation is supplied.
+Source: the four - criteria research continuation, 4 November 2026.
+The large conductor need not itself be prime. -/
+
+def localTest (h : ℕ → ℝ) (p n : ℕ) : ℝ :=
+  h (n - 1) * ((n - 1) % p : ℕ) - h n * (n % p : ℕ) -
+    h (n ^ 2 - 1) * ((n ^ 2 - 1) % p : ℕ) + h (n ^ 2) * (n ^ 2 % p : ℕ)
+
+theorem adjacent_eq_of_two_selected_tests (h : ℕ → ℝ) (n p l : ℕ)
+    (hn : 2 ≤ n) (hp : p.Prime) (hpn : p ∣ n) (hl : n ^ 2 < l)
+    (hlegal : h (n ^ 2) - h (n ^ 2 - 1) = h n - h (n - 1))
+    (hP : localTest h p n = 0) (hL : localTest h l n = 0) :
+    h n = h (n - 1) := by
+  have hpn2 : p ∣ n ^ 2 := by
+    simpa only [pow_two] using dvd_mul_of_dvd_left hpn n
+  have hn2 : 1 ≤ n ^ 2 := by nlinarith
+  unfold localTest at hP hL
+  rw [previous_mod_of_dvd p n hp.two_le (by omega) hpn,
+    previous_mod_of_dvd p (n ^ 2) hp.two_le hn2 hpn2,
+    Nat.mod_eq_zero_of_dvd hpn, Nat.mod_eq_zero_of_dvd hpn2] at hP
+  simp only [Nat.cast_zero, mul_zero, sub_zero, add_zero] at hP
+  have hpne : ((p - 1 : ℕ) : ℝ) ≠ 0 := by
+    exact_mod_cast (show p - 1 ≠ 0 by have := hp.two_le; omega)
+  have ha : h (n - 1) = h (n ^ 2 - 1) :=
+    mul_right_cancel₀ hpne (sub_eq_zero.mp hP)
+  have hb : h (n ^ 2) = h n := by linarith
+  have hnl : n < l := by nlinarith
+  rw [Nat.mod_eq_of_lt (show n - 1 < l by omega), Nat.mod_eq_of_lt hnl,
+    Nat.mod_eq_of_lt (show n ^ 2 - 1 < l by omega), Nat.mod_eq_of_lt hl,
+    ← ha, hb, Nat.cast_sub (show 1 ≤ n by omega), Nat.cast_sub hn2,
+    Nat.cast_one, Nat.cast_pow] at hL
+  have hz : ((n : ℝ) * ((n : ℝ) - 1)) * (h n - h (n - 1)) = 0 := by
+    linear_combination hL
+  have hn0 : (n : ℝ) ≠ 0 := by exact_mod_cast (show n ≠ 0 by omega)
+  have hn1 : (n : ℝ) - 1 ≠ 0 := by
+    have hh : (1 : ℝ) < n := by exact_mod_cast (show 1 < n by omega)
+    linarith
+  exact sub_eq_zero.mp ((mul_eq_zero.mp hz).resolve_left (mul_ne_zero hn0 hn1))
+
+theorem constant_of_two_selected_tests (h : ℕ → ℝ)
+    (hlegal : ∀ n, 2 ≤ n → h (n ^ 2) - h (n ^ 2 - 1) = h n - h (n - 1))
+    (htest : ∀ n, 2 ≤ n → ∃ p l : ℕ,
+      p.Prime ∧ p ∣ n ∧ n ^ 2 < l ∧ localTest h p n = 0 ∧ localTest h l n = 0) :
+    ∀ n, 1 ≤ n → h n = h 1 := by
+  have hadj (n : ℕ) (hn : 2 ≤ n) : h n = h (n - 1) := by
+    obtain ⟨p, l, hp, hpn, hl, hP, hL⟩ := htest n hn
+    exact adjacent_eq_of_two_selected_tests h n p l hn hp hpn hl (hlegal n hn) hP hL
+  intro n hn
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hn
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    have hh := hadj (1 + (k + 1)) (by omega)
+    have he : 1 + (k + 1) - 1 = 1 + k := by omega
+    rw [he] at hh
+    exact hh.trans (ih (by omega))
 
 end RiemannResearch.NumberTheory.PrimeMultiplierRigidity
