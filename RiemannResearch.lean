@@ -78,6 +78,7 @@ import RiemannResearch.RH.QMixedRadixCarry
 import RiemannResearch.RH.QRecursivePrimeCarry
 import RiemannResearch.RH.QRecursiveCarryDetection
 import RiemannResearch.RH.QRecursiveDigitBounds
+import RiemannResearch.RH.QTreeDigitMellin
 import RiemannResearch.RH.QInfiniteRecursiveCarry
 import RiemannResearch.RH.QPrimeSubtreeBudget
 import RiemannResearch.RH.PrefixExpansion

@@ -13,6 +13,11 @@ digit for a child $r$ has full physical eighth-power sum at most $3/r$.
 [Finite recursion](RH/QRecursivePrimeCarry.lean) · [Tree charges](RH/QRecursiveCarryDetection.lean) ·
 [Infinite recursion](RH/QInfiniteRecursiveCarry.lean) · [Digit estimates](RH/QRecursiveDigitBounds.lean).
 
+**Physical zero ordinates.** For every fixed edge with parent $D\ge1$ and radix
+$p\ge2$, its quotient digit has Mellin transform $D^{-s}(p^{-1}-p^{-s})\zeta(s)/s$.
+Throughout the open critical strip, including its critical line, the integral
+vanishes exactly at the zeta zeros. [Edge integral and RH equivalence](RH/QTreeDigitMellin.lean).
+
 **Checked tree criteria.** The signed finite Euler leaf sum extends from $\Re s>1$
 holomorphically to $\Re s>1/2$ exactly under RH. Deleting finitely many fixed primes
 preserves this equivalence. The compact space of prime masks has clopen prefix
