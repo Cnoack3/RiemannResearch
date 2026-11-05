@@ -11,6 +11,7 @@ import RiemannResearch.RH.QSquarefreeDisplacementRigidity
 import RiemannResearch.RH.QHilbertConvergence
 import RiemannResearch.RH.QShiftedReciprocal
 import Mathlib.Analysis.MeanInequalities
+import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
 import Mathlib.Topology.Instances.ENNReal.Lemmas
 
 /-! # An eighth-moment criterion on aligned finite projection heads
@@ -33,6 +34,114 @@ open ZetaTwoOptimizerStage QShiftedReciprocal
 /-- Unnormalized physical eighth moment through coordinate N. The zero term vanishes. -/
 def eighthHead (v : QHilbert) (N : ℕ) : ℝ :=
   ∑ n ∈ Finset.range (N + 1), |qSequence v n| ^ 8 / (n : ℝ) ^ 2
+
+/-- Convert the handoff's unnormalized moment to the physical probability weights. -/
+theorem eighthHead_eq_weighted (v : QHilbert) (H : ℕ) :
+    eighthHead v H = zetaTwo * ∑ n ∈ Finset.Icc 1 H, positiveQWeight n * (qSequence v n)^8 := by
+  classical
+  have hi : Finset.range (H + 1) = insert 0 (Finset.Icc 1 H) := by
+    ext n
+    simp only [Finset.mem_range, Finset.mem_insert, Finset.mem_Icc]
+    omega
+  rw [eighthHead, hi, Finset.sum_insert (by simp), Finset.mul_sum]
+  simp only [qSequence_zero, abs_zero, zero_pow (by decide : 8 ≠ 0), zero_div, zero_add]
+  apply Finset.sum_congr rfl
+  intro n hn
+  rw [Even.pow_abs (by decide : Even 8), positiveQWeight]
+  field_simp [zetaTwo_pos.ne', (show (n : ℝ) ≠ 0 by
+    exact_mod_cast (show n ≠ 0 from Nat.ne_of_gt (Finset.mem_Icc.mp hn).1))]
+
+private def eighthScaledCoord (v : QHilbert) (n : ℕ) : ℝ :=
+  qSequence v n / Real.sqrt (Real.sqrt (n : ℝ))
+
+private theorem eighthScaledCoord_add (v w : QHilbert) (n : ℕ) :
+    eighthScaledCoord (v + w) n = eighthScaledCoord v n + eighthScaledCoord w n := by
+  have hvw : qSequence (v + w) n = qSequence v n + qSequence w n :=
+    congrFun (qSequenceLinear.map_add v w) n
+  simp only [eighthScaledCoord, hvw, add_div]
+
+private theorem scaled_eighth_sum_eq (v : QHilbert) (H : ℕ) :
+    (∑ n ∈ Finset.range (H + 1), |eighthScaledCoord v n| ^ (8 : ℝ)) = eighthHead v H := by
+  unfold eighthHead
+  apply Finset.sum_congr rfl
+  intro n _
+  have hw : (Real.sqrt (Real.sqrt (n : ℝ))) ^ 8 = (n : ℝ) ^ 2 := by
+    calc
+      _ = (((Real.sqrt (Real.sqrt (n : ℝ))) ^ 2) ^ 2) ^ 2 := by ring
+      _ = _ := by rw [Real.sq_sqrt (Real.sqrt_nonneg _), Real.sq_sqrt (Nat.cast_nonneg n)]
+  rw [eighthScaledCoord, abs_div, abs_of_nonneg (Real.sqrt_nonneg _),
+    Real.rpow_ofNat, div_pow, hw]
+
+/-- Weighted finite Minkowski for the unnormalized eighth head. -/
+theorem eighthHead_root_add_le (v w : QHilbert) (H : ℕ) :
+    (eighthHead (v + w) H) ^ (1 / 8 : ℝ) ≤
+      (eighthHead v H) ^ (1 / 8 : ℝ) + (eighthHead w H) ^ (1 / 8 : ℝ) := by
+  simpa only [← eighthScaledCoord_add, scaled_eighth_sum_eq] using
+    (Real.Lp_add_le (Finset.range (H + 1)) (eighthScaledCoord v) (eighthScaledCoord w)
+      (p := (8 : ℝ)) (by norm_num))
+
+/-- Replacing a fitted vector changes the eighth-root statistic by at most
+    the eighth root of the aligned physical error. -/
+theorem abs_eighthHead_root_sub_le (v w : QHilbert) (H : ℕ) :
+    |(eighthHead v H) ^ (1 / 8 : ℝ) - (eighthHead w H) ^ (1 / 8 : ℝ)| ≤
+      (eighthHead (v - w) H) ^ (1 / 8 : ℝ) := by
+  have hswap : eighthHead (w - v) H = eighthHead (v - w) H := by
+    unfold eighthHead
+    apply Finset.sum_congr rfl
+    intro n _
+    have h₁ : qSequence (w - v) n = qSequence w n - qSequence v n :=
+      congrFun (qSequenceLinear.map_sub w v) n
+    have h₂ : qSequence (v - w) n = qSequence v n - qSequence w n :=
+      congrFun (qSequenceLinear.map_sub v w) n
+    rw [h₁, h₂, abs_sub_comm]
+  have hv := eighthHead_root_add_le (v - w) w H
+  have hw := eighthHead_root_add_le (w - v) v H
+  rw [sub_add_cancel] at hv
+  rw [sub_add_cancel, hswap] at hw
+  exact abs_le.mpr ⟨by linarith only [hw], by linarith only [hv]⟩
+
+/-- Vanishing physical head error gives a vanishing difference of the
+    eighth roots at aligned stages. -/
+theorem eighthHead_root_sub_tendsto {v w : ℕ → QHilbert}
+    (h : Tendsto (fun n => eighthHead (v n - w n) n) atTop (𝓝 0)) :
+    Tendsto (fun n => (eighthHead (v n) n) ^ (1 / 8 : ℝ) -
+      (eighthHead (w n) n) ^ (1 / 8 : ℝ)) atTop (𝓝 0) := by
+  apply tendsto_zero_iff_norm_tendsto_zero.mpr
+  exact squeeze_zero (fun _ => norm_nonneg _)
+    (fun n => by simpa only [Real.norm_eq_abs] using abs_eighthHead_root_sub_le (v n) (w n) n)
+    (h.rpow_const_nhds_zero (by norm_num : (0 : ℝ) < 1 / 8))
+
+/-- Cofinal boundedness of the *original*, unrooted statistics is equivalent
+    across an aligned replacement with vanishing head error. -/
+theorem frequently_eighthHead_bounded_iff_of_error {v w : ℕ → QHilbert}
+    (h : Tendsto (fun n => eighthHead (v n - w n) n) atTop (𝓝 0)) :
+    (∃ C : ℝ, ∃ᶠ n : ℕ in atTop, eighthHead (v n) n ≤ C) ↔
+      ∃ C : ℝ, ∃ᶠ n : ℕ in atTop, eighthHead (w n) n ≤ C := by
+  let R (u : ℕ → QHilbert) (n : ℕ) := (eighthHead (u n) n) ^ (1 / 8 : ℝ)
+  have hnon (u : ℕ → QHilbert) (n : ℕ) : 0 ≤ eighthHead (u n) n := by
+    unfold eighthHead
+    exact Finset.sum_nonneg (fun _ _ => by positivity)
+  have hclose : ∀ᶠ n : ℕ in atTop, |R v n - R w n| < 1 := by
+    have hc := (eighthHead_root_sub_tendsto h).abs
+    have hzero : Tendsto (fun n => |R v n - R w n|) atTop (𝓝 0) := by simpa [R] using hc
+    exact hzero.eventually (Iio_mem_nhds (by norm_num : (0 : ℝ) < 1))
+  have transfer (x y : ℕ → QHilbert) (hxy : ∀ᶠ n : ℕ in atTop, R y n ≤ R x n + 1)
+      (hx : ∃ C : ℝ, ∃ᶠ n : ℕ in atTop, eighthHead (x n) n ≤ C) :
+      ∃ D : ℝ, ∃ᶠ n : ℕ in atTop, eighthHead (y n) n ≤ D := by
+    obtain ⟨C, hC⟩ := hx
+    refine ⟨(C ^ (1 / 8 : ℝ) + 1) ^ 8, (hC.and_eventually hxy).mono ?_⟩
+    intro n hn
+    have hr : R y n ≤ C ^ (1 / 8 : ℝ) + 1 := hn.2.trans
+      (add_le_add (Real.rpow_le_rpow (hnon x n) hn.1 (by norm_num : (0 : ℝ) ≤ 1 / 8)) le_rfl)
+    have hp : 0 ≤ R y n := Real.rpow_nonneg (hnon y n) _
+    calc
+      eighthHead (y n) n = (R y n) ^ 8 := by
+        simpa only [R, one_div, Nat.cast_ofNat] using
+          (Real.rpow_inv_natCast_pow (hnon y n) (by decide : (8 : ℕ) ≠ 0)).symm
+      _ ≤ _ := pow_le_pow_left₀ hp hr _
+  constructor
+  · exact transfer v w (hclose.mono fun n hn => by linarith only [(abs_lt.mp hn).1])
+  · exact transfer w v (hclose.mono fun n hn => by linarith only [(abs_lt.mp hn).2])
 
 /-- A cofinal bound on aligned heads controls every fixed limiting partial sum. -/
 theorem summable_eighth_of_frequent_diagonal {v : ℕ → QHilbert} {u : QHilbert}

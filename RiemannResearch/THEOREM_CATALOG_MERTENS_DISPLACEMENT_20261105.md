@@ -120,6 +120,42 @@ the projected truncated forcing converges in Hilbert norm to the actual
 displacement. Its own aligned cofinal bound is then sufficient under the
 same approximation premise. [Forcing estimates](RH/QFiniteEighthForcing.lean).
 
+**Centered matched forcing.** For $a=1/(2T+3)$ the full projection of
+$[(1+a)B-aI]r_{P,N}$ is $d_N$. Cutting this input at $T$ costs at most
+$\|1_{n>T}r_{P,N}\|_Q/(2T+3)$ in the Hilbert norm. If $T\to\infty$ and
+$N^6\le(2T+3)^8$, the original and centered aligned eighth-root statistics differ
+by $o(1)$ and have equivalent cofinal boundedness tests.
+[Exact remainder and equivalence](RH/QFiniteEighthCentered.lean).
+
+**Signed Schur forcing.** The normalized anchor and low floor rows have total
+squared mass at most $4$, and the mass beyond any diverging contrast index tends
+to zero. The complete inverse quadratic satisfies
+$\zeta(2)b^\top G^{-1}b\le1/2$. The signed physical output pairs the data with
+$e(n)^\top G^{-1}$. A cofinal bound for the actual signed responses suffices
+under subcritical approximation, even for arbitrarily slow diverging input cutoffs.
+[Signed rows](RH/QFiniteSchurForcingData.lean) · [Inverse response](RH/QFiniteSchurEighth.lean).
+
+**Obstruction for arbitrary Schur data.** The unsigned physical eighth-power
+sum of the inverse evaluation rows tends to infinity for any $T_N\to\infty$,
+$T_N\le N$, $d_{0,N}>T_N$. Three physical evaluations extract a low prime
+coefficient. The inverse diagonal, the harmonic bound on differences of nearby
+conductors, and cofinal close prime pairs give the divergent lower bound.
+**Open:** the cofinal upper bound for the specific signed projection inputs.
+[Obstruction](RH/QFiniteSchurRowObstruction.lean).
+
+**Pareto projection of the physical kernel.** Let
+$U(k)={\bf1}_{1\le k\le T}K_N(n,k)/k$ and $D=U-\Pi_N^P U$.
+Then $Z\widetilde d_{N,T}(n)=\mathbb E_P D=\langle r_N,D\rangle_P$.
+The first $Q$ moment of $\|U\|_P^2$ is uniformly at most $Z$. A cofinal
+bound for $\|r_N\|_P^8\sum_{n\le N}\|D\|_P^8/n^2$ suffices for RH under
+subcritical approximation. [Kernel identities and bounds](RH/QFinitePhysicalForcingKernel.lean).
+
+**Lee transfer.** The Lebesgue $8/7$-power error of Lee's centered finite sums
+equals the full Pareto moment. Its convergence yields the exact physical
+approximation premise with the finite squarefree Möbius trials.
+**Open in Lean:** derive this integral limit from the external zero-free
+half-plane. [Integral and criterion](RH/QFiniteEighthLee.lean).
+
 **Matched evaluation kernels and reconstruction bounds.** The unconditional identity
 `finiteDisplacement_eq_paretoDual_pairing` expresses each site as a Pareto residual
 pairing after both projections. The aligned bound uses three explicit Gram matrices.

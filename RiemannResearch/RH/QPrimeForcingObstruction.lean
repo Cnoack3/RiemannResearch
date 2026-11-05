@@ -8,6 +8,7 @@ import RiemannResearch.RH.QAdjacentConductorPacket
 import RiemannResearch.RH.QPrimeAnchoredTarget
 import RiemannResearch.RH.QFiniteEighthMoment
 import RiemannResearch.Analysis.ProjectionTrialEnergy
+import Mathlib.NumberTheory.Harmonic.Bounds
 
 /-! # Prime innovations with small Gram data and large output
 
@@ -106,6 +107,72 @@ theorem eighth_head_lower (n : ℕ) (hp : Nat.Prime (n + 3)) :
       gcongr
     _ = _ := by ring
 
+
+/-- Consecutive raw residue atoms, including the entire infinite physical tail. -/
+theorem raw_residue_adjacent_energy_le (d : ℕ) (hd : 0 < d) :
+    zetaTwo * ‖((d + 1 : ℕ) : ℝ) • qResidue (d + 1) - (d : ℝ) • qResidue d‖ ^ 2 ≤
+      2 * (harmonic d : ℝ) := by
+  let x : QHilbert := (d : ℝ) • qResidue d - ((d + 1 : ℕ) : ℝ) • qResidue (d + 1)
+  have hphys (k : ℕ) : qSequence x k = Pareto.adjacentResidueDifference d k := by
+    change qSequenceLinear ((d : ℝ) • qResidue d - ((d + 1 : ℕ) : ℝ) • qResidue (d + 1)) k = _
+    rw [map_sub, map_smul, map_smul]
+    change (d : ℝ) * qSequence (qResidue d) k -
+      ((d + 1 : ℕ) : ℝ) * qSequence (qResidue (d + 1)) k = _
+    exact (QAdjacentConductorPacket.packet_eq_residue_combination d k hd).symm
+  have hP : ‖toPareto x‖ ^ 2 ≤ (harmonic d : ℝ) := by
+    rw [Pareto.hilbert_norm_weighted_sq, toPareto_sequence]
+    simp_rw [hphys]
+    exact Pareto.adjacentResidueDifference_energy_upper d hd
+  have henergy := (zetaTwo_mul_norm_sq_le_two_toPareto_norm_sq x).trans
+    (mul_le_mul_of_nonneg_left hP (by norm_num : (0 : ℝ) ≤ 2))
+  rw [norm_sub_rev]
+  exact henergy
+
+theorem raw_residue_adjacent_norm_le (d : ℕ) (hd : 0 < d) :
+    ‖((d + 1 : ℕ) : ℝ) • qResidue (d + 1) - (d : ℝ) • qResidue d‖ ≤
+      Real.sqrt (2 * (harmonic d : ℝ) / zetaTwo) := by
+  apply Real.le_sqrt_of_sq_le
+  exact (le_div_iff₀ zetaTwo_pos).mpr (by linarith only [raw_residue_adjacent_energy_le d hd])
+
+/-- Crossing an arbitrary conductor gap costs at most its length times the
+    largest adjacent harmonic norm. Intermediate conductors need no legality. -/
+theorem raw_residue_gap_norm_le (p q : ℕ) (hq : 0 < q) (hqp : q ≤ p) :
+    ‖(p : ℝ) • qResidue p - (q : ℝ) • qResidue q‖ ≤
+      ((p - q : ℕ) : ℝ) * Real.sqrt (2 * (harmonic p : ℝ) / zetaTwo) := by
+  let R (k : ℕ) : QHilbert := (k : ℝ) • qResidue k
+  let C := Real.sqrt (2 * (harmonic p : ℝ) / zetaTwo)
+  have hstep (d : ℕ) (hd : 0 < d) (hdp : d ≤ p) : ‖R (d + 1) - R d‖ ≤ C := by
+    have hrat : harmonic d ≤ harmonic p := by
+      unfold harmonic
+      exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono hdp)
+        (fun i _ _ => by positivity)
+    have hreal : (harmonic d : ℝ) ≤ (harmonic p : ℝ) := by exact_mod_cast hrat
+    exact (raw_residue_adjacent_norm_le d hd).trans (Real.sqrt_le_sqrt
+      (div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left hreal (by norm_num)) zetaTwo_pos.le))
+  have htel (j : ℕ) (hj : q + j ≤ p) : ‖R (q + j) - R q‖ ≤ (j : ℝ) * C := by
+    induction j with
+    | zero => simp
+    | succ j ih =>
+      have htriangle := dist_triangle (R (q + j + 1)) (R (q + j)) (R q)
+      simp only [dist_eq_norm] at htriangle
+      calc
+        ‖R (q + (j + 1)) - R q‖ = ‖R (q + j + 1) - R q‖ := rfl
+        _ ≤ ‖R (q + j + 1) - R (q + j)‖ + ‖R (q + j) - R q‖ := htriangle
+        _ ≤ C + (j : ℝ) * C := add_le_add (hstep (q + j) (by omega) (by omega)) (ih (by omega))
+        _ = ((j + 1 : ℕ) : ℝ) * C := by push_cast; ring
+  have he : q + (p - q) = p := by omega
+  have ht := htel (p - q) he.le
+  rwa [he] at ht
+
+/-- A purely logarithmic bound uniform in both conductors. -/
+theorem raw_residue_gap_norm_le_log (p q : ℕ) (hq : 0 < q) (hqp : q ≤ p) :
+    ‖(p : ℝ) • qResidue p - (q : ℝ) • qResidue q‖ ≤
+      ((p - q : ℕ) : ℝ) * Real.sqrt (2 * (1 + Real.log (p : ℝ)) / zetaTwo) := by
+  exact (raw_residue_gap_norm_le p q hq hqp).trans (mul_le_mul_of_nonneg_left
+    (Real.sqrt_le_sqrt (div_le_div_of_nonneg_right
+      (mul_le_mul_of_nonneg_left (harmonic_le_one_add_log p) (by norm_num)) zetaTwo_pos.le))
+    (Nat.cast_nonneg _))
+
 /-- Exact control of the only nonzero Gram datum from the complete P-energy
 of the consecutive raw residue difference, including all periods. -/
 theorem sole_datum_bound (n : ℕ) (hs : Squarefree (n + 2)) :
@@ -129,19 +196,12 @@ theorem sole_datum_bound (n : ℕ) (hs : Squarefree (n + 2)) :
   have hle : b ^ 2 * ‖innovation n‖ ^ 2 ≤ ‖y - x‖ ^ 2 := by
     rw [norm_sub_rev]
     linarith [sq_nonneg ‖(stage (n + 1)).starProjection x - y‖]
-  have hphys (k : ℕ) : qSequence (y - x) k = Pareto.adjacentResidueDifference (n + 2) k := by
-    change qSequenceLinear (a • qResidue (n + 2) - b • qResidue (n + 3)) k = _
-    rw [map_sub,map_smul,map_smul]
-    change a * qSequence (qResidue (n + 2)) k - b * qSequence (qResidue (n + 3)) k = _
-    exact (QAdjacentConductorPacket.packet_eq_residue_combination (n + 2) k (by omega)).symm
-  have hpbound : ‖toPareto (y - x)‖ ^ 2 ≤ (harmonic (n + 2) : ℝ) := by
-    rw [Pareto.hilbert_norm_weighted_sq,toPareto_sequence]
-    simp_rw [hphys]
-    exact Pareto.adjacentResidueDifference_energy_upper (n + 2) (by omega)
+  have hadj : zetaTwo * ‖y - x‖ ^ 2 ≤ 2 * (harmonic (n + 2) : ℝ) := by
+    rw [norm_sub_rev]
+    exact raw_residue_adjacent_energy_le (n + 2) (by omega)
   rw [new_gram]
   change zetaTwo * b ^ 2 * ‖innovation n‖ ^ 2 ≤ _
   rw [mul_assoc]
-  exact ((mul_le_mul_of_nonneg_left hle zetaTwo_pos.le).trans
-    (zetaTwo_mul_norm_sq_le_two_toPareto_norm_sq (y - x))).trans (by linarith)
+  exact (mul_le_mul_of_nonneg_left hle zetaTwo_pos.le).trans hadj
 
 end RiemannResearch.RH.QPrimeForcingObstruction

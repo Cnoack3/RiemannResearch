@@ -3,6 +3,7 @@ import Mathlib.Topology.Algebra.InfiniteSum.NatInt
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Tactic.Ring
 import Lean.Elab.Tactic.Omega
 
@@ -263,5 +264,51 @@ theorem triangular_matrix_bessel (a : ℕ → ℝ) (K : ℕ → ℕ → ℝ)
       truncatedTail_energy_le_four _ M ha
     _ = _ := by simp only [sq_abs]
 
+/-- The finite adjoint Hardy inequality with squared constant four. A finite
+    tail has the prescribed decrement and zero terminal boundary. -/
+theorem finite_adjoint_hardy_sq (a : ℕ → ℝ) (T : ℕ) :
+    (∑ d ∈ Finset.Icc 1 T, (∑ k ∈ Finset.Icc d T, a k) ^ 2) ≤
+      4 * ∑ k ∈ Finset.Icc 1 T, ((k : ℝ) * a k) ^ 2 := by
+  classical
+  let S (j : ℕ) : ℝ := ∑ k ∈ Finset.Icc j T, a k
+  let Q (j : ℕ) : ℝ := ((j : ℝ) * a j) ^ 2
+  have hzero (j : ℕ) (hj : T < j) : S j = 0 := by simp [S, Finset.Icc_eq_empty_of_lt hj]
+  have hd (j : ℕ) (_ : 0 < j) : (j : ℝ) ^ 2 * (S j - S (j + 1)) ^ 2 ≤ Q j := by
+    by_cases hj : j ≤ T
+    · have hI : Finset.Icc j T = insert j (Finset.Icc (j + 1) T) := by
+        ext i
+        simp only [Finset.mem_Icc, Finset.mem_insert]
+        omega
+      have hnot : j ∉ Finset.Icc (j + 1) T := by
+        intro h
+        have := (Finset.mem_Icc.mp h).1
+        omega
+      have hs : S j - S (j + 1) = a j := by
+        dsimp only [S]
+        rw [hI, Finset.sum_insert hnot]
+        ring
+      rw [hs]
+      exact le_of_eq (mul_pow (j : ℝ) (a j) 2).symm
+    · rw [hzero j (by omega), hzero (j + 1) (by omega), sub_self,
+          zero_pow (by decide : 2 ≠ 0), mul_zero]
+      exact sq_nonneg _
+  have hindex (f : ℕ → ℝ) : (∑ k ∈ Finset.Icc 1 T, f k) =
+      ∑ k ∈ Finset.range T, f (k + 1) := by
+    calc
+      _ = ∑ k ∈ Finset.range T, f (1 + k) := by
+        simpa only [Finset.Ico_add_one_right_eq_Icc, Nat.add_sub_cancel] using
+          Finset.sum_Ico_eq_sum_range f 1 (T + 1)
+      _ = _ := by
+        apply Finset.sum_congr rfl
+        intro k _
+        rw [Nat.add_comm 1 k]
+  have hQ : (∑ k ∈ Finset.range (T + 1), Q k) = ∑ k ∈ Finset.Icc 1 T, Q k := by
+    rw [hindex, Finset.sum_range_succ']
+    simp [Q]
+  have hh := prefix_le_with_boundary S Q (fun _ => sq_nonneg _) hd T
+  rw [hzero (T + 1) (by omega), zero_pow (by decide : 2 ≠ 0), mul_zero, add_zero, hQ] at hh
+  change (∑ k ∈ Finset.Icc 1 T, S k ^ 2) ≤ 4 * ∑ k ∈ Finset.Icc 1 T, Q k
+  rw [hindex (fun k => S k ^ 2)]
+  exact hh
 
 end RiemannResearch.Analysis.DiscreteTailHardy

@@ -55,7 +55,8 @@ theorem projectedFiniteForcing_scaled_error (N T : ℕ) :
   exact (mul_le_mul_of_nonneg_left (hp _) (by positivity)).trans
     (scaled_B_norm_le_of_head _ _ hz)
 
-private theorem eighth_head_le (v : QHilbert) (H : ℕ) :
+/-- A finite physical eighth moment controlled by the Hilbert norm and the output cutoff. -/
+theorem weighted_eighth_head_le_norm (v : QHilbert) (H : ℕ) :
     (∑ n ∈ Finset.Icc 1 H, positiveQWeight n * (qSequence v n) ^ 8) ≤
       (Real.sqrt zetaTwo * (H : ℝ) * ‖v‖) ^ 6 * ‖v‖ ^ 2 := by
   let A := Real.sqrt zetaTwo * (H : ℝ) * ‖v‖
@@ -90,14 +91,15 @@ theorem projectedFiniteForcing_eighth_error (N T H : ℕ)
   have hscaled : ((T : ℝ) + 2) * ‖v‖ ≤ ‖tail T (qOne - finitePFit N)‖ :=
     projectedFiniteForcing_scaled_error N T
   calc
-    _ ≤ (Real.sqrt zetaTwo * (H : ℝ) * ‖v‖) ^ 6 * ‖v‖ ^ 2 := eighth_head_le v H
+    _ ≤ (Real.sqrt zetaTwo * (H : ℝ) * ‖v‖) ^ 6 * ‖v‖ ^ 2 := weighted_eighth_head_le_norm v H
     _ = (Real.sqrt zetaTwo) ^ 6 * ((H : ℝ) ^ 6 * ‖v‖ ^ 8) := by ring
     _ ≤ (Real.sqrt zetaTwo) ^ 6 * ((((T : ℝ) + 2) * ‖v‖) ^ 8) := by
       rw [mul_pow]
       gcongr
     _ ≤ _ := by gcongr
 
-private theorem finiteParetoResidual_tail_tendsto (T : ℕ → ℕ) (hT : Tendsto T atTop atTop) :
+/-- The moving Pareto residuals are uniformly tight along every cofinal input cutoff. -/
+theorem finiteParetoResidual_tail_tendsto (T : ℕ → ℕ) (hT : Tendsto T atTop atTop) :
     Tendsto (fun N => ‖tail (T N) (qOne - finitePFit N)‖) atTop (𝓝 0) := by
   have hc : Tendsto (fun N => qOne - finitePFit N) atTop
       (𝓝 (qOne - QParetoClosedProjectionComparison.pFit

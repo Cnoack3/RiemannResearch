@@ -1,6 +1,7 @@
 import RiemannResearch.Analysis.ChebyshevEnergy
 import RiemannResearch.RH.QSquarefreeChebyshev
 import RiemannResearch.NumberTheory.ApproximateSquareTests
+import RiemannResearch.NumberTheory.CofinalPrimeGaps
 import RiemannResearch.RH.QSquarefreeApproximateTests
 import RiemannResearch.RH.QSquarefreeMultiplierLeakage
 import RiemannResearch.RH.QSquarefreeWeakLeakage
@@ -52,6 +53,12 @@ import RiemannResearch.RH.QSquarefreeSqrtLogDisplacement
 import RiemannResearch.RH.QFiniteMetricGap
 import RiemannResearch.RH.QFiniteEighthForcing
 import RiemannResearch.RH.QFiniteEighthMoment
+import RiemannResearch.RH.QFiniteEighthCentered
+import RiemannResearch.RH.QFiniteSchurForcingData
+import RiemannResearch.RH.QFiniteSchurEighth
+import RiemannResearch.RH.QFiniteSchurRowObstruction
+import RiemannResearch.RH.QFinitePhysicalForcingKernel
+import RiemannResearch.RH.QFiniteEighthLee
 import RiemannResearch.RH.QFiniteForcingData
 import RiemannResearch.RH.QFiniteEighthReconstruction
 import RiemannResearch.RH.QFiniteEighthCapped
