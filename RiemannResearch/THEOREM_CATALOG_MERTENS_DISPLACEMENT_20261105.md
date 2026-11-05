@@ -28,6 +28,12 @@ A separate explicit theorem gives $9|M(x)|\le 2x+8$ for every real $x\ge0$ and $
 
 **Conditional research reduction.** For the actual squarefree displacement, $\log(2+|d(n)|)=o(S(n)^{1/3})$ implies RH. **Open:** the displayed growth estimate for the actual displacement. [Cube-root displacement theorem](RH/QSquarefreeCubeRootDisplacement.lean).
 
+## Cofinal gaps between the two finite minimum errors
+
+For each finite squarefree space, let $e_{Q,N}$ and $e_{P,N}$ be the two minimum squared errors for the constant 1. The gap $G_N=\zeta(2)e_{Q,N}-e_{P,N}$ equals the squared Pareto norm of the finite displacement plus the metric correction of the Q residual. Each gap is positive. The gaps converge, and the limiting residual is zero exactly when for every $\epsilon>0$ arbitrarily large stages have $G_N\le\epsilon$.
+
+**Conditional research reduction.** `riemannHypothesis_of_cofinal_finiteMetricGap` derives Mathlib RH from this gap condition. **Open:** establish the cofinal bound for the actual finite distances. [Finite metric gap](RH/QFiniteMetricGap.lean).
+
 ## Square-sampled Mertens estimates and the boxed displacement criterion
 
 `NumberTheory.PrimeNumberTheorem.mertens_vk_of_square_samples` retains the exponent $a>0$ from an eventual bound $|M(k^2)|\le Ck^2e^{-a\Phi(k^2)}$ with $C\ge0$. Filling the gaps between squares gives $|M(x)|\le(C+3)xe^{-a\Phi(x)}$ on the full real half-line beyond a threshold. `riemannHypothesis_of_square_sample_vk_log_displacement` specializes this to the logarithmic displacement criterion. Walfisz supplies the arithmetic estimate in the literature (Gerhold, Acta Arith. 142 (2010), equation (2), DOI 10.4064/aa142-2-8). The square-sampled estimate has **Open** formal-provider status.
