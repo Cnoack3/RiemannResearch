@@ -230,4 +230,20 @@ theorem displacement_eq_zero_iff_projected_residual_eq_zero :
       mul_pos zetaTwo_pos (sq_pos_of_pos (norm_pos_iff.mpr hd))
     nlinarith
 
+/-- Target-specific reciprocal invariance is exactly zero displacement. -/
+theorem displacement_eq_zero_iff_reciprocal_mem :
+    displacement = 0 ↔ B displacement ∈ closure := by
+  constructor
+  · intro hd
+    simpa only [hd, map_zero] using closure.zero_mem
+  · intro hm
+    have hz := Submodule.inner_right_of_mem_orthogonal hm qResidual_mem_orthogonal
+    have he := displacement_p_energy
+    rw [← B_symmetric, hz, mul_zero] at he
+    have hle := zetaTwo_mul_norm_sq_le_two_toPareto_norm_sq displacement
+    by_contra hd
+    have hp : 0 < zetaTwo * ‖displacement‖ ^ 2 :=
+      mul_pos zetaTwo_pos (sq_pos_of_pos (norm_pos_iff.mpr hd))
+    nlinarith
+
 end RiemannResearch.RH.QFullDisplacement

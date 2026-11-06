@@ -108,6 +108,30 @@ Open: establish Pi_Q(B r_Q)=0 using additional arithmetic information, or
 supply a bounded full-legal family v_j with B v_j -> B 1. Infinite CRT
 coordinate approximation alone does not supply that Hilbert norm bound.
 
+### Reciprocal invariance is an RH-strength hypothesis
+
+Source: the user's positive-square-root/invariant-subspace question,
+6 November 2026. The operator called R in the discussion is still named
+QShiftedReciprocal.B in the source.
+
+- displacement_eq_zero_iff_reciprocal_mem proves d=0 iff B d belongs to V.
+- riemannHypothesis_of_reciprocal_displacement_mem concludes RH from that
+  target-specific membership.
+- riemannHypothesis_of_reciprocal_invariant concludes RH from B(V) subset V.
+
+The proof retains the exact energy:
+||d||_P^2 = zeta(2) <B d,r_Q>_Q.
+If B d is legal, residual orthogonality makes this energy zero.
+
+These are conditional research reductions. The membership and invariance
+hypotheses remain Open; positivity and existence of a positive square root
+do not establish them. No RH-to-density converse is newly formalized here.
+
+The coherent candidate passed job job_RHEXto2B-em3eZmXeaMr7iN5n_yzkbUK:
+verified=true, exit code 0, server-reported 33.074 seconds. The audited
+declarations use only propext, Classical.choice, and Quot.sound.
+This is an isolated source check, distinct from the final project checkpoint.
+
 ### Exact errors and localized integer tests (agenda A2–A3)
 
 `RH/QMobiusFloorError.lean` gives the actual Q defect's complete signed

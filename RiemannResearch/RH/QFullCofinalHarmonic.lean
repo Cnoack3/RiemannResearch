@@ -225,4 +225,15 @@ theorem riemannHypothesis_of_displacement_eq_zero (hd : displacement = 0) :
   QFullResidueProjection.riemannHypothesis_of_qOne_mem_full_closure
     (qResidual_eq_zero_iff.mp (qResidual_eq_zero_iff_displacement_eq_zero.mpr hd))
 
+/-- Conditional RH reduction: membership of the actual reciprocal displacement is Open. -/
+theorem riemannHypothesis_of_reciprocal_displacement_mem
+    (h : B displacement ∈ QFullResidueProjection.closure) : RiemannHypothesis :=
+  riemannHypothesis_of_displacement_eq_zero
+    (displacement_eq_zero_iff_reciprocal_mem.mpr h)
+
+/-- Positivity does not supply this full-space invariance hypothesis. -/
+theorem riemannHypothesis_of_reciprocal_invariant
+    (h : ∀ f ∈ QFullResidueProjection.closure, B f ∈ QFullResidueProjection.closure) : RiemannHypothesis :=
+  riemannHypothesis_of_reciprocal_displacement_mem (h displacement displacement_mem)
+
 end RiemannResearch.RH.QFullDisplacement
