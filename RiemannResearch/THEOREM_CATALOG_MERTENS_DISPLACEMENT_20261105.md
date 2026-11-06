@@ -2,6 +2,18 @@
 
 Write $M(x)=\sum_{n\le x}\mu(n)$ and $\Phi(x)=(\log x)^{3/5}(\log\log x)^{-1/5}$. Let $V$ be the closed legal squarefree span in $L^2(Q)$, $r=1-f_Q$ its projection residual and $d=f_Q-f_P$ the displacement between the two projections. $T_N$ keeps all physical coordinates beyond $N$.
 
+## Fixed-root route to actual projection agreement (2026-11-06)
+
+The [research note](RH/FixedRootDisplacementResearch20261106.md) follows the exact fixed-root implication and distinguishes ordinary Mobius weights from the Mobius transform of the actual displacement.
+
+- **Conditional research reduction:** [PrimeTreeFixedRootDisplacement](RH/PrimeTreeFixedRootDisplacement.lean) derives the actual `displacement = 0` from fixed-root square-root-plus-epsilon power bounds and the explicitly named `BaezDuarteMobiusApproximation`. **Open:** the former arithmetic bounds; **Open in Lean:** a provider for the latter published approximation theorem.
+- **Established exact identity and rigidity equivalence:** [PrimeTreeDisplacementPrimeDefect](RH/PrimeTreeDisplacementPrimeDefect.lean) retains the signed prime-deletion defect. For the actual matched displacement, all Mobius prime sign rules hold if and only if d=0. The prime sign rules are therefore not supplied by legal-span membership.
+- **Conditional research reduction:** [PrimeTreeLogChargeCriterion](RH/PrimeTreeLogChargeCriterion.lean) proves d=0 from a bound `sum_{m<=H} [-sigma*b_m(d)]_+ <= C*(1+log H)^B` for one fixed sign, fixed constants, and all horizons. No Baez-Duarte premise enters this route. **Open:** prove the bound for the actual matched displacement. The nonzero-displacement contrapositive is included.
+- **Established positive-prefix analysis:** [PositiveWeightedPrefix](Analysis/PositiveWeightedPrefix.lean) proves that one additional power of a decreasing weight converts a positive prefix bound into summability, retaining the finite boundary term.
+- **Established unconditional analytic bounds:** [GammaRatioVertical](Analysis/GammaRatioVertical.lean) proves the exact horizontal log-Gamma integral and a uniform vertical quotient estimate. [SymmetricZetaRatio](Analysis/SymmetricZetaRatio.lean) retains the exact functional-equation norm identity and gives the explicit symmetric zeta bound for `0 <= epsilon < 1/2`, `|t| >= 1`. The multiplicative statement includes zeros; only its quotient corollary assumes nonvanishing. **Open:** the separate finite-cutoff L2 convergence needed for the full published approximation provider.
+
+No unconditional theorem of RH or vanishing of the actual displacement is claimed by this development.
+
 ## Matched prime and carry projections
 
 The new [audit](RH/ProjectionDisplacementAudit20261105.md) corrects the two signed-series criteria to require absolute outer summability. It retains the subcritical approximation premise in the eighth-moment criterion.
