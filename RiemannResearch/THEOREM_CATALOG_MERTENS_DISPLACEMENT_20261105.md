@@ -2,6 +2,18 @@
 
 Write $M(x)=\sum_{n\le x}\mu(n)$ and $\Phi(x)=(\log x)^{3/5}(\log\log x)^{-1/5}$. Let $V$ be the closed legal squarefree span in $L^2(Q)$, $r=1-f_Q$ its projection residual and $d=f_Q-f_P$ the displacement between the two projections. $T_N$ keeps all physical coordinates beyond $N$.
 
+## Matched prime and carry projections
+
+The new [audit](RH/ProjectionDisplacementAudit20261105.md) corrects the two signed-series criteria to require absolute outer summability. It retains the subcritical approximation premise in the eighth-moment criterion.
+
+- [NestedOrthogonalDecomposition](Analysis/NestedOrthogonalDecomposition.lean) proves the exact nested projection difference and strong convergence of finite carry projections.
+- [PrimeScaleBounds](NumberTheory/PrimeScaleBounds.lean) supplies the scalar cubic estimate and Bertrand selection at the residual scale.
+- [QPrimeProjectionControl](RH/QPrimeProjectionControl.lean) proves the unconditional bound `epsilon_N^3 <= max ((8/(N+1))^3) (64*zeta(2)*alpha_N^2)` for the actual finite matched projections.
+- [QPrimeProjectionLimit](RH/QPrimeProjectionLimit.lean) passes this bound to the actual infinite projections.
+- [QPrimeCarryProjection](RH/QPrimeCarryProjection.lean) identifies the carry complement with the closed span of projected CRT carries and specializes the quantitative estimate to the actual closed prime span.
+
+**Open.** Prove that the canonical prime component of the actual displacement vanishes. The quantitative bound and the convergence of both component projections preserve this arithmetic obligation.
+
 ## Recursive prime carries
 
 ### Prime trees: paper verification, November 2026
