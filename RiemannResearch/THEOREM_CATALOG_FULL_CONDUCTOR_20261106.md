@@ -70,6 +70,44 @@ B h(n) = h(n)/(n+1), the module proves
 
 The exact positive energy terms are retained.
 
+### Reversed metric expansion and the remaining projected residual
+
+Source: the user's simultaneous D/R expansion argument, 6 November 2026.
+Here the source name B still denotes the reciprocal multiplier R(n)=1/(n+1);
+it does not denote the invertible metric operator A* A.
+
+The new module RH/QReciprocalMetric.lean constructs Df(n)=f(n)/n as a bounded
+linear operator, retaining the anchored coordinate at zero. It proves
+
+- D - B D = B;
+- <Df,g>_P = zeta(2) <Bf,g>_Q;
+- <f,g>_Q = (<f,g>_P + <Df,g>_P)/zeta(2).
+
+For the actual full-conductor displacement, RH/QFullDisplacement.lean adds
+
+- displacement_swapped_normal_equation:
+  <D r_Q,v>_P = <d,v>_P for every v in the full legal closure;
+- displacement_p_energy:
+  ||d||_P^2 = zeta(2) <d,B r_Q>_Q;
+- displacement_eq_zero_iff_projected_residual_eq_zero:
+  d=0 iff Pi_Q(B r_Q)=0.
+
+These are exact identities and an equivalence. They do not prove that d or
+the projected reciprocal residual vanishes. Combining the two metric
+expansions retains the positive displacement energy; setting the cross term
+to zero would add the unresolved hypothesis.
+
+The coherent source candidate passed job job_IFOy2iaN-CHmzokn9q6rEs7aaR2fadxc:
+verified=true, exit code 0, server-reported 7.148 seconds. Its two principal
+axiom reports contain only propext, Classical.choice, and Quot.sound.
+This isolated check is distinct from the final project checkpoint.
+The initial candidate had a rewrite-direction error and an incomplete
+positivity tactic; both were repaired before this successful check.
+
+Open: establish Pi_Q(B r_Q)=0 using additional arithmetic information, or
+supply a bounded full-legal family v_j with B v_j -> B 1. Infinite CRT
+coordinate approximation alone does not supply that Hilbert norm bound.
+
 ### Exact errors and localized integer tests (agenda A2–A3)
 
 `RH/QMobiusFloorError.lean` gives the actual Q defect's complete signed

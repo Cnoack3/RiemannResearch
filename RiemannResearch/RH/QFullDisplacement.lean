@@ -7,6 +7,7 @@ import RiemannResearch.RH.QFullResidueProjection
 import RiemannResearch.RH.QParetoClosedProjectionComparison
 import RiemannResearch.RH.QParetoEquivalence
 import RiemannResearch.RH.QShiftedReciprocal
+import RiemannResearch.RH.QReciprocalMetric
 import RiemannResearch.RH.ZetaTwoParetoTransfer
 import RiemannResearch.RH.ZetaTwoProbability
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
@@ -32,6 +33,7 @@ namespace RiemannResearch.RH.QFullDisplacement
 open Pareto ZetaTwoHilbert ZetaTwoProbability ZetaTwoParetoTransfer
 open QParetoEquivalence QParetoClosedProjectionComparison QShiftedReciprocal
 open QFullResidueProjection
+open QReciprocalMetric
 
 /-- Pareto closure of the very same all-conductor algebraic dictionary. -/
 def paretoClosure : Submodule ℝ ThresholdHilbert :=
@@ -181,5 +183,51 @@ theorem displacement_fixed_point :
     _ = closure.starProjection (B (qResidual + displacement)) := by
       rw [← pResidual_eq_residual_add_displacement]
     _ = _ := by rw [map_add, map_add]
+
+/-- The reversed metric expansion reproduces the full Pareto normal equation. -/
+theorem displacement_swapped_normal_equation (v : QHilbert) (hv : v ∈ closure) :
+    inner ℝ (toPareto (D qResidual)) (toPareto v) =
+      inner ℝ (toPareto displacement) (toPareto v) := by
+  have hc := Submodule.inner_right_of_mem_orthogonal hv witness_mem_orthogonal
+  rw [witness, inner_sub_right, pResidual_eq_residual_add_displacement,
+    map_add, inner_add_right] at hc
+  rw [pareto_inner_D, pareto_inner_identity]
+  have h1 : inner ℝ (B qResidual) v = inner ℝ v (B qResidual) :=
+    real_inner_comm _ _
+  have h2 : inner ℝ displacement v = inner ℝ v displacement :=
+    real_inner_comm _ _
+  have h3 : inner ℝ displacement (B v) = inner ℝ v (B displacement) := by
+    rw [← B_symmetric, real_inner_comm]
+  rw [h1, h2, h3]
+  congr 1
+  linarith
+
+/-- The cross term is exactly the Pareto displacement energy, not an extra zero. -/
+theorem displacement_p_energy :
+    ‖toPareto displacement‖ ^ 2 =
+      zetaTwo * inner ℝ displacement (B qResidual) := by
+  have h := displacement_swapped_normal_equation displacement displacement_mem
+  rw [pareto_inner_D, real_inner_self_eq_norm_sq] at h
+  rw [real_inner_comm displacement (B qResidual)] at h
+  exact h.symm
+
+/-- Conditional reduction: the projected reciprocal residual must still be shown zero. -/
+theorem displacement_eq_zero_iff_projected_residual_eq_zero :
+    displacement = 0 ↔ closure.starProjection (B qResidual) = 0 := by
+  constructor
+  · intro hd
+    have h := displacement_fixed_point
+    simpa only [hd, map_zero, add_zero] using h.symm
+  · intro h
+    have hz := Submodule.inner_right_of_mem_orthogonal displacement_mem
+      (Submodule.sub_starProjection_mem_orthogonal (K := closure) (B qResidual))
+    rw [h, sub_zero] at hz
+    have he := displacement_p_energy
+    rw [hz, mul_zero] at he
+    have hle := zetaTwo_mul_norm_sq_le_two_toPareto_norm_sq displacement
+    by_contra hd
+    have hp : 0 < zetaTwo * ‖displacement‖ ^ 2 :=
+      mul_pos zetaTwo_pos (sq_pos_of_pos (norm_pos_iff.mpr hd))
+    nlinarith
 
 end RiemannResearch.RH.QFullDisplacement
