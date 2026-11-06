@@ -132,6 +132,34 @@ verified=true, exit code 0, server-reported 33.074 seconds. The audited
 declarations use only propext, Classical.choice, and Quot.sound.
 This is an isolated source check, distinct from the final project checkpoint.
 
+### Reciprocal compactness argument: checked limits and the missing defect bound
+
+Source: the user's approximation/compactness argument, 6 November 2026.
+New module RH/QFullReciprocalLimits.lean uses the actual full-conductor
+displacement and the reciprocal operator QShiftedReciprocal.B.
+
+- G_M -> d implies B G_M -> B d; B qOne is nonzero.
+- B commutes with an orthogonal projection iff the subspace is B-invariant.
+- Commutation at d is equivalent to d=0.
+- d=0 iff B G_M - Pi_Q(B G_M) -> 0 for any G_M -> d.
+- ||d||_P^2 <= zeta(2) ||r_Q||_Q
+  (||B G_M - Pi_Q(B G_M)||_Q + ||G_M-d||_Q/2).
+- Every reciprocal orbit converges to zero at rate 2^(-k), including an
+  explicitly exhibited nonzero vector with nonzero first image.
+- Full projection commutation, or the extra zero-defect limit, implies RH.
+
+The new source does not prove the reciprocal operator compact in Lean.
+Its compactness is an elementary paper result via finite-rank truncations,
+and would not make its strong limit zero. The missing estimate concerns
+the distance of B G_M back to V, not merely the norm or convergence of B G_M.
+
+The coherent extended candidate passed job
+job_M1rbJ2q8K8x_LwEBY_BvOQD5FZCxtxjV: verified=true, exit code 0,
+22.802 seconds. All four audited declarations use only propext,
+Classical.choice, and Quot.sound. This is an isolated source check;
+publication uses a separate final project checkpoint. An earlier
+triangle-inequality API error was repaired before this successful check.
+
 ### Exact errors and localized integer tests (agenda A2–A3)
 
 `RH/QMobiusFloorError.lean` gives the actual Q defect's complete signed
