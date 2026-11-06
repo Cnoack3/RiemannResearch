@@ -16,6 +16,7 @@ import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Push
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 
@@ -394,5 +395,85 @@ theorem floorDilation_relative_energy_tendsto (f : QHilbert) :
   rw [he] at h
   convert h using 1
   field_simp [ne_of_gt zetaTwo_pos]
+
+/-- Strict loss in every positive floor block when the dilation exceeds one.
+Source: user-requested full-conductor audit, November 2026; elementary strict
+comparison of the existing inverse-square block weights. -/
+theorem qBlockWeight_lt (m k : ℕ) (hm : 1 < m) (hk : 0 < k) :
+    qBlockWeight m k < positiveQWeight k / (m : ℝ) := by
+  have hm0 : 0 < m := by omega
+  have hmR : (m : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr (ne_of_gt hm0)
+  have hmk : (0 : ℝ) < (m * k : ℕ) := Nat.cast_pos.mpr (Nat.mul_pos hm0 hk)
+  have hZ := zetaTwo_pos
+  have hle (r : ℕ) : positiveQWeight (m * k + r) ≤ positiveQWeight (m * k) := by
+    have hleR : ((m * k : ℕ) : ℝ) ≤ ((m * k + r : ℕ) : ℝ) := by
+      exact_mod_cast Nat.le_add_right (m * k) r
+    unfold positiveQWeight
+    gcongr
+  have hlt : positiveQWeight (m * k + 1) < positiveQWeight (m * k) := by
+    have hltR : ((m * k : ℕ) : ℝ) < ((m * k + 1 : ℕ) : ℝ) := by
+      exact_mod_cast Nat.lt_succ_self (m * k)
+    unfold positiveQWeight
+    gcongr
+  calc
+    qBlockWeight m k < ∑ r ∈ Finset.range m, positiveQWeight (m * k) := by
+      exact Finset.sum_lt_sum (fun r _ => hle r) ⟨1, Finset.mem_range.mpr hm, hlt⟩
+    _ = (m : ℝ) * positiveQWeight (m * k) := by simp
+    _ = positiveQWeight k / (m : ℝ) := by
+      rw [positiveQWeight_mul]
+      field_simp [hmR]
+
+/-- Every positive-site coefficient of the exact energy defect is positive. -/
+theorem qBlockDefect_pos (m k : ℕ) (hm : 1 < m) (hk : 0 < k) :
+    0 < qBlockDefect m k := by
+  exact sub_pos.mpr (qBlockWeight_lt m k hm hk)
+
+/-- The full defect series converges, retaining every physical site. -/
+theorem qBlockDefect_energy_summable (m : ℕ) (hm : 0 < m) (f : QHilbert) :
+    Summable (fun k => qBlockDefect m k * (qSequence f k)^2) := by
+  apply (((qSequence_square_summable f).div_const (m : ℝ)).sub
+    (qBlockEnergy_summable m hm f)).congr
+  intro k
+  unfold qBlockDefect
+  ring
+
+/-- The sharp upper energy bound is strict for each nonzero vector.
+This excludes attainment, but does not assert a uniform improvement below 1/m. -/
+theorem floorDilation_norm_sq_lt (m : ℕ) (hm : 1 < m)
+    (f : QHilbert) (hf : f ≠ 0) :
+    ‖floorDilation m (by omega) f‖^2 < ‖f‖^2 / (m : ℝ) := by
+  have hex : ∃ k, qSequence f k ≠ 0 := by
+    by_contra h
+    push Not at h
+    apply hf
+    apply qSequence_injective
+    change qSequence f = qSequenceLinear 0
+    rw [map_zero]
+    exact funext h
+  obtain ⟨k, hk⟩ := hex
+  have hk0 : 0 < k := by
+    by_contra hn
+    have : k = 0 := by omega
+    subst k
+    exact hk (qSequence_zero f)
+  have hnn (j : ℕ) : 0 ≤ qBlockDefect m j * (qSequence f j)^2 := by
+    by_cases hj : j = 0
+    · simp [hj]
+    · exact mul_nonneg (qBlockDefect_nonneg m j (by omega) (Nat.pos_of_ne_zero hj)) (sq_nonneg _)
+  have hp : 0 < ∑' j, qBlockDefect m j * (qSequence f j)^2 :=
+    (qBlockDefect_energy_summable m (by omega) f).tsum_pos hnn k
+      (mul_pos (qBlockDefect_pos m k hm hk0) (sq_pos_of_ne_zero hk))
+  rw [← floorDilation_norm_sq_defect m (by omega) f] at hp
+  linarith
+
+/-- Equality at the sharp energy bound occurs only at the zero vector. -/
+theorem floorDilation_sharp_equality_iff (m : ℕ) (hm : 1 < m) (f : QHilbert) :
+    ‖floorDilation m (by omega) f‖^2 = ‖f‖^2 / (m : ℝ) ↔ f = 0 := by
+  constructor
+  · intro h
+    by_contra hf
+    exact (ne_of_lt (floorDilation_norm_sq_lt m hm f hf)) h
+  · rintro rfl
+    simp
 
 end RiemannResearch.RH.QFloorDilation
