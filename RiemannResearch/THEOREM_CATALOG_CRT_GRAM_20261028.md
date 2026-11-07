@@ -2,6 +2,14 @@
 
 28 October 2026. See [research memorandum](RH/CRTGramMinimizersResearch20261028.md).
 
+## Full-conductor collocation and zero-sensitive leakage (2026-11-07)
+
+See [the separate collocation catalog](THEOREM_CATALOG_CRT_COLLOCATION_20261107.md).
+It records unique finite conditional-moment lifts, complete leakage Parseval,
+LCM optimal projection limits, and conditional bounded-leakage-to-RH results.
+The actual collocation growth bound remains Open. This family includes all
+prime powers and is separate from the squarefree exact-head minimizers below.
+
 ## Complete-squarefree Ramanujan coefficients (2026-10-30)
 
 See [the coefficient construction and convergence audit](RH/SquarefreeRamanujanCoefficientsResearch20261030.md).
