@@ -173,6 +173,32 @@ D_(2 Re(s))(L_M)V(L_M) >= (1-epsilon)^2/((1+epsilon)^2 Z |s|^2)
 eventually at a hypothetical right-half-strip zero. This does not supply
 the cofinal smallness condition. See Section 6 of the stability memorandum.
 
+## Sharp sampler order and Mellin rate continuation
+
+The follow-on changes extend the three existing owning modules:
+
+| Owning module | Established results |
+|---|---|
+| `NumberTheory/GcdSampleTail.lean` | `sampleTerm_two`, `sampleTail_two`, pointwise antitonicity, `sampleTail_antitoneOn`, `tail_two_le_sampleTail`, and the exact positive-cutoff endpoint ratio `sampleTail_div_tail_two` |
+| `NumberTheory/GcdSamplePrimeTail.lean` | Positive explicit constants `sampleLogConstant` and `sampleRatioConstant`; `sampleTail_lcmUpto_lower_explicit`; eventual two-sided energy bounds; `eventually_sampleTail_div_tail_le_power`; `exists_eventually_sampleTail_div_tail_bounds`; normalized-energy bounds and nonconvergence to zero |
+| `RH/QCRTAsymptoticSampler.lean` | `eventually_tailMellin_norm_le_power` for the actual projected Mellin map |
+
+For each fixed 1<t<=2 and L_M=lcm(1,...,M), the complete sampler has the
+sharp order S_t(L_M)=Theta_t(1/(M log M)). Its relative energy has the sharp
+order S_t(L_M)/D_t(L_M)=Theta_t(M^(t-2)). At t=2 this ratio is exactly one
+for every positive finite cutoff.
+
+For beta=Re(s) in (1/2,1), the new checked bound is
+
+    K_(L_M)(s) <= [1+sqrt(C_R(2 beta)) M^(beta-1)] sqrt(Z D_(2 beta)(L_M)),
+
+where C_R(t)=C_S(t)/(4*32^(-t)) and
+C_S(t)=zeta(t)[1/(t-1)+2^(t+1)/(t+1)+4(2 log 4+2)].
+The rate is sharp for the separated arithmetic contribution. No lower
+bound for the actual signed Mellin operator is asserted. The canonical
+norm-growth obligation remains **Open**, and RH is not proved.
+See Section 6A of the stability memorandum for precise endpoint limitations.
+
 ## Still not claimed
 
 - Any proof of subpolynomial growth for the actual canonical LCM family,
@@ -227,3 +253,15 @@ latency and the server's reported verification duration are distinct.
 The retained token is `ws_mwWauOIKeaTQFsXlLf9olVQpDUYrLPst`.
 The final checkpoint separately audits, validates, and publishes the complete
 unpublished delta; its terminal job and commit are reported in the delivery.
+
+## Sharp-order continuation verification
+
+This continuation starts from published commit
+`4b977a100e86fa1462cc2480c606ed5a45251483`.
+The three actual owning modules passed server job
+`job_rtm41nQ0l6YmdE3wPQ-XOca_V0rqu90f`, with reported verification
+time 28.486 seconds. All fifteen newly added theorems were axiom-audited,
+as was the existing conditional cofinal escape-energy implication to RH.
+Each used only `propext`, `Classical.choice`, and `Quot.sound`.
+Two positive-constant definitions accompany the fifteen theorems.
+The final checkpoint separately validates and publishes the repository delta.

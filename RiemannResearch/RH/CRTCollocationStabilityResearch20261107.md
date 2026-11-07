@@ -220,6 +220,58 @@ statements use M+2 to keep the canonical cutoff at least two.
 
 These sampler improvements do not establish the canonical norm bound.
 
+## 6A. Sharp sampler order and quantitative Mellin rate
+
+The follow-on declarations in `GcdSampleTail` show that S_t(L) decreases
+with t on 1<t<=2, and that S_2(L)=D_2(L) exactly. Consequently
+D_2(L)<=S_t(L). Combining this with the existing full Euler-tail lower
+bound at exponent two gives, for every M>=32,
+
+    S_t(L_M) >= 1/(256 M log M),    1<t<=2.
+
+With C_S(t)=zeta(t)[1/(t-1)+2^(t+1)/(t+1)+4(2 log 4+2)],
+the two-sided eventual estimate is
+
+    1/(256 M log M) <= S_t(L_M) <= C_S(t)/(M log M).
+
+Thus S_t(L_M)=Theta_t(1/(M log M)). The normalized complete energy
+M log M S_t(L_M) is eventually between 1/256 and C_S(t), and cannot
+converge to zero. These bounds concern the entire positive-coordinate tail.
+
+Set b_t=4*32^(-t) and C_R(t)=C_S(t)/b_t. The logarithm in the earlier
+relative sampler upper bound can now be removed:
+
+    S_t(L_M)/D_t(L_M) <= C_R(t) M^(t-2), eventually.
+
+The existing upper bound D_t(L_M)=O_t(M^(1-t)/log M), together with the
+new sampler lower bound, also proves a positive constant c_t with
+
+    c_t M^(t-2) <= S_t(L_M)/D_t(L_M) <= C_R(t) M^(t-2)
+
+eventually. Both sides are formalized in
+`exists_eventually_sampleTail_div_tail_bounds`.
+
+For each fixed s with beta=Re(s) in (1/2,1), the actual projected Mellin
+map therefore satisfies the checked quantitative upper bound
+
+    K_(L_M)(s) <= sqrt(Z D_(2 beta)(L_M))
+      [1+sqrt(C_R(2 beta)) M^(beta-1)].
+
+This is `QCRTAsymptoticSampler.eventually_tailMellin_norm_le_power`.
+The power is sharp for the separated arithmetic sampler contribution.
+There is no corresponding lower bound here for the actual operator:
+cancellation between its signed pieces remains possible.
+
+At beta=1, S_2(L)/D_2(L)=1 for every positive finite L, so the
+negligible-sampler argument does not extend to that endpoint. At beta=1/2,
+the present summability and Hilbert-space Mellin hypotheses do not apply.
+All interior estimates are for fixed beta; uniformity across the open
+strip is not asserted.
+
+The actual canonical-norm condition remains OPEN. These sharper arithmetic
+rates do not furnish the small canonical escape-energy product required
+by the conditional RH theorem.
+
 ## 7. Published context and status
 
 Bagchi, *On Nyman, Beurling and Baez-Duarte's Hilbert space reformulation of

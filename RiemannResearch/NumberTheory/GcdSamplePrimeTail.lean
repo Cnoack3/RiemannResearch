@@ -669,4 +669,158 @@ theorem eventually_sampleTail_lcmUpto_le_log
         (power_series_pos t ht).le
     _ = _ := by ring
 
+/-- Explicit constant for the complete sampler's reciprocal-logarithmic bound. -/
+def sampleLogConstant (t : ℝ) : ℝ :=
+  (∑' n : ℕ, (n : ℝ)^(-t)) *
+    (1/(t-1) + (2 : ℝ)^(t+1)/(t+1) + 4*(2*Real.log 4+2))
+
+theorem sampleLogConstant_pos (t : ℝ) (ht : 1 < t) :
+    0 < sampleLogConstant t := by
+  have h1 : 0 < t-1 := by linarith
+  have h2 : 0 < t+1 := by linarith
+  have hlog : 0 < Real.log 4 := Real.log_pos (by norm_num)
+  unfold sampleLogConstant
+  exact mul_pos (power_series_pos t ht) (by positivity)
+
+/-- Relative sampler constant obtained from the explicit Euler-tail lower bound. -/
+def sampleRatioConstant (t : ℝ) : ℝ :=
+  sampleLogConstant t / (4 * (32 : ℝ)^(-t))
+
+theorem sampleRatioConstant_pos (t : ℝ) (ht : 1 < t) :
+    0 < sampleRatioConstant t :=
+  div_pos (sampleLogConstant_pos t ht) (by positivity)
+
+/-- The sampler cannot decay faster than reciprocal cutoff times logarithm.
+The constant is uniform in the full range 1 < t ≤ 2. -/
+theorem sampleTail_lcmUpto_lower_explicit
+    (t : ℝ) (ht : 1 < t) (ht2 : t ≤ 2) (M : ℕ) (hM : 32 ≤ M) :
+    1 / (256 * (M : ℝ) * Real.log M) ≤ sampleTail t (Nat.lcmUpto M) := by
+  have h := (tail_lcmUpto_lower_explicit 2 (by norm_num) M hM).trans
+    (tail_two_le_sampleTail t ht ht2 (Nat.lcmUpto M))
+  calc
+    _ = 4 * (32 : ℝ)^(-(2 : ℝ)) * (M : ℝ)^(1-(2 : ℝ)) / Real.log M := by
+      norm_num [Real.rpow_neg, Real.rpow_two, Real.rpow_one]
+      ring
+    _ ≤ _ := h
+
+/-- Two-sided complete sampler bounds: the reciprocal-logarithmic order is sharp. -/
+theorem eventually_sampleTail_lcmUpto_bounds
+    (t : ℝ) (ht : 1 < t) (ht2 : t ≤ 2) :
+    ∀ᶠ M : ℕ in atTop,
+      1 / (256 * (M : ℝ) * Real.log M) ≤ sampleTail t (Nat.lcmUpto M) ∧
+      sampleTail t (Nat.lcmUpto M) ≤
+        sampleLogConstant t / ((M : ℝ) * Real.log M) := by
+  filter_upwards [eventually_sampleTail_lcmUpto_le_log t ht ht2,
+    eventually_ge_atTop (32 : ℕ)] with M hupper hM
+  exact ⟨sampleTail_lcmUpto_lower_explicit t ht ht2 M hM, hupper⟩
+
+/-- The logarithmic loss in the earlier relative sampler estimate is removable. -/
+theorem eventually_sampleTail_div_tail_le_power
+    (t : ℝ) (ht : 1 < t) (ht2 : t ≤ 2) :
+    ∀ᶠ M : ℕ in atTop,
+      sampleTail t (Nat.lcmUpto M) / tail t (Nat.lcmUpto M) ≤
+        sampleRatioConstant t * (M : ℝ)^(t-2) := by
+  filter_upwards [eventually_sampleTail_lcmUpto_le_log t ht ht2,
+    eventually_ge_atTop (32 : ℕ)] with M hupper hM
+  have hMR : (0 : ℝ) < M := by exact_mod_cast (show 0 < M by omega)
+  have hlog : 0 < Real.log M := Real.log_pos (by exact_mod_cast (show 1 < M by omega))
+  have hb : 0 < 4 * (32 : ℝ)^(-t) := by positivity
+  have hD : 0 < tail t (Nat.lcmUpto M) :=
+    tail_pos t ht ht2 _ (Nat.lcmUpto_pos M)
+  have hscale : 0 ≤ sampleRatioConstant t * (M : ℝ)^(t-2) :=
+    mul_nonneg (sampleRatioConstant_pos t ht).le (Real.rpow_nonneg hMR.le _)
+  apply (div_le_iff₀ hD).mpr
+  calc
+    _ ≤ sampleLogConstant t / ((M : ℝ) * Real.log M) := hupper
+    _ = (sampleRatioConstant t * (M : ℝ)^(t-2)) *
+        (4 * (32 : ℝ)^(-t) * (M : ℝ)^(1-t) / Real.log M) := by
+      unfold sampleRatioConstant
+      have hpow : (M : ℝ)^(t-2) * (M : ℝ)^(1-t) = (M : ℝ)⁻¹ := by
+        rw [← Real.rpow_add hMR, show t-2+(1-t) = -1 by ring, Real.rpow_neg_one]
+      calc
+        _ = sampleLogConstant t / Real.log M * (M : ℝ)⁻¹ := by ring
+        _ = sampleLogConstant t / Real.log M *
+            ((M : ℝ)^(t-2) * (M : ℝ)^(1-t)) := by rw [hpow]
+        _ = _ := by field_simp
+    _ ≤ _ := mul_le_mul_of_nonneg_left
+      (tail_lcmUpto_lower_explicit t ht M hM) hscale
+
+/-- Both sides of the relative sampler estimate have the same power of M.
+This is a statement about the separated arithmetic majorant, not a lower
+bound for the actual projected Mellin operator, where cancellation may occur. -/
+theorem exists_eventually_sampleTail_div_tail_bounds
+    (t : ℝ) (ht : 1 < t) (ht2 : t ≤ 2) :
+    ∃ c : ℝ, 0 < c ∧ ∀ᶠ M : ℕ in atTop,
+      c * (M : ℝ)^(t-2) ≤
+        sampleTail t (Nat.lcmUpto M) / tail t (Nat.lcmUpto M) ∧
+      sampleTail t (Nat.lcmUpto M) / tail t (Nat.lcmUpto M) ≤
+        sampleRatioConstant t * (M : ℝ)^(t-2) := by
+  let A : ℝ := (∑' n : ℕ, (n : ℝ)^(-t)) * (Real.log 4+1) *
+    (1+2/(1-(2 : ℝ)^(1-t)))
+  have hden : 0 < 1-(2 : ℝ)^(1-t) := sub_pos.mpr
+    (Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith))
+  have hA : 0 < A := by
+    have hlog : 0 < Real.log 4 := Real.log_pos (by norm_num)
+    dsimp [A]
+    exact mul_pos (mul_pos (power_series_pos t ht) (by positivity)) (by positivity)
+  refine ⟨1/(256*A), by positivity, ?_⟩
+  filter_upwards [eventually_tail_lcmUpto_le_log t ht 1 (by norm_num),
+    eventually_sampleTail_div_tail_le_power t ht ht2,
+    eventually_ge_atTop (32 : ℕ)] with M hupper hratio hM
+  refine ⟨?_, hratio⟩
+  have hMR : (0 : ℝ) < M := by exact_mod_cast (show 0 < M by omega)
+  have hlog : 0 < Real.log M := Real.log_pos (by exact_mod_cast (show 1 < M by omega))
+  have hD : 0 < tail t (Nat.lcmUpto M) :=
+    tail_pos t ht ht2 _ (Nat.lcmUpto_pos M)
+  have hscale : 0 ≤ 1/(256*A) * (M : ℝ)^(t-2) := by positivity
+  apply (le_div_iff₀ hD).mpr
+  calc
+    _ ≤ (1/(256*A) * (M : ℝ)^(t-2)) *
+        (A * (M : ℝ)^(1-t) / Real.log M) :=
+      mul_le_mul_of_nonneg_left hupper hscale
+    _ = 1/(256*(M : ℝ)*Real.log M) := by
+      have hpow : (M : ℝ)^(t-2) * (M : ℝ)^(1-t) = (M : ℝ)⁻¹ := by
+        rw [← Real.rpow_add hMR, show t-2+(1-t) = -1 by ring, Real.rpow_neg_one]
+      calc
+        _ = ((M : ℝ)^(t-2) * (M : ℝ)^(1-t))/(256*Real.log M) := by
+          field_simp
+        _ = _ := by rw [hpow]; ring
+    _ ≤ _ := sampleTail_lcmUpto_lower_explicit t ht ht2 M hM
+
+/-- The normalized sampled energy stays uniformly away from zero. -/
+theorem eventually_sampleTail_mul_cutoff_log_bounds
+    (t : ℝ) (ht : 1 < t) (ht2 : t ≤ 2) :
+    ∀ᶠ M : ℕ in atTop,
+      1/256 ≤ ((M : ℝ)*Real.log M) * sampleTail t (Nat.lcmUpto M) ∧
+      ((M : ℝ)*Real.log M) * sampleTail t (Nat.lcmUpto M) ≤
+        sampleLogConstant t := by
+  filter_upwards [eventually_sampleTail_lcmUpto_bounds t ht ht2,
+    eventually_ge_atTop (32 : ℕ)] with M hbounds hM
+  have hMR : (0 : ℝ) < M := by exact_mod_cast (show 0 < M by omega)
+  have hlog : 0 < Real.log M := Real.log_pos (by exact_mod_cast (show 1 < M by omega))
+  have hp := mul_pos hMR hlog
+  constructor
+  · have hlow : (1/256 : ℝ)/((M : ℝ)*Real.log M) ≤
+        sampleTail t (Nat.lcmUpto M) := by
+      calc
+        _ = 1/(256*(M : ℝ)*Real.log M) := by ring
+        _ ≤ _ := hbounds.1
+    have h := (div_le_iff₀ hp).mp hlow
+    nlinarith
+  · have h := (le_div_iff₀ hp).mp hbounds.2
+    nlinarith
+
+/-- A strictly smaller order than 1/(M log M) is impossible for the complete
+sampler itself. This does not exclude cancellation in the Mellin detector. -/
+theorem sampleTail_mul_cutoff_log_not_tendsto_zero
+    (t : ℝ) (ht : 1 < t) (ht2 : t ≤ 2) :
+    ¬ Tendsto (fun M : ℕ =>
+      ((M : ℝ)*Real.log M) * sampleTail t (Nat.lcmUpto M)) atTop (𝓝 0) := by
+  intro h
+  have hlow := (eventually_sampleTail_mul_cutoff_log_bounds t ht ht2).mono
+    (fun _ hM => hM.1)
+  have hc : (1/256 : ℝ) ≤ 0 :=
+    le_of_tendsto_of_tendsto tendsto_const_nhds h hlow
+  norm_num at hc
+
 end RiemannResearch.NumberTheory.DivisorEscapeTail

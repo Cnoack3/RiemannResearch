@@ -5,6 +5,7 @@ Authors: Christian Noack
 -/
 import RiemannResearch.NumberTheory.DivisorEscapeTail
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
@@ -103,5 +104,50 @@ theorem tail_pos (t : ℝ) (ht : 1 < t) (ht2 : t ≤ 2)
   by_contra h
   have hn := mul_nonpos_of_nonneg_of_nonpos hq.le (le_of_not_gt h)
   linarith
+
+/-- At exponent two, the gcd weight is exactly one. -/
+@[simp] theorem sampleTerm_two (L n : ℕ) :
+    sampleTerm 2 L n = term 2 L n := by
+  by_cases hnL : n ∣ L
+  · simp [sampleTerm, term, hnL]
+  · simp [sampleTerm, term, hnL]
+
+/-- At exponent two, complete sampling and divisor escape coincide. -/
+@[simp] theorem sampleTail_two (L : ℕ) :
+    sampleTail 2 L = tail 2 L := by
+  simpa only [sampleTail, sampleTerm_two] using tsum_shifted_term 2 (by norm_num) L
+
+/-- Increasing the exponent decreases each positive-coordinate sampler weight. -/
+theorem sampleTerm_antitone (L n : ℕ) (hn : 0 < n) :
+    Antitone (fun t : ℝ => sampleTerm t L n) := by
+  intro s t hst
+  by_cases hnL : n ∣ L
+  · simp [sampleTerm, hnL]
+  · have hg : (1 : ℝ) ≤ Nat.gcd n L := by
+      exact_mod_cast Nat.succ_le_of_lt (Nat.gcd_pos_of_pos_left L hn)
+    simp only [sampleTerm, if_neg hnL]
+    exact div_le_div_of_nonneg_right
+      (Real.rpow_le_rpow_of_exponent_le hg (by linarith)) (sq_nonneg _)
+
+/-- The complete sampled energy is decreasing on its summable exponent range. -/
+theorem sampleTail_antitoneOn (L : ℕ) :
+    AntitoneOn (fun t : ℝ => sampleTail t L) (Set.Ioc 1 2) := by
+  intro s hs t ht hst
+  exact Summable.tsum_le_tsum
+    (fun n => sampleTerm_antitone L (n+1) (Nat.succ_pos n) hst)
+    (sampleTerm_summable t ht.1 ht.2 L) (sampleTerm_summable s hs.1 hs.2 L)
+
+/-- The square-reciprocal escape tail is a universal lower bound for sampling. -/
+theorem tail_two_le_sampleTail (t : ℝ) (ht : 1 < t) (ht2 : t ≤ 2) (L : ℕ) :
+    tail 2 L ≤ sampleTail t L := by
+  simpa only [sampleTail_two] using
+    sampleTail_antitoneOn L ⟨ht, ht2⟩ ⟨by norm_num, le_rfl⟩ ht2
+
+/-- At the boundary exponent two the relative sampled energy is exactly one.
+The interior-strip negligible-sampler statement does not extend to this endpoint. -/
+theorem sampleTail_div_tail_two (L : ℕ) (hL : 0 < L) :
+    sampleTail 2 L / tail 2 L = 1 := by
+  rw [sampleTail_two]
+  exact div_self (ne_of_gt (tail_pos 2 (by norm_num) le_rfl L hL))
 
 end RiemannResearch.NumberTheory.DivisorEscapeTail

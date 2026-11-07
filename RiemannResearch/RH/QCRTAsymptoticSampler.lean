@@ -154,4 +154,46 @@ theorem riemannHypothesis_of_cofinal_escape_energy
       (lcmLeakage_le_norm_sq M) (tail_nonneg _ _))
   exact (not_lt_of_ge hle) hM
 
+/-- A quantitative version of asymptotic factor one, with no logarithmic loss
+in the relative arithmetic sampler bound. -/
+theorem eventually_tailMellin_norm_le_power
+    (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) (hs1 : s.re < 1) :
+    ∀ᶠ M : ℕ in atTop, ‖tailMellin (Nat.lcmUpto M) s hs‖ ≤
+      (1 + Real.sqrt (sampleRatioConstant (2*s.re)) * (M : ℝ)^(s.re-1)) *
+        Real.sqrt (zetaTwo * tail (2*s.re) (Nat.lcmUpto M)) := by
+  have ht : 1 < 2*s.re := by linarith
+  have ht2 : 2*s.re ≤ 2 := by linarith
+  filter_upwards [eventually_sampleTail_div_tail_le_power (2*s.re) ht ht2,
+    eventually_ge_atTop (1 : ℕ)] with M hM hMpos
+  have hMR : (0 : ℝ) < M := by exact_mod_cast (show 0 < M by omega)
+  have hsmall := (div_le_iff₀
+    (tail_pos (2*s.re) ht ht2 _ (Nat.lcmUpto_pos M))).mp hM
+  let e := Real.sqrt (sampleRatioConstant (2*s.re)) * (M : ℝ)^(s.re-1)
+  have he : 0 ≤ e := mul_nonneg (Real.sqrt_nonneg _) (Real.rpow_nonneg hMR.le _)
+  have he2 : e^2 = sampleRatioConstant (2*s.re) * (M : ℝ)^(2*s.re-2) := by
+    dsimp [e]
+    rw [mul_pow, Real.sq_sqrt (sampleRatioConstant_pos (2*s.re) ht).le]
+    congr 1
+    rw [← Real.rpow_two, ← Real.rpow_mul hMR.le]
+    congr 1
+    ring
+  have hroot : Real.sqrt (sampleTail (2*s.re) (Nat.lcmUpto M)) ≤
+      e * Real.sqrt (tail (2*s.re) (Nat.lcmUpto M)) := by
+    have hS := Real.sq_sqrt (sampleTail_nonneg (2*s.re) (Nat.lcmUpto M))
+    have hD := Real.sq_sqrt (tail_nonneg (2*s.re) (Nat.lcmUpto M))
+    have heD : (e * Real.sqrt (tail (2*s.re) (Nat.lcmUpto M)))^2 =
+        sampleRatioConstant (2*s.re) * (M : ℝ)^(2*s.re-2) *
+          tail (2*s.re) (Nat.lcmUpto M) := by rw [mul_pow, hD, he2]
+    have hn : 0 ≤ e * Real.sqrt (tail (2*s.re) (Nat.lcmUpto M)) :=
+      mul_nonneg he (Real.sqrt_nonneg _)
+    nlinarith [Real.sqrt_nonneg (sampleTail (2*s.re) (Nat.lcmUpto M))]
+  calc
+    _ ≤ Real.sqrt zetaTwo * (Real.sqrt (tail (2*s.re) (Nat.lcmUpto M)) +
+        Real.sqrt (sampleTail (2*s.re) (Nat.lcmUpto M))) :=
+      tailMellin_norm_le_separated s hs hs1.le _ (Nat.lcmUpto_pos M)
+    _ ≤ Real.sqrt zetaTwo * (Real.sqrt (tail (2*s.re) (Nat.lcmUpto M)) +
+        e * Real.sqrt (tail (2*s.re) (Nat.lcmUpto M))) :=
+      mul_le_mul_of_nonneg_left (add_le_add le_rfl hroot) (Real.sqrt_nonneg _)
+    _ = _ := by rw [Real.sqrt_mul zetaTwo_pos.le]; dsimp [e]; ring
+
 end RiemannResearch.RH.QCRTAsymptoticSampler
