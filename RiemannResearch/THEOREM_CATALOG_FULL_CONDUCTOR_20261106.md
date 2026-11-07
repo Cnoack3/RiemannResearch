@@ -354,7 +354,7 @@ Every displacement declaration uses the actual full-conductor residuals.
 - displacement_eq_zero_iff_second_inverse_mem: d=0 iff T^2d in V_Q.
 - rootDefect=J=1-T/sqrt(Z), with its exact coordinate multiplier.
 - rootDefect_norm_le_of_head_zero:
-  ||Jf||_Q <= ||f||_Q/(N+2) when the first N positive coordinates vanish.
+  ||Jf||_Q <= ||f||_Q/(2N+3) when the first N positive coordinates vanish.
 - two_distance_head_certificate: explicit legal-correction certificates
   for a shared J-transformed head target, retaining the infinite remainder.
 
@@ -377,3 +377,44 @@ job_Odin6V3Y3pnftimYSpdTePhqM2miJeiF (verified=true, exit 0,
 server-reported 20.679 seconds). Reports contain only propext,
 Classical.choice, and Quot.sound. Publication additionally uses the
 mandatory aggregate and changed-module checkpoint.
+
+## Compact square-root corrections and explicit Gram fits: November 6 continuation
+
+Source: CrossedDistanceLeanHandoff20261106.md. Detailed account and remaining
+providers: RH/CompactCrossedCorrectionResearch20261106.md.
+
+### Established
+
+- QParetoSquareRootEnergy: exact rationalization of the J coefficient;
+  rootDefect_norm_le_of_head_zero and both head certificates are strengthened
+  from denominator N+2 to 2N+3, retaining every infinite tail term.
+- QFullCrossedDistances: for legal g, a(g)=dist_P(A Jg,V_P) and
+  b(g)=sqrt(Z) dist_Q(Jg,V_Q), with no identification of A(V_Q) with V_P.
+- QParetoSquareRootCompactness: finite-rank J_N, operator error <=1/(2N+3),
+  IsCompactOperator J, and bounded coordinatewise/weak convergence giving
+  strong convergence JG_M -> Jf. The limit is not asserted to vanish.
+- QFullCorrectionCertificates: both full inverse-Gram corrections,
+  exact Schur values and completion identities, finite target pairings,
+  and explicit matchedApprox N defined by two finite solves with target 1.
+  matchedApprox_tendsto proves convergence to the actual full displacement.
+- matched_head_certificate instantiates the complete strengthened certificate
+  with those approximants and both optimal finite corrections.
+- optimized_correction_budget_tendsto gives the actual crossed-budget limit
+  for fixed legal targets; it does not give a zero-limit provider.
+
+### Conditional research reductions
+
+- QFullCompactCrossedDistances: legal norm-bounded approximants with coordinate
+  limit d suffice for the budget-decay iff and RH implication.
+  Open: vanishing of their complete crossed budget.
+- QFullCrossedDistances: weak convergence determines the signed-test limit;
+  an independently justified nonpositive limit implies d=0 and RH.
+  Open: the arithmetic signed nonpositive-limit provider.
+- Open: cofinal full correction-error decay, and T(Td) membership in V_Q.
+  Compactness and finite-head matching do not discharge either condition.
+
+Assembled-module verification and nine axiom audits succeeded in
+job_M5yiY2OyEf3aD5ELvT--00J40dERKUWb (verified=true, exit 0,
+server-reported 24.999 seconds). Only propext, Classical.choice, and
+Quot.sound occur in those reports. Final publication additionally requires
+and uses the source-audited aggregate checkpoint.

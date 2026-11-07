@@ -144,28 +144,43 @@ theorem rootDefect_apply (f : QHilbert) (n : ℕ) :
     Real.sqrt_mul zetaTwo_pos.le]
   field_simp
 
-theorem rootDefect_weight_bounds (n : ℕ) :
-    0 ≤ 1 - Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)) ∧
-      1 - Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)) ≤ 1/((n : ℝ)+2) := by
+theorem rootDefect_weight_rationalized (n : ℕ) :
+    1 - Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)) =
+      1 / (((n : ℝ)+2) * (1 + Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)))) := by
+  have hp : 0 ≤ ((n : ℝ)+1)/((n : ℝ)+2) := by positivity
+  have he := Real.sq_sqrt hp
+  have hn : (n : ℝ)+2 ≠ 0 := by positivity
+  have hs : 1 + Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)) ≠ 0 := by positivity
+  apply (eq_div_iff (mul_ne_zero hn hs)).mpr
+  have he' : (Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)))^2 * ((n : ℝ)+2) = (n : ℝ)+1 :=
+    (eq_div_iff hn).mp he
+  nlinarith
+theorem rootDefect_weight_upper (n : ℕ) :
+    1 - Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)) ≤ 1 / (2*(n : ℝ)+3) := by
   have hn : (0 : ℝ) < (n : ℝ)+2 := by positivity
   have hp : 0 ≤ ((n : ℝ)+1)/((n : ℝ)+2) := by positivity
-  have hu : ((n : ℝ)+1)/((n : ℝ)+2) ≤ 1 := by
-    apply (div_le_one hn).mpr
-    linarith
+  have hu : ((n : ℝ)+1)/((n : ℝ)+2) ≤ 1 := (div_le_one hn).mpr (by linarith)
   have hs := Real.sqrt_nonneg (((n : ℝ)+1)/((n : ℝ)+2))
   have hs1 := Real.sqrt_le_one.mpr hu
   have he := Real.sq_sqrt hp
-  have hx : ((n : ℝ)+1)/((n : ℝ)+2) ≤
-      Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)) := by nlinarith
+  have hx : ((n : ℝ)+1)/((n : ℝ)+2) ≤ Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)) := by nlinarith
   have hx' := (div_le_iff₀ hn).mp hx
-  exact ⟨sub_nonneg.mpr hs1, (le_div_iff₀ hn).mpr (by nlinarith)⟩
+  rw [rootDefect_weight_rationalized]
+  exact one_div_le_one_div_of_le (by positivity) (by nlinarith)
+
+theorem rootDefect_weight_bounds (n : ℕ) :
+    0 ≤ 1 - Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)) ∧
+      1 - Real.sqrt (((n : ℝ)+1)/((n : ℝ)+2)) ≤ 1/(2*(n : ℝ)+3) := by
+  have hu : ((n : ℝ)+1)/((n : ℝ)+2) ≤ 1 :=
+    (div_le_one (by positivity)).mpr (by linarith)
+  exact ⟨sub_nonneg.mpr (Real.sqrt_le_one.mpr hu), rootDefect_weight_upper n⟩
 
 /-- Complete tail estimate: vanishing encoded coordinates below N improve the operator bound. -/
 theorem rootDefect_norm_le_of_head_zero (f : QHilbert) (N : ℕ)
     (hhead : ∀ n < N, f n = 0) :
-    ‖rootDefect f‖ ≤ ‖f‖ / ((N : ℝ)+2) := by
-  have hN : (0 : ℝ) < (N : ℝ)+2 := by positivity
-  have hs : ‖rootDefect f‖ ^ 2 ≤ (‖f‖ / ((N : ℝ)+2)) ^ 2 := by
+    ‖rootDefect f‖ ≤ ‖f‖ / (2*(N : ℝ)+3) := by
+  have hN : (0 : ℝ) < 2*(N : ℝ)+3 := by positivity
+  have hs : ‖rootDefect f‖ ^ 2 ≤ (‖f‖ / (2*(N : ℝ)+3)) ^ 2 := by
     rw [div_pow, qNorm_sq, qNorm_sq, ← tsum_div_const]
     apply Summable.tsum_le_tsum _ (qCoordinate_square_summable (rootDefect f))
       ((qCoordinate_square_summable f).div_const _)
@@ -175,9 +190,9 @@ theorem rootDefect_norm_le_of_head_zero (f : QHilbert) (N : ℕ)
     · simp [hhead n hn]
     · have hNn : (N : ℝ) ≤ n := by exact_mod_cast Nat.le_of_not_gt hn
       have hb := rootDefect_weight_bounds n
-      have hdiv : 1/((n : ℝ)+2) ≤ 1/((N : ℝ)+2) :=
+      have hdiv : 1/(2*(n : ℝ)+3) ≤ 1/(2*(N : ℝ)+3) :=
         one_div_le_one_div_of_le hN (by linarith)
-      have hsq := (sq_le_sq₀ hb.1 (by positivity : (0 : ℝ) ≤ 1/((N : ℝ)+2))).mpr
+      have hsq := (sq_le_sq₀ hb.1 (by positivity : (0 : ℝ) ≤ 1/(2*(N : ℝ)+3))).mpr
         (hb.2.trans hdiv)
       have hm := mul_le_mul_of_nonneg_right hsq (sq_nonneg (f n))
       simpa only [mul_pow, div_pow, one_pow, one_div_mul_eq_div] using hm
@@ -188,7 +203,7 @@ theorem rootDefect_norm_le_of_head_zero (f : QHilbert) (N : ℕ)
 theorem rootDefect_head_trial_bound (g v z : QHilbert) (N : ℕ)
     (hhead : ∀ n < N, g n = v n) :
     ‖rootDefect g - z‖ ≤
-      ‖rootDefect v - z‖ + ‖g - v‖ / ((N : ℝ)+2) := by
+      ‖rootDefect v - z‖ + ‖g - v‖ / (2*(N : ℝ)+3) := by
   have hh : ∀ n < N, (g - v) n = 0 := by
     intro n hn
     change g n - v n = 0

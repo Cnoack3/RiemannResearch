@@ -3920,3 +3920,6 @@ import RiemannResearch.RH.QCRTFiniteCollocation
 import RiemannResearch.RH.QCRTLeakageParseval
 import RiemannResearch.RH.QCRTBoundedCriterion
 import RiemannResearch.RH.QCRTZeroObstruction
+import RiemannResearch.RH.QParetoSquareRootCompactness
+import RiemannResearch.RH.QFullCompactCrossedDistances
+import RiemannResearch.RH.QFullCorrectionCertificates

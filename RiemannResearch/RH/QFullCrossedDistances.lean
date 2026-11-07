@@ -268,6 +268,30 @@ theorem inverseDistance_le_rootDefect_trial (g k : QHilbert)
     Real.norm_eq_abs, abs_of_nonneg (Real.sqrt_nonneg zetaTwo), norm_sub_rev k] using hd
 
 
+/-- Exact common-target formula for the forward crossed distance on legal vectors. -/
+theorem forwardDistance_eq_rootDefect (g : QHilbert) (hg : g ∈ closure) :
+    forwardDistance g = Metric.infDist (A (rootDefect g))
+      (paretoClosure : Set ThresholdHilbert) := by
+  have hm : toPareto ((Real.sqrt zetaTwo)⁻¹ • g) ∈ paretoClosure :=
+    (toPareto_mem_iff _).mpr (closure.smul_mem _ hg)
+  have he : A (rootDefect g) = A g - toPareto ((Real.sqrt zetaTwo)⁻¹ • g) := by
+    change g - (Real.sqrt zetaTwo)⁻¹ • inversePhysical g =
+      g - toParetoLinear ((Real.sqrt zetaTwo)⁻¹ • g)
+    rw [map_smul]
+    rfl
+  rw [he, paretoClosure.infDist_sub_mem _ hm]
+  rfl
+theorem inverseDistance_eq_rootDefect (g : QHilbert) (hg : g ∈ closure) :
+    inverseDistance g = Real.sqrt zetaTwo *
+      Metric.infDist (rootDefect g) (closure : Set QHilbert) := by
+  change Metric.infDist (toPareto g) (imageSubmodule closure : Set ThresholdHilbert) = _
+  rw [infDist_same_sequence_image]
+  change Metric.infDist (inversePhysical g) (closure : Set QHilbert) = _
+  have he : inversePhysical g = Real.sqrt zetaTwo • (g - rootDefect g) := by
+    rw [smul_sub, rootDefect_scale]
+    abel
+  rw [he, closure.infDist_smul_sub_of_mem hg, abs_of_nonneg (Real.sqrt_nonneg zetaTwo)]
+
 /-- A complete head-and-tail certificate with two legal corrections.
 The head vector v need not itself be legal. No infinite tail is discarded. -/
 theorem two_distance_head_certificate (g v h k : QHilbert) (N : ℕ)
@@ -275,9 +299,9 @@ theorem two_distance_head_certificate (g v h k : QHilbert) (N : ℕ)
     (hhead : ∀ n < N, g n = v n) :
     Real.sqrt (zetaTwo / 2) * ‖displacement‖ ^ 2 + inverseEnergy g ≤
       2 * (‖toPareto pResidual‖ *
-          (‖rootDefect v - inversePhysical h‖ + ‖g - v‖ / ((N : ℝ)+2)) +
+          (‖rootDefect v - inversePhysical h‖ + ‖g - v‖ / (2*(N : ℝ)+3)) +
         ‖qResidual‖ * (Real.sqrt zetaTwo *
-          (‖rootDefect v - k‖ + ‖g - v‖ / ((N : ℝ)+2)))) +
+          (‖rootDefect v - k‖ + ‖g - v‖ / (2*(N : ℝ)+3)))) +
       Real.sqrt zetaTwo * ‖displacement - g‖ ^ 2 := by
   have ha := (forwardDistance_le_rootDefect_trial g h hg hh).trans
     (rootDefect_head_trial_bound g v (inversePhysical h) N hhead)
@@ -290,5 +314,42 @@ theorem two_distance_head_certificate (g v h k : QHilbert) (N : ℕ)
   have hquad := quadratic_two_distance_bound g
   unfold crossedBudget at hquad
   linarith
+
+/-- Weak convergence alone determines the signed-test limit; legality is unnecessary. -/
+theorem signedTest_tendsto_of_weak {G : ℕ → QHilbert}
+    (hweak : ∀ v : QHilbert,
+      Tendsto (fun M => inner ℝ (G M) v) atTop (𝓝 (inner ℝ displacement v))) :
+    Tendsto (fun M => signedTest (G M)) atTop (𝓝 (inverseEnergy displacement)) := by
+  have he : (fun M => signedTest (G M)) =
+      (fun M => inner ℝ (G M) (inversePhysical displacement)) := by
+    funext M
+    rw [signedTest_eq, ← inversePhysical_symmetric, real_inner_comm]
+  rw [he]
+  exact hweak (inversePhysical displacement)
+
+/-- A justified nonpositive signed limit suffices; its provider remains open. -/
+theorem displacement_eq_zero_of_weak_signed_limit_nonpos
+    {G : ℕ → QHilbert} {L : ℝ}
+    (hweak : ∀ v : QHilbert,
+      Tendsto (fun M => inner ℝ (G M) v) atTop (𝓝 (inner ℝ displacement v)))
+    (hF : Tendsto (fun M => signedTest (G M)) atTop (𝓝 L))
+    (hL : L ≤ 0) : displacement = 0 := by
+  have he := tendsto_nhds_unique (signedTest_tendsto_of_weak hweak) hF
+  have hlo := inverseEnergy_lower displacement
+  have hp : 0 < Real.sqrt (zetaTwo / 2) :=
+    Real.sqrt_pos.mpr (div_pos zetaTwo_pos (by norm_num))
+  rw [he] at hlo
+  have hz : ‖displacement‖ ^ 2 = 0 := by nlinarith [sq_nonneg ‖displacement‖]
+  exact norm_eq_zero.mp (sq_eq_zero_iff.mp hz)
+
+theorem riemannHypothesis_of_weak_signed_limit_nonpos
+    {G : ℕ → QHilbert} {L : ℝ}
+    (hweak : ∀ v : QHilbert,
+      Tendsto (fun M => inner ℝ (G M) v) atTop (𝓝 (inner ℝ displacement v)))
+    (hF : Tendsto (fun M => signedTest (G M)) atTop (𝓝 L))
+    (hL : L ≤ 0) : RiemannHypothesis :=
+  riemannHypothesis_of_displacement_eq_zero
+    (displacement_eq_zero_of_weak_signed_limit_nonpos hweak hF hL)
+
 
 end RiemannResearch.RH.QFullCrossedDistances
