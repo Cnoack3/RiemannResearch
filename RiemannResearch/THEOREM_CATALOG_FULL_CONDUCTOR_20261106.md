@@ -325,3 +325,55 @@ Cauchy-Schwarz. A cofinal bound m eta_m = O((log m)^k) would therefore
 supply H(m-1) = O((log m)^((k+1)/2)) and feed the checked A4 theorem.
 The finite estimate and this product-distance assembly are not yet
 kernel-certified.
+
+## Crossed distances and square-root correction: November 6 continuation
+
+Source: Isometric_Transport_Lean_Handoff_2026-11-06.md, Section 5 and
+priorities 1--5. Detailed statements and remaining obligations:
+RH/CrossedDistanceContinuation20261106.md.
+
+### Established identities and quantitative estimates
+
+Three new modules: Analysis/OrthogonalDistanceBound,
+RH/QParetoSquareRootEnergy, and RH/QFullCrossedDistances.
+
+Let T=A^{-1}I, q(f)=<f,Tf>_Q, a(g)=dist_P(Ag,V_P),
+b(g)=dist_P(Ig,A V_Q), and Delta(g)=||r_P||_P a(g)+||r_Q||_Q b(g).
+Every displacement declaration uses the actual full-conductor residuals.
+
+- signedTest_eq: F(g)=<Ir_P,Ag>_P-<r_Q,Tg>_Q=<d,Tg>_Q.
+- inverseEnergy_lower/upper: sqrt(Z/2)||f||_Q^2 <= q(f) <= sqrt(Z)||f||_Q^2.
+- two_distance_bound: sqrt(Z/2)||d||_Q^2 <= Delta(d).
+- two_distance_trial_bound: the handoff's full linear approximation penalty.
+- inverseEnergy_polarization: q(d)+q(g)=2F(g)+q(d-g), retaining all terms.
+- quadratic_two_distance_bound:
+  sqrt(Z/2)||d||_Q^2+q(g) <= 2 Delta(g)+sqrt(Z)||d-g||_Q^2.
+- displacement_eq_zero_iff_crossed_membership:
+  d=0 iff both Ad in V_P and Id in A V_Q.
+- inversePhysical_square: T^2=Z(1-R).
+- displacement_eq_zero_iff_second_inverse_mem: d=0 iff T^2d in V_Q.
+- rootDefect=J=1-T/sqrt(Z), with its exact coordinate multiplier.
+- rootDefect_norm_le_of_head_zero:
+  ||Jf||_Q <= ||f||_Q/(N+2) when the first N positive coordinates vanish.
+- two_distance_head_certificate: explicit legal-correction certificates
+  for a shared J-transformed head target, retaining the infinite remainder.
+
+### Conditional research reductions
+
+For G_M -> d, the combined budget and signed-test zero limits are each
+equivalent to d=0. The RH implications conclude Mathlib RiemannHypothesis
+from the corresponding explicit provider.
+
+- Open: vanishing of both actual crossed distances, or their combined budget.
+- Open: signed-test cancellation F(G_M)->0.
+- Open: second-inverse membership T^2d in the full legal closure.
+- Open: actual legal corrections with vanishing complete J-target errors.
+
+No global invariance, first-inverse-to-second-inverse shortcut, or RH
+conclusion without these providers is asserted.
+
+The assembled modules and seven principal axiom reports passed
+job_Odin6V3Y3pnftimYSpdTePhqM2miJeiF (verified=true, exit 0,
+server-reported 20.679 seconds). Reports contain only propext,
+Classical.choice, and Quot.sound. Publication additionally uses the
+mandatory aggregate and changed-module checkpoint.

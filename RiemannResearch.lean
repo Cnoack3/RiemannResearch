@@ -1301,6 +1301,9 @@ import RiemannResearch.RH.QFullCofinalHarmonic
 import RiemannResearch.RH.QFullReciprocalLimits
 import RiemannResearch.RH.QParetoIsometricTransport
 import RiemannResearch.RH.QFullIsometricTransport
+import RiemannResearch.Analysis.OrthogonalDistanceBound
+import RiemannResearch.RH.QParetoSquareRootEnergy
+import RiemannResearch.RH.QFullCrossedDistances
 import RiemannResearch.RH.QMobiusFloorError
 import RiemannResearch.RH.QFloorDilationSharpBounds
 import RiemannResearch.RH.QMixedConductorObstruction
