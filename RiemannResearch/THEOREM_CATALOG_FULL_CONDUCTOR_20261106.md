@@ -160,6 +160,36 @@ Classical.choice, and Quot.sound. This is an isolated source check;
 publication uses a separate final project checkpoint. An earlier
 triangle-inequality API error was repaired before this successful check.
 
+### Isometric transport of distances, projections, and the RH defect
+
+Source: the user's question comparing dist_Q(R G,V) with dist_P(G,A V),
+6 November 2026. The cross-space isometry A is physical multiplication by
+sqrt((n+1)/(zeta(2)*n)); it is not the sequence-preserving toPareto map.
+
+RH/QParetoIsometricTransport.lean proves the physical formulas for A and
+its inverse, then specializes Mathlib's isometry-distance and projection API:
+
+- dist_Q(R G,V) = dist_P(A R G,A V);
+- dist_P(G,A V) = dist_Q(A inverse G,V), with G the same physical sequence;
+- Pi_(A V)^P = A Pi_V^Q A inverse;
+- the transported projection defects have exactly the same norm.
+
+RH/QFullIsometricTransport.lean retains the actual all-conductor closure.
+The Q target 1 transports to A(1), not to the physical constant target 1.
+For G_M -> d it proves d=0 iff the P projection defect of A R G_M from A(V)
+tends to zero, and derives the conditional RH implication.
+
+Open: prove this transported defect tends to zero for actual legal
+approximants. The isometry does not identify A(V) with the original physical
+V, does not identify the two original projections, and does not establish RH.
+
+The coherent candidate passed job job_swWmStRRX9ZKVjzjs6UprHl9D1vWaCcX:
+verified=true, exit code 0, 11.252 seconds. Four audited declarations
+(the physical A formula, reciprocal distance transport, projection conjugacy,
+and conditional RH implication) use only propext, Classical.choice,
+and Quot.sound. The final project checkpoint separately validates the
+persisted module split and imports.
+
 ### Exact errors and localized integer tests (agenda A2–A3)
 
 `RH/QMobiusFloorError.lean` gives the actual Q defect's complete signed
