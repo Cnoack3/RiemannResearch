@@ -5,6 +5,7 @@ import RiemannResearch.Analysis.FiniteHilbertGramMatrix
 import RiemannResearch.Analysis.FiniteHilbertGramProjection
 import RiemannResearch.Analysis.ExhaustiveProjectionWalk
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
+import Mathlib.Topology.Metrizable.Basic
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -62,6 +63,20 @@ def closure : Submodule ℝ QHilbert := legalSpan.topologicalClosure
 instance closure_hasOrthogonalProjection : closure.HasOrthogonalProjection := by
   unfold closure
   infer_instance
+
+/-- The full legal closure is complete and countably generated in closure. -/
+instance closure_completeSpace : CompleteSpace closure :=
+  (show IsClosed (closure : Set QHilbert) from
+    legalSpan.isClosed_topologicalClosure).completeSpace_coe
+
+instance closure_separableSpace : TopologicalSpace.SeparableSpace closure := by
+  apply TopologicalSpace.IsSeparable.separableSpace
+  change TopologicalSpace.IsSeparable
+    ((Submodule.span ℝ (Set.range (fun i : ℕ => qResidue (i + 2)))).topologicalClosure :
+      Set QHilbert)
+  rw [Submodule.topologicalClosure_coe]
+  exact ((Set.countable_range (fun i : ℕ => qResidue (i + 2))).isSeparable.span
+    (R := ℝ)).closure
 
 theorem coefficients_normal (n : ℕ) (i : Fin n) :
     action (qGram (conductor n)) (coefficients n) i = qMean (conductor n) i := by

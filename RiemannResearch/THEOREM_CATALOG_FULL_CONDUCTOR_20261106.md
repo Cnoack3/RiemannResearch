@@ -418,3 +418,56 @@ job_M5yiY2OyEf3aD5ELvT--00J40dERKUWb (verified=true, exit 0,
 server-reported 24.999 seconds). Only propext, Classical.choice, and
 Quot.sound occur in those reports. Final publication additionally requires
 and uses the source-audited aggregate checkpoint.
+
+## Weak-star finite-head compactness and reciprocal residual-tail costs
+
+Source: the user's weak-star compactness request, November 6, 2026.
+Detailed proofs, exact hypotheses, and the remaining arithmetic tasks are in
+RH/WeakStarReciprocalHeadResearch20261106.md.
+
+### Established
+
+- Analysis/BoundedWeakInterpolation transports Banach--Alaoglu through Riesz:
+  a bounded sequence in a complete separable subspace has an ambient weak
+  subsequence with limit in the same subspace and norm ball. Bounded finite
+  feasibility of countably many linear tests is equivalent to simultaneous
+  bounded feasibility. A continuous-linear-image coordinate version is included.
+- QFullResidueProjection now explicitly exposes completeness and separability
+  of the actual all-conductor legal closure.
+- QFullHeadObstruction.mem_closure_iff_bounded_exact_heads: x belongs to the
+  full closure iff all its finite heads admit finite legal interpolants with
+  one uniform complete Q-norm bound. The reverse uses weak-star compactness.
+- exists_finite_head_norm_obstruction supplies a finite dual witness for any
+  proposed norm bound when x is outside the closure. Every increasing-head
+  legal interpolation family then has norm tending to infinity.
+- QFullReciprocalHeadTail.reciprocal_head_energy_identity: for a legal F_N
+  matching the first N coordinates of R d,
+  ||I d||_P^2 = Z <R d-F_N,r_Q-H_N r_Q>_Q, retaining both complete factors.
+- residual_tail_norm_tendsto_zero is unconditional.
+- reciprocal_head_norm_lower: if d is nonzero, tau_N=||r_Q-H_N r_Q|| is
+  positive whenever such a repair exists, and
+  ||F_N|| >= ||I d||_P^2/(Z tau_N) - ||R d||.
+
+### Conditional research reductions
+
+- displacement_eq_zero_iff_bounded_reciprocal_heads: d=0 iff all finite heads
+  of R d admit uniformly bounded finite legal repairs. The consequent RH
+  theorem leaves that norm bound explicit and Open.
+- reciprocal_head_norm_tendsto_atTop: nonzero actual full displacement forces
+  every such family of repair norms to tend to infinity.
+- riemannHypothesis_of_repair_norm_tail_product permits unbounded repairs:
+  ||F_N|| tau_N -> 0 suffices. The complete-error product criterion also suffices.
+  Open: either product-decay estimate for the actual reciprocal-head repairs.
+- QFullWeakHeadCorrections: uniformly bounded finite-head corrections h_N,k_N
+  satisfying H_N T h_N=H_N Jd and H_N k_N=H_N Jd force d=0 and RH.
+  Open: both uniform full-norm bounds. No identification of A(V_Q) with V_P
+  or global reciprocal invariance is assumed.
+
+The combined candidate containing all 28 new theorem declarations passed
+job_G9PUjB9eFP-jR0EXaLsITvbe2D9crKOJ (verified=true, exit 0, 9.201 seconds).
+
+The persisted modules and nine axiom audits passed
+job_CN-XP_8VlGeCnueN-51fITbhAeY-q23n (verified=true, exit 0, 154.211 seconds).
+Only propext, Classical.choice, and Quot.sound occur in those reports.
+Publication additionally uses the mandatory source-audited aggregate and
+changed-module checkpoint. RH and every actual norm/product provider remain Open.

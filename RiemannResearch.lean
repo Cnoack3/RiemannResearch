@@ -3923,3 +3923,7 @@ import RiemannResearch.RH.QCRTZeroObstruction
 import RiemannResearch.RH.QParetoSquareRootCompactness
 import RiemannResearch.RH.QFullCompactCrossedDistances
 import RiemannResearch.RH.QFullCorrectionCertificates
+import RiemannResearch.Analysis.BoundedWeakInterpolation
+import RiemannResearch.RH.QFullWeakHeadCorrections
+import RiemannResearch.RH.QFullHeadObstruction
+import RiemannResearch.RH.QFullReciprocalHeadTail
