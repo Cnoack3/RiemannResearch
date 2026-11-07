@@ -627,4 +627,83 @@ theorem tail_lcmUpto_lower_explicit (t : ℝ) (ht : 1 < t)
         (Real.rpow_nonneg (Nat.cast_nonneg _) _)
     _ ≤ _ := prime_interval_count_le_tail t ht M (32*M) (by omega)
 
+/-- A nonnegative finite prime sum is at most the corresponding integer sum. -/
+theorem primePrefix_rpow_le_Icc (M : ℕ) (a : ℝ) :
+    (∑ p ∈ primePrefix M, ((p : ℕ) : ℝ) ^ a) ≤
+      ∑ n ∈ Finset.Icc 1 M, (n : ℝ) ^ a := by
+  classical
+  have hsub : (primePrefix M).image (fun p : Nat.Primes => (p : ℕ)) ⊆
+      Finset.Icc 1 M := by
+    intro n hn
+    obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hn
+    exact Finset.mem_Icc.mpr
+      ⟨Nat.succ_le_of_lt p.property.pos, (mem_primePrefix M p).mp hp⟩
+  calc
+    _ = ∑ n ∈ (primePrefix M).image (fun p : Nat.Primes => (p : ℕ)),
+        (n : ℝ) ^ a := by
+      apply Finset.sum_bij (fun (p : Nat.Primes) _ => (p : ℕ))
+      · intro p hp
+        exact Finset.mem_image.mpr ⟨p, hp, rfl⟩
+      · intro p hp q hq h
+        exact Subtype.ext h
+      · intro n hn
+        obtain ⟨p, hp, hpn⟩ := Finset.mem_image.mp hn
+        exact ⟨p, hp, hpn⟩
+      · intro p hp
+        rfl
+    _ ≤ _ := Finset.sum_le_sum_of_subset_of_nonneg hsub
+      (fun n _ _ => Real.rpow_nonneg (Nat.cast_nonneg n) a)
+
+/-- Complete prime tails are controlled by the same integral tail as integers. -/
+theorem primeTail_le_rpow (s : ℝ) (hs : 1 < s) (M : ℕ) (hM : 0 < M) :
+    primeTail s M ≤ (M : ℝ) ^ (1 - s) / (s - 1) := by
+  classical
+  let f : ℕ → ℝ := fun n => if M < n then (n : ℝ) ^ (-s) else 0
+  have hf0 : ∀ n, 0 ≤ f n := by
+    intro n
+    dsimp [f]
+    split_ifs <;> positivity
+  have hf : Summable f := by
+    apply Summable.of_nonneg_of_le hf0
+      (fun n => show f n ≤ (n : ℝ) ^ (-s) from by
+        dsimp [f]
+        split_ifs
+        · exact le_rfl
+        · exact Real.rpow_nonneg (Nat.cast_nonneg n) _)
+    exact Real.summable_nat_rpow.mpr (by linarith : -s < -1)
+  have hpref : ∑ n ∈ Finset.range (M + 1), f n = 0 := by
+    apply Finset.sum_eq_zero
+    intro n hn
+    have hnM : ¬ M < n := by have := Finset.mem_range.mp hn; omega
+    simp only [f, if_neg hnM]
+  have he := hf.sum_add_tsum_nat_add (M + 1)
+  rw [hpref, zero_add] at he
+  calc
+    _ ≤ ∑' n : ℕ, f n :=
+      (summable_primeTail s hs M).tsum_le_tsum_of_inj
+        (fun p : Nat.Primes => (p : ℕ)) Subtype.val_injective
+        (fun n _ => hf0 n) (fun _ => le_rfl) hf
+    _ = ∑' k : ℕ, ((k + (M + 1) : ℕ) : ℝ) ^ (-s) := by
+      rw [← he]
+      apply tsum_congr
+      intro k
+      simp only [f, if_pos (show M < k + (M + 1) by omega)]
+    _ ≤ _ := by
+      simpa only [Nat.add_assoc] using
+        RiemannResearch.Analysis.Cesaro.nat_rpow_tail_le s hs M hM
+
+
+/-- Explicit complete square prime tail, from the retained Chebyshev bound. -/
+theorem primeTail_two_le_explicit_log (M : ℕ) (hM : 1 < M) :
+    primeTail 2 M ≤
+      4 * (2 * Real.log 4 + 2) / ((M : ℝ) * Real.log M) := by
+  have hMR : 1 < (M : ℝ) := by exact_mod_cast hM
+  have hlog : 0 < Real.log (M : ℝ) := Real.log_pos hMR
+  have h := primeTail_le_of_primeCounting 2 (by norm_num) M hM
+    (2 * Real.log 4 + 2) (by positivity)
+    (fun N hMN => primeCounting_le_explicit N (hM.trans_le hMN))
+  apply h.trans_eq
+  norm_num only [show (1 : ℝ) - 2 = -1 by norm_num, Real.rpow_neg_one]
+  field_simp [ne_of_gt (lt_trans (by norm_num : (0 : ℝ) < 1) hMR), ne_of_gt hlog]; ring
+
 end RiemannResearch.NumberTheory.DivisorEscapeTail

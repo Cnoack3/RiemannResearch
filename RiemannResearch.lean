@@ -1,5 +1,6 @@
 import RiemannResearch.RH.QCRTNestedCutoffs
 import RiemannResearch.NumberTheory.GcdSampleTail
+import RiemannResearch.NumberTheory.GcdSamplePrimeTail
 import RiemannResearch.RH.QCRTPrimeCutoffGrowth
 import RiemannResearch.NumberTheory.DivisorEscapePrimeTail
 import RiemannResearch.NumberTheory.DivisorCountSqrt
@@ -12,6 +13,7 @@ import RiemannResearch.RH.QGcdSampling
 import RiemannResearch.RH.QCRTProjectedMellin
 import RiemannResearch.Analysis.CofinalLogGrowth
 import RiemannResearch.RH.QCRTZeroGrowth
+import RiemannResearch.RH.QCRTAsymptoticSampler
 import RiemannResearch.Analysis.NestedOrthogonalDecomposition
 import RiemannResearch.NumberTheory.PrimeScaleBounds
 import RiemannResearch.RH.QPrimeCarryProjection

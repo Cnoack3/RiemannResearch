@@ -146,13 +146,40 @@ The inverse-instability theorem concerns arbitrary right-hand sides. Prime
 canonical growth concerns a sequence that is not divisor-exhausting. Neither
 disproves the desired bound along the LCM tower.
 
+## Complete sampler prime-budget continuation
+
+Two further owning modules are exported from the root aggregate:
+
+| Owning module | Established results |
+|---|---|
+| `NumberTheory/GcdSamplePrimeTail.lean` | Direct first-forbidden-prime-power cover; exact complete cover sums and depth/size split; `sampleTail_lcmUpto_le_reciprocal`; `sampleTail_div_tail_tendsto_zero`; arbitrary-threshold and square-cutoff refinements; all-cutoff `sampleTail_lcmUpto_le_explicit_log` and `eventually_sampleTail_lcmUpto_le_log` |
+| `RH/QCRTAsymptoticSampler.lean` | `eventually_tailMellin_norm_le_one_add`; complete `eventually_canonical_obstruction`; zero-dependent `eventually_escape_leakage_floor` |
+
+The existing `NumberTheory/DivisorEscapePrimeTail.lean` owns the reusable
+finite prime-to-integer comparison, complete prime integral bound, and
+`primeTail_two_le_explicit_log`.
+
+For fixed 1<t<=2 the complete sampler satisfies S_t(L_M)=O_t(1/(M log M)).
+For 1<t<2, S_t(L_M)/D_t(L_M) tends to zero. For every epsilon>0 the actual
+Mellin detector is eventually bounded by (1+epsilon)sqrt(Z D), with Z=zeta(2).
+The exact endpoint and full leakage are retained before taking estimates.
+
+| Conditional research reduction | Conclusion | Domain-specific obligation |
+|---|---|---|
+| `QCRTAsymptoticSampler.riemannHypothesis_of_cofinal_escape_energy` | Mathlib RH | **Open:** for every 1<t<2, c>0 and N, some M>=N has D_t(L_M)||F_(L_M)||_Q^2<c; the formal indexing uses L_(M+2) |
+
+The zero-dependent leakage lower bound holds for every 0<epsilon<1:
+D_(2 Re(s))(L_M)V(L_M) >= (1-epsilon)^2/((1+epsilon)^2 Z |s|^2)
+eventually at a hypothetical right-half-strip zero. This does not supply
+the cofinal smallness condition. See Section 6 of the stability memorandum.
+
 ## Still not claimed
 
 - Any proof of subpolynomial growth for the actual canonical LCM family,
   or a proof of RH.
 - A converse from RH to bounded canonical collocation.
-- The further paper bound S_t(L_M)<=t*zeta(t)/((t-1)M), or its infinite-product
-  representation, as Lean-verified in this continuation.
+- A separate formalization of the infinite-product representation for S;
+  the sharper sampler bounds above use a direct prime-power cover instead.
 - Interval certification of the Wolfram full-tail numerical tables.
 - A separately named P-LCM-minimizer convergence theorem.
 
@@ -182,3 +209,21 @@ The final checkpoint validates the root aggregate and affected modules,
 audits the repository delta, and publishes the exact commit. Its terminal
 result is reported in the accompanying delivery; a successful snippet alone
 is not represented as that final publication gate.
+
+## Sampler continuation verification
+
+The actual owning modules were imported and nine principal results audited in
+server job `job_2UWZpSU2BXE_1to_4VLKjfV1r84hGqeE`, which succeeded with
+server-reported verification time 25.561 seconds. The checked modules included
+DivisorEscapePrimeTail, GcdSamplePrimeTail, the affected QCRTZeroGrowth consumer,
+and QCRTAsymptoticSampler. Every audited declaration used only
+`propext`, `Classical.choice`, and `Quot.sound`. The conditional RH theorem
+still has the explicit cofinal-growth hypothesis in its type.
+
+The opening of a fresh workspace timed out; reopening the retained workspace
+succeeded. Opening round-trip duration was not recorded. Subsequent queued
+checks were polled at their reported 30-second minimum intervals; polling
+latency and the server's reported verification duration are distinct.
+The retained token is `ws_mwWauOIKeaTQFsXlLf9olVQpDUYrLPst`.
+The final checkpoint separately audits, validates, and publishes the complete
+unpublished delta; its terminal job and commit are reported in the delivery.

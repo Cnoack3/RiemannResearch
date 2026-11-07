@@ -144,43 +144,81 @@ Existing conditional-nonlegality and screened-carry invariance theorems also
 block treating the canonical sequence as a legal martingale or improving a
 screened update solely by changing Bezout representatives.
 
-## 6. A further sampler estimate: paper proof, not yet Lean-verified
+## 6. Sharper complete sampler estimates: now formalized
 
-For 1<t<2 define
+For 1<t<=2 let
 
-    S_t(L) = sum_(n not dividing L) gcd(n,L)^(2-t)/n^2.
+    S_t(L) = sum_(n not dividing L) gcd(n,L)^(2-t)/n^2,
+    D_t(L) = sum_(n not dividing L) n^(-t).
 
-The checked separated sampler bound is
+Both quantities retain the entire infinite physical tail. The existing finite
+Mobius formula for S remains available in QGcdCellEstimates. The new owning
+module NumberTheory/GcdSamplePrimeTail proves the additional estimates here.
 
-    K_L(s) <= sqrt(zeta(2)) [sqrt(D_(2 beta)(L))+sqrt(S_(2 beta)(L))].
+Write e_p=v_p(L) and w_p=p^(t-2)(p^(-t))^(e_p+1)=p^(-t e_p-2).
+The proof uses a direct prime-power cover. Every escaping positive integer n
+has a prime p with p^(e_p+1)|n. For any such p, p*gcd(n,L)|n, hence
 
-The complete finite Mobius formula for S is checked in QGcdCellEstimates.
-The following additional bound is a remaining formalization task:
+    gcd(n,L)^(2-t)/n^2 <= p^(t-2)n^(-t).
 
-    S_t(lcm(1,...,M)) <= t zeta(t)/((t-1)M),  1<t<2, M>=1.
+The sum of this cover over all multiples of p^(e_p+1) is exactly zeta(t) w_p.
+Nonnegative summability justifies summing over every prime and every integer.
+Thus the checked bound and exact LCM budget split are
 
-Here is the paper derivation. Set q=p^(-t), r=p^(-2), e=v_p(L). Relative to
-zeta(t), the divisor mass has local factor E_p=1-q^(e+1). The full gcd-weighted
-series has factor
+    S_t(L) <= zeta(t) sum_p w_p,
+    sum_p w_p(L_M) = sum_(p<=M) w_p(L_M) + sum_(p>M) p^(-2).
 
-    A_p = E_p + delta_p,
-    delta_p = p^(-t e-2)(1-p^(-t))/(1-p^(-2)).
+The earlier product argument is not needed for this proof. This continuation
+does not claim a separate formalization of that infinite-product formula for S.
 
-For 1<t<=2, 0<=E_p<=A_p<=1 and delta_p<=p^(-t e-2). The infinite products
-converge. Telescoping products gives
+The original proposed rate is now checked, including the endpoint t=2:
 
-    S_t(L) <= zeta(t) sum_p p^(-t e_p-2).
+    S_t(L_M) <= t zeta(t)/((t-1)M),  M>=1.
 
-For L=L_M and p<=M, p^(e_p+1)>M, hence
-p^(-t e_p-2)<=M^(-t)p^(t-2). Summing over all integers up to M gives at most
-1/((t-1)M), since sum_(n<=M)n^(t-2)<=M^(t-1)/(t-1). For p>M, e_p=0 and the
-integer tail of p^(-2) is at most 1/M. Adding gives the displayed bound.
+A further checked improvement uses an arbitrary prime threshold K, retaining
+the entire large-prime tail. Choosing K=floor(sqrt M), set
 
-The new checked bound D_t(L_M)>=4*32^(-t) M^(1-t)/log M supplies the needed
-lower estimate for D. Combined with the still-paper-only S upper bound, this
-would give S_t(L_M)/D_t(L_M)->0 for 1<t<2 and asymptotic sampler coefficient one.
-The product representation and this stronger S rate have not been formalized
-in this continuation. Neither would supply the canonical norm bound.
+    C_t = 1/(t-1) + 2^(t+1)/(t+1),    B = 4(2 log 4+2).
+
+Then, for every M>=2,
+
+    S_t(L_M) <= zeta(t)[C_t M^(-(t+1)/2) + B/(M log M)].
+
+The checked eventual bound is
+
+    S_t(L_M) <= zeta(t)(C_t+B)/(M log M).
+
+Thus the complete sampler tail has order at most 1/(M log M) for each fixed
+1<t<=2. No monotonicity of S_t(L_M) is assumed in passing to every cutoff.
+The sharper square-cutoff identity retains coefficient
+1/(t-1)+1/(t+1) on K^(-t-1), with M=K^2.
+
+The checked lower bound D_t(L_M)>=4*32^(-t) M^(1-t)/log M, together with the
+reciprocal sampler bound, proves
+
+    S_t(L_M)/D_t(L_M) -> 0,  1<t<2.
+
+RH/QCRTAsymptoticSampler applies this to the actual projected Mellin map.
+For every fixed s with 1/2<Re(s)<1 and every epsilon>0, eventually
+
+    K_(L_M)(s) <= (1+epsilon) sqrt(zeta(2) D_(2 Re(s))(L_M)).
+
+This is an upper bound with asymptotic coefficient one, not an assertion that
+the quotient of K by that square root converges to one. The complete endpoint
+and canonical leakage remain present in the checked zero obstruction.
+
+If zeta(s)=0, then for every 0<epsilon<1, eventually
+
+    D_(2 Re(s))(L_M) V(L_M)
+      >= (1-epsilon)^2 / ((1+epsilon)^2 zeta(2) |s|^2).
+
+Finally, riemannHypothesis_of_cofinal_escape_energy proves Mathlib RH from
+the following explicit condition: for every 1<t<2, c>0, and N, there is M>=N
+with D_t(L_M)||F_(L_M)||_Q^2<c. This is a conditional research reduction.
+The condition on the actual canonical norms remains OPEN. The formal RH
+statements use M+2 to keep the canonical cutoff at least two.
+
+These sampler improvements do not establish the canonical norm bound.
 
 ## 7. Published context and status
 
