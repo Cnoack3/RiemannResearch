@@ -81,27 +81,104 @@ checked providers. No converse RH-to-bounded-collocation theorem is claimed.
 The standalone generic moment theorem is a sufficient-condition theorem,
 not a claim that every legal bounded family has the required moments.
 
-## Not claimed as Lean-verified in this addition
+## Explicit Euler-tail and sampler continuation: now checked
 
-- The explicit estimate ||tailMellin(L,s)|| <= 2 sqrt(Z D_(2 Re(s))(L)).
-- The endpoint rate, Euler-product tail formula, and the resulting
-  subpolynomial-in-M zero-growth criterion.
-- Any asymptotic bound for the canonical collocation inverse applied to its
-  particular target, or any proof of RH.
-- The numerical Wolfram table as an exact or interval-certified computation.
-- A separate P-LCM-minimizer convergence theorem.
+Fourteen new modules replace the earlier paper-only estimate with proofs.
+Each module below is exported by the root aggregate; all paths are below
+`RiemannResearch/`.
 
-The memorandum gives the analytic proof and precise formalization tasks for
-the explicit rates. Wolfram computations reproduce the full-period moment
-system through L=2520, without truncating the physical Q tail, but remain
-floating-point evidence.
+| Owning module | Principal checked results |
+|---|---|
+| `NumberTheory/DivisorEscapeTail.lean` | Complete escape series, exact divisor-sum subtraction, certified finite-prefix enclosures, basic LCM rate M^(1-t)/(t-1) |
+| `NumberTheory/DivisorEscapeEulerProduct.lean` | `tail_eq_series_mul_euler_deficit`; convergence of the actual Euler product and its prime escape union bound |
+| `NumberTheory/DivisorEscapePrimeTail.lean` | `tail_lcmUpto_le_explicit_log`; eventual constant log(4)+epsilon; depth splitting, `tail_lcmUpto_square_le_explicit`, and matching `tail_lcmUpto_lower_explicit` |
+| `NumberTheory/GcdSampleTail.lean` | Complete S_t(L) sampler energy, summability, positivity, and S<=2^(t-2)D |
+| `NumberTheory/DivisorCountSqrt.lean` | tau(L)<=2 sqrt(L) |
+| `Analysis/CofinalLogGrowth.lean` | Cofinal/extended-liminf growth transfer; eventual logarithmic lower floors from squared-norm power floors |
+| `RH/QGcdSampling.lean` | Actual finite Mobius gcd-cell sampler and its real/complex orthogonality identities |
+| `RH/QCRTProjectedMellin.lean` | `tailMellin_norm_le_sharp`, `tailMellin_norm_le_separated`; actual defect energy and unconditional fixed-s norm decay |
+| `RH/QCRTExactEndpoint.lean` | `canonical_residual_explicit_obstruction`; exact signed residual endpoint, with no assumed endpoint provider |
+| `RH/QCRTZeroGrowth.lean` | Actual canonical power floors, both liminf RH criteria, logarithmic norm floor, and critical-power zero exclusion |
+| `RH/QGcdCellEstimates.lean` | Exact conditional cell geometry, finite Mobius formula for S, and necessary full-trial stability factor |
+| `RH/QCRTInverseInstability.lean` | `eventually_exists_unstable_trial`: every fixed full-trial inverse bound fails as the modulus tends to infinity |
+| `RH/QCRTPrimeCutoffGrowth.lean` | Exact prime canonical lift; actual norm growth along primes |
+| `RH/QCRTNestedCutoffs.lean` | Nested conditional identities and `canonical_increment_norm_sq`, retaining the full leakage increment and cross term |
+
+For beta=Re(s), 1/2<beta<=1, A_beta=1+2^(beta-1), the formalized improvement is
+
+    ||tailMellin(L,s)|| <= sqrt(Z)(sqrt(D_(2beta)(L))+sqrt(S_(2beta)(L)))
+                         <= A_beta sqrt(Z D_(2beta)(L)).
+
+For every t>1 and M>=2, the fully explicit logarithmic bound is
+
+    D_t(L_M) <= zeta(t)(2 log 4+2)[1+2/(1-2^(1-t))]
+                    M^(1-t)/log M.
+
+Its minimum with the basic integer-tail bound is also checked. Eventually,
+2 log 4+2 can be replaced by log 4+epsilon for any epsilon>0. The formal
+zeta(t) here is the positive-integer p-series.
+
+The matching checked lower bound, for every M>=32, is
+
+    D_t(L_M) >= 4 * 32^(-t) M^(1-t)/log M.
+
+`prime_interval_count_lower` proves pi(32M)-pi(M)>=4M/logM using the retained
+Mathlib `Chebyshev.pi_ge`; `prime_interval_count_le_tail` connects these actual
+escaping primes to D. Thus the scalar Euler-tail order is sharp up to positive
+t-dependent constants; a faster order for D is not an available route to RH.
+
+## Stronger conditional criteria and exact open obligations
+
+| Declaration in QCRTZeroGrowth | Checked conclusion | Still-open input |
+|---|---|---|
+| `riemannHypothesis_of_liminf_norm_log_eq_zero` | Mathlib RH | Extended nonnegative liminf log(1+||F_(L_(M+2))||)/log(M+2)=0 |
+| `riemannHypothesis_of_liminf_residual_log_eq_zero` | Mathlib RH | The corresponding liminf for ||1-F_(L_(M+2))|| is zero |
+| `canonical_norm_sq_log_power_floor` | A zero at beta>1/2 forces ||F_(L_M)||^2>=c_s M^(2beta-1)log M eventually | No growth input; the theorem is conditional on the specified zero |
+| `zeta_ne_zero_of_cofinal_critical_power_bound` | zeta(s) is nonzero | For some fixed C, ||F_(L_M)||<=C M^(beta-1/2) cofinally |
+
+All canonical vectors are the actual unique full-conductor collocation lifts.
+No detector, endpoint decay, Euler-tail estimate, or reverse RH-to-density
+provider is assumed in these new criteria. The actual growth bound remains
+open. An upper bound for squarefree best-fit displacement is not a bound
+for these canonical lifts.
+
+The inverse-instability theorem concerns arbitrary right-hand sides. Prime
+canonical growth concerns a sequence that is not divisor-exhausting. Neither
+disproves the desired bound along the LCM tower.
+
+## Still not claimed
+
+- Any proof of subpolynomial growth for the actual canonical LCM family,
+  or a proof of RH.
+- A converse from RH to bounded canonical collocation.
+- The further paper bound S_t(L_M)<=t*zeta(t)/((t-1)M), or its infinite-product
+  representation, as Lean-verified in this continuation.
+- Interval certification of the Wolfram full-tail numerical tables.
+- A separately named P-LCM-minimizer convergence theorem.
+
+See the [main research memorandum](RH/CRTCollocationZeroGrowthResearch20261107.md),
+[stability memorandum](RH/CRTCollocationStabilityResearch20261107.md), and
+[existing-machinery audit](RH/CanonicalUpdateMachineryAudit20261107.md).
+The latter records the exact signed-source and leakage-response gap that
+remains after applying existing carry and screened-Gram results.
 
 ## Verification provenance
 
-The coherent candidate passed job `job_xnrn6F37zEQdZbGd1EwH_SrpUw8S45K6`
-(6.963 s of server-reported verification). Its main axiom audit returned only
-`propext`, `Classical.choice`, and `Quot.sound`; local growth hypotheses remain
-visible in the theorem types. The actual Parseval module passed
-`job_GQ6aKB-vbM_Y-9-22kDIjCgBXgCtcQrB` (5.479 s). The final checkpoint validates
-the aggregate project plus changed modules and reports the exact published
-commit; these earlier snippets alone are not that publication gate.
+The preceding construction was published at
+`0fb2590c08fff6c746258cc5cc5b8fbda8ac2bcf`.
+
+All fourteen new owning modules were imported and verified together in
+`job_Y-NHrRTo0q3HUoOgT7QZK3Y0xZr1GUoH`, with server-reported verification
+time 18.649 seconds. Fourteen principal declarations were axiom-audited:
+every result used only `propext`, `Classical.choice`, and `Quot.sound`.
+This includes the new arithmetic estimates, actual RH reductions, finite
+sampler formula, instability, prime growth, and nested increment energy.
+The later three-lemma lower-bound candidate passed
+`job__A9uD8lLirroZC2FOf4Jo7WR8T3MbkbJ` in 6.846 seconds. Its final lower theorem
+had the same standard axiom set and was merged into the arithmetic owner
+before the final checkpoint.
+
+The final checkpoint validates the root aggregate and affected modules,
+audits the repository delta, and publishes the exact commit. Its terminal
+result is reported in the accompanying delivery; a successful snippet alone
+is not represented as that final publication gate.

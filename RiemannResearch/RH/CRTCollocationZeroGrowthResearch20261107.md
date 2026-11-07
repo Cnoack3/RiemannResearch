@@ -27,6 +27,15 @@ Matematica e Applicazioni **14** (2003), 5–11,
 This is background for the restricted discrete approximation criterion, not a
 provider for the remaining collocation growth hypothesis.
 
+A related published comparison is F. Alouges, S. Darses, and E. Hillion,
+*Polynomial approximations in a generalized Nyman–Beurling criterion*,
+Journal de théorie des nombres de Bordeaux **34** (2022), 767–785,
+[DOI 10.5802/jtnb.1227](https://doi.org/10.5802/jtnb.1227),
+[accepted manuscript](https://arxiv.org/pdf/2006.02953).
+Its unconditional construction still requires coefficient control for the
+RH implication. Its Gram system differs from this CRT system; its density
+theorem does not supply the canonical CRT norm bound.
+
 The finite construction and the quantitative CRT proposal originate in the
 user's handoff. No claim of historical novelty is made. Existing project
 machinery reused here includes the actual Q Hilbert space, physical difference
@@ -164,54 +173,178 @@ right half of the critical strip, RH follows. The Lean theorem
 `riemannHypothesis_of_vanishing_mellin_budget` leaves precisely that budget
 convergence as its domain-specific hypothesis.
 
-### Paper derivation of the explicit arithmetic rate: not yet formalized here
+### Verified arithmetic tail and improved constants
 
-Let beta=Re(s) lie in (1/2,1),
+The paper-only analytic estimate in the preceding revision is now formalized.
+Write beta=Re(s), t=2 beta, and
 
-    kappa_s(n) = integral from n to n+1 of x^(-s-1) dx,
-    u_s(n) = conjugate(kappa_s(n))/Q(n),
-    D_t(L) = sum_{n>=1, n not dividing L} n^(-t),   t>1.
+    D_t(L) = sum_{n>=1, n not dividing L} n^(-t),  t>1,
+    A_beta = 1 + 2^(beta-1).
 
-Work in the complexification of the real Hilbert space when using u_s. The
-real T_L extends by projecting real and imaginary parts separately. The
-bounds |u_s(n)| <= Z n^(1-beta) and gcd(n,L)<=n imply, with
-k_L(n)=u_s(gcd(n,L)),
+The generic number-theory modules prove the exact identities
 
-    ||u_s-k_L||_Q^2 <= 4 Z D_{2 beta}(L).
+    D_t(L) = sum_{n>=1} n^(-t) - sum_{d|L} d^(-t)
+           = zeta(t) [1 - product_p (1-p^(-t(v_p(L)+1)))],
 
-The error vanishes at every divisor of L; elsewhere each of its two summands
-has modulus at most Z n^(1-beta). Since k_L is gcd-measurable and T_L is the
-best approximation in that space, this gives
+including convergence of the actual infinite product. The formal real
+zeta(t) is written as its absolutely convergent positive-integer series.
+No prime outside the modulus, or excessive prime-power depth, is omitted.
+The complete union bound is also checked:
 
-    K_L(s) <= 2 sqrt(Z D_{2 beta}(L)).
+    D_t(L) <= zeta(t) sum_p p^(-t(v_p(L)+1)).
 
-Also, absolute summation over multiples of L gives
+Every integer up to M divides L_M=lcm(1,...,M), so the checked basic bound is
 
-    |ell_s(a_L)| <= zeta(beta+1) L^(-beta-1).
+    D_t(L_M) <= M^(1-t)/(t-1).
 
-Together with the checked identity, these would yield the leakage-only bound
+Finite exact escape prefixes plus an integral bound on their remaining tail
+give additional certified enclosures. These are analytic enclosures; they do
+not certify floating-point rounding.
 
-    1/|s| <= 2 sqrt(Z D_{2 beta}(L)) sqrt(V(L))
-              + zeta(beta+1) L^(-beta-1).
+The actual gcd-cell sampler is constructed using finite Möbius inversion.
+The proof works with the complex-valued functional on the existing real Q
+Hilbert space and proves both real and imaginary signed pairings. Its raw
+witness is
 
-This has a different endpoint constant from the handoff's original
-residual-norm inequality. It is not claimed to be uniformly numerically
-smaller. The benefit is that it measures only the orthogonal leakage.
+    w_s(n) = Z n^2 [n^(-s)-(n+1)^(-s)].
 
-Every n<=M divides L_M=lcm(1,...,M), so the elementary integral estimate gives
+The exact nonnegative defect energy is
 
-    D_{2 beta}(L_M) <= M^(1-2 beta)/(2 beta-1).
+    H_s(L) = sum_{n>=1} Q(n) |w_s(n)-w_s(gcd(n,L))|^2.
 
-A zero with real part beta would therefore force sqrt(V(L_M)) to grow at
-least as a positive constant times M^(beta-1/2), eventually. A cofinal
-subpolynomial bound in M would exclude every such zero. This recovers the
-paper-level zero-sensitive direction in the handoff. A polylogarithmic bound
-in L_M is a different, much weaker statement and does not close this argument.
+It vanishes termwise at divisors of L. On the escape set, gcd(n,L)<=n/2.
+For 1/2<beta<=1 the checked consequences are
 
-The actual K_L inequality and Mellin endpoint rate are not specialized in the
-new Lean source. The stronger subpolynomial criterion must not be reported as
-newly kernel-checked from this work. The remaining formalization is identified
-below, separately from the genuinely open arithmetic growth question.
+    H_s(L) <= A_beta^2 Z |s|^2 D_(2 beta)(L),
+    K_L(s) <= A_beta sqrt(Z D_(2 beta)(L)).
+
+A further checked improvement keeps a second complete arithmetic energy:
+
+    S_t(L) = sum_(n not dividing L) gcd(n,L)^(2-t)/n^2,
+    K_L(s) <= sqrt(Z) [sqrt(D_(2 beta)(L))+sqrt(S_(2 beta)(L))].
+
+The bound S_t(L)<=2^(t-2)D_t(L) recovers A_beta, while retaining S separately
+can give a substantially smaller value. QGcdCellEstimates also proves the
+exact computable formula, for every real t and L>0,
+
+    S_t(L) = Z sum_(d|L) d^(2-t) sum_(j|L,d|j) mu(j/d)/j^2
+                - sum_(d|L) d^(-t).
+
+Thus the handoff coefficient 2 improves to A_beta<2 throughout the open
+critical strip. For each fixed s, K_(L_M)(s) tends to zero unconditionally.
+This is a statement about a fixed Mellin functional; it does not provide a
+bound on the moving canonical vectors.
+
+### Exact residual endpoint, with no endpoint provider
+
+The signed boundary identity is formalized before its absolute estimate:
+
+    |1-Z[n^(-s)-(n+1)^(-s)]_(n=L)|^2
+        <= H_s(L) ||1-F_L||_Q^2.
+
+At a right-half-strip zeta zero this yields the fully explicit inequality
+
+    1/|s| <= A_beta sqrt(Z D_(2 beta)(L)) ||1-F_L||_Q
+                + Z L^(-1-beta).
+
+This is precisely the handoff's residual-norm endpoint, with its improved
+coefficient. The separate leakage-only identity remains exact:
+
+    1/s = ell_s(a_L)-ell_s(F_L-h_L).
+
+For that endpoint, continuity and ||a_L||_Q=1/L already prove convergence to
+zero. The subpolynomial theorem therefore needs no assumed endpoint decay.
+
+### Verified subpolynomial criterion and exact growth exponent
+
+If zeta(s)=0 and 1/2<beta<1, the actual complete leakage eventually satisfies
+
+    V(L_M) >= [(2 beta-1)/(4 A_beta^2 Z |s|^2)] M^(2 beta-1).
+
+The previous factor 16 in the denominator has improved to 4 A_beta^2<16.
+Both ||F_(L_M)|| and ||1-F_(L_M)|| dominate sqrt(V(L_M)). Consequently:
+
+    liminf log(1+||F_(L_M)||_Q)/log M = 0  implies Mathlib RH,
+    liminf log(1+||1-F_(L_M)||_Q)/log M = 0  implies Mathlib RH.
+
+The formal definitions use L_(M+2), avoiding zero denominators and small
+cutoff exceptions, and an extended nonnegative liminf. This avoids the
+default value that Lean's total real liminf may assign to an unbounded
+sequence. The equivalent explicit cofinal condition is also proved:
+for every epsilon>0 and every N there is M>=N whose relative log norm is
+below epsilon. No upper bound on the full sequence is required.
+
+The exponent is sharp for this elementary tail comparison: for every
+epsilon>0, a zero at beta forces, eventually,
+
+    log(1+||F_(L_M)||_Q)/log M >= beta-1/2-epsilon.
+
+Thus a cofinal upper exponent alpha excludes zeros with beta>1/2+alpha.
+These are proved conditional implications. Their remaining arithmetic
+hypothesis, the actual canonical norm bound, is still OPEN.
+
+### Logarithmic improvement from checked prime counting
+
+The new number-theory continuation separates the exact escape sum into
+
+    sum_{p<=M} p^(-t(v_p(L_M)+1)) + sum_{p>M} p^(-t).
+
+The first forbidden power exceeds M, and Mathlib's Chebyshev prime-counting
+theorem controls the finite depth term. A complete dyadic cover controls
+the large-prime tail. This proves, for each t>1 and epsilon>0, eventually,
+
+    D_t(L_M) <= zeta(t)(log 4+epsilon)
+        [1+2/(1-2^(1-t))] M^(1-t)/log M.
+
+A fully explicit version replaces log 4+epsilon by 2 log 4+2 and holds
+for every M>=2. The minimum with M^(1-t)/(t-1) is checked, so the available
+numerical enclosure never worsens. The explicit log bound alone need not be
+smaller at moderate M because its constant is deliberately conservative.
+
+Further checked depth bounds retain the exact split at an arbitrary prime
+threshold K. They give
+
+    small-prime depth <= pi(K) M^(-t) + sum_{p>K} p^(-2t),
+
+and an improved square-cutoff formula at M=K^2. This isolates the smaller
+depth contribution without changing the actual canonical family.
+
+The logarithmic improvement is connected to the actual family in Lean. A
+right-half-strip zero at beta forces, for some c_s>0 and all sufficiently
+large M,
+
+    ||F_(L_M)||_Q^2 >= c_s M^(2 beta-1) log M.
+
+Equivalently the norm has the extra square-root logarithmic factor. The
+checked critical-power theorem now excludes a zero at beta whenever, for
+some fixed C, ||F_(L_M)||_Q<=C M^(beta-1/2) occurs cofinally. The boundary
+exponent itself is excluded, unlike the earlier relative-log upper-exponent
+criterion. This is still conditional on the actual norm bound.
+
+The logarithmic saving is an arithmetic improvement to the zero obstruction.
+It is not a provider for the open canonical growth bound.
+
+### Matching lower bound: the Euler-tail order is sharp
+
+The same owning arithmetic module now proves, for every t>1 and M>=32,
+
+    D_t(L_M) >= 4 * 32^(-t) M^(1-t)/log M.
+
+The proof uses the retained Mathlib theorem `Chebyshev.pi_ge`, including its
+log(n+1) correction, and the already checked upper bound on pi(M). It proves
+
+    pi(32M)-pi(M) >= 4 M/log M.
+
+Every prime in (M,32M] fails to divide L_M and contributes at least (32M)^(-t).
+Summing these actual escape terms gives the lower bound. No PNT, RH, or
+unformalized numerical prime-counting hypothesis is used.
+
+Together with the upper bound, this establishes the order M^(1-t)/log M up
+to positive constants depending on t. In particular the complete scalar tail
+cannot be little-o of this scale. A faster rate for D alone cannot remove the
+remaining canonical norm obligation. More refined projected-Mellin cancellation
+would be a different question.
+
 
 ## 5. Why the present energy estimate does not control leakage
 
@@ -232,6 +365,15 @@ the formalization; no uncontrolled term is silently dropped.
 This is not a counterexample to boundedness of the canonical family. Proving
 or disproving that boundedness remains an arithmetic research problem.
 
+The new [stability memorandum](CRTCollocationStabilityResearch20261107.md)
+records three further formal results. First, every uniform inverse bound for
+all collocation targets fails as L grows. Second, the actual canonical norms
+diverge along prime moduli, which are not divisor-exhausting and are distinct
+from the LCM tower. Third, for nested cutoffs the exact increment energy
+separates the telescoping target increment from the complete leakage
+increment, retaining its cross term. These results prevent inappropriate
+transfers of general inverse, positivity, or orthogonality arguments.
+
 ## 6. Wolfram full-period computations
 
 Wolfram Language was used to reconstruct the actual finite moment matrices.
@@ -246,8 +388,9 @@ was evaluated as
 
     E_Q[H] = (1/(Z L^2)) sum_{r=1}^L H(r) zeta(2,r/L).
 
-This retains the entire infinite physical tail analytically. Arbitrary
-precision numerical values, rounded here, were:
+This retains the entire infinite physical tail analytically. Values through
+L=27720 used arbitrary precision; the final two large cutoffs used machine
+precision. All displayed values are rounded numerical observations:
 
 | L | Number of coefficients | Complete ||1-F_L||_Q^2 | Complete ||F_L||_Q^2 |
 |---:|---:|---:|---:|
@@ -259,75 +402,105 @@ precision numerical values, rounded here, were:
 | 420 | 23 | 0.036804379080269 | 1.036793041211788 |
 | 840 | 31 | 0.046198090098666 | 1.046195255631545 |
 | 2520 | 47 | 0.029984987806915 | 1.029984672866124 |
+| 27720 | 95 | 0.029076491879528 | 1.029076489276711 |
+| 360360 | 191 | 0.032628803211079 | 1.032628803195680 |
+| 720720 | 239 | 0.033448814301311 | 1.033448814297451 |
 
-The earlier handoff values were reproduced and extended. At L=420,840,2520,
+The earlier handoff values were reproduced and extended. At L=27720 the
+full-period minimum is about -23.1746 despite the small complete Q norm.
+At L=420,840,2520,
 the numerical period minima are approximately -1.2510,-1.5851,-2.7033, so a
 positivity-based explanation should not be presumed. The residual energy is
-not numerically monotone. None of these floating-point observations is a
-Lean theorem, interval certificate, or asymptotic bound.
+not numerically monotone. At L=360360 and 720720 the minima are about
+-66.9685 and -171.7354. The corresponding moment residual infinity norms are
+1.7e-13 and 2.1e-13. These are floating-point diagnostics, not error bounds.
+None of these observations is a Lean theorem, interval certificate, or
+asymptotic bound.
+
+The admissions M=13 and M=16 show why the leakage correlation matters:
+
+| From L | To L | Squared-norm ratio | Squared increment norm | Leakage cross inner product |
+|---:|---:|---:|---:|---:|
+| 27720 | 360360 | 1.003451943520218 | 0.030217657634197 | 0.015743818720503 |
+| 360360 | 720720 | 1.000794100551169 | 0.022559091720473 | 0.021759262894025 |
+
+The complete increment energy is much larger than the change in squared norm;
+its correlation with the old leakage is essential. This is a finite numerical
+observation about the exact quantities in the checked nested-cutoff identity.
+
+The separate arithmetic sampler experiment at t=3/2 gives the following
+full-tail values. Here K_bound=sqrt(Z)(sqrt(D)+sqrt(S)); the last column compares
+it with the original bound 2 sqrt(Z M^(1-t)/(t-1)). The S values were computed
+from its finite local-factor product; the equivalent finite Mobius identity
+is Lean-verified, but these floating-point evaluations are not certificates.
+
+| M | D_(3/2)(L_M) | S_(3/2)(L_M) | K_bound | Ratio to original bound |
+|---:|---:|---:|---:|---:|
+| 10 | 0.462591380761024 | 0.107199313003719 | 1.29223791446213 | 0.633465895256237 |
+| 50 | 0.139457947952029 | 0.016422612205995 | 0.643316001864829 | 0.471571569686990 |
+| 100 | 0.091172929351668 | 0.008109165469237 | 0.502758839595712 | 0.438268718761222 |
+| 1000 | 0.019536723922592 | 0.000466244426517 | 0.206960609418778 | 0.320825185127062 |
 
 ## 7. Continuation obligations, in priority order
 
-1. **Open arithmetic growth:** prove a finite uniform bound for V(L_M) along
-   a cofinal subsequence. This would immediately apply the checked RH theorem.
-   A weaker subpolynomial growth bound is enough for the paper-level
-   zero-sensitive route once its analytic bridge is formalized.
-2. **Open formalization of a paper-proved analytic estimate:** construct the
-   actual complexified gcd sampler for the existing Mellin witness, prove its
-   weighted norm estimate, and obtain K_L(s)<=2 sqrt(Z D_{2 beta}(L)). Keep the
-   physical Q normalization and both real and imaginary parts explicit.
-3. **Open formalization of an elementary endpoint/rate:** prove the absolute
-   multiples-series estimate and the LCM p-series tail bound. Combine these
-   with the checked exact Mellin balance to obtain the explicit zero-growth
-   theorem, without adding either estimate as a hidden provider.
-4. **Arithmetic rather than purely functional-analytic work:** study the
-   inverse finite collocation matrix on the actual target t_L. Uniform bounds
-   on the full operator are stronger than necessary. Retain signed arithmetic
-   cancellations and use full-tail matrix entries.
-5. **Sharper published-input route:** prime-distribution estimates can sharpen
-   the divisor tail beyond the crude n>M estimate. This only improves the
-   conditional zero obstruction; it still does not bound the canonical lift.
+1. **OPEN, decisive:** prove cofinal subpolynomial growth in M of the actual
+   canonical LCM norms, or of the complete residual norms. All required
+   analytic Euler-tail, sampler, and residual-endpoint estimates are now
+   proved. This growth bound would apply the checked Mathlib RH theorem.
+2. **Alternative OPEN condition:** bounded canonical leakage on a cofinal LCM
+   subsequence applies the earlier weak-compactness route and gives actual
+   optimal Q projection error tending to zero.
+3. **Use the special target:** exploit cancellation in B_L^(-1)t_L. A uniform
+   inverse bound on the full trial space is impossible, as the new formal
+   instability theorem shows. This does not imply divergence of F_(L_M).
+4. **Avoid the energy promotion gap:** the exact shift defect controls an
+   n^(-3)-scale energy; it has not been promoted to the complete n^(-2) norm.
+5. **Further quantitative work:** sharpen the two retained sampler energies
+   and prime/depth constants, while keeping the actual canonical growth
+   obligation separate from improvements to its zero detector.
 
-All conditional results retain their hypotheses. No assertion is made that
-RH implies boundedness of this particular collocation family.
+All conditional results retain their hypotheses. No converse RH-to-bounded-
+collocation theorem is asserted. RH itself remains unproved here.
 
 ## 8. Verification and persistence
 
-The implementation is split by mathematical responsibility:
+The preceding finite construction, complete Parseval identity, bounded-family
+criterion, and Mellin annihilator were published at commit
+`0fb2590c08fff6c746258cc5cc5b8fbda8ac2bcf`. The present continuation adds fourteen
+owning modules, all exported by the root aggregate:
 
-- `Analysis/FiniteAccretiveCollocation.lean`: reusable finite solvability and
-  exact contraction energies.
-- `RH/QCRTFiniteCollocation.lean`: actual full-conductor construction,
-  conditional image, moments, and full energy identities.
-- `RH/QCRTLeakageParseval.lean`: arithmetic Hilbert inversion and full leakage.
-- `RH/QCRTBoundedCriterion.lean`: weak compactness, LCM exhaustion, optimal
-  projection limits, and conditional RH.
-- `RH/QCRTZeroObstruction.lean`: actual Mellin map, signed balance, and
-  leakage-only zero obstruction.
+| Area | New owning modules |
+|---|---|
+| Arithmetic escape tails | `NumberTheory/DivisorEscapeTail`, `DivisorEscapeEulerProduct`, `DivisorEscapePrimeTail` |
+| Sampler arithmetic and divisor count | `NumberTheory/GcdSampleTail`, `DivisorCountSqrt` |
+| Cofinal growth analysis | `Analysis/CofinalLogGrowth` |
+| Actual sampler and Mellin functional | `RH/QGcdSampling`, `QCRTProjectedMellin`, `QCRTExactEndpoint` |
+| Canonical growth and RH reductions | `RH/QCRTZeroGrowth` |
+| Cell geometry and inverse instability | `RH/QGcdCellEstimates`, `QCRTInverseInstability` |
+| Prime and nested canonical cutoffs | `RH/QCRTPrimeCutoffGrowth`, `QCRTNestedCutoffs` |
 
-Before final checkpoint, the combined theorem candidate passed server job
-`job_xnrn6F37zEQdZbGd1EwH_SrpUw8S45K6` (server-reported verification 6.963 s).
-Its axiom audit for the bounded-LCM RH implication, Mellin obstruction,
-vanishing-budget RH implication, and Parseval identity reported only
-`propext`, `Classical.choice`, and `Quot.sound`. These are foundations, not a
-certificate that the local growth hypotheses hold. The actual Parseval
-module separately passed `job_GQ6aKB-vbM_Y-9-22kDIjCgBXgCtcQrB` (5.479 s).
+The actual owning modules were imported together and checked in server job
+`job_Y-NHrRTo0q3HUoOgT7QZK3Y0xZr1GUoH`, which succeeded with server-reported
+verification time 18.649 seconds. This was a modular compilation, not merely
+a concatenated theorem snippet. The axiom audit covered fourteen principal
+results, including the Euler-product identity, explicit logarithmic tail
+bound, separated sampler estimate, actual residual endpoint, both liminf RH
+criteria, critical-power zero exclusion, logarithmic norm floor, exact finite
+sampler formula, inverse instability, prime-cutoff growth, and nested energy.
+Every audited declaration reported only `propext`, `Classical.choice`, and
+`Quot.sound`. The subsequent matching-lower-bound candidate passed
+`job__A9uD8lLirroZC2FOf4Jo7WR8T3MbkbJ` in 6.846 seconds, with the same axiom set,
+and was merged into `DivisorEscapePrimeTail.lean` for the final checkpoint.
+No proof of the open canonical growth condition is thereby supplied.
 
-The actual bounded-criterion module, including direct LCM projection errors,
-passed `job_1HxFm0Iw7xddW9niMEZk19QAnw-FU7BB` (7.385 s). The actual
-Mellin module passed `job_53lqbV5Tc1sh6Ts4u31Q4AW9CVhnQZ7I` (6.908 s).
-Explicit owning-module and tactic imports were then added for the final
-server validation. Final publication must use `agent_workspace_checkpoint` with
-push enabled and wait for its successful terminal validation. A successful
-snippet alone does not certify the final repository delta. The final answer
-records that checkpoint's job, scope, and exact published commit.
+The final server checkpoint audits the repository delta, validates the root
+aggregate and affected modules, and publishes the result. Its terminal result
+and exact commit are recorded in the accompanying delivery. Successful
+individual checks alone are not represented as that publication gate.
 
-The active retained workspace is
-`ws_mwWauOIKeaTQFsXlLf9olVQpDUYrLPst`, based initially on
-`33e589172ac2e2f4e1ee4bbb63bced686ba04bee`.
-Workspace-opening elapsed time was not recorded and is not reconstructed.
-Queue/wait time and server verification time must be reported separately;
-no cache, disk, or networking cause is inferred from an end-to-end delay.
+The retained workspace is `ws_mwWauOIKeaTQFsXlLf9olVQpDUYrLPst`.
+Queue/wait time and server verification time are distinct; no cache, disk,
+or networking cause is inferred from an end-to-end delay.
 
 ## Appendix: reproducible Wolfram Language experiment
 
@@ -361,4 +534,34 @@ crtCollocation[ell_Integer, precision_Integer : 40] /; ell >= 2 := Module[
     "EnergyIdentityResidual" -> (norm - err - 1 + 2/ell^2)|>
 ];
 crtCollocation /@ {2, 4, 6, 12, 60, 420, 840, 2520}
+```
+
+
+For the larger two cutoffs, the following Wolfram implementation reuses
+reduced residue moments and forms the full period by cumulative differences.
+It uses machine precision and does not certify rounding errors.
+
+```wolfram
+ClearAll[fastCRT];
+fastCRT[ell_Integer] := Module[
+  {ds=Divisors[ell], rows, cols, z=N[Zeta[2]], w, entry,
+   mat, rhs, c, inc, v, weights},
+  rows=Most[ds]; cols=Rest[ds];
+  w[k_Integer] := w[k] = PolyGamma[1,Range[k]/N[k]]/(z N[k]^2);
+  entry[a_Integer,k_Integer] := entry[a,k] =
+    N[Mod[a Range[k],k]/k].w[k];
+  mat=Table[With[{g=GCD[a,m]},
+      entry[Mod[a/g,m/g],m/g]], {a,rows},{m,cols}];
+  rhs=N[1-rows^2/ell^2]; c=LinearSolve[mat,rhs];
+  inc=ConstantArray[Total[c/cols],ell];
+  Do[inc[[Range[cols[[i]],ell,cols[[i]]]]]-=c[[i]],
+    {i,Length[cols]}];
+  v=Accumulate[inc]; weights=w[ell];
+  <|"L"->ell,"Dimension"->Length[cols],
+    "ErrorSquared"->weights.((1-v)^2),
+    "NormSquared"->weights.(v^2),"Minimum"->Min[v],
+    "MomentResidual"->Norm[mat.c-rhs,Infinity],
+    "EndpointRoundoff"->Last[v]|>
+];
+fastCRT /@ {360360,720720}
 ```
