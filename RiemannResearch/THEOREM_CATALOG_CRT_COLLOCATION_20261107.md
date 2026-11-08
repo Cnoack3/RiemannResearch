@@ -265,3 +265,47 @@ as was the existing conditional cofinal escape-energy implication to RH.
 Each used only `propext`, `Classical.choice`, and `Quot.sound`.
 Two positive-constant definitions accompany the fifteen theorems.
 The final checkpoint separately validates and publishes the repository delta.
+
+## Canonical prime-power update continuation
+
+Base: 8f11fcee05b12c462bb0538be8839bb6aa7df5a5. The user approved publication after review.
+
+**Kernel-checked before publication in the owning modules:** server job
+job_ujFCPKlblpVJB_6DH7Fzyzfv96rawsgQ built both changed owning modules and
+audited all 15 added theorems, using only propext, Classical.choice, Quot.sound.
+Reported verification duration: 15.547 seconds. This is targeted module
+verification; the publication checkpoint separately validates the full delta and any integration.
+
+QCRTNestedCutoffs adds one definition, updateSource, and 14 theorems:
+- canonical_norm_growth_exact; canonical_update_budget_iff;
+- canonical_increment_conditional; updateSource_eq; updateSource_norm_sq;
+- target_increment_divisor_moment; signed_divisor_update_source;
+- canonical_target_source_mean; signed_difference_update_source;
+- signed_difference_update_source_old; signed_difference_update_source_new;
+- canonical_increment_difference_test; canonical_increment_difference_energy;
+- leakage_divisor_moment_sq_le.
+
+LinearAlgebra/ObliqueBlockElimination adds block_elimination, preserving both
+cross blocks and the signed source in a nonsymmetric system. It is exported
+from the aggregate module.
+
+For N=pL at admission p^k, the source is
+b=h_N-h_L-T_N r_L, with ||b||^2=L^-2-N^-2+||T_N r_L||^2.
+New difference-test rows have signed source delta/d+<r_L,a_d>.
+The exact norm update retains 2<r_L,r_N-r_L>; its budget equivalence does not
+prove the budget. The contraction-defect estimate is not a full-Q norm bound.
+
+**Independently checked calculations:** exact rational complete-tail intervals
+certify E_12>E_60, a negative leakage correlation at 12 -> 60, and failure of
+the literal C=1 multiplicative bound at 2 -> 6. Wolfram agrees at higher
+precision. Higher stages through L_16=720720 are floating-point exploration.
+
+**Paper argument, not Lean-checked:** the gcd-cell refinement formula and an
+arithmetic family at genuine 2^k LCM admissions show that periodicity,
+zero-cell vanishing, and old-cell orthogonality cannot alone force
+depth-decaying revealed leakage. This family is not asserted to be canonical
+or to satisfy h_L+r in V_L.
+
+**Open:** the actual canonical signed Schur-response estimate, any uniform
+C/p^k norm-growth budget, and the cofinal canonical escape-energy hypothesis.
+No RH claim is made. See RH/CanonicalPrimePowerUpdatesResearch20261107.md.
