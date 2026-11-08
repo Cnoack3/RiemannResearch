@@ -80,5 +80,9 @@ build:buildbuddy-artifacts --experimental_build_event_upload_strategy=remote
 build:buildbuddy-benchmark --config=buildbuddy
 build:buildbuddy-benchmark --jobs=8
 
+# Experimental SDK pruning; normal builds keep the original input set.
+build:lean-sdk-slim --repo_env=RULES_LEAN_SDK_INDEX=1
+build:lean-sdk-slim --define=lean_sdk_inputs=imports
+
 try-import %workspace%/.bazelrc.local
 

@@ -696,3 +696,55 @@ The user-run measurements above verify full-project analysis and remote
 action-cache reuse. Hosted Lean compilation, worker input-transfer reductions,
 and performance effects of changes beyond these measured concurrency trials
 remain unverified.
+
+## Experimental per-action SDK inputs
+
+`--config=lean-sdk-slim` opts into SDK import-closure selection. Use it alongside
+the usual remote profile, initially on the existing bounded smoke target:
+
+```sh
+bazel build --config=buildbuddy --config=lean-sdk-slim //:smoke
+```
+
+Normal builds retain their existing action inputs and commands and do not run
+the SDK indexer. The profile enables both SDK indexing at repository setup and
+input selection at action analysis. Removing
+`--config=lean-sdk-slim` returns to the existing configuration. Changing this
+setting changes the affected action keys; start with a small target before a
+full build. This does not purge either cache or force unrelated actions to run.
+
+At SDK repository setup, a helper uses the pinned Lean decoder to read imports
+from the compiled SDK modules, including private olean parts. The toolchain
+constructs a shared transitive depset for each SDK module once. A compile action
+includes the SDK closures required by its own imports and its indexed external
+dependencies, implicit `Init`, and any required compiled-sorry checker imports.
+All existing shared runtime libraries remain inputs. This selects whole module
+bundles; it does not drop `.olean.private`, `.olean.server`, `.ir` or `.ir.sig`
+from selected modules. See the pinned
+[module loader](https://github.com/leanprover/lean4/blob/v4.33.0-rc2/src/Lean/Environment.lean).
+
+The experimental checker imports `Lean.Environment` and `Lean.Util.Sorry`
+instead of the `Lean` umbrella. Its compiled-declaration audit body is identical
+to the existing checker, including private proof inspection and rejection of
+suppressed sorry warnings. The existing checker remains the default.
+
+Unknown prebuilt dependency graphs, custom plugins, custom `LEAN_PATH`, an
+unavailable SDK index, and unsupported host/target platform combinations retain
+the full SDK. Index generation is currently enabled for a native Linux x86-64
+SDK. Malformed or incomplete successful indexes fail validation rather than
+silently omitting dependencies. A decoder failure emits a repository-setup
+warning and keeps the full SDK.
+
+The existing benchmark's SDK inventory reports the entire installed SDK. It is
+not a count of selected per-action inputs. Compare actual action input sizes
+and invocation-level internal downloads in BuildBuddy after a successful smoke
+build. Declared bytes, compressed transfer bytes, executor-local cache reuse,
+and account billing are different measurements. This feature has no promised
+percentage reduction and does not establish free-tier eligibility.
+
+The patch passed 19 local checks of the actual Starlark functions, including
+default-action equivalence and disabled-indexer behavior. These checks model
+Bazel actions; they do not execute Bazel or Lean. The SDK decoder, checker
+imports, and measured transfer reduction still need validation through the
+experimental Bazel smoke build. This build-tooling trial does not require the
+legacy Lake/MCP verification path to be recovered.
