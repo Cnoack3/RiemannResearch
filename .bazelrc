@@ -5,6 +5,9 @@ startup --host_jvm_args=-Xmx8g
 startup --host_jvm_args=-XX:ActiveProcessorCount=4
 # A heap OOM must terminate the server, including failures on background threads.
 startup --host_jvm_args=-XX:+ExitOnOutOfMemoryError
+# All checkouts share repository and action caches. Bazel still creates one
+# output base per workspace under this root; never share a single output base.
+startup --output_user_root=~/.cache/riemann-bazel/outputs
 build --loading_phase_threads=4
 build --local_resources=cpu=4
 
@@ -34,9 +37,18 @@ build:verbose --output_filter=.*
 # DO NOT ENABLE - this is unstable and causes hangs
 # startup --experimental_remote_repo_contents_cache
 
-# Keep native repository caches at Bazel's persistent per-user defaults.
+# Pin cache locations independently of the selected workspace/output base.
+common --repository_cache=~/.cache/riemann-bazel/repository
+common --repo_contents_cache=~/.cache/riemann-bazel/repo-contents
 common --repo_contents_cache_gc_max_age=14d
 common --repo_contents_cache_gc_idle_delay=5m
+build --disk_cache=~/.cache/riemann-bazel/disk
+# 32 GiB soft limit, collected while the server is idle; not a total disk quota.
+build --experimental_disk_cache_gc_max_size=34359738368
+build --experimental_disk_cache_gc_max_age=14d
+build --experimental_disk_cache_gc_idle_delay=5m
+# Generated state is outside the source tree; remove old convenience links too.
+build --experimental_convenience_symlinks=clean
 
 # Stock bazel-remote signs GCS requests with the server's private HMAC key.
 # Bucket: riemann_lean_cache; object prefix: bazel/.
@@ -89,4 +101,3 @@ build:lean-sdk-full --repo_env=RULES_LEAN_SDK_INDEX=0
 build:lean-sdk-full --define=lean_sdk_inputs=full
 
 try-import %workspace%/.bazelrc.local
-

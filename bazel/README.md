@@ -71,14 +71,13 @@ The full project compilation, private GCS reuse, and RBE have not been tested.
 
 ## Shared local repository caches
 
-Bazel 9.2 provides two native repository caches. Workspaces using the same
-`output_user_root` share these persistent locations:
+Bazel 9.2 provides two native repository caches. The repository pins these
+per-user paths independently of the output base:
 
-- Downloaded archives: `{output_user_root}/cache/repos/v1`.
-- Completed reproducible repositories: `{repository_cache}/contents`.
+- Downloaded archives: `~/.cache/riemann-bazel/repository`.
+- Completed reproducible repositories: `~/.cache/riemann-bazel/repo-contents`.
 
-Run `bazel info output_user_root` on the Ubuntu server to locate them. No
-additional service or authentication is required; the directories survive
+No additional service or authentication is required; the directories survive
 reboots. Eligible completed repositories are shared through directory symlinks,
 with native filesystem locks for concurrent readers and garbage collection.
 The patched rules normalize fetched repositories into portable trees and mark
@@ -93,7 +92,7 @@ The first Mathlib population downloads its public cache locally. Bootstrap uses
 isolated temporary Home, Lake, and Mathlib cache directories. It retains only
 compiled import bundles and deterministic metadata, then removes the temporary
 state. Later workspaces with matching dependency inputs and the same
-`output_user_root` can reuse the completed repository through a directory
+repository caches can reuse the completed repository through a directory
 symlink, without repeating bootstrap or copying its bundles. This reuse must
 still be confirmed on the Ubuntu server with the hosted BuildBuddy profile.
 RBE executes compilation actions; repository bootstrap still runs locally.
@@ -108,6 +107,11 @@ miss runs bootstrap locally; there is no remote repository contents fallback.
 `--remote_download_outputs=minimal` still limits action output downloads.
 Cached action outputs download when needed by local actions; outputs compiled
 locally still occupy disk. The downloaded-archive cache remains separate.
+The local action cache at `~/.cache/riemann-bazel/disk` retains downloaded blobs
+for reuse in other checkouts, with a 32 GiB soft limit and 14-day retention.
+Per-workspace generated state lives under `~/.cache/riemann-bazel/outputs`,
+and convenience `bazel-*` links are removed from the source tree. See
+[shared storage](VERIFICATION.md#shared-storage) for cleanup and deployment.
 Omit `--remote_accept_cached=false` from normal builds and reuse tests: it
 bypasses remote action cache hits, and would also bypass remote repository
 cache reads if that experiment were enabled. It does not disable the native

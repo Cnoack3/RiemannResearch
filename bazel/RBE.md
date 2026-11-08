@@ -5,7 +5,8 @@
 `bazel build --config=buildbuddy` selects BuildBuddy's hosted executors and
 artifact cache. It also sends build events to the authenticated BuildBuddy
 organization so its invocation page can show execution and transfer statistics.
-Ordinary builds keep the GCS cache. MCP verification continues using Lake.
+Ordinary builds keep the GCS cache. MCP verification defaults to Bazel with
+BuildBuddy; Lake is available as an explicit legacy backend.
 Use either `--config=buildbuddy` or `--config=rbe`, not both.
 
 The BuildBuddy profile uses the existing pinned Ubuntu 24.04 Linux x86-64
@@ -13,6 +14,21 @@ platform, 80 jobs, minimal output downloads, and remote execution only.
 An executor failure fails the build rather than compiling on the MCP server.
 BuildBuddy's hosted workers use its CAS; this profile does not attach our GCS
 bucket to those workers.
+
+All updated checkouts use shared local caches under `~/.cache/riemann-bazel`:
+repository archives in `repository/`, completed repositories in `repo-contents/`,
+and action results/downloaded blobs in `disk/`. Mutable output state remains
+separate for each workspace under `outputs/`, outside the checkout. The disk
+cache uses a 32 GiB soft limit and 14-day retention. Builds remove convenience
+`bazel-*` symlinks, so inspect outputs via `bazel info bazel-bin` instead.
+Managed workspaces enforce these paths even for retained older snapshots and
+clean stale output bases under the existing workspace-retention policy. See
+[shared storage and rollout details](VERIFICATION.md#shared-storage).
+
+Minimal output downloads remain enabled. Only bytes actually fetched from
+BuildBuddy enter the local CAS; the configuration does not mirror every remote
+artifact. This local reuse reduces repeated client downloads, not the SDK input
+bytes downloaded by BuildBuddy's executors.
 
 The API key is scoped to `common:buildbuddy` in this private repository's
 `.bazelrc`, as authorized by the repository owner. No additional authentication
@@ -28,7 +44,7 @@ bazel --output_base="$HOME/.cache/bazel-buildbuddy-smoke" build \
   --config=buildbuddy --remote_accept_cached=false \
   --action_env=LEAN_RBE_PROBE_NONCE="$(date +%s%N)" \
   --remote_download_outputs=toplevel //bazel:rbe_probe
-cat bazel-bin/bazel/rbe-probe.txt
+cat "$(bazel --output_base="$HOME/.cache/bazel-buildbuddy-smoke" info bazel-bin)/bazel/rbe-probe.txt"
 ```
 
 Expect `Linux x86_64` and an actual `remote` process in the build summary.
@@ -155,7 +171,7 @@ Once the instance and worker pool are running, from the project root:
 bazel --output_base="$HOME/.cache/bazel-rbe-smoke" build --config=rbe \
   --remote_accept_cached=false --remote_download_outputs=toplevel \
   //bazel:rbe_probe
-cat bazel-bin/bazel/rbe-probe.txt
+cat "$(bazel --output_base="$HOME/.cache/bazel-rbe-smoke" info bazel-bin)/bazel/rbe-probe.txt"
 
 bazel --output_base="$HOME/.cache/bazel-rbe-smoke" build --config=rbe \
   //:smoke
