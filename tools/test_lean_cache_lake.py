@@ -186,6 +186,7 @@ class RecordingGuard:
 
 class LifecycleManager:
     def __init__(self, root):
+        self.default_verification_backend = "lake"
         self.root = root
         self._outputs_guard = RecordingGuard()
         self.calls = []
@@ -314,6 +315,13 @@ class EditorLifecycleTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(os.environ["LAKE"], "original lake")
         self.assertNotIn("cache lease", self.manager.calls)
 
+    async def test_bazel_workspace_provisions_editor_dependencies_only_on_demand(self):
+        self.manager.default_verification_backend = "bazel"
+        calls = []
+        self.manager._attach_dependencies = lambda project: calls.append(project)
+        await self.hooks["_start_cached_client"](self.project)
+        self.assertEqual(calls, [self.project])
+
     async def test_retired_client_remains_protected_until_process_exits(self):
         client = FakeClient(str(self.project))
         self.hooks["_cache_clients"][self.project] = client
@@ -402,3 +410,4 @@ class EditorLifecycleTests(unittest.IsolatedAsyncioTestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

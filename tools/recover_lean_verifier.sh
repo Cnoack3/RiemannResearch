@@ -94,24 +94,35 @@ if [[ "$health_ok" -ne 1 ]]; then
   fail "The service is active, but one or more local health checks failed. Verify the listen address/port in the unit and tunnel profile; rerun with LEAN_HEALTH_BASE if needed."
 fi
 
-log "Running a direct local Lean smoke test"
-command -v lake >/dev/null 2>&1 || fail "lake is not on PATH in this WSL shell."
-[[ -f "$REPO_ROOT/lakefile.toml" || -f "$REPO_ROOT/lakefile.lean" ]] || fail "No Lake project found at $REPO_ROOT."
-
-smoke_dir="$(mktemp -d)"
-trap 'rm -rf "$smoke_dir"' EXIT
-cat >"$smoke_dir/LeanVerifierSmoke.lean" <<'LEAN'
-import Mathlib
+backend="${LEAN_VERIFICATION_BACKEND:-bazel}"
+log "Running a local verification smoke test with backend=$backend"
+if [[ "$backend" == bazel ]]; then
+  command -v bazel >/dev/null 2>&1 || fail "bazel is not on PATH in this WSL shell."
+  (
+    cd "$REPO_ROOT"
+    python3 tools/bazel_verification.py --fix
+    python3 tools/bazel_verification.py --check
+    bazel build --config=buildbuddy //:smoke
+  )
+elif [[ "$backend" == lake ]]; then
+  command -v lake >/dev/null 2>&1 || fail "lake is not on PATH in this WSL shell."
+  smoke_dir="$(mktemp -d)"
+  trap 'rm -rf "$smoke_dir"' EXIT
+  cat >"$smoke_dir/LeanVerifierSmoke.lean" <<'LEAN'
+import Mathlib.Tactic.NormNum
 
 example : 1 + 1 = 2 := by
   norm_num
 LEAN
+  (
+    cd "$REPO_ROOT"
+    lake env lean "$smoke_dir/LeanVerifierSmoke.lean"
+  )
+else
+  fail "LEAN_VERIFICATION_BACKEND must be bazel or lake."
+fi
 
-(
-  cd "$REPO_ROOT"
-  lake env lean "$smoke_dir/LeanVerifierSmoke.lean"
-)
-
-log "Local service health and direct Lean compilation succeeded."
+log "Local service health and $backend smoke verification succeeded."
 log "Next: reconnect/open a fresh ChatGPT Lean Verifier session if the existing session still reports the stale remote tunnel 404."
-log "Then run agent_workspace_open and compile the same Mathlib smoke theorem through the MCP tool."
+log "Then run agent_workspace_open and submit a queued check through the MCP tool and confirm its reported backend."
+

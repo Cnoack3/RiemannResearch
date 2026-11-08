@@ -62,6 +62,27 @@
   unresolved domain-specific hypotheses. `#print axioms` does not report local
   hypotheses in a theorem's type.
 
+## Bazel verification default
+
+- Default all acceptance checks to Bazel with `--config=buildbuddy`. The queued
+  snippet, file-check, full-build, and checkpoint tools select this backend.
+  Do not silently retry a failed Bazel check through Lake.
+- This is an experimental migration. Select `backend="lake"` on a queued tool
+  for an explicitly requested legacy check. The server environment flag
+  `LEAN_VERIFICATION_BACKEND=lake` restores the old default. Record which backend
+  verified the result. Jobs record their backend at submission; old jobs retain
+  their original Lake path.
+- Every new directory containing Lean sources, including its intermediate
+  parents, must have `BUILD.bazel` with `lean_modules()`. The server generates
+  absent package files after patches and before verification. Keep these files
+  in the same checkpoint as the source. Use
+  `python3 tools/bazel_verification.py --check` to audit coverage, or `--fix` to
+  create missing package files. Preserve existing custom package definitions.
+- LSP diagnostics, goals, tactic attempts, and axiom exploration remain editor
+  tools. They do not replace queued Bazel acceptance or the publication gate.
+  If the installed server lacks the backend fields/default, report that the
+  migration is not deployed; do not label an old Lake result as Bazel-verified.
+
 ## Efficient isolated workflow
 
 - Retain the active workspace token and absolute project root across turns of
@@ -97,15 +118,19 @@
 - `agent_workspace_checkpoint` audits and validates the entire unpublished
   delta from the workspace base before commit and serialized publication.
   It skips Lean only when that delta contains no Lean source or dependency
-  changes. Otherwise Lake incrementally builds the aggregate project plus
-  explicitly changed child modules; unchanged artifacts are reused. Source
+  changes. Otherwise Bazel incrementally builds `//:RiemannResearch` with
+  `--config=buildbuddy`, including every project package and unexported source;
+  unchanged artifacts are reused. Source
   changes during validation block publication. Integrated source is audited
   and validated again before pushing its exact commit. `lean_build` is the
   explicit incremental full-project validation; do not run it immediately
   before checkpoint. After
   an intentional `lakefile.toml` change, queue `agent_workspace_update_deps`
   once and wait for it before validation.
-- Dependency artifacts are shared read-mostly. Native project artifacts use a
+- The following native dependency/cache details apply to the explicit Lake
+  legacy backend and editor exploration. Bazel uses the existing repository
+  configuration and BuildBuddy cache without changing resource/quota settings.
+  Dependency artifacts are shared read-mostly. Native project artifacts use a
   shared content-addressed cache backed by private GCS storage. Each clone has
   its own writable project build directory, restored through native Lake
   artifacts and cleaned after successful verification when no editor uses it.
@@ -198,4 +223,5 @@ Local cost telemetry is written as bounded JSON Lines to
 `~/.local/state/lean-agent-workspaces/metrics.jsonl`; it records durations,
 response sizes, queue polling, and cache/build events without proof text or
 workspace tokens.
+
 

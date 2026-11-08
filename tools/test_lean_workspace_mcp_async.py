@@ -59,16 +59,16 @@ class AsyncHandlerTests(unittest.IsolatedAsyncioTestCase):
             ("agent_workspace_git_diff", ("ws",), "git_diff", ("ws",)),
             ("agent_workspace_sync", ("ws",), "sync", ("ws",)),
             ("agent_workspace_update_deps", ("ws",), "submit_update_dependencies", ("ws", "")),
-            ("queued_lean_build", ("/approved/project",), "submit_build_for_project", ("/approved/project",)),
+            ("queued_lean_build", ("/approved/project",), "submit_build_for_project", ("/approved/project", "")),
             ("agent_workspace_checkpoint", ("ws", "checkpoint"), "submit_checkpoint",
-             ("ws", "checkpoint", True)),
+             ("ws", "checkpoint", True, "")),
             ("agent_workspace_job_status", ("job",), "job_status", ("job", False)),
             ("agent_workspace_list_jobs", ("ws",), "list_jobs", ("ws", 20)),
             ("agent_workspace_reset", ("ws",), "reset", ("ws", "")),
             ("agent_workspace_run_code", ("ws", "example : True := True.intro"), "submit_run_code",
-             ("ws", "example : True := True.intro", 300)),
+             ("ws", "example : True := True.intro", 300, "")),
             ("agent_workspace_check_file", ("ws", "RiemannResearch/A.lean"), "submit_check_file",
-             ("ws", "RiemannResearch/A.lean", 300)),
+             ("ws", "RiemannResearch/A.lean", 300, "")),
         ]
         for name, arguments, expected_method, expected_arguments in cases:
             with self.subTest(handler=name):
@@ -129,16 +129,29 @@ class AsyncHandlerTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, "Path is protected"):
             await handlers["agent_workspace_check_file"]("ws", "tools/server.lean")
 
+    async def test_backend_override_reaches_all_acceptance_jobs(self):
+        manager = RecordingManager()
+        handlers = load_handlers(manager)
+        for name, args, method in (
+            ("queued_lean_build", ("/project", "lake"), "submit_build_for_project"),
+            ("agent_workspace_checkpoint", ("ws", "checkpoint", False, "lake"), "submit_checkpoint"),
+            ("agent_workspace_run_code", ("ws", "example : True := True.intro", 30, "lake"), "submit_run_code"),
+            ("agent_workspace_check_file", ("ws", "RiemannResearch/A.lean", 30, "lake"), "submit_check_file"),
+        ):
+            await handlers[name](*args)
+            self.assertEqual(manager.calls[-1][:2], (method, args))
+
     async def test_explicit_options_are_not_lost(self):
         manager = RecordingManager()
         handlers = load_handlers(manager)
         await handlers["agent_workspace_job_status"]("job", True)
         self.assertEqual(manager.calls[-1][:2], ("job_status", ("job", True)))
         await handlers["agent_workspace_checkpoint"]("ws", "message", False)
-        self.assertEqual(manager.calls[-1][:2], ("submit_checkpoint", ("ws", "message", False)))
+        self.assertEqual(manager.calls[-1][:2], ("submit_checkpoint", ("ws", "message", False, "")))
         await handlers["agent_workspace_run_code"]("ws", "code", 900)
-        self.assertEqual(manager.calls[-1][:2], ("submit_run_code", ("ws", "code", 900)))
+        self.assertEqual(manager.calls[-1][:2], ("submit_run_code", ("ws", "code", 900, "")))
 
 
 if __name__ == "__main__":
     unittest.main()
+

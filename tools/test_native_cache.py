@@ -68,6 +68,7 @@ class NativeCacheTests(unittest.TestCase):
         lake.write_text("#!" + sys.executable + "\n" + FAKE_LAKE)
         lake.chmod(0o755)
         environment = patch.dict(os.environ, {
+            "LEAN_VERIFICATION_BACKEND": "lake",
             "LAKE_CACHE_DIR": str(self.cache),
             "LEAN_REMOTE_CACHE_SERVICE": "gcs",
             "CACHE_TEST_STATE": str(self.state),
@@ -82,6 +83,7 @@ class NativeCacheTests(unittest.TestCase):
     def manager_instance():
         # Exercise real cache methods without starting unrelated queue workers.
         manager = workspaces.AgentWorkspaceManager.__new__(workspaces.AgentWorkspaceManager)
+        manager.default_verification_backend = "lake"
         manager._cache_local = threading.local()
         manager._outputs_guard = threading.RLock()
         manager._job_local = threading.local()
@@ -133,7 +135,8 @@ class NativeCacheTests(unittest.TestCase):
 
     def test_compiler_and_auth_errors_do_not_continue_or_upload(self):
         for mode, expected_code, expected_commands in (("compiler", 1, 1), ("auth", 22, 2)):
-            with self.subTest(mode=mode), patch.dict(os.environ, {"CACHE_TEST_MODE": mode}):
+            with self.subTest(mode=mode), patch.dict(os.environ, {
+            "LEAN_VERIFICATION_BACKEND": "lake","CACHE_TEST_MODE": mode}):
                 (self.state / "commands.jsonl").unlink(missing_ok=True)
                 with self.assertRaises(workspaces.LakeCommandError) as error:
                     self.build()
@@ -143,7 +146,8 @@ class NativeCacheTests(unittest.TestCase):
 
     def test_failed_upload_and_active_lsp_preserve_build_outputs(self):
         build = self.seed_local()
-        with patch.dict(os.environ, {"CACHE_TEST_MODE": "upload"}):
+        with patch.dict(os.environ, {
+            "LEAN_VERIFICATION_BACKEND": "lake","CACHE_TEST_MODE": "upload"}):
             with self.assertRaises(workspaces.LakeCommandError):
                 self.build()
         self.assertTrue(build.exists())
@@ -278,3 +282,4 @@ class NativeCacheTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

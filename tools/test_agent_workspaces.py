@@ -75,6 +75,7 @@ with tempfile.TemporaryDirectory() as raw:
     run(["git", "commit", "-m", "Initial"], source)
     run(["git", "clone", "--bare", str(source), str(remote)], temp)
 
+    os.environ["LEAN_VERIFICATION_BACKEND"] = "lake"
     os.environ["LEAN_AGENT_WORKSPACES_ROOT"] = str(temp / "workspaces")
     os.environ["LEAN_AGENT_WORKSPACES_STATE"] = str(temp / "state")
     os.environ["LEAN_SHARED_DEPS_ROOT"] = str(temp / "shared")
@@ -321,4 +322,5 @@ new file mode 100644
     assert first_token not in metrics
 
 print("isolated workspace lifecycle ok")
+
 

@@ -25,9 +25,18 @@ from pydantic import BaseModel, ConfigDict
 from agent_workspaces import AgentWorkspaceManager, TOKEN_RE
 
 
-WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive, sensibly named modules with focused imports; checkpoint rejects umbrella `import Mathlib` and unexported root-level modules. A long cohesive theorem may remain in one file; split by mathematical responsibility, not an arbitrary line count. Checkpoints audit and validate the entire unpublished delta from the workspace base. They skip Lean only when no Lean source or dependency changes are being published; otherwise Lake incrementally builds the aggregate project plus explicitly changed modules; lean_build remains an explicit queued full-project validation and should not run immediately before checkpoint. If lakefile.toml changes, queue agent_workspace_update_deps once before further validation. Exact dependency configurations and binary artifacts are shared by content key; cache preparation is protected and project builds are clone-local. Poll queued work no sooner than retry_after_seconds and never resubmit it; running status includes phase and Lake task progress. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Publish Lean/dependency changes only through a terminal successful agent_workspace_checkpoint; failed, timed-out or unavailable verification blocks publication. GitHub-hosted CI has no runner quota: never rely on it or bypass verification with direct git push or GitHub commit APIs. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
+WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive, sensibly named modules with focused imports; checkpoint rejects umbrella `import Mathlib` and unexported root-level modules. A long cohesive theorem may remain in one file; split by mathematical responsibility, not an arbitrary line count. Checkpoints audit and validate the entire unpublished delta from the workspace base. They skip Lean only when no Lean source or dependency changes are being published; otherwise Bazel incrementally builds every project package with --config=buildbuddy; lean_build remains an explicit queued full-project validation and should not run immediately before checkpoint. If lakefile.toml changes, queue agent_workspace_update_deps once before further validation. Exact dependency configurations and binary artifacts are shared by content key; cache preparation is protected and project builds are clone-local. Poll queued work no sooner than retry_after_seconds and never resubmit it; running status includes phase and build progress. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Publish Lean/dependency changes only through a terminal successful agent_workspace_checkpoint; failed, timed-out or unavailable verification blocks publication. GitHub-hosted CI has no runner quota: never rely on it or bypass verification with direct git push or GitHub commit APIs. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
 
 WORKFLOW_INSTRUCTIONS += (
+    " Verification defaults to Bazel with --config=buildbuddy. Use the queued "
+    "agent_workspace_run_code, agent_workspace_check_file, lean_build and "
+    "agent_workspace_checkpoint tools; pass backend='lake' only for an explicit "
+    "legacy request. LEAN_VERIFICATION_BACKEND=lake sets the server default. "
+    "The selected backend is recorded when a job is submitted; no silent fallback "
+    "occurs. LSP goals, diagnostics, lean_multi_attempt and lean_verify remain "
+    "interactive exploration only, not acceptance certificates. New Lean source "
+    "directories receive a canonical BUILD.bazel automatically before verification "
+    "and after patches; retain these files in checkpoints. "
     " agent_workspace_run_code and agent_workspace_check_file are asynchronous "
     "verification jobs: acceptance is NOT verification. Retain the job_id, poll "
     "agent_workspace_job_status at retry_after_seconds, and inspect the terminal "
@@ -127,6 +136,10 @@ _original_evict_client = lean_client_utils._evict_oldest_client
 
 
 async def _start_cached_client(project: Path):
+    # Bazel-only clones do not provision a second dependency tree until a user
+    # actually requests editor/LSP exploration. Acceptance stays in Bazel.
+    if AGENT_WORKSPACES.default_verification_backend == "bazel" and not (project / ".lake/packages").is_dir():
+        await asyncio.to_thread(AGENT_WORKSPACES._attach_dependencies, project)
     if not os.environ.get("LEAN_REMOTE_CACHE_SERVICE"):
         return await _original_start_client(project)
     project = project.resolve(strict=False)
@@ -876,28 +889,28 @@ mcp.remove_tool("lean_build")
 @mcp.tool(
     name="lean_build",
     description=(
-        "Queue incremental project validation using shared Mathlib binaries; "
+        "Queue Bazel/BuildBuddy project validation (backend=lake selects the legacy path); "
         "do not call immediately before checkpoint."
     ),
 )
-async def queued_lean_build(lean_project_path: str) -> dict:
+async def queued_lean_build(lean_project_path: str, backend: str = "") -> dict:
     if not lean_project_path:
         raise ValueError(
             "lean_project_path is required and must equal project_root from "
             "agent_workspace_open"
         )
-    return await asyncio.to_thread(AGENT_WORKSPACES.submit_build_for_project, lean_project_path)
+    return await asyncio.to_thread(AGENT_WORKSPACES.submit_build_for_project, lean_project_path, backend)
 
 
 @mcp.tool(
     name="agent_workspace_checkpoint",
-    description="Queue source audit, incremental project validation, commit, and publication; failed validation blocks pushes.",
+    description="Queue source audit, Bazel/BuildBuddy validation, commit, and publication; backend=lake selects legacy validation. Failed validation blocks pushes.",
 )
 async def agent_workspace_checkpoint(
-    workspace_token: str, message: str, push: bool = True
+    workspace_token: str, message: str, push: bool = True, backend: str = ""
 ) -> dict:
     return await asyncio.to_thread(
-        AGENT_WORKSPACES.submit_checkpoint, workspace_token, message, push
+        AGENT_WORKSPACES.submit_checkpoint, workspace_token, message, push, backend
     )
 
 
@@ -948,14 +961,14 @@ async def agent_workspace_reset(
     description=(
         "Queue one ephemeral Lean snippet and return its job ID immediately; "
         "poll agent_workspace_job_status for bounded diagnostics and verification. "
-        "An accepted job is not a verified theorem."
+        "Default: Bazel --config=buildbuddy; backend=lake selects legacy verification. An accepted job is not a verified theorem."
     ),
 )
 async def agent_workspace_run_code(
-    workspace_token: str, code: str, timeout_seconds: int = 300
+    workspace_token: str, code: str, timeout_seconds: int = 300, backend: str = ""
 ) -> dict:
     return await asyncio.to_thread(
-        AGENT_WORKSPACES.submit_run_code, workspace_token, code, timeout_seconds
+        AGENT_WORKSPACES.submit_run_code, workspace_token, code, timeout_seconds, backend
     )
 
 
@@ -964,14 +977,14 @@ async def agent_workspace_run_code(
     description=(
         "Queue compilation of an existing approved project-relative .lean file; "
         "return a job ID, then poll agent_workspace_job_status. "
-        "Use this for full-file verification instead of a long LSP diagnostic request."
+        "Default: Bazel --config=buildbuddy; backend=lake selects legacy verification. Use this for full-file acceptance; LSP diagnostics are exploratory."
     ),
 )
 async def agent_workspace_check_file(
-    workspace_token: str, path: str, timeout_seconds: int = 300
+    workspace_token: str, path: str, timeout_seconds: int = 300, backend: str = ""
 ) -> dict:
     return await asyncio.to_thread(
-        AGENT_WORKSPACES.submit_check_file, workspace_token, path, timeout_seconds
+        AGENT_WORKSPACES.submit_check_file, workspace_token, path, timeout_seconds, backend
     )
 
 
@@ -1096,6 +1109,14 @@ for _retired_tool in (
 ):
     mcp.remove_tool(_retired_tool)
 
+for _exploration_name in ("lean_verify", "lean_multi_attempt", "lean_diagnostic_messages"):
+    _exploration_tool = mcp._tool_manager.get_tool(_exploration_name)
+    if _exploration_tool is not None:
+        _exploration_tool.description += (
+            " Editor exploration only. For Bazel acceptance, use "
+            "agent_workspace_run_code or agent_workspace_check_file."
+        )
+
 
 # FastMCP derives large response schemas from lean-lsp-mcp's Pydantic models.
 # Advertise only their common top-level object shape. Keeping a non-null schema
@@ -1109,4 +1130,5 @@ for _tool in mcp._tool_manager.list_tools():
 
 if __name__ == "__main__":
     raise SystemExit(lean_lsp_main())
+
 
