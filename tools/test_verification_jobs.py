@@ -80,6 +80,7 @@ class VerificationJobsTests(unittest.TestCase):
         fake_lake.write_text("#!" + sys.executable + "\n" + FAKE_LAKE)
         fake_lake.chmod(0o755)
         self.environment = patch.dict(os.environ, {
+            "LEAN_VERIFICATION_BACKEND": "lake",
             "LEAN_AGENT_WORKSPACES_ROOT": str(self.root / "workspaces"),
             "LEAN_AGENT_WORKSPACES_STATE": str(self.root / "state"),
             "LEAN_SHARED_DEPS_ROOT": str(self.root / "shared"),
@@ -167,7 +168,7 @@ class VerificationJobsTests(unittest.TestCase):
         self.assertEqual(queued["job_id"], duplicate["job_id"])
         expected = hashlib.sha256(json.dumps({
             "workspace_token": self.token, "kind": "run_code",
-            "arguments": {"code": code, "timeout_seconds": 17},
+            "arguments": {"code": code, "timeout_seconds": 17, "backend": "lake"},
         }, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         self.assertEqual(queued["request_sha256"], expected)
         self.assertEqual(status["code_sha256"], hashlib.sha256(code.encode()).hexdigest())
@@ -628,3 +629,4 @@ class VerificationJobsTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+

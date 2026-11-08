@@ -60,6 +60,7 @@ class CheckpointGateTests(unittest.TestCase):
         git(self.root, "clone", "--bare", str(self.source), str(self.remote))
         git(self.source, "remote", "add", "origin", str(self.remote))
         environment = patch.dict(os.environ, {
+            "LEAN_VERIFICATION_BACKEND": "lake",
             "LEAN_AGENT_WORKSPACES_ROOT": str(self.root / "workspaces"),
             "LEAN_AGENT_WORKSPACES_STATE": str(self.root / "state"),
             "LEAN_SHARED_DEPS_ROOT": str(self.root / "shared"),
@@ -214,3 +215,4 @@ class CheckpointGateTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

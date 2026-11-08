@@ -26,6 +26,10 @@ from functools import wraps
 from pathlib import Path
 from typing import Callable, Iterator
 
+from bazel_verification import (
+    bazel_build_command, bazel_target, ensure_bazel_coverage, verification_backend,
+)
+
 
 TOKEN_RE = re.compile(r"^ws_[A-Za-z0-9_-]{20,80}$")
 JOB_RE = re.compile(r"^job_[A-Za-z0-9_-]{20,80}$")
@@ -98,6 +102,7 @@ class AgentWorkspaceManager:
         self.before_replace = before_replace
         self.can_archive = can_archive
         self.retention_days = retention_days
+        self.default_verification_backend = verification_backend()
         try:
             self.lean_num_threads = int(os.environ.get("LEAN_NUM_THREADS", "8"))
         except ValueError as exc:
@@ -581,6 +586,8 @@ class AgentWorkspaceManager:
         self._run(["git", "config", "user.email", "lean-agent@localhost"], cwd=destination)
         if commit:
             self._run(["git", "checkout", "--detach", commit], cwd=destination)
+        if self.verification_backend == "bazel":
+            return {"restored": False, "backend": "bazel", "cache": "BuildBuddy"}
         dependency_key = self._attach_dependencies(destination)
         return self._restore_project_cache(destination, dependency_key)
 
@@ -704,6 +711,8 @@ class AgentWorkspaceManager:
         }
 
     def _publish_project_cache(self, project: Path) -> dict:
+        if self.verification_backend == "bazel":
+            return {"published": False, "reason": "Bazel/BuildBuddy owns verification artifacts"}
         if os.environ.get("LEAN_REMOTE_CACHE_SERVICE"):
             return {"published": False, "reason": "native remote cache replaces commit snapshots"}
         status = self._run(["git", "status", "--porcelain"], cwd=project)
@@ -875,6 +884,8 @@ class AgentWorkspaceManager:
             "shared_dependency_key": self._dependency_key(project),
             "project_cache": meta.get("project_cache", {"restored": False}),
             "retention_days": self.retention_days,
+            "verification_backend": self.default_verification_backend,
+            "legacy_backend": "Pass backend='lake' to a verification tool, or set LEAN_VERIFICATION_BACKEND=lake on the server",
             "usage": (
                 "Pass workspace_token to every agent_workspace_* tool. Pass absolute paths "
                 "under project_root to Lean file tools. Do not use relative paths or lean_run_code."
@@ -895,6 +906,10 @@ class AgentWorkspaceManager:
         allowed = normalized in (ROOT_WRITABLE if writable else ROOT_READABLE) or (
             relative.parts[0] == "RiemannResearch" and resolved.suffix.lower() in WRITABLE_SUFFIXES
         )
+        if not writable and (normalized == "BUILD.bazel" or (
+            relative.parts[0] == "RiemannResearch" and relative.name == "BUILD.bazel"
+        )):
+            allowed = True
         if not allowed:
             raise ValueError(f"Access is not allowed for {normalized}")
         return normalized, resolved
@@ -1076,6 +1091,9 @@ class AgentWorkspaceManager:
         paths = self._patch_paths(project, patch)
         self._run(["git", "apply", "--check", "--whitespace=error-all", "-"], cwd=project, input_text=patch)
         self._run(["git", "apply", "--whitespace=error-all", "-"], cwd=project, input_text=patch)
+        # Package generation is trusted server code; arbitrary BUILD code is not
+        # exposed through the restricted patch tool.
+        created_build_files = ensure_bazel_coverage(project) if self.verification_backend == "bazel" else []
         architecture_issues = self._architecture_audit(project)
         return {
             "applied": True,
@@ -1083,6 +1101,7 @@ class AgentWorkspaceManager:
             "project_root": str(project),
             "checkpoint_ready": not architecture_issues,
             "architecture_issues": architecture_issues,
+            "created_build_files": created_build_files,
         }
 
     def git_status(self, token: str) -> dict:
@@ -1201,18 +1220,47 @@ class AgentWorkspaceManager:
         # Kill descendants even if the Lake parent has exited but they still
         # hold its diagnostic pipe. Reap our direct child; orphan descendants
         # are reaped by the host's init, not by this (non-subreaper) service.
+        # Give the Bazel client a chance to cancel remote actions before killing
+        # it; its persistent server is outside the client's process group.
+        if process.args and Path(process.args[0]).name in {"bazel", "bazelisk"}:
+            try:
+                os.killpg(process.pid, signal.SIGINT)
+                process.wait(timeout=5)
+            except (ProcessLookupError, subprocess.TimeoutExpired):
+                pass
         try:
             os.killpg(process.pid, signal.SIGKILL)
         except ProcessLookupError:
             pass
         process.wait()
 
+    @property
+    def verification_backend(self) -> str:
+        return getattr(self._job_local, "backend", None) or self.default_verification_backend
+
+    def _run_bazel_build(self, project: Path, targets: list[str], *, timeout: int = 3600) -> tuple[str, dict]:
+        created = ensure_bazel_coverage(project)
+        command = bazel_build_command(targets)
+        output = self._run_streaming(command, cwd=project, timeout=timeout, phase="bazel_build")
+        return output, {"backend": "bazel", "config": "buildbuddy", "created_build_files": created}
+
     def _run_verification(self, project: Path, path: Path, timeout_seconds: int) -> dict:
+        if self.verification_backend == "bazel":
+            created = ensure_bazel_coverage(project)
+            command = bazel_build_command([bazel_target(project, path)])
+            result = self._run_verification_command(project, path, timeout_seconds, command)
+            result.update(backend="bazel", command=command, created_build_files=created)
+            return result
+        # Per-job legacy selection also works in fresh Bazel-only workspaces.
+        if not (project / ".lake" / "packages").is_dir() and (project / "lake-manifest.json").is_file():
+            self._attach_dependencies(project)
         service = os.environ.get("LEAN_REMOTE_CACHE_SERVICE")
         if not service:
-            return self._run_verification_command(
+            result = self._run_verification_command(
                 project, path, timeout_seconds, ["lake", "env", "lean", str(path)]
             )
+            result["backend"] = "lake"
+            return result
         with self._native_cache_lock():
             started = time.monotonic()
             result = self._run_verification_command(
@@ -1243,6 +1291,7 @@ class AgentWorkspaceManager:
             result.update(
                 elapsed_seconds=round(time.monotonic() - started, 3),
                 timeout_seconds=timeout_seconds,
+                backend="lake",
             )
             return result
 
@@ -1323,7 +1372,8 @@ class AgentWorkspaceManager:
         self._ensure_workspace_idle(token, "run Lean code")
         self._validate_code(code, timeout_seconds)
         _, project = self._get(token)
-        scratch = project / ".lake" / "agent-scratch"
+        scratch = (project / "RiemannResearch" / ("McpSnippet_" + secrets.token_hex(12))
+                   if self.verification_backend == "bazel" else project / ".lake" / "agent-scratch")
         scratch.mkdir(parents=True, exist_ok=True)
         path = scratch / f"Run_{secrets.token_hex(12)}.lean"
         response = {
@@ -1344,6 +1394,9 @@ class AgentWorkspaceManager:
             except OSError as exc:
                 response["cleanup_error"] = str(exc)[-1000:]
             response["temporary_file_removed"] = not path.exists()
+            if self.verification_backend == "bazel":
+                (scratch / "BUILD.bazel").unlink(missing_ok=True)
+                scratch.rmdir()
         self._record_metric(
             "run_code",
             workspace=self._workspace_label(token),
@@ -1471,6 +1524,14 @@ class AgentWorkspaceManager:
 
     def _build(self, project: Path) -> dict:
         started = time.monotonic()
+        if self.verification_backend == "bazel":
+            output, cache = self._run_bazel_build(project, ["//:RiemannResearch"])
+            return {
+                "backend": "bazel", "command": bazel_build_command(["//:RiemannResearch"]),
+                "elapsed_seconds": round(time.monotonic() - started, 3),
+                "output": "\n".join(output.splitlines()[-20:]), "dependency_cache": cache,
+                "scope": "full", "cache": "BuildBuddy",
+            }
         output, dependency_cache = self._run_lake_build(
             project,
             ["lake", "build", "RiemannResearch", "--quiet"],
@@ -1538,7 +1599,8 @@ class AgentWorkspaceManager:
         ]
         if unsupported_lean:
             raise ValueError("Unsupported Lean source scope; publication blocked: " + ", ".join(unsupported_lean))
-        dependency_files = {"lakefile.toml", "lake-manifest.json", "lean-toolchain"}
+        dependency_files = {"lakefile.toml", "lake-manifest.json", "lean-toolchain", "MODULE.bazel", "MODULE.bazel.lock", ".bazelrc", ".bazelversion"}
+        build_changed = any(Path(p).name in {"BUILD.bazel", "BUILD"} or p.startswith("bazel/") for p in changed_paths)
         changed_project_lean = {
             path for path in changed_paths if self._lean_module(path) is not None
         }
@@ -1553,6 +1615,7 @@ class AgentWorkspaceManager:
         }
         full_reason = (
             "dependency configuration changed" if dependency_files.intersection(changed_paths)
+            else "Bazel build configuration changed" if build_changed
             else "a project Lean module was deleted or moved" if deleted_project_lean
             else "the aggregate project module changed" if "RiemannResearch.lean" in changed_paths
             else None
@@ -1573,6 +1636,20 @@ class AgentWorkspaceManager:
                 elapsed_seconds=0,
             )
             return result
+
+        if self.verification_backend == "bazel":
+            started = time.monotonic()
+            # The aggregate includes every package, even unexported sources.
+            targets = ["//:RiemannResearch"]
+            output, cache = self._run_bazel_build(project, targets)
+            return {
+                "backend": "bazel", "command": bazel_build_command(targets), "scope": "full",
+                "reason": full_reason or "complete Bazel project coverage",
+                "changed_paths": changed_paths, "changed_modules": sorted(changed_modules),
+                "targets": targets, "target_count": 1, "targets_truncated": False,
+                "elapsed_seconds": round(time.monotonic() - started, 3),
+                "output": "\n".join(output.splitlines()[-20:]), "dependency_cache": cache,
+            }
 
         # Validate the aggregate import graph with Lake, rather than assuming a
         # text regex found every reverse import. Explicit targets also cover any
@@ -1632,6 +1709,8 @@ class AgentWorkspaceManager:
         if not 5 <= len(message) <= 120 or "\n" in message:
             raise ValueError("Commit message must be one line containing 5-120 characters")
         meta, project = self._get(token)
+        if self.verification_backend == "bazel":
+            ensure_bazel_coverage(project)
         checked_tree = self._checkpoint_tree(project)
         self._set_job_progress("auditing", detail="Auditing changed source", force=True)
         warnings = self._scan(project)
@@ -1693,7 +1772,10 @@ class AgentWorkspaceManager:
                         self._run(["git", "fetch", str(project), local_head], cwd=integration)
                         for commit in commits:
                             self._run(["git", "cherry-pick", commit], cwd=integration)
-                        self._attach_dependencies(integration)
+                        if self.verification_backend == "bazel":
+                            ensure_bazel_coverage(integration)
+                        else:
+                            self._attach_dependencies(integration)
                         integrated_tree = self._checkpoint_tree(integration)
                         warnings = self._scan(integration)
                         warnings.extend(self._architecture_audit(
@@ -1890,6 +1972,9 @@ class AgentWorkspaceManager:
             )
 
     def _submit_job(self, token: str, kind: str, arguments: dict) -> dict:
+        arguments = dict(arguments)
+        if kind in {"build", "checkpoint", "run_code", "check_file"}:
+            arguments["backend"] = verification_backend(arguments.get("backend") or self.default_verification_backend)
         self._meta_path(token)
         if not self._meta_path(token).is_file():
             raise ValueError("Unknown workspace token")
@@ -1927,6 +2012,7 @@ class AgentWorkspaceManager:
                 "job_id": job_id,
                 "workspace_token": token,
                 "kind": kind,
+                "backend": arguments.get("backend"),
                 "arguments": arguments,
                 "request_sha256": self._request_sha256(token, kind, arguments),
                 "owner_id": self._owner_id,
@@ -1980,26 +2066,26 @@ class AgentWorkspaceManager:
             job = self._read_job(job_id)
             return 1 if job.get("state") == "queued" else None
 
-    def submit_build(self, token: str) -> dict:
-        return self._submit_job(token, "build", {})
+    def submit_build(self, token: str, backend: str = "") -> dict:
+        return self._submit_job(token, "build", {"backend": backend})
 
-    def submit_run_code(self, token: str, code: str, timeout_seconds: int = 300) -> dict:
+    def submit_run_code(self, token: str, code: str, timeout_seconds: int = 300, backend: str = "") -> dict:
         self._validate_code(code, timeout_seconds)
         self._verification_project(token)
         return self._submit_job(
-            token, "run_code", {"code": code, "timeout_seconds": timeout_seconds}
+            token, "run_code", {"code": code, "timeout_seconds": timeout_seconds, "backend": backend}
         )
 
-    def submit_check_file(self, token: str, path: str, timeout_seconds: int = 300) -> dict:
+    def submit_check_file(self, token: str, path: str, timeout_seconds: int = 300, backend: str = "") -> dict:
         self._validate_verification_timeout(timeout_seconds)
         project = self._verification_project(token)
         _, _, file_sha256 = self._verification_file(project, path)
         return self._submit_job(
             token, "check_file",
-            {"path": path, "timeout_seconds": timeout_seconds, "file_sha256": file_sha256},
+            {"path": path, "timeout_seconds": timeout_seconds, "file_sha256": file_sha256, "backend": backend},
         )
 
-    def submit_build_for_project(self, project_path: str) -> dict:
+    def submit_build_for_project(self, project_path: str, backend: str = "") -> dict:
         project = Path(project_path).expanduser().resolve()
         for path in self.state.glob("ws_*.json"):
             try:
@@ -2009,17 +2095,17 @@ class AgentWorkspaceManager:
             registered = Path(meta.get("path", "")).resolve(strict=False)
             if registered == project:
                 self._validate_workspace_path(meta["token"], registered)
-                return self.submit_build(meta["token"])
+                return self.submit_build(meta["token"], backend)
         raise ValueError(
             "lean_project_path must be the exact project_root returned by "
             "agent_workspace_open"
         )
 
-    def submit_checkpoint(self, token: str, message: str, push: bool = True) -> dict:
+    def submit_checkpoint(self, token: str, message: str, push: bool = True, backend: str = "") -> dict:
         message = message.strip()
         if not 5 <= len(message) <= 120 or "\n" in message:
             raise ValueError("Commit message must be one line containing 5-120 characters")
-        return self._submit_job(token, "checkpoint", {"message": message, "push": push})
+        return self._submit_job(token, "checkpoint", {"message": message, "push": push, "backend": backend})
 
     def submit_update_dependencies(self, token: str, package: str = "") -> dict:
         if package and not PACKAGE_RE.fullmatch(package):
@@ -2030,6 +2116,8 @@ class AgentWorkspaceManager:
         token = job["workspace_token"]
         arguments = job["arguments"]
         self._job_local.workspace_token = token
+        # Pre-migration queued jobs retain their original Lake execution path.
+        self._job_local.backend = verification_backend(arguments.get("backend", "lake"))
         try:
             if job["kind"] == "build":
                 return self.build(token)
@@ -2046,6 +2134,7 @@ class AgentWorkspaceManager:
             raise RuntimeError(f"Unsupported job kind: {job['kind']}")
         finally:
             self._job_local.workspace_token = None
+            self._job_local.backend = None
 
     def _job_worker(self) -> None:
         while True:
@@ -2315,5 +2404,6 @@ class AgentWorkspaceManager:
             "preserved_unpublished": preserved,
             "policy": "Dirty or unpublished workspaces are never automatically deleted.",
         }
+
 
 
