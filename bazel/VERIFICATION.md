@@ -59,6 +59,21 @@ BuildBuddy flags, credentials, and remote resource settings are unchanged.
 RBE runs compiler actions remotely; local Bazel servers still perform analysis
 and consume memory, so set an optional cap if measurements warrant one.
 
+Admission uses a separate lock and pending-job index for each workspace.
+Submitting a job or checking whether a workspace is busy does not scan completed
+job history. A process-start recovery scan indexes legacy pending records and
+marks jobs whose owner exited as interrupted; it never replays them. Keep
+cooperating MCP processes on the same server version when upgrading.
+Malformed job records block recovery/admission instead of being treated as idle;
+the original records remain available for diagnosis.
+
+Submission responses include `admission` timings for workspace-lock waiting,
+pending-record lookup, persistence, dispatch, and total admission time, plus
+`records_examined`. Job records retain `admission_started_at` and lookup/lock
+measurements. These measurements start inside the manager's admission method;
+they exclude earlier request validation and connector/network time. The existing
+`submitted_at` timestamp still marks job creation, not initial request arrival.
+
 ## Host resource policy
 
 Remote execution still leaves analysis, input preparation, and cache handling

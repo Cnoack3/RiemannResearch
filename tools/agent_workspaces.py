@@ -145,6 +145,7 @@ class AgentWorkspaceManager:
             )
         ).resolve()
         self.jobs = self.state / "jobs"
+        self.pending_jobs = self.state / "pending-jobs"
         self.metrics_path = self.state / "metrics.jsonl"
         try:
             self.project_cache_keep = int(os.environ.get("LEAN_PROJECT_CACHE_KEEP", "8"))
@@ -152,13 +153,14 @@ class AgentWorkspaceManager:
             raise ValueError("LEAN_PROJECT_CACHE_KEEP must be an integer") from exc
         if not 1 <= self.project_cache_keep <= 128:
             raise ValueError("LEAN_PROJECT_CACHE_KEEP must be between 1 and 128")
-        for path in (self.root, self.state, self.shared, self.project_cache, self.jobs):
+        for path in (self.root, self.state, self.shared, self.project_cache, self.jobs, self.pending_jobs):
             path.mkdir(parents=True, exist_ok=True)
         self._job_queue: queue.Queue[str] = queue.Queue()
         self._job_guard = threading.Lock()
         self._metrics_guard = threading.Lock()
         self._job_local = threading.local()
         self._operation_local = threading.local()
+        self._admission_local = threading.local()
         self._cache_local = threading.local()
         self._outputs_guard = threading.RLock()
         self._active_jobs: set[str] = set()
@@ -170,7 +172,11 @@ class AgentWorkspaceManager:
         self._owner_directory.mkdir(exist_ok=True)
         self._owner_lease = (self._owner_directory / self._owner_id).open("a+")
         fcntl.flock(self._owner_lease.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        self._recover_interrupted_jobs()
+        try:
+            self._recover_interrupted_jobs()
+        except BaseException:
+            self._owner_lease.close()
+            raise
         self._job_worker_threads = [
             threading.Thread(
                 target=self._job_worker,
@@ -274,7 +280,7 @@ class AgentWorkspaceManager:
             "phase_started_at": phase_started_at,
             "updated_at": now,
         }
-        with self._job_guard:
+        with self._admission_lock(self._read_job(job_id)["workspace_token"]):
             job = self._read_job(job_id)
             if job.get("state") != "running":
                 return
@@ -1841,16 +1847,53 @@ class AgentWorkspaceManager:
         path = self._job_path(job_id)
         if not path.is_file():
             raise ValueError("Unknown job ID")
-        return json.loads(path.read_text(encoding="utf-8"))
+        job = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(job, dict) or job.get("job_id") != job_id:
+            raise RuntimeError("Job record identity mismatch")
+        if job.get("state") not in {"queued", "running", "succeeded", "failed", "interrupted"}:
+            raise RuntimeError("Invalid job record state")
+        token = job.get("workspace_token")
+        if not isinstance(token, str) or not TOKEN_RE.fullmatch(token):
+            raise RuntimeError("Invalid job record workspace")
+        return job
+
+    @contextmanager
+    def _admission_lock(self, token: str) -> Iterator[None]:
+        """Coordinate one workspace across threads/processes, without blocking others."""
+        self._meta_path(token)  # Validate before using the token in a lock path.
+        held = getattr(self._admission_local, "held", None)
+        if held is None:
+            held = self._admission_local.held = set()
+        if token in held:
+            yield
+            return
+        with self._lock(self.state / f"{token}.admission.lock"):
+            held.add(token)
+            try:
+                yield
+            finally:
+                held.remove(token)
 
     def _write_job(self, job: dict) -> None:
         path = self._job_path(job["job_id"])
-        temporary = path.with_suffix(f".tmp.{os.getpid()}.{secrets.token_hex(4)}")
-        temporary.write_text(
-            json.dumps(job, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
-        )
-        os.replace(temporary, path)
+        token = job["workspace_token"]
+        with self._admission_lock(token):
+            marker = self.pending_jobs / token / job["job_id"]
+            pending = job.get("state") in {"queued", "running"}
+            if pending:
+                marker.parent.mkdir(exist_ok=True)
+                # Reserve before writing: a crash can leave a harmless orphan
+                # marker, never an undiscoverable pending job. Readers hold the
+                # same workspace lock and prune missing/terminal records.
+                marker.touch(exist_ok=True)
+            temporary = path.with_suffix(f".tmp.{os.getpid()}.{secrets.token_hex(4)}")
+            temporary.write_text(
+                json.dumps(job, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            os.replace(temporary, path)
+            if not pending:
+                marker.unlink(missing_ok=True)
 
     def _job_owner_alive(self, job: dict) -> bool:
         owner = job.get("owner_id", "")
@@ -1865,19 +1908,25 @@ class AgentWorkspaceManager:
         return False
 
     def _recover_interrupted_jobs(self) -> None:
-        # Serialize recovery with admission, never with long-running execution.
-        # Pending jobs are never replayed: a checkpoint may have published just
-        # before the owner died, and retrying it automatically would be unsafe.
-        with self._lock(self.state / ".jobs-admission.lock"):
+        # One historical scan at process startup rebuilds the small pending
+        # index, including pre-index records. Admission never takes this global
+        # recovery lock. Upgrade cooperating server processes together.
+        with self._lock(self.state / ".jobs-recovery.lock"):
             for path in self.jobs.glob("job_*.json"):
                 try:
-                    job = json.loads(path.read_text(encoding="utf-8"))
-                except (OSError, ValueError, json.JSONDecodeError):
+                    job = self._read_job(path.stem)
+                except (OSError, ValueError, RuntimeError) as exc:
+                    raise RuntimeError(f"Cannot recover invalid job record: {path.name}") from exc
+                if job.get("state") not in {"queued", "running"}:
                     continue
-                self._interrupt_abandoned_job(job)
+                with self._admission_lock(job["workspace_token"]):
+                    job = self._read_job(job["job_id"])
+                    if job.get("state") in {"queued", "running"}:
+                        self._write_job(job)
+                        self._interrupt_abandoned_job(job)
 
     def _interrupt_abandoned_job(self, job: dict) -> dict:
-        """Caller holds admission lock and has read a fresh job record."""
+        """Caller holds this workspace's admission lock and read a fresh record."""
         if job.get("state") in {"queued", "running"} and not self._job_owner_alive(job):
             job.update(
                 state="interrupted",
@@ -1893,7 +1942,7 @@ class AgentWorkspaceManager:
     def _read_live_job(self, job_id: str) -> dict:
         job = self._read_job(job_id)
         if job.get("state") in {"queued", "running"} and not self._job_owner_alive(job):
-            with self._lock(self.state / ".jobs-admission.lock"):
+            with self._admission_lock(job["workspace_token"]):
                 job = self._interrupt_abandoned_job(self._read_job(job_id))
         return job
 
@@ -1935,46 +1984,46 @@ class AgentWorkspaceManager:
         return self.job_workers
 
     def _queue_position(self, job_id: str) -> int | None:
-        if self._read_job(job_id).get("arguments", {}).get("backend") == "bazel":
-            return 0 if job_id in self._active_jobs else None
+        job = self._read_job(job_id)
         with self._job_guard:
             if job_id in self._active_jobs:
                 return 0
-            with self._job_queue.mutex:
-                pending = list(self._job_queue.queue)
-            try:
-                return pending.index(job_id) + 1
-            except ValueError:
-                job = self._read_job(job_id)
-                return 1 if job.get("state") == "queued" else None
+        if job.get("arguments", {}).get("backend") == "bazel":
+            return None
+        with self._job_queue.mutex:
+            pending = list(self._job_queue.queue)
+        try:
+            return pending.index(job_id) + 1
+        except ValueError:
+            return 1 if job.get("state") == "queued" else None
 
-    def _existing_job(self, token: str, kind: str, arguments: dict) -> dict | None:
-        for path in self.jobs.glob("job_*.json"):
-            try:
-                job = json.loads(path.read_text(encoding="utf-8"))
-            except (OSError, ValueError, json.JSONDecodeError):
-                continue
-            if (
-                job.get("workspace_token") == token
-                and job.get("kind") == kind
-                and job.get("arguments") == arguments
-                and job.get("state") in {"queued", "running"}
-            ):
-                return job
-        return None
+    def _indexed_pending_jobs(self, token: str) -> tuple[list[dict], int]:
+        pending = []
+        examined = 0
+        with self._admission_lock(token):
+            for marker in (self.pending_jobs / token).glob("job_*"):
+                if not JOB_RE.fullmatch(marker.name):
+                    raise RuntimeError("Invalid pending-job index entry")
+                examined += 1
+                path = self._job_path(marker.name)
+                if not path.is_file():
+                    marker.unlink(missing_ok=True)
+                    continue
+                # Corrupt records fail closed; do not silently admit a second
+                # operation into a potentially active workspace.
+                job = self._read_job(marker.name)
+                if job.get("workspace_token") != token:
+                    raise RuntimeError("Pending-job index workspace mismatch")
+                job = self._interrupt_abandoned_job(job)
+                if job.get("state") in {"queued", "running"}:
+                    pending.append(job)
+                else:
+                    marker.unlink(missing_ok=True)
+        return pending, examined
 
     def _pending_job_for_workspace(self, token: str) -> dict | None:
-        for path in self.jobs.glob("job_*.json"):
-            try:
-                job = json.loads(path.read_text(encoding="utf-8"))
-            except (OSError, ValueError, json.JSONDecodeError):
-                continue
-            if (
-                job.get("workspace_token") == token
-                and job.get("state") in {"queued", "running"}
-            ):
-                return job
-        return None
+        pending, _ = self._indexed_pending_jobs(token)
+        return pending[0] if pending else None
 
     def _ensure_workspace_idle(self, token: str, operation: str) -> None:
         if getattr(self._job_local, "workspace_token", None) == token:
@@ -1991,117 +2040,108 @@ class AgentWorkspaceManager:
             )
 
     def _submit_job(self, token: str, kind: str, arguments: dict) -> dict:
+        admission_started_at = time.time()
+        started = time.perf_counter()
         arguments = dict(arguments)
         if kind in {"build", "checkpoint", "run_code", "check_file"}:
             arguments["backend"] = verification_backend(arguments.get("backend") or self.default_verification_backend)
         self._meta_path(token)
         if not self._meta_path(token).is_file():
             raise ValueError("Unknown workspace token")
-        with self._job_guard, self._lock(self.state / ".jobs-admission.lock"):
-            pending = self._pending_job_for_workspace(token)
-            if pending is not None:
-                self._interrupt_abandoned_job(pending)
-            existing = self._existing_job(token, kind, arguments)
+        lock_started = time.perf_counter()
+        with self._admission_lock(token):
+            lock_wait = time.perf_counter() - lock_started
+            lookup_started = time.perf_counter()
+            pending, examined = self._indexed_pending_jobs(token)
+            lookup_time = time.perf_counter() - lookup_started
+            existing = next((job for job in pending
+                             if job.get("kind") == kind and job.get("arguments") == arguments), None)
             if existing is not None:
-                job_id = existing["job_id"]
-                position = self._queue_position_unlocked(job_id)
-                retry_after = (
-                    60
-                    if existing["state"] == "running"
-                    else min(120, 30 + 15 * max((position or 1) - 1, 0))
-                )
-                return {
-                    "accepted": False,
-                    "existing": True,
-                    "job_id": job_id,
-                    "state": existing["state"],
-                    "request_sha256": existing.get("request_sha256"),
+                job = existing
+                position = self._queue_position(job["job_id"])
+                response = {
+                    "accepted": False, "existing": True, "job_id": job["job_id"],
+                    "state": job["state"], "request_sha256": job.get("request_sha256"),
                     "queue_position": position,
-                    "retry_after_seconds": retry_after,
+                    "retry_after_seconds": 60 if job["state"] == "running" else 30,
                     "instruction": "Poll after retry_after_seconds; do not resubmit.",
                 }
-            pending = self._pending_job_for_workspace(token)
-            if pending is not None:
-                raise RuntimeError(
-                    f"Workspace already has {pending['kind']} job {pending['job_id']} "
-                    f"{pending['state']}; poll it until terminal before submitting {kind}."
-                )
-            job_id = "job_" + secrets.token_urlsafe(24)
-            job = {
-                "job_id": job_id,
-                "workspace_token": token,
-                "kind": kind,
-                "backend": arguments.get("backend"),
-                "arguments": arguments,
-                "request_sha256": self._request_sha256(token, kind, arguments),
-                "owner_id": self._owner_id,
-                "state": "queued",
-                "submitted_at": time.time(),
-                "progress": {
-                    "phase": "queued",
-                    "detail": "Waiting for an available workspace worker",
-                    "current": None,
-                    "total": None,
-                    "percent": None,
-                    "phase_started_at": time.time(),
-                    "updated_at": time.time(),
-                },
-            }
-            if kind == "run_code":
-                job["code_sha256"] = hashlib.sha256(arguments["code"].encode("utf-8")).hexdigest()
-            elif kind == "check_file":
-                job["file_sha256"] = arguments["file_sha256"]
-            self._write_job(job)
+            else:
+                if pending:
+                    active = pending[0]
+                    raise RuntimeError(
+                        f"Workspace already has {active['kind']} job {active['job_id']} "
+                        f"{active['state']}; poll it until terminal before submitting {kind}."
+                    )
+                job_id = "job_" + secrets.token_urlsafe(24)
+                now = time.time()
+                job = {
+                    "job_id": job_id, "workspace_token": token, "kind": kind,
+                    "backend": arguments.get("backend"), "arguments": arguments,
+                    "request_sha256": self._request_sha256(token, kind, arguments),
+                    "owner_id": self._owner_id, "state": "queued", "submitted_at": now,
+                    "admission_started_at": admission_started_at,
+                    "admission": {
+                        "lock_wait_seconds": round(lock_wait, 6),
+                        "lookup_seconds": round(lookup_time, 6),
+                        "records_examined": examined,
+                    },
+                    "progress": {
+                        "phase": "queued", "detail": "Waiting for an available workspace worker",
+                        "current": None, "total": None, "percent": None,
+                        "phase_started_at": now, "updated_at": now,
+                    },
+                }
+                if kind == "run_code":
+                    job["code_sha256"] = hashlib.sha256(arguments["code"].encode("utf-8")).hexdigest()
+                elif kind == "check_file":
+                    job["file_sha256"] = arguments["file_sha256"]
+                self._write_job(job)
+                response = {"accepted": True, "job_id": job_id, "state": "queued",
+                            "request_sha256": job["request_sha256"]}
+        # No disk I/O or workspace lock may be taken while holding _job_guard:
+        # it protects only the in-process active/thread sets, not admission.
+        persisted = time.perf_counter()
+        if response["accepted"]:
             if arguments.get("backend") == "bazel":
                 worker = threading.Thread(
-                    target=self._bazel_job_worker, args=(job_id,),
-                    name=f"bazel-workspace-{job_id}", daemon=True,
+                    target=self._bazel_job_worker, args=(job["job_id"],),
+                    name=f"bazel-workspace-{job['job_id']}", daemon=True,
                 )
-                self._bazel_job_threads.add(worker)
+                with self._job_guard:
+                    self._bazel_job_threads.add(worker)
                 try:
                     worker.start()
                 except Exception as exc:
-                    self._bazel_job_threads.discard(worker)
+                    with self._job_guard:
+                        self._bazel_job_threads.discard(worker)
                     job.update(state="failed", finished_at=time.time(),
                                error=f"Bazel worker could not start: {exc}")
                     self._write_job(job)
                     raise
             else:
-                self._job_queue.put(job_id)
-            position = self._queue_position_unlocked(job_id)
-        self._record_metric(
-            "job_submitted",
-            job_id=job_id,
-            workspace=self._workspace_label(token),
-            kind=kind,
-            queue_position=position,
-        )
-        return {
-            "accepted": True,
-            "job_id": job_id,
-            "state": "queued",
-            "request_sha256": job["request_sha256"],
-            "queue_position": position,
-            "worker_count": self._job_concurrency_limit(job),
-            "same_workspace_limit": 1,
-            "retry_after_seconds": min(120, 30 + 15 * max((position or 1) - 1, 0)),
-            "instruction": (
-                "Poll after retry_after_seconds until terminal. Do not resubmit."
-            ),
+                self._job_queue.put(job["job_id"])
+            position = self._queue_position(job["job_id"])
+            response.update(
+                queue_position=position,
+                retry_after_seconds=min(120, 30 + 15 * max((position or 1) - 1, 0)),
+                instruction="Poll after retry_after_seconds until terminal. Do not resubmit.",
+            )
+        response.update(worker_count=self._job_concurrency_limit(job), same_workspace_limit=1)
+        timing = {
+            "lock_wait_seconds": round(lock_wait, 6),
+            "lookup_seconds": round(lookup_time, 6), "records_examined": examined,
+            "persist_seconds": round(persisted - lookup_started - lookup_time, 6),
+            "dispatch_seconds": round(time.perf_counter() - persisted, 6),
+            "total_seconds": round(time.perf_counter() - started, 6),
         }
-
-    def _queue_position_unlocked(self, job_id: str) -> int | None:
-        if job_id in self._active_jobs:
-            return 0
-        if self._read_job(job_id).get("arguments", {}).get("backend") == "bazel":
-            return None
-        with self._job_queue.mutex:
-            pending = list(self._job_queue.queue)
-        try:
-            return pending.index(job_id) + 1
-        except ValueError:
-            job = self._read_job(job_id)
-            return 1 if job.get("state") == "queued" else None
+        response["admission"] = timing
+        self._record_metric(
+            "job_submitted" if response["accepted"] else "job_reused",
+            job_id=job["job_id"], workspace=self._workspace_label(token), kind=kind,
+            queue_position=response["queue_position"], admission=timing,
+        )
+        return response
 
     def submit_build(self, token: str, backend: str = "") -> dict:
         return self._submit_job(token, "build", {"backend": backend})
@@ -2190,11 +2230,13 @@ class AgentWorkspaceManager:
                 self._bazel_job_threads.discard(threading.current_thread())
 
     def _run_job(self, job_id: str) -> None:
-        with self._job_guard:
-            self._active_jobs.add(job_id)
+        job = self._read_job(job_id)
+        with self._admission_lock(job["workspace_token"]):
             job = self._read_job(job_id)
             job.update(state="running", started_at=time.time())
             self._write_job(job)
+        with self._job_guard:
+            self._active_jobs.add(job_id)
         self._job_local.job_id = job_id
         self._job_local.last_progress_write = 0.0
         self._job_local.progress = {}
@@ -2222,7 +2264,7 @@ class AgentWorkspaceManager:
                 finished_at=time.time(), result=result,
             )
         finally:
-            with self._job_guard:
+            with self._admission_lock(job["workspace_token"]):
                 current = self._read_job(job_id)
                 current.update(
                     {key: value for key, value in job.items() if key != "progress"}
@@ -2235,6 +2277,7 @@ class AgentWorkspaceManager:
                 )
                 current["progress"] = progress
                 self._write_job(current)
+            with self._job_guard:
                 self._active_jobs.discard(job_id)
             self._record_metric(
                 "job_finished",
