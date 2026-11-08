@@ -1278,10 +1278,10 @@ index 2ad2ce9..42c5aa0 100644
              providers = [LeanPluginInfo],
              doc = "Other plugins loaded during compilation.",
 diff --git a/lean/private/repositories.bzl b/lean/private/repositories.bzl
-index bb65173..73edbe3 100644
+index bb65173..8bb4518 100644
 --- a/lean/private/repositories.bzl
 +++ b/lean/private/repositories.bzl
-@@ -13,6 +13,42 @@ load("//lean/private:versions.bzl", "PLATFORM_CONSTRAINTS", "asset_prefix", "rel
+@@ -13,6 +13,46 @@ load("//lean/private:versions.bzl", "PLATFORM_CONSTRAINTS", "asset_prefix", "rel
  _TOOLCHAIN_BZL = str(Label("//lean:toolchain.bzl"))
  _TOOLCHAIN_TYPE = str(Label("//lean:toolchain_type"))
  
@@ -1292,7 +1292,7 @@ index bb65173..73edbe3 100644
 +    # Cross-platform toolchains remain usable without executing foreign binaries.
 +    if (platform != "linux_x86_64" or rctx.os.name != "linux" or
 +        rctx.os.arch not in ["amd64", "x86_64"]):
-+        return {}
++        fail("rules_lean: SDK indexing currently requires a native Linux x86-64 toolchain; omit --config=lean-sdk-slim on this host")
 +    rctx.report_progress("Indexing compiled Lean SDK imports")
 +    rctx.file("BazelSdkIndex.lean", rctx.read(rctx.attr._sdk_indexer))
 +    result = rctx.execute(
@@ -1302,9 +1302,13 @@ index bb65173..73edbe3 100644
 +        environment = {"LEAN_PATH": str(rctx.path("lib/lean"))},
 +    )
 +    if result.return_code:
-+        # Indexing is an optimization. A failed decoder must not omit inputs.
-+        print("rules_lean: SDK indexing unavailable; retaining full SDK inputs: %s" % result.stderr[:1000])
-+        return {}
++        # Lean compiler diagnostics may be on stdout. An explicit experiment
++        # must not report success after quietly reverting to the full SDK.
++        fail("rules_lean: SDK indexing failed (exit %s).\nstdout:\n%s\nstderr:\n%s" % (
++            result.return_code,
++            result.stdout[-4000:],
++            result.stderr[-4000:],
++        ))
 +    imports = {}
 +    for line in result.stdout.splitlines():
 +        if not line:
@@ -1324,7 +1328,7 @@ index bb65173..73edbe3 100644
  # The loader opens five files per imported module: `.olean`, `.olean.private`,
  # `.olean.server`, `.ir`, and `.ir.sig` (measured with strace on 4.34.1). The
  # `.so` files are the shared library of the compiler itself.
-@@ -20,6 +56,7 @@ _STDLIB_GLOBS = [
+@@ -20,6 +60,7 @@ _STDLIB_GLOBS = [
      "lib/lean/**/*.ir",
      "lib/lean/**/*.ir.sig",
      "lib/lean/**/*.olean*",
@@ -1332,7 +1336,7 @@ index bb65173..73edbe3 100644
      "lib/lean/*.so*",
  ]
  
-@@ -34,6 +71,12 @@ filegroup(
+@@ -34,6 +75,12 @@ filegroup(
  {stdlib_globs}
          ],
          allow_empty = False,
@@ -1345,7 +1349,7 @@ index bb65173..73edbe3 100644
      ),
      visibility = ["//visibility:public"],
  )
-@@ -68,6 +111,7 @@ lean_toolchain(
+@@ -68,6 +115,7 @@ lean_toolchain(
      leanc = "bin/leanc",
      link = ":link",
      stdlib = ":stdlib",
@@ -1353,7 +1357,7 @@ index bb65173..73edbe3 100644
      visibility = ["//visibility:public"],
  )
  
-@@ -89,15 +133,27 @@ def _lean_toolchain_repo_impl(rctx):
+@@ -89,15 +137,27 @@ def _lean_toolchain_repo_impl(rctx):
      if not result.success:
          fail("could not unpack Lean %s for %s: %s" % (version, platform, result.error))
  
@@ -1381,7 +1385,7 @@ index bb65173..73edbe3 100644
          "platform": attr.string(mandatory = True),
          "sha256": attr.string(mandatory = True),
          "urls": attr.string_list(mandatory = True),
-@@ -121,7 +177,7 @@ def _lean_toolchains_repo_impl(rctx):
+@@ -121,7 +181,7 @@ def _lean_toolchains_repo_impl(rctx):
  
      # One `toolchain` target per (version, platform). A `toolchain` target holds
      # the constraints that select it: Bazel picks the entry whose execution
@@ -1390,7 +1394,7 @@ index bb65173..73edbe3 100644
      for entry in rctx.attr.entries:
          version, platform, repo = entry.split(" ")
          constraints = ", ".join(['"%s"' % c for c in PLATFORM_CONSTRAINTS[platform]])
-@@ -140,6 +196,7 @@ toolchain(
+@@ -140,6 +200,7 @@ toolchain(
          ))
  
      rctx.file("BUILD.bazel", "".join(lines))
@@ -1398,7 +1402,7 @@ index bb65173..73edbe3 100644
  
  _lean_toolchains_repo = repository_rule(
      implementation = _lean_toolchains_repo_impl,
-@@ -158,34 +215,12 @@ def lean_toolchains_repo(name, entries):
+@@ -158,34 +219,12 @@ def lean_toolchains_repo(name, entries):
      """
      _lean_toolchains_repo(name = name, entries = entries)
  
@@ -1438,7 +1442,7 @@ index bb65173..73edbe3 100644
      lines = text.split("\n")
      depth = 0
      in_string = False
-@@ -216,6 +251,7 @@ def _parse_imports(text):
+@@ -216,6 +255,7 @@ def _parse_imports(text):
              elif ch2 == "/-":
                  depth += 1
                  i = idx + 2
@@ -1446,7 +1450,7 @@ index bb65173..73edbe3 100644
              elif ch2 == "--":
                  break
              elif ch == '"':
-@@ -231,30 +267,56 @@ def _parse_imports(text):
+@@ -231,30 +271,56 @@ def _parse_imports(text):
          words = [w for w in cleaned.replace("\t", " ").split(" ") if w]
          if not words:
              continue
@@ -1511,7 +1515,7 @@ index bb65173..73edbe3 100644
              is_pkg = (curr_dir.get_child("BUILD.bazel").exists or
                        curr_dir.get_child("BUILD").exists)
              if is_pkg:
-@@ -265,12 +327,14 @@ def _lean_imports_repo_impl(rctx):
+@@ -265,12 +331,14 @@ def _lean_imports_repo_impl(rctx):
                      curr_pkg = curr_str[len(root_dir_str) + 1:]
                  if curr_pkg not in imports_by_pkg:
                      imports_by_pkg[curr_pkg] = {}
@@ -1527,7 +1531,7 @@ index bb65173..73edbe3 100644
                      if entry != root_dir and entry.get_child("MODULE.bazel").exists:
                          continue
                      queue.append((entry, curr_pkg))
-@@ -286,16 +350,26 @@ def _lean_imports_repo_impl(rctx):
+@@ -286,16 +354,26 @@ def _lean_imports_repo_impl(rctx):
                          module_rel = rel_in_pkg[:-len(".lean")]
                          module_name = module_rel.replace("/", ".")
                          content = rctx.read(entry)
@@ -1558,7 +1562,7 @@ index bb65173..73edbe3 100644
              doc = "Name of the root module being scanned.",
 diff --git a/lean/private/sdk_index.lean b/lean/private/sdk_index.lean
 new file mode 100644
-index 0000000..6fa17d3
+index 0000000..7015282
 --- /dev/null
 +++ b/lean/private/sdk_index.lean
 @@ -0,0 +1,49 @@
@@ -1576,7 +1580,7 @@ index 0000000..6fa17d3
 +  let [rootName] := args
 +    | throw <| IO.userError "expected the SDK lib/lean directory"
 +  let root : FilePath := rootName
-+  let prefix := rootName ++ "/"
++  let rootPrefix := rootName ++ "/"
 +  let mut pending := #[root]
 +  let mut files : Array FilePath := #[]
 +  while !pending.isEmpty do
@@ -1591,9 +1595,9 @@ index 0000000..6fa17d3
 +    throw <| IO.userError "SDK has no olean files"
 +  for file in files.qsort (fun a b => decide (a.toString < b.toString)) do
 +    let path := file.toString
-+    unless path.startsWith prefix do
++    unless path.startsWith rootPrefix do
 +      throw <| IO.userError s!"SDK path is outside its root: {path}"
-+    let name := ((path.drop prefix.length).toString.dropEnd 6).toString.replace "/" "."
++    let name := ((path.drop rootPrefix.length).toString.dropEnd 6).toString.replace "/" "."
 +    let server : FilePath := path ++ ".server"
 +    let privatePart : FilePath := path ++ ".private"
 +    let mut parts := #[file]

@@ -728,12 +728,13 @@ instead of the `Lean` umbrella. Its compiled-declaration audit body is identical
 to the existing checker, including private proof inspection and rejection of
 suppressed sorry warnings. The existing checker remains the default.
 
-Unknown prebuilt dependency graphs, custom plugins, custom `LEAN_PATH`, an
-unavailable SDK index, and unsupported host/target platform combinations retain
-the full SDK. Index generation is currently enabled for a native Linux x86-64
-SDK. Malformed or incomplete successful indexes fail validation rather than
-silently omitting dependencies. A decoder failure emits a repository-setup
-warning and keeps the full SDK.
+Unknown prebuilt dependency graphs, custom plugins, custom `LEAN_PATH`, and
+custom toolchains without an index retain the full SDK. The experimental profile
+requires a native Linux x86-64 SDK. An unsupported host, decoder failure, or
+malformed/incomplete index fails the explicit experiment rather than silently
+switching it off. Decoder errors include bounded stdout and stderr, since Lean
+compiler diagnostics can appear on stdout. Ordinary builds do not run the
+indexer and remain unaffected.
 
 The existing benchmark's SDK inventory reports the entire installed SDK. It is
 not a count of selected per-action inputs. Compare actual action input sizes
