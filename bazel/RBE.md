@@ -269,7 +269,7 @@ Bazel server. They are not a combined RAM limit across workspaces.
 For this memory-sensitive MCP host, install
 [`lean-tunnel.resources.conf`](lean-tunnel.resources.conf) as described in
 [the verification guide](VERIFICATION.md#host-resource-policy). It sets the
-aggregate memory controls (`MemoryHigh=8G`, `MemoryMax=10G`, and
+aggregate memory controls (`MemoryHigh=9G`, `MemoryMax=10G`, and
 `MemorySwapMax=1G`) for the service and its descendants. Independent workspaces
 remain concurrent with `LEAN_BAZEL_JOB_WORKERS=0`, and each BuildBuddy build
 retains its 80-action limit. Local Lean pools and retained editor clients are

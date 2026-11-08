@@ -86,11 +86,18 @@ The process logs do not identify whether that Lean process was an editor worker
 or a dependency-bootstrap compiler. A later service start does not turn those
 interrupted jobs into successful verifications.
 
+A guarded full-project trial with an 8 GiB `MemoryHigh` reached about 8.11 GiB
+of cgroup usage and about 99% full memory pressure, with repeated `high` events
+and no OOM kills. That soft limit forced sustained reclaim during analysis.
+The profile now uses 9 GiB high while retaining the 10 GiB hard limit; this
+still needs workload measurement and is not a guarantee that concurrent full
+builds fit.
+
 Install `bazel/lean-tunnel.resources.conf` to apply an aggregate service budget:
 
 | Setting | Value | Purpose |
 | --- | --- | --- |
-| `MemoryHigh` | 8 GiB | Reclaim/throttle memory above the preferred budget |
+| `MemoryHigh` | 9 GiB | Reclaim/throttle memory above the preferred budget |
 | `MemoryMax` | 10 GiB | Hard limit for the whole service and its descendants |
 | `MemorySwapMax` | 1 GiB | Bound service swap use |
 | `OOMPolicy` | stop | Stop the unit if one of its processes is OOM-killed |
@@ -122,10 +129,20 @@ lean_cgroup=$(systemctl show lean-tunnel.service -p ControlGroup --value)
 cat "/sys/fs/cgroup${lean_cgroup}/memory.high" "/sys/fs/cgroup${lean_cgroup}/memory.max" "/sys/fs/cgroup${lean_cgroup}/memory.swap.max"
 ```
 
-Expected byte values are `8589934592`, `10737418240`, and `1073741824`.
+Expected byte values are `9663676416`, `10737418240`, and `1073741824`.
 Missing controller files or `max` values do not establish that the guard is
 active. The drop-in preserves service commands and credentials. Other drop-ins
 may override it, so verify effective settings rather than only reading the file.
+
+To relieve the old 8 GiB soft limit during an active build without restarting
+the service, apply only the live property:
+
+```bash
+sudo systemctl set-property --runtime lean-tunnel.service MemoryHigh=9G
+```
+
+This leaves the 10 GiB hard limit and 1 GiB swap limit intact. The runtime
+override lasts until reboot; install the updated drop-in for persistence.
 
 Warm one fresh workspace's dependency setup first. Once that succeeds, run
 parallel warm-workspace checks and measure memory and latency. Do not start
