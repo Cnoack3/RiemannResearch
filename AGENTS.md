@@ -99,15 +99,21 @@
   file, send 2--5 alternatives together with `lean_multi_attempt`.
 - Batch related declaration checks and proof candidates into coherent
   submissions, and batch independent read-only searches and file reads.
-  Across cooperating agents on the same server, allow at most one queued or
-  running Lean verification job at a time. A timeout does not free that slot:
-  recover the job status before submitting more verification. Do not repeat a
+  Independent Bazel workspaces may verify concurrently. Each parallel agent
+  must own its workspace; allow at most one queued or running job per workspace.
+  A timeout does not free that workspace: recover the job status before
+  submitting more work there. Do not repeat a
   connectivity smoke test when a successful task-relevant operation already
   establishes access.
 - Read only relevant source ranges. Use targeted diagnostics or verification
   during development. Diagnostics are compact by default; request full details
   only when the bounded result omits evidence needed to repair the proof.
-- Long builds, updates, and checkpoints use a bounded worker queue. Submit once
+- Bazel jobs bypass the legacy global worker queue. By default
+  `LEAN_BAZEL_JOB_WORKERS=0` imposes no global Bazel job cap; a positive value
+  enables an optional cross-process cap. Lake retains `LEAN_JOB_WORKERS`
+  (default 1, maximum 4). Same-workspace operations and publication stay locked.
+  RBE offloads build actions, but Bazel analysis still consumes local resources.
+  Submit once
   and poll `agent_workspace_job_status` no sooner than `retry_after_seconds`;
   never resubmit a pending job. Running status reports the current phase, Lake
   task percentage when available, and a rough task-count ETA.
@@ -136,7 +142,7 @@
   artifacts and cleaned after successful verification when no editor uses it.
   Native cache writes and pruning share an exclusive reentrant lease; its
   retention budget is 100 GiB, excluding dependency artifacts and active
-  workspace links. One managed worker runs by default, with at most eight Lean
+  workspace links. One managed Lake worker runs by default, with at most eight Lean
   threads; publication remains serialized. Before each build, a protected
   `lake exe cache get` preflight fills available binary artifacts. If that
   preflight is incomplete, builds for the same dependency key serialize while

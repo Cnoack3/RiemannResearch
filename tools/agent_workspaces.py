@@ -122,6 +122,12 @@ class AgentWorkspaceManager:
             raise ValueError("LEAN_JOB_WORKERS must be an integer") from exc
         if not 1 <= self.job_workers <= 4:
             raise ValueError("LEAN_JOB_WORKERS must be between 1 and 4")
+        try:
+            self.bazel_job_workers = int(os.environ.get("LEAN_BAZEL_JOB_WORKERS", "0"))
+        except ValueError as exc:
+            raise ValueError("LEAN_BAZEL_JOB_WORKERS must be an integer") from exc
+        if self.bazel_job_workers < 0:
+            raise ValueError("LEAN_BAZEL_JOB_WORKERS must be nonnegative (0 means unlimited)")
         home = Path(os.environ.get("HOME", "/home/cri_2025")).resolve()
         self.root = Path(
             os.environ.get("LEAN_AGENT_WORKSPACES_ROOT", home / "lean-agent-workspaces")
@@ -156,6 +162,7 @@ class AgentWorkspaceManager:
         self._cache_local = threading.local()
         self._outputs_guard = threading.RLock()
         self._active_jobs: set[str] = set()
+        self._bazel_job_threads: set[threading.Thread] = set()
         # A lifetime lease distinguishes another live manager from an actual
         # restart. The OS releases it on process exit, including SIGKILL.
         self._owner_id = secrets.token_hex(16)
@@ -1891,19 +1898,24 @@ class AgentWorkspaceManager:
         return job
 
     @contextmanager
-    def _heavy_worker_slot(self) -> Iterator[None]:
-        """Admission for queued work across cooperating managers on this state root.
+    def _heavy_worker_slot(self, backend: str = "lake") -> Iterator[None]:
+        """Limit legacy work; optionally cap independent Bazel work across managers.
 
-        Explicit LEAN_JOB_WORKERS overrides select the slot count. All managers
-        should use the same setting. This does NOT limit raw LSP/external Lean,
-        synchronous internal helpers, or unrelated tools outside this queue.
+        Bazel defaults to no global cap. Workspace and publication leases remain
+        mandatory. All managers sharing this state directory must use matching
+        cap settings. The two backends have independent slot namespaces.
         """
+        limit = self.bazel_job_workers if backend == "bazel" else self.job_workers
+        if limit == 0:
+            yield
+            return
+        prefix = ".bazel-worker" if backend == "bazel" else ".heavy-worker"
         self._set_job_progress(
             "waiting_for_worker", detail="Waiting for a shared heavy-worker slot", force=True
         )
         while True:
-            for index in range(self.job_workers):
-                handle = (self.state / f".heavy-worker-{index}.lock").open("a+")
+            for index in range(limit):
+                handle = (self.state / f"{prefix}-{index}.lock").open("a+")
                 try:
                     fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
                 except BlockingIOError:
@@ -1917,7 +1929,14 @@ class AgentWorkspaceManager:
                 return
             time.sleep(0.05)
 
+    def _job_concurrency_limit(self, job: dict) -> int | None:
+        if job.get("arguments", {}).get("backend", "lake") == "bazel":
+            return self.bazel_job_workers or None
+        return self.job_workers
+
     def _queue_position(self, job_id: str) -> int | None:
+        if self._read_job(job_id).get("arguments", {}).get("backend") == "bazel":
+            return 0 if job_id in self._active_jobs else None
         with self._job_guard:
             if job_id in self._active_jobs:
                 return 0
@@ -2033,7 +2052,22 @@ class AgentWorkspaceManager:
             elif kind == "check_file":
                 job["file_sha256"] = arguments["file_sha256"]
             self._write_job(job)
-            self._job_queue.put(job_id)
+            if arguments.get("backend") == "bazel":
+                worker = threading.Thread(
+                    target=self._bazel_job_worker, args=(job_id,),
+                    name=f"bazel-workspace-{job_id}", daemon=True,
+                )
+                self._bazel_job_threads.add(worker)
+                try:
+                    worker.start()
+                except Exception as exc:
+                    self._bazel_job_threads.discard(worker)
+                    job.update(state="failed", finished_at=time.time(),
+                               error=f"Bazel worker could not start: {exc}")
+                    self._write_job(job)
+                    raise
+            else:
+                self._job_queue.put(job_id)
             position = self._queue_position_unlocked(job_id)
         self._record_metric(
             "job_submitted",
@@ -2048,7 +2082,8 @@ class AgentWorkspaceManager:
             "state": "queued",
             "request_sha256": job["request_sha256"],
             "queue_position": position,
-            "worker_count": self.job_workers,
+            "worker_count": self._job_concurrency_limit(job),
+            "same_workspace_limit": 1,
             "retry_after_seconds": min(120, 30 + 15 * max((position or 1) - 1, 0)),
             "instruction": (
                 "Poll after retry_after_seconds until terminal. Do not resubmit."
@@ -2058,6 +2093,8 @@ class AgentWorkspaceManager:
     def _queue_position_unlocked(self, job_id: str) -> int | None:
         if job_id in self._active_jobs:
             return 0
+        if self._read_job(job_id).get("arguments", {}).get("backend") == "bazel":
+            return None
         with self._job_queue.mutex:
             pending = list(self._job_queue.queue)
         try:
@@ -2137,68 +2174,81 @@ class AgentWorkspaceManager:
             self._job_local.backend = None
 
     def _job_worker(self) -> None:
+        """Legacy jobs retain the existing bounded worker queue."""
         while True:
             job_id = self._job_queue.get()
-            with self._job_guard:
-                self._active_jobs.add(job_id)
-                job = self._read_job(job_id)
-                job.update(state="running", started_at=time.time())
-                self._write_job(job)
-            self._job_local.job_id = job_id
-            self._job_local.last_progress_write = 0.0
-            self._job_local.progress = {}
             try:
-                with self._heavy_worker_slot():
-                    self._set_job_progress(
-                        "waiting_for_workspace", detail="Waiting for the workspace operation lock",
-                        force=True,
-                    )
-                    with self._operation_lock(job["workspace_token"]):
-                        result = self._execute_job(job)
-                result["request_sha256"] = job["request_sha256"]
-            except Exception as exc:
-                job.update(
-                    state="failed",
-                    finished_at=time.time(),
-                    error=f"{type(exc).__name__}: {exc}"[-8000:],
-                )
-            else:
-                verification_failed = (
-                    job["kind"] in {"run_code", "check_file"} and not result.get("verified")
-                )
-                job.update(
-                    state="failed" if verification_failed else "succeeded",
-                    finished_at=time.time(), result=result,
-                )
+                self._run_job(job_id)
             finally:
-                with self._job_guard:
-                    current = self._read_job(job_id)
-                    current.update(
-                        {key: value for key, value in job.items() if key != "progress"}
-                    )
-                    progress = current.get("progress", {})
-                    progress.update(
-                        phase="complete" if job.get("state") == "succeeded" else "failed",
-                        percent=100.0 if job.get("state") == "succeeded" else progress.get("percent"),
-                        updated_at=time.time(),
-                    )
-                    current["progress"] = progress
-                    self._write_job(current)
-                    self._active_jobs.discard(job_id)
-                self._record_metric(
-                    "job_finished",
-                    job_id=job_id,
-                    kind=job.get("kind"),
-                    state=job.get("state"),
-                    elapsed_seconds=round(
-                        job.get("finished_at", time.time())
-                        - job.get("started_at", job.get("submitted_at", time.time())),
-                        3,
-                    ),
-                )
-                self._job_local.job_id = None
-                self._job_local.progress = {}
                 self._job_queue.task_done()
+
+    def _bazel_job_worker(self, job_id: str) -> None:
+        try:
+            self._run_job(job_id)
+        finally:
+            with self._job_guard:
+                self._bazel_job_threads.discard(threading.current_thread())
+
+    def _run_job(self, job_id: str) -> None:
+        with self._job_guard:
+            self._active_jobs.add(job_id)
+            job = self._read_job(job_id)
+            job.update(state="running", started_at=time.time())
+            self._write_job(job)
+        self._job_local.job_id = job_id
+        self._job_local.last_progress_write = 0.0
+        self._job_local.progress = {}
+        try:
+            with self._heavy_worker_slot(job.get("arguments", {}).get("backend", "lake")):
+                self._set_job_progress(
+                    "waiting_for_workspace", detail="Waiting for the workspace operation lock",
+                    force=True,
+                )
+                with self._operation_lock(job["workspace_token"]):
+                    result = self._execute_job(job)
+            result["request_sha256"] = job["request_sha256"]
+        except Exception as exc:
+            job.update(
+                state="failed",
+                finished_at=time.time(),
+                error=f"{type(exc).__name__}: {exc}"[-8000:],
+            )
+        else:
+            verification_failed = (
+                job["kind"] in {"run_code", "check_file"} and not result.get("verified")
+            )
+            job.update(
+                state="failed" if verification_failed else "succeeded",
+                finished_at=time.time(), result=result,
+            )
+        finally:
+            with self._job_guard:
+                current = self._read_job(job_id)
+                current.update(
+                    {key: value for key, value in job.items() if key != "progress"}
+                )
+                progress = current.get("progress", {})
+                progress.update(
+                    phase="complete" if job.get("state") == "succeeded" else "failed",
+                    percent=100.0 if job.get("state") == "succeeded" else progress.get("percent"),
+                    updated_at=time.time(),
+                )
+                current["progress"] = progress
+                self._write_job(current)
+                self._active_jobs.discard(job_id)
+            self._record_metric(
+                "job_finished",
+                job_id=job_id,
+                kind=job.get("kind"),
+                state=job.get("state"),
+                elapsed_seconds=round(
+                    job.get("finished_at", time.time())
+                    - job.get("started_at", job.get("submitted_at", time.time())),
+                    3,
+                ),
+            )
+            self._job_local.job_id = None
+            self._job_local.progress = {}
 
     @staticmethod
     def _compact_result(value: object, *, include_logs: bool) -> object:
@@ -2249,7 +2299,8 @@ class AgentWorkspaceManager:
             if key not in {"arguments"}
         }
         response["queue_position"] = self._queue_position(job_id)
-        response["worker_count"] = self.job_workers
+        response["worker_count"] = self._job_concurrency_limit(job)
+        response["same_workspace_limit"] = 1
         response["active_job_count"] = len(self._active_jobs)
         response["elapsed_seconds"] = round(
             (job.get("finished_at", now) - job.get("started_at", job["submitted_at"])),

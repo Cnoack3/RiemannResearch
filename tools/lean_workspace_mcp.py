@@ -28,7 +28,7 @@ from agent_workspaces import AgentWorkspaceManager, TOKEN_RE
 WORKFLOW_INSTRUCTIONS = """For local Lean verification or persistence, call agent_workspace_open once and retain its token and absolute project_root; reopen that token to resume an older clone. Discover declarations with bounded lean_local_search first, then focused declaration lookup, Loogle, or LeanSearch; batch #check for shortlisted signatures. Never read the whole theorem catalog for discovery. Use bounded agent_workspace_search_files only when declaration search and filename filtering are insufficient. Test a coherent proof with agent_workspace_run_code. After failure, use compact diagnostics; request full details only if evidence was omitted. When several local tactic repairs are plausible in an existing file, batch 2-5 snippets with lean_multi_attempt instead of one call per tactic. Before persistent edits, read AGENTS.md, inspect the matching subject directory, and use cohesive, sensibly named modules with focused imports; checkpoint rejects umbrella `import Mathlib` and unexported root-level modules. A long cohesive theorem may remain in one file; split by mathematical responsibility, not an arbitrary line count. Checkpoints audit and validate the entire unpublished delta from the workspace base. They skip Lean only when no Lean source or dependency changes are being published; otherwise Bazel incrementally builds every project package with --config=buildbuddy; lean_build remains an explicit queued full-project validation and should not run immediately before checkpoint. If lakefile.toml changes, queue agent_workspace_update_deps once before further validation. Exact dependency configurations and binary artifacts are shared by content key; cache preparation is protected and project builds are clone-local. Poll queued work no sooner than retry_after_seconds and never resubmit it; running status includes phase and build progress. Successful material proofs are checkpointed with push enabled unless the user requests exploration only. Publish Lean/dependency changes only through a terminal successful agent_workspace_checkpoint; failed, timed-out or unavailable verification blocks publication. GitHub-hosted CI has no runner quota: never rely on it or bypass verification with direct git push or GitHub commit APIs. Never use sorry, admit, project-local axioms, unsafe declarations, force pushes, rebases, stashes, merge commits, or discarded work. Reset requires preview and explicit permission. Distinguish informal reasoning from kernel verification. If Lean decisively invalidates user logic, lead with '## Lean found a problem' and exact evidence."""
 
 WORKFLOW_INSTRUCTIONS += (
-    " Verification defaults to Bazel with --config=buildbuddy. Use the queued "
+    " Verification defaults to Bazel with --config=buildbuddy. Use the asynchronous "
     "agent_workspace_run_code, agent_workspace_check_file, lean_build and "
     "agent_workspace_checkpoint tools; pass backend='lake' only for an explicit "
     "legacy request. LEAN_VERIFICATION_BACKEND=lake sets the server default. "
@@ -48,8 +48,12 @@ WORKFLOW_INSTRUCTIONS += (
     "transport is down. wall_timeout is a per-job execution deadline. HTTP 504 "
     "and Session terminated are transport/session failures; neither proves the "
     "underlying job failed. Interrupted jobs are not automatically replayed, "
-    "especially publication jobs. Only one heavy queue worker runs by default; "
-    "keep direct upstream LSP proof operations sequential as well."
+    "especially publication jobs. Independent Bazel workspaces run concurrently "
+    "without a global job cap by default. LEAN_BAZEL_JOB_WORKERS=0 means unlimited; "
+    "a positive value sets an optional shared cap. Keep at most one active job "
+    "per workspace; each parallel agent must own its workspace. Publication "
+    "remains serialized. Lake keeps its bounded LEAN_JOB_WORKERS queue (default 1). "
+    "Keep direct upstream LSP proof operations sequential within a workspace."
 )
 
 _existing_instructions = getattr(mcp._mcp_server, "instructions", "") or ""
@@ -90,8 +94,9 @@ LEAN_LAKE_BUILD_THREADS = min(
 )
 LEAN_JOB_WORKERS = _bounded_env_int("LEAN_JOB_WORKERS", 1, 1, 4)
 # Cap the Lean runtime task pool inherited by LSP clients and every Lake/Lean
-# child process. Queue one heavy job by default; explicit higher concurrency
-# remains available to host operators. This does not limit upstream LSP tools.
+# child process. LEAN_JOB_WORKERS bounds legacy Lake jobs only. Independent
+# Bazel jobs bypass that queue; AgentWorkspaceManager reads their optional cap.
+# This does not limit upstream LSP tools or remote Bazel action concurrency.
 os.environ["LEAN_NUM_THREADS"] = str(LEAN_WORKSPACE_THREADS)
 os.environ["LEAN_LAKE_BUILD_THREADS"] = str(LEAN_LAKE_BUILD_THREADS)
 os.environ["LEAN_JOB_WORKERS"] = str(LEAN_JOB_WORKERS)
