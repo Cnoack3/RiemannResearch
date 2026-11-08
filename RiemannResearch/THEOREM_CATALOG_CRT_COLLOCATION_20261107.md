@@ -309,3 +309,38 @@ or to satisfy h_L+r in V_L.
 **Open:** the actual canonical signed Schur-response estimate, any uniform
 C/p^k norm-growth budget, and the cofinal canonical escape-energy hypothesis.
 No RH claim is made. See RH/CanonicalPrimePowerUpdatesResearch20261107.md.
+
+## Canonical refinement and positive logarithmic variation
+
+Continuation of the prime-power handoff, from published cca9edcaf7e73cdcdff72c07a63501aa715f8424.
+See [refinement memorandum](RH/CanonicalRefinementVariationResearch20261107.md).
+
+Five owning modules add 22 checked theorems and six definitions:
+
+- Analysis/OrthogonalRefinementEnergy.lean: four generic signed Hilbert identities.
+- RH/QCRTNestedCutoffs.lean: three vectors and ten theorems identifying the
+  revealed old leakage, the remaining old leakage and the actual hidden update.
+- RH/QCRTLeakageParseval.lean: three theorems giving conditional wavelet
+  coordinates and exact Jordan-normalized revealed-leakage energy.
+- Analysis/PositiveLogVariation.lean: one definition and four theorems,
+  including exact signed telescoping and a logarithmic growth transfer.
+- RH/QCRTPositiveLogVariation.lean: actual canonical energy and logarithmic
+  variation definitions, and the conditional RH implication.
+
+With t=T_M r_L, q=r_L-t and z=r_M-q, the full identity is
+
+    E_M-E_L = (L^-2-M^-2) - ||t||^2 + ||z||^2 + 2<q,z>.
+
+The negative revealed term and signed correlation are retained. The exact
+multiplicative-budget equivalence does not assert its inequality.
+
+| Conditional research reduction | Conclusion | Domain-specific obligation |
+|---|---|---|
+| QCRTPositiveLogVariation.riemannHypothesis_of_positive_log_variation | Mathlib RH | **Open:** positive variation of log(1+actual canonical squared norm) is o(log(M+2)) along the actual LCM stages |
+
+All five saved modules and 22 axiom audits passed in
+job_Cdcr0liLJN2Iy1FABGf1l_XKkMCXGGIW (20.597 seconds reported verification).
+Every audited declaration uses only propext, Classical.choice and Quot.sound.
+The final publication checkpoint separately validates the complete delta
+and any integration. The explicit gcd-cell obstruction and rational numerical
+certificates from the handoff are not newly kernel-checked by this addition.

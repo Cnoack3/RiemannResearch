@@ -1,4 +1,7 @@
 import RiemannResearch.LinearAlgebra.ObliqueBlockElimination
+import RiemannResearch.Analysis.OrthogonalRefinementEnergy
+import RiemannResearch.Analysis.PositiveLogVariation
+import RiemannResearch.RH.QCRTPositiveLogVariation
 import RiemannResearch.RH.QCRTNestedCutoffs
 import RiemannResearch.NumberTheory.GcdSampleTail
 import RiemannResearch.NumberTheory.GcdSamplePrimeTail

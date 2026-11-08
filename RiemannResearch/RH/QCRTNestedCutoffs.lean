@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QCRTFiniteCollocation
+import RiemannResearch.Analysis.OrthogonalRefinementEnergy
 import RiemannResearch.RH.QPhysicalDifference
 import RiemannResearch.Analysis.FiniteAccretiveCollocation
 import Mathlib.Tactic.Abel
@@ -357,5 +358,128 @@ theorem leakage_divisor_moment_sq_le (L d : ℕ) (hL : 2 ≤ L) (hd : 0 < d) :
     apply sq_le_sq.mpr
     simpa only [abs_of_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg _))] using hb
   simpa only [mul_pow, leakageVector_norm_sq, qDivisor_norm_sq d hd, mul_one_div] using hs
+
+
+/-!
+## Revealed old leakage and the exact hidden response
+
+Source: continuation of CanonicalPrimePowerUpdatesResearch20261107,
+Sections 2, 5 and 7. The revealed component and the hidden response retain their exact signs.
+-/
+
+/-- The part of the old canonical leakage visible to the new test space. -/
+def visibleLeakage (L M : ℕ) (hL : 2 ≤ L) : QHilbert :=
+  conditionalProjection M (leakageVector L hL)
+
+/-- The old leakage that remains outside the new test space. -/
+def hiddenOldLeakage (L M : ℕ) (hL : 2 ≤ L) : QHilbert :=
+  leakageVector L hL - visibleLeakage L M hL
+
+/-- The new leakage minus the old leakage remaining outside the new tests. -/
+def hiddenLeakageUpdate (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M) : QHilbert :=
+  leakageVector M hM - hiddenOldLeakage L M hL
+
+theorem visibleLeakage_mem_cell (L M : ℕ) (hL : 2 ≤ L) :
+    visibleLeakage L M hL ∈ cellSpace M :=
+  (cellSpace M).starProjection_apply_mem (leakageVector L hL)
+
+theorem leakage_inner_visibleLeakage (L M : ℕ) (hL : 2 ≤ L) :
+    inner ℝ (leakageVector L hL) (visibleLeakage L M hL) =
+      ‖visibleLeakage L M hL‖ ^ 2 := by
+  have h := conditional_inner M (leakageVector L hL)
+    (visibleLeakage L M hL) (visibleLeakage_mem_cell L M hL)
+  change inner ℝ (visibleLeakage L M hL) (visibleLeakage L M hL) =
+    inner ℝ (leakageVector L hL) (visibleLeakage L M hL) at h
+  rw [real_inner_self_eq_norm_sq] at h
+  exact h.symm
+
+theorem hiddenOldLeakage_inner_cell (L M : ℕ) (hL : 2 ≤ L)
+    (v : QHilbert) (hv : v ∈ cellSpace M) :
+    inner ℝ (hiddenOldLeakage L M hL) v = 0 := by
+  rw [hiddenOldLeakage, visibleLeakage, inner_sub_left,
+    conditional_inner M (leakageVector L hL) v hv, sub_self]
+
+theorem hiddenLeakageUpdate_inner_cell (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M)
+    (v : QHilbert) (hv : v ∈ cellSpace M) :
+    inner ℝ (hiddenLeakageUpdate L M hL hM) v = 0 := by
+  rw [hiddenLeakageUpdate, inner_sub_left,
+    leakageVector_inner_cell M hM v hv,
+    hiddenOldLeakage_inner_cell L M hL v hv, sub_self]
+
+/-- Exact Pythagorean splitting of the leakage increment. -/
+theorem leakage_increment_refinement_norm_sq
+    (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M) :
+    ‖leakageVector M hM - leakageVector L hL‖ ^ 2 =
+      ‖visibleLeakage L M hL‖ ^ 2 + ‖hiddenLeakageUpdate L M hL hM‖ ^ 2 := by
+  exact InnerProductSpace.increment_norm_sq_refinement
+    (leakageVector L hL) (leakageVector M hM) (visibleLeakage L M hL)
+    (leakage_inner_visibleLeakage L M hL)
+    (leakageVector_inner_cell M hM _ (visibleLeakage_mem_cell L M hL))
+
+/-- The retained signed correlation loses the full newly revealed old energy. -/
+theorem leakage_increment_refinement_correlation
+    (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M) :
+    inner ℝ (leakageVector L hL)
+      (leakageVector M hM - leakageVector L hL) =
+      inner ℝ (hiddenOldLeakage L M hL) (hiddenLeakageUpdate L M hL hM) -
+        ‖visibleLeakage L M hL‖ ^ 2 := by
+  exact InnerProductSpace.correlation_refinement
+    (leakageVector L hL) (leakageVector M hM) (visibleLeakage L M hL)
+    (leakage_inner_visibleLeakage L M hL)
+    (leakageVector_inner_cell M hM _ (visibleLeakage_mem_cell L M hL))
+
+/-- Full canonical energy change, retaining the sign of the revealed old part.
+This algebraic energy formula does not itself require nested cutoffs. -/
+theorem canonical_energy_refinement
+    (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M) :
+    ‖(canonical M hM : QHilbert)‖ ^ 2 - ‖(canonical L hL : QHilbert)‖ ^ 2 =
+      (1 / (L : ℝ) ^ 2 - 1 / (M : ℝ) ^ 2) -
+        ‖visibleLeakage L M hL‖ ^ 2 + ‖hiddenLeakageUpdate L M hL hM‖ ^ 2 +
+        2 * inner ℝ (hiddenOldLeakage L M hL) (hiddenLeakageUpdate L M hL hM) := by
+  have h := InnerProductSpace.norm_sq_sub_norm_sq_refinement
+    (leakageVector L hL) (leakageVector M hM) (visibleLeakage L M hL)
+    (leakage_inner_visibleLeakage L M hL)
+  change ‖leakageVector M hM‖ ^ 2 - ‖leakageVector L hL‖ ^ 2 =
+    -‖visibleLeakage L M hL‖ ^ 2 + ‖hiddenLeakageUpdate L M hL hM‖ ^ 2 +
+      2 * inner ℝ (hiddenOldLeakage L M hL) (hiddenLeakageUpdate L M hL hM) at h
+  rw [leakageVector_norm_sq, leakageVector_norm_sq] at h
+  rw [canonical_norm M hM, canonical_norm L hL]
+  linarith
+
+/-- Exact reformulation of a proposed multiplicative budget. The inequality
+on the hidden response remains an open canonical-specific obligation. -/
+theorem canonical_refinement_budget_iff
+    (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M) (α : ℝ) :
+    ‖(canonical M hM : QHilbert)‖ ^ 2 ≤
+      (1 + α) * ‖(canonical L hL : QHilbert)‖ ^ 2 ↔
+    ‖hiddenLeakageUpdate L M hL hM‖ ^ 2 +
+      2 * inner ℝ (hiddenOldLeakage L M hL) (hiddenLeakageUpdate L M hL hM) ≤
+      ‖visibleLeakage L M hL‖ ^ 2 + α * ‖(canonical L hL : QHilbert)‖ ^ 2 -
+        (1 / (L : ℝ) ^ 2 - 1 / (M : ℝ) ^ 2) := by
+  have h := canonical_energy_refinement L M hL hM
+  constructor <;> intro hb <;> nlinarith
+
+/-- Three orthogonal pieces of the actual nested canonical increment. -/
+theorem canonical_increment_refinement_norm_sq
+    (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M) (hLM : L ∣ M) :
+    ‖(canonical M hM : QHilbert) - canonical L hL‖ ^ 2 =
+      (1 / (L : ℝ) ^ 2 - 1 / (M : ℝ) ^ 2) +
+        ‖visibleLeakage L M hL‖ ^ 2 + ‖hiddenLeakageUpdate L M hL hM‖ ^ 2 := by
+  rw [canonical_increment_norm_sq L M hL hM hLM,
+    leakage_increment_refinement_norm_sq L M hL hM]
+  ring
+
+/-- The hidden response is exactly the unobserved part of the actual update. -/
+theorem hiddenLeakageUpdate_eq_unobserved_increment
+    (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M) (hLM : L ∣ M) :
+    hiddenLeakageUpdate L M hL hM =
+      ((canonical M hM : QHilbert) - canonical L hL) -
+        conditionalProjection M ((canonical M hM : QHilbert) - canonical L hL) := by
+  have hp : conditionalProjection M (target L) = target L :=
+    (cellSpace M).starProjection_eq_self_iff.mpr
+      (cellSpace_mono_of_dvd L M (by omega) hLM (target_mem_cell L (by omega)))
+  simp only [hiddenLeakageUpdate, hiddenOldLeakage, visibleLeakage,
+    leakageVector, map_sub, canonical_conditional, hp]
+  abel
 
 end RiemannResearch.RH.QCRTNestedCutoffs

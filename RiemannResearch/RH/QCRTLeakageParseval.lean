@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 Christian Noack. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Christian Noack
+-/
 import Lean.Elab.Tactic.Omega
 import Mathlib.Tactic.Positivity
 import RiemannResearch.RH.QCRTFiniteCollocation
+import RiemannResearch.RH.QCRTNestedCutoffs
 import RiemannResearch.RH.QDivisorHilbertBasis
 import RiemannResearch.RH.QDivisorWaveletDensity
 import RiemannResearch.RH.QDivisorWaveletFactorization
@@ -112,6 +118,71 @@ theorem canonical_leakage_parseval (L : ℕ) (hL : 2 ≤ L) :
           (by decide : 2 ≠ 0), zero_div]
       · rw [if_neg hr, inner_sub_left, target_wavelet_outside L (by omega) r hr,
           sub_zero]
+    _ = _ := hp
+
+
+/-!
+## Exact arithmetic coordinates of newly revealed leakage
+
+Source: CanonicalPrimePowerUpdatesResearch20261107, Section 5. The existing
+Jordan-normalized Hilbert basis supplies a coordinate alternative to the
+gcd-cell innovation formula. All coefficients use the complete physical Q inner product.
+-/
+
+/-- A wavelet outside the divisor cutoff is orthogonal to its entire cell space. -/
+theorem cell_inner_wavelet_outside (L : ℕ) (f : QHilbert)
+    (hf : f ∈ cellSpace L) (r : ℕ+) (hrL : ¬ (r : ℕ) ∣ L) :
+    inner ℝ f (divisorWavelet r) = 0 := by
+  induction hf using Submodule.span_induction with
+  | mem g hg =>
+    rcases hg with ⟨d, hd, rfl⟩
+    have hrd : ¬ (r : ℕ) ∣ d :=
+      fun h => hrL (h.trans (Nat.dvd_of_mem_divisors hd))
+    rw [divisor_wavelet_inner d (Nat.pos_of_mem_divisors hd) r, if_neg hrd]
+  | zero => simp
+  | add x y hx hy ihx ihy => simp [inner_add_left, ihx, ihy]
+  | smul c x hx ih => simp [real_inner_smul_left, ih]
+
+/-- Exact wavelet coordinate of a finite conditional projection. -/
+theorem conditional_wavelet_coordinate (M : ℕ) (hM : 0 < M)
+    (f : QHilbert) (r : ℕ+) :
+    inner ℝ (conditionalProjection M f) (divisorWavelet r) =
+      if (r : ℕ) ∣ M then inner ℝ f (divisorWavelet r) else 0 := by
+  by_cases hrM : (r : ℕ) ∣ M
+  · rw [if_pos hrM]
+    exact conditional_inner M f _ (wavelet_mem_cell M hM r hrM)
+  · rw [if_neg hrM]
+    exact cell_inner_wavelet_outside M _
+      ((cellSpace M).starProjection_apply_mem f) r hrM
+
+/-- Complete energy revealed from the actual old canonical leakage. The sum
+is supported on divisors of M outside L; its denominators are the actual
+Jordan squared norms, not unnormalized row coordinates. -/
+theorem revealed_leakage_parseval (L M : ℕ) (hL : 2 ≤ L) (hM : 0 < M) :
+    (∑' r : ℕ+, if (r : ℕ) ∣ M ∧ ¬ (r : ℕ) ∣ L then
+      (inner ℝ (canonical L hL : QHilbert) (divisorWavelet r)) ^ 2 /
+        qJordanTwo r else 0) =
+      ‖conditionalProjection M (QCRTNestedCutoffs.leakageVector L hL)‖ ^ 2 := by
+  have hp := divisorWavelet_parseval_norm
+    (conditionalProjection M (QCRTNestedCutoffs.leakageVector L hL))
+  calc
+    _ = ∑' r : ℕ+,
+        (inner ℝ (conditionalProjection M (QCRTNestedCutoffs.leakageVector L hL))
+          (divisorWavelet r)) ^ 2 / qJordanTwo r := by
+      apply tsum_congr
+      intro r
+      rw [conditional_wavelet_coordinate M hM]
+      by_cases hrM : (r : ℕ) ∣ M
+      · rw [if_pos hrM]
+        by_cases hrL : (r : ℕ) ∣ L
+        · rw [if_neg (by simp [hrL]),
+            QCRTNestedCutoffs.leakageVector_inner_cell L hL _
+              (wavelet_mem_cell L (by omega) r hrL)]
+          simp
+        · rw [if_pos ⟨hrM, hrL⟩, QCRTNestedCutoffs.leakageVector,
+            inner_sub_left, target_wavelet_outside L (by omega) r hrL, sub_zero]
+      · rw [if_neg hrM, if_neg (by simp [hrM])]
+        simp
     _ = _ := hp
 
 end RiemannResearch.RH.QCRTLeakageParseval
