@@ -124,7 +124,9 @@ class BazelVerificationTests(unittest.TestCase):
             self.manager.submit_build(self.token, "typo")
 
     def test_full_build_uses_buildbuddy_and_all_packages(self):
-        result = self.terminal(self.manager.submit_build(self.token))
+        with patch.object(self.manager, "_run_streaming", wraps=self.manager._run_streaming) as run:
+            result = self.terminal(self.manager.submit_build(self.token))
+            self.assertEqual(run.call_args.kwargs["timeout"], 10800)
         self.assertEqual(result["state"], "succeeded")
         self.assertEqual(self.commands()[0][:3], ["bazel", "build", "--config=buildbuddy"])
         self.assertEqual(self.commands()[0][-1], "//:RiemannResearch")

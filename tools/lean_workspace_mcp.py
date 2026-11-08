@@ -970,7 +970,7 @@ async def agent_workspace_reset(
     ),
 )
 async def agent_workspace_run_code(
-    workspace_token: str, code: str, timeout_seconds: int = 300, backend: str = ""
+    workspace_token: str, code: str, timeout_seconds: int = 1800, backend: str = ""
 ) -> dict:
     return await asyncio.to_thread(
         AGENT_WORKSPACES.submit_run_code, workspace_token, code, timeout_seconds, backend
@@ -986,7 +986,7 @@ async def agent_workspace_run_code(
     ),
 )
 async def agent_workspace_check_file(
-    workspace_token: str, path: str, timeout_seconds: int = 300, backend: str = ""
+    workspace_token: str, path: str, timeout_seconds: int = 1800, backend: str = ""
 ) -> dict:
     return await asyncio.to_thread(
         AGENT_WORKSPACES.submit_check_file, workspace_token, path, timeout_seconds, backend

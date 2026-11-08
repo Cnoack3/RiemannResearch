@@ -162,6 +162,19 @@ Sources: [Bazel 9.2 cache options](https://bazel.build/versions/9.2.0/reference/
 [output layout](https://bazel.build/versions/9.2.0/remote/output-directories),
 and [local-first downloads and remote-cache fill](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/remote/CombinedCache.java).
 
+## Time budgets and cold workspaces
+
+Snippet and file checks default to 1,800 seconds (30 minutes); callers may set
+`timeout_seconds` from 1 through 10,800 seconds. Full builds and checkpoint
+validation allow 10,800 seconds (three hours). These are cancellation ceilings,
+not target runtimes or polling intervals.
+
+A cold workspace can prepare dependency repositories, fetch Mathlib's published
+compiled artifacts, and perform Bazel analysis before any remote Lean action
+starts. This setup consumes the same wall-clock budget. Measure cold setup,
+warm verification, and cache invalidation separately. Do not treat expiry of a
+short diagnostic budget as evidence of a bad theorem or an execution deadlock.
+
 ## Operator rollout
 
 1. Wait for all existing queued/running jobs to finish. Preserve retained

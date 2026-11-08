@@ -271,12 +271,20 @@ class VerificationJobsTests(unittest.TestCase):
         self.assertEqual(self.terminal(self.manager.submit_check_file(
             self.token, "RiemannResearch/Basic.lean"))["state"], "succeeded")
 
+    def test_cold_setup_budgets_and_explicit_override_reach_execution(self):
+        default = self.terminal(self.manager.submit_run_code(self.token, "-- default budget"))
+        self.assertEqual(default["result"]["timeout_seconds"], 1800)
+        explicit = self.terminal(self.manager.submit_check_file(
+            self.token, "RiemannResearch/Basic.lean", 10800,
+        ))
+        self.assertEqual(explicit["result"]["timeout_seconds"], 10800)
+
     def test_invalid_code_timeout_and_workspace_rejected_before_enqueue(self):
         for code in (None, "", " \n", "\x00", "x" * (MAX_PATCH_BYTES + 1)):
             with self.subTest(code_size=len(code) if code is not None else None):
                 with self.assertRaises(ValueError):
                     self.manager.submit_run_code(self.token, code)
-        for timeout in (0, -1, 1801, 1.5, "1", True, None):
+        for timeout in (0, -1, 10801, 1.5, "1", True, None):
             for method, arg in ((self.manager.submit_run_code, "-- fine"),
                                 (self.manager.submit_check_file, "RiemannResearch/Basic.lean")):
                 with self.assertRaises(ValueError):

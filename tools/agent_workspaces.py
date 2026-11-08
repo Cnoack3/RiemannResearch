@@ -449,7 +449,7 @@ class AgentWorkspaceManager:
         return key, result
 
     def _run_lake_build(
-        self, project: Path, args: list[str], *, timeout: int = 3600
+        self, project: Path, args: list[str], *, timeout: int = 10800
     ) -> tuple[str, dict]:
         key, cache = self._dependency_cache_preflight(project)
         if cache["status"] == "complete":
@@ -1172,8 +1172,8 @@ class AgentWorkspaceManager:
 
     @staticmethod
     def _validate_verification_timeout(timeout_seconds: int) -> None:
-        if type(timeout_seconds) is not int or not 1 <= timeout_seconds <= 1800:
-            raise ValueError("timeout_seconds must be an integer between 1 and 1800")
+        if type(timeout_seconds) is not int or not 1 <= timeout_seconds <= 10800:
+            raise ValueError("timeout_seconds must be an integer between 1 and 10800")
 
     @classmethod
     def _validate_code(cls, code: str, timeout_seconds: int) -> None:
@@ -1251,7 +1251,7 @@ class AgentWorkspaceManager:
     def verification_backend(self) -> str:
         return getattr(self._job_local, "backend", None) or self.default_verification_backend
 
-    def _run_bazel_build(self, project: Path, targets: list[str], *, timeout: int = 3600) -> tuple[str, dict]:
+    def _run_bazel_build(self, project: Path, targets: list[str], *, timeout: int = 10800) -> tuple[str, dict]:
         created = ensure_bazel_coverage(project)
         command = bazel_build_command(targets)
         output = self._run_streaming(command, cwd=project, timeout=timeout, phase="bazel_build")
@@ -1380,7 +1380,7 @@ class AgentWorkspaceManager:
         }
 
     @_workspace_operation
-    def run_code(self, token: str, code: str, timeout_seconds: int = 300) -> dict:
+    def run_code(self, token: str, code: str, timeout_seconds: int = 1800) -> dict:
         """Synchronous execution primitive; MCP callers should submit_run_code."""
         self._ensure_workspace_idle(token, "run Lean code")
         self._validate_code(code, timeout_seconds)
@@ -1548,7 +1548,7 @@ class AgentWorkspaceManager:
         output, dependency_cache = self._run_lake_build(
             project,
             ["lake", "build", "RiemannResearch", "--quiet"],
-            timeout=3600,
+            timeout=10800,
         )
         result = {
             "command": "lake build RiemannResearch --quiet",
@@ -1673,7 +1673,7 @@ class AgentWorkspaceManager:
         output, dependency_cache = self._run_lake_build(
             project,
             ["lake", "build", *lake_targets, "--quiet"],
-            timeout=3600,
+            timeout=10800,
         )
         result = {
             "command": f"lake build +RiemannResearch <{len(changed_modules)} changed module(s)> --quiet",
@@ -2146,14 +2146,14 @@ class AgentWorkspaceManager:
     def submit_build(self, token: str, backend: str = "") -> dict:
         return self._submit_job(token, "build", {"backend": backend})
 
-    def submit_run_code(self, token: str, code: str, timeout_seconds: int = 300, backend: str = "") -> dict:
+    def submit_run_code(self, token: str, code: str, timeout_seconds: int = 1800, backend: str = "") -> dict:
         self._validate_code(code, timeout_seconds)
         self._verification_project(token)
         return self._submit_job(
             token, "run_code", {"code": code, "timeout_seconds": timeout_seconds, "backend": backend}
         )
 
-    def submit_check_file(self, token: str, path: str, timeout_seconds: int = 300, backend: str = "") -> dict:
+    def submit_check_file(self, token: str, path: str, timeout_seconds: int = 1800, backend: str = "") -> dict:
         self._validate_verification_timeout(timeout_seconds)
         project = self._verification_project(token)
         _, _, file_sha256 = self._verification_file(project, path)

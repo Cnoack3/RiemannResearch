@@ -66,9 +66,9 @@ class AsyncHandlerTests(unittest.IsolatedAsyncioTestCase):
             ("agent_workspace_list_jobs", ("ws",), "list_jobs", ("ws", 20)),
             ("agent_workspace_reset", ("ws",), "reset", ("ws", "")),
             ("agent_workspace_run_code", ("ws", "example : True := True.intro"), "submit_run_code",
-             ("ws", "example : True := True.intro", 300, "")),
+             ("ws", "example : True := True.intro", 1800, "")),
             ("agent_workspace_check_file", ("ws", "RiemannResearch/A.lean"), "submit_check_file",
-             ("ws", "RiemannResearch/A.lean", 300, "")),
+             ("ws", "RiemannResearch/A.lean", 1800, "")),
         ]
         for name, arguments, expected_method, expected_arguments in cases:
             with self.subTest(handler=name):
