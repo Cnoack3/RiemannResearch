@@ -71,6 +71,8 @@ build:buildbuddy --remote_cache_compression
 # Bypass BEP artifact metadata hashing; dashboard events and RBE remain enabled.
 # Artifact/test-log/profile links are local files. Opt in to uploads below.
 build:buildbuddy --experimental_build_event_upload_strategy=local
+# The full-repo SDK-closure build passed; enable the validated input selection.
+build:buildbuddy --config=lean-sdk-slim
 
 # Restore hosted artifact uploads when needed; this may recreate the uploader OOM.
 build:buildbuddy-artifacts --config=buildbuddy
@@ -80,9 +82,11 @@ build:buildbuddy-artifacts --experimental_build_event_upload_strategy=remote
 build:buildbuddy-benchmark --config=buildbuddy
 build:buildbuddy-benchmark --jobs=8
 
-# Experimental SDK pruning; normal builds keep the original input set.
+# SDK input selection; BuildBuddy enables lean-sdk-slim by default.
 build:lean-sdk-slim --repo_env=RULES_LEAN_SDK_INDEX=1
 build:lean-sdk-slim --define=lean_sdk_inputs=imports
+build:lean-sdk-full --repo_env=RULES_LEAN_SDK_INDEX=0
+build:lean-sdk-full --define=lean_sdk_inputs=full
 
 try-import %workspace%/.bazelrc.local
 

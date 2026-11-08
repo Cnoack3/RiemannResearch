@@ -697,21 +697,25 @@ action-cache reuse. Hosted Lean compilation, worker input-transfer reductions,
 and performance effects of changes beyond these measured concurrency trials
 remain unverified.
 
-## Experimental per-action SDK inputs
+## SDK inputs for BuildBuddy
 
-`--config=lean-sdk-slim` opts into SDK import-closure selection. Use it alongside
-the usual remote profile, initially on the existing bounded smoke target:
+`--config=buildbuddy` enables per-action SDK import closures by default. This is
+the same flag sequence used by the successful full-repository build below:
 
 ```sh
-bazel build --config=buildbuddy --config=lean-sdk-slim //:smoke
+bazel build --config=buildbuddy //:RiemannResearch
 ```
 
-Normal builds retain their existing action inputs and commands and do not run
-the SDK indexer. The profile enables both SDK indexing at repository setup and
-input selection at action analysis. Removing
-`--config=lean-sdk-slim` returns to the existing configuration. Changing this
-setting changes the affected action keys; start with a small target before a
-full build. This does not purge either cache or force unrelated actions to run.
+To select the previous full-SDK input set, put the rollback profile last:
+
+```sh
+bazel build --config=buildbuddy --config=lean-sdk-full //:RiemannResearch
+```
+
+The rollback disables SDK indexing and selects the original checker and action
+inputs. It does not delete caches. `--config=lean-sdk-slim` remains available
+when using another build profile. Do not add it separately to `buildbuddy`;
+that profile already includes it.
 
 At SDK repository setup, a helper uses the pinned Lean decoder to read imports
 from the compiled SDK modules, including private olean parts. The toolchain
@@ -723,29 +727,52 @@ bundles; it does not drop `.olean.private`, `.olean.server`, `.ir` or `.ir.sig`
 from selected modules. See the pinned
 [module loader](https://github.com/leanprover/lean4/blob/v4.33.0-rc2/src/Lean/Environment.lean).
 
-The experimental checker imports `Lean.Environment` and `Lean.Util.Sorry`
-instead of the `Lean` umbrella. Its compiled-declaration audit body is identical
-to the existing checker, including private proof inspection and rejection of
-suppressed sorry warnings. The existing checker remains the default.
+The smaller checker imports `Lean.Environment` and `Lean.Util.Sorry` instead
+of the `Lean` umbrella. Its compiled-declaration audit body is identical to the
+original checker, including private proof inspection and rejection of
+suppressed sorry warnings.
 
 Unknown prebuilt dependency graphs, custom plugins, custom `LEAN_PATH`, and
-custom toolchains without an index retain the full SDK. The experimental profile
-requires a native Linux x86-64 SDK. An unsupported host, decoder failure, or
-malformed/incomplete index fails the explicit experiment rather than silently
-switching it off. Decoder errors include bounded stdout and stderr, since Lean
-compiler diagnostics can appear on stdout. Ordinary builds do not run the
-indexer and remain unaffected.
+custom toolchains without an index retain the full SDK. SDK indexing currently
+requires a native Linux x86-64 host and SDK. On other hosts use
+`--config=lean-sdk-full`. Decoder failures and malformed/incomplete indexes
+fail rather than silently disabling indexing. Errors include bounded stdout
+and stderr. Builds that do not enable either `buildbuddy` or `lean-sdk-slim`
+keep their previous SDK selection.
 
-The existing benchmark's SDK inventory reports the entire installed SDK. It is
-not a count of selected per-action inputs. Compare actual action input sizes
-and invocation-level internal downloads in BuildBuddy after a successful smoke
-build. Declared bytes, compressed transfer bytes, executor-local cache reuse,
-and account billing are different measurements. This feature has no promised
-percentage reduction and does not establish free-tier eligibility.
+### Validation on 2026-11-08
 
-The patch passed 19 local checks of the actual Starlark functions, including
-default-action equivalence and disabled-indexer behavior. These checks model
-Bazel actions; they do not execute Bazel or Lean. The SDK decoder, checker
-imports, and measured transfer reduction still need validation through the
-experimental Bazel smoke build. This build-tooling trial does not require the
-legacy Lake/MCP verification path to be recovered.
+The full aggregate
+[build](https://app.buildbuddy.io/invocation/6c96992e-a5a6-43e5-a9f4-d4e3be794597)
+succeeded in 672.845 seconds: 3,934 remote actions, one remote cache hit and one
+internal action. Its cache panel recorded 5.846 GB downloaded, 2.64 GB compressed,
+and 19.37 MB uploaded. Executor file caches were already populated, so this is
+not a measurement of a completely cold executor fleet.
+
+The same output digest was retained for the two inspected targets:
+
+| Target and measurement | Full SDK | Selected SDK |
+| --- | ---: | ---: |
+| Basic: SDK inputs | 2.713 GB | 1.892 GB |
+| Basic: external input files | 3.321 GB | 2.501 GB |
+| Basic: recorded worker peak RAM | 1.377 GB | 263.7 MB |
+| ZetaBounds: SDK inputs | 2.713 GB | 1.985 GB |
+| ZetaBounds: external input files | 5.427 GB | 4.699 GB |
+| ZetaBounds: recorded worker peak RAM | 1.704 GB | 775.9 MB |
+
+Sources: [baseline action cache](https://app.buildbuddy.io/invocation/5fb1b633-1d08-461b-bd95-d89e9a6b6ac6#cache),
+[Basic run](https://app.buildbuddy.io/invocation/5dc0ff52-8824-493b-84ff-b0955015ba4a),
+and [ZetaBounds run](https://app.buildbuddy.io/invocation/4942914e-b3b5-4553-9539-3a3841cf122b).
+Worker RAM figures are individual recorded executions, not a whole-repository
+memory bound. The ZetaBounds trial rebuilt seven remote actions successfully.
+
+The existing benchmark's SDK inventory reports the entire installed SDK, not
+the subset selected for an action. Declared inputs, compressed transfer bytes,
+executor-local file reuse, and account billing are different measurements.
+These runs do not establish BuildBuddy free-tier eligibility or guarantee a
+particular reduction for a completely cold fleet.
+
+Nineteen local tests also exercise the actual Starlark functions, including
+SDK closures, default-action equivalence, disabled-indexer behavior, error
+reporting and rollback selection. The user-run Bazel builds above provide the
+runtime evidence; the local action model alone does not compile Lean.
