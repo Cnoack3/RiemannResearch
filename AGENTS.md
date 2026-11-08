@@ -83,6 +83,30 @@
   If the installed server lacks the backend fields/default, report that the
   migration is not deployed; do not label an old Lake result as Bazel-verified.
 
+
+## Verification scope and cache reuse
+
+| Goal | Tool | Requested scope |
+| --- | --- | --- |
+| Try a proof candidate | `agent_workspace_run_code` | Temporary snippet and its transitive imports |
+| Check an edited file | `agent_workspace_check_file` | That file and its transitive imports |
+| Explicit standalone whole-project check | `lean_build` | `//:RiemannResearch` |
+| Publish a completed change | `agent_workspace_checkpoint` | Full project if Lean/dependency/build inputs changed; otherwise compilation can be skipped |
+
+- Use snippet or file checks while iterating. A focused check does not validate
+  downstream consumers; the final checkpoint covers those consumers.
+- Do not call `lean_build` before each candidate or file check, or immediately
+  before a checkpoint that will run the same full-project validation.
+- A whole-project target is incremental, not a request to recompile everything.
+  Bazel reuses unchanged action results. Analysis, dependency traversal and cache
+  checks still happen locally and may consume substantial CPU and memory.
+- Retain the workspace across iterations. Do not routinely run `bazel clean`
+  or bypass caches as part of proof checking.
+- Honor the server's reported resource cap. The executable default of no global
+  cap does not mean the deployed host is uncapped: the repository resource
+  profile sets `LEAN_BAZEL_JOB_WORKERS=1` when installed. Do not change or evade
+  an operator cap during proof work.
+
 ## Efficient isolated workflow
 
 - Retain the active workspace token and absolute project root across turns of
