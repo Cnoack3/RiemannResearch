@@ -59,6 +59,47 @@ BuildBuddy flags, credentials, and remote resource settings are unchanged.
 RBE runs compiler actions remotely; local Bazel servers still perform analysis
 and consume memory, so set an optional cap if measurements warrant one.
 
+## Host resource policy
+
+Remote execution still leaves analysis, input preparation, and cache handling
+on the MCP host. Each workspace has its own JVM; the 8 GiB heap setting applies
+to each JVM, not to the whole service.
+
+The existing scheduler cap can protect this host without Python changes.
+Install `bazel/lean-tunnel.resources.conf` to set
+`LEAN_BAZEL_JOB_WORKERS=1`. It permits one active managed Bazel verification
+job at a time; other requests remain asynchronous and report their waiting
+state. A build retains its 80 remote-action limit. Explicitly setting this
+variable to `0` restores uncapped workspace concurrency.
+
+Once existing jobs have finished, run from the server checkout:
+
+```bash
+git pull --ff-only
+sudo install -Dm644 bazel/lean-tunnel.resources.conf /etc/systemd/system/lean-tunnel.service.d/90-bazel-resources.conf
+sudo systemctl daemon-reload
+sudo systemctl restart lean-tunnel.service
+```
+
+The drop-in changes only the scheduler setting. It does not change the service
+command, credentials, or other environment variables. Use the same setting for
+all cooperating service processes that share the workspace state directory.
+The host policy does not limit builds launched manually outside the service.
+
+The repository rc file uses two JVM-visible processors, two loading threads,
+a local CPU budget of two, Linux batch CPU scheduling, a five-minute idle exit,
+and idle low-memory shutdown. These CPU settings improve scheduling behavior;
+they are not an OS CPU quota or a hard total RSS limit. The 8 GiB heap cap stays
+in place because full-project runs used most of it.
+
+After a service restart, new jobs use the configured scheduler limit. Existing
+source snapshots still read their own rc settings; update or retire them
+normally. Startup flags do not retroactively change a running JVM. Inspect the
+`worker_count` field on new jobs to confirm the service limit is 1.
+
+Sources: [Bazel startup and build options](https://bazel.build/versions/9.2.0/reference/command-line-reference),
+[commands and options](https://bazel.build/versions/9.2.0/docs/user-manual).
+
 ## Shared storage
 
 The cache policy lives entirely in the repository's `.bazelrc`. Updated
@@ -83,7 +124,7 @@ Bazel then consults BuildBuddy. This is not a mirror of the entire hosted CAS
 and does not eliminate analysis in a fresh workspace.
 
 The disk cache has a **32 GiB soft limit** and **14-day age limit**, with
-garbage collection after five idle minutes. Completed repository contents use
+garbage collection after one idle minute. Completed repository contents use
 14-day idle retention. These limits do not cover repository archives,
 per-workspace output bases, or native Lake caches.
 
@@ -122,11 +163,11 @@ and [local-first downloads and remote-cache fill](https://github.com/bazelbuild/
    bazel build --config=buildbuddy //:RiemannResearch
    ```
 
-4. Leave `LEAN_VERIFICATION_BACKEND` and `LEAN_BAZEL_JOB_WORKERS` unset for
-   Bazel with no global job cap. Remove an old backend or positive cap override
-   if present, and restart the existing `lean-tunnel.service` when idle. If a
-   systemd environment drop-in was edited, run `sudo systemctl daemon-reload`
-   before the restart. Do not replace other service settings.
+4. Leave `LEAN_VERIFICATION_BACKEND` unset for Bazel. On this host, install
+   the resource-policy drop-in above to set `LEAN_BAZEL_JOB_WORKERS=1`.
+   Restart the existing `lean-tunnel.service` only when its jobs are idle.
+   After changing a systemd drop-in, run `sudo systemctl daemon-reload`
+   before restarting. Preserve other service settings.
 5. Refresh the connected plugin's tool schema. Confirm `backend` is advertised
    on the four queued tools and that workspace/job results report Bazel.
 6. Through the plugin, run a valid snippet, an invalid snippet, a file check,

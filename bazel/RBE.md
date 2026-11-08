@@ -252,13 +252,27 @@ and [successful versus failed action output](https://github.com/bazelbuild/bazel
 
 ### Local client limits and artifact uploads
 
-The repository sets an 8 GiB maximum Java heap, four loading/analysis threads,
-and a four-CPU budget for locally scheduled actions. `ActiveProcessorCount=4`
+The repository sets an 8 GiB maximum Java heap, two loading/analysis threads,
+and a two-CPU budget for locally scheduled actions. `ActiveProcessorCount=2`
 also reduces automatically sized JVM pools, including garbage collection.
 The heap ceiling excludes native memory, thread stacks, and child processes.
 The CPU settings are scheduling and pool-size controls, not an operating-system
 CPU quota; explicitly sized remote callback pools can still run more threads.
 The normal BuildBuddy profile continues to allow 80 remote jobs.
+
+Bazel uses Linux batch CPU scheduling to favor interactive work. An idle JVM
+exits after five minutes, and idle low-memory shutdown is enabled. The shared
+disk and repository-content collectors start after one idle minute so they can
+run before that timeout. These settings are per JVM; each workspace has its own
+Bazel server. They are not a combined RAM limit across workspaces.
+
+For this memory-sensitive MCP host, install
+[`lean-tunnel.resources.conf`](lean-tunnel.resources.conf) as described in
+[the verification guide](VERIFICATION.md#host-resource-policy). It sets the
+existing `LEAN_BAZEL_JOB_WORKERS=1` limit, permitting one active managed Bazel
+verification at a time while other requests stay asynchronous. This does not
+cap manually launched builds or remove the 80-action parallelism within a
+BuildBuddy build. No Python changes are required.
 
 The JVM also exits immediately on heap exhaustion via
 `-XX:+ExitOnOutOfMemoryError`, including when a background callback encounters
@@ -266,13 +280,17 @@ it. This prevents an exhausted server from continuing to run; it does not
 prevent OOM. Immediate exit can leave the final event/profile diagnostics
 incomplete and outstanding remote actions may finish independently.
 
-Allow memory headroom beyond the 8 GiB heap; this default is intended for a host
-with at least 16 GiB available to Ubuntu/WSL. For a smaller machine, set a suitable
-heap limit in the imported `.bazelrc.local`, for example
-`startup --host_jvm_args=-Xmx4g`. A smaller heap may still be insufficient for
-the full analysis graph. An explicit heap size may raise or lower the previous
-runtime-selected default; it is not evidence that the out-of-memory condition
-has been solved.
+Allow memory headroom beyond the 8 GiB heap; full-project runs previously
+reported about 8.5 GiB process RSS. Reducing the heap without a measured trial
+risks recreating the earlier OOM failures. The host policy limits concurrent
+builds instead. The heap limit remains configurable in `.bazelrc.local`;
+a smaller value is not established as sufficient for the full analysis graph.
+
+Startup settings only apply when a Bazel server starts. Updating the rc file
+does not retroactively change already-running or retained older workspaces.
+Restart the MCP service only when its jobs are idle. Manually launched idle
+Bazel servers can be stopped from their own workspace with
+`bazel --noblock_for_lock shutdown`. Avoid killing all Java processes.
 
 BuildBuddy now uses
 `--experimental_build_event_upload_strategy=local`.

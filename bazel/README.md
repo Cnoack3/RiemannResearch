@@ -84,7 +84,7 @@ The patched rules normalize fetched repositories into portable trees and mark
 them reproducible. Keep any custom cache location outside the checkout.
 
 `.bazelrc` explicitly retains completed repositories for 14 days after last use
-and runs their garbage collection after 5 minutes idle. This is age-based
+and runs their garbage collection after 1 minute idle. This is age-based
 retention, not a 100 GiB size limit; it does not prune the downloaded-archive
 cache or change Lake's separate cache budget.
 

@@ -2,14 +2,18 @@
 # 8 GiB caps the Java heap, not process RSS; leave room for native memory and tools.
 # ActiveProcessorCount sizes automatic JVM pools; it is not an OS CPU quota.
 startup --host_jvm_args=-Xmx8g
-startup --host_jvm_args=-XX:ActiveProcessorCount=4
+startup --host_jvm_args=-XX:ActiveProcessorCount=2
 # A heap OOM must terminate the server, including failures on background threads.
 startup --host_jvm_args=-XX:+ExitOnOutOfMemoryError
+# Prefer interactive server work on Linux and release idle JVMs promptly.
+startup --batch_cpu_scheduling
+startup --max_idle_secs=300
+startup --shutdown_on_low_sys_mem
 # All checkouts share repository and action caches. Bazel still creates one
 # output base per workspace under this root; never share a single output base.
 startup --output_user_root=~/.cache/riemann-bazel/outputs
-build --loading_phase_threads=4
-build --local_resources=cpu=4
+build --loading_phase_threads=2
+build --local_resources=cpu=2
 
 # Show activity and successful completion so slow or cached builds are visible.
 # These UI options do not alter Lean action commands or their cache keys.
@@ -41,12 +45,12 @@ build:verbose --output_filter=.*
 common --repository_cache=~/.cache/riemann-bazel/repository
 common --repo_contents_cache=~/.cache/riemann-bazel/repo-contents
 common --repo_contents_cache_gc_max_age=14d
-common --repo_contents_cache_gc_idle_delay=5m
+common --repo_contents_cache_gc_idle_delay=1m
 build --disk_cache=~/.cache/riemann-bazel/disk
 # 32 GiB soft limit, collected while the server is idle; not a total disk quota.
 build --experimental_disk_cache_gc_max_size=34359738368
 build --experimental_disk_cache_gc_max_age=14d
-build --experimental_disk_cache_gc_idle_delay=5m
+build --experimental_disk_cache_gc_idle_delay=1m
 # Generated state is outside the source tree; remove old convenience links too.
 build --experimental_convenience_symlinks=clean
 
