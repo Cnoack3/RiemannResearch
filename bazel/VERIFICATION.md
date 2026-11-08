@@ -76,44 +76,71 @@ they exclude earlier request validation and connector/network time. The existing
 
 ## Host resource policy
 
-Remote execution still leaves analysis, input preparation, and cache handling
-on the MCP host. Each workspace has its own JVM; the 8 GiB heap setting applies
-to each JVM, not to the whole service.
+Remote execution still leaves analysis, input preparation, dependency bootstrap,
+and editor processes on the MCP host. Each workspace has its own JVM; the 8 GiB
+Java heap setting is per JVM, not a total memory budget.
 
-The existing scheduler cap can protect this host without Python changes.
-Install `bazel/lean-tunnel.resources.conf` to set
-`LEAN_BAZEL_JOB_WORKERS=1`. It permits one active managed Bazel verification
-job at a time; other requests remain asynchronous and report their waiting
-state. A build retains its 80 remote-action limit. Explicitly setting this
-variable to `0` restores uncapped workspace concurrency.
+The approximately 14 GiB WSL host experienced global OOM kills of a local Lean
+process with about 10.1 GiB resident memory and a Java process with about 5.3 GiB.
+The process logs do not identify whether that Lean process was an editor worker
+or a dependency-bootstrap compiler. A later service start does not turn those
+interrupted jobs into successful verifications.
 
-Once existing jobs have finished, run from the server checkout:
+Install `bazel/lean-tunnel.resources.conf` to apply an aggregate service budget:
+
+| Setting | Value | Purpose |
+| --- | --- | --- |
+| `MemoryHigh` | 8 GiB | Reclaim/throttle memory above the preferred budget |
+| `MemoryMax` | 10 GiB | Hard limit for the whole service and its descendants |
+| `MemorySwapMax` | 1 GiB | Bound service swap use |
+| `OOMPolicy` | stop | Stop the unit if one of its processes is OOM-killed |
+| `LEAN_WORKSPACE_THREADS`, `LEAN_LAKE_BUILD_THREADS` | 2 | Bound local Lean thread pools |
+| `LEAN_MAX_SHARED_CLIENTS` | 2 | Bound retained editor clients |
+| `LEAN_BAZEL_JOB_WORKERS` | 0 | Preserve concurrent independent workspaces |
+
+A BuildBuddy build retains its 80-action limit. One job per workspace and
+serialized publication still apply. A large local task can fail at the memory
+limit; this policy does not prove that arbitrary concurrent builds fit in RAM.
+It does not cover manually launched builds outside the service's control group.
+Do not run heavy manual jobs alongside the recovery test.
+
+Once jobs are idle, run from the server checkout:
 
 ```bash
 git pull --ff-only
 sudo install -Dm644 bazel/lean-tunnel.resources.conf /etc/systemd/system/lean-tunnel.service.d/90-bazel-resources.conf
 sudo systemctl daemon-reload
 sudo systemctl restart lean-tunnel.service
+systemctl show lean-tunnel.service -p MemoryHigh -p MemoryMax -p MemorySwapMax -p OOMPolicy
 ```
 
-The drop-in changes only the scheduler setting. It does not change the service
-command, credentials, or other environment variables. Use the same setting for
-all cooperating service processes that share the workspace state directory.
-The host policy does not limit builds launched manually outside the service.
+Use `start` instead of `restart` if the service was deliberately stopped after
+an OOM. Verify the kernel cgroup limits before resuming stress tests:
 
-The repository rc file uses two JVM-visible processors, two loading threads,
-a local CPU budget of two, Linux batch CPU scheduling, a five-minute idle exit,
-and idle low-memory shutdown. These CPU settings improve scheduling behavior;
-they are not an OS CPU quota or a hard total RSS limit. The 8 GiB heap cap stays
-in place because full-project runs used most of it.
+```bash
+lean_cgroup=$(systemctl show lean-tunnel.service -p ControlGroup --value)
+cat "/sys/fs/cgroup${lean_cgroup}/memory.high" "/sys/fs/cgroup${lean_cgroup}/memory.max" "/sys/fs/cgroup${lean_cgroup}/memory.swap.max"
+```
 
-After a service restart, new jobs use the configured scheduler limit. Existing
-source snapshots still read their own rc settings; update or retire them
-normally. Startup flags do not retroactively change a running JVM. Inspect the
-`worker_count` field on new jobs to confirm the service limit is 1.
+Expected byte values are `8589934592`, `10737418240`, and `1073741824`.
+Missing controller files or `max` values do not establish that the guard is
+active. The drop-in preserves service commands and credentials. Other drop-ins
+may override it, so verify effective settings rather than only reading the file.
 
-Sources: [Bazel startup and build options](https://bazel.build/versions/9.2.0/reference/command-line-reference),
-[commands and options](https://bazel.build/versions/9.2.0/docs/user-manual).
+Warm one fresh workspace's dependency setup first. Once that succeeds, run
+parallel warm-workspace checks and measure memory and latency. Do not start
+several cold Mathlib bootstraps at once during recovery. Never automatically
+replay interrupted jobs, particularly publication jobs. Keep the original job
+records and source changes.
+
+Bazel's existing two-processor hint, loading threads, batch scheduling, and idle
+exit remain in place. They are not a hard aggregate RSS limit. The 8 GiB Java
+heap ceiling is unchanged because previous full-project runs used most of it.
+New job responses should report `worker_count: null` and `same_workspace_limit: 1`.
+
+Sources: [systemd memory controls](https://www.freedesktop.org/software/systemd/man/latest/systemd.resource-control.html),
+[systemd OOM policy](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#OOMPolicy=),
+and [Bazel options](https://bazel.build/versions/9.2.0/reference/command-line-reference).
 
 ## Shared storage
 
@@ -192,7 +219,8 @@ short diagnostic budget as evidence of a bad theorem or an execution deadlock.
    ```
 
 4. Leave `LEAN_VERIFICATION_BACKEND` unset for Bazel. On this host, install
-   the resource-policy drop-in above to set `LEAN_BAZEL_JOB_WORKERS=1`.
+   the resource-policy drop-in above to bound aggregate memory while keeping
+   `LEAN_BAZEL_JOB_WORKERS=0`.
    Restart the existing `lean-tunnel.service` only when its jobs are idle.
    After changing a systemd drop-in, run `sudo systemctl daemon-reload`
    before restarting. Preserve other service settings.

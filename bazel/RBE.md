@@ -269,10 +269,13 @@ Bazel server. They are not a combined RAM limit across workspaces.
 For this memory-sensitive MCP host, install
 [`lean-tunnel.resources.conf`](lean-tunnel.resources.conf) as described in
 [the verification guide](VERIFICATION.md#host-resource-policy). It sets the
-existing `LEAN_BAZEL_JOB_WORKERS=1` limit, permitting one active managed Bazel
-verification at a time while other requests stay asynchronous. This does not
-cap manually launched builds or remove the 80-action parallelism within a
-BuildBuddy build. No Python changes are required.
+aggregate memory controls (`MemoryHigh=8G`, `MemoryMax=10G`, and
+`MemorySwapMax=1G`) for the service and its descendants. Independent workspaces
+remain concurrent with `LEAN_BAZEL_JOB_WORKERS=0`, and each BuildBuddy build
+retains its 80-action limit. Local Lean pools and retained editor clients are
+bounded separately. Manually launched builds outside the service are not covered.
+Warm dependency setup in one fresh workspace before parallel recovery tests.
+No Python changes are required.
 
 The JVM also exits immediately on heap exhaustion via
 `-XX:+ExitOnOutOfMemoryError`, including when a background callback encounters
@@ -282,8 +285,9 @@ incomplete and outstanding remote actions may finish independently.
 
 Allow memory headroom beyond the 8 GiB heap; full-project runs previously
 reported about 8.5 GiB process RSS. Reducing the heap without a measured trial
-risks recreating the earlier OOM failures. The host policy limits concurrent
-builds instead. The heap limit remains configurable in `.bazelrc.local`;
+risks recreating the earlier OOM failures. The host policy bounds aggregate
+service memory; an oversized job may fail at that boundary. The heap limit remains
+configurable in `.bazelrc.local`;
 a smaller value is not established as sufficient for the full analysis graph.
 
 Startup settings only apply when a Bazel server starts. Updating the rc file

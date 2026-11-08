@@ -102,10 +102,10 @@
   checks still happen locally and may consume substantial CPU and memory.
 - Retain the workspace across iterations. Do not routinely run `bazel clean`
   or bypass caches as part of proof checking.
-- Honor the server's reported resource cap. The executable default of no global
-  cap does not mean the deployed host is uncapped: the repository resource
-  profile sets `LEAN_BAZEL_JOB_WORKERS=1` when installed. Do not change or evade
-  an operator cap during proof work.
+- Honor the server's effective resource policy. The repository host profile
+  keeps `LEAN_BAZEL_JOB_WORKERS=0` while bounding aggregate local service memory.
+  A separately configured positive job cap still applies; do not change or
+  evade an operator's limits during proof work.
 
 ## Efficient isolated workflow
 
@@ -141,6 +141,11 @@
   and poll `agent_workspace_job_status` no sooner than `retry_after_seconds`;
   never resubmit a pending job. Running status reports the current phase, Lake
   task percentage when available, and a rough task-count ETA.
+- On the memory-constrained WSL host, verify the aggregate service memory guard
+  before load tests. Warm dependency setup in one fresh workspace before
+  launching concurrent checks in other workspaces; remote execution does not
+  remove local Bazel analysis, dependency-bootstrap, or editor memory costs.
+  An OOM or service restart interrupts verification and never counts as success.
 - Report workspace-opening request time, queue/polling delay, and the server's
   reported verification duration separately. A request round trip is not a
   measurement of kernel proof-checking time. Do not attribute a delay to disk,
