@@ -21,9 +21,10 @@ and action results/downloaded blobs in `disk/`. Mutable output state remains
 separate for each workspace under `outputs/`, outside the checkout. The disk
 cache uses a 32 GiB soft limit and 14-day retention. Builds remove convenience
 `bazel-*` symlinks, so inspect outputs via `bazel info bazel-bin` instead.
-Managed workspaces enforce these paths even for retained older snapshots and
-clean stale output bases under the existing workspace-retention policy. See
-[shared storage and rollout details](VERIFICATION.md#shared-storage).
+These settings come entirely from each checkout's `.bazelrc`; existing
+checkouts adopt them when updated. Per-workspace output bases have no automatic
+size limit or additional MCP cleanup. See
+[shared storage details](VERIFICATION.md#shared-storage).
 
 Minimal output downloads remain enabled. Only bytes actually fetched from
 BuildBuddy enter the local CAS; the configuration does not mirror every remote

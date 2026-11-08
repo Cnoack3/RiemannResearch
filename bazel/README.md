@@ -111,7 +111,7 @@ The local action cache at `~/.cache/riemann-bazel/disk` retains downloaded blobs
 for reuse in other checkouts, with a 32 GiB soft limit and 14-day retention.
 Per-workspace generated state lives under `~/.cache/riemann-bazel/outputs`,
 and convenience `bazel-*` links are removed from the source tree. See
-[shared storage](VERIFICATION.md#shared-storage) for cleanup and deployment.
+[shared storage](VERIFICATION.md#shared-storage) for cache policy and output details.
 Omit `--remote_accept_cached=false` from normal builds and reuse tests: it
 bypasses remote action cache hits, and would also bypass remote repository
 cache reads if that experiment were enabled. It does not disable the native

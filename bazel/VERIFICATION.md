@@ -26,69 +26,6 @@ packages in `RiemannResearch/`, use the same Bazel rules and sorry audit, and ar
 removed after the job finishes. Bazel handles its own artifacts; native Lake
 cache snapshots are not restored or published for Bazel verification.
 
-## Shared storage
-
-Every managed Bazel job uses one per-user root, `~/.cache/riemann-bazel`, even
-when its retained source snapshot predates this configuration. Normal commands
-in updated checkouts use the same locations from `.bazelrc`:
-
-| Directory beneath the root | Purpose |
-| --- | --- |
-| `repository/` | Downloaded external-repository archives, shared by content hash |
-| `repo-contents/` | Completed, reproducible external repositories shared by Bazel |
-| `disk/` | Local action cache and content-addressed blobs, including remote downloads |
-| `outputs/<workspace-path-hash>/` | Separate mutable build state for each checkout |
-
-The output base is never shared between different checkouts. Source files stay
-in the checkout; Bazel writes its intermediate artifacts and logs outside it.
-Convenience `bazel-*` symlinks are removed by builds; use `bazel info output_path`
-or `bazel info bazel-bin` when inspecting generated files. Remote output
-downloads remain `minimal`. Files fetched when needed enter the shared disk
-cache; absent remote blobs are not downloaded eagerly. A disk action entry can
-still miss if its referenced blobs are absent, particularly with minimal
-downloads, and Bazel then consults BuildBuddy. This is not a mirror of the
-entire hosted CAS and does not eliminate analysis in a fresh workspace.
-
-The disk cache has a **32 GiB soft limit** and **14-day age limit**; Bazel runs
-its collector after five idle minutes. Completed repository contents also use
-14-day idle retention. These limits do not cap the combined size of repository
-archives, active output bases, or the existing native Lake caches.
-
-The workspace manager cleans an inactive workspace's output base when its
-existing retention policy expires (14 days by default). It invokes
-`bazel --noblock_for_lock clean --expunge_async` with that exact output base before
-archiving the source checkout. Dirty or unpublished source stays intact even
-when its disposable output base is cleaned. Queued jobs, active editors and
-builds prevent cleanup; a busy Bazel lock or failed cleanup defers archiving.
-This runs as part of the existing workspace cleanup, including when opening a
-workspace; it is not an independent wall-clock timer. Shared caches survive.
-Deletion runs in the background after Bazel has released the old output base,
-so cleanup does not synchronously traverse a large artifact tree.
-Temporary publication-integration clones retire their output bases immediately
-after validation, including failed validation. If Bazel cannot release a base,
-cleanup records the failure and retains that integration directory for inspection.
-
-The service can override its storage root with `LEAN_BAZEL_STORAGE_ROOT`; keep
-it outside the workspaces. If using an override, set the equivalent cache and
-startup paths in `.bazelrc.local` for manual commands too. Workspace-open
-responses include `bazel_storage` with the exact effective paths. Existing
-caches at older locations are not moved or deleted by this rollout. The first
-use of the new root may repopulate dependencies and analysis state.
-
-Deploy the updated Python files into the existing service checkout and restart
-the verifier only after its active jobs finish. Pulling the source configuration
-alone updates manual builds; it does not reload an already-running service.
-
-Sources: [Bazel 9.2 cache options](https://bazel.build/versions/9.2.0/reference/command-line-reference),
-[output layout](https://bazel.build/versions/9.2.0/remote/output-directories),
-and [local-first downloads and remote-cache fill](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/remote/CombinedCache.java).
-
-Offline integration tests exercise command routing, shared paths, isolated
-outputs, cleanup and source preservation using a fake Bazel executable. They
-do not certify real Bazel cache hits or a deployed service.
-
-## Package coverage
-
 After patches and before verification, the server generates missing
 `BUILD.bazel` files for Lean source directories and all intermediate parents.
 Existing package files are preserved and must call `lean_modules()`; empty
@@ -121,6 +58,53 @@ This controls concurrent verification jobs, not Bazel action parallelism.
 BuildBuddy flags, credentials, and remote resource settings are unchanged.
 RBE runs compiler actions remotely; local Bazel servers still perform analysis
 and consume memory, so set an optional cap if measurements warrant one.
+
+## Shared storage
+
+The cache policy lives entirely in the repository's `.bazelrc`. Updated
+checkouts use the following per-user locations; older checkouts retain their
+own settings until updated.
+
+| Directory under `~/.cache/riemann-bazel` | Purpose |
+| --- | --- |
+| `repository/` | Shared external-repository downloads |
+| `repo-contents/` | Shared completed, reproducible external repositories |
+| `disk/` | Local action cache and CAS, including downloaded BuildBuddy blobs |
+| `outputs/<workspace-path-hash>/` | Separate mutable build state for each checkout |
+
+Bazel keeps each output base outside the source tree and removes convenience
+`bazel-*` symlinks from the checkout. Use `bazel info output_path` or
+`bazel info bazel-bin` to locate generated files.
+
+Remote output downloads remain `minimal`. Files downloaded when needed enter
+the shared disk cache; absent remote blobs are not fetched eagerly. A disk
+action-cache entry can still miss when its referenced blobs are absent, and
+Bazel then consults BuildBuddy. This is not a mirror of the entire hosted CAS
+and does not eliminate analysis in a fresh workspace.
+
+The disk cache has a **32 GiB soft limit** and **14-day age limit**, with
+garbage collection after five idle minutes. Completed repository contents use
+14-day idle retention. These limits do not cover repository archives,
+per-workspace output bases, or native Lake caches.
+
+There are no additional Python storage overrides or workspace-lifecycle cleanup
+hooks. Per-workspace output bases have no size limit and are retained until
+explicitly cleaned; their actual disk usage has not yet been measured. After a
+representative build, inspect one without following links to shared repositories:
+
+```bash
+du -h --max-depth=1 "$(bazel info --config=buildbuddy output_base)"
+```
+
+Override local paths through the existing `.bazelrc.local` import when needed.
+Pulling the configuration applies it to subsequent Bazel invocations; no MCP
+service restart is needed for this cache policy. Existing caches at older
+locations are not moved or deleted, and the first use of the new root may
+repopulate dependencies and analysis state.
+
+Sources: [Bazel 9.2 cache options](https://bazel.build/versions/9.2.0/reference/command-line-reference),
+[output layout](https://bazel.build/versions/9.2.0/remote/output-directories),
+and [local-first downloads and remote-cache fill](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/remote/CombinedCache.java).
 
 ## Operator rollout
 

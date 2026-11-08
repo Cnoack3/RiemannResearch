@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import os
 import re
 from pathlib import Path
@@ -11,44 +10,6 @@ from pathlib import Path
 
 PACKAGE_BUILD = 'load("//bazel:lean_modules.bzl", "lean_modules")\n\nlean_modules()\n'
 BACKENDS = {"bazel", "lake"}
-DEFAULT_BAZEL_STORAGE_ROOT = "~/.cache/riemann-bazel"
-
-
-def bazel_storage_root() -> Path:
-    """One per-user cache root, independent of ephemeral checkout paths."""
-    return Path(os.environ.get("LEAN_BAZEL_STORAGE_ROOT", DEFAULT_BAZEL_STORAGE_ROOT)).expanduser().resolve()
-
-
-def bazel_output_base(project: Path, storage_root: Path) -> Path:
-    """Mirror Bazel's workspace-path hash; writable build state stays isolated."""
-    project, storage_root = project.resolve(), storage_root.resolve()
-    if storage_root == project or project in storage_root.parents:
-        raise ValueError("Bazel storage must be outside the source workspace")
-    key = hashlib.md5(os.fsencode(project), usedforsecurity=False).hexdigest()
-    return storage_root / "outputs" / key
-
-
-def bazel_startup_options(project: Path, storage_root: Path) -> list[str]:
-    return [
-        f"--output_user_root={storage_root / 'outputs'}",
-        f"--output_base={bazel_output_base(project, storage_root)}",
-    ]
-
-
-def bazel_cache_options(storage_root: Path) -> list[str]:
-    # Keep in sync with .bazelrc. Explicit command options also cover retained
-    # workspaces whose source snapshot predates the shared-storage settings.
-    return [
-        f"--repository_cache={storage_root / 'repository'}",
-        f"--repo_contents_cache={storage_root / 'repo-contents'}",
-        "--repo_contents_cache_gc_max_age=14d",
-        "--repo_contents_cache_gc_idle_delay=5m",
-        f"--disk_cache={storage_root / 'disk'}",
-        "--experimental_disk_cache_gc_max_size=34359738368",
-        "--experimental_disk_cache_gc_max_age=14d",
-        "--experimental_disk_cache_gc_idle_delay=5m",
-        "--experimental_convenience_symlinks=clean",
-    ]
 
 
 def verification_backend(value: str | None = None) -> str:
@@ -128,10 +89,8 @@ def bazel_target(project: Path, source: Path) -> str:
     return f"//{relative.parent.as_posix()}:{relative.stem}"
 
 
-def bazel_build_command(targets: list[str], *, project: Path, storage_root: Path) -> list[str]:
-    return ["bazel", *bazel_startup_options(project, storage_root),
-            "build", "--config=buildbuddy", "--color=no", "--curses=no",
-            *bazel_cache_options(storage_root), *targets]
+def bazel_build_command(targets: list[str]) -> list[str]:
+    return ["bazel", "build", "--config=buildbuddy", "--color=no", "--curses=no", *targets]
 
 
 def main() -> int:

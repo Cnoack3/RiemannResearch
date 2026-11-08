@@ -27,8 +27,7 @@ from pathlib import Path
 from typing import Callable, Iterator
 
 from bazel_verification import (
-    bazel_build_command, bazel_output_base, bazel_startup_options,
-    bazel_storage_root, bazel_target, ensure_bazel_coverage, verification_backend,
+    bazel_build_command, bazel_target, ensure_bazel_coverage, verification_backend,
 )
 
 
@@ -104,7 +103,6 @@ class AgentWorkspaceManager:
         self.can_archive = can_archive
         self.retention_days = retention_days
         self.default_verification_backend = verification_backend()
-        self.bazel_storage = bazel_storage_root()
         try:
             self.lean_num_threads = int(os.environ.get("LEAN_NUM_THREADS", "8"))
         except ValueError as exc:
@@ -469,32 +467,6 @@ class AgentWorkspaceManager:
             build = lake / "build"
             if not lake.is_symlink() and not build.is_symlink() and build.is_dir():
                 shutil.rmtree(build)
-
-    def _cleanup_bazel_outputs(self, project: Path) -> dict:
-        """Drop only regenerated state, with Bazel itself holding its build lock.
-
-        Do not share output bases or unlink their contents ourselves: an
-        independently started Bazel build may be using this workspace too.
-        The shared repository and disk caches live outside the output base.
-        """
-        base = bazel_output_base(project, self.bazel_storage)
-        if base.is_symlink() or base.resolve() != base:
-            return {"removed": False, "reason": "output base or its parent is a symlink"}
-        if not base.exists():
-            return {"removed": False, "absent": True}
-        if not base.is_dir():
-            return {"removed": False, "reason": "output base is not a directory"}
-        try:
-            self._run(
-                ["bazel", *bazel_startup_options(project, self.bazel_storage),
-                 "--noblock_for_lock", "clean", "--expunge_async"],
-                cwd=project, timeout=45,
-            )
-        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
-            return {"removed": False, "reason": str(exc)[-1000:]}
-        if base.exists() or base.is_symlink():
-            return {"removed": False, "reason": "output base remains after bazel clean"}
-        return {"removed": True, "output_base": str(base)}
 
     @contextmanager
     def _native_cache_lock(self) -> Iterator[None]:
@@ -920,13 +892,6 @@ class AgentWorkspaceManager:
             "project_cache": meta.get("project_cache", {"restored": False}),
             "retention_days": self.retention_days,
             "verification_backend": self.default_verification_backend,
-            "bazel_storage": {
-                "root": str(self.bazel_storage),
-                "output_base": str(bazel_output_base(project, self.bazel_storage)),
-                "disk_cache": str(self.bazel_storage / "disk"),
-                "repository_cache": str(self.bazel_storage / "repository"),
-                "repo_contents_cache": str(self.bazel_storage / "repo-contents"),
-            },
             "legacy_backend": "Pass backend='lake' to a verification tool, or set LEAN_VERIFICATION_BACKEND=lake on the server",
             "usage": (
                 "Pass workspace_token to every agent_workspace_* tool. Pass absolute paths "
@@ -1282,14 +1247,14 @@ class AgentWorkspaceManager:
 
     def _run_bazel_build(self, project: Path, targets: list[str], *, timeout: int = 3600) -> tuple[str, dict]:
         created = ensure_bazel_coverage(project)
-        command = bazel_build_command(targets, project=project, storage_root=self.bazel_storage)
+        command = bazel_build_command(targets)
         output = self._run_streaming(command, cwd=project, timeout=timeout, phase="bazel_build")
         return output, {"backend": "bazel", "config": "buildbuddy", "created_build_files": created}
 
     def _run_verification(self, project: Path, path: Path, timeout_seconds: int) -> dict:
         if self.verification_backend == "bazel":
             created = ensure_bazel_coverage(project)
-            command = bazel_build_command([bazel_target(project, path)], project=project, storage_root=self.bazel_storage)
+            command = bazel_build_command([bazel_target(project, path)])
             result = self._run_verification_command(project, path, timeout_seconds, command)
             result.update(backend="bazel", command=command, created_build_files=created)
             return result
@@ -1569,7 +1534,7 @@ class AgentWorkspaceManager:
         if self.verification_backend == "bazel":
             output, cache = self._run_bazel_build(project, ["//:RiemannResearch"])
             return {
-                "backend": "bazel", "command": bazel_build_command(["//:RiemannResearch"], project=project, storage_root=self.bazel_storage),
+                "backend": "bazel", "command": bazel_build_command(["//:RiemannResearch"]),
                 "elapsed_seconds": round(time.monotonic() - started, 3),
                 "output": "\n".join(output.splitlines()[-20:]), "dependency_cache": cache,
                 "scope": "full", "cache": "BuildBuddy",
@@ -1685,7 +1650,7 @@ class AgentWorkspaceManager:
             targets = ["//:RiemannResearch"]
             output, cache = self._run_bazel_build(project, targets)
             return {
-                "backend": "bazel", "command": bazel_build_command(targets, project=project, storage_root=self.bazel_storage), "scope": "full",
+                "backend": "bazel", "command": bazel_build_command(targets), "scope": "full",
                 "reason": full_reason or "complete Bazel project coverage",
                 "changed_paths": changed_paths, "changed_modules": sorted(changed_modules),
                 "targets": targets, "target_count": 1, "targets_truncated": False,
@@ -1837,18 +1802,7 @@ class AgentWorkspaceManager:
                         build["integrated_build"] = integrated_build
                         integrated = True
                     finally:
-                        # Integration clones have no workspace registry entry.
-                        # Retire their external output base now, including
-                        # failed validation, so those bases cannot be orphaned.
-                        cleanup = {"absent": True}
-                        if self.verification_backend == "bazel" and integration.is_dir():
-                            cleanup = self._cleanup_bazel_outputs(integration)
-                            build["integration_output_cleanup"] = cleanup
-                            self._record_metric("integration_output_cleanup", **cleanup)
-                        if cleanup.get("removed") or cleanup.get("absent"):
-                            shutil.rmtree(integration, ignore_errors=True)
-                        # On a busy/failed clean keep the integration source
-                        # for inspection rather than deleting beneath Bazel.
+                        shutil.rmtree(integration, ignore_errors=True)
 
             meta.update(
                 published_commit=published,
@@ -2440,7 +2394,7 @@ class AgentWorkspaceManager:
         if not 7 <= retention_days <= 3650:
             raise ValueError("Retention must be between 7 and 3650 days")
         cutoff = time.time() - retention_days * 86400
-        archived, preserved, bazel_outputs = [], [], []
+        archived, preserved = [], []
 
         def inspect_workspace(path: Path) -> None:
             # Re-read after acquiring the operation lease: an in-flight change
@@ -2464,18 +2418,6 @@ class AgentWorkspaceManager:
                     "reason": "active Lean client or build",
                 })
                 return
-            # Generated output can be discarded even when source is dirty or
-            # unpublished. Never discard either source state in that case.
-            if not dry_run:
-                output_cleanup = self._cleanup_bazel_outputs(project)
-                if output_cleanup.get("removed"):
-                    bazel_outputs.append({"workspace_token": token, **output_cleanup})
-                elif not output_cleanup.get("absent"):
-                    preserved.append({
-                        "workspace_token": token,
-                        "reason": "Bazel output cleanup deferred: " + output_cleanup["reason"],
-                    })
-                    return
             status = self._run(["git", "status", "--porcelain"], cwd=project)
             head = self._run(["git", "rev-parse", "HEAD"], cwd=project)
             safe_heads = {meta.get("published_commit"), meta.get("base_commit")}
@@ -2511,6 +2453,8 @@ class AgentWorkspaceManager:
             "retention_days": retention_days,
             "archived_or_eligible": archived,
             "preserved_unpublished": preserved,
-            "bazel_outputs_removed": bazel_outputs,
             "policy": "Dirty or unpublished workspaces are never automatically deleted.",
         }
+
+
+
