@@ -19,6 +19,8 @@ build --local_resources=cpu=2
 # These UI options do not alter Lean action commands or their cache keys.
 common --ui_event_filters=+info,+warning
 common --show_progress
+# Bazel 9 disables command.log by default; keep a local console log per workspace.
+common --write_command_log
 build --show_loading_progress
 build --show_result=0
 # Hide successful compiler stdout/stderr; failed-action diagnostics stay visible.

@@ -189,6 +189,36 @@ Sources: [Bazel 9.2 cache options](https://bazel.build/versions/9.2.0/reference/
 [output layout](https://bazel.build/versions/9.2.0/remote/output-directories),
 and [local-first downloads and remote-cache fill](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/remote/CombinedCache.java).
 
+## Viewing a running build
+
+Bazel 9 defaults `--write_command_log` to false. The repository enables it so
+each output base retains `command.log`, containing the current/latest command's
+console output. The setting applies to the next invocation; it cannot enable
+logging retroactively for a running command and requires no MCP restart.
+
+For the default output-root policy, calculate the log path without starting
+another Bazel command:
+
+```bash
+lean_workspace=/absolute/project_root/from/agent_workspace_open
+lean_output_base="$HOME/.cache/riemann-bazel/outputs/$(printf %s "$(realpath "$lean_workspace")" | md5sum | cut -d' ' -f1)"
+tail -n 80 -F "$lean_output_base/command.log"
+```
+
+In the same shell (stop `tail` with Ctrl+C first), extract the BuildBuddy link:
+
+```bash
+rg -o 'https://app\.buildbuddy\.io/invocation/[A-Za-z0-9-]+' "$lean_output_base/command.log" | head -n 1
+```
+
+A custom `--output_base` or `--output_user_root` changes this path.
+Do not run `bazel info` to discover it while a build is active: commands share
+the output-base lock, and the later info command can replace the command log.
+`server/jvm.out` in the same output base is a separate JVM diagnostic log; it
+is not a substitute for the build console. MCP full-build status currently
+does not stream console output, so an unchanged progress field alone does not
+establish an analysis stall.
+
 ## Time budgets and cold workspaces
 
 Snippet and file checks default to 1,800 seconds (30 minutes); callers may set
