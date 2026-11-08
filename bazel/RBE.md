@@ -179,20 +179,42 @@ persistent machine authentication remain untested.
 
 ## RBE performance diagnostics
 
-### Quiet build logs
+### Build progress and quiet logs
 
-Normal builds hide Bazel INFO/WARNING events, progress updates, and output-file
-lists. This also hides warning and informational text from successful Lean
-actions in the terminal and BuildBuddy console. Failed-action diagnostics and
-failed-test logs remain visible. The Lean compiler and compiled-sorry audit still
-run unchanged; only console rendering changes, so this does not invalidate Lean
-action cache entries or shrink worker input downloads.
+Normal builds show progress, INFO messages, and successful completion. Warning
+events and long output-file lists remain hidden; failed-action diagnostics and
+failed-test logs remain visible. Successful Lean action output attached to INFO
+events can also appear. The earlier default suppressed both INFO and progress,
+making successful cached builds silent and long-running builds appear idle.
 
-Restore the full console output when diagnosing warnings:
+For fully silent successful builds, select quiet mode explicitly:
+
+```sh
+bazel build --config=buildbuddy --config=quiet //:smoke
+```
+
+Restore warnings and output-file details when diagnosing a problem:
 
 ```sh
 bazel build --config=buildbuddy --config=verbose //:smoke
 ```
+
+To expose startup, lock, or analysis problems without running Lean compilation:
+
+```sh
+timeout --signal=INT --kill-after=5s 45s bazel --noblock_for_lock build \
+  --config=buildbuddy --config=verbose --nobuild //:smoke
+printf 'Bazel diagnostic exit: %s\n' "$?"
+```
+
+Exit 9 indicates another command holds this Bazel server's lock; exit 124
+indicates the 45-second diagnostic timed out. Dependency repository setup can
+still run during analysis. The diagnostic explicitly selects BuildBuddy;
+ordinary builds without that config use the local GCS cache proxy at
+`http://127.0.0.1:9090`, which must be running.
+
+These UI options do not alter Lean action commands, the compiled-sorry audit, or
+action cache keys. They do not reduce worker input downloads.
 
 Structured build events and profiles remain available; execution logs can be
 enabled separately for an input audit. Raw

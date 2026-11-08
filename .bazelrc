@@ -8,15 +8,20 @@ startup --host_jvm_args=-XX:+ExitOnOutOfMemoryError
 build --loading_phase_threads=4
 build --local_resources=cpu=4
 
-# Keep normal console and BuildBuddy logs focused on failures.
+# Show activity and successful completion so slow or cached builds are visible.
 # These UI options do not alter Lean action commands or their cache keys.
-common --ui_event_filters=-info,-warning
-common --noshow_progress
-build --noshow_loading_progress
+common --ui_event_filters=+info,-warning
+common --show_progress
+build --show_loading_progress
 build --show_result=0
 test --test_output=errors
 
-# Restore informational output, warnings, and progress for diagnosis.
+# Fully silent successful builds are opt-in.
+common:quiet --ui_event_filters=-info,-warning
+common:quiet --noshow_progress
+build:quiet --noshow_loading_progress
+
+# Restore warnings and output-file details for diagnosis.
 common:verbose --ui_event_filters=+info,+warning
 common:verbose --show_progress
 build:verbose --show_loading_progress
