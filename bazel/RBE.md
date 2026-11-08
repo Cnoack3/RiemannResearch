@@ -181,11 +181,16 @@ persistent machine authentication remain untested.
 
 ### Build progress and quiet logs
 
-Normal builds show progress, INFO messages, and successful completion. Warning
-events and long output-file lists remain hidden; failed-action diagnostics and
-failed-test logs remain visible. Successful Lean action output attached to INFO
-events can also appear. The earlier default suppressed both INFO and progress,
-making successful cached builds silent and long-running builds appear idle.
+Normal builds show Bazel progress, status messages, warnings, and successful
+completion. `--output_filter='^$'` suppresses stdout/stderr from successful
+build actions, including Lean's informational messages and compiler warnings.
+Failed-action diagnostics and failed-test logs remain visible. Long output-file
+lists remain hidden. The filter applies at the action-output boundary, so it
+does not hide Bazel's progress or completion messages.
+
+The earlier default suppressed both INFO and progress, making successful
+cached builds silent and long-running builds appear idle. That global
+suppression is now restricted to the explicit quiet configuration.
 
 For fully silent successful builds, select quiet mode explicitly:
 
@@ -193,7 +198,7 @@ For fully silent successful builds, select quiet mode explicitly:
 bazel build --config=buildbuddy --config=quiet //:smoke
 ```
 
-Restore warnings and output-file details when diagnosing a problem:
+Restore successful action output and output-file details when diagnosing a problem:
 
 ```sh
 bazel build --config=buildbuddy --config=verbose //:smoke
@@ -213,15 +218,18 @@ still run during analysis. The diagnostic explicitly selects BuildBuddy;
 ordinary builds without that config use the local GCS cache proxy at
 `http://127.0.0.1:9090`, which must be running.
 
-These UI options do not alter Lean action commands, the compiled-sorry audit, or
-action cache keys. They do not reduce worker input downloads.
+These display options do not alter Lean action commands, the compiled-sorry
+audit, or action cache keys. They do not reduce worker input downloads. Action
+stdout/stderr can still exist in the remote execution logs even when it is
+hidden from the build console.
 
 Structured build events and profiles remain available; execution logs can be
 enabled separately for an input audit. Raw
 worker action output can still be recorded and transferred; quieter console logs
 are not evidence of a measured performance or transfer reduction.
 
-Sources: [Bazel 9.2 UI filters](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/runtime/UiOptions.java),
+Sources: [Bazel 9.2 action output filter](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/buildtool/BuildRequestOptions.java),
+[UI filters](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/runtime/UiOptions.java),
 [UI output handling](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/runtime/UiEventHandler.java),
 and [successful versus failed action output](https://github.com/bazelbuild/bazel/blob/9.2.0/src/main/java/com/google/devtools/build/lib/skyframe/SkyframeActionExecutor.java).
 

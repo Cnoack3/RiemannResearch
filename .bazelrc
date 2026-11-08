@@ -10,10 +10,12 @@ build --local_resources=cpu=4
 
 # Show activity and successful completion so slow or cached builds are visible.
 # These UI options do not alter Lean action commands or their cache keys.
-common --ui_event_filters=+info,-warning
+common --ui_event_filters=+info,+warning
 common --show_progress
 build --show_loading_progress
 build --show_result=0
+# Hide successful compiler stdout/stderr; failed-action diagnostics stay visible.
+build --output_filter='^$'
 test --test_output=errors
 
 # Fully silent successful builds are opt-in.
@@ -21,11 +23,12 @@ common:quiet --ui_event_filters=-info,-warning
 common:quiet --noshow_progress
 build:quiet --noshow_loading_progress
 
-# Restore warnings and output-file details for diagnosis.
+# Restore successful action output and output-file details for diagnosis.
 common:verbose --ui_event_filters=+info,+warning
 common:verbose --show_progress
 build:verbose --show_loading_progress
 build:verbose --show_result=1
+build:verbose --output_filter=.*
 
 # Also share eligible repository contents through the remote cache (Bazel 9.2).
 # DO NOT ENABLE - this is unstable and causes hangs
