@@ -123,6 +123,38 @@ theorem witness_mean_energy :
   rw [hmean, hsym, hc, hmetric]
   ring
 
+/-- The second equality of (4.5), expressed as a difference of the complete errors. -/
+theorem witness_mean_eq_residual_energy_difference :
+    zetaTwo * inner ℝ qOne witness =
+      zetaTwo * ‖qResidual‖ ^ 2 - ‖toPareto pResidual‖ ^ 2 := by
+  have hw : witness = qResidual - (pResidual - B pResidual) := by
+    rw [witness, pResidual_eq_residual_add_displacement]
+    abel
+  have hq : inner ℝ qOne qResidual = ‖qResidual‖ ^ 2 := by
+    have hz := Submodule.inner_right_of_mem_orthogonal
+      (closure.starProjection_apply_mem qOne) qResidual_mem_orthogonal
+    calc
+      _ = inner ℝ (qResidual + closure.starProjection qOne) qResidual := by
+        rw [qResidual, sub_add_cancel]
+      _ = _ := by rw [inner_add_left, hz, add_zero, real_inner_self_eq_norm_sq]
+  have hp : inner ℝ (toPareto qOne) (toPareto pResidual) = ‖toPareto pResidual‖ ^ 2 := by
+    have hrep : toPareto pResidual =
+        toPareto qOne - paretoClosure.starProjection (toPareto qOne) := by
+      rw [pResidual, toPareto_sub, toPareto_pFit]
+    have hz := Submodule.inner_right_of_mem_orthogonal
+      (paretoClosure.starProjection_apply_mem (toPareto qOne))
+      (Submodule.sub_starProjection_mem_orthogonal (K := paretoClosure) (toPareto qOne))
+    calc
+      _ = inner ℝ (toPareto pResidual +
+          paretoClosure.starProjection (toPareto qOne)) (toPareto pResidual) := by
+        conv_rhs => lhs; rw [hrep, sub_add_cancel]
+      _ = _ := by
+        rw [inner_add_left, real_inner_self_eq_norm_sq]
+        have hz' : inner ℝ (paretoClosure.starProjection (toPareto qOne))
+            (toPareto pResidual) = 0 := by rw [hrep]; exact hz
+        rw [hz', add_zero]
+  rw [hw, inner_sub_right, inner_sub_right, hq, mul_sub, ← pareto_inner_identity, hp]
+
 theorem qResidual_eq_zero_of_witness_mean_zero (hm : inner ℝ qOne witness = 0) :
     qResidual = 0 := by
   have he := witness_mean_energy

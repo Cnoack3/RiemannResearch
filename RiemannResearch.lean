@@ -1347,6 +1347,7 @@ import RiemannResearch.RH.QFullResidueProjection
 import RiemannResearch.RH.QFullDisplacement
 import RiemannResearch.RH.QFullLocalResiduePairing
 import RiemannResearch.RH.QFullCofinalHarmonic
+import RiemannResearch.RH.QFullProductDistance
 import RiemannResearch.RH.QFullReciprocalLimits
 import RiemannResearch.RH.QParetoIsometricTransport
 import RiemannResearch.RH.QFullIsometricTransport

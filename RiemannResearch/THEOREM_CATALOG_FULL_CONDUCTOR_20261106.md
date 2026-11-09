@@ -23,23 +23,33 @@ The initial coherent snippet passed server job
 these additions were published in commit 7ec9ee06cb5432a3e96597845f8780523ac2f433.
 Their fresh verification is recorded below.
 
-## Paper results, not new Lean certifications
+## Full-conductor product distance (agenda A5)
 
-The accompanying full-conductor manuscript develops exact P/Q Gram equations,
-integrated Ramanujan changes of basis, full p-adic CRT, Q divisor Parseval, and
-Mertens exact-head transfer for the full matched displacement.
+`RH/QFullProductDistance.lean` proves the exact signed product identity,
+the Pareto normal pairing limit, and a finite Cauchy–Schwarz lower bound
+with the exact harmonic number. All distances use the full legal closure.
 
-In particular, the paper establishes:
-RH iff liminf_m m dist_Q(d g_m,V)/(1+log m)^k < infinity, for each fixed k >= 0.
-The argument uses localized residue pairing, the full exact-head correction,
-and the actual full-family witness. Formalization of that proof is Open.
+- `residueProduct_finite_distance_bound` bounds the squared cheaper harmonic
+  sign on every physical head X < m by the complete product distance and
+  the exact correction pairing.
+- `residueProductDistance_polylog_escape_of_not_RH` proves that the scaled
+  product distance divided by (1 + log m)^k tends to infinity under failure
+  of RH, for each real k >= 0.
+- `naturalApproximation_iff_cofinal_residueProductDistance` identifies the
+  cofinal product bound with Báez-Duarte's natural-dilation approximation
+  condition. `riemannHypothesis_of_cofinal_residueProductDistance` proves
+  the implication to Mathlib RH. The reverse implication in
+  `riemannHypothesis_iff_cofinal_residueProductDistance` takes the published
+  analytic implication as an explicit premise.
+
+Báez-Duarte, Rend. Lincei Mat. Appl. 14 (2003), 5–11, Theorem 1.
+https://arxiv.org/abs/math/0202141
 
 ## Open obligations
 
-- Formalize the remaining full-family product-distance asymptotic bridge (A5).
-- Supply the named RH-to-natural-approximation provider wherever still explicit.
-- Prove an actual quantitative regularity or tail bound for the full displacement.
-- Do not substitute the squarefree displacement in these full-family statements.
+- Establish a cofinal product-distance bound for the actual full displacement (A6).
+- Formalize the analytic RH-to-natural-approximation direction of Báez-Duarte's theorem.
+- Prove a quantitative regularity or tail bound for the actual full displacement.
 
 ## Full-conductor continuation: checked structure and conditional RH reduction
 
@@ -65,6 +75,8 @@ B h(n) = h(n)/(n+1), the module proves
 - r_P = r_Q + d and d belongs to the full legal closure;
 - w = B r_P - d is orthogonal to that full closure;
 - zeta(2) <1,w>_Q = zeta(2) <r_Q,B r_Q>_Q + ||d||_P^2;
+- `witness_mean_eq_residual_energy_difference` gives the second equality of
+  (4.5), zeta(2) <1,w>_Q = zeta(2) ||r_Q||_Q^2 - ||r_P||_P^2;
 - zero witness mean forces r_Q = 0;
 - d = Pi_Q(B r_P) = Pi_Q(B r_Q) + Pi_Q(B d).
 
@@ -288,9 +300,6 @@ spikes are legal, or that a legal projection error vanishes.
 
 This does not complete the manuscript's sixty-task research agenda.
 
-- A5: the full polylogarithmic product-distance asymptotic bridge is not
-  newly formalized here. The exact local residue estimate and cofinal
-  full-family harmonic criterion are now available as its checked inputs.
 - A6 / J2 / J4 / J6: no bound on the actual full displacement's product
   distance, cheaper harmonic sign, or complete legal approximation error
   is established. Such a bound would finish an RH route.
