@@ -51,30 +51,75 @@ apply to every legal competitor at the stage. Quantitative decay of the
 remaining square for the actual optimal legal competitors is a separate
 obligation.
 
-### Fixed critical-line families on paper
+### Checked critical-line certificate asymptotics
 
-For a fixed family of distinct positive-height zeros `Z` on the critical
-line, the two real rows for each zero have limiting diagonal entries
-`|rho|²/2` in the Gram matrix divided by `log L`. Thus the certificate
-energy is asymptotic to `(2/log L) sum_{rho in Z} |rho|^(-2)`.
+- [ParetoResidueCriticalGram.lean](RH/ParetoResidueCriticalGram.lean) proves
+  `critical_class_tail_bound`, `classCrossSum_firstPeriod_bound`, and
+  `classCross_tendsto`. The first-difference tail is of order
+  `L^(-3/2)`. With the complete progression weights the cross-entry
+  perturbation is of order `1/L` per class, uniformly in its representative
+  for fixed ordinates. The sum of perturbations is bounded, and the
+  existing ungrouped critical-line Gram limit applies.
+- [ParetoResidueCriticalNormalLimit.lean](RH/ParetoResidueCriticalNormalLimit.lean)
+  proves `normalizedCriticalGram_tendsto` and the canonical
+  `legal_error_completion_canonical` at every modulus. For fixed distinct
+  positive ordinates, the normalized real Gram tends to the diagonal with
+  each `|rho|²/2` appearing twice. The source tends to `(1,0)` for each
+  zero. The checked limit `critical_certificate_log_tendsto` is
+  `(log L) C_L → 2 sum_{rho in Z} |rho|^(-2)` for actual critical-line zeros.
+- [ParetoResidueAtomTests.lean](RH/ParetoResidueAtomTests.lean) gives
+  `class_pairing_atom_zeta`, with grouped pairing
+  `zeta(s) (1/d - d^(-s))` for every `d | L`.
+  `lcm_zero_row_orthogonal_prime` specializes this to every prime
+  up to the cutoff. `omitted_six_span_error_floor` proves a squared
+  distance of at least `1/92` when conductor six is omitted, which
+  applies to prime-only and prime-power-only dictionaries. The
+  separating functional is `2 f(1) - f(3) - f(5) + f(6)`.
+  `lcm_log_eq_sum_vonMangoldt` identifies `log lcm(1,…,M)` with the
+  complete von Mangoldt sum. The exact successive jumps are already
+  available in `Nat.log_lcmUpto_succ_sub`.
+- [ParetoLCMZeroCertificate.lean](RH/ParetoLCMZeroCertificate.lean) gives
+  `lcm_critical_certificate_psi_tendsto` and
+  `lcm_critical_certificate_cutoff_tendsto` on every cofinal cutoff
+  sequence. Either `psi(M)` or `M` gives the same limiting constant.
+  `lcm_critical_certificate_legal_error_floor` gives the corresponding
+  lower bound uniformly over all legal trials. `lcm_error_four_terms`
+  adds the squared displacement from the actual legal projection to
+  the optimum's compulsory mass, certificate energy, and remainder.
+  `lcm_remainder_eventually_ge_of_right_zero` bounds the optimized
+  remainder away from zero if there is an actual zero with real part
+  above one half.
 
-For representatives `1 <= r < L`, the grouped weight differs from its
-first atom by `O(L^(-2))`. The grouped Mellin first difference differs
-from its first term by `O_Z(L^(-3/2))`, by comparison with the convergent
-`3/2` power series over the remaining progression. The first term itself
-is `O_Z(r^(-3/2))`. Since the inverse first-atom weight is `r(r+1)`,
-the product errors in an entry sum to
-`O_Z(L^(-3/2) sum sqrt(r) + L^(-3) sum r²) = O_Z(1)`.
-The inverse-weight error contributes `O_Z(L^(-2) sum r) = O_Z(1)).
-The raw first differences are
-`rho r^(-3/2-i Im(rho)) + O_Z(r^(-5/2))`.
-The logarithmic mean of every nonzero sum or difference frequency is
-zero by integral comparison with `r^(-1-it)`. The zero frequency
-gives the stated real diagonal. The multiples source tends to the pair
-`(1,0)` for each zero, so inversion of the limiting diagonal gives the
-certificate asymptotic. This comparison between the raw and grouped
-Gram matrices is a paper calculation. The finite identities above are
-Lean declarations.
+### Published comparison and open remainder
+
+For a fixed critical family, `lcm_remainder_tendsto_zero_iff`
+identifies the vanishing of the optimized remainder with membership of the
+target in the full Pareto closure. `riemannHypothesis_of_lcm_remainder`
+proves the implication to Mathlib's RH. **Open** is the unconditional
+upper bound tending to zero for this remainder.
+
+The comparison theorems `lcm_best_error_as_naturalError` and
+`lcm_best_error_le_two_naturalError` retain the exact complete norm. With
+`d_N` denoting the classical distance through conductor `N` and `E_M`
+the optimum squared Pareto error on the LCM divisor dictionary, they give
+`d_(lcmUpto M)^2 ≤ E_M ≤ 2 d_M^2` for `M ≥ 1`.
+The lower side uses the exact index-one charge correction and the upper
+side uses the complete centering bound. The checked equivalence
+`lcm_remainder_tendsto_zero_iff_naturalApproximation` identifies the
+remainder condition with the classical natural approximation proposition.
+Báez-Duarte's published theorem supplies the converse from RH at the
+paper level. [Báez-Duarte](https://arxiv.org/abs/math/0202141)
+
+Burnol's classical lower bound uses multiplicity-squared contributions
+from zero derivatives. The grouped certificate above uses one complex
+value per chosen zero. Published classical upper estimates of Balazard
+and de Roton require RH. Bettin, Conrey, and Farmer obtain the logarithmic
+order under RH and an additional reciprocal zeta derivative moment
+bound. The two comparisons transfer the lower bound and the conditional
+upper orders to the LCM optimum.
+[Burnol](https://arxiv.org/abs/math/0103058)
+[Balazard–de Roton](https://arxiv.org/abs/0812.1689)
+[Bettin–Conrey–Farmer](https://arxiv.org/abs/1211.5191)
 
 ## Full-conductor product distance (agenda A5)
 

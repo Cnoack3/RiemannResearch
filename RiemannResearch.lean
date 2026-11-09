@@ -1291,6 +1291,10 @@ import RiemannResearch.RH.ParetoResidualBoundaryEnergy
 import RiemannResearch.RH.ParetoFiniteMellinHalfPlane
 import RiemannResearch.RH.ParetoResidueClassMellin
 import RiemannResearch.RH.ParetoResidueZeroNormal
+import RiemannResearch.RH.ParetoResidueCriticalGram
+import RiemannResearch.RH.ParetoResidueCriticalNormalLimit
+import RiemannResearch.RH.ParetoResidueAtomTests
+import RiemannResearch.RH.ParetoLCMZeroCertificate
 import RiemannResearch.Analysis.ActualZeroParetoCoshBridge
 import RiemannResearch.Analysis.SummableOrdinateKernel
 import RiemannResearch.Analysis.FrequencySensitiveGramBounds
