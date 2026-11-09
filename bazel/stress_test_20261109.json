@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "kind": "mixed-cache-invalidation",
+  "reference": "b1283de65f86612e63eddeaa61fc33d649c6d2e8",
+  "serial": {
+    "small": {
+      "job": "job_cLM7KkvdmU16aVyxDYXPMeRo5nB37cUk",
+      "seconds": 83.486,
+      "state": "succeeded",
+      "remote_compilations": 4,
+      "action_cache_hits": 196,
+      "critical_path": 72.11,
+      "invocation": "https://app.buildbuddy.io/invocation/ebdb5112-b047-4e12-a7ce-945ee52eaa99"
+    },
+    "medium": {
+      "job": "job_aDuN4vS2umg4CRM4RaCGh8KBPJsxE3_R",
+      "seconds": 315.328,
+      "state": "succeeded",
+      "remote_compilations": 42,
+      "action_cache_hits": 225,
+      "critical_path": 300.83,
+      "invocation": "https://app.buildbuddy.io/invocation/3d172dc5-018f-4829-94b0-52a8eb3a778d"
+    },
+    "large": {
+      "job": "job_q57-BF3AOIIz8ueTkwRwr41z1Ca6KJ2E",
+      "state": "succeeded",
+      "seconds": 538.558,
+      "bazel_seconds": 537.792,
+      "critical_path": 512.61,
+      "remote_compilations": 100,
+      "action_cache_hits": 266,
+      "internal": 1,
+      "invocation": "https://app.buildbuddy.io/invocation/a60be95a-363d-404b-8d68-f67d9fe5a9f3",
+      "telemetry_file": "mixed_serial_large_telemetry.json"
+    }
+  },
+  "parallel": {
+    "small": {
+      "job_id": "job_R-rMJoAG1t4zg9NBflMkQKdbrYqxjSWl",
+      "state": "succeeded",
+      "started_at": 1794186039.730255,
+      "finished_at": 1794186234.4443412,
+      "wall_seconds": 194.589,
+      "backend": "bazel",
+      "command": [
+        "bazel",
+        "build",
+        "--config=buildbuddy",
+        "--color=no",
+        "--curses=no",
+        "//RiemannResearch/RH:QCanonicalSchurVariance"
+      ],
+      "invocation": "https://app.buildbuddy.io/invocation/61b73dbb-79d4-417e-bb10-f1db3a82ba9d",
+      "remote_compilations": 4,
+      "action_cache_hits": 196
+    },
+    "medium": {
+      "job_id": "job_ZscX8Zkg_nRMjXcuEIsto0iQHrifWwGv",
+      "state": "succeeded",
+      "started_at": 1794186038.2926223,
+      "finished_at": 1794186400.5684466,
+      "wall_seconds": 362.206,
+      "backend": "bazel",
+      "command": [
+        "bazel",
+        "build",
+        "--config=buildbuddy",
+        "--color=no",
+        "--curses=no",
+        "//RiemannResearch/RH:QCRTGramMinimizer"
+      ],
+      "invocation": "https://app.buildbuddy.io/invocation/50f03cba-1d3b-4f51-8972-7e05b70f894f",
+      "remote_compilations": 42,
+      "action_cache_hits": 225
+    },
+    "large": {
+      "job_id": "job_8aqyIlDhD_C6tNWIBY1Y6tusPKZEEoh9",
+      "state": "succeeded",
+      "started_at": 1794186036.742442,
+      "finished_at": 1794186513.1505191,
+      "wall_seconds": 476.274,
+      "backend": "bazel",
+      "command": [
+        "bazel",
+        "build",
+        "--config=buildbuddy",
+        "--color=no",
+        "--curses=no",
+        "//RiemannResearch/RH:QFullIsometricTransport"
+      ],
+      "invocation": "https://app.buildbuddy.io/invocation/2107ea7b-5c8e-4fae-95f2-e90aac074707",
+      "remote_compilations": 100,
+      "action_cache_hits": 266
+    }
+  },
+  "parallel_makespan_seconds": 476.40807723999023,
+  "parallel_all_three_overlap_seconds": 194.7140862941742,
+  "full_baseline": {
+    "job": "job_MGY_cxWKA1lG2Z9m00k8yqWnZwIptQot",
+    "seconds": 202.687,
+    "bazel_seconds": 201.391,
+    "critical_path": 26.27,
+    "local_action_cache_hits": 3942,
+    "remote_cache_hits": 0,
+    "memory_peak_GiB": 9,
+    "java_peak_GiB": 8.501,
+    "high_event_delta": 15772,
+    "oom_delta": 0,
+    "max_event_delta": 0,
+    "full_psi_avg10_at_finish": 0,
+    "invocation": "https://app.buildbuddy.io/invocation/68bcc691-0760-4375-b606-0c507e32dfb8"
+  },
+  "policy": {
+    "initial": {
+      "high_GiB": 9,
+      "max_GiB": 10,
+      "swap_GiB": 1
+    },
+    "final": {
+      "high_GiB": 11,
+      "max_GiB": 12,
+      "swap": "host capacity",
+      "WSL_swap_GiB": 16
+    }
+  },
+  "caveats": [
+    "Three-way run began under initial limits and RAM limits changed during that run.",
+    "Small workspace JVM expired and restarted for the three-way run.",
+    "Proof variants and remote-worker/cache warmth differed between serial and parallel runs.",
+    "Full aggregate reused cached compilation results; it was not a complete recompile.",
+    "Retained test revisions predate ae18a9a's package-index optimization; its performance is not measured here."
+  ],
+  "full_overlap": {
+    "full": {
+      "job_id": "job_c0L3_Yu1RSJVYdRu7eEfZB9mc4vSlPC6",
+      "state": "succeeded",
+      "started_at": 1794186751.9198582,
+      "finished_at": 1794186979.0757022,
+      "wall_seconds": 227.152,
+      "backend": "bazel",
+      "command": [
+        "bazel",
+        "build",
+        "--config=buildbuddy",
+        "--color=no",
+        "--curses=no",
+        "//:RiemannResearch"
+      ],
+      "invocation": "https://app.buildbuddy.io/invocation/890ba8fa-5c7f-48fa-ad69-fa36322da07c",
+      "remote_compilations": 0,
+      "action_cache_hits": 3942
+    },
+    "small": {
+      "job_id": "job_0gU_zlUuJW5c21xQXCJGlTfDbiU9Sr5Q",
+      "state": "succeeded",
+      "started_at": 1794186750.21892,
+      "finished_at": 1794186807.5710645,
+      "wall_seconds": 57.289,
+      "backend": "bazel",
+      "command": [
+        "bazel",
+        "build",
+        "--config=buildbuddy",
+        "--color=no",
+        "--curses=no",
+        "//RiemannResearch/RH:QCanonicalSchurVariance"
+      ],
+      "invocation": "https://app.buildbuddy.io/invocation/1ae0aa05-97e4-42ec-9c33-a12905ac29cc",
+      "remote_compilations": 4,
+      "action_cache_hits": 196
+    },
+    "overlap_seconds": 55.651206254959106,
+    "memory": {
+      "memory_peak_bytes": 11813765120,
+      "swap_peak_bytes": 1357185024,
+      "full_PSI_avg10_peak": 6.93,
+      "event_deltas": {
+        "low": 0,
+        "high": 26767,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "full_bazel_rss_peak_bytes": 9121452032,
+      "idle_full_bazel_rss_bytes": 9121189888,
+      "idle_snapshot_at": 1794187009.8342671
+    }
+  },
+  "restoration": {
+    "all_originals_match": true,
+    "sha256": {
+      "small": "9fc0ebad18189833f339da392067b08de5de3273339af6b737bce6bd40f6b29a",
+      "medium": "28a79cc4b556353039535148a7c0f4bbf9cfd0d1776716abe508798bbb1349ce",
+      "large": "5d06950c6c12fedce98041a0a7740793d069b3be6e1f618b613a60aec47ae435"
+    },
+    "tracked_source_changes_published": false
+  },
+  "workload_sources": {
+    "small": {
+      "root": "RiemannResearch/Analysis/FiniteGramSchurBounds.lean",
+      "target": "RiemannResearch/RH/QCanonicalSchurVariance.lean",
+      "expected_invalidated_modules": 4,
+      "target_project_closure": 188
+    },
+    "medium": {
+      "root": "RiemannResearch/Analysis/FiniteHilbertGram.lean",
+      "target": "RiemannResearch/RH/QCRTGramMinimizer.lean",
+      "expected_invalidated_modules": 42,
+      "target_project_closure": 255
+    },
+    "large": {
+      "root": "RiemannResearch/RH/ZetaTwoProbability.lean",
+      "target": "RiemannResearch/RH/QFullIsometricTransport.lean",
+      "expected_invalidated_modules": 100,
+      "target_project_closure": 354
+    },
+    "full": {
+      "target": "//:RiemannResearch",
+      "baseline": "unchanged cached full target under corrected limits"
+    }
+  },
+  "variants": {
+    "small": {
+      "original": "9fc0ebad18189833f339da392067b08de5de3273339af6b737bce6bd40f6b29a",
+      "serial": "2b06a332a7066481df137c37c08e35a6ebf5d815169f1a2aecbf2c951b207c50",
+      "parallel": "f15a0d2fa182cee9b4f49a393dc755704bd641f671f351e003a644a513d458c5"
+    },
+    "medium": {
+      "original": "28a79cc4b556353039535148a7c0f4bbf9cfd0d1776716abe508798bbb1349ce",
+      "serial": "a777640f223fe525eb8b956357eed7e682a8403694adff9180e42e41802fd705",
+      "parallel": "f47efe8771d6f17e7bc492646893d9916f9bacf1c2059c660f8c40632ebe0c20"
+    },
+    "large": {
+      "original": "5d06950c6c12fedce98041a0a7740793d069b3be6e1f618b613a60aec47ae435",
+      "serial": "bcea48027f4757c02053dd79d9c4cb7327e0a18e88e6733c74b6b5e13cf2b94b",
+      "parallel": "3f8858d7950360997c166c1c41aa382989f23ef6361ff403e48ff6e464809468"
+    }
+  },
+  "three_way_cold_warmup": {
+    "small": {
+      "job": "job_2jVJpaVcWS1z28gdPlfRW9yuOc_wwnep",
+      "state": "failed",
+      "seconds": 308.367,
+      "exit_code": 37,
+      "reason": "operatorSIGKILL; Bazelserverterminated; not a Leanprooferror"
+    },
+    "medium": {
+      "job": "job_F6FQZLLTA7qwSsewDQFyCZ-BGItPNfRj",
+      "state": "succeeded",
+      "seconds": 319.921,
+      "remote_cache_hits": 267,
+      "finished_at": 1794184096.7509506
+    },
+    "large": {
+      "job": "job_266FhuRL_KmicOx3moW9Qm6l5hBqmBrx",
+      "state": "failed",
+      "seconds": 488.447,
+      "exit_code": 37,
+      "reason": "operatorSIGKILL; Bazelserverterminated; not a Leanprooferror"
+    }
+  },
+  "three_way_memory_summary": {
+    "memory_peak_bytes": 10593697792,
+    "swap_peak_bytes": 1073741824,
+    "full_PSI_avg10_peak": 98.98,
+    "high_events": 84297,
+    "max_events": 0,
+    "oom_events": 0
+  },
+  "captured_at": "2026-11-09T01:17:12.757Z",
+  "source_revisions": {
+    "full": "b1283de65f86612e63eddeaa61fc33d649c6d2e8",
+    "small": "d55848ef0b46ddbad171e2c68248c1d7948c72ab",
+    "medium": "5e84d1913632ca9c415adb718f140a1643a8fe3e",
+    "large": "d55848ef0b46ddbad171e2c68248c1d7948c72ab",
+    "newer_rule_optimization_not_measured": "ae18a9a588d55bf876aa01173e92afd37f94fb7b"
+  }
+}

@@ -326,6 +326,10 @@ without the Bazel setup must use the explicit legacy backend until updated.
 
 ## Observed verification tests: 2026-11-08 to 2026-11-09
 
+For the larger 4/42/100-module invalidations, failed cold-start trials, and
+full-build overlap under the revised memory policy, see the
+[November 9 stress-test report](STRESS_TEST_20261109.md) and its linked job data.
+
 These are actual MCP jobs on the NucBoxK6 WSL host. Times below are server-side
 verification wall times; clone, RPC, and polling delays are excluded. Fixtures
 remained in isolated workspaces and were not published.
