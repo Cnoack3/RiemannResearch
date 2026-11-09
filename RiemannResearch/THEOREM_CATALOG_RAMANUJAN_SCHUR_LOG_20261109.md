@@ -1,7 +1,7 @@
 # Ramanujan Schur limits, global logarithms, and zero certificates
 
 Research continuation: 2026-11-09. These are additions to the existing
-full-conductor program, not a proof of RH. The four modules are exported
+full-conductor program, not a proof of RH. The modules below are exported
 by RiemannResearch.lean and use the complete Pareto Hilbert norm.
 
 ## Files and scope
@@ -12,6 +12,10 @@ by RiemannResearch.lean and use the complete Pareto Hilbert norm.
 | RH/PrimePowerRamanujanClosure.lean | Complete mixed-conductor elimination preserves the target-membership condition. |
 | RH/GlobalLogDilation.lean | Absolutely convergent global logarithmic dilation; explicit contractive damping; legal Neumann inverse. |
 | RH/RamanujanSchurLogZero.lean | Exact zero-test remainder for screened covariance; filtered source, convergence, legality, and quantitative error comparison. |
+| RH/PsiNormalizedRamanujan.lean | Exact psi source and mean-one family; convergence iff subquadratic covariance mass; implication to RH. |
+| NumberTheory/MangoldtPowerTail.lean | Exact finite Abel identity with both endpoints; unconditional power and logarithmic tail bounds. |
+| RH/GlobalLogDilationTail.lean | Explicit operator truncation bound, exact term norms, and failure of absolute convergence at the critical exponent. |
+| RH/ChebyshevDiscreteEnergy.lean | Discrete Pareto/power comparison, discrete-to-continuous energy transfer, and all-damping implication to RH. |
 
 All declarations below have ordinary Lean proofs. No sorry, admit, custom
 axiom, unproved analytic provider, or numerical approximation is introduced.
@@ -114,9 +118,10 @@ Identification with log zeta(s+1/2) is not needed or formalized here.
 This Dirichlet-convolution logarithm is not the Banach logarithm of one
 floor-dilation operator.
 
-The sharper sigma=1 contraction estimate from log zeta(3/2), the critical
-sigma=1/2 domain analysis, and the undamped obstruction remain outside this
-formalized package.
+The sharper sigma=1 contraction estimate from log zeta(3/2) and the critical
+sigma=1/2 domain analysis remain outside this package. Section 6 now proves
+failure of absolute operator summability at sigma=1/2; it does not decide
+conditional convergence or supply a critical inverse.
 
 ## 5. Joining the filter to the Schur and zero phases
 
@@ -149,13 +154,97 @@ horizontal-energy/count-provider hypotheses. No spectral diagonalization
 or growing-dimension uniform estimate is inferred from fixed-conductor
 ordinate limits.
 
+## 6. Summatory von Mangoldt continuation
+
+All new estimates use the actual Chebyshev.psi and the actual screened
+packets/operators. The only PNT input is the existing unconditional
+NumberTheory.PrimeNumberTheorem.WeakPNT'.
+
+### Exact source and covariance criterion
+
+In RH.Pareto.PsiNormalizedRamanujan, let M_N = covarianceMass N, the
+complete centered covariance with every coefficient equal to one.
+For N >= 2 the declarations prove:
+
+- prime_source_eq_psi: sum over prime-power q in [2,N] of Lambda(q) = psi(N).
+- approximant_mean_one and approximant_mem_closedSpace: the finite family
+  v_N = psi(N)^(-1) sum_q screenedPacket([2,N],q) is legal and has mean one.
+- covarianceMass_nonneg and error_exact: M_N >= 0 and
+  ||1-v_N||^2 = M_N / psi(N)^2, with all signed cross terms retained.
+- normalizedMass_tendsto_iff_subquadratic: M_N/psi(N)^2 -> 0 iff M_N/N^2 -> 0.
+- approximant_tendsto_iff_subquadratic: v_N -> 1 iff M_N/N^2 -> 0.
+- riemannHypothesis_of_covarianceMass_subquadratic: this condition implies
+  Mathlib's RiemannHypothesis.
+
+The family is constructed unconditionally; its convergence is conditional.
+No theorem here proves M_N=o(N^2), or that RH forces this particular family
+to converge.
+
+### Quantitative legal logarithmic tail
+
+Put C = log(4)+4. In NumberTheory.MangoldtPowerTail, power_abel retains
+the exact difference psi(M) M^(-s) - psi(N) N^(-s), plus the integral term.
+For s>1 and M>=N>=2, log_power_tail_finite_bound proves
+
+  sum_{N<m<=M} Lambda(m)/log(m) * m^(-s)
+    <= C (1+s/(s-1)) N^(1-s)/log(N).
+
+In RH.Pareto.GlobalLogDilation, globalLog_tail_bound proves the same bound
+for the norm of the operator tail, with N replaced by N+1 after N terms.
+floorLog_tail_bound therefore gives the explicit rate
+
+  C [1+(sigma+1/2)/(sigma-1/2)] (N+1)^(1/2-sigma)/log(N+1)
+
+for sigma>1/2 and N>=1. The proof uses the full operator norm and an
+unconditional Chebyshev upper bound, not RH.
+
+normalizedDilation_norm_eq_one and logTerm_norm_eq_arithmetic give exact
+term norms. not_summable_critical_logTerm_norm proves failure of absolute
+operator convergence at sigma=1/2 using divergence of prime reciprocals.
+The sharper asymptotic sum of term norms ~ log log N is not formalized.
+
+### Discrete Pareto energy and the analytic zero obstruction
+
+In RH.ChebyshevDiscreteEnergy set
+
+  powerTerm a n = (psi(n)-n)^2 n^(-2-a),
+  paretoTerm a n = (psi(n)-n)^2 n^(-a)/(n(n+1)).
+
+The zero index contributes zero. On positive indices the weights satisfy
+paretoTerm <= powerTerm <= 2*paretoTerm. The theorem
+summable_power_iff_pareto is a genuine summability equivalence.
+
+continuousEnergy_of_summable_pareto transfers that discrete series to
+ChebyshevMellin.ErrorFiniteEnergy(1+a) for a>0. Its proof retains the
+unit-cell shift: (psi(x)-x)^2 <= 2[(psi(floor x)-floor x)^2+1].
+The existing NatStepIntegral integration API is made public and extended
+by natStep_summable_iff_integrable_Ici.
+
+riemannHypothesis_of_all_discrete_pareto_damping proves:
+
+  [for every a>0, sum_n (psi(n)-n)^2 n^(-a)/(n(n+1)) is finite] => RH.
+
+Taking a=2*epsilon gives the energy expression in the discussion.
+The proof directly reuses ChebyshevEnergyCriterion's established Mellin
+pole exclusion; there is no extra analytic provider or zero-location
+assumption.
+
+Formalization boundary: this continuation does NOT prove the reverse
+RH => all discrete energy bounds. The classical route uses a von Koch
+Chebyshev error estimate under RH. No checked RH-to-von-Koch bridge was
+located in the current project, and none is introduced as an axiom.
+Consequently the catalog records an implication to RH, not a newly
+kernel-checked RH equivalence.
+
 ## Next mathematical obligation
 
-Construct normalized prime-power coefficient families with b_N=1 (or b_N->1)
-and prove decay of their complete screened covariance. Retain all signed
-cross terms and the correction tail. A useful intermediate objective is a
-uniform quadratic-form bound in the coefficient metric, not just entrywise
-convergence or finite-head interpolation.
+The psi-normalized prime-power family now has b_N=1 exactly. Prove
+M_N=o(N^2), or find better mean-one coefficients with vanishing complete
+screened covariance. Retain all signed cross terms and the correction tail.
+A useful intermediate objective is a uniform quadratic-form bound in the
+coefficient metric, not just entrywise convergence or finite-head interpolation.
+Separately, formalize the classical RH-to-Chebyshev-error estimate to complete
+the discrete-energy equivalence; it does not by itself prove RH.
 
 The checked filter allows equivalent transformed equations with an explicit
 factor-16 bound on recovering squared error. It supplies a controlled change

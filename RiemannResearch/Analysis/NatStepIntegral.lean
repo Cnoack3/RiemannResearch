@@ -56,13 +56,25 @@ private theorem natStep_integral_cell (a : ℕ → ℝ) (n : ℕ) :
         ← intervalIntegral.integral_of_le (by linarith : (n : ℝ) ≤ (n : ℝ) + 1)]
       simp
 
-private theorem natStep_integrable_Ici (a : ℕ → ℝ) (ha : Summable a) :
+/-- Summability gives integrability of the complete unit-cell step realization. -/
+theorem natStep_integrable_Ici (a : ℕ → ℝ) (ha : Summable a) :
     IntegrableOn (fun x : ℝ => a ⌊x⌋₊) (Ici 0) := by
   rw [← natStepCell_union]
   apply integrableOn_iUnion_of_summable_integral_norm (natStep_integrable_cell a)
   convert! ha.norm using 1
   funext n
   exact natStep_integral_cell (fun k => ‖a k‖) n
+
+/-- No information is lost by passing from a sequence to its unit-cell step function. -/
+theorem natStep_summable_iff_integrable_Ici (a : ℕ → ℝ) :
+    Summable a ↔ IntegrableOn (fun x : ℝ => a ⌊x⌋₊) (Ici 0) := by
+  refine ⟨natStep_integrable_Ici a, ?_⟩
+  intro h
+  have hi : IntegrableOn (fun x : ℝ => a ⌊x⌋₊) (⋃ n, natStepCell n) := by
+    simpa only [natStepCell_union] using h
+  have hs := (hasSum_integral_iUnion (s := natStepCell) (fun _ => measurableSet_Ico)
+    natStepCell_disjoint hi).summable
+  simpa only [natStep_integral_cell] using hs
 
 /-- Ordinary Lebesgue integration of the complete unit-cell step function. -/
 theorem integral_natStep_Ioi (a : ℕ → ℝ) (ha : Summable a) :
