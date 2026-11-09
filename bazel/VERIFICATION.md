@@ -40,24 +40,33 @@ python3 tools/bazel_verification.py --check
 Build-file changes trigger full checkpoint validation. A failed build, a changed
 source tree during validation, or failed integration blocks publication. The
 per-workspace operation lease and serialized publication are retained. Independent
-Bazel workspaces bypass the legacy global queue and run concurrently by default.
+Bazel workspaces bypass the legacy Lake queue and share a five-job cap by default.
 
 ## Verification concurrency
 
-- `LEAN_BAZEL_JOB_WORKERS=0` (the default): no global Bazel job cap.
-- A positive `LEAN_BAZEL_JOB_WORKERS` sets an optional cap shared by cooperating
-  MCP processes using the same state directory; configure them consistently.
+- `LEAN_BAZEL_JOB_WORKERS=5` is the default global Bazel job cap. Additional
+  jobs wait for a worker slot.
+- A positive `LEAN_BAZEL_JOB_WORKERS` sets the cap shared by cooperating MCP
+  processes using the same state directory. Configure them consistently.
+- Explicit `LEAN_BAZEL_JOB_WORKERS=0` disables the global Bazel job cap.
 - `LEAN_JOB_WORKERS` applies only to the legacy Lake queue (default 1, range 1–4).
 - Each workspace allows one active job. Duplicate pending requests reuse that
   job; competing requests or mutations are rejected until it finishes. Give
   each parallel agent a separate workspace. Publication remains serialized.
 
-Job responses report `worker_count: null` for uncapped Bazel execution and
-`same_workspace_limit: 1`. A configured cap reports its numeric value.
+Job responses report `worker_count: 5` by default and `same_workspace_limit: 1`.
+A configured cap reports its numeric value. Explicit unlimited execution reports
+`worker_count: null`.
 This controls concurrent verification jobs, not Bazel action parallelism.
+Jobs waiting for a shared worker slot remain `queued` with progress phase
+`waiting_for_worker`. `started_at` is recorded after the slot is acquired.
+Shared worker slots do not promise FIFO ordering or an exact queue position.
+`active_job_count` counts active jobs in the responding MCP process. The worker
+limit is shared across cooperating processes.
 BuildBuddy flags, credentials, and remote resource settings are unchanged.
 RBE runs compiler actions remotely; local Bazel servers still perform analysis
-and consume memory, so set an optional cap if measurements warrant one.
+and consume memory. The five-job default follows the completed concurrency test;
+the ten-job trial suffered prolonged paging and was cancelled by the operator.
 
 Admission uses a separate lock and pending-job index for each workspace.
 Submitting a job or checking whether a workspace is busy does not scan completed
@@ -105,7 +114,7 @@ Install `bazel/lean-tunnel.resources.conf` to apply an aggregate service budget:
 | `OOMPolicy` | stop | Stop the unit if one of its processes is OOM-killed |
 | `LEAN_WORKSPACE_THREADS`, `LEAN_LAKE_BUILD_THREADS` | 2 | Bound local Lean thread pools |
 | `LEAN_MAX_SHARED_CLIENTS` | 2 | Bound retained editor clients |
-| `LEAN_BAZEL_JOB_WORKERS` | 0 | Preserve concurrent independent workspaces |
+| `LEAN_BAZEL_JOB_WORKERS` | 5 | Admit five concurrent verification jobs; queue additional jobs |
 
 A BuildBuddy build retains its 80-action limit. One job per workspace and
 serialized publication still apply. A large local task can fail at the memory
@@ -327,7 +336,7 @@ short diagnostic budget as evidence of a bad theorem or an execution deadlock.
 
 4. Leave `LEAN_VERIFICATION_BACKEND` unset for Bazel. On this host, install
    the resource-policy drop-in above to bound aggregate memory while keeping
-   `LEAN_BAZEL_JOB_WORKERS=0`.
+   `LEAN_BAZEL_JOB_WORKERS=5`.
    Restart the existing `lean-tunnel.service` only when its jobs are idle.
    After changing a systemd drop-in, run `sudo systemctl daemon-reload`
    before restarting. Preserve other service settings.

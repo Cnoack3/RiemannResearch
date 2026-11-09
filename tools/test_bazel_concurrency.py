@@ -236,7 +236,7 @@ class BazelConcurrencyTests(unittest.TestCase):
         self.assertEqual(failed["state"], "failed")
         self.assertTrue(failed["terminal"])
         self.assertIn("Bazel worker could not start", failed["error"])
-        self.assertIsNone(failed["worker_count"])
+        self.assertEqual(failed["worker_count"], 5)
         self.assertEqual(failed["same_workspace_limit"], 1)
         self.assertEqual(manager._bazel_job_threads, set())
         self.assertEqual(manager._active_jobs, set())
@@ -247,15 +247,71 @@ class BazelConcurrencyTests(unittest.TestCase):
         self.finish_and_check()
         self.assertEqual(manager.job_status(failed_id)["state"], "failed")
 
-    def test_default_bazel_jobs_overlap_in_independent_workspaces(self):
+    def test_default_bazel_cap_is_five_across_manager_instances(self):
         manager = self.manager()
-        self.assertEqual(manager.bazel_job_workers, 0)
+        other_manager = self.manager()
+        self.assertEqual(manager.bazel_job_workers, 5)
+        self.assertEqual(other_manager.bazel_job_workers, 5)
         self.assertEqual(manager.default_verification_backend, "bazel")
         submissions = [self.submit(manager)[0] for _ in range(5)]
         self.wait_entered(*submissions)
+        sixth, _ = self.submit(other_manager)
+        sixth_id = sixth["job_id"]
+        self.barrier.wait_for(
+            lambda: sixth_id in self.barrier.blocked or sixth_id in self.barrier.entered,
+            "sixth job to attempt the shared capacity lease",
+        )
+        self.assertNotIn(sixth_id, self.barrier.entered)
+        waiting = manager.job_status(sixth_id)
+        self.assertEqual(waiting["state"], "queued")
+        self.assertEqual(waiting["progress"]["phase"], "waiting_for_worker")
+        self.assertNotIn("started_at", waiting)
+        self.assertEqual(waiting["active_job_count"], 5)
+        self.assertEqual(waiting["worker_count"], 5)
+        self.assertIsNone(waiting["queue_position"])
+        duplicate = other_manager.submit_run_code(
+            self.submitted[-1][2], self.submitted[-1][3]
+        )
+        self.assertTrue(duplicate["existing"])
+        self.assertEqual(duplicate["job_id"], sixth_id)
+        self.assertEqual(duplicate["state"], "queued")
+        with self.assertRaisesRegex(RuntimeError, re.escape(sixth_id)):
+            other_manager.submit_run_code(self.submitted[-1][2], "example : True := trivial")
+        with self.assertRaisesRegex(RuntimeError, re.escape(sixth_id)):
+            other_manager.apply_patch(self.submitted[-1][2], "unreachable while queued")
+        self.assertEqual(self.barrier.maximum["bazel"], 5)
+        self.barrier.release(self.submitted[0][2])
+        self.wait_entered(sixth)
+        running = other_manager.job_status(sixth_id)
+        self.assertEqual(running["state"], "running")
+        self.assertGreaterEqual(running["started_at"], waiting["progress"]["updated_at"])
         self.assertEqual(self.barrier.maximum["bazel"], 5)
         with manager._job_queue.mutex:
             self.assertEqual(list(manager._job_queue.queue), [])
+        self.finish_and_check()
+
+    def test_worker_slot_failure_is_terminal_before_start(self):
+        manager = self.manager()
+        with patch.object(manager, "_heavy_worker_slot",
+                          side_effect=RuntimeError("injected slot failure")):
+            submission, token = self.submit(manager)
+            job_id = submission["job_id"]
+            self.barrier.wait_for(lambda: job_id in self.barrier.finished,
+                                  "failed capacity acquisition")
+        failed = manager.job_status(job_id)
+        self.assertEqual(failed["state"], "failed")
+        self.assertTrue(failed["terminal"])
+        self.assertNotIn("started_at", failed)
+        self.assertIn("injected slot failure", failed["error"])
+        self.assertEqual(failed["active_job_count"], 0)
+        self.assertIsNone(manager._pending_job_for_workspace(token))
+
+    def test_explicit_zero_allows_more_than_five_bazel_jobs(self):
+        manager = self.manager(bazel_cap=0)
+        self.assertEqual(manager.bazel_job_workers, 0)
+        submissions = [self.submit(manager)[0] for _ in range(6)]
+        self.wait_entered(*submissions)
+        self.assertEqual(self.barrier.maximum["bazel"], 6)
         self.finish_and_check()
 
     def test_bazel_cap_limits_bodies_after_waiter_reaches_shared_lease(self):

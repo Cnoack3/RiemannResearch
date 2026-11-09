@@ -103,8 +103,8 @@
 - Retain the workspace across iterations. Do not routinely run `bazel clean`
   or bypass caches as part of proof checking.
 - Honor the server's effective resource policy. The repository host profile
-  keeps `LEAN_BAZEL_JOB_WORKERS=0` while bounding aggregate local service memory.
-  A separately configured positive job cap still applies; do not change or
+  keeps `LEAN_BAZEL_JOB_WORKERS=5` while bounding aggregate local service memory.
+  Additional jobs wait for a shared worker slot. Do not change or
   evade an operator's limits during proof work.
 
 ## Efficient isolated workflow
@@ -132,9 +132,9 @@
 - Read only relevant source ranges. Use targeted diagnostics or verification
   during development. Diagnostics are compact by default; request full details
   only when the bounded result omits evidence needed to repair the proof.
-- Bazel jobs bypass the legacy global worker queue. By default
-  `LEAN_BAZEL_JOB_WORKERS=0` imposes no global Bazel job cap; a positive value
-  enables an optional cross-process cap. Lake retains `LEAN_JOB_WORKERS`
+- Bazel jobs use a shared five-job cap by default. A positive
+  `LEAN_BAZEL_JOB_WORKERS` sets the cross-process cap. Explicit `0` disables it.
+  Lake retains `LEAN_JOB_WORKERS`
   (default 1, maximum 4). Same-workspace operations and publication stay locked.
   RBE offloads build actions, but Bazel analysis still consumes local resources.
   Submit once

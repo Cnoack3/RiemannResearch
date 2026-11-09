@@ -123,7 +123,7 @@ class AgentWorkspaceManager:
         if not 1 <= self.job_workers <= 4:
             raise ValueError("LEAN_JOB_WORKERS must be between 1 and 4")
         try:
-            self.bazel_job_workers = int(os.environ.get("LEAN_BAZEL_JOB_WORKERS", "0"))
+            self.bazel_job_workers = int(os.environ.get("LEAN_BAZEL_JOB_WORKERS", "5"))
         except ValueError as exc:
             raise ValueError("LEAN_BAZEL_JOB_WORKERS must be an integer") from exc
         if self.bazel_job_workers < 0:
@@ -282,7 +282,7 @@ class AgentWorkspaceManager:
         }
         with self._admission_lock(self._read_job(job_id)["workspace_token"]):
             job = self._read_job(job_id)
-            if job.get("state") != "running":
+            if job.get("state") not in {"queued", "running"}:
                 return
             job["progress"] = progress
             self._write_job(job)
@@ -1948,9 +1948,9 @@ class AgentWorkspaceManager:
 
     @contextmanager
     def _heavy_worker_slot(self, backend: str = "lake") -> Iterator[None]:
-        """Limit legacy work; optionally cap independent Bazel work across managers.
+        """Limit independent verification jobs across cooperating managers.
 
-        Bazel defaults to no global cap. Workspace and publication leases remain
+        Bazel defaults to five active jobs. Workspace and publication leases remain
         mandatory. All managers sharing this state directory must use matching
         cap settings. The two backends have independent slot namespaces.
         """
@@ -2231,17 +2231,17 @@ class AgentWorkspaceManager:
 
     def _run_job(self, job_id: str) -> None:
         job = self._read_job(job_id)
-        with self._admission_lock(job["workspace_token"]):
-            job = self._read_job(job_id)
-            job.update(state="running", started_at=time.time())
-            self._write_job(job)
-        with self._job_guard:
-            self._active_jobs.add(job_id)
         self._job_local.job_id = job_id
         self._job_local.last_progress_write = 0.0
         self._job_local.progress = {}
         try:
             with self._heavy_worker_slot(job.get("arguments", {}).get("backend", "lake")):
+                with self._admission_lock(job["workspace_token"]):
+                    job = self._read_job(job_id)
+                    job.update(state="running", started_at=time.time())
+                    self._write_job(job)
+                with self._job_guard:
+                    self._active_jobs.add(job_id)
                 self._set_job_progress(
                     "waiting_for_workspace", detail="Waiting for the workspace operation lock",
                     force=True,
