@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.ResidueOscillation
+import RiemannResearch.RH.QFullCRTDisplacement
 import RiemannResearch.RH.ParetoResidueMicroscopicSource
 import RiemannResearch.RH.ParetoLCMMicroscopicRemainder
 import RiemannResearch.RH.ParetoLCMVariational
