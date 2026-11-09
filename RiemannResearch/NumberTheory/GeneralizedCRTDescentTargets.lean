@@ -4,22 +4,14 @@ import Mathlib.Topology.Algebra.Ring.Basic
 /-!
 # Interfaces for generalized CRT and descent claims
 
-Source: the user-provided generalized-CRT discussion, September 2026.
+These predicates record two interfaces from the generalized CRT discussion
+in September 2026. A ring equivalence satisfies the topological CRT interface
+when both directions are continuous. A restriction map has effective descent
+when compatible local data have a unique global lift.
 
-Mathlib currently supplies the ordinary finite CRT used by the RH modules.
-The two declarations below record the additional interfaces mentioned in the
-chat without postulating an instance:
-
-* a candidate ring equivalence is a topological-ring CRT equivalence exactly
-  when it and its inverse are continuous;
-* a restriction map has effective descent exactly when compatible local data
-  have a unique global lift.
-
-The names `Zhat`, `PrimeAdicProduct`, `Global`, and `LocalData` are
-parameters deliberately. Instantiating them with the inverse limit of
-`Z/nZ`, the product of the `p`-adic integers, or an Amitsur totalization
-is the remaining formalization work. Consequently these definitions do not
-claim the profinite CRT or derived Amitsur descent theorem.
+`ProfiniteCRT` proves the topological CRT interface for the inverse limit of
+`Z/nZ` and the product of the `p`-adic integers. The effective descent
+interface leaves the local compatibility relation as a parameter.
 -/
 
 namespace RiemannResearch.NumberTheory.GeneralizedCRT

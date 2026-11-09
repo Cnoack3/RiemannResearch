@@ -1,4 +1,6 @@
 import RiemannResearch.RH.PrimePowerRamanujanLimits
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Ring
 
 /-!
 # Full elimination of mixed conductors from the target closure
@@ -97,6 +99,59 @@ theorem fullScreening_one : fullScreening hilbertOne = hilbertOne := by
     tendsto_nhds_unique tendsto_const_nhds ht
   change hilbertOne - mixedClosure.starProjection hilbertOne = hilbertOne
   rw [← he, sub_zero]
+
+/-- For an arbitrary input, the error after finite mixed screening is the
+full-screening error plus the squared error of the mixed projection. -/
+theorem finite_screened_error_eq_full_add_projection_tail
+    (M : ℕ) (x : ThresholdHilbert) :
+    ‖hilbertOne - (x - (mixedSpace (Finset.Icc 2 M)).starProjection x)‖ ^ 2 =
+      ‖hilbertOne - fullScreening x‖ ^ 2 +
+        ‖mixedClosure.starProjection x -
+          (mixedSpace (Finset.Icc 2 M)).starProjection x‖ ^ 2 := by
+  let K := mixedSpace (Finset.Icc 2 M)
+  have hK : K.starProjection hilbertOne = 0 :=
+    (Submodule.starProjection_apply_eq_zero_iff K).mpr (one_mem_mixed_orthogonal _)
+  have hL : mixedClosure.starProjection hilbertOne = 0 := by
+    have h := fullScreening_one
+    change hilbertOne - mixedClosure.starProjection hilbertOne = hilbertOne at h
+    exact sub_eq_self.mp h
+  have h := nested_projection_energy K mixedClosure (mixedSpace_window_le_closure M)
+    (hilbertOne - x)
+  simp only [map_sub, hK, hL, zero_sub] at h
+  have hleft (y : ThresholdHilbert) : hilbertOne - x - -y = hilbertOne - (x - y) := by abel
+  have hright : -mixedClosure.starProjection x - -K.starProjection x =
+      -(mixedClosure.starProjection x - K.starProjection x) := by abel
+  rw [hleft, hleft, hright, norm_neg] at h
+  exact h
+
+/-- The complete error separates the mean defect, the covariance after
+screening against the entire mixed space, and the finite projection tail. -/
+theorem finite_screened_error_eq_mean_covariance_projection_tail
+    (M : ℕ) (x : ThresholdHilbert) :
+    ‖hilbertOne - (x - (mixedSpace (Finset.Icc 2 M)).starProjection x)‖ ^ 2 =
+      (1 - inner ℝ x hilbertOne) ^ 2 +
+        ‖fullScreening x - (inner ℝ x hilbertOne) • hilbertOne‖ ^ 2 +
+        ‖mixedClosure.starProjection x -
+          (mixedSpace (Finset.Icc 2 M)).starProjection x‖ ^ 2 := by
+  have hzero : mixedClosure.starProjection hilbertOne = 0 := by
+    have h := fullScreening_one
+    change hilbertOne - mixedClosure.starProjection hilbertOne = hilbertOne at h
+    exact sub_eq_self.mp h
+  have ho := (Submodule.starProjection_apply_eq_zero_iff mixedClosure).mp hzero
+  have hp := (mixedClosure.mem_orthogonal hilbertOne).mp ho _
+    (mixedClosure.starProjection_apply_mem x)
+  have hmean : inner ℝ (fullScreening x) hilbertOne = inner ℝ x hilbertOne := by
+    change inner ℝ (x - mixedClosure.starProjection x) hilbertOne = _
+    rw [inner_sub_left, hp, sub_zero]
+  have he : ‖hilbertOne - fullScreening x‖ ^ 2 =
+      (1 - inner ℝ x hilbertOne) ^ 2 +
+        ‖fullScreening x - (inner ℝ x hilbertOne) • hilbertOne‖ ^ 2 := by
+    have hmean' : inner ℝ hilbertOne (fullScreening x) = inner ℝ x hilbertOne := by
+      rw [real_inner_comm, hmean]
+    simp only [norm_sub_sq_real, hmean, hmean', real_inner_smul_right, norm_smul,
+      Real.norm_eq_abs, mul_pow, sq_abs, hilbertOne_norm_sq]
+    ring
+  rw [finite_screened_error_eq_full_add_projection_tail, he]
 
 /-- Removing all mixed conductors loses no target information, provided the
 prime-power packets are corrected by the full mixed projection. -/

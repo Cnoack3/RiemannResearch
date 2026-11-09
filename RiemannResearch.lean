@@ -3512,6 +3512,9 @@ import RiemannResearch.RH.DyadicResidualConstraints
 import RiemannResearch.RH.LogarithmicCorrectionTarget
 import RiemannResearch.RH.CoupledResidualAnalyticTargets
 import RiemannResearch.NumberTheory.GeneralizedCRTDescentTargets
+import RiemannResearch.NumberTheory.FiniteGeneralizedCRT
+import RiemannResearch.NumberTheory.ProfiniteGeneralizedCRT
+import RiemannResearch.NumberTheory.ProfiniteCRT
 import RiemannResearch.RH.ActualResidualLaplace
 import RiemannResearch.RH.BurnolDyadicComparison
 import RiemannResearch.Analysis.CesaroPulseObstruction
