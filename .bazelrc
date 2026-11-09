@@ -1,7 +1,7 @@
 # Bound the local Bazel client while retaining remote execution concurrency.
-# 3 GiB caps the Java heap, not process RSS; leave room for native memory and tools.
+# 4 GiB caps the Java heap, not process RSS; leave room for native memory and tools.
 # ActiveProcessorCount sizes automatic JVM pools; it is not an OS CPU quota.
-startup --host_jvm_args=-Xmx3g
+startup --host_jvm_args=-Xmx4g
 startup --host_jvm_args=-XX:ActiveProcessorCount=2
 # A heap OOM must terminate the server, including failures on background threads.
 startup --host_jvm_args=-XX:+ExitOnOutOfMemoryError
