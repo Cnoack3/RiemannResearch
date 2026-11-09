@@ -1,5 +1,15 @@
 # Theorem catalog
 
+## Full-conductor LCM zero-coordinate energy
+
+- `Analysis/FiniteWeightedResidual.energy_eq_fixedClass_add_certificate_add_remainder`
+  gives the exact weighted residual energy as the fixed class's mass, the
+  energy of a solved observation Gram, and the remaining weighted square.
+  In the Ramanujan application the fixed class is the zero residue modulo
+  the LCM. The rows can represent the real and imaginary Mellin observations.
+  The identity accepts dependent observation rows when their normal equation
+  is solved.
+
 ## Normalized exact heads, persistent squarefree support, and complete spectral energy (2026-10-30)
 
 Research note: [RH/NormalizedExactHeadResearch20261030.md](RH/NormalizedExactHeadResearch20261030.md).

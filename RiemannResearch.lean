@@ -2318,6 +2318,7 @@ import RiemannResearch.Probability.DeterminantalCardinality
 import RiemannResearch.RH.IntegerDPPArithmeticExclusion
 import RiemannResearch.LinearAlgebra.AccretiveDeterminant
 import RiemannResearch.Analysis.FiniteHilbertGramMatrix
+import RiemannResearch.Analysis.FiniteWeightedResidual
 import RiemannResearch.RH.IntegerDPPGramDeterminant
 import RiemannResearch.Probability.FiniteDeterminantalLaw
 import RiemannResearch.Probability.FiniteSubsetLaw
