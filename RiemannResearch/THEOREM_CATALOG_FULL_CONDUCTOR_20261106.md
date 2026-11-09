@@ -170,6 +170,39 @@ exceptional quartet. [Balazard–de Roton](https://arxiv.org/abs/0812.1689)
 [Bettin–Conrey–Farmer](https://arxiv.org/abs/1211.5191)
 [Maier–Rassias](https://doi.org/10.4153/CMB-2017-070-3)
 
+### Microscopic coefficients and moving certificate energy
+
+- [ParetoResidueMicroscopicGram.lean](RH/ParetoResidueMicroscopicGram.lean)
+  proves `phaseStrippedCross_sub_logPhaseKernel_le` and its moving limit.
+  After removing the critical-point factors the coefficient is
+  `exp(-i v/2) sinc(v/2)` at `v = (t-u) log L`, with an explicit error
+  of order `(1+|t|+|u|)/log L` that is uniform in the gap. The limiting
+  two-ordinate determinant is positive for nonzero scaled gaps and zero
+  at a collision.
+- [ParetoResidueMovingCertificate.lean](RH/ParetoResidueMovingCertificate.lean)
+  gives the real entry formula with both difference and sum frequencies,
+  the finite energy sandwich, and `moving_critical_certificate_tendsto`
+  under explicit row and source budgets. The uniform multiples-source
+  error retains the `L^(-3/2)` scale.
+- [ParetoResidueMovingGrowth.lean](RH/ParetoResidueMovingGrowth.lean)
+  proves the harmonic inverse-gap row estimate and
+  `lcm_moving_critical_certificate_of_log_spacing`. A family of `m`
+  positive ordinates of height at most `T` and signed separation `δ`
+  has the moving energy law when
+  `[m(1+T) + log(2m)/δ]/psi(M) → 0`. The uniform reciprocal source
+  bound follows from the checked actual-zero sum.
+- [ParetoLCMRamanujanCertificate.lean](RH/ParetoLCMRamanujanCertificate.lean)
+  proves `lcm_packet_inverse_zero_split`. On the complete divisor
+  dictionary, `1 - Λᵀ H⁻¹ Λ` equals the compulsory multiples mass plus
+  the zero-certificate energy and the optimized remainder.
+  `packetClassVector_prime` gives `R_p = p g_p` in the weighted quotient.
+  The certificate shift preserves every packet normal source.
+- [ParetoShiftedZetaCompactWindow.lean](RH/ParetoShiftedZetaCompactWindow.lean)
+  proves `shiftedZetaQuotient_window_le` without RH. On every fixed
+  ordinate window the integral is at most `C_T ε` for small positive
+  shifts. The moving-height tail and the Möbius truncation budget remain
+  Open. [Balazard–de Roton, Proposition 2](https://arxiv.org/abs/0812.1689)
+
 ## Full-conductor product distance (agenda A5)
 
 `RH/QFullProductDistance.lean` proves the exact signed product identity,

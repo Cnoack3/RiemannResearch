@@ -33,7 +33,8 @@ namespace RiemannResearch.RH.Pareto.ResidueMellin
 open RiemannResearch.Analysis.FiniteHilbertGram
 open MellinFrequency (criticalPoint)
 
-private def crossPart (b c : Bool) : ℂ × ℂ →L[ℝ] ℝ :=
+/-- Extract the real Gram entry from the difference and sum coefficients. -/
+def crossPart (b c : Bool) : ℂ × ℂ →L[ℝ] ℝ :=
   let r₁ := Complex.reCLM.comp (ContinuousLinearMap.fst ℝ ℂ ℂ)
   let r₂ := Complex.reCLM.comp (ContinuousLinearMap.snd ℝ ℂ ℂ)
   let i₁ := Complex.imCLM.comp (ContinuousLinearMap.fst ℝ ℂ ℂ)
@@ -49,7 +50,7 @@ private theorem crossPart_term (b c : Bool) (x y : ℂ) :
   cases b <;> cases c <;>
     simp [crossPart, part, Complex.mul_re, Complex.mul_im] <;> ring
 
-private theorem crossPart_zero_right (b c : Bool) (v : ℝ) :
+theorem crossPart_zero_right (b c : Bool) (v : ℝ) :
     crossPart b c ((v : ℂ), 0) = if b = c then v / 2 else 0 := by
   cases b <;> cases c <;> simp [crossPart, div_eq_mul_inv, mul_comm]
 
@@ -59,7 +60,7 @@ variable {ι : Type*}
 def normalizedCriticalGram (γ : ι → ℝ) (N : ℕ) : Matrix (ι × Bool) (ι × Bool) ℝ :=
   (Real.log ((N : ℝ) + 1))⁻¹ • gramMatrix (rowVector N (fun i => criticalPoint (γ i)))
 
-private theorem normalizedCriticalGram_entry (γ : ι → ℝ) (N : ℕ) (i j : ι × Bool) :
+theorem normalizedCriticalGram_entry (γ : ι → ℝ) (N : ℕ) (i j : ι × Bool) :
     normalizedCriticalGram γ N i j = crossPart i.2 j.2
       (classCross (γ i.1) (γ j.1) N, classCross (γ i.1) (-γ j.1) N) := by
   let t := γ i.1

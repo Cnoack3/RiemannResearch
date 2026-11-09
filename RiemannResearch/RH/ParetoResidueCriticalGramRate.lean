@@ -124,6 +124,37 @@ private theorem sum_reciprocalSquare_le (N : ℕ) :
     (∑ n ∈ Finset.range N, 1 / ((n : ℝ) + 1) ^ 2) ≤ reciprocalSquareMass :=
   reciprocalSquare_summable.sum_le_tsum _ (fun n _ => by positivity)
 
+/-- The summable phase discretization error, with its vanishing frequency factor. -/
+theorem phaseSlopeError_sum_bound (v : ℝ) (N : ℕ) :
+    ‖∑ n ∈ Finset.range N, phaseSlopeError v n / ((n : ℂ) + 1)‖ ≤
+      |v| * ‖(v : ℂ) * Complex.I + 1‖ * reciprocalSquareMass := by
+  let s : ℂ := (v : ℂ) * Complex.I
+  have hs : s.re = 0 := by simp [s, Complex.mul_re]
+  have hn : ‖s‖ = |v| := by simp [s, Real.norm_eq_abs]
+  have he (n : ℕ) :
+      ‖phaseSlopeError v n / ((n : ℂ) + 1)‖ ≤
+        (|v| * ‖s + 1‖) * (1 / ((n : ℝ) + 1) ^ 2) := by
+    have hc : ‖(n : ℂ) + 1‖ = (n : ℝ) + 1 := by
+      rw [show (n : ℂ) + 1 = (((n : ℝ) + 1 : ℝ) : ℂ) by push_cast; rfl,
+        Complex.norm_real, Real.norm_eq_abs, abs_of_pos (by positivity)]
+    rw [norm_div, hc, phaseSlopeError, norm_mul, powerPhase_norm, one_mul]
+    change ‖cellSlope s n - s‖ / ((n : ℝ) + 1) ≤ _
+    calc
+      _ ≤ (‖s‖ * ‖s + 1‖ / ((n : ℝ) + 1)) / ((n : ℝ) + 1) :=
+        div_le_div_of_nonneg_right (cellSlope_sub_le s hs.ge n) (by positivity)
+      _ = _ := by rw [hn, div_div, ← pow_two, div_eq_mul_inv, one_div]
+  have hsum : ‖∑ n ∈ Finset.range N, phaseSlopeError v n / ((n : ℂ) + 1)‖ ≤
+      |v| * ‖s + 1‖ * reciprocalSquareMass := by
+    calc
+      _ ≤ ∑ n ∈ Finset.range N, ‖phaseSlopeError v n / ((n : ℂ) + 1)‖ := norm_sum_le _ _
+      _ ≤ ∑ n ∈ Finset.range N,
+          (|v| * ‖s + 1‖) * (1 / ((n : ℝ) + 1) ^ 2) :=
+        Finset.sum_le_sum (fun n _ => he n)
+      _ ≤ _ := by
+        rw [← Finset.mul_sum]
+        exact mul_le_mul_of_nonneg_left (sum_reciprocalSquare_le N) (by positivity)
+  exact hsum
+
 def phaseSumBudget (v : ℝ) : ℝ :=
   if v = 0 then 1 else 2 / |v| + reciprocalSquareMass * ‖(v : ℂ) * Complex.I + 1‖
 
@@ -152,40 +183,17 @@ theorem harmonicPhaseSum_sub_diag_le (v : ℝ) (N : ℕ) :
     rw [abs_of_nonneg (sub_nonneg.mpr hlo)]
     linarith
   · rw [if_neg hv, sub_zero, phaseSumBudget, if_neg hv]
-    let s : ℂ := (v : ℂ) * Complex.I
-    have hs : s.re = 0 := by simp [s, Complex.mul_re]
-    have hn : ‖s‖ = |v| := by simp [s, Real.norm_eq_abs]
-    have he (n : ℕ) :
-        ‖phaseSlopeError v n / ((n : ℂ) + 1)‖ ≤
-          (|v| * ‖s + 1‖) * (1 / ((n : ℝ) + 1) ^ 2) := by
-      have hc : ‖(n : ℂ) + 1‖ = (n : ℝ) + 1 := by
-        rw [show (n : ℂ) + 1 = (((n : ℝ) + 1 : ℝ) : ℂ) by push_cast; rfl,
-          Complex.norm_real, Real.norm_eq_abs, abs_of_pos (by positivity)]
-      rw [norm_div, hc, phaseSlopeError, norm_mul, powerPhase_norm, one_mul]
-      change ‖cellSlope s n - s‖ / ((n : ℝ) + 1) ≤ _
-      calc
-        _ ≤ (‖s‖ * ‖s + 1‖ / ((n : ℝ) + 1)) / ((n : ℝ) + 1) :=
-          div_le_div_of_nonneg_right (cellSlope_sub_le s hs.ge n) (by positivity)
-        _ = _ := by rw [hn, div_div, ← pow_two, div_eq_mul_inv, one_div]
-    have hsum : ‖∑ n ∈ Finset.range N, phaseSlopeError v n / ((n : ℂ) + 1)‖ ≤
-        |v| * ‖s + 1‖ * reciprocalSquareMass := by
-      calc
-        _ ≤ ∑ n ∈ Finset.range N, ‖phaseSlopeError v n / ((n : ℂ) + 1)‖ := norm_sum_le _ _
-        _ ≤ ∑ n ∈ Finset.range N,
-            (|v| * ‖s + 1‖) * (1 / ((n : ℝ) + 1) ^ 2) :=
-          Finset.sum_le_sum (fun n _ => he n)
-        _ ≤ _ := by
-          rw [← Finset.mul_sum]
-          exact mul_le_mul_of_nonneg_left (sum_reciprocalSquare_le N) (by positivity)
+    have hsum := phaseSlopeError_sum_bound v N
     have ht : ‖(1 : ℂ) - powerPhase v N‖ ≤ 2 := by
       simpa only [norm_one, powerPhase_norm, one_add_one_eq_two] using
         norm_sub_le (1 : ℂ) (powerPhase v N)
     have h := (norm_sub_le ((1 : ℂ) - powerPhase v N) _).trans (add_le_add ht hsum)
-    rw [← phase_sum_exact, norm_mul, show ‖(v : ℂ) * Complex.I‖ = |v| from hn] at h
+    have hnorm : ‖(v : ℂ) * Complex.I‖ = |v| := by simp [Real.norm_eq_abs]
+    rw [← phase_sum_exact, norm_mul, hnorm] at h
     by_contra! hbad
-    change 2 / |v| + reciprocalSquareMass * ‖s + 1‖ < _ at hbad
-    have heq : |v| * (2 / |v| + reciprocalSquareMass * ‖s + 1‖) =
-        2 + |v| * ‖s + 1‖ * reciprocalSquareMass := by
+    change 2 / |v| + reciprocalSquareMass * ‖(v : ℂ) * Complex.I + 1‖ < _ at hbad
+    have heq : |v| * (2 / |v| + reciprocalSquareMass * ‖(v : ℂ) * Complex.I + 1‖) =
+        2 + |v| * ‖(v : ℂ) * Complex.I + 1‖ * reciprocalSquareMass := by
       field_simp [(abs_pos.mpr hv).ne']
     have hbad' := mul_lt_mul_of_pos_left hbad (abs_pos.mpr hv)
     rw [heq] at hbad'
@@ -255,6 +263,34 @@ private theorem crossSlopeError_sum_le (t u : ℝ) (N : ℕ) :
       rw [← Finset.mul_sum]
       exact mul_le_mul_of_nonneg_left (sum_reciprocalSquare_le N) (by dsimp [A]; positivity)
 
+/-- The complete progression Gram differs from the oscillatory harmonic
+model by a summable error. This version retains the full phase sum. -/
+theorem classCrossSum_sub_phaseSum_le (t u : ℝ) (N : ℕ) :
+    ‖classCrossSum t u N - (criticalPoint t * star (criticalPoint u)) *
+      (∑ n ∈ Finset.range N, ((n : ℂ) + 1) ^ (-1 - ((t - u : ℝ) : ℂ) * Complex.I))‖ ≤
+      ‖criticalPoint t‖ * ‖criticalPoint u‖ *
+        (2 * (1 + criticalTailMass) ^ 2 +
+          reciprocalSquareMass * (1 + ‖criticalPoint t + 1‖ + ‖criticalPoint u + 1‖)) := by
+  let a := criticalPoint t * star (criticalPoint u)
+  let W := fun n : ℕ => ((n : ℂ) + 1) ^ (-1 - ((t - u : ℝ) : ℂ) * Complex.I)
+  have hterm (n : ℕ) : firstCrossTerm t u n =
+      a * W n + crossSlopeError t u n / ((n : ℂ) + 1) := by
+    rw [firstCrossTerm_eq, criticalCross_term_eq]
+    dsimp only [W, a]
+    rw [powerPhase_div, crossSlopeError]
+    ring
+  have hraw : (∑ n ∈ Finset.range N, firstCrossTerm t u n) =
+      a * (∑ n ∈ Finset.range N, W n) +
+        ∑ n ∈ Finset.range N, crossSlopeError t u n / ((n : ℂ) + 1) := by
+    simp_rw [hterm]
+    rw [Finset.sum_add_distrib, Finset.mul_sum]
+  change ‖classCrossSum t u N - a * ∑ n ∈ Finset.range N, W n‖ ≤ _
+  rw [show classCrossSum t u N - a * ∑ n ∈ Finset.range N, W n =
+      (classCrossSum t u N - ∑ n ∈ Finset.range N, firstCrossTerm t u n) +
+        ∑ n ∈ Finset.range N, crossSlopeError t u n / ((n : ℂ) + 1) by rw [hraw]; ring]
+  exact ((norm_add_le _ _).trans (add_le_add (classCrossSum_firstPeriod_bound t u N)
+    (crossSlopeError_sum_le t u N))).trans_eq (by ring)
+
 /-- Explicit complete-period error budget for two critical ordinates. -/
 def criticalCrossBudget (t u : ℝ) : ℝ :=
   2 * (1 + criticalTailMass) ^ 2 +
@@ -272,34 +308,20 @@ theorem classCrossSum_sub_diag_le (t u : ℝ) (N : ℕ) :
   let W := fun n : ℕ => ((n : ℂ) + 1) ^ (-1 - ((t - u : ℝ) : ℂ) * Complex.I)
   let logL : ℂ := (Real.log ((N : ℝ) + 1) : ℂ)
   let diag := if t = u then logL else 0
-  have hterm (n : ℕ) : firstCrossTerm t u n =
-      a * W n + crossSlopeError t u n / ((n : ℂ) + 1) := by
-    rw [firstCrossTerm_eq, criticalCross_term_eq]
-    dsimp only [W, a]
-    rw [powerPhase_div, crossSlopeError]
-    ring
-  have hraw : (∑ n ∈ Finset.range N, firstCrossTerm t u n) =
-      a * (∑ n ∈ Finset.range N, W n) +
-        ∑ n ∈ Finset.range N, crossSlopeError t u n / ((n : ℂ) + 1) := by
-    simp_rw [hterm]
-    rw [Finset.sum_add_distrib, Finset.mul_sum]
   have hd : (if t = u then a else 0) * logL = a * diag := by
     by_cases h : t = u <;> simp [h, diag]
   have hphase : ‖(∑ n ∈ Finset.range N, W n) - diag‖ ≤ phaseSumBudget (t - u) := by
     simpa only [W, diag, logL, sub_eq_zero] using harmonicPhaseSum_sub_diag_le (t - u) N
-  change ‖classCrossSum t u N - (if t = u then a else 0) * logL‖ ≤ _
-  rw [hd, show classCrossSum t u N - a * diag =
-      (classCrossSum t u N - ∑ n ∈ Finset.range N, firstCrossTerm t u n) +
-      (a * ((∑ n ∈ Finset.range N, W n) - diag) +
-        ∑ n ∈ Finset.range N, crossSlopeError t u n / ((n : ℂ) + 1)) by rw [hraw]; ring]
-  have hnorm : ‖a‖ = ‖criticalPoint t‖ * ‖criticalPoint u‖ := by
-    simp [a]
   have hmul : ‖a * ((∑ n ∈ Finset.range N, W n) - diag)‖ ≤
       ‖criticalPoint t‖ * ‖criticalPoint u‖ * phaseSumBudget (t - u) := by
-    rw [norm_mul, hnorm]
+    rw [norm_mul, show ‖a‖ = ‖criticalPoint t‖ * ‖criticalPoint u‖ by simp [a]]
     exact mul_le_mul_of_nonneg_left hphase (by positivity)
-  refine (norm_add_le _ _).trans (add_le_add (classCrossSum_firstPeriod_bound t u N)
-    ((norm_add_le _ _).trans (add_le_add hmul (crossSlopeError_sum_le t u N)))) |>.trans_eq ?_
+  change ‖classCrossSum t u N - (if t = u then a else 0) * logL‖ ≤ _
+  rw [hd, show classCrossSum t u N - a * diag =
+      (classCrossSum t u N - a * ∑ n ∈ Finset.range N, W n) +
+      a * ((∑ n ∈ Finset.range N, W n) - diag) by ring]
+  refine ((norm_add_le _ _).trans
+    (add_le_add (classCrossSum_sub_phaseSum_le t u N) hmul)).trans_eq ?_
   unfold criticalCrossBudget
   ring
 

@@ -1297,6 +1297,12 @@ import RiemannResearch.RH.ParetoResidueAtomTests
 import RiemannResearch.RH.ParetoLCMZeroCertificate
 import RiemannResearch.RH.ParetoLCMAnalyticRates
 import RiemannResearch.RH.ParetoResidueCriticalGramRate
+import RiemannResearch.Analysis.FiniteHilbertGramRowBounds
+import RiemannResearch.RH.ParetoResidueMicroscopicGram
+import RiemannResearch.RH.ParetoResidueMovingCertificate
+import RiemannResearch.RH.ParetoResidueMovingGrowth
+import RiemannResearch.RH.ParetoLCMRamanujanCertificate
+import RiemannResearch.RH.ParetoShiftedZetaCompactWindow
 import RiemannResearch.Analysis.ActualZeroParetoCoshBridge
 import RiemannResearch.Analysis.SummableOrdinateKernel
 import RiemannResearch.Analysis.FrequencySensitiveGramBounds
