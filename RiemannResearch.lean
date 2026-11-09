@@ -5,6 +5,13 @@ import RiemannResearch.RH.PsiNormalizedRamanujan
 import RiemannResearch.RH.GlobalLogDilation
 import RiemannResearch.RH.PrimePowerRamanujanClosure
 import RiemannResearch.RH.PrimePowerRamanujanLimits
+import RiemannResearch.NumberTheory.DyadicAdditiveRigidity
+import RiemannResearch.RH.RamanujanPacketDilation
+import RiemannResearch.RH.MixedConductorDilation
+import RiemannResearch.RH.MixedConductorCovariance
+import RiemannResearch.RH.ResidueConductorVariation
+import RiemannResearch.RH.MixedConductorRankOne
+import RiemannResearch.RH.MixedConductorHead
 import RiemannResearch.RH.RamanujanSchurLogZero
 import RiemannResearch.Analysis.BoundedInjectiveLift
 import RiemannResearch.Analysis.ExponentialQuadraticRemainder
