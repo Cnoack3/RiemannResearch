@@ -62,6 +62,21 @@
   unresolved domain-specific hypotheses. `#print axioms` does not report local
   hypotheses in a theorem's type.
 
+### Known anonymous-example verification gap
+
+- A Bazel snippet job can report `verified=true` for an anonymous `example`
+  containing `sorry` when placeholder warnings are suppressed, for example with
+  `set_option warn.sorry false`. Treat that result as an unfinished proof.
+- Keep placeholder warnings enabled and inspect candidate source and job
+  diagnostics before claiming verification. Prefer a named theorem when an
+  explicit declaration check matters. Never use warning suppression to make
+  an incomplete proof appear verified.
+- Ordinary proof errors and the tested named false theorem were rejected.
+  The checkpoint source audit also blocks literal `sorry` and `admit` tokens
+  before publication. These safeguards are separate from snippet acceptance.
+- This low-priority footgun predates the input-sharing optimization. Its fix
+  is deferred. See the [reproduction and investigation](bazel/STRESS_TEST_OPTIMIZED_20261109.md#correctness-checks).
+
 ## Bazel verification default
 
 - Default all acceptance checks to Bazel with `--config=buildbuddy`. The queued
