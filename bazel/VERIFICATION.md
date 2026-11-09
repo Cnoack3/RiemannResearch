@@ -89,17 +89,19 @@ interrupted jobs into successful verifications.
 A guarded full-project trial with an 8 GiB `MemoryHigh` reached about 8.11 GiB
 of cgroup usage and about 99% full memory pressure, with repeated `high` events
 and no OOM kills. That soft limit forced sustained reclaim during analysis.
-The profile now uses 9 GiB high while retaining the 10 GiB hard limit; this
-still needs workload measurement and is not a guarantee that concurrent full
-builds fit.
+A later three-workspace invalidation trial also reached about 97% full memory
+pressure with a 9 GiB soft limit and a 1 GiB service swap cap. The operator then
+raised the live limits to 11 GiB high and 12 GiB max. The profile now matches
+those RAM limits and removes the separate service swap cap. These settings
+still need workload measurement and do not guarantee arbitrary concurrency.
 
 Install `bazel/lean-tunnel.resources.conf` to apply an aggregate service budget:
 
 | Setting | Value | Purpose |
 | --- | --- | --- |
-| `MemoryHigh` | 9 GiB | Reclaim/throttle memory above the preferred budget |
-| `MemoryMax` | 10 GiB | Hard limit for the whole service and its descendants |
-| `MemorySwapMax` | 1 GiB | Bound service swap use |
+| `MemoryHigh` | 11 GiB | Reclaim/throttle memory above the preferred budget |
+| `MemoryMax` | 12 GiB | Hard limit for the whole service and its descendants |
+| `MemorySwapMax` | infinity | Allow available host swap; WSL still bounds total capacity |
 | `OOMPolicy` | stop | Stop the unit if one of its processes is OOM-killed |
 | `LEAN_WORKSPACE_THREADS`, `LEAN_LAKE_BUILD_THREADS` | 2 | Bound local Lean thread pools |
 | `LEAN_MAX_SHARED_CLIENTS` | 2 | Bound retained editor clients |
@@ -129,20 +131,54 @@ lean_cgroup=$(systemctl show lean-tunnel.service -p ControlGroup --value)
 cat "/sys/fs/cgroup${lean_cgroup}/memory.high" "/sys/fs/cgroup${lean_cgroup}/memory.max" "/sys/fs/cgroup${lean_cgroup}/memory.swap.max"
 ```
 
-Expected byte values are `9663676416`, `10737418240`, and `1073741824`.
-Missing controller files or `max` values do not establish that the guard is
-active. The drop-in preserves service commands and credentials. Other drop-ins
+Expected values are `11811160064`, `12884901888`, and `max`, respectively.
+The RAM limits must be finite; `max` is intentional only for the service swap
+limit. Missing controller files do not establish that the guard is active. The drop-in preserves service commands and credentials. Other drop-ins
 may override it, so verify effective settings rather than only reading the file.
 
-To relieve the old 8 GiB soft limit during an active build without restarting
-the service, apply only the live property:
+To apply the current policy during an active build without restarting the
+service:
 
 ```bash
-sudo systemctl set-property --runtime lean-tunnel.service MemoryHigh=9G
+sudo systemctl set-property --runtime lean-tunnel.service \
+  MemoryHigh=11G MemoryMax=12G MemorySwapMax=infinity
 ```
 
-This leaves the 10 GiB hard limit and 1 GiB swap limit intact. The runtime
-override lasts until reboot; install the updated drop-in for persistence.
+The runtime override lasts until reboot; install the updated drop-in for
+persistence. `MemorySwapMax=infinity` removes only the unit-specific swap limit;
+it does not allocate additional swap and does not remove the RAM limits.
+
+### WSL swap capacity
+
+For this host, 16 GiB of WSL swap is a reasonable initial capacity for the
+multi-workspace experiments. In Windows PowerShell, open the existing global
+configuration:
+
+```powershell
+notepad "$env:USERPROFILE\.wslconfig"
+```
+
+Set `swap=16GB` inside its existing `[wsl2]` section, preserving other settings.
+If the file does not exist, create it with:
+
+```ini
+[wsl2]
+swap=16GB
+```
+
+After all verifier jobs have finished, apply the WSL configuration from
+PowerShell with `wsl --shutdown`, then reopen Ubuntu. This stops all WSL
+distributions, so do not use it during a build. Verify inside Ubuntu:
+
+```bash
+free -h
+swapon --show
+```
+
+The service swap allowance and WSL swap capacity are separate: both must permit
+swapping. More swap helps absorb peaks and move cold pages out of RAM; it does
+not make disk-backed pages as fast as RAM or eliminate active-working-set
+thrashing.
 
 Warm one fresh workspace's dependency setup first. Once that succeeds, run
 parallel warm-workspace checks and measure memory and latency. Do not start
@@ -157,7 +193,8 @@ New job responses should report `worker_count: null` and `same_workspace_limit: 
 
 Sources: [systemd memory controls](https://www.freedesktop.org/software/systemd/man/latest/systemd.resource-control.html),
 [systemd OOM policy](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#OOMPolicy=),
-and [Bazel options](https://bazel.build/versions/9.2.0/reference/command-line-reference).
+[Bazel options](https://bazel.build/versions/9.2.0/reference/command-line-reference),
+and [Microsoft WSL configuration](https://learn.microsoft.com/en-us/windows/wsl/wsl-config).
 
 ## Shared storage
 
