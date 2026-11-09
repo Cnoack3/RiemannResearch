@@ -286,3 +286,48 @@ service loaded the change.
 Rollback changes only the backend selection; it does not delete new packages,
 workspaces, cache entries, source changes, or job records. A historical clone
 without the Bazel setup must use the explicit legacy backend until updated.
+
+## Observed verification tests: 2026-11-08 to 2026-11-09
+
+These are actual MCP jobs on the NucBoxK6 WSL host. Times below are server-side
+verification wall times; clone, RPC, and polling delays are excluded. Fixtures
+remained in isolated workspaces and were not published.
+
+| Test | Observed result |
+| --- | --- |
+| Fresh workspace, new real-number identity | Passed in 17.389 s; one remote compilation |
+| Identical source in a second workspace | Passed in 13.642 s; one remote-cache hit |
+| Earlier partial invalidation of a mid-graph proof | Passed in 44.581 s; four remote compilations and 196 remote-cache hits |
+| Warm serial changed-source checks, three workspaces | 8.035 / 7.108 / 8.189 s; one remote compilation each |
+| Warm concurrent changed-source checks, same three workspaces | 6.576 / 6.432 / 6.666 s; one remote compilation each |
+| Deliberately false equality proved with rfl | Rejected in 6.004 s with the expected Lean equality error |
+| False equality using sorry with warnings suppressed | Rejected in 10.118 s: declaration uses sorry while forbid_sorry is enabled |
+| Deliberate one-second deadline | Controlled wall_timeout in 1.822 s; next valid check passed in 3.027 s |
+| Restore after both invalid-proof tests | Exact original source hash restored; passed in 3.071 s |
+| Full aggregate | Passed in 856.977 s; 3,777 action-cache hits and 165 remote-cache hits |
+
+The concurrent changed-source batch spanned 8.438 s from first worker start to
+last finish, with all three workers overlapping for 4.783 s. Admission took
+0.899 / 0.981 / 1.334 ms, with no completed-history records examined. Each job
+reported an uncapped global worker count, one job per workspace, and distinct,
+matching submitted/checked source hashes. No slowdown was observed in this
+small sample; warmup and ordering effects prevent treating the faster parallel
+times as a general speedup claim.
+
+The full aggregate configured 46,184 targets in 150 packages. It reused cached
+results rather than recompiling the whole project, and its elapsed time includes
+the memory-reclaim episode described above. During that run, the operator raised
+MemoryHigh to 9 GiB and stopped the two completed test JVMs. After the full build,
+the operator stopped its idle JVM; measured service memory fell to about 516 MiB
+and ten-second full memory pressure fell to 0.05%. This is not a clean cold-build
+benchmark, a peak-memory measurement for the concurrent batch, or evidence that
+several simultaneous full-project analyses fit in the host budget.
+
+Evidence:
+- [Full aggregate](https://app.buildbuddy.io/invocation/40eedd76-01dd-45df-b32c-8ff5c8820b7d)
+- Concurrent checks: [A](https://app.buildbuddy.io/invocation/7d3744af-3bb9-4b91-87e3-1ac01799042d), [B](https://app.buildbuddy.io/invocation/47eb2b02-5490-44bc-9ce2-55b22272ff9c), [C](https://app.buildbuddy.io/invocation/2d5bfc3a-1a5c-426a-ad79-9a8c60f3f99b)
+- [Partial invalidation](https://app.buildbuddy.io/invocation/2a3eee75-78b3-43ef-89e0-38fa6e5ebb97)
+- [False equality](https://app.buildbuddy.io/invocation/7e63805d-a5d9-4256-8ff2-b6ebff7c2b26)
+- [Suppressed-sorry rejection](https://app.buildbuddy.io/invocation/b512dacb-784a-4b41-82e1-c15b00fe61cd)
+- [Timeout](https://app.buildbuddy.io/invocation/eb1ac1bb-2b33-4ee4-99c8-5926c667ac4c) and [successful recovery](https://app.buildbuddy.io/invocation/a2a82da3-c0c6-4def-90a9-b60b2981417b)
+- [Restored proof](https://app.buildbuddy.io/invocation/51a5ff2c-bf7d-4beb-bbbf-9b7f4cf83cb1)
