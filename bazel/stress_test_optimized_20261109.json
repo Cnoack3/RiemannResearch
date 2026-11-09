@@ -1,0 +1,2096 @@
+{
+  "schema_version": 1,
+  "repository": "Cnoack3/RiemannResearch",
+  "tested_revision": "4bcfcc114d2d6de516e5fd17a76f07aa78ae85ec",
+  "backend": "bazel",
+  "config": "buildbuddy",
+  "resource_policies": {
+    "solo_and_initial_cold_starts": {
+      "memory_high_bytes": 9663676416,
+      "memory_max_bytes": 10737418240,
+      "service_swap_max_bytes": 1073741824
+    },
+    "ten_five_and_invalidation_rounds": {
+      "memory_high_bytes": 11811160064,
+      "memory_max_bytes": 12884901888,
+      "service_swap_max_bytes": null
+    },
+    "host_swap_bytes": 137438953472,
+    "bazel_heap_max_bytes": 8589934592,
+    "global_job_cap": 0,
+    "per_workspace_active_job_cap": 1
+  },
+  "solo_full": {
+    "job_id": "job_ffQAuHhXX_KyOZTHHFPrv2t2jqZqkZvN",
+    "workspace_token": "ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes",
+    "state": "succeeded",
+    "backend": "bazel",
+    "submitted_at": 1794189370.7587447,
+    "started_at": 1794189370.7600555,
+    "finished_at": 1794189539.756038,
+    "seconds": 168.994,
+    "invocation": "https://app.buildbuddy.io/invocation/de3c1cc7-8728-48c1-b624-38aae5108800",
+    "processes": "INFO: 3943 processes: 3942 remote cache hit, 1 internal.",
+    "verified": null,
+    "classification": null
+  },
+  "three_cold_targets": {
+    "small": {
+      "job_id": "job_O7d05G8yDEwhgX0cBan1TIJQuJhx05gj",
+      "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL",
+      "state": "succeeded",
+      "backend": "bazel",
+      "submitted_at": 1794189594.5951731,
+      "started_at": 1794189594.5974066,
+      "finished_at": 1794189632.241707,
+      "seconds": 37.557,
+      "invocation": "https://app.buildbuddy.io/invocation/56b790bc-9126-40c1-8cd0-468b73d5f1cf",
+      "processes": "INFO: 201 processes: 200 remote cache hit, 1 internal.",
+      "verified": true,
+      "classification": "success"
+    },
+    "medium": {
+      "job_id": "job_FsNKSf3LDm93Dt76hEbTOY5K6UOBJb3u",
+      "workspace_token": "ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH",
+      "state": "succeeded",
+      "backend": "bazel",
+      "submitted_at": 1794189593.358467,
+      "started_at": 1794189593.360158,
+      "finished_at": 1794189633.073832,
+      "seconds": 39.636,
+      "invocation": "https://app.buildbuddy.io/invocation/d62cd252-6dfb-467b-8c9b-84f4da998fad",
+      "processes": "INFO: 268 processes: 267 remote cache hit, 1 internal.",
+      "verified": true,
+      "classification": "success"
+    },
+    "large": {
+      "job_id": "job_U-fyksStkKt0BlQnIQL5f7-x2M-_v-7E",
+      "workspace_token": "ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR",
+      "state": "succeeded",
+      "backend": "bazel",
+      "submitted_at": 1794189595.8551636,
+      "started_at": 1794189595.8567138,
+      "finished_at": 1794189643.662793,
+      "seconds": 47.725,
+      "invocation": "https://app.buildbuddy.io/invocation/1e91f428-204c-476b-8a47-8345d60f4598",
+      "processes": "INFO: 367 processes: 366 remote cache hit, 1 internal.",
+      "verified": true,
+      "classification": "success"
+    }
+  },
+  "five_full": {
+    "jobs": [
+      {
+        "job_id": "job_H-OlMeoWr6GIwPkA8vV7e4odOww1L4hr",
+        "workspace_token": "ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes",
+        "state": "succeeded",
+        "backend": "bazel",
+        "submitted_at": 1794191690.725816,
+        "started_at": 1794191690.7306209,
+        "finished_at": 1794192150.7120664,
+        "seconds": 459.971,
+        "invocation": "https://app.buildbuddy.io/invocation/70961589-092c-413b-b525-ba6a1bc454f0",
+        "processes": null,
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_yNoxLNj2V-R6qOtaQ0yV2RgUhzZs5rpX",
+        "workspace_token": "ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR",
+        "state": "succeeded",
+        "backend": "bazel",
+        "submitted_at": 1794191684.2001588,
+        "started_at": 1794191684.204536,
+        "finished_at": 1794192182.0285325,
+        "seconds": 497.813,
+        "invocation": "https://app.buildbuddy.io/invocation/c1fe51af-e85d-4eac-b14a-e3fd94243094",
+        "processes": "INFO: 3577 processes: 366 action cache hit, 3576 remote cache hit, 1 internal.",
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_Yqq74JUJHq5GeIITPsWj5KO0S8SG3CkS",
+        "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL",
+        "state": "succeeded",
+        "backend": "bazel",
+        "submitted_at": 1794191687.3573542,
+        "started_at": 1794191687.3589084,
+        "finished_at": 1794192106.398947,
+        "seconds": 419.02,
+        "invocation": "https://app.buildbuddy.io/invocation/432cfb3a-5375-484a-bc61-95d7918f5a1b",
+        "processes": "INFO: 3743 processes: 200 action cache hit, 3742 remote cache hit, 1 internal.",
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_UY_vKmEA-QzFR95smOSIWT6KJbPw7a_H",
+        "workspace_token": "ws_q5ew12SO3kRjDKweOPNSpKTC2UepCdTG",
+        "state": "succeeded",
+        "backend": "bazel",
+        "submitted_at": 1794191689.67766,
+        "started_at": 1794191689.6808398,
+        "finished_at": 1794192285.6733797,
+        "seconds": 595.978,
+        "invocation": "https://app.buildbuddy.io/invocation/db3eefc9-1bc3-470b-946c-4de9f37a6941",
+        "processes": "INFO: 3943 processes: 3942 remote cache hit, 1 internal.",
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_ZbrQO-UJcLD3DXCPUXxqoc5jze1nt5pq",
+        "workspace_token": "ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH",
+        "state": "succeeded",
+        "backend": "bazel",
+        "submitted_at": 1794191688.5888443,
+        "started_at": 1794191688.5911355,
+        "finished_at": 1794192315.5364547,
+        "seconds": 626.938,
+        "invocation": "https://app.buildbuddy.io/invocation/a6ddbf90-00c1-4be8-b2e5-29eb558f22f8",
+        "processes": "INFO: 3676 processes: 267 action cache hit, 3675 remote cache hit, 1 internal.",
+        "verified": null,
+        "classification": null
+      }
+    ],
+    "makespan_seconds": 631.3319187164307,
+    "all_five_overlap_seconds": 415.6683261394501
+  },
+  "ten_full": {
+    "outcome": "Operator cancelled all ten after prolonged paging; completion was not established.",
+    "all_ten_running_confirmed": true,
+    "jobs": [
+      {
+        "job_id": "job_LZ70B8qYgFo_mlQ4YxazPjD5LtIFEcRV",
+        "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL",
+        "state": "failed",
+        "backend": "bazel",
+        "submitted_at": 1794189856.2950108,
+        "started_at": 1794189856.2982802,
+        "finished_at": 1794191618.7627156,
+        "seconds": null,
+        "invocation": null,
+        "processes": null,
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_97x_Mza0zMrI1_ozt8jgTIMtFnfe1ARX",
+        "workspace_token": "ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR",
+        "state": "failed",
+        "backend": "bazel",
+        "submitted_at": 1794189861.0281231,
+        "started_at": 1794189861.03015,
+        "finished_at": 1794191618.4793928,
+        "seconds": null,
+        "invocation": null,
+        "processes": null,
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_hnzK9PaG8m7ExTcKe4_bfhTU2dVycvNZ",
+        "workspace_token": "ws_rdefumqimpdWlOXPP5X3dbORWgYNlGlB",
+        "state": "failed",
+        "backend": "bazel",
+        "submitted_at": 1794189863.531148,
+        "started_at": 1794189863.5353303,
+        "finished_at": 1794191618.5258448,
+        "seconds": null,
+        "invocation": null,
+        "processes": null,
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_3mtg0EZAn7tDv69DTdKUVncaz8uRx590",
+        "workspace_token": "ws_xMuNuc31n7yEWGQRudfXzQywhhimRURj",
+        "state": "failed",
+        "backend": "bazel",
+        "submitted_at": 1794189859.7746012,
+        "started_at": 1794189859.776359,
+        "finished_at": 1794191618.5894942,
+        "seconds": null,
+        "invocation": null,
+        "processes": null,
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_N3SDtlG5bQzWIg_uDvBJCfzExqkHy-PC",
+        "workspace_token": "ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes",
+        "state": "failed",
+        "backend": "bazel",
+        "submitted_at": 1794189867.0960326,
+        "started_at": 1794189867.1026616,
+        "finished_at": 1794191618.7112927,
+        "seconds": null,
+        "invocation": null,
+        "processes": null,
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_BeweOk71jEwQMxuRztIkgiUTkAS4Mka3",
+        "workspace_token": "ws_h1v7yAd2i5iWB-JVOl73JmAK_6vVFyjx",
+        "state": "failed",
+        "backend": "bazel",
+        "submitted_at": 1794189865.8502257,
+        "started_at": 1794189865.85799,
+        "finished_at": 1794191618.6656113,
+        "seconds": null,
+        "invocation": null,
+        "processes": null,
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_bf2QbN3thFq7a-sqr9kdv094rLgEJQf0",
+        "workspace_token": "ws_ybMUtObTn-Te5QN6jZfaGhkW9kGgDQzO",
+        "state": "failed",
+        "backend": "bazel",
+        "submitted_at": 1794189862.2717345,
+        "started_at": 1794189862.276158,
+        "finished_at": 1794191618.6152194,
+        "seconds": null,
+        "invocation": null,
+        "processes": null,
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_qmLdOTBYZ7fNr5FX8WLaPQDOhscU3E-e",
+        "workspace_token": "ws_kIImz4Lm9ho036mAKHspSCqZNA4VkpY1",
+        "state": "failed",
+        "backend": "bazel",
+        "submitted_at": 1794189864.5826585,
+        "started_at": 1794189864.5911324,
+        "finished_at": 1794191618.5749745,
+        "seconds": null,
+        "invocation": null,
+        "processes": null,
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_HB7dJwFCPvoJB_N8nfiKI9rloZ7mw9-G",
+        "workspace_token": "ws_q5ew12SO3kRjDKweOPNSpKTC2UepCdTG",
+        "state": "failed",
+        "backend": "bazel",
+        "submitted_at": 1794189858.361162,
+        "started_at": 1794189858.3630855,
+        "finished_at": 1794191618.5571544,
+        "seconds": null,
+        "invocation": null,
+        "processes": null,
+        "verified": null,
+        "classification": null
+      },
+      {
+        "job_id": "job_MbPenhSM6xJYaicOips8moPN-mxwM2WV",
+        "workspace_token": "ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH",
+        "state": "failed",
+        "backend": "bazel",
+        "submitted_at": 1794189857.3190563,
+        "started_at": 1794189857.3201044,
+        "finished_at": 1794191618.5360065,
+        "seconds": null,
+        "invocation": null,
+        "processes": null,
+        "verified": null,
+        "classification": null
+      }
+    ]
+  },
+  "phases": [
+    {
+      "phase": "optimized_idle_baseline",
+      "samples": 71,
+      "first_timestamp": 1794189227.3890347,
+      "last_timestamp": 1794189367.5693817,
+      "memory_peak_bytes": 5940838400,
+      "swap_peak_bytes": 36864,
+      "psi_peak": {
+        "memory.pressure": {
+          "some": {
+            "avg10": 0,
+            "avg60": 0,
+            "avg300": 0
+          },
+          "full": {
+            "avg10": 0,
+            "avg60": 0,
+            "avg300": 0
+          }
+        },
+        "io.pressure": {
+          "some": {
+            "avg10": 1.66,
+            "avg60": 0.34,
+            "avg300": 0.07
+          },
+          "full": {
+            "avg10": 1.66,
+            "avg60": 0.34,
+            "avg300": 0.07
+          }
+        }
+      },
+      "event_deltas": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "peak_java_rss_bytes": {
+        "/home/cri_2025/lean-agent-workspaces/ws_CDIJzOag-rmezMPiwiYUnSi9hfa2gsHK/RiemannResearch": 4980367360
+      }
+    },
+    {
+      "phase": "optimized_full_alone",
+      "samples": 112,
+      "first_timestamp": 1794189369.5716813,
+      "last_timestamp": 1794189591.8611462,
+      "memory_peak_bytes": 6407360512,
+      "swap_peak_bytes": 36864,
+      "psi_peak": {
+        "memory.pressure": {
+          "some": {
+            "avg10": 0.32,
+            "avg60": 0.06,
+            "avg300": 0.01
+          },
+          "full": {
+            "avg10": 0.32,
+            "avg60": 0.06,
+            "avg300": 0.01
+          }
+        },
+        "io.pressure": {
+          "some": {
+            "avg10": 2.75,
+            "avg60": 0.64,
+            "avg300": 0.18
+          },
+          "full": {
+            "avg10": 2.75,
+            "avg60": 0.64,
+            "avg300": 0.18
+          }
+        }
+      },
+      "event_deltas": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "peak_java_rss_bytes": {
+        "/home/cri_2025/lean-agent-workspaces/ws_CDIJzOag-rmezMPiwiYUnSi9hfa2gsHK/RiemannResearch": 938127360,
+        "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch": 4282044416
+      }
+    },
+    {
+      "phase": "optimized_three_cold_starts",
+      "samples": 130,
+      "first_timestamp": 1794189593.863781,
+      "last_timestamp": 1794189852.2920957,
+      "memory_peak_bytes": 8298405888,
+      "swap_peak_bytes": 102821888,
+      "psi_peak": {
+        "memory.pressure": {
+          "some": {
+            "avg10": 4.24,
+            "avg60": 1.08,
+            "avg300": 0.24
+          },
+          "full": {
+            "avg10": 0.33,
+            "avg60": 0.07,
+            "avg300": 0.01
+          }
+        },
+        "io.pressure": {
+          "some": {
+            "avg10": 2.91,
+            "avg60": 0.66,
+            "avg300": 0.21
+          },
+          "full": {
+            "avg10": 2.91,
+            "avg60": 0.64,
+            "avg300": 0.19
+          }
+        }
+      },
+      "event_deltas": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "peak_java_rss_bytes": {
+        "/home/cri_2025/lean-agent-workspaces/ws_CDIJzOag-rmezMPiwiYUnSi9hfa2gsHK/RiemannResearch": 938127360,
+        "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch": 959156224,
+        "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch": 1887731712,
+        "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch": 1316102144,
+        "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch": 1916837888
+      }
+    },
+    {
+      "phase": "optimized_ten_full_builds",
+      "samples": 885,
+      "first_timestamp": 1794189854.2954848,
+      "last_timestamp": 1794191628.5065749,
+      "memory_peak_bytes": 11812339712,
+      "swap_peak_bytes": 57188184064,
+      "psi_peak": {
+        "memory.pressure": {
+          "some": {
+            "avg10": 43.53,
+            "avg60": 29.65,
+            "avg300": 19.57
+          },
+          "full": {
+            "avg10": 41.09,
+            "avg60": 28.13,
+            "avg300": 18.48
+          }
+        },
+        "io.pressure": {
+          "some": {
+            "avg10": 89.23,
+            "avg60": 86.3,
+            "avg300": 84.08
+          },
+          "full": {
+            "avg10": 85.12,
+            "avg60": 81.05,
+            "avg300": 78.55
+          }
+        }
+      },
+      "event_deltas": {
+        "low": 0,
+        "high": 735423,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "peak_java_rss_bytes": {
+        "/home/cri_2025/lean-agent-workspaces/ws_CDIJzOag-rmezMPiwiYUnSi9hfa2gsHK/RiemannResearch": 856862720,
+        "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch": 2305085440,
+        "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch": 2641031168,
+        "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch": 2300051456,
+        "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch": 1870823424,
+        "/home/cri_2025/lean-agent-workspaces/ws_q5ew12SO3kRjDKweOPNSpKTC2UepCdTG/RiemannResearch": 1934397440,
+        "/home/cri_2025/lean-agent-workspaces/ws_xMuNuc31n7yEWGQRudfXzQywhhimRURj/RiemannResearch": 2009640960,
+        "/home/cri_2025/lean-agent-workspaces/ws_ybMUtObTn-Te5QN6jZfaGhkW9kGgDQzO/RiemannResearch": 2052354048,
+        "/home/cri_2025/lean-agent-workspaces/ws_rdefumqimpdWlOXPP5X3dbORWgYNlGlB/RiemannResearch": 1704546304,
+        "/home/cri_2025/lean-agent-workspaces/ws_kIImz4Lm9ho036mAKHspSCqZNA4VkpY1/RiemannResearch": 2231869440,
+        "/home/cri_2025/lean-agent-workspaces/ws_h1v7yAd2i5iWB-JVOl73JmAK_6vVFyjx/RiemannResearch": 1453498368,
+        "pid:8062/start:71723": 0,
+        "pid:10595/start:93981": 0,
+        "pid:10649/start:94105": 0,
+        "pid:16914/start:120481": 0,
+        "pid:17046/start:120629": 0,
+        "pid:17463/start:120876": 0,
+        "pid:17585/start:121008": 0,
+        "pid:17634/start:121110": 0,
+        "pid:17904/start:121242": 0
+      }
+    },
+    {
+      "phase": "optimized_five_full_builds",
+      "samples": 332,
+      "first_timestamp": 1794191682.676507,
+      "last_timestamp": 1794192346.626944,
+      "memory_peak_bytes": 11812089856,
+      "swap_peak_bytes": 30894530560,
+      "psi_peak": {
+        "memory.pressure": {
+          "some": {
+            "avg10": 34.67,
+            "avg60": 21.99,
+            "avg300": 14.58
+          },
+          "full": {
+            "avg10": 30.58,
+            "avg60": 19.61,
+            "avg300": 12.39
+          }
+        },
+        "io.pressure": {
+          "some": {
+            "avg10": 60.67,
+            "avg60": 50.8,
+            "avg300": 67.58
+          },
+          "full": {
+            "avg10": 57,
+            "avg60": 46.73,
+            "avg300": 63.13
+          }
+        }
+      },
+      "event_deltas": {
+        "low": 0,
+        "high": 311599,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "peak_java_rss_bytes": {
+        "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch": 3916668928,
+        "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch": 3659636736,
+        "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch": 6915985408,
+        "/home/cri_2025/lean-agent-workspaces/ws_q5ew12SO3kRjDKweOPNSpKTC2UepCdTG/RiemannResearch": 6253793280,
+        "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch": 3089199104
+      }
+    }
+  ],
+  "regression_suite": {
+    "commit": "4bcfcc114d2d6de516e5fd17a76f07aa78ae85ec",
+    "repository": "Cnoack3/RiemannResearch",
+    "source_validation": {
+      "remote_tree_entries": 4777,
+      "tree_truncated": false,
+      "selected_files_hash_verified": 33,
+      "test_files": 9,
+      "production_python_files_identical_to_local_snapshot": 4
+    },
+    "infrastructure_suite": {
+      "command": "python3 -m unittest discover -s tools -p 'test_*.py' -q",
+      "tests": 86,
+      "duration_seconds": 31.584,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "additional_top_level_lifecycle_script_passed": true,
+      "log": "logs/unittest_discovery.log"
+    },
+    "coverage": {
+      "command": "python3 tools/bazel_verification.py --root coverage_tree --check",
+      "exit_code": 0,
+      "lean_source_paths": 3930,
+      "exact_hash_build_files": 66,
+      "source_bodies": "placeholders; path-only coverage audit",
+      "log": "logs/package_coverage.log"
+    },
+    "optimized_helpers": {
+      "tests": 18,
+      "duration_seconds": 0.527,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seeded_DAGs": 200,
+      "modeled_setup_argument_comparisons": 512,
+      "log": "logs/optimized_helpers.log",
+      "method": "Verbatim Starlark helper source executed as Python with ordered-unique depset and JSON stand-ins. No actual Bazel action execution or Args deferred evaluation."
+    },
+    "initial_issue": "copyfile lost executable bit on tools/lean_cache_lake.py; restored 100755 mode from exact remote tree, then full suite passed",
+    "not_executed": [
+      "Real Bazel/Lean builds in this task",
+      "Actual aquery/action input equivalence with rollback enabled",
+      "Real Bazel Args serialization/parameter file comparison",
+      "Full live server load/stress regression (owned by parent agent)"
+    ],
+    "changes": "No product code changes, no Git commits or pushes. Separate local test snapshot and logs only."
+  },
+  "functional_cases": {
+    "workspace_token": "ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes",
+    "base_commit": "4bcfcc114d2d6de516e5fd17a76f07aa78ae85ec",
+    "cases": [
+      {
+        "case": "valid Bazel snippet",
+        "outcome": "pass",
+        "job": "job_OOEMpEf0y1AHwwUSapt262isvW9BTSlD",
+        "verified": true,
+        "server_seconds": 19.049
+      },
+      {
+        "case": "identical pending reuse",
+        "outcome": "pass",
+        "job": "job_OOEMpEf0y1AHwwUSapt262isvW9BTSlD",
+        "existing": true,
+        "accepted": false,
+        "state": "running"
+      },
+      {
+        "case": "differing pending rejection",
+        "outcome": "pass",
+        "error": "Workspace already has run_code job job_OOEMpEf0y1AHwwUSapt262isvW9BTSlD running"
+      },
+      {
+        "case": "false equality rfl rejected",
+        "outcome": "pass",
+        "job": "job_O6fB1do2exUfcBVStKp1xObBQstHdrf1",
+        "verified": false,
+        "classification": "compiler_error",
+        "server_seconds": 12.656
+      },
+      {
+        "case": "anonymous suppressed-sorry rejected",
+        "outcome": "FAIL",
+        "job": "job_PEvqefVO7j45P1PD9hnKYIM1NSyxYH_T",
+        "verified": true,
+        "classification": "success",
+        "server_seconds": 10.064,
+        "note": "anonymous example of 0=1 with warn.sorry=false accepted"
+      },
+      {
+        "case": "nested BUILD auto-generation and filecheck",
+        "outcome": "pass",
+        "job": "job_c-tiUiAb-xPn-F6VN1FkR_Kz3xsnsocv",
+        "verified": true,
+        "server_seconds": 7.888,
+        "created_build_files": [
+          "RiemannResearch/Verification/BUILD.bazel",
+          "RiemannResearch/Verification/OptimizedFunctional/BUILD.bazel"
+        ]
+      },
+      {
+        "case": "named suppressed-sorry rejected",
+        "outcome": "pass",
+        "job": "job_qYEXzAw4VMt_YaMTLiBdHElFxZ6Kw2E6",
+        "verified": false,
+        "classification": "compiler_error",
+        "server_seconds": 7.358,
+        "gate": "OptimizedAuditRegression.falseNamed uses sorry, but forbid_sorry is enabled"
+      },
+      {
+        "case": "one-second timeout",
+        "outcome": "pass",
+        "job": "job_ZXUYfll1aEErjd5wCth_5HGls0yDTylu",
+        "backend": "bazel",
+        "verified": false,
+        "classification": "wall_timeout",
+        "exit_code": 8,
+        "server_seconds": 1.717,
+        "timeout_seconds": 1,
+        "temporary_file_removed": true,
+        "stage": "package loading before Lean actions"
+      },
+      {
+        "case": "next valid Bazel recovery check",
+        "outcome": "pass",
+        "job": "job_VS4wXCaRMsiTJWqYeep2v5d3FwCFcvBO",
+        "backend": "bazel",
+        "verified": true,
+        "classification": "success",
+        "exit_code": 0,
+        "server_seconds": 10.859,
+        "temporary_file_removed": true
+      },
+      {
+        "case": "explicit Lake core-only rollback",
+        "outcome": "pass",
+        "job": "job_cCBUEzD2QB3b9JpWKJB_BLchXDjOMCUd",
+        "backend": "lake",
+        "verified": true,
+        "classification": "success",
+        "exit_code": 0,
+        "server_seconds": 11.661,
+        "temporary_file_removed": true,
+        "code": "example : True := by\n  trivial\n",
+        "worker_count": 1
+      }
+    ],
+    "cleanup": {
+      "outcome": "blocked",
+      "reason": "agent_workspace_apply_patch denies deletion patches",
+      "remaining": [
+        "RiemannResearch/Verification/OptimizedFunctional/NestedIdentity.lean",
+        "RiemannResearch/Verification/OptimizedFunctional/BUILD.bazel",
+        "RiemannResearch/Verification/BUILD.bazel"
+      ],
+      "ephemeral_snippets": "automatically removed",
+      "publication": "none",
+      "remaining_absolute": [
+        "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch/RiemannResearch/Verification/OptimizedFunctional/NestedIdentity.lean",
+        "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch/RiemannResearch/Verification/OptimizedFunctional/BUILD.bazel",
+        "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch/RiemannResearch/Verification/BUILD.bazel"
+      ],
+      "final_git_status": "## main...origin/main\n?? RiemannResearch/Verification/",
+      "pending_jobs": 0,
+      "snippet_paths_remaining": 0
+    },
+    "attribution": "The anonymous-example acceptance gap also reproduces at old source HEAD d55848e; it is not newly introduced by optimized commit 4bcfcc1.",
+    "baseline_comparison": {
+      "workspace_token": "ws_HxFGEwbvDMWkQuWhGlOn3UzGDVsAsufj",
+      "head": "d55848e",
+      "job": "job_odUjJscDkVX2uxFrCp8jhmq7DE1gMFwR",
+      "code_sha256": "24738f338311ba6d7e13c851bcaaa8716a7f328d007c621a19155656b9978b01",
+      "outcome": "same anonymous suppressed-sorry snippet accepted against old repository source",
+      "verified": true,
+      "classification": "success",
+      "elapsed_seconds": 14.941,
+      "temporary_file_removed": true,
+      "existing_untracked_directory": "RiemannResearch/VerificationStress/",
+      "source_mutations": "none"
+    }
+  },
+  "queue_cap_change": {
+    "base": "4bcfcc114d2d6de516e5fd17a76f07aa78ae85ec",
+    "tree": "d28f2942a0a9071d96a6301e3b73842b8fb66319",
+    "commit": "68c9cdb2a90a3c01ad335350ea9d9d16493aaf83",
+    "files": [
+      {
+        "path": "tools/agent_workspaces.py",
+        "sha256": "391b4309e6bcd4e3fc53094c8cb69f6f221ac91a9a56a37484e047269bd806da",
+        "blob": "503b2e5b15c5d845d9b623a66435965316bf4f5a"
+      },
+      {
+        "path": "tools/lean_workspace_mcp.py",
+        "sha256": "56ff60c518b8ca868a11c36d608038b90549dcf2caa05404866ad29485e76d37",
+        "blob": "e61b3f16388ee17cf4bd880bc87f726dfce3bb08"
+      },
+      {
+        "path": "tools/test_bazel_concurrency.py",
+        "sha256": "2275fff05c5e4a92f1b185ca9e019724b583be9dbc3b2250511db8ca88c9148a",
+        "blob": "ec13b6e36fe43c7c534da87cc9131bc6599a92bd"
+      },
+      {
+        "path": "AGENTS.md",
+        "sha256": "d71ecb5d40eca0f35144a48b34cdc04e5d3da3e2aa0af708e571d81f677e0cf2",
+        "blob": "ca7c5f0c5d24e39f0875db5acabe99aa1e001046"
+      },
+      {
+        "path": "bazel/VERIFICATION.md",
+        "sha256": "838fc2fe291c0542c33b9bee719c915872f9916c2a1eccb2d35bd37fe0ed388d",
+        "blob": "b17245d721c3b17eb3c4fb3c2b0cee16db2e6774"
+      },
+      {
+        "path": "bazel/lean-tunnel.resources.conf",
+        "sha256": "911d7c3cea9f356e8754472ff85bbce1cd7f81784b622ef0b03ef3a90bce87a6",
+        "blob": "af598bab00c5a194fa3e393a250a5246ddd500d7"
+      },
+      {
+        "path": "bazel/RBE.md",
+        "sha256": "6bff6d3143111a9b40b94a664e681d182ecbb90dac8035a7e63c5b2f56c02015",
+        "blob": "d3016888ac5f290347b5e53887b61ff3010bcded"
+      }
+    ],
+    "tests": {
+      "full_suite": {
+        "count": 88,
+        "seconds": 14.746,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "log": "/workspace/scratch/ed080f368d1d/cap5_update/logs/unittest.log"
+      },
+      "concurrency": {
+        "count": 10,
+        "log": "/workspace/scratch/ed080f368d1d/cap5_update/logs/concurrency.log"
+      }
+    },
+    "deployed": false,
+    "skills": {
+      "workflow_commit": "d2a1bbe",
+      "build_commit": "ddac25b",
+      "remote_verified": true
+    }
+  },
+  "queue_cap_tests": {
+    "full_suite": {
+      "count": 88,
+      "seconds": 14.746,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "log": "/workspace/scratch/ed080f368d1d/cap5_update/logs/unittest.log"
+    },
+    "concurrency": {
+      "count": 10,
+      "log": "/workspace/scratch/ed080f368d1d/cap5_update/logs/concurrency.log"
+    }
+  },
+  "anonymous_audit_investigation": {
+    "check_exit_code": 0,
+    "stderr": "",
+    "source_sha256": "b055b8685ae693721a79ef6e3b947af903668487da86cb42638167f51f338226",
+    "candidate_sha256": "29fd96dcae5f970256cab9747ef101f9a4bfc69f6c4fa6826e5ba9f82a9d6492",
+    "base_revision": "4bcfcc114d2d6de516e5fd17a76f07aa78ae85ec",
+    "native_plugin_link_tested": false,
+    "deployed": false,
+    "disabled_info_guard": true,
+    "positive_job": "job_1LW7zepBzjiLjqdl6D2lqZTC7tQPcOip",
+    "positive_seconds": 6.961,
+    "disabled_state_job": "job_610_F5Jk5LUcIJen_7TazIgExbkocG7X",
+    "disabled_state_seconds": 3.642,
+    "workspace_clean": true,
+    "remaining": [
+      "native plugin compilation/linking",
+      "native plugin preload and diagnostic visibility",
+      "Bazel shared-input equivalence with plugin",
+      "full-project validation"
+    ]
+  },
+  "independent_restoration_check": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "path": "RiemannResearch/Analysis/FiniteGramSchurBounds.lean",
+        "exact_match": true,
+        "status": {
+          "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL",
+          "state": "active",
+          "status": "## main...origin/main",
+          "recent_commits": "4bcfcc1 (HEAD -> main, origin/main) Share Lean action inputs and defer setup serialization\nbb91281 Keep idle Bazel servers warm for thirty minutes\nbcd5451 Record concurrent cache-invalidation and full-build stress tests",
+          "published_commit": null,
+          "needs_rehydrate": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "path": "RiemannResearch/Analysis/FiniteHilbertGram.lean",
+        "exact_match": true,
+        "status": {
+          "workspace_token": "ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH",
+          "state": "active",
+          "status": "## main...origin/main",
+          "recent_commits": "4bcfcc1 (HEAD -> main, origin/main) Share Lean action inputs and defer setup serialization\nbb91281 Keep idle Bazel servers warm for thirty minutes\nbcd5451 Record concurrent cache-invalidation and full-build stress tests",
+          "published_commit": null,
+          "needs_rehydrate": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "path": "RiemannResearch/RH/ZetaTwoProbability.lean",
+        "exact_match": true,
+        "status": {
+          "workspace_token": "ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR",
+          "state": "active",
+          "status": "## main...origin/main",
+          "recent_commits": "4bcfcc1 (HEAD -> main, origin/main) Share Lean action inputs and defer setup serialization\nbb91281 Keep idle Bazel servers warm for thirty minutes\nbcd5451 Record concurrent cache-invalidation and full-build stress tests",
+          "published_commit": null,
+          "needs_rehydrate": false
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Single samples; cache warmth, proof variants and background load differ from the earlier baseline.",
+    "Full aggregate runs reused compilation caches and were not empty-cache full source recompilations.",
+    "Initial solo and cold-target runs used the older 9/10/1 GiB service policy.",
+    "Five-build and ten-build memory pressure measurements include local analysis and filesystem cache.",
+    "Direct rollback-define and live shared-input comparison modes were not exposed by the MCP build API."
+  ],
+  "invalidation_suite": {
+    "schema_version": 1,
+    "tested_commit": "4bcfcc114d2d6de516e5fd17a76f07aa78ae85ec",
+    "backend": "bazel",
+    "config": "buildbuddy",
+    "live_worker_cap_during_tests": 0,
+    "worker_count_returned_by_api": null,
+    "resource_policy": {
+      "memory_high_bytes": 11811160064,
+      "memory_max_bytes": 12884901888,
+      "memory_swap_max": "unlimited",
+      "host_swap_GiB": 128
+    },
+    "expected_invalidation_counts": {
+      "small": 4,
+      "medium": 42,
+      "large": 100
+    },
+    "serial": {
+      "small": {
+        "job_id": "job_c4YNncqNu_lU9MzYvk2GGaG93f5suz_h",
+        "state": "succeeded",
+        "backend": "bazel",
+        "verification_seconds": 97.398,
+        "job_seconds": 97.46,
+        "scope": "RiemannResearch/RH/QCanonicalSchurVariance.lean",
+        "fresh_remote_actions": 4,
+        "remote_cache_hits": 0,
+        "action_cache_hits": 196,
+        "critical_path_seconds": 77.31,
+        "invocation": "https://app.buildbuddy.io/invocation/2e04a438-5663-4b05-a0bf-3ccaad8a5f30"
+      },
+      "medium": {
+        "job_id": "job_tNLIvA_sADieSrRL3AwSME_zHgwvhzGs",
+        "state": "succeeded",
+        "backend": "bazel",
+        "verification_seconds": 335.198,
+        "job_seconds": 335.26,
+        "scope": "RiemannResearch/RH/QCRTGramMinimizer.lean",
+        "fresh_remote_actions": 42,
+        "remote_cache_hits": 0,
+        "action_cache_hits": 225,
+        "critical_path_seconds": 316.43,
+        "invocation": "https://app.buildbuddy.io/invocation/adc5de7e-4651-49f2-884c-850c4aedd292"
+      },
+      "large": {
+        "job_id": "job_QbyZIwQaAUydlvDq0tKNbw2eAM-Kdn5-",
+        "state": "succeeded",
+        "backend": "bazel",
+        "verification_seconds": 512.063,
+        "job_seconds": 512.139,
+        "scope": "RiemannResearch/RH/QFullIsometricTransport.lean",
+        "fresh_remote_actions": 100,
+        "remote_cache_hits": 0,
+        "action_cache_hits": 266,
+        "critical_path_seconds": 487.44,
+        "invocation": "https://app.buildbuddy.io/invocation/5cd25a06-b2bd-48ac-af48-89c05be65ae6"
+      }
+    },
+    "concurrent": {
+      "small": {
+        "job_id": "job_x2EpJdYl1KyzWCu8Q8vfyPwPv_4OaCoi",
+        "state": "succeeded",
+        "backend": "bazel",
+        "verification_seconds": 43.793,
+        "job_seconds": 43.855,
+        "scope": "RiemannResearch/RH/QCanonicalSchurVariance.lean",
+        "fresh_remote_actions": 4,
+        "remote_cache_hits": 0,
+        "action_cache_hits": 196,
+        "critical_path_seconds": 27.95,
+        "invocation": "https://app.buildbuddy.io/invocation/d6473864-9a96-4698-8ee0-b16a1722378d"
+      },
+      "medium": {
+        "job_id": "job_qjK8Ojz26kJv_ZeP0d32gxIXFmzFubJ8",
+        "state": "succeeded",
+        "backend": "bazel",
+        "verification_seconds": 208.809,
+        "job_seconds": 208.874,
+        "scope": "RiemannResearch/RH/QCRTGramMinimizer.lean",
+        "fresh_remote_actions": 42,
+        "remote_cache_hits": 0,
+        "action_cache_hits": 225,
+        "critical_path_seconds": 188.07,
+        "invocation": "https://app.buildbuddy.io/invocation/aca673b9-918c-453f-a44c-beebd6aa484b"
+      },
+      "large": {
+        "job_id": "job__Ux1KWsrqkYoExFPbEkuIhP-ePbC6qAj",
+        "state": "succeeded",
+        "backend": "bazel",
+        "verification_seconds": 332.994,
+        "job_seconds": 333.064,
+        "scope": "RiemannResearch/RH/QFullIsometricTransport.lean",
+        "fresh_remote_actions": 100,
+        "remote_cache_hits": 0,
+        "action_cache_hits": 266,
+        "critical_path_seconds": 311.19,
+        "invocation": "https://app.buildbuddy.io/invocation/f63589b2-7f15-4260-b9a9-1355629a1d23"
+      }
+    },
+    "concurrent_timing": {
+      "all_jobs_running_overlap_seconds": 42.58763837814331,
+      "makespan_from_first_submission_seconds": 333.065221786499,
+      "submission_spread_seconds": 2.2888031005859375
+    },
+    "full_overlap": {
+      "full": {
+        "job_id": "job_SA55pXy_mj24ntyn1KVbx5iRSdhmXoxy",
+        "state": "succeeded",
+        "backend": "bazel",
+        "verification_seconds": 194.885,
+        "job_seconds": 194.887,
+        "scope": "full",
+        "fresh_remote_actions": 0,
+        "remote_cache_hits": 3942,
+        "action_cache_hits": 0,
+        "critical_path_seconds": 51.05,
+        "invocation": "https://app.buildbuddy.io/invocation/4a0b9496-ebb9-475a-b25e-39ad71150624"
+      },
+      "small": {
+        "job_id": "job_NhDYzz1OBkJFRL7ieM59nLXpc4kH3JaN",
+        "state": "succeeded",
+        "backend": "bazel",
+        "verification_seconds": 42.689,
+        "job_seconds": 42.798,
+        "scope": "RiemannResearch/RH/QCanonicalSchurVariance.lean",
+        "fresh_remote_actions": 4,
+        "remote_cache_hits": 0,
+        "action_cache_hits": 196,
+        "critical_path_seconds": 29.01,
+        "invocation": "https://app.buildbuddy.io/invocation/c79073d9-129e-4e97-984b-49f00f4ce73a"
+      }
+    },
+    "full_overlap_timing": {
+      "all_jobs_running_overlap_seconds": 42.79754447937012,
+      "makespan_from_first_submission_seconds": 194.88919186592102,
+      "submission_spread_seconds": 0.9909060001373291
+    },
+    "full_overlap_workspace": {
+      "workspace_token": "ws_kIImz4Lm9ho036mAKHspSCqZNA4VkpY1",
+      "baseline": {
+        "workspace_token": "ws_kIImz4Lm9ho036mAKHspSCqZNA4VkpY1",
+        "state": "active",
+        "status": "## main...origin/main",
+        "recent_commits": "4bcfcc1 (HEAD -> main, origin/main) Share Lean action inputs and defer setup serialization\nbb91281 Keep idle Bazel servers warm for thirty minutes\nbcd5451 Record concurrent cache-invalidation and full-build stress tests",
+        "published_commit": null,
+        "needs_rehydrate": false
+      },
+      "pre_run_jvm_absent": true,
+      "cache_state": "Fresh Bazel JVM, existing artifact caches. Prior ten-build attempt was operator-cancelled."
+    },
+    "restoration": [
+      {
+        "name": "small",
+        "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL",
+        "source": "RiemannResearch/Analysis/FiniteGramSchurBounds.lean",
+        "exact_original_restored": true,
+        "status": {
+          "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL",
+          "state": "active",
+          "status": "## main...origin/main",
+          "recent_commits": "4bcfcc1 (HEAD -> main, origin/main) Share Lean action inputs and defer setup serialization\nbb91281 Keep idle Bazel servers warm for thirty minutes\nbcd5451 Record concurrent cache-invalidation and full-build stress tests",
+          "published_commit": null,
+          "needs_rehydrate": false
+        },
+        "restored_sha256": "9fc0ebad18189833f339da392067b08de5de3273339af6b737bce6bd40f6b29a"
+      },
+      {
+        "name": "medium",
+        "workspace_token": "ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH",
+        "source": "RiemannResearch/Analysis/FiniteHilbertGram.lean",
+        "exact_original_restored": true,
+        "status": {
+          "workspace_token": "ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH",
+          "state": "active",
+          "status": "## main...origin/main",
+          "recent_commits": "4bcfcc1 (HEAD -> main, origin/main) Share Lean action inputs and defer setup serialization\nbb91281 Keep idle Bazel servers warm for thirty minutes\nbcd5451 Record concurrent cache-invalidation and full-build stress tests",
+          "published_commit": null,
+          "needs_rehydrate": false
+        },
+        "restored_sha256": "28a79cc4b556353039535148a7c0f4bbf9cfd0d1776716abe508798bbb1349ce"
+      },
+      {
+        "name": "large",
+        "workspace_token": "ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR",
+        "source": "RiemannResearch/RH/ZetaTwoProbability.lean",
+        "exact_original_restored": true,
+        "status": {
+          "workspace_token": "ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR",
+          "state": "active",
+          "status": "## main...origin/main",
+          "recent_commits": "4bcfcc1 (HEAD -> main, origin/main) Share Lean action inputs and defer setup serialization\nbb91281 Keep idle Bazel servers warm for thirty minutes\nbcd5451 Record concurrent cache-invalidation and full-build stress tests",
+          "published_commit": null,
+          "needs_rehydrate": false
+        },
+        "restored_sha256": "5d06950c6c12fedce98041a0a7740793d069b3be6e1f618b613a60aec47ae435"
+      }
+    ],
+    "telemetry_phases": [
+      {
+        "phase": "optimized_serial_large_E",
+        "samples": 265,
+        "first_timestamp": 1794192400.7215044,
+        "memory_peak_bytes": 10224234496,
+        "swap_peak_bytes": 3823370240,
+        "psi_peak": {
+          "memory.pressure": {
+            "some": {
+              "avg10": 0,
+              "avg60": 2.22,
+              "avg300": 8.66
+            },
+            "full": {
+              "avg10": 0,
+              "avg60": 2.15,
+              "avg300": 7.79
+            }
+          },
+          "io.pressure": {
+            "some": {
+              "avg10": 22.07,
+              "avg60": 11.68,
+              "avg300": 28.86
+            },
+            "full": {
+              "avg10": 22.07,
+              "avg60": 11.45,
+              "avg300": 26.64
+            }
+          }
+        },
+        "peak_java_rss_bytes": {
+          "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch": 2030411776,
+          "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch": 94846976,
+          "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch": 861093888,
+          "/home/cri_2025/lean-agent-workspaces/ws_q5ew12SO3kRjDKweOPNSpKTC2UepCdTG/RiemannResearch": 670703616,
+          "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch": 1399472128,
+          "/home/cri_2025/lean-agent-workspaces/ws_HxFGEwbvDMWkQuWhGlOn3UzGDVsAsufj/RiemannResearch": 910663680,
+          "/home/cri_2025/lean-agent-workspaces/ws_rdefumqimpdWlOXPP5X3dbORWgYNlGlB/RiemannResearch": 675909632
+        },
+        "event_start": {
+          "low": 0,
+          "high": 1047022,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "last_timestamp": 1794192929.7199597,
+        "event_end": {
+          "low": 0,
+          "high": 1047022,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "event_deltas": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        }
+      },
+      {
+        "phase": "optimized_serial_medium_E",
+        "samples": 202,
+        "first_timestamp": 1794192931.723208,
+        "memory_peak_bytes": 9776992256,
+        "swap_peak_bytes": 2836873216,
+        "psi_peak": {
+          "memory.pressure": {
+            "some": {
+              "avg10": 0,
+              "avg60": 0,
+              "avg300": 1.37
+            },
+            "full": {
+              "avg10": 0,
+              "avg60": 0,
+              "avg300": 1.23
+            }
+          },
+          "io.pressure": {
+            "some": {
+              "avg10": 1.24,
+              "avg60": 1.86,
+              "avg300": 5.84
+            },
+            "full": {
+              "avg10": 1.23,
+              "avg60": 1.83,
+              "avg300": 5.46
+            }
+          }
+        },
+        "peak_java_rss_bytes": {
+          "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch": 941314048,
+          "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch": 102580224,
+          "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch": 1514209280,
+          "/home/cri_2025/lean-agent-workspaces/ws_q5ew12SO3kRjDKweOPNSpKTC2UepCdTG/RiemannResearch": 674373632,
+          "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch": 815349760,
+          "/home/cri_2025/lean-agent-workspaces/ws_HxFGEwbvDMWkQuWhGlOn3UzGDVsAsufj/RiemannResearch": 520978432,
+          "/home/cri_2025/lean-agent-workspaces/ws_rdefumqimpdWlOXPP5X3dbORWgYNlGlB/RiemannResearch": 677470208
+        },
+        "event_start": {
+          "low": 0,
+          "high": 1047022,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "last_timestamp": 1794193334.4810374,
+        "event_end": {
+          "low": 0,
+          "high": 1047022,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "event_deltas": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        }
+      },
+      {
+        "phase": "optimized_serial_small_E",
+        "samples": 89,
+        "first_timestamp": 1794193336.484222,
+        "memory_peak_bytes": 11811147776,
+        "swap_peak_bytes": 2791948288,
+        "psi_peak": {
+          "memory.pressure": {
+            "some": {
+              "avg10": 0,
+              "avg60": 0,
+              "avg300": 0.31
+            },
+            "full": {
+              "avg10": 0,
+              "avg60": 0,
+              "avg300": 0.28
+            }
+          },
+          "io.pressure": {
+            "some": {
+              "avg10": 7.27,
+              "avg60": 1.91,
+              "avg300": 1.82
+            },
+            "full": {
+              "avg10": 7.27,
+              "avg60": 1.91,
+              "avg300": 1.73
+            }
+          }
+        },
+        "peak_java_rss_bytes": {
+          "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch": 943386624,
+          "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch": 3148484608,
+          "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch": 1092665344,
+          "/home/cri_2025/lean-agent-workspaces/ws_q5ew12SO3kRjDKweOPNSpKTC2UepCdTG/RiemannResearch": 676208640,
+          "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch": 815349760,
+          "/home/cri_2025/lean-agent-workspaces/ws_rdefumqimpdWlOXPP5X3dbORWgYNlGlB/RiemannResearch": 696926208
+        },
+        "event_start": {
+          "low": 0,
+          "high": 1047022,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "last_timestamp": 1794193512.8222687,
+        "event_end": {
+          "low": 0,
+          "high": 1047311,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "event_deltas": {
+          "low": 0,
+          "high": 289,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        }
+      },
+      {
+        "phase": "optimized_concurrent_F",
+        "samples": 201,
+        "first_timestamp": 1794193514.826087,
+        "memory_peak_bytes": 10926788608,
+        "swap_peak_bytes": 2378432512,
+        "psi_peak": {
+          "memory.pressure": {
+            "some": {
+              "avg10": 0,
+              "avg60": 0,
+              "avg300": 0.15
+            },
+            "full": {
+              "avg10": 0,
+              "avg60": 0,
+              "avg300": 0.13
+            }
+          },
+          "io.pressure": {
+            "some": {
+              "avg10": 1.56,
+              "avg60": 0.63,
+              "avg300": 1.21
+            },
+            "full": {
+              "avg10": 1.56,
+              "avg60": 0.63,
+              "avg300": 1.16
+            }
+          }
+        },
+        "peak_java_rss_bytes": {
+          "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch": 1563303936,
+          "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch": 1486688256,
+          "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch": 1202262016,
+          "/home/cri_2025/lean-agent-workspaces/ws_q5ew12SO3kRjDKweOPNSpKTC2UepCdTG/RiemannResearch": 677650432,
+          "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch": 815349760,
+          "/home/cri_2025/lean-agent-workspaces/ws_rdefumqimpdWlOXPP5X3dbORWgYNlGlB/RiemannResearch": 701349888,
+          "/home/cri_2025/lean-agent-workspaces/ws_CDIJzOag-rmezMPiwiYUnSi9hfa2gsHK/RiemannResearch": 1363845120
+        },
+        "event_start": {
+          "low": 0,
+          "high": 1047311,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "last_timestamp": 1794193915.563103,
+        "event_end": {
+          "low": 0,
+          "high": 1047311,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "event_deltas": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        }
+      },
+      {
+        "phase": "optimized_full_plus_small_G",
+        "samples": 122,
+        "first_timestamp": 1794193917.56629,
+        "memory_peak_bytes": 11811160064,
+        "swap_peak_bytes": 2400784384,
+        "psi_peak": {
+          "memory.pressure": {
+            "some": {
+              "avg10": 5.14,
+              "avg60": 1.05,
+              "avg300": 0.31
+            },
+            "full": {
+              "avg10": 3.18,
+              "avg60": 0.8,
+              "avg300": 0.22
+            }
+          },
+          "io.pressure": {
+            "some": {
+              "avg10": 4.56,
+              "avg60": 1.19,
+              "avg300": 0.56
+            },
+            "full": {
+              "avg10": 3.5,
+              "avg60": 0.98,
+              "avg300": 0.36
+            }
+          }
+        },
+        "peak_java_rss_bytes": {
+          "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch": 938835968,
+          "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch": 1591545856,
+          "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch": 952487936,
+          "/home/cri_2025/lean-agent-workspaces/ws_q5ew12SO3kRjDKweOPNSpKTC2UepCdTG/RiemannResearch": 677781504,
+          "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch": 815349760,
+          "/home/cri_2025/lean-agent-workspaces/ws_rdefumqimpdWlOXPP5X3dbORWgYNlGlB/RiemannResearch": 636350464,
+          "/home/cri_2025/lean-agent-workspaces/ws_CDIJzOag-rmezMPiwiYUnSi9hfa2gsHK/RiemannResearch": 1752526848,
+          "/home/cri_2025/lean-agent-workspaces/ws_kIImz4Lm9ho036mAKHspSCqZNA4VkpY1/RiemannResearch": 3971592192
+        },
+        "event_start": {
+          "low": 0,
+          "high": 1047311,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "last_timestamp": 1794194160.0749888,
+        "event_end": {
+          "low": 0,
+          "high": 1067794,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "event_deltas": {
+          "low": 0,
+          "high": 20483,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        }
+      }
+    ],
+    "ambient_jobs_after": {
+      "observed_at": 1794194168.79,
+      "workspace_token": "ws_CDIJzOag-rmezMPiwiYUnSi9hfa2gsHK",
+      "jobs": [
+        {
+          "job_id": "job_6Qe_LNwlabblj5MZG3JMUTB3gM_Vx7w1",
+          "kind": "run_code",
+          "state": "succeeded",
+          "request_sha256": "a483b0b507ee50b277c64bdf3dc2d5a44ec5455724988bcbf335716a8c525fe9",
+          "submitted_at": 1794194099.1841488,
+          "terminal": true
+        },
+        {
+          "job_id": "job_e-Py1Iywfk0C6D7JEZsDt7QNM1sroRUY",
+          "kind": "build",
+          "state": "succeeded",
+          "request_sha256": "6b0346f66fe096e9d58edaeceaccc0acd759eda4f3d293e1fb993c4fd7160969",
+          "submitted_at": 1794193874.9321249,
+          "terminal": true
+        }
+      ],
+      "total_matches": 4,
+      "truncated": true
+    },
+    "limitations": [
+      "Serial E and concurrent F/G use distinct valid proof-body edits so every case causes new actions. Their proof terms and remote execution timings differ, which prevents attributing the timing difference solely to parallelism.",
+      "Other functional checks used separate workspaces during portions of the serial and concurrent trials.",
+      "An unrelated workspace ws_CDIJzOag-rmezMPiwiYUnSi9hfa2gsHK started a full build near the end of the concurrent trial and overlapped the full-plus-small trial. Its two latest jobs were terminal when inspected after this suite.",
+      "A positive default cap of five was committed to main during these tests but was not deployed to the live service. All these measurements used the previous uncapped service.",
+      "The monitor samples aggregate service memory and PSI, including retained idle JVMs and unrelated workspaces.",
+      "The first small F-to-G patch request lacked the final newline and was rejected without applying. The corrected patch succeeded and matched the expected full source before submission.",
+      "Some compiler logs were truncated by the MCP response. Their retained terminal summaries include exact fresh remote action counts and successful build outcomes."
+    ],
+    "raw_statuses": {
+      "serial": {
+        "small": {
+          "observed_at": 1794193483.472,
+          "admission": {
+            "lock_wait_seconds": 4.6e-05,
+            "lookup_seconds": 4.2e-05,
+            "records_examined": 0
+          },
+          "admission_started_at": 1794193336.0514367,
+          "backend": "bazel",
+          "file_sha256": "f69aa88d76cca4f88bb1444832454c31d7cc35c4fd502fd84c50cce245001d49",
+          "finished_at": 1794193433.5128398,
+          "job_id": "job_c4YNncqNu_lU9MzYvk2GGaG93f5suz_h",
+          "kind": "check_file",
+          "owner_id": "153088960293877b49b816037577aeb7",
+          "progress": {
+            "current": null,
+            "detail": "Checking Lean source",
+            "percent": 100,
+            "phase": "complete",
+            "phase_started_at": 1794193336.1144755,
+            "total": null,
+            "updated_at": 1794193433.5130074
+          },
+          "request_sha256": "fda73d9af350e3d769b769a0f6aeaa28a60d7200fac9e5d57cb8fa54128ec19f",
+          "result": {
+            "backend": "bazel",
+            "checked_file_sha256": "f69aa88d76cca4f88bb1444832454c31d7cc35c4fd502fd84c50cce245001d49",
+            "classification": "success",
+            "command": [
+              "bazel",
+              "build",
+              "--config=buildbuddy",
+              "--color=no",
+              "--curses=no",
+              "//RiemannResearch/RH:QCanonicalSchurVariance"
+            ],
+            "created_build_files": [],
+            "elapsed_seconds": 97.398,
+            "exit_code": 0,
+            "file_sha256": "f69aa88d76cca4f88bb1444832454c31d7cc35c4fd502fd84c50cce245001d49",
+            "output": "INFO: Invocation ID: 2e04a438-5663-4b05-a0bf-3ccaad8a5f30\nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/2e04a438-5663-4b05-a0bf-3ccaad8a5f30\nINFO: Checking for file changes...\nComputing main repo mapping: \nLoading: \nLoading: 0 packages loaded\nLoading: 0 packages loaded\nLoading: 0 packages loaded\n    currently loading: RiemannResearch/RH\nAnalyzing: target //RiemannResearch/RH:QCanonicalSchurVariance (1 packages loaded, 0 targets configured)\nAnalyzing: target //RiemannResearch/RH:QCanonicalSchurVariance (1 packages loaded, 0 targets configured)\n\nAnalyzing: target //RiemannResearch/RH:QCanonicalSchurVariance (15 packages loaded, 1529 targets configured)\n\nINFO: Analyzed target //RiemannResearch/RH:QCanonicalSchurVariance (15 packages loaded, 24232 targets configured).\n[1 / 1] no actions running\n[135 / 201] Lean RiemannResearch/Analysis/FiniteGramSchurBounds; 0s remote, disk-cache, remote-cache\n[151 / 201] [Sched] Lean RiemannResearch/Analysis/FiniteGramSchurBounds\n[197 / 201] Lean RiemannResearch/Analysis/FiniteGramSchurBounds; 1s remote, disk-cache, remote-cache\n[198 / 201] [Prepa] Lean RiemannResearch/RH/QCanonicalWindowCapacity\n[198 / 201] [Sched] Lean RiemannResearch/RH/QCanonicalWindowCapacity\n[198 / 201] Lean RiemannResearch/RH/QCanonicalWindowCapacity; 0s remote, disk-cache, remote-cache\n[198 / 201] Lean RiemannResearch/RH/QCanonicalWindowCapacity; 9s remote, disk-cache, remote-cache\n[199 / 201] [Prepa] Lean RiemannResearch/RH/QCanonicalWindowSchurArithmetic\n[199 / 201] Lean RiemannResearch/RH/QCanonicalWindowSchurArithmetic; 0s remote, disk-cache, remote-cache\n[199 / 201] Lean RiemannResearch/RH/QCanonicalWindowSchurArithmetic; 10s remote, disk-cache, remote-cache\n[200 / 201] [Prepa] Lean RiemannResearch/RH/QCanonicalSchurVariance\n[200 / 201] Lean RiemannResearch/RH/QCanonicalSchurVariance; 0s remote, disk-cache, remote-cache\nINFO: Found 1 target...\nINFO: Elapsed time: 96.640s, Critical Path: 77.31s\nINFO: 5 processes: 196 action cache hit, 1 internal, 4 remote.\nINFO: Build completed successfully, 5 total actions\nINFO: \nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/2e04a438-5663-4b05-a0bf-3ccaad8a5f30",
+            "output_bytes": 2192,
+            "output_truncated": false,
+            "path": "RiemannResearch/RH/QCanonicalSchurVariance.lean",
+            "project_root": "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch",
+            "request_sha256": "fda73d9af350e3d769b769a0f6aeaa28a60d7200fac9e5d57cb8fa54128ec19f",
+            "temporary_file_removed": null,
+            "timeout_seconds": 10800,
+            "verified": true,
+            "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL"
+          },
+          "started_at": 1794193336.0530949,
+          "state": "succeeded",
+          "submitted_at": 1794193336.0515523,
+          "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL",
+          "queue_position": null,
+          "worker_count": null,
+          "same_workspace_limit": 1,
+          "active_job_count": 0,
+          "elapsed_seconds": 97.46,
+          "terminal": true,
+          "retry_after_seconds": 0
+        },
+        "medium": {
+          "observed_at": 1794193318.37,
+          "admission": {
+            "lock_wait_seconds": 7.9e-05,
+            "lookup_seconds": 7.1e-05,
+            "records_examined": 0
+          },
+          "admission_started_at": 1794192934.336484,
+          "backend": "bazel",
+          "file_sha256": "8602e52dc51d169ee419e82e2d35b77f8bdd87a6caecc2e7d3325a00b112102a",
+          "finished_at": 1794193269.5982928,
+          "job_id": "job_tNLIvA_sADieSrRL3AwSME_zHgwvhzGs",
+          "kind": "check_file",
+          "owner_id": "153088960293877b49b816037577aeb7",
+          "progress": {
+            "current": null,
+            "detail": "Checking Lean source",
+            "percent": 100,
+            "phase": "complete",
+            "phase_started_at": 1794192934.4001172,
+            "total": null,
+            "updated_at": 1794193269.5986106
+          },
+          "request_sha256": "e6adc92a9b84618d4742d1af6b4caac3a68fbb40adfda58d62ec37158a8c5acf",
+          "result": {
+            "backend": "bazel",
+            "checked_file_sha256": "8602e52dc51d169ee419e82e2d35b77f8bdd87a6caecc2e7d3325a00b112102a",
+            "classification": "success",
+            "command": [
+              "bazel",
+              "build",
+              "--config=buildbuddy",
+              "--color=no",
+              "--curses=no",
+              "//RiemannResearch/RH:QCRTGramMinimizer"
+            ],
+            "created_build_files": [],
+            "elapsed_seconds": 335.198,
+            "exit_code": 0,
+            "file_sha256": "8602e52dc51d169ee419e82e2d35b77f8bdd87a6caecc2e7d3325a00b112102a",
+            "output": "10s remote, disk-cache, remote-cache ... (2 actions running)\n[251 / 268] Lean RiemannResearch/RH/PhysicalCoreMonotonicity; 6s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[251 / 268] Lean RiemannResearch/RH/PhysicalCoreMonotonicity; 7s remote, disk-cache, remote-cache ... (2 actions running)\n[252 / 268] Lean RiemannResearch/RH/ArithmeticPacketCore; 7s remote, disk-cache, remote-cache\n[253 / 268] [Prepa] Lean RiemannResearch/RH/MeanOneSix\n[253 / 268] Lean RiemannResearch/RH/MeanOneSix; 0s remote, disk-cache, remote-cache\n[253 / 268] Lean RiemannResearch/RH/MeanOneSix; 10s remote, disk-cache, remote-cache\n[254 / 268] [Prepa] Lean RiemannResearch/RH/MeanOneChargeBounds\n[254 / 268] Lean RiemannResearch/RH/MeanOneChargeBounds; 0s remote, disk-cache, remote-cache\n[254 / 268] Lean RiemannResearch/RH/MeanOneChargeBounds; 10s remote, disk-cache, remote-cache\n[255 / 268] [Prepa] Lean RiemannResearch/RH/SquarefreeStageExhaustion\n[255 / 268] Lean RiemannResearch/RH/SquarefreeStageExhaustion; 0s remote, disk-cache, remote-cache\n[255 / 268] Lean RiemannResearch/RH/SquarefreeStageExhaustion; 10s remote, disk-cache, remote-cache\n[256 / 268] [Prepa] Lean RiemannResearch/RH/CRTSquarefreeConverse\n[256 / 268] Lean RiemannResearch/RH/CRTSquarefreeConverse; 0s remote, disk-cache, remote-cache\n[257 / 268] [Prepa] Lean RiemannResearch/RH/ZetaTwoCRTSquarefreeConverse\n[257 / 268] Lean RiemannResearch/RH/ZetaTwoCRTSquarefreeConverse; 0s remote, disk-cache, remote-cache\n[258 / 268] [Prepa] Lean RiemannResearch/RH/QSquarefreeCapacity\n[258 / 268] Lean RiemannResearch/RH/QSquarefreeCapacity; 0s remote, disk-cache, remote-cache ... (2 actions running)\n[259 / 268] Lean RiemannResearch/RH/QSquarefreeLatticePackets; 10s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[259 / 268] Lean RiemannResearch/RH/QSquarefreeLatticePackets; 11s remote, disk-cache, remote-cache ... (2 actions running)\n[260 / 268] Lean RiemannResearch/RH/QSquarefreeExactHeadAverages; 3s remote, disk-cache, remote-cache ... (3 actions, 1 running)\n[260 / 268] Lean RiemannResearch/RH/QSquarefreeExactHeadAverages; 4s remote, disk-cache, remote-cache ... (3 actions running)\n[262 / 268] Lean RiemannResearch/RH/QPrimePowerSieve; 8s remote, disk-cache, remote-cache\n[262 / 268] Lean RiemannResearch/RH/QPrimePowerSieve; 9s remote, disk-cache, remote-cache ... (2 actions running)\n[262 / 268] Lean RiemannResearch/RH/QPrimePowerSieve; 19s remote, disk-cache, remote-cache ... (2 actions running)\n[263 / 268] Lean RiemannResearch/RH/QSquarefreeConstrainedMinimum; 12s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[263 / 268] Lean RiemannResearch/RH/QSquarefreeConstrainedMinimum; 13s remote, disk-cache, remote-cache ... (2 actions running)\n[264 / 268] Lean RiemannResearch/RH/QPrimePowerPrimorial; 6s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[264 / 268] Lean RiemannResearch/RH/QPrimePowerPrimorial; 7s remote, disk-cache, remote-cache ... (2 actions running)\n[265 / 268] Lean RiemannResearch/RH/QSquarefreeAffineHead; 6s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[265 / 268] Lean RiemannResearch/RH/QSquarefreeAffineHead; 7s remote, disk-cache, remote-cache ... (2 actions running)\n[265 / 268] Lean RiemannResearch/RH/QSquarefreeAffineHead; 16s remote, disk-cache, remote-cache ... (2 actions running)\n[266 / 268] Lean RiemannResearch/RH/QCRTCoprimeApproximation; 24s remote, disk-cache, remote-cache\n[267 / 268] [Prepa] Lean RiemannResearch/RH/QCRTGramMinimizer\n[267 / 268] Lean RiemannResearch/RH/QCRTGramMinimizer; 0s remote, disk-cache, remote-cache\n[267 / 268] Lean RiemannResearch/RH/QCRTGramMinimizer; 10s remote, disk-cache, remote-cache\nINFO: Found 1 target...\nINFO: Elapsed time: 334.421s, Critical Path: 316.43s\nINFO: 43 processes: 225 action cache hit, 1 internal, 42 remote.\nINFO: Build completed successfully, 43 total actions\nINFO: \nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/adc5de7e-4651-49f2-884c-850c4aedd292",
+            "output_bytes": 8826,
+            "output_truncated": true,
+            "path": "RiemannResearch/RH/QCRTGramMinimizer.lean",
+            "project_root": "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch",
+            "request_sha256": "e6adc92a9b84618d4742d1af6b4caac3a68fbb40adfda58d62ec37158a8c5acf",
+            "temporary_file_removed": null,
+            "timeout_seconds": 10800,
+            "verified": true,
+            "workspace_token": "ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH"
+          },
+          "started_at": 1794192934.3379402,
+          "state": "succeeded",
+          "submitted_at": 1794192934.3366754,
+          "workspace_token": "ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH",
+          "queue_position": null,
+          "worker_count": null,
+          "same_workspace_limit": 1,
+          "active_job_count": 0,
+          "elapsed_seconds": 335.26,
+          "terminal": true,
+          "retry_after_seconds": 0
+        },
+        "large": {
+          "observed_at": 1794192918.225,
+          "admission": {
+            "lock_wait_seconds": 6.2e-05,
+            "lookup_seconds": 0.00034,
+            "records_examined": 0
+          },
+          "admission_started_at": 1794192401.9304674,
+          "backend": "bazel",
+          "file_sha256": "68e1db34e1211260259529a51d986e366dc33751ab635627204358fcc3f218de",
+          "finished_at": 1794192914.0762591,
+          "job_id": "job_QbyZIwQaAUydlvDq0tKNbw2eAM-Kdn5-",
+          "kind": "check_file",
+          "owner_id": "153088960293877b49b816037577aeb7",
+          "progress": {
+            "current": null,
+            "detail": "Checking Lean source",
+            "percent": 100,
+            "phase": "complete",
+            "phase_started_at": 1794192402.01268,
+            "total": null,
+            "updated_at": 1794192914.0764205
+          },
+          "request_sha256": "be06078c1f9b02afe150c705767d8d5f11307a2dec47c0f7e5f922ecb5a3e773",
+          "result": {
+            "backend": "bazel",
+            "checked_file_sha256": "68e1db34e1211260259529a51d986e366dc33751ab635627204358fcc3f218de",
+            "classification": "success",
+            "command": [
+              "bazel",
+              "build",
+              "--config=buildbuddy",
+              "--color=no",
+              "--curses=no",
+              "//RiemannResearch/RH:QFullIsometricTransport"
+            ],
+            "created_build_files": [],
+            "elapsed_seconds": 512.063,
+            "exit_code": 0,
+            "file_sha256": "68e1db34e1211260259529a51d986e366dc33751ab635627204358fcc3f218de",
+            "output": "arch/RH/QMeasureInterpolation; 19s remote, disk-cache, remote-cache ... (3 actions running)\n[351 / 367] Lean RiemannResearch/RH/QMeasureInterpolation; 21s remote, disk-cache, remote-cache ... (3 actions, 2 running)\n[351 / 367] Lean RiemannResearch/RH/QMeasureInterpolation; 22s remote, disk-cache, remote-cache ... (3 actions running)\n[352 / 367] Lean RiemannResearch/RH/QMeasureInterpolation; 25s remote, disk-cache, remote-cache ... (3 actions, 2 running)\n[352 / 367] Lean RiemannResearch/RH/QMeasureInterpolation; 26s remote, disk-cache, remote-cache ... (3 actions running)\n[353 / 367] Lean RiemannResearch/RH/QCofinalHarmonicWitness; 8s remote, disk-cache, remote-cache ... (3 actions, 2 running)\n[353 / 367] Lean RiemannResearch/RH/QCofinalHarmonicWitness; 9s remote, disk-cache, remote-cache ... (3 actions running)\n[353 / 367] Lean RiemannResearch/RH/QCofinalHarmonicWitness; 19s remote, disk-cache, remote-cache ... (3 actions running)\n[354 / 367] Lean RiemannResearch/RH/QCofinalHarmonicWitness; 21s remote, disk-cache, remote-cache ... (3 actions, 2 running)\n[355 / 367] Lean RiemannResearch/RH/QSquarefreeInterpolationRigidity; 13s remote, disk-cache, remote-cache ... (2 actions running)\n[356 / 367] Lean RiemannResearch/RH/MertensLeeLeongCriterion; 2s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[357 / 367] Lean RiemannResearch/RH/QSquarefreeStretchedDisplacement; 0s remote, disk-cache, remote-cache ... (3 actions, 1 running)\n[357 / 367] Lean RiemannResearch/RH/QSquarefreeStretchedDisplacement; 1s remote, disk-cache, remote-cache ... (3 actions running)\n[358 / 367] Lean RiemannResearch/RH/QMertensUniformDefectSlope; 5s remote, disk-cache, remote-cache ... (3 actions, 2 running)\n[358 / 367] Lean RiemannResearch/RH/QMertensUniformDefectSlope; 6s remote, disk-cache, remote-cache ... (3 actions running)\n[358 / 367] Lean RiemannResearch/RH/QMertensUniformDefectSlope; 17s remote, disk-cache, remote-cache ... (3 actions running)\n[359 / 367] Lean RiemannResearch/RH/MertensEndpointEnvelope; 18s remote, disk-cache, remote-cache ... (2 actions running)\n[360 / 367] Lean RiemannResearch/RH/MertensEndpointEnvelope; 26s remote, disk-cache, remote-cache\n[361 / 367] Lean RiemannResearch/RH/MertensEndpointPairing; 0s remote, disk-cache, remote-cache\n[361 / 367] Lean RiemannResearch/RH/MertensEndpointPairing; 1s remote, disk-cache, remote-cache\n[361 / 367] Lean RiemannResearch/RH/MertensEndpointPairing; 9s remote, disk-cache, remote-cache\n[362 / 367] [Prepa] Lean RiemannResearch/RH/MertensBaezDuarteConverse\n[362 / 367] Lean RiemannResearch/RH/MertensBaezDuarteConverse; 0s remote, disk-cache, remote-cache\n[362 / 367] Lean RiemannResearch/RH/MertensBaezDuarteConverse; 10s remote, disk-cache, remote-cache\n[363 / 367] [Prepa] Lean RiemannResearch/RH/QCofinalDisplacementMoments\n[363 / 367] Lean RiemannResearch/RH/QCofinalDisplacementMoments; 0s remote, disk-cache, remote-cache\n[364 / 367] [Prepa] Lean RiemannResearch/RH/QFullCofinalHarmonic\n[364 / 367] Lean RiemannResearch/RH/QFullCofinalHarmonic; 0s remote, disk-cache, remote-cache\n[364 / 367] Lean RiemannResearch/RH/QFullCofinalHarmonic; 10s remote, disk-cache, remote-cache\n[365 / 367] [Prepa] Lean RiemannResearch/RH/QFullReciprocalLimits\n[365 / 367] Lean RiemannResearch/RH/QFullReciprocalLimits; 0s remote, disk-cache, remote-cache\n[365 / 367] Lean RiemannResearch/RH/QFullReciprocalLimits; 10s remote, disk-cache, remote-cache\n[366 / 367] [Prepa] Lean RiemannResearch/RH/QFullIsometricTransport\n[366 / 367] Lean RiemannResearch/RH/QFullIsometricTransport; 0s remote, disk-cache, remote-cache\n[366 / 367] Lean RiemannResearch/RH/QFullIsometricTransport; 9s remote, disk-cache, remote-cache\nINFO: Found 1 target...\nINFO: Elapsed time: 511.216s, Critical Path: 487.44s\nINFO: 101 processes: 266 action cache hit, 1 internal, 100 remote.\nINFO: Build completed successfully, 101 total actions\nINFO: \nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/5cd25a06-b2bd-48ac-af48-89c05be65ae6",
+            "output_bytes": 19434,
+            "output_truncated": true,
+            "path": "RiemannResearch/RH/QFullIsometricTransport.lean",
+            "project_root": "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch",
+            "request_sha256": "be06078c1f9b02afe150c705767d8d5f11307a2dec47c0f7e5f922ecb5a3e773",
+            "temporary_file_removed": null,
+            "timeout_seconds": 10800,
+            "verified": true,
+            "workspace_token": "ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR"
+          },
+          "started_at": 1794192401.9368975,
+          "state": "succeeded",
+          "submitted_at": 1794192401.9309156,
+          "workspace_token": "ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR",
+          "queue_position": null,
+          "worker_count": null,
+          "same_workspace_limit": 1,
+          "active_job_count": 0,
+          "elapsed_seconds": 512.139,
+          "terminal": true,
+          "retry_after_seconds": 0
+        }
+      },
+      "concurrent": {
+        "small": {
+          "name": "small",
+          "observed_at": 1794193607.73,
+          "admission": {
+            "lock_wait_seconds": 6.1e-05,
+            "lookup_seconds": 5.2e-05,
+            "records_examined": 0
+          },
+          "admission_started_at": 1794193515.5721138,
+          "backend": "bazel",
+          "file_sha256": "f69aa88d76cca4f88bb1444832454c31d7cc35c4fd502fd84c50cce245001d49",
+          "finished_at": 1794193559.4281297,
+          "job_id": "job_x2EpJdYl1KyzWCu8Q8vfyPwPv_4OaCoi",
+          "kind": "check_file",
+          "owner_id": "153088960293877b49b816037577aeb7",
+          "progress": {
+            "current": null,
+            "detail": "Checking Lean source",
+            "percent": 100,
+            "phase": "complete",
+            "phase_started_at": 1794193515.6351788,
+            "total": null,
+            "updated_at": 1794193559.4282682
+          },
+          "request_sha256": "fda73d9af350e3d769b769a0f6aeaa28a60d7200fac9e5d57cb8fa54128ec19f",
+          "result": {
+            "backend": "bazel",
+            "checked_file_sha256": "f69aa88d76cca4f88bb1444832454c31d7cc35c4fd502fd84c50cce245001d49",
+            "classification": "success",
+            "command": [
+              "bazel",
+              "build",
+              "--config=buildbuddy",
+              "--color=no",
+              "--curses=no",
+              "//RiemannResearch/RH:QCanonicalSchurVariance"
+            ],
+            "created_build_files": [],
+            "elapsed_seconds": 43.793,
+            "exit_code": 0,
+            "file_sha256": "f69aa88d76cca4f88bb1444832454c31d7cc35c4fd502fd84c50cce245001d49",
+            "output": "INFO: Invocation ID: d6473864-9a96-4698-8ee0-b16a1722378d\nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/d6473864-9a96-4698-8ee0-b16a1722378d\nComputing main repo mapping: \nLoading: \nLoading: 0 packages loaded\nLoading: 0 packages loaded\nAnalyzing: target //RiemannResearch/RH:QCanonicalSchurVariance (1 packages loaded, 0 targets configured)\nAnalyzing: target //RiemannResearch/RH:QCanonicalSchurVariance (1 packages loaded, 0 targets configured)\n\nAnalyzing: target //RiemannResearch/RH:QCanonicalSchurVariance (15 packages loaded, 21707 targets configured)\n\nINFO: Analyzed target //RiemannResearch/RH:QCanonicalSchurVariance (15 packages loaded, 24232 targets configured).\n[1 / 1] no actions running\n[147 / 201] Lean RiemannResearch/Analysis/FiniteGramSchurBounds; 0s remote, disk-cache, remote-cache\n[197 / 201] Lean RiemannResearch/Analysis/FiniteGramSchurBounds; 1s remote, disk-cache, remote-cache\n[198 / 201] [Prepa] Lean RiemannResearch/RH/QCanonicalWindowCapacity\n[198 / 201] [Sched] Lean RiemannResearch/RH/QCanonicalWindowCapacity\n[198 / 201] Lean RiemannResearch/RH/QCanonicalWindowCapacity; 1s remote, disk-cache, remote-cache\n[198 / 201] Lean RiemannResearch/RH/QCanonicalWindowCapacity; 8s remote, disk-cache, remote-cache\n[199 / 201] [Prepa] Lean RiemannResearch/RH/QCanonicalWindowSchurArithmetic\n[199 / 201] Lean RiemannResearch/RH/QCanonicalWindowSchurArithmetic; 0s remote, disk-cache, remote-cache\n[200 / 201] [Prepa] Lean RiemannResearch/RH/QCanonicalSchurVariance\n[200 / 201] Lean RiemannResearch/RH/QCanonicalSchurVariance; 0s remote, disk-cache, remote-cache\nINFO: Found 1 target...\nINFO: Elapsed time: 43.058s, Critical Path: 27.95s\nINFO: 5 processes: 196 action cache hit, 1 internal, 4 remote.\nINFO: Build completed successfully, 5 total actions\nINFO: \nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/d6473864-9a96-4698-8ee0-b16a1722378d",
+            "output_bytes": 1911,
+            "output_truncated": false,
+            "path": "RiemannResearch/RH/QCanonicalSchurVariance.lean",
+            "project_root": "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch",
+            "request_sha256": "fda73d9af350e3d769b769a0f6aeaa28a60d7200fac9e5d57cb8fa54128ec19f",
+            "temporary_file_removed": null,
+            "timeout_seconds": 10800,
+            "verified": true,
+            "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL"
+          },
+          "started_at": 1794193515.573524,
+          "state": "succeeded",
+          "submitted_at": 1794193515.5722647,
+          "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL",
+          "queue_position": null,
+          "worker_count": null,
+          "same_workspace_limit": 1,
+          "active_job_count": 2,
+          "elapsed_seconds": 43.855,
+          "terminal": true,
+          "retry_after_seconds": 0
+        },
+        "medium": {
+          "name": "medium",
+          "observed_at": 1794193731.313,
+          "admission": {
+            "lock_wait_seconds": 5.4e-05,
+            "lookup_seconds": 4.6e-05,
+            "records_examined": 0
+          },
+          "admission_started_at": 1794193516.8381758,
+          "backend": "bazel",
+          "file_sha256": "8602e52dc51d169ee419e82e2d35b77f8bdd87a6caecc2e7d3325a00b112102a",
+          "finished_at": 1794193725.714753,
+          "job_id": "job_qjK8Ojz26kJv_ZeP0d32gxIXFmzFubJ8",
+          "kind": "check_file",
+          "owner_id": "153088960293877b49b816037577aeb7",
+          "progress": {
+            "current": null,
+            "detail": "Checking Lean source",
+            "percent": 100,
+            "phase": "complete",
+            "phase_started_at": 1794193516.905034,
+            "total": null,
+            "updated_at": 1794193725.7149415
+          },
+          "request_sha256": "e6adc92a9b84618d4742d1af6b4caac3a68fbb40adfda58d62ec37158a8c5acf",
+          "result": {
+            "backend": "bazel",
+            "checked_file_sha256": "8602e52dc51d169ee419e82e2d35b77f8bdd87a6caecc2e7d3325a00b112102a",
+            "classification": "success",
+            "command": [
+              "bazel",
+              "build",
+              "--config=buildbuddy",
+              "--color=no",
+              "--curses=no",
+              "//RiemannResearch/RH:QCRTGramMinimizer"
+            ],
+            "created_build_files": [],
+            "elapsed_seconds": 208.809,
+            "exit_code": 0,
+            "file_sha256": "8602e52dc51d169ee419e82e2d35b77f8bdd87a6caecc2e7d3325a00b112102a",
+            "output": ", remote-cache ... (3 actions running)\n[249 / 268] Lean RiemannResearch/RH/QOptimizerParityRH; 11s remote, disk-cache, remote-cache ... (3 actions, 2 running)\n[250 / 268] Lean RiemannResearch/RH/PhysicalCoreMonotonicity; 4s remote, disk-cache, remote-cache ... (3 actions, 2 running)\n[250 / 268] Lean RiemannResearch/RH/PhysicalCoreMonotonicity; 5s remote, disk-cache, remote-cache ... (3 actions running)\n[251 / 268] Lean RiemannResearch/RH/ArithmeticPacketCore; 2s remote, disk-cache, remote-cache ... (2 actions running)\n[252 / 268] Lean RiemannResearch/RH/QFiniteSupportDualCriterion; 4s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[252 / 268] Lean RiemannResearch/RH/QFiniteSupportDualCriterion; 5s remote, disk-cache, remote-cache ... (2 actions running)\n[253 / 268] Lean RiemannResearch/RH/MeanOneSix; 2s remote, disk-cache, remote-cache\n[253 / 268] Lean RiemannResearch/RH/MeanOneSix; 12s remote, disk-cache, remote-cache\n[254 / 268] [Prepa] Lean RiemannResearch/RH/MeanOneChargeBounds\n[254 / 268] Lean RiemannResearch/RH/MeanOneChargeBounds; 0s remote, disk-cache, remote-cache\n[254 / 268] Lean RiemannResearch/RH/MeanOneChargeBounds; 10s remote, disk-cache, remote-cache\n[255 / 268] [Prepa] Lean RiemannResearch/RH/SquarefreeStageExhaustion\n[255 / 268] Lean RiemannResearch/RH/SquarefreeStageExhaustion; 1s remote, disk-cache, remote-cache\n[255 / 268] Lean RiemannResearch/RH/SquarefreeStageExhaustion; 11s remote, disk-cache, remote-cache\n[256 / 268] [Prepa] Lean RiemannResearch/RH/CRTSquarefreeConverse\n[256 / 268] Lean RiemannResearch/RH/CRTSquarefreeConverse; 0s remote, disk-cache, remote-cache\n[257 / 268] [Prepa] Lean RiemannResearch/RH/ZetaTwoCRTSquarefreeConverse\n[257 / 268] Lean RiemannResearch/RH/ZetaTwoCRTSquarefreeConverse; 0s remote, disk-cache, remote-cache\n[258 / 268] [Prepa] Lean RiemannResearch/RH/QSquarefreeCapacity\n[258 / 268] Lean RiemannResearch/RH/QSquarefreeCapacity; 0s remote, disk-cache, remote-cache ... (2 actions running)\n[259 / 268] Lean RiemannResearch/RH/QSquarefreeLatticePackets; 4s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[259 / 268] Lean RiemannResearch/RH/QSquarefreeLatticePackets; 5s remote, disk-cache, remote-cache ... (2 actions running)\n[260 / 268] Lean RiemannResearch/RH/QSquarefreeLatticePackets; 11s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[260 / 268] Lean RiemannResearch/RH/QSquarefreeLatticePackets; 12s remote, disk-cache, remote-cache ... (2 actions running)\n[261 / 268] Lean RiemannResearch/RH/QSquarefreeConstrainedMinimum; 5s remote, disk-cache, remote-cache ... (3 actions, 1 running)\n[261 / 268] Lean RiemannResearch/RH/QSquarefreeConstrainedMinimum; 7s remote, disk-cache, remote-cache ... (3 actions running)\n[262 / 268] Lean RiemannResearch/RH/QSquarefreeConstrainedMinimum; 11s remote, disk-cache, remote-cache ... (3 actions, 2 running)\n[262 / 268] Lean RiemannResearch/RH/QSquarefreeConstrainedMinimum; 13s remote, disk-cache, remote-cache ... (3 actions running)\n[263 / 268] Lean RiemannResearch/RH/QResidueHeadSpace; 8s remote, disk-cache, remote-cache ... (2 actions running)\n[264 / 268] Lean RiemannResearch/RH/QResidueHeadSpace; 9s remote, disk-cache, remote-cache\n[264 / 268] Lean RiemannResearch/RH/QResidueHeadSpace; 10s remote, disk-cache, remote-cache ... (2 actions running)\n[265 / 268] Lean RiemannResearch/RH/QCRTCoprimeApproximation; 1s remote, disk-cache, remote-cache ... (2 actions running)\n[266 / 268] Lean RiemannResearch/RH/QSquarefreeAffineHead; 8s remote, disk-cache, remote-cache\n[267 / 268] [Prepa] Lean RiemannResearch/RH/QCRTGramMinimizer\n[267 / 268] Lean RiemannResearch/RH/QCRTGramMinimizer; 0s remote, disk-cache, remote-cache\nINFO: Found 1 target...\nINFO: Elapsed time: 207.984s, Critical Path: 188.07s\nINFO: 43 processes: 225 action cache hit, 1 internal, 42 remote.\nINFO: Build completed successfully, 43 total actions\nINFO: \nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/aca673b9-918c-453f-a44c-beebd6aa484b",
+            "output_bytes": 8382,
+            "output_truncated": true,
+            "path": "RiemannResearch/RH/QCRTGramMinimizer.lean",
+            "project_root": "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch",
+            "request_sha256": "e6adc92a9b84618d4742d1af6b4caac3a68fbb40adfda58d62ec37158a8c5acf",
+            "temporary_file_removed": null,
+            "timeout_seconds": 10800,
+            "verified": true,
+            "workspace_token": "ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH"
+          },
+          "started_at": 1794193516.8404913,
+          "state": "succeeded",
+          "submitted_at": 1794193516.8383315,
+          "workspace_token": "ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH",
+          "queue_position": null,
+          "worker_count": null,
+          "same_workspace_limit": 1,
+          "active_job_count": 1,
+          "elapsed_seconds": 208.874,
+          "terminal": true,
+          "retry_after_seconds": 0
+        },
+        "large": {
+          "name": "large",
+          "observed_at": 1794193867.686,
+          "admission": {
+            "lock_wait_seconds": 4.9e-05,
+            "lookup_seconds": 5e-05,
+            "records_examined": 0
+          },
+          "admission_started_at": 1794193514.5494013,
+          "backend": "bazel",
+          "file_sha256": "68e1db34e1211260259529a51d986e366dc33751ab635627204358fcc3f218de",
+          "finished_at": 1794193847.6147501,
+          "job_id": "job__Ux1KWsrqkYoExFPbEkuIhP-ePbC6qAj",
+          "kind": "check_file",
+          "owner_id": "153088960293877b49b816037577aeb7",
+          "progress": {
+            "current": null,
+            "detail": "Checking Lean source",
+            "percent": 100,
+            "phase": "complete",
+            "phase_started_at": 1794193514.6190856,
+            "total": null,
+            "updated_at": 1794193847.6152997
+          },
+          "request_sha256": "be06078c1f9b02afe150c705767d8d5f11307a2dec47c0f7e5f922ecb5a3e773",
+          "result": {
+            "backend": "bazel",
+            "checked_file_sha256": "68e1db34e1211260259529a51d986e366dc33751ab635627204358fcc3f218de",
+            "classification": "success",
+            "command": [
+              "bazel",
+              "build",
+              "--config=buildbuddy",
+              "--color=no",
+              "--curses=no",
+              "//RiemannResearch/RH:QFullIsometricTransport"
+            ],
+            "created_build_files": [],
+            "elapsed_seconds": 332.994,
+            "exit_code": 0,
+            "file_sha256": "68e1db34e1211260259529a51d986e366dc33751ab635627204358fcc3f218de",
+            "output": "k-cache, remote-cache ... (3 actions running)\n[346 / 367] Lean RiemannResearch/RH/QMeasureInterpolation; 6s remote, disk-cache, remote-cache ... (4 actions, 2 running)\n[346 / 367] Lean RiemannResearch/RH/QMeasureInterpolation; 7s remote, disk-cache, remote-cache ... (6 actions, 3 running)\n[346 / 367] Lean RiemannResearch/RH/QMeasureInterpolation; 9s remote, disk-cache, remote-cache ... (6 actions running)\n[348 / 367] Lean RiemannResearch/RH/QMeasureInterpolation; 12s remote, disk-cache, remote-cache ... (5 actions, 4 running)\n[348 / 367] Lean RiemannResearch/RH/QMeasureInterpolation; 13s remote, disk-cache, remote-cache ... (5 actions running)\n[349 / 367] Lean RiemannResearch/RH/QMeasureInterpolation; 14s remote, disk-cache, remote-cache ... (5 actions, 4 running)\n[351 / 367] Lean RiemannResearch/RH/MertensFirstMomentEnvelope; 8s remote, disk-cache, remote-cache ... (4 actions, 3 running)\n[351 / 367] Lean RiemannResearch/RH/MertensFirstMomentEnvelope; 9s remote, disk-cache, remote-cache ... (4 actions running)\n[352 / 367] Lean RiemannResearch/RH/QSquarefreeVKDisplacement; 7s remote, disk-cache, remote-cache ... (3 actions running)\n[354 / 367] Lean RiemannResearch/RH/QSquarefreeInterpolationRigidity; 5s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[354 / 367] Lean RiemannResearch/RH/QSquarefreeInterpolationRigidity; 7s remote, disk-cache, remote-cache ... (2 actions running)\n[355 / 367] Lean RiemannResearch/RH/MertensVKFirstMoment; 7s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[355 / 367] Lean RiemannResearch/RH/MertensVKFirstMoment; 9s remote, disk-cache, remote-cache ... (2 actions running)\n[356 / 367] Lean RiemannResearch/RH/MertensVKFirstMoment; 13s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[357 / 367] Lean RiemannResearch/RH/MertensUnconditionalStretched; 0s remote, disk-cache, remote-cache ... (2 actions, 1 running)\n[357 / 367] Lean RiemannResearch/RH/MertensUnconditionalStretched; 1s remote, disk-cache, remote-cache ... (2 actions running)\n[358 / 367] Lean RiemannResearch/RH/MertensUnconditionalStretched; 5s remote, disk-cache, remote-cache ... (3 actions, 1 running)\n[358 / 367] Lean RiemannResearch/RH/MertensUnconditionalStretched; 7s remote, disk-cache, remote-cache ... (3 actions running)\n[359 / 367] Lean RiemannResearch/RH/MertensEndpointEnvelope; 4s remote, disk-cache, remote-cache ... (2 actions running)\n[360 / 367] Lean RiemannResearch/RH/MertensEndpointEnvelope; 14s remote, disk-cache, remote-cache\n[361 / 367] [Prepa] Lean RiemannResearch/RH/MertensEndpointPairing\n[361 / 367] Lean RiemannResearch/RH/MertensEndpointPairing; 0s remote, disk-cache, remote-cache\n[361 / 367] Lean RiemannResearch/RH/MertensEndpointPairing; 10s remote, disk-cache, remote-cache\n[362 / 367] [Prepa] Lean RiemannResearch/RH/MertensBaezDuarteConverse\n[362 / 367] Lean RiemannResearch/RH/MertensBaezDuarteConverse; 0s remote, disk-cache, remote-cache\n[363 / 367] [Prepa] Lean RiemannResearch/RH/QCofinalDisplacementMoments\n[363 / 367] Lean RiemannResearch/RH/QCofinalDisplacementMoments; 0s remote, disk-cache, remote-cache\n[364 / 367] [Prepa] Lean RiemannResearch/RH/QFullCofinalHarmonic\n[364 / 367] Lean RiemannResearch/RH/QFullCofinalHarmonic; 0s remote, disk-cache, remote-cache\n[364 / 367] Lean RiemannResearch/RH/QFullCofinalHarmonic; 10s remote, disk-cache, remote-cache\n[365 / 367] [Prepa] Lean RiemannResearch/RH/QFullReciprocalLimits\n[365 / 367] Lean RiemannResearch/RH/QFullReciprocalLimits; 0s remote, disk-cache, remote-cache\n[366 / 367] [Prepa] Lean RiemannResearch/RH/QFullIsometricTransport\n[366 / 367] Lean RiemannResearch/RH/QFullIsometricTransport; 0s remote, disk-cache, remote-cache\nINFO: Found 1 target...\nINFO: Elapsed time: 332.250s, Critical Path: 311.19s\nINFO: 101 processes: 266 action cache hit, 1 internal, 100 remote.\nINFO: Build completed successfully, 101 total actions\nINFO: \nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/f63589b2-7f15-4260-b9a9-1355629a1d23",
+            "output_bytes": 15142,
+            "output_truncated": true,
+            "path": "RiemannResearch/RH/QFullIsometricTransport.lean",
+            "project_root": "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch",
+            "request_sha256": "be06078c1f9b02afe150c705767d8d5f11307a2dec47c0f7e5f922ecb5a3e773",
+            "temporary_file_removed": null,
+            "timeout_seconds": 10800,
+            "verified": true,
+            "workspace_token": "ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR"
+          },
+          "started_at": 1794193514.5507174,
+          "state": "succeeded",
+          "submitted_at": 1794193514.5495284,
+          "workspace_token": "ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR",
+          "queue_position": null,
+          "worker_count": null,
+          "same_workspace_limit": 1,
+          "active_job_count": 0,
+          "elapsed_seconds": 333.064,
+          "terminal": true,
+          "retry_after_seconds": 0
+        }
+      },
+      "full_overlap": {
+        "full": {
+          "name": "full",
+          "observed_at": 1794194130.861,
+          "admission": {
+            "lock_wait_seconds": 6.7e-05,
+            "lookup_seconds": 0.000223,
+            "records_examined": 0
+          },
+          "admission_started_at": 1794193918.7685828,
+          "backend": "bazel",
+          "finished_at": 1794194113.658099,
+          "job_id": "job_SA55pXy_mj24ntyn1KVbx5iRSdhmXoxy",
+          "kind": "build",
+          "owner_id": "153088960293877b49b816037577aeb7",
+          "progress": {
+            "current": null,
+            "detail": "Starting bazel build --config=buildbuddy --color=no --curses=no //:RiemannResearch",
+            "percent": 100,
+            "phase": "complete",
+            "phase_started_at": 1794193918.8448408,
+            "total": null,
+            "updated_at": 1794194113.6582527
+          },
+          "request_sha256": "eb03b28b5a8c15f3514140247a79859bacfa1315018c8fa5f693d3ee9dc420b7",
+          "result": {
+            "backend": "bazel",
+            "cache": "BuildBuddy",
+            "command": [
+              "bazel",
+              "build",
+              "--config=buildbuddy",
+              "--color=no",
+              "--curses=no",
+              "//:RiemannResearch"
+            ],
+            "dependency_cache": {
+              "backend": "bazel",
+              "config": "buildbuddy",
+              "created_build_files": []
+            },
+            "elapsed_seconds": 194.885,
+            "output": "[3,475 / 3,943] [Prepa] Lean RiemannResearch/RH/QSquarefreeNormEquality ... (60 actions, 0 running)\n[3,511 / 3,943] [Prepa] Lean RiemannResearch/RH/QSquarefreeCompleteBasis ... (56 actions, 0 running)\n[3,551 / 3,943] [Prepa] Lean RiemannResearch/RH/QCRTMinimumHeadCost ... (65 actions, 0 running)\n[3,585 / 3,943] [Prepa] Lean RiemannResearch/RH/MertensShiftedPairing ... (55 actions, 0 running)\n[3,624 / 3,943] [Prepa] Lean RiemannResearch/RH/DerivativeMobiusCRT ... (57 actions, 0 running)\n[3,656 / 3,943] [Prepa] Lean RiemannResearch/RH/QSquarefreeInterpolationRigidity ... (61 actions, 0 running)\n[3,694 / 3,943] [Prepa] Lean RiemannResearch/RH/QPrimorialExtensionGram ... (41 actions, 0 running)\n[3,736 / 3,943] [Prepa] Lean RiemannResearch/RH/RamanujanWeightedDefect ... (39 actions, 0 running)\n[3,778 / 3,943] [Prepa] Lean RiemannResearch/RH/RamanujanBackwardError ... (34 actions, 0 running)\n[3,821 / 3,943] [Prepa] Lean RiemannResearch/RH/MertensEndpointPairing ... (21 actions, 0 running)\n[3,863 / 3,943] [Prepa] Lean RiemannResearch/RH/QCRTInnovationPairGap ... (13 actions, 0 running)\n[3,904 / 3,943] [Prepa] Lean RiemannResearch/RH/QMertensResolventBlocks ... (17 actions, 0 running)\n[3,941 / 3,943] [Prepa] Lean RiemannResearch/RH/QFullHeadObstruction\nINFO: Found 1 target...\nINFO: Elapsed time: 193.642s, Critical Path: 51.05s\nINFO: 3943 processes: 3942 remote cache hit, 1 internal.\nINFO: Build completed successfully, 3943 total actions\nINFO: \nINFO: \nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/4a0b9496-ebb9-475a-b25e-39ad71150624",
+            "request_sha256": "eb03b28b5a8c15f3514140247a79859bacfa1315018c8fa5f693d3ee9dc420b7",
+            "scope": "full"
+          },
+          "started_at": 1794193918.770702,
+          "state": "succeeded",
+          "submitted_at": 1794193918.768907,
+          "workspace_token": "ws_kIImz4Lm9ho036mAKHspSCqZNA4VkpY1",
+          "queue_position": null,
+          "worker_count": null,
+          "same_workspace_limit": 1,
+          "active_job_count": 0,
+          "elapsed_seconds": 194.887,
+          "terminal": true,
+          "retry_after_seconds": 0
+        },
+        "small": {
+          "name": "small",
+          "observed_at": 1794194007.346,
+          "admission": {
+            "lock_wait_seconds": 4.9e-05,
+            "lookup_seconds": 4.6e-05,
+            "records_examined": 0
+          },
+          "admission_started_at": 1794193919.7596924,
+          "backend": "bazel",
+          "file_sha256": "f69aa88d76cca4f88bb1444832454c31d7cc35c4fd502fd84c50cce245001d49",
+          "finished_at": 1794193962.5587223,
+          "job_id": "job_NhDYzz1OBkJFRL7ieM59nLXpc4kH3JaN",
+          "kind": "check_file",
+          "owner_id": "153088960293877b49b816037577aeb7",
+          "progress": {
+            "current": null,
+            "detail": "Checking Lean source",
+            "percent": 100,
+            "phase": "complete",
+            "phase_started_at": 1794193919.8694,
+            "total": null,
+            "updated_at": 1794193962.5588546
+          },
+          "request_sha256": "fda73d9af350e3d769b769a0f6aeaa28a60d7200fac9e5d57cb8fa54128ec19f",
+          "result": {
+            "backend": "bazel",
+            "checked_file_sha256": "f69aa88d76cca4f88bb1444832454c31d7cc35c4fd502fd84c50cce245001d49",
+            "classification": "success",
+            "command": [
+              "bazel",
+              "build",
+              "--config=buildbuddy",
+              "--color=no",
+              "--curses=no",
+              "//RiemannResearch/RH:QCanonicalSchurVariance"
+            ],
+            "created_build_files": [],
+            "elapsed_seconds": 42.689,
+            "exit_code": 0,
+            "file_sha256": "f69aa88d76cca4f88bb1444832454c31d7cc35c4fd502fd84c50cce245001d49",
+            "output": "INFO: Invocation ID: c79073d9-129e-4e97-984b-49f00f4ce73a\nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/c79073d9-129e-4e97-984b-49f00f4ce73a\nComputing main repo mapping: \nLoading: \nLoading: 0 packages loaded\nLoading: 0 packages loaded\n    currently loading: RiemannResearch/RH\nAnalyzing: target //RiemannResearch/RH:QCanonicalSchurVariance (1 packages loaded, 0 targets configured)\nAnalyzing: target //RiemannResearch/RH:QCanonicalSchurVariance (1 packages loaded, 0 targets configured)\n\nAnalyzing: target //RiemannResearch/RH:QCanonicalSchurVariance (15 packages loaded, 21227 targets configured)\n\nINFO: Analyzed target //RiemannResearch/RH:QCanonicalSchurVariance (15 packages loaded, 24232 targets configured).\n[1 / 1] no actions running\n[140 / 201] Lean RiemannResearch/Analysis/FiniteGramSchurBounds; 0s remote, disk-cache, remote-cache\n[197 / 201] [Sched] Lean RiemannResearch/Analysis/FiniteGramSchurBounds\n[197 / 201] Lean RiemannResearch/Analysis/FiniteGramSchurBounds; 1s remote, disk-cache, remote-cache\n[198 / 201] [Prepa] Lean RiemannResearch/RH/QCanonicalWindowCapacity\n[198 / 201] Lean RiemannResearch/RH/QCanonicalWindowCapacity; 1s remote, disk-cache, remote-cache\n[198 / 201] Lean RiemannResearch/RH/QCanonicalWindowCapacity; 0s remote, disk-cache, remote-cache\n[198 / 201] Lean RiemannResearch/RH/QCanonicalWindowCapacity; 9s remote, disk-cache, remote-cache\n[199 / 201] Lean RiemannResearch/RH/QCanonicalWindowSchurArithmetic; 0s remote\n[199 / 201] Lean RiemannResearch/RH/QCanonicalWindowSchurArithmetic; 0s remote, disk-cache, remote-cache\n[200 / 201] [Prepa] Lean RiemannResearch/RH/QCanonicalSchurVariance\n[200 / 201] Lean RiemannResearch/RH/QCanonicalSchurVariance; 0s remote, disk-cache, remote-cache\nINFO: Found 1 target...\nINFO: Elapsed time: 42.012s, Critical Path: 29.01s\nINFO: 5 processes: 196 action cache hit, 1 internal, 4 remote.\nINFO: Build completed successfully, 5 total actions\nINFO: \nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/c79073d9-129e-4e97-984b-49f00f4ce73a",
+            "output_bytes": 2057,
+            "output_truncated": false,
+            "path": "RiemannResearch/RH/QCanonicalSchurVariance.lean",
+            "project_root": "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch",
+            "request_sha256": "fda73d9af350e3d769b769a0f6aeaa28a60d7200fac9e5d57cb8fa54128ec19f",
+            "temporary_file_removed": null,
+            "timeout_seconds": 10800,
+            "verified": true,
+            "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL"
+          },
+          "started_at": 1794193919.7611778,
+          "state": "succeeded",
+          "submitted_at": 1794193919.759813,
+          "workspace_token": "ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL",
+          "queue_position": null,
+          "worker_count": null,
+          "same_workspace_limit": 1,
+          "active_job_count": 2,
+          "elapsed_seconds": 42.798,
+          "terminal": true,
+          "retry_after_seconds": 0
+        }
+      }
+    }
+  },
+  "new_heap_revision": {
+    "commit": "4ff1ffb3bc8e36d7d4d3f2fe8b53a186ef5768e7",
+    "bazel_heap_max_bytes": 3221225472,
+    "full_build": {
+      "observed_at": 1794194472.504,
+      "admission": {
+        "lock_wait_seconds": 5.2e-05,
+        "lookup_seconds": 4.9e-05,
+        "records_examined": 0
+      },
+      "admission_started_at": 1794194278.5218644,
+      "backend": "bazel",
+      "finished_at": 1794194433.5512962,
+      "job_id": "job_oe4QRNa5g9Qd-cSZ1iA7ts2cZ4fb5naz",
+      "kind": "build",
+      "owner_id": "153088960293877b49b816037577aeb7",
+      "progress": {
+        "current": null,
+        "detail": "Starting bazel build --config=buildbuddy --color=no --curses=no //:RiemannResearch",
+        "percent": 100,
+        "phase": "complete",
+        "phase_started_at": 1794194278.5847144,
+        "total": null,
+        "updated_at": 1794194433.5515778
+      },
+      "request_sha256": "eb03b28b5a8c15f3514140247a79859bacfa1315018c8fa5f693d3ee9dc420b7",
+      "result": {
+        "backend": "bazel",
+        "cache": "BuildBuddy",
+        "command": [
+          "bazel",
+          "build",
+          "--config=buildbuddy",
+          "--color=no",
+          "--curses=no",
+          "//:RiemannResearch"
+        ],
+        "dependency_cache": {
+          "backend": "bazel",
+          "config": "buildbuddy",
+          "created_build_files": []
+        },
+        "elapsed_seconds": 155.025,
+        "output": "Loading: \nLoading: 0 packages loaded\nLoading: 0 packages loaded\n    currently loading: \nAnalyzing: target //:RiemannResearch (1 packages loaded)\nAnalyzing: target //:RiemannResearch (5 packages loaded, 6 targets configured)\nAnalyzing: target //:RiemannResearch (5 packages loaded, 6 targets configured)\n\nAnalyzing: target //:RiemannResearch (147 packages loaded, 1332 targets configured)\n\nAnalyzing: target //:RiemannResearch (150 packages loaded, 38492 targets configured)\n\nINFO: Analyzed target //:RiemannResearch (150 packages loaded, 46184 targets configured).\n[1 / 1] no actions running\nINFO: Found 1 target...\nINFO: Elapsed time: 153.520s, Critical Path: 40.60s\nINFO: 1 process: 3942 action cache hit, 1 internal.\nINFO: Build completed successfully, 1 total action\nINFO: \nINFO: Streaming build results to: https://app.buildbuddy.io/invocation/e8a4997a-4976-48ee-9c2f-b0748b6516ca",
+        "request_sha256": "eb03b28b5a8c15f3514140247a79859bacfa1315018c8fa5f693d3ee9dc420b7",
+        "scope": "full"
+      },
+      "started_at": 1794194278.5232627,
+      "state": "succeeded",
+      "submitted_at": 1794194278.5220013,
+      "workspace_token": "ws_kIImz4Lm9ho036mAKHspSCqZNA4VkpY1",
+      "queue_position": null,
+      "worker_count": null,
+      "same_workspace_limit": 1,
+      "active_job_count": 0,
+      "elapsed_seconds": 155.028,
+      "terminal": true,
+      "retry_after_seconds": 0
+    },
+    "telemetry_phase": {
+      "phase": "optimized_three_gib_full",
+      "samples": 102,
+      "first_timestamp": 1794194278.3085275,
+      "memory_peak_bytes": 11811135488,
+      "swap_peak_bytes": 1936080896,
+      "psi_peak": {
+        "memory.pressure": {
+          "some": {
+            "avg10": 7.78,
+            "avg60": 1.44,
+            "avg300": 0.48
+          },
+          "full": {
+            "avg10": 2.35,
+            "avg60": 0.46,
+            "avg300": 0.24
+          }
+        },
+        "io.pressure": {
+          "some": {
+            "avg10": 2.89,
+            "avg60": 0.75,
+            "avg300": 0.75
+          },
+          "full": {
+            "avg10": 0.78,
+            "avg60": 0.72,
+            "avg300": 0.62
+          }
+        }
+      },
+      "peak_java_rss_bytes": {
+        "/home/cri_2025/lean-agent-workspaces/ws_KeN6eb-7Gfii12F_miLvM2XYoo8mz6LR/RiemannResearch": 919437312,
+        "/home/cri_2025/lean-agent-workspaces/ws_qKTlNrRwy1Mr-EnG1Xjn93doDi_Y__rL/RiemannResearch": 862920704,
+        "/home/cri_2025/lean-agent-workspaces/ws_fMppkbxStqHg_ejLaykgm8LoZcJjMrKH/RiemannResearch": 867594240,
+        "/home/cri_2025/lean-agent-workspaces/ws_E1lB2gP7I33f6mf4XvlTaALLfdqcXKes/RiemannResearch": 795504640,
+        "/home/cri_2025/lean-agent-workspaces/ws_rdefumqimpdWlOXPP5X3dbORWgYNlGlB/RiemannResearch": 636350464,
+        "/home/cri_2025/lean-agent-workspaces/ws_CDIJzOag-rmezMPiwiYUnSi9hfa2gsHK/RiemannResearch": 962629632,
+        "/home/cri_2025/lean-agent-workspaces/ws_kIImz4Lm9ho036mAKHspSCqZNA4VkpY1/RiemannResearch": 2141306880
+      },
+      "event_start": {
+        "low": 0,
+        "high": 1067794,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "last_timestamp": 1794194480.711231,
+      "event_end": {
+        "low": 0,
+        "high": 1071491,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "event_deltas": {
+        "low": 0,
+        "high": 3697,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      }
+    }
+  }
+}
