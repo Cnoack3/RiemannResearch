@@ -368,4 +368,164 @@ theorem riemannHypothesis_of_lcm_remainder (γ : ι → ℝ)
   have hs1 : s ≠ 1 := by intro he; norm_num [he] at hlt
   exact zeta_ne_zero_of_hilbertOne_mem_normalizedResidueClosure hmem s hs hs1
 
+section RemainderAsymptotics
+
+/-- The optimized complete physical squared error at a running LCM cutoff. -/
+def lcmError (M : ℕ) : ℝ := ‖hilbertOne - lcmBest M‖ ^ 2
+
+theorem lcmError_le_one (M : ℕ) : lcmError M ≤ 1 := by
+  have h := affine_target_error_split (trialSpace (Nat.lcmUpto M)) hilbertOne
+    0 ((trialSpace (Nat.lcmUpto M)).zero_mem)
+  change ‖hilbertOne - 0‖ ^ 2 = lcmError M + ‖0 - lcmBest M‖ ^ 2 at h
+  rw [sub_zero, hilbertOne_norm_sq] at h
+  linarith [sq_nonneg ‖(0 : ThresholdHilbert) - lcmBest M‖]
+
+theorem lcm_trial_mono : Monotone (fun M => trialSpace (Nat.lcmUpto M)) := by
+  intro M K hMK
+  apply Submodule.span_le.mpr
+  rintro _ ⟨d, rfl⟩
+  have hLK : Nat.lcmUpto M ∣ Nat.lcmUpto K :=
+    Finset.lcm_dvd (fun k hk =>
+      Finset.dvd_lcm (f := id) (Finset.mem_Icc.mpr
+        ⟨(Finset.mem_Icc.mp hk).1, (Finset.mem_Icc.mp hk).2.trans hMK⟩))
+  exact atom_mem_trial _ d.val (Nat.lcmUpto_pos K) (Nat.pos_of_mem_divisors d.property)
+    ((Nat.dvd_of_mem_divisors d.property).trans hLK)
+
+theorem lcm_trial_iSup_eq : (⨆ M, trialSpace (Nat.lcmUpto M)) = normalizedResidueSpan := by
+  apply le_antisymm
+  · exact iSup_le (fun M => trialSpace_le_full (Nat.lcmUpto M))
+  · apply Submodule.span_le.mpr
+    rintro _ ⟨d, rfl⟩
+    apply (le_iSup (fun M => trialSpace (Nat.lcmUpto M)) d.val)
+    have hd : 0 < d.val := by have := d.property; omega
+    exact atom_mem_trial _ d.val (Nat.lcmUpto_pos d.val) hd
+      (Finset.dvd_lcm (f := id) (Finset.mem_Icc.mpr ⟨hd, le_rfl⟩))
+
+/-- All divisor stages converge to the projection on the full legal closure. -/
+theorem lcmBest_tendsto :
+    Tendsto lcmBest atTop
+      (𝓝 (normalizedResidueSpan.topologicalClosure.starProjection hilbertOne)) := by
+  change Tendsto (fun M => (trialSpace (Nat.lcmUpto M)).starProjection hilbertOne) atTop _
+  simpa only [lcm_trial_iSup_eq] using
+    Submodule.starProjection_tendsto_closure_iSup
+      (fun M => trialSpace (Nat.lcmUpto M)) lcm_trial_mono hilbertOne
+
+theorem lcmError_tendsto :
+    Tendsto lcmError atTop
+      (𝓝 (‖hilbertOne -
+        normalizedResidueSpan.topologicalClosure.starProjection hilbertOne‖ ^ 2)) :=
+  (tendsto_const_nhds.sub lcmBest_tendsto).norm.pow 2
+
+variable {κ : Type*} [Fintype κ]
+
+theorem lcmRemainder_le_error (M : ℕ) (z : κ → ℂ)
+    (hs : ∀ i, 0 < (z i).re) (hs1 : ∀ i, z i ≠ 1) (hz : ∀ i, riemannZeta (z i) = 0) :
+    lcmRemainder z M ≤ lcmError M := by
+  have h := lcm_best_error_eq M z hs hs1 hz
+  unfold lcmError
+  linarith [classWeight_pos (lcmResidueIndex M) (Fin.last (lcmResidueIndex M)),
+    certificateEnergy_nonneg (lcmResidueIndex M) z]
+
+/-- Fixed critical tests remove a vanishing amount from the actual projection error. -/
+theorem lcmRemainder_tendsto_limit (γ : κ → ℝ) (hγ : Function.Injective γ)
+    (hpos : ∀ i, 0 < γ i) (hz : ∀ i, riemannZeta (criticalPoint (γ i)) = 0) :
+    Tendsto (lcmRemainder (fun i => criticalPoint (γ i))) atTop
+      (𝓝 (‖hilbertOne -
+        normalizedResidueSpan.topologicalClosure.starProjection hilbertOne‖ ^ 2)) := by
+  have h := lcmError_tendsto.sub (lcm_certificate_terms_tendsto_zero γ hγ hpos hz)
+  rw [sub_zero] at h
+  refine h.congr (fun M => ?_)
+  unfold lcmError
+  rw [lcm_best_error_eq M (fun i => criticalPoint (γ i)) (fun i => by simp)
+    (fun i => criticalPoint_ne_one (γ i)) hz]
+  ring
+
+private theorem cutoff_mul_multiples_mass_tendsto :
+    Tendsto (fun M : ℕ => (M : ℝ) * classWeight (lcmResidueIndex M)
+      (Fin.last (lcmResidueIndex M))) atTop (𝓝 0) := by
+  have hM : Tendsto (fun M : ℕ => (M : ℝ) + 1) atTop atTop :=
+    tendsto_atTop_mono (fun M => by linarith) tendsto_natCast_atTop_atTop
+  have hlim := (tendsto_inv_atTop_zero.comp hM).const_mul (2 : ℝ)
+  rw [mul_zero] at hlim
+  apply squeeze_zero' (Eventually.of_forall (fun M =>
+    mul_nonneg (Nat.cast_nonneg _) (classWeight_pos _ _).le)) ?_ hlim
+  filter_upwards [eventually_ge_atTop (1 : ℕ)] with M hM
+  have hL := Nat.lcmUpto_pos M
+  have hd : M ∣ Nat.lcmUpto M :=
+    Finset.dvd_lcm (f := id) (Finset.mem_Icc.mpr ⟨hM, le_rfl⟩)
+  have hle : (M : ℝ) ≤ (Nat.lcmUpto M : ℝ) := by
+    exact_mod_cast Nat.le_of_dvd hL hd
+  have hpos : 0 < (Nat.lcmUpto M : ℝ) := by exact_mod_cast hL
+  have hu := (multiples_mass_bounds (lcmResidueIndex M)).2
+  rw [lcmResidueIndex_succ] at hu
+  calc
+    _ ≤ (M : ℝ) * (2 / ((Nat.lcmUpto M : ℝ) * ((Nat.lcmUpto M : ℝ) + 1))) :=
+      mul_le_mul_of_nonneg_left hu (Nat.cast_nonneg _)
+    _ ≤ (Nat.lcmUpto M : ℝ) *
+        (2 / ((Nat.lcmUpto M : ℝ) * ((Nat.lcmUpto M : ℝ) + 1))) :=
+      mul_le_mul_of_nonneg_right hle (by positivity)
+    _ = 2 / ((Nat.lcmUpto M : ℝ) + 1) := by field_simp
+    _ ≤ 2 * ((M : ℝ) + 1)⁻¹ := by
+      rw [← div_eq_mul_inv]
+      exact div_le_div_of_nonneg_left (by norm_num) (by positivity) (by linarith)
+
+/-- The certificate is exactly the first-order correction to the remainder.
+This applies even if the limiting squared error is positive. -/
+theorem lcmError_sub_remainder_cutoff_tendsto (γ : κ → ℝ) (hγ : Function.Injective γ)
+    (hpos : ∀ i, 0 < γ i) (hz : ∀ i, riemannZeta (criticalPoint (γ i)) = 0) :
+    Tendsto (fun M : ℕ => (M : ℝ) * (lcmError M -
+      lcmRemainder (fun i => criticalPoint (γ i)) M)) atTop
+      (𝓝 (2 * ∑ i, 1 / ‖criticalPoint (γ i)‖ ^ 2)) := by
+  have h := cutoff_mul_multiples_mass_tendsto.add
+    (lcm_critical_certificate_cutoff_tendsto id tendsto_id γ hγ hpos hz)
+  rw [zero_add] at h
+  refine h.congr (fun M => ?_)
+  dsimp only [id, lcmError]
+  rw [lcm_best_error_eq M (fun i => criticalPoint (γ i)) (fun i => by simp)
+    (fun i => criticalPoint_ne_one (γ i)) hz]
+  ring
+
+/-- Any cofinal family of upper budgets tending to zero yields RH. -/
+theorem riemannHypothesis_of_cofinal_remainder_upper (γ : κ → ℝ) (hγ : Function.Injective γ)
+    (hpos : ∀ i, 0 < γ i) (hz : ∀ i, riemannZeta (criticalPoint (γ i)) = 0)
+    (M : ℕ → ℕ) (hM : Tendsto M atTop atTop) (B : ℕ → ℝ)
+    (hB : Tendsto B atTop (𝓝 0))
+    (hub : ∀ᶠ j in atTop, lcmRemainder (fun i => criticalPoint (γ i)) (M j) ≤ B j) :
+    RiemannHypothesis := by
+  apply RiemannResearch.RH.riemannHypothesis_iff_right_half_strip_zero_free.mpr
+  intro s hs hlt hzero
+  have hs1 : s ≠ 1 := by intro he; norm_num [he] at hlt
+  have hs0 : s ≠ 0 := by intro he; norm_num [he] at hs
+  have hp : 0 < ((2 * s.re - 1) / ‖s‖ ^ 2) / 2 :=
+    div_pos (div_pos (by linarith) (sq_pos_of_pos (norm_pos_iff.mpr hs0))) (by norm_num)
+  obtain ⟨j, hlow, hup, hsmall⟩ :=
+    ((hM.eventually (lcm_remainder_eventually_ge_of_right_zero γ hγ hpos hz s hs hs1 hzero)).and
+      (hub.and (hB.eventually (gt_mem_nhds hp)))).exists
+  exact (not_lt_of_ge (hlow.trans hup)) hsmall
+
+/-- A single finite upper certificate gives an effective zero-free region. -/
+theorem right_zero_re_le_of_lcmError_bound (M : ℕ) (B T : ℝ)
+    (hB : lcmError M ≤ B) (hT : 0 ≤ T) (s : ℂ)
+    (hs : (1 / 2 : ℝ) < s.re) (hs' : s.re < 1)
+    (ht : |s.im| ≤ T) (hz : riemannZeta s = 0) :
+    s.re ≤ 1 / 2 + (1 + T ^ 2) * B / 2 := by
+  have hs1 : s ≠ 1 := by intro he; norm_num [he] at hs'
+  have hs0 : s ≠ 0 := by intro he; norm_num [he] at hs
+  have hp : 0 < ‖s‖ ^ 2 := sq_pos_of_pos (norm_pos_iff.mpr hs0)
+  have hm : lcmBest M ∈ normalizedResidueClosure :=
+    subset_closure (trialSpace_le_full _ (lcmBest_mem M))
+  have hlow := (div_le_iff₀ hp).mp
+    ((normalizedResidue_error_sq_lower_bound_of_zeta_zero s hs hs1 hz _ hm).trans hB)
+  have hB0 : 0 ≤ B := (sq_nonneg _).trans hB
+  have hre : s.re ^ 2 ≤ 1 := by
+    nlinarith [mul_nonneg (show 0 ≤ 1 - s.re by linarith) (show 0 ≤ 1 + s.re by linarith)]
+  have him : s.im ^ 2 ≤ T ^ 2 := by
+    simpa only [sq_abs] using ((sq_le_sq₀ (abs_nonneg _) hT).mpr ht)
+  have hnorm : ‖s‖ ^ 2 ≤ 1 + T ^ 2 := by
+    rw [← Complex.normSq_eq_norm_sq, Complex.normSq_apply]
+    nlinarith
+  linarith [mul_le_mul_of_nonneg_left hnorm hB0]
+
+end RemainderAsymptotics
+
 end RiemannResearch.RH.Pareto.ResidueMellin

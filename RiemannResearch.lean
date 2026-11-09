@@ -1295,6 +1295,8 @@ import RiemannResearch.RH.ParetoResidueCriticalGram
 import RiemannResearch.RH.ParetoResidueCriticalNormalLimit
 import RiemannResearch.RH.ParetoResidueAtomTests
 import RiemannResearch.RH.ParetoLCMZeroCertificate
+import RiemannResearch.RH.ParetoLCMAnalyticRates
+import RiemannResearch.RH.ParetoResidueCriticalGramRate
 import RiemannResearch.Analysis.ActualZeroParetoCoshBridge
 import RiemannResearch.Analysis.SummableOrdinateKernel
 import RiemannResearch.Analysis.FrequencySensitiveGramBounds

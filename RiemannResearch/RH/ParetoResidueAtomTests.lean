@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.RH.ParetoResidueZeroNormal
+import RiemannResearch.RH.ParetoResidueCriticalNormalLimit
+import RiemannResearch.RH.ParetoResidueMean
 import RiemannResearch.RH.ParetoAtomMellinSignature
 import RiemannResearch.RH.ParetoUnscaledDilation
 import RiemannResearch.RH.MobiusHilbertCoordinates
@@ -200,5 +202,53 @@ theorem omitted_six_span_error_floor (f : ThresholdHilbert)
     change mobiusDifferenceCLM 6 (normalizedResidueHilbert d.val d.property.1) = 0
     rw [mobius_normalizedResidue 6 d.val (by decide) d.property.1, if_neg d.property.2.symm]
   exact hker hf
+
+/-- The same Chebyshev scale is the total sparse Ramanujan mean source. -/
+theorem lcm_sum_ramanujan_mean_eq_psi (M : ℕ) :
+    (∑ q ∈ (Nat.lcmUpto M).divisors, paretoMean (ramanujanPacket q)) =
+      Chebyshev.psi (M : ℝ) := by
+  simp_rw [paretoMean_ramanujanPacket]
+  rw [ArithmeticFunction.vonMangoldt_sum, Chebyshev.psi_eq_log_lcmUpto]
+
+/-- The entire synthesized certificate has zero pairing with every legal atom.
+Thus appending the zero tests to a legal Gram introduces zero mixed blocks. -/
+theorem certificate_orthogonal_atom {ι : Type*} [Fintype ι] (N d : ℕ)
+    (hd : 0 < d) (hdL : d ∣ N + 1) (z : ι → ℂ)
+    (hs : ∀ i, 0 < (z i).re) (hs1 : ∀ i, z i ≠ 1) (hz : ∀ i, riemannZeta (z i) = 0) :
+    inner ℝ (certificateVector N z) (atomVector N d) = 0 := by
+  obtain ⟨a, ha⟩ := exists_zero_normal N z hs hs1 hz
+  rw [certificateVector,
+    ← certificate_eq_projection ((trialSpace (N + 1)).zero_mem) z hs hs1 hz a ha,
+    inner_synthesis_left]
+  apply Finset.sum_eq_zero
+  intro i _
+  rw [zero_row_orthogonal_atom N d hd hdL z i (hs i.1) (hs1 i.1) (hz i.1), mul_zero]
+
+
+/-- Subtracting the certified zero component leaves every legal normal
+right-hand side identical in the weighted residue quotient. -/
+theorem certificate_shift_preserves_atom_pairing {ι : Type*} [Fintype ι] (N d : ℕ)
+    (hd : 0 < d) (hdL : d ∣ N + 1) (z : ι → ℂ)
+    (hs : ∀ i, 0 < (z i).re) (hs1 : ∀ i, z i ≠ 1) (hz : ∀ i, riemannZeta (z i) = 0)
+    (x : EuclideanSpace ℝ (Fin N)) :
+    inner ℝ (atomVector N d) (x - certificateVector N z) = inner ℝ (atomVector N d) x := by
+  have h : inner ℝ (atomVector N d) (certificateVector N z) = 0 := by
+    calc
+      _ = inner ℝ (certificateVector N z) (atomVector N d) := real_inner_comm _ _
+      _ = 0 := certificate_orthogonal_atom N d hd hdL z hs hs1 hz
+  rw [inner_sub_right, h, sub_zero]
+
+/-- The missing-conductor obstruction holds at each coordinate, with its
+actual squared dual norm and without a squarefree premise. -/
+theorem omitted_conductor_error (m : ℕ) (hm : 1 < m) (f : ThresholdHilbert)
+    (hf : mobiusDifferenceCLM m f = 0) :
+    (ArithmeticFunction.moebius m : ℝ) ^ 2 ≤
+      ‖mobiusDifferenceCLM m‖ ^ 2 * ‖hilbertOne - f‖ ^ 2 := by
+  have he : mobiusDifferenceCLM m (hilbertOne - f) = (ArithmeticFunction.moebius m : ℝ) := by
+    rw [map_sub, mobius_coordinate_one m (by omega), hf, sub_zero]
+  have h := (mobiusDifferenceCLM m).le_opNorm (hilbertOne - f)
+  rw [he] at h
+  simpa only [Real.norm_eq_abs, sq_abs, mul_pow] using
+    pow_le_pow_left₀ (norm_nonneg _) h 2
 
 end RiemannResearch.RH.Pareto.ResidueMellin

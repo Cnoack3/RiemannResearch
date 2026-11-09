@@ -261,9 +261,10 @@ private theorem crossTerm_diff_le (t u : ℝ) (N : ℕ) (r : Fin (N + 1)) :
       mul_le_mul_of_nonneg_left hscale2 (by positivity)
     _ = _ := by dsimp only [A, B, C, L]; ring
 
-private theorem firstCrossTerm_eq (t u : ℝ) (n : ℕ) :
+theorem firstCrossTerm_eq (t u : ℝ) (n : ℕ) :
     firstCrossTerm t u n =
-      (paretoWeight n : ℂ) * mellinMode (critical t) n * star (mellinMode (critical u) n) := by
+      (paretoWeight n : ℂ) * mellinMode (MellinFrequency.criticalPoint t) n *
+        star (mellinMode (MellinFrequency.criticalPoint u) n) := by
   have h (v : ℝ) :
       mellinMode (critical v) n =
         mellinFirst (critical v) (n + 1) / (paretoWeight n : ℂ) := by

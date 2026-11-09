@@ -121,6 +121,55 @@ upper orders to the LCM optimum.
 [Balazard–de Roton](https://arxiv.org/abs/0812.1689)
 [Bettin–Conrey–Farmer](https://arxiv.org/abs/1211.5191)
 
+### Upper-rate inputs and moving zero tests
+
+- `lcmBest_tendsto` and `lcmRemainder_tendsto_limit` identify the
+  unconditional limit with the full legal projection and its squared
+  residual, respectively. For fixed distinct positive critical ordinates,
+  `lcmError_sub_remainder_cutoff_tendsto` gives
+  `M (E_M - R_M) → 2 sum_{rho in Z} |rho|^(-2)`.
+  `riemannHypothesis_of_cofinal_remainder_upper` needs a vanishing upper
+  budget only along a cofinal sequence. The finite
+  `right_zero_re_le_of_lcmError_bound` confines a zero with
+  `|Im rho| ≤ T` to `Re rho ≤ 1/2 + (1+T²) B/2` whenever `E_M ≤ B`.
+  This is the physical Pareto form of a finite distance-based zero exclusion.
+  [Delaunay–Fricain–Mosaki–Robert](https://delaunay.perso.math.cnrs.fr/zero_free_regions.pdf)
+- `lcm_sum_ramanujan_mean_eq_psi` identifies the total sparse Ramanujan
+  source over all LCM divisors with the same Chebyshev scale.
+  `certificate_orthogonal_atom` and
+  `certificate_shift_preserves_atom_pairing` keep the legal normal source
+  intact after removing the zero certificate. `omitted_conductor_error`
+  gives the exact dual-norm obstruction at every omitted squarefree
+  conductor by taking the square of its Möbius charge.
+- [ParetoResidueCriticalGramRate.lean](RH/ParetoResidueCriticalGramRate.lean)
+  checks a uniform unnormalized Gram error for each pair of critical
+  frequencies. After division by their norms its budget has linear
+  dependence on their heights and an inverse-gap term off the diagonal.
+  `growing_critical_gram_pairing_error_tendsto_zero` permits a moving
+  collection with vanishing explicit coefficient-weighted budget.
+  The theorem concerns the Gram error and leaves the legal projection
+  remainder as a separate quantity.
+- [ParetoLCMAnalyticRates.lean](RH/ParetoLCMAnalyticRates.lean) proves
+  `lcmError_le_shifted_zeta_budgets` for the centered version of the
+  Balazard--de Roton split, and `bcf_lcm_log_upper_of_natural_budget`
+  transfers a complete classical BCF trial budget without a factor-two
+  loss in its leading constant. The repository Möbius means supply the
+  charge condition `charge² log M → 0` unconditionally. If `E_M` is
+  the optimized squared error, `lcm_remainder_mul_log_inv_error_le`
+  gives `R_M log(1/E_M) ≤ 1-E_M`, an upper estimate at the error's own scale.
+
+The open Balazard--de Roton inputs are the weighted shifted-quotient and
+truncation bounds on a common schedule. The shift-factor condition is
+`Re rho ≤ Re s + ε/2` for each zero. The published argument uses RH
+for the quotient estimate, the contour evaluation, and the truncation.
+The open BCF input is the complete trial budget. Its published
+provider assumes RH and the reciprocal zeta derivative second-moment
+bound. An off-line zero contributes a horizontal power of the cutoff
+in its residue factor. Maier and Rassias analyze that effect under an
+exceptional quartet. [Balazard–de Roton](https://arxiv.org/abs/0812.1689)
+[Bettin–Conrey–Farmer](https://arxiv.org/abs/1211.5191)
+[Maier–Rassias](https://doi.org/10.4153/CMB-2017-070-3)
+
 ## Full-conductor product distance (agenda A5)
 
 `RH/QFullProductDistance.lean` proves the exact signed product identity,
