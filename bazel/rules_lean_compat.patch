@@ -691,7 +691,7 @@ index 0000000..71ee267
 +      failed := true
 +  return if failed then 1 else 0
 diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
-index 2ad2ce9..d593a16 100644
+index 2ad2ce9..107d98d 100644
 --- a/lean/private/lean_rules.bzl
 +++ b/lean/private/lean_rules.bzl
 @@ -11,7 +11,8 @@
@@ -704,7 +704,7 @@ index 2ad2ce9..d593a16 100644
  
  Lean resolves an import by the *first* `LEAN_PATH` entry that holds the module's
  top-level directory, and it does not continue to later entries. Two entries
-@@ -22,13 +23,15 @@
+@@ -22,13 +23,16 @@
  directory holds exactly those files.
  """
  
@@ -716,12 +716,13 @@ index 2ad2ce9..d593a16 100644
      doc = "Oleans of one `lean_library`, and the directories that hold them.",
      fields = {
 +        "module_artifacts": "depset[tuple[str, tuple[File, ...]]]: module name to compiled files, transitive.",
++        "input_closures": "depset[tuple[module, compiler, SDK identity, imports, depset[File]]]: reusable, fully indexed input closures.",
          "module_imports": "depset[tuple[str, tuple[str, ...]]]: module name to imports, transitive.",
 +        "opaque_oleans": "depset[File]: files whose complete module import graph is unavailable.",
          "module_sources": "depset[tuple[str, str, File]]: module path, module name, " +
                            "and source file, transitive.",
          "olean_dirs": "depset[str]: `LEAN_PATH` entries for actions, transitive.",
-@@ -78,7 +81,8 @@
+@@ -78,7 +82,8 @@
  
      if not rel.endswith(".lean"):
          fail("%s: %s is not a .lean file" % (ctx.label, src.short_path))
@@ -731,7 +732,7 @@ index 2ad2ce9..d593a16 100644
  
  def _dir_of(path, suffix):
      """Strip a known suffix from a path, leaving the directory."""
-@@ -124,6 +128,76 @@
+@@ -124,6 +129,186 @@
  def _transitive(deps, field):
      return depset(transitive = [getattr(dep[LeanLibraryInfo], field) for dep in deps if hasattr(dep[LeanLibraryInfo], field)])
  
@@ -741,7 +742,79 @@ index 2ad2ce9..d593a16 100644
 +        for dep in deps
 +    ])
 +
-+def _artifact_closures(label, artifacts, imports, mapped_modules, sdk_inputs = {}):
++def _module_import_data(deps):
++    imports = {}
++    unambiguous = True
++    for mod, direct in _transitive(deps, "module_imports").to_list():
++        if mod in imports and imports[mod] != direct:
++            unambiguous = False
++        imports[mod] = direct
++    return struct(imports = imports, unambiguous = unambiguous)
++
++def _can_share_inputs(ctx, tc, sdk_inputs, artifacts, unambiguous):
++    # Keep the existing path for full-SDK mode, incomplete metadata, or a
++    # custom library shadowing an SDK module. Those contexts are not equivalent.
++    return (
++        ctx.var.get("lean_share_inputs", "1") == "1" and
++        getattr(tc, "input_closure_key", None) != None and
++        bool(sdk_inputs) and
++        unambiguous and
++        not any([mod in sdk_inputs for mod in artifacts])
++    )
++
++def _cached_input_closures(deps, tc, artifacts, imports):
++    cached = {}
++    for mod, compiler, sdk_key, direct, files in _transitive(deps, "input_closures").to_list():
++        if compiler == tc.lean and sdk_key == tc.input_closure_key and mod in artifacts and tuple(imports.get(mod, [])) == direct:
++            cached[mod] = files
++    return cached
++
++def _closure_records(tc, artifacts, imports, closures):
++    return [
++        (mod, tc.lean, tc.input_closure_key, tuple(imports.get(mod, [])), closures.files[mod])
++        for mod in artifacts
++        if closures.shareable[mod]
++    ]
++
++def _prebuilt_input_closures(ctx, artifacts, complete_graph):
++    if not complete_graph or ctx.var.get("lean_share_inputs", "1") != "1":
++        return []
++    tc = ctx.toolchains[TOOLCHAIN_TYPE].lean_toolchain
++    sdk_inputs = getattr(tc, "sdk_inputs", {}) if ctx.var.get("lean_sdk_inputs", "full") == "imports" else {}
++    if not sdk_inputs or _opaque_oleans(ctx.attr.deps).to_list():
++        return []
++    metadata = _module_import_data(ctx.attr.deps)
++    imports = metadata.imports
++    unambiguous = metadata.unambiguous
++    for mod, direct in ctx.attr.internal_imports.items():
++        if mod in imports and tuple(imports[mod]) != tuple(direct):
++            unambiguous = False
++        imports[mod] = direct
++    all_artifacts = {}
++    for mod, files in _transitive(ctx.attr.deps, "module_artifacts").to_list():
++        if mod in all_artifacts and all_artifacts[mod] != files:
++            unambiguous = False
++        all_artifacts[mod] = files
++    for mod, files in artifacts.items():
++        if mod in all_artifacts and tuple(all_artifacts[mod]) != tuple(files):
++            unambiguous = False
++        all_artifacts[mod] = files
++    if not _can_share_inputs(ctx, tc, sdk_inputs, all_artifacts, unambiguous):
++        return []
++    cached = _cached_input_closures(ctx.attr.deps, tc, all_artifacts, imports)
++    # Dependency providers already own their complete indexed file closures.
++    # Build only this prebuilt target's nodes; unmatched imports stay unshareable.
++    dependency_inputs = {}
++    for mod in artifacts:
++        for imp in imports.get(mod, []):
++            if imp in cached:
++                dependency_inputs[imp] = cached[imp]
++            elif imp in sdk_inputs:
++                dependency_inputs[imp] = sdk_inputs[imp]
++    closures = _artifact_closures(ctx.label, artifacts, imports, {}, dependency_inputs, cached)
++    return _closure_records(tc, artifacts, imports, closures)
++
++def _artifact_closures(label, artifacts, imports, mapped_modules, sdk_inputs = {}, cached_files = {}):
 +    """Build file closures in dependency order, with one step per graph node."""
 +    remaining = {}
 +    importers = {}
@@ -753,20 +826,28 @@ index 2ad2ce9..d593a16 100644
 +
 +    ready = [mod for mod, count in remaining.items() if count == 0]
 +    closures = {}
++    shareable = {}
 +    mapped_closures = {}
 +    for _ in range(len(artifacts)):
 +        if not ready:
 +            cycle = [mod for mod in artifacts if mod not in closures]
 +            fail("%s: import cycle among modules: %s" % (label, ", ".join(cycle[:10])))
 +        mod = ready.pop()
-+        closures[mod] = depset(
-+            direct = artifacts[mod],
-+            transitive = [closures[imp] for imp in imports.get(mod, []) if imp in closures] + [
-+                sdk_inputs[imp]
-+                for imp in imports.get(mod, [])
-+                if imp in sdk_inputs and imp not in artifacts
-+            ],
++        shareable[mod] = (
++            all([imp in artifacts or imp in sdk_inputs for imp in imports.get(mod, [])]) and
++            all([shareable[imp] for imp in imports.get(mod, []) if imp in artifacts])
 +        )
++        if shareable[mod] and mod in cached_files:
++            closures[mod] = cached_files[mod]
++        else:
++            closures[mod] = depset(
++                direct = artifacts[mod],
++                transitive = [closures[imp] for imp in imports.get(mod, []) if imp in closures] + [
++                    sdk_inputs[imp]
++                    for imp in imports.get(mod, [])
++                    if imp in sdk_inputs and imp not in artifacts
++                ],
++            )
 +        mapped_closures[mod] = depset(
 +            direct = [mod] if mod in mapped_modules else [],
 +            transitive = [mapped_closures[imp] for imp in imports.get(mod, []) if imp in mapped_closures],
@@ -775,7 +856,7 @@ index 2ad2ce9..d593a16 100644
 +            remaining[importer] -= 1
 +            if remaining[importer] == 0:
 +                ready.append(importer)
-+    return struct(files = closures, mapped_modules = mapped_closures)
++    return struct(files = closures, mapped_modules = mapped_closures, shareable = shareable)
 +
 +def _ambiguous_modules(tc, artifacts, action_dirs):
 +    # Lean stops at the first namespace directory/root file. Bazel child-package
@@ -805,10 +886,40 @@ index 2ad2ce9..d593a16 100644
 +        if len(roots[mod.partition(".")[0]]) > 1
 +    }
 +
++def _encode_module_setup(data):
++    # Expand at action-key/execution time instead of retaining repeated JSON.
++    mod, is_module, imported_modules, entries, out_files = data
++    all_artifacts = dict(entries.to_list())
++    import_arts = {}
++    for imported in imported_modules:
++        paths = {}
++        for file in all_artifacts[imported]:
++            for suffix in [".olean.private", ".olean.server", ".olean", ".ir.sig", ".ir"]:
++                if file.path.endswith(suffix):
++                    paths[suffix] = file.path
++                    break
++        import_arts[imported] = [
++            [paths[suffix] for suffix in [".olean", ".olean.server", ".olean.private"] if suffix in paths],
++            [paths[suffix] for suffix in [".ir.sig", ".ir"] if suffix in paths],
++        ]
++    if out_files:
++        import_arts[mod] = [
++            [file.path for file in out_files if file.path.endswith((".olean", ".olean.server", ".olean.private"))],
++            [file.path for file in out_files if file.path.endswith((".ir.sig", ".ir"))],
++        ]
++    return json.encode({
++        "name": mod,
++        "isModule": is_module,
++        "importArts": import_arts,
++        "options": {},
++        "plugins": [],
++        "dynlibs": [],
++    })
++
  def _compile_modules(
          ctx,
          tc,
-@@ -137,6 +211,18 @@
+@@ -137,6 +322,18 @@
      """Compile one action per source. Returns the oleans and their directory."""
      dep_oleans = _transitive(deps, "oleans")
  
@@ -827,7 +938,7 @@ index 2ad2ce9..d593a16 100644
      olean_dir = None
      runfiles_olean_dir = None
      oleans_by_mod = {}
-@@ -146,12 +232,19 @@
+@@ -146,12 +343,19 @@
      for src in srcs:
          rel = _module_rel(ctx, src)
          mod = rel.replace("/", ".")
@@ -852,7 +963,7 @@ index 2ad2ce9..d593a16 100644
          if generate_c:
              out_c = ctx.actions.declare_file("%s.c/%s.c" % (ctx.label.name, rel))
              files.append(out_c)
-@@ -166,11 +259,10 @@
+@@ -166,11 +370,10 @@
  
      # Lean searches LEAN_PATH in order and replaces its built-in path, so the
      # package output directory and standard library must be explicit entries.
@@ -865,7 +976,7 @@ index 2ad2ce9..d593a16 100644
      lean_path = ":".join(action_dirs)
  
      # The upstream test driver runs a test with the environment of its
-@@ -178,38 +270,52 @@
+@@ -178,52 +381,86 @@
      env = {"LEAN_PATH": lean_path}
      env.update(extra_env)
  
@@ -908,7 +1019,8 @@ index 2ad2ce9..d593a16 100644
 +        if mod in all_artifacts and all_artifacts[mod] != files:
 +            fail("%s: deps supply different artifacts for module '%s'" % (ctx.label, mod))
 +        all_artifacts[mod] = files
-+    all_imports = dict(_transitive(deps, "module_imports").to_list())
++    import_metadata = _module_import_data(deps)
++    all_imports = import_metadata.imports
 +    for mod, files in oleans_by_mod.items():
 +        if mod in all_artifacts:
 +            fail("%s: module '%s' is also supplied by deps" % (ctx.label, mod))
@@ -942,7 +1054,12 @@ index 2ad2ce9..d593a16 100644
 +        if missing:
 +            fail("%s: SDK index is missing required roots %s" % (ctx.label, missing))
 +        sdk_base = [tc.sdk_runtime] + [sdk_inputs[root] for root in sdk_roots]
-+    closures = _artifact_closures(ctx.label, all_artifacts, all_imports, mapped_modules, sdk_inputs)
++    share_inputs = _can_share_inputs(ctx, tc, sdk_inputs, all_artifacts, import_metadata.unambiguous)
++    cached_files = _cached_input_closures(deps, tc, all_artifacts, all_imports) if share_inputs else {}
++    closures = _artifact_closures(ctx.label, all_artifacts, all_imports, mapped_modules, sdk_inputs, cached_files)
++    reference_closures = None
++    if ctx.var.get("lean_verify_shared_inputs", "0") == "1":
++        reference_closures = _artifact_closures(ctx.label, all_artifacts, all_imports, mapped_modules, sdk_inputs)
 +
 +    sorry_checker = None
 +    if forbid_sorry:
@@ -950,7 +1067,12 @@ index 2ad2ce9..d593a16 100644
  
      plugin_flags = ["--plugin=" + p.path for p in plugins]
      c_snippet = '-c "$LEAN_C"' if generate_c else ""
-@@ -218,12 +324,12 @@
+ 
++    setup_artifacts = depset(
++        direct = [(mod, tuple(files)) for mod, files in oleans_by_mod.items()],
++        transitive = [_transitive(deps, "module_artifacts")],
++    )
+     oleans = []
      for mod, src in src_by_mod.items():
          out_files = oleans_by_mod[mod]
          out = out_files[0]
@@ -965,10 +1087,20 @@ index 2ad2ce9..d593a16 100644
 +            for imp in all_imports[mod]
 +            if imp in closures.files
 +        ] + [sdk_inputs[imp] for imp in all_imports[mod] if imp in sdk_inputs and imp not in all_artifacts]
++
++        if reference_closures != None:
++            reference_inputs = depset(transitive = [
++                reference_closures.files[imp]
++                for imp in all_imports[mod]
++                if imp in reference_closures.files
++            ] + [sdk_inputs[imp] for imp in all_imports[mod] if imp in sdk_inputs and imp not in all_artifacts])
++            shared_inputs = depset(transitive = imported_artifacts)
++            if {file: True for file in reference_inputs.to_list()} != {file: True for file in shared_inputs.to_list()}:
++                fail("%s: shared input closure differs from reference for %s" % (ctx.label, mod))
  
          sorry_check = ""
          if forbid_sorry:
-@@ -233,18 +339,61 @@
+@@ -233,18 +470,40 @@
      rm -f "$tmp_log"
      exit 1
  fi
@@ -999,33 +1131,12 @@ index 2ad2ce9..d593a16 100644
 +                if imp in closures.mapped_modules
 +            ],
 +        ).to_list()
-+        import_arts = {}
-+        for imported in imported_modules:
-+            paths = {}
-+            for file in all_artifacts[imported]:
-+                for suffix in [".olean.private", ".olean.server", ".olean", ".ir.sig", ".ir"]:
-+                    if file.path.endswith(suffix):
-+                        paths[suffix] = file.path
-+                        break
-+            import_arts[imported] = [
-+                [paths[suffix] for suffix in [".olean", ".olean.server", ".olean.private"] if suffix in paths],
-+                [paths[suffix] for suffix in [".ir.sig", ".ir"] if suffix in paths],
-+            ]
 +        setup = ctx.actions.args()
-+        if forbid_sorry:
-+            # The audit imports the newly compiled module, including private proofs.
-+            import_arts[mod] = [
-+                [file.path for file in out_files if file.path.endswith((".olean", ".olean.server", ".olean.private"))],
-+                [file.path for file in out_files if file.path.endswith((".ir.sig", ".ir"))],
-+            ]
-+        setup.add(json.encode({
-+            "name": mod,
-+            "isModule": mod in module_system,
-+            "importArts": import_arts,
-+            "options": {},
-+            "plugins": [],
-+            "dynlibs": [],
-+        }))
++        data = (mod, mod in module_system, tuple(imported_modules), setup_artifacts, tuple(out_files) if forbid_sorry else ())
++        if ctx.var.get("lean_share_inputs", "1") == "1":
++            setup.add_all([data], map_each = _encode_module_setup)
++        else:
++            setup.add(_encode_module_setup(data))
 +        setup.set_param_file_format("multiline")
 +        setup.use_param_file("--setup=%s", use_always = True)
 +        flags = ctx.actions.args()
@@ -1033,7 +1144,7 @@ index 2ad2ce9..d593a16 100644
  
          ctx.actions.run_shell(
              command = "set -euo pipefail\n\n" + _ROOT_SNIPPET + """
-@@ -255,19 +404,11 @@
+@@ -255,19 +514,11 @@
  fi
  {sorry_check}
  rm -f "$tmp_log"
@@ -1056,16 +1167,17 @@ index 2ad2ce9..d593a16 100644
              ),
              outputs = out_files,
              tools = [tc.lean],
-@@ -279,6 +420,8 @@
+@@ -279,6 +530,9 @@
  
      return struct(
          cfiles = [cfiles_by_mod[m] for m in src_by_mod if m in cfiles_by_mod],
 +        direct_oleans = depset(oleans),
++        input_closures = _closure_records(tc, oleans_by_mod, all_imports, closures) if share_inputs else [],
 +        module_artifacts = [(mod, tuple(files)) for mod, files in oleans_by_mod.items()],
          module_imports = [
              (
                  _module_rel(ctx, src).replace("/", "."),
-@@ -291,6 +434,7 @@
+@@ -291,6 +545,7 @@
              for src in srcs
          ],
          olean_dir = olean_dir,
@@ -1073,13 +1185,17 @@ index 2ad2ce9..d593a16 100644
          oleans = depset(direct = oleans, transitive = [dep_oleans]),
          runfiles_olean_dir = runfiles_olean_dir,
      )
-@@ -310,8 +454,13 @@
+@@ -310,8 +565,17 @@
      )
  
      return [
 -        DefaultInfo(files = result.oleans),
 +        DefaultInfo(files = result.direct_oleans),
          LeanLibraryInfo(
++            input_closures = depset(
++                direct = result.input_closures,
++                transitive = [_transitive(ctx.attr.deps, "input_closures")],
++            ),
 +            module_artifacts = depset(
 +                direct = result.module_artifacts,
 +                transitive = [_transitive(ctx.attr.deps, "module_artifacts")],
@@ -1088,7 +1204,7 @@ index 2ad2ce9..d593a16 100644
              module_imports = depset(
                  direct = result.module_imports,
                  transitive = [_transitive(ctx.attr.deps, "module_imports")],
-@@ -321,12 +470,12 @@
+@@ -321,12 +585,12 @@
                  transitive = [_transitive(ctx.attr.deps, "module_sources")],
              ),
              olean_dirs = depset(
@@ -1103,7 +1219,7 @@ index 2ad2ce9..d593a16 100644
                  transitive = [_transitive(ctx.attr.deps, "runfiles_olean_dirs")],
              ),
          ),
-@@ -335,6 +484,14 @@
+@@ -335,6 +599,14 @@
  lean_library = rule(
      implementation = _lean_library_impl,
      attrs = {
@@ -1118,7 +1234,7 @@ index 2ad2ce9..d593a16 100644
          "deps": attr.label_list(
              providers = [LeanLibraryInfo],
              doc = "Lean libraries that these sources import.",
-@@ -350,8 +507,14 @@
+@@ -350,8 +622,14 @@
              default = False,
              doc = "Fail compilation if any declaration in the target uses `sorry`.",
          ),
@@ -1133,7 +1249,7 @@ index 2ad2ce9..d593a16 100644
          ),
          "plugins": attr.label_list(
              providers = [LeanPluginInfo],
-@@ -370,37 +533,69 @@
+@@ -370,37 +648,73 @@
  def _lean_prebuilt_library_impl(ctx):
      direct_olean_dirs = []
      direct_runfiles_dirs = []
@@ -1208,6 +1324,10 @@ index 2ad2ce9..d593a16 100644
      return [
          DefaultInfo(files = depset(ctx.files.srcs)),
          LeanLibraryInfo(
++            input_closures = depset(
++                direct = _prebuilt_input_closures(ctx, artifacts, complete_graph),
++                transitive = [_transitive(ctx.attr.deps, "input_closures")],
++            ),
 +            module_artifacts = depset(
 +                direct = [(mod, tuple(files)) for mod, files in artifacts.items()],
 +                transitive = [_transitive(ctx.attr.deps, "module_artifacts")],
@@ -1220,17 +1340,25 @@ index 2ad2ce9..d593a16 100644
              olean_dirs = depset(
                  direct = direct_olean_dirs,
                  transitive = [_transitive(ctx.attr.deps, "olean_dirs")],
-@@ -422,6 +617,9 @@
-         "deps": attr.label_list(
+@@ -423,6 +737,9 @@
              providers = [LeanLibraryInfo],
              doc = "Lean libraries that these prebuilt modules import.",
-+        ),
+         ),
 +        "internal_imports": attr.string_list_dict(
 +            doc = "Complete import graph for prebuilt modules. Enables per-module action inputs.",
-         ),
++        ),
          "root": attr.string(
              default = "",
-@@ -521,6 +719,9 @@
+             doc = "Directory containing the root modules, relative to package (e.g. 'lib/lean').",
+@@ -435,6 +752,7 @@
+             doc = "Prebuilt files in the library.",
+         ),
+     },
++    toolchains = [TOOLCHAIN_TYPE],
+     doc = "Provides prebuilt oleans without running compilation actions.",
+ )
+ 
+@@ -521,6 +839,9 @@
          ),
          "extra_flags": attr.string_list(
              doc = "Extra flags for `lean`.",
@@ -1240,7 +1368,7 @@ index 2ad2ce9..d593a16 100644
          ),
          "plugins": attr.label_list(
              providers = [LeanPluginInfo],
-@@ -901,17 +1102,15 @@
+@@ -901,17 +1222,15 @@
          for mod_name, imps in ctx.attr.internal_imports.items():
              all_imports[mod_name] = list(imps)
  
@@ -1261,10 +1389,14 @@ index 2ad2ce9..d593a16 100644
                  queue.append(imp)
  
      compile_modules = [modules[name] for name in sorted(needed.keys()) if name in modules]
-@@ -1075,6 +1274,11 @@
+@@ -1075,6 +1394,15 @@
          DefaultInfo(files = depset([shared_lib])),
          LeanPluginInfo(plugin = shared_lib),
          LeanLibraryInfo(
++            input_closures = depset(
++                direct = result.input_closures,
++                transitive = [_transitive(ctx.attr.deps, "input_closures")],
++            ),
 +            module_artifacts = depset(
 +                direct = result.module_artifacts,
 +                transitive = [_transitive(ctx.attr.deps, "module_artifacts")],
@@ -1273,7 +1405,7 @@ index 2ad2ce9..d593a16 100644
              module_imports = depset(
                  direct = result.module_imports,
                  transitive = [_transitive(ctx.attr.deps, "module_imports")],
-@@ -1117,6 +1321,9 @@
+@@ -1117,6 +1445,9 @@
          "main": attr.string(
              doc = "The entry module of the plugin (determines initialize_<main> symbol). Defaults to the single src module or target name.",
          ),
@@ -1639,15 +1771,16 @@ index 8ceccc5..92d42ec 100644
          "darwin_aarch64": "ae1f70cd5a72eeb93f8600edfeaed8550b9c9b073f04162ab6d721ab801ed709",
          "darwin_x86_64": "c011bf88cd984cab01d2be5b0ed98e1a23aa744ad5f8cf77e6f5c8cec82e63f9",
 diff --git a/lean/toolchain.bzl b/lean/toolchain.bzl
-index 9df955e..8e2da4e 100644
+index 9df955e..9ca1720 100644
 --- a/lean/toolchain.bzl
 +++ b/lean/toolchain.bzl
-@@ -7,19 +7,76 @@ LeanToolchainInfo = provider(
+@@ -7,19 +7,78 @@
          "link_inputs": "depset[File]: files the linker reads, for `lean_binary`.",
          "lean": "File: the Lean binary.",
          "stdlib": "depset[File]: prebuilt oleans of the standard library.",
 +        "sdk_inputs": "dict[str, depset[File]]: complete compiled SDK import closures, if indexed.",
 +        "sdk_runtime": "depset[File]: shared runtime files, excluding indexed module artifacts.",
++        "input_closure_key": "depset[File]: identity token for this compiler, SDK and decoded import index.",
          "version": "str: the Lean version, for example \"4.34.1\".",
      },
  )
@@ -1717,10 +1850,11 @@ index 9df955e..8e2da4e 100644
 +        stdlib = stdlib,
 +        sdk_inputs = sdk.modules,
 +        sdk_runtime = sdk.runtime,
++        input_closure_key = depset(direct = [ctx.file.lean], transitive = [stdlib]),
      )
  
      # A `toolchain()` target wraps this target and reads its ToolchainInfo.
-@@ -49,6 +106,9 @@ lean_toolchain = rule(
+@@ -49,6 +108,9 @@
              mandatory = True,
              doc = "Target that provides the prebuilt standard library oleans.",
          ),
