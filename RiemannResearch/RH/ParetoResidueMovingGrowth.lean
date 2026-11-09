@@ -236,7 +236,7 @@ bounded by one plus the logarithm of the number of signed ordinates. -/
 def criticalSpacingBudget (m : ℕ) (T δ : ℝ) (N : ℕ) : ℝ :=
   ((m : ℝ) * (1 + T) + (harmonic (2 * m) : ℝ) / δ) / Real.log ((N : ℝ) + 1)
 
-private theorem criticalSourceError_le_inv (N : ℕ) :
+theorem criticalSourceError_le_inv (N : ℕ) :
     0 ≤ criticalSourceError N ∧
       criticalSourceError N ≤ (1 + criticalTailMass) / ((N : ℝ) + 1) := by
   have ht : 0 ≤ criticalTailMass := tsum_nonneg (fun _ => by unfold criticalScale; positivity)

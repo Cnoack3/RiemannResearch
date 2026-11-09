@@ -251,7 +251,7 @@ theorem lcm_best_error_tendsto_zero_iff :
       linarith [sq_nonneg ‖f - lcmBest M‖]
 
 omit [Fintype ι] in
-private theorem multiples_mass_tendsto_zero :
+theorem multiples_mass_tendsto_zero :
     Tendsto (fun N => classWeight N (Fin.last N)) atTop (𝓝 0) := by
   have hN : Tendsto (fun N : ℕ => (N : ℝ) + 1) atTop atTop :=
     tendsto_atTop_mono (fun N => by linarith) tendsto_natCast_atTop_atTop

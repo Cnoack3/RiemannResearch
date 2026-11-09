@@ -25,3 +25,32 @@ The vacancy formulas use all nontrivial divisors of $L=\operatorname{lcm}(1,\ldo
 - `riemannHypothesis_of_cofinal_augmented_vacancy` applies to moving finite families when their certificate energies and augmented vacancies both tend to zero on the same cofinal schedule.
 
 The open arithmetic obligation is an upper bound forcing the complete augmented vacancy to zero. A microscopic real row bound controls the certificate term. A clustered complex pair determinant is a bound on a different matrix.
+
+## Continuation: automatic source decay and legal packet refits
+
+- `microscopicRealRowBudget_card_le` and `card_div_log_le_of_microscopic`
+  prove the counting premise proposed in the handoff: a row bound d controls
+  m/log(N+1) by d/2, including empty families.
+- `relativeCriticalSourceSq_div_log_le_of_microscopic` gives the explicit
+  bound S/ell <= C0/(2 ell) + (d/2)e(4+e), using the actual-zero reciprocal sum.
+- `critical_certificate_tendsto_of_microscopic_actual_zeros` removes the
+  separate source-decay hypothesis for cofinal periods and moving distinct
+  positive actual critical-line zeros. **Open:** an eventual uniform
+  microscopic row margin d<1/2 for the chosen moving schedule.
+- `lcm_moving_remainder_tendsto_limit_of_microscopic` identifies the remaining
+  vacancy limit with the squared distance to the full legal closure.
+- `riemannHypothesis_of_microscopic_remainder_upper` and
+  `riemannHypothesis_of_microscopic_shifted_trials` assemble the strengthened
+  certificate theorem with the complete LCM criterion.
+  **Open:** a complete remainder or shifted-trial upper budget tending to zero.
+- `lcmPacketRefit_mem`, `lcmPacketRefit_error_completion`, and
+  `lcmError_le_packet_refit` construct a legal screened-packet correction and
+  retain its exact Rayleigh gain and displacement from the enlarged optimizer.
+- `lcm_remainder_packet_refit_transition` retains both signed changes in
+  multiples mass and zero-certificate energy when stages and zero families change.
+  **Open:** quantitative control of accumulated gains sufficient for vanishing error.
+
+Source modules: `RH/ParetoResidueMicroscopicSource.lean`,
+`RH/ParetoLCMMicroscopicRemainder.lean`, and `RH/ParetoLCMVariational.lean`.
+See [the continuation record](Microscopic_Source_and_LCM_Refits_20261109.md)
+for hypotheses, external calculations, and published references.
