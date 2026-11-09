@@ -7,7 +7,7 @@ startup --host_jvm_args=-XX:ActiveProcessorCount=2
 startup --host_jvm_args=-XX:+ExitOnOutOfMemoryError
 # Prefer interactive server work on Linux and release idle JVMs promptly.
 startup --batch_cpu_scheduling
-startup --max_idle_secs=300
+startup --max_idle_secs=1800
 startup --shutdown_on_low_sys_mem
 # All checkouts share repository and action caches. Bazel still creates one
 # output base per workspace under this root; never share a single output base.

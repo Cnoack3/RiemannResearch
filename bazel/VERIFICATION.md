@@ -196,6 +196,29 @@ Sources: [systemd memory controls](https://www.freedesktop.org/software/systemd/
 [Bazel options](https://bazel.build/versions/9.2.0/reference/command-line-reference),
 and [Microsoft WSL configuration](https://learn.microsoft.com/en-us/windows/wsl/wsl-config).
 
+## Idle Bazel servers
+
+The default server idle timeout is 30 minutes (`--max_idle_secs=1800`).
+Each command restarts the idle interval. Retaining the server preserves its
+in-memory analysis graph for subsequent work in that workspace. Disk and
+BuildBuddy compilation caches survive a server shutdown.
+
+The timeout is read when the Bazel server starts. Existing JVMs retain their
+previous timeout until they exit. Existing checkouts must pull or sync this
+configuration before starting a replacement server.
+
+This is an explicit retention tradeoff. A full-project server has been observed
+retaining about 8.5 GiB. The aggregate RAM limits and available host swap still
+constrain simultaneous workspaces. Additional swap provides capacity for cold
+pages, while repeatedly paging active graphs can slow builds. Pressure-aware
+eviction of idle servers is still pending. The existing
+`--shutdown_on_low_sys_mem` checks VM-wide memory and is not a substitute for
+service-cgroup-aware eviction.
+
+Revert the startup option to 300 for the previous five-minute policy.
+The 30-minute setting has been checked as a configuration-only change, but a
+live 30-minute retention test has not yet been performed.
+
 ## Shared storage
 
 The cache policy lives entirely in the repository's `.bazelrc`. Updated
