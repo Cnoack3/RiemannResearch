@@ -1289,6 +1289,8 @@ import RiemannResearch.RH.ParetoHorizontalZeroBridge
 import RiemannResearch.Analysis.ActualZeroReciprocalConstant
 import RiemannResearch.RH.ParetoResidualBoundaryEnergy
 import RiemannResearch.RH.ParetoFiniteMellinHalfPlane
+import RiemannResearch.RH.ParetoResidueClassMellin
+import RiemannResearch.RH.ParetoResidueZeroNormal
 import RiemannResearch.Analysis.ActualZeroParetoCoshBridge
 import RiemannResearch.Analysis.SummableOrdinateKernel
 import RiemannResearch.Analysis.FrequencySensitiveGramBounds

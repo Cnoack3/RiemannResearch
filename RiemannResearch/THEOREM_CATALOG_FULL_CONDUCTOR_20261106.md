@@ -23,6 +23,59 @@ The initial coherent snippet passed server job
 these additions were published in commit 7ec9ee06cb5432a3e96597845f8780523ac2f433.
 Their fresh verification is recorded below.
 
+## Finite zeta-zero normal equations on the full residue quotient
+
+The metric here is the physical Pareto norm. The stage modulus can be any
+positive integer, including the running LCM with every prime-power divisor.
+
+- [ParetoResidueClassMellin.lean](RH/ParetoResidueClassMellin.lean) proves the class formulas.
+  `error_norm_sq_eq_classes` groups the entire error by physical residue
+  classes. `multiples_mass_bounds` bounds the compulsory term between
+  `1/L²` and `2/(L(L+1))`. `class_pairing_eq_mellin` and
+  `error_zero_moment` verify the actual bounded-step zeta coordinate at
+  every zero in the positive half-plane, with the entire multiples
+  coordinate subtracted from the source.
+- [ParetoResidueZeroNormal.lean](RH/ParetoResidueZeroNormal.lean) proves the projection formulas.
+  `zero_gram_entry` gives the signed real Gram entries.
+  `exists_zero_normal` and `certificate_eq_projection` give consistency
+  and uniqueness of the synthesized certificate for a possibly singular
+  Gram matrix. `legal_error_completion` gives the compulsory mass, the
+  certificate energy, and the complete remaining square. The inverse
+  quadratic is available in `legal_error_completion_inverse` when the
+  rows are independent. `exists_lcm_critical_line_family` supplies any
+  prescribed finite number of distinct simple positive-height critical-line
+  zeros, using the existing Lean zero-existence theorem.
+
+The first-difference normalization is `s * Mellin`. The finite equations
+apply to every legal competitor at the stage. Quantitative decay of the
+remaining square for the actual optimal legal competitors is a separate
+obligation.
+
+### Fixed critical-line families on paper
+
+For a fixed family of distinct positive-height zeros `Z` on the critical
+line, the two real rows for each zero have limiting diagonal entries
+`|rho|²/2` in the Gram matrix divided by `log L`. Thus the certificate
+energy is asymptotic to `(2/log L) sum_{rho in Z} |rho|^(-2)`.
+
+For representatives `1 <= r < L`, the grouped weight differs from its
+first atom by `O(L^(-2))`. The grouped Mellin first difference differs
+from its first term by `O_Z(L^(-3/2))`, by comparison with the convergent
+`3/2` power series over the remaining progression. The first term itself
+is `O_Z(r^(-3/2))`. Since the inverse first-atom weight is `r(r+1)`,
+the product errors in an entry sum to
+`O_Z(L^(-3/2) sum sqrt(r) + L^(-3) sum r²) = O_Z(1)`.
+The inverse-weight error contributes `O_Z(L^(-2) sum r) = O_Z(1)).
+The raw first differences are
+`rho r^(-3/2-i Im(rho)) + O_Z(r^(-5/2))`.
+The logarithmic mean of every nonzero sum or difference frequency is
+zero by integral comparison with `r^(-1-it)`. The zero frequency
+gives the stated real diagonal. The multiples source tends to the pair
+`(1,0)` for each zero, so inversion of the limiting diagonal gives the
+certificate asymptotic. This comparison between the raw and grouped
+Gram matrices is a paper calculation. The finite identities above are
+Lean declarations.
+
 ## Full-conductor product distance (agenda A5)
 
 `RH/QFullProductDistance.lean` proves the exact signed product identity,
