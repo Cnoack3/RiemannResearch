@@ -1,6 +1,7 @@
 import RiemannResearch.RH.PrimePowerRamanujanClosure
 import RiemannResearch.RH.PsiNormalizedRamanujan
 import RiemannResearch.Analysis.ExhaustiveProjectionWalk
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 
@@ -150,6 +151,53 @@ theorem exists_centered_mixed_dual_maximizer (z : ThresholdHilbert)
       change (inner ℝ v (‖v‖⁻¹ • v)) ^ 2 = ‖v‖ ^ 2
       rw [real_inner_smul_right, real_inner_self_eq_norm_sq, pow_two ‖v‖,
         ← mul_assoc, inv_mul_cancel₀ hn, one_mul, pow_two]
+
+/-- Enlarging a mixed cutoff decreases the remaining distance to full screening. -/
+theorem finiteScreening_full_gap_antitone (x : ThresholdHilbert) :
+    Antitone (fun M : ℕ => ‖finiteScreening M x - fullScreening x‖) := by
+  intro M L hML
+  have he (J : ℕ) : finiteScreening J x - fullScreening x =
+      mixedClosure.starProjection x - (mixedSpace (Finset.Icc 2 J)).starProjection x := by
+    rw [finiteScreening_apply]
+    change (x - _) - (x - _) = _
+    abel
+  change ‖finiteScreening L x - fullScreening x‖ ≤ ‖finiteScreening M x - fullScreening x‖
+  rw [he L, he M]
+  apply (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mp
+  linarith only [finiteScreening_energy_split M L hML x,
+    finiteScreening_energy_eq_full_add_tail M x, finiteScreening_energy_eq_full_add_tail L x,
+    sq_nonneg ‖(mixedSpace (Finset.Icc 2 L)).starProjection x -
+      (mixedSpace (Finset.Icc 2 M)).starProjection x‖]
+
+/-- The finite cutoffs can be chosen increasing while retaining every lower
+bound and every positive tolerance in the original selection theorem. -/
+theorem exists_monotone_finiteScreening_cutoffs (x : ℕ → ThresholdHilbert)
+    (lower : ℕ → ℕ) (ε : ℕ → ℝ) (hε : ∀ N, 0 < ε N) :
+    ∃ M : ℕ → ℕ, Monotone M ∧ ∀ N, lower N ≤ M N ∧
+      ‖finiteScreening (M N) (x N) - fullScreening (x N)‖ < ε N := by
+  obtain ⟨m, hm⟩ := exists_finiteScreening_cutoffs x lower ε hε
+  let M (N : ℕ) := (Finset.range (N + 1)).sup m
+  have hle (N : ℕ) : m N ≤ M N :=
+    Finset.le_sup (f := m) (Finset.mem_range.mpr (by omega))
+  refine ⟨M, ?_, fun N => ⟨(hm N).1.trans (hle N), ?_⟩⟩
+  · intro i j hij
+    exact Finset.sup_mono (Finset.range_mono (by omega))
+  · exact ((finiteScreening_full_gap_antitone (x N)) (hle N)).trans_lt (hm N).2
+
+/-- A unit-ball witness for the finite mixed annihilator bounds that
+cutoff's squared screening error. -/
+theorem finite_mixed_dual_pairing_sq_le (M : ℕ) (z h : ThresholdHilbert)
+    (hh : h ∈ (mixedSpace (Finset.Icc 2 M))ᗮ) (hnorm : ‖h‖ ≤ 1) :
+    (inner ℝ z h) ^ 2 ≤ ‖finiteScreening M z‖ ^ 2 := by
+  let K := mixedSpace (Finset.Icc 2 M)
+  have he : inner ℝ (finiteScreening M z) h = inner ℝ z h := by
+    rw [finiteScreening_apply, inner_sub_left,
+      K.inner_right_of_mem_orthogonal (K.starProjection_apply_mem z) hh, sub_zero]
+  rw [← he]
+  have hc := (abs_real_inner_le_norm (finiteScreening M z) h).trans
+    (by simpa only [mul_one] using
+      mul_le_mul_of_nonneg_left hnorm (norm_nonneg (finiteScreening M z)))
+  simpa only [sq_abs] using (sq_le_sq₀ (abs_nonneg _) (norm_nonneg _)).mpr hc
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur
 

@@ -12,18 +12,25 @@ residue closure. A mixed conductor has at least two distinct prime factors.
 | [PrimePowerRamanujanClosure](RH/PrimePowerRamanujanClosure.lean) | `finite_screened_error_eq_mean_covariance_projection_tail` gives the exact three-term split for a moving input and independent mixed cutoff. |
 | [RamanujanPacketDilation](RH/RamanujanPacketDilation.lean) | `dilation_ramanujanPacket_fiber` selects precisely the output conductors \(t\) with \(t/\gcd(t,m)=q\). `dilation_ramanujanPacket_divisors` and `hilbertDilation_ramanujanPacket_divisors` give the equivalent divisor expansion, with repeated prime factors retained. |
 | [MixedConductorDilation](RH/MixedConductorDilation.lean) | `hilbertDilation_mem_mixedClosure` proves invariance. `fullScreening_dilation_primePow` shifts the exponent by \(v_p(m)\). `coprimeDilationSpan_closure_eq_mixedClosure` and `mem_mixedClosure_orthogonal_iff_coprime_dilation` identify the generators and their annihilator. |
-| [MixedConductorCovariance](RH/MixedConductorCovariance.lean) | `offDiagonalCovarianceMass_gain` and `offDiagonalCovarianceMass_split` retain the complete squared projection differences. `exists_finiteScreening_cutoffs` selects finite cutoffs for arbitrary moving inputs and positive tolerances. `fullScreening_tendsto_iff_exists_cutoffs` gives the resulting convergence equivalence. `exists_centered_mixed_dual_maximizer` attains the unit-ball dual bound for centered inputs. |
-| [MixedConductorHead](RH/MixedConductorHead.lean) | `exists_mixed_exact_head_at` fits any head through \(H\) in the mixed window through \(s(H+1)\) for a prime \(s>H+1\). `mixed_exact_head_error_sq_ge` proves the complete squared error lower bound \(H+1\) for a mixed constant head. `centeredInput_exact_head_tail_product_lower` gives the complete dual tail bound for a mixed correction of the canonical centered input. |
+| [MixedConductorCovariance](RH/MixedConductorCovariance.lean) | `offDiagonalCovarianceMass_gain` and `offDiagonalCovarianceMass_split` retain the complete squared projection differences. `exists_finiteScreening_cutoffs` selects finite cutoffs for arbitrary moving inputs and positive tolerances. `fullScreening_tendsto_iff_exists_cutoffs` gives the resulting convergence equivalence. `exists_centered_mixed_dual_maximizer` attains the unit-ball dual bound for centered inputs. `exists_monotone_finiteScreening_cutoffs` makes the schedule increasing while preserving the lower bounds and tolerances. |
+| [MixedConductorHead](RH/MixedConductorHead.lean) | `exists_mixed_exact_head_at` fits any head through \(H\) in the mixed window through \(s(H+1)\) for a prime \(s>H+1\). `mixed_exact_head_error_sq_ge` proves the complete squared error lower bound \(H+1\) for a mixed constant head. `centeredInput_exact_head_tail_product_lower` gives the complete dual tail bound for a mixed correction of the canonical centered input. `mixed_exactHead_one_error` retains the remainder above the sharp head cost. `riemannHypothesis_of_bounded_fixedTwo_exact_heads` reduces the fixed-input problem to uniformly bounded errors. |
 | [ResidueConductorVariation](RH/ResidueConductorVariation.lean) | `norm_sq_le_of_residueConductorVariation` bounds a signed dyadic average by \(13\) in complete squared norm. `residuePairing_dyadic_variation_tendsto` proves vanishing dyadic mean absolute differences for every fixed Hilbert vector. |
 | [DyadicAdditiveRigidity](NumberTheory/DyadicAdditiveRigidity.lean) | `eq_log_of_coprime_additive_of_dyadic_variation` identifies a coprime-additive function with vanishing dyadic variation as a multiple of \(\log\). |
-| [MixedConductorRankOne](RH/MixedConductorRankOne.lean) | `fullScreening_packet_eq_mangoldt_smul` identifies each screened packet with \(\Lambda(q)u\). `mem_mixedClosure_iff_mem_closedSpace_and_mean_zero` identifies \(C\) with the mean-zero subspace of \(V\). `fixed_capture_tendsto_saturation_iff` gives the fixed-input criterion, and `covarianceMass_eq_fixed_error_add_diagonal_tail` retains the additional diagonal projection tail. |
+| [MixedConductorRankOne](RH/MixedConductorRankOne.lean) | `fullScreening_packet_eq_mangoldt_smul` identifies each screened packet with \(\Lambda(q)u\). `mem_mixedClosure_iff_mem_closedSpace_and_mean_zero` identifies \(C\) with the mean-zero subspace of \(V\). `fixed_capture_tendsto_saturation_iff` gives the fixed-input criterion, and `covarianceMass_eq_fixed_error_add_diagonal_tail` retains the additional diagonal projection tail. `hilbertDilation_sub_self_mem_mixedClosure` gives trivial dilation action on the full legal quotient. |
+| [ParetoRamanujanGramCRT](RH/ParetoRamanujanGramCRT.lean) | `ramanujanPacketHilbert_inner_eq_lcm_digamma` evaluates each complete Gram entry at its pairwise lcm. `ramanujan_meanOne_optimal_error` gives the inverse-Gram minimum and the exact error remainder for every alternative mean-one trial. |
+| [PsiNormalizedRamanujanUnscreened](RH/PsiNormalizedRamanujanUnscreened.lean) | `unnormalizedInput_sequence_primeTowers`, `unscreened_pointwise_tendsto_zero`, and `unscreenedApproximant_norm_sq_eventually_bounds` give the unscreened tower identity and complete asymptotics. `offDiagonalCovarianceMass_div_psi_sq_eq_removed_energy` gives the exact normalized energy removed by mixed screening. |
+| [MixedConductorSeedObstruction](RH/MixedConductorSeedObstruction.lean) | `restricted_mixed_seed_error_floor` gives a positive Mellin bound when all correction conductors are multiples of the input prime. |
 | [FiniteGeneralizedCRT](NumberTheory/FiniteGeneralizedCRT.lean) | `exists_int_modEq_iff_pairwise` gives existence for arbitrary finite congruences under pairwise gcd compatibility. `int_solution_class` gives the exact lcm solution class. `existsUnique_int_modEq_of_pairwise` gives the normalized representative for positive moduli. |
 | [ProfiniteGeneralizedCRT](NumberTheory/ProfiniteGeneralizedCRT.lean) | `exists_profiniteInt_iff_pairwise` lifts any indexed family of compatible positive-modulus congruences to a profinite integer. `profiniteInt_ext_of_lcm_cofinal` gives uniqueness when every positive modulus divides a finite lcm of the given moduli. |
 | [ProfiniteCRT](NumberTheory/ProfiniteCRT.lean) | `profinitePadicEquiv` identifies the all-modulus inverse limit with the product of the \(p\)-adic integer rings. `padicProjection_toZModPow` identifies the reductions, and `isTopologicalRingCRT_profinitePadicEquiv` proves continuity in both directions. |
 
 The weighted Gram entries use the complete progression weights in
 [ParetoFullTailCRT](RH/ParetoFullTailCRT.lean). The CRT specifies the
-compatible cells and their reductions.
+compatible cells and their reductions. For a finite packet window with a
+prime power, put \(b=G^{-1}\lambda\) and \(T=\lambda^\mathsf{T}b\). The
+checked mean-one optimum has coefficients \(b/T\) and squared error
+\(1/T-1\). Every alternative mean-one vector adds the squared norm of its
+difference from that optimizer.
 
 ## Rank-one full screening
 
@@ -91,6 +98,33 @@ squared errors were merely \(O(\psi(N)^2)\). The checked theorem
 bound as an explicit hypothesis. A specific mixed correction family
 with this bound remains Open.
 
+For the fixed target \(z=R_2-(\log 2)\mathbf1\), it also suffices to find
+mixed corrections \(c_H\) that match \(z\) through cofinal heads and satisfy
+\(\sup_H\|z-c_H\|_P^2<\infty\). The proof tests the signed tail against
+\(Sz\). The squared tail norm of this fixed dual vector tends to zero.
+The required uniform bound for a finite mixed correction family remains Open.
+
+The universal constant-head bound has an exact remainder. If \(c\in C\)
+agrees with \(\mathbf1\) through \(H\), then
+\[
+\|\mathbf1-c\|_P^2 =
+H+1+\|\mathbf1-c-(H+1)\mathbf1_{\{n>H\}}\|_P^2 .
+\]
+For a general exact-head trial, `exactHead_tail_eq_covariance_add`
+separates the full signed tail into the optimal finite covariance and the
+square of the distance from the chosen correction to its mixed projection.
+
+A restriction on possible corrections comes from the single-seed Mellin
+separation. For input \(R_p/\log p\), corrections using only conductors
+divisible by \(p\) leave squared error at least
+\[
+\frac{1}{1+(2\pi/\log p)^2}.
+\]
+The resonance is \(1+2\pi i/\log p\). For \(p=2\) the lower bound is
+approximately \(0.01202368852\), so the fixed-conductor route requires
+odd mixed conductors. The one-dilation correction \(x-D_mx\) also has exact
+centered error \(m\|x\|_P^2-\langle x,\mathbf1\rangle_P^2\).
+
 ## Finite Wolfram validation
 
 The folded Gram computations use complete Pareto progression weights
@@ -104,15 +138,39 @@ simplified the first mixed Gram entries to
 \(\langle R_2,R_6\rangle_P=\log 2-\pi/(2\sqrt3)\) and
 \(\|R_6\|_P^2=\pi/\sqrt3\), reproducing the first squared error.
 
-## Unscreened size on paper
+
+A separate exact-integer sweep checked 238 conductor–dilation pairs at
+17,850 period points, with zero defects. In a 60-digit two-cutoff sweep,
+the following are the centered input energy, its removed projection energy,
+and the remaining variance. The displayed values are rounded.
+
+| \(N\) | \(M\) | \(\|Z_N\|_P^2\) | \(\|P_{C_M}Z_N\|_P^2\) | \(A_N(M)\) |
+| ---: | ---: | ---: | ---: | ---: |
+| 8 | 8 | 10.22034218 | 5.30013589 | 4.92020630 |
+| 8 | 16 | 10.22034218 | 6.63897044 | 3.58137174 |
+| 8 | 24 | 10.22034218 | 7.43156952 | 2.78877267 |
+| 12 | 8 | 39.29932290 | 20.03422230 | 19.26510059 |
+| 12 | 16 | 39.29932290 | 31.02541408 | 8.27390882 |
+| 12 | 24 | 39.29932290 | 32.43376536 | 6.86555753 |
+| 16 | 8 | 87.99537120 | 40.27636435 | 47.71900685 |
+| 16 | 16 | 87.99537120 | 77.65514950 | 10.34022170 |
+| 16 | 24 | 87.99537120 | 78.67103434 | 9.32433686 |
+
+The gain from \(M=8\) to \(M=24\) agreed with the separately evaluated
+squared projection difference to more than 55 digits of absolute working
+precision for all three prime cutoffs.
+
+## Unscreened size
 
 For \(x_N=\psi(N)^{-1}\sum_{p^k\le N}R_{p^k}\), the prime-power
 sum telescopes for each prime to \(r_{p^{k_p}}\), where \(p^{k_p}\) is its
 largest power at most \(N\). Thus
 \(0\le x_N(n)\le\pi(N)\min(n,N)/\psi(N)\).
 On \(n\le N/2\), primes in \((N/2,N]\) give the lower bound
-\(n(\pi(N)-\pi(N/2))/\psi(N)\). The Pareto sum and the prime number theorem
-then give \(\|x_N\|_P^2\asymp N/(\log N)^2\). For the prime number theorem
+\(n(\pi(N)-\pi(N/2))/\psi(N)\). The checked complete norm bounds give
+\(\|x_N\|_P^2\asymp N/(\log N)^2\), with eventual comparison constants
+\(1/2048\) and \(32\). The checked pointwise limit is \(x_N(n)\to0\) for
+every fixed \(n\). For the prime number theorem
 forms, see Leonard Tomczak's
 [Analytic Number Theory lecture notes](https://math.berkeley.edu/~ltomczak/notes/Mich2022/AnaNT_Notes.pdf),
 Section 5.

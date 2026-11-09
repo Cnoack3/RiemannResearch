@@ -1,4 +1,5 @@
 import RiemannResearch.NumberTheory.DyadicAdditiveRigidity
+import RiemannResearch.Analysis.NestedOrthogonalDecomposition
 import RiemannResearch.RH.BaezDuarteNaturalApproximation
 import RiemannResearch.RH.IntegratedRamanujanBasis
 import RiemannResearch.RH.MixedConductorCovariance
@@ -178,6 +179,45 @@ theorem mem_mixedClosure_iff_mem_closedSpace_and_mean_zero (x : ThresholdHilbert
     change x - mixedClosure.starProjection x = 0 at hz
     rw [sub_eq_zero.mp hz]
     exact mixedClosure.starProjection_apply_mem _
+
+/-- Every positive dilation acts trivially on the full legal mixed quotient. -/
+theorem hilbertDilation_sub_self_mem_mixedClosure (m : ℕ) (hm : 0 < m)
+    {x : ThresholdHilbert} (hx : x ∈ closedSpace) :
+    hilbertDilation m hm x - x ∈ mixedClosure := by
+  apply (mem_mixedClosure_iff_mem_closedSpace_and_mean_zero _).mpr
+  refine ⟨closedSpace.sub_mem (closedSpace_dilation hx m hm) hx, ?_⟩
+  rw [inner_sub_left, hilbert_inner_one, hilbertDilation_mean, ← hilbert_inner_one, sub_self]
+
+theorem fullScreening_hilbertDilation_eq (m : ℕ) (hm : 0 < m)
+    {x : ThresholdHilbert} (hx : x ∈ closedSpace) :
+    fullScreening (hilbertDilation m hm x) = fullScreening x := by
+  rw [fullScreening_eq_mean_smul (closedSpace_dilation hx m hm), fullScreening_eq_mean_smul hx,
+    hilbert_inner_one, hilbertDilation_mean, ← hilbert_inner_one]
+
+theorem screenedPrimeClosure_eq_inf_orthogonal :
+    screenedPrimeClosure = closedSpace ⊓ mixedClosureᗮ := by
+  apply le_antisymm
+  · apply le_inf screenedPrimeClosure_le_closedSpace
+    apply Submodule.topologicalClosure_minimal
+    · apply Submodule.span_le.mpr
+      rintro _ ⟨q, rfl⟩
+      exact mixedClosure.sub_starProjection_mem_orthogonal _
+    · exact mixedClosure.isClosed_orthogonal
+  · intro x hx
+    have he : fullScreening x = x := by
+      change x - mixedClosure.starProjection x = x
+      rw [(Submodule.starProjection_apply_eq_zero_iff _).mpr hx.2, sub_zero]
+    rw [← he]
+    exact fullScreening_closedSpace_mem hx.1
+
+theorem mixed_sup_screenedPrimeClosure : mixedClosure ⊔ screenedPrimeClosure = closedSpace := by
+  rw [screenedPrimeClosure_eq_inf_orthogonal]
+  exact RiemannResearch.Analysis.NestedOrthogonalDecomposition.prime_sup_carry
+    mixedClosure_le_closedSpace
+
+theorem mixed_inf_screenedPrimeClosure : mixedClosure ⊓ screenedPrimeClosure = ⊥ := by
+  rw [screenedPrimeClosure_eq_inf_orthogonal, inf_left_comm, Submodule.inf_orthogonal_eq_bot,
+    inf_bot_eq]
 
 /-- The limiting fixed-seed error is the canonical legal projection error
 rescaled by the squared norm of its projection. -/

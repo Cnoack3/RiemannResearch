@@ -2,6 +2,9 @@ import RiemannResearch.RH.ExactHeadResidualTail
 import RiemannResearch.RH.MixedConductorDilation
 import RiemannResearch.RH.MixedConductorRankOne
 import RiemannResearch.RH.MobiusDifferenceCLM
+import RiemannResearch.RH.ParetoHeadMeanEnergy
+import RiemannResearch.RH.ThresholdJointAdjointTail
+import Mathlib.Tactic.Abel
 import RiemannResearch.RH.ParetoPrimePackets
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
@@ -20,6 +23,7 @@ open Filter
 open scoped BigOperators Topology
 
 namespace RiemannResearch.RH.Pareto.PrimePowerSchur
+open CoefficientStabilization PsiNormalizedRamanujan
 
 private theorem mixed_rawResidue_head (s q H : ℕ)
     (hs : s.Prime) (hq : 0 < q) (hqs : q < s) (hHs : H < s) :
@@ -98,34 +102,145 @@ theorem exists_mixed_exact_head (f : ℕ → ℝ) (H : ℕ) :
   obtain ⟨s, hs, hp⟩ := Nat.exists_infinite_primes (H + 2)
   exact ⟨s * (H + 1), exists_mixed_exact_head_at f H s hp (by omega)⟩
 
+/-- Exact head and zero mean force the sharp universal tail cost and retain
+the remaining norm as a separate square. -/
+theorem mixed_exactHead_one_error (H : ℕ) {c : ThresholdHilbert} (hc : c ∈ mixedClosure)
+    (hhead : ∀ n, 0 < n → n ≤ H → hilbertSequence c n = 1) :
+    ‖hilbertOne - c‖ ^ 2 = (H : ℝ) + 1 +
+      ‖hilbertOne - c - ((H : ℝ) + 1) • paretoTail H‖ ^ 2 := by
+  let f := hilbertOne - c
+  have hzero (k : ℕ) (hk : k < H) : hilbertGibbsPhysical f k = 0 := by
+    rw [hilbertGibbsPhysical_eq, show f = hilbertOne - c from rfl, hilbertSequence_sub,
+      Pi.sub_apply, hilbertOne_sequence, hhead (k + 1) (by omega) (by omega)]
+    simp [zeroAnchor]
+  have hm : inner ℝ f hilbertOne = 1 := by
+    change inner ℝ (hilbertOne - c) hilbertOne = 1
+    rw [inner_sub_left, real_inner_self_eq_norm_sq, hilbertOne_norm_sq,
+      mixedClosure.inner_right_of_mem_orthogonal hc one_mem_mixedClosure_orthogonal, sub_zero]
+  have hheadMean : paretoHeadMean H f = 0 := by
+    unfold paretoHeadMean
+    exact Finset.sum_eq_zero (fun k hk => by rw [hzero k (Finset.mem_range.mp hk), mul_zero])
+  have hheadVec : paretoHead H f = 0 := by
+    unfold paretoHead
+    exact Finset.sum_eq_zero (fun k hk => by rw [hzero k (Finset.mem_range.mp hk), zero_smul])
+  have hsum : (∑ k ∈ Finset.range H, paretoWeight k * hilbertGibbsPhysical f k ^ 2) = 0 :=
+    Finset.sum_eq_zero (fun k hk => by rw [hzero k (Finset.mem_range.mp hk)]; simp)
+  have h := paretoHeadMean_energy_identity H f
+  rw [hsum, hm, hheadMean, paretoHeadMeanMinimizer, hheadVec, hm, hheadMean] at h
+  simpa only [sub_zero, one_pow, mul_one, zero_add] using h
+
 /-- The cost of an exact mixed constant head is paid by the complete tail. -/
 theorem mixed_exact_head_error_sq_ge (H : ℕ) {c : ThresholdHilbert}
     (hc : c ∈ mixedClosure)
     (hhead : ∀ n, 0 < n → n ≤ H → hilbertSequence c n = 1) :
     (H : ℝ) + 1 ≤ ‖hilbertOne - c‖ ^ 2 := by
-  let e := hilbertOne - c
-  have he (n : ℕ) (hn : n < H) : e n = 0 := by
-    have he' : hilbertSequence e (n + 1) = 0 := by
-      change hilbertSequenceLinear (hilbertOne - c) (n + 1) = 0
-      rw [map_sub]
-      change hilbertSequence hilbertOne (n + 1) - hilbertSequence c (n + 1) = 0
-      rw [hilbertOne_sequence, hhead (n + 1) (by omega) (by omega)]
-      simp [zeroAnchor]
-    have hs := hilbertSequence_weighted_square e n
-    rw [he', zero_pow (by norm_num : 2 ≠ 0), mul_zero] at hs
-    simpa only [pow_two, mul_eq_zero, or_self] using hs.symm
-  have hm : inner ℝ hilbertOne e = 1 := by
-    have h := (mixedClosure.mem_orthogonal hilbertOne).mp one_mem_mixedClosure_orthogonal c hc
-    rw [real_inner_comm] at h
-    simp only [e, inner_sub_right, h, real_inner_self_eq_norm_sq, hilbertOne_norm_sq, sub_zero]
-  have ht : ‖hilbertTailShift hilbertOne H‖ ^ 2 ≤ 1 / ((H : ℝ) + 1) := by
-    simpa using hilbertTailShift_norm_sq_le_of_bounded hilbertOne H 1 (by norm_num)
-      (fun n hn => by simp [hilbertOne_sequence, zeroAnchor, hn.ne'])
-  have hp := hilbertTailShift_inner_sq_le hilbertOne e H he
-  rw [hm, one_pow] at hp
-  have hb := hp.trans (mul_le_mul_of_nonneg_right ht (sq_nonneg ‖e‖))
-  rw [one_div, ← div_eq_inv_mul] at hb
-  simpa only [one_mul] using (le_div_iff₀ (by positivity : 0 < (H : ℝ) + 1)).mp hb
+  rw [mixed_exactHead_one_error H hc hhead]
+  exact le_add_of_nonneg_right (sq_nonneg _)
+
+/-- For an exact finite head, the remaining norm is exactly the complete
+physical Pareto tail of the signed residual. -/
+theorem exactHead_error_eq_tail (H : ℕ) (z c : ThresholdHilbert)
+    (h : ∀ n, 0 < n → n ≤ H → hilbertSequence c n = hilbertSequence z n) :
+    ‖z - c‖ ^ 2 = hilbertTailEnergy (z - c) (H + 1) := by
+  have hz : (∑ k ∈ Finset.range (H + 1),
+      positiveWeight k * hilbertSequence (z - c) k ^ 2) = 0 := by
+    apply Finset.sum_eq_zero
+    intro k hk
+    by_cases hk0 : k = 0
+    · subst k
+      simp
+    · rw [hilbertSequence_sub, Pi.sub_apply, h k (by omega) (by
+        have := Finset.mem_range.mp hk
+        omega)]
+      simp
+  simpa only [hz, zero_add] using (hilbert_head_add_tailEnergy (z - c) (H + 1)).symm
+
+theorem exactHead_tail_eq_covariance_add (N M H : ℕ) {c : ThresholdHilbert}
+    (hc : c ∈ mixedSpace (window M))
+    (h : ∀ n, 0 < n → n ≤ H → hilbertSequence c n = hilbertSequence (centeredInput N) n) :
+    hilbertTailEnergy (centeredInput N - c) (H + 1) =
+      offDiagonalCovarianceMass N M +
+        ‖(mixedSpace (window M)).starProjection (centeredInput N) - c‖ ^ 2 := by
+  let K := mixedSpace (window M)
+  let z := centeredInput N
+  have ho : inner ℝ (z - K.starProjection z) (K.starProjection z - c) = 0 :=
+    K.inner_left_of_mem_orthogonal (K.sub_mem (K.starProjection_apply_mem z) hc)
+      (K.sub_starProjection_mem_orthogonal z)
+  have he : z - c = (z - K.starProjection z) + (K.starProjection z - c) := by abel
+  change hilbertTailEnergy (z - c) (H + 1) = ‖z - K.starProjection z‖ ^ 2 + _
+  rw [← exactHead_error_eq_tail H z c h, he, norm_add_sq_real, ho]
+  ring
+
+/-- Complete error for the one-dilation correction x - D_m x. -/
+theorem centered_dilationCorrection_error_exact (m : ℕ) (hm : 0 < m)
+    (x : ThresholdHilbert) :
+    ‖(x - inner ℝ x hilbertOne • hilbertOne) - (x - hilbertDilation m hm x)‖ ^ 2 =
+      (m : ℝ) * ‖x‖ ^ 2 - (inner ℝ x hilbertOne) ^ 2 := by
+  let b := inner ℝ x hilbertOne
+  have he : (x - b • hilbertOne) - (x - hilbertDilation m hm x) =
+      hilbertDilation m hm x - b • hilbertOne := by abel
+  have hm' : inner ℝ (hilbertDilation m hm x) hilbertOne = b := by
+    simp only [b, hilbert_inner_one, hilbertDilation_mean]
+  change ‖(x - b • hilbertOne) - (x - hilbertDilation m hm x)‖ ^ 2 = _
+  rw [he, norm_sub_sq_real, real_inner_smul_right, hm', norm_smul, Real.norm_eq_abs, mul_pow,
+    sq_abs, hilbertOne_norm_sq, hilbertDilation_norm_sq]
+  change _ = (m : ℝ) * ‖x‖ ^ 2 - b ^ 2
+  ring
+
+/-- A fixed input has the same complete tail obstruction for every exact head. -/
+theorem mixed_exactHead_dual_tail_floor (z : ThresholdHilbert) (H : ℕ)
+    {c : ThresholdHilbert} (hc : c ∈ mixedClosure) (hhead : ∀ n < H, c n = z n) :
+    (‖fullScreening z‖ ^ 2) ^ 2 ≤
+      ‖hilbertTailShift (fullScreening z) H‖ ^ 2 * ‖z - c‖ ^ 2 := by
+  have ho := fullScreening_mem_orthogonal z
+  have hp : inner ℝ (fullScreening z) (z - c) = ‖fullScreening z‖ ^ 2 := by
+    rw [real_inner_comm, inner_sub_left, mixedClosure.inner_right_of_mem_orthogonal hc ho,
+      sub_zero, ← fullScreening_inner_right_of_orthogonal z _ ho, real_inner_self_eq_norm_sq]
+  have h := hilbertTailShift_inner_sq_le (fullScreening z) (z - c) H (fun n hn => by
+    change z n - c n = 0
+    rw [hhead n hn, sub_self])
+  rwa [hp] at h
+
+/-- A cofinal family of exact mixed heads for one fixed input only needs a
+uniform complete energy bound. -/
+theorem mem_mixedClosure_of_bounded_exact_heads (z : ThresholdHilbert)
+    (H : ℕ → ℕ) (c : ℕ → ThresholdHilbert) (hH : Tendsto H atTop atTop)
+    (hc : ∀ N, c N ∈ mixedClosure) (hhead : ∀ N n, n < H N → c N n = z n)
+    (A : ℝ) (hA : ∀ N, ‖z - c N‖ ^ 2 ≤ A) : z ∈ mixedClosure := by
+  let e := fullScreening z
+  have hbound : ∀ᶠ N in atTop, (‖e‖ ^ 2) ^ 2 ≤ ‖hilbertTailShift e (H N)‖ ^ 2 * A :=
+    Eventually.of_forall fun N =>
+      (mixed_exactHead_dual_tail_floor z (H N) (hc N) (hhead N)).trans
+        (mul_le_mul_of_nonneg_left (hA N) (sq_nonneg _))
+  have ht : Tendsto (fun N => ‖hilbertTailShift e (H N)‖ ^ 2 * A) atTop (𝓝 0) := by
+    simpa only [Function.comp_def, zero_mul] using
+      ((hilbertTailShift_energy_tendsto_zero e).comp hH).mul_const A
+  have he : (‖e‖ ^ 2) ^ 2 = 0 := le_antisymm (ge_of_tendsto ht hbound) (sq_nonneg _)
+  have hz := norm_eq_zero.mp (sq_eq_zero_iff.mp (sq_eq_zero_iff.mp he))
+  change z - mixedClosure.starProjection z = 0 at hz
+  exact Submodule.starProjection_eq_self_iff.mp (sub_eq_zero.mp hz).symm
+
+/-- Fixed-conductor RH criterion with bounded complete error and exact heads. -/
+theorem riemannHypothesis_of_bounded_fixedTwo_exact_heads
+    (H : ℕ → ℕ) (c : ℕ → ThresholdHilbert) (hH : Tendsto H atTop atTop)
+    (hc : ∀ N, c N ∈ mixedClosure)
+    (hhead : ∀ N n, n < H N →
+      c N n = (ramanujanPacketHilbert 2 - Real.log 2 • hilbertOne) n)
+    (A : ℝ) (hA : ∀ N,
+      ‖ramanujanPacketHilbert 2 - Real.log 2 • hilbertOne - c N‖ ^ 2 ≤ A) :
+    RiemannHypothesis := by
+  have hz := mem_mixedClosure_of_bounded_exact_heads _ H c hH hc hhead A hA
+  have hconst := closedSpace.sub_mem (packet_mem_closedSpace 2 (by decide))
+    (mixedClosure_le_closedSpace hz)
+  have he : ramanujanPacketHilbert 2 - (ramanujanPacketHilbert 2 - Real.log 2 • hilbertOne) =
+      Real.log 2 • hilbertOne := by abel
+  rw [he] at hconst
+  have hlog : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num : (1 : ℝ) < 2)).ne'
+  have hmem : hilbertOne ∈ closedSpace := by
+    simpa only [smul_smul, inv_mul_cancel₀ hlog, one_smul] using
+      closedSpace.smul_mem (Real.log 2)⁻¹ hconst
+  exact riemannHypothesis_of_normalizedScreenedTwo
+    (one_mem_closedSpace_iff_normalizedScreenedTwo.mp hmem)
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur
 

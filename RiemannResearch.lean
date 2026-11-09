@@ -12,6 +12,9 @@ import RiemannResearch.RH.MixedConductorCovariance
 import RiemannResearch.RH.ResidueConductorVariation
 import RiemannResearch.RH.MixedConductorRankOne
 import RiemannResearch.RH.MixedConductorHead
+import RiemannResearch.RH.ParetoRamanujanGramCRT
+import RiemannResearch.RH.PsiNormalizedRamanujanUnscreened
+import RiemannResearch.RH.MixedConductorSeedObstruction
 import RiemannResearch.RH.RamanujanSchurLogZero
 import RiemannResearch.Analysis.BoundedInjectiveLift
 import RiemannResearch.Analysis.ExponentialQuadraticRemainder
