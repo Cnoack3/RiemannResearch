@@ -54,3 +54,45 @@ Source modules: `RH/ParetoResidueMicroscopicSource.lean`,
 `RH/ParetoLCMMicroscopicRemainder.lean`, and `RH/ParetoLCMVariational.lean`.
 See [the continuation record](Microscopic_Source_and_LCM_Refits_20261109.md)
 for hypotheses, external calculations, and published references.
+
+## Infinite-law and sine-kernel continuation
+
+Established in the source modules below:
+- `integerLaw_inclusion_tendsto`, `integerLaw_finite_gap_tendsto`, and
+  `integerLaw_window_generating_tendsto` pass the actual integer laws to
+  the actual infinite law on every fixed finite window, without RH or a
+  spatial coupling assumption.
+- `logPhaseKernel_sub_gauge`, `logPhaseKernel_det_eq_sinc`, and
+  `logPhaseKernel_scaled_det_eq_sine` identify every finite comparison
+  determinant with the standard sine-kernel determinant.
+- `phaseStrippedCross_det_fixedCenter_tendsto` proves the fixed-k limit at
+  frequencies t0+2*pi*x/log(N+1), for every cofinal N and fixed real t0.
+  It has no RH or actual-zero premise.
+- `classFrequencyKernel_eq_crossSum` and
+  `phaseStrippedCross_eq_classFrequencyKernel_div` identify the grouped
+  Gram with the normalized feature-sum kernel of the nonzero residue partition.
+
+Conditional moving-center reduction:
+- `phaseStrippedCross_det_microscopic_tendsto` allows moving ordinates with
+  every rescaled pair difference convergent and every entrywise error budget
+  divided by log(N+1) tending to zero.
+  **Open:** a sharp enough high-height provider for the natural zeta-zero scale.
+
+Interpretation and remaining formalization:
+- The auxiliary residue-partition Mellin DPP has a sine-process limit by
+  Mellin--Plancherel, the locally uniform kernel estimate, and the published
+  local-trace convergence theorem. This continuous process construction and
+  convergence packaging are paper deductions, not completed Lean declarations
+  in this change.
+- The larger partition space is different from the legal Ramanujan space.
+  **Open:** the local projection-defect estimate needed to transfer this limit.
+- At a fixed actual critical zero the legal kernel has a reduced-Palm upper
+  comparison. Its specialization and asymptotic inequality are paper deductions;
+  equality with that comparison is not proved.
+- **Open:** vanishing complete constant-target vacancy, still the RH obligation.
+
+Source modules: `RH/IntegerDPPLawLimit.lean`,
+`RH/ParetoResidueSineLimit.lean`, and
+`RH/ParetoResidueFrequencyKernel.lean`.
+See [the infinite-limit record](Infinite_DPP_and_Sine_Limits_20261109.md)
+for exact normalizations, the auxiliary DPP proof, and the Palm comparison.

@@ -1302,6 +1302,9 @@ import RiemannResearch.RH.ParetoLCMAnalyticRates
 import RiemannResearch.RH.ParetoResidueCriticalGramRate
 import RiemannResearch.Analysis.FiniteHilbertGramRowBounds
 import RiemannResearch.RH.ParetoResidueMicroscopicGram
+import RiemannResearch.RH.ParetoResidueFrequencyKernel
+import RiemannResearch.RH.ParetoResidueSineLimit
+import RiemannResearch.RH.IntegerDPPLawLimit
 import RiemannResearch.RH.ParetoResidueMovingCertificate
 import RiemannResearch.RH.ParetoResidueMovingGrowth
 import RiemannResearch.RH.ParetoLCMRamanujanCertificate
