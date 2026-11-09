@@ -691,10 +691,10 @@ index 0000000..71ee267
 +      failed := true
 +  return if failed then 1 else 0
 diff --git a/lean/private/lean_rules.bzl b/lean/private/lean_rules.bzl
-index 2ad2ce9..42c5aa0 100644
+index 2ad2ce9..d593a16 100644
 --- a/lean/private/lean_rules.bzl
 +++ b/lean/private/lean_rules.bzl
-@@ -11,7 +11,8 @@ package root (`-R`), and it looks up an imported module `A.B` as
+@@ -11,7 +11,8 @@
    parallel, and a change in one module re-elaborates only its importers.
  * The module name of a source is its path relative to the Bazel package
    directory. A `BUILD.bazel` file in `lean/` therefore gives `lean/Foo.lean` the
@@ -704,7 +704,7 @@ index 2ad2ce9..42c5aa0 100644
  
  Lean resolves an import by the *first* `LEAN_PATH` entry that holds the module's
  top-level directory, and it does not continue to later entries. Two entries
-@@ -22,13 +23,15 @@ directory, the output directory of the package, and that directory is the
+@@ -22,13 +23,15 @@
  directory holds exactly those files.
  """
  
@@ -721,7 +721,7 @@ index 2ad2ce9..42c5aa0 100644
          "module_sources": "depset[tuple[str, str, File]]: module path, module name, " +
                            "and source file, transitive.",
          "olean_dirs": "depset[str]: `LEAN_PATH` entries for actions, transitive.",
-@@ -78,7 +81,8 @@ def _module_rel(ctx, src):
+@@ -78,7 +81,8 @@
  
      if not rel.endswith(".lean"):
          fail("%s: %s is not a .lean file" % (ctx.label, src.short_path))
@@ -731,7 +731,7 @@ index 2ad2ce9..42c5aa0 100644
  
  def _dir_of(path, suffix):
      """Strip a known suffix from a path, leaving the directory."""
-@@ -124,6 +128,76 @@ def _stdlib_dir(tc, attribute):
+@@ -124,6 +128,76 @@
  def _transitive(deps, field):
      return depset(transitive = [getattr(dep[LeanLibraryInfo], field) for dep in deps if hasattr(dep[LeanLibraryInfo], field)])
  
@@ -808,16 +808,18 @@ index 2ad2ce9..42c5aa0 100644
  def _compile_modules(
          ctx,
          tc,
-@@ -137,6 +211,16 @@ def _compile_modules(
+@@ -137,6 +211,18 @@
      """Compile one action per source. Returns the oleans and their directory."""
      dep_oleans = _transitive(deps, "oleans")
  
 +    pkg = ctx.label.package
 +    prefix = getattr(ctx.attr, "module_prefix", "").replace("/", ".").strip(".")
 +    prefix = prefix + "." if prefix else ""
-+    pkg_imports = {prefix + mod: imports for mod, imports in IMPORTS.get(pkg, {}).items()}
-+    if hasattr(ctx.attr, "internal_imports") and ctx.attr.internal_imports:
-+        pkg_imports.update(ctx.attr.internal_imports)
++    # Read the shared package index; each target only needs its own source headers.
++    # Copying the whole package here repeats quadratic work for one-source rules.
++    package_imports = IMPORTS.get(pkg, {})
++    internal_imports = getattr(ctx.attr, "internal_imports", {})
++    pkg_imports = {}
 +    module_system = {prefix + mod: True for mod in MODULES.get(pkg, [])}
 +    if hasattr(ctx.attr, "module_system"):
 +        module_system.update({mod: True for mod in ctx.attr.module_system})
@@ -825,9 +827,14 @@ index 2ad2ce9..42c5aa0 100644
      olean_dir = None
      runfiles_olean_dir = None
      oleans_by_mod = {}
-@@ -147,11 +231,14 @@ def _compile_modules(
+@@ -146,12 +232,19 @@
+     for src in srcs:
          rel = _module_rel(ctx, src)
          mod = rel.replace("/", ".")
++        pkg_imports[mod] = internal_imports.get(
++            mod,
++            package_imports.get(mod[len(prefix):], []),
++        )
          out = ctx.actions.declare_file("%s%s" % (rel, _OLEAN_SUFFIX))
 -        out_server = ctx.actions.declare_file("%s%s.server" % (rel, _OLEAN_SUFFIX))
 -        out_private = ctx.actions.declare_file("%s%s.private" % (rel, _OLEAN_SUFFIX))
@@ -845,7 +852,7 @@ index 2ad2ce9..42c5aa0 100644
          if generate_c:
              out_c = ctx.actions.declare_file("%s.c/%s.c" % (ctx.label.name, rel))
              files.append(out_c)
-@@ -166,11 +253,10 @@ def _compile_modules(
+@@ -166,11 +259,10 @@
  
      # Lean searches LEAN_PATH in order and replaces its built-in path, so the
      # package output directory and standard library must be explicit entries.
@@ -858,7 +865,7 @@ index 2ad2ce9..42c5aa0 100644
      lean_path = ":".join(action_dirs)
  
      # The upstream test driver runs a test with the environment of its
-@@ -178,38 +264,52 @@ def _compile_modules(
+@@ -178,38 +270,52 @@
      env = {"LEAN_PATH": lean_path}
      env.update(extra_env)
  
@@ -866,6 +873,34 @@ index 2ad2ce9..42c5aa0 100644
 -    pkg_imports = dict(IMPORTS.get(pkg, {}))
 -    if hasattr(ctx.attr, "internal_imports") and ctx.attr.internal_imports:
 -        pkg_imports.update(ctx.attr.internal_imports)
+-
+-    # Compute direct internal dependencies (modules in the same target)
+-    direct_internal = {}
+-    for mod in oleans_by_mod:
+-        direct_internal[mod] = [
+-            dep_mod
+-            for dep_mod in pkg_imports.get(mod, [])
+-            if dep_mod in oleans_by_mod
+-        ]
+-
+-    # Compute transitive internal dependencies
+-    transitive_internal = {}
+-    for mod in oleans_by_mod:
+-        visited = {}
+-        queue = list(direct_internal[mod])
+-        for _ in range(1000):
+-            if not queue:
+-                break
+-            curr = queue.pop()
+-            if curr in visited:
+-                continue
+-            visited[curr] = True
+-            for next_dep in direct_internal.get(curr, []):
+-                if next_dep not in visited:
+-                    queue.append(next_dep)
+-        if mod in visited:
+-            fail("%s: import cycle detected involving module '%s'" % (ctx.label, mod))
+-        transitive_internal[mod] = visited.keys()
 +    # Providers carry module identity and import edges across package boundaries.
 +    # Unindexed prebuilt libraries keep their full input set for compatibility.
 +    all_artifacts = {}
@@ -908,41 +943,14 @@ index 2ad2ce9..42c5aa0 100644
 +            fail("%s: SDK index is missing required roots %s" % (ctx.label, missing))
 +        sdk_base = [tc.sdk_runtime] + [sdk_inputs[root] for root in sdk_roots]
 +    closures = _artifact_closures(ctx.label, all_artifacts, all_imports, mapped_modules, sdk_inputs)
- 
--    # Compute direct internal dependencies (modules in the same target)
--    direct_internal = {}
--    for mod in oleans_by_mod:
--        direct_internal[mod] = [
--            dep_mod
--            for dep_mod in pkg_imports.get(mod, [])
--            if dep_mod in oleans_by_mod
--        ]
--
--    # Compute transitive internal dependencies
--    transitive_internal = {}
--    for mod in oleans_by_mod:
--        visited = {}
--        queue = list(direct_internal[mod])
--        for _ in range(1000):
--            if not queue:
--                break
--            curr = queue.pop()
--            if curr in visited:
--                continue
--            visited[curr] = True
--            for next_dep in direct_internal.get(curr, []):
--                if next_dep not in visited:
--                    queue.append(next_dep)
--        if mod in visited:
--            fail("%s: import cycle detected involving module '%s'" % (ctx.label, mod))
--        transitive_internal[mod] = visited.keys()
++
 +    sorry_checker = None
 +    if forbid_sorry:
 +        sorry_checker = ctx.file._sdk_sorry_checker if use_sdk_index else ctx.file._sorry_checker
  
      plugin_flags = ["--plugin=" + p.path for p in plugins]
      c_snippet = '-c "$LEAN_C"' if generate_c else ""
-@@ -218,12 +318,12 @@ def _compile_modules(
+@@ -218,12 +324,12 @@
      for mod, src in src_by_mod.items():
          out_files = oleans_by_mod[mod]
          out = out_files[0]
@@ -960,7 +968,7 @@ index 2ad2ce9..42c5aa0 100644
  
          sorry_check = ""
          if forbid_sorry:
-@@ -233,19 +333,62 @@ if grep -q "declaration uses" "$tmp_log" && grep -q "sorry" "$tmp_log"; then
+@@ -233,18 +339,61 @@
      rm -f "$tmp_log"
      exit 1
  fi
@@ -982,7 +990,7 @@ index 2ad2ce9..42c5aa0 100644
          )
          if generate_c:
              action_env["LEAN_C"] = cfiles_by_mod[mod].path
- 
++
 +        imported_modules = depset(
 +            direct = opaque_modules,
 +            transitive = [
@@ -1022,11 +1030,10 @@ index 2ad2ce9..42c5aa0 100644
 +        setup.use_param_file("--setup=%s", use_always = True)
 +        flags = ctx.actions.args()
 +        flags.add_all(plugin_flags + extra_flags)
-+
+ 
          ctx.actions.run_shell(
              command = "set -euo pipefail\n\n" + _ROOT_SNIPPET + """
- tmp_log="$(mktemp)"
-@@ -255,19 +398,11 @@ if ! "{lean}" -o "$LEAN_OUT" {c_snippet} -R "$root" "$LEAN_SRC" "$@" 2>&1 | tee
+@@ -255,19 +404,11 @@
  fi
  {sorry_check}
  rm -f "$tmp_log"
@@ -1049,7 +1056,7 @@ index 2ad2ce9..42c5aa0 100644
              ),
              outputs = out_files,
              tools = [tc.lean],
-@@ -279,6 +414,8 @@ fi
+@@ -279,6 +420,8 @@
  
      return struct(
          cfiles = [cfiles_by_mod[m] for m in src_by_mod if m in cfiles_by_mod],
@@ -1058,7 +1065,7 @@ index 2ad2ce9..42c5aa0 100644
          module_imports = [
              (
                  _module_rel(ctx, src).replace("/", "."),
-@@ -291,6 +428,7 @@ fi
+@@ -291,6 +434,7 @@
              for src in srcs
          ],
          olean_dir = olean_dir,
@@ -1066,7 +1073,7 @@ index 2ad2ce9..42c5aa0 100644
          oleans = depset(direct = oleans, transitive = [dep_oleans]),
          runfiles_olean_dir = runfiles_olean_dir,
      )
-@@ -310,8 +448,13 @@ def _lean_library_impl(ctx):
+@@ -310,8 +454,13 @@
      )
  
      return [
@@ -1081,7 +1088,7 @@ index 2ad2ce9..42c5aa0 100644
              module_imports = depset(
                  direct = result.module_imports,
                  transitive = [_transitive(ctx.attr.deps, "module_imports")],
-@@ -321,12 +464,12 @@ def _lean_library_impl(ctx):
+@@ -321,12 +470,12 @@
                  transitive = [_transitive(ctx.attr.deps, "module_sources")],
              ),
              olean_dirs = depset(
@@ -1096,7 +1103,7 @@ index 2ad2ce9..42c5aa0 100644
                  transitive = [_transitive(ctx.attr.deps, "runfiles_olean_dirs")],
              ),
          ),
-@@ -335,6 +478,14 @@ def _lean_library_impl(ctx):
+@@ -335,6 +484,14 @@
  lean_library = rule(
      implementation = _lean_library_impl,
      attrs = {
@@ -1111,7 +1118,7 @@ index 2ad2ce9..42c5aa0 100644
          "deps": attr.label_list(
              providers = [LeanLibraryInfo],
              doc = "Lean libraries that these sources import.",
-@@ -350,9 +501,15 @@ lean_library = rule(
+@@ -350,8 +507,14 @@
              default = False,
              doc = "Fail compilation if any declaration in the target uses `sorry`.",
          ),
@@ -1120,14 +1127,13 @@ index 2ad2ce9..42c5aa0 100644
 +        ),
          "internal_imports": attr.string_list_dict(
              doc = "Internal import graph edges between modules in this library.",
-         ),
++        ),
 +        "module_system": attr.string_list(
 +            doc = "Modules with a module header, in addition to the scanned source headers.",
-+        ),
+         ),
          "plugins": attr.label_list(
              providers = [LeanPluginInfo],
-             doc = "Lean compiler plugins to load with --plugin.",
-@@ -370,37 +527,69 @@ lean_library = rule(
+@@ -370,37 +533,69 @@
  def _lean_prebuilt_library_impl(ctx):
      direct_olean_dirs = []
      direct_runfiles_dirs = []
@@ -1139,22 +1145,6 @@ index 2ad2ce9..42c5aa0 100644
          roots.append(ctx.attr.root)
  
 -    if ctx.files.srcs:
--        first = ctx.files.srcs[0]
--        if roots:
--            for r in roots:
--                idx = first.path.find(r)
--                if idx != -1:
--                    d = first.path[:idx + len(r)]
--                    if d not in direct_olean_dirs:
--                        direct_olean_dirs.append(d)
--                sidx = first.short_path.find(r)
--                if sidx != -1:
--                    sd = first.short_path[:sidx + len(r)]
--                    if sd not in direct_runfiles_dirs:
--                        direct_runfiles_dirs.append(sd)
--        else:
--            direct_olean_dirs.append(first.dirname)
--            direct_runfiles_dirs.append(_parent_of(first.short_path, first.basename))
 +    for src in ctx.files.srcs:
 +        rel = src.short_path
 +        if rel.startswith("../"):
@@ -1181,9 +1171,25 @@ index 2ad2ce9..42c5aa0 100644
 +                    indexed_files[src] = True
 +                    break
 +            break
- 
++
 +    if ctx.files.srcs and not roots:
-+        first = ctx.files.srcs[0]
+         first = ctx.files.srcs[0]
+-        if roots:
+-            for r in roots:
+-                idx = first.path.find(r)
+-                if idx != -1:
+-                    d = first.path[:idx + len(r)]
+-                    if d not in direct_olean_dirs:
+-                        direct_olean_dirs.append(d)
+-                sidx = first.short_path.find(r)
+-                if sidx != -1:
+-                    sd = first.short_path[:sidx + len(r)]
+-                    if sd not in direct_runfiles_dirs:
+-                        direct_runfiles_dirs.append(sd)
+-        else:
+-            direct_olean_dirs.append(first.dirname)
+-            direct_runfiles_dirs.append(_parent_of(first.short_path, first.basename))
+-
 +        direct_olean_dirs.append(first.dirname)
 +        direct_runfiles_dirs.append(_parent_of(first.short_path, first.basename))
 +
@@ -1214,27 +1220,27 @@ index 2ad2ce9..42c5aa0 100644
              olean_dirs = depset(
                  direct = direct_olean_dirs,
                  transitive = [_transitive(ctx.attr.deps, "olean_dirs")],
-@@ -423,6 +612,9 @@ lean_prebuilt_library = rule(
+@@ -422,6 +617,9 @@
+         "deps": attr.label_list(
              providers = [LeanLibraryInfo],
              doc = "Lean libraries that these prebuilt modules import.",
-         ),
++        ),
 +        "internal_imports": attr.string_list_dict(
 +            doc = "Complete import graph for prebuilt modules. Enables per-module action inputs.",
-+        ),
+         ),
          "root": attr.string(
              default = "",
-             doc = "Directory containing the root modules, relative to package (e.g. 'lib/lean').",
-@@ -522,6 +714,9 @@ lean_test = rule(
+@@ -521,6 +719,9 @@
+         ),
          "extra_flags": attr.string_list(
              doc = "Extra flags for `lean`.",
-         ),
++        ),
 +        "module_system": attr.string_list(
 +            doc = "Modules with a module header, in addition to the scanned source headers.",
-+        ),
+         ),
          "plugins": attr.label_list(
              providers = [LeanPluginInfo],
-             doc = "Lean compiler plugins to load with --plugin.",
-@@ -901,17 +1096,15 @@ def _lean_binary_impl(ctx):
+@@ -901,17 +1102,15 @@
          for mod_name, imps in ctx.attr.internal_imports.items():
              all_imports[mod_name] = list(imps)
  
@@ -1255,7 +1261,7 @@ index 2ad2ce9..42c5aa0 100644
                  queue.append(imp)
  
      compile_modules = [modules[name] for name in sorted(needed.keys()) if name in modules]
-@@ -1075,6 +1268,11 @@ def _lean_plugin_impl(ctx):
+@@ -1075,6 +1274,11 @@
          DefaultInfo(files = depset([shared_lib])),
          LeanPluginInfo(plugin = shared_lib),
          LeanLibraryInfo(
@@ -1267,7 +1273,7 @@ index 2ad2ce9..42c5aa0 100644
              module_imports = depset(
                  direct = result.module_imports,
                  transitive = [_transitive(ctx.attr.deps, "module_imports")],
-@@ -1117,6 +1315,9 @@ lean_plugin = rule(
+@@ -1117,6 +1321,9 @@
          "main": attr.string(
              doc = "The entry module of the plugin (determines initialize_<main> symbol). Defaults to the single src module or target name.",
          ),
