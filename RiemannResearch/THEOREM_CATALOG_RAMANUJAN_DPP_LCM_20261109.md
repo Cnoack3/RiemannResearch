@@ -85,7 +85,8 @@ Interpretation and remaining formalization:
   convergence packaging are paper deductions, not completed Lean declarations
   in this change.
 - The larger partition space is different from the legal Ramanujan space.
-  **Open:** the local projection-defect estimate needed to transfer this limit.
+  **Open:** a local projection-defect estimate away from prescribed zeros;
+  at an actual zero, the appropriate comparison is the reduced-Palm kernel.
 - At a fixed actual critical zero the legal kernel has a reduced-Palm upper
   comparison. Its specialization and asymptotic inequality are paper deductions;
   equality with that comparison is not proved.

@@ -176,9 +176,12 @@ the multiples class, whose complete Pareto mass tends to zero.
 
 The legal Mellin sampling kernel is the packet inverse-Gram kernel with the
 zeta envelope. No theorem above identifies it with Q_L or proves that its
-rescaled kernel has the same limit. A local trace estimate on the difference
-between these projections would be a concrete way to transfer the auxiliary
-sine limit. This is an OPEN analytic obligation.
+rescaled kernel has the same limit. A vanishing local trace difference could transfer the auxiliary sine limit
+at centers away from prescribed zeros; establishing such an estimate is OPEN.
+At a window pinned to an actual zero, that unconditioned transfer is impossible:
+the Palm comparison leaves a limiting local trace deficit at least the integral
+of S(x)^2 on the window. The appropriate comparison there is Q_L^gamma,
+whose additional difference from the legal projection still requires a bound.
 
 For actual zeta zeros near a height T, the customary unfolding uses
 log T/(2 pi), not an arbitrary conductor-period logarithm [5].
