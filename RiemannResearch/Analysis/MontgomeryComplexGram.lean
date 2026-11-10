@@ -164,4 +164,30 @@ theorem complexSignal_shift (z : ι → ℂ) (u s : ℝ) :
   push_cast
   ring
 
+theorem sqrt_energy_add_le {f g : ℝ → ℂ} (hf : MemLp f 2) (hg : MemLp g 2) :
+    Real.sqrt (∫ s : ℝ, ‖f s + g s‖^2) ≤
+      Real.sqrt (∫ s : ℝ, ‖f s‖^2) + Real.sqrt (∫ s : ℝ, ‖g s‖^2) := by
+  have h := sqrt_energy_reverse_triangle (hf.add hg) hf
+  simp only [Pi.add_apply, add_sub_cancel_left] at h
+  have hh := (le_abs_self _).trans h
+  linarith
+
+theorem sqrt_energy_sum_le {ι : Type*} (s : Finset ι) (f : ι → ℝ → ℂ)
+    (hf : ∀ i, MemLp (f i) 2) :
+    Real.sqrt (∫ x : ℝ, ‖∑ i ∈ s, f i x‖^2) ≤
+      ∑ i ∈ s, Real.sqrt (∫ x : ℝ, ‖f i x‖^2) := by
+  classical
+  have hh : ∀ s : Finset ι,
+      MemLp (fun x : ℝ => ∑ i ∈ s, f i x) 2 ∧
+      Real.sqrt (∫ x : ℝ, ‖∑ i ∈ s, f i x‖^2) ≤
+        ∑ i ∈ s, Real.sqrt (∫ x : ℝ, ‖f i x‖^2) := by
+    intro s
+    induction s using Finset.induction_on with
+    | empty => simp
+    | @insert a s ha ih =>
+      simp only [Finset.sum_insert ha]
+      refine ⟨(hf a).add ih.1, ?_⟩
+      exact (sqrt_energy_add_le (hf a) ih.1).trans (add_le_add le_rfl ih.2)
+  exact (hh s).2
+
 end RiemannResearch.Analysis.MontgomeryComplexGram

@@ -103,7 +103,9 @@ coshCorrection; it has not been bounded by a constant.
 
 ## What still needs analytic providers
 
-1. Positive complex-shifted sech smoothing and its transform.
+1. **Completed in the continuation:** positive complex-shifted sech smoothing,
+   its complete transform, and the actual-zero smoothing bridge. See
+   [the analytic-provider ledger](MontgomeryAnalyticProviders20261110.md).
 2. The complete gamma remainder with the required uniform row/operator bound.
    No proposed O((D/T)^(r+1)/log T) rate is claimed proved here.
 3. The separate sharp compression norm estimate. Haar L2 control alone is

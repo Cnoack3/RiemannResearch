@@ -4,6 +4,8 @@ These modules extend the actual-zero, prime-torus, and band-limited Weil baselin
 
 [Research ledger, corrected literature, and open estimates](MontgomeryParsevalResearch20261110.md).
 
+Continuation: [analytic providers, positive sech transform, and Gaussian damping removal](THEOREM_CATALOG_MONTGOMERY_ANALYTIC_20261110.md).
+
 | Module | Principal declarations | Exact scope / assumptions |
 |---|---|---|
 | [PrimeHomogeneousResonance.lean](Analysis/PrimeHomogeneousResonance.lean) | `resonance_eq_zero_of_cardFactors_eq`; `actual_zero_sum_homogeneous` | Positive natural indices, equal Omega; the Weil specialization retains its test regularity, support, and length assumptions. |
