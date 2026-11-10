@@ -1,4 +1,6 @@
 import RiemannResearch.RH.GammaLaplaceInversion
+import RiemannResearch.RH.WeilExplicitFormula.ExplicitFormula.Bridge
+import Mathlib.Analysis.Calculus.MeanValue
 import RiemannResearch.Analysis.EvenIntegralHalfLine
 import RiemannResearch.RH.WeilGammaLimits
 import RiemannResearch.RH.DigammaQuarter
@@ -240,4 +242,48 @@ theorem re_integral_paperFT_gammaBracket_eq_regulated
   ring
 
 end
+end RiemannResearch.RH.SignedWeilCorrelation
+
+namespace RiemannResearch.RH.SignedWeilCorrelation
+open Zeta23
+open scoped FourierTransform
+
+/-- A compact C2 test discharges every regularity and decay input in the
+existing gamma adapter. The only symmetry condition concerns its real part. -/
+theorem gamma_spatial_of_contDiff_two {k : ℝ → ℂ}
+    (hk : ContDiff ℝ 2 k) (hc : HasCompactSupport k)
+    (heven : ∀ t, (k (-t)).re = (k t).re) :
+    ((1 / (2 * Real.pi) : ℂ) *
+      (∫ r : ℝ, paperFT k r * (EF.gammaBracket r : ℂ))).re =
+      -(Real.eulerMascheroniConstant + Real.log (4 * Real.pi)) * (k 0).re -
+        2 * (∫ t, weilGammaKernel t * ((k t).re - weilRegulator t * (k 0).re)
+          ∂positiveMeasure) := by
+  have hi : Integrable k := hk.continuous.integrable_of_hasCompactSupport hc
+  have hfi := EF.integrable_fourier_of_contDiff_two hk hc
+  have hHc : Continuous (fun r : ℝ => paperFT k r) := by
+    simp_rw [EF.paperFT_ofReal_eq_fourier]
+    exact (EF.continuous_fourier_of_integrable hi).comp (by fun_prop)
+  obtain ⟨L,hL⟩ := EF.exists_abs_le_of_hasCompactSupport hc
+  let A : ℝ := (∫ u : ℝ, ‖k u‖) + ∫ u : ℝ, ‖deriv (deriv k) u‖
+  have hA : 0 ≤ A := add_nonneg (integral_nonneg (fun _ => norm_nonneg _))
+    (integral_nonneg (fun _ => norm_nonneg _))
+  have hdec (r : ℝ) : ‖paperFT k r‖ ≤ A / (1+r^2) :=
+    (le_div_iff₀ (by positivity)).mpr (EF.norm_paperFT_mul_one_add_sq_le hk hL r)
+  have hder : ContDiff ℝ 1 (deriv k) :=
+    (contDiff_succ_iff_deriv.mp hk).2.2
+  obtain ⟨x₀,hx₀⟩ := hder.continuous.norm.exists_forall_ge_of_hasCompactSupport hc.deriv.norm
+  let K : NNReal := ‖deriv k x₀‖₊
+  have hlip : LipschitzWith K k := by
+    apply lipschitzWith_of_nnnorm_deriv_le (hk.differentiable (by norm_num))
+    intro x
+    exact hx₀ x
+  apply re_integral_paperFT_gammaBracket_eq_regulated hk.continuous hi hfi heven hHc A hA hdec
+    (K : ℝ) K.coe_nonneg
+  intro t ht
+  calc
+    |(k t).re - (k 0).re| ≤ ‖k t - k 0‖ := by
+      simpa only [Complex.sub_re] using Complex.abs_re_le_norm (k t-k 0)
+    _ ≤ (K : ℝ) * t := by
+      simpa [dist_eq_norm, Real.norm_eq_abs, abs_of_pos ht] using hlip.dist_le_mul t 0
+
 end RiemannResearch.RH.SignedWeilCorrelation
