@@ -1,5 +1,38 @@
 # Full-conductor dilation and projection audit, November 2026
 
+## Canonical full-conductor divisor projections (9 November 2026)
+
+Module: `RiemannResearch/RH/QFullDivisorProjection.lean`.
+
+- `qOptimizer` and `pOptimizer` are the actual orthogonal projections onto
+  the same divisor dictionary in Q and Pareto. The period is a positive L;
+  all conductors dividing L are allowed, including prime powers and L itself.
+- `iSup_divisorStage_eq_full`, `qOptimizer_tendsto`,
+  `pOptimizer_tendsto`, and `lcm_displacement_tendsto` identify the
+  unconditional limits with the existing full-family projections and
+  `QFullDisplacement.displacement`.
+- `sequence_mod_of_mem`, `factors_through_residue`,
+  `continuous_profiniteLift`, and `profiniteLift_natCast` construct the
+  finite quotient functions and their continuous profinite extensions.
+- `positive_site_error_one` retains the exact error of one at the positive
+  site equal to the period. `no_uniform_approximation_to_one` shows that
+  finite legal fits cannot converge uniformly to one on the positive integers.
+- Task A1 remains supplied by
+  `QFullDisplacement.displacement_eq_projected_pResidual`,
+  `witness_mean_energy`, and
+  `witness_mean_eq_residual_energy_difference`; no squarefree closure is
+  substituted in their types.
+
+Index distinction: conductors up to M have common period lcm(1,...,M).
+Conductors up to L generally do not all divide L. The divisor dictionary
+is used to include g_L while preserving period L.
+
+**Open:** a common modulus or boundedness estimate for the actual displacement.
+Continuous finite cylinder functions and Hilbert convergence do not establish
+continuity of the limit on the profinite integers. Quotient reduction
+compatibility is not compatibility of successive scalar projection functions.
+The conditional RH consequences remain in `QFullCRTDisplacement.lean`.
+
 ## Established finite and Hilbert identities
 
 Module: `RiemannResearch/RH/QFloorDilationEnergy.lean`.
