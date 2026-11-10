@@ -11,6 +11,7 @@ import RiemannResearch.RH.ZetaTwoProbability
 import RiemannResearch.RH.ZetaTwoHilbertSpace
 import RiemannResearch.RH.QSquarefreeCorrectionKernel
 import RiemannResearch.Analysis.ResidualizedProjectionKernel
+import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 
 
@@ -56,6 +57,45 @@ theorem screenedPairKernel_energy (n m : ℕ) :
       ‖reciprocalD (toPareto (pairKernel S n m))‖ ^ 2 -
         ‖T.starProjection (reciprocalD (toPareto (pairKernel S n m)))‖ ^ 2 :=
   residual_norm_sq T _
+
+/-- The reciprocal test screened against the same physical dictionary in P. -/
+def screenReciprocal (v : QHilbert) : ThresholdHilbert :=
+  reciprocalD (toPareto v) - T.starProjection (reciprocalD (toPareto v))
+
+theorem screenReciprocal_sub (v u : QHilbert) :
+    screenReciprocal T (v - u) = screenReciprocal T v - screenReciprocal T u := by
+  simp only [screenReciprocal, toPareto_sub, map_sub]
+  abel
+
+/-- Keep the raw evaluation term and subtract its complementary-projection
+contribution. The auxiliary vector can be chosen as a physical head cutoff. -/
+theorem screenedPairKernel_raw_sub_split (n m : ℕ) (h : QHilbert) :
+    let v := evaluation n - evaluation m
+    let u := v - S.starProjection v
+    screenedPairKernel S T n m =
+      screenReciprocal T v - screenReciprocal T h - screenReciprocal T (u - h) := by
+  dsimp only
+  change screenReciprocal T (S.starProjection (evaluation n - evaluation m)) = _
+  let v := evaluation n - evaluation m
+  let u := v - S.starProjection v
+  change screenReciprocal T (S.starProjection v) =
+    screenReciprocal T v - screenReciprocal T h - screenReciprocal T (u - h)
+  have hv : S.starProjection v = v - u := (sub_sub_cancel v _).symm
+  calc
+    screenReciprocal T (S.starProjection v) = screenReciprocal T (v - u) :=
+      congrArg (screenReciprocal T) hv
+    _ = screenReciprocal T v - screenReciprocal T u := screenReciprocal_sub T v u
+    _ = _ := by
+      rw [screenReciprocal_sub T u h]
+      abel
+
+/-- Exact split of the complete screened kernel at an arbitrary test head. -/
+theorem screenedPairKernel_split (n m : ℕ) (h : QHilbert) :
+    screenedPairKernel S T n m =
+      screenReciprocal T h + screenReciprocal T (pairKernel S n m - h) := by
+  change screenReciprocal T (pairKernel S n m) = _
+  rw [screenReciprocal_sub T (pairKernel S n m) h]
+  abel
 
 variable (hsame : ∀ f : QHilbert, toPareto f ∈ T ↔ f ∈ S)
 include hsame
