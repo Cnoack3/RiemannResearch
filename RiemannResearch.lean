@@ -1378,6 +1378,10 @@ import RiemannResearch.RH.QPrimorialMatchedGram
 import RiemannResearch.RH.QPrimorialPrimeCarry
 import RiemannResearch.RH.QEuclidCarryRay
 import RiemannResearch.RH.QPrimorialRayAssembly
+import RiemannResearch.RH.QPrimorialPairingRefinement
+import RiemannResearch.RH.QPrimorialSchurEnergy
+import RiemannResearch.RH.QPrimorialSchurCertificate
+import RiemannResearch.RH.QPrimorialRayProjection
 import RiemannResearch.RH.QSquarefreeWitnessHead
 import RiemannResearch.Analysis.FiniteGramScreenedInverse
 import RiemannResearch.RH.QCovarianceScreening

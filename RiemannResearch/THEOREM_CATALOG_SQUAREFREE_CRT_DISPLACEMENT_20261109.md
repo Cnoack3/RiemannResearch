@@ -69,3 +69,22 @@ The Q and Pareto bounds for `β` at period 2310 are 0.001666 and 0.001670.
 The intervals certify positivity at these finite stages. They are
 external arithmetic evidence. The cofinal upper bound and vanishing of
 the actual residual remain open.
+
+## 10 November 2026: stronger certificates
+
+The follow-up [research note](SquarefreeCRTPrioritiesStrengthening20261110.md)
+maps all six priorities and records the exact new hypotheses.
+
+| Priorities | New module | Strengthening |
+| --- | --- | --- |
+| 1 | `QPrimorialPairingRefinement` | Uniform little-o error at scale inverse square root of the included conductor; finite nonpositive-pairing bound `E_n <= 1/m`. |
+| 2, 4 | `QPrimorialSchurEnergy` | Coercivity constant improves to `30*zetaTwo/59`; one scalar self-forcing energy detects displacement vanishing; exact gap retains the carry and metric remainders. |
+| 1, 2, 4 | `QPrimorialSchurCertificate` | Completion-of-square identity and rigorous upper/lower bounds on the actual scalar energy from an approximate trial and its complete dual residual bound. |
+| 3 | `QPrimorialRayProjection` | Actual projected branch limits; a diagonal making both vector and normalized moving-conductor boundaries negligible. |
+| 5 | Existing `QSquarefreeWitnessHead` | The exact prime-anchor witness identity is retained and rechecked. No actual growth or tail-product provider has been proved. |
+| 6 | All four modules exported | 29 new theorem declarations, with full-project server validation required before publication. |
+
+**Open:** cofinal smallness of the complete Gram row, scalar Schur energy,
+approximate-certificate upper endpoint, or witness tail product. None of
+the new boundary or positivity theorems is asserted to discharge these
+arithmetic obligations.
