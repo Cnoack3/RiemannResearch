@@ -15,8 +15,8 @@ import Mathlib.Tactic.Ring
 
 /-! The cubic Schur bound for the explicit spatial off-diagonal matrix.
 Source: user-provided MontgomeryGammaAudit20261110.md, Sections 4--5.
-This module bounds its explicitly defined real kernel. Identification of every
-entry with the full complex actual-zero sum is a separate obligation. -/
+This module bounds its explicitly defined real kernel. The exact identification
+with the centered actual-zero matrix is proved in PrimeBandlimitedMatrix. -/
 noncomputable section
 open MeasureTheory
 open scoped BigOperators ComplexConjugate

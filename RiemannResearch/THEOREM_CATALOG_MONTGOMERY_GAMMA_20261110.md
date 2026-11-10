@@ -11,10 +11,12 @@ checked, unpublished pole/gamma module and its compact-C2 regularity adapter.
 It does **not** prove Montgomery's pair correlation conjecture or RH.
 
 The matrix theorem below concerns the explicitly defined spatial matrix E.
-There is no new checked theorem identifying E with the centered complete
-actual-zero matrix. This identification and the diagonal asymptotic remain
-formalization obligations. The raw-ordinate transfer and the high-support
-arithmetic estimate are separate substantive research obligations.
+The continuation now proves its exact identification with the centered complete
+actual-zero matrix and evaluates the full diagonal, including both poles,
+the c_F/log T correction, and an explicit O(1/(T^2 log T)) remainder.
+See [the current matrix/transfer/prime catalog](THEOREM_CATALOG_MONTGOMERY_MATRIX_TRANSFER_PRIMES_20261110.md).
+The raw-ordinate transfer and complete high-support arithmetic estimate remain
+separate substantive research obligations; their new partial results are recorded there.
 
 ## Exact definitions and main theorem
 
@@ -90,32 +92,42 @@ quadratic inequality complete the constant 72 estimate.
 Namespaces are under `RiemannResearch.Analysis`, except the adapter under
 `RiemannResearch.RH.SignedWeilCorrelation`.
 
-## Remaining obligations
+## Updated obligation status
 
-1. **Formalization open: actual off-diagonal identity.** Extend/symmetrize the
-   spatial gamma adapter for shifted real tests, retain the full zero and pole
-   identity, and prove the change of variables giving (4.2)--(4.3) of the audit.
-   Establish any reality/symmetry needed to identify the complex zero matrix
-   with the real spatial matrix. Only then apply `quadratic_bound` to that matrix.
-2. **Formalization open: diagonal evaluation.** Prove the exact regulated
-   identities (6.2)--(6.3), then the bound (6.4). The generally nonzero
-   c_F/log T correction has not been removed by zero ordinary moments.
-3. **Research open: transfer to raw ordinates.** Neither the full smoothed
-   complex-zero sum nor Gaussian Fourier-damping removal supplies the
-   hard-cutoff, ordinate-only Montgomery limit. Horizontal displacement,
-   fixed-width sech smoothing, and height cutoff transfers need justified
-   hypotheses and estimates.
-4. **Research open: signed prime correlations above support one.** In the
-   repository's centered short-interval notation the target remains
+1. **Closed: actual off-diagonal identity.** The new
+   PrimeBandlimitedMatrix module proves centeredZeroEntry_eq_spatial and
+   actual_zero_centered_quadratic_bound for real even compact C2 zero-mean
+   windows and homogeneous positive integer blocks, T >= 4, 2D <= T.
+   The shifted gamma reality/reflection and affine change of variables are proved.
+2. **Closed: diagonal evaluation.** SechGammaDiagonal, PrimeBandlimitedDiagonal,
+   and PrimeBandlimitedMatrixDiagonal prove the exact regulated formula and
+   normalizedDiagonal_exact, retaining the pole term even without zero mean.
+   Under zero mean the remainder after F(0)+c_F/log T is at most
+   11 M_1(F)/(48 T^2 log T). The corrected actual-zero quadratic theorem
+   assembles this with the constant-72 spatial estimate.
+3. **Research open: full transfer to raw ordinates.** New averaged one-point
+   criteria transfer actual hard-cutoff complex pairings to raw pairings and
+   remove Gaussian damping. Their budget decay remains an explicit hypothesis.
+   A proved obstruction shows all-frequency positive-budget decay is equivalent
+   to the critical-line assertion for actual positive zeros. The separate
+   full-height smoothed-matrix comparison still requires a justified tail estimate.
+4. **Research open: complete signed prime correlations above support one.**
+   Exact endpoint/prefix identities and an unconditional odd-gap raw bound are
+   now proved. The actual PNT gives R_N(h(N))/N -> -1 for every eventually odd
+   gap sequence h(N) <= N. Even-gap cancellation remains missing from the target
 
        C(N,H) = -HN log H + o_epsilon(HN log N),
 
    uniformly for N^epsilon <= H <= N^(1-epsilon), together with the diagonal
-   estimate and the stated prime/zero transfer hypotheses. Homogeneous
-   multiplicative cancellation does not prove this additive correlation bound.
+   estimate and the stated prime/zero transfer hypotheses. The coarse H^3
+   endpoint bound cannot be discarded throughout this range.
 5. **Research/provider open: transition control.** Retain the corrected
    low-support uniform error and control concentration near |alpha|=1 before
    asserting a full raw test-function limit.
+
+The complete statements, dependencies, and new verification records are in
+THEOREM_CATALOG_MONTGOMERY_MATRIX_TRANSFER_PRIMES_20261110.md. The development
+verification records below document the earlier spatial-only stage.
 
 For a degree-k polynomial in integer modes bounded by D_0, the length entering
 the matrix theorem can be D_0^k. More prime-torus coordinates do not remove

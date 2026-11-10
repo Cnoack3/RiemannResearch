@@ -26,8 +26,9 @@ https://www-users.cse.umn.edu/~garrett/m/mfms/notes_2015-16/04_Guinand_explicit_
 supports the pole/gamma convention; DLMF 5.9.16 supports the digamma
 representation used by the existing spatial adapter.
 The cancellations and kernel split below are elementary deductions.
-See THEOREM_CATALOG_MONTGOMERY_GAMMA_20261110.md for the verified
-spatial estimates and the remaining actual-zero and raw-ordinate transfers.
+See THEOREM_CATALOG_MONTGOMERY_MATRIX_TRANSFER_PRIMES_20261110.md for
+the completed actual-zero matrix identification and diagonal correction,
+and the remaining full transfer to raw ordinate pair statistics.
 -/
 
 open MeasureTheory Zeta23
@@ -163,8 +164,8 @@ theorem sechGammaKernel_split {t : ℝ} (ht : 0 < t) :
 
 
 /-- The proved spatial-kernel estimate uses the actual sech-modified Weil
-gamma kernel. Turning this integral into an off-diagonal zero-matrix entry
-still requires the frequency-to-space and change-of-variables identity. -/
+gamma kernel. The frequency-to-space identity, change of variables, and
+actual-zero matrix identification are proved in PrimeBandlimitedMatrix. -/
 theorem gamma_kernel_window_bound (F : ℝ → ℝ) (hF : Continuous F)
     (hFe : ∀ x, F (-x) = F x)
     (h0 : SechGammaBounds.windowMoment F 0 = 0)
