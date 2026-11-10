@@ -3,6 +3,9 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
+import RiemannResearch.Analysis.GrowingFourierGramBounds
+import RiemannResearch.RH.ParetoResidueCriticalGramRate
+import RiemannResearch.RH.ParetoResidueMicroscopicGram
 import RiemannResearch.RH.ParetoResidueMovingCertificate
 import RiemannResearch.RH.ParetoResidueAtomTests
 import RiemannResearch.Analysis.ActualZeroReciprocalConstant
@@ -16,6 +19,8 @@ import Lean.Elab.Tactic.Omega
 
 A sorted separated set has at most two points at each rank distance.
 The harmonic sum controls each row of the absolute inverse-gap matrix.
+Complex pairings also retain their coefficient weights and can use the full
+logarithmic-window kernel in the microscopic regime.
 -/
 
 noncomputable section
@@ -23,7 +28,8 @@ open Filter
 open scoped BigOperators Topology
 
 namespace RiemannResearch.RH.Pareto.ResidueMellin
-open SpectralObstruction (phaseSumBudget reciprocalSquareMass)
+open SpectralObstruction (logPhaseKernel phaseSumBudget reciprocalSquareMass)
+open RiemannResearch.Fourier (finiteGramErrorPairing finiteGramErrorPairing_norm_le_wiener_sq)
 open MellinFrequency (criticalPoint)
 
 private theorem rank_gap_le {m : ℕ} (f : Fin m → ℝ) (hf : StrictMono f) (δ : ℝ)
@@ -158,9 +164,9 @@ private theorem criticalHeightConstant_nonneg : 0 ≤ criticalHeightConstant := 
   unfold criticalHeightConstant
   positivity
 
-theorem criticalCrossBudget_height_le (t u T : ℝ) (hT : 0 ≤ T)
+theorem microscopicCrossBudget_height_le (t u T : ℝ) (hT : 0 ≤ T)
     (ht : |t| ≤ T) (hu : |u| ≤ T) :
-    criticalCrossBudget t u ≤ criticalHeightConstant * (1 + T) + 2 * |t - u|⁻¹ := by
+    microscopicCrossBudget t u ≤ criticalHeightConstant * (1 + T) := by
   have h₀ : 0 ≤ reciprocalSquareMass := tsum_nonneg (fun _ => by positivity)
   have hnorm (x : ℝ) : ‖(x : ℂ) * Complex.I‖ = |x| := by
     rw [norm_mul, Complex.norm_I, mul_one, Complex.norm_real, Real.norm_eq_abs]
@@ -175,20 +181,140 @@ theorem criticalCrossBudget_height_le (t u T : ℝ) (hT : 0 ≤ T)
     refine (norm_add_le _ _).trans ?_
     rw [hnorm, norm_one]
     linarith only [abs_sub t u, ht, hu]
+  have hh : 1 + ‖criticalPoint t + 1‖ + ‖criticalPoint u + 1‖ +
+      ‖((t - u : ℝ) : ℂ) * Complex.I + 1‖ ≤ 6 * (1 + T) := by
+    linarith only [hpoint t, hpoint u, hphase, ht, hu, hT]
+  unfold microscopicCrossBudget criticalHeightConstant
+  nlinarith only [mul_le_mul_of_nonneg_left hh h₀,
+    mul_nonneg hT (by positivity : 0 ≤ 2 * (1 + criticalTailMass) ^ 2 + 1)]
+
+theorem criticalCrossBudget_height_le (t u T : ℝ) (hT : 0 ≤ T)
+    (ht : |t| ≤ T) (hu : |u| ≤ T) :
+    criticalCrossBudget t u ≤ criticalHeightConstant * (1 + T) + 2 * |t - u|⁻¹ := by
+  refine (show criticalCrossBudget t u ≤ microscopicCrossBudget t u + 2 * |t - u|⁻¹ from ?_).trans
+    (add_le_add (microscopicCrossBudget_height_le t u T hT ht hu) le_rfl)
+  have h₀ : 0 ≤ reciprocalSquareMass := tsum_nonneg (fun _ => by positivity)
   have hp : phaseSumBudget (t - u) ≤
-      1 + reciprocalSquareMass * (1 + 2 * T) + 2 * |t - u|⁻¹ := by
+      1 + reciprocalSquareMass * ‖((t - u : ℝ) : ℂ) * Complex.I + 1‖ + 2 * |t - u|⁻¹ := by
     unfold phaseSumBudget
     split
-    · have h := mul_nonneg h₀ (by linarith only [hT] : 0 ≤ 1 + 2 * T)
-      have hgap : 0 ≤ 2 * |t - u|⁻¹ := by positivity
-      linarith only [h, hgap]
+    · have h := mul_nonneg h₀ (norm_nonneg (((t - u : ℝ) : ℂ) * Complex.I + 1))
+      have hg : 0 ≤ 2 * |t - u|⁻¹ := by positivity
+      linarith only [h, hg]
     · rw [div_eq_mul_inv]
-      linarith only [mul_le_mul_of_nonneg_left hphase h₀]
-  have hh : 1 + ‖criticalPoint t + 1‖ + ‖criticalPoint u + 1‖ + (1 + 2 * T) ≤
-      6 * (1 + T) := by linarith only [hpoint t, hpoint u, ht, hu, hT]
-  unfold criticalCrossBudget criticalHeightConstant
-  nlinarith only [hp, mul_le_mul_of_nonneg_left hh h₀,
-    mul_nonneg hT (by positivity : 0 ≤ 2 * (1 + criticalTailMass) ^ 2 + 1)]
+      linarith
+  unfold criticalCrossBudget microscopicCrossBudget
+  nlinarith only [hp]
+
+/-- Keep the actual weighted inverse-gap rows, and separate the height term from them. -/
+theorem criticalGramWeightedBudget_le_height_rows {ι : Type*} (s : Finset ι)
+    (a : ι → ℂ) (u : ι → ℝ) (N : ℕ) (T : ℝ) (hT : 0 ≤ T)
+    (hu : ∀ i ∈ s, |u i| ≤ T) :
+    criticalGramWeightedBudget s a u N ≤
+      (criticalHeightConstant * (1 + T) *
+          (∑ i ∈ s, (‖a i‖ * ‖criticalPoint (u i)‖)) ^ 2 +
+        2 * ∑ i ∈ s, (‖a i‖ * ‖criticalPoint (u i)‖) ^ 2 *
+          (∑ j ∈ s, |u i - u j|⁻¹)) / Real.log ((N : ℝ) + 1) := by
+  let w (i : ι) := ‖a i‖ * ‖criticalPoint (u i)‖
+  let g (i j : ι) := |u i - u j|⁻¹
+  let C := criticalHeightConstant * (1 + T)
+  unfold criticalGramWeightedBudget
+  apply div_le_div_of_nonneg_right _ (Real.log_nonneg (by linarith [Nat.cast_nonneg (α := ℝ) N]))
+  have hsym :
+      (∑ i ∈ s, ∑ j ∈ s, w j ^ 2 * g i j) =
+        ∑ i ∈ s, ∑ j ∈ s, w i ^ 2 * g i j := by
+    rw [Finset.sum_comm]
+    apply Finset.sum_congr rfl
+    intro i _
+    apply Finset.sum_congr rfl
+    intro j _
+    dsimp only [g]
+    rw [abs_sub_comm]
+  calc
+    _ ≤ ∑ i ∈ s, ∑ j ∈ s, (C * (w i * w j) + (w i ^ 2 * g i j + w j ^ 2 * g i j)) := by
+      apply Finset.sum_le_sum
+      intro i hi
+      apply Finset.sum_le_sum
+      intro j hj
+      calc
+        _ = w i * w j * criticalCrossBudget (u i) (u j) := by dsimp only [w]; ring
+        _ ≤ w i * w j * (C + 2 * g i j) :=
+          mul_le_mul_of_nonneg_left (criticalCrossBudget_height_le (u i) (u j) T hT
+            (hu i hi) (hu j hj)) (by positivity [w])
+        _ ≤ _ := by
+          have hn := mul_nonneg (sq_nonneg (w i - w j)) (by dsimp only [g]; positivity : 0 ≤ g i j)
+          nlinarith only [hn]
+    _ = _ := by
+      simp only [Finset.sum_add_distrib]
+      rw [hsym]
+      simp only [← Finset.mul_sum, ← Finset.sum_mul]
+      ring
+
+/-- The gap cost uses squared coefficient mass and the harmonic row bound. -/
+theorem criticalGramWeightedBudget_le_height_spacing {ι : Type*} [Fintype ι]
+    (a : ι → ℂ) (u : ι → ℝ) (N : ℕ) (T δ : ℝ) (hT : 0 ≤ T)
+    (hu : ∀ i, |u i| ≤ T) (hδ : 0 < δ) (hgap : ∀ i j, i ≠ j → δ ≤ |u i - u j|) :
+    criticalGramWeightedBudget Finset.univ a u N ≤
+      (criticalHeightConstant * (1 + T) *
+          (∑ i, (‖a i‖ * ‖criticalPoint (u i)‖)) ^ 2 +
+        (4 * (harmonic (Fintype.card ι) : ℝ) / δ) *
+          ∑ i, (‖a i‖ * ‖criticalPoint (u i)‖) ^ 2) / Real.log ((N : ℝ) + 1) := by
+  refine (criticalGramWeightedBudget_le_height_rows Finset.univ a u N T hT
+    (fun i _ => hu i)).trans ?_
+  apply div_le_div_of_nonneg_right _ (Real.log_nonneg (by linarith [Nat.cast_nonneg (α := ℝ) N]))
+  apply add_le_add_right
+  calc
+    _ ≤ 2 * ∑ i, (‖a i‖ * ‖criticalPoint (u i)‖) ^ 2 *
+        (2 * (harmonic (Fintype.card ι) : ℝ) / δ) := by
+      apply mul_le_mul_of_nonneg_left _ (by norm_num)
+      exact Finset.sum_le_sum (fun i _ => mul_le_mul_of_nonneg_left
+        (sum_inv_gaps_le_harmonic u δ hδ hgap i) (sq_nonneg _))
+    _ = _ := by rw [← Finset.sum_mul]; ring
+
+/-- A moving complex Gram pairing from the separated weighted schedule. -/
+theorem growing_critical_gram_pairing_error_of_height_spacing (κ : ℕ → Type*) [∀ k, Fintype (κ k)]
+    (a : ∀ k, κ k → ℂ) (u : ∀ k, κ k → ℝ) (N : ℕ → ℕ) (T δ : ℕ → ℝ)
+    (hN : ∀ᶠ k in atTop, 0 < N k)
+    (hT : ∀ k, 0 ≤ T k) (hu : ∀ k i, |u k i| ≤ T k) (hδ : ∀ k, 0 < δ k)
+    (hgap : ∀ k i j, i ≠ j → δ k ≤ |u k i - u k j|)
+    (hB : Tendsto (fun k =>
+      (criticalHeightConstant * (1 + T k) *
+          (∑ i, (‖a k i‖ * ‖criticalPoint (u k i)‖)) ^ 2 +
+        (4 * (harmonic (Fintype.card (κ k)) : ℝ) / δ k) *
+          ∑ i, (‖a k i‖ * ‖criticalPoint (u k i)‖) ^ 2) / Real.log ((N k : ℝ) + 1))
+      atTop (𝓝 0)) :
+    Tendsto (fun k => finiteGramErrorPairing Finset.univ (a k) (fun i j =>
+        classCross (u k i) (u k j) (N k) -
+          (if u k i = u k j then criticalPoint (u k i) * star (criticalPoint (u k j)) else 0)))
+      atTop (𝓝 0) := by
+  apply tendsto_zero_iff_norm_tendsto_zero.mpr
+  refine squeeze_zero' (Eventually.of_forall (fun _ => norm_nonneg _)) (hN.mono fun k hk => ?_) hB
+  exact (critical_gram_pairing_error_le Finset.univ (a k) (u k) (N k) hk).trans
+    (criticalGramWeightedBudget_le_height_spacing (a k) (u k) (N k) (T k) (δ k) (hT k)
+      (hu k) (hδ k) (hgap k))
+
+/-- Approximate a moving complex Gram by its full logarithmic-window kernel.
+Keeping that kernel permits coincident or microscopically close ordinates. -/
+theorem growing_phaseStripped_critical_gram_pairing_error_of_height {ι : Type*}
+    (s : ℕ → Finset ι) (b : ℕ → ι → ℂ) (u : ℕ → ι → ℝ) (N : ℕ → ℕ) (T : ℕ → ℝ)
+    (hN : ∀ᶠ k in atTop, 0 < N k) (hT : ∀ k, 0 ≤ T k)
+    (hu : ∀ k i, i ∈ s k → |u k i| ≤ T k)
+    (hB : Tendsto (fun k =>
+      (criticalHeightConstant * (1 + T k) / Real.log ((N k : ℝ) + 1)) *
+        (∑ i ∈ s k, ‖b k i‖) ^ 2) atTop (𝓝 0)) :
+    Tendsto (fun k => finiteGramErrorPairing (s k) (b k) (fun i j =>
+        phaseStrippedCross (u k i) (u k j) (N k) -
+          logPhaseKernel ((u k i - u k j) * Real.log ((N k : ℝ) + 1))))
+      atTop (𝓝 0) := by
+  apply tendsto_zero_iff_norm_tendsto_zero.mpr
+  refine squeeze_zero' (Eventually.of_forall (fun _ => norm_nonneg _)) (hN.mono fun k hk => ?_) hB
+  apply finiteGramErrorPairing_norm_le_wiener_sq
+  intro i hi j hj
+  have hlog : 0 ≤ Real.log ((N k : ℝ) + 1) :=
+    Real.log_nonneg (by linarith [Nat.cast_nonneg (α := ℝ) (N k)])
+  exact (phaseStrippedCross_sub_logPhaseKernel_le (u k i) (u k j) (N k) hk).trans
+    (div_le_div_of_nonneg_right (microscopicCrossBudget_height_le (u k i) (u k j) (T k)
+      (hT k) (hu k i hi) (hu k j hj)) hlog)
 
 variable {ι : Type*} [Fintype ι]
 

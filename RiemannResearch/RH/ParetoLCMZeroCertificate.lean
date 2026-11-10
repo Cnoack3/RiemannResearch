@@ -440,6 +440,66 @@ theorem lcmRemainder_tendsto_limit (γ : κ → ℝ) (hγ : Function.Injective �
     (fun i => criticalPoint_ne_one (γ i)) hz]
   ring
 
+private theorem lcm_psi_mul_multiples_mass_tendsto :
+    Tendsto (fun M : ℕ => Chebyshev.psi (M : ℝ) *
+      classWeight (lcmResidueIndex M) (Fin.last (lcmResidueIndex M))) atTop (𝓝 0) := by
+  have hN : Tendsto (fun N : ℕ => (N : ℝ) + 1) atTop atTop :=
+    tendsto_atTop_mono (fun N => by linarith) tendsto_natCast_atTop_atTop
+  have hlim := (tendsto_inv_atTop_zero.comp (hN.comp lcmResidueIndex_tendsto)).const_mul (2 : ℝ)
+  rw [mul_zero] at hlim
+  apply squeeze_zero (fun M => mul_nonneg (Chebyshev.psi_nonneg _) (classWeight_pos _ _).le) ?_ hlim
+  intro M
+  rw [← lcm_log_eq_psi]
+  let L := (lcmResidueIndex M : ℝ) + 1
+  have hL : 1 ≤ L := by dsimp only [L]; linarith [Nat.cast_nonneg (α := ℝ) (lcmResidueIndex M)]
+  have hp : 0 < L := zero_lt_one.trans_le hL
+  have hw := (multiples_mass_bounds (lcmResidueIndex M)).2
+  simp only [Nat.cast_add, Nat.cast_one] at hw
+  change classWeight (lcmResidueIndex M) (Fin.last (lcmResidueIndex M)) ≤ 2 / (L * (L + 1)) at hw
+  change Real.log L * classWeight (lcmResidueIndex M) (Fin.last (lcmResidueIndex M)) ≤ 2 * L⁻¹
+  calc
+    _ ≤ Real.log L * (2 / (L * (L + 1))) :=
+      mul_le_mul_of_nonneg_left hw (Real.log_nonneg hL)
+    _ ≤ (L + 1) * (2 / (L * (L + 1))) :=
+      mul_le_mul_of_nonneg_right (by linarith [Real.log_le_sub_one_of_pos hp]) (by positivity)
+    _ = _ := by field_simp [hp.ne']
+
+/-- The moving certificate is the entire first-order correction, apart from
+the compulsory multiples mass. No uniform size or spacing premise is needed for this transfer. -/
+theorem lcmError_sub_moving_remainder_psi_tendsto (κ : ℕ → Type*) [∀ j, Fintype (κ j)]
+    (z : ∀ j, κ j → ℂ) (M : ℕ → ℕ) (hM : Tendsto M atTop atTop)
+    (hs : ∀ j i, 0 < (z j i).re) (hs1 : ∀ j i, z j i ≠ 1)
+    (hz : ∀ j i, riemannZeta (z j i) = 0) :
+    Tendsto (fun j => Chebyshev.psi (M j : ℝ) *
+      (lcmError (M j) - lcmRemainder (z j) (M j)) -
+        Chebyshev.psi (M j : ℝ) * certificateEnergy (lcmResidueIndex (M j)) (z j))
+      atTop (𝓝 0) := by
+  refine (lcm_psi_mul_multiples_mass_tendsto.comp hM).congr (fun j => ?_)
+  have he := lcm_best_error_eq (M j) (z j) (hs j) (hs1 j) (hz j)
+  change lcmError (M j) = _ at he
+  dsimp only [Function.comp_def]
+  rw [he]
+  ring
+
+/-- Vanishing moving certificate energy leaves the full optimized projection limit. -/
+theorem lcm_moving_remainder_tendsto_limit (κ : ℕ → Type*) [∀ j, Fintype (κ j)]
+    (z : ∀ j, κ j → ℂ) (M : ℕ → ℕ) (hM : Tendsto M atTop atTop)
+    (hs : ∀ j i, 0 < (z j i).re) (hs1 : ∀ j i, z j i ≠ 1)
+    (hz : ∀ j i, riemannZeta (z j i) = 0)
+    (hC : Tendsto (fun j => certificateEnergy (lcmResidueIndex (M j)) (z j)) atTop (𝓝 0)) :
+    Tendsto (fun j => lcmRemainder (z j) (M j)) atTop
+      (𝓝 (‖hilbertOne -
+        normalizedResidueSpan.topologicalClosure.starProjection hilbertOne‖ ^ 2)) := by
+  have hm := multiples_mass_tendsto_zero.comp (lcmResidueIndex_tendsto.comp hM)
+  have h := ((lcmError_tendsto.comp hM).sub hm).sub hC
+  simp only [sub_zero] at h
+  refine h.congr (fun j => ?_)
+  have he := lcm_best_error_eq (M j) (z j) (hs j) (hs1 j) (hz j)
+  change lcmError (M j) = _ at he
+  dsimp only [Function.comp_def]
+  rw [he]
+  ring
+
 private theorem cutoff_mul_multiples_mass_tendsto :
     Tendsto (fun M : ℕ => (M : ℝ) * classWeight (lcmResidueIndex M)
       (Fin.last (lcmResidueIndex M))) atTop (𝓝 0) := by

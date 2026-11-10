@@ -318,8 +318,8 @@ theorem bcf_zero_power_norm (M : ℕ) (hM : 0 < M) (s ρ : ℂ) :
 
 variable {ι : Type*} [Fintype ι]
 
-/-- Inverse log of reciprocal error is an automatic inequality on the error's
-own scale. Its right side shrinks only when the original error does. -/
+/-- The inverse-log bound follows from the finite error domination and
+`log x ≤ x - 1` at the reciprocal error. -/
 theorem lcm_remainder_mul_log_inv_error_le (M : ℕ) (z : ι → ℂ)
     (hs : ∀ i, 0 < (z i).re) (hs1 : ∀ i, z i ≠ 1) (hz : ∀ i, riemannZeta (z i) = 0) :
     lcmRemainder z M * Real.log ((lcmError M)⁻¹) ≤ 1 - lcmError M := by

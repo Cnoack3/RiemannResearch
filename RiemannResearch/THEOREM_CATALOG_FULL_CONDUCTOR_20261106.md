@@ -224,6 +224,20 @@ exceptional quartet. [Balazard–de Roton](https://arxiv.org/abs/0812.1689)
   has the moving energy law when
   `[m(1+T) + log(2m)/δ]/psi(M) → 0`. The uniform reciprocal source
   bound follows from the checked actual-zero sum.
+  For complex pairings, `criticalGramWeightedBudget_le_height_rows`
+  retains the actual inverse-gap rows. `criticalGramWeightedBudget_le_height_spacing`
+  and `growing_critical_gram_pairing_error_of_height_spacing`
+  separate the height loss on squared coefficient \(\ell^1\) mass from the
+  harmonic gap loss on squared coefficient \(\ell^2\) mass. The coefficients
+  include the critical-point norm factors.
+  `growing_phaseStripped_critical_gram_pairing_error_of_height`
+  gives a moving-family limit against the full logarithmic-window kernel
+  under the height and coefficient budget, including coincident ordinates.
+- `lcmError_sub_moving_remainder_psi_tendsto` transfers any moving
+  certificate law to the first-order difference between the actual LCM
+  error and its remainder. `lcm_moving_remainder_tendsto_limit`
+  identifies the unconditional projection limit of the remainder whenever
+  the selected certificate energies vanish. The value of that limit is Open.
 - [ParetoLCMRamanujanCertificate.lean](RH/ParetoLCMRamanujanCertificate.lean)
   proves `lcm_packet_inverse_zero_split`. On the complete divisor
   dictionary, `1 - Λᵀ H⁻¹ Λ` equals the compulsory multiples mass plus
