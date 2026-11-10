@@ -493,6 +493,7 @@ import RiemannResearch.Analysis.PrimeTorusPlancherel
 import RiemannResearch.Analysis.LogarithmicSampleNormalization
 import RiemannResearch.Analysis.ActualPrimeTorusPlancherel
 import RiemannResearch.Analysis.ActualPrimeTorusPlancherelRate
+import RiemannResearch.Analysis.PrimeBandlimitedWeil
 import RiemannResearch.RH.QInitialResponseImprovement
 import RiemannResearch.Analysis.OddReciprocalSquare
 import RiemannResearch.RH.QParitySmoothingEnergy

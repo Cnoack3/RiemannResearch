@@ -2,6 +2,22 @@
 
 28 October 2026. Continuation of [the FMZ catalog](THEOREM_CATALOG_FMZ_20261028.md).
 
+## Band-limited actual-zero Weil specialization
+
+- `Analysis/PrimeBandlimitedWeil.log_gap_nat` bounds the gap from a positive
+  integer logarithm by the reciprocal of that integer plus one.
+- `prime_sum_eq_resonance` retains both signs in the Weil prime sum and
+  removes all nonresonant terms for `n + 1 < T` and `m + 1 < T`.
+- `ratioWeight_eq` gives the smoothed coefficient `2 * Λ k / (k + 1)`.
+  `resonance_eq_zero_of_distinct_primes` makes the first-prime block vanish.
+- `actual_zero_sum_eq_resonance` applies the compact Weil formula to the
+  actual zeros with multiplicity, retaining the poles and the gamma integral.
+  Its test has support in the interval of radius `1 / T` about `log(n/m)`.
+
+The positive ordinate-smoothing representation, gamma-integral norm bound,
+sharp finite compression norm, and DPP consequences are analytic deductions
+outside the scope of this Lean module.
+
 ## Definitions and scope
 
 For a finite coordinate type and nonnegative weights ell, the native Fourier
