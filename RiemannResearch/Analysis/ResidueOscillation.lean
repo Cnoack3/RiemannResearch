@@ -77,4 +77,17 @@ theorem bound_of_uniform_approximation (f g : ℕ → ℝ) (L : ℕ) (ε : ℝ)
   simp only [sub_zero, zero_sub, abs_neg] at ht
   exact ht.trans (by linarith [he n, he m])
 
+/-- Only a cofinal physical head must be controlled at each stage.
+The residue modulus and numerical bound remain fixed. -/
+theorem bound_of_expanding_head_limit (F : ℕ → ℕ → ℝ) (f : ℕ → ℝ)
+    (L : ℕ) (C : ℝ) (H : ℕ → ℕ) (hH : Tendsto H atTop atTop)
+    (hlim : ∀ n, Tendsto (fun j => F j n) atTop (𝓝 (f n)))
+    (hb : ∀ j n m, 0 < n → 0 < m → n ≤ H j → m ≤ H j →
+      n % L = m % L → |F j n - F j m| ≤ C) : Bound f L C := by
+  intro n m hn hm hnm
+  apply le_of_tendsto (((hlim n).sub (hlim m)).abs)
+  filter_upwards [hH.eventually (eventually_ge_atTop n),
+    hH.eventually (eventually_ge_atTop m)] with j hjn hjm
+  exact hb j n m hn hm hjn hjm hnm
+
 end RiemannResearch.Analysis.ResidueOscillation
