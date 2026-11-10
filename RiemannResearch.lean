@@ -160,6 +160,7 @@ import RiemannResearch.RH.QRecursiveCarryDetection
 import RiemannResearch.RH.QRecursiveDigitBounds
 import RiemannResearch.RH.QTreeDigitMellin
 import RiemannResearch.RH.QInfiniteRecursiveCarry
+import RiemannResearch.RH.QInfiniteSquarefreeCarry
 import RiemannResearch.RH.QPrimeSubtreeBudget
 import RiemannResearch.RH.PrefixExpansion
 import RiemannResearch.RH.PrefixPruning

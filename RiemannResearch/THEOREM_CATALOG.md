@@ -1,5 +1,25 @@
 # Theorem catalog
 
+## Absolute Hilbert convergence of squarefree CRT carry paths
+
+- `RH/QInfiniteSquarefreeCarry.qCarry_telescope` gives the exact finite
+  signed synthesis identity with its terminal boundary.
+- `qParentTerm_norm_le` bounds that boundary geometrically.
+- `euclidChain_squarefree`, `euclidChain_q_expansion`, and
+  `euclidChain_pareto_expansion` construct the `D + 1` path from any
+  squarefree root and give the absolutely norm-summable identities in both
+  complete physical norms. `euclidChain_prime_norm_sq_le` gives the
+  explicit prime-term estimate.
+- `orderedChain_least_prime`, `orderedChain_squarefree`,
+  `orderedChain_q_expansion`, and `orderedChain_pareto_expansion` give the
+  corresponding path on the largest-prime deletion tree.
+- `euclidChain_projected_carry_sum` identifies the projected sum as the
+  projected root atom. `euclidChain_projected_carry_eq_zero_iff` gives
+  vanishing exactly at prime roots, and `composite_charge_projected_qResidue`
+  gives the charge `-1` at a composite root.
+
+Assembling these identities for the actual squarefree displacement is open.
+
 ## Full-conductor LCM zero-coordinate energy
 
 - `Analysis/FiniteWeightedResidual.energy_eq_fixedClass_add_certificate_add_remainder`
