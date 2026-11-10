@@ -75,15 +75,6 @@ theorem full_conductor_forcing (N m : ℕ) (hm : 0 < m) (hv : qResidue m ∈ sta
     ratioVector_sequence, toPareto_sequence]
   rfl
 
-theorem finitePResidual_mean (N : ℕ) :
-    inner ℝ hilbertOne (toPareto (qOne - finitePFit N)) =
-      ‖toPareto (qOne - finitePFit N)‖ ^ 2 := by
-  rw [finitePFit, toPareto_sub, toPareto_pFit, toPareto_qOne]
-  have h := Submodule.inner_right_of_mem_orthogonal
-    ((paretoStage N).starProjection_apply_mem hilbertOne)
-    (Submodule.sub_starProjection_mem_orthogonal (K := paretoStage N) hilbertOne)
-  rw [← real_inner_self_eq_norm_sq, inner_sub_left, h, sub_zero]
-
 private theorem defect_sequence (m : ℕ) :
     hilbertSequence (hilbertOne - ratioVector m) =
       fun k => zeroAnchor (fun _ => (1 : ℝ)) k - remRatio m k := by
@@ -124,21 +115,6 @@ private theorem defect_norm_sq_le (m : ℕ) (hm : 0 < m) :
   simpa only [zeroAnchor, hk, if_false, mul_one] using
     (mul_le_mul_of_nonneg_left hs' (positiveWeight_nonneg (k + m)))
 
-/-- The deficit is a full signed series with multiplier zero below the conductor. -/
-theorem full_conductor_forcing_deficit (N m : ℕ) (hm : 0 < m) (hv : qResidue m ∈ stage N) :
-    ‖toPareto (qOne - finitePFit N)‖ ^ 2 -
-      (zetaTwo * m) * inner ℝ (qResidue m) (finiteDisplacement N) =
-      ∑' k : ℕ, positiveWeight k *
-        ((1 - (((k % m : ℕ) : ℝ) / k)) * qSequence (qOne - finitePFit N) k) := by
-  have h := Submodule.inner_right_of_mem_orthogonal hv (finite_witness_mem_orthogonal N)
-  rw [inner_sub_right] at h
-  rw [← sub_eq_zero.mp h, full_forcing_pair m hm, ← finitePResidual_mean, ← inner_sub_left,
-    hilbert_inner_weighted, defect_sequence, toPareto_sequence]
-  unfold paretoInner
-  apply tsum_congr
-  intro k
-  by_cases hk : k = 0 <;> simp [hk, zeroAnchor, remRatio]
-
 private theorem defect_tail_pair (m : ℕ) (f : QHilbert) :
     inner ℝ (hilbertOne - ratioVector m) (toPareto f) =
       inner ℝ (hilbertOne - ratioVector m) (toPareto (tail (m - 1) f)) := by
@@ -156,20 +132,91 @@ private theorem defect_tail_pair (m : ℕ) (f : QHilbert) :
         rfl
       rw [hq]
 
+section MatchedProjection
+
+variable (S : Submodule ℝ QHilbert) (T : Submodule ℝ ThresholdHilbert)
+variable [S.HasOrthogonalProjection] [T.HasOrthogonalProjection]
+
+/-- The Pareto residual paired with the target gives its own squared norm. -/
+theorem matched_pResidual_mean :
+    inner ℝ hilbertOne (toPareto (qOne - pFit T qOne)) =
+      ‖toPareto (qOne - pFit T qOne)‖ ^ 2 := by
+  rw [toPareto_sub, toPareto_pFit, toPareto_qOne]
+  have h := Submodule.inner_right_of_mem_orthogonal
+    (T.starProjection_apply_mem hilbertOne)
+    (Submodule.sub_starProjection_mem_orthogonal (K := T) hilbertOne)
+  rw [← real_inner_self_eq_norm_sq, inner_sub_left, h, sub_zero]
+
+/-- A common test vector sees the displacement through the shifted reciprocal
+of the Pareto residual. The dictionaries need only share this test vector. -/
+theorem matched_displacement_pairing (v : QHilbert) (hv : v ∈ S)
+    (hvp : toPareto v ∈ T) :
+    inner ℝ v (qFit S qOne - pFit T qOne) =
+      inner ℝ v (B (qOne - pFit T qOne)) := by
+  have hq : inner ℝ v (qOne - qFit S qOne) = 0 :=
+    Submodule.inner_right_of_mem_orthogonal hv
+      (Submodule.sub_starProjection_mem_orthogonal (K := S) qOne)
+  have hp : inner ℝ (toPareto v) (toPareto (qOne - pFit T qOne)) = 0 := by
+    rw [toPareto_sub, toPareto_pFit]
+    exact Submodule.inner_right_of_mem_orthogonal hvp
+      (Submodule.sub_starProjection_mem_orthogonal (K := T) (toPareto qOne))
+  rw [pareto_inner_identity] at hp
+  have hp' := (mul_eq_zero.mp hp).resolve_left zetaTwo_pos.ne'
+  rw [inner_sub_right] at hq hp' ⊢
+  linarith only [hq, hp']
+
+/-- The complete signed forcing deficit for a conductor in both dictionaries. -/
+theorem matched_conductor_forcing_deficit (m : ℕ) (hm : 0 < m)
+    (hv : qResidue m ∈ S) (hvp : toPareto (qResidue m) ∈ T) :
+    ‖toPareto (qOne - pFit T qOne)‖ ^ 2 -
+      (zetaTwo * m) * inner ℝ (qResidue m) (qFit S qOne - pFit T qOne) =
+      ∑' k : ℕ, positiveWeight k *
+        ((1 - (((k % m : ℕ) : ℝ) / k)) * qSequence (qOne - pFit T qOne) k) := by
+  rw [matched_displacement_pairing S T _ hv hvp, full_forcing_pair m hm,
+    ← matched_pResidual_mean T, ← inner_sub_left, hilbert_inner_weighted,
+    defect_sequence, toPareto_sequence]
+  unfold paretoInner
+  apply tsum_congr
+  intro k
+  by_cases hk : k = 0 <;> simp [hk, zeroAnchor, remRatio]
+
+/-- Only the physical Pareto residual tail at and above the conductor enters
+the forcing error. This estimate is uniform in the choice of dictionaries. -/
+theorem matched_conductor_forcing_error (m : ℕ) (hm : 0 < m)
+    (hv : qResidue m ∈ S) (hvp : toPareto (qResidue m) ∈ T) :
+    |‖toPareto (qOne - pFit T qOne)‖ ^ 2 -
+      (zetaTwo * m) * inner ℝ (qResidue m) (qFit S qOne - pFit T qOne)| ≤
+      Real.sqrt (1 / (m : ℝ)) * ‖toPareto (tail (m - 1) (qOne - pFit T qOne))‖ := by
+  rw [matched_displacement_pairing S T _ hv hvp, full_forcing_pair m hm,
+    ← matched_pResidual_mean T, ← inner_sub_left, defect_tail_pair]
+  apply (abs_real_inner_le_norm _ _).trans
+  apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
+  exact (Real.le_sqrt (norm_nonneg _) (by positivity)).mpr (defect_norm_sq_le m hm)
+
+end MatchedProjection
+
+theorem finitePResidual_mean (N : ℕ) :
+    inner ℝ hilbertOne (toPareto (qOne - finitePFit N)) =
+      ‖toPareto (qOne - finitePFit N)‖ ^ 2 :=
+  matched_pResidual_mean (paretoStage N)
+
+/-- The deficit is a full signed series with multiplier zero below the conductor. -/
+theorem full_conductor_forcing_deficit (N m : ℕ) (hm : 0 < m) (hv : qResidue m ∈ stage N) :
+    ‖toPareto (qOne - finitePFit N)‖ ^ 2 -
+      (zetaTwo * m) * inner ℝ (qResidue m) (finiteDisplacement N) =
+      ∑' k : ℕ, positiveWeight k *
+        ((1 - (((k % m : ℕ) : ℝ) / k)) * qSequence (qOne - finitePFit N) k) :=
+  matched_conductor_forcing_deficit (stage N) (paretoStage N) m hm hv
+    ((toPareto_mem_paretoStage_iff N _).mpr hv)
+
 /-- Conductor-normalized right-hand sides approach the same squared Pareto
 residual norm. The output stage does not occur in the modulus of this estimate. -/
 theorem full_conductor_forcing_error (N m : ℕ) (hm : 0 < m) (hv : qResidue m ∈ stage N) :
     |‖toPareto (qOne - finitePFit N)‖ ^ 2 -
       (zetaTwo * m) * inner ℝ (qResidue m) (finiteDisplacement N)| ≤
-      Real.sqrt (1 / (m : ℝ)) * ‖toPareto (tail (m - 1) (qOne - finitePFit N))‖ := by
-  have h := Submodule.inner_right_of_mem_orthogonal hv (finite_witness_mem_orthogonal N)
-  rw [inner_sub_right] at h
-  rw [← sub_eq_zero.mp h, full_forcing_pair m hm, ← finitePResidual_mean,
-    ← inner_sub_left, defect_tail_pair]
-  apply (abs_real_inner_le_norm _ _).trans
-  apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
-  exact (Real.le_sqrt (norm_nonneg _) (by positivity)).mpr (defect_norm_sq_le m hm)
-
+      Real.sqrt (1 / (m : ℝ)) * ‖toPareto (tail (m - 1) (qOne - finitePFit N))‖ :=
+  matched_conductor_forcing_error (stage N) (paretoStage N) m hm hv
+    ((toPareto_mem_paretoStage_iff N _).mpr hv)
 
 /-- The signed defects for all conductors at once satisfy a Bessel bound.
 The proof uses the discrete dual Hardy inequality (E. T. Copson, J. London

@@ -1340,6 +1340,12 @@ import RiemannResearch.Analysis.CoordinateProjectionCriterion
 import RiemannResearch.RH.SquarefreeMobiusProjection
 import RiemannResearch.RH.QSquarefreeRelativeGain
 import RiemannResearch.RH.QSquarefreePrimorialCofinality
+import RiemannResearch.RH.QPrimorialMatchedDisplacement
+import RiemannResearch.RH.QPrimorialMatchedGram
+import RiemannResearch.RH.QPrimorialPrimeCarry
+import RiemannResearch.RH.QEuclidCarryRay
+import RiemannResearch.RH.QPrimorialRayAssembly
+import RiemannResearch.RH.QSquarefreeWitnessHead
 import RiemannResearch.Analysis.FiniteGramScreenedInverse
 import RiemannResearch.RH.QCovarianceScreening
 import RiemannResearch.RH.QSquarefreePrimePacket
