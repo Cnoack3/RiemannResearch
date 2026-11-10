@@ -5,7 +5,6 @@ import RiemannResearch.RH.ParetoBeurlingMellinObstruction
 import RiemannResearch.RH.ParetoResidueAtomTests
 import RiemannResearch.RH.MellinCriticalPoint
 import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 
 /-!
 # Moving microscopic certificates on the full LCM tower
@@ -46,15 +45,10 @@ theorem lcm_moving_certificate_tendsto_of_microscopic :
 theorem lcm_moving_remainder_tendsto_limit_of_microscopic :
     Tendsto (fun j => lcmRemainder (fun i => criticalPoint (γ j i)) (M j))
       atTop (𝓝 (‖hilbertOne -
-        normalizedResidueSpan.topologicalClosure.starProjection hilbertOne‖ ^ 2)) := by
-  have hc := lcm_moving_certificate_tendsto_of_microscopic κ M hM γ hγ hpos hz d hd hd' hrow
-  have hm := multiples_mass_tendsto_zero.comp (lcmResidueIndex_tendsto.comp hM)
-  have h := (lcmError_tendsto.comp hM).sub (hm.add hc)
-  simp only [Function.comp_def, zero_add, sub_zero] at h
-  refine h.congr (fun j => ?_)
-  rw [lcmError, lcm_best_error_eq (M j) (fun i => criticalPoint (γ j i))
-    (fun i => by simp) (fun i => criticalPoint_ne_one (γ j i)) (hz j)]
-  ring
+        normalizedResidueSpan.topologicalClosure.starProjection hilbertOne‖ ^ 2)) :=
+  lcm_moving_remainder_tendsto_limit κ (fun j i => criticalPoint (γ j i)) M hM
+    (fun _ _ => by simp) (fun j i => criticalPoint_ne_one (γ j i)) hz
+    (lcm_moving_certificate_tendsto_of_microscopic κ M hM γ hγ hpos hz d hd hd' hrow)
 
 /-- Only the complete remainder upper bound remains as a vanishing input. -/
 theorem riemannHypothesis_of_microscopic_remainder_upper
