@@ -1,6 +1,9 @@
+import RiemannResearch.RH.RealZetaNonvanishing
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 
 /-!
 # The continued zeta expression is not a global Hilbert Gram kernel
@@ -39,5 +42,22 @@ theorem no_global_zeta_gram :
   rintro ⟨Φ, hΦ⟩
   exact no_zeta_gram_on_domain_containing_zero (E := E) Set.univ (Set.mem_univ 0)
     ⟨Φ, fun s _ w _ => hΦ s w⟩
+
+/-- The unmodified meromorphic zeta kernel has a negative diagonal at every
+point with 0 < Re(s) < 1/2, even if RH is assumed. This strengthens the
+zero-point obstruction to the entire left half of the positive strip. -/
+theorem no_zeta_gram_on_domain_meeting_left_halfstrip
+    (D : Set ℂ) (s : ℂ) (hsD : s ∈ D)
+    (hs0 : 0 < s.re) (hs1 : s.re < 1 / 2) :
+    ¬ ∃ Φ : ℂ → E, ∀ z ∈ D, ∀ w ∈ D,
+      inner ℂ (Φ z) (Φ w) = riemannZeta (z + star w) := by
+  rintro ⟨Φ, hΦ⟩
+  have hp := gram_diagonal_re_nonneg Φ s
+  rw [hΦ s hsD s hsD] at hp
+  have he : s + star s = ((2 * s.re : ℝ) : ℂ) := by
+    apply Complex.ext <;> simp [Complex.star_def] <;> ring
+  rw [he] at hp
+  exact (not_lt_of_ge hp) (riemannZeta_ofReal_re_neg (2 * s.re)
+    (by linarith) (by linarith))
 
 end RiemannResearch.RH.ZetaKernel

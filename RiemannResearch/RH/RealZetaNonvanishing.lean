@@ -35,17 +35,18 @@ private theorem real_mellinFirst_term (σ : ℝ) (n : ℕ) :
       Complex.ofReal_natCast, Complex.ofReal_neg]
   rw [he, ← Complex.ofReal_mul, Complex.ofReal_re]
 
-/-- No positive real number away from the pole is a zeta zero. -/
-theorem riemannZeta_ofReal_ne_zero (σ : ℝ) (hσ : 0 < σ) (hσ1 : σ ≠ 1) :
-    riemannZeta (σ : ℂ) ≠ 0 := by
-  intro hz
+/-- The actual normalized conductor product has strictly positive real part
+on the positive real axis away from the pole. This retains the sign needed
+for the zeta-kernel continuation obstruction. -/
+theorem riemannZeta_ofReal_conductor_re_pos (σ : ℝ) (hσ : 0 < σ) (hσ1 : σ ≠ 1) :
+    0 < (((1 / (2 : ℂ) - (2 : ℂ) ^ (-(σ : ℂ))) * riemannZeta (σ : ℂ))).re := by
   have hσC1 : (σ : ℂ) ≠ 1 := by exact_mod_cast hσ1
   have hsumC := residueFraction_first_hasSum_zeta 2 (by norm_num)
     (σ : ℂ) hσ hσC1
-  rw [hz, mul_zero] at hsumC
   have hsum := Complex.reCLM.hasSum hsumC
   change HasSum (fun k : ℕ =>
-    (mellinFirst (σ : ℂ) (k + 1) * (residueFraction 2 (k + 1) : ℂ)).re) 0 at hsum
+    (mellinFirst (σ : ℂ) (k + 1) * (residueFraction 2 (k + 1) : ℂ)).re)
+    (((1 / (2 : ℂ) - (2 : ℂ) ^ (-(σ : ℂ))) * riemannZeta (σ : ℂ))).re at hsum
   simp only [real_mellinFirst_term] at hsum
   have hnonneg (k : ℕ) :
       0 ≤ (((k + 1 : ℕ) : ℝ) ^ (-σ) -
@@ -66,6 +67,32 @@ theorem riemannZeta_ofReal_ne_zero (σ : ℝ) (hσ : 0 < σ) (hσ1 : σ ≠ 1) :
     · norm_num [residueFraction]
   have hp := hsum.summable.tsum_pos hnonneg 0 hfirst
   rw [hsum.tsum_eq] at hp
+  exact hp
+
+/-- No positive real number away from the pole is a zeta zero. -/
+theorem riemannZeta_ofReal_ne_zero (σ : ℝ) (hσ : 0 < σ) (hσ1 : σ ≠ 1) :
+    riemannZeta (σ : ℂ) ≠ 0 := by
+  intro hz
+  have hp := riemannZeta_ofReal_conductor_re_pos σ hσ hσ1
+  simp only [hz, mul_zero, Complex.zero_re] at hp
   exact (lt_irrefl (0 : ℝ)) hp
+
+/-- The continued zeta value has strictly negative real part on (0,1).
+In particular this proves the negative diagonal obstruction in Section 5
+of the user-provided V_vector_space_RH.pdf without an RH premise. -/
+theorem riemannZeta_ofReal_re_neg (σ : ℝ) (hσ : 0 < σ) (hσ1 : σ < 1) :
+    (riemannZeta (σ : ℂ)).re < 0 := by
+  have hp := riemannZeta_ofReal_conductor_re_pos σ hσ (ne_of_lt hσ1)
+  have he : (1 / (2 : ℂ) - (2 : ℂ) ^ (-(σ : ℂ))) =
+      (((1 / 2 : ℝ) - (2 : ℝ) ^ (-σ) : ℝ) : ℂ) := by
+    push_cast
+    rw [Complex.ofReal_cpow (by norm_num : (0 : ℝ) ≤ 2)]
+    norm_num
+  rw [he, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero] at hp
+  have hpow : (1 / 2 : ℝ) < (2 : ℝ) ^ (-σ) := by
+    calc
+      (1 / 2 : ℝ) = (2 : ℝ) ^ (-1 : ℝ) := by norm_num
+      _ < _ := Real.rpow_lt_rpow_of_exponent_lt (by norm_num) (by linarith)
+  nlinarith
 
 end RiemannResearch.RH
