@@ -2,14 +2,46 @@
 
 Prepared 9 November 2026.
 
+## 11 November: formalized short-head localization
+
+Five new modules formalize the November 10 paper argument for the actual
+matched full-conductor divisor projections. The complete P and Q norms,
+all signed pairings, and the Schur subtraction are retained.
+
+- `Analysis/SublinearTailCutoff.lean`: exact floor/ceiling cutoff; positivity
+  for H>0; A(0)=0; A(H) tends to infinity; A(H)/H tends to zero; A(H)<=H
+  eventually; the normalized tail factor is at most sqrt(rho(floor(sqrt(H)))).
+- `RH/QMatchedResidualTails.lean`: the actual P residuals have norm at most
+  one and converge strongly. Their complete supremum tail envelope is
+  nonnegative, decreasing, at most one, and tends to zero.
+- `RH/QHighConductorSlope.lean`: high-conductor vectors have a linear
+  physical head, the projected evaluation difference has an exact slope
+  representation, and the slope energy is at most zeta(2)/H for H>0.
+- `RH/QMatchedShortHead.lean`: the sharp reciprocal tail norm estimate,
+  exact signed head/tail pairing, and zeta(2) sqrt(2) remainder bound.
+- `RH/QFullShortHeadLocalization.lean`: actual high divisor stages,
+  bounded high-head contribution, exact three-term split, arbitrary
+  moving-stage signed-tail convergence, and a conditional RH theorem.
+
+`riemannHypothesis_of_short_schur_bound` keeps the residualized short-head
+pairing as an explicit Open hypothesis. It only requires its bound eventually,
+on cofinal physical heads, at one fixed positive modulus.
+Neither the localization nor the slope estimate supplies that bound.
+
+See [the research review](ShortHeadLocalizationResearch20261111.md) and
+the accompanying `short_head_gram.py` for complete finite Gram experiments.
+These computations preserve cross terms but are not interval certificates.
+The proposed localization modules are checked separately from the unresolved
+arithmetic estimate. Verification evidence is retained with the review.
+
 ## 10 November: short physical head and high-conductor slope
 
 In `RH/QMatchedOscillationKernel.lean`, `screenReciprocal_sub`,
 `screenedPairKernel_raw_sub_split`, and `screenedPairKernel_split` preserve
 the exact signed decomposition of the screened kernel at any test head.
 
-The following localization and slope calculation are ordinary mathematical
-proofs, not formalized by those declarations. Let r_j be the actual matched
+At commit 29fa2567 the following argument was still paper-level; its
+formalization is listed above. Let r_j be the actual matched
 Pareto residual, K_j the Q-projected evaluation difference for n,m <= H,
 and rho(A) = sup_j ||1_{s>A} r_j||_P. Strong residual convergence gives
 rho(A) -> 0 by a finite-exception argument. The signed contribution from
