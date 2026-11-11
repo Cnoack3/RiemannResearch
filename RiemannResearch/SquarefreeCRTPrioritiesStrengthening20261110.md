@@ -259,3 +259,23 @@ defect theorem, exact gap, approximate-certificate RH consumer, normalized
 branch construction, and existing prime-anchor witness identity.
 The domain-specific bounds in conditional theorem types remain hypotheses;
 an axiom audit does not discharge those bounds.
+
+## Follow-up: explicit canonical upper endpoints
+
+The request to produce cofinal smallness, or the strongest available
+alternative, led to three additional modules:
+`QPrimorialResolvent`, `QPrimorialSchurEndpoints`, and
+`QPrimorialResidualCertificate`. The
+[endpoint research note](SquarefreeSchurEndpointCertificates20261110.md)
+records the definitions and complete verification evidence.
+
+The trial vectors and complete dual residual bounds are now supplied
+unconditionally by a specified finite Q resolvent iteration. The upper
+endpoint excess is bounded by
+`(966289/8136000)*zetaTwo*E_Q(n)*289^(-k)`, uniformly in the stage.
+An observed-iterate certificate gives another upper endpoint. Taking the
+minimum of the two supplies a finite bound on the limiting Pareto
+residual through the cubic inequality with constant `128000/1017`.
+
+Cofinal smallness of the endpoints themselves remains **Open**.
+The original Priority 1--5 arithmetic obligations are not marked solved.

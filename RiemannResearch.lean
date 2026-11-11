@@ -1381,6 +1381,9 @@ import RiemannResearch.RH.QPrimorialRayAssembly
 import RiemannResearch.RH.QPrimorialPairingRefinement
 import RiemannResearch.RH.QPrimorialSchurEnergy
 import RiemannResearch.RH.QPrimorialSchurCertificate
+import RiemannResearch.RH.QPrimorialResolvent
+import RiemannResearch.RH.QPrimorialSchurEndpoints
+import RiemannResearch.RH.QPrimorialResidualCertificate
 import RiemannResearch.RH.QPrimorialRayProjection
 import RiemannResearch.RH.QSquarefreeWitnessHead
 import RiemannResearch.Analysis.FiniteGramScreenedInverse

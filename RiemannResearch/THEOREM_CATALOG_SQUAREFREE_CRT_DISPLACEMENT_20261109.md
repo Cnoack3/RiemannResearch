@@ -88,3 +88,19 @@ maps all six priorities and records the exact new hypotheses.
 approximate-certificate upper endpoint, or witness tail product. None of
 the new boundary or positivity theorems is asserted to discharge these
 arithmetic obligations.
+
+## 10 November 2026: canonical certified endpoints
+
+See [the endpoint research note](SquarefreeSchurEndpointCertificates20261110.md).
+
+| Module | Main verified declarations | Content |
+| --- | --- | --- |
+| `QPrimorialResolvent` | `displacement_energy_exact`, `approx_error_sq`, `approx_successor_error_sq` | A Q-only finite primorial Chebyshev recursion; complete error bound `c E_Q(n) 289^(-k)`, `c=966289/8136000`; a posteriori squared error at most `||a_(k+1)-a_k||^2/256`. |
+| `QPrimorialSchurEndpoints` | `certified_interval`, `automatic_schur_residual`, `upper_excess_uniform_smallness`, `posteriorUpper_certified` | No assumed solve-accuracy provider. The canonical endpoint excess is uniformly small as solve depth increases. The endpoint itself is not proved to vanish. |
+| `QPrimorialResidualCertificate` | `schurForm_coercive_983_2000`, `limiting_pError_cube_le_certified`, `limiting_pError_le_tolerance` | Schur coercivity `1017*zetaTwo/2000`; each finite complete certificate bounds the limiting Pareto error by the explicit cubic inequality and stopping rule. |
+
+`diagonal_upper_tendsto_zero_iff` retains the equivalence of actual
+diagonal endpoint convergence to zero with `displacement=0`.
+`riemannHypothesis_of_cofinal_upper` remains conditional on cofinal
+smallness of those actual upper endpoints. This arithmetic condition is
+**Open**; uniform disappearance of the solve-error budget does not prove it.
