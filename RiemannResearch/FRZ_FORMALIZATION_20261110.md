@@ -247,6 +247,34 @@ quantitative theorem exposes actual S1 energy and individual mode providers.
 For the large-cutoff strategy, the sharp next target is a bound on the
 single combined signed defect D, together with the polynomial bias estimate.
 
+### November 11: combined signed defect investigation
+
+`Analysis/SpectralSignedTail.lean` adds ten finite and Hilbert-space declarations.
+For a coefficient truncation of Q, the combined defect is exactly the
+off-diagonal energy of Q−P, with weighted bound
+`|D| ≤ 26 Σ |a_i−c_i|²/δ_i`. The perturbation identity couples U−Q only
+to Q−P and keeps the mixed term signed.
+
+`Analysis/ActualSignedResidualPairing.lean` adds two declarations extracting
+an actual ordinate mode and bounding the actual-zero remainder by
+`[T(C−E_P)+D](T+26/δ)J₄`. Gamma, endpoints and analytic multiplicities
+are retained. These twelve declarations pass the focused Bazel file check
+recorded in [the investigation](FRZ_SIGNED_DEFECT_20261111.md).
+
+The note also derives an unconditional mathematical estimate
+`|D_X(T)| + ∫|S₁−P_X|² ≪_θ T/log T` for `X=T^θ`, `0<θ<1/5`.
+It combines Selberg's energy and zero-density estimates, actual-zero fifth
+moment sampling, product-fiber inequalities, and uniform Landau bounds.
+This analytic assembly is **not newly kernel-checked**. A pointwise-mode
+fallback and the exact additional signed estimate needed for `T/log² T`
+are documented separately. No literature-optimality claim is made.
+
+The estimate improves the direct S₁ remainder range to `Δ=o((log T)^(3/4))`,
+but does not beat the existing first-derivative/J₂ range and does not
+establish a complete growing-support or Montgomery asymptotic.
+Reproducible finite, prime-supported, synthetic-horizontal and low-height
+experiments accompany the review bundle described in the investigation.
+
 ## Section 8 Fourth: centered energy, common subsequences, regularity
 
 The actual energy measure is

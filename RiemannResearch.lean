@@ -40,6 +40,8 @@ import RiemannResearch.Analysis.RationalFrequencyHeightSeparation
 import RiemannResearch.Analysis.RationalModeHeightCompactness
 import RiemannResearch.Analysis.SpectralDerivativePairing
 import RiemannResearch.Analysis.SpectralResidualMeanSquare
+import RiemannResearch.Analysis.SpectralSignedTail
+import RiemannResearch.Analysis.ActualSignedResidualPairing
 import RiemannResearch.Analysis.SupportSensitiveEnergy
 import RiemannResearch.Analysis.WeightedFourierStrengthenedClasses
 import RiemannResearch.RH.RamanujanFRZHierarchy
