@@ -2,6 +2,13 @@
 
 7 November 2026 — continuation approved for publication after review.
 
+**11 November 2026 formalization update.** Section 3's actual screened
+coordinate assembly is now implemented in `QCRTScreenedCoordinates.lean`:
+complete physical Gram inverses, old/full/Schur difference-test inverses,
+screened source, canonical synthesis, and exact signed energy. See
+[the declaration and verification map](ScreenedCRTCoordinateAssembly20261111.md).
+The quantitative canonical growth and reciprocal-tail obligations remain open.
+
 **Conclusion.** The exact canonical source and nonsymmetric block equations can be derived without a canonical escape-energy assumption. They retain a newly visible old-leakage term and the signed old/new correlation. The existing bounds do not yet control the resulting canonical norm increase. A uniform summable-depth bound for the actual canonical sequence is neither proved nor refuted here. There is an explicit obstruction to obtaining it from periodicity, old-cell orthogonality, and small unnormalized divisor moments alone.
 
 ## 1. Definitions and provenance
