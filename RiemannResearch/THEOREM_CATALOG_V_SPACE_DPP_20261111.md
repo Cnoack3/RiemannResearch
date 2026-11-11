@@ -76,7 +76,36 @@ nonzero two-point repulsion. Merely increasing the number of sample vectors
 does not supply that spread. The inequality is necessary information, not a
 sufficient condition for a sine limit.
 
-The expression on the left is a two-site Gram determinant. For a **discrete
+`Analysis/PrimeProbeBudgetObstruction.lean` connects this directly to the
+existing FMZ moving-test criterion. For rational frequencies
+$q_j=\log(n_j/m_j)$, $n_j,m_j\ge1$, write
+$$
+W(n,m)=1+|\log n+\log m|,\qquad
+\mathcal M(b,n,m)=\sum_{j,k}b_jb_k
+ W(n_jm_k,m_jn_k)^2.
+$$
+This is the complete squared-height absolute budget for the displayed rational
+representation of the Fourier expansion of $|H|^2$. Lean proves
+$$
+2V_b(q)\le\mathcal M(b,n,m).
+$$
+It also proves, for varying finite families,
+$$
+\frac{\mathcal M(b_T,n_T,m_T)}{\log T}\longrightarrow0
+\quad\Longrightarrow\quad
+1-|H_T(u/\log T)|^2\longrightarrow0.
+$$
+The analogous single-mode budget theorem is included. The factor $2\pi$ in
+the usual zero-spacing scale is absorbed into the fixed parameter $u$.
+
+Thus the present sufficient absolute FMZ budget and a nondegenerate
+microscopic positive probe cannot be combined by merely enlarging support.
+The bound itself needs strengthening, for example through signed cancellation
+or a wider-band estimate. This obstruction requires neither RH nor Selberg
+density. It is not an impossibility theorem for other FMZ methods or for
+Montgomery's conjecture.
+
+For these normalized feature probes, $1-|H(t)|^2$ is a two-site Gram determinant. For a **discrete
 DPP**, the entire kernel also needs to be a positive contraction. A
 unit-diagonal correlation matrix is not automatically such a contraction.
 This distinction prevents interpreting the displayed minor as a probability
@@ -277,9 +306,12 @@ declaration's provider obligation.
 1. **Close the classical provider gap.** Formalize the Selberg-density input
    used by the actual-ordinate comparison; keep it distinct from a new
    pair-correlation estimate.
-2. **Design moving probes with sufficient bandwidth.** Use the new variance
-   obstruction before trying to extract a sine limit. Positive probes whose
-   frequency variance is $o((\log T)^2)$ cannot work at the desired scale.
+2. **Design moving probes and sharpen their remainder estimates together.**
+   Positive probes whose frequency variance is $o((\log T)^2)$ cannot work
+   at the desired scale. The new `rational_pair_budget_microscopic_repulsion_tendsto_zero`
+   proves that remaining within the present sufficient $o(\log T)$ absolute
+   FMZ budget forces precisely this degeneracy. More support within that
+   budget is insufficient; preserve cancellation or prove a wider-band rate.
 3. **Estimate the complete signed pair statistic.** Use the exact dual Gram
    and existing `MontgomeryFormFactor.shifted_probe` in `MontgomeryPrimeProbe.lean`; retain both diagonal
    and cross-prime terms. A fixed-support FMZ limit does not control a moving
@@ -312,6 +344,7 @@ New modules and their principal declarations:
 | `Analysis/FinitePolynomialResonance` | `resonancePolynomial_sample_energy_ge`, `no_uniform_one_prime_centered_upper_bound` |
 | `Analysis/ZetaDirichletKernel` | `feature_memℓp_iff`, `vector_inner`, `finite_gram_energy`, `dirichlet_series_bound` |
 | `Analysis/PrimeProbeMicroscopic` | `probeRepulsion_exact`, `probeRepulsion_le_variance`, `microscopic_repulsion_tendsto_zero` |
+| `Analysis/PrimeProbeBudgetObstruction` | `spectralVariance_eq_secondMoment_sub`, `two_mul_spectralVariance_le_rationalPairBudget`, `rational_pair_budget_microscopic_repulsion_tendsto_zero` |
 | `Analysis/PrimeProbeDualGram` | `gram_determinant_duality`, `gram_square_trace_duality`, `primeFeature_square_trace` |
 | `Probability/DeterminantalDiagonal` | `diagonalLaw_configuration`, `diagonalLaw_finite_ae`, `contractionDPP_configuration_tendsto_diagonal` |
 | `Probability/SampledCovarianceDPP` | `covariance_complement_posSemidef`, `law_isDPP`, `law_configuration_tendsto_diagonal` |
