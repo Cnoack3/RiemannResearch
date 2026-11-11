@@ -389,3 +389,34 @@ Primary references used for interpretation and proof strategy:
   https://arxiv.org/abs/2311.13441
 
 No priority or novelty claim is made for these mathematical consequences.
+
+## 8. Signed moving-test investigation (11 November 2026)
+
+See [FMZ_Signed_Microscopic_Investigation_20261111.md](FMZ_Signed_Microscopic_Investigation_20261111.md)
+for the positivity audit, explicit probe families, all Fourier corrections,
+published FMZ/FSZ range comparison, and a reproducible numerical experiment.
+
+New unconditional declarations:
+- `Analysis/RationalLandauMovingBand.eventually_rational_landau_error_power_band`
+  proves normalized complex-zero Landau error O(1/log T) on each fixed
+  numerator band n <= T^theta, 0 <= theta < 2/5, using the existing provider.
+- `Analysis/FejerSignedRemainder` retains the exact triangular signed sum,
+  bounds it by signed prefixes or their mean-square energy, and supplies
+  bounded-difference and alternating examples. Its exact square example
+  shows why linear cancellation does not control pair-square errors.
+- `Analysis/PrimeProbeExplicitFamilies` gives two-mode and three-mode
+  variance/repulsion identities, the exact two-mode rational budget, and
+  the failure of nonnegative variance/repulsion for signed spectral weights.
+- `Analysis/ActualFejerMovingFMZ.fejer_remainder_exact` and
+  `eventually_fejer_ordinate_remainder_le` retain the actual signed horizontal
+  prefixes and the complete unconditional Landau remainder.
+
+**Conditional research reduction:** `tendsto_fejer_ordinate_of_horizontal_prefix`
+has no RH or Selberg premise but requires averaged signed-horizontal-prefix
+smallness. Provider status: **Open**. Neither finite Gram duality nor a
+manufactured DPP supplies it. The actual pair-square and high-support
+signed additive prime-correlation estimates also remain **Open**.
+
+The stronger external prime-power band theta < 2 follows on paper from
+FMZ Lemma 1; it is not claimed as a newly formalized provider. Source
+publication is subject to the full-project Bazel/BuildBuddy checkpoint.
