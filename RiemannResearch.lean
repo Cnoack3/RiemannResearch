@@ -4121,3 +4121,7 @@ import RiemannResearch.Analysis.OddGapPrimeUniform
 import RiemannResearch.Analysis.CauchyWeightPerturbation
 import RiemannResearch.Analysis.ActualZeroBandCount
 import RiemannResearch.Analysis.MontgomeryHeightCutoff
+import RiemannResearch.Analysis.EvenGapPrimeReduction
+import RiemannResearch.Analysis.EvenGapPrimeAsymptotic
+import RiemannResearch.Analysis.EvenGapSingularModel
+import RiemannResearch.Analysis.ShortIntervalModelTransfer
