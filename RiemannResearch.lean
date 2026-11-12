@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.PeriodicWeightedTail
+import RiemannResearch.RH.QReciprocalSchurDescent
 import RiemannResearch.RH.QReciprocalFiniteCost
 import RiemannResearch.RH.QParetoCostTransfer
 import RiemannResearch.RH.QReciprocalCostCertificates
