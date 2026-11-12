@@ -1,10 +1,10 @@
-# Pareto-first research: Priority 1 review
+# Pareto-first research: Priorities 1–7
 
 Source: [Pareto First Projections and Transfer to Q Research Draft](https://chatgpt.com/space/page_899f440a0304819182638fe62685b02e), November 11, 2026, Priority 1 and its detailed acceptance criteria.
 
 Base inspected: `3895041bee07f30260e4eda17ce32371492a2403` in `Cnoack3/RiemannResearch`.
 
-Status: scoped Bazel verification passed. The user has now authorized automatic commits and pushes for Priorities 1–7. Each publication must still pass the complete server checkpoint. Priorities 2–7 remain subsequent work.
+Status: Priority 1 passed its full-project checkpoint and was pushed as `93bc04a3c33a85e88a85268e260f72f7c5a05e9d`. The user authorized automatic commits and pushes for Priorities 1–7. Each subsequent publication must pass its own server checkpoint.
 
 ## Physical-coordinate interface reused
 
@@ -81,8 +81,8 @@ The existing `LinearAlgebra.inner_residualized_eq_schur` and `finiteSchurResidua
 
 | Priority | Status after the Priority 1 package |
 | --- | --- |
-| 1. Transfer interface, finite annihilator, inverse bounds | Implemented; scoped Bazel check passed; full-project checkpoint and publication authorized. |
-| 2. Complete Gram and forcing certificates | Open; numerical tail/solve/rounding certificates not supplied by this package. |
+| 1. Transfer interface, finite annihilator, inverse bounds | Full-project verified and published as `93bc04a3`. |
+| 2. Complete Gram and forcing certificates | General complete-norm certification and two-solve error propagation implemented; two numerical stages externally audited. Kernel replay of these numerical instances remains open. |
 | 3. Actual signed arithmetic cancellation | Open; no cofinal vanishing of canonical forcing proved. |
 | 4. Cumulative carry gains | Open; representative invariance does not show energy exhaustion. |
 | 5. Actual Q-mean and middle-subspace coupling | Open; exact reciprocal obstruction retained. |
@@ -99,7 +99,7 @@ No density, RH, residual-vanishing, or forcing-vanishing premise is introduced i
 - Server-reported source-check duration: 63.82 seconds; this excludes earlier setup, proof iteration, and polling delays.
 - Scope: Four new Priority 1 modules, two edited supporting modules, existing isometric transport, and their transitive imports; not a full-project checkpoint.
 - [Build log](https://app.buildbuddy.io/invocation/13b5216a-210e-48ce-9206-58c346f21c29).
-- No commit or push has occurred. The publication checkpoint must validate the complete project and any integration with newer main before pushing.
+- Priority 1 full-project checkpoint: `job_DzGh2lmF3XTl7jQt5Mkntj_RqbQL7ayq`; succeeded, full scope, Bazel/BuildBuddy, 808.125 seconds build time; committed and pushed `93bc04a3c33a85e88a85268e260f72f7c5a05e9d`.
 
 Proposed commit message: `Formalize Pareto-first transfer bounds and joint-annihilator estimates`.
 
@@ -111,4 +111,38 @@ A second Bazel job compiled `#guard_msgs` assertions for the exact `#print axiom
 - Audit code SHA-256: `1807c7873245c642bc79fab5a50d39adeb531d8a81ced949d45ece9e61186c1e`.
 - [Guarded audit log](https://app.buildbuddy.io/invocation/2f3f8997-b612-4a1e-aa8d-08f0cd5a138a).
 
-Automatic commit and push authorization for Priorities 1–7 is retained. The next action is the complete server checkpoint for this Priority 1 package; Priority 2 follows after that checkpoint succeeds.
+Automatic commit and push authorization for Priorities 1–7 is retained.
+
+## Priority 2: complete forcing certificates
+
+New modules:
+- `Analysis/FiniteProjectionForcingCertificate.lean`: exact complete inverse-Gram projection energy; two-solve error propagation; the signed six-term backward budget; complete minimum-error intervals.
+- `Analysis/ParetoReciprocalTailCertificate.lean`: full Pareto tail at most C/(H+1), reciprocal-weighted tail at most C/(H+1)^2, and signed moment intervals. Existing periodic mean acceleration is reused.
+- `RH/QParetoPrimorialForcing.lean`: actual primorial dictionary, signed source z = d - J c_P, complete forcing energy z^T G_P^{-1} z, and certified endpoints with independent normal errors for both solves.
+
+For trial first-fit coefficients c and forcing coefficients t, the complete bound is
+
+$$
+\\|a-S t\\|_P\\leq
+\\sqrt{\\operatorname{defectEnergy}(D(1-S c),t)}
++\\sqrt{\\operatorname{defectEnergy}(1,c)}.
+$$
+
+The second source uses the trial residual, so the first solve error cannot be omitted. Each defect is measured using the actual complete inverse Gram. The backward-budget variant keeps solver residual, source error, Gram-action error, and all signed mixed terms.
+
+### External exact-rational finite-stage audit
+
+Reproduction source: the Python code block in `RH/ParetoFirstFiniteCertificates20261112.md` (NumPy proposes trial vectors; all acceptance arithmetic uses Python Fraction). Data: `RH/ParetoFirstFiniteCertificates20261112.json`.
+
+The executable checks positive rational LDL pivots for a finite-head Gram lower bound, the entire infinite periodic Pareto tail, the reciprocal tail, both full normal residuals, coefficient rounding, and a separate Q solve. Q errors below use the normalized Q measure; the script encloses zeta(2) before division. Serialized interval endpoints are rounded outward.
+
+| Primorial L | Dictionary | Physical head | Complete P error interval | Complete Q error interval | Forcing-energy upper bound |
+| --- | --- | --- | --- | --- | --- |
+| 6 | 2, 3, 6 | 600 | [0.07818878, 0.07840057] | [0.05469601, 0.05484008] | 0.000547537 |
+| 30 | 2, 3, 5, 6, 10, 15, 30 | 1800 | [0.03739645, 0.03757045] | [0.02534381, 0.02545630] | 0.000818519 |
+
+The full normal-residual intervals are recorded coordinate by coordinate in the JSON. The bounds on first-solve norm errors are 0.000408643 and 0.001114032; the second-solve bounds are 0.000041238 and 0.000070466.
+
+**Evidence boundary:** the general certificate theorems are Lean results. These two numerical instances are independently computed exact-rational external audits, not a kernel replay of the finite arithmetic and interval instances. No convergence, monotonicity of forcing energy, or cofinal smallness follows from this table. In particular, its second forcing endpoint is larger than the first.
+
+Priority 2 source verification and guarded axiom-audit job: `job_oDBEjIJk_lAKif0Bhf7MS8bOxVzn5VWX`; Bazel/BuildBuddy, verified=true, exit 0. Eight main declarations were guarded to require exactly propext, Classical.choice, and Quot.sound. [Audit log](https://app.buildbuddy.io/invocation/96bb1dd5-be23-4e47-a7a4-53226aa452f4). Full-project publication checkpoint follows.
