@@ -4,7 +4,7 @@ Source: [Pareto First Projections and Transfer to Q Research Draft](https://chat
 
 Base inspected: `3895041bee07f30260e4eda17ce32371492a2403` in `Cnoack3/RiemannResearch`.
 
-Status: Priorities 1–3 passed full-project checkpoints and were pushed separately. Priority 4 extends the scoped-verified development set with an actual optimized Schur block identity; its full-project publication checkpoint accompanies this update. Automatic commit and push authorization for Priorities 1–7 is retained.
+Status: Priorities 1–4 passed full-project checkpoints and were pushed separately. Priority 5 supplies the actual joint-annihilator mean bound and signed middle-block equation; its full-project publication checkpoint accompanies this update. Automatic commit and push authorization for Priorities 1–7 is retained.
 
 ## Physical-coordinate interface reused
 
@@ -85,7 +85,7 @@ The existing `LinearAlgebra.inner_residualized_eq_schur` and `finiteSchurResidua
 | 2. Complete Gram and forcing certificates | General complete-norm certification and two-solve error propagation implemented; two numerical stages externally audited. Kernel replay of these numerical instances remains open. |
 | 3. Actual signed arithmetic cancellation | Centered physical rows, exact variance remainder, and finite/cofinal endpoint consumers proved. The cofinal smallness provider remains open. |
 | 4. Cumulative carry gains | Exact optimized Schur block gain, nested-stage telescoping, and total gain proved. Exhaustion remains equivalent to the unresolved zero residual. |
-| 5. Actual Q-mean and middle-subspace coupling | Open; exact reciprocal obstruction retained. |
+| 5. Actual Q-mean and middle-subspace coupling | W–K reciprocal blocks vanish; quantitative Q-mean bound sqrt(1/7)/zeta(2) and exact actual middle-block equation proved. Q-mean zero and zero displacement remain open. |
 | 6. Finite-rank compactness error certificates | Subsequent work; no zero limiting input assumed. |
 | 7. Admissible limits and stage dependence | Subsequent work; operator series here is explicitly distinguished from prohibited fixed residue expansions. |
 
@@ -221,3 +221,30 @@ $$
 `exhaustion_iff_zero_residual` proves precisely that total gain equals the initial error if and only if the limiting residual vanishes. **Exhaustion is still open.** Nonnegative gains, positive gains at infinitely many stages, and representative changes do not prove it.
 
 Additional Schur/finite-rank development audit: `job_mV1SVIAOF935G4T2AEXpgHFIoRJuRNw9`; Bazel/BuildBuddy, verified=true, exit 0, 91.103 seconds. Eight guarded declarations passed, including the actual augmented Schur gain and the strengthened factor-64/finite-head bounds reserved for Priority 6. All guards require exactly propext, Classical.choice, and Quot.sound. Source SHA-256: `03f7a0435d613e3dc7fa54c8d0f8656508e6fba298a29b2388bc556d5f53e3aa`. [Audit log](https://app.buildbuddy.io/invocation/0f896f12-0284-46bd-afd9-e12f44a77666).
+
+## Priority 5: actual joint-annihilator pairing and middle block
+
+Modules: `RH/QParetoCenteredConstant.lean` and `RH/QParetoJointBlock.lean`.
+
+With K the actual intersection of V and both physical annihilators of W, the two orthogonalities imply <k,Dw>_P=0. Hence both the ordinary and reciprocal W-to-K projected blocks vanish. If W contains all prime atoms, P_K 1=P_K f_P=0.
+
+The remaining Q mean satisfies the exact centered identity and explicit bound
+
+$$
+\zeta(2)\langle1,k\rangle_Q=\langle D1-\alpha1,k\rangle_P,\qquad
+|\langle1,k\rangle_Q|
+\leq \frac{\sqrt{1/7}}{\zeta(2)}\|k\|_P.
+$$
+
+The improved constant is a **kernel-checked numerical instance**: `centered_constant_energy_le_seventh` proves ||D1-(2/3)1||_P squared <= 1/7 by thirty exact rational physical sites and a rigorous entire Pareto tail at most (4/9)/31. This is distinct from the externally audited stage matrices in Priority 2. No optimality of 1/7 is claimed.
+
+For the actual Q fit, write f_Q=w+k+u using the P-orthogonal projections onto W, K, and their remaining subspace U inside V. `middleComponent_mem` verifies that u belongs to that actual U, assuming W <= V. The normal equation gives
+
+$$
+k+P_KDk=P_KD1-P_KDu,\qquad
+\|k\|_P\leq\|P_KD1-P_KDu\|_P.
+$$
+
+`actual_K_displacement` proves k=P_K(f_Q-f_P). The entire signed middle-block coupling survives in this displacement bound. Q-mean zero, vanishing of the K displacement, and vanishing of all other displacement components remain unproved; none is inferred by symmetry.
+
+Priority 4 full-project checkpoint: `job_9to38YOA5igJQwIu0EQ0p5hg6xlIWF4L`; Bazel/BuildBuddy, full scope, 211.508 seconds build time; committed and pushed `235c49572aaad8886c4840ab23edb700cd74c637`.
