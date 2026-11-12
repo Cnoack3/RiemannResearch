@@ -244,4 +244,98 @@ theorem actual_middle_block_bound
     (actual_middle_block_equation V W hW S hsame)
 
 
+/-!
+## Meaning of K cancellation
+
+Source: user-requested explanation of K and its cancellation criterion,
+11 November 2026. The following statements formalize the explanation.
+The cancellation equality itself remains an Open arithmetic obligation.
+-/
+
+/-- The P projection onto K of the displacement between the physical Q and P fits. -/
+def kDisplacement [V.HasOrthogonalProjection]
+    (S : Submodule ℝ QHilbert) [S.HasOrthogonalProjection] : ThresholdHilbert :=
+  (jointAnnihilator V W).starProjection
+    (toPareto (S.starProjection qOne) - V.starProjection hilbertOne)
+
+/-- Full signed K forcing, including the actual middle component of the Q fit. -/
+def kForcing (S : Submodule ℝ QHilbert) [S.HasOrthogonalProjection] : ThresholdHilbert :=
+  (jointAnnihilator V W).starProjection (reciprocalD hilbertOne) -
+    (jointAnnihilator V W).starProjection
+      (reciprocalD (middleComponent V W (toPareto (S.starProjection qOne))))
+
+theorem kDisplacement_normal [V.HasOrthogonalProjection]
+    (S : Submodule ℝ QHilbert) [S.HasOrthogonalProjection]
+    (hsame : ∀ f : QHilbert, toPareto f ∈ V ↔ f ∈ S) :
+    kDisplacement V W S +
+      (jointAnnihilator V W).starProjection (reciprocalD (kDisplacement V W S)) =
+      kForcing V W S := by
+  simpa only [kDisplacement, actual_K_displacement V W hW S, kForcing] using
+    actual_middle_block_equation V W hW S hsame
+
+/-- Exact energy identity retains the nonnegative reciprocal energy. -/
+theorem kDisplacement_energy [V.HasOrthogonalProjection]
+    (S : Submodule ℝ QHilbert) [S.HasOrthogonalProjection]
+    (hsame : ∀ f : QHilbert, toPareto f ∈ V ↔ f ∈ S) :
+    ‖kDisplacement V W S‖ ^ 2 +
+      inner ℝ (kDisplacement V W S) (reciprocalD (kDisplacement V W S)) =
+      inner ℝ (kDisplacement V W S) (kForcing V W S) := by
+  have hd : kDisplacement V W S ∈ jointAnnihilator V W :=
+    (jointAnnihilator V W).starProjection_apply_mem _
+  have ho := Submodule.inner_right_of_mem_orthogonal hd
+    (Submodule.sub_starProjection_mem_orthogonal (K := jointAnnihilator V W)
+      (reciprocalD (kDisplacement V W S)))
+  rw [inner_sub_right] at ho
+  have hn := congrArg (fun z => inner ℝ (kDisplacement V W S) z)
+    (kDisplacement_normal V W hW S hsame)
+  rw [inner_add_right, real_inner_self_eq_norm_sq] at hn
+  linarith only [ho, hn]
+
+theorem kForcing_norm_bounds [V.HasOrthogonalProjection]
+    (S : Submodule ℝ QHilbert) [S.HasOrthogonalProjection]
+    (hsame : ∀ f : QHilbert, toPareto f ∈ V ↔ f ∈ S) :
+    ‖kDisplacement V W S‖ ≤ ‖kForcing V W S‖ ∧
+      ‖kForcing V W S‖ ≤ 2 * ‖kDisplacement V W S‖ := by
+  have he := kDisplacement_normal V W hW S hsame
+  exact ⟨displacement_le_forcing _ _ _
+    ((jointAnnihilator V W).starProjection_apply_mem _) he,
+    forcing_le_twice_displacement _ _ _ he⟩
+
+/-- Positivity makes zero K displacement equivalent to zero full signed forcing. -/
+theorem kDisplacement_eq_zero_iff_forcing_zero [V.HasOrthogonalProjection]
+    (S : Submodule ℝ QHilbert) [S.HasOrthogonalProjection]
+    (hsame : ∀ f : QHilbert, toPareto f ∈ V ↔ f ∈ S) :
+    kDisplacement V W S = 0 ↔ kForcing V W S = 0 := by
+  constructor
+  · intro hd
+    have h := kDisplacement_normal V W hW S hsame
+    simpa only [hd, map_zero, add_zero] using h.symm
+  · intro hf
+    have h := (kForcing_norm_bounds V W hW S hsame).1
+    rw [hf, norm_zero] at h
+    exact norm_eq_zero.mp (le_antisymm h (norm_nonneg _))
+
+/-- The precise cancellation criterion; this theorem does not assert the equality on the right. -/
+theorem kDisplacement_eq_zero_iff_cancellation [V.HasOrthogonalProjection]
+    (S : Submodule ℝ QHilbert) [S.HasOrthogonalProjection]
+    (hsame : ∀ f : QHilbert, toPareto f ∈ V ↔ f ∈ S) :
+    kDisplacement V W S = 0 ↔
+      (jointAnnihilator V W).starProjection (reciprocalD hilbertOne) =
+        (jointAnnihilator V W).starProjection
+          (reciprocalD (middleComponent V W (toPareto (S.starProjection qOne)))) := by
+  rw [kDisplacement_eq_zero_iff_forcing_zero V W hW S hsame, kForcing, sub_eq_zero]
+
+/-- Even if the Q mean vanishes on K, the actual middle term remains to be controlled. -/
+theorem kDisplacement_eq_zero_iff_middle_zero_of_qMean_zero [V.HasOrthogonalProjection]
+    (S : Submodule ℝ QHilbert) [S.HasOrthogonalProjection]
+    (hsame : ∀ f : QHilbert, toPareto f ∈ V ↔ f ∈ S)
+    (hQ : ∀ k ∈ jointAnnihilator V W, inner ℝ qOne (toQ k) = 0) :
+    kDisplacement V W S = 0 ↔
+      (jointAnnihilator V W).starProjection
+        (reciprocalD (middleComponent V W (toPareto (S.starProjection qOne)))) = 0 := by
+  have hzero := (joint_qMean_zero_iff_project_reciprocal_one_zero V W hW).mp hQ
+  rw [kDisplacement_eq_zero_iff_cancellation V W hW S hsame, hzero]
+  exact eq_comm
+
+
 end RiemannResearch.RH.QParetoJointBlock

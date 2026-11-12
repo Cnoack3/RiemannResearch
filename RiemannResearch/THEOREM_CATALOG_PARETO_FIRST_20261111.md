@@ -247,6 +247,30 @@ $$
 
 `actual_K_displacement` proves k=P_K(f_Q-f_P). The entire signed middle-block coupling survives in this displacement bound. Q-mean zero, vanishing of the K displacement, and vanishing of all other displacement components remain unproved; none is inferred by symmetry.
 
+### Explicit K-cancellation criterion
+
+The follow-up formalizes the explanation of K as the same physical annihilator under both measures. `mem_jointAnnihilator_iff` states membership using both quantified inner-product conditions. `joint_qMean_zero_iff_project_reciprocal_one_zero` proves that all Q means on K vanish if and only if P_K D1 = 0.
+
+In `QParetoJointBlock`, `kDisplacement` is P_K(f_Q-f_P), and `kForcing` is the full signed difference P_K D1 - P_K Du, with u the existing actual middle component. `kDisplacement_normal` and `kDisplacement_energy` give
+
+$
+d_K+P_KDd_K=F_K,\qquad
+\|d_K\|_P^2+\langle d_K,Dd_K\rangle_P=\langle d_K,F_K\rangle_P.
+$
+
+`kForcing_norm_bounds` gives ||d_K||_P <= ||F_K||_P <= 2||d_K||_P. The precise criterion, `kDisplacement_eq_zero_iff_cancellation`, is
+
+$
+d_K=0\quad\Longleftrightarrow\quad P_KD1=P_KDu.
+$
+
+`kDisplacement_eq_zero_iff_middle_zero_of_qMean_zero` separates the two questions: **assuming** Q-mean zero on K, zero K displacement is equivalent to P_K Du = 0. The statements use the same physical P/Q subspace, all prime tests in W, and the stated orthogonal projections. The existing `middleComponent_mem` places u in V intersect W-perp_P intersect K-perp_P when W is contained in V.
+
+These are established equivalences and quantitative identities. The actual cancellation equality and the Q-mean-zero premise remain **Open**. Only the K component is addressed; no vanishing of the entire displacement is asserted.
+
+
+Follow-up source and guarded axiom audit: `job_pccvukqD8-I-lZjWQ97PA4ntNAENBMUy`; Bazel/BuildBuddy, verified=true, exit 0, 62.502 seconds server-reported check time. Six selected declarations have exactly propext, Classical.choice, and Quot.sound as transitive axioms. Source SHA-256: `72912a9b504bd2fa06a691e01ad19ec209263c1de6d161f6d9b65360647cd8f8`. [Audit log](https://app.buildbuddy.io/invocation/2f6a9933-2da7-4316-a8e1-bec54f9d1398). This scoped check is followed by the full-project publication checkpoint.
+
 Priority 4 full-project checkpoint: `job_9to38YOA5igJQwIu0EQ0p5hg6xlIWF4L`; Bazel/BuildBuddy, full scope, 211.508 seconds build time; committed and pushed `235c49572aaad8886c4840ab23edb700cd74c637`.
 
 ## Priority 6: finite-rank forcing and inverse certificates

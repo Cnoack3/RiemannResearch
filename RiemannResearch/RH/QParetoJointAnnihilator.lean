@@ -170,4 +170,45 @@ theorem finite_prime_joint_projection_bound [IsClosed (V : Set ThresholdHilbert)
   apply joint_projection_norm_le V _ _ (hp _ (s.max'_mem hs)).pos
   exact Submodule.subset_span ⟨s.max' hs, s.max'_mem hs, rfl⟩
 
+/-- Membership means simultaneous orthogonality to the same physical prime-test space. -/
+theorem mem_jointAnnihilator_iff (k : ThresholdHilbert) :
+    k ∈ jointAnnihilator V W ↔
+      k ∈ V ∧
+      (∀ w ∈ W, inner ℝ (toPareto w) k = 0) ∧
+      (∀ w ∈ W, inner ℝ w (toQ k) = 0) := by
+  constructor
+  · intro hk
+    refine ⟨hk.1, ?_, ?_⟩
+    · intro w hw
+      exact Submodule.inner_right_of_mem_orthogonal
+        (show toPareto w ∈ W.map toParetoLinear from ⟨w, hw, rfl⟩) hk.2.1
+    · intro w hw
+      exact Submodule.inner_right_of_mem_orthogonal hw hk.2.2
+  · rintro ⟨hV, hP, hQ⟩
+    refine ⟨hV, ?_, ?_⟩
+    · apply (Submodule.mem_orthogonal _ _).mpr
+      intro w hw
+      obtain ⟨v, hv, rfl⟩ := hw
+      exact hP v hv
+    · change toQ k ∈ Wᗮ
+      exact (Submodule.mem_orthogonal W (toQ k)).mpr hQ
+
+/-- The whole K-space has Q-mean zero exactly when its reciprocal constant projection vanishes. -/
+theorem joint_qMean_zero_iff_project_reciprocal_one_zero
+    (hW : ∀ p : ℕ, p.Prime → qResidue p ∈ W) :
+    (∀ k ∈ jointAnnihilator V W, inner ℝ qOne (toQ k) = 0) ↔
+      (jointAnnihilator V W).starProjection (reciprocalD hilbertOne) = 0 := by
+  rw [Submodule.starProjection_apply_eq_zero_iff]
+  constructor
+  · intro h
+    apply (Submodule.mem_orthogonal _ _).mpr
+    intro k hk
+    rw [real_inner_comm]
+    exact (joint_qMean_zero_iff V W hW k hk).mp (h k hk)
+  · intro h k hk
+    apply (joint_qMean_zero_iff V W hW k hk).mpr
+    rw [real_inner_comm]
+    exact Submodule.inner_right_of_mem_orthogonal hk h
+
+
 end RiemannResearch.RH.QParetoJointAnnihilator
