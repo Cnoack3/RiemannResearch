@@ -1234,6 +1234,11 @@ import RiemannResearch.RH.QParetoEquivalence
 import RiemannResearch.RH.QDensityMetric
 import RiemannResearch.RH.QDensityAugmentedSpan
 import RiemannResearch.RH.QDensitySquarefreeObstruction
+import RiemannResearch.RH.QReciprocalFullDensity
+import RiemannResearch.RH.QReciprocalSieveNorm
+import RiemannResearch.RH.QReciprocalSpanObstruction
+import RiemannResearch.RH.QReciprocalTargetLift
+import RiemannResearch.RH.QReciprocalDensityClassification
 import RiemannResearch.RH.QParetoMetric
 import RiemannResearch.RH.QMetricApproximateHeads
 import RiemannResearch.RH.QParetoGramComparison
