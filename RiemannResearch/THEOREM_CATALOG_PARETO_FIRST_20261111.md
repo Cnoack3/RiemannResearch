@@ -4,7 +4,7 @@ Source: [Pareto First Projections and Transfer to Q Research Draft](https://chat
 
 Base inspected: `3895041bee07f30260e4eda17ce32371492a2403` in `Cnoack3/RiemannResearch`.
 
-Status: Priorities 1–5 passed full-project checkpoints and were pushed separately. Priority 6 supplies exact finite-rank errors and a sharper residual detector; its full-project publication checkpoint accompanies this update. Automatic commit and push authorization for Priorities 1–7 is retained.
+Status: Priorities 1–6 passed full-project checkpoints and were pushed separately. Priority 7 supplies admissible moving CRT limits and complete tail identities; its full-project publication checkpoint accompanies this update. Automatic commit and push authorization for Priorities 1–7 is retained.
 
 ## Physical-coordinate interface reused
 
@@ -87,7 +87,7 @@ The existing `LinearAlgebra.inner_residualized_eq_schur` and `finiteSchurResidua
 | 4. Cumulative carry gains | Exact optimized Schur block gain, nested-stage telescoping, and total gain proved. Exhaustion remains equivalent to the unresolved zero residual. |
 | 5. Actual Q-mean and middle-subspace coupling | W–K reciprocal blocks vanish; quantitative Q-mean bound sqrt(1/7)/zeta(2) and exact actual middle-block equation proved. Q-mean zero and zero displacement remain open. |
 | 6. Finite-rank compactness error certificates | Exact tail operator norm, complete inverse budget, and factor-64 residual detector proved. No vanishing arithmetic head estimate supplied. |
-| 7. Admissible limits and stage dependence | Subsequent work; operator series here is explicitly distinguished from prohibited fixed residue expansions. |
+| 7. Admissible limits and stage dependence | Complete P/Q norm limits of actual moving finite blocks and the fixed unordered-series obstruction proved. Convergence to 1 and separate block convergence are not presumed. |
 
 No density, RH, residual-vanishing, or forcing-vanishing premise is introduced into the unconditional structural results. The same-physical-subspace hypothesis in matched projection theorems is explicit. Standard projection-existence/closedness assumptions are functional-analytic assumptions, not unresolved arithmetic providers.
 
@@ -295,3 +295,48 @@ $$
 The displayed finite-head hypothesis remains explicit. No vanishing head estimate or cofinal decay is claimed.
 
 Priority 5 full-project checkpoint: `job_NcRAFdxYe0ZIfmpe4wfUO_ZPv5GOClak`; Bazel/BuildBuddy, full scope, 193.784 seconds build time; committed and pushed `12d77248eb707de4c07bd4abf60b779ab3826a2c`. [Full-build log](https://app.buildbuddy.io/invocation/dc247cb2-f6bf-459f-8eb9-ed26b67e9feb).
+
+## Priority 7: admissible stage-dependent CRT limits
+
+Module: `RH/QParetoAdmissibleLimits.lean`.
+
+`primeBlock` and `carryBlock` use the actual finite primorial divisor dictionary and its current Pareto coefficient vector at every stage. Their exact signed difference is the physical Pareto optimizer.
+
+The ordered sequence of these finite differences converges in the **complete Q norm** to the physical Pareto projection, and after physical identification it converges in the **complete P norm** to P_V 1. The finite exact identity is transported without discarding any carry.
+
+`pareto_block_target_iff` shows convergence to 1 is exactly the still unresolved target membership 1 in V. Separate prime and carry convergence is not presumed: if both limits are supplied, their difference is the projection; if a prime-block limit is supplied, convergence of the difference supplies the carry-block limit.
+
+`no_fixed_unordered_pareto_target` transfers the existing Q obstruction through the bounded physical map: no fixed unordered residue series can sum to 1 in the P norm. This also excludes an absolutely norm-summable such series. It does not exclude the proved stage-dependent finite-block convergence to the projection.
+
+**Explicit complete tails:** for m >= n, the P norm squared of the finite-block difference is epsilon_n - epsilon_m. The P norm squared of the error to the actual limiting projection is exactly epsilon_n - epsilon_infinity. The Q norm squared of that same physical error is at most (2/zeta(2)) times this difference. These are proved as `finite_block_tail_energy`, `complete_block_tail_energy`, and `complete_q_block_tail_bound`.
+
+No quantitative arithmetic stage-convergence rate is claimed. Complete-site truncation errors are supplied separately by Priority 6; separate unordered CRT limits cannot be introduced merely by rearrangement.
+
+
+Priority 7 source and guarded axiom audit: `job_ukd0uj5e6MgN-51kcP0S3Fej2L5K2t9S`; Bazel/BuildBuddy, verified=true, exit 0, 67.986 seconds. Six main declarations, including all three new complete-tail statements, have exactly propext, Classical.choice, and Quot.sound as their transitive axioms. Source SHA-256: `2625be10d233ca277e142a2a4dffa69aa76f5309bd7e5ac78eef995927a85d05`. [Audit log](https://app.buildbuddy.io/invocation/23289615-ea52-416d-9cab-e3132ff67f93).
+
+## Remaining obligations after the seven research packages
+
+- **Central arithmetic provider:** cofinal smallness of the actual complete forcing endpoints, or an appropriate uniform finite-head estimate with the complete tail included. The finite computations and centered identities do not prove this.
+- **Equivalent energy target:** exhaustion of the initial residual energy by the nested gains. The exact total-gain identity retains the limiting residual.
+- **Actual K question:** Q-mean zero and the signed middle-block cancellation are not proved. The package provides a quantitative pairing bound and the actual displacement equation.
+- **Numerical validation boundary:** the two larger finite-stage matrix instances remain external exact-rational audits. Their general complete-energy certificate machinery and the separate thirty-site constant are kernel checked.
+- **Admissible convergence:** the moving legal finite blocks converge to the projection. Convergence to 1 still requires target membership; separate prime/carry convergence is not assumed.
+
+These packages prove structural identities, quantitative bounds, finite certificates, and conditional consumers. They do not establish RH.
+
+Priority 6 full-project checkpoint: `job_Vbll74kFBRmGKMAP8LSLOpt2nsZn7F-y`; Bazel/BuildBuddy, full scope, 197.173 seconds build time; committed and pushed `696cf418857df126c7ae61cb3c4fa86ec0ac64d7`. [Full-build log](https://app.buildbuddy.io/invocation/1c294dfc-3dfa-4596-b3d2-0b2b0dc5583a).
+
+## Publication ledger
+
+Each listed publication passed a separate full-project Bazel/BuildBuddy checkpoint before push.
+
+| Priority | Commit | Full-project checkpoint |
+| --- | --- | --- |
+| 1 | [93bc04a3](https://github.com/Cnoack3/RiemannResearch/commit/93bc04a3c33a85e88a85268e260f72f7c5a05e9d) | `job_DzGh2lmF3XTl7jQt5Mkntj_RqbQL7ayq` |
+| 2 | [6dfdbdda](https://github.com/Cnoack3/RiemannResearch/commit/6dfdbdda76bec448ccc8c316d41d2d1fa64c4870) | `job_LggsO6XZGrR-Mj91NL6e5zShNd6YMF19` |
+| 3 | [b9f26781](https://github.com/Cnoack3/RiemannResearch/commit/b9f2678112e8daf66bc763c0d3ae65e6f5c48e46) | `job_R8prNdfQLOlWHEz3Brz26iOv4ohNtdVp` |
+| 4 | [235c4957](https://github.com/Cnoack3/RiemannResearch/commit/235c49572aaad8886c4840ab23edb700cd74c637) | `job_9to38YOA5igJQwIu0EQ0p5hg6xlIWF4L` |
+| 5 | [12d77248](https://github.com/Cnoack3/RiemannResearch/commit/12d77248eb707de4c07bd4abf60b779ab3826a2c) | `job_NcRAFdxYe0ZIfmpe4wfUO_ZPv5GOClak` |
+| 6 | [696cf418](https://github.com/Cnoack3/RiemannResearch/commit/696cf418857df126c7ae61cb3c4fa86ec0ac64d7) | `job_Vbll74kFBRmGKMAP8LSLOpt2nsZn7F-y` |
+| 7 | This update | The server publication checkpoint validates this exact source before committing and pushing. |
