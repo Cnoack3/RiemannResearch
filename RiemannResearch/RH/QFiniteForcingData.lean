@@ -115,7 +115,7 @@ theorem ratioVector_error_norm_sq_le (m : ℕ) (hm : 0 < m) :
   simpa only [zeroAnchor, hk, if_false, mul_one] using
     (mul_le_mul_of_nonneg_left hs' (positiveWeight_nonneg (k + m)))
 
-private theorem defect_tail_pair (m : ℕ) (f : QHilbert) :
+theorem defect_tail_pair (m : ℕ) (f : QHilbert) :
     inner ℝ (hilbertOne - ratioVector m) (toPareto f) =
       inner ℝ (hilbertOne - ratioVector m) (toPareto (tail (m - 1) f)) := by
   simp only [hilbert_inner_weighted, toPareto_sequence, paretoInner]
