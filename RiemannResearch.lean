@@ -4187,3 +4187,6 @@ import RiemannResearch.Analysis.PrimeProbeFramePotential
 import RiemannResearch.Analysis.ThreePointGram
 import RiemannResearch.Probability.DeterminantalThreePoint
 import RiemannResearch.Probability.ZeroOrdinateProjectionDPP
+import RiemannResearch.Probability.DeterminantalPairTransfer
+import RiemannResearch.Probability.ZeroOrdinateInfiniteDPP
+import RiemannResearch.Analysis.PairVacancyMoment
