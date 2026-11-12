@@ -1,10 +1,10 @@
 # Pareto-first research: Priorities 1–7
 
-Source: [Pareto First Projections and Transfer to Q Research Draft](https://chatgpt.com/space/page_899f440a0304819182638fe62685b02e), November 11, 2026, Priority 1 and its detailed acceptance criteria.
+Source: [Pareto First Projections and Transfer to Q Research Draft](https://chatgpt.com/space/page_899f440a0304819182638fe62685b02e), November 11, 2026, research priorities 1–7 and their detailed acceptance criteria.
 
 Base inspected: `3895041bee07f30260e4eda17ce32371492a2403` in `Cnoack3/RiemannResearch`.
 
-Status: Priority 1 passed its full-project checkpoint and was pushed as `93bc04a3c33a85e88a85268e260f72f7c5a05e9d`. The user authorized automatic commits and pushes for Priorities 1–7. Each subsequent publication must pass its own server checkpoint.
+Status: Priorities 1 and 2 passed full-project checkpoints and were pushed as `93bc04a3` and `6dfdbdda`. Priority 3 has passed the scoped source check; its full-project publication checkpoint accompanies this update. The user authorized automatic commits and pushes for Priorities 1–7. Each subsequent publication must pass its own server checkpoint.
 
 ## Physical-coordinate interface reused
 
@@ -79,11 +79,11 @@ The existing `LinearAlgebra.inner_residualized_eq_schur` and `finiteSchurResidua
 
 ## Unresolved research obligations
 
-| Priority | Status after the Priority 1 package |
+| Priority | Current status |
 | --- | --- |
 | 1. Transfer interface, finite annihilator, inverse bounds | Full-project verified and published as `93bc04a3`. |
 | 2. Complete Gram and forcing certificates | General complete-norm certification and two-solve error propagation implemented; two numerical stages externally audited. Kernel replay of these numerical instances remains open. |
-| 3. Actual signed arithmetic cancellation | Open; no cofinal vanishing of canonical forcing proved. |
+| 3. Actual signed arithmetic cancellation | Centered physical rows, exact variance remainder, and finite/cofinal endpoint consumers proved. The cofinal smallness provider remains open. |
 | 4. Cumulative carry gains | Open; representative invariance does not show energy exhaustion. |
 | 5. Actual Q-mean and middle-subspace coupling | Open; exact reciprocal obstruction retained. |
 | 6. Finite-rank compactness error certificates | Subsequent work; no zero limiting input assumed. |
@@ -123,9 +123,9 @@ New modules:
 For trial first-fit coefficients c and forcing coefficients t, the complete bound is
 
 $$
-\\|a-S t\\|_P\\leq
-\\sqrt{\\operatorname{defectEnergy}(D(1-S c),t)}
-+\\sqrt{\\operatorname{defectEnergy}(1,c)}.
+\|a-S t\|_P\leq
+\sqrt{\operatorname{defectEnergy}(D(1-S c),t)}
++\sqrt{\operatorname{defectEnergy}(1,c)}.
 $$
 
 The second source uses the trial residual, so the first solve error cannot be omitted. Each defect is measured using the actual complete inverse Gram. The backward-budget variant keeps solver residual, source error, Gram-action error, and all signed mixed terms.
@@ -145,4 +145,50 @@ The full normal-residual intervals are recorded coordinate by coordinate in the 
 
 **Evidence boundary:** the general certificate theorems are Lean results. These two numerical instances are independently computed exact-rational external audits, not a kernel replay of the finite arithmetic and interval instances. No convergence, monotonicity of forcing energy, or cofinal smallness follows from this table. In particular, its second forcing endpoint is larger than the first.
 
-Priority 2 source verification and guarded axiom-audit job: `job_oDBEjIJk_lAKif0Bhf7MS8bOxVzn5VWX`; Bazel/BuildBuddy, verified=true, exit 0. Eight main declarations were guarded to require exactly propext, Classical.choice, and Quot.sound. [Audit log](https://app.buildbuddy.io/invocation/96bb1dd5-be23-4e47-a7a4-53226aa452f4). Full-project publication checkpoint follows.
+Priority 2 source verification and guarded axiom-audit job: `job_oDBEjIJk_lAKif0Bhf7MS8bOxVzn5VWX`; Bazel/BuildBuddy, verified=true, exit 0. Eight main declarations were guarded to require exactly propext, Classical.choice, and Quot.sound. [Audit log](https://app.buildbuddy.io/invocation/96bb1dd5-be23-4e47-a7a4-53226aa452f4). Full-project checkpoint `job_LggsO6XZGrR-Mj91NL6e5zShNd6YMF19` passed (Bazel/BuildBuddy, 181.012 seconds build time) and pushed `6dfdbdda76bec448ccc8c316d41d2d1fa64c4870`.
+
+## Priority 3: actual signed forcing and sharper endpoint consumers
+
+Module: `RH/QParetoCenteredForcing.lean`.
+
+For a residual r orthogonal to the projected subspace, scalar centering leaves the projected forcing unchanged. `centered_energy_identity` retains the exact nonnegative remainder:
+
+$$
+\|\Pi D r\|_P^2+\|Dr-\alpha r-\Pi Dr\|_P^2
+=\|Dr\|_P^2-2\alpha\langle r,Dr\rangle_P+\alpha^2\|r\|_P^2.
+$$
+
+`variance_bound` optimizes the scalar and is also valid at zero residual (Lean's division by zero convention gives the correct zero case). It gives
+
+$$
+\eta^2\leq \nu-\mu^2/\varepsilon,\qquad
+\varepsilon=\|r\|_P^2,\quad \mu=\langle r,Dr\rangle_P,\quad \nu=\|Dr\|_P^2.
+$$
+
+The universal consequence is eta squared <= epsilon/4. The actual canonical theorem `actual_rhs_centered_physical` proves the complete signed physical sum, with the normal-row cancellation applied before any absolute estimate:
+
+$$
+z_i=\sum_{k\geq1}P(k)g_{m_i}(k)(1/k-\alpha)r_n(k).
+$$
+
+`actual_moment_endpoint` accepts separate complete upper endpoints for epsilon and nu and a lower endpoint for mu; no head-only moment is substituted. `actual_forcing_tendsto` proves convergence to the projection of D applied to the actual limiting residual. It does not replace that limit with zero.
+
+A finite complete forcing endpoint U gives the stronger residual detector
+
+$$
+\varepsilon_n^3\leq
+\max\{(8/(n+3))^3,\;128\eta_n^2\},\qquad
+\varepsilon_\infty^3\leq
+\max\{(8/(n+3))^3,\;128U\}.
+$$
+
+`residual_zero_of_cofinal_forcing_endpoints` is a conditional consumer: if N tends cofinally to infinity, U tends to zero, and every actual forcing energy at N(j) is at most U(j), then the physical Pareto residual vanishes. The essential signed arithmetic estimate constructing such endpoints remains **open**. No cofinal decay or RH conclusion is claimed from the finite numerical data.
+
+
+### Common source and axiom evidence for the Priority 3–7 development set
+
+The combined development source passed Bazel/BuildBuddy in `job_Xd6p5DS7OPn8awfjtFbrlbyjoIgN0UHq` (verified=true, exit 0, 76.496 seconds). [Source log](https://app.buildbuddy.io/invocation/da1ad0f3-efd2-4888-8d6c-7fdbc9455c96).
+
+A separate guarded audit passed in `job_Xd2fRI_TxL0fC5NI5gws4ZvXqn5GpCQi` (verified=true, exit 0, 66.083 seconds). Twenty selected main declarations from priorities 3–7 have exactly the transitive axioms propext, Classical.choice, and Quot.sound. [Guarded audit log](https://app.buildbuddy.io/invocation/cd111c61-908c-41fe-a610-8a731f14569e). Audit source SHA-256: `3bb563b6c3be009222ad6abe53894c1c15eeaa98a2e120eadb2b62df9f1cabd8`.
+
+The combined check is a scoped development check, not a replacement for each priority's separate full-project checkpoint. Future-priority modules enter the repository only in their own subsequent commit.
