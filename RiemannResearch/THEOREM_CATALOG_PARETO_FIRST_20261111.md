@@ -4,7 +4,7 @@ Source: [Pareto First Projections and Transfer to Q Research Draft](https://chat
 
 Base inspected: `3895041bee07f30260e4eda17ce32371492a2403` in `Cnoack3/RiemannResearch`.
 
-Status: Priorities 1–4 passed full-project checkpoints and were pushed separately. Priority 5 supplies the actual joint-annihilator mean bound and signed middle-block equation; its full-project publication checkpoint accompanies this update. Automatic commit and push authorization for Priorities 1–7 is retained.
+Status: Priorities 1–5 passed full-project checkpoints and were pushed separately. Priority 6 supplies exact finite-rank errors and a sharper residual detector; its full-project publication checkpoint accompanies this update. Automatic commit and push authorization for Priorities 1–7 is retained.
 
 ## Physical-coordinate interface reused
 
@@ -86,7 +86,7 @@ The existing `LinearAlgebra.inner_residualized_eq_schur` and `finiteSchurResidua
 | 3. Actual signed arithmetic cancellation | Centered physical rows, exact variance remainder, and finite/cofinal endpoint consumers proved. The cofinal smallness provider remains open. |
 | 4. Cumulative carry gains | Exact optimized Schur block gain, nested-stage telescoping, and total gain proved. Exhaustion remains equivalent to the unresolved zero residual. |
 | 5. Actual Q-mean and middle-subspace coupling | W–K reciprocal blocks vanish; quantitative Q-mean bound sqrt(1/7)/zeta(2) and exact actual middle-block equation proved. Q-mean zero and zero displacement remain open. |
-| 6. Finite-rank compactness error certificates | Subsequent work; no zero limiting input assumed. |
+| 6. Finite-rank compactness error certificates | Exact tail operator norm, complete inverse budget, and factor-64 residual detector proved. No vanishing arithmetic head estimate supplied. |
 | 7. Admissible limits and stage dependence | Subsequent work; operator series here is explicitly distinguished from prohibited fixed residue expansions. |
 
 No density, RH, residual-vanishing, or forcing-vanishing premise is introduced into the unconditional structural results. The same-physical-subspace hypothesis in matched projection theorems is explicit. Standard projection-existence/closedness assumptions are functional-analytic assumptions, not unresolved arithmetic providers.
@@ -173,7 +173,7 @@ $$
 
 `actual_moment_endpoint` accepts separate complete upper endpoints for epsilon and nu and a lower endpoint for mu; no head-only moment is substituted. `actual_forcing_tendsto` proves convergence to the projection of D applied to the actual limiting residual. It does not replace that limit with zero.
 
-A finite complete forcing endpoint U gives the stronger residual detector
+A finite complete forcing endpoint U gives the following residual detector (Priority 6 below subsequently sharpens the factor 128 to 64)
 
 $$
 \varepsilon_n^3\leq
@@ -248,3 +248,50 @@ $$
 `actual_K_displacement` proves k=P_K(f_Q-f_P). The entire signed middle-block coupling survives in this displacement bound. Q-mean zero, vanishing of the K displacement, and vanishing of all other displacement components remain unproved; none is inferred by symmetry.
 
 Priority 4 full-project checkpoint: `job_9to38YOA5igJQwIu0EQ0p5hg6xlIWF4L`; Bazel/BuildBuddy, full scope, 211.508 seconds build time; committed and pushed `235c49572aaad8886c4840ab23edb700cd74c637`.
+
+## Priority 6: finite-rank forcing and inverse certificates
+
+Module: `RH/QParetoFiniteRankForcing.lean`.
+
+The cutoff D_H retains physical sites 1 through H. Its explicit finite coordinate synthesis is proved, and the first omitted coordinate attains the exact complete operator error:
+
+$$
+\|D-D_H\|=\frac1{H+1},\qquad
+\|\Pi Dr-\Pi D_Hr\|_P\leq\frac{\|r\|_P}{H+1}.
+$$
+
+The operator-norm convergence and compactness of D are derived from these finite-rank operators. The inverse correction is Lipschitz with constant one on the projected subspace, so the same truncation error is not amplified.
+
+For a finite approximation b inside the subspace, with certified finite forcing error delta, and N rescaled inverse iterations, `complete_inverse_budget` proves
+
+$$
+\|(I+\Pi D)^{-1}\Pi Dr-d^{(N)}(b)\|_P
+\leq \frac{\|r\|_P}{H+1}+\delta+3^{-N}\|b\|_P.
+$$
+
+The matched and actual primorial versions identify the left side with the physical Q/P displacement error. At every primorial stage the residual norm is at most one, giving the uniform tail cost 1/(H+1).
+
+This is a complete-norm error budget. Neither a zero limiting forcing nor a vanishing canonical head is assumed or deduced from compactness. Selection of H as a function of stage still requires the relevant arithmetic head estimate.
+
+### Sharper normalized Q energy and the finite-head residual detector
+
+`normal_solution_weighted_energy_le` preserves the full normal-equation pairing:
+
+$$
+\|d\|_P^2+\langle d,Dd\rangle_P
+=\langle d,a\rangle_P\leq\|a\|_P^2.
+$$
+
+Consequently `matched_q_energy_le_forcing` proves zeta(2) ||d||_Q squared <= ||a||_P squared. `primorial_pError_cube_le_forcing` sharpens Priority 3's factor 128 to **64**, without a new arithmetic hypothesis.
+
+If the actual finite-head forcing norm is at most B, then the entire limiting residual obeys
+
+$$
+\varepsilon_\infty^3\leq
+\max\left\{(8/(n+3))^3,\;
+64\left(B+\frac1{H+1}\right)^2\right\}.
+$$
+
+The displayed finite-head hypothesis remains explicit. No vanishing head estimate or cofinal decay is claimed.
+
+Priority 5 full-project checkpoint: `job_NcRAFdxYe0ZIfmpe4wfUO_ZPv5GOClak`; Bazel/BuildBuddy, full scope, 193.784 seconds build time; committed and pushed `12d77248eb707de4c07bd4abf60b779ab3826a2c`. [Full-build log](https://app.buildbuddy.io/invocation/dc247cb2-f6bf-459f-8eb9-ed26b67e9feb).
