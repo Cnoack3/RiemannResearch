@@ -53,3 +53,39 @@ This integration separates the reusable density operator from its approximation
 application and exports both modules through `RiemannResearch.lean`.
 Publication requires the repository's server checkpoint for the integrated
 source; the earlier standalone check alone does not certify that integration.
+
+## Squarefree density-image obstruction
+
+The module `RH/QDensitySquarefreeObstruction.lean` distinguishes the span of
+density images alone from the augmented span above. Here `B` is exactly
+`QDensityMetric.B = dQ/dP`, not the shifted reciprocal operator.
+
+Its continuous functional is
+`Lambda(f) = f(1)/2 - 2*f(2)/3 - 3*f(3)/4 + 4*f(4)/5`.
+The signed identity `densityFourSite_B` gives
+`Lambda(B f) = (f(1) - f(2) - f(3) + f(4))/zetaTwo`.
+Thus `densityFourSite_B_qResidue` vanishes for every conductor other than four,
+whereas `densityFourSite_qOne` is exactly `-7/60`.
+
+Established declarations, with no domain-specific hypotheses:
+
+- `one_not_mem_densityClosure_of_four_not_mem`: any conductor family omitting
+  four has density-image closed span excluding one.
+- `densityClosure_ne_top_of_four_not_mem`: that closed span is proper in QHilbert.
+- `one_not_mem_squarefree_densityClosure` and `squarefree_densityClosure_ne_top`:
+  squarefree density images cannot approximate one and are not dense in L²(Q).
+  The indexing set includes every squarefree natural number; restricting to
+  conductors greater than one cannot remove the obstruction.
+- `pareto_one_not_mem_squarefree_densityClosure`: the same physical density
+  images cannot approximate one in the Pareto norm.
+
+The prime family is a subfamily, so it has the same obstruction. The earlier
+augmented-span membership theorem remains valid: it uses both `g_k` and `B g_k`.
+The full integer conductor family includes four, so this obstruction does not
+settle its density.
+
+The isolated Lean proof passed Bazel/BuildBuddy job
+`job_DMDpMKlpxprVeg4TdcD0Hl7FYoG7zvSL` with exit code 0 and
+`verified = true` (63.635 seconds reported for verification).
+This is scoped proof evidence; publication additionally requires the full-project
+server checkpoint for the integrated source.

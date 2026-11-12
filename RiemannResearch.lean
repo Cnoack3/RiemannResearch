@@ -1233,6 +1233,7 @@ import RiemannResearch.Analysis.FiniteGramMetricComparison
 import RiemannResearch.RH.QParetoEquivalence
 import RiemannResearch.RH.QDensityMetric
 import RiemannResearch.RH.QDensityAugmentedSpan
+import RiemannResearch.RH.QDensitySquarefreeObstruction
 import RiemannResearch.RH.QParetoMetric
 import RiemannResearch.RH.QMetricApproximateHeads
 import RiemannResearch.RH.QParetoGramComparison
