@@ -1,5 +1,9 @@
 # Reciprocal residue density and the Nyman–Beurling boundary — 2026-11-11
 
+Follow-up: [veracity audit, stronger D-cost criterion, quantitative sieve, and RH ledger](THEOREM_CATALOG_D_RECIPROCAL_AUDIT_20261111.md).
+The audit adds exact finite-span cost equivalence, normalized-cost divergence,
+complete head-tail lifting, and cofinal CRT convergence/uniqueness results.
+
 ## Scope and notation
 
 Physical positive coordinates: P(n)=1/(n(n+1)), Q(n)=1/(zeta(2)n^2),

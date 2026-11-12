@@ -125,4 +125,31 @@ theorem q_inner_identity (f g : QHilbert) :
   field_simp [ne_of_gt zetaTwo_pos]
   ring
 
+/-- The shifted reciprocal R is no larger than D in the complete Q norm. -/
+theorem shifted_norm_sq_le_D (f : QHilbert) :
+    ‖QShiftedReciprocal.B f‖ ^ 2 ≤ ‖D f‖ ^ 2 := by
+  rw [qNorm_sq, qNorm_sq]
+  apply Summable.tsum_le_tsum _ (qCoordinate_square_summable _) (qCoordinate_square_summable _)
+  intro n
+  rw [QShiftedReciprocal.B_apply, D_apply, div_pow, div_pow]
+  apply div_le_div_of_nonneg_left (sq_nonneg _) (by positivity)
+  nlinarith [Nat.cast_nonneg (α := ℝ) n]
+
+/-- The two smoothing norms are equivalent; this does not invert either one. -/
+theorem D_norm_sq_le_four_shifted (f : QHilbert) :
+    ‖D f‖ ^ 2 ≤ 4 * ‖QShiftedReciprocal.B f‖ ^ 2 := by
+  rw [qNorm_sq, qNorm_sq, ← tsum_mul_left]
+  apply Summable.tsum_le_tsum _ (qCoordinate_square_summable _)
+    ((qCoordinate_square_summable _).mul_left 4)
+  intro n
+  rw [D_apply, QShiftedReciprocal.B_apply]
+  have h1 : (0 : ℝ) < n + 1 := by positivity
+  have h2 : (0 : ℝ) < n + 2 := by positivity
+  have hn : (n : ℝ) + 2 ≤ 2 * ((n : ℝ) + 1) := by
+    linarith [Nat.cast_nonneg (α := ℝ) n]
+  rw [div_pow, div_pow, ← mul_div_assoc]
+  apply (div_le_div_iff₀ (sq_pos_of_pos h1) (sq_pos_of_pos h2)).mpr
+  have hs : ((n : ℝ) + 2) ^ 2 ≤ 4 * ((n : ℝ) + 1) ^ 2 := by nlinarith
+  nlinarith [mul_le_mul_of_nonneg_left hs (sq_nonneg (f n))]
+
 end RiemannResearch.RH.QReciprocalMetric

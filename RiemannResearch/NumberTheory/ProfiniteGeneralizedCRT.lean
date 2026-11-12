@@ -138,4 +138,37 @@ theorem profiniteInt_ext_of_lcm_cofinal {ι : Type*}
   rw [← reduce_compatible x (m := n) (n := L) hs,
     ← reduce_compatible y (m := n) (n := L) hs, hL]
 
+open Filter
+open scoped Topology
+
+/-- Pairwise compatible cofinal data have a unique profinite realization. -/
+theorem existsUnique_profiniteInt_iff_pairwise_of_lcm_cofinal {ι : Type*}
+    (m : ι → PositiveModulus) (a : ι → ℤ)
+    (hcover : ∀ n : PositiveModulus, ∃ s : Finset ι, n.val ∣ s.lcm (fun i => (m i).val)) :
+    (∃! x : ProfiniteInt, ∀ i, reduce (m i) x = (a i : ZMod (m i).val)) ↔
+      ∀ i j, Int.ModEq ((m i).val.gcd (m j).val : ℤ) (a i) (a j) := by
+  constructor
+  · rintro ⟨x,hx,_⟩
+    exact (exists_profiniteInt_iff_pairwise m a).mp ⟨x,hx⟩
+  · intro ha
+    obtain ⟨x,hx⟩ := (exists_profiniteInt_iff_pairwise m a).mpr ha
+    refine ⟨x,hx,?_⟩
+    intro y hy
+    exact profiniteInt_ext_of_lcm_cofinal m hcover (fun i => (hy i).trans (hx i).symm)
+
+/-- Inverse-limit convergence is finite-coordinate eventual agreement. -/
+theorem tendsto_iff_eventually_reduce_eq {α : Type*} {l : Filter α}
+    (f : α → ProfiniteInt) (x : ProfiniteInt) :
+    Tendsto f l (𝓝 x) ↔
+      ∀ n : PositiveModulus, ∀ᶠ i in l, reduce n (f i) = reduce n x := by
+  rw [tendsto_subtype_rng, tendsto_pi_nhds]
+  change (∀ n : PositiveModulus, Tendsto (fun i => reduce n (f i)) l (𝓝 (reduce n x))) ↔ _
+  constructor
+  · intro h n
+    exact (h n).eventually ((isOpen_discrete ({reduce n x} : Set (ZMod n.val))).mem_nhds rfl)
+  · intro h n
+    apply tendsto_const_nhds.congr'
+    filter_upwards [h n] with i hi
+    exact hi.symm
+
 end RiemannResearch.NumberTheory.GeneralizedCRT

@@ -148,4 +148,22 @@ theorem isTopologicalRingCRT_profinitePadicEquiv : IsTopologicalRingCRT profinit
     continuous_pi fun p => continuous_padicProjection p
   exact ⟨h, h.continuous_symm_of_equiv_compact_to_t2⟩
 
+open Filter
+open scoped Topology
+
+/-- The equivalent product criterion retains every prime-power depth. -/
+theorem tendsto_iff_padicProjection {α : Type*} {l : Filter α}
+    (f : α → ProfiniteInt) (x : ProfiniteInt) :
+    Tendsto f l (𝓝 x) ↔
+      ∀ p : Nat.Primes, Tendsto (fun i => padicProjection p (f i)) l (𝓝 (padicProjection p x)) := by
+  constructor
+  · intro h p
+    exact ((continuous_apply p).comp
+      isTopologicalRingCRT_profinitePadicEquiv.1).continuousAt.tendsto.comp h
+  · intro h
+    have hh : Tendsto (fun i => profinitePadicEquiv (f i)) l
+        (𝓝 (profinitePadicEquiv x)) := tendsto_pi_nhds.mpr h
+    have ht := isTopologicalRingCRT_profinitePadicEquiv.2.continuousAt.tendsto.comp hh
+    simpa only [Function.comp_def, profinitePadicEquiv.symm_apply_apply] using ht
+
 end RiemannResearch.NumberTheory.GeneralizedCRT
