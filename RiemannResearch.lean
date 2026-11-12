@@ -4177,3 +4177,8 @@ import RiemannResearch.Analysis.FinitePolynomialResonance
 import RiemannResearch.Probability.PrimeBlockDPP
 import RiemannResearch.Probability.PrimeBlockDPPInfinite
 import RiemannResearch.Analysis.PrimeProbeBudgetObstruction
+import RiemannResearch.Analysis.ActualPrimeTorusHomogeneousGram
+import RiemannResearch.Analysis.PrimeProbeFramePotential
+import RiemannResearch.Analysis.ThreePointGram
+import RiemannResearch.Probability.DeterminantalThreePoint
+import RiemannResearch.Probability.ZeroOrdinateProjectionDPP
