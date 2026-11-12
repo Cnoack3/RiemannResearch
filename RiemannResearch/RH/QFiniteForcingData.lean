@@ -47,7 +47,7 @@ def ratioVector (m : ℕ) : ThresholdHilbert :=
 private theorem ratioVector_sequence (m : ℕ) : hilbertSequence (ratioVector m) = remRatio m :=
   hilbertSequence_sequenceHilbert _ _ (by simp [remRatio])
 
-private theorem full_forcing_pair (m : ℕ) (hm : 0 < m) (f : QHilbert) :
+theorem ratioVector_pair_shifted (m : ℕ) (hm : 0 < m) (f : QHilbert) :
     (zetaTwo * m) * inner ℝ (qResidue m) (B f) =
       inner ℝ (ratioVector m) (toPareto f) := by
   rw [qInner_weighted, ← tsum_mul_left, hilbert_inner_weighted, ratioVector_sequence,
@@ -71,7 +71,7 @@ theorem full_conductor_forcing (N m : ℕ) (hm : 0 < m) (hv : qResidue m ∈ sta
         ((((k % m : ℕ) : ℝ) / k) * qSequence (qOne - finitePFit N) k) := by
   have h := Submodule.inner_right_of_mem_orthogonal hv (finite_witness_mem_orthogonal N)
   rw [inner_sub_right] at h
-  rw [← sub_eq_zero.mp h, full_forcing_pair m hm, hilbert_inner_weighted,
+  rw [← sub_eq_zero.mp h, ratioVector_pair_shifted m hm, hilbert_inner_weighted,
     ratioVector_sequence, toPareto_sequence]
   rfl
 
@@ -91,7 +91,7 @@ private theorem defect_head_zero (m k : ℕ) (hk : k < m) :
   · simp [hz, zeroAnchor, remRatio]
   · simp [zeroAnchor, remRatio, hz, Nat.mod_eq_of_lt hk]
 
-private theorem defect_norm_sq_le (m : ℕ) (hm : 0 < m) :
+theorem ratioVector_error_norm_sq_le (m : ℕ) (hm : 0 < m) :
     ‖hilbertOne - ratioVector m‖ ^ 2 ≤ 1 / (m : ℝ) := by
   let z := hilbertOne - ratioVector m
   have hs := (hilbertSequence_square_summable z).sum_add_tsum_nat_add m
@@ -172,7 +172,7 @@ theorem matched_conductor_forcing_deficit (m : ℕ) (hm : 0 < m)
       (zetaTwo * m) * inner ℝ (qResidue m) (qFit S qOne - pFit T qOne) =
       ∑' k : ℕ, positiveWeight k *
         ((1 - (((k % m : ℕ) : ℝ) / k)) * qSequence (qOne - pFit T qOne) k) := by
-  rw [matched_displacement_pairing S T _ hv hvp, full_forcing_pair m hm,
+  rw [matched_displacement_pairing S T _ hv hvp, ratioVector_pair_shifted m hm,
     ← matched_pResidual_mean T, ← inner_sub_left, hilbert_inner_weighted,
     defect_sequence, toPareto_sequence]
   unfold paretoInner
@@ -187,11 +187,11 @@ theorem matched_conductor_forcing_error (m : ℕ) (hm : 0 < m)
     |‖toPareto (qOne - pFit T qOne)‖ ^ 2 -
       (zetaTwo * m) * inner ℝ (qResidue m) (qFit S qOne - pFit T qOne)| ≤
       Real.sqrt (1 / (m : ℝ)) * ‖toPareto (tail (m - 1) (qOne - pFit T qOne))‖ := by
-  rw [matched_displacement_pairing S T _ hv hvp, full_forcing_pair m hm,
+  rw [matched_displacement_pairing S T _ hv hvp, ratioVector_pair_shifted m hm,
     ← matched_pResidual_mean T, ← inner_sub_left, defect_tail_pair]
   apply (abs_real_inner_le_norm _ _).trans
   apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
-  exact (Real.le_sqrt (norm_nonneg _) (by positivity)).mpr (defect_norm_sq_le m hm)
+  exact (Real.le_sqrt (norm_nonneg _) (by positivity)).mpr (ratioVector_error_norm_sq_le m hm)
 
 end MatchedProjection
 
@@ -298,7 +298,7 @@ theorem full_conductor_forcing_bessel (N D : ℕ) (s : Finset ℕ)
       intro d hd
       have h := Submodule.inner_right_of_mem_orthogonal (hv d hd) (finite_witness_mem_orthogonal N)
       rw [inner_sub_right] at h
-      rw [← sub_eq_zero.mp h, full_forcing_pair _ (by omega), ← finitePResidual_mean,
+      rw [← sub_eq_zero.mp h, ratioVector_pair_shifted _ (by omega), ← finitePResidual_mean,
         inner_sub_left]
     _ ≤ _ := (Finset.sum_le_sum_of_subset_of_nonneg hs (by intros; positivity)).trans
       (forcing_deficit_bessel _ D)
@@ -344,8 +344,8 @@ theorem adjacent_full_data_difference (N m : ℕ) (hm : 0 < m)
   have h₁ := Submodule.inner_right_of_mem_orthogonal hv (finite_witness_mem_orthogonal N)
   have h₂ := Submodule.inner_right_of_mem_orthogonal hw (finite_witness_mem_orthogonal N)
   rw [inner_sub_right] at h₁ h₂
-  rw [← sub_eq_zero.mp h₁, ← sub_eq_zero.mp h₂, full_forcing_pair m hm,
-    full_forcing_pair (m + 1) (by omega), ← inner_sub_left]
+  rw [← sub_eq_zero.mp h₁, ← sub_eq_zero.mp h₂, ratioVector_pair_shifted m hm,
+    ratioVector_pair_shifted (m + 1) (by omega), ← inner_sub_left]
   let r := toPareto (qOne - finitePFit N)
   change (m : ℝ) ^ 2 * (inner ℝ v r) ^ 2 ≤ _ * ‖r‖ ^ 2
   have hcs := abs_real_inner_le_norm v r

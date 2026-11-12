@@ -112,4 +112,10 @@ theorem residualized_sq_le_centered_complement
   rw [residualized_of_eigenvector S B e a he, residual_norm_sq]
   exact sub_le_self _ (sq_nonneg _)
 
+/-- Adding an element of the projected space leaves only the negative atom residual. -/
+theorem residualized_representation (u x : E) (hu : u ∈ S) :
+    (u - x) - S.starProjection (u - x) = -(x - S.starProjection x) := by
+  rw [map_sub, Submodule.starProjection_eq_self_iff.mpr hu]
+  abel
+
 end RiemannResearch.Analysis.ResidualizedProjectionKernel
