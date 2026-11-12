@@ -1482,6 +1482,7 @@ import RiemannResearch.RH.QPrimorialSchurCertificate
 import RiemannResearch.RH.QPrimorialResolvent
 import RiemannResearch.RH.QPrimorialSchurEndpoints
 import RiemannResearch.RH.QPrimorialResidualCertificate
+import RiemannResearch.RH.QPrimorialSchurForcing
 import RiemannResearch.RH.QPrimorialRayProjection
 import RiemannResearch.RH.QSquarefreeWitnessHead
 import RiemannResearch.Analysis.FiniteGramScreenedInverse

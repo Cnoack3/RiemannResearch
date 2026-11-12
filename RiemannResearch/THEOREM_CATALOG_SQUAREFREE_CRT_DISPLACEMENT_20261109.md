@@ -7,6 +7,40 @@ They use the cutoff-indexed period `primorial (n + 3)` from
 `SquarefreeStageExhaustion`. Repeated periods between primes give the same
 finite space. Every squarefree conductor eventually divides these periods.
 
+## 11 November: Q-only forcing certificates
+
+The new `QPrimorialSchurForcing` module proves an unconditional upper
+bound for the actual canonical energy:
+`selfForcing n ≤ (2000/1017) * zetaTwo * ‖correction n‖^2`.
+The correction uses only the Q fit and the reciprocal multiplier.
+`correction_pairing` identifies its complete Gram forcing;
+`forcingUpper_exact` retains the carry energy, a complete Q square,
+and the nonnegative four-site reciprocal gap. The module also supplies
+`three_upper_certified`, `limiting_pError_cube_le_forcing`, and the signed
+`selfForcing_transition_exact`.
+
+Focused Bazel verification and seven standard-axiom guards succeeded in
+job `job_5_JF7ANAsHxmvXrry5AqiVIr7-yF7JRC`. That historical receipt covers
+the audit snippet and its transitive imports. Publication was requested on
+12 November; the publication checkpoint must separately validate the full
+project and any integration with newer main before pushing.
+
+External rational complete-tail certificates show that the actual Schur
+energy increases from period 6 to period 30, then decreases in the tested
+stages through period 30030. Thus it is not antitone under prime admission.
+The period-30030 posterior upper endpoint is below
+0.000084914946203925; the direct complete Pareto error is below
+0.018059970522683. These numerical identifications are not Lean theorems.
+See `CanonicalSchurFiniteInvestigation20261111.md` and
+`CanonicalSchurFiniteCertificates20261111.json`. The external script
+`tools/certify_primorial_schur.py` referenced by the original review was
+not present in the recovered workspace. These retained numerical results
+were not rerun for this publication and are not Lean-certified.
+
+**Open:** cofinal decay of the actual Schur energies or of the Q-only
+correction. `riemannHypothesis_of_correction_tendsto_zero` is a conditional
+research reduction; its decay hypothesis has no checked provider.
+
 ## Established identities and convergence
 
 | Agenda item | Lean module and declarations | Content |
