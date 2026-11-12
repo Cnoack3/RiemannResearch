@@ -1,7 +1,12 @@
 # Inverse-Gram enlargement and periodic tail certificates — 12 November 2026
 
 Baseline: eb09bd278f88edafc68a60b1603b7fd4efba6aad.
-Publication status: proposed continuation, not committed or pushed.
+Published source commit: 584e5593316880a078e745838288c6065bace0ec.
+Full-project Bazel/BuildBuddy checkpoint passed before publication:
+job_W--Qw94L1msS8UktHmP-11KQC58l4pN5, target //:RiemannResearch,
+195.512 server build seconds. Guarded audit of all 18 new theorems passed:
+job_thm7bb2PiL65cPhpFat_fbRlLlIxJNgy; allowed axioms were only
+propext, Classical.choice, and Quot.sound.
 The arithmetic cofinal O(alpha) and all-exponent near-linear providers remain OPEN.
 
 ## Signed direction descent and nested full families
