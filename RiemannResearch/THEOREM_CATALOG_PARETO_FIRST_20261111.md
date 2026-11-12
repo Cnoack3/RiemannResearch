@@ -4,7 +4,7 @@ Source: [Pareto First Projections and Transfer to Q Research Draft](https://chat
 
 Base inspected: `3895041bee07f30260e4eda17ce32371492a2403` in `Cnoack3/RiemannResearch`.
 
-Status: Priorities 1 and 2 passed full-project checkpoints and were pushed as `93bc04a3` and `6dfdbdda`. Priority 3 has passed the scoped source check; its full-project publication checkpoint accompanies this update. The user authorized automatic commits and pushes for Priorities 1–7. Each subsequent publication must pass its own server checkpoint.
+Status: Priorities 1–3 passed full-project checkpoints and were pushed separately. Priority 4 extends the scoped-verified development set with an actual optimized Schur block identity; its full-project publication checkpoint accompanies this update. Automatic commit and push authorization for Priorities 1–7 is retained.
 
 ## Physical-coordinate interface reused
 
@@ -84,7 +84,7 @@ The existing `LinearAlgebra.inner_residualized_eq_schur` and `finiteSchurResidua
 | 1. Transfer interface, finite annihilator, inverse bounds | Full-project verified and published as `93bc04a3`. |
 | 2. Complete Gram and forcing certificates | General complete-norm certification and two-solve error propagation implemented; two numerical stages externally audited. Kernel replay of these numerical instances remains open. |
 | 3. Actual signed arithmetic cancellation | Centered physical rows, exact variance remainder, and finite/cofinal endpoint consumers proved. The cofinal smallness provider remains open. |
-| 4. Cumulative carry gains | Open; representative invariance does not show energy exhaustion. |
+| 4. Cumulative carry gains | Exact optimized Schur block gain, nested-stage telescoping, and total gain proved. Exhaustion remains equivalent to the unresolved zero residual. |
 | 5. Actual Q-mean and middle-subspace coupling | Open; exact reciprocal obstruction retained. |
 | 6. Finite-rank compactness error certificates | Subsequent work; no zero limiting input assumed. |
 | 7. Admissible limits and stage dependence | Subsequent work; operator series here is explicitly distinguished from prohibited fixed residue expansions. |
@@ -192,3 +192,32 @@ The combined development source passed Bazel/BuildBuddy in `job_Xd6p5DS7OPn8awfj
 A separate guarded audit passed in `job_Xd2fRI_TxL0fC5NI5gws4ZvXqn5GpCQi` (verified=true, exit 0, 66.083 seconds). Twenty selected main declarations from priorities 3–7 have exactly the transitive axioms propext, Classical.choice, and Quot.sound. [Guarded audit log](https://app.buildbuddy.io/invocation/cd111c61-908c-41fe-a610-8a731f14569e). Audit source SHA-256: `3bb563b6c3be009222ad6abe53894c1c15eeaa98a2e120eadb2b62df9f1cabd8`.
 
 The combined check is a scoped development check, not a replacement for each priority's separate full-project checkpoint. Future-priority modules enter the repository only in their own subsequent commit.
+
+Priority 3 full-project checkpoint: `job_R8prNdfQLOlWHEz3Brz26iOv4ohNtdVp`; verified full scope with Bazel/BuildBuddy (273.157 seconds build time), committed and pushed `b9f2678112e8daf66bc763c0d3ae65e6f5c48e46`. [Full-build log](https://app.buildbuddy.io/invocation/e57814fe-cdd5-4d77-856a-c3b6b5798242).
+
+## Priority 4: exact Schur blocks and cumulative gains
+
+Module: `RH/QParetoCumulativeGains.lean`.
+
+`augmented_schur_gain` identifies the actual optimized gain from S to S + span(z) with the full inverse Schur quadratic form. Its matrix entries and source are
+
+$$
+C_{ij}=\langle z_i,z_j\rangle-\langle P_Sz_i,P_Sz_j\rangle,\qquad
+b_i=\langle z_i,x\rangle-\langle P_Sz_i,P_Sx\rangle.
+$$
+
+Thus the gain is b transpose C inverse b. When S is the old finite block, the existing complete inverse-Gram projection and covariance formulas identify C with S_BB - S_BA S_AA inverse S_AB and b with t_B - S_BA S_AA inverse t_A. The theorem requires an actual invertible complete Schur action; it never substitutes a diagonal matrix. `normal_block_gain` retains the inverse-free formulation for any complete normal block.
+
+For the actual nested Pareto primorial tower, let g_n be the squared norm of the change in the full optimal projection. The moving prime projections and changing carry coordinates are already included in these full spaces. The following are unconditional:
+
+$$
+g_n=\varepsilon_n-\varepsilon_{n+1}\geq0,\qquad
+\sum_{n<N}g_n=\varepsilon_0-\varepsilon_N,\qquad
+\sum_{n\geq0}g_n=\varepsilon_0-\varepsilon_\infty.
+$$
+
+`gain_inverseGram` expresses the actual gain as the difference of the two complete inverse-Gram capacities. `limiting_residual_bound` turns any certified lower gains L_n <= g_n into epsilon_infinity <= epsilon_0 - sum_{n<N} L_n.
+
+`exhaustion_iff_zero_residual` proves precisely that total gain equals the initial error if and only if the limiting residual vanishes. **Exhaustion is still open.** Nonnegative gains, positive gains at infinitely many stages, and representative changes do not prove it.
+
+Additional Schur/finite-rank development audit: `job_mV1SVIAOF935G4T2AEXpgHFIoRJuRNw9`; Bazel/BuildBuddy, verified=true, exit 0, 91.103 seconds. Eight guarded declarations passed, including the actual augmented Schur gain and the strengthened factor-64/finite-head bounds reserved for Priority 6. All guards require exactly propext, Classical.choice, and Quot.sound. Source SHA-256: `03f7a0435d613e3dc7fa54c8d0f8656508e6fba298a29b2388bc556d5f53e3aa`. [Audit log](https://app.buildbuddy.io/invocation/0f896f12-0284-46bd-afd9-e12f44a77666).

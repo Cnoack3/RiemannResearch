@@ -1,3 +1,4 @@
+import RiemannResearch.RH.QParetoCumulativeGains
 import RiemannResearch.RH.QParetoCenteredForcing
 import RiemannResearch.Analysis.FiniteProjectionForcingCertificate
 import RiemannResearch.Analysis.ParetoReciprocalTailCertificate
