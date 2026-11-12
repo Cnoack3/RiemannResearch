@@ -2,6 +2,35 @@
 
 Prepared 9 November 2026.
 
+## 12 November: exact fixed-pair Schur limit and weaker common-bound criterion
+
+Extended `RH/QFullShortHeadLocalization.lean` for the actual full-conductor
+matched projections. The complete signed identity is primary.
+
+- `high_head_pair_bound` retains the factor abs(n-m)/H, so the high-head
+  contribution vanishes for fixed sites; `tail_fixed_pair_tendsto` handles the
+  complete signed tail along arbitrary cofinal physical heads.
+- `shortSchur` names the actual signed residualized term.
+  `shortSchur_exact` retains both subtracted terms, and
+  `shortSchur_tendsto` proves its limit is zeta(2)[d(n)-d(m)].
+- `residue_oscillation_of_frequent_shortSchur_bound` gives the sharp limiting
+  constant C/zeta(2), without an additive high-part or tail allowance.
+- `riemannHypothesis_of_frequent_shortSchur_bound` is a **conditional research
+  reduction**: for every fixed positive congruent pair, a common finite C need
+  only bound the term at arbitrarily late stages. The good stages may depend on
+  the pair. Simultaneous eventual control of the whole growing window is stronger
+  than necessary.
+- `residual_zero_iff_frequent_shortSchur_bound` identifies the common-C condition
+  with zero actual Q residual. `fixed_pair_escape_of_not_riemannHypothesis`
+  shows that failure of RH forces eventual escape at a fixed pair for each C.
+
+**Open:** supply one C independent of the pair. The exact limit does not provide
+it, and separate pair-dependent constants are insufficient. The original
+uniform-window `hSchur` remains open and sufficient.
+
+See [the fixed-pair limit review](ShortHeadSchurLimitResearch20261112.md) for
+precise hypotheses, declarations, verification scope, and the remaining gap.
+
 ## 11 November: formalized short-head localization
 
 Five new modules formalize the November 10 paper argument for the actual

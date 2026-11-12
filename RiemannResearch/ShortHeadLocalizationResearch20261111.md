@@ -1,5 +1,10 @@
 # Short-head localization and high-conductor slope
-Prepared 11 November 2026. Proposed repository changes; not published.
+Prepared 11 November 2026. The localization modules are published; the arithmetic
+Schur bound remains Open.
+
+12 November continuation: [exact fixed-pair Schur limits and a weaker common-bound
+criterion](ShortHeadSchurLimitResearch20261112.md). The new limit theorem does not
+supply the common bound. This document's original verification discussion is historical.
 
 Base: `6c4fe3312e24b00813bcc5c329cf28ba0fe14333`.
 Requested starting argument:

@@ -1,4 +1,8 @@
 import RiemannResearch.RH.QMatchedShortHead
+import RiemannResearch.RH.QFullDisplacement
+import RiemannResearch.Analysis.ResidueOscillation
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Topology.Order.OrderClosed
 import RiemannResearch.RH.QHighConductorSlope
 import RiemannResearch.RH.QFullCRTDisplacement
 import RiemannResearch.RH.QHilbertConvergence
@@ -18,7 +22,9 @@ import Lean.Elab.Tactic.Omega
 Source: user-provided November 10 localization argument.
 The low Schur pairing remains signed and unresolved. The exact decomposition,
 uniformly vanishing remainder, and bounded high-conductor contribution
-are independent of RH.
+are independent of RH. The November 12 extension identifies the exact fixed-pair
+limit and weakens the sufficient common-bound hypothesis to pairwise frequent
+control. It does not supply that common arithmetic bound.
 -/
 noncomputable section
 set_option backward.isDefEq.respectTransparency false
@@ -294,5 +300,169 @@ theorem riemannHypothesis_of_short_schur_bound
     (add_le_add (abs_add_le _ _) le_rfl)
   apply (le_div_iff₀ zetaTwo_pos).mpr
   nlinarith
+
+
+/-- Keep the fixed physical separation instead of bounding it by the growing head. -/
+theorem high_head_pair_bound (U : Submodule ℝ QHilbert)
+    [U.HasOrthogonalProjection] (H A : ℕ) (hH : 0 < H)
+    (hlin : HasLinearHead U H) (hA : A ≤ H)
+    (r : ThresholdHilbert) (n m : ℕ) (hn : n ≤ H) (hm : m ≤ H) :
+    |signedHead A r (pairKernel U n m)| ≤
+      |(n : ℝ) - m| * (zetaTwo / H) * ‖r‖ := by
+  rw [high_head_exact U H A hlin hA r n m hn hm, abs_mul, abs_mul,
+    abs_of_nonneg (show 0 ≤ slopeEnergy U from sq_nonneg _)]
+  exact mul_le_mul
+    (mul_le_mul_of_nonneg_left (slopeEnergy_le U H hH hlin) (abs_nonneg _))
+    (head_mean_bound A r) (abs_nonneg _)
+    (mul_nonneg (abs_nonneg _) (div_nonneg zetaTwo_pos.le (Nat.cast_nonneg H)))
+
+/-- The actual signed residualized low-head term, with the canonical physical cutoff. -/
+def shortSchur (R : ℕ → ℕ+) (j H n m : ℕ) : ℝ :=
+  signedHead (physicalCutoff R H) (matchedResidual (R j))
+    (pairKernel (divisorStage (R j : ℕ)) n m -
+      pairKernel (highStage (R j) H) n m)
+
+/-- Exact signed finite identity; neither the high term nor the tail is discarded. -/
+theorem shortSchur_exact (R : ℕ → ℕ+) (j H n m : ℕ) :
+    shortSchur R j H n m =
+      zetaTwo * (qSequence (QFullDivisorProjection.displacement (R j)) n -
+        qSequence (QFullDivisorProjection.displacement (R j)) m) -
+      signedHead (physicalCutoff R H) (matchedResidual (R j))
+        (pairKernel (highStage (R j) H) n m) -
+      signedTail (physicalCutoff R H) (matchedResidual (R j))
+        (pairKernel (divisorStage (R j : ℕ)) n m) := by
+  rw [shortSchur, signedHead_sub, actual_head_tail]
+  ring
+
+/-- At fixed sites the high-conductor contribution vanishes, with no residual decay rate. -/
+theorem high_head_fixed_pair_tendsto (R : ℕ → ℕ+)
+    (hnest : ∀ i j, i ≤ j → (R i : ℕ) ∣ (R j : ℕ))
+    (hcofinal : ∀ q : ℕ, 1 < q → ∃ j, q ∣ (R j : ℕ))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop) (n m : ℕ) :
+    Tendsto (fun j => signedHead (physicalCutoff R (H j)) (matchedResidual (R j))
+      (pairKernel (highStage (R j) (H j)) n m)) atTop (𝓝 0) := by
+  have hdiv : Tendsto (fun j => zetaTwo / (H j : ℝ)) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop (tendsto_natCast_atTop_atTop.comp hH)
+  have hb : Tendsto (fun j => |(n : ℝ) - m| * (zetaTwo / (H j : ℝ)))
+      atTop (𝓝 0) := by simpa only [mul_zero] using hdiv.const_mul |(n : ℝ) - m|
+  apply squeeze_zero_norm' _ hb
+  filter_upwards [hH.eventually (localization_limits R hnest hcofinal).2.2.1,
+    hH.eventually (eventually_ge_atTop 1), hH.eventually (eventually_ge_atTop n),
+    hH.eventually (eventually_ge_atTop m)] with j hA hpos hn hm
+  rw [Real.norm_eq_abs]
+  calc
+    _ ≤ |(n : ℝ) - m| * (zetaTwo / H j) * ‖matchedResidual (R j)‖ :=
+      high_head_pair_bound _ _ _ hpos (highStage_linear (R j) (H j) hpos)
+        hA _ n m hn hm
+    _ ≤ |(n : ℝ) - m| * (zetaTwo / H j) := by
+      simpa only [mul_one] using mul_le_mul_of_nonneg_left
+        (matchedResidual_norm_le_one (R j))
+        (mul_nonneg (abs_nonneg _) (div_nonneg zetaTwo_pos.le (Nat.cast_nonneg _)))
+
+/-- The complete signed tail vanishes at every fixed pair along any cofinal heads. -/
+theorem tail_fixed_pair_tendsto (R : ℕ → ℕ+)
+    (hnest : ∀ i j, i ≤ j → (R i : ℕ) ∣ (R j : ℕ))
+    (hcofinal : ∀ q : ℕ, 1 < q → ∃ j, q ∣ (R j : ℕ))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop) (n m : ℕ) :
+    Tendsto (fun j => signedTail (physicalCutoff R (H j)) (matchedResidual (R j))
+      (pairKernel (divisorStage (R j : ℕ)) n m)) atTop (𝓝 0) := by
+  apply squeeze_zero_norm' _ ((localization_limits R hnest hcofinal).2.2.2.comp hH)
+  filter_upwards [hH.eventually (eventually_ge_atTop n),
+    hH.eventually (eventually_ge_atTop m)] with j hn hm
+  simpa only [Real.norm_eq_abs, Function.comp_apply, remainderBound] using
+    signedTail_bound (fun j => matchedResidual (R j))
+      (fun j => matchedResidual_norm_le_one (R j))
+      (divisorStage (R j : ℕ)) (H j) (physicalCutoff R (H j)) n m j hn hm
+
+/-- Unconditional pointwise limit of the actual signed Schur term. This is not a
+uniform estimate over a growing set of pairs and does not assume the residual is zero. -/
+theorem shortSchur_tendsto (R : ℕ → ℕ+)
+    (hnest : ∀ i j, i ≤ j → (R i : ℕ) ∣ (R j : ℕ))
+    (hcofinal : ∀ q : ℕ, 1 < q → ∃ j, q ∣ (R j : ℕ))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop) (n m : ℕ) :
+    Tendsto (fun j => shortSchur R j (H j) n m) atTop
+      (𝓝 (zetaTwo * (qSequence QFullDisplacement.displacement n -
+        qSequence QFullDisplacement.displacement m))) := by
+  have hd := QFullDivisorProjection.displacement_tendsto R hnest hcofinal
+  have hd' := ((qSequence_tendsto_of_tendsto hd n).sub
+    (qSequence_tendsto_of_tendsto hd m)).const_mul zetaTwo
+  simpa only [shortSchur_exact, sub_zero] using
+    (hd'.sub (high_head_fixed_pair_tendsto R hnest hcofinal H hH n m)).sub
+      (tail_fixed_pair_tendsto R hnest hcofinal H hH n m)
+
+/-- A common bound at arbitrarily late stages for each fixed pair passes to the
+limit with constant C/zeta(2), without an additive high-part or tail allowance. -/
+theorem residue_oscillation_of_frequent_shortSchur_bound (R : ℕ → ℕ+)
+    (hnest : ∀ i j, i ≤ j → (R i : ℕ) ∣ (R j : ℕ))
+    (hcofinal : ∀ q : ℕ, 1 < q → ∃ j, q ∣ (R j : ℕ))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop) (L : ℕ) (C : ℝ)
+    (hSchur : ∀ n m, 0 < n → 0 < m → n % L = m % L →
+      ∃ᶠ j in atTop, |shortSchur R j (H j) n m| ≤ C) :
+    RiemannResearch.Analysis.ResidueOscillation.Bound
+      (qSequence QFullDisplacement.displacement) L (C / zetaTwo) := by
+  intro n m hn hm hnm
+  have hb := le_of_tendsto_of_frequently
+    (shortSchur_tendsto R hnest hcofinal H hH n m).abs (hSchur n m hn hm hnm)
+  rw [abs_mul, abs_of_pos zetaTwo_pos] at hb
+  exact (le_div_iff₀ zetaTwo_pos).mpr (by nlinarith)
+
+/-- Conditional research reduction. The good stages may depend on the pair, but
+one constant C must work for every positive congruent pair. This common-C provider
+remains an open arithmetic obligation; simultaneous growing-window bounds are unnecessary. -/
+theorem riemannHypothesis_of_frequent_shortSchur_bound (R : ℕ → ℕ+)
+    (hnest : ∀ i j, i ≤ j → (R i : ℕ) ∣ (R j : ℕ))
+    (hcofinal : ∀ q : ℕ, 1 < q → ∃ j, q ∣ (R j : ℕ))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop)
+    (L : ℕ) (hL : 0 < L) (C : ℝ)
+    (hSchur : ∀ n m, 0 < n → 0 < m → n % L = m % L →
+      ∃ᶠ j in atTop, |shortSchur R j (H j) n m| ≤ C) :
+    RiemannHypothesis :=
+  QFullCRTDisplacement.riemannHypothesis_of_finite_residue_oscillation L hL
+    (C / zetaTwo)
+    (residue_oscillation_of_frequent_shortSchur_bound R hnest hcofinal H hH L C hSchur)
+
+/-- The weaker common-C condition is equivalent to zero actual full Q residual.
+Neither side is supplied unconditionally by this equivalence. -/
+theorem residual_zero_iff_frequent_shortSchur_bound (R : ℕ → ℕ+)
+    (hnest : ∀ i j, i ≤ j → (R i : ℕ) ∣ (R j : ℕ))
+    (hcofinal : ∀ q : ℕ, 1 < q → ∃ j, q ∣ (R j : ℕ))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop) (L : ℕ) (hL : 0 < L) :
+    QFullDisplacement.qResidual = 0 ↔
+      ∃ C : ℝ, ∀ n m, 0 < n → 0 < m → n % L = m % L →
+        ∃ᶠ j in atTop, |shortSchur R j (H j) n m| ≤ C := by
+  constructor
+  · intro hr
+    refine ⟨1, ?_⟩
+    intro n m _ _ _
+    have ht := (shortSchur_tendsto R hnest hcofinal H hH n m).abs
+    rw [QFullDisplacement.displacement_eq_zero_of_qResidual_eq_zero hr] at ht
+    simp only [show qSequence (0 : QHilbert) = 0 from map_zero qSequenceLinear,
+      Pi.zero_apply, sub_self, mul_zero, abs_zero] at ht
+    exact ((ht.eventually_lt_const (by norm_num : (0 : ℝ) < 1)).mono
+      (fun _ h => h.le)).frequently
+  · rintro ⟨C, hC⟩
+    exact (QFullCRTDisplacement.residual_zero_iff_finite_residue_oscillation L hL).mpr
+      ⟨C / zetaTwo,
+        residue_oscillation_of_frequent_shortSchur_bound R hnest hcofinal H hH L C hC⟩
+
+/-- If RH fails, each proposed bound is eventually exceeded at one fixed pair.
+The pair may depend on the bound; this does not claim divergence at a single pair. -/
+theorem fixed_pair_escape_of_not_riemannHypothesis (R : ℕ → ℕ+)
+    (hnest : ∀ i j, i ≤ j → (R i : ℕ) ∣ (R j : ℕ))
+    (hcofinal : ∀ q : ℕ, 1 < q → ∃ j, q ∣ (R j : ℕ))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop)
+    (hRH : ¬ RiemannHypothesis) (L : ℕ) (hL : 0 < L) (C : ℝ) :
+    ∃ n m : ℕ, 0 < n ∧ 0 < m ∧ n % L = m % L ∧
+      ∀ᶠ j in atTop, C < |shortSchur R j (H j) n m| := by
+  obtain ⟨n, m, hn, hm, hnm, hb⟩ :=
+    QFullCRTDisplacement.unbounded_oscillation_of_not_riemannHypothesis
+      hRH L hL (C / zetaTwo)
+  refine ⟨n, m, hn, hm, hnm, ?_⟩
+  apply (shortSchur_tendsto R hnest hcofinal H hH n m).abs.eventually
+  apply Ioi_mem_nhds
+  rw [abs_mul, abs_of_pos zetaTwo_pos]
+  have hc := (div_lt_iff₀ zetaTwo_pos).mp hb
+  nlinarith
+
 
 end RiemannResearch.RH.QFullShortHeadLocalization
