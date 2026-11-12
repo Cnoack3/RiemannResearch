@@ -318,6 +318,8 @@ import RiemannResearch.RH.PrimeTreeCompositeCancellation
 import RiemannResearch.RH.PrimeTreeConductorWeak
 import RiemannResearch.RH.PrimeTreeConeStructure
 import RiemannResearch.RH.PrimeTreeConstants
+import RiemannResearch.Analysis.SubsetSumSummability
+import RiemannResearch.RH.QPrimeCoefficientSummability
 import RiemannResearch.RH.PrimeTreeCriticalPlancherel
 import RiemannResearch.RH.PrimeTreeDepthMultiplicity
 import RiemannResearch.RH.PrimeTreeEntireMultiplier
