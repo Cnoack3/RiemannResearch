@@ -107,6 +107,25 @@ theorem q_inner_density (f g : QHilbert) :
     inner ℝ f g = inner ℝ (toPareto f) (toPareto (B g)) := by
   rw [pareto_inner_inverse, inverse_B]
 
+/-- The Q pairing as a sum of two P pairings of the same physical sequences. -/
+theorem q_inner_pareto_add_D (f g : QHilbert) :
+    inner ℝ f g = (1 / zetaTwo) *
+      (inner ℝ (toPareto f) (toPareto g) +
+        inner ℝ (toPareto f) (toPareto (D g))) := by
+  rw [q_inner_density]
+  change inner ℝ (toPareto f) (toParetoCLM ((1 / zetaTwo) • (g + D g))) = _
+  rw [map_smul, map_add, inner_smul_right, inner_add_right]
+  rfl
+
+/-- On a closed P subspace, the second argument may be compressed back into it. -/
+theorem q_inner_pareto_compressed (S : Submodule ℝ Pareto.ThresholdHilbert)
+    [S.HasOrthogonalProjection] (f g : QHilbert) (hf : toPareto f ∈ S) :
+    inner ℝ f g = (1 / zetaTwo) *
+      (inner ℝ (toPareto f) (toPareto g) +
+        inner ℝ (toPareto f) (S.starProjection (toPareto (D g)))) := by
+  rw [q_inner_pareto_add_D, ← S.inner_starProjection_left_eq_right,
+    Submodule.starProjection_eq_self_iff.mpr hf]
+
 theorem norm_comparison (f : QHilbert) :
     (zetaTwo / 2) * ‖f‖ ^ 2 ≤ ‖toPareto f‖ ^ 2 ∧
       ‖toPareto f‖ ^ 2 ≤ zetaTwo * ‖f‖ ^ 2 := by

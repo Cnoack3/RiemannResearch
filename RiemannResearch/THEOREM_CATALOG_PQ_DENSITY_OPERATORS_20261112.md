@@ -4,6 +4,14 @@ Date: 2026-11-12 (user-facing date).
 Source: user-provided correction reserving B for dQ/dP.
 Base examined: 8b94e4c6fcadf811881e42aa2999f5c099b643c4.
 
+## Seven-agenda continuation
+
+The follow-up [seven-agenda catalog](THEOREM_CATALOG_PQ_SEVEN_AGENDAS_20261112.md)
+records the reverse Q/P pairing, compressed V pairing, arithmetic target-totality
+equivalence, normalized signed budget, residual correlations, leakage/parity
+criteria, canonical CRT norm escape, and the conditional analytic converse.
+The explicit analytic approximation provider and the arithmetic bounds remain Open.
+
 ## Notation and scope
 
 For physical n >= 1:
@@ -29,6 +37,8 @@ Namespace: RiemannResearch.RH.QDensityMetricInverse
 | R_eq_inverse | R=I-B inverse/zeta(2) |
 | pareto_inner_inverse | <f,g>_P=<f,B inverse g>_Q |
 | q_inner_density | <f,g>_Q=<f,Bg>_P |
+| q_inner_pareto_add_D | Q pairing = (P pairing + P pairing with D)/zeta(2) |
+| q_inner_pareto_compressed | P pairing with D can be compressed into a closed P subspace |
 | norm_comparison | (zeta(2)/2)||f||_Q^2 <= ||f||_P^2 <= zeta(2)||f||_Q^2 |
 | DP, DP_toPareto, DP_physical | D_P=T D_Q T inverse; D_P T=T D_Q; physical division by n |
 | map_closure | B(cl S)=cl(BS) for any submodule |
@@ -66,7 +76,9 @@ All use the existing QFullResidueProjection.riemannHypothesis_of_qOne_mem_full_c
 That bridge takes 1 in V explicitly, transfers to the Pareto legal closure, and
 uses the existing Mellin separation theorem. No RH premise is discharged by
 full_D_map_dense or full_augmentedClosure_eq_top.
-No converse RH=>V=H is asserted.
+The continuation proves 1 in V iff V=H without analytic assumptions.
+It also proves RH iff V=H conditional on the explicit
+BaezDuarteMobiusApproximation provider; this analytic hypothesis is not discharged.
 
 ## Why the abstract shortcut fails (paper proof, not a new Lean theorem)
 
@@ -101,8 +113,9 @@ It shows that arithmetic information or a source bound is still needed.
 6. Open: combine CRT interpolation with uniform complete Q-tail/source-energy
    estimates; neither finite-coordinate agreement nor profinite continuity
    alone supplies a bounded legal lift.
-7. Open: audit and formalize any desired converse from RH to this exact
-   target closure or full totality. Keep RH, 1 in V and V=H distinct.
+7. Translation chain completed in the continuation, with the published analytic
+   provider explicit. The provider itself remains Open in Lean. The arithmetic
+   equivalence 1 in V iff V=H is now formalized without that provider.
 
 ## Verification evidence
 
