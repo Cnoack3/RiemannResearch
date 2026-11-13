@@ -8,6 +8,9 @@ import RiemannResearch.LinearAlgebra.CenteredNormalEquations
 import RiemannResearch.RH.QCovarianceInverse
 import RiemannResearch.RH.QCovarianceInvertibility
 import RiemannResearch.RH.QCRTFiniteCollocation
+import RiemannResearch.RH.QDivisorLegality
+import RiemannResearch.RH.QDivisibilityHilbertMoments
+import RiemannResearch.RH.QOptimizerParity
 import RiemannResearch.RH.QCRTNestedCutoffs
 import RiemannResearch.RH.QDivisorWaveletDensity
 import RiemannResearch.RH.QDivisorWaveletFactorization
@@ -23,6 +26,8 @@ import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.NormNum
+import Lean.Elab.Tactic.Omega
 
 /-!
 # CRT Gram decomposition and the actual inverse-Gram saturation limit
@@ -485,5 +490,251 @@ theorem riemannHypothesis_of_cofinal_head_small
 /-- info: 'RiemannResearch.RH.QCRTGramSaturation.riemannHypothesis_of_cofinal_head_small' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms riemannHypothesis_of_cofinal_head_small
+
+/-!
+Source: the user's retained-head criterion audit, 13 November 2026.
+The cutoff-one identity identifies cofinal smallness with saturation exactly.
+Positive cutoff restrictions do not provide a new arithmetic decay estimate.
+The complete Gram tail and nonconstant retained energy remain explicit below.
+-/
+
+/-- The optimizer's cutoff-one projection is its saturation times one. -/
+theorem candidate_projection_one (n : ℕ) :
+    conditionalProjection 1 (candidate n) = saturation n • qOne := by
+  rw [conditionalProjection_one, real_inner_comm, candidate_constant_pairing]
+
+/-- The one-cell retained error is exactly the square of the saturation gap. -/
+theorem headEnergy_one (n : ℕ) :
+    headEnergy 1 n = (1 - saturation n)^2 := by
+  rw [head_constant_mode_exact 1 n (by decide), candidate_projection_one]
+  simp
+
+/-- The complementary one-cell energy is retained exactly. -/
+theorem tailEnergy_one (n : ℕ) :
+    dotProduct (coefficients n) ((tailGram 1 n).mulVec (coefficients n)) =
+      saturation n * (1 - saturation n) := by
+  have h := matrix_error_crt_split 1 n
+  rw [headEnergy_one] at h
+  nlinarith
+
+/-- The nonconstant retained modes and complete omitted modes sum to the optimizer variance. -/
+theorem centered_head_tail_exact (L n : ℕ) (hL : 0 < L) :
+    ‖conditionalProjection L (candidate n) - saturation n • qOne‖^2 +
+      dotProduct (coefficients n) ((tailGram L n).mulVec (coefficients n)) =
+      saturation n * (1 - saturation n) := by
+  have h := matrix_error_crt_split L n
+  rw [head_constant_mode_exact L n hL] at h
+  nlinarith
+
+/-- The one-cell cutoff minimizes the retained error over all positive cutoffs. -/
+theorem headEnergy_one_le (L n : ℕ) (hL : 0 < L) :
+    headEnergy 1 n ≤ headEnergy L n := by
+  rw [headEnergy_one]
+  exact (head_constant_mode_bounds L n hL).1
+
+/-- Cofinal retained-head smallness is exactly the existing saturation condition. -/
+theorem cofinal_head_small_iff_saturation :
+    (∀ ε : ℝ, 0 < ε → ∀ N : ℕ, ∃ n : ℕ, N ≤ n ∧
+      ∃ L : ℕ, 0 < L ∧ headEnergy L n < ε) ↔
+      Tendsto saturation atTop (𝓝 1) := by
+  constructor
+  · intro h
+    exact saturation_tendsto_one_iff.mpr (one_mem_of_cofinal_head_small h)
+  · intro hs ε hε N
+    have hh : Tendsto (fun n => headEnergy 1 n) atTop (𝓝 0) := by
+      simpa only [headEnergy_one, sub_self, zero_pow (by decide : 2 ≠ 0)]
+        using ((tendsto_const_nhds :
+          Tendsto (fun _ : ℕ => (1 : ℝ)) atTop (𝓝 1)).sub hs).pow 2
+    have he : ∀ᶠ n in atTop, headEnergy 1 n < ε :=
+      (tendsto_order.1 hh).2 ε hε
+    obtain ⟨K, hK⟩ := eventually_atTop.1 he
+    exact ⟨max N K, le_max_left _ _, 1, by decide, hK _ (le_max_right _ _)⟩
+
+/-- Cofinal retained-head smallness is exactly legal closure membership. -/
+theorem cofinal_head_small_iff_one_mem :
+    (∀ ε : ℝ, 0 < ε → ∀ N : ℕ, ∃ n : ℕ, N ≤ n ∧
+      ∃ L : ℕ, 0 < L ∧ headEnergy L n < ε) ↔ qOne ∈ closure :=
+  cofinal_head_small_iff_saturation.trans saturation_tendsto_one_iff
+
+/-- Any prescribed positive cutoff sequence gives the same zero-limit condition; no nesting is needed. -/
+theorem headEnergy_tendsto_zero_iff_positive (L : ℕ → ℕ)
+    (hpos : ∀ n, 0 < L n) :
+    Tendsto (fun n => headEnergy (L n) n) atTop (𝓝 0) ↔
+      Tendsto saturation atTop (𝓝 1) := by
+  constructor
+  · intro h
+    apply cofinal_head_small_iff_saturation.mp
+    intro ε hε N
+    have he : ∀ᶠ n in atTop, headEnergy (L n) n < ε :=
+      (tendsto_order.1 h).2 ε hε
+    obtain ⟨K, hK⟩ := eventually_atTop.1 he
+    exact ⟨max N K, le_max_left _ _, L (max N K), hpos _, hK _ (le_max_right _ _)⟩
+  · intro hs
+    have he : Tendsto (fun n => 1 - saturation n) atTop (𝓝 0) := by
+      simpa only [sub_self] using (tendsto_const_nhds :
+        Tendsto (fun _ : ℕ => (1 : ℝ)) atTop (𝓝 1)).sub hs
+    apply squeeze_zero _ (fun n => (head_constant_mode_bounds (L n) n (hpos n)).2) he
+    intro n
+    exact (sq_nonneg (1 - saturation n)).trans
+      (head_constant_mode_bounds (L n) n (hpos n)).1
+
+/-- Refining the CRT cutoff reveals an exact additional square at a fixed conductor stage. -/
+theorem headEnergy_refinement_exact (L M n : ℕ) (hM : 0 < M)
+    (hLM : L ∣ M) :
+    headEnergy M n = headEnergy L n +
+      ‖conditionalProjection M (candidate n) -
+        conditionalProjection L (candidate n)‖^2 := by
+  have hLmem := (cellSpace L).starProjection_apply_mem (candidate n)
+  have hMmem := QCRTNestedCutoffs.cellSpace_mono_of_dvd L M hM hLM hLmem
+  have h1 := conditional_inner M (candidate n)
+    (conditionalProjection L (candidate n)) hMmem
+  have h2 := conditional_inner L (candidate n)
+    (conditionalProjection L (candidate n)) hLmem
+  rw [real_inner_self_eq_norm_sq] at h2
+  simp only [headEnergy, candidate_head_quadratic, norm_sub_sq_real]
+  linarith
+
+/-- The retained error increases under divisor refinement. -/
+theorem headEnergy_mono_of_dvd (L M n : ℕ) (hM : 0 < M)
+    (hLM : L ∣ M) : headEnergy L n ≤ headEnergy M n := by
+  rw [headEnergy_refinement_exact L M n hM hLM]
+  exact le_add_of_nonneg_right (sq_nonneg _)
+
+/-- No finite conductor stage has zero retained error at a positive cutoff. -/
+theorem headEnergy_pos (L n : ℕ) (hL : 0 < L) : 0 < headEnergy L n := by
+  have he : 0 < 1 - saturation n := by
+    rw [← error_identity]
+    exact residual_energy_pos n
+  exact (pow_pos he 2).trans_le (head_constant_mode_bounds L n hL).1
+
+/-- Optimizer orthogonality to the parity residue determines the two-cell residual. -/
+theorem residual_projection_two (n : ℕ) (hn : 0 < n) :
+    conditionalProjection 2 (qOne - candidate n) =
+      (4 * (1 - saturation n)) • QDivisibilityDensity.qDivisor 2 := by
+  apply conditional_eq_of_match
+  · exact (cellSpace 2).smul_mem _
+      (divisor_mem_cell 2 2 (by decide) (dvd_refl 2))
+  · intro d hd
+    have hdp := Nat.pos_of_mem_divisors hd
+    have hdle := Nat.le_of_dvd (by decide : 0 < 2) (Nat.dvd_of_mem_divisors hd)
+    have hd12 : d = 1 ∨ d = 2 := by omega
+    have hr : inner ℝ (qOne - candidate n) qOne = 1 - saturation n := by
+      rw [residual_inner_qOne, error_identity]
+    rcases hd12 with rfl | rfl
+    · rw [qDivisor_one, hr, real_inner_smul_left, real_inner_comm,
+        QDivisibilityDensity.qOne_inner_qDivisor 2 (by decide)]
+      norm_num
+      ring
+    · have hg := residual_inner_stage n (qResidue 2) (qResidue_two_mem_stage n hn)
+      have hdv : inner ℝ (qOne - candidate n)
+          (QDivisibilityDensity.qDivisor 2) = 1 - saturation n := by
+        rw [QDivisorLegality.qDivisor_two_eq, inner_sub_right, inner_smul_right, hr, hg]
+        ring
+      rw [hdv, real_inner_smul_left, real_inner_self_eq_norm_sq,
+        QDivisibilityDensity.qDivisor_norm_sq 2 (by decide)]
+      norm_num
+      ring
+
+/-- Even the two-cell retained error is an exact multiple of the squared saturation gap. -/
+theorem headEnergy_two (n : ℕ) (hn : 0 < n) :
+    headEnergy 2 n = 4 * (1 - saturation n)^2 := by
+  have hone : conditionalProjection 2 qOne = qOne :=
+    Submodule.starProjection_eq_self_iff.mpr (qOne_mem_cell 2 (by decide))
+  rw [headEnergy_eq_norm_sq 2 n (by decide), ← hone, ← map_sub,
+    residual_projection_two n hn]
+  simp only [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs,
+    QDivisibilityDensity.qDivisor_norm_sq 2 (by decide)]
+  norm_num
+  ring
+
+/-- Every even cutoff satisfies the sharper parity lower bound, retaining the full-error upper bound. -/
+theorem even_cutoff_head_bounds (L n : ℕ) (hL : 0 < L)
+    (hn : 0 < n) (heven : 2 ∣ L) :
+    4 * (1 - saturation n)^2 ≤ headEnergy L n ∧
+      headEnergy L n ≤ 1 - saturation n := by
+  constructor
+  · rw [← headEnergy_two n hn]
+    exact headEnergy_mono_of_dvd 2 L n hL heven
+  · exact (head_constant_mode_bounds L n hL).2
+
+/-- Every nonempty stage captures at least three quarters of the target energy and strictly less than one. -/
+theorem saturation_bounds (n : ℕ) (hn : 0 < n) :
+    (3 / 4 : ℝ) ≤ saturation n ∧ saturation n < 1 := by
+  have he : 0 < 1 - saturation n := by
+    rw [← error_identity]
+    exact residual_energy_pos n
+  have hb := (head_constant_mode_bounds 2 n (by decide)).2
+  rw [headEnergy_two n hn] at hb
+  have hx : (4 * (1 - saturation n)) * (1 - saturation n) ≤
+      1 * (1 - saturation n) := by nlinarith
+  have hy : 4 * (1 - saturation n) ≤ 1 := by
+    by_contra h
+    have hp : 0 < 4 * (1 - saturation n) - 1 := by linarith
+    have hz := mul_pos he hp
+    nlinarith
+  constructor <;> linarith
+
+/-- Along a divisor-exhausting tower, the centered head tends to the limiting optimizer variance. -/
+theorem centered_head_tendsto (L : ℕ → ℕ)
+    (hpos : ∀ n, 0 < L n)
+    (hnest : ∀ i j, i ≤ j → L i ∣ L j)
+    (hcover : ∀ m : ℕ, 0 < m → ∃ n, m ∣ L n) :
+    Tendsto (fun n => ‖conditionalProjection (L n) (candidate n) -
+      saturation n • qOne‖^2) atTop
+      (𝓝 (‖closure.starProjection qOne‖^2 * ‖defect‖^2)) := by
+  have he : (fun n => ‖conditionalProjection (L n) (candidate n) -
+        saturation n • qOne‖^2) =
+      (fun n => saturation n * (1 - saturation n) -
+        dotProduct (coefficients n) ((tailGram (L n) n).mulVec (coefficients n))) := by
+    funext n
+    linarith [centered_head_tail_exact (L n) n (hpos n)]
+  rw [he]
+  simpa only [sub_zero] using
+    (saturation_tendsto.mul error_tendsto).sub
+      (matrix_tail_tendsto_zero L hpos hnest hcover)
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.headEnergy_one' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms headEnergy_one
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.tailEnergy_one' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms tailEnergy_one
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.centered_head_tail_exact' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms centered_head_tail_exact
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.cofinal_head_small_iff_saturation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms cofinal_head_small_iff_saturation
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.cofinal_head_small_iff_one_mem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms cofinal_head_small_iff_one_mem
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.headEnergy_tendsto_zero_iff_positive' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms headEnergy_tendsto_zero_iff_positive
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.headEnergy_refinement_exact' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms headEnergy_refinement_exact
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.headEnergy_two' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms headEnergy_two
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.even_cutoff_head_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms even_cutoff_head_bounds
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.saturation_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms saturation_bounds
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.centered_head_tendsto' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms centered_head_tendsto
 
 end RiemannResearch.RH.QCRTGramSaturation

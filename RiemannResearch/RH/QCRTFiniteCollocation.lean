@@ -203,6 +203,29 @@ theorem conditional_eq_of_match (L : ℕ) (f h : QHilbert)
     exact norm_eq_zero.mp (sq_eq_zero_iff.mp hz)
   exact sub_eq_zero.mp hg0
 
+/-! Source: the user's retained-head criterion audit, 13 November 2026.
+The cutoff-one formulas require no legal-density or RH premise. -/
+
+/-- The cutoff one retains exactly the constant cell. -/
+theorem cellSpace_one :
+    cellSpace 1 = Submodule.span ℝ ({qOne} : Set QHilbert) := by
+  simp [cellSpace, qDivisor_one]
+
+/-- The cutoff-one projection is the complete-Q mean times one. -/
+theorem conditionalProjection_one (f : QHilbert) :
+    conditionalProjection 1 f = (inner ℝ f qOne) • qOne := by
+  apply conditional_eq_of_match
+  · exact (cellSpace 1).smul_mem _ (qOne_mem_cell 1 (by decide))
+  · intro d hd
+    have hd1 : d = 1 := Nat.dvd_one.mp (Nat.dvd_of_mem_divisors hd)
+    subst d
+    rw [qDivisor_one, real_inner_smul_left, real_inner_self_eq_norm_sq,
+      qOne_norm_sq, mul_one]
+
+/-- info: 'RiemannResearch.RH.QCRTFiniteCollocation.conditionalProjection_one' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms conditionalProjection_one
+
 /-- The canonical lift exactly matches every gcd-cell conditional mean. -/
 theorem canonical_conditional (L : ℕ) (hL : 2 ≤ L) :
     conditionalProjection L (canonical L hL) = target L :=

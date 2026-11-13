@@ -183,9 +183,10 @@ divisor-exhaustive tower. The proof takes the limit of (1-s_n)^2 along arbitrari
 late small certificates and obtains ||defect||_Q^4=0.
 
 This is a conditional research reduction, not a provider for small certificates.
-It strengthens the applicability of the previous RH consumer by removing its CRT
-tower assumptions and replacing a full limit by cofinal smallness. It gives no
-new unconditional decay rate. The requested retained-head zero limit remains Open.
+The cofinal retained-head condition is exactly equivalent to the existing
+inverse-Gram saturation condition and to membership of one in the closed full
+legal residue span. Cutoff freedom and cofinal quantifiers provide no new
+arithmetic estimate. The requested retained-head zero limit remains Open.
 
 The attempted CRT-only proof stops at the constant component: decreasing omitted
 energy cannot force 1-s_n to vanish. Ambient density of CRT cells and reciprocal
@@ -198,3 +199,130 @@ Verification: the coherent named-theorem candidate is checked separately from
 publication. The terminal publication checkpoint identifies the final source
 revision and validates the whole project. No unfinished proofs or new axioms are
 introduced.
+
+## Retained-head criterion audit and exact converse
+
+Source: the user's audit of commit 62f6997, 13 November 2026.
+Let e_n=1-s_n=||1-f_n||_Q^2, let tau_(L,n)=c_n^T tailGram(L,n)c_n,
+and let v=Pi_V 1. The cutoff-one formulas give
+
+    cellSpace(1) = span{1},
+    P_1 f = <f,1>_Q 1,
+    P_1 f_n = s_n 1,
+    headEnergy(1,n) = e_n^2,
+    tau_(1,n) = s_n e_n.
+
+Consequently the published cofinal-head hypothesis is equivalent to s_n -> 1
+and to 1 in V. More strongly, for EVERY prescribed sequence L_n>0,
+
+    headEnergy(L_n,n) -> 0  iff  s_n -> 1.
+
+There is no nesting or exhaustion hypothesis in this equivalence. Excluding
+L=1 therefore does not change the zero-limit obligation. The original
+conditional RH theorem remains valid; no unconditional RH conclusion or
+RH-to-density converse is asserted.
+
+### Further unconditional identities
+
+For every L>0, the complete energy accounting is
+
+    headEnergy(L,n) = e_n^2 + ||P_L f_n-s_n 1||_Q^2,
+    ||P_L f_n-s_n 1||_Q^2 + tau_(L,n) = s_n e_n.
+
+For L|M and M>0, refinement gives
+
+    headEnergy(M,n) = headEnergy(L,n) + ||P_M f_n-P_L f_n||_Q^2.
+
+Every positive-cutoff head energy is strictly positive at a finite stage.
+For n>0, orthogonality of the residual to g_2 gives the exact parity formula
+
+    P_2(1-f_n) = 4e_n qDivisor(2),
+    headEnergy(2,n) = 4e_n^2.
+
+Thus 4e_n^2 <= headEnergy(L,n) <= e_n when 2|L and L>0, and
+3/4 <= s_n < 1 for n>0. These statements do not decide the limiting gap.
+
+Along the previously specified nested divisor-exhausting towers,
+
+    ||P_(L_n) f_n-s_n 1||_Q^2 -> ||v||_Q^2 ||1-v||_Q^2.
+
+Together with the unconditional tail limit zero and head limit ||1-v||_Q^2,
+this identifies the possible nonzero limiting energy without discarding it.
+
+### Declaration map for the audit
+
+The first row belongs to QCRTFiniteCollocation; all other rows belong to
+QCRTGramSaturation.
+
+| Declarations | Statement/status |
+| --- | --- |
+| cellSpace_one; conditionalProjection_one | Exact constant-cell space and mean projection. |
+| candidate_projection_one; headEnergy_one; tailEnergy_one | Exact one-cell optimizer formulas with the complementary energy retained. |
+| centered_head_tail_exact | Complete nonconstant-head plus omitted-tail variance identity. |
+| headEnergy_one_le | The one-cell cutoff attains the smallest positive-cutoff retained error. |
+| cofinal_head_small_iff_saturation; cofinal_head_small_iff_one_mem | Exact equivalence with saturation and legal closure membership. |
+| headEnergy_tendsto_zero_iff_positive | Same zero-limit obligation for every prescribed positive cutoff sequence. |
+| headEnergy_refinement_exact; headEnergy_mono_of_dvd | Exact refinement square and its monotonicity consequence. |
+| headEnergy_pos | Strict positivity at every finite stage and positive cutoff. |
+| residual_projection_two; headEnergy_two | Exact two-cell residual and retained error. |
+| even_cutoff_head_bounds; saturation_bounds | Sharper even-cutoff bounds and 3/4 <= s_n < 1 for n>0. |
+| centered_head_tendsto | Unconditional limit to ‖v‖²_Q ‖1-v‖²_Q on exhaustive towers. |
+
+### A separate nondegenerate arithmetic provider remains Open
+
+Prime-power exhaustion is essential for the ambient tail theorem. An LCM tower
+L_m=lcm(1,...,m) admits every prime-power depth and composite divisor; squarefree
+primorial cutoffs do not. All coefficients and Gram entries must still use the
+complete physical Q measure, and G=headGram+tailGram must remain the matrix
+being inverted.
+
+For the actual optimizers, the missing estimate is exactly
+
+    1-b_n^T G_n^(-1)b_n -> 0.
+
+An independently proved vanishing bound for the centered retained energy on
+an exhaustive tower would also suffice, because the complete omitted tail
+already tends to zero and the limiting saturation is at least 3/4.
+
+The explicit canonical collocation lifts F_L are a different family:
+
+    P_L F_L = 1-qDivisor(L),
+    ||1-P_L F_L||_Q^2 = L^(-2),
+    ||1-F_L||_Q^2 = L^(-2)+leakage(L),
+    ||F_L||_Q^2 = 1-L^(-2)+leakage(L).
+
+Their visible errors already vanish, but they need not satisfy the optimizer
+normal equations. They cannot be substituted into the optimizer criterion.
+The complete leakage is the full Jordan-weighted sum over all wavelets whose
+conductors do not divide L, including excessive powers of primes already present.
+
+QCRTBoundedCriterion.riemannHypothesis_of_bounded_lcm_leakage consumes a uniform
+bound on this complete leakage along a cofinal LCM subsequence. The weaker
+cofinal subpower norm-growth condition in QCRTZeroGrowth is another sufficient
+provider. Neither arithmetic bound is proved by this audit.
+
+A uniform inverse bound for every CRT target cannot supply the missing estimate:
+QCRTInverseInstability.eventually_exists_unstable_trial rules out such a fixed
+bound along every cutoff sequence tending to infinity. A successful argument
+must control the actual canonical right-hand side and LCM arithmetic.
+
+The conditional theorem has no circular proof body. Using saturation or equivalent
+closure membership to establish its head-smallness hypothesis, then presenting
+the conclusion as an independent proof of saturation, would be circular.
+
+### Audit verification and publication scope
+
+All 18 named review declarations passed an ephemeral Bazel/BuildBuddy check
+against commit 62f6997, with guarded result axioms restricted to propext,
+Classical.choice, and Quot.sound:
+
+- Job: job_Jc0hdGeu114vDbikW7Id4EhOYF6nmjWH.
+- Verification duration: 58.291 seconds, excluding transport and polling delays.
+- [BuildBuddy invocation](https://app.buildbuddy.io/invocation/acc908db-04d6-4d97-bd50-f2eeec9ab4dc).
+- Reviewed source SHA-256:
+  eec9ee079a2c44231ce1a1266f3a3935bd6568bd0b8eadb760b2bf0c7674be10.
+
+The persisted declarations remove the temporary _audit suffix, add provenance
+and descriptions, and place general projection lemmas in their owning module.
+The publication checkpoint separately validates the full resulting project
+and any integration with newer main before committing and pushing.
