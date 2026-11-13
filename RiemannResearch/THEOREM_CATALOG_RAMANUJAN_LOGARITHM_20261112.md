@@ -1,5 +1,12 @@
 # Ramanujan logarithm and direct atom closure
 
+Correction, 13 November 2026: the user clarified that the intended logarithm
+is the physical Pareto sequence h(n)=Lambda(n)/log(n), not the packet
+coefficient synthesis studied below. This note's obstruction applies only
+to the latter and does not refute legality of the physical sequence.
+See THEOREM_CATALOG_PARETO_PHYSICAL_LOGARITHM_20261113.md for the corrected
+investigation and the remaining legality transfer.
+
 12 November 2026. Source: Christian Noack's request to use
 log_*(mathbb 1) as a legal Ramanujan combination and prove that the
 constant target belongs to the closed atom span.

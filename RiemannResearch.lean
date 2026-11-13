@@ -2570,6 +2570,7 @@ import RiemannResearch.LinearAlgebra.WeightedFiniteCovariance
 import RiemannResearch.LinearAlgebra.WeightedQuotientHilbert
 import RiemannResearch.RH.IntegratedRamanujanHilbert
 import RiemannResearch.RH.RamanujanLogarithmObstruction
+import RiemannResearch.RH.ParetoPhysicalLogarithm
 import RiemannResearch.RH.OmittedPrimePacketObstruction
 import RiemannResearch.RH.ConductorProjectionRH
 import RiemannResearch.RH.ParetoConductorFibers
