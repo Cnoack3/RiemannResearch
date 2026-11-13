@@ -1535,6 +1535,8 @@ import RiemannResearch.RH.QSquarefreeExactHeadAverages
 import RiemannResearch.RH.QExplicitCandidates
 import RiemannResearch.RH.QFullResidueProjection
 import RiemannResearch.RH.QFullDisplacement
+import RiemannResearch.RH.QFullPrimeProjectionControl
+import RiemannResearch.RH.QFullPrimeDecomposition
 import RiemannResearch.RH.QFullDivisorProjection
 import RiemannResearch.RH.QMatchedOscillationKernel
 import RiemannResearch.RH.QFullOscillationDual
