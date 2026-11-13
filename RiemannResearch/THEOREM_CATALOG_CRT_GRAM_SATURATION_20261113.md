@@ -152,3 +152,49 @@ RH consumer. Each permits exactly the standard Lean axioms
 propext, Classical.choice, and Quot.sound. The publication checkpoint
 also audits source and validates the aggregate project with Bazel and
 BuildBuddy before committing or pushing.
+
+## Constant-mode continuation: the requested zero limit is still open
+
+Source: the user's request to perform the retained-head obligation, 13 November 2026.
+Write f_n=candidate n, s_n=saturation n, and P_L=conditionalProjection L.
+The normal equations give <1,f_n>_Q=s_n. Every positive CRT cell contains 1,
+so <1,P_L f_n>_Q=s_n as well. Orthogonal separation of the constant mode gives
+
+    headEnergy L n = (1-s_n)^2 + ||P_L f_n - s_n 1||_Q^2.
+
+This is head_constant_mode_exact. Together with the complete head/tail split,
+head_constant_mode_bounds proves, for EVERY L>0 and n,
+
+    (1-s_n)^2 <= headEnergy L n <= 1-s_n.
+
+No nesting, exhaustion, asymptotic rate, or RH premise enters these identities.
+Thus a finite certificate headEnergy L n <= epsilon controls the full squared
+approximation error 1-s_n by sqrt(epsilon). Both the constant-mode remainder
+and the omitted CRT energy are retained in their respective exact identities.
+
+The new one_mem_of_cofinal_head_small and
+riemannHypothesis_of_cofinal_head_small require only
+
+    for every epsilon>0 and N, there are n>=N and L>0
+    with headEnergy L n < epsilon.
+
+The cutoff L may depend on the certificate. It need not belong to a nested or
+divisor-exhaustive tower. The proof takes the limit of (1-s_n)^2 along arbitrarily
+late small certificates and obtains ||defect||_Q^4=0.
+
+This is a conditional research reduction, not a provider for small certificates.
+It strengthens the applicability of the previous RH consumer by removing its CRT
+tower assumptions and replacing a full limit by cofinal smallness. It gives no
+new unconditional decay rate. The requested retained-head zero limit remains Open.
+
+The attempted CRT-only proof stops at the constant component: decreasing omitted
+energy cannot force 1-s_n to vanish. Ambient density of CRT cells and reciprocal
+density of the residues do not supply that arithmetic assertion. The focused next
+attempt is a rigorous complete-Gram certificate family with arbitrarily small
+headEnergy; neither a finite numerical table nor a claim of invariant legal
+closure supplies such a family.
+
+Verification: the coherent named-theorem candidate is checked separately from
+publication. The terminal publication checkpoint identifies the final source
+revision and validates the whole project. No unfinished proofs or new axioms are
+introduced.

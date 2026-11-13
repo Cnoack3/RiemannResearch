@@ -22,6 +22,7 @@ import RiemannResearch.RH.QCRTLeakageParseval
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Positivity
 
 /-!
 # CRT Gram decomposition and the actual inverse-Gram saturation limit
@@ -423,5 +424,66 @@ theorem riemannHypothesis_of_matrix_head_tendsto_zero (L : ℕ → ℕ)
 /-- info: 'RiemannResearch.RH.QCRTGramSaturation.riemannHypothesis_of_matrix_head_tendsto_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms riemannHypothesis_of_matrix_head_tendsto_zero
+
+/-! Source: the user's retained-head obligation, 13 November 2026.
+The exact identity is unconditional; small-certificate existence remains Open. -/
+
+theorem candidate_constant_pairing (n : ℕ) :
+    inner ℝ qOne (candidate n) = saturation n := by
+  have h := error_identity n
+  rw [norm_sub_sq_real, qOne_norm_sq, ← saturation_eq_norm_sq] at h
+  linarith
+
+theorem head_constant_mode_exact (L n : ℕ) (hL : 0 < L) :
+    headEnergy L n = (1 - saturation n)^2 +
+      ‖conditionalProjection L (candidate n) - saturation n • qOne‖^2 := by
+  have hp := conditional_inner L (candidate n) qOne (qOne_mem_cell L hL)
+  have hm : inner ℝ (conditionalProjection L (candidate n)) qOne = saturation n := by
+    rw [hp, real_inner_comm]
+    exact candidate_constant_pairing n
+  have hm' : inner ℝ qOne (conditionalProjection L (candidate n)) = saturation n :=
+    (real_inner_comm _ _).trans hm
+  rw [headEnergy_eq_norm_sq L n hL]
+  simp only [norm_sub_sq_real, norm_smul, Real.norm_eq_abs, mul_pow,
+    sq_abs, qOne_norm_sq, inner_smul_right, hm, hm']
+  ring
+
+theorem head_constant_mode_bounds (L n : ℕ) (hL : 0 < L) :
+    (1 - saturation n)^2 ≤ headEnergy L n ∧ headEnergy L n ≤ 1 - saturation n := by
+  constructor
+  · rw [head_constant_mode_exact L n hL]
+    exact le_add_of_nonneg_right (sq_nonneg _)
+  · have h := matrix_error_crt_split L n
+    rw [candidate_tail_quadratic] at h
+    linarith [sq_nonneg ‖candidate n - conditionalProjection L (candidate n)‖]
+
+/-- Conditional reduction: cutoffs need not be nested or exhaustive. -/
+theorem one_mem_of_cofinal_head_small
+    (hsmall : ∀ ε : ℝ, 0 < ε → ∀ N : ℕ, ∃ n : ℕ, N ≤ n ∧
+      ∃ L : ℕ, 0 < L ∧ headEnergy L n < ε) : qOne ∈ closure := by
+  have hz : (‖defect‖^2)^2 = 0 := by
+    by_contra hn
+    have hp : 0 < (‖defect‖^2)^2 := lt_of_le_of_ne (sq_nonneg _) (Ne.symm hn)
+    have hf : ∃ᶠ n in atTop, (1 - saturation n)^2 ≤ (‖defect‖^2)^2 / 2 := by
+      rw [frequently_atTop]
+      intro N
+      obtain ⟨n, hn, L, hL, he⟩ := hsmall ((‖defect‖^2)^2 / 2) (by positivity) N
+      exact ⟨n, hn, ((head_constant_mode_bounds L n hL).1.trans_lt he).le⟩
+    have hh := le_of_tendsto_of_frequently (error_tendsto.pow 2) hf
+    linarith
+  have hd : defect = 0 := norm_eq_zero.mp (sq_eq_zero_iff.mp (sq_eq_zero_iff.mp hz))
+  exact Submodule.starProjection_eq_self_iff.mp (sub_eq_zero.mp hd).symm
+
+theorem riemannHypothesis_of_cofinal_head_small
+    (hsmall : ∀ ε : ℝ, 0 < ε → ∀ N : ℕ, ∃ n : ℕ, N ≤ n ∧
+      ∃ L : ℕ, 0 < L ∧ headEnergy L n < ε) : RiemannHypothesis :=
+  riemannHypothesis_of_qOne_mem_full_closure (one_mem_of_cofinal_head_small hsmall)
+
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.head_constant_mode_exact' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms head_constant_mode_exact
+/-- info: 'RiemannResearch.RH.QCRTGramSaturation.riemannHypothesis_of_cofinal_head_small' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms riemannHypothesis_of_cofinal_head_small
 
 end RiemannResearch.RH.QCRTGramSaturation
