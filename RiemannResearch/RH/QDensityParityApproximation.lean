@@ -19,6 +19,10 @@ import RiemannResearch.Analysis.ExhaustiveProjectionWalk
 import RiemannResearch.RH.QDivisorHilbertBasis
 import RiemannResearch.RH.QDivisibilityResidueCoefficients
 import RiemannResearch.RH.QDivisorWaveletFactorization
+import Mathlib.NumberTheory.ZetaValues
+import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.IntervalCases
 import Mathlib.Tactic.FieldSimp
@@ -274,5 +278,158 @@ theorem threeCoordinateDensityFit_exact (n : ℕ)
 /-- info: 'RiemannResearch.RH.QDensityParityApproximation.density_error_parseval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms density_error_parseval
+
+/-!
+The exact normalization below uses Mathlib's checked zeta(2) and zeta(4)
+series evaluations:
+https://leanprover-community.github.io/mathlib4_docs/Mathlib/NumberTheory/ZetaValues.html
+
+The resulting numeric saturation criterion is still conditional on the
+single target's legal-span membership; the residual is retained in the
+unconditional monotone limit.
+-/
+
+set_option maxHeartbeats 800000 in
+private theorem odd_fourth_sum :
+    (∑' m : ℕ, if m % 2 = 1 then 1 / (m : ℝ) ^ 4 else 0) =
+      Real.pi ^ 4 / 96 := by
+  have hs : Summable (fun m : ℕ => 1 / (m : ℝ) ^ 4) :=
+    hasSum_zeta_four.summable
+  have he : Function.Injective (fun m : ℕ => 2 * m) := by
+    intro i j h
+    change 2 * i = 2 * j at h
+    omega
+  have ho : Function.Injective (fun m : ℕ => 2 * m + 1) := by
+    intro i j h
+    change 2 * i + 1 = 2 * j + 1 at h
+    omega
+  have hsplit := tsum_even_add_odd
+    (f := fun m : ℕ => 1 / (m : ℝ) ^ 4)
+    (hs.comp_injective he) (hs.comp_injective ho)
+  have heven :
+      (∑' m : ℕ, 1 / ((2 * m : ℕ) : ℝ) ^ 4) =
+        (1 / 16 : ℝ) * (Real.pi ^ 4 / 90) := by
+    rw [← hasSum_zeta_four.tsum_eq, ← tsum_mul_left]
+    apply tsum_congr
+    intro m
+    simp only [Nat.cast_mul, Nat.cast_ofNat, mul_pow, one_div, mul_inv_rev]
+    norm_num
+    ring
+  rw [hasSum_zeta_four.tsum_eq, heven] at hsplit
+  have hodd :
+      (∑' m : ℕ, 1 / ((2 * m + 1 : ℕ) : ℝ) ^ 4) = Real.pi ^ 4 / 96 := by
+    linarith
+  have hd : Summable (fun m : ℕ =>
+      if m % 2 = 1 then 1 / (m : ℝ) ^ 4 else 0) := by
+    apply Summable.of_nonneg_of_le (fun m => by split_ifs <;> positivity) _ hs
+    intro m
+    split_ifs
+    · exact le_rfl
+    · positivity
+  have hdsplit := tsum_even_add_odd
+    (f := fun m : ℕ => if m % 2 = 1 then 1 / (m : ℝ) ^ 4 else 0)
+    (hd.comp_injective he) (hd.comp_injective ho)
+  have hdeq :
+      (∑' m : ℕ, 1 / ((2 * m + 1 : ℕ) : ℝ) ^ 4) =
+        ∑' m : ℕ, if m % 2 = 1 then 1 / (m : ℝ) ^ 4 else 0 := by
+    simpa [Nat.add_mod, Nat.mul_mod] using hdsplit
+  exact hdeq.symm.trans hodd
+
+theorem oddReciprocal_norm_sq :
+    ‖oddReciprocal‖ ^ 2 = Real.pi ^ 2 / 64 := by
+  have hz : zetaTwo = Real.pi ^ 2 / 6 := by
+    rw [zetaTwo_eq_nat_sum]
+    exact hasSum_zeta_two.tsum_eq
+  rw [oddReciprocal_norm_series]
+  calc
+    _ = (1 / (4 * zetaTwo)) *
+        ∑' m : ℕ, if m % 2 = 1 then 1 / (m : ℝ) ^ 4 else 0 := by
+      rw [← tsum_mul_left]
+      apply tsum_congr
+      intro m
+      split_ifs <;> simp [one_div, mul_inv_rev, mul_left_comm, mul_comm]
+    _ = Real.pi ^ 2 / 64 := by
+      rw [odd_fourth_sum, hz]
+      field_simp [Real.pi_ne_zero]
+      ring
+
+def targetInformation (n : ℕ) : ℝ :=
+  dotProduct (targetCross n) (targetCoefficients n)
+
+theorem targetInformation_eq_norm_sq (n : ℕ) :
+    targetInformation n = ‖reciprocalFit n‖ ^ 2 := by
+  rw [reciprocalFit_eq_projection]
+  have h := projection_inner_eq_inverseGram
+    (qResidue_linearIndependent (conductor n)
+      (conductor_gt_one n) (conductor_injective n)) oddReciprocal oddReciprocal
+  rw [real_inner_self_eq_norm_sq] at h
+  exact h.symm
+
+theorem targetInformation_nonneg (n : ℕ) : 0 ≤ targetInformation n := by
+  rw [targetInformation_eq_norm_sq]
+  exact sq_nonneg _
+
+theorem targetInformation_le (n : ℕ) :
+    targetInformation n ≤ Real.pi ^ 2 / 64 := by
+  have h := reciprocal_error_matrix n
+  rw [oddReciprocal_norm_sq] at h
+  change ‖oddReciprocal - reciprocalFit n‖ ^ 2 =
+    Real.pi ^ 2 / 64 - targetInformation n at h
+  nlinarith [sq_nonneg ‖oddReciprocal - reciprocalFit n‖]
+
+theorem targetInformation_monotone : Monotone targetInformation := by
+  intro m n hmn
+  have h := walkError_antitone (fun i => qResidue (i + 2))
+    id oddReciprocal hmn
+  change ‖oddReciprocal - (stage n).starProjection oddReciprocal‖ ^ 2 ≤
+    ‖oddReciprocal - (stage m).starProjection oddReciprocal‖ ^ 2 at h
+  rw [← reciprocalFit_eq_projection, ← reciprocalFit_eq_projection,
+    reciprocal_error_matrix, reciprocal_error_matrix] at h
+  change ‖oddReciprocal‖ ^ 2 - targetInformation n ≤
+    ‖oddReciprocal‖ ^ 2 - targetInformation m at h
+  linarith
+
+/-- The unconditional limit retains the full closed-span residual. -/
+theorem targetInformation_tendsto :
+    Tendsto targetInformation atTop
+      (𝓝 (Real.pi ^ 2 / 64 -
+        ‖oddReciprocal - closure.starProjection oddReciprocal‖ ^ 2)) := by
+  change Tendsto (fun n => dotProduct (targetCross n) (targetCoefficients n))
+    atTop _
+  have h := (tendsto_const_nhds :
+    Tendsto (fun _ : ℕ => ‖oddReciprocal‖ ^ 2) atTop
+      (𝓝 (‖oddReciprocal‖ ^ 2))).sub reciprocal_error_matrix_tendsto
+  simpa only [sub_sub_cancel, oddReciprocal_norm_sq, targetInformation] using h
+
+/-- The requested numeric saturation limit still requires Bg₂ membership. -/
+theorem targetInformation_tendsto_pi_iff :
+    Tendsto targetInformation atTop (𝓝 (Real.pi ^ 2 / 64)) ↔
+      B (qResidue 2) ∈ closure := by
+  change Tendsto (fun n => dotProduct (targetCross n) (targetCoefficients n))
+    atTop (𝓝 (Real.pi ^ 2 / 64)) ↔ B (qResidue 2) ∈ closure
+  constructor
+  · intro h
+    apply reciprocal_matrix_zero_iff_density_mem.mp
+    have ht := (tendsto_const_nhds :
+      Tendsto (fun _ : ℕ => Real.pi ^ 2 / 64) atTop
+        (𝓝 (Real.pi ^ 2 / 64))).sub h
+    simpa only [sub_self, ← oddReciprocal_norm_sq, targetInformation] using ht
+  · intro h
+    have ht := (tendsto_const_nhds :
+      Tendsto (fun _ : ℕ => ‖oddReciprocal‖ ^ 2) atTop
+        (𝓝 (‖oddReciprocal‖ ^ 2))).sub
+      (reciprocal_matrix_zero_iff_density_mem.mpr h)
+    simpa only [sub_sub_cancel, sub_zero, oddReciprocal_norm_sq,
+      targetInformation] using ht
+
+/-- info: 'RiemannResearch.RH.QDensityParityApproximation.oddReciprocal_norm_sq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms oddReciprocal_norm_sq
+/-- info: 'RiemannResearch.RH.QDensityParityApproximation.targetInformation_tendsto' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms targetInformation_tendsto
+/-- info: 'RiemannResearch.RH.QDensityParityApproximation.targetInformation_tendsto_pi_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms targetInformation_tendsto_pi_iff
 
 end RiemannResearch.RH.QDensityParityApproximation

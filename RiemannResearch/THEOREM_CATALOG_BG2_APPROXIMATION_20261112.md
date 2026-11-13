@@ -64,14 +64,23 @@ fourth-power sum give
 \[
 \|u\|_Q^2=\frac{15\zeta(4)}{64\zeta(2)}=\frac{\pi^2}{64}.
 \]
-This final scalar evaluation is a paper calculation here; the Lean
-declaration retains the exact infinite series.
+The scalar evaluation is now kernel checked by oddReciprocal_norm_sq,
+using Mathlib's hasSum_zeta_two and hasSum_zeta_four. Both the exact series
+and the numerical constant are retained.
 
 The proved unconditional error limit is
 \[
 \|Bg_2-h_N\|_Q^2\longrightarrow
  z^{-2}\|u-\Pi_Vu\|_Q^2.
 \]
+The scalar information \(s_N=(b_N^{(2)})^\top G_N^{-1}b_N^{(2)}\)
+is now proved nonnegative, monotone, and bounded by \(\pi^2/64\), with the
+exact unconditional limit
+\[
+s_N\uparrow\frac{\pi^2}{64}-\|u-\Pi_Vu\|_Q^2.
+\]
+This proves existence of a limit, not its equality to the upper bound.
+
 The required new assertion is
 \[
 (b_N^{(2)})^\top G_N^{-1}b_N^{(2)}\longrightarrow\|u\|_Q^2.
@@ -120,6 +129,11 @@ Namespace: RiemannResearch.RH.QDensityParityApproximation.
 | reciprocal_matrix_zero_iff_density_mem | Exact remaining zero-error criterion. |
 | oddReciprocal_norm_series; targetCross_series | Complete arithmetic formulas for the norm and normal-equation vector. |
 | density_error_parseval | Complete Jordan-weighted divisor-wavelet error. |
+| oddReciprocal_norm_sq | Exact kernel-checked value `Real.pi ^ 2 / 64`. |
+| targetInformation_eq_norm_sq; targetInformation_nonneg | The scalar matrix information is a squared projection norm. |
+| targetInformation_le; targetInformation_monotone | The information increases and is at most `Real.pi ^ 2 / 64`. |
+| targetInformation_tendsto | Exact unconditional limit with the entire residual energy subtracted. |
+| targetInformation_tendsto_pi_iff | The displayed numerical limit holds iff Bg₂ belongs to the legal closure; membership remains Open. |
 | threeCoordinateFit_exact; threeCoordinateDensityFit_exact | Explicit three-coordinate interpolants. |
 
 ## Verification and provenance
@@ -130,12 +144,16 @@ checks, passed Bazel with BuildBuddy: job
 60.888 seconds of verification.
 [BuildBuddy invocation](https://app.buildbuddy.io/invocation/d2d8dba1-5b39-455b-b806-729ebc138d4c).
 
-The persisted module adds its provenance header and the direct projection
-import. The publication checkpoint separately validates the complete
+The subsequent exact-normalization and monotone-limit candidate passed
+Bazel with BuildBuddy: job `job_ajdHOCxKUxEYkkMMDsKrmE5ZdRk6aWS2`,
+verified true, exit code 0, 63.249 seconds of verification.
+[BuildBuddy invocation](https://app.buildbuddy.io/invocation/c9404f64-087c-46f8-81e9-4b18d11f9cdb).
+
+The persisted module includes both verified developments. The publication checkpoint separately validates the complete
 aggregate repository before committing and pushing.
 
 The module contains guarded axiom checks for the matrix identity, the
-membership criterion, and Parseval. Their dependencies are exactly
+membership criterion, Parseval, the exact scalar norm, and the numeric limit criterion. Their dependencies are exactly
 propext, Classical.choice, and Quot.sound.
 
 Source: the user's request to approximate Bg₂ by the original residues.
