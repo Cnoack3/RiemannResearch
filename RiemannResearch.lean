@@ -1,3 +1,5 @@
+import RiemannResearch.RH.QDensityMetricInverse
+import RiemannResearch.RH.QDensityClosureTransfer
 import RiemannResearch.RH.QCompactPhysicalBounds
 import RiemannResearch.RH.QDisplacementProfiniteContinuity
 import RiemannResearch.NumberTheory.PrimeCRTSelectors

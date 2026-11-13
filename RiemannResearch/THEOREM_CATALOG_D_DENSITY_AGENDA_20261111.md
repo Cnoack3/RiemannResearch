@@ -5,6 +5,8 @@ Implementation baseline: 2d94869a4c420b6596ef068f7403a2e94dfb0f74.
 This continuation adds seven focused Lean modules, 50 public theorems, and nine public definitions.
 The arithmetic complete-cost provider and RH remain OPEN.
 
+P/Q notation and the exact closure/invariance audit: [density operator catalog](THEOREM_CATALOG_PQ_DENSITY_OPERATORS_20261112.md).
+
 ## Status of the seven priorities
 
 | Priority | Proved or improved here | What remains open |
