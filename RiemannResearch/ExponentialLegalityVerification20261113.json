@@ -1,0 +1,136 @@
+{
+  "date": "2026-11-13",
+  "timezone": "America/New_York",
+  "task": "exp_*(V): coefficientwise domain, bounded legality criterion, and full-legality obstruction",
+  "base_commit": "bfbd7d177636a562ce29ecba817ed5357e224c86",
+  "theorem_count": 49,
+  "declarations": {
+    "NumberTheory/DirichletExponentialDomain.lean": {
+      "theorems": [
+        "convolutionPower_abs_le_of_local_bound",
+        "convolutionExp_summable_at",
+        "convolutionExp_at_one",
+        "convolutionExp_at_one_pos",
+        "convolutionExp_ne_zero",
+        "convolutionExp_quadratic_lower_of_nonneg"
+      ],
+      "definitions": []
+    },
+    "RH/ParetoExponentialLegality.lean": {
+      "theorems": [
+        "arithmeticInput_apply",
+        "arithmeticInput_zero",
+        "physicalExp_summable",
+        "physicalExp_one",
+        "physicalExp_zero",
+        "zero_not_mem_expImage",
+        "expImage_not_submodule",
+        "unit_mem_expImage",
+        "zero_hasBoundedCoordinates",
+        "physicalExp_square_summable_of_bounded",
+        "boundedExp_sequence",
+        "boundedExp_zero",
+        "retainsBoundedLegality_iff_density",
+        "retainsLegality_implies_bounded",
+        "riemannHypothesis_of_retainsBoundedLegality",
+        "riemannHypothesis_of_retainsLegality",
+        "retainsBoundedLegality_iff_rh",
+        "exponential_not_square_summable_of_square_not_summable",
+        "exponential_mem_of_power_legality",
+        "centered_exponential_mem_of_positive_power_legality"
+      ],
+      "definitions": [
+        "arithmeticInput",
+        "physicalExp",
+        "expImage",
+        "HasBoundedCoordinates",
+        "boundedExp",
+        "RetainsLegality",
+        "RetainsBoundedLegality"
+      ]
+    },
+    "RH/ParetoExponentialCounterexample.lean": {
+      "theorems": [
+        "decay_pos",
+        "decay_sq",
+        "decay_sq_summable",
+        "sparseInput_pow",
+        "sparseInput_outside",
+        "sparseInput_nonneg",
+        "sparseInput_inv_sq_summable",
+        "sparseInput_pareto_summable",
+        "sparseInput_square_pow",
+        "decay_antitone",
+        "convolution_sum_lower",
+        "sparseInput_square_inv_sq_lower",
+        "inv_sq_le_twice_positiveWeight",
+        "sparseInput_square_pareto_lower",
+        "sparseInput_square_not_pareto_summable",
+        "sparseInput_exp_not_pareto_summable",
+        "sparseVector_sequence",
+        "sparseVector_arithmeticInput",
+        "sparseVector_exp_not_pareto_summable",
+        "exists_square_outside_hilbert",
+        "exists_exponential_outside_hilbert",
+        "not_retainsLegality",
+        "exists_legal_input_without_legal_exponential"
+      ],
+      "definitions": [
+        "decay",
+        "sparseInput",
+        "sparseVector"
+      ]
+    }
+  },
+  "verification": {
+    "job_id": "job_rZ9ZTaM1Ahrv2yTB8QBYRzb9pVoEThp9",
+    "backend": "bazel",
+    "exit_code": 0,
+    "classification": "success",
+    "verified": true,
+    "elapsed_seconds": 47.375,
+    "audit_code_sha256": "da3cd5f406a3bf05b096af7f33f1c7f749a28434365634b64a760b46049f7af4",
+    "invocation": "https://app.buildbuddy.io/invocation/940a2887-0c1e-4edf-8116-631a8c8b4b6d",
+    "audit_source": "import RiemannResearch.RH.ParetoExponentialCounterexample\n\nopen RiemannResearch.NumberTheory.DirichletExponential\nopen RiemannResearch.RH.Pareto.ExponentialLegality\nopen RiemannResearch.RH.Pareto.ExponentialCounterexample\n/-- info: 'RiemannResearch.NumberTheory.DirichletExponential.convolutionExp_summable_at' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms convolutionExp_summable_at\n\n/-- info: 'RiemannResearch.RH.Pareto.ExponentialLegality.retainsBoundedLegality_iff_density' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms retainsBoundedLegality_iff_density\n\n/-- info: 'RiemannResearch.RH.Pareto.ExponentialLegality.riemannHypothesis_of_retainsBoundedLegality' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms riemannHypothesis_of_retainsBoundedLegality\n\n/-- info: 'RiemannResearch.RH.Pareto.ExponentialLegality.centered_exponential_mem_of_positive_power_legality' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms centered_exponential_mem_of_positive_power_legality\n\n/-- info: 'RiemannResearch.RH.Pareto.ExponentialCounterexample.sparseInput_exp_not_pareto_summable' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms sparseInput_exp_not_pareto_summable\n\n/-- info: 'RiemannResearch.RH.Pareto.ExponentialCounterexample.not_retainsLegality' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms not_retainsLegality\n\n/-- info: 'RiemannResearch.RH.Pareto.ExponentialCounterexample.exists_legal_input_without_legal_exponential' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms exists_legal_input_without_legal_exponential\n",
+    "audited_declarations": [
+      "RiemannResearch.NumberTheory.DirichletExponential.convolutionExp_summable_at",
+      "RiemannResearch.RH.Pareto.ExponentialLegality.retainsBoundedLegality_iff_density",
+      "RiemannResearch.RH.Pareto.ExponentialLegality.riemannHypothesis_of_retainsBoundedLegality",
+      "RiemannResearch.RH.Pareto.ExponentialLegality.centered_exponential_mem_of_positive_power_legality",
+      "RiemannResearch.RH.Pareto.ExponentialCounterexample.sparseInput_exp_not_pareto_summable",
+      "RiemannResearch.RH.Pareto.ExponentialCounterexample.not_retainsLegality",
+      "RiemannResearch.RH.Pareto.ExponentialCounterexample.exists_legal_input_without_legal_exponential"
+    ],
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "all_guarded_axiom_checks_passed": true
+  },
+  "external_computation": {
+    "system": "Wolfram Language",
+    "status": "evaluator succeeded; context lookup returned an internal error",
+    "code": "{FullSimplify[(a+1)*((a+1)^(-3/4))^2,(a>=0)],FullSimplify[((a+1)^(-1/2))^2,(a>=0)],Sum[1/(a+1)^(3/2),{a,0,Infinity}],Sum[1/(a+1),{a,0,Infinity}]}",
+    "results": [
+      "1/Sqrt[1+a]",
+      "1/(1+a)",
+      "Zeta[3/2]",
+      "Sum::div: harmonic series does not converge"
+    ],
+    "proof_status": "Independent symbolic checks, not Lean proof inputs"
+  },
+  "formal_boundary": {
+    "full_legality": "Refuted unconditionally by not_retainsLegality",
+    "bounded_legality": "Equivalent to closedSpace = top; implies RiemannHypothesis",
+    "rh_converse": "Explicit parameter hDensity : RiemannHypothesis -> closedSpace = top",
+    "centered_legality": "Requires legality of all positive convolution powers and the stated factorial energy bound",
+    "rh_proved": false
+  },
+  "sources": [
+    "https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/PSeries.html",
+    "https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/Normed/Algebra/Exponential.html",
+    "https://www.bdim.eu/item?id=RLIN_2003_9_14_1_5_0",
+    "https://arxiv.org/abs/math/0202141"
+  ]
+}

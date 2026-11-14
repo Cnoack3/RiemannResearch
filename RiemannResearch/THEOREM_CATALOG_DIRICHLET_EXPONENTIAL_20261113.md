@@ -178,3 +178,11 @@ in the closed residue span, since bounded approximants can converge in
 | Decide legality for one specified prime | **Open in these modules:** establish or refute `residueExponential p ∈ closedSpace`. The cofinal criterion and algebraic-span nonmembership do not decide this statement. |
 
 The envelope-energy and factorial-moment obligations are discharged by checked provider declarations. The established theorem is actual unbounded-prime legality iff `closedSpace = ⊤`, together with its implication to Mathlib RH. No unconditional RH conclusion or fixed-prime closed-span conclusion is claimed.
+
+## Exponentiating the entire legal space
+
+The follow-up [exponential-legality catalog](THEOREM_CATALOG_EXPONENTIAL_LEGALITY_20261113.md)
+formalizes coefficientwise convergence for arbitrary real inputs, proves that
+bounded-input legality preservation is equivalent to density, and supplies a
+positive Hilbert vector with an exponential of infinite energy. Full legality
+preservation on V is therefore false; the bounded-input density question remains open.

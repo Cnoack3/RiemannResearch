@@ -3,6 +3,9 @@ import RiemannResearch.RH.ConditionalMeanExactEndpoint
 import RiemannResearch.RH.ParetoFiniteHeadRepair
 import RiemannResearch.RH.ConditionalMeanEndpointEquivalences
 import RiemannResearch.NumberTheory.DirichletExponential
+import RiemannResearch.NumberTheory.DirichletExponentialDomain
+import RiemannResearch.RH.ParetoExponentialLegality
+import RiemannResearch.RH.ParetoExponentialCounterexample
 import RiemannResearch.NumberTheory.ParityResidueConvolution
 import RiemannResearch.NumberTheory.ParityResidueConvolutionMoments
 import RiemannResearch.NumberTheory.ParityResidueLSeries
