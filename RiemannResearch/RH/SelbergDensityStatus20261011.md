@@ -1,5 +1,13 @@
 # Precise Selberg density input and strengthened actual-zero consequences
 
+**Update, 14 November 2026:** the strongest located published range for this
+uniform near-line form is every fixed 0<a<8/7. The strict/inclusive interface
+and real-order Jordan finite optimization are now proved, and the quantitative
+consumers use the full open range. The analytic provider remains an incomplete
+Lean formalization, not an unresolved mathematical conjecture. See
+[the current coverage and verification record](../THEOREM_CATALOG_SELBERG_PUBLISHED_RANGE_20261114.md).
+The October 11 record below is retained as historical context.
+
 2026-10-11. All zero counts use actual analytic multiplicities and positive
 ordinates. The all-sign count in the cited source dominates this count.
 

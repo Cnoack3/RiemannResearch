@@ -36,22 +36,20 @@ analytic multiplicities. The cited all-sign count bounds this count with the
 same constant. Classical Selberg gives the exponent a = 1/4 uniformly over
 1/2 <= sigma <= 1, with C and the height threshold independent of sigma.
 
-Formalization decision (2026-10-28): at the user's request, the known
-unconditional analytic density theorem is intentionally retained as an
-explicit hypothesis to save formalization time. Its proof is deferred;
-formalizing it is not a prerequisite for the current ordinate research.
-`ConreyBaluyotDensityHypothesis` records the full known range above as a
-proposition, never as a global axiom or a proved provider. Constants and
-height thresholds may depend on a. The conventional strict count in the
-source passes to the inclusive convention by left limits above 1/2 and
-the total zero-count bound at 1/2; this analytic input is also deferred.
+Formalization status (2026-11-14): the user has requested a complete analytic
+proof. The strict-to-inclusive count interface is now proved in
+`ActualSelbergDensityConventions`, including the endpoint at 1/2.
+The real-order Jordan arithmetic and supported finite optimization are proved
+in `SelbergRealJordanMollifier`. The uniform mollified zeta moment,
+Kloosterman-sum estimates and their analytic assembly remain unproved here.
+`ConreyBaluyotDensityHypothesis` remains a proposition passed explicitly,
+not an axiom or a proved provider. Constants may depend on a.
 
-Existing consumers keep the weaker `UniformSelbergDensity (1/4)` premise:
-the classical exponent may be all the eventual application needs.
-`ConreyBaluyotDensityHypothesis.classical` supplies that premise from the
-stronger explicit hypothesis. Lean verifies these conditional research
-reductions, not the deferred literature theorem. There is no RH premise
-and no new axiom.
+`ActualConreyBaluyotConsequences` uses the full open published range:
+every fixed frequency-band width b < 8/7 is allowed, and any positive
+density exponent suffices for fixed-mode convergence. Existing one-quarter
+entry points remain compatible. None of these deductions discharges the
+analytic density premise or proves RH.
 
 The proved deductions include equivalence of the power and exponential
 forms, exact strict/inclusive count transfer, the general FMZ rational majorant
@@ -76,11 +74,10 @@ def UniformSelbergDensity (a : ℝ) : Prop :=
   ∃ C T₀ : ℝ, 0 ≤ C ∧ 1 < T₀ ∧
     ∀ T : ℝ, T₀ ≤ T → SelbergDensityBound T C a
 
-/-- The known Conrey--Baluyot range, intentionally assumed to save
-formalization time. This is a named proposition to pass as an explicit
-theorem hypothesis, not a provider or an axiom. The analytic proof is
-deliberately deferred. Each exponent has its own constants and height
-threshold; the endpoint `8 / 7` is excluded. See the module sources. -/
+/-- The published Conrey--Baluyot range, whose analytic proof remains an open
+formalization task. This named proposition is passed as an explicit theorem
+hypothesis; it is not a provider or an axiom. Each exponent has its own
+constants and height threshold. The endpoint `8 / 7` is excluded. -/
 def ConreyBaluyotDensityHypothesis : Prop :=
   ∀ a : ℝ, 0 < a → a < 8 / 7 → UniformSelbergDensity a
 
@@ -92,7 +89,7 @@ theorem ConreyBaluyotDensityHypothesis.classical
   hD (1 / 4) (by norm_num) (by norm_num)
 
 /-- An admissible stronger exponent for quantitative applications,
-still conditional on the deliberately deferred literature input. -/
+still conditional on the unformalized analytic density input. -/
 theorem ConreyBaluyotDensityHypothesis.one
     (hD : ConreyBaluyotDensityHypothesis) :
     UniformSelbergDensity 1 :=
@@ -260,7 +257,8 @@ theorem normalized_ordinate_landau_error_of_classical_selberg
   convert h using 1; ring
 
 /-- Uniform classical density supplies the existing actual fixed-mode limit.
-The known Selberg input is deliberately left explicit to save formalization time. -/
+The analytic density input remains explicit; the general positive-exponent
+version is in ActualConreyBaluyotConsequences. -/
 theorem tendsto_ordinate_landau_error_of_uniformSelberg
     (u : ℝ) (hD : UniformSelbergDensity (1 / 4)) :
     Tendsto (fun T : ℝ => (ordinateSum T u - landauSum T u) / (T : ℂ))
