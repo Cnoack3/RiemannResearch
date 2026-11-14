@@ -344,3 +344,29 @@ Every audited declaration uses only propext, Classical.choice and Quot.sound.
 The final publication checkpoint separately validates the complete delta
 and any integration. The explicit gcd-cell obstruction and rational numerical
 certificates from the handoff are not newly kernel-checked by this addition.
+
+## PAPER-001: finite raw-source summation
+
+The owning module `RH/QCRTNestedCutoffs.lean` now contains:
+
+- `signed_difference_update_source_new_sq_le`: the individual new difference-row bound.
+- `signed_difference_update_source_new_sum_sq_le`: summation over a finite divisor set, bounded by the complete inverse-square sum `zetaTwo`.
+- `signed_difference_update_source_prime_power`: the exact source formula at `L = p^k R`, `M = p^(k+1) R`.
+- `signed_difference_update_source_prime_power_sum_sq_le`: the requested bound with factor `2*zetaTwo/p^(2*(k+1))`.
+- `signed_difference_update_source_new_scaled`: the exact identity `d*s_d = delta + d*<r_L,a_d>`.
+
+The prime-power specialization assumes `2 <= p`, `0 < R`, `2 <= p^k*R`, and `Nat.Coprime p R`. Primality is not needed. This uses a zero-based depth index; replace `k+1` by the positive admission depth in the research memorandum. No unproved inverse-Gram, growth, or RH hypothesis occurs in these finite estimates.
+
+The generic divisor-sum theorem also covers the empty divisor set at `R=0`. No reciprocal of source energy, leakage energy, or projected-test capacity is used. Zero energy remains covered by the undivided inequality.
+
+The source identity keeps the positive leakage term. Multiplying a row by its conductor removes its explicit inverse-conductor factor, so this result does not provide a normalized canonical response bound, a Schur inverse bound, or the required signed canonical energy estimate. Those obligations remain open.
+
+The owning module passed Bazel/BuildBuddy file check `job_4Wd0gIf3OkEJZNDWPw30AjoGZEqOheCf` (40.689 s):
+[verification log](https://app.buildbuddy.io/invocation/8a3c5367-3336-42c1-883a-011038d9be29).
+The strict transitive whitelist for all five declarations passed
+`job_D74R3srTSSoM6dA5yhDN6MQL-g3HMTuX` (23.797 s):
+[axiom audit](https://app.buildbuddy.io/invocation/481befd4-fe41-4d5f-808e-0f05e5ec6e31).
+The whitelist permits only `propext`, `Classical.choice`, and `Quot.sound`;
+no other transitive axiom is accepted. Verified module SHA-256:
+`73c8be84b2919b48ab53ebdc9c2103cce4196389e1947ca1fdc29e5eecacec2e`.
+The publication checkpoint separately validates the complete repository delta.

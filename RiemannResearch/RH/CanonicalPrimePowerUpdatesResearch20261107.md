@@ -85,7 +85,16 @@ Hence, for the new raw difference source,
 \sum_{e\mid R}|s_{p^ke}|^2
 \le \frac{2Z}{p^{2k}}\bigl(\delta^2+\|r_L\|_Q^2\bigr).
 \]
-The individual Cauchy–Schwarz estimate is Lean-checked; this displayed finite-sum corollary is a paper deduction. It is a bound in unnormalized row coordinates. Since \(\|a_d\|_Q=1/d\), normalizing the divisor tests removes this apparent depth gain.
+The individual Cauchy–Schwarz estimate and this finite-sum corollary are now
+formalized in `QCRTNestedCutoffs.lean`, culminating in
+`signed_difference_update_source_prime_power_sum_sq_le`. The specialization
+uses `L = p^k R`, `N = p^(k+1) R`, `p ≥ 2`, `R > 0`, `L ≥ 2`, and
+`Nat.Coprime p R`; primality is not needed. The exact positive leakage source
+is retained in `signed_difference_update_source_prime_power`. The theorem
+`signed_difference_update_source_new_scaled` records `d*s_d = delta + d*<r_L,a_d>`.
+This is a bound in unnormalized row coordinates. Since `||a_d||_Q = 1/d`,
+rescaling the divisor tests removes the apparent depth gain; no canonical
+response or growth bound follows from this corollary alone.
 
 ## 3. Screened Gram and collocation equations
 

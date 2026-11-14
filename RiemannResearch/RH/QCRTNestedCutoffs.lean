@@ -4,6 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.QCRTFiniteCollocation
+import RiemannResearch.RH.ZetaTwoProbability
+import Mathlib.Analysis.PSeries
+import Mathlib.NumberTheory.Divisors
+import Mathlib.Tactic.NormNum
 import RiemannResearch.Analysis.OrthogonalRefinementEnergy
 import RiemannResearch.RH.QPhysicalDifference
 import RiemannResearch.Analysis.FiniteAccretiveCollocation
@@ -24,8 +28,10 @@ orthogonality of successive leakage increments. The visible target increment
 has a telescoping norm, but its uncontrolled leakage increment remains.
 -/
 noncomputable section
+open scoped BigOperators
 namespace RiemannResearch.RH.QCRTNestedCutoffs
 open ZetaTwoHilbert QDivisibilityDensity QCRTFiniteCollocation QPhysicalDifference
+open ZetaTwoProbability
 
 /-- Divisibility of cutoffs nests their actual legal divisor spans. -/
 theorem trialSpace_mono_of_dvd (L M : ℕ) (hM : 0 < M) (hLM : L ∣ M) :
@@ -358,6 +364,151 @@ theorem leakage_divisor_moment_sq_le (L d : ℕ) (hL : 2 ≤ L) (hd : 0 < d) :
     apply sq_le_sq.mpr
     simpa only [abs_of_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg _))] using hb
   simpa only [mul_pow, leakageVector_norm_sq, qDivisor_norm_sq d hd, mul_one_div] using hs
+
+
+/-!
+## Finite raw-source bounds at prime-power admissions
+
+Source: CanonicalPrimePowerUpdatesResearch20261107.md, Section 2, from the
+user-provided canonical CRT argument. These bounds concern unnormalized rows;
+the signed source and its exact row rescaling are retained explicitly.
+-/
+
+/-- The raw new difference-test row is bounded before any row normalization. -/
+theorem signed_difference_update_source_new_sq_le
+    (L M d : ℕ) (hL : 2 ≤ L) (hM : 0 < M) (hd : 2 ≤ d)
+    (hdM : d ∣ M) (hnew : Nat.lcm L d = M) :
+    (inner ℝ (target M - canonical L hL) (differenceCLM (qResidue d))) ^ 2 ≤
+      2 * ((1 / (L : ℝ) ^ 2 - 1 / (M : ℝ) ^ 2) ^ 2 + leakage L hL) /
+        (d : ℝ) ^ 2 := by
+  rw [signed_difference_update_source_new L M d hL hM hd hdM hnew]
+  have hb := leakage_divisor_moment_sq_le L d hL (by omega)
+  calc
+    _ ≤ 2 * ((1 / (d : ℝ)) * (1 / (L : ℝ)^2 - 1 / (M : ℝ)^2))^2 +
+        2 * (inner ℝ (leakageVector L hL) (qDivisor d))^2 := by
+      nlinarith [sq_nonneg ((1 / (d : ℝ)) *
+        (1 / (L : ℝ)^2 - 1 / (M : ℝ)^2) -
+        inner ℝ (leakageVector L hL) (qDivisor d))]
+    _ ≤ 2 * ((1 / (d : ℝ)) * (1 / (L : ℝ)^2 - 1 / (M : ℝ)^2))^2 +
+        2 * (leakage L hL / (d : ℝ)^2) := by linarith
+    _ = _ := by simp only [div_eq_mul_inv, mul_pow, inv_pow]; ring
+
+/-- Finite-divisor summation of the raw rows. The empty divisor set at R=0 is
+allowed; no division by a source energy or a capacity occurs. -/
+theorem signed_difference_update_source_new_sum_sq_le
+    (L M a R : ℕ) (hL : 2 ≤ L) (hM : 0 < M) (ha : 2 ≤ a)
+    (hnew : ∀ e ∈ R.divisors, Nat.lcm L (a * e) = M) :
+    (∑ e ∈ R.divisors,
+      (inner ℝ (target M - canonical L hL)
+        (differenceCLM (qResidue (a * e)))) ^ 2) ≤
+      (2 * zetaTwo / (a : ℝ) ^ 2) *
+        ((1 / (L : ℝ) ^ 2 - 1 / (M : ℝ) ^ 2) ^ 2 + leakage L hL) := by
+  have hleak : 0 ≤ leakage L hL := by
+    rw [← leakageVector_norm_sq]
+    positivity
+  have hsum : (∑ e ∈ R.divisors, 1 / (e : ℝ)^2) ≤ zetaTwo := by
+    rw [zetaTwo_eq_nat_sum]
+    exact (Real.summable_one_div_nat_pow.mpr (by norm_num : 1 < (2 : ℕ))).sum_le_tsum
+      R.divisors (fun _ _ => by positivity)
+  let C : ℝ := 2 / (a : ℝ)^2 *
+    ((1 / (L : ℝ)^2 - 1 / (M : ℝ)^2)^2 + leakage L hL)
+  have hC : 0 ≤ C := by dsimp [C]; positivity
+  calc
+    _ ≤ ∑ e ∈ R.divisors, C * (1 / (e : ℝ)^2) := by
+      apply Finset.sum_le_sum
+      intro e he
+      have hep := Nat.pos_of_mem_divisors he
+      have hde : 2 ≤ a * e := by nlinarith
+      have hdM : a * e ∣ M := by
+        rw [← hnew e he]
+        exact Nat.dvd_lcm_right L (a * e)
+      have hb := signed_difference_update_source_new_sq_le
+        L M (a * e) hL hM hde hdM (hnew e he)
+      calc
+        _ ≤ _ := hb
+        _ = C * (1 / (e : ℝ)^2) := by
+          dsimp [C]
+          push_cast
+          simp only [div_eq_mul_inv, mul_pow, mul_inv_rev]
+          ring
+    _ = C * ∑ e ∈ R.divisors, 1 / (e : ℝ)^2 := by rw [Finset.mul_sum]
+    _ ≤ C * zetaTwo := mul_le_mul_of_nonneg_left hsum hC
+    _ = _ := by dsimp [C]; ring
+
+/-- Exact positive-leakage source at a prime-power-shaped admission.
+Primality is unnecessary: p≥2 and Coprime p R suffice. -/
+theorem signed_difference_update_source_prime_power
+    (p k R e : ℕ) (hp : 2 ≤ p) (hR : 0 < R)
+    (hL : 2 ≤ p^k * R) (hcop : Nat.Coprime p R) (he : e ∈ R.divisors) :
+    inner ℝ (target (p^(k+1) * R) - canonical (p^k * R) hL)
+      (differenceCLM (qResidue (p^(k+1) * e))) =
+      (1 / ((p^(k+1) * e : ℕ) : ℝ)) *
+        (1 / ((p^k * R : ℕ) : ℝ)^2 - 1 / ((p^(k+1) * R : ℕ) : ℝ)^2) +
+      inner ℝ (leakageVector (p^k * R) hL) (qDivisor (p^(k+1) * e)) := by
+  have hp0 : 0 < p := by omega
+  have heR := Nat.dvd_of_mem_divisors he
+  have hep := Nat.pos_of_mem_divisors he
+  have hpow : 2 ≤ p^(k+1) := by
+    rw [pow_succ]
+    have hh := pow_pos hp0 k
+    nlinarith
+  have hlcm : Nat.lcm (p^k * R) (p^(k+1) * e) = p^(k+1) * R := by
+    apply Nat.dvd_antisymm
+    · apply Nat.lcm_dvd
+      · exact Nat.mul_dvd_mul (Nat.pow_dvd_pow p (Nat.le_succ k)) (dvd_refl R)
+      · exact Nat.mul_dvd_mul_left (p^(k+1)) heR
+    · apply (hcop.pow_left (k+1)).mul_dvd_of_dvd_of_dvd
+      · exact (dvd_mul_right (p^(k+1)) e).trans (Nat.dvd_lcm_right _ _)
+      · exact (dvd_mul_left R (p^k)).trans (Nat.dvd_lcm_left _ _)
+  exact signed_difference_update_source_new (p^k * R) (p^(k+1) * R)
+    (p^(k+1) * e) hL (Nat.mul_pos (pow_pos hp0 _) hR)
+    (by nlinarith) (Nat.mul_dvd_mul_left _ heR) hlcm
+
+/-- PAPER-001: the complete finite raw-source bound at a prime-power admission.
+This does not estimate the inverse collocation response or its signed energy. -/
+theorem signed_difference_update_source_prime_power_sum_sq_le
+    (p k R : ℕ) (hp : 2 ≤ p) (hR : 0 < R)
+    (hL : 2 ≤ p^k * R) (hcop : Nat.Coprime p R) :
+    (∑ e ∈ R.divisors,
+      (inner ℝ (target (p^(k+1) * R) - canonical (p^k * R) hL)
+        (differenceCLM (qResidue (p^(k+1) * e)))) ^ 2) ≤
+      (2 * zetaTwo / (p : ℝ)^(2 * (k+1))) *
+        ((1 / ((p^k * R : ℕ) : ℝ)^2 - 1 / ((p^(k+1) * R : ℕ) : ℝ)^2)^2 +
+          leakage (p^k * R) hL) := by
+  have hp0 : 0 < p := by omega
+  have hpow : 2 ≤ p^(k+1) := by
+    rw [pow_succ]
+    have hh := pow_pos hp0 k
+    nlinarith
+  have hnew : ∀ e ∈ R.divisors,
+      Nat.lcm (p^k * R) (p^(k+1) * e) = p^(k+1) * R := by
+    intro e he
+    have heR := Nat.dvd_of_mem_divisors he
+    apply Nat.dvd_antisymm
+    · apply Nat.lcm_dvd
+      · exact Nat.mul_dvd_mul (Nat.pow_dvd_pow p (Nat.le_succ k)) (dvd_refl R)
+      · exact Nat.mul_dvd_mul_left (p^(k+1)) heR
+    · apply (hcop.pow_left (k+1)).mul_dvd_of_dvd_of_dvd
+      · exact (dvd_mul_right (p^(k+1)) e).trans (Nat.dvd_lcm_right _ _)
+      · exact (dvd_mul_left R (p^k)).trans (Nat.dvd_lcm_left _ _)
+  have hb := signed_difference_update_source_new_sum_sq_le
+    (p^k * R) (p^(k+1) * R) (p^(k+1)) R hL
+    (Nat.mul_pos (pow_pos hp0 _) hR) hpow hnew
+  simpa only [Nat.cast_pow, ← pow_mul, Nat.mul_comm (k+1) 2] using hb
+
+/-- Exact row rescaling exposes why the raw inverse-square depth factor does
+not itself give a normalized-response estimate. The leakage sign stays positive. -/
+theorem signed_difference_update_source_new_scaled
+    (L M d : ℕ) (hL : 2 ≤ L) (hM : 0 < M) (hd : 2 ≤ d)
+    (hdM : d ∣ M) (hnew : Nat.lcm L d = M) :
+    (d : ℝ) * inner ℝ (target M - canonical L hL)
+      (differenceCLM (qResidue d)) =
+      (1 / (L : ℝ)^2 - 1 / (M : ℝ)^2) +
+        (d : ℝ) * inner ℝ (leakageVector L hL) (qDivisor d) := by
+  rw [signed_difference_update_source_new L M d hL hM hd hdM hnew]
+  have hd0 : (d : ℝ) ≠ 0 := by positivity
+  field_simp
+  <;> ring
 
 
 /-!
