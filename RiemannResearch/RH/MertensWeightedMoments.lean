@@ -9,8 +9,9 @@ import Mathlib.Tactic.Ring
 
 Source: user-provided `Reciprocal_Residue_Density_and_Direct_RH_Agenda (1).tex`,
 Section 6 and agenda Step 2. This proves the discrete Cauchy--Schwarz input
-at the exact threshold sigma > 1/2 + epsilon. It does not yet construct the
-holomorphic Mellin integral or prove a zeta zero-exclusion theorem.
+at the exact threshold sigma > 1/2 + epsilon. The downstream module
+MertensEnergyRH constructs the holomorphic first-difference series and
+proves zero exclusion and the direct RH implication from these energies.
 -/
 
 noncomputable section

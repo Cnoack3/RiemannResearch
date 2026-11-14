@@ -4,11 +4,12 @@
 `Reciprocal_Residue_Density_and_Direct_RH_Agenda (1).tex`.
 
 The finite-matrix and signed-energy part of Step 1 is formalized. Weak-star
-compactness simplifies the bounded-lifting argument and removes its unnecessary
-separability assumption. The first discrete absolute-moment implication in
-Step 2 is formalized. **The uniform arithmetic bound, the direct analytic
-zero-exclusion theorem, and an RH equivalence for these energies remain open
-formalization/research obligations. No proof of RH is claimed.**
+compactness simplifies the bounded-lifting argument without separability.
+Step 2 now includes the direct analytic zero-exclusion theorem and the implication
+from all positive weighted Mertens energies to RH. The proof uses the actual
+first-difference Dirichlet series and no external analytic provider.
+**The small-damping arithmetic energy bound and the reverse RH-to-energy
+implication remain Open. No unconditional proof of RH is claimed.**
 
 The existing `RH/QReciprocalFullDensity.lean` supplies the unconditional
 full-conductor reciprocal density and its physical P transfer. Its finite
@@ -122,14 +123,15 @@ There is no uniform norm bound for L_N inverse in these statements.
 The proof factors each summand into two square-summable factors and uses
 the elementary square inequality. The strict half-plane margin is exactly
 what makes the second p-series converge. The declaration does not assume
-RH and does not construct or identify a holomorphic reciprocal zeta function.
+RH. Its downstream consumer `RH/MertensEnergyRH.lean` now constructs the
+holomorphic reciprocal-zeta extension from these moments.
 
 ## Agenda coverage and remaining obligations
 
 | Step | Status after this work | Remaining task |
 |---|---|---|
 | 1: finite identities | Formalized | No uniform arithmetic estimate follows from positivity. |
-| 2: direct zero exclusion | Absolute moment input formalized | Construct the locally holomorphic Mellin expression, identify it with 1/(s zeta(s)), and exclude zeros. |
+| 2: direct zero exclusion | Formalized in MertensEnergyRH | Supply the arithmetic energy premise; the analytic continuation is no longer an external input. |
 | 3: dyadic Mertens estimate | Open | Prove the bound uniformly over all blocks and every positive exponent loss. |
 | 4: CRT cross terms | Open | Derive and control the actual signed induced correlations. Finite positivity is insufficient. |
 | 5: weaker damping | Open beyond previously checked reciprocal density | Formalize the alpha>1/2 paper extension and investigate the critical range without assuming an RH-level provider. |
@@ -144,9 +146,10 @@ The precise remaining arithmetic target is
 \]
 
 The checked equivalence identifies this with the all-epsilon weighted-energy
-condition, not yet with a checked direct RH iff. The attached paper supplies
-the informal analytic bridge; it is not inserted as a Lean hypothesis named
-like an established theorem.
+condition, and the new checked analytic bridge proves that it implies RH.
+The converse from RH remains an open formalization task; no RH iff is claimed.
+A positive sequence of damping exponents tending to zero suffices. At each
+damping, a single upper bound need hold only at arbitrarily late cutoffs.
 
 ## Sources and external computation
 
@@ -185,3 +188,89 @@ the explicit energy or boundedness hypotheses of these theorems.
 The final persisted sources, moment implication, and downstream consumers are
 subject to the final full-project checkpoint. Its retained job record is the
 publication evidence; focused checks alone do not certify the whole project.
+
+## Direct analytic bridge: 13 November follow-up
+
+New module: `RH/MertensEnergyRH.lean`. Namespace:
+`RiemannResearch.RH.MertensWeightedEnergy`.
+
+Define the actual series
+
+    F(s) = sum_{n>=1} M(n) [n^(-s) - (n+1)^(-s)].
+
+Finite Abel summation retains the complete boundary term:
+
+    sum_{n=1}^N mu(n)n^(-s)
+      = sum_{n=1}^N M(n)[n^(-s)-(n+1)^(-s)] + M(N)(N+1)^(-s).
+
+The elementary bound |M(N)|<=N makes the boundary tend to zero for Re(s)>1.
+The weighted-energy moment theorem makes F normally convergent locally on
+Re(s)>1/2+epsilon, for epsilon>=0. Initial equality with 1/zeta(s) follows
+from the actual Mobius L-series. Analytic continuation uses the proved
+regularZetaRatio identity; the pole at s=1 is handled by that regularization.
+
+| Result | Exact declaration |
+|---|---|
+| Finite Abel identity including boundary | `finite_mertens_abel` |
+| Boundary convergence in the initial half-plane | `mertens_abel_boundary_tendsto` |
+| Absolute convergence from energy | `mertensTransform_summable` |
+| Local analyticity on Re(s)>1/2+epsilon | `mertensTransform_analyticOnNhd` |
+| Initial reciprocal-zeta identity | `mertensTransform_eq_inv_zeta` |
+| Continued regularized identity | `regularZetaRatio_mul_mertensTransform` |
+| One finite energy excludes zeros strictly to its right | `zeta_ne_zero_of_hasFiniteEnergy` |
+| A zero forces failure of the corresponding energy | `not_hasFiniteEnergy_of_zero` |
+| A zero forces full energies to tend to +infinity | `finiteEnergy_tendsto_atTop_of_zero` |
+| For epsilon>0, it also forces signed off-diagonal sums to +infinity | `offDiagonal_tendsto_atTop_of_zero` |
+| All positive energies imply RH | `riemannHypothesis_of_hasFiniteEnergy_forall` |
+| All positive signed uniform bounds imply RH | `riemannHypothesis_of_bounded_offDiagonal_forall` |
+| A damping sequence tending to zero suffices | `riemannHypothesis_of_energy_along_damping` |
+| Positive damping sequence plus frequent signed bounds implies RH | `riemannHypothesis_of_frequently_bounded_offDiagonal_along_damping` |
+
+Four supporting results are added to the owning energy module:
+
+- `mertensPrefix_abs_le`: the actual elementary arithmetic bound.
+- `hasFiniteEnergy_mono`: increasing the damping preserves finite energy.
+- `hasFiniteEnergy_of_half_lt`: unconditional finiteness for epsilon>1/2.
+- `hasFiniteEnergy_iff_frequently_bounded_offDiagonal`: for epsilon>0,
+  one upper bound at arbitrarily late cutoffs is equivalent to finite energy.
+  This uses monotonicity of total energy and the proved diagonal bound;
+  it does not assert monotonicity of the signed cross term.
+
+Together the change adds 19 theorems and the definition `mertensTransform`.
+The single-zero results retain epsilon>=0, Re(s)>1/2+epsilon and s!=1.
+The signed divergence result requires epsilon>0. No simplicity assumption
+or assertion that an off-line zero exists is made.
+
+### Exact remaining arithmetic obligation
+
+Choose epsilon_j>0 with epsilon_j->0. Prove, for each j, one finite B_j
+such that for every cutoff K some N>=K satisfies
+
+    offDiagonal epsilon_j N <= B_j.
+
+The bound may depend on j, but not on N or K. Equivalently, establish finite
+weighted Mertens energy along this damping sequence. This is a
+**conditional research reduction** until an arithmetic provider is proved.
+The elementary epsilon>1/2 baseline does not supply dampings tending to zero.
+The existing CRT canonical-growth, Q-only forcing and density leakage
+obligations are not discharged by this analytic bridge.
+
+### Follow-up verification
+
+The coherent 20-declaration candidate passed queued Bazel/BuildBuddy acceptance
+in `job_LUj2kNdYHCn5ndP_-rotIlGb8VkYM2FS` (19.019 server seconds):
+https://app.buildbuddy.io/invocation/9d59792f-b588-4b9d-b0d5-8d650a3e11f3 .
+This is focused candidate evidence. The persisted module split is separately
+audited, and publication requires the terminal full-project checkpoint.
+
+
+The persisted owning modules and eight pivotal declarations passed exact
+`#guard_msgs (whitespace := lax)` axiom guards in `job_aCQpBd-SmaZ59rI0lH1gRjVjzY2bXSBB`
+(38.15 server seconds, verified=true, exit_code=0):
+https://app.buildbuddy.io/invocation/91490f1f-9405-4dc3-8d05-b35239dcdfd3 .
+The guards require exactly `propext`, `Classical.choice`, and `Quot.sound`
+for analyticity, finite Abel summation, initial reciprocal-zeta equality,
+zero exclusion, signed divergence, the unconditional baseline, frequent-bound
+equivalence, and the final damping-sequence RH criterion. They do not discharge
+the explicit energy or arithmetic boundedness hypotheses. The audit source
+SHA-256 is `4ca8b9ecd3fb36faee2b328e6269828443b3fdb187934623befc5aaa94305b49`.

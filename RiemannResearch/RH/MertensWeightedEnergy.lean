@@ -5,6 +5,8 @@ import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 
 /-!
 # Actual Mobius weighted energy and its signed cancellation criterion
@@ -20,6 +22,7 @@ That reference supplies background, not an unchecked analytic Lean provider.
 -/
 
 noncomputable section
+open Filter
 open scoped BigOperators
 namespace RiemannResearch.RH.MertensWeightedEnergy
 open RiemannResearch.LinearAlgebra.CumulativeCellEnergy
@@ -249,5 +252,67 @@ theorem finiteEnergy_eq_inverse_floor_quadratic (ε : ℝ) (N : ℕ) :
   rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
     Matrix.dotProduct_mulVec, Matrix.vecMul_transpose, floorMatrix_inv_one]
   exact finiteEnergy_eq_mobius_gram ε N
+
+theorem mertensPrefix_abs_le (N : ℕ) : |mertensPrefix N| ≤ N := by
+  unfold mertensPrefix RiemannResearch.LinearAlgebra.CumulativeCellEnergy.cumulative
+  calc
+    _ ≤ ∑ i ∈ Finset.range N, |mobiusCoefficients i| := Finset.abs_sum_le_sum_abs _ _
+    _ ≤ ∑ _i ∈ Finset.range N, (1 : ℝ) := by
+      apply Finset.sum_le_sum
+      intro i hi
+      unfold mobiusCoefficients
+      exact_mod_cast (ArithmeticFunction.abs_moebius_le_one (n := i + 1))
+    _ = _ := by simp
+
+theorem hasFiniteEnergy_mono {ε δ : ℝ} (hεδ : ε ≤ δ)
+    (hE : HasFiniteEnergy ε) : HasFiniteEnergy δ := by
+  apply Summable.of_nonneg_of_le
+    (fun n => mul_nonneg (weight_pos δ n).le (sq_nonneg _)) _ hE
+  intro n
+  apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
+  exact Real.rpow_le_rpow_of_exponent_le
+    (show (1 : ℝ) ≤ (n : ℝ)+1 by have := Nat.cast_nonneg (α := ℝ) n; linarith)
+    (by linarith)
+
+/-- Unconditional baseline from |M(n)| ≤ n; the critical small dampings
+needed by the RH criterion are not supplied by this estimate. -/
+theorem hasFiniteEnergy_of_half_lt {ε : ℝ} (hε : 1/2 < ε) : HasFiniteEnergy ε := by
+  have hs : Summable (fun n : ℕ => ((n : ℝ)+1)^(-2*ε)) := by
+    have hp := Real.summable_nat_rpow.mpr (show -2*ε < -1 by linarith)
+    simpa only [Nat.cast_add, Nat.cast_one] using (summable_nat_add_iff 1).mpr hp
+  apply Summable.of_nonneg_of_le
+    (fun n => mul_nonneg (weight_pos ε n).le (sq_nonneg _)) _ hs
+  intro n
+  have hx : 0 < (n : ℝ)+1 := by positivity
+  have hb : mertensPrefix (n+1)^2 ≤ ((n : ℝ)+1)^2 := by
+    have hh := mul_self_le_mul_self (abs_nonneg _) (mertensPrefix_abs_le (n+1))
+    simpa only [← pow_two, sq_abs, Nat.cast_add, Nat.cast_one] using hh
+  calc
+    weight ε n * mertensPrefix (n+1)^2 ≤ weight ε n * ((n : ℝ)+1)^2 :=
+      mul_le_mul_of_nonneg_left hb (weight_pos ε n).le
+    _ = _ := by
+      rw [weight, ← Real.rpow_two, ← Real.rpow_add hx]
+      congr 1
+      ring
+
+/-- Arbitrarily late bounded signed sums are enough: monotonicity applies
+to total energy while the signed term is kept intact. -/
+theorem hasFiniteEnergy_iff_frequently_bounded_offDiagonal (ε : ℝ) (hε : 0 < ε) :
+    HasFiniteEnergy ε ↔
+      ∃ B : ℝ, ∃ᶠ N : ℕ in atTop, offDiagonal ε N ≤ B := by
+  constructor
+  · intro hE
+    obtain ⟨B, hB⟩ := (hasFiniteEnergy_iff_bounded_offDiagonal ε hε).mp hE
+    exact ⟨B, (Eventually.of_forall hB).frequently⟩
+  · rintro ⟨B, hB⟩
+    apply (hasFiniteEnergy_iff_bounded_finiteEnergy ε).mpr
+    let D : ℝ := ∑' n : ℕ, ((n : ℝ)+1)^(-1-2*ε)
+    refine ⟨D+B, fun n => ?_⟩
+    obtain ⟨N, hgood, hN⟩ := (hB.and_eventually (eventually_ge_atTop n)).exists
+    have hdiag : diagonal ε N ≤ D := diagonal_le_pseries ε hε N
+    calc
+      finiteEnergy ε n ≤ finiteEnergy ε N := finiteEnergy_monotone ε hN
+      _ = diagonal ε N + offDiagonal ε N := finiteEnergy_identity ε N
+      _ ≤ D+B := add_le_add hdiag hgood
 
 end RiemannResearch.RH.MertensWeightedEnergy
