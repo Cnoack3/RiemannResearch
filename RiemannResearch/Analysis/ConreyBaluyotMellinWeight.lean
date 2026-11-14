@@ -30,9 +30,12 @@ for sigma>1/2, xi>0 and r>0. The explicit majorant and integral bound are
 uniform in sigma. The constant depends on r and is not bounded as r tends
 to zero.
 
-Open: independence of the positive contour; the signed expansion (3.1.3);
-the uniform positive lower bound for W(y); exponential small-xi decay;
-Estermann/Kloosterman input; and the uniform mollified second moment.
+Positive-contour independence and reality are proved in the sibling module
+ConreyBaluyotMellinContour; exponential small-xi decay is proved in
+ConreyBaluyotMellinDecay, and the actual local residues are computed in
+ConreyBaluyotMellinResidues. The signed contour expansion (3.1.3), the
+uniform positive lower bound for W(y), global boundedness,
+Estermann/Kloosterman input, and the uniform mollified second moment remain open.
 In particular this module supplies no ConreyBaluyotDensityHypothesis.
 The finite coefficient normalization theorem keeps W(y) nonzero explicit.
 -/
@@ -54,7 +57,7 @@ def mellinIntegrand (σ ξ r t : ℝ) : ℂ :=
 def weightOnLine (σ ξ r : ℝ) : ℂ :=
   (2 * Real.pi : ℂ)⁻¹ * ∫ t : ℝ, mellinIntegrand σ ξ r t
 
-/-- Fixing the admissible defining line r=1. Independence of r is not proved here. -/
+/-- Fixing the admissible defining line r=1. Positive-line independence is in MellinContour. -/
 def weight (σ ξ : ℝ) : ℂ := weightOnLine σ ξ 1
 
 /-- A pointwise majorant uniform in sigma>1/2. The dependence on r is explicit. -/

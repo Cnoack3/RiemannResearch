@@ -234,10 +234,11 @@ The separate Ingham-detector pipeline in
 top-minus-bottom argument integrals. No estimate for that budget, or
 identification of its `zetaDetector X` with this mollifier, is asserted here.
 
-### Exact remaining targets
+### Remaining targets at the first Mellin-weight checkpoint
 
-This is a proved part of the analytic groundwork for Lemma 3.1.1, not a
-formalization of that entire lemma. Still open:
+At that checkpoint this was a proved part of the analytic groundwork for
+Lemma 3.1.1, not a formalization of that entire lemma. The following list
+records the obligations then open; the next continuation below updates them:
 
 1. Independence of the defining integral from the positive contour.
 2. The signed expansion (3.1.3), retaining
@@ -289,3 +290,143 @@ No endpoint a=8/7 or uniform endpoint constants are claimed.
   integrated-source verification record.
 - Wolfram confirmed the two-step Gamma identity and the Cauchy-kernel integral.
   Those computations were exploratory; the acceptance evidence is Lean/Bazel.
+
+## Positive-contour, exponential-tail and residue continuation (14 November 2026)
+
+Prepared on base `57d0785fbea35e5539f0e5f174cde10348c75457`.
+The user approved committing and pushing this continuation on 14 November 2026,
+subject to the server's source audit and full-project publication checkpoint.
+
+### Exact analytic results and hypotheses
+
+There are 19 new public theorems in four focused modules, with two new
+definitions, `mellinKernel` and `secondaryResidueCoefficient`.
+The actual weight, cutoff and mollifier definitions are unchanged.
+
+| File in Analysis | Public theorems | Content |
+| --- | ---: | --- |
+| `VerticalContourShift.lean` | 1 | Rectangle Cauchy theorem plus an inverse-square strip majorant implies equality of absolutely convergent vertical integrals |
+| `ConreyBaluyotMellinContour.lean` | 10 | Actual kernel holomorphy, compact-strip bound, positive-contour independence, factorial bounds and reality |
+| `ConreyBaluyotMellinDecay.lean` | 3 | Explicit uniform small-argument exponential bound and its tail specialization |
+| `ConreyBaluyotMellinResidues.lean` | 5 | The two actual local residues, real secondary coefficient, and rectangle-residue API identities |
+
+The main new statements are:
+
+1. `weightOnLine_eq`: for sigma>1/2, xi>0 and a,b>0,
+   `weightOnLine sigma xi a = weightOnLine sigma xi b`.
+   Holomorphy, integrability and horizontal decay are proved from the actual
+   Gamma/zeta kernel, not left as analytic provider hypotheses.
+2. `norm_weight_le_of_posLine`: for sigma>1/2, xi>0 and r>0,
+   `norm(weight sigma xi) <= Gamma(r+3) (1+1/r) xi^r / 2`.
+   `norm_weight_le_factorial` specializes this to
+   `norm(weight sigma xi) <= (n+2)! xi^n` for integers n>=1.
+3. `weight_im_eq_zero`: for xi>0, the weight is real.
+   The sigma restriction is unnecessary for this conjugation identity.
+4. `norm_weight_le_exp`: for sigma>1/2 and 0<xi<=1,
+   `norm(weight sigma xi) <= 72 exp(-1/(2 xi))`.
+   The constant 72 is absolute and independent of sigma.
+   `norm_weight_ratio_le_exp` gives
+   `norm(weight sigma (y/h)) <= 72 exp(-h/(2 y))` for h>=y>0.
+5. `mellinKernel_residue_zero`: for sigma>1/2 and xi>0,
+   the punctured-neighborhood limit of `z * mellinKernel sigma xi z`
+   at zero equals 1. The nonzero zeta denominator is proved.
+6. `mellinKernel_residue_secondary`: for 1/2<sigma<1 and xi>0,
+   the limit of `(z-(1-2 sigma)) * mellinKernel sigma xi z`
+   at `1-2 sigma` equals `A(sigma) xi^(1-2 sigma)`, where
+   `A(sigma)=Gamma(2-2 sigma) zeta(2-2 sigma)/zeta(2 sigma)`.
+   This is a signed complex identity; `secondaryResidueCoefficient_im_eq_zero`
+   proves the coefficient is real. No positivity or negativity claim is
+   substituted for the coefficient.
+7. `residue_mellinKernel_zero` and `residue_mellinKernel_secondary`
+   express the same coefficients in the existing rectangle-residue API.
+
+All kernel arguments and powers in the actual residue statements are complex,
+with real parameters coerced explicitly. The exact theorem types are in the
+named source modules.
+
+The public declarations, with namespace
+`RiemannResearch.Analysis.ConreyBaluyot` except for the first, are:
+
+- `Complex.integral_vertical_eq_of_cauchy_bound`
+- `mellinKernel_onLine`
+- `differentiableAt_mellinKernel`
+- `exists_mellinKernel_strip_bound`
+- `weightOnLine_eq`
+- `norm_weight_le_of_posLine`
+- `norm_weight_le_factorial`
+- `mellinKernel_conj`
+- `conj_mellinIntegrand`
+- `conj_weightOnLine`
+- `weight_im_eq_zero`
+- `norm_weight_le_factorial_all`
+- `norm_weight_le_exp`
+- `norm_weight_ratio_le_exp`
+- `mellinKernel_residue_zero`
+- `secondaryResidueCoefficient_im_eq_zero`
+- `mellinKernel_residue_secondary`
+- `residue_mellinKernel_zero`
+- `residue_mellinKernel_secondary`
+
+### Proof and source comparison
+
+The source is Baluyot (2017), Lemma 3.1.1, equations (3.1.3)--(3.1.4),
+pp. 94--95, at the primary thesis URL above. The positive-contour argument
+uses finite Cauchy rectangles, a compact-strip majorant and convergence of
+the two absolutely integrable vertical sides. The exponential estimate
+sums the integer-contour factorial bounds against the exponential series;
+it does not assume Stirling's formula. This yields the thesis's tail
+shape with an explicit constant on the larger domain sigma>1/2, 0<xi<=1.
+The residue proofs use Mathlib's proved zeta residue at 1.
+
+Wolfram checks of elementary inverse-Mellin and generating-series identities
+were exploratory only. The final exponential argument and both actual
+residues are proved in Lean.
+
+### Updated obligation ledger
+
+| ID | Current status | Remaining work |
+| --- | --- | --- |
+| CB-01 | Proved | None: the actual positive-contour theorem has only numerical domain hypotheses |
+| CB-02 | Partly proved | Both local residues are computed; prove the negative-contour identity and its uniform remainder estimate |
+| CB-03 | Partly proved | Reality and exponential decay are proved; the uniform positive lower bound for W(y) and global boundedness remain open |
+| CB-04 | Open | Estermann continuation and functional equation; justified exchanges |
+| CB-05 | Open | Weil incomplete Kloosterman and Deshouillers--Iwaniec bounds |
+| CB-06 | Open | Actual uniform mollified zeta moment, both signed main terms and every remainder |
+| CB-07 | Open | Full logarithmic/argument, near/away-line and dyadic density assembly |
+| CB-08 | Open | A theorem inhabiting `ConreyBaluyotDensityHypothesis` with no unresolved analytic provider |
+
+The next concrete target is
+`W(xi)=1+A(sigma) xi^(1-2 sigma)+R(sigma,xi)`, with R the actual
+integral on Re z=-3/4, and a bound `|R| <= C xi^(-3/4)` uniform on
+the source's narrow sigma strip. Existing proved infrastructure includes
+`Zeta23.RvM.riemannZeta_linear_growth` in
+`RH/WeilExplicitFormula/RvM/ZetaGrowth.lean` and
+`RectangleIntegral'_eq_sumResiduesIn` in
+`RH/WeilExplicitFormula/FromPNTPlus/ResidueCalcOnRectangles.lean`.
+Still needed are the actual kernel's meromorphy and pole-set bookkeeping,
+negative-line absolute convergence, a uniform remainder bound, and the
+horizontal limits across the two poles. The newly computed residues alone
+do not imply a contour identity.
+
+Neither W(y)!=0 nor the density proposition follows from the results above.
+The published target remains each fixed 0<a<8/7; no endpoint a=8/7,
+uniform endpoint constant, or RH result is claimed.
+
+### Verification of the new continuation
+
+- The coherent contour/decay/residue candidate passed Bazel/BuildBuddy:
+  `job_yFfeJ12v2kl0nAX7bzThJxYB4ac3A7YQ`, 20.44 seconds server elapsed,
+  https://app.buildbuddy.io/invocation/76b9865c-7406-4a00-972f-c4c9616bd44b .
+- All four saved modules and exact axiom guards for all 19 public theorems
+  passed Bazel/BuildBuddy in `job_M8sDDR3Kh2JlGZtAq2i1a8xCzJ7rISOo`,
+  19.251 seconds server elapsed:
+  https://app.buildbuddy.io/invocation/3412268b-281e-45a1-a31e-fb70526ff5fc .
+  Every guard accepts exactly propext, Classical.choice and Quot.sound.
+  The audit imports the saved modules, rather than copying their proofs.
+- Standalone full-project Bazel/BuildBuddy acceptance succeeded:
+  `job_GO89KPezfENscuegyrwBcH1VynzGkz9W`, scope `full`,
+  target `//:RiemannResearch`, 190.229 seconds server job elapsed:
+  https://app.buildbuddy.io/invocation/2bc2a059-f3e1-48e7-99b4-4b49eb402bf8 .
+  No Lean source changed after this acceptance; only this verification
+  record and the publication approval were recorded. The publication checkpoint
+  supplies the final commit and any required integrated-source validation.
