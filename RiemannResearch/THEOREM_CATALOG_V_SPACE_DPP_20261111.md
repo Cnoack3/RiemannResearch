@@ -22,29 +22,72 @@ are classical published theorems, rather than open mathematical conjectures.
 
 | PDF result | Lean coverage and precise remaining issue |
 |---|---|
-| §1 full Dirichlet log/exp equivalence | `PrimePowerLocalCoordinates` covers local degrees 1--3. The full formal convolution-log equivalence is not supplied by this change. |
+| §1 full Dirichlet log/exp equivalence | `PrimePowerFormalCoordinates` proves all-degree local inverse identities. `PrimePowerFormalCoordinates.dirichletExpLogEquiv` in `PrimePowerMultiplicativeEquiv.lean` reconstructs a unique globally multiplicative arithmetic function from every prime-local logarithmic family; `dirichletExp_eta` gives the constant-one function on positive integers. This is a coefficientwise formal Euler-factor realization, with no convergence hypothesis. |
 | §2 coordinate recovery and sampled completeness | Existing `SampledGaugeCompleteness`; new `SampledGauge.sampled_orbit_closure_eq_support` removes the full-support restriction. It assumes the stated phase-average limits. |
 | §2 actual-zero Fourier cancellation | The Fourier-to-Haar/orbit bridge is proved in `ZeroOrdinateEquidistribution`. Actual ordinate estimates retain analytic inputs. Published unconditional cancellation is not a new axiom or a discharged provider here. |
-| §2 independent prime phases and compact infinite orbit law | Existing finite-prime FMZ/Haar modules apply with their hypotheses. A completed infinite-product compact-orbit weak-convergence theorem is not asserted here. |
+| §2 independent prime phases and compact infinite orbit law | `CompactGaugeOrbit` now constructs the infinite prime-circle orbit in l2 and proves norm continuity, compactness, and exact norm preservation. Finite-prime FMZ/Haar results retain their hypotheses; the full empirical weak-convergence assembly for actual ordinates remains unformalized. |
 | §3 exact sampled energy | Existing finite signed covariance/Parseval identities. The PDF's general trace-norm operator convergence is not fully formalized by the finite identities. |
 | §3 no scalar weighted frame | New `SampledGaugeSupport` supplies the coordinate energy identity and weighted-frame obstruction on any infinite nonzero support, including sparse support. Completeness does not give a lower frame bound. |
 | §4 signed arithmetic correction | Existing rational FMZ formulas retain the arithmetic correction and exact diagonal. `ActualRationalFMZRate` explicitly assumes `UniformSelbergDensity (1/4)` for its actual-ordinate rates. |
 | §4 bounded prime-power correction | New `PrimeBlockCovariance` proves support-independent finite geometric/prime-block bounds, including the full finite-prime sum with constant $\log 2/[\pi(\sqrt2-1)]$. Infinite self-adjoint extension and norm optimality are not claimed as new Lean results. |
 | §4 finite-height counterexamples | Existing `FinitePolynomialSampling` supplies vanishing sample polynomials and the lower-bound obstruction. New `FinitePolynomialResonance` proves the upper obstruction, including exact coefficient energy, the centered estimate, and the concrete powers-of-two phases. |
 | §5 zeta Hilbert kernel | New `ZetaDirichletKernel` realizes the actual integer Dirichlet-series feature vector, its zeta inner product and finite Gram energy, with bounded evaluation on the right half-plane. Lean uses the conjugate-first convention. |
-| §5 prime-power log kernel and Fock regrouping | The full prime-power log-zeta feature identity, symmetric-Fock exponential construction, and occupation grouping by integers remain untransferred. The direct integer Hilbert realization proves the zeta-kernel conclusion by another route. |
+| §5 prime-power log kernel and Fock regrouping | `LogEulerFeature` constructs the actual prime-power logarithmic Hilbert feature. `CoherentFock` constructs square-summable coherent vectors and proves their exponential mixed Gram identity. `ZetaFockKernel` obtains the actual zeta kernel from Mathlib's proved Euler product. `ZetaDirichletTotality` and `ZetaFockSpan` identify the zeta-generated closed subspace with all integer l2 and construct an integer Hilbert basis with the Dirichlet expansion. This proves the Hilbert conclusion without the PDF's explicit occupation-regrouping formula; that particular combinatorial coefficient identity is not asserted here. |
 | §5 obstruction to continuation | Strengthened `RealZetaNonvanishing` and `ZetaKernelObstruction` rule out a positive Gram kernel on any domain meeting $0<\Re s<1/2$. No RH premise. |
 | §6 dense classes and zero topology | Existing `ZeroDivisorTopology` proves dense finite-coordinate classes, vanishing tails, zero-divisor invariance under exponential factors, and the discontinuity reduction with its continuation-formula premise. |
-| §6 sharp prime-power evaluation threshold | Not supplied by the integer-feature threshold: these are different spaces and different evaluation functionals. |
+| §6 sharp prime-power evaluation threshold | `PrimePowerEvaluation.exists_finite_bound_iff` proves boundedness exactly when Re(w)>sigma+1/2, including boundary failure by prime reciprocal divergence. `evaluation_hasSum`, `evaluation_bound`, and `vector_norm_sq` give the actual convergent functional and its Riesz-vector norm on l2 coordinates. |
 | §7 exact cumulative and cutoff Gram | Existing `CumulativeTailKernel` retains complex cross terms and the cutoff boundary. Existing cell/affine modules preserve the background and all square remainders. |
 | §7 free optimum, correction, and tail cost | Existing `FiniteCumulativeCellEnergy` already contains exact correction cost and boundary-reset refinements. The optimizer is not the prescribed von Mangoldt vector. |
 | §7 tridiagonal inverse | New `FiniteCumulativeGramInverse` proves both inverse identities in operator form, including the endpoint term before setting it to zero. |
-| §7 summation unboundedness and truncated von Mangoldt divergence | No complete transfer is claimed. A max-kernel identity alone is not a proof of this assertion. |
+| §7 summation unboundedness and truncated von Mangoldt divergence | `MangoldtCumulativeDivergence` proves that the actual von Mangoldt truncations converge in the weighted source Hilbert space for s>1, their cumulative energies are finite for s>0 and tend to infinity for s<=2, and the finite-cutoff main-term ratios tend to zero whereas psi(x)/x tends to one. It proves summation unboundedness for 1<s<=2. The PDF's general all-s>0 cluster argument remains unformalized. |
 | §7 damped-energy RH criterion | Existing `ChebyshevEnergyCriterion` proves sufficiency and the sharp off-line-zero pole obstruction. The reverse RH-to-energy direction and the critical almost-periodicity theorem are not newly formalized. |
 | §8 continuous Nyman Mellin formula | Continuous generators exist, but `NymanCommonZeros` explicitly distinguishes Mellin symbols from the continuous integral formula. The full all-theta integral formula remains a gap. |
 | §8 bounded off-line-zero obstruction | The actual Pareto/discrete counterpart is proved in `ParetoBeurlingMellinObstruction`, with exact lower bound $(2\Re\rho-1)/\lvert\rho\rvert^2$. Its DPP vacancy consequence is already in `IntegerDPPMellinObstruction`. |
 | §8 Burnol Sonine completeness and dual minimality | External classical results; no complete Lean transfer found in this audit. |
 | §9 actual arithmetic energy and Montgomery target | Still open. The new duality gives equivalent certificates, not the missing uniform arithmetic estimate. |
+
+## 1a. Additional transfer, 14 November 2026
+
+Eleven additional modules close the formal-coordinate, prime-torus compactness,
+sharp-evaluation, and zeta-Fock Hilbert-construction gaps described above.
+They also establish the concrete von Mangoldt discontinuity in Section 7.
+They use ordinary Lean/Mathlib foundations and proved analytic theorems, including
+the repository's proved prime number theorem, without
+introducing a new arithmetic hypothesis.
+
+The main declarations are:
+
+- `PrimePowerFormalCoordinates.dirichletExpLogEquiv` and `dirichletExp_eta`.
+- `CompactGaugeOrbit.continuous_orbit` and `primeOrbit_isCompact`.
+- `PrimePowerEvaluation.exists_finite_bound_iff` and `evaluation_hasSum`.
+- `CoherentFock.vector_inner` and `vector_norm_sq`.
+- `LogEulerFeature.vector_inner` and `ZetaFockKernel.coherent_inner`.
+- `ZetaDirichletKernel.span_features_dense`.
+- `ZetaFockKernel.fullIsometry`, `integerBasis`, and `coherent_basis_hasSum`.
+- `MangoldtCumulativeDivergence.coordinate_truncations_tendsto`,
+  `real_energy_tendsto_atTop`, and `no_uniform_mangoldt_summation_bound`.
+
+Lean's conjugate-first convention gives
+`inner (coherent s) (coherent w) = riemannZeta (star s + w)`.
+The constructed Fock space contains a distinguished zeta-generated closed
+subspace. Its identification with integer l2 does **not** identify the entire
+Fock space with that subspace.
+
+Focused acceptance evidence: job `job_Hi3gFGifYcjYIQRuhzJpS48S_SR8gXBs`
+succeeded with Bazel/BuildBuddy. Exact `#guard_msgs` checks on 15 construction,
+basis, evaluation, and arithmetic-limit declarations confirmed precisely
+`propext`, `Classical.choice`, and `Quot.sound`; no additional axioms occurred.
+[Audit build](https://app.buildbuddy.io/invocation/7765f352-0a83-4dda-8b99-ab074872de2e).
+The final publication checkpoint separately validates the integrated repository.
+
+Coverage is still incomplete: actual-ordinate analytic providers, full
+infinite-orbit weak convergence, general trace-norm covariance convergence,
+the infinite signed operator and its sharp norm, the all-s summation
+unboundedness extension outside 1<s<=2,
+the RH-to-damped-energy/critical almost-periodicity directions, the
+all-theta continuous Nyman Mellin integral, and Burnol's Sonine theorems still
+require formalization. The actual RH energy estimate and microscopic
+zero-pair transfer remain open mathematical obligations.
 
 ## 2. New quantitative obstruction at the microscopic scale
 
