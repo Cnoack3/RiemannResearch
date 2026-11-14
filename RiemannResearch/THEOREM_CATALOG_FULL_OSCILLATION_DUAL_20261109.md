@@ -2,6 +2,30 @@
 
 Prepared 9 November 2026.
 
+## 14 November: one-sided anchored common-bound criterion
+
+New module `RH/QFullShortHeadOneSided.lean` proves that it suffices to fix
+one sign epsilon in {-1,1}, a positive modulus L, and one constant C, then
+bound epsilon * shortSchur(R,j,H_j,n,n mod L + L) above by C at arbitrarily
+late stages for each fixed positive n. At L=1 the anchor is always site 1.
+The sign and constant cannot depend on n; good stages may.
+
+- `qResidual_zero_of_oneSided_displacement_bound` uses the signed harmonic
+  rigidity theorem after bounding the selected harmonic prefix by D*H_X.
+- `qResidual_zero_of_frequent_oneSided_anchor` and
+  `riemannHypothesis_of_frequent_oneSided_fixed_anchor` are checked
+  conditional reductions for the actual full-conductor projections.
+- `qResidual_zero_iff_frequent_oneSided_anchor` proves equivalence with zero
+  actual full residual, for every fixed sign and positive modulus.
+- `eventually_abs_shortSchur_le_of_frequent_oneSided_anchor` recovers every
+  positive two-sided bound, eventually at each fixed pair.
+
+**Open:** an arithmetic provider of the common one-sided bound. The eight
+new theorems do not provide this premise. All eight axiom-list guards passed
+with standard foundations only. See
+[the anchored-bound review](ShortHeadOneSidedResearch20261114.md).
+
+
 ## 12 November: exact fixed-pair Schur limit and weaker common-bound criterion
 
 Extended `RH/QFullShortHeadLocalization.lean` for the actual full-conductor
