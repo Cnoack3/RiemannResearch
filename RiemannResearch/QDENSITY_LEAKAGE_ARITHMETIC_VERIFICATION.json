@@ -1,0 +1,115 @@
+{
+  "source_commit": "848b7130a5ed82d149d44c600866c6fada32a350",
+  "workspace_base_commit": "6ee8111fc0a35e4b7194b6dbd7ed7238a5fda6ee",
+  "workspace_token": "ws_mOoZDCHNeMmv1x917WE-kAZq-ux_RvJA",
+  "project_root": "/home/cri_2025/lean-agent-workspaces/ws_mOoZDCHNeMmv1x917WE-kAZq-ux_RvJA/RiemannResearch",
+  "finite_model": {
+    "N": 6,
+    "conductors": [
+      2,
+      3,
+      6
+    ],
+    "weight": "Q0(n)=1/n^2",
+    "density": "B0=diag(1+1/n)=zeta(2) B",
+    "residual": [
+      "13/971",
+      "68/971",
+      "153/971",
+      "208/971",
+      "-750/971",
+      "1"
+    ],
+    "residual_squared": "2051/34956",
+    "scaled_leakage_squared": [
+      "296/14565",
+      "683/38840",
+      "30/971"
+    ],
+    "commutator_nonzero": true
+  },
+  "complete_Q_table": [
+    {
+      "L": 2,
+      "constant_error": 0.25,
+      "quotient_error": 0.07171045517283535
+    },
+    {
+      "L": 6,
+      "constant_error": 0.05476694337026224,
+      "quotient_error": 0.07424869789408546
+    },
+    {
+      "L": 12,
+      "constant_error": 0.04023995914864253,
+      "quotient_error": 0.06120059870848461
+    },
+    {
+      "L": 30,
+      "constant_error": 0.02540022543571816,
+      "quotient_error": 0.03654207531526216
+    },
+    {
+      "L": 60,
+      "constant_error": 0.0227332938397308,
+      "quotient_error": 0.02873857340840038
+    }
+  ],
+  "complete_Q_method": "Hurwitz zeta sums over residues include the whole infinite tail. Wolfram and mpmath agree to displayed precision; these numerical values are not interval-certified Lean theorems.",
+  "period_2_exact": "(pi^6-588*zeta(3)^2)/(16*pi^4)",
+  "sources": [
+    {
+      "author": "Bhaskar Bagchi",
+      "title": "On Nyman, Beurling and Baez-Duarte's Hilbert space reformulation of the Riemann hypothesis",
+      "url": "https://arxiv.org/abs/math/0607733",
+      "use": "Theorem 1 and equivalent inverse-square weights; interpretation only."
+    },
+    {
+      "author": "Luis Báez-Duarte",
+      "title": "A strengthening of the Nyman-Beurling criterion for the Riemann hypothesis",
+      "url": "https://www.bdim.eu/item?id=RLIN_2003_9_14_1_5_0",
+      "use": "Theorem 1; density equivalence, not unconditional density."
+    },
+    {
+      "author": "S. Bettin, J. B. Conrey, D. W. Farmer",
+      "title": "An optimal choice of Dirichlet polynomials for the Nyman-Beurling criterion",
+      "url": "https://arxiv.org/abs/1211.5191",
+      "use": "Theorem 1 assumes RH and an inverse-zeta-derivative moment bound; cannot supply an independent proof."
+    }
+  ],
+  "verification": {
+    "state": "succeeded",
+    "verified": true,
+    "backend": "bazel",
+    "job_id": "job_g9gxvlDIj7cI_QFkxw88R1OppN98Y9Nm",
+    "path": "RiemannResearch/RH/QDensityLeakageArithmetic.lean",
+    "scope": "New module and all transitive imports; not an aggregate whole-project build or publication checkpoint.",
+    "target": "//RiemannResearch/RH:QDensityLeakageArithmetic",
+    "command": [
+      "bazel",
+      "build",
+      "--config=buildbuddy",
+      "--color=no",
+      "--curses=no",
+      "//RiemannResearch/RH:QDensityLeakageArithmetic"
+    ],
+    "file_sha256": "43ab584b3f20fa324f258991909619986728b4470010289608760cf0588392d5",
+    "request_sha256": "0612b82069523bc667981f50a3462cc1d07335195d0ab9179e89b010db38ceb0",
+    "server_verification_seconds": 38.257,
+    "job_total_seconds": 38.323,
+    "exit_code": 0,
+    "buildbuddy_url": "https://app.buildbuddy.io/invocation/207806df-c829-4f40-9612-bf1e1347e20c",
+    "declarations": 18,
+    "guarded_axiom_checks": 10,
+    "guarded_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "publication": {
+      "committed": false,
+      "pushed": false,
+      "checkpoint_run": false
+    }
+  }
+}

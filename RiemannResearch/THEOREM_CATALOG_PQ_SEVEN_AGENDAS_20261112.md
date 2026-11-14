@@ -208,6 +208,42 @@ existence of the normalized limit proves its value is zero. Exact vanishing
 of all h_k remains equivalent to 1 in V, hence V=H. The RH-to-target direction
 is not newly formalized by this extension.
 
+### Quantitative leakage and finite-conductor obstruction (unpublished investigation)
+
+The draft module QDensityLeakageArithmetic retains all signed remainders and proves:
+
+- `scaled_leakage_error_pythagoras`: the squared normalized error plus the
+  squared V-projection of a_k-1 equals the complete approximation error.
+- `approximation_error_norm_sq_le` and `scaled_leakage_error_norm_sq_le`:
+  both squared errors are at most 1/[zeta(2)(k-1)], k>=2.
+  Consequently h_k = w/[zeta(2)k] + O(k^(-3/2)); w is not set to zero.
+- `legal_approximation_error_identity`: every legal competitor has error
+  equal to the squared normalized leakage plus a retained squared remainder.
+- `constant_residual_norm_le_certificate`: any legal f gives
+  ||w|| <= ||a_k-f|| + sqrt(1/[zeta(2)(k-1)]).
+- `scaled_leakage_mean_tendsto`: zeta(2) k <1,h_k> -> ||w||^2.
+- `one_mem_iff_cofinal_scaled_leakage_mean_zero`: a zero scalar limit along
+  any cofinal conductor sequence is exactly one in V.
+- `moving_stage_residual_tendsto` and `moving_stage_error_tendsto`:
+  with U_j=span(g_2,...,g_(j+1)) and k_j->infinity, the actual complete-Q
+  finite residual of a_(k_j) tends to w and its squared norm tends to ||w||^2.
+- `one_mem_iff_moving_stage_error_zero` and
+  `one_mem_iff_cofinal_candidate_error_zero`: exact finite arithmetic criteria.
+- `approximation_not_mem_any_trial` and `density_atom_not_mem_any_trial`:
+  neither a_k nor B g_k is in a finite divisor trial space of positive period.
+  Periodicity proves this; it is not an obstruction to infinite closed-span membership.
+
+Conditional research reduction:
+`riemannHypothesis_of_cofinal_scaled_leakage_mean_zero`.
+Open provider: force the complete finite Gram defect
+||a_(k_j)||^2 - b_j^T G_j^(-1) b_j -> 0, where b_j(i)=<g_i,a_(k_j)>,
+or equivalently supply the cofinal zero scalar leakage limit. Neither is
+deduced from CRT matching, prime-composite decomposition, or O(1/k) leakage.
+
+Published sources are documented in the module. Bagchi's equivalent-weight
+criterion explains the RH interpretation. Bettin--Conrey--Farmer's optimal
+rate assumes RH and therefore cannot supply the missing premise.
+
 ## 6. CRT with complete Q energy
 
 QCRTCanonicalEscape.canonical_norm_tendsto_atTop proves the following precise
