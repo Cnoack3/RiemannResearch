@@ -617,22 +617,113 @@ Source: S. A. C. Baluyot, *On the Zeros of Riemann's Zeta-function* (2017),
 pp. 95–97, equations (3.1.5)–(3.1.7) and the proof of Lemma 3.1.3.
 https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320
 
+### Complex Mellin representation and local residues
+
+The continuation from base `8c2a2616e1b94d3d3481cb3b9bdbe33be1aa0eaa`
+adds **26 public theorems in five modules**, exported from `RiemannResearch.lean`.
+
+| Module under `RiemannResearch/Analysis/` | Public theorems | Established scope |
+| --- | ---: | --- |
+| `ComplexLaplaceGamma.lean` | 2 | Absolute convergence and the complex Laplace–Gamma identity |
+| `ComplexMellinExponential.lean` | 6 | Exact recurrence, quantitative majorants, vertical integrability, exponential inversion |
+| `ConreyBaluyotEstermannMellinKernel.lean` | 9 | Exact term norms, common-shift factorization, integral–series exchange and general kernel assembly |
+| `ConreyBaluyotEstermannMellin.lean` | 3 | Actual kernel integrability, explicit majorant and unconditional initial Mellin representation |
+| `ConreyBaluyotEstermannMellinResidues.lean` | 6 | Three actual local residue limits and their values in the rectangle-residue API |
+
+For every positive modulus K, **every** residue h modulo K, arbitrary complex
+shifts alpha and beta, Im(w)>0, and
+
+$$
+c>\max\{0,1-\Re\alpha,1-\Re\beta\},\qquad \lambda=-2\pi i w,
+$$
+
+`estermannDampedSeries_eq_mellinIntegral` proves the identity of the actual series
+and the actual continued function:
+
+$$
+S(w,\alpha,\beta,h)=\frac1{2\pi}
+\int_{\mathbb R}\Gamma(c+it)\lambda^{-(c+it)}
+D_h(c+it+\alpha,c+it+\beta)\,dt.
+$$
+
+`integrable_estermannMellinKernel_vertical` separately proves absolute
+integrability. The theorem assumes neither an inversion provider nor a
+summation-exchange provider. This initial formula does not need a unit h, an
+upper bound on c, or strip restrictions on the shifts beyond absolute
+convergence of the shifted undamped series. These are improvements in the
+scope of the formalized initial step, not an improved zero-density exponent.
+
+The scalar proof first establishes, for Re(a)>0 and Re(lambda)>0,
+
+$$
+\int_0^\infty x^{a-1}e^{-\lambda x}\,dx=\lambda^{-a}\Gamma(a).
+$$
+
+Dominated differentiation and analytic continuation from positive real lambda
+supply this equality. The exact two-step recurrence then gives the explicit bound
+
+$$
+|\Gamma(c+it)\lambda^{-c-it}|
+\le
+\frac{|\lambda|^2(\Re\lambda)^{-c-2}\Gamma(c+2)}{c^2+t^2}.
+$$
+
+`gamma_mul_cpow_neg_vertical_bound_uniform` makes the numerator uniform when
+Re(lambda)>=delta>0 and |lambda|<=M, replacing it by
+M^2 delta^(-c-2) Gamma(c+2). Thus the genuinely complex damping is controlled
+without a separate Stirling estimate. All complex powers are principal powers.
+
+The actual kernel is
+`estermannMellinKernel h alpha beta lambda s` =
+Gamma(s) lambda^(-s) D_h(s+alpha,s+beta).
+Its zero residue is D_h(alpha,beta), assuming alpha,beta are not 1 and lambda
+is nonzero; h need not be a unit. For a unit h and distinct shifts, the left
+residue is
+
+$$
+\Gamma(1-\alpha)\lambda^{\alpha-1}
+K^{-(1-\alpha+\beta)}\zeta(1-\alpha+\beta),
+$$
+
+under Re(alpha)<1 and lambda nonzero. The right residue exchanges alpha and
+beta and assumes Re(beta)<1. Both punctured-neighborhood limits and the
+repository's `residue` identities are proved. This covers the intended
+alpha=2 sigma-1, beta=0 regime for 1/2<sigma<1. It does not yet cover the
+source's full shifted range or collisions among the candidate poles.
+
+Source: Baluyot (2017), equation (3.1.8) and the proof of Lemma 3.1.3,
+printed pp. 96–97. The source supplies the statements and Mellin strategy;
+the kernel bounds and integral exchanges are checked proofs.
+
 ### Remaining part of CB-04
 
-With $\Re(-2\pi i w)>0$, $c>0$, and
-$c+\Re\alpha,c+\Re\beta>1$, prove the initial Mellin identity
-$$
-S(w,\alpha,\beta,H/K)=\frac1{2\pi}
-\int_{\mathbb R}\Gamma(c+it)(-2\pi i w)^{-(c+it)}
- D_h(c+it+\alpha,c+it+\beta)\,dt .
-$$
-This requires the complex inverse Mellin formula and the actual
-integral–series exchange. Then justify the shift to $1-c$ in the
-source range, keeping the $0,1-\alpha,1-\beta$ residues with the
-appropriate treatment of coincidences. The uniform bound of Lemma 3.1.2
-for $D_h(2\sigma-1,0)$ is also open.
-CB-05 through CB-08 remain open, including the Kloosterman bounds,
-the uniform mollified moment, and the exact $0<a<8/7$ density theorem.
+The initial complex Mellin representation and its integral–series exchange
+are now proved. Still open:
+
+- The global shift to Re(s)=1-c: finite rectangle bookkeeping, horizontal
+  limits, and convergence on the shifted line, retaining every signed residue.
+- Pole collisions and the full shifted parameter range of Lemma 3.1.3.
+- Assembly of that justified shift with the already proved functional equation,
+  retaining the inverse residue and both cosine terms.
+- The uniform bound of Lemma 3.1.2, |D_h(2 sigma-1,0)| <= 2 K^2.
+
+CB-05 through CB-08 remain open, including the Kloosterman bounds, the uniform
+mollified moment, and an unconditional provider of the exact repository
+`ConreyBaluyotDensityHypothesis` for 0<a<8/7. RH is not proved by this continuation.
+
+### Acceptance evidence for the complex Mellin continuation
+
+Saved-module compilation and **26 exact axiom guards** succeeded in
+`job_mbtPuj6rTltpAVNB2lJtwgFbtXiX8-LT` using Bazel/BuildBuddy
+(89.066 seconds server verification time).
+The audit imports the five saved modules through the actual Mellin theorem and
+residue module. Every public theorem in this continuation accepts exactly
+`propext`, `Classical.choice`, and `Quot.sound`.
+https://app.buildbuddy.io/invocation/69532c70-d3f7-4bd1-9240-f7c51c8a888a
+
+This is focused saved-module evidence. Publication additionally uses the server
+checkpoint's full incremental `//:RiemannResearch` build; its terminal result and
+published commit are reported with the checkpoint.
 
 ### Acceptance evidence on base 95b5aeb
 
