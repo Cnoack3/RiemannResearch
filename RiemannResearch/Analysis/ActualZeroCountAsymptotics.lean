@@ -251,4 +251,34 @@ theorem eventually_count_ge_seven_log :
   apply (div_lt_div_iff₀ (by positivity) (by positivity)).2
   nlinarith [Real.pi_pos]
 
+
+open scoped Topology
+
+/-- The height/count ratio vanishes by the unconditional zero-count lower bound. -/
+theorem tendsto_height_div_count :
+    Tendsto (fun T : ℝ => T / (Ncount 0 T : ℝ)) atTop (𝓝 0) := by
+  have hupper : ∀ᶠ T : ℝ in atTop,
+      T / (Ncount 0 T : ℝ) ≤ (16 * Real.pi) / Real.log T := by
+    filter_upwards [eventually_count_ge_log, eventually_gt_atTop (1 : ℝ)] with T hN hT
+    have hTpos : 0 < T := by linarith
+    have hL : 0 < Real.log T := Real.log_pos hT
+    have hc : 0 < 1 / (16 * Real.pi) := by positivity
+    calc
+      _ ≤ T / ((1 / (16 * Real.pi)) * T * Real.log T) :=
+        div_le_div_of_nonneg_left hTpos.le (by positivity) hN
+      _ = (16 * Real.pi) / Real.log T := by field_simp
+  refine squeeze_zero' ?_ hupper ?_
+  · filter_upwards [eventually_gt_atTop (0 : ℝ)] with T hT
+    exact div_nonneg hT.le (Nat.cast_nonneg _)
+  · simpa only [div_eq_mul_inv, mul_zero] using
+      (tendsto_const_nhds.mul (tendsto_inv_atTop_zero.comp Real.tendsto_log_atTop) :
+        Tendsto (fun T : ℝ => (16 * Real.pi) * (Real.log T)⁻¹) atTop (𝓝 ((16 * Real.pi) * 0)))
+
+theorem tendsto_complex_height_div_count :
+    Tendsto (fun T : ℝ => (T : ℂ) / (Ncount 0 T : ℂ)) atTop (𝓝 0) := by
+  simpa only [Function.comp_def, Complex.ofReal_div, Complex.ofReal_natCast,
+    Complex.ofReal_zero] using
+      (Complex.continuous_ofReal.tendsto 0).comp tendsto_height_div_count
+
+
 end RiemannResearch.Analysis.ActualZeroOrdinate

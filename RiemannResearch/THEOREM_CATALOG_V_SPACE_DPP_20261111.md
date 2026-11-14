@@ -25,7 +25,7 @@ are classical published theorems, rather than open mathematical conjectures.
 | §1 full Dirichlet log/exp equivalence | `PrimePowerFormalCoordinates` proves all-degree local inverse identities. `PrimePowerFormalCoordinates.dirichletExpLogEquiv` in `PrimePowerMultiplicativeEquiv.lean` reconstructs a unique globally multiplicative arithmetic function from every prime-local logarithmic family; `dirichletExp_eta` gives the constant-one function on positive integers. This is a coefficientwise formal Euler-factor realization, with no convergence hypothesis. |
 | §2 coordinate recovery and sampled completeness | Existing `SampledGaugeCompleteness`; new `SampledGauge.sampled_orbit_closure_eq_support` removes the full-support restriction. It assumes the stated phase-average limits. |
 | §2 actual-zero Fourier cancellation | The Fourier-to-Haar/orbit bridge is proved in `ZeroOrdinateEquidistribution`. Actual ordinate estimates retain analytic inputs. Published unconditional cancellation is not a new axiom or a discharged provider here. |
-| §2 independent prime phases and compact infinite orbit law | `CompactGaugeOrbit` now constructs the infinite prime-circle orbit in l2 and proves norm continuity, compactness, and exact norm preservation. Finite-prime FMZ/Haar results retain their hypotheses; the full empirical weak-convergence assembly for actual ordinates remains unformalized. |
+| §2 independent prime phases and compact infinite orbit law | `CompactGaugeOrbit` proves norm continuity, compactness, and exact norm preservation. New `CompactGaugeOrbitLaw.existsUnique_orbit_limit` constructs the unique torus probability law and proves infinite Hilbert-orbit weak convergence from all joint finite-character limits. No Haar or independence premise is imposed. `ActualInfinitePrimeTorus.existsUnique_actual_orbit_limit` now supplies the actual multiplicity-weighted empirical specialization under the explicit `UniformSelbergDensity (1/4)` hypothesis. |
 | §3 exact sampled energy | Existing finite signed covariance/Parseval identities. The PDF's general trace-norm operator convergence is not fully formalized by the finite identities. |
 | §3 no scalar weighted frame | New `SampledGaugeSupport` supplies the coordinate energy identity and weighted-frame obstruction on any infinite nonzero support, including sparse support. Completeness does not give a lower frame bound. |
 | §4 signed arithmetic correction | Existing rational FMZ formulas retain the arithmetic correction and exact diagonal. `ActualRationalFMZRate` explicitly assumes `UniformSelbergDensity (1/4)` for its actual-ordinate rates. |
@@ -80,14 +80,166 @@ basis, evaluation, and arithmetic-limit declarations confirmed precisely
 [Audit build](https://app.buildbuddy.io/invocation/7765f352-0a83-4dda-8b99-ab074872de2e).
 The final publication checkpoint separately validates the integrated repository.
 
-Coverage is still incomplete: actual-ordinate analytic providers, full
-infinite-orbit weak convergence, general trace-norm covariance convergence,
+Coverage is still incomplete: actual-ordinate analytic providers,
+general trace-norm covariance convergence,
 the infinite signed operator and its sharp norm, the all-s summation
 unboundedness extension outside 1<s<=2,
 the RH-to-damped-energy/critical almost-periodicity directions, the
 all-theta continuous Nyman Mellin integral, and Burnol's Sonine theorems still
 require formalization. The actual RH energy estimate and microscopic
 zero-pair transfer remain open mathematical obligations.
+
+
+## 1b. Finite-character to infinite-orbit transfer (14 November 2026)
+
+The new transfer consists of:
+
+- `Probability/CompactMomentConvergence.lean`: convergence from a dense
+  family of continuous moments; existence and uniqueness of the limiting
+  probability measure using compactness.
+- `Analysis/InfiniteTorusCharacters.lean`: continuous finite-coordinate
+  Laurent characters on an arbitrary product of circles, their finite
+  coordinate dependence, and uniform density by complex Stone-Weierstrass.
+- `Analysis/CompactGaugeOrbitLaw.lean`: weak convergence of the full
+  prime-torus laws and their norm-continuous Hilbert-orbit pushforwards;
+  convergence of uncentered and centered covariance pairings; positivity
+  and an explicit contraction bound for the uncentered quadratic form.
+
+Write K = product_p Circle and
+chi_m(z) = product_p z_p^(m_p), for finitely supported integer m.
+For a nontrivial filter and probability measures mu_i on K, the only
+substantive input is convergence of every joint character integral
+integral chi_m dmu_i -> c(m). The theorem constructs a unique probability
+measure nu with these moments and proves mu_i -> nu and
+(primeOrbit h)_* mu_i -> (primeOrbit h)_* nu.
+Lean indexes characters by finite words of prime/integer pairs; repeated
+coordinates add their exponents. The locality theorem records their
+finite-coordinate dependence. Individual coordinate marginals alone do
+not suffice.
+
+For moments arising as these limits, normalization, positive definiteness,
+conjugation symmetry, and finite-marginal compatibility follow from the
+constructed probability measure. No Haar law or independence is assumed.
+For independently specified finite-dimensional probability laws, the
+required compatibility is pushforward under every coordinate restriction.
+For independently specified Fourier data, normalization c(0)=1 and positive
+definiteness on the direct sum of the integer character groups are the
+corresponding conditions; the new code uses the stronger concrete input
+that these data are limits of actual probability measures.
+
+Normalization matters. The usual zero empirical probability measure is
+N(T)^(-1) sum_{0<gamma<=T} delta_{(p^(i gamma))_p}, with multiplicities.
+Hlawka's unconditional fixed-frequency equidistribution, as described in
+Ford--Zaharescu, plus rational independence of prime logarithms gives
+c(m)=0 for m != 0 and c(0)=1. Thus the leading probability limit is Haar.
+The arithmetic bias survives in the separate signed functional
+T^(-1)(sum f(z_gamma) - N(T) integral f dHaar), not as a non-Haar leading
+probability measure. The new exact normalized_centered_identity and its
+limit theorem preserve this distinction.
+
+Existing ActualPrimeTorusFMZ.tendsto_centered_character_div retains
+UniformSelbergDensity (1/4). ActualZeroSelbergDensity explicitly records
+that its published unconditional provider was deliberately deferred.
+ActualZeroCountAsymptotics supplies an unconditional eventual positive
+count and a T log T lower bound. The finite-prime smooth FMZ extension
+also states its Fourier-decay and density assumptions explicitly.
+The actual-zero empirical interface is now connected by
+ActualInfinitePrimeTorus, as recorded in Section 1c. The analytic density
+provider remains an explicit, intentionally deferred hypothesis.
+
+Published analytic sources:
+Ford--Zaharescu, J. reine angew. Math. 579 (2005), 145--158,
+https://arxiv.org/abs/math/0405459;
+Ford--Meng--Zaharescu, Bull. London Math. Soc. 49 (2017), 1--9,
+https://arxiv.org/abs/1511.06814, Theorem 1 and Corollary 1.1.
+The latter assumes a Diophantine condition and Fourier decay B > dimension+2;
+its full-rank prime-log case satisfies the Diophantine condition by Baker.
+These are published analytic inputs, not newly kernel-checked providers.
+
+The pairing theorem uses genuine infinite Hilbert vectors. For a possibly
+non-Haar law the centered version subtracts both mean factors.
+The uncentered form satisfies 0 <= Q_mu(u) <= ||h||^2 ||u||^2;
+division by 1+||h||^2 gives a positive-contraction quadratic bound, including
+h=0. This is not a new DPP construction or identification with actual zeros.
+Existing SampledCovarianceDPP supplies finite-sample positive-contraction
+laws under an explicit energy budget. Existing ZeroOrdinateInfiniteDPP
+constructs a separate projection thinning on actual zero-copy labels.
+Neither construction proves Montgomery pair correlation.
+
+A mathematical consequence, not newly formalized here, is trace-norm
+convergence of the uncentered covariance for fixed h. For a finite
+coordinate projection P_F and tau_F = ||(I-P_F)h||, the exact constant-norm
+orbit gives the uniform estimate
+||C_i-C||_1 <= 4 ||h|| tau_F + ||P_F(C_i-C)P_F||_1.
+First fix F and use the proved pairing limits, then let F exhaust the
+coordinates. The signed order-T correction has no such automatic
+probability bound: extension to arbitrary infinite observables requires
+an appropriate uniform remainder/tail bound. Weak convergence against all
+continuous tests for the centered signed measures is not justified by
+finite-character limits.
+
+Scoped Bazel/BuildBuddy verification succeeded for
+`//RiemannResearch/Analysis:CompactGaugeOrbitLaw`, including all three new
+modules, in job `job_ARo-hgCEv2bs6lMgwTEC444ly_QkX5Xm`.
+[Transfer build](https://app.buildbuddy.io/invocation/a0eca4c5-e185-4101-8023-692dde4f76d6).
+Exact `#guard_msgs` axiom checks on eight principal declarations succeeded in
+job `job_xaC9TSr1OWK5Fb3iuh8RrWMooHv-sn84`, confirming only
+`propext`, `Classical.choice`, and `Quot.sound`.
+[Audit build](https://app.buildbuddy.io/invocation/9a1aaeb4-9268-4a77-9411-f11e90af6798).
+Publication of the transfer and actual-zero specialization is gated by the
+full repository checkpoint. Its terminal record identifies the validated
+integrated source and published commit.
+
+
+## 1c. Actual empirical infinite-prime-torus law (13 November 2026)
+
+**Conditional research reduction.** `Analysis/ActualInfinitePrimeTorus.lean`
+now assembles the actual-zero specialization. The sole domain-specific premise
+of `existsUnique_actual_orbit_limit` is
+`ActualZeroOrdinate.UniformSelbergDensity (1 / 4)`.
+
+- `phasePoint t` simultaneously records every prime phase
+  `Circle.exp (log p * t)`.
+- `rawEmpiricalMeasure T` is the sum of Dirac atoms over
+  `ActualZeroOrdinate.Copies T`, each with weight `1/N(T)`.
+  `rawEmpiricalMeasure_isProbability` requires only `0 < N(T)`.
+  `empiricalProbability T` uses the Dirac probability at the identity when
+  the cutoff is empty. The unconditional eventual positivity theorem removes
+  this convention from every limit.
+- `integral_empiricalProbability` identifies every complex test integral
+  with the actual multiplicity-weighted normalized sum, without a continuity
+  assumption. `integral_character_eq_sampleFunctional` identifies every
+  word-character integral with the existing finite-prime FMZ functional.
+  `wordMode` adds exponents at repeated primes, so cancellation and the
+  empty word are included.
+- `haarMoment_eq` computes the limiting moment as one precisely when all
+  combined exponents vanish, and zero otherwise.
+  `integral_character_centered_identity` retains the exact signed correction:
+  `integral chi_s dmu_T = c_s + (T/N(T)) * ((S_s(T)-N(T)*c_s)/T)`.
+- `ActualZeroOrdinate.tendsto_height_div_count` and its complex version,
+  added to `ActualZeroCountAsymptotics.lean`, prove `T/N(T) -> 0`
+  from the existing unconditional count lower bound.
+- `tendsto_integral_character` combines that ratio with the existing
+  conditional centered FMZ limit. `existsUnique_actual_orbit_limit`
+  applies the new compact transfer theorem to obtain one uniquely determined
+  probability law with all finite joint Haar moments, convergence of the
+  full actual empirical laws, and weak convergence of every fixed Hilbert
+  orbit pushforward.
+
+**Open formal provider:** `UniformSelbergDensity (1 / 4)`. Its classical
+provider is intentionally deferred, as requested. No RH or zero-simplicity
+hypothesis is introduced. This theorem does not assert an infinite signed
+operator limit, a trace-norm limit, or a DPP law for the actual zeros.
+
+The scoped source check passed with Bazel/BuildBuddy in
+`job_I08YOY_MSNkWY_B4PQmFL0F2UxXhwFyq`
+([source build](https://app.buildbuddy.io/invocation/410fc3d0-5111-42d6-820d-13aa140abed3)).
+After the final direct-import update, the module and eight exact axiom guards
+passed in `job_g6jyPCin_8xk7cBS9PvmTRA-faVPO0A5`
+([axiom audit](https://app.buildbuddy.io/invocation/8636e0a9-67d0-4a0e-b10f-bcddda7f07b9)).
+The guards confirm only `propext`, `Classical.choice`, and `Quot.sound`.
+These are scoped checks; full integrated acceptance is the publication
+checkpoint's responsibility.
 
 ## 2. New quantitative obstruction at the microscopic scale
 
