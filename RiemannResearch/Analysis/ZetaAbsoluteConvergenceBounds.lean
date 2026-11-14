@@ -53,3 +53,67 @@ theorem norm_riemannZeta_le_integral_test {s : ℂ} (hs : 1 < s.re) :
   have hh := norm_le_norm_sub_add (riemannZeta s) (1 : ℂ)
   simp only [norm_one] at hh
   linarith [norm_riemannZeta_sub_one_le_integral_test hs]
+
+private theorem zeta_real_term_eq_norm (q : ℝ) (n : ℕ) :
+    LSeries.term (1 : ℕ → ℂ) (q : ℂ) n =
+      (‖LSeries.term (1 : ℕ → ℂ) (q : ℂ) n‖ : ℂ) := by
+  rw [LSeries.norm_term_eq]
+  by_cases hn : n = 0
+  · simp [LSeries.term, hn]
+  · simp only [LSeries.term, hn, ↓reduceIte, Pi.one_apply, norm_one,
+      Complex.ofReal_re]
+    rw [Complex.ofReal_div, Complex.ofReal_one,
+      Complex.ofReal_cpow (Nat.cast_nonneg n), Complex.ofReal_natCast]
+
+/-- On the real half-line above one the zeta series is a sum of nonnegative real terms. -/
+theorem riemannZeta_real_eq_tsum_norm {q : ℝ} (hq : 1 < q) :
+    riemannZeta (q : ℂ) =
+      ((∑' n : ℕ, ‖LSeries.term (1 : ℕ → ℂ) (q : ℂ) n‖ : ℝ) : ℂ) := by
+  rw [← LSeries_one_eq_riemannZeta (by simpa using hq), Complex.ofReal_tsum]
+  exact tsum_congr (zeta_real_term_eq_norm q)
+
+/-- Exact absolute mass of the zeta series on the real half-line. -/
+theorem norm_riemannZeta_real_eq_tsum_norm {q : ℝ} (hq : 1 < q) :
+    ‖riemannZeta (q : ℂ)‖ =
+      ∑' n : ℕ, ‖LSeries.term (1 : ℕ → ℂ) (q : ℂ) n‖ := by
+  rw [riemannZeta_real_eq_tsum_norm hq,
+    Complex.norm_of_nonneg (tsum_nonneg fun n => norm_nonneg _)]
+
+/-- The n=1 term gives a nonzero real-axis denominator. -/
+theorem one_le_norm_riemannZeta_real {q : ℝ} (hq : 1 < q) :
+    1 ≤ ‖riemannZeta (q : ℂ)‖ := by
+  rw [norm_riemannZeta_real_eq_tsum_norm hq]
+  have hs : Summable (LSeries.term (1 : ℕ → ℂ) (q : ℂ)) :=
+    LSeriesSummable_one_iff.mpr (by simpa using hq)
+  have h := hs.norm.le_tsum 1 (fun _ _ => norm_nonneg _)
+  simpa [LSeries.term] using h
+
+/-- Absolute convergence and monotonicity of positive Dirichlet coefficients. -/
+theorem norm_riemannZeta_le_real_of_re_le {q : ℝ} {s : ℂ}
+    (hq : 1 < q) (hqs : q ≤ s.re) :
+    ‖riemannZeta s‖ ≤ ‖riemannZeta (q : ℂ)‖ := by
+  have hs : 1 < s.re := hq.trans_le hqs
+  have hsum : Summable (LSeries.term (1 : ℕ → ℂ) s) := LSeriesSummable_one_iff.mpr hs
+  have hqsum : Summable (LSeries.term (1 : ℕ → ℂ) (q : ℂ)) :=
+    LSeriesSummable_one_iff.mpr (by simpa using hq)
+  rw [norm_riemannZeta_real_eq_tsum_norm hq, ← LSeries_one_eq_riemannZeta hs]
+  change ‖∑' n, LSeries.term (1 : ℕ → ℂ) s n‖ ≤ _
+  apply (norm_tsum_le_tsum_norm hsum.norm).trans
+  apply Summable.tsum_le_tsum _ hsum.norm hqsum.norm
+  intro n
+  rw [LSeries.norm_term_eq, LSeries.norm_term_eq]
+  by_cases hn : n = 0
+  · simp [hn]
+  · simp only [hn, ↓reduceIte, Pi.one_apply, norm_one, Complex.ofReal_re]
+    have hn1 : (1 : ℝ) ≤ n := by exact_mod_cast Nat.one_le_iff_ne_zero.mpr hn
+    exact one_div_le_one_div_of_le (Real.rpow_pos_of_pos (lt_of_lt_of_le zero_lt_one hn1) q)
+      (Real.rpow_le_rpow_of_exponent_le hn1 hqs)
+
+/-- Normalized zeta domination, uniform as the real parameter approaches one from above. -/
+theorem norm_riemannZeta_div_real_le_one {q : ℝ} {s : ℂ}
+    (hq : 1 < q) (hqs : q ≤ s.re) :
+    ‖riemannZeta s / riemannZeta (q : ℂ)‖ ≤ 1 := by
+  rw [norm_div]
+  exact (div_le_one (lt_of_lt_of_le zero_lt_one
+    (one_le_norm_riemannZeta_real hq))).mpr
+      (norm_riemannZeta_le_real_of_re_le hq hqs)
