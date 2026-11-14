@@ -33,9 +33,11 @@ to zero.
 Positive-contour independence and reality are proved in the sibling module
 ConreyBaluyotMellinContour; exponential small-xi decay is proved in
 ConreyBaluyotMellinDecay, and the actual local residues are computed in
-ConreyBaluyotMellinResidues. The signed contour expansion (3.1.3), the
-uniform positive lower bound for W(y), global boundedness,
-Estermann/Kloosterman input, and the uniform mollified second moment remain open.
+ConreyBaluyotMellinResidues. The signed contour expansion (3.1.3) is proved in
+ConreyBaluyotMellinShift; uniform positive normalization and global bounds are
+proved in ConreyBaluyotMellinNormalization, with exact-floor tails in
+ConreyBaluyotMollifierTruncation. Estermann/Kloosterman input and the actual
+uniform mollified second moment remain open.
 In particular this module supplies no ConreyBaluyotDensityHypothesis.
 The finite coefficient normalization theorem keeps W(y) nonzero explicit.
 -/

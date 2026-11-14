@@ -20,8 +20,9 @@ https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFil
 Here the positive-contour identity and integer Gamma values give factorial
 bounds. Summing against the exponential power series proves the explicit
 bound 72 exp(-1/(2 xi)) for every sigma > 1/2 and 0 < xi <= 1.
-This proof avoids a separate Stirling estimate. It does not provide
-the signed negative-contour expansion or the large-y normalization bound.
+This proof avoids a separate Stirling estimate. The signed negative-contour
+expansion and large-y normalization are proved in ConreyBaluyotMellinShift
+and ConreyBaluyotMellinNormalization.
 -/
 
 open Complex MeasureTheory Set Filter

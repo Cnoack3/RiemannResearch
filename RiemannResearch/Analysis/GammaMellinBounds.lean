@@ -5,6 +5,7 @@ Authors: RiemannResearch contributors
 -/
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 
@@ -42,7 +43,7 @@ theorem gamma_norm_le_real_part {s : ℂ} (hs : 0 < s.re) :
       simp
 
 /-- Exact two-step recurrence; no remainder is discarded. -/
-theorem gamma_add_three_eq (s : ℂ) (hs : 0 ≤ s.re) :
+theorem gamma_add_three_eq (s : ℂ) (hs : -1 < s.re) :
     Gamma (s + 3) = (s + 2) * (s + 1) * Gamma (s + 1) := by
   have h1 : s + 1 ≠ 0 := by
     intro h; have := congrArg Complex.re h; simp at this; linarith
@@ -61,7 +62,7 @@ theorem gamma_vertical_cauchy_bound {r : ℝ} (hr : 0 ≤ r) (t : ℝ) :
     ‖Gamma ((r : ℂ) + I * t + 1)‖ ≤ Real.Gamma (r + 3) / (1 + t ^ 2) := by
   let z : ℂ := (r : ℂ) + I * t
   have hz : 0 ≤ z.re := by simpa [z] using hr
-  have he := congrArg norm (gamma_add_three_eq z hz)
+  have he := congrArg norm (gamma_add_three_eq z (by linarith))
   rw [norm_mul, norm_mul] at he
   have hA : 1 + t ^ 2 ≤ ‖z + 1‖ ^ 2 := by
     rw [← Complex.normSq_eq_norm_sq, Complex.normSq_apply]
@@ -88,5 +89,49 @@ theorem gamma_vertical_cauchy_bound {r : ℝ} (hr : 0 ≤ r) (t : ℝ) :
       mul_le_mul_of_nonneg_left hAB (norm_nonneg _)
     _ = ‖Gamma (z + 3)‖ := by rw [he]; ring
     _ ≤ _ := hg
+
+/-- Four recurrence steps give an inverse-quartic majorant down to Re z = -3/4. -/
+theorem gamma_vertical_quartic_bound {r : ℝ} (hr : -(3 / 4 : ℝ) ≤ r) (t : ℝ) :
+    ‖Gamma ((r : ℂ) + I * t + 1)‖ ≤
+      16 * Real.Gamma (r + 5) / (1 + t ^ 2) ^ 2 := by
+  let z : ℂ := (r : ℂ) + I * t
+  have hz : -1 < z.re := by simp [z]; linarith
+  have he := congrArg norm (gamma_add_three_eq z hz)
+  rw [norm_mul, norm_mul] at he
+  have hA : 1 + t ^ 2 ≤ (4 * ‖z + 1‖) ^ 2 := by
+    have hn : ‖z + 1‖ ^ 2 = (r + 1)^2 + t^2 := by
+      rw [← Complex.normSq_eq_norm_sq, Complex.normSq_apply]
+      simp [z, pow_two]
+    nlinarith [sq_nonneg (r + 3/4), sq_nonneg t]
+  have hB : 1 + t ^ 2 ≤ (4 * ‖z + 2‖) ^ 2 := by
+    have hn : ‖z + 2‖ ^ 2 = (r + 2)^2 + t^2 := by
+      rw [← Complex.normSq_eq_norm_sq, Complex.normSq_apply]
+      simp [z, pow_two]
+    nlinarith [sq_nonneg (r + 3/4), sq_nonneg t]
+  have hD : 0 < 1 + t ^ 2 := by positivity
+  have hAB : 1 + t ^ 2 ≤ 16 * (‖z + 2‖ * ‖z + 1‖) := by
+    have hp := mul_nonneg (sub_nonneg.mpr hA) (sub_nonneg.mpr hB)
+    have hA' := mul_le_mul_of_nonneg_right hA hD.le
+    have hB' := mul_le_mul_of_nonneg_right hB hD.le
+    have hn : 0 ≤ ‖z + 2‖ * ‖z + 1‖ := by positivity
+    nlinarith [sq_nonneg (16 * (‖z + 2‖ * ‖z + 1‖) - (1 + t ^ 2))]
+  have hg : ‖Gamma (z + 3)‖ ≤ Real.Gamma (r + 5) / (1 + t^2) := by
+    have h := gamma_vertical_cauchy_bound (r := r + 2) (by linarith) t
+    have harg : (((r + 2 : ℝ) : ℂ) + I * t + 1) = z + 3 := by
+      dsimp [z]; push_cast; ring
+    have hreal : r + 2 + 3 = r + 5 := by ring
+    rw [harg, hreal] at h
+    exact h
+  have hx : ‖Gamma (z+1)‖ * (1+t^2) ≤
+      16 * Real.Gamma (r+5) / (1+t^2) := by
+    calc
+      _ ≤ 16 * ((‖z+2‖ * ‖z+1‖) * ‖Gamma (z+1)‖) := by
+        nlinarith [mul_le_mul_of_nonneg_right hAB (norm_nonneg (Gamma (z+1)))]
+      _ = 16 * ‖Gamma (z+3)‖ := by rw [he]
+      _ ≤ _ := by simpa only [mul_div_assoc] using
+        mul_le_mul_of_nonneg_left hg (by norm_num : (0 : ℝ) ≤ 16)
+  apply (le_div_iff₀ (sq_pos_of_pos hD)).mpr
+  have hx' := (le_div_iff₀ hD).mp hx
+  simpa only [pow_two, mul_assoc] using hx'
 
 end Complex

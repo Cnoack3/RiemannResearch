@@ -430,3 +430,219 @@ uniform endpoint constant, or RH result is claimed.
   No Lean source changed after this acceptance; only this verification
   record and the publication approval were recorded. The publication checkpoint
   supplies the final commit and any required integrated-source validation.
+
+## Negative-contour and normalization closure (14 November 2026)
+
+Development base: f26bc44f85c68c42b36a53eb9418af9fb1f623c1.
+This continuation was initially retained for review without publication.
+It follows Conrey_Baluyot_Density_Closure_Plan(1).md. Fresh publication approval
+was granted after recovery and the integrated checks recorded below.
+
+### Thirty new public theorems
+
+All names below except the Gamma bound are in
+`RiemannResearch.Analysis.ConreyBaluyot`.
+
+| Owning Analysis module | New public declarations |
+| --- | --- |
+| GammaMellinBounds | `Complex.gamma_vertical_quartic_bound` |
+| ConreyBaluyotMellinNegativeContour | `differentiableAt_mellinKernel_off_poles`, `norm_mellinIntegrand_negative_le`, `integrable_mellinIntegrand_negative`, `norm_weightOnLine_negative_le` |
+| ConreyBaluyotMellinShift | `analyticAt_mellinKernel_off_poles`, `meromorphicAt_mellinKernel`, `hasSimplePolesOn_mellinKernel`, `rectangleIntegral_mellinKernel`, `norm_mellinKernel_strip_tail_le`, `exists_mellinKernel_closed_strip_tail_bound`, `weight_eq_residues_add_negative`, `weight_eq_residues_add_negative_real` |
+| ConreyBaluyotMellinNormalization | `tendsto_secondaryResidueCoefficient`, `exists_secondaryResidueCoefficient_bound`, `negativeRemainderConstant_pos`, `norm_weight_sub_one_le`, `weight_re_lower_bound`, `rpow_le_exp_neg_two_of_coupled_strip`, `norm_weight_le_global_of_coefficient_bound`, `exists_uniform_weight_normalization`, `weight_ne_zero_of_re_lower_bound`, `norm_weight_inv_le_of_re_lower_bound`, `exists_uniform_mollifier_coefficient_bounds` |
+| ConreyBaluyotMollifierTruncation | `norm_mollifierCoefficient_le_exp`, `mollifier_tail_geometric_bound`, `mollifier_floor_tail_geometric_bound`, `exists_stretched_tail_bound`, `exists_uniform_mollifier_truncation` |
+| ConreyBaluyotParameterBudget | `exists_strict_error_budget` |
+
+The one new definition is `negativeRemainderConstant = 1024 Gamma(17/4)`.
+The existing two-step Gamma recurrence is generalized from Re(s)>=0
+to Re(s)>-1. All five new modules are exported by RiemannResearch.lean,
+with the existing Analysis BUILD.bazel. Existing weight, coefficient,
+finite cutoff and density definitions are unchanged.
+
+### Exact hypotheses and conclusions
+
+For 1/2<sigma<=3/4 and xi>0, the actual integrand on Re(z)=-3/4
+is absolutely integrable, and the signed identity is
+
+`W_sigma(xi) = 1 + A(sigma) xi^(1-2sigma) + R_sigma(xi)`,
+
+where R is the existing weightOnLine at -3/4. Its uniform bound is
+
+`|R_sigma(xi)| <= C_- xi^(-3/4), C_- = 1024 Gamma(17/4)>0`.
+
+No holomorphy, meromorphy, simple-pole, convergence, or horizontal-decay
+provider remains in the concrete contour theorem. The proof uses the actual
+rectangle residue theorem with both signed residues, then passes to the
+absolutely convergent vertical integrals. Both complex- and real-power
+versions are provided.
+
+The coefficient A(sigma) tends to -1 as sigma decreases to 1/2.
+There exist 0<epsilon0<1/4 and Y0>1 with exp(1/epsilon0)<=Y0 such that:
+- for 1/2<sigma<=1/2+epsilon0 and xi>0, |W_sigma(xi)|<=K, where
+  K=max(72,3+C_-);
+- on y>=Y0 and 1/2+1/log(y)<=sigma<=1/2+epsilon0, Re(W_sigma(y))>=1/4;
+- on that coupled strip, W_sigma(y)!=0, |W_sigma(y)^(-1)|<=4,
+  b_sigma,y(1)=1, |b_sigma,y(n)|<=4K for n>=1, and
+  |b_sigma,y(n)|<=288 exp(-n/(2y)) for n>=y.
+
+Reality was already proved. The coupled restriction and quantifier order
+are retained; no positive lower bound for every sigma>1/2 is asserted.
+
+For y<=N+1 and Re(s)>=0, the normalized coefficient tail beginning at
+N+1 is absolutely summable and summable, with norm at most
+`288 exp(-(N+1)/(2y))/(1-exp(-1/(2y)))`.
+The exact floor N=floor(y^(1+epsilon)) is used. For each fixed epsilon>0,
+a sufficiently large threshold gives the uniform bound
+`864 exp(-y^epsilon/4)` on the coupled strip. The proof controls the
+geometric denominator first, then absorbs the factor y via log(y)=o(y^epsilon).
+The final uniform truncation theorem has no analytic-provider premise.
+
+For 0<theta<4/7 and eta>0, the proposed choices
+g=1-7theta/4, delta=g/28 and epsilon_err=g/16 admit a positive
+epsilon0<=min(eta/2,1/8,delta/(8theta)). Lean verifies
+E1=-5g/16, E2=-13g/16, 2theta epsilon0<=g/112 and
+4theta epsilon0<delta, and the strict comparison with theta(1-2sigma).
+This checks parameter algebra only. It does not prove the analytic error
+estimates or identify the independent cutoff and error-loss parameters.
+
+### Historical Mellin-stage ledger (CB-04 is advanced below)
+
+| ID | Status | Remaining work |
+| --- | --- | --- |
+| CB-01 | Previously proved | None |
+| CB-02 | Proved in retained changes | Actual signed shift and uniform remainder now discharged |
+| CB-03 | Proved in retained changes | Uniform normalization, global/coefficients bounds, absolute convergence and exact-floor/exponential truncation now discharged |
+| CB-04 | Open: first unmet stage | Estermann series/Hurwitz bridge, continuation, functional equation and justified exchanges |
+| CB-05 | Open | Incomplete and multilinear Kloosterman estimates |
+| CB-06 | Open | Actual zeta-mollifier moment, signed main terms and all errors; elementary parameter budget is now proved |
+| CB-07 | Open | Signed counting, boundaries, full sigma coverage, away-line input and dyadic assembly |
+| CB-08 | Open | Unconditional provider of the exact ConreyBaluyotDensityHypothesis |
+
+The next target at this stage was the actual absolutely convergent double series
+D(s,alpha,beta,H/K) for Re(s+alpha)>1 and Re(s+beta)>1, with K>0 and
+coprime integers H,K, and its finite Hurwitz-zeta identity (3.1.7):
+
+D = K^(-2s-alpha-beta) sum_{a=1}^K sum_{b=1}^K
+exp(2 pi i abH/K) zeta(s+alpha,a/K) zeta(s+beta,b/K).
+
+This was initially a specification. The Estermann continuation below now proves
+absolute convergence, residue-class reindexing, meromorphic continuation and
+the functional equation. The transformed contour identity remains open.
+At this earlier stage, bounded declaration and filename searches had found no
+Estermann or Kloosterman implementation in the inspected project.
+
+No `conreyBaluyotDensity` declaration is added. The exact density proposition,
+actual multiplicities, single logarithm, full sigma interval and strict
+a<8/7 range remain unchanged. No endpoint a=8/7 or RH result is claimed.
+
+### Acceptance evidence
+
+- Saved-module acceptance and exact axiom guards for all 33 public declarations
+  (30 new plus three existing Gamma helpers) passed in
+  `job_MQVqzorl1o3U1r84p1xK5_fDVmWHY-EV`, backend Bazel, verified=true, exit code 0,
+  91.842 seconds server elapsed:
+  https://app.buildbuddy.io/invocation/9bac2235-9a89-4be9-9f08-6d3d134355d4 .
+  Every guard requires exactly propext, Classical.choice and Quot.sound.
+- Standalone full-project validation passed in `job_2Uf28pCVOAMAiw-ppLxrlPcEdXjswWCS`,
+  scope `full`, target `//:RiemannResearch`, backend Bazel/BuildBuddy,
+  218.573 seconds server elapsed:
+  https://app.buildbuddy.io/invocation/14dca3f6-cfd9-4ec6-9dda-040b3c6d5aa6 .
+  All saved Lean source and root exports were included. No Lean source
+  changed after this acceptance; only the catalog/review evidence was recorded.
+- Wolfram checks were exploratory; the acceptance evidence is Lean/Bazel.
+  Source scans of the six proof modules found no placeholders, new axioms,
+  or unsafe declarations.
+
+During development, published main advanced to
+`24c7355cf07d2f756cf7103b01232977c4cc8300`
+(Mobius D-lift convergence and unit-ball lift equivalence).
+Its inspected diff adds unrelated RH modules and root imports without
+editing the Mellin modules. The retained workspace remains based on f26bc44;
+the standalone build above does not claim integration of 24c7355.
+After fresh publication approval, the server checkpoint must integrate
+newer main and validate the integrated full project before any push.
+
+### Recovery on current main
+
+The recovered Lean changes were applied to a separate retained workspace based on
+`95b5aeb20ecd8bc18a8fdfc2bae7ce13cf6eef22`. The integrated full-project
+Bazel/BuildBuddy build passed in `job_TtAqS8tF81amvy0oV9CqPRgH_dqMEJsP`
+(197.217 seconds server elapsed):
+https://app.buildbuddy.io/invocation/8781f5db-6b8e-45d1-922d-2bb0714d4f50 .
+
+## Estermann continuation
+
+The recovered negative-contour, normalization and truncation theorems
+are the completed inputs for this continuation. Both new Analysis modules
+are exported by RiemannResearch.lean.
+
+| Module | Public theorems | Verified scope |
+| --- | ---: | --- |
+| ConreyBaluyotEstermann | 15 | Actual exponential phase, absolute convergence, product-to-iterated summation, finite Hurwitz-zeta formula, meromorphic continuation, exact shifted residues, diagonal leading coefficient and the reflected functional equation |
+| ConreyBaluyotEstermannDampedSeries | 2 | Absolute convergence and iterated summation of the actual damped series for arbitrary complex shifts and Im(w)>0 |
+
+The two exponents in the first module are u and v. Baluyot's notation is
+$D(s,\alpha,\beta,H/K)=D_h(s+\alpha,s+\beta)$, with h the class of H.
+The underlying series converges absolutely when Re(u)>1 and Re(v)>1.
+`estermannSeries_eq_estermann` and `estermann_eq_sum_hurwitzZeta` give
+the exact finite Hurwitz-zeta formula (3.1.7). It uses ZMod K with K>0.
+The zero class represents the fraction 1 in the Hurwitz sum. The phase
+bridge for the integer numerator is `estermannTerm_intCast`.
+
+The meromorphic continuation in s has possible poles at $1-\alpha$
+and $1-\beta$. For distinct shifts and a unit h, the left residue is
+$K^{-(1-\alpha+\beta)}\zeta(1-\alpha+\beta)$. The right residue
+exchanges the shifts. On the diagonal $D_h(u,u)$, the leading
+double-pole coefficient at $u=1$ is $1/K$.
+The owning declarations include `meromorphic_estermann_shifted`,
+`analyticAt_estermann_shifted`, `estermann_shifted_residue_left`,
+`estermann_shifted_residue_right`, and `estermann_diagonal_doublePole_limit`.
+
+`estermann_one_sub` proves the exact reflection for h a unit,
+with $u,v\notin\{1,0,-1,-2,\ldots\}$.
+$$
+D_h(1-u,1-v)=2K^{u+v-1}(2\pi)^{-u-v}\Gamma(u)\Gamma(v)
+\left[
+\cos\left(\frac{\pi(u-v)}2\right)D_{h^{-1}}(u,v)
++\cos\left(\frac{\pi(u+v)}2\right)D_{-h^{-1}}(u,v)
+\right].
+$$
+This is the two-exponent form of the functional equation in the proof of
+Baluyot's Lemma 3.1.3. The $h^{-1}$ reindexing uses multiplication by a
+unit modulo K. The separate damped series `estermannDampedSeries` is
+the $S$ of equation (3.1.6). `summable_norm_estermannDampedTerm`
+and `estermannDampedSeries_eq_iterated_tsum` discharge its absolute
+convergence and the double-series exchange on the upper half-plane.
+
+Source: S. A. C. Baluyot, *On the Zeros of Riemann's Zeta-function* (2017),
+pp. 95–97, equations (3.1.5)–(3.1.7) and the proof of Lemma 3.1.3.
+https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320
+
+### Remaining part of CB-04
+
+With $\Re(-2\pi i w)>0$, $c>0$, and
+$c+\Re\alpha,c+\Re\beta>1$, prove the initial Mellin identity
+$$
+S(w,\alpha,\beta,H/K)=\frac1{2\pi}
+\int_{\mathbb R}\Gamma(c+it)(-2\pi i w)^{-(c+it)}
+ D_h(c+it+\alpha,c+it+\beta)\,dt .
+$$
+This requires the complex inverse Mellin formula and the actual
+integral–series exchange. Then justify the shift to $1-c$ in the
+source range, keeping the $0,1-\alpha,1-\beta$ residues with the
+appropriate treatment of coincidences. The uniform bound of Lemma 3.1.2
+for $D_h(2\sigma-1,0)$ is also open.
+CB-05 through CB-08 remain open, including the Kloosterman bounds,
+the uniform mollified moment, and the exact $0<a<8/7$ density theorem.
+
+### Acceptance evidence on base 95b5aeb
+
+- Saved-module compilation and 50 axiom guards succeeded in `job_bMuEK1z6OgpoeI6TXuzWfbsN0XEW2csL`
+  (39.060 seconds server elapsed).
+  The guards cover 30 recovered theorems, three existing Gamma helpers and
+  17 new Estermann theorems. Each uses exactly the axioms `propext`,
+  `Classical.choice` and `Quot.sound`.
+  https://app.buildbuddy.io/invocation/00971277-6c98-42a3-8716-6540860fa6b9
+- Full Bazel/BuildBuddy verification of `//:RiemannResearch` succeeded in `job_Ogmxl15-soyhs1Xn0qAdnuEpHoT50Cdm`
+  (168.634 seconds server elapsed). It covered both Estermann
+  modules and their exports along with the recovered Mellin changes.
+  https://app.buildbuddy.io/invocation/7601e8dd-55a4-4665-b885-1dde8451bc4c

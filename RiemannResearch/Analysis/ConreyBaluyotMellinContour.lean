@@ -22,7 +22,8 @@ https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFil
 The analytic provider is discharged here: holomorphy on Re z > 0,
 a common majorant on every compact positive strip, and absolute integrability.
 Consequently the canonical weight inherits every positive-line bound.
-The signed negative-contour expansion and density estimate remain open.
+The signed negative-contour expansion is proved in ConreyBaluyotMellinShift.
+The density estimate remains open.
 -/
 
 open Complex MeasureTheory Set Filter

@@ -18,8 +18,9 @@ of zeta at 1. Both the punctured-neighborhood limits and their values
 in the repository's rectangle-residue API are proved. The second
 coefficient is real and is retained with its sign.
 
-These local results do not yet prove a negative-contour shift, an
-integrable uniform remainder, or a nonzero normalizing weight W(y).
+These local results alone do not prove a contour shift or normalization.
+The actual integrable negative contour, signed shift and nonzero normalizing
+weight are proved in the sibling NegativeContour, Shift and Normalization modules.
 -/
 
 open Complex MeasureTheory Set Filter
