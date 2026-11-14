@@ -4310,3 +4310,6 @@ import RiemannResearch.Probability.ZeroOrdinateProjectionDPP
 import RiemannResearch.Probability.DeterminantalPairTransfer
 import RiemannResearch.Probability.ZeroOrdinateInfiniteDPP
 import RiemannResearch.Analysis.PairVacancyMoment
+import RiemannResearch.Analysis.ResidualLossBounds
+import RiemannResearch.RH.CoupledResidualHeadBounds
+import RiemannResearch.RH.QFullResidualProjectionBounds
