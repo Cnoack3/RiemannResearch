@@ -1,5 +1,9 @@
 # V-space, determinantal laws, microscopic scaling, and duality
 
+The actual full-Q residual, prime-Fock coordinates, and zero-sampled energy
+criterion are linked in [the 14 November residual criterion](THEOREM_CATALOG_PRIME_ZERO_RESIDUAL_20261114.md).
+That reduction retains the arithmetic cancellation target as Open.
+
 Source: the user-provided **V_vector_space_RH.pdf**, titled *Prime-power vector
 spaces, zeta-zero sampling, and the topology of the RH obstruction*
 (16 September 2026). Audit and extensions: 11 November 2026.
