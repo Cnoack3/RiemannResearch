@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.FiniteCollocationCertificate
+import RiemannResearch.RH.QCRTCanonicalGrowthCertificate
 import RiemannResearch.RH.ConditionalMeanSublinearHeads
 import RiemannResearch.RH.ConditionalMeanExactEndpoint
 import RiemannResearch.RH.ParetoFiniteHeadRepair

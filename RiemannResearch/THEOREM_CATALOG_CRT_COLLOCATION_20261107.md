@@ -370,3 +370,41 @@ The whitelist permits only `propext`, `Classical.choice`, and `Quot.sound`;
 no other transitive axiom is accepted. Verified module SHA-256:
 `73c8be84b2919b48ab53ebdc9c2103cce4196389e1947ca1fdc29e5eecacec2e`.
 The publication checkpoint separately validates the complete repository delta.
+
+## GROW-001: certified finite signed response
+
+The new `Analysis/FiniteCollocationCertificate.lean` and
+`RH/QCRTCanonicalGrowthCertificate.lean` provide 30 declarations
+(21 theorems and nine definitions) for rigorous a posteriori bounds on the
+**actual** nonsymmetric canonical response. See
+[the certificate memorandum](RH/CanonicalGrowthResidualCertificates20261113.md).
+
+With predictor v=Uz, residual rho=beta-Az, actual response T=UA^{-1},
+and epsilon=sum_i |rho_i| ||Te_i||, the exact energy identity retains
+2<F_L,v> and 2<F_L+v,T rho>, and the certificate bounds only the latter
+error and its norm square. The resulting upper bound is
+
+    E_M-E_L <= 2<F_L,v> + ||v||^2 + 2||F_L+v|| epsilon + epsilon^2.
+
+`predictor_signed_energy` preserves the signed old refit 2c^T Gx.
+`old_predictor_residual` proves that z=(A00^{-1} beta0,0) leaves exactly
+(0,sigma); `old_predictor_radius` reduces the error cost to new-row
+columns of the full nonsymmetric inverse. No H^{-1} substitution occurs.
+Zero radius and zero Schur source give exact updates without any
+inverse-energy or inverse-capacity division. Positive diagonal row
+rescaling leaves the error radius unchanged.
+
+| Conditional research reduction | Conclusion | Domain-specific obligation |
+|---|---|---|
+| QCRTCanonicalGrowthCertificate.canonical_growth_of_residual_certificate | Actual E_M <= (1+alpha) E_L | **Open:** prove the displayed finite certificate inequality with alpha=C/p^k eventually along the actual LCM admissions, for one fixed C. |
+
+**GROW-001 remains Open / blocked.** The new unconditional finite bounds
+and exact identities do not assert the uniform growth provider or RH.
+
+The application and generic dependency passed Bazel/BuildBuddy file check
+`job_IjsQM_7tpIN-VWcN_Z3ZACiJKXyuMxZI` (106.139 s), followed by the
+strict 30-declaration axiom whitelist in `job_eb19EhAX5_qTVMu7RgtZMvTEeTyNla2l`
+(38.554 s). Allowed foundations: propext, Classical.choice, Quot.sound.
+[Module check](https://app.buildbuddy.io/invocation/b6c2da7b-0119-49b8-9ed6-12c2ceddc0d0)
+and [strict audit](https://app.buildbuddy.io/invocation/bd60faf6-1b01-4c59-9db6-5ab038e159e8).
+The final checkpoint separately validates the complete delta and any integration.
