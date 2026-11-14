@@ -176,6 +176,38 @@ Declarations in QDensityLeakage:
 Wolfram independently evaluated the odd reciprocal series as pi^2/64.
 The Lean parity norm and remainder were already present and are reused.
 
+### Projected density atoms: exact normalized limit (2026-11-13)
+
+For W=V-perp-Q, h_k=Pi_W(B g_k), and w=Pi_W 1, the existing leakage
+is exactly h_k. The residue-quotient approximant a_k(n)=(n mod k)/n gives
+
+    zeta(2) k h_k = Pi_W a_k,
+    zeta(2) k h_k - w = Pi_W(a_k-1),
+    zeta(2) k h_k -> w,
+    ||h_k||_Q <= 1/[zeta(2) k].
+
+The signed error is retained before using projection contraction.
+The normalized norms converge to ||w||_Q. The complete Q norm is used.
+
+New declarations in QDensityLeakage:
+
+- residue_leakage_vanishes_iff_one_mem
+- scaled_residue_leakage_eq
+- scaled_residue_leakage_tendsto
+- scaled_residue_leakage_error_eq
+- scaled_residue_leakage_error_norm_le
+- residue_leakage_norm_le
+- scaled_residue_leakage_norm_tendsto
+- scaled_residue_leakage_tendsto_zero_iff
+- riemannHypothesis_of_scaled_residue_leakage_tendsto_zero
+
+The first eight are unconditional identities, estimates, convergence, or exact
+equivalences. The last is a conditional research reduction: its explicit
+zero-normalized-limit hypothesis is Open. Neither O(1/k) decay nor the
+existence of the normalized limit proves its value is zero. Exact vanishing
+of all h_k remains equivalent to 1 in V, hence V=H. The RH-to-target direction
+is not newly formalized by this extension.
+
 ## 6. CRT with complete Q energy
 
 QCRTCanonicalEscape.canonical_norm_tendsto_atTop proves the following precise
