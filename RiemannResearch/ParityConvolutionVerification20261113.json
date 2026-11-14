@@ -1,0 +1,76 @@
+{
+  "schema": "riemannresearch.parity-convolution-verification.v1",
+  "started_date": "2026-11-13",
+  "completion_date": "2026-11-14",
+  "base_commit": "9a4631b138d9c07b4fe8755aaa591cd906bc4ef7",
+  "backend": "bazel --config=buildbuddy",
+  "source_modules": {
+    "RiemannResearch/NumberTheory/ParityResidueConvolution.lean": {
+      "sha256": "01312e7e7e8bd10fd4795f498cc80da3b71d198f6747221cb90845c81afa7912",
+      "theorems": 8
+    },
+    "RiemannResearch/NumberTheory/ParityResidueConvolutionMoments.lean": {
+      "sha256": "2b2790abce2ac648f48b2bcb44a45caa1400e10612e8f46743b981add456cf23",
+      "theorems": 15
+    },
+    "RiemannResearch/NumberTheory/ParityResidueLSeries.lean": {
+      "sha256": "d4069666bb3ac0b13e7e7c6cfbcd5ed42fba241227627d3ff758428bdbdd769c",
+      "theorems": 5
+    },
+    "RiemannResearch/RH/ParetoParityConvolution.lean": {
+      "sha256": "7f33675068e80202ccfc0ee3b71533935a3c99dfc842f86cc1c83a3c0016722f",
+      "theorems": 28
+    }
+  },
+  "module_acceptance": {
+    "job_id": "job_XLRdZ1UkxdFuEYqD1MiVMXVQdmolUpBj",
+    "state": "succeeded",
+    "verified": true,
+    "code_sha256": "633176be8cc439dc492c0761fd32bf4474fe61a2de492a463fc5f2f93c7e1a32",
+    "invocation": "https://app.buildbuddy.io/invocation/c5b89072-966a-4e53-bb7c-aa07b192ba64"
+  },
+  "axiom_audit": {
+    "method": "Bazel acceptance of #guard_msgs assertions for #print axioms",
+    "code": "import RiemannResearch.NumberTheory.ParityResidueLSeries\nimport RiemannResearch.RH.ParetoParityConvolution\n\n/-- info: 'RiemannResearch.NumberTheory.ParityResidueConvolution.paritySquare_parity' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.NumberTheory.ParityResidueConvolution.paritySquare_parity\n\n/-- info: 'RiemannResearch.NumberTheory.ParityResidueConvolution.paritySquare_exact_moment' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.NumberTheory.ParityResidueConvolution.paritySquare_exact_moment\n\n/-- info: 'RiemannResearch.NumberTheory.DivisorSquareMoment.divisor_square_sum' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.NumberTheory.DivisorSquareMoment.divisor_square_sum\n\n/-- info: 'RiemannResearch.NumberTheory.DivisorSquareMoment.bounded_convolution_moment' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.NumberTheory.DivisorSquareMoment.bounded_convolution_moment\n\n/-- info: 'RiemannResearch.NumberTheory.ParityResidueLSeries.paritySquare_hasSum' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.NumberTheory.ParityResidueLSeries.paritySquare_hasSum\n\n/-- info: 'RiemannResearch.RH.ParetoParityConvolution.qTarget_norm_exact' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.RH.ParetoParityConvolution.qTarget_norm_exact\n\n/-- info: 'RiemannResearch.RH.ParetoParityConvolution.pTarget_norm_bound' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.RH.ParetoParityConvolution.pTarget_norm_bound\n\n/-- info: 'RiemannResearch.RH.ParetoParityConvolution.pTarget_not_mem_atomSpan' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.RH.ParetoParityConvolution.pTarget_not_mem_atomSpan\n\n/-- info: 'RiemannResearch.RH.ParetoParityConvolution.gram_posDef' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.RH.ParetoParityConvolution.gram_posDef\n\n/-- info: 'RiemannResearch.RH.ParetoParityConvolution.exact_saturation_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.RH.ParetoParityConvolution.exact_saturation_iff\n\n/-- info: 'RiemannResearch.RH.ParetoParityConvolution.coefficient_target_prime' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.RH.ParetoParityConvolution.coefficient_target_prime\n\n/-- info: 'RiemannResearch.RH.ParetoParityConvolution.coefficient_limit_signed_defect' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.RH.ParetoParityConvolution.coefficient_limit_signed_defect\n\n/-- info: 'RiemannResearch.RH.ParetoParityConvolution.all_coefficient_limits_iff_mem' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.RH.ParetoParityConvolution.all_coefficient_limits_iff_mem\n\n/-- info: 'RiemannResearch.RH.ParetoParityConvolution.no_continuous_compact_extension' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n#guard_msgs (whitespace := lax) in\n#print axioms RiemannResearch.RH.ParetoParityConvolution.no_continuous_compact_extension\n",
+    "theorems": [
+      "RiemannResearch.NumberTheory.ParityResidueConvolution.paritySquare_parity",
+      "RiemannResearch.NumberTheory.ParityResidueConvolution.paritySquare_exact_moment",
+      "RiemannResearch.NumberTheory.DivisorSquareMoment.divisor_square_sum",
+      "RiemannResearch.NumberTheory.DivisorSquareMoment.bounded_convolution_moment",
+      "RiemannResearch.NumberTheory.ParityResidueLSeries.paritySquare_hasSum",
+      "RiemannResearch.RH.ParetoParityConvolution.qTarget_norm_exact",
+      "RiemannResearch.RH.ParetoParityConvolution.pTarget_norm_bound",
+      "RiemannResearch.RH.ParetoParityConvolution.pTarget_not_mem_atomSpan",
+      "RiemannResearch.RH.ParetoParityConvolution.gram_posDef",
+      "RiemannResearch.RH.ParetoParityConvolution.exact_saturation_iff",
+      "RiemannResearch.RH.ParetoParityConvolution.coefficient_target_prime",
+      "RiemannResearch.RH.ParetoParityConvolution.coefficient_limit_signed_defect",
+      "RiemannResearch.RH.ParetoParityConvolution.all_coefficient_limits_iff_mem",
+      "RiemannResearch.RH.ParetoParityConvolution.no_continuous_compact_extension"
+    ],
+    "expected_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "job_id": "job_DEkh9RBcpT3qeeWfGu_0CwxUxtrNMngO",
+    "state": "succeeded",
+    "verified": true,
+    "code_sha256": "b479d6cc4575f8aae189f6d5de6c4f691d8377151f5820d59959655d2386edc9",
+    "invocation": "https://app.buildbuddy.io/invocation/db4215ee-2f94-4169-977a-6035f365cd7b"
+  },
+  "external_computation": {
+    "script": "RiemannResearch/ParityConvolutionExperiments20261113.md (Python source block)",
+    "data": "RiemannResearch/ParityConvolutionExperiments20261113.json",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "kernel_checked": false
+  },
+  "unresolved": [
+    "h in the full residue-atom closure",
+    "inverse-Gram capacity saturation limit",
+    "convolution closure of V",
+    "h in V implies RH"
+  ],
+  "checkpoint_note": "This receipt records focused source acceptance and axiom evidence. Full-project acceptance and publication are recorded separately by the final workspace checkpoint."
+}

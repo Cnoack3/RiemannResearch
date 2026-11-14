@@ -1,0 +1,128 @@
+{
+  "status": "external interval computation; not Lean kernel verification",
+  "method": "finite residue sums; integral-test tails; directed Decimal rounding",
+  "residue_tail_terms": 128,
+  "pi_interval": [
+    "3.14159265358979323846264338327950288419716939937510582097413",
+    "3.14159265358979323846264338327950288419716939937510582097573"
+  ],
+  "q_target_norm_squared_interval": [
+    "0.0867445699314494409858500185535989845877180611964522613649160",
+    "0.0867445699314494409858500185535989845877180611964522613650046"
+  ],
+  "systems": [
+    {
+      "N": 2,
+      "conductors": [
+        2
+      ],
+      "rational_coefficients_decimal": [
+        "0.616850275068"
+      ],
+      "numerical_condition_number_2": 1.0,
+      "numerical_optimal_residual_squared": 0.01540002083427966,
+      "chosen_approximant_residual_squared_interval": [
+        "0.0153987086220395737008276611437002762612375416186931020177109",
+        "0.0154013353151354154444901165671747040676770552030168024599236"
+      ],
+      "certified_upper_bound_on_optimal_residual_squared": "0.0154013353151354154444901165671747040676770552030168024599236",
+      "interpretation": "Interval is for the fixed rational vector, not a lower bound on the optimum."
+    },
+    {
+      "N": 4,
+      "conductors": [
+        2,
+        3,
+        4
+      ],
+      "rational_coefficients_decimal": [
+        "0.554687762395",
+        "-0.186863535210",
+        "0.284609533904"
+      ],
+      "numerical_condition_number_2": 11.856380840839664,
+      "numerical_optimal_residual_squared": 0.011306608904356197,
+      "chosen_approximant_residual_squared_interval": [
+        "0.0113047863491274330547340692008686332813784736800645894676270",
+        "0.0113084330229412657872402607084113017173344457342683395295093"
+      ],
+      "certified_upper_bound_on_optimal_residual_squared": "0.0113084330229412657872402607084113017173344457342683395295093",
+      "interpretation": "Interval is for the fixed rational vector, not a lower bound on the optimum."
+    },
+    {
+      "N": 8,
+      "conductors": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "rational_coefficients_decimal": [
+        "0.548921561117",
+        "-0.289405890545",
+        "0.162667999998",
+        "-0.100211639423",
+        "0.384619796645",
+        "-0.119976949395",
+        "0.162075831096"
+      ],
+      "numerical_condition_number_2": 71.91803808880009,
+      "numerical_optimal_residual_squared": 0.007181144406711193,
+      "chosen_approximant_residual_squared_interval": [
+        "0.00717843883452617787478903250233176205218753268095348638860947",
+        "0.00718385078567435091808673948948984663391370095610963000064832"
+      ],
+      "certified_upper_bound_on_optimal_residual_squared": "0.00718385078567435091808673948948984663391370095610963000064832",
+      "interpretation": "Interval is for the fixed rational vector, not a lower bound on the optimum."
+    },
+    {
+      "N": 16,
+      "conductors": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "rational_coefficients_decimal": [
+        "0.536575667990",
+        "-0.271525797548",
+        "0.208932437561",
+        "-0.207030430550",
+        "0.426812752509",
+        "-0.223942462926",
+        "0.012180963757",
+        "-0.112811143893",
+        "0.382015824658",
+        "-0.054320800214",
+        "-0.131730867271",
+        "-0.084198870072",
+        "0.325348835864",
+        "-0.169879888034",
+        "0.223923806089"
+      ],
+      "numerical_condition_number_2": 403.0841076433809,
+      "numerical_optimal_residual_squared": 0.004741199413722141,
+      "chosen_approximant_residual_squared_interval": [
+        "0.00473696963774869856701316029045163019418213852225360724142271",
+        "0.00474542884429682137200648256716766523121906261593822313795868"
+      ],
+      "certified_upper_bound_on_optimal_residual_squared": "0.00474542884429682137200648256716766523121906261593822313795868",
+      "interpretation": "Interval is for the fixed rational vector, not a lower bound on the optimum."
+    }
+  ],
+  "infinite_stage_conclusion": "none; membership and zero residual limit remain open"
+}
