@@ -15,7 +15,9 @@ Source: the user's weak-star compactness request, 6 November 2026.
 This specializes Banach--Alaoglu and Riesz representation via Mathlib;
 no mathematical priority claim is made.
 The proof transports Banach--Alaoglu through the existing Hilbert-space Riesz
-representation theorem and uses weak subsequences in complete separable subspaces.
+representation theorem. Interpolation uses a compact image in the product of
+all scalar tests, with no separability hypothesis. The separate subsequence
+extraction theorem retains its explicit separability assumption.
 No strong convergence or vanishing infinite-tail error is assumed.
 -/
 
@@ -56,24 +58,41 @@ theorem exists_ambient_weak_subsequence_of_norm_le (S : Submodule ℝ H)
   exact ((WeakSpace.map S.subtypeL).continuous.tendsto _).comp hlim
 
 /-- Bounded approximate interpolation of arbitrary continuous linear tests
-produces an exact simultaneous interpolant in the same closed norm ball. -/
+produces an exact simultaneous interpolant in the same complete norm ball.
+The compact product image proof needs no separability or subsequence extraction. -/
 theorem exists_mem_of_bounded_test_limits (S : Submodule ℝ H)
-    [CompleteSpace S] [TopologicalSpace.SeparableSpace S]
+    [CompleteSpace S]
     {ι : Type*} (C : ℝ) (F : ℕ → H)
     (hmem : ∀ n, F n ∈ S) (hbound : ∀ n, ‖F n‖ ≤ C)
     (L : ι → H →L[ℝ] ℝ) (b : ι → ℝ)
     (hlim : ∀ i, Tendsto (fun n => L i (F n)) atTop (𝓝 (b i))) :
     ∃ f ∈ S, ‖f‖ ≤ C ∧ ∀ i, L i f = b i := by
-  obtain ⟨f, hf, hn, φ, hφ, hweak⟩ :=
-    S.exists_ambient_weak_subsequence_of_norm_le C F hmem hbound
-  refine ⟨f, hf, hn, fun i => ?_⟩
-  exact tendsto_nhds_unique (WeakSpace.tendsto_eval_of_tendsto hweak (L i))
-    ((hlim i).comp hφ.tendsto_atTop)
+  let test : WeakSpace ℝ S → (ι → ℝ) := fun w i =>
+    ((L i).comp S.subtypeL) ((toWeakSpace ℝ S).symm w)
+  have ht : Continuous test := by
+    apply continuous_pi
+    intro i
+    exact WeakBilin.eval_continuous (topDualPairing ℝ S).flip
+      ((L i).comp S.subtypeL)
+  have hc := (RiemannResearch.Analysis.HilbertWeakCompactness.isCompact_closedBall_weak
+    (H := S) C).image ht
+  have hb : b ∈ test '' (toWeakSpace ℝ S '' Metric.closedBall (0 : S) C) := by
+    apply hc.isClosed.mem_of_tendsto (tendsto_pi_nhds.mpr hlim)
+    apply Eventually.of_forall
+    intro n
+    refine ⟨toWeakSpace ℝ S ⟨F n, hmem n⟩, ?_, ?_⟩
+    · exact ⟨⟨F n, hmem n⟩, by simpa using hbound n, rfl⟩
+    · rfl
+  obtain ⟨w, ⟨f, hf, rfl⟩, hfb⟩ := hb
+  refine ⟨f, f.property, ?_, ?_⟩
+  · simpa using hf
+  · intro i
+    exact congrFun hfb i
 
 /-- Uniformly bounded feasibility of every finite test head is equivalent to
 one bounded exact solution of all countably many tests. -/
 theorem bounded_finite_test_feasibility_iff (S : Submodule ℝ H)
-    [CompleteSpace S] [TopologicalSpace.SeparableSpace S]
+    [CompleteSpace S]
     (C : ℝ) (L : ℕ → H →L[ℝ] ℝ) (b : ℕ → ℝ) :
     (∀ N, ∃ f ∈ S, ‖f‖ ≤ C ∧ ∀ n < N, L n f = b n) ↔
       ∃ f ∈ S, ‖f‖ ≤ C ∧ ∀ n, L n f = b n := by
@@ -92,7 +111,7 @@ theorem bounded_finite_test_feasibility_iff (S : Submodule ℝ H)
 /-- Exact coordinate feasibility for images of bounded vectors. The image
 need not be separately declared closed: the source weak limit supplies a preimage. -/
 theorem bounded_lp_head_image_feasibility_iff (S : Submodule ℝ H)
-    [CompleteSpace S] [TopologicalSpace.SeparableSpace S]
+    [CompleteSpace S]
     (C : ℝ) (L : H →L[ℝ] lp (fun _ : ℕ => ℝ) 2) (x : lp (fun _ : ℕ => ℝ) 2) :
     (∀ N, ∃ f ∈ S, ‖f‖ ≤ C ∧ ∀ n < N, L f n = x n) ↔
       ∃ f ∈ S, ‖f‖ ≤ C ∧ L f = x := by

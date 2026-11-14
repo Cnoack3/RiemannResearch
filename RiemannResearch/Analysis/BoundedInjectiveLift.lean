@@ -29,7 +29,7 @@ variable [NormedAddCommGroup K] [InnerProductSpace ℝ K]
 /-- A convergent image of a bounded sequence has a preimage in the same closed
 source subspace and norm ball. This uses weak compactness of the source ball. -/
 theorem exists_mem_of_bounded_image_tendsto (S : Submodule ℝ H)
-    [CompleteSpace S] [TopologicalSpace.SeparableSpace S]
+    [CompleteSpace S]
     (T : H →L[ℝ] K) (C : ℝ) (F : ℕ → H) (y : K)
     (hmem : ∀ n, F n ∈ S) (hbound : ∀ n, ‖F n‖ ≤ C)
     (hlim : Tendsto (fun n => T (F n)) atTop (𝓝 y)) :
@@ -48,7 +48,7 @@ theorem exists_mem_of_bounded_image_tendsto (S : Submodule ℝ H)
 
 /-- Injectivity identifies the bounded weak lift with the prescribed target. -/
 theorem mem_of_bounded_injective_image_tendsto (S : Submodule ℝ H)
-    [CompleteSpace S] [TopologicalSpace.SeparableSpace S]
+    [CompleteSpace S]
     (T : H →L[ℝ] K) (hT : Function.Injective T)
     (C : ℝ) (F : ℕ → H) (x : H)
     (hmem : ∀ n, F n ∈ S) (hbound : ∀ n, ‖F n‖ ≤ C)
@@ -61,7 +61,7 @@ theorem mem_of_bounded_injective_image_tendsto (S : Submodule ℝ H)
 
 /-- Only a bounded cofinal subsequence is required. -/
 theorem mem_of_bounded_subsequence_injective_image_tendsto (S : Submodule ℝ H)
-    [CompleteSpace S] [TopologicalSpace.SeparableSpace S]
+    [CompleteSpace S]
     (T : H →L[ℝ] K) (hT : Function.Injective T)
     (C : ℝ) (F : ℕ → H) (x : H) (φ : ℕ → ℕ)
     (hφ : Tendsto φ atTop atTop)

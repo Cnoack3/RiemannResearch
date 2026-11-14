@@ -46,7 +46,7 @@ theorem D_injective : Function.Injective D := by
     _ = g n := div_mul_cancel₀ _ hn
 
 theorem mem_of_bounded_D_tendsto (S : Submodule ℝ QHilbert)
-    [CompleteSpace S] [TopologicalSpace.SeparableSpace S]
+    [CompleteSpace S]
     (C : ℝ) (F : ℕ → QHilbert) (x : QHilbert)
     (hmem : ∀ n, F n ∈ S) (hbound : ∀ n, ‖F n‖ ≤ C)
     (hlim : Tendsto (fun n => D (F n)) atTop (𝓝 (D x))) :
@@ -55,7 +55,7 @@ theorem mem_of_bounded_D_tendsto (S : Submodule ℝ QHilbert)
 
 /-- One bounded cofinal subsequence suffices; a bound on every term is unnecessary. -/
 theorem mem_of_bounded_subsequence_D_tendsto (S : Submodule ℝ QHilbert)
-    [CompleteSpace S] [TopologicalSpace.SeparableSpace S]
+    [CompleteSpace S]
     (C : ℝ) (F : ℕ → QHilbert) (x : QHilbert) (φ : ℕ → ℕ)
     (hφ : Tendsto φ atTop atTop)
     (hmem : ∀ n, F n ∈ S) (hbound : ∀ n, ‖F (φ n)‖ ≤ C)
@@ -66,7 +66,7 @@ theorem mem_of_bounded_subsequence_D_tendsto (S : Submodule ℝ QHilbert)
 
 /-- A bounded approximate D-lift is exactly membership, not a consequence of density. -/
 theorem bounded_D_lift_iff_mem (S : Submodule ℝ QHilbert)
-    [CompleteSpace S] [TopologicalSpace.SeparableSpace S] (x : QHilbert) :
+    [CompleteSpace S] (x : QHilbert) :
     (∃ C : ℝ, ∃ F : ℕ → QHilbert, (∀ n, F n ∈ S) ∧
       (∀ n, ‖F n‖ ≤ C) ∧
       Tendsto (fun n => D (F n)) atTop (𝓝 (D x))) ↔ x ∈ S := by
