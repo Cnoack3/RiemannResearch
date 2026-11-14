@@ -26,6 +26,7 @@ import RiemannResearch.RH.QFullDensityConditionalConverse
 import RiemannResearch.RH.QFullTargetTotality
 import RiemannResearch.RH.QDensityLeakage
 import RiemannResearch.RH.QReciprocalNormalizedBalance
+import RiemannResearch.RH.QReciprocalBalanceCertificates
 import RiemannResearch.RH.QResidualDilationCorrelation
 import RiemannResearch.RH.QCRTCanonicalEscape
 import RiemannResearch.RH.QDensityMetricInverse

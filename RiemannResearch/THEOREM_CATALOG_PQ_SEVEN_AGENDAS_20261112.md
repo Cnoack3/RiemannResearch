@@ -300,3 +300,68 @@ the normalized residual penalty and full gain. A bounded upper budget is a
 sufficient completed arithmetic input. Agenda 6 gives a parallel test:
 a bounded cofinal subsequence of complete canonical CRT energies would suffice.
 Neither bound follows from the finite computations above.
+
+## Agenda 02 follow-up: lower barrier and computable direction bounds
+
+Date: 2026-11-13. Module: RH/QReciprocalBalanceCertificates.lean.
+Eight additional theorems were checked together in
+job_u07O9JoYXX7HLwS3n1ct_-QwzVRCyqna (Bazel/BuildBuddy, exit 0, verified=true):
+https://app.buildbuddy.io/invocation/db973224-59b5-404d-893d-bd34ef34b235
+The final full-project checkpoint and exact published commit are retained in
+the Site evidence record. This focused check alone is not a publication record.
+
+For positive alpha_j -> 0 and arbitrary cutoff sequence H_j, Lean now proves
+that for every c < 1, eventually c <= eta_(H_j,alpha_j). Thus liminf eta >= 1.
+No cofinality or monotonicity of H is needed for this lower barrier.
+For a monotone cutoff sequence and S_n = sum_{j<n} signedStep_j, telescoping gives
+liminf S_n >= 1-eta_0. Any uniform upper budget S_n <= C therefore requires
+C >= 1-eta_0. If eta_0 < 1, the strategy S_n <= 0 for all n is impossible
+with alpha_j -> 0. This does not refute RH or require every individual step
+to be positive.
+
+For an explicit direction w in the K-stage legal span, define
+
+    e_beta(w) = ||Dw||_Q^2 + beta ||w||_Q^2,
+    p_beta(u,w) = <D(1-u),Dw>_Q - beta <u,w>_Q.
+
+If H <= K, alpha,beta > 0, and e_beta(w) > 0, the exact optimization along
+u+t*w and the K-stage variational inequality give
+
+    signedStep(H,K,alpha,beta)
+      <= (alpha-beta)/(alpha beta) ||D(u-1)||_Q^2
+         - p_beta(u,w)^2 / [beta e_beta(w)].
+
+The right side is directionDeficit. Its gain uses complete Q norms and
+pairings. Zero-energy directions are explicitly excluded, not divided by.
+The proof needs no monotonicity of alpha; a decreasing positive sequence
+is the intended application. A uniform upper bound on finite sums of these
+directionDeficits implies RH. That arithmetic provider remains OPEN.
+
+Declarations (namespace QReciprocalBalanceCertificates):
+
+- norm_sq_le_of_cost_bound: bounded normalized cost in a complete separable
+  submodule implies ||x||^2 <= C; uses weak compactness and injectivity of D.
+- eventually_normalized_cost_ge: eventual lower barrier for every c < ||x||^2.
+- eventually_fullValue_ge: the unit-target specialization for actual minimizers.
+- eventually_signed_sum_ge: eventual lower barrier for cumulative signed steps.
+- one_le_initial_add_budget: 1 <= eta_0+C for every uniform signed budget.
+- no_nonpositive_signed_budget_of_initial_lt_one: excludes the zero-budget
+  strategy when eta_0 < 1 and alpha_j -> 0.
+- signedStep_le_directionDeficit: the explicit legal-direction inequality.
+- riemannHypothesis_of_direction_budget: conditional consumer retaining the
+  uniform partial-sum hypothesis; does not prove it.
+
+Independent Wolfram recomputation uses all CRT progression tails, evaluated
+at 35-digit working precision. With alpha=H^-2, beta=K^-2:
+
+| H -> K | Penalty | Complete gain | Signed step | Direction bound, w=g_(K+1) |
+|---|---:|---:|---:|---:|
+| 2 -> 4 | 0.556344252809 | 0.350290501416 | 0.206053751393 | 0.240172754388 |
+| 4 -> 6 | 0.140835536450 | 0.092551569318 | 0.048283967132 | 0.093238367911 |
+
+Starting eta_0 is approximately 0.660709869568, so the necessary budget
+threshold is approximately 0.339290130432. These are external floating-point
+illustrations, not interval-certified constants in the Lean statements.
+The next target is an explicit legal direction schedule with a uniformly
+bounded cumulative directionDeficit while alpha -> 0. Finite CRT
+solvability and the displayed finite steps do not prove that estimate.
