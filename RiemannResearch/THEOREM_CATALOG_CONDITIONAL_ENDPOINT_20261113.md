@@ -95,8 +95,58 @@ https://arxiv.org/abs/math/0202141. That reference supports the classical
 input; a citation does not certify a Lean proof.
 
 The complete RH equivalence is conditional until this argument is
-discharged. The new development supplies no unconditional witnesses and
+discharged. The endpoint-equivalence argument supplies no unconditional logarithmic witnesses and
 does not prove RH. It introduces no project axiom or proof placeholder.
 An axiom audit checks foundations separately from this explicit local
 hypothesis. Server checkpoint validation, not this catalog, determines
 the exact verified and published revision.
+
+
+## Unconditional construction attempt: sublinear energy
+
+Source: the user's request to prove RH through an endpoint equivalence,
+continued on November 13, 2026 (America/New_York).
+Module: `RH/ConditionalMeanSublinearHeads.lean`.
+
+The following declarations in `RiemannResearch.RH.Pareto` have no
+domain-specific hypotheses:
+
+- `canonicalMobiusHead_energy_le_full_norm_sq`: complete conditional
+  energy is at most the complete physical Pareto energy of the same
+  canonical finite witness.
+- `canonicalMobiusHead_energy_sublinear`: the actual canonical
+  conditional energy divided by the head length tends to zero.
+- `conditionalHeadMinimum_sublinear` and
+  `zeroMeanConditionalHeadMinimum_sublinear`: both true infima are
+  sublinear in the head length.
+- `exists_zeroMean_conditionalHeads_sublinear`: one family of finite
+  legal exact-head functions with zero period mean has complete
+  conditional energy `o(Y)`.
+
+The arithmetic provider is the existing unconditional
+`canonicalMobiusHilbert_sublinear`, proved from the repository's PNT.
+The transfer uses the actual weighted Cesaro contraction. Mean
+neutralization costs less than one in energy at each head length.
+No physical tail, signed Gram term, or finite-legality requirement is
+dropped. This is an assembly of established inputs, with no novelty claim.
+
+### Why the RH target remains open
+
+The required condition (iv) is a logarithmic limit equal to zero.
+Sublinear energy does not supply that limit. The scalar results
+`EnergyGrowth.power_sublinear` and
+`EnergyGrowth.power_logarithmic_growth` prove that for each
+`0 < alpha < 1`, `Y^alpha / Y -> 0`, while
+`log(1 + Y^alpha)/log Y -> alpha`.
+The theorem `EnergyGrowth.sublinear_not_logarithmic` records this
+distinction. This example is a scalar growth profile, with no claim
+that it is an actual residue-family energy.
+
+**Open arithmetic obligation:** construct actual finite legal exact
+heads with subpolynomial complete conditional energy (or a uniformly
+bounded cofinal family). Equivalently, for the endpoint route, prove
+the genuine minimum equals `Y/(Y+2)` for every positive head length.
+The new sublinear theorem does not discharge either obligation and
+does not prove RH. In particular, a hypothetical zero with
+`1/2 < beta < 1` forces polynomial energy with exponent
+`2*beta-1 < 1`; that is compatible with an `o(Y)` upper bound.
