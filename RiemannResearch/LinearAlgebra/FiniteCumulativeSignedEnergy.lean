@@ -154,4 +154,39 @@ theorem summable_prefixEnergy_iff_bounded_offDiagonal (w a : ℕ → ℝ)
     _ (fun n => mul_nonneg (hw n) (sq_nonneg _))]
   exact bounded_prefixEnergy_iff_bounded_offDiagonal w a hw D hD
 
+/-- Exact prefix splitting at an arbitrary initial head. -/
+theorem cumulative_add_shift (a : ℕ → ℝ) (N K : ℕ) :
+    cumulative a (N + K) =
+      cumulative a N + cumulative (fun i => a (N+i)) K := by
+  exact Finset.sum_range_add a N K
+
+/-- Complete shifted energy expansion. No positivity assumption is needed;
+the head square and its signed interaction with the new block are retained. -/
+theorem shifted_weightedPrefixEnergy_identity (w a : ℕ → ℝ) (N K : ℕ) :
+    (∑ i ∈ Finset.range K, w i * cumulative a (N+i+1)^2) =
+      cumulative a N ^ 2 * cumulative w K +
+      2 * cumulative a N *
+        (∑ j ∈ Finset.range K, a (N+j) * tailWeight w K j) +
+      diagonalEnergy w (fun i => a (N+i)) K +
+      offDiagonalEnergy w (fun i => a (N+i)) K := by
+  have hs : (∑ i ∈ Finset.range K, w i * cumulative a (N+i+1)^2) =
+      cumulative a N ^ 2 * cumulative w K +
+      2 * cumulative a N *
+        (∑ i ∈ Finset.range K, w i * cumulative (fun j => a (N+j)) (i+1)) +
+      weightedPrefixEnergy w (fun j => a (N+j)) K := by
+    have hp (i : ℕ) : cumulative a (N+i+1) =
+        cumulative a N + cumulative (fun j => a (N+j)) (i+1) := by
+      simpa only [Nat.add_assoc] using cumulative_add_shift a N (i+1)
+    simp_rw [hp]
+    unfold weightedPrefixEnergy
+    change _ = cumulative a N ^ 2 * (∑ i ∈ Finset.range K, w i) + _ + _
+    rw [Finset.mul_sum, Finset.mul_sum,
+      ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro i hi
+    ring
+  rw [hs, weighted_cumulative_eq_sum_tail,
+    weightedPrefixEnergy_eq_diagonal_add_offDiagonal]
+  ring
+
 end RiemannResearch.LinearAlgebra.CumulativeCellEnergy

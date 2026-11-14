@@ -132,8 +132,8 @@ holomorphic reciprocal-zeta extension from these moments.
 |---|---|---|
 | 1: finite identities | Formalized | No uniform arithmetic estimate follows from positivity. |
 | 2: direct zero exclusion | Formalized in MertensEnergyRH | Supply the arithmetic energy premise; the analytic continuation is no longer an external input. |
-| 3: dyadic Mertens estimate | Open | Prove the bound uniformly over all blocks and every positive exponent loss. |
-| 4: CRT cross terms | Open | Derive and control the actual signed induced correlations. Finite positivity is insufficient. |
+| 3: dyadic Mertens estimate | Exact energy/block reductions formalized | Prove the arithmetic bound uniformly over all dyadic blocks and positive exponent losses approaching zero. |
+| 4: CRT cross terms | Complete signed block identity formalized; CRT estimate Open | Control the actual signed correlations together with the inherited head and its interaction. |
 | 5: weaker damping | Open beyond previously checked reciprocal density | Formalize the alpha>1/2 paper extension and investigate the critical range without assuming an RH-level provider. |
 | 6: existing minimizers | Open | Derive a comparison with the complete residue inverse-Gram costs; these matrices are different. |
 | 7: reverse implication | Open formalization | Supply the RH-to-Mertens growth theorem or its analytic ingredients in Lean. |
@@ -360,3 +360,144 @@ explicit; the axiom audit does not discharge them.
 The final publication evidence is the terminal checkpoint attached to the
 commit containing this section. No full-project success is inferred from
 focused verification alone.
+
+## Dyadic energy and complete block cancellation: 14 November continuation
+
+The handoff was reconciled against published main
+`24c7355cf07d2f756cf7103b01232977c4cc8300`. The analytic bridge, exact
+normalization at s=1, signed convergence, and unconditional epsilon=1/2
+endpoint were already present. This continuation adds 23 theorems and four
+definitions without duplicating those results.
+
+New arithmetic module: `RH/MertensDyadicEnergy.lean`.
+The RH applications extend `RH/MertensEnergyRH.lean`.
+Both use namespace `RiemannResearch.RH.MertensWeightedEnergy`.
+Two general shifted-prefix identities extend the existing namespace
+`RiemannResearch.LinearAlgebra.CumulativeCellEnergy` in
+`LinearAlgebra/FiniteCumulativeSignedEnergy.lean`.
+
+### Exact dyadic reduction
+
+For X=2^j, put
+
+    H(X) = sum_{X < n <= 2X} M(n)^2,
+    A_epsilon(j) = X^(-2-2epsilon) H(X).
+
+The exact finite grouping retains the initial M(1)^2=1. The weighted block
+sum lies between 2^(-2-2epsilon) A_epsilon(j) and A_epsilon(j) when
+epsilon>=0. Consequently:
+
+    HasFiniteEnergy epsilon
+      iff Summable (fun j => A_epsilon(j)).
+
+In particular A_epsilon(j)->0 under that energy premise. A mere bound on
+A_epsilon at a single exponent does not establish its summability.
+
+For every positive epsilon, finite energy is equivalent, as a family of
+conditions, to
+
+    for every delta>0 there is a finite C_delta such that
+    for every j, H(2^j) <= C_delta (2^j)^(2+2delta).
+
+The sufficient direction uses a strict margin delta<epsilon; the normalized
+block majorant is C_delta [2^(2delta-2epsilon)]^j. This margin is not omitted.
+A single positive sequence delta_k->0 suffices, with one constant for each
+k and the bound holding on every dyadic scale. These are **conditional
+research reductions**: no small-loss arithmetic provider is supplied.
+
+| Result | Exact declaration |
+|---|---|
+| Exact finite dyadic decomposition, including the initial term | `finiteEnergy_dyadic_identity` |
+| Fixed-damping energy iff summable normalized blocks | `hasFiniteEnergy_iff_summable_dyadic` |
+| Block bound with strict exponent margin gives finite energy | `hasFiniteEnergy_of_dyadic_block_bound` |
+| Finite energy gives a uniform bound at its own exponent | `dyadic_block_bound_of_hasFiniteEnergy` |
+| All positive energies iff all positive-loss block bounds | `energy_forall_iff_dyadic_block_bounds` |
+| Normalized blocks vanish under finite energy | `dyadicNormalizedEnergy_tendsto_zero` |
+| Dyadic block bounds imply RH | `riemannHypothesis_of_dyadic_block_bounds` |
+| A countable positive loss sequence tending to zero suffices | `riemannHypothesis_of_dyadic_bounds_along_damping` |
+| A zero beyond 1/2+delta forces normalized dyadic blocks to be unbounded | `dyadicNormalizedEnergy_unbounded_of_zero` |
+
+The last theorem requires delta>=0, Re(s)>1/2+delta, s!=1, and zeta(s)=0.
+It concludes that for every real C there is a scale j with C<A_delta(j).
+It does not assume a zero exists, or claim A_delta(j)->infinity.
+
+### Complete signed block identity
+
+With positive-integer indexing, let
+
+    D(X) = sum_{j=1}^X (X-j+1) mu(X+j)^2,
+
+    C(X) = 2 M(X) sum_{j=1}^X (X-j+1) mu(X+j)
+         + 2 sum_{1<=i<j<=X} (X-j+1) mu(X+i) mu(X+j).
+
+Then `blockSquareSum_signed_identity` proves exactly
+
+    H(X) = X M(X)^2 + D(X) + C(X).
+
+Here D is `blockDiagonal`, and C is `signedBlockCross`.
+The first term in C is the interaction with the inherited head M(X).
+The second preserves all signed within-block pairs. Both are needed.
+
+The unconditional bounds 0<=D(X)<=X^2 imply that the all-positive-loss
+block condition is equivalent to the signed condition
+
+    for every delta>0 there is C_delta such that, for every dyadic X,
+    X M(X)^2 + C(X) <= C_delta X^(2+2delta).
+
+This equivalence is `dyadic_block_bounds_iff_signed_cancellation`;
+its RH consequence is `riemannHypothesis_of_dyadic_signed_cancellation`.
+The head square has not been removed from the arithmetic obligation.
+
+The general `shifted_weightedPrefixEnergy_identity` proves the full
+head-square, head-interaction, diagonal and off-diagonal decomposition
+for arbitrary real weights and coefficients, without positivity assumptions.
+The companion prefix identity is `cumulative_add_shift`.
+
+### External computation and the open arithmetic step
+
+Wolfram independently checked the exact block decomposition at
+X=2,4,8,16,32. At X=32 it returned
+
+    H=136, head square=512, head interaction=-560,
+    diagonal=344, within-block cross=-160.
+
+Thus 136=512-560+344-160. This illustrates the signed cancellation that
+would be lost by deleting the head interaction or replacing signs by
+absolute values. A further finite scan through X=131072 gave
+H(X)/X^2=0.02538249071 and
+[X M(X)^2+C(X)]/X^2=-0.2785395929 at that last scale.
+These are external finite computations, not an asymptotic proof.
+
+Soundararajan, *Partial sums of the Mobius function*,
+https://arxiv.org/abs/0705.0723, introduction and Theorem 1, was reread.
+Its strengthened Mertens growth estimate assumes RH. It cannot supply the
+unconditional small-loss block bound needed here.
+
+**Open:** prove one of the equivalent arithmetic bounds at losses tending
+to zero, uniformly over all dyadic scales. The current epsilon=1/2 endpoint
+and its logarithmic refinements do not supply that. The existing weak-star
+lifting theorem still needs a complete undamped source-norm bound.
+No CRT correlation estimate, RH-to-Mertens converse, or RH proof is claimed.
+
+### Verification for this continuation
+
+The coherent 23-theorem candidate passed Bazel/BuildBuddy acceptance in
+`job_aLCQOBSqguPgcreu1ponvbSoMR76YN9E` (45.458 server seconds,
+verified=true, exit_code=0):
+https://app.buildbuddy.io/invocation/595730d4-e487-43aa-9555-0ae796b30740 .
+
+The persisted modules and eight pivotal declarations passed exact axiom
+guards in `job_0ZWOsyunMWBszszzdUhKOAPCAKiwoZlf` (37.716 server seconds,
+verified=true, exit_code=0):
+https://app.buildbuddy.io/invocation/12075b9b-0d71-4d8e-a958-eed21837541d .
+Each audited dependency list is exactly `propext`, `Classical.choice`,
+and `Quot.sound`. The guards cover the shifted identity, exact finite
+grouping, fixed-energy equivalence, all-energy block equivalence, complete
+signed identity, signed-condition equivalence, damping-sequence RH criterion,
+and zero obstruction. They do not discharge the arithmetic hypotheses.
+Audit source SHA-256:
+`9640d60cd56e11a5a2ae47831663a7ef5978db16c727c239544abd4f6b7722de`.
+
+Final publication is gated by the terminal full-project checkpoint attached
+to the commit containing this section. Focused acceptance is not represented
+as full-project verification.

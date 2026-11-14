@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christian Noack
 -/
 import RiemannResearch.RH.MertensWeightedEnergy
+import RiemannResearch.RH.MertensDyadicEnergy
 import RiemannResearch.RH.MertensWeightedMoments
 import RiemannResearch.Analysis.CesaroFiniteCalculus
 import RiemannResearch.Analysis.FirstMellinSeries
@@ -333,5 +334,54 @@ theorem riemannHypothesis_of_frequently_bounded_offDiagonal_along_damping
     RiemannHypothesis :=
   riemannHypothesis_of_energy_along_damping ε hlim fun j =>
     (hasFiniteEnergy_iff_frequently_bounded_offDiagonal (ε j) (hε j)).mpr (h j)
+
+/-- Conditional research reduction: uniform dyadic mean-square bounds with every positive exponent loss imply RH. -/
+theorem riemannHypothesis_of_dyadic_block_bounds
+    (h : ∀ δ : ℝ, 0 < δ → ∃ C : ℝ, ∀ j : ℕ,
+      blockSquareSum (2^j) ≤ C * ((2^j : ℕ) : ℝ)^(2+2*δ)) :
+    RiemannHypothesis :=
+  riemannHypothesis_of_hasFiniteEnergy_forall
+    (energy_forall_iff_dyadic_block_bounds.mpr h)
+
+/-- Conditional research reduction in signed arithmetic form. The inherited head square and both signed cross contributions are included. -/
+theorem riemannHypothesis_of_dyadic_signed_cancellation
+    (h : ∀ δ : ℝ, 0 < δ → ∃ C : ℝ, ∀ j : ℕ,
+      ((2^j : ℕ) : ℝ) * mertensPrefix (2^j)^2 + signedBlockCross (2^j) ≤
+        C * ((2^j : ℕ) : ℝ)^(2+2*δ)) : RiemannHypothesis :=
+  riemannHypothesis_of_dyadic_block_bounds
+    (dyadic_block_bounds_iff_signed_cancellation.mpr h)
+
+/-- A countable positive sequence of exponent losses tending to zero suffices. Each bound must hold on every dyadic scale. -/
+theorem riemannHypothesis_of_dyadic_bounds_along_damping
+    (δ : ℕ → ℝ) (hδ : ∀ k, 0 < δ k) (hlim : Tendsto δ atTop (𝓝 0))
+    (hblock : ∀ k, ∃ C : ℝ, ∀ j : ℕ,
+      blockSquareSum (2^j) ≤ C * ((2^j : ℕ) : ℝ)^(2+2*δ k)) :
+    RiemannHypothesis := by
+  apply riemannHypothesis_of_energy_along_damping (fun k => 2*δ k)
+    (by simpa using hlim.const_mul 2)
+  intro k
+  obtain ⟨C, hC⟩ := hblock k
+  exact hasFiniteEnergy_of_dyadic_block_bound (2*δ k) (δ k) C
+    (by linarith [hδ k]) (by linarith [hδ k]) hC
+
+/-- A zero strictly beyond the damping line forces normalized dyadic blocks to be unbounded, not merely nonsummable. -/
+theorem dyadicNormalizedEnergy_unbounded_of_zero
+    (δ : ℝ) (hδ : 0 ≤ δ) {s : ℂ}
+    (hs : 1 / 2+δ < s.re) (hs1 : s ≠ 1) (hzero : riemannZeta s = 0) :
+    ∀ C : ℝ, ∃ j : ℕ, C < dyadicNormalizedEnergy δ j := by
+  intro C
+  by_contra h
+  push Not at h
+  have hblock : ∀ j : ℕ, blockSquareSum (2^j) ≤
+      C * ((2^j : ℕ) : ℝ)^(2+2*δ) := by
+    intro j
+    rw [blockSquareSum_eq_scaledNormalized δ j, mul_comm C]
+    exact mul_le_mul_of_nonneg_left (h j) (Real.rpow_nonneg (by positivity) _)
+  let ε : ℝ := (δ+s.re-1 / 2)/2
+  have hε : 0 ≤ ε := by dsimp [ε]; linarith
+  have hδε : δ < ε := by dsimp [ε]; linarith
+  have hmargin : 1 / 2+ε < s.re := by dsimp [ε]; linarith
+  exact zeta_ne_zero_of_hasFiniteEnergy ε hε
+    (hasFiniteEnergy_of_dyadic_block_bound ε δ C hε hδε hblock) hmargin hs1 hzero
 
 end RiemannResearch.RH.MertensWeightedEnergy
