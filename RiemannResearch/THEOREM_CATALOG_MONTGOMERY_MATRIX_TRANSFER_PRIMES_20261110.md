@@ -1,5 +1,9 @@
 # Montgomery: actual-zero matrices, ordinate transfer, and signed prime correlations
 
+Continuation (2026-11-14): [Exact signed interval and countable criteria](THEOREM_CATALOG_MONTGOMERY_INTERVAL_20261114.md)
+adds sharp actual zero-count normalization and rational anchored reductions.
+The signed cancellation and full PCC remain open.
+
 Date: 2026-11-10. Development baseline: 869857d79633cf098a2431836349f11c52fd1f3e.
 Continuation of MontgomeryGammaAudit20261110.md and THEOREM_CATALOG_MONTGOMERY_GAMMA_20261110.md.
 
