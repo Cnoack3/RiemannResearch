@@ -185,9 +185,13 @@ also recompiled the final arithmetic source with its helper kept private;
 server verification took 43.972 seconds. Axiom inspection does not discharge
 the explicit energy or boundedness hypotheses of these theorems.
 
-The final persisted sources, moment implication, and downstream consumers are
-subject to the final full-project checkpoint. Its retained job record is the
-publication evidence; focused checks alone do not certify the whole project.
+The baseline full-project checkpoint `job_cUjCOE-AuUI43XxJ8qLUr4xLgR0gzzkX`
+completed successfully (verified=true, exit_code=0), with 390.413 seconds
+of server verification, and pushed commit
+`4f21b88349ebc98a8d98d5ee2ef032924c289633`:
+https://app.buildbuddy.io/invocation/b7b9bf84-0720-4eb5-8cc4-3f39a03f224f .
+The retained terminal record was reread for this continuation. Subsequent
+changes require their own full-project checkpoint.
 
 ## Direct analytic bridge: 13 November follow-up
 
@@ -274,3 +278,85 @@ zero exclusion, signed divergence, the unconditional baseline, frequent-bound
 equivalence, and the final damping-sequence RH criterion. They do not discharge
 the explicit energy or arithmetic boundedness hypotheses. The audit source
 SHA-256 is `4ca8b9ecd3fb36faee2b328e6269828443b3fdb187934623befc5aaa94305b49`.
+
+## Reusable Mellin convergence and exact pole normalization
+
+Continuation of `Mertens_Weighted_Energy_Weak_Star_Continuation(1).md`.
+The direct analytic bridge published concurrently at
+`f3380fd6b8e228d87757e1c08ced9eda210b3a05` is retained as the canonical
+implementation. Its stronger damping-sequence and signed-divergence results
+are preserved. No competing Mertens series or duplicate RH criteria are introduced.
+
+The new general-purpose module `Analysis/FirstMellinSeries.lean` takes
+arbitrary complex coefficients a(n) and proves that
+
+    sum_{n>=1} ||a(n)|| n^(-1-q) < infinity, q>0
+
+implies convergence of sum a(n)[n^(-s)-(n+1)^(-s)] for Re(s)>=q and
+analyticity for Re(s)>q. Its local majorant controls the full infinite series,
+not just individual terms. The actual Mertens analyticity theorem now applies
+this reusable result to the previously checked absolute-moment theorem.
+
+| Result | Exact declaration | Hypotheses |
+|---|---|---|
+| Absolute convergence | `Cesaro.firstMellinSeries_summable` | q>0, summable absolute moment, Re(s)>=q |
+| Local complex differentiability | `Cesaro.firstMellinSeries_differentiableAt` | Same moment, Re(s)>q |
+| Analyticity on the open half-plane | `Cesaro.firstMellinSeries_analyticOnNhd` | q>0 and summable absolute moment |
+| Reciprocal value at one | `mertensTransform_one_eq_zero` | 0<=epsilon<1/2, HasFiniteEnergy epsilon |
+| Simple zero with derivative one | `mertensTransform_hasDerivAt_one` | 0<=epsilon<1/2, HasFiniteEnergy epsilon |
+| Reciprocal identity on the full energy half-plane | `mertensTransform_eq_inv_zeta_of_hasFiniteEnergy` | epsilon>=0, HasFiniteEnergy epsilon, Re(s)>1/2+epsilon, s!=1 |
+
+The generic declarations have namespace
+`RiemannResearch.Analysis.Cesaro`; the arithmetic declarations retain
+`RiemannResearch.RH.MertensWeightedEnergy`.
+
+The statements F(1)=0 and F'(1)=1 concern the analytic extension of
+1/zeta. They use the regularized identity and
+`Burnol.regularZetaRatio_one`. They do not evaluate the pole through
+Lean's totalized value of `riemannZeta 1`.
+
+### Arithmetic investigation and remaining boundary
+
+Wolfram corroborated the exact finite Abel identity at N=4,8,16 for s=3+2i.
+An independent finite numerical scan retained the signs in
+E_epsilon=diagonal+offDiagonal. At N=10000 it gave:
+
+| epsilon | E_epsilon(N) | diagonal | offDiagonal |
+|---|---:|---:|---:|
+| 0.05 | 1.86519392921 | 4.94362740640 | -3.07843347719 |
+| 0.10 | 1.67168110517 | 3.77416705182 | -2.10248594665 |
+| 0.25 | 1.34630873086 | 2.28166493550 | -0.93535620464 |
+
+These finite computations do not prove boundedness at arbitrarily large
+cutoffs. Soundararajan's cited paper was reread: its strengthened growth
+estimate assumes RH, so it supplies no unconditional arithmetic input here.
+Weak-star compactness still requires the complete undamped source-norm bound.
+The exact remaining target is the positive damping sequence and frequent
+signed bound recorded above; neither pole normalization nor the holomorphy
+refactor proves that target.
+
+### Continuation verification
+
+The three arithmetic extensions passed focused Bazel/BuildBuddy acceptance
+in `job_mog80ZZonhE4BAgzk5FO4YP-B4nIZcLn` (33.143 server seconds,
+verified=true, exit_code=0):
+https://app.buildbuddy.io/invocation/865cb404-9cbb-46e2-bfbf-1e48129fe9e2 .
+
+After persistence, eight pivotal declarations passed exact axiom guards in
+`job_T3GtVAcGSOE6HDNwypgjNERN3LXTIyuW` (22.083 server seconds,
+verified=true, exit_code=0):
+https://app.buildbuddy.io/invocation/c67e8819-5671-4bc3-a16d-b5f00132b119 .
+The audited declarations are the generic analyticity theorem, actual Mertens
+analyticity, the value and derivative at one, the extended reciprocal identity,
+finite Abel summation, signed divergence, and the final frequently bounded
+damping-sequence RH criterion. Each list is exactly
+`propext`, `Classical.choice`, and `Quot.sound`.
+Audit code SHA-256:
+`635ccb6c92f2e5f879730a9ab8e940f10d3142722eb927db7deb8be2c5d8d2a8`.
+
+No `sorry`, `admit`, or new axiom is used. All energy premises remain
+explicit; the axiom audit does not discharge them.
+
+The final publication evidence is the terminal checkpoint attached to the
+commit containing this section. No full-project success is inferred from
+focused verification alone.

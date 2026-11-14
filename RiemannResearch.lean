@@ -2,6 +2,7 @@ import RiemannResearch.LinearAlgebra.FiniteCumulativeSignedEnergy
 import RiemannResearch.RH.MertensWeightedEnergy
 import RiemannResearch.RH.MertensWeightedMoments
 import RiemannResearch.RH.MertensEnergyRH
+import RiemannResearch.Analysis.FirstMellinSeries
 import RiemannResearch.Analysis.FiniteCollocationCertificate
 import RiemannResearch.RH.QCRTCanonicalGrowthCertificate
 import RiemannResearch.RH.ConditionalMeanSublinearHeads

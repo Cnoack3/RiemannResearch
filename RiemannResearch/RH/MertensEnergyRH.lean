@@ -6,7 +6,7 @@ Authors: Christian Noack
 import RiemannResearch.RH.MertensWeightedEnergy
 import RiemannResearch.RH.MertensWeightedMoments
 import RiemannResearch.Analysis.CesaroFiniteCalculus
-import RiemannResearch.Analysis.MellinDifferenceBounds
+import RiemannResearch.Analysis.FirstMellinSeries
 import RiemannResearch.RH.BurnolCayleyJensen
 import RiemannResearch.RH.TreeEulerCriterion
 import Mathlib.Analysis.Analytic.Uniqueness
@@ -76,43 +76,20 @@ theorem mertensTransform_analyticOnNhd (ε : ℝ) (hε : 0 ≤ ε)
     (hE : HasFiniteEnergy ε) :
     AnalyticOnNhd ℂ mertensTransform {s : ℂ | 1/2 + ε < s.re} := by
   intro s hs
-  change 1/2 + ε < s.re at hs
   let σ : ℝ := (1/2 + ε + s.re)/2
-  let R : ℝ := ‖s‖ + 1
-  let U : Set ℂ := {z | σ < z.re ∧ ‖z‖ < R}
-  have hσ : 1/2 + ε < σ := by dsimp [σ]; linarith
+  have hσ : 1/2 + ε < σ := by dsimp [σ]; change 1/2 + ε < s.re at hs; linarith
   have hσ0 : 0 < σ := by linarith
-  have hU : IsOpen U :=
-    (isOpen_lt continuous_const Complex.continuous_re).inter
-      (isOpen_lt continuous_norm continuous_const)
-  have hsU : s ∈ U := by
-    change σ < s.re ∧ ‖s‖ < R
-    dsimp [σ, R]
-    constructor <;> linarith
-  have hterm (n : ℕ) : DifferentiableOn ℂ
-      (fun z => mellinFirst z (n+1) * (mertensPrefix (n+1) : ℂ)) U := by
-    have hn : ((n+1 : ℕ) : ℂ) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero n
-    have hn' : ((n+1+1 : ℕ) : ℂ) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero (n+1)
-    unfold mellinFirst
-    fun_prop
-  have hdom (n : ℕ) (z : ℂ) (hz : z ∈ U) :
-      ‖mellinFirst z (n+1) * (mertensPrefix (n+1) : ℂ)‖ ≤
-        R * (|mertensPrefix (n+1)| * ((n : ℝ)+1)^(-1-σ)) := by
-    have hx : (1 : ℝ) ≤ (n : ℝ)+1 := by have := Nat.cast_nonneg (α := ℝ) n; linarith
-    rw [norm_mul, Complex.norm_real, Real.norm_eq_abs]
-    calc
-      _ ≤ (‖z‖ * ((n+1 : ℕ) : ℝ)^(-z.re-1)) * |mertensPrefix (n+1)| :=
-        mul_le_mul_of_nonneg_right
-          (mellinFirst_norm_le z (lt_trans hσ0 hz.1) _ (Nat.succ_pos _)) (abs_nonneg _)
-      _ ≤ (R * ((n : ℝ)+1)^(-1-σ)) * |mertensPrefix (n+1)| := by
-        apply mul_le_mul_of_nonneg_right _ (abs_nonneg _)
-        simp only [Nat.cast_add, Nat.cast_one]
-        exact mul_le_mul hz.2.le (Real.rpow_le_rpow_of_exponent_le hx (by linarith [hz.1]))
-          (Real.rpow_nonneg (by positivity) _) (by dsimp [R]; positivity)
-      _ = _ := by ring
-  have hd := Complex.differentiableOn_tsum_of_summable_norm
-    ((summable_absolute_mertens_moment ε σ hE hσ).mul_left R) hterm hU hdom
-  exact hd.analyticOnNhd hU s hsU
+  have ha : Summable (fun n : ℕ =>
+      ‖(mertensPrefix (n+1) : ℂ)‖ * ((n : ℝ)+1)^(-1-σ)) := by
+    simpa only [Complex.norm_real, Real.norm_eq_abs] using
+      summable_absolute_mertens_moment ε σ hE hσ
+  have h := firstMellinSeries_analyticOnNhd (fun n => (mertensPrefix n : ℂ)) σ hσ0 ha s
+    (show σ < s.re by dsimp [σ]; change 1/2 + ε < s.re at hs; linarith)
+  have heq : firstMellinSeries (fun n => (mertensPrefix n : ℂ)) = mertensTransform := by
+    funext z
+    simp only [firstMellinSeries, mertensTransform, mul_comm]
+  rw [heq] at h
+  exact h
 
 
 theorem finite_mertens_abel (s : ℂ) (N : ℕ) :
@@ -251,6 +228,60 @@ theorem zeta_ne_zero_of_hasFiniteEnergy (ε : ℝ) (hε : 0 ≤ ε)
     have hs0 : s ≠ 0 := by intro he; simp only [he, Complex.zero_re] at hs; linarith
     exact (div_ne_zero (sub_ne_zero.mpr hs1) hs0) h.symm
   · exact riemannZeta_ne_zero_of_one_le_re (by linarith)
+
+/-- The analytic reciprocal has a zero at the pole of zeta. -/
+theorem mertensTransform_one_eq_zero (ε : ℝ) (hε : 0 ≤ ε)
+    (hε1 : ε < 1 / 2) (hE : HasFiniteEnergy ε) :
+    mertensTransform 1 = 0 := by
+  simpa only [Burnol.regularZetaRatio_one, one_mul, sub_self, zero_div] using
+    regularZetaRatio_mul_mertensTransform ε hε hε1 hE
+      (s := 1) (by norm_num; linarith)
+
+set_option backward.isDefEq.respectTransparency false in
+/-- The reciprocal's zero at one is simple, with derivative exactly one. -/
+theorem mertensTransform_hasDerivAt_one (ε : ℝ) (hε : 0 ≤ ε)
+    (hε1 : ε < 1 / 2) (hE : HasFiniteEnergy ε) :
+    HasDerivAt mertensTransform 1 1 := by
+  have h1 : 1 / 2 + ε < (1 : ℂ).re := by norm_num; linarith
+  have hF := (mertensTransform_analyticOnNhd ε hε hE 1 h1).differentiableAt.hasDerivAt
+  have hR := (Burnol.analyticAt_regularZetaRatio (s := 1) one_ne_zero).differentiableAt.hasDerivAt
+  have hp := hR.mul hF
+  simp only [mertensTransform_one_eq_zero ε hε hε1 hE,
+    Burnol.regularZetaRatio_one, mul_zero, one_mul, zero_add] at hp
+  have heq : (fun z => Burnol.regularZetaRatio z * mertensTransform z)
+      =ᶠ[𝓝 (1 : ℂ)] (fun z : ℂ => (z-1)/z) := by
+    have ho : IsOpen {z : ℂ | 1 / 2 + ε < z.re} :=
+      isOpen_lt continuous_const Complex.continuous_re
+    filter_upwards [ho.mem_nhds h1] with z hz
+    exact regularZetaRatio_mul_mertensTransform ε hε hε1 hE hz
+  have hr : HasDerivAt (fun z : ℂ => (z-1)/z) 1 1 := by
+    convert! ((hasDerivAt_id (1 : ℂ)).sub_const 1).fun_div
+      (hasDerivAt_id (1 : ℂ)) one_ne_zero using 1 <;> norm_num
+  have hd : deriv mertensTransform 1 = 1 :=
+    (hp.congr_of_eventuallyEq heq.symm).unique hr
+  rw [hd] at hF
+  exact hF
+
+/-- The actual Mertens series equals the reciprocal throughout the energy
+half-plane away from the pole. -/
+theorem mertensTransform_eq_inv_zeta_of_hasFiniteEnergy (ε : ℝ) (hε : 0 ≤ ε)
+    (hE : HasFiniteEnergy ε) {s : ℂ}
+    (hs : 1 / 2 + ε < s.re) (hs1 : s ≠ 1) :
+    mertensTransform s = (riemannZeta s)⁻¹ := by
+  by_cases hε1 : ε < 1 / 2
+  · have hs0 : s ≠ 0 := by
+      intro he
+      simp only [he, Complex.zero_re] at hs
+      linarith
+    have h := regularZetaRatio_mul_mertensTransform ε hε hε1 hE hs
+    rw [Burnol.regularZetaRatio_eq (by linarith) hs1, mul_assoc] at h
+    have hp : riemannZeta s * mertensTransform s = 1 :=
+      mul_left_cancel₀ (div_ne_zero (sub_ne_zero.mpr hs1) hs0)
+        (h.trans (mul_one _).symm)
+    apply mul_left_cancel₀ (zeta_ne_zero_of_hasFiniteEnergy ε hε hE hs hs1)
+    rw [mul_inv_cancel₀ (zeta_ne_zero_of_hasFiniteEnergy ε hε hE hs hs1)]
+    exact hp
+  · exact mertensTransform_eq_inv_zeta ε hE (by linarith) hs
 
 theorem not_hasFiniteEnergy_of_zero (ε : ℝ) (hε : 0 ≤ ε)
     {s : ℂ} (hs : 1/2+ε < s.re) (hs1 : s ≠ 1) (hzero : riemannZeta s = 0) :
