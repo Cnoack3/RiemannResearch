@@ -34,6 +34,7 @@ import RiemannResearch.CategoryTheory.RegularCategoryCRT
 import RiemannResearch.LinearAlgebra.CRTReconstructionObstructions
 import RiemannResearch.NumberTheory.InfiniteCRTObstruction
 import RiemannResearch.RH.QFullResidualCorrectionCost
+import RiemannResearch.RH.QFullCorrectionBudgetDescent
 import RiemannResearch.Logic.EquivalenceRelationCRT
 import RiemannResearch.Topology.CompactConstraintGluing
 import RiemannResearch.Analysis.ResidualCorrectionCost

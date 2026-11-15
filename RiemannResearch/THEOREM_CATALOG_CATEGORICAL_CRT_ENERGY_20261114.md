@@ -253,3 +253,101 @@ Lean foundations.
 The sixteen integrated principal axiom guards require exactly `propext`,
 `Classical.choice`, and `Quot.sound`. The subsequent full-project publication
 checkpoint is the acceptance gate for the complete integrated change.
+
+## Growing actual-Q correction budgets (15 November 2026)
+
+Continuation module: `RH/QFullCorrectionBudgetDescent.lean`, namespace
+`RiemannResearch.RH.QFullCorrectionBudgetDescent`. It adds two definitions
+and fifteen theorems to the earlier reconstruction package.
+
+### Exact finite statements
+
+For a nondecreasing stage schedule σ, put
+E_k = ||qOne - candidate (σ k)||² and let K_k > 0.
+`CorrectionBudget (σ k) (σ (k+1)) (K k)` means that, unless the old
+residual is zero, there is w in the specified next stage with nonzero
+actual Q correlation and
+
+```math
+E_k ||w||² / <r_(σ k),w>² <= K_k.
+```
+
+The zero-residual case requires no correction. The exact cost conversion is
+
+```math
+CorrectionBudget (σ k) (σ (k+1)) K_k
+  iff E_k / K_k <= E_k - E_(k+1).
+```
+
+`correction_budget_accounting` keeps both complete remainder sums:
+
+```math
+E_0 = E_n (1 + sum_(k<n) 1/K_k)
+    + sum_(k<n) (E_k - E_n)/K_k
+    + sum_(k<n) (||candidate(σ(k+1))-candidate(σ(k))||² - E_k/K_k).
+```
+
+No positivity or budget assumption is needed for this equality. Under valid
+positive budgets, the remainders are nonnegative. The resulting finite bound is
+
+```math
+E_n <= E_0 exp(-sum_(k<n) 1/K_k).
+```
+
+For K_k = C(k+1), C > 0,
+`energy_le_exp_neg_harmonic_of_linear_budgets` gives
+
+```math
+E_n <= E_0 exp(-H_n/C).
+```
+
+If δ = ||qOne - closure.starProjection qOne||² > 0, the complementary
+`reciprocal_sum_le_of_positive_limiting_energy` proves, for every n,
+
+```math
+sum_(k<n) 1/K_k <= E_0/δ - 1.
+```
+
+### Conditional research reductions
+
+| Declaration | Explicit sufficient input |
+| --- | --- |
+| `riemannHypothesis_of_reciprocal_budgets` | A nondecreasing stage schedule, positive budgets, eventual corrections in the specified next stage, and nonsummability of 1/K_k. |
+| `riemannHypothesis_of_linear_budgets` | Eventual next-stage corrections with normalized cost at most C(k+1), for one C > 0. |
+| `riemannHypothesis_of_logarithmic_budgets` | Eventual cost at most C log L_k and eventual log L_k <= A(k+1), for positive C and A. |
+| `riemannHypothesis_of_geometric_scale_logarithmic_budgets` | Eventual cost at most C log(L^(k+1)), with C > 0 and L > 1. |
+
+The proof first obtains vanishing actual-Q residual energy along the schedule,
+then qOne membership in the full legal closure, and finally the existing
+unconditional sufficient implication to RH. Cofinality is unnecessary for this
+implication; the global limiting residual energy is a lower bound at every
+stage. No converse from RH to full-Q density is used.
+
+`summable_reciprocal_budgets_of_not_riemannHypothesis` records the contrapositive:
+if RH fails, the reciprocals of every valid eventual positive budget schedule
+are summable.
+
+**Open arithmetic provider:** construct the corrections inside the specified
+next stage and prove their normalized actual-Q costs obey one of these bounds.
+An arbitrary correction lying somewhere in the full finite legal span gives
+no prescribed bound on the next-stage conductor. If L_k is an LCM modulus,
+the growth hypothesis must be proved for that actual modulus. Geometric
+growth of the conductor cutoff does not itself give log L_k = O(k).
+
+Finite CRT and the abstract duality theorems supply none of these arithmetic
+cost or scale-growth estimates. RH remains open in this continuation.
+
+### Focused acceptance for this continuation
+
+- Final module and principal declaration checks: Bazel job
+  `job_Uaks8JtHOGI-HWX2XWSwAxHTR6gZr0u3`, successful; server verification
+  54.611 seconds. [Build receipt](https://app.buildbuddy.io/invocation/b9ea1637-b6ce-4373-81a2-092d25686063).
+- Four exact axiom-output guards: Bazel job
+  `job_yNb9bSuamgS9b-6stxt5jTBcJURSUoMw`, successful; server verification
+  45.111 seconds. [Build receipt](https://app.buildbuddy.io/invocation/684b9ea8-84d0-4c04-bf31-b35696bdd5ae).
+  The accounting identity, harmonic finite bound, reciprocal-budget RH
+  implication, and geometric-scale logarithmic implication depend exactly on
+  `propext`, `Classical.choice`, and `Quot.sound`.
+
+These are focused receipts. Publication remains gated by the subsequent
+full-project Bazel checkpoint, including integration of newer main changes.
