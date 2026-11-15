@@ -96,6 +96,36 @@ moment's usable domain, without requiring an estimate at the critical line.
 The actual uniform weighted excess estimate, its moment and Kloosterman
 inputs, and a kernel proof of **InghamDensityBound** remain open.
 
+## Finite Fourier completion of the inverse sums (15 November 2026)
+
+**KloostermanCompletion.lean** defines the complete classical sum
+S(k,m;q) with phase kx + m/x, using the standard additive character on
+ZMod q and retaining only invertible x. Every modulus q > 0 is allowed.
+
+For the weight w that counts residues in an interval of length L starting
+at b, **interval_inverseSum_eq_complete** proves the signed identity
+
+$
+\sum_{j=0}^{L-1} e_q\bigl(m/(b+j)\bigr)\,1_{(b+j,q)=1}
+ = q^{-1} \sum_{k\bmod q} \widehat w(k) S(k,m;q),
+$
+
+where the indicator notation on the left means the phase is evaluated only
+on units, and the forward transform uses the negative character. There is
+no restriction L <= q in the identity: repetitions are counted with their
+full multiplicities. **dft_intervalWeight** and
+**dft_intervalWeight_mul_complement** keep the translated phase and the
+complete geometric numerator, including the zero frequency.
+**norm_dft_intervalWeight_le** gives the explicit nonzero-frequency
+majorant 2 / |1 - e_q(-k)|.
+
+**norm_interval_inverseSum_le_of_complete** transfers an upper bound B
+for every complete sum at fixed (m,q) to (B/q) times the full Fourier
+L1 mass of the interval weight. This proves the completion part of
+Baluyot's Lemma 3.1.5. The next estimates are the harmonic bound for the
+mass, the complete Weil bound, and the distinct Deshouillers–Iwaniec
+multilinear estimate of Lemma 3.1.6. None is assumed as an axiom.
+
 ## New proved components
 
 All declarations below are in `RiemannResearch.Analysis`.
