@@ -3,6 +3,25 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Actual zeta-zero count under a mollified rectangle boundary (15 November 2026)
+
+**ConreyBaluyotZetaRectangle.lean** strengthens the product-zero identity.
+Under the same explicit zero-free product-boundary condition, the rectangle
+has a finite set A of exactly the actual zeta zeros, and their weighted
+analytic-multiplicity sum is at most the real part of the normalized weighted
+log-derivative contour integral of the mollified product. The proof uses
+additivity of analytic orders for the product and proves both orders finite.
+
+For alpha >= Re z, **exists_zeta_rectangle_count_margin_bound** proves
+
+  (alpha - Re z) sum_{rho in A, Re rho >= alpha} ord_rho(zeta)
+    <= Re[(1/(2 pi i)) integral_boundary (s - Re z) F'(s)/F(s) ds].
+
+Both sides retain actual analytic multiplicity. A positive margin is needed
+to divide by it. The zero-free boundary, the log-modulus/phase form of the
+contour integral, boundary limits, and the mollified moment remain separate
+obligations; this is not yet the unconditional density estimate.
+
 ## Weighted rectangle identity for the actual mollified product (15 November 2026)
 
 **ConreyBaluyotWeightedRectangle.lean** applies the previously proved weighted
