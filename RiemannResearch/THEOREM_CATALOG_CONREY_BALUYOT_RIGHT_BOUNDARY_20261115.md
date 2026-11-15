@@ -101,6 +101,14 @@ N_Z(\alpha;T,2T)\le
 \]
 The moment is on the selected line ℓ, with the same mollifier parameters and outward endpoints. It remains an explicit premise. Required integrability and boundary nonvanishing are discharged by the construction. The full mollifier-zero remainder is subtracted.
 
+## Later continuation: finite moments and prescribed-line transfer
+
+The [finite-moment continuation](THEOREM_CATALOG_CONREY_BALUYOT_FINITE_MOMENT_20261115.md)
+proves the exact twisted expansion, continuity in the evaluation line and arbitrarily
+small adaptive endpoint errors. Its combined theorem accepts a moment bound on
+one prescribed line over [T,2T], with no separate neighborhood or outward-moment
+provider and with a protected denominator. The central analytic moment remains open.
+
 ## Revised research agenda
 
 | Obligation | Status and acceptance criterion |
@@ -108,14 +116,14 @@ The moment is on the selected line ℓ, with the same mollifier parameters and o
 | Compatible branches and outward closed-window coverage | Proved and retained |
 | Signed right integral for the same nonstandard mollifier | Discharged by the uniform provider |
 | Left edge inside a prescribed interval | Proved for any 1/2≤a<c≤α<b |
-| Actual uniform mollified second moment | **Open.** Prove the uncentered moment for the same σ,y,ε family, uniformly on a selected left interval and the outward height windows. |
-| A moment available only on a different prescribed line | **Open if needed.** Prove a neighborhood estimate or a justified limiting passage; selectable intervals alone do not permit changing the line. |
+| Actual uniform mollified second moment | **Open.** Prove the central moment for the same σ,y,ε family on one prescribed line and [T,2T]. The later transfer theorem supplies a selectable neighborhood and outward endpoints with arbitrary positive slack. |
+| A moment available only on a prescribed line | Discharged in the finite-moment continuation by continuity, for fixed parameters and with arbitrary positive slack; no uniform modulus is asserted. |
 | Full arithmetic error | **Open.** Retain diagonal, off-diagonal, cutoff and endpoint terms, then prove the required decay. |
 | Complete and multilinear Kloosterman estimates | **Open.** Supply their exact uniform arithmetic hypotheses in the actual moment argument. |
 | Global density function and Ingham assembly | **Open.** Identify the finite multiplicity sum with the repository counting conventions and provide the remaining estimates. |
 | RH-level zero exclusion or residual vanishing | **Open.** The finite boundary estimates do not force the count to vanish. |
 
-Priority 1 is the actual uncentered moment on a selectable left interval. Choose the interval from the intended analytic theorem before invoking the new dyadic result. Coefficient normalization and right decay do not control the critical-strip off-diagonal moment.
+Priority 1 is the actual central uncentered moment on one prescribed line. The later finite-moment continuation transfers it to a selectable left interval and outward endpoints. Coefficient normalization and right decay do not control the critical-strip off-diagonal moment.
 
 Priority 2 is quantitative arithmetic error control. Use `exists_strict_error_budget` only after proving the corresponding analytic bounds, and keep the cutoff exponent and error-loss parameters distinct.
 
