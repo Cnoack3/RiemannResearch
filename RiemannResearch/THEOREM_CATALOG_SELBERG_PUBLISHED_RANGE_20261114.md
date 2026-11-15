@@ -3,6 +3,28 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Dyadic zero-free rectangles for one actual mollifier (15 November 2026)
+
+**ConreyBaluyotDyadicRectangle.lean** combines the fixed-mollifier dyadic
+good-height result with the zero-free side construction. For each epsilon >= 0
+and theta > 0, the theorem
+**exists_uniform_dyadic_mollifiedZeta_zero_free_rectangle** chooses uniform
+eta, b, D and H. For T >= H and sigma in the established coupled strip, and
+for each sufficiently small positive delta, it chooses t1 and t2 arbitrarily
+near T and 2T, respectively, and vertical sides l and r in arbitrary prescribed
+separated interior intervals.
+
+The actual product with its one fixed mollifier of length T^theta is nonzero
+on the entire chosen rectangle border. On each horizontal edge a continuous
+phase is normalized at b and all integrals from a in [1/2,b] to b are bounded
+in absolute value by D log T. The phases apply to the larger horizontal
+segment ending at b, while the selected right side r is strictly less than b.
+
+The boundary-existence part is now unconditional on the recorded strip; the
+conversion of the weighted contour integral into logarithmic and phase terms,
+the necessary vertical-side estimates and limiting argument, the mollified
+moment, Kloosterman bounds and Ingham density provider remain open.
+
 ## Zero-free vertical lines and rectangle borders (15 November 2026)
 
 **ConreyBaluyotZeroFreeRectangle.lean** proves that if an analytic function on
