@@ -3,6 +3,22 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Linear uniform mollifier growth (15 November 2026)
+
+**ConreyBaluyotMollifierLinearGrowth.lean** improves the bound below to
+|M(s)| <= C y throughout Re(s) >= 0, uniformly on the proved coupled
+sigma,y strip and simultaneously for every real cutoff exponent. It combines
+the existing global coefficient bound with the exponential tail bound to
+obtain one geometric majorant for all positive indices. This majorant sums
+to O(y), independent of the truncation length.
+
+**exists_uniform_mollifiedZeta_linear_growth** consequently proves
+|zeta(s) M(s)| <= C |Im(s)| y when Re(s) >= 1/4 and |Im(s)| >= 1,
+uniformly in the same parameters and every real cutoff exponent. These
+pointwise estimates do not prove the horizontal argument bound, mollified
+second moment, complete or multilinear Kloosterman estimates, or Ingham's
+density estimate in Lean.
+
 ## Uniform growth of the actual mollifier (15 November 2026)
 
 **ConreyBaluyotMollifierGrowth.lean** proves, for every fixed epsilon >= 0,

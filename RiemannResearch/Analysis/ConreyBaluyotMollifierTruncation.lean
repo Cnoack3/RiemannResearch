@@ -112,7 +112,8 @@ theorem mollifier_floor_tail_geometric_bound {σ y ε : ℝ} {s : ℂ}
       (show (1 : ℝ) ≤ 1 + ε by linarith)
   exact hp.trans (Nat.lt_floor_add_one (y ^ (1 + ε))).le
 
-private theorem geometric_denominator_inv_le {y : ℝ} (hy : 1 ≤ y) :
+/-- The reciprocal geometric denominator grows at most linearly in y. -/
+theorem geometric_denominator_inv_le {y : ℝ} (hy : 1 ≤ y) :
     (1 - Real.exp (-1 / (2 * y)))⁻¹ ≤ 3 * y := by
   have hy0 : 0 < y := by linarith
   let x := 1 / (2 * y)
