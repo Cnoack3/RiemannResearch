@@ -737,3 +737,86 @@ published commit are reported with the checkpoint.
   (168.634 seconds server elapsed). It covered both Estermann
   modules and their exports along with the recovered Mellin changes.
   https://app.buildbuddy.io/invocation/7601e8dd-55a4-4665-b885-1dde8451bc4c
+
+## Uniform dyadic assembly beyond one quarter (15 November 2026)
+
+The new modules `Analysis/DyadicPowerLogBound.lean` and
+`Analysis/ActualSelbergDyadicAssembly.lean` close the **conditional height-window
+assembly**, including the finite initial count and the narrow logarithmic band.
+The unconditional Conrey--Baluyot density provider is still **Open**.
+
+The general assembly works for `0 <= a < 2`; this is the validity range of a
+conditional implication, not a new published density range. It includes every
+requested `1/4 < a < 8/7`. The analytic source excludes the endpoint `8/7`.
+
+### Exact identity and uniform constant
+
+For every nonnegative H and natural n, actual inclusive counts satisfy
+
+```text
+N+(sigma, H*2^n)
+  = N+(sigma,H)
+    + sum_{k<n} N+(sigma; H*2^k < gamma <= H*2^(k+1)).
+```
+
+Analytic multiplicities and all boundary conventions remain unchanged.
+If every window (T/2,T] is at most
+`D*T^(1-a*(sigma-1/2))*log T` for T >= 2H, with the same D,H for every
+sigma in [1/2,1], the proof constructs
+
+```text
+r = 2^(-(1-a/2)) < 1,
+A = N(0,2H) / log H,
+K = (A+D)/(1-r).
+```
+
+Then K works for every T >= H and every sigma in the whole strip.
+The complete finite initial count is absorbed into A, never declared zero.
+The dyadic formulation is equivalent to `UniformSelbergDensity a` on this
+range, and hence characterizes the complete open Conrey--Baluyot range.
+
+### Near-line and away-line gluing
+
+`uniformSelbergDensity_of_near_excess_and_far_windows` assumes:
+
+1. One near-line weighted-excess bound
+   `rightLogExcessWindow (T/2) T alpha <=
+     D*T*exp(-(a*log T)*(alpha-1/2))`,
+   uniformly for alpha in [1/2,1/2+eta] and sufficiently large T.
+2. One away-line actual-window density bound with the same exponent a,
+   uniformly for sigma in [1/2+eta,1] and sufficiently large T.
+
+The two providers may have different constants and thresholds.
+The proof combines them, handles `(sigma-1/2)*log T <= 1/a` by the
+unconditional total-count theorem, and otherwise uses the exact shifted
+weighted-excess identity at `alpha=sigma-1/(a*log T)`. The exponent is preserved.
+
+Both providers remain Open. In particular, the actual uniform mollified zeta
+second moment, the necessary Kloosterman estimates, and the analytic away-line
+input have not been proved by these implications. An axiom guard does not
+discharge those local hypotheses. No RH conclusion is asserted.
+
+Source for the final assembly strategy: Baluyot (2017), section 3.6,
+equations (3.6.12)--(3.6.13), printed pp. 142--143, at the primary-source URL
+already cited above. The dyadic induction and inclusive-count specialization
+are formal proofs rather than assumptions imported from that source.
+
+### Declarations
+
+- `RiemannResearch.Analysis.bound_of_dyadic_power_log`
+- `RiemannResearch.Analysis.ActualZeroOrdinate.rightInclusiveCount_monotone_height`
+- `RiemannResearch.Analysis.ActualZeroOrdinate.rightInclusiveCount_dyadic_exact`
+- `RiemannResearch.Analysis.ActualZeroOrdinate.uniformSelbergDensity_of_dyadic_windows`
+- `RiemannResearch.Analysis.ActualZeroOrdinate.uniformSelbergDensity_iff_dyadic_windows`
+- `RiemannResearch.Analysis.ActualZeroOrdinate.conreyBaluyotDensity_iff_dyadic_windows`
+- `RiemannResearch.Analysis.ActualZeroOrdinate.uniformSelbergDensity_of_near_excess_and_far_windows`
+
+### Focused verification
+
+Saved modules and all seven exact axiom guards passed Bazel/BuildBuddy in
+`job_kAn8OxeSd8GiCesI8YP5PCieVsJL6lbQ` (38.726 seconds server verification).
+Only `propext`, `Classical.choice`, and `Quot.sound` are accepted by the guards.
+https://app.buildbuddy.io/invocation/f78582d6-e538-4a7d-8b3e-2914c0aab8f5
+
+Publication additionally requires the full incremental `//:RiemannResearch`
+checkpoint. The Compact Orbit Site records that terminal receipt and commit.
