@@ -117,6 +117,52 @@ Focused acceptance for this continuation:
 - Full-project validation and publication are performed by the required checkpoint;
   this focused receipt alone does not certify downstream consumers.
 
+## Actual-zero dimension obstruction (2026-11-14)
+
+Module: RH/QComplementZeroDimension.lean
+Namespace: RiemannResearch.RH.QComplementZeroDimension
+
+The requested finite upper bound on dim W remains **Open**. The new result
+is the sharp opposite-direction obstruction: if W has real dimension d,
+every finite family of distinct actual zeros with 1/2 < Re(s) < 1 has
+cardinality at most d. Consequently finite dimension of W, or surjectivity
+of the actual density coupling, forces finitely many such zeros.
+
+| Declaration | Exact content |
+|---|---|
+| powerCharacters_linearIndependent | The characters n^(1-s), indexed by distinct complex s, are independent over C |
+| normalizedMellin_linearIndependent | Actual continuous normalized Mellin functionals on Q are independent |
+| normalizedMellin_zero_on_closure | An actual right-hand zero annihilates the full all-conductor closure |
+| zeroFunctionals_linearIndependent | Their restrictions to W remain independent over C |
+| rightZero_family_card_le_finrank | Any finite distinct family of actual right-hand zeros has cardinality at most dim_R W, assuming W is finite-dimensional |
+| finite_rightZeros_of_finiteDimensional | Finite-dimensional W forces a finite actual right-hand zero set |
+| not_finiteDimensional_of_infinite_rightZeros | An infinite actual right-hand zero set forces infinite-dimensional W |
+| finite_rightZeros_of_coupling_surjective | Proposed surjectivity implies the same arithmetic finiteness conclusion |
+
+The proof uses the existing complete Q/P transfer, actual arithmetic Mellin
+formula and integer dilation identity. Dedekind character independence
+and the proved two/three logarithm argument supply independence. Restriction
+to W loses no information because the functionals vanish on V. Evaluation
+on a real basis of W gives the sharp complex dimension bound d, not 2d.
+No RH, zero-simplicity, RH-failure conjecture, spectral-synthesis assumption,
+or unproved analytic provider is used.
+
+This does not prove the converse from finitely many zeros to finite dimension.
+It also does not prove that the right-hand zero set is finite.
+The cited Hardy-space paper's zero-or-infinite conclusion assumes the
+RH-failure conjecture; it is not imported as an unconditional theorem.
+
+Sources: [Bagchi, Theorem 1](https://arxiv.org/abs/math/0607733) for the discrete
+space; [Calderaro--Manzur--Noor--Santos, Section 4](https://arxiv.org/html/2203.05030v4)
+for the related independent-zero-kernel strategy. The actual Q bridge is
+proved directly here.
+
+Candidate acceptance: job_1KAFEsq7-gDmcj6jYs6dl1gJM2H9FuPE,
+Bazel --config=buildbuddy, verified=true, exit_code=0,
+40.488 seconds server verification.
+[BuildBuddy log](https://app.buildbuddy.io/invocation/9a9fdf6b-e8d1-4f6f-b1e8-9805444a651f).
+This is a snippet receipt; publication requires the full-project checkpoint.
+
 ## Conditional research reductions
 
 | Declaration | Exact open premise | Conclusion |

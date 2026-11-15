@@ -87,6 +87,7 @@ import RiemannResearch.RH.QDensityLeakage
 import RiemannResearch.RH.QDensityLeakageQuantitative
 import RiemannResearch.Analysis.FiniteHeadSurjectivity
 import RiemannResearch.RH.QDensityCouplingSurjectivity
+import RiemannResearch.RH.QComplementZeroDimension
 import RiemannResearch.RH.QReciprocalNormalizedBalance
 import RiemannResearch.RH.QReciprocalBalanceCertificates
 import RiemannResearch.RH.QResidualDilationCorrelation
