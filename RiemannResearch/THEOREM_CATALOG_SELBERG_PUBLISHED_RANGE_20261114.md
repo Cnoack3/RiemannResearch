@@ -126,6 +126,38 @@ Baluyot's Lemma 3.1.5. The next estimates are the harmonic bound for the
 mass, the complete Weil bound, and the distinct Deshouillers–Iwaniec
 multilinear estimate of Lemma 3.1.6. None is assumed as an axiom.
 
+## Direct mollified-zeta vertical bounds (15 November 2026)
+
+**ConreyBaluyotMollifiedBoundary.lean** uses the actual fixed-parameter
+product F(s) = zeta(s) M(s) from Baluyot (1.2.6). The analytic parameter
+sigma in the coefficients is separate from the complex integration point.
+The mollifier is entire with its exact floor cutoff, and subtraction of
+the normalized n = 1 term leaves the original finite tail.
+
+The new theorems **exists_uniform_mollifiedZeta_right_decay** and
+**exists_uniform_mollifiedZeta_right_real_lower** prove the normalization
+used in (3.2.1). There is one D, independent of the height, y and sigma
+on the specified coupled strip, such that for Re s >= 2,
+
+$
+|F(s)-1|\le D\,2^{2-\operatorname{Re}s}.
+$
+
+A single fixed right line has Re F >= 1/2 on and to its right, uniformly
+in the ordinate and parameters. This supplies a nonzero right side for
+the Littlewood contour and a positive center value for the horizontal
+Jensen argument. Its proof uses the convergent real p=2 majorant, not an
+estimate on zeta near the critical line.
+
+**integral_log_mollifiedZeta_le_of_moment** proves the one-sided
+left-boundary transfer on any zero-free vertical segment at positive
+heights H <= T. An upper uncentered second moment at most T-H+E yields
+a logarithmic integral at most E/2. The interval integrability of both
+functions follows from analyticity and the domain condition. The
+uniform moment estimate, the quantitative horizontal term with
+boundary-limit treatment, the full Kloosterman estimates and the
+classical Ingham provider remain open in Lean.
+
 ## New proved components
 
 All declarations below are in `RiemannResearch.Analysis`.

@@ -31,19 +31,18 @@ https://maine-quebec.mat.ulaval.ca/CNTA_XV_website/docs/baluyot.pdf .
 The source parameter is theta = a/2, so every fixed 0 < a < 8/7 is allowed.
 There is no endpoint assertion at a = 8/7 and no uniformity in a.
 
-The conventional inclusive count here uses positive ordinates and actual
-analytic multiplicities. The cited all-sign count bounds this count with the
-same constant. Classical Selberg gives the exponent a = 1/4 uniformly over
-1/2 <= sigma <= 1, with C and the height threshold independent of sigma.
+Baluyot's count uses positive ordinates and the strict real-part cutoff.
+The repository's count retains actual analytic multiplicities and includes
+threshold copies. The left-limit transfer, including the total-count
+endpoint at 1/2, is proved in ActualSelbergDensityConventions.
+Classical Selberg gives a = 1/4 uniformly on 1/2 <= sigma <= 1.
 
-Formalization status (2026-11-14): the user has requested a complete analytic
-proof. The strict-to-inclusive count interface is now proved in
-`ActualSelbergDensityConventions`, including the endpoint at 1/2.
-The real-order Jordan arithmetic and supported finite optimization are proved
-in `SelbergRealJordanMollifier`. The uniform mollified zeta moment,
-Kloosterman-sum estimates and their analytic assembly remain unproved here.
-`ConreyBaluyotDensityHypothesis` remains a proposition passed explicitly,
-not an axiom or a proved provider. Constants may depend on a.
+As of 2026-11-15, the count conventions, dyadic assembly, truncated
+near-line assembly and reduction to the Ingham estimate are proved.
+The actual upper mollified moment, full Kloosterman estimates, horizontal
+boundary estimate and Ingham density estimate still need Lean providers.
+ConreyBaluyotDensityHypothesis is the explicit target proposition.
+Constants may depend on a.
 
 `ActualConreyBaluyotConsequences` uses the full open published range:
 every fixed frequency-band width b < 8/7 is allowed, and any positive
