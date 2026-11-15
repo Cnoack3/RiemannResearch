@@ -3,6 +3,33 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Normalized horizontal argument on zero-free segments (15 November 2026)
+
+**ConreyBaluyotHorizontalArgument.lean** constructs a continuous polar phase
+for every continuous nonvanishing complex function on a compact real interval.
+It uses a continuous logarithm on an open, simply connected interval and
+normalizes the phase to the principal argument at the right endpoint.
+
+For each fixed epsilon >= 0, the theorem
+**exists_uniform_mollifiedZeta_normalized_horizontal_argument** chooses
+uniform eta, Y, b >= 2 and C. Whenever y >= Y, sigma lies in the coupled
+strip, T >= b + 1, and the actual mollified zeta F has no zeros on
+[1/2,b] + iT, it constructs a continuous phase phi with
+
+  F(x+iT) = |F(x+iT)| exp(i phi(x)),
+  phi(b) = arg F(b+iT),
+  |phi(x) - phi(b)| <= pi (J(T,y) + 2),
+  |phi(x)| <= pi (J(T,y) + 3),
+
+where J(T,y) is the explicit logarithmic count in the following sections.
+It also bounds the norm of the horizontal integral from alpha to b by
+pi (J(T,y) + 3) |b-alpha| for every alpha in [1/2,b].
+
+The zero-free segment is an explicit hypothesis. Selection of arbitrarily
+nearby zero-free heights and passage through the Littlewood boundary limits
+remain to be formalized. The mollified moment, complete and multilinear
+Kloosterman estimates, and Ingham provider also remain open in Lean.
+
 ## Horizontal phase displacement from the real-zero count (15 November 2026)
 
 **ConreyBaluyotHorizontalPhase.lean** proves a general finite-crossing
@@ -22,8 +49,9 @@ on [1/2,b] obeys |phi(x) - phi(b)| <= pi (J(T,y) + 2), where J is
 the explicit logarithmic real-zero bound in the next section.
 
 The theorem assumes the continuous polar phase rather than constructing it.
-Existence on zero-free horizontal segments, normalization, the Littlewood
-boundary-limit passage, the mollified second moment, complete and multilinear
+The subsequent horizontal-argument module constructs and normalizes a phase
+on a zero-free segment. The selection of zero-free heights, Littlewood
+boundary-limit passage, mollified second moment, complete and multilinear
 Kloosterman estimates, and Ingham's density estimate remain open in Lean.
 
 ## Uniform count of horizontal real-part zeros (15 November 2026)
