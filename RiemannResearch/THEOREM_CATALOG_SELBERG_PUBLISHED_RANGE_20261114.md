@@ -3,6 +3,30 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## One mollifier at both dyadic boundaries (15 November 2026)
+
+**ConreyBaluyotDyadicHorizontalArgument.lean** strengthens the preceding
+good-height result to every nominal height U in [T,2T], with one fixed actual
+mollifier of length T^theta.
+
+For every fixed epsilon >= 0 and theta > 0,
+**exists_uniform_mollifiedZeta_dyadic_good_horizontal_argument** chooses
+eta, b >= 2, D > 0 and H uniformly. For each T >= H and each sigma in the
+coupled strip 1/2 + 1/log(T^theta) <= sigma <= 1/2 + eta, every U in
+[T,2T] and every 0 < delta <= 1/4 admit t with |t-U| < delta. On the
+segment [1/2,b]+it the actual product F is zero-free and has a continuous
+polar phase normalized by phi(b) = arg F(b+it), with
+
+  |integral_alpha^b phi(x) dx| <= D log T
+
+for all alpha in [1/2,b]. In particular the result applies near both T and
+2T without changing sigma, epsilon or the mollifier length T^theta.
+
+This is an unconditional Lean proof of the good-height horizontal bound.
+The Littlewood zero-count contour identity and its boundary-limit passage
+remain open, as do the mollified moment, the complete and multilinear
+Kloosterman estimates, and the Ingham density provider.
+
 ## Uniform horizontal argument on nearby good heights (15 November 2026)
 
 **ConreyBaluyotGoodHorizontalArgument.lean** assembles the normalized phase
