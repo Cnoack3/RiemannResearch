@@ -1270,3 +1270,53 @@ https://app.buildbuddy.io/invocation/f78582d6-e538-4a7d-8b3e-2914c0aab8f5
 
 Publication additionally requires the full incremental `//:RiemannResearch`
 checkpoint. The Compact Orbit Site records that terminal receipt and commit.
+
+## Recovered continuation: exact Littlewood identity (15 November 2026)
+
+The inaccessible chat's results were recovered from published main through
+`035293716a82df7806fc46fc8fed6a6e56b658c6`. In particular, its proposed
+continuous-logarithm improvement was already published in
+`f026eb9a57ebcbda4a83d7ab7a0bbcec358dd90c`:
+**exists_uniform_mollifiedZeta_normalized_horizontal_argument** constructs
+the phase from nonvanishing, and later commits supply nearby good heights
+and zero-free dyadic rectangles. These results were preserved.
+
+The new continuation adds:
+
+- **Complex.exists_logRectangleBoundary_eq_weighted_zeros**,
+  in namespace `Complex`: the full signed Littlewood boundary equals
+  (2 pi) times the weighted analytic zero mass, for compatible logarithm
+  lifts of any analytic function with zero-free rectangle border.
+- **exists_mollifiedZeta_littlewood_identity_with_remainder**: for the actual
+  Baluyot product (F=zeta M), this is exactly
+  `L = 2*pi*(Z_zeta + Z_M)`, where each weighted mass sums the analytic
+  multiplicity times `Re(rho)-a`. The theorem also proves `Z_M >= 0`.
+- **exists_mollifiedZeta_littlewood_count_bound**: the same compatible lifts
+  work simultaneously for every `alpha > a`, giving
+  `N_Z(alpha) <= (L/(2*pi) - Z_M)/(alpha-a)`.
+  Here Z is exactly the product-zero set in the rectangle and N_Z sums zeta's
+  analytic multiplicities on its points with `Re(rho) >= alpha`. All zeta
+  zeros in the rectangle belong to Z; a nonzero value of zeta has order zero.
+  The entire nonnegative mollifier correction is retained.
+- **exists_uniform_dyadic_littlewood_identity**: the exact identity on
+  rectangles with heights arbitrarily close to T and 2T, with one fixed
+  mollifier of length `T^theta`. For each `epsilon >= 0` and `theta > 0`,
+  the strip constants and height threshold are uniform. The theorem constructs
+  both the zero-free boundary and the compatible lifts.
+
+**Current proof boundary.** The exact compatible-lift Littlewood identity is
+now proved, including its dyadic existence specialization. Older checkpoint
+paragraphs above that list this conversion as open describe earlier states.
+The O(log T) bounds already proved for phases independently normalized at b
+do not automatically apply to these compatible lifts. Relating the two,
+including any right-edge winding/endpoint correction, remains open.
+Vertical quantitative estimates, limiting boundary passages, the actual
+mollified moment, complete/multilinear Kloosterman estimates, and the full
+density provider remain separate obligations. No proof of RH is claimed.
+
+Verification uses the managed Bazel/BuildBuddy checkpoint for all new modules.
+The recovery note
+`CONREY_BALUYOT_RECOVERY_20261115.md` records the source history and next check.
+
+The publication integration also preserves the newer dyadic contour-count
+commit `928d4bb84010012b47ba1e75eef7ab9446da4fb2`.
