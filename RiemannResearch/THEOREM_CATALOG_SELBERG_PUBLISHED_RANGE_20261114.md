@@ -3,6 +3,32 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Uniform count of horizontal real-part zeros (15 November 2026)
+
+**ConreyBaluyotHorizontalRealZeros.lean** proves that every distinct zero of
+a nontrivial analytic function in a closed disk contributes a positive
+integer to its divisor. It then bounds the cardinality of a finite set of
+such zeros by the divisor sum and applies the Jensen estimate to real-part
+zeros on a horizontal segment.
+
+For each fixed epsilon >= 0, the theorem
+**exists_uniform_mollifiedZeta_horizontalRealZeros_bound** supplies eta, Y,
+b >= 2 and C uniformly. For y >= Y, 1/2 + 1/log y <= sigma <= 1/2 + eta
+and T >= b + 1, the set of x in [1/2,b] where
+
+  Re(zeta(x+iT) M_{sigma,y,epsilon}(x+iT)) = 0
+
+is finite. Its cardinality is at most
+
+  log(2 (1 + C (T + b - 1/4) y)) /
+    log((b - 1/4) / (b - 1/2)).
+
+This proves the real-part zero-count step, including finiteness, uniformly on
+the coupled strip. It does not construct a continuous argument or bound its
+variation, control boundary limits, prove the mollified second moment, supply
+the complete or multilinear Kloosterman estimates, or prove Ingham's density
+estimate.
+
 ## Jensen divisor bound for the actual mollified zeta (15 November 2026)
 
 **ConreyBaluyotMollifiedJensen.lean** constructs the holomorphic
@@ -21,7 +47,8 @@ the closed disk centered at b of radius r is at most
 
 The actual theorem assumes y >= Y, 1/2 + 1/log y <= sigma <= 1/2 + eta,
 and T >= b + 1. Its output is the finite Jensen divisor sum, not a formalized
-cardinality or argument-variation estimate. The passage from this bound to
+cardinality or argument-variation estimate. The separate horizontal-real-zero
+module subsequently proves the cardinality bound. The passage to
 the horizontal argument term, including zero-free segment and limiting
 conditions, remains open. The mollified moment, complete and multilinear
 Kloosterman estimates, and Ingham provider also remain open in Lean.
