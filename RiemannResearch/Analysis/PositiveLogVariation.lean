@@ -100,4 +100,86 @@ theorem log_ratio_tendsto_zero_of_positiveVariation
         _ = _ := add_div _ _ _
     exact hratio.trans_lt hup
 
+
+/-!
+## Comparison with positive relative energy increments
+
+Source: `CanonicalRefinementVariationResearch20261107.md`, the paper
+comparison following the conditional RH criterion. These are ordinary
+finite inequalities; they supply no estimate for the arithmetic sequence.
+-/
+
+/-- For nonnegative energies, a positive logarithmic increment is bounded by
+the positive relative energy increment. The old energy must be positive. -/
+theorem positive_log_increment_le_relative (x y : ℝ) (hx : 0 < x)
+    (hy : 0 ≤ y) :
+    max (Real.log (1 + y) - Real.log (1 + x)) 0 ≤ max (y / x - 1) 0 := by
+  by_cases hxy : y ≤ x
+  · have hlog : Real.log (1 + y) ≤ Real.log (1 + x) :=
+      Real.log_le_log (by linarith) (by linarith)
+    rw [max_eq_right (by linarith : Real.log (1 + y) - Real.log (1 + x) ≤ 0)]
+    exact le_max_right _ _
+  · have hxy' : x ≤ y := le_of_lt (lt_of_not_ge hxy)
+    have hr : (1 + y) / (1 + x) ≤ y / x := by
+      apply (div_le_div_iff₀ (by linarith : 0 < 1 + x) hx).2
+      nlinarith
+    have hlog := Real.log_le_sub_one_of_pos
+      (div_pos (by linarith : 0 < 1 + y) (by linarith : 0 < 1 + x))
+    rw [Real.log_div (by linarith : 1 + y ≠ 0) (by linarith : 1 + x ≠ 0)] at hlog
+    apply max_le_max _ le_rfl
+    linarith
+
+/-- The cumulative positive relative increment budget. -/
+def positiveRelativeVariation (E : ℕ → ℝ) (N : ℕ) : ℝ :=
+  ∑ n ∈ Finset.range N, max (E (n + 1) / E n - 1) 0
+
+theorem positiveRelativeVariation_nonneg (E : ℕ → ℝ) (N : ℕ) :
+    0 ≤ positiveRelativeVariation E N := by
+  unfold positiveRelativeVariation
+  exact Finset.sum_nonneg (fun n _ => le_max_right _ _)
+
+/-- The finite comparison retains all decreases by taking positive parts on
+both sides before summing. -/
+theorem positiveVariation_log_one_add_le_relative (E : ℕ → ℝ)
+    (hE : ∀ n, 0 < E n) (N : ℕ) :
+    positiveVariation (fun n => Real.log (1 + E n)) N ≤
+      positiveRelativeVariation E N := by
+  unfold positiveVariation positiveRelativeVariation
+  exact Finset.sum_le_sum (fun n _ =>
+    positive_log_increment_le_relative (E n) (E (n + 1)) (hE n) (hE (n + 1)).le)
+
+/-- Sublogarithmic cumulative positive relative increments imply the
+positive-logarithmic-variation hypothesis. -/
+theorem positiveVariation_ratio_tendsto_zero_of_relative
+    (x E : ℕ → ℝ) (hx : Tendsto x atTop atTop) (hE : ∀ n, 0 < E n)
+    (hrelative : Tendsto
+      (fun N => positiveRelativeVariation E N / Real.log (x N)) atTop (𝓝 0)) :
+    Tendsto (fun N => positiveVariation (fun n => Real.log (1 + E n)) N /
+      Real.log (x N)) atTop (𝓝 0) := by
+  have hx2 : ∀ᶠ N : ℕ in atTop, 2 ≤ x N :=
+    hx.eventually (eventually_ge_atTop 2)
+  apply tendsto_order.2
+  constructor
+  · intro a ha
+    filter_upwards [hx2] with N hN
+    exact ha.trans_le (div_nonneg (positiveVariation_nonneg _ _)
+      (Real.log_nonneg (by linarith)))
+  · intro b hb
+    filter_upwards [hx2, hrelative.eventually (gt_mem_nhds hb)] with N hN hrel
+    apply lt_of_le_of_lt _ hrel
+    exact div_le_div_of_nonneg_right
+      (positiveVariation_log_one_add_le_relative E hE N)
+      (Real.log_nonneg (by linarith))
+
+/-- The relative-increment criterion also forces subpolynomial energy. -/
+theorem log_ratio_tendsto_zero_of_positiveRelativeVariation
+    (x E : ℕ → ℝ) (hx : Tendsto x atTop atTop) (hE : ∀ n, 0 < E n)
+    (hrelative : Tendsto
+      (fun N => positiveRelativeVariation E N / Real.log (x N)) atTop (𝓝 0)) :
+    Tendsto (fun N => Real.log (1 + E N) / Real.log (x N))
+      atTop (𝓝 0) :=
+  log_ratio_tendsto_zero_of_positiveVariation x E hx (fun n => (hE n).le)
+    (positiveVariation_ratio_tendsto_zero_of_relative x E hx hE hrelative)
+
+
 end Real

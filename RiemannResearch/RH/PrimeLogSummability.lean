@@ -1,4 +1,4 @@
-import Mathlib.NumberTheory.Chebyshev
+import RiemannResearch.NumberTheory.PrimeReciprocalBounds
 import Mathlib.Analysis.PSeries
 import Mathlib.Data.Nat.Log
 import Mathlib.Tactic.FieldSimp
@@ -19,44 +19,6 @@ not assume a smooth-number gap theorem and does not assert one.
 open scoped BigOperators
 namespace RiemannResearch.RH.Pareto
 noncomputable section
-
-/-- Exact dyadic cardinality estimate, retaining the natural dyadic index. -/
-theorem prime_dyadic_card_mul_le (s : Finset ℕ) (j : ℕ)
-    (hs : ∀ p ∈ s, p.Prime ∧ 2^j ≤ p ∧ p ≤ 2^(j+1)) :
-    (s.card : ℝ) * j ≤ 4 * (2 : ℝ)^j := by
-  have hlog2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
-  have hlo : (s.card : ℝ) * ((j : ℝ) * Real.log 2) ≤
-      ∑ p ∈ s, Real.log (p : ℝ) := by
-    calc
-      _ = ∑ _p ∈ s, (j : ℝ) * Real.log 2 := by simp
-      _ ≤ _ := by
-        apply Finset.sum_le_sum
-        intro p hp
-        have h := Real.log_le_log (by positivity : 0 < (2 : ℝ)^j)
-          (show (2 : ℝ)^j ≤ (p : ℝ) by exact_mod_cast (hs p hp).2.1)
-        simpa only [Real.log_pow] using h
-  have hsum : (∑ p ∈ s, Real.log (p : ℝ)) ≤
-      Chebyshev.theta ((2^(j+1) : ℕ) : ℝ) := by
-    rw [Chebyshev.theta_eq_sum_Icc]
-    simp only [Nat.floor_natCast]
-    apply Finset.sum_le_sum_of_subset_of_nonneg
-    · intro p hp
-      exact Finset.mem_filter.mpr
-        ⟨Finset.mem_Icc.mpr ⟨Nat.zero_le _, (hs p hp).2.2⟩, (hs p hp).1⟩
-    · intro p hp _
-      exact Real.log_nonneg (by exact_mod_cast
-        (Finset.mem_filter.mp hp).2.one_lt.le)
-  have htheta := Chebyshev.theta_le_log4_mul_x
-    (by positivity : 0 ≤ ((2^(j+1) : ℕ) : ℝ))
-  have hlog4 : Real.log 4 = 2 * Real.log 2 := by
-    rw [show (4 : ℝ) = 2^2 by norm_num, Real.log_pow]
-    norm_num
-  have hall := le_trans hlo (le_trans hsum htheta)
-  rw [hlog4] at hall
-  push_cast at hall
-  rw [pow_succ] at hall
-  apply (mul_le_mul_iff_of_pos_right hlog2).mp
-  nlinarith
 
 /-- The complete contribution of any finite collection of primes in a dyadic
 block; no asymptotic prime-counting hypothesis is introduced. -/
@@ -79,7 +41,7 @@ theorem prime_dyadic_weight_sum_le (s : Finset ℕ) (j : ℕ)
     _ ≤ 4 / (j : ℝ)^(1+ε) := by
       rw [Real.rpow_one_add' hjR.le (by linarith)]
       apply (div_le_div_iff₀ (mul_pos h2pow hjpow) (mul_pos hjR hjpow)).2
-      have hc := prime_dyadic_card_mul_le s j hs
+      have hc := RiemannResearch.NumberTheory.PrimeReciprocalBounds.prime_dyadic_card_mul_le s j hs
       nlinarith [mul_le_mul_of_nonneg_right hc hjpow.le]
 
 /-- A finite bound valid simultaneously for every choice of prime set. -/
