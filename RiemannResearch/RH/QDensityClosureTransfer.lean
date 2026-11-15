@@ -3,9 +3,13 @@ import RiemannResearch.RH.QReciprocalFullDensity
 import RiemannResearch.RH.QDensityAugmentedSpan
 import RiemannResearch.RH.QFullResidueProjection
 import RiemannResearch.RH.QOptimizerParityRH
+import RiemannResearch.RH.QParetoEquivalence
 import RiemannResearch.RH.QDensityMetric
 import RiemannResearch.RH.QReciprocalMetric
 import RiemannResearch.RH.QShiftedReciprocal
+import RiemannResearch.RH.ZetaTwoParetoTransfer
+import Mathlib.Analysis.InnerProductSpace.Continuous
+import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.Topology.Algebra.Module.ClosedSubmodule
 import Lean.Elab.Tactic.Omega
 
@@ -22,7 +26,7 @@ rather than silently supplied as a consequence of change of measure.
 noncomputable section
 namespace RiemannResearch.RH.QDensityClosureTransfer
 open ZetaTwoHilbert ZetaTwoProbability QDensityMetric QReciprocalMetric
-open QDensityMetricInverse QFullResidueProjection
+open QDensityMetricInverse QFullResidueProjection QParetoEquivalence ZetaTwoParetoTransfer
 local notation "R" => QShiftedReciprocal.B
 
 theorem map_legalSpan (T : QHilbert →ₗ[ℝ] QHilbert) :
@@ -43,6 +47,37 @@ theorem full_D_map_dense :
     (legalSpan.map D.toLinearMap).topologicalClosure = ⊤ := by
   rw [map_legalSpan]
   exact QReciprocalFullDensity.fullReciprocalClosure_eq_top
+
+/-- The P and Q orthogonal complements of the full residue closure intersect trivially.
+Pull the P complement back along the sequence-preserving map to the Q space. -/
+theorem full_joint_orthogonal_eq_bot :
+    closureᗮ ⊓ Submodule.comap toParetoLinear (closure.map toParetoLinear)ᗮ = ⊥ := by
+  apply le_antisymm ?_ bot_le
+  intro f hf
+  rw [Submodule.mem_bot]
+  let pairing := innerSL ℝ (toPareto f)
+  have hspan : (legalSpan.map D.toLinearMap).map toParetoLinear ≤ pairing.ker := by
+    rintro _ ⟨_, ⟨g, hg, rfl⟩, rfl⟩
+    have hgV : g ∈ closure := legalSpan.le_topologicalClosure hg
+    have hQ : inner ℝ g f = 0 :=
+      Submodule.inner_right_of_mem_orthogonal hgV hf.1
+    have hgP : toPareto g ∈ closure.map toParetoLinear := ⟨g, hgV, rfl⟩
+    have hP : inner ℝ (toPareto g) (toPareto f) = 0 :=
+      Submodule.inner_right_of_mem_orthogonal hgP hf.2
+    have hD := QReciprocalMetric.q_inner_identity g f
+    rw [hQ, hP, zero_add] at hD
+    change inner ℝ (toPareto f) (toPareto (D g)) = 0
+    rw [real_inner_comm]
+    exact (mul_eq_zero.mp hD.symm).resolve_left (div_ne_zero one_ne_zero zetaTwo_pos.ne')
+  have hdense : ((legalSpan.map D.toLinearMap).map toParetoLinear).topologicalClosure = ⊤ := by
+    rw [map_legalSpan]
+    exact QReciprocalFullDensity.pareto_fullReciprocalClosure_eq_top
+  have hker := Submodule.topologicalClosure_minimal _ hspan pairing.isClosed_ker
+  rw [hdense] at hker
+  have hself : inner ℝ (toPareto f) (toPareto f) = 0 := hker (by trivial)
+  apply paretoEquiv.injective
+  rw [map_zero, paretoEquiv_apply]
+  exact (inner_self_eq_zero (𝕜 := ℝ)).mp hself
 
 /-- Full R-density follows from full D-density via the bounded inverse density. -/
 theorem full_R_map_dense :

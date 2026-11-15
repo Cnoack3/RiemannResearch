@@ -53,6 +53,7 @@ Here S=QFullResidueProjection.legalSpan and V=QFullResidueProjection.closure.
 |---|---|
 | map_legalSpan | Operator image of S equals the corresponding generator span |
 | full_D_map_dense | cl(D S)=H, from the existing full-conductor theorem |
+| full_joint_orthogonal_eq_bot | U_P ∩ U_Q = {0} for the full conductor span, with both complements realized in Q coordinates |
 | full_R_map_dense | cl(R S)=H |
 | full_augmentedClosure_eq_top | cl span{g_k,Bg_k}=H |
 | densityClosure_eq_image | cl(B S)=B(V) |
@@ -63,6 +64,11 @@ Here S=QFullResidueProjection.legalSpan and V=QFullResidueProjection.closure.
 
 Full R-density is transferred by B inverse D=zeta(2)R, not by inverting D.
 The complete P statements follow from the sequence-preserving equivalence and equivalent norms.
+
+For `full_joint_orthogonal_eq_bot`, let `U_v` be the orthogonal complement of the same
+physical full-conductor span in measure `v`. Orthogonality in both measures gives
+`<D g_k,f>_P=0` by the exact change-of-weight identity. The reciprocal density
+proved by the finite sieve in `QReciprocalFullDensity` then forces `f=0`.
 
 ## Density-coupling surjectivity continuation (2026-11-14)
 
