@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.CompressionVariance
+import RiemannResearch.RH.QDensityCouplingVariance
 import RiemannResearch.Analysis.ComplexLogLiftUniqueness
 import RiemannResearch.RH.PrimorialCoefficientObstruction
 import RiemannResearch.RH.PrimorialDensityLowerBound

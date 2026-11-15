@@ -12,6 +12,14 @@ equivalence, normalized signed budget, residual correlations, leakage/parity
 criteria, canonical CRT norm escape, and the conditional analytic converse.
 The explicit analytic approximation provider and the arithmetic bounds remain Open.
 
+## Operator-variance continuation
+
+The [coupling-variance catalog](THEOREM_CATALOG_COUPLING_VARIANCE_20261115.md)
+records C* C = Phi(B^2) - Phi(B)^2, the exact total-variance decomposition,
+and zero variance iff full unaugmented density. Actual zero variance remains
+Open. A uniform positive gap for C C* is equivalent to finite-dimensionality
+of the Q complement; that gap also remains Open.
+
 ## Notation and scope
 
 For physical n >= 1:
