@@ -67,6 +67,35 @@ The mathematical theorem for 0 < a < 8/7 is proved unconditionally in Baluyot,
 Theorem 1.2.1 and §3.6. The derived away-line comparison through a < 4/3
 does not extend that theorem's near-line exponent range.
 
+## Near-line assembly on Baluyot's truncated strip (15 November 2026)
+
+**ActualSelbergTruncatedNearLine.lean** proves
+**uniformSelbergDensity_of_truncated_near_excess_and_ingham** in the
+**RiemannResearch.Analysis.ActualZeroOrdinate** namespace. It accepts the
+actual weighted excess estimate on the strip
+
+$
+1/2 + A / \log T \le \alpha \le 1/2 + \eta
+$
+
+at window (T/2, T], with the additional boundary cost E log T from
+Baluyot's Lemma 3.2.1. The output is **UniformSelbergDensity a** for
+0 < a < 4/3 and a eta < 1, given the explicit near estimate and Ingham
+providers. For the source's window (U, 2U] and y = U^theta, the cutoff is
+1/log y <= 2/(theta log T) at T = 2U >= 4, so A = 2/theta suffices.
+
+The exact existing shifted-window identity is applied at
+alpha = sigma - 1/(a log T). If (sigma - 1/2) log T <= A + 1/a,
+unconditional total counting gives the required uniform bound. Otherwise
+the shifted alpha lies in the analytic strip. The additional a E (log T)^2
+is bounded by (a E / (1 - a eta)) times the target power-log kernel, and the
+loss from the shift itself is exactly the factor e. The away-line part uses
+**exists_selberg_far_windows_of_ingham**. This matches the one-sided source
+moment's usable domain, without requiring an estimate at the critical line.
+
+The actual uniform weighted excess estimate, its moment and Kloosterman
+inputs, and a kernel proof of **InghamDensityBound** remain open.
+
 ## New proved components
 
 All declarations below are in `RiemannResearch.Analysis`.
