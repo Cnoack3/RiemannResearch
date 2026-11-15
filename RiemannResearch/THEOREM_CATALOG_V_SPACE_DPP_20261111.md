@@ -104,6 +104,12 @@ The new transfer consists of:
 - `Analysis/InfiniteTorusCharacters.lean`: continuous finite-coordinate
   Laurent characters on an arbitrary product of circles, their finite
   coordinate dependence, and uniform density by complex Stone-Weierstrass.
+  `CompactCharacter.modeCharacter` indexes the same character family by
+  `ι →₀ ℤ`, adding exponents at repeated coordinates. `range_modeCharacter`
+  proves exact agreement with the word family. `modeCharacters_dense` gives
+  the dense span in the finitely supported indexing, including mixed modes.
+  The zero, addition, conjugation, and separation laws hold on every product
+  of circles.
 - `Analysis/CompactGaugeOrbitLaw.lean`: weak convergence of the full
   prime-torus laws and their norm-continuous Hilbert-orbit pushforwards;
   convergence of uncentered and centered covariance pairings; positivity

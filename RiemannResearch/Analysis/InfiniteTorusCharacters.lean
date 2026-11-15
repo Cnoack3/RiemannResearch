@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Circle
+import Mathlib.Algebra.BigOperators.Finsupp.Basic
 import Mathlib.Topology.ContinuousMap.StoneWeierstrass
 
 /-!
@@ -116,5 +117,87 @@ theorem characters_dense :
   have h := ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints
     (polynomials ι) polynomials_separate
   exact congrArg (fun A : StarSubalgebra ℂ C(Torus ι, ℂ) => A.toSubalgebra.toSubmodule) h
+
+@[simp] theorem coordinatePower_zero (i : ι) : coordinatePower i 0 = 1 := by
+  ext z
+  change ((z i ^ (0 : ℤ) : Circle) : ℂ) = 1
+  simp
+
+theorem coordinatePower_add (i : ι) (a b : ℤ) :
+    coordinatePower i (a + b) = coordinatePower i a * coordinatePower i b := by
+  ext z
+  change (↑(z i ^ (a + b)) : ℂ) = ↑(z i ^ a) * ↑(z i ^ b)
+  rw [zpow_add]
+  rfl
+
+/-- The joint character indexed by the net integer exponent at each coordinate. -/
+def modeCharacter (k : ι →₀ ℤ) : C(Torus ι, ℂ) :=
+  k.prod coordinatePower
+
+@[simp] theorem modeCharacter_zero : modeCharacter (0 : ι →₀ ℤ) = 1 := by
+  simp [modeCharacter]
+
+@[simp] theorem modeCharacter_single (i : ι) (k : ℤ) :
+    modeCharacter (Finsupp.single i k) = coordinatePower i k := by
+  classical
+  exact Finsupp.prod_single_index (coordinatePower_zero i)
+
+@[simp] theorem modeCharacter_add (k l : ι →₀ ℤ) :
+    modeCharacter (k + l) = modeCharacter k * modeCharacter l := by
+  classical
+  exact Finsupp.prod_add_index (fun i _ => coordinatePower_zero i)
+    (fun i _ a b => coordinatePower_add i a b)
+
+/-- Combine repeated coordinates by adding their exponents. -/
+def wordExponents : List (ι × ℤ) → ι →₀ ℤ
+  | [] => 0
+  | (i, k) :: s => Finsupp.single i k + wordExponents s
+
+@[simp] theorem modeCharacter_wordExponents (s : List (ι × ℤ)) :
+    modeCharacter (wordExponents s) = character s := by
+  induction s with
+  | nil => exact modeCharacter_zero
+  | cons a s ih =>
+    rcases a with ⟨i, k⟩
+    simp [wordExponents, character, ih]
+
+theorem exists_wordExponents (k : ι →₀ ℤ) : ∃ s, wordExponents s = k := by
+  classical
+  induction k using Finsupp.induction with
+  | zero => exact ⟨[], rfl⟩
+  | single_add i a f hi ha ih =>
+    obtain ⟨s, rfl⟩ := ih
+    exact ⟨(i, a) :: s, rfl⟩
+
+theorem star_modeCharacter (k : ι →₀ ℤ) :
+    star (modeCharacter k) = modeCharacter (-k) := by
+  obtain ⟨s, rfl⟩ := exists_wordExponents k
+  rw [modeCharacter_wordExponents, star_character, ← modeCharacter_wordExponents]
+  congr 1
+  induction s with
+  | nil => simp [wordExponents]
+  | cons a s ih =>
+    rcases a with ⟨i, k⟩
+    simp [wordExponents, ih, add_comm]
+
+theorem modeCharacters_separate {x y : Torus ι} (h : x ≠ y) :
+    ∃ k : ι →₀ ℤ, modeCharacter k x ≠ modeCharacter k y := by
+  obtain ⟨i, hi⟩ := Function.ne_iff.mp h
+  exact ⟨Finsupp.single i 1, by simpa [coordinatePower, Circle.coe_inj] using hi⟩
+
+theorem range_modeCharacter :
+    Set.range (modeCharacter (ι := ι)) = Set.range (character (ι := ι)) := by
+  ext f
+  constructor
+  · rintro ⟨k, rfl⟩
+    obtain ⟨s, rfl⟩ := exists_wordExponents k
+    exact ⟨s, (modeCharacter_wordExponents s).symm⟩
+  · rintro ⟨s, rfl⟩
+    exact ⟨wordExponents s, modeCharacter_wordExponents s⟩
+
+theorem modeCharacters_dense :
+    (Submodule.span ℂ (Set.range (modeCharacter (ι := ι)))).topologicalClosure = ⊤ := by
+  rw [range_modeCharacter]
+  exact characters_dense
 
 end RiemannResearch.Analysis.CompactCharacter
