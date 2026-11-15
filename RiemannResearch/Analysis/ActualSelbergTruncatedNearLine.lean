@@ -53,7 +53,7 @@ private theorem log_le_density_power_div {T a η σ : ℝ} (hT : 1 ≤ T) (ha : 
 original logarithmic error. An independently proved Ingham estimate supplies
 the away-line windows. Both bounds remain explicit hypotheses. -/
 theorem uniformSelbergDensity_of_truncated_near_excess_and_ingham
-    {a η A : ℝ} (ha : 0 < a) (ha' : a < 4 / 3) (hη : 0 < η) (hp : 0 < 1 - a * η)
+    {a η A : ℝ} (ha : 0 < a) (ha' : a ≤ 4 / 3) (hη : 0 < η) (hp : 0 < 1 - a * η)
     (hI : InghamDensityBound)
     (hnear : ∃ D E H : ℝ, 0 ≤ D ∧ 0 ≤ E ∧ 1 < H ∧
       ∀ T : ℝ, H ≤ T → ∀ α ∈ Icc (1 / 2 + A / Real.log T) (1 / 2 + η),
