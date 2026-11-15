@@ -3,6 +3,32 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Unconditional dyadic rectangle count in terms of the contour (15 November 2026)
+
+**ConreyBaluyotDyadicCount.lean** combines the actual zero-free rectangle
+construction, its two horizontal phase bounds, and the zeta-zero count bound.
+The theorem **exists_uniform_dyadic_zeta_rectangle_count_bound** holds for
+fixed epsilon >= 0 and theta > 0, all sufficiently large T, and sigma in the
+established coupled strip. It chooses t1 near T and t2 near 2T, and vertical
+sides l < alpha < beta < r within [1/2,b], with a zero-free border for one
+fixed mollifier of length T^theta. Its finite set Z is exactly the zeta zeros
+in the selected closed rectangle, and it proves
+
+  (alpha - l) sum_{rho in Z, Re rho >= alpha} ord_rho(zeta)
+    <= Re[(1/(2 pi i)) integral_boundary (s - l) F'(s)/F(s) ds].
+
+Both horizontal normalized phase integrals retain their D log T bound.
+An exact seven-declaration axiom guard (BuildBuddy invocation
+0a7ef826-72d2-47b3-a1b5-5829eed46c2c) checked the dyadic horizontal theorem,
+weighted rectangle identity, zeta weighted-zero and margin bounds, general
+zero-free border, dyadic rectangle construction, and this count theorem;
+only propext, Classical.choice, and Quot.sound occur.
+
+The count bound retains the actual contour integral; it is not yet an
+unconditional numerical zero-density estimate. Conversion to logarithmic
+and phase integrals, bounds on vertical sides and boundary limits, the
+mollified second moment, Kloosterman inputs, and Ingham remain separate.
+
 ## Dyadic zero-free rectangles for one actual mollifier (15 November 2026)
 
 **ConreyBaluyotDyadicRectangle.lean** combines the fixed-mollifier dyadic
