@@ -97,17 +97,18 @@ theorem exists_uniform_dyadic_mollifiedZeta_zero_free_rectangle
 
 /-- The same anchor works for an outward rectangle: its horizontal edges
 lie strictly below T and above 2T, so no limiting passage is needed to cover
-the closed dyadic height window. The mollifier remains fixed at T^theta. -/
+the closed dyadic height window. The left edge may be selected inside any
+prescribed nonempty interval above 1/2. The mollifier remains fixed at T^theta. -/
 theorem exists_uniform_dyadic_mollifiedZeta_outward_anchor_rectangle
     {ε θ : ℝ} (hε : 0 ≤ ε) (hθ : 0 < θ) :
     ∃ η b D H : ℝ, 0 < η ∧ η < 1 / 4 ∧ 2 ≤ b ∧ 0 < D ∧ b + 2 ≤ H ∧
       ∀ T : ℝ, H ≤ T → ∀ σ : ℝ,
         1 / 2 + 1 / Real.log (T ^ θ) ≤ σ → σ ≤ 1 / 2 + η →
-          ∀ δ : ℝ, 0 < δ → δ ≤ 1 / 4 → ∀ α : ℝ,
-            1 / 2 < α → α < b →
+          ∀ δ : ℝ, 0 < δ → δ ≤ 1 / 4 → ∀ a α : ℝ,
+            1 / 2 ≤ a → a < α → α < b →
               ∃ t₁ t₂ l : ℝ, T - δ < t₁ ∧ t₁ < T ∧
                 2 * T < t₂ ∧ t₂ < 2 * T + δ ∧
-                1 / 2 < l ∧ l < α ∧ 0 < t₁ ∧ t₁ < t₂ ∧
+                1 / 2 < l ∧ a < l ∧ l < α ∧ 0 < t₁ ∧ t₁ < t₂ ∧
                 (∀ s ∈ RectangleBorder ((l : ℂ) + (t₁ : ℂ) * I)
                     ((b : ℂ) + (t₂ : ℂ) * I),
                   mollifiedZeta σ (T ^ θ) ε s ≠ 0) ∧
@@ -118,7 +119,7 @@ theorem exists_uniform_dyadic_mollifiedZeta_outward_anchor_rectangle
   obtain ⟨η, b, D, H, hη, hη', hb, hD, hH, hanchor, hdyadic⟩ :=
     exists_uniform_mollifiedZeta_dyadic_good_horizontal_argument hε hθ
   refine ⟨η, b, D, H, hη, hη', hb, hD, hH, ?_⟩
-  intro T hT σ hσ hση δ hδ hδ' α hα hαb
+  intro T hT σ hσ hση δ hδ hδ' a α ha hα hαb
   have hT0 : 0 < T := by linarith
   obtain ⟨t₁, ht₁, hfree₁, φ₁, hφ₁, hφb₁, hrep₁, hint₁⟩ :=
     hdyadic T hT σ hσ hση (T - δ / 2)
@@ -152,10 +153,11 @@ theorem exists_uniform_dyadic_mollifiedZeta_outward_anchor_rectangle
     exact analyticAt_mollifiedZeta σ (T ^ θ) ε hsne
   have hz : F z ≠ 0 := by
     simpa [F, z] using hfree₁ (1 / 2) ⟨le_rfl, by linarith⟩
-  obtain ⟨l, hl, hlα, hleft⟩ :=
+  obtain ⟨l, hal, hlα, hleft⟩ :=
     exists_zero_free_vertical_of_nontrivial_rectangle F hre him hf
-      (left_mem_rect z w) hz (1 / 2) α (by simp [z]) hα
+      (left_mem_rect z w) hz a α (by simpa [z] using ha) hα
       (by simpa [w] using hαb.le)
+  have hl : 1 / 2 < l := ha.trans_lt hal
   have hlb : l ≤ b := by linarith
   have hr : ∀ t ∈ Icc t₁ t₂, F ((b : ℂ) + (t : ℂ) * I) ≠ 0 := by
     intro t _ he
@@ -163,7 +165,7 @@ theorem exists_uniform_dyadic_mollifiedZeta_outward_anchor_rectangle
     change (1 / 2 : ℝ) ≤ (F ((b : ℂ) + (t : ℂ) * I)).re at hh
     rw [he] at hh
     norm_num at hh
-  refine ⟨t₁, t₂, l, ht₁lo, ht₁hi, ht₂lo, ht₂hi, hl, hlα,
+  refine ⟨t₁, t₂, l, ht₁lo, ht₁hi, ht₂lo, ht₂hi, hl, hal, hlα,
     ht₁pos, htt, ?_, hanchor T hT σ hσ hση,
     ⟨φ₁, hφ₁, hφb₁, hrep₁, hint₁⟩,
     ⟨φ₂, hφ₂, hφb₂, hrep₂, hint₂⟩⟩

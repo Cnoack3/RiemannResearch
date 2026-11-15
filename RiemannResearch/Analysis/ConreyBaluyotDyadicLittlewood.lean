@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.ConreyBaluyotLittlewood
+import RiemannResearch.Analysis.ConreyBaluyotRightBoundary
 import RiemannResearch.Analysis.ComplexLogLiftUniqueness
 import RiemannResearch.Analysis.ConreyBaluyotDyadicRectangle
+import RiemannResearch.RH.WeilExplicitFormula.RvM.ZetaGrowth
 import Mathlib.Tactic.Linarith
 
 /-!
@@ -17,6 +19,8 @@ horizontal edges. On the positive-real right anchor, covering-map uniqueness
 identifies the compatible logarithm lifts with the bounded normalized phases.
 Outward good heights cover the closed dyadic window, with no limiting passage.
 The exact mollifier remainder survives in the resulting multiplicity bound.
+The right integral is now bounded uniformly by horizontal contour decay.
+The final logarithmic moment estimate remains an explicit conditional input.
 -/
 
 noncomputable section
@@ -93,18 +97,20 @@ theorem GoodHorizontalPhase.integral_logLift_bound
 
 /-- Uniform outward dyadic Littlewood rectangles with the same normalized
 lifts in the exact identity and both horizontal bounds. The corrected zeta
-count includes the full mollifier-zero remainder. No branch-compatibility,
+count includes the full mollifier-zero remainder. The same right anchor has
+an endpoint-independent signed bound, and an actual moment on the selected
+left edge gives the sharpened conditional count. No branch-compatibility,
 horizontal-budget, or zero-free-border premise is assumed. -/
-theorem exists_uniform_dyadic_littlewood_normalized_horizontal_bound
+theorem exists_uniform_dyadic_littlewood_normalized_boundary_bound
     {ε θ : ℝ} (hε : 0 ≤ ε) (hθ : 0 < θ) :
-    ∃ η b D H : ℝ, 0 < η ∧ η < 1 / 4 ∧ 2 ≤ b ∧ 0 < D ∧ b + 2 ≤ H ∧
+    ∃ η b D C H : ℝ, 0 < η ∧ η < 1 / 4 ∧ 2 ≤ b ∧ 0 < D ∧ 0 < C ∧ b + 2 ≤ H ∧
       ∀ T : ℝ, H ≤ T → ∀ σ : ℝ,
         1 / 2 + 1 / Real.log (T ^ θ) ≤ σ → σ ≤ 1 / 2 + η →
-          ∀ δ : ℝ, 0 < δ → δ ≤ 1 / 4 → ∀ α : ℝ,
-            1 / 2 < α → α < b →
+          ∀ δ : ℝ, 0 < δ → δ ≤ 1 / 4 → ∀ a c α : ℝ,
+            1 / 2 ≤ a → a < c → c ≤ α → α < b →
               ∃ (t₁ t₂ l : ℝ) (Z : Finset ℂ) (B U : ℝ → ℂ),
                 T - δ < t₁ ∧ t₁ < T ∧ 2 * T < t₂ ∧ t₂ < 2 * T + δ ∧
-                1 / 2 < l ∧ l < α ∧ 0 < t₁ ∧ t₁ < t₂ ∧
+                1 / 2 < l ∧ a < l ∧ l < c ∧ l < α ∧ 0 < t₁ ∧ t₁ < t₂ ∧
                 (∀ s ∈ RectangleBorder ((l : ℂ) + (t₁ : ℂ) * I)
                     ((b : ℂ) + (t₂ : ℂ) * I),
                   mollifiedZeta σ (T ^ θ) ε s ≠ 0) ∧
@@ -132,7 +138,11 @@ theorem exists_uniform_dyadic_littlewood_normalized_horizontal_bound
                 0 ≤ ∑ ρ ∈ Z,
                   (analyticOrderNatAt (nonstandardMollifier σ (T ^ θ) ε) ρ : ℝ) *
                     (ρ.re - l) ∧
-                (∀ s : ℂ, α ≤ s.re → s.re ≤ b → T ≤ s.im → s.im ≤ 2 * T →
+                ‖∫ t in t₁..t₂, log (mollifiedZeta σ (T ^ θ) ε
+                  ((b : ℂ) + (t : ℂ) * I))‖ ≤ C ∧
+                |∫ t in t₁..t₂, Real.log ‖mollifiedZeta σ (T ^ θ) ε
+                  ((b : ℂ) + (t : ℂ) * I)‖| ≤ C ∧
+                (∀ s : ℂ, α ≤ s.re → T ≤ s.im → s.im ≤ 2 * T →
                   riemannZeta s = 0 → s ∈ Z) ∧
                 ((∑ ρ ∈ Z.filter (fun s => α ≤ s.re ∧ T ≤ s.im ∧ s.im ≤ 2 * T),
                     analyticOrderNatAt riemannZeta ρ : ℕ) : ℝ) ≤
@@ -143,15 +153,46 @@ theorem exists_uniform_dyadic_littlewood_normalized_horizontal_bound
                     2 * D * Real.log T) / (2 * Real.pi) -
                     ∑ ρ ∈ Z,
                       (analyticOrderNatAt (nonstandardMollifier σ (T ^ θ) ε) ρ : ℝ) *
-                        (ρ.re - l)) / (α - l) := by
+                        (ρ.re - l)) / (α - l) ∧
+                (∀ E : ℝ, 0 ≤ E →
+                  (∫ t in t₁..t₂, ‖mollifiedZeta σ (T ^ θ) ε
+                    ((l : ℂ) + (t : ℂ) * I)‖ ^ 2) ≤ t₂ - t₁ + E →
+                  ((∑ ρ ∈ Z.filter (fun s => α ≤ s.re ∧ T ≤ s.im ∧ s.im ≤ 2 * T),
+                    analyticOrderNatAt riemannZeta ρ : ℕ) : ℝ) ≤
+                    (((t₂ - t₁) * Real.log (1 + E / (t₂ - t₁)) / 2 +
+                      C + 2 * D * Real.log T) / (2 * Real.pi) -
+                      ∑ ρ ∈ Z,
+                        (analyticOrderNatAt (nonstandardMollifier σ (T ^ θ) ε) ρ : ℝ) *
+                          (ρ.re - l)) / (α - l)) := by
   classical
-  obtain ⟨η, b, D, H, hη, hη', hb, hD, hH, hrect⟩ :=
+  obtain ⟨η₀, b, D, H₀, hη₀, hη₀', hb, hD, hH₀, hrect⟩ :=
     exists_uniform_dyadic_mollifiedZeta_outward_anchor_rectangle hε hθ
-  refine ⟨η, b, D, H, hη, hη', hb, hD, hH, ?_⟩
-  intro T hT σ hσ hση δ hδ hδ' α hα hαb
-  obtain ⟨t₁, t₂, l, ht₁lo, ht₁hi, ht₂lo, ht₂hi, hl, hlα, ht₁pos, htt,
+  obtain ⟨η₁, Y, K, hη₁, hη₁', hY, hK, hdecay⟩ :=
+    exists_uniform_mollifiedZeta_right_decay hε
+  let C := (4 * K / Real.log 2) * (2 : ℝ) ^ (2 - b)
+  have hC : 0 < C := by
+    dsimp [C]
+    exact mul_pos (div_pos (by positivity) (Real.log_pos (by norm_num)))
+      (Real.rpow_pos_of_pos (by norm_num) _)
+  refine ⟨min η₀ η₁, b, D, C, max H₀ (Y ^ θ⁻¹),
+    lt_min hη₀ hη₁, (min_le_left _ _).trans_lt hη₀', hb, hD, hC,
+    hH₀.trans (le_max_left _ _), ?_⟩
+  intro T hT σ hσ hση δ hδ hδ' a c α ha hac hcα hαb
+  have hT₀ : H₀ ≤ T := (le_max_left _ _).trans hT
+  have hση₀ : σ ≤ 1 / 2 + η₀ := by linarith [min_le_left η₀ η₁]
+  have hση₁ : σ ≤ 1 / 2 + η₁ := by linarith [min_le_right η₀ η₁]
+  have hYpow : Y ≤ T ^ θ := by
+    calc
+      Y = (Y ^ θ⁻¹) ^ θ :=
+        (Real.rpow_inv_rpow (by linarith : 0 ≤ Y) hθ.ne').symm
+      _ ≤ T ^ θ := Real.rpow_le_rpow (Real.rpow_nonneg (by linarith) _)
+        ((le_max_right _ _).trans hT) hθ.le
+  obtain ⟨t₁, t₂, l, ht₁lo, ht₁hi, ht₂lo, ht₂hi, hl, hal, hlc, ht₁pos, htt,
       hborder, hanchor, hphaseB, hphaseU⟩ :=
-    hrect T hT σ hσ hση δ hδ hδ' α hα hαb
+    hrect T hT₀ σ hσ hση₀ δ hδ hδ' a c ha hac (hcα.trans_lt hαb)
+  have hlα : l < α := hlc.trans_le hcα
+  have hright := mollifiedZeta_right_integral_bounds hb hK.le hanchor
+    (fun s hs => hdecay (T ^ θ) hYpow σ hσ hση₁ s (hb.trans hs)) t₁ t₂
   have hlb : l ≤ b := by linarith
   obtain ⟨Z, B, U, hZ, hBc, hUc, hBe, hUe, hid, hM, hBb, hUb'⟩ :=
     exists_mollifiedZeta_littlewood_identity_with_remainder
@@ -174,64 +215,99 @@ theorem exists_uniform_dyadic_littlewood_normalized_horizontal_bound
     calc
       _ ≤ ‖∫ x in l..b, (U x).im‖ + ‖∫ x in l..b, (B x).im‖ := norm_sub_le _ _
       _ ≤ _ := by linarith
-  refine ⟨t₁, t₂, l, Z, B, U, ht₁lo, ht₁hi, ht₂lo, ht₂hi, hl, hlα,
+  refine ⟨t₁, t₂, l, Z, B, U, ht₁lo, ht₁hi, ht₂lo, ht₂hi, hl, hal, hlc, hlα,
     ht₁pos, htt, hborder, hZ, hBc, hUc, hBe, hUe, hBb, hUb, hiB, hiU, hsigned,
-    hid, hM, ?_, ?_⟩
-  · intro s hsα hsb hsT hs2T hzero
+    hid, hM, hright.1, hright.2, ?_, ?_⟩
+  · intro s hsα hsT hs2T hzero
+    have hsb : s.re ≤ b := by
+      by_contra hn
+      exact Zeta23.RvM.riemannZeta_ne_zero_of_two_le_re
+        (hb.trans (not_le.mp hn).le) hzero
     apply (hZ s).mpr
     constructor
     · apply (mem_Rect (by simpa using hlb) (by simpa using htt.le) s).mpr
       simpa using (show l ≤ s.re ∧ s.re ≤ b ∧ t₁ ≤ s.im ∧ s.im ≤ t₂ from
         ⟨by linarith, hsb, by linarith, by linarith⟩)
     · simp [mollifiedZeta, hzero]
-  · let S := Z.filter (fun s => α ≤ s.re ∧ T ≤ s.im ∧ s.im ≤ 2 * T)
-    have hmass :
-        (α - l) * ((∑ ρ ∈ S, analyticOrderNatAt riemannZeta ρ : ℕ) : ℝ) ≤
-          ∑ ρ ∈ Z, (analyticOrderNatAt riemannZeta ρ : ℝ) * (ρ.re - l) := by
-      calc
-        _ = ∑ ρ ∈ S, (analyticOrderNatAt riemannZeta ρ : ℝ) * (α - l) := by
-          push_cast
-          rw [Finset.mul_sum]
-          apply Finset.sum_congr rfl
-          intro ρ _
-          ring
-        _ ≤ ∑ ρ ∈ S, (analyticOrderNatAt riemannZeta ρ : ℝ) * (ρ.re - l) := by
-          apply Finset.sum_le_sum
-          intro ρ hρ
-          exact mul_le_mul_of_nonneg_left
-            (sub_le_sub_right (Finset.mem_filter.mp hρ).2.1 l) (Nat.cast_nonneg _)
-        _ ≤ ∑ ρ ∈ Z, (analyticOrderNatAt riemannZeta ρ : ℝ) * (ρ.re - l) := by
-          apply Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _)
-          intro ρ hρ _
-          have hr := ((hZ ρ).mp hρ).1.1
-          have hre : (((l : ℂ) + (t₁ : ℂ) * I)).re ≤
-              (((b : ℂ) + (t₂ : ℂ) * I)).re := by simpa using hlb
-          rw [Set.uIcc_of_le hre] at hr
-          have hρl : l ≤ ρ.re := by simpa using hr.1
-          exact mul_nonneg (Nat.cast_nonneg _) (sub_nonneg.mpr hρl)
-    have hboundary :
-        logRectangleBoundary (mollifiedZeta σ (T ^ θ) ε)
-            (fun x => (B x).im) (fun x => (U x).im) l b t₁ t₂ ≤
-          (∫ t in t₁..t₂, Real.log ‖mollifiedZeta σ (T ^ θ) ε
-            ((l : ℂ) + (t : ℂ) * I)‖) -
-          (∫ t in t₁..t₂, Real.log ‖mollifiedZeta σ (T ^ θ) ε
-            ((b : ℂ) + (t : ℂ) * I)‖) + 2 * D * Real.log T := by
-      have hh := le_abs_self ((∫ x in l..b, (U x).im) - (∫ x in l..b, (B x).im))
-      rw [Real.norm_eq_abs] at hsigned
-      unfold logRectangleBoundary
+  · have hcount :
+        ((∑ ρ ∈ Z.filter (fun s => α ≤ s.re ∧ T ≤ s.im ∧ s.im ≤ 2 * T),
+          analyticOrderNatAt riemannZeta ρ : ℕ) : ℝ) ≤
+          (((∫ t in t₁..t₂, Real.log ‖mollifiedZeta σ (T ^ θ) ε
+              ((l : ℂ) + (t : ℂ) * I)‖) -
+            (∫ t in t₁..t₂, Real.log ‖mollifiedZeta σ (T ^ θ) ε
+              ((b : ℂ) + (t : ℂ) * I)‖) + 2 * D * Real.log T) / (2 * Real.pi) -
+            ∑ ρ ∈ Z, (analyticOrderNatAt (nonstandardMollifier σ (T ^ θ) ε) ρ : ℝ) *
+              (ρ.re - l)) / (α - l) := by
+      let S := Z.filter (fun s => α ≤ s.re ∧ T ≤ s.im ∧ s.im ≤ 2 * T)
+      have hmass :
+          (α - l) * ((∑ ρ ∈ S, analyticOrderNatAt riemannZeta ρ : ℕ) : ℝ) ≤
+            ∑ ρ ∈ Z, (analyticOrderNatAt riemannZeta ρ : ℝ) * (ρ.re - l) := by
+        calc
+          _ = ∑ ρ ∈ S, (analyticOrderNatAt riemannZeta ρ : ℝ) * (α - l) := by
+            push_cast
+            rw [Finset.mul_sum]
+            apply Finset.sum_congr rfl
+            intro ρ _
+            ring
+          _ ≤ ∑ ρ ∈ S, (analyticOrderNatAt riemannZeta ρ : ℝ) * (ρ.re - l) := by
+            apply Finset.sum_le_sum
+            intro ρ hρ
+            exact mul_le_mul_of_nonneg_left
+              (sub_le_sub_right (Finset.mem_filter.mp hρ).2.1 l) (Nat.cast_nonneg _)
+          _ ≤ ∑ ρ ∈ Z, (analyticOrderNatAt riemannZeta ρ : ℝ) * (ρ.re - l) := by
+            apply Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _)
+            intro ρ hρ _
+            have hr := ((hZ ρ).mp hρ).1.1
+            have hre : (((l : ℂ) + (t₁ : ℂ) * I)).re ≤
+                (((b : ℂ) + (t₂ : ℂ) * I)).re := by simpa using hlb
+            rw [Set.uIcc_of_le hre] at hr
+            have hρl : l ≤ ρ.re := by simpa using hr.1
+            exact mul_nonneg (Nat.cast_nonneg _) (sub_nonneg.mpr hρl)
+      have hboundary :
+          logRectangleBoundary (mollifiedZeta σ (T ^ θ) ε)
+              (fun x => (B x).im) (fun x => (U x).im) l b t₁ t₂ ≤
+            (∫ t in t₁..t₂, Real.log ‖mollifiedZeta σ (T ^ θ) ε
+              ((l : ℂ) + (t : ℂ) * I)‖) -
+            (∫ t in t₁..t₂, Real.log ‖mollifiedZeta σ (T ^ θ) ε
+              ((b : ℂ) + (t : ℂ) * I)‖) + 2 * D * Real.log T := by
+        have hh := le_abs_self ((∫ x in l..b, (U x).im) - (∫ x in l..b, (B x).im))
+        rw [Real.norm_eq_abs] at hsigned
+        unfold logRectangleBoundary
+        linarith
+      have hpi : (2 * Real.pi : ℝ) ≠ 0 := by positivity
+      have heq : logRectangleBoundary (mollifiedZeta σ (T ^ θ) ε)
+            (fun x => (B x).im) (fun x => (U x).im) l b t₁ t₂ / (2 * Real.pi) =
+          (∑ ρ ∈ Z, (analyticOrderNatAt riemannZeta ρ : ℝ) * (ρ.re - l)) +
+            ∑ ρ ∈ Z,
+              (analyticOrderNatAt (nonstandardMollifier σ (T ^ θ) ε) ρ : ℝ) *
+                (ρ.re - l) := by
+        rw [hid, mul_div_cancel_left₀ _ hpi]
+      have hquot := div_le_div_of_nonneg_right hboundary
+        (show 0 ≤ 2 * Real.pi by positivity)
+      apply (le_div_iff₀ (sub_pos.mpr hlα)).mpr
+      change ((∑ ρ ∈ S, analyticOrderNatAt riemannZeta ρ : ℕ) : ℝ) * (α - l) ≤ _
       linarith
-    have hpi : (2 * Real.pi : ℝ) ≠ 0 := by positivity
-    have heq : logRectangleBoundary (mollifiedZeta σ (T ^ θ) ε)
-          (fun x => (B x).im) (fun x => (U x).im) l b t₁ t₂ / (2 * Real.pi) =
-        (∑ ρ ∈ Z, (analyticOrderNatAt riemannZeta ρ : ℝ) * (ρ.re - l)) +
-          ∑ ρ ∈ Z,
-            (analyticOrderNatAt (nonstandardMollifier σ (T ^ θ) ε) ρ : ℝ) *
-              (ρ.re - l) := by
-      rw [hid, mul_div_cancel_left₀ _ hpi]
-    have hquot := div_le_div_of_nonneg_right hboundary
-      (show 0 ≤ 2 * Real.pi by positivity)
-    apply (le_div_iff₀ (sub_pos.mpr hlα)).mpr
-    change ((∑ ρ ∈ S, analyticOrderNatAt riemannZeta ρ : ℕ) : ℝ) * (α - l) ≤ _
+
+    refine ⟨hcount, ?_⟩
+    intro E hE hm
+    have hleft : ∀ t ∈ Icc t₁ t₂,
+        mollifiedZeta σ (T ^ θ) ε ((l : ℂ) + (t : ℂ) * I) ≠ 0 := by
+      intro t ht
+      apply hborder
+      apply Or.inl
+      apply Or.inl
+      apply Or.inr
+      constructor
+      · simp
+      · simpa [Set.uIcc_of_le htt.le] using ht
+    have hmoment := (integral_log_mollifiedZeta_le_log_of_moment
+      σ (T ^ θ) ε l ht₁pos htt hE hleft hm).1
+    have hminus : -(∫ t in t₁..t₂, Real.log ‖mollifiedZeta σ (T ^ θ) ε
+        ((b : ℂ) + (t : ℂ) * I)‖) ≤ C := (neg_le_abs _).trans hright.2
+    apply hcount.trans
+    apply div_le_div_of_nonneg_right _ (by linarith : 0 ≤ α - l)
+    apply sub_le_sub_right
+    apply div_le_div_of_nonneg_right _ (by positivity : 0 ≤ 2 * Real.pi)
     linarith
 
 end RiemannResearch.Analysis.ConreyBaluyot

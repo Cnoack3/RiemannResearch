@@ -3,6 +3,8 @@
 Base: [ee6afa898e3c93e10d6db3568ac2b30245df13e7](https://github.com/Cnoack3/RiemannResearch/commit/ee6afa898e3c93e10d6db3568ac2b30245df13e7).
 This continuation resolves the recovery note's branch-compatibility target and constructs outward rectangles. It also sharpens the conditional conversion of an actual second moment to a vertical logarithmic integral.
 
+**Subsequent continuation:** [Signed right boundary and revised agenda](THEOREM_CATALOG_CONREY_BALUYOT_RIGHT_BOUNDARY_20261115.md) discharges the signed right integral, permits any prescribed left interval, and adds the conditional moment count. The theorem below is the specialization a=1/2, c=alpha of that stronger current declaration.
+
 ## Established declarations
 
 All Conrey–Baluyot declarations below are in namespace
@@ -18,7 +20,7 @@ All Conrey–Baluyot declarations below are in namespace
 | `exists_mollifiedZeta_littlewood_identity_with_remainder` | `Analysis/ConreyBaluyotLittlewood.lean` | Propagates normalization while retaining the exact nonnegative mollifier-zero remainder. |
 | `exists_uniform_dyadic_mollifiedZeta_outward_anchor_rectangle` | `Analysis/ConreyBaluyotDyadicRectangle.lean` | Builds a zero-free border with fixed right anchor and horizontal edges strictly outside the closed dyadic window. |
 | `GoodHorizontalPhase.integral_logLift_bound` | `Analysis/ConreyBaluyotDyadicLittlewood.lean` | Transfers the phase integral bound to the actual normalized logarithm lift. |
-| `exists_uniform_dyadic_littlewood_normalized_horizontal_bound` | same | Supplies the exact identity, both normalized horizontal bounds, outward coverage, and the corrected closed-window multiplicity estimate for the same lifts. |
+| `exists_uniform_dyadic_littlewood_normalized_boundary_bound` | same | Supplies the exact identity, both normalized horizontal bounds, outward coverage, and the corrected closed-window multiplicity estimate for the same lifts. |
 | `Complex.scaledLogSecondMomentDefect_nonneg` | `Analysis/ComplexLogSecondMoment.lean` | Nonnegative tangent defect for positive mean-square scale and nonzero argument. |
 | `Complex.integral_log_norm_scaled_second_moment_exact` | same | Exact scaled second-moment/logarithm identity with the entire integrated defect. |
 | `Complex.integral_log_norm_le_of_mean_square_bound` | same | Converts an explicit mean-square bound into a logarithmic bound. |
@@ -119,31 +121,18 @@ This improves the earlier linear conversion and preserves the exact defect in it
 | Outward coverage of the closed dyadic window | Discharged for the finite count above |
 | Sharp conversion from an actual second moment to the left log integral | Discharged as a conditional analytic conversion |
 | Actual uniform mollified second moment in the required range, at admissible left boundaries | Open |
-| Uniform signed right vertical integral for this nonstandard mollifier | Open |
+| Uniform signed right vertical integral for this nonstandard mollifier | Discharged; see the signed right-boundary continuation |
 | Complete and multilinear Kloosterman inputs | Open |
 | Unconditional numerical density provider and remaining Ingham input | Open |
 | RH | Not established |
 
 The selected left edge is \(\ell<\alpha\); applying a moment theorem only on a prescribed different line requires an additional uniformity or limiting argument. The outward construction resolves height coverage, not that separate alignment issue.
 
-A useful next target is a uniform bound on the right vertical integral, independent of both endpoints and mollifier length, at a sufficiently far fixed anchor. The existing pointwise right decay ensures nonvanishing but does not itself supply cancellation in a long integral.
+The signed right-boundary target is now discharged by a holomorphic rectangle shift and the established exponential decay. No logarithmic Dirichlet-series interchange is needed. The optional sharper dilogarithm estimate remains a quantitative refinement, not a missing hypothesis of the current bound.
 
-**Proposed route, not a checked provider:** construct an absolutely convergent Dirichlet series \(F(b+it)=1+G(t)\) whose nonconstant coefficient mass at \(b\) is at most \(r<1\). Expand the principal logarithm in powers of \(G\). The \(k\)-th power has frequencies at least \(k\log2\), suggesting the bound
-\[
-\left|\int_{H_1}^{H_2}\log F(b+it)\,dt\right|
-\le \frac{2}{\log2}\sum_{k\ge1}\frac{r^k}{k^2}.
-\]
-For \(r\le1/2\), the simpler majorant
-\[
-\frac{2}{\log2}\sum_{k\ge1}\frac{2^{-k}}k=2
-\]
-would suffice. Wolfram independently evaluated the sharper constant
-\(2\operatorname{Li}_2(1/2)/\log2\approx1.6799910402713056\).
-This computation is exploratory evidence only. Uniform coefficient-mass control, the Dirichlet-series expansion, and interchange of sums with integration must be established in Lean before claiming the right-bound provider.
+The next target is the actual uncentered second moment for the same mollifier, on a left interval selected before applying the strengthened rectangle theorem. See the [current agenda](THEOREM_CATALOG_CONREY_BALUYOT_RIGHT_BOUNDARY_20261115.md) for exact quantifiers, retained signs, and remaining obligations.
 
-The right-bound theorem in `ActualMollifierRightBoundary.lean` concerns the distinct truncated Möbius mollifier and quadratic detector. It cannot be substituted for this nonstandard direct product without proving an identification.
-
-## Verification
+## Verification of the earlier normalized snapshot
 
 The final focused Bazel check imported the dyadic module and all its transitive
 imports and passed nine standard-axiom guards:
