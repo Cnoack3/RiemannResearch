@@ -353,4 +353,52 @@ theorem density_atom_not_mem_any_trial (L k : ℕ) (hL : 0 < L) (hk : 2 ≤ k) :
 /-- info: 'RiemannResearch.RH.QDensityLeakageArithmetic.one_mem_iff_moving_stage_error_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms one_mem_iff_moving_stage_error_zero
+open QCRTFiniteCollocation
+
+/-- Every finite legal vector lies in a single positive divisor dictionary. -/
+theorem exists_trialSpace_of_mem_legalSpan (f : QHilbert) (hf : f ∈ legalSpan) :
+    ∃ L : ℕ, 0 < L ∧ f ∈ trialSpace L := by
+  induction hf using Submodule.span_induction with
+  | mem g hg =>
+    rcases hg with ⟨i, rfl⟩
+    exact ⟨i + 2, by omega, residue_mem_trial (i + 2) (i + 2)
+      (by omega) (dvd_refl _)⟩
+  | zero => exact ⟨1, by omega, (trialSpace 1).zero_mem⟩
+  | add x y hx hy ihx ihy =>
+    obtain ⟨L, hL, hxL⟩ := ihx
+    obtain ⟨M, hM, hyM⟩ := ihy
+    have hLM : 0 < L * M := Nat.mul_pos hL hM
+    exact ⟨L * M, hLM, (trialSpace (L * M)).add_mem
+      (trialSpace_mono_dvd L (L * M) hLM (dvd_mul_right L M) hxL)
+      (trialSpace_mono_dvd M (L * M) hLM (dvd_mul_left M L) hyM)⟩
+  | smul c x hx ih =>
+    obtain ⟨L, hL, hxL⟩ := ih
+    exact ⟨L, hL, (trialSpace L).smul_mem c hxL⟩
+
+/-- A density atom is never an exact finite synthesis, even if its closed-span
+membership is subsequently established. -/
+theorem density_atom_not_mem_legalSpan (k : ℕ) (hk : 2 ≤ k) :
+    B (qResidue k) ∉ legalSpan := by
+  intro h
+  obtain ⟨L, hL, hm⟩ := exists_trialSpace_of_mem_legalSpan _ h
+  exact density_atom_not_mem_any_trial L k hL hk hm
+
+theorem density_atom_error_pos (k : ℕ) (hk : 2 ≤ k)
+    (a : QHilbert) (ha : a ∈ legalSpan) :
+    0 < ‖B (qResidue k) - a‖ := by
+  apply norm_pos_iff.mpr
+  intro he
+  exact density_atom_not_mem_legalSpan k hk ((sub_eq_zero.mp he).symm ▸ ha)
+
+/-- info: 'RiemannResearch.RH.QDensityLeakageArithmetic.exists_trialSpace_of_mem_legalSpan' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms exists_trialSpace_of_mem_legalSpan
+
+/-- info: 'RiemannResearch.RH.QDensityLeakageArithmetic.density_atom_not_mem_legalSpan' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms density_atom_not_mem_legalSpan
+
+/-- info: 'RiemannResearch.RH.QDensityLeakageArithmetic.density_atom_error_pos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms density_atom_error_pos
 end RiemannResearch.RH.QDensityLeakageArithmetic

@@ -64,6 +64,15 @@ Classification: **conditional research reduction**. The theorem is a proved impl
 
 `riemannHypothesis_of_cofinal_normalized_leakage` separately proves the subsequence criterion for the actual normalized Q leakage. Its zero-limit premise also remains **Open**.
 
+Follow-up: [Finite density provider catalog](THEOREM_CATALOG_FINITE_DENSITY_PROVIDER_20261114.md)
+records the explicit legal family
+a_(k,N) = g_k/zetaTwo + candidate(N)/(zetaTwo*k).
+Its scaled error converges to the actual constant residual for independently
+cofinal k and N, and is asymptotically optimal. The new
+QDensityFiniteProvider.one_mem_iff_finite_provider proves that the small-o
+provider exists exactly when qOne is in the legal closure. The witness can
+always be this explicit family; proving the small-o rate remains **Open**.
+
 ## Verification
 
 The source files include explicit axiom reports for the central theorems. Accepted proofs must have only ordinary foundations (`propext`, `Classical.choice`, `Quot.sound`), with no unfinished proof or project-local arithmetic axiom. Publication is through the managed Bazel/BuildBuddy full-project checkpoint; the checkpoint job and exact commit are reported in the accompanying delivery.
