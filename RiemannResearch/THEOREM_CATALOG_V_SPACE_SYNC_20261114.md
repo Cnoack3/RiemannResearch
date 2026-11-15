@@ -162,3 +162,28 @@ paper-only gcd-cell mass/innovation formulas, noncanonical depth example,
 oblique-lift example, and positive-relative-variation comparison recorded on
 the research Sites. The rational energy enclosures retain their explicit
 normal-equation hypotheses; further comparisons must retain their own scope.
+
+## Cofinal subharmonic strengthening (15 November 2026)
+
+The exact identity gives `abs (||S_N|| - H_N ||r||) <= M` at every N.
+The common boundedness provider can be weakened to
+`forall epsilon > 0, forall J, exists N >= J, ||S_N|| <= epsilon H_N`.
+This allows candidate envelopes growing sublinearly relative to harmonic mass.
+It is equivalent to `1 in V` and to full Q-space totality, and implies RH.
+The actual arithmetic cofinal smallness premise remains **Open**.
+
+Four new declarations in `RiemannResearch.RH.QDensityLeakageSeries`:
+
+- `partialLeakage_norm_gap_le`: the two-sided norm error, keeping the full budget.
+- `cofinal_subharmonic_partialLeakage_iff`: exact cofinal provider equivalence.
+- `cofinal_subharmonic_partialLeakage_iff_totality`: full-space equivalence.
+- `riemannHypothesis_of_cofinal_subharmonic_partialLeakage`: conditional RH consumer.
+
+Source: user-requested triage continuation, 15 November 2026; deduction from
+this module's signed identity. No analytic RH-to-density converse is used.
+The coherent candidate passed Bazel/BuildBuddy job
+`job_ku4WYfE-1eam1U8l0irVBMKxnylS4vcJ` in 52.32 server seconds:
+https://app.buildbuddy.io/invocation/3c0b1f8a-584e-46f3-81e7-2b5209bc15ab.
+This is a snippet receipt; saved-source axiom checks and full-project checkpoint
+provide the separate publication gate. The synchronized triage Site retains
+final commit and checkpoint evidence.

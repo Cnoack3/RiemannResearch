@@ -152,4 +152,62 @@ theorem riemannHypothesis_of_frequently_bounded_partialLeakage
   riemannHypothesis_of_qOne_mem_full_closure
     (frequently_bounded_partialLeakage_iff.mp h)
 
+/-! ## Cofinal subharmonic leakage
+
+Source: user-requested proof-obligation triage continuation, 15 November 2026.
+The exact signed identity above gives a two-sided norm error at every stage.
+The conditional provider can therefore allow unbounded sums: for every positive
+slope, cofinally many sums lie below that slope times harmonic mass. This
+criterion is equivalent to constant-target membership; the arithmetic provider
+remains open. No analytic RH converse is used.
+-/
+
+theorem partialLeakage_norm_gap_le (N : ℕ) :
+    |‖partialLeakage N‖ - harmonicMass N * ‖residual‖| ≤ centeredBudget := by
+  apply abs_le.mpr
+  constructor
+  · linarith [partialLeakage_lower N]
+  · have h := norm_add_le (harmonicMass N • residual) (centeredPartial N)
+    rw [← partialLeakage_exact, norm_smul, Real.norm_eq_abs,
+      abs_of_nonneg (harmonicMass_nonneg N)] at h
+    linarith [centeredPartial_norm_le N]
+
+theorem cofinal_subharmonic_partialLeakage_iff :
+    (∀ ε : ℝ, 0 < ε → ∀ J : ℕ,
+      ∃ N : ℕ, J ≤ N ∧ ‖partialLeakage N‖ ≤ ε * harmonicMass N) ↔
+      qOne ∈ closure := by
+  constructor
+  · intro h
+    by_contra hne
+    have hr : 0 < ‖residual‖ := by
+      apply norm_pos_iff.mpr
+      intro he
+      exact hne (Submodule.starProjection_eq_self_iff.mp (sub_eq_zero.mp he).symm)
+    obtain ⟨J, hJ⟩ := eventually_atTop.1
+      (harmonicMass_tendsto_atTop.eventually
+        (eventually_ge_atTop ((2 * centeredBudget + 1) / ‖residual‖)))
+    obtain ⟨N, hJN, hN⟩ := h (‖residual‖ / 2) (by positivity) J
+    have ht := (div_le_iff₀ hr).mp (hJ N hJN)
+    nlinarith [partialLeakage_lower N]
+  · intro hmem ε hε J
+    have hz := residue_leakage_vanishes_iff_one_mem.mpr hmem
+    refine ⟨J, le_rfl, ?_⟩
+    have hn (n : ℕ) : leakage (qResidue (n + 2)) = 0 := hz _ (by omega)
+    simp only [partialLeakage, hn, Finset.sum_const_zero, norm_zero]
+    exact mul_nonneg hε.le (harmonicMass_nonneg J)
+
+theorem cofinal_subharmonic_partialLeakage_iff_totality :
+    (∀ ε : ℝ, 0 < ε → ∀ J : ℕ,
+      ∃ N : ℕ, J ≤ N ∧ ‖partialLeakage N‖ ≤ ε * harmonicMass N) ↔
+      closure = ⊤ :=
+  cofinal_subharmonic_partialLeakage_iff.trans
+    QFullTargetTotality.closure_eq_top_iff_one_mem.symm
+
+theorem riemannHypothesis_of_cofinal_subharmonic_partialLeakage
+    (h : ∀ ε : ℝ, 0 < ε → ∀ J : ℕ,
+      ∃ N : ℕ, J ≤ N ∧ ‖partialLeakage N‖ ≤ ε * harmonicMass N) :
+    RiemannHypothesis :=
+  riemannHypothesis_of_qOne_mem_full_closure
+    (cofinal_subharmonic_partialLeakage_iff.mp h)
+
 end RiemannResearch.RH.QDensityLeakageSeries
