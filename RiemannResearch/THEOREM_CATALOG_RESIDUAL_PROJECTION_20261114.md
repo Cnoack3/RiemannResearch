@@ -1,5 +1,7 @@
 # Residual-projection estimate investigation — 14 November 2026
 
+Continuation: [signed finite-head detection and obstructions](THEOREM_CATALOG_SIGNED_HEAD_DETECTION_20261114.md).
+
 ## Status of the requested estimate
 
 The requested uniform estimate

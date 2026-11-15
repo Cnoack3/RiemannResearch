@@ -4330,3 +4330,5 @@ import RiemannResearch.Analysis.PairVacancyMoment
 import RiemannResearch.Analysis.ResidualLossBounds
 import RiemannResearch.RH.CoupledResidualHeadBounds
 import RiemannResearch.RH.QFullResidualProjectionBounds
+import RiemannResearch.RH.CoupledResidualFiniteHead
+import RiemannResearch.Analysis.ResidualProjectionObstruction
