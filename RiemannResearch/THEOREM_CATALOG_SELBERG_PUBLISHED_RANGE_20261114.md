@@ -3,6 +3,36 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Uniform horizontal argument on nearby good heights (15 November 2026)
+
+**ConreyBaluyotGoodHorizontalArgument.lean** assembles the normalized phase
+and nearby zero-free heights for one fixed mollifier. The theorem
+**exists_uniform_mollifiedZeta_good_horizontal_argument** gives arbitrarily
+close good heights and the explicit logarithmic integral bound for the
+coupled sigma,y strip.
+
+The stronger specialization
+**exists_uniform_mollifiedZeta_power_good_horizontal_argument** fixes any
+epsilon >= 0 and theta > 0. It chooses eta, b >= 2, D > 0 and H uniformly.
+For every T >= H, every sigma with
+
+  1/2 + 1/log(T^theta) <= sigma <= 1/2 + eta,
+
+and every 0 < delta <= 1/4, there is t with |t-T| < delta such that
+F(s) = zeta(s) M_{sigma,T^theta,epsilon}(s) is zero-free on [1/2,b]+it.
+A continuous polar phase phi, normalized by phi(b) = arg F(b+it), satisfies
+
+  |integral_alpha^b phi(x) dx| <= D log T
+
+for all alpha in [1/2,b]. The mollifier length T^theta and all its
+parameters stay fixed as t approaches T. The horizontal estimate itself
+does not require theta < 4/7; the mollified moment does.
+
+This establishes the good-height horizontal input with explicit quantifiers,
+but does not pass to the limiting Littlewood boundary or prove the moment,
+the complete or multilinear Kloosterman estimates, or Ingham's density
+estimate in Lean.
+
 ## Nearby zero-free heights for a fixed mollifier (15 November 2026)
 
 **ConreyBaluyotMollifierGoodHeights.lean** proves that an analytic function
