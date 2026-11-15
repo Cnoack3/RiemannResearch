@@ -3,6 +3,25 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Nearby zero-free heights for a fixed mollifier (15 November 2026)
+
+**ConreyBaluyotMollifierGoodHeights.lean** proves that an analytic function
+nonzero at the center of a suitable compact disk has zero-free horizontal
+segments at arbitrarily close heights. Its proof places all relevant zeros in
+the finite support of the disk divisor and avoids their finite set of
+ordinates.
+
+For each fixed epsilon >= 0,
+**exists_uniform_mollifiedZeta_zero_free_heights** chooses eta, Y, b >= 2
+uniformly. For y >= Y and sigma in the coupled strip, every L >= b,
+T >= L + 1, and 0 < delta <= 1/4 admit t with |t-T| < delta such that
+the actual mollified zeta has no zeros on [1/2,L] + it.
+
+The mollifier parameters sigma, y and epsilon are held fixed while t varies.
+This statement does not identify a limit with the Littlewood contour
+argument or prove the mollified moment, complete or multilinear Kloosterman
+estimates, or Ingham's density theorem in Lean.
+
 ## Normalized horizontal argument on zero-free segments (15 November 2026)
 
 **ConreyBaluyotHorizontalArgument.lean** constructs a continuous polar phase
@@ -25,9 +44,10 @@ where J(T,y) is the explicit logarithmic count in the following sections.
 It also bounds the norm of the horizontal integral from alpha to b by
 pi (J(T,y) + 3) |b-alpha| for every alpha in [1/2,b].
 
-The zero-free segment is an explicit hypothesis. Selection of arbitrarily
-nearby zero-free heights and passage through the Littlewood boundary limits
-remain to be formalized. The mollified moment, complete and multilinear
+The zero-free segment is an explicit hypothesis. The preceding good-heights
+module supplies arbitrarily nearby zero-free heights for each fixed mollifier.
+Passage through the Littlewood boundary limits remains to be formalized.
+The mollified moment, complete and multilinear
 Kloosterman estimates, and Ingham provider also remain open in Lean.
 
 ## Horizontal phase displacement from the real-zero count (15 November 2026)
@@ -50,8 +70,8 @@ the explicit logarithmic real-zero bound in the next section.
 
 The theorem assumes the continuous polar phase rather than constructing it.
 The subsequent horizontal-argument module constructs and normalizes a phase
-on a zero-free segment. The selection of zero-free heights, Littlewood
-boundary-limit passage, mollified second moment, complete and multilinear
+on a zero-free segment, and the good-heights module supplies nearby heights.
+The Littlewood boundary-limit passage, mollified second moment, complete and multilinear
 Kloosterman estimates, and Ingham's density estimate remain open in Lean.
 
 ## Uniform count of horizontal real-part zeros (15 November 2026)
