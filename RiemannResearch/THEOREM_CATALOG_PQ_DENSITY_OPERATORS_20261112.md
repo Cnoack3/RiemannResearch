@@ -70,6 +70,38 @@ physical full-conductor span in measure `v`. Orthogonality in both measures give
 `<D g_k,f>_P=0` by the exact change-of-weight identity. The reciprocal density
 proved by the finite sieve in `QReciprocalFullDensity` then forces `f=0`.
 
+## Complement separation and the bounded residual criterion (2026-11-15)
+
+Module: RH/QComplementDensitySeparation.lean
+Namespace: RiemannResearch.RH.QComplementDensitySeparation
+Here U=V-perp-Q, and the P complement is pulled back to the same Q carrier.
+
+| Declaration | Exact content |
+|---|---|
+| pareto_orthogonal_eq_density_image | U_P=B(U_Q), with the physical sequence identification explicit |
+| density_mem_orthogonal_iff | For u in U, B u belongs to U if and only if u=0 |
+| orthogonal_inf_density_image_eq_bot | U intersect B(U) is zero |
+| orthogonal_inf_inverse_image_eq_bot | U intersect B inverse(U) is zero |
+| id_sub_density_injective | I-B restricted to U is injective into the ambient space |
+| density_eigenvector_eq_zero | U contains no nonzero B-eigenvector |
+| orthogonal_eq_bot_iff_density_invariant | U=0 if and only if B(U) is contained in U |
+| orthogonal_inf_reciprocal_range_eq_bot | U intersect range(D) is zero |
+| orthogonal_eq_bot_iff_bounded_constant_residual | U=0 if and only if the physical values of Pi_U(1) admit a finite uniform bound |
+| exists_nonzero_submodule_inf_density_image_eq_bot | The actual B has a nonzero subspace S with S intersect B(S)=0 |
+| riemannHypothesis_of_orthogonal_eq_bot | Conditional research reduction: U=0 implies RH |
+
+The counterexample S is a line supported on the first two normalized coordinates.
+It is not the actual arithmetic complement U. It demonstrates that invertibility,
+positivity and trivial intersection alone cannot establish U=0.
+
+Canonical next check: prove that the actual residual r=Pi_U(1) satisfies
+`exists A >= 0, forall physical n >= 1, abs(r(n)) <= A`.
+This remains **Open**. The existing annihilator tail-escape theorem kills a
+bounded r; the checked arithmetic target-totality theorem then forces V=H.
+The complete Q norm bound on r does not supply this physical sup bound.
+Density invariance of U is likewise an equivalent open condition, not a provider.
+No unconditional U=0 or RH theorem is claimed.
+
 ## Density-coupling surjectivity continuation (2026-11-14)
 
 Let V be the actual full-conductor closure, W=V-perp-Q, and
