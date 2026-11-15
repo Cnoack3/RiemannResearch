@@ -3,6 +3,29 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Jensen divisor bound for the actual mollified zeta (15 November 2026)
+
+**ConreyBaluyotMollifiedJensen.lean** constructs the holomorphic
+symmetrization g_T(z) = (F(z+iT) + conjugate(F(conjugate(z)+iT)))/2,
+where F is the actual mollified zeta. On the real axis g_T(x) = Re F(x+iT).
+
+The proved generic Jensen estimate bounds the divisor sum inside an inner disk
+from a uniform outer-circle bound and a positive right-hand anchor. The
+specialization **exists_uniform_mollifiedZeta_jensen_bound** discharges those
+hypotheses unconditionally using the linear growth and right-line lower
+bound. For fixed epsilon >= 0 it chooses eta, Y, b, C uniformly in y, sigma,
+and T. With r = b - 1/2 and R = b - 1/4, it proves the divisor sum in
+the closed disk centered at b of radius r is at most
+
+  log(2 (1 + C (T + R) y)) / log(R / r).
+
+The actual theorem assumes y >= Y, 1/2 + 1/log y <= sigma <= 1/2 + eta,
+and T >= b + 1. Its output is the finite Jensen divisor sum, not a formalized
+cardinality or argument-variation estimate. The passage from this bound to
+the horizontal argument term, including zero-free segment and limiting
+conditions, remains open. The mollified moment, complete and multilinear
+Kloosterman estimates, and Ingham provider also remain open in Lean.
+
 ## Linear uniform mollifier growth (15 November 2026)
 
 **ConreyBaluyotMollifierLinearGrowth.lean** improves the bound below to
