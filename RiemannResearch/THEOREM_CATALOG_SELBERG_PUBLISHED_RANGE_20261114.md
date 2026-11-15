@@ -3,6 +3,24 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Weighted rectangle identity for the actual mollified product (15 November 2026)
+
+**ConreyBaluyotWeightedRectangle.lean** applies the previously proved weighted
+argument principle to the actual analytic product F = zeta M. For a rectangle
+of positive imaginary part on whose entire border F is nonzero, the theorem
+**mollifiedZeta_rectangle_weighted_zero_identity** constructs its finite
+zero set Z and proves
+
+  Re[(1/(2 pi i)) integral_boundary (s - Re z) F'(s)/F(s) ds]
+    = sum_{rho in Z} ord_rho(F) (Re rho - Re z).
+
+The analytic multiplicity is retained and zeros of the mollifier are included.
+The border nonvanishing hypothesis remains explicit. This is the weighted-zero
+side of the contour argument: the conversion into log-modulus and continuous
+phase integrals, the choice of both vertical boundaries and boundary-limit
+passage, and the upper mollified moment remain separate obligations. No
+unconditional density theorem is asserted here.
+
 ## One mollifier at both dyadic boundaries (15 November 2026)
 
 **ConreyBaluyotDyadicHorizontalArgument.lean** strengthens the preceding
