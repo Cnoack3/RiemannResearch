@@ -64,6 +64,59 @@ Here S=QFullResidueProjection.legalSpan and V=QFullResidueProjection.closure.
 Full R-density is transferred by B inverse D=zeta(2)R, not by inverting D.
 The complete P statements follow from the sequence-preserving equivalence and equivalent norms.
 
+## Density-coupling surjectivity continuation (2026-11-14)
+
+Let V be the actual full-conductor closure, W=V-perp-Q, and
+C=Pi_W B|V : V -> W. Its adjoint maps W -> V. The new result is the
+unconditional equivalence
+\[
+\operatorname{Surjective}(C)
+\iff \exists N,\ \forall w\in W,\
+  [w(1)=\cdots=w(N)=0\Rightarrow w=0]
+\iff \dim W<\infty.
+\]
+Existence of such a finite detecting head remains **Open**. Surjectivity,
+finite-dimensionality, W=0, and RH are not asserted unconditionally.
+N=0 is allowed and then the detecting-head condition says W=0.
+
+Module: RH/QDensityCouplingSurjectivity.lean
+Namespace: RiemannResearch.RH.QDensityCouplingSurjectivity
+
+| Declaration | Exact content |
+|---|---|
+| coupling, reverseCoupling, coupling_coe | Actual density leakage V -> W and reverse compression W -> V |
+| coupling_adjoint | The reverse compression is the Q adjoint |
+| reverseCoupling_eq_reciprocal | C* w=(1/zeta(2)) Pi_V D w |
+| reverseCoupling_zero, coupling_adjoint_injective | Unconditional injectivity from full reciprocal density |
+| coupling_dense_range | The range of C is dense in W |
+| coupling_adjoint_tail_bound | First N normalized coordinates zero implies norm(C* w) <= norm(w)/(zeta(2)(N+1)) |
+| PhysicalHeadUnique, physicalHeadUnique_iff | Exact translation to physical sites 1 through N |
+| coupling_surjective_iff_finite_head | Surjectivity is equivalent to existence of one detecting physical head |
+| coupling_surjective_iff_finiteDimensional | Surjectivity is equivalent to finite-dimensionality of W |
+| exists_unit_head_zero_small_adjoint | If W is infinite-dimensional, each head misses a unit vector with the explicit adjoint bound |
+| coupling_not_surjective_of_infiniteDimensional | The infinite-dimensional case rules out surjectivity |
+| coupling_surjective_of_finite_head | **Conditional research reduction**; the finite-head existence premise is Open |
+
+The reusable proof is in Analysis/FiniteHeadSurjectivity.lean. It derives a
+uniform adjoint norm bound from surjectivity using the Banach open mapping
+theorem, then combines a tail bound with finite-coordinate linear algebra.
+Its reverse implication uses dense range in a finite-dimensional target.
+
+The owning metric modules also add QDensityMetric.B_symmetric,
+QReciprocalMetric.D_norm_sq (the exact complete energy), and
+QReciprocalMetric.D_norm_le_of_head_zero. No infinite tail is discarded.
+
+
+Focused acceptance for this continuation:
+- Job: job_z7V0NFKgfzXtYNY8pGgC7IU0_lMKCrZo.
+- Backend: Bazel --config=buildbuddy.
+- Target: //RiemannResearch/RH:QDensityCouplingSurjectivity.
+- Result: verified=true, exit_code=0; server verification duration 202.086 seconds.
+- Source SHA-256: a94b00dd8fe54d8222170f10ae6cda35b3d36ddc09bb04da0900a459776d5da1.
+- [BuildBuddy log](https://app.buildbuddy.io/invocation/b5465e74-72da-4ddb-9864-e437ac0becde).
+- Full-project validation and publication are performed by the required checkpoint;
+  this focused receipt alone does not certify downstream consumers.
+
 ## Conditional research reductions
 
 | Declaration | Exact open premise | Conclusion |

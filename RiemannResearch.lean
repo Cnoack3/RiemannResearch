@@ -85,6 +85,8 @@ import RiemannResearch.RH.QFullDensityConditionalConverse
 import RiemannResearch.RH.QFullTargetTotality
 import RiemannResearch.RH.QDensityLeakage
 import RiemannResearch.RH.QDensityLeakageQuantitative
+import RiemannResearch.Analysis.FiniteHeadSurjectivity
+import RiemannResearch.RH.QDensityCouplingSurjectivity
 import RiemannResearch.RH.QReciprocalNormalizedBalance
 import RiemannResearch.RH.QReciprocalBalanceCertificates
 import RiemannResearch.RH.QResidualDilationCorrelation

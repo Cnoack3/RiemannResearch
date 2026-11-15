@@ -7,6 +7,7 @@ import RiemannResearch.RH.QReciprocalMetric
 import RiemannResearch.RH.ParetoWeights
 import RiemannResearch.RH.ZetaTwoHilbertSpace
 import RiemannResearch.RH.ZetaTwoProbability
+import Mathlib.Analysis.InnerProductSpace.l2Space
 import Mathlib.Analysis.Normed.Operator.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Positivity
@@ -59,5 +60,15 @@ theorem weight_mul_density (k : ℕ) (hk : 0 < k) :
   have hk1 : (k : ℝ) + 1 ≠ 0 := by positivity
   unfold Pareto.positiveWeight positiveQWeight
   field_simp [hkR, hk1, ne_of_gt zetaTwo_pos]
+
+/-- The positive density multiplier is symmetric in the Q inner product. -/
+theorem B_symmetric (f g : QHilbert) :
+    inner ℝ (B f) g = inner ℝ f (B g) := by
+  rw [lp.inner_eq_tsum, lp.inner_eq_tsum]
+  apply tsum_congr
+  intro n
+  change g n * (B f n) = (B g n) * f n
+  simp only [B_apply]
+  ring
 
 end RiemannResearch.RH.QDensityMetric

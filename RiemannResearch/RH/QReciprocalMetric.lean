@@ -152,4 +152,36 @@ theorem D_norm_sq_le_four_shifted (f : QHilbert) :
   have hs : ((n : ℝ) + 2) ^ 2 ≤ 4 * ((n : ℝ) + 1) ^ 2 := by nlinarith
   nlinarith [mul_le_mul_of_nonneg_left hs (sq_nonneg (f n))]
 
+/-- Exact complete reciprocal energy, before any head or tail estimate. -/
+theorem D_norm_sq (f : QHilbert) :
+    ‖D f‖ ^ 2 = ∑' n : ℕ, (f n) ^ 2 / ((n : ℝ) + 1) ^ 2 := by
+  rw [qNorm_sq]
+  simp only [D_apply, div_pow]
+
+/-- A vector vanishing on its first N normalized coordinates has a small
+reciprocal image. Normalized coordinate n represents physical site n+1. -/
+theorem D_norm_le_of_head_zero (N : ℕ) (f : QHilbert)
+    (hf : ∀ n : ℕ, n < N → f n = 0) :
+    ‖D f‖ ≤ (1 / ((N : ℝ) + 1)) * ‖f‖ := by
+  have hterm (n : ℕ) :
+      (D f n) ^ 2 ≤ (1 / ((N : ℝ) + 1)) ^ 2 * (f n) ^ 2 := by
+    rw [D_apply]
+    by_cases hn : n < N
+    · simp [hf n hn]
+    have hle : (N : ℝ) + 1 ≤ (n : ℝ) + 1 := by
+      exact_mod_cast Nat.succ_le_succ (Nat.le_of_not_gt hn)
+    have hd : ((N : ℝ) + 1) ^ 2 ≤ ((n : ℝ) + 1) ^ 2 := by
+      nlinarith [Nat.cast_nonneg (α := ℝ) N]
+    have hdiv := div_le_div_of_nonneg_left (sq_nonneg (f n))
+      (sq_pos_of_pos (by positivity : (0 : ℝ) < (N : ℝ) + 1)) hd
+    rw [div_pow, div_pow, one_pow]
+    simpa only [one_div, div_eq_mul_inv, mul_comm, one_mul] using hdiv
+  have hsq : ‖D f‖ ^ 2 ≤ (1 / ((N : ℝ) + 1)) ^ 2 * ‖f‖ ^ 2 := by
+    rw [qNorm_sq, qNorm_sq, ← tsum_mul_left]
+    exact Summable.tsum_le_tsum hterm (qCoordinate_square_summable _)
+      ((qCoordinate_square_summable _).mul_left _)
+  apply (sq_le_sq₀ (norm_nonneg _)
+    (mul_nonneg (by positivity) (norm_nonneg _))).mp
+  simpa only [mul_pow] using hsq
+
 end RiemannResearch.RH.QReciprocalMetric
