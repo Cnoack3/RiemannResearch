@@ -1,4 +1,5 @@
 import RiemannResearch.RH.PrimorialDensityLowerBound
+import RiemannResearch.Analysis.FinitePrimeProductBounds
 import RiemannResearch.RH.PrimorialSieveLift
 import RiemannResearch.RH.QuantitativeSieve
 import RiemannResearch.RH.QPrimeSieve
@@ -19,6 +20,7 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Abel
 import Lean.Elab.Tactic.Omega
 import Mathlib.Algebra.BigOperators.Intervals
 /-!
@@ -32,8 +34,9 @@ cutoff choice K_N, with no growth assumption on K_N.
 First retain the exact physical count and complete norm identities. Two
 finite blocks then force large source energy: covered-head drift for small
 cutoffs, and the first jump for large cutoffs. The elementary prime-product
-lemma discharges the arithmetic growth input without RH. For cofinal K_N,
-the damped images still converge to D1. Any additional correction that makes
+lemma discharges the arithmetic growth input without RH. For every positive K_N,
+the damped images still converge to D1, uniformly in the cutoff choice.
+Any additional correction that makes
 the sources bounded must itself have divergent norm.
 
 This does not exclude signed multiscale constructions. The provider application
@@ -311,28 +314,74 @@ theorem primorial_cutoff_p_norm_sq_tendsto (K : ℕ → ℕ) (hK : ∀ N, 0 < K 
     (cutoffLift (primorial N) (K N))
   nlinarith
 
-theorem primorial_cutoff_damped_tendsto (K : ℕ → ℕ) (hK : ∀ N, 0 < K N)
-    (hcofinal : Tendsto K atTop atTop) :
-    Tendsto (fun N : ℕ => D (cutoffLift (primorial N) (K N))) atTop (𝓝 (D qOne)) := by
-  have hpred : Tendsto (fun N => K N - 1) atTop atTop := by
-    apply tendsto_atTop.2
-    intro b
-    filter_upwards [hcofinal.eventually (eventually_ge_atTop (b+1))] with N hN
-    omega
-  have h1 := Real.continuous_sqrt.continuousAt.tendsto.comp
-    ((tailMass_tendsto qModel).comp hpred)
-  have h2 := Real.continuous_sqrt.continuousAt.tendsto.comp (tailMass_tendsto qModel)
-  have ht : Tendsto (fun N : ℕ =>
-      Real.sqrt (tailMass qModel (K N - 1)) + Real.sqrt (tailMass qModel N))
-      atTop (𝓝 0) := by
-    simpa only [Function.comp_def, Real.sqrt_zero, add_zero] using h1.add h2
+/-- The exact density coefficient is retained instead of replacing it by 1. -/
+theorem cutoffLift_damped_error (L N K : ℕ) (hL : 0 < L)
+    (hK : 0 < K) (hc : Covers L N) :
+    ‖D (cutoffLift L K) - D qOne‖ ≤
+      divisorDensity L * Real.sqrt (tailMass qModel (K-1)) +
+        Real.sqrt (tailMass qModel N) := by
+  have hδ := coefficient_bounds L 1 (by omega) (by norm_num)
+  simp only [coefficient, Nat.cast_one, div_one] at hδ
+  rw [damped_cutoffLift_eq, ← tailVector_one_eq]
+  have he : finiteApprox L 1 K - QReciprocalFullDensity.tailVector 1 =
+      divisorDensity L • (QDensityMetric.approximation K - qOne) +
+        (sieve L 1 - QReciprocalFullDensity.tailVector 1) := by
+    have hs := finiteApprox_sub_sieve L 1 K
+    simp only [coefficient, Nat.cast_one, div_one] at hs
+    rw [← hs]
+    abel
+  rw [he]
+  calc
+    _ ≤ ‖divisorDensity L • (QDensityMetric.approximation K - qOne)‖ +
+        ‖sieve L 1 - QReciprocalFullDensity.tailVector 1‖ := norm_add_le _ _
+    _ ≤ _ := by
+      rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg hδ.1]
+      exact add_le_add (mul_le_mul_of_nonneg_left
+        (approximation_error qModel K hK) hδ.1)
+        (by simpa only [Nat.cast_one, div_one, one_mul, qModel,
+          ContinuousLinearMap.id_apply, Nat.one_mul] using
+            sieve_error qModel L N 1 (by omega) (by norm_num) hc)
+
+
+theorem q_tailMass_le_one (M : ℕ) : tailMass qModel M ≤ 1 := by
+  rw [← positiveQWeight_tsum]
+  apply Summable.tsum_le_tsum _ (tail_summable qModel M) positiveQWeight_summable
+  intro n
+  change (if M < n then positiveQWeight n else 0) ≤ positiveQWeight n
+  split_ifs
+  · exact le_rfl
+  · exact positiveQWeight_nonneg n
+
+/-- Damped convergence is uniform in the positive correction conductor. -/
+theorem cutoffLift_damped_error_uniform (L N K : ℕ)
+    (hL : 0 < L) (hK : 0 < K) (hc : Covers L N) :
+    ‖D (cutoffLift L K) - D qOne‖ ≤
+      divisorDensity L + Real.sqrt (tailMass qModel N) := by
+  have hδ := coefficient_bounds L 1 (by omega) (by norm_num)
+  simp only [coefficient, Nat.cast_one, div_one] at hδ
+  have hs : Real.sqrt (tailMass qModel (K-1)) ≤ 1 := by
+    simpa only [Real.sqrt_one] using Real.sqrt_le_sqrt (q_tailMass_le_one (K-1))
+  exact (cutoffLift_damped_error L N K hL hK hc).trans
+    (add_le_add (by simpa using mul_le_mul_of_nonneg_left hs hδ.1) le_rfl)
+
+/-- No growth condition on K is needed for damped convergence. -/
+theorem primorial_cutoff_damped_tendsto (K : ℕ → ℕ) (hK : ∀ N, 0 < K N) :
+    Tendsto (fun N => D (cutoffLift (primorial N) (K N)))
+      atTop (𝓝 (D qOne)) := by
+  have hd : Tendsto (fun N => divisorDensity (primorial N)) atTop (𝓝 0) := by
+    have he (N : ℕ) : divisorDensity (primorial N) =
+        RiemannResearch.Analysis.finitePrimeProduct N := by
+      rw [divisorDensity_euler _ (squarefree_primorial N), primeFactors_primorial]
+      rfl
+    simpa only [he] using RiemannResearch.Analysis.finitePrimeProduct_tendsto_zero
+  have hs := Real.continuous_sqrt.continuousAt.tendsto.comp (tailMass_tendsto qModel)
+  have ht : Tendsto (fun N => divisorDensity (primorial N) +
+      Real.sqrt (tailMass qModel N)) atTop (𝓝 0) := by
+    simpa only [Function.comp_def, Real.sqrt_zero, add_zero] using hd.add hs
   apply tendsto_iff_norm_sub_tendsto_zero.mpr
-  apply squeeze_zero (fun N => norm_nonneg _) _ ht
-  intro N
-  have h := finiteApprox_error qModel (primorial N) N 1 (K N)
-    (primorial_ne_zero N) (by norm_num) (hK N) (primorial_covers N)
-  simpa only [← damped_cutoffLift_eq, tailVector_one_eq,
-    Nat.cast_one, div_one, one_mul, qModel, ContinuousLinearMap.id_apply] using h
+  exact squeeze_zero (fun N => norm_nonneg _)
+    (fun N => cutoffLift_damped_error_uniform (primorial N) N (K N)
+      (primorial_pos _) (hK N) (primorial_covers _)) ht
 
 /-- An explicit bound independent of the choice of cutoff. -/
 theorem primorial_uniform_energy_explicit (N K : ℕ) (hN : 3 ≤ N) (hK : 0 < K)
@@ -389,4 +438,29 @@ theorem necessary_correction_norm_tendsto (K : ℕ → ℕ) (hK : ∀ N, 0 < K N
     simpa only [add_sub_cancel_right] using
       norm_sub_le (cutoffLift (primorial N) (K N) + c N) (c N)
   linarith [hbound N]
+/-- Any uniformly bounded scalar rescaling of the divergent sieve loses its target. -/
+theorem scalar_tendsto_zero_of_bounded (K : ℕ → ℕ) (hK : ∀ N, 0 < K N)
+    (a : ℕ → ℝ) (C : ℝ)
+    (hb : ∀ N, ‖a N • cutoffLift (primorial N) (K N)‖ ≤ C) :
+    Tendsto a atTop (𝓝 0) := by
+  have hC : 0 ≤ C := (norm_nonneg _).trans (hb 0)
+  have hn := (primorial_cutoff_norms_tendsto K hK).1
+  have ht : Tendsto (fun N => C / ‖cutoffLift (primorial N) (K N)‖) atTop (𝓝 0) := by
+    simpa only [Function.comp_def, div_eq_mul_inv, mul_zero] using
+      (tendsto_inv_atTop_zero.comp hn).const_mul C
+  apply tendsto_iff_norm_sub_tendsto_zero.mpr
+  simp only [sub_zero]
+  apply squeeze_zero' (Eventually.of_forall (fun N => norm_nonneg (a N))) ?_ ht
+  filter_upwards [hn.eventually (eventually_gt_atTop (0 : ℝ))] with N hN
+  apply (le_div_iff₀ hN).mpr
+  simpa only [norm_smul] using hb N
+
+theorem bounded_rescaling_damped_tendsto_zero (K : ℕ → ℕ) (hK : ∀ N, 0 < K N)
+    (a : ℕ → ℝ) (C : ℝ)
+    (hb : ∀ N, ‖a N • cutoffLift (primorial N) (K N)‖ ≤ C) :
+    Tendsto (fun N => D (a N • cutoffLift (primorial N) (K N))) atTop (𝓝 0) := by
+  simpa only [map_smul, zero_smul] using
+    (scalar_tendsto_zero_of_bounded K hK a C hb).smul (primorial_cutoff_damped_tendsto K hK)
+
+
 end RiemannResearch.RH.PrimorialCutoff

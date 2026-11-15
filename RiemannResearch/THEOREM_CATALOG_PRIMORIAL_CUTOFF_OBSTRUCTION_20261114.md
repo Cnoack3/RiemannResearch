@@ -25,8 +25,8 @@ Both complete source norms tend to infinity:
 ```
 
 There is **no growth assumption on K_N** in this obstruction. Each source
-belongs to the finite legal span. If K_N tends to infinity, its damped image
-still converges strongly to D1. Thus changing the single cutoff cannot
+belongs to the finite legal span. Its damped image converges strongly to D1
+for every positive cutoff schedule; see the verified extension below. Thus changing the single cutoff cannot
 repair the missing bounded-source condition.
 
 This is a checked extension of the repository. No priority or novelty claim
@@ -117,7 +117,7 @@ All namespaces below have prefix `RiemannResearch.RH.`.
 | `PrimorialCutoff.lean` | `PrimorialCutoff.cutoffLift_mem`, `cutoffLift_sequence`, `cutoff_norm_sq_exact` | Exact finite membership and identities |
 | `PrimorialCutoff.lean` | `cutoff_jump_energy`, `cutoff_small_energy`, `cutoff_uniform_energy`, `primorial_uniform_energy_explicit` | Complete norm lower bounds |
 | `PrimorialCutoff.lean` | `primorial_cutoff_norms_tendsto` | Divergence for every positive cutoff sequence, in P and Q |
-| `PrimorialCutoff.lean` | `primorial_cutoff_damped_tendsto` | Strong convergence to D1 for cofinal cutoffs |
+| `PrimorialCutoff.lean` | `primorial_cutoff_damped_tendsto` | Strong convergence to D1 for every positive cutoff schedule |
 | `PrimorialCutoff.lean` | `necessary_correction_norm_tendsto` | Unavoidable divergence of corrections to bounded sources |
 | `PrimorialCutoffLeakage.lean` | `PrimorialCutoffLeakage.providerApprox_mem`, `provider_error_identity`, `provider_error_norm_identity` | Exact finite provider and signed error |
 | `PrimorialCutoffLeakage.lean` | `primorial_provider_scaled_error_tendsto` | Scaled error diverges for this provider family |
@@ -228,3 +228,216 @@ Retained workspace token:
 Project root:
 `/home/cri_2025/lean-agent-workspaces/ws_7DCmDIw7bhSfWmPzfDKzqxTUy7PpbbYr/RiemannResearch`.
 This is a Lean-server path, not a local attachment path.
+
+
+## Compactness review and coefficient extension — 14 November 2026
+
+This continuation starts from published commit
+13df1e0c895794f6cecde835a577c6f96f5ec253. The all-cutoff source-divergence
+theorem above was already present there. The user reviewed this extension
+and authorized committing and publishing it on 14 November 2026.
+
+### Stronger damped convergence
+
+The revised primorial_cutoff_damped_tendsto removes its cofinality hypothesis.
+For every positive cutoff schedule K_N, including constant and oscillating
+schedules, D v_(N,K_N) converges strongly in Q to D1. The new finite estimates
+retain the exact sieve density:
+
+\[
+ \|D v_{L,K}-D1\|_Q
+ \le \delta_L \sqrt{T_Q(K-1)}+\sqrt{T_Q(N)}
+ \le \delta_L+\sqrt{T_Q(N)}.
+\]
+
+Here L covers 2 through N and T_Q(M) is the complete Q mass on n>M.
+The first term's coefficient was previously bounded by 1. Keeping delta_L
+makes the convergence uniform over all positive K. The proof uses the
+existing elementary finite-prime-product decay and summable Q tails.
+
+New declarations in PrimorialCutoff:
+cutoffLift_damped_error, q_tailMass_le_one,
+cutoffLift_damped_error_uniform, scalar_tendsto_zero_of_bounded,
+bounded_rescaling_damped_tendsto_zero.
+
+If t_N v_(N,K_N) has uniformly bounded Q norm, then t_N tends to zero,
+and D(t_N v_(N,K_N)) tends to zero. Scalar normalization therefore loses D1.
+The same boundedness obstruction holds in P by the existing norm equivalence.
+
+### Arbitrarily chosen correcting coefficients
+
+New module: RH/PrimorialCoefficientObstruction.lean.
+
+Define the finite legal vector
+
+\[
+ F_{L,K,a}=a g_K-\sum_{d\mid L}\mu(d)g_d,
+ \qquad a\in\mathbb R.
+\]
+
+The exact physical sequence is C_L(n)-delta_L n+a g_K(n).
+For a positive multiple H of K, while both sites lie in the covered head,
+
+\[
+ F_{L,K,a}(n+H)-F_{L,K,a}(n)=-\delta_L H.
+\]
+
+Thus the arbitrary coefficient cancels exactly. Pair the H sites in [H,2H)
+with [2H,3H); summing
+(x^2+y^2)>=(x-y)^2/2 against a lower bound for the actual Q weights gives
+
+\[
+ \frac{H\delta_L^2}{18\zeta(2)}
+ \le \|F_{L,K,a}\|_Q^2.
+\]
+
+Taking H=K floor(M/K), with 1<=K<=M, gives H>=M/2 and therefore
+
+\[
+ \boxed{\frac{M\delta_L^2}{36\zeta(2)}
+ \le \|F_{L,K,a}\|_Q^2}
+ \qquad\text{for every }a\in\mathbb R.
+\]
+
+Only positivity, K<=M, and coverage through 3M are needed; there is no
+delta_L M>=2 assumption. All norms include the entire infinite tail.
+
+For L_N=primorial N, arbitrary real coefficients a_N, and every positive
+schedule eventually satisfying K_N<=floor(N/3), the squared Q source norms
+tend to infinity. The existing growth of floor(N/3) delta_N^3, together
+with 0<delta_N<=1, discharges the arithmetic growth input. No RH premise
+occurs in this theorem.
+
+Central declarations:
+coefficientLift_eq, coefficientLift_mem, coefficientLift_sequence,
+coefficientLift_head_difference, coefficientLift_block_energy,
+coefficientLift_small_energy, coefficientLift_small_norm_sq_tendsto.
+
+This does not exclude freely chosen coefficients with large cutoffs, or
+several signed correction residues. The existing all-cutoff divergence
+theorem concerns the prescribed coefficient a_N=delta_N K_N.
+
+### Which replacement actually supports compactness?
+
+| Construction | Source bound | Actual limit or remaining condition |
+|---|---|---|
+| Original diagonal primorial lift | Diverges in P and Q | D-image tends to D1 |
+| Prescribed-coefficient single cutoff, arbitrary positive K_N | Diverges in P and Q | D-image tends to D1 without cofinality |
+| Freely chosen coefficient, K_N<=floor(N/3) eventually | Complete squared Q norm diverges | Optimizing this coefficient cannot repair boundedness |
+| Uniformly bounded scalar rescaling of the prescribed family | Bounded by assumption | D-image tends to 0 |
+| Full finite Q projection p_N of 1 | Norm at most 1, unconditionally | Strong limit is projection of 1 onto V |
+| Optimal exact-head vectors in closed V | Uniform energy bound remains Open | Existing QOptimalExactHead identifies this bound with 1 in V |
+| Several signed legal corrections or Tikhonov minimizers | No new uniform bound established | Must prove full signed cost control and the correct target |
+
+QFiniteBoundedLift already proves that existence of any uniformly bounded
+finite legal D-lift to D1 is equivalent to existence of finite legal
+unit-ball vectors converging strongly to 1. The canonical full inverse-Gram
+candidates have norm at most 1; their D-images converge to D1 if and only if
+1 belongs to V. QReciprocalTargetLift proves that this membership implies RH.
+
+The exact projection coefficients are G_N^{-1} b_N, with the complete Q Gram
+matrix and b_i=<g_i,1>_Q. Their unconditional limit is P_V 1, not a
+proved identification with 1. A bounded trial found by source-norm
+minimization alone is not evidence that its target has been preserved.
+
+For a feasible finite-conductor exact-head system A c=1 and positive-definite
+complete source Gram matrix G, the minimum-energy coefficients are
+G^{-1} A^T (A G^{-1} A^T)^{-1} 1. This formula requires full row rank of A.
+It is a linear-algebra candidate, not a new uniform arithmetic estimate.
+
+
+For several signed correction residues, write s=-sum_(d|L) mu(d)g_d and
+r=sum_i c_i g_(K_i). With complete Gram matrix G_ij=<g_(K_i),g_(K_j)>_Q
+and b_i=<g_(K_i),s>_Q, the exact energy is
+
+\[
+ \|s+r\|_Q^2=\|s\|_Q^2+2b^\top c+c^\top Gc.
+\]
+
+When G is invertible, the unconstrained energy minimizer is c=-G^{-1}b,
+with minimum ||s||^2-b^T G^{-1}b. This does not constrain the damped target;
+if the correction span includes s, it can simply cancel the source to zero.
+A useful optimization must retain the target error or exact-head constraints.
+
+For Tikhonov cost ||D(f-1)||_Q^2+lambda||f||_Q^2, a bound C lambda along
+lambda down to zero supplies both a uniform source bound and the correct
+damped limit. This is the existing conditional theorem
+QReciprocalTargetLift.riemannHypothesis_of_regularized_D_cost.
+Minimizer existence alone does not give C independent of lambda.
+
+### Weaker topologies
+
+A norm-closed linear subspace of a Hilbert space is weakly closed.
+Consequently Hilbert weak convergence, or weak-star convergence after Riesz
+identification, preserves the same legal closure and cannot bypass the source
+norm obstruction. Closed norm balls support weak compactness, but proving
+membership of the correct weak limit remains necessary.
+
+The topology defined by ||Df||_Q is strictly weaker: it is physical
+square summability with weights 1/(zeta(2)n^4). The displayed sieve already
+converges to 1 in that topology. Pointwise convergence likewise loses
+complete-source energy control. Neither establishes 1 in the original
+P/Q legal closure.
+
+For the unrestricted legal approximation problem, the precise dichotomy
+remains: if 1 is outside V, every legal sequence with D-image tending to D1
+has source norm tending to infinity; if 1 lies in V, the canonical finite
+projections are bounded strong approximants. The present work proves
+family-specific obstructions, not nonmembership of 1 in V.
+
+### Complete-energy Wolfram checks
+
+For an L-periodic source f with K dividing L, Wolfram evaluated the complete
+Q energy via the convergent residue-class identity
+
+\[
+ \|f\|_Q^2 =
+ \frac{1}{\zeta(2)L^2}\sum_{r=1}^L f(r)^2\psi_1(r/L).
+\]
+
+These are numerical evaluations of an exact infinite-tail formula, not
+kernel certificates or asymptotic evidence.
+
+| N | L_N | Diagonal K=L_N | Prescribed coefficient, K=2 | Minimum over a at K=2 |
+|---:|---:|---:|---:|---:|
+| 3 | 6 | 1.081644 | 0.680354 | 0.059668 |
+| 5 | 30 | 2.304360 | 0.684076 | 0.104850 |
+| 7 | 210 | 9.137701 | 0.716903 | 0.159601 |
+| 11 | 2310 | 77.254995 | 0.744395 | 0.195550 |
+
+Every displayed quantity is source energy, not error to 1. In particular the
+smallest entries do not by themselves retain the desired target. The new
+theorem proves eventual divergence for arbitrary coefficient choices at
+fixed K=2, despite these small finite values.
+
+The literature review additionally checked Baez-Duarte's
+A strengthening of the Nyman-Beurling criterion (arXiv:math/0202141),
+A divergent Vasyunin correction (arXiv:math/0506318), and Bettin-Conrey-Farmer
+(arXiv:1211.5191). The last paper's logarithmically smoothed Mobius polynomial
+has a sharp conditional asymptotic under RH and an inverse-zeta-derivative
+moment condition. It cannot supply an unconditional bound in an RH proof.
+
+### Review status
+
+The permanent source modules and eight selected declarations passed the guarded
+Bazel/BuildBuddy audit: job_EoqSXpb8h2b1ktqT19e0GsI5zqCBmmSb, 58.251 seconds
+server job elapsed. Every guarded report contains exactly propext,
+Classical.choice, and Quot.sound.
+Receipt: https://app.buildbuddy.io/invocation/c85dc26b-5912-4eb2-bcf9-1fe424520a80.
+
+The full project target //:RiemannResearch then passed in
+job_Fk5jUQWwjOGQbRL6k-iSwFAY7ZTH2rRK, 191.782 seconds server job elapsed,
+with backend bazel and BuildBuddy. This covers downstream consumers and the
+new root export. Receipt:
+https://app.buildbuddy.io/invocation/1d66c11a-2bd8-4f2e-b7fa-d5b486ab8526.
+
+The subsequent catalog edits are documentation only. No Lean source changed
+after that full-project check. Publication was authorized after review and is
+performed through the managed full-project Bazel/BuildBuddy checkpoint.
+The retained workspace is
+ws_uapFHlU7P3G6COy0w6v5dq5dObI06leL, based on
+13df1e0c895794f6cecde835a577c6f96f5ec253.
+The remaining arithmetic target is still Open:
+construct actual finite legal f_j with one common bound on ||f_j||_Q and
+D f_j -> D1, or equivalently prove the canonical unit-ball projection
+sequence preserves the target. No such provider is claimed here.
