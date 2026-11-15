@@ -3,6 +3,29 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Horizontal phase displacement from the real-zero count (15 November 2026)
+
+**ConreyBaluyotHorizontalPhase.lean** proves a general finite-crossing
+principle: if a continuous phase on [A,B] has all cosine zeros covered by a
+finite set S, then every phase displacement from B is bounded by
+pi (|S| + 2). This controls displacement, not total variation.
+
+**exists_uniform_mollifiedZeta_horizontalPhase_bound** combines the
+crossing principle with the actual real-part zero count. For every fixed
+epsilon >= 0 it chooses uniform strip parameters eta, Y, b and C. For
+admissible y, sigma and T, any continuous phi satisfying the polar
+representation
+
+  zeta(x+iT) M(x+iT) = |zeta(x+iT) M(x+iT)| exp(i phi(x))
+
+on [1/2,b] obeys |phi(x) - phi(b)| <= pi (J(T,y) + 2), where J is
+the explicit logarithmic real-zero bound in the next section.
+
+The theorem assumes the continuous polar phase rather than constructing it.
+Existence on zero-free horizontal segments, normalization, the Littlewood
+boundary-limit passage, the mollified second moment, complete and multilinear
+Kloosterman estimates, and Ingham's density estimate remain open in Lean.
+
 ## Uniform count of horizontal real-part zeros (15 November 2026)
 
 **ConreyBaluyotHorizontalRealZeros.lean** proves that every distinct zero of
