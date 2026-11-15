@@ -1,5 +1,10 @@
 # Actual signed-head detection: bounds, obstructions, and review
 
+Continuation: [sharper Cauchy tail certificates and the exact RH criterion](THEOREM_CATALOG_SIGNED_HEAD_CRITERION_20261114.md).
+The continuation separates its new verified structural results from the still
+open arithmetic provider. The user explicitly approved its six files for
+managed checkpoint publication.
+
 Date: 14 November 2026. Starting revision:
 `4383b0b81dfd284c0845cd182f50a26644cb44c5`.
 Retained workspace: `ws_FORguE7ZeEWRBMEHezcT0XdjWF855Bob`.
