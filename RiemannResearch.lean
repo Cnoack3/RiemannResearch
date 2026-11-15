@@ -1,3 +1,6 @@
+import RiemannResearch.Analysis.GaussianWindow
+import RiemannResearch.Analysis.ConreyBaluyotGaussianMoment
+import RiemannResearch.Analysis.ConreyBaluyotGaussianReflection
 import RiemannResearch.Analysis.CompressionVariance
 import RiemannResearch.RH.QDensityCouplingVariance
 import RiemannResearch.Analysis.ComplexLogLiftUniqueness

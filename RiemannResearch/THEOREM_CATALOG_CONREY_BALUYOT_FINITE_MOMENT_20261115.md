@@ -1,5 +1,10 @@
 # Conrey–Baluyot finite moments and prescribed-line transfer — 15 November 2026
 
+Subsequent development: [Gaussian moment continuation](THEOREM_CATALOG_CONREY_BALUYOT_GAUSSIAN_MOMENT_20261115.md).
+Gaussian integrability, explicit desmoothing and the initial reflected vertical
+integral are now proved. The linked catalog supersedes the agenda below; the
+substantive smoothed-moment and arithmetic estimates remain open.
+
 Starting published checkpoint: [0ae685c9dfc5ab72a9791d16b915a17e42d8ef7a](https://github.com/Cnoack3/RiemannResearch/commit/0ae685c9dfc5ab72a9791d16b915a17e42d8ef7a).
 Current main matched that checkpoint when this continuation began.
 
