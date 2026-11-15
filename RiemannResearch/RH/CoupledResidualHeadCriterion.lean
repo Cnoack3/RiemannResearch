@@ -1,4 +1,6 @@
 import RiemannResearch.RH.CoupledResidualCauchyHead
+import RiemannResearch.RH.CoupledResidualDyadicAccounting
+import RiemannResearch.RH.DyadicGainEndpoint
 import RiemannResearch.RH.LogarithmicCorrectionTarget
 import RiemannResearch.Analysis.ResidualGainProduct
 import Mathlib.Tactic.FieldSimp
@@ -172,5 +174,87 @@ theorem riemannHypothesis_of_nonsummable_cauchyHead
   exact riemannHypothesis_of_distance_convergence (fun j => 2^(J+j))
     ((RiemannResearch.Analysis.ResidualGain.residual_tendsto_zero_iff_not_summable
       (hd 0) hr0 hr1 hrec).mpr hnr)
+
+/-- Complete normalized detection. Lean's zero division sets it to zero at zero-trace stages. -/
+def normalizedSourceSquare (M : ℕ) : ℝ :=
+  sourceSquare M / (distance M * trace M)
+
+/-- Normalized detection is nonnegative even at a degenerate stage. -/
+theorem normalizedSourceSquare_nonneg (M : ℕ) :
+    0 ≤ normalizedSourceSquare M :=
+  div_nonneg (sourceSquare_nonneg M)
+    (mul_nonneg (distance_pos M).le (trace_nonneg M))
+
+/-- A zero-trace stage contributes zero normalized detection. -/
+theorem normalizedSourceSquare_of_zero_trace (M : ℕ) (ht : trace M = 0) :
+    normalizedSourceSquare M = 0 := by
+  simp [normalizedSourceSquare, ht]
+
+/-- The relative-gain comparison requires no separate trace-positivity hypothesis. -/
+theorem normalizedSourceSquare_le_relativeGain (M : ℕ) :
+    normalizedSourceSquare M ≤ gain M / distance M := by
+  have hh := div_le_div_of_nonneg_right
+    (sourceSquare_div_trace_le_gain M) (distance_pos M).le
+  simpa only [normalizedSourceSquare, div_div, mul_comm] using hh
+
+/-- Conditional RH reduction. Divergence of the actual normalized sources remains open. -/
+theorem riemannHypothesis_of_nonsummable_normalizedSource (J : ℕ)
+    (hns : ¬ Summable (fun j => normalizedSourceSquare (2 ^ (J + j)))) :
+    RiemannHypothesis := by
+  apply riemannHypothesis_of_dyadic_gain_divergence J
+  intro hs
+  exact hns (Summable.of_nonneg_of_le
+    (fun j => normalizedSourceSquare_nonneg _)
+    (fun j => normalizedSourceSquare_le_relativeGain _) hs)
+
+/-- Finite-head normalized detection, again zero at zero-trace stages. -/
+def normalizedCauchySquare (M K : ℕ) : ℝ :=
+  cauchySourceSquare M K / (distance M * trace M)
+
+/-- The finite-head normalized certificate is nonnegative. -/
+theorem normalizedCauchySquare_nonneg (M K : ℕ) :
+    0 ≤ normalizedCauchySquare M K := by
+  apply div_nonneg _ (mul_nonneg (distance_pos M).le (trace_nonneg M))
+  exact add_nonneg (sq_nonneg _) (sq_nonneg _)
+
+/-- Every finite-head certificate lies below the complete normalized source square. -/
+theorem normalizedCauchySquare_le_source (M K : ℕ) :
+    normalizedCauchySquare M K ≤ normalizedSourceSquare M :=
+  div_le_div_of_nonneg_right (cauchySourceSquare_le_sourceSquare M K)
+    (mul_nonneg (distance_pos M).le (trace_nonneg M))
+
+/-- Conditional RH reduction allowing arbitrary zero-trace stages. -/
+theorem riemannHypothesis_of_nonsummable_normalizedCauchy (J : ℕ) (K : ℕ → ℕ)
+    (hns : ¬ Summable (fun j => normalizedCauchySquare (2 ^ (J + j)) (K j))) :
+    RiemannHypothesis := by
+  apply riemannHypothesis_of_nonsummable_normalizedSource J
+  intro hs
+  exact hns (Summable.of_nonneg_of_le
+    (fun j => normalizedCauchySquare_nonneg _ _)
+    (fun j => normalizedCauchySquare_le_source _ _) hs)
+
+/-- Conditional RH reduction: only selected stages need a certificate.
+The selected nonnegative weights must be nonsummable; cofinality alone does not suffice. -/
+theorem riemannHypothesis_of_masked_cauchySchedule
+    (J : ℕ) (K : ℕ → ℕ) (a : ℕ → ℝ) (good : Set ℕ)
+    (ha : ∀ j, 0 ≤ a j) (hns : ¬ Summable (good.indicator a))
+    (ht : ∀ j ∈ good, 0 < trace (2 ^ (J + j)))
+    (hcert : ∀ j ∈ good,
+      a j * distance (2 ^ (J + j)) * trace (2 ^ (J + j)) ≤
+        cauchySourceSquare (2 ^ (J + j)) (K j)) :
+    RiemannHypothesis := by
+  apply riemannHypothesis_of_nonsummable_normalizedCauchy J K
+  intro hs
+  apply hns
+  apply Summable.of_nonneg_of_le _ _ hs
+  · intro j
+    exact Set.indicator_nonneg (fun i hi => ha i) j
+  · intro j
+    by_cases hj : j ∈ good
+    · rw [Set.indicator_of_mem hj]
+      apply (le_div_iff₀ (mul_pos (distance_pos _) (ht j hj))).mpr
+      simpa only [mul_assoc] using hcert j hj
+    · rw [Set.indicator_of_notMem hj]
+      exact normalizedCauchySquare_nonneg _ _
 
 end RiemannResearch.RH.Pareto.CoupledResidual

@@ -9,6 +9,16 @@
   `serre-ii-archive-20260904`. Do not reconstruct or publish Serre II modules on
   `main`; future Serre II work requires an explicitly branch-aware workspace.
 
+## Standing publication authorization
+
+- The user explicitly instructed on 2026-11-14: "always publish". For completed
+  Lean research work in this repository, commit and push after successful
+  mandatory server verification without requesting another confirmation.
+  This standing authorization supersedes older handoff notes that ask for
+  separate approval of repository commits and pushes.
+- Continue to use the managed checkpoint and its verification gates below.
+  A later explicit task-specific user restriction takes precedence.
+
 ## Mandatory server verification before publication
 
 - The private repository uses GitHub for source hosting. GitHub-hosted CI is

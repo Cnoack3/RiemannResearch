@@ -1,5 +1,9 @@
 # Signed-head detection: sharper tails and the RH criterion
 
+Continuation: [exact dyadic source accounting and masked RH detection](THEOREM_CATALOG_SIGNED_SOURCE_DYADIC_20261114.md).
+The continuation proves unconditional summability and permits zero-trace stages;
+the normalized arithmetic divergence remains open.
+
 Date: 14 November 2026.
 Base commit: `cf60e52ec04283928cfd5e335da151632237ad93`.
 Retained workspace: `ws_FORguE7ZeEWRBMEHezcT0XdjWF855Bob`.
