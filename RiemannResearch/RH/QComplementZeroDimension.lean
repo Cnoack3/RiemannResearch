@@ -1,8 +1,10 @@
+import RiemannResearch.Analysis.FiniteHeadSurjectivity
 import RiemannResearch.RH.ArithmeticConductorCommonZeros
 import RiemannResearch.RH.ParetoAtomMellinSignature
 import RiemannResearch.RH.ParetoMellinDilation
 import RiemannResearch.RH.QFloorDilation
 import RiemannResearch.RH.QDensityCouplingSurjectivity
+import RiemannResearch.RH.ZetaTwoProbability
 import Mathlib.LinearAlgebra.Dimension.Finite
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.LinearAlgebra.LinearIndependent.Basic
@@ -11,6 +13,7 @@ import Mathlib.Data.PNat.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.Linarith
+import Lean.Elab.Tactic.Omega
 
 
 /-!
@@ -234,5 +237,41 @@ theorem finite_rightZeros_of_coupling_surjective
   letI : FiniteDimensional ℝ W :=
     QDensityCouplingSurjectivity.coupling_surjective_iff_finiteDimensional.mp h
   exact finite_rightZeros_of_finiteDimensional
+
+
+open QDensityCouplingSurjectivity ZetaTwoProbability
+open RiemannResearch.Analysis.FiniteHeadSurjectivity
+
+/-- Conditional zero-count bound supplied by a uniform adjoint lower estimate. -/
+theorem rightZero_family_card_le_of_adjoint_lower_bound
+    (δ : ℝ) (hlower : ∀ w : W, δ * ‖w‖ ≤ ‖coupling.adjoint w‖)
+    (N : ℕ) (hN : (1 / zetaTwo) / ((N : ℝ) + 1) < δ)
+    {ι : Type*} [Fintype ι] (s : ι → RightZero) (hs : Function.Injective s) :
+    Fintype.card ι ≤ N := by
+  have hh := physicalHeadUnique_of_adjoint_lower_bound δ hlower N hN
+  let _ := finiteDimensional_of_headUnique coordinates N ((physicalHeadUnique_iff N).mp hh)
+  exact (rightZero_family_card_le_finrank s hs).trans
+    (finrank_le_of_physicalHeadUnique N hh)
+
+/-- More than N actual distinct right-hand zeros force a small adjoint direction.
+No finite-dimensionality, zero-finiteness, or spectral synthesis is assumed. -/
+theorem exists_unit_small_adjoint_of_rightZero_family
+    {ι : Type*} [Fintype ι] (s : ι → RightZero) (hs : Function.Injective s)
+    (N : ℕ) (hN : N < Fintype.card ι) :
+    ∃ w : W, ‖w‖ = 1 ∧
+      (∀ n : ℕ, n < N → coordinates w n = 0) ∧
+      ‖coupling.adjoint w‖ ≤ (1 / zetaTwo) / ((N : ℝ) + 1) := by
+  have hnot : ¬ HeadUnique coordinates N := by
+    intro hh
+    let _ := finiteDimensional_of_headUnique coordinates N hh
+    have hc := (rightZero_family_card_le_finrank s hs).trans
+      (finrank_le_of_headUnique coordinates N hh)
+    omega
+  obtain ⟨w, hw, hh⟩ := exists_unit_head_zero_of_not_headUnique coordinates N hnot
+  exact ⟨w, hw, hh, by simpa only [hw, mul_one] using coupling_adjoint_tail_bound N w hh⟩
+
+#print axioms rightZero_family_card_le_of_adjoint_lower_bound
+#print axioms exists_unit_small_adjoint_of_rightZero_family
+#print axioms QDensityCouplingSurjectivity.finiteDimensional_iff_adjoint_lower_bound
 
 end RiemannResearch.RH.QComplementZeroDimension

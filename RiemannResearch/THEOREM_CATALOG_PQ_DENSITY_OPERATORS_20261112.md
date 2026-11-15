@@ -163,6 +163,217 @@ Bazel --config=buildbuddy, verified=true, exit_code=0,
 [BuildBuddy log](https://app.buildbuddy.io/invocation/9a9fdf6b-e8d1-4f6f-b1e8-9805444a651f).
 This is a snippet receipt; publication requires the full-project checkpoint.
 
+## Structural dimension audit and quantitative bounds (2026-11-14)
+
+Proofs developed and reviewed on base commit
+`13df1e0c895794f6cecde835a577c6f96f5ec253`.
+Finite-dimensionality of W, surjectivity of C, and RH remain **Open**.
+
+Write Z = zeta(2), H = QHilbert, V = the actual closed all-conductor residue
+span, W = V-perp-Q, and C = Pi_W B|V. In normalized coordinates indexed by
+n >= 0, D acts by division by n+1 and B = (I+D)/Z.
+
+### Exact statements added
+
+| Module / declaration | Status and exact content |
+|---|---|
+| Analysis/FiniteHeadSurjectivity.finrank_le_of_headUnique | A detecting head of length N gives finrank <= N |
+| Analysis/FiniteHeadSurjectivity.headUnique_of_adjoint_lower_bound | An adjoint lower estimate above the tail coefficient gives a detecting head |
+| Analysis/FiniteHeadSurjectivity.exists_unit_head_zero_of_not_headUnique | Failure of detection has a unit witness |
+| RH/QDensityCouplingSurjectivity.coupling_adjoint_energy_identity | Exact complete reciprocal energy with the W-projected remainder retained |
+| RH/QDensityCouplingSurjectivity.eq_zero_of_reciprocal_mem_orthogonal | Df in W implies f=0; in particular W intersects range(D) only at zero |
+| RH/QDensityCouplingSurjectivity.physicalHeadUnique_of_adjoint_lower_bound | A uniform lower estimate gives the explicit physical head cutoff |
+| RH/QDensityCouplingSurjectivity.finrank_le_of_physicalHeadUnique | A physical head of length N bounds the real dimension by N |
+| RH/QDensityCouplingSurjectivity.finiteDimensional_iff_adjoint_lower_bound | Exact equivalence between finite dimension and a uniform positive lower bound for C* |
+| RH/QDensityCouplingSurjectivity.finiteDimensional_and_finrank_le_of_adjoint_lower_bound | **Conditional** finite dimension and finrank <= N from the stated lower bound |
+| RH/QComplementZeroDimension.rightZero_family_card_le_of_adjoint_lower_bound | **Conditional** bound by N for any finite distinct family of actual right-hand zeros |
+| RH/QComplementZeroDimension.exists_unit_small_adjoint_of_rightZero_family | More than N actual distinct right-hand zeros force a unit vector with head zero and small C* image |
+
+The exact energy identity is
+\[
+ Z^2\|C^*w\|^2+\|\Pi_W Dw\|^2
+ =\|Dw\|^2
+ =\sum_{n=0}^{\infty}\frac{|\widehat w_n|^2}{(n+1)^2}.
+\]
+Here \(\widehat w_n\) is the normalized coordinate, not the physical value.
+No signed or projected remainder is discarded.
+
+The exact dimension criterion is
+\[
+ \dim_{\mathbb R}W<\infty
+ \quad\Longleftrightarrow\quad
+ \exists\delta>0\ \forall w\in W,\quad
+       \delta\|w\|\le\|C^*w\|.
+\]
+Neither side has an unconditional provider. If such a lower estimate is supplied,
+then for every N satisfying \(1/[Z(N+1)]<\delta\),
+\[
+ \dim_{\mathbb R}W\le N.
+\]
+Indeed, a vector whose first N coordinates vanish satisfies the reverse upper
+estimate \(\|C^*w\|\le\|w\|/[Z(N+1)]\); the strict gap forces that vector to
+vanish. The head map into \(\mathbb R^N\) is therefore injective.
+
+Conversely, more than N actual distinct right-hand zeros force a unit vector
+with its first N coordinates zero and
+\[
+ \|C^*w\|\le\frac1{Z(N+1)}.
+\]
+If the head map were injective, the new dimension upper bound and the existing
+independent-zero-functional lower bound would contradict each other. This
+argument does not assume W is finite-dimensional. It counts distinct zeros,
+not their analytic multiplicities.
+
+### Counterexample to the operator-only route
+
+The following is an explicit analytic counterexample, not a Lean-formalized
+construction and not a counterexample to finite-dimensionality of the actual
+arithmetic W. It preserves the exact diagonal D and B, full reciprocal image
+density, and the regularity obstruction, while its complement is infinite.
+
+Work in real \(\ell^2(\mathbb N_{\ge1})\), put \(Dx(n)=x(n)/n\) and
+\(B=(I+D)/Z\). Partition positive integers into
+\[
+ A_j=\{2^j(2k+1):k\ge0\},\qquad j\ge0.
+\]
+Let \(a_p=(1-2^{-p})\zeta(p)\), and define unit vectors with disjoint supports:
+\[
+ u_j(2^j(2k+1))=a_{3/2}^{-1/2}(2k+1)^{-3/4},\qquad
+ u_j(n)=0\quad(n\notin A_j).
+\]
+Then \(W_0=\overline{\operatorname{span}}\{u_j:j\ge0\}\) is a closed
+infinite-dimensional space. Set \(V_0=W_0^\perp\).
+
+1. \(W_0\cap\operatorname{ran}D=\{0\}\). If
+   \(u=\sum_j c_j u_j\ne0\), choose \(c_j\ne0\). On A_j the coordinates of
+   the only possible \(D^{-1}u\) equal a nonzero constant times
+   \(2^j(2k+1)^{1/4}\); they are not square summable.
+2. \(\overline{D(V_0)}=H\). If \(y\perp D(V_0)\), self-adjointness gives
+   \(Dy\in W_0\cap\operatorname{ran}D=\{0\}\); injectivity of D gives y=0.
+3. B is positive, bounded, boundedly invertible, and has exactly the same
+   diagonal spectrum as the actual density multiplier.
+4. \(C_0=\Pi_{W_0}B|_{V_0}=Z^{-1}\Pi_{W_0}D|_{V_0}\) is compact.
+   Its adjoint is injective by item 1, so its range is dense.
+   It cannot be surjective onto infinite-dimensional W_0.
+5. The failure of a uniform lower bound is explicit:
+   \[
+   \|C_0^*u_j\|^2=
+   \frac{4^{-j}}{Z^2}
+   \left(\frac{a_{7/2}}{a_{3/2}}-
+         \left(\frac{a_{5/2}}{a_{3/2}}\right)^2\right)\longrightarrow0.
+   \]
+   The bracket is strictly positive: it is the variance of reciprocal odd
+   integers under strictly positive weights. This is the complete projected
+   energy, not just an upper estimate.
+6. Every finite head misses some u_j, by taking \(2^j>N\). Thus there is no
+   uniform detecting head.
+7. These are rough vectors: the physical coordinate corresponding to a
+   nonzero u is unbounded on a block with \(c_j\ne0\). Also its normalized
+   squared tail is bounded below by a positive multiple of \(N^{-1/2}\);
+   hence \(N\|\operatorname{tail}_N u\|^2/(\log N)^k\to\infty\) for each
+   fixed k. Even these qualitative roughness consequences of the actual
+   dilation results do not by themselves exclude infinite dimension.
+
+Wolfram checked the three scalar normalization sums \(a_{3/2},a_{5/2},a_{7/2}\).
+The orthogonality, density, compactness, and infinite-dimensionality arguments
+above are analytic proofs, not conclusions from finite numerical data.
+
+The model does not assert the arithmetic residue identities, actual common
+Mellin-zero functionals, or invariance under the repository's floor dilations.
+It refutes an inference from the operator assumptions alone; arithmetic
+dilation structure could still supply a missing estimate.
+
+### Audit of the other routes
+
+| Available input | What follows | What is still missing |
+|---|---|---|
+| B is positive and invertible | A metric equivalence on H | C is an off-diagonal map V -> W, not a self-adjoint invertible endomorphism |
+| C* is injective | C has dense range; ker(C*)=0 | Closed range, equivalently the uniform positive lower estimate |
+| D is compact and C is its off-diagonal compression | C is compact | Compactness is compatible with injective dense range in infinite dimension |
+| I+D is invertible (hence Fredholm) | The ambient multiplier B is invertible | Its off-diagonal compression C need not be Fredholm |
+| Full reciprocal density | W intersects range(D) only at zero | A dimension bound; the explicit model satisfies this stronger density too |
+| Floor dilation preserves V | W is invariant under adjoint dilations | A finite-rank constraint, finite detecting head, or uniform observability estimate |
+| Common Mellin characters are independent | Dimension lower bounds | Completeness of those functionals and a finite zero set would be additional assumptions |
+| Exact finite CRT compatibility and interpolation | Solvability on each finite head | A single stage-independent norm/energy bound controlling full tails |
+| Weak compactness | Limits of bounded legal lifts remain legal | Boundedness of the unsmoothed lifts must first be proved |
+
+There is also a kernel obstruction to a naive Fredholm argument. Full D-density
+implies that V is infinite-dimensional: otherwise D(V) would be finite-dimensional,
+closed, and dense in the infinite-dimensional H. If W were finite-dimensional,
+C would have finite rank and consequently an infinite-dimensional kernel.
+More generally, a compact C with closed range has finite-dimensional range.
+Thus demanding both closed range and finite-dimensional kernel for C would
+contradict the already infinite-dimensional source V. The appropriate missing
+condition concerns closed range of C (or a lower estimate for C*), not a
+Fredholm assertion for the whole ambient multiplier.
+
+A contraction semigroup alone does not force a nonzero co-invariant complement
+to be infinite-dimensional. For right translations on \(L^2(0,\infty)\),
+the backward translations satisfy \(S_t^*e^{-a x}=e^{-at}e^{-a x}\)
+for \(a>0\); their common invariant line is one-dimensional.
+Conversely, neither infinite ambient dimension nor a unitary extension
+bounds a general complement's dimension. The actual residue arithmetic is essential.
+
+The inspected exact declarations are
+`QFloorDilation.floorDilation_mem_legalClosure`,
+`QAnnihilatorDilationEscape.nonzero_annihilator_log_scaled_tail_tendsto_atTop`,
+`QDensityClosureTransfer.full_D_map_dense`,
+`QDensityClosureTransfer.fullClosure_eq_top_iff_density_invariant`, and
+`Pareto.riemannHypothesis_of_cofinal_reciprocal_bound`.
+The last theorem explicitly requires one full CRT-energy bound for all stages.
+Density invariance \(B(V)\subseteq V\) is already equivalent to V=H in this
+development, so assuming it would conceal the desired density conclusion.
+
+### Precise remaining requirement
+
+Prove, for the actual arithmetic W, one constant \(\delta>0\) such that
+\[
+ \sum_{n=0}^{\infty}\frac{|\widehat w_n|^2}{(n+1)^2}
+ -\|\Pi_W Dw\|^2
+ \ge Z^2\delta^2\|w\|^2\qquad(w\in W).
+\]
+Equivalently, prove that a single finite physical head determines every w in W.
+Pointwise positivity for each nonzero w is already known; uniform positivity
+on the whole unit sphere is the undisclosed mathematical content. Obtaining it
+from finite-dimensional compactness would be circular.
+
+Even after proving finite dimension, the current zero-functional results give
+only finiteness of the actual right-hand zero set. They do not prove that this
+set is empty. The related Hardy-space paper explicitly assumes the RH-failure
+conjecture to obtain its zero-or-infinite dimension result; that hypothesis has
+not been imported here. No spectral-synthesis converse has been assumed.
+
+Primary references: [Bagchi's discrete criterion](https://arxiv.org/abs/math/0607733);
+[Calderaro--Manzur--Noor--Santos, Section 4 and Theorem 21](https://arxiv.org/html/2203.05030v4).
+These support the context and the stated conditionality, not an unconditional
+dimension upper bound.
+
+### Verification and review boundary
+
+Prepublication verification: job `job_H8RqnO2JWkO8blpUnvj79H8X-7BbUgqk`,
+Bazel `--config=buildbuddy`, verified=true, exit_code=0, 48.583 seconds
+reported server verification. The snippet imports the final
+`QComplementZeroDimension` module and its transitive dependencies, including
+all three changed Lean modules. Eleven `#guard_msgs` checks confirm that
+each added theorem depends only on `propext`, `Classical.choice`, and
+`Quot.sound`.
+[Final verification log](https://app.buildbuddy.io/invocation/9f6f7f62-3b5f-470a-95e5-5482859d80dc).
+
+An earlier focused build of `//RiemannResearch/RH:QComplementZeroDimension`
+also passed (job `job_EjTQBGGZ90pa828Zh9prDEUei0qEQmoM`, 77.948 seconds).
+The final guard job above includes subsequent direct-import additions.
+
+Final source SHA-256 values:
+
+| File | SHA-256 |
+|---|---|
+| Analysis/FiniteHeadSurjectivity.lean | 220e00212c83b8e30b93579d0b7bf3d9e7aac1442844093d6ca74b9745b313b9 |
+| RH/QDensityCouplingSurjectivity.lean | 1f6fbc872e46e82fa2fd13ed7c334e8fa8f52cee2c33f49b0566573effb50ea2 |
+| RH/QComplementZeroDimension.lean | 5fbea844d83bfc69f0041a788e599664bff17adf4fd367b375c4a1595b2bda7e |
+
+This receipt covers the changed modules and their imports.
+Publication uses a separate whole-project checkpoint.
+
 ## Conditional research reductions
 
 | Declaration | Exact open premise | Conclusion |

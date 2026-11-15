@@ -1,17 +1,20 @@
 import RiemannResearch.Analysis.FiniteHeadSurjectivity
 import RiemannResearch.RH.QDensityClosureTransfer
+import RiemannResearch.RH.QDensityMetric
 import RiemannResearch.RH.QDensityMetricInverse
 import RiemannResearch.RH.QReciprocalMetric
 import RiemannResearch.RH.QFullResidueProjection
 import RiemannResearch.RH.ZetaTwoHilbertSpace
 import RiemannResearch.RH.ZetaTwoProbability
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.Analysis.InnerProductSpace.l2Space
 import Mathlib.Analysis.Normed.Operator.Banach
 import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Topology.Algebra.Module.ClosedSubmodule
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 import Lean.Elab.Tactic.Omega
@@ -212,6 +215,86 @@ theorem exists_unit_head_zero_small_adjoint
 theorem coupling_not_surjective_of_infiniteDimensional
     (hinf : ¬ FiniteDimensional ℝ W) : ¬ Function.Surjective coupling :=
   fun h => hinf (coupling_surjective_iff_finiteDimensional.mp h)
+
+/-- Exact complete energy: the W-projected remainder is retained. -/
+theorem coupling_adjoint_energy_identity (w : W) :
+    zetaTwo ^ 2 * ‖coupling.adjoint w‖ ^ 2 +
+      ‖W.orthogonalProjectionOnto (D (w : QHilbert))‖ ^ 2 =
+      ∑' n : ℕ, ((w : QHilbert) n) ^ 2 / ((n : ℝ) + 1) ^ 2 := by
+  have hnorm : zetaTwo ^ 2 * ‖coupling.adjoint w‖ ^ 2 =
+      ‖V.orthogonalProjectionOnto (D (w : QHilbert))‖ ^ 2 := by
+    rw [coupling_adjoint, reverseCoupling_eq_reciprocal, norm_smul,
+      Real.norm_eq_abs, abs_of_nonneg (div_nonneg zero_le_one zetaTwo_pos.le), mul_pow]
+    field_simp [ne_of_gt zetaTwo_pos]
+  rw [hnorm, ← Submodule.norm_sq_eq_add_norm_sq_projection (D (w : QHilbert)) V]
+  exact D_norm_sq (w : QHilbert)
+
+/-- Reciprocal density excludes every nonzero reciprocal image from W.
+It gives a regularity obstruction, not an upper bound on the dimension of W. -/
+theorem eq_zero_of_reciprocal_mem_orthogonal (f : QHilbert)
+    (hf : D f ∈ W) : f = 0 := by
+  let L : QHilbert →L[ℝ] ℝ := innerSL ℝ f
+  have hs : legalSpan.map D.toLinearMap ≤ L.ker := by
+    rintro _ ⟨v, hv, rfl⟩
+    change inner ℝ f (D v) = 0
+    have hsym : inner ℝ f (D v) = inner ℝ (D f) v := by
+      rw [QDensityMetricInverse.D_eq_density, QDensityMetricInverse.D_eq_density,
+        inner_sub_left, inner_sub_right, inner_smul_left, inner_smul_right, B_symmetric]
+      simp
+    rw [hsym, real_inner_comm]
+    exact Submodule.inner_right_of_mem_orthogonal
+      (legalSpan.le_topologicalClosure hv) hf
+  have hc := (legalSpan.map D.toLinearMap).topologicalClosure_minimal hs L.isClosed_ker
+  rw [full_D_map_dense] at hc
+  have he : inner ℝ f f = 0 := hc (by trivial)
+  exact (inner_self_eq_zero).mp he
+
+
+/-- Conditional detection: the uniform adjoint lower bound is an open input. -/
+theorem physicalHeadUnique_of_adjoint_lower_bound
+    (δ : ℝ) (hlower : ∀ w : W, δ * ‖w‖ ≤ ‖coupling.adjoint w‖)
+    (N : ℕ) (hN : (1 / zetaTwo) / ((N : ℝ) + 1) < δ) :
+    PhysicalHeadUnique N :=
+  (physicalHeadUnique_iff N).mpr
+    (headUnique_of_adjoint_lower_bound coupling coordinates (1 / zetaTwo) δ
+      coupling_adjoint_tail_bound hlower N hN)
+
+/-- A physical head of length N bounds the real dimension by N. -/
+theorem finrank_le_of_physicalHeadUnique (N : ℕ) (hN : PhysicalHeadUnique N) :
+    Module.finrank ℝ W ≤ N :=
+  finrank_le_of_headUnique coordinates N ((physicalHeadUnique_iff N).mp hN)
+
+/-- Exact coercivity criterion. Neither side is asserted unconditionally. -/
+theorem finiteDimensional_iff_adjoint_lower_bound :
+    FiniteDimensional ℝ W ↔
+      ∃ δ > 0, ∀ w : W, δ * ‖w‖ ≤ ‖coupling.adjoint w‖ := by
+  constructor
+  · intro h
+    obtain ⟨K, hK, hbound⟩ := adjoint_norm_bound_of_surjective coupling
+      (coupling_surjective_iff_finiteDimensional.mpr h)
+    refine ⟨K⁻¹, inv_pos.mpr hK, ?_⟩
+    intro w
+    have hh := mul_le_mul_of_nonneg_left (hbound w) (inv_nonneg.mpr hK.le)
+    simpa only [← mul_assoc, inv_mul_cancel₀ hK.ne', one_mul] using hh
+  · rintro ⟨δ, hδ, hlower⟩
+    obtain ⟨N, hN⟩ := exists_nat_gt ((1 / zetaTwo) / δ)
+    have hprod : 1 / zetaTwo < δ * ((N : ℝ) + 1) := by
+      have ht := (div_lt_iff₀ hδ).mp hN
+      nlinarith
+    have hsmall : (1 / zetaTwo) / ((N : ℝ) + 1) < δ :=
+      (div_lt_iff₀ (by positivity : (0 : ℝ) < (N : ℝ) + 1)).mpr hprod
+    exact finiteDimensional_of_headUnique coordinates N
+      ((physicalHeadUnique_iff N).mp
+        (physicalHeadUnique_of_adjoint_lower_bound δ hlower N hsmall))
+/-- Conditional structural upper bound independent of assumptions on zeta zeros. -/
+theorem finiteDimensional_and_finrank_le_of_adjoint_lower_bound
+    (δ : ℝ) (hlower : ∀ w : W, δ * ‖w‖ ≤ ‖coupling.adjoint w‖)
+    (N : ℕ) (hN : (1 / zetaTwo) / ((N : ℝ) + 1) < δ) :
+    FiniteDimensional ℝ W ∧ Module.finrank ℝ W ≤ N := by
+  have hh := physicalHeadUnique_of_adjoint_lower_bound δ hlower N hN
+  exact ⟨finiteDimensional_of_headUnique coordinates N ((physicalHeadUnique_iff N).mp hh),
+    finrank_le_of_physicalHeadUnique N hh⟩
+
 
 #print axioms exists_unit_head_zero_small_adjoint
 #print axioms coupling_adjoint_injective

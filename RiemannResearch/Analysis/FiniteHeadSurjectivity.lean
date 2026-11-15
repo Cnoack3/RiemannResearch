@@ -2,6 +2,8 @@ import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
 import Mathlib.Analysis.Normed.Operator.Banach
 import Mathlib.Analysis.Normed.Module.FiniteDimension
+import Mathlib.LinearAlgebra.Dimension.Finite
+import Mathlib.LinearAlgebra.LinearIndependent.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
@@ -122,6 +124,50 @@ theorem surjective_iff_exists_headUnique
   · exact exists_headUnique_of_surjective T coordinates a htail
   · rintro ⟨N, hN⟩
     exact surjective_of_headUnique T hdense coordinates N hN
+
+/-- A detecting head gives an explicit upper bound, not only finite dimension. -/
+theorem finrank_le_of_headUnique
+    (coordinates : F →ₗ[ℝ] (ℕ → ℝ)) (N : ℕ) (h : HeadUnique coordinates N) :
+    Module.finrank ℝ F ≤ N := by
+  let _ := finiteDimensional_of_headUnique coordinates N h
+  have hli := (Module.finBasis ℝ F).linearIndependent.map'
+    (headMap coordinates N) (LinearMap.ker_eq_bot.mpr (headMap_injective coordinates N h))
+  simpa using hli.fintype_card_le_finrank
+
+/-- A uniform lower bound beats the reciprocal tail beyond an explicit cutoff. -/
+theorem headUnique_of_adjoint_lower_bound
+    (T : E →L[ℝ] F) (coordinates : F →ₗ[ℝ] (ℕ → ℝ))
+    (a δ : ℝ)
+    (htail : ∀ (N : ℕ) (w : F),
+      (∀ n : ℕ, n < N → coordinates w n = 0) →
+      ‖T.adjoint w‖ ≤ (a / ((N : ℝ) + 1)) * ‖w‖)
+    (hlower : ∀ w : F, δ * ‖w‖ ≤ ‖T.adjoint w‖)
+    (N : ℕ) (hN : a / ((N : ℝ) + 1) < δ) :
+    HeadUnique coordinates N := by
+  intro w hw
+  by_contra hne
+  have hp : 0 < ‖w‖ := norm_pos_iff.mpr hne
+  have hle := (hlower w).trans (htail N w hw)
+  exact (not_le_of_gt (mul_lt_mul_of_pos_right hN hp)) hle
+
+/-- Failure of finite-head detection has a normalized witness. -/
+theorem exists_unit_head_zero_of_not_headUnique
+    (coordinates : F →ₗ[ℝ] (ℕ → ℝ)) (N : ℕ) (h : ¬ HeadUnique coordinates N) :
+    ∃ w : F, ‖w‖ = 1 ∧ ∀ n : ℕ, n < N → coordinates w n = 0 := by
+  obtain ⟨w, hw, hne⟩ :
+      ∃ w : F, (∀ n : ℕ, n < N → coordinates w n = 0) ∧ w ≠ 0 := by
+    by_contra hh
+    apply h
+    intro w hw
+    by_contra hne
+    exact hh ⟨w, hw, hne⟩
+  have hp : 0 < ‖w‖ := norm_pos_iff.mpr hne
+  refine ⟨‖w‖⁻¹ • w, ?_, ?_⟩
+  · rw [norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hp), inv_mul_cancel₀ hp.ne']
+  · intro n hn
+    rw [map_smul]
+    change ‖w‖⁻¹ * coordinates w n = 0
+    rw [hw n hn, mul_zero]
 
 #print axioms surjective_iff_exists_headUnique
 #print axioms adjoint_norm_bound_of_surjective
