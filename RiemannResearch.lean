@@ -1543,6 +1543,7 @@ import RiemannResearch.Analysis.ActualSelbergDyadicAssembly
 import RiemannResearch.Analysis.ActualSelbergIngham
 import RiemannResearch.Analysis.ActualSelbergTruncatedNearLine
 import RiemannResearch.Analysis.KloostermanCompletion
+import RiemannResearch.Analysis.KloostermanIntervalBound
 import RiemannResearch.Analysis.ActualSelbergDensityConventions
 import RiemannResearch.Analysis.ActualConreyBaluyotConsequences
 import RiemannResearch.Analysis.SelbergMollifierOptimization

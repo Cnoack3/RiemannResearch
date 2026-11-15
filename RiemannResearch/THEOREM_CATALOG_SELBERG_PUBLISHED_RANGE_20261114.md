@@ -120,11 +120,30 @@ complete geometric numerator, including the zero frequency.
 majorant 2 / |1 - e_q(-k)|.
 
 **norm_interval_inverseSum_le_of_complete** transfers an upper bound B
-for every complete sum at fixed (m,q) to (B/q) times the full Fourier
-L1 mass of the interval weight. This proves the completion part of
-Baluyot's Lemma 3.1.5. The next estimates are the harmonic bound for the
-mass, the complete Weil bound, and the distinct Deshouillers–Iwaniec
-multilinear estimate of Lemma 3.1.6. None is assumed as an axiom.
+for every complete sum at fixed (m,q) to the normalized full Fourier mass.
+The follow-up below proves a harmonic bound and isolates the zero mode.
+
+## Harmonic Fourier mass for the incomplete sum (15 November 2026)
+
+**KloostermanIntervalBound.lean** proves that for every q > 0, b mod q,
+and interval length L, the nonzero Fourier mass is at most q H_(q-1).
+It uses the exact unit-circle chord identity, Jordan's sine inequality,
+the representatives 1 through q-1, and reciprocal pairing. The proof
+includes q = 1 and arbitrarily many complete periods.
+
+For B >= 0 bounding every complete S(k,m;q) at k != 0, Lean verifies
+
+$
+\left|\sum_{j<L} e_q(m/(b+j))1_{(b+j,q)=1}
+-\frac Lq S(0,m;q)\right|
+\le B H_{q-1}\le B(1+\log q).
+$
+
+The signed zero-frequency term and all repetitions remain in the exact
+identity preceding the bound. The result needs no complete-sum estimate
+at k = 0, which is a sharper interface than a uniform bound for all k.
+The complete Weil bound, Deshouillers–Iwaniec multilinear estimate,
+and the uniform zeta-mollifier moment remain open in Lean.
 
 ## Direct mollified-zeta vertical bounds (15 November 2026)
 
