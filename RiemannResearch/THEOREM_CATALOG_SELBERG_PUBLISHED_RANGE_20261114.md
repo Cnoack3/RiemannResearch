@@ -3,6 +3,19 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Zero-free vertical lines and rectangle borders (15 November 2026)
+
+**ConreyBaluyotZeroFreeRectangle.lean** proves that if an analytic function on
+a rectangle is nonzero at a point, the real parts of its zeros form a finite
+set. Consequently every nonempty open subinterval of the horizontal range
+contains a zero-free vertical segment.
+
+If the original rectangle's lower and upper edges are zero-free, then
+**exists_zero_free_rectangle_border_between** chooses both vertical sides in
+arbitrary prescribed separated interior intervals. The resulting smaller
+rectangle has no boundary zeros. This general lemma does not by itself bound
+the contour integral, establish the moment, or pass to a limiting boundary.
+
 ## Actual zeta-zero count under a mollified rectangle boundary (15 November 2026)
 
 **ConreyBaluyotZetaRectangle.lean** strengthens the product-zero identity.
