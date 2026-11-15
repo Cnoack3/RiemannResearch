@@ -3,6 +3,20 @@
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 
+## Uniform growth of the actual mollifier (15 November 2026)
+
+**ConreyBaluyotMollifierGrowth.lean** proves, for every fixed epsilon >= 0,
+the bound |M(s)| <= C y^(1+epsilon) throughout Re(s) >= 0. The constants
+are uniform for the actual coupled sigma,y strip in the coefficient theorem.
+The proof bounds the actual finite polynomial, using the established uniform
+coefficient bound; it does not assume a mollified-moment estimate.
+
+**exists_uniform_mollifiedZeta_growth** combines this with the existing
+unconditional zeta bound to obtain |zeta(s) M(s)| <= C |Im(s)| y^(1+epsilon)
+for Re(s) >= 1/4 and |Im(s)| >= 1. This is polynomial growth needed for
+boundary arguments; it does not itself supply the horizontal boundary
+integral, the second moment, Kloosterman cancellation, or Ingham's estimate.
+
 ## Result and precise boundary
 
 **The requested unconditional Lean density provider is not completed.**
