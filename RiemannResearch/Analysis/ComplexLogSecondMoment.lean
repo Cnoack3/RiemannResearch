@@ -98,6 +98,66 @@ theorem integral_log_norm_le_of_second_moment
     (∫ t in H..T, Real.log ‖f t‖) ≤ E / 2 :=
   (integral_log_norm_le_half_second_moment_excess hHT hne hlog h2).trans (by linarith)
 
+/-- The tangent defect at a positive mean-square scale A. Its integral
+is retained exactly before the nonnegative defect is discarded in bounds. -/
+noncomputable def scaledLogSecondMomentDefect (A : ℝ) (z : ℂ) : ℝ :=
+  (‖z‖ ^ 2 / A - 1) / 2 + Real.log A / 2 - Real.log ‖z‖
+
+theorem scaledLogSecondMomentDefect_nonneg {A : ℝ} (hA : 0 < A)
+    (z : ℂ) (hz : z ≠ 0) : 0 ≤ scaledLogSecondMomentDefect A z := by
+  have hn : 0 < ‖z‖ := norm_pos_iff.mpr hz
+  have h := Real.log_le_sub_one_of_pos (div_pos (sq_pos_of_pos hn) hA)
+  rw [Real.log_div (ne_of_gt (sq_pos_of_pos hn)) (ne_of_gt hA), Real.log_pow] at h
+  unfold scaledLogSecondMomentDefect
+  norm_num only [Nat.cast_ofNat] at h
+  linarith
+
+/-- Exact scale-dependent logarithmic identity, including the full defect.
+Setting A to one recovers the quadratic main-term subtraction. -/
+theorem integral_log_norm_scaled_second_moment_exact
+    {f : ℝ → ℂ} {H T : ℝ} (A : ℝ)
+    (hlog : IntervalIntegrable (fun t => Real.log ‖f t‖) volume H T)
+    (h2 : IntervalIntegrable (fun t => ‖f t‖ ^ 2) volume H T) :
+    (∫ t in H..T, Real.log ‖f t‖) =
+      (T - H) * Real.log A / 2 +
+        ((∫ t in H..T, ‖f t‖ ^ 2) / A - (T - H)) / 2 -
+          ∫ t in H..T, scaledLogSecondMomentDefect A (f t) := by
+  unfold scaledLogSecondMomentDefect
+  rw [intervalIntegral.integral_sub
+    (((h2.div_const A).sub intervalIntegrable_const).div_const 2 |>.add
+      intervalIntegrable_const) hlog,
+    intervalIntegral.integral_add
+      (((h2.div_const A).sub intervalIntegrable_const).div_const 2)
+      intervalIntegrable_const,
+    intervalIntegral.integral_div,
+    intervalIntegral.integral_sub (h2.div_const A) intervalIntegrable_const,
+    intervalIntegral.integral_div,
+    intervalIntegral.integral_const, intervalIntegral.integral_const]
+  simp only [smul_eq_mul, mul_one]
+  ring
+
+/-- A mean-square bound gives its logarithm, rather than its linear excess.
+This is an analytic conversion; it does not supply the mean-square bound. -/
+theorem integral_log_norm_le_of_mean_square_bound
+    {f : ℝ → ℂ} {H T A : ℝ} (hHT : H ≤ T) (hA : 0 < A)
+    (hne : ∀ t ∈ Set.Icc H T, f t ≠ 0)
+    (hlog : IntervalIntegrable (fun t => Real.log ‖f t‖) volume H T)
+    (h2 : IntervalIntegrable (fun t => ‖f t‖ ^ 2) volume H T)
+    (hm : (∫ t in H..T, ‖f t‖ ^ 2) ≤ (T - H) * A) :
+    (∫ t in H..T, Real.log ‖f t‖) ≤ (T - H) * Real.log A / 2 := by
+  have hdi : IntervalIntegrable (fun t => scaledLogSecondMomentDefect A (f t)) volume H T :=
+    ((((h2.div_const A).sub intervalIntegrable_const).div_const 2).add
+      intervalIntegrable_const).sub hlog
+  have hd : 0 ≤ ∫ t in H..T, scaledLogSecondMomentDefect A (f t) := by
+    have hh := intervalIntegral.integral_mono_on hHT
+      (intervalIntegrable_const : IntervalIntegrable (fun _ : ℝ => (0 : ℝ)) volume H T) hdi
+      (fun t ht => scaledLogSecondMomentDefect_nonneg hA (f t) (hne t ht))
+    simpa using hh
+  have hm' : (∫ t in H..T, ‖f t‖ ^ 2) / A ≤ T - H :=
+    (div_le_iff₀ hA).mpr hm
+  rw [integral_log_norm_scaled_second_moment_exact A hlog h2]
+  linarith
+
 end Complex
 
 #print axioms Complex.integral_log_norm_second_moment_exact

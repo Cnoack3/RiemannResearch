@@ -143,7 +143,7 @@ theorem densityDifference_le_of_signedRectangleBudget
       ((α : ℂ) + (H : ℂ) * I) (((3 / 2 : ℝ) : ℂ) + (T : ℂ) * I), zetaDetector X s ≠ 0)
     (hbudget : SignedRectangleBudget X α H T σ F) :
     rightInclusiveCount T σ - rightInclusiveCount H σ ≤ F := by
-  obtain ⟨B, U, hBc, hUc, _, _, hn⟩ :=
+  obtain ⟨B, U, hBc, hUc, _, _, hn, _, _⟩ :=
     Complex.exists_logRectangleBoundary_eq_contour hαβ hHT
       (zetaDetector_analyticOnNhd_rectangle X hαβ hH hHT) hborder
   exact densityDifference_le_of_normalizedContour_signedBudget hX B U
@@ -256,7 +256,7 @@ theorem densityDifference_le_of_expandedLeftRectangleBudget
     rw [← heq]
     exact mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_left hgap (by positivity)) hE
-  obtain ⟨B, U, hBc, hUc, _, _, hn⟩ :=
+  obtain ⟨B, U, hBc, hUc, _, _, hn, _, _⟩ :=
     Complex.exists_logRectangleBoundary_eq_contour hαβ hHT'
       (zetaDetector_analyticOnNhd_rectangle X hαβ hH' hHT') hborder
   have hr := zetaDetector_right_signed_log_integral_le_constant hX hHT'
@@ -432,7 +432,7 @@ theorem densityDifference_le_of_expandedLeftRectangleBudget_sharpRight
       _ = 2 * Real.pi * (η / L) * E := heq.symm
       _ ≤ _ := mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_left hgap (by positivity)) hE
-  obtain ⟨B, U, hBc, hUc, _, _, hn⟩ :=
+  obtain ⟨B, U, hBc, hUc, _, _, hn, _, _⟩ :=
     Complex.exists_logRectangleBoundary_eq_contour hαβ hHT'
       (zetaDetector_analyticOnNhd_rectangle X hαβ hH' hHT') hborder
   have hl := hleft B U hBc hUc hn

@@ -271,4 +271,55 @@ theorem integral_log_mollifiedZeta_le_of_moment (σ y ε α : ℝ) {H T E : ℝ}
   exact Complex.integral_log_norm_le_of_second_moment hHT hne
     hlog.intervalIntegrable hsq.intervalIntegrable hm
 
+/-- Sharper logarithmic conversion of the actual uncentered moment bound.
+For positive interval length and nonnegative excess E, this improves E/2 to
+length * log(1 + E/length) / 2. The moment estimate itself remains a premise. -/
+theorem integral_log_mollifiedZeta_le_log_of_moment (σ y ε α : ℝ) {H T E : ℝ}
+    (hH : 0 < H) (hHT : H < T) (hE : 0 ≤ E)
+    (hne : ∀ t ∈ Icc H T, mollifiedZeta σ y ε ((α : ℂ) + (t : ℂ) * I) ≠ 0)
+    (hm : (∫ t in H..T, ‖mollifiedZeta σ y ε ((α : ℂ) + (t : ℂ) * I)‖ ^ 2) ≤ T - H + E) :
+    (∫ t in H..T, Real.log ‖mollifiedZeta σ y ε ((α : ℂ) + (t : ℂ) * I)‖) ≤
+        (T - H) * Real.log (1 + E / (T - H)) / 2 ∧
+      (T - H) * Real.log (1 + E / (T - H)) / 2 ≤ E / 2 := by
+  let f : ℝ → ℂ := fun t => mollifiedZeta σ y ε ((α : ℂ) + (t : ℂ) * I)
+  have hf : ContinuousOn f (Icc H T) := by
+    intro t ht
+    have ht0 : 0 < t := hH.trans_le ht.1
+    have hs : (α : ℂ) + (t : ℂ) * I ≠ 1 := by
+      intro he
+      have hi := congrArg Complex.im he
+      simp at hi
+      linarith
+    have hpt : ContinuousAt (fun v : ℝ => (α : ℂ) + (v : ℂ) * I) t := by fun_prop
+    have hcomp : ContinuousAt
+        (mollifiedZeta σ y ε ∘ (fun v : ℝ => (α : ℂ) + (v : ℂ) * I)) t :=
+      ContinuousAt.comp (g := mollifiedZeta σ y ε)
+        (f := fun v : ℝ => (α : ℂ) + (v : ℂ) * I)
+        (analyticAt_mollifiedZeta σ y ε hs).continuousAt hpt
+    exact hcomp.continuousWithinAt
+  have hsq : ContinuousOn (fun t => ‖f t‖ ^ 2) (uIcc H T) := by
+    rw [uIcc_of_le hHT.le]
+    exact hf.norm.pow 2
+  have hlog : ContinuousOn (fun t => Real.log ‖f t‖) (uIcc H T) := by
+    rw [uIcc_of_le hHT.le]
+    intro t ht
+    exact (hf t ht).norm.log (norm_ne_zero_iff.mpr (hne t ht))
+  have hlen : 0 < T - H := sub_pos.mpr hHT
+  have hA : 0 < 1 + E / (T - H) := by positivity
+  have hmul : (T - H) * (1 + E / (T - H)) = T - H + E := by
+    field_simp [ne_of_gt hlen]
+    <;> ring
+  refine ⟨?_, ?_⟩
+  · apply Complex.integral_log_norm_le_of_mean_square_bound hHT.le hA hne
+      hlog.intervalIntegrable hsq.intervalIntegrable
+    rw [hmul]
+    exact hm
+  · have hh := Real.log_le_sub_one_of_pos hA
+    have hh' := mul_le_mul_of_nonneg_left hh hlen.le
+    have he : (T - H) * ((1 + E / (T - H)) - 1) = E := by
+      field_simp [ne_of_gt hlen]
+      <;> ring
+    rw [he] at hh'
+    linarith
+
 end RiemannResearch.Analysis.ConreyBaluyot

@@ -17,8 +17,9 @@ part is Re(s) minus the left boundary. The compatible logarithm lifts retain
 all four signed boundary terms.
 
 Provenance: this proof assembles ComplexLittlewoodBoundary (whose source
-reference supports the boundary identity) and RectangleLogDeriv. No new
-analytic estimate or independent branch-normalization claim is used.
+reference supports the boundary identity) and RectangleLogDeriv. The bottom
+lift is principal-normalized at the right corner; the top normalization
+follows when the entire right side lies in the complex slit plane.
 -/
 
 noncomputable section
@@ -41,7 +42,10 @@ theorem exists_logRectangleBoundary_eq_weighted_zeros
       (∀ x ∈ Icc a b, exp (B x) = F ((x : ℂ) + (H : ℂ) * I)) ∧
       (∀ x ∈ Icc a b, exp (U x) = F ((x : ℂ) + (T : ℂ) * I)) ∧
       logRectangleBoundary F (fun x => (B x).im) (fun x => (U x).im) a b H T =
-        2 * Real.pi * ∑ ρ ∈ Z, (analyticOrderNatAt F ρ : ℝ) * (ρ.re - a) := by
+        2 * Real.pi * ∑ ρ ∈ Z, (analyticOrderNatAt F ρ : ℝ) * (ρ.re - a) ∧
+      B b = log (F ((b : ℂ) + (H : ℂ) * I)) ∧
+      ((∀ t ∈ Icc H T, F ((b : ℂ) + (t : ℂ) * I) ∈ slitPlane) →
+        U b = log (F ((b : ℂ) + (T : ℂ) * I))) := by
   classical
   let z : ℂ := (a : ℂ) + (H : ℂ) * I
   let w : ℂ := (b : ℂ) + (T : ℂ) * I
@@ -70,9 +74,9 @@ theorem exists_logRectangleBoundary_eq_weighted_zeros
       ∑ ρ ∈ Z, (analyticOrderNatAt F ρ : ℝ) * (ρ.re - a) := by
     have he := congrArg Complex.re hres
     simpa [Complex.mul_re, z] using he
-  obtain ⟨B, U, hBc, hUc, hBe, hUe, hboundary⟩ :=
+  obtain ⟨B, U, hBc, hUc, hBe, hUe, hboundary, hBb, hUb⟩ :=
     exists_logRectangleBoundary_eq_contour hab hHT hf hborder
-  refine ⟨Z, B, U, hZexact, hBc, hUc, hBe, hUe, ?_⟩
+  refine ⟨Z, B, U, hZexact, hBc, hUc, hBe, hUe, ?_, hBb, hUb⟩
   have heq : logRectangleBoundary F (fun x => (B x).im) (fun x => (U x).im)
       a b H T / (2 * Real.pi) =
         ∑ ρ ∈ Z, (analyticOrderNatAt F ρ : ℝ) * (ρ.re - a) :=

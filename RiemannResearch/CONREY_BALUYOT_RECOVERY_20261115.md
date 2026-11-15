@@ -1,5 +1,10 @@
 # Conrey--Baluyot recovery and continuation, 15 November 2026
 
+> Later continuation: normalized branch compatibility and outward dyadic
+> coverage are now established, with a sharper conditional vertical moment
+> conversion. See [the current catalog](THEOREM_CATALOG_CONREY_BALUYOT_NORMALIZED_20261115.md)
+> for exact statements and remaining obligations. The record below is historical.
+
 ## Recovery result
 
 The inaccessible chat's source work was already preserved in published main.

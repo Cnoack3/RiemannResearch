@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.ComplexIntegralLogLift
+import RiemannResearch.Analysis.ComplexLogLiftUniqueness
 import RiemannResearch.Analysis.ComplexLogRectangleBoundary
 import RiemannResearch.RH.WeilExplicitFormula.FromPNTPlus.ResidueCalcOnRectangles
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
@@ -179,7 +180,10 @@ theorem exists_logRectangleBoundary_eq_contour {F : ℂ → ℂ} {a b H T : ℝ}
         (fun s => (s - ((a : ℂ) + (H : ℂ) * I)) * logDeriv F s)
         ((a : ℂ) + (H : ℂ) * I) ((b : ℂ) + (T : ℂ) * I)).re =
       logRectangleBoundary F (fun x => (B x).im) (fun x => (U x).im) a b H T /
-        (2 * Real.pi) := by
+        (2 * Real.pi) ∧
+      B b = log (F ((b : ℂ) + (H : ℂ) * I)) ∧
+      ((∀ t ∈ Icc H T, F ((b : ℂ) + (t : ℂ) * I) ∈ slitPlane) →
+        U b = log (F ((b : ℂ) + (T : ℂ) * I))) := by
   let z : ℂ := (a : ℂ) + (H : ℂ) * I
   let w : ℂ := (b : ℂ) + (T : ℂ) * I
   have hBmem : ∀ x ∈ uIcc a b, (x : ℂ) + (H : ℂ) * I ∈ RectangleBorder z w := by
@@ -266,7 +270,39 @@ theorem exists_logRectangleBoundary_eq_contour {F : ℂ → ℂ} {a b H T : ℝ}
     (fun y hy => logLift_re_eq_log_norm (L := L.toFun)
       (p := fun t => F ((a : ℂ) + (t : ℂ) * I)) (t := y)
       (L.exp_eq y (by simpa [uIcc_of_le hHT] using hy)))
-  refine ⟨B.toFun, U.toFun, B.continuous, U.continuous, B.exp_eq, U.exp_eq, ?_⟩
-  rw [rectangleIntegral'_re_eq_im_div, him]
+  let c := log (F ((b : ℂ) + (H : ℂ) * I)) - B.toFun b
+  have hce : exp c = 1 := by
+    dsimp [c]
+    rw [exp_sub, exp_log (hRn H ⟨le_rfl, hHT⟩), B.exp_eq b ⟨hab, le_rfl⟩]
+    exact div_self (hRn H ⟨le_rfl, hHT⟩)
+  refine ⟨fun x => B.toFun x + c, fun x => U.toFun x + c,
+    B.continuous.add continuous_const, U.continuous.add continuous_const,
+    ?_, ?_, ?_, ?_, ?_⟩
+  · intro x hx
+    rw [exp_add, hce, mul_one, B.exp_eq x hx]
+  · intro x hx
+    rw [exp_add, hce, mul_one, U.exp_eq x hx]
+  · have hinv := logRectangleBoundary_add_argument_const F
+      (fun x => (B.toFun x).im) (fun x => (U.toFun x).im) a b H T c.im
+      ((Complex.continuous_im.comp B.continuous).intervalIntegrable a b)
+      ((Complex.continuous_im.comp U.continuous).intervalIntegrable a b)
+    simp only [Complex.add_im]
+    rw [hinv, rectangleIntegral'_re_eq_im_div, him]
+  · dsimp [c]
+    ring
+  · intro hslit
+    have hpc : ContinuousOn (fun t : ℝ => F ((b : ℂ) + (t : ℂ) * I)) (Icc H T) := by
+      intro t ht
+      exact ((hanalytic b ⟨hab, le_rfl⟩ t ht).continuousAt.comp
+        (f := fun u : ℝ => (b : ℂ) + (u : ℂ) * I) (x := t)
+        (by fun_prop)).continuousWithinAt
+    have heq := logLift_eq_principal_on_Icc hHT
+      (R.continuous.add continuous_const).continuousOn hpc hslit
+      (L := fun t => R.toFun t + c)
+      (by intro t ht; rw [exp_add, hce, mul_one, R.exp_eq t ht])
+      (by rw [hBR]; dsimp [c]; ring)
+    change U.toFun b + c = _
+    rw [hRU]
+    exact heq ⟨hHT, le_rfl⟩
 
 end Complex

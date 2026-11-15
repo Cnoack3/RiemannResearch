@@ -124,6 +124,9 @@ and the boundary passage are not asserted. -/
 theorem exists_uniform_mollifiedZeta_horizontalPhase_bound
     {ε : ℝ} (hε : 0 ≤ ε) :
     ∃ η Y b C : ℝ, 0 < η ∧ η < 1 / 4 ∧ 1 < Y ∧ 2 ≤ b ∧ 0 < C ∧
+      (∀ y : ℝ, Y ≤ y → ∀ σ : ℝ, 1 / 2 + 1 / Real.log y ≤ σ →
+        σ ≤ 1 / 2 + η → ∀ s : ℂ, b ≤ s.re →
+          1 / 2 ≤ (mollifiedZeta σ y ε s).re) ∧
       ∀ y : ℝ, Y ≤ y → ∀ σ : ℝ, 1 / 2 + 1 / Real.log y ≤ σ →
         σ ≤ 1 / 2 + η → ∀ T : ℝ, b + 1 ≤ T → ∀ φ : ℝ → ℝ,
           ContinuousOn φ (Set.Icc (1 / 2 : ℝ) b) →
@@ -135,9 +138,9 @@ theorem exists_uniform_mollifiedZeta_horizontalPhase_bound
             |φ x - φ b| ≤
               (Real.log (2 * (1 + C * (T + (b - 1 / 4)) * y)) /
                 Real.log ((b - 1 / 4) / (b - 1 / 2)) + 2) * Real.pi := by
-  obtain ⟨η, Y, b, C, hη, hη', hY, hb, hC, hz⟩ :=
+  obtain ⟨η, Y, b, C, hη, hη', hY, hb, hC, hanchor, hz⟩ :=
     exists_uniform_mollifiedZeta_horizontalRealZeros_bound hε
-  refine ⟨η, Y, b, C, hη, hη', hY, hb, hC, ?_⟩
+  refine ⟨η, Y, b, C, hη, hη', hY, hb, hC, hanchor, ?_⟩
   intro y hy σ hσ hση T hT φ hφ hrep x hx
   obtain ⟨hfin, hcard⟩ := hz y hy σ hσ hση T hT
   let S := hfin.toFinset

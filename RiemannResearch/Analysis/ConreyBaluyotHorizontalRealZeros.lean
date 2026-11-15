@@ -181,10 +181,13 @@ theorem horizontalRealZeros_jensen_bound
 
 /-- Uniform logarithmic upper bound for the number of real-part zeros of
 the actual mollified zeta on the horizontal segment. The continuous
-argument and its variation remain separate obligations. -/
+phase and its displacement are handled by the downstream phase modules. -/
 theorem exists_uniform_mollifiedZeta_horizontalRealZeros_bound
     {ε : ℝ} (hε : 0 ≤ ε) :
     ∃ η Y b C : ℝ, 0 < η ∧ η < 1 / 4 ∧ 1 < Y ∧ 2 ≤ b ∧ 0 < C ∧
+      (∀ y : ℝ, Y ≤ y → ∀ σ : ℝ, 1 / 2 + 1 / Real.log y ≤ σ →
+        σ ≤ 1 / 2 + η → ∀ s : ℂ, b ≤ s.re →
+          1 / 2 ≤ (mollifiedZeta σ y ε s).re) ∧
       ∀ y : ℝ, Y ≤ y → ∀ σ : ℝ, 1 / 2 + 1 / Real.log y ≤ σ →
         σ ≤ 1 / 2 + η → ∀ T : ℝ, b + 1 ≤ T →
           ∃ hZ : (horizontalRealZeros (mollifiedZeta σ y ε) T (1 / 2) b).Finite,
@@ -200,49 +203,52 @@ theorem exists_uniform_mollifiedZeta_horizontalRealZeros_bound
   refine ⟨η, Y, b, C, by dsimp [η]; exact lt_min hη1 hη2,
     by dsimp [η]; exact (min_le_left _ _).trans_lt hη1',
     by dsimp [Y]; exact hY1.trans_le (le_max_left _ _),
-    hb, hC, ?_⟩
-  intro y hy σ hσ hση T hT
-  have hy1 : Y1 ≤ y := (le_max_left _ _).trans hy
-  have hy2 : Y2 ≤ y := (le_max_right _ _).trans hy
-  have hy0 : 0 ≤ y := by dsimp [Y] at hy; linarith [le_max_left Y1 Y2]
-  have hs1 : σ ≤ 1 / 2 + η1 := by
-    dsimp [η] at hση
-    linarith [min_le_left η1 η2]
-  have hs2 : σ ≤ 1 / 2 + η2 := by
-    dsimp [η] at hση
-    linarith [min_le_right η1 η2]
-  let r := b - 1 / 2
-  let R := b - 1 / 4
-  let M := 1 + C * (T + R) * y
-  have hr : 0 < r := by dsimp [r]; linarith
-  have hrR : r < R := by dsimp [r, R]; linarith
-  have hTR : R + 1 ≤ T := by dsimp [R]; linarith
-  have ha : (1 / 4 : ℝ) ≤ b - R := by dsimp [R]; linarith
-  have hTR0 : 0 ≤ T + R := by dsimp [R]; linarith
-  have hM : 1 ≤ M := by
-    dsimp [M]
-    have hp : 0 ≤ C * (T + R) * y :=
-      mul_nonneg (mul_nonneg hC.le hTR0) hy0
-    linarith
-  have hbound : ∀ w : ℂ, (1 / 4 : ℝ) ≤ w.re → 1 ≤ w.im →
-      |w.im - T| ≤ R → ‖mollifiedZeta σ y ε w‖ ≤ M := by
-    intro w hw hwi hnear
-    have habs : |w.im| ≤ T + R := by
-      rw [abs_of_nonneg (by linarith : 0 ≤ w.im)]
-      have hn := (abs_le.mp hnear).2
+    hb, hC, ?_, ?_⟩
+  · intro y hy σ hσ hση s hs
+    exact hanchor y ((le_max_right _ _).trans hy) σ hσ
+      (by dsimp [η] at hση; linarith [min_le_right η1 η2]) s hs
+  · intro y hy σ hσ hση T hT
+    have hy1 : Y1 ≤ y := (le_max_left _ _).trans hy
+    have hy2 : Y2 ≤ y := (le_max_right _ _).trans hy
+    have hy0 : 0 ≤ y := by dsimp [Y] at hy; linarith [le_max_left Y1 Y2]
+    have hs1 : σ ≤ 1 / 2 + η1 := by
+      dsimp [η] at hση
+      linarith [min_le_left η1 η2]
+    have hs2 : σ ≤ 1 / 2 + η2 := by
+      dsimp [η] at hση
+      linarith [min_le_right η1 η2]
+    let r := b - 1 / 2
+    let R := b - 1 / 4
+    let M := 1 + C * (T + R) * y
+    have hr : 0 < r := by dsimp [r]; linarith
+    have hrR : r < R := by dsimp [r, R]; linarith
+    have hTR : R + 1 ≤ T := by dsimp [R]; linarith
+    have ha : (1 / 4 : ℝ) ≤ b - R := by dsimp [R]; linarith
+    have hTR0 : 0 ≤ T + R := by dsimp [R]; linarith
+    have hM : 1 ≤ M := by
+      dsimp [M]
+      have hp : 0 ≤ C * (T + R) * y :=
+        mul_nonneg (mul_nonneg hC.le hTR0) hy0
       linarith
-    have hgrowth := hg y hy1 σ hσ hs1 ε w hw
-      (by rw [abs_of_nonneg (by linarith : 0 ≤ w.im)]; exact hwi)
-    calc
-      _ ≤ C * |w.im| * y := hgrowth
-      _ ≤ C * (T + R) * y :=
-        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left habs hC.le) hy0
-      _ ≤ M := by dsimp [M]; linarith
-  have hc : (1 / 2 : ℝ) ≤ (mollifiedZeta σ y ε ((b : ℂ) + (T : ℂ) * I)).re :=
-    hanchor y hy2 σ hσ hs2 _ (by simp)
-  have hh := horizontalRealZeros_jensen_bound (mollifiedZeta σ y ε) T b (1 / 4) r R M
-    hr hrR hTR ha hM
-    (fun w hw => differentiableAt_mollifiedZeta_of_im_pos σ y ε hw) hbound hc
-  have heq : b - r = (1 / 2 : ℝ) := by dsimp [r]; ring
-  simpa only [heq, r, R, M] using hh
+    have hbound : ∀ w : ℂ, (1 / 4 : ℝ) ≤ w.re → 1 ≤ w.im →
+        |w.im - T| ≤ R → ‖mollifiedZeta σ y ε w‖ ≤ M := by
+      intro w hw hwi hnear
+      have habs : |w.im| ≤ T + R := by
+        rw [abs_of_nonneg (by linarith : 0 ≤ w.im)]
+        have hn := (abs_le.mp hnear).2
+        linarith
+      have hgrowth := hg y hy1 σ hσ hs1 ε w hw
+        (by rw [abs_of_nonneg (by linarith : 0 ≤ w.im)]; exact hwi)
+      calc
+        _ ≤ C * |w.im| * y := hgrowth
+        _ ≤ C * (T + R) * y :=
+          mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left habs hC.le) hy0
+        _ ≤ M := by dsimp [M]; linarith
+    have hc : (1 / 2 : ℝ) ≤ (mollifiedZeta σ y ε ((b : ℂ) + (T : ℂ) * I)).re :=
+      hanchor y hy2 σ hσ hs2 _ (by simp)
+    have hh := horizontalRealZeros_jensen_bound (mollifiedZeta σ y ε) T b (1 / 4) r R M
+      hr hrR hTR ha hM
+      (fun w hw => differentiableAt_mollifiedZeta_of_im_pos σ y ε hw) hbound hc
+    have heq : b - r = (1 / 2 : ℝ) := by dsimp [r]; ring
+    simpa only [heq, r, R, M] using hh
 end RiemannResearch.Analysis.ConreyBaluyot

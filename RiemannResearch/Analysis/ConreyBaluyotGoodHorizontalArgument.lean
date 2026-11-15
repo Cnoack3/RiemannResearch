@@ -29,6 +29,9 @@ Littlewood contour or prove the mollified moment. -/
 theorem exists_uniform_mollifiedZeta_good_horizontal_argument
     {ε : ℝ} (hε : 0 ≤ ε) :
     ∃ η Y b C H : ℝ, 0 < η ∧ η < 1 / 4 ∧ 1 < Y ∧ 2 ≤ b ∧ 0 < C ∧ b + 2 ≤ H ∧
+      (∀ y : ℝ, Y ≤ y → ∀ σ : ℝ, 1 / 2 + 1 / Real.log y ≤ σ →
+        σ ≤ 1 / 2 + η → ∀ s : ℂ, b ≤ s.re →
+          1 / 2 ≤ (mollifiedZeta σ y ε s).re) ∧
       ∀ y : ℝ, Y ≤ y → ∀ σ : ℝ, 1 / 2 + 1 / Real.log y ≤ σ →
         σ ≤ 1 / 2 + η → ∀ T : ℝ, H ≤ T →
           ∀ δ : ℝ, 0 < δ → δ ≤ 1 / 4 →
@@ -46,7 +49,7 @@ theorem exists_uniform_mollifiedZeta_good_horizontal_argument
                     ((Real.log (2 * (1 + C * (t + (b - 1 / 4)) * y)) /
                       Real.log ((b - 1 / 4) / (b - 1 / 2)) + 3) * Real.pi) *
                         |b - α|) := by
-  obtain ⟨η1, Y1, b, C, hη1, hη1', hY1, hb, hC, harg⟩ :=
+  obtain ⟨η1, Y1, b, C, hη1, hη1', hY1, hb, hC, hanchor, harg⟩ :=
     exists_uniform_mollifiedZeta_normalized_horizontal_argument hε
   obtain ⟨η2, Y2, b2, hη2, hη2', hY2, hb2, hgood⟩ :=
     exists_uniform_mollifiedZeta_zero_free_heights hε
@@ -57,37 +60,40 @@ theorem exists_uniform_mollifiedZeta_good_horizontal_argument
   refine ⟨η, Y, b, C, H, by dsimp [η]; exact lt_min hη1 hη2,
     by dsimp [η]; exact (min_le_left _ _).trans_lt hη1',
     by dsimp [Y]; exact hY1.trans_le (le_max_left _ _),
-    hb, hC, by dsimp [H, L]; linarith [le_max_left b b2], ?_⟩
-  intro y hy σ hσ hση T hT δ hδ hδ'
-  have hy1 : Y1 ≤ y := (le_max_left _ _).trans hy
-  have hy2 : Y2 ≤ y := (le_max_right _ _).trans hy
-  have hs1 : σ ≤ 1 / 2 + η1 := by
-    dsimp [η] at hση
-    linarith [min_le_left η1 η2]
-  have hs2 : σ ≤ 1 / 2 + η2 := by
-    dsimp [η] at hση
-    linarith [min_le_right η1 η2]
-  have hbL : b ≤ L := le_max_left _ _
-  have hb2L : b2 ≤ L := le_max_right _ _
-  have hTL : L + 1 ≤ T := by dsimp [H] at hT; linarith
-  obtain ⟨t, ht, hfree⟩ := hgood y hy2 σ hσ hs2 L hb2L T hTL δ hδ hδ'
-  have htb : b + 1 ≤ t := by
-    have hh := (abs_lt.mp ht).1
-    dsimp [H] at hT
-    linarith
-  have hfree' : ∀ x ∈ Set.Icc (1 / 2 : ℝ) b,
-      mollifiedZeta σ y ε ((x : ℂ) + (t : ℂ) * I) ≠ 0 := by
-    intro x hx
-    exact hfree x ⟨hx.1, hx.2.trans hbL⟩
-  obtain ⟨φ, hφ, hφb, hrep, hdisp, habs, hint⟩ :=
-    harg y hy1 σ hσ hs1 t htb hfree'
-  exact ⟨t, ht, hfree', φ, hφ, hφb, hrep, hint⟩
+    hb, hC, by dsimp [H, L]; linarith [le_max_left b b2], ?_, ?_⟩
+  · intro y hy σ hσ hση s hs
+    exact hanchor y ((le_max_left _ _).trans hy) σ hσ
+      (by dsimp [η] at hση; linarith [min_le_left η1 η2]) s hs
+  · intro y hy σ hσ hση T hT δ hδ hδ'
+    have hy1 : Y1 ≤ y := (le_max_left _ _).trans hy
+    have hy2 : Y2 ≤ y := (le_max_right _ _).trans hy
+    have hs1 : σ ≤ 1 / 2 + η1 := by
+      dsimp [η] at hση
+      linarith [min_le_left η1 η2]
+    have hs2 : σ ≤ 1 / 2 + η2 := by
+      dsimp [η] at hση
+      linarith [min_le_right η1 η2]
+    have hbL : b ≤ L := le_max_left _ _
+    have hb2L : b2 ≤ L := le_max_right _ _
+    have hTL : L + 1 ≤ T := by dsimp [H] at hT; linarith
+    obtain ⟨t, ht, hfree⟩ := hgood y hy2 σ hσ hs2 L hb2L T hTL δ hδ hδ'
+    have htb : b + 1 ≤ t := by
+      have hh := (abs_lt.mp ht).1
+      dsimp [H] at hT
+      linarith
+    have hfree' : ∀ x ∈ Set.Icc (1 / 2 : ℝ) b,
+        mollifiedZeta σ y ε ((x : ℂ) + (t : ℂ) * I) ≠ 0 := by
+      intro x hx
+      exact hfree x ⟨hx.1, hx.2.trans hbL⟩
+    obtain ⟨φ, hφ, hφb, hrep, hdisp, habs, hint⟩ :=
+      harg y hy1 σ hσ hs1 t htb hfree'
+    exact ⟨t, ht, hfree', φ, hφ, hφb, hrep, hint⟩
 
 /-- On a power-length mollifier scale y = T^theta, the explicit Jensen
 logarithm is bounded by a constant times log T uniformly for nearby heights. -/
 theorem jensen_count_power_log_bound
     (b C θ T t : ℝ) (hb : 2 ≤ b) (hC : 0 < C) (hθ : 0 ≤ θ)
-    (hT : 3 ≤ T) (ht : |t - T| ≤ 1 / 4) :
+    (hT : 3 ≤ T) (htpos : 0 < t) (htup : t ≤ 2 * T + 1) :
     let R := b - 1 / 4
     let r := b - 1 / 2
     let K := 2 * (1 + C * (b + 2))
@@ -113,13 +119,10 @@ theorem jensen_count_power_log_bound
     apply Real.log_le_log (Real.exp_pos 1)
     have hh := Real.exp_one_lt_d9
     linarith
-  have htup := (abs_le.mp ht).2
-  have htlow := (abs_le.mp ht).1
-  have htpos : 0 < t := by linarith
   have hTy : 1 ≤ T * y := one_le_mul_of_one_le_of_one_le hT1 hy1
   have hlarge : t + R ≤ (b + 2) * T := by
     dsimp [R]
-    have hh := mul_nonneg (show 0 ≤ b + 1 by linarith) (show 0 ≤ T - 1 by linarith)
+    have hh := mul_nonneg (show 0 ≤ b by linarith) (show 0 ≤ T - 2 by linarith)
     nlinarith
   have hprod : C * (t + R) * y ≤ C * ((b + 2) * T) * y :=
     mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hlarge hC.le) hy0.le
@@ -168,7 +171,7 @@ theorem exists_uniform_mollifiedZeta_power_good_horizontal_argument
                       Complex.exp ((φ x : ℂ) * I)) ∧
                 (∀ α ∈ Set.Icc (1 / 2 : ℝ) b,
                   ‖∫ x in α..b, φ x‖ ≤ D * Real.log T) := by
-  obtain ⟨η, Y, b, C, H, hη, hη', hY, hb, hC, hH, hgood⟩ :=
+  obtain ⟨η, Y, b, C, H, hη, hη', hY, hb, hC, hH, _, hgood⟩ :=
     exists_uniform_mollifiedZeta_good_horizontal_argument hε
   let d := Real.log ((b - 1 / 4) / (b - 1 / 2))
   let K := 2 * (1 + C * (b + 2))
@@ -204,7 +207,9 @@ theorem exists_uniform_mollifiedZeta_power_good_horizontal_argument
       Real.log (2 * (1 + C * (t + (b - 1 / 4)) * T ^ θ)) / d + 3 ≤
         Q * Real.log T := by
     simpa only [d, Q, K] using
-      jensen_count_power_log_bound b C θ T t hb hC hθ.le hT3 ht14
+      jensen_count_power_log_bound b C θ T t hb hC hθ.le hT3
+        (by have hh := (abs_le.mp ht14).1; linarith)
+        (by have hh := (abs_le.mp ht14).2; linarith)
   have hlog0 : 0 ≤ Real.log T := Real.log_nonneg (by linarith)
   have hcoef : 0 ≤ Q * Real.log T * Real.pi := by positivity
   refine ⟨t, ht, hfree, φ, hφ, hφb, hrep, ?_⟩

@@ -21,9 +21,10 @@ The second theorem retains the entire nonnegative M contribution in the
 zeta-zero count bound.
 
 These are consequences of the proved Littlewood and analytic-order
-identities, not a new mollified-moment estimate. The compatible boundary
-lifts must not be replaced by independently normalized phases without a
-separate branch-compatibility argument.
+identities, not a new mollified-moment estimate. Principal normalization at
+both right corners is retained when the whole right side lies in the slit
+plane. The actual uniform anchor discharges this condition in the dyadic
+normalized theorem.
 -/
 
 noncomputable section
@@ -33,8 +34,9 @@ namespace RiemannResearch.Analysis.ConreyBaluyot
 
 /-- Exact signed Littlewood identity for the actual mollified product.
 The mollifier's weighted zero contribution is retained, not discarded.
-The logarithm lifts are compatible around the rectangle; their endpoint
-values are not asserted to be independent principal logarithms. -/
+The logarithm lifts are compatible around the rectangle. The bottom-right
+value is principal; so is the top-right value whenever the entire right side
+lies in the slit plane. -/
 theorem exists_mollifiedZeta_littlewood_identity_with_remainder
     (σ y ε : ℝ) {a b H T : ℝ}
     (hab : a ≤ b) (hHT : H ≤ T) (hH : 0 < H)
@@ -57,7 +59,10 @@ theorem exists_mollifiedZeta_littlewood_identity_with_remainder
           ∑ ρ ∈ Z, (analyticOrderNatAt (nonstandardMollifier σ y ε) ρ : ℝ) *
             (ρ.re - a)) ∧
       0 ≤ ∑ ρ ∈ Z, (analyticOrderNatAt (nonstandardMollifier σ y ε) ρ : ℝ) *
-        (ρ.re - a) := by
+        (ρ.re - a) ∧
+      B b = log (mollifiedZeta σ y ε ((b : ℂ) + (H : ℂ) * I)) ∧
+      ((∀ t ∈ Icc H T, mollifiedZeta σ y ε ((b : ℂ) + (t : ℂ) * I) ∈ slitPlane) →
+        U b = log (mollifiedZeta σ y ε ((b : ℂ) + (T : ℂ) * I))) := by
   classical
   let z : ℂ := (a : ℂ) + (H : ℂ) * I
   let w : ℂ := (b : ℂ) + (T : ℂ) * I
@@ -83,7 +88,7 @@ theorem exists_mollifiedZeta_littlewood_identity_with_remainder
     exact lt_of_lt_of_le hz hi.1
   have hf : AnalyticOnNhd ℂ F (Rectangle z w) :=
     fun s hs => hFanalytic s (hpos s hs)
-  obtain ⟨Z, B, U, hZ, hBc, hUc, hBe, hUe, hboundary⟩ :=
+  obtain ⟨Z, B, U, hZ, hBc, hUc, hBe, hUe, hboundary, hBb, hUb⟩ :=
     Complex.exists_logRectangleBoundary_eq_weighted_zeros hab hHT hf hborder
   have hzBorder : z ∈ RectangleBorder z w :=
     Or.inl (Or.inl (Or.inl ⟨left_mem_uIcc, rfl⟩))
@@ -121,7 +126,7 @@ theorem exists_mollifiedZeta_littlewood_identity_with_remainder
     rw [hFmul]
     exact analyticOrderNatAt_mul (analyticAt_riemannZeta hρne)
       (analyticAt_nonstandardMollifier σ y ε ρ) hζorder hMorder
-  refine ⟨Z, B, U, hZ, hBc, hUc, hBe, hUe, ?_, ?_⟩
+  refine ⟨Z, B, U, hZ, hBc, hUc, hBe, hUe, ?_, ?_, hBb, hUb⟩
   · rw [hboundary, ← Finset.sum_add_distrib]
     congr 1
     apply Finset.sum_congr rfl
@@ -163,7 +168,7 @@ theorem exists_mollifiedZeta_littlewood_count_bound
             ∑ ρ ∈ Z, (analyticOrderNatAt (nonstandardMollifier σ y ε) ρ : ℝ) *
               (ρ.re - a)) / (α - a) := by
   classical
-  obtain ⟨Z, B, U, hZ, hBc, hUc, hBe, hUe, hid, _⟩ :=
+  obtain ⟨Z, B, U, hZ, hBc, hUc, hBe, hUe, hid, _, _, _⟩ :=
     exists_mollifiedZeta_littlewood_identity_with_remainder σ y ε hab hHT hH hborder
   refine ⟨Z, B, U, hZ, hBc, hUc, hBe, hUe, ?_⟩
   intro α hα
