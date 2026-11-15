@@ -30,6 +30,43 @@ proved equivalent as uniform density statements. The endpoint sigma=1/2
 uses the already unconditional Riemann–von Mangoldt upper bound; threshold
 copies are not thrown away.
 
+## Away-line reduction to Ingham (15 November 2026)
+
+The actual inclusive zero-count version of Ingham's classical estimate is
+recorded as the proposition **InghamDensityBound**. The unconditional
+classical bound is stated, with inclusive cutoff and positive heights, in
+Chourasiya and Simonič, https://arxiv.org/abs/2507.15184. Its application
+here is the away-line step in Baluyot, §3.6, p. 142.
+
+For a fixed away-line width eta > 0 and a < 4/3, let
+d = (4/3 - a) eta. The exact exponent identity is
+
+$
+\frac{3(1-\sigma)}{2-\sigma}
+=1-\frac{2}{2-\sigma}(\sigma-\tfrac12).
+$
+
+For sigma in [1/2 + eta, 1], adding d still leaves the Ingham exponent
+below or equal to the Selberg exponent 1 - a(sigma - 1/2). The elementary
+bound (log T)^4 <= (4/d)^4 T^d for T >= 1 absorbs all four excess
+logarithms. The positive dyadic window (T/2, T] is bounded by the positive
+global count at the same T, preserving the inclusive cutoff and multiplicity.
+
+The declarations in **ActualSelbergIngham.lean**, namespace
+**RiemannResearch.Analysis.ActualZeroOrdinate**, are:
+
+- **ingham_exponent_add_gap_le** proves the uniform exponent comparison.
+- **exists_selberg_far_windows_of_ingham** supplies the exact far-window
+  input of the existing assembly, with explicit multiplier (4/d)^4.
+- **uniformSelbergDensity_of_near_excess_and_ingham** assembles the bound
+  from near-line weighted excess and the classical Ingham input.
+
+This is a checked reduction. A Lean proof of **InghamDensityBound** remains
+open, as do the actual near-line moment and its Kloosterman estimates.
+The mathematical theorem for 0 < a < 8/7 is proved unconditionally in Baluyot,
+Theorem 1.2.1 and §3.6. The derived away-line comparison through a < 4/3
+does not extend that theorem's near-line exponent range.
+
 ## New proved components
 
 All declarations below are in `RiemannResearch.Analysis`.
