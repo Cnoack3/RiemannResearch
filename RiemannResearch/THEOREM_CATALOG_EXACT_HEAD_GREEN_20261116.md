@@ -236,3 +236,38 @@ weight tails, exact outward rational rounding, and checked Neumann solve defects
 See `ResearchData/ExactHeadGreen20261116/rational_certification_sources.md` and
 `rational_certificate_summary.json`. The individual endpoint computations have
 not been replayed in Lean; x=17,19,23 remain floating-point diagnostics.
+
+## Continuation: coercivity, inverse-free certificates, and a kernel stage
+
+- `ExactHeadGcdAtoms.properUpperDivisors` and `synthesis_upper_eq_proper`
+  remove the zero endpoint column exactly on the optimization domain.
+- `RH/ExactHeadAtomCoercivity.lean`: `coefficient_sq_le_energy` proves
+  c_d^2 <= 4 d^2 E for each proper divisor. `coefficient_energy_bound`
+  sums these bounds, and `proper_synthesis_energy_pos` gives strict finite
+  nondegeneracy for every nonzero proper-divisor coefficient vector.
+- `Analysis/FiniteNormalDefect.lean`: exact energy completion and
+  `normal_defect_energy_identity`, followed by `energy_le_of_dual_coercivity`.
+- `RH/ExactHeadAtomCertification.lean`: `trial_energy_split` and
+  `trial_energy_gap_eq_normal_defect` retain the entire optimized energy gap.
+  `trial_energy_enclosure` bounds that gap above by
+  4(sum of proper d^2)(sum of actual normal-defect squares), for arbitrary
+  trial coefficients. No Gram inverse or condition-number bound is assumed.
+- `RH/ParetoRationalWeightIntervals.lean`: elementary complete rational
+  progression intervals from finite prefixes and proved telescoping tails.
+- `RH/ExactHeadAtomSmallStage.lean`: at P=6, x=3, the actual residual
+  is supported only at r=5. Its energy is the complete progression weight;
+  the kernel-checked enclosure is [0.05225229129512139667270,
+  0.05225229129512139667271]. The affine profile loss is exactly zero,
+  while its signed moment is 2q>q. Zero dispersion alone does not force
+  moment admissibility even at a finite stage.
+
+Focused checks: `job_MvubLut5LeCdIGPJP33hp9-iHqyqPCv-` (49.043 s) and
+`job_NydaH_RbBGVKMMSqt9uJGgpqtz8dmC_D` (26.796 s), Bazel/BuildBuddy.
+These await the managed full-project publication checkpoint of this stage.
+The preceding full checkpoint `job_jS79El2_ZluI64oe3U2kY2caBO-oSK1S`
+published `5d6f74ea801dc54edf2611b8533774a030c45d90` after 258.633 seconds.
+
+The external rational run now retains an independent inverse-free energy
+certificate. At x=13 its q interval has width 4.9463e-26; the earlier affine
+profile/moment enclosures are unchanged. The higher-stage endpoint checks
+remain external, not kernel-replayed.

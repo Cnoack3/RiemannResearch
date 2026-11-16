@@ -226,7 +226,7 @@ identify an asymptotic transition scale.
 
 | Item | Status | Delivered | Remaining acceptance criterion |
 |---|---|---|---|
-| R1 certified data | Partial: external rational certificates | Complete weight and solve enclosures at 5,7,11,13; diagnostics through 23 | Replay endpoint checks in Lean; certify larger stages |
+| R1 certified data | Partial: kernel at 3, external rational certificates | Complete kernel stage at 3; rational enclosures at 5,7,11,13; diagnostics through 23 | Extend kernel replay to 5 and larger; certify larger stages |
 | R2 dyadic ledger | Computed, external | Canonical and best-affine block energies through 23 | Certified block intervals and larger cutoffs if justified |
 | R3 digit/carry formulas | Partial, Lean checked | General digit recursion, primitive arithmetic bridge, affine completion/shift | Identify the actual boundary carry/discrepancy with the affine component |
 | R4 signal-specific discrepancy | Open | Actual tail mass, low-conductor bound, strict quadratic gap criterion | Jointly cofinal W E<=k^2 q^2+Cq with k<delta, without assuming bounded q or RH |
@@ -247,6 +247,40 @@ Priority order for continuation:
    component algebraically, and target the weaker W E_tail<=Cq budget.
 5. Keep any claimed uniform bound separate from finite diagnostics; check that
    no target-closure or bounded-exact-head premise has been inserted.
+
+## Quantitative finite certification and kernel replay
+
+The proper gcd-atom coefficients satisfy c_d^2 <= 4 d^2 E for the actual
+complete Pareto energy, for every positive period. Summing gives a fully
+explicit coercivity bound and strict positivity for every nonzero proper
+coefficient vector. The endpoint column is removed by an exact sample identity.
+
+For any trial fit, Lean now proves both exact identities
+
+- trial energy = optimized energy + error energy;
+- error energy = coefficient error paired with the trial normal-equation defect.
+
+It then gives the inverse-free enclosure
+
+$
+0\le Q_{\mathrm{trial}}-q\le
+4\left(\sum_{d\in D}d^2\right)\left(\sum_{d\in D}b_d^2\right),
+$
+
+where D is the proper upper divisor set and b_d is the actual trial normal
+defect. This finite bound needs no numerical inverse or condition-number
+hypothesis. The external exact-rational calculation supplies a second q
+interval using it; at x=13 its width is 4.9463e-26. Those stage endpoint
+calculations are still external.
+
+A complete kernel replay is proved at P=6, x=3. The residual is 1 at r=5
+and zero on the other nonterminal residues, so q=w_6(5). Lean proves
+
+0.05225229129512139667270 <= q <= 0.05225229129512139667271.
+
+The same stage has exactly zero affine-profile loss and signed moment 2q>q.
+This is a concrete reason to keep R4 dispersion and R5 signed moment separate.
+It does not refute a cofinal moment estimate at later cutoffs.
 
 ## Files and evidence
 

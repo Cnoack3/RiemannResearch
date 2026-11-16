@@ -183,3 +183,27 @@ theorem proper_coefficients_unique (P : ℕ) (D : Finset ℕ) (c u : ℕ → ℝ
     ← synthesis_divisor_jump P D u d hd hdpos hdP, heq d hdpos hdlt, hp]
 
 end RiemannResearch.RH.ExactHeadGcdAtoms
+
+namespace RiemannResearch.RH.ExactHeadGcdAtoms
+
+def properUpperDivisors (P x : ℕ) : Finset ℕ :=
+  (upperDivisors P x).filter (fun d => d < P)
+
+theorem properUpperDivisors_properties (P x d : ℕ) (hd : d ∈ properUpperDivisors P x) :
+    0 < d ∧ d ∣ P ∧ d < P := by
+  obtain ⟨hd,hlt⟩ := Finset.mem_filter.mp hd
+  have hm := (Finset.mem_filter.mp hd).1
+  exact ⟨Nat.pos_of_mem_divisors hm, Nat.dvd_of_mem_divisors hm, hlt⟩
+
+theorem synthesis_upper_eq_proper (P x : ℕ) (c : ℕ → ℝ) (r : ℕ) (hr : r < P) :
+    synthesis P (upperDivisors P x) c r =
+      synthesis P (properUpperDivisors P x) c r := by
+  symm
+  apply Finset.sum_subset (Finset.filter_subset _ _)
+  intro d hd hnd
+  have hPd : P ≤ d := by
+    by_contra! h
+    exact hnd (Finset.mem_filter.mpr ⟨hd,h⟩)
+  rw [atom_zero_of_lt P d r (hr.trans_le hPd),mul_zero]
+
+end RiemannResearch.RH.ExactHeadGcdAtoms

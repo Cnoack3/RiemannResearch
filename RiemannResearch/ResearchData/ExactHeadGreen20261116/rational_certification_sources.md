@@ -14,6 +14,9 @@ outward to an exact rational grid with denominator 10^30. mpmath at 70 digits
 only proposes centers and preconditioners. Acceptance checks the rational
 Neumann row defect theta<1 and the rational preconditioned residual rho;
 every actual normal solution is enclosed within rho/(1-theta) of the center.
+A second optimized-energy enclosure uses the proved inverse-free normal-defect
+bound with K=4 sum(d^2). Its trial energy and defect intervals involve rational
+trial coefficients only; no preconditioner is used for that enclosure.
 The normal solution exists by finite weighted least squares. All profile,
 affine fit, energy and signed-moment intervals are then propagated outward.
 
@@ -124,6 +127,13 @@ def stage(x):
     residual=[sub(pt(targets[r]),isum(scale(rows[r][j],ci[j]) for j in range(m)))
               for r in range(P-1)]
     q=isum(mul(w,sq(v)) for w,v in zip(wi,residual))
+    trial_residual=[sub(pt(targets[r]),isum(scale(rows[r][j],pt(c[j])) for j in range(m)))
+                    for r in range(P-1)]
+    trial_q=isum(mul(w,sq(v)) for w,v in zip(wi,trial_residual))
+    coercivity=4*sum(d*d for d in D)
+    defect_gap=up(coercivity*sum((ab(v)**2 for v in rb),F(0)))
+    q_defect=rounded(trial_q[0]-defect_gap,trial_q[1])
+    assert max(q_defect[0],q[0])<=min(q_defect[1],q[1])
     tau=isum(mul(w,v) for w,v in zip(wi,residual))
     assert q[0]>0
     profiles={d:isum(scale(d*(r//d),mul(wi[r-1],residual[r-1])) for r in range(1,P))
@@ -145,7 +155,9 @@ def stage(x):
     result={'cutoff':x,'period':P,'proper_upper_divisors':D,'prefix_K':16,
       'rational_rounding_scale':str(S),'status':'external_exact_rational_certificate',
       'theta':str(theta),'rho':str(rho),'coefficient_error_radius':str(eps),
-      'q':enc(q),'affine_energy':enc(ea),'affine_c0':enc(c0),'affine_c1':enc(c1),
+      'q':enc(q),'q_from_normal_defect':enc(q_defect),
+      'normal_defect_energy_gap_bound':str(defect_gap),
+      'coercivity_constant':coercivity,'trial_energy':enc(trial_q),'affine_energy':enc(ea),'affine_c0':enc(c0),'affine_c1':enc(c1),
       'signed_moment':enc(moment),'x_E_over_q':enc(scale(x,div(ea,q))),
       'W_E_over_q':enc(scale(W,div(ea,q))),
       'moment_deficit':enc(sub(pt(1),div(moment,q))),
