@@ -187,3 +187,92 @@ https://app.buildbuddy.io/invocation/3c0b1f8a-584e-46f3-81e7-2b5209bc15ab.
 This is a snippet receipt; saved-source axiom checks and full-project checkpoint
 provide the separate publication gate. The synchronized triage Site retains
 final commit and checkpoint evidence.
+
+
+## Actual signed sums: partial progress and remaining gap (16 November 2026)
+
+**The requested unconditional cofinal subharmonic bound remains Open.**
+No target-membership premise was discharged. The following new results identify
+the exact limit and prove a concrete unconditional range of slopes.
+
+For N > 0, with all definitions and full Q tails unchanged,
+
+```text
+H_N^(-1) S_N - r = H_N^(-1) E_N
+||H_N^(-1) S_N - r|| <= M/H_N
+S_N/H_N -> r
+||S_N||/H_N -> ||r||
+<1,S_N>/H_N -> ||r||^2.
+```
+
+The complete energy equality is
+
+```text
+||S_N||^2 = H_N^2 ||r||^2 + 2 H_N <r,E_N> + ||E_N||^2.
+```
+
+Consequently a bounded centered remainder does not itself give a zero normalized
+limit. The possible leading residual remains. Passing to a cofinal subsequence
+does not change that limit.
+
+There is genuine unconditional arithmetic partial progress: the finite legal
+competitor qOdd = 2*g_2 has complete error norm 1/2, because the Q mass of positive
+even integers is exactly 1/4. Therefore, at every N,
+
+```text
+||S_N|| <= H_N/2 + M.
+```
+
+For every epsilon > 1/2, the requested bound holds at every sufficiently large
+stage, with threshold H_N >= M/(epsilon - 1/2). This does not establish the
+quantifier over ALL epsilon > 0. The number 1/2 is a proved upper bound from
+one competitor; it is not asserted to be optimal.
+
+A more focused arithmetic target is now equivalent to the requested vector
+condition:
+
+```text
+forall epsilon > 0, forall J, exists N >= J,
+  <1,S_N> <= epsilon*H_N.
+```
+
+This is a one-sided signed bound, without an absolute value. Its equivalence is
+proved; its actual arithmetic provider remains **Open**. It uses the fixed test
+vector 1, rather than requiring a bound against every vector in the annihilator.
+
+All new declarations are in RiemannResearch.RH.QDensityLeakageSeries:
+
+| Declaration | Content |
+|---|---|
+| harmonicMass_pos | Positive normalization for N > 0 |
+| normalized_partialLeakage_error_eq | Exact normalized error |
+| normalized_partialLeakage_error_norm_le | Complete M/H_N error bound |
+| normalized_partialLeakage_tendsto | Vector limit equals r |
+| normalized_partialLeakage_norm_tendsto | Norm ratio limit equals ||r|| |
+| partialLeakage_norm_sq_exact | Full signed energy expansion |
+| qOne_inner_residual | Constant pairing equals residual energy |
+| partialLeakage_mean_exact | Exact signed mean decomposition |
+| partialLeakage_mean_gap_le | Mean error at most M |
+| normalized_partialLeakage_mean_tendsto | Signed mean ratio tends to ||r||^2 |
+| cofinal_subharmonic_partialLeakage_mean_iff | Conditional scalar criterion |
+| cofinal_subharmonic_partialLeakage_iff_mean | Vector/scalar criterion equivalence |
+| partialLeakage_norm_le_legal_certificate | Bound from any legal competitor |
+| partialLeakage_norm_le_half_harmonic_add_budget | Unconditional parity bound |
+| eventually_partialLeakage_norm_le_of_half_lt | Unconditional slopes > 1/2 |
+
+The coherent fifteen-theorem candidate passed Bazel/BuildBuddy in
+job_QgPWva4j-zGDEQsBC3qAh-Nc-2DCV-C5 (55.914 server seconds):
+https://app.buildbuddy.io/invocation/f8b9b6dc-3142-495d-bce2-99a8ffc0c1bf.
+Saved-source guarded axiom checks and the managed full-project checkpoint are
+separate publication evidence recorded on the triage Site.
+
+Source: user-requested continuation, 16 November 2026; deductions from the exact
+leakage identity and complete parity mass. Bagchi, arXiv:math/0607733,
+Theorem 1 and its equivalent-weight observation, support the classical
+RH/density interpretation. No external estimate is imported as an axiom.
+
+Next check: prove the displayed one-sided signed-mean smallness from the actual
+arithmetic data, or construct finite legal competitors whose complete errors
+approach zero with justified uniform tail bounds. Increasing a finite table,
+using a bounded centered remainder, or assuming that the projection preserves
+physical positivity does not supply that estimate.
