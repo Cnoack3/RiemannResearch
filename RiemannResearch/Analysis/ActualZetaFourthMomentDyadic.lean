@@ -28,8 +28,9 @@ the L2 constant instead of replacing it by three times the squared costs.
 The phase of the actual functional equation is connected to the vendored
 Hardy API. Its continuity and unit modulus are proved, including at zero.
 Source: Chourasiya--Simonic, arXiv:2507.15184v2, Section 5.1, supports the
-analytic representation agenda. The uniform contour remainder is not
-proved here. Dyadic induction is an elementary assembly step.
+analytic representation agenda. The unconditional contour provider is now
+proved in `ActualZetaSquareResidualBound`, which applies the consumer here.
+Dyadic induction is an elementary assembly step.
 -/
 noncomputable section
 open MeasureTheory Complex Set

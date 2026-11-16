@@ -10,13 +10,10 @@ its uniform rapid decay, both central functional-equation multipliers, and
 arbitrary-order decay of the original left Mellin tails. It also bounds the
 actual zeta factor and actual original Mellin kernel in the central region.
 
-**The complete actual residual estimate is still open.** In particular,
-this continuation does not assert
-`integral_U^(2U) |zeta(1/2+it)^2 - P_floor(U)(t)
-- chi(1/2+it)^2 conjugate(P_floor(U)(t))|^2
-<= C U (log U)^4`.
-The unconditional Ingham I1 fourth-moment theorem and the remaining Z03
-obligations are not closed.
+**Current status:** [the completed uniform remainder proof](THEOREM_CATALOG_ZETA_REMAINDER_BOUND_20261116.md) now establishes the complete actual
+residual estimate and the unconditional Ingham I1 fourth-moment theorem.
+This catalog preserves the preceding residue/contour checkpoint and its
+inputs. The remaining separate Z03 obligations are unchanged.
 
 No hypothesis asserting a residue estimate, Gamma quotient estimate,
 zeta growth estimate, or the target residual estimate is used in the
@@ -161,7 +158,11 @@ These are the tails of the **original** kernel. They should not be silently
 substituted for the separate tails after the functional equation and the
 arithmetic head/tail split.
 
-## Remaining steps to the complete actual residual
+## Previously remaining steps (now completed)
+
+All five steps below are discharged by the completed remainder continuation.
+Its full-line translated chi bounds and integrable Gamma envelopes handle
+the transformed contours without a separate central/far split.
 
 1. Prove the exact smoothed zeta-square Mellin representation at the moving
    critical parameter and its global contour shift, using the newly

@@ -21,9 +21,11 @@ import Lean.Elab.Tactic.Omega
 # Exact residual and fourth-moment transfer for the actual zeta function
 
 The unconditional results here are finite identities and transfer inequalities.
-The bound on the actual residual is an explicit, unresolved analytic input.
-No actual-zeta fourth-moment provider or approximate functional equation is
-asserted. The existing Ingham I2 provider is used without modification.
+The residual bound is an explicit input to the transfer theorems in this module.
+The unconditional actual provider is now proved in
+`ActualZetaSquareResidualBound`; the exact contour identity is in
+`ActualZetaSquareRemainderIdentity`.
+The existing Ingham I2 provider is used without modification.
 
 Source for the representation agenda: Chourasiya--Simonic,
 https://arxiv.org/html/2507.15184v2, Section 5.1, equations (51)--(56).

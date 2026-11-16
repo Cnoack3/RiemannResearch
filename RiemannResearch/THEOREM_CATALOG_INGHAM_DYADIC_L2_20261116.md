@@ -10,10 +10,11 @@ phase obligations in the preceding fourth-moment catalog. It also proves
 finite damped-shell and smoothing-correction estimates and the finite L2
 assembly needed to combine remainder pieces.
 
-**I1 is not yet an unconditional Lean theorem.** The canonical consumer still
-requires a uniform bound for the *actual* residual on each window `[U,2U]`.
-The Mellin representation, complete contour estimates, and infinite-tail
-limit passage are not supplied by these new declarations. Z03 is not closed.
+**Current status:** I1 is now an unconditional Lean theorem in
+[the completed uniform remainder proof](THEOREM_CATALOG_ZETA_REMAINDER_BOUND_20261116.md). Its provider is
+`exists_actual_zeta_fourth_moment_bound`. The canonical consumer described
+here remains a reusable conditional theorem; the new contour development
+supplies its actual residual hypothesis. The separate Z03 obligations remain open.
 
 No existing theorem statement is weakened. There are no new project axioms
 or unfinished proofs.
@@ -163,7 +164,7 @@ one for every real height, including zero. Its only domain-specific input is
 
 **This is a conditional research reduction, not a proof of that input.**
 
-## Remaining analytic obligations and next check
+## Analytic obligations after the completed remainder continuation
 
 | Obligation | Status |
 | --- | --- |
@@ -172,14 +173,15 @@ one for every real height, including zero. Its only domain-specific input is
 | Finite exponentially damped shell estimates | Proved |
 | Finite L2 assembly of the five remainder pieces | Proved for arbitrary continuous finite families |
 | Dyadic windows to global I1 shape, with finite head | Proved |
-| Exact smoothed zeta-square representation and its contour shifts | Open |
+| Exact smoothed zeta-square representation and its contour shifts | Proved in `ZetaSquareMellinRepresentation` and `ActualZetaSquareMellinShift` |
 | Actual damped divisor series and fixed-positive-damping L2 limit passage | Proved for all positive real scales in [the damped-series continuation](THEOREM_CATALOG_DAMPED_DIVISOR_L2_20261116.md) |
 | Sharp smoothed moments for positive integer scales | Proved in [the uniform remainder continuation](THEOREM_CATALOG_INGHAM_REMAINDER_PROGRESS_20261116.md) |
 | Uniform central off-critical chi bounds on Re s=-1/4 and 3/4 | Proved in [the residue and contour continuation](THEOREM_CATALOG_ZETA_REMAINDER_RESIDUE_20261116.md) |
 | Actual moving double-pole coefficient and uniform rapid decay | Proved, including every polynomially weighted dyadic square moment |
-| Weighted divisor head/tail moments and complete transformed contour estimates | Open |
-| Complete actual residual bound with one height-independent constant | Open |
-| Unconditional I1 and remaining Ingham/Z03 obligations | Not closed |
+| Weighted divisor head/tail moments and complete transformed contour estimates | Proved in `WeightedDivisorMoment` and the actual head/tail moment modules |
+| Complete actual residual bound with one height-independent constant | Proved by `exists_zetaSquareResidual_comparable_cutoff_bound` |
+| Unconditional I1 | Proved by `exists_actual_zeta_fourth_moment_bound` |
+| Separate remaining Ingham/Z03 obligations | Unchanged; not closed |
 
 The real-scale convergence and L2 limit passage are proved in
 [DampedDivisorSeries.lean](Analysis/DampedDivisorSeries.lean), with a closed-form
@@ -187,16 +189,17 @@ tail bound and convergence of moments after subtraction of any fixed continuous
 function. The sharp integer-scale block moment is separately proved in
 [SmoothedDivisorMoment.lean](Analysis/SmoothedDivisorMoment.lean); the two series
 are identified by smoothedDivisorSeries_eq_dampedDivisorSeries.
-The next checks are the exact Mellin representation, the weighted divisor
-head/tail mean values, and the complete functional-equation contour assembly.
+The exact Mellin representation, weighted divisor head/tail mean values,
+and complete functional-equation contour assembly have since passed Lean;
+see the completed remainder catalog linked above.
 The moving residue and central chi factors are now proved unconditionally;
 the original left-line tails have decay to every inverse-power order in
 ActualZetaSquareMellinTail.lean.
 
 External reference for the representation strategy:
 [Chourasiya--Simonic, Section 5.1](https://arxiv.org/html/2507.15184v2).
-The source supports the analytic agenda, not a claim that these remaining
-obligations have been formalized.
+The source supports the analytic strategy. The later completed remainder
+catalog records the formal providers and their verification evidence.
 
 ## Verification evidence
 

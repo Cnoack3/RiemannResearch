@@ -10,6 +10,11 @@ and publication.
 
 ## Status
 
+**Current status:** [the completed uniform remainder proof](THEOREM_CATALOG_ZETA_REMAINDER_BOUND_20261116.md) supplies I1 unconditionally and
+proves the actual mixed mollifier four-thirds moment with a squared logarithm.
+The paragraphs and research route below describe this earlier reduction's
+original scope; its conditional consumers now have actual providers.
+
 **The classical actual-zeta fourth-moment bound I1 is not proved by this
 continuation.** The arithmetic logarithmic-energy input is proved, as are
 the finite-polynomial mean values and the exact transfer to the existing
@@ -25,8 +30,9 @@ closes the dyadic-to-global assembly and the actual critical-line phase
 conditions, proves finite smoothing and damped-shell estimates, and replaces
 the factor-three residual transfer by its sharper L2 form. The later canonical
 criterion needs only a uniform actual residual bound on `[U,2U]`. The infinite
-tail limit and the complete Mellin/contour estimates remain open. The detailed
-agenda below records the initial state before that continuation.
+tail limit and complete Mellin/contour estimates have now been supplied in
+the completed remainder continuation. The detailed agenda below records
+the initial state before those later providers.
 
 ## Proposed changes
 
@@ -166,7 +172,7 @@ valid for all `T>=H_0`. These phase, weight, and residual hypotheses are
 visible in the theorem type. In particular the uniform residual provider
 is still **Open**.
 
-## Analytic route to the missing provider
+## Historical analytic route to the provider (now completed)
 
 The classical target and Mellin strategy are supported by
 [Chourasiya--Simonic, Section 5.1](https://arxiv.org/html/2507.15184v2).
@@ -298,14 +304,14 @@ for `X>=1` and `0<=H<=T`, that any supplied bound
 The proof derives the needed subinterval fourth-moment bound from `[0,T]`
 using nonnegativity and the proved continuity of actual zeta.
 
-| Obligation | Status after this work |
+| Obligation | Current status, including the completed remainder continuation |
 | --- | --- |
 | Divisor coefficient energy with fourth logarithmic power | Proved |
 | Finite weighted divisor-polynomial mean value | Proved |
-| Actual zeta-square smoothed representation with uniform remainder | Open in Lean |
-| I1 actual fourth-moment provider | Open in Lean; classical externally |
+| Actual zeta-square smoothed representation with uniform remainder | Proved in the completed remainder continuation |
+| I1 actual fourth-moment provider | Proved by `exists_actual_zeta_fourth_moment_bound` |
 | I2 actual mollifier second moment | Already proved; reused |
-| Substitution of I1 into the actual critical-error inequality | Proved as an explicit conditional consumer |
+| Substitution of I1 into the actual critical-error inequality | Unconditional `exists_actual_critical_error_moment_log_bound` now supplied |
 | Moving right-line error moment, Gabriel interpolation, and boundary/counting assembly | Unchanged |
 | Independent near-line Selberg estimate and Z03 | Unchanged; not closed |
 
