@@ -1,5 +1,27 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## Strip decay and explicit collision coefficient (16 November 2026)
+
+Analysis/DampedGammaStripBounds.lean proves arbitrary-order damped Gamma
+decay uniformly on any fixed bounded strip (Re(lam)>0, 0<a+n, t!=0).
+Analysis/ConreyBaluyotEstermannRegularPart.lean proves the exact identity
+E_h(u,v)=K^(1-u-v) zeta(u) zeta(v)+R_h(u,v), with an entire shifted
+remainder for unit h. Differences of two unit twists are entire.
+
+Analysis/ConreyBaluyotEstermannMellinCollision.lean now evaluates the
+simple Laurent coefficient at the double pole:
+(gamma-log(lam)-2*log(K))/(K*lam). This is the actual pole-subtracted
+limit, with principal logarithms, and is independent of the unit numerator.
+
+**Conditional research reduction:** Analysis/ConreyBaluyotEstermannMellinGrowth.lean
+derives the required kernel tail and the global distinct-pole shift from
+any polynomial strip-growth bound for the continued Estermann factor.
+The Gamma provider is proved; the Estermann growth provider remains open.
+Collision rectangle accounting, Gaussian-ray Fubini, arithmetic estimates,
+cofinal uniform moment bounds, and independent Ingham density remain open.
+
+See [the exact new declarations and research agenda](SELBERG_MELLIN_GROWTH_COLLISION_20261116.md).
+
 ## Estermann Mellin finite rectangles and global reduction (16 November 2026)
 
 New unconditional results in Analysis/ConreyBaluyotEstermannMellinShift.lean:
@@ -29,8 +51,9 @@ finite-sum/integral exchange on the new line.
 **Collision:** Analysis/ConreyBaluyotEstermannMellinCollision.lean proves
 that alpha=beta=0 has order exactly -2 at s=1 and leading coefficient
 1/(K*lam). It constructs an analytic numerator g and identifies the
-pole-subtracted simple coefficient by a limit equal to g'(1). Its
-explicit evaluation and the collision rectangle/global shift remain open.
+pole-subtracted simple coefficient by a limit equal to g'(1). The later
+strengthening above evaluates it explicitly. The collision rectangle/global
+shift remains open.
 
 **Next analytic obligation:** prove existence of B,T0 for the actual
 closed-strip tail estimate. The already proved initial-line bound does

@@ -1,8 +1,20 @@
 # Estermann Mellin shifts — finite rectangles, collision, and exact finite assembly
 
-Prepared 16 November 2026, America/Los_Angeles.
+Updated 16 November 2026, America/New_York.
 
-## Status
+## Latest strengthening
+
+The collision coefficient is now explicitly evaluated as
+(gamma-log(lam)-2*log(K))/(K*lam). The damped Gamma factor has proved
+arbitrary-order decay on closed strips. The remaining global analytic
+provider can be reduced to polynomial growth of the continued Estermann
+function. An exact zeta-product separation has an entire finite remainder.
+
+See [the new results and concrete research agenda](SELBERG_MELLIN_GROWTH_COLLISION_20261116.md).
+The finite-rectangle results below remain established; the global shift
+still depends on an actual growth provider.
+
+## Earlier checkpoint status
 
 The rational-character, gcd, coefficient, Gaussian-ray and actual-moment assembly
 at b3a5e9295578c55995db65b197080a70e75d70bd remains established and is reused.
@@ -172,10 +184,15 @@ Declarations:
 - meromorphicOrderAt_estermannMellinKernel_diagonal;
 - exists_estermannMellinKernel_diagonal_laurent.
 
-**Open:** evaluate g'(1) in the desired explicit constants, prove the
-double-pole rectangle identity (for example by subtracting the double
-term and showing its boundary integral is zero), and supply the actual
-tail bound for the collision's global shift.
+**Now closed:** the explicit value is
+g'(1)=(gamma-log(lam)-2*log(K))/(K*lam), by
+estermannMellinKernel_diagonal_residue_explicit and uniqueness of limits.
+The explicit numerator's derivative is proved in
+hasDerivAt_estermannDiagonalNumerator_one.
+
+**Open:** prove the double-pole rectangle identity (for example by
+subtracting the double term and showing its boundary integral is zero),
+and supply the actual tail bound for the collision's global shift.
 
 ## Verification evidence and next actions
 
@@ -201,8 +218,10 @@ Next work, in order:
 
 1. Establish existence of B,T₀ for the actual closed-strip kernel bound
    above, first for fixed parameters alpha=2*l-1, beta=0, 0<l<1,
-   l != 1/2. This turns the global reduction into an unconditional theorem.
-2. Complete the collision residue and rectangle accounting.
+   l != 1/2. The new Gamma strip bounds reduce this to polynomial Estermann
+   growth; the new agenda gives the a=-l Euler–Maclaurin route.
+   This turns the global reduction into an unconditional theorem.
+2. Complete the collision rectangle accounting; the residue is now evaluated.
 3. Apply the resulting identities under the actual outward Gaussian ray
    integrals, proving every needed splitting/Fubini step.
 4. Identify the full signed M1+M2+D1+D2+E decomposition.
