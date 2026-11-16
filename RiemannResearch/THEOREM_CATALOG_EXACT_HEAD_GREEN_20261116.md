@@ -235,8 +235,8 @@ after full validation and revalidation against newer main (205.999 s + 190.518 s
 External rational certificates now cover x=5,7,11,13, including complete infinite
 weight tails, exact outward rational rounding, and checked Neumann solve defects.
 See `ResearchData/ExactHeadGreen20261116/rational_certification_sources.md` and
-`rational_certificate_summary.json`. The individual endpoint computations have
-not been replayed in Lean; x=17,19,23 remain floating-point diagnostics.
+`rational_certificate_summary.json`. These high-precision endpoint computations remain external; independent
+kernel energy certificates at x=3 and x=5 are described below; x=17,19,23 remain floating-point diagnostics.
 
 ## Continuation: coercivity, inverse-free certificates, and a kernel stage
 
@@ -332,3 +332,16 @@ The direct-moment stage and its three guarded axiom checks passed focused job
 `job_kUHNYsBfNFggEYdYxC0gxerx_nRmjN_A` in 49.069 seconds.
 [Focused build](https://app.buildbuddy.io/invocation/e46f068d-4fb6-44ae-9883-a2e614b95a35).
 All sixteen guards are retained in the project audit module.
+
+## Latest full publication and finite R5 witnesses
+
+Latest complete code checkpoint: [8e87d34](https://github.com/Cnoack3/RiemannResearch/commit/8e87d34452790e73ffbd901f67c4ebbb62dbbdbf).
+Full Bazel/BuildBuddy job `job_Yag5tEUrM52V8X0ESe4tJ4PbTukrQu5R`
+passed `//:RiemannResearch` in 196.796 seconds, including all sixteen
+permanent guarded axiom checks.
+[Full build](https://app.buildbuddy.io/invocation/8323ea5a-c55e-417f-b480-4edd0e859ca2).
+
+The centered-probe experiment supplies exact-rational trial corrections at
+5,7,11,13 with alpha=1/2 and complete energy below 2/3. These endpoint
+certificates are external; a uniform bound and kernel replay remain open.
+See the research continuation and the retained `moment_probe_certificates.json`.

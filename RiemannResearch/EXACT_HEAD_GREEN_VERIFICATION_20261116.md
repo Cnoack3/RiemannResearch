@@ -1,6 +1,18 @@
 # Exact-head Green verification and axiom audit
 Date: 2026-11-16.
 
+## Latest completed code checkpoint
+
+Latest complete code checkpoint: [8e87d34](https://github.com/Cnoack3/RiemannResearch/commit/8e87d34452790e73ffbd901f67c4ebbb62dbbdbf).
+Full Bazel/BuildBuddy job `job_Yag5tEUrM52V8X0ESe4tJ4PbTukrQu5R`
+passed `//:RiemannResearch` in 196.796 seconds, including all sixteen
+permanent guarded axiom checks.
+[Full build](https://app.buildbuddy.io/invocation/8323ea5a-c55e-417f-b480-4edd0e859ca2).
+
+All sixteen guards require exactly `propext`, `Classical.choice`, and
+`Quot.sound`. The final follow-up records external rational probe witnesses
+and documentation only; it does not alter the verified Lean sources.
+
 ## Earlier guarded transitive axiom check
 
 Bazel/BuildBuddy job `job_xAhpgx5jIhHCYWwQTWv1rPXEgARUYX-D` passed,
@@ -165,3 +177,12 @@ The permanent audit module now contains sixteen guards.
 [Focused build](https://app.buildbuddy.io/invocation/e46f068d-4fb6-44ae-9883-a2e614b95a35).
 Combined snippet SHA-256:
 `022c86e373469af2f3abbb54c410806a0198f1e1469da9c65279a5ca80e5bde9`.
+
+## Final external probe replay
+
+The complete rational centered-probe calculation was rerun successfully for
+x=5,7,11,13. Legal proper-divisor support and exact energy upper bounds below
+2/3 were checked. This is external computation, distinct from the kernel
+proof of the generic implication. Reproduction and exact witnesses are in
+`ResearchData/ExactHeadGreen20261116/moment_probe_certification_sources.md`
+and `moment_probe_certificates.json`.

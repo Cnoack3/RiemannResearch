@@ -5,6 +5,12 @@ Source: the attached 17-page *Best Nyman Beurling for RH.pdf*, internally titled
 *Exact-Head Green Profiles in the Nyman--Beurling Program*, 27 July 2026.
 This is not the longer A1--A2 audited revision from the RH part 2 review.
 
+Latest complete code checkpoint: [8e87d34](https://github.com/Cnoack3/RiemannResearch/commit/8e87d34452790e73ffbd901f67c4ebbb62dbbdbf).
+Full Bazel/BuildBuddy job `job_Yag5tEUrM52V8X0ESe4tJ4PbTukrQu5R`
+passed `//:RiemannResearch` in 196.796 seconds, including all sixteen
+permanent guarded axiom checks.
+[Full build](https://app.buildbuddy.io/invocation/8323ea5a-c55e-417f-b480-4edd0e859ca2).
+
 ## Continuation: actual optimizer and a strict quadratic gap
 
 The finite optimizer identification is now proved in Lean. The gcd-atom and
@@ -333,39 +339,60 @@ bound on the actual affine coefficients or signed moment.
 Let C_P(r)=A_1(r)-1 be the actual target and let R be its normal residual.
 The affine signed moment has the exact representation
 
-$
+$$
 m=\langle R,\psi_x\rangle,
-$
+$$
 
 where the explicit probe psi_x depends only on the cutoff's affine sampling
 weights and abscissae. The formula holds for every affine normal fit at x>=2.
 It keeps the signed coefficients together. Its evaluation on a rational trial
 residual differs from the actual moment by a squared error at most
 
-$
+$$
 D\,\|\psi_x\|_w^2,
-$
+$$
 
 where D is the already-proved inverse-free normal-defect budget.
 
 For every v in the upper gcd-atom span, the exact normal equations give
 
-$
+$$
 m-\alpha q=\langle R,\psi_x-\alpha C_P-v\rangle,\qquad
 (m-\alpha q)^2\le q\,\|\psi_x-\alpha C_P-v\|_w^2.
-$
+$$
 
 Consequently, a bound on the last energy by M gives, for every eps>0,
 
-$
+$$
 m\le(\alpha+\varepsilon)q+\frac{M}{4\varepsilon}.
-$
+$$
 
 Theorem `fitted_moment_deficit_of_probe_bound` proves this implication
 without a bounded-q assumption. Uniform alpha<1 and M, with
 0<eps<1-alpha, would supply R5 with delta=1-alpha-eps and B=M/(4eps).
 Producing such upper-span corrections v and proving a uniform M remain
 **Open**. R4 dispersion must still hold on a common cofinal sequence.
+
+### Finite centered-probe certificates
+
+An external exact-rational replay now checks alpha=1/2 and rational upper-span
+corrections at the following stages. The complete energy upper bounds are:
+
+| x | P | Upper bound for centered-probe energy |
+|---|---:|---:|
+| 5 | 30 | 0.628954 |
+| 7 | 210 | 0.510332 |
+| 11 | 2310 | 0.365700 |
+| 13 | 30030 | 0.364855 |
+
+All exact endpoints are below M=2/3. Together with eps=1/4, the proved
+implication gives the finite candidate m <= (3/4)q+2/3. The four witnesses
+and all rational coefficients are retained in
+[the centered-probe certificates](ResearchData/ExactHeadGreen20261116/moment_probe_certificates.json);
+[the reproduction source](ResearchData/ExactHeadGreen20261116/moment_probe_certification_sources.md)
+evaluates every residue and complete progression tail.
+These individual endpoints are external, not kernel-replayed. A uniform
+M=2/3 bound remains an explicit falsification target, not a proved estimate.
 
 ## Files and evidence
 
