@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.DivisorPolynomialMoment
+import RiemannResearch.Analysis.IntervalL2Triangle
 import RiemannResearch.Analysis.ActualInghamMollifierMoment
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -196,6 +197,50 @@ theorem exists_fourth_moment_bound_of_uniform_residual
   exact zeta_fourth_moment_le_of_residual_bound hN (u T) (v T)
     (fun n _ => hu T hT n) (fun n _ => hv T hT n) hφ (hH.trans hT) hNT
     (fun t _ => hφnorm t) hres
+
+/-- Sharp L2 transfer: the three square-root moments are added before squaring. -/
+theorem zeta_fourth_moment_le_residual_l2 {P Q : ℝ → ℂ}
+    (hP : Continuous P) (hQ : Continuous Q) {H T : ℝ} (hHT : H ≤ T) :
+    (∫ t in H..T, ‖riemannZeta ((1 / 2 : ℂ) + Complex.I * t)‖ ^ 4) ≤
+      (Real.sqrt (∫ t in H..T, ‖P t‖ ^ 2) +
+        Real.sqrt (∫ t in H..T, ‖Q t‖ ^ 2) +
+        Real.sqrt (∫ t in H..T, ‖zetaSquareResidual P Q t‖ ^ 2)) ^ 2 := by
+  have he : (∫ t in H..T, ‖riemannZeta ((1 / 2 : ℂ) + Complex.I * t)‖ ^ 4) =
+      ∫ t in H..T, ‖P t + Q t + zetaSquareResidual P Q t‖ ^ 2 := by
+    apply intervalIntegral.integral_congr
+    intro t ht
+    change ‖riemannZeta ((1 / 2 : ℂ) + Complex.I * t)‖ ^ 4 =
+      ‖P t + Q t + zetaSquareResidual P Q t‖ ^ 2
+    rw [← zetaSquareResidual_identity P Q t, norm_pow]
+    ring
+  have h := intervalIntegral.sqrt_integral_norm_sq_add_le (hP.add hQ)
+    (continuous_zetaSquareResidual hP hQ) hHT
+  have h' := intervalIntegral.sqrt_integral_norm_sq_add_le hP hQ hHT
+  have hh := h.trans (add_le_add h' le_rfl)
+  rw [he]
+  exact (Real.sqrt_le_iff.mp hh).2
+
+/-- Separate cutoffs and independent square-root bounds for the two polynomials. -/
+theorem zeta_fourth_moment_le_two_cutoffs_residual
+    {N M : ℕ} (hN : 0 < N) (hM : 0 < M)
+    (u v : ℕ → ℂ) (hu : ∀ n ∈ Finset.Icc 1 N, ‖u n‖ ≤ 1)
+    (hv : ∀ n ∈ Finset.Icc 1 M, ‖v n‖ ≤ 1)
+    {φ : ℝ → ℂ} (hφ : Continuous φ) {H T : ℝ} (hHT : H ≤ T)
+    (hφnorm : ∀ t ∈ Set.Icc H T, ‖φ t‖ ≤ 1) :
+    (∫ t in H..T, ‖riemannZeta ((1 / 2 : ℂ) + Complex.I * t)‖ ^ 4) ≤
+      (Real.sqrt ((12 * Real.sqrt (2 * Real.pi) * Real.exp (1 / 2 : ℝ)) *
+          (T - H + N) * (1 + Real.log N) ^ 4) +
+       Real.sqrt ((12 * Real.sqrt (2 * Real.pi) * Real.exp (1 / 2 : ℝ)) *
+          (T - H + M) * (1 + Real.log M) ^ 4) +
+       Real.sqrt (∫ t in H..T, ‖zetaSquareResidual (divisorPolynomial N u)
+          (fun t => φ t * star (divisorPolynomial M v t)) t‖ ^ 2)) ^ 2 := by
+  apply (zeta_fourth_moment_le_residual_l2 (continuous_divisorPolynomial N u)
+    (hφ.mul (continuous_divisorPolynomial M v).star) hHT).trans
+  apply pow_le_pow_left₀ (by positivity)
+  exact add_le_add
+    (add_le_add (Real.sqrt_le_sqrt (divisorPolynomial_second_moment_le hN u hu hHT))
+      (Real.sqrt_le_sqrt
+        (reflected_divisorPolynomial_second_moment_le hM v hv hφ hHT hφnorm))) le_rfl
 
 namespace InghamMollifier
 

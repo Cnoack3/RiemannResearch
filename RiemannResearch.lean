@@ -1619,6 +1619,9 @@ import RiemannResearch.Analysis.ActualInghamMollifierMoment
 import RiemannResearch.Analysis.DivisorCoefficientEnergy
 import RiemannResearch.Analysis.DivisorPolynomialMoment
 import RiemannResearch.Analysis.ActualZetaFourthMomentReduction
+import RiemannResearch.Analysis.DyadicIntegralBound
+import RiemannResearch.Analysis.IntervalL2Triangle
+import RiemannResearch.Analysis.ActualZetaFourthMomentDyadic
 import RiemannResearch.Analysis.ActualInghamThinStrip
 import RiemannResearch.Analysis.ActualSelbergTruncatedNearLine
 import RiemannResearch.Analysis.KloostermanCompletion

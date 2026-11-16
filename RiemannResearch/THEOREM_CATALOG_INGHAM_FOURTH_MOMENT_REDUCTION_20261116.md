@@ -20,6 +20,14 @@ The formal results do not assume RH, a zero-density estimate, or I1 in order
 to prove the divisor bounds. A conditional theorem taking a residual or
 fourth-moment estimate as input is not an unconditional provider of that input.
 
+The subsequent [dyadic and L2 continuation](THEOREM_CATALOG_INGHAM_DYADIC_L2_20261116.md)
+closes the dyadic-to-global assembly and the actual critical-line phase
+conditions, proves finite smoothing and damped-shell estimates, and replaces
+the factor-three residual transfer by its sharper L2 form. The later canonical
+criterion needs only a uniform actual residual bound on `[U,2U]`. The infinite
+tail limit and the complete Mellin/contour estimates remain open. The detailed
+agenda below records the initial state before that continuation.
+
 ## Proposed changes
 
 | File | Responsibility |
