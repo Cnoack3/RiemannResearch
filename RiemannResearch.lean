@@ -18,6 +18,8 @@ import RiemannResearch.Analysis.ConreyBaluyotGaussianArithmetic
 import RiemannResearch.Analysis.GaussianVerticalLaplace
 import RiemannResearch.Analysis.GaussianGammaTransform
 import RiemannResearch.Analysis.ConreyBaluyotGaussianEuler
+import RiemannResearch.Analysis.GaussianHorizontalShift
+import RiemannResearch.Analysis.GaussianRayRotation
 import RiemannResearch.Analysis.CompressionVariance
 import RiemannResearch.RH.QDensityCouplingVariance
 import RiemannResearch.Analysis.ComplexLogLiftUniqueness

@@ -1,5 +1,38 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## Outward Gaussian ray rotation (15 November 2026)
+
+The modules `Analysis/GaussianHorizontalShift.lean` and
+`Analysis/GaussianRayRotation.lean` establish the exact logarithmic kernel
+norm, a uniform Gaussian majorant, absolute ray integrability, the principal
+logarithm on the rays, and the positive exponential Jacobian. Cauchy's
+rectangle identity is passed to the whole line with both vertical sides
+proved to vanish.
+
+For arbitrary real l,u, positive Delta, nonnegative frequency omega,
+tau in {1,-1}, and any two angles in [0,pi), the outward ray integrals
+`Complex.gaussianRayIntegral l Delta u (tau*omega) (tau*theta)`
+are equal. This strengthens the requested sector [0,pi/2] and includes
+the oscillatory endpoint theta=0. The corresponding logarithmic-coordinate
+integrals are invariant on the full closed half-sector [0,pi].
+The negative principal-log cut is explicitly excluded for the ray theorem.
+
+Key declarations:
+- `Complex.integral_horizontal_eq_of_gaussian_bound`;
+- `Complex.norm_gaussianRayLogKernel`;
+- `Complex.norm_gaussianRayLogKernel_le`;
+- `Complex.gaussianRayLogKernel_integral_angle_independent`;
+- `Complex.gaussianRayIntegrand_exp`;
+- `Complex.gaussianRayIntegrand_integrable`;
+- `Complex.gaussianRayIntegral_angle_independent`.
+
+This checkpoint proves rotation of the explicitly defined ray integrals.
+The exact identification with the existing actual Euler branches, including
+omega^(1-2*l), is the next step. Then prove joint series/ray absolute
+convergence and the rational-phase Estermann identity. The uniform
+long-mollifier moment provider and the independent Ingham provider remain
+open formalization obligations. No density or RH conclusion is asserted.
+
 ## Gamma–Euler evaluation and exact moment series (15 November 2026)
 
 **Priority 1 of the Gaussian arithmetic continuation is established.**
