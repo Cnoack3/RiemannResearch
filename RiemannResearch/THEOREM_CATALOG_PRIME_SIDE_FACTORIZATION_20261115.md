@@ -3,6 +3,11 @@
 Date: 2026-11-15.
 Development base: `ac85bee98c61d52bb7865e010acab73ee988360a`.
 
+Continuation (2026-11-16): [actual damped prime operator and revised agenda](THEOREM_CATALOG_DAMPED_PRIME_OPERATOR_20261116.md).
+The synthesis, exact support projection, and nuclear prime operator for sigma > 1
+are now formalized. Analytic-only status statements below record the earlier
+checkpoint; the continuation gives the current status and remaining obligations.
+
 ## Sources and scope
 
 The selected Drive file was [v_prime_side_factorization.pdf](https://drive.google.com/file/d/1q6RheCrn_nIDz3B8JZRs0Vuv4nr1h19p/view).
