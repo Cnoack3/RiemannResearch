@@ -127,5 +127,74 @@ theorem affine_determinant_pos (s : Finset ι) (w t : ι → ℝ)
   simpa [energy, pairing, mass] using (show 0 <
     energy s w (fun _ => 1) * energy s w t - pairing s w (fun _ => 1) t ^ 2 by linarith)
 
+/-- The exact signed - moment numerator from the two affine normal equations.
+This isolates the one coefficient direction needed by the RH criterion. -/
+theorem affine_moment_numerator (W V U y0 y1 m0 m1 c0 c1 : ℝ)
+    (h0 : W * c0 + V * c1 = y0) (h1 : V * c0 + U * c1 = y1) :
+    (W * U - V ^ 2) * (c0 * m0 + c1 * m1) =
+      (U * m0 - V * m1) * y0 + (W * m1 - V * m0) * y1 := by
+  rw [← h0, ← h1]
+  ring
+
+theorem affine_moment_le_iff (W V U y0 y1 m0 m1 c0 c1 B : ℝ)
+    (h0 : W * c0 + V * c1 = y0) (h1 : V * c0 + U * c1 = y1)
+    (hdet : 0 < W * U - V ^ 2) :
+    c0 * m0 + c1 * m1 ≤ B ↔
+      (U * m0 - V * m1) * y0 + (W * m1 - V * m0) * y1 ≤ B * (W * U - V ^ 2) := by
+  rw [← affine_moment_numerator W V U y0 y1 m0 m1 c0 c1 h0 h1,
+    mul_comm B]
+  constructor
+  · intro h
+    exact mul_le_mul_of_nonneg_left h hdet.le
+  · intro h
+    by_contra! hn
+    have hp := mul_pos hdet (sub_pos.mpr hn)
+    nlinarith
+
+
+/-- Exact restriction to a support set; no weight is discarded where f is nonzero. -/
+theorem pairing_support (s t : Finset ι) (w f g : ι → ℝ) (hts : t ⊆ s)
+    (hf : ∀ i ∈ s, i ∉ t → f i = 0) :
+    pairing t w f g = pairing s w f g := by
+  apply Finset.sum_subset hts
+  intro i hi hit
+  simp [hf i hi hit]
+
+theorem energy_support (s t : Finset ι) (w f : ι → ℝ) (hts : t ⊆ s)
+    (hf : ∀ i ∈ s, i ∉ t → f i = 0) :
+    energy t w f = energy s w f := by
+  apply Finset.sum_subset hts
+  intro i hi hit
+  simp [hf i hi hit]
+
+/-- A finite frame estimate using the actual support mass and exact column bounds. -/
+theorem frame_bound {κ : Type*} (s : Finset ι) (D : Finset κ)
+    (w f : ι → ℝ) (v M : κ → ℝ) (phi : κ → ι → ℝ)
+    (hw : ∀ i ∈ s, 0 ≤ w i) (hv : ∀ d ∈ D, 0 ≤ v d)
+    (hphi : ∀ d ∈ D, ∀ i ∈ s, phi d i ^ 2 ≤ M d) :
+    (∑ d ∈ D, v d * pairing s w f (phi d) ^ 2) ≤
+      energy s w f * mass s w * (∑ d ∈ D, v d * M d) := by
+  calc
+    _ ≤ ∑ d ∈ D, v d * (energy s w f * mass s w * M d) := by
+      apply Finset.sum_le_sum
+      intro d hd
+      apply mul_le_mul_of_nonneg_left _ (hv d hd)
+      have he : energy s w (phi d) ≤ mass s w * M d := by
+        unfold energy mass
+        rw [Finset.sum_mul]
+        apply Finset.sum_le_sum
+        intro i hi
+        exact mul_le_mul_of_nonneg_left (hphi d hd i hi) (hw i hi)
+      calc
+        _ ≤ energy s w f * energy s w (phi d) := pairing_sq_le s w f (phi d) hw
+        _ ≤ _ := by
+          have h := mul_le_mul_of_nonneg_left he (energy_nonneg s w f hw)
+          simpa [mul_assoc] using h
+    _ = _ := by
+      rw [Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro d hd
+      ring
+
 end
 end RiemannResearch.Analysis.FiniteProfileEnergy

@@ -1,0 +1,191 @@
+[
+  {
+    "x": 17,
+    "primorial": 510510,
+    "controls": 115,
+    "q": 0.018841492411886346,
+    "tau": 0.005078808209414492,
+    "beta": 0.12090424389039445,
+    "root": 0.023920300622181086,
+    "root_identity_error": 8.802489986914352e-13,
+    "reconstructed_head_error": -1.2212453270876722e-15,
+    "terminal_weight": 6.311598527690401e-12,
+    "best_affine_coefficients": [
+      0.12138194215657283,
+      -0.05327744404094415
+    ],
+    "canonical_coefficients": [
+      0.1234436479951017,
+      -0.04316986978002318
+    ],
+    "E_aff": 0.00031795899550361224,
+    "E_green": 0.00039607720749490797,
+    "x_E_aff_over_q": 0.2868829498958064,
+    "W_E_aff_over_q": 0.04737969927201496,
+    "signed_moment": 0.00650046978223391,
+    "scaled_gram_condition": 13787449.928236343,
+    "normal_residual_max": 1.0092471149345908e-12,
+    "loss_cancellation_check": 7.710415639294865e-12,
+    "dyadic_ledger": [
+      {
+        "lower_exclusive": 1,
+        "upper_inclusive": 2,
+        "canonical_energy": 8.140763145852421e-06,
+        "best_affine_energy": 3.074888291919648e-07
+      },
+      {
+        "lower_exclusive": 2,
+        "upper_inclusive": 4,
+        "canonical_energy": 1.843788911859287e-05,
+        "best_affine_energy": 4.300630855017314e-06
+      },
+      {
+        "lower_exclusive": 4,
+        "upper_inclusive": 8,
+        "canonical_energy": 9.168588068811595e-05,
+        "best_affine_energy": 6.608836781851322e-05
+      },
+      {
+        "lower_exclusive": 8,
+        "upper_inclusive": 16,
+        "canonical_energy": 0.0002772729798318869,
+        "best_affine_energy": 0.00023529234203889526
+      },
+      {
+        "lower_exclusive": 16,
+        "upper_inclusive": 17,
+        "canonical_energy": 5.396947104598902e-07,
+        "best_affine_energy": 4.914400800410009e-06
+      }
+    ],
+    "gram_seconds": 0.18772740600979887,
+    "seconds": 0.2805002850072924,
+    "status": "floating_point_diagnostic_not_interval_certified"
+  },
+  {
+    "x": 19,
+    "primorial": 9699690,
+    "controls": 242,
+    "q": 0.013322600687637154,
+    "tau": -0.0005507684446632141,
+    "beta": 0.007843315288307149,
+    "root": 0.012771832260911182,
+    "root_identity_error": 1.7937241752682964e-11,
+    "reconstructed_head_error": -1.8621215680525438e-13,
+    "terminal_weight": 1.748367613887887e-14,
+    "best_affine_coefficients": [
+      0.007539036028149084,
+      -0.013859722570134396
+    ],
+    "canonical_coefficients": [
+      0.007567931065975542,
+      0.005232300224300534
+    ],
+    "E_aff": 0.00010053218126894651,
+    "E_green": 0.00022548381727525865,
+    "x_E_aff_over_q": 0.14337376679633515,
+    "W_E_aff_over_q": 0.021583333346576205,
+    "signed_moment": 0.0018060286455116213,
+    "scaled_gram_condition": 555623989.4175348,
+    "normal_residual_max": 1.1231444031588531e-11,
+    "loss_cancellation_check": -2.488235312236853e-13,
+    "dyadic_ledger": [
+      {
+        "lower_exclusive": 1,
+        "upper_inclusive": 2,
+        "canonical_energy": 8.10508770735808e-06,
+        "best_affine_energy": 1.9752859521310667e-06
+      },
+      {
+        "lower_exclusive": 2,
+        "upper_inclusive": 4,
+        "canonical_energy": 8.624095703369367e-06,
+        "best_affine_energy": 1.3913590892906946e-06
+      },
+      {
+        "lower_exclusive": 4,
+        "upper_inclusive": 8,
+        "canonical_energy": 2.2998801585902004e-05,
+        "best_affine_energy": 1.1759757774643893e-05
+      },
+      {
+        "lower_exclusive": 8,
+        "upper_inclusive": 16,
+        "canonical_energy": 9.033560741982793e-05,
+        "best_affine_energy": 7.023513559783e-05
+      },
+      {
+        "lower_exclusive": 16,
+        "upper_inclusive": 19,
+        "canonical_energy": 9.542022485880125e-05,
+        "best_affine_energy": 1.4102027893682682e-05
+      }
+    ],
+    "gram_seconds": 4.596729234996019,
+    "seconds": 6.138973803987028,
+    "status": "floating_point_diagnostic_not_interval_certified"
+  },
+  {
+    "x": 23,
+    "primorial": 223092870,
+    "controls": 495,
+    "q": 0.01118024946096184,
+    "tau": -0.0001615411951133487,
+    "beta": 0.011159358846457084,
+    "root": 0.011018708659015428,
+    "root_identity_error": 3.931669366973294e-10,
+    "reconstructed_head_error": 3.6836245859150907e-13,
+    "terminal_weight": 3.305043003686696e-17,
+    "best_affine_coefficients": [
+      0.009908375086015166,
+      -0.009128331975544567
+    ],
+    "canonical_coefficients": [
+      0.01107858824890041,
+      0.00185772374380351
+    ],
+    "E_aff": 7.166859359415265e-05,
+    "E_green": 0.00013678013237022966,
+    "x_E_aff_over_q": 0.14743657182437328,
+    "W_E_aff_over_q": 0.019210289863783786,
+    "signed_moment": 0.0007826655108435912,
+    "scaled_gram_condition": 24906498804.235573,
+    "normal_residual_max": 1.9139818404230565e-10,
+    "loss_cancellation_check": 8.895072916084712e-09,
+    "dyadic_ledger": [
+      {
+        "lower_exclusive": 1,
+        "upper_inclusive": 2,
+        "canonical_energy": 4.87368697790691e-06,
+        "best_affine_energy": 4.965620415859622e-07
+      },
+      {
+        "lower_exclusive": 2,
+        "upper_inclusive": 4,
+        "canonical_energy": 8.93319760451873e-06,
+        "best_affine_energy": 2.2079006411977553e-06
+      },
+      {
+        "lower_exclusive": 4,
+        "upper_inclusive": 8,
+        "canonical_energy": 1.6307351449136352e-05,
+        "best_affine_energy": 4.464865673321569e-06
+      },
+      {
+        "lower_exclusive": 8,
+        "upper_inclusive": 16,
+        "canonical_energy": 3.9851677257990386e-05,
+        "best_affine_energy": 3.339035892820854e-05
+      },
+      {
+        "lower_exclusive": 16,
+        "upper_inclusive": 23,
+        "canonical_energy": 6.681421908067728e-05,
+        "best_affine_energy": 2.8393438157438636e-05
+      }
+    ],
+    "gram_seconds": 172.6193894269818,
+    "seconds": 214.82957270299084,
+    "status": "floating_point_diagnostic_not_interval_certified"
+  }
+]
