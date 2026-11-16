@@ -112,4 +112,25 @@ theorem estermannDampedSeries_eq_iterated_tsum {K : ℕ} [NeZero K] (h : ZMod K)
     estermannDampedSeries h α β w = ∑' m : ℕ, ∑' n : ℕ, estermannDampedTerm h α β w (m, n) :=
   (summable_norm_estermannDampedTerm h α β hw).of_norm.tsum_prod
 
+
+/-- Quantitative damping bound, uniform as Im(w) tends to zero.
+The factor (Im(w))^(-N) is explicit; no compact-set lower bound is assumed. -/
+theorem norm_estermannDampedTerm_le_shift {K : ℕ} [NeZero K] (h : ZMod K)
+    (α β : ℂ) {w : ℂ} (hw : 0 < w.im) (p : ℕ × ℕ) (N : ℕ) :
+    ‖estermannDampedTerm h α β w p‖ ≤
+      ‖estermannTerm h (α+(N:ℂ)) (β+(N:ℂ)) p‖ *
+        ((N.factorial : ℝ)/(2*Real.pi*w.im)^N) := by
+  let r : ℝ := 2*Real.pi*w.im
+  have hr : 0 < r := by dsimp [r]; positivity
+  calc
+    ‖estermannDampedTerm h α β w p‖ =
+        ‖estermannTerm h (α+(N:ℂ)) (β+(N:ℂ)) p‖ *
+          ((p.1 : ℝ)^N*(p.2 : ℝ)^N *
+            Real.exp (-(r*(p.1 : ℝ)*(p.2 : ℝ)))) := by
+      unfold estermannDampedTerm
+      rw [norm_mul, norm_exp_estermannDamping, estermannTerm_shift_nat h α β p N]
+      simp only [norm_mul, norm_pow, Complex.norm_natCast]
+      ring
+    _ ≤ _ := mul_le_mul_of_nonneg_left (pow_mul_damping_le hr p.1 p.2 N) (norm_nonneg _)
+
 end RiemannResearch.Analysis.ConreyBaluyot

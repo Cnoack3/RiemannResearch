@@ -6,6 +6,7 @@ Authors: RiemannResearch contributors
 import RiemannResearch.Analysis.GaussianHorizontalShift
 import RiemannResearch.RH.PrimeTreeExpSubstitution
 import Mathlib.Analysis.Complex.Trigonometric
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Mathlib.Tactic.FunProp
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
@@ -24,7 +25,8 @@ The exact kernel norm yields a Gaussian majorant and a contour rotation
 on the entire closed half-sector, including the undamped boundary.
 The parameters l and u are arbitrary real numbers and the frequency can
 vanish. This is fixed-parameter convergence, not a uniform height bound.
-Principal-log ray parameterization is a separate step.
+The explicit principal-log parameterization below transfers the result
+back to outward ray integrals.
 -/
 
 noncomputable section
@@ -222,5 +224,26 @@ theorem gaussianRayIntegral_angle_independent (l u : ℝ) {Δ ω θ₁ θ₂ τ 
     gaussianRayIntegral_eq_log_integral l Δ u (τ*ω) (τ*θ₂) (hb hθ₂).1 (hb hθ₂).2]
   exact gaussianRayLogKernel_integral_angle_independent l u hΔ hω
     ⟨hθ₁.1, hθ₁.2.le⟩ ⟨hθ₂.1, hθ₂.2.le⟩ hτ
+
+
+theorem gaussianRayLogKernel_zero_integrable (l u y : ℝ) {Δ : ℝ}
+    (hΔ : 0 < Δ) :
+    Integrable (fun x : ℝ => gaussianRayLogKernel l Δ u 0 ((x:ℂ)+(y:ℂ)*I)) := by
+  have hc : Continuous (fun x : ℝ => gaussianRayLogKernel l Δ u 0 ((x:ℂ)+(y:ℂ)*I)) :=
+    (differentiable_gaussianRayLogKernel l Δ u 0).continuous.comp
+      (Complex.continuous_ofReal.add continuous_const)
+  exact ((integrable_exp_neg_mul_sq (show 0 < Δ^2/8 by positivity)).const_mul
+    (Real.exp (|u| * |y| + (Δ^2/4)*|y|^2 + (1-l)^2/(2*(Δ^2/4))))).mono'
+      hc.aestronglyMeasurable (Eventually.of_forall fun x =>
+        norm_gaussianRayLogKernel_le hΔ l u 0 x y |y| le_rfl (by simp))
+
+theorem norm_gaussianRayLogKernel_zero_shift (l Δ u x y : ℝ) (N : ℕ) :
+    ‖gaussianRayLogKernel l Δ u 0 ((x:ℂ)+(y:ℂ)*I)‖ *
+        Real.exp (-(N:ℝ)*x) =
+      ‖gaussianRayLogKernel (l+N) Δ u 0 ((x:ℂ)+(y:ℂ)*I)‖ := by
+  rw [norm_gaussianRayLogKernel, norm_gaussianRayLogKernel, ← Real.exp_add]
+  congr 1
+  ring
+
 
 end Complex

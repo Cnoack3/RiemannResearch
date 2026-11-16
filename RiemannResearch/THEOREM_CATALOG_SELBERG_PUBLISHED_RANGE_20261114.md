@@ -1,5 +1,32 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## Joint absolute convergence on Estermann rays (15 November 2026)
+
+The new module Analysis/ConreyBaluyotGaussianEstermannIntegrability.lean
+proves absolute integrability of every ray term, summability of their norm
+integrals, and the exact sum/integral exchange for arbitrary complex
+exponents, every residue class, and both signed rays with 0 < theta < pi.
+There is no unproved convergence or tail hypothesis.
+
+The damping estimate in ConreyBaluyotEstermannDampedSeries.lean bounds
+each term by its N-shifted undamped term times N!/(2*pi*Im(w))^N.
+For Im(w(x)) = d*exp(x), d > 0, the extra exp(-N*x) is absorbed exactly
+by changing l to l+N in the Gaussian logarithmic kernel. Choosing N to
+put both shifted exponents in the half-plane Re > 1 proves joint
+absolute convergence before Fubini. The radial theorem includes the
+actual outward-ray Jacobian and principal-log substitution.
+
+Key declarations:
+- norm_estermannDampedTerm_le_shift;
+- summable_integral_norm_gaussianEstermannRayTerm;
+- integral_gaussianRay_mul_estermannDampedSeries.
+
+See SELBERG_GAUSSIAN_ESTERMANN_CONTINUATION_20261115.md for the
+remaining exact rational-character/gcd/coefficient assembly and the
+downstream global Mellin, arithmetic cancellation, uniform moment and
+independent Ingham obligations. Positive damping is required for this
+exchange; the result does not authorize setting theta=0 inside the series.
+
 ## Actual Euler-to-ray bridge (15 November 2026)
 
 `Analysis/ConreyBaluyotGaussianRays.lean` identifies each actual Euler
