@@ -195,3 +195,14 @@ See [verification and reproducible audit](EXACT_HEAD_GREEN_VERIFICATION_20261116
 The relative-rate improvement compares E=O(q/W) with the paper's preferred
 E=O(q/x). The absolute E=o(1/log x) formulation is a separate sufficient route;
 it alone does not imply the relative-energy hypothesis.
+
+## Continuation: exact atom/floor arithmetic bridge
+
+`RH/ExactHeadGcdAtoms.lean` proves `atom_eq_moebius_grid_sum`,
+`grid_eq_atom_sum`, `upper_spans_eq`, and the target identity
+`atom_one_eq_moebius_grid`. These hold for every positive period, not only
+squarefree periods. Thus the two upper direction spaces agree exactly.
+Identification of the actual weighted normal residuals is the next assembly.
+
+Focused Bazel check: `job_Y5oc7XsONZ8wIkkv8jGee76yLspGHwia`, 28.918 seconds.
+Publication of this stage requires the managed full-project checkpoint.
