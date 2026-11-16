@@ -8,6 +8,8 @@ OPENBLAS_NUM_THREADS=2 python profile_diagnostics.py --cutoffs 5 7 11 13 17 19
 OPENBLAS_NUM_THREADS=2 python profile_event.py --cutoffs 5 7 11 13 17 19 23
 ```
 
+The dyadic ledger includes the singleton d=1. In the retained runs this entry was reconstructed from the full energy minus the disjoint d>1 bins; current sources accumulate it directly. All fitted values and energy totals are unchanged.
+
 ## profile_diagnostics.py
 
 ```python
@@ -102,7 +104,9 @@ def audit(x, chunk=16384):
     eg = fit_weight * (b - Phi @ canonical) ** 2
     root = float(np.dot(mu, scores))
     moment = float(np.dot(mu / d, Phi @ fitted))
-    ledgers = []
+    ledgers = [{'lower_exclusive': 0, 'upper_inclusive': 1,
+                  'canonical_energy': float(eg[0]),
+                  'best_affine_energy': float(ea[0])}]
     D = 1
     while D < x:
         mask = (d > D) & (d <= 2 * D)
@@ -226,7 +230,9 @@ def audit(x, chunk=262144):
     eg = fit_weight*(b-Phi@canonical)**2
     root = float(mu@scores)
     moment = float((mu/d)@(Phi@fitted))
-    ledger=[]
+    ledger = [{'lower_exclusive': 0, 'upper_inclusive': 1,
+                  'canonical_energy': float(eg[0]),
+                  'best_affine_energy': float(ea[0])}]
     D=1
     while D<x:
         mask=(d>D)&(d<=2*D)

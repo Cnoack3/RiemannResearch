@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Positivity
@@ -197,4 +198,91 @@ theorem frame_bound {κ : Type*} (s : Finset ι) (D : Finset κ)
       ring
 
 end
+
+/-- Explicit Cramer solution of the finite affine normal equations. -/
+theorem exists_affine_normal (s : Finset ι) (w t b : ι → ℝ)
+    (hdet : mass s w * energy s w t - (∑ i ∈ s, w i*t i)^2 ≠ 0) :
+    ∃ c0 c1 : ℝ,
+      (∑ i ∈ s, w i*(b i-c0-c1*t i)) = 0 ∧
+      (∑ i ∈ s, w i*t i*(b i-c0-c1*t i)) = 0 := by
+  let W := mass s w
+  let V := ∑ i ∈ s, w i*t i
+  let U := energy s w t
+  let y0 := ∑ i ∈ s, w i*b i
+  let y1 := ∑ i ∈ s, w i*t i*b i
+  let det := W*U-V^2
+  have hd : det ≠ 0 := hdet
+  let c0 := (U*y0-V*y1)/det
+  let c1 := (W*y1-V*y0)/det
+  have hn0 : W*c0+V*c1 = y0 := by
+    dsimp only [c0,c1]
+    field_simp [hd]
+    dsimp only [det]
+    ring
+  have hn1 : V*c0+U*c1 = y1 := by
+    dsimp only [c0,c1]
+    field_simp [hd]
+    dsimp only [det]
+    ring
+  refine ⟨c0,c1,?_,?_⟩
+  · calc
+      _ = ∑ i ∈ s, (w i*b i-c0*w i-c1*(w i*t i)) := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        ring
+      _ = y0-c0*W-c1*V := by
+        simp [y0,W,V,mass,Finset.sum_sub_distrib,Finset.mul_sum]
+      _ = 0 := by linarith
+  · calc
+      _ = ∑ i ∈ s, (w i*t i*b i-c0*(w i*t i)-c1*(w i*t i^2)) := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        ring
+      _ = y1-c0*V-c1*U := by
+        simp [y1,V,U,energy,Finset.sum_sub_distrib,Finset.mul_sum]
+      _ = 0 := by linarith
+
+theorem affine_energy_eq_zero (s : Finset ι) (w t : ι → ℝ) (a b : ℝ)
+    (hw : ∀ k ∈ s, 0 ≤ w k) (i j : ι) (hi : i ∈ s) (hj : j ∈ s)
+    (hwi : 0 < w i) (hwj : 0 < w j) (ht : t i ≠ t j)
+    (he : energy s w (fun k => a+b*t k) = 0) : a = 0 ∧ b = 0 := by
+  have hz (k : ι) (hk : k ∈ s) (hwk : 0 < w k) : a+b*t k = 0 := by
+    have hl := Finset.single_le_sum
+      (f := fun k => w k*(a+b*t k)^2)
+      (fun l hl => mul_nonneg (hw l hl) (sq_nonneg _)) hk
+    change w k*(a+b*t k)^2 ≤ energy s w (fun k => a+b*t k) at hl
+    rw [he] at hl
+    by_contra h
+    exact (not_lt_of_ge hl) (mul_pos hwk (sq_pos_of_ne_zero h))
+  have hi0 := hz i hi hwi
+  have hj0 := hz j hj hwj
+  have hb : b = 0 := by
+    have hp : b*(t i-t j) = 0 := by nlinarith
+    exact (mul_eq_zero.mp hp).resolve_right (sub_ne_zero.mpr ht)
+  exact ⟨by simpa [hb] using hi0,hb⟩
+
+/-- Existence and uniqueness of the global real affine minimum at every
+nondegenerate finite stage; the exact normal equations give its witness. -/
+theorem exists_unique_affine_minimizer (s : Finset ι) (w t b : ι → ℝ)
+    (hw : ∀ k ∈ s, 0 ≤ w k) (i j : ι) (hi : i ∈ s) (hj : j ∈ s)
+    (hwi : 0 < w i) (hwj : 0 < w j) (ht : t i ≠ t j) :
+    ∃! c : ℝ × ℝ, ∀ a : ℝ × ℝ,
+      affineLoss s w t b c.1 c.2 ≤ affineLoss s w t b a.1 a.2 := by
+  obtain ⟨c0,c1,h0,h1⟩ := exists_affine_normal s w t b
+    (affine_determinant_pos s w t hw i j hi hj hwi hwj ht).ne'
+  refine ⟨(c0,c1),?_,?_⟩
+  · intro a
+    exact affine_minimizes s w t b c0 c1 hw h0 h1 a.1 a.2
+  · rintro ⟨a0,a1⟩ ha
+    have hb := ha (c0,c1)
+    have hc := affine_completion s w t b c0 c1 a0 a1 h0 h1
+    have he : energy s w (fun k => (a0-c0)+(a1-c1)*t k) = 0 := by
+      have hn := energy_nonneg s w (fun k => (a0-c0)+(a1-c1)*t k) hw
+      dsimp at hb
+      linarith
+    obtain ⟨ha0,ha1⟩ := affine_energy_eq_zero s w t (a0-c0) (a1-c1)
+      hw i j hi hj hwi hwj ht he
+    apply Prod.ext <;> dsimp <;> linarith
+
+
 end RiemannResearch.Analysis.FiniteProfileEnergy

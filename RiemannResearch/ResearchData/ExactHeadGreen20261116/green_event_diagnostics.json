@@ -28,6 +28,13 @@
     "loss_cancellation_check": -3.469446951953614e-16,
     "dyadic_ledger": [
       {
+        "lower_exclusive": 0,
+        "upper_inclusive": 1,
+        "canonical_energy": 0,
+        "best_affine_energy": 2.1387836203899215e-06,
+        "reconstructed_from_energy_total": true
+      },
+      {
         "lower_exclusive": 1,
         "upper_inclusive": 2,
         "canonical_energy": 0.000271722990360884,
@@ -48,7 +55,8 @@
     ],
     "gram_seconds": 0.0009188700059894472,
     "seconds": 0.001957314001629129,
-    "status": "floating_point_diagnostic_not_interval_certified"
+    "status": "floating_point_diagnostic_not_interval_certified",
+    "ledger_note": "The (0,1] row was recovered from the retained total minus the disjoint d>1 bins. Tiny negative roundoff is clipped to zero. Reproduction sources now accumulate this singleton directly."
   },
   {
     "x": 7,
@@ -79,6 +87,13 @@
     "loss_cancellation_check": 4.975186929101483e-15,
     "dyadic_ledger": [
       {
+        "lower_exclusive": 0,
+        "upper_inclusive": 1,
+        "canonical_energy": 4.336808689942018e-19,
+        "best_affine_energy": 3.6057442643392355e-06,
+        "reconstructed_from_energy_total": true
+      },
+      {
         "lower_exclusive": 1,
         "upper_inclusive": 2,
         "canonical_energy": 6.77288768933551e-05,
@@ -99,7 +114,8 @@
     ],
     "gram_seconds": 0.0002492060011718422,
     "seconds": 0.0007423500064760447,
-    "status": "floating_point_diagnostic_not_interval_certified"
+    "status": "floating_point_diagnostic_not_interval_certified",
+    "ledger_note": "The (0,1] row was recovered from the retained total minus the disjoint d>1 bins. Tiny negative roundoff is clipped to zero. Reproduction sources now accumulate this singleton directly."
   },
   {
     "x": 11,
@@ -130,6 +146,13 @@
     "loss_cancellation_check": 6.983996714282625e-14,
     "dyadic_ledger": [
       {
+        "lower_exclusive": 0,
+        "upper_inclusive": 1,
+        "canonical_energy": 0,
+        "best_affine_energy": 6.570151505421828e-06,
+        "reconstructed_from_energy_total": true
+      },
+      {
         "lower_exclusive": 1,
         "upper_inclusive": 2,
         "canonical_energy": 1.922087324471398e-05,
@@ -156,7 +179,8 @@
     ],
     "gram_seconds": 0.00042733701411634684,
     "seconds": 0.001189867005450651,
-    "status": "floating_point_diagnostic_not_interval_certified"
+    "status": "floating_point_diagnostic_not_interval_certified",
+    "ledger_note": "The (0,1] row was recovered from the retained total minus the disjoint d>1 bins. Tiny negative roundoff is clipped to zero. Reproduction sources now accumulate this singleton directly."
   },
   {
     "x": 13,
@@ -187,6 +211,13 @@
     "loss_cancellation_check": 3.1200424188693177e-12,
     "dyadic_ledger": [
       {
+        "lower_exclusive": 0,
+        "upper_inclusive": 1,
+        "canonical_energy": 0,
+        "best_affine_energy": 5.17388023158101e-11,
+        "reconstructed_from_energy_total": true
+      },
+      {
         "lower_exclusive": 1,
         "upper_inclusive": 2,
         "canonical_energy": 7.71685763325925e-06,
@@ -213,7 +244,8 @@
     ],
     "gram_seconds": 0.0026947970036417246,
     "seconds": 0.006773205008357763,
-    "status": "floating_point_diagnostic_not_interval_certified"
+    "status": "floating_point_diagnostic_not_interval_certified",
+    "ledger_note": "The (0,1] row was recovered from the retained total minus the disjoint d>1 bins. Tiny negative roundoff is clipped to zero. Reproduction sources now accumulate this singleton directly."
   },
   {
     "x": 17,
@@ -243,6 +275,13 @@
     "normal_residual_max": 2.4106692878868297e-11,
     "loss_cancellation_check": -1.8506994894917916e-10,
     "dyadic_ledger": [
+      {
+        "lower_exclusive": 0,
+        "upper_inclusive": 1,
+        "canonical_energy": 0,
+        "best_affine_energy": 7.055765161559878e-06,
+        "reconstructed_from_energy_total": true
+      },
       {
         "lower_exclusive": 1,
         "upper_inclusive": 2,
@@ -276,7 +315,8 @@
     ],
     "gram_seconds": 0.09951706198626198,
     "seconds": 0.21322408900596201,
-    "status": "floating_point_diagnostic_not_interval_certified"
+    "status": "floating_point_diagnostic_not_interval_certified",
+    "ledger_note": "The (0,1] row was recovered from the retained total minus the disjoint d>1 bins. Tiny negative roundoff is clipped to zero. Reproduction sources now accumulate this singleton directly."
   },
   {
     "x": 19,
@@ -306,6 +346,13 @@
     "normal_residual_max": 1.3341713866500682e-09,
     "loss_cancellation_check": 5.237607972330416e-09,
     "dyadic_ledger": [
+      {
+        "lower_exclusive": 0,
+        "upper_inclusive": 1,
+        "canonical_energy": 0,
+        "best_affine_energy": 1.0686166110928708e-06,
+        "reconstructed_from_energy_total": true
+      },
       {
         "lower_exclusive": 1,
         "upper_inclusive": 2,
@@ -339,7 +386,8 @@
     ],
     "gram_seconds": 1.1934775580011774,
     "seconds": 2.63102573400829,
-    "status": "floating_point_diagnostic_not_interval_certified"
+    "status": "floating_point_diagnostic_not_interval_certified",
+    "ledger_note": "The (0,1] row was recovered from the retained total minus the disjoint d>1 bins. Tiny negative roundoff is clipped to zero. Reproduction sources now accumulate this singleton directly."
   },
   {
     "x": 23,
@@ -369,6 +417,13 @@
     "normal_residual_max": 7.254867411747405e-08,
     "loss_cancellation_check": -0.00024195436375080287,
     "dyadic_ledger": [
+      {
+        "lower_exclusive": 0,
+        "upper_inclusive": 1,
+        "canonical_energy": 0,
+        "best_affine_energy": 2.7156504378621573e-06,
+        "reconstructed_from_energy_total": true
+      },
       {
         "lower_exclusive": 1,
         "upper_inclusive": 2,
@@ -402,6 +457,7 @@
     ],
     "gram_seconds": 33.55991385897505,
     "seconds": 71.34981837999658,
-    "status": "floating_point_diagnostic_not_interval_certified"
+    "status": "floating_point_diagnostic_not_interval_certified",
+    "ledger_note": "The (0,1] row was recovered from the retained total minus the disjoint d>1 bins. Tiny negative roundoff is clipped to zero. Reproduction sources now accumulate this singleton directly."
   }
 ]
