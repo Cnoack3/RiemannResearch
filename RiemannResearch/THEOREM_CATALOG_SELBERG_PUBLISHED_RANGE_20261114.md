@@ -1,5 +1,28 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## Actual Euler-to-ray bridge (15 November 2026)
+
+`Analysis/ConreyBaluyotGaussianRays.lean` identifies each actual Euler
+branch with the outward ray integral:
+`E_(tau*pi/2)(omega) = omega^(1-2*l) *
+gaussianRayIntegral l Delta u (tau*(2*pi*omega)) (tau*theta)`.
+The hypotheses are Delta,omega > 0, arbitrary real l,u,
+tau in {1,-1}, and 0 <= theta < pi. Both phases, the frequency,
+principal-log convention, positive Jacobian and outward orientation are exact.
+
+`gaussianArithmeticTransform_eq_rayValue` includes zero frequency under
+the existing natural-index convention. `mollifiedGaussianMoment_eq_ray_series`
+gives the actual normalized moment with its complete finite coefficients and
+the signed residue `-(2*sqrt(pi)/Delta)*mollifiedGaussianPoleCoeff`.
+`summable_norm_mollifiedGaussianRayTerm` proves absolute convergence of
+the paired integrated series even at theta=0.
+
+Priority 1 of the ray-rotation continuation is now closed.
+The paired-series convergence does not by itself justify putting either
+individual Estermann series inside a ray integral. The next task is joint
+absolute convergence for positive angles, followed by exact rational-twist,
+gcd and coefficient assembly.
+
 ## Outward Gaussian ray rotation (15 November 2026)
 
 The modules `Analysis/GaussianHorizontalShift.lean` and
