@@ -1,5 +1,9 @@
 # Montgomery: actual-zero matrices, ordinate transfer, and signed prime correlations
 
+Continuation (2026-11-16): [Uniform boundary and actual diagonal estimates](THEOREM_CATALOG_MONTGOMERY_SC_PROGRESS_20261116.md)
+proves the sub-square-root endpoint corollary and the full interior diagonal estimate.
+The complete signed-prefix estimate and the analytic SC transfer remain open.
+
 Continuation (2026-11-14): [Exact signed interval and countable criteria](THEOREM_CATALOG_MONTGOMERY_INTERVAL_20261114.md)
 adds sharp actual zero-count normalization and rational anchored reductions.
 The signed cancellation and full PCC remain open.
