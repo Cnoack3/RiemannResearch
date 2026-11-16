@@ -4222,6 +4222,10 @@ import RiemannResearch.Analysis.FiniteCollisionCertificates
 import RiemannResearch.Analysis.FrequencySpreadInterval
 import RiemannResearch.Analysis.LagPhase
 import RiemannResearch.Analysis.PrimePhaseTorus
+import RiemannResearch.Analysis.PhaseDecoding
+import RiemannResearch.Analysis.PrimeLogProjection
+import RiemannResearch.Analysis.PrimePhaseWindows
+import RiemannResearch.RH.PrimeLogProjectionCriterion
 import RiemannResearch.Analysis.ProductFrequencyDispersion
 import RiemannResearch.Analysis.ReciprocalRateBalance
 import RiemannResearch.Analysis.TruncatedMobiusConvolution
