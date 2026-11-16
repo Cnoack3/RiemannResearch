@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.DivisorPolynomialMoment
+import RiemannResearch.Analysis.DampedDivisorSeries
 import RiemannResearch.Analysis.GeometricL2Series
 import Mathlib.NumberTheory.ArithmeticFunction.Misc
 import Mathlib.NumberTheory.Divisors
@@ -153,30 +154,6 @@ theorem dampedDivisorBlock_second_moment_le {N : ℕ} (hN : 0 < N) (j : ℕ)
       norm_num
       ring
 
-theorem criticalDivisorCoefficient_norm_le (n : ℕ) :
-    ‖criticalDivisorCoefficient n‖ ≤ n := by
-  by_cases hn : n=0
-  · subst n; simp [criticalDivisorCoefficient]
-  have hn1 : (1 : ℝ) ≤ n := by exact_mod_cast (Nat.one_le_iff_ne_zero.mpr hn)
-  have he : ‖Complex.exp (-(1 / 2 : ℂ) * (Real.log n : ℂ))‖ ≤ 1 := by
-    rw [Complex.norm_exp]
-    apply Real.exp_le_one_iff.mpr
-    have hl := Real.log_nonneg hn1
-    have hid : -(1 / 2 : ℂ) * (Real.log n : ℂ) = ((-Real.log (n : ℝ) / 2 : ℝ) : ℂ) := by
-      push_cast
-      ring
-    rw [hid, Complex.ofReal_re]
-    linarith
-  have hd : (ArithmeticFunction.sigma 0 n : ℝ) ≤ n := by
-    exact_mod_cast (show ArithmeticFunction.sigma 0 n ≤ n from by
-      rw [ArithmeticFunction.sigma_zero_apply]; exact Nat.card_divisors_le_self n)
-  unfold criticalDivisorCoefficient
-  rw [norm_mul, Complex.norm_natCast]
-  calc
-    _ ≤ (ArithmeticFunction.sigma 0 n : ℝ) * 1 :=
-      mul_le_mul_of_nonneg_left he (Nat.cast_nonneg _)
-    _ ≤ _ := by simpa using hd
-
 theorem norm_dampedDivisorBlock_le {N : ℕ} (hN : 0 < N) (j : ℕ) (t : ℝ) :
     ‖dampedDivisorBlock N j t‖ ≤ (N : ℝ) ^ 2 * ((j + 1 : ℝ) ^ 2 * (1 / 2 : ℝ) ^ j) := by
   let M := (j + 1) * N
@@ -238,6 +215,16 @@ theorem summable_smoothedDivisorTerm {N : ℕ} (hN : 0 < N) (t : ℝ) :
     Summable (fun n => smoothedDivisorTerm N n t) :=
   Summable.of_norm_bounded (summable_smoothedDivisorTerm_majorant hN)
     (fun n => norm_smoothedDivisorTerm_le N n t)
+
+/-- The integer-scale moment provider and the real-scale convergence provider
+use exactly the same ordinary divisor series. -/
+theorem smoothedDivisorSeries_eq_dampedDivisorSeries {N : ℕ} (hN : 0 < N) (t : ℝ) :
+    smoothedDivisorSeries N t = dampedDivisorSeries (N : ℝ) t := by
+  have hz : smoothedDivisorTerm N 0 t = 0 := by
+    simp [smoothedDivisorTerm, criticalDivisorCoefficient]
+  unfold smoothedDivisorSeries
+  rw [(summable_smoothedDivisorTerm hN t).tsum_eq_zero_add, hz, zero_add]
+  rfl
 
 theorem continuous_smoothedDivisorSeries {N : ℕ} (hN : 0 < N) :
     Continuous (smoothedDivisorSeries N) := by

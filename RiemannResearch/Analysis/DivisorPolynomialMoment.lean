@@ -60,6 +60,31 @@ theorem criticalDivisorCoefficient_norm_sq {n : ℕ} (hn : 0 < n) :
     Real.exp_neg, Real.exp_log hn0]
   ring
 
+/-- An elementary pointwise majorant for absolute convergence of damped series. -/
+theorem criticalDivisorCoefficient_norm_le (n : ℕ) :
+    ‖criticalDivisorCoefficient n‖ ≤ n := by
+  by_cases hn : n=0
+  · subst n; simp [criticalDivisorCoefficient]
+  have hn1 : (1 : ℝ) ≤ n := by exact_mod_cast (Nat.one_le_iff_ne_zero.mpr hn)
+  have he : ‖Complex.exp (-(1 / 2 : ℂ) * (Real.log n : ℂ))‖ ≤ 1 := by
+    rw [Complex.norm_exp]
+    apply Real.exp_le_one_iff.mpr
+    have hl := Real.log_nonneg hn1
+    have hid : -(1 / 2 : ℂ) * (Real.log n : ℂ) = ((-Real.log (n : ℝ) / 2 : ℝ) : ℂ) := by
+      push_cast
+      ring
+    rw [hid, Complex.ofReal_re]
+    linarith
+  have hd : (ArithmeticFunction.sigma 0 n : ℝ) ≤ n := by
+    exact_mod_cast (show ArithmeticFunction.sigma 0 n ≤ n from by
+      rw [ArithmeticFunction.sigma_zero_apply]; exact Nat.card_divisors_le_self n)
+  unfold criticalDivisorCoefficient
+  rw [norm_mul, Complex.norm_natCast]
+  calc
+    _ ≤ (ArithmeticFunction.sigma 0 n : ℝ) * 1 :=
+      mul_le_mul_of_nonneg_left he (Nat.cast_nonneg _)
+    _ ≤ _ := by simpa using hd
+
 theorem weighted_divisor_coefficient_energy_le (N : ℕ) (w : ℕ → ℂ)
     (hw : ∀ n ∈ Finset.Icc 1 N, ‖w n‖ ≤ 1) :
     (∑ n ∈ Finset.Icc 1 N, ‖w n * criticalDivisorCoefficient n‖ ^ 2) ≤

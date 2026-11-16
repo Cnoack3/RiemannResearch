@@ -173,16 +173,22 @@ one for every real height, including zero. Its only domain-specific input is
 | Finite L2 assembly of the five remainder pieces | Proved for arbitrary continuous finite families |
 | Dyadic windows to global I1 shape, with finite head | Proved |
 | Exact smoothed zeta-square representation and its contour shifts | Open |
-| Infinite damped-shell summability and justified L2 limit passage | Open |
+| Actual damped divisor series and fixed-positive-damping L2 limit passage | Proved for all positive real scales in [the damped-series continuation](THEOREM_CATALOG_DAMPED_DIVISOR_L2_20261116.md) |
+| Sharp smoothed moments for positive integer scales | Proved in [the uniform remainder continuation](THEOREM_CATALOG_INGHAM_REMAINDER_PROGRESS_20261116.md) |
 | Uniform off-critical-line bounds for chi on the contour regions | Open |
 | Moving double-pole Gamma and Gamma-derivative estimates | Open |
 | Complete actual residual bound with one height-independent constant | Open |
 | Unconditional I1 and remaining Ingham/Z03 obligations | Not closed |
 
-The next arithmetic/analytic check is to sum the newly bounded damped shells
-in L2 and prove convergence to the actual infinite damped tail. The full
-Mellin representation and the distant contour region near `Im z=-t` still
-need independent attention.
+The real-scale convergence and L2 limit passage are proved in
+[DampedDivisorSeries.lean](Analysis/DampedDivisorSeries.lean), with a closed-form
+tail bound and convergence of moments after subtraction of any fixed continuous
+function. The sharp integer-scale block moment is separately proved in
+[SmoothedDivisorMoment.lean](Analysis/SmoothedDivisorMoment.lean); the two series
+are identified by smoothedDivisorSeries_eq_dampedDivisorSeries.
+The next checks are the exact Mellin representation, moving residue, and
+central functional-equation contour estimates. The original left-line kernel
+far tails are already bounded in ActualZetaSquareMellinTail.lean.
 
 External reference for the representation strategy:
 [Chourasiya--Simonic, Section 5.1](https://arxiv.org/html/2507.15184v2).
