@@ -19,14 +19,15 @@ including nonunits. Polynomial bounds of possibly different degrees on the
 two Hurwitz factors produce a bound of their summed degree, with an explicit
 constant and arbitrary complex shifts.
 
-This is a conditional research reduction. The actual Hurwitz polynomial strip
-bounds, with constants uniform in the real strip coordinate, remain open.
+The transfer below retains its explicit growth hypotheses. Actual quadratic
+Hurwitz bounds are supplied in HurwitzEulerMaclaurin; the fixed-parameter
+Estermann and contour specializations are in ConreyBaluyotEstermannActualGrowth.
 
 Source: Baluyot, *On the Zeros of Riemann's Zeta-function* (2017),
 equation (3.1.7), pp. 95–96 (finite Hurwitz identity):
 https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320
-The proposed next analytic input is the corrected Euler–Maclaurin expansion
-https://dlmf.nist.gov/25.11.E6, not a theorem established in this module.
+The actual provider uses the corrected Euler--Maclaurin expansion
+https://dlmf.nist.gov/25.11.E6, proved separately in HurwitzEulerMaclaurin.
 -/
 
 open Complex Set

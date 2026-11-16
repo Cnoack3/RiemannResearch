@@ -30,6 +30,8 @@ import RiemannResearch.Analysis.ConreyBaluyotGaussianEstermann
 import RiemannResearch.Analysis.DampedGammaStripBounds
 import RiemannResearch.Analysis.ConreyBaluyotEstermannRegularPart
 import RiemannResearch.Analysis.ConreyBaluyotEstermannMellinGrowth
+import RiemannResearch.Analysis.HurwitzEulerMaclaurin
+import RiemannResearch.Analysis.ConreyBaluyotEstermannActualGrowth
 import RiemannResearch.Analysis.CompressionVariance
 import RiemannResearch.RH.QDensityCouplingVariance
 import RiemannResearch.Analysis.ComplexLogLiftUniqueness

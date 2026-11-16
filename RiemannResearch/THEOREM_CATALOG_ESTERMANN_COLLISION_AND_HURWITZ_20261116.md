@@ -47,9 +47,15 @@ It starts from the exact finite Hurwitz identity. It applies to all numerator
 classes h modulo positive K, including nonunits; the zero class represents
 Hurwitz parameter one.
 
-## Conditional research reductions
+## Generic transfer interfaces
 
-| Declaration | File | Unresolved provider |
+The fixed-parameter providers have now been supplied in
+[the actual-growth development](THEOREM_CATALOG_HURWITZ_GROWTH_PROVIDER_20261116.md).
+The declarations below retain their general hypotheses; the new specialized
+declarations discharge them. This does not provide uniformity for cofinal
+mollifier lengths or vanishing damping.
+
+| Declaration | File | Hypothesis retained in this interface |
 |---|---|---|
 | `estermannDampedSeries_diagonal_eq_residues_add_mellinIntegral_of_tail_bound` | `Analysis/ConreyBaluyotEstermannMellinCollisionShift.lean` | Closed-strip inverse-quadratic tail for the actual kernel. |
 | `estermannDampedSeries_diagonal_eq_residues_add_mellinIntegral_of_polynomial_growth` | same | Actual polynomial growth of the continued Estermann function. |
@@ -68,14 +74,12 @@ bounds on norms yield the intermediate nonnegative sums.
 
 ## Open analytic work
 
-1. Identify the corrected Euler–Maclaurin representation with Mathlib's
-   Hurwitz continuation and prove uniform quadratic growth on fixed strips
-   with left endpoint greater than -1.
-2. Apply the proved finite transfer and Gamma strip estimate to close the
-   distinct and collision global shifts for fixed damping.
-3. Establish domination along both actual Gaussian rays, including endpoints.
-4. Complete the signed decomposition and arithmetic estimates.
-5. Prove a cofinal uniform moment provider and the separate Ingham density provider.
+The actual Hurwitz identification, quadratic strip bound, and fixed-damping
+distinct and collision shifts are now proved; see the linked actual-growth catalog.
+
+1. Establish domination along both actual Gaussian rays, including endpoints.
+2. Complete the signed decomposition and arithmetic estimates.
+3. Prove a cofinal uniform moment provider and the separate Ingham density provider.
 
 The existing signed Gaussian correction remains unchanged. No unconditional
 new density bound or RH conclusion is claimed.
@@ -102,4 +106,4 @@ the explicit growth hypotheses.
 - [Baluyot, On the Zeros of Riemann's Zeta-function (2017)](https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320),
   equation (3.1.7), Lemma 3.1.3, pp. 95–97: finite Hurwitz identity and contour strategy.
 - [DLMF 25.11.6](https://dlmf.nist.gov/25.11.E6): corrected second-order
-  Euler–Maclaurin formula for the remaining Hurwitz provider.
+  Euler–Maclaurin formula used in the actual Hurwitz provider.

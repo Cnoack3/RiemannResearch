@@ -18,9 +18,11 @@ The Gamma/damping factor is now supplied by a proved arbitrary-order strip
 bound. Any polynomial bound on the continued Estermann factor yields the
 exact Cauchy tail required by the global contour theorem.
 
-This is a conditional research reduction: the actual Estermann/Hurwitz
-polynomial strip-growth provider remains open. Neither cofinal uniformity
-nor the collision contour identity is assumed to follow automatically.
+The generic implications below retain explicit polynomial-growth hypotheses.
+ConreyBaluyotEstermannActualGrowth supplies the actual fixed-parameter
+provider when the shifted left edges have real part greater than -1, and
+discharges both distinct and zero-shift collision contour identities.
+Cofinal uniformity for the mollified moment remains a separate obligation.
 
 Source: the contour strategy of Baluyot, *On the Zeros of Riemann's
 Zeta-function* (2017), Lemma 3.1.3, pp. 96–97:

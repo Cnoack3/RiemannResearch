@@ -23,7 +23,9 @@ has primitive -A/(s-1), so its boundary contribution is zero.
 Source: Baluyot, *On the Zeros of Riemann's Zeta-function* (2017),
 Lemma 3.1.3, pp. 96–97 (contour strategy and setting):
 https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320
-Global identities below remain conditional on the stated growth provider.
+Global identities below retain the stated growth hypothesis. Its actual
+fixed-damping provider and the unconditional specialization are supplied in
+ConreyBaluyotEstermannActualGrowth.
 -/
 
 open Complex MeasureTheory Set Filter
