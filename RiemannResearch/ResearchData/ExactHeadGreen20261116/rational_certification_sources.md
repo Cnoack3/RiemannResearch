@@ -167,6 +167,12 @@ def stage(x):
       'rational_preconditioner':[[str(v) for v in row] for row in R],
       'gram_intervals':[[{'lo':str(v[0]),'hi':str(v[1])} for v in row] for row in GI],
       'rhs_intervals':[{'lo':str(v[0]),'hi':str(v[1])} for v in bI]}
+    dispersion_ok=F(result['W_E_over_q']['hi']) <= F(7,100)
+    moment_ok=F(result['signed_moment']['hi']) <= F(3,4)*F(result['q']['lo'])
+    result['finite_candidate']={'C':'7/100','delta':'1/4','k':'0','B':'0',
+        'dispersion_pass':dispersion_ok,'moment_pass':moment_ok,
+        'scope':'This cutoff only; no cofinal or uniform conclusion.'}
+    assert dispersion_ok and moment_ok
     print(json.dumps({k:result[k] for k in ['cutoff','period','q','x_E_over_q','W_E_over_q','signed_moment','theta','wall_seconds']}),flush=True)
     return result
 

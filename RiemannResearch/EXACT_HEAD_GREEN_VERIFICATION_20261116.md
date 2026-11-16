@@ -1,7 +1,7 @@
 # Exact-head Green verification and axiom audit
 Date: 2026-11-16.
 
-## Guarded transitive axiom check
+## Earlier guarded transitive axiom check
 
 Bazel/BuildBuddy job `job_xAhpgx5jIhHCYWwQTWv1rPXEgARUYX-D` passed,
 exit code 0, 51.966 seconds. Eight `#guard_msgs` assertions required the
@@ -23,7 +23,7 @@ The 14 newly authored source modules were also scanned for `sorry`,
 `admit`, `axiom` declarations and `unsafe` declarations; no matches were found.
 This source scan covers the new modules, not every pre-existing repository file.
 
-## Published full checkpoints
+## Earlier published full checkpoints
 
 | Commit | Full target | Build seconds | Evidence |
 |---|---|---:|---|
@@ -32,10 +32,10 @@ This source scan covers the new modules, not every pre-existing repository file.
 | [2042719](https://github.com/Cnoack3/RiemannResearch/commit/2042719725f4edd784a9eecf2767827b1d0dfe94) | //:RiemannResearch | 197.319 | [Build](https://app.buildbuddy.io/invocation/4a8c28bb-378f-4435-8028-37ffd1995348) |
 | [bec4737](https://github.com/Cnoack3/RiemannResearch/commit/bec4737b714907f72a0c62f1f097cbc29a90fc08) | //:RiemannResearch | 191.946 | [Build](https://app.buildbuddy.io/invocation/17e6a627-15a6-45f1-b776-68fe78b84b15) |
 
-Final code checkpoint: `job_FiFArmWFyGNXOAtlBlmLG5bPK0kgfnfo`.
+Earlier code checkpoint: `job_FiFArmWFyGNXOAtlBlmLG5bPK0kgfnfo`.
 It succeeded, committed and pushed `bec4737b714907f72a0c62f1f097cbc29a90fc08`;
 the build scope was the full `//:RiemannResearch` target.
-This follow-up changes documentation only. The complete code checkpoint and
+That follow-up changed documentation only. The complete code checkpoint and
 the guarded transitive axiom audit are separate evidence records.
 
 ## Reproducible guarded Lean audit
@@ -118,3 +118,30 @@ info: 'RiemannResearch.LinearAlgebra.WeightedGreen.cumulative_gram_event_identit
 #print axioms
   RiemannResearch.LinearAlgebra.WeightedGreen.cumulative_gram_event_identity
 ```
+
+## Continuation checkpoints
+
+All entries below passed the full Bazel/BuildBuddy `//:RiemannResearch` target
+and were committed and pushed by the managed checkpoint.
+
+| Commit | Job | Full build seconds |
+|---|---|---:|
+| [232ab22](https://github.com/Cnoack3/RiemannResearch/commit/232ab22655fbfb2040a7338217c12e028ebeb081) | `job_Rw-u8uE6b6ae2jzC5TKm8Tg-YetT61U3` | 205.999 + 190.518 after main integration |
+| [5d6f74e](https://github.com/Cnoack3/RiemannResearch/commit/5d6f74ea801dc54edf2611b8533774a030c45d90) | `job_jS79El2_ZluI64oe3U2kY2caBO-oSK1S` | 258.633 |
+| [d1108e0](https://github.com/Cnoack3/RiemannResearch/commit/d1108e0e01749048b4c4262d17e310e6c6798a6a) | `job_vL1OTX3vD74GF56EpMBCaa0Iu4LdBTCO` | 276.817 |
+
+## Continuation guarded axiom audit
+
+Job `job_XIOXayvk89L9-EO3AEXuGMmy03S2MVAo` passed the new cutoff-five certificate,
+all observation-stability theorems, and thirteen guarded transitive axiom
+assertions in 188.427 seconds. Every guard requires exactly
+`[propext, Classical.choice, Quot.sound]`; no `sorryAx` or custom axiom
+occurs in these dependency closures.
+
+[Focused audit build](https://app.buildbuddy.io/invocation/32fa425d-4161-4e4e-b7e0-2c3f773746b7).
+Combined snippet SHA-256: `26b6eb758ea1272ccb0829277775008b4c8489c5faf68201e2caf33994e9ee90`.
+
+The guards are retained in [ExactHeadGreenAxiomAudit.lean](RH/ExactHeadGreenAxiomAudit.lean)
+and imported by the project aggregate. The authored proof sources were scanned
+for proof placeholders and new axiom/unsafe declarations, with no matches.
+The external rational data at 7,11,13 are not thereby kernel-replayed.

@@ -15,10 +15,10 @@ atom is zero on the optimization domain.
 
 The strongest current conditional theorem permits
 
-$
+$$
 W_x E_x \le k^2 q_x^2+Cq_x,\qquad
 m_x\le(1-\delta)q_x+B,\qquad 0\le k<\delta.
-$
+$$
 
 It gives (delta-k)^2 q <= 2(delta-k)B+2C+2/(x+1), hence a cofinal
 uniform bound for the legal exact-head approximants and RH. This is a conditional
@@ -27,8 +27,9 @@ remain open. It does not assume q is bounded while proving that conclusion.
 
 R1 now has external exact-rational certificates at x=5,7,11,13. They use the
 repository's complete Pareto tail formulas, outward rational rounding and
-Neumann defect checks, not a floating-point accuracy assumption. The individual
-endpoint computations have not yet been replayed in Lean. Source and precise
+Neumann defect checks, not a floating-point accuracy assumption. The high-precision
+endpoint computations remain external. Independent complete energy certificates
+are now kernel-checked at x=3 and x=5. Source and precise
 bounds are retained next to the earlier numerical records. No finite set of
 certificates proves the cofinal analytic hypotheses.
 
@@ -38,9 +39,9 @@ The paper asks for E_aff=o(1/log x) and a signed affine moment tending to zero.
 The first Lean reduction instead suffices with constants delta>0,
 C>=0 and B such that, on a cofinal sequence of actual primorial stages,
 
-$
+$$
 W_x E_x \le Cq_x,\qquad m_x\le (1-\delta)q_x+B.
-$
+$$
 
 The simpler bounded-moment condition m_x<=B is the special case delta=1.
 The relative-rate improvement is from the paper's preferred E_x=O(q_x/x)
@@ -55,10 +56,10 @@ compactness, PNT, asymptotic nonsingularity, or prior bound on q_x is assumed.
 
 The exact signed root r=q+tau and the profile Cauchy estimate give
 
-$
+$$
 \tau^2\le aq,\qquad (r-m)^2\le Cq,\qquad
 \delta^2q\le 2\delta B+2C+2a.
-$
+$$
 
 For delta=1 this gives q<=2B+2C+2a.
 
@@ -86,10 +87,10 @@ allows arbitrary periods and takes:
 The legal seed span here is the full positive-index span, `Set.Ici 1`.
 It constructs the legal NB residue extension
 
-$
+$$
 f_x(n)=P_x\left(\sum_d\frac{c_x(d)}d\right)\left\{\frac n{P_x}\right\}
 -\sum_d c_x(d)\left\{\frac nd\right\}.
-$
+$$
 
 proves f_x(n)=sum_d c_x(d) floor(n/d) below P_x, proves f_x=1 on
 1<=n<=x, proves the signed root, tail-charge bound and full terminal split,
@@ -116,18 +117,18 @@ appearing in the conditional RH criterion.
 
 The formalized actual-weight estimate is
 
-$
+$$
 E_{\mathrm{low}}(D)\le\frac{q_xD(D+1)}{8(x+1)}.
-$
+$$
 
 Its sharper version retains both the actual support mass and the exact
 squarefree sum. It holds for arbitrary D, not just D<=x.
 
 For the weaker relative criterion, it suffices to choose D so that
 
-$
+$$
 W_xD(D+1)\le 8C_{\mathrm{low}}(x+1).
-$
+$$
 
 Then W_x E_low(D)<=C_low q_x. A moving cutoff on the scale
 sqrt(x/W_x), heuristically sqrt(x/log x), is therefore admissible for this
@@ -143,10 +144,10 @@ does not exploit the source's special optimizer direction.
 The existing integrated Ramanujan packet J_a is used directly. For every
 positive d, including nonsquarefree d,
 
-$
+$$
 \widetilde\rho_d(r)=\sum_{\substack{a\mid d\\a>1}}
 \left(J_a(r)-\frac{\varphi(a)}2\right).
-$
+$$
 
 Pairing against arbitrary finite weights gives the exact primitive score sum.
 The canonical affine energy equals its complete divisor square function.
@@ -155,9 +156,9 @@ arithmetic centering.
 
 Digit recursion is proved for every natural multiplier p, without primality:
 
-$
+$$
 G_d=pG_{pd}+D_{p,d}.
-$
+$$
 
 The boundary score identity uses the exact equation score(pd)=0.
 The affine least-squares completion retains all mixed terms.
@@ -226,7 +227,7 @@ identify an asymptotic transition scale.
 
 | Item | Status | Delivered | Remaining acceptance criterion |
 |---|---|---|---|
-| R1 certified data | Partial: kernel at 3, external rational certificates | Complete kernel stage at 3; rational enclosures at 5,7,11,13; diagnostics through 23 | Extend kernel replay to 5 and larger; certify larger stages |
+| R1 certified data | Partial: energy kernel-checked at 3 and 5 | Full-tail energy certificates at 3 and 5; external rational profile/moment enclosures at 5,7,11,13; diagnostics through 23 | Kernel replay of affine and signed-moment enclosures; larger certified stages |
 | R2 dyadic ledger | Computed, external | Canonical and best-affine block energies through 23 | Certified block intervals and larger cutoffs if justified |
 | R3 digit/carry formulas | Partial, Lean checked | General digit recursion, primitive arithmetic bridge, affine completion/shift | Identify the actual boundary carry/discrepancy with the affine component |
 | R4 signal-specific discrepancy | Open | Actual tail mass, low-conductor bound, strict quadratic gap criterion | Jointly cofinal W E<=k^2 q^2+Cq with k<delta, without assuming bounded q or RH |
@@ -234,10 +235,10 @@ identify an asymptotic transition scale.
 | R6 falsification | Extended, external | No blow-up observed through 23 | Further certified stages; no finite test is an asymptotic proof |
 
 Priority order for continuation:
-1. Replay the retained rational certificates inside Lean. The external
-   complete-weight and normal-solve enclosures at 5,7,11,13 are available;
-   larger cutoffs still need outward-rounded event accumulation with every
-   simultaneous jump term retained.
+1. Extend the kernel energy certificates at 3 and 5 to the actual affine
+   profile and signed moment. The external complete-weight enclosures at
+   5,7,11,13 are available; larger cutoffs still need outward-rounded event
+   accumulation with every simultaneous jump term retained.
 2. The atom/floor identification is completed. Use the checked common
    residual and the proper-divisor first-difference formula in certificate assembly.
 3. Form the exact signed normal numerator at each cutoff and pursue the
@@ -262,10 +263,10 @@ For any trial fit, Lean now proves both exact identities
 
 It then gives the inverse-free enclosure
 
-$
+$$
 0\le Q_{\mathrm{trial}}-q\le
 4\left(\sum_{d\in D}d^2\right)\left(\sum_{d\in D}b_d^2\right),
-$
+$$
 
 where D is the proper upper divisor set and b_d is the actual trial normal
 defect. This finite bound needs no numerical inverse or condition-number
@@ -281,6 +282,50 @@ and zero on the other nonterminal residues, so q=w_6(5). Lean proves
 The same stage has exactly zero affine-profile loss and signed moment 2q>q.
 This is a concrete reason to keep R4 dispersion and R5 signed moment separate.
 It does not refute a cofinal moment estimate at later cutoffs.
+
+At x=5, P=30, Lean independently certifies
+
+0.0379 <= q_5 <= 0.0381.
+
+All 29 nonterminal residues and the complete infinite progression tails are
+included. Rational trial coefficients (743144,974745,1068929)/1000000 at
+proper divisors (6,10,15) are checked through the actual normal-defect bound.
+The full finite rational endpoint computations are kernel-checked using
+`norm_num` and `decide`; no floating-point or native computation oracle is used.
+
+### A finite candidate for the two remaining estimates
+
+The external exact-rational certificates at x=5,7,11,13 all satisfy
+
+$$
+W_x E_{\mathrm{aff},x}\le\frac7{100}q_x,\qquad
+m_x\le\frac34q_x.
+$$
+
+Thus C=7/100, delta=1/4, k=0, B=0 passes these four finite stages.
+The reproduction source checks these inequalities by rational cross
+multiplication, with outward endpoint bounds. The x=7 dispersion ratio is
+approximately 0.069724, close to the candidate 0.07 budget.
+This is a finite falsification target for R4/R5, not a uniform theorem or
+a cofinal provider. The x=3 moment counterexample remains a useful warning
+against treating either estimate as automatic.
+
+### Certifying observations from the same defect
+
+`ExactHeadAtomStability.lean` transfers the actual normal-defect budget
+D=4(sum of proper d^2)(sum of normal-defect squares) to the entire optimizer:
+
+- complete residual error energy <= D;
+- each proper coefficient error squared <= 4 d^2 D;
+- each sample error squared <= r(r+1)D, for r<P;
+- each linear observation error squared <= D times the complete weighted
+  energy of its observation function.
+
+In particular, the last bound controls every Green-profile coordinate using
+the test function d floor(r/d). It retains all progression tails and imposes
+no matrix-inverse premise. This is a quantitative route from rational trial
+coefficients to certified R1/R5 profile data; it does not supply a uniform
+bound on the actual affine coefficients or signed moment.
 
 ## Files and evidence
 

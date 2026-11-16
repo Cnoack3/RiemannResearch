@@ -185,7 +185,7 @@ The 14 new Lean modules contain 92 theorem declarations, including private
 helpers. No source placeholders or new axiom declarations were found.
 See [verification and reproducible audit](EXACT_HEAD_GREEN_VERIFICATION_20261116.md).
 
-## Final complete code checkpoint
+## Earlier complete code checkpoint
 
 `job_FiFArmWFyGNXOAtlBlmLG5bPK0kgfnfo` passed the full
 `//:RiemannResearch` target in 191.946 seconds and pushed
@@ -202,10 +202,11 @@ it alone does not imply the relative-energy hypothesis.
 `grid_eq_atom_sum`, `upper_spans_eq`, and the target identity
 `atom_one_eq_moebius_grid`. These hold for every positive period, not only
 squarefree periods. Thus the two upper direction spaces agree exactly.
-Identification of the actual weighted normal residuals is the next assembly.
+Identification of the actual weighted normal residuals is completed by the
+subsequent optimizer module below.
 
 Focused Bazel check: `job_Y5oc7XsONZ8wIkkv8jGee76yLspGHwia`, 28.918 seconds.
-Publication of this stage requires the managed full-project checkpoint.
+This stage was included in the full-project checkpoint 232ab22 below.
 
 ## Continuation: actual optimizer and quadratic dispersion gap
 
@@ -263,7 +264,9 @@ not been replayed in Lean; x=17,19,23 remain floating-point diagnostics.
 
 Focused checks: `job_MvubLut5LeCdIGPJP33hp9-iHqyqPCv-` (49.043 s) and
 `job_NydaH_RbBGVKMMSqt9uJGgpqtz8dmC_D` (26.796 s), Bazel/BuildBuddy.
-These await the managed full-project publication checkpoint of this stage.
+Full checkpoint `job_vL1OTX3vD74GF56EpMBCaa0Iu4LdBTCO` passed
+`//:RiemannResearch` in 276.817 seconds and published
+`d1108e0e01749048b4c4262d17e310e6c6798a6a`.
 The preceding full checkpoint `job_jS79El2_ZluI64oe3U2kY2caBO-oSK1S`
 published `5d6f74ea801dc54edf2611b8533774a030c45d90` after 258.633 seconds.
 
@@ -271,3 +274,29 @@ The external rational run now retains an independent inverse-free energy
 certificate. At x=13 its q interval has width 4.9463e-26; the earlier affine
 profile/moment enclosures are unchanged. The higher-stage endpoint checks
 remain external, not kernel-replayed.
+
+## Continuation: cutoff-five certificate and observation stability
+
+- `RH/ExactHeadAtomStageFive.lean`:
+  `primorial_five_energy_interval` proves 0.0379 <= q_5 <= 0.0381 for the
+  actual optimizer, using all 29 residues and complete progression weights.
+  Rational trial coefficients are certified by the normal-defect bound.
+- `RH/ExactHeadAtomStability.lean`:
+  `residual_error_energy_eq_gap` and `residual_error_energy_le` identify
+  and bound the complete residual error energy.
+  `trial_coefficient_error_sq_le` and `trial_sample_error_sq_le` give
+  explicit individual error bars. `trial_observation_error_sq_le` and
+  `trial_profile_error_sq_le` transfer them to arbitrary linear statistics
+  and every actual Green-profile coordinate.
+- `RH/ExactHeadGreenAxiomAudit.lean` retains guarded transitive axiom
+  regression checks for the bridge, the strengthened conditional RH theorem,
+  coercivity, finite certificates, and observation stability.
+
+External exact-rational records at 5,7,11,13 also check the shared finite
+candidate C=7/100, delta=1/4, k=0, B=0. No cofinal or uniform estimate follows
+from those four stages; R4 and R5 remain open.
+
+The combined focused check and all thirteen guarded transitive axiom checks
+passed in `job_XIOXayvk89L9-EO3AEXuGMmy03S2MVAo` (188.427 seconds).
+[Focused build](https://app.buildbuddy.io/invocation/32fa425d-4161-4e4e-b7e0-2c3f773746b7).
+The managed full-project checkpoint gates publication of this revision.
