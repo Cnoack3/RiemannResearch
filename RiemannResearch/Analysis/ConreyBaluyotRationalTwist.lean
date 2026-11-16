@@ -34,6 +34,14 @@ theorem reducedRationalTwist_pos_coprime {h k : ℕ} (hh : 0 < h) (hk : 0 < k) :
   ⟨Nat.div_gcd_pos_of_pos_left k hh, Nat.div_gcd_pos_of_pos_right h hk,
     Nat.coprime_div_gcd_div_gcd (Nat.gcd_pos_of_pos_left k hh)⟩
 
+/-- Gcd reduction supplies the actual unit class for both signed residues. -/
+theorem reducedRationalTwist_isUnit {h k : ℕ} (hh : 0 < h) (hk : 0 < k) :
+    IsUnit ((h / h.gcd k : ℕ) : ZMod (k / h.gcd k)) ∧
+      IsUnit (-((h / h.gcd k : ℕ) : ZMod (k / h.gcd k))) := by
+  have hu := (ZMod.isUnit_iff_coprime (h / h.gcd k) (k / h.gcd k)).mpr
+    (reducedRationalTwist_pos_coprime hh hk).2.2
+  exact ⟨hu, hu.neg⟩
+
 /-- Exact casts of the reduced fraction, valid even at zero indices. -/
 theorem reducedRationalTwist_ratio (F : Type*) [Field F] [CharZero F] (h k : ℕ) :
     ((h / h.gcd k : ℕ) : F) / ((k / h.gcd k : ℕ) : F) = (h : F) / (k : F) := by

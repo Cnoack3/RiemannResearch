@@ -1,5 +1,45 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## Estermann Mellin finite rectangles and global reduction (16 November 2026)
+
+New unconditional results in Analysis/ConreyBaluyotEstermannMellinShift.lean:
+holomorphy off the three candidate poles on Re(s)>-1, meromorphy including
+them, at most simple poles for distinct complex shifts with real parts
+below one, and rectangleIntegral_estermannMellinKernel with the exact
+signed sum of the zero and two shifted residues. The finite rectangle
+contains the actual kernel; no convergence or residue-identity provider
+is assumed.
+
+ConreyBaluyotRationalTwist.reducedRationalTwist_isUnit proves that both
+gcd-reduced signed numerator classes are units. The earlier exact
+rational-character, coefficient and actual Gaussian-moment identities
+remain established with their signed Gaussian correction.
+
+**Conditional research reduction:** the global identity
+estermannDampedSeries_eq_residues_add_mellinIntegral_of_tail_bound
+still assumes an actual bound B/(1+t^2) on the whole closed strip,
+outside a fixed height. From that one estimate, the new code proves
+negative-line integrability, both horizontal limits and the improper
+contour passage. The generic lemmas are in Analysis/VerticalResidueShift.lean.
+The indexed finite-coefficient version in
+Analysis/ConreyBaluyotEstermannMellinFinite.lean allows varying moduli,
+units and damping, and arbitrary complex coefficients; it proves the
+finite-sum/integral exchange on the new line.
+
+**Collision:** Analysis/ConreyBaluyotEstermannMellinCollision.lean proves
+that alpha=beta=0 has order exactly -2 at s=1 and leading coefficient
+1/(K*lam). It constructs an analytic numerator g and identifies the
+pole-subtracted simple coefficient by a limit equal to g'(1). Its
+explicit evaluation and the collision rectangle/global shift remain open.
+
+**Next analytic obligation:** prove existence of B,T0 for the actual
+closed-strip tail estimate. The already proved initial-line bound does
+not meet this requirement. Full M1+M2+D1+D2+E assembly, cofinal uniform
+moment estimates and the independent Ingham density provider remain open.
+
+See [the exact continuation and remaining hypothesis](SELBERG_MELLIN_SHIFT_CONTINUATION_20261116.md).
+The earlier dated sections below record the previous checkpoints.
+
 ## Exact rational-twist assembly (16 November 2026)
 
 Priority 1 of the Gaussian-ray/Estermann continuation is closed.

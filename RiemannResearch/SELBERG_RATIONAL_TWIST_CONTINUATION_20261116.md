@@ -1,6 +1,15 @@
 # Selberg rational twists — verified continuation
 Prepared 16 November 2026, America/New_York.
 
+## Mellin-shift follow-up (16 November 2026)
+
+See [the later Mellin-shift continuation](SELBERG_MELLIN_SHIFT_CONTINUATION_20261116.md).
+Finite three-pole rectangles are now proved for distinct complex shifts;
+the global shift and its finite coefficient assembly are reduced to one
+explicit closed-strip tail bound. The collision at l=1/2 has order
+exactly -2 and a proved local Laurent-numerator description. The tail
+provider and collision contour accounting remain open.
+
 ## Result and scope
 
 Priority 1 of the 15 November Gaussian-ray/Estermann continuation is closed by
