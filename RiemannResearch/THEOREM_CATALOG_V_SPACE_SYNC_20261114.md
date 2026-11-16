@@ -276,3 +276,10 @@ arithmetic data, or construct finite legal competitors whose complete errors
 approach zero with justified uniform tail bounds. Increasing a finite table,
 using a bounded centered remainder, or assuming that the projection preserves
 physical positivity does not supply that estimate.
+
+## Finite rational certificate continuation (16 November 2026)
+
+See [the finite-certificate catalog](THEOREM_CATALOG_LEAKAGE_RATIONAL_CERTIFICATES_20261116.md).
+The leakage condition is now equivalent to a countable family of entirely finite
+rational inequalities with complete tail budgets. The unconditional slope improves
+to 19/100, including the eventual endpoint. The universal certificate provider is Open.

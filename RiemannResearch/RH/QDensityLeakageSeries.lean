@@ -32,8 +32,8 @@ Thus conditional convergence cannot rescue this particular leakage series:
 vector summability and absolute norm summability are equivalent to 1 in V.
 
 Cofinal boundedness of the actual sums is a conditional RH reduction.
-No bound on these actual sums, vanishing of r, or unconditional RH proof is
-asserted. No RH-to-density analytic converse is used.
+No cofinal uniform bound, vanishing of r, or unconditional RH proof is asserted.
+The bounds below allow harmonic growth. No RH-to-density analytic converse is used.
 -/
 
 noncomputable section
