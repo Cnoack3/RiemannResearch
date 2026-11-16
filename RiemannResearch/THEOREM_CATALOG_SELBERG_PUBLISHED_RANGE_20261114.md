@@ -1,5 +1,95 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## Gamma–Euler evaluation and exact moment series (15 November 2026)
+
+**Priority 1 of the Gaussian arithmetic continuation is established.**
+The new modules are `Analysis/GaussianGammaTransform.lean` and
+`Analysis/ConreyBaluyotGaussianEuler.lean`. Product-space absolute
+integrability, Euler insertion, Fubini, and the two phases of the actual
+Gamma-weighted scalar transform are proved, with no analytic provider
+hypothesis.
+
+For arbitrary complex $a,z$, real $c,l,u$, $\Delta>0$, and
+$\operatorname{Re}a+c>0$, the general result is
+$$
+\int_{\mathbb R} e^{(c+it-l-iu)^2/\Delta^2}
+ \Gamma(a+c+it)e^{(c+it)z}\,dt
+=\Delta\sqrt\pi\int_0^\infty e^{-x}x^{a-1}
+ \exp\!\left((l+iu)(z+\log x)
+ -\frac{\Delta^2}{4}(z+\log x)^2\right)\,dx.
+$$
+The Euler integral is absolutely convergent for every complex $a,z$.
+The vertical integral is independent of $c$ throughout
+$\operatorname{Re}a+c>0$. The key norm identity factors the joint norm
+into the real Gamma weight $e^{-x}x^{\operatorname{Re}a+c-1}$ and the
+norm of the complex-frequency Gaussian, proving genuine product-space
+integrability before applying Fubini.
+
+For the actual arithmetic transform put $a=1-2l$ and
+$L_\omega(x)=\log x-\log(2\pi)-\log\omega$. Define
+$$
+E_v(\omega)=e^{a(-\log(2\pi)+iv)}
+ \int_0^\infty e^{-x}x^{a-1}
+ \exp\!\left((l+iu)(L_\omega(x)+iv)
+ -\frac{\Delta^2}{4}(L_\omega(x)+iv)^2\right)\,dx.
+$$
+Then, for **every $c>2l-1$**, arbitrary real $l,u$, and
+$\Delta,\omega>0$,
+$$
+J_c(\omega)=\Delta\sqrt\pi
+ \bigl(E_{\pi/2}(\omega)+E_{-\pi/2}(\omega)\bigr).
+$$
+This proves abscissa independence for the actual scalar transform,
+with neither $c>1$ nor $c<2$ required. The original arithmetic-series
+interchange still uses $c>\max(1,2l)$.
+
+Set $E(\omega)=E_{\pi/2}(\omega)+E_{-\pi/2}(\omega)$ for
+positive frequency and $E(0)=0$. With the original finite coefficients
+$a_h=\mathrm{mollifierCoefficient}(\sigma,y,h)$ and
+$N=\lfloor y^{1+\varepsilon}\rfloor$, define
+$$
+E_{m,n}=\sum_{1\le h,k\le N}
+ \frac{a_h a_k n^{2l-1}}{k^{2l}} E(mnh/k).
+$$
+The exact normalized actual-moment identity is
+$$
+\boxed{g_l(u)=\sum_{m,n\ge1}E_{m,n}
+ -\frac{2\sqrt\pi}{\Delta}R_1.}
+$$
+The Lean sum includes zero natural indices with vanishing Euler values.
+The paired series is absolutely convergent. Its convergence theorem
+allows all fixed real $\sigma,y,\varepsilon,l,u$ and $\Delta>0$.
+The actual-moment identity requires only $y,\Delta>0$, $0<l<1$;
+$\sigma,\varepsilon,u$ are arbitrary real parameters. No abscissa
+appears in this final theorem.
+
+| Declaration | Established content |
+| --- | --- |
+| `Complex.gaussianGammaEulerKernel_integrable` | Joint absolute integrability |
+| `Complex.gaussian_gamma_vertical_laplace_integral` | General exact Gamma-weighted transform |
+| `Complex.gaussian_gamma_euler_integrable` | Euler convergence for every complex shift and frequency |
+| `gaussianArithmeticTransform_eq_euler` | Actual scalar evaluation at the two phases |
+| `gaussianArithmeticTransform_abscissa_independent` | Every pair of lines with $c,d>2l-1$ |
+| `gaussianArithmeticTransform_eq_eulerValue` | Also the zero-frequency convention when $c>0$ |
+| `integral_mollifiedGaussianArithmeticTerm_eq_eulerTerm` | Actual finite coefficients pass into the Euler representation |
+| `summable_norm_mollifiedGaussianEulerTerm` | Absolute convergence of the paired outer series |
+| `mollifiedGaussianMoment_eq_euler_series` | Complete normalized identity with the signed residue |
+
+**Remaining research obligations.** The next task is to turn these
+positive-axis Euler integrals into the oscillatory and rotated-ray
+integrals of Baluyot's Lemma 3.1.7 and Section 3.3. Prove the contour
+rotations, endpoint/arc limits, principal-log branches, and positive
+damping, then identify the actual rational-phase
+`estermannDampedSeries` after gcd reduction of $h/k$.
+The Euler evaluation does not establish those rotations.
+
+The global signed Estermann Mellin decomposition, complete and
+multilinear Kloosterman estimates, cofinal
+`UniformGaussianMollifiedMoment` provider, and independent
+`ActualZeroOrdinate.InghamDensityBound` remain open formalization
+obligations. Fixed-parameter convergence here is not a uniform
+growing-height moment bound and does not prove RH.
+
 ## Gaussian-to-arithmetic bridge (15 November 2026)
 
 **Established identities.** `Analysis/ConreyBaluyotGaussianArithmetic.lean`
