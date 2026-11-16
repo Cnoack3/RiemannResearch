@@ -1620,6 +1620,9 @@ import RiemannResearch.Analysis.DirichletPolynomialMeanValue
 import RiemannResearch.Analysis.ActualInghamMollifierMoment
 import RiemannResearch.Analysis.DivisorCoefficientEnergy
 import RiemannResearch.Analysis.DivisorPolynomialMoment
+import RiemannResearch.Analysis.GeometricL2Series
+import RiemannResearch.Analysis.SmoothedDivisorMoment
+import RiemannResearch.Analysis.ActualZetaSquareMellinTail
 import RiemannResearch.Analysis.ActualZetaFourthMomentReduction
 import RiemannResearch.Analysis.DyadicIntegralBound
 import RiemannResearch.Analysis.IntervalL2Triangle
