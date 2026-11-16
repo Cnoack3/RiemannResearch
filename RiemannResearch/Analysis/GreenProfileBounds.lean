@@ -42,4 +42,24 @@ theorem energy_le_of_relative_profile {q r tau m C a B : ℝ}
 theorem root_square_identity (q r a : ℝ) :
     q * (2 * r + a - q) = a * q - (q - r) ^ 2 + r ^ 2 := by ring
 
+
+/-- A uniform deficit from the energy is enough: the signed moment may grow.
+The positive margin δ replaces the stronger requirement that m be bounded. -/
+theorem energy_scaled_le_of_profile_deficit
+    {q r tau m δ C a B : ℝ} (hq : 0 ≤ q) (hδ : 0 < δ)
+    (hC : 0 ≤ C) (ha : 0 ≤ a) (hr : r = q + tau)
+    (ht : tau ^ 2 ≤ a * q) (he : (r - m) ^ 2 ≤ C * q)
+    (hm : m ≤ (1 - δ) * q + B) :
+    δ ^ 2 * q ≤ 2 * δ * B + 2 * C + 2 * a := by
+  have h := energy_le_of_relative_profile
+    (q := δ ^ 2 * q) (r := δ * (r - (1 - δ) * q))
+    (tau := δ * tau) (m := δ * (m - (1 - δ) * q))
+    (C := C) (a := a) (B := δ * B)
+    (mul_nonneg (sq_nonneg δ) hq) hC ha
+    (by rw [hr]; ring)
+    (by nlinarith only [mul_le_mul_of_nonneg_left ht (sq_nonneg δ)])
+    (by nlinarith only [mul_le_mul_of_nonneg_left he (sq_nonneg δ)])
+    (by nlinarith only [mul_le_mul_of_nonneg_left hm hδ.le])
+  nlinarith only [h]
+
 end RiemannResearch.Analysis.GreenProfileBounds

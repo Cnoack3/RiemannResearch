@@ -117,4 +117,35 @@ theorem root_identity (s D : Finset ℕ) (w R C coeff : ℕ → ℝ) (x : ℕ)
   rw [hfilter]
   linarith
 
+theorem root_identity_of_weighted_upper (s D : Finset ℕ) (w R C coeff : ℕ → ℝ) (x : ℕ)
+    (hC : ∀ r, C r = (∑ d ∈ D, coeff d * grid d r) - 1)
+    (hprojection : pairing s w R C = energy s w R)
+    (hupper : ∀ d ∈ D, x < d → coeff d * score s w R d = 0) :
+    (∑ d ∈ D.filter (fun d => d ≤ x), coeff d * score s w R d) =
+      energy s w R + pairing s w R (fun _ => 1) := by
+  have hpair : pairing s w R C =
+      (∑ d ∈ D, coeff d * score s w R d) - pairing s w R (fun _ => 1) := by
+    unfold score pairing
+    simp_rw [hC, mul_sub, Finset.sum_sub_distrib, Finset.mul_sum]
+    rw [Finset.sum_comm]
+    congr 1
+    apply Finset.sum_congr rfl
+    intro d hd
+    apply Finset.sum_congr rfl
+    intro r hr
+    ring
+  have hfilter :
+      (∑ d ∈ D.filter (fun d => d ≤ x), coeff d * score s w R d) =
+        ∑ d ∈ D, coeff d * score s w R d := by
+    apply Finset.sum_subset (Finset.filter_subset _ _)
+    intro d hd hn
+    have hx : x < d := by
+      have : ¬ d ≤ x := by
+        intro hx
+        exact hn (Finset.mem_filter.mpr ⟨hd, hx⟩)
+      exact Nat.lt_of_not_ge this
+    exact hupper d hd hx
+  rw [hfilter]
+  linarith
+
 end RiemannResearch.RH.ExactHeadGreenProfile

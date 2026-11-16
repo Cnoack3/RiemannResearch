@@ -81,4 +81,26 @@ theorem affine_signed_moment (x : ℕ) (c0 c1 : ℝ) :
   field_simp [hd0]
 
 
+
+/-- The actual squarefree-weighted affine fit exists uniquely at every x >= 2. -/
+theorem exists_unique_affine_fit (x : ℕ) (hx : 2 ≤ x) (b : ℕ → ℝ) :
+    ∃! c : ℝ × ℝ, ∀ a : ℝ × ℝ,
+      affineLoss (Finset.Icc 1 x) weight (fun d => (d : ℝ)/(x : ℝ)) b c.1 c.2 ≤
+      affineLoss (Finset.Icc 1 x) weight (fun d => (d : ℝ)/(x : ℝ)) b a.1 a.2 := by
+  apply RiemannResearch.Analysis.FiniteProfileEnergy.exists_unique_affine_minimizer
+    (Finset.Icc 1 x) weight (fun d => (d : ℝ)/(x : ℝ)) b
+    (fun d _ => weight_nonneg d) 1 2
+  · exact Finset.mem_Icc.mpr ⟨by norm_num, le_trans (by norm_num) hx⟩
+  · exact Finset.mem_Icc.mpr ⟨by norm_num, hx⟩
+  · norm_num [weight, ArithmeticFunction.moebius_apply_one]
+  · norm_num [weight, ArithmeticFunction.moebius_apply_prime Nat.prime_two]
+  · have hx0 : (x : ℝ) ≠ 0 := by
+      have : 0 < x := lt_of_lt_of_le (by norm_num) hx
+      exact_mod_cast this.ne'
+    intro he
+    norm_num at he
+    field_simp [hx0] at he
+    norm_num at he
+
+
 end RiemannResearch.RH.MobiusAffineProfile

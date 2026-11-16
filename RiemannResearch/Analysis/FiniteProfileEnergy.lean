@@ -285,4 +285,16 @@ theorem exists_unique_affine_minimizer (s : Finset ι) (w t b : ι → ℝ)
     apply Prod.ext <;> dsimp <;> linarith
 
 
+
+/-- An affine carry term shifts only the fitted coefficients, with no loss. -/
+theorem affineLoss_add_affine (s : Finset ι) (w t b : ι → ℝ)
+    (c0 c1 u v : ℝ) :
+    affineLoss s w t (fun i => b i + u + v * t i) (c0 + u) (c1 + v) =
+      affineLoss s w t b c0 c1 := by
+  unfold affineLoss energy
+  apply Finset.sum_congr rfl
+  intro i hi
+  ring
+
+
 end RiemannResearch.Analysis.FiniteProfileEnergy

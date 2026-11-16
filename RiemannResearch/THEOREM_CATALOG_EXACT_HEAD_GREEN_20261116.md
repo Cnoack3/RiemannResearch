@@ -1,4 +1,4 @@
-# Exact-head Green profiles: first verified checkpoint (2026-11-16)
+# Exact-head Green profiles: verified development (2026-11-16)
 
 Source: user attachment *Best Nyman Beurling for RH.pdf*, internally titled
 *Exact-Head Green Profiles in the Nyman--Beurling Program*, 27 July 2026, 17 pages.
@@ -107,3 +107,80 @@ These are floating-point observations, not outward-rounded certificates.
 The x=23 scaled Gram condition is about 2.49e10. A precision comparison is
 not an error enclosure. R1 interval certification and uniform R4/R5 estimates
 remain Open. Finite data do not establish an asymptotic conjecture.
+
+## Concrete legal construction and primitive-conductor bridge
+
+- `FiniteProfileEnergy.exists_affine_normal`, `exists_unique_affine_minimizer`
+  and `affineLoss_add_affine`: explicit finite Cramer solution, unique
+  minimum, and exact removal of an affine component.
+- `MobiusAffineProfile.exists_unique_affine_fit`: actual squarefree weights,
+  every integer x>=2, no asymptotic nonsingularity premise.
+- `RH/ExactHeadFloorExtension.lean`: finite legal residue extension of any
+  positive-index floor polynomial. Divisibility is required only at active
+  coefficients. `hilbertExtension_error_norm` and
+  `hilbertExtension_error_split` prove the full infinite weighted norm and
+  terminal split. `hilbertExtension_head` transfers exact finite heads.
+- `RH/MobiusHeadGreen.lean`: the Mobius coefficients give the exact head;
+  active upper normal equations give the signed root; actual Pareto weights
+  give the tail charge. `riemannHypothesis_of_cofinal_mobius_profiles`
+  constructs the legal Hilbert approximants and proves the conditional RH
+  implication from cofinal W E<=Cq and signed moment<=B. Its remaining finite
+  inputs are the divisor-supported coefficient array and active upper normal
+  equations; these are not silently inferred from a numerical solve.
+- `RH/ExactHeadGreenPrimitive.lean`:
+  `centeredResidue_eq_primitive_sum` identifies the paper's primitive
+  components with the existing integrated Ramanujan packets for every positive
+  modulus, with arbitrary pairing weights.
+  `canonical_energy_eq_primitive_square` identifies the exact conductor
+  square function. It supplies no uniform dispersion estimate.
+
+The fit and initial legal construction passed `job_u2oVuvRP6mUcMF5lcd3yaB-EBhZdKgZA`
+(25.130 seconds); norm/split passed `job_eUb3rDtZ3a3DuUd5ySINicTlEmBkWNAc`
+(119.521 seconds). The concrete criterion, primitive bridge, actual unique
+fit and affine-shift identity passed `job_mxqbu7zCsmzLn5viROxQyZHEgkoQS5rK`
+(40.013 seconds), Bazel/BuildBuddy.
+
+Second complete checkpoint: `job_lzP1MQbRnZ9scuLd3MddXTKkxafjUSd4`,
+full `//:RiemannResearch`, 208.605 seconds, published commit
+`c8e343a60365e47f39eff95d738cdc3d518e8f83`.
+
+## Strongest reduction and discharged finite providers
+
+- `GreenProfileBounds.energy_scaled_le_of_profile_deficit` proves
+  delta^2 q<=2 delta B+2C+2a when delta>0 and
+  m<=(1-delta)q+B, retaining the signed moment. This is weaker than
+  requiring m to be bounded.
+- `MobiusHeadGreen.riemannHypothesis_of_cofinal_mobius_profile_deficit`
+  applies that criterion to the actual legal finite floor construction.
+- `Analysis/FiniteWeightedNormal.lean`: `exists_normal` and
+  `exists_normal_finset` construct actual weighted normal solutions.
+  Nonnegative weights, dependent columns, and singular Gram matrices are allowed.
+- `RH/MobiusHeadGreenNormal.lean` proves existence of the upper-divisor
+  coefficients, supplies `greenPeriod x=primorial(x+1)`, proves its arithmetic
+  coverage and constructs `primorialNormalCoefficients`.
+  `riemannHypothesis_of_primorial_profile_deficit` leaves only the two
+  cofinal analytic estimates; no normal equation, legality, head, root, tail
+  charge or norm-split provider remains as a hypothesis.
+- `RH/MobiusAffineMomentBounds.lean` proves
+  `affine_signed_moment_abs_le`: |m|<=|c0|+|c1| without PNT.
+  A uniform bound on the actual coefficients is not proved.
+
+This complete stage passed focused Bazel job
+`job_B5OMSNx2otU8Ns8a7g94fzaZ5GIXj_u1` (46.088 seconds).
+Third full-project checkpoint `job_JJiBfLDP1etXqCJ1duRZDXSKeH5zsgrj`
+published `2042719725f4edd784a9eecf2767827b1d0dfe94` after 197.319 seconds;
+its scope was affine existence/uniqueness, the legal floor extension and norm
+split, and completed numerical ledgers. The later concrete/primitive/provider
+modules are included in the publication checkpoint of this revision.
+
+See [the research continuation](EXACT_HEAD_GREEN_RESEARCH_CONTINUATION_20261116.md)
+for the exact remaining estimates, agenda R1--R6, and numerical limitations.
+
+## Guarded axiom audit
+
+Eight transitive dependency checks passed under `#guard_msgs`, requiring
+exactly `propext`, `Classical.choice`, and `Quot.sound`.
+Job `job_xAhpgx5jIhHCYWwQTWv1rPXEgARUYX-D`, 51.966 seconds, Bazel/BuildBuddy.
+The 14 new Lean modules contain 92 theorem declarations, including private
+helpers. No source placeholders or new axiom declarations were found.
+See [verification and reproducible audit](EXACT_HEAD_GREEN_VERIFICATION_20261116.md).
