@@ -124,7 +124,7 @@ theorem rectangleIntegral_mollifiedGaussianContourKernel (σ y ε Δ u : ℝ)
   exact ResidueTheoremOnRectangleWithSimplePole' hre him hp hhol
     (by simpa only [div_eq_mul_inv] using BddAbove_to_IsBigO hV hbounded)
 
-private theorem norm_cos_le_exp_abs_im (z : ℂ) :
+theorem norm_cos_le_exp_abs_im (z : ℂ) :
     ‖Complex.cos z‖ ≤ Real.exp |z.im| := by
   unfold Complex.cos
   rw [norm_div]
@@ -192,7 +192,7 @@ private theorem exists_reflectedZeta_exp_growth {d b : ℝ} (hd : 0 < d) :
       gcongr
     _ = _ := by ring
 
-private theorem norm_mollifier_le_of_re_ge (σ y ε r : ℝ) {s : ℂ} (hs : r ≤ s.re) :
+theorem norm_mollifier_le_of_re_ge (σ y ε r : ℝ) {s : ℂ} (hs : r ≤ s.re) :
     ‖nonstandardMollifier σ y ε s‖ ≤
       ∑ n ∈ Finset.Icc 1 ⌊y ^ (1 + ε)⌋₊, ‖mollifierCoefficient σ y n‖ / (n : ℝ) ^ r := by
   unfold nonstandardMollifier
@@ -206,7 +206,7 @@ private theorem norm_mollifier_le_of_re_ge (σ y ε r : ℝ) {s : ℂ} (hs : r �
     (Real.rpow_pos_of_pos (by exact_mod_cast hn0) _)
     (Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast hn1) hs)
 
-private theorem gaussian_strip_absorption {q k x l c t u : ℝ} (hq : 0 < q)
+theorem gaussian_strip_absorption {q k x l c t u : ℝ} (hq : 0 < q)
     (hx : x ∈ Icc l c) :
     q * ((x - l) ^ 2 - (t - u) ^ 2) + k * |t| ≤
       q * (c - l) ^ 2 + (2 * q * |u| + k) ^ 2 / (2 * q) - (q / 2) * t ^ 2 := by

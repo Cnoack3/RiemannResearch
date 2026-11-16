@@ -1,5 +1,105 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## Gaussian-to-arithmetic bridge (15 November 2026)
+
+**Established identities.** `Analysis/ConreyBaluyotGaussianArithmetic.lean`
+proves `mollifiedGaussianMoment_eq_arithmetic_series` and
+`mollifiedGaussianMoment_eq_expanded_arithmetic_series` for the actual
+mollifier, with no unresolved moment, summability, or integral-exchange
+hypothesis. Let $a_j$ be `mollifierCoefficient sigma y j` and
+$N=\lfloor y^{1+\varepsilon}\rfloor$. With $s=c+it$, define
+$$
+A_{l,\Delta,u}(s)=
+ e^{(s-l-iu)^2/\Delta^2}
+ 2(2\pi)^{-(1-2l+s)}\Gamma(1-2l+s)
+ \cos\!\left(\frac{\pi(1-2l+s)}2\right),
+\qquad
+J_c(\omega)=\int_{\mathbb R}A_{l,\Delta,u}(c+it)\omega^{-c-it}\,dt.
+$$
+The exact result is
+$$
+g_l(u)=\frac1{\Delta\sqrt\pi}
+\left[
+ \sum_{m,n\ge1}\sum_{1\le h,k\le N}
+ \frac{a_h a_k n^{2l-1}}{k^{2l}} J_c(mnh/k)
+ -2\pi R_1
+\right].
+$$
+The Lean equality is in `Complex`; the left side is the cast of the real
+moment. Natural-index sums include zero indices, whose terms are proved to
+vanish on `c > 0`. The exact signed pole coefficient `R_1`, floor cutoff,
+and normalization are retained.
+
+**Stronger parameter range than the proposed bridge.** The final theorem
+requires only `0 < l < 1`, `y > 0`, `Delta > 0`, `1 < c`, and
+`2*l < c`. There is no `c < 2` requirement; `sigma`, `epsilon`, and
+`u` are arbitrary real numbers, and `sigma` is independent of `l`.
+The Gaussian–Gamma kernel itself is integrable as soon as
+`0 < 1 - 2*l + c` and `Delta > 0`, without any ordering between `l`
+and `c`.
+
+Supporting declarations prove:
+
+- `mollifiedGaussianContourKernel_eq_arithmetic`: actual functional
+  equation and the untwisted Estermann product.
+- `integrable_mollifiedGaussianArithmeticTerm`: genuine termwise
+  integrability.
+- `summable_integral_norm_mollifiedGaussianArithmeticTerm` and
+  `summable_norm_integral_mollifiedGaussianArithmeticTerm`: the absolute
+  convergence needed for Fubini and for the integrated double series.
+- `mollifiedGaussianArithmeticTerm_eq_finite_sum_of_re_pos` and
+  `integral_mollifiedGaussianArithmeticTerm_eq_finite_sum`: the explicit
+  coefficient expansion, including complex-power branches and zero terms.
+- `integrable_gaussianArithmeticTransform`: absolute convergence of
+  the scalar transform at every positive frequency.
+
+The reusable lemma `estermann_mod_one_eq_zeta_product` is in
+`Analysis/ConreyBaluyotEstermann.lean` and holds for all complex arguments,
+including continued values. Three previously private bounds in
+`ConreyBaluyotGaussianShift.lean` are exported for reuse.
+
+**Next analytic obligations.**
+
+1. Evaluate `gaussianArithmeticTransform` as the two oscillatory
+   integrals in Baluyot's Lemma 3.1.7; then justify rotation to the rays
+   with arguments plus/minus lambda, `0 < lambda < pi/2`.
+2. Identify the resulting rational-phase sums with the existing actual
+   `estermannDampedSeries`, preserving its positive-damping condition.
+   The modulus-one identification above is not that rotated/damped formula.
+3. Prove the global Estermann contour shifts and the signed main/error
+   decomposition, then supply the complete and multilinear Kloosterman
+   bounds with their full parameter quantifiers.
+4. Obtain the cofinal family of `UniformGaussianMollifiedMoment`
+   providers. The independent `ActualZeroOrdinate.InghamDensityBound`
+   provider also remains open.
+
+The fixed-parameter Gaussian domination proved here is not a uniform
+growing-height small-moment estimate. No full density or RH conclusion is
+claimed. Source for the expansion strategy:
+[Baluyot's thesis](https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320),
+Section 3.3, pp. 116–117, between (3.3.6) and (3.3.7).
+
+
+**Additional exact Gaussian input.** `Analysis/GaussianVerticalLaplace.lean`
+proves `Complex.gaussian_vertical_laplace_integrable` and
+`Complex.gaussian_vertical_laplace_integral`. For every real `c,l,u`,
+every `Delta > 0`, and every complex `z`,
+
+$$
+\int_{\mathbb R}
+ e^{(c+it-l-iu)^2/\Delta^2} e^{(c+it)z}\,dt
+ = \Delta\sqrt\pi\,
+   e^{(l+iu)z-\Delta^2z^2/4}.
+$$
+
+This strengthens the inner Gaussian calculation to arbitrary complex
+frequency and proves independence from `c`. One concrete route toward
+obligation 1 is now to insert the Euler integral for Gamma, split the
+cosine into two exponentials, and use this theorem on the inner integral.
+The joint absolute-integrability/Fubini proof and the rotated-ray
+identification remain obligations; the Gaussian identity alone does not
+establish the full Gamma-weighted transform.
+
 ## Actual Gaussian contour and uniform-density transfer
 
 Baluyot's [thesis](https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320),

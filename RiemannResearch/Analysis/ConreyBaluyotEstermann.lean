@@ -210,6 +210,13 @@ theorem residueLFunction_zero {K : ℕ} [NeZero K] (u : ℂ) :
     residueLFunction (0 : ZMod K) u = (K : ℂ) ^ (-u) * riemannZeta u := by
   simp [residueLFunction_eq_hurwitzZeta, HurwitzZeta.hurwitzZeta_zero]
 
+/-- Modulus one gives the exact zeta product, including the continued values. -/
+theorem estermann_mod_one_eq_zeta_product (s w : ℂ) :
+    estermann (0 : ZMod 1) s w = riemannZeta s * riemannZeta w := by
+  classical
+  have hzero (x : ZMod 1) : x = 0 := Subsingleton.elim _ _
+  simp [estermann, hzero, residueLFunction_zero]
+
 private theorem meromorphicAt_residueLFunction {K : ℕ} [NeZero K] (a : ZMod K) (z : ℂ) :
     MeromorphicAt (residueLFunction a) z := by
   have hdiff := (HurwitzZeta.differentiable_hurwitzZeta_sub_hurwitzZeta
