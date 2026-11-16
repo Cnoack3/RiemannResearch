@@ -1,5 +1,50 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## Actual Gaussian contour and uniform-density transfer
+
+Baluyot's [thesis](https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320),
+Theorem 1.2.1 and Sections 3.2–3.6, proves the estimate unconditionally in
+the literature for every fixed `0 < a < 8/7`. The Lean result below is a
+conditional research reduction with two analytic hypotheses.
+
+- `Analysis/ConreyBaluyotMomentExcess.lean`
+  proves `exists_uniform_dyadic_logExcess_of_prescribed_line_moment`.
+  For the actual mollifier of length `T^theta`, a moment at most `T + E`
+  on the prescribed line gives
+  `rightLogExcessWindow T (2*T) sigma <= E/(4*pi) + B*log T`.
+  The threshold and all boundary constants are uniform in sigma and T.
+  The inequality permits signed E. The proof chooses outward good heights
+  and a zero-free left side below sigma with arbitrarily small added cost.
+  It uses the exact Littlewood identity with both signed boundary terms
+  and all mollifier-zero multiplicities.
+- `Analysis/ActualConreyBaluyotDensity.lean`
+  proves `uniformDyadicMollifiedMoment_of_gaussian` with the exact
+  logarithmic padding `Delta*log T`, the Gaussian deficit, and the same
+  exponent as the source moment. It proves
+  `uniformSelbergDensity_of_dyadicMollifiedMoment_and_ingham` and
+  `conreyBaluyotDensity_of_cofinal_gaussianMollifiedMoments`.
+  For each target exponent a it suffices to supply a Gaussian bound
+  for one theta with `a <= 2*theta` and `theta < 4/7`.
+  The counting theorem includes multiplicities and finite initial heights.
+  `UniformSelbergDensity.all_heights_ge_two` absorbs the initial interval
+  into the constant for every `T >= 2` and every `sigma >= 1/2`.
+- `Analysis/ConreyBaluyotGaussianShift.lean`
+  proves the exact normalized rightward shift
+  `mollifiedGaussianMoment_eq_right_shift`, including the source range
+  `2*l < c < 2`. In the dt parameterization it subtracts `2*pi` times
+  the coefficient at s = 1 from the new vertical integral before
+  normalizing. Both horizontal integrals vanish and the shifted integral
+  is absolutely convergent. `exists_uniform_mollifiedGaussianPoleCoeff_bound`
+  bounds the coefficient by `C*y^2*exp(-(u/Delta)^2)` on the coupled strip
+  when `Delta >= 1`.
+
+**Open in Lean.** The uniform upper Gaussian moment still requires the
+signed arithmetic decomposition and estimates, including the full
+Kloosterman inputs. The away-line Ingham estimate is an independent
+unproved Lean provider. The signed contour shift and the normalized
+Littlewood boundary work are already proved. The literature theorem
+allows a-dependent constants and excludes the endpoint `a = 8/7`.
+
 Updated 14 November 2026. Base repository revision:
 `f3380fd6b8e228d87757e1c08ced9eda210b3a05`.
 

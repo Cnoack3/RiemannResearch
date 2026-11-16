@@ -37,10 +37,11 @@ threshold copies. The left-limit transfer, including the total-count
 endpoint at 1/2, is proved in ActualSelbergDensityConventions.
 Classical Selberg gives a = 1/4 uniformly on 1/2 <= sigma <= 1.
 
-As of 2026-11-15, the count conventions, dyadic assembly, truncated
-near-line assembly and reduction to the Ingham estimate are proved.
-The actual upper mollified moment, full Kloosterman estimates, horizontal
-boundary estimate and Ingham density estimate still need Lean providers.
+The count conventions, dyadic assembly, normalized Littlewood boundary
+estimates and transfer from the actual mollified moment are proved.
+`ActualConreyBaluyotDensity` gives the full range from the uniform
+Gaussian upper moment and Ingham estimates. These analytic inputs
+still need Lean providers.
 ConreyBaluyotDensityHypothesis is the explicit target proposition.
 Constants may depend on a.
 
