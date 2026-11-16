@@ -1,14 +1,49 @@
-# Uniform actual remainder: verified progress and remaining analytic gap
+# Uniform actual remainder: historical progress and current I1 closure
 
 Prepared 16 November 2026, America/Los_Angeles.
 Investigation base: d414397c292ff465a2c3351929b22d942ff848a2.
 The user approved committing and publishing these additions on 16 November 2026.
 The managed checkpoint records final validation, integration, and publication.
 
-## Conclusion
+## Current status: I1 is closed
 
-The complete uniform actual-zeta remainder bound is **not proved** here.
-Two unconditional contributions are established:
+The open I1 entries in this note describe its original checkpoint and are
+superseded by commit
+[`8885be09052bffe132cf1a52eeb115065c88e6de`](https://github.com/Cnoack3/RiemannResearch/commit/8885be09052bffe132cf1a52eeb115065c88e6de).
+The [completed remainder catalog](THEOREM_CATALOG_ZETA_REMAINDER_BOUND_20261116.md)
+records the full proof chain. In namespace `RiemannResearch.Analysis`,
+[ActualZetaSquareResidualBound.lean](Analysis/ActualZetaSquareResidualBound.lean)
+now supplies:
+
+- `exists_zetaSquareResidual_comparable_cutoff_bound`: one constant controls
+  the complete actual residual for all `U >= 2` and positive integer cutoffs
+  `N <= U <= 2*N`.
+- `exists_actual_zetaSquareResidual_dyadic_bound`: the exact canonical
+  `N = floor(U)` provider, with bound `C*U*(log U)^4`.
+- `exists_actual_zeta_fourth_moment_bound`: the unconditional actual I1
+  estimate on `[0,T]`, uniformly for every `T >= 2`.
+
+The complete smoothing defect, moving residue, right finite-head integral,
+and left infinite-tail integral are retained in the exact identity. Their
+proved moments give the residual bound before I1 is invoked; this is not a
+reformulation assuming the desired fourth moment. None of these three public
+theorems has a supplied analytic, growth, contour, or residual premise.
+
+A fresh Bazel/BuildBuddy audit at repository revision
+`d6c2e61ea06de4f6d75c142a86dab8fbcb895a79` passed on 16 November 2026:
+`job_6EurI1MJOugH9WxBX49K5_l49i5Sw2Kt`,
+[verification log](https://app.buildbuddy.io/invocation/b147f193-3cf6-4872-8948-d3e13a1aedd7).
+It elaborated the exact canonical residual and I1 statements and enforced
+three axiom-output guards: only `propext`, `Classical.choice`, and `Quot.sound`.
+Its scope was an ephemeral audit snippet and its transitive imports, not a
+new whole-project checkpoint. Server verification took 53.508 seconds;
+workspace setup and polling are separate. This status correction changes
+documentation only and does not assert closure of the separate Z03 work.
+
+## Original checkpoint conclusion (historical)
+
+The complete uniform actual-zeta remainder bound was **not proved by this
+original checkpoint**. Two unconditional contributions were established:
 
 1. The ordinary infinite exponentially smoothed divisor series, and its
    difference from the unsmoothed finite divisor polynomial, have uniform
@@ -18,8 +53,9 @@ Two unconditional contributions are established:
    outer height and the real smoothing scale.
 
 Neither result assumes I1, RH, a zeta-moment estimate, or an unproved analytic
-growth provider. They do not discharge the complete residual hypothesis in
-ActualZetaFourthMomentReduction.lean. I1 and Z03 remain open in this development.
+growth provider. They did not discharge the complete residual hypothesis in
+ActualZetaFourthMomentReduction.lean at that checkpoint. I1 was closed by
+the later provider identified above; this audit does not close Z03.
 
 ## New modules
 
