@@ -7,6 +7,11 @@ Prepared 16 November 2026 (UTC).
 This development supplies the previously missing polynomial-growth input.
 It does **not** supply UniformSelbergDensity or the cofinal mollified moment.
 
+**M06 status: closed.** A subsequent checked strengthening supplies explicit
+uniform Hurwitz-parameter and modulus bounds, including one Mellin-tail
+constant after an explicit power of the modulus is factored out. See
+[uniform modulus continuation](THEOREM_CATALOG_HURWITZ_UNIFORM_MODULUS_20261116.md).
+
 ### Exact identities first
 
 In Analysis/HurwitzEulerMaclaurin.lean, namespace
@@ -80,8 +85,10 @@ consumer declarations discharge them with actual proved bounds.
 
 **Still open in this Lean development:** the positive-exponent uniform
 Selberg density provider. The new constants may depend on the modulus,
-shift, strip and positive damping. There is no bound uniform in a growing
-modulus or in a damping parameter approaching zero.
+shift, strip and positive damping. The subsequent uniform-modulus development
+quantifies the modulus dependence as an explicit real power of K, with the
+remaining constant independent of K. It does not give a modulus-independent
+bound or a bound uniform as the damping approaches its boundary.
 
 The existing density consumer in ActualConreyBaluyotDensity.lean needs:
 
