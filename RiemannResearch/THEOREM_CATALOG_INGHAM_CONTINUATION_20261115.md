@@ -111,8 +111,12 @@ $$
 \exists C>0,\ \exists H\ge2,\ \forall T\ge H,\quad
 \int_0^T|\zeta(1/2+it)|^4\,dt\le C T(\log T)^4.
 $$
-The new mixed-moment theorem consumes this together with an appropriate
-uniform second-moment estimate for the actual finite Mobius mollifier.
+The actual finite-Mobius second-moment input (I2) is now proved in
+`Analysis/ActualInghamMollifierMoment.lean`, uniformly in X and T.
+`critical_error_moment_le_fourth_moment` inserts that checked input into
+the mixed-moment estimate. The actual zeta fourth moment remains open.
+See [the continuation catalog](THEOREM_CATALOG_INGHAM_MOLLIFIER_MOMENT_20261115.md)
+for exact declarations, the translated-interval strengthening, and the updated agenda.
 
 The literature route also requires the moving right-line error moment,
 Gabriel interpolation, and the matching horizontal/boundary budget.

@@ -1576,6 +1576,9 @@ import RiemannResearch.Analysis.ActualSelbergDyadicAssembly
 import RiemannResearch.Analysis.ActualSelbergIngham
 import RiemannResearch.Analysis.ComplexMixedMomentBounds
 import RiemannResearch.Analysis.ActualInghamCriticalMoment
+import RiemannResearch.Analysis.ComplexGaussianMeanValue
+import RiemannResearch.Analysis.DirichletPolynomialMeanValue
+import RiemannResearch.Analysis.ActualInghamMollifierMoment
 import RiemannResearch.Analysis.ActualInghamThinStrip
 import RiemannResearch.Analysis.ActualSelbergTruncatedNearLine
 import RiemannResearch.Analysis.KloostermanCompletion
