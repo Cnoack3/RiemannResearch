@@ -22,6 +22,11 @@ The exact horizontal logarithmic identity precedes the estimate. For
 
 `‖Gamma (b + it) / Gamma (a + it)‖ ≤ exp (5 * (b-a) / t^2) * |t|^(b-a)`.
 
+The extension below permits either order of a and b in (0,1], proving
+both upper and lower bounds with exp(+-5 |b-a|/t^2) and the signed
+power |t|^(b-a). It supplies the negative exponents required on the
+right zeta-square Mellin contour.
+
 The frequency restriction is explicit: no assertion about the remaining
 compact range is supplied by this estimate. This is an unconditional Gamma
 ingredient of the symmetric shifted-zeta estimate in Báez-Duarte,
@@ -177,4 +182,113 @@ theorem norm_Gamma_symmetric_ratio_le {ε t : ℝ}
   simpa only [he, hf, abs_div, abs_two, Complex.ofReal_div,
     Complex.ofReal_ofNat] using hh
 
+
+/-- The lower horizontal Stirling estimate, retaining the signed logarithmic
+main term. -/
+theorem log_norm_Gamma_sub_ge {a b t : ℝ} (ha : 0 < a)
+    (hab : a ≤ b) (hb : b ≤ 1) (ht : 1 / 2 ≤ |t|) :
+    (b - a) * (Real.log |t| - 5 / t ^ 2) ≤
+      Real.log ‖Complex.Gamma ((b : ℂ) + I * t)‖ -
+        Real.log ‖Complex.Gamma ((a : ℂ) + I * t)‖ := by
+  rw [log_norm_Gamma_sub_eq_integral_digamma ha hab]
+  calc
+    _ = ∫ _x in a..b, Real.log |t| - 5 / t ^ 2 := by
+      rw [intervalIntegral.integral_const]
+      simp only [smul_eq_mul]
+    _ ≤ _ := by
+      apply intervalIntegral.integral_mono_on hab intervalIntegrable_const
+        ((continuousOn_re_digamma_horizontal (b := b) (t := t) ha).intervalIntegrable_of_Icc hab)
+      intro x hx
+      have hh := Zeta23.StirlingVert.re_digamma_stirling'
+        (ha.trans_le hx.1) (hx.2.trans hb) ht
+      linarith [(abs_le.mp hh).1]
+
+/-- A two-sided logarithmic Gamma quotient estimate, with either order of
+the abscissae. This also controls the inverse quotient without losing the
+sign of the power of the height. -/
+theorem abs_log_norm_Gamma_ratio_error_le {a b t : ℝ}
+    (ha : 0 < a) (ha1 : a ≤ 1) (hb : 0 < b) (hb1 : b ≤ 1)
+    (ht : 1 / 2 ≤ |t|) :
+    abs ((Real.log ‖Complex.Gamma ((b : ℂ) + I * t)‖ -
+        Real.log ‖Complex.Gamma ((a : ℂ) + I * t)‖) -
+      (b - a) * Real.log |t|) ≤ 5 * |b - a| / t ^ 2 := by
+  rcases le_total a b with hab | hba
+  · rw [abs_of_nonneg (sub_nonneg.mpr hab)]
+    have hu := log_norm_Gamma_sub_le ha hab hb1 ht
+    have hl := log_norm_Gamma_sub_ge ha hab hb1 ht
+    simp only [div_eq_mul_inv] at hu hl ⊢
+    exact abs_le.mpr ⟨by nlinarith, by nlinarith⟩
+  · rw [abs_of_nonpos (sub_nonpos.mpr hba)]
+    have hu := log_norm_Gamma_sub_le hb hba ha1 ht
+    have hl := log_norm_Gamma_sub_ge hb hba ha1 ht
+    simp only [div_eq_mul_inv] at hu hl ⊢
+    exact abs_le.mpr ⟨by nlinarith, by nlinarith⟩
+
+/-- Uniform Gamma quotient bound for arbitrary positive abscissae up to
+one. In particular, the height exponent may be negative. -/
+theorem norm_Gamma_ratio_le_of_pos {a b t : ℝ}
+    (ha : 0 < a) (ha1 : a ≤ 1) (hb : 0 < b) (hb1 : b ≤ 1)
+    (ht : 1 / 2 ≤ |t|) :
+    ‖Complex.Gamma ((b : ℂ) + I * t) /
+        Complex.Gamma ((a : ℂ) + I * t)‖ ≤
+      Real.exp (5 * |b - a| / t ^ 2) * |t| ^ (b - a) := by
+  have hna : 0 < ‖Complex.Gamma ((a : ℂ) + I * t)‖ :=
+    norm_pos_iff.mpr (Complex.Gamma_ne_zero_of_re_pos (by simpa using ha))
+  have hnb : 0 < ‖Complex.Gamma ((b : ℂ) + I * t)‖ :=
+    norm_pos_iff.mpr (Complex.Gamma_ne_zero_of_re_pos (by simpa using hb))
+  have htpos : 0 < |t| := by linarith
+  have hh := (abs_le.mp (abs_log_norm_Gamma_ratio_error_le ha ha1 hb hb1 ht)).2
+  calc
+    _ = Real.exp (Real.log ‖Complex.Gamma ((b : ℂ) + I * t)‖ -
+        Real.log ‖Complex.Gamma ((a : ℂ) + I * t)‖) := by
+      rw [norm_div, Real.exp_sub, Real.exp_log hna, Real.exp_log hnb]
+    _ ≤ Real.exp (5 * |b - a| / t ^ 2 + (b - a) * Real.log |t|) :=
+      Real.exp_le_exp.mpr (by linarith)
+    _ = _ := by
+      rw [Real.rpow_def_of_pos htpos, ← Real.exp_add]
+      congr 1
+      ring
+
+/-- The matching lower bound, with the same explicit error. -/
+theorem le_norm_Gamma_ratio_of_pos {a b t : ℝ}
+    (ha : 0 < a) (ha1 : a ≤ 1) (hb : 0 < b) (hb1 : b ≤ 1)
+    (ht : 1 / 2 ≤ |t|) :
+    Real.exp (-(5 * |b - a| / t ^ 2)) * |t| ^ (b - a) ≤
+      ‖Complex.Gamma ((b : ℂ) + I * t) /
+        Complex.Gamma ((a : ℂ) + I * t)‖ := by
+  have hna : 0 < ‖Complex.Gamma ((a : ℂ) + I * t)‖ :=
+    norm_pos_iff.mpr (Complex.Gamma_ne_zero_of_re_pos (by simpa using ha))
+  have hnb : 0 < ‖Complex.Gamma ((b : ℂ) + I * t)‖ :=
+    norm_pos_iff.mpr (Complex.Gamma_ne_zero_of_re_pos (by simpa using hb))
+  have htpos : 0 < |t| := by linarith
+  have hh := (abs_le.mp (abs_log_norm_Gamma_ratio_error_le ha ha1 hb hb1 ht)).1
+  calc
+    _ = Real.exp (-(5 * |b - a| / t ^ 2) + (b - a) * Real.log |t|) := by
+      rw [Real.rpow_def_of_pos htpos, ← Real.exp_add]
+      congr 1
+      ring
+    _ ≤ Real.exp (Real.log ‖Complex.Gamma ((b : ℂ) + I * t)‖ -
+        Real.log ‖Complex.Gamma ((a : ℂ) + I * t)‖) :=
+      Real.exp_le_exp.mpr (by linarith)
+    _ = _ := by
+      rw [norm_div, Real.exp_sub, Real.exp_log hna, Real.exp_log hnb]
+
+/-- Both symmetric directions, including the negative exponents needed
+on the right-hand zeta-square Mellin contour. -/
+theorem norm_Gamma_symmetric_ratio_le_of_abs_lt {ε t : ℝ}
+    (hε : |ε| < 1 / 2) (ht : 1 ≤ |t|) :
+    ‖Complex.Gamma (((1 / 4 + ε / 2 : ℝ) : ℂ) + I * (t / 2)) /
+        Complex.Gamma (((1 / 4 - ε / 2 : ℝ) : ℂ) + I * (t / 2))‖ ≤
+      Real.exp (20 * |ε| / t ^ 2) * (|t| / 2) ^ ε := by
+  have he := abs_lt.mp hε
+  have ht' : (1 / 2 : ℝ) ≤ |t / 2| := by
+    rw [abs_div, abs_two]
+    linarith
+  have hh := norm_Gamma_ratio_le_of_pos
+    (a := 1 / 4 - ε / 2) (b := 1 / 4 + ε / 2)
+    (by linarith) (by linarith) (by linarith) (by linarith) ht'
+  have heq : (1 / 4 + ε / 2 : ℝ) - (1 / 4 - ε / 2) = ε := by ring
+  have hf : (5 * |ε| / (t / 2) ^ 2 : ℝ) = 20 * |ε| / t ^ 2 := by ring
+  simpa only [heq, hf, abs_div, abs_two, Complex.ofReal_div,
+    Complex.ofReal_ofNat] using hh
 end RiemannResearch.Analysis.GammaRatioVertical

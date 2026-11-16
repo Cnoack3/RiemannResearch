@@ -175,8 +175,9 @@ one for every real height, including zero. Its only domain-specific input is
 | Exact smoothed zeta-square representation and its contour shifts | Open |
 | Actual damped divisor series and fixed-positive-damping L2 limit passage | Proved for all positive real scales in [the damped-series continuation](THEOREM_CATALOG_DAMPED_DIVISOR_L2_20261116.md) |
 | Sharp smoothed moments for positive integer scales | Proved in [the uniform remainder continuation](THEOREM_CATALOG_INGHAM_REMAINDER_PROGRESS_20261116.md) |
-| Uniform off-critical-line bounds for chi on the contour regions | Open |
-| Moving double-pole Gamma and Gamma-derivative estimates | Open |
+| Uniform central off-critical chi bounds on Re s=-1/4 and 3/4 | Proved in [the residue and contour continuation](THEOREM_CATALOG_ZETA_REMAINDER_RESIDUE_20261116.md) |
+| Actual moving double-pole coefficient and uniform rapid decay | Proved, including every polynomially weighted dyadic square moment |
+| Weighted divisor head/tail moments and complete transformed contour estimates | Open |
 | Complete actual residual bound with one height-independent constant | Open |
 | Unconditional I1 and remaining Ingham/Z03 obligations | Not closed |
 
@@ -186,9 +187,11 @@ tail bound and convergence of moments after subtraction of any fixed continuous
 function. The sharp integer-scale block moment is separately proved in
 [SmoothedDivisorMoment.lean](Analysis/SmoothedDivisorMoment.lean); the two series
 are identified by smoothedDivisorSeries_eq_dampedDivisorSeries.
-The next checks are the exact Mellin representation, moving residue, and
-central functional-equation contour estimates. The original left-line kernel
-far tails are already bounded in ActualZetaSquareMellinTail.lean.
+The next checks are the exact Mellin representation, the weighted divisor
+head/tail mean values, and the complete functional-equation contour assembly.
+The moving residue and central chi factors are now proved unconditionally;
+the original left-line tails have decay to every inverse-power order in
+ActualZetaSquareMellinTail.lean.
 
 External reference for the representation strategy:
 [Chourasiya--Simonic, Section 5.1](https://arxiv.org/html/2507.15184v2).

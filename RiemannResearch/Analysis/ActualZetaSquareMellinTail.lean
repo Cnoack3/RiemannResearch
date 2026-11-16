@@ -26,7 +26,9 @@ growth theorem supplies the actual zeta bound, including the compact range.
 
 On Re z = -3/4 the resulting kernel has arbitrary-order inverse-power
 decay when |t| <= 4 |Im z|. Both outward tail integrals beyond U/2 are
-bounded by 2 C/U for U >= 2, |t| <= 2 U and every Y >= 1.
+bounded by C_m Y^(-3/4) U^(-m-1), for U >= 2, |t| <= 2 U
+and every real Y > 0. The scale-independent Y >= 1 estimates are retained
+as corollaries.
 
 Source for the kernel and contour setting: Chourasiya--Simonic,
 arXiv:2507.15184v2, Section 5.1, equations (51)--(52):
@@ -133,7 +135,7 @@ theorem exists_zetaSquareMellinKernel_left_far_bound (m : ℕ) :
         (by positivity : 0 ≤ 1296 * Z ^ 2)
       nlinarith [hb]
 
-theorem continuous_zetaSquareMellinKernel_left {Y : ℝ} (hY : 1 ≤ Y) (t τ : ℝ) :
+theorem continuous_zetaSquareMellinKernel_left_of_pos {Y : ℝ} (hY : 0 < Y) (t τ : ℝ) :
     Continuous (fun v : ℝ => zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + (τ * v : ℝ) * I)) := by
   have ha : Continuous (fun v : ℝ => (-3 / 4 : ℂ) + (τ * v : ℝ) * I) := by fun_prop
   have hg : Continuous (fun v : ℝ => Gamma ((-3 / 4 : ℂ) + (τ * v : ℝ) * I)) := by
@@ -160,6 +162,116 @@ theorem continuous_zetaSquareMellinKernel_left {Y : ℝ} (hY : 1 ≤ Y) (t τ : 
     norm_num at hr
   exact (hg.mul hp).mul (hz.pow 2)
 
+/-- The complete smoothing-scale dependence on the left line. -/
+theorem norm_zetaSquareMellinKernel_left_scale {Y : ℝ} (hY : 0 < Y) (t v : ℝ) :
+    ‖zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + v * I)‖ =
+      Y ^ (-3 / 4 : ℝ) * ‖zetaSquareMellinKernel 1 t ((-3 / 4 : ℂ) + v * I)‖ := by
+  have hy : ‖(Y : ℂ) ^ ((-3 / 4 : ℂ) + v * I)‖ = Y ^ (-3 / 4 : ℝ) := by
+    rw [Complex.norm_cpow_eq_rpow_re_of_pos hY]
+    norm_num
+  simp only [zetaSquareMellinKernel, norm_mul, hy, Complex.ofReal_one,
+    Complex.one_cpow, mul_one]
+  ring
+
+theorem exists_zetaSquareMellinKernel_left_far_bound_scaled (m : ℕ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ Y t v : ℝ, 0 < Y → 1 ≤ |v| → |t| ≤ 4 * |v| →
+      ‖zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + v * I)‖ * |v| ^ m ≤
+        C * Y ^ (-3 / 4 : ℝ) := by
+  obtain ⟨C, hC, hCb⟩ := exists_zetaSquareMellinKernel_left_far_bound m
+  refine ⟨C, hC, ?_⟩
+  intro Y t v hY hv ht
+  rw [norm_zetaSquareMellinKernel_left_scale hY]
+  have hh := mul_le_mul_of_nonneg_left (hCb 1 t v (by norm_num) hv ht)
+    (Real.rpow_nonneg hY.le (-3 / 4))
+  nlinarith [hh]
+
+/-- Both original left-line tails decay to every inverse-power order,
+uniformly in the height, with the exact scale factor for every Y > 0. -/
+theorem exists_zetaSquareMellinKernel_left_tail_integral_pow_bound_scaled (m : ℕ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ Y t U τ : ℝ,
+      0 < Y → 2 ≤ U → |t| ≤ 2 * U → |τ| = 1 →
+      IntegrableOn
+        (fun v : ℝ => zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + (τ * v : ℝ) * I))
+        (Ioi (U / 2)) volume ∧
+      ‖∫ v : ℝ in Ioi (U / 2),
+        zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + (τ * v : ℝ) * I)‖ * U ^ m ≤
+          C * Y ^ (-3 / 4 : ℝ) / U := by
+  obtain ⟨C,hC,hCb⟩ := exists_zetaSquareMellinKernel_left_far_bound_scaled (m+2)
+  refine ⟨2 ^ (m+1) * C, by positivity, ?_⟩
+  intro Y t U τ hY hU ht hτ
+  have hU0 : 0 < U := by linarith
+  have ha0 : 0 < U / 2 := by linarith
+  let B : ℝ := (C * Y ^ (-3 / 4 : ℝ)) * 2 ^ m / U ^ m
+  let f : ℝ → ℂ := fun v => zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + (τ * v : ℝ) * I)
+  have henv : IntegrableOn (fun v : ℝ => B * v ^ (-2 : ℝ)) (Ioi (U / 2)) volume :=
+    (integrableOn_Ioi_rpow_of_lt (by norm_num : (-2 : ℝ) < -1) ha0).const_mul B
+  have hb (v : ℝ) (hv : v ∈ Ioi (U / 2)) : ‖f v‖ ≤ B * v ^ (-2 : ℝ) := by
+    have hv1 : 1 ≤ v := by have := hv; change U / 2 < v at this; linarith
+    have hv0 : 0 < v := by linarith
+    have hUv : U ≤ 2 * v := by have := hv; change U / 2 < v at this; linarith
+    have he : |τ * v| = v := by rw [abs_mul,hτ,one_mul,abs_of_pos hv0]
+    have hh := hCb Y t (τ * v) hY (by simpa only [he] using hv1) (by
+      rw [he]; linarith)
+    rw [he] at hh
+    have hh' : ‖f v‖ * v ^ (m+2) ≤ C * Y ^ (-3 / 4 : ℝ) := hh
+    have hx : (‖f v‖ * v ^ 2) * U ^ m ≤ (C * Y ^ (-3 / 4 : ℝ)) * 2 ^ m := by
+      calc
+        _ ≤ (‖f v‖ * v ^ 2) * (2*v) ^ m := by gcongr
+        _ = (‖f v‖ * v ^ (m+2)) * 2 ^ m := by
+          rw [mul_pow, pow_add]
+          ring
+        _ ≤ (C * Y ^ (-3 / 4 : ℝ)) * 2 ^ m := by gcongr
+    have hx' : ‖f v‖ * v ^ 2 ≤ B := (le_div_iff₀ (pow_pos hU0 m)).2 hx
+    rw [Real.rpow_neg hv0.le, Real.rpow_two]
+    simpa only [div_eq_mul_inv] using (le_div_iff₀ (sq_pos_of_pos hv0)).2 hx'
+  have hbae : ∀ᵐ v ∂volume.restrict (Ioi (U / 2)), ‖f v‖ ≤ B * v ^ (-2 : ℝ) := by
+    filter_upwards [ae_restrict_mem measurableSet_Ioi] with v hv
+    exact hb v hv
+  have hi : IntegrableOn f (Ioi (U / 2)) volume :=
+    henv.mono' (continuous_zetaSquareMellinKernel_left_of_pos hY t τ).aestronglyMeasurable hbae
+  refine ⟨hi,?_⟩
+  have hh : ‖∫ v in Ioi (U / 2), f v‖ ≤ 2 * B / U := by
+    calc
+      _ ≤ ∫ v in Ioi (U / 2), ‖f v‖ := norm_integral_le_integral_norm _
+      _ ≤ ∫ v in Ioi (U / 2), B * v ^ (-2 : ℝ) :=
+        integral_mono_ae hi.norm henv hbae
+      _ = 2 * B / U := by
+        rw [integral_const_mul, integral_Ioi_rpow_of_lt (by norm_num) ha0]
+        norm_num [Real.rpow_neg_one]
+        field_simp
+  calc
+    _ ≤ (2 * B / U) * U ^ m := mul_le_mul_of_nonneg_right hh (pow_nonneg hU0.le m)
+    _ = (2 ^ (m+1) * C) * Y ^ (-3 / 4 : ℝ) / U := by
+      dsimp [B]
+      rw [pow_succ]
+      field_simp
+
+
+
+/-- The original continuity interface for smoothing scales at least one. -/
+theorem continuous_zetaSquareMellinKernel_left {Y : ℝ} (hY : 1 ≤ Y) (t τ : ℝ) :
+    Continuous (fun v : ℝ =>
+      zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + (τ * v : ℝ) * I)) :=
+  continuous_zetaSquareMellinKernel_left_of_pos (by linarith) t τ
+
+/-- A scale-independent corollary for all Y >= 1. -/
+theorem exists_zetaSquareMellinKernel_left_tail_integral_pow_bound (m : ℕ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ Y t U τ : ℝ,
+      1 ≤ Y → 2 ≤ U → |t| ≤ 2 * U → |τ| = 1 →
+      IntegrableOn
+        (fun v : ℝ => zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + (τ * v : ℝ) * I))
+        (Ioi (U / 2)) volume ∧
+      ‖∫ v : ℝ in Ioi (U / 2),
+        zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + (τ * v : ℝ) * I)‖ * U ^ m ≤ C / U := by
+  obtain ⟨C, hC, hCb⟩ := exists_zetaSquareMellinKernel_left_tail_integral_pow_bound_scaled m
+  refine ⟨C, hC, ?_⟩
+  intro Y t U τ hY hU ht hτ
+  obtain ⟨hi, hb⟩ := hCb Y t U τ (by linarith) hU ht hτ
+  refine ⟨hi, hb.trans ?_⟩
+  apply div_le_div_of_nonneg_right _ (by linarith : 0 ≤ U)
+  have hp := Real.rpow_le_one_of_one_le_of_nonpos hY (by norm_num : (-3 / 4 : ℝ) ≤ 0)
+  nlinarith [mul_le_mul_of_nonneg_left hp hC]
+
 /-- Both outward parametrizations of the far left-line tails are integrable
 and bounded uniformly in the outer height and smoothing scale. -/
 theorem exists_zetaSquareMellinKernel_left_tail_integral_bound :
@@ -170,38 +282,8 @@ theorem exists_zetaSquareMellinKernel_left_tail_integral_bound :
         (Ioi (U / 2)) volume ∧
       ‖∫ v : ℝ in Ioi (U / 2),
         zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + (τ * v : ℝ) * I)‖ ≤ 2 * C / U := by
-  obtain ⟨C,hC,hCb⟩ := exists_zetaSquareMellinKernel_left_far_bound 2
-  refine ⟨C,hC,?_⟩
-  intro Y t U τ hY hU ht hτ
-  have hU0 : 0 < U := by linarith
-  have ha0 : 0 < U / 2 := by linarith
-  let f : ℝ → ℂ := fun v => zetaSquareMellinKernel Y t ((-3 / 4 : ℂ) + (τ * v : ℝ) * I)
-  have henv : IntegrableOn (fun v : ℝ => C * v ^ (-2 : ℝ)) (Ioi (U / 2)) volume :=
-    (integrableOn_Ioi_rpow_of_lt (by norm_num : (-2 : ℝ) < -1) ha0).const_mul C
-  have hb (v : ℝ) (hv : v ∈ Ioi (U / 2)) : ‖f v‖ ≤ C * v ^ (-2 : ℝ) := by
-    have hv1 : 1 ≤ v := by have := hv; change U / 2 < v at this; linarith
-    have hv0 : 0 < v := by linarith
-    have he : |τ * v| = v := by rw [abs_mul,hτ,one_mul,abs_of_pos hv0]
-    have hh := hCb Y t (τ * v) hY (by simpa only [he] using hv1) (by
-      rw [he]; have := hv; change U / 2 < v at this; linarith)
-    rw [he] at hh
-    have hh' : ‖f v‖ * v ^ 2 ≤ C := hh
-    rw [Real.rpow_neg hv0.le, Real.rpow_two]
-    simpa only [div_eq_mul_inv] using (le_div_iff₀ (sq_pos_of_pos hv0)).2 hh'
-  have hbae : ∀ᵐ v ∂volume.restrict (Ioi (U / 2)), ‖f v‖ ≤ C * v ^ (-2 : ℝ) := by
-    filter_upwards [ae_restrict_mem measurableSet_Ioi] with v hv
-    exact hb v hv
-  have hi : IntegrableOn f (Ioi (U / 2)) volume :=
-    henv.mono' (continuous_zetaSquareMellinKernel_left hY t τ).aestronglyMeasurable hbae
-  refine ⟨hi,?_⟩
-  change ‖∫ v in Ioi (U / 2), f v‖ ≤ _
-  calc
-    _ ≤ ∫ v in Ioi (U / 2), ‖f v‖ := norm_integral_le_integral_norm _
-    _ ≤ ∫ v in Ioi (U / 2), C * v ^ (-2 : ℝ) :=
-      integral_mono_ae hi.norm henv hbae
-    _ = 2 * C / U := by
-      rw [integral_const_mul, integral_Ioi_rpow_of_lt (by norm_num) ha0]
-      norm_num [Real.rpow_neg_one]
-      field_simp
+  obtain ⟨C, hC, hCb⟩ := exists_zetaSquareMellinKernel_left_tail_integral_pow_bound 0
+  refine ⟨C / 2, by positivity, ?_⟩
+  simpa only [pow_zero, mul_one, show 2 * (C / 2) = C by ring] using hCb
 
 end RiemannResearch.Analysis
