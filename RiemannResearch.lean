@@ -22,6 +22,8 @@ import RiemannResearch.Analysis.GaussianHorizontalShift
 import RiemannResearch.Analysis.GaussianRayRotation
 import RiemannResearch.Analysis.ConreyBaluyotGaussianRays
 import RiemannResearch.Analysis.ConreyBaluyotGaussianEstermannIntegrability
+import RiemannResearch.Analysis.ConreyBaluyotRationalTwist
+import RiemannResearch.Analysis.ConreyBaluyotGaussianEstermann
 import RiemannResearch.Analysis.CompressionVariance
 import RiemannResearch.RH.QDensityCouplingVariance
 import RiemannResearch.Analysis.ComplexLogLiftUniqueness

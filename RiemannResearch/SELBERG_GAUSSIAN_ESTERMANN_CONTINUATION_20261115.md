@@ -2,6 +2,17 @@
 
 Prepared 15 November 2026, America/Los_Angeles.
 
+## Continuation update — 16 November 2026
+
+The exact rational-twist assembly listed below is now closed by
+`mollifiedGaussianMoment_eq_estermann`, with both signs, reduced modulus,
+zero indices and the original signed residue. See
+[the updated research agenda](SELBERG_RATIONAL_TWIST_CONTINUATION_20261116.md)
+for the strengthened coefficient identities, individual-ray angle
+independence, exact positive-angle boundary limit, and the remaining
+global Mellin contour shift. The dated text below records the earlier
+checkpoint.
+
 ## What this work closes
 
 The ray-rotation obligation from the uploaded continuation is proved. For

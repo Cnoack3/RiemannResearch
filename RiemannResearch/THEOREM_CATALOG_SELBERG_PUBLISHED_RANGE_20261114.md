@@ -1,5 +1,38 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## Exact rational-twist assembly (16 November 2026)
+
+Priority 1 of the Gaussian-ray/Estermann continuation is closed.
+`Analysis/ConreyBaluyotRationalTwist.lean` proves the exact gcd cast
+identity, positive coprime reduction, signed rational additive characters,
+and coefficient cancellation for arbitrary complex exponents and
+coefficients with positive real bases. Rational presentation changes
+preserve every damped term and the entire damped series.
+
+`Analysis/ConreyBaluyotGaussianEstermann.lean` proves
+`finite_gaussianRay_sum_eq_estermann` for arbitrary complex coefficient
+arrays and arbitrary positive finite supports, with arbitrary real l,u.
+The actual specialization `mollifiedGaussianMoment_eq_estermann`
+retains the original finite mollifier coefficients, the reduced modulus,
+both outward rays, exponents alpha=2*l-1 and beta=0, both signed residue
+classes, all zero-index conventions, and the signed correction
+`-(2*sqrt(pi)/Delta)*mollifiedGaussianPoleCoeff`.
+
+The analytic hypotheses are Delta>0 and 0<theta<pi. The actual moment
+additionally uses y>0 and 0<l<1. No convergence or analytic-bound provider
+is assumed. Each individual signed Estermann ray is angle-independent
+on (0,pi), for arbitrary real l,u. The complete finite expression has an
+exact limit as theta decreases to zero after integration, proved by
+`tendsto_mollifiedGaussianEstermannValue_zero`; this does not authorize
+the sum/integral exchange at theta=0.
+
+See [the updated continuation](SELBERG_RATIONAL_TWIST_CONTINUATION_20261116.md).
+The next task is the global Mellin contour shift, including both remote
+sides and coincident poles. Initial Mellin inversion and local simple
+residues are already established. Uniform cofinal moment and independent
+Ingham providers remain open; no density or RH conclusion is asserted.
+The earlier dated sections below are historical checkpoints.
+
 ## Joint absolute convergence on Estermann rays (15 November 2026)
 
 The new module Analysis/ConreyBaluyotGaussianEstermannIntegrability.lean
