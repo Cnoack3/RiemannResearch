@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-16",
+  "base_commit": "b9d28e2775cfe2f846798fb307b9460e99f6b59f",
+  "backend": "Bazel --config=buildbuddy",
+  "scope": "Guarded axiom snippet importing all four final modules and their transitive dependencies; full-project publication is a separate managed checkpoint.",
+  "job_id": "job_fy862Q7XW4RHgy83YBm0P6_wwIoPJFb9",
+  "state": "succeeded",
+  "verified": true,
+  "elapsed_seconds": 33.263,
+  "snippet_sha256": "3fd9fe140b795c0823f3c2821188c1fe5b142b22b608c7866032fbb346c595cf",
+  "buildbuddy": "https://app.buildbuddy.io/invocation/d458d53b-8a17-4e54-8801-75c64f91bb09",
+  "axiom_audit": {
+    "principal_results": 10,
+    "expected_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "method": "Guarded #print axioms messages; exact expected output matched"
+  },
+  "files": [
+    {
+      "path": "RiemannResearch/LinearAlgebra/HeadTailDriftObstruction.lean",
+      "sha256": "3adb1e54a5d36f876910053b797910e50f2f08f93447f42fba801d9fd755cc4c",
+      "theorems": 10
+    },
+    {
+      "path": "RiemannResearch/LinearAlgebra/ReciprocalMaxGreen.lean",
+      "sha256": "999aa3f92f5571aa3932f96353af335173283782ec24d9fa7935f5a879aab2ec",
+      "theorems": 11
+    },
+    {
+      "path": "RiemannResearch/Analysis/FiniteCoordinateDecoding.lean",
+      "sha256": "418ab25735af1e8c79264acb755d8b46036f6e3c46a3ee73f59881692f115bf6",
+      "theorems": 4
+    },
+    {
+      "path": "RiemannResearch/LinearAlgebra/ThreeBlockOptimizerObstruction.lean",
+      "sha256": "3022415972d3b7570a779e3ad00ed6d993631bd54424c5326659b8fb63acc4d0",
+      "theorems": 13
+    }
+  ],
+  "publication": "This manifest records focused verification. Final publication and exact integrated commit are recorded in the managed checkpoint terminal response and completion receipt.",
+  "fourth_module_check": {
+    "job_id": "job_qSZ6qCdJcxeCNxq25QsSwglJyXkVUS-7",
+    "state": "succeeded",
+    "verified": true,
+    "elapsed_seconds": 30.775,
+    "buildbuddy": "https://app.buildbuddy.io/invocation/b664338f-cae1-4cd3-9d96-ce64e3f23cbc"
+  }
+}
