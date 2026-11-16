@@ -184,3 +184,14 @@ Job `job_xAhpgx5jIhHCYWwQTWv1rPXEgARUYX-D`, 51.966 seconds, Bazel/BuildBuddy.
 The 14 new Lean modules contain 92 theorem declarations, including private
 helpers. No source placeholders or new axiom declarations were found.
 See [verification and reproducible audit](EXACT_HEAD_GREEN_VERIFICATION_20261116.md).
+
+## Final complete code checkpoint
+
+`job_FiFArmWFyGNXOAtlBlmLG5bPK0kgfnfo` passed the full
+`//:RiemannResearch` target in 191.946 seconds and pushed
+`bec4737b714907f72a0c62f1f097cbc29a90fc08`.
+[BuildBuddy invocation](https://app.buildbuddy.io/invocation/17e6a627-15a6-45f1-b776-68fe78b84b15).
+
+The relative-rate improvement compares E=O(q/W) with the paper's preferred
+E=O(q/x). The absolute E=o(1/log x) formulation is a separate sufficient route;
+it alone does not imply the relative-energy hypothesis.

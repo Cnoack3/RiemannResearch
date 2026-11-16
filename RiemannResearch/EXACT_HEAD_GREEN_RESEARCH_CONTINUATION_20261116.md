@@ -5,7 +5,7 @@ Source: the attached 17-page *Best Nyman Beurling for RH.pdf*, internally titled
 *Exact-Head Green Profiles in the Nyman--Beurling Program*, 27 July 2026.
 This is not the longer A1--A2 audited revision from the RH part 2 review.
 
-## Main improvement: a weaker sufficient analytic target
+## Main improvement: a weaker relative-dispersion target
 
 The paper asks for E_aff=o(1/log x) and a signed affine moment tending to zero.
 The strongest new Lean reduction instead suffices with constants delta>0,
@@ -16,6 +16,9 @@ W_x E_x \le Cq_x,\qquad m_x\le (1-\delta)q_x+B.
 $
 
 The simpler bounded-moment condition m_x<=B is the special case delta=1.
+The relative-rate improvement is from the paper's preferred E_x=O(q_x/x)
+to E_x=O(q_x/W_x). The absolute o(1/log x) formulation is a separate route;
+it alone does not assert a bound on W_x E_x/q_x.
 
 Here W_x=sum_{1<=d<=x} mu(d)^2/d, E_x is the weighted squared profile error,
 and m_x=sum mu(d) h_x(d)/d. The profile need not be affine.

@@ -23,18 +23,20 @@ The 14 newly authored source modules were also scanned for `sorry`,
 `admit`, `axiom` declarations and `unsafe` declarations; no matches were found.
 This source scan covers the new modules, not every pre-existing repository file.
 
-## Published full checkpoints before the final assembly
+## Published full checkpoints
 
 | Commit | Full target | Build seconds | Evidence |
 |---|---|---:|---|
 | [c20ca4a](https://github.com/Cnoack3/RiemannResearch/commit/c20ca4aa4e1d728c38a2da59826d330b8834325c) | //:RiemannResearch | 227.504 | [Build](https://app.buildbuddy.io/invocation/e67bbbea-fd1a-481e-88a5-b3aba0f00356) |
 | [c8e343a](https://github.com/Cnoack3/RiemannResearch/commit/c8e343a60365e47f39eff95d738cdc3d518e8f83) | //:RiemannResearch | 208.605 | [Build](https://app.buildbuddy.io/invocation/403192db-aaf6-4d9c-b608-42dc0e30e57e) |
 | [2042719](https://github.com/Cnoack3/RiemannResearch/commit/2042719725f4edd784a9eecf2767827b1d0dfe94) | //:RiemannResearch | 197.319 | [Build](https://app.buildbuddy.io/invocation/4a8c28bb-378f-4435-8028-37ffd1995348) |
+| [bec4737](https://github.com/Cnoack3/RiemannResearch/commit/bec4737b714907f72a0c62f1f097cbc29a90fc08) | //:RiemannResearch | 191.946 | [Build](https://app.buildbuddy.io/invocation/17e6a627-15a6-45f1-b776-68fe78b84b15) |
 
-The managed checkpoint publishing the revision containing this document runs
-the full target again. Its terminal commit SHA and BuildBuddy invocation are
-the authoritative final publication record. Focused snippet success and the
-axiom audit do not substitute for that full checkpoint.
+Final code checkpoint: `job_FiFArmWFyGNXOAtlBlmLG5bPK0kgfnfo`.
+It succeeded, committed and pushed `bec4737b714907f72a0c62f1f097cbc29a90fc08`;
+the build scope was the full `//:RiemannResearch` target.
+This follow-up changes documentation only. The complete code checkpoint and
+the guarded transitive axiom audit are separate evidence records.
 
 ## Reproducible guarded Lean audit
 
