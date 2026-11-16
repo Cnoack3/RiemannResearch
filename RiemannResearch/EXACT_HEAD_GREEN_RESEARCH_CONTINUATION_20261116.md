@@ -231,7 +231,7 @@ identify an asymptotic transition scale.
 | R2 dyadic ledger | Computed, external | Canonical and best-affine block energies through 23 | Certified block intervals and larger cutoffs if justified |
 | R3 digit/carry formulas | Partial, Lean checked | General digit recursion, primitive arithmetic bridge, affine completion/shift | Identify the actual boundary carry/discrepancy with the affine component |
 | R4 signal-specific discrepancy | Open | Actual tail mass, low-conductor bound, strict quadratic gap criterion | Jointly cofinal W E<=k^2 q^2+Cq with k<delta, without assuming bounded q or RH |
-| R5 moment admissibility | Partial, Lean checked | Unique fit at all x>=2, exact Cramer moment numerator | Fixed proportional moment deficit m<=(1-delta)q+B; bounded m is sufficient |
+| R5 moment admissibility | Partial, Lean checked | Unique fit at all x>=2, exact signed observation, normal-defect certificates, centered-probe deficit criterion | Uniform centered-probe energy bound or another jointly cofinal proportional moment deficit |
 | R6 falsification | Extended, external | No blow-up observed through 23 | Further certified stages; no finite test is an asymptotic proof |
 
 Priority order for continuation:
@@ -241,9 +241,10 @@ Priority order for continuation:
    accumulation with every simultaneous jump term retained.
 2. The atom/floor identification is completed. Use the checked common
    residual and the proper-divisor first-difference formula in certificate assembly.
-3. Form the exact signed normal numerator at each cutoff and pursue the
-   proportional deficit or a uniform upper bound directly. Bounded coefficients
-   are a sufficient stronger route and need no PNT in this reduction.
+3. Use the explicit signed-moment probe and its normal-defect error bound
+   to certify R5 directly. For an analytic route, seek alpha<1 and a uniform
+   bound for the energy of probe-alpha*target after removing an upper-span
+   component. This implies a proportional deficit without first bounding q.
 4. Prove the actual boundary carry/discrepancy decomposition, remove the affine
    component algebraically, and target the weaker W E_tail<=Cq budget.
 5. Keep any claimed uniform bound separate from finite diagnostics; check that
@@ -326,6 +327,45 @@ the test function d floor(r/d). It retains all progression tails and imposes
 no matrix-inverse premise. This is a quantitative route from rational trial
 coefficients to certified R1/R5 profile data; it does not supply a uniform
 bound on the actual affine coefficients or signed moment.
+
+## Direct signed-moment observation and a new R5 route
+
+Let C_P(r)=A_1(r)-1 be the actual target and let R be its normal residual.
+The affine signed moment has the exact representation
+
+$
+m=\langle R,\psi_x\rangle,
+$
+
+where the explicit probe psi_x depends only on the cutoff's affine sampling
+weights and abscissae. The formula holds for every affine normal fit at x>=2.
+It keeps the signed coefficients together. Its evaluation on a rational trial
+residual differs from the actual moment by a squared error at most
+
+$
+D\,\|\psi_x\|_w^2,
+$
+
+where D is the already-proved inverse-free normal-defect budget.
+
+For every v in the upper gcd-atom span, the exact normal equations give
+
+$
+m-\alpha q=\langle R,\psi_x-\alpha C_P-v\rangle,\qquad
+(m-\alpha q)^2\le q\,\|\psi_x-\alpha C_P-v\|_w^2.
+$
+
+Consequently, a bound on the last energy by M gives, for every eps>0,
+
+$
+m\le(\alpha+\varepsilon)q+\frac{M}{4\varepsilon}.
+$
+
+Theorem `fitted_moment_deficit_of_probe_bound` proves this implication
+without a bounded-q assumption. Uniform alpha<1 and M, with
+0<eps<1-alpha, would supply R5 with delta=1-alpha-eps and B=M/(4eps).
+Producing such upper-span corrections v and proving a uniform M remain
+**Open**. R4 dispersion must still hold on a common cofinal sequence.
 
 ## Files and evidence
 

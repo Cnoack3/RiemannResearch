@@ -299,4 +299,36 @@ from those four stages; R4 and R5 remain open.
 The combined focused check and all thirteen guarded transitive axiom checks
 passed in `job_XIOXayvk89L9-EO3AEXuGMmy03S2MVAo` (188.427 seconds).
 [Focused build](https://app.buildbuddy.io/invocation/32fa425d-4161-4e4e-b7e0-2c3f773746b7).
-The managed full-project checkpoint gates publication of this revision.
+Full checkpoint `job_tuphtB8nUFvVcHK8Lliv6lb9EOo0rX-u` passed
+`//:RiemannResearch` in 275.52 seconds and published
+`14242515fa8e7a06b362f0e0d216502d32a76306`.
+[Full build](https://app.buildbuddy.io/invocation/8aa23a8b-095a-4038-b436-3932b4b430d2).
+
+## Continuation: direct signed moment and a centered-probe criterion
+
+- `Analysis/FiniteAffineMomentFunctional.lean` proves
+  `affine_signed_moment_eq_dual`, expressing any signed affine-fit moment
+  as a fixed linear functional of the original data; `pairing_finite_combination`
+  assembles that functional into one observation; `one_sided_of_square_budget`
+  supplies an explicit Young inequality with constants.
+- `RH/ExactHeadAtomMoment.lean` defines the actual cutoff-dependent
+  `fittedMomentProbe` and `atomFittedMoment`.
+  `fitted_moment_eq_probe` identifies every actual affine normal fit with
+  that single observation, for all x>=2.
+  `trial_fitted_moment_error_sq_le` certifies the moment directly from the
+  trial normal-equation defect.
+- `target_pairing_eq_energy`, `fitted_moment_gap_eq_pairing` and
+  `fitted_moment_gap_sq_le` remove any upper-span correction exactly.
+  `fitted_moment_deficit_of_probe_bound` proves
+  m <= (alpha+eps)q + M/(4eps) from a bound M for the centered probe's
+  complete weighted energy. Choosing alpha+eps<1 supplies the R5 deficit.
+  No prior bounded-q hypothesis is used.
+
+The uniform centered-probe energy provider remains **Open**. R4 must also
+hold on a common cofinal sequence. This adds a route to the agenda, not
+an unconditional R5 or RH proof.
+
+The direct-moment stage and its three guarded axiom checks passed focused job
+`job_kUHNYsBfNFggEYdYxC0gxerx_nRmjN_A` in 49.069 seconds.
+[Focused build](https://app.buildbuddy.io/invocation/e46f068d-4fb6-44ae-9883-a2e614b95a35).
+All sixteen guards are retained in the project audit module.

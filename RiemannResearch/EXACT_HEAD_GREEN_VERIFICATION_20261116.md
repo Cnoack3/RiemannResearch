@@ -145,3 +145,23 @@ The guards are retained in [ExactHeadGreenAxiomAudit.lean](RH/ExactHeadGreenAxio
 and imported by the project aggregate. The authored proof sources were scanned
 for proof placeholders and new axiom/unsafe declarations, with no matches.
 The external rational data at 7,11,13 are not thereby kernel-replayed.
+
+## Fourth continuation checkpoint
+
+Full job `job_tuphtB8nUFvVcHK8Lliv6lb9EOo0rX-u` succeeded and pushed
+`14242515fa8e7a06b362f0e0d216502d32a76306` after 275.52 seconds.
+Scope: `//:RiemannResearch`, including the cutoff-five certificate,
+optimizer stability, and the permanent thirteen-guard axiom audit.
+[Full build](https://app.buildbuddy.io/invocation/8aa23a8b-095a-4038-b436-3932b4b430d2).
+
+## Direct-moment continuation audit
+
+Focused job `job_kUHNYsBfNFggEYdYxC0gxerx_nRmjN_A` passed in 49.069 seconds.
+It checks the exact affine signed-moment observation, the trial-moment error
+bound, and the centered-probe deficit criterion. Three additional guarded
+transitive axiom checks require exactly `[propext, Classical.choice, Quot.sound]`.
+The permanent audit module now contains sixteen guards.
+
+[Focused build](https://app.buildbuddy.io/invocation/e46f068d-4fb6-44ae-9883-a2e614b95a35).
+Combined snippet SHA-256:
+`022c86e373469af2f3abbb54c410806a0198f1e1469da9c65279a5ca80e5bde9`.

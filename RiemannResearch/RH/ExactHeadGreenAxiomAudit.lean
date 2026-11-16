@@ -1,3 +1,4 @@
+import RiemannResearch.RH.ExactHeadAtomMoment
 import RiemannResearch.RH.ExactHeadAtomStability
 import RiemannResearch.RH.ExactHeadAtomStageFive
 import RiemannResearch.RH.ExactHeadAtomCertification
@@ -121,3 +122,30 @@ info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.trial_profile_error_sq_l
 #guard_msgs in
 #print axioms
   ExactHeadAtomOptimizer.trial_profile_error_sq_le
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.fitted_moment_eq_probe' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.fitted_moment_eq_probe
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.trial_fitted_moment_error_sq_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.trial_fitted_moment_error_sq_le
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.fitted_moment_deficit_of_probe_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.fitted_moment_deficit_of_probe_bound
