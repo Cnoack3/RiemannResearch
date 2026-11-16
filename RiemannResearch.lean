@@ -1,3 +1,7 @@
+import RiemannResearch.RH.ExactHeadGreenQuadraticCriterion
+import RiemannResearch.RH.ExactHeadAtomOptimizer
+import RiemannResearch.Analysis.FiniteWeightedSpan
+import RiemannResearch.Analysis.GreenProfileQuadratic
 import RiemannResearch.RH.ExactHeadGcdAtoms
 import RiemannResearch.RH.MobiusHeadGreenNormal
 import RiemannResearch.RH.MobiusAffineMomentBounds

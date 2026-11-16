@@ -131,4 +131,55 @@ theorem atom_one_eq_moebius_grid (P r : ℕ) (hP : P ≠ 0) :
     atom P 1 r = ∑ e ∈ P.divisors, (ArithmeticFunction.moebius e : ℝ) * grid e r := by
   simpa using atom_eq_moebius_grid_sum P 1 r hP (Nat.one_mem_divisors.mpr hP)
 
+
+theorem atom_zero_of_lt (P d r : ℕ) (hr : r < d) : atom P d r = 0 := by
+  apply Finset.sum_eq_zero
+  intro n hn
+  have hne : Nat.gcd n P ≠ d := by
+    intro h
+    have hd : d ∣ n := h ▸ Nat.gcd_dvd_left n P
+    have hnpos := (Finset.mem_Icc.mp hn).1
+    have hdn := Nat.le_of_dvd hnpos hd
+    have hnr := (Finset.mem_Icc.mp hn).2
+    omega
+  simp [hne]
+
+theorem atom_succ (P d r : ℕ) :
+    atom P d (r + 1) = atom P d r + if Nat.gcd (r + 1) P = d then 1 else 0 := by
+  unfold atom
+  rw [Finset.sum_Icc_succ_top (by omega)]
+
+def synthesis (P : ℕ) (D : Finset ℕ) (c : ℕ → ℝ) (r : ℕ) : ℝ :=
+  ∑ d ∈ D, c d * atom P d r
+
+@[simp] theorem synthesis_zero (P : ℕ) (D : Finset ℕ) (c : ℕ → ℝ) :
+    synthesis P D c 0 = 0 := by simp [synthesis,atom]
+
+/-- First differences recover every coefficient at its divisor label. -/
+theorem synthesis_divisor_jump (P : ℕ) (D : Finset ℕ) (c : ℕ → ℝ)
+    (d : ℕ) (hd : d ∈ D) (hdpos : 0 < d) (hdP : d ∣ P) :
+    synthesis P D c d - synthesis P D c (d - 1) = c d := by
+  have hs : d - 1 + 1 = d := by omega
+  have hj (e : ℕ) : atom P e d =
+      atom P e (d - 1) + if d = e then 1 else 0 := by
+    have h := atom_succ P e (d - 1)
+    rw [hs, Nat.gcd_eq_left hdP] at h
+    exact h
+  unfold synthesis
+  simp_rw [hj, mul_add, Finset.sum_add_distrib]
+  simp [hd]
+
+/-- The only coefficient invisible below P is the endpoint coefficient.
+Proper-divisor coefficients are determined uniquely by the sampled synthesis. -/
+theorem proper_coefficients_unique (P : ℕ) (D : Finset ℕ) (c u : ℕ → ℝ)
+    (heq : ∀ r, 0 < r → r < P → synthesis P D c r = synthesis P D u r)
+    (d : ℕ) (hd : d ∈ D) (hdpos : 0 < d) (hdP : d ∣ P) (hdlt : d < P) :
+    c d = u d := by
+  have hp : synthesis P D c (d - 1) = synthesis P D u (d - 1) := by
+    by_cases h : d - 1 = 0
+    · simp [h]
+    · exact heq (d - 1) (Nat.pos_of_ne_zero h) (by omega)
+  rw [← synthesis_divisor_jump P D c d hd hdpos hdP,
+    ← synthesis_divisor_jump P D u d hd hdpos hdP, heq d hdpos hdlt, hp]
+
 end RiemannResearch.RH.ExactHeadGcdAtoms

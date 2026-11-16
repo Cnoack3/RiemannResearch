@@ -5,10 +5,37 @@ Source: the attached 17-page *Best Nyman Beurling for RH.pdf*, internally titled
 *Exact-Head Green Profiles in the Nyman--Beurling Program*, 27 July 2026.
 This is not the longer A1--A2 audited revision from the RH part 2 review.
 
-## Main improvement: a weaker relative-dispersion target
+## Continuation: actual optimizer and a strict quadratic gap
+
+The finite optimizer identification is now proved in Lean. The gcd-atom and
+floor upper spans agree for every positive period. Their weighted normal
+residuals agree on every nonterminal residue, so their q and profile agree.
+First differences recover all proper-divisor coefficients; the period-endpoint
+atom is zero on the optimization domain.
+
+The strongest current conditional theorem permits
+
+$
+W_x E_x \le k^2 q_x^2+Cq_x,\qquad
+m_x\le(1-\delta)q_x+B,\qquad 0\le k<\delta.
+$
+
+It gives (delta-k)^2 q <= 2(delta-k)B+2C+2/(x+1), hence a cofinal
+uniform bound for the legal exact-head approximants and RH. This is a conditional
+research reduction: the actual uniform dispersion and signed-moment bounds
+remain open. It does not assume q is bounded while proving that conclusion.
+
+R1 now has external exact-rational certificates at x=5,7,11,13. They use the
+repository's complete Pareto tail formulas, outward rational rounding and
+Neumann defect checks, not a floating-point accuracy assumption. The individual
+endpoint computations have not yet been replayed in Lean. Source and precise
+bounds are retained next to the earlier numerical records. No finite set of
+certificates proves the cofinal analytic hypotheses.
+
+## Earlier relative-dispersion target (the k=0 case)
 
 The paper asks for E_aff=o(1/log x) and a signed affine moment tending to zero.
-The strongest new Lean reduction instead suffices with constants delta>0,
+The first Lean reduction instead suffices with constants delta>0,
 C>=0 and B such that, on a cofinal sequence of actual primorial stages,
 
 $
@@ -80,10 +107,10 @@ only the two cofinal analytic estimates as its remaining mathematical inputs.
 The harmless shifted cutoff guarantees a period larger than every integer
 head; at the odd-prime cutoffs in the numerical table it is the same primorial.
 
-The numerical gcd-atom fit is still to be formally identified with this
-floor-normal construction by the upper atom/grid span equivalence. That
-identification is a finite arithmetic task, not an additional premise of
-the new abstractly constructed primorial-family theorem.
+The gcd-atom fit is now formally identified with this floor-normal construction.
+`ExactHeadAtomOptimizer.floor_residual_eq_atomResidual` proves the residual
+identity. Its primorial q and profile specializations identify the exact data
+appearing in the conditional RH criterion.
 
 ## Low-conductor budget without circular boundedness
 
@@ -199,19 +226,20 @@ identify an asymptotic transition scale.
 
 | Item | Status | Delivered | Remaining acceptance criterion |
 |---|---|---|---|
-| R1 certified data | Partial, external | Full-period runs at 19 and 23, independent method/precision comparisons | Outward-rounded weights and a certified normal solve/error enclosure |
+| R1 certified data | Partial: external rational certificates | Complete weight and solve enclosures at 5,7,11,13; diagnostics through 23 | Replay endpoint checks in Lean; certify larger stages |
 | R2 dyadic ledger | Computed, external | Canonical and best-affine block energies through 23 | Certified block intervals and larger cutoffs if justified |
 | R3 digit/carry formulas | Partial, Lean checked | General digit recursion, primitive arithmetic bridge, affine completion/shift | Identify the actual boundary carry/discrepancy with the affine component |
-| R4 signal-specific discrepancy | Open | Actual tail mass, low-conductor bound, weaker relative target | W E_tail<=C_tail q for the actual residual direction, without assuming bounded q or RH |
+| R4 signal-specific discrepancy | Open | Actual tail mass, low-conductor bound, strict quadratic gap criterion | Jointly cofinal W E<=k^2 q^2+Cq with k<delta, without assuming bounded q or RH |
 | R5 moment admissibility | Partial, Lean checked | Unique fit at all x>=2, exact Cramer moment numerator | Fixed proportional moment deficit m<=(1-delta)q+B; bounded m is sufficient |
 | R6 falsification | Extended, external | No blow-up observed through 23 | Further certified stages; no finite test is an asymptotic proof |
 
 Priority order for continuation:
-1. Build an outward-rounded version of the event formula and retain every
-   simultaneous jump term. Certify the actual normal equations before using
-   the numerical coefficients as evidence.
-2. Identify the now-constructed primorial floor-normal residual with the
-   paper's gcd-atom residual through the atom/grid upper-span equivalence.
+1. Replay the retained rational certificates inside Lean. The external
+   complete-weight and normal-solve enclosures at 5,7,11,13 are available;
+   larger cutoffs still need outward-rounded event accumulation with every
+   simultaneous jump term retained.
+2. The atom/floor identification is completed. Use the checked common
+   residual and the proper-divisor first-difference formula in certificate assembly.
 3. Form the exact signed normal numerator at each cutoff and pursue the
    proportional deficit or a uniform upper bound directly. Bounded coefficients
    are a sufficient stronger route and need no PNT in this reduction.

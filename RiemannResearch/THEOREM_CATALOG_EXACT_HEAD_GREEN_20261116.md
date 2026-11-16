@@ -206,3 +206,33 @@ Identification of the actual weighted normal residuals is the next assembly.
 
 Focused Bazel check: `job_Y5oc7XsONZ8wIkkv8jGee76yLspGHwia`, 28.918 seconds.
 Publication of this stage requires the managed full-project checkpoint.
+
+## Continuation: actual optimizer and quadratic dispersion gap
+
+- `Analysis/FiniteWeightedSpan.lean`: finite weighted span orthogonality,
+  exact energy completion and uniqueness of the residual on positive-weight samples.
+- `RH/ExactHeadAtomOptimizer.lean`: constructs the actual gcd-atom fit;
+  `floor_residual_eq_atomResidual` identifies it with every admissible floor-normal
+  residual. `primorial_q_eq_atomEnergy` and `primorial_profile_eq_atomProfile`
+  identify the actual scalar data. No optimizer-identification premise remains.
+- `ExactHeadGcdAtoms.synthesis_divisor_jump` recovers each divisor coefficient
+  by first differences. `proper_coefficients_unique` proves uniqueness for
+  proper divisors; the endpoint atom vanishes on the nonterminal domain.
+- `Analysis/GreenProfileQuadratic.lean`: the stronger scalar estimate
+  (delta-k)^2 q <= 2(delta-k)B+2C+2a permits error squared <= k^2 q^2+Cq
+  whenever 0<=k<delta and m<=(1-delta)q+B.
+- `RH/ExactHeadGreenQuadraticCriterion.lean`:
+  `riemannHypothesis_of_atom_quadratic_profile_deficit` specializes this to the
+  actual atom optimizer. The two jointly cofinal analytic bounds remain **Open**.
+  The k=0 case recovers the earlier relative budget; no prior bound on q is used.
+
+Focused checks: `job_LzJtZGu2RKkaDgdSTve7skppqpBzokR0` (57.187 s) and
+`job_UbHMsv-0SZ-7riei4AWKQvj7LTlAxgIX` (91.033 s), Bazel/BuildBuddy.
+The first arithmetic bridge was published at `232ab22655fbfb2040a7338217c12e028ebeb081`
+after full validation and revalidation against newer main (205.999 s + 190.518 s).
+
+External rational certificates now cover x=5,7,11,13, including complete infinite
+weight tails, exact outward rational rounding, and checked Neumann solve defects.
+See `ResearchData/ExactHeadGreen20261116/rational_certification_sources.md` and
+`rational_certificate_summary.json`. The individual endpoint computations have
+not been replayed in Lean; x=17,19,23 remain floating-point diagnostics.
