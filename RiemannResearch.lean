@@ -1,3 +1,6 @@
+import RiemannResearch.RH.ExactHeadGreenClosure
+import RiemannResearch.Analysis.FiniteProfileEnergy
+import RiemannResearch.Analysis.GreenProfileBounds
 import RiemannResearch.LinearAlgebra.ThreeBlockOptimizerObstruction
 import RiemannResearch.LinearAlgebra.HeadTailDriftObstruction
 import RiemannResearch.LinearAlgebra.ReciprocalMaxGreen
