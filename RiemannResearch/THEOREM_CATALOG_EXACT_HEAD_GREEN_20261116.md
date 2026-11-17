@@ -1,5 +1,30 @@
 # Exact-head Green profiles: verified development (2026-11-16)
 
+## Signed occurrence/reuse decomposition (17 November 2026)
+
+`RH/ExactHeadMomentOccurrence.lean` proves
+`fitted_moment_gap_eq_occurrence_reuse`. For the complete pairing let
+`g = probe - alpha * target - v`, with `v` an upper atom correction.
+Then the signed gap is exactly
+
+    m - alpha*q = <R_occ, g - fit(c)> + <R_reuse, g>.
+
+The occurrence fit is arbitrary; it is removed only from the channel it
+annihilates. This permits independent block mean subtraction in the first
+term without applying an illegal occurrence-dependent correction in the
+second term.
+
+Paper consequence: on a free block I with mass W and target/probe weighted
+means Tbar and psibar, the occurrence term is
+`sum_I w (T-Tbar)(probe-psibar) - alpha sum_I w (T-Tbar)^2`.
+In jump coordinates the covariance kernel for two jumps t,u inside I is
+`mass(I below min(t,u)) * mass(I at or above max(t,u)) / W`.
+The initial interval must be kept; it vanishes at x=p-1 for primes p>=3
+since the first free site is p and the target is zero before p.
+This arithmetic block calculation is not formalized by the new declaration.
+A uniform signed bound including reuse, and R4 on the same cofinal stages,
+remain open.
+
 ## Tail Gram remainder and conditional RH assembly
 
 See [the continuation and research agenda](EXACT_HEAD_GREEN_TAIL_CONTINUATION_20261116.md).
