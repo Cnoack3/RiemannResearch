@@ -1,0 +1,356 @@
+{
+  "status": "floating-point diagnostic only",
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "sympy": "1.14.0"
+  },
+  "stages": [
+    {
+      "x": 5,
+      "P": 30,
+      "occurrence_energy": 0.0342367680363034,
+      "unweighted_return_dispersion": 0.18741360984669952,
+      "mean_coefficient_green_trial": 0.009933759919013074,
+      "candidate_trials": [
+        {
+          "exponent": 0.0,
+          "charge_constraint": false,
+          "green_energy": 0.009933759919013074,
+          "total_increment": 0.0
+        },
+        {
+          "exponent": 0.0,
+          "charge_constraint": true,
+          "green_energy": 0.009933759919013074,
+          "total_increment": 0.0
+        },
+        {
+          "exponent": 0.5,
+          "charge_constraint": false,
+          "green_energy": 0.008249807776086348,
+          "total_increment": 0.14747356695486213
+        },
+        {
+          "exponent": 0.5,
+          "charge_constraint": true,
+          "green_energy": 0.009125698536949667,
+          "total_increment": -1.1102230246251565e-16
+        },
+        {
+          "exponent": 1.0,
+          "charge_constraint": false,
+          "green_energy": 0.008500277130674087,
+          "total_increment": 0.3304640696873977
+        },
+        {
+          "exponent": 1.0,
+          "charge_constraint": true,
+          "green_energy": 0.008139927708386646,
+          "total_increment": -4.440892098500626e-16
+        },
+        {
+          "exponent": 1.5,
+          "charge_constraint": false,
+          "green_energy": 0.01154521784311049,
+          "total_increment": 0.5233758492373615
+        },
+        {
+          "exponent": 1.5,
+          "charge_constraint": true,
+          "green_energy": 0.007081150420662409,
+          "total_increment": 4.440892098500626e-16
+        },
+        {
+          "exponent": 2.0,
+          "charge_constraint": false,
+          "green_energy": 0.016878577733440255,
+          "total_increment": 0.7013999200813774
+        },
+        {
+          "exponent": 2.0,
+          "charge_constraint": true,
+          "green_energy": 0.006087885564325135,
+          "total_increment": 0.0
+        }
+      ]
+    },
+    {
+      "x": 7,
+      "P": 210,
+      "occurrence_energy": 0.03403199559457178,
+      "unweighted_return_dispersion": 0.7417138212064777,
+      "mean_coefficient_green_trial": 0.001737321290883951,
+      "candidate_trials": [
+        {
+          "exponent": 0.0,
+          "charge_constraint": false,
+          "green_energy": 0.001737321290883951,
+          "total_increment": -3.3306690738754696e-16
+        },
+        {
+          "exponent": 0.0,
+          "charge_constraint": true,
+          "green_energy": 0.0017373212908839426,
+          "total_increment": 7.438494264988549e-15
+        },
+        {
+          "exponent": 0.5,
+          "charge_constraint": false,
+          "green_energy": 0.001673079584947895,
+          "total_increment": 0.06758326759524624
+        },
+        {
+          "exponent": 0.5,
+          "charge_constraint": true,
+          "green_energy": 0.0017062048006982566,
+          "total_increment": 1.6653345369377348e-15
+        },
+        {
+          "exponent": 1.0,
+          "charge_constraint": false,
+          "green_energy": 0.0018055179991434715,
+          "total_increment": 0.16336666313230397
+        },
+        {
+          "exponent": 1.0,
+          "charge_constraint": true,
+          "green_energy": 0.0017708460245529876,
+          "total_increment": 1.2101430968414206e-14
+        },
+        {
+          "exponent": 1.5,
+          "charge_constraint": false,
+          "green_energy": 0.002253398623557554,
+          "total_increment": 0.26929455809620995
+        },
+        {
+          "exponent": 1.5,
+          "charge_constraint": true,
+          "green_energy": 0.0020213116324008674,
+          "total_increment": 4.107825191113079e-15
+        },
+        {
+          "exponent": 2.0,
+          "charge_constraint": false,
+          "green_energy": 0.0028860246697080144,
+          "total_increment": 0.36076842427466704
+        },
+        {
+          "exponent": 2.0,
+          "charge_constraint": true,
+          "green_energy": 0.0024409364487508003,
+          "total_increment": 1.4432899320127035e-15
+        }
+      ]
+    },
+    {
+      "x": 11,
+      "P": 2310,
+      "occurrence_energy": 0.02907201795949037,
+      "unweighted_return_dispersion": 52.637012995033174,
+      "mean_coefficient_green_trial": 0.014313811373657894,
+      "candidate_trials": [
+        {
+          "exponent": 0.0,
+          "charge_constraint": false,
+          "green_energy": 0.014313811373657894,
+          "total_increment": 5.995204332975845e-15
+        },
+        {
+          "exponent": 0.0,
+          "charge_constraint": true,
+          "green_energy": 0.014313811373657883,
+          "total_increment": 8.359979375427429e-14
+        },
+        {
+          "exponent": 0.5,
+          "charge_constraint": false,
+          "green_energy": 0.017963589936435695,
+          "total_increment": -0.9764591159874791
+        },
+        {
+          "exponent": 0.5,
+          "charge_constraint": true,
+          "green_energy": 0.01737853180068538,
+          "total_increment": 7.571721027943568e-14
+        },
+        {
+          "exponent": 1.0,
+          "charge_constraint": false,
+          "green_energy": 0.06001685012837871,
+          "total_increment": -8.299615380332266
+        },
+        {
+          "exponent": 1.0,
+          "charge_constraint": true,
+          "green_energy": 0.020535817000458544,
+          "total_increment": -3.4638958368304884e-14
+        },
+        {
+          "exponent": 1.5,
+          "charge_constraint": false,
+          "green_energy": 0.30085164522813845,
+          "total_increment": -22.336979633873938
+        },
+        {
+          "exponent": 1.5,
+          "charge_constraint": true,
+          "green_energy": 0.020324691457161256,
+          "total_increment": -3.68594044175552e-14
+        },
+        {
+          "exponent": 2.0,
+          "charge_constraint": false,
+          "green_energy": 0.6703045808497963,
+          "total_increment": -34.0991671321958
+        },
+        {
+          "exponent": 2.0,
+          "charge_constraint": true,
+          "green_energy": 0.03504507345538556,
+          "total_increment": -3.5083047578154947e-14
+        }
+      ]
+    },
+    {
+      "x": 13,
+      "P": 30030,
+      "occurrence_energy": 0.021187841549419422,
+      "unweighted_return_dispersion": 971.4281329229038,
+      "mean_coefficient_green_trial": 0.018082360143331602,
+      "candidate_trials": [
+        {
+          "exponent": 0.0,
+          "charge_constraint": false,
+          "green_energy": 0.018082360143331602,
+          "total_increment": -1.2811973704174306e-13
+        },
+        {
+          "exponent": 0.0,
+          "charge_constraint": true,
+          "green_energy": 0.018082360143331557,
+          "total_increment": 9.250378241176804e-13
+        },
+        {
+          "exponent": 0.5,
+          "charge_constraint": false,
+          "green_energy": 0.01756498556394777,
+          "total_increment": 1.7232949549854173
+        },
+        {
+          "exponent": 0.5,
+          "charge_constraint": true,
+          "green_energy": 0.017509386721614346,
+          "total_increment": 1.1259881915748338e-12
+        },
+        {
+          "exponent": 1.0,
+          "charge_constraint": false,
+          "green_energy": 0.019087464615818846,
+          "total_increment": 10.450237845123722
+        },
+        {
+          "exponent": 1.0,
+          "charge_constraint": true,
+          "green_energy": 0.01497617483333915,
+          "total_increment": -6.139533326177116e-13
+        },
+        {
+          "exponent": 1.5,
+          "charge_constraint": false,
+          "green_energy": 0.0159544032198547,
+          "total_increment": 5.558861450719746
+        },
+        {
+          "exponent": 1.5,
+          "charge_constraint": true,
+          "green_energy": 0.014948026809171068,
+          "total_increment": -7.87148124459236e-13
+        },
+        {
+          "exponent": 2.0,
+          "charge_constraint": false,
+          "green_energy": 0.019019510206097944,
+          "total_increment": -6.757824484322655
+        },
+        {
+          "exponent": 2.0,
+          "charge_constraint": true,
+          "green_energy": 0.01688358402641314,
+          "total_increment": 1.0245138071240945e-12
+        }
+      ]
+    },
+    {
+      "x": 17,
+      "P": 510510,
+      "occurrence_energy": 0.014412480676457838,
+      "unweighted_return_dispersion": 22265.130096606124,
+      "mean_coefficient_green_trial": 0.07276722662259737,
+      "candidate_trials": [
+        {
+          "exponent": 0.0,
+          "charge_constraint": false,
+          "green_energy": 0.07276722662259737,
+          "total_increment": -9.106049247975534e-13
+        },
+        {
+          "exponent": 0.0,
+          "charge_constraint": true,
+          "green_energy": 0.07276722662259737,
+          "total_increment": -9.106049247975534e-13
+        },
+        {
+          "exponent": 0.5,
+          "charge_constraint": false,
+          "green_energy": 0.07372692033210769,
+          "total_increment": -18.273466862030766
+        },
+        {
+          "exponent": 0.5,
+          "charge_constraint": true,
+          "green_energy": 0.07292113953530584,
+          "total_increment": -5.084155318968442e-12
+        },
+        {
+          "exponent": 1.0,
+          "charge_constraint": false,
+          "green_energy": 2.964385979252758,
+          "total_increment": -1084.1956328467027
+        },
+        {
+          "exponent": 1.0,
+          "charge_constraint": true,
+          "green_energy": 0.06284901946356194,
+          "total_increment": 2.80020451270957e-12
+        },
+        {
+          "exponent": 1.5,
+          "charge_constraint": false,
+          "green_energy": 37.41514530151312,
+          "total_increment": -3890.23437577035
+        },
+        {
+          "exponent": 1.5,
+          "charge_constraint": true,
+          "green_energy": 0.05348739995131961,
+          "total_increment": 1.2986722808250306e-11
+        },
+        {
+          "exponent": 2.0,
+          "charge_constraint": false,
+          "green_energy": 73.742515827447,
+          "total_increment": -5463.214425356293
+        },
+        {
+          "exponent": 2.0,
+          "charge_constraint": true,
+          "green_energy": 0.31712931936332045,
+          "total_increment": -5.9614535530272406e-12
+        }
+      ]
+    }
+  ]
+}

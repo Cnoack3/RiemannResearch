@@ -4584,3 +4584,10 @@ import RiemannResearch.RH.QResidueGramCertificates
 import RiemannResearch.RH.QTriangularMobiusCoefficients
 import RiemannResearch.RH.QDensityLeakageSeries
 import RiemannResearch.RH.QLeakageFiniteCertificates
+import RiemannResearch.RH.ExactHeadOccurrenceProjection
+import RiemannResearch.Analysis.FiniteAtomDispersion
+import RiemannResearch.Analysis.DiscretePrefixHardy
+import RiemannResearch.NumberTheory.DivisorReturnCoordinates
+import RiemannResearch.RH.ExactHeadOccurrenceDispersion
+import RiemannResearch.RH.ExactHeadOccurrenceCriterion
+import RiemannResearch.RH.ExactHeadOccurrenceAxiomAudit
