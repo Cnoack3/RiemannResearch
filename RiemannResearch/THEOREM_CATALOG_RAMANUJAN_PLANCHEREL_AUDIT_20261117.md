@@ -6,16 +6,16 @@ Date: 2026-11-17.
 
 Source: [89-page audited revision and supplement](https://drive.google.com/file/d/1DHIp4gGwApIL1V6nHwV4HDxuOAFdijwG/view), main section 8, supplement sections 11.2 and 21–23. The source's section 2.2 uniform-energy justification is invalid; the claimed bound is unproved.
 
-This catalog covers 44 named theorems and seven definitions in five modules, all exported from RiemannResearch.lean. General finite identities are established with their stated algebraic hypotheses. The RH implications are **conditional research reductions**, not proofs of the energy hypotheses or RH.
+This catalog covers 56 named theorems and eight definitions in six modules, all exported from RiemannResearch.lean. General finite identities are established with their stated algebraic hypotheses. The RH implications are **conditional research reductions**, not proofs of the energy hypotheses or RH.
 
-## Open domain-specific obligations
+## Domain-specific obligation status
 
 | Obligation | Status |
 | --- | --- |
 | Uniform/cofinal bound on actual exact-head atom energy | Open; sufficient for RH |
 | Absolute low-conductor decay after retaining the q_x factor | Open under the cited inputs; no automatic q_x<=1 |
 | Actual arithmetic signed-return curvature bound | Open |
-| Full physical-window identification of the original z_Y field with activated coordinates | Not formalized by this change |
+| Physical-window identification of the original z_Y field with activated coordinates | Discharged with prime coverage, p<=x<2p, and Y<p^2; full correction retained beyond the window |
 | A1, A2, and RH | Not proved |
 
 ## RamanujanFinitePlancherel.lean
@@ -113,6 +113,29 @@ Activated gcd-atom moments and three-label return curvature.
 | [endpoint_divisor_signal](RH/ExactHeadAtomReturnMoments.lean#L88) | Checked finite/structural theorem |
 | [endpoint_signal_difference](RH/ExactHeadAtomReturnMoments.lean#L101) | Checked finite/structural theorem |
 | [triple_curvature_moment](RH/ExactHeadAtomReturnMoments.lean#L117) | Checked finite/structural theorem |
+
+## ExactHeadPhysicalReturn.lean
+
+Namespace: RiemannResearch.RH.ExactHeadPhysicalReturn.
+
+Physical prime signals, the exact lower-class correction, safe-window activated moments,
+and the actual optimizer's complete tail return. No asymptotic energy bound is assumed.
+
+| Declaration | Kind |
+| --- | --- |
+| [gcd_eq_prime_iff_before_square](RH/ExactHeadPhysicalReturn.lean#L36) | Checked finite/structural theorem |
+| [prime_atom_eq_one](RH/ExactHeadPhysicalReturn.lean#L59) | Checked finite/structural theorem |
+| [upperDivisorSignal_eq_grid_sub_atom](RH/ExactHeadPhysicalReturn.lean#L74) | Checked finite/structural theorem |
+| [upperDivisorSignal_zero_head](RH/ExactHeadPhysicalReturn.lean#L108) | Checked finite/structural theorem |
+| [upperDivisorSignal_eq_grid_sub_one](RH/ExactHeadPhysicalReturn.lean#L115) | Checked finite/structural theorem |
+| [physicalSignal](RH/ExactHeadPhysicalReturn.lean#L126) | Definition |
+| [physical_pairing_upper](RH/ExactHeadPhysicalReturn.lean#L129) | Checked finite/structural theorem |
+| [physicalSignal_with_reentry](RH/ExactHeadPhysicalReturn.lean#L145) | Checked finite/structural theorem |
+| [physicalSignal_eq_activatedMoment](RH/ExactHeadPhysicalReturn.lean#L160) | Checked finite/structural theorem |
+| [primorial_physicalSignal_eq_activatedMoment](RH/ExactHeadPhysicalReturn.lean#L176) | Checked finite/structural theorem |
+| [physicalSignal_eq_endpoint](RH/ExactHeadPhysicalReturn.lean#L185) | Checked finite/structural theorem |
+| [atomResidual_physicalSignal_eq_tail](RH/ExactHeadPhysicalReturn.lean#L201) | Checked finite/structural theorem |
+| [square_cutoff_requires_reentry](RH/ExactHeadPhysicalReturn.lean#L241) | Checked finite/structural theorem |
 
 ## Verification
 

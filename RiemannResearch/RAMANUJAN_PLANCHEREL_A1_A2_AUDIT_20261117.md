@@ -189,7 +189,61 @@ Lean proves:
 5. The three-label determinant combination is exactly
    p(r-q)S_Y(p)-q(r-p)S_Y(q)+r(q-p)S_Y(r).
 
-These results hold for arbitrary divisor labels and periods, not only primes and primorials. They formalize the activated-moment algebra of (23.21)–(23.24). The separate physical-window identification of the paper's original z_Y(p)/p with these coordinates, and its numerical curvature prefactors, are not asserted as newly kernel-checked here.
+These results hold for arbitrary divisor labels and periods, not only primes and primorials. They formalize the activated-moment algebra of (23.21)–(23.24). The physical-window continuation below now identifies the paper's original z_Y(p)/p with these coordinates, including the exact correction outside the safe cutoff. The numerical curvature prefactors and full inverse-Gram/Hessian formulas are not asserted as newly kernel-checked.
+
+## Physical-window continuation
+
+[ExactHeadPhysicalReturn.lean](RH/ExactHeadPhysicalReturn.lean) now formalizes the missing arithmetic bridge from supplement sections 22.2 and 23.5. This preserves the earlier audit of the invalid uniform-energy justification; it does not reinstate any absolute estimate obtained by deleting \(q_x\).
+
+Write \(G_p(n)=\lfloor n/p\rfloor\), \(A_g(n)=\#\{1\le k\le n:\gcd(k,P)=g\}\), and \(U_p=\sum_{g\mid P,\ x<g,\ p\mid g}A_g\). For \(P\ne0\), \(p\mid P\), and \(p\le x<2p\), the all-position identity is
+
+$$
+U_p(n)=G_p(n)-A_p(n).
+$$
+
+For arbitrary real weights \(w\) and signal \(h\), the definition of the paper's physical signal retains its factor \(p\) and integer interval:
+
+$$
+z_Y(p)=p\sum_{x<n\le Y}w(n)h(n)(G_p(n)-1).
+$$
+
+With the activated moment \(S_Y(p)\) already defined in ExactHeadAtomReturnMoments, the complete correction formula is
+
+$$
+z_Y(p)=pS_Y(p)+p\sum_{x<n\le Y}w(n)h(n)(A_p(n)-1).
+$$
+
+No cutoff restriction is needed for this equality. If \(p\) is prime, every prime at most \(p\) divides \(P\), and \(Y<p^2\), the lower-class correction vanishes exactly:
+
+$$
+z_Y(p)=pS_Y(p).
+$$
+
+In particular, the arithmetic hypotheses are supplied for \(P=\operatorname{primorial}(x)\), \(p\) prime, \(p\le x<2p\), and \(Y<p^2\). The general proof needs neither squarefreeness of the period, positive weights, an energy bound, nor normal equations. The paper's physical ceiling \(Y<x^2/4\) and window \(p>x/2\) lie inside this range.
+
+The cutoff cannot simply be removed. A finite kernel certificate gives
+
+$$
+U_3(9)=1,\qquad G_3(9)-1=2\qquad(P=30,\ x=5).
+$$
+
+This refutes extension of the zero-correction formula through the first square; it does not refute the paper's correctly restricted window.
+
+For the actual atom residual \(R\) with the exact periodized Pareto weight, the proved normal equations supply the full tail identity under the same safe-window hypotheses and \(Y<P\):
+
+$$
+z_Y(p)=-p\langle R,U_p\rangle_{Y<n<P}.
+$$
+
+For a global fit \(u\) and tail-only fit \(v\) satisfying their normal equations, the corresponding endpoint formula is
+
+$$
+z_Y(p)=p\langle u-v,U_p\rangle_{\mathrm{tail}}.
+$$
+
+The signs differ because the first formula pairs the residual, while the second pairs the fitted drift. Neither formula truncates the return graph. Combining this identification with triple_curvature_moment supplies the original three-prime signal's signed activated-moment numerator. A quantitative bound for that numerator remains open.
+
+The physical-window identification is therefore discharged. The remaining work must retain the inverse-tail-Gram return cost and any required \(q_x\) growth hypothesis. The companion large-sieve input, full Hessian normalization and asymptotic curvature estimates are not certified by this finite bridge.
 
 ## Status by claim
 
@@ -204,7 +258,9 @@ These results hold for arbitrary divisor labels and periods, not only primes and
 | Companion primitive large-sieve estimate | Cited analytic input; not newly kernel-checked |
 | Endpoint covariance, energy split, update telescope | Newly kernel-checked, weaker hypotheses |
 | Activated-atom moment and three-label return formulas | Newly kernel-checked finite identities |
-| Full physical-window realization and all Hessian prefactors in sections 22–23 | Reviewed source claims; not fully formalized in this change |
+| Physical-window realization z_Y(p)=p S_Y(p), with prime coverage and Y<p^2 | Newly kernel-checked by the continuation |
+| All-cutoff lower-class correction and actual residual's complete tail identity | Newly kernel-checked strengthening |
+| Full inverse-Gram/Hessian formulas and numerical curvature prefactors in sections 22–23 | Reviewed source claims; not fully formalized in this change |
 | Uniform actual signed-curvature/nonalignment estimate | Open |
 | A1, A2, q_x -> 0, RH | Not proved by this change |
 
@@ -212,7 +268,7 @@ These results hold for arbitrary divisor labels and periods, not only primes and
 
 1. Correct section 2.2 and propagate q_x through every downstream estimate. Maintain separate relative and absolute conclusions.
 2. If pursuing the low/high split, prove the actual growth control needed by the selected cutoff. Do not classify that estimate as a routine normalization; even uniform boundedness already suffices for RH.
-3. Formalize the physical-window identification linking the paper's original return field z_Y to the activated moments. Preserve the periodized weights, prefix subtraction, and complete upper-atom family.
+3. Use the now-checked physical-window identification to estimate the actual signed moments. Retain the lower-class correction if the physical cutoff reaches a prime square; retain the periodized weights and complete upper-atom family.
 4. Attack the actual signed three-prime moment combination. A bound for its weighted curvature energy requires arithmetic information about C_x beyond global and tail normality.
 5. Keep the inverse tail Gram geometry in the energy budget. Neither diagonal replacement, Plancherel alone, nor normal equations provide the required asymptotic smallness.
 6. For the trivial-conductor A2 route, bound the actual lower-support weighted score energy; the exact mass remainder is a concrete certificate to investigate. This still leaves the other signed scalar contributions unless separately controlled.
@@ -221,7 +277,7 @@ The source's final target, an actual endpoint-curvature quantity o(x^2/log^3 x),
 
 ## Verification record
 
-All five modules are exported by RiemannResearch.lean. They contain named proofs with no unfinished proof placeholders or project-local axioms.
+All six modules are exported by RiemannResearch.lean. They contain named proofs with no unfinished proof placeholders or project-local axioms.
 
 Component Bazel/BuildBuddy checks:
 
@@ -230,3 +286,27 @@ Component Bazel/BuildBuddy checks:
 - Activated-moment check: job_QrTbzxUHOdpwx7ukCxQeUyhTuYIEMQV0, [62.628 seconds of server verification](https://app.buildbuddy.io/invocation/cfd4d582-ed79-4f82-97be-8730015fa207).
 
 These durations are server-reported verification elapsed times, not API round-trip or queue/polling measurements. Successful component checks certify their imported source graph, not the full repository. The managed publication checkpoint separately validates the full //:RiemannResearch target and, if required, the source integrated with newer main before publishing its exact commit.
+
+### Physical-window continuation verification
+
+- File acceptance: job_mt7ljakLdZC2vEO6JY-HFSV-1ldhok4W.
+- Scope: //RiemannResearch/RH:ExactHeadPhysicalReturn and its transitive imports.
+- Backend: Bazel --config=buildbuddy; verified=true, exit_code=0.
+- [BuildBuddy invocation](https://app.buildbuddy.io/invocation/619ec47e-dc55-4c85-bd96-0829cc262fc9).
+- Server verification elapsed: 34.363 seconds.
+- Checked file SHA-256: f98e181733f0b183d04ff6ed24f07f2dbd8b42482e4e873011c7b01a97b285ab.
+
+This component result is not a full-project checkpoint. The final managed
+checkpoint validates the complete project and any integration with newer main
+before publishing. No A1, A2, curvature-rate or RH conclusion follows from
+the finite identities.
+
+The actual-optimizer theorem also passed a guarded axiom check:
+job_MUoKCBNHHBeFMlt223xyKg7FoUXnXF2p,
+[BuildBuddy invocation](https://app.buildbuddy.io/invocation/b01459d6-9e7d-414e-82ab-4f92caeca8a6).
+The checked `#guard_msgs` assertion requires exactly
+`[propext, Classical.choice, Quot.sound]` for
+`RiemannResearch.RH.ExactHeadPhysicalReturn.atomResidual_physicalSignal_eq_tail`.
+It passed through Bazel with `verified=true`; no project-specific axiom occurs
+in that theorem's dependency set. Its arithmetic window assumptions remain
+explicit in its type.
