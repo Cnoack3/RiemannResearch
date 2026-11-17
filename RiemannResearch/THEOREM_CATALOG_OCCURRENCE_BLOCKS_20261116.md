@@ -130,14 +130,15 @@ gate. Focused file checks certify only their listed targets and imports,
 not the entire project. The terminal checkpoint record identifies the exact
 published commit and full //:RiemannResearch validation.
 
-The next mathematical tasks are:
+Current research agenda (updated 17 November 2026):
 
 1. Prove a uniform cofinal bound for the explicit initial-plus-block
    statistic, or a sharper exact-variance bound that uses the pairwise formula.
 2. Construct one shared atom vector whose complete signed Green trial is
    bounded at the same cofinal stages.
-3. Use the explicit means and finite normal-certificate uniqueness to
-   replace floating-point occurrence diagnostics by rigorous enclosures.
+3. **Completed for every fixed P>0:** complete rational energy and coefficient
+   enclosures with effective convergence, plus finite reuse certificates.
+   See [the certification continuation](THEOREM_CATALOG_OCCURRENCE_CERTIFICATION_20261117.md).
 4. Prove any required squarefree smooth-gap or translated-sieve providers
    with their correct arithmetic normalization.
 
