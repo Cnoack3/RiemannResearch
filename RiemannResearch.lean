@@ -1,3 +1,8 @@
+import RiemannResearch.RH.ExactHeadAtomReturnMoments
+import RiemannResearch.RH.RamanujanFinitePlancherel
+import RiemannResearch.RH.ExactHeadRamanujanPlancherel
+import RiemannResearch.RH.ExactHeadEnergyAudit
+import RiemannResearch.Analysis.FiniteWeightedReturnDrift
 import RiemannResearch.Analysis.ZetaFactorBudgetGap
 import RiemannResearch.Analysis.PrimitiveRegularizationCertificates
 import RiemannResearch.RH.ProjectedPairSpectralObstruction
