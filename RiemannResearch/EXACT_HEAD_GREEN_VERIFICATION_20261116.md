@@ -1,4 +1,29 @@
 # Exact-head Green verification and axiom audit
+
+## Affine-dual continuation: focused verification
+
+The integrated target `//RiemannResearch/RH:ExactHeadGreenAxiomAudit`
+passed with Bazel/BuildBuddy, exit code 0, in 189.960 seconds:
+job `job_zQ1hIKC9ZEehCaM6xZA8j0LR9B3pSlKg`.
+[Focused BuildBuddy invocation](https://app.buildbuddy.io/invocation/81503fea-8e59-4410-b7e7-da7a3da2e724).
+Audit-source SHA-256:
+`25080991b7b17d8eb744a0f22f93a0e63eb6289a6b5e4bb2c566a89e7ef10209`.
+
+All 26 guards matched exactly `[propext, Classical.choice, Quot.sound]`.
+They cover the new conditional affine criterion, residual Gram identity,
+projected budget, finite signed-moment and centered-probe certificates,
+and the universal head obstruction. The explicit equality `H_3=49/72`
+was extracted after this focused pass from the checked inequality proof.
+The final full-project publication checkpoint verifies that extraction
+and is the publication gate for the entire change.
+
+The [current continuation](EXACT_HEAD_GREEN_AFFINE_DUAL_CONTINUATION_20261116.md)
+separates Lean results, external exact-rational diagnostics, and the
+not-yet-formalized asymptotic head derivation. No uniform R4/R5 theorem or
+unconditional RH conclusion is asserted.
+
+## Previous verification history
+
 Date: 2026-11-16.
 
 ## Latest completed code checkpoint

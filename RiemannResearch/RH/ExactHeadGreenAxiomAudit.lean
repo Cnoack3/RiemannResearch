@@ -1,3 +1,5 @@
+import RiemannResearch.RH.ExactHeadGreenAffineCriterion
+import RiemannResearch.RH.ExactHeadMomentHeadObstruction
 import RiemannResearch.RH.ExactHeadAtomMoment
 import RiemannResearch.RH.ExactHeadAtomStability
 import RiemannResearch.RH.ExactHeadAtomStageFive
@@ -149,3 +151,93 @@ info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.fitted_moment_deficit_of
 #guard_msgs in
 #print axioms
   RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.fitted_moment_deficit_of_probe_bound
+
+/--
+info: 'RiemannResearch.Analysis.FiniteProfileEnergy.affine_residual_gram_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.Analysis.FiniteProfileEnergy.affine_residual_gram_identity
+
+/--
+info: 'RiemannResearch.Analysis.FiniteProfileEnergy.affine_normal_removed_energy' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.Analysis.FiniteProfileEnergy.affine_normal_removed_energy
+
+/--
+info: 'RiemannResearch.RH.MobiusAffineProfile.profile_error_sq_le_affine_mobius_loss' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.MobiusAffineProfile.profile_error_sq_le_affine_mobius_loss
+
+/--
+info: 'RiemannResearch.RH.MobiusAffineProfile.mobius_five_normal_loss' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.MobiusAffineProfile.mobius_five_normal_loss
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.riemannHypothesis_of_atom_signed_profile_deficit' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.riemannHypothesis_of_atom_signed_profile_deficit
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.riemannHypothesis_of_atom_affine_residual_deficit' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.riemannHypothesis_of_atom_affine_residual_deficit
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomStageFiveMoment.centered_probe_energy_interval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomStageFiveMoment.centered_probe_energy_interval
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomStageFive.primorial_five_signed_moment_deficit' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomStageFive.primorial_five_signed_moment_deficit
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.probe_head_energy_le_centered' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.probe_head_energy_le_centered
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.centered_probe_three_gt_two_thirds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.centered_probe_three_gt_two_thirds

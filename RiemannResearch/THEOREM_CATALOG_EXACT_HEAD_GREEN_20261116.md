@@ -1,5 +1,22 @@
 # Exact-head Green profiles: verified development (2026-11-16)
 
+## Affine-dual continuation (16 November 2026)
+
+See [the new continuation and declaration map](EXACT_HEAD_GREEN_AFFINE_DUAL_CONTINUATION_20261116.md).
+New Lean results include the exact affine-residual Gram remainder,
+projected Mobius budget `sigma <= W`, and conditional direct signed-error
+RH criterion. At cutoff 5, the complete centered-probe energy is in
+`[0.6288,0.63]`, the actual fitted moment is in `[0.0251,0.0282]`, and
+`m_5 <= (3/4)q_5`. Every legal upper-span correction retains the head
+energy, with `H_3=49/72>2/3`. The latter excludes an all-cutoff bound,
+not an eventual/cofinal one. There are now 26 permanent axiom guards.
+
+The [head-coercivity paper derivation](EXACT_HEAD_GREEN_HEAD_COERCIVITY_DERIVATION_20261116.md)
+is not yet Lean-verified. Uniform/cofinal R4 and R5 remain open; RH is not proved.
+
+## Earlier development
+
+
 Source: user attachment *Best Nyman Beurling for RH.pdf*, internally titled
 *Exact-Head Green Profiles in the Nyman--Beurling Program*, 27 July 2026, 17 pages.
 This is the attached memorandum, distinct from the longer A1--A2 audited revision

@@ -1,4 +1,5 @@
 import RiemannResearch.RH.MobiusHeadGreenNormal
+import RiemannResearch.RH.ExactHeadAtomStageFiveMoment
 import RiemannResearch.RH.ExactHeadAtomCertification
 import RiemannResearch.RH.ParetoRationalWeightIntervals
 import RiemannResearch.LinearAlgebra.RationalLinearSolveCertificate
@@ -103,9 +104,9 @@ private def energyInterval : RatInterval :=
     RatInterval.mul (elementaryProgressionInterval 30 (j+1) 8)
       (RatInterval.point (data (j+1) ^ 2)))
 
-private def defectInterval (d : ℕ) : RatInterval :=
+private def defectInterval (K d : ℕ) : RatInterval :=
   RatInterval.sum (Finset.range 29) (fun j =>
-    RatInterval.mul (elementaryProgressionInterval 30 (j+1) 8)
+    RatInterval.mul (elementaryProgressionInterval 30 (j+1) K)
       (RatInterval.point (data (j+1) * (((j+1)/d : ℕ) : ℚ))))
 
 private theorem data_cast (r : ℕ) (hr : r < 30) :
@@ -125,15 +126,15 @@ private theorem energyInterval_contains :
   have hp := RatInterval.contains_point (data (j+1) ^ 2)
   simpa only [Rat.cast_pow, data_cast (j+1) hr] using RatInterval.contains_mul hw hp
 
-private theorem defectInterval_contains (d : ℕ) (hd : d ∈ ({6,10,15} : Finset ℕ)) :
-    (defectInterval d).Contains (normalDefect 30 5 trialCoeff d) := by
+private theorem defectInterval_contains (K d : ℕ) (hd : d ∈ ({6,10,15} : Finset ℕ)) :
+    (defectInterval K d).Contains (normalDefect 30 5 trialCoeff d) := by
   unfold defectInterval normalDefect pairing
   norm_num only [Nat.reduceSub]
   rw [sum_Icc_one]
   apply RatInterval.contains_sum
   intro j hj
   have hr : j+1 < 30 := by have hh := Finset.mem_range.mp hj; omega
-  have hw := elementaryProgressionInterval_contains 30 (j+1) 8 (by norm_num) (by omega)
+  have hw := elementaryProgressionInterval_contains 30 (j+1) K (by norm_num) (by omega)
   have hp := RatInterval.contains_point (data (j+1) * (((j+1)/d : ℕ) : ℚ))
   have he : ((data (j+1) * (((j+1)/d : ℕ) : ℚ) : ℚ) : ℝ) =
       trialResidual 30 5 trialCoeff (j+1) * atom 30 d (j+1) := by
@@ -146,9 +147,9 @@ set_option maxHeartbeats 10000000 in
 set_option maxRecDepth 100000 in
 private theorem endpoint_checks :
     ((3798 / 100000) : ℚ) ≤ energyInterval.lo ∧ energyInterval.hi ≤ ((3807 / 100000) : ℚ) ∧
-    RatInterval.absBound (defectInterval 6) ≤ ((15 / 100000) : ℚ) ∧
-    RatInterval.absBound (defectInterval 10) ≤ ((75 / 1000000) : ℚ) ∧
-    RatInterval.absBound (defectInterval 15) ≤ ((37 / 1000000) : ℚ) := by
+    RatInterval.absBound (defectInterval 8 6) ≤ ((15 / 100000) : ℚ) ∧
+    RatInterval.absBound (defectInterval 8 10) ≤ ((75 / 1000000) : ℚ) ∧
+    RatInterval.absBound (defectInterval 8 15) ≤ ((37 / 1000000) : ℚ) := by
   norm_num [energyInterval, defectInterval, elementaryProgressionInterval,
     RatInterval.sum, RatInterval.mul, RatInterval.point, RatInterval.absBound,
     data, numData, Finset.sum_range_succ]
@@ -168,13 +169,13 @@ theorem primorial_five_energy_interval :
   have hehi : trialEnergy 30 5 trialCoeff ≤ ((3807 / 100000) : ℝ) :=
     he.2.trans (by simpa only [Rat.cast_div, Rat.cast_ofNat] using ((Rat.cast_le (K := ℝ)).2 heHi))
   have hb6 : |normalDefect 30 5 trialCoeff 6| ≤ ((15 / 100000) : ℝ) :=
-    (RatInterval.abs_le_absBound (defectInterval_contains 6 (by simp))).trans
+    (RatInterval.abs_le_absBound (defectInterval_contains 8 6 (by simp))).trans
       (by simpa only [Rat.cast_div, Rat.cast_ofNat] using ((Rat.cast_le (K := ℝ)).2 h6))
   have hb10 : |normalDefect 30 5 trialCoeff 10| ≤ ((75 / 1000000) : ℝ) :=
-    (RatInterval.abs_le_absBound (defectInterval_contains 10 (by simp))).trans
+    (RatInterval.abs_le_absBound (defectInterval_contains 8 10 (by simp))).trans
       (by simpa only [Rat.cast_div, Rat.cast_ofNat] using ((Rat.cast_le (K := ℝ)).2 h10))
   have hb15 : |normalDefect 30 5 trialCoeff 15| ≤ ((37 / 1000000) : ℝ) :=
-    (RatInterval.abs_le_absBound (defectInterval_contains 15 (by simp))).trans
+    (RatInterval.abs_le_absBound (defectInterval_contains 8 15 (by simp))).trans
       (by simpa only [Rat.cast_div, Rat.cast_ofNat] using ((Rat.cast_le (K := ℝ)).2 h15))
   have hs6 : normalDefect 30 5 trialCoeff 6 ^ 2 ≤ ((15 / 100000) : ℝ) ^ 2 := by
     simpa only [sq_abs] using (sq_le_sq₀ (abs_nonneg _) (by norm_num)).2 hb6
@@ -185,5 +186,118 @@ theorem primorial_five_energy_interval :
   have hb := trial_energy_enclosure 30 5 (by norm_num) trialCoeff
   norm_num [divisor_check] at hb
   constructor <;> nlinarith [hb.1,hb.2]
+
+private def probeData (r : ℕ) : ℚ :=
+  (111 * (r : ℚ) - 7 * (r / 2 : ℕ) - 125 * (r / 3 : ℕ) -
+    361 * (r / 5 : ℕ)) / 191
+
+private theorem probeData_cast (r : ℕ) :
+    (probeData r : ℝ) = fittedMomentProbe 5 r := by
+  rw [ExactHeadAtomStageFiveMoment.probe_formula]
+  norm_num [probeData]
+
+private def momentInterval : RatInterval :=
+  RatInterval.sum (Finset.range 29) (fun j =>
+    RatInterval.mul (elementaryProgressionInterval 30 (j+1) 16)
+      (RatInterval.point (data (j+1) * probeData (j+1))))
+
+private def probeNormInterval : RatInterval :=
+  RatInterval.sum (Finset.range 29) (fun j =>
+    RatInterval.mul (elementaryProgressionInterval 30 (j+1) 8)
+      (RatInterval.point (probeData (j+1) ^ 2)))
+
+private theorem momentInterval_contains :
+    momentInterval.Contains (trialFittedMoment 30 5 trialCoeff) := by
+  unfold momentInterval trialFittedMoment pairing
+  norm_num only [Nat.reduceSub]
+  rw [sum_Icc_one]
+  apply RatInterval.contains_sum
+  intro j hj
+  have hr : j+1 < 30 := by have hh := Finset.mem_range.mp hj; omega
+  have hw := elementaryProgressionInterval_contains 30 (j+1) 16 (by norm_num) (by omega)
+  have hp := RatInterval.contains_point (data (j+1) * probeData (j+1))
+  simpa only [Rat.cast_mul, data_cast (j+1) hr, probeData_cast, mul_assoc] using
+    RatInterval.contains_mul hw hp
+
+private theorem probeNormInterval_contains :
+    probeNormInterval.Contains
+      (energy (Finset.Icc 1 29) (progressionWeight 30) (fittedMomentProbe 5)) := by
+  unfold probeNormInterval energy
+  rw [sum_Icc_one]
+  apply RatInterval.contains_sum
+  intro j hj
+  have hw := elementaryProgressionInterval_contains 30 (j+1) 8 (by norm_num) (by omega)
+  have hp := RatInterval.contains_point (probeData (j+1) ^ 2)
+  simpa only [Rat.cast_pow, probeData_cast] using RatInterval.contains_mul hw hp
+
+set_option maxHeartbeats 20000000 in
+-- Sixteen complete-weight prefix terms resolve the strict signed-moment margin.
+set_option maxRecDepth 100000 in
+private theorem moment_endpoint_checks :
+    ((2665 / 100000) : ℚ) ≤ momentInterval.lo ∧
+    momentInterval.hi ≤ ((2668 / 100000) : ℚ) ∧
+    probeNormInterval.hi ≤ ((71 / 100) : ℚ) ∧
+    RatInterval.absBound (defectInterval 16 6) ≤ ((4 / 100000) : ℚ) ∧
+    RatInterval.absBound (defectInterval 16 10) ≤ ((2 / 100000) : ℚ) ∧
+    RatInterval.absBound (defectInterval 16 15) ≤ ((1 / 100000) : ℚ) := by
+  norm_num [momentInterval, probeNormInterval, defectInterval, elementaryProgressionInterval,
+    RatInterval.sum, RatInterval.mul, RatInterval.point, RatInterval.absBound,
+    data, numData, probeData, Finset.sum_range_succ]
+
+/-- Complete actual moment enclosure, with certified optimizer error. -/
+theorem fitted_moment_five_interval :
+    ((251 / 10000) : ℝ) ≤ atomFittedMoment 30 5 ∧
+      atomFittedMoment 30 5 ≤ ((282 / 10000) : ℝ) := by
+  obtain ⟨hl,hu,hp,h6,h10,h15⟩ := moment_endpoint_checks
+  have hm := momentInterval_contains
+  have hmlo : ((2665 / 100000) : ℝ) ≤ trialFittedMoment 30 5 trialCoeff :=
+    (show ((2665 / 100000) : ℝ) ≤ (momentInterval.lo : ℝ) by
+      simpa only [Rat.cast_div, Rat.cast_ofNat] using ((Rat.cast_le (K := ℝ)).2 hl)).trans hm.1
+  have hmhi : trialFittedMoment 30 5 trialCoeff ≤ ((2668 / 100000) : ℝ) :=
+    hm.2.trans (by simpa only [Rat.cast_div, Rat.cast_ofNat] using
+      ((Rat.cast_le (K := ℝ)).2 hu))
+  have hphi : energy (Finset.Icc 1 29) (progressionWeight 30) (fittedMomentProbe 5) ≤
+      ((71 / 100) : ℝ) := probeNormInterval_contains.2.trans
+        (by simpa only [Rat.cast_div, Rat.cast_ofNat] using ((Rat.cast_le (K := ℝ)).2 hp))
+  have hd6 : |normalDefect 30 5 trialCoeff 6| ≤ ((4 / 100000) : ℝ) :=
+    (RatInterval.abs_le_absBound (defectInterval_contains 16 6 (by simp))).trans
+      (by simpa only [Rat.cast_div, Rat.cast_ofNat] using ((Rat.cast_le (K := ℝ)).2 h6))
+  have hd10 : |normalDefect 30 5 trialCoeff 10| ≤ ((2 / 100000) : ℝ) :=
+    (RatInterval.abs_le_absBound (defectInterval_contains 16 10 (by simp))).trans
+      (by simpa only [Rat.cast_div, Rat.cast_ofNat] using ((Rat.cast_le (K := ℝ)).2 h10))
+  have hd15 : |normalDefect 30 5 trialCoeff 15| ≤ ((1 / 100000) : ℝ) :=
+    (RatInterval.abs_le_absBound (defectInterval_contains 16 15 (by simp))).trans
+      (by simpa only [Rat.cast_div, Rat.cast_ofNat, Rat.cast_one] using
+        ((Rat.cast_le (K := ℝ)).2 h15))
+  have hs6 : normalDefect 30 5 trialCoeff 6 ^ 2 ≤ ((4 / 100000) : ℝ) ^ 2 := by
+    simpa only [sq_abs] using (sq_le_sq₀ (abs_nonneg _) (by norm_num)).2 hd6
+  have hs10 : normalDefect 30 5 trialCoeff 10 ^ 2 ≤ ((2 / 100000) : ℝ) ^ 2 := by
+    simpa only [sq_abs] using (sq_le_sq₀ (abs_nonneg _) (by norm_num)).2 hd10
+  have hs15 : normalDefect 30 5 trialCoeff 15 ^ 2 ≤ ((1 / 100000) : ℝ) ^ 2 := by
+    simpa only [sq_abs] using (sq_le_sq₀ (abs_nonneg _) (by norm_num)).2 hd15
+  have hbudget : defectBudget 30 5 trialCoeff ≤ ((31 / 10000000) : ℝ) := by
+    norm_num [defectBudget, divisor_check]
+    nlinarith only [hs6,hs10,hs15]
+  have hs := trial_fitted_moment_error_sq_le 30 5 (by norm_num) trialCoeff
+  have hprod := mul_le_mul hbudget hphi
+    (energy_nonneg _ _ _ (fun r _ => progressionWeight_nonneg 30 r)) (by norm_num)
+  have hsquare : (trialFittedMoment 30 5 trialCoeff - atomFittedMoment 30 5) ^ 2 ≤
+      ((3 / 2000) : ℝ) ^ 2 := by
+    norm_num only [Nat.reduceSub] at hs
+    nlinarith only [hs,hprod]
+  have habs : |trialFittedMoment 30 5 trialCoeff - atomFittedMoment 30 5| ≤
+      ((3 / 2000) : ℝ) :=
+    (sq_le_sq₀ (abs_nonneg _) (by norm_num)).1 (by simpa only [sq_abs] using hsquare)
+  obtain ⟨hleft,hright⟩ := abs_le.mp habs
+  constructor <;> linarith
+
+/-- The finite proportional signed-moment target now has a kernel-checked provider. -/
+theorem primorial_five_signed_moment_deficit :
+    atomFittedMoment (MobiusHeadGreen.greenPeriod 5) 5 ≤
+      (3 / 4) * atomEnergy (MobiusHeadGreen.greenPeriod 5) 5 := by
+  have hP : MobiusHeadGreen.greenPeriod 5 = 30 := by decide
+  have hq := primorial_five_energy_interval.1
+  rw [hP] at hq ⊢
+  linarith [fitted_moment_five_interval.2]
 
 end RiemannResearch.RH.Pareto.ExactHeadAtomStageFive

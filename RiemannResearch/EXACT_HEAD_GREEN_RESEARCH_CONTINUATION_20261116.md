@@ -1,4 +1,17 @@
 # Exact-head Green profiles: Lean continuation and research agenda
+
+## Subsequent affine-dual continuation
+
+See [the updated results and agenda](EXACT_HEAD_GREEN_AFFINE_DUAL_CONTINUATION_20261116.md)
+for the sharper signed-error criterion, projected Mobius budget, certified
+cutoff-five signed moment, and uncorrectable-head obstruction.
+The [head-coercivity derivation](EXACT_HEAD_GREEN_HEAD_COERCIVITY_DERIVATION_20261116.md)
+is a separate paper argument awaiting formalization. Uniform/cofinal R4 and
+R5 remain open. The checkpoint references and sixteen-guard count below
+describe the prior development.
+
+## Prior continuation
+
 Date: 2026-11-16. Repository: Cnoack3/RiemannResearch.
 
 Source: the attached 17-page *Best Nyman Beurling for RH.pdf*, internally titled
