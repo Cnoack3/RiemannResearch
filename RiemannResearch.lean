@@ -4607,6 +4607,9 @@ import RiemannResearch.RH.ExactHeadOccurrencePartition
 import RiemannResearch.Analysis.FiniteWeightedVarianceCertificates
 import RiemannResearch.RH.ExactHeadOccurrenceStability
 import RiemannResearch.RH.ExactHeadOccurrenceMeanBudget
+import RiemannResearch.RH.ExactHeadMeanGreenCertificate
+import RiemannResearch.RH.ExactHeadMeanGreenStages
+import RiemannResearch.RH.ExactHeadOccurrenceRelativeIntervals
 import RiemannResearch.RH.ExactHeadOccurrenceEnclosures
 import RiemannResearch.RH.ExactHeadOccurrenceRational
 import RiemannResearch.RH.ExactHeadOccurrenceStageFive

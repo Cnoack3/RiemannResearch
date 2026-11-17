@@ -1,6 +1,9 @@
 import RiemannResearch.RH.ExactHeadOccurrenceMeanBudget
 import RiemannResearch.RH.ExactHeadOccurrenceStageSeven
 import RiemannResearch.RH.ExactHeadOccurrenceReuseLowerBounds
+import RiemannResearch.RH.ExactHeadMeanGreenCertificate
+import RiemannResearch.RH.ExactHeadMeanGreenStages
+import RiemannResearch.RH.ExactHeadOccurrenceRelativeIntervals
 
 /-!
 # Foundations of complete occurrence certificates
@@ -109,3 +112,48 @@ open RiemannResearch.RH.Pareto.ExactHeadOccurrenceStageSeven
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms occurrenceEnergy_lt_iff_rational_certificate
+
+/-- info: 'RiemannResearch.RH.Pareto.progressionWeight_endpoint_relative_errors' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms RiemannResearch.RH.Pareto.progressionWeight_endpoint_relative_errors
+
+/-- info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.meanGreenBudget_eq_target_trial' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms meanGreenBudget_eq_target_trial
+
+/-- info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.cofinal_meanGreenBudget_iff_atom_endpoint' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms cofinal_meanGreenBudget_iff_atom_endpoint
+
+/-- info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.rationalMeanGreenBudget_relative' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms rationalMeanGreenBudget_relative
+
+/-- info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.cofinal_rationalMeanGreenBudget_iff' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms cofinal_rationalMeanGreenBudget_iff
+
+/-- info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.riemannHypothesis_of_cofinal_rational_mean_green_budget' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms riemannHypothesis_of_cofinal_rational_mean_green_budget
+
+/-- info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.optimal_meanGreenBudget_five_lt_seven' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms optimal_meanGreenBudget_five_lt_seven
+
+/-- info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.rationalBlockMeanRadius_le_oscillation' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms rationalBlockMeanRadius_le_oscillation
+
+/-- info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.rationalBlockMean_error_le_oscillation' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms rationalBlockMean_error_le_oscillation

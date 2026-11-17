@@ -101,8 +101,10 @@ exactly the depth-one width divided by K^2. Both endpoints converge to the
 actual coefficient, and every strict coefficient ordering is eventually
 certified by disjoint rational intervals.
 
-These refinement limits hold with P and x fixed. Their constants have not
-been bounded uniformly along P=greenPeriod(x).
+Those original limits were proved with P and x fixed. The continuation below
+now supplies uniform relative complete-budget errors and oscillation-normalized
+block-mean radii. Neither the actual combined budget nor the block oscillations
+have been bounded uniformly along P=greenPeriod(x).
 
 ## Exact characterization of reuse cost
 
@@ -185,7 +187,9 @@ the certificate does not silently use a positive-residue tail formula at zero.
 
 ## Declaration map and foundations
 
-This continuation adds 100 public theorem declarations in 13 proof modules.
+The original `2cbae18d` continuation added 100 public theorem declarations in
+13 proof modules. The table below records that original addition; subsequent
+mean--Green additions are described separately below.
 This count includes supporting lemmas; it is not a count of solved uniform
 research obligations. There are also eight private arithmetic checks and 20 explicit definitions.
 Every module is exported from `RiemannResearch.lean` and belongs to an
@@ -207,11 +211,71 @@ existing Bazel package.
 | [RH/ExactHeadOccurrenceStageSeven.lean](RH/ExactHeadOccurrenceStageSeven.lean) | 2 | Complete cutoff-seven energy interval and strict comparison with cutoff five. |
 | [RH/ExactHeadOccurrenceReuseLowerBounds.lean](RH/ExactHeadOccurrenceReuseLowerBounds.lean) | 5 | Quantitative coefficient-gap lower bounds and rational reuse certificates. |
 
-`RH/ExactHeadOccurrenceCertificationAudit.lean` adds 19 guarded transitive
-axiom audits. Their required foundations are exactly `propext`,
+The original `RH/ExactHeadOccurrenceCertificationAudit.lean` added 19 guarded
+transitive axiom audits; the proposed continuation extends the total to 28. Their required foundations are exactly `propext`,
 `Classical.choice`, and `Quot.sound`. These checks do not erase mathematical
 premises: in particular the cofinal RH implication retains its uniform
 arithmetic hypothesis. No placeholder proof or new axiom is introduced.
+
+
+## Mean--Green upper certificates and exact remaining hypothesis
+
+The reviewed continuation is documented in
+[MEAN_GREEN_CONTINUATION_REVIEW_20261117.md](MEAN_GREEN_CONTINUATION_REVIEW_20261117.md).
+The user approved committing and publishing this continuation on 17 November 2026.
+The managed checkpoint record identifies the validated integrated commit.
+
+For P>0 let C(P,x,u) be the mean budget plus the complete Green trial.
+The exact identities in `ExactHeadOccurrenceMeanBudget.lean` give
+
+    C = ||target-synthesis(u)||^2 + endpointRemainder
+      = atomEnergy + endpointRemainder + ||synthesis(u*)-synthesis(u)||^2.
+
+Thus the minimum over shared corrections is exactly atomEnergy+endpointRemainder.
+The cofinal provider is equivalent to bounding this sum on cofinal stages;
+the endpoint remainder cannot be canceled by a correction. This is an exact
+reduction, not a provider of the uniform bound.
+
+For 1<=r<=P and K>=1, `progressionWeight_endpoint_relative_errors` proves
+that each complete-weight endpoint error is at most w(r)/K^2, uniformly
+in the period. The proof uses w(r)>=1/(Pr)>=1/P^2.
+
+`RH/ExactHeadMeanGreenCertificate.lean` defines a complete rational upper
+certificate Q_K, using the direct target trial and the endpoint products.
+Its central theorem `rationalMeanGreenBudget_relative` proves, for every
+rational trial and positive P,K,
+
+    C <= Q_K <= (1+1/K^2) C.
+
+`RH/ExactHeadOccurrenceRelativeIntervals.lean` also bounds each existing
+rational block-mean radius by its target oscillation divided by K^2, for
+1<=a<b<=P and K>=1. The actual mean error satisfies the same bound. No
+uniform bound on the oscillations is asserted.
+
+Depth ten therefore gives at most one percent multiplicative certification
+loss at every cutoff, without propagating coefficient intervals.
+`cofinal_rationalMeanGreenBudget_iff` equates cofinal boundedness of Q_K
+and C for any fixed positive K and prescribed rational correction family.
+The RH consumer still explicitly requires the common cofinal bound.
+
+`RH/ExactHeadMeanGreenStages.lean` retains the endpoint loss in the finite
+comparison. It proves endpointRemainder(30,5)=0 and
+endpointRemainder(210,7)>=2/143 from the first free block [10,14).
+Consequently every cutoff-seven combined budget is at least
+
+    212/6250 + 2/143 > 0.04790,
+
+whereas the best cutoff-five combined budget is at most 0.0381.
+This reverses the direction of the occurrence-only comparison, without
+implying anything about asymptotic boundedness.
+
+Status: finite identities, relative estimates, and finite comparison are
+checked declarations; the common cofinal arithmetic provider remains **Open**.
+The exact final verification record and floating-point diagnostics are in
+the linked review. Numerical evaluations at cutoffs 11 and 13 are diagnostics,
+not kernel certificates. The existing gcd-fiber lower bounds do not supply
+an upper bound, and the total coefficient-dispersion bound still needs its
+own uniform arithmetic estimate.
 
 ## Remaining research obligations
 
@@ -230,7 +294,15 @@ remain open.
 
 ## Verification evidence
 
-The final focused integration and all 19 guarded axiom audits passed using
+Before publication approval, the reviewed continuation passed the full `//:RiemannResearch` build,
+including all 28 axiom guards, in 325.178 server verification seconds:
+[Full-project BuildBuddy record](https://app.buildbuddy.io/invocation/c10a81f4-efe9-4471-be79-9e3ef6491698).
+Its base is `325eabb4a52ceb0f616e15567f032919078761f9`; the complete draft
+verification record is in the linked review. The subsequent managed checkpoint
+records the final integrated verification and publication outcome.
+
+For the original finite-certification work, the focused integration and all
+19 guarded axiom audits passed using
 Bazel/BuildBuddy: job `job_QTRp1GikP6Qe-0RPaJkJUdMq4bxcYg78`,
 42.404 server-reported verification seconds.
 [Integrated proof and axiom audit](https://app.buildbuddy.io/invocation/1e2690c8-f2b5-4cd2-8169-82ba3d706463).

@@ -1,4 +1,5 @@
 import RiemannResearch.RH.ParetoRationalWeightIntervals
+import RiemannResearch.RH.ParetoProgressionTails
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
@@ -122,5 +123,43 @@ theorem progressionWeight_endpoint_errors (P r K : ℕ)
       Rat.cast_mul, Rat.cast_natCast] using h
   exact ⟨sub_nonneg.mpr hw.1, by linarith [hw.2],
     sub_nonneg.mpr hw.2, by linarith [hw.1]⟩
+
+/-- Relative endpoint errors are uniform over every sampled residue and period.
+Only the refinement depth controls the factor; no cutoff-dependent sensitivity
+constant is required. -/
+theorem progressionWeight_endpoint_relative_errors (P r K : ℕ)
+    (hP : 0 < P) (hr : 0 < r) (hrP : r ≤ P) (hK : 0 < K) :
+    progressionWeight P r - ((elementaryProgressionInterval P r K).lo : ℝ) ≤
+        progressionWeight P r / (K : ℝ)^2 ∧
+    ((elementaryProgressionInterval P r K).hi : ℝ) - progressionWeight P r ≤
+        progressionWeight P r / (K : ℝ)^2 := by
+  have hp : (0 : ℝ) < P := by exact_mod_cast hP
+  have hrr : (0 : ℝ) < r := by exact_mod_cast hr
+  have hle : (r : ℝ) ≤ P := by exact_mod_cast hrP
+  have hl : 1 / (P : ℝ)^2 ≤ progressionWeight P r := by
+    calc
+      _ ≤ 1 / ((P : ℝ) * r) := by
+        apply one_div_le_one_div_of_le (mul_pos hp hrr)
+        nlinarith
+      _ ≤ _ := progressionWeight_lower P r hP hr
+  have he : 1 / (((P : ℝ)*K)^2) ≤ progressionWeight P r / (K : ℝ)^2 := by
+    calc
+      _ = (1 / (P : ℝ)^2) / (K : ℝ)^2 := by
+        simp only [mul_pow, div_div]
+      _ ≤ _ := div_le_div_of_nonneg_right hl (sq_nonneg _)
+  have h := progressionWeight_endpoint_errors P r K hP hr hK
+  exact ⟨h.2.1.trans he, h.2.2.2.trans he⟩
+
+/-- Complete upper weights lose at most the uniform factor 1 + 1/K^2. -/
+theorem elementaryProgressionInterval_upper_relative (P r K : ℕ)
+    (hP : 0 < P) (hr : 0 < r) (hrP : r ≤ P) (hK : 0 < K) :
+    progressionWeight P r ≤ ((elementaryProgressionInterval P r K).hi : ℝ) ∧
+      ((elementaryProgressionInterval P r K).hi : ℝ) ≤
+        (1 + 1 / (K : ℝ)^2) * progressionWeight P r := by
+  refine ⟨(elementaryProgressionInterval_contains P r K hP hr).2, ?_⟩
+  have h := (progressionWeight_endpoint_relative_errors P r K hP hr hrP hK).2
+  calc
+    _ ≤ progressionWeight P r + progressionWeight P r / (K : ℝ)^2 := by linarith
+    _ = _ := by ring
 
 end RiemannResearch.RH.Pareto
