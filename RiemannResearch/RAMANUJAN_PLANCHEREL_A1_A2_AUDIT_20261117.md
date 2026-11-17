@@ -310,3 +310,34 @@ The checked `#guard_msgs` assertion requires exactly
 It passed through Bazel with `verified=true`; no project-specific axiom occurs
 in that theorem's dependency set. Its arithmetic window assumptions remain
 explicit in its type.
+
+## Signed three-prime quantitative continuation
+
+The [signed-moment theorem catalog](THEOREM_CATALOG_SIGNED_THREE_PRIME_RETURN_20261117.md)
+records four further checked modules. With the actual residual R, complete
+signed atom profile F, numerator N, and complete tail return d, they prove
+
+    Q = E_L(R) + E_T(R+d) + E_T(d),
+    (E_L(F)+E_T(F)) N² <= [Q-E_T(R+d)] E_L(F) E_T(F).
+
+The exact nonnegative Gram remainders precede these inequalities. In the safe
+prime window they also prove the position-independent signed floor bound
+|F(n)| <= (q-1)(r-p), hence
+
+    N² <= Q * M_[x+1,Y] * [(q-1)(r-p)]².
+
+Here Q is the actual atomEnergy(P,x); it is never replaced by 1. The periodized
+mass and all tail Gram cross terms remain explicit. The corrected polarized
+Ramanujan formula is applied to activated prefix scores with conductor one
+included. The full-period upper scores cannot be substituted for those
+prefix scores.
+
+The actual tail representer is constructed without invertibility. Its cost
+is both c transpose G_T c and c transpose m. The period-endpoint atom is a
+zero tail Gram column; a matrix inverse must therefore specify a reduced
+basis or the feasible range.
+
+These are unconditional finite estimates under their stated cutoff/arithmetic
+assumptions. They do not prove a cofinal bound for Q, a uniform inverse-return
+estimate, the requested normalized curvature decay, A1, A2, or RH. See the
+linked catalog for exact declaration names, hypotheses, and verification scope.

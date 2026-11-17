@@ -1,3 +1,7 @@
+import RiemannResearch.Analysis.FiniteWeightedReturnBounds
+import RiemannResearch.RH.ExactHeadSignedMomentBounds
+import RiemannResearch.RH.ExactHeadSignedMomentPlancherel
+import RiemannResearch.RH.ExactHeadTailReturnEnergy
 import RiemannResearch.RH.ExactHeadPhysicalReturn
 import RiemannResearch.RH.ExactHeadAtomReturnMoments
 import RiemannResearch.RH.RamanujanFinitePlancherel
