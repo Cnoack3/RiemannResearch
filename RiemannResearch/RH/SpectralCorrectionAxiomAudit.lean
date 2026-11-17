@@ -1,0 +1,12 @@
+import RiemannResearch.Analysis.PrimitiveRegularizationCertificates
+import RiemannResearch.RH.ProjectedPairSpectralObstruction
+
+/-! Axiom audit for the spectral-correction continuation. -/
+
+#print axioms RiemannResearch.Analysis.ZetaFactorObstruction.no_accumulating_zeros
+#print axioms RiemannResearch.Analysis.PrimitiveRegularization.trust_region_minimizes
+#print axioms RiemannResearch.Analysis.PrimitiveRegularization.approximate_source_centered_identity
+#print axioms RiemannResearch.Analysis.PrimitiveRegularization.approximate_source_residual_bound
+#print axioms RiemannResearch.Analysis.PrimitiveRegularization.exact_source_residual_le_quarter
+#print axioms RiemannResearch.Analysis.PrimitiveRegularization.exists_approximate_source_budget
+#print axioms RiemannResearch.RH.ProjectedPairSpectralObstruction.finite_cube_block_pos

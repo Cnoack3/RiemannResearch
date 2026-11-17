@@ -1,0 +1,77 @@
+[
+  {
+    "x": 53,
+    "block": [
+      1.0,
+      16.0
+    ],
+    "arithmetic": "FLINT/Arb ball arithmetic",
+    "python_flint": "0.9.0",
+    "digits": 50,
+    "integration_tolerance": "1e-10",
+    "head_atoms": 33,
+    "first_chaos_rank": 17,
+    "pair_columns": 120,
+    "free_gram_positive_definite_exact": true,
+    "diagonal_energy_ratio": "[0.999800009999999186205264293408877700985299277273 +/- 2.33e-49]",
+    "continuous_residual_ratio": "[0.001892089 +/- 7.70e-10]",
+    "certified_inequalities": [
+      "diagonal energy < x^2 log(x)",
+      "0 < continuous [1.0, 16.0] residual < (1/100) * x^2 log(x)"
+    ],
+    "coefficient_scaling": "9999/10000",
+    "coefficient_input": "17-digit decimals in spectral_correction_extended_diagnostics.json, interpreted as exact rationals",
+    "coefficients_sha256": "15440a8b9e46a9982eb9590b763c150019e2586ace0af7a99a6daa9d6fd594d0",
+    "scope": "finite cutoff only; external computational certificate, not Lean-kernel or uniform evidence"
+  },
+  {
+    "x": 97,
+    "block": [
+      1.0,
+      16.0
+    ],
+    "arithmetic": "FLINT/Arb ball arithmetic",
+    "python_flint": "0.9.0",
+    "digits": 50,
+    "integration_tolerance": "1e-10",
+    "head_atoms": 61,
+    "first_chaos_rank": 26,
+    "pair_columns": 300,
+    "free_gram_positive_definite_exact": true,
+    "diagonal_energy_ratio": "[0.999800010000000306417015357263325114790593845596 +/- 7.23e-49]",
+    "continuous_residual_ratio": "[0.00217401992 +/- 9.50e-12]",
+    "certified_inequalities": [
+      "diagonal energy < x^2 log(x)",
+      "0 < continuous [1.0, 16.0] residual < (1/100) * x^2 log(x)"
+    ],
+    "coefficient_scaling": "9999/10000",
+    "coefficient_input": "17-digit decimals in spectral_correction_extended_diagnostics.json, interpreted as exact rationals",
+    "coefficients_sha256": "9f37cf01835a7cf589b21b32fcfae8285e0b0b24252877e59d63c83484968d2d",
+    "scope": "finite cutoff only; external computational certificate, not Lean-kernel or uniform evidence"
+  },
+  {
+    "x": 199,
+    "block": [
+      1.0,
+      16.0
+    ],
+    "arithmetic": "FLINT/Arb ball arithmetic",
+    "python_flint": "0.9.0",
+    "digits": 50,
+    "integration_tolerance": "1e-10",
+    "head_atoms": 122,
+    "first_chaos_rank": 47,
+    "pair_columns": 1035,
+    "free_gram_positive_definite_exact": true,
+    "diagonal_energy_ratio": "[0.99980001000000012931552146176121315136705319757 +/- 4.57e-48]",
+    "continuous_residual_ratio": "[0.002219182 +/- 4.10e-10]",
+    "certified_inequalities": [
+      "diagonal energy < x^2 log(x)",
+      "0 < continuous [1.0, 16.0] residual < (1/100) * x^2 log(x)"
+    ],
+    "coefficient_scaling": "9999/10000",
+    "coefficient_input": "17-digit decimals in spectral_correction_extended_diagnostics.json, interpreted as exact rationals",
+    "coefficients_sha256": "d8c6813ddeda2948a6bf3fd25d05a4a7a69d842b4623787d651bdf205f411c9f",
+    "scope": "finite cutoff only; external computational certificate, not Lean-kernel or uniform evidence"
+  }
+]
