@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.ZetaFactorObstruction
 import RiemannResearch.Analysis.FiniteAffineResidualDuality
 import RiemannResearch.RH.MobiusAffineDuality
 import RiemannResearch.RH.ExactHeadGreenAffineCriterion
