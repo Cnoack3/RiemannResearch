@@ -4595,3 +4595,6 @@ import RiemannResearch.Analysis.FiniteAtomConcentration
 import RiemannResearch.Analysis.FinitePeriodicCancellation
 import RiemannResearch.NumberTheory.UnitCenteredReturnSampling
 import RiemannResearch.RH.ExactHeadOccurrenceBudgets
+import RiemannResearch.RH.ExactHeadOccurrenceCertificates
+import RiemannResearch.RH.ExactHeadOccurrenceBlocks
+import RiemannResearch.RH.ExactHeadOccurrencePartition

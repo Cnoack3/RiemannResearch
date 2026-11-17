@@ -1,4 +1,5 @@
 import RiemannResearch.RH.ExactHeadOccurrenceCriterion
+import RiemannResearch.RH.ExactHeadOccurrencePartition
 import RiemannResearch.NumberTheory.DivisorReturnCoordinates
 
 import RiemannResearch.RH.ExactHeadOccurrenceBudgets
@@ -113,3 +114,83 @@ info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.riemannHypothesis
 -/
 #guard_msgs (whitespace := lax) in
 #print axioms riemannHypothesis_of_cofinal_fiber_budgets
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.occurrence_trial_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms occurrence_trial_identity
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.occurrenceCoefficients_eq_of_normal' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms occurrenceCoefficients_eq_of_normal
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.occurrence_block_pairwise_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms occurrence_block_pairwise_identity
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.occurrence_block_pair_lower' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms occurrence_block_pair_lower
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.occurrenceEnergy_eq_block_variances' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms occurrenceEnergy_eq_block_variances
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.occurrenceEnergy_le_gapBudget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms occurrenceEnergy_le_gapBudget
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.occurrenceCoefficients_boundary' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms occurrenceCoefficients_boundary
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.occurrenceCoefficients_nonneg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms occurrenceCoefficients_nonneg
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.occurrence_fit_mono' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms occurrence_fit_mono
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.riemannHypothesis_of_cofinal_gap_green_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms riemannHypothesis_of_cofinal_gap_green_budget

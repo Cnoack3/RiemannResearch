@@ -190,7 +190,8 @@ in floating point; small nonzero residuals are reported, not hidden.
 | Corrected fiber concentration | Supplied as an exact finite identity and bound; decay remains open. |
 | Haar-uniform return pseudorandomness | Invalid in the all-character form, by the parity obstruction. |
 | Uniform signed Green trial bound | **Open.** Construct actual shared atom coefficients with the common cofinal bound in the new criterion. |
-| Occurrence compression estimate | **Not formalized here.** The paper's squarefree smooth-gap adaptation and its analytic providers must still be supplied in Lean. |
+| Finite occurrence compression and explicit optimizer | **Supplied.** Canonical blocks, exact complete variances, explicit nonnegative active coefficients, and the quarter-oscillation gap budget are proved; see [the block continuation](THEOREM_CATALOG_OCCURRENCE_BLOCKS_20261116.md). |
+| Uniform occurrence compression estimate | **Open.** Bound the explicit gap statistic or exact block variances cofinally; the squarefree smooth-gap adaptation and analytic providers remain to be supplied. |
 | Signal-direction Ramanujan–Green estimate (81) | **Open**, independent of the atom-reuse route. |
 | Walsh/subset-lattice decay | **Open.** Basis changes alone do not provide the required weighted estimate. |
 | Markov-chain comparison | **Open after correction.** Respect unit support and retain the signed Green geometry. |
