@@ -1,7 +1,12 @@
 import RiemannResearch.RH.ExactHeadOccurrenceCriterion
 import RiemannResearch.NumberTheory.DivisorReturnCoordinates
 
+import RiemannResearch.RH.ExactHeadOccurrenceBudgets
+import RiemannResearch.NumberTheory.UnitCenteredReturnSampling
+
 open RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection
+open RiemannResearch.Analysis.FiniteAtomDispersion
+open RiemannResearch.NumberTheory.UnitCenteredReturnSampling
 
 /-! Guarded dependency audits for the exact identities, corrected inferences,
 and conditional RH criteria. Substantive hypotheses remain visible in the
@@ -60,3 +65,51 @@ info: 'RiemannResearch.NumberTheory.DivisorReturnCoordinates.parity_return_bias'
 #guard_msgs (whitespace := lax) in
 #print axioms
   RiemannResearch.NumberTheory.DivisorReturnCoordinates.parity_return_bias
+
+/--
+info: 'RiemannResearch.Analysis.FiniteAtomDispersion.l1_sq_add_pairwise_eq_card_mul_loss' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms l1_sq_add_pairwise_eq_card_mul_loss
+
+/--
+info: 'RiemannResearch.Analysis.FiniteAtomDispersion.l1_sq_le_normalized_fiber_budgets' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms l1_sq_le_normalized_fiber_budgets
+
+/--
+info: 'RiemannResearch.NumberTheory.UnitCenteredReturnSampling.parity_centered_return_sum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms parity_centered_return_sum
+
+/--
+info: 'RiemannResearch.NumberTheory.UnitCenteredReturnSampling.return_average_error_exact' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms return_average_error_exact
+
+/--
+info: 'RiemannResearch.NumberTheory.UnitCenteredReturnSampling.return_second_moment_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms return_second_moment_le
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadOccurrenceProjection.riemannHypothesis_of_cofinal_fiber_budgets' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms riemannHypothesis_of_cofinal_fiber_budgets

@@ -1,5 +1,12 @@
 # CRT occurrence relaxation, atom reuse, and corrected research targets
 
+**Correction follow-up:** the two invalid inference steps below now have
+formal replacements in [CRT return and concentration repairs](CRT_RETURN_CONCENTRATION_REPAIRS_20261116.md).
+These prove total-budget concentration, unit-centered parity cancellation,
+exact incomplete-period sampling, and a bias-retaining mean-square transfer.
+The actual cofinal arithmetic providers remain open. The earlier
+counterarguments are retained because the original statements remain invalid.
+
 Source: Christian Noack, **Chinese-Remainder and Profinite Structure in the
 Nyman–Beurling–Báez-Duarte Hilbert Space**, `sdf_modified.pdf`, dated July 21, 2026.
 [Drive source](https://drive.google.com/file/d/1RWvDfQdERH8uDRS9PwGhK2eOKJxyfvO6/view).
