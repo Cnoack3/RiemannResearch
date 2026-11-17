@@ -125,4 +125,124 @@ theorem fitted_moment_deficit_of_probe_bound (P x : ℕ) (alpha M eps : ℝ)
     (atomEnergy P x) M eps hq hM heps hs
   nlinarith only [h]
 
+private theorem upper_span_eval_zero (P x r : ℕ) (hr : r ≤ x) (v : ℕ → ℝ)
+    (hv : v ∈ upperSpan P x (atom P)) : v r = 0 := by
+  let eval : (ℕ → ℝ) →ₗ[ℝ] ℝ :=
+    { toFun := fun f => f r
+      map_add' := fun _ _ => rfl
+      map_smul' := fun _ _ => rfl }
+  have hspan : upperSpan P x (atom P) ≤ LinearMap.ker eval := by
+    apply Submodule.span_le.mpr
+    rintro _ ⟨d, hd, rfl⟩
+    exact LinearMap.mem_ker.mpr (atom_zero_of_lt P d r (hr.trans_lt (Finset.mem_filter.mp hd).2))
+  exact LinearMap.mem_ker.mp (hspan hv)
+
+private theorem primorial_residual_zero_on_head (x r : ℕ) (hr : r ∈ Finset.Icc 1 x) :
+    atomResidual (MobiusHeadGreen.greenPeriod x) x r = 0 := by
+  have hxP := MobiusHeadGreen.greenPeriod_gt x
+  obtain ⟨hr1, hrx⟩ := Finset.mem_Icc.mp hr
+  have hrP : r ∈ Finset.Icc 1 (MobiusHeadGreen.greenPeriod x - 1) :=
+    Finset.mem_Icc.mpr ⟨hr1, by omega⟩
+  rw [← primorial_residual_eq_atomResidual x r hrP]
+  exact MobiusHeadGreen.residual_head _ x hxP.le _
+    (MobiusHeadGreen.primorialNormalCoefficients_spec x).1 r hr1 hrx
+
+/-- Centering and every upper-span correction vanish on the positive exact head. -/
+theorem centered_probe_eq_on_primorial_head (x r : ℕ) (hr : r ∈ Finset.Icc 1 x)
+    (alpha : ℝ) (v : ℕ → ℝ)
+    (hv : v ∈ upperSpan (MobiusHeadGreen.greenPeriod x) x (atom (MobiusHeadGreen.greenPeriod x))) :
+    fittedMomentProbe x r - alpha * target (MobiusHeadGreen.greenPeriod x) r - v r =
+      fittedMomentProbe x r := by
+  have hrx := (Finset.mem_Icc.mp hr).2
+  have hzero := primorial_residual_zero_on_head x r hr
+  have hs := upper_span_eval_zero _ _ r hrx _ (atomResidual_sub_target_mem
+    (MobiusHeadGreen.greenPeriod x) x)
+  change atomResidual (MobiusHeadGreen.greenPeriod x) x r -
+    target (MobiusHeadGreen.greenPeriod x) r = 0 at hs
+  have ht : target (MobiusHeadGreen.greenPeriod x) r = 0 := by linarith only [hzero, hs]
+  rw [ht, upper_span_eval_zero _ _ r hrx _ hv, mul_zero, sub_zero, sub_zero]
+
+/-- A correction can only change the part of the energy outside the exact head. -/
+theorem complete_centered_probe_energy_split (x : ℕ) (alpha : ℝ) (v : ℕ → ℝ)
+    (hv : v ∈ upperSpan (MobiusHeadGreen.greenPeriod x) x (atom (MobiusHeadGreen.greenPeriod x))) :
+    let P := MobiusHeadGreen.greenPeriod x
+    let f := fun r => fittedMomentProbe x r - alpha * target P r - v r
+    energy (Finset.Icc 1 (P - 1)) (progressionWeight P) f =
+      energy (Finset.Icc 1 x) (progressionWeight P) (fittedMomentProbe x) +
+        energy (Finset.Icc 1 (P - 1) \ Finset.Icc 1 x) (progressionWeight P) f := by
+  dsimp only
+  have hxP := MobiusHeadGreen.greenPeriod_gt x
+  have hsub : Finset.Icc 1 x ⊆ Finset.Icc 1 (MobiusHeadGreen.greenPeriod x - 1) :=
+    Finset.Icc_subset_Icc_right (by omega)
+  let f := fun r => fittedMomentProbe x r - alpha * target (MobiusHeadGreen.greenPeriod x) r - v r
+  have he : energy (Finset.Icc 1 x) (progressionWeight (MobiusHeadGreen.greenPeriod x)) f =
+      energy (Finset.Icc 1 x) (progressionWeight (MobiusHeadGreen.greenPeriod x)) (fittedMomentProbe x) := by
+    unfold energy
+    apply Finset.sum_congr rfl
+    intro r hr
+    dsimp [f]
+    rw [centered_probe_eq_on_primorial_head x r hr alpha v hv]
+  change _ = _ + energy _ _ f
+  rw [← he, add_comm]
+  exact (Finset.sum_sdiff hsub).symm
+
+theorem primorial_head_probe_energy_le (x : ℕ) (alpha : ℝ) (v : ℕ → ℝ)
+    (hv : v ∈ upperSpan (MobiusHeadGreen.greenPeriod x) x (atom (MobiusHeadGreen.greenPeriod x))) :
+    let P := MobiusHeadGreen.greenPeriod x
+    energy (Finset.Icc 1 x) (progressionWeight P) (fittedMomentProbe x) ≤
+      energy (Finset.Icc 1 (P - 1)) (progressionWeight P)
+        (fun r => fittedMomentProbe x r - alpha * target P r - v r) := by
+  dsimp only
+  rw [complete_centered_probe_energy_split x alpha v hv]
+  exact le_add_of_nonneg_right (energy_nonneg _ _ _ (fun r _ => progressionWeight_nonneg _ r))
+
+/-- The moment sees only the residues outside the exact head. -/
+theorem fitted_moment_gap_sq_le_tail (x : ℕ) (alpha : ℝ) (v : ℕ → ℝ)
+    (hv : v ∈ upperSpan (MobiusHeadGreen.greenPeriod x) x
+      (atom (MobiusHeadGreen.greenPeriod x))) :
+    let P := MobiusHeadGreen.greenPeriod x
+    (atomFittedMoment P x - alpha * atomEnergy P x) ^ 2 ≤ atomEnergy P x *
+      energy (Finset.Icc 1 (P - 1) \ Finset.Icc 1 x) (progressionWeight P)
+        (fun r => fittedMomentProbe x r - alpha * target P r - v r) := by
+  let P := MobiusHeadGreen.greenPeriod x
+  let s := Finset.Icc 1 (P - 1)
+  let t := s \ Finset.Icc 1 x
+  let f := fun r => fittedMomentProbe x r - alpha * target P r - v r
+  change (atomFittedMoment P x - alpha * atomEnergy P x) ^ 2 ≤
+    atomEnergy P x * energy t (progressionWeight P) f
+  have hs : t ⊆ s := Finset.sdiff_subset
+  have hz (r : ℕ) (hrs : r ∈ s) (hrt : r ∉ t) : atomResidual P x r = 0 := by
+    apply primorial_residual_zero_on_head x r
+    by_contra h
+    exact hrt (Finset.mem_sdiff.mpr ⟨hrs, h⟩)
+  rw [fitted_moment_gap_eq_pairing P x alpha v hv]
+  change (pairing s (progressionWeight P) (atomResidual P x) f) ^ 2 ≤ _
+  rw [← pairing_support s t (progressionWeight P) (atomResidual P x) f hs hz]
+  have he : energy t (progressionWeight P) (atomResidual P x) = atomEnergy P x :=
+    energy_support s t (progressionWeight P) (atomResidual P x) hs hz
+  rw [← he]
+  exact pairing_sq_le t (progressionWeight P) (atomResidual P x) f
+    (fun r _ => progressionWeight_nonneg P r)
+
+/-- A uniform bound for the complementary energy suffices for the R5 moment budget. -/
+theorem fitted_moment_deficit_of_tail_probe_bound (x : ℕ) (alpha M eps : ℝ)
+    (hM : 0 ≤ M) (heps : 0 < eps) (v : ℕ → ℝ)
+    (hv : v ∈ upperSpan (MobiusHeadGreen.greenPeriod x) x
+      (atom (MobiusHeadGreen.greenPeriod x)))
+    (hb : let P := MobiusHeadGreen.greenPeriod x
+      energy (Finset.Icc 1 (P - 1) \ Finset.Icc 1 x) (progressionWeight P)
+        (fun r => fittedMomentProbe x r - alpha * target P r - v r) ≤ M) :
+    let P := MobiusHeadGreen.greenPeriod x
+    atomFittedMoment P x ≤ (alpha + eps) * atomEnergy P x + M / (4 * eps) := by
+  dsimp only at hb ⊢
+  let P := MobiusHeadGreen.greenPeriod x
+  have hq : 0 ≤ atomEnergy P x :=
+    energy_nonneg _ _ _ (fun r _ => progressionWeight_nonneg P r)
+  have hs := (fitted_moment_gap_sq_le_tail x alpha v hv).trans
+    (mul_le_mul_of_nonneg_left hb hq)
+  have h := one_sided_of_square_budget (atomFittedMoment P x - alpha * atomEnergy P x)
+    (atomEnergy P x) M eps hq hM heps hs
+  change atomFittedMoment P x ≤ _
+  nlinarith only [h]
+
 end RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer

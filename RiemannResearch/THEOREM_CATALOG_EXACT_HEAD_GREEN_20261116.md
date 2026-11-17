@@ -358,7 +358,47 @@ passed `//:RiemannResearch` in 196.796 seconds, including all sixteen
 permanent guarded axiom checks.
 [Full build](https://app.buildbuddy.io/invocation/8323ea5a-c55e-417f-b480-4edd0e859ca2).
 
-The centered-probe experiment supplies exact-rational trial corrections at
-5,7,11,13 with alpha=1/2 and complete energy below 2/3. These endpoint
-certificates are external; a uniform bound and kernel replay remain open.
-See the research continuation and the retained `moment_probe_certificates.json`.
+The published centered-probe experiment supplies exact rational trial
+corrections at 5,7,11,13 with alpha=1/2. Its conservative complete bounds
+are independently kernel-checked with the elementary complete-progression
+interval.
+
+## Continuation: kernel replay and the complementary energy
+
+- `RH/ExactHeadProbeCertificate.lean` proves
+  `ExactHeadProbeCertificate.energy_le_of_scan` and
+  `ExactHeadProbeCertificate.tail_energy_le_of_scan`. Both check integer
+  complete-weight sums using the proved progression interval. The
+  complementary check uses the exact difference of two integer sums.
+- `ExactHeadProbeWitnesses.centered_probe_energy_bounds` certifies the
+  published coefficients at x=5,7,11,13. The full bounds are 0.628954,
+  0.510332, 0.365700 and 0.364855. The complementary bounds are 0.018057,
+  0.032283, 0.009073 and 0.005777.
+- `ExactHeadAtomOptimizer.complete_centered_probe_energy_split` identifies
+  the part independent of every upper-span correction and of alpha.
+  `ExactHeadAtomOptimizer.fitted_moment_gap_sq_le_tail` proves that only the
+  complementary energy enters the signed-moment bound because the exact-head
+  residual vanishes there.
+- `ExactHeadAtomOptimizer.fitted_moment_deficit_of_tail_probe_bound` gives
+  the generic moment criterion with just the complementary energy.
+  `ExactHeadProbeWitnesses.fitted_moment_gap_sq_le` gives the finite
+  two-sided squared inequality, and
+  `ExactHeadProbeWitnesses.fitted_moment_deficit`,
+  `ExactHeadProbeWitnesses.fitted_moment_three_quarters` and
+  `ExactHeadProbeWitnesses.fitted_moment_three_quarters_common` give its
+  one-sided consequences.
+- `RH/ExactHeadGreenAxiomAudit.lean` guards the finite replay, the finite
+  moment inequalities, and the generic energy split and moment criterion.
+
+The certificate replay draft passed full Bazel/BuildBuddy job
+`job_AucU4euZeejw8BJoM3upZLvaTB7wj4oj`, which built
+`//:RiemannResearch` in 473.337 seconds, including all 21 guarded axiom checks.
+[Full build](https://app.buildbuddy.io/invocation/385aeff7-852b-49c9-8eff-a77f32a78fe6).
+
+The independently checked `ExactHeadAtomStageFive.primorial_five_signed_moment_deficit`
+gives the zero-budget inequality at cutoff five. The complete energy at
+cutoff three exceeds 2/3 by `ExactHeadAtomOptimizer.centered_probe_three_gt_two_thirds`.
+
+A cofinal complementary-energy provider and the R4 profile-dispersion
+estimate remain **Open**. The research continuation records a paper-level
+Möbius summation condition forced by an all-cutoff complete energy bound.

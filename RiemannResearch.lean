@@ -9,6 +9,8 @@ import RiemannResearch.RH.ExactHeadGreenAffineCriterion
 import RiemannResearch.RH.ExactHeadAtomStageFiveMoment
 import RiemannResearch.RH.ExactHeadMomentHeadObstruction
 import RiemannResearch.RH.ExactHeadAtomMoment
+import RiemannResearch.RH.ExactHeadProbeCertificate
+import RiemannResearch.RH.ExactHeadProbeWitnesses
 import RiemannResearch.Analysis.FiniteAffineMomentFunctional
 import RiemannResearch.RH.ExactHeadGreenAxiomAudit
 import RiemannResearch.RH.ExactHeadAtomStageFive

@@ -246,11 +246,11 @@ identify an asymptotic transition scale.
 
 | Item | Status | Delivered | Remaining acceptance criterion |
 |---|---|---|---|
-| R1 certified data | Partial: energy kernel-checked at 3 and 5 | Full-tail energy certificates at 3 and 5; external rational profile/moment enclosures at 5,7,11,13; diagnostics through 23 | Kernel replay of affine and signed-moment enclosures; larger certified stages |
+| R1 certified data | Partial: complete weights kernel-checked | Optimizer energy at 3 and 5, centered-probe energies at 5,7,11,13, and external diagnostics through 23 | Kernel replay of the direct affine and signed-moment intervals |
 | R2 dyadic ledger | Computed, external | Canonical and best-affine block energies through 23 | Certified block intervals and larger cutoffs if justified |
 | R3 digit/carry formulas | Partial, Lean checked | General digit recursion, primitive arithmetic bridge, affine completion/shift | Identify the actual boundary carry/discrepancy with the affine component |
 | R4 signal-specific discrepancy | Open | Actual tail mass, low-conductor bound, strict quadratic gap criterion | Jointly cofinal W E<=k^2 q^2+Cq with k<delta, without assuming bounded q or RH |
-| R5 moment admissibility | Partial, Lean checked | Unique fit at all x>=2, exact signed observation, normal-defect certificates, centered-probe deficit criterion | Uniform centered-probe energy bound or another jointly cofinal proportional moment deficit |
+| R5 moment admissibility | Partial, Lean checked | Unique fit at all x>=2, exact signed observation, normal-defect certificates, complementary-probe deficit criterion and four finite checks | Uniform complementary-probe bound or another jointly cofinal proportional moment deficit |
 | R6 falsification | Extended, external | No blow-up observed through 23 | Further certified stages; no finite test is an asymptotic proof |
 
 Priority order for continuation:
@@ -261,9 +261,9 @@ Priority order for continuation:
 2. The atom/floor identification is completed. Use the checked common
    residual and the proper-divisor first-difference formula in certificate assembly.
 3. Use the explicit signed-moment probe and its normal-defect error bound
-   to certify R5 directly. For an analytic route, seek alpha<1 and a uniform
-   bound for the energy of probe-alpha*target after removing an upper-span
-   component. This implies a proportional deficit without first bounding q.
+   to certify R5 directly. For a cofinal route, seek alpha<1 and a bounded
+   complementary energy for probe-alpha*target after removing an
+   upper-span component. The residual vanishes on the head.
 4. Prove the actual boundary carry/discrepancy decomposition, remove the affine
    component algebraically, and target the weaker W E_tail<=Cq budget.
 5. Keep any claimed uniform bound separate from finite diagnostics; check that
@@ -386,28 +386,147 @@ without a bounded-q assumption. Uniform alpha<1 and M, with
 Producing such upper-span corrections v and proving a uniform M remain
 **Open**. R4 dispersion must still hold on a common cofinal sequence.
 
-### Finite centered-probe certificates
+### Kernel replay of the centered-probe witnesses
 
-An external exact-rational replay now checks alpha=1/2 and rational upper-span
-corrections at the following stages. The complete energy upper bounds are:
+For \(\alpha=1/2\), the four published upper-span corrections give the
+following Lean-checked bounds. The complementary energy covers the same
+complete progression weights at residues \(x<r<P\).
 
-| x | P | Upper bound for centered-probe energy |
-|---|---:|---:|
-| 5 | 30 | 0.628954 |
-| 7 | 210 | 0.510332 |
-| 11 | 2310 | 0.365700 |
-| 13 | 30030 | 0.364855 |
+| \(x\) | \(P\) | Complete energy upper bound | Complementary energy upper bound \(T_x\) |
+|---:|---:|---:|---:|
+| 5 | 30 | 0.628954 | 0.018057 |
+| 7 | 210 | 0.510332 | 0.032283 |
+| 11 | 2310 | 0.365700 | 0.009073 |
+| 13 | 30030 | 0.364855 | 0.005777 |
 
-All exact endpoints are below M=2/3. Together with eps=1/4, the proved
-implication gives the finite candidate m <= (3/4)q+2/3. The four witnesses
-and all rational coefficients are retained in
-[the centered-probe certificates](ResearchData/ExactHeadGreen20261116/moment_probe_certificates.json);
-[the reproduction source](ResearchData/ExactHeadGreen20261116/moment_probe_certification_sources.md)
-evaluates every residue and complete progression tail.
-These individual endpoints are external, not kernel-replayed. A uniform
-M=2/3 bound remains an explicit falsification target, not a proved estimate.
+`ExactHeadProbeWitnesses.centered_probe_energy_bounds` uses the published
+rational coefficients over a common denominator. The integer scan checks
+each residue's exact first difference. Its weights use the existing
+elementary complete-progression interval and round every reciprocal upward
+at scale \(10^{22}\). For the complementary bound, it removes the exact
+integer head contribution from that same sum. The raw rational endpoint
+intervals in the JSON were generated separately, using the higher-order
+weight formula described in the reproduction source.
+
+Because the actual residual is zero on the head, the complementary bound
+suffices for the signed moment. Lean proves
+$$
+(m_x-q_x/2)^2\le q_x T_x,\qquad
+m_x\le (1/2+\varepsilon)q_x+T_x/(4\varepsilon)
+\quad (\varepsilon>0).
+$$
+At \(\varepsilon=1/4\), all four cutoffs therefore satisfy
+\(m_x\le 3q_x/4+0.032283\) and retain their respective smaller additive
+budgets in `ExactHeadProbeWitnesses.fitted_moment_three_quarters`. The direct zero-budget inequality at cutoff five is separately proved by
+`ExactHeadAtomStageFive.primorial_five_signed_moment_deficit`. The corresponding
+zero-budget estimates at 7, 11, and 13 have the external evidence described above.
+
+The certificates and reproduction source are retained at
+[`moment_probe_certificates.json`](ResearchData/ExactHeadGreen20261116/moment_probe_certificates.json)
+and [`moment_probe_certification_sources.md`](ResearchData/ExactHeadGreen20261116/moment_probe_certification_sources.md).
+
+### A necessary condition for the centered-probe route
+
+Let \(H_x\) be the complete-weight energy of \(\psi_x\) restricted to
+\(1\le r\le x\). Lean proves
+`centered_probe_eq_on_primorial_head` and
+`complete_centered_probe_energy_split`. On the head, the target and every
+upper-span correction vanish. The complete energy is exactly \(H_x\) plus
+the energy on the complementary nonterminal residues. This holds for any
+real \(\alpha\). The existing theorem `centered_probe_three_gt_two_thirds`
+shows that a bound of \(2/3\) fails at cutoff three for every correction.
+
+The following asymptotic argument is a paper-level deduction. Write
+\(u_d=\mu(d)^2\), \(m_0=\sum_{d\le x}\mu(d)/d\) and
+\(m_1=x^{-1}\sum_{d\le x}\mu(d)\). Let \(a,b\) be the two dual coefficients
+satisfying \(Wa+Vb=m_0\), \(Va+Ub=m_1\), with
+\(W=\sum_{d\le x}u_d/d\), \(V=x^{-1}\sum_{d\le x}u_d\) and
+\(U=x^{-2}\sum_{d\le x}du_d\). The probe on the head is
+$$
+\psi_x(r)=a F_0(r)+b F_1(r),\qquad
+F_0(r)=\sum_{d\le r}u_d\lfloor r/d\rfloor,\qquad
+F_1(r)=x^{-1}\sum_{d\le r}du_d\lfloor r/d\rfloor.
+$$
+The identity \(u_n=\sum_{k^2\mid n}\mu(k)\) gives
+\(\sum_{d\le t}u_d=ct+O(\sqrt t)\) with \(c=1/\zeta(2)\), by replacing
+\(\lfloor t/k^2\rfloor\) by \(t/k^2\) for \(k\le\sqrt t\) and bounding the
+remaining absolutely convergent tail. Partial summation gives
+\(W=c\log x+O(1)\), \(V=c+O(x^{-1/2})\) and \(U=c/2+O(x^{-1/2})\).
+
+Rounding the floors incurs \(O(r)\) in \(F_0\), so
+\(F_0(r)=cr\log r+O(r)\). For \(F_1\), sum first over the multiples:
+$$
+x F_1(r)=\sum_{k\le r}\sum_{d\le r/k}du_d
+        =r^2/2+O(r^{3/2}).
+$$
+Here the inner sum is \(ct^2/2+O(t^{3/2})\) at \(t=r/k\), and the leading
+terms sum using \(c\zeta(2)=1\). On \(x/2\le r\le x\), the vector
+\((F_0/(x\log x),F_1/x)\) converges uniformly to
+\((ct,t^2/2)\) with \(t=r/x\). The limiting Gram matrix on
+\([1/2,1]\) is positive definite, since the two polynomials are linearly
+independent. The zeroth term of each progression weight is
+\(1/[r(r+1)]\ge 1/[x(x+1)]\), so the Riemann sum bounds
+\(H_x\) below by a positive constant times \(x((a\log x)^2+b^2)\)
+for all sufficiently large \(x\).
+
+For the upper bound, the complete progression weight is at most
+\((1+r/P)/[r(r+1)]\le 2/[r(r+1)]\). The elementary estimates
+\(F_0\le r(1+\log x)\) and \(F_1\le r^2/x\) give the reverse bound up to
+a constant. The linear map from \((a\log x,b)\) to \((m_0,m_1)\) converges
+to the invertible matrix with rows \((c,c)\) and \((0,c/2)\). Hence
+$$
+H_x\asymp x\left(
+  \left(\sum_{d\le x}\frac{\mu(d)}d\right)^2+
+  \left(x^{-1}\sum_{d\le x}\mu(d)\right)^2
+\right).
+$$
+
+An all-cutoff complete bound would therefore imply
+\(\sum_{d\le x}\mu(d)=O(\sqrt x)\) for all sufficiently large \(x\).
+Abel summation would then extend the reciprocal-zeta Dirichlet series to
+\(\Re s>1/2\), which would imply RH. A cofinal bound requires the two
+square-root-scale estimates only along its chosen stages.
+
+There is a conditional construction at \(\alpha=0\). For large \(x\), choose a
+prime \(p\) with \(x/2<p\le x\) by Bertrand's postulate and put \(D=2p\).
+Then \(x<D\le 2x\), \(D\mid P\), and \(v(r)=m_0D\lfloor r/D\rfloor\) is in
+the upper span. The identity \(\sum_d\lambda_d=m_0\) cancels the linear
+part of \(\psi_x-v\), leaving
+$$
+\psi_x(r)-v(r)=-\sum_{d\le x}u_d(a+b d/x)\{r/d\}
+                 +m_0D\{r/D\}.
+$$
+Its absolute value is at most \(x(|a|+|b|+2|m_0|)\).
+The total progression mass over complementary residues is at most
+\(1/(x+1)\), since all terms there have raw index greater than \(x\).
+The normal equations and the head estimate therefore give a complete
+energy bound \(O(x(m_0^2+m_1^2))\) for this correction. In particular,
+square-root bounds for both moments along any set of stages suffice for
+a bounded complete probe there at \(\alpha=0\).
+
+The moment needs the complementary energy alone. The actual fitted residual
+vanishes on the head, so `fitted_moment_deficit_of_tail_probe_bound` gives
+R5 from a uniform complementary bound. On a common cofinal sequence this
+can be combined with R4, which is still open.
+
+One explicit correction was tested. At each gcd label \(g>x\), set the
+correction coefficient to the full probe jump
+\(\sum_{d\mid g,\ d\le x}d\lambda_d\), with \(\lambda_d\) the affine dual
+weights. It cancels every upper-label jump exactly. At \(x=13\),
+external integer arithmetic gives a complementary energy above \(6.56\)
+from the zeroth progression terms alone. To reproduce the lower bound,
+start the integer numerator at half its denominator \(L\). At each
+residue with \(g\le x\), add \(L\sum_{d\mid g}d\lambda_d\) and subtract
+\(L/2\) if \(g=1\). For \(r>x\), sum the squared numerator multiplied by
+\(\lfloor 10^{22}/[r(r+1)]\rfloor\), then divide by \(10^{22}L^2\).
+This rejects the proposed \(2/3\) bound for that construction at one stage.
 
 ## Files and evidence
+
+The certificate replay draft passed full Bazel/BuildBuddy job
+`job_AucU4euZeejw8BJoM3upZLvaTB7wj4oj`, which built
+`//:RiemannResearch` in 473.337 seconds, including all 21 guarded axiom checks.
+[Full build](https://app.buildbuddy.io/invocation/385aeff7-852b-49c9-8eff-a77f32a78fe6).
 
 See [verification and the guarded axiom audit](EXACT_HEAD_GREEN_VERIFICATION_20261116.md).
 See [the theorem catalog](THEOREM_CATALOG_EXACT_HEAD_GREEN_20261116.md) for

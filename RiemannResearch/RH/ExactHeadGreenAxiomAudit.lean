@@ -1,6 +1,7 @@
 import RiemannResearch.RH.ExactHeadGreenAffineCriterion
 import RiemannResearch.RH.ExactHeadMomentHeadObstruction
 import RiemannResearch.RH.ExactHeadAtomMoment
+import RiemannResearch.RH.ExactHeadProbeWitnesses
 import RiemannResearch.RH.ExactHeadAtomStability
 import RiemannResearch.RH.ExactHeadAtomStageFive
 import RiemannResearch.RH.ExactHeadAtomCertification
@@ -241,3 +242,48 @@ info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.centered_probe_three_gt_
 #guard_msgs in
 #print axioms
   RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.centered_probe_three_gt_two_thirds
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadProbeWitnesses.centered_probe_energy_bounds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  ExactHeadProbeWitnesses.centered_probe_energy_bounds
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadProbeWitnesses.fitted_moment_gap_sq_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  ExactHeadProbeWitnesses.fitted_moment_gap_sq_le
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadProbeWitnesses.fitted_moment_three_quarters_common' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  ExactHeadProbeWitnesses.fitted_moment_three_quarters_common
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.complete_centered_probe_energy_split' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  ExactHeadAtomOptimizer.complete_centered_probe_energy_split
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.fitted_moment_deficit_of_tail_probe_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  ExactHeadAtomOptimizer.fitted_moment_deficit_of_tail_probe_bound
