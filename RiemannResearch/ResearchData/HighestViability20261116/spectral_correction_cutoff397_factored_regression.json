@@ -1,0 +1,11 @@
+{
+  "cutoff": 397,
+  "block": [
+    16,
+    64
+  ],
+  "direct_certificate": "spectral_correction_cutoff397_out_of_window_arb_certificates.json",
+  "factored_certificate": "spectral_correction_cutoff397_factored_arb_certificates.json",
+  "coefficient_sha256": "32553d025cfc9327e576481e7f5c47a5e84eab0ba82fd31e42e6e1d877d44a94",
+  "rigorous_enclosures_overlap": true
+}

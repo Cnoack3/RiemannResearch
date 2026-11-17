@@ -67,5 +67,28 @@
     ],
     "symmetric_interpretation": "Equals the [-64,64] contribution with weight 1/(2*pi*(t^2+1/4))",
     "scope": "finite cutoff; external ball arithmetic and interval additivity; no uniform or tail claim"
+  },
+  {
+    "x": 397,
+    "block": [
+      0,
+      64
+    ],
+    "same_correction_verified": true,
+    "combined_residual_ratio": "[0.03677040225613829 +/- 9.23e-18]",
+    "diagonal_energy_ratio": "[0.99980001000000096085428523942016359735394334697 +/- 5.26e-48]",
+    "coefficients_sha256": "32553d025cfc9327e576481e7f5c47a5e84eab0ba82fd31e42e6e1d877d44a94",
+    "coefficient_scaling": "9999/10000",
+    "coefficient_input": "17-digit decimals in spectral_correction_cutoff397_diagnostics.json, interpreted as exact rationals",
+    "input_certificates": [
+      "spectral_correction_cutoff397_arb_certificates.json",
+      "spectral_correction_cutoff397_out_of_window_arb_certificates.json"
+    ],
+    "certified_inequalities": [
+      "diagonal energy < x^2 log(x)",
+      "0 < continuous [0,64] residual < (1/20) * x^2 log(x)"
+    ],
+    "symmetric_interpretation": "Equals the [-64,64] contribution with weight 1/(2*pi*(t^2+1/4))",
+    "scope": "finite cutoff; external ball arithmetic and interval additivity; no uniform or tail claim"
   }
 ]

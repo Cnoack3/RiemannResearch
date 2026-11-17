@@ -69,15 +69,16 @@ For x=53,97,199 the verifier certifies diagonal correction energy <x²log(x). It
 | 97 | 300 | [0.004499037 ± 1.02e-10] |
 | 199 | 1035 | [0.002639813 ± 2.57e-10] |
 
-The unchanged [0,16] coefficients also pass rigorous certification on [16,64], with residual <(1/25)x²log(x) for x=53,97,199. Matching coefficient hashes and interval additivity yield the following same-correction certificate on [0,64]:
+The unchanged [0,16] coefficients also pass rigorous certification on [16,64], with residual <(1/25)x²log(x) for x=53,97,199,397. Matching coefficient hashes and interval additivity yield the following same-correction certificate on [0,64]:
 
 | x | Certified residual ratio on [0,64] |
 |---:|---|
 | 53 | [0.038379024 ± 1.16e-10] |
 | 97 | [0.034711018 ± 4.05e-10] |
 | 199 | [0.029668509 ± 5.03e-10] |
+| 397 | [0.03677040225613829 ± 9.23e-18] |
 
-Thus each of these three fixed corrections has diagonal energy <x²log(x) and residual <(1/20)x²log(x) on the whole [0,64] window. The reports are `spectral_correction_out_of_window_arb_certificates.json` and `spectral_correction_combined_arb_certificates.json`.
+Thus each of these four fixed corrections has diagonal energy <x²log(x) and residual <(1/20)x²log(x) on the whole [0,64] window. The reports are `spectral_correction_out_of_window_arb_certificates.json` and `spectral_correction_combined_arb_certificates.json`.
 
 The residual uses the positive-half-line normalization 1/(π(t²+1/4)). Real coefficients identify [0,64] with the symmetric [-64,64] contribution in the paper's 1/(2π) normalization. One correction controls the whole stated window. This makes finite-cutoff progress on both G4 and G5 without combining incompatible separately optimized blocks.
 
@@ -85,7 +86,7 @@ Exact full-cube regression at x=7,11,13 checks the compressed signed formula, pr
 
 ### Additional cutoff
 
-At x=397 (78 primes, 3,003 pair columns), external continuous certification on [0,16] gives residual ratio [0.00842189859732497 ± 7.29e-18] <1/100 and diagonal energy <x²log(x). The exact decimal input, interval report, and a floating-point out-of-window diagnostic are retained. A new shared-product evaluator is checked by exact rational identities and an overlapping direct-versus-factored Arb regression at x=53. The x=397 [16,64] result is not promoted from a numerical diagnostic to a continuous certificate without its own verification.
+At x=397 (78 primes, 3,003 pair columns), external continuous certification on [0,16] gives residual ratio [0.00842189859732497 ± 7.29e-18] <1/100 and diagonal energy <x²log(x). The exact decimal input, interval report, and a floating-point out-of-window diagnostic are retained. The unchanged x=397 correction is also certified on [16,64], with residual ratio [0.028348503658813318063370044 ± 9.62e-28] <1/25. Combining it with the [0,16] enclosure gives the four-cutoff table above. A new shared-product evaluator is checked by exact rational identities and overlapping direct-versus-factored Arb enclosures at both x=53 and x=397.
 
 ## Agenda and next checks
 
@@ -94,8 +95,10 @@ At x=397 (78 primes, 3,003 pair columns), external continuous certification on [
 | G1 | Open; strengthened Lean regularization tools and finite witnesses | Construct approximate witnesses with energy and residual budgets uniformly in x |
 | G2 | Exact finite-cutoff membership refuted | Replace it by a quantitative approximate-source condition; no exact-membership premise |
 | G3 | Signed formula preserved and independently regression-tested | Prove an x-uniform bound on the actual signed head-resonance contraction |
-| G4 | Certified externally for three cutoffs and continuous windows through t=64 | Extend certified cutoffs/windows or formalize a uniform analytic certificate; numerical nodes alone are insufficient |
-| G5 | One common correction per cutoff controls all of [0,64] | Bound the tail |t|>64 for the same correction, with summable budgets uniform in x |
+| G4 | Certified externally for four cutoffs and continuous windows through t=64 | Extend certified cutoffs/windows or formalize a uniform analytic certificate; numerical nodes alone are insufficient |
+| G5 | One common correction per cutoff controls all of [0,64] | Bound frequencies above 64 for the same correction, with summable budgets uniform in x |
+
+The positive regularization theorems are abstract Hilbert-space results. Their full formal instantiation with the paper's actual weighted L² pair-synthesis operator has not been constructed here. The source's complete variance/Mellin–Plancherel argument is not asserted to be wholly formalized by this continuation. The literal-kernel obstruction is instantiated in Lean; the numerical witnesses remain external.
 
 The next priority is a quantitative approximate-source construction that survives both x→∞ and enlargement of the t-window. The finite certificates neither prove uniformity nor control the high-frequency tail. The RH-level variance bound and RH remain open.
 
@@ -110,4 +113,5 @@ The next priority is a quantitative approximate-source construction that survive
 - Focused fixed-budget gap check: [BuildBuddy](https://app.buildbuddy.io/invocation/fc59fe68-ddba-42a3-a623-6193370de734).
 - Fixed-budget residual floors and common-correction certificates through t=64: `001aead84c4254bad987e9c8747c5bff477b37fc`, [full Bazel checkpoint](https://app.buildbuddy.io/invocation/01081cea-82e6-43fe-977d-7669b23e1d9e).
 - Strict axiom-list guard check: [BuildBuddy](https://app.buildbuddy.io/invocation/db24bd5a-9a1e-4dd0-a0d0-0383b09c1ae5).
+- Strict axiom guards and the x=397 continuation: `3e2b0fd49800092da29346ae03ea792c40387fc0`, [full integrated Bazel checkpoint](https://app.buildbuddy.io/invocation/10ce11e9-d91d-49a7-81fc-40cb5c45697f). The verifier safely integrated newer main and rebuilt the combined tree.
 - Every Lean publication uses the managed full Bazel/BuildBuddy checkpoint; focused checks alone are not the publication gate.

@@ -8,12 +8,12 @@ The PDF is source material, not a Lean verification certificate. The variance ta
 
 | ID | Source target | Current status |
 |---|---|---|
-| G1 | Uniform diagonal pair-kernel ridge energy and residual | Open; new approximate-source Lean bounds and finite witnesses |
-| G2 | Exact finite-cutoff target RKHS membership | Exact finite-cutoff membership refuted in Lean |
-| G3 | Signed resonance contraction, equations (72)–(73) | Open |
-| G4 | Continuous-block certification between nodes | External Arb certificates at x=53,97,199 through t=16 |
-| G5 | Compatible corrections over all Mellin blocks | Common correction on [0,16] certified; tail and uniformity open |
+| G1 | Uniform diagonal pair-kernel ridge energy and residual | Open; abstract approximate-source Lean bounds and finite witnesses |
+| G2 | Exact finite-cutoff target RKHS membership | Exact membership obstructed by the Lean finite-column theorem |
+| G3 | Signed resonance contraction, equations (72)–(73) | Open; signed formula regression-tested |
+| G4 | Continuous-block certification between nodes | External Arb certificates at x=53,97,199,397 through t=64 |
+| G5 | Compatible corrections over all Mellin blocks | Common correction on [0,64] certified; tail and uniformity open |
 
-The continuation proves trust-region comparisons, a signed approximate-source identity, quantitative residual bounds, and the impossibility of exact interval cancellation of H + zeta(1-z) F(z). See [the theorem catalog](THEOREM_CATALOG_SPECTRAL_CORRECTION_20261116.md) for exact hypotheses, proof status, external certificates, and the revised agenda.
+The continuation proves trust-region comparisons, a signed approximate-source identity, quantitative residual bounds, positive fixed-budget residual floors, and the impossibility of exact interval cancellation of H + zeta(1-z) F(z). See [the theorem catalog](THEOREM_CATALOG_SPECTRAL_CORRECTION_20261116.md) for exact hypotheses, proof status, external certificates, and the revised agenda.
 
 The extracted source is retained at ResearchData/HighestViability20261116/source_extracted.md. Mathematical layout may be damaged; consult the original PDF.

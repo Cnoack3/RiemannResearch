@@ -8,14 +8,14 @@ These are **external computational certificates**, not Lean-kernel certificates 
 
 For each x in {53,97,199}, use all primes p≤x, Haar weights a_x/φ(d) on squarefree head atoms d≤x, and all distinct prime pairs. The retained decimal coefficients, multiplied by the exact rational 9999/10000, specify one fixed real correction r_x for each cutoff and each input file. Put
 
-\[
+$$
 J_x(I)=\int_I\frac{|H_x+\zeta(1/2-it)\Gamma_{x,r}(1/2+it)|^2}{\pi(t^2+1/4)}\,dt,
 \quad E_D(c)=\sum_{i<j}(p_i-1)(p_j-1)c_{ij}^2.
-\]
+$$
 
 The independently certified inequalities are E_D(c)<x²log(x), 0<J_x([1,4])<10⁻⁴x²log(x), and, for separate fits on the larger windows, 0<J_x([1,16])<10⁻²x²log(x) and 0<J_x([0,16])<10⁻²x²log(x). **Each larger window uses a single fixed correction across that whole window.** Corrections optimized for different windows are not identified or combined.
 
-All coefficients and prime logs are real, so the [0,16] integral with weight 1/π is also the symmetric [-16,16] contribution with the paper's weight 1/(2π). The same [0,16] coefficients were also certified on [16,64]. Their sums give J_x([0,64])<(1/20)x²log(x) for x=53,97,199, without refitting. Thus the symmetric [-64,64] contribution is controlled. Frequencies |t|>64 remain uncontrolled here.
+All coefficients and prime logs are real, so the [0,16] integral with weight 1/π is also the symmetric [-16,16] contribution with the paper's weight 1/(2π). The same [0,16] coefficients were also certified on [16,64]. Their sums give J_x([0,64])<(1/20)x²log(x) for x=53,97,199,397, without refitting. Thus the symmetric [-64,64] contribution is controlled. Frequencies |t|>64 remain uncontrolled here.
 
 | x | Pair columns | Certified J_x([0,16])/(x²log x) enclosure |
 |---:|---:|---|
@@ -34,6 +34,7 @@ The diagonal energy ratios are approximately 0.99980001; the strict bound <1 is 
 | 53 | [0.038379024 ± 1.16e-10] |
 | 97 | [0.034711018 ± 4.05e-10] |
 | 199 | [0.029668509 ± 5.03e-10] |
+| 397 | [0.03677040225613829 ± 9.23e-18] |
 
 All totals are strictly below 1/20. The correction-energy bound is used once, because the coefficient vector is unchanged. Interval additivity applies to the continuous integrand. The assembled report is `spectral_correction_combined_arb_certificates.json`. This is finite-window progress on G5; there is still no uniform cutoff estimate or high-frequency-tail bound.
 
@@ -44,15 +45,15 @@ At x=397, using 78 primes and all 3,003 pair columns, the continuous [0,16] cert
 - residual ratio [0.00842189859732497 ± 7.29e-18] <1/100;
 - diagonal energy ratio approximately 0.99980001 <1.
 
-The retained input and certificate are `spectral_correction_cutoff397_diagnostics.json` and `spectral_correction_cutoff397_arb_certificates.json`. The out-of-window diagnostic at x=397 is floating-point evidence only until a separate continuous certificate is recorded.
+The retained input and certificate are `spectral_correction_cutoff397_diagnostics.json` and `spectral_correction_cutoff397_arb_certificates.json`. The same coefficients are now certified on [16,64], with enclosure [0.028348503658813318063370044 ± 9.62e-28] <1/25. The separate factored evaluation gives an overlapping rigorous enclosure; both reports and their cross-check are retained. Interval addition yields the [0,64] total in the table above.
 
 The current certifier can use the exact factorization
 
-\[
+$$
 K_d(z)=K_1(z)\prod_{p\mid d}\frac{p^z}{1-(p^z-1)/(p-1)}.
-\]
+$$
 
-It shares the full-prime product across head atoms, reducing repeated head-product evaluation. Apparent poles are removable in the exact expression; a ball meeting a denominator zero returns a nonfinite enclosure and forces subdivision. The factorization is checked by exact rational cube enumeration at x=7,11,13. A rigorous x=53 comparison on [16,64] produced overlapping enclosures with the original direct product; see `spectral_correction_factored_regression.json`.
+It shares the full-prime product across head atoms, reducing repeated head-product evaluation. Apparent poles are removable in the exact expression; a ball meeting a denominator zero returns a nonfinite enclosure and forces subdivision. The factorization is checked by exact rational cube enumeration at x=7,11,13. Rigorous comparisons at x=53 and x=397 on [16,64] produced overlapping enclosures with the original direct product; see `spectral_correction_factored_regression.json` and `spectral_correction_cutoff397_factored_regression.json`.
 
 Earlier reports used the direct product. The current default uses the factored product; `--direct-kernel` selects the original evaluator. Both evaluate the same exact integrand. Enclosure widths and runtimes may differ.
 
@@ -60,11 +61,11 @@ Earlier reports used the direct product. The current default uses the factored p
 
 Let X=(1,X_p), X_p(d)=p·1_{p|d}−1, W=diag(a_x/φ(d)) on the head, M=D₁−XᵀWX, C_{d,ij}=X_i(d)X_j(d), g=S+H_x·1_{d=1}, and m=g+Cc. Solve u=M⁻¹XᵀWm. With a_p(z)=p^z−1 and K_d(z)=∏_p(1+X_p(d)a_p(z)/(p−1)), evaluate
 
-\[
+$$
 \Gamma_{x,r}(z)=u_0+\sum_p(\log p+u_p)a_p(z)
 +\sum_{i<j}c_{ij}a_i(z)a_j(z)
 -\sum_{d\le x}w_d\bigl(m_d+X(d)u\bigr)K_d(z).
-\]
+$$
 
 The head contraction is retained with its sign throughout. This formula is independently compared with direct full-Boolean-cube enumeration using exact rationals at x=7,11,13. The regression also checks the head constraint, all first moments, orthogonality of the correction to the original derivative, the exact energy decomposition, and the diagonal energy majorant. Transcendental inputs are replaced by arbitrary rational values for this algebra regression; no claim about zeta evaluation follows from that regression alone.
 
@@ -86,8 +87,9 @@ python certify_spectral_block.py
 python certify_spectral_block.py --input spectral_correction_extended_diagnostics.json --output spectral_correction_extended_arb_certificates.json --bound 1/100
 python certify_spectral_block.py --input spectral_correction_low_extended_diagnostics.json --output spectral_correction_low_extended_arb_certificates.json --bound 1/100
 python certify_spectral_block.py --input spectral_correction_low_extended_diagnostics.json --output spectral_correction_out_of_window_arb_certificates.json --block 16 64 --bound 1/25
-python assemble_spectral_certificates.py
 python certify_spectral_block.py 397 --input spectral_correction_cutoff397_diagnostics.json --output spectral_correction_cutoff397_arb_certificates.json --bound 1/100
+python certify_spectral_block.py 397 --input spectral_correction_cutoff397_diagnostics.json --output spectral_correction_cutoff397_out_of_window_arb_certificates.json --block 16 64 --bound 1/25
+python assemble_spectral_certificates.py --include397
 ```
 
 The retained coefficients are sufficient to reproduce certification. To generate fresh floating-point candidates:
@@ -98,4 +100,4 @@ OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=2 python -c "from spectral_correction_exp
 OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=2 python -c "from spectral_correction_experiment import run; run([53,97,199], 'spectral_correction_low_extended_diagnostics.json', (0.,16.))"
 ```
 
-Fresh optimizer runs may produce different decimal coefficients. Regenerate the matching certificate afterward; its SHA-256 binds the coefficient list. The coefficient hash uses UTF-8 JSON of the string list with separators `(',',':')` and no trailing newline, before rational scaling. No uniform inference in x, whole-line bound, or RH conclusion is justified by these three cutoffs.
+Fresh optimizer runs may produce different decimal coefficients. Regenerate the matching certificate afterward; its SHA-256 binds the coefficient list. The coefficient hash uses UTF-8 JSON of the string list with separators `(',',':')` and no trailing newline, before rational scaling. No uniform inference in x, whole-line bound, or RH conclusion is justified by these four cutoffs.

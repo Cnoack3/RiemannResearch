@@ -1,0 +1,32 @@
+[
+  {
+    "x": 397,
+    "block": [
+      16.0,
+      64.0
+    ],
+    "optimization_block": [
+      0.0,
+      16.0
+    ],
+    "arithmetic": "FLINT/Arb ball arithmetic",
+    "python_flint": "0.9.0",
+    "digits": 50,
+    "integration_tolerance": "1e-10",
+    "head_atoms": 241,
+    "first_chaos_rank": 79,
+    "pair_columns": 3003,
+    "free_gram_positive_definite_exact": true,
+    "diagonal_energy_ratio": "[0.99980001000000096085428523942016359735394334697 +/- 5.25e-48]",
+    "continuous_residual_ratio": "[0.0283485036588133181 +/- 5.45e-20]",
+    "certified_inequalities": [
+      "diagonal energy < x^2 log(x)",
+      "0 < continuous [16.0, 64.0] residual < (1/25) * x^2 log(x)"
+    ],
+    "coefficient_scaling": "9999/10000",
+    "kernel_evaluation": "factored Boolean product",
+    "coefficient_input": "17-digit decimals in spectral_correction_cutoff397_diagnostics.json, interpreted as exact rationals",
+    "coefficients_sha256": "32553d025cfc9327e576481e7f5c47a5e84eab0ba82fd31e42e6e1d877d44a94",
+    "scope": "finite cutoff only; external computational certificate, not Lean-kernel or uniform evidence"
+  }
+]
