@@ -1,0 +1,72 @@
+{
+  "cutoff": 53,
+  "block": [
+    16,
+    64
+  ],
+  "factored_result": {
+    "x": 53,
+    "block": [
+      16,
+      64
+    ],
+    "optimization_block": [
+      0.0,
+      16.0
+    ],
+    "arithmetic": "FLINT/Arb ball arithmetic",
+    "python_flint": "0.9.0",
+    "digits": 50,
+    "integration_tolerance": "1e-10",
+    "head_atoms": 33,
+    "first_chaos_rank": 17,
+    "pair_columns": 120,
+    "free_gram_positive_definite_exact": true,
+    "diagonal_energy_ratio": "[0.999800010000000321753045025552903410510174763557 +/- 5.53e-49]",
+    "continuous_residual_ratio": "[0.03591576 +/- 2.60e-9]",
+    "certified_inequalities": [
+      "diagonal energy < x^2 log(x)",
+      "0 < continuous [16, 64] residual < (1/25) * x^2 log(x)"
+    ],
+    "coefficient_scaling": "9999/10000",
+    "kernel_evaluation": "factored Boolean product",
+    "coefficient_input": "17-digit decimals in spectral_correction_low_extended_diagnostics.json, interpreted as exact rationals",
+    "coefficients_sha256": "574b771961469593334fa1f4356da46a8dcb9970bc1996bb1a6a183779898d8f",
+    "scope": "finite cutoff only; external computational certificate, not Lean-kernel or uniform evidence"
+  },
+  "direct_result": {
+    "x": 53,
+    "block": [
+      16.0,
+      64.0
+    ],
+    "optimization_block": [
+      0.0,
+      16.0
+    ],
+    "arithmetic": "FLINT/Arb ball arithmetic",
+    "python_flint": "0.9.0",
+    "digits": 50,
+    "integration_tolerance": "1e-10",
+    "head_atoms": 33,
+    "first_chaos_rank": 17,
+    "pair_columns": 120,
+    "free_gram_positive_definite_exact": true,
+    "diagonal_energy_ratio": "[0.999800010000000321753045025552903410510174763557 +/- 5.53e-49]",
+    "continuous_residual_ratio": "[0.03591575884 +/- 3.78e-12]",
+    "certified_inequalities": [
+      "diagonal energy < x^2 log(x)",
+      "0 < continuous [16.0, 64.0] residual < (1/25) * x^2 log(x)"
+    ],
+    "coefficient_scaling": "9999/10000",
+    "coefficient_input": "17-digit decimals in spectral_correction_low_extended_diagnostics.json, interpreted as exact rationals",
+    "coefficients_sha256": "574b771961469593334fa1f4356da46a8dcb9970bc1996bb1a6a183779898d8f",
+    "scope": "finite cutoff only; external computational certificate, not Lean-kernel or uniform evidence"
+  },
+  "rigorous_enclosures_overlap": true,
+  "exact_algebra_cutoffs": [
+    7,
+    11,
+    13
+  ]
+}

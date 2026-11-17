@@ -124,7 +124,8 @@ from sympy import primerange, mobius, totient
 
 
 def certify(record, digits=50, tolerance='1e-10', upper_bound='1/10000',
-            input_name='spectral_correction_diagnostics.json', integration_block=None):
+            input_name='spectral_correction_diagnostics.json', integration_block=None,
+            factored_kernel=True):
     ctx.dps=digits
     x=record['x']
     optimization_block=record.get('block',[1,4])
@@ -144,6 +145,7 @@ def certify(record, digits=50, tolerance='1e-10', upper_bound='1/10000',
     weight_q=[haar/Fraction(int(totient(d))) for d in head]
     weights=[as_arb(q) for q in weight_q]
     Y=[[p*int(d%p==0)-1 for p in primes] for d in head]
+    head_prime_indices=[[i for i,p in enumerate(primes) if d%p==0] for d in head]
     X=[[1]+row for row in Y]
     rank=len(primes)+1
     Mq=[[Fraction(([1]+[p-1 for p in primes])[i] if i==j else 0)
@@ -176,10 +178,26 @@ def certify(record, digits=50, tolerance='1e-10', upper_bound='1/10000',
         az=[(z*lp).exp()-1 for lp in logs]
         gamma=u[0,0]+sum(((logs[i]+u[i+1,0])*az[i] for i in range(len(primes))),acb(0))
         gamma+=sum((coeff[q]*az[i]*az[j] for q,(i,j) in enumerate(pairs)),acb(0))
-        for row,hc in zip(Y,headcoeff):
-            K=acb(1)
-            for i,p in enumerate(primes): K*=1+row[i]*az[i]/(p-1)
-            gamma-=hc*K
+        if factored_kernel:
+            # K_d=K_1*product_{p|d} p**z/(1-(p**z-1)/(p-1)).
+            # This is a rational identity with removable singularities.
+            # Balls meeting a denominator zero return nonfinite enclosures,
+            # forcing subdivision; no singular value is silently cancelled.
+            factors=[1-az[i]/(p-1) for i,p in enumerate(primes)]
+            base=acb(1)
+            for f in factors: base*=f
+            ratios=[(az[i]+1)/f for i,f in enumerate(factors)]
+            headsum=acb(0)
+            for indices,hc in zip(head_prime_indices,headcoeff):
+                term=acb(hc)
+                for i in indices: term*=ratios[i]
+                headsum+=term
+            gamma-=base*headsum
+        else:
+            for row,hc in zip(Y,headcoeff):
+                K=acb(1)
+                for i,p in enumerate(primes): K*=1+row[i]*az[i]/(p-1)
+                gamma-=hc*K
         return H+(1-z).zeta()*gamma
     def integrand(t, analytic):
         # This is a meromorphic extension in t, with no variable branch cuts.
@@ -202,6 +220,7 @@ def certify(record, digits=50, tolerance='1e-10', upper_bound='1/10000',
         certified_inequalities=['diagonal energy < x^2 log(x)',
                                 f'0 < continuous {block} residual < ({upper_bound}) * x^2 log(x)'],
         coefficient_scaling='9999/10000',
+        kernel_evaluation='factored Boolean product' if factored_kernel else 'direct Boolean product',
         coefficient_input=f'17-digit decimals in {input_name}, interpreted as exact rationals',
         coefficients_sha256=hashlib.sha256(json.dumps(record['coefficients'],separators=(',',':')).encode()).hexdigest(),
         scope='finite cutoff only; external computational certificate, not Lean-kernel or uniform evidence')
@@ -216,13 +235,14 @@ if __name__=='__main__':
     parser.add_argument('--bound',default='1/10000')
     parser.add_argument('--digits',type=int,default=50)
     parser.add_argument('--block',type=float,nargs=2,help='Evaluate the same coefficients on another interval')
+    parser.add_argument('--direct-kernel',action='store_true',help='Use the slower direct product for cross-checking')
     args=parser.parse_args()
     selected=set(args.cutoffs) or {53,97,199}
     reports=[]
     for r in json.loads(Path(args.input).read_text()):
         if r['x'] in selected:
             v=certify(r,digits=args.digits,upper_bound=args.bound,input_name=args.input,
-                      integration_block=args.block)
+                      integration_block=args.block,factored_kernel=not args.direct_kernel)
             reports.append(v)
             print(json.dumps(v),flush=True)
             Path(args.output).write_text(json.dumps(reports,indent=2)+'\n')
@@ -283,6 +303,10 @@ def check(x):
     az = [Q(i+2,2*i+5) for i in range(len(primes))]
     K = Matrix([prod(1+Q(int(X[k,i+1]),primes[i]-1)*az[i] for i in range(len(primes)))
                 for k in range(len(atoms))])
+    factors=[1-az[i]/(p-1) for i,p in enumerate(primes)]
+    ratios=[(1+az[i])/f for i,f in enumerate(factors)]
+    assert K==Matrix([prod(factors)*prod(ratios[i] for i,p in enumerate(primes) if d%p==0)
+                      for d in atoms])
     full = Matrix([1]+az)
     assert X.T*W*K==full
     assert C.T*W*K==Matrix([az[i]*az[j] for i,j in pairs])

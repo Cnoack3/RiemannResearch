@@ -37,6 +37,25 @@ The diagonal energy ratios are approximately 0.99980001; the strict bound <1 is 
 
 All totals are strictly below 1/20. The correction-energy bound is used once, because the coefficient vector is unchanged. Interval additivity applies to the continuous integrand. The assembled report is `spectral_correction_combined_arb_certificates.json`. This is finite-window progress on G5; there is still no uniform cutoff estimate or high-frequency-tail bound.
 
+## Larger cutoff and factored evaluation
+
+At x=397, using 78 primes and all 3,003 pair columns, the continuous [0,16] certificate gives
+
+- residual ratio [0.00842189859732497 ± 7.29e-18] <1/100;
+- diagonal energy ratio approximately 0.99980001 <1.
+
+The retained input and certificate are `spectral_correction_cutoff397_diagnostics.json` and `spectral_correction_cutoff397_arb_certificates.json`. The out-of-window diagnostic at x=397 is floating-point evidence only until a separate continuous certificate is recorded.
+
+The current certifier can use the exact factorization
+
+\[
+K_d(z)=K_1(z)\prod_{p\mid d}\frac{p^z}{1-(p^z-1)/(p-1)}.
+\]
+
+It shares the full-prime product across head atoms, reducing repeated head-product evaluation. Apparent poles are removable in the exact expression; a ball meeting a denominator zero returns a nonfinite enclosure and forces subdivision. The factorization is checked by exact rational cube enumeration at x=7,11,13. A rigorous x=53 comparison on [16,64] produced overlapping enclosures with the original direct product; see `spectral_correction_factored_regression.json`.
+
+Earlier reports used the direct product. The current default uses the factored product; `--direct-kernel` selects the original evaluator. Both evaluate the same exact integrand. Enclosure widths and runtimes may differ.
+
 ## Signed compressed formula
 
 Let X=(1,X_p), X_p(d)=p·1_{p|d}−1, W=diag(a_x/φ(d)) on the head, M=D₁−XᵀWX, C_{d,ij}=X_i(d)X_j(d), g=S+H_x·1_{d=1}, and m=g+Cc. Solve u=M⁻¹XᵀWm. With a_p(z)=p^z−1 and K_d(z)=∏_p(1+X_p(d)a_p(z)/(p−1)), evaluate
@@ -68,6 +87,7 @@ python certify_spectral_block.py --input spectral_correction_extended_diagnostic
 python certify_spectral_block.py --input spectral_correction_low_extended_diagnostics.json --output spectral_correction_low_extended_arb_certificates.json --bound 1/100
 python certify_spectral_block.py --input spectral_correction_low_extended_diagnostics.json --output spectral_correction_out_of_window_arb_certificates.json --block 16 64 --bound 1/25
 python assemble_spectral_certificates.py
+python certify_spectral_block.py 397 --input spectral_correction_cutoff397_diagnostics.json --output spectral_correction_cutoff397_arb_certificates.json --bound 1/100
 ```
 
 The retained coefficients are sufficient to reproduce certification. To generate fresh floating-point candidates:

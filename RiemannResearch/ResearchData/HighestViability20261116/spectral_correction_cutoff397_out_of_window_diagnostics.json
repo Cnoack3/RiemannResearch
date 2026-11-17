@@ -1,0 +1,16 @@
+[
+  {
+    "x": 397,
+    "optimization_block": [
+      0,
+      16
+    ],
+    "evaluation_block": [
+      16,
+      64
+    ],
+    "coefficient_scaling": "9999/10000",
+    "normalized_residual": 0.028348285238838884,
+    "classification": "floating-point diagnostic; same fixed coefficients, no refit"
+  }
+]

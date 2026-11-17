@@ -83,6 +83,10 @@ The residual uses the positive-half-line normalization 1/(π(t²+1/4)). Real coe
 
 Exact full-cube regression at x=7,11,13 checks the compressed signed formula, preservation of head/first moments, correction orthogonality, energy decomposition, and diagonal majorization. It is external exact arithmetic, not Lean verification. The continuous certificates likewise depend on the numerical implementation and Arb; their trust boundary is explicit in the data README.
 
+### Additional cutoff
+
+At x=397 (78 primes, 3,003 pair columns), external continuous certification on [0,16] gives residual ratio [0.00842189859732497 ± 7.29e-18] <1/100 and diagonal energy <x²log(x). The exact decimal input, interval report, and a floating-point out-of-window diagnostic are retained. A new shared-product evaluator is checked by exact rational identities and an overlapping direct-versus-factored Arb regression at x=53. The x=397 [16,64] result is not promoted from a numerical diagnostic to a continuous certificate without its own verification.
+
 ## Agenda and next checks
 
 | ID | Current status | Remaining acceptance condition |
@@ -101,7 +105,9 @@ The next priority is a quantitative approximate-source construction that survive
 - General zeta obstruction publication: `c68fde58095b50971d67c5c97b9ba12b761a4c6b`; full Bazel checkpoint succeeded.
 - Focused regularization check: [BuildBuddy](https://app.buildbuddy.io/invocation/0632e7f3-e127-4967-8a89-5da9a7835f5e).
 - Focused literal-kernel check: [BuildBuddy](https://app.buildbuddy.io/invocation/d276e075-adbb-46c7-851d-40a15e64ffa7).
-- `RH/SpectralCorrectionAxiomAudit.lean` prints the key declarations' axiom dependencies.
+- `RH/SpectralCorrectionAxiomAudit.lean` now guards the key declarations' axiom dependencies against exactly `propext`, `Classical.choice`, and `Quot.sound`. The build fails if the printed dependency list differs.
 - Regularization, literal-kernel formalization, and the initial continuous certificates: `f5995c89c9e2f16f8ec1dbdad613c1dbef7e9579`, [full Bazel checkpoint](https://app.buildbuddy.io/invocation/8e50faa3-cb96-4fc8-904e-d22a683cccc9).
 - Focused fixed-budget gap check: [BuildBuddy](https://app.buildbuddy.io/invocation/fc59fe68-ddba-42a3-a623-6193370de734).
+- Fixed-budget residual floors and common-correction certificates through t=64: `001aead84c4254bad987e9c8747c5bff477b37fc`, [full Bazel checkpoint](https://app.buildbuddy.io/invocation/01081cea-82e6-43fe-977d-7669b23e1d9e).
+- Strict axiom-list guard check: [BuildBuddy](https://app.buildbuddy.io/invocation/db24bd5a-9a1e-4dd0-a0d0-0383b09c1ae5).
 - Every Lean publication uses the managed full Bazel/BuildBuddy checkpoint; focused checks alone are not the publication gate.
