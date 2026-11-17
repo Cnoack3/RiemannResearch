@@ -1,0 +1,44 @@
+[
+  {
+    "x": 53,
+    "optimization_block": [
+      0,
+      16
+    ],
+    "evaluation_block": [
+      16,
+      64
+    ],
+    "coefficient_scaling": "9999/10000",
+    "normalized_residual": 0.03591560666644542,
+    "classification": "floating-point diagnostic; same fixed coefficients, no refit"
+  },
+  {
+    "x": 97,
+    "optimization_block": [
+      0,
+      16
+    ],
+    "evaluation_block": [
+      16,
+      64
+    ],
+    "coefficient_scaling": "9999/10000",
+    "normalized_residual": 0.030211822690161472,
+    "classification": "floating-point diagnostic; same fixed coefficients, no refit"
+  },
+  {
+    "x": 199,
+    "optimization_block": [
+      0,
+      16
+    ],
+    "evaluation_block": [
+      16,
+      64
+    ],
+    "coefficient_scaling": "9999/10000",
+    "normalized_residual": 0.02702865932296503,
+    "classification": "floating-point diagnostic; same fixed coefficients, no refit"
+  }
+]

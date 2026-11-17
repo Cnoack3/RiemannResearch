@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.ZetaFactorBudgetGap
 import RiemannResearch.Analysis.PrimitiveRegularizationCertificates
 import RiemannResearch.RH.ProjectedPairSpectralObstruction
 
@@ -10,3 +11,5 @@ import RiemannResearch.RH.ProjectedPairSpectralObstruction
 #print axioms RiemannResearch.Analysis.PrimitiveRegularization.exact_source_residual_le_quarter
 #print axioms RiemannResearch.Analysis.PrimitiveRegularization.exists_approximate_source_budget
 #print axioms RiemannResearch.RH.ProjectedPairSpectralObstruction.finite_cube_block_pos
+
+#print axioms RiemannResearch.Analysis.ZetaFactorObstruction.diagonal_budget_gap

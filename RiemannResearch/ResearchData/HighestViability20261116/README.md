@@ -15,7 +15,7 @@ J_x(I)=\int_I\frac{|H_x+\zeta(1/2-it)\Gamma_{x,r}(1/2+it)|^2}{\pi(t^2+1/4)}\,dt,
 
 The independently certified inequalities are E_D(c)<x²log(x), 0<J_x([1,4])<10⁻⁴x²log(x), and, for separate fits on the larger windows, 0<J_x([1,16])<10⁻²x²log(x) and 0<J_x([0,16])<10⁻²x²log(x). **Each larger window uses a single fixed correction across that whole window.** Corrections optimized for different windows are not identified or combined.
 
-All coefficients and prime logs are real, so the [0,16] integral with weight 1/π is also the symmetric [-16,16] contribution with the paper's weight 1/(2π). Frequencies |t|>16 remain uncontrolled here.
+All coefficients and prime logs are real, so the [0,16] integral with weight 1/π is also the symmetric [-16,16] contribution with the paper's weight 1/(2π). The same [0,16] coefficients were also certified on [16,64]. Their sums give J_x([0,64])<(1/20)x²log(x) for x=53,97,199, without refitting. Thus the symmetric [-64,64] contribution is controlled. Frequencies |t|>64 remain uncontrolled here.
 
 | x | Pair columns | Certified J_x([0,16])/(x²log x) enclosure |
 |---:|---:|---|
@@ -24,6 +24,18 @@ All coefficients and prime logs are real, so the [0,16] integral with weight 1/�
 | 199 | 1035 | [0.002639813 ± 2.57e-10] |
 
 The diagonal energy ratios are approximately 0.99980001; the strict bound <1 is checked with balls. Exact rational LDL pivots establish positive definiteness of the free first-chaos Gram matrix at each cutoff.
+
+## Same correction through t=64
+
+`spectral_correction_out_of_window_arb_certificates.json` certifies J_x([16,64])<(1/25)x²log(x) using exactly the same coefficients as the [0,16] reports. The assembler checks matching coefficient SHA-256, rational scaling, and input identity before adding the interval enclosures.
+
+| x | Certified J_x([0,64])/(x²log x) |
+|---:|---|
+| 53 | [0.038379024 ± 1.16e-10] |
+| 97 | [0.034711018 ± 4.05e-10] |
+| 199 | [0.029668509 ± 5.03e-10] |
+
+All totals are strictly below 1/20. The correction-energy bound is used once, because the coefficient vector is unchanged. Interval additivity applies to the continuous integrand. The assembled report is `spectral_correction_combined_arb_certificates.json`. This is finite-window progress on G5; there is still no uniform cutoff estimate or high-frequency-tail bound.
 
 ## Signed compressed formula
 
@@ -47,13 +59,15 @@ Trust boundary: Python, SymPy, FLINT/Arb, and the implementation of this transla
 
 ## Reproduce
 
-Copy the three Python listings and requirements listing from `REPRODUCTION_CODE.md` into the named local files beside the JSON inputs. Install `requirements.txt`, then run:
+Copy the four Python listings and requirements listing from `REPRODUCTION_CODE.md` into the named local files beside the JSON inputs. Install `requirements.txt`, then run:
 
 ```sh
 python test_spectral_correction_exact.py
 python certify_spectral_block.py
 python certify_spectral_block.py --input spectral_correction_extended_diagnostics.json --output spectral_correction_extended_arb_certificates.json --bound 1/100
 python certify_spectral_block.py --input spectral_correction_low_extended_diagnostics.json --output spectral_correction_low_extended_arb_certificates.json --bound 1/100
+python certify_spectral_block.py --input spectral_correction_low_extended_diagnostics.json --output spectral_correction_out_of_window_arb_certificates.json --block 16 64 --bound 1/25
+python assemble_spectral_certificates.py
 ```
 
 The retained coefficients are sufficient to reproduce certification. To generate fresh floating-point candidates:

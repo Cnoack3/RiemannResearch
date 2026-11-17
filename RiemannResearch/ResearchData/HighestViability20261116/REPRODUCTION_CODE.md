@@ -124,10 +124,11 @@ from sympy import primerange, mobius, totient
 
 
 def certify(record, digits=50, tolerance='1e-10', upper_bound='1/10000',
-            input_name='spectral_correction_diagnostics.json'):
+            input_name='spectral_correction_diagnostics.json', integration_block=None):
     ctx.dps=digits
     x=record['x']
-    block=record.get('block',[1,4])
+    optimization_block=record.get('block',[1,4])
+    block=optimization_block if integration_block is None else integration_block
     primes=list(primerange(1,x+1))
     head=[d for d in range(1,x+1) if mobius(d)!=0]
     pairs=[(i,j) for i in range(len(primes)) for j in range(i+1,len(primes))]
@@ -192,7 +193,8 @@ def certify(record, digits=50, tolerance='1e-10', upper_bound='1/10000',
     assert result.imag.contains(0), str(result)
     assert result.real>0, str(result)
     assert result.real<arb(upper_bound), str(result)
-    out=dict(x=x,block=block,arithmetic='FLINT/Arb ball arithmetic',python_flint=__version__,
+    out=dict(x=x,block=block,optimization_block=optimization_block,
+        arithmetic='FLINT/Arb ball arithmetic',python_flint=__version__,
         digits=digits,integration_tolerance=tolerance,head_atoms=len(head),
         first_chaos_rank=rank,pair_columns=len(pairs),
         free_gram_positive_definite_exact=True,
@@ -213,12 +215,14 @@ if __name__=='__main__':
     parser.add_argument('--output',default='spectral_correction_arb_certificates.json')
     parser.add_argument('--bound',default='1/10000')
     parser.add_argument('--digits',type=int,default=50)
+    parser.add_argument('--block',type=float,nargs=2,help='Evaluate the same coefficients on another interval')
     args=parser.parse_args()
     selected=set(args.cutoffs) or {53,97,199}
     reports=[]
     for r in json.loads(Path(args.input).read_text()):
         if r['x'] in selected:
-            v=certify(r,digits=args.digits,upper_bound=args.bound,input_name=args.input)
+            v=certify(r,digits=args.digits,upper_bound=args.bound,input_name=args.input,
+                      integration_block=args.block)
             reports.append(v)
             print(json.dumps(v),flush=True)
             Path(args.output).write_text(json.dumps(reports,indent=2)+'\n')
@@ -299,6 +303,62 @@ def check(x):
 if __name__=='__main__':
     for x in [7,11,13]:
         print(check(x),flush=True)
+```
+
+## assemble_spectral_certificates.py
+
+```python
+"""Combine adjacent certified blocks for exactly the same correction.
+
+Uses interval additivity, established analytically for the continuous
+integrand. This is external certificate bookkeeping, not a Lean proof.
+"""
+import json
+import argparse
+from pathlib import Path
+from flint import arb,ctx
+
+
+def assemble(pairs,output):
+    ctx.dps=50
+    reports=[]
+    for low_path,high_path in pairs:
+        low={r['x']:r for r in json.loads(Path(low_path).read_text())}
+        high={r['x']:r for r in json.loads(Path(high_path).read_text())}
+        assert low.keys()==high.keys()
+        for x,a in low.items():
+            b=high[x]
+            assert a['block']==[0,16] and b['block']==[16,64]
+            for key in ['coefficients_sha256','coefficient_scaling','coefficient_input']:
+                assert a[key]==b[key]
+            total=arb(a['continuous_residual_ratio'])+arb(b['continuous_residual_ratio'])
+            energy=arb(a['diagonal_energy_ratio'])
+            assert energy<1 and 0<total<arb('1/20')
+            reports.append(dict(x=x,block=[0,64],same_correction_verified=True,
+                combined_residual_ratio=str(total),diagonal_energy_ratio=str(energy),
+                coefficients_sha256=a['coefficients_sha256'],
+                coefficient_scaling=a['coefficient_scaling'],coefficient_input=a['coefficient_input'],
+                input_certificates=[low_path,high_path],
+                certified_inequalities=['diagonal energy < x^2 log(x)',
+                    '0 < continuous [0,64] residual < (1/20) * x^2 log(x)'],
+                symmetric_interpretation='Equals the [-64,64] contribution with weight 1/(2*pi*(t^2+1/4))',
+                scope='finite cutoff; external ball arithmetic and interval additivity; no uniform or tail claim'))
+    Path(output).write_text(json.dumps(reports,indent=2)+'\n')
+    for r in reports:
+        print(r,flush=True)
+
+
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--include397',action='store_true')
+    args=parser.parse_args()
+    pairs=[
+        ('spectral_correction_low_extended_arb_certificates.json',
+         'spectral_correction_out_of_window_arb_certificates.json')]
+    if args.include397:
+        pairs.append(('spectral_correction_cutoff397_arb_certificates.json',
+                      'spectral_correction_cutoff397_out_of_window_arb_certificates.json'))
+    assemble(pairs,'spectral_correction_combined_arb_certificates.json')
 ```
 
 ## requirements.txt

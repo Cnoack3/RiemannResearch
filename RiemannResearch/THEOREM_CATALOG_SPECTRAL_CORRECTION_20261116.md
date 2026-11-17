@@ -27,6 +27,17 @@ At each fixed finite cutoff, Gamma and the projected column factors are entire f
 
 This is not a uniform lower bound as x grows. It does not refute G1, approximation, or RH. Sampled pseudoinverse interpolation can succeed while exact continuous interpolation is impossible.
 
+## Lean: a positive floor on every fixed coefficient budget
+
+Module: `Analysis/ZetaFactorBudgetGap.lean`, in the ZetaFactorObstruction namespace.
+
+- `correctedBlockEnergy_continuous`: the actual continuous-block objective depends continuously on the finite coefficient vector.
+- `compact_correction_minimum_pos`: every nonempty compact coefficient set has an attained strictly positive minimum.
+- `bounded_correction_gap`: every fixed coefficient norm budget has a strictly positive residual floor.
+- `diagonal_budget_gap`: the same conclusion holds under Σd_i|c_i|²≤B when d_i≥1 and B≥0, covering the prime-pair diagonal weights.
+
+The floor depends on the cutoff, the entire column family, the interval, and the energy budget. No positive floor uniform in x is asserted. These theorems sharpen the fixed-cutoff obstruction and leave open decay of the minima as the cutoff grows.
+
 ## Lean: replacement by quantitative approximate sources
 
 Module: `Analysis/PrimitiveRegularizationCertificates.lean`.
@@ -44,7 +55,7 @@ Let u solve the normal equation for T, target e, multiplier μ, and a linear sub
 | `approximate_source_budget` | If ‖Tv−e‖²≤δ and ‖v‖²≤B, the regularized objective at u is ≤δ+μB |
 | `exists_approximate_source_budget` | For a continuous linear operator between complete real Hilbert spaces and μ>0, such a normal solution and objective bound exist |
 
-The exact signed correlation is retained before Cauchy–Schwarz. These are unconditional Hilbert-space implications/existence results; they do not supply the x-uniform arithmetic approximate witnesses. In particular the exact-source corollary must not be applied to the obstructed exact source in G2.
+The exact signed correlation is retained before Cauchy–Schwarz. If a family of approximate witnesses has energy and residual each O(x²log x), the μ=1 normal solution inherits the combined bound; exact RKHS membership is unnecessary. These are unconditional Hilbert-space implications/existence results; they do not supply the x-uniform arithmetic approximate witnesses. In particular the exact-source corollary must not be applied to the obstructed exact source in G2.
 
 ## External: continuous block certificates
 
@@ -58,7 +69,17 @@ For x=53,97,199 the verifier certifies diagonal correction energy <x²log(x). It
 | 97 | 300 | [0.004499037 ± 1.02e-10] |
 | 199 | 1035 | [0.002639813 ± 2.57e-10] |
 
-The residual uses the positive-half-line normalization 1/(π(t²+1/4)). Real coefficients identify [0,16] with the symmetric [-16,16] contribution in the paper's 1/(2π) normalization. One correction controls the whole stated window. This makes finite-cutoff progress on both G4 and G5 without combining incompatible separately optimized blocks.
+The unchanged [0,16] coefficients also pass rigorous certification on [16,64], with residual <(1/25)x²log(x) for x=53,97,199. Matching coefficient hashes and interval additivity yield the following same-correction certificate on [0,64]:
+
+| x | Certified residual ratio on [0,64] |
+|---:|---|
+| 53 | [0.038379024 ± 1.16e-10] |
+| 97 | [0.034711018 ± 4.05e-10] |
+| 199 | [0.029668509 ± 5.03e-10] |
+
+Thus each of these three fixed corrections has diagonal energy <x²log(x) and residual <(1/20)x²log(x) on the whole [0,64] window. The reports are `spectral_correction_out_of_window_arb_certificates.json` and `spectral_correction_combined_arb_certificates.json`.
+
+The residual uses the positive-half-line normalization 1/(π(t²+1/4)). Real coefficients identify [0,64] with the symmetric [-64,64] contribution in the paper's 1/(2π) normalization. One correction controls the whole stated window. This makes finite-cutoff progress on both G4 and G5 without combining incompatible separately optimized blocks.
 
 Exact full-cube regression at x=7,11,13 checks the compressed signed formula, preservation of head/first moments, correction orthogonality, energy decomposition, and diagonal majorization. It is external exact arithmetic, not Lean verification. The continuous certificates likewise depend on the numerical implementation and Arb; their trust boundary is explicit in the data README.
 
@@ -69,8 +90,8 @@ Exact full-cube regression at x=7,11,13 checks the compressed signed formula, pr
 | G1 | Open; strengthened Lean regularization tools and finite witnesses | Construct approximate witnesses with energy and residual budgets uniformly in x |
 | G2 | Exact finite-cutoff membership refuted | Replace it by a quantitative approximate-source condition; no exact-membership premise |
 | G3 | Signed formula preserved and independently regression-tested | Prove an x-uniform bound on the actual signed head-resonance contraction |
-| G4 | Certified externally for three cutoffs and continuous windows through t=16 | Extend certified cutoffs/windows or formalize a uniform analytic certificate; numerical nodes alone are insufficient |
-| G5 | One common correction per cutoff controls all of [0,16] | Bound the tail |t|>16 for the same correction, with summable budgets uniform in x |
+| G4 | Certified externally for three cutoffs and continuous windows through t=64 | Extend certified cutoffs/windows or formalize a uniform analytic certificate; numerical nodes alone are insufficient |
+| G5 | One common correction per cutoff controls all of [0,64] | Bound the tail |t|>64 for the same correction, with summable budgets uniform in x |
 
 The next priority is a quantitative approximate-source construction that survives both x→∞ and enlargement of the t-window. The finite certificates neither prove uniformity nor control the high-frequency tail. The RH-level variance bound and RH remain open.
 
@@ -81,4 +102,6 @@ The next priority is a quantitative approximate-source construction that survive
 - Focused regularization check: [BuildBuddy](https://app.buildbuddy.io/invocation/0632e7f3-e127-4967-8a89-5da9a7835f5e).
 - Focused literal-kernel check: [BuildBuddy](https://app.buildbuddy.io/invocation/d276e075-adbb-46c7-851d-40a15e64ffa7).
 - `RH/SpectralCorrectionAxiomAudit.lean` prints the key declarations' axiom dependencies.
-- Publication of the continuation requires the managed full Bazel/BuildBuddy checkpoint, not just the focused checks.
+- Regularization, literal-kernel formalization, and the initial continuous certificates: `f5995c89c9e2f16f8ec1dbdad613c1dbef7e9579`, [full Bazel checkpoint](https://app.buildbuddy.io/invocation/8e50faa3-cb96-4fc8-904e-d22a683cccc9).
+- Focused fixed-budget gap check: [BuildBuddy](https://app.buildbuddy.io/invocation/fc59fe68-ddba-42a3-a623-6193370de734).
+- Every Lean publication uses the managed full Bazel/BuildBuddy checkpoint; focused checks alone are not the publication gate.

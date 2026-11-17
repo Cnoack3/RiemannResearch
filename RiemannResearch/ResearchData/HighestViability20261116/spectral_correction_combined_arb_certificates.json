@@ -1,0 +1,71 @@
+[
+  {
+    "x": 53,
+    "block": [
+      0,
+      64
+    ],
+    "same_correction_verified": true,
+    "combined_residual_ratio": "[0.038379024 +/- 1.16e-10]",
+    "diagonal_energy_ratio": "[0.999800010000000321753045025552903410510174763557 +/- 5.54e-49]",
+    "coefficients_sha256": "574b771961469593334fa1f4356da46a8dcb9970bc1996bb1a6a183779898d8f",
+    "coefficient_scaling": "9999/10000",
+    "coefficient_input": "17-digit decimals in spectral_correction_low_extended_diagnostics.json, interpreted as exact rationals",
+    "input_certificates": [
+      "spectral_correction_low_extended_arb_certificates.json",
+      "spectral_correction_out_of_window_arb_certificates.json"
+    ],
+    "certified_inequalities": [
+      "diagonal energy < x^2 log(x)",
+      "0 < continuous [0,64] residual < (1/20) * x^2 log(x)"
+    ],
+    "symmetric_interpretation": "Equals the [-64,64] contribution with weight 1/(2*pi*(t^2+1/4))",
+    "scope": "finite cutoff; external ball arithmetic and interval additivity; no uniform or tail claim"
+  },
+  {
+    "x": 97,
+    "block": [
+      0,
+      64
+    ],
+    "same_correction_verified": true,
+    "combined_residual_ratio": "[0.034711018 +/- 4.05e-10]",
+    "diagonal_energy_ratio": "[0.99980000999999895947530533973771300208459793726 +/- 2.96e-48]",
+    "coefficients_sha256": "097719f1678ab3e782ac421110c8b27579a96eb3acfd80aac62a6bb4f1597ac2",
+    "coefficient_scaling": "9999/10000",
+    "coefficient_input": "17-digit decimals in spectral_correction_low_extended_diagnostics.json, interpreted as exact rationals",
+    "input_certificates": [
+      "spectral_correction_low_extended_arb_certificates.json",
+      "spectral_correction_out_of_window_arb_certificates.json"
+    ],
+    "certified_inequalities": [
+      "diagonal energy < x^2 log(x)",
+      "0 < continuous [0,64] residual < (1/20) * x^2 log(x)"
+    ],
+    "symmetric_interpretation": "Equals the [-64,64] contribution with weight 1/(2*pi*(t^2+1/4))",
+    "scope": "finite cutoff; external ball arithmetic and interval additivity; no uniform or tail claim"
+  },
+  {
+    "x": 199,
+    "block": [
+      0,
+      64
+    ],
+    "same_correction_verified": true,
+    "combined_residual_ratio": "[0.029668509 +/- 5.03e-10]",
+    "diagonal_energy_ratio": "[0.99980000999999922940691999200621828566245315692 +/- 5.04e-48]",
+    "coefficients_sha256": "75e57599ce4f16671705de8dc70992cae641eb181e9c9e3eaee2a2ad4bf2f91d",
+    "coefficient_scaling": "9999/10000",
+    "coefficient_input": "17-digit decimals in spectral_correction_low_extended_diagnostics.json, interpreted as exact rationals",
+    "input_certificates": [
+      "spectral_correction_low_extended_arb_certificates.json",
+      "spectral_correction_out_of_window_arb_certificates.json"
+    ],
+    "certified_inequalities": [
+      "diagonal energy < x^2 log(x)",
+      "0 < continuous [0,64] residual < (1/20) * x^2 log(x)"
+    ],
+    "symmetric_interpretation": "Equals the [-64,64] contribution with weight 1/(2*pi*(t^2+1/4))",
+    "scope": "finite cutoff; external ball arithmetic and interval additivity; no uniform or tail claim"
+  }
+]
