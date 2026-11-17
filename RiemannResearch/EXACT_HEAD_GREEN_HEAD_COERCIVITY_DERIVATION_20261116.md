@@ -1,5 +1,11 @@
 # The centered-probe head already measures square-root Mobius cancellation
 
+The [tail continuation](EXACT_HEAD_GREEN_TAIL_CONTINUATION_20261116.md)
+shows that this obstruction concerns the stronger **full-energy** probe
+route. The optimizer vanishes on the head, allowing a sufficient signed-moment
+bound from complementary energy alone. This paper derivation remains of
+independent interest and is still not a Lean-checked asymptotic theorem.
+
 Date: 16 November 2026.
 
 **Status:** paper derivation, not a Lean-checked asymptotic theorem. The exact

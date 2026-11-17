@@ -1,5 +1,14 @@
 # Exact-head Green profiles: Lean continuation and research agenda
 
+## Tail Gram remainder and cofinal RH assembly
+
+The [tail continuation](EXACT_HEAD_GREEN_TAIL_CONTINUATION_20261116.md) builds
+on the complementary-energy criterion and four kernel witnesses below. It
+adds the exact two-coordinate Gram remainder, the explicit jointly cofinal
+RH criterion, and an independent cutoff-seven six-decimal certificate.
+The full-energy head obstruction concerns the older, stronger sufficient
+route. Uniform/cofinal R4 and R5 remain open.
+
 ## Subsequent affine-dual continuation
 
 See [the updated results and agenda](EXACT_HEAD_GREEN_AFFINE_DUAL_CONTINUATION_20261116.md)

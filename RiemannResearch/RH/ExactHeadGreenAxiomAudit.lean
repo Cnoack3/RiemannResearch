@@ -8,6 +8,44 @@ import RiemannResearch.RH.ExactHeadAtomCertification
 import RiemannResearch.RH.ExactHeadGreenQuadraticCriterion
 import RiemannResearch.RH.ExactHeadAtomSmallStage
 import RiemannResearch.RH.ParetoRationalWeightIntervals
+import RiemannResearch.RH.ExactHeadAtomStageSevenMoment
+import RiemannResearch.RH.ExactHeadGreenTailCriterion
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.fitted_moment_tail_gram_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.fitted_moment_tail_gram_identity
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.riemannHypothesis_of_atom_affine_tail_probe' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.riemannHypothesis_of_atom_affine_tail_probe
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.centered_tail_five_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomOptimizer.centered_tail_five_le
+
+/--
+info: 'RiemannResearch.RH.Pareto.ExactHeadAtomStageSevenMoment.centered_tail_seven_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms
+  RiemannResearch.RH.Pareto.ExactHeadAtomStageSevenMoment.centered_tail_seven_le
 
 open RiemannResearch.RH.Pareto
 

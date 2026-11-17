@@ -81,8 +81,14 @@ At x=5, `0.6026 <= H_5 <= 0.6027`. At x=3, `H_3=49/72>2/3`, independently
 of alpha and v. The latter excludes an all-cutoff 2/3 bound, but does not
 exclude the handoff's proposed eventual/cofinal bound starting after stage 3.
 
-Any analytic R5 provider must control this uncorrectable head as well as the
-remaining residues. Optimizing an upper correction cannot remove head cost.
+Any **full-energy** centered-probe provider must control this uncorrectable
+head as well as the remaining residues. Optimizing an upper correction
+cannot remove head cost. The complementary-energy criterion in
+`RH/ExactHeadAtomMoment.lean` and the
+[tail continuation](EXACT_HEAD_GREEN_TAIL_CONTINUATION_20261116.md)
+omit the head from the signed observation because the optimizer is zero
+there. That weaker sufficient R5 route does not require a uniform
+head-energy bound.
 
 The companion [head-coercivity derivation](EXACT_HEAD_GREEN_HEAD_COERCIVITY_DERIVATION_20261116.md)
 uses elementary squarefree asymptotics to derive, on paper,

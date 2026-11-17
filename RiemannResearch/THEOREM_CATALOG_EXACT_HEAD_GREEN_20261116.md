@@ -1,5 +1,18 @@
 # Exact-head Green profiles: verified development (2026-11-16)
 
+## Tail Gram remainder and conditional RH assembly
+
+See [the continuation and research agenda](EXACT_HEAD_GREEN_TAIL_CONTINUATION_20261116.md).
+`RH/ExactHeadMomentTail.lean` retains the exact tail Gram remainder and reuses
+the published complementary-energy deficit theorem.
+`RH/ExactHeadGreenTailCriterion.lean` assembles the jointly cofinal signed
+dispersion and tail bound into a conditional RH theorem.
+`RH/ExactHeadAtomStageSevenMoment.lean` supplies an independent six-decimal
+certificate `T_7(1/2,v)<=1/30`. The sharper integrated witnesses at
+5,7,11,13 remain available and unchanged. Four new permanent guards bring
+the integrated axiom audit from 31 to 35. The jointly cofinal analytic
+providers remain **Open**.
+
 ## Affine-dual continuation (16 November 2026)
 
 See [the new continuation and declaration map](EXACT_HEAD_GREEN_AFFINE_DUAL_CONTINUATION_20261116.md).

@@ -8,6 +8,9 @@ import RiemannResearch.RH.MobiusAffineDuality
 import RiemannResearch.RH.ExactHeadGreenAffineCriterion
 import RiemannResearch.RH.ExactHeadAtomStageFiveMoment
 import RiemannResearch.RH.ExactHeadMomentHeadObstruction
+import RiemannResearch.RH.ExactHeadAtomStageSevenMoment
+import RiemannResearch.RH.ExactHeadGreenTailCriterion
+import RiemannResearch.RH.ExactHeadMomentTail
 import RiemannResearch.RH.ExactHeadAtomMoment
 import RiemannResearch.RH.ExactHeadProbeCertificate
 import RiemannResearch.RH.ExactHeadProbeWitnesses
