@@ -99,3 +99,42 @@ $$
    =1-m_n\le 0.036208034636966 .
 $$
 The upper bound on this entire remaining budget allows positive limiting error. [Exact certificate and Schur budget](RH/RamanujanSixMass.lean)
+
+The matching dual certificate uses signed masses $y_r$ on the same sixty classes. Each of the five moments $\sum_r y_r R_d(r)$ vanishes exactly. For any trial error $u_r=1-\sum_{d=2}^6 c_dR_d(r)$ and $w_r=w_{60}(r)$, completing the square gives
+$$
+ \sum_r w_r u_r^2=2\sum_r y_r-\sum_r\frac{y_r^2}{w_r}
+                  +\sum_r w_r\left(u_r-\frac{y_r}{w_r}\right)^2 .
+$$
+Lower enclosures on $w_r$ bound the dual cost from above. Both certificates together enclose the exact normal-equation optimum in an interval of width $1.04\times10^{-13}$,
+$$
+  0.963791965363034\ \le\ m_5\ \le\ 0.963791965363138 .
+$$
+The upper endpoint applies to stage five. The lower endpoint persists at later stages by monotonicity. [Primal and dual certificates](RH/RamanujanSixMass.lean)
+
+## A stronger remaining-error and mixed-projection bound
+
+A trial in 65 raw residue atoms through conductor 124 yields a stronger bound for the exhaustive space. Its integer coefficient list, divided by $10^6$, is in the Lean source. The numerator of the pointwise residual has absolute value at most $7\,063\,991$. On sites $1,\ldots,32768$ the sum of the outward-rounded squared errors is at most $10\,810\,291\,372/10^{12}$. The remaining Pareto probability is exactly $1/32769$. For every $n\ge123$,
+$$
+ e_\infty+\sum_{j\ge n}\Delta_j
+   = e_n
+   \le \frac{10\,810\,291\,372}{10^{12}}
+      +\frac{(7\,063\,991/10^6)^2}{32769}
+   =\frac{36\,740\,218\,801\,559}{2\,979\,000\,000\,000\,000}
+   <0.012333072 .
+$$
+The centered signal-to-noise ratio at each such stage is at least $2\,942\,259\,781\,198\,441/36\,740\,218\,801\,559 > 80.0828$. [Conductor-124 certificate](RH/RamanujanResidueMass.lean) · [Integer coefficients and head sum](RH/RamanujanResidueMassData.lean)
+
+Let $\ell=\log 2$, $\kappa=\|\Pi_MJ_2\|_P^2$, and $\kappa_*=\ell-\ell^2$. The rank-one mixed reduction and the normal equations give the exact missing energy
+$$
+ \kappa_*-\kappa=\ell^2\frac{e_\infty}{1-e_\infty}.
+$$
+In particular, every finite certified $m_n>0$ gives $\kappa\ge\ell-\ell^2/m_n$. Using the conductor-124 trial gives
+$$
+ \kappa\ge \ell-\ell^2
+ \frac{2\,979\,000\,000\,000\,000}{2\,942\,259\,781\,198\,441}
+ \quad\text{and}\quad
+ \kappa\ge\frac{971793053}{10^9}\,\kappa_* .
+$$
+Thus the **full** mixed space captures at least **97.1793053%** of the energy required by the RH criterion. Every sufficiently large finite mixed cutoff exceeds **97.17%** of the target. The proof gives an existential cutoff for that statement. By comparison, at mixed cutoff six the exact capture is $(\ell-\pi/(2\sqrt3))^2/(\pi/\sqrt3)$. The conductor-124 trial concerns the fit to the constant in the full arithmetic dictionary. RH would require the remaining mixed deficit to vanish. [Mixed-capture transfer](RH/RamanujanMixedCaptureBudget.lean) · [Exact cutoff-six capture](RH/ScreenedPrimePowerTelescope.lean)
+
+The same estimate has a direct interpretation in terms of zeta ordinates. For every fixed prime probe and fixed stage $n\ge123$, the unrounded ordinate mass eventually exceeds $0.9876669289$. More generally, if $\widehat m_n(T)\ge b>0$ at arbitrarily large heights for one fixed $n$, then $\kappa\ge\ell-\ell^2/b$. [Ordinate-to-projection inequalities](RH/RamanujanMixedCaptureBudget.lean)

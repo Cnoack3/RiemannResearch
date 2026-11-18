@@ -1759,6 +1759,9 @@ import RiemannResearch.RH.RamanujanOrdinateFMZ
 import RiemannResearch.RH.RamanujanOrdinateRate
 import RiemannResearch.RH.RamanujanOrdinateNormalEquations
 import RiemannResearch.RH.RamanujanSixMass
+import RiemannResearch.RH.RamanujanResidueMassData
+import RiemannResearch.RH.RamanujanResidueMass
+import RiemannResearch.RH.RamanujanMixedCaptureBudget
 import RiemannResearch.RH.RamanujanOrdinatePhases
 import RiemannResearch.Analysis.ActualRationalFMZDomination
 import RiemannResearch.Analysis.ActualRationalFMZLimits

@@ -3,8 +3,8 @@
 For exact Haar Plancherel, the A2 algebra, actual-zero Gram identities, and uniform
 energy sampling, see [the Plancherel supplement](THEOREM_CATALOG_PLANCHEREL_20261028.md).
 
-For the Pareto/von Mangoldt normal equations, RH equivalences, and the complete
-conductor-six certificate, see [the normal-equations catalog](THEOREM_CATALOG_PARETO_ORDINATE_NORMAL_20261118.md).
+For the Pareto/von Mangoldt equations, ordinate RH criteria, the conductor-124
+error bound and the mixed projection of the packet at two, see [the normal-equations catalog](THEOREM_CATALOG_PARETO_ORDINATE_NORMAL_20261118.md).
 
 ## Ramanujan sums sampled at actual zeta ordinates (17 November 2026)
 
