@@ -1739,6 +1739,7 @@ import RiemannResearch.RH.QCanonicalAverageEnergy
 import RiemannResearch.Analysis.OrdinateTriangleSecants
 import RiemannResearch.Analysis.CosinePolynomialMeanSquare
 import RiemannResearch.Analysis.ActualZeroWindowVariance
+import RiemannResearch.Analysis.ActualZeroWindowDiscrepancy
 import RiemannResearch.Analysis.ActualConsecutiveGapWindows
 import RiemannResearch.Analysis.ActualConsecutivePhase
 import RiemannResearch.Analysis.ConsecutivePhaseAsymptotics
@@ -4440,6 +4441,7 @@ import RiemannResearch.Analysis.MontgomeryCauchyGapMesh
 import RiemannResearch.Analysis.MontgomeryGapBand
 import RiemannResearch.Analysis.MontgomeryWindowPairCorrelation
 import RiemannResearch.Analysis.MontgomeryWindowVarianceCriterion
+import RiemannResearch.Analysis.MontgomeryWindowFourierVariance
 import RiemannResearch.Analysis.MontgomeryGapTailDensity
 import RiemannResearch.Analysis.MontgomeryGapIntegratedCriterion
 import RiemannResearch.Analysis.MontgomeryFinitePairPerturbation

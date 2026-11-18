@@ -155,6 +155,25 @@ private theorem formFactor_eq_pair_cosSeries (T : ℝ) :
     Real.log T * (copyOrdinate T i - copyOrdinate T j) * α by ring]
   ring
 
+/-- A translated frequency triangle is bounded above by the centered one:
+every coefficient of the finite cosine series after the triangle test
+is nonnegative. -/
+theorem fejerTriangleStep_formFactor_le_fejerFormFactor {T R : ℝ}
+    (hT : 1 < T) (hR : 0 < R) (α : ℝ) :
+    fejerTriangleStep R (formFactor T) α ≤ fejerFormFactor T R := by
+  rw [← fejerPowerFormFactor_one, fejerPowerFormFactor]
+  change iteratedFejerTriangle R (formFactor T) 1 α ≤
+    iteratedFejerTriangle R (formFactor T) 1 0
+  rw [formFactor_eq_pair_cosSeries, iteratedFejerTriangle_cosSeries hR]
+  simp only [pow_one, mul_zero, Real.cos_zero, mul_one]
+  have hnorm : 0 < T * Real.log T / (2 * Real.pi) :=
+    div_pos (mul_pos (zero_lt_one.trans hT) (Real.log_pos hT)) (by positivity)
+  apply Finset.sum_le_sum
+  intro p _
+  exact mul_le_of_le_one_right
+    (mul_nonneg (div_nonneg (by unfold cauchyWeight; positivity) hnorm.le)
+      (sincSquared_nonneg _ _)) (Real.cos_le_one _)
+
 theorem fejerPowerFormFactor_eq_kernelEnergy (T : ℝ) {R : ℝ} (hR : 0 < R) (n : ℕ) :
     fejerPowerFormFactor T R n =
       kernelEnergy (copyOrdinate T) (fun d => cauchyWeight d *
