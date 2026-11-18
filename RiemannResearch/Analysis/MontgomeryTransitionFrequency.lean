@@ -164,7 +164,8 @@ theorem transition_spike (c T : ℝ) (hT : 1 < T) :
     show -2 * ((Real.log (Real.log T) + c) / 2) = -c - Real.log (Real.log T) by ring,
     Real.exp_sub, Real.exp_log hL, div_mul_cancel₀ _ hL.ne']
 
-private theorem loglog_pow_div_log_tendsto_zero (n : ℕ) :
+/-- Any fixed power of the iterated logarithm is negligible compared with log T. -/
+theorem loglog_pow_div_log_tendsto_zero (n : ℕ) :
     Tendsto (fun T : ℝ => (Real.log (Real.log T)) ^ n / Real.log T) atTop (𝓝 0) := by
   have h := (Real.tendsto_pow_mul_exp_neg_atTop_nhds_zero n).comp
     (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop)

@@ -72,6 +72,23 @@ A fixed Fourier test radius reaches frequencies of order one and higher. The aud
 
 [Logarithmic mean square](Analysis/MontgomeryLogMeanSquare.lean) · [Oscillatory integral](Analysis/MontgomeryLogPhaseIntegral.lean) · [Prime cross integral](Analysis/MontgomeryPrimeCrossIntegral.lean) · [Critical-line counts](Analysis/ActualZeroCollisionDensity.lean) · [Raw Fourier tests](Analysis/MontgomeryFejerDensity.lean) · [Strict positive gaps](Analysis/MontgomeryPositiveGapDensity.lean)
 
+## Central Fourier mass and the analytic diagonal
+
+The finite certificates and signed gap identity formalize Sections 3–5 of the
+user-provided note `Montgomery_Pair_Correlation_Without_RH.md`.
+The core estimate formalizes Section 2. Write $D=T\log(T)/(2\pi)$,
+$C$ for the equal-ordinate count, and $A=\sum_\rho m(\rho)^2$ for the
+analytic diagonal.
+
+| Declaration | Result and assumptions |
+|---|---|
+| [`eventually_raw_central_peak_L1`](Analysis/MontgomeryCentralPeak.lean), `raw_central_test_tendsto_value` | Under `BGSTBPositiveCutoffEstimate`, the rescaled raw profile extended by zero has full-line L1 error $O(\log\log T/\log T)$ from $e^{-2|u|}$. The corresponding Fourier core contributes $f(0)$ to each continuous test. |
+| [`density_one_of_fejer_outside_central_upper`](Analysis/MontgomeryCentralPeak.lean) | Under the BGSTB input, one-sided upper bounds on the part outside the core imply simple-critical density one. The full Fourier prediction would give the complementary Fejér value $1-1/R+1/(3R^2)$ for fixed $R\ge1$. |
+| [`analyticPairCount_eq_sum_sq`](Analysis/ActualZeroAnalyticDiagonal.lean), `collision_eq_analytic_add_distinctZeroCollision` | Exact analytic diagonal and equal-ordinate decomposition. The distinct-zero term bounds the off-line occurrence count. |
+| [`normalized_fejer_sub_analytic_eq`](Analysis/MontgomeryFejerCertificate.lean), `cofinal_fejer_critical_line_iff_RH` | The adjusted Fejér energy is the distinct-zero equal-height count plus the full nonnegative different-height remainder. The strict two-pair threshold along cofinal cutoffs is equivalent to Mathlib's RH and permits arbitrary critical-line multiplicities. |
+| [`distinct_height_excess_bound`](Analysis/OrdinateCrowding.lean), `crowded_occurrence_excess_bound`, `crowded_height_excess_bound` | Finite inequalities for the number of distinct heights and the two forms of the high-occupancy count. |
+| [`collision_div_main_eq_signed_gap_deficits`](Analysis/MontgomeryIntegratedGapDensity.lean), `density_one_of_integratedGapDeficits` | Exact normalized collision count equals the sine-hole triangle plus the signed moment and integrated gap deficits. An eventual upper bound on their sum at a common fixed width for each tolerance suffices for density one. |
+
 ## Open providers
 
 | Obligation | Status |
