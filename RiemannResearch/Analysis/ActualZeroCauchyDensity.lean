@@ -39,7 +39,7 @@ private theorem count_low_copies {T H : ℝ} (h : H ≤ T) :
   rw [← Finset.sum_filter, hef, Nat.cast_sum]
 
 /-- Sum an observation on the high zeros, retaining the low-height count. -/
-private theorem count_le_boundary_integral {T H σ W B M a b : ℝ} {f : ℝ → ℝ}
+theorem count_le_boundary_integral {T H σ W B M a b : ℝ} {f : ℝ → ℝ}
     (hHT : H ≤ T) (hW : 0 ≤ W) (hB : 0 ≤ B) (hab : a ≤ b)
     (hf : Continuous f) (hf0 : ∀ t, 0 ≤ f t)
     (hrow : ∀ t, (∑ i : Copies T, cauchyWeight (t - copyOrdinate T i)) ≤ M)

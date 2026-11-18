@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.ActualSelbergTruncatedNearLine
+import RiemannResearch.Analysis.ActualInghamDensityBound
 import RiemannResearch.Analysis.ConreyBaluyotMomentExcess
 import RiemannResearch.Analysis.ConreyBaluyotGaussianMoment
 import Mathlib.Tactic.FieldSimp
@@ -17,8 +18,8 @@ import Mathlib.Tactic.Ring
 
 The Gaussian window error, weighted-excess bound and dyadic summation
 preserve the exponent 2*theta. A cofinal family of mollifier lengths
-below 4/7 suffices. The two analytic premises are the uniform Gaussian
-upper estimates and the Ingham density bound.
+below 4/7 suffices. The actual Ingham density theorem supplies the
+away-line input. The uniform near-line moment is the remaining premise.
 
 Source for the proof strategy: S. A. C. Baluyot, *On the Zeros of
 Riemann's Zeta-function* (2017), Chapter 3,
@@ -112,12 +113,12 @@ theorem uniformSelbergDensity_of_dyadicMollifiedMoment_and_ingham
 suffices for every density exponent strictly below 8/7. -/
 theorem conreyBaluyotDensity_of_cofinal_dyadicMollifiedMoments
     (hm : ∀ a : ℝ, 0 < a → a < 8 / 7 →
-      ∃ θ ε : ℝ, a ≤ 2 * θ ∧ θ < 4 / 7 ∧ 0 ≤ ε ∧ UniformDyadicMollifiedMoment θ ε)
-    (hI : InghamDensityBound) : ConreyBaluyotDensityHypothesis := by
+      ∃ θ ε : ℝ, a ≤ 2 * θ ∧ θ < 4 / 7 ∧ 0 ≤ ε ∧ UniformDyadicMollifiedMoment θ ε) :
+    ConreyBaluyotDensityHypothesis := by
   intro a ha ha'
   obtain ⟨θ, ε, hθa, hθhi, hε, hp⟩ := hm a ha ha'
   have hstrong := uniformSelbergDensity_of_dyadicMollifiedMoment_and_ingham
-    (show 0 < θ by linarith) (show θ ≤ 2 / 3 by linarith) hε hp hI
+    (show 0 < θ by linarith) (show θ ≤ 2 / 3 by linarith) hε hp inghamDensityBound
   obtain ⟨C, H, hC, hH, hd⟩ := hstrong
   refine ⟨C, H, hC, hH, ?_⟩
   intro T hT σ hσ
@@ -253,14 +254,13 @@ theorem uniformDyadicMollifiedMoment_of_gaussian
 
 
 /-- A cofinal family of actual smoothed moment estimates gives every published
-density exponent when an Ingham provider is available. -/
+density exponent strictly below 8/7. -/
 theorem conreyBaluyotDensity_of_cofinal_gaussianMollifiedMoments
     (hm : ∀ a : ℝ, 0 < a → a < 8 / 7 →
       ∃ θ ε δ : ℝ, a ≤ 2 * θ ∧ θ < 4 / 7 ∧ 0 ≤ ε ∧ 0 < δ ∧ δ ≤ 1 ∧
-        UniformGaussianMollifiedMoment θ ε δ)
-    (hI : ActualZeroOrdinate.InghamDensityBound) :
+        UniformGaussianMollifiedMoment θ ε δ) :
     ActualZeroOrdinate.ConreyBaluyotDensityHypothesis := by
-  apply conreyBaluyotDensity_of_cofinal_dyadicMollifiedMoments _ hI
+  apply conreyBaluyotDensity_of_cofinal_dyadicMollifiedMoments
   intro a ha ha'
   obtain ⟨θ, ε, δ, hθa, hθhi, hε, hδ, hδ', hmoment⟩ := hm a ha ha'
   exact ⟨θ, ε, hθa, hθhi, hε,

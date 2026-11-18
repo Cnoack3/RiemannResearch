@@ -4,7 +4,15 @@ Date: 2026-11-15. Investigation base: `f1df51cb44c3b28bd0087864c316c8915271cef4`
 Integration base: `ac85bee98c61d52bb7865e010acab73ee988360a`.
 Consumer: the Ingham input to the actual Selberg/Z03 density assembly.
 
-## Status
+## Subsequent proof
+
+The full multiplicity-weighted Ingham bound and a smaller logarithmic factor
+are now proved by `ActualZeroOrdinate.inghamDensityBound` and
+`ActualZeroOrdinate.exists_ingham_density_log_profile`. The near-line
+Conrey–Baluyot moment remains open. The proof and its hypotheses are recorded
+in [the Ingham density catalog](THEOREM_CATALOG_INGHAM_DENSITY_20261117.md).
+
+## Status at the November 15 checkpoint
 
 Ingham's density estimate is a classical unconditional theorem. The project's
 `ActualZeroOrdinate.InghamDensityBound` is still a proposition awaiting an

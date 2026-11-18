@@ -62,7 +62,7 @@ theorem height_log_le_ingham_profile_iff {T σ : ℝ} (hT : 1 < T) (hσ : σ < 2
     linarith
 
 /-- An unconditional actual-zero estimate on a logarithmically shrinking strip.
-This uses total counting, not the unproved global Ingham provider. -/
+The total count alone suffices throughout this strip. -/
 theorem exists_ingham_profile_on_thin_strip :
     ∃ C : ℝ, 0 < C ∧ ∀ T : ℝ, 9 ≤ T → ∀ σ ∈ Icc (1 / 2 : ℝ) 1,
       (σ-1 / 2) * (2*Real.log T + 4*Real.log (Real.log T)) ≤
