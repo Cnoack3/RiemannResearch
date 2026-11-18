@@ -4415,6 +4415,7 @@ import RiemannResearch.Analysis.MontgomeryLogPhaseIntegral
 import RiemannResearch.Analysis.MontgomeryPrimeCrossIntegral
 import RiemannResearch.Analysis.MontgomeryFejerDensity
 import RiemannResearch.Analysis.MontgomeryFejerCertificate
+import RiemannResearch.Analysis.MontgomeryFejerResolution
 import RiemannResearch.Analysis.MontgomeryCentralPeak
 import RiemannResearch.Analysis.MontgomeryPositiveGapDensity
 import RiemannResearch.Analysis.MontgomeryIntegratedGapDensity
