@@ -65,6 +65,43 @@ Consequently \(A_N(\infty)/N^2\to0\) if and only if
 \(\mathbf1\in V\). The diagonal value \(A_N(N)\) adds the entire
 squared finite-to-full projection difference on the centered input.
 
+## Prime-power telescopes at a mixed cutoff
+
+[ScreenedPrimePowerTelescope](RH/ScreenedPrimePowerTelescope.lean) connects the
+finite telescope to the rank-one theorem. [PrimePowerPacketSummation](RH/PrimePowerPacketSummation.lean)
+also proves summation by parts for arbitrary tower coefficients, including the endpoint term. With \(D_d(n)=n\bmod d\),
+\(\sum_{a=1}^A J_{p^a}=D_{p^A}\) in the complete Hilbert space.
+Every single fully screened prime power spans \(W_*\). For every \(d>1\) put
+\(x_d=D_d/\log d\). Then \(Sx_d=u\), and
+\[
+ \|\mathbf1-S_B x_d\|_P^2
+ =\frac{\delta}{1-\delta}+\|(P_C-P_{C_B})x_d\|_P^2 .
+\]
+The centered residue \(D_d-(\log d)\mathbf1\) belongs to \(C\) exactly when the
+target belongs to \(V\). In particular the fixed conductor 2 tests centered parity.
+For any two legal inputs of means \(m_x,m_y\), the centered Gram entry at cutoff
+\(B\) equals \(m_xm_y\delta/(1-\delta)+\langle(P_C-P_{C_B})x,(P_C-P_{C_B})y\rangle_P\).
+The declaration `finiteScreening_centered_gram` proves this identity. For any prescribed sequence
+of moduli, convergence to the target along some mixed cutoffs is equivalent
+to target membership. The cutoffs may exceed any prescribed lower bounds.
+
+For finite mixed conductors and any correction in their span, all common
+multiples are compulsory physical observations. On a set \(T\) of such
+multiples with \(2\log d\le n<d\), the squared error is at least
+\(|T|/(8\log^2 d)\). The declaration `logNormalizedResidue_error_partition`
+retains the exact sum over the complementary sites. For a fixed period \(L\),
+the number of eligible multiples is asymptotic to \(d/L\), so a fixed mixed
+window gives divergent error as the input conductor grows. The arithmetic
+saturation of the fixed conductor 2 remains open.
+
+The first mixed conductor is 6. With \(b=\log 2-\pi/(2\sqrt3)\) and
+\(h=\pi/\sqrt3\), the optimal mixed coefficient for the raw packet
+\(J_2-tJ_6\) is \(t=b/h\). Its captured energy is \(b^2/h\).
+The theorem `fixedTwo_mixed_capture_at_six` identifies the energy of the actual
+mixed-window projection with this value. The theorem `conductor_six_mixed_fit_error`
+gives the unit-mean target error for every real coefficient, including the whole
+square above the minimum.
+
 ## Fixed-conductor criterion
 
 For \(y_M=(I-P_{C_M})R_2/\log 2\), the exact finite error is

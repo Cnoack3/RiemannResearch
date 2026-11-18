@@ -404,6 +404,8 @@ import RiemannResearch.RH.MixedConductorDilation
 import RiemannResearch.RH.MixedConductorCovariance
 import RiemannResearch.RH.ResidueConductorVariation
 import RiemannResearch.RH.MixedConductorRankOne
+import RiemannResearch.RH.PrimePowerPacketSummation
+import RiemannResearch.RH.ScreenedPrimePowerTelescope
 import RiemannResearch.RH.MixedConductorHead
 import RiemannResearch.RH.ParetoRamanujanGramCRT
 import RiemannResearch.RH.PsiNormalizedRamanujanUnscreened

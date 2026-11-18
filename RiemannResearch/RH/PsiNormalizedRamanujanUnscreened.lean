@@ -1,6 +1,6 @@
 import RiemannResearch.NumberTheory.PrimeNumberTheorem.Consequences
 import RiemannResearch.RH.MixedConductorCovariance
-import RiemannResearch.RH.IntegratedRamanujanMarkedArithmetic
+import RiemannResearch.RH.PrimePowerPacketSummation
 import RiemannResearch.RH.ThresholdJointAdjointTail
 import RiemannResearch.RH.NearbyDilationGram
 import Mathlib.Data.Nat.Log
@@ -36,15 +36,6 @@ theorem unnormalizedInput_inner_one (N : ℕ) :
   simp only [unnormalizedInput, primeCombination, finiteSchurCombination, one_smul, sum_inner,
     hpacket, prime_source_eq_psi]
 
-private theorem primeTower_sum (p j n : ℕ) (hp : p.Prime) :
-    (∑ i ∈ Finset.range j, ramanujanPacket (p ^ (i + 1)) n) = residue (p ^ j) n := by
-  induction j with
-  | zero => simp [residue, Nat.mod_one]
-  | succ j ih =>
-    rw [Finset.sum_range_succ, ih, ramanujanPacket_prime_pow_succ p j hp, residue_mul_floor,
-      ← pow_succ]
-    ring
-
 /-- Sum once per prime at its largest power in the input window. -/
 theorem unnormalizedInput_sequence_primeTowers (N n : ℕ) :
     hilbertSequence (unnormalizedInput N) n =
@@ -61,7 +52,7 @@ theorem unnormalizedInput_sequence_primeTowers (N n : ℕ) :
       rw [Finset.sum_sigma]
       apply Finset.sum_congr rfl
       intro p hp
-      exact (primeTower_sum p _ n (Nat.prime_of_mem_primesLE hp)).symm
+      exact (sum_ramanujanPacket_prime_powers p _ n (Nat.prime_of_mem_primesLE hp)).symm
     _ = _ := by
       apply Finset.sum_bij (fun a _ => a.1 ^ (a.2 + 1))
       · rintro ⟨p, j⟩ hj
