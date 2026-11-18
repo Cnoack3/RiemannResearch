@@ -24,7 +24,8 @@ the triangular pair statistic and to increments of the zeta argument.
 Here the count is formed from the actual multiplicity copies in the cutoff.
 It has an exact mean-square decomposition and its normalized fixed-width
 variance gives a sufficient input for ordinate pair correlation. Positive
-rational widths suffice. The reverse implication takes the existing
+rational widths suffice, and the signed triangle error may instead be
+averaged over positive rational intervals. The reverse implication takes the existing
 one-sided GLSS moment bound as an explicit premise.
 -/
 
@@ -131,29 +132,31 @@ theorem unfoldedWindowVariance_tendsto_iff {R : ℝ} (hR : 0 ≤ R) :
   · intro h
     exact (h.sub hm).congr' (he.mono fun T hT => by rw [hT]; ring)
 
+private theorem continuous_sineWindowEnergy : Continuous sineWindowEnergy := by
+  unfold sineWindowEnergy
+  exact continuous_id.add ((intervalIntegral.continuous_primitive
+    (fun a b => sineGapMass_mono.intervalIntegrable (a := a) (b := b)) 0).const_mul 2)
+
+private theorem unfoldedWindowEnergy_mono (T : ℝ) (hT : 1 < T) : Monotone (unfoldedWindowEnergy T) := by
+  intro a b hab
+  unfold unfoldedWindowEnergy actualPhysicalTriangleEnergy
+  apply div_le_div_of_nonneg_right _ (by linarith)
+  apply Finset.sum_le_sum
+  intro i _
+  apply Finset.sum_le_sum
+  intro j _
+  have hscale : 0 ≤ Real.log T / (2 * Real.pi) := by
+    exact div_nonneg (Real.log_pos hT).le (by positivity)
+  exact max_le_max_right _ (sub_le_sub_right (div_le_div_of_nonneg_right hab hscale) _)
+
 /-- Checking the fixed-width triangle law on the positive rationals suffices
 by monotonicity of the finite triangle and continuity of the target. -/
 theorem sineWindowMoment_of_rational
     (h : ∀ R : ℚ, 0 < R →
       Tendsto (fun T => unfoldedWindowEnergy T (R : ℝ)) atTop (𝓝 (sineWindowEnergy R))) :
     SineWindowMoment := by
-  have hc : Continuous sineWindowEnergy := by
-    unfold sineWindowEnergy
-    exact continuous_id.add ((intervalIntegral.continuous_primitive
-      (fun a b => sineGapMass_mono.intervalIntegrable (a := a) (b := b)) 0).const_mul 2)
-  have hmono (T : ℝ) (hT : 1 < T) : Monotone (unfoldedWindowEnergy T) := by
-    intro a b hab
-    unfold unfoldedWindowEnergy actualPhysicalTriangleEnergy
-    apply div_le_div_of_nonneg_right _ (by linarith)
-    apply Finset.sum_le_sum
-    intro i _
-    apply Finset.sum_le_sum
-    intro j _
-    have hscale : 0 ≤ Real.log T / (2 * Real.pi) := by
-      exact div_nonneg (Real.log_pos hT).le (by positivity)
-    exact max_le_max_right _ (sub_le_sub_right (div_le_div_of_nonneg_right hab hscale) _)
   intro R hR
-  have hcont : ContinuousAt sineWindowEnergy R := hc.continuousAt
+  have hcont : ContinuousAt sineWindowEnergy R := continuous_sineWindowEnergy.continuousAt
   apply tendsto_order.2
   constructor
   · intro a ha
@@ -170,7 +173,7 @@ theorem sineWindowMoment_of_rational
       linarith [min_le_left (d / 2) (R / 2)]
     filter_upwards [(h q hq).eventually (lt_mem_nhds (hn hdist)),
       eventually_gt_atTop (1 : ℝ)] with T ht hT
-    exact ht.trans_le (hmono T hT hq₂.le)
+    exact ht.trans_le (unfoldedWindowEnergy_mono T hT hq₂.le)
   · intro a ha
     obtain ⟨d, hd, hn⟩ := Metric.eventually_nhds_iff.mp (hcont.eventually (gt_mem_nhds ha))
     obtain ⟨q, hq₁, hq₂⟩ := exists_rat_btwn (show R < R + d / 2 by linarith)
@@ -180,7 +183,7 @@ theorem sineWindowMoment_of_rational
       linarith
     filter_upwards [(h q hq).eventually (gt_mem_nhds (hn hdist)),
       eventually_gt_atTop (1 : ℝ)] with T ht hT
-    exact (hmono T hT hq₁.le).trans_lt ht
+    exact (unfoldedWindowEnergy_mono T hT hq₁.le).trans_lt ht
 
 /-- The microscopic variance of actual zero counts at positive rational
 widths. Its sine-model target retains the signed sinc-square correction. -/
@@ -218,5 +221,83 @@ theorem density_one_of_rationalSineWindowVariance (h : RationalSineWindowVarianc
     Tendsto (fun T : ℝ => (criticalLineCount T : ℝ) / (Ncount 0 T : ℝ)) atTop (𝓝 1) :=
   density_one_of_collision_limit
     (collision_limit_of_sineWindowMoment (sineWindowMoment_of_rationalSineWindowVariance h))
+
+/-- Signed width averages on positive rational intervals. -/
+def RationalTriangleWidthAverages : Prop :=
+  ∀ a b : ℚ, 0 < a → a < b →
+    Tendsto (fun T : ℝ => ∫ r in (a : ℝ)..(b : ℝ),
+      unfoldedWindowEnergy T r - sineWindowEnergy r) atTop (𝓝 0)
+
+/-- Averaging the signed discrepancy in the width variable suffices to
+recover the pointwise triangle law. The proof bounds a value by the
+averages on immediately adjacent rational intervals. -/
+theorem sineWindowMoment_of_rationalTriangleWidthAverages
+    (h : RationalTriangleWidthAverages) : SineWindowMoment := by
+  have hi (a b : ℚ) (ha : 0 < a) (hab : a < b) :
+      Tendsto (fun T : ℝ => ∫ r in (a : ℝ)..(b : ℝ), unfoldedWindowEnergy T r)
+        atTop (𝓝 (∫ r in (a : ℝ)..(b : ℝ), sineWindowEnergy r)) := by
+    have ht := (h a b ha hab).add_const (∫ r in (a : ℝ)..(b : ℝ), sineWindowEnergy r)
+    rw [zero_add] at ht
+    apply ht.congr'
+    filter_upwards [eventually_gt_atTop (1 : ℝ)] with T hT
+    rw [intervalIntegral.integral_sub (unfoldedWindowEnergy_mono T hT).intervalIntegrable
+      (continuous_sineWindowEnergy.intervalIntegrable _ _)]
+    exact sub_add_cancel _ _
+  apply sineWindowMoment_of_rational
+  intro R hR
+  have hr : 0 < (R : ℝ) := by exact_mod_cast hR
+  apply tendsto_order.2
+  constructor
+  · intro l hl
+    obtain ⟨c, hlc, hcr⟩ := exists_between hl
+    obtain ⟨d, hd, hn⟩ := Metric.eventually_nhds_iff.mp
+      (continuous_sineWindowEnergy.continuousAt.eventually (lt_mem_nhds hcr))
+    obtain ⟨q, hlow, hqr⟩ := exists_rat_btwn
+      (show max 0 ((R : ℝ) - d) < (R : ℝ) from max_lt hr (by linarith))
+    have hq : 0 < q := by
+      exact_mod_cast (lt_of_le_of_lt (le_max_left 0 ((R : ℝ) - d)) hlow)
+    have hqR : q < R := by exact_mod_cast hqr
+    have hbound : ((R : ℝ) - (q : ℝ)) * c ≤ ∫ r in (q : ℝ)..(R : ℝ), sineWindowEnergy r := by
+      have hle := intervalIntegral.integral_mono_on (μ := volume) hqr.le
+        (f := fun _ : ℝ => c) intervalIntegrable_const (continuous_sineWindowEnergy.intervalIntegrable _ _)
+        (fun x hx => (hn (show dist x (R : ℝ) < d by
+          rw [Real.dist_eq, abs_of_nonpos (sub_nonpos.mpr hx.2)]
+          linarith [le_max_right 0 ((R : ℝ) - d), hx.1])).le)
+      simpa only [intervalIntegral.integral_const, smul_eq_mul] using hle
+    have hstrict := (mul_lt_mul_of_pos_left hlc (sub_pos.mpr hqr)).trans_le hbound
+    filter_upwards [(hi q R hq hqR).eventually (lt_mem_nhds hstrict),
+      eventually_gt_atTop (1 : ℝ)] with T ht hT
+    have hupper := intervalIntegral.integral_mono_on (μ := volume) hqr.le (unfoldedWindowEnergy_mono T hT).intervalIntegrable
+      (g := fun _ : ℝ => unfoldedWindowEnergy T R) intervalIntegrable_const
+      (fun x hx => unfoldedWindowEnergy_mono T hT hx.2)
+    simp only [intervalIntegral.integral_const, smul_eq_mul] at hupper
+    by_contra! hle
+    exact (not_lt_of_ge (hupper.trans (mul_le_mul_of_nonneg_left hle (sub_nonneg.mpr hqr.le)))) ht
+  · intro u hu
+    obtain ⟨c, hrc, hcu⟩ := exists_between hu
+    obtain ⟨d, hd, hn⟩ := Metric.eventually_nhds_iff.mp
+      (continuous_sineWindowEnergy.continuousAt.eventually (gt_mem_nhds hrc))
+    obtain ⟨q, hrq, hhigh⟩ := exists_rat_btwn (show (R : ℝ) < (R : ℝ) + d by linarith)
+    have hRq : R < q := by exact_mod_cast hrq
+    have hbound : (∫ r in (R : ℝ)..(q : ℝ), sineWindowEnergy r) ≤ ((q : ℝ) - (R : ℝ)) * c := by
+      have hle := intervalIntegral.integral_mono_on (μ := volume) hrq.le (continuous_sineWindowEnergy.intervalIntegrable _ _)
+        (g := fun _ : ℝ => c) intervalIntegrable_const
+        (fun x hx => (hn (show dist x (R : ℝ) < d by
+          rw [Real.dist_eq, abs_of_nonneg (sub_nonneg.mpr hx.1)]
+          linarith [hx.2])).le)
+      simpa only [intervalIntegral.integral_const, smul_eq_mul] using hle
+    have hstrict := hbound.trans_lt (mul_lt_mul_of_pos_left hcu (sub_pos.mpr hrq))
+    filter_upwards [(hi R q hR hRq).eventually (gt_mem_nhds hstrict),
+      eventually_gt_atTop (1 : ℝ)] with T ht hT
+    have hlower := intervalIntegral.integral_mono_on (μ := volume) hrq.le
+      (f := fun _ : ℝ => unfoldedWindowEnergy T R) intervalIntegrable_const
+      (unfoldedWindowEnergy_mono T hT).intervalIntegrable (fun x hx => unfoldedWindowEnergy_mono T hT hx.1)
+    simp only [intervalIntegral.integral_const, smul_eq_mul] at hlower
+    by_contra! hle
+    exact (not_lt_of_ge ((mul_le_mul_of_nonneg_left hle (sub_nonneg.mpr hrq.le)).trans hlower)) ht
+
+theorem positiveGapPCC_of_rationalTriangleWidthAverages
+    (h : RationalTriangleWidthAverages) : PositiveGapPCC :=
+  positiveGapPCC_of_sineWindowMoment (sineWindowMoment_of_rationalTriangleWidthAverages h)
 
 end RiemannResearch.Analysis.MontgomeryPositiveGap

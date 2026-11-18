@@ -7,6 +7,12 @@
   ordinate occurrences with analytic multiplicity. The target is
   `sineWindowEnergy R - R^2`, and `sineWindowEnergy_eq` expresses it
   as the fixed-width sinc-square integral after subtracting the squared mean.
+- `positiveGapPCC_of_rationalTriangleWidthAverages` in the same module
+  needs convergence to zero of the signed triangle-moment error integrated
+  on each fixed interval with positive rational endpoints. Monotonicity
+  bounds the triangle moment at a width between its adjacent interval
+  averages. Continuity of the sine model recovers its value there.
+  Establishing these signed averages for the actual zeros remains open.
 - `ActualZeroWindowDiscrepancy.lean` identifies the finite cutoff count
   almost everywhere with `Ncount t (min T (t+h))`, including its analytic
   multiplicities. The count is the clipped discrepancy increment plus
