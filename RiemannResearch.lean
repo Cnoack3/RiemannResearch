@@ -4421,6 +4421,7 @@ import RiemannResearch.Analysis.MontgomeryFejerResolution
 import RiemannResearch.Analysis.MontgomeryCentralPeak
 import RiemannResearch.Analysis.MontgomeryFejerCoreUniform
 import RiemannResearch.Analysis.MontgomeryFourierShoulder
+import RiemannResearch.Analysis.MontgomeryExtendedFourierShoulder
 import RiemannResearch.Analysis.MontgomeryPositiveGapDensity
 import RiemannResearch.Analysis.MontgomeryIntegratedGapDensity
 import RiemannResearch.Analysis.MontgomeryGapMesh
