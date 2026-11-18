@@ -1757,6 +1757,8 @@ import RiemannResearch.Analysis.ActualFixedFrequencyLandau
 import RiemannResearch.Analysis.ActualOrdinateAngularLaw
 import RiemannResearch.RH.RamanujanOrdinateFMZ
 import RiemannResearch.RH.RamanujanOrdinateRate
+import RiemannResearch.RH.RamanujanOrdinateNormalEquations
+import RiemannResearch.RH.RamanujanSixMass
 import RiemannResearch.RH.RamanujanOrdinatePhases
 import RiemannResearch.Analysis.ActualRationalFMZDomination
 import RiemannResearch.Analysis.ActualRationalFMZLimits
