@@ -36,8 +36,9 @@ N(\sigma,T)\ll T(\log T)^4\exp[-(\sigma-1/2)\log T/4].
 $$
 The four-sided Cauchy identity for the Möbius mollifier error, the actual
 critical-line mixed moment, and the local zero-count bound supply this estimate.
-The classical Selberg single-log estimate and the full Ingham exponent
-remain separate formalization obligations.
+The actual Ingham theorem also supplies the away-line density input. The
+uniform single-logarithm Selberg estimate still requires near-line control.
+[Ingham density theorem](THEOREM_CATALOG_INGHAM_DENSITY_20261117.md) ·
 [Contour identity](Analysis/ActualZeroDensityCauchyDetector.lean) ·
 [Estimate at a zero](Analysis/ActualZeroDensityCauchyObservation.lean) ·
 [Density and energy theorems](Analysis/ActualZeroCauchyDensity.lean)
@@ -46,6 +47,34 @@ remain separate formalization obligations.
 [Angular sampling](Analysis/ActualOrdinateAngularLaw.lean) ·
 [Ramanujan phase limits](RH/RamanujanOrdinatePhases.lean) ·
 [Prime-root Fourier coefficients](RH/RamanujanOrdinateFMZ.lean)
+
+## Unconditional rates and one-period reconstruction
+
+Write $L=\log T$, $\ell=\log L$, and $r(T)=\ell^2/L$. Combining the total
+zero count near the central line with the Cauchy density bound farther out
+gives a right-tail estimate $\ll TL\exp(-Lt/(8\ell))$. Integrating the tail
+gives $E(T)/T\ll r(T)$. The reflected ordinate-to-Landau error divided by
+$T$ is $O(u^2r(T))$ uniformly for $|u|\le L/(16\ell)$. In particular it tends
+to zero for every moving frequency satisfying $u(T)^2r(T)\to0$.
+For fixed positive $u$, the centered contour contributes
+$O_u(\log^2(T+3)/T)$ after subtracting its identified main term.
+
+| Lean declaration | Scope |
+| --- | --- |
+| `eventually_ordinate_landau_loglog_band`, `tendsto_ordinate_landau_of_moving_loglog` | Uniform transfer of actual ordinates, with multiplicity, over the growing band. |
+| `eventually_rational_ordinate_loglog_band` | Uniform arithmetic remainder $O(1/L+u^2r(T))$ for $u=\log(n/m)$, $1\le m<n$, $\log n\le L/8$ and $u\le L/(16\ell)$. |
+| `ramanujanOrdinateApprox_sub_eq`, `ramanujanOrdinateApprox_error_isBigO` | Exact signed divisor-probe error identity and an unconditional $O_{p,q,n}(r(T))$ rate for the original height-normalized sum. |
+| `ramanujanPacket_ordinate_error_isBigO` | Same-height signed prefix at any fixed cutoff. |
+| `periodicOrdinatePacket_error_le_one_period`, `eventually_periodicOrdinatePacket_uniform` | One period reconstructed from harmonics $1,\ldots,q-1$ controls all physical coordinates and all successive differences with an $O_{p,q}(r(T))$ error. |
+| `eventually_periodicOrdinatePacket_weighted_sq` | For every nonnegative summable weight, the full squared error is at most $(\sum_k w_k) C_{p,q}^2r(T)^2$ with a common height threshold. |
+| `eventually_round_periodicOrdinatePacket` | For every sufficiently large $T$, rounding real parts recovers every integer packet value and every positive harmonic Ramanujan sum simultaneously. |
+| `exists_cofinal_round_periodicOrdinatePacket` | One increasing sequence of height thresholds works at stage $N$ for all primes and conductors up to $N$ and every coordinate. |
+
+The uniform reconstruction fixes $p$ and $q>1$ and reduces the physical
+coordinate modulo $q$ before taking the prefix. The raw divisor probe has a
+fixed-harmonic estimate. The rounding threshold is existential.
+[Horizontal concentration and transfer](Analysis/ActualZeroLoglogRate.lean) ·
+[Quantitative reconstruction](RH/RamanujanOrdinateRate.lean)
 
 28 October 2026. This supplement records the strengthening of the current
 prime-phase results, rather than the older saved audit.

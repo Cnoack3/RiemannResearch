@@ -2,6 +2,7 @@ import RiemannResearch.Analysis.ActualRationalFMZLimits
 import RiemannResearch.Analysis.ActualZeroCountAsymptotics
 import RiemannResearch.Analysis.ActualZeroFixedStripConcentration
 import RiemannResearch.Analysis.ActualUniformRationalLandau
+import Mathlib.Analysis.Asymptotics.Defs
 import Mathlib.Tactic
 
 /-!
@@ -63,11 +64,12 @@ theorem exists_bound_rightLandauLine_of_nonresonance (u : ℝ)
     ((norm_finitePhaseKernel_le (sub_ne_zero.mpr (hn k)) A B).trans (hD k))
     (mangoldtSquareCoeff_nonneg k)
 
-/-- Transfer a bounded fixed-frequency right side to the full actual cutoff.
-The other three sides and the short terminal zero window are all included. -/
-theorem tendsto_landau_div_of_bounded_right {u : ℝ} (hu : 0 < u)
+/-- Fixed-frequency contour remainder with all three other sides and the short
+terminal zero window included. -/
+theorem exists_landau_log_sq_bound_of_bounded_right {u : ℝ} (hu : 0 < u)
     (hbounded : ∃ K : ℝ, ∀ A B : ℝ, ‖rightLandauLine A B u‖ ≤ K) :
-    Tendsto (fun T : ℝ => landauSum T u / (T : ℂ)) atTop (𝓝 0) := by
+    ∃ C : ℝ, 0 < C ∧ ∀ T : ℝ, 9 ≤ T →
+      ‖landauSum T u‖ ≤ C * (Real.log (T+3))^2 := by
   obtain ⟨K,hK⟩ := hbounded
   obtain ⟨Cg,hCg,R,hR⟩ := WeilEF.good_heights_centered_exponential_horizontals
   obtain ⟨D,hD,htransfer⟩ := exists_landauSum_short_height_bound
@@ -78,14 +80,8 @@ theorem tendsto_landau_div_of_bounded_right {u : ℝ} (hu : 0 < u)
   let h := 12*e*Cg
   let c := 4*D*Real.exp (|u|/2)
   let k₀ := ‖landauSum A u‖ + K + b
-  have hsmall : Tendsto (fun T : ℝ =>
-      k₀/T + (s+c) * ((Real.log (T+3))^1/T) + h * ((Real.log (T+3))^2/T)) atTop (𝓝 0) := by
-    have h0 : Tendsto (fun T : ℝ => k₀/T) atTop (𝓝 0) :=
-      tendsto_const_nhds.div_atTop tendsto_id
-    simpa using ((h0.add ((shifted_log_pow_div_self_tendsto_zero 1).const_mul (s+c))).add
-      ((shifted_log_pow_div_self_tendsto_zero 2).const_mul h))
-  apply squeeze_zero_norm' _ hsmall
-  filter_upwards [eventually_ge_atTop (9 : ℝ)] with T hT
+  refine ⟨|k₀| + |s+c| + |h| + 1,by positivity,?_⟩
+  intro T hT
   let L := Real.log (T+3)
   let j := Nat.floor T - 6
   let B := R j
@@ -120,7 +116,8 @@ theorem tendsto_landau_div_of_bounded_right {u : ℝ} (hu : 0 < u)
   have hjlog := Real.log_nat_add_ten_le_two_log_add_three hT hjT
   change _ ≤ 2*L at hjlog
   have hsq : (Real.log ((j:ℝ)+10))^2 ≤ 4*L^2 := by
-    nlinarith only [hjlog,hL,Real.log_nonneg (by linarith [Nat.cast_nonneg (α := ℝ) j] : 1 ≤ (j:ℝ)+10)]
+    have hj0 := Real.log_nonneg (by linarith [Nat.cast_nonneg (α := ℝ) j] : 1 ≤ (j:ℝ)+10)
+    nlinarith only [hjlog,hL,hj0]
   have hhor : ‖horizontalLandauCorrection A B u‖ ≤ b + h * L^2 := by
     refine (norm_horizontalLandauCorrection_le A B u).trans (add_le_add hbottom ?_)
     calc
@@ -152,15 +149,92 @@ theorem tendsto_landau_div_of_bounded_right {u : ℝ} (hu : 0 < u)
               (horizontalLandauCorrection A B u)
             linarith
       _ ≤ _ := by dsimp [k₀]; linarith [hK A B]
-  rw [norm_div, Complex.norm_real,Real.norm_eq_abs,abs_of_pos (by linarith : 0<T)]
+  have hLL : L ≤ L^2 := by nlinarith [mul_nonneg (by linarith : 0 ≤ L) (sub_nonneg.mpr hL)]
+  have h1 : 1 ≤ L^2 := by nlinarith
   calc
-    _ ≤ (k₀ + (s+c)*L + h*L^2)/T := div_le_div_of_nonneg_right hnorm (by linarith)
-    _ = _ := by dsimp [L]; ring
+    _ ≤ _ := hnorm
+    _ ≤ |k₀| * L^2 + |s+c| * L^2 + |h| * L^2 := by
+      have ha := (le_abs_self k₀).trans (le_mul_of_one_le_right (abs_nonneg k₀) h1)
+      have hb := mul_le_mul (le_abs_self (s+c)) hLL (by linarith : 0 ≤ L) (abs_nonneg _)
+      have hc := mul_le_mul_of_nonneg_right (le_abs_self h) (sq_nonneg L)
+      linarith
+    _ ≤ _ := by
+      change _ ≤ (|k₀| + |s+c| + |h| + 1) * L^2
+      nlinarith [sq_nonneg L]
+
+theorem tendsto_landau_div_of_bounded_right {u : ℝ} (hu : 0 < u)
+    (hbounded : ∃ K : ℝ, ∀ A B : ℝ, ‖rightLandauLine A B u‖ ≤ K) :
+    Tendsto (fun T : ℝ => landauSum T u / (T : ℂ)) atTop (𝓝 0) := by
+  obtain ⟨C,hC,hb⟩ := exists_landau_log_sq_bound_of_bounded_right hu hbounded
+  apply squeeze_zero_norm' _ (by simpa using
+    (shifted_log_pow_div_self_tendsto_zero 2).const_mul C)
+  filter_upwards [eventually_ge_atTop (9 : ℝ)] with T hT
+  have hTp : 0 < T := by linarith
+  rw [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hTp, ← mul_div_assoc]
+  exact div_le_div_of_nonneg_right (hb T hT) hTp.le
 
 theorem tendsto_landau_div_of_nonresonance {u : ℝ} (hu : 0 < u)
     (hn : ∀ k : ℕ, u ≠ Real.log k) :
     Tendsto (fun T : ℝ => landauSum T u / (T : ℂ)) atTop (𝓝 0) :=
   tendsto_landau_div_of_bounded_right hu (exists_bound_rightLandauLine_of_nonresonance u hn)
+
+/-- The contour gives a quantitative remainder at every fixed positive real
+frequency. The limit parameter allows any of the arithmetic identifications
+of the main term to be used without choosing a logarithmic representative. -/
+theorem fixed_landau_remainder_isBigO_log_sq {u : ℝ} {m : ℂ} (hu : 0 < u)
+    (hm : Tendsto (fun T : ℝ => landauSum T u / (T : ℂ)) atTop (𝓝 m)) :
+    Asymptotics.IsBigO atTop (fun T : ℝ => landauSum T u / (T : ℂ) - m)
+      (fun T : ℝ => (Real.log (T+3))^2 / T) := by
+  classical
+  by_cases hr : ∃ k : ℕ, u = Real.log (k : ℝ)
+  · obtain ⟨k,rfl⟩ := hr
+    have hk : 1 < k := by
+      by_contra! hk
+      interval_cases k <;> norm_num at hu
+    have hm' := tendsto_rational_landau_div (n:=k) (m:=1) (by decide) hk
+    simp only [Nat.cast_one, div_one] at hm'
+    have heq := tendsto_nhds_unique hm hm'
+    obtain ⟨C,hC,hb⟩ := exists_uniform_rational_landau_rpow_bound
+    let A := (k : ℝ) ^ (5 / 2 : ℝ)
+    let B := (k : ℝ) ^ (3 / 2 : ℝ)
+    refine Asymptotics.IsBigO.of_bound (C*(A+B+k)) ?_
+    filter_upwards [eventually_ge_atTop (9 : ℝ)] with T hT
+    have hTp : 0 < T := by linarith
+    have hTc : (T : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hTp.ne'
+    let L := Real.log (T+3)
+    have hL : 1 ≤ L := by
+      dsimp [L]
+      rw [← Real.log_exp 1]
+      exact Real.log_le_log (Real.exp_pos _) (by linarith [Real.exp_one_lt_d9])
+    have hA : 0 ≤ A := Real.rpow_nonneg (Nat.cast_nonneg _) _
+    have hB := hb T (k:ℝ) k 1 hT (by decide) hk le_rfl
+    simp only [Nat.cast_one, div_one] at hB
+    have he : landauSum T (Real.log k) / (T:ℂ) - m =
+        (landauSum T (Real.log k) + ((T*rationalLandauMain k 1 : ℝ) : ℂ)) / (T:ℂ) := by
+      rw [heq]
+      push_cast
+      field_simp <;> ring
+    rw [he, norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hTp,
+      Real.norm_eq_abs, abs_of_nonneg (div_nonneg (sq_nonneg _) hTp.le), ← mul_div_assoc]
+    apply div_le_div_of_nonneg_right _ hTp.le
+    refine hB.trans ?_
+    change C*(A + B*L^2 + k*L) ≤ C*(A+B+k)*L^2
+    rw [mul_assoc]
+    apply mul_le_mul_of_nonneg_left _ hC.le
+    have hL2 : L ≤ L^2 := by nlinarith [mul_nonneg (by linarith : 0 ≤ L) (sub_nonneg.mpr hL)]
+    have h1 := le_mul_of_one_le_right hA (hL.trans hL2)
+    have h2 := mul_le_mul_of_nonneg_left hL2 (Nat.cast_nonneg (α:=ℝ) k)
+    linarith
+  · have hn : ∀ k : ℕ, u ≠ Real.log k := fun k hk => hr ⟨k,hk⟩
+    have hm0 := tendsto_nhds_unique hm (tendsto_landau_div_of_nonresonance hu hn)
+    obtain ⟨C,hC,hb⟩ := exists_landau_log_sq_bound_of_bounded_right hu
+      (exists_bound_rightLandauLine_of_nonresonance u hn)
+    refine Asymptotics.IsBigO.of_bound C ?_
+    filter_upwards [eventually_ge_atTop (9:ℝ)] with T hT
+    have hTp : 0 < T := by linarith
+    rw [hm0,sub_zero,norm_div,Complex.norm_real,Real.norm_eq_abs,abs_of_pos hTp,
+      Real.norm_eq_abs,abs_of_nonneg (div_nonneg (sq_nonneg _) hTp.le),← mul_div_assoc]
+    exact div_le_div_of_nonneg_right (hb T hT) hTp.le
 
 /-- The count-normalized centered Landau mode vanishes for every positive
 real frequency, including resonances, without a zero-density premise. -/

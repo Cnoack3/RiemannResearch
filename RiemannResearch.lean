@@ -1704,9 +1704,11 @@ import RiemannResearch.Analysis.ActualRationalFMZRate
 import RiemannResearch.Analysis.ActualPrimeTorusFMZSeries
 import RiemannResearch.Analysis.ActualPrimeTorusFMZPoisson
 import RiemannResearch.Analysis.ActualPrimeTorusFMZ
+import RiemannResearch.Analysis.ActualZeroLoglogRate
 import RiemannResearch.Analysis.ActualFixedFrequencyLandau
 import RiemannResearch.Analysis.ActualOrdinateAngularLaw
 import RiemannResearch.RH.RamanujanOrdinateFMZ
+import RiemannResearch.RH.RamanujanOrdinateRate
 import RiemannResearch.RH.RamanujanOrdinatePhases
 import RiemannResearch.Analysis.ActualRationalFMZDomination
 import RiemannResearch.Analysis.ActualRationalFMZLimits
