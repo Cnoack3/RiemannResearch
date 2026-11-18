@@ -6,6 +6,7 @@ Authors: RiemannResearch contributors
 import RiemannResearch.Analysis.MontgomeryGapBand
 import RiemannResearch.Analysis.MontgomeryIntegratedGapDensity
 import RiemannResearch.Analysis.MontgomeryGapMesh
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
@@ -83,6 +84,96 @@ private theorem sineWindowEnergy_sub (U R : ℝ) :
     sineGapMass_mono.intervalIntegrable sineGapMass_mono.intervalIntegrable
   unfold sineWindowEnergy
   linarith only [hi]
+
+private theorem sineWindowEnergy_adjacent_secants (R h : ℝ) (hh : 0 < h) :
+    (1 + 2 * sineGapMass R - h) * h ≤ sineWindowEnergy R - sineWindowEnergy (R - h) ∧
+      sineWindowEnergy (R + h) - sineWindowEnergy R ≤ (1 + 2 * sineGapMass R + h) * h := by
+  let f := fun u : ℝ => sineGapMass R + (u - R)
+  have hf : Continuous f := by dsimp [f]; fun_prop
+  have hI (U V : ℝ) : (∫ u in U..V, f u) =
+      (V - U) * (sineGapMass R - R) + (V ^ 2 - U ^ 2) / 2 := by
+    have hsum := intervalIntegral.integral_add (f := fun _ : ℝ => sineGapMass R - R)
+      (g := fun u : ℝ => u) (μ := volume) intervalIntegrable_const
+      (continuous_id.intervalIntegrable U V)
+    rw [show f = (fun u => (sineGapMass R - R) + u) by funext u; dsimp [f]; ring,
+      hsum, intervalIntegral.integral_const, integral_id]
+    simp only [smul_eq_mul] <;> ring
+  have hlo := intervalIntegral.integral_mono_on (μ := volume)
+    (show R - h ≤ R by linarith) (hf.intervalIntegrable _ _)
+    sineGapMass_mono.intervalIntegrable (fun u hu => by
+      have hu' := (sineGapMass_increment_bounds hu.2).2
+      dsimp [f]
+      linarith only [hu'])
+  have hhi := intervalIntegral.integral_mono_on (μ := volume)
+    (show R ≤ R + h by linarith) sineGapMass_mono.intervalIntegrable
+    (hf.intervalIntegrable _ _) (fun u hu => by
+      have hu' := (sineGapMass_increment_bounds hu.1).2
+      dsimp [f]
+      linarith only [hu'])
+  rw [hI] at hlo hhi
+  constructor
+  · rw [sineWindowEnergy_sub]
+    nlinarith only [hlo]
+  · rw [sineWindowEnergy_sub]
+    nlinarith only [hhi]
+
+/-- The two neighboring window errors bound the signed gap discrepancy,
+retaining the collision excess separately. The sine-model secant error
+uses the integral of the affine Lipschitz bound. -/
+theorem signed_gap_error_le_window_secants {T R h : ℝ}
+    (hT : 1 < T) (hh : 0 < h) (hR : h ≤ R) :
+    let e := fun u => unfoldedWindowEnergy T u - sineWindowEnergy u
+    |positiveGapMass T R - sineGapMass R +
+      ((actualCollision T : ℝ) / (T * Real.log T / (2 * Real.pi)) - 1) / 2| ≤
+        h / 2 + max |e (R + h) - e R| |e R - e (R - h)| / (2 * h) := by
+  let e := fun u => unfoldedWindowEnergy T u - sineWindowEnergy u
+  let B := max |e (R + h) - e R| |e R - e (R - h)|
+  let A := positiveGapMass T R - sineGapMass R + (collisionMass T - 1) / 2
+  change |A| ≤ h / 2 + B / (2 * h)
+  have hR₀ : 0 ≤ R := hh.le.trans hR
+  have hmodel := sineWindowEnergy_adjacent_secants R h hh
+  have hleft := (unfoldedWindowEnergy_secant_bounds hT (sub_nonneg.mpr hR)
+    (show R - h < R by linarith)).2
+  have hright := (unfoldedWindowEnergy_secant_bounds hT hR₀ (show R < R + h by linarith)).1
+  rw [show R - (R - h) = h by ring] at hleft
+  rw [show R + h - R = h by ring] at hright
+  have hlo := (div_le_iff₀ hh).mp hleft
+  have hhi := (le_div_iff₀ hh).mp hright
+  have hEL : -B ≤ e R - e (R - h) := (abs_le.mp (le_max_right _ _)).1
+  have hER : e (R + h) - e R ≤ B := (abs_le.mp (le_max_left _ _)).2
+  have hbottom : -(h ^ 2 + B) ≤ A * (2 * h) := by
+    dsimp only [e] at hEL
+    dsimp [A, collisionMass]
+    nlinarith only [hmodel.1, hEL, hlo]
+  have htop : A * (2 * h) ≤ h ^ 2 + B := by
+    dsimp only [e] at hER
+    dsimp [A, collisionMass]
+    nlinarith only [hmodel.2, hER, hhi]
+  have hh₂ : 0 < 2 * h := by positivity
+  rw [show h / 2 + B / (2 * h) = (h ^ 2 + B) / (2 * h) by field_simp [hh.ne']]
+  apply abs_le.2
+  exact ⟨by rw [← neg_div]; exact (div_le_iff₀ hh₂).2 hbottom, (le_div_iff₀ hh₂).2 htop⟩
+
+/-- A common error at the three widths yields the usual finite-difference
+bound with full error amplification. -/
+theorem signed_gap_error_le_of_window_errors {T R h E : ℝ}
+    (hT : 1 < T) (hh : 0 < h) (hR : h ≤ R)
+    (hl : |unfoldedWindowEnergy T (R - h) - sineWindowEnergy (R - h)| ≤ E)
+    (hm : |unfoldedWindowEnergy T R - sineWindowEnergy R| ≤ E)
+    (hr : |unfoldedWindowEnergy T (R + h) - sineWindowEnergy (R + h)| ≤ E) :
+    |positiveGapMass T R - sineGapMass R +
+      ((actualCollision T : ℝ) / (T * Real.log T / (2 * Real.pi)) - 1) / 2| ≤
+        h / 2 + E / h := by
+  let e := fun u => unfoldedWindowEnergy T u - sineWindowEnergy u
+  have htri (x y : ℝ) : |x - y| ≤ |x| + |y| := by
+    simpa only [sub_eq_add_neg, abs_neg] using abs_add_le x (-y)
+  have heR : |e (R + h) - e R| ≤ E + E := (htri _ _).trans (add_le_add hr hm)
+  have heL : |e R - e (R - h)| ≤ E + E := (htri _ _).trans (add_le_add hm hl)
+  apply (signed_gap_error_le_window_secants hT hh hR).trans
+  refine add_le_add le_rfl ?_
+  calc
+    _ ≤ (E + E) / (2 * h) := div_le_div_of_nonneg_right (max_le heR heL) (by positivity)
+    _ = _ := by ring
 
 private theorem local_sineWindowEnergy_secant (x : ℝ) {η : ℝ} (hη : 0 < η) :
     ∃ δ : ℝ, 0 < δ ∧ ∀ U R : ℝ, U < R → x - δ ≤ U → R ≤ x + δ →

@@ -10,6 +10,18 @@ The exact homogeneous Parseval results from the starting revision are reused.
 
 ## Actual-zero local mass and Bessel estimates
 
+The later short-window reduction is in
+[MontgomeryWindowVarianceCriterion.lean](Analysis/MontgomeryWindowVarianceCriterion.lean).
+It identifies the triangle moment with the exact finite-height mean squared
+plus the variance for each fixed unfolded width at all sufficiently large
+heights. The sine-model variance at positive rational widths suffices for
+ordinary ordinate PCC and density one of simple critical zeros. The reverse
+direction uses the one-sided GLSS moment estimate as an explicit premise.
+The finite theorem `signed_gap_error_le_of_window_errors` bounds the signed
+gap discrepancy, including half the collision excess, by $h/2+E/h$ when the
+three consecutive unfolded widths have error at most $E$.
+[Goldston–Lee–Schettler–Suriajaya, Propositions 1–2](https://doi.org/10.1112/mtk.70127)
+
 Let `Copies T` retain every analytic multiplicity at heights `0 < gamma <= T`,
 and put `w(d)=4/(4+d^2)`. The already-checked unconditional unit-window bound
 is instantiated with the actual zeta function. Sorting copies by
