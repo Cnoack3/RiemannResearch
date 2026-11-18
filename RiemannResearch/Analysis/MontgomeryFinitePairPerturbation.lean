@@ -131,4 +131,68 @@ theorem eventually_formFactorWithTwoAtHeight_sub_bound :
       div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left hnorm' (by positivity)) hD.le
     _ = _ := by dsimp [D]; field_simp [hL.ne', hT0.ne', Real.pi_ne_zero]; ring
 
+/-- Add two separately labeled occurrences to a finite ordinate configuration. -/
+def appendOrdinatePair {ι : Type*} (t : ι → ℝ) (a b : ℝ) : ι ⊕ Bool → ℝ :=
+  Sum.elim t (fun q => cond q a b)
+
+theorem kernelEnergy_appendOrdinatePair {ι : Type*} [Fintype ι]
+    (t : ι → ℝ) (a b : ℝ) (k : ℝ → ℝ) :
+    kernelEnergy (appendOrdinatePair t a b) k =
+      kernelEnergy t k + (∑ i : ι, (k (t i - a) + k (t i - b))) +
+      (∑ i : ι, (k (a - t i) + k (b - t i))) + k (a - b) + k (b - a) + 2 * k 0 := by
+  classical
+  unfold kernelEnergy appendOrdinatePair
+  simp only [Fintype.sum_sum_type, Fintype.sum_bool, Sum.elim_inl, Sum.elim_inr,
+    cond_true, cond_false, sub_self, Finset.sum_add_distrib]
+  ring
+
+/-- Replacing two isolated heights by two distinct labels at one fresh height
+changes a localized kernel only through its value at zero. -/
+theorem isolated_ordinate_replacement_energy_eq {ι : Type*} [Fintype ι]
+    (t : ι → ℝ) (a b c δ : ℝ) (k : ℝ → ℝ)
+    (ha : ∀ i, δ ≤ |t i - a|) (hb : ∀ i, δ ≤ |t i - b|)
+    (hc : ∀ i, δ ≤ |t i - c|) (hab : δ ≤ |a - b|)
+    (hk : ∀ x, δ ≤ |x| → k x = 0) :
+    kernelEnergy (appendOrdinatePair t c c) k =
+      kernelEnergy (appendOrdinatePair t a b) k + 2 * k 0 := by
+  have hflip {x y : ℝ} (h : δ ≤ |x - y|) : δ ≤ |y - x| := by rwa [abs_sub_comm]
+  rw [kernelEnergy_appendOrdinatePair, kernelEnergy_appendOrdinatePair]
+  simp [fun i => hk _ (ha i), fun i => hk _ (hb i), fun i => hk _ (hc i),
+    fun i => hk _ (hflip (ha i)), fun i => hk _ (hflip (hb i)),
+    fun i => hk _ (hflip (hc i)), hk _ hab, hk _ (hflip hab)] <;> ring
+
+/-- All strictly positive ordinate-gap counts below the separation scale are
+preserved exactly by an isolated reflected-pair replacement. -/
+theorem isolated_ordinate_replacement_positive_count_eq {ι : Type*} [Fintype ι]
+    (t : ι → ℝ) (a b c δ u : ℝ)
+    (ha : ∀ i, δ ≤ |t i - a|) (hb : ∀ i, δ ≤ |t i - b|)
+    (hc : ∀ i, δ ≤ |t i - c|) (hab : δ ≤ |a - b|) (hu : u < δ) :
+    kernelEnergy (appendOrdinatePair t c c) (fun x => if 0 < x ∧ x ≤ u then 1 else 0) =
+      kernelEnergy (appendOrdinatePair t a b) (fun x => if 0 < x ∧ x ≤ u then 1 else 0) := by
+  have hk (x : ℝ) (hx : δ ≤ |x|) :
+      (if 0 < x ∧ x ≤ u then (1 : ℝ) else 0) = 0 := by
+    apply if_neg
+    intro h
+    rw [abs_of_pos h.1] at hx
+    exact (not_lt_of_ge hx) (h.2.trans_lt hu)
+  simpa using isolated_ordinate_replacement_energy_eq t a b c δ
+    (fun x => if 0 < x ∧ x ≤ u then 1 else 0) ha hb hc hab hk
+
+/-- The same replacement adds exactly two ordered equal-ordinate pairs. -/
+theorem isolated_ordinate_replacement_collision_eq {ι : Type*} [Fintype ι]
+    (t : ι → ℝ) (a b c δ : ℝ) (hδ : 0 < δ)
+    (ha : ∀ i, δ ≤ |t i - a|) (hb : ∀ i, δ ≤ |t i - b|)
+    (hc : ∀ i, δ ≤ |t i - c|) (hab : δ ≤ |a - b|) :
+    occurrenceCollision (appendOrdinatePair t c c) =
+      occurrenceCollision (appendOrdinatePair t a b) + 2 := by
+  have hk (x : ℝ) (hx : δ ≤ |x|) : (if x = 0 then (1 : ℝ) else 0) = 0 := by
+    exact if_neg (abs_pos.mp (hδ.trans_le hx))
+  have he := isolated_ordinate_replacement_energy_eq t a b c δ
+    (fun x => if x = 0 then 1 else 0) ha hb hc hab hk
+  rw [← occurrenceCollision_cast_eq_kernelEnergy,
+    ← occurrenceCollision_cast_eq_kernelEnergy] at he
+  have he' : (occurrenceCollision (appendOrdinatePair t c c) : ℝ) =
+      (occurrenceCollision (appendOrdinatePair t a b) : ℝ) + 2 := by simpa using he
+  exact_mod_cast he'
+
 end RiemannResearch.Analysis.MontgomeryFormFactor
