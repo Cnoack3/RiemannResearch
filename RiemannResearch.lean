@@ -4418,6 +4418,7 @@ import RiemannResearch.Analysis.MontgomeryPrimeCrossIntegral
 import RiemannResearch.Analysis.MontgomeryFejerDensity
 import RiemannResearch.Analysis.MontgomeryFejerCertificate
 import RiemannResearch.Analysis.MontgomeryFejerResolution
+import RiemannResearch.Analysis.MontgomeryFejerPower
 import RiemannResearch.Analysis.MontgomeryCentralPeak
 import RiemannResearch.Analysis.MontgomeryFejerCoreUniform
 import RiemannResearch.Analysis.MontgomeryFourierShoulder
