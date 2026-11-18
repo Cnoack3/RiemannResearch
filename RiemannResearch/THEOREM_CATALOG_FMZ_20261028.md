@@ -66,6 +66,8 @@ $O_u(\log^2(T+3)/T)$ after subtracting its identified main term.
 | --- | --- |
 | `eventually_ordinate_landau_loglog_band`, `tendsto_ordinate_landau_of_moving_loglog` | Uniform transfer of actual ordinates, with multiplicity, over the growing band. |
 | `eventually_rational_ordinate_loglog_band` | Uniform arithmetic remainder $O(1/L+u^2r(T))$ for $u=\log(n/m)$, $1\le m<n$, $\log n\le L/8$ and $u\le L/(16\ell)$. |
+| `eventually_centeredRationalOrdinate_remainder_loglog` | Unconditional signed FMZ remainder bounded by $Cr(T)$ times squared logarithmic height, uniformly over all positive numerator and denominator pairs. The diagonal vanishes exactly. |
+| `eventually_fourierSeries_remainder_loglog`, `tendsto_moving_fourierSeries_remainder_loglog` | One unconditional bound for every finite prime set and every absolutely summable squared-height Fourier test. Moving tests converge when their squared-height Wiener mass times $r(T)$ tends to zero. |
 | `ramanujanOrdinateApprox_sub_eq`, `ramanujanOrdinateApprox_error_isBigO` | Exact signed divisor-probe error identity and an unconditional $O_{p,q,n}(r(T))$ rate for the original height-normalized sum. |
 | `ramanujanPacket_ordinate_error_isBigO` | Same-height signed prefix at any fixed cutoff. |
 | `periodicOrdinatePacket_error_le_one_period`, `eventually_periodicOrdinatePacket_uniform` | One period reconstructed from harmonics $1,\ldots,q-1$ controls all physical coordinates and all successive differences with an $O_{p,q}(r(T))$ error. |

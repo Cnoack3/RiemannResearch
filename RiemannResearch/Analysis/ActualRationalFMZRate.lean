@@ -212,18 +212,17 @@ theorem eventually_rational_ordinate_remainder_rate
         dsimp [K]
         nlinarith
 
-/-- All rational modes, with exact diagonal centering and conjugate modes. -/
-theorem eventually_centeredRationalOrdinate_remainder_rate
-    (hD : UniformSelbergDensity (1 / 4)) :
-    ∃ K : ℝ, 0 < K ∧ ∀ᶠ T : ℝ in atTop, ∀ n m : ℕ,
-      1 ≤ n → 1 ≤ m →
+/-- Positive rational modes determine the bound for every centered mode by
+the exact zero diagonal and negative-frequency conjugation. -/
+theorem centeredRationalOrdinate_remainder_le_of_positive {T B : ℝ}
+    (hB : 0 ≤ B)
+    (hpositive : ∀ n m : ℕ, 1 ≤ m → m < n →
+      ‖ordinateSum T (Real.log ((n : ℝ) / (m : ℝ))) / (T : ℂ) +
+        (rationalLandauMain n m : ℂ)‖ ≤ B * (1 + Real.log (n : ℝ)) ^ 2) :
+    ∀ n m : ℕ, 1 ≤ n → 1 ≤ m →
       ‖centeredRationalOrdinate T n m / (T : ℂ) - rationalFMZMain n m‖ ≤
-        (K / Real.log T) * rationalModeWeight n m ^ 2 := by
-  obtain ⟨K, hK, hb⟩ := eventually_rational_ordinate_remainder_rate hD
-  refine ⟨K, hK, ?_⟩
-  filter_upwards [hb, eventually_gt_atTop (1 : ℝ)] with T hT hT1
+        B * rationalModeWeight n m ^ 2 := by
   intro n m hn hm
-  have hL : 0 < Real.log T := Real.log_pos hT1
   have hn0 : (n : ℝ) ≠ 0 := by positivity
   have hm0 : (m : ℝ) ≠ 0 := by positivity
   have hln : 0 ≤ Real.log (n : ℝ) := Real.log_nonneg (by exact_mod_cast hn)
@@ -232,21 +231,20 @@ theorem eventually_centeredRationalOrdinate_remainder_rate
     simp only [rationalModeWeight, abs_of_nonneg (add_nonneg hln hlm)]
     ring
   have hbound (a : ℝ) (ha : 0 ≤ a) (haw : a ≤ Real.log n + Real.log m) :
-      K * (1 + a) ^ 2 / Real.log T ≤ (K / Real.log T) * rationalModeWeight n m ^ 2 := by
-    rw [hw, div_mul_eq_mul_div]
-    apply div_le_div_of_nonneg_right _ hL.le
-    apply mul_le_mul_of_nonneg_left _ hK.le
+      B * (1 + a) ^ 2 ≤ B * rationalModeWeight n m ^ 2 := by
+    rw [hw]
+    apply mul_le_mul_of_nonneg_left _ hB
     nlinarith
   rcases lt_trichotomy m n with hmn | hmn | hnm
   · have hne : n ≠ m := by omega
     simp only [centeredRationalOrdinate, rationalFMZMain, if_pos hmn,
       if_neg hne, sub_zero, sub_neg_eq_add]
-    exact (hT n m hm hmn).trans (hbound _ hln (by linarith))
+    exact (hpositive n m hm hmn).trans (hbound _ hln (by linarith))
   · subst n
     have hz : centeredRationalOrdinate T m m / (T : ℂ) - rationalFMZMain m m = 0 := by
       simp [centeredRationalOrdinate, rationalFMZMain, hm0]
     rw [hz, norm_zero]
-    positivity
+    exact mul_nonneg hB (sq_nonneg _)
   · have hne : n ≠ m := by omega
     have hnot : ¬ m < n := by omega
     have hlog : Real.log ((n : ℝ) / (m : ℝ)) =
@@ -259,7 +257,21 @@ theorem eventually_centeredRationalOrdinate_remainder_rate
       simp [centeredRationalOrdinate, rationalFMZMain, hnot, hnm, hne, hlog,
         ordinateSum_neg]
     rw [heq, norm_star]
-    exact (hT m n hn hnm).trans (hbound _ hlm (by linarith))
+    exact (hpositive m n hn hnm).trans (hbound _ hlm (by linarith))
+
+/-- All rational modes, with exact diagonal centering and conjugate modes. -/
+theorem eventually_centeredRationalOrdinate_remainder_rate
+    (hD : UniformSelbergDensity (1 / 4)) :
+    ∃ K : ℝ, 0 < K ∧ ∀ᶠ T : ℝ in atTop, ∀ n m : ℕ,
+      1 ≤ n → 1 ≤ m →
+      ‖centeredRationalOrdinate T n m / (T : ℂ) - rationalFMZMain n m‖ ≤
+        (K / Real.log T) * rationalModeWeight n m ^ 2 := by
+  obtain ⟨K, hK, hb⟩ := eventually_rational_ordinate_remainder_rate hD
+  refine ⟨K, hK, ?_⟩
+  filter_upwards [hb, eventually_gt_atTop (1 : ℝ)] with T hT hT₁
+  apply centeredRationalOrdinate_remainder_le_of_positive (div_nonneg hK.le (Real.log_pos hT₁).le)
+  intro n m hn hm
+  simpa only [div_mul_eq_mul_div] using hT n m hn hm
 
 /-- The arithmetic correction has a uniform first-height bound. -/
 theorem rationalFMZMain_norm_le_weight (n m : ℕ) (hn : 1 ≤ n) (hm : 1 ≤ m) :
@@ -284,6 +296,34 @@ theorem rationalFMZMain_norm_le_weight (n m : ℕ) (hn : 1 ≤ n) (hm : 1 ≤ m)
     rw [hw]
     exact (rationalLandauMain_le_log hn hnm).trans (by linarith)
 
+/-- A common mode bound controls the full signed Fourier pairing. -/
+theorem rational_fourier_remainder_le_of_mode_bound {ι : Type*} {T B : ℝ}
+    (a : ι → ℂ) (n m : ι → ℕ) (hn : ∀ i, 1 ≤ n i) (hm : ∀ i, 1 ≤ m i)
+    (ha : Summable (fun i => ‖a i‖ * rationalModeWeight (n i) (m i) ^ 2))
+    (hmode : ∀ n m : ℕ, 1 ≤ n → 1 ≤ m →
+      ‖centeredRationalOrdinate T n m / (T : ℂ) - rationalFMZMain n m‖ ≤
+        B * rationalModeWeight n m ^ 2) :
+    ‖Fourier.weightedFourierPairing a
+        (fun i => centeredRationalOrdinate T (n i) (m i) / (T : ℂ)) -
+      Fourier.weightedFourierPairing a (fun i => rationalFMZMain (n i) (m i))‖ ≤
+      B * Fourier.weightedFourierMass a (fun i => rationalModeWeight (n i) (m i) ^ 2) := by
+  have hmain : Summable (fun i => a i * rationalFMZMain (n i) (m i)) := by
+    apply ha.of_norm_bounded
+    intro i
+    have hw : 1 ≤ rationalModeWeight (n i) (m i) := by
+      unfold rationalModeWeight
+      linarith [abs_nonneg (Real.log (n i : ℝ) + Real.log (m i : ℝ))]
+    have hsq : rationalModeWeight (n i) (m i) ≤ rationalModeWeight (n i) (m i) ^ 2 := by
+      nlinarith
+    rw [norm_mul]
+    exact mul_le_mul_of_nonneg_left
+      ((rationalFMZMain_norm_le_weight (n i) (m i) (hn i) (hm i)).trans hsq) (norm_nonneg _)
+  simpa only [div_one] using (Fourier.weightedFourierPairing_remainder_bound_of_limit_summable a
+    (fun i => centeredRationalOrdinate T (n i) (m i) / (T : ℂ))
+    (fun i => rationalFMZMain (n i) (m i))
+    (fun i => rationalModeWeight (n i) (m i) ^ 2) B 1
+    hmain ha (fun i => by simpa using hmode (n i) (m i) (hn i) (hm i))).2
+
 /-- Quantitative infinite rational Fourier synthesis. The constants and
 height threshold precede every choice of coefficients and rational modes. -/
 theorem eventually_rational_fourier_remainder_bound {ι : Type*}
@@ -300,22 +340,7 @@ theorem eventually_rational_fourier_remainder_bound {ι : Type*}
   obtain ⟨K, hK, hb⟩ := eventually_centeredRationalOrdinate_remainder_rate hD
   refine ⟨K, hK, hb.mono ?_⟩
   intro T hT a n m hn hm ha
-  have hmain : Summable (fun i => a i * rationalFMZMain (n i) (m i)) := by
-    apply ha.of_norm_bounded
-    intro i
-    have hw : 1 ≤ rationalModeWeight (n i) (m i) := by
-      unfold rationalModeWeight
-      linarith [abs_nonneg (Real.log (n i : ℝ) + Real.log (m i : ℝ))]
-    have hsq : rationalModeWeight (n i) (m i) ≤ rationalModeWeight (n i) (m i) ^ 2 := by
-      nlinarith
-    rw [norm_mul]
-    exact mul_le_mul_of_nonneg_left
-      ((rationalFMZMain_norm_le_weight (n i) (m i) (hn i) (hm i)).trans hsq) (norm_nonneg _)
-  exact (Fourier.weightedFourierPairing_remainder_bound_of_limit_summable a
-    (fun i => centeredRationalOrdinate T (n i) (m i) / (T : ℂ))
-    (fun i => rationalFMZMain (n i) (m i))
-    (fun i => rationalModeWeight (n i) (m i) ^ 2) K (Real.log T)
-    hmain ha (fun i => hT (n i) (m i) (hn i) (hm i))).2
+  exact rational_fourier_remainder_le_of_mode_bound a n m hn hm ha hT
 
 /-- Moving coefficients, changing rational frequencies, and infinitely many
 prime coordinates are allowed when their squared-height Wiener mass is

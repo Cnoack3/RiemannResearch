@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.ActualRationalFMZRate
+import RiemannResearch.Analysis.ActualZeroLoglogRate
 import RiemannResearch.Analysis.ActualPrimeTorusFMZ
 import RiemannResearch.Analysis.ActualPrimeTorusFMZPoisson
 import RiemannResearch.Analysis.ActualPrimeTorusFMZSeries
@@ -78,6 +79,27 @@ theorem summable_norm_of_primeModeWeight_sq {ι : Type*}
   simpa only [norm_norm, mul_one] using
     mul_le_mul_of_nonneg_left hw2 (norm_nonneg (a i))
 
+/-- A bound for centered rational modes transfers to prime-torus tests
+with the same coefficient and the full squared-height Wiener mass. -/
+theorem fourierSeries_remainder_le_of_mode_bound {ι : Type*} {T B : ℝ}
+    (P : Finset ℕ) (a : ι → ℂ) (k : ι → ℕ → ℤ)
+    (hP : ∀ p ∈ P, p.Prime)
+    (ha : Summable (fun i => ‖a i‖ * primeModeWeight P (k i) ^ 2))
+    (hmode : ∀ n m : ℕ, 1 ≤ n → 1 ≤ m →
+      ‖centeredRationalOrdinate T n m / (T : ℂ) - rationalFMZMain n m‖ ≤
+        B * rationalModeWeight n m ^ 2) :
+    ‖(sampleFunctional P T (fourierSeries a (fun i => fun p : P => k i p)) -
+        (Ncount 0 T : ℂ) * haarIntegral
+          (fourierSeries a (fun i => fun p : P => k i p))) / (T : ℂ) -
+      haarIntegral (fourierSeries a (fun i => fun p : P => k i p) * primeDensity P)‖ ≤
+      B * Fourier.weightedFourierMass a (fun i => primeModeWeight P (k i) ^ 2) := by
+  rw [fourierSeries_remainder_eq_rationalPairing P a k hP
+    (summable_norm_of_primeModeWeight_sq P a k ha)]
+  exact rational_fourier_remainder_le_of_mode_bound a
+    (fun i => primeNumerator P (k i)) (fun i => primeDenominator P (k i))
+    (fun i => primeProduct_pos P (fun p => (k i p).toNat) hP)
+    (fun i => primeProduct_pos P (fun p => (-k i p).toNat) hP) ha hmode
+
 /-- Uniform quantitative prime-torus FMZ. The bound is independent of the
 prime set, dimension, coefficients and frequencies; all are quantified after
 the height threshold. The price is the explicit squared-height Wiener mass. -/
@@ -93,14 +115,28 @@ theorem eventually_fourierSeries_remainder_bound {ι : Type*}
         haarIntegral (fourierSeries a (fun i => fun p : P => k i p) * primeDensity P)‖ ≤
         (K / Real.log T) *
           Fourier.weightedFourierMass a (fun i => primeModeWeight P (k i) ^ 2) := by
-  obtain ⟨K, hK, hb⟩ := eventually_rational_fourier_remainder_bound (ι := ι) hD
+  obtain ⟨K, hK, hb⟩ := eventually_centeredRationalOrdinate_remainder_rate hD
   refine ⟨K, hK, hb.mono ?_⟩
   intro T hT P a k hP ha
-  rw [fourierSeries_remainder_eq_rationalPairing P a k hP
-    (summable_norm_of_primeModeWeight_sq P a k ha)]
-  exact hT a (fun i => primeNumerator P (k i)) (fun i => primeDenominator P (k i))
-    (fun i => primeProduct_pos P (fun p => (k i p).toNat) hP)
-    (fun i => primeProduct_pos P (fun p => (-k i p).toNat) hP) ha
+  exact fourierSeries_remainder_le_of_mode_bound P a k hP ha hT
+
+/-- Unconditional quantitative prime-torus FMZ with one height threshold
+for every prime set and summable squared-height Fourier test. -/
+theorem eventually_fourierSeries_remainder_loglog {ι : Type*} :
+    ∃ K : ℝ, 0 < K ∧ ∀ᶠ T : ℝ in atTop,
+      ∀ (P : Finset ℕ) (a : ι → ℂ) (k : ι → ℕ → ℤ),
+      (∀ p ∈ P, p.Prime) →
+      Summable (fun i => ‖a i‖ * primeModeWeight P (k i) ^ 2) →
+      ‖(sampleFunctional P T (fourierSeries a (fun i => fun p : P => k i p)) -
+          (Ncount 0 T : ℂ) * haarIntegral
+            (fourierSeries a (fun i => fun p : P => k i p))) / (T : ℂ) -
+        haarIntegral (fourierSeries a (fun i => fun p : P => k i p) * primeDensity P)‖ ≤
+        (K * horizontalLogRate T) *
+          Fourier.weightedFourierMass a (fun i => primeModeWeight P (k i) ^ 2) := by
+  obtain ⟨K, hK, hb⟩ := eventually_centeredRationalOrdinate_remainder_loglog
+  refine ⟨K, hK, hb.mono ?_⟩
+  intro T hT P a k hP ha
+  exact fourierSeries_remainder_le_of_mode_bound P a k hP ha hT
 
 /-- The prime set itself may grow, while coefficients and Fourier frequencies
 move with height, provided the squared-height Wiener mass is o(log T). -/
@@ -125,6 +161,30 @@ theorem tendsto_moving_fourierSeries_remainder {ι : Type*}
   apply squeeze_zero_norm' _ hlim
   filter_upwards [hb] with T hT
   simpa only [div_mul_eq_mul_div, mul_div_assoc] using
+    hT (P T) (a T) (k T) (hP T) (ha T)
+
+/-- Moving prime-torus FMZ using the unconditional horizontal energy scale
+and the weighted Wiener mass of each height-dependent test. -/
+theorem tendsto_moving_fourierSeries_remainder_loglog {ι : Type*}
+    (P : ℝ → Finset ℕ) (a : ℝ → ι → ℂ) (k : ℝ → ι → ℕ → ℤ)
+    (hP : ∀ T p, p ∈ P T → p.Prime)
+    (ha : ∀ T, Summable (fun i => ‖a T i‖ * primeModeWeight (P T) (k T i) ^ 2))
+    (hsmall : Tendsto (fun T : ℝ =>
+      horizontalLogRate T * Fourier.weightedFourierMass (a T)
+        (fun i => primeModeWeight (P T) (k T i) ^ 2)) atTop (𝓝 0)) :
+    Tendsto (fun T : ℝ =>
+      (sampleFunctional (P T) T
+          (fourierSeries (a T) (fun i => fun p : P T => k T i p)) -
+        (Ncount 0 T : ℂ) * haarIntegral
+          (fourierSeries (a T) (fun i => fun p : P T => k T i p))) / (T : ℂ) -
+      haarIntegral (fourierSeries (a T) (fun i => fun p : P T => k T i p) *
+        primeDensity (P T))) atTop (𝓝 0) := by
+  obtain ⟨K, hK, hb⟩ := eventually_fourierSeries_remainder_loglog (ι := ι)
+  have hlim := hsmall.const_mul K
+  simp only [mul_zero] at hlim
+  apply squeeze_zero_norm' _ hlim
+  filter_upwards [hb] with T hT
+  simpa only [mul_assoc] using
     hT (P T) (a T) (k T) (hP T) (ha T)
 
 end RiemannResearch.Analysis.ActualPrimeTorusFMZ

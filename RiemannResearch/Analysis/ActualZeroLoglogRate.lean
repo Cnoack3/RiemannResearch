@@ -240,4 +240,96 @@ theorem eventually_rational_ordinate_loglog_band :
   simp only [div_eq_mul_inv] at *
   nlinarith
 
+/-- The unconditional two-band estimate extends to every rational mode.
+Outside the bands, squared logarithmic height already pays for the full
+ordinate count and for the signed arithmetic main term. -/
+theorem eventually_rational_ordinate_remainder_loglog :
+    ∃ K : ℝ, 0 < K ∧ ∀ᶠ T : ℝ in atTop, ∀ n m : ℕ, 1 ≤ m → m < n →
+      ‖ordinateSum T (Real.log ((n : ℝ) / (m : ℝ))) / (T : ℂ) +
+        (rationalLandauMain n m : ℂ)‖ ≤
+        (K * horizontalLogRate T) * (1 + Real.log (n : ℝ)) ^ 2 := by
+  obtain ⟨B, hB, hband⟩ := eventually_rational_ordinate_loglog_band
+  obtain ⟨C, hC, hcount⟩ := exists_normalized_ordinate_bound
+  refine ⟨B + 256 * C + 16, by positivity, ?_⟩
+  filter_upwards [hband, eventually_ge_atTop (9 : ℝ),
+    (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop).eventually_ge_atTop 1]
+    with T hb hT hℓ
+  intro n m hm hmn
+  let L := Real.log T
+  let ℓ := Real.log L
+  let H := Real.log (n : ℝ)
+  let u := Real.log ((n : ℝ) / (m : ℝ))
+  change 1 ≤ ℓ at hℓ
+  have hL : 0 < L := Real.log_pos (by linarith)
+  have hℓ₀ : 0 < ℓ := by linarith
+  have hu := rational_frequency_bounds hm hmn (le_refl (n : ℝ))
+  change 0 < u ∧ u ≤ H ∧ _ at hu
+  have hH : 0 ≤ H := hu.1.le.trans hu.2.1
+  have hr : 0 ≤ horizontalLogRate T := by unfold horizontalLogRate; positivity
+  have hweight : 0 ≤ (1 + H) ^ 2 := sq_nonneg _
+  change ‖ordinateSum T u / (T : ℂ) + (rationalLandauMain n m : ℂ)‖ ≤ _
+  by_cases hsmall : H ≤ L / 8 ∧ u ≤ horizontalTailDecay T / 2
+  · have h1 : 1 / L ≤ horizontalLogRate T := by
+      exact div_le_div_of_nonneg_right (one_le_pow₀ hℓ) hL.le
+    have hsq : 1 + u ^ 2 ≤ (1 + H) ^ 2 := by
+      nlinarith [pow_le_pow_left₀ hu.1.le hu.2.1 2]
+    calc
+      _ ≤ B * (1 / L + u ^ 2 * horizontalLogRate T) := hb n m hm hmn hsmall.1 hsmall.2
+      _ ≤ B * ((1 + u ^ 2) * horizontalLogRate T) := by
+        apply mul_le_mul_of_nonneg_left _ hB.le
+        rw [add_mul, one_mul]
+        exact add_le_add h1 le_rfl
+      _ ≤ (B * horizontalLogRate T) * (1 + H) ^ 2 := by
+        simpa only [mul_left_comm, mul_comm, mul_assoc] using
+          mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right hsq hr) hB.le
+      _ ≤ _ := by gcongr; linarith
+  · have hcut : L / (16 * ℓ) ≤ H := by
+      by_contra! h
+      apply hsmall
+      constructor
+      · exact h.le.trans (div_le_div_of_nonneg_left hL.le (by norm_num) (by linarith))
+      · have hd : horizontalTailDecay T / 2 = L / (16 * ℓ) := by
+          unfold horizontalTailDecay
+          dsimp [L, ℓ]
+          ring
+        rw [hd]
+        exact hu.2.1.trans h.le
+    have hcross : L ≤ 16 * (ℓ * H) := by
+      have hh := (div_le_iff₀ (show 0 < 16 * ℓ by positivity)).mp hcut
+      linarith only [hh]
+    have hLH : L ^ 2 ≤ 256 * (ℓ * H) ^ 2 := by
+      nlinarith only [pow_le_pow_left₀ hL.le hcross 2]
+    have hlin : H * L ≤ 16 * (ℓ * H) ^ 2 := by
+      have hh := mul_le_mul_of_nonneg_right hcross hH
+      have hi := mul_le_mul_of_nonneg_right hℓ (show 0 ≤ ℓ * H ^ 2 by positivity)
+      nlinarith only [hh, hi]
+    have hmain : ‖(rationalLandauMain n m : ℂ)‖ ≤ H := by
+      rw [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (rationalLandauMain_nonneg n m)]
+      exact rationalLandauMain_le_log hm hmn
+    have hscale : C * L + H ≤ ((256 * C + 16) * horizontalLogRate T) * H ^ 2 := by
+      change C * L + H ≤ ((256 * C + 16) * (ℓ ^ 2 / L)) * H ^ 2
+      rw [show ((256 * C + 16) * (ℓ ^ 2 / L)) * H ^ 2 =
+        (256 * C + 16) * (ℓ * H) ^ 2 / L by ring, le_div_iff₀ hL]
+      nlinarith only [mul_le_mul_of_nonneg_left hLH hC.le, hlin]
+    calc
+      _ ≤ ‖ordinateSum T u / (T : ℂ)‖ + ‖(rationalLandauMain n m : ℂ)‖ := norm_add_le _ _
+      _ ≤ C * L + H := add_le_add (hcount T u hT) hmain
+      _ ≤ _ := hscale.trans (by
+        apply mul_le_mul (mul_le_mul_of_nonneg_right (by linarith) hr)
+        · nlinarith
+        · positivity
+        · positivity)
+
+/-- Exact diagonal centering and conjugation extend the unconditional bound
+to all positive numerator and denominator pairs. -/
+theorem eventually_centeredRationalOrdinate_remainder_loglog :
+    ∃ K : ℝ, 0 < K ∧ ∀ᶠ T : ℝ in atTop, ∀ n m : ℕ, 1 ≤ n → 1 ≤ m →
+      ‖centeredRationalOrdinate T n m / (T : ℂ) - rationalFMZMain n m‖ ≤
+        (K * horizontalLogRate T) * rationalModeWeight n m ^ 2 := by
+  obtain ⟨K, hK, hb⟩ := eventually_rational_ordinate_remainder_loglog
+  refine ⟨K, hK, ?_⟩
+  filter_upwards [hb, eventually_gt_atTop (1 : ℝ)] with T hT hT₁
+  have hscale : 0 ≤ horizontalLogRate T := div_nonneg (sq_nonneg _) (Real.log_pos hT₁).le
+  exact centeredRationalOrdinate_remainder_le_of_positive (mul_nonneg hK.le hscale) hT
+
 end RiemannResearch.Analysis.ActualZeroOrdinate
