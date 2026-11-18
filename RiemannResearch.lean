@@ -4417,6 +4417,7 @@ import RiemannResearch.Analysis.MontgomeryLogMeanSquare
 import RiemannResearch.Analysis.MontgomeryLogPhaseIntegral
 import RiemannResearch.Analysis.MontgomeryPrimeCrossIntegral
 import RiemannResearch.Analysis.MontgomeryFejerDensity
+import RiemannResearch.Analysis.MontgomeryOneSidedFourier
 import RiemannResearch.Analysis.MontgomeryFejerCertificate
 import RiemannResearch.Analysis.MontgomeryFejerResolution
 import RiemannResearch.Analysis.MontgomeryFejerPower
@@ -4433,6 +4434,7 @@ import RiemannResearch.Analysis.MontgomeryGapMesh
 import RiemannResearch.Analysis.MontgomeryGapPrescribedMesh
 import RiemannResearch.Analysis.MontgomeryCauchyGapMesh
 import RiemannResearch.Analysis.MontgomeryGapBand
+import RiemannResearch.Analysis.MontgomeryWindowPairCorrelation
 import RiemannResearch.Analysis.MontgomeryGapTailDensity
 import RiemannResearch.Analysis.MontgomeryGapIntegratedCriterion
 import RiemannResearch.Analysis.MontgomeryFinitePairPerturbation
@@ -4587,6 +4589,7 @@ import RiemannResearch.Analysis.PrimeBandlimitedMatrix
 import RiemannResearch.Analysis.WeightedSqrtTransfer
 import RiemannResearch.Analysis.MontgomeryHorizontalPairing
 import RiemannResearch.Analysis.MontgomerySharpPolynomialCriterion
+import RiemannResearch.Analysis.MontgomerySharpWeilSeparator
 import RiemannResearch.Analysis.MontgomeryHorizontalObstruction
 import RiemannResearch.Analysis.SechGammaDiagonal
 import RiemannResearch.Analysis.PrimeBandlimitedDiagonal
