@@ -4417,6 +4417,8 @@ import RiemannResearch.Analysis.MontgomeryFejerDensity
 import RiemannResearch.Analysis.MontgomeryFejerCertificate
 import RiemannResearch.Analysis.MontgomeryFejerResolution
 import RiemannResearch.Analysis.MontgomeryCentralPeak
+import RiemannResearch.Analysis.MontgomeryFejerCoreUniform
+import RiemannResearch.Analysis.MontgomeryFourierShoulder
 import RiemannResearch.Analysis.MontgomeryPositiveGapDensity
 import RiemannResearch.Analysis.MontgomeryIntegratedGapDensity
 import RiemannResearch.Analysis.OrdinateTriangularIntegral
