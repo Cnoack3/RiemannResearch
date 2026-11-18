@@ -7,6 +7,8 @@ Authors: RiemannResearch contributors
 import RiemannResearch.Analysis.ActualZeroDiscrepancy
 import RiemannResearch.Analysis.ActualZeroWindowVariance
 import RiemannResearch.RH.WeilExplicitFormula.RvM.NcountWindow
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
@@ -23,7 +25,7 @@ is the exact smooth increment from the formalized counting formula.
 noncomputable section
 
 open Filter MeasureTheory Set Zeta23
-open scoped BigOperators
+open scoped BigOperators Topology
 
 namespace RiemannResearch.Analysis.ActualZeroWindowVariance
 
@@ -203,5 +205,91 @@ theorem exists_actualCenteredMoment_clip_error_le :
         · linarith only [hfl_sq, sq_nonneg ((Ncount t T : ℝ) - lam)]
         · linarith only [hcl_sq, sq_nonneg ((Ncount t (t + h) : ℝ) - lam)])
   simpa only [Real.norm_eq_abs, show T - (T - h) = h by ring, abs_of_nonneg hh] using he
+
+/-- Signed normalized loss at the upper height cutoff for a window of unfolded
+width `R` and center `lam`. -/
+def normalizedWindowClipError (T R lam : ℝ) : ℝ :=
+  ((∫ t : ℝ, actualCenteredCount T (R / (Real.log T / (2 * Real.pi))) lam t ^ 2) -
+    (∫ t in (0 : ℝ)..T, ((Ncount t (t + R / (Real.log T / (2 * Real.pi))) : ℝ) -
+      lam) ^ 2)) / T
+
+/-- Uniform microscopic clipping rate on bounded sets of widths and centers.
+The finite-height estimate already includes the square of the local count. -/
+theorem eventually_normalizedWindowClipError_le {B : ℝ} (hB : 0 ≤ B) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ T : ℝ in atTop, ∀ R lam : ℝ, 0 ≤ R → R ≤ B → |lam| ≤ B →
+      |normalizedWindowClipError T R lam| ≤ C * (Real.log T / T) := by
+  obtain ⟨A, hA, hclip⟩ := exists_actualCenteredMoment_clip_error_le
+  let K := 2 * A + B
+  refine ⟨K ^ 2 * (2 * Real.pi * B), by positivity, ?_⟩
+  filter_upwards [eventually_ge_atTop (3 : ℝ),
+    Real.tendsto_log_atTop.eventually_ge_atTop (max 1 (2 * Real.pi * B))] with T hT hL
+  intro R lam hR hRB hlam
+  have hTp : 0 < T := by linarith
+  have hL1 : 1 ≤ Real.log T := (le_max_left _ _).trans hL
+  have hLp : 0 < Real.log T := by linarith
+  have hscale : 0 < Real.log T / (2 * Real.pi) := div_pos hLp (by positivity)
+  let h := R / (Real.log T / (2 * Real.pi))
+  have hh : 0 ≤ h := div_nonneg hR hscale.le
+  have hh1 : h ≤ 1 := by
+    apply (div_le_iff₀ hscale).2
+    rw [one_mul]
+    apply (le_div_iff₀ (by positivity : 0 < 2 * Real.pi)).2
+    calc
+      R * (2 * Real.pi) ≤ B * (2 * Real.pi) := mul_le_mul_of_nonneg_right hRB (by positivity)
+      _ ≤ Real.log T := by simpa only [mul_comm B] using (le_max_right 1 (2 * Real.pi * B)).trans hL
+  have hshift : Real.log (T + 3) ≤ 2 * Real.log T := by
+    calc
+      Real.log (T + 3) ≤ Real.log (T * T) :=
+        Real.log_le_log (by linarith) (by nlinarith [mul_self_nonneg (T - 3)])
+      _ = 2 * Real.log T := by rw [Real.log_mul hTp.ne' hTp.ne']; ring
+  have hsum : A * Real.log (T + 3) + |lam| ≤ K * Real.log T := by
+    have h1 := mul_le_mul_of_nonneg_left hshift (by linarith : 0 ≤ A)
+    have h2 := mul_le_mul_of_nonneg_left hL1 hB
+    dsimp [K]
+    nlinarith only [h1, h2, hlam]
+  have hspos : 0 ≤ A * Real.log (T + 3) + |lam| :=
+    add_nonneg (mul_nonneg (by linarith) (Real.log_nonneg (by linarith))) (abs_nonneg _)
+  have hw : h ≤ (2 * Real.pi * B) / Real.log T := by
+    dsimp [h]
+    rw [div_div_eq_mul_div]
+    apply div_le_div_of_nonneg_right _ hLp.le
+    rw [mul_comm (2 * Real.pi) B]
+    exact mul_le_mul_of_nonneg_right hRB (by positivity)
+  unfold normalizedWindowClipError
+  rw [abs_div, abs_of_pos hTp]
+  apply (div_le_iff₀ hTp).2
+  calc
+    _ ≤ (A * Real.log (T + 3) + |lam|) ^ 2 * h := hclip T h lam hh hh1 (by linarith)
+    _ ≤ (K * Real.log T) ^ 2 * ((2 * Real.pi * B) / Real.log T) :=
+      mul_le_mul (pow_le_pow_left₀ hspos hsum 2) hw hh (sq_nonneg _)
+    _ = K ^ 2 * (2 * Real.pi * B) * (Real.log T / T) * T := by
+      field_simp [hLp.ne', hTp.ne']
+      <;> ring
+
+/-- At fixed unfolded width, centering at the limiting mean gives a
+vanishing normalized clipped-to-full second-moment error. -/
+theorem normalizedWindowClipError_tendsto {R : ℝ} (hR : 0 ≤ R) :
+    Tendsto (fun T : ℝ => normalizedWindowClipError T R R) atTop (𝓝 0) := by
+  obtain ⟨C, _, he⟩ := eventually_normalizedWindowClipError_le hR
+  have hlog : Tendsto (fun T : ℝ => Real.log T / T) atTop (𝓝 0) := by
+    simpa using Real.tendsto_pow_log_div_mul_add_atTop 1 0 1 (by norm_num)
+  apply squeeze_zero_norm' _ (by simpa using hlog.const_mul C)
+  filter_upwards [he] with T hT
+  simpa [Real.norm_eq_abs] using hT R R hR le_rfl (le_of_eq (abs_of_nonneg hR))
+
+/-- The signed clipping contribution vanishes after integration over any
+bounded interval of nonnegative unfolded widths. -/
+theorem integral_normalizedWindowClipError_tendsto {a b : ℝ} (ha : 0 ≤ a) (hab : a ≤ b) :
+    Tendsto (fun T : ℝ => ∫ r in a..b, normalizedWindowClipError T r r) atTop (𝓝 0) := by
+  obtain ⟨C, _, he⟩ := eventually_normalizedWindowClipError_le (ha.trans hab)
+  have hlog : Tendsto (fun T : ℝ => Real.log T / T) atTop (𝓝 0) := by
+    simpa using Real.tendsto_pow_log_div_mul_add_atTop 1 0 1 (by norm_num)
+  apply squeeze_zero_norm' _ (by simpa using (hlog.const_mul C).mul_const |b - a|)
+  filter_upwards [he] with T hT
+  apply intervalIntegral.norm_integral_le_of_norm_le_const
+  intro r hr
+  rw [uIoc_of_le hab] at hr
+  have hr0 := ha.trans hr.1.le
+  simpa only [Real.norm_eq_abs] using hT r r hr0 hr.2 (by simpa only [abs_of_nonneg hr0] using hr.2)
 
 end RiemannResearch.Analysis.ActualZeroWindowVariance

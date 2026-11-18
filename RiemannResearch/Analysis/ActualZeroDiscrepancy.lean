@@ -9,6 +9,9 @@ import RiemannResearch.RH.WeilExplicitFormula.GammaFacts.Complete
 import RiemannResearch.Analysis.HighMomentTransfer
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
+import RiemannResearch.RH.WeilExplicitFormula.RvM.GammaSide
+import RiemannResearch.RH.WeilExplicitFormula.RvM.LocalCount
+import Mathlib.Topology.Order.Compact
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
@@ -43,7 +46,7 @@ and high-moment application. The measure-theoretic assembly below is elementary.
 No novelty or proof of the Selberg approximation, Tsang asymptotic, or RH is claimed.
 -/
 
-open MeasureTheory Zeta23 RiemannResearch.HighMomentTransfer
+open MeasureTheory Set Zeta23 RiemannResearch.HighMomentTransfer
 open scoped Interval
 namespace RiemannResearch.Analysis.ActualZeroDiscrepancy
 /-- Exact smooth gamma contribution, with base point zero. -/
@@ -241,6 +244,100 @@ theorem discrepancy_sub_log_bound :
   exact (discrepancy_sub_abs_le_contour ha hab hga hgb).trans
     (mul_le_mul_of_nonneg_left
       (by linarith only [hbound a hTa hga, hbound b hTb hgb]) (by positivity))
+
+/-- Backlund's good-height bound extends to the right-continuous discrepancy
+at every nonnegative height. The transfer across a unit interval uses its
+actual zero count and the exact smooth gamma integral. -/
+theorem exists_abs_discrepancy_le_log :
+    ∃ C : ℝ, 0 < C ∧ ∀ t : ℝ, 0 ≤ t →
+      |discrepancy t| ≤ C * (1 + Real.log (t + 4)) := by
+  obtain ⟨c, t₀, hbk⟩ := discrepancy_sub_log_bound
+  obtain ⟨A, hA, hgoodA⟩ := RvM.exists_goodHeight (max 1 t₀)
+  have hA1 := (le_max_left (1 : ℝ) t₀).trans hA.1
+  have hAt := (le_max_right (1 : ℝ) t₀).trans hA.1
+  obtain ⟨v, _, hv⟩ := isCompact_Icc.exists_isMaxOn
+    (show (Icc (0 : ℝ) A).Nonempty from ⟨0, le_rfl, by linarith⟩)
+    smoothCount_continuous.abs.continuousOn
+  obtain ⟨m, hm, hmu⟩ := RvM.mu_le_log gammaFacts
+  obtain ⟨n, hn, hcount⟩ := RvM.zeta_local_zero_count
+  let C : ℝ := (Ncount 0 A : ℝ) + |smoothCount v| + |discrepancy A| +
+    Real.pi + 2 * |c| + m + n + 1
+  have hC : 0 < C := by
+    dsimp [C]
+    linarith only [Nat.cast_nonneg (α := ℝ) (Ncount 0 A), abs_nonneg (smoothCount v),
+      abs_nonneg (discrepancy A), Real.pi_pos, abs_nonneg c, hm, hn]
+  refine ⟨C, hC, ?_⟩
+  intro t ht
+  let L := Real.log (t + 4)
+  have hL : 0 ≤ L := Real.log_nonneg (by linarith)
+  by_cases htA : t ≤ A
+  · have hs : |smoothCount t| ≤ |smoothCount v| := isMaxOn_iff.mp hv t ⟨ht, htA⟩
+    have hN : (Ncount 0 t : ℝ) ≤ (Ncount 0 A : ℝ) := count_monotone htA
+    have hd : |discrepancy t| ≤ (Ncount 0 A : ℝ) + |smoothCount v| := by
+      unfold discrepancy
+      have H := abs_sub (Ncount 0 t : ℝ) (smoothCount t)
+      rw [abs_of_nonneg (Nat.cast_nonneg (α := ℝ) (Ncount 0 t))] at H
+      linarith only [H, hs, hN]
+    have hk : (Ncount 0 A : ℝ) + |smoothCount v| ≤ C := by
+      dsimp [C]
+      linarith only [abs_nonneg (discrepancy A), Real.pi_pos, abs_nonneg c, hm, hn]
+    exact (hd.trans hk).trans (by change C ≤ C * (1 + L); nlinarith only [mul_nonneg hC.le hL])
+  · have hAt' := lt_of_not_ge htA
+    obtain ⟨u, hu, hgu⟩ := RvM.exists_goodHeight t
+    have hAu := hAt'.trans_le hu.1
+    have hUb := hbk A u hA1 hAu hAt (hAt.trans hAu.le) hgoodA hgu
+    have hlg (x : ℝ) (hx : 1 ≤ x) (hxt : x ≤ t + 4) : c * Real.log x ≤ |c| * L :=
+      (mul_le_mul_of_nonneg_right (le_abs_self _) (Real.log_nonneg hx)).trans
+        (mul_le_mul_of_nonneg_left (Real.log_le_log (by linarith) hxt) (abs_nonneg _))
+    have hAlog := hlg A hA1 (by linarith)
+    have hulog := hlg u (hA1.trans hAu.le) (by linarith [hu.2])
+    have hBr : |discrepancy u - discrepancy A| ≤ Real.pi + 2 * |c| * L := by
+      refine hUb.trans ((mul_le_mul_of_nonneg_left
+        (show c * Real.log A + Real.pi + c * Real.log u ≤ Real.pi + 2 * |c| * L
+          by linarith only [hAlog, hulog]) (by positivity)).trans ?_)
+      have hπ : (1 : ℝ) / Real.pi ≤ 1 := (div_le_one Real.pi_pos).mpr (by linarith [Real.pi_gt_three])
+      simpa only [one_mul] using mul_le_mul_of_nonneg_right hπ
+        (show 0 ≤ Real.pi + 2 * |c| * L by positivity)
+    have hloc : (Ncount t u : ℝ) ≤ n * L := by
+      have hN : (Ncount t u : ℝ) ≤ (Ncount t (t + 1) : ℝ) := by
+        exact_mod_cast Ncount_mono (a := t) (b := u) (c := t) (d := t+1) le_rfl hu.2
+      have hn' := hcount t
+      rw [abs_of_nonneg ht] at hn'
+      exact hN.trans (hn'.trans (mul_le_mul_of_nonneg_left
+        (Real.log_le_log (by linarith) (by linarith)) (by linarith)))
+    have hμpoint (x : ℝ) (hx : x ∈ uIoc t u) : ‖mu x‖ ≤ m * L := by
+      rw [uIoc_of_le hu.1] at hx
+      rw [Real.norm_eq_abs]
+      exact (hmu x (by linarith [hx.1])).trans (mul_le_mul_of_nonneg_left
+        (Real.log_le_log (by linarith [hx.1]) (by linarith [hx.2, hu.2])) hm.le)
+    have hμbound := intervalIntegral.norm_integral_le_of_norm_le_const hμpoint
+    rw [Real.norm_eq_abs, abs_of_nonneg (sub_nonneg.mpr hu.1)] at hμbound
+    have hμabs : |∫ x in t..u, mu x| ≤ m * L := by
+      exact hμbound.trans (by simpa only [mul_one] using
+        mul_le_mul_of_nonneg_left (show u-t ≤ 1 by linarith [hu.2]) (mul_nonneg hm.le hL))
+    have hdtu : |discrepancy u - discrepancy t| ≤ (n+m) * L := by
+      rw [discrepancy_sub ht hu.1]
+      have H := abs_sub (Ncount t u : ℝ) (∫ x in t..u, mu x)
+      rw [abs_of_nonneg (Nat.cast_nonneg (α := ℝ) (Ncount t u))] at H
+      linarith only [H, hloc, hμabs]
+    have hthree : |discrepancy t| ≤ |discrepancy A| +
+        |discrepancy u - discrepancy A| + |discrepancy u - discrepancy t| := by
+      calc
+        _ = |(discrepancy A + (discrepancy u - discrepancy A)) -
+            (discrepancy u - discrepancy t)| := by ring_nf
+        _ ≤ |discrepancy A + (discrepancy u - discrepancy A)| +
+              |discrepancy u - discrepancy t| := abs_sub _ _
+        _ ≤ _ := add_le_add (abs_add_le _ _) le_rfl
+    have hinter : |discrepancy A| + Real.pi ≤ C := by
+      dsimp [C]
+      linarith only [Nat.cast_nonneg (α := ℝ) (Ncount 0 A), abs_nonneg (smoothCount v),
+        abs_nonneg c, hm, hn]
+    have hslope : 2 * |c| + n + m ≤ C := by
+      dsimp [C]
+      linarith only [Nat.cast_nonneg (α := ℝ) (Ncount 0 A), abs_nonneg (smoothCount v),
+        abs_nonneg (discrepancy A), Real.pi_pos]
+    change |discrepancy t| ≤ C * (1 + L)
+    linarith only [hthree, hBr, hdtu, hinter, mul_le_mul_of_nonneg_right hslope hL]
 
 theorem increment_evenMoment_le_of_continuous_budgets
     (f : ℝ → ℝ) (hf : Continuous f) (h a b T U V : ℝ) (hab : a ≤ b)

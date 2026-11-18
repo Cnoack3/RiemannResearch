@@ -40,7 +40,7 @@ open ActualZeroCollisionCertificate ActualZeroOrdinate ActualZeroWindowVariance
 
 /-- A common positive lower bound for all positive ordinates. Only finiteness
 of the cutoff at height one is used. -/
-private theorem exists_ordinate_floor :
+theorem exists_ordinate_floor :
     ∃ d : ℝ, 0 < d ∧ ∀ T : ℝ, ∀ c : Copies T, d ≤ c.1.1.im := by
   classical
   have hf : ∀ s : Finset ℂ, (∀ ρ ∈ s, 0 < ρ.im) →
@@ -132,12 +132,12 @@ theorem unfoldedWindowVariance_tendsto_iff {R : ℝ} (hR : 0 ≤ R) :
   · intro h
     exact (h.sub hm).congr' (he.mono fun T hT => by rw [hT]; ring)
 
-private theorem continuous_sineWindowEnergy : Continuous sineWindowEnergy := by
+theorem continuous_sineWindowEnergy : Continuous sineWindowEnergy := by
   unfold sineWindowEnergy
   exact continuous_id.add ((intervalIntegral.continuous_primitive
     (fun a b => sineGapMass_mono.intervalIntegrable (a := a) (b := b)) 0).const_mul 2)
 
-private theorem unfoldedWindowEnergy_mono (T : ℝ) (hT : 1 < T) : Monotone (unfoldedWindowEnergy T) := by
+theorem unfoldedWindowEnergy_mono (T : ℝ) (hT : 1 < T) : Monotone (unfoldedWindowEnergy T) := by
   intro a b hab
   unfold unfoldedWindowEnergy actualPhysicalTriangleEnergy
   apply div_le_div_of_nonneg_right _ (by linarith)

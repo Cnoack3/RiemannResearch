@@ -28,6 +28,25 @@
   the ordinate form factor by its centered value. This is a finite
   inequality from the nonnegative pair coefficients.
 
+- `ActualZeroWindowDiscrepancy.lean` gives the uniform microscopic clipping
+  rate in `eventually_normalizedWindowClipError_le`, its fixed-width limit
+  in `normalizedWindowClipError_tendsto`, and its signed interval limit
+  in `integral_normalizedWindowClipError_tendsto`.
+- `ActualZeroWindowCrossTerm.lean` bounds the unnormalized mixed increment
+  uniformly in height. `MicroscopicGammaDrift.lean` bounds the normalized
+  mean-square drift by $C_B/(\log T)^2$.
+- `MontgomeryArgumentWindowVariance.lean` retains the finite normalization
+  and clipping in `eventually_window_sub_argument_eq` and the two signed
+  gamma contributions in `fullArgumentWidthMoment_sub_pure`.
+  `integral_triangle_sub_pureArgument_tendsto` identifies the signed
+  interval tests asymptotically. `positiveGapPCC_of_pureArgumentHalfWidthContrasts`
+  has the single open input `RationalPureArgumentHalfWidthContrasts`.
+- `MontgomeryDyadicWidthCriterion.lean` proves the half-width implication
+  directly for triangle moments, using finite triangular overlap and dyadic
+  telescoping. `MontgomeryDyadicWidthFourier.lean` computes the exact
+  multiplier, proves its inverse-cubic bound, and evaluates it at $3/2$.
+  Its spectral tail estimate retains the unit-interval mass hypothesis.
+
 ## Analytic reduction and open estimate
 
 Write `L = log T`, `lambda = L / (2 pi)`, and `F_T` for the raw
@@ -56,9 +75,9 @@ is at least `1/(2w`). A unit interval is covered by finitely many
 such intervals with a number depending only on `w`.
 
 For any fixed small `a > 0`, the averaged central-peak estimate
-in Theorem 2 of *Montgomery pair correlation without RH* (November 18, 2026) gives
+from Theorem 2 of the repository's *Montgomery pair correlation without RH* note (November 18, 2026) gives, under its positive-cutoff estimate,
 `int_[−a,a] F_T = 1 + O(a^2) + o_T(1)`. The central contribution
-to the `K_R` pairing is therefore `R^2 + O_R(a^2) + o_T(1)`.
+to the `K_R` pairing is therefore `R^2 + O_R(a^2) + o_T(1)` under the stated central-peak input.
 Putting these together, the variance error and the signed integral
 of `K_R(alpha) * (F_T(alpha) - min(|alpha|,1))` on
 `a <= |alpha| <= A` differ by at most
@@ -68,6 +87,81 @@ The fixed-width sine variance at every positive rational width
 remains open. It suffices to bound the limsup of the absolute signed
 integral by a quantity tending to zero as `a` decreases to zero
 and `A` increases to infinity after the height limit.
+
+## Signed argument increments on half-sized width intervals
+
+Let $L_T=\log T/(2\pi)$, $h=r/L_T$ and $D(t)=N(0,t)-\int_0^t\mu(u)\,du$.
+Put $G_T(r)=T^{-1}\int_0^T(D(t+h)-D(t))^2\,dt$ and
+$V(r)=r-2\int_0^r(r-u)\operatorname{sinc}^2(\pi u)\,du$.
+Here $\operatorname{sinc}(x)=\sin(x)/x$ with its continuous value at zero.
+The actual count includes analytic multiplicity. The increment agrees with
+the continued-argument increment at good heights above one.
+
+For $I=[a,b]$ with positive rational endpoints, write
+$A_T(I)=|I|^{-1}\int_I(G_T(r)-V(r))\,dr$.
+The remaining analytic obligation is
+$A_T(I)-A_T(I/2)\to0$ for every such $I$. A proof would imply ordinary
+positive-gap ordinate pair correlation without an RH premise.
+The shrinkage inequality $E_T(sr)\le s E_T(r)$ for the actual triangle
+($0\le s\le1$) explains why no constant is lost. The first difference
+bounds the original interval moment. Telescoping a fixed number of
+differences leaves a remainder bounded by a constant times $2^{-n}$,
+after which $n$ tends to infinity.
+
+### GLSS comparison
+
+Goldston, Lee, Schettler and Suriajaya, Proposition 2, (2.6), approximate
+the uncentered full count second moment by $Tr^2+T G_T(r)$, with error
+$O(Th^2 L_T+L_T^2)$. Normalizing makes this $O_B(1/\log T+(\log T)^2/T)$
+for $0\le r\le B$. Their (2.7) gives
+$G_T(r)=\pi^{-2}\log(2+r)+O(\sqrt{\log(2+r)})$ for positive microscopic
+widths. The latter estimate permits an order-one signed error on each
+fixed interval. The half-width condition tests the actual bias relative
+to $V(r)$. [GLSS, Propositions 1 and 2](https://arxiv.org/html/2503.15449v2)
+
+For the **centered** full count, write
+$d(t)=\int_t^{t+h}\mu(u)\,du-r$.
+The difference of its normalized second moment and $G_T(r)$ equals
+$T^{-1}(2\int_0^T\Delta_hD(t)d(t)\,dt+\int_0^T d(t)^2\,dt)$.
+Translation places the difference on the monotone gamma weight and the
+two end intervals. The all-height Backlund envelope gives a uniform
+$O_B(1)$ bound for the unnormalized signed cross term. Stirling's
+gamma estimate gives $T^{-1}\int d^2=O_B((\log T)^{-2})$.
+The clipped triangle comparison keeps a separate term
+$2r^2(n_T-1)$, with $n_T=N(0,T)/(T L_T)$, and clipping of
+$O_B(\log T/T)$. This separates the improved centered comparison from
+the first-moment correction in the uncentered GLSS formula.
+
+### Frequencies tested by the half-width condition
+
+Write $K_I(\alpha)=|I|^{-1}\int_I r^2\operatorname{sinc}^2(\pi r\alpha)\,dr$.
+For $\alpha\ne0$ the contrast $W_I=K_I-K_{I/2}$ is
+$$
+W_I(\alpha)=
+\frac{2[\sin(\pi b\alpha)-\sin(\pi a\alpha)]
+      -[\sin(2\pi b\alpha)-\sin(2\pi a\alpha)]}
+     {4\pi^3(b-a)\alpha^3}.
+$$
+The Fourier multiplier has $W_I(0)=(a^2+ab+b^2)/4$, the difference of
+the averaged squared means. At nonzero frequencies
+$|W_I(\alpha)|\le3/(2\pi^3(b-a)|\alpha|^3)$. A uniform unit-interval
+mass bound gives $O_I(M^{-2})$ for the absolute spectral tail beyond
+$M$, compared with $O_I(M^{-1})$ for an individual width average.
+
+The compact-frequency signed pairing still needs arithmetic input. For
+example $W_{[1,2]}(3/2)=4/(27\pi^3)$. Adding equal positive masses at
+$\pm3/2$ to a model measure preserves its restriction to $[-1,1]$ and
+bounded unit-interval mass but changes this test. This example only
+concerns the information contained in the spectral estimates. In Lean,
+the central test in `MontgomeryWindowFourierVariance.lean` takes
+`BGSTBPositiveCutoffEstimate` as a premise.
+
+The moving FMZ estimate `eventually_fejer_ordinate_remainder_le` controls
+a linear combination of ordinate sums from signed horizontal prefixes
+and an explicit complex Landau remainder in its power band. The squared
+increment above contains correlations of pairs at height-dependent
+frequencies. A transfer to its signed quadratic statistic is open.
+[Ford, Meng and Zaharescu](https://arxiv.org/abs/1511.06814)
 
 ## The FMZ projection law with all integer cutoffs
 
