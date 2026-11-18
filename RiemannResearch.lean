@@ -1293,6 +1293,9 @@ import RiemannResearch.RH.QRamanujanDPPAngle
 import RiemannResearch.RH.PrimePacketIncrementIndependence
 import RiemannResearch.RH.QPrimeParetoGram
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
+import RiemannResearch.Analysis.ActualZeroDensityCauchyDetector
+import RiemannResearch.Analysis.ActualZeroDensityCauchyObservation
+import RiemannResearch.Analysis.ActualZeroCauchyDensity
 import RiemannResearch.Analysis.SignalNormalizationStability
 import RiemannResearch.Analysis.FiniteGramSignalStability
 import RiemannResearch.RH.RamanujanZeroSignal

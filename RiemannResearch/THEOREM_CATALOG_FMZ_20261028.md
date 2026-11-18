@@ -12,10 +12,10 @@ nontrivial zeros of the actual Riemann zeta function.
 | --- | --- |
 | `tendsto_landau_div_of_nonresonance`, `tendsto_primeRoot_landau` | Proved without a density hypothesis. The centered Landau sum at frequency `(n/d) log p` has its explicit signed prime-power coefficient, including zero when `d ∤ n`. |
 | `ramanujanSum_eq_reduced_phases` | Proved for every positive conductor. The existing divisor formula equals the sum of primitive additive characters, including conductor one. |
-| `tendsto_angularLaw_haar`, `exists_ordinate_sequence_all_harmonics` | Conditional on `FixedStripConcentration`. Haar convergence yields actual ordinates of unbounded height approaching each angle, simultaneously for every integer harmonic. |
+| `tendsto_angularLaw_haar`, `exists_ordinate_sequence_all_harmonics` | `fixedStripConcentration_of_sublinearHorizontalEnergy sublinearHorizontalEnergy` supplies `FixedStripConcentration`. Haar convergence yields actual ordinates of unbounded height approaching each angle, simultaneously for every integer harmonic. |
 | `exists_ordinate_ramanujan_P_and_Q` | Under the same hypothesis, one family of zero sequences converges to the Ramanujan profile in the full squared norms of both physical probability weights. |
 | `exists_common_ordinate_ramanujan_of_dvd` | Under fixed-strip concentration, one actual ordinate sequence at the angle `2π/L` handles all `q ∣ L`, residues, harmonics, and summable physical weights through the integer multiplier `(L/q)an`. |
-| `tendsto_ordinateDivisorProbe`, `tendsto_ramanujanSum_ordinateProbes`, `tendsto_ramanujanPacket_ordinateProbes` | Conditional on `SublinearHorizontalEnergy`. The height-normalized ordinate modes recover divisibility, the Möbius sum, and its signed physical prefix. The full-sum formula is for each fixed index. |
+| `tendsto_ordinateDivisorProbe`, `tendsto_ramanujanSum_ordinateProbes`, `tendsto_ramanujanPacket_ordinateProbes` | `sublinearHorizontalEnergy` supplies the required energy limit. The height-normalized ordinate modes recover divisibility, the Möbius sum, and its signed physical prefix. The full-sum formula is for each fixed index. |
 
 The first-order hypothesis says the fraction of zeros outside any fixed strip
 about the critical line tends to zero. The order-`T` hypothesis says the
@@ -24,9 +24,23 @@ The second implies the first by `fixedStripConcentration_of_sublinearHorizontalE
 `sublinearHorizontalEnergy_of_inghamDensityBound` supplies both from Ingham's
 inclusive estimate with its fifth logarithmic power. The existing
 `sublinearHorizontalEnergy_of_uniformSelberg` supplies them from a uniform
-Selberg estimate at any positive exponent. An unconditional Lean
-provider for the required zero-density input remains open. Hlawka and
-Ford–Zaharescu establish the respective conclusions in the literature.
+Selberg estimate at any positive exponent. Hlawka and Ford–Zaharescu
+establish the respective ordinate conclusions in the literature.
+
+The unconditional theorem `ActualZeroOrdinate.sublinearHorizontalEnergy`
+now supplies the height-normalized energy limit. Its proof uses
+`uniformLogLossDensity_quarter_four`, which gives, uniformly for
+$1/2\leq\sigma\leq1$ and all sufficiently large $T$,
+$$
+N(\sigma,T)\ll T(\log T)^4\exp[-(\sigma-1/2)\log T/4].
+$$
+The four-sided Cauchy identity for the Möbius mollifier error, the actual
+critical-line mixed moment, and the local zero-count bound supply this estimate.
+The classical Selberg single-log estimate and the full Ingham exponent
+remain separate formalization obligations.
+[Contour identity](Analysis/ActualZeroDensityCauchyDetector.lean) ·
+[Estimate at a zero](Analysis/ActualZeroDensityCauchyObservation.lean) ·
+[Density and energy theorems](Analysis/ActualZeroCauchyDensity.lean)
 
 [Fixed real frequencies](Analysis/ActualFixedFrequencyLandau.lean) ·
 [Angular sampling](Analysis/ActualOrdinateAngularLaw.lean) ·
