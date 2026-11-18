@@ -25,7 +25,7 @@ noncomputable section
 open scoped BigOperators
 namespace RiemannResearch.RH.Pareto
 
-private theorem sum_divisors_coprime {p n : ℕ} (hpn : p.Coprime n) (F : ℕ → ℝ) :
+theorem sum_divisors_coprime {p n : ℕ} (hpn : p.Coprime n) (F : ℕ → ℝ) :
     (∑ d ∈ (p*n).divisors, F d) = ∑ a ∈ p.divisors, ∑ b ∈ n.divisors, F (a*b) := by
   rw [hpn.divisors_mul, Finset.sum_map]
   change (∑ x ∈ (p.divisors ×ˢ n.divisors).attach, F (x.val.1*x.val.2)) = _

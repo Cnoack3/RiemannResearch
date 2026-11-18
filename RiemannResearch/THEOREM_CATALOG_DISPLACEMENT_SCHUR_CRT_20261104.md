@@ -9,6 +9,8 @@ Neumann inverse and Schur operator, formalizes several sufficient regularity
 conditions, and checks a finite obstruction to an operator-algebra-only proof.
 It does **not** prove the prime-product premise unconditionally.
 
+The [CRT carry Schur and zeta trace continuation](THEOREM_CATALOG_CRT_CARRY_SCHUR_TRACE_20261117.md) records the physical prime blocks, sharpened source reductions and determinant obstruction.
+
 All concrete Hilbert operators below are real. The finite matrix-algebra
 generation theorem holds over every characteristic-zero field, including C.
 No full complex classification of the infinite operator algebra is claimed.
