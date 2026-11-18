@@ -359,6 +359,8 @@ import RiemannResearch.Analysis.MontgomeryDifferenceGram
 import RiemannResearch.Analysis.MontgomeryHorizontalBessel
 import RiemannResearch.Analysis.MontgomeryHorizontalLimit
 import RiemannResearch.Analysis.MontgomeryLoglogTransfer
+import RiemannResearch.Analysis.MontgomeryReflectedBessel
+import RiemannResearch.Analysis.MontgomeryReflectedDefectRate
 import RiemannResearch.Analysis.MontgomeryTransitionFrequency
 import RiemannResearch.Analysis.ActualZeroSechSmoothing
 import RiemannResearch.Analysis.MontgomeryGaussianSmoothing

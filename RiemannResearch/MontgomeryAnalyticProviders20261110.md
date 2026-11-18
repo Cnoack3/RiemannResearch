@@ -69,6 +69,24 @@ from the actual critical strip. This provides useful control for future
 horizontal Taylor integrals without replacing squared coefficient sums by
 the square of their absolute sum.
 
+## Reflected horizontal defect (18 November 2026)
+
+`coshCorrection_eq_reflected_signals` splits the complete signal into a
+coefficient $\cosh(ux)-1$ at the raw ordinate and two shifted differences,
+where $x=\beta-1/2$ and $u=\alpha\log T$. The Cauchy row bound now squares
+the quadratic coefficient. The remaining two terms contribute their full
+weighted second moments. The exact signed form-factor identity is in
+`MontgomeryHorizontalPairing.sharp_sub_raw_exact`.
+
+Writing $L=\log T$ and $\ell=\log L$, the normalized defect is
+$O(\ell^2/L+u^4\ell^4/L^3)$ in the unconditional band. Hence the raw and
+complex square-root form factors agree when $u=o(L^{3/4}/\ell)$.
+A uniform Selberg density provider gives
+$O(1/(a^2L)+u^4/(a^4L^3))$ on $|u|\le aL/8$.
+The remaining fixed nonzero scaled-frequency estimates are open.
+[Reflected Bessel bound](Analysis/MontgomeryReflectedBessel.lean) ·
+[Quartic rate](Analysis/MontgomeryReflectedDefectRate.lean)
+
 ## Positive sech smoothing and its complete transform
 
 `ShiftedSechKernel` proves that

@@ -72,7 +72,8 @@ theorem horizontalBudget_le_horizontalEnergy (T u : ℝ) :
   rw [horizontalBudget_eq_coshMass]
   linarith [coshMass_nonneg T u]
 
-private theorem coshMass_le_of_strictTail (T u M q : ℝ) (hM : 0 ≤ M) (hu : |u| < q)
+/-- The positive cosh mass controlled by a two-sided exponential tail. -/
+theorem coshMass_le_of_strictTail (T u M q : ℝ) (hM : 0 ≤ M) (hu : |u| < q)
     (htail : ∀ t ∈ Icc (0 : ℝ) (1 / 2), strictTail T t ≤ M * Real.exp (-q * t)) :
     coshMass T u ≤ M * u ^ 2 / (q ^ 2 - u ^ 2) := by
   have he : coshMass T u = badWeightedSum T 0 (fun t => Real.cosh (|u| * t) - 1) := by
