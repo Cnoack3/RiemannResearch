@@ -43,14 +43,20 @@ and $u=\alpha\log T$. Every zero in the cutoff carries its analytic multiplicity
 | `horizontalBudget_le_of_strictTail` | If the two-sided tail is bounded by $M e^{-qt}$, then $B_T(u)\le 8M(1+u^2)/q^2$ for $|u|\le q/4$ and $q>0$. |
 | `eventually_horizontalBudget_loglog_band` | Uniformly for $|u|\le \log T/(32\log\log T)$, one has $B_T(u)/T\ll(1+u^2)r(T)$. |
 | `horizontalBudget_div_height_tendsto_zero_of_loglog`, `sqrt_formFactor_difference_tendsto_zero_of_loglog` | If $u(T)^2r(T)\to0$, then $B_T(u(T))/T\to0$ and the square-root form factors agree up to $o(1)$. Both implications are unconditional for these frequencies. |
-| `raw_transition_limit_of_corrected_complex_estimate` | At $\alpha=(\log\log T+c)/(2\log T)$ the raw form factor tends to $e^{-c}$. The Lean declaration assumes `CorrectedComplexFormFactorEstimate`, the normalized version of equation (3.5) for $(0,T]$. Its proof in Lean is open. |
+| `eventually_sqrt_formFactor_difference_loglog_band` | Unconditionally, the absolute difference of the two square roots is $O(\sqrt{(1+u^2)r(T)})$ uniformly throughout $|u|\le \log T/(32\log\log T)$. |
+| `sharpFormFactor_sub_main_eq_pair_remainder` | Exact normalization of the signed complex pair remainder with $x=T^\alpha$ and $D=T\log T/(2\pi)$, for $T>1$. |
+| `sharpFormFactor_bound_of_bgstb`, `correctedComplexFormFactorEstimate_of_bgstb` | The first line of BGSTB (3.5) yields normalized error $O(T^{-2\alpha}+1/\sqrt{\log T})$ uniformly on $[0,1]$. This implies the existing estimate. Both declarations take the physical pair-sum estimate as a premise. |
+| `transition_spike` | The normalized spike is exactly $e^{-c}$ at $\alpha_c=(\log\log T+c)/(2\log T)$ for $T>1$. |
+| `sharp_transition_limit_of_corrected_complex_estimate`, `raw_transition_limit_of_corrected_complex_estimate` | With the normalized complex estimate, each statistic tends to $e^{-c}$ for fixed $c$. |
+| `raw_transition_uniform_rate_of_corrected_complex_estimate` | With the same input, the raw statistic differs from $e^{-c}$ by $O_A((\log\log T)^2/\sqrt{\log T})$ uniformly for $|c|\le A$. |
 
-[RH energy criterion](RH/HorizontalEnergyCriterion.lean) · [Unconditional transfer](Analysis/MontgomeryLoglogTransfer.lean) · [Transition and analytic hypothesis](Analysis/MontgomeryTransitionFrequency.lean) · [Corrected external estimate](https://arxiv.org/abs/2501.14545)
+[RH energy criterion](RH/HorizontalEnergyCriterion.lean) · [Unconditional transfer](Analysis/MontgomeryLoglogTransfer.lean) · [Transition and analytic hypothesis](Analysis/MontgomeryTransitionFrequency.lean) · [Corrected positive-cutoff estimate, v3, equation (3.5)](https://arxiv.org/html/2501.14545v3#S3.E5)
 
 ## Open providers
 
 | Obligation | Status |
 |---|---|
+| Lean proof of `BGSTBPositiveCutoffEstimate` for the actual complex pair sum | Open in Lean. The authors prove it unconditionally for $(0,T]$ in §3, equation (3.5) of v3, equation (3.3) of v1/v2. The zero-box and strong density hypotheses concern other results. |
 | Actual budget or weighted-moment decay on a fixed support window | Open |
 | Complex or raw form-factor asymptotic above support one | Open |
 | Complete normalized gamma remainder and growing homogeneous sampling transfer | Open |

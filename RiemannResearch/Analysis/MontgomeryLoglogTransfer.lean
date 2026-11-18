@@ -173,6 +173,26 @@ theorem horizontalBudget_div_height_tendsto_zero_of_loglog (u : ℝ → ℝ)
     rw [he] at hp
     linarith
 
+/-- Quantitative square-root comparison throughout the unconditional frequency band. -/
+theorem eventually_sqrt_formFactor_difference_loglog_band :
+    ∃ C : ℝ, 0 < C ∧ ∀ᶠ T : ℝ in atTop, ∀ α : ℝ,
+      |α * Real.log T| ≤ horizontalTailDecay T / 4 →
+      |Real.sqrt (sharpFormFactor T α) - Real.sqrt (formFactor T α)| ≤
+        C * Real.sqrt ((1 + (α * Real.log T) ^ 2) * horizontalLogRate T) := by
+  obtain ⟨B, hB, hbudget⟩ := eventually_horizontalBudget_loglog_band
+  obtain ⟨D, hD, hdefect⟩ := exists_horizontalDefect_le_budget
+  refine ⟨Real.sqrt (D * B), Real.sqrt_pos.2 (mul_pos hD hB), ?_⟩
+  filter_upwards [hbudget, eventually_ge_atTop (9 : ℝ)] with T hb hT
+  intro α hα
+  have hd := hdefect T α hT
+  rw [mul_div_assoc] at hd
+  calc
+    _ ≤ Real.sqrt (horizontalDefect T α) := sqrt_horizontal_error T α
+    _ ≤ Real.sqrt ((D * B) * ((1 + (α * Real.log T) ^ 2) * horizontalLogRate T)) := by
+      apply Real.sqrt_le_sqrt
+      exact hd.trans ((mul_le_mul_of_nonneg_left (hb _ hα) hD.le).trans_eq (by ring))
+    _ = _ := Real.sqrt_mul (mul_pos hD hB).le _
+
 /-- The actual complex-zero and raw-ordinate square-root form factors agree
 asymptotically at every moving frequency in the stated range. -/
 theorem sqrt_formFactor_difference_tendsto_zero_of_loglog (α : ℝ → ℝ)
