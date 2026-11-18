@@ -71,6 +71,19 @@ the horizontal sides lie at heights 1 and \(2T\). The source identity
 
 ## Related estimates
 
+The sharper Gabriel–Littlewood profile has logarithmic exponent at most
+three. At distance $b=(3/2)\log\log T/\log T$, the exponential factor
+absorbs the surplus two powers over the total-count scale. The squared
+excess $(|\beta-1/2|-b)_+^2$ then sums to $O(T/\log T)$. Keeping the
+actual Riemann–von Mangoldt leading count in the complementary bound
+gives the unconditional estimate
+\[
+  \limsup_{T\to\infty}\frac{E(T)}{T(\log\log T)^2/\log T}
+  \le \frac{9}{8\pi}.
+\]
+See `eventually_horizontalEnergy_ratio_le_ingham` in
+[ActualZeroInghamHorizontalEnergy.lean](Analysis/ActualZeroInghamHorizontalEnergy.lean).
+
 The away-line Selberg transfer in
 [ActualSelbergIngham.lean](Analysis/ActualSelbergIngham.lean) now has its
 Ingham hypothesis supplied. The unconditional corollary

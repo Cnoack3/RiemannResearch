@@ -1131,6 +1131,8 @@ import RiemannResearch.RH.QSquarefreeReducedGram
 import RiemannResearch.RH.QSquarefreeHeadCompressionExamples
 import RiemannResearch.Analysis.FiniteStrictTailSecondMoment
 import RiemannResearch.Analysis.ActualZeroHorizontalMomentRate
+import RiemannResearch.Analysis.ActualZeroInghamHorizontalEnergy
+import RiemannResearch.Analysis.ActualZeroHorizontalHarmonicRate
 import RiemannResearch.Analysis.ContractionScreening
 import RiemannResearch.RH.QCarryContraction
 import RiemannResearch.RH.ParetoMellinFiniteGram

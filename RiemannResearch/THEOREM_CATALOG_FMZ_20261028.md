@@ -81,6 +81,21 @@ fixed-harmonic estimate. The rounding threshold is existential.
 [Horizontal concentration and transfer](Analysis/ActualZeroLoglogRate.lean) ·
 [Quantitative reconstruction](RH/RamanujanOrdinateRate.lean)
 
+### Sharper energy and signed horizontal harmonics (18 November 2026)
+
+| Lean declaration | Status and scope |
+| --- | --- |
+| `eventually_horizontalEnergy_ratio_le_ingham` | Unconditional. Writing $r(T)=(\log\log T)^2/\log T$, the upper limit of $E(T)/(Tr(T))$ is at most $9/(8\pi)$. |
+| `eventually_horizontalHarmonic_loglog_bounds` | Unconditional. One height threshold and common prefactor control every even horizontal moment and every signed Taylor remainder. After keeping the quadratic moment, the normalized remainder is $O(u^4(\log\log T)^4/(\log T)^3)$ in the stated band. |
+| `ConreyBaluyotDensityHypothesis.horizontalTaylorBand` | Conditional on the uniform density family proved in Baluyot's thesis. Every fixed band $|u|\le b\log T$ with $b<8/7$ admits the full signed Taylor expansion with a geometric remainder in the order. |
+
+The multiplicity-weighted phase moments remain in the exact expansion
+`horizontalTaylorPolynomial_eq_moments`. The magnitude bound applies to
+the complete signed remainder.
+[Ingham energy estimate](Analysis/ActualZeroInghamHorizontalEnergy.lean) ·
+[Harmonic rates](Analysis/ActualZeroHorizontalHarmonicRate.lean) ·
+[Baluyot, Theorem 1.2.1](https://hdl.handle.net/1802/32855)
+
 ## Uniform recovery in the prime-two band
 
 Set $a=\log 2$ and fold the harmonic $n$ for a divisor $d$ to frequency
