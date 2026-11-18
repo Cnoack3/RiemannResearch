@@ -1,4 +1,5 @@
 import RiemannResearch.RH.RamanujanOrdinateRate
+import RiemannResearch.RH.RamanujanFoldedOrdinateRecovery
 import RiemannResearch.RH.RamanujanNormalDefect
 import RiemannResearch.RH.RamanujanSaturationCriteria
 import Mathlib.Topology.Instances.Matrix
@@ -40,6 +41,27 @@ def arithmeticLoss (n : ℕ) (a : Fin n → ℝ) : ℝ :=
   ‖hilbertOne - Fintype.linearCombination ℝ
     (fun i : Fin n => ramanujanPacketHilbert (i.val + 2)) a‖ ^ 2
 
+/-- Real packet row obtained by rounding the dyadic divisor probes. -/
+def dyadicRoundedRow (T : ℝ) (q k : ℕ) : ℝ :=
+  ordinateRamanujanPacketFromDivisor (dyadicOrdinateDivisor T) q k
+
+private theorem normal_equations_eq_of_rows {n : ℕ} {row : ℕ → ℕ → ℝ}
+    (hr : ∀ i : Fin n, row (i.val + 2) = ramanujanPacket (i.val + 2)) :
+    gram n row = finitePacketGram n ∧
+      source n row = (fun i : Fin n => ArithmeticFunction.vonMangoldt (i.val + 2)) ∧
+      coefficients n row = packetCoefficients n ∧ capturedMass n row = packetMass n := by
+  have hG : gram n row = finitePacketGram n := by
+    ext i j
+    rw [gram, hr i, hr j, finitePacketGram_apply]
+  have hb : source n row = (fun i : Fin n =>
+      ArithmeticFunction.vonMangoldt (i.val+2)) := by
+    funext i
+    rw [source, hr, paretoMean_ramanujanPacket]
+  have ha : coefficients n row = packetCoefficients n := by
+    rw [coefficients, hG, hb, packetCoefficients_eq_inverseGram]
+  refine ⟨hG,hb,ha,?_⟩
+  rw [capturedMass, ha, hb, packetCoefficients_eq_inverseGram, packetMass_eq_inverseGram]
+
 /-- Exact simultaneous recovery includes every entry of the inverse system. -/
 theorem exists_cofinal_rounded_normal_equations :
     ∃ H : ℕ → ℝ, StrictMono H ∧ Tendsto H atTop atTop ∧
@@ -55,17 +77,39 @@ theorem exists_cofinal_rounded_normal_equations :
     funext k
     exact (h (max p (n+1)) T hT p (le_max_left _ _) hp (i.val+2)
       (le_trans (by omega) (le_max_right p (n+1))) (by omega) k).1
-  have hG : gram n (roundedRow p T) = finitePacketGram n := by
-    ext i j
-    rw [gram, hr i, hr j, finitePacketGram_apply]
-  have hb : source n (roundedRow p T) = (fun i : Fin n =>
-      ArithmeticFunction.vonMangoldt (i.val+2)) := by
-    funext i
-    rw [source, hr, paretoMean_ramanujanPacket]
-  have ha : coefficients n (roundedRow p T) = packetCoefficients n := by
-    rw [coefficients, hG, hb, packetCoefficients_eq_inverseGram]
-  refine ⟨hG,hb,ha,?_⟩
-  rw [capturedMass, ha, hb, packetCoefficients_eq_inverseGram, packetMass_eq_inverseGram]
+  exact normal_equations_eq_of_rows hr
+
+/-- One common zero cutoff recovers the entire finite normal system at every stage. -/
+theorem eventually_dyadic_normal_equations_eq :
+    ∀ᶠ T : ℝ in atTop, ∀ n : ℕ,
+      gram n (dyadicRoundedRow T) = finitePacketGram n ∧
+        source n (dyadicRoundedRow T) =
+          (fun i : Fin n => ArithmeticFunction.vonMangoldt (i.val + 2)) ∧
+        coefficients n (dyadicRoundedRow T) = packetCoefficients n ∧
+        capturedMass n (dyadicRoundedRow T) = packetMass n := by
+  filter_upwards [eventually_dyadic_ordinate_ramanujan_reconstruction] with T hT
+  intro n
+  apply normal_equations_eq_of_rows
+  intro i
+  funext k
+  exact hT.2 (i.val + 2) k (by omega)
+
+/-- The common cutoff can be fixed before taking the conductor limit. -/
+theorem eventually_dyadic_ordinate_mass_criterion :
+    ∀ᶠ T : ℝ in atTop,
+      (Tendsto (fun n => capturedMass n (dyadicRoundedRow T)) atTop (𝓝 1) ↔
+        limitEnergy = 0) ∧
+      (Tendsto (fun n => capturedMass n (dyadicRoundedRow T)) atTop (𝓝 1) →
+        RiemannHypothesis) ∧
+      ((RiemannHypothesis → BaezDuarte.NaturalApproximation) →
+        (Tendsto (fun n => capturedMass n (dyadicRoundedRow T)) atTop (𝓝 1) ↔
+          RiemannHypothesis)) := by
+  filter_upwards [eventually_dyadic_normal_equations_eq] with T hT
+  have he : (fun n => capturedMass n (dyadicRoundedRow T)) = packetMass :=
+    funext fun n => (hT n).2.2.2
+  rw [he]
+  exact ⟨packet_cofinal_mass_iff id tendsto_id, packet_riemannHypothesis_of_saturation,
+    fun hBD => (packet_cofinal_rh_equivalences hBD id tendsto_id).1⟩
 
 /-- Any prime schedule and any heights above the common cutoff have the same
 saturation criterion. The forward RH implication uses no converse theorem. -/
@@ -400,6 +444,13 @@ theorem rawMassSaturation_iff_riemannHypothesis
     RawMassSaturation p ↔ RiemannHypothesis :=
   (rawMassSaturation_iff hp).trans ((packet_cofinal_mass_iff id tendsto_id).symm.trans
     (packet_cofinal_rh_equivalences hBD id tendsto_id).1)
+
+/--
+info: 'RiemannResearch.RH.RamanujanOrdinateNormalEquations.eventually_dyadic_ordinate_mass_criterion' depends on axioms:
+[propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms eventually_dyadic_ordinate_mass_criterion
 
 end RiemannResearch.RH.RamanujanOrdinateNormalEquations
 

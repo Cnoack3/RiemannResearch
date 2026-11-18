@@ -79,6 +79,30 @@ fixed-harmonic estimate. The rounding threshold is existential.
 [Horizontal concentration and transfer](Analysis/ActualZeroLoglogRate.lean) ·
 [Quantitative reconstruction](RH/RamanujanOrdinateRate.lean)
 
+## Uniform recovery in the prime-two band
+
+Set $a=\log 2$ and fold the harmonic $n$ for a divisor $d$ to frequency
+$a(1-(n\bmod d)/(2d))$. This is the original prime-root orbit with
+denominator $2d$ and harmonic $2d-(n\bmod d)$.
+The positive-height zero sum uses analytic multiplicity throughout.
+
+| Lean declaration | Scope |
+| --- | --- |
+| `landauSum_add_primeTwoLandauKernel_eq_complete` | Exact signed contour identity at an arbitrary cutoff, retaining the full moving prime-two kernel and both endpoint corrections. |
+| `eventually_primeTwoOrdinateProbe_profile_bound` | On $a/2\le u\le a$, the normalized probe has the main term $e^{2u}K_{0,T}(u-a)/(4T)$ and a uniform error of order $r(T)+\log^2(T+3)/T$. |
+| `tendsto_primeTwoOrdinateProbe_scaled` | At $u=a-x/T$ for $x\ge0$, the limit is $K_{0,1}(-x)$, including its value one at $x=0$. |
+| `eventually_single_folded_ordinate_ramanujan` | A single rounded probe per divisor suffices for all $q\le aT/16$ and every harmonic. |
+| `eventually_dyadic_ordinate_ramanujan_reconstruction` | One existential height threshold works for every conductor and harmonic. Each divisor uses at most $1+\lfloor\log_2 d\rfloor$ probes. Rounded divisor indicators give exact signed sums and all integrated packet coordinates. |
+| `eventually_dyadic_normal_equations_eq`, `eventually_dyadic_ordinate_mass_criterion` | At any height above a common threshold, the complete Pareto Gram, von Mangoldt source, optimizer, and captured mass are exact at every stage. Saturation at this fixed height implies RH. The reverse implication uses the open `RiemannHypothesis → BaezDuarte.NaturalApproximation` provider. |
+
+Testing the fixed multipliers $1,2,4,\ldots$ sends every nonzero residue
+into the upper half of its period at least once. The corresponding
+frequency lies at least $a/4$ below resonance. The eventual analytic
+cutoff is common to all queries.
+[Moving prime-two contour and profile](Analysis/ActualPrimeTwoLandauBand.lean) ·
+[Folded and dyadic reconstruction](RH/RamanujanFoldedOrdinateRecovery.lean) ·
+[Pareto normal equations](RH/RamanujanOrdinateNormalEquations.lean)
+
 28 October 2026. This supplement records the strengthening of the current
 prime-phase results, rather than the older saved audit.
 
