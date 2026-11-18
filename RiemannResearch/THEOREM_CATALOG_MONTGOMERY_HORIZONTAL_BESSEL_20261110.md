@@ -52,11 +52,35 @@ and $u=\alpha\log T$. Every zero in the cutoff carries its analytic multiplicity
 
 [RH energy criterion](RH/HorizontalEnergyCriterion.lean) · [Unconditional transfer](Analysis/MontgomeryLoglogTransfer.lean) · [Transition and analytic hypothesis](Analysis/MontgomeryTransitionFrequency.lean) · [Corrected positive-cutoff estimate, v3, equation (3.5)](https://arxiv.org/html/2501.14545v3#S3.E5)
 
+## Prime mean-square terms and critical-line proportions
+
+Write $D=T\log T/(2\pi)$, $N=N(T)$ and $C(T)=\sum_\gamma H_T(\gamma)^2$, where $H_T(\gamma)$ counts every zero occurrence at ordinate $\gamma$. Write $S(T)$ for the count of simultaneously simple critical-line zeros. All three counts use $0<\gamma\le T$.
+
+| Declaration | Result and assumptions |
+|---|---|
+| `log_mean_square_eq`, `log_mean_square_error_le` | For $T\ge2$ the logarithmic term $M_1$ has error at most $3T\log T/x^2$. The exact antiderivative retains both endpoints. |
+| `log_phase_integral_parts`, `norm_log_phase_integral_le` | Exact signed integration by parts and the bound $2\log(T+2)/\log n$ for the individual frequency $n>1$. |
+| `crossIntegral_eq_series`, `norm_crossIntegral_le` | The full $A_1\overline{A_2}$ cross integral has an absolutely convergent signed von Mangoldt expansion. Its modulus is at most $(2\log(T+2)/\log 2)\sum_{n\ge2}\Lambda(n)/n^{3/2}$ uniformly in $x>0$. |
+| `twice_count_le_simpleCriticalCount_add_collision`, `density_one_of_collision_limit` | Unconditionally $2N\le S(T)+C(T)$. The ES1 limit $C(T)/D\to1$ implies $S(T)/N\to1$ and $N_0(T)/N\to1$. |
+| `fejerFormFactor_eq_kernelEnergy`, `collision_div_main_le_fejerFormFactor` | The triangular integral of the raw form factor is exactly the normalized Cauchy-weighted sinc-squared sum. Every equal-ordinate pair contributes $1/D$. |
+| `fejer_model_value`, `simpleCritical_proportion_of_fejer_limit` | The full Fourier model gives $1+1/(3R^2)$ at radius $R\ge1$. Any one fixed triangular limit $M$ gives every eventual lower proportion strictly below $2-M$. |
+| `collision_limit_of_fejer_upper`, `density_one_of_rawFormFactorTestLimit` | One-sided triangular bounds arbitrarily close to one suffice for ES1. The raw compact-test Fourier law implies density one of simple critical-line zeros, without RH. |
+| `physicalTriangle_eq_collision_add_positive_gaps`, `integral_sinc_sq_pi_Ioi` | The physical triangle is $R C(T)/D+2\int_0^R P_T(u)\,du$, where $P_T$ counts strictly positive unfolded gaps divided by $D$. The missing sine-kernel mass on the positive half-line is exactly $1/2$. |
+| `shrinking_positive_gap_limit`, `density_one_of_positiveGapPCC` | The classical strict positive-gap PCC alone gives ES2 on every shrinking unfolded window. PCC together with the separate short-window second-moment upper bound gives ES1 and density one of simple critical-line zeros. |
+
+A fixed Fourier test radius reaches frequencies of order one and higher. The audited transition frequency tends to zero and provides a different test. In the classical counting formulation the conjecture omits all equal ordinates. The short-window mean-square estimate recovers their total through the triangle identity. Goldston, Lee, Schettler and Suriajaya prove the required estimate without RH in Propositions 1 and 2 and deduce the density conclusion from PCC. [Primary paper](https://doi.org/10.1112/mtk.70127) · [Positive-gap proof](https://arxiv.org/html/2503.15449v2#S3)
+
+[Logarithmic mean square](Analysis/MontgomeryLogMeanSquare.lean) · [Oscillatory integral](Analysis/MontgomeryLogPhaseIntegral.lean) · [Prime cross integral](Analysis/MontgomeryPrimeCrossIntegral.lean) · [Critical-line counts](Analysis/ActualZeroCollisionDensity.lean) · [Raw Fourier tests](Analysis/MontgomeryFejerDensity.lean) · [Strict positive gaps](Analysis/MontgomeryPositiveGapDensity.lean)
+
 ## Open providers
 
 | Obligation | Status |
 |---|---|
 | Lean proof of `BGSTBPositiveCutoffEstimate` for the actual complex pair sum | Open in Lean. The authors prove it unconditionally for $(0,T]$ in §3, equation (3.5) of v3, equation (3.3) of v1/v2. The zero-box and strong density hypotheses concern other results. |
+| Explicit-formula pair-sum identification (3.4), uniform prime mean square $M_2$, and the explicit-formula remainder $A_3$ | Open components for an internal proof of BGSTB (3.5). |
+| `ShortWindowSecondMomentUpper` for the actual cutoff | Open in Lean. The independent analytic input follows from the published GLSS short-interval moment and boundary estimates. |
+| `RawFormFactorTestLimit` or cofinal one-sided Fejér upper tests | Open for the actual raw ordinates. |
+| `PositiveGapPCC` | Open for strict positive gaps in the actual zero multiset. |
 | Actual budget or weighted-moment decay on a fixed support window | Open |
 | Complex or raw form-factor asymptotic above support one | Open |
 | Complete normalized gamma remainder and growing homogeneous sampling transfer | Open |
