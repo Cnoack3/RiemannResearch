@@ -186,6 +186,36 @@ uniform one-log Selberg estimate is equivalent to its restriction to
 The dyadic and all-height statements are both available with uniform
 constants. [Transition window](Analysis/ActualSelbergTransitionWindow.lean)
 
+[ActualZeroLogExcessIntegral.lean](Analysis/ActualZeroLogExcessIntegral.lean)
+gives the exact identity
+\[
+  W_{H,T}(\alpha)=\int_{\alpha}^{1} N_{H,T}(\sigma)\,d\sigma
+\]
+for \(\alpha\le1\). Both sides count the actual zeros with analytic
+multiplicity on \(H<\Im\rho\le T\). The threshold is inclusive.
+
+[ActualSelbergNearExcessCriterion.lean](Analysis/ActualSelbergNearExcessCriterion.lean)
+proves `uniformSelbergDensity_iff_truncated_near_excess` for \(0<a\le4/3\).
+This is the fixed-strip Z1 condition from the Ingham / Z03 checkpoint
+with the Ingham argument supplied by `inghamDensityBound`. The converse
+integrates the Selberg profile and retains the upper-endpoint subtraction
+before bounding it by zero.
+
+The sharper moving-window theorem
+`uniformSelbergDensity_iff_dyadic_transition_logExcess` works for
+\(0<a<4/3\) and any fixed \(A\ge0\). At the Z03 exponent \(a=1/4\),
+`uniformSelbergDensity_quarter_iff_dyadic_transition_logExcess` gives the
+equivalent provider
+\[
+  W_{T/2,T}(\alpha)\le D T e^{-u/4},
+  \qquad A<u<\frac{24}{13}\log\log T,\qquad
+  u=(\alpha-\tfrac12)\log T.
+\]
+Here \(D\ge0\) and the height threshold are uniform, with
+\(\alpha\in[1/2,1]\). Recovering the count uses the existing shift
+\(1/(a\log T)\), with the lower count cutoff raised to \(A+1/a\).
+The excess estimate on this moving window remains open.
+
 At the arithmetic level the actual Gaussian moment is the signed residue
 sum plus the signed vertical integral minus the pole correction, including
 both rays. The normalized pole correction is \(O_A(T^{-A})\) for every
