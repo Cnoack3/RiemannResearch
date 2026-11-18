@@ -3,6 +3,36 @@
 For exact Haar Plancherel, the A2 algebra, actual-zero Gram identities, and uniform
 energy sampling, see [the Plancherel supplement](THEOREM_CATALOG_PLANCHEREL_20261028.md).
 
+## Ramanujan sums sampled at actual zeta ordinates (17 November 2026)
+
+All height cutoffs use the analytic multiplicities of the positive-height
+nontrivial zeros of the actual Riemann zeta function.
+
+| Lean declaration | Mathematical status and scope |
+| --- | --- |
+| `tendsto_landau_div_of_nonresonance`, `tendsto_primeRoot_landau` | Proved without a density hypothesis. The centered Landau sum at frequency `(n/d) log p` has its explicit signed prime-power coefficient, including zero when `d ∤ n`. |
+| `ramanujanSum_eq_reduced_phases` | Proved for every positive conductor. The existing divisor formula equals the sum of primitive additive characters, including conductor one. |
+| `tendsto_angularLaw_haar`, `exists_ordinate_sequence_all_harmonics` | Conditional on `FixedStripConcentration`. Haar convergence yields actual ordinates of unbounded height approaching each angle, simultaneously for every integer harmonic. |
+| `exists_ordinate_ramanujan_P_and_Q` | Under the same hypothesis, one family of zero sequences converges to the Ramanujan profile in the full squared norms of both physical probability weights. |
+| `exists_common_ordinate_ramanujan_of_dvd` | Under fixed-strip concentration, one actual ordinate sequence at the angle `2π/L` handles all `q ∣ L`, residues, harmonics, and summable physical weights through the integer multiplier `(L/q)an`. |
+| `tendsto_ordinateDivisorProbe`, `tendsto_ramanujanSum_ordinateProbes`, `tendsto_ramanujanPacket_ordinateProbes` | Conditional on `SublinearHorizontalEnergy`. The height-normalized ordinate modes recover divisibility, the Möbius sum, and its signed physical prefix. The full-sum formula is for each fixed index. |
+
+The first-order hypothesis says the fraction of zeros outside any fixed strip
+about the critical line tends to zero. The order-`T` hypothesis says the
+multiplicity-weighted sum of squared horizontal displacements is `o(T)`.
+The second implies the first by `fixedStripConcentration_of_sublinearHorizontalEnergy`.
+`sublinearHorizontalEnergy_of_inghamDensityBound` supplies both from Ingham's
+inclusive estimate with its fifth logarithmic power. The existing
+`sublinearHorizontalEnergy_of_uniformSelberg` supplies them from a uniform
+Selberg estimate at any positive exponent. An unconditional Lean
+provider for the required zero-density input remains open. Hlawka and
+Ford–Zaharescu establish the respective conclusions in the literature.
+
+[Fixed real frequencies](Analysis/ActualFixedFrequencyLandau.lean) ·
+[Angular sampling](Analysis/ActualOrdinateAngularLaw.lean) ·
+[Ramanujan phase limits](RH/RamanujanOrdinatePhases.lean) ·
+[Prime-root Fourier coefficients](RH/RamanujanOrdinateFMZ.lean)
+
 28 October 2026. This supplement records the strengthening of the current
 prime-phase results, rather than the older saved audit.
 

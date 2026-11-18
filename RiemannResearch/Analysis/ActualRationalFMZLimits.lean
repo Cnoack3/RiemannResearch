@@ -30,7 +30,7 @@ private theorem log_pow_div_self_tendsto_zero (n : ℕ) :
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with T hT
   simp only [Function.comp_def, Real.exp_neg, Real.exp_log hT, div_eq_mul_inv]
 
-private theorem shifted_log_pow_div_self_tendsto_zero (n : ℕ) :
+theorem shifted_log_pow_div_self_tendsto_zero (n : ℕ) :
     Tendsto (fun T : ℝ => (Real.log (T + 3)) ^ n / T) atTop (𝓝 0) := by
   have hshift : Tendsto (fun T : ℝ => T + 3) atTop atTop := by
     apply tendsto_atTop.2
