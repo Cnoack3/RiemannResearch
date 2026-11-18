@@ -6,6 +6,8 @@ Authors: Christian Noack
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.Topology.MetricSpace.HausdorffDistance
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 
 /-!
 # Orthogonal pairings bounded by distance
@@ -13,7 +15,8 @@ import Mathlib.Tactic.Abel
 Source: the user-provided isometric transport handoff, Section 5,
 6 November 2026, for this application of projection and Cauchy--Schwarz.
 The statement is independent of the Q/P measures; its full-conductor consumer
-is QFullCrossedDistances.
+is QFullCrossedDistances. The initial-interval criterion uses the invariant-subspace
+perturbation bounds and exact squared distance below.
 -/
 
 noncomputable section
@@ -53,4 +56,67 @@ theorem abs_real_inner_le_norm_mul_infDist_of_mem_orthogonal
     _ = _ := by
       congr 1
       simp [Metric.infDist_eq_iInf, S.starProjection_minimal, dist_eq_norm]
+
+/-- On the quotient by an invariant subspace the same norm bound holds. -/
+theorem infDist_map_le_of_invariant (S : Submodule ℝ E) [S.HasOrthogonalProjection]
+    (T : E →ₗ[ℝ] E) (hS : ∀ z ∈ S, T z ∈ S) {c : ℝ}
+    (hT : ∀ z, ‖T z‖ ≤ c * ‖z‖) (y : E) :
+    Metric.infDist (T y) (S : Set E) ≤ c * Metric.infDist y (S : Set E) := by
+  calc
+    _ ≤ dist (T y) (T (S.starProjection y)) :=
+      Metric.infDist_le_dist_of_mem (hS _ (S.starProjection_apply_mem y))
+    _ = ‖T (y - S.starProjection y)‖ := by rw [dist_eq_norm, map_sub]
+    _ ≤ _ := by rw [S.infDist_eq_norm_sub_starProjection]; exact hT _
+
+/-- Exact square on the quotient, including the component of the image
+of the old residual which projects back into the subspace. -/
+theorem infDist_sub_map_sq_of_invariant (S : Submodule ℝ E) [S.HasOrthogonalProjection]
+    (T : E →ₗ[ℝ] E) (hS : ∀ z ∈ S, T z ∈ S) (x y : E) :
+    Metric.infDist (x - T y) (S : Set E) ^ 2 =
+      Metric.infDist x (S : Set E) ^ 2 + ‖T (y - S.starProjection y)‖ ^ 2 -
+        ‖S.starProjection (T (y - S.starProjection y))‖ ^ 2 -
+        2 * inner ℝ (x - S.starProjection x) (T (y - S.starProjection y)) := by
+  let a := x - S.starProjection x
+  let b := T (y - S.starProjection y)
+  have hfix : S.starProjection (T (S.starProjection y)) = T (S.starProjection y) :=
+    Submodule.starProjection_eq_self_iff.mpr (hS _ (S.starProjection_apply_mem _))
+  have hres : (x - T y) - S.starProjection (x - T y) = a - (b - S.starProjection b) := by
+    dsimp only [a, b]
+    simp only [map_sub, hfix]
+    abel
+  have hab : inner ℝ a (S.starProjection b) = 0 :=
+    S.inner_left_of_mem_orthogonal (S.starProjection_apply_mem b)
+      (Submodule.sub_starProjection_mem_orthogonal x)
+  have hb : inner ℝ (b - S.starProjection b) (S.starProjection b) = 0 :=
+    S.inner_left_of_mem_orthogonal (S.starProjection_apply_mem b)
+      (Submodule.sub_starProjection_mem_orthogonal b)
+  have hpyth : ‖b - S.starProjection b‖ ^ 2 + ‖S.starProjection b‖ ^ 2 = ‖b‖ ^ 2 := by
+    calc
+      _ = ‖(b - S.starProjection b) + S.starProjection b‖ ^ 2 := by
+        rw [norm_add_sq_real, hb]; ring
+      _ = _ := by rw [sub_add_cancel]
+  rw [S.infDist_eq_norm_sub_starProjection, S.infDist_eq_norm_sub_starProjection, hres]
+  change ‖a - (b - S.starProjection b)‖ ^ 2 =
+    ‖a‖ ^ 2 + ‖b‖ ^ 2 - ‖S.starProjection b‖ ^ 2 - 2 * inner ℝ a b
+  rw [norm_sub_sq_real, inner_sub_right, hab, sub_zero]
+  linarith only [hpyth]
+
+/-- Perturbing one target by the image of another changes quotient distance
+by at most the operator bound times the second target's distance. -/
+theorem abs_infDist_sub_map_sub_le (S : Submodule ℝ E) [S.HasOrthogonalProjection]
+    (T : E →ₗ[ℝ] E) (hS : ∀ z ∈ S, T z ∈ S) {c : ℝ}
+    (hT : ∀ z, ‖T z‖ ≤ c * ‖z‖) (x y : E) :
+    |Metric.infDist (x - T y) (S : Set E) - Metric.infDist x (S : Set E)| ≤
+      c * Metric.infDist y (S : Set E) := by
+  apply le_trans _ (S.infDist_map_le_of_invariant T hS hT y)
+  simp only [S.infDist_eq_norm_sub_starProjection, map_sub]
+  let a := x - S.starProjection x
+  let b := T y - S.starProjection (T y)
+  have he : (x - T y) - (S.starProjection x - S.starProjection (T y)) = a - b := by
+    dsimp only [a, b]; abel
+  rw [he]
+  change |‖a - b‖ - ‖a‖| ≤ ‖b‖
+  have h := abs_norm_sub_norm_le (a - b) a
+  rwa [show a - b - a = -b by abel, norm_neg] at h
+
 end Submodule

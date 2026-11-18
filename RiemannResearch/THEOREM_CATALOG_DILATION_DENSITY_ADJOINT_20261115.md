@@ -147,3 +147,65 @@ complete Bazel build, integration validation, and successful commit/push.
 Its result is the authoritative record for the final commit and full-build receipt.
 
 The modules are exported by RiemannResearch.lean. No pre-existing theorem or provider is weakened.
+
+## Initial-interval distances, November 17, 2026
+
+Write $M=\texttt{closedSpace}$, $P=\Pi_M$, $r_x=x-Px$, and
+$d(x)=\operatorname{dist}(x,M)$. The unscaled operator is
+$T_k f(n)=f(\lfloor n/k\rfloor)$, with $\|T_kf\|=\|f\|/\sqrt{k}$.
+
+| Lean declaration | Result |
+| --- | --- |
+| `Submodule.infDist_sub_map_sq_of_invariant` | Exact signed square for two targets and an invariant real Hilbert subspace admitting orthogonal projection. |
+| `Submodule.infDist_map_le_of_invariant`, `Submodule.abs_infDist_sub_map_sub_le` | A linear map preserving the subspace induces its ambient norm bound on quotient distances. |
+| `dilationDifference_infDist_sq` | $d(x-T_ky)^2=d(x)^2+\|r_y\|^2/k-\|PT_kr_y\|^2-2\langle r_x,T_kr_y\rangle$. |
+| `abs_infDist_dilationDifference_sub_le`, `dilationDifference_infDist_bounds` | $\lvert d(x-T_ky)-d(x)\rvert\le d(y)/\sqrt{k}$ for all $k\ge1$. Taking $y=x$ gives both relative bounds. |
+| `compactHead_one_infDist_bounds` | With $H_m=\mathbf 1_{\{1,\ldots,m\}}$ and $c_m=1/\sqrt{m+1}$, $(1-c_m)d(1)\le d(H_m)\le(1+c_m)d(1)$. |
+| `one_infDist_le_of_compactHead_finiteTrial` | A finite residue combination $q$ gives $d(1)\le\|H_m-q\|/(1-c_m)$ for $m\ge1$. |
+
+The generic results are in `Analysis/OrthogonalDistanceBound.lean`. The Pareto
+specializations are in `RH/ParetoInitialIntervalCriterion.lean` and the norm
+factor is in `RH/TailCapacityDilationCorrection.lean`.
+
+### Finite certificates
+
+`RH/ParetoInitialIntervalCertificates.lean` uses the complete Pareto measure
+$1/[n(n+1)]$ on positive integers.
+
+- The existing identity `TailCapacity.pointError_eq_inv_capacity` gives
+  $d(1)\le\sqrt{1/(C_n+2)}/(1-1/\sqrt2)$ at every finite stage, where
+  $C_n$ is the first-site tail capacity. This is `one_infDist_le_of_tailCapacity`.
+- The singleton trial $q=(7/4)g_2+g_3-(1/2)g_4-g_6$ belongs to `finiteSpace 5`.
+  Its exact squared error is $1/2-q(1)+\sum_{r=1}^{12}w_{12,r}q(r)^2$, where
+  $w_{12,r}$ is the complete mass of the progression $r+12\mathbb N$.
+  `singletonTrialTwelve_error_sq_le` proves the upper endpoint
+  $9500632951/165216205440$ using `progressionWeight_upper_two` on all twelve
+  classes. `one_infDist_le_of_singletonTrialTwelve` transfers it to
+  $d(1)\le\sqrt{9500632951/165216205440}/(1-1/\sqrt2)<0.819$.
+- The published period-5040 trial `legalWitness5040_full_error_lt` already
+  controls the constant directly. `one_infDist_lt_of_period5040` places that
+  bound in this closure, giving $d(1)<\sqrt{39/1000}$.
+  `compactHead_one_infDist_lt_of_period5040` transfers it to every head.
+  At $m=3$ this gives $d(H_3)<(3/2)\sqrt{39/1000}$. Sending this
+  particular certificate back through the lower bound costs a factor of
+  three relative to its original constant-target bound.
+
+### Remaining approximation theorem
+
+`closedSpace_eq_top_iff_compactHead_one_walkError_tendsto` identifies density
+with convergence to zero of the finite least-squares errors for any one fixed
+nonempty head. Equivalently, for every $\varepsilon>0$ one needs a finite
+residue combination $q$ with complete Hilbert error $\|H_m-q\|<\varepsilon$.
+The error includes the entire tail $\sum_{n>m}|q(n)|^2/[n(n+1)]$.
+
+`closedSpace_eq_top_iff_arbitrarily_small_compactHead_one` allows the head
+length to vary with the tolerance because $1-c_m\ge1-1/\sqrt2>0$ for every
+$m\ge1$. Producing arbitrarily small errors remains open. The period-12 and
+period-5040 certificates each give a single positive bound. The cutoff-seven
+`occurrenceEnergy` certificate concerns one summand in
+`atomEnergy_eq_occurrence_add_reuse` and would require an upper bound on the
+remaining reuse energy and a transfer to the desired target for this purpose.
+
+The focused Bazel target `//RiemannResearch/RH:ParetoInitialIntervalCertificates`
+passed in job `job_Evl6S7XyqRn3BKyIAvF80UGVElNPLcfZ`, including the quantitative
+criterion and both concrete certificates. [BuildBuddy verification](https://app.buildbuddy.io/invocation/e3216fce-477f-453d-9566-ea67b5707d52)

@@ -37,6 +37,16 @@ theorem unscaledResidueDilation_norm_sq (m : ℕ) (hm : 0 < m)
   rw [norm_smul, mul_pow, Real.norm_eq_abs, sq_abs, hilbertDilation_norm_sq]
   field_simp [hm0]
 
+/-- The norm factor of the unscaled physical pullback. -/
+theorem unscaledResidueDilation_norm (k : ℕ) (hk : 0 < k) (x : ThresholdHilbert) :
+    ‖unscaledResidueDilation k hk x‖ = (1 / Real.sqrt k) * ‖x‖ := by
+  calc
+    _ = Real.sqrt (‖unscaledResidueDilation k hk x‖ ^ 2) :=
+      (Real.sqrt_sq (norm_nonneg _)).symm
+    _ = Real.sqrt (‖x‖ ^ 2 / (k : ℝ)) := by rw [unscaledResidueDilation_norm_sq]
+    _ = ‖x‖ / Real.sqrt k := by rw [Real.sqrt_div (sq_nonneg _), Real.sqrt_sq (norm_nonneg _)]
+    _ = _ := by ring
+
 theorem unscaledResidueDilation_firstCoordinate (m : ℕ) (hm : 2 ≤ m)
     (F : ThresholdHilbert) :
     hilbertSequence (unscaledResidueDilation m (by omega) F) 1 = 0 := by
