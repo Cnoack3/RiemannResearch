@@ -408,6 +408,14 @@ import RiemannResearch.RH.ResidueConductorVariation
 import RiemannResearch.RH.MixedConductorRankOne
 import RiemannResearch.RH.PrimePowerPacketSummation
 import RiemannResearch.RH.ScreenedPrimePowerTelescope
+import RiemannResearch.RH.MixedConductorCaptureGains
+import RiemannResearch.RH.MixedCaptureLegalTrials
+import RiemannResearch.RH.MixedCaptureZeroPair
+import RiemannResearch.RH.MixedParityCaptureFifteen
+import RiemannResearch.RH.MixedConductorResonanceProduct
+import RiemannResearch.RH.OddPeriodBlock
+import RiemannResearch.RH.OddPeriodEvenPackets
+import RiemannResearch.RH.FixedOddPeriodProjection
 import RiemannResearch.RH.MixedConductorHead
 import RiemannResearch.RH.ParetoRamanujanGramCRT
 import RiemannResearch.RH.PsiNormalizedRamanujanUnscreened

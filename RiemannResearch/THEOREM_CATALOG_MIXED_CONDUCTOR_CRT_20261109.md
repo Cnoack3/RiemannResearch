@@ -5,6 +5,23 @@ Write \(C_M\) for the span of the mixed Ramanujan packets through \(M\),
 \(C\) for their closed span, \(S=I-P_C\), and \(V\) for the full legal
 residue closure. A mixed conductor has at least two distinct prime factors.
 
+## Saturation of the mixed projection of parity, 18 November 2026
+
+Put \(\ell=\log 2\), \(z=J_2-\ell\mathbf 1\), \(C_B=\|P_{C_B^{\rm mix}}J_2\|_P^2\) and \(D_B=\ell-\ell^2-C_B\). Here \(C_B^{\rm mix}\) is the span of mixed packets through \(B\), and \(C_\infty\) denotes the corresponding squared capture by their closed span.
+
+| Lean module | Established result |
+| --- | --- |
+| [MixedConductorCaptureGains](RH/MixedConductorCaptureGains.lean) | `deficit_add_capture` identifies the centered error. Every finite deficit is positive. The exact product and `fixed_capture_saturation_iff_relativeGain_not_summable` reduce saturation to divergence of the actual relative gains. `riemannHypothesis_of_mixed_correlation_shares` accepts lower bounds from individual candidate directions. |
+| [MixedCaptureLegalTrials](RH/MixedCaptureLegalTrials.lean) | If \(d=\operatorname{dist}_P(\mathbf1,V)^2\), then \(C_\infty=\ell-\ell^2/(1-d)\). The complete period-5040 legal trial proves \(C_B>\ell-(1000/961)\ell^2\) for every sufficiently large mixed cutoff. |
+| [MixedCaptureZeroPair](RH/MixedCaptureZeroPair.lean) | A nonreal zeta zero with real part greater than one half forces a strictly positive deficit. The upper bound retains the contribution of its conjugate. |
+| [MixedParityCaptureFifteen](RH/MixedParityCaptureFifteen.lean) | `fixedTwo_centered_trial_balance` keeps the complete excess square for any mixed trial. Five explicit mixed packets prove \(C_B>1/15\) for every \(B\ge15\). |
+| [MixedConductorResonanceProduct](RH/MixedConductorResonanceProduct.lean) | Every common prime contributes a full lattice of Mellin resonances. Their Euler product gives an explicit squared error floor. For even mixed packets the Mellin argument yields capture at most \(\ell-1/2\). |
+| [OddPeriodBlock](RH/OddPeriodBlock.lean), [OddPeriodEvenPackets](RH/OddPeriodEvenPackets.lean), [FixedOddPeriodProjection](RH/FixedOddPeriodProjection.lean) | A discrete signed test of squared dual norm \(Q(49Q^2-1)/21\) annihilates the even mixed packets and the positive-index \(Q\)-periodic corrections for odd \(Q\). The complete gap is at least \(21Q/[16(49Q^2-1)]\), in particular \(7/256\) with only even mixed packets. Any saturating sequence requires unbounded odd conductor periods. |
+
+**External exact-arithmetic certificate.** A trial of 35,704 rational mixed packets through 40,000 proves \(C_{40000}>0.21001598\). The computation evaluates 320,000,000 physical coordinates and bounds the entire infinite tail. The variational identity has a Lean proof. The larger witness has a separate integer verifier. [Proof, exact fractions and reproduction files](RH/MixedParityCaptureFiniteCertificate.md)
+
+**Open arithmetic obligation.** Prove nonsummability of \(g_B=(C_{B+1}-C_B)/D_B\), or of certified nonnegative lower bounds for those gains. The finite certificate and the necessary growth of the odd conductors do not establish divergence. [Dyadic argument](RH/MixedConductorOddPeriodFloor.md)
+
 ## Lean declarations
 
 | Module | Result |
