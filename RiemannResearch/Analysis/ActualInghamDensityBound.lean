@@ -85,48 +85,54 @@ private theorem actual_two_endpoint_moments {T ℓ : ℝ} {X : ℕ} {K : ℝ}
     exact hR.trans (by linarith)
 
 private theorem sum_two_edge_moments {A B : ℝ → ℝ} (hA : Continuous A) (hB : Continuous B)
-    {s r K J T ℓ P U V : ℝ} (hs : 0 ≤ s) (hr : 0 ≤ r) (hK : 0 ≤ K) (hJ : 0 ≤ J)
-    (hℓ : 0 ≤ ℓ)
+    {s r K J T ℓ P Z U V : ℝ} (hs : 0 ≤ s) (hr : 0 ≤ r) (hK : 0 ≤ K) (hJ : 0 ≤ J)
+    (hZ : 0 ≤ Z)
     (ha : (∫ t in (1 : ℝ)..2 * T, A t) ≤ K * T * ℓ ^ 2)
-    (hb : (∫ t in (1 : ℝ)..2 * T, B t) ≤ J * ℓ ^ 3)
-    (hsl : s * T ≤ U * P * ℓ ^ 2) (hsr : r ≤ V * P * ℓ) :
-    (∫ t in (1 : ℝ)..2 * T, 2 * (s * A t + r * B t)) ≤ 2 * (U * K + V * J) * P * ℓ ^ 4 := by
+    (hb : (∫ t in (1 : ℝ)..2 * T, B t) ≤ J * Z)
+    (hsl : s * (T * ℓ ^ 2) ≤ U * P * Z * ℓ) (hsr : r ≤ V * P * ℓ) :
+    (∫ t in (1 : ℝ)..2 * T, 2 * (s * A t + r * B t)) ≤ 2 * (U * K + V * J) * P * Z * ℓ := by
   rw [intervalIntegral.integral_const_mul, intervalIntegral.integral_add
     (f := fun t => s * A t) (g := fun t => r * B t)
     ((continuous_const.mul hA).intervalIntegrable _ _)
     ((continuous_const.mul hB).intervalIntegrable _ _),
     intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul]
   have hl := mul_le_mul_of_nonneg_left ha hs
-  have hl' := mul_le_mul_of_nonneg_right hsl (show 0 ≤ K * ℓ ^ 2 by positivity)
+  have hl' := mul_le_mul_of_nonneg_right hsl hK
   have hrr := mul_le_mul_of_nonneg_left hb hr
-  have hr' := mul_le_mul_of_nonneg_right hsr (show 0 ≤ J * ℓ ^ 3 by positivity)
+  have hr' := mul_le_mul_of_nonneg_right hsr (show 0 ≤ J * Z by positivity)
   linarith
 
-/-- A uniform logarithmic refinement of the fifth-power formulation.
-All zeros in the closed right half-plane are counted with analytic multiplicity. -/
-theorem exists_ingham_density_log_profile :
-    ∃ C H : ℝ, 0 ≤ C ∧ 1 < H ∧ ∀ T : ℝ, H ≤ T → ∀ σ ∈ Icc (1 / 2 : ℝ) 1,
-      rightInclusiveCount T σ ≤
-        C * (T / Real.log T) ^ (3 * (1 - σ) / (2 - σ)) * (Real.log T) ^ 5 := by
+/-- Right-boundary mean square used by the signed rectangle detector, at the
+cutoff attached to the observation height. -/
+def inghamRightCountingMoment (T : ℝ) : ℝ :=
+  let X := Nat.ceil T
+  let d := 1 / Real.log (X : ℝ)
+  ∫ t in (1 : ℝ)..2 * T, ‖mollifiedError X (((1 + d : ℝ) : ℂ) + (t : ℂ) * I)‖ ^ 2
+
+/-- One constant works for all right-edge moment budgets between one and three
+logarithms. The exact balance uses Y = T (log T)^2 / Z. -/
+theorem exists_ingham_density_of_right_moment_scale {J : ℝ} (hJ : 0 < J) :
+    ∃ D : ℝ, 0 < D ∧ ∀ T : ℝ, Real.exp 16 ≤ T → ∀ Z : ℝ,
+      Real.log T ≤ Z → Z ≤ (Real.log T)^3 → inghamRightCountingMoment T ≤ J * Z →
+      ∀ σ ∈ Icc (1 / 2 : ℝ) 1, rightInclusiveCount T σ ≤
+        D * (T * (Real.log T)^2 / Z) ^ (3 * (1 - σ) / (2 - σ)) * Z * (Real.log T)^2 := by
   obtain ⟨C, hC, hcount⟩ := exists_count_le_height_log
   obtain ⟨R, hR, hrow⟩ := exists_actual_cauchy_row_bound
   obtain ⟨K, hK, hm⟩ := exists_actual_critical_error_moment_log_bound
-  let J := movingRightMomentConstant 1
   let S := 32 * Real.exp 1
   let U := 2 * S ^ (4 / 3 : ℝ)
   let V := 2 * S ^ 2 * Real.exp 4
-  let G := 2 * (U * (8 * K) + V * (81 * J))
+  let G := 2 * (U * (8 * K) + V * J)
   let D := C * Real.exp 3 + 5 * C + 2 * R * G
-  have hJ : 0 < J := movingRightMomentConstant_pos (by norm_num)
   have hS : 0 < S := by dsimp [S]; positivity
   have hU : 0 < U := by dsimp [U]; positivity
   have hV : 0 < V := by dsimp [V]; positivity
   have hG : 0 < G := by dsimp [G]; positivity
   have hD : 0 < D := by dsimp [D]; positivity
-  refine ⟨D, Real.exp 16, hD.le, Real.one_lt_exp_iff.mpr (by norm_num), ?_⟩
-  intro T hT σ hσ
+  refine ⟨D, hD, ?_⟩
+  intro T hT Z hZlo hZhi hb σ hσ
   let ℓ := Real.log T
-  let Y := T / ℓ
+  let Y := T * ℓ ^ 2 / Z
   let q := 3 * (1 - σ) / (2 - σ)
   let L := 3 * Real.log Y / (2 * (2 - σ))
   let P := Y ^ q
@@ -163,9 +169,15 @@ theorem exists_ingham_density_log_profile :
   have hdhalf : d ≤ 1 / 2 := by
     dsimp [d]
     exact (div_le_div_iff₀ hxlog (by norm_num)).mpr (by linarith)
-  have hTY : T = Y * ℓ := by dsimp [Y]; field_simp
-  have hY : 1 ≤ Y := (one_le_div hℓp).mpr (by dsimp [H] at hbig; linarith)
-  have hYT : Y ≤ T := div_le_self hTp.le hℓ1
+  have hZp : 0 < Z := hℓp.trans_le hZlo
+  have hTY : T * ℓ ^ 2 = Y * Z := by dsimp [Y]; field_simp
+  have hY : 1 ≤ Y := by
+    apply (one_le_div hZp).mpr
+    have hℓT : ℓ ≤ T := by dsimp [H] at hbig; linarith
+    exact hZhi.trans (by nlinarith only [mul_le_mul_of_nonneg_right hℓT (sq_nonneg ℓ)])
+  have hYT : Y ≤ T * ℓ := by
+    apply (div_le_iff₀ hZp).mpr
+    nlinarith only [mul_le_mul_of_nonneg_left hZlo (mul_nonneg hTp.le hℓp.le)]
   obtain ⟨hL, hLY, hP, hleft, hright⟩ := balanced_tilt hY hσ
   change 0 ≤ L at hL
   change L ≤ 2 * Real.log Y at hLY
@@ -174,15 +186,26 @@ theorem exists_ingham_density_log_profile :
   change Real.exp (2 * (L * (1 - σ))) = P at hright
   have hP0 : 0 ≤ P := by linarith
   have hLT : L ≤ 2 * ℓ := by
-    have hh : Real.log Y ≤ ℓ := Real.log_le_log (by linarith) hYT
-    linarith
+    have hlog4 : Real.log 4 ≤ 2 := by
+      rw [show (4 : ℝ) = 2 * 2 by norm_num, Real.log_mul (by norm_num) (by norm_num)]
+      linarith [Real.log_le_sub_one_of_pos (by norm_num : (0 : ℝ) < 2)]
+    have hlogℓ : Real.log ℓ ≤ ℓ / 3 := by
+      have h := Real.log_le_sub_one_of_pos (show 0 < ℓ / 4 by linarith)
+      rw [Real.log_div hℓp.ne' (by norm_num)] at h
+      linarith
+    have hh := Real.log_le_log (zero_lt_one.trans_le hY) hYT
+    rw [Real.log_mul hTp.ne' hℓp.ne'] at hh
+    change Real.log Y ≤ ℓ + Real.log ℓ at hh
+    dsimp only [L]
+    apply (div_le_iff₀ (by linarith [hσ.2])).mpr
+    nlinarith only [hh, hlogℓ, mul_nonneg hℓp.le (sub_nonneg.mpr hσ.2)]
   have hLd : L * d ≤ 2 := by linarith [mul_le_mul_of_nonneg_right hLT hd.le]
-  have hscale : T * Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ))) = P * ℓ := by
+  have hscale : T * Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ))) * ℓ ^ 2 = P * Z := by
     calc
-      _ = (Y * Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ)))) * ℓ := by rw [hTY]; ring
+      _ = (T * ℓ ^ 2) * Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ))) := by ring
+      _ = (Y * Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ)))) * Z := by rw [hTY]; ring
       _ = _ := by rw [hleft]
-  have hℓ25 : ℓ ^ 2 ≤ ℓ ^ 5 := pow_le_pow_right₀ hℓ1 (by decide : 2 ≤ 5)
-  change rightInclusiveCount T σ ≤ D * P * ℓ ^ 5
+  change rightInclusiveCount T σ ≤ D * P * Z * ℓ ^ 2
   by_cases hsep : d ≤ σ - 1 / 2
   · let b := 1 + d
     let A (t : ℝ) := ‖mollifiedError X ((1 / 2 : ℂ) + (t : ℂ) * I)‖ ^ (4 / 3 : ℝ)
@@ -199,15 +222,15 @@ theorem exists_ingham_density_log_profile :
     have hf : Continuous f :=
       continuous_const.mul ((continuous_const.mul hA).add (continuous_const.mul hB))
     have hf0 (t : ℝ) : 0 ≤ f t := by dsimp [f, A, B]; positivity
-    have hsl : s * T ≤ U * P * ℓ ^ 2 := by
+    have hsl : s * (T * ℓ ^ 2) ≤ U * P * Z * ℓ := by
       have eh : (Real.exp (L * (1 / 2 - σ))) ^ (4 / 3 : ℝ) =
           Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ))) := by
         rw [Real.rpow_def_of_pos (Real.exp_pos _), Real.log_exp]; congr 1; ring
       dsimp only [s, U]
       rw [Real.mul_rpow hS.le (Real.exp_pos _).le, eh]
       calc
-        _ = S ^ (4 / 3 : ℝ) * (T * Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ)))) * (1 / d) := by ring
-        _ ≤ S ^ (4 / 3 : ℝ) * (P * ℓ) * (2 * ℓ) := by
+        _ = S ^ (4 / 3 : ℝ) * (T * Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ))) * ℓ ^ 2) * (1 / d) := by ring
+        _ ≤ S ^ (4 / 3 : ℝ) * (P * Z) * (2 * ℓ) := by
           rw [hscale, hdinv]; exact mul_le_mul_of_nonneg_left hxhi (by positivity)
         _ = _ := by ring
     have hsr : r ≤ V * P * ℓ := by
@@ -222,11 +245,11 @@ theorem exists_ingham_density_log_profile :
           exact mul_le_mul (mul_le_mul_of_nonneg_left hh (by positivity))
             hxhi hxlog.le (by positivity)
         _ = _ := by ring
-    obtain ⟨ha, hb⟩ := actual_two_endpoint_moments hℓ1 (by linarith : 2 ≤ T) hX hX' hlog2
+    obtain ⟨ha, _⟩ := actual_two_endpoint_moments hℓ1 (by linarith : 2 ≤ T) hX hX' hlog2
       (hm (2 * T) (by linarith) X hX1 hX') hK.le
-    have hif : (∫ t in (1 : ℝ)..2 * T, f t) ≤ G * P * ℓ ^ 4 :=
-      sum_two_edge_moments hA hB hs hr (by positivity : 0 ≤ 8 * K) (by positivity : 0 ≤ 81 * J)
-        hℓp.le ha hb hsl hsr
+    have hif : (∫ t in (1 : ℝ)..2 * T, f t) ≤ G * P * Z * ℓ :=
+      sum_two_edge_moments hA hB hs hr (by positivity : 0 ≤ 8 * K) hJ.le
+        hZp.le ha hb hsl hsr
     have obs (ρ : ℂ) (hρ : ρ ∈ cutoff T) (hl : H < ρ.im) (hsig : σ ≤ ρ.re) :
         (1 : ℝ) ≤ 0 + ∫ t in (1 : ℝ)..2 * T, f t * cauchyWeight (t - ρ.im) := by
       obtain ⟨hz, _, hh⟩ := mem_cutoff_iff_zeta.mp hρ
@@ -238,38 +261,78 @@ theorem exists_ingham_density_log_profile :
     have hH9 : 9 ≤ H := by dsimp [H]; linarith
     have hH' : H ≤ 5 * ℓ := by dsimp [H]; linarith
     have hlogH : Real.log H ≤ ℓ := Real.log_le_log (by linarith) hbig
-    have hhead : (Ncount 0 H : ℝ) ≤ 5 * C * P * ℓ ^ 5 := by
+    have hhead : (Ncount 0 H : ℝ) ≤ 5 * C * P * Z * ℓ ^ 2 := by
       refine (hcount H hH9).trans ?_
       have hprod := mul_le_mul (mul_le_mul_of_nonneg_left hH' hC.le) hlogH
         (Real.log_nonneg (by linarith)) (show 0 ≤ C * (5 * ℓ) by positivity)
-      have hh := mul_le_mul (show 5 * C ≤ 5 * C * P from le_mul_of_one_le_right (by positivity) hP)
-        hℓ25 (sq_nonneg _) (by positivity)
-      linarith
+      have hsize : 5 * C ≤ 5 * C * P * Z :=
+        (le_mul_of_one_le_right (by positivity) hP).trans
+          (le_mul_of_one_le_right (by positivity) (hℓ1.trans hZlo))
+      nlinarith only [hprod, mul_le_mul_of_nonneg_right hsize (sq_nonneg ℓ)]
     have hlogR : Real.log (T + 3) ≤ 2 * ℓ :=
       (Real.log_le_log (by positivity) (show T + 3 ≤ 2 * T by linarith)).trans hlog2
     have hrowTerm := mul_le_mul (mul_le_mul_of_nonneg_left hlogR hR.le) hif
       (intervalIntegral.integral_nonneg_of_forall (by linarith : 1 ≤ 2 * T) hf0)
       (show 0 ≤ R * (2 * ℓ) by positivity)
     dsimp only [D]
-    linarith [show 0 ≤ C * Real.exp 3 * P * ℓ ^ 5 by positivity]
+    linarith [show 0 ≤ C * Real.exp 3 * P * Z * ℓ ^ 2 by positivity]
   · have hsmall : L * (σ - 1 / 2) ≤ 2 :=
       (mul_le_mul_of_nonneg_left (le_of_not_ge hsep) hL).trans hLd
     have he : Real.exp ((4 / 3 : ℝ) * (L * (σ - 1 / 2))) ≤ Real.exp 3 :=
       Real.exp_le_exp.mpr (by linarith)
-    have hsmallT : T ≤ P * ℓ * Real.exp 3 := by
+    have hsmallT : T * ℓ ^ 2 ≤ P * Z * Real.exp 3 := by
       calc
-        _ = (T * Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ)))) *
+        _ = (T * Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ))) * ℓ ^ 2) *
             Real.exp ((4 / 3 : ℝ) * (L * (σ - 1 / 2))) := by
-          rw [mul_assoc,← Real.exp_add]; ring_nf; simp
+          have hz : Real.exp ((4 / 3 : ℝ) * (L * (1 / 2 - σ))) *
+              Real.exp ((4 / 3 : ℝ) * (L * (σ - 1 / 2))) = 1 := by
+            rw [← Real.exp_add]; ring_nf; simp
+          linear_combination -(T * ℓ ^ 2) * hz
         _ ≤ _ := by rw [hscale]; exact mul_le_mul_of_nonneg_left he (by positivity)
     refine (rightInclusiveCount_le_count T σ).trans ((hcount T hT9).trans ?_)
     change C * T * ℓ ≤ _
-    have hh := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hsmallT hC.le) hℓp.le
-    have hh' := mul_le_mul_of_nonneg_left hℓ25 (show 0 ≤ C * Real.exp 3 * P by positivity)
+    have hpad : T * ℓ ≤ T * ℓ ^ 2 := by
+      nlinarith only [mul_nonneg (mul_nonneg hTp.le hℓp.le) (sub_nonneg.mpr hℓ1)]
     have hcomp : C * Real.exp 3 ≤ D := by dsimp [D]; linarith [show 0 ≤ 2 * R * G by positivity]
-    have hfin := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hcomp hP0)
-      (show 0 ≤ ℓ ^ 5 by positivity)
-    linarith
+    have hfin := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hcomp hP0) hZp.le
+    have hlead : D * P * Z ≤ D * P * Z * ℓ ^ 2 :=
+      le_mul_of_one_le_right (by positivity) (one_le_pow₀ hℓ1)
+    nlinarith only [mul_le_mul_of_nonneg_left (hpad.trans hsmallT) hC.le, hfin, hlead]
+
+/-- A uniform logarithmic refinement of the fifth-power formulation.
+All zeros in the closed right half-plane are counted with analytic multiplicity. -/
+theorem exists_ingham_density_log_profile :
+    ∃ C H : ℝ, 0 ≤ C ∧ 1 < H ∧ ∀ T : ℝ, H ≤ T → ∀ σ ∈ Icc (1 / 2 : ℝ) 1,
+      rightInclusiveCount T σ ≤
+        C * (T / Real.log T) ^ (3 * (1 - σ) / (2 - σ)) * (Real.log T) ^ 5 := by
+  obtain ⟨D, hD, hbound⟩ := exists_ingham_density_of_right_moment_scale
+    (show 0 < 81 * movingRightMomentConstant 1 by
+      have := movingRightMomentConstant_pos (by norm_num : (0 : ℝ) < 1); positivity)
+  obtain ⟨K, hK, hm⟩ := exists_actual_critical_error_moment_log_bound
+  refine ⟨D, Real.exp 16, hD.le, Real.one_lt_exp_iff.mpr (by norm_num), ?_⟩
+  intro T hT σ hσ
+  let ℓ := Real.log T
+  let X := Nat.ceil T
+  have hTp := (Real.exp_pos 16).trans_le hT
+  have hℓ : 16 ≤ ℓ := by simpa [ℓ] using Real.log_le_log (Real.exp_pos 16) hT
+  have hℓ1 : 1 ≤ ℓ := by linarith
+  have hℓp : 0 < ℓ := by linarith
+  have hT2 : 2 ≤ T := by linarith only [Real.add_one_le_exp 16, hT]
+  have hX : T ≤ (X : ℝ) := Nat.le_ceil _
+  have hX' : (X : ℝ) ≤ 2 * T := by dsimp [X]; linarith [Nat.ceil_lt_add_one hTp.le]
+  have hX1 : 1 ≤ X := by exact_mod_cast (show (1 : ℝ) ≤ X by linarith)
+  have hlog2 : Real.log (2 * T) ≤ 2 * ℓ := by
+    rw [Real.log_mul (by norm_num) hTp.ne']
+    dsimp [ℓ] at *
+    linarith [Real.log_le_sub_one_of_pos (by norm_num : (0 : ℝ) < 2)]
+  have hh := (actual_two_endpoint_moments hℓ1 hT2 hX hX' hlog2
+    (hm (2 * T) (by linarith only [hT2]) X hX1 hX') hK.le).2
+  have hcmp : ℓ ≤ ℓ ^ 3 := by simpa using pow_le_pow_right₀ hℓ1 (by decide : 1 ≤ 3)
+  have hd := hbound T hT (ℓ ^ 3) hcmp le_rfl hh σ hσ
+  have hy : T * ℓ ^ 2 / ℓ ^ 3 = T / ℓ := by field_simp [hℓp.ne']
+  change rightInclusiveCount T σ ≤ D * (T * ℓ ^ 2 / ℓ ^ 3) ^ _ * ℓ ^ 3 * ℓ ^ 2 at hd
+  rw [hy] at hd
+  exact hd.trans_eq (by dsimp [ℓ]; ring)
 
 /-- For every height at least two the actual inclusive count satisfies both the
 total-count estimate and the refined density estimate, with one constant. -/

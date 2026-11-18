@@ -81,15 +81,125 @@ mollified moment for lengths cofinal below \(T^{4/7}\) stays open in Z03.
 The dyadic and Gaussian cofinal theorems in
 [ActualConreyBaluyotDensity.lean](Analysis/ActualConreyBaluyotDensity.lean)
 now take only their respective near-line moment input.
-The proof above uses the three-logarithm right endpoint. The sharper
-one-logarithm endpoint and the sharper published logarithmic profile remain
-separate formalization targets.
+The preceding proof records the original three-logarithm endpoint. The following refinements use the sharp right-line moment.
 
 [Chourasiya and Simonič](https://arxiv.org/abs/2507.15184) state the
 classical Ingham bound and prove an explicit estimate with log exponent
 \((7-5\sigma)/(2-\sigma)\). This source supports the analytic context and
 the moment orders. The Lean proof above counts via individual Cauchy
 rectangles and uses its own constants.
+
+## Sharp right edge and Gabriel interpolation
+
+Write \(F_X(s)=\zeta(s)M_X(s)-1\), where \(M_X(s)=\sum_{n\le X}\mu(n)n^{-s}\).
+For each fixed \(\delta>0\), all integers \(X\ge2\), all real \(H\le T\), and
+\(\beta=1+\delta/\log X\), the actual right-line error satisfies
+\[
+   \int_H^T |F_X(\beta+it)|^2\,dt
+   \le C_\delta\bigl((T-H)/X+\log X\bigr).
+\]
+The cutoff and both interval endpoints are uniform. The complementary-divisor
+estimate bounds the diagonal by an absolute constant divided by \(X\).
+[Sharp interval estimate](Analysis/ActualInghamSharpLength.lean)
+· [Complementary-divisor argument](Analysis/ActualInghamComplementaryDiagonal.lean)
+· [One-log Gaussian endpoint with its full \(\Gamma(3/2)\) term](Analysis/ActualInghamSharpEndpoint.lean)
+
+On \(\Re s>1\) the error is the tail with the actual truncated Möbius divisor
+coefficients \(a_X(n)=\sum_{d\mid n,\ d\le X}\mu(d)\).
+For \(\tau>1\), its exact squared coefficient sum is
+\[
+   \sum_{n>X} a_X(n)^2 n^{-\tau}
+   =\zeta(\tau) S_X(\tau)-1,\qquad
+   S_X(\tau)=\sum_{d,e\le X}\mu(d)\mu(e)[d,e]^{-\tau}.
+\]
+The signed off-diagonal mean-square error is bounded on both sides by 52
+times the weighted coefficient sum. The totient expansion and uniform
+coprime Möbius estimate give \(S_X(1)\le K\) with absolute \(K\).
+The prime-by-prime comparison gives
+\(S_X(1+b/\log X)\le e^{4b} S_X(1)\) for \(b\ge0\). These inputs all have
+Lean proofs. [Coefficient identity](Analysis/ActualInghamMobiusCoefficients.lean)
+· [Signed mean square](Analysis/ActualInghamSharpRightMoment.lean)
+· [Totient expansion](Analysis/MobiusLCMTotientExpansion.lean)
+· [Moving-line comparison](Analysis/ActualMobiusLCMTransport.lean)
+
+The theorem `actual_gabriel_moving_window` proves the analytic mixed-norm
+inequality for the pole-removed, Gaussian-damped actual error on the strip
+from \(1/2\) to \(\beta\). The observation exponent is \(p=4/(3-\theta)\) at
+\(\sigma=(1-\theta)/2+\theta\beta\), \(0\le\theta\le1\). It retains the
+factor \(e^{b(\sigma^2-T^2)}(1-1/H)\), positive for \(H>1\). The theorem
+`exists_actual_gabriel_sharp_window` supplies the two-log critical-line
+and one-log right-line Gaussian budgets together, for \(2\le X\le T\) and
+\(1\le H\le T\). Its constants are uniform in the window and interpolation
+position. [Full strip theorem](Analysis/ActualInghamGabrielMovingWindow.lean)
+· [Both endpoint estimates](Analysis/ActualInghamGabrielSharp.lean)
+
+If \(2\le X\le T\le DX\) and \(2\le H\le T\), set
+\(\theta=(\sigma-1/2)/(\beta-1/2)\) and
+\(q_\theta=3(1-\theta)/(3-\theta)\). For every \(1/2\le\sigma\le1\),
+the undamped actual moment then satisfies
+\[
+ \int_H^T |F_X(\sigma+it)|^{4/(3-\theta)}\,dt
+ \le C_{\delta,D}\,T^{q_\theta}(\log T)^{1+q_\theta}.
+\]
+[Comparable-cutoff Gabriel moment](Analysis/ActualInghamGabrielComparable.lean)
+
+## Inclusive zero counting
+
+The actual Gabriel–Littlewood argument gives, uniformly for all \(T\ge2\)
+and \(1/2\le\sigma\le1\),
+\[
+  N(\sigma,T)\le C\min\{T\log T,\;T^{q(\sigma)}(\log T)^{2+q(\sigma)}\}.
+\]
+The count includes analytic multiplicities at both inclusive upper thresholds.
+Here \(2+q(\sigma)=(7-5\sigma)/(2-\sigma)\), the logarithmic exponent
+in Chourasiya and Simonič's Theorem 1. The Lean theorem supplies one
+existential constant. At \(\sigma=3/4\) the second term is
+\(T^{3/5}(\log T)^{13/5}\).
+
+Littlewood's lemma is applied to \(1-F_X^2\) on a single outward-shifted,
+zero-free rectangle, with fixed lower height. A Jensen argument bounds
+the signed top-minus-bottom horizontal argument integral by
+\(O(1+\log(T+2)+\log(X+1))\). The left edge uses the undamped Gabriel
+moment. Choosing \(X=\lfloor T\rfloor\) gives a uniform cost for moving
+the counting line by at most \(2/\log T\).
+[All-height counting theorem](Analysis/ActualInghamLittlewoodDensity.lean)
+· [Horizontal argument](Analysis/ActualInghamHorizontalBoundary.lean)
+· [Outward rectangle and moment count](Analysis/ActualInghamLittlewoodAssembly.lean)
+· [Focused Bazel check](https://app.buildbuddy.io/invocation/035fedd8-2df2-4930-af8a-ec8c8bc885dc)
+
+For every \(T\ge2\) and \(1/2\le\sigma\le1\), the sharp right edge in the
+two-edge argument gives a single absolute constant for
+\[
+   N(\sigma,T)\le C\min\{T\log T,\;T^{q(\sigma)}(\log T)^{3+q(\sigma)}\}.
+\]
+At \(\sigma=3/4\) the second term is \(T^{3/5}(\log T)^{18/5}\).
+[Sharp Cauchy counting theorem](Analysis/ActualInghamSharpDensity.lean)
+· [Focused Bazel check](https://app.buildbuddy.io/invocation/10258554-1b74-4bdb-8389-d5213db28ded)
+
+## The independent Selberg estimate
+
+For \(0\le a<4/3\), any fixed \(A\), and \(u=(\sigma-1/2)\log T\), the
+uniform one-log Selberg estimate is equivalent to its restriction to
+\[
+  A<u<\frac{2\log\log T}{4/3-a}.
+\]
+The dyadic and all-height statements are both available with uniform
+constants. [Transition window](Analysis/ActualSelbergTransitionWindow.lean)
+
+At the arithmetic level the actual Gaussian moment is the signed residue
+sum plus the signed vertical integral minus the pole correction, including
+both rays. The normalized pole correction is \(O_A(T^{-A})\) for every
+fixed \(A\ge0\), uniformly over the padded Gaussian centers. For the full
+\(0<a<8/7\) range, the remaining sufficient input is
+`UniformGaussianMellinPartsBound` for an admissible \(a\le2\theta<8/7\):
+uniformly in the height, center and near-line strip, the real part of
+the combined arithmetic terms must be \(\le1+C y^{1-2\sigma}\), with
+\(y=T^\theta\). The growing-modulus averaged Kloosterman estimate in
+Baluyot's Chapter 3 is an external analytic input. The Lean reduction
+retains the cancellation between the two arithmetic contributions.
+[Pole estimate](Analysis/ConreyBaluyotGaussianPoleReduction.lean)
+· [Exact signed splitting and conditional density theorem](Analysis/ConreyBaluyotRayMellinSeparation.lean)
+· [Baluyot, Chapter 3, Lemma 3.1.6 and equation (3.4.61)](https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320)
 
 ## Verification
 
