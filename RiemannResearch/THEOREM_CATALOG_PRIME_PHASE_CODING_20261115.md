@@ -155,6 +155,27 @@ it should not be interpreted as independence at growing resolution.
   the numerical minimum circular sup distance is approximately
   0.11457881987534. This is not a certified minimum for a zero table.
 
+## Unconditional growing-primorial FMZ
+
+In [ActualPrimeTorusFMZPrimorial](Analysis/ActualPrimeTorusFMZPrimorial.lean),
+set X(T) = (log T)^(1/3) and take all primes at most X(T). The coefficient-one
+character with every exponent equal to one has squared weight
+(1 + sum_{p <= X(T)} log p)^2. The elementary bound (1 + X(T) log X(T))^2
+gives the rate (log log T)^4 / (log T)^(1/3).
+
+- `eventually_primorial_boundedMode_FMZ` gives that rate uniformly for all
+  modes with exponents in {-1, 0, 1}, keeping Haar centering and the signed
+  prime-density correction.
+- `primorialCharacter_sample_div_isBigO` and
+  `tendsto_primorialCharacter_sample_div` give the rate and zero limit for
+  the actual multiplicity-weighted ordinate sum divided by T. Both Haar
+  coefficients vanish once the cutoff contains 2 and 3.
+
+The uniform bound covers the phase products indexed by pairs of squarefree
+divisors. The existing CRT code still needs a relative discrepancy estimate
+for the joint half-open cells at their shrinking Haar mass. The carry criteria
+use the signed residual pairing in the complete Q inner product.
+
 ## Remaining research agenda
 
 1. Complete an unconditional provider of the actual Selberg density
