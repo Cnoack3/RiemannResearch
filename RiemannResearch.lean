@@ -358,6 +358,8 @@ import RiemannResearch.Analysis.MontgomeryResolventDifference
 import RiemannResearch.Analysis.MontgomeryDifferenceGram
 import RiemannResearch.Analysis.MontgomeryHorizontalBessel
 import RiemannResearch.Analysis.MontgomeryHorizontalLimit
+import RiemannResearch.Analysis.MontgomeryLoglogTransfer
+import RiemannResearch.Analysis.MontgomeryTransitionFrequency
 import RiemannResearch.Analysis.ActualZeroSechSmoothing
 import RiemannResearch.Analysis.MontgomeryGaussianSmoothing
 import RiemannResearch.Analysis.ShiftedSechTransform
@@ -1707,6 +1709,7 @@ import RiemannResearch.Analysis.ActualPrimeTorusFMZSeries
 import RiemannResearch.Analysis.ActualPrimeTorusFMZPoisson
 import RiemannResearch.Analysis.ActualPrimeTorusFMZ
 import RiemannResearch.Analysis.ActualZeroLoglogRate
+import RiemannResearch.RH.HorizontalEnergyCriterion
 import RiemannResearch.Analysis.ActualFixedFrequencyLandau
 import RiemannResearch.Analysis.ActualOrdinateAngularLaw
 import RiemannResearch.RH.RamanujanOrdinateFMZ

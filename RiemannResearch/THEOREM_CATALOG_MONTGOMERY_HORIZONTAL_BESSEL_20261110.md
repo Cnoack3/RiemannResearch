@@ -28,6 +28,25 @@ results below retain explicit, unresolved asymptotic hypotheses.
 | Same | Same | `raw_limit_of_budget` | **Conditional:** budget decay and a nonnegative finite complex form-factor limit. |
 | Same | Same | `raw_limit_of_exponentialMoment` | **Conditional:** eventually bounded frequencies, weighted moment decay, and a complex form-factor limit. |
 
+## Horizontal energy and shrinking Montgomery frequencies
+
+Write $E(T)$ for the total horizontal energy, $r(T)=(\log\log T)^2/\log T$,
+and $u=\alpha\log T$. Every zero in the cutoff carries its analytic multiplicity.
+
+| Lean declaration | Result |
+|---|---|
+| `horizontalEnergy_eq_reflected_pair_add` | A reflected off-line pair contributes exactly $2m(\rho)(\Re\rho-1/2)^2$, with the full sum over the remaining zeros. |
+| `riemannHypothesis_iff_cofinal_horizontalEnergy_small` | RH is equivalent to arbitrarily small unnormalized $E(T)$ at arbitrarily large heights. |
+| `horizontalEnergy_add_const_div_height_isBigO` | $(E(T)+c)/T=O(r(T))$ for every fixed real $c$. |
+| `horizontalBudget_eq_coshMass` | $B_T(u)=E(T)+M_T(2u)-2M_T(u)$, where $M_T$ sums $\cosh(u(\beta-1/2))-1$. |
+| `horizontalBudget_le_horizontalEnergy` | $B_T(u)\le(4\cosh u-3)E(T)$ at every height. |
+| `horizontalBudget_le_of_strictTail` | If the two-sided tail is bounded by $M e^{-qt}$, then $B_T(u)\le 8M(1+u^2)/q^2$ for $|u|\le q/4$ and $q>0$. |
+| `eventually_horizontalBudget_loglog_band` | Uniformly for $|u|\le \log T/(32\log\log T)$, one has $B_T(u)/T\ll(1+u^2)r(T)$. |
+| `horizontalBudget_div_height_tendsto_zero_of_loglog`, `sqrt_formFactor_difference_tendsto_zero_of_loglog` | If $u(T)^2r(T)\to0$, then $B_T(u(T))/T\to0$ and the square-root form factors agree up to $o(1)$. Both implications are unconditional for these frequencies. |
+| `raw_transition_limit_of_corrected_complex_estimate` | At $\alpha=(\log\log T+c)/(2\log T)$ the raw form factor tends to $e^{-c}$. The Lean declaration assumes `CorrectedComplexFormFactorEstimate`, the normalized version of equation (3.5) for $(0,T]$. Its proof in Lean is open. |
+
+[RH energy criterion](RH/HorizontalEnergyCriterion.lean) · [Unconditional transfer](Analysis/MontgomeryLoglogTransfer.lean) · [Transition and analytic hypothesis](Analysis/MontgomeryTransitionFrequency.lean) · [Corrected external estimate](https://arxiv.org/abs/2501.14545)
+
 ## Open providers
 
 | Obligation | Status |
