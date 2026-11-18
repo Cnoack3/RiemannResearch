@@ -82,6 +82,29 @@ Consequently \(A_N(\infty)/N^2\to0\) if and only if
 \(\mathbf1\in V\). The diagonal value \(A_N(N)\) adds the entire
 squared finite-to-full projection difference on the centered input.
 
+## The constant as a logarithmic test vector
+
+[ParetoLogResidueTest](RH/ParetoLogResidueTest.lean) verifies
+\(F_{\mathbf1}(d)=\log d\) for positive \(d\).
+The vectors sharing these moments are exactly \(\mathbf1+V^\perp\).
+Their unique representative in \(V\) is \(P_V\mathbf1\).
+Uniqueness in the whole Hilbert space is equivalent to \(\mathbf1\in V\).
+
+Let \(r=\mathbf1-P_V\mathbf1\), \(\delta=\|r\|_P^2\), and
+\(T_k f(n)=f(\lfloor n/k\rfloor)\) with the zero anchor.
+For every \(m\ge1\), Lean checks
+\[
+ \langle r,\mathbf1_{\{1\le n\le m\}}\rangle_P
+ =\delta-\langle r,T_{m+1}r\rangle_P,
+ \qquad
+ |\langle r,T_{m+1}r\rangle_P|\le\frac{\delta}{\sqrt{m+1}}.
+\]
+The conditional reduction `riemannHypothesis_of_nonpositive_compactHead_residual`
+uses nonpositive signed residual mass on a single nonempty initial interval.
+
+**Open.** Establish that nonpositive signed mass for some \(m\ge1\).
+The logarithmic moments determine the projected constant and leave this endpoint open.
+
 ## Prime-power telescopes at a mixed cutoff
 
 [ScreenedPrimePowerTelescope](RH/ScreenedPrimePowerTelescope.lean) connects the
