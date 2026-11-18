@@ -92,6 +92,10 @@ analytic diagonal.
 | [`sq_mul_fejerNonzeroGapRemainder_eq`](Analysis/MontgomeryFejerResolution.lean), `normalized_fejer_sub_analytic_in_collision_unit_interval`, `eventually_resolving_fejer_gap_lt_two_iff_RH` | The exact oscillatory Fejér remainder is controlled by its Cauchy-weighted inverse-square gap budget $K_T$. Any radius $R\ge\sqrt{1+K_T}$ resolves the unnormalized distinct-zero equal-height count to within one pair. The explicit radius gives a single test per height equivalent to RH. |
 | [`distinct_height_excess_bound`](Analysis/OrdinateCrowding.lean), `crowded_occurrence_excess_bound`, `crowded_height_excess_bound` | Finite inequalities for the number of distinct heights and the two forms of the high-occupancy count. |
 | [`collision_div_main_eq_signed_gap_deficits`](Analysis/MontgomeryIntegratedGapDensity.lean), `density_one_of_integratedGapDeficits` | Exact normalized collision count equals the sine-hole triangle plus the signed moment and integrated gap deficits. An eventual upper bound on their sum at a common fixed width for each tolerance suffices for density one. |
+| [`integral_sub_gapMeshSum_bounds`](Analysis/MontgomeryGapMesh.lean), `collision_div_main_eq_signed_mesh_deficits` | The exact signed identity replaces the gap integral with a uniform left-endpoint sum and retains the entire quadrature correction. For monotone $P_T$ the error lies between zero and $(R/n)(P_T(R)-P_T(0))$. |
+| [`cofinal_sampled_gap_critical_line_iff_RH`](Analysis/MontgomeryGapMesh.lean) | At any fixed positive unfolded width, sufficiently fine finite sampling gives an absolute two-pair RH certificate after subtracting the analytic diagonal. The sine-model terms cancel in the summed statistic. |
+| [`density_one_of_rational_positiveGap_lower`](Analysis/MontgomeryGapMesh.lean) | One-sided pointwise lower sine-model bounds at positive rational gaps suffice for density one when paired with `ShortWindowSecondMomentUpper`. The proof needs only finitely many samples for each tolerance and chosen width. |
+| [`occurrenceCollision_add_two_at_fresh_height`](Analysis/MontgomeryFinitePairPerturbation.lean), `eventually_formFactorWithTwoAtHeight_sub_bound` | Adding two occurrences at a fresh common height increases the ordered collision count by four. The normalized raw Fourier perturbation is $O(T^{-1})$ uniformly in both frequency and insertion height. |
 
 ## Open providers
 
@@ -102,6 +106,8 @@ analytic diagonal.
 | `ShortWindowSecondMomentUpper` for the actual cutoff | Open in Lean. The independent analytic input follows from the published GLSS short-interval moment and boundary estimates. |
 | `RawFormFactorTestLimit` or cofinal one-sided Fejér upper tests | Open for the actual raw ordinates. |
 | `PositiveGapPCC` | Open for strict positive gaps in the actual zero multiset. |
+| One-sided positive rational gap lower bounds or common-width sampled deficit budget | Open for the actual zeros. Either form can be used with the indicated moment or signed companion bound. |
+| Absolute Fejér or sampled-gap upper bound below two beyond the analytic diagonal at cofinal cutoffs | Open and equivalent to RH. The normalized density-one bounds leave this absolute scale unresolved. |
 | Actual budget or weighted-moment decay on a fixed support window | Open |
 | Complex or raw form-factor asymptotic above support one | Open |
 | Complete normalized gamma remainder and growing homogeneous sampling transfer | Open |
