@@ -39,6 +39,22 @@ def innovation (n : ℕ) (d : DivisorIndex n) : QHilbert :=
 def score (n : ℕ) (d : DivisorIndex n) : ℝ :=
   inner ℝ (innovation n d) (screen (primeBase n (n + 4)) qOne)
 
+/-- Pair the middle residual directly with the unscreened incoming atom. -/
+def rawPairing (n : ℕ) (d : DivisorIndex n) : ℝ :=
+  inner ℝ (screen (primeBase n (n + 4)) qOne) (qResidue ((n + 4) * d.val))
+
+theorem score_eq_neg_rawPairing (n : ℕ) (d : DivisorIndex n) :
+    score n d = -rawPairing n d := by
+  let V := primeBase n (n + 4)
+  let x := qResidue ((n + 4) * d.val)
+  have ho := Submodule.starProjection_inner_eq_zero qOne (V.starProjection x)
+    (V.starProjection_apply_mem x)
+  change inner ℝ (screen V qOne) (V.starProjection x) = 0 at ho
+  change inner ℝ (-screen V x) (screen V qOne) = -inner ℝ (screen V qOne) x
+  calc
+    _ = -inner ℝ (screen V qOne) (screen V x) := by rw [inner_neg_left, real_inner_comm]
+    _ = _ := by rw [screen_apply V x, inner_sub_right, ho, sub_zero]
+
 def blockTrace (n : ℕ) (s : Finset (DivisorIndex n)) : ℝ :=
   ∑ d ∈ s, ‖innovation n d‖ ^ 2
 
@@ -322,7 +338,8 @@ theorem blockTrace_upper (n : ℕ) (s : Finset (DivisorIndex n)) :
       (mul_nonneg ZetaTwoProbability.zetaTwo_pos.le (sq_nonneg _))
   linarith
 
-private theorem cZero_pos : 0 < Real.log (2 * Real.pi) - Real.eulerMascheroniConstant := by
+/-- Positivity of the constant in the upper estimate for the residue atom norms. -/
+theorem cZero_pos : 0 < Real.log (2 * Real.pi) - Real.eulerMascheroniConstant := by
   rw [← StepCorrectionNorm.residueEnergy_eq_log_two_pi_sub_gamma, StepCorrectionNorm.residueEnergy]
   have ht : 0 ≤ ∑' m, StepCorrectionNorm.rawResidueCellEnergy m :=
     tsum_nonneg StepCorrectionNorm.rawResidueCellEnergy_nonneg

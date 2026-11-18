@@ -55,6 +55,37 @@ A further criterion permits a complementary set of primes of arbitrary size. It 
 
 The implication uses the published squarefree form of the Nyman–Beurling criterion and the project's cofinality and projection theorems. A source lower estimate for the actual residual over a cofinal family remains open. The bound on $T_A$ alone supplies no lower bound on $S_A$. [QCRTCarrySourceBudget](RH/QCRTCarrySourceBudget.lean), `riemannHypothesis_of_eventual_source_floor`, `riemannHypothesis_of_prime_scores_with_defect`, `summable_selectedBudget_of_not_RH`. [Bagchi, Remark 8](https://arxiv.org/pdf/math/0607733), [published article](https://doi.org/10.1007/BF02829783), [Báez-Duarte's strong criterion](https://arxiv.org/abs/math/0202141)
 
+## Prime numbers selected by their carry scores
+
+For an actual prime $p\ge3$, let $b_p$ be the largest physical one-divisor score. For $p=3$ use the period-six Gram with old divisor $2$. Put $G_c=\{p\ge3:p\ {\rm prime},\ p b_p\ge c\}$. For $c>0$, the cutoff definition of $G_c$ is equivalent at every $p\ge5$ to the existence of one nontrivial old divisor attaining the threshold. The formal first-block enclosure is $2.950256\le b_3\le2.950261$. [Prime sets and first-block proof](RH/QCRTCarryGoodPrimes.lean)
+
+A second set $A_c$ scans primes in increasing order. At $p$ compute $H_{A_c}(p)=\sum_{q\in A_c,\,q<p}1/q$ from earlier decisions and include $p\ge3$ precisely when
+$$
+ b_p\ \ge\ \frac{c}{p(1+H_{A_c}(p))}.
+$$
+For $c\ge0$ this recursion produces the greatest set passing its own test and it contains $G_c$. For every set $A$ passing its own test and every $N$,
+$$
+ c\log(1+H_A(N))\le\sum_{p<N}b_p .
+$$
+Consequently, for $c>0$, divergent reciprocal mass on $A_c$ implies RH. The proof sums the exact increments of $\log(1+H_A)$ and applies Bagchi's squarefree closure criterion. **Open.** Establish divergent reciprocal mass for some $c>0$, or supply an arithmetic lower estimate for the true screened scores that proves it. [Adaptive prime set, maximality and finite bound](RH/QCRTCarryGoodPrimes.lean) · [Bagchi, Remark 8](https://doi.org/10.1007/BF02829783)
+
+More generally, start with $w_p=\mathbf1_A(p)/p$ on any prime set with divergent reciprocal mass and write $S_w(N)=\sum_{p<N}w_p$. Replace $w_p$ by $\log(1+S_w(p+1))-\log(1+S_w(p))$ any fixed finite number of times. Each resulting weight still has divergent sum. A positive multiple bounded by the scores up to a summable loss implies RH. For all primes, Mertens's theorem gives $S_w(p)=\log\log p+O(1)$, so the eventual floor in `riemannHypothesis_of_eventual_prime_log_floor` has order $1/(p\log\log p)$. [Logarithmic comparison in Lean](Analysis/LogarithmicWeights.lean) · [Knopp, §39, Theorem 173](https://books.google.com/books?id=drJNXrAa7poC) · [Mertens's sum theorem](https://mathworld.wolfram.com/MertensConstant.html)
+
+For the raw arithmetic input, let $r_p=(I-P_{V_p})1$, $e_p=\lVert r_p\rVert_Q^2$, and let $A$ be any set of primes $p\ge5$ with divergent reciprocal sum. It suffices that, at every $p\in A$, some old divisor $d>1$ satisfy
+$$
+ |\langle r_p,g_{pd}\rangle_Q|^2\ \ge\
+ \frac{C e_p^2}{p^2 d(1+H_A(p))},\qquad C>0 .
+$$
+The sign identity is $\eta_{p,d}=-\langle r_p,g_{pd}\rangle_Q$. The residue norm bound then gives admission with $c=C\zeta(2)/(\log(2\pi)-\gamma)$. The arithmetic lower bound on the displayed pairing remains open. [Signed pairing](RH/QCRTCarrySourceBudget.lean) · [Raw single-divisor criterion](RH/QCRTCarryGoodPrimes.lean)
+
+The fixed-threshold family also recovers the entire score. For every finite cutoff,
+$$
+ \int_0^\infty \sum_{\substack{p<N\\p\in G_t}} \frac1p\,dt=\sum_{p<N}b_p .
+$$
+Thus the divergence test using all threshold levels retains the exact singleton budget. [Lean identity and RH implication](RH/QCRTCarryPrimeLevels.lean)
+
+At $c=1$, complete-period interval computations select $3,5,11,13$ in $G_1$ through $13$, and $3,5,7,11,13$ in $A_1$. The first difference is $p=7$, where $d=6$ maximizes the score and $15/161<b_7<1/7$. [Finite enclosures, method and reproduction](ResearchData/CarryGoodPrimes/score_enclosures.md)
+
 ## Zeta, leverage and the determinant agenda
 
 1. For a family on $\mathbb Z/D\mathbb Z$, each entry of the unnormalized Gram is a finite Hurwitz combination and a Dirichlet series for $\Re s>1$. The normalized Gram has a punctured complex limit at $s=1$ equal to the uniform counting Gram. Whenever the base uniform Gram is nonsingular, the Schur determinant converges to its uniform-period determinant ratio. [PeriodicDirichletGram](Analysis/PeriodicDirichletGram.lean), `gram_hurwitz`, `gram_dirichlet`, `gram_entry_meromorphic`, `dirichlet_ratio_meromorphic`, `normalized_tendsto_periodGram`, `schur_det_tendsto_uniform_period`. [DLMF §25.11](https://dlmf.nist.gov/25.11)

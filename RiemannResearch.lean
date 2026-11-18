@@ -1428,8 +1428,11 @@ import RiemannResearch.Analysis.FiniteSignedVariance
 import RiemannResearch.NumberTheory.DivisorIncidence
 import RiemannResearch.RH.QRationalGcdTail
 import RiemannResearch.Analysis.ScreenedBlockGain
+import RiemannResearch.Analysis.LogarithmicWeights
 import RiemannResearch.RH.QCRTCarryGain
 import RiemannResearch.RH.QCRTCarrySourceBudget
+import RiemannResearch.RH.QCRTCarryGoodPrimes
+import RiemannResearch.RH.QCRTCarryPrimeLevels
 import RiemannResearch.RH.QResidueMeshNorm
 import RiemannResearch.RH.QPrimorialCarryTrace
 import RiemannResearch.Analysis.VanishingTraceDeterminant
