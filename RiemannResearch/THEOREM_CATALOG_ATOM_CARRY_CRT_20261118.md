@@ -1,6 +1,6 @@
-# Finite atom/carry CRT and Ramanujan coordinates
+# Atom/carry CRT, Ramanujan coordinates and physical reconstruction
 
-Source agenda: user-provided categorical CRT note, section 14, priorities 1–4 and the finite part of priority 6.
+Source agenda: user-provided categorical CRT note, section 14 and the Stage 3 handoff.
 
 ## Exact finite results
 
@@ -48,9 +48,35 @@ At a divisor q of a common period, the floor-carry coefficient is the sum of a�
 
 `weighted_gcd_cells_orthogonal` follows from pointwise disjointness. The modulo-six calculation `modulo_six_primitive_and_integrated_gram` gives uniform pairings 0 for c₂,c₃ and 1/2 for J₂,J₃. At L = 4 the full dual diagonal at g = 2 is 4.
 
-## Stage three
+## Physical Hilbert spaces, conductor refinement and reconstruction
 
-Outstanding work covers the physical P and Q Hilbert spaces, their projected mixed-carry spans and Gram transport, conductor refinement, the full profinite and squarefree limits, and the uniform minimum-energy estimate for the specified infinite reconstruction data.
+| Module | Checked mathematical conclusion |
+|---|---|
+| [PhysicalPrimePowerCarryProjection](RH/PhysicalPrimePowerCarryProjection.lean) | Each certified signed floor has its literal physical sequence under P and Q. In both Hilbert spaces, the closed span of projected canonical mixed carries is the orthogonal complement of the closed prime-power span inside the full atom closure. All exponents j ≥ 1 occur. |
+| [PhysicalCarryGram](RH/PhysicalCarryGram.lean) | The Stage 1 coefficient matrix T transports each physical Gram matrix to TᵀGT and its observations to Tᵀb. Inverse energy uses the explicit invertibility hypothesis. For singular systems, feasibility, the extended minimum energy and the feasible minimum-norm vector are invariant. The Pareto identities retain the weighting defect, the Green boundary product and the full tail. The Q identities give the inverse-square weighted series and a finite trigamma formula for the packet Gram on a common period. |
+| [FiniteAtomCarryRefinement](RH/FiniteAtomCarryRefinement.lean) | For L dividing M, zero extension of the old coefficient arrays commutes with the coefficient involution. Synthesis of both dictionaries commutes with reduction from Z/M to Z/L. In the packet expansion of an old word, every old nontrivial coefficient persists and every new one vanishes. |
+| [ConductorTowerCompletions](RH/ConductorTowerCompletions.lean) | On a nested divisibility-cofinal LCM tower the compatible residues form the product of the p-adic integer rings. The primorial tower gives the product of the prime fields. Both identifications are bicontinuous. The quotient reduces each component modulo p. The tuple supported at 2 with value 2 has zero primorial image and residue 2 modulo 4. |
+| [ConductorReconstructionEnergy](RH/ConductorReconstructionEnergy.lean) | For arbitrary real data on distinct physical atoms, every finite Gram system is feasible. The supremum of the Moore–Penrose energies over nontrivial divisors of successive LCMs is the global minimum energy. If it is finite, the canonical finite solutions converge in norm to the closed-span solution. |
+| [ArithmeticResidueMomentEnergy](RH/ArithmeticResidueMomentEnergy.lean) | For data b(d) = ∑ a(n)g_d(n) with ∑ n²a(n)² finite, explicit physical representers give the all-conductor inequalities below. Conversely, the observations of every physical representer have such a signed-moment representation. |
+
+### Uniform energy estimates and an obstruction
+
+For the signed-moment targets above, the constants in the squared finite-coefficient bound are
+
+- Under P the constant is ∑ n(n+1)a(n)².
+- Under Q the constant is ζ(2) ∑ n²a(n)².
+
+These are the squared norms of the displayed physical representers. The least possible constant is the norm squared of the projection onto the atom span closure. For evaluation at a single positive site k, the respective constants are k(k+1) and ζ(2)k². The estimates hold simultaneously over every finite conductor restriction.
+
+For independent prescribed data the two physical norms give equivalent solvability. A P dual-bound constant C gives a Q constant ζ(2)C, and a Q constant C gives a P constant 2C/ζ(2). Any representable atom data satisfy √d b(d) → 0. Thus b(d) = 1/√d has a solution on each finite stage and unbounded least energies on the LCM tower under both measures.
+
+### Conditional research reduction to RH
+
+[QFullDisplacementFiniteHeads](RH/QFullDisplacementFiniteHeads.lean) uses D_j, the difference between the actual Q and P fitted vectors at LCM stage j, and the full displacement D. For any fixed positive integer L and C > 0, `lcm_extension_iff_frequent_head_bound` identifies continuous profinite extendibility of D with the following finite-stage condition. For every H, arbitrarily late j satisfy |D_j(n)−D_j(m)| ≤ C for all positive n,m ≤ H in the same class modulo L. The good stages may depend on H. This holds for any monotone cutoff tending to infinity.
+
+**Open.** Prove this bound for the actual matched projections, for example with L = C = 1. The extension theorem identifies it with D = 0, and `rh_of_lcm_frequent_head_bound` gives the ensuing RH implication. Finite CRT identities and existence of a representer for separately specified signed-moment data leave this premise open.
+
+The coordinate changes in the projection and Gram theorems use finite synthesis. For infinite separated prime and carry series, `RH/QSimultaneousCRT.lean` states the required separate `HasSum` hypotheses. The signed-moment series above has its own summability proof.
 
 ## Provenance
 
@@ -60,4 +86,4 @@ P. Haukkanen, *Discrete Ramanujan-Fourier Transform of Even Functions (mod r)*, 
 
 The category and carry assembly follow the user-provided argument. Wolfram finite checks support the normalization audit but are not used as formal premises.
 
-Publication is gated by the managed full-project Bazel/BuildBuddy checkpoint. The separate continuation handoff records its terminal result and exact commit.
+Publication uses the managed full-project Bazel/BuildBuddy checkpoint.
