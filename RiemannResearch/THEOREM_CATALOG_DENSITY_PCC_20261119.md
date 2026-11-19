@@ -2,6 +2,10 @@
 
 November 19, 2026. The starting revision is `d85004e85625dcf1811e6a66720dae4a50bc645e`. Write \(L=\log T\), \(X=L|\beta-\tfrac12|\), and count each occurrence with \(0<\gamma\le T\), with analytic multiplicity. The form-factor calculations use their stated \(TL/(2\pi)\) normalization. Physical displacement in the RH criterion is indexed by positive integers.
 
+## Finite-law sharpness
+
+With mass $e^{-Az}/z$ at $z\ge 1$ and all other mass at zero, the tilted first moments are at most one for every $a\le A$, and $q/[m\log(1/m)]=1/A$. At $A=8/7$ this attains the actual-zero upper coefficient for the abstract class of tilt inputs. [`two_atom_reciprocal_sharp`](Analysis/FiniteSizeBiasedSharpness.lean)
+
 ## The Selberg parameter
 
 | Result | Bound and scope |
