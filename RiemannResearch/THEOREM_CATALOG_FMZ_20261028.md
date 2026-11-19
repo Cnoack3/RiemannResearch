@@ -1,5 +1,14 @@
 # Quantitative FMZ and product-test cancellation: theorem catalog supplement
 
+## Dyadic joint zero-coordinate Wasserstein rate (19 November 2026)
+
+The sampling window is `(U,2U]` with analytic multiplicity. The sum metric combines the real part, relative height and the prime angles. The target is the product of the critical-line point mass, uniform relative height and product Haar. The rate is a **conditional research reduction** in `Analysis/DyadicZeroWasserstein.lean`.
+
+- `sharp_wasserstein_product` and `sharp_wasserstein_nu` give the same two-sided order, including the empty prime set. `sharp_transport_product` specializes the same result to the infimum over couplings using compact-support Kantorovich–Rubinstein duality.
+- `height_bias` gives the signed height numerator with main term `U * (3/4 - log 2) / (2*pi)` and logarithmic error. `height_mean_limit` gives the normalized coefficient `3/4 - log 2`.
+- `horizontal_sum` uses the existing first-displacement-moment theorem. `prime_polynomial_bound` bounds the whole short prime polynomial uniformly using integer-log separation for outside primes.
+- **Open Lean providers.** Classical cumulative Riemann–von Mangoldt, Selberg's uniform one-quarter density and short-prime approximation, and the positive finite-torus Jackson approximation at arbitrary degree. The coupling formulation additionally takes classical compact-support Kantorovich–Rubinstein duality. `tensorJackson_of_degree` verifies the logarithmic bandwidth choice. `shortPrimePrimitive_of_sixteenth` converts the published sixteenth moment and cumulative count estimate into the dyadic primitive bound. The sources and exact hypotheses are recorded beside the declarations.
+
 For exact Haar Plancherel, the A2 algebra, actual-zero Gram identities, and uniform
 energy sampling, see [the Plancherel supplement](THEOREM_CATALOG_PLANCHEREL_20261028.md).
 
