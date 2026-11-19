@@ -4,6 +4,12 @@ import RiemannResearch.CategoryTheory.AtomCarryPresentation
 import RiemannResearch.RH.ResidueAtomIndependence
 import RiemannResearch.RH.FiniteAtomCarryCRT
 import RiemannResearch.RH.CRTCarryRamanujanCoordinates
+import RiemannResearch.RH.UniversalAtomCarryPresentation
+import RiemannResearch.RH.AllCertifiedCarrySpan
+import RiemannResearch.RH.CertifiedCarryComposition
+import RiemannResearch.RH.FiniteCarryRamanujanDictionary
+import RiemannResearch.RH.UniversalCarryRamanujanSynthesis
+import RiemannResearch.RH.FullConductorRamanujanTransform
 import RiemannResearch.RH.ParetoInitialIntervalCertificates
 import RiemannResearch.RH.ParetoInitialIntervalCriterion
 import RiemannResearch.Analysis.FiniteWeightedReturnBounds

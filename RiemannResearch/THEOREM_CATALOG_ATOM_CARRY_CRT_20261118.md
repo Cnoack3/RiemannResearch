@@ -1,6 +1,6 @@
 # Finite atom/carry CRT and Ramanujan coordinates
 
-Source agenda: user-provided categorical CRT note, section 14, priorities 1--2 and the finite foundations of priority 6. This is the first of three implementation stages.
+Source agenda: user-provided categorical CRT note, section 14, priorities 1–4 and the finite part of priority 6.
 
 ## Exact finite results
 
@@ -33,15 +33,30 @@ For `q|d`, its packet coefficient is
 
 When each input has at most one distinct prime factor and `q` has at least two, `A(q)=-1/d`. This concerns an exact finite change of coordinates, not orthogonality.
 
-## Remaining stages
+## Universal floor carries and finite conductor transforms
 
-Stage two: universal free atom/carry presentation and its defining relations, all-representatives spanning, recursive composition, gcd/divisibility/Ramanujan coordinate assembly, and full-conductor finite Plancherel.
+| Module | Principal declarations | Scope |
+|---|---|---|
+| `RH/UniversalAtomCarryPresentation.lean` | `synthesis_eq_realized`, `relations_eq_ker`, `quotientEquivAtomSpan`, `quotientEquivAtomSpan_mk` | Finite real words on atom labels and full signed certificates. Each carry is the actual floor. The span of the displayed carry relations is the entire kernel. |
+| `RH/AllCertifiedCarrySpan.lean` | `adjacentMinus_floor_identity`, `adjacentPlus_floor_identity`, `adjacent_carry_difference`, `allCarrySpan_eq_atomSpan` | For every d > 1 the charges 0 and 1 on the same input pair give carries differing by d times the atom. All representatives together span the algebraic atom space. |
+| `RH/CertifiedCarryComposition.lean` | `Certificate.flatten`, `Certificate.flatten_carry`, `recursivePrimeCarry_reciprocal_charge`, `recursivePrimeCarry_flattened` | Signed coefficients multiply down each branch. The outer charge and floor each acquire the coefficient-weighted inner contributions. For an arbitrary finite chain, the total charge and total floor are explicit sums with the same downstream multipliers. The terminal residue and fractional part are retained. |
+| `RH/FiniteCarryRamanujanDictionary.lean` | `certificate_packet_expansion`, `packet_coefficients_unique_on_period`, `certificate_cumulative_gcd_expansion`, `certificate_pairing_conductor_scores` | On a common multiple of all inputs and the output, integrated packets, cumulative gcd cells and finite conductor scores compute the same floor carry or its pairing. |
+| `RH/UniversalCarryRamanujanSynthesis.lean` | `word_packet_expansion`, `mem_relations_iff_nontrivial_packets_vanish` | Every finite universal word has an actual positive common period. The nontrivial packet coordinates detect membership in the explicitly generated relations. |
+| `RH/FullConductorRamanujanTransform.lean` | `primitive_period_orthogonality`, `primitive_gcd_orthogonality`, `conductor_kernel`, `polarized_plancherel`, `transform_inverse` | Arbitrary positive L, including L = 1 and nonsquarefree L. The primal counting measure weights a gcd cell g by φ(L/g), and the dual kernel has diagonal L/φ(L/g). |
 
-Stage three: P/Q Hilbert transport, weighted Gram and orthogonal decompositions, compatible conductor refinement, full versus squarefree profinite limits, and the additional uniform minimum-energy condition for infinite reconstruction. These analytic conclusions do not follow solely from a finite involution.
+At a divisor q of a common period, the floor-carry coefficient is the sum of aᵢ/pᵢ over the inputs divisible by q, minus 1/d when q divides the output. At q = 1 this choice equals the integer charge, while J₁ is zero. One full period of the synthesized sequence determines every nontrivial packet coefficient.
+
+`weighted_gcd_cells_orthogonal` follows from pointwise disjointness. The modulo-six calculation `modulo_six_primitive_and_integrated_gram` gives uniform pairings 0 for c₂,c₃ and 1/2 for J₂,J₃. At L = 4 the full dual diagonal at g = 2 is 4.
+
+## Stage three
+
+Outstanding work covers the physical P and Q Hilbert spaces, their projected mixed-carry spans and Gram transport, conductor refinement, the full profinite and squarefree limits, and the uniform minimum-energy estimate for the specified infinite reconstruction data.
 
 ## Provenance
 
 S. Ramanujan, *On certain trigonometrical sums and their applications in the theory of numbers*, Transactions of the Cambridge Philosophical Society 22, No. 13 (1918), 259--276, section 2, (2.6)--(2.7), and section 16: https://ramanujan.sirinudi.org/Volumes/published/ram21.html . This supports the divisor/Moebius and cumulative-sum identities.
+
+P. Haukkanen, *Discrete Ramanujan-Fourier Transform of Even Functions (mod r)*, Theorems 3.1–3.2. [Paper](https://arxiv.org/abs/1210.0295). L. Tóth and P. Haukkanen, *The discrete Fourier transform of r-even functions*, Application 8, equation (37). [Paper](https://emis.de/ft/40430). These give the finite Fourier and gcd-cell Parseval normalizations.
 
 The category and carry assembly follow the user-provided argument. Wolfram finite checks support the normalization audit but are not used as formal premises.
 
