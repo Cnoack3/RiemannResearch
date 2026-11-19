@@ -105,6 +105,14 @@ The previous \(1+1/9\) exponent lies inside this interval. In particular, `riema
 
 The ordinary-ordinate PCC still requires the second-order pair asymptotic. The improved horizontal hypothesis supplies a restricted-support transfer. Above support one the signed prime-correlation input remains open. The small-gap proportion and positive finite moment caps bound different observables.
 
+## Cofinal microscopic mean and the degree-285 finite replay
+
+Write $m_T=\mathbb E_T[\log T\,|\beta-1/2|]$. RH holds exactly when $T m_T$ takes arbitrarily small values at cofinal heights. In particular a cofinal bound $m_T\le C T^{-1-\delta}$ with fixed $C$ and $\delta>0$ implies RH. The equivalence follows from the exact reflection and count normalizations, and uses no density estimate. The remaining analytic requirement is to prove cofinal smallness for the actual zeros. [`riemannHypothesis_iff_cofinalSmallMicroscopicMean` and `riemannHypothesis_of_cofinal_microscopic_power`](Analysis/ActualCofinalOneSidedMassRH.lean)
+
+For the degree-285 certificate at $\lambda=0.784782678$, Lean now proves the Fourier normalization is strictly positive directly from the shared Laguerre weights. Signed base expansion gives a second exact implementation of Bernstein subdivision. A proposed shifted row can also be validated by a single integer evaluation on each side, with proved coefficient bounds that make the comparison injective. [`unit_positive`](Analysis/LamzouriGap285Normalization.lean) · [`checkPackedRay_eq` and `certifyBernsteinRight_sound`](Analysis/GapKernelPackedBernstein.lean)
+
+[Focused Bazel verification of the RH criterion, positive normalization and signed-digit certificates](https://app.buildbuddy.io/invocation/8a08e533-16f9-4b1a-aec6-191587b0afad) · [Full verification of the preceding real-order and fixed-strip checkpoint](https://app.buildbuddy.io/invocation/271582e1-ced9-4dd3-99e1-3078f7a45a9c)
+
 ## Gap proportions and literature comparisons
 
 These bounds count every positive zero occurrence with analytic multiplicity. Small-gap statements concern one adjacent gap. Isolation statements require both adjacent gaps to exceed the threshold. The fixed-gap note gives the passage between common-height and local-ordinate normalization.

@@ -85,4 +85,65 @@ theorem riemannHypothesis_iff_cofinalSmallOneSidedTotal :
     rw [reflect_re] at lo
     linarith
 
+
+/-- The sharp boundary for a vanishing scaled first moment: RH is equivalent
+to making T times the actual microscopic mean arbitrarily small at cofinal
+heights. No Selberg density estimate enters the equivalence. -/
+theorem riemannHypothesis_iff_cofinalSmallMicroscopicMean :
+    RiemannHypothesis ↔ ∀ ε : ℝ, 0 < ε → ∀ B : ℝ, ∃ T : ℝ, B ≤ T ∧
+      T * (displacementMoment T 1 * Real.log T) < ε := by
+  let X (T : ℝ) := T * (displacementMoment T 1 * Real.log T)
+  let R (T : ℝ) := (Ncount 0 T : ℝ) / (T * Real.log T / (2 * Real.pi))
+  have hr : Tendsto R atTop (𝓝 1) := tendsto_count_div_mainTerm
+  have hevent : ∀ᶠ T : ℝ in atTop, 0 < R T ∧ R T ≤ 2 ∧ 0 ≤ X T ∧
+      X T * R T = (4 * Real.pi) * (T * oneSidedHeightMean T) := by
+    filter_upwards [hr.eventually (Ioi_mem_nhds (show (0:ℝ) < 1 by norm_num)),
+      hr.eventually_lt_const (show (1:ℝ) < 2 by norm_num),
+      eventually_count_pos, eventually_gt_atTop (1:ℝ)] with T hlo hhi hN hT
+    have ht : 0 < T := zero_lt_one.trans hT
+    have id := firstMark_mul_countRatio_eq hT (by exact_mod_cast hN.ne')
+    refine ⟨hlo, hhi.le, mul_nonneg ht.le
+      (mul_nonneg (displacementMoment_nonneg _ _) (Real.log_pos hT).le), ?_⟩
+    calc
+      X T * R T = T * ((displacementMoment T 1 * Real.log T) * R T) := by dsimp [X]; ring
+      _ = _ := by rw [show (displacementMoment T 1 * Real.log T) * R T = _ from id]; ring
+  obtain ⟨t₀, H⟩ := eventually_atTop.1 hevent
+  constructor
+  · intro h ε hε B
+    let T := max B t₀
+    obtain ⟨hr, _, _, hid⟩ := H T (le_max_right _ _)
+    rw [oneSidedHeightTotal_eq_zero_of_riemannHypothesis h T, mul_zero] at hid
+    have hz : X T = 0 := (mul_eq_zero.mp hid).resolve_right hr.ne'
+    exact ⟨T, le_max_left _ _, hz.trans_lt hε⟩
+  · intro h
+    apply riemannHypothesis_iff_cofinalSmallOneSidedTotal.mpr
+    intro ε hε B
+    obtain ⟨T, hT, hsmall⟩ := h (2 * Real.pi * ε) (by positivity) (max B t₀)
+    obtain ⟨_, hr, hX, hid⟩ := H T ((le_max_right _ _).trans hT)
+    change X T < 2 * Real.pi * ε at hsmall
+    have hu := (mul_le_mul_of_nonneg_left hr hX).trans_lt (mul_lt_mul_of_pos_right hsmall (by norm_num : (0:ℝ) < 2))
+    refine ⟨T, (le_max_left _ _).trans hT, ?_⟩
+    by_contra! hle
+    have hbad := mul_le_mul_of_nonneg_left hle (by positivity : 0 ≤ 4 * Real.pi)
+    linarith only [hu, hid, hbad]
+
+/-- A cofinal power saving beyond 1/T for the microscopic mean implies RH. -/
+theorem riemannHypothesis_of_cofinal_microscopic_power {δ C : ℝ} (hδ : 0 < δ)
+    (h : ∀ B : ℝ, ∃ T : ℝ, B ≤ T ∧
+      displacementMoment T 1 * Real.log T ≤ C * T ^ (-1 - δ)) : RiemannHypothesis := by
+  apply riemannHypothesis_iff_cofinalSmallMicroscopicMean.mpr
+  intro ε hε B
+  have htend : Tendsto (fun t : ℝ => C * t ^ (-δ)) atTop (𝓝 0) := by
+    simpa only [mul_zero] using (tendsto_rpow_neg_atTop hδ).const_mul C
+  obtain ⟨t₀, H⟩ := eventually_atTop.1 (htend.eventually_lt_const hε)
+  obtain ⟨T, hT, hm⟩ := h (max (max B t₀) 1)
+  have hB := (le_max_left (max B t₀) 1).trans hT
+  have ht : 0 < T := zero_lt_one.trans_le ((le_max_right _ _).trans hT)
+  refine ⟨T, (le_max_left _ _).trans hB, ?_⟩
+  calc
+    _ ≤ T * (C * T ^ (-1 - δ)) := mul_le_mul_of_nonneg_left hm ht.le
+    _ = C * (T ^ (1 : ℝ) * T ^ (-1 - δ)) := by rw [Real.rpow_one]; ring
+    _ = C * T ^ (-δ) := by rw [← Real.rpow_add ht, show (1:ℝ) + (-1 - δ) = -δ by ring]
+    _ < ε := H T ((le_max_right _ _).trans hB)
+
 end RiemannResearch.Analysis.ActualZeroOrdinate
