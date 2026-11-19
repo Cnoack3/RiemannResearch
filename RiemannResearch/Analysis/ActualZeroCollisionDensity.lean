@@ -56,7 +56,8 @@ theorem criticalLineCount_le_count (T : ℝ) : criticalLineCount T ≤ Ncount 0 
   rw [← card_copies, ← Finset.card_univ]
   exact Finset.card_le_card (Finset.subset_univ _)
 
-private theorem exceptional_has_companion (T : ℝ) (c : Copies T)
+/-- An exceptional copy has a distinct equal-ordinate copy in the same cutoff. -/
+theorem exceptional_has_companion (T : ℝ) (c : Copies T)
     (hc : c ∉ simpleCriticalCopies T) :
     ∃ d : Copies T, c ≠ d ∧ copyOrdinate T c = copyOrdinate T d := by
   classical

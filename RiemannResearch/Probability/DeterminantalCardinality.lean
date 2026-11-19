@@ -19,15 +19,15 @@ open MeasureTheory
 open scoped BigOperators Classical ENNReal
 namespace RiemannResearch.Probability.DPP
 
-/-- The extended number of elements of a subset of the positive-integer
-coordinate set (whose Lean indexing starts at zero). -/
-def setCount (s : Set ℕ) : ℝ≥0∞ := ∑' i, s.indicator (1 : ℕ → ℝ≥0∞) i
+/-- The extended number of labels in a discrete configuration. -/
+def setCount {α : Type*} (s : Set α) : ℝ≥0∞ := ∑' i, s.indicator (1 : α → ℝ≥0∞) i
 
-theorem setCount_le_of_no_embedding (s : Set ℕ) (N : ℕ)
-    (hno : ∀ e : Fin (N + 1) ↪ ℕ, ¬ ∀ i, e i ∈ s) : setCount s ≤ N := by
-  apply ENNReal.tsum_le_of_sum_range_le
-  intro m
-  let A : Finset ℕ := (Finset.range m).filter (fun i => i ∈ s)
+theorem setCount_le_of_no_embedding {α : Type*} (s : Set α) (N : ℕ)
+    (hno : ∀ e : Fin (N + 1) ↪ α, ¬ ∀ i, e i ∈ s) : setCount s ≤ N := by
+  rw [setCount, ENNReal.tsum_eq_iSup_sum]
+  apply iSup_le
+  intro I
+  let A : Finset α := I.filter (fun i => i ∈ s)
   have hcard : A.card ≤ N := by
     by_contra hle
     have hN : N + 1 ≤ Fintype.card A := by
@@ -36,12 +36,12 @@ theorem setCount_le_of_no_embedding (s : Set ℕ) (N : ℕ)
       ⟨fun i => ⟨i.val, lt_of_lt_of_le i.isLt hN⟩,
         fun i j hij => Fin.ext (congrArg (fun k : Fin (Fintype.card A) => k.val) hij)⟩
     let q : Fin (Fintype.card A) ≃ A := (Fintype.equivFin A).symm
-    let e : Fin (N + 1) ↪ ℕ :=
+    let e : Fin (N + 1) ↪ α :=
       f.trans (q.toEmbedding.trans (Function.Embedding.subtype (fun i => i ∈ A)))
     apply hno e
     intro i
     exact (Finset.mem_filter.mp (q (f i)).property).2
-  have hsum : (∑ i ∈ Finset.range m, s.indicator (1 : ℕ → ℝ≥0∞) i) = A.card := by
+  have hsum : (∑ i ∈ I, s.indicator (1 : α → ℝ≥0∞) i) = A.card := by
     calc
       _ = ∑ i ∈ A, (1 : ℝ≥0∞) := by
         simp [A, Finset.sum_filter, Set.indicator_apply]
@@ -49,21 +49,21 @@ theorem setCount_le_of_no_embedding (s : Set ℕ) (N : ℕ)
   rw [hsum]
   exact_mod_cast hcard
 
-variable {Ω : Type*} [MeasurableSpace Ω]
+variable {Ω α : Type*} [MeasurableSpace Ω] [Countable α]
   {μ : Measure Ω} [IsProbabilityMeasure μ]
-  {X : Ω → Set ℕ} {K : ℕ → ℕ → ℝ}
+  {X : Ω → Set α} {K : α → α → ℝ}
 
 /-- Tonelli identifies the expected total particle count with the kernel trace. -/
 theorem IsDPP.expected_setCount (h : IsDPP μ X K)
     (hs : Summable (fun i => K i i)) :
     (∫⁻ ω, setCount (X ω) ∂μ) = ENNReal.ofReal (∑' i, K i i) := by
-  let f : ℕ → Ω → ℝ≥0∞ := fun i =>
+  let f : α → Ω → ℝ≥0∞ := fun i =>
     ({ω | i ∈ X ω} : Set Ω).indicator (1 : Ω → ℝ≥0∞)
-  have hm (i : ℕ) : AEMeasurable (f i) μ :=
+  have hm (i : α) : AEMeasurable (f i) μ :=
     (measurable_const.indicator (h.measurable_occupancy i)).aemeasurable
   change (∫⁻ ω, ∑' i, f i ω ∂μ) = _
   rw [lintegral_tsum (f := f) hm]
-  have he (i : ℕ) :
+  have he (i : α) :
       (∫⁻ ω, f i ω ∂μ) =
         ENNReal.ofReal (K i i) := by
     change (∫⁻ ω, ({ω | i ∈ X ω} : Set Ω).indicator (1 : Ω → ℝ≥0∞) ω ∂μ) = _
@@ -75,19 +75,19 @@ theorem IsDPP.expected_setCount (h : IsDPP μ X K)
 /-- Vanishing correlations of order N+1 give an almost-sure rank bound for the
 actual random subset. Countability lets us exclude all injective tuples at once. -/
 theorem IsDPP.setCount_le_ae_of_rank (h : IsDPP μ X K) (N : ℕ)
-    (hrank : ∀ e : Fin (N + 1) ↪ ℕ,
+    (hrank : ∀ e : Fin (N + 1) ↪ α,
       Matrix.det (Matrix.of (fun i j => K (e i) (e j))) = 0) :
     ∀ᵐ ω ∂μ, setCount (X ω) ≤ N := by
-  have he (e : Fin (N + 1) ↪ ℕ) : ∀ᵐ ω ∂μ, ¬ ∀ i, e i ∈ X ω := by
+  have he (e : Fin (N + 1) ↪ α) : ∀ᵐ ω ∂μ, ¬ ∀ i, e i ∈ X ω := by
     have hz : μ {ω | ∀ i, e i ∈ X ω} = 0 :=
       (measureReal_eq_zero_iff (measure_ne_top μ _)).mp
         ((h.correlation (N + 1) e).trans (hrank e))
     exact ae_iff.mpr (by simpa only [not_not] using hz)
-  letI : Countable (Fin (N + 1) ↪ ℕ) :=
+  let : Countable (Fin (N + 1) ↪ α) :=
     Function.Injective.countable
-      (f := fun e : Fin (N + 1) ↪ ℕ => (e : Fin (N + 1) → ℕ))
+      (f := fun e : Fin (N + 1) ↪ α => (e : Fin (N + 1) → α))
       Function.Embedding.coe_injective
-  have hall : ∀ᵐ ω ∂μ, ∀ e : Fin (N + 1) ↪ ℕ, ¬ ∀ i, e i ∈ X ω :=
+  have hall : ∀ᵐ ω ∂μ, ∀ e : Fin (N + 1) ↪ α, ¬ ∀ i, e i ∈ X ω :=
     ae_all_iff.mpr he
   filter_upwards [hall] with ω hω
   exact setCount_le_of_no_embedding (X ω) N hω
@@ -96,7 +96,7 @@ theorem IsDPP.setCount_le_ae_of_rank (h : IsDPP μ X K) (N : ℕ)
 rank condition and trace are deterministic kernel facts; no coupling or
 approximation-to-the-constant hypothesis occurs here. -/
 theorem IsDPP.setCount_eq_ae_of_rank_trace (h : IsDPP μ X K) (N : ℕ)
-    (hrank : ∀ e : Fin (N + 1) ↪ ℕ,
+    (hrank : ∀ e : Fin (N + 1) ↪ α,
       Matrix.det (Matrix.of (fun i j => K (e i) (e j))) = 0)
     (hs : Summable (fun i => K i i))
     (htrace : (∑' i, K i i) = N) :

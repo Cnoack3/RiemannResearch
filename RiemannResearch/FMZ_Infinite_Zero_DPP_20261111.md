@@ -3,6 +3,10 @@
 Date: 11 November 2026.
 Starting revision: 8d91c2e44fa978205f4d8b4a59a636398f4bca9d.
 
+## November 18 continuation
+
+The [updated Lean catalog](THEOREM_CATALOG_INFINITE_ZERO_DPP_20261111.md) identifies the limiting kernel on actual ordinate fibres, the exact multiplicity-weighted pair and translated-window statistics, weak convergence of the discrete laws, and the RH criteria from horizontal marks. It also records the finite-rank trace theorem and improved integrated vacancy bounds. The sections below describe the November 11 checkpoint.
+
 ## Outcome
 
 The infinite zero-label construction, finite-feature inclusion limits,

@@ -14,20 +14,20 @@ open scoped BigOperators Classical ENNReal
 
 namespace RiemannResearch.Probability.DPP
 
-theorem finset_card_le_setCount (A : Finset ℕ) (s : Set ℕ)
+theorem finset_card_le_setCount {α : Type*} (A : Finset α) (s : Set α)
     (hA : ∀ i ∈ A, i ∈ s) : (A.card : ℝ≥0∞) ≤ setCount s := by
   calc
     (A.card : ℝ≥0∞) = ∑ i ∈ A, (1 : ℝ≥0∞) := by simp
-    _ = ∑ i ∈ A, s.indicator (1 : ℕ → ℝ≥0∞) i := by
+    _ = ∑ i ∈ A, s.indicator (1 : α → ℝ≥0∞) i := by
       apply Finset.sum_congr rfl
       intro i hi
       simp [Set.indicator_apply, hA i hi]
-    _ ≤ ∑' i, s.indicator (1 : ℕ → ℝ≥0∞) i := ENNReal.sum_le_tsum A
+    _ ≤ ∑' i, s.indicator (1 : α → ℝ≥0∞) i := ENNReal.sum_le_tsum A
 
 /-- Inclusion of N distinct sites saturates any set of cardinality at most N. -/
-theorem set_eq_range_of_setCount_le (N : ℕ) (e : Fin N ↪ ℕ) (s : Set ℕ)
+theorem set_eq_range_of_setCount_le {α : Type*} (N : ℕ) (e : Fin N ↪ α) (s : Set α)
     (hsub : ∀ i, e i ∈ s) (hc : setCount s ≤ N) : s = Set.range e := by
-  let A : Finset ℕ := Finset.univ.map e
+  let A : Finset α := Finset.univ.map e
   have hA : ∀ i ∈ A, i ∈ s := by
     intro i hi
     obtain ⟨j, hj, rfl⟩ := Finset.mem_map.mp hi
@@ -53,14 +53,14 @@ theorem set_eq_range_of_setCount_le (N : ℕ) (e : Fin N ↪ ℕ) (s : Set ℕ)
   · rintro i ⟨j, rfl⟩
     exact hsub j
 
-variable {Ω : Type*} [MeasurableSpace Ω]
+variable {Ω α : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ]
-    {X : Ω → Set ℕ} {K : ℕ → ℕ → ℝ}
+    {X : Ω → Set α} {K : α → α → ℝ}
 
 /-- For a DPP with exactly N points, every N-site correlation is an exact
 configuration probability, not merely an inclusion probability. -/
 theorem IsDPP.full_configuration_of_setCount (h : IsDPP μ X K) (N : ℕ)
-    (hc : ∀ᵐ ω ∂μ, setCount (X ω) = N) (e : Fin N ↪ ℕ) :
+    (hc : ∀ᵐ ω ∂μ, setCount (X ω) = N) (e : Fin N ↪ α) :
     μ.real {ω | X ω = Set.range e} =
       Matrix.det (Matrix.of (fun i j => K (e i) (e j))) := by
   calc
