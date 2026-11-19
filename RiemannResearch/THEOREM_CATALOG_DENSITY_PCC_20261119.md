@@ -6,6 +6,24 @@ November 19, 2026. The starting revision is `d85004e85625dcf1811e6a66720dae4a50b
 
 With mass $e^{-Az}/z$ at $z\ge 1$ and all other mass at zero, the tilted first moments are at most one for every $a\le A$, and $q/[m\log(1/m)]=1/A$. At $A=8/7$ this attains the actual-zero upper coefficient for the abstract class of tilt inputs. [`two_atom_reciprocal_sharp`](Analysis/FiniteSizeBiasedSharpness.lean)
 
+## Horizontal moment rates and moving thresholds
+
+For a filtered family of heights tending to infinity let $m$ and $q$ be the first two moments of $X=L|\beta-1/2|$ under the actual occurrence law. Set $M=\log(1/m)$ and $\ell=\log L$. The rows below bound $q/(mM)$ eventually by every constant strictly above the stated coefficient. The mean is positive eventually.
+
+| Prior bound | New coefficient | Exact hypotheses and declaration |
+| --- | --- | --- |
+| $7/8$ from subcritical size-biased tilts | $\min\{7/8,(3/4)(1+2/\lambda)\}$ | $m\to0$ and $M/\ell\to\lambda>0$ finite. The $7/8$ alternative uses the named Conrey–Baluyot hypothesis. The crossover is $\lambda=12$. [`actual_secondMoment_ratio_le_of_loglog_rate`](Analysis/ActualHorizontalMomentRates.lean) |
+| $7/8$ | $3/4$ | $m\to0$ and $\ell/M\to0$. The proved Ingham bound gives a copy-law cap $K_aL^2$ at each $0<a<4/3$. [`exists_sizeBiased_log_sq_cap_of_ingham` and `actual_secondMoment_ratio_le_of_fast_mean`](Analysis/ActualHorizontalMomentRates.lean) |
+| $3/4$ | $3/(4+2p)$ | $M/L\to p\in(0,1]$. For $p<1$ invert the curved Ingham exponent at a fixed cut, then take that cut down to $3p/(4+2p)$. At $p=1$ the physical support gives $1/2$. [`actual_secondMoment_ratio_le_of_fixed_cut` and `actual_secondMoment_ratio_le_of_polynomial_mean`](Analysis/ActualPolynomialHorizontalMoment.lean) |
+
+The clean $8/7$ endpoint is equivalent to a common bound at the integer strikes $0\le k\le\min((21/2)\ell,L/2)$ at each sufficiently large height. Rounding a general strike down costs at most $e^{8/7}$. With $U=L/\ell$, $\log y=4L/7-BU$ and smoothing exponent $D/\ell$, the two logarithmic off-diagonal errors in (3.6.2), allowing a loss $KU$, are $(K+7D/2-7B/8)U$ and $(K+7D/2-7B/4)U$. Baluyot chooses the mollifier exponent before the error parameters in (3.6.3)–(3.6.7). A common residual constant and the corresponding uniform diagonal and desmoothing estimates remain open. [Integer-strike equivalence and exponent identities](Analysis/ActualSelbergEndpointMesh.lean) · [Baluyot, §3.6](https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320)
+
+Write $S_T(u)=\mathbb E_T(X-u)_+$. The exact difference $S_T(0)-S_T(1)=\mathbb E_T\min(X,1)$ detects microscopic concentration. For every $\delta>0$ it lies between $\min(\delta,1)\Pr_T(X>\delta)$ and $\delta+\Pr_T(X>\delta)$. Its convergence to zero is equivalent to concentration without any density hypothesis. Estimating this signed difference by $o(1)$ on the actual zeros remains open. [`microscopicHorizontalConcentration_iff_clipped_excess`](Analysis/ActualClippedHorizontalConcentration.lean)
+
+The degree-285 replay uses integer Bernstein subdivision on the compactified positive ray. The theorem `checkBernsteinRay_sound` covers every real input on that ray, including zero. [Soundness proof](Analysis/GapKernelBernsteinRay.lean)
+
+[Focused Bazel verification of the rate, endpoint, concentration and Bernstein declarations](https://app.buildbuddy.io/invocation/4092c9d3-10e7-49ee-8702-9ed0c9b28577) · [Full verification of the preceding two-atom checkpoint](https://app.buildbuddy.io/invocation/0f596cf6-dc18-49cc-84d7-400d4cc8a1af)
+
 ## The Selberg parameter
 
 | Result | Bound and scope |
