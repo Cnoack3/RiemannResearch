@@ -60,8 +60,9 @@ private theorem synthesis_spec (n : ℕ) (s : List (ℕ × ℤ))
     simp only [signal, Int.cast_add, Int.cast_mul, Int.cast_natCast, residue,
       show d-2+2=d by omega]
 
-private theorem head_bound (rows : List (ℕ × ℤ)) (k : ℕ) :
-    lossTerm rows k ≤ (headUnit rows k : ℝ)/10^12 := by
+private theorem head_bounds (rows : List (ℕ × ℤ)) (k : ℕ) :
+    ((headUnit rows k : ℝ)-1)/10^12 ≤ lossTerm rows k ∧
+      lossTerm rows k ≤ (headUnit rows k : ℝ)/10^12 := by
   let a := (difference rows (k+1)).natAbs
   let b := (k+1)*(k+2)
   have hb : 0 < b := by dsimp [b]; positivity
@@ -73,14 +74,34 @@ private theorem head_bound (rows : List (ℕ × ℤ)) (k : ℕ) :
     have hr : (a:ℝ) = |(difference rows (k+1) : ℝ)| := by
       simpa only [a, Int.cast_natCast, Int.cast_abs] using hz
     rw [hr,sq_abs]
-  rw [ha] at hreal
+  have hlow : ((a^2/b : ℕ) : ℝ) * (((k : ℝ)+1)*((k : ℝ)+2)) ≤ (a : ℝ)^2 := by
+    exact_mod_cast Nat.div_mul_le_self (a^2) b
+  have hunit : (headUnit rows k : ℝ) = ((a^2/b : ℕ) : ℝ)+1 := by
+    change ((a^2/b+1 : ℕ) : ℝ) = _
+    simp only [Nat.cast_add, Nat.cast_one]
+  rw [ha] at hreal hlow
   unfold lossTerm positiveWeight
   push_cast
   have h1 : 0 < (k:ℝ)+1 := by positivity
   have h2 : 0 < (k:ℝ)+1+1 := by positivity
-  field_simp [h1.ne',h2.ne']
-  nlinarith [hreal]
+  constructor
+  · rw [hunit]
+    field_simp [h1.ne',h2.ne']
+    nlinarith only [hlow]
+  · field_simp [h1.ne',h2.ne']
+    nlinarith only [hreal]
 
+/-- Each rounded head summand overestimates by at most one integer unit.
+This lower bound belongs to the specified trial. -/
+theorem rounded_head_loss_lower (rows : List (ℕ × ℤ)) (K : ℕ) :
+    (((∑ j ∈ Finset.range K, block rows j : ℕ) : ℝ) - ((K*128 : ℕ) : ℝ))/10^12 ≤
+      ∑ k ∈ Finset.range (K*128), positiveWeight (k+1) *
+        ((difference rows (k+1) : ℝ)/1000000)^2 := by
+  calc
+    _ = ∑ k ∈ Finset.range (K*128), ((headUnit rows k : ℝ)-1)/10^12 := by
+      rw [← Finset.sum_div, Finset.sum_sub_distrib, ← Nat.cast_sum, head_split]
+      simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul, mul_one]
+    _ ≤ _ := Finset.sum_le_sum fun k _ => (head_bounds rows k).1
 
 theorem packet_error_le_of_certificate (trialStage n : ℕ) (hstage : trialStage ≤ n)
     (rows : List (ℕ × ℤ)) (K U B : ℕ)
@@ -118,7 +139,7 @@ theorem packet_error_le_of_certificate (trialStage n : ℕ) (hstage : trialStage
     rfl
   have hhead : (∑ k ∈ Finset.range T, lossTerm rows k) ≤ (U : ℝ)/10^12 := calc
     _ ≤ ∑ k ∈ Finset.range T, (headUnit rows k : ℝ)/10^12 :=
-      Finset.sum_le_sum fun k _ => head_bound rows k
+      Finset.sum_le_sum fun k _ => (head_bounds rows k).2
     _ = ((∑ j ∈ Finset.range K, block rows j : ℕ) : ℝ)/10^12 := by
       rw [← Finset.sum_div, ← Nat.cast_sum, head_split]
     _ ≤ _ := div_le_div_of_nonneg_right (by exact_mod_cast hunits) (by positivity)

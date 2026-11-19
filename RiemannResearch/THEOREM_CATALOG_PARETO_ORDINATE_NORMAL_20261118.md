@@ -92,11 +92,31 @@ vanish. Applied to $1-P_V1$, the mean is exactly its squared norm. An unconditio
 one-sided bound for $u$ remains open. [Annihilator tail](RH/ParetoAnnihilatorOneSided.lean)
 · [Screened parity criterion](RH/ScreenedParityOneSided.lean)
 
-At conductors through 241 a rational trial on 65,536 positive sites, with a grouped
-periodic envelope on the complete tail, gives
-$\|u-1\|_P^2\le643505167532007/64893494832467993<1/100$.
+At conductors through 241 the same 147-coefficient trial on 65,536 positive sites
+uses a common residue modulo 30 when combining the group envelopes. The complete
+tail bound gives $1-\mathrm{packetMass}(n)\le628101568132839/65537000000000000$
+for every stage $n\ge240$ and
+$\|u-1\|_P^2\le628101568132839/64908898431867161<1/100$.
+The head alone contributes at least $8592900483/10^{12}$ to this fixed trial.
 [Complete trial and bound](RH/ParetoGroupedResidueMass.lean) ·
-[Integer certificate](RH/ParetoGroupedResidueMassData.lean)
+[Congruence envelope](RH/ParetoGroupedResidueMassBase.lean) ·
+[Integer head certificate](RH/ParetoGroupedResidueMassData.lean)
+
+For $w_k=1/[k(k+1)]$ the exact mean of $u$ gives
+$|u(k)-1|^2\le(k(k+1)-1)\|u-1\|_P^2$. Every complete absolute first-moment
+tail starting at $N$ is at most $\sqrt{S(N)/N}$, where $S(N)$ is the remaining
+weighted square energy. With $z=1-(1-e_\infty)u$ and
+$D_N=\{k:\lfloor k/N\rfloor\text{ is odd}\}$ one has
+$\sum_{k\in D_N}w_k z(k)=0$ for every positive $N$.
+
+**Conditional research reduction.** A complete $O(1/N)$ weighted first-moment
+tail bound for the smaller of the positive and negative tails of $z$ implies $u=1$.
+The choice of sign may vary with $N$. Alternatively a common
+one-sided constant for the actual mixed trials at cofinally many cutoffs for
+each fixed physical site implies $u=1$. Every finite mixed trial $u_m$ vanishes
+at $2(m+1)!$, so its uniform distance from one is at least one. Both analytic
+inputs are open.
+[Physical bounds and cutoff transfer](RH/ScreenedParityPhysicalBounds.lean)
 
 ## What the ordinate bound proves
 

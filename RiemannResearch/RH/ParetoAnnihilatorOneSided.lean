@@ -69,6 +69,29 @@ private lemma annihilator_mean_eq_mobius_error (z : ThresholdHilbert) (hz : z �
     _ = _ := hilbert_inner_weighted _ _
 
 
+/-- Finite two-window estimate with the actual absolute masses. Both cutoffs
+and the canonical head bound may vary together. -/
+theorem annihilator_mean_abs_le_window_tails (z : ThresholdHilbert) (hz : z ∈ closedSpaceᗮ)
+    (N K : ℕ) (hN : 0 < N) (b : ℝ) (hb : 0 ≤ b)
+    (hmid : ∀ j, N < j → j ≤ K * N → |canonicalMobiusHead N j| ≤ b * (N : ℝ)) :
+    |inner ℝ z hilbertOne| ≤
+      (1 + b * (N : ℝ)) * (∑' k : ℕ, positiveWeight (k+N) * |hilbertSequence z (k+N)|) +
+      (1 + 2 * (N : ℝ)) * (∑' k : ℕ, positiveWeight (k+K*N) * |hilbertSequence z (k+K*N)|) := by
+  let a : ℕ → ℝ := fun j => positiveWeight j * |hilbertSequence z j|
+  have ha : Summable a := hilbertL1Norm_summable z
+  have hapos (j : ℕ) : 0 ≤ a j := mul_nonneg (positiveWeight_nonneg j) (abs_nonneg _)
+  let f : ℕ → ℝ := fun j => positiveWeight j * (hilbertSequence z j * physicalError N j)
+  obtain ⟨hhead, hsmall, hglobal⟩ := physicalError_cutoff_facts hN hmid
+  have hpoint (j : ℕ) : |f j| ≤ a j * |physicalError N j| := by
+    simp [f, a, abs_mul, abs_of_nonneg (positiveWeight_nonneg j), mul_assoc]
+  have hnB : 0 ≤ 1 + b * (N : ℝ) := by positivity
+  rw [annihilator_mean_eq_mobius_error z hz N]
+  calc
+    |∑' j, f j| ≤ (1 + b * (N : ℝ)) * (∑' k, a (k + N)) +
+        (1 + 2 * (N : ℝ)) * (∑' k, a (k + (K * N))) :=
+      RiemannResearch.Analysis.WeightedTail.abs_tsum_le_two_tails a (physicalError N) f N
+        (K * N) _ _ ha hapos hnB hhead hsmall hglobal hpoint
+
 /-- A Pareto annihilator with a complete absolute first-moment tail of order 1/N
 has zero mean. The Möbius cancellation used here is unconditional. -/
 theorem annihilator_mean_zero_of_absolute_tail (z : ThresholdHilbert)
@@ -76,9 +99,6 @@ theorem annihilator_mean_zero_of_absolute_tail (z : ThresholdHilbert)
     (htail : ∀ N : ℕ, 0 < N →
       (∑' k : ℕ, positiveWeight (k + N) * |hilbertSequence z (k + N)|) ≤ A / (N : ℝ)) :
     inner ℝ z hilbertOne = 0 := by
-  let a : ℕ → ℝ := fun j => positiveWeight j * |hilbertSequence z j|
-  have ha : Summable a := hilbertL1Norm_summable z
-  have hapos (j : ℕ) : 0 ≤ a j := mul_nonneg (positiveWeight_nonneg j) (abs_nonneg _)
   have hw := canonicalMobiusHead_windows_of_mobius_cancellation
     (mobius_sum_div_tendsto_zero_of_reciprocal_tendsto mobiusReciprocalSum_tendsto_zero)
     mobiusReciprocalSum_tendsto_zero
@@ -86,18 +106,13 @@ theorem annihilator_mean_zero_of_absolute_tail (z : ThresholdHilbert)
   apply RiemannResearch.Analysis.weighted_tail_squeeze _ A hA (abs_nonneg _)
   intro K hK b hb
   filter_upwards [hw K hK b hb, eventually_gt_atTop 0] with N hmid hN
-  let f : ℕ → ℝ := fun j => positiveWeight j * (hilbertSequence z j * physicalError N j)
-  obtain ⟨hhead, hsmall, hglobal⟩ := physicalError_cutoff_facts hN hmid
-  have hpoint (j : ℕ) : |f j| ≤ a j * |physicalError N j| := by
-    simp [f, a, abs_mul, abs_of_nonneg (positiveWeight_nonneg j), mul_assoc]
   have hnB : 0 ≤ 1 + b * (N : ℝ) := by positivity
   have hnC : 0 ≤ 1 + 2 * (N : ℝ) := by positivity
-  rw [annihilator_mean_eq_mobius_error z hz N]
   calc
-    |∑' j, f j| ≤ (1 + b * (N : ℝ)) * (∑' k, a (k + N)) +
-        (1 + 2 * (N : ℝ)) * (∑' k, a (k + (K * N))) :=
-      RiemannResearch.Analysis.WeightedTail.abs_tsum_le_two_tails a (physicalError N) f N
-        (K * N) _ _ ha hapos hnB hhead hsmall hglobal hpoint
+    |inner ℝ z hilbertOne| ≤
+        (1+b*(N : ℝ)) * (∑' k : ℕ, positiveWeight (k+N) * |hilbertSequence z (k+N)|) +
+        (1+2*(N : ℝ)) * (∑' k : ℕ, positiveWeight (k+K*N) * |hilbertSequence z (k+K*N)|) :=
+      annihilator_mean_abs_le_window_tails z hz N K hN b hb.le hmid
     _ ≤ (1 + b * (N : ℝ)) * (A / (N : ℝ)) + (1 + 2 * (N : ℝ)) * (A / ((K : ℝ) * (N : ℝ))) := by
       have hfar := htail (K * N) (Nat.mul_pos (by omega) hN)
       rw [Nat.cast_mul] at hfar
@@ -234,15 +249,12 @@ theorem annihilator_absolute_tail_le_of_upper (z : ThresholdHilbert) (hz : z ∈
   abs_tail_bound_of_shell (hilbertL1Norm_summable z)
     (absolute_dyadic_shell_of_upper z hz hC hu) N hN
 
-/-- A bound on just the positive part controls the complete absolute first-moment tail. -/
-theorem annihilator_absolute_tail_le_of_positive_tail
-    (z : ThresholdHilbert) (hz : z ∈ closedSpaceᗮ) (C : ℝ)
-    (hp : ∀ n : ℕ, 0 < n →
-      (∑' k : ℕ, positiveWeight (k+n) * max (hilbertSequence z (k+n)) 0) ≤ C/(n : ℝ))
-    (N : ℕ) (hN : 0 < N) :
-    (∑' k : ℕ, positiveWeight (k+N) * |hilbertSequence z (k+N)|) ≤ 2*(2*C)/(N : ℝ) := by
-  apply abs_tail_bound_of_shell (hilbertL1Norm_summable z) _ N hN
-  intro n hn
+/-- A one-sided tail estimate at a single scale controls the absolute mass
+on that scale's first dyadic shell. -/
+private theorem annihilator_shell_le_of_positive_tail_at (z : ThresholdHilbert)
+    (hz : z ∈ closedSpaceᗮ) (C : ℝ) (n : ℕ) (hn : 0 < n)
+    (hp : (∑' k : ℕ, positiveWeight (k+n) * max (hilbertSequence z (k+n)) 0) ≤ C / (n : ℝ)) :
+    (∑ k ∈ Finset.range n, positiveWeight (k+n) * |hilbertSequence z (k+n)|) ≤ 2*C/(n : ℝ) := by
   let d := hilbertDilation n hn (ramanujanPacketHilbert 2)
   let f := hilbertAbs z + z
   have hd (j : ℕ) : hilbertSequence d j = (n : ℝ) * ((j/n % 2 : ℕ) : ℝ) := by
@@ -321,8 +333,36 @@ theorem annihilator_absolute_tail_le_of_positive_tail
     _ ≤ 2*C := by
       rw [tsum_mul_right]
       calc
-        _ ≤ C/(n:ℝ)*(2*n) := mul_le_mul_of_nonneg_right (hp n hn) (by positivity)
+        _ ≤ C/(n:ℝ)*(2*n) := mul_le_mul_of_nonneg_right hp (by positivity)
         _ = _ := by field_simp
+
+/-- At each cutoff the controlled sign may be selected anew. Parity
+orthogonality converts either estimate into the same dyadic-shell bound. -/
+theorem annihilator_absolute_tail_le_of_oneSided_tails
+    (z : ThresholdHilbert) (hz : z ∈ closedSpaceᗮ) (C : ℝ)
+    (h : ∀ n : ℕ, 0 < n →
+      (∑' k : ℕ, positiveWeight (k+n) * max (hilbertSequence z (k+n)) 0) ≤ C/(n : ℝ) ∨
+      (∑' k : ℕ, positiveWeight (k+n) * max (-hilbertSequence z (k+n)) 0) ≤ C/(n : ℝ))
+    (N : ℕ) (hN : 0 < N) :
+    (∑' k : ℕ, positiveWeight (k+N) * |hilbertSequence z (k+N)|) ≤ 2*(2*C)/(N : ℝ) := by
+  apply abs_tail_bound_of_shell (hilbertL1Norm_summable z) _ N hN
+  intro n hn
+  rcases h n hn with hp | hm
+  · exact annihilator_shell_le_of_positive_tail_at z hz C n hn hp
+  · have hneg (k : ℕ) : hilbertSequence (-z) k = -hilbertSequence z k := by
+      rw [← anchoredEvaluationCLM_apply, map_neg, anchoredEvaluationCLM_apply]
+    simpa only [hneg, abs_neg] using
+      annihilator_shell_le_of_positive_tail_at (-z) (closedSpace.orthogonal.neg_mem hz) C n hn
+        (by simpa only [hneg] using hm)
+
+/-- A bound on just the positive part controls the complete absolute first-moment tail. -/
+theorem annihilator_absolute_tail_le_of_positive_tail
+    (z : ThresholdHilbert) (hz : z ∈ closedSpaceᗮ) (C : ℝ)
+    (hp : ∀ n : ℕ, 0 < n →
+      (∑' k : ℕ, positiveWeight (k+n) * max (hilbertSequence z (k+n)) 0) ≤ C/(n : ℝ))
+    (N : ℕ) (hN : 0 < N) :
+    (∑' k : ℕ, positiveWeight (k+N) * |hilbertSequence z (k+N)|) ≤ 2*(2*C)/(N : ℝ) :=
+  annihilator_absolute_tail_le_of_oneSided_tails z hz C (fun n hn => Or.inl (hp n hn)) N hN
 
 /-- One-sided boundedness forces the constant pairing of a legal annihilator to vanish. -/
 theorem annihilator_mean_zero_of_upper_bound (z : ThresholdHilbert) (hz : z ∈ closedSpaceᗮ)

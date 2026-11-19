@@ -46,16 +46,80 @@ private theorem signal_append (s t : List (ℕ × ℤ)) (k : ℕ) :
     obtain ⟨d,z⟩ := a
     simp [signal, ih, add_assoc]
 
-theorem group_sum_bounds (gs : List ResidueGroup) (h : ∀ g ∈ gs, g.Valid) (k : ℕ) :
-    (gs.map ResidueGroup.lower).sum ≤ signal (gs.flatMap ResidueGroup.terms) k ∧
-      signal (gs.flatMap ResidueGroup.terms) k ≤ (gs.map ResidueGroup.upper).sum := by
+/-- Bounds at a common physical site add across all conductor groups. -/
+private theorem group_bounds_at (gs : List ResidueGroup) (k : ℕ)
+    (lo hi : ResidueGroup → ℤ)
+    (h : ∀ g ∈ gs, lo g ≤ signal g.terms k ∧ signal g.terms k ≤ hi g) :
+    (gs.map lo).sum ≤ signal (gs.flatMap ResidueGroup.terms) k ∧
+      signal (gs.flatMap ResidueGroup.terms) k ≤ (gs.map hi).sum := by
   induction gs with
   | nil => simp [signal]
   | cons g gs ih =>
-    have hg := g.bounds (h g (by simp)) k
+    have hg := h g (by simp)
     have ht := ih (fun a ha => h a (by simp [ha]))
     simpa only [List.flatMap_cons, signal_append, List.map_cons, List.sum_cons]
       using And.intro (add_le_add hg.1 ht.1) (add_le_add hg.2 ht.2)
+
+theorem group_sum_bounds (gs : List ResidueGroup) (h : ∀ g ∈ gs, g.Valid) (k : ℕ) :
+    (gs.map ResidueGroup.lower).sum ≤ signal (gs.flatMap ResidueGroup.terms) k ∧
+      signal (gs.flatMap ResidueGroup.terms) k ≤ (gs.map ResidueGroup.upper).sum :=
+  group_bounds_at gs k _ _ (fun g hg => g.bounds (h g hg) k)
+
+/-- Enclose one shared residue class modulo q. Coprime periods can reuse
+their complete-period bounds. -/
+def ResidueGroup.classRange (g : ResidueGroup) (q a : ℕ) : ℤ × ℤ :=
+  let m := g.period.gcd q
+  if m = 1 then (g.lower, g.upper) else
+    let values := fun i : ℕ => signal g.terms (a % m + i*m)
+    let indices := Finset.range (g.period / m + 1)
+    (g.upper - (indices.sup (fun i => (g.upper - values i).toNat) : ℕ),
+     g.lower + (indices.sup (fun i => (values i - g.lower).toNat) : ℕ))
+
+private theorem ResidueGroup.mem_classRange (g : ResidueGroup) (hg : g.Valid) (q k : ℕ) :
+    (g.classRange q (k % q)).1 ≤ signal g.terms k ∧
+      signal g.terms k ≤ (g.classRange q (k % q)).2 := by
+  by_cases h : g.period.gcd q = 1
+  · simpa only [classRange, if_pos h] using g.bounds hg k
+  simp only [classRange, if_neg h]
+  let m := g.period.gcd q
+  let r := k % g.period
+  let i := r / m
+  have hi : i ∈ Finset.range (g.period / m + 1) := by
+    apply Finset.mem_range.mpr
+    exact Nat.lt_succ_of_le (Nat.div_le_div_right (Nat.mod_lt k hg.1).le)
+  have hclass : (k % q) % m = r % m := by
+    rw [Nat.mod_mod_of_dvd _ (Nat.gcd_dvd_right _ _)]
+    exact (Nat.mod_mod_of_dvd _ (Nat.gcd_dvd_left _ _)).symm
+  have hrepr : (k % q) % m + i*m = r := by
+    rw [hclass, Nat.mul_comm]
+    exact Nat.mod_add_div r m
+  have hval : signal g.terms ((k % q) % m + i*m) = signal g.terms k := by
+    rw [hrepr]
+    exact signal_mod g.terms g.period k hg.2.1
+  have hl := Finset.le_sup
+    (f := fun j : ℕ => (g.upper - signal g.terms ((k % q) % m + j*m)).toNat) hi
+  have hu := Finset.le_sup
+    (f := fun j : ℕ => (signal g.terms ((k % q) % m + j*m) - g.lower).toNat) hi
+  simp only [hval] at hl hu
+  let down := (Finset.range (g.period / m + 1)).sup
+    (fun j : ℕ => (g.upper - signal g.terms ((k % q) % m + j*m)).toNat)
+  let up := (Finset.range (g.period / m + 1)).sup
+    (fun j : ℕ => (signal g.terms ((k % q) % m + j*m) - g.lower).toNat)
+  change (g.upper - signal g.terms k).toNat ≤ down at hl
+  change (signal g.terms k - g.lower).toNat ≤ up at hu
+  change g.upper - (down : ℤ) ≤ signal g.terms k ∧ signal g.terms k ≤ g.lower + (up : ℤ)
+  have hgl := g.bounds hg k
+  have hl' : ((g.upper - signal g.terms k).toNat : ℤ) ≤ (down : ℤ) := by exact_mod_cast hl
+  have hu' : ((signal g.terms k - g.lower).toNat : ℤ) ≤ (up : ℤ) := by exact_mod_cast hu
+  rw [Int.toNat_of_nonneg (sub_nonneg.mpr hgl.2)] at hl'
+  rw [Int.toNat_of_nonneg (sub_nonneg.mpr hgl.1)] at hu'
+  omega
+
+theorem group_class_bounds (gs : List ResidueGroup) (h : ∀ g ∈ gs, g.Valid) (q k : ℕ) :
+    (gs.map (fun g => (g.classRange q (k % q)).1)).sum ≤ signal (gs.flatMap ResidueGroup.terms) k ∧
+      signal (gs.flatMap ResidueGroup.terms) k ≤
+        (gs.map (fun g => (g.classRange q (k % q)).2)).sum :=
+  group_bounds_at gs k _ _ (fun g hg => g.mem_classRange (h g hg) q k)
 
 namespace Conductor241
 def groups : List ResidueGroup := [
@@ -142,15 +206,27 @@ theorem rows_range : ∀ t ∈ rows, 2 ≤ t.1 ∧ t.1 ≤ 241 := by decide
 
 def difference (k : ℕ) : ℤ := 1000000 - signal rows k
 
-theorem scaled_abs_bound (k : ℕ) : |difference k| ≤ 8963702 := by
-  have h := group_sum_bounds groups groups_valid k
-  have hlo : (groups.map ResidueGroup.lower).sum = -7948434 := by decide
-  have hhi : (groups.map ResidueGroup.upper).sum = 9963702 := by decide
-  rw [hlo, hhi] at h
-  change -7948434 ≤ signal rows k ∧ signal rows k ≤ 9963702 at h
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 16000000 in
+-- Evaluate every compatible group envelope in the thirty physical classes.
+private theorem shared_class_ranges (a : Fin 30) :
+    -7043538 ≤ (groups.map (fun g => (g.classRange 30 a.val).1)).sum ∧
+      (groups.map (fun g => (g.classRange 30 a.val).2)).sum ≤ 9058806 := by
+  revert a
+  decide +kernel
+
+theorem scaled_abs_bound_mod30 (k : ℕ) : |difference k| ≤ 8058806 := by
+  have hg := group_class_bounds groups groups_valid 30 k
+  have hc := shared_class_ranges ⟨k % 30, Nat.mod_lt _ (by decide)⟩
+  have hlo : -7043538 ≤ signal rows k := hc.1.trans hg.1
+  have hhi : signal rows k ≤ 9058806 := hg.2.trans hc.2
   unfold difference
   rw [abs_le]
   omega
+
+/-- The original complete-period ceiling. -/
+theorem scaled_abs_bound (k : ℕ) : |difference k| ≤ 8963702 :=
+  (scaled_abs_bound_mod30 k).trans (by decide)
 
 def headUnit (k : ℕ) : ℕ :=
   (difference (k+1)).natAbs^2 / ((k+1)*(k+2)) + 1

@@ -22,7 +22,8 @@ open scoped BigOperators
 namespace RiemannResearch.RH.Pareto.PrimePowerSchur
 open CoefficientStabilization
 
-private theorem residual_at_pos (k : ℕ) (hk : 0 < k) :
+/-- Physical affine relation between the legal residual and the screened direction. -/
+theorem limitResidual_at_pos_eq_screenedTwo (k : ℕ) (hk : 0 < k) :
     hilbertSequence limitResidual k =
       1 - (1 - limitEnergy) * hilbertSequence normalizedScreenedTwo k := by
   rw [limitResidual, limitProjection_eq_scaled_screenedTwo, ← anchoredEvaluationCLM_apply,
@@ -40,12 +41,12 @@ theorem normalizedScreenedTwo_eq_one_of_oneSidedBound
     rcases hbound with ⟨C, hC⟩ | ⟨C, hC⟩
     · apply annihilator_mean_zero_of_upper_bound _ limitResidual_mem_orthogonal
       refine ⟨1 - (1 - limitEnergy) * C, fun k hk => ?_⟩
-      rw [residual_at_pos k hk]
+      rw [limitResidual_at_pos_eq_screenedTwo k hk]
       exact sub_le_sub_left (mul_le_mul_of_nonneg_left (hC k hk) hcoef) _
     · have hb : ∃ B : ℝ, ∀ k : ℕ, 0 < k → hilbertSequence (-limitResidual) k ≤ B := by
         refine ⟨(1 - limitEnergy) * C - 1, fun k hk => ?_⟩
         rw [← anchoredEvaluationCLM_apply, map_neg, anchoredEvaluationCLM_apply,
-          residual_at_pos k hk]
+          limitResidual_at_pos_eq_screenedTwo k hk]
         linarith [mul_le_mul_of_nonneg_left (hC k hk) hcoef]
       have h := annihilator_mean_zero_of_upper_bound _ (closedSpace.orthogonal.neg_mem limitResidual_mem_orthogonal) hb
       simpa only [inner_neg_left, neg_eq_zero] using h
