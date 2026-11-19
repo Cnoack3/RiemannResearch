@@ -125,6 +125,8 @@ The same monomial vectors satisfy the positive Fourier normalization, nonnegativ
 
 [Focused verification and axiom audit for the five finite conditions](https://app.buildbuddy.io/invocation/b2ec85b0-1f66-4fbf-b708-1cf51b771107) · [Full verification of the preceding cofinal-mean checkpoint](https://app.buildbuddy.io/invocation/a426a0d3-c9f0-4743-a79a-dccb29009e0b)
 
+Lean now identifies all 286 entries in each stored monomial vector with the coefficients defined from the original 286 Laguerre weights. A balanced lookup supplies factorials, odd products and weights. Lean checks each table entry against its defining formula, evaluates the two signed expansions in eight blocks, and assembles the lists in increasing degree order. Rewriting by these equalities transfers both sign rays and the rational objective checks to the original polynomials in `Replay`. [`physicalData_eq` and `frequencyData_eq`](Analysis/LamzouriGap285SourceVerification.lean) · [All 572 coefficient checks](https://app.buildbuddy.io/invocation/76c661ba-e9f4-4b0a-9038-52dd8705656a) · [Full verification of the five rational and sign conditions](https://app.buildbuddy.io/invocation/63678e4c-f2b9-4083-93a5-aaadc9d78206) · [Lean axiom audit and transfer of both signs](<https://app.buildbuddy.io/invocation/333ac728-ada6-4451-9d88-8cdb1dfc70ea>)
+
 ## Gap proportions and literature comparisons
 
 These bounds count every positive zero occurrence with analytic multiplicity. Small-gap statements concern one adjacent gap. Isolation statements require both adjacent gaps to exceed the threshold. The fixed-gap note gives the passage between common-height and local-ordinate normalization.
