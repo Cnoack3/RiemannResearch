@@ -15,7 +15,9 @@ import Mathlib.Tactic.Ring
 
 Stirling's expansion for the logarithmic derivative of the gamma factor
 controls the mean-square cost of replacing its exact increment by the
-unfolded width. The estimate is uniform on bounded sets of widths.
+unfolded width. A finite-height estimate retains the square of the width,
+so the gamma energy vanishes for every nonnegative width small relative
+to the height logarithm, including growing mesoscopic windows.
 For the count/argument comparison see GLSS, Proposition 2,
 https://doi.org/10.1112/mtk.70127.
 -/
@@ -99,28 +101,30 @@ private theorem integral_log_drift_sq_le {T : ℝ} (hT : 0 ≤ T) :
 def microscopicGammaDrift (T R t : ℝ) : ℝ :=
   smoothCount (t + R / (Real.log T / (2 * Real.pi))) - smoothCount t - R
 
-/-- Uniform in bounded unfolded width: the mean-square gamma drift is
-bounded by a constant times the inverse square of the height logarithm. -/
-theorem microscopicGammaDrift_mean_sq_bound (B : ℝ) (hB : 0 ≤ B) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ T : ℝ in atTop, ∀ R ∈ Icc 0 B,
+/-- A single finite-height constant controls every nonnegative unfolded width
+whose physical window has length at most one. The width remains explicit,
+so this estimate also applies when the unfolded width grows with height. -/
+theorem microscopicGammaDrift_mean_sq_le :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ T R : ℝ, 1 < T → 0 ≤ R →
+      R ≤ Real.log T / (2 * Real.pi) →
       (∫ t in (0 : ℝ)..T, microscopicGammaDrift T R t ^ 2) / T ≤
-        C / (Real.log T)^2 := by
+        C * R ^ 2 / (Real.log T)^2 := by
   obtain ⟨A,hA,happrox⟩ := gamma_uniform_log_approx
   let k := 1 / (2 * Real.pi)
   have hk : 0 < k := by dsimp [k]; positivity
   let D := A + 2*k
   have hD : 0 ≤ D := by dsimp [D]; positivity
-  refine ⟨(2 * Real.pi * B)^2 * (2*D^2 + 8*k^2), by positivity, ?_⟩
-  filter_upwards [eventually_gt_atTop (1 : ℝ),
-    Real.tendsto_log_atTop.eventually_ge_atTop (2 * Real.pi * B)] with T hT hlog
-  intro R hr
+  refine ⟨(2 * Real.pi)^2 * (2*D^2 + 8*k^2), by positivity, ?_⟩
+  intro T R hT hR hRmax
   have hTp : 0 < T := by linarith
   have hL : 0 < Real.log T := Real.log_pos hT
   let h := R / (Real.log T / (2 * Real.pi))
-  have hh : 0 ≤ h := div_nonneg hr.1 (by positivity)
+  have hh : 0 ≤ h := div_nonneg hR (by positivity)
   have heq : h = 2 * Real.pi * R / Real.log T := by dsimp [h]; field_simp [Real.pi_ne_zero,hL.ne'] <;> ring
-  have hmax : h ≤ 2 * Real.pi * B / Real.log T := by rw [heq]; gcongr <;> exact hr.2
-  have h1 : h ≤ 1 := hmax.trans ((div_le_iff₀ hL).2 (by linarith))
+  have h1 : h ≤ 1 := by
+    change R / (Real.log T / (2 * Real.pi)) ≤ 1
+    apply (div_le_iff₀ (by positivity : 0 < Real.log T / (2 * Real.pi))).2
+    simpa only [one_mul] using hRmax
   have hc : Continuous (microscopicGammaDrift T R) := by
     exact ((smoothCount_continuous.comp (continuous_id.add continuous_const)).sub
       smoothCount_continuous).sub continuous_const
@@ -178,13 +182,62 @@ theorem microscopicGammaDrift_mean_sq_bound (B : ℝ) (hB : 0 ≤ B) :
   have hsum : (T*(2*D^2) + (2*k^2)*(∫ t in (0:ℝ)..T, (L t)^2)) ≤ T*(2*D^2+8*k^2) := by
     nlinarith [mul_le_mul_of_nonneg_left hlInt (by positivity : 0 ≤ 2*k^2),
       mul_nonneg (show 0 ≤ T-1 by linarith) (sq_nonneg k)]
-  have hh2 := pow_le_pow_left₀ hh hmax 2
   calc _ ≤ (h^2 * (T*(2*D^2+8*k^2))) / T := div_le_div_of_nonneg_right
         (hind.trans (mul_le_mul_of_nonneg_left hsum (sq_nonneg h))) hTp.le
     _ = h^2 * (2*D^2+8*k^2) := by field_simp [hTp.ne'] <;> ring
-    _ ≤ (2 * Real.pi * B / Real.log T)^2 * (2*D^2+8*k^2) :=
-        mul_le_mul_of_nonneg_right hh2 (by positivity)
-    _ = _ := by rw [div_pow]; ring
+    _ = _ := by rw [heq, div_pow]; ring
+
+/-- Uniform in bounded unfolded width: the mean-square gamma drift is
+bounded by a constant times the inverse square of the height logarithm. -/
+theorem microscopicGammaDrift_mean_sq_bound (B : ℝ) (hB : 0 ≤ B) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ T : ℝ in atTop, ∀ R ∈ Icc 0 B,
+      (∫ t in (0 : ℝ)..T, microscopicGammaDrift T R t ^ 2) / T ≤
+        C / (Real.log T)^2 := by
+  obtain ⟨C, hC, hbound⟩ := microscopicGammaDrift_mean_sq_le
+  refine ⟨C * B ^ 2, by positivity, ?_⟩
+  filter_upwards [eventually_gt_atTop (1 : ℝ),
+    Real.tendsto_log_atTop.eventually_ge_atTop (2 * Real.pi * B)] with T hT hlog
+  intro R hr
+  have hRmax : R ≤ Real.log T / (2 * Real.pi) := by
+    apply (le_div_iff₀ (by positivity : 0 < 2 * Real.pi)).2
+    calc
+      R * (2 * Real.pi) ≤ B * (2 * Real.pi) :=
+        mul_le_mul_of_nonneg_right hr.2 (by positivity)
+      _ ≤ Real.log T := by simpa only [mul_comm] using hlog
+  exact (hbound T R hT hr.1 hRmax).trans
+    (div_le_div_of_nonneg_right
+      (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hr.1 hr.2 2) hC)
+      (sq_nonneg _))
+
+/-- The gamma drift vanishes in normalized mean square for every eventually
+nonnegative unfolded width that is small relative to the height logarithm.
+The width need not remain bounded. -/
+theorem microscopicGammaDrift_mean_sq_tendsto_zero {R : ℝ → ℝ}
+    (hR : ∀ᶠ T : ℝ in atTop, 0 ≤ R T)
+    (hRlog : Tendsto (fun T : ℝ => R T / Real.log T) atTop (𝓝 0)) :
+    Tendsto (fun T : ℝ =>
+      (∫ t in (0 : ℝ)..T, microscopicGammaDrift T (R T) t ^ 2) / T)
+      atTop (𝓝 0) := by
+  obtain ⟨C, hC, hbound⟩ := microscopicGammaDrift_mean_sq_le
+  have hmajor : Tendsto (fun T : ℝ => C * (R T / Real.log T) ^ 2)
+      atTop (𝓝 0) := by
+    simpa using (hRlog.pow 2).const_mul C
+  have hnonneg : ∀ᶠ T : ℝ in atTop,
+      0 ≤ (∫ t in (0 : ℝ)..T, microscopicGammaDrift T (R T) t ^ 2) / T := by
+    filter_upwards [eventually_gt_atTop (0 : ℝ)] with T hT
+    exact div_nonneg
+      (intervalIntegral.integral_nonneg hT.le (fun _ _ => sq_nonneg _)) hT.le
+  have hle : ∀ᶠ T : ℝ in atTop,
+      (∫ t in (0 : ℝ)..T, microscopicGammaDrift T (R T) t ^ 2) / T ≤
+        C * (R T / Real.log T) ^ 2 := by
+    filter_upwards [hR, eventually_gt_atTop (1 : ℝ),
+      hRlog.eventually_le_const (by positivity : (0 : ℝ) < 1 / (2 * Real.pi))]
+      with T hRT hT hsmall
+    have hRmax : R T ≤ Real.log T / (2 * Real.pi) := by
+      have hh := (div_le_iff₀ (Real.log_pos hT)).mp hsmall
+      simpa only [one_div, div_eq_mul_inv, one_mul, mul_comm] using hh
+    simpa only [div_pow, mul_div_assoc] using hbound T (R T) hT hRT hRmax
+  exact squeeze_zero' hnonneg hle hmajor
 
 /-- Uniform vanishing as an eventual upper envelope for the normalized gamma energy. -/
 theorem microscopicGammaDrift_mean_sq_vanishes_uniformly (B : ℝ) (hB : 0 ≤ B) :
