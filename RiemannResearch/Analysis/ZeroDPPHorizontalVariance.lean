@@ -1,6 +1,7 @@
 import RiemannResearch.Probability.ZeroOrdinateDPPSampling
 import RiemannResearch.Probability.DeterminantalFiberMarks
 import RiemannResearch.Analysis.ActualZeroInghamHorizontalEnergy
+import RiemannResearch.Analysis.ActualZeroDisplacementMoments
 import RiemannResearch.RH.HorizontalEnergyCriterion
 import Mathlib.Probability.Moments.Variance
 import Mathlib.Tactic.LinearCombination
@@ -149,7 +150,8 @@ theorem riemannHypothesis_iff_cofinal_variance_small (q : ℝ → ℕ → ℝ) :
     RiemannHypothesis ↔ ∀ ε : ℝ, 0 < ε → ∀ B : ℝ, ∃ T : ℝ, B ≤ T ∧
       ProbabilityTheory.variance (horizontalStatistic (q T) T (fun _ => 1))
         (limitingLaw (q T)) < ε := by
-  simpa only [variance_horizontalStatistic] using RH.riemannHypothesis_iff_cofinal_horizontalEnergy_small
+  simpa only [variance_horizontalStatistic] using
+    RH.riemannHypothesis_iff_cofinal_horizontalEnergy_small
 
 /-- Variance for an arbitrary ordinate window or real Fourier weight. -/
 theorem variance_horizontalStatistic_weighted (q : ℕ → ℝ) (T : ℝ) (f : ℝ → ℝ) :
@@ -166,13 +168,15 @@ theorem variance_horizontalStatistic_weighted (q : ℕ → ℝ) (T : ℝ) (f : �
 /-- A bounded signed ordinate weight can only reduce the unweighted variance. -/
 theorem variance_horizontalStatistic_le (q : ℕ → ℝ) (T : ℝ) (f : ℝ → ℝ)
     (hf : ∀ t, |f t| ≤ 1) :
-    ProbabilityTheory.variance (horizontalStatistic q T f) (limitingLaw q) ≤ horizontalEnergy T := by
+    ProbabilityTheory.variance (horizontalStatistic q T f) (limitingLaw q) ≤
+      horizontalEnergy T := by
   rw [variance_horizontalStatistic_weighted, horizontalEnergy, realSum_eq_copies]
   apply Finset.sum_le_sum
   intro c _
   have hh := abs_le.mp (hf (copyOrdinate T c))
   have hs : f (copyOrdinate T c) ^ 2 ≤ 1 := by
-    nlinarith only [mul_nonneg (sub_nonneg.mpr hh.2) (show 0 ≤ 1 + f (copyOrdinate T c) by linarith)]
+    nlinarith only [mul_nonneg (sub_nonneg.mpr hh.2)
+      (show 0 ≤ 1 + f (copyOrdinate T c) by linarith)]
   simpa only [one_mul] using mul_le_mul_of_nonneg_right hs (sq_nonneg (c.1.1.re - 1 / 2))
 
 /-- The unconditional upper tail at the square-root height scale is uniform
@@ -184,7 +188,8 @@ theorem eventually_horizontalStatistic_tail {δ ε : ℝ} (hδ : 0 < δ) (hε : 
   filter_upwards [eventually_horizontalEnergy_ratio_le_ingham hε, eventually_gt_atTop (1 : ℝ),
     Real.tendsto_log_atTop.eventually_gt_atTop (1 : ℝ)] with T ht hT hL q f hf
   have hT₀ : 0 < T := zero_lt_one.trans hT
-  have hR : 0 < horizontalLogRate T := div_pos (sq_pos_of_pos (Real.log_pos hL)) (zero_lt_one.trans hL)
+  have hR : 0 < horizontalLogRate T :=
+    div_pos (sq_pos_of_pos (Real.log_pos hL)) (zero_lt_one.trans hL)
   have hS : MemLp (horizontalStatistic q T f) 2 (limitingLaw q) :=
     (limitingLaw_isDPP q).linearStatistic_memLp (liftCopy T) _
   have hcheb := ProbabilityTheory.meas_ge_le_variance_div_sq hS (mul_pos hδ (Real.sqrt_pos.mpr hT₀))
@@ -212,5 +217,108 @@ theorem moving_horizontalStatistic_tail_tendsto_zero (q : ℝ → ℕ → ℝ) (
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hu
     (Filter.Eventually.of_forall (fun _ => ENNReal.toReal_nonneg))
     ((eventually_horizontalStatistic_tail hδ zero_lt_one).mono fun T ht => ht (q T) (f T) (hf T))
+
+/-- Signed displacement multiplied by an absolute power. Inverse square root
+inclusion weighting is the same as for the original horizontal statistic. -/
+def horizontalPowerStatistic (q : ℕ → ℝ) (T : ℝ) (p : ℕ) (f : ℝ → ℝ) :
+    (Site → Bool) → ℝ :=
+  normalizedMark (fun x : Site → Bool => {j | x j = true}) (limitingKernel q) (liftCopy T)
+    (fun c => f (copyOrdinate T c) * (c.1.1.re-1/2) * copyDisplacement T c ^ p)
+
+theorem horizontalPowerStatistic_zero (q : ℕ → ℝ) (T : ℝ) (f : ℝ → ℝ) :
+    horizontalPowerStatistic q T 0 f = horizontalStatistic q T f := by
+  simp [horizontalPowerStatistic, horizontalStatistic]
+
+private theorem horizontalPower_fiberCentered (T : ℝ) (p : ℕ) (f : ℝ → ℝ) :
+    FiberCentered (copyOrdinate T)
+      (fun c => f (copyOrdinate T c) * (c.1.1.re-1/2) * copyDisplacement T c ^ p) := by
+  intro g
+  let F := fun ρ : ℂ => g ρ.im * (f ρ.im * (ρ.re-1/2) * |ρ.re-1/2| ^ p)
+  have h := realSum_reflect T F
+  have hn (ρ : ℂ) : F (reflect ρ) = -F ρ := by
+    simp only [F, reflect_im, reflect_re]
+    rw [show 1-ρ.re-1/2 = -(ρ.re-1/2) by ring, abs_neg]
+    ring
+  simp_rw [hn] at h
+  rw [realSum_eq_copies, realSum_eq_copies, Finset.sum_neg_distrib] at h
+  change (∑ c : Copies T, F c.1.1) = 0
+  linarith
+
+theorem expected_horizontalPowerStatistic (q : ℕ → ℝ) (T : ℝ) (p : ℕ) (f : ℝ → ℝ) :
+    (∫ x, horizontalPowerStatistic q T p f x ∂limitingLaw q) = 0 :=
+  (limitingLaw_isDPP q).expected_normalizedMark (liftCopy T) (copyOrdinate T)
+    (ordinateKernelAt q) (sampledKernel_factors q T) _ (horizontalPower_fiberCentered T p f)
+
+/-- Centred DPP products recover the full displacement moment with both
+ordinate tests. This retains every original zero occurrence for every dictionary. -/
+theorem horizontalPowerStatistic_product (q : ℕ → ℝ) (T : ℝ) (p r : ℕ) (f g : ℝ → ℝ) :
+    (∫ x, horizontalPowerStatistic q T p f x * horizontalPowerStatistic q T r g x ∂limitingLaw q) =
+      ∑ c : Copies T, f (copyOrdinate T c) * g (copyOrdinate T c) *
+        copyDisplacement T c ^ (p+r+2) := by
+  unfold horizontalPowerStatistic
+  rw [(limitingLaw_isDPP q).normalizedMark_product_moment (liftCopy T) (copyOrdinate T)
+    (ordinateKernelAt q) (sampledKernel_factors q T)
+    (fun c => limitingKernel_diagonal_pos q (liftCopy T c)) _ _
+    (horizontalPower_fiberCentered T r g)]
+  apply Finset.sum_congr rfl
+  intro c _
+  simp only [pow_add, copyDisplacement, sq_abs]
+  ring
+
+/-- Includes orders two (p=r=0), three (p=0, r=1) and four (p=r=1). -/
+theorem horizontalPowerStatistic_product_div_count (q : ℕ → ℝ) (T : ℝ) (p r : ℕ) :
+    (∫ x, horizontalPowerStatistic q T p (fun _ => 1) x *
+      horizontalPowerStatistic q T r (fun _ => 1) x ∂limitingLaw q) / (Ncount 0 T : ℝ) =
+      displacementMoment T (p+r+2) := by
+  simp only [horizontalPowerStatistic_product, one_mul, displacementMoment]
+
+/-- Sum of the two real quadratures gives the cosine Fourier coefficient of
+the displacement moment at the difference frequency. -/
+theorem horizontalPower_fourier_covariance (q : ℕ → ℝ) (T a b : ℝ) (p r : ℕ) :
+    (∫ x, horizontalPowerStatistic q T p (fun t => Real.cos (a*t)) x *
+      horizontalPowerStatistic q T r (fun t => Real.cos (b*t)) x ∂limitingLaw q) +
+    (∫ x, horizontalPowerStatistic q T p (fun t => Real.sin (a*t)) x *
+      horizontalPowerStatistic q T r (fun t => Real.sin (b*t)) x ∂limitingLaw q) =
+    ∑ c : Copies T, Real.cos ((a-b)*copyOrdinate T c) * copyDisplacement T c ^ (p+r+2) := by
+  rw [horizontalPowerStatistic_product, horizontalPowerStatistic_product, ← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro c _
+  rw [sub_mul, Real.cos_sub]
+  ring
+
+/-- The antisymmetric quadrature gives the sine Fourier coefficient, including
+its sign when the two frequencies are interchanged. -/
+theorem horizontalPower_sine_covariance (q : ℕ → ℝ) (T a b : ℝ) (p r : ℕ) :
+    (∫ x, horizontalPowerStatistic q T p (fun t => Real.sin (a*t)) x *
+      horizontalPowerStatistic q T r (fun t => Real.cos (b*t)) x ∂limitingLaw q) -
+    (∫ x, horizontalPowerStatistic q T p (fun t => Real.cos (a*t)) x *
+      horizontalPowerStatistic q T r (fun t => Real.sin (b*t)) x ∂limitingLaw q) =
+    ∑ c : Copies T, Real.sin ((a-b)*copyOrdinate T c) * copyDisplacement T c ^ (p+r+2) := by
+  rw [horizontalPowerStatistic_product, horizontalPowerStatistic_product, ← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro c _
+  rw [sub_mul, Real.sin_sub]
+  ring
+
+/-- Decay of normalized DPP covariances, uniform over moving dictionaries and
+moving bounded ordinate tests, with each positive power counted separately. -/
+theorem tendsto_horizontalPower_covariance_div_count (q : ℝ → ℕ → ℝ) (p r : ℕ)
+    (f g : ℝ → ℝ → ℝ) (hf : ∀ T t, |f T t| ≤ 1) (hg : ∀ T t, |g T t| ≤ 1) :
+    Tendsto (fun T : ℝ => (∫ x, horizontalPowerStatistic (q T) T p (f T) x *
+      horizontalPowerStatistic (q T) T r (g T) x ∂limitingLaw (q T)) / (Ncount 0 T : ℝ))
+      atTop (𝓝 0) := by
+  apply squeeze_zero_norm' _ (tendsto_displacementMoment (p+r+1))
+  filter_upwards with T
+  rw [Real.norm_eq_abs, horizontalPowerStatistic_product, abs_div,
+    abs_of_nonneg (Nat.cast_nonneg (Ncount 0 T) : 0 ≤ (Ncount 0 T : ℝ))]
+  apply div_le_div_of_nonneg_right _ (Nat.cast_nonneg _)
+  apply (Finset.abs_sum_le_sum_abs _ _).trans
+  apply Finset.sum_le_sum
+  intro c _
+  have hx : 0 ≤ copyDisplacement T c ^ (p+r+2) := pow_nonneg (abs_nonneg _) _
+  rw [abs_mul, abs_mul, abs_of_nonneg hx]
+  have hfg := mul_le_mul (hf T (copyOrdinate T c)) (hg T (copyOrdinate T c))
+    (abs_nonneg _) zero_le_one
+  simpa only [one_mul] using mul_le_mul_of_nonneg_right hfg hx
 
 end RiemannResearch.Analysis.ZeroDPPHorizontal

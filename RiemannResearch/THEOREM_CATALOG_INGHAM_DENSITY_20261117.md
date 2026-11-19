@@ -84,6 +84,46 @@ gives the unconditional estimate
 See `eventually_horizontalEnergy_ratio_le_ingham` in
 [ActualZeroInghamHorizontalEnergy.lean](Analysis/ActualZeroInghamHorizontalEnergy.lean).
 
+For the count-normalized moments, put \(X_\rho=\Re\rho-\tfrac12\),
+\(M_k(T)=N(T)^{-1}\sum_{0<\Im\rho\le T}|X_\rho|^k\), and
+\(s_T=\log\log T/\log T\). Counting the central strip only on its off-line
+copies gives, for each fixed positive integer \(k\),
+\[
+   \limsup_{T\to\infty} M_k(T)/s_T^k \le (3/2)^k/3,
+   \qquad M_k(T)\longrightarrow 0.
+\]
+In particular \(M_2=E(T)/N(T)\). The squared, cubed and fourth powers of
+the per-copy energy \(X_\rho^2\) have respective means \(M_4,M_6,M_8\).
+Reflection makes every signed odd moment vanish at finite height, even
+with an arbitrary real ordinate weight. At order two, Riemann–von Mangoldt
+converts the improved coefficient \(3/4\) into \(3/(8\pi)\) in the
+preceding height normalization. The proof uses the checked Ingham envelope
+and the checked two-thirds critical-line theorem. It retains the finite
+Mellin tail identity and bounds the positive excess using Euler's gamma
+integral. [Displacement moments](Analysis/ActualZeroDisplacementMoments.lean)
+
+The joint empirical law of the ordinate modulo \(2\pi\) and \(X_\rho\)
+converges to angular Haar measure pushed forward under \(t\mapsto(t,0)\).
+The horizontal marginal converges weakly to \(\delta_0\).
+The infinite prime-torus word-character law and each fixed Hilbert-orbit
+pushforward now use this unconditional second-moment input. Their
+former full-strip Selberg hypothesis has been discharged.
+[Infinite prime torus](Analysis/ActualInfinitePrimeTorus.lean) · [Joint law and Lipschitz coupling](Analysis/ActualZeroAngleDisplacementLaw.lean)
+
+For the zero-label DPP, give each selected label with inclusion probability
+\(\pi_i\) the signed weight \(X_i|X_i|^p/\sqrt{\pi_i}\), and call its sum
+\(H_p\). Reflection centres every ordinate fibre. For each dictionary and
+cutoff, \(\mathbb E[H_p H_r]/N(T)=M_{p+r+2}(T)\). The weighted identity
+allows moving bounded ordinate tests and gives both Fourier quadratures at
+a difference frequency. [DPP moments](Analysis/ZeroDPPHorizontalVariance.lean)
+
+**Conditional research reduction.** The classical single-logarithm
+Selberg estimate gives \(M_k(T)\ll_k(\log T)^{-k}\).
+The finite bound in Lean is
+\(M_k(T)(a\log T)^k\le 2C\,T\log T\,k!/N(T)\).
+The positive-exponent full-strip provider for the actual zeros remains
+open in Lean. [Ford–Zaharescu, Lemma 2](https://arxiv.org/abs/math/0405459)
+
 The away-line Selberg transfer in
 [ActualSelbergIngham.lean](Analysis/ActualSelbergIngham.lean) now has its
 Ingham hypothesis supplied. The unconditional corollary

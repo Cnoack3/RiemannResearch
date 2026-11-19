@@ -4,7 +4,11 @@ import RiemannResearch.Analysis.ActualZeroCountAsymptotics
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import RiemannResearch.Analysis.InfiniteTorusCharacters
 import RiemannResearch.Analysis.ActualZeroOrdinate
-import RiemannResearch.Analysis.ActualZeroSelbergDensity
+import RiemannResearch.Analysis.ActualZeroDisplacementMoments
+import RiemannResearch.Analysis.ActualZeroFixedStripConcentration
+import RiemannResearch.Analysis.ActualFixedFrequencyLandau
+import RiemannResearch.Analysis.ActualRationalFMZLimits
+import RiemannResearch.Analysis.FinitePrimeModeArithmetic
 import RiemannResearch.Analysis.ZeroOrdinateEquidistribution
 import RiemannResearch.Analysis.PrimePhaseTorus
 import RiemannResearch.Analysis.PrimeTorusHaarSpecialization
@@ -19,9 +23,10 @@ import Mathlib.Tactic.Ring
 Source: the user-requested actual-zero specialization of the compact-orbit
 transfer. The atoms are actual zeta zeros and every analytic multiplicity is
 retained through ActualZeroOrdinate.Copies. Empty cutoffs are completed by
-the Dirac probability at the identity; this choice disappears eventually.
-The arithmetic application retains UniformSelbergDensity (1/4) explicitly.
-No classical provider, signed infinite-measure limit, or RH claim is added.
+the Dirac probability at the identity. The count-normalized horizontal second
+moment and fixed-frequency Landau theorem give unconditional Haar character
+limits. Their dense span identifies the full prime-torus law and its
+continuous Hilbert-orbit pushforward.
 -/
 
 noncomputable section
@@ -180,36 +185,51 @@ theorem integral_character_centered_identity (s : List (Nat.Primes × ℤ))
   · exact_mod_cast hN.ne'
   · exact_mod_cast hT
 
-/-- Selberg's existing hypothesis supplies the normalized word-character limits.
-The nonzero order-height signed correction is retained in the input theorem. -/
-theorem tendsto_integral_character (hD : UniformSelbergDensity (1 / 4))
-    (s : List (Nat.Primes × ℤ)) :
+/-- Every word character has its product-Haar moment. The actual count-normalized
+second moment supplies the fixed-strip hypothesis for the ordinate Fourier modes. -/
+theorem tendsto_integral_character (s : List (Nat.Primes × ℤ)) :
     Tendsto (fun T : ℝ => ∫ z, character s z ∂empiricalProbability T)
       atTop (𝓝 (haarMoment s)) := by
-  have hcenter := ActualPrimeTorusFMZ.tendsto_centered_character_div
-    (wordPrimes s) (wordMode s) (wordPrimes_prime s) hD
-  have hn : ∀ᶠ T : ℝ in atTop, (Ncount 0 T : ℂ) ≠ 0 := by
-    filter_upwards [eventually_count_pos] with T hT
-    exact_mod_cast hT.ne'
-  have ht : ∀ᶠ T : ℝ in atTop, (T : ℂ) ≠ 0 := by
-    filter_upwards [eventually_gt_atTop (0 : ℝ)] with T hT
-    exact_mod_cast hT.ne'
-  have h := normalized_limit_of_centered_limit _ _ _ _ _
-    hn ht tendsto_complex_height_div_count hcenter
-  apply h.congr'
-  filter_upwards [eventually_count_pos] with T hN
-  exact (integral_character_eq_sampleFunctional s T hN).symm
+  let P := wordPrimes s
+  let k := wordMode s
+  let u := PrimePhaseTorus.primeFrequency P k
+  have he : ((fun p : P => k p) = 0) ↔ u = 0 :=
+    (ActualPrimeTorusFMZ.restrictedMode_eq_zero_iff P k).trans
+      (PrimePhaseTorus.primeFrequency_eq_zero_iff P k (wordPrimes_prime s)).symm
+  have ha : ∀ᶠ T : ℝ in atTop, (∫ z, character s z ∂empiricalProbability T) =
+      ordinateSum T u / (Ncount 0 T : ℂ) := by
+    filter_upwards [eventually_count_pos] with T hN
+    rw [integral_character_eq_sampleFunctional s T hN,
+      ActualPrimeTorusFMZ.sampleFunctional_character]
+  rw [haarMoment_eq]
+  change Tendsto _ atTop (𝓝 (if (fun p : P => k p) = 0 then 1 else 0))
+  by_cases hu : u = 0
+  · rw [if_pos (he.mpr hu)]
+    apply tendsto_const_nhds.congr'
+    filter_upwards [ha,eventually_count_pos] with T hi hN
+    have hn : (Ncount 0 T : ℂ) ≠ 0 := by exact_mod_cast hN.ne'
+    simp [hi, hu, ordinateSum_zero, hn]
+  · rw [if_neg (fun h => hu (he.mp h))]
+    have hE : Tendsto (fun T : ℝ => horizontalEnergy T / (Ncount 0 T : ℝ)) atTop (𝓝 0) := by
+      simpa only [show 1+1 = (2:ℕ) by decide, displacementMoment_two] using
+        tendsto_displacementMoment 1
+    have hstrip := fixedStrip_of_relativeEnergy_tendsto_zero hE
+    have hmode : Tendsto (fun T : ℝ => ordinateSum T u / (Ncount 0 T : ℂ)) atTop (𝓝 0) := by
+      rcases lt_or_gt_of_ne hu with hneg | hpos
+      · simpa [ordinateSum_neg] using
+          (tendsto_ordinate_div_count_of_pos (neg_pos.mpr hneg) hstrip).star
+      · exact tendsto_ordinate_div_count_of_pos hpos hstrip
+    exact hmode.congr' (ha.mono fun _ h => h.symm)
 
 /-- The actual zero-copy laws converge on the infinite prime torus and on
-every fixed infinite Hilbert orbit. All finite joint Haar moments are identified.
-The sole remaining domain-specific premise is the displayed density estimate. -/
-theorem existsUnique_actual_orbit_limit (hD : UniformSelbergDensity (1 / 4))
+every fixed Hilbert orbit. All finite joint Haar moments are identified. -/
+theorem existsUnique_actual_orbit_limit
     (h : HilbertSpace) :
     ∃! ν : ProbabilityMeasure PrimeTorus,
       (∀ s, ∫ z, character s z ∂ν = haarMoment s) ∧
       Tendsto empiricalProbability atTop (𝓝 ν) ∧
       Tendsto (fun T => orbitLaw h (empiricalProbability T)) atTop
         (𝓝 (orbitLaw h ν)) :=
-  existsUnique_orbit_limit h empiricalProbability haarMoment (tendsto_integral_character hD)
+  existsUnique_orbit_limit h empiricalProbability haarMoment tendsto_integral_character
 
 end RiemannResearch.Analysis.ActualInfinitePrimeTorus
