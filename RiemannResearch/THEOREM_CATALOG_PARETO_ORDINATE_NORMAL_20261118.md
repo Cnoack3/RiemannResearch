@@ -84,6 +84,20 @@ The spanning identity is open. Identifying $W=\mathbb R1$ from this criterion
 also uses the published reverse natural approximation implication as an explicit Lean
 hypothesis. [Conditional span criterion](RH/MixedConductorSpanCriterion.lean)
 
+The orthogonal projection is $P_V1=(1-e_\infty)u$, and $u=P_V1$ holds exactly when $u=1$.
+A uniform bound on either side of the physical values $u(k)$, for $k\ge1$, implies $u=1$.
+Indeed one-sided boundedness of a legal annihilator gives an absolute first-moment tail of
+order $1/N$ by dyadic parity testing. The prime number theorem then forces its mean to
+vanish. Applied to $1-P_V1$, the mean is exactly its squared norm. An unconditional
+one-sided bound for $u$ remains open. [Annihilator tail](RH/ParetoAnnihilatorOneSided.lean)
+· [Screened parity criterion](RH/ScreenedParityOneSided.lean)
+
+At conductors through 241 a rational trial on 65,536 positive sites, with a grouped
+periodic envelope on the complete tail, gives
+$\|u-1\|_P^2\le643505167532007/64893494832467993<1/100$.
+[Complete trial and bound](RH/ParetoGroupedResidueMass.lean) ·
+[Integer certificate](RH/ParetoGroupedResidueMassData.lean)
+
 ## What the ordinate bound proves
 
 Fix a prime $p$. At the same height $T$ take all positive-height nontrivial zeta zeros up to $T$, with analytic multiplicity. For each harmonic $h$ the signed Möbius sum of prime-root probes estimates $c_q(h)$. The negative prefix up to $k\bmod q$ gives a complex $q$-periodic packet $Z_{p,q,T}(k)$. Use its real part as a row $\widehat J_q$. Define $\widehat G,\widehat b$ by the **same complete Pareto expectations** as $G,b$, and $\widehat a=\widehat G^{-1}\widehat b$. Write $r(T)=(\log\log T)^2/\log T$. [Ford and Zaharescu](https://arxiv.org/abs/math/0405459) · [Ordinate construction and uniform rate](RH/RamanujanOrdinateRate.lean)

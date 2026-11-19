@@ -366,30 +366,58 @@ theorem mixed_orthogonal_span_one_iff_residual_spans :
     have hright : Submodule.span ℝ {hilbertOne} ≤ S := le_sup_right
     exact S.sub_mem (hright (Submodule.subset_span (Set.mem_singleton _))) (hleft hP)
 
+/-- The mean of the legal projection equals the mass captured from the unit target. -/
+theorem limitProjection_inner_one :
+    inner ℝ limitProjection hilbertOne = 1 - limitEnergy := by
+  have h := limitResidual_inner_one
+  rw [limitResidual, inner_sub_left, real_inner_self_eq_norm_sq, hilbertOne_norm_sq] at h
+  linarith
+
+/-- The legal projection has the screened direction and squared projection norm as its scale. -/
+theorem limitProjection_eq_scaled_screenedTwo :
+    limitProjection = (1 - limitEnergy) • normalizedScreenedTwo := by
+  have hmem : limitProjection ∈ closedSpace := closedSpace.starProjection_apply_mem _
+  have ho : limitResidual ∈ mixedClosureᗮ :=
+    fun m hm => limitResidual_mem_orthogonal m (mixedClosure_le_closedSpace hm)
+  have hp : limitProjection ∈ mixedClosureᗮ := by
+    have h := mixedClosure.orthogonal.sub_mem one_mem_mixedClosure_orthogonal ho
+    rw [limitResidual, sub_sub_cancel] at h
+    exact h
+  have h := fullScreening_eq_mean_smul hmem
+  change limitProjection - mixedClosure.starProjection limitProjection = _ at h
+  rwa [(Submodule.starProjection_apply_eq_zero_iff _).mpr hp, sub_zero,
+    limitProjection_inner_one] at h
+
+instance : screenedPrimeClosure.HasOrthogonalProjection := by
+  unfold screenedPrimeClosure
+  infer_instance
+
+theorem mixed_starProjection_screenedTwo :
+    mixedClosure.starProjection normalizedScreenedTwo = 0 := by
+  apply (Submodule.starProjection_apply_eq_zero_iff _).mpr
+  have h := normalizedScreenedTwo_mem_screenedPrimeClosure
+  rw [screenedPrimeClosure_eq_inf_orthogonal] at h
+  exact h.2
+
+theorem mixedOrthogonal_starProjection_one :
+    mixedClosureᗮ.starProjection hilbertOne = hilbertOne :=
+  Submodule.starProjection_eq_self_iff.mpr one_mem_mixedClosure_orthogonal
+
+theorem screenedPrimeClosure_starProjection_one :
+    screenedPrimeClosure.starProjection hilbertOne = limitProjection := by
+  have hp : limitProjection ∈ screenedPrimeClosure := by
+    rw [limitProjection_eq_scaled_screenedTwo]
+    exact screenedPrimeClosure.smul_mem _ normalizedScreenedTwo_mem_screenedPrimeClosure
+  have hr : hilbertOne - limitProjection ∈ screenedPrimeClosureᗮ :=
+    fun v hv => limitResidual_mem_orthogonal v (screenedPrimeClosure_le_closedSpace hv)
+  exact Submodule.eq_starProjection_of_mem_orthogonal hp hr
+
 /-- The limiting fixed-seed error is the canonical legal projection error
 rescaled by the squared norm of its projection. -/
 theorem normalizedScreenedTwo_error_sq_eq_limitEnergy :
     ‖normalizedScreenedTwo - hilbertOne‖ ^ 2 = limitEnergy / (1 - limitEnergy) := by
-  have hP : limitProjection ∈ closedSpace := closedSpace.starProjection_apply_mem _
   have hU := screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure
-  have hPmean : inner ℝ limitProjection hilbertOne = 1 - limitEnergy := by
-    have h := limitResidual_inner_one
-    rw [limitResidual, inner_sub_left, real_inner_self_eq_norm_sq, hilbertOne_norm_sq] at h
-    linarith
-  have hPorth : limitProjection ∈ mixedClosureᗮ := by
-    apply (mixedClosure.mem_orthogonal _).mpr
-    intro x hx
-    have h₁ := (closedSpace.mem_orthogonal _).mp limitResidual_mem_orthogonal x
-      (mixedClosure_le_closedSpace hx)
-    have h₂ := (mixedClosure.mem_orthogonal _).mp one_mem_mixedClosure_orthogonal x hx
-    rw [limitResidual, inner_sub_right, h₂, zero_sub, neg_eq_zero] at h₁
-    exact h₁
-  have hPproj : mixedClosure.starProjection limitProjection = 0 :=
-    (Submodule.starProjection_apply_eq_zero_iff mixedClosure).mpr hPorth
-  have hPu : limitProjection = (1 - limitEnergy) • normalizedScreenedTwo := by
-    have h := fullScreening_eq_mean_smul hP
-    change limitProjection - mixedClosure.starProjection limitProjection = _ at h
-    rwa [hPproj, sub_zero, hPmean] at h
+  have hPu := limitProjection_eq_scaled_screenedTwo
   have hprod : (1 - limitEnergy) * ‖normalizedScreenedTwo‖ ^ 2 = 1 := by
     have h := (closedSpace.mem_orthogonal _).mp limitResidual_mem_orthogonal _ hU
     rw [limitResidual, inner_sub_right, normalizedScreenedTwo_mean, hPu, real_inner_smul_right,
@@ -399,6 +427,22 @@ theorem normalizedScreenedTwo_error_sq_eq_limitEnergy :
   apply (eq_div_iff hn).mpr
   rw [norm_sub_sq_real, normalizedScreenedTwo_mean, hilbertOne_norm_sq]
   nlinarith
+
+/-- Equality with the orthogonal projection already forces equality with the target. -/
+theorem normalizedScreenedTwo_eq_limitProjection_iff :
+    normalizedScreenedTwo = limitProjection ↔ normalizedScreenedTwo = hilbertOne := by
+  constructor
+  · intro h
+    have he := limitResidual_inner_one
+    rw [limitResidual, ← h, inner_sub_left, real_inner_self_eq_norm_sq, hilbertOne_norm_sq,
+      normalizedScreenedTwo_mean, sub_self] at he
+    have herr := normalizedScreenedTwo_error_sq_eq_limitEnergy
+    rw [← he, zero_div, pow_two, mul_eq_zero, or_self, norm_eq_zero, sub_eq_zero] at herr
+    exact herr
+  · intro h
+    have hm := one_mem_closedSpace_iff_normalizedScreenedTwo.mpr h
+    rw [h]
+    exact (Submodule.starProjection_eq_self_iff.mpr hm).symm
 
 /-- The prime input is fixed at conductor 2 while the mixed cutoff grows. -/
 def fixedTwoTrial (M : ℕ) : ThresholdHilbert :=
