@@ -183,3 +183,22 @@ the two-point determinant and has expected count one there by the
 diagonal. Countability then gives exactly one selected occurrence
 per distinct ordinate almost surely. The sine variance of these
 distinct ordinates still requires a spacing estimate.
+
+## Factorial window tests on the pure-prime DPP
+
+In `ZeroDPPFactorialWidthContrast.lean`, the normalized translation integral
+of $N(N-1)$ counts ordered pairs of different occurrence labels, including
+distinct labels at a common ordinate. The finite-height triangle equals this
+factorial moment plus the exact window mean. For width $s=2^{-j}r$, its
+signed triangle error integrated over $[a,b]$ equals the factorial error
+against $\mathrm{sineWindowEnergy}(s)-s$ plus
+$(\mathrm{unfoldedWindowMean}(T,1)-1)\int_a^b 2^{-j}r\,dr$.
+The displayed correction tends to zero for every fixed interval and scale.
+
+`positiveGapPCC_of_factorialHalfWidthContrasts` takes the one open input
+that the difference of those signed factorial errors at scales $1$ and
+$1/2$ tends to zero on every positive rational interval.
+`factorialHalfWidthContrasts_iff_prime_sampled` identifies this condition
+with the corresponding almost-sure condition for the multiplicity-weighted
+translated counts of the pure-prime DPP. The sampling identity holds at
+all finite heights and widths on one common full-measure event.

@@ -87,7 +87,7 @@ theorem variance_eq_latticeExcess (T h m : ℝ) (k : ℕ) (hT : 0 < T) (hh : 0 �
   field_simp [hT.ne']
   <;> ring
 
-private theorem eventually_supported_width (B : ℝ) :
+theorem eventually_supported_width (B : ℝ) :
     ∀ᶠ T : ℝ in atTop, ∀ R : ℝ, 0 ≤ R → R ≤ B →
       0 ≤ R / (Real.log T / (2 * Real.pi)) ∧
         ∀ c : Copies T, R / (Real.log T / (2 * Real.pi)) ≤ c.1.1.im := by
