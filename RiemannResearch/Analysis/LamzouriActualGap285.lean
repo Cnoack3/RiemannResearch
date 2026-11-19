@@ -8,13 +8,14 @@ import RiemannResearch.Analysis.GapKernelPolynomialObjective
 import RiemannResearch.Analysis.GapKernelFourierObjective
 
 /-!
-# External exact degree-285 certificate and actual small gaps
+# Degree-285 certificate interface and actual small gaps
 
 The six numerical premises concern given integer polynomials and their
 positive rays, their finite Fourier recurrence and a rational scalar check.
 The accompanying Python certificate uses rational Bernstein subdivision and
-a Gaussian objective enclosure. The analytic input is the scoped compact
-deletion theorem. No condition in the finite certificate mentions any zeta zero.
+a Gaussian objective enclosure. The original integer polynomials have a
+verified instance in `LamzouriGap285OriginalReplay`. The analytic input is
+the scoped compact-deletion theorem. No condition in the finite certificate mentions any zeta zero.
 -/
 
 noncomputable section

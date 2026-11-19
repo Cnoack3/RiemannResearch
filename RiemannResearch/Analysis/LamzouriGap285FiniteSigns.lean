@@ -6,7 +6,7 @@ import RiemannResearch.Analysis.LamzouriGap285PhysicalSignCheck
 import RiemannResearch.Analysis.LamzouriGap285FourierRay
 import RiemannResearch.Analysis.LamzouriGap285ObjectiveData
 
-/-! # Degree-285 compact deletion with only the Fourier identity outstanding -/
+/-! # Degree-285 compact deletion from the integer Fourier identity -/
 
 namespace RiemannResearch.Analysis.LamzouriGapKernel285
 open ActualZeroOrdinate GapKernelPolynomial GapKernelFourierRecurrence LamzouriSmallGapCriterion
