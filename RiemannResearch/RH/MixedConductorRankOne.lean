@@ -219,6 +219,153 @@ theorem mixed_inf_screenedPrimeClosure : mixedClosure ⊓ screenedPrimeClosure =
   rw [screenedPrimeClosure_eq_inf_orthogonal, inf_left_comm, Submodule.inf_orthogonal_eq_bot,
     inf_bot_eq]
 
+/-- In the mixed split the algebraic span already contains its normalized generator. -/
+theorem screenedPrimeSpan_eq_span_two :
+    Submodule.span ℝ (Set.range fun q : {q : ℕ // 1 < q ∧ IsPrimePow q} =>
+      limitScreenedPacket q.val) = Submodule.span ℝ {normalizedScreenedTwo} := by
+  apply le_antisymm
+  · rw [← screenedPrimeClosure_eq_span_two]
+    exact Submodule.le_topologicalClosure _
+  · apply Submodule.span_le.mpr
+    apply Set.singleton_subset_iff.mpr
+    exact Submodule.smul_mem _ _ (Submodule.subset_span
+      ⟨⟨2, by decide, Nat.prime_two.isPrimePow⟩, rfl⟩)
+
+/-- The mean map in the mixed-conductor split exact sequence. -/
+def legalPacketMean : closedSpace →L[ℝ] ℝ where
+  toFun x := inner ℝ (x : ThresholdHilbert) hilbertOne
+  map_add' _ _ := inner_add_left _ _ _
+  map_smul' _ _ := real_inner_smul_left _ _ _
+  cont := continuous_subtype_val.inner continuous_const
+
+/-- A bounded linear section of the mean on the legal space. -/
+def screenedMeanSection : ℝ →L[ℝ] closedSpace where
+  toFun a := a • (⟨normalizedScreenedTwo,
+    screenedPrimeClosure_le_closedSpace
+      normalizedScreenedTwo_mem_screenedPrimeClosure⟩ : closedSpace)
+  map_add' _ _ := add_smul _ _ _
+  map_smul' _ _ := mul_smul _ _ _
+  cont := continuous_id.smul continuous_const
+
+theorem legalPacketMean_comp_screenedMeanSection :
+    legalPacketMean.comp screenedMeanSection = ContinuousLinearMap.id ℝ ℝ := by
+  apply ContinuousLinearMap.ext
+  intro a
+  change inner ℝ (a • normalizedScreenedTwo) hilbertOne = a
+  rw [real_inner_smul_left, normalizedScreenedTwo_mean, mul_one]
+
+theorem legalPacketMean_ker :
+    legalPacketMean.ker = mixedClosure.comap closedSpace.subtype := by
+  ext x
+  change inner ℝ (x : ThresholdHilbert) hilbertOne = 0 ↔ (x : ThresholdHilbert) ∈ mixedClosure
+  exact ⟨fun h => (mem_mixedClosure_iff_mem_closedSpace_and_mean_zero _).mpr ⟨x.property, h⟩,
+    fun h => ((mem_mixedClosure_iff_mem_closedSpace_and_mean_zero _).mp h).2⟩
+
+theorem mixed_orthogonal_eq_screened_sup_legal_orthogonal :
+    mixedClosureᗮ = screenedPrimeClosure ⊔ closedSpaceᗮ := by
+  have hVM : closedSpaceᗮ ≤ mixedClosureᗮ := by
+    intro x hx m hm
+    exact hx m (mixedClosure_le_closedSpace hm)
+  have h := RiemannResearch.Analysis.NestedOrthogonalDecomposition.prime_sup_carry hVM
+  rw [screenedPrimeClosure_eq_inf_orthogonal]
+  simpa only [Submodule.orthogonal_orthogonal, inf_comm, sup_comm] using h.symm
+
+/-- The constant and the screened line give two complements to the legal orthogonal
+complement inside the mixed orthogonal complement. -/
+theorem mixed_orthogonal_eq_target_sup_legal_orthogonal :
+    mixedClosureᗮ = Submodule.span ℝ {hilbertOne} ⊔ closedSpaceᗮ := by
+  apply le_antisymm
+  · intro x hx
+    let a := inner ℝ normalizedScreenedTwo x
+    have hyM : x - a • hilbertOne ∈ mixedClosureᗮ :=
+      mixedClosure.orthogonal.sub_mem hx
+        (mixedClosure.orthogonal.smul_mem _ one_mem_mixedClosure_orthogonal)
+    have hyU : inner ℝ normalizedScreenedTwo (x - a • hilbertOne) = 0 := by
+      rw [inner_sub_right, real_inner_smul_right, normalizedScreenedTwo_mean, mul_one]
+      exact sub_self _
+    have hyV : x - a • hilbertOne ∈ closedSpaceᗮ := by
+      intro z hz
+      rw [← mixed_sup_screenedPrimeClosure, screenedPrimeClosure_eq_span_two] at hz
+      obtain ⟨m, hm, w, hw, rfl⟩ := Submodule.mem_sup.mp hz
+      obtain ⟨b, rfl⟩ := Submodule.mem_span_singleton.mp hw
+      rw [inner_add_left, hyM m hm, real_inner_smul_left, hyU, mul_zero, add_zero]
+    refine Submodule.mem_sup.mpr ⟨a • hilbertOne,
+      Submodule.mem_span_singleton.mpr ⟨a, rfl⟩, x - a • hilbertOne, hyV, ?_⟩
+    abel
+  · apply sup_le
+    · apply Submodule.span_le.mpr
+      intro y hy
+      rw [Set.mem_singleton_iff.mp hy]
+      exact one_mem_mixedClosure_orthogonal
+    · intro x hx m hm
+      exact hx m (mixedClosure_le_closedSpace hm)
+
+/-- The ambient orthogonal complement of the screened line contains the mixed packet at six. -/
+theorem screened_sup_ambient_orthogonal_ne_mixed_orthogonal :
+    screenedPrimeClosure ⊔ screenedPrimeClosureᗮ ≠ mixedClosureᗮ := by
+  have h6 := mixed_packet_mem_closure 6 (by decide) (by decide)
+  have hne : ramanujanPacketHilbert 6 ≠ 0 :=
+    (finitePacket_independent 5).ne_zero (⟨4, by decide⟩ : Fin 5)
+  have ho : ramanujanPacketHilbert 6 ∈ screenedPrimeClosureᗮ := by
+    intro x hx
+    rw [screenedPrimeClosure_eq_inf_orthogonal] at hx
+    exact inner_eq_zero_symm.mp (hx.2 _ h6)
+  intro he
+  have hh : ramanujanPacketHilbert 6 ∈ mixedClosureᗮ :=
+    he ▸ (show ramanujanPacketHilbert 6 ∈ screenedPrimeClosure ⊔ screenedPrimeClosureᗮ from
+      (le_sup_right : screenedPrimeClosureᗮ ≤ screenedPrimeClosure ⊔ screenedPrimeClosureᗮ) ho)
+  exact hne (inner_self_eq_zero.mp (hh _ h6))
+
+/-- The proposed spanning condition is equivalent to asking the constant residual
+to span the whole legal orthogonal complement. -/
+theorem mixed_orthogonal_span_one_iff_residual_spans :
+    mixedClosureᗮ = screenedPrimeClosure ⊔ Submodule.span ℝ {hilbertOne} ↔
+      closedSpaceᗮ = Submodule.span ℝ {limitResidual} := by
+  have hVM : closedSpaceᗮ ≤ mixedClosureᗮ :=
+    fun _ hx m hm => hx m (mixedClosure_le_closedSpace hm)
+  have hW : screenedPrimeClosure ≤ mixedClosureᗮ := by
+    rw [screenedPrimeClosure_eq_inf_orthogonal]
+    exact inf_le_right
+  have hspan : Submodule.span ℝ {hilbertOne} ≤ mixedClosureᗮ :=
+    Submodule.span_le.mpr (Set.singleton_subset_iff.mpr one_mem_mixedClosure_orthogonal)
+  constructor
+  · intro h
+    apply le_antisymm _ (Submodule.span_le.mpr
+      (Set.singleton_subset_iff.mpr limitResidual_mem_orthogonal))
+    intro x hx
+    have hxm := hVM hx
+    rw [h] at hxm
+    obtain ⟨w, hw, t, ht, he⟩ := Submodule.mem_sup.mp hxm
+    obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.mp ht
+    apply Submodule.mem_span_singleton.mpr
+    refine ⟨a, ?_⟩
+    change a • (hilbertOne - closedSpace.starProjection hilbertOne) = x
+    calc
+      _ = (w + a • hilbertOne) - closedSpace.starProjection (w + a • hilbertOne) := by
+        rw [map_add, map_smul,
+          Submodule.starProjection_eq_self_iff.mpr (screenedPrimeClosure_le_closedSpace hw),
+          smul_sub]
+        abel
+      _ = x := by rw [he, (Submodule.starProjection_apply_eq_zero_iff _).mpr hx, sub_zero]
+  · intro h
+    apply le_antisymm _ (sup_le hW hspan)
+    rw [mixed_orthogonal_eq_screened_sup_legal_orthogonal, h]
+    apply sup_le le_sup_left
+    apply Submodule.span_le.mpr
+    apply Set.singleton_subset_iff.mpr
+    have hPorth : limitProjection ∈ mixedClosureᗮ := by
+      have hp := mixedClosure.orthogonal.sub_mem one_mem_mixedClosure_orthogonal
+        (hVM limitResidual_mem_orthogonal)
+      rw [limitResidual, sub_sub_cancel] at hp
+      exact hp
+    have hP : limitProjection ∈ screenedPrimeClosure := by
+      rw [screenedPrimeClosure_eq_inf_orthogonal]
+      exact ⟨closedSpace.starProjection_apply_mem _, hPorth⟩
+    let S := screenedPrimeClosure ⊔ Submodule.span ℝ {hilbertOne}
+    have hleft : screenedPrimeClosure ≤ S := le_sup_left
+    have hright : Submodule.span ℝ {hilbertOne} ≤ S := le_sup_right
+    exact S.sub_mem (hright (Submodule.subset_span (Set.mem_singleton _))) (hleft hP)
+
 /-- The limiting fixed-seed error is the canonical legal projection error
 rescaled by the squared norm of its projection. -/
 theorem normalizedScreenedTwo_error_sq_eq_limitEnergy :

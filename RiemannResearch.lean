@@ -431,6 +431,8 @@ import RiemannResearch.RH.MixedConductorDilation
 import RiemannResearch.RH.MixedConductorCovariance
 import RiemannResearch.RH.ResidueConductorVariation
 import RiemannResearch.RH.MixedConductorRankOne
+import RiemannResearch.RH.CompositePacketClosure
+import RiemannResearch.RH.MixedConductorSpanCriterion
 import RiemannResearch.RH.ParetoLogResidueTest
 import RiemannResearch.RH.PrimePowerPacketSummation
 import RiemannResearch.RH.ScreenedPrimePowerTelescope

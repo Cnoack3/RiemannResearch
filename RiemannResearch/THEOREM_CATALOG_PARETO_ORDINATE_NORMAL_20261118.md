@@ -62,6 +62,28 @@ Each condition below is equivalent to $e_\infty=0$. Each implies Mathlib's Riema
 
 For growing regularized observations the vanishing penalized minimum is equivalent to $e_\infty=0$ **and** vanishing soft cost. A vanishing canonical budget supplies the cost condition. For trials matching $1$ exactly on a physical head, the tail product uses the limiting residual's tail energy times the trial's complete squared error. With eventual head matching, that product tending to zero is equivalent to $e_\infty=0$. These formulations retain their budget and feasibility hypotheses. [Regularized equations](RH/RamanujanRegularizationCriteria.lean) · [Exact-head equations](RH/RamanujanExactHeadFilterCriteria.lean)
 
+## Composite conductors and the screened line
+
+For the closed span $M_{\rm all}$ of every composite packet, the conductor $4$ has
+Pareto mean $\log 2$. The mixed packets span the mean kernel in $V$, hence
+$M_{\rm all}=V$ and screening against all composites annihilates every packet.
+[All-composite closure](RH/CompositePacketClosure.lean)
+
+For the mixed closure $M$, whose indices have at least two distinct prime divisors,
+let $W$ be the algebraic span of the screened prime powers.
+The mean on $V$ has kernel $M$ and bounded linear section $a\mapsto au$,
+where $u=(J_2-P_MJ_2)/\log 2$. Then $W=\mathbb Ru$ and
+$M^\perp=W\oplus^\perp V^\perp=\mathbb R1+V^\perp$. The nonzero mixed packet $J_6$ lies in the
+ambient $W^\perp$. [Categorical split and ambient complement](RH/MixedConductorRankOne.lean)
+
+**Conditional research reduction.** The proposed identity
+$M^\perp=W+\mathbb R1$ is equivalent to $V^\perp=\mathbb R(1-P_V1)$.
+Containment of $V^\perp$ in any real line implies RH because a right-hand
+zero and its distinct conjugate would yield two independent Mellin functionals.
+The spanning identity is open. Identifying $W=\mathbb R1$ from this criterion
+also uses the published reverse natural approximation implication as an explicit Lean
+hypothesis. [Conditional span criterion](RH/MixedConductorSpanCriterion.lean)
+
 ## What the ordinate bound proves
 
 Fix a prime $p$. At the same height $T$ take all positive-height nontrivial zeta zeros up to $T$, with analytic multiplicity. For each harmonic $h$ the signed Möbius sum of prime-root probes estimates $c_q(h)$. The negative prefix up to $k\bmod q$ gives a complex $q$-periodic packet $Z_{p,q,T}(k)$. Use its real part as a row $\widehat J_q$. Define $\widehat G,\widehat b$ by the **same complete Pareto expectations** as $G,b$, and $\widehat a=\widehat G^{-1}\widehat b$. Write $r(T)=(\log\log T)^2/\log T$. [Ford and Zaharescu](https://arxiv.org/abs/math/0405459) · [Ordinate construction and uniform rate](RH/RamanujanOrdinateRate.lean)
