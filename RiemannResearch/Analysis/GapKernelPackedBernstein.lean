@@ -166,4 +166,81 @@ theorem checkPackedRay_eq (n : ℕ) (p : List ℤ) :
   | zero => rfl
   | succ n ih => simp only [checkPackedRay, checkBernsteinRay, ih, packedBernsteinRight_eq]
 
+/-- Monomial coefficients after the affine change of variable a + w x. -/
+def affineCoefficients (a w : ℤ) : List ℤ → List ℤ
+  | [] => []
+  | c :: p =>
+    let q := affineCoefficients a w p
+    add [c] (add (scale a q) (0 :: scale w q))
+
+theorem value_affineCoefficients (a w : ℤ) (p : List ℤ) (x : ℝ) :
+    value (affineCoefficients a w p) x = value p (a + w * x) := by
+  induction p with
+  | nil => rfl
+  | cons c p ih =>
+    simp only [affineCoefficients, value_add, value_scale, value, ih, Int.cast_zero,
+      zero_add, mul_zero, add_zero]
+    ring
+
+private theorem length_affine (a w : ℤ) (p : List ℤ) :
+    (affineCoefficients a w p).length = p.length := by
+  induction p with
+  | nil => rfl
+  | cons c p ih =>
+    simp only [affineCoefficients, length_add, scale, List.length_map, List.length_cons,
+      List.length_nil, ih]
+    omega
+
+private theorem mass_scale_int (a : ℤ) (p : List ℤ) : mass (scale a p) = |a| * mass p := by
+  induction p with
+  | nil => simp [scale, mass]
+  | cons c p ih =>
+    change |a * c| + mass (scale a p) = |a| * (|c| + mass p)
+    rw [abs_mul, ih]
+    ring
+
+private def affineBound (s : ℤ) : List ℤ → ℤ
+  | [] => 0
+  | c :: p => |c| + s * affineBound s p
+
+private theorem mass_affine (a w : ℤ) (p : List ℤ) :
+    mass (affineCoefficients a w p) ≤ affineBound (|a| + |w|) p := by
+  induction p with
+  | nil => rfl
+  | cons c p ih =>
+    let q := affineCoefficients a w p
+    have h := mass_add_le [c] (add (scale a q) (0 :: scale w q))
+    have h' := mass_add_le (scale a q) (0 :: scale w q)
+    simp only [mass, abs_zero, zero_add, add_zero, mass_scale_int] at h h'
+    change mass (add [c] (add (scale a q) (0 :: scale w q))) ≤
+      |c| + (|a| + |w|) * affineBound (|a| + |w|) p
+    change mass q ≤ affineBound (|a| + |w|) p at ih
+    nlinarith only [h, h', mul_le_mul_of_nonneg_left ih (add_nonneg (abs_nonneg a) (abs_nonneg w))]
+
+private theorem evalInt_affine (a w : ℤ) (p : List ℤ) (t : ℤ) :
+    evalInt t (affineCoefficients a w p) = evalInt (a + w*t) p := by
+  apply (Int.cast_injective (α := ℝ))
+  simp only [cast_evalInt, value_affineCoefficients, Int.cast_add, Int.cast_mul]
+
+/-- Compare a proposed affine row at a radix large enough to distinguish
+every coefficient of both arrays, including their signs. -/
+def certifyAffine (a w : ℤ) (p q : List ℤ) : Bool :=
+  let m := affineBound (|a| + |w|) p
+  let b := (2 : ℤ) ^ ((max m (mass q)).toNat.log2 + 1)
+  decide (m < b ∧ mass q < b ∧ p.length = q.length ∧
+    evalInt (a + w*(2*b)) p = evalInt (2*b) q)
+
+theorem certifyAffine_sound (a w : ℤ) (p q : List ℤ) (h : certifyAffine a w p q = true) :
+    affineCoefficients a w p = q := by
+  let b := (2 : ℤ) ^ ((max (affineBound (|a| + |w|) p) (mass q)).toNat.log2 + 1)
+  change decide (affineBound (|a| + |w|) p < b ∧ mass q < b ∧ p.length = q.length ∧
+    evalInt (a + w*(2*b)) p = evalInt (2*b) q) = true at h
+  rcases of_decide_eq_true h with ⟨hp, hq, hn, he⟩
+  rw [← evalInt_affine] at he
+  calc
+    _ = digits b (affineCoefficients a w p).length (evalInt (2*b) (affineCoefficients a w p)) :=
+      (digits_eval _ ((mass_affine a w p).trans_lt hp)).symm
+    _ = digits b q.length (evalInt (2*b) q) := by rw [length_affine, hn, he]
+    _ = _ := digits_eval _ hq
+
 end RiemannResearch.Analysis.GapKernelPolynomial

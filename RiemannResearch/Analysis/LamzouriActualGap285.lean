@@ -40,37 +40,53 @@ class Replay : Prop where
       (ratValue (primitiveFrom 0 inputPolynomial) 0 -
         ratValue (primitiveFrom 0 inputPolynomial) (radius^2)/expLower (radius^2) 32)
 
+/-! A certificate with the same conditions for an explicit monomial pair. -/
+structure PolynomialCertificate (physical frequency : List ℤ) : Prop where
+  unit_pos : 0 < ratValue frequency 0
+  input_pos (x : ℝ) : 0 ≤ x → 0 < value physical x
+  output_neg (y : ℝ) : (78/25 : ℝ) ≤ y → value frequency y < 0
+  coefficients : transport physical = scale (2^physical.length) frequency
+  primitive_nonneg : 0 ≤ ratValue (primitiveFrom 0 physical) (radius^2)
+  scalar : (177245385090551603/100000000000000000 : ℚ)*ratValue frequency 0 <
+    (radius/cutoff)*ratValue physical 0 + (cutoff/radius)*
+      (ratValue (primitiveFrom 0 physical) 0 -
+        ratValue (primitiveFrom 0 physical) (radius^2)/expLower (radius^2) 32)
+
 private theorem smooth_value (p : List ℤ) : ContDiff ℝ 2 (value p) := by
   induction p with
   | nil => exact contDiff_const
   | cons a p ih => exact contDiff_const.add (contDiff_id.mul ih)
 
-theorem smallGapProportion_certified285 [h : Replay] [LamzouriCompactDeletion2026] :
+/-- Fixed-cutoff compact deletion for any integer polynomial pair satisfying the
+six finite conditions. This lets independent exact witnesses use the same
+normalization and the same analytic argument. -/
+theorem smallGapProportion_of_polynomialCertificate (physical frequency : List ℤ)
+    (h : PolynomialCertificate physical frequency) [LamzouriCompactDeletion2026] :
     0 < smallGapProportion (392391339/500000000) := by
   have hr : (0:ℝ) < radius := by norm_num [radius]
   have ht : (0:ℝ) < cutoff := by norm_num [cutoff]
   have hs : 0 < scaleFactor := div_pos (mul_pos ht (Real.sqrt_pos.mpr Real.pi_pos)) hr
-  have hq : 0 < value fourierPolynomial 0 := by
-    have hq' : (0:ℝ) < ((ratValue fourierPolynomial 0:ℚ):ℝ) := by exact_mod_cast h.unit_pos
+  have hq : 0 < value frequency 0 := by
+    have hq' : (0:ℝ) < ((ratValue frequency 0:ℚ):ℝ) := by exact_mod_cast h.unit_pos
     simpa only [cast_ratValue,Rat.cast_zero] using hq'
-  let f := normalizedTest inputPolynomial fourierPolynomial scaleFactor
-  have hi : Integrable (model inputPolynomial) := by
-    simpa only [pow_zero,one_mul] using weighted_integrable inputPolynomial 0
+  let f := normalizedTest physical frequency scaleFactor
+  have hi : Integrable (model physical) := by
+    simpa only [pow_zero,one_mul] using weighted_integrable physical 0
   have hfi : Integrable f := by
-    apply ((hi.comp_div hs.ne').const_mul ((scaleFactor*value fourierPolynomial 0)⁻¹)).congr
+    apply ((hi.comp_div hs.ne').const_mul ((scaleFactor*value frequency 0)⁻¹)).congr
     exact Filter.Eventually.of_forall fun x => by simp [f,normalizedTest,div_eq_inv_mul]
   have hfc : ContDiff ℝ 2 f := by
     change ContDiff ℝ 2 (fun x : ℝ =>
       Real.exp (-Real.pi*(x/scaleFactor)^2) *
-      value inputPolynomial (Real.pi*(x/scaleFactor)^2) /
-        (scaleFactor*value fourierPolynomial 0))
-    have hv := smooth_value inputPolynomial
+      value physical (Real.pi*(x/scaleFactor)^2) /
+        (scaleFactor*value frequency 0))
+    have hv := smooth_value physical
     fun_prop
   have he : Function.Even f := fun x => by simp [f,normalizedTest,model,neg_div]
   have hn (x : ℝ) : 0 ≤ f x := by
     apply div_nonneg _ (mul_pos hs hq).le
     exact mul_nonneg (Real.exp_pos _).le (h.input_pos _ (mul_nonneg Real.pi_pos.le (sq_nonneg _))).le
-  have hfour (u : ℝ) : cosineTransform f u = fourierModel scaleFactor fourierPolynomial u :=
+  have hfour (u : ℝ) : cosineTransform f u = fourierModel scaleFactor frequency u :=
     normalized_fourier_cosine hs hq h.coefficients u
   have hedge : (78/25:ℝ) ≤ Real.pi*(scaleFactor*(gap:ℝ))^2 := by
     have hπ : (314159265358979323846/100000000000000000000 : ℝ) < Real.pi :=
@@ -101,13 +117,18 @@ theorem smallGapProportion_certified285 [h : Replay] [LamzouriCompactDeletion202
       · intro i hi
         positivity
       · exact ⟨0, by simp, by norm_num⟩
-    have hobj := polynomial_objective_gt_one inputPolynomial 32
+    have hobj := polynomial_objective_gt_one physical 32
       (by norm_num [radius]) (by norm_num [cutoff]) h.unit_pos h.primitive_nonneg
       hE h.scalar
     unfold objective
     change 1 < normalizedTest _ _ _ 0 + 2 * ∫ x in (0:ℝ)..(cutoff:ℝ), x * normalizedTest _ _ _ x
     unfold scaleFactor
-    rw [normalizedTest_eq_objectiveTest inputPolynomial fourierPolynomial hr ht hq]
+    rw [normalizedTest_eq_objectiveTest physical frequency hr ht hq]
     simpa only [cast_ratValue,Rat.cast_zero] using hobj
+
+theorem smallGapProportion_certified285 [h : Replay] [LamzouriCompactDeletion2026] :
+    0 < smallGapProportion (392391339/500000000) :=
+  smallGapProportion_of_polynomialCertificate inputPolynomial fourierPolynomial
+    ⟨h.unit_pos, h.input_pos, h.output_neg, h.coefficients, h.primitive_nonneg, h.scalar⟩
 
 end RiemannResearch.Analysis.LamzouriGapKernel285

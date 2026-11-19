@@ -113,6 +113,18 @@ For the degree-285 certificate at $\lambda=0.784782678$, Lean now proves the Fou
 
 [Focused Bazel verification of the RH criterion, positive normalization and signed-digit certificates](https://app.buildbuddy.io/invocation/8a08e533-16f9-4b1a-aec6-191587b0afad) · [Full verification of the preceding real-order and fixed-strip checkpoint](https://app.buildbuddy.io/invocation/271582e1-ced9-4dd3-99e1-3078f7a45a9c)
 
+## Exact certificates for both degree-285 sign rays
+
+For the explicit degree-285 monomial vectors generated from the Laguerre weights, Lean proves positivity of the physical polynomial at every $x\ge0$ and negativity of its Fourier polynomial at every $y\ge78/25$. Previously the numerical sign evidence for this degree came from the external Bernstein replay. For each sign the two stored integer polynomials $A,B$ have degree 142. Writing $F(x)=P(x)$ on the physical side and $F(x)=-25^{286}Q(x+78/25)$ on the Fourier side, every one of the 286 coefficients of
+\[
+2^{480}F(x)-A(x)^2-xB(x)^2
+\]
+is strictly positive in the independent integer calculation. The kernel checks a positive constant coefficient and nonnegative remaining coefficients, which suffice on the entire unbounded ray. A checked signed-radix comparison identifies the shifted Fourier row with the stated affine transform. Approximate roots were used to find the two square polynomials. Only the displayed integer identities and signs enter the proof. [Physical sign](Analysis/LamzouriGap285PhysicalSignCheck.lean) · [Fourier sign](Analysis/LamzouriGap285FourierRay.lean) · [Integer square criterion](Analysis/GapKernelSumOfSquares.lean)
+
+The same monomial vectors satisfy the positive Fourier normalization, nonnegative primitive value at the rational radius, and strict objective inequality with the specified Taylor sum. With the named compact-deletion theorem, only the integer Fourier identity is needed to obtain $D(0.784782678)>0$ for these vectors. [`objective_data_checks`](Analysis/LamzouriGap285ObjectiveData.lean) · [`smallGapProportion_of_degree285_transport`](Analysis/LamzouriGap285FiniteSigns.lean)
+
+[Focused verification and axiom audit for the five finite conditions](https://app.buildbuddy.io/invocation/b2ec85b0-1f66-4fbf-b708-1cf51b771107) · [Full verification of the preceding cofinal-mean checkpoint](https://app.buildbuddy.io/invocation/a426a0d3-c9f0-4743-a79a-dccb29009e0b)
+
 ## Gap proportions and literature comparisons
 
 These bounds count every positive zero occurrence with analytic multiplicity. Small-gap statements concern one adjacent gap. Isolation statements require both adjacent gaps to exceed the threshold. The fixed-gap note gives the passage between common-height and local-ordinate normalization.
