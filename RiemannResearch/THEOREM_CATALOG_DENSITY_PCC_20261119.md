@@ -6,6 +6,27 @@ November 19, 2026. The starting revision is `d85004e85625dcf1811e6a66720dae4a50b
 
 With mass $e^{-Az}/z$ at $z\ge 1$ and all other mass at zero, the tilted first moments are at most one for every $a\le A$, and $q/[m\log(1/m)]=1/A$. At $A=8/7$ this attains the actual-zero upper coefficient for the abstract class of tilt inputs. [`two_atom_reciprocal_sharp`](Analysis/FiniteSizeBiasedSharpness.lean)
 
+## Real-order moments and fixed strips
+
+For every fixed real $s>1$, the actual copy law satisfies
+\[
+\limsup \frac{\mathbb E_T X^s}{m(\log(1/m))^{s-1}}\le (7/8)^{s-1}
+\]
+along a family of heights with positive mean tending to zero, under the named Conrey–Baluyot input. The previous actual-copy specialization treated $s=2$. Splitting at $k\log(1/m)$ for fixed $k>7/8$ leaves an exponentially small tilted contribution. The two-atom law attains the displayed coefficient for every $s$ at once. [`actual_realMoment_ratio_le_of_conreyBaluyot`](Analysis/ActualRealOrderHorizontalMoment.lean) · [`two_atom_realOrder_reciprocal_sharp`](Analysis/FiniteSizeBiasedRealPowers.lean)
+
+For $M/L\to p\in(0,1]$, the curved Ingham coefficient is $3/(4+2p)$. Under the additional registered Lewko and published Guth–Maynard fixed-strip hypotheses the coefficient is $(\sigma_*(p)-1/2)/p$. Each strip is fixed before its height limit. At the $3/4$ jump the abscissae approach from above. [`actual_secondMoment_ratio_le_of_lewko_guthMaynard` and `horizontalStripCrossing`](Analysis/ActualFixedStripHorizontalMoment.lean) · [Lewko, Palomar v1](https://palomar-registry.org/entry?id=PALOMAR-2026-10-11-000010&version=1) · [Guth and Maynard, Theorem 1.2](https://arxiv.org/html/2405.20552v2)
+
+| $p$ | $\sigma_*(p)$ |
+| --- | --- |
+| $(0,5/17)$ | $(1+2p)/(2+p)$ |
+| $[5/17,5/14)$ | $(15+3p)/(25-7p)$ |
+| $[5/14,2/5)$ | $(5+4p)/9$ |
+| $[2/5,4/9)$ | $(12+3p)/(20-5p)$ |
+| $[4/9,1/2)$ | $3/4$ |
+| $[1/2,1]$ | $3/(5-2p)$ |
+
+[Focused Bazel verification and axiom checks](https://app.buildbuddy.io/invocation/c972702b-fc3e-4689-b094-87332b26f8cc) · [Full verification of the preceding moment-rate checkpoint](https://app.buildbuddy.io/invocation/fc3404e2-4dcd-424e-867e-d4ee510f79a5)
+
 ## Horizontal moment rates and moving thresholds
 
 For a filtered family of heights tending to infinity let $m$ and $q$ be the first two moments of $X=L|\beta-1/2|$ under the actual occurrence law. Set $M=\log(1/m)$ and $\ell=\log L$. The rows below bound $q/(mM)$ eventually by every constant strictly above the stated coefficient. The mean is positive eventually.
