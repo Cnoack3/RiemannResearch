@@ -4,6 +4,8 @@ Date: November 10, 2026.
 Starting revision: `29fa256722998cc6fa8b9b0f6682fd7788ffae85`.
 Companion research ledger: [MontgomeryHorizontalBesselResearch20261110.md](MontgomeryHorizontalBesselResearch20261110.md).
 
+The November 19 continuation refines the reflected quartic estimates, raw transition, and exceptional-pair bounds. [November 19 density and PCC catalog](THEOREM_CATALOG_DENSITY_PCC_20261119.md)
+
 There are 36 new theorem declarations and 8 definitions in four focused
 modules, all under `RiemannResearch.Analysis`.
 The analytic upper bounds are unconditional. The four convergence/transfer

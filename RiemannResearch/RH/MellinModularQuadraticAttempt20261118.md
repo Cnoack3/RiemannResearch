@@ -396,38 +396,30 @@ Here use the cumulative zero list 0<gamma<=T and define
        \sum_{0<\gamma,\gamma'\le T}
            \widehat g(a_T(\gamma-\gamma')).
 \]
-For a fixed nonnegative even smooth g supported inside [-theta,theta],
-with 1/2<theta<4/7, the following is a deduction from [Lam-Nov], not a
-theorem quoted from that paper:
+For a fixed nonnegative even smooth test \(g\) supported inside
+\([-\theta,\theta]\), the centered comparison now gives, for every fixed
+\(0<\kappa<1-7\theta/4\),
 \[
- |{\cal P}_T(g)-g(0)-\int|\alpha|g(\alpha)d\alpha|
- \ll_g a^2+(\epsilon_T/a^2)^{\kappa_\theta}
-                 +(\log T)^{-1/2},                         (5)
+ \left|{\cal P}_T(g)-g(0)-\int |\alpha|g(\alpha)\,d\alpha\right|
+ \ll_{g,\theta,\kappa}
+    \min(1,\epsilon_T)^\kappa+(\log T)^{-1/2}.               \tag{5}
 \]
-for 0<a<=1 and epsilon_T/a^2<1.
+Here \(0<\theta<4/7\). The normalizer and the range of positive-height
+zero occurrences are those displayed above. To see the gain over optimizing
+a hard deletion threshold, weight each row by
+\(m_i=\min(1,(\log T)^2(\beta_i-1/2)^2)\). Reflection cancels the linear
+term of the tested kernel when both marks are small. On the remaining
+pairs their combined truncated marks are at least one. Hölder with the
+local row moments and integration of the Selberg tail give the stated
+power. Removing the Lorentz weight costs \(O_g(1/\log T)\). The constants
+can depend on the distance of \(\kappa\) from its strict endpoint.
 
-To prove it, remove the reflection-invariant set
-E_a={rho: |beta-1/2|log T>a}. Chebyshev gives
-|E_a|/N(T)<=epsilon_T/a^2. Proposition 3.2 controls deletion of its
-complex-zero contribution. On the remaining set, the normalized
-imaginary gap is bounded by a/pi. Horizontal reflection cancels the
-first Taylor term of the tested complex kernel. Its second derivative
-has decay O_g((1+|a_T(gamma-gamma')|^2)^{-1}), uniformly in this bounded
-complex strip. Lemma 2.3 with q=1 therefore bounds the normalized
-complex-to-ordinate error by O_g(a^2).
-Adding the actual ordinate pairs involving E_a back costs
-O_g((|E_a|/N(T))^{1/2}), by Lemma 2.3 with q=2 and Cauchy–Schwarz.
-This is absorbed by the smaller exponent kappa_theta.
-Finally the Lorentz weight is removed with O_g(1/log T): split
-normalized gaps at a_T, use G_T(r)<<N(T)(1+r), and the quadratic decay
-of the test. This proves (5).
+With \(\epsilon_T\ll(\log T)^{-p}\), the same comparison also tends to
+zero throughout \(4/7\le\theta<2/3\) when \(p>6\theta/(2-3\theta)\).
+For the endpoint \(\theta=4/7\), this condition is \(p>12\).
+The proof and the piecewise remainder powers are in
+[Sparse density bounds for the Montgomery pair statistic](SparsePairDensityBounds20261119.md).
 
-If epsilon_T tends to zero, optimize
-a^2=epsilon_T^{kappa_theta/(1+kappa_theta)}. The error becomes
-\[
- O_g\left(\epsilon_T^{\kappa_\theta/(1+\kappa_\theta)}
-                      +(\log T)^{-1/2}\right).
-\]
 Thus the sufficient strengthening is precisely
 \[
  \sum_{0<\gamma\le T}(\beta-1/2)^2=o(T/\log T).

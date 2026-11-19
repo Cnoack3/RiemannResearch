@@ -80,6 +80,15 @@ private theorem crossWeight_le {x : ℝ} (hx : 0 < x) (n : ℕ) :
       field_simp [hx.ne', hn0.ne', (Real.sqrt_pos.2 hn0).ne']
       <;> ring
 
+/-- A bound in the normalization used by the squared prime signal. -/
+theorem primeWeight_le_mangoldtThreeHalves {x : ℝ} (hx : 0 < x) (n : ℕ) :
+    primeWeight x n ≤ x*mangoldtThreeHalves n := by
+  simpa only [mul_comm] using (div_le_iff₀ hx).mp (crossWeight_le hx n)
+
+theorem primeWeight_nonneg {x : ℝ} (hx : 0 < x) (n : ℕ) : 0 ≤ primeWeight x n :=
+  mul_nonneg (div_nonneg ArithmeticFunction.vonMangoldt_nonneg (Real.sqrt_nonneg _))
+    (le_min (div_nonneg (Nat.cast_nonneg _) hx.le) (div_nonneg hx.le (Nat.cast_nonneg _)))
+
 /-- The cross integral written with the positive phases in conjugate A₂.
 For T ≥ 0 the logarithmic factor is exactly A₁ on its interval of integration. -/
 def crossIntegral (x T : ℝ) : ℂ :=

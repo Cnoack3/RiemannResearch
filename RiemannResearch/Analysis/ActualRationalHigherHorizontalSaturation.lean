@@ -30,6 +30,21 @@ private theorem inverse_pow_le_height_ratio (W L : ℝ) (q : ℕ)
       div_le_div_of_nonneg_right (one_le_pow₀ hW) (by positivity)
     _ = _ := by rw [div_pow, pow_succ L]; field_simp
 
+/-- One constant and one height threshold work for every Taylor order and
+every rational mode. The mode enters through its exact log ratio. -/
+theorem eventually_rationalHorizontalTaylorTerm_all_orders {a : ℝ}
+    (ha : 0 < a) (hD : UniformSelbergDensity a) :
+    ∃ K : ℝ, 0 ≤ K ∧ ∀ᶠ T : ℝ in atTop, ∀ j n m : ℕ,
+      ‖rationalHorizontalTaylorTerm T n m j‖ ≤
+        (|Real.log ((n : ℝ) / (m : ℝ))| / (a * Real.log T)) ^ (2 * (j + 1)) *
+          (K * Real.log T) := by
+  obtain ⟨C, T₀, hC, hT₀, hden⟩ := hD
+  refine ⟨2*C, by positivity, ?_⟩
+  filter_upwards [eventually_ge_atTop T₀] with T hT
+  intro j n m
+  exact normalized_evenHorizontalTaylorTerm_of_selberg T _ C a j
+    (hT₀.trans_le hT) hC ha (hden T hT)
+
 /-- Uniform control of each retained actual horizontal term, including all
 frequencies, not merely a logarithmic band. -/
 theorem eventually_rationalHorizontalTaylorTerm_ratio_bound
@@ -39,7 +54,7 @@ theorem eventually_rationalHorizontalTaylorTerm_ratio_bound
       ‖rationalHorizontalTaylorTerm T n m j‖ ≤
         K * Real.log T * (rationalModeWeight n m / Real.log T) ^ (2 * (j + 1)) := by
   obtain ⟨C, T₀, hC, hT₀, hden⟩ := hD
-  let D : ℝ := (8 : ℝ) ^ (2 * (j + 1)) * (2 * C / 3)
+  let D : ℝ := (4 : ℝ) ^ (2 * (j + 1)) * (2 * C)
   have hD0 : 0 ≤ D := by dsimp [D]; positivity
   refine ⟨D + 1, by positivity, ?_⟩
   filter_upwards [eventually_ge_atTop T₀] with T hT
@@ -53,13 +68,13 @@ theorem eventually_rationalHorizontalTaylorTerm_ratio_bound
   have hb := normalized_evenHorizontalTaylorTerm_of_selberg
     T u C (1 / 4) j hT1 hC (by norm_num) (hden T hT)
   change ‖rationalHorizontalTaylorTerm T n m j‖ ≤ _ at hb
-  have hbase : 2 * |u| / ((1 / 4) * Real.log T) ≤ 8 * W / Real.log T := by
+  have hbase : |u| / ((1 / 4) * Real.log T) ≤ 4 * W / Real.log T := by
     apply (div_le_div_iff₀ (by positivity) hL).2
     nlinarith
-  have hp := pow_le_pow_left₀ (by positivity : 0 ≤ 2 * |u| / ((1 / 4) * Real.log T))
+  have hp := pow_le_pow_left₀ (by positivity : 0 ≤ |u| / ((1 / 4) * Real.log T))
     hbase (2 * (j + 1))
   calc
-    _ ≤ (8 * W / Real.log T) ^ (2 * (j + 1)) * (2 * C * Real.log T / 3) :=
+    _ ≤ (4 * W / Real.log T) ^ (2 * (j + 1)) * (2 * C * Real.log T) :=
       hb.trans (mul_le_mul_of_nonneg_right hp (by positivity))
     _ = D * Real.log T * (W / Real.log T) ^ (2 * (j + 1)) := by
       dsimp [D]
@@ -79,7 +94,7 @@ theorem eventually_higherCorrectedRationalRemainder_lowBand
         K * Real.log T * (rationalModeWeight n m / Real.log T) ^ (2 * (J + 1)) := by
   obtain ⟨CL, hCL, hland⟩ := eventually_rational_landau_error_le_inv_log_pow (2 * J + 1)
   obtain ⟨C, T₀, hC, hT₀, hden⟩ := hD
-  let D : ℝ := (8 : ℝ) ^ (2 * (J + 1)) * (2 * C / 3)
+  let D : ℝ := (4 : ℝ) ^ (2 * (J + 1)) * (8 * C / 3)
   have hD0 : 0 ≤ D := by dsimp [D]; positivity
   refine ⟨D + CL, by positivity, ?_⟩
   filter_upwards [hland, eventually_ge_atTop T₀] with T hland hT
@@ -105,18 +120,30 @@ theorem eventually_higherCorrectedRationalRemainder_lowBand
       linarith
     have huW : |u| ≤ W := rational_log_abs_le_weight n m hn hm
     have hu : |u| ≤ (1 / 4) * Real.log T / 2 := by linarith
-    have hE := normalized_horizontalTaylorError_of_selberg
-      T u C (1 / 4) J hT1 hC (by norm_num) hu (hden T hT)
-    have hbase : 2 * |u| / ((1 / 4) * Real.log T) ≤ 8 * W / Real.log T := by
-      apply (div_le_div_iff₀ (by positivity) hL).2
+    let r := |u| / ((1 / 4) * Real.log T)
+    have hq : 0 < (1 / 4 : ℝ) * Real.log T := by positivity
+    have hr0 : 0 ≤ r := div_nonneg (abs_nonneg _) hq.le
+    have hr : r ≤ 1/2 := (div_le_iff₀ hq).mpr (by linarith)
+    have hdenom : 3/4 ≤ 1-r^2 := by
+      nlinarith [mul_nonneg (sub_nonneg.mpr hr) (show 0 ≤ 1/2+r by linarith)]
+    have hE := normalized_horizontalTaylorError_geometric_of_selberg
+      T u C (1/4) J hT1 hC (by norm_num) (by linarith) (hden T hT)
+    have hb : ‖horizontalTaylorError T u J / (T : ℂ)‖ ≤
+        r ^ (2 * (J+1)) * (8 * C * Real.log T / 3) := by
+      apply hE.trans
+      apply (div_le_iff₀ (show 0 < 1-r^2 by linarith)).mpr
+      have hh := mul_le_mul_of_nonneg_left hdenom
+        (show 0 ≤ r ^ (2*(J+1)) * (8*C*Real.log T/3) by positivity)
+      linarith only [hh]
+    have hbase : r ≤ 4 * W / Real.log T := by
+      apply (div_le_div_iff₀ hq hL).2
       nlinarith
-    have hp := pow_le_pow_left₀ (by positivity : 0 ≤ 2 * |u| / ((1 / 4) * Real.log T))
-      hbase (2 * (J + 1))
+    have hp := pow_le_pow_left₀ hr0 hbase (2 * (J+1))
     have hE' : ‖horizontalTaylorError T u J / (T : ℂ)‖ ≤
         D * Real.log T * (W / Real.log T) ^ (2 * (J + 1)) := by
       calc
-        _ ≤ (8 * W / Real.log T) ^ (2 * (J + 1)) * (2 * C * Real.log T / 3) :=
-          hE.trans (mul_le_mul_of_nonneg_right hp (by positivity))
+        _ ≤ (4 * W / Real.log T) ^ (2 * (J + 1)) * (8 * C * Real.log T / 3) :=
+          hb.trans (mul_le_mul_of_nonneg_right hp (by positivity))
         _ = _ := by dsimp [D]; simp only [div_pow, mul_pow]; ring
     have hLa := hland n m hm hmn (hlogW.trans hband)
     have hi := inverse_pow_le_height_ratio W (Real.log T) (2 * J + 1) hW hL

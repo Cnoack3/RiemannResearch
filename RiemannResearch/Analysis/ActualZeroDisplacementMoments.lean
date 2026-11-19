@@ -3,6 +3,7 @@ import RiemannResearch.Analysis.ActualZeroCriticalLineTailFraction
 import RiemannResearch.Analysis.ActualZeroCountAsymptotics
 import RiemannResearch.Analysis.ActualZeroCountNormalization
 import RiemannResearch.Analysis.ActualZeroSelbergDensity
+import RiemannResearch.Analysis.ActualZeroTailDensityTransfer
 import RiemannResearch.Analysis.ActualZeroTailLayerCake
 import RiemannResearch.Analysis.ActualZeroTailReflection
 import RiemannResearch.Analysis.LogarithmicMatrixMoments
@@ -121,12 +122,12 @@ private theorem scaled_excess_moment (T b a A : ℝ) (p : ℕ) (hb : 0 ≤ b)
         lt_sub_iff_add_lt, add_comm (t/a) b]
     exact if_congr he rfl rfl
 
-/-- A quantitative consequence of the classical Selberg density hypothesis in its
-actual-zero, inclusive counting convention. -/
-theorem displacementMoment_le_of_selberg {T C a : ℝ} (p : ℕ)
+/-- Unnormalized factorial bound obtained by integrating the reflected
+density envelope. It also holds when the zero multiset is empty. -/
+theorem displacementSum_le_of_selberg {T C a : ℝ} (p : ℕ)
     (hT : 1 < T) (hC : 0 ≤ C) (ha : 0 < a) (hD : SelbergDensityBound T C a) :
-    displacementMoment T (p+1) * (a * Real.log T) ^ (p+1) ≤
-      (2 * C * T * Real.log T / (Ncount 0 T : ℝ)) * ((p+1).factorial : ℝ) := by
+    (a * Real.log T) ^ (p+1) * (∑ c : Copies T, copyDisplacement T c ^ (p+1)) ≤
+      (2 * C * T * Real.log T) * ((p+1).factorial : ℝ) := by
   let v := a * Real.log T
   have hT0 : 0 < T := by linarith
   have hL := Real.log_pos hT
@@ -150,8 +151,141 @@ theorem displacementMoment_le_of_selberg {T C a : ℝ} (p : ℕ)
         positivity)
   have hx (c : Copies T) : 0 ≤ copyDisplacement T c := abs_nonneg _
   simp only [sub_zero, max_eq_right (hx _), mul_pow, ← Finset.mul_sum] at hs
+  exact hs
+
+/-- A quantitative consequence of the classical Selberg density hypothesis in its
+actual-zero, inclusive counting convention. -/
+theorem displacementMoment_le_of_selberg {T C a : ℝ} (p : ℕ)
+    (hT : 1 < T) (hC : 0 ≤ C) (ha : 0 < a) (hD : SelbergDensityBound T C a) :
+    displacementMoment T (p+1) * (a * Real.log T) ^ (p+1) ≤
+      (2 * C * T * Real.log T / (Ncount 0 T : ℝ)) * ((p+1).factorial : ℝ) := by
+  have hs := displacementSum_le_of_selberg p hT hC ha hD
   have hd := div_le_div_of_nonneg_right hs (Nat.cast_nonneg (Ncount 0 T) : 0 ≤ (Ncount 0 T : ℝ))
-  simpa only [displacementMoment, v, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using hd
+  simpa only [displacementMoment, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using hd
+
+/-- Euler's integral bounds the truncated polynomial-exponential integral by
+the full positive half-line integral after scaling. -/
+private theorem integral_scaled_gamma_le (p : ℕ) (b M : ℝ)
+    (hb : 0 < b) (hM : 0 ≤ M) :
+    (∫ t in (0 : ℝ)..M, Real.exp (-b*t) * t^p) ≤ (p.factorial : ℝ) / b^(p+1) := by
+  let g := fun t : ℝ => Real.exp (-t) * t^p
+  have hsub : Ioc (0 : ℝ) (b*M) ⊆ Ioi (0 : ℝ) := fun _ ht => ht.1
+  have hnn : 0 ≤ᵐ[volume.restrict (Ioi (0 : ℝ))] g := by
+    filter_upwards [ae_restrict_mem measurableSet_Ioi] with t ht
+    exact mul_nonneg (Real.exp_pos _).le (pow_nonneg ht.le p)
+  have hup : (∫ t in (0:ℝ)..b*M, g t) ≤ (p.factorial : ℝ) := by
+    rw [intervalIntegral.integral_of_le (mul_nonneg hb.le hM)]
+    exact (setIntegral_mono_set (LogarithmicMatrixMoments.integrableOn_pow_mul_exp_neg p)
+      hnn hsub.eventuallyLE).trans_eq (LogarithmicMatrixMoments.integral_pow_mul_exp_neg p)
+  have he (t : ℝ) : Real.exp (-b*t)*t^p = (b^p)⁻¹ * g (b*t) := by
+    dsimp [g]
+    rw [mul_pow, ← neg_mul]
+    field_simp
+  simp_rw [he]
+  rw [intervalIntegral.integral_const_mul, intervalIntegral.integral_comp_mul_left g hb.ne',
+    smul_eq_mul, mul_zero]
+  calc
+    _ ≤ (b^p)⁻¹ * (b⁻¹ * (p.factorial : ℝ)) :=
+      mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hup (by positivity)) (by positivity)
+    _ = _ := by rw [pow_succ]; field_simp
+
+/-- Quartic exponential moment for a general two-sided displacement tail.
+The coefficient is the half-line integral of the derivative of the weight
+against the exponential majorant. -/
+theorem weightedFourthSum_le_expTail {T K q v : ℝ} (hK : 0 ≤ K) (hv : 0 ≤ v)
+    (hvq : v < q) (htail : ∀ t ∈ Icc (0:ℝ) (1/2),
+      strictTail T t ≤ K * Real.exp (-q * t)) :
+    (∑ c : Copies T, (c.1.1.re-1/2)^4 * Real.exp (v*|c.1.1.re-1/2|)) ≤
+      K*(24*q/(q-v)^5) := by
+  let b := q-v
+  let φ := fun t : ℝ => t^4 * Real.exp (v*t)
+  let f := fun t : ℝ => (4*t^3 + v*t^4) * Real.exp (v*t)
+  have hb : 0 < b := sub_pos.mpr hvq
+  have hφ (t : ℝ) : HasDerivAt φ (f t) t := by
+    have h := (hasDerivAt_pow 4 t).mul (((hasDerivAt_id t).const_mul v).exp)
+    convert h using 1 <;> try dsimp [φ, f]
+    all_goals first | rfl | ring
+  have h := badWeightedSum_le_of_expTail T 0 K q φ f (by norm_num)
+    (by dsimp [f]; fun_prop) hφ (by simp [φ])
+    (fun t ht => by have ht0 : 0 ≤ t := ht.1; dsimp [f]; positivity) htail
+  have he : badWeightedSum T 0 φ =
+      ∑ c : Copies T, (c.1.1.re-1/2)^4 * Real.exp (v*|c.1.1.re-1/2|) := by
+    unfold badWeightedSum FiniteStrictTail.badSum
+    apply Finset.sum_congr rfl
+    intro c _
+    by_cases hx : 0 < copyDisplacement T c
+    · rw [if_pos hx]
+      dsimp [φ, copyDisplacement]
+      rw [show (4 : ℕ) = 2*2 by decide, pow_mul, sq_abs, ← pow_mul]
+    · have hz : c.1.1.re - 1/2 = 0 := abs_eq_zero.mp
+        (le_antisymm (le_of_not_gt hx) (abs_nonneg _))
+      rw [if_neg hx, hz]
+      norm_num
+  rw [he] at h
+  simp only [φ, zero_pow (by decide : 4 ≠ 0), zero_mul, zero_add] at h
+  have hsplit (t : ℝ) : Real.exp (-q*t) * f t =
+      4 * (Real.exp (-b*t)*t^3) + v * (Real.exp (-b*t)*t^4) := by
+    have he : Real.exp (-q*t) * Real.exp (v*t) = Real.exp (-b*t) := by
+      rw [← Real.exp_add]
+      congr 1
+      dsimp [b]
+      ring
+    dsimp [f]
+    rw [← he]
+    ring
+  simp_rw [hsplit] at h
+  rw [intervalIntegral.integral_add (Continuous.intervalIntegrable (by fun_prop) _ _)
+    (Continuous.intervalIntegrable (by fun_prop) _ _),
+    intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul] at h
+  have h3 := integral_scaled_gamma_le 3 b (1/2) hb (by norm_num)
+  have h4 := integral_scaled_gamma_le 4 b (1/2) hb (by norm_num)
+  norm_num [Nat.factorial] at h3 h4
+  have hh := add_le_add (mul_le_mul_of_nonneg_left h3 (by norm_num : (0:ℝ) ≤ 4))
+    (mul_le_mul_of_nonneg_left h4 hv)
+  simp only [← neg_mul] at hh
+  have hnum := h.trans (mul_le_mul_of_nonneg_left hh (by positivity))
+  apply hnum.trans_eq
+  change K*(4*(6/b^4)+v*(24/b^5)) = K*(24*q/b^5)
+  have he : q = b+v := by dsimp [b]; ring
+  rw [he]
+  field_simp <;> ring
+
+/-- An exponential weight uses part of the density exponent. After reflection
+and division by height, its fourth moment is bounded with the exact
+half-line constant for the given tail majorant. -/
+theorem weightedFourthMoment_div_height_of_selberg {T C a v : ℝ}
+    (hT : 1 < T) (hC : 0 ≤ C) (ha : 0 < a) (hv : 0 ≤ v)
+    (hvq : v < a * Real.log T) (hD : SelbergDensityBound T C a) :
+    (∑ c : Copies T, (c.1.1.re-1/2)^4 * Real.exp (v*|c.1.1.re-1/2|)) / T ≤
+      48*C*Real.log T*(a*Real.log T)/(a*Real.log T-v)^5 := by
+  have ht : 0 < T := by linarith
+  have hL := Real.log_pos hT
+  have h := weightedFourthSum_le_expTail (by positivity : 0 ≤ 2*C*T*Real.log T) hv hvq
+    (fun t ht' => strictTail_of_selbergDensity T C a t ht ht' hD)
+  apply (div_le_iff₀ ht).mpr
+  apply h.trans_eq
+  ring
+
+/-- For any fixed closed subband of the density frequency band, the fourth
+moment with exponential weight is O((log T)⁻³) after dividing by height. -/
+theorem weightedFourthMoment_div_height_band {T C a u θ : ℝ}
+    (hT : 1 < T) (hC : 0 ≤ C) (ha : 0 < a) (hθ : θ < 1)
+    (hu : 2 * |u| ≤ θ*(a*Real.log T)) (hD : SelbergDensityBound T C a) :
+    (∑ c : Copies T, (c.1.1.re-1/2)^4 * Real.exp (2 * |u| * |c.1.1.re-1/2|)) / T ≤
+      (48*C / ((1-θ)^5 * a^4)) / (Real.log T)^3 := by
+  have hL := Real.log_pos hT
+  have hq : 0 < a * Real.log T := mul_pos ha hL
+  have hs : 0 < 1-θ := sub_pos.mpr hθ
+  have hv : 2 * |u| < a*Real.log T := hu.trans_lt (by nlinarith [mul_pos hs hq])
+  have h := weightedFourthMoment_div_height_of_selberg hT hC ha
+    (show 0 ≤ 2 * |u| by positivity) hv hD
+  have hden : (1-θ)*(a*Real.log T) ≤ a*Real.log T - 2 * |u| := by linarith
+  have hp := pow_le_pow_left₀ (mul_pos hs hq).le hden 5
+  apply h.trans
+  calc
+    _ ≤ 48*C*Real.log T*(a*Real.log T) / ((1-θ)*(a*Real.log T))^5 :=
+      div_le_div_of_nonneg_left (by positivity) (by positivity) hp
+    _ = _ := by rw [mul_pow, mul_pow]; field_simp <;> ring
 
 /-- The exact cap in the central strip is the number of off-line copies.
 The excess is measured in units of `1/a`. -/
