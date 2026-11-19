@@ -346,4 +346,51 @@ theorem montgomeryTaylor_ingham_tilted_fourth {B D : ℝ} (hB : 0 ≤ B)
         D*(Real.log (Real.log T))^4/(Real.log T)^3 :=
   montgomeryTaylor_distinctCriticalProportion.ingham_tilted_fourth hB hD
 
+/-- The inclusive central threshold contains at least half of the whole
+zero multiset. Riemann–von Mangoldt therefore forces at least one logarithm
+in any uniform logarithmic-loss estimate, independently of its slope. -/
+theorem one_le_logPower_of_uniformLogLossDensity {a b : ℝ}
+    (hD : UniformLogLossDensity a b) : 1 ≤ b := by
+  by_contra! hb
+  obtain ⟨C,T₀,hC,hT₀,hw⟩ := hD
+  obtain ⟨c,hc,hn⟩ := exists_count_normalization
+  have hz := ((tendsto_rpow_neg_atTop (show 0 < 1-b by linarith)).comp Real.tendsto_log_atTop).const_mul (2*C)
+  rw [show -(1-b) = b-1 by ring] at hz
+  simp only [Function.comp_apply,mul_zero] at hz
+  have hbad : ∀ᶠ T : ℝ in atTop, False := by
+    filter_upwards [eventually_ge_atTop T₀,hn,hz.eventually_lt_const hc] with T hT hN hsmall
+    have ht := hT₀.trans_le hT
+    have ht0 := zero_lt_one.trans ht
+    have hL := Real.log_pos ht
+    have hh := hw T hT (1/2) (by norm_num)
+    simp only [sub_self,mul_zero,Real.exp_zero,mul_one] at hh
+    have hNupper : c*T*Real.log T ≤ (2*C)*T*(Real.log T)^b := by
+      nlinarith only [hN,hh,twice_rightInclusive_half_add_strictTail T,strictTail_le_count T 0]
+    have hr : (Real.log T)^b = (Real.log T)^(b-1)*Real.log T := by
+      calc
+        _ = (Real.log T)^((b-1)+(1:ℝ)) := by congr 1; ring
+        _ = _ := by rw [Real.rpow_add hL,Real.rpow_one]
+    have hm : c*(T*Real.log T) ≤ ((2*C)*(Real.log T)^(b-1))*(T*Real.log T) := by
+      rw [hr] at hNupper
+      linarith only [hNupper]
+    exact (not_lt_of_ge (le_of_mul_le_mul_right hm (mul_pos ht0 hL))) hsmall
+  exact hbad.exists.choose_spec
+
+/-- At a slope possessing the one-logarithm Selberg estimate, the full
+range of compatible global logarithmic losses is exactly b ≥ 1. -/
+theorem uniformLogLossDensity_iff_of_uniformSelbergDensity {a b : ℝ}
+    (hD : UniformSelbergDensity a) : UniformLogLossDensity a b ↔ 1 ≤ b := by
+  refine ⟨one_le_logPower_of_uniformLogLossDensity,?_⟩
+  intro hb
+  obtain ⟨C,T₀,hC,hT₀,hw⟩ := uniformLogLossDensity_of_uniformSelberg a hD
+  refine ⟨C,max T₀ (Real.exp 1),hC,hT₀.trans_le (le_max_left _ _),?_⟩
+  intro T hT σ hσ
+  have ht := (le_max_left _ _).trans hT
+  have ht0 := zero_lt_one.trans (hT₀.trans_le ht)
+  have hL : 1 ≤ Real.log T := by
+    simpa only [Real.log_exp] using Real.log_le_log (Real.exp_pos 1) ((le_max_right _ _).trans hT)
+  apply (hw T ht σ hσ).trans
+  apply mul_le_mul_of_nonneg_right _ (Real.exp_pos _).le
+  exact mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_le hL hb) (mul_nonneg hC ht0.le)
+
 end RiemannResearch.Analysis.ActualZeroOrdinate

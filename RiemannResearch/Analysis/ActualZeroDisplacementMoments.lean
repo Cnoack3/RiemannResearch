@@ -9,6 +9,7 @@ import RiemannResearch.Analysis.ActualZeroTailReflection
 import RiemannResearch.Analysis.LogarithmicMatrixMoments
 import RiemannResearch.Analysis.LogMarginAsymptotics
 import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.FunProp
 import Mathlib.Tactic.Linarith
@@ -189,43 +190,279 @@ private theorem integral_scaled_gamma_le (p : ℕ) (b M : ℝ)
       mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hup (by positivity)) (by positivity)
     _ = _ := by rw [pow_succ]; field_simp
 
-/-- Quartic exponential moment for a general two-sided displacement tail.
-The coefficient is the half-line integral of the derivative of the weight
-against the exponential majorant. -/
-theorem weightedFourthSum_le_expTail {T K q v : ℝ} (hK : 0 ≤ K) (hv : 0 ≤ v)
-    (hvq : v < q) (htail : ∀ t ∈ Icc (0:ℝ) (1/2),
-      strictTail T t ≤ K * Real.exp (-q * t)) :
-    (∑ c : Copies T, (c.1.1.re-1/2)^4 * Real.exp (v*|c.1.1.re-1/2|)) ≤
-      K*(24*q/(q-v)^5) := by
+private theorem hasDerivAt_tiltedMoment (p : ℕ) (v t : ℝ) :
+    HasDerivAt (fun x : ℝ => x^(p+1) * Real.exp (v*x))
+      ((((p : ℝ)+1)*t^p + v*t^(p+1)) * Real.exp (v*t)) t := by
+  have h := (hasDerivAt_pow (p+1) t).mul (((hasDerivAt_id t).const_mul v).exp)
+  convert h using 1 <;> try simp only [Nat.cast_add, Nat.cast_one, Nat.add_sub_cancel,
+    id_eq, mul_one]
+  all_goals first | rfl | ring
+
+private theorem tiltedMoment_badSum (T v : ℝ) (p : ℕ) :
+    badWeightedSum T 0 (fun t => t^(p+1) * Real.exp (v*t)) =
+      ∑ c : Copies T, copyDisplacement T c^(p+1) * Real.exp (v*copyDisplacement T c) := by
+  unfold badWeightedSum FiniteStrictTail.badSum
+  apply Finset.sum_congr rfl
+  intro c _
+  by_cases hx : 0 < copyDisplacement T c
+  · simp only [if_pos hx]
+  · have hz : copyDisplacement T c = 0 := le_antisymm (le_of_not_gt hx) (abs_nonneg _)
+    simp [hz]
+
+/-- Exact finite-interval identity for any positive integer order and any real tilt.
+The endpoint term at zero vanishes, including for copies on the critical line. -/
+theorem tiltedMoment_layerCake (T v : ℝ) (p : ℕ) :
+    (∑ c : Copies T, copyDisplacement T c^(p+1) * Real.exp (v*copyDisplacement T c)) =
+      ∫ t in (0 : ℝ)..(1/2), strictTail T t *
+        ((((p : ℝ)+1)*t^p + v*t^(p+1)) * Real.exp (v*t)) := by
+  have h := badWeightedSum_layerCake T 0 (fun t => t^(p+1) * Real.exp (v*t))
+    (fun t => (((p : ℝ)+1)*t^p + v*t^(p+1)) * Real.exp (v*t)) (by norm_num)
+    (by fun_prop) (hasDerivAt_tiltedMoment p v)
+  simpa only [tiltedMoment_badSum, zero_pow (Nat.succ_ne_zero p), zero_mul, zero_add] using h
+
+/-- Finite compensated tail bound for every positive integer order. It retains both
+the strict off-line mass cap and the finite endpoint of the critical strip. -/
+theorem tiltedMoment_le_mellin_cap {T K q v : ℝ} (p : ℕ) (hv : 0 ≤ v)
+    (htail : ∀ t ∈ Icc (0 : ℝ) (1/2), strictTail T t ≤ K * Real.exp (-q*t)) :
+    (∑ c : Copies T, copyDisplacement T c^(p+1) * Real.exp (v*copyDisplacement T c)) ≤
+      ∫ t in (0 : ℝ)..(1/2), min (strictTail T 0) (K * Real.exp (-q*t)) *
+        ((((p : ℝ)+1)*t^p + v*t^(p+1)) * Real.exp (v*t)) := by
+  rw [tiltedMoment_layerCake]
+  apply intervalIntegral.integral_mono_on (by norm_num)
+    (FiniteStrictTail.intervalIntegrable_tail_mul Finset.univ (copyDisplacement T) _
+      (by fun_prop) 0 (1/2)) (Continuous.intervalIntegrable (by fun_prop) _ _)
+  intro t ht
+  exact mul_le_mul_of_nonneg_right (le_min (strictTail_le_zero T t ht.1) (htail t ht))
+    (by have ht0 : 0 ≤ t := ht.1; positivity)
+
+/-- At the crossing of the off-line cap and an exponential majorant, the
+head contribution cancels the integration-by-parts term at the lower limit.
+The finite endpoint makes the bound valid even at and above the density rate. -/
+theorem tiltedMoment_le_compensated_expTail {T F K q v d : ℝ} (p : ℕ)
+    (hF : strictTail T 0 ≤ F) (hK : 0 ≤ K) (hq : 0 ≤ q) (hv : 0 ≤ v)
+    (hd : d ∈ Icc (0 : ℝ) (1/2)) (hcross : K * Real.exp (-q*d) = F)
+    (htail : ∀ t ∈ Icc (0 : ℝ) (1/2), strictTail T t ≤ K * Real.exp (-q*t)) :
+    (∑ c : Copies T, copyDisplacement T c^(p+1) * Real.exp (v*copyDisplacement T c)) ≤
+      K * ((1/2 : ℝ)^(p+1) * Real.exp ((v-q)*(1/2)) +
+        q * ∫ t in d..(1/2), t^(p+1) * Real.exp ((v-q)*t)) := by
+  let f := fun t : ℝ => (((p : ℝ)+1)*t^p + v*t^(p+1)) * Real.exp (v*t)
+  let φ := fun t : ℝ => t^(p+1) * Real.exp (v*t)
+  let ψ := fun t : ℝ => t^(p+1) * Real.exp ((v-q)*t)
+  let g := fun t : ℝ => (((p : ℝ)+1)*t^p + (v-q)*t^(p+1)) * Real.exp ((v-q)*t)
+  let a := fun t : ℝ => min F (K * Real.exp (-q*t)) * f t
+  have hc : Continuous a := by dsimp [a,f]; fun_prop
+  have hf : Continuous f := by dsimp [f]; fun_prop
+  have hψ : Continuous ψ := by dsimp [ψ]; fun_prop
+  have hg : Continuous g := by dsimp [g]; fun_prop
+  have h1 : (∫ t in (0 : ℝ)..d, a t) = F * φ d := by
+    have he : (∫ t in (0 : ℝ)..d, a t) = ∫ t in (0 : ℝ)..d, F * f t := by
+      apply intervalIntegral.integral_congr
+      intro t ht
+      rw [uIcc_of_le hd.1] at ht
+      have h := mul_le_mul_of_nonneg_left
+        (Real.exp_le_exp.mpr (mul_le_mul_of_nonpos_left ht.2 (neg_nonpos.mpr hq))) hK
+      rw [hcross] at h
+      dsimp [a]
+      rw [min_eq_left h]
+    rw [he, intervalIntegral.integral_const_mul]
+    have hi : (∫ t in (0 : ℝ)..d, f t) = φ d - φ 0 :=
+      intervalIntegral.integral_eq_sub_of_hasDerivAt
+        (fun t _ => hasDerivAt_tiltedMoment p v t) (hf.intervalIntegrable _ _)
+    rw [hi, show φ 0 = 0 by simp [φ], sub_zero]
+  have h2 : (∫ t in d..(1/2), a t) = K * ((ψ (1/2) - ψ d) + q * ∫ t in d..(1/2), ψ t) := by
+    have he : (∫ t in d..(1/2), a t) = ∫ t in d..(1/2), K * (g t + q * ψ t) := by
+      apply intervalIntegral.integral_congr
+      intro t ht
+      rw [uIcc_of_le hd.2] at ht
+      have h := mul_le_mul_of_nonneg_left
+        (Real.exp_le_exp.mpr (mul_le_mul_of_nonpos_left ht.1 (neg_nonpos.mpr hq))) hK
+      rw [hcross] at h
+      dsimp [a]
+      rw [min_eq_right h]
+      dsimp [g,f,ψ]
+      rw [show (v-q)*t = -q*t + v*t by ring, Real.exp_add]
+      ring
+    have hqψ : Continuous (fun t : ℝ => q * ψ t) := continuous_const.mul hψ
+    rw [he, intervalIntegral.integral_const_mul,
+      intervalIntegral.integral_add (hg.intervalIntegrable _ _)
+        (hqψ.intervalIntegrable _ _), intervalIntegral.integral_const_mul]
+    have hi : (∫ t in d..(1/2), g t) = ψ (1/2) - ψ d :=
+      intervalIntegral.integral_eq_sub_of_hasDerivAt
+        (fun t _ => hasDerivAt_tiltedMoment p (v-q) t) (hg.intervalIntegrable _ _)
+    rw [hi]
+  have hhead : F*φ d = K*ψ d := by
+    rw [← hcross]
+    dsimp [φ,ψ]
+    rw [show (v-q)*d = -q*d + v*d by ring, Real.exp_add]
+    ring
+  rw [tiltedMoment_layerCake]
+  apply le_trans (b := ∫ t in (0 : ℝ)..(1/2), a t)
+  · apply intervalIntegral.integral_mono_on (by norm_num)
+      (FiniteStrictTail.intervalIntegrable_tail_mul Finset.univ (copyDisplacement T) f
+        hf 0 (1/2)) (hc.intervalIntegrable _ _)
+    intro t ht
+    apply mul_le_mul_of_nonneg_right
+      (le_min ((strictTail_le_zero T t ht.1).trans hF) (htail t ht))
+    have ht0 : 0 ≤ t := ht.1
+    dsimp [f]
+    positivity
+  · rw [← intervalIntegral.integral_add_adjacent_intervals
+      (hc.intervalIntegrable 0 d) (hc.intervalIntegrable d (1/2)), h1, h2, hhead]
+    change K*ψ d + K*((ψ (1/2)-ψ d) + q*∫ t in d..(1/2), ψ t) ≤
+      K*(ψ (1/2) + q*∫ t in d..(1/2), ψ t)
+    apply le_of_eq
+    ring
+
+/-- The endpoint polynomial in an integer-order incomplete gamma integral. -/
+def gammaEndpointPolynomial (p : ℕ) (x : ℝ) : ℝ :=
+  (p.factorial : ℝ) * ∑ j ∈ Finset.range (p+1), x^j / (j.factorial : ℝ)
+
+private theorem gammaEndpointPolynomial_succ (p : ℕ) (x : ℝ) :
+    gammaEndpointPolynomial (p+1) x =
+      ((p : ℝ)+1) * gammaEndpointPolynomial p x + x^(p+1) := by
+  unfold gammaEndpointPolynomial
+  rw [Finset.sum_range_succ]
+  have hp : ((p+1).factorial : ℝ) ≠ 0 := by positivity
+  rw [mul_add, show ((p+1).factorial : ℝ)*(x^(p+1)/((p+1).factorial : ℝ)) =
+    x^(p+1) by field_simp]
+  rw [Nat.factorial_succ]
+  push_cast
+  ring
+
+private theorem hasDerivAt_exp_gammaEndpoint (p : ℕ) (t : ℝ) :
+    HasDerivAt (fun x : ℝ => Real.exp (-x) * gammaEndpointPolynomial p x)
+      (-Real.exp (-t) * t^p) t := by
+  have hexp := ((hasDerivAt_id t).neg).exp
+  induction p with
+  | zero => simpa [gammaEndpointPolynomial] using hexp
+  | succ p ih =>
+    have hh := (ih.const_mul ((p : ℝ)+1)).add (hexp.mul (hasDerivAt_pow (p+1) t))
+    have hf : (fun x : ℝ => Real.exp (-x) * gammaEndpointPolynomial (p+1) x) =
+        ((fun x : ℝ => ((p : ℝ)+1) * (Real.exp (-x)*gammaEndpointPolynomial p x)) +
+          (fun x : ℝ => Real.exp (-x)) * fun x : ℝ => x^(p+1)) := by
+      funext x
+      simp only [gammaEndpointPolynomial_succ, Pi.add_apply, Pi.mul_apply]
+      ring
+    rw [hf]
+    apply hh.congr_deriv
+    simp only [Pi.neg_apply, id_eq, Nat.cast_add, Nat.cast_one, Nat.add_sub_cancel, mul_neg, mul_one]
+    ring
+
+/-- Exact integral between arbitrary finite endpoints. This expression is valid
+for both signs of the exponent and records the compensating upper boundary. -/
+theorem integral_pow_exp_between (p : ℕ) (b d B : ℝ) (hb : b ≠ 0) :
+    (∫ x in d..B, x^p * Real.exp (-b*x)) =
+      (Real.exp (-b*d) * gammaEndpointPolynomial p (b*d) -
+        Real.exp (-b*B) * gammaEndpointPolynomial p (b*B)) / b^(p+1) := by
+  have hd (x : ℝ) : HasDerivAt
+      (fun y : ℝ => -(Real.exp (-b*y) * gammaEndpointPolynomial p (b*y)) / b^(p+1))
+      (x^p * Real.exp (-b*x)) x := by
+    have h := (((hasDerivAt_exp_gammaEndpoint p (b*x)).comp x
+      ((hasDerivAt_id x).const_mul b)).neg).div_const (b^(p+1))
+    have he : -(-Real.exp (-(b*x))*(b*x)^p*(b*1))/b^(p+1) =
+        x^p*Real.exp (-b*x) := by
+      rw [mul_pow, pow_succ]
+      field_simp [hb]
+      <;> ring
+    rw [he] at h
+    simpa only [Function.comp_def, Pi.neg_apply, id_eq, neg_mul] using h
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun x _ => hd x)
+    (Continuous.intervalIntegrable (by fun_prop) _ _)]
+  ring
+
+/-- The all-order cap at unequal density and tilt rates in finite arithmetic form. -/
+theorem tiltedMoment_le_compensated_polynomial {T F K q v d : ℝ} (p : ℕ)
+    (hF : strictTail T 0 ≤ F) (hK : 0 ≤ K) (hq : 0 ≤ q) (hv : 0 ≤ v) (hgap : q ≠ v)
+    (hd : d ∈ Icc (0 : ℝ) (1/2)) (hcross : K * Real.exp (-q*d) = F)
+    (htail : ∀ t ∈ Icc (0 : ℝ) (1/2), strictTail T t ≤ K * Real.exp (-q*t)) :
+    let b := q-v
+    (∑ c : Copies T, copyDisplacement T c^(p+1) * Real.exp (v*copyDisplacement T c)) ≤
+      K * ((1/2 : ℝ)^(p+1) * Real.exp (-b*(1/2)) + q *
+        ((Real.exp (-b*d) * gammaEndpointPolynomial (p+1) (b*d) -
+          Real.exp (-b*(1/2)) * gammaEndpointPolynomial (p+1) (b*(1/2))) / b^(p+2))) := by
+  dsimp only
+  have he := tiltedMoment_le_compensated_expTail p hF hK hq hv hd hcross htail
+  rw [show v-q = -(q-v) by ring] at he
+  rwa [integral_pow_exp_between (p+1) (q-v) d (1/2) (sub_ne_zero.mpr hgap)] at he
+
+/-- The incomplete gamma endpoint polynomial contains its highest monomial. -/
+theorem pow_le_gammaEndpointPolynomial (p : ℕ) {x : ℝ} (hx : 0 ≤ x) :
+    x^p ≤ gammaEndpointPolynomial p x := by
+  cases p with
+  | zero => simp [gammaEndpointPolynomial]
+  | succ p =>
+    rw [gammaEndpointPolynomial_succ]
+    apply le_add_of_nonneg_left
+    apply mul_nonneg (by positivity)
+    unfold gammaEndpointPolynomial
+    exact mul_nonneg (Nat.cast_nonneg _) (Finset.sum_nonneg fun j _ =>
+      div_nonneg (pow_nonneg hx j) (Nat.cast_nonneg _))
+
+/-- For tilts below the density rate, deleting the nonpositive upper boundary
+leaves the incomplete gamma polynomial at the cap crossing. -/
+theorem tiltedMoment_le_compensated_subcritical {T F K q v d : ℝ} (p : ℕ)
+    (hF : strictTail T 0 ≤ F) (hK : 0 ≤ K) (hv : 0 ≤ v) (hvq : v < q)
+    (hd : d ∈ Icc (0 : ℝ) (1/2)) (hcross : K * Real.exp (-q*d) = F)
+    (htail : ∀ t ∈ Icc (0 : ℝ) (1/2), strictTail T t ≤ K * Real.exp (-q*t)) :
+    let b := q-v
+    (∑ c : Copies T, copyDisplacement T c^(p+1) * Real.exp (v*copyDisplacement T c)) ≤
+      F * Real.exp (v*d) * (q * gammaEndpointPolynomial (p+1) (b*d) / b^(p+2)) := by
   let b := q-v
-  let φ := fun t : ℝ => t^4 * Real.exp (v*t)
-  let f := fun t : ℝ => (4*t^3 + v*t^4) * Real.exp (v*t)
   have hb : 0 < b := sub_pos.mpr hvq
-  have hφ (t : ℝ) : HasDerivAt φ (f t) t := by
-    have h := (hasDerivAt_pow 4 t).mul (((hasDerivAt_id t).const_mul v).exp)
-    convert h using 1 <;> try dsimp [φ, f]
-    all_goals first | rfl | ring
-  have h := badWeightedSum_le_of_expTail T 0 K q φ f (by norm_num)
-    (by dsimp [f]; fun_prop) hφ (by simp [φ])
+  have hq : 0 ≤ q := hv.trans hvq.le
+  have he := tiltedMoment_le_compensated_polynomial p hF hK hq hv (ne_of_gt hvq) hd hcross htail
+  have hh := pow_le_gammaEndpointPolynomial (p+1) (mul_nonneg hb.le (by norm_num : 0 ≤ (1/2 : ℝ)))
+  have hbp : (1/2 : ℝ)^(p+1)*b^(p+2) ≤ q * gammaEndpointPolynomial (p+1) (b*(1/2)) := calc
+    _ = b*((b*(1/2))^(p+1)) := by rw [pow_succ b (p+1), mul_pow]; ring
+    _ ≤ _ := mul_le_mul (show b ≤ q by dsimp [b]; linarith) hh (by positivity) hq
+  have hhB := mul_le_mul_of_nonneg_right hbp (Real.exp_pos (-b*(1/2))).le
+  have hcmp : ((1/2 : ℝ)^(p+1)*Real.exp (-b*(1/2)) + q *
+      ((Real.exp (-b*d) * gammaEndpointPolynomial (p+1) (b*d) -
+        Real.exp (-b*(1/2)) * gammaEndpointPolynomial (p+1) (b*(1/2))) / b^(p+2))) ≤
+      Real.exp (-b*d) * (q * gammaEndpointPolynomial (p+1) (b*d) / b^(p+2)) := by
+    calc
+      _ = (((1/2 : ℝ)^(p+1)*Real.exp (-b*(1/2)))*b^(p+2) + q *
+          (Real.exp (-b*d) * gammaEndpointPolynomial (p+1) (b*d) -
+            Real.exp (-b*(1/2)) * gammaEndpointPolynomial (p+1) (b*(1/2)))) / b^(p+2) := by
+        field_simp [hb.ne']
+      _ ≤ (Real.exp (-b*d)*(q * gammaEndpointPolynomial (p+1) (b*d))) / b^(p+2) :=
+        div_le_div_of_nonneg_right (by nlinarith only [hhB]) (pow_nonneg hb.le _)
+      _ = _ := by ring
+  have hE : K * Real.exp (-b*d) = F*Real.exp (v*d) := by
+    rw [← hcross, show -b*d = -q*d+v*d by dsimp [b]; ring, Real.exp_add]
+    ring
+  apply he.trans ((mul_le_mul_of_nonneg_left hcmp hK).trans_eq ?_)
+  rw [← mul_assoc, hE]
+
+/-- At tilt equal to the density rate, the finite cap reduces to an elementary
+polynomial in the crossing position. -/
+theorem tiltedMoment_le_compensated_at_rate {T F K q d : ℝ} (p : ℕ)
+    (hF : strictTail T 0 ≤ F) (hK : 0 ≤ K) (hq : 0 ≤ q)
+    (hd : d ∈ Icc (0 : ℝ) (1/2)) (hcross : K * Real.exp (-q*d) = F)
+    (htail : ∀ t ∈ Icc (0 : ℝ) (1/2), strictTail T t ≤ K * Real.exp (-q*t)) :
+    (∑ c : Copies T, copyDisplacement T c^(p+1) * Real.exp (q*copyDisplacement T c)) ≤
+      K * ((1/2 : ℝ)^(p+1) + q * (((1/2 : ℝ)^(p+2) - d^(p+2)) / ((p : ℝ)+2))) := by
+  have h := tiltedMoment_le_compensated_expTail p hF hK hq hq hd hcross htail
+  simpa only [sub_self, zero_mul, Real.exp_zero, mul_one, integral_pow, Nat.cast_add,
+    Nat.cast_one, add_assoc, one_add_one_eq_two] using h
+
+/-- When a two-sided displacement tail has majorant K exp(−q t), the full
+half-line weighted factorial constant is K k! q/(q−v)^(k+1) for each k≥1. -/
+theorem tiltedMoment_le_expTail {T K q v : ℝ} (p : ℕ) (hK : 0 ≤ K) (hv : 0 ≤ v)
+    (hvq : v < q) (htail : ∀ t ∈ Icc (0 : ℝ) (1/2),
+      strictTail T t ≤ K * Real.exp (-q*t)) :
+    (∑ c : Copies T, copyDisplacement T c^(p+1) * Real.exp (v*copyDisplacement T c)) ≤
+      K * (((p+1).factorial : ℝ) * q / (q-v)^(p+2)) := by
+  let b := q-v
+  let f := fun t : ℝ => (((p : ℝ)+1)*t^p + v*t^(p+1)) * Real.exp (v*t)
+  have hb : 0 < b := sub_pos.mpr hvq
+  have h := badWeightedSum_le_of_expTail T 0 K q (fun t => t^(p+1)*Real.exp (v*t)) f
+    (by norm_num) (by dsimp [f]; fun_prop) (hasDerivAt_tiltedMoment p v) (by simp)
     (fun t ht => by have ht0 : 0 ≤ t := ht.1; dsimp [f]; positivity) htail
-  have he : badWeightedSum T 0 φ =
-      ∑ c : Copies T, (c.1.1.re-1/2)^4 * Real.exp (v*|c.1.1.re-1/2|) := by
-    unfold badWeightedSum FiniteStrictTail.badSum
-    apply Finset.sum_congr rfl
-    intro c _
-    by_cases hx : 0 < copyDisplacement T c
-    · rw [if_pos hx]
-      dsimp [φ, copyDisplacement]
-      rw [show (4 : ℕ) = 2*2 by decide, pow_mul, sq_abs, ← pow_mul]
-    · have hz : c.1.1.re - 1/2 = 0 := abs_eq_zero.mp
-        (le_antisymm (le_of_not_gt hx) (abs_nonneg _))
-      rw [if_neg hx, hz]
-      norm_num
-  rw [he] at h
-  simp only [φ, zero_pow (by decide : 4 ≠ 0), zero_mul, zero_add] at h
+  simp only [tiltedMoment_badSum, zero_pow (Nat.succ_ne_zero p), zero_mul, zero_add] at h
   have hsplit (t : ℝ) : Real.exp (-q*t) * f t =
-      4 * (Real.exp (-b*t)*t^3) + v * (Real.exp (-b*t)*t^4) := by
-    have he : Real.exp (-q*t) * Real.exp (v*t) = Real.exp (-b*t) := by
+      ((p : ℝ)+1)*(Real.exp (-b*t)*t^p) + v*(Real.exp (-b*t)*t^(p+1)) := by
+    have he : Real.exp (-q*t)*Real.exp (v*t) = Real.exp (-b*t) := by
       rw [← Real.exp_add]
       congr 1
       dsimp [b]
@@ -237,18 +474,47 @@ theorem weightedFourthSum_le_expTail {T K q v : ℝ} (hK : 0 ≤ K) (hv : 0 ≤ 
   rw [intervalIntegral.integral_add (Continuous.intervalIntegrable (by fun_prop) _ _)
     (Continuous.intervalIntegrable (by fun_prop) _ _),
     intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul] at h
-  have h3 := integral_scaled_gamma_le 3 b (1/2) hb (by norm_num)
-  have h4 := integral_scaled_gamma_le 4 b (1/2) hb (by norm_num)
-  norm_num [Nat.factorial] at h3 h4
-  have hh := add_le_add (mul_le_mul_of_nonneg_left h3 (by norm_num : (0:ℝ) ≤ 4))
-    (mul_le_mul_of_nonneg_left h4 hv)
-  simp only [← neg_mul] at hh
-  have hnum := h.trans (mul_le_mul_of_nonneg_left hh (by positivity))
-  apply hnum.trans_eq
-  change K*(4*(6/b^4)+v*(24/b^5)) = K*(24*q/b^5)
+  have hp := integral_scaled_gamma_le p b (1/2) hb (by norm_num)
+  have hs := integral_scaled_gamma_le (p+1) b (1/2) hb (by norm_num)
+  have hh := add_le_add (mul_le_mul_of_nonneg_left hp (by positivity : 0 ≤ (p : ℝ)+1))
+    (mul_le_mul_of_nonneg_left hs hv)
+  apply (h.trans (mul_le_mul_of_nonneg_left hh hK)).trans_eq
+  change K*(((p : ℝ)+1)*((p.factorial : ℝ)/b^(p+1)) +
+    v*(((p+1).factorial : ℝ)/b^((p+1)+1))) =
+    K*(((p+1).factorial : ℝ)*q/b^((p+1)+1))
   have he : q = b+v := by dsimp [b]; ring
-  rw [he]
-  field_simp <;> ring
+  rw [he, pow_succ b (p+1), Nat.factorial_succ]
+  push_cast
+  field_simp
+  <;> ring
+
+/-- Quartic specialization in the signed horizontal coordinate used by the
+reflected Gram kernel. -/
+theorem weightedFourthSum_le_expTail {T K q v : ℝ} (hK : 0 ≤ K) (hv : 0 ≤ v)
+    (hvq : v < q) (htail : ∀ t ∈ Icc (0:ℝ) (1/2),
+      strictTail T t ≤ K * Real.exp (-q * t)) :
+    (∑ c : Copies T, (c.1.1.re-1/2)^4 * Real.exp (v*|c.1.1.re-1/2|)) ≤
+      K*(24*q/(q-v)^5) := by
+  have h := tiltedMoment_le_expTail 3 hK hv hvq htail
+  norm_num [Nat.factorial] at h
+  have hs (x : ℝ) : |x|^4 = x^4 := by
+    rw [show (4 : ℕ) = 2*2 by decide, pow_mul, sq_abs, ← pow_mul]
+  simpa only [copyDisplacement, hs] using h
+
+/-- Height-normalized tilted absolute moments of every positive integer
+order, with a single inclusive density constant and the full open tilt range. -/
+theorem tiltedMoment_div_height_of_selberg {T C a v : ℝ} (p : ℕ)
+    (hT : 1 < T) (hC : 0 ≤ C) (hv : 0 ≤ v)
+    (hvq : v < a*Real.log T) (hD : SelbergDensityBound T C a) :
+    (∑ c : Copies T, copyDisplacement T c^(p+1) * Real.exp (v*copyDisplacement T c)) / T ≤
+      2*C*Real.log T * (((p+1).factorial : ℝ)*(a*Real.log T)/(a*Real.log T-v)^(p+2)) := by
+  have ht := zero_lt_one.trans hT
+  have hL := Real.log_pos hT
+  have h := tiltedMoment_le_expTail p (by positivity : 0 ≤ 2*C*T*Real.log T) hv hvq
+    (fun t ht' => strictTail_of_selbergDensity T C a t ht ht' hD)
+  apply (div_le_iff₀ ht).mpr
+  apply h.trans_eq
+  ring
 
 /-- An exponential weight uses part of the density exponent. After reflection
 and division by height, its fourth moment is bounded with the exact

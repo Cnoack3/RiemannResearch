@@ -53,7 +53,7 @@ The removable values are understood by continuity. Average over the dilations by
 \]
 The integral is continuous and strictly positive for every \(u>0\). It tends to \((b-a)/2\) as \(u\to\infty\), by substituting \(v=1/t\) and using the Riemann–Lebesgue lemma. Hence some \(c>0\) gives \(\widehat k(u)\le -c(1+|u|)^{-4}\) for every \(|u|\ge\lambda\).
 
-Take an even smooth cutoff \(0\le\chi\le1\) equal to one on \([-1,1]\), and put \(f_R(x)=\chi(x/R)f(x)\). As \(R\to\infty\), the Schwartz decay of \(f\) gives \(f_R\to f\) in \(W^{4,1}(\mathbb R)\). Fourier evaluation and four integrations by parts therefore give \(\sup_u(1+|u|)^4|\widehat f_R(u)-\widehat f(u)|\to0\). Fix \(0<\varepsilon<M-1\); all five kernel intervals permit \(\varepsilon=10^{-11}\). Choose \(R>\theta\) large enough that this weighted error is at most \(c\varepsilon\). Then \(h=f_R+\varepsilon k\) is nonnegative and compactly supported and \(\widehat h(u)\le0\) for \(|u|\ge\lambda\). Its zero-frequency mass satisfies \(0<\widehat h(0)\le1+\varepsilon\). Its objective is at least \(M>1+\varepsilon\) because \(f_R=f\) throughout \([-\theta,\theta]\) and \(k\ge0\). The compact test \(h/\widehat h(0)\) thus satisfies every hypothesis in Lamzouri's stated Theorem 3.3. [Lamzouri, Theorem 3.3 and the Selberg minorant following (3.15)](https://arxiv.org/html/2611.14486v1#S3)
+Take an even smooth cutoff \(0\le\chi\le1\) equal to one on \([-1,1]\), and put \(f_R(x)=\chi(x/R)f(x)\). As \(R\to\infty\), the Schwartz decay of \(f\) gives \(f_R\to f\) in \(W^{4,1}(\mathbb R)\). Fourier evaluation and four integrations by parts therefore give \(\sup_u(1+|u|)^4|\widehat f_R(u)-\widehat f(u)|\to0\). Fix \(0<\varepsilon<M-1\); all six kernel intervals permit \(\varepsilon=10^{-11}\). Choose \(R>\theta\) large enough that this weighted error is at most \(c\varepsilon\). Then \(h=f_R+\varepsilon k\) is nonnegative and compactly supported and \(\widehat h(u)\le0\) for \(|u|\ge\lambda\). Its zero-frequency mass satisfies \(0<\widehat h(0)\le1+\varepsilon\). Its objective is at least \(M>1+\varepsilon\) because \(f_R=f\) throughout \([-\theta,\theta]\) and \(k\ge0\). The compact test \(h/\widehat h(0)\) thus satisfies every hypothesis in Lamzouri's stated Theorem 3.3. [Lamzouri, Theorem 3.3 and the Selberg minorant following (3.15)](https://arxiv.org/html/2611.14486v1#S3)
 
 ## The explicit kernel
 
@@ -89,17 +89,18 @@ Its independent polynomial signs hold on the same domains \(y\ge0\) and \(y\ge t
 \]
 The strictly subcritical support parameter is essential in the application of Proposition 3.2. The constants implicit in the deletion loss can depend on this parameter.
 
-The following three further kernels use the same normalized construction.
+The following further kernels use the same normalized construction.
 Write \(D(\lambda)>0\) for positive lower gap proportion and \(a\) for the exponent in a one-logarithm Selberg density estimate holding uniformly down to the critical line.
 
 | Degree in \(y\) | Gap \(\lambda\) | Cutoff \(\theta\) | Fourier ray \(t\) | Rational radius \(r\) | Certified lower endpoint for \(M\) | Frequency-side premise |
 |---:|---:|---:|---:|---:|---:|---|
 | 285 | 0.784782678 | \(4/7-10^{-12}\) | 78/25 | 79759777828511/10¹⁴ | 1.000000000452054486 | Unconditional |
 | 149 | 0.73995708 | \(2/3-10^{-8}\) | 77/25 | 44152955860237/50000000000000 | 1.000000000256212568 | One-log \(a=4/3\) |
+| 251 | 0.739922533 | \(2/3-10^{-8}\) | 77/25 | 88301788907929/100000000000000 | 1.000000000629954198 | One-log \(a=4/3\) |
 | 205 | 0.603780886 | \(1-10^{-12}\) | 77/25 | 108082125014603/10¹⁴ | 1.000000000666644703 | One-log \(a=2\) |
 
 For the conditional rows, uniform one-log density gives
-\(\mathbb P((\log T)|\beta-1/2|>v)\ll e^{-av}\). Lamzouri's all-fixed-order row moments and the sparse-deletion argument then allow any fixed support below \(a/2\) and below one. The displayed cutoffs therefore suffice with any single exponent \(a>4/3-2\cdot10^{-8}\) and \(a>2-2\cdot10^{-12}\), respectively. A cofinal family at either endpoint gives the same conclusion. If the internal gap fraction tends to zero along a sequence, deleting its endpoints has negligible effect on the tested sum at this support. The finite separated-pair upper bound contradicts the certified excess. The same two kernels give \(D(0.70321)>0\) under one-log \(a=3/2\), and \(D(0.65181)>0\) under one-log \(a=7/4\). Lamzouri explicitly records 0.6039 under the one-log \(a=2\) premise. [Lamzouri, Introduction](https://arxiv.org/html/2611.14486v1#S1) · [Sparse-deletion proof](SparsePairDensityBounds20261119.md)
+\(\mathbb P((\log T)|\beta-1/2|>v)\ll e^{-av}\). Lamzouri's all-fixed-order row moments and the sparse-deletion argument then allow any fixed support below \(a/2\) and below one. The displayed cutoffs therefore suffice with any single exponent \(a>4/3-2\cdot10^{-8}\) and \(a>2-2\cdot10^{-12}\), respectively. A cofinal family at either endpoint gives the same conclusion. If the internal gap fraction tends to zero along a sequence, deleting its endpoints has negligible effect on the tested sum at this support. The finite separated-pair upper bound contradicts the certified excess. The degree-149 and degree-205 kernels also give \(D(0.70321)>0\) under one-log \(a=3/2\), and \(D(0.65181)>0\) under one-log \(a=7/4\). Lamzouri explicitly records 0.6039 under the one-log \(a=2\) premise. [Lamzouri, Introduction](https://arxiv.org/html/2611.14486v1#S1) · [Sparse-deletion proof](SparsePairDensityBounds20261119.md)
 
 ## Unconditional counts at smaller gap scales
 
@@ -111,9 +112,9 @@ Write \(d_T(\lambda)\) for the qualifying internal-gap count divided by \(N(T)\)
 | 0.75926 | 5/8 | every \(p>30\) | 285 |
 | 0.74762 | 13/20 | every \(p>78\) | 149 |
 | 0.74301 | 33/50 | every \(p>198\) | 149 |
-| 0.74 | \(28352/(3(14176+2))-10^{-10}\) | \(p=14176\) | 149 |
+| 0.74 | \(15698/(3(7849+2))-10^{-12}\) | \(p=7849\) | 251 |
 
-The proof uses the log-prefactor density estimate of Chourasiya and Simonič together with the normalized one-log estimates for every fixed \(a<8/7\). Each row uses a strictly larger support for its smooth cutoff while preserving the stated strict inequality on \(p\). The final row gives a lower bound for the number of gaps at 74% of average spacing of order \(N(T)/(\log T)^{14176}\), with the ratio tending to infinity. [Sparse-deletion proof and phase diagram](SparsePairDensityBounds20261119.md) · [Chourasiya and Simonič](https://arxiv.org/abs/2507.15184)
+The proof uses the log-prefactor density estimate of Chourasiya and Simonič together with the normalized one-log estimates for every fixed \(a<8/7\). Each row uses a strictly larger support for its smooth cutoff while preserving the stated strict inequality on \(p\). The final row gives a lower bound for the number of gaps at 74% of average spacing of order \(N(T)/(\log T)^{7849}\), with the ratio tending to infinity. [Sparse-deletion proof and phase diagram](SparsePairDensityBounds20261119.md) · [Chourasiya and Simonič](https://arxiv.org/abs/2507.15184)
 
 ## Polynomial counts in the height at smaller gap thresholds
 
@@ -131,6 +132,6 @@ The first four conclusions use published curves. Lewko's final-row input has a d
 
 ## Reproducibility
 
-Run `python3 verify_small_gap_kernel.py` for every kernel and additional parameter row. The `--degree` option selects one kernel and its associated rows. The checker uses the Python standard library and accepts no optimizer output at runtime. It constructs both polynomials by the Laguerre three-term recurrence, translates \(-Q(t+y)\), and maps each positive half-line to \(0\le v\le1\) using \(y=v/(1-v)\). A polynomial \(\sum a_k y^k\) of degree \(n\) then has Bernstein coefficients \(a_k/\binom nk\) after multiplication by \((1-v)^n\). Exact subdivision at dyadic midpoints certifies every coefficient strictly positive on the final intervals. The physical/Fourier node counts are 399/323, 453/395, 543/393, 905/569 and 921/981 for degrees 83, 105, 149, 205 and 285 respectively.
+Run `python3 verify_small_gap_kernel.py` for every kernel and additional parameter row. The `--degree` option selects one kernel and its associated rows. The checker uses the Python standard library and accepts no optimizer output at runtime. It constructs both polynomials by the Laguerre three-term recurrence, translates \(-Q(t+y)\), and maps each positive half-line to \(0\le v\le1\) using \(y=v/(1-v)\). A polynomial \(\sum a_k y^k\) of degree \(n\) then has Bernstein coefficients \(a_k/\binom nk\) after multiplication by \((1-v)^n\). Exact subdivision at dyadic midpoints certifies every coefficient strictly positive on the final intervals. The physical/Fourier node counts are 399/323, 453/395, 543/393, 905/569, 899/757, and 921/981 for degrees 83, 105, 149, 205, 251 and 285 respectively.
 
 The integral check uses integer-backed interval arithmetic with outward rounding at every operation. Machin's formula and alternating rational arctangent sums bound \(\pi\). Integer square roots bound \(s\), and Taylor's theorem with the signs of successive derivatives bounds \(e^{-z}\). The checker prints every enclosure rounded outward. The analytic small-gap conclusion remains a paper deduction from the cited theorem. [Certificate checker](BoundCertificateReplays20261119.md#verify_small_gap_kernelpy)

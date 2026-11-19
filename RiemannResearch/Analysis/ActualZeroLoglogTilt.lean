@@ -7,17 +7,13 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 
-/-! # Exponential tilts of the fourth absolute zero-displacement moment
+/-! # Exponential tilts of absolute zero-displacement moments
 
-For every fixed B, tilts v ≤ B log log T preserve the fourth-moment
-Ingham scale. Split the critical strip at displacement 1/log log T.
-The lower part has a bounded exponential weight. On the upper part the
-weight is at most a fixed power of log T, which a sufficiently high
-absolute displacement moment absorbs. The full finite sums count zeta
-zeros with analytic multiplicity. The Ingham exponential tail also gives
-a wider inverse-cubic-log bound for v ≤ B log T / log log T and a
-frequency-dependent estimate up to every fixed tilt below (4/3) log T. The
-central term retains the exact number of off-line copies. The density input
+For every fixed B, tilts v ≤ B log T / log log T retain the untilted
+moment scale. The sharper cap can be integrated exactly at horizontal
+displacement (3/2) log log T / log T, giving a frequency-dependent
+polynomial up to the (4/3) log T linear tilt. The central term also has
+a version retaining the exact number of off-line copies. The density input
 is adapted in ActualZeroInghamHorizontalEnergy from Chourasiya–Simonič,
 Theorem 1, https://arxiv.org/abs/2507.15184.
 -/
@@ -26,131 +22,103 @@ open Filter Zeta23 Set
 open scoped BigOperators Topology
 namespace RiemannResearch.Analysis.ActualZeroOrdinate
 
-private theorem exists_displacementSum_div_height_bound (p : ℕ) :
-    ∃ H : ℝ, 0 ≤ H ∧ ∀ᶠ T : ℝ in atTop,
-      (∑ i : Copies T, copyDisplacement T i ^ (p+1)) / T ≤
-        H * (Real.log (Real.log T)/Real.log T)^(p+1) * Real.log T := by
-  let H := (3/2 : ℝ)^(p+1)/3+1
-  refine ⟨H, by dsimp [H]; positivity, ?_⟩
+/-- The central and Ingham envelopes can be made to meet exactly at
+(3/2) log log T / log T. One constant and height threshold work for every
+positive order and every tilt strictly below (4/3) log T. -/
+theorem exists_ingham_tilted_moment_exact_crossing :
+    ∃ C : ℝ, 0 < C ∧ ∀ᶠ T : ℝ in atTop, ∀ p : ℕ, ∀ v : ℝ,
+      0 ≤ v → v < (4/3) * Real.log T →
+      let L := Real.log T
+      let d := (3/2) * (Real.log L / L)
+      let q := (4/3)*L
+      (∑ i : Copies T, copyDisplacement T i^(p+1) * Real.exp (v*copyDisplacement T i)) / T ≤
+        C*L * Real.exp (v*d) * (q * gammaEndpointPolynomial (p+1) ((q-v)*d) / (q-v)^(p+2)) := by
+  obtain ⟨H,hH,hing⟩ := exists_strictTail_ingham_exponential
+  let C := max 1 H
+  have hC : 0 < C := zero_lt_one.trans_le (le_max_left _ _)
+  refine ⟨C, hC, ?_⟩
   have hc := eventually_count_le_log_of_lt (show 1/(2*Real.pi) < (1:ℝ) by
     apply (div_lt_iff₀ (by positivity)).mpr
     linarith [Real.pi_gt_three])
-  filter_upwards [eventually_displacementMoment_ratio_le p zero_lt_one, hc, eventually_count_pos,
-    eventually_gt_atTop (1:ℝ),
-    (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop).eventually_gt_atTop 0]
-    with T hm hN hp hT hℓ
-  have ht : 0 < T := by linarith
-  have hL := Real.log_pos hT
-  let M := ∑ i : Copies T, copyDisplacement T i ^ (p+1)
-  let w := Real.log (Real.log T) / Real.log T
-  have hw : 0 < w := div_pos hℓ hL
-  change (M / (Ncount 0 T : ℝ)) / w^(p+1) ≤ H at hm
-  have hcount : (Ncount 0 T : ℝ)/T ≤ Real.log T := (div_le_iff₀ ht).mpr (by
-    simpa only [one_mul, mul_one, mul_comm] using hN)
-  have hn : (Ncount 0 T : ℝ) ≠ 0 := by positivity
-  change M/T ≤ H*w^(p+1)*Real.log T
-  calc
-    M/T = (M/(Ncount 0 T : ℝ))*((Ncount 0 T : ℝ)/T) := by field_simp
-    _ ≤ _ := mul_le_mul ((div_le_iff₀ (pow_pos hw _)).mp hm) hcount
-      (div_nonneg (Nat.cast_nonneg _) ht.le) (by dsimp [H]; positivity)
-
-/-- Uniform tilted fourth-moment bound over every fixed loglog-frequency
-band. The height and constant may depend on B. -/
-theorem exists_loglog_tilted_fourth_moment_bound (B : ℝ) (hB : 0 ≤ B) :
-    ∃ K : ℝ, 0 < K ∧ ∀ᶠ T : ℝ in atTop, ∀ v : ℝ, 0 ≤ v →
-      v ≤ B * Real.log (Real.log T) →
-      (∑ i : Copies T, (i.1.1.re - 1/2)^4 * Real.exp (v * |i.1.1.re - 1/2|)) / T ≤
-        K * (Real.log (Real.log T))^4 / (Real.log T)^3 := by
-  obtain ⟨n, hn⟩ := exists_nat_ge B
-  let m := n+1
-  obtain ⟨H, hH, hfour⟩ := exists_displacementSum_div_height_bound 3
-  obtain ⟨J, hJ, hhigh⟩ := exists_displacementSum_div_height_bound (m+3)
-  have hsmall : Tendsto (fun T : ℝ => (Real.log (Real.log T))^(2*m) / Real.log T) atTop (𝓝 0) := by
-    have h := (Real.tendsto_pow_mul_exp_neg_atTop_nhds_zero (2*m)).comp
-      (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop)
-    apply h.congr'
-    filter_upwards [Real.tendsto_log_atTop.eventually_gt_atTop 0] with T ht
-    simp only [Function.comp_def, Real.exp_neg, Real.exp_log ht, div_eq_mul_inv]
-  refine ⟨Real.exp B * H + J + 1, by positivity, ?_⟩
-  filter_upwards [hfour,hhigh,eventually_gt_atTop (1:ℝ),
+  have hscale : Tendsto (fun T : ℝ => Real.log (Real.log T) / Real.log T) atTop (𝓝 0) :=
+    Real.log_div_self_tendsto_zero.comp Real.tendsto_log_atTop
+  filter_upwards [eventually_ge_atTop (max 2 (Real.exp 1)), hc,
     (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop).eventually_gt_atTop 0,
-    hsmall.eventually_le_const zero_lt_one] with T h4 hm hT hℓ hscale
-  intro v hv hvB
+    hscale.eventually_le_const (by norm_num : (0:ℝ)<1/3)] with T hT hc hℓ hgeom
+  intro p v hv hvq
+  let L := Real.log T
+  let d := (3/2)*(Real.log L/L)
+  let q := (4/3)*L
+  have ht : 1 < T := by linarith [(le_max_left (2:ℝ) (Real.exp 1)).trans hT]
+  have ht0 := zero_lt_one.trans ht
+  have hL : 0 < L := Real.log_pos ht
+  change 0 < Real.log L at hℓ
+  have hd : d ∈ Icc (0 : ℝ) (1/2) :=
+    ⟨mul_nonneg (by norm_num) (div_nonneg hℓ.le hL.le), by
+      change (3/2)*(Real.log (Real.log T)/Real.log T) ≤ 1/2
+      linarith only [hgeom]⟩
+  have hF : strictTail T 0 ≤ C*T*L := calc
+    _ ≤ (Ncount 0 T : ℝ) := strictTail_le_count T 0
+    _ ≤ 1*T*L := by simpa only [one_mul,mul_one,mul_comm,L] using hc
+    _ ≤ _ := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (le_max_left _ _) ht0.le) hL.le
+  have hcross : (C*T*L^3)*Real.exp (-q*d) = C*T*L := by
+    have hqd : -q*d = -(Real.log L+Real.log L) := by dsimp [q,d]; field_simp <;> ring
+    rw [hqd, Real.exp_neg, Real.exp_add, Real.exp_log hL]
+    field_simp
+  have htail (t : ℝ) (ht' : t ∈ Icc (0:ℝ) (1/2)) :
+      strictTail T t ≤ C*T*L^3*Real.exp (-q*t) := by
+    have hh : strictTail T t ≤ H*T*L^3*Real.exp (-q*t) := by
+      simpa only [q,L,neg_mul] using hing T hT t ht'.1
+    apply hh.trans
+    apply mul_le_mul_of_nonneg_right _ (Real.exp_pos _).le
+    exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (le_max_right _ _) ht0.le) (pow_nonneg hL.le 3)
+  have hh := tiltedMoment_le_compensated_subcritical (T := T) p hF (by positivity : 0 ≤ C*T*L^3)
+    hv hvq hd hcross htail
+  apply (div_le_iff₀ ht0).mpr
+  apply hh.trans_eq
+  ring
+
+/-- At a linear tilt λ log T the logarithmic power is exactly (3/2)λ
+above the untilted moment scale. The polynomial records every lower order. -/
+theorem exists_ingham_linear_tilt_power_polynomial :
+    ∃ C : ℝ, 0 < C ∧ ∀ᶠ T : ℝ in atTop, ∀ p : ℕ, ∀ slope : ℝ, 0 ≤ slope → slope < 4/3 →
+      let L := Real.log T
+      let ℓ := Real.log L
+      (∑ i : Copies T, copyDisplacement T i^(p+1) *
+        Real.exp ((slope*L)*copyDisplacement T i)) / T ≤
+        (C*(4/3) * L^((3/2)*slope) / ((4/3-slope)^(p+2)*L^p)) *
+          gammaEndpointPolynomial (p+1) ((2-(3/2)*slope)*ℓ) := by
+  obtain ⟨C,hC,h⟩ := exists_ingham_tilted_moment_exact_crossing
+  refine ⟨C,hC,?_⟩
+  filter_upwards [h,eventually_gt_atTop (1:ℝ)] with T hT ht
+  intro p slope hslope hquick
   let L := Real.log T
   let ℓ := Real.log L
-  let S := fun k : ℕ => ∑ i : Copies T, copyDisplacement T i ^ k
-  have hT0 : 0 < T := by linarith
-  have hL : 0 < L := Real.log_pos hT
-  change 0 < ℓ at hℓ
-  change v ≤ B * ℓ at hvB
-  change ℓ^(2*m)/L ≤ 1 at hscale
-  change S 4/T ≤ H*(ℓ/L)^4*L at h4
-  change S (m+4)/T ≤ J*(ℓ/L)^(m+4)*L at hm
-  have hpoint (i : Copies T) :
-      (i.1.1.re-1/2)^4 * Real.exp (v * |i.1.1.re-1/2|) ≤
-        Real.exp B * copyDisplacement T i ^ 4 +
-          (L^n * ℓ^m) * copyDisplacement T i ^ (m+4) := by
-    let d := copyDisplacement T i
-    have hd : 0 ≤ d := abs_nonneg _
-    have hd1 : d ≤ 1 := by
-      have hx : d < 1/2 := displacement_lt_half i.1.2
-      linarith
-    have hpow : (i.1.1.re-1/2)^4 = d^4 := by
-      dsimp [d,copyDisplacement]
-      rw [show (4 : ℕ) = 2*2 by decide, pow_mul, pow_mul, sq_abs]
-    rw [hpow]
-    change d^4 * Real.exp (v*d) ≤ Real.exp B * d^4 + (L^n * ℓ^m) * d^(m+4)
-    by_cases hnear : ℓ*d ≤ 1
-    · have harg : v*d ≤ B := calc
-        _ ≤ (B*ℓ)*d := mul_le_mul_of_nonneg_right hvB hd
-        _ = B*(ℓ*d) := by ring
-        _ ≤ B := (mul_le_mul_of_nonneg_left hnear hB).trans_eq (mul_one B)
-      have hh := mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr harg) (pow_nonneg hd 4)
-      nlinarith only [hh, mul_nonneg (mul_nonneg (pow_nonneg hL.le n) (pow_nonneg hℓ.le m))
-        (pow_nonneg hd (m+4))]
-    · have harg : v*d ≤ (n:ℝ)*ℓ :=
-        (mul_le_mul_of_nonneg_left hd1 hv).trans ((mul_one v).le.trans
-          (hvB.trans (mul_le_mul_of_nonneg_right hn hℓ.le)))
-      have he : Real.exp (v*d) ≤ L^n := by
-        apply (Real.exp_le_exp.mpr harg).trans_eq
-        rw [Real.exp_nat_mul, Real.exp_log hL]
-      have hw : 1 ≤ (ℓ*d)^m := one_le_pow₀ (le_of_not_ge hnear)
-      calc
-        _ ≤ d^4 * L^n := mul_le_mul_of_nonneg_left he (pow_nonneg hd _)
-        _ ≤ (d^4*L^n) * (ℓ*d)^m :=
-          (le_mul_of_one_le_right (mul_nonneg (pow_nonneg hd _) (pow_nonneg hL.le _)) hw)
-        _ = (L^n * ℓ^m)*d^(m+4) := by rw [mul_pow, pow_add]; ring
-        _ ≤ _ := le_add_of_nonneg_left (mul_nonneg (Real.exp_pos _).le (pow_nonneg hd _))
-  have hs := Finset.sum_le_sum (s := Finset.univ) fun i _ => hpoint i
-  rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum] at hs
-  apply (div_le_div_of_nonneg_right hs hT0.le).trans
-  change (Real.exp B*S 4 + (L^n*ℓ^m)*S (m+4))/T ≤ (Real.exp B*H+J+1)*ℓ^4/L^3
-  simp only [add_div, mul_div_assoc]
-  have htail : (L^n*ℓ^m)*(J*(ℓ/L)^(m+4)*L) ≤ J*ℓ^4/L^3 := by
-    calc
-      _ = (J*ℓ^4/L^3) * (ℓ^(2*m)/L) := by
-        dsimp [m]
-        simp only [div_pow, pow_add, pow_succ, two_mul]
-        field_simp
-      _ ≤ _ := (mul_le_mul_of_nonneg_left hscale (by positivity)).trans_eq (mul_one _)
-  have hhead : Real.exp B * (H*(ℓ/L)^4*L) = (Real.exp B*H)*ℓ^4/L^3 := by rw [div_pow]; field_simp
-  calc
-    _ ≤ Real.exp B*(H*(ℓ/L)^4*L) + (L^n*ℓ^m)*(J*(ℓ/L)^(m+4)*L) :=
-      add_le_add (mul_le_mul_of_nonneg_left h4 (Real.exp_pos _).le)
-        (mul_le_mul_of_nonneg_left hm (mul_nonneg (pow_nonneg hL.le _) (pow_nonneg hℓ.le _)))
-    _ ≤ (Real.exp B*H)*ℓ^4/L^3 + J*ℓ^4/L^3 := add_le_add hhead.le htail
-    _ = (Real.exp B*H+J)*(ℓ^4/L^3) := by ring
-    _ ≤ _ := mul_le_mul_of_nonneg_right (by linarith) (by positivity)
+  have hL : 0 < L := Real.log_pos ht
+  have hh := hT p (slope*L) (mul_nonneg hslope hL.le) (mul_lt_mul_of_pos_right hquick hL)
+  have h1 : (slope*L)*((3/2)*(ℓ/L)) = ℓ*((3/2)*slope) := by field_simp <;> ring
+  have h2 : (4/3)*L-slope*L = (4/3-slope)*L := by ring
+  have h3 : ((4/3-slope)*L)*((3/2)*(ℓ/L)) = (2-(3/2)*slope)*ℓ := by field_simp <;> ring
+  apply hh.trans_eq
+  change C*L*Real.exp ((slope*L)*((3/2)*(ℓ/L))) *
+    (((4/3)*L)*gammaEndpointPolynomial (p+1) (((4/3)*L-slope*L)*((3/2)*(ℓ/L))) /
+      ((4/3)*L-slope*L)^(p+2)) =
+    (C*(4/3)*L^((3/2)*slope) / ((4/3-slope)^(p+2)*L^p)) *
+      gammaEndpointPolynomial (p+1) ((2-(3/2)*slope)*ℓ)
+  rw [h1,h2,h3,Real.rpow_def_of_pos hL,mul_pow,pow_add L p 2]
+  dsimp only [ℓ]
+  field_simp [sub_ne_zero.mpr hquick.ne']
+  <;> ring
 
 /-- In the full band v ≤ (2/β) log T for any β > 3/2, the frequency
 dependence remains explicit in the exponential factor at the cutoff. The central term retains the exact number of off-line zero copies.
 The second term uses the Ingham tail with exponent 4/3. -/
-theorem exists_ingham_tilted_fourth_moment_envelope :
+theorem exists_ingham_tilted_moment_envelope :
     ∃ C : ℝ, 0 < C ∧ ∀ β : ℝ, 3/2 < β →
-      ∀ᶠ T : ℝ in atTop, ∀ v : ℝ, 0 ≤ v → v ≤ (2/β) * Real.log T →
-        (∑ i : Copies T, (i.1.1.re-1/2)^4 * Real.exp (v * |i.1.1.re-1/2|)) / T ≤
-          Real.exp (v * (β * Real.log (Real.log T)/Real.log T)) * (β^4 * (strictTail T 0/(T*Real.log T)) *
-            (Real.log (Real.log T))^4 + 32*C/(4/3-2/β)^5) / (Real.log T)^3 := by
+      ∀ᶠ T : ℝ in atTop, ∀ p : ℕ, ∀ v : ℝ, 0 ≤ v → v ≤ (2/β) * Real.log T →
+        (∑ i : Copies T, copyDisplacement T i^(p+1) * Real.exp (v * copyDisplacement T i)) / T ≤
+          Real.exp (v * (β * Real.log (Real.log T)/Real.log T)) * (β^(p+1) * (strictTail T 0/(T*Real.log T)) *
+            (Real.log (Real.log T))^(p+1) + ((p+1).factorial : ℝ)*(4/3)*C/(4/3-2/β)^(p+2)) / (Real.log T)^p := by
   obtain ⟨C,hC,hing⟩ := exists_strictTail_ingham_exponential
   refine ⟨C,hC,?_⟩
   intro β hβ
@@ -161,7 +129,7 @@ theorem exists_ingham_tilted_fourth_moment_envelope :
   filter_upwards [eventually_ge_atTop (max 2 (Real.exp 1)),
     (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop).eventually_gt_atTop 0]
     with T hT hℓ
-  intro v hv hvw
+  intro p v hv hvw
   let L := Real.log T
   let ℓ := Real.log L
   let b := β*ℓ/L
@@ -174,21 +142,17 @@ theorem exists_ingham_tilted_fourth_moment_envelope :
   have hb : 0 < b := div_pos (mul_pos hβ0 hℓ) hL
   have hkw : w < (4/3)*L := mul_lt_mul_of_pos_right hgap hL
   have hwb : w*b = 2*ℓ := by dsimp [w,b,k]; field_simp
-  have htail := weightedFourthSum_le_expTail (T := T) (v := w) (q := (4/3)*L) (show 0 ≤ C*T*L^3 by positivity)
+  have htail := tiltedMoment_le_expTail (T := T) (v := w) (q := (4/3)*L) p (show 0 ≤ C*T*L^3 by positivity)
     (mul_nonneg hk.le hL.le) hkw (fun t ht => by simpa only [L,neg_mul] using hing T hT t ht.1)
   let E := Real.exp (v*b)
   have hpoint (i : Copies T) :
-      (i.1.1.re-1/2)^4 * Real.exp (v * |i.1.1.re-1/2|) ≤
-        (E*b^4)*(if 0 < copyDisplacement T i then 1 else 0) +
-          (E/L^2)*((i.1.1.re-1/2)^4*Real.exp (w * |i.1.1.re-1/2|)) := by
+      copyDisplacement T i^(p+1) * Real.exp (v * copyDisplacement T i) ≤
+        (E*b^(p+1))*(if 0 < copyDisplacement T i then 1 else 0) +
+          (E/L^2)*(copyDisplacement T i^(p+1)*Real.exp (w * copyDisplacement T i)) := by
     let d := copyDisplacement T i
     have hd : 0 ≤ d := abs_nonneg _
-    have hid : (i.1.1.re-1/2)^4 = d^4 := by
-      dsimp [d,copyDisplacement]
-      rw [show (4:ℕ) = 2*2 by decide, pow_mul, pow_mul, sq_abs]
-    change (i.1.1.re-1/2)^4 * Real.exp (v*d) ≤ (E*b^4)*(if 0 < d then 1 else 0) + (E/L^2)*
-      ((i.1.1.re-1/2)^4 * Real.exp (w*d))
-    rw [hid]
+    change d^(p+1) * Real.exp (v*d) ≤ (E*b^(p+1))*(if 0 < d then 1 else 0) + (E/L^2)*
+      (d^(p+1) * Real.exp (w*d))
     have hE : 0 < E := Real.exp_pos _
     by_cases hpos : 0 < d
     swap
@@ -198,8 +162,8 @@ theorem exists_ingham_tilted_fourth_moment_envelope :
     by_cases hnear : d ≤ b
     · have he := Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left hnear hv)
       calc
-        _ ≤ b^4*E := mul_le_mul (pow_le_pow_left₀ hd hnear _) he (Real.exp_pos _).le (by positivity)
-        _ ≤ _ := by rw [mul_comm (b^4)]; exact le_add_of_nonneg_right (by positivity)
+        _ ≤ b^(p+1)*E := mul_le_mul (pow_le_pow_left₀ hd hnear _) he (Real.exp_pos _).le (by positivity)
+        _ ≤ _ := by rw [mul_comm (b^(p+1))]; exact le_add_of_nonneg_right (by positivity)
     · have hdiff := mul_le_mul_of_nonneg_left (le_of_not_ge hnear) (sub_nonneg.mpr hvw)
       have harg : v*d ≤ v*b - 2*ℓ + w*d := by nlinarith only [hdiff, hwb]
       have h2 : Real.exp (2*ℓ) = L^2 := by
@@ -208,9 +172,9 @@ theorem exists_ingham_tilted_fourth_moment_envelope :
         apply (Real.exp_le_exp.mpr harg).trans_eq
         rw [Real.exp_add, Real.exp_sub, h2]
       calc
-        _ ≤ d^4*((E/L^2)*Real.exp (w*d)) := mul_le_mul_of_nonneg_left he (pow_nonneg hd 4)
-        _ = (E/L^2)*(d^4*Real.exp (w*d)) := by ring
-        _ ≤ _ := le_add_of_nonneg_left (mul_nonneg hE.le (pow_nonneg hb.le 4))
+        _ ≤ d^(p+1)*((E/L^2)*Real.exp (w*d)) := mul_le_mul_of_nonneg_left he (pow_nonneg hd (p+1))
+        _ = (E/L^2)*(d^(p+1)*Real.exp (w*d)) := by ring
+        _ ≤ _ := le_add_of_nonneg_left (mul_nonneg hE.le (pow_nonneg hb.le (p+1)))
   have hsum := Finset.sum_le_sum (s := Finset.univ) fun i _ => hpoint i
   rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum] at hsum
   have hE : 0 < E := Real.exp_pos _
@@ -218,14 +182,35 @@ theorem exists_ingham_tilted_fourth_moment_envelope :
     (div_nonneg hE.le (sq_nonneg L))))
   apply (div_le_iff₀ hT0).mpr
   apply hh.trans_eq
-  change (E*b^4)*strictTail T 0 + E/L^2 * ((C*T*L^3)*(24*((4/3)*L)/((4/3)*L-w)^5)) =
-    E*(β^4*(strictTail T 0/(T*L))*ℓ^4 + 32*C/(4/3-k)^5)/L^3*T
+  change (E*b^(p+1))*strictTail T 0 + E/L^2 *
+    ((C*T*L^3)*(((p+1).factorial : ℝ)*((4/3)*L)/((4/3)*L-w)^(p+2))) =
+    E*(β^(p+1)*(strictTail T 0/(T*L))*ℓ^(p+1) +
+      ((p+1).factorial : ℝ)*(4/3)*C/(4/3-k)^(p+2))/L^p*T
   have hp : (4/3)*L-w = (4/3-k)*L := by dsimp [w]; ring
   rw [hp,mul_pow]
   dsimp [b]
-  rw [div_pow]
+  rw [div_pow, mul_pow]
+  simp only [pow_add]
   field_simp [sub_ne_zero.mpr hgap.ne']
   <;> ring
+
+/-- Quartic form with the signed horizontal displacement used in the raw Gram kernel. -/
+theorem exists_ingham_tilted_fourth_moment_envelope :
+    ∃ C : ℝ, 0 < C ∧ ∀ β : ℝ, 3/2 < β →
+      ∀ᶠ T : ℝ in atTop, ∀ v : ℝ, 0 ≤ v → v ≤ (2/β) * Real.log T →
+        (∑ i : Copies T, (i.1.1.re-1/2)^4 * Real.exp (v * |i.1.1.re-1/2|)) / T ≤
+          Real.exp (v * (β * Real.log (Real.log T)/Real.log T)) * (β^4 * (strictTail T 0/(T*Real.log T)) *
+            (Real.log (Real.log T))^4 + 32*C/(4/3-2/β)^5) / (Real.log T)^3 := by
+  obtain ⟨C, hC, h⟩ := exists_ingham_tilted_moment_envelope
+  refine ⟨C, hC, ?_⟩
+  intro β hβ
+  filter_upwards [h β hβ] with T hT
+  intro v hv hvw
+  have hh := hT 3 v hv hvw
+  have hs (x : ℝ) : |x|^4 = x^4 := by
+    rw [show (4 : ℕ) = 2*2 by decide, pow_mul, sq_abs, ← pow_mul]
+  norm_num [Nat.factorial] at hh
+  simpa only [copyDisplacement, hs] using hh
 
 /-- Uniform bound over each band of size B log T / log log T, with no
 density assumption on the theorem. -/
@@ -278,17 +263,43 @@ theorem exists_ingham_tilted_fourth_moment_bound (B : ℝ) (hB : 0 ≤ B) :
   have hrem := mul_le_mul_of_nonneg_left h4 (show 0 ≤ 7776*C by positivity)
   nlinarith only [hcen,hrem]
 
+/-- Each fixed loglog tilt band is eventually contained in the stronger
+Ingham band B log T / log log T. -/
+theorem exists_loglog_tilted_fourth_moment_bound (B : ℝ) (hB : 0 ≤ B) :
+    ∃ K : ℝ, 0 < K ∧ ∀ᶠ T : ℝ in atTop, ∀ v : ℝ, 0 ≤ v →
+      v ≤ B * Real.log (Real.log T) →
+      (∑ i : Copies T, (i.1.1.re - 1/2)^4 * Real.exp (v * |i.1.1.re - 1/2|)) / T ≤
+        K * (Real.log (Real.log T))^4 / (Real.log T)^3 := by
+  obtain ⟨K,hK,he⟩ := exists_ingham_tilted_fourth_moment_bound B hB
+  refine ⟨K,hK,?_⟩
+  have hsmall : Tendsto (fun T : ℝ => (Real.log (Real.log T))^2 / Real.log T) atTop (𝓝 0) := by
+    have h := (Real.tendsto_pow_mul_exp_neg_atTop_nhds_zero 2).comp
+      (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop)
+    apply h.congr'
+    filter_upwards [Real.tendsto_log_atTop.eventually_gt_atTop 0] with T ht
+    simp only [Function.comp_def,Real.exp_neg,Real.exp_log ht,div_eq_mul_inv]
+  filter_upwards [he,hsmall.eventually_le_const zero_lt_one,
+    (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop).eventually_gt_atTop 0,
+    eventually_gt_atTop (1:ℝ)] with T hT hratio hℓ ht
+  intro v hv hbound
+  change 0 < Real.log (Real.log T) at hℓ
+  apply hT v hv
+  apply hbound.trans
+  apply (le_div_iff₀ hℓ).mpr
+  have hm := (div_le_iff₀ (Real.log_pos ht)).mp hratio
+  nlinarith only [mul_le_mul_of_nonneg_left hm hB]
+
 /-- The infimum over allowed cutoffs is 3/2. An upper limiting coefficient
 for the off-line count therefore gives this limiting tilted-moment bound
 with arbitrarily small slack. -/
-theorem eventually_ingham_tilted_fourth_of_offline_cap {B κ D : ℝ}
+theorem eventually_ingham_tilted_moment_of_offline_cap (p : ℕ) {B κ D : ℝ}
     (hB : 0 ≤ B) (hcap : ∀ z : ℝ, κ < z → ∀ᶠ T : ℝ in atTop,
       strictTail T 0 ≤ z*(T*Real.log T))
-    (hD : Real.exp (B*(3/2))*(3/2)^4*κ < D) :
+    (hD : Real.exp (B*(3/2))*(3/2)^(p+1)*κ < D) :
     ∀ᶠ T : ℝ in atTop, ∀ v : ℝ, 0 ≤ v → v ≤ B * Real.log T / Real.log (Real.log T) →
-      (∑ i : Copies T, (i.1.1.re-1/2)^4 * Real.exp (v*|i.1.1.re-1/2|))/T ≤
-        D*(Real.log (Real.log T))^4/(Real.log T)^3 := by
-  let F (x : ℝ) := Real.exp (B*(3/2+x))*(3/2+x)^4*(κ+x)
+      (∑ i : Copies T, copyDisplacement T i^(p+1) * Real.exp (v*copyDisplacement T i))/T ≤
+        D*(Real.log (Real.log T))^(p+1)/(Real.log T)^p := by
+  let F (x : ℝ) := Real.exp (B*(3/2+x))*(3/2+x)^(p+1)*(κ+x)
   have hF : Continuous F := by dsimp [F]; fun_prop
   have hzero : F 0 < D := by simpa only [F,add_zero] using hD
   have hopen : ∀ᶠ x : ℝ in 𝓝[>] 0, F x < D :=
@@ -299,8 +310,8 @@ theorem eventually_ingham_tilted_fourth_of_offline_cap {B κ D : ℝ}
   have hβ : 3/2 < β := by dsimp [β]; linarith
   have hβ0 : 0 < β := by linarith
   have hk : 0 < 2/β := div_pos (by norm_num) hβ0
-  obtain ⟨C,hC,henv⟩ := exists_ingham_tilted_fourth_moment_envelope
-  let V := 32*C/(4/3-2/β)^5
+  obtain ⟨C,hC,henv⟩ := exists_ingham_tilted_moment_envelope
+  let V := ((p+1).factorial : ℝ)*(4/3)*C/(4/3-2/β)^(p+2)
   let E := Real.exp (B*β)
   have hV : 0 ≤ V := by
     have hk1 : 2/β < 4/3 := (div_lt_iff₀ hβ0).mpr (by linarith)
@@ -308,7 +319,7 @@ theorem eventually_ingham_tilted_fourth_of_offline_cap {B κ D : ℝ}
     positivity
   have hE : 0 < E := Real.exp_pos _
   have hδ := sub_pos.mpr hslack
-  have hpow := (tendsto_pow_atTop (by decide : 4 ≠ 0)).comp
+  have hpow := (tendsto_pow_atTop (Nat.succ_ne_zero p)).comp
     (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop)
   filter_upwards [henv β hβ, hcap (κ+η) (by linarith),eventually_gt_atTop (1:ℝ),
     (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop).eventually_ge_atTop (max 1 (B/(2/β))),
@@ -320,7 +331,7 @@ theorem eventually_ingham_tilted_fourth_of_offline_cap {B κ D : ℝ}
   have hL : 0 < L := Real.log_pos hT
   change max 1 (B/(2/β)) ≤ ℓ at hwidth
   have hℓ : 0 < ℓ := zero_lt_one.trans_le ((le_max_left _ _).trans hwidth)
-  change E*V/(D-F η) ≤ ℓ^4 at herr
+  change E*V/(D-F η) ≤ ℓ^(p+1) at herr
   change v ≤ B*L/ℓ at hvB
   have hvk : v ≤ (2/β)*L := by
     apply hvB.trans
@@ -332,16 +343,34 @@ theorem eventually_ingham_tilted_fourth_of_offline_cap {B κ D : ℝ}
     apply (mul_le_mul_of_nonneg_right hvB (by positivity)).trans_eq
     field_simp
   have hc : strictTail T 0/(T*L) ≤ κ+η := (div_le_iff₀ (mul_pos hT0 hL)).mpr hf
-  apply (he v hv hvk).trans
+  apply (he p v hv hvk).trans
   apply div_le_div_of_nonneg_right _ (by positivity)
-  change Real.exp (v*(β*ℓ/L))*(β^4*(strictTail T 0/(T*L))*ℓ^4+V) ≤ D*ℓ^4
+  change Real.exp (v*(β*ℓ/L))*(β^(p+1)*(strictTail T 0/(T*L))*ℓ^(p+1)+V) ≤ D*ℓ^(p+1)
   have hnn := strictTail_nonneg T 0
   apply (mul_le_mul_of_nonneg_right hfreq (by positivity)).trans
   have hcentr := mul_le_mul_of_nonneg_left
-    (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hc (pow_nonneg hβ0.le 4))
-      (pow_nonneg hℓ.le 4)) hE.le
+    (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hc (pow_nonneg hβ0.le (p+1)))
+      (pow_nonneg hℓ.le (p+1))) hE.le
   have hfar := (div_le_iff₀ hδ).mp herr
-  change E*V ≤ ℓ^4*(D-E*β^4*(κ+η)) at hfar
+  change E*V ≤ ℓ^(p+1)*(D-E*β^(p+1)*(κ+η)) at hfar
   linarith only [hcentr,hfar]
+
+/-- The infimum over allowed cutoffs is 3/2. An upper limiting coefficient
+for the off-line count therefore gives this limiting tilted-moment bound
+with arbitrarily small slack. -/
+theorem eventually_ingham_tilted_fourth_of_offline_cap {B κ D : ℝ}
+    (hB : 0 ≤ B) (hcap : ∀ z : ℝ, κ < z → ∀ᶠ T : ℝ in atTop,
+      strictTail T 0 ≤ z*(T*Real.log T))
+    (hD : Real.exp (B*(3/2))*(3/2)^4*κ < D) :
+    ∀ᶠ T : ℝ in atTop, ∀ v : ℝ, 0 ≤ v → v ≤ B * Real.log T / Real.log (Real.log T) →
+      (∑ i : Copies T, (i.1.1.re-1/2)^4 * Real.exp (v*|i.1.1.re-1/2|))/T ≤
+        D*(Real.log (Real.log T))^4/(Real.log T)^3 := by
+  have he := eventually_ingham_tilted_moment_of_offline_cap 3 hB hcap hD
+  filter_upwards [he] with T hT
+  intro v hv hwidth
+  have h := hT v hv hwidth
+  have hs (x : ℝ) : |x|^4 = x^4 := by
+    rw [show (4 : ℕ) = 2*2 by decide, pow_mul, sq_abs, ← pow_mul]
+  simpa only [show (3:ℕ)+1 = 4 by decide, copyDisplacement, hs] using h
 
 end RiemannResearch.Analysis.ActualZeroOrdinate

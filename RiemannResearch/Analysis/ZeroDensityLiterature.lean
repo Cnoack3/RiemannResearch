@@ -5,6 +5,7 @@ Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.ActualSelbergDensityConventions
 import RiemannResearch.Analysis.ActualSelbergDensityInterpolation
+import RiemannResearch.Analysis.ActualOneSidedHorizontalDisplacement
 import RiemannResearch.Analysis.ActualConreyBaluyotConsequences
 import RiemannResearch.Analysis.ActualPrimeTorusFMZRate
 import RiemannResearch.Analysis.MontgomeryTransitionFrequency
@@ -51,6 +52,19 @@ class BGSTB2026 : Prop where
 critical-line boundary and doubles the source's mollifier exponent. -/
 theorem conreyBaluyot [ConreyBaluyot2017] : ConreyBaluyotDensityHypothesis :=
   conreyBaluyotDensity_iff_strict_source.mpr ConreyBaluyot2017.rightCount
+
+/-- Every fixed exponent in the full one-logarithm interval is available.
+The height threshold and multiplicative constant may depend on a. -/
+theorem oneLogSlope [ConreyBaluyot2017] {a : ℝ} (ha : 0 < a) (ha' : a < 8/7) :
+    UniformSelbergDensity a := conreyBaluyot a ha ha'
+
+/-- With the published density input, the one-sided o(T) height mass is
+equivalent to the quadratic horizontal condition used in the PCC program. -/
+theorem quadraticPCCCondition [ConreyBaluyot2017] :
+    Tendsto oneSidedHeightMean atTop (𝓝 0) ↔
+      Tendsto (fun T : ℝ => displacementMoment T 2 * Real.log T ^ 2) atTop (𝓝 0) :=
+  oneSidedHeightMean_tendsto_zero_iff_quadratic (a := 1) (by norm_num)
+    (oneLogSlope (by norm_num) (by norm_num))
 
 /-- Use the limiting slope with any prescribed positive logarithmic loss. -/
 theorem limitingSlope [ConreyBaluyot2017] {ε : ℝ} (hε : 0 < ε) :

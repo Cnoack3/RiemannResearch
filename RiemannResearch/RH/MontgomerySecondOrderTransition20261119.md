@@ -104,6 +104,8 @@ The repository also has an independent route at the transition. Its checked Ingh
 
 For the individual reflected pair the exact optimal prefactor multiplying \(a^2b^2(1+|u|)^4e^{|u|(|a|+|b|)}w(v)\) is \(8/15\). All five derivatives of \(4/(4-(y+iv)^2)\) on \(|y|\le1\) are dominated by \(w(v)\) times the fourth derivative of the real comparison kernel \(Q_0(y)=4/(4-y^2)\). Averaging the fourth derivative against the two triangular Taylor weights reduces the extremum to \(u=v=0,\ a=b=1/2\), where the mixed central difference is \(1/30\). The accompanying sharp-constant note gives the full argument and an algebraic certificate for the comparison model. This replaces the contour estimate \(1536e\) by a factor \(2880e\) in the individual-pair inequality.
 
+The pairwise Cauchy-weight constant in this argument can be made optimal. The estimate keeps \((1+|u|)^4e^{|u|(|a|+|b|)}a^2b^2 w(d)\) and has best uniform coefficient \(8/15\) on \(|a|,|b|\le1/2\). Equal displacements \(a=b=1/2\) with \(u=d=0\) give a kernel value \(1/30\). On each smaller symmetric band \(|a|,|b|\le r\) the optimal coefficient is \(3/[2(4-r^2)(1-r^2)]\). The accompanying reflected-kernel note gives the comparison, sharpness proof and the scope of this pairwise extremizer.
+
 ## What this reaches in the pair-correlation program
 
 These are shrinking normalized frequencies. The second-order formula fixes the leading error at the boundary between the spike and the small-frequency form factor. Pair-correlation asymptotics for fixed normalized support or above support one require estimates on different frequencies. In the displayed quartic majorant, \(u=\alpha L\) with fixed \(\alpha\ne0\) yields a term of order \(\alpha^4 L\).
@@ -112,7 +114,11 @@ Ford and Zaharescu's unconditional Theorem 1 on unnormalized differences has a t
 
 Ford and Zaharescu's Theorem 4 does supply a separate pair-statistical criterion equivalent to RH. Fix a primitive Dirichlet character of modulus \(q>1\), a nonnegative smooth compactly supported bump of integral one, and an ordinate \(\beta>1/2\). Take the authors' successive height and bump-width limits of the \(k\)-th derivative test against that character's positive-height zero pairs. Pointwise convergence in \(k\) for every \(\alpha>1/2\) is equivalent to RH for ζ. Their normalization contains \(2^{k+1}(k+1)!\), and the order of the three limits is part of the theorem. The Cauchy-weight transition considered here estimates a different fixed-order kernel. [Ford–Zaharescu, Theorem 4](https://www.ford126.web.illinois.edu/wwwpapers/linear.pdf)
 
-BGSTB §3 explicitly report a forthcoming Montgomery–Vaughan refinement under RH and warn about a lower-order error at \(x=c\log T\) in the former relative-error formulation. Montgomery and Vaughan's published Volume II preface postpones pair correlation to a subsequent volume. The retained-diagonal estimates here keep the actual \(D(x)\) and use (3.4) with positive-height cutoffs. Replacing \(D(c\log T)\) by \(\log(c\log T)\) with the earlier relative-error budget would require significantly stronger control of the diagonal. A comparison against the forthcoming authors' exact formula remains open. [BGSTB corrected §3, discussion preceding (3.3)](https://arxiv.org/html/2501.14545v3#S3) · [Montgomery–Vaughan, Volume II preface](https://assets.cambridge.org/97810094/45054/frontmatter/9781009445054_frontmatter.pdf)
+BGSTB §3 warn about a lower-order error at \(x=c\log T\) in the former relative-error formulation and announce a Montgomery–Vaughan refinement on RH. The authors have posted the subsequent Volume III draft. Its Theorem 30.1, equation (30.8), applies on RH throughout \(1\le x\le T\) and uses the denominator \(T\log(T/(2\pi))/(2\pi)\). With \(k=\log(2\pi)\), converting its two main terms to this repository's normalization gives
+\[
+ \frac{(L-k)(L-k-2)}{Lx^2}+\frac{\log x}{L}.
+\]
+The draft remainder in the repository's normalization is \(O((\log(2x))^3/(\sqrt{x}L)+x\log\log(4x)/(TL))\). This confirms the signed transition correction on RH, the two fixed-interior polynomial exponents, and the \(O(\log\log T/L)\) endpoint independently of the present calculation. The draft's (30.10) retains both \(D(x)\) and \(S_3/x^2\) in an intermediate step. Its (30.12) retains the first two centered logarithmic terms. Replacing \(D(x)\) by \(\log x\) discards information relevant to the fourth displayed order at the transition. The unconditional complex-to-raw arguments in this note use the BGSTB positive-height contour identity. [BGSTB corrected §3, discussion preceding (3.3)](https://arxiv.org/html/2501.14545v3#S3) · [Montgomery–Vaughan, author-posted Volume III draft, Theorem 30.1 and (30.10)–(30.12)](https://personal.science.psu.edu/rcv4/Vol3/Vol3.pdf)
 
 ## Signed correction at order \(1/L\)
 
@@ -276,7 +282,7 @@ Under RH the raw and complex statistics agree, and the conditional bound \(\vart
    +T^{\alpha-1}\frac{\log L}{L}
    +\frac{T^{-1/2}}{L}+T^{-2\alpha}L .
 \]
-Here RH also supplies the prime number theorem error. In particular the two principal polynomial exponents \(\alpha/2\) and \(1-\alpha\) coincide at \(\alpha=2/3\). [Schoenfeld, Mathematics of Computation 30 (1976), Theorem 10](https://doi.org/10.1090/S0025-5718-1976-0457374-X)
+The sharper RH theorem in Montgomery–Vaughan’s Volume III draft already contains the two principal terms on the right and omits the additional cutoff remainder. Here RH also supplies the prime number theorem error. The two principal polynomial exponents \(\alpha/2\) and \(1-\alpha\) coincide at \(\alpha=2/3\). [Schoenfeld, Mathematics of Computation 30 (1976), Theorem 10](https://doi.org/10.1090/S0025-5718-1976-0457374-X)
 
 ## Which Hilbert constant is needed
 

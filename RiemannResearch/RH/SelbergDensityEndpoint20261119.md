@@ -30,7 +30,7 @@ At the exact tilt $8/7$, the exponential moment of $L|\beta-1/2|$ is $O_\varepsi
 
 ## The remaining window for a single logarithm
 
-The clean $a=8/7$ estimate holds unconditionally wherever $X\ge(21/2)\log L$. Indeed $L^2\exp[-(4/3-8/7)X]\le1$ precisely in this range. Consequently the global clean endpoint is **equivalent** to proving it for $0\le X\le(21/2)\log L$ with one absolute constant. A compact scaled interval can be controlled from the shifted mollified moment, but the required interval has growing length. [Lean window equivalence](../Analysis/ActualSelbergDensityInterpolation.lean) · [Fixed-scale stop-loss estimates](OptimizedHorizontalMoments20261119.md)
+The clean $a=8/7$ estimate holds unconditionally wherever $X\ge(21/2)\log L$. Indeed $L^2\exp[-(4/3-8/7)X]\le1$ precisely in this range. Consequently the global clean endpoint is **equivalent** to proving it for $0\le X\le(21/2)\log L$ with one absolute constant. The shifted Conrey input controls every fixed interval and even a single unspecified diverging window \(W(T)\to\infty\) with a height-uniform constant, by the formal theorem `microscopic_endpoint_on_growing_window`. The comparison \(W(T)\ge(21/2)\log L\) that would cover the remaining window is open. [Lean window equivalence](../Analysis/ActualSelbergDensityInterpolation.lean) · [Fixed-scale stop-loss estimates](OptimizedHorizontalMoments20261119.md)
 
 A sufficient moving-slope version uses $a_T=8/7-g(T)$, a common bound $C$, and $0\le g(T)$ with $g(T)\log L\le M$ eventually. In the remaining window,
 
@@ -39,3 +39,17 @@ e^{-a_T X}=e^{g(T)X}e^{-(8/7)X}\le e^{21M/2}e^{-(8/7)X}.
 \]
 
 This identifies an analytic target with the needed order of uniformity. In Baluyot's (3.6.2), the two error terms contain $T^{-1/2+7\delta/2+\varepsilon}y^{7/8}$ and $T^{-1+7\delta/2+\varepsilon}y^{7/4}$. His choices in (3.6.3)–(3.6.7) use a **fixed** margin $4/7-\theta$ before $T\to\infty$. To see what a quantitative refinement would give, set $y=T^{4/7}\exp[-B L/\log L]$ and replace the smoothing exponent $\delta$ by $D/\log L$. If the remaining losses in both error terms admit a uniform bound $\exp(K L/\log L)$, with the constants of the diagonal and desmoothing estimates uniform for these choices, any $B>(8/7)(K+7D/2)$ makes both errors exponentially small in $L/\log L$. Meanwhile $y^{1-2\sigma}\le e^{21B}e^{-(8/7)X}$ throughout the remaining window. The printed fixed-$\varepsilon$ estimate does not furnish those uniform constants. This quantitative mollifier estimate is an **open** provider. [Baluyot, §3.6, equations (3.6.2)–(3.6.12)](https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320)
+
+## A sharp obstruction for the two available envelopes
+
+For \(t\ge1\), put probability \(m=\exp(t-8t^2/7)\) at the mark \(X=t^2\), and the remaining probability at zero. Choose \(L=\exp(2t^2/21+t/2)\). For every fixed \(a<8/7\), completing the square gives \(m\le e^{1/[4(8/7-a)]}e^{-at^2}\). Also \(m=L^2 e^{-(4/3)t^2}\) exactly. These inequalities control the full positive tail of the two-atom model because the tail is constant up to its positive atom and vanishes beyond it.
+
+For a proposed slope \(b\) and surplus log exponent \(e\), the ratio at the atom is exactly
+\[
+  m e^{bt^2}/L^e=\exp\big((b-8/7-2e/21)t^2+(1-e/2)t\big).
+\]
+It diverges whenever \(e\le(21/2)(b-8/7)\) and \(e<2\). This proves that the clean \(8/7\) endpoint, and even equality in the interpolation exponent for \(8/7<b<4/3\), cannot follow from these two numerical envelopes alone. At \(b=4/3,e=2\) the ratio is one. The model is a probability law used to delimit a method for bounding actual zeros. [Exact profile and divergence](../Analysis/SelbergDensityProfileSharpness.lean)
+
+This obstruction persists even if the normalized exceptional contribution to *every* strictly subcritical exponential moment tends to zero: for \(a<8/7\), it equals \(\exp[t-(8/7-a)t^2]\to0\). In particular all fixed positive polynomial mark moments of the model tend to zero. Uniform control along a genuinely growing scale is what the clean density endpoint requires.
+
+The exceptional mark respects the physical strip width for large heights. For \(t\ge42\), \(L=e^{2t^2/21}e^{t/2}\ge t^3/21\ge2t^2\), so \(X/L\le1/2\). Splitting its mass equally at horizontal displacements \(\pm X/L\) also enforces reflection symmetry.
