@@ -77,7 +77,7 @@ The spectral argument for the new isolation bounds is given on paper. The extern
 
 ## Exact countable RH test
 
-Put \(a_n(q)=(\xi'/\xi)^{(n)}(1+iq)/n!\), where \(q\) runs through rational ordinates, and \(B=\sup_\rho\Re\rho\). The paper identity \(\sup_q\limsup_n |a_n(q)|^{1/n}=1/(1-B)\) expresses the horizontal boundary through pointwise Taylor growth. An open radius-one-half disk about every rational center is exactly equivalent to RH. The current continuum-contact input gives a normalized coefficient-growth ceiling of \(3.947758713\); RH corresponds to ceiling one. Ford–Zaharescu Theorem 4 gives a separate RH-equivalent limit in derivative order for smoothed Dirichlet-zero differences. The published proof also rules out pointwise subexponential growth when RH fails. [Disk criterion and Cauchy–Hadamard proof](RH/RationalTaylorRadiusRH20261119.md) · [Ford–Zaharescu](https://doi.org/10.1112/S0010437X14007659)
+Put \(a_n(q)=(\xi'/\xi)^{(n)}(1+iq)/n!\), where \(q\) runs through rational ordinates, and \(B=\sup_\rho\Re\rho\). The Lean-checked identity \(\sup_q\limsup_n |a_n(q)|^{1/n}=1/(1-B)\) expresses the horizontal boundary through pointwise Taylor growth. An open radius-one-half disk about every rational center is exactly equivalent to RH. The current continuum-contact input gives a normalized coefficient-growth ceiling of \(3.947758713\); RH corresponds to ceiling one. Ford–Zaharescu Theorem 4 gives a separate RH-equivalent limit in derivative order for smoothed Dirichlet-zero differences. The published proof also rules out pointwise subexponential growth when RH fails. [Disk criterion and Cauchy–Hadamard proof](RH/RationalTaylorRadiusRH20261119.md) · [Ford–Zaharescu](https://doi.org/10.1112/S0010437X14007659)
 
 ## Sharp constants and the mesoscopic transition
 
@@ -156,3 +156,47 @@ Write \(d_T(\lambda)\) for the small-gap count through \(T\) divided by the numb
 Thus gaps below \(0.603780886\) have counts growing faster than \(T^{7/16}\log T\) on the peer-reviewed density inputs, or faster than \(\sqrt T\log T\) using the Lewko input. A positive limiting *fraction* at that gap uses the substantially stronger density premise in the earlier table. At gap \(0.74\) the degree-149 witness lowers the unconditional **logarithmic** abundance exponent from 15000 to 14176, and the degree-251 witness lowers it further to 7849. These are paper deductions with exact finite objectives and scalars. [Proof with the fixed-strip ranges](RH/SparsePairDensityBounds20261119.md) · [Numerical objectives](RH/SmallGapFourierCertificate.md) · [Tao–Trudgian–Yang](https://doi.org/10.1090/mcom/4138)
 
 Montgomery and Vaughan's author-posted *Volume III*, Theorem 30.1, already gives the signed lower-order correction and the fixed-support/endpoint errors under RH, in the normalization \(T\log(T/(2\pi))/(2\pi)\). Equations (30.10) and (30.12) retain both the prime diagonal and the reflected Dirichlet square before taking their coarser error. These parts have published or publicly documented precedents. The repository comparisons track the unconditional complex estimate, the raw transfer at shrinking frequency, and the exact residual after retaining the prime diagonal. [Montgomery–Vaughan, chapter 30](https://personal.science.psu.edu/rcv4/Vol3/Vol3.pdf) · [Normalization and prior results](RH/MontgomerySecondOrderTransition20261119.md)
+
+## Verification records
+
+| Scope | Verification |
+| --- | --- |
+| Initial 93-file integration, including the cofinal RH criterion, surviving-gap finite comparison, literature interface and moving raw form-factor estimates | [Full repository build at 27b221c](https://app.buildbuddy.io/invocation/fb65c660-c5b9-4f08-9b71-ee98c71a1e67) · [Commit](https://github.com/Cnoack3/RiemannResearch/commit/27b221c773fdb670f1b4d6fedb3c3b25a51bc9ea) |
+| Cofinal density slopes and 39-decimal half-plane comparison, all-order tilted moment provider | [Focused Bazel result](https://app.buildbuddy.io/invocation/5c1bedf7-7303-4364-98fa-08b29021ee05) |
+| Critical Ingham tilt, explicit linear tilt and the minimum inclusive logarithmic power | [Focused Bazel result](https://app.buildbuddy.io/invocation/c3aed39f-7888-4947-a520-b10c29cfb3e8) |
+| Finite degree-83 polynomial signs | [Kernel certificate](https://app.buildbuddy.io/invocation/2e7cf170-c5e5-4b9d-b904-e6d08b490c4e) |
+| Actual distinct-ordinate fibre identity, with the finite interaction input for the resulting numerical lower proportions | [Kernel certificate](https://app.buildbuddy.io/invocation/55fa807f-4d21-443d-80c8-f40184df03e3) |
+| Langer phase rank and unconditional square-root support | [Finite exponential zero-count consumer](https://app.buildbuddy.io/invocation/b1c0f8a7-71be-4ff6-bf4a-39c2b32bfc4b) · [Operator-norm check](https://app.buildbuddy.io/invocation/0cc4477a-acc3-4442-adac-d373ce8d335b) |
+| All six Fourier witnesses and their fourteen extra scalar tests, optimal stop-loss values, and isolation certificates | [Replay programs and their arithmetic](RH/BoundCertificateReplays20261119.md) |
+
+An external source assumption in a checked declaration remains an explicit parameter. A paper deduction or a Python interval certificate has its own designation in the corresponding note.
+
+The finite Dirichlet phase correction also has a sharp model constant. For a displacement cutoff \(0<a<1/2\), the largest real root of
+\[
+z^3-\frac{3z}{(1-4a^2)(1-a^2)}-\frac{1}{(1-4a^2)(1-a^2)^2}=0
+\]
+gives the optimal coefficient for its one-occurrence norm bound in dimension \(d\). The proof uses a compression to normalized step functions and a limiting cubic for the three-dimensional range. This assertion concerns the comparison kernel. [Finite constants, proof and conditional RH benchmark](RH/ActualPhaseFrames20261119.md)
+
+For the actual Taylor coefficients of \(\xi'/\xi\), Lean proves the pointwise radius is the infimum of the distances to all nontrivial zeros, that the global reciprocal boundary is at least 2, and that equality to 2 is **exactly RH**. The companion paper transfers the same threshold to the signed, absolutely convergent Chebyshev-error moments
+\[
+ I_n(q)=\frac1{n!}\int_0^\infty u^n[e^{-u}\psi(e^u)-1]e^{-iqu}\,du,\qquad q\in\mathbb Q.
+\]
+The open target is \(\limsup_n |I_n(q)|^{1/n}\le2\) for each rational \(q\). The conditional external contact boundary gives an upper bound of \(7.895517425\) on the unnormalized Taylor growth. [Lean coefficient proof](RH/XiTaylorCoefficientRadius.lean) · [Bazel receipt](https://app.buildbuddy.io/invocation/bce61214-154a-4c49-9962-889e50f86fa1) · [Signed prime-error transfer](RH/RationalTaylorRadiusRH20261119.md)
+
+The sharpness model for the Selberg interpolation edge and the Montgomery–Vaughan normalization conversion are individually kernel-checked. [Profiles](Analysis/SelbergDensityProfileSharpness.lean) · [Draft's RH-conditional source and conversion](Analysis/MontgomeryVaughanDraftComparison.lean) · [Joint Bazel receipt](https://app.buildbuddy.io/invocation/2cbe7913-ba3c-418a-94b4-77bd1390ffe0)
+
+The complete local reflected-kernel proof establishes that the uniform quartic inequality holds **if and only if** its constant is at least \(8/15\). The production horizontal-defect Schur estimate now uses \(8/15\) times its row constant. The displacement-specific majorant is attained at zero frequency and ordinate difference for every fixed pair of halfwidths. [Sharp kernel](Analysis/MontgomeryReflectedKernelOptimal.lean) · [Actual Schur consumer](Analysis/MontgomeryReflectedDefect.lean) · [Joint kernel check](https://app.buildbuddy.io/invocation/9271e9ae-d0af-4caf-92be-84adc52a9a32)
+
+The manuscript dyadic input alone now implies the actual cumulative one-sided bound \(0.32133/(2\pi)\), and the mean scaled mark bound \(0.64266\). The finite-copy count supplies the initial compact-height majorant in the dyadic iteration. The named manuscript proposition is the only external mean premise. [Dyadic transfer](Analysis/DyadicHorizontalMean.lean) · [Normalized mark](Analysis/DyadicMicroscopicMean.lean) · [Combined verification with uniform raw crossover](https://app.buildbuddy.io/invocation/450a6a33-78ee-436a-978e-ccb49ac33c4e)
+
+For the reflected Gram matrix in growing dimension, the componentwise Bui–Florea–Milinovich estimate gives an eventual operator error at most \(b+\varepsilon\) at \(d\le T^b\) for \(b<1\), and convergence to zero when \(d\log d=o(T)\). Under RH the ordinary Gram form is consequently bounded below by \((1-b-\varepsilon)\|v\|^2\). Convergence of the least eigenvalue to \(1-b\) is derived in the accompanying paper comparison. [Lean deduction](Analysis/ActualBuiFloreaMilinovichFrame.lean) · [Growing correction](Analysis/ActualGrowingPhaseGram.lean) · [Focused Bazel verification](https://app.buildbuddy.io/invocation/4825380a-ed38-472e-aaa7-4b98563a2511)
+
+`smallGapProportion_certified83` proves a positive lower proportion of actual adjacent zero gaps at normalized cutoff \(0.784981\). The sole external input is Lamzouri's compact deletion estimate. The polynomial signs, cosine transform identity, strict objective, smooth cutoff and deduction for actual zero occurrences are all checked in Lean. [Final theorem](Analysis/LamzouriActualGap83.lean) · [Full focused certificate](https://app.buildbuddy.io/invocation/5e35f79a-2825-4475-abc3-bfe156c67e10)
+
+At the unit-slope crossover `raw_unit_slope_crossover_log_correction` gives the next-order coefficient \(e^{-2c}/2\) after rescaling by \(\log\log T/\log\log\log T\). The precise centering, source hypotheses and normalization are in the declaration. [Crossover rate](Analysis/MontgomeryMesoscopicCrossoverRate.lean) · [Bazel verification](https://app.buildbuddy.io/invocation/a0a0584d-2d5f-471b-8707-5db459db4918)
+
+Each positive displacement radius has a sharp corner bound. Its affine refinement has prefactor \(3/8+(19/60)(a^2+b^2)\), with the slope \(19/60\) necessary at that intercept. [Radius and affine proof](Analysis/MontgomeryReflectedKernelAffine.lean) · [Kernel verification](https://app.buildbuddy.io/invocation/e02a2003-d9a9-484c-a442-fc0f9e27e248)
+
+The uniform band coefficient at \(|a|,|b|\le r\le1/2\) is \(3/[2(4-r^2)(1-r^2)]\). A separate symbolic calculation reproduces \(3/8\), \(8/15\), and \(19/60\) from that expression. The Lean proof above establishes the inequality and sharpness, including all real values of the ordinate difference and frequency.
+
+`smallGapProportion_certified285` gives the stronger threshold \(0.784782678\) from Lamzouri's scoped compact deletion estimate and six finite `Replay` statements about the displayed integer polynomials. A separate exact rational program checks all six statements, including the 572 coefficients, both signed polynomial rays and the 32-term exponential bound. The certified objective is in \([1.000000000452054486,1.000000000452054487]\). [Lean implication](Analysis/LamzouriActualGap285.lean) · [Bazel receipt](https://app.buildbuddy.io/invocation/58274281-12ed-450b-93bb-21910ebdbe17) · [Exact external replay](RH/BoundCertificateReplays20261119.md)

@@ -66,4 +66,27 @@ Direct simplification gives \(H_aH_bQ_0(0)=a^2b^2N/\Delta\). The identity
 \]
 shows \(N/\Delta\le8/15\) throughout the admissible square.
 
+The argument yields the optimal displacement-dependent bound as well. For each fixed nonzero \(a,b\) in the admissible square, the smallest constant multiplying \(a^2b^2(1+|u|)^4e^{|u|(|a|+|b|)}w(d)\) for all \(u,d\) is \(N/\Delta\). Indeed the derivative comparison already bounds the entire left side by \(H_aH_bQ_0(0)\) times the frequency and ordinate factors, and \(u=d=0\) realizes equality for this particular pair. The continuous extension of \(N/\Delta\) tends to \(96/256=3/8\) when both displacements tend to zero. On a restricted rectangle \(|a|\le A,\ |b|\le B\) with positive \(A,B\le1/2\), monotonicity under the triangular averaging above gives the best common constant \(N(A,B)/\Delta(A,B)\).
+
+For a symmetric restriction \(|a|,|b|\le r\le1/2\), the exact worst-pair coefficient has the simpler form
+\[
+  \frac{3}{2(4-r^2)(1-r^2)}
+  =\frac38+\frac{15}{32}r^2+O(r^4).
+\]
+For \(r>0\), the extremizer is again \(u=d=0\) with \(|a|=|b|=r\). At \(r=0\) both differences vanish. The displayed expression extends continuously to the transverse origin.
+
+There is a simpler sharp approximation suitable for sums over zeta zeros. The optimal affine majorant whose intercept is the limiting value is
+\[
+\frac N\Delta\le \frac38+\frac{19}{60}(a^2+b^2).
+\]
+Indeed \(P(A,B)=N/\Delta\) has the absolutely convergent series
+\[
+P(A,B)=\sum_{i,j\ge0}\binom{2i+2j+4}{2i+2}\frac{A^iB^j}{4^{i+j+2}} .
+\]
+For \(i+j>0\), \(A^iB^j\le 4^{1-i-j}(iA+jB)/(i+j)\) on the admissible square. Summing and using the symmetry of the coefficients gives the affine interpolation from \(3/8\) at the origin to \(8/15\) at \((1/4,1/4)\). The corner equality also forces its slope to be at least \(19/60\). For a finite family let \(D\) bound every Cauchy row sum, and put \(E_j=\sum_i |a_i|^j\exp(2|u||a_i|)\). The nonnegative symmetric Cauchy matrix has \(\ell^2\) norm at most \(D\). Applied first to the vector \(a_i^2e^{|u||a_i|}\), then bilinearly to that vector and \(a_i^4e^{|u||a_i|}\), the affine bound gives the unnormalized Gram majorant
+\[
+ D(1+|u|)^4\left(\tfrac38 E_4+\tfrac{19}{30}\sqrt{E_4 E_8}\right).
+\]
+If the normalized moments have Selberg orders \(L^{-3}\) and \(L^{-7}\), this correction has order \(L^{-5}\) before the common frequency and row-mass factors. These statements concern the arithmetic prefactor within the majorant.
+
 This is a bound for an individual reflected pair. The extremal parameters are admissible for the kernel inequality. A zero-density or ordinate-sum estimate for the actual zeta zeros has further restrictions, so this extremizer alone supplies no equality case for the full horizontal defect. The earlier contour argument gives \(1536e\) in this normalization. The optimal constant improves that bound by the factor \(2880e\); it affects the prefactor and leaves the quartic powers and frequency ranges as stated.

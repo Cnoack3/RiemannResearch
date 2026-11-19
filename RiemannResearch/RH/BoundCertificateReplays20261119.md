@@ -114,7 +114,7 @@ arithmetic. Bernstein subdivision handles the two unbounded sign conditions.
 """
 from argparse import ArgumentParser
 from fractions import Fraction as F
-from math import comb, gcd, isqrt, lcm
+from math import comb, factorial, gcd, isqrt, lcm, prod
 
 
 GAP = F(784981, 1000000)
@@ -580,6 +580,33 @@ SCALAR_ROWS = (
 )
 
 
+def verify_degree285_formal_data(weights, p, q, theta, radius):
+    """Check the integer representation and the 32-term scalar used in Lean."""
+    n = len(weights) - 1
+    fact = [factorial(j) for j in range(n + 1)]
+    odd = [prod(range(1, 2*j, 2)) for j in range(n + 1)]
+    joint = 2**n * fact[n]
+    for k in range(n + 1):
+        original = [weights[j] * (-4)**k * 2**(n-j) * (fact[n]//fact[j])
+                    * comb(j,k) * (odd[j]//odd[k]) for j in range(k,n+1)]
+        require(sum(original) == joint*p[k], "integer input coefficient mismatch")
+        require(sum((-1)**j*w for j,w in enumerate(original,k)) == joint*q[k],
+                "integer output coefficient mismatch")
+    primitive = list(p)
+    for j in reversed(range(n)):
+        primitive[j] += (j+1)*primitive[j+1]
+    z = radius**2
+    at_radius = F(0)
+    for coefficient in reversed(primitive):
+        at_radius = at_radius*z + coefficient
+    exp_lower = sum(z**j/factorial(j) for j in range(32))
+    required = F(177245385090551603,10**17)*q[0]
+    objective_lower = (radius/theta)*p[0]+(theta/radius)*(primitive[0]-at_radius/exp_lower)
+    require(at_radius >= 0 and exp_lower > 0 and required < objective_lower,
+            "degree-285 formal scalar failed")
+    print("All 572 integer monomial coefficients and the 32-term scalar agree with Lean.")
+
+
 def verify_kernel(degree):
     coefficients, gap, theta, t, radius = KERNELS[degree]
     cap = DENSITY_CAPS[degree]
@@ -589,6 +616,8 @@ def verify_kernel(degree):
     require(len(p) == degree + 1 and q[0] > 0, "invalid Fourier normalization")
     verify_fourier_pair(p, q)
     verify_fourier_differential_recurrence(p, q)
+    if degree == 285:
+        verify_degree285_formal_data(coefficients, p, q, theta, radius)
     print("Degree", degree)
     print("P on [0,infinity), Bernstein nodes and maximum depth", positive_on_half_line(p))
     print("-Q on [t,infinity), Bernstein nodes and maximum depth",

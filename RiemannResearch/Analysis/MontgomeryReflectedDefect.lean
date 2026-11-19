@@ -3,7 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
-import RiemannResearch.Analysis.MontgomeryReflectedGramKernel
+import RiemannResearch.Analysis.MontgomeryReflectedKernelOptimal
 import RiemannResearch.Analysis.MontgomeryLocalMass
 import RiemannResearch.Analysis.MontgomeryHorizontalTransfer
 import Mathlib.Tactic.FinCases
@@ -119,14 +119,15 @@ theorem defectIntegral_reflected_gram (T u : ℝ) :
 
 /-- Schur's inequality after the two central differences. The row bound is
 for the complete Cauchy matrix, with repeated ordinates included. -/
-theorem reflected_pair_sum_re_le {ι : Type*} [Fintype ι]
+theorem reflected_pair_sum_re_le_of_envelope {ι : Type*} [Fintype ι] {C : ℝ}
+    (hC : 0 ≤ C) (hkernel : ReflectedPairQuarticEnvelope C)
     (a t : ι → ℝ) (u D : ℝ) (ha : ∀ i, |a i| ≤ 1 / 2)
     (hrow : ∀ i, (∑ j, cauchyWeight (t i-t j)) ≤ D) :
     (∑ i, ∑ j, (phase u (t i) * conj (phase u (t j))) *
       reflectedPairKernel u (a i) (a j) (t i-t j)).re ≤
-      (1536*Real.exp 1)*(1 + |u|) ^ 4 * D *
+      C*(1 + |u|) ^ 4 * D *
         ∑ i, (a i) ^ 4 * Real.exp (2* |u| * |a i|) := by
-  let H := (1536*Real.exp 1)*(1 + |u|) ^ 4
+  let H := C*(1 + |u|) ^ 4
   let v (i : ι) := (a i)^2 * Real.exp (|u| * |a i|)
   let K (i j : ι) := cauchyWeight (t i-t j)
   have hH : 0 ≤ H := by dsimp [H]; positivity
@@ -140,7 +141,7 @@ theorem reflected_pair_sum_re_le {ι : Type*} [Fintype ι]
   have he (i j : ι) : ‖(phase u (t i) * conj (phase u (t j))) *
       reflectedPairKernel u (a i) (a j) (t i-t j)‖ ≤ H*(K i j*v i*v j) := by
     rw [norm_mul, norm_mul, Complex.norm_conj, phase_norm, phase_norm, one_mul, one_mul]
-    apply (reflectedPairKernel_norm_le u (a i) (a j) (t i-t j) (ha i) (ha j)).trans_eq
+    apply (hkernel u (a i) (a j) (t i-t j) (ha i) (ha j)).trans_eq
     dsimp only [H,K,v]
     rw [mul_add, Real.exp_add]
     ring
@@ -163,6 +164,27 @@ theorem reflected_pair_sum_re_le {ι : Type*} [Fintype ι]
     _ ≤ H*(D*∑ i, v i^2) := mul_le_mul_of_nonneg_left hschur hH
     _ = _ := by simp only [H, hdiag, mul_assoc]
 
+/-- The optimal pair coefficient, passed intact to Schur's row bound. -/
+theorem reflected_pair_sum_re_le_sharp {ι : Type*} [Fintype ι]
+    (a t : ι → ℝ) (u D : ℝ) (ha : ∀ i, |a i| ≤ 1 / 2)
+    (hrow : ∀ i, (∑ j, cauchyWeight (t i-t j)) ≤ D) :
+    (∑ i, ∑ j, (phase u (t i) * conj (phase u (t j))) *
+      reflectedPairKernel u (a i) (a j) (t i-t j)).re ≤
+      (8/15)*(1 + |u|) ^ 4 * D *
+        ∑ i, (a i) ^ 4 * Real.exp (2* |u| * |a i|) :=
+  reflected_pair_sum_re_le_of_envelope (by norm_num) reflectedPairQuarticEnvelope_eight_fifteenths
+    a t u D ha hrow
+
+/-- The former contour-sized inequality retained for existing callers. -/
+theorem reflected_pair_sum_re_le {ι : Type*} [Fintype ι]
+    (a t : ι → ℝ) (u D : ℝ) (ha : ∀ i, |a i| ≤ 1 / 2)
+    (hrow : ∀ i, (∑ j, cauchyWeight (t i-t j)) ≤ D) :
+    (∑ i, ∑ j, (phase u (t i) * conj (phase u (t j))) *
+      reflectedPairKernel u (a i) (a j) (t i-t j)).re ≤
+      (1536*Real.exp 1)*(1 + |u|) ^ 4 * D *
+        ∑ i, (a i) ^ 4 * Real.exp (2* |u| * |a i|) :=
+  reflected_pair_sum_re_le_of_envelope (by positivity) reflectedPairKernel_norm_le a t u D ha hrow
+
 /-- Unconditional fourth-order defect estimate in terms of actual horizontal
 displacements. The constant is independent of height and frequency. -/
 theorem exists_defectIntegral_le_reflected_quartic :
@@ -170,10 +192,10 @@ theorem exists_defectIntegral_le_reflected_quartic :
       defectIntegral T u ≤ A * Real.log (T+3) * (1 + |u|) ^ 4 *
         ∑ i : Copies T, (i.1.1.re-1 / 2) ^ 4 * Real.exp (2* |u| * |i.1.1.re-1 / 2|) := by
   obtain ⟨C,hC,hrow⟩ := exists_actual_cauchy_row_bound
-  refine ⟨(1536*Real.exp 1)*C, by positivity, ?_⟩
+  refine ⟨(8/15)*C, by positivity, ?_⟩
   intro T u hT
   rw [defectIntegral_reflected_gram]
-  apply (reflected_pair_sum_re_le (fun i : Copies T => i.1.1.re-1 / 2) (copyOrdinate T)
+  apply (reflected_pair_sum_re_le_sharp (fun i : Copies T => i.1.1.re-1 / 2) (copyOrdinate T)
     u (C*Real.log (T+3)) (fun i => (displacement_lt_half i.1.2).le)
     (fun i => hrow T hT _)).trans_eq
   ring

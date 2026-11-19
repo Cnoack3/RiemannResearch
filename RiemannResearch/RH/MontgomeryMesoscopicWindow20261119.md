@@ -73,7 +73,7 @@ The combined spike and linear main term extends uniformly down to phase zero. Th
  \sup_{0\le u\le U(T)}
  \left|\frac{F_{\rm raw}(T,u/L)}{Le^{-2u}+u/L}-1\right|\longrightarrow0.
 \]
-The exact evenness of the ordinate form factor extends the same uniform conclusion to $|u|\le U(T)$, with $|u|$ substituted in the main term. For the linear-only ratio, the additional spike-negligibility condition remains necessary for this main term.
+The exact evenness of the ordinate form factor extends the same uniform conclusion to $|u|\le U(T)$, with $|u|$ substituted in the main term. On any diverging phase path with $u^3/L^2\to0$, the unit-slope criterion is an equivalence for the actual raw statistic. If $F_{\rm raw}/(u/L)\to1$, divide by the proved limit $F_{\rm raw}/(S/L)\to1$ to obtain $S/u\to1$, hence $L^2e^{-2u}/u\to0$.
 
 A directly integrable consequence identifies the atom at zero in the Fourier variable. For $U\ge0$ and $L>0$ the exact two-sided model mass in $|\alpha|\le U/L$ is
 \[

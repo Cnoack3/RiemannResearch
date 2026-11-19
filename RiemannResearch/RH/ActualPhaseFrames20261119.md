@@ -30,6 +30,24 @@ $$
 
 This comparison gives quantitative conditioning where the Langer argument gives full rank. The source equation is Theorem 3.1. Its upper-triangular reflected sum and arithmetic estimates apply to $H_{T,d}$ with the unconditional Gonek formula in Lemma 3.2. This extends the reflected residual to $d=o(T/\log T)$, including all powers strictly below one. The source mean square uses the complex zeros $\rho=1/2+i\gamma$, so its phase conversion uses RH. [Published theorem](https://doi.org/10.1112/blms.13092)
 
+### Sharpness of the polynomial lower frame bound
+
+For the vector $v_n=n^{-1/2}$, the positive prime-power matrix satisfies the exact Rayleigh identity
+$$
+\frac{\langle P_dv,v\rangle}{\|v\|^2}
+=\frac{2\sum_{k\le d}\frac{\Lambda(k)}{k}\sum_{m\le d/k}\frac{1}{m}}
+{\sum_{n\le d}1/n}
+=\frac{2\sum_{n\le d}\log(n)/n}{\sum_{n\le d}1/n}.
+$$
+The second equality follows from $\sum_{k\mid n}\Lambda(k)=\log n$. Integral comparison gives $\sum_{n\le d}\log(n)/n=(\log d)^2/2+O(1)$ and $\sum_{n\le d}1/n=\log d+O(1)$. Combining this witness with the repository’s upper operator bound therefore yields $\lambda_{\max}(P_d)=\log d+O(1)$.
+
+For $\log d(T)/\log T\to b$ with $0<b<1$, the reflected error tends to zero under the stated Bui arithmetic input. The exact decomposition $H_{T,d}=I-T P_d/(2\pi N(T))+R_{T,d}$ and Riemann–von Mangoldt now give
+$$
+\lambda_{\min}(H_{T,d(T)})\longrightarrow 1-b,
+\qquad \|H_{T,d(T)}-I\|\longrightarrow b.
+$$
+For $b=0$ the same conclusions follow directly from norm convergence. Under RH they hold for the ordinary phase Gram as well. This matching lower witness and the exact limiting conditioning are a paper derivation from the displayed finite Rayleigh quotient.
+
 ## Horizontal correction in growing dimension
 
 For the copy at $a=\beta-1/2$, unitary diagonal phase factors leave the singular values of the matrix $C_{ij}=\cosh(a\log(i/j))-1$ unchanged. The normalized Frobenius-square limit for fixed $|a|<1/2$ is
@@ -83,19 +101,13 @@ The lower bound is attained in the limit by the reference displacement itself. T
 
 | Reference $a$ | Sharp single-copy coefficient $z(a)$ |
 |---|---|
-| $3/8$ | $3.001714249896563340069ldots$ |
-| $1/4$ | $2.224549218988302507786ldots$ |
-| $1/8$ | $1.953054646559388494471ldots$ |
-| $10^{-7}$ | $1.879385241571861778085ldots$ |
-| $a\downarrow0$ | $2\cos(\pi/9)=1.879385241571816768108ldots$ |
+| $3/8$ | $3.001714249896563340069\ldots$ |
+| $1/4$ | $2.224549218988302507786\ldots$ |
+| $1/8$ | $1.953054646559388494471\ldots$ |
+| $10^{-7}$ | $1.879385241571861778085\ldots$ |
+| $a\downarrow0$ | $2\cos(\pi/9)=1.879385241571816768108\ldots$ |
 
 The eigenvalue-continuity and single-copy optimality argument in this section is a paper derivation. The comparison for the zeta-averaged horizontal correction admits signed cancellation, and another mechanism could improve its leading coefficient.
-
-## Verification scope
-
-The focused Lean builds have checked the finite quadratic bound, the harmonic bound for the signed exceptional operator, the sub-square-root-dimension norm theorem, the square-root full-rank theorem and the exact finite Langer rank transfer. Langer's exponential-polynomial zero theorem is a scoped external assumption. The positive-ordinate cardinalities and their kernel implication are proved in Lean. The 83-percent distinct-ordinate improvements additionally have the named Gram-transfer and certificate premises described above.
-
-The componentwise Bui error, Schur-certificate asymptotic and growing-dimension refinements have the analytical derivations recorded here. Their current Lean verification evidence, when available, is listed separately in the repository’s theorem catalog. The cubic for the exact continuum operator is independently checked symbolically.
 
 ## Uniform finite-dimensional sharp coefficient
 
@@ -114,3 +126,15 @@ $$
 \big\|(\cosh(s\log(i/j))-1)_{1\le i,j\le d}\big\|\le d\,s^2 z(a).
 $$
 At $s=a$ the normalized norms converge to $z(a)$ by the three-dimensional factorization, so no smaller uniform coefficient is possible. The diagonal sample phases act by unitary conjugation and preserve this bound. In particular at $a=3/8$ the exact single-copy coefficient $3.00171424989656\ldots$ applies to every $d$, and near the critical line the sharp infimum is $2\cos(\pi/9)$. This proof uses a finite compression of the integral operator and has the paper-proof status of the preceding cubic calculation.
+
+For the actual reflected correction, a finite height at which all copies have $|\beta-1/2|\le a$ gives
+$$
+\|H_{T,d}-G_{T,d}\|\le z(a)d\,\frac{1}{N(T)}\sum_{0<\gamma\le T}(\beta-1/2)^2.
+$$
+Consequently the scoped continuum-contact half-plane input with $B_*=0.8733458561067185768\ldots$ gives $z(B_*-1/2)=2.9835172390175436\ldots$ for the entire finite sum. With a central cutoff $0<a<1/2$ and an unbounded far support, the same finite calculation gives the budget $z(a)d M_2(T)+(\mathrm{strictTail}(T,a)/N(T))\,\mathrm{harmonicHyperbolicCap}(d)$. This is a direct consequence of the uniform compression proof and the repository’s reflected-copy decomposition.
+
+## Verification scope
+
+The focused Lean builds have checked the finite quadratic bound, the harmonic bound for the signed exceptional operator, the sub-square-root-dimension norm theorem, the square-root full-rank theorem and the exact finite Langer rank transfer. Langer's exponential-polynomial zero theorem is a scoped external assumption. The positive-ordinate cardinalities and their kernel implication are proved in Lean. The 83-percent distinct-ordinate improvements additionally have the named Gram-transfer and certificate premises described above.
+
+The Bui polynomial frame bound, refined residual and subpolynomial convergence have passed a focused Lean build from the named reflected quadratic-error premise. The global growing-dimension horizontal bounds are checked as its dependency. The exact matching Rayleigh witness, the continuum cubic and the uniform finite compression have the paper derivations recorded here. The repository’s theorem catalog records the separate status of the upper-triangular source reduction and Schur-certificate calculations. [Bui frame build](https://app.buildbuddy.io/invocation/4825380a-ed38-472e-aaa7-4b98563a2511)
