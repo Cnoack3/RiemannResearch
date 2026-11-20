@@ -227,5 +227,132 @@ theorem sharpFormFactor_edgeLayer_uniform {ι : Type*} {l : Filter ι}
   exact mul_le_mul_of_nonneg_left (edgeSmoothingModulus_le
     (div_pos (ht0.trans_le hx.1) hTL) hratio (by linarith only [hsmall])) hB
 
+open MontgomeryHorizontalBessel
+
+/-- Finite edge estimate keeping the diagonal, optimized mean-square and transfer constants separate. -/
+theorem sharpFormFactor_edge_of_optimized_errors {T x D M a b c : ℝ}
+    (hT : 1 < T) (hx : T ≤ x) (he : x ≤ T * Real.log T)
+    (hc : 0 ≤ c)
+    (hd : |D - Real.log x| ≤ a)
+    (hm : |M - T*D| ≤ b*x*(1 + Real.log ((T*Real.log T)/x)))
+    (hf : |T*Real.log T*sharpFormFactor T (Real.log x/Real.log T) - M| ≤ c*x) :
+    let y := x/(T*Real.log T)
+    |sharpFormFactor T (Real.log x/Real.log T) - 1| ≤
+      a/Real.log T + (b+c+1)*(y*(1+Real.log (1/y))) := by
+  have ht : 0 < T := lt_trans zero_lt_one hT
+  have hl : 0 < Real.log T := Real.log_pos hT
+  have htl := mul_pos ht hl
+  have hxp : 0 < x := ht.trans_le hx
+  let F := sharpFormFactor T (Real.log x/Real.log T)
+  let g := Real.log ((T*Real.log T)/x)
+  have hg : 0 ≤ g := Real.log_nonneg ((one_le_div hxp).2 he)
+  have htr : |T*Real.log T*F-T*Real.log x| ≤ c*x+b*x*(1+g)+T*a := by
+    rw [show T*Real.log T*F-T*Real.log x =
+        (T*Real.log T*F-M)+(M-T*D)+T*(D-Real.log x) by ring]
+    apply (abs_add_le _ _).trans
+    apply add_le_add ((abs_add_le _ _).trans (add_le_add hf hm))
+    rw [abs_mul, abs_of_pos ht]
+    exact mul_le_mul_of_nonneg_left hd ht.le
+  have hshift : |T*(Real.log x-Real.log T)| ≤ x := by
+    rw [abs_mul, abs_of_pos ht, abs_of_nonneg (sub_nonneg.mpr (Real.log_le_log ht hx))]
+    have h := Real.log_le_sub_one_of_pos (div_pos hxp ht)
+    rw [Real.log_div hxp.ne' ht.ne'] at h
+    have k := mul_le_mul_of_nonneg_right h ht.le
+    simp only [sub_mul, div_mul_cancel₀ _ ht.ne', one_mul] at k
+    linarith
+  have htarg : |T*Real.log T*(F-1)| ≤ T*a+(b+c+1)*x*(1+g) := by
+    rw [show T*Real.log T*(F-1) =
+      (T*Real.log T*F-T*Real.log x)+T*(Real.log x-Real.log T) by ring]
+    apply (abs_add_le _ _).trans ((add_le_add htr hshift).trans ?_)
+    nlinarith only [mul_nonneg (mul_nonneg hc hxp.le) hg, mul_nonneg hxp.le hg]
+  change |F-1| ≤ a/Real.log T + (b+c+1)*(x/(T*Real.log T)*(1+Real.log (1/(x/(T*Real.log T)))))
+  rw [show 1/(x/(T*Real.log T)) = T*Real.log T/x by field_simp]
+  rw [abs_mul, abs_of_pos htl] at htarg
+  apply (mul_le_mul_iff_right₀ htl).mp
+  change T*Real.log T*|F-1| ≤ T*Real.log T*(a/Real.log T+(b+c+1)*(x/(T*Real.log T)*(1+g)))
+  calc
+    _ ≤ T*a+(b+c+1)*x*(1+g) := htarg
+    _ = _ := by field_simp [ht.ne', hl.ne']
+
+/-- Uniform moving-edge limit from the three optimized bounds at the retained frequencies. -/
+theorem sharpFormFactor_edge_uniform_of_optimized_errors {ι : Type*} {l : Filter ι}
+    (T H : ι → ℝ) (a b c : ℝ) (hb : 0 ≤ b) (hc : 0 ≤ c)
+    (hT : Tendsto T l atTop) (hH : Tendsto (fun i => H i / Real.log (T i)) l (𝓝 0))
+    (h : ∀ᶠ i in l, ∀ x ∈ Icc (T i) (T i * H i),
+      |primeDiagonal x - Real.log x| ≤ a ∧
+      |primeSignalEnergy (T i) x - T i*primeDiagonal x| ≤
+        b*x*(1+Real.log ((T i*Real.log (T i))/x)) ∧
+      |T i*Real.log (T i)*sharpFormFactor (T i) (Real.log x/Real.log (T i)) -
+        primeSignalEnergy (T i) x| ≤ c*x) :
+    ∀ ε : ℝ, 0 < ε → ∀ᶠ i in l, ∀ x ∈ Icc (T i) (T i*H i),
+      |sharpFormFactor (T i) (Real.log x/Real.log (T i)) - 1| < ε := by
+  intro ε hε
+  have hlog := Real.tendsto_log_atTop.comp hT
+  have ha : Tendsto (fun i => a/Real.log (T i)) l (𝓝 0) := by
+    simpa [div_eq_mul_inv, Function.comp_def] using
+      (tendsto_inv_atTop_zero.comp hlog).const_mul a
+  have hz := (edgeSmoothingModulus_tendsto hH).const_mul (b+c+1)
+  rw [mul_zero] at hz
+  have hj := ha.add hz
+  rw [zero_add] at hj
+  filter_upwards [h, hT.eventually (eventually_gt_atTop (1:ℝ)),
+    hH.eventually_lt_const zero_lt_one, hj.eventually_lt_const hε] with i hi ht hh hj'
+  intro x hx
+  have ht0 := lt_trans zero_lt_one ht
+  have hl := Real.log_pos ht
+  have hratio : x/(T i * Real.log (T i)) ≤ H i/Real.log (T i) := by
+    rw [← div_div]
+    exact div_le_div_of_nonneg_right ((div_le_iff₀ ht0).2 (by simpa [mul_comm] using hx.2)) hl.le
+  have he := (div_le_one (mul_pos ht0 hl)).1 (hratio.trans hh.le)
+  obtain ⟨hd, hm, hf⟩ := hi x hx
+  apply ((sharpFormFactor_edge_of_optimized_errors ht hx.1 he hc hd hm hf).trans _).trans_lt hj'
+  apply add_le_add le_rfl
+  exact mul_le_mul_of_nonneg_left (edgeSmoothingModulus_le (div_pos (ht0.trans_le hx.1)
+    (mul_pos ht0 hl)) hratio hh.le) (by linarith)
+
+/-- After subtracting the pole energy, the sharp limit at a moving frequency
+is equivalent to a vanishing signed off-diagonal at the same normalization. -/
+theorem sharp_tendsto_one_iff_centered_prime_offDiagonal_tendsto_zero
+    {ι : Type*} {l : Filter ι} (T x : ι → ℝ)
+    (hT : ∀ᶠ i in l, 1 < T i)
+    (hD : Tendsto (fun i =>
+      MontgomeryHorizontalBessel.primeDiagonal (x i) / Real.log (T i)) l (𝓝 1))
+    (htransfer : Tendsto (fun i =>
+      (MontgomeryHorizontalBessel.primeSignalEnergy (T i) (x i) -
+        T i * Real.log (T i) * sharpFormFactor (T i) (Real.log (x i) / Real.log (T i)) -
+        (4 * Real.pi / 3) * x i) / (T i * Real.log (T i))) l (𝓝 0)) :
+    Tendsto (fun i => sharpFormFactor (T i) (Real.log (x i) / Real.log (T i))) l (𝓝 1) ↔
+    Tendsto (fun i =>
+      (MontgomeryHorizontalBessel.primeSignalEnergy (T i) (x i) -
+        T i * MontgomeryHorizontalBessel.primeDiagonal (x i) -
+        (4 * Real.pi / 3) * x i) / (T i * Real.log (T i))) l (𝓝 0) := by
+  let F := fun i => sharpFormFactor (T i) (Real.log (x i) / Real.log (T i))
+  let d := fun i => MontgomeryHorizontalBessel.primeDiagonal (x i) / Real.log (T i)
+  let M := fun i => MontgomeryHorizontalBessel.primeSignalEnergy (T i) (x i)
+  let R := fun i => (M i - T i * Real.log (T i) * F i - (4 * Real.pi / 3) * x i) /
+    (T i * Real.log (T i))
+  let Q := fun i => (M i - T i * MontgomeryHorizontalBessel.primeDiagonal (x i) -
+    (4 * Real.pi / 3) * x i) / (T i * Real.log (T i))
+  change Tendsto F l (𝓝 1) ↔ Tendsto Q l (𝓝 0)
+  change Tendsto R l (𝓝 0) at htransfer
+  change Tendsto d l (𝓝 1) at hD
+  have hident : ∀ᶠ i in l, R i + F i - d i = Q i := by
+    filter_upwards [hT] with i hi
+    have hT' : T i ≠ 0 := (lt_trans zero_lt_one hi).ne'
+    have hlog : Real.log (T i) ≠ 0 := (Real.log_pos hi).ne'
+    dsimp only [R, d, Q]
+    field_simp [hT', hlog] <;> ring
+  constructor
+  · intro hF
+    have h := (htransfer.add hF).sub hD
+    rw [show (0 : ℝ) + 1 - 1 = 0 by norm_num] at h
+    exact h.congr' hident
+  · intro hQ
+    have h := (hQ.sub htransfer).add hD
+    rw [show (0 : ℝ) - 0 + 1 = 1 by norm_num] at h
+    apply h.congr'
+    filter_upwards [hident] with i hi
+    change Q i - R i + d i = F i
+    linarith only [hi]
 
 end RiemannResearch.Analysis.MontgomeryHorizontalTransfer
