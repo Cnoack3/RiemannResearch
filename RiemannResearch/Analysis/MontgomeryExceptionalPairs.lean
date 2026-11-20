@@ -289,4 +289,139 @@ theorem retained_quadratic_row_le (s G : Finset ι) (hG : G ⊆ s)
     (Real.rpow_le_rpow hR0 hR' (inv_nonneg.mpr (by linarith)))
     (Real.rpow_nonneg hR0 _) (Real.rpow_nonneg (hw0.trans hε') _)
 
+omit [DecidableEq ι] in
+/-- Exact finite Dirichlet-form identity for a symmetric kernel. -/
+theorem pair_dirichlet_identity (s : Finset ι) (K : ι → ι → ℝ)
+    (hsym : ∀ i j, K i j = K j i) (u : ι → ℝ) (m : ℝ) :
+    (∑ e ∈ s ×ˢ s, (m * K e.1 e.2) * (u e.1 * u e.2)) +
+      (∑ e ∈ s ×ˢ s, (m * K e.1 e.2) * (u e.1 - u e.2)^2 / 2) =
+      ∑ i ∈ s, m * (u i ^ 2 * rowMass s K i) := by
+  have hcol : (∑ i ∈ s, ∑ j ∈ s, (m * K i j) * u j ^ 2) =
+      ∑ i ∈ s, ∑ j ∈ s, (m * K i j) * u i ^ 2 := by
+    rw [Finset.sum_comm]
+    exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by rw [hsym j i]
+  have hleft : (∑ i ∈ s, ∑ j ∈ s, (m * K i j) * u i ^ 2) =
+      ∑ i ∈ s, m * (u i ^ 2 * rowMass s K i) := by
+    apply Finset.sum_congr rfl
+    intro i _
+    simp only [rowMass, Finset.mul_sum]
+    exact Finset.sum_congr rfl fun j _ => by ring
+  rw [← Finset.sum_add_distrib]
+  calc
+    _ = ∑ e ∈ s ×ˢ s, ((m * K e.1 e.2) * u e.1 ^ 2 +
+        (m * K e.1 e.2) * u e.2 ^ 2) / 2 := Finset.sum_congr rfl fun e _ => by ring
+    _ = _ := by
+      rw [← Finset.sum_div, Finset.sum_product]
+      simp only [Finset.sum_add_distrib]
+      rw [hcol, hleft]
+      ring
+
+omit [DecidableEq ι] in
+/-- Multiplicative horizontal and row-moment budget, retaining the whole
+square defect before applying Hölder to the one-point sum. -/
+theorem pair_exp_moment_add_defect_le (s : Finset ι) (K : ι → ι → ℝ)
+    (hK : ∀ i j, 0 ≤ K i j) (hsym : ∀ i j, K i j = K j i)
+    (X : ι → ℝ) {m p θ r t D R : ℝ} (hm : 0 ≤ m)
+    (hrt : Real.HolderConjugate r t)
+    (hD : (∑ i ∈ s, m * Real.exp ((2 * p * θ * r) * X i)) ≤ D)
+    (hR : (∑ i ∈ s, m * rowMass s K i ^ t) ≤ R) :
+    (∑ e ∈ s ×ˢ s, (m * K e.1 e.2) * Real.exp (θ * (X e.1 + X e.2)) ^ p) +
+      (∑ e ∈ s ×ˢ s, (m * K e.1 e.2) *
+        (Real.exp (p * θ * X e.1) - Real.exp (p * θ * X e.2))^2 / 2) ≤
+      D ^ r⁻¹ * R ^ t⁻¹ := by
+  let u (i : ι) := Real.exp (p * θ * X i)
+  let A (i : ι) := Real.exp (2 * p * θ * X i)
+  have hpair (i j : ι) : Real.exp (θ * (X i + X j)) ^ p = u i * u j := by
+    dsimp [u]
+    rw [← Real.exp_mul, ← Real.exp_add]
+    congr 1
+    ring
+  have hsq (i : ι) : u i ^ 2 = A i := by
+    dsimp [u, A]
+    rw [pow_two, ← Real.exp_add]
+    congr 1
+    ring
+  have hAr (i : ι) : (A i) ^ r = Real.exp ((2 * p * θ * r) * X i) := by
+    dsimp [A]
+    rw [← Real.exp_mul]
+    congr 1
+    ring
+  have hr (i : ι) : 0 ≤ rowMass s K i := Finset.sum_nonneg fun j _ => hK i j
+  have hA0 := Finset.sum_nonneg (s := s) (fun i _ => Real.rpow_nonneg (Real.exp_nonneg (2*p*θ*X i)) r)
+  have hR0 := Finset.sum_nonneg (s := s) (fun i _ => Real.rpow_nonneg (hr i) t)
+  have hAw : m * (∑ i ∈ s, (A i)^r) ≤ D := by simpa only [Finset.mul_sum, hAr] using hD
+  have hRw : m * (∑ i ∈ s, rowMass s K i ^ t) ≤ R := by simpa only [Finset.mul_sum] using hR
+  have hD0 : 0 ≤ D := (mul_nonneg hm hA0).trans hAw
+  have hRcap : 0 ≤ R := (mul_nonneg hm hR0).trans hRw
+  rcases eq_or_lt_of_le hm with hz | hm'
+  · subst m
+    simpa using mul_nonneg (Real.rpow_nonneg hD0 r⁻¹) (Real.rpow_nonneg hRcap t⁻¹)
+  have hsplit : m ^ r⁻¹ * m ^ t⁻¹ = m := by
+    rw [← Real.rpow_add hm', hrt.inv_add_inv_eq_one, Real.rpow_one]
+  have hH := Real.inner_le_Lp_mul_Lq_of_nonneg s hrt
+    (f := A) (g := rowMass s K) (fun i _ => Real.exp_nonneg _) (fun i _ => hr i)
+  simp only [one_div] at hH
+  change (∑ e ∈ s ×ˢ s, (m * K e.1 e.2) * Real.exp (θ * (X e.1 + X e.2)) ^ p) +
+      (∑ e ∈ s ×ˢ s, (m * K e.1 e.2) * (u e.1 - u e.2)^2 / 2) ≤ _
+  simp only [hpair]
+  rw [pair_dirichlet_identity s K hsym u m]
+  simp only [hsq, ← Finset.mul_sum]
+  calc
+    _ ≤ m * ((∑ i ∈ s, (A i)^r)^r⁻¹ * (∑ i ∈ s, rowMass s K i ^ t)^t⁻¹) :=
+      mul_le_mul_of_nonneg_left hH hm
+    _ = (m * (∑ i ∈ s, (A i)^r))^r⁻¹ * (m * (∑ i ∈ s, rowMass s K i ^ t))^t⁻¹ := by
+      rw [Real.mul_rpow hm hA0, Real.mul_rpow hm hR0]
+      calc
+        _ = (m^r⁻¹ * m^t⁻¹) * ((∑ i ∈ s, (A i)^r)^r⁻¹ * (∑ i ∈ s, rowMass s K i ^ t)^t⁻¹) := by rw [hsplit]
+        _ = _ := by ring
+    _ ≤ _ := mul_le_mul
+      (Real.rpow_le_rpow (mul_nonneg hm hA0) hAw (inv_nonneg.mpr hrt.pos.le))
+      (Real.rpow_le_rpow (mul_nonneg hm hR0) hRw (inv_nonneg.mpr hrt.symm.pos.le))
+      (Real.rpow_nonneg (mul_nonneg hm hR0) _) (Real.rpow_nonneg hD0 _)
+
+/-- Signed deletion estimate retaining the complete finite Dirichlet square
+in the multiplicative moment budget. -/
+theorem norm_signed_deletion_le_with_defect {V : Type*} [SeminormedAddCommGroup V]
+    (s E : Finset ι) (hE : E ⊆ s) (K : ι → ι → ℝ)
+    (hK : ∀ i j, 0 ≤ K i j) (hsym : ∀ i j, K i j = K j i)
+    (X : ι → ℝ) (F : ι × ι → V) {m δ θ p q r t D Q R A : ℝ}
+    (hm : 0 ≤ m) (hA : 0 ≤ A) (hp : 1 ≤ p) (hq : 1 ≤ q)
+    (hrt : Real.HolderConjugate r t) (hδ : (∑ _i ∈ E, m) ≤ δ)
+    (hQ : (∑ i ∈ s, m * rowMass s K i ^ q) ≤ Q)
+    (hD : (∑ i ∈ s, m * Real.exp ((2 * p * θ * r) * X i)) ≤ D)
+    (hR : (∑ i ∈ s, m * rowMass s K i ^ t) ≤ R)
+    (hF : ∀ e ∈ incident s E, ‖F e‖ ≤
+      A * ((m * K e.1 e.2) * Real.exp (θ * (X e.1 + X e.2)))) :
+    ‖(∑ e ∈ s ×ˢ s, F e) - (∑ e ∈ (s \ E) ×ˢ (s \ E), F e)‖ ≤
+      A * ((2 * δ ^ (1 - q⁻¹) * Q ^ q⁻¹) ^ (1 - p⁻¹) *
+        (D ^ r⁻¹ * R ^ t⁻¹ - ∑ e ∈ s ×ˢ s, (m * K e.1 e.2) *
+          (Real.exp (p * θ * X e.1) - Real.exp (p * θ * X e.2))^2 / 2) ^ p⁻¹) := by
+  rw [signed_deletion_identity s E hE F]
+  refine (norm_sum_le _ _).trans ((Finset.sum_le_sum hF).trans ?_)
+  rw [← Finset.mul_sum]
+  apply mul_le_mul_of_nonneg_left _ hA
+  have hs : incident s E ⊆ s ×ˢ s := by
+    intro e he
+    rcases Finset.mem_union.mp he with h | h <;>
+      obtain ⟨h₁, h₂⟩ := Finset.mem_product.mp h
+    · exact Finset.mem_product.mpr ⟨hE h₁, h₂⟩
+    · exact Finset.mem_product.mpr ⟨h₁, hE h₂⟩
+  have hw (e : ι × ι) : 0 ≤ m * K e.1 e.2 := mul_nonneg hm (hK _ _)
+  have h := Real.inner_le_weight_mul_Lp_of_nonneg (incident s E) hp
+    (fun e => m * K e.1 e.2) (fun e => Real.exp (θ * (X e.1 + X e.2))) hw
+    (fun _ => Real.exp_nonneg _)
+  have hm' := incident_mass_le s E hE K hK hsym hm hq hδ hQ
+  have hs' := Finset.sum_le_sum_of_subset_of_nonneg hs (f := fun e : ι × ι =>
+    (m * K e.1 e.2) * Real.exp (θ * (X e.1 + X e.2)) ^ p)
+    (fun e _ _ => mul_nonneg (hw e) (Real.rpow_nonneg (Real.exp_nonneg _) _))
+  have hsub := hs'.trans (le_sub_iff_add_le.mpr (pair_exp_moment_add_defect_le s K hK hsym X hm hrt hD hR))
+  have hm0 := Finset.sum_nonneg (s := incident s E) (fun e _ => hw e)
+  have he0 : 0 ≤ ∑ e ∈ incident s E,
+      (m * K e.1 e.2) * Real.exp (θ * (X e.1 + X e.2)) ^ p :=
+    Finset.sum_nonneg (fun e _ => mul_nonneg (hw e) (Real.rpow_nonneg (Real.exp_nonneg _) _))
+  exact h.trans (mul_le_mul
+    (Real.rpow_le_rpow hm0 hm' (sub_nonneg.mpr (inv_le_one_of_one_le₀ hp)))
+    (Real.rpow_le_rpow he0 hsub (inv_nonneg.mpr (by linarith)))
+    (Real.rpow_nonneg he0 _) (Real.rpow_nonneg (hm0.trans hm') _))
+
 end RiemannResearch.Analysis.MontgomeryExceptionalPairs

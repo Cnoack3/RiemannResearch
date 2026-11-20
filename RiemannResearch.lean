@@ -551,6 +551,7 @@ import RiemannResearch.Analysis.MontgomeryComplexSchur
 import RiemannResearch.Analysis.ShiftedSechKernel
 import RiemannResearch.Analysis.ShiftedSechSpectrum
 import RiemannResearch.Analysis.MontgomeryHorizontalTransfer
+import RiemannResearch.Analysis.MontgomerySharpEdgeLayer
 import RiemannResearch.Analysis.CompletedZetaStripBound
 import RiemannResearch.Analysis.MontgomeryComplexGram
 import RiemannResearch.Analysis.MontgomeryFourierPairing

@@ -225,4 +225,71 @@ theorem eventually_signed_deletion_le
   rw [hpow, show A * (((2 * Q ^ q⁻¹) ^ v * δ ^ (u*v)) * H) = B * δ ^ (u*v) by dsimp [B]; ring]
   exact mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_ge hδ0 hδ1 hκ'.le) hB
 
+open scoped Classical in
+/-- Uniform removal of zero copies outside a microscopic strip. For any fixed
+rate below `8/7 - 2*θ`, the bound decays exponentially in the strip width;
+the implicit constant and height threshold are independent of the width. -/
+theorem eventually_signed_strip_deletion_le
+    (hDensity : ConreyBaluyotDensityHypothesis) (hRows : FujiiMicroscopicRowMoments)
+    {θ c A : ℝ} (hθ : 0 < θ) (hc : 0 < c) (hgap : c < 8 / 7 - 2 * θ) (hA : 0 ≤ A) :
+    ∃ B : ℝ, 0 ≤ B ∧ ∀ᶠ T : ℝ in atTop, ∀ x : ℝ, 0 ≤ x →
+      ∀ (E : Finset (Copies T)), (∀ i ∈ E, x ≤ mark T i) →
+      ∀ (F : Copies T × Copies T → ℂ),
+      (∀ e ∈ incident Finset.univ E, ‖F e‖ ≤ A *
+        (((Ncount 0 T : ℝ)⁻¹ * gapWeight T e.1 e.2) *
+        Real.exp (θ * (mark T e.1 + mark T e.2)))) →
+      ‖(∑ e ∈ (Finset.univ : Finset (Copies T)) ×ˢ Finset.univ, F e) -
+        (∑ e ∈ (Finset.univ \ E) ×ˢ (Finset.univ \ E), F e)‖ ≤
+          B * Real.exp (-(c * x)) := by
+  classical
+  obtain ⟨κ, hκlo, hκhi⟩ := exists_between
+    (show c / (8 / 7) < 1 - 7 * θ / 4 by linarith only [hgap])
+  have hκ : 0 < κ := lt_trans (by positivity) hκlo
+  obtain ⟨a, hca, ha⟩ := exists_between (show c / κ < 8 / 7 by
+    apply (div_lt_iff₀ hκ).mpr
+    linarith only [hκlo])
+  have ha0 : 0 < a := lt_trans (div_pos hc hκ) hca
+  obtain ⟨b, hab, hb⟩ := exists_between ha
+  obtain ⟨C, T₀, hC, hT₀, hD⟩ := hDensity b (ha0.trans hab) hb
+  obtain ⟨K, hK, hdel⟩ := eventually_signed_deletion_le hDensity hRows hθ hκ.le hκhi hA
+  let d : ℝ := 1 / (16 * Real.pi)
+  have hd : 0 < d := by dsimp [d]; positivity
+  let H := (2 * C / d) * (a / (b-a))
+  have hH : 0 ≤ H := mul_nonneg (div_nonneg (by positivity) hd.le)
+    (div_nonneg ha0.le (sub_pos.mpr hab).le)
+  have hD0 : 0 ≤ 1 + H := by linarith
+  refine ⟨K * (1 + H) ^ κ, mul_nonneg hK (Real.rpow_nonneg hD0 _), ?_⟩
+  filter_upwards [eventually_ge_atTop T₀, eventually_count_ge_log, hdel] with T hT hN hdel
+  intro x hx E hE F hF
+  let n : ℝ := (Ncount 0 T : ℝ)
+  have hn : 0 ≤ n := by dsimp [n]; positivity
+  have ht : 1 < T := hT₀.trans_le hT
+  have hmoment := normalized_exp_mark_le ht ha0.le hab hC hd (hD T hT) hN
+  have hwhole : (∑ i : Copies T, n⁻¹ * Real.exp (a * mark T i)) ≤ 1 + H := by
+    apply hmoment.trans
+    have hfactor : 1 - Real.exp (-((b-a)*Real.log T)/2) ≤ 1 :=
+      sub_le_self _ (Real.exp_nonneg _)
+    exact add_le_add le_rfl ((mul_le_mul_of_nonneg_left hfactor hH).trans_eq (mul_one _))
+  have hcount : (E.card : ℝ) / n * Real.exp (a*x) ≤ 1 + H := by
+    calc
+      _ = ∑ _i ∈ E, n⁻¹ * Real.exp (a*x) := by simp [div_eq_mul_inv, mul_assoc]
+      _ ≤ ∑ i ∈ E, n⁻¹ * Real.exp (a * mark T i) := Finset.sum_le_sum fun i hi =>
+        mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr
+          (mul_le_mul_of_nonneg_left (hE i hi) ha0.le)) (inv_nonneg.mpr hn)
+      _ ≤ _ := (Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ E)
+        (fun i _ _ => mul_nonneg (inv_nonneg.mpr hn) (Real.exp_nonneg _))).trans hwhole
+  have hδ : (E.card : ℝ) / n ≤ (1 + H) * Real.exp (-(a*x)) := by
+    rw [Real.exp_neg, ← div_eq_mul_inv]
+    exact (le_div_iff₀ (Real.exp_pos _)).mpr hcount
+  have hdec : Real.exp (-(a*x)) ^ κ ≤ Real.exp (-(c*x)) := by
+    rw [← Real.exp_mul, Real.exp_le_exp]
+    have hca' : c ≤ a * κ := ((div_lt_iff₀ hκ).mp hca).le
+    linarith only [mul_le_mul_of_nonneg_right hca' hx]
+  apply (hdel E F hF).trans
+  have hsmall := Real.rpow_le_rpow (div_nonneg (Nat.cast_nonneg _) hn) hδ hκ.le
+  rw [Real.mul_rpow hD0 (Real.exp_pos _).le] at hsmall
+  exact (mul_le_mul_of_nonneg_left (hsmall.trans
+    (mul_le_mul_of_nonneg_left hdec (Real.rpow_nonneg hD0 _))) hK).trans_eq
+      (mul_assoc _ _ _).symm
+
 end RiemannResearch.Analysis.ActualMontgomeryExceptionalPairs
