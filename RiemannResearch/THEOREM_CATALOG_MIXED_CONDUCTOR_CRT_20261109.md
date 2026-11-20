@@ -22,6 +22,20 @@ Put \(\ell=\log 2\), \(z=J_2-\ell\mathbf 1\), \(C_B=\|P_{C_B^{\rm mix}}J_2\|_P^2
 
 **Open arithmetic obligation.** Prove nonsummability of \(g_B=(C_{B+1}-C_B)/D_B\), or of certified nonnegative lower bounds for those gains. The finite certificate and the necessary growth of the odd conductors do not establish divergence. [Dyadic argument](RH/MixedConductorOddPeriodFloor.md)
 
+## Norm of the normalized screened packet
+
+For \(u=SJ_2/\log 2\) and \(E=\|\mathbf 1-P_V\mathbf 1\|_P^2\),
+`normalizedScreenedTwo_norm_sq` gives \(\|u\|_P^2=1/(1-E)\).
+The norm is at least one, equals one exactly when \(E=0\), and exceeds one exactly when \(E>0\).
+The period-5040 trial gives \(\|u\|_P^2<1000/961\).
+The legal projection is \((\|u\|_P^2)^{-1}u\). Screening this projection recovers the constant exactly when \(E=0\).
+[Norm and RH declarations](RH/MixedCaptureLegalTrials.lean) · [Projection identities](RH/MixedConductorRankOne.lean)
+
+Unit norm is equivalent to natural approximation and implies RH. Failure of RH forces strict norm excess.
+The converse from RH to unit norm takes `RiemannHypothesis → BaezDuarte.NaturalApproximation` as an explicit hypothesis.
+This implication remains open in Lean. Báez-Duarte proves it in Theorem 1 of the published paper, numbered 1.1 in the preprint.
+[Lean bridge](RH/BaezDuarteNaturalApproximation.lean) · [Published theorem](https://www.bdim.eu/item?fmt=pdf&id=RLIN_2003_9_14_1_5_0) · [Preprint](https://arxiv.org/abs/math/0202141)
+
 ## Lean declarations
 
 | Module | Result |

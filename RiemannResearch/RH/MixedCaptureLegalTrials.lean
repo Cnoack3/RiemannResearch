@@ -1,4 +1,6 @@
+import RiemannResearch.RH.BaezDuarteNaturalApproximation
 import RiemannResearch.RH.MixedConductorRankOne
+import RiemannResearch.RH.MobiusCoefficientStabilization
 import RiemannResearch.RH.ParetoInitialIntervalCertificates
 import RiemannResearch.RH.ZetaTwoParetoTransfer
 import Mathlib.Tactic.FieldSimp
@@ -29,18 +31,97 @@ theorem limitEnergy_lt_period5040_bound : limitEnergy < (39 : ℝ) / 1000 := by
   have hs := (sq_lt_sq₀ (norm_nonneg _) (Real.sqrt_nonneg _)).mpr hd
   rwa [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 39 / 1000)] at hs
 
+/-- Exact squared norm of the screened conductor-two packet with mean one. -/
+theorem normalizedScreenedTwo_norm_sq :
+    ‖normalizedScreenedTwo‖ ^ 2 = 1 / (1 - limitEnergy) := by
+  have hden : 1 - limitEnergy ≠ 0 := by linarith [limitEnergy_lt_period5040_bound]
+  have he := normalizedScreenedTwo_error_sq_eq_limitEnergy
+  rw [norm_sub_sq_real, normalizedScreenedTwo_mean, hilbertOne_norm_sq] at he
+  field_simp [hden] at he ⊢
+  nlinarith
+
+theorem one_le_norm_normalizedScreenedTwo : 1 ≤ ‖normalizedScreenedTwo‖ := by
+  have hOne : ‖hilbertOne‖ = 1 := by nlinarith [hilbertOne_norm_sq, norm_nonneg hilbertOne]
+  simpa only [normalizedScreenedTwo_mean, hOne, mul_one] using
+    real_inner_le_norm normalizedScreenedTwo hilbertOne
+
+theorem normalizedScreenedTwo_norm_eq_one_iff :
+    ‖normalizedScreenedTwo‖ = 1 ↔ limitEnergy = 0 := by
+  have he := normalizedScreenedTwo_norm_sq
+  constructor
+  · intro hu
+    rw [hu, one_pow, one_div] at he
+    linarith only [inv_eq_one.mp he.symm]
+  · intro hE
+    rw [hE, sub_zero, div_one] at he
+    nlinarith [norm_nonneg normalizedScreenedTwo]
+
+theorem one_lt_norm_normalizedScreenedTwo_iff :
+    1 < ‖normalizedScreenedTwo‖ ↔ 0 < limitEnergy := by
+  have hE : 0 ≤ limitEnergy := sq_nonneg ‖limitResidual‖
+  constructor
+  · intro hu
+    exact lt_of_le_of_ne hE fun h =>
+      hu.ne' (normalizedScreenedTwo_norm_eq_one_iff.mpr h.symm)
+  · intro he
+    exact lt_of_le_of_ne one_le_norm_normalizedScreenedTwo fun h =>
+      he.ne' (normalizedScreenedTwo_norm_eq_one_iff.mp h.symm)
+
+/-- The complete period-5040 trial gives a strict upper bound on the squared norm. -/
+theorem normalizedScreenedTwo_norm_sq_lt_period5040 :
+    ‖normalizedScreenedTwo‖ ^ 2 < (1000 : ℝ) / 961 := by
+  rw [normalizedScreenedTwo_norm_sq]
+  apply (div_lt_iff₀ (show 0 < 1 - limitEnergy by linarith [limitEnergy_lt_period5040_bound])).mpr
+  linarith only [limitEnergy_lt_period5040_bound]
+
+theorem limitProjection_eq_inv_norm_sq_smul_screenedTwo :
+    limitProjection = (‖normalizedScreenedTwo‖ ^ 2)⁻¹ • normalizedScreenedTwo := by
+  rw [normalizedScreenedTwo_norm_sq, one_div, inv_inv]
+  exact limitProjection_eq_scaled_screenedTwo
+
+theorem limitProjection_inner_normalizedScreenedTwo :
+    inner ℝ limitProjection normalizedScreenedTwo = 1 := by
+  have h : ‖normalizedScreenedTwo‖ ^ 2 ≠ 0 :=
+    (sq_pos_of_pos (zero_lt_one.trans_le one_le_norm_normalizedScreenedTwo)).ne'
+  rw [limitProjection_eq_inv_norm_sq_smul_screenedTwo, real_inner_smul_left,
+    real_inner_self_eq_norm_sq, inv_mul_cancel₀ h]
+
+theorem normalizedScreenedTwo_norm_eq_one_iff_naturalApproximation :
+    ‖normalizedScreenedTwo‖ = 1 ↔ BaezDuarte.NaturalApproximation :=
+  normalizedScreenedTwo_norm_eq_one_iff.trans
+    (limitEnergy_zero_iff_mem.trans BaezDuarte.naturalApproximation_iff_one_mem.symm)
+
+theorem riemannHypothesis_of_normalizedScreenedTwo_norm_eq_one
+    (hu : ‖normalizedScreenedTwo‖ = 1) : RiemannHypothesis :=
+  riemannHypothesis_of_normalizedScreenedTwo
+    (one_mem_closedSpace_iff_normalizedScreenedTwo.mp
+      (limitEnergy_zero_iff_mem.mp (normalizedScreenedTwo_norm_eq_one_iff.mp hu)))
+
+theorem one_lt_norm_normalizedScreenedTwo_of_not_riemannHypothesis
+    (h : ¬ RiemannHypothesis) : 1 < ‖normalizedScreenedTwo‖ :=
+  lt_of_le_of_ne one_le_norm_normalizedScreenedTwo fun hu =>
+    h (riemannHypothesis_of_normalizedScreenedTwo_norm_eq_one hu.symm)
+
+/-- Báez-Duarte's Theorem 1.1 supplies the analytic implication in the reverse direction. -/
+theorem normalizedScreenedTwo_norm_eq_one_iff_riemannHypothesis
+    (hBaezDuarte : RiemannHypothesis → BaezDuarte.NaturalApproximation) :
+    ‖normalizedScreenedTwo‖ = 1 ↔ RiemannHypothesis :=
+  ⟨riemannHypothesis_of_normalizedScreenedTwo_norm_eq_one,
+    fun hRH => normalizedScreenedTwo_norm_eq_one_iff_naturalApproximation.mpr (hBaezDuarte hRH)⟩
+
+theorem one_lt_norm_normalizedScreenedTwo_iff_not_riemannHypothesis
+    (hBaezDuarte : RiemannHypothesis → BaezDuarte.NaturalApproximation) :
+    1 < ‖normalizedScreenedTwo‖ ↔ ¬ RiemannHypothesis :=
+  ⟨fun hu hRH => hu.ne'
+      ((normalizedScreenedTwo_norm_eq_one_iff_riemannHypothesis hBaezDuarte).mpr hRH),
+    one_lt_norm_normalizedScreenedTwo_of_not_riemannHypothesis⟩
+
 /-- Exact conversion of the best legal error into full mixed parity capture. -/
 theorem full_mixed_capture_eq_limitEnergy :
     ‖mixedClosure.starProjection (ramanujanPacketHilbert 2)‖ ^ 2 =
       Real.log 2 - (Real.log 2) ^ 2 / (1 - limitEnergy) := by
   let z := ramanujanPacketHilbert 2
   let p := mixedClosure.starProjection z
-  have hden : 1 - limitEnergy ≠ 0 := by linarith [limitEnergy_lt_period5040_bound]
-  have hu : ‖normalizedScreenedTwo‖ ^ 2 = 1 / (1 - limitEnergy) := by
-    have he := normalizedScreenedTwo_error_sq_eq_limitEnergy
-    rw [norm_sub_sq_real, normalizedScreenedTwo_mean, hilbertOne_norm_sq] at he
-    field_simp [hden] at he ⊢
-    nlinarith
   have hp : inner ℝ p (z - p) = 0 :=
     (mixedClosure.mem_orthogonal _).mp (mixedClosure.sub_starProjection_mem_orthogonal z) p
       (mixedClosure.starProjection_apply_mem z)
@@ -55,7 +136,7 @@ theorem full_mixed_capture_eq_limitEnergy :
     change ‖ramanujanPacketHilbert 2‖ ^ 2 - _ + _ = _
     rw [ramanujanPacketHilbert_two_norm_sq]
     ring
-  rw [hz, norm_smul, Real.norm_eq_abs, mul_pow, sq_abs, hu] at hs
+  rw [hz, norm_smul, Real.norm_eq_abs, mul_pow, sq_abs, normalizedScreenedTwo_norm_sq] at hs
   change ‖p‖ ^ 2 = _
   rw [div_eq_mul_inv] at hs ⊢
   simp only [one_mul] at hs

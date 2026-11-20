@@ -412,6 +412,29 @@ theorem screenedPrimeClosure_starProjection_one :
     fun v hv => limitResidual_mem_orthogonal v (screenedPrimeClosure_le_closedSpace hv)
   exact Submodule.eq_starProjection_of_mem_orthogonal hp hr
 
+open RiemannResearch.Analysis.NestedOrthogonalDecomposition in
+/-- On every ambient vector, screening the legal projection gives the projection
+onto the screened legal line. -/
+theorem mixedOrthogonal_starProjection_closedSpace (x : ThresholdHilbert) :
+    mixedClosureᗮ.starProjection (closedSpace.starProjection x) =
+      screenedPrimeClosure.starProjection x := by
+  rw [Submodule.starProjection_orthogonal_val,
+    nested_projection_apply mixedClosure_le_closedSpace]
+  symm
+  apply Submodule.eq_starProjection_of_mem_orthogonal
+  · rw [screenedPrimeClosure_eq_inf_orthogonal]
+    exact projection_difference_mem mixedClosure_le_closedSpace x
+  · rw [screenedPrimeClosure_eq_inf_orthogonal]
+    exact sub_projection_difference_mem_orthogonal x
+
+/-- Screening the legal projection of the constant recovers the constant
+exactly when the legal residual vanishes. -/
+theorem mixedOrthogonal_limitProjection_eq_one_iff :
+    mixedClosureᗮ.starProjection limitProjection = hilbertOne ↔ limitEnergy = 0 := by
+  rw [limitProjection, mixedOrthogonal_starProjection_closedSpace,
+    screenedPrimeClosure_starProjection_one]
+  exact Submodule.starProjection_eq_self_iff.trans limitEnergy_zero_iff_mem.symm
+
 /-- The limiting fixed-seed error is the canonical legal projection error
 rescaled by the squared norm of its projection. -/
 theorem normalizedScreenedTwo_error_sq_eq_limitEnergy :
