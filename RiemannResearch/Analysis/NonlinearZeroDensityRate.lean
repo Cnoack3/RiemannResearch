@@ -50,6 +50,39 @@ theorem logExponent_eq_three_sub_rate (s : ℝ) (hs : 3 - 2 * s ≠ 0) :
   unfold inghamRate
   field_simp [hs, hs', hs_c] <;> ring_nf <;> field_simp [hs, hs', hs_c] <;> ring
 
+/-- The Ingham height exponent is bounded by the affine profile on the full
+half-strip exactly for slopes at most `4 / 3`. -/
+theorem ingham_exponent_le_affine_iff (a : ℝ) :
+    (∀ σ ∈ Set.Icc (1 / 2 : ℝ) 1,
+      3 * (1 - σ) / (2 - σ) ≤ 1 - a * (σ - 1 / 2)) ↔ a ≤ 4 / 3 := by
+  constructor
+  · intro h
+    by_contra! ha
+    have ha₀ : 0 < a := by linarith
+    let σ : ℝ := 1 - 2 / (3 * a)
+    have hs : 1 / 2 < σ := by
+      have hu : 2 / (3 * a) < 1 / 2 :=
+        (div_lt_iff₀ (by positivity : 0 < 3 * a)).2 (by linarith)
+      dsimp [σ]
+      linarith
+    have hs₁ : σ ≤ 1 := sub_le_self _ (by positivity)
+    have hc := (div_le_iff₀ (show 0 < 2 - σ by linarith only [hs₁])).1
+      (h σ ⟨hs.le, hs₁⟩)
+    have hprod : a * (2 - σ) ≤ 2 := by
+      by_contra! hg
+      nlinarith only [hc, mul_pos (sub_pos.mpr hs) (sub_pos.mpr hg)]
+    have hval : a * (2 - σ) = a + 2 / 3 := by
+      dsimp [σ]
+      field_simp [ha₀.ne']
+      ring
+    linarith only [hprod, hval, ha]
+  · intro ha σ hσ
+    have hden : 0 < 2 - σ := by linarith only [hσ.2]
+    have ht : 3 * (1 - σ) / (2 - σ) ≤ 1 - (4 / 3) * (σ - 1 / 2) := by
+      apply (div_le_iff₀ hden).2
+      nlinarith only [sq_nonneg (σ - 1 / 2)]
+    linarith only [ht, mul_le_mul_of_nonneg_right ha (sub_nonneg.mpr hσ.1)]
+
 /-- The nonlinear gain beyond the coarse linear rate 4s/3. -/
 theorem inghamRate_linear_remainder (s : ℝ) (hs : 3 - 2 * s ≠ 0) :
     inghamRate s = 4 * s / 3 + 8 * s ^ 2 / (3 * (3 - 2 * s)) := by

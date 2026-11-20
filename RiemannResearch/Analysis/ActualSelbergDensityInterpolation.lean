@@ -6,6 +6,7 @@ Authors: RiemannResearch contributors
 import RiemannResearch.Analysis.ActualInghamLittlewoodDensity
 import RiemannResearch.Analysis.ActualSelbergDensityConventions
 import RiemannResearch.Analysis.ActualZeroSublinearEnergy
+import RiemannResearch.Analysis.NonlinearZeroDensityRate
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
@@ -76,9 +77,8 @@ theorem ingham_tangent_density_log_loss : UniformLogLossDensity (4 / 3) 3 := by
   let q := 3 * (1 - σ) / (2 - σ)
   have den : 0 < 2 - σ := by linarith [hσ.2]
   have hq : q ≤ 1 := (div_le_iff₀ den).mpr (by linarith [hσ.1])
-  have htan : q ≤ 1 - 4 / 3 * (σ - 1 / 2) := by
-    apply (div_le_iff₀ den).mpr
-    nlinarith [sq_nonneg (σ - 1 / 2)]
+  have htan : q ≤ 1 - 4 / 3 * (σ - 1 / 2) :=
+    (ZeroDensityRate.ingham_exponent_le_affine_iff (4 / 3)).2 le_rfl σ hσ
   apply (hc T ht2 σ hσ).trans
   apply mul_le_mul_of_nonneg_left _ hC.le
   refine (min_le_right _ _).trans ?_

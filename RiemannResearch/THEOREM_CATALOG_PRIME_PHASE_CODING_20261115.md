@@ -89,31 +89,37 @@ No theorem here asserts a globally meromorphic infinite local object whose
 isolated poles are all projected zeros. The PDFs themselves acknowledge
 that this stronger analytic construction is unproved.
 
-## Conditional window results, with all boundary terms
+## Fixed-prime window results (updated 2026-11-20)
 
 Namespace RiemannResearch.Analysis.PrimePhaseWindows;
 module Analysis/PrimePhaseWindows.lean.
 
 Let S_f(T) be the actual multiplicity-weighted phase sum, N(T) the actual
 zero count, I_f its Haar integral, and J_f the signed FMZ correction.
-The existing formalization, conditional on Selberg, says
-(S_f(T)-N(T)*I_f)/T -> J_f.
+`ActualPrimeTorusFMZ.tendsto_centered_continuous_div_poisson` gives
+(S_f(T)-N(T)*I_f)/T -> J_f by fractional Wiener interpolation.
 
 - centered_scaled_window_limit is a general unconditional transfer lemma:
   [S_f(rT)-S_f(T)-(N(rT)-N(T))*I_f]/T -> (r-1)*J_f for every fixed r>0.
-- scaled_window_signed_limit_of_selberg specializes this to actual zeros
-  and every fixed finite prime set.
+- `scaled_window_signed_limit` specializes this to actual zeros and every
+  fixed finite prime set. For 0<r<1 the boundary difference is oriented.
 - eventually_dyadic_count_ge_log and tendsto_height_div_dyadic_count use
   the already proved actual Riemann-von Mangoldt theorem, unconditionally.
-- dyadic_equidistribution_of_selberg proves
+- `dyadic_equidistribution` proves
   [S_f(2T)-S_f(T)] / N(T,2T] -> I_f.
 
-The zero-sampled results require Fourier decay
-|f_hat(k)| <= C*(1+||k||)^(-B), C>=0, B>card(P)+1, and
-UniformSelbergDensity (1/4).
-This is a CONDITIONAL RESEARCH REDUCTION. The Selberg provider remains Open
-in this checkout and is not discharged by the new algebraic window transfer.
-Simplicity and RH are not premises. Multiplicity is retained exactly.
+For a fixed prime `p`, `dyadicPrimeCosineMean p T` averages `cos(log p * γ)`
+over this window with analytic multiplicities. The dyadic count divided by
+`T * log T` tends to `1 / (2π)` by `Assembly.tendsto_dyadic_count_div_height_log`.
+The theorem `tendsto_log_mul_dyadicPrimeCosineMean` gives the signed limit
+`(log T) * dyadicPrimeCosineMean p T → -log p / √p`. At `p = 2` this is
+`-log 2 / √2`. The theorem `dyadicPrimeCosineMean_isBigO_log_rpow_iff`
+shows that the raw mean is `O((log T)^(-α))` exactly when `α ≤ 1`.
+
+The two general window theorems require Fourier decay
+|f_hat(k)| <= C*(1+||k||)^(-B), C>=0, B>card(P)+1.
+The signed correction is `haarIntegral (f * primeDensity P)`. Both limits
+are unconditional in this class and count zeros with analytic multiplicity.
 
 The measure convention is (T,2T], matching the actual count API.
 The statement does not concern fixed-length or microscopic windows.
@@ -124,8 +130,8 @@ Equidistribution is not an uncharted conjecture. Hlawka's unconditional
 one-dimensional theorem, applied to nonzero integer combinations of the
 prime logarithms and Weyl's criterion, gives the fixed finite-prime Haar law.
 The dyadic version follows by subtracting cumulative sums and using
-Riemann-von Mangoldt. This is a mathematical deduction from classical results,
-not a newly completed unconditional Lean proof of their analytic inputs.
+Riemann-von Mangoldt. The Lean declarations above use the project's signed
+FMZ limit on the stated Fourier class.
 
 Primary references:
 - Ford and Zaharescu, On the distribution of imaginary parts of zeros of
@@ -178,9 +184,8 @@ use the signed residual pairing in the complete Q inner product.
 
 ## Remaining research agenda
 
-1. Complete an unconditional provider of the actual Selberg density
-   estimate (or a weaker sufficient Fourier-cancellation provider).
-   This would discharge the analytic hypothesis in the window results.
+1. Prove `UniformSelbergDensity (1/4)` for the separate one-log quantitative
+   remainder in `eventually_continuous_remainder_bound_of_selberg`.
 2. Prove an effective two-prime inverse modulus on a prescribed height
    interval using explicit lower bounds for integer logarithmic forms.
    The compactness result gives existence, not a practical precision budget.
@@ -195,17 +200,15 @@ use the signed residual pairing in the complete Q inner product.
    analytic estimate). Exact phase reconstruction and Haar equidistribution
    alone do not constrain Re(rho).
 
-## Verification record
+## 2026-11-15 verification record
 
 The focused Bazel/BuildBuddy check succeeded for all four new modules and
 transitive imports: job_kh4GAtVjAIFg5ASQLvx9LjwxRoI2yt5d, server-reported
 verification duration 54.316 seconds (not total session or polling time).
 BuildBuddy invocation: 84290bdf-220f-4402-a56e-1ab20bcc026d.
 
-The mandatory full-project checkpoint is the publication gate. The
-conditional statuses above are mathematical hypotheses in theorem types
-and are unchanged by a successful kernel check. The publication response
-records the exact checkpoint job and published commit.
+That run checked the original window declarations with their Selberg premise.
+The publication response records the full-project checkpoint and commit.
 
 Publication recovery: the first full-project checkpoint reached integration
 and retained commit f3dc3894f8a39fe7301a0970b6c7e5ef02e44a5a, but concurrent

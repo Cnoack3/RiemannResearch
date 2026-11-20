@@ -74,6 +74,26 @@ theorem eventually_N_le_log_of_lt (Z : ZeroConfig) (hR : RiemannVonMangoldt Z)
   have hCT := mul_le_mul_of_nonneg_right hC₀ hlog
   nlinarith
 
+/-- The dyadic count divided by `T * log T` has the Riemann–von Mangoldt
+leading coefficient. The interval is `(T, 2*T]`. -/
+theorem tendsto_dyadic_count_div_height_log (Z : ZeroConfig) (hR : RiemannVonMangoldt Z) :
+    Tendsto (fun T : ℝ => (Z.N T (2 * T) : ℝ) / (T * Real.log T))
+      atTop (𝓝 (1 / (2 * Real.pi))) := by
+  apply tendsto_order.2
+  constructor
+  · intro a ha
+    obtain ⟨q, haq, hq⟩ := exists_between ha
+    filter_upwards [eventually_N_ge_log_of_lt Z hR hq, eventually_gt_atTop (1 : ℝ)] with T hN hT
+    have hd := mul_pos (zero_lt_one.trans hT) (Real.log_pos hT)
+    exact (lt_div_iff₀ hd).2 ((mul_lt_mul_of_pos_right haq hd).trans_le (by
+      simpa only [mul_assoc] using hN))
+  · intro b hb
+    obtain ⟨q, hq, hqb⟩ := exists_between hb
+    filter_upwards [eventually_N_le_log_of_lt Z hR hq, eventually_gt_atTop (1 : ℝ)] with T hN hT
+    have hd := mul_pos (zero_lt_one.trans hT) (Real.log_pos hT)
+    exact (div_lt_iff₀ hd).2 ((by simpa only [mul_assoc] using hN :
+      (Z.N T (2 * T) : ℝ) ≤ q * (T * Real.log T)).trans_lt (mul_lt_mul_of_pos_right hqb hd))
+
 end Zeta23.Assembly
 
 namespace RiemannResearch.Analysis.ActualZeroOrdinate
