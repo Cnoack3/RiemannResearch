@@ -82,10 +82,10 @@ theorem haarIntegral_character_primeDensity
 
 /-- The finite prime-torus FMZ theorem for every trigonometric polynomial,
 with actual product Haar measure and the actual signed Poisson density.
-The sole analytic premise is the classical Selberg density proposition. -/
+The unconditional rational mode limits supply every Fourier coefficient. -/
 theorem tendsto_centered_polynomial_div_poisson {ι : Type*}
     (P : Finset ℕ) (s : Finset ι) (a : ι → ℂ) (k : ι → ℕ → ℤ)
-    (hP : ∀ p ∈ P, p.Prime) (hD : UniformSelbergDensity (1 / 4)) :
+    (hP : ∀ p ∈ P, p.Prime) :
     Tendsto (fun T : ℝ =>
       (sampleFunctional P T (polynomial P s a k) -
         (Ncount 0 T : ℂ) * haarIntegral (polynomial P s a k)) / (T : ℂ))
@@ -96,6 +96,6 @@ theorem tendsto_centered_polynomial_div_poisson {ι : Type*}
     simp only [polynomial, Finset.sum_mul, smul_mul_assoc, map_sum, map_smul,
       smul_eq_mul, haarIntegral_character_primeDensity P _ hP]
   rw [hmain]
-  exact tendsto_centered_polynomial_div P s a k hP hD
+  exact tendsto_centered_polynomial_div P s a k hP
 
 end RiemannResearch.Analysis.ActualPrimeTorusFMZ

@@ -6,10 +6,9 @@ import RiemannResearch.Analysis.PrimeTorusMoments
 # Actual homogeneous prime-torus Gram sampling
 
 FMZ (Ford--Meng--Zaharescu), https://arxiv.org/abs/1511.06814,
-provides the external sampling theorem. This assembly reuses the repository's
-conditional actual-zero provider and its exact homogeneous Parseval
-cancellation. UniformSelbergDensity (1/4) remains a formal analytic obligation.
-The conclusion is a fixed-family one-point Gram asymptotic, not PCC.
+gives the prime-phase sampling framework. The proved rational mode estimates
+and homogeneous Parseval cancellation give an unconditional fixed-family
+Gram asymptotic. The one-logarithm quantitative refinement uses Selberg density.
 -/
 noncomputable section
 open Filter Zeta23
@@ -20,13 +19,12 @@ open ActualZeroOrdinate PrimePhaseTorus PrimeTorusHaar
 /-- Zero-total-degree modes have no arithmetic axis correction. -/
 theorem tendsto_centered_degree_zero_polynomial_div {ι : Type*}
     (P : Finset ℕ) (s : Finset ι) (a : ι → ℂ) (k : ι → ℕ → ℤ)
-    (hP : ∀ p ∈ P, p.Prime) (hk : ∀ i ∈ s, ∑ p : P, k i p = 0)
-    (hD : UniformSelbergDensity (1 / 4)) :
+    (hP : ∀ p ∈ P, p.Prime) (hk : ∀ i ∈ s, ∑ p : P, k i p = 0) :
     Tendsto (fun T : ℝ =>
       (sampleFunctional P T (polynomial P s a k) -
         (Ncount 0 T : ℂ) * haarIntegral (polynomial P s a k)) / (T : ℂ))
       atTop (𝓝 0) := by
-  have h := tendsto_centered_polynomial_div P s a k hP hD
+  have h := tendsto_centered_polynomial_div P s a k hP
   have hm : (∑ i ∈ s, a i *
       rationalFMZMain (primeNumerator P (k i)) (primeDenominator P (k i))) = 0 := by
     apply Finset.sum_eq_zero
@@ -39,8 +37,7 @@ theorem tendsto_centered_degree_zero_polynomial_div {ι : Type*}
 centered error. Multiplicities and all off-diagonal coefficients are retained. -/
 theorem tendsto_centered_homogeneous_gram_div {ι : Type*} [Fintype ι]
     (P : Finset ℕ) (a : ι → ℂ) (k : ι → ℕ → ℤ) (d : ℤ)
-    (hP : ∀ p ∈ P, p.Prime) (hk : ∀ i, ∑ p : P, k i p = d)
-    (hD : UniformSelbergDensity (1 / 4)) :
+    (hP : ∀ p ∈ P, p.Prime) (hk : ∀ i, ∑ p : P, k i p = d) :
     Tendsto (fun T : ℝ =>
       (sampleFunctional P T
         (polynomial P Finset.univ (fun ij : ι × ι => a ij.1 * star (a ij.2))
@@ -49,7 +46,7 @@ theorem tendsto_centered_homogeneous_gram_div {ι : Type*} [Fintype ι]
         (polynomial P Finset.univ (fun ij : ι × ι => a ij.1 * star (a ij.2))
           (fun ij p => k ij.1 p - k ij.2 p))) / (T : ℂ))
       atTop (𝓝 0) := by
-  apply tendsto_centered_degree_zero_polynomial_div P _ _ _ hP _ hD
+  apply tendsto_centered_degree_zero_polynomial_div P _ _ _ hP
   intro ij hij
   rw [Finset.sum_sub_distrib, hk, hk, sub_self]
 

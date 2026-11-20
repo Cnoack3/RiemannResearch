@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.ActualRationalFMZLimits
+import RiemannResearch.Analysis.ActualZeroLoglogRate
 import RiemannResearch.Analysis.FinitePrimeModeArithmetic
 import RiemannResearch.Analysis.PrimeTorusHaarSpecialization
 import RiemannResearch.Analysis.PrimePhaseTorus
@@ -14,7 +15,8 @@ import RiemannResearch.Analysis.PrimePhaseTorus
 The actual positive-height zeta zeros, their analytic multiplicities, the exact
 product-Haar centering and the actual prime-phase map are used throughout.
 The rational Landau coefficients are derived from the proved contour theorem.
-The sole remaining analytic input is the named classical Selberg estimate.
+The unconditional horizontal estimate gives convergence for every character
+and finite polynomial, including all mixed prime frequencies.
 -/
 
 noncomputable section
@@ -86,33 +88,32 @@ theorem centered_character_eq_rational (P : Finset ℕ) (k : ℕ → ℤ)
 /-- Every actual prime-torus character has its arithmetic FMZ limit. The
 constant character is removed by exact product-Haar centering. -/
 theorem tendsto_centered_character_div (P : Finset ℕ) (k : ℕ → ℤ)
-    (hP : ∀ p ∈ P, p.Prime) (hD : UniformSelbergDensity (1 / 4)) :
+    (hP : ∀ p ∈ P, p.Prime) :
     Tendsto (fun T : ℝ =>
       (sampleFunctional P T (character (fun p : P => k p)) -
         (Ncount 0 T : ℂ) * haarIntegral (character (fun p : P => k p))) / (T : ℂ))
       atTop (𝓝 (rationalFMZMain (primeNumerator P k) (primeDenominator P k))) := by
   simp_rw [centered_character_eq_rational P k hP]
-  apply tendsto_centeredRationalOrdinate_div_of_uniformSelberg
+  apply tendsto_centeredRationalOrdinate_div
   · exact primeProduct_pos P (fun p => (k p).toNat) hP
   · exact primeProduct_pos P (fun p => (-k p).toNat) hP
-  · exact hD
 
 def polynomial {ι : Type*} (P : Finset ℕ) (s : Finset ι)
     (a : ι → ℂ) (k : ι → ℕ → ℤ) : C(Torus P, ℂ) :=
   ∑ i ∈ s, a i • character (fun p : P => k i p)
 
 /-- Complete finite prime-torus synthesis, retaining every mixed mode and
-the original signed coefficients. Only Selberg's classical density is assumed. -/
+the original signed coefficients. -/
 theorem tendsto_centered_polynomial_div {ι : Type*}
     (P : Finset ℕ) (s : Finset ι) (a : ι → ℂ) (k : ι → ℕ → ℤ)
-    (hP : ∀ p ∈ P, p.Prime) (hD : UniformSelbergDensity (1 / 4)) :
+    (hP : ∀ p ∈ P, p.Prime) :
     Tendsto (fun T : ℝ =>
       (sampleFunctional P T (polynomial P s a k) -
         (Ncount 0 T : ℂ) * haarIntegral (polynomial P s a k)) / (T : ℂ))
       atTop (𝓝 (∑ i ∈ s,
         a i * rationalFMZMain (primeNumerator P (k i)) (primeDenominator P (k i)))) := by
   have h := tendsto_finsetSum s (fun i hi =>
-    (tendsto_centered_character_div P (k i) hP hD).const_mul (a i))
+    (tendsto_centered_character_div P (k i) hP).const_mul (a i))
   convert h using 1
   funext T
   simp only [polynomial, map_sum, map_smul, smul_eq_mul]

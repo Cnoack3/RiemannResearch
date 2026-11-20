@@ -332,4 +332,15 @@ theorem eventually_centeredRationalOrdinate_remainder_loglog :
   have hscale : 0 ≤ horizontalLogRate T := div_nonneg (sq_nonneg _) (Real.log_pos hT₁).le
   exact centeredRationalOrdinate_remainder_le_of_positive (mul_nonneg hK.le hscale) hT
 
+/-- Every fixed rational mode has its centered FMZ limit, including the
+diagonal and the conjugate negative frequencies. -/
+theorem tendsto_centeredRationalOrdinate_div {n m : ℕ} (hn : 1 ≤ n) (hm : 1 ≤ m) :
+    Tendsto (fun T : ℝ => centeredRationalOrdinate T n m / (T : ℂ))
+      atTop (𝓝 (rationalFMZMain n m)) := by
+  obtain ⟨K, _, hb⟩ := eventually_centeredRationalOrdinate_remainder_loglog
+  apply (tendsto_sub_nhds_zero_iff).1
+  have h := (horizontalLogRate_tendsto_zero.const_mul K).mul_const (rationalModeWeight n m ^ 2)
+  simp only [mul_zero, zero_mul] at h
+  exact squeeze_zero_norm' (hb.mono (fun _ ht => ht n m hn hm)) h
+
 end RiemannResearch.Analysis.ActualZeroOrdinate

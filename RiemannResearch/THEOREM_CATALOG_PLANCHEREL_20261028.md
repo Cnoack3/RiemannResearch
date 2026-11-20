@@ -93,26 +93,16 @@ LogarithmicSampleNormalization first proves the exact signed normalization
 identity, then its corrected and uncorrected norm bounds. The project
 ActualZeroCountAsymptotics supplies c T log T <= N(T) unconditionally.
 
-ActualPrimeTorusPlancherelRate contains:
+In `ActualPrimeTorusPlancherelRate`, let `L = log T` and let `M` denote the squared-weight Wiener norm of the test.
 
-- norm_a2_densityIntegral_le: the correction functional is bounded by a2Mass,
-  unconditionally.
-- eventually_a2_height_remainder_bound: the signed height-normalized FMZ
-  error is O(a2Mass(g)/log T).
-- eventually_a2_count_remainder_bound: after both Haar and prime-density
-  corrections, the count-normalized error is O(a2Mass(g)/log(T)^2).
-- eventually_a2_count_error_bound: the uncorrected error is
-  O(a2Mass(g)/log T).
-- eventually_a2_energy_remainder_bound: for g=|f|^2 the corrected energy error
-  is O(a2Mass(f)^2/log(T)^2), with Haar energy replaced by its Fourier sum.
-- eventually_a2_energy_error_bound: the uncorrected energy error is
-  O(a2Mass(f)^2/log T).
-- tendstoUniformlyOn_a2_energy: convergence to the Fourier-square sum is
-  uniform on each bounded A2 ball.
-
-Every eventual/rate/convergence statement in the last list takes P before
-the existential constant. The proved uniformity is in all functions in the
-stated bounded ball for fixed P. It is not an unrestricted growing-P claim.
+| Declaration | Estimate or conclusion | Analytic premise |
+| --- | --- | --- |
+| `eventually_a2_count_remainder_loglog` | After subtracting Haar and the exact signed prime-density bias, the empirical error is `O(M (log L)^2/L^2)`. | Unconditional, uniformly over finite prime sets |
+| `eventually_a2_first_order_bias` | Uniformly on the unit ball, the empirical discrepancy multiplied by `L` tends to `2π` times the signed prime-density integral. | Unconditional, uniformly over finite prime sets |
+| `eventually_a2_energy_remainder_loglog` | For squared modulus sampling, the same rate holds with `M = a2Mass(f)^2` and the Haar Fourier-square sum. | Unconditional, uniformly over finite prime sets |
+| `eventually_a2_count_error_bound`, `eventually_a2_energy_error_bound` | The uncorrected empirical errors are `O(M/L)`. | Unconditional |
+| `tendstoUniformlyOn_a2_energy` | Uniform convergence on each bounded A2 ball for fixed prime set. | Unconditional |
+| `eventually_a2_height_remainder_bound`, `eventually_a2_count_remainder_bound`, `eventually_a2_energy_remainder_bound` | Corrected height-normalized error `O(M/L)` and corrected count-normalized error `O(M/L^2)`. | `UniformSelbergDensity (1/4)` |
 
 ## Provenance
 
@@ -129,6 +119,5 @@ The seven-module dependency chain compiled successfully in verification job
 `job_FiOYfMqp5drYQL4VhpAbv4TAIN4klY0x` (19.261 seconds of reported execution).
 The six principal Haar, density, algebra, Gram, rate, and uniform-convergence
 theorems were audited with `#print axioms`; each reported only `propext`,
-`Classical.choice`, and `Quot.sound`. The sampling density premise remains an
-explicit theorem argument. Aggregate verification and publication are handled
+`Classical.choice`, and `Quot.sound`. The original audit predates the unconditional sampling results above. Aggregate verification and publication are handled
 by the final workspace checkpoint.

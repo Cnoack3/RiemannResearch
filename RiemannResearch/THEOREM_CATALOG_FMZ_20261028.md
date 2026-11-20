@@ -1,5 +1,9 @@
 # Quantitative FMZ and product-test cancellation: theorem catalog supplement
 
+## Unconditional finite prime-torus sampling (19 November 2026)
+
+The actual character, polynomial, and Poisson-density limits now follow from `tendsto_centeredRationalOrdinate_div` for positive numerator and denominator. The homogeneous Gram and degree-zero polynomial limits inherit this proof. The signed finite Fourier coefficients and multiplicities are retained. The corrected and uncorrected energy bounds are recorded in the [Plancherel catalog](THEOREM_CATALOG_PLANCHEREL_20261028.md).
+
 ## Growing primorial characters (19 November 2026)
 
 For primes up to `X` with exponents of absolute value at most `B`, `primeModeWeight_le_chebyshev` gives the weight `1 + B θ(X)` as an upper bound. The all-ones character attains `1 + θ(X)`. The unconditional `eventually_primeCharacterRemainder_chebyshev` and `tendsto_moving_primeCharacterRemainder_chebyshev` allow the cutoff, subset and exponent budget to vary together. At `X = (log T)^(1/3)`, `eventually_primorial_boundedMode_FMZ` and `primorialCharacter_sample_div_isBigO` give error `O((log log T)^2 / (log T)^(1/3))`. These declarations are in `Analysis/ActualPrimeTorusFMZPrimorial.lean`.
