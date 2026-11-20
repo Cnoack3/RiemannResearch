@@ -624,6 +624,15 @@ import RiemannResearch.RH.PrimePowerPacketSummation
 import RiemannResearch.RH.ScreenedPrimePowerTelescope
 import RiemannResearch.RH.MixedConductorCaptureGains
 import RiemannResearch.RH.MixedCaptureLegalTrials
+import RiemannResearch.RH.ParetoParityNormBounds
+import RiemannResearch.RH.ParetoPeriodicTailDiscrepancy
+import RiemannResearch.RH.ParetoRawTrialPeriodicTail
+import RiemannResearch.RH.ParetoParity8192Data
+import RiemannResearch.RH.ParetoParity8192Jordan
+import RiemannResearch.RH.ParetoParity8192Arithmetic
+import RiemannResearch.RH.ParetoParity8192Head
+import RiemannResearch.RH.ParetoParity8192Sieve
+import RiemannResearch.RH.ParetoParity8192Certificate
 import RiemannResearch.RH.MixedCaptureZeroPair
 import RiemannResearch.RH.MixedParityProjectionDPP
 import RiemannResearch.RH.MixedParityCaptureFifteen

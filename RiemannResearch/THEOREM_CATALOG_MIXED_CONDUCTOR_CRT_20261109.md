@@ -5,6 +5,28 @@ Write \(C_M\) for the span of the mixed Ramanujan packets through \(M\),
 \(C\) for their closed span, \(S=I-P_C\), and \(V\) for the full legal
 residue closure. A mixed conductor has at least two distinct prime factors.
 
+## Conductor-8192 enclosure of the normalized projection
+
+Write \(\rho=\|P_M(J_2/\log 2)\|_P\) and \(E=\operatorname{dist}_P(\mathbf1,V)^2\). The kernel-checked identity is
+\[
+(1/\log 2-1)-\rho^2=E/(1-E).
+\]
+The upper endpoint is attained exactly when \(E=0\). Attainment implies RH. The reverse direction in Lean takes `RiemannHypothesis → BaezDuarte.NaturalApproximation`. [Norm and endpoint theorems](RH/ParetoParityNormBounds.lean)
+
+The conductor-8192 integer trial has scale \(10^9\). For \(T=2^{30}\), its rounded integer head is \(H=5067697348817286\). The twice-centered mean, discrepancy amplitude, and signed CRT covariance are \(b=112901299\), \(A=5074605440756600\), and \(B=161141128064221680975\). With \(C=10^9\), the complete energy budget is
+\[
+D=\frac{H}{C^2}+\frac{3b^2+B}{12C^2(T+1)}
+  +\frac{A^2+2|b|A}{8C^2(T+1)(T+2)}
+=\frac{5845890643391160621199204193718469}{1152921507828072450000000000000000000}.
+\]
+Using \(E\le D\) in the identity gives \(0.66151243224796<\rho\le\sqrt{1/\log2-1}\), improving the supplied conductor-768 bound \(0.66020430387572<\rho\).
+
+| Evidence | Scope |
+| --- | --- |
+| [CRT tail theorem](RH/ParetoRawTrialPeriodicTail.lean) and [integer reductions](RH/ParetoParity8192Arithmetic.lean) | Lean bounds every omitted site and evaluates \(b,A,B\) from the [signed coefficients](RH/ParetoParity8192Data.lean). |
+| [Head identities](RH/ParetoParity8192Head.lean), [segmented sieve](RH/ParetoParity8192Sieve.lean), and [enclosure](RH/ParetoParity8192Certificate.lean) | The kernel proves the divisor-jump recurrence, the exact block and stripe formulas, and the first 128 rounded terms. The enclosure theorem takes the finite inequality `roundedHead (2^30) ≤ 5067697348817286`. |
+| [Full integer replay](RH/ParetoParity8192Replay.md) | An independent C++ executable reads the signed coefficient rows used by Lean and evaluates every rounded term through \(2^{30}\). It verifies the eight stripe subtotals and their exact sum. The complete head equality is an arithmetic replay result. |
+
 ## Saturation of the mixed projection of parity, 18 November 2026
 
 Put \(\ell=\log 2\), \(z=J_2-\ell\mathbf 1\), \(C_B=\|P_{C_B^{\rm mix}}J_2\|_P^2\) and \(D_B=\ell-\ell^2-C_B\). Here \(C_B^{\rm mix}\) is the span of mixed packets through \(B\), and \(C_\infty\) denotes the corresponding squared capture by their closed span.
