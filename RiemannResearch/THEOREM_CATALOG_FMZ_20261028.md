@@ -1,5 +1,9 @@
 # Quantitative FMZ and product-test cancellation: theorem catalog supplement
 
+## Growing primorial characters (19 November 2026)
+
+For primes up to `X` with exponents of absolute value at most `B`, `primeModeWeight_le_chebyshev` gives the weight `1 + B θ(X)` as an upper bound. The all-ones character attains `1 + θ(X)`. The unconditional `eventually_primeCharacterRemainder_chebyshev` and `tendsto_moving_primeCharacterRemainder_chebyshev` allow the cutoff, subset and exponent budget to vary together. At `X = (log T)^(1/3)`, `eventually_primorial_boundedMode_FMZ` and `primorialCharacter_sample_div_isBigO` give error `O((log log T)^2 / (log T)^(1/3))`. These declarations are in `Analysis/ActualPrimeTorusFMZPrimorial.lean`.
+
 ## Dyadic joint zero-coordinate Wasserstein rate (19 November 2026)
 
 The sampling window is `(U,2U]` with analytic multiplicity. The sum metric combines the real part, relative height and the prime angles. The target is the product of the critical-line point mass, uniform relative height and product Haar. The rate is a **conditional research reduction** in `Analysis/DyadicZeroWasserstein.lean`.
