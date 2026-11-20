@@ -78,6 +78,14 @@ For independent prescribed data the two physical norms give equivalent solvabili
 
 The coordinate changes in the projection and Gram theorems use finite synthesis. For infinite separated prime and carry series, `RH/QSimultaneousCRT.lean` states the required separate `HasSum` hypotheses. The signed-moment series above has its own summability proof.
 
+### Mixed parity projection in carry coordinates
+
+[MixedCanonicalCarryCapture](RH/MixedCanonicalCarryCapture.lean) expresses each corrected floor carry as the sum of its mixed divisor packets. Divisor induction proves equality of the carry and packet subspaces at every cutoff. Their projections therefore coincide in the Pareto inner product.
+
+[MixedParityCarry](RH/MixedParityCarry.lean) realizes parity as the difference of two certified carries at conductor six. The full carry span has closure equal to the legal space. For the normalized mixed projection `projectedParity`, `norm_sq_add_error` gives its exact squared norm with the screened-target error retained, and `norm_sq_bounds` gives the conductor-241 enclosure.
+
+**Open.** Equality at the upper norm endpoint requires arbitrarily accurate finite carry approximation of the constant in the complete Pareto norm. Equivalently the squared captures on corrected carry spans must converge to log(2) − log(2)².
+
 ## Provenance
 
 S. Ramanujan, *On certain trigonometrical sums and their applications in the theory of numbers*, Transactions of the Cambridge Philosophical Society 22, No. 13 (1918), 259--276, section 2, (2.6)--(2.7), and section 16: https://ramanujan.sirinudi.org/Volumes/published/ram21.html . This supports the divisor/Moebius and cumulative-sum identities.

@@ -171,6 +171,8 @@ import RiemannResearch.RH.UniversalCarryRamanujanSynthesis
 import RiemannResearch.RH.FullConductorRamanujanTransform
 import RiemannResearch.RH.PhysicalPrimePowerCarryProjection
 import RiemannResearch.RH.PhysicalCarryGram
+import RiemannResearch.RH.MixedCanonicalCarryCapture
+import RiemannResearch.RH.MixedParityCarry
 import RiemannResearch.RH.FiniteAtomCarryRefinement
 import RiemannResearch.RH.ConductorTowerCompletions
 import RiemannResearch.RH.ArithmeticResidueMomentEnergy
