@@ -143,6 +143,27 @@ theorem exists_actual_sizeBiased_cap_of_conreyBaluyot
   obtain ⟨b, hab, hb⟩ := exists_between ha'
   exact exists_actual_sizeBiased_cap_of_uniformSelberg ha hab (hD b (ha.trans hab) hb)
 
+/-- A family of one-log density slopes below A bounds the second-to-first
+moment ratio by every fixed coefficient above 1/A along the chosen heights.
+The analytic mean-convergence and positivity hypotheses stay explicit. -/
+theorem actual_secondMoment_ratio_le_of_density_slopes {A c : ℝ} (hA : 0 < A)
+    (hD : ∀ b : ℝ, 0 < b → b < A → UniformSelbergDensity b) (hc : 1 / A < c)
+    {ι : Type*} {l : Filter ι} {T : ι → ℝ} (hT : Tendsto T l atTop)
+    (hm : Tendsto (fun i => displacementMoment (T i) 1 * Real.log (T i)) l (𝓝 0))
+    (hp : ∀ᶠ i in l, 0 < displacementMoment (T i) 1 * Real.log (T i)) :
+    ∀ᶠ i in l, (displacementMoment (T i) 2 * Real.log (T i) ^ 2) /
+      ((displacementMoment (T i) 1 * Real.log (T i)) *
+        Real.log (1 / (displacementMoment (T i) 1 * Real.log (T i)))) ≤ c := by
+  apply FiniteSizeBiasedExponential.eventually_secondMoment_ratio_le_of_open_tilts hA hc hm hp
+  intro a ha haA
+  obtain ⟨b, hab, hb⟩ := exists_between haA
+  obtain ⟨M, hM, hcap⟩ := exists_actual_sizeBiased_cap_of_uniformSelberg ha hab
+    (hD b (ha.trans hab) hb)
+  refine ⟨M, hM, ?_⟩
+  filter_upwards [hT.eventually hcap, hp, hT.eventually eventually_count_pos,
+    hT.eventually (eventually_gt_atTop (1 : ℝ))] with i hcap' hpos hN ht
+  exact (actual_sizeBiased_exp ht.le (by exact_mod_cast hN) hpos).trans hcap'.1
+
 /-- The quantitative microscopic-concentration implication for actual zeros.
 For a vanishing positive microscopic mean, the scaled second moment is eventually
 at most c times m log(1/m), for every c strictly greater than 7/8. -/
@@ -154,13 +175,7 @@ theorem actual_secondMoment_ratio_le_of_conreyBaluyot
       (displacementMoment T 2 * Real.log T ^ 2) /
         ((displacementMoment T 1 * Real.log T) *
           Real.log (1/(displacementMoment T 1 * Real.log T))) ≤ c := by
-  apply FiniteSizeBiasedExponential.eventually_secondMoment_ratio_le_of_tilts_lt_eight_sevenths
-    hc hm hmpos
-  intro a ha ha'
-  obtain ⟨M,hM,h⟩ := exists_actual_sizeBiased_cap_of_conreyBaluyot hD ha ha'
-  refine ⟨M,hM,?_⟩
-  filter_upwards [h, hmpos, eventually_count_pos, eventually_gt_atTop (1:ℝ)]
-    with T hT hmT hn ht
-  exact (actual_sizeBiased_exp ht.le (by exact_mod_cast hn) hmT).trans hT.1
+  exact actual_secondMoment_ratio_le_of_density_slopes (A := 8 / 7) (by norm_num)
+    hD (by norm_num; exact hc) tendsto_id hm hmpos
 
 end RiemannResearch.Analysis.ActualZeroOrdinate

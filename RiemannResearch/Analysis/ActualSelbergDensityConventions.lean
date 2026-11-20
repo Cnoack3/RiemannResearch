@@ -142,3 +142,25 @@ theorem conreyBaluyotDensity_iff_strict_source :
     exact hD T hT σ hσ
 
 end RiemannResearch.Analysis.ActualZeroOrdinate
+
+namespace RiemannResearch.Analysis.ZeroDensityLiterature
+open ActualZeroOrdinate
+
+/-- Baluyot's strict source count with theta in its original normalization. -/
+class ConreyBaluyot2017 : Prop where
+  rightCount : ∀ θ : ℝ, 0 < θ → θ < 4 / 7 →
+    ∃ C H : ℝ, 0 ≤ C ∧ 1 < H ∧ ∀ T : ℝ, H ≤ T →
+      ∀ σ ∈ Ioc (1 / 2 : ℝ) 1,
+        rightStrictTail T (σ - 1 / 2) ≤ C * T ^ (1 + θ * (1 - 2 * σ)) * Real.log T
+
+/-- Conversion to the actual inclusive multiplicity count includes the
+critical-line boundary and doubles the source's mollifier exponent. -/
+theorem conreyBaluyot [ConreyBaluyot2017] : ConreyBaluyotDensityHypothesis :=
+  conreyBaluyotDensity_iff_strict_source.mpr ConreyBaluyot2017.rightCount
+
+/-- Every fixed exponent in the full one-logarithm interval is available.
+The height threshold and multiplicative constant may depend on a. -/
+theorem oneLogSlope [ConreyBaluyot2017] {a : ℝ} (ha : 0 < a) (ha' : a < 8/7) :
+    UniformSelbergDensity a := conreyBaluyot a ha ha'
+
+end RiemannResearch.Analysis.ZeroDensityLiterature

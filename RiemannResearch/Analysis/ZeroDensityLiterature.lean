@@ -5,6 +5,9 @@ Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.ActualSelbergDensityConventions
 import RiemannResearch.Analysis.ActualSelbergDensityInterpolation
+import RiemannResearch.Analysis.ActualSelbergDensityAssembly
+import RiemannResearch.Analysis.ActualSelbergTransitionWindow
+import RiemannResearch.Analysis.ActualSizeBiasedDisplacement
 import RiemannResearch.Analysis.ActualOneSidedHorizontalDisplacement
 import RiemannResearch.Analysis.ActualConreyBaluyotConsequences
 import RiemannResearch.Analysis.ActualPrimeTorusFMZRate
@@ -19,7 +22,8 @@ import RiemannResearch.Analysis.MontgomeryTransitionHorizontalDefect
 
 Each input is an independent proposition that a caller may supply locally.
 Baluyot, *On the Zeros of Riemann's Zeta-function* (2017), Theorem 1.2.1
-and §3.6, proves the strict right-count estimate stated below.
+and §3.6, proves the strict right-count estimate imported from
+`ActualSelbergDensityConventions`.
 <https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320>
 
 Baluyot, Goldston, Suriajaya and Turnage-Butterbaugh, arXiv:2501.14545v3,
@@ -37,26 +41,9 @@ namespace RiemannResearch.Analysis.ZeroDensityLiterature
 open ActualZeroOrdinate MontgomeryHorizontalBessel
 open ActualPrimeTorusFMZ PrimePhaseTorus PrimeTorusHaar
 
-/-- Baluyot's strict source count with theta in its original normalization. -/
-class ConreyBaluyot2017 : Prop where
-  rightCount : ∀ θ : ℝ, 0 < θ → θ < 4 / 7 →
-    ∃ C H : ℝ, 0 ≤ C ∧ 1 < H ∧ ∀ T : ℝ, H ≤ T →
-      ∀ σ ∈ Ioc (1 / 2 : ℝ) 1,
-        rightStrictTail T (σ - 1 / 2) ≤ C * T ^ (1 + θ * (1 - 2 * σ)) * Real.log T
-
 /-- Corrected complex pair-sum estimate in BGSTB version 3. -/
 class BGSTB2026 : Prop where
   positiveCutoff : BGSTBPositiveCutoffEstimate
-
-/-- Conversion to the actual inclusive multiplicity count includes the
-critical-line boundary and doubles the source's mollifier exponent. -/
-theorem conreyBaluyot [ConreyBaluyot2017] : ConreyBaluyotDensityHypothesis :=
-  conreyBaluyotDensity_iff_strict_source.mpr ConreyBaluyot2017.rightCount
-
-/-- Every fixed exponent in the full one-logarithm interval is available.
-The height threshold and multiplicative constant may depend on a. -/
-theorem oneLogSlope [ConreyBaluyot2017] {a : ℝ} (ha : 0 < a) (ha' : a < 8/7) :
-    UniformSelbergDensity a := conreyBaluyot a ha ha'
 
 /-- With the published density input, the one-sided o(T) height mass is
 equivalent to the quadratic horizontal condition used in the PCC program. -/
@@ -69,6 +56,19 @@ theorem quadraticPCCCondition [ConreyBaluyot2017] :
 /-- Use the limiting slope with any prescribed positive logarithmic loss. -/
 theorem limitingSlope [ConreyBaluyot2017] {ε : ℝ} (hε : 0 < ε) :
     UniformLogLossDensity (8 / 7) (1 + ε) := conreyBaluyot.endpoint_log_loss hε
+
+/-- The dyadic one-log Ingham input gives every coefficient strictly above
+3/4 for the second moment when the microscopic mean tends to zero from above. -/
+theorem secondMomentRatio_of_dyadicInghamOneLog (h : DyadicInghamOneLog)
+    {c : ℝ} (hc : 3 / 4 < c) {ι : Type*} {l : Filter ι} {T : ι → ℝ} (hT : Tendsto T l atTop)
+    (hm : Tendsto (fun i => displacementMoment (T i) 1 * Real.log (T i)) l (𝓝 0))
+    (hp : ∀ᶠ i in l, 0 < displacementMoment (T i) 1 * Real.log (T i)) :
+    ∀ᶠ i in l, (displacementMoment (T i) 2 * Real.log (T i) ^ 2) /
+      ((displacementMoment (T i) 1 * Real.log (T i)) *
+        Real.log (1 / (displacementMoment (T i) 1 * Real.log (T i)))) ≤ c := by
+  have hD := uniformSelbergDensity_four_thirds_of_dyadic_ingham_one_log h
+  exact actual_secondMoment_ratio_le_of_density_slopes (A := 4 / 3) (by norm_num)
+    (fun _ _ hb => uniformSelbergDensity_mono hb.le hD) (by norm_num; exact hc) hT hm hp
 
 /-- The literature-normalized one-point FMZ budget applies even when the
 prime set, harmonics, and coefficients all move with height. -/

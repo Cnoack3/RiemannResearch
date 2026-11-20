@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
+import RiemannResearch.Analysis.ActualAbsoluteZeroDensityCount
 import RiemannResearch.Analysis.ActualGuthMaynardFixedStrip
 
 /-!
@@ -31,38 +32,12 @@ def lewkoDensityCoefficient (σ : ℝ) : ℝ :=
   else if σ ≤ 3 / 4 then 9 / 4
   else 3 / (2 * σ)
 
-/-- The source counts all actual strip zeros of absolute height at most T,
-with analytic multiplicity and an inclusive real-part threshold. -/
-def AbsoluteZeroCountBound (σ T b : ℝ) : Prop :=
-  ∃ Z : Finset ℂ, (∀ ρ : ℂ, ρ ∈ Z ↔ IsNontrivialZero ρ ∧ σ ≤ ρ.re ∧ |ρ.im| ≤ T) ∧
-    ((∑ ρ ∈ Z, analyticOrderNatAt riemannZeta ρ : ℕ) : ℝ) ≤ b
-
 structure LewkoDensityHypothesis : Prop where
   global_uniform : ∀ ε : ℝ, 0 < ε → ∃ C : ℝ, 0 < C ∧ ∀ σ ∈ Icc (1 / 2 : ℝ) 1,
     ∀ T : ℝ, 2 ≤ T → AbsoluteZeroCountBound σ T (C * T ^ ((39 / 17) * (1 - σ) + ε))
   uniform_away_boundary : ∀ δ ε : ℝ, 0 < δ → 0 < ε → ∃ C : ℝ, 0 < C ∧
     ∀ σ ∈ Icc (1 / 2 : ℝ) 1, (σ ≤ 3 / 4 ∨ 3 / 4 + δ ≤ σ) → ∀ T : ℝ, 2 ≤ T →
       AbsoluteZeroCountBound σ T (C * T ^ (lewkoDensityCoefficient σ * (1 - σ) + ε))
-
-theorem rightInclusiveCount_le_of_absoluteZeroCountBound {σ T b : ℝ}
-    (h : AbsoluteZeroCountBound σ T b) : rightInclusiveCount T σ ≤ b := by
-  classical
-  obtain ⟨Z, hZ, hb⟩ := h
-  let S := (cutoff T).filter (fun ρ : ℂ => σ ≤ ρ.re)
-  have hS : S ⊆ Z := by
-    intro ρ hρ
-    obtain ⟨hc, hβ⟩ := Finset.mem_filter.mp hρ
-    obtain ⟨hz, hγ, hT⟩ := mem_cutoff.mp hc
-    exact (hZ ρ).mpr ⟨hz, hβ, by rwa [abs_of_nonneg hγ.le]⟩
-  have he : rightInclusiveCount T σ = ∑ ρ ∈ S, (analyticOrderNatAt riemannZeta ρ : ℝ) := by
-    unfold rightInclusiveCount realSum
-    rw [Finset.sum_filter]
-    apply Finset.sum_congr rfl
-    intro ρ _
-    by_cases hβ : σ ≤ ρ.re <;> simp [hβ, analyticOrderNatAt, zeroMult]
-  rw [he]
-  apply (Finset.sum_le_sum_of_subset_of_nonneg hS (fun _ _ _ => Nat.cast_nonneg _)).trans
-  simpa only [Nat.cast_sum] using hb
 
 theorem uniform_lewko_density_global (h : LewkoDensityHypothesis) {ε : ℝ} (hε : 0 < ε) :
     ∃ C : ℝ, 0 < C ∧ ∀ σ ∈ Icc (1 / 2 : ℝ) 1, ∀ T : ℝ, 2 ≤ T →

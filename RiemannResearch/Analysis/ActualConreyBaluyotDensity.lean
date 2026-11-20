@@ -5,6 +5,9 @@ Authors: RiemannResearch contributors
 -/
 import RiemannResearch.Analysis.ActualSelbergTruncatedNearLine
 import RiemannResearch.Analysis.ActualInghamDensityBound
+import RiemannResearch.Analysis.ActualSelbergDensityConventions
+import RiemannResearch.Analysis.ConreyBaluyotMomentEndpoints
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import RiemannResearch.Analysis.ConreyBaluyotMomentExcess
 import RiemannResearch.Analysis.ConreyBaluyotGaussianMoment
 import Mathlib.Tactic.FieldSimp
@@ -42,6 +45,33 @@ def UniformDyadicMollifiedMoment (θ ε : ℝ) : Prop :=
       1 / 2 + 1 / Real.log (T ^ θ) ≤ σ → σ ≤ 1 / 2 + η →
       mollifiedSecondMoment σ (T ^ θ) ε σ T (2 * T) ≤
         T + C * T ^ (1 - (2 * θ) * (σ - 1 / 2))
+
+/-- The normalized second moment in Baluyot (2017), Theorem 1.2.2.
+The integral uses the mollifier (1.2.6), with length parameter `T^θ`,
+truncation at its `(1+ε)` power, and evaluation on the same line σ. -/
+def BaluyotDyadicMomentAsymptotic (θ ε : ℝ) : Prop :=
+  ∃ η C H : ℝ, 0 < η ∧ 0 ≤ C ∧ 1 < H ∧
+    ∀ T : ℝ, H ≤ T → ∀ σ : ℝ,
+      1 / 2 + 1 / Real.log (T ^ θ) ≤ σ → σ ≤ 1 / 2 + η →
+      |mollifiedSecondMoment σ (T ^ θ) ε σ T (2 * T) / T - 1| ≤
+        C * (T ^ θ) ^ (1 - 2 * σ)
+
+/-- Removing the height normalization and taking the upper side of the
+published asymptotic preserves the exponent, strip, constant and threshold. -/
+theorem BaluyotDyadicMomentAsymptotic.upper {θ ε : ℝ}
+    (h : BaluyotDyadicMomentAsymptotic θ ε) : UniformDyadicMollifiedMoment θ ε := by
+  obtain ⟨η, C, H, hη, hC, hH, hm⟩ := h
+  refine ⟨η, C, H, hη, hC, hH, ?_⟩
+  intro T hT σ hlo hhi
+  have hpos : 0 < T := zero_lt_one.trans (hH.trans_le hT)
+  have hu := (abs_le.mp (hm T hT σ hlo hhi)).2
+  have hratio : mollifiedSecondMoment σ (T ^ θ) ε σ T (2 * T) / T ≤
+      1 + C * (T ^ θ) ^ (1 - 2 * σ) := by linarith only [hu]
+  apply ((div_le_iff₀ hpos).mp hratio).trans_eq
+  rw [← Real.rpow_mul hpos.le,
+    show 1 - 2 * θ * (σ - 1 / 2) = θ * (1 - 2 * σ) + 1 by ring,
+    Real.rpow_add hpos, Real.rpow_one]
+  ring
 
 /-- The actual upper dyadic moment and Ingham's estimate suffice for the
 uniform inclusive count at the full exponent 2*theta. -/
@@ -267,6 +297,23 @@ theorem conreyBaluyotDensity_of_cofinal_gaussianMollifiedMoments
     uniformDyadicMollifiedMoment_of_gaussian (by linarith) hδ hδ' hmoment⟩
 
 end RiemannResearch.Analysis.ConreyBaluyot
+
+namespace RiemannResearch.Analysis.ZeroDensityLiterature
+
+/-- Baluyot's normalized dyadic second moment (Theorem 1.2.2) supplies the
+strict count interface of Theorem 1.2.1 via the proved Ingham estimate.
+Each fixed θ chooses its own truncation parameter before the height varies. -/
+theorem ConreyBaluyot2017.of_normalizedMoments
+    (hm : ∀ θ : ℝ, 0 < θ → θ < 4 / 7 → ∃ ε : ℝ, 0 < ε ∧
+      ConreyBaluyot.BaluyotDyadicMomentAsymptotic θ ε) : ConreyBaluyot2017 := by
+  constructor
+  apply ActualZeroOrdinate.conreyBaluyotDensity_iff_strict_source.mp
+  apply ConreyBaluyot.conreyBaluyotDensity_of_cofinal_dyadicMollifiedMoments
+  intro a ha ha'
+  obtain ⟨ε, hε, hmoment⟩ := hm (a / 2) (by linarith) (by linarith)
+  exact ⟨a / 2, ε, by linarith, by linarith, hε.le, hmoment.upper⟩
+
+end RiemannResearch.Analysis.ZeroDensityLiterature
 
 namespace RiemannResearch.Analysis.ActualZeroOrdinate
 

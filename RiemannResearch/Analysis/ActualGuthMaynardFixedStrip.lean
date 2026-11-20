@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
+import RiemannResearch.Analysis.ActualAbsoluteZeroDensityCount
 import RiemannResearch.Analysis.ActualInghamLittlewoodDensity
 import RiemannResearch.Analysis.ActualSelbergDensityAssembly
 
@@ -35,6 +36,16 @@ and allowance are fixed before the constant and the height threshold. -/
 def GuthMaynardDensityHypothesis : Prop :=
   ∀ σ ∈ Icc (1 / 2 : ℝ) 1, ∀ ε : ℝ, 0 < ε → ∃ C : ℝ, 0 < C ∧
     ∀ᶠ T : ℝ in atTop, rightInclusiveCount T σ ≤ C * T ^ (guthMaynardExponent σ + ε)
+
+/-- Guth–Maynard, Theorem 1.2, counts both signs of the ordinate. A fixed
+abscissa and positive power allowance suffice for the local interface. -/
+theorem guthMaynardDensity_of_absoluteCount
+    (h : ∀ σ ∈ Icc (1 / 2 : ℝ) 1, ∀ ε : ℝ, 0 < ε → ∃ C : ℝ, 0 < C ∧
+      ∀ᶠ T : ℝ in atTop, AbsoluteZeroCountBound σ T (C * T ^ (guthMaynardExponent σ + ε))) :
+    GuthMaynardDensityHypothesis := by
+  intro σ hσ ε hε
+  obtain ⟨C, hC, hcount⟩ := h σ hσ ε hε
+  exact ⟨C, hC, hcount.mono fun _ ht => rightInclusiveCount_le_of_absoluteZeroCountBound ht⟩
 
 /-- Exact signed gain in the height exponent. -/
 theorem ingham_sub_guthMaynard {σ : ℝ} (hσ : σ ∈ Icc (1 / 2 : ℝ) 1) :

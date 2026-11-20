@@ -2,6 +2,8 @@
 
 28 October 2026.
 
+The November 19 audit lists the current providers, the normalized second-moment route, the dyadic assembly and the status of the 2026 density results. [Current Selberg source audit](SelbergDensitySourceAudit20261119.md)
+
 ## Status
 
 **Updated request, 14 November 2026:** the analytic proof is now requested,

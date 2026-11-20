@@ -40,8 +40,9 @@ Classical Selberg gives a = 1/4 uniformly on 1/2 <= sigma <= 1.
 The count conventions, dyadic assembly, normalized Littlewood boundary
 estimates and transfer from the actual mollified moment are proved.
 `ActualConreyBaluyotDensity` gives the full range from the uniform
-Gaussian upper moment and Ingham estimates. These analytic inputs
-still need Lean providers.
+Gaussian upper moment together with the proved `inghamDensityBound`.
+The uniform near-line moment still needs a Lean provider. Baluyot's
+Theorem 1.2.2 in normalized dyadic form is an alternative analytic input.
 ConreyBaluyotDensityHypothesis is the explicit target proposition.
 Constants may depend on a.
 

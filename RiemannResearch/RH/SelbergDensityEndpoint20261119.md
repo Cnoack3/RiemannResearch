@@ -9,6 +9,8 @@ N(\sigma,T) \le C_a T L e^{-aX}
 
 Baluyot proves this for **each fixed $0<a<8/7$**. The source uses mollifier length $T^\theta$, exponent $1+\theta(1-2\sigma)$, and a strict right cutoff. Its slope is $a=2\theta$; the repository converts the strict count to the inclusive count, including equality at $1/2$. Each fixed slope has its own constant and threshold. [Baluyot, Theorem 1.2.1 and §3.6](https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320) · [Tao, Trudgian and Yang, zero-density chapter](https://teorth.github.io/expdb/blueprint/zero-density-chapter.html)
 
+The November 19 source audit also records a newer dyadic fourth-moment claim implying a single logarithm at $a=4/3$. Lean proves that implication with the dyadic estimate explicit. The interpolation below uses only the classical subcritical range and the native Ingham bound. [Source audit and checked implications](SelbergDensitySourceAudit20261119.md)
+
 ## A uniform estimate at the limiting slope
 
 The repository's Gabriel–Littlewood bound gives $N(\sigma,T)\ll T^q L^{2+q}$, with $q=3(1-\sigma)/(2-\sigma)$. Since $q\le1-(4/3)(\sigma-1/2)$, it follows that
