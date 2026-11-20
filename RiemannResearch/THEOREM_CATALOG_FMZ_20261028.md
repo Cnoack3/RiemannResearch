@@ -221,11 +221,30 @@ One zero coordinate mean kills the Haar term. Two distinct zero coordinate
 means kill every term of the signed prime-Poisson correction. The full product
 formula is proved first, without dividing by possibly zero coordinate means.
 
+## Fractional FMZ estimates on prime-logarithm tori
+
+Write L = log T, l = log L, and W(k) = 1 + ∑ₚ |kₚ| log p. In
+`ActualPrimeTorusFMZInterpolation`, `eventually_fourierSeries_remainder_fractional`
+bounds the FMZ remainder divided by T by
+C l^s L^(1-s) ∑ₖ |aₖ| W(k)^s for every 0 ≤ s ≤ 2. The constant and
+height threshold are uniform in s, the finite prime set, and the coefficients.
+The leading signed prime-density integral is explicit. For 1 < s ≤ 2 the
+displayed rate tends to zero.
+
+For a fixed prime torus of dimension d, coefficient decay of order B > d+1
+implies convergence without a density parameter. Choose
+1 < s < min(2, B-d) and use
+`summable_primeModeWeight_rpow_of_fourierDecay`. Ford, Meng and Zaharescu,
+*Simultaneous distribution of the fractional parts of Riemann zeta zeros*,
+Theorem 1 and Corollary 1.1, assume B > d+2 in the published formulation.
+[Paper](https://doi.org/10.1112/blms.12001)
+
 ## RiemannResearch/Analysis/ActualPrimeTorusFMZContinuous.lean
 
 - `eventually_continuous_remainder_bound_of_selberg`: conditional
   O(T/log T) corrected remainder at B > card(P) + 2.
-- `tendsto_productTest_div_zero_of_two_centered`: conditional o(T)
+- `tendsto_centered_continuous_div_poisson` gives the unconditional signed prime-density limit.
+- `tendsto_productTest_div_zero_of_two_centered` gives an unconditional o(T)
   actual-zero sum at B > card(P) + 1 for a product with two centered factors.
 - `eventually_productTest_div_bound_of_two_centered`: conditional
   O(T/log T) actual-zero sum at B > card(P) + 2.
@@ -256,7 +275,7 @@ entrywise hypothesis.
 - Sharp indicator boxes and shrinking boxes are not established by the
   continuous Fourier-series theorems without their required norm control.
 - The moving-test conclusion gives no unrestricted dimension-growth law:
-  its squared-height mass condition is essential to the stated result.
+  the fractional and quadratic estimates apply under their respective mass bounds.
 - These phase results do not control the real parts of the zeros or prove RH.
 - The source checkpoint determines verification and publication acceptance.
 

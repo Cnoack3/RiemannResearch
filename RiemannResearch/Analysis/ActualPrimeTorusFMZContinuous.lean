@@ -6,6 +6,7 @@ Authors: RiemannResearch contributors
 import RiemannResearch.Analysis.PrimeTorusFourierDecay
 import RiemannResearch.Analysis.PrimeTorusFourierInversion
 import RiemannResearch.Analysis.ActualPrimeTorusFMZRate
+import RiemannResearch.Analysis.ActualPrimeTorusFMZInterpolation
 import RiemannResearch.Analysis.PrimeTorusHaarSpecialization
 
 /-!
@@ -14,13 +15,12 @@ import RiemannResearch.Analysis.PrimeTorusHaarSpecialization
 This is the classical finite-prime specialization with the strengthened strict
 Fourier-decay threshold B > card(P) + 1. Arithmetic limits, product Haar,
 Poisson coefficients, uniform Fourier domination and Fourier reconstruction
-are proved in the imported development. The remaining analytic premise is
-exactly UniformSelbergDensity (1/4), whose unconditional provider is not yet
-formalized in this project.
+are proved in the imported development. Fractional Wiener interpolation
+removes the density premise at every strict exponent B > card(P) + 1.
 
 The squared-height Fourier norm additionally gives an O(T/log T) remainder
-when B > card(P) + 2. Exact product-Haar identities yield cancellation of
-both main terms for products with two distinct centered factors.
+under the one-log Selberg density premise when B > card(P) + 2. Exact product-Haar identities
+yield cancellation of both main terms for products with two distinct centered factors.
 -/
 
 noncomputable section
@@ -31,7 +31,34 @@ namespace RiemannResearch.Analysis.ActualPrimeTorusFMZ
 open ActualZeroOrdinate PrimeTorusHaar
 
 /-- The full finite-prime-torus FMZ conclusion for an arbitrary continuous
-test function with the strengthened Fourier decay. Selberg remains explicit. -/
+test function with the strict decay threshold B > dimension + 1. -/
+theorem tendsto_centered_continuous_div_poisson
+    (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime) (f : C(Torus P, ℂ))
+    (C B : ℝ) (hC : 0 ≤ C) (hB : (P.card : ℝ) + 1 < B)
+    (hf : ∀ k : P → ℤ,
+      ‖UnitAddTorus.mFourierCoeff (f : Torus P → ℂ) k‖ ≤ C * (1 + ‖k‖) ^ (-B)) :
+    Tendsto (fun T : ℝ =>
+      (sampleFunctional P T f - (Ncount 0 T : ℂ) * haarIntegral f) / (T : ℂ))
+      atTop (𝓝 (haarIntegral (f * primeDensity P))) := by
+  have ha := summable_primeModeWeight_of_fourierDecay P hP
+    (UnitAddTorus.mFourierCoeff (f : Torus P → ℂ)) C B hC hB hf
+  have ha0 := summable_norm_of_primeModeWeight P
+    (UnitAddTorus.mFourierCoeff (f : Torus P → ℂ)) (ambientPrimeMode P) ha
+  obtain ⟨s, hs, hs'⟩ := exists_between
+    (lt_min (by norm_num : (1 : ℝ) < 2) (show 1 < B - (P.card : ℝ) by linarith))
+  obtain ⟨hs2, hsB⟩ := lt_min_iff.mp hs'
+  have hfrac := summable_primeModeWeight_rpow_of_fourierDecay (s := s) (by linarith) P hP
+    (UnitAddTorus.mFourierCoeff (f : Torus P → ℂ)) C B hC (by linarith) hf
+  have h := tendsto_centered_fourierSeries_div_poisson_of_fractional hs hs2.le P
+    (UnitAddTorus.mFourierCoeff (f : Torus P → ℂ)) (ambientPrimeMode P) hP hfrac
+  have hseries := fourierSeries_mFourierCoeff f ha0
+  have hmodes : (fun i : P → ℤ => fun p : P => ambientPrimeMode P i p) = id := by
+    funext i p
+    exact ambientPrimeMode_apply P i p
+  rw [hmodes, hseries] at h
+  exact h
+
+/-- Compatibility form of the continuous FMZ limit with its original density argument. -/
 theorem tendsto_centered_continuous_div_poisson_of_selberg
     (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime) (f : C(Torus P, ℂ))
     (C B : ℝ) (hC : 0 ≤ C) (hB : (P.card : ℝ) + 1 < B)
@@ -41,22 +68,12 @@ theorem tendsto_centered_continuous_div_poisson_of_selberg
     Tendsto (fun T : ℝ =>
       (sampleFunctional P T f - (Ncount 0 T : ℂ) * haarIntegral f) / (T : ℂ))
       atTop (𝓝 (haarIntegral (f * primeDensity P))) := by
-  have ha := summable_primeModeWeight_of_fourierDecay P hP
-    (UnitAddTorus.mFourierCoeff (f : Torus P → ℂ)) C B hC hB hf
-  have ha0 := summable_norm_of_primeModeWeight P
-    (UnitAddTorus.mFourierCoeff (f : Torus P → ℂ)) (ambientPrimeMode P) ha
-  have h := tendsto_centered_fourierSeries_div_poisson P
-    (UnitAddTorus.mFourierCoeff (f : Torus P → ℂ)) (ambientPrimeMode P) hP ha hD
-  have hseries := fourierSeries_mFourierCoeff f ha0
-  have hmodes : (fun i : P → ℤ => fun p : P => ambientPrimeMode P i p) = id := by
-    funext i p
-    exact ambientPrimeMode_apply P i p
-  rw [hmodes, hseries] at h
-  exact h
+  clear hD
+  exact tendsto_centered_continuous_div_poisson P hP f C B hC hB hf
 
 /-- A smooth tensor interaction with two centered coordinates has neither a
 Haar main term nor an order-T Poisson correction. The actual-zero conclusion
-uses the existing Fourier-decay theorem and retains its Selberg premise. -/
+uses unconditional fractional Wiener summability. -/
 theorem tendsto_productTest_div_zero_of_two_centered
     (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
     (f : P → PoissonHaar.CircleFunction)
@@ -66,12 +83,11 @@ theorem tendsto_productTest_div_zero_of_two_centered
         C * (1 + ‖k‖) ^ (-B))
     (i j : P) (hij : i ≠ j)
     (hi : PoissonHaar.haarIntegralCLM (f i) = 0)
-    (hj : PoissonHaar.haarIntegralCLM (f j) = 0)
-    (hD : UniformSelbergDensity (1 / 4)) :
+    (hj : PoissonHaar.haarIntegralCLM (f j) = 0) :
     Tendsto (fun T : ℝ => sampleFunctional P T (productTest f) / (T : ℂ))
       atTop (𝓝 0) := by
-  have h := tendsto_centered_continuous_div_poisson_of_selberg
-    P hP (productTest f) C B hC hB hf hD
+  have h := tendsto_centered_continuous_div_poisson
+    P hP (productTest f) C B hC hB hf
   have hm : haarIntegral (productTest f) = 0 :=
     haarIntegral_productTest_eq_zero f i hi
   have hc : haarIntegral (productTest f * primeDensity P) = 0 := by
@@ -143,4 +159,4 @@ theorem eventually_productTest_div_bound_of_two_centered
 
 end RiemannResearch.Analysis.ActualPrimeTorusFMZ
 
-#print axioms RiemannResearch.Analysis.ActualPrimeTorusFMZ.tendsto_centered_continuous_div_poisson_of_selberg
+#print axioms RiemannResearch.Analysis.ActualPrimeTorusFMZ.tendsto_centered_continuous_div_poisson
