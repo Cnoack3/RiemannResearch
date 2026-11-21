@@ -87,6 +87,46 @@ def refineCoefficients (h : (L : ℕ) ∣ (M : ℕ)) (x : StageCoefficients L) :
     StageCoefficients M :=
   (extendCoefficients (primeEmbedding h) x.1, extendCoefficients (mixedEmbedding h) x.2)
 
+private def extendCoefficientsLinear {ι κ : Type*} [Fintype ι] [DecidableEq κ]
+    (e : ι ↪ κ) : (ι → ℝ) →ₗ[ℝ] (κ → ℝ) where
+  toFun := extendCoefficients e
+  map_add' x y := by
+    funext k
+    by_cases hk : k ∈ Set.range e
+    · obtain ⟨i, rfl⟩ := hk
+      simp only [Pi.add_apply, extend_at]
+    · simp only [Pi.add_apply, extend_outside e _ k hk, add_zero]
+  map_smul' a x := by
+    funext k
+    by_cases hk : k ∈ Set.range e
+    · obtain ⟨i, rfl⟩ := hk
+      simp only [Pi.smul_apply, extend_at, RingHom.id_apply]
+    · simp only [Pi.smul_apply, extend_outside e _ k hk, smul_zero, RingHom.id_apply]
+
+/-- The linear map extending the two coefficient blocks by zero along divisibility. -/
+def refineCoefficientsLinear (h : (L : ℕ) ∣ (M : ℕ)) :
+    StageCoefficients L →ₗ[ℝ] StageCoefficients M :=
+  (extendCoefficientsLinear (primeEmbedding h)).prodMap
+    (extendCoefficientsLinear (mixedEmbedding h))
+
+@[simp] theorem refineCoefficientsLinear_apply (h : (L : ℕ) ∣ (M : ℕ)) (x : StageCoefficients L) :
+    refineCoefficientsLinear h x = refineCoefficients h x := rfl
+
+/-- Refinement preserves sequence-valued synthesis for any compatible mixed dictionary. -/
+theorem stageSynthesis_refine (h : (L : ℕ) ∣ (M : ℕ))
+    (b : MixedIndex L → ℕ → ℝ) (c : MixedIndex M → ℕ → ℝ)
+    (hc : ∀ j, c (mixedEmbedding h j) = b j) (x : StageCoefficients L) :
+    ((Fintype.linearCombination ℝ (primeAtom M)).coprod
+        (Fintype.linearCombination ℝ c)) (refineCoefficients h x) =
+      ((Fintype.linearCombination ℝ (primeAtom L)).coprod
+        (Fintype.linearCombination ℝ b)) x := by
+  funext n
+  simp only [refineCoefficients, LinearMap.coprod_apply, Fintype.linearCombination_apply,
+    Pi.add_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+  rw [sum_extend_mul, sum_extend_mul]
+  simp only [hc, primeEmbedding, primeAtom]
+  rfl
+
 theorem refineCoefficients_injective (h : (L : ℕ) ∣ (M : ℕ)) :
     Function.Injective (refineCoefficients h) := by
   intro x y he

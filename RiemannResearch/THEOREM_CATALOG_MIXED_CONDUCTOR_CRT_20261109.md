@@ -5,6 +5,15 @@ Write \(C_M\) for the span of the mixed Ramanujan packets through \(M\),
 \(C\) for their closed span, \(S=I-P_C\), and \(V\) for the full legal
 residue closure. A mixed conductor has at least two distinct prime factors.
 
+## Categorical form of the legal mean
+
+In `TopModuleCat ℝ`, `legalMeanSplitting` exhibits the mixed inclusion and the legal mean as a split short exact sequence.
+For the screened section \(s(a)=au\), the retraction sends \(v\) to \(v-s(m(v))\).
+The inclusion is a categorical kernel (`legalMixedIsKernel`) and the mean is a categorical cokernel (`legalMeanIsCokernel`).
+The splitting identifies the legal space with the biproduct of the mixed closure and the scalar line.
+Under `legalMixedQuotientIso` the quotient projection becomes the actual mean.
+For every continuous linear map \(f:X\to\mathbb R\), `legalMean_unique_mixed_lift` writes each lift \(v:X\to V\) of \(f\) uniquely as \(i\circ k+s\circ f\) with \(k:X\to M\), where \(i\) includes the mixed closure \(M\) into \(V\). [Lean declarations](RH/MixedConductorSplitExact.lean)
+
 ## Contractive sections of the legal mean
 
 Write \(m(v)=\langle v,\mathbf1\rangle_P\), \(u=(I-P_C)J_2/\log 2\), and \(E=\operatorname{dist}_P(\mathbf1,V)^2\).

@@ -60,6 +60,17 @@ instance : Category (Presentation.{u, v, w} R H) where
   comp_id f := by ext x; rfl
   assoc f g h := by ext x; rfl
 
+/-- Maps into an injective synthesis presentation are determined by their source synthesis. -/
+theorem subsingleton_hom_of_injective (X Y : Presentation.{u, v, w} R H)
+    (hY : Function.Injective Y.synthesis) : Subsingleton (X ⟶ Y) := by
+  constructor
+  intro f g
+  apply PresentationHom.ext
+  apply LinearMap.ext
+  intro x
+  apply hY
+  exact (DFunLike.congr_fun f.preserves x).trans (DFunLike.congr_fun g.preserves x).symm
+
 variable {P M : Type w}
 variable [AddCommGroup P] [Module R P]
 variable [AddCommGroup M] [Module R M]

@@ -2,6 +2,8 @@
 
 Source agenda: user-provided categorical CRT note, section 14 and the Stage 3 handoff.
 
+The single Lean import `RiemannResearch.CategoryTheory.All` exposes the repository’s categorical CRT declarations and the split exact sequence of the Pareto legal mean.
+
 ## Exact finite results
 
 - `NumberTheory/PrimePowerCRTDecomposition.lean`, namespace `PrimePowerCRT`: maximal prime-power moduli, pairwise coprimality, factorization, canonical inverse bounds, the simultaneous modular certificate, its exact integer/reciprocal charge, and `atom_reconstruction` for every positive conductor.
@@ -47,6 +49,10 @@ When each input has at most one distinct prime factor and `q` has at least two, 
 At a divisor q of a common period, the floor-carry coefficient is the sum of aᵢ/pᵢ over the inputs divisible by q, minus 1/d when q divides the output. At q = 1 this choice equals the integer charge, while J₁ is zero. One full period of the synthesized sequence determines every nontrivial packet coefficient.
 
 `weighted_gcd_cells_orthogonal` follows from pointwise disjointness. The modulo-six calculation `modulo_six_primitive_and_integrated_gram` gives uniform pairings 0 for c₂,c₃ and 1/2 for J₂,J₃. At L = 4 the full dual diagonal at g = 2 is 4.
+
+## Functorial conductor refinement
+
+`atomPresentationFunctor` and `carryPresentationFunctor` take positive periods ordered by divisibility to their synthesis presentations over real sequences. Both functors extend coefficients by zero along a divisibility arrow. The component of `atomCarryRefinementIso` at period \(L\) is the existing `presentationIso L`. Every refinement square commutes. [Lean declarations](RH/FiniteAtomCarryFunctor.lean)
 
 ## Physical Hilbert spaces, conductor refinement and reconstruction
 
