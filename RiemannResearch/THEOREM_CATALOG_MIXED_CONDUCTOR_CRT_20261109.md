@@ -5,6 +5,17 @@ Write \(C_M\) for the span of the mixed Ramanujan packets through \(M\),
 \(C\) for their closed span, \(S=I-P_C\), and \(V\) for the full legal
 residue closure. A mixed conductor has at least two distinct prime factors.
 
+## Contractive sections of the legal mean
+
+Write \(m(v)=\langle v,\mathbf1\rangle_P\), \(u=(I-P_C)J_2/\log 2\), and \(E=\operatorname{dist}_P(\mathbf1,V)^2\).
+For every bounded linear right inverse \(s\) of \(m\), `legalMeanSection_norm_sq` gives
+\[
+\|s\|^2=\|u\|_P^2+\|s(1)-u\|_P^2.
+\]
+The canonical section \(t\mapsto tu\) attains the minimum. Integer dilation produces right inverses with squared norms \(d\|u\|_P^2\) for every positive integer \(d\).
+
+The adjoint satisfies \(m^*(t)=(1-E)tu\) and \(mm^*=(1-E)I\). The conditional research reduction `screenedPrimeClosure_eq_constantLine_iff_coisometry` identifies \(V\cap C^\perp=\mathbb R\mathbf1\) with \(mm^*=I\). Equivalently, the legal mean admits a section of norm at most one. **Open** is existence of such a contractive section. [Lean declarations](RH/MixedConductorContractiveSection.lean)
+
 ## Sharp first-site interpolation and complete costs
 
 Let $e=2\mathbf{1}_{\{1\}}-\mathbf{1}$. For every mixed vector $v$ with first value one, `mixed_unit_firstSite_cost` proves $\|v\|^2=1+\|v-e\|^2$. The conditional research reduction `rh_of_sharp_mixed_firstSite_cost` shows that arbitrarily small squared-cost excess at this single site implies RH. Attaining infimum one is open. The Mellin symbol of $e$ is $(1-2^{1-s})/s$.

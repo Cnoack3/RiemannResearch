@@ -597,6 +597,7 @@ import RiemannResearch.RH.MixedConductorDilation
 import RiemannResearch.RH.MixedConductorCovariance
 import RiemannResearch.RH.ResidueConductorVariation
 import RiemannResearch.RH.MixedConductorRankOne
+import RiemannResearch.RH.MixedConductorContractiveSection
 import RiemannResearch.RH.CompositePacketClosure
 import RiemannResearch.RH.MixedConductorSpanCriterion
 import RiemannResearch.Analysis.WeightedTailSqueeze
