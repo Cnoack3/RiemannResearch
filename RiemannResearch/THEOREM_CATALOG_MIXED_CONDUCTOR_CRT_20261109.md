@@ -16,6 +16,8 @@ The canonical section \(t\mapsto tu\) attains the minimum. Integer dilation prod
 
 The adjoint satisfies \(m^*(t)=(1-E)tu\) and \(mm^*=(1-E)I\). The conditional research reduction `screenedPrimeClosure_eq_constantLine_iff_coisometry` identifies \(V\cap C^\perp=\mathbb R\mathbf1\) with \(mm^*=I\). Equivalently, the legal mean admits a section of norm at most one. **Open** is existence of such a contractive section. [Lean declarations](RH/MixedConductorContractiveSection.lean)
 
+The closed unit ball reaches exactly the means \(|a|\le 1/\|u\|_P\). The scaled map \(\|u\|_P m\) has an isometric section. The physical mean has a section of squared norm strictly below \(1000/961\). For every finite set of distinct right-half-strip zeros \(Z\), each physical mean section satisfies \(1\le\|s\|^2\prod_{z\in Z}|(1-z)/z|^2\). A contractive physical section implies RH. Lean states the published RH-to-natural-approximation implication explicitly for the converse. [Metric lifting and finite zero bounds](RH/MixedConductorMetricLifting.lean)
+
 ## Sharp first-site interpolation and complete costs
 
 Let $e=2\mathbf{1}_{\{1\}}-\mathbf{1}$. For every mixed vector $v$ with first value one, `mixed_unit_firstSite_cost` proves $\|v\|^2=1+\|v-e\|^2$. The conditional research reduction `rh_of_sharp_mixed_firstSite_cost` shows that arbitrarily small squared-cost excess at this single site implies RH. Attaining infimum one is open. The Mellin symbol of $e$ is $(1-2^{1-s})/s$.
