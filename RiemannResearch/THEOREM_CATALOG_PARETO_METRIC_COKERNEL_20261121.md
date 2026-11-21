@@ -200,9 +200,9 @@ $$
 
 For the minimizing packet vector $x_H$ and every feasible packet vector $y$, the complete norm satisfies $\|y\|^2=E_H+\|y-x_H\|^2$. The construction also covers the empty row set. A fresh prime certifies feasibility of the full window. At $H=2$, the single column $J_6$ with coefficient $(L-2)/2$ gives the explicit unconditional estimate
 
-$
+$$
 E_2\le \frac{(2-L)^2}{4}\frac{\pi}{\sqrt3}.
-$
+$$
 
 **Conditional research reduction.** Fix the schedule in advance, for example the least prime $s_H>H+1$. A single bound $E_H\le C$ along arbitrarily large heads implies $1_H^\perp\subseteq M$ and hence RH. Equivalently at each finite stage the rank-one matrix inequality is $tt^\top\preceq C K_H$. This condition tests signed arithmetic rows. The proof uses totality of the Möbius Riesz tests in the ambient space. The ambient inclusion is equivalent in Lean to the repository's Nyman–Beurling approximation condition. Its implication to RH is kernel-checked. The reverse RH implication in the quotient development takes Báez-Duarte's published theorem as a parameter. Necessity of this specified cutoff schedule for that approximation is unproved.
 
