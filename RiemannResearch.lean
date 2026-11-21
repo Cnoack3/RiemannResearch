@@ -600,6 +600,7 @@ import RiemannResearch.RH.MixedConductorCovariance
 import RiemannResearch.RH.ResidueConductorVariation
 import RiemannResearch.RH.MixedConductorRankOne
 import RiemannResearch.RH.MixedConductorSplitExact
+import RiemannResearch.RH.MixedConductorSquareZero
 import RiemannResearch.RH.MixedConductorContractiveSection
 import RiemannResearch.RH.MixedConductorMetricLifting
 import RiemannResearch.RH.MeanSectionStructure

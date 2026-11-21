@@ -14,6 +14,23 @@ The splitting identifies the legal space with the biproduct of the mixed closure
 Under `legalMixedQuotientIso` the quotient projection becomes the actual mean.
 For every continuous linear map \(f:X\to\mathbb R\), `legalMean_unique_mixed_lift` writes each lift \(v:X\to V\) of \(f\) uniquely as \(i\circ k+s\circ f\) with \(k:X\to M\), where \(i\) includes the mixed closure \(M\) into \(V\). [Lean declarations](RH/MixedConductorSplitExact.lean)
 
+## Square-zero algebra of the screened mean
+
+Write \(M=\ker C\) for the mixed-conductor closure and \(u=s(1)\) for the screened unit.
+Opening the `LegalMeanAlgebra` scope equips the original real Hilbert space \(V\) with
+\(x\star y=C(x)y+C(y)x-C(x)C(y)u\). The product is jointly continuous.
+With the unit fixed, bilinearity and zero products on the mixed kernel force this multiplication (`mulWith_unique`).
+Every choice of mean-one lift induces the same quotient multiplication (`quotient_mk_mulWith`).
+The algebra equivalence `splitCoordinates` sends \(x\) to \((C(x),x-C(x)u)\) in the idealization \(\mathbb R\ltimes M\).
+The unital augmentation `meanHom` has square-zero maximal ideal \(M\).
+Its quotient algebra equivalence and homeomorphism send \([x]\) to \(C(x)\), agreeing with `legalMixedQuotientIso`.
+
+Every mean-preserving surjective linear isometry carries the minimum-norm lift to the target minimum-norm lift.
+Changing a mean-one lift from \(e\) to \(f\) conjugates the products by \(x\mapsto x+C(x)(f-e)\).
+Through the conductor-six packet there is a continuous linear shear fixing both end terms and moving \(u\).
+Here \(J_6\star J_6=0\) and \(J_6(1)=-1\), so the arithmetic pointwise square takes value \(1\) at the first site.
+The exact physical discrepancy is \(\|u-\mathbf1\|_P^2=E/(1-E)\). **Open** is vanishing of \(E\). [Lean declarations](RH/MixedConductorSquareZero.lean)
+
 ## Contractive sections of the legal mean
 
 Write \(m(v)=\langle v,\mathbf1\rangle_P\), \(u=(I-P_C)J_2/\log 2\), and \(E=\operatorname{dist}_P(\mathbf1,V)^2\).
