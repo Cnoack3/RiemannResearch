@@ -97,6 +97,49 @@ component after screening against the entire closed two-prime space.
 
 [Strictness, norm convergence, and categorical quotients](RH/MixedConductorPrimeSupport.lean)
 
+## Global Parseval identity and the filtered parity deficit
+
+Let $L_k=F_{k+1}\cap F_k^\perp$, $m=P_Mv$ and $A_N(m)=\sum_{k<N}\|P_{L_k}m\|_P^2$.
+The scalar coordinate of $v$ is $C(v)$ in the line with norm $|a|\|u\|_P$.
+For every legal $v$ and every cutoff $N$,
+\[
+ \|v\|_P^2=|C(v)|^2\|u\|_P^2+A_N(m)+\|m-P_{F_N}m\|_P^2 .
+\]
+The last term tends to zero. Reconstruction converges in the original norm.
+The isometric equivalence uses the screened line with its inherited norm and
+the external Hilbert sum of the $L_k$. Its coordinate maps are $v\mapsto C(v)u$
+and $v\mapsto P_{L_k}m$. Synthesis adds the scalar vector to the convergent mixed sum.
+The theorem `support_energy_eq_conductor_basis` identifies the total layer energy
+with the existing conductor-ordered Hilbert-basis sum.
+
+For $p=P_M(J_2/\log 2)$ the finite deficit splits exactly as
+\[
+ (\log 2)^{-1}-1-A_N(p)=\|u-1\|_P^2+\|p-P_{F_N}p\|_P^2 .
+\]
+Thus saturation along these support stages is equivalent to $\|u\|_P=1$.
+The theorem `norm_one_iff_forall_support_capture` expresses this as one cutoff per positive tolerance.
+Whether saturation holds remains open. Any Möbius coordinate above the cutoff
+bounds the omitted norm from below. Each $N\ge1$ misses a unit vector in $L_N$,
+so convergence of the truncations on $M$ is strong and fails in operator norm.
+
+| Lean declaration | Conclusion |
+| --- | --- |
+| `legal_support_energy_remainder` and `legal_support_parseval` | Finite and infinite weighted identities on the legal space |
+| `legalSupportEquiv` and `legalSupportEquiv_symm_apply` | Isometric equivalence and synthesis formula |
+| `supportCoordinate_tail_bound` and `exists_unit_missed_by_support_cutoff` | Finite-stage lower bounds and the obstruction to uniform convergence |
+| `parity_support_deficit` and `parity_support_saturation_iff_norm_one` | Exact parity deficit and the norm-one obligation |
+
+For a comparison of successive layer rows the left vertical map is inclusion
+and the right one is zero. Truncating the middle map to the old stage preserves
+the sections and gives zero boundary. Taking the natural middle inclusion
+gives the identity $L_k\to L_k$ when the left cokernel is identified via its
+layer projection. This map is nonzero for $k\ge1$. The declarations
+`truncatedLayerBoundary_eq_zero` and `successiveLayerBoundary_eq_id` compute
+both maps using mathlib's module snake lemma.
+
+[Global Parseval and the parity deficit](RH/MixedConductorGlobalParseval.lean) ·
+[Connecting maps of the layer tower](RH/MixedConductorSupportSnake.lean)
+
 ## Snake boundary of the centered mean diagram
 
 The morphism from the legal mean sequence to the ambient mean sequence has vertical

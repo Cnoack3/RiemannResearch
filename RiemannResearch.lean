@@ -608,6 +608,8 @@ import RiemannResearch.RH.CenteredMeanQuotients
 import RiemannResearch.RH.MixedConductorHilbertBasis
 import RiemannResearch.RH.MixedConductorBlockSplitting
 import RiemannResearch.RH.MixedConductorPrimeSupport
+import RiemannResearch.RH.MixedConductorGlobalParseval
+import RiemannResearch.RH.MixedConductorSupportSnake
 import RiemannResearch.RH.MixedMobiusWindow
 import RiemannResearch.RH.MixedParitySupportBounds
 import RiemannResearch.RH.MixedConductorContractiveSection
