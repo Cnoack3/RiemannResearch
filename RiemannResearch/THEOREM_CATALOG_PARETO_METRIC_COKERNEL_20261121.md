@@ -96,3 +96,27 @@ $\Delta_{30}(J_{30}-P_{F_2}J_{30})=-30$. This detects a nonzero three-prime
 component after screening against the entire closed two-prime space.
 
 [Strictness, norm convergence, and categorical quotients](RH/MixedConductorPrimeSupport.lean)
+
+## Snake boundary of the centered mean diagram
+
+The morphism from the legal mean sequence to the ambient mean sequence has vertical
+maps $M\hookrightarrow 1^\perp$, $v\mapsto v-C(v)1$, and $0:\mathbb R\to\mathbb R$.
+Both rows split. Mathlib's module snake lemma gives exactness of
+$0\to V\cap\mathbb R1\xrightarrow{C}\mathbb R\xrightarrow{\partial}1^\perp/M$.
+For every legal lift $v$ of $a$, the boundary is $[v-a1]=a[u-1]$.
+
+The orthogonality $u-1\perp M$ gives the exact identities
+```math
+\|\partial\|_{\mathrm{op}}=\|u-1\|_P,\qquad
+\|\partial\|_{\mathrm{op}}^2=\|u\|_P^2-1=\frac{E}{1-E},
+\qquad E=\operatorname{dist}_P(1,V)^2 .
+```
+The boundary vanishes exactly when $1\in V$. In the other branch it is injective,
+has range $\mathbb R[u-1]$ of dimension one, and $E>0$ bounds every legal squared
+approximation error from below. The minimum norm on the mean-one fiber is $\|u\|_P>1$.
+
+**Open.** Decide whether $\partial=0$. Lean proves that vanishing implies RH.
+The converse direction uses the RH-to-natural-approximation implication of
+Báez-Duarte's Theorem 1.1 as an explicit hypothesis.
+
+[Centered mean diagram, snake boundary, and norm dichotomy](RH/CenteredMeanSnake.lean)
