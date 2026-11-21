@@ -128,6 +128,25 @@ equals $C(v)$. Since $1_V=u/\|u\|_P^2$, both $(\mathbb R1_V)^{\perp_V}$ and
 $(\mathbb Ru)^{\perp_V}$ equal $M$. Their quotient by $M$ is zero. On $V$, $P_{M^\perp}v=C(v)u$ has kernel $M$ and range $\mathbb Ru$.
 The ambient constant decomposes as $1=u/\|u\|_P^2+P_{V^\perp}1$.
 
+With $a=1_H-P_V1_H$, the theorem `screenedLine_eq_projectedOne_line` gives
+$\mathbb Ru=\mathbb R1_V$ in the ambient space. The residual is orthogonal to $M$
+and $\mathbb Ru$. The theorem `limitResidual_mean_and_screened_norm` gives its exact mean.
+
+$$
+\langle a,1_H\rangle_P=\|a\|_P^2=1-\frac{1}{\|u\|_P^2}.
+$$
+
+The line and residual criteria, including `screenedLine_eq_one_line_iff_residual_mean_zero`, give
+
+$$
+\mathbb Ru=\mathbb R1_H
+\quad\Longleftrightarrow\quad a=0
+\quad\Longleftrightarrow\quad 1_H\in V
+\quad\Longleftrightarrow\quad \langle a,1_H\rangle_P=0.
+$$
+
+Proving that this mean vanishes is open.
+
 The linear equivalence `boundaryTargetEquivLegalQuotient` sends
 $x+M\mapsto x+V$ on $1^{\perp_H}/M$. Its inverse sends $h+V$ to
 $[h-\langle h,1\rangle_Pu]$. Under this equivalence $\partial(a)$ becomes

@@ -3,6 +3,7 @@ import RiemannResearch.RH.MixedCaptureLegalTrials
 import RiemannResearch.RH.MixedConductorRankOne
 import RiemannResearch.RH.MixedConductorSplitExact
 import RiemannResearch.RH.MobiusCoefficientStabilization
+import RiemannResearch.RH.MobiusResidualFirstCoordinate
 import RiemannResearch.RH.PrimePowerRamanujanClosure
 import RiemannResearch.RH.ResidueClosureDensity
 import RiemannResearch.RH.ThresholdContractiveRepair
@@ -137,6 +138,57 @@ theorem one_eq_screened_add_orthogonal :
   rw [← limitProjection_eq_inv_norm_sq_smul_screenedTwo, Submodule.starProjection_orthogonal_val]
   change hilbertOne = limitProjection + (hilbertOne - limitProjection)
   exact (add_sub_cancel _ _).symm
+
+/-- In the ambient Pareto space the screened unit spans the line of the projected constant. -/
+theorem screenedLine_eq_projectedOne_line :
+    Submodule.span ℝ {normalizedScreenedTwo} =
+      Submodule.span ℝ {(projectedOne : ThresholdHilbert)} := by
+  have hpos : 0 < ‖normalizedScreenedTwo‖ :=
+    zero_lt_one.trans_le one_le_norm_normalizedScreenedTwo
+  have hunit : IsUnit ((‖normalizedScreenedTwo‖ ^ 2)⁻¹) :=
+    isUnit_iff_ne_zero.mpr (inv_ne_zero (pow_ne_zero _ hpos.ne'))
+  change _ = Submodule.span ℝ {limitProjection}
+  rw [limitProjection_eq_inv_norm_sq_smul_screenedTwo, Submodule.span_singleton_smul_eq hunit]
+
+/-- The projection residual of the constant is orthogonal to both summands of the legal space. -/
+theorem limitResidual_mem_mixed_screened_orthogonals :
+    limitResidual ∈ mixedClosureᗮ ⊓ (Submodule.span ℝ {normalizedScreenedTwo})ᗮ := by
+  rw [← screenedPrimeClosure_eq_span_two]
+  exact ⟨fun m hm => limitResidual_mem_orthogonal m (mixedClosure_le_closedSpace hm),
+    fun v hv => limitResidual_mem_orthogonal v (screenedPrimeClosure_le_closedSpace hv)⟩
+
+/-- The mean and squared norm of the projection residual in terms of the screened unit. -/
+theorem limitResidual_mean_and_screened_norm :
+    inner ℝ limitResidual hilbertOne = ‖limitResidual‖ ^ 2 ∧
+      ‖limitResidual‖ ^ 2 = 1 - 1 / ‖normalizedScreenedTwo‖ ^ 2 := by
+  refine ⟨limitResidual_inner_one, ?_⟩
+  change limitEnergy = 1 - 1 / ‖normalizedScreenedTwo‖ ^ 2
+  simp [normalizedScreenedTwo_norm_sq, one_div]
+
+/-- The screened line is the ambient constant line exactly when the constant is legal. -/
+theorem screenedLine_eq_one_line_iff_one_mem :
+    Submodule.span ℝ {normalizedScreenedTwo} = Submodule.span ℝ {hilbertOne} ↔
+      hilbertOne ∈ closedSpace := by
+  constructor
+  · intro h
+    have hOne : hilbertOne ∈ Submodule.span ℝ {hilbertOne} :=
+      Submodule.subset_span (Set.mem_singleton _)
+    rw [← h, ← screenedPrimeClosure_eq_span_two] at hOne
+    exact screenedPrimeClosure_le_closedSpace hOne
+  · intro h
+    rw [one_mem_closedSpace_iff_normalizedScreenedTwo.mp h]
+
+theorem screenedLine_eq_one_line_iff_residual_zero :
+    Submodule.span ℝ {normalizedScreenedTwo} = Submodule.span ℝ {hilbertOne} ↔
+      limitResidual = 0 := by
+  rw [screenedLine_eq_one_line_iff_one_mem, limitResidual_zero_iff_energy_zero,
+    limitEnergy_zero_iff_mem]
+
+/-- A zero mean for the projection residual is necessary and sufficient for equality of the lines. -/
+theorem screenedLine_eq_one_line_iff_residual_mean_zero :
+    Submodule.span ℝ {normalizedScreenedTwo} = Submodule.span ℝ {hilbertOne} ↔
+      inner ℝ limitResidual hilbertOne = 0 := by
+  rw [screenedLine_eq_one_line_iff_one_mem, limitResidual_inner_one, limitEnergy_zero_iff_mem]
 
 /-- Inclusion of the ambient mean-zero hyperplane followed by the quotient by the legal space. -/
 def meanZeroToLegalQuotient : meanZero →ₗ[ℝ] ThresholdHilbert ⧸ closedSpace :=
