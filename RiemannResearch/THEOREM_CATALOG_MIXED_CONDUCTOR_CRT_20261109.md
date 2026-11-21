@@ -5,6 +5,18 @@ Write \(C_M\) for the span of the mixed Ramanujan packets through \(M\),
 \(C\) for their closed span, \(S=I-P_C\), and \(V\) for the full legal
 residue closure. A mixed conductor has at least two distinct prime factors.
 
+## Sharp first-site interpolation and complete costs
+
+Let $e=2\mathbf{1}_{\{1\}}-\mathbf{1}$. For every mixed vector $v$ with first value one, `mixed_unit_firstSite_cost` proves $\|v\|^2=1+\|v-e\|^2$. The conditional research reduction `rh_of_sharp_mixed_firstSite_cost` shows that arbitrarily small squared-cost excess at this single site implies RH. Attaining infimum one is open. The Mellin symbol of $e$ is $(1-2^{1-s})/s$.
+
+`mixed_parity_agenda_cost_barrier` gives the power growth forced by a right-half-strip zero. `rh_of_mixed_agenda_cofinal_subpower` excludes every such zero if the complete squared residual of cofinal exact mixed fits is subpolynomial. The required subpolynomial estimate remains open.
+
+`dyadicMomentProfile_mean` and `dyadicMomentProfile_second` evaluate the first two Pareto moments of the profile $1/(2n+1)$ as $3-4\log 2$ and $5-\pi^2/2$.
+
+`freshDilation_exact_head_cost` bounds the complete cost of a single dilation difference below by $(\sqrt p-1)^2$ times the fitted head energy for every $p>h$.
+
+The conductor-768 transfer `limitEnergy_le_of_roundedHead` gives the exact budget $1987639569969424585050133/293203310455500000000000000$ under the finite integer inequality `roundedHead (2^22) ≤ 674763337657`. The module proves the CRT arithmetic, the full tail transfer, the sieve partition and the first 256 physical sites. The complete rounded-head inequality was independently replayed in integers and is an explicit Lean premise.
+
 ## A single adjoint parity vector for endpoint attainment
 
 Let \(r=\mathbf 1-P_V\mathbf 1\), \(E=\|r\|_P^2\), and \(g=D_2^*J_2\) for the ambient adjoint of the scaled dilation. Its physical profile is \(g(n)=n/(2n+1)\). For \(L_d f(n)=f(\lfloor n/d\rfloor)\) with zero anchor, the complete symbolic identities give
