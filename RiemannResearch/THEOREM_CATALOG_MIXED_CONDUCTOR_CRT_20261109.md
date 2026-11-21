@@ -18,6 +18,23 @@ The adjoint satisfies \(m^*(t)=(1-E)tu\) and \(mm^*=(1-E)I\). The conditional re
 
 The closed unit ball reaches exactly the means \(|a|\le 1/\|u\|_P\). The scaled map \(\|u\|_P m\) has an isometric section. The physical mean has a section of squared norm strictly below \(1000/961\). For every finite set of distinct right-half-strip zeros \(Z\), each physical mean section satisfies \(1\le\|s\|^2\prod_{z\in Z}|(1-z)/z|^2\). A contractive physical section implies RH. Lean states the published RH-to-natural-approximation implication explicitly for the converse. [Metric lifting and finite zero bounds](RH/MixedConductorMetricLifting.lean)
 
+The minimum operator norm of a physical section is `‖normalizedScreenedTwo‖`. A contractive physical section exists exactly when `limitEnergy = 0`, equivalently when the screened and constant lines agree. `limitEnergy_finite_zero_product_remainder` keeps the full squared Mellin remainder. A single right-hand zero bounds the excess squared section norm below by $(2\Re z-1)/|1-z|^2$. All finite zero-product tests at budget one hold exactly under RH. [Physical sections and zero families](RH/MixedConductorMetricLifting.lean)
+
+The raw cumulative GCD parity formula at any fixed positive modulus grows at least as $n/(4P^2-1)$ and has infinite Pareto energy. For a signed finite legal fit, its energy on one full period bounds its complete squared norm within a factor of two. `exists_contractive_legalMeanSection_iff_bounded_parity_periods` reduces the physical section to finite normalized-residue coefficients. **Open** is a uniform bound on the one-period energies of fits matching $k/(2k+1)$ on increasing heads. A cofinal bound for the explicit Möbius parity lifts would suffice. [Finite-period criterion](RH/ParetoParityPeriodSection.lean)
+
+### Resetting the GCD profile at each period
+
+The following argument is a paper proof. For \(P>1\), write \(a(k)=1/(4\gcd(k,P)^2-1)\), \(G(r)=\sum_{k=1}^r a(k)\), and \(F(n)=G(n\bmod P)\). At a compatible modulus, \(F\) matches the parity head through \(N<P\). Divisor inversion gives \(a(k)=\sum_{d\mid P,\,d\mid k}b_d\). Thus \(G(n)=\sum_{d\mid P} b_d\lfloor n/d\rfloor\) and \(G(P)=P\sum_{d\mid P}b_d/d\). In \(F(n)=G(n)-G(P)\lfloor n/P\rfloor\) the linear terms cancel, giving a finite legal sum of normalized residues.
+
+For \(0\le r<P\), symmetry gives \(G(r)+G(P-1-r)=G(P-1)\). The \(\varphi(P)\) coprime sites each contribute \(1/3\), so \(G(P-1)\ge\varphi(P)/3\). Cauchy–Schwarz and the smallest first-period weight give
+\[
+\sum_{r=1}^P\frac{F(r)^2}{r(r+1)}
+\ \ge\ \frac{1}{P(P+1)}\sum_{r=0}^{P-1}G(r)^2
+\ \ge\ \frac{G(P-1)^2}{4(P+1)}
+\ \ge\ \frac{\varphi(P)^2}{36(P+1)}.
+\]
+Ordering the distinct prime divisors as \(p_1<\cdots<p_t\) gives \(p_j\ge j+1\) and \(2^t\le P\). Euler's product then gives \(\varphi(P)/P\ge\prod_{j=1}^{t}j/(j+1)=1/(t+1)\). The lower bound diverges as \(P\to\infty\). The periodic reset therefore fails the uniform energy test. Existence of other signed coefficient arrays meeting the test remains open.
+
 ## Sharp first-site interpolation and complete costs
 
 Let $e=2\mathbf{1}_{\{1\}}-\mathbf{1}$. For every mixed vector $v$ with first value one, `mixed_unit_firstSite_cost` proves $\|v\|^2=1+\|v-e\|^2$. The conditional research reduction `rh_of_sharp_mixed_firstSite_cost` shows that arbitrarily small squared-cost excess at this single site implies RH. Attaining infimum one is open. The Mellin symbol of $e$ is $(1-2^{1-s})/s$.

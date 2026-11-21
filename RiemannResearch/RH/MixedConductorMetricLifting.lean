@@ -3,6 +3,7 @@ import RiemannResearch.RH.MixedCaptureLegalTrials
 import RiemannResearch.RH.ParetoMellinCenteredProduct
 import RiemannResearch.RH.ParetoBeurlingMellinObstruction
 import RiemannResearch.RH.RamanujanSchurLogZero
+import RiemannResearch.RH.RiemannHypothesisRightHalfStrip
 import Mathlib.Analysis.Normed.Operator.Basic
 
 /-!
@@ -75,17 +76,58 @@ theorem normalized_legalPacketMean_isometric_section :
     rw [Real.norm_eq_abs, abs_mul, abs_of_pos hc, mul_comm c, one_mul]
     exact legalPacketMean_fiber_bound v
 
+/-- The canonical physical section attains the least possible operator norm. -/
+theorem norm_screenedMeanSection : ‖screenedMeanSection‖ = ‖normalizedScreenedTwo‖ := by
+  have h := legalMeanSection_norm_sq screenedMeanSection legalPacketMean_comp_screenedMeanSection
+  change ‖screenedMeanSection‖ ^ 2 = ‖normalizedScreenedTwo‖ ^ 2 +
+    ‖(1 : ℝ) • normalizedScreenedTwo - normalizedScreenedTwo‖ ^ 2 at h
+  simp only [one_smul, sub_self, norm_zero, zero_pow (by decide : 2 ≠ 0), add_zero] at h
+  exact le_antisymm ((sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mp h.le)
+    ((sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mp h.ge)
+
+/-- Feasibility of any operator-norm budget for a right inverse of the unscaled mean. -/
+theorem exists_legalMeanSection_norm_le_iff (B : ℝ) :
+    (∃ s : ℝ →L[ℝ] closedSpace,
+      legalPacketMean.comp s = ContinuousLinearMap.id ℝ ℝ ∧ ‖s‖ ≤ B) ↔
+      ‖normalizedScreenedTwo‖ ≤ B := by
+  constructor
+  · rintro ⟨s, hs, hB⟩
+    apply le_trans _ hB
+    apply (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mp
+    rw [legalMeanSection_norm_sq s hs]
+    exact le_add_of_nonneg_right (sq_nonneg _)
+  · intro hB
+    exact ⟨screenedMeanSection, legalPacketMean_comp_screenedMeanSection,
+      norm_screenedMeanSection.le.trans hB⟩
+
+/-- Lifting the scalar one in the closed unit ball is exactly the operator section
+condition, with the original physical normalization on both sides. -/
+theorem exists_contractive_legalMeanSection_iff_unitBall_lifts_one :
+    (∃ s : ℝ →L[ℝ] closedSpace,
+      legalPacketMean.comp s = ContinuousLinearMap.id ℝ ℝ ∧ ‖s‖ ≤ 1) ↔
+      ∃ v : closedSpace, legalPacketMean v = 1 ∧ ‖v‖ ≤ 1 := by
+  rw [exists_legalMeanSection_norm_le_iff, legalPacketMean_unitBall_image, abs_one,
+    le_div_iff₀ (zero_lt_one.trans_le one_le_norm_normalizedScreenedTwo), one_mul]
+
+theorem exists_contractive_legalMeanSection_iff_limitEnergy_zero :
+    (∃ s : ℝ →L[ℝ] closedSpace,
+      legalPacketMean.comp s = ContinuousLinearMap.id ℝ ℝ ∧ ‖s‖ ≤ 1) ↔ limitEnergy = 0 := by
+  rw [exists_legalMeanSection_norm_le_iff, ← normalizedScreenedTwo_norm_eq_one_iff]
+  exact ⟨fun h => le_antisymm h one_le_norm_normalizedScreenedTwo, fun h => h.le⟩
+
+theorem screenedPrimeClosure_eq_constantLine_iff_limitEnergy_zero :
+    screenedPrimeClosure = Submodule.span ℝ {hilbertOne} ↔ limitEnergy = 0 :=
+  screenedPrimeClosure_eq_constantLine_iff_contractive_section.trans
+    exists_contractive_legalMeanSection_iff_limitEnergy_zero
+
 /-- A concrete unconditional section for the unscaled mean, using the complete
 period-5040 estimate for its squared operator norm. -/
 theorem exists_legalMeanSection_period5040 :
     ∃ s : ℝ →L[ℝ] closedSpace,
       legalPacketMean.comp s = ContinuousLinearMap.id ℝ ℝ ∧ ‖s‖ ^ 2 < (1000 : ℝ) / 961 := by
   refine ⟨screenedMeanSection, legalPacketMean_comp_screenedMeanSection, ?_⟩
-  have h := legalMeanSection_norm_sq screenedMeanSection legalPacketMean_comp_screenedMeanSection
-  change ‖screenedMeanSection‖ ^ 2 = ‖normalizedScreenedTwo‖ ^ 2 +
-    ‖(1 : ℝ) • normalizedScreenedTwo - normalizedScreenedTwo‖ ^ 2 at h
-  simpa only [h, one_smul, sub_self, norm_zero, zero_pow (by decide : 2 ≠ 0), add_zero]
-    using normalizedScreenedTwo_norm_sq_lt_period5040
+  rw [norm_screenedMeanSection]
+  exact normalizedScreenedTwo_norm_sq_lt_period5040
 
 /-- A contractive lift of the physical unit implies RH with no analytic hypothesis. -/
 theorem riemannHypothesis_of_legalMeanSection {s : ℝ →L[ℝ] closedSpace}
@@ -111,7 +153,31 @@ theorem exists_contractive_legalMeanSection_iff_riemannHypothesis
     apply screenedPrimeClosure_eq_constantLine_iff_contractive_section.mp
     rw [screenedPrimeClosure_eq_span_two, one_mem_closedSpace_iff_normalizedScreenedTwo.mp hv]
 
-open RiemannResearch.RH.ParetoBeurlingMellinObstruction in
+open MeasureTheory RiemannResearch.RH.ParetoBeurlingMellinObstruction in
+/-- A finite family of right-hand zeros accounts for an explicit part of the physical
+residual. The integral is the complete squared error left by its Mellin interpolant. -/
+theorem limitEnergy_finite_zero_product_remainder {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (z : ι → ℂ) (hinj : Function.Injective z) (hz : ∀ i, riemannZeta (z i) = 0)
+    (hre : ∀ i, (1 / 2 : ℝ) < (z i).re) (hne : ∀ i, z i ≠ 1) :
+    limitEnergy = 1 - mellinCenteredProduct z 1 +
+      ∫ x in Set.Ioi (1 : ℝ), ‖mellinWeightedStep limitResidual x -
+        starRingEnd ℂ (finiteMellinKernel z
+          (mellinInverseCoefficients z (fun i => (z i)⁻¹)) x)‖ ^ 2 := by
+  have hp : limitProjection ∈ normalizedResidueClosure := by
+    rw [← RamanujanSchurLogZero.closedSpace_eq_normalizedResidueClosure]
+    exact closedSpace.starProjection_apply_mem hilbertOne
+  have hsig (i : ι) : paretoMellin limitResidual (z i) = 1 / z i :=
+    paretoMellin_normalizedResidue_error_identity
+      (z i) (hre i) (hne i) (hz i) limitProjection hp
+  have hgram := finiteMellinKernel_inverse_completion limitResidual z hre
+    ((mellinCauchyGram_det_ne_zero_iff_injective z hre).mpr hinj)
+  simp_rw [hsig, one_div] at hgram
+  have hprod := mellinInverseCapacity_centered_product z 1 hre (by norm_num) hinj
+  simp at hprod
+  norm_num at hprod
+  rw [hprod] at hgram
+  exact hgram
+
 /-- Every finite set of distinct right-half-plane zeros imposes a cost on any
 section of the actual mean. This finite inequality follows from the repository's
 Mellin Gram identity. Burnol, Theorem 1.2 (https://arxiv.org/abs/math/9910055),
@@ -123,25 +189,9 @@ theorem legalMeanSection_finite_zero_product {ι : Type*} [Fintype ι]
     (hs : legalPacketMean.comp s = ContinuousLinearMap.id ℝ ℝ) :
     1 ≤ mellinCenteredProduct z 1 * ‖s‖ ^ 2 := by
   classical
-  have hp : limitProjection ∈ normalizedResidueClosure := by
-    rw [← RamanujanSchurLogZero.closedSpace_eq_normalizedResidueClosure]
-    exact closedSpace.starProjection_apply_mem hilbertOne
-  have hsig (i : ι) : paretoMellin limitResidual (z i) = 1 / z i :=
-    paretoMellin_normalizedResidue_error_identity
-      (z i) (hre i) (hne i) (hz i) limitProjection hp
-  have hgram := finiteMellinKernel_inverse_completion limitResidual z hre
-    ((mellinCauchyGram_det_ne_zero_iff_injective z hre).mpr hinj)
-  have hcap : mellinInverseCapacity z (fun i => paretoMellin limitResidual (z i)) ≤
-      ‖limitResidual‖ ^ 2 := by
-    rw [hgram]
-    exact le_add_of_nonneg_right (MeasureTheory.integral_nonneg (fun _ => sq_nonneg _))
-  simp_rw [hsig] at hcap
-  have hprod := mellinInverseCapacity_centered_product z 1 hre (by norm_num) hinj
-  simp at hprod
-  norm_num at hprod
-  simp only [one_div] at hcap
-  rw [hprod] at hcap
-  change 1 - mellinCenteredProduct z 1 ≤ limitEnergy at hcap
+  have hcap : 1 - mellinCenteredProduct z 1 ≤ limitEnergy := by
+    rw [limitEnergy_finite_zero_product_remainder z hinj hz hre hne]
+    exact le_add_of_nonneg_right (MeasureTheory.integral_nonneg fun _ => sq_nonneg _)
   have hscale : 1 - limitEnergy ≤ mellinCenteredProduct z 1 := by linarith
   have hmin : ‖normalizedScreenedTwo‖ ^ 2 ≤ ‖s‖ ^ 2 := by
     rw [legalMeanSection_norm_sq s hs]
@@ -152,5 +202,68 @@ theorem legalMeanSection_finite_zero_product {ι : Type*} [Fintype ι]
     _ ≤ mellinCenteredProduct z 1 * ‖normalizedScreenedTwo‖ ^ 2 :=
       mul_le_mul_of_nonneg_right hscale (sq_nonneg _)
     _ ≤ _ := mul_le_mul_of_nonneg_left hmin (mellinCenteredProduct_nonneg z 1)
+
+/-- Testing the certified physical section on a finite zero family gives a strict
+rational lower bound independently of any density or approximation converse. -/
+theorem finite_zero_product_gt_period5040 {ι : Type*} [Fintype ι]
+    (z : ι → ℂ) (hinj : Function.Injective z) (hz : ∀ i, riemannZeta (z i) = 0)
+    (hre : ∀ i, (1 / 2 : ℝ) < (z i).re) (hne : ∀ i, z i ≠ 1) :
+    (961 : ℝ) / 1000 < mellinCenteredProduct z 1 := by
+  obtain ⟨s, hs, hnorm⟩ := exists_legalMeanSection_period5040
+  have hprod := legalMeanSection_finite_zero_product z hinj hz hre hne s hs
+  by_contra! h
+  have hupper := mul_le_mul_of_nonneg_right h (sq_nonneg ‖s‖)
+  linarith only [hprod, hupper, hnorm]
+
+private theorem singleton_mellinCenteredProduct (z : ℂ) :
+    mellinCenteredProduct (fun _ : Fin 1 => z) 1 = ‖1 - z‖ ^ 2 / ‖z‖ ^ 2 := by
+  simp [mellinCenteredProduct, norm_div, div_pow]
+
+private theorem one_sub_complex_norm_sq (z : ℂ) :
+    ‖1 - z‖ ^ 2 = ‖z‖ ^ 2 + 1 - 2 * z.re := by
+  simp only [Complex.sq_norm, Complex.normSq_apply, Complex.sub_re, Complex.one_re,
+    Complex.sub_im, Complex.one_im]
+  ring
+
+/-- One witnessed zero gives a positive lower bound on the physical section's
+excess squared norm after clearing its nonzero denominator. -/
+theorem legalMeanSection_single_zero_excess (z : ℂ) (hz : riemannZeta z = 0)
+    (hre : (1 / 2 : ℝ) < z.re) (hne : z ≠ 1)
+    (s : ℝ →L[ℝ] closedSpace) (hs : legalPacketMean.comp s = ContinuousLinearMap.id ℝ ℝ) :
+    2 * z.re - 1 ≤ ‖1 - z‖ ^ 2 * (‖s‖ ^ 2 - 1) := by
+  have hz0 : z ≠ 0 := by rintro rfl; norm_num at hre
+  have h := legalMeanSection_finite_zero_product (fun _ : Fin 1 => z)
+    (fun _ _ _ => Subsingleton.elim _ _) (fun _ => hz) (fun _ => hre) (fun _ => hne) s hs
+  rw [singleton_mellinCenteredProduct, div_mul_eq_mul_div,
+    le_div_iff₀ (sq_pos_of_pos (norm_pos_iff.mpr hz0)), one_mul] at h
+  rw [mul_sub, mul_one]
+  linarith only [h, one_sub_complex_norm_sq z]
+
+/-- Passing all finite zero-product tests at budget one is equivalent to RH.
+The empty family passes automatically, and a singleton detects any right-hand zero. -/
+theorem riemannHypothesis_iff_unit_finite_zero_products :
+    RiemannHypothesis ↔ ∀ (n : ℕ) (z : Fin n → ℂ), Function.Injective z →
+      (∀ i, riemannZeta (z i) = 0) → (∀ i, (1 / 2 : ℝ) < (z i).re) →
+      (∀ i, z i ≠ 1) → 1 ≤ mellinCenteredProduct z 1 := by
+  constructor
+  · intro hRH n z _ hz hre _
+    cases n with
+    | zero => simp [mellinCenteredProduct]
+    | succ n =>
+      let i : Fin (n + 1) := 0
+      have hlt : (z i).re < 1 :=
+        lt_of_not_ge (fun h => riemannZeta_ne_zero_of_one_le_re h (hz i))
+      exact ((RiemannResearch.RH.riemannHypothesis_iff_right_half_strip_zero_free.mp hRH
+        (z i) (hre i) hlt) (hz i)).elim
+  · intro hall
+    apply RiemannResearch.RH.riemannHypothesis_iff_right_half_strip_zero_free.mpr
+    intro z hre hlt hz
+    have hne : z ≠ 1 := by rintro rfl; norm_num at hlt
+    have hz0 : z ≠ 0 := by rintro rfl; norm_num at hre
+    have h := hall 1 (fun _ => z) (fun _ _ _ => Subsingleton.elim _ _) (fun _ => hz)
+      (fun _ => hre) (fun _ => hne)
+    rw [singleton_mellinCenteredProduct, le_div_iff₀ (sq_pos_of_pos (norm_pos_iff.mpr hz0)),
+      one_mul, one_sub_complex_norm_sq] at h
+    linarith
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur

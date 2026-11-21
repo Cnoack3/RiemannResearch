@@ -599,6 +599,7 @@ import RiemannResearch.RH.ResidueConductorVariation
 import RiemannResearch.RH.MixedConductorRankOne
 import RiemannResearch.RH.MixedConductorContractiveSection
 import RiemannResearch.RH.MixedConductorMetricLifting
+import RiemannResearch.RH.ParetoParityPeriodSection
 import RiemannResearch.RH.CompositePacketClosure
 import RiemannResearch.RH.MixedConductorSpanCriterion
 import RiemannResearch.Analysis.WeightedTailSqueeze
