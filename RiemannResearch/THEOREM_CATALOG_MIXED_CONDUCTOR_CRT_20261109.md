@@ -31,6 +31,13 @@ Through the conductor-six packet there is a continuous linear shear fixing both 
 Here \(J_6\star J_6=0\) and \(J_6(1)=-1\), so the arithmetic pointwise square takes value \(1\) at the first site.
 The exact physical discrepancy is \(\|u-\mathbf1\|_P^2=E/(1-E)\). **Open** is vanishing of \(E\). [Lean declarations](RH/MixedConductorSquareZero.lean)
 
+Let \(d=\mathbf1-u\). The exact mixed approximation error is
+\(\|d-m\|_P^2=E/(1-E)+\|m\|_P^2\) for every \(m\in M\).
+Zero uniquely minimizes the error, including over every finite mixed packet space.
+The criterion `finite_mixed_tendsto_one_sub_screenedTwo_iff` identifies convergence to \(d\) with \(\mathbf1\in V\).
+At each cutoff the normalized screened trial \(u_N\) satisfies
+\(\|\mathbf1-u_N\|_P^2=E/(1-E)+\|u_N-u\|_P^2\). **Open** is \(d\in M\), equivalently \(E=0\). [Lean declarations](RH/ScreenedTwoMixedApproximation.lean)
+
 ## Contractive sections of the legal mean
 
 Write \(m(v)=\langle v,\mathbf1\rangle_P\), \(u=(I-P_C)J_2/\log 2\), and \(E=\operatorname{dist}_P(\mathbf1,V)^2\).
