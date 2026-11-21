@@ -435,21 +435,29 @@ theorem mixedOrthogonal_limitProjection_eq_one_iff :
     screenedPrimeClosure_starProjection_one]
   exact Submodule.starProjection_eq_self_iff.trans limitEnergy_zero_iff_mem.symm
 
+/-- The product is fixed by orthogonality and the exact mean of the screened packet. -/
+theorem normalizedScreenedTwo_energy_product :
+    (1 - limitEnergy) * ‖normalizedScreenedTwo‖ ^ 2 = 1 := by
+  have hu := screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure
+  have h := (closedSpace.mem_orthogonal _).mp limitResidual_mem_orthogonal _ hu
+  rw [limitResidual, inner_sub_right, normalizedScreenedTwo_mean,
+    limitProjection_eq_scaled_screenedTwo, real_inner_smul_right, real_inner_self_eq_norm_sq] at h
+  linarith
+
+/-- Positivity of the projection energy follows from the unit pairing alone. -/
+theorem one_sub_limitEnergy_pos : 0 < 1 - limitEnergy := by
+  by_contra! h
+  have hprod := mul_nonpos_of_nonpos_of_nonneg h (sq_nonneg ‖normalizedScreenedTwo‖)
+  rw [normalizedScreenedTwo_energy_product] at hprod
+  exact (not_le_of_gt zero_lt_one) hprod
+
 /-- The limiting fixed-seed error is the canonical legal projection error
 rescaled by the squared norm of its projection. -/
 theorem normalizedScreenedTwo_error_sq_eq_limitEnergy :
     ‖normalizedScreenedTwo - hilbertOne‖ ^ 2 = limitEnergy / (1 - limitEnergy) := by
-  have hU := screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure
-  have hPu := limitProjection_eq_scaled_screenedTwo
-  have hprod : (1 - limitEnergy) * ‖normalizedScreenedTwo‖ ^ 2 = 1 := by
-    have h := (closedSpace.mem_orthogonal _).mp limitResidual_mem_orthogonal _ hU
-    rw [limitResidual, inner_sub_right, normalizedScreenedTwo_mean, hPu, real_inner_smul_right,
-      real_inner_self_eq_norm_sq] at h
-    linarith
-  have hn : 1 - limitEnergy ≠ 0 := by intro he; simp [he] at hprod
-  apply (eq_div_iff hn).mpr
+  apply (eq_div_iff one_sub_limitEnergy_pos.ne').mpr
   rw [norm_sub_sq_real, normalizedScreenedTwo_mean, hilbertOne_norm_sq]
-  nlinarith
+  nlinarith only [normalizedScreenedTwo_energy_product]
 
 /-- Equality with the orthogonal projection already forces equality with the target. -/
 theorem normalizedScreenedTwo_eq_limitProjection_iff :

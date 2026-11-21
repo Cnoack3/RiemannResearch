@@ -5,6 +5,29 @@ Write \(C_M\) for the span of the mixed Ramanujan packets through \(M\),
 \(C\) for their closed span, \(S=I-P_C\), and \(V\) for the full legal
 residue closure. A mixed conductor has at least two distinct prime factors.
 
+## A single adjoint parity vector for endpoint attainment
+
+Let \(r=\mathbf 1-P_V\mathbf 1\), \(E=\|r\|_P^2\), and \(g=D_2^*J_2\) for the ambient adjoint of the scaled dilation. Its physical profile is \(g(n)=n/(2n+1)\). For \(L_d f(n)=f(\lfloor n/d\rfloor)\) with zero anchor, the complete symbolic identities give
+\[
+g=\tfrac13\mathbf 1+\sum_{d=2}^{\infty}\frac{L_d\mathbf 1}{(2d-1)(2d+1)},\qquad
+\langle r,g\rangle_P=\tfrac13 E+\sum_{d=2}^{\infty}\frac{\langle r,L_dr\rangle_P}{(2d-1)(2d+1)}.
+\]
+The complete signed pairing lies between \(E/6\) and \(E/2\). Consequently the projection attains its upper endpoint exactly when \(g\in V\), or equivalently when \(\langle D_2r,J_2\rangle_P\le0\). Equivalently, the dyadic adjoint commutes with \(P_V\) on \(J_2\). Invariance of \(V\) under that one ambient adjoint is also equivalent to attainment.
+
+For a period \(P\) divisible by every integer through \(N\), the cumulative GCD classes with weights \(a_d=1/[(2d-1)(2d+1)]\) reconstruct \(g\) on every site through \(N\). Möbius interpolation also gives a finite legal fit to each head. For any such fit \(v_N\), the exact tail pairing gives \((E/6)^2\le\|r\mathbf 1_{n>N}\|_P^2\|g-v_N\|_P^2\). **Open** is a bound on these complete errors along arbitrarily long heads for some choice of legal fits, or a proof that \(\langle D_2r,J_2\rangle_P\le0\). Every finite packet combination vanishes at a common multiple of its conductors. The resulting one-site obstruction and the endpoint equivalences are kernel-checked. [Adjoint criterion](RH/ParetoParityAdjointCriterion.lean) · [GCD and finite-head theorems](RH/ParetoParityAdjointHeads.lean)
+
+### The periodic GCD lift
+
+One explicit choice extends the matched heads by \(F_P(n)=\sum_{j=1}^{n\bmod P}a_{\gcd(j,P)}\), with \(a_d=1/[(2d-1)(2d+1)]\). This choice permits an exact tail calculation. With \(b_d=\sum_{e\mid d}\mu(d/e)a_e\) and \(r_d(n)=n\bmod d\), divisor inversion gives
+\[
+ F_P(n)=\sum_{d\mid P}\frac{b_d}{d}\bigl(r_P(n)-r_d(n)\bigr).
+\]
+Thus \(F_P\) is a finite legal vector. For \(P=N!\) and \(N\ge3\), it agrees with \(g\) through site \(N\). Pairing the coprime residues \(j\) and \(P-j\) gives exactly \(\varphi(P)/2\) coprime sites below \(P/2\). Each contributes \(a_1=1/3\) and all other increments are positive. For \(P/2\le n<P\), \(F_P(n)\ge\varphi(P)/6\) and \(g(n)<1/2\). The Pareto weights on this half-period sum to \(1/P\). Writing \(x_+=\max(x,0)\) gives
+\[
+ \|F_P-g\|_P^2\ \ge\ \frac{(\varphi(P)/6-1/2)_+^2}{P}.
+\]
+The Euler product satisfies \(\varphi(N!)/N!=\prod_{p\le N}(1-1/p)\ge\prod_{j=2}^N(1-1/j)=1/N\). The lower bound therefore tends to infinity. This symbolic derivation applies to the displayed periodic lifts. Uniform control for other choices of signed finite lifts remains open.
+
 ## Conductor-8192 enclosure of the normalized projection
 
 Write \(\rho=\|P_M(J_2/\log 2)\|_P\) and \(E=\operatorname{dist}_P(\mathbf1,V)^2\). The kernel-checked identity is

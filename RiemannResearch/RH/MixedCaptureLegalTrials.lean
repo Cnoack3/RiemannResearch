@@ -34,7 +34,7 @@ theorem limitEnergy_lt_period5040_bound : limitEnergy < (39 : ℝ) / 1000 := by
 /-- Exact squared norm of the screened conductor-two packet with mean one. -/
 theorem normalizedScreenedTwo_norm_sq :
     ‖normalizedScreenedTwo‖ ^ 2 = 1 / (1 - limitEnergy) := by
-  have hden : 1 - limitEnergy ≠ 0 := by linarith [limitEnergy_lt_period5040_bound]
+  have hden : 1 - limitEnergy ≠ 0 := one_sub_limitEnergy_pos.ne'
   have he := normalizedScreenedTwo_error_sq_eq_limitEnergy
   rw [norm_sub_sq_real, normalizedScreenedTwo_mean, hilbertOne_norm_sq] at he
   field_simp [hden] at he ⊢
@@ -71,7 +71,7 @@ theorem one_lt_norm_normalizedScreenedTwo_iff :
 theorem normalizedScreenedTwo_norm_sq_lt_period5040 :
     ‖normalizedScreenedTwo‖ ^ 2 < (1000 : ℝ) / 961 := by
   rw [normalizedScreenedTwo_norm_sq]
-  apply (div_lt_iff₀ (show 0 < 1 - limitEnergy by linarith [limitEnergy_lt_period5040_bound])).mpr
+  apply (div_lt_iff₀ one_sub_limitEnergy_pos).mpr
   linarith only [limitEnergy_lt_period5040_bound]
 
 theorem limitProjection_eq_inv_norm_sq_smul_screenedTwo :

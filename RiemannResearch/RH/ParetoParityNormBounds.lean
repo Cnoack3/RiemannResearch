@@ -24,7 +24,7 @@ def normalizedParityCapture : ℝ :=
 theorem normalizedParityCapture_sq :
     normalizedParityCapture ^ 2 = 1 / Real.log 2 - 1 / (1 - limitEnergy) := by
   have hL : 0 < Real.log 2 := Real.log_pos (by norm_num)
-  have hd : 1 - limitEnergy ≠ 0 := by linarith [limitEnergy_lt_period5040_bound]
+  have hd : 1 - limitEnergy ≠ 0 := one_sub_limitEnergy_pos.ne'
   rw [normalizedParityCapture, map_smul, norm_smul, Real.norm_eq_abs,
     abs_of_pos (inv_pos.mpr hL), mul_pow, full_mixed_capture_eq_limitEnergy]
   field_simp [hL.ne', hd]
@@ -33,7 +33,7 @@ theorem normalizedParityCapture_sq :
 theorem normalizedParityCapture_sq_deficit :
     (1 / Real.log 2 - 1) - normalizedParityCapture ^ 2 =
       limitEnergy / (1 - limitEnergy) := by
-  have hd : 1 - limitEnergy ≠ 0 := by linarith [limitEnergy_lt_period5040_bound]
+  have hd : 1 - limitEnergy ≠ 0 := one_sub_limitEnergy_pos.ne'
   rw [normalizedParityCapture_sq]
   field_simp [hd, (Real.log_pos (show (1:ℝ) < 2 by norm_num)).ne']
   ring
@@ -54,7 +54,7 @@ theorem sqrt_energy_lower_le_normalizedParityCapture {D : ℝ}
 private theorem capture_sq_le_endpoint :
     normalizedParityCapture ^ 2 ≤ 1 / Real.log 2 - 1 := by
   have he : 0 ≤ limitEnergy := sq_nonneg ‖limitResidual‖
-  have hd : 0 < 1 - limitEnergy := by linarith [limitEnergy_lt_period5040_bound]
+  have hd : 0 < 1 - limitEnergy := one_sub_limitEnergy_pos
   rw [← sub_nonneg, normalizedParityCapture_sq_deficit]
   exact div_nonneg he hd.le
 
@@ -66,7 +66,7 @@ theorem normalizedParityCapture_eq_upper_iff :
     normalizedParityCapture = Real.sqrt (1 / Real.log 2 - 1) ↔ limitEnergy = 0 := by
   have hr := (sq_nonneg normalizedParityCapture).trans capture_sq_le_endpoint
   have hs := Real.sq_sqrt hr
-  have hd : 1 - limitEnergy ≠ 0 := by linarith [limitEnergy_lt_period5040_bound]
+  have hd : 1 - limitEnergy ≠ 0 := one_sub_limitEnergy_pos.ne'
   constructor
   · intro h
     have hz : limitEnergy / (1 - limitEnergy) = 0 := by

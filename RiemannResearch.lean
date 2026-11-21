@@ -629,6 +629,8 @@ import RiemannResearch.RH.ScreenedPrimePowerTelescope
 import RiemannResearch.RH.MixedConductorCaptureGains
 import RiemannResearch.RH.MixedCaptureLegalTrials
 import RiemannResearch.RH.ParetoParityNormBounds
+import RiemannResearch.RH.ParetoParityAdjointCriterion
+import RiemannResearch.RH.ParetoParityAdjointHeads
 import RiemannResearch.RH.ParetoPeriodicTailDiscrepancy
 import RiemannResearch.RH.ParetoRawTrialPeriodicTail
 import RiemannResearch.RH.ParetoParity8192Data
