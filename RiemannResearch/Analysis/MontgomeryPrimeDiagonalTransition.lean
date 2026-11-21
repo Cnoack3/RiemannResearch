@@ -120,6 +120,38 @@ theorem primeDiagonal_le_quadratic {x : ℝ} (hx : 0 < x) :
   have hs := Summable.of_nonneg_of_le (fun n => sq_nonneg _) (square_primeWeight_le hx) hm
   exact (hs.tsum_le_tsum (square_primeWeight_le hx) hm).trans_eq tsum_mul_left
 
+/-- Cutting the actual diagonal before index `N` has a nonnegative error
+bounded uniformly in the real frequency by a constant times `x²/N`. -/
+theorem primeDiagonal_truncation_error {x : ℝ} (hx : 0 < x) {N : ℕ} (hN : 0 < N) :
+    0 ≤ primeDiagonal x - ∑ n ∈ Finset.range N, (primeWeight x n)^2 ∧
+    primeDiagonal x - ∑ n ∈ Finset.range N, (primeWeight x n)^2 ≤
+      (((2 / Real.exp 1) * x^2) * ∑' n : ℕ, mangoldtThreeHalves n) / (N : ℝ) := by
+  let B : ℝ := (2 / Real.exp 1) * x^2
+  have hB : 0 ≤ B := by dsimp [B]; positivity
+  have hw : Summable (fun n : ℕ => (primeWeight x n)^2) :=
+    Summable.of_nonneg_of_le (fun n => sq_nonneg _) (square_primeWeight_le hx)
+      (summable_mangoldtThreeHalves.mul_left B)
+  have hwN := (summable_nat_add_iff N).mpr hw
+  have hmN := (summable_nat_add_iff N).mpr summable_mangoldtThreeHalves
+  have htail : primeDiagonal x - ∑ n ∈ Finset.range N, (primeWeight x n)^2 =
+      ∑' n : ℕ, (primeWeight x (n + N))^2 := by
+    change (∑' n : ℕ, (primeWeight x n)^2) - _ = _
+    linarith only [hw.sum_add_tsum_nat_add N]
+  rw [htail]
+  refine ⟨tsum_nonneg (fun _ => sq_nonneg _), ?_⟩
+  apply (le_div_iff₀ (show (0 : ℝ) < N by exact_mod_cast hN)).mpr
+  have hcomp := (hwN.mul_left (N : ℝ)).tsum_le_tsum (g := fun n => B * mangoldtThreeHalves (n + N))
+    (fun n => (mul_le_mul_of_nonneg_right
+      (show (N : ℝ) ≤ ((n + N : ℕ) : ℝ) by exact_mod_cast Nat.le_add_left N n)
+      (sq_nonneg _)).trans (weighted_primeWeight_le hx (n + N))) (hmN.mul_left B)
+  simp only [tsum_mul_left] at hcomp
+  have hmle : (∑' n : ℕ, mangoldtThreeHalves (n + N)) ≤ ∑' n : ℕ, mangoldtThreeHalves n := by
+    linarith only [summable_mangoldtThreeHalves.sum_add_tsum_nat_add N,
+      show 0 ≤ ∑ n ∈ Finset.range N, mangoldtThreeHalves n from
+        Finset.sum_nonneg (fun n _ => mangoldtThreeHalves_nonneg n)]
+  rw [mul_comm _ (N : ℝ)]
+  exact hcomp.trans (mul_le_mul_of_nonneg_left hmle hB)
+
 /-- The stronger prime-diagonal limit also gives the bounded estimate
 at every real cutoff x≥2, including prime-power endpoints. -/
 theorem primeDiagonalBound_of_asymptotic (h : PrimeDiagonalAsymptotic) : PrimeDiagonalBound := by
