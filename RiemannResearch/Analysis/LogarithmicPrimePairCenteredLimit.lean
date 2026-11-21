@@ -101,6 +101,21 @@ private theorem annular_mean_limit {A B : ℝ} (hA : 0 < A) (hAB : A < B) :
     Nat.cast_sub hab, prefix_sub (fun n => Λ n) hab]
   ring
 
+/-- Centering changes the squared-coefficient mass by a lower-order first moment. -/
+theorem annular_centered_diagonal_limit {A B : ℝ} (hA : 0 < A) (hAB : A < B) :
+    Tendsto (fun X : ℝ => (∑ n ∈ Ioc ⌊A*X⌋₊ ⌊B*X⌋₊, (Λ n - 1)^2) / (X * Real.log X))
+      atTop (𝓝 (B-A)) := by
+  have h := (annular_diagonal_limit hA hAB).sub
+    ((annular_mean_limit hA hAB).div_atTop Real.tendsto_log_atTop)
+  rw [sub_zero] at h
+  apply h.congr
+  intro X
+  rw [div_div, ← sub_div, ← sum_sub_distrib]
+  congr 1
+  apply sum_congr rfl
+  intro n _
+  ring
+
 private theorem endpoint_limits (A : ℝ) {B u : ℝ} (hB : 0 < B) (hu : 0 < u) :
     Tendsto (fun X : ℝ => rightEndpoint ⌊A*X⌋₊ ⌊B*X⌋₊ (shiftWidth u X) (u*Real.log X) /
       (X*(Real.log X)^2)) atTop (𝓝 0) ∧

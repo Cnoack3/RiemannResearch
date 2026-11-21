@@ -65,3 +65,45 @@ The unresolved normalized error is
        [C_X(h)-(B-A)X\,\mathfrak S(h)].
 \]
 Proving that this tends to zero for each \(d>0\) would give the sharp asymptotic. Both literature estimates above leave this arithmetic cancellation open.
+
+## Additive Fourier localization
+
+Set \(S_X(\alpha)=\sum_{n\in I}(\Lambda(n)-1)e^{2\pi i n\alpha}\),
+\(D_X=\sum_{n\in I}(\Lambda(n)-1)^2\), and
+\(U_\rho=\{\alpha:|1-e^{2\pi i\alpha}|<\rho\}\).
+Write \(J_X(u;E)=(XL^2)^{-1}\int_E K_{uL}|S_X|^2\,d\alpha\).
+All these integrals use probability Haar measure on the additive circle.
+
+| Status | Statement | Lean declaration |
+| --- | --- | --- |
+| Proved | \(D_X/(XL)\to B-A\). For \(0<\rho\), the exterior contribution satisfies \(0\le J_X(u;U_\rho^c)\le 4D_X/(\rho^2XL^2)\) for \(X>1\). This tends to zero if \(\rho^2L\to\infty\). | `annular_centered_diagonal_limit`, `FractionalFejer.offArc_energy_le`, `tendsto_centered_offArc` |
+| Proved finite identity | For \(z=e^{2\pi i\alpha}\), \(\lvert1-z\rvert^2\sum_{j<m}\lvert D_j(\alpha)\rvert^2=2m-2\operatorname{Re} D_m(\alpha)\). Where \(m\lvert1-z\rvert\ge4\), this bounds \(mK_s\) above by \(4\sum_{j<m}\lvert D_j\rvert^2\), uniformly in \(s\ge0\). | `chord_sq_mul_sum_dirichlet_sq`, `kernel_le_dirichlet_average`, `offArc_energy_le_short_energies` |
+| Proved implication | If \(F_X(1)\) is eventually bounded, there is a single \(C_{A,B}\) with \(J_X(u;U_\rho^c)\le C_{A,B}/(\rho L)\) for all sufficiently large \(X\), all \(0<\rho\le1\) with \(\rho L\ge5\), and every \(u>0\). The threshold in \(X\) is independent of \(\rho,u\). | `eventually_centered_offArc_le_of_sharp_bound` |
+| Published input | The existing prime-only hypothesis `GPYPrimePairSieve` provides the required upper bound at width 1. Consequently every positive \(\rho\le1\) with \(\rho L\to\infty\) has negligible exterior energy. The sieve enters as a parameter to the Lean corollary. | `tendsto_centered_offArc_of_sieve` |
+
+The proof of the sharper bound uses the exact Fejér expansion at the shorter integer widths \(j\le\lfloor L\rfloor\). Since \((\Lambda(n)-1)(\Lambda(n+h)-1)\le\Lambda(n)\Lambda(n+h)+1\), the single upper bound on \(F_X(1)\) gives \(E_j\ll_{A,B}jXL\). Take \(m=\lceil4/\rho\rceil\) in the finite identity. Equation (5.5) in the published paper is the upper sieve used here. [Goldston, Pintz and Yıldırım, *Primes in tuples IV*, p. 49](https://doi.org/10.4064/aa160-1-3)
+
+### Conditional research reduction
+
+Choose \(0<\rho_X\le1\) with \(\rho_XL\to\infty\), for instance \(\rho_X=(\log L)/L\) for large \(X\). Define the localized cosine moments
+\[
+ b_X(h)=\frac1X\int_{U_{\rho_X}}\cos(2\pi h\alpha)
+                 (|S_X(\alpha)|^2-D_X)\,d\alpha .
+\]
+
+**Open arithmetic estimate.** For each fixed \(v>0\),
+\(\max_{0\le h\le\lfloor vL\rfloor}|b_X(h)|\to0\).
+These moments use ordinary cosine probes, include \(h=0\), and contain no Fejér kernel.
+The exact cosine expansion has nonnegative weights summing to \(K_{uL}(0)\). Thus if the maximum at width \(u\) is \(e\), the absolute normalized local signed Fejér error is at most \((u^2+1)e\) for \(L\ge1\). With the published upper sieve this gives the centered, triangular, and sharp laws. See `integral_kernel_mul_eq_cosineMoments`, `abs_integral_kernel_mul_le_modes`, `abs_localCovariance_le_modes`, and `sharpPairAverage_of_localModes`. For the coarser radii \(\rho_X^2L\to\infty\), `centered_energy_of_localCovariance_plancherel` needs only the local signed error at the chosen width. No global axiom was added.
+
+### An interval-mass criterion on paper
+
+An alternative sufficient arithmetic estimate uses ordinary intervals. Represent the circle by \([-1/2,1/2)\). Suppose that for every fixed positive rational \(R\),
+\[
+ \frac1X\int_{-R/L}^{R/L}|S_X(\alpha)|^2\,d\alpha \ \longrightarrow\ 2(B-A)R .
+\]
+The integral is taken for \(L>2R\). Push the measure \(X^{-1}|S_X(\alpha)|^2\,d\alpha\) forward by \(t=L|\alpha|\). Differences of these cumulative masses give convergence on intervals with rational endpoints. Positivity and approximation by step functions give convergence against continuous tests on each fixed compact interval to \(2(B-A)\,dt\).
+
+On \(0\le t\le R\), \(L^{-2}K_{uL}(t/L)\) converges uniformly to \((\sin(\pi ut)/(\pi t))^2\), with value \(u^2\) at zero. This follows from the geometric sum for \(D_j\) and uniform convergence of \(\sin(\pi t/L)/(\pi t/L)\) to one there. The bounded masses on that interval permit using the moving kernel. On \(|\alpha|>R/L\), the chord is at least \(4R/L\). The single-width sieve bound above makes the normalized exterior contribution \(O_{A,B}(1/R)\). Let \(X\to\infty\) first and then \(R\to\infty\). Plancherel for the indicator of \([0,u]\) gives \(\int_{\mathbb R}(\sin(\pi ut)/(\pi t))^2\,dt=u\), proving \(J_X(u)\to(B-A)u\) under the interval-mass hypothesis. The cumulative-mass hypothesis is open. This compact-interval argument is recorded here as a paper corollary of the formal tail bounds.
+
+The ordinate sample of the multiplicative polynomial tends to zero, and its prime-torus Haar mean is zero. The deletion projection multiplies the polynomial's identity value by \(1-2/N\). The local additive moments remain an arithmetic input. The almost-all binary-correlation theorem of Matomäki, Radziwiłł and Tao assumes \(H\ge X^{8/33+\varepsilon}\). The later almost-all progression theorem assumes \(H\ge X^{1/3+\varepsilon}\). Both ranges grow faster than a fixed multiple of \(\log X\). [Matomäki–Radziwiłł–Tao](https://arxiv.org/abs/1707.01315) · [Matomäki–Radziwiłł–Shao–Tao–Teräväinen, Theorem 1.5](https://doi.org/10.1007/s00222-026-01408-6)

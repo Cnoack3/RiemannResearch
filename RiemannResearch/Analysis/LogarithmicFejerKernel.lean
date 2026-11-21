@@ -241,6 +241,23 @@ private theorem kernel_expansion (H : ℕ) (r : ℝ) (t : Circle₁) :
   rw [hs]
   ring
 
+/-- Real expansion of the fractional kernel into positive-lag cosine modes. -/
+theorem kernel_cosine_expansion (H : ℕ) (r : ℝ) (t : Circle₁) :
+    kernel H r t = (H : ℝ) + r +
+      ∑ h ∈ Ioc 0 H, (2 * ((H : ℝ) + r - h)) * (fourier (h : ℤ) t).re := by
+  have hs (s : Finset ℕ) (f : ℕ → ℂ) : (∑ h ∈ s, f h).re = ∑ h ∈ s, (f h).re := by
+    induction s using Finset.induction_on with
+    | empty => simp
+    | insert b s hb ih => simp [hb, Complex.add_re, ih]
+  have hc (h : ℕ) : (((H : ℂ) + r - h) * pairedMode h t).re =
+      (2 * ((H : ℝ) + r - h)) * (fourier (h : ℤ) t).re := by
+    rw [pairedMode, fourier_neg]
+    simp [Complex.mul_re] <;> ring
+  have he := congrArg Complex.re (kernel_expansion H r t)
+  rw [Complex.ofReal_re, Complex.add_re, Complex.add_re, hs] at he
+  simp_rw [hc] at he
+  simpa using he
+
 def energy (H : ℕ) (r : ℝ) (I : Finset ℕ) (a : ℕ → ℝ) : ℝ :=
   ∫ t : Circle₁, kernel H r t * ‖polynomial I a t‖^2 ∂haarAddCircle
 
