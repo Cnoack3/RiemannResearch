@@ -603,6 +603,9 @@ import RiemannResearch.RH.ScreenedTwoMixedApproximation
 import RiemannResearch.RH.MixedConductorSplitExact
 import RiemannResearch.RH.MixedConductorSquareZero
 import RiemannResearch.RH.MixedConductorMetricCokernel
+import RiemannResearch.RH.MixedConductorHilbertBasis
+import RiemannResearch.RH.MixedConductorBlockSplitting
+import RiemannResearch.RH.MixedConductorPrimeSupport
 import RiemannResearch.RH.MixedConductorContractiveSection
 import RiemannResearch.RH.MixedConductorMetricLifting
 import RiemannResearch.RH.MeanSectionStructure

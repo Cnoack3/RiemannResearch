@@ -40,3 +40,59 @@ $1\le\|u\|_P$. Equality is equivalent to $u=1$ and to $1\in V$.
 The implication from the norm-one universal property to RH is checked by
 `riemannHypothesis_of_legalMean_contractive_cokernel`. The reverse implication
 uses the published RH-to-natural-approximation theorem. See [Bagchi, Theorem 1](https://arxiv.org/abs/math/0607733).
+
+## Decomposing the mixed ideal by conductor
+
+Write $\mathcal I=\{q\ge2:q\text{ has at least two distinct prime divisors}\}$.
+For $S\subseteq\mathcal I$, set $K_S=\overline{\operatorname{span}}\{J_q:q\in S\}$
+and let $P_S$ be its orthogonal projection inside $M$. Then
+
+$$
+M=K_S\oplus^\perp
+ \overline{\operatorname{span}}\{J_q-P_SJ_q:q\in\mathcal I\setminus S\}.
+$$
+
+The two arrows in the split exact sequence are inclusion of $K_S$ and
+orthogonal projection onto the second summand. Their adjoints give the retraction
+and section. Taking $S=\{q:\omega(q)=2\}$ separates the raw packets with exactly
+two distinct prime divisors from the screened packets with at least three.
+
+In increasing conductor order, put $H_{<q}=\operatorname{span}\{J_r:r\in\mathcal I,\ r<q\}$.
+Finite packet independence makes every $d_q=J_q-P_{H_{<q}}J_q$ nonzero. The vectors
+$e_q=d_q/\|d_q\|_P$ form a Hilbert basis of $M$. Every partition of these modes gives
+a binary biproduct. The lattice of all real subspaces of $M$ is order-isomorphic to the
+ideals of the screened algebra contained in $M$. This correspondence preserves closedness
+in both directions.
+
+For the parity packet, the energy of the first mode and the complete sum are
+
+$$
+ |\langle J_2,e_6\rangle_P|^2=
+ \frac{(\log 2-\pi/(2\sqrt3))^2}{\pi/\sqrt3},
+ \qquad
+ \sum_{q\in\mathcal I}|\langle J_2,e_q\rangle_P|^2
+ =\log 2-\frac{(\log 2)^2}{1-E}.
+$$
+
+The remaining arithmetic equality is attainment of $\log 2-(\log 2)^2$ by this sum,
+equivalently $1\in V$. The basis and both biproduct constructions are unconditional.
+
+[Hilbert basis and Parseval](RH/MixedConductorHilbertBasis.lean) ·
+[Split exact sequences and ideals](RH/MixedConductorBlockSplitting.lean)
+
+## Strict filtration by the number of prime divisors
+
+Put $F_r=\overline{\operatorname{span}}\{J_q:q\in\mathcal I,\ \omega(q)\le r\}$ and
+$D_r=F_r\cap F_{r-1}^{\perp}$, where $\omega(q)$ counts distinct prime divisors.
+Then $F_1=0$, each $F_{r-1}\subsetneq F_r$ for $r\ge2$, and
+$M=\widehat{\bigoplus}_{r\ge2}D_r$. The projection onto $D_r$ is
+$P_{F_r}-P_{F_{r-1}}$. The vector partial sums and their squared norms converge
+in the original Pareto metric. Each inclusion $F_{r-1}\hookrightarrow F_r$
+belongs to a split short exact sequence with categorical cokernel $D_r$.
+
+The continuous Möbius difference $\Delta_q$ vanishes on $F_{r-1}$ whenever
+$\omega(q)=r$ and has value $-q$ on $J_q$. In particular
+$\Delta_{30}(J_{30}-P_{F_2}J_{30})=-30$. This detects a nonzero three-prime
+component after screening against the entire closed two-prime space.
+
+[Strictness, norm convergence, and categorical quotients](RH/MixedConductorPrimeSupport.lean)
