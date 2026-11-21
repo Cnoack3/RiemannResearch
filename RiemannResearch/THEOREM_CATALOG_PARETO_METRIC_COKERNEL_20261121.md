@@ -120,3 +120,18 @@ The converse direction uses the RH-to-natural-approximation implication of
 Báez-Duarte's Theorem 1.1 as an explicit hypothesis.
 
 [Centered mean diagram, snake boundary, and norm dichotomy](RH/CenteredMeanSnake.lean)
+
+## The internal and ambient mean quotients
+
+Put $1_V=P_V1$. For $v\in V$, the inner product $\langle v,1_V\rangle_P$
+equals $C(v)$. Thus $(\mathbb R1_V)^{\perp_V}=M$ and its quotient by $M$ is
+zero. On $V$, $P_{M^\perp}v=C(v)u$ has kernel $M$ and range $\mathbb Ru$.
+The ambient constant decomposes as $1=u/\|u\|_P^2+P_{V^\perp}1$.
+
+The linear equivalence `boundaryTargetEquivLegalQuotient` sends
+$x+M\mapsto x+V$ on $1^{\perp_H}/M$. Its inverse sends $h+V$ to
+$[h-\langle h,1\rangle_Pu]$. Under this equivalence $\partial(a)$ becomes
+$-a(1+V)$. The ambient quotient is zero exactly when $V=H$, equivalently
+$1\in V$, by `boundaryTarget_subsingleton_iff_one_mem`.
+
+[Quotient equivalence and rank-one projection](RH/CenteredMeanQuotients.lean)
