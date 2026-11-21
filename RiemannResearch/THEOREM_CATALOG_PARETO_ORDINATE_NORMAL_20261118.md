@@ -118,6 +118,34 @@ at $2(m+1)!$, so its uniform distance from one is at least one. Both analytic
 inputs are open.
 [Physical bounds and cutoff transfer](RH/ScreenedParityPhysicalBounds.lean)
 
+### Quadratic windows for the actual screened packet
+
+Write $F_N=\exp(A\sqrt{\log N})$ with $A>0$. If the normalized screened packet
+differs from one, then, under the published Lee–Leong Mertens estimate, every
+sufficiently large $[N,N^2]$ contains more than $F_N^2$ sites with $u(n)<-F_N$
+and more than $F_N^2$ sites with $u(n)>F_N$. The cofinal implication allows
+the controlled sign to vary between windows. For $5A$ strictly below the
+repository's classical contour endpoint, its own Mertens theorem supplies the
+arithmetic input. The proof uses a bounded legal test covering $[H,H^2]$, a
+signed exterior pairing and both ordinary and reciprocal Möbius sums.
+[Window theorem and arithmetic hypotheses](RH/QuadraticWindowSignCriterion.lean)
+
+A finite mixed projection gives a certificate for the actual count on a fixed
+window. For a set of evaluations take their sum's Riesz vector, remove its
+constant component and its finite mixed projection, and use the norm of the
+remainder in the centered projection inequality. Alternatively, limiting
+strict excursions eventually persist together on every fixed finite window.
+[Finite Gram certificate](RH/ScreenedParityDiameter.lean) ·
+[Finite-cutoff count transfer](RH/ScreenedParityWindowCounts.lean)
+
+At $N=16$ the actual packet has at most seven values below $-8$. This uses the
+certified complete squared distance to one and the minimum site weight in the
+window. [Certified finite window](RH/ScreenedParityCertifiedWindow.lean)
+
+**Open.** Prove that arbitrarily large windows pass a one-sided count bound
+for some fixed admissible $A$. Equivalently, for the depth and count budget in
+the Gram criterion, exhibit compatible mixed cutoffs on unbounded windows.
+
 ## What the ordinate bound proves
 
 Fix a prime $p$. At the same height $T$ take all positive-height nontrivial zeta zeros up to $T$, with analytic multiplicity. For each harmonic $h$ the signed Möbius sum of prime-root probes estimates $c_q(h)$. The negative prefix up to $k\bmod q$ gives a complex $q$-periodic packet $Z_{p,q,T}(k)$. Use its real part as a row $\widehat J_q$. Define $\widehat G,\widehat b$ by the **same complete Pareto expectations** as $G,b$, and $\widehat a=\widehat G^{-1}\widehat b$. Write $r(T)=(\log\log T)^2/\log T$. [Ford and Zaharescu](https://arxiv.org/abs/math/0405459) · [Ordinate construction and uniform rate](RH/RamanujanOrdinateRate.lean)

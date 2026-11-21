@@ -603,6 +603,16 @@ import RiemannResearch.Analysis.WeightedTailSqueeze
 import RiemannResearch.RH.ParetoAnnihilatorOneSided
 import RiemannResearch.RH.ScreenedParityOneSided
 import RiemannResearch.RH.ScreenedParityPhysicalBounds
+import RiemannResearch.Analysis.QuadraticWindowSqueeze
+import RiemannResearch.RH.QuadraticWindowCover
+import RiemannResearch.RH.ParetoWindowExcess
+import RiemannResearch.RH.ParetoMobiusWindowPairing
+import RiemannResearch.RH.QuadraticWindowMertens
+import RiemannResearch.RH.QuadraticWindowClassicalMertens
+import RiemannResearch.RH.ScreenedParityWindowCounts
+import RiemannResearch.RH.ScreenedParityDiameter
+import RiemannResearch.RH.ScreenedParityCertifiedWindow
+import RiemannResearch.RH.QuadraticWindowSignCriterion
 import RiemannResearch.RH.ParetoRawTrial
 import RiemannResearch.RH.ParetoGroupedResidueMassBase
 import RiemannResearch.RH.ParetoGroupedResidueMassBatch00
