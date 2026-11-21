@@ -654,6 +654,13 @@ import RiemannResearch.RH.ParetoParity8192Arithmetic
 import RiemannResearch.RH.ParetoParity8192Head
 import RiemannResearch.RH.ParetoParity8192Sieve
 import RiemannResearch.RH.ParetoParity8192Certificate
+import RiemannResearch.RH.ParetoParityHeadMellin
+import RiemannResearch.RH.ParetoParityHeadZeroFree
+import RiemannResearch.RH.ParetoParityFiniteHeadTransfer
+import RiemannResearch.RH.ParetoParityMobiusLifts
+import RiemannResearch.RH.ParetoParityConsecutiveHeads
+import RiemannResearch.RH.ParetoParityHeadInverse
+import RiemannResearch.RH.ParetoMixedCenteredParityHeads
 import RiemannResearch.RH.MixedCaptureZeroPair
 import RiemannResearch.RH.MixedParityProjectionDPP
 import RiemannResearch.RH.MixedParityCaptureFifteen
