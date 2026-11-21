@@ -167,3 +167,70 @@ $$
 The inclusion $1_H^\perp\subseteq M$ remains open.
 
 [Quotient equivalence and rank-one projection](RH/CenteredMeanQuotients.lean)
+
+## Finite Möbius tests for the ambient mean-zero space
+
+Set $L=\log 2$, $z=J_2-L1$ and $F_k=\overline{\operatorname{span}}\{J_q:q\in\mathcal I,\ \omega(q)\le k\}$. The constant is legal exactly when $z\in M$. Write $p=P_MJ_2$, $D_j=F_{j+1}\cap F_j^\perp$, and take the projections onto $D_j$ and $F_k$ inside $M$. The finite Parseval identity retains both residual terms.
+
+$$
+L-L^2=L^2\|\partial\|^2+
+\sum_{j=0}^{k-1}\|P_{D_j}p\|^2+\|p-P_{F_k}p\|^2.
+$$
+
+The last term tends to zero by the support filtration. The first term is precisely the ambient defect.
+
+### A finite matrix and its exact cost
+
+Use rows $2\le m\le H$ and columns $q\in\mathcal I$ with $q\le B$. Put
+
+$$
+A_{mq}=-m\,\mathbf1_{m\mid q}\,\mu(q/m),\qquad
+t_m=-2\,\mathbf1_{m=2}-L\mu(m),\qquad
+G_{qr}=\langle J_q,J_r\rangle_P.
+$$
+
+The incidence entry is zero when $m$ does not divide $q$. Each entry of $G$ is the sum of packet products over one common period, weighted by its **complete Pareto progression masses**. This is a finite formula that retains the infinite physical tail. For any row weights $a$, the squared norm of the projection of $\sum_m a_m R_m$ onto the packet window is $(A^\top a)^\top G^{-1}(A^\top a)$, where $R_m$ represents the continuous Möbius difference of order $m$.
+
+Choose a prime $s_H>H+1$ and take $B_H=s_H(H+1)$. The finite head interpolation theorem gives linear independence of the projected rows. In particular $K_H=AG^{-1}A^\top$ is positive definite and
+
+$$
+E_H=t^\top K_H^{-1}t
+=\min_{Ac=t}c^\top Gc.
+$$
+
+For the minimizing packet vector $x_H$ and every feasible packet vector $y$, the complete norm satisfies $\|y\|^2=E_H+\|y-x_H\|^2$. The construction also covers the empty row set. A fresh prime certifies feasibility of the full window. At $H=2$, the single column $J_6$ with coefficient $(L-2)/2$ gives the explicit unconditional estimate
+
+$
+E_2\le \frac{(2-L)^2}{4}\frac{\pi}{\sqrt3}.
+$
+
+**Conditional research reduction.** Fix the schedule in advance, for example the least prime $s_H>H+1$. A single bound $E_H\le C$ along arbitrarily large heads implies $1_H^\perp\subseteq M$ and hence RH. Equivalently at each finite stage the rank-one matrix inequality is $tt^\top\preceq C K_H$. This condition tests signed arithmetic rows. The proof uses totality of the Möbius Riesz tests in the ambient space. The ambient inclusion is equivalent in Lean to the repository's Nyman–Beurling approximation condition. Its implication to RH is kernel-checked. The reverse RH implication in the quotient development takes Báez-Duarte's published theorem as a parameter. Necessity of this specified cutoff schedule for that approximation is unproved.
+
+When the schedule itself may be chosen separately at each head, existence of a uniformly bounded schedule is equivalent to $\partial=0$. For the reverse implication, $z\in M$ gives finite mixed approximants within unit norm distance that match its full physical head. Taking the prime large enough to include each approximant gives $E_H\le(\|z\|_P+1)^2$. This use of membership explains the role of prescribing $s_H$ in the arithmetic problem.
+
+**Open.** Establish $\liminf_{H\to\infty}E_H<\infty$ for a prescribed schedule. Finite positive definiteness and solvability give a separate finite bound at each head. The existing sublinear complete squared-error estimate for centered parity uses freely chosen mixed cutoffs and supplies $o(H)$.
+
+### Two restrictions on a possible proof
+
+For every fixed $k$, some $\delta_k>0$ satisfies $\|z-y\|_P^2\ge\delta_k$ throughout $F_k$. A squarefree order $m>2$ with $\omega(m)>k$ annihilates the stage and has target $-L\mu(m)$. Centering the Riesz test reduces its squared norm by $\mu(m)^2$. At $m=30$ the exact dual squared norm is $2652$, so $\|z-y\|_P^2\ge L^2/2651$ throughout the closed two-prime stage.
+
+If all columns used are $J_{sd}$ for one fresh prime $s\nmid d$, their weighted sum has the form $v=D_s f-f$ for the Pareto dilation. At $s>2$, even matching just the order-two observation forces
+
+$$
+14\|v\|_P^2\ge (\sqrt{s}-1)^2(2-L)^2.
+$$
+
+Thus the standard fresh-prime columns used to show solvability have growing cost. The full window also contains columns outside that restricted family.
+
+| Lean declaration | Conclusion |
+| --- | --- |
+| `parity_variance_eq_boundary_add_layers` | Exact boundary and finite-layer remainder |
+| `captured_eq_projection`, `windowGram_entry` | Exact projected test energy from the complete CRT Gram |
+| `headGram_posDef`, `headCost_minimum` | Unconditional positive definiteness and least-energy interpolation |
+| `boundary_eq_zero_iff_exists_bounded_headCost` | Equivalence when the prime schedule can follow the approximants |
+| `headCost_two_le` | Explicit upper bound at the first nonempty head |
+| `one_orthogonal_le_mixedClosure_of_cofinal_headCost` | Conditional ambient inclusion from cofinally bounded cost |
+| `fixed_support_positive_floor`, `two_prime_error_floor` | Obstruction at any fixed support level and its order-thirty certificate |
+| `fresh_packet_combination`, `fresh_dilation_cost_floor` | Quantitative obstruction for a single fresh prime |
+
+[Finite Möbius matrices and the ambient inclusion](RH/MixedMobiusWindow.lean) · [Support and fresh-prime lower bounds](RH/MixedParitySupportBounds.lean) · [Finite head interpolation](RH/MixedConductorHead.lean) · [Sublinear centered parity fits](RH/ParetoMixedCenteredParityHeads.lean)
