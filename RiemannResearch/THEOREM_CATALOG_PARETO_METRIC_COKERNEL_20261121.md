@@ -124,8 +124,8 @@ Báez-Duarte's Theorem 1.1 as an explicit hypothesis.
 ## The internal and ambient mean quotients
 
 Put $1_V=P_V1$. For $v\in V$, the inner product $\langle v,1_V\rangle_P$
-equals $C(v)$. Thus $(\mathbb R1_V)^{\perp_V}=M$ and its quotient by $M$ is
-zero. On $V$, $P_{M^\perp}v=C(v)u$ has kernel $M$ and range $\mathbb Ru$.
+equals $C(v)$. Since $1_V=u/\|u\|_P^2$, both $(\mathbb R1_V)^{\perp_V}$ and
+$(\mathbb Ru)^{\perp_V}$ equal $M$. Their quotient by $M$ is zero. On $V$, $P_{M^\perp}v=C(v)u$ has kernel $M$ and range $\mathbb Ru$.
 The ambient constant decomposes as $1=u/\|u\|_P^2+P_{V^\perp}1$.
 
 The linear equivalence `boundaryTargetEquivLegalQuotient` sends
@@ -133,5 +133,18 @@ $x+M\mapsto x+V$ on $1^{\perp_H}/M$. Its inverse sends $h+V$ to
 $[h-\langle h,1\rangle_Pu]$. Under this equivalence $\partial(a)$ becomes
 $-a(1+V)$. The ambient quotient is zero exactly when $V=H$, equivalently
 $1\in V$, by `boundaryTarget_subsingleton_iff_one_mem`.
+
+In $H$, `mixedClosure_eq_closedSpace_inf_one_orthogonal` gives $M=V\cap 1_H^\perp$.
+The defect $u-1$ lies in $1_H^\perp\cap M^\perp$. If $1_H^\perp\subseteq M$,
+then $u-1\in M\cap M^\perp=\{0\}$. Conversely, scaled dilation differences of a legal
+constant put every coordinate point mass in $V$, so $V=H$. The theorem
+`boundary_eq_zero_iff_mixedClosure_eq_one_orthogonal` composes these equivalences.
+
+$$
+\partial=0\quad\Longleftrightarrow\quad 1\in V\quad\Longleftrightarrow\quad V=H
+\quad\Longleftrightarrow\quad M=1_H^\perp.
+$$
+
+The inclusion $1_H^\perp\subseteq M$ remains open.
 
 [Quotient equivalence and rank-one projection](RH/CenteredMeanQuotients.lean)

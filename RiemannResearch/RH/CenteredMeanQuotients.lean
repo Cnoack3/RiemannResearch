@@ -9,6 +9,7 @@ import RiemannResearch.RH.ThresholdContractiveRepair
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.LinearAlgebra.Isomorphisms
 import Mathlib.LinearAlgebra.Quotient.Basic
+import Mathlib.LinearAlgebra.Span.Defs
 
 /-!
 # The internal and ambient quotients for the Pareto mean
@@ -17,7 +18,9 @@ The projected constant represents the legal mean on the closed space `V`.
 The quotient of its orthogonal complement inside `V` by the mixed subspace is
 zero. In the ambient space, inclusion identifies the target of the centered
 snake boundary with `H ⧸ V`. Under this identification the boundary at one is
-the negative of the class of the constant.
+the negative of the class of the constant. The boundary vanishes exactly when the
+mixed space is the full ambient orthogonal complement of the constant. Inside
+`V`, the projected constant and the screened unit have the same orthogonal complement.
 
 Source: the user's comparison of the two mean quotients and the rank-one formula.
 -/
@@ -46,6 +49,24 @@ theorem projectedOne_orthogonal_eq_mixed :
   change v ∈ (Submodule.span ℝ {projectedOne})ᗮ ↔ legalPacketMean v = 0
   simp only [Submodule.mem_orthogonal_singleton_iff_inner_right, ← inner_projectedOne,
     real_inner_comm]
+
+/-- Inside the legal space the projected constant is the screened section at one
+scaled by the reciprocal squared norm of its ambient value. -/
+theorem projectedOne_eq_scaled_section_one :
+    projectedOne = (‖normalizedScreenedTwo‖ ^ 2)⁻¹ • screenedMeanSection 1 := by
+  apply Subtype.ext
+  change limitProjection = (‖normalizedScreenedTwo‖ ^ 2)⁻¹ • ((1 : ℝ) • normalizedScreenedTwo)
+  simpa only [one_smul] using limitProjection_eq_inv_norm_sq_smul_screenedTwo
+
+/-- The orthogonal complement of the screened unit inside the legal space is the mixed space. -/
+theorem screenedMeanSection_one_orthogonal_eq_mixed :
+    (Submodule.span ℝ {screenedMeanSection 1})ᗮ = mixedClosure.comap closedSpace.subtype := by
+  have hpos : 0 < ‖normalizedScreenedTwo‖ :=
+    zero_lt_one.trans_le one_le_norm_normalizedScreenedTwo
+  have hunit : IsUnit ((‖normalizedScreenedTwo‖ ^ 2)⁻¹) :=
+    isUnit_iff_ne_zero.mpr (inv_ne_zero (pow_ne_zero _ hpos.ne'))
+  rw [← projectedOne_orthogonal_eq_mixed, projectedOne_eq_scaled_section_one,
+    Submodule.span_singleton_smul_eq hunit]
 
 /-- The quotient of the legal orthogonal complement of the projected constant by the mixed space. -/
 abbrev InternalMeanQuotient :=
@@ -196,5 +217,59 @@ theorem boundaryTarget_subsingleton_iff_closedSpace_eq_top :
 theorem boundaryTarget_subsingleton_iff_one_mem :
     Subsingleton BoundaryTarget ↔ hilbertOne ∈ closedSpace :=
   boundaryTarget_subsingleton_iff_closedSpace_eq_top.trans closedSpace_eq_top_iff_one_mem
+
+/-- As an ambient subspace, the mixed closure is the legal part of the constant's orthogonal
+complement. -/
+theorem mixedClosure_eq_closedSpace_inf_one_orthogonal :
+    mixedClosure = closedSpace ⊓ (Submodule.span ℝ {hilbertOne})ᗮ := by
+  ext x
+  simp only [mem_mixedClosure_iff_mem_closedSpace_and_mean_zero, Submodule.mem_inf,
+    Submodule.mem_orthogonal_singleton_iff_inner_right, real_inner_comm]
+
+/-- The screened unit minus the ambient constant has mean zero and is orthogonal to every
+mixed vector. Both complements in this statement are formed in the ambient space. -/
+theorem screenedTwo_sub_one_mem_orthogonals :
+    normalizedScreenedTwo - hilbertOne ∈
+      (Submodule.span ℝ {hilbertOne})ᗮ ⊓ mixedClosureᗮ := by
+  constructor
+  · rw [← meanZero_eq_orthogonal]
+    exact defect.property
+  · intro m hm
+    exact defect_orthogonal (mixedInclusion ⟨m, hm⟩) hm
+
+/-- The missing inclusion puts the defect in the mixed space as well as its orthogonal
+complement, so the screened unit equals the constant. -/
+theorem screenedTwo_eq_one_of_one_orthogonal_le_mixed
+    (h : (Submodule.span ℝ {hilbertOne})ᗮ ≤ mixedClosure) :
+    normalizedScreenedTwo = hilbertOne := by
+  have hd := screenedTwo_sub_one_mem_orthogonals
+  exact sub_eq_zero.mp (inner_self_eq_zero.mp (hd.2 _ (h hd.1)))
+
+/-- In the converse direction, legality of the constant gives density via the scaled
+dilation differences for the coordinate point masses. -/
+theorem one_orthogonal_le_mixedClosure_iff_one_mem :
+    (Submodule.span ℝ {hilbertOne})ᗮ ≤ mixedClosure ↔ hilbertOne ∈ closedSpace := by
+  constructor
+  · intro h
+    exact one_mem_closedSpace_iff_normalizedScreenedTwo.mpr
+      (screenedTwo_eq_one_of_one_orthogonal_le_mixed h)
+  · intro hOne
+    simp only [mixedClosure_eq_closedSpace_inf_one_orthogonal,
+      closedSpace_eq_top_iff_one_mem.mpr hOne, top_inf_eq, le_refl]
+
+theorem closedSpace_eq_top_iff_mixedClosure_eq_one_orthogonal :
+    closedSpace = ⊤ ↔ mixedClosure = (Submodule.span ℝ {hilbertOne})ᗮ := by
+  constructor
+  · intro h
+    rw [mixedClosure_eq_closedSpace_inf_one_orthogonal, h, top_inf_eq]
+  · intro h
+    exact closedSpace_eq_top_iff_one_mem.mpr (one_orthogonal_le_mixedClosure_iff_one_mem.mp h.ge)
+
+/-- Vanishing of the centered snake boundary is equivalent to equality of the two ambient
+subspaces. -/
+theorem boundary_eq_zero_iff_mixedClosure_eq_one_orthogonal :
+    boundary = 0 ↔ mixedClosure = (Submodule.span ℝ {hilbertOne})ᗮ :=
+  boundary_eq_zero_iff_one_mem.trans
+    (closedSpace_eq_top_iff_one_mem.symm.trans closedSpace_eq_top_iff_mixedClosure_eq_one_orthogonal)
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake
