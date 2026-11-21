@@ -113,6 +113,29 @@ theorem pairBlock_nonneg (A B X : ℝ) (h : ℕ) : 0 ≤ pairBlock A B X h :=
   sum_nonneg fun _ _ => mul_nonneg ArithmeticFunction.vonMangoldt_nonneg
     ArithmeticFunction.vonMangoldt_nonneg
 
+/-- On this moving window every Mangoldt coefficient is eventually at most twice log X. -/
+theorem eventually_window_mangoldt {B d : ℝ} (hB : 0 < B) (hd : 0 < d) :
+    ∀ᶠ X : ℝ in atTop, ∀ n : ℕ, n ≤ ⌊B*X⌋₊ + shiftWidth d X → Λ n ≤ 2*Real.log X := by
+  filter_upwards [eventually_gt_atTop (1:ℝ), eventually_ge_atTop (B+d)] with X hX hxB
+  intro n hn
+  have hx : 0 < X := by linarith
+  have hL := Real.log_pos hX
+  by_cases hz : n=0
+  · subst n
+    simp [hL.le]
+  have hn0 : (0:ℝ) < n := by exact_mod_cast Nat.pos_of_ne_zero hz
+  have hlog : Real.log X ≤ X := Real.log_le_self hx.le
+  have hx2 : (n:ℝ) ≤ X^2 := calc
+    _ ≤ (⌊B*X⌋₊:ℝ)+(shiftWidth d X:ℝ) := by exact_mod_cast hn
+    _ ≤ B*X+d*Real.log X := add_le_add (Nat.floor_le (mul_pos hB hx).le)
+      (Nat.floor_le (mul_pos hd hL).le)
+    _ ≤ (B+d)*X := by nlinarith [mul_le_mul_of_nonneg_left hlog hd.le]
+    _ ≤ _ := by nlinarith [mul_le_mul_of_nonneg_right hxB hx.le]
+  calc
+    Λ n ≤ Real.log n := ArithmeticFunction.vonMangoldt_le_log
+    _ ≤ Real.log (X^2) := Real.log_le_log hn0 hx2
+    _ = _ := by rw [Real.log_pow]; norm_num
+
 private theorem block_le_raw (A B X : ℝ) (h : ℕ) :
     pairBlock A B X h ≤ rawGapCorrelation ⌊B * X⌋₊ h := by
   let b := ⌊B * X⌋₊
