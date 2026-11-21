@@ -216,3 +216,7 @@ imports at the top of RiemannResearch.lean caused a cherry-pick conflict.
 That commit was not published. A fresh checkout preserves the newer main
 commits; identical theorem files are exported beside PrimePhaseTorus and
 are submitted again to the managed full-project publication gate.
+
+## Consecutive ordinates
+
+The [prime-coordinate determinants and signed Fourier sums](THEOREM_CATALOG_PRIME_ORDINATE_MINORS_20261121.md) use these coordinates on successive copies of zeta zeros.
