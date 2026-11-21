@@ -2238,6 +2238,10 @@ import RiemannResearch.RH.AnnularMellinRH
 import RiemannResearch.Analysis.TwistedRieszFilterOrder
 import RiemannResearch.Analysis.HigherRieszLocalization
 import RiemannResearch.RH.AnnularPrimePairTargets
+import RiemannResearch.RH.PrimePairSingularSeriesMean
+import RiemannResearch.Analysis.LogarithmicPrimePairs
+import RiemannResearch.Analysis.LogarithmicPrimePairTriangle
+import RiemannResearch.Analysis.LogarithmicPrimePairSmallGaps
 import RiemannResearch.Analysis.WeightedMellinDerivativeSharpness
 import RiemannResearch.NumberTheory.PrimePairEulerProductTail
 import RiemannResearch.RH.ActualAnnularKernel
