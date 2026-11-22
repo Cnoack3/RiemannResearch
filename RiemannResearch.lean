@@ -337,6 +337,7 @@ import RiemannResearch.CategoryTheory.LocalFamilyCRT
 import RiemannResearch.CategoryTheory.OverlapEqualizerCRT
 import RiemannResearch.CategoryTheory.QuotientMatchingCRT
 import RiemannResearch.CategoryTheory.RegularCategoryCRT
+import RiemannResearch.CategoryTheory.SquarefreeResidueCRT
 import RiemannResearch.LinearAlgebra.CRTReconstructionObstructions
 import RiemannResearch.NumberTheory.InfiniteCRTObstruction
 import RiemannResearch.RH.QFullResidualCorrectionCost
@@ -607,6 +608,8 @@ import RiemannResearch.RH.MixedConductorSquareZero
 import RiemannResearch.RH.MixedConductorMetricCokernel
 import RiemannResearch.RH.CenteredMeanSnake
 import RiemannResearch.RH.CenteredMeanQuotients
+import RiemannResearch.RH.CenteredMeanLongExact
+import RiemannResearch.RH.CenteredMeanRHCriteria
 import RiemannResearch.RH.MixedOrthogonalMean
 import RiemannResearch.RH.MixedConductorHilbertBasis
 import RiemannResearch.RH.MixedConductorBlockSplitting
@@ -616,6 +619,7 @@ import RiemannResearch.RH.MixedConductorSupportSnake
 import RiemannResearch.RH.PrimeSupportCokernel
 import RiemannResearch.RH.PrimeSupportParityQuotient
 import RiemannResearch.RH.PrimeSupportParityDescent
+import RiemannResearch.RH.PrimeSupportAlgebraDescent
 import RiemannResearch.RH.MixedConductorPolarizedParseval
 import RiemannResearch.RH.MixedConductorGramBoundary
 import RiemannResearch.RH.MixedConductorGramZeroFree

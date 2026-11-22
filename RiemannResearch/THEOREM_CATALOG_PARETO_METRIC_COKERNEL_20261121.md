@@ -41,6 +41,71 @@ The implication from the norm-one universal property to RH is checked by
 `riemannHypothesis_of_legalMean_contractive_cokernel`. The reverse implication
 uses the published RH-to-natural-approximation theorem. See [Bagchi, Theorem 1](https://arxiv.org/abs/math/0607733).
 
+## The Von-Mangoldt Pattern and squarefree CRT
+
+For a finite set of primes $S$, put $q_S=\prod_{p\in S}p$. For $T\subseteq S$, reduction from $q_S$ to $q_T$ forgets precisely the coordinates in $S\setminus T$. The CRT equivalences give a natural isomorphism of contravariant diagrams in commutative rings. Each residue ring, with its prime projections, satisfies the categorical product universal property.
+
+$$
+\mathbb Z/q_S\mathbb Z \;\simeq\; \prod_{p\in S}\mathbb Z/p\mathbb Z.
+$$
+
+At the point $m$ the local contrast on the $p$-coordinate is $p\mathbf1_{p\mid m}-1$. Their product is the Ramanujan sum. Summing the jumps reconstructs the integrated packet whenever $q_S>1$
+
+$$
+J_{q_S}(n)=-\sum_{m=1}^{n}\prod_{p\in S}(p\mathbf1_{p\mid m}-1).
+$$
+
+[Ramanujan contrasts](RH/QRamanujanContrastGram.lean) · [Packet jumps](RH/ParetoPacketGreenGram.lean) · [Reconstruction from the categorical CRT coordinates](RH/PrimeSupportAlgebraDescent.lean)
+
+For a mixed conductor $q$ with at least two distinct prime divisors, let $\omega(q)$ count its distinct prime divisors. Let $I_k$ be the closed span in $V$ of the mixed packets with at most $k$ distinct prime divisors. Then
+
+$$
+ C(J_q)=0,\qquad J_q\in I_k \;\Longleftrightarrow\; \omega(q)\le k.
+$$
+
+When $k<\omega(q)$, the continuous Möbius coordinate at $q$ kills $I_k$ and takes the value $-q$ on $J_q$. The reverse implication follows from the generators of $I_k$. Thus $J_{30}$ first occurs at stage three. The conductor $12=2^2\cdot3$ gives a mean-zero packet at stage two outside the closed span of squarefree mixed packets. For $q=p^a$ with $a\ge1$, one has $C(J_q)=\log p$ and $P_{M^\perp}J_q=(\log p)u$.
+
+[Squarefree CRT and its product cone](CategoryTheory/SquarefreeResidueCRT.lean) · [Packet entry and prime-power screening](RH/PrimeSupportAlgebraDescent.lean) · [Packet expectations](RH/ParetoResidueMean.lean) · [The conductor twelve](RH/MixedOrthogonalMean.lean) · [Full and squarefree tower completions](RH/ConductorTowerCompletions.lean)
+
+## The centered snake sequence
+
+Let $H$ be the Pareto space, $Z=\ker C_H$ its ambient mean-zero subspace, and $c(v)=v-C(v)\mathbf1_H$ for $v\in V$. The vertical maps between the two split mean sequences are inclusion $M\to Z$, centering $c:V\to H$, and the zero endomorphism of $\mathbb R$. Identifying the scalar term with the algebra quotient $V/M$ gives the exact sequence in real modules
+
+$$
+0\longrightarrow V\cap\mathbb R\mathbf1_H\longrightarrow V/M
+\xrightarrow{\delta} Z/M\longrightarrow H/c(V)
+\longrightarrow\mathbb R\longrightarrow 0.
+$$
+
+The connecting map sends $[v]$ to $[c(v)]$. Its pullback to $V/I_k$ sends the algebra unit to $[u-\mathbf1_H]$ for every $k$. Under $Z/M\simeq H/V$ this becomes the class of $-(\mathbf1_H-P_V\mathbf1_H)$. The transition $V/I_n\to V/I_k$ for $n\le k$ gives a short exact sequence with kernel $I_k/I_n$. Compatible continuous maps from the stages into a Hausdorff algebra descend uniquely through $V/M$.
+
+Let $j:V\hookrightarrow H$ be inclusion. The screened and ambient square-zero products use the chosen mean-one vectors $u$ and $\mathbf1_H$, respectively. Expanding them gives the vector identity
+
+$$
+j(x\star_V y)-j(x)\star_H j(y)=C(x)C(y)(\mathbf1_H-u).
+$$
+
+On $J_q,J_r$ the scalar is $\Lambda(q)\Lambda(r)$. A mixed input gives automatic agreement. At $q=2,r=3$ the scalar is $(\log 2)(\log 3)\ne0$, so agreement on that pair is equivalent to $u=\mathbf1_H$. The screened product has $J_6\star_VJ_6=0$ while the pointwise square of $J_6$ has value one at site one. Proving the two-prime agreement, equivalently $\delta(1)=0$, remains open here. [The screened square at conductor six](RH/MixedConductorSquareZero.lean)
+
+[Split rows and connecting map](RH/CenteredMeanSnake.lean) · [Long exact sequence](RH/CenteredMeanLongExact.lean) · [Hausdorff algebra descent](RH/PrimeSupportAlgebraDescent.lean) · [Product identity and two-prime test](RH/CenteredMeanRHCriteria.lean) · [Snake lemma, Stacks Project, Tag 07JV](https://stacks.math.columbia.edu/tag/07JV)
+
+## Which formulations reach RH in Lean
+
+The declaration `categoricalMean_tfae` groups thirteen conditions equivalent to $\mathbf1_H\in V$. They include vanishing of the snake boundary, zero residual energy, existence of a contractive mean section, arbitrarily small parity quotient norm, the Gram determinant limit, natural approximation, and agreement of the two products on $J_2,J_3$. Each implies mathlib's `RiemannHypothesis`. The reverse direction in `stageUnit_zero_iff_riemannHypothesis` takes `RiemannHypothesis → BaezDuarte.NaturalApproximation` as an explicit premise. Báez-Duarte's discrete theorem supplies the published reference for that implication. [Formal statements](RH/CenteredMeanRHCriteria.lean) · [Báez-Duarte, 2003](https://www.bdim.eu/item?id=RLIN_2003_9_14_1_5_0) · [Bagchi, Theorem 1](https://arxiv.org/abs/math/0607733)
+
+The declaration `analyticRiemannHypothesis_tfae` collects six two-way criteria whose Lean statements require no additional premise.
+
+| Criterion | Lean source |
+| --- | --- |
+| Every finite distinct family of right-half-strip zeros satisfies the unit-budget Mellin product bound | [Finite Mellin products](RH/MixedConductorMetricLifting.lean) |
+| Each off-line Cauchy mixture has nonzero residue pairing at scale two | [Cauchy detection](RH/CauchyAnnihilatorRH.lean) |
+| The damped horizontal second energy of the actual zeros vanishes | [Zero energy](Analysis/ActualZeroSecondEnergy.lean) |
+| Uniform Selberg density holds for an unbounded set of slopes | [Cofinal slopes](Analysis/ActualSelbergSlopeRH.lean) |
+| The specified Taylor disks for the logarithmic derivative of $\xi$ exist at rational centers for every rational radius below one half | [Rational Taylor disks](RH/XiTaylorDiskRadius.lean) |
+| The cofinal sharp Weil integrals satisfy the specified polynomial upper bound | [Sharp Weil bound](Analysis/MontgomerySharpWeilSeparator.lean) |
+
+On November 22, 2026, Lean checked the transitive axiom dependencies of the 70 exported declarations in the four modules and the two packet lemmas made public. The audit allowed only `propext`, `Classical.choice`, and `Quot.sound`. [Axiom audit](https://app.buildbuddy.io/invocation/c3221973-f53f-490a-80f1-225528588406)
+
 ## A single prime-power covariance
 
 Write $d=u-1$. For every $v\in V$ the signed identity is

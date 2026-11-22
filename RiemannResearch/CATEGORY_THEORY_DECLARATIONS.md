@@ -1,10 +1,10 @@
 # Category theory and the Pareto boundary in Lean
 
-The index covers 45 modules, 710 public named declarations, 75 private or local declarations, and 5 further anonymous instances. The first two sections contain the abstract categorical constructions and the Pareto diagrams. The third section includes their Hilbert-space, arithmetic, and other applications.
+The index covers 49 modules, 782 public named declarations, 84 private or local declarations, and 5 further anonymous instances. The first two sections contain the abstract categorical constructions and the Pareto diagrams. The third section includes their Hilbert-space, arithmetic, and other applications.
 
 Each entry links to its declaration in this revision. Names are relative to the displayed namespace. The fields of structures and classes appear beside their declarations. Imported mathlib declarations and automatically generated recursors are outside the index.
 
-The Hausdorff descent property of the quotient cocone has a dedicated proof in [PrimeSupportParityDescent](RH/PrimeSupportParityDescent.lean). The [Gram boundary research note](THEOREM_CATALOG_PARETO_BOUNDARY_GRAM_20261121.md) records the exact arithmetic tests and their outstanding hypotheses.
+The underlying Hilbert quotient tower and its algebra quotients have separate Hausdorff descent theorems. The complete mean snake sequence, its pullback to each stage, and the squarefree residue product are indexed here. [Hilbert tower](RH/PrimeSupportParityDescent.lean) · [Algebra tower](RH/PrimeSupportAlgebraDescent.lean) · [Exact sequence](RH/CenteredMeanLongExact.lean) · [Arithmetic criteria](RH/CenteredMeanRHCriteria.lean). The [Gram boundary research note](THEOREM_CATALOG_PARETO_BOUNDARY_GRAM_20261121.md) records the exact arithmetic tests and their outstanding hypotheses.
 
 ## Abstract category theory and CRT
 
@@ -230,6 +230,34 @@ Namespace `CategoryTheory.GeneralizedEquivalence`
 
 - theorem [exists_matching_quotient_of_regular](CategoryTheory/RegularCategoryCRT.lean#L178)
 
+### SquarefreeResidueCRT
+
+CRT as a natural isomorphism of diagrams of commutative rings and a product universal property. [Lean source](CategoryTheory/SquarefreeResidueCRT.lean)
+
+Namespace `RiemannResearch.SquarefreeResidueCRT`
+
+- abbrev [PrimeFamily](CategoryTheory/SquarefreeResidueCRT.lean#L22)
+- def [conductor](CategoryTheory/SquarefreeResidueCRT.lean#L24)
+- def [primeSupport](CategoryTheory/SquarefreeResidueCRT.lean#L26)
+- theorem [conductor_eq_prod](CategoryTheory/SquarefreeResidueCRT.lean#L29)
+- theorem [primeFactors_conductor](CategoryTheory/SquarefreeResidueCRT.lean#L32)
+- theorem [conductor_primeSupport](CategoryTheory/SquarefreeResidueCRT.lean#L36)
+- theorem [conductor_squarefree](CategoryTheory/SquarefreeResidueCRT.lean#L39)
+- theorem [conductor_dvd](CategoryTheory/SquarefreeResidueCRT.lean#L55)
+- abbrev [Coordinates](CategoryTheory/SquarefreeResidueCRT.lean#L60)
+- private theorem [pairwise](CategoryTheory/SquarefreeResidueCRT.lean#L62)
+- def [crtEquiv](CategoryTheory/SquarefreeResidueCRT.lean#L67)
+- theorem [crtEquiv_apply](CategoryTheory/SquarefreeResidueCRT.lean#L70)
+- def [squarefreeEquiv](CategoryTheory/SquarefreeResidueCRT.lean#L75)
+- def [restrictCoordinates](CategoryTheory/SquarefreeResidueCRT.lean#L79)
+- def [residueFunctor](CategoryTheory/SquarefreeResidueCRT.lean#L87)
+- def [coordinateFunctor](CategoryTheory/SquarefreeResidueCRT.lean#L93)
+- def [crtIso](CategoryTheory/SquarefreeResidueCRT.lean#L100)
+- def [primeFan](CategoryTheory/SquarefreeResidueCRT.lean#L106)
+- private def [glue](CategoryTheory/SquarefreeResidueCRT.lean#L110)
+- private theorem [glue_proj](CategoryTheory/SquarefreeResidueCRT.lean#L114)
+- def [primeFanIsLimit](CategoryTheory/SquarefreeResidueCRT.lean#L121)
+
 ## Pareto sequences, functors, quotients, and connecting maps
 
 
@@ -441,34 +469,34 @@ Namespace `RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis`
 
 - abbrev [supportSpace](RH/MixedConductorPrimeSupport.lean#L33)
 - theorem [supportSpace_mono](RH/MixedConductorPrimeSupport.lean#L36)
-- private theorem [packet_mem_supportSpace](RH/MixedConductorPrimeSupport.lean#L43)
-- theorem [supportSpace_one](RH/MixedConductorPrimeSupport.lean#L47)
-- def [supportCoordinate](RH/MixedConductorPrimeSupport.lean#L59)
-- private theorem [supportCoordinate_self](RH/MixedConductorPrimeSupport.lean#L62)
-- theorem [supportSpace_le_coordinate_ker](RH/MixedConductorPrimeSupport.lean#L72)
-- theorem [supportCoordinate_residual](RH/MixedConductorPrimeSupport.lean#L88)
-- theorem [conductor_thirty_witness](RH/MixedConductorPrimeSupport.lean#L96)
-- private theorem [exists_nat_support_card](RH/MixedConductorPrimeSupport.lean#L108)
-- theorem [supportSpace_strict](RH/MixedConductorPrimeSupport.lean#L121)
-- abbrev [supportLayer](RH/MixedConductorPrimeSupport.lean#L141)
-- instance [supportLayer_hasOrthogonalProjection](RH/MixedConductorPrimeSupport.lean#L144)
-- theorem [supportSpace_sup_layer](RH/MixedConductorPrimeSupport.lean#L147)
-- theorem [supportLayer_ne_bot](RH/MixedConductorPrimeSupport.lean#L151)
-- theorem [supportLayer_orthogonal](RH/MixedConductorPrimeSupport.lean#L157)
-- theorem [supportLayer_projection](RH/MixedConductorPrimeSupport.lean#L161)
-- theorem [supportSpace_dense](RH/MixedConductorPrimeSupport.lean#L166)
-- theorem [sum_supportLayer_projection](RH/MixedConductorPrimeSupport.lean#L174)
-- theorem [tendsto_sum_supportLayer_projection](RH/MixedConductorPrimeSupport.lean#L188)
-- theorem [sum_supportLayer_energy](RH/MixedConductorPrimeSupport.lean#L196)
-- theorem [tendsto_sum_supportLayer_energy](RH/MixedConductorPrimeSupport.lean#L216)
-- private def [includeIn](RH/MixedConductorPrimeSupport.lean#L222)
-- def [layerComplex](RH/MixedConductorPrimeSupport.lean#L226)
-- def [layerSplitting](RH/MixedConductorPrimeSupport.lean#L239)
-- local [instance : HasZeroObject (TopModuleCat.{0} ℝ)](RH/MixedConductorPrimeSupport.lean#L257)
-- theorem [layer_shortExact](RH/MixedConductorPrimeSupport.lean#L260)
-- def [layerIsCokernel](RH/MixedConductorPrimeSupport.lean#L263)
-- local [instance : HasBinaryBiproducts (TopModuleCat.{0} ℝ)](RH/MixedConductorPrimeSupport.lean#L267)
-- def [supportSpaceBiprodIso](RH/MixedConductorPrimeSupport.lean#L270)
+- theorem [packet_mem_supportSpace](RH/MixedConductorPrimeSupport.lean#L44)
+- theorem [supportSpace_one](RH/MixedConductorPrimeSupport.lean#L48)
+- def [supportCoordinate](RH/MixedConductorPrimeSupport.lean#L60)
+- theorem [supportCoordinate_self](RH/MixedConductorPrimeSupport.lean#L64)
+- theorem [supportSpace_le_coordinate_ker](RH/MixedConductorPrimeSupport.lean#L74)
+- theorem [supportCoordinate_residual](RH/MixedConductorPrimeSupport.lean#L90)
+- theorem [conductor_thirty_witness](RH/MixedConductorPrimeSupport.lean#L98)
+- private theorem [exists_nat_support_card](RH/MixedConductorPrimeSupport.lean#L110)
+- theorem [supportSpace_strict](RH/MixedConductorPrimeSupport.lean#L123)
+- abbrev [supportLayer](RH/MixedConductorPrimeSupport.lean#L143)
+- instance [supportLayer_hasOrthogonalProjection](RH/MixedConductorPrimeSupport.lean#L146)
+- theorem [supportSpace_sup_layer](RH/MixedConductorPrimeSupport.lean#L149)
+- theorem [supportLayer_ne_bot](RH/MixedConductorPrimeSupport.lean#L153)
+- theorem [supportLayer_orthogonal](RH/MixedConductorPrimeSupport.lean#L159)
+- theorem [supportLayer_projection](RH/MixedConductorPrimeSupport.lean#L163)
+- theorem [supportSpace_dense](RH/MixedConductorPrimeSupport.lean#L168)
+- theorem [sum_supportLayer_projection](RH/MixedConductorPrimeSupport.lean#L176)
+- theorem [tendsto_sum_supportLayer_projection](RH/MixedConductorPrimeSupport.lean#L190)
+- theorem [sum_supportLayer_energy](RH/MixedConductorPrimeSupport.lean#L198)
+- theorem [tendsto_sum_supportLayer_energy](RH/MixedConductorPrimeSupport.lean#L218)
+- private def [includeIn](RH/MixedConductorPrimeSupport.lean#L224)
+- def [layerComplex](RH/MixedConductorPrimeSupport.lean#L228)
+- def [layerSplitting](RH/MixedConductorPrimeSupport.lean#L241)
+- local [instance : HasZeroObject (TopModuleCat.{0} ℝ)](RH/MixedConductorPrimeSupport.lean#L259)
+- theorem [layer_shortExact](RH/MixedConductorPrimeSupport.lean#L262)
+- def [layerIsCokernel](RH/MixedConductorPrimeSupport.lean#L265)
+- local [instance : HasBinaryBiproducts (TopModuleCat.{0} ℝ)](RH/MixedConductorPrimeSupport.lean#L269)
+- def [supportSpaceBiprodIso](RH/MixedConductorPrimeSupport.lean#L272)
 
 ### MixedConductorSplitExact
 
@@ -564,6 +592,87 @@ Namespace `RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis`
 - theorem [boundary_eq_zero_iff_small_parity_quotients](RH/PrimeSupportParityQuotient.lean#L107)
 - theorem [riemannHypothesis_of_finite_parity_certificates](RH/PrimeSupportParityQuotient.lean#L123)
 - theorem [single_zero_le_parityQuotientClass](RH/PrimeSupportParityQuotient.lean#L155)
+
+### CenteredMeanLongExact
+
+Exactness at every term of the centered mean sequence, including its two endpoints. [Lean source](RH/CenteredMeanLongExact.lean)
+
+Namespace `RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake`
+
+- abbrev [CenterCokernel](RH/CenteredMeanLongExact.lean#L36)
+- def [toCenterCokernel](RH/CenteredMeanLongExact.lean#L39)
+- def [cokernelMean](RH/CenteredMeanLongExact.lean#L48)
+- def [constantClass](RH/CenteredMeanLongExact.lean#L54)
+- def [quotientBoundary](RH/CenteredMeanLongExact.lean#L58)
+- theorem [quotientBoundary_apply](RH/CenteredMeanLongExact.lean#L61)
+- theorem [quotientBoundary_mk](RH/CenteredMeanLongExact.lean#L66)
+- theorem [constantClass_injective](RH/CenteredMeanLongExact.lean#L71)
+- theorem [exact_constantClass_quotientBoundary](RH/CenteredMeanLongExact.lean#L74)
+- theorem [exact_quotientBoundary_toCenterCokernel](RH/CenteredMeanLongExact.lean#L83)
+- theorem [exact_toCenterCokernel_cokernelMean](RH/CenteredMeanLongExact.lean#L97)
+- theorem [cokernelMean_surjective](RH/CenteredMeanLongExact.lean#L107)
+- private abbrev [ZeroTerm](RH/CenteredMeanLongExact.lean#L113)
+- def [centeredLongSequence](RH/CenteredMeanLongExact.lean#L116)
+- private theorem [pairExact](RH/CenteredMeanLongExact.lean#L122)
+- theorem [centeredLongSequence_exact](RH/CenteredMeanLongExact.lean#L129)
+- theorem [quotientBoundary_unit_residual](RH/CenteredMeanLongExact.lean#L143)
+
+### PrimeSupportAlgebraDescent
+
+The stage ideals, short exact transitions, Hausdorff descent, and packet detection. [Lean source](RH/PrimeSupportAlgebraDescent.lean)
+
+Namespace `RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis`
+
+- private abbrev [legalSupport](RH/PrimeSupportAlgebraDescent.lean#L34)
+- def [supportIdeal](RH/PrimeSupportAlgebraDescent.lean#L39)
+- theorem [supportIdeal_mono](RH/PrimeSupportAlgebraDescent.lean#L50)
+- theorem [supportIdeal_le_mixed](RH/PrimeSupportAlgebraDescent.lean#L54)
+- theorem [supportIdeal_sq](RH/PrimeSupportAlgebraDescent.lean#L58)
+- private def [idealTower](RH/PrimeSupportAlgebraDescent.lean#L66)
+- private def [idealCocone](RH/PrimeSupportAlgebraDescent.lean#L80)
+- private theorem [linear_factor_comp](RH/PrimeSupportAlgebraDescent.lean#L92)
+- private theorem [factor_shortExact](RH/PrimeSupportAlgebraDescent.lean#L102)
+- def [supportAlgebraTower](RH/PrimeSupportAlgebraDescent.lean#L112)
+- def [supportAlgebraCocone](RH/PrimeSupportAlgebraDescent.lean#L115)
+- theorem [supportTransition_shortExact](RH/PrimeSupportAlgebraDescent.lean#L119)
+- theorem [supportTransition_kernel_mk_iff](RH/PrimeSupportAlgebraDescent.lean#L124)
+- theorem [supportAlgebra_hausdorff_desc](RH/PrimeSupportAlgebraDescent.lean#L131)
+- def [stageMeanBoundary](RH/PrimeSupportAlgebraDescent.lean#L163)
+- theorem [stageMeanBoundary_natural](RH/PrimeSupportAlgebraDescent.lean#L166)
+- theorem [stageMeanBoundary_mk](RH/PrimeSupportAlgebraDescent.lean#L172)
+- theorem [stageMeanBoundary_unit](RH/PrimeSupportAlgebraDescent.lean#L176)
+- def [boundaryToMixedQuotient](RH/PrimeSupportAlgebraDescent.lean#L182)
+- theorem [boundaryToMixedQuotient_injective](RH/PrimeSupportAlgebraDescent.lean#L186)
+- theorem [stageMeanBoundary_unit_eq_descended_parity](RH/PrimeSupportAlgebraDescent.lean#L196)
+- def [coordinateContrast](RH/PrimeSupportAlgebraDescent.lean#L205)
+- theorem [coordinateContrast_natCast](RH/PrimeSupportAlgebraDescent.lean#L208)
+- theorem [ramanujanSum_eq_crtContrast](RH/PrimeSupportAlgebraDescent.lean#L218)
+- theorem [squarefree_packet_prefix_crt](RH/PrimeSupportAlgebraDescent.lean#L226)
+- theorem [packet_mem_supportIdeal_iff](RH/PrimeSupportAlgebraDescent.lean#L233)
+- def [familyMixedIndex](RH/PrimeSupportAlgebraDescent.lean#L249)
+- theorem [squarefree_packet_descent](RH/PrimeSupportAlgebraDescent.lean#L262)
+- theorem [primePower_screened](RH/PrimeSupportAlgebraDescent.lean#L272)
+
+### CenteredMeanRHCriteria
+
+The two-prime product test, the equivalent Pareto conditions, and six analytic RH equivalences. [Lean source](RH/CenteredMeanRHCriteria.lean)
+
+Namespace `RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake`
+
+- def [ambientProduct](RH/CenteredMeanRHCriteria.lean#L43)
+- private theorem [ambientMean_coe](RH/CenteredMeanRHCriteria.lean#L47)
+- theorem [inclusion_product_defect](RH/CenteredMeanRHCriteria.lean#L54)
+- def [legalRamanujan](RH/CenteredMeanRHCriteria.lean#L65)
+- theorem [legalRamanujan_mean](RH/CenteredMeanRHCriteria.lean#L68)
+- def [packetProductAgrees](RH/CenteredMeanRHCriteria.lean#L74)
+- theorem [packetProductAgrees_iff](RH/CenteredMeanRHCriteria.lean#L80)
+- theorem [two_three_product_iff_screened](RH/CenteredMeanRHCriteria.lean#L90)
+- theorem [stageUnit_zero_iff_boundary](RH/CenteredMeanRHCriteria.lean#L97)
+- theorem [categoricalMean_tfae](RH/CenteredMeanRHCriteria.lean#L104)
+- theorem [riemannHypothesis_of_stageUnit_zero](RH/CenteredMeanRHCriteria.lean#L135)
+- theorem [criterion_to_stageUnit_iff_naturalApproximation](RH/CenteredMeanRHCriteria.lean#L140)
+- theorem [stageUnit_zero_iff_riemannHypothesis](RH/CenteredMeanRHCriteria.lean#L147)
+- theorem [analyticRiemannHypothesis_tfae](RH/CenteredMeanRHCriteria.lean#L160)
 
 ## Applications and companion modules
 

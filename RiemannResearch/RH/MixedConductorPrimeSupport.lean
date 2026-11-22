@@ -40,7 +40,8 @@ theorem supportSpace_mono : Monotone supportSpace := by
   rintro _ ⟨q, hq, rfl⟩
   exact ⟨q, le_trans hq h, rfl⟩
 
-private theorem packet_mem_supportSpace (q : Index) {k : ℕ} (h : q.val.primeFactors.card ≤ k) :
+/-- A raw mixed packet belongs to every stage containing its prime support. -/
+theorem packet_mem_supportSpace (q : Index) {k : ℕ} (h : q.val.primeFactors.card ≤ k) :
     packet q ∈ supportSpace k :=
   Submodule.le_topologicalClosure _ (Submodule.subset_span ⟨q, h, rfl⟩)
 
@@ -59,7 +60,8 @@ theorem supportSpace_one : supportSpace 1 = ⊥ := by
 def supportCoordinate (q : Index) : mixedClosure →L[ℝ] ℝ :=
   (mobiusDifferenceCLM q.val).comp mixedClosure.subtypeL
 
-private theorem supportCoordinate_self (q : Index) :
+/-- The conductor's own Möbius coordinate detects its raw packet. -/
+theorem supportCoordinate_self (q : Index) :
     supportCoordinate q (packet q) = -(q.val : ℝ) := by
   have hp := Nat.zero_lt_one.trans q.property.1
   change mobiusDifferenceCLM q.val (ramanujanPacketHilbert q.val) = _
