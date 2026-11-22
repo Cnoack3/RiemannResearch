@@ -1,5 +1,6 @@
 import RiemannResearch.Analysis.WeightedTailSqueeze
 import RiemannResearch.RH.CanonicalMobiusPNT
+import RiemannResearch.RH.ThresholdHilbertAdjoint
 import RiemannResearch.RH.ThresholdHilbertL1
 import RiemannResearch.RH.MixedConductorRankOne
 
@@ -376,5 +377,42 @@ theorem annihilator_mean_zero_of_upper_bound (z : ThresholdHilbert) (hz : z ∈ 
   have ha : 0 ≤ 2 * (2 * D * Real.log 2) := by positivity
   exact annihilator_mean_zero_of_absolute_tail z hz _ ha
     (annihilator_absolute_tail_le_of_upper z hz hD hu)
+
+/-- An upper bound on a legal annihilator persists under every dilation adjoint.
+Their means recover each coordinate, hence the annihilator vanishes. -/
+theorem annihilator_eq_zero_of_upper_bound (z : ThresholdHilbert) (hz : z ∈ closedSpaceᗮ)
+    (hbound : ∃ C : ℝ, ∀ k : ℕ, 0 < k → hilbertSequence z k ≤ C) : z = 0 := by
+  obtain ⟨C, hC⟩ := hbound
+  have hmean (m : ℕ) (hm : 0 < m) :
+      inner ℝ hilbertOne (hilbertDilationAdjoint m hm z) = 0 := by
+    rw [real_inner_comm]
+    apply annihilator_mean_zero_of_upper_bound _ ?_ ⟨C, ?_⟩
+    · intro v hv
+      change inner ℝ v ((hilbertDilationContinuous m hm).adjoint z) = 0
+      rw [ContinuousLinearMap.adjoint_inner_right]
+      exact hz _ (closedSpace_dilation hv m hm)
+    · intro k hk
+      calc
+        hilbertSequence (hilbertDilationAdjoint m hm z) k ≤
+            hilbertSequence (hilbertDilationAdjoint m hm (C • hilbertOne)) k := by
+          rw [hilbertDilationAdjoint_coordinate m k hm hk z,
+            hilbertDilationAdjoint_coordinate m k hm hk (C • hilbertOne)]
+          apply mul_le_mul_of_nonneg_left _
+            (div_nonneg (Nat.cast_nonneg _) (positiveWeight_nonneg _))
+          apply Finset.sum_le_sum
+          intro n hn
+          have hn' := (Nat.mul_pos hm hk).trans_le (Finset.mem_Ico.mp hn).1
+          apply mul_le_mul_of_nonneg_left _ (positiveWeight_nonneg _)
+          simpa [hilbertSequence_smul, hilbertOne_sequence, zeroAnchor, hn'.ne'] using hC n hn'
+        _ = C := by simp [hilbertDilationAdjoint_one, zeroAnchor, hk.ne']
+  apply hilbertSequence_injective
+  funext k
+  change hilbertSequence z k = hilbertSequenceLinear (0 : ThresholdHilbert) k
+  rw [map_zero]
+  cases k with
+  | zero => exact hilbertSequence_zero z
+  | succ k =>
+    rw [hilbert_coordinate_recovery z _ (Nat.succ_pos k), hmean _ _, hmean _ _]
+    simp
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization

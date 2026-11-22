@@ -276,6 +276,47 @@ The inclusion $1_H^\perp\subseteq M$ remains open.
 
 [Quotient equivalence and rank-one projection](RH/CenteredMeanQuotients.lean)
 
+## The mean restricted to the ambient mixed complement
+
+Write $C(h)=\langle\mathbf1,h\rangle_P$ for $h\in M^\perp$ and
+$K=M^\perp\cap\mathbf1^\perp$. The constant gives a section, so $C$ is
+surjective and $M^\perp/K\cong\mathbb R$. The restricted mean is injective on
+$V\cap M^\perp=\mathbb Ru$. On the whole mixed complement the following
+conditions are equivalent.
+
+$$
+C|_{M^\perp}\text{ is injective}
+\quad\Longleftrightarrow\quad M^\perp=\mathbb R\mathbf1
+\quad\Longleftrightarrow\quad \mathbf1\in V
+\quad\Longleftrightarrow\quad \mathbf1-u=0 .
+$$
+
+Taking orthogonal complements of $M\subseteq\mathbf1^\perp$ gives
+$\mathbb R\mathbf1\subseteq M^\perp$. The exact ambient splitting is
+$M^\perp=\mathbb R\mathbf1\oplus^\perp K$. The theorem
+`mixedOrthogonal_inf_oneOrthogonal_eq_bot_iff_discrepancy_zero` gives
+$K=\{0\}\iff\mathbf1-u=0$.
+
+The von Mangoldt coefficient is the continuous linear functional
+$T(h)=\langle u,h\rangle_P$. For the draft sign $d=\mathbf1-u$,
+$(C-T)(h)=\langle d,h\rangle_P$, hence $T(d)=-\|d\|_P^2$.
+
+**Established.** Every $h\in M^\perp$ bounded above or below on the positive
+sites equals $C(h)\mathbf1$. Write $h=a\mathbf1+z$ with $z\in V^\perp$. For an
+upper-bounded $z$, the dilation adjoints preserve its upper bound and its
+membership in $V^\perp$. The one-sided mean estimate applies at each dilation,
+and consecutive dilation means recover every coordinate of $z$. Negation gives
+the lower-bounded case.
+
+**Conditional research reduction.** If $K$ lies in one real line, then RH holds.
+For $z\in V^\perp$, the vector $z-C(z)\mathbf1$ lies in $K$. Subtracting its
+packet coefficient times $\mathbf1$ recovers $z$. A line containing $K$ would
+therefore put $V^\perp$ in a line, where the conjugate-zero dimension criterion
+applies. **Open.** Exclude a nonzero vector in $K$ unbounded in both directions.
+
+[Ambient mean and packet coefficient](RH/MixedOrthogonalMean.lean) ·
+[One-sided annihilator theorem](RH/ParetoAnnihilatorOneSided.lean)
+
 ## Finite Möbius tests for the ambient mean-zero space
 
 Set $L=\log 2$, $z=J_2-L1$ and $F_k=\overline{\operatorname{span}}\{J_q:q\in\mathcal I,\ \omega(q)\le k\}$. The constant is legal exactly when $z\in M$. Write $p=P_MJ_2$, $D_j=F_{j+1}\cap F_j^\perp$, and take the projections onto $D_j$ and $F_k$ inside $M$. The finite Parseval identity retains both residual terms.
