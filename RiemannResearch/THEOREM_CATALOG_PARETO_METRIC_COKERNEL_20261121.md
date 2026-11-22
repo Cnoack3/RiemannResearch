@@ -56,6 +56,19 @@ inequality $\langle J_2,u-1\rangle_P\le0$. **Open.** Prove this inequality,
 or prove that the finite pairings tend to zero. Each finite pairing is
 strictly positive and equals $(\log 2)\|u_N-1\|_P^2$.
 
+In the second draft (November 22), centered parity is $g=J_2/\log 2-1$.
+Its full screening equals $d$, so $g\in M$ is equivalent to $1\in V$.
+The dilated odd blocks $A_m=\{n:\lfloor n/m\rfloor\text{ is odd}\}$ have
+mass $(\log 2)/m$. Their conditional mean of $d$ equals $\|d\|_P^2$ at every scale.
+
+Theorem `screened_displacement_scaled_tail_identity` splits the scaled physical
+tail energy into $(\log 2)\|d\|_P^4$ and the complete squared remainder.
+Theorem `screenedTwo_eq_one_iff_cofinal_small_scaled_tail` identifies arbitrarily
+small cofinal scaled tails with vanishing of $d$. **Open.** Establish
+$\liminf_{m\to\infty}m\sum_{n\ge m}w_n d(n)^2=0$ for this screened vector.
+For finite mixed fits made from one dilation, `centered_parity_single_dilation_error_lower`
+bounds the error below by $(\sqrt m-1)\|y\|_P-\|g\|_P$ for the fit $y-D_m y$.
+
 [Signed identities and finite-cutoff proofs](RH/ParetoPrimePowerCovariance.lean)
 
 ## Decomposing the mixed ideal by conductor
