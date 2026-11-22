@@ -697,6 +697,10 @@ import RiemannResearch.RH.ParetoParityMobiusLifts
 import RiemannResearch.RH.ParetoParityConsecutiveHeads
 import RiemannResearch.RH.ParetoParityHeadInverse
 import RiemannResearch.RH.ParetoMixedCenteredParityHeads
+import RiemannResearch.RH.ParetoAffineHeadTower
+import RiemannResearch.RH.ZetaTwoAffineHeadTower
+import RiemannResearch.RH.QDensityImageReconstruction
+import RiemannResearch.RH.MixedReciprocalDensity
 import RiemannResearch.RH.MixedCaptureZeroPair
 import RiemannResearch.RH.MixedParityProjectionDPP
 import RiemannResearch.RH.MixedParityCaptureFifteen

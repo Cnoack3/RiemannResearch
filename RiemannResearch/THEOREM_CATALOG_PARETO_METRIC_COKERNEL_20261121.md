@@ -400,6 +400,81 @@ gives RH. **Open.** Exclude a nonzero vector in $K$ unbounded in both directions
 [Ambient mean and packet coefficient](RH/MixedOrthogonalMean.lean) ·
 [One-sided annihilator theorem](RH/ParetoAnnihilatorOneSided.lean)
 
+## Reconstruction from the density image in zeta-two space
+
+Set $S=B(V)$, with $B=dQ/dP$. Its distinguished target is $b=B\mathbf1$.
+Then $S=L^2(Q)$ if and only if $b\in S$, equivalently $P_S^Q b=b$.
+There is also an unconditional reconstruction using only elements of $S$.
+For $(Rh)(n)=h(n)/(n+1)$, the identity $\zeta(2)R(Bv)(n)=v(n)/n$
+and full reciprocal density give $\overline{R(S)}=L^2(Q)$.
+For squarefree conductors $a\ge2$, Möbius inversion gives the same finite
+span for the integrated packets and the residues, before taking closure.
+Consequently $Bf$ belongs to the closed zeta-two span of the twisted
+squarefree residues exactly when the physical $f$ belongs to the Pareto
+squarefree packet closure. This squarefree image omits $Br_4$.
+[Reconstruction from the single density-image space](RH/QDensityImageReconstruction.lean)
+
+## Mixed packets alone after the reciprocal multiplier
+
+Let $V$ be the full legal closure in $L^2(Q)$, $M$ its closed mixed-conductor
+subspace, $B=dQ/dP$, and $D=\zeta(2)B-I$, so $Df(n)=f(n)/n$.
+For the raw legal remainder $r_a(n)=n\bmod a$, $C_P(r_a)=\log a$
+and $\|Dr_a\|_Q\le1$. Thus for each $v\in V$ the corrected vector
+$v-C_P(v)r_a/\log a$ lies in $M$ and its reciprocal image tends to $Dv$.
+Full reciprocal totality gives
+\[
+\overline{D(M)}=\overline{M+B(M)}=L^2(Q).
+\]
+In particular the single family $J_q(n)/n$ at conductors with at least two
+distinct prime factors has dense span. Full density of either pure family
+$\{g_a\}$ or $\{Bg_a\}$ is equivalent to $B J_q\in V$ for **each mixed
+conductor** $q$. The preservation assertion remains open and would imply RH.
+[Mixed reciprocal density and the mixed-only test](RH/MixedReciprocalDensity.lean)
+
+## Orthogonal tower of mean-one physical patches
+
+Write $u$ for the screened mean-one vector and $M$ for the closed mixed
+space. Let $K_n$ consist of the vectors in $M$ vanishing on positive sites
+$1,\ldots,n$. With $K_0=M$, project the Riesz representer of site $n+1$
+onto $K_n$ to obtain $g_{n+1}$. Finite mixed interpolation gives
+$g_{n+1}\ne0$. The normalized direction $h_{n+1}=g_{n+1}/\|g_{n+1}\|^2$
+has value one there, and
+$K_n=\mathbb Rh_{n+1}\oplus^\perp K_{n+1}$. These lines span a dense
+subspace of $M$.
+
+The minimum-norm legal patch $a_n$ has mean one and physical values one on
+$1,\ldots,n$. It starts at $a_0=u$ and satisfies
+$a_{n+1}=a_n+(1-a_n(n+1))h_{n+1}$. Every feasible vector belongs to
+$a_n+K_n$. If $D_n=|1-a_n(n+1)|^2/\|g_{n+1}\|^2$, then
+$\|a_N-\mathbf1\|^2=\|u-\mathbf1\|^2+\sum_{n<N}D_n$.
+The existing centered-parity trials give $\|a_N-\mathbf1\|^2=o(N)$.
+
+**Open.** Prove the partial sums of $D_n$ are bounded along arbitrarily
+large physical cutoffs. In Lean this is equivalent to $u=\mathbf1$ and
+implies RH. If $u=\mathbf1$, every patch already equals $\mathbf1$.
+[Orthogonal layers, finite minimizers and global criterion](RH/ParetoAffineHeadTower.lean)
+
+## The same affine tower under the zeta-two law
+
+The physical head constraints and the Pareto mean define the same affine sets.
+In the zeta-two inner product, the Pareto mean is represented by
+$w(k)=\zeta(2)k/(k+1)$. Orthogonally projecting the constant onto each
+affine set gives its zeta-two minimizer $b_n$. Its squared distance increases
+by $\|b_m-b_n\|_Q^2$ between stages $n\le m$ and is $o(n)$.
+
+Write $\widehat b_n(r)$ for the full Jordan-normalized divisor coefficients.
+Then $\widehat b_n(r)\to\mathbf1_{\{r=1\}}$ at each fixed conductor. More
+precisely, the squared coefficient error is bounded by
+\[
+\frac{2J_2(r)}{\zeta(2)(n+1)}\,\|\mathbf1-b_n\|_Q^2 .
+\]
+On the Pareto mean-one fiber, the complete squared error is at most
+$\zeta(2)(\zeta(2)-1)$ times the sum of the squares of the nonconstant
+coefficients. A uniform bound for that sum at arbitrarily large physical
+stages is equivalent to $u=\mathbf1$ and implies RH. Obtaining this bound
+over all conductors remains open.
+[Zeta-two projections and arithmetic coordinates](RH/ZetaTwoAffineHeadTower.lean)
+
 ## Finite Möbius tests for the ambient mean-zero space
 
 Set $L=\log 2$, $z=J_2-L1$ and $F_k=\overline{\operatorname{span}}\{J_q:q\in\mathcal I,\ \omega(q)\le k\}$. The constant is legal exactly when $z\in M$. Write $p=P_MJ_2$, $D_j=F_{j+1}\cap F_j^\perp$, and take the projections onto $D_j$ and $F_k$ inside $M$. The finite Parseval identity retains both residual terms.
