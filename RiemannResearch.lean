@@ -673,6 +673,7 @@ import RiemannResearch.RH.ParetoLogResidueTest
 import RiemannResearch.RH.PrimePowerPacketSummation
 import RiemannResearch.RH.ScreenedPrimePowerTelescope
 import RiemannResearch.RH.MixedConductorCaptureGains
+import RiemannResearch.RH.CenteredParityFiniteTrials
 import RiemannResearch.RH.MixedCaptureLegalTrials
 import RiemannResearch.RH.ParetoParityNormBounds
 import RiemannResearch.RH.ParetoParityAdjointCriterion

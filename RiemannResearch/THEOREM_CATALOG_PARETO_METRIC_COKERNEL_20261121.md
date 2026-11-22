@@ -584,3 +584,29 @@ Thus the standard fresh-prime columns used to show solvability have growing cost
 | `fresh_packet_combination`, `fresh_dilation_cost_floor` | Quantitative obstruction for a single fresh prime |
 
 [Finite Möbius matrices and the ambient inclusion](RH/MixedMobiusWindow.lean) · [Support and fresh-prime lower bounds](RH/MixedParitySupportBounds.lean) · [Finite head interpolation](RH/MixedConductorHead.lean) · [Sublinear centered parity fits](RH/ParetoMixedCenteredParityHeads.lean)
+
+## Finite mixed fits to centered parity
+
+With $a=\log 2$, $g=J_2-a\mathbf1$, and $P_N$ the projection onto the mixed
+span up to conductor $N$, every $m$ in that span satisfies
+
+$$
+\|g-m\|_P^2=a-a^2-\|P_NJ_2\|_P^2+\|P_NJ_2-m\|_P^2.
+$$
+
+The conductor-241 certificate gives a finite trial in every sufficiently
+large window with complete squared error below $\varepsilon$ for each
+$\varepsilon>(\log 2)^2\,628101568132839/64908898431867161$.
+The best error tends to $a^2\|u-\mathbf1\|_P^2$.
+
+A separate head interpolation estimate uses the explicit canonical Möbius
+ceiling $Q_C(N)$. For every legal mean-one $z$, every sufficiently large
+head $N$, and every $\eta>0$, there is a finite mixed fit to $z-\mathbf1$
+matching its first $N$ values, with complete norm error less than
+$(1+\|z\|_P)\sqrt{(N+1)Q_C(N)}+\eta$. The constant $C$ is independent of $z$.
+
+**Conditional research reduction.** Complete squared-error fits to $g$ for
+every positive tolerance are equivalent to $\mathbf1\in V$ and imply RH.
+Producing the fits below arbitrarily small positive tolerances remains open.
+
+[Finite trial identity and conductor-241 estimate](RH/CenteredParityFiniteTrials.lean) · [Quantitative finite-head estimate](RH/ParetoMixedCenteredParityHeads.lean) · [Manuscript](RH/ParetoVonMangoldtReduction.tex.md)

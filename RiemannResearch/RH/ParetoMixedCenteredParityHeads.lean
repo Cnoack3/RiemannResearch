@@ -1,5 +1,6 @@
 import RiemannResearch.RH.MixedConductorHead
 import RiemannResearch.RH.ParetoFiniteHeadRepair
+import RiemannResearch.RH.CanonicalMobiusQuantitativeEnergy
 import RiemannResearch.RH.CanonicalMobiusWeightedEndpoint
 
 /-!
@@ -170,7 +171,8 @@ theorem pdf_centered_parity_finite_mixed_sublinear :
       2*b^2*‖hilbertOne-canonicalMobiusHilbert N‖^2+2 := by
     have he := (hE N).le
     rw [norm_sub_rev (canonicalMobiusHilbert N) hilbertOne] at he
-    have hsq := (sq_le_sq₀ (norm_nonneg _) (add_nonneg (mul_nonneg hb (norm_nonneg _)) zero_le_one)).mpr he
+    have hsq := (sq_le_sq₀ (norm_nonneg _)
+      (add_nonneg (mul_nonneg hb (norm_nonneg _)) zero_le_one)).mpr he
     nlinarith only [hsq,sq_nonneg (b*‖hilbertOne-canonicalMobiusHilbert N‖-1)]
   have hlim : Tendsto (fun N : ℕ => (2*b^2)*(‖hilbertOne-canonicalMobiusHilbert N‖^2/(N:ℝ))
       + 2*(1/(N:ℝ))) atTop (𝓝 0) := by
@@ -182,5 +184,31 @@ theorem pdf_centered_parity_finite_mixed_sublinear :
     _ ≤ (2*b^2*‖hilbertOne-canonicalMobiusHilbert N‖^2+2)/(N:ℝ) :=
       div_le_div_of_nonneg_right (hs N) (Nat.cast_nonneg N)
     _ = _ := by ring
+
+/-- Transfer the quantitative Möbius ceiling to complete finite mixed fits.
+The same constant works for every legal input of mean one. The finite cutoff
+may be chosen after specifying the input and the extra norm tolerance. -/
+theorem finite_mixed_centered_heads_quantitative :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ N : ℕ in atTop, ∀ z : ThresholdHilbert,
+      z ∈ closedSpace → inner ℝ z hilbertOne = 1 → ∀ ε : ℝ, 0 < ε →
+      ∃ M : ℕ, ∃ v ∈ mixedSpace (Finset.Icc 2 M),
+        (∀ k, 0 < k → k ≤ N →
+          hilbertSequence v k = hilbertSequence (z - hilbertOne) k) ∧
+        ‖(z - hilbertOne) - v‖ <
+          (1 + ‖z‖) * Real.sqrt (((N : ℝ) + 1) * canonicalMobiusResidualCeiling C N) + ε := by
+  obtain ⟨C, hC, hbound⟩ := canonicalMobiusResidual_eventual_explicit_ceiling
+  refine ⟨C, hC, ?_⟩
+  filter_upwards [hbound] with N hN
+  intro z hz hm ε hε
+  obtain ⟨M, v, hv, hhead, herr⟩ := finite_mixed_centered_head_transfer N z
+    (canonicalMobiusHilbert N) hz (canonicalMobiusHilbert_mem_closedSpace N) hm
+    (fun k hk hkN => by
+      rw [canonicalMobiusHilbert_exact N k hk hkN, hilbertOne_sequence]
+      simp [zeroAnchor, hk.ne']) ε hε
+  refine ⟨M, v, hv, hhead, ?_⟩
+  rw [norm_sub_rev (canonicalMobiusHilbert N) hilbertOne] at herr
+  have hfactor : 0 ≤ 1 + ‖z‖ := by positivity
+  exact herr.trans_le (add_le_add
+    (mul_le_mul_of_nonneg_left (Real.le_sqrt_of_sq_le hN.2) hfactor) (le_refl ε))
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur
