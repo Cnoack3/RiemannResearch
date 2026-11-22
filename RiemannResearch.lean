@@ -613,6 +613,7 @@ import RiemannResearch.RH.MixedConductorSupportSnake
 import RiemannResearch.RH.PrimeSupportCokernel
 import RiemannResearch.RH.PrimeSupportParityQuotient
 import RiemannResearch.RH.PrimeSupportParityDescent
+import RiemannResearch.RH.MixedConductorPolarizedParseval
 import RiemannResearch.RH.MixedMobiusWindow
 import RiemannResearch.RH.MixedParitySupportBounds
 import RiemannResearch.RH.MixedConductorContractiveSection
