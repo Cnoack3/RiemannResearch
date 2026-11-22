@@ -1,4 +1,5 @@
 import RiemannResearch.RH.QFullTargetTotality
+import RiemannResearch.RH.QFullDensityConditionalConverse
 import RiemannResearch.RH.ParetoRamanujanSquarefreeAnnihilator
 
 /-!
@@ -123,6 +124,40 @@ theorem squarefree_omits_four : B (qResidue 4) ∉ squarefreeImage := by
   have hz := ParetoRamanujanSquarefreeAnnihilator.fourSiteWitness_mem_ramanujan_orthogonal _ h
   rw [real_inner_comm, ParetoRamanujanSquarefreeAnnihilator.fourSiteWitness_pairing_residue_four] at hz
   norm_num at hz
+
+private theorem squarefree_residue_span :
+    Submodule.span ℝ (qResidue '' ParetoRamanujanSquarefreeAnnihilator.squarefreeConductors) =
+      qSquarefreeCRTSpan := by
+  unfold qSquarefreeCRTSpan
+  congr 1
+  ext f
+  constructor
+  · rintro ⟨d,hd,rfl⟩
+    exact ⟨⟨d,hd.1,hd.2⟩,rfl⟩
+  · rintro ⟨d,rfl⟩
+    exact ⟨d.val,⟨d.property.1,d.property.2⟩,rfl⟩
+
+theorem squarefree_image_target_iff_q :
+    B qOne ∈ squarefreeImage ↔ qOne ∈ qSquarefreeCRTSpan.topologicalClosure := by
+  unfold squarefreeImage
+  rw [mem_density_closure_iff, squarefree_residue_span]
+
+/-- Squarefree density-image approximation implies RH without any analytic provider. -/
+theorem rh_of_squarefree_image (h : B qOne ∈ squarefreeImage) : RiemannHypothesis :=
+  riemannHypothesis_of_qOne_mem_full_closure
+    (QFullDensityConditionalConverse.squarefreeClosure_le_full (squarefree_image_target_iff_q.mp h))
+
+/-- Bagchi, Remark 8, in density-image coordinates. The published analytic
+input for the forward direction is Báez-Duarte, Theorem 2 (2003). -/
+theorem rh_iff_squarefree_image
+    (hBD : Pareto.BaezDuarte.BaezDuarteMobiusApproximation) :
+    RiemannHypothesis ↔ B qOne ∈ squarefreeImage := by
+  refine ⟨fun hRH => squarefree_image_target_iff_q.mpr ?_, rh_of_squarefree_image⟩
+  exact qSquarefreeClosure_iff_paretoSquarefreeClosure.mpr
+    (Pareto.BaezDuarte.squarefreeClosure_of_baezDuarteMobiusApproximation hBD hRH)
+
+#print axioms rh_of_squarefree_image
+#print axioms rh_iff_squarefree_image
 
 #print axioms squarefree_transfer
 #print axioms squarefree_target_iff

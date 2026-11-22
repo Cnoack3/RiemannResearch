@@ -400,6 +400,36 @@ gives RH. **Open.** Exclude a nonzero vector in $K$ unbounded in both directions
 [Ambient mean and packet coefficient](RH/MixedOrthogonalMean.lean) ·
 [One-sided annihilator theorem](RH/ParetoAnnihilatorOneSided.lean)
 
+## The density operator from the reciprocal blocks
+
+Write $P$ for the $Q$-orthogonal projection onto a closed subspace $S$,
+$A=PD|_S$, and $C=(I-P)D|_S$. The affine operator identity
+$B=(I+D)/\zeta(2)$ determines every matrix entry of $B$ in the orthonormal
+divisor basis. Positivity of $D$ gives $I_S+A\ge I_S$. Its bounded inverse
+identifies $B(S)$ with the graph of $C(I_S+A)^{-1}$ over $S$.
+For the full legal space $V$, the complementary components of this graph
+are dense in $V^{\perp_Q}$ because $D(V)$ is dense in $L^2(Q)$.
+
+[Density operator and graph theorem](RH/QDensityOperatorDecomposition.lean)
+
+## Reciprocal images of affine squarefree packets
+
+Use $D=\zeta(2)B-I$, so $Df(n)=f(n)/n$. For squarefree $q>1$ and
+a new prime $p>q$ the integrated CRT identity reads
+\[
+D(J_{pq}+J_q)(n)=\frac{p}{n}J_q(\lfloor n/p\rfloor).
+\]
+It vanishes for $n<p$ and its absolute value is uniformly bounded in $p$.
+Consequently $-DJ_{pq}\to DJ_q$ in the full zeta-two norm. If $M_{\rm sf}$
+denotes finite mixed squarefree packet combinations and $z=J_2/\log 2$,
+the squarefree reciprocal sieve now gives
+$D(\mathbf1-z)\in\overline{D(M_{\rm sf})}$. This is an unconditional
+mean-one affine approximation to $1/n$. A uniform bound on the original
+affine trials would imply RH. For the full legal space the established
+equality is $\overline{D(V)}=L^2(Q)$ and exact range equality
+$D(V)=D(L^2(Q))$ would imply $V=L^2(Q)$ by injectivity.
+[Affine squarefree reciprocal transfer](RH/SquarefreeAffineReciprocal.lean)
+
 ## Reconstruction from the density image in zeta-two space
 
 Set $S=B(V)$, with $B=dQ/dP$. Its distinguished target is $b=B\mathbf1$.
@@ -412,6 +442,13 @@ span for the integrated packets and the residues, before taking closure.
 Consequently $Bf$ belongs to the closed zeta-two span of the twisted
 squarefree residues exactly when the physical $f$ belongs to the Pareto
 squarefree packet closure. This squarefree image omits $Br_4$.
+Bagchi's Remark 8 gives the arithmetic criterion
+$\mathrm{RH}\iff B\mathbf1\in B(V_{\rm sf})$. The sufficiency direction is
+formalized without extra hypotheses. For necessity the Lean theorem takes
+the published Möbius approximation from Báez-Duarte's Theorem 2 as an
+explicit hypothesis.
+[Bagchi, Remark 8](https://arxiv.org/pdf/math/0607733#page=9) ·
+[Báez-Duarte, Theorem 2](https://www.bdim.eu/item?fmt=pdf&id=RLIN_2003_9_14_1_5_0)
 [Reconstruction from the single density-image space](RH/QDensityImageReconstruction.lean)
 
 ## Mixed packets alone after the reciprocal multiplier

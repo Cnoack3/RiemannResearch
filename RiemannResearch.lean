@@ -700,6 +700,8 @@ import RiemannResearch.RH.ParetoMixedCenteredParityHeads
 import RiemannResearch.RH.ParetoAffineHeadTower
 import RiemannResearch.RH.ZetaTwoAffineHeadTower
 import RiemannResearch.RH.QDensityImageReconstruction
+import RiemannResearch.RH.SquarefreeAffineReciprocal
+import RiemannResearch.RH.QDensityOperatorDecomposition
 import RiemannResearch.RH.MixedReciprocalDensity
 import RiemannResearch.RH.MixedCaptureZeroPair
 import RiemannResearch.RH.MixedParityProjectionDPP
