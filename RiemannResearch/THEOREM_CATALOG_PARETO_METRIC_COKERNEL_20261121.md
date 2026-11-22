@@ -109,6 +109,15 @@ The vanishing of $G$ remains open.
 ## Decomposing the mixed ideal by conductor
 
 Write $\mathcal I=\{q\ge2:q\text{ has at least two distinct prime divisors}\}$.
+
+Let $M_{\mathrm{sf}}$ denote the closed span of the squarefree composite packets.
+The functional $L(f)=f(4)-f(3)-f(2)+f(1)$ has $L(J_q)=0$ when $4\nmid q$
+and $L(J_q)=-4\mu(q/4)$ otherwise. The pair $(C,L)$ vanishes on $M_{\mathrm{sf}}$
+and takes values $(\log 2,0)$ and $(0,4)$ on $J_2$ and $J_{12}$.
+`squarefreeMixed_two_twelve_independent` proves independence of these cosets in
+$V/M_{\mathrm{sf}}$, and `squarefreeMixedPacketClosure_lt_mixedClosure` gives
+$M_{\mathrm{sf}}\subsetneq M$. The rank-one quotient in this paper is $V/M$.
+
 For $S\subseteq\mathcal I$, set $K_S=\overline{\operatorname{span}}\{J_q:q\in S\}$
 and let $P_S$ be its orthogonal projection inside $M$. Then
 
@@ -296,6 +305,12 @@ $\mathbb R\mathbf1\subseteq M^\perp$. The exact ambient splitting is
 $M^\perp=\mathbb R\mathbf1\oplus^\perp K$. The theorem
 `mixedOrthogonal_inf_oneOrthogonal_eq_bot_iff_discrepancy_zero` gives
 $K=\{0\}\iff\mathbf1-u=0$.
+
+On $D=\operatorname{span}_{\mathbb R}\{\mathbf1,u\}$, `meanKer_on_one_screenedTwo_span`
+gives $D\cap\ker C=\mathbb R d$ with $d=\mathbf1-u$. Indeed,
+$C(a\mathbf1+bu)=a+b$. The theorem `discrepancy_mem_closedSpace_iff_zero`
+applies injectivity on $V\cap M^\perp$ to prove $d\in V\iff d=0$.
+The membership $d\in V$ remains open and is equivalent to $\mathbf1\in V$.
 
 The von Mangoldt coefficient is the continuous linear functional
 $T(h)=\langle u,h\rangle_P$. For the draft sign $d=\mathbf1-u$,
