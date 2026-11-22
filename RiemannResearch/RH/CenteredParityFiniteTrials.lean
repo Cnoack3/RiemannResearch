@@ -1,5 +1,5 @@
 import RiemannResearch.Analysis.ProjectionTrialEnergy
-import RiemannResearch.RH.ParetoGroupedResidueMass
+import RiemannResearch.RH.ParetoConductor241Covariance
 import RiemannResearch.RH.MixedConductorCaptureGains
 import RiemannResearch.RH.MixedMobiusWindow
 import RiemannResearch.RH.CenteredMeanSnake
@@ -69,17 +69,12 @@ theorem riemannHypothesis_of_centeredParity_finite_trials
     (one_mem_closedSpace_iff_normalizedScreenedTwo.mp
       (one_mem_iff_centeredParity_finite_trials.mpr h))
 
-/-- The independent conductor-241 certificate gives a mixed fit throughout
-every sufficiently large window for each tolerance above its complete-error
-bound. The cutoff can depend on the tolerance. -/
-theorem eventually_centeredParity_finite_trials_of_conductor241 (ε : ℝ)
-    (hε : (628101568132839 : ℝ) / 64908898431867161 * (Real.log 2) ^ 2 < ε) :
+/-- A bound on the screened vector gives finite projection witnesses throughout
+every sufficiently large mixed-conductor window. -/
+theorem eventually_centeredParity_finite_trials_of_screened_error (ε : ℝ)
+    (hbound : ‖hilbertOne - normalizedScreenedTwo‖ ^ 2 * (Real.log 2) ^ 2 < ε) :
     ∀ᶠ N : ℕ in Filter.atTop, ∃ m ∈ mixedSpace (Finset.Icc 2 N),
       ‖centeredParity - m‖ ^ 2 < ε := by
-  have hbound : ‖hilbertOne - normalizedScreenedTwo‖ ^ 2 * (Real.log 2) ^ 2 < ε :=
-    (mul_le_mul_of_nonneg_right
-      RiemannResearch.RH.GroupedResidueMass.Conductor241.screenedTwo_squared_distance_le_mod30
-      (sq_nonneg _)).trans_lt hε
   have ht := (((tendsto_const_nhds (x := hilbertOne)).sub
     fixedTwoTrial_tendsto).norm.pow 2).mul_const ((Real.log 2) ^ 2)
   filter_upwards [ht.eventually_lt_const hbound] with N hN
@@ -95,5 +90,25 @@ theorem eventually_centeredParity_finite_trials_of_conductor241 (ε : ℝ)
       Real.log 2 - (Real.log 2) ^ 2 - ‖p‖ ^ 2 := he
   rw [sub_self, norm_zero, zero_pow (by decide : 2 ≠ 0), add_zero, ← hvalue]
   exact hN
+
+/-- Finite mixed fits from the conductor-241 residue-class envelope. -/
+theorem eventually_centeredParity_finite_trials_of_conductor241 (ε : ℝ)
+    (hε : (628101568132839 : ℝ) / 64908898431867161 * (Real.log 2) ^ 2 < ε) :
+    ∀ᶠ N : ℕ in Filter.atTop, ∃ m ∈ mixedSpace (Finset.Icc 2 N),
+      ‖centeredParity - m‖ ^ 2 < ε :=
+  eventually_centeredParity_finite_trials_of_screened_error ε
+    ((mul_le_mul_of_nonneg_right
+      RiemannResearch.RH.GroupedResidueMass.Conductor241.screenedTwo_squared_distance_le_mod30
+      (sq_nonneg _)).trans_lt hε)
+
+/-- The signed covariance tail improves the threshold for the same trial. -/
+theorem eventually_centeredParity_finite_trials_of_covariance241 (ε : ℝ)
+    (hε : (2093945167971946997 : ℝ) / 236526271832028053003 * (Real.log 2) ^ 2 < ε) :
+    ∀ᶠ N : ℕ in Filter.atTop, ∃ m ∈ mixedSpace (Finset.Icc 2 N),
+      ‖centeredParity - m‖ ^ 2 < ε :=
+  eventually_centeredParity_finite_trials_of_screened_error ε
+    ((mul_le_mul_of_nonneg_right
+      RiemannResearch.RH.GroupedResidueMass.Conductor241.screenedTwo_squared_distance_le_covariance
+      (sq_nonneg _)).trans_lt hε)
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur.CaptureGains

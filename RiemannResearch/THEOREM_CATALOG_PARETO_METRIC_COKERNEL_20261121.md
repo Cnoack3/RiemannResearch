@@ -610,3 +610,21 @@ every positive tolerance are equivalent to $\mathbf1\in V$ and imply RH.
 Producing the fits below arbitrarily small positive tolerances remains open.
 
 [Finite trial identity and conductor-241 estimate](RH/CenteredParityFiniteTrials.lean) · [Quantitative finite-head estimate](RH/ParetoMixedCenteredParityHeads.lean) · [Manuscript](RH/ParetoVonMangoldtReduction.tex.md)
+
+## Two-seed digamma jumps and finite error bounds
+
+For an $L$-periodic trial vanishing at zero, the complete squared error is
+$1-L^{-1}\sum_{r=1}^L\Delta[(1-f)^2](r)\psi(r/L)$.
+With $K$ exact terms per congruence class, the positive rational upper sum
+bounds the complete squared error within the uniform factor $1+(K+1)^{-2}$.
+Thus its rational least-squares minimizers at $K=1$ are within a factor $5/4$
+of the optimal squared error on any finite two-seed dictionary.
+
+- `periodic_paretoMean_eq_digamma_jumps` and `paretoError_eq_one_sub_digamma_jumps` retain the wrapped value and complete infinite Pareto mass.
+- `periodLossUpper_bounds` and `periodLossUpper_trial_comparison` prove the relative precision and its consequence for two competing trials.
+- `period5040_certificate` proves membership of a specified 56-term trial in the binary/ternary span and complete squared error at most $39318898889/10^{12}$.
+- `limitEnergy_le_conductor_241_covariance` and `eventually_centeredParity_finite_trials_of_covariance241` improve the centered-parity threshold to $(\log 2)^2\,2093945167971946997/236526271832028053003$.
+
+The larger rational digit tables have independently replayed integer bounds. At dilation 2,048 the complete squared error of the specified trial is below 0.01971066. Decay to zero over growing budgets remains open.
+
+[Jump formula](RH/TwoSeedDigammaJumps.lean) · [Relative error](RH/ParetoPeriodRelativeError.lean) · [Verified rational trial](RH/TwoSeedPeriodicCertificate.lean) · [Signed conductor-241 bound](RH/ParetoConductor241Covariance.lean) · [External integer replay](RH/TwoSeedTrialAudit.md)

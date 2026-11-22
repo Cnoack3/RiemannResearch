@@ -23,7 +23,10 @@ prime factors leaves a single line inside the closed residue span.
 We express the distance from the centered parity packet to the mixed
 subspace as an exact projection deficit. Vanishing of this deficit would
 place the constant function in the residue span and imply the Riemann
-hypothesis. The reverse projection bound remains open.
+hypothesis. For dilations of the binary and ternary residues, a rational
+quadratic form controls the full squared error within a uniform factor.
+Explicit trials reach squared error below \(0.019711\). Vanishing of the
+limiting error remains open.
 \end{abstract}
 \input{ParetoVonMangoldtReduction.tex.md}
 \end{document}

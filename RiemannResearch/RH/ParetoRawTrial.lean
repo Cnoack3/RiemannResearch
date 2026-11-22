@@ -103,6 +103,16 @@ theorem rounded_head_loss_lower (rows : List (ℕ × ℤ)) (K : ℕ) :
       simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul, mul_one]
     _ ≤ _ := Finset.sum_le_sum fun k _ => (head_bounds rows k).1
 
+/-- The computed block sum bounds the complete contribution of the indicated head. -/
+theorem rounded_head_loss_upper (rows : List (ℕ × ℤ)) (K : ℕ) :
+    (∑ k ∈ Finset.range (K*128), positiveWeight (k+1) *
+      ((difference rows (k+1) : ℝ)/1000000)^2) ≤
+      ((∑ j ∈ Finset.range K, block rows j : ℕ) : ℝ)/10^12 := by
+  calc
+    _ ≤ ∑ k ∈ Finset.range (K*128), (headUnit rows k : ℝ)/10^12 :=
+      Finset.sum_le_sum fun k _ => (head_bounds rows k).2
+    _ = _ := by rw [← Finset.sum_div, ← Nat.cast_sum, head_split]
+
 theorem packet_error_le_of_certificate (trialStage n : ℕ) (hstage : trialStage ≤ n)
     (rows : List (ℕ × ℤ)) (K U B : ℕ)
     (hrows : ∀ t ∈ rows, 2 ≤ t.1 ∧ t.1 ≤ trialStage+1)
@@ -138,10 +148,8 @@ theorem packet_error_le_of_certificate (trialStage n : ℕ) (hstage : trialStage
     rw [hseq]
     rfl
   have hhead : (∑ k ∈ Finset.range T, lossTerm rows k) ≤ (U : ℝ)/10^12 := calc
-    _ ≤ ∑ k ∈ Finset.range T, (headUnit rows k : ℝ)/10^12 :=
-      Finset.sum_le_sum fun k _ => (head_bounds rows k).2
-    _ = ((∑ j ∈ Finset.range K, block rows j : ℕ) : ℝ)/10^12 := by
-      rw [← Finset.sum_div, ← Nat.cast_sum, head_split]
+    _ ≤ ((∑ j ∈ Finset.range K, block rows j : ℕ) : ℝ)/10^12 :=
+      rounded_head_loss_upper rows K
     _ ≤ _ := div_le_div_of_nonneg_right (by exact_mod_cast hunits) (by positivity)
   have hw : Summable (fun j : ℕ => positiveWeight (j+(T+1))) :=
     positiveWeight_summable.comp_injective (fun _ _ h => Nat.add_right_cancel h)

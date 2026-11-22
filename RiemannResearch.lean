@@ -669,6 +669,7 @@ import RiemannResearch.RH.ParetoGroupedResidueMassBatch14
 import RiemannResearch.RH.ParetoGroupedResidueMassBatch15
 import RiemannResearch.RH.ParetoGroupedResidueMassData
 import RiemannResearch.RH.ParetoGroupedResidueMass
+import RiemannResearch.RH.ParetoConductor241Covariance
 import RiemannResearch.RH.ParetoLogResidueTest
 import RiemannResearch.RH.PrimePowerPacketSummation
 import RiemannResearch.RH.ScreenedPrimePowerTelescope
@@ -3547,6 +3548,9 @@ import RiemannResearch.RH.ParetoL1MellinBound
 import RiemannResearch.RH.ParetoGroupedSignedTails
 import RiemannResearch.RH.ParetoLegalHeadGrowth
 import RiemannResearch.RH.TwoSeedExactHeadEnergy
+import RiemannResearch.RH.TwoSeedDigammaJumps
+import RiemannResearch.RH.TwoSeedPeriodicCertificate
+import RiemannResearch.RH.ParetoPeriodRelativeError
 import RiemannResearch.RH.FiniteTwoSeedHeadRepair
 import RiemannResearch.RH.TwoSeedHeadEnergyGeometry
 import RiemannResearch.Analysis.DestructiveComponentEnergy

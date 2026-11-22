@@ -170,19 +170,21 @@ another form of condition 1.
 Write \(E=\|\mathbf 1-P_V\mathbf 1\|_P^2\). The projection formula just
 proved gives \(1-E=1/\|u\|_P^2\), and \(C(u)=1\) gives
 \(\|u-\mathbf 1\|_P^2=\|u\|_P^2-1=E/(1-E)\).
-The conductor-241 residue trial, evaluated on 65,536 sites with a
-complete tail bound, gives \(E\le 628101568132839/65537000000000000\).
+For the 147-term conductor-241 trial the rounded sum on the first 65,536
+sites is at most \(8592966019/10^{12}\). Retaining the signed CRT
+covariances in the tail gives
+\(E\le 2093945167971946997/238620217000000000000\).
 Applying \eqref{pvm:full} and the monotonicity of \(t/(1-t)\) gives
 \[
  \lim_N\delta_N\le
- c_{241}:=(\log 2)^2\frac{628101568132839}{64908898431867161}
- \simeq 0.00464918214215 .
+ c_{241}:=(\log 2)^2\frac{2093945167971946997}{236526271832028053003}
+ \simeq 0.00425340601338 .
 \]
 For every \(\varepsilon>c_{241}\), all sufficiently large \(N\) therefore
 admit a finite mixed trial of squared error below \(\varepsilon\), namely
 \(P_NJ_2\). Condition 4 requires this conclusion for every positive
 \(\varepsilon\).
-\ifdefined\href\href{https://github.com/Cnoack3/RiemannResearch/blob/6f8673015600a62e0d94158362d3913d46d8dd16/RiemannResearch/RH/ParetoGroupedResidueMass.lean\#L45}{[Lean source for the conductor-241 bound.]}\fi
+\ifdefined\href\href{https://github.com/Cnoack3/RiemannResearch/blob/main/RiemannResearch/RH/ParetoConductor241Covariance.lean}{[Lean source for the conductor-241 bound.]}\fi
 
 \subsection{Why approximation implies the Riemann hypothesis}
 
@@ -291,4 +293,76 @@ The interpolation estimate \eqref{pvm:headrate} uses the explicit ceiling in
 and \texttt{MixedConductorHead}, with the cofinal subpolynomial test in
 \texttt{MixedParityCofinalSubpower}. The zeta obstruction is formalized in
 \texttt{ThresholdRiemannHypothesis} and the converse premise in
-\texttt{BaezDuarteNaturalApproximation}.
+\texttt{BaezDuarteNaturalApproximation}. The digamma identity is in \texttt{TwoSeedDigammaJumps}. The relative enclosure and period-5,040 witness are in \texttt{ParetoPeriodRelativeError} and \texttt{TwoSeedPeriodicCertificate}.
+
+\ifdefined\pvmStandaloneLayout\newpage\fi
+\subsection{Two seeds and the complete Pareto error}
+
+For \(p\in\{2,3\}\) the packet is \(J_p=r_p\). Its scaled dilation is
+\[
+ D_{p,m}(n)=m\big(\lfloor n/m\rfloor\bmod p\big)=r_{mp}(n)-r_m(n).
+\]
+Every finite linear combination \(f\) of these dilations lies in \(V\).
+Choose a common multiple \(L\) of the periods \(mp\) used by \(f\).
+Put \(h(n)=(1-f(n))^2\), so \(h(0)=h(L)=1\). Write
+\(W_L(r)=\sum_{j\ge0}P(r+jL)\), with \(1\le r\le L\). Telescoping
+the two reciprocals in \(P\) by the digamma series gives
+\[
+ W_L(r)=\frac{\psi((r+1)/L)-\psi(r/L)}{L}.
+\]
+Thus \(\|\mathbf1-f\|_P^2=\sum_{r=1}^L h(r)W_L(r)\). Summation by
+parts and \(\psi(1+1/L)-\psi(1/L)=L\) give the exact jump formula
+\[
+ \|\mathbf1-f\|_P^2
+ =1-\frac1L\sum_{r=1}^L\big(h(r)-h(r-1)\big)\psi(r/L).
+\]
+The initial 1 comes from the wrap at \(r=L\). Applied to products of two
+digit functions with dilations \(m,n\), the sum only visits multiples of
+\(m\) or \(n\). The product jump is
+\(\Delta(uv)(r)=\Delta u(r)v(r)+u(r-1)\Delta v(r)\), including sites
+where both functions change.
+
+\paragraph{Rational approximation with uniform relative error.}
+Fix \(K\ge0\), put \(t=r+KL\), and write
+\(S=\sum_{j=0}^{K-1}P(r+jL)\). The decreasing-tail bounds give
+\[
+ S+\frac1{Lt}\ \le\ W_L(r)\ \le\
+ U_{L,K}(r):=S+\frac1{t(t+1)}+\frac1{L(t+1)}.
+\]
+Indeed, at \(x=r+jL\) the difference
+\(1/(Lx)-1/(L(x+L))\) is at most \(P(x)\).
+After retaining the first term, the remaining sum is at most
+\(1/[L(t+1)]\), by the reverse telescoping comparison at \(x=t+jL\)
+for \(j\ge1\). The endpoint difference equals \((L-1)/(Lt(t+1))\).
+Its ratio to \(P(r)\) increases with \(r\), since both
+\(r/(r+KL)\) and \((r+1)/(r+KL+1)\) do. At \(r=L\) the ratio is
+\((L^2-1)/[(K+1)L((K+1)L+1)]\le(K+1)^{-2}\).
+Since \(P(r)\le W_L(r)\), the finite quadratic form
+\(A_{L,K}(f)=\sum_{r=1}^L U_{L,K}(r)(1-f(r))^2\) satisfies
+\begin{equation}\label{pvm:twoseed}
+ \|\mathbf1-f\|_P^2\ \le\ A_{L,K}(f)\ \le\
+ \bigl(1+(K+1)^{-2}\bigr)\|\mathbf1-f\|_P^2 .
+\end{equation}
+For rational digit values the normal equations for this form have rational
+coefficients. Discard dependent columns to obtain a positive definite
+system. Its rational solution minimizes the form. At \(K=1\) its true
+squared error is at most \(5/4\) times the best complete squared error
+in that dictionary. Thus upper sums tending to zero along finite
+two-seed trials would put \(\mathbf1\) in \(V\) and imply RH.
+
+\paragraph{Finite witnesses.}
+A 56-term trial of period 5,040 has kernel-checked squared error at most
+\(0.039318898889\). Larger rational trials give the following
+outward bounds, checked separately by integer arithmetic. Here the cutoff
+is the largest allowed dilation, and every interval includes the infinite tail.
+\[
+\begin{array}{r@{\qquad}r@{\qquad}c}
+ \text{Cutoff}&\text{Columns}&\|\mathbf1-f\|_P^2\\
+ 384&640&(0.02329298,\,0.02329340)\\
+ 1536&2560&(0.02021995,\,0.02022743)\\
+ 2048&3414&(0.01970347,\,0.01971066)
+\end{array}
+\]
+The verification note gives the coefficient tables and integer replay. Let
+\(e_N\) be the least full squared error with \(p\in\{2,3\}\) and
+\(m\le N\). Proving \(\inf_N e_N=0\) remains open.\par
