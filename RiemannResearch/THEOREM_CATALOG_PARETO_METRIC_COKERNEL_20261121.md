@@ -71,6 +71,24 @@ bounds the error below by $(\sqrt m-1)\|y\|_P-\|g\|_P$ for the fit $y-D_m y$.
 
 [Signed identities and finite-cutoff proofs](RH/ParetoPrimePowerCovariance.lean)
 
+## Möbius coordinates of the mixed projection
+
+Use $d=1-u$, $\ell=\log 2$, and $L_b$ for the continuous Möbius difference
+functional of conductor $b$. For every $b>1$, the actual mixed projection satisfies
+
+$$L_b(P_M J_2)+2{\bf1}_{b=2}+\ell\mu(b)=\ell L_b(d).$$
+
+The coordinates above one determine a vector of finite Pareto norm, so all the
+left sides vanish simultaneously exactly when $d=0$. At $b=6$, the centered
+Riesz vector has squared norm $92-1=91$, giving
+$|L_6(P_M J_2)+\ell|^2\le91\ell^2\|d\|_P^2$.
+
+**Conditional research reduction.** Prove the simultaneous mixed projection
+charge identities. The precise equalities constitute the premise in
+`screenedTwo_eq_one_iff_mixed_projection_charges`. **Open.**
+
+[Mixed projection charge identities and the conductor-six bound](RH/ScreenedParityMobiusCoordinates.lean)
+
 ## Decomposing the mixed ideal by conductor
 
 Write $\mathcal I=\{q\ge2:q\text{ has at least two distinct prime divisors}\}$.
