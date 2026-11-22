@@ -41,6 +41,23 @@ The implication from the norm-one universal property to RH is checked by
 `riemannHypothesis_of_legalMean_contractive_cokernel`. The reverse implication
 uses the published RH-to-natural-approximation theorem. See [Bagchi, Theorem 1](https://arxiv.org/abs/math/0607733).
 
+## A single prime-power covariance
+
+Write $d=u-1$. For every $v\in V$ the signed identity is
+$\langle v,d\rangle_P=C(v)\|d\|_P^2$. In particular
+$\langle J_q,d\rangle_P=\Lambda(q)\|d\|_P^2$ for all $q\ge2$.
+For any fixed prime power, nonpositivity of this pairing is equivalent to
+$1\in V$. At conductor two the pairing integrates $u-1$ over the odd sites
+against the original Pareto law.
+
+**Conditional research reduction.** The theorem
+`riemannHypothesis_of_parity_pairing_nonpos` derives RH from the single
+inequality $\langle J_2,u-1\rangle_P\le0$. **Open.** Prove this inequality,
+or prove that the finite pairings tend to zero. Each finite pairing is
+strictly positive and equals $(\log 2)\|u_N-1\|_P^2$.
+
+[Signed identities and finite-cutoff proofs](RH/ParetoPrimePowerCovariance.lean)
+
 ## Decomposing the mixed ideal by conductor
 
 Write $\mathcal I=\{q\ge2:q\text{ has at least two distinct prime divisors}\}$.
