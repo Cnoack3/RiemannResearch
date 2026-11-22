@@ -308,11 +308,14 @@ membership in $V^\perp$. The one-sided mean estimate applies at each dilation,
 and consecutive dilation means recover every coordinate of $z$. Negation gives
 the lower-bounded case.
 
-**Conditional research reduction.** If $K$ lies in one real line, then RH holds.
-For $z\in V^\perp$, the vector $z-C(z)\mathbf1$ lies in $K$. Subtracting its
-packet coefficient times $\mathbf1$ recovers $z$. A line containing $K$ would
-therefore put $V^\perp$ in a line, where the conjugate-zero dimension criterion
-applies. **Open.** Exclude a nonzero vector in $K$ unbounded in both directions.
+**Established.** Centering gives a continuous linear equivalence
+$\Phi:V^\perp\to K$ with inverse $\Psi:K\to V^\perp$. Their formulas are
+$\Phi(z)=z-C(z)\mathbf1$ and $\Psi(y)=y-\langle u,y\rangle_P\mathbf1$.
+The inverse satisfies $\|\Psi(y)\|_P^2=\|y\|_P^2+\langle u,y\rangle_P^2$.
+
+**Conditional research reduction.** If $K$ lies in one real line, linearity
+of $\Psi$ puts $V^\perp$ in one real line, so the conjugate-zero criterion
+gives RH. **Open.** Exclude a nonzero vector in $K$ unbounded in both directions.
 
 [Ambient mean and packet coefficient](RH/MixedOrthogonalMean.lean) ·
 [One-sided annihilator theorem](RH/ParetoAnnihilatorOneSided.lean)

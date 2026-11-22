@@ -214,26 +214,111 @@ theorem mixedOrthogonal_eq_mean_smul_one_of_oneSidedBound {h : ThresholdHilbert}
       linarith
   simp [hz0]
 
+/-- Mean-zero vectors in the ambient mixed orthogonal complement. -/
+abbrev ambientMixedMeanKernel : Submodule ℝ ThresholdHilbert :=
+  mixedClosureᗮ ⊓ (Submodule.span ℝ {hilbertOne})ᗮ
+
+/-- Remove the component along the constant detected by the screened packet.
+On the ambient mixed complement the result annihilates the whole legal space. -/
+def subtractPacketCoefficient : ThresholdHilbert →L[ℝ] ThresholdHilbert :=
+  ContinuousLinearMap.id ℝ _ - (innerSL ℝ normalizedScreenedTwo).smulRight hilbertOne
+
+private theorem subtractPacketCoefficient_mem {h : ThresholdHilbert} (hh : h ∈ mixedClosureᗮ) :
+    subtractPacketCoefficient h ∈ closedSpaceᗮ := by
+  obtain ⟨v, hv, z, hz, rfl⟩ := Submodule.mem_sup.mp
+    (mixed_orthogonal_eq_target_sup_legal_orthogonal ▸ hh)
+  obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.mp hv
+  have huz : inner ℝ normalizedScreenedTwo z = 0 :=
+    hz _ (screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure)
+  change a • hilbertOne + z - inner ℝ normalizedScreenedTwo (a • hilbertOne + z) • hilbertOne ∈ _
+  simpa only [inner_add_right, real_inner_smul_right, normalizedScreenedTwo_mean, huz,
+    mul_one, add_zero, add_sub_cancel_left] using hz
+
+/-- Centering by the Pareto mean is a continuous linear equivalence from the
+legal annihilator onto the mean-zero part of the ambient mixed complement. -/
+def legalOrthogonalEquivMeanZeroMixed :
+    closedSpaceᗮ ≃L[ℝ] ambientMixedMeanKernel := by
+  let f : closedSpaceᗮ →L[ℝ] ambientMixedMeanKernel :=
+    (CenteredMeanSnake.center.comp closedSpaceᗮ.subtypeL).codRestrict ambientMixedMeanKernel
+      fun z => center_mem_mixedOrthogonal_kernel fun m hm =>
+        z.property m (mixedClosure_le_closedSpace hm)
+  let g : ambientMixedMeanKernel →L[ℝ] closedSpaceᗮ :=
+    (subtractPacketCoefficient.comp ambientMixedMeanKernel.subtypeL).codRestrict closedSpaceᗮ
+      fun y => subtractPacketCoefficient_mem y.property.1
+  refine { toFun := f, invFun := g, map_add' := f.map_add, map_smul' := f.map_smul,
+           continuous_toFun := f.continuous, continuous_invFun := g.continuous,
+           left_inv := ?_, right_inv := ?_ }
+  · intro z
+    apply Subtype.ext
+    have huz : inner ℝ normalizedScreenedTwo (z : ThresholdHilbert) = 0 :=
+      z.property _
+        (screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure)
+    change (z : ThresholdHilbert) - hilbertMeanContinuous z • hilbertOne -
+      inner ℝ normalizedScreenedTwo
+        ((z : ThresholdHilbert) - hilbertMeanContinuous z • hilbertOne) • hilbertOne = z
+    simp only [inner_sub_right, real_inner_smul_right, huz, normalizedScreenedTwo_mean,
+      mul_one, zero_sub, neg_smul, sub_neg_eq_add, sub_add_cancel]
+  · intro y
+    apply Subtype.ext
+    have hy : hilbertMeanContinuous (y : ThresholdHilbert) = 0 :=
+      Submodule.mem_orthogonal_singleton_iff_inner_right.mp y.property.2
+    change (y : ThresholdHilbert) - inner ℝ normalizedScreenedTwo y • hilbertOne -
+      hilbertMeanContinuous
+        ((y : ThresholdHilbert) - inner ℝ normalizedScreenedTwo y • hilbertOne) • hilbertOne = y
+    simp [hy]
+
+@[simp] theorem legalOrthogonalEquivMeanZeroMixed_apply (z : closedSpaceᗮ) :
+    (legalOrthogonalEquivMeanZeroMixed z : ThresholdHilbert) =
+      (z : ThresholdHilbert) - hilbertMeanContinuous z • hilbertOne := rfl
+
+@[simp] theorem legalOrthogonalEquivMeanZeroMixed_symm_apply
+    (y : ambientMixedMeanKernel) :
+    (legalOrthogonalEquivMeanZeroMixed.symm y : ThresholdHilbert) =
+      (y : ThresholdHilbert) - inner ℝ normalizedScreenedTwo y • hilbertOne := rfl
+
+/-- The inverse adds exactly the squared packet coefficient to the input energy. -/
+theorem legalOrthogonalEquivMeanZeroMixed_symm_norm_sq
+    (y : ambientMixedMeanKernel) :
+    ‖legalOrthogonalEquivMeanZeroMixed.symm y‖ ^ 2 =
+      ‖y‖ ^ 2 + (inner ℝ normalizedScreenedTwo (y : ThresholdHilbert)) ^ 2 := by
+  have hy : inner ℝ (y : ThresholdHilbert) hilbertOne = 0 :=
+    (real_inner_comm _ _).trans (Submodule.mem_orthogonal_singleton_iff_inner_right.mp y.property.2)
+  change ‖(y : ThresholdHilbert) - inner ℝ normalizedScreenedTwo y • hilbertOne‖ ^ 2 = _
+  rw [norm_sub_sq_real, real_inner_smul_right, hy, mul_zero, mul_zero, sub_zero,
+    norm_smul, Real.norm_eq_abs, mul_pow, sq_abs, hilbertOne_norm_sq, mul_one]
+  simp
+
+/-- Vanishing of either space under the centering equivalence is equivalent to
+vanishing of the other, with no finite-dimensionality assumption. -/
+theorem ambientMixedMeanKernel_eq_bot_iff_legalOrthogonal_eq_bot :
+    ambientMixedMeanKernel = ⊥ ↔ closedSpaceᗮ = ⊥ := by
+  have transport {U W : Submodule ℝ ThresholdHilbert} (e : U ≃L[ℝ] W) (hW : W = ⊥) :
+      U = ⊥ := by
+    apply eq_bot_iff.mpr
+    intro x hx
+    let z : U := ⟨x, hx⟩
+    have hy : (e z : ThresholdHilbert) = 0 := by simpa using hW.le (e z).property
+    have he : e z = 0 := Subtype.ext hy
+    change x = 0
+    exact congrArg Subtype.val (e.injective (he.trans e.map_zero.symm))
+  exact ⟨transport legalOrthogonalEquivMeanZeroMixed,
+    transport legalOrthogonalEquivMeanZeroMixed.symm⟩
+
 /-- Even containment of the mean-zero part in one real line suffices for RH.
-Centering embeds the legal annihilator in that part. Subtraction of the packet
-coefficient recovers the original annihilator and carries a line into a line. -/
+The inverse of the centering equivalence carries the containing line into a line. -/
 theorem riemannHypothesis_of_mixedOrthogonal_meanZero_le_line (v : ThresholdHilbert)
     (hker : mixedClosureᗮ ⊓ (Submodule.span ℝ {hilbertOne})ᗮ ≤ Submodule.span ℝ {v}) :
     RiemannHypothesis := by
   apply RiemannResearch.RH.ParetoComplementTransfer.riemannHypothesis_of_pareto_complement_le_line
-    (v - inner ℝ normalizedScreenedTwo v • hilbertOne)
+    (subtractPacketCoefficient v)
   intro z hz
-  have hzM : z ∈ mixedClosureᗮ := fun m hm => hz m (mixedClosure_le_closedSpace hm)
-  obtain ⟨a, ha⟩ := Submodule.mem_span_singleton.mp (hker (center_mem_mixedOrthogonal_kernel hzM))
-  change a • v = z - hilbertMeanContinuous z • hilbertOne at ha
-  have huz : inner ℝ normalizedScreenedTwo z = 0 :=
-    hz _ (screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure)
-  have hcoef := congrArg (fun x : ThresholdHilbert => inner ℝ normalizedScreenedTwo x) ha
-  change inner ℝ normalizedScreenedTwo (a • v) =
-    inner ℝ normalizedScreenedTwo (z - hilbertMeanContinuous z • hilbertOne) at hcoef
-  simp only [real_inner_smul_right, inner_sub_right, huz, normalizedScreenedTwo_mean,
-    mul_one, zero_sub] at hcoef
+  let y := legalOrthogonalEquivMeanZeroMixed ⟨z, hz⟩
+  obtain ⟨a, ha⟩ := Submodule.mem_span_singleton.mp (hker y.property)
   refine Submodule.mem_span_singleton.mpr ⟨a, ?_⟩
-  rw [smul_sub, smul_smul, hcoef, neg_smul, sub_neg_eq_add, ha, sub_add_cancel]
+  calc
+    a • subtractPacketCoefficient v = subtractPacketCoefficient (a • v) :=
+      (subtractPacketCoefficient.map_smul a v).symm
+    _ = subtractPacketCoefficient y := congrArg subtractPacketCoefficient ha
+    _ = z := congrArg Subtype.val (legalOrthogonalEquivMeanZeroMixed.symm_apply_apply ⟨z, hz⟩)
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur
