@@ -183,6 +183,12 @@ and takes values $(\log 2,0)$ and $(0,4)$ on $J_2$ and $J_{12}$.
 $V/M_{\mathrm{sf}}$, and `squarefreeMixedPacketClosure_lt_mixedClosure` gives
 $M_{\mathrm{sf}}\subsetneq M$. The rank-one quotient in this paper is $V/M$.
 
+The residual $J_{12}-P_{M_{\mathrm{sf}}}J_{12}$ witnesses
+`mean_not_injOn_legal_squarefreeMixedOrthogonal`. For the full mixed closure,
+`mixedOrthogonalMean_injective_iff_full_capture_saturation` identifies ambient
+injectivity with $\|P_MJ_2\|_P^2=\log 2-(\log 2)^2$. **Open.** Establish the
+reverse bound independently. [LaTeX section](RH/ParetoVonMangoldtReduction.tex.md)
+
 For $S\subseteq\mathcal I$, set $K_S=\overline{\operatorname{span}}\{J_q:q\in S\}$
 and let $P_S$ be its orthogonal projection inside $M$. Then
 

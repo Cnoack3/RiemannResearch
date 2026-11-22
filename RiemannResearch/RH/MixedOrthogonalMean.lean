@@ -423,4 +423,41 @@ theorem squarefreeMixedPacketClosure_lt_mixedClosure :
       squarefreeMixedPacketClosure := by simpa [he] using h12
   exact one_ne_zero ((squarefreeMixed_two_twelve_independent 0 1).mp hv).2
 
+/-- Screening only squarefree mixed conductors leaves a legal mean-zero direction:
+the part of the conductor-twelve packet perpendicular to that closure. -/
+theorem mean_not_injOn_legal_squarefreeMixedOrthogonal :
+    ¬ Set.InjOn hilbertMeanContinuous
+      ((closedSpace ⊓ squarefreeMixedPacketClosureᗮ : Submodule ℝ ThresholdHilbert) :
+        Set ThresholdHilbert) := by
+  let K := squarefreeMixedPacketClosure
+  letI : K.HasOrthogonalProjection := by
+    dsimp [K, squarefreeMixedPacketClosure]
+    infer_instance
+  let j := ramanujanPacketHilbert 12
+  let z := j - K.starProjection j
+  have hK : K ≤ mixedClosure := squarefreeMixedPacketClosure_lt_mixedClosure.le
+  have hj : j ∈ mixedClosure := mixed_packet_mem_closure 12 (by decide) (by decide)
+  have hz : z ∈ mixedClosure := mixedClosure.sub_mem hj (hK (K.starProjection_apply_mem j))
+  have hlegal : z ∈ closedSpace ⊓ Kᗮ :=
+    ⟨mixedClosure_le_closedSpace hz, K.sub_starProjection_mem_orthogonal j⟩
+  have hmean : hilbertMeanContinuous z = 0 :=
+    (real_inner_comm _ _).trans ((mem_mixedClosure_iff_mem_closedSpace_and_mean_zero z).mp hz).2
+  intro hinj
+  have he : z = 0 := hinj hlegal (Submodule.zero_mem _) (hmean.trans (map_zero _).symm)
+  have hjK : j ∈ K := by
+    rw [show j = K.starProjection j from sub_eq_zero.mp he]
+    exact K.starProjection_apply_mem j
+  have hcomb : (0 : ℝ) • ramanujanPacketHilbert 2 + (1 : ℝ) • ramanujanPacketHilbert 12 ∈
+      squarefreeMixedPacketClosure := by simpa [K, j] using hjK
+  exact one_ne_zero ((squarefreeMixed_two_twelve_independent 0 1).mp hcomb).2
+
+/-- Injectivity on the full mixed complement is precisely saturation of the
+mixed projection of the conductor-two packet. -/
+theorem mixedOrthogonalMean_injective_iff_full_capture_saturation :
+    Function.Injective mixedOrthogonalMean ↔
+      ‖mixedClosure.starProjection (ramanujanPacketHilbert 2)‖ ^ 2 =
+        Real.log 2 - (Real.log 2) ^ 2 :=
+  mixedOrthogonalMean_injective_iff_span_one.trans
+    (mixedOrthogonal_eq_span_one_iff_one_mem.trans full_capture_saturation_iff.symm)
+
 end RiemannResearch.RH.Pareto.PrimePowerSchur
