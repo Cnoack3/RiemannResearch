@@ -10,6 +10,24 @@ squared norms equal to the squared centered snake boundary plus the omitted
 mixed energy. Orthogonal projection in the mixed space realizes the minimum
 over each ambient support stage. See S. Axler, *Measure, Integration & Real
 Analysis*, Chapter 8, on best approximation in Hilbert space.
+
+B. Bagchi, *On Nyman, Beurling and Baez-Duarte's Hilbert space reformulation of
+the Riemann hypothesis*, Proc. Indian Acad. Sci. Math. Sci. 116 (2006), 137–146,
+Theorem 1, treats approximation in the discrete weighted Hilbert space.
+L. Báez-Duarte, *A strengthening of the Nyman-Beurling criterion for the Riemann
+hypothesis*, Rend. Lincei Mat. Appl. 14 (2003), 5–11, gives the integer-dilation
+criterion. J.-F. Burnol, *A note on Nyman's equivalent formulation of the Riemann
+hypothesis*, Contemp. Math. 287 (2001), 23–26, relates the continuous projection
+to a product over zeros. The bound below uses the repository's finite Mellin
+inequality for one zero.
+
+For a finite dictionary of mixed packets, the quadratic test uses its Gram matrix
+and the inner products with the centered parity input. Packet independence makes
+the Gram matrix positive definite. Solving the finite normal equations gives
+coefficients that minimize this trial error. The open arithmetic step
+is to construct dictionaries and coefficients with arbitrarily small error.
+A trial error below 2σ/(T² + 1/4) excludes zeros with real part at least
+1/2 + σ and absolute imaginary part at most T in the open critical strip.
 -/
 
 noncomputable section
@@ -84,5 +102,63 @@ theorem tendsto_parityQuotientClass_norm_sq :
   have ht := ((tendsto_const_nhds (x := parityMixedProjection)).sub hp).norm.pow 2
   simpa only [parityQuotientClass_norm_sq, sub_self, norm_zero, zero_pow (by decide : 2 ≠ 0),
     add_zero] using (tendsto_const_nhds (x := ‖CenteredMeanSnake.boundary‖ ^ 2)).add ht
+
+/-- An arbitrarily small quotient error is equivalent to vanishing of the centered boundary. -/
+theorem boundary_eq_zero_iff_small_parity_quotients :
+    CenteredMeanSnake.boundary = 0 ↔
+      ∀ ε : ℝ, 0 < ε → ∃ n : ℕ, ‖parityQuotientClass n‖ ^ 2 < ε := by
+  constructor
+  · intro hb ε hε
+    have ht := tendsto_parityQuotientClass_norm_sq
+    rw [hb, norm_zero, zero_pow (by decide : 2 ≠ 0)] at ht
+    exact ((tendsto_order.mp ht).2 ε hε).exists
+  · intro h
+    by_contra hb
+    have hpos : 0 < ‖CenteredMeanSnake.boundary‖ ^ 2 := sq_pos_of_pos (norm_pos_iff.mpr hb)
+    obtain ⟨n, hn⟩ := h _ hpos
+    rw [parityQuotientClass_norm_sq] at hn
+    exact (not_lt_of_ge (le_add_of_nonneg_right (sq_nonneg _))) hn
+
+/-- Arbitrarily small quadratic errors on finite dictionaries of mixed packets imply RH. -/
+theorem riemannHypothesis_of_finite_parity_certificates
+    (h : ∀ ε : ℝ, 0 < ε → ∃ (F : Finset Index) (a : Index → ℝ),
+      let x := (Real.log 2)⁻¹ • ramanujanPacketHilbert 2 - hilbertOne
+      let w : mixedClosure := ∑ q ∈ F, a q • packet q
+      ‖x‖ ^ 2 - 2 * inner ℝ x (w : ThresholdHilbert) + ‖w‖ ^ 2 < ε) :
+    RiemannHypothesis := by
+  classical
+  apply CenteredMeanSnake.riemannHypothesis_of_boundary_eq_zero
+  apply boundary_eq_zero_iff_small_parity_quotients.mpr
+  intro ε hε
+  obtain ⟨F, a, hscore⟩ := h ε hε
+  let x := (Real.log 2)⁻¹ • ramanujanPacketHilbert 2 - hilbertOne
+  let w : mixedClosure := ∑ q ∈ F, a q • packet q
+  let n := F.sup fun q => q.val.primeFactors.card
+  have hw : w ∈ supportSpace n := by
+    apply Submodule.sum_mem
+    intro q hq
+    apply Submodule.smul_mem
+    exact Submodule.le_topologicalClosure _ (Submodule.subset_span
+      ⟨q, Finset.le_sup (f := fun r : Index => r.val.primeFactors.card) hq, rfl⟩)
+  have herr : ‖x - (w : ThresholdHilbert)‖ ^ 2 < ε := by
+    rw [norm_sub_sq_real]
+    exact hscore
+  refine ⟨n, lt_of_le_of_lt ?_ herr⟩
+  apply pow_le_pow_left₀ (norm_nonneg _) _ 2
+  have hq : ‖parityQuotientClass n‖ = Metric.infDist x (ambientSupport n : Set ThresholdHilbert) :=
+    QuotientAddGroup.norm_mk (S := (ambientSupport n).toAddSubgroup) x
+  rw [hq]
+  have hw' : (w : ThresholdHilbert) ∈ ambientSupport n := ⟨w, hw, rfl⟩
+  simpa only [dist_eq_norm] using Metric.infDist_le_dist_of_mem (x := x) hw'
+
+/-- A zero to the right of the critical line gives the same positive lower bound at every cutoff. -/
+theorem single_zero_le_parityQuotientClass (z : ℂ) (hz : riemannZeta z = 0)
+    (hre : (1 / 2 : ℝ) < z.re) (hne : z ≠ 1) (n : ℕ) :
+    2 * z.re - 1 ≤ ‖1 - z‖ ^ 2 * ‖parityQuotientClass n‖ ^ 2 := by
+  have h := legalMeanSection_single_zero_excess z hz hre hne
+    screenedMeanSection legalPacketMean_comp_screenedMeanSection
+  rw [norm_screenedMeanSection, ← CenteredMeanSnake.boundary_norm_sq] at h
+  rw [parityQuotientClass_norm_sq]
+  exact h.trans (mul_le_mul_of_nonneg_left (le_add_of_nonneg_right (sq_nonneg _)) (sq_nonneg _))
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis
