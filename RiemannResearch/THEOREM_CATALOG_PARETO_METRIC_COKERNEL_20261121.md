@@ -89,6 +89,23 @@ charge identities. The precise equalities constitute the premise in
 
 [Mixed projection charge identities and the conductor-six bound](RH/ScreenedParityMobiusCoordinates.lean)
 
+## Exact Mellin obstruction for the two-prime covariance
+
+Write $G$ for the full covariance of $J_2,J_3$ minus the inner product of
+their projections onto the mixed space. If $E$ is the squared distance of
+the constant to the legal space, then
+$G=(\log 2)(\log 3)E/(1-E)$. For a finite family of distinct zeros with
+real parts greater than $1/2$, `two_three_covariance_finite_zero_remainder`
+expresses $E$ as the sum of the Mellin interpolation energy and the complete
+squared interpolation remainder. For any such zero $z$, the single-zero
+consequence reads
+$$
+(\log 2)(\log 3)(2\Re z-1)\le |1-z|^2G.
+$$
+The vanishing of $G$ remains open.
+
+[Finite-zero remainder and single-zero covariance bound](RH/MixedConductorPolarizedParseval.lean)
+
 ## Decomposing the mixed ideal by conductor
 
 Write $\mathcal I=\{q\ge2:q\text{ has at least two distinct prime divisors}\}$.

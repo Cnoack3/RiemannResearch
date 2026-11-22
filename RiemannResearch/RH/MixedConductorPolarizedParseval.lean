@@ -1,4 +1,5 @@
 import RiemannResearch.RH.MixedConductorGlobalParseval
+import RiemannResearch.RH.MixedConductorMetricLifting
 import RiemannResearch.RH.CenteredMeanSnake
 import RiemannResearch.RH.ResidueSmallGram
 
@@ -169,6 +170,42 @@ theorem two_three_projected_covariance_gap :
     Real.log 2 * Real.log 3 - inner ℝ (mixedClosure.starProjection (ramanujanPacketHilbert 2))
       (mixedClosure.starProjection (ramanujanPacketHilbert 3)) = _ at h
   rwa [two_three_packet_inner] at h
+
+open MeasureTheory RiemannResearch.RH.ParetoBeurlingMellinObstruction in
+/-- A finite family of right-hand zeta zeros accounts for an explicit portion of
+the two-prime covariance deficit. The integral retains the full interpolation error. -/
+theorem two_three_covariance_finite_zero_remainder {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (z : ι → ℂ) (hinj : Function.Injective z) (hz : ∀ i, riemannZeta (z i) = 0)
+    (hre : ∀ i, (1 / 2 : ℝ) < (z i).re) (hne : ∀ i, z i ≠ 1) :
+    Real.log 2 + Real.log 3 / 2 - Real.pi / (3 * Real.sqrt 3) - Real.log 2 * Real.log 3 -
+      inner ℝ (mixedClosure.starProjection (ramanujanPacketHilbert 2))
+        (mixedClosure.starProjection (ramanujanPacketHilbert 3)) =
+      (Real.log 2 * Real.log 3 / (1 - limitEnergy)) *
+        (1 - mellinCenteredProduct z 1 +
+          ∫ x in Set.Ioi (1 : ℝ), ‖mellinWeightedStep limitResidual x -
+            starRingEnd ℂ (finiteMellinKernel z
+              (mellinInverseCoefficients z (fun i => (z i)⁻¹)) x)‖ ^ 2) := by
+  rw [two_three_projected_covariance_gap, CenteredMeanSnake.boundary_norm_sq_eq_energy,
+    ← limitEnergy_finite_zero_product_remainder z hinj hz hre hne]
+  ring
+
+/-- A single right-hand zeta zero forces a positive deficit in the fully mixed
+cross entry of the parity and conductor-three packets. -/
+theorem single_zero_le_two_three_covariance_gap (z : ℂ) (hz : riemannZeta z = 0)
+    (hre : (1 / 2 : ℝ) < z.re) (hne : z ≠ 1) :
+    (Real.log 2 * Real.log 3) * (2 * z.re - 1) ≤ ‖1 - z‖ ^ 2 *
+      (Real.log 2 + Real.log 3 / 2 - Real.pi / (3 * Real.sqrt 3) - Real.log 2 * Real.log 3 -
+      inner ℝ (mixedClosure.starProjection (ramanujanPacketHilbert 2))
+        (mixedClosure.starProjection (ramanujanPacketHilbert 3))) := by
+  rw [two_three_projected_covariance_gap]
+  have h := legalMeanSection_single_zero_excess z hz hre hne
+    screenedMeanSection legalPacketMean_comp_screenedMeanSection
+  rw [norm_screenedMeanSection, ← CenteredMeanSnake.boundary_norm_sq] at h
+  calc
+    _ ≤ (Real.log 2 * Real.log 3) * (‖1 - z‖ ^ 2 * ‖CenteredMeanSnake.boundary‖ ^ 2) :=
+      mul_le_mul_of_nonneg_left h
+        (mul_nonneg (Real.log_nonneg (by norm_num)) (Real.log_nonneg (by norm_num)))
+    _ = _ := by ring
 
 /-- A single reverse bound on the fully mixed (2,3) inner product implies RH. -/
 theorem riemannHypothesis_of_two_three_projected_covariance
