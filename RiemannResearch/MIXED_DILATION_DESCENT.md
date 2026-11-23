@@ -12,6 +12,73 @@ Because $t_B$ lies in a finite legal span and $u$ lies outside every such span, 
 
 With $g_k=(D_k-D_{k+1})/D_k$, the exact product is $D_N=D_0\prod_{k<N}(1-g_k)$. The project proves $0\le g_k<1$ and $F=0\iff\sum_k g_k=\infty$. When $F=0$ the ambient connecting map vanishes, $\mathbf1\in V$, and the established discrete Hilbert-space criterion yields RH. The strict decreases above also occur in the scalar example $D_k=1+2^{-k}$, where the product has positive limit. The unresolved estimate for this descent is divergence of the relative gains. For the classical discrete approximation criterion, see [Bagchi, Theorem 1](https://arxiv.org/abs/math/0607733).
 
+## Testing the same prime family before and after fitting its base conductor
+
+Let $S_B$ be the span of the mixed packets of conductor at most $B$ and put
+$t_B=(I-P_{S_B})J_2/\log 2$. For every $B$ there is a mixed $q>B$ with
+$c=\langle J_q,t_B\rangle\ne 0$. Indeed, if all mixed packets annihilated $t_B$,
+the difference $t_B-u\in M$ would be orthogonal to both $u$ and $t_B$, forcing
+$t_B=u$. The strict finite descent theorem excludes this. Every packet in $S_B$
+already annihilates $t_B$.
+
+Write $T_m f(n)=m f(\lfloor n/m\rfloor)$. For the normalized residues
+$g_d(n)=(n\bmod d)/d$, let $v=\sum_d a_d g_d$ be a finite sum. Then
+
+$$
+\left\|T_m^*v-\left(\sum_d a_d\frac{d-1}{2d}\right)\mathbf1\right\|_P
+\le \frac{1}{4m}\sum_d |a_d|d.
+$$
+
+For one residue the primitive $b_d(n)=(2(n\bmod d)-d)^2/(8d)$ lies in
+$[0,d/8]$ and satisfies $b_d(n+1)-b_d(n)=g_d(n)-(d-1)/(2d)$.
+Abel summation in each dilation block and the exact Pareto block mass give
+the displayed estimate. Its constant can be computed from the finite fit.
+
+For primes $p>q$, the identity $J_{pq}=T_pJ_q-J_q$ and the zero Pareto
+mean of $J_q$ give $\langle J_{pq},t_B\rangle=-c+O_B(\|J_q\|_P/p)$.
+Applying the same estimate with $v=J_q$ shows that
+$\|J_{pq}\|_P^2=(p+1)\|J_q\|_P^2+O_q(1/p)$. Consequently
+
+$$
+p\,\frac{|\langle J_{pq},t_B\rangle|^2}{\|J_{pq}\|_P^2}
+\longrightarrow\frac{c^2}{\|J_q\|_P^2}>0.
+$$
+
+Euler's prime reciprocal theorem gives divergence, also for the fixed
+correlation shares in the repository. For each *fixed* $C\ge q$ the same
+base pairing is zero. Its prime multiples now have squared correlations
+divided by their squared norms bounded by $4K_C^2/p^3$, where
+$K_C=\tfrac14\sum_d |a_{C,d}|d$ for the residue coefficients of $t_C$.
+The series over these very same primes converges. Even allowing an arbitrary
+choice of nonzero mixed directions $y_B\in M$, Cauchy–Schwarz gives
+$|\langle y_B,t_B\rangle|/\|y_B\|\le\|t_B-u\|\to0$. Thus the positive
+coefficient driving each fixed-stage divergence can decay with the stage.
+
+For $q=6$ and $v=J_2$, the coefficient of $1/p$ is exactly
+$(\log 2-\pi/(2\sqrt3))^2/(\pi/\sqrt3)$. Every $J_{6p}$ for $p>6$
+lies in the closed dilation span of $J_6$, in which every approximation to
+centered parity has squared error greater than $49/1000$.
+This gives a concrete counterexample to inferring zero distance from a
+divergent sum of fixed squared correlations.
+
+For the full tower the absolute energy gains telescope. Each test
+$y_k\in S_{k+1}$ contributes at most $D_k-D_{k+1}$ against the updated
+residual. Whether $\sum_k (D_k-D_{k+1})/D_k$ diverges remains open.
+Its divergence forces the snake boundary to vanish and proves RH.
+
+There is an arithmetic test for an actual block gain using adjacent scales.
+Set $f=J_q$, $y=T_{m+1}f-T_m f$, $C=\sup_n|f(n)|$, and
+$N=\max(B,q(m+1))$. Write $e_B=(I-P_{S_B})(J_2-\log(2)\mathbf1)$.
+The existing nearby-dilation Gram identity and the finite projection estimate give
+$$
+|\langle y,e_B\rangle|^2\le (D_B-D_N)
+\left(\sum_{j=0}^{m-1}\frac{(f(j+1)-f(j))^2}{j+1}+15C^2\right).
+$$
+For fixed $q$ this denominator grows at most logarithmically in $m$.
+Proving a sufficiently large numerator on successive blocks remains open.
+
+[Adjoint estimates](RH/PeriodicDilationAverages.lean) · [Prime correlation series](RH/MixedPrimeCorrelationSeries.lean)
+
 ## A fixed mixed packet detects every finite fit
 
 Write $y=T_mJ_6$. The divisor formula gives

@@ -614,6 +614,8 @@ import RiemannResearch.RH.CenteredMeanAmbientGeometry
 import RiemannResearch.RH.CenteredMeanRHCriteria
 import RiemannResearch.RH.CenteredMeanFiniteDescent
 import RiemannResearch.RH.MixedConductorStrictDescent
+import RiemannResearch.RH.PeriodicDilationAverages
+import RiemannResearch.RH.MixedPrimeCorrelationSeries
 import RiemannResearch.RH.TernaryMixedOrbitObstruction
 import RiemannResearch.RH.SiteGramStrictStages
 import RiemannResearch.RH.MixedOrthogonalMean
