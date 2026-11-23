@@ -5,6 +5,8 @@ import RiemannResearch.Analysis.NestedOrthogonalDecomposition
 import Mathlib.Data.Nat.Factorization.PrimePow
 import Mathlib.Data.Nat.Prime.Infinite
 import Mathlib.Data.Nat.PrimeFin
+import Mathlib.Data.Nat.Nth
+import Mathlib.LinearAlgebra.Dimension.Finite
 import Mathlib.Algebra.Category.ModuleCat.Topology.Homology
 import Mathlib.Algebra.Homology.ShortComplex.ShortExact
 import Mathlib.CategoryTheory.Preadditive.Biproducts
@@ -273,5 +275,70 @@ def supportSpaceBiprodIso (k : ℕ) :
     TopModuleCat.of ℝ (supportSpace (k + 1)) ≅
       TopModuleCat.of ℝ (supportSpace k) ⊞ TopModuleCat.of ℝ (supportLayer k) :=
   (layerSplitting k).isoBinaryBiproduct
+
+/-- A packet of exact support size, with its component in the preceding stage removed. -/
+def layerPacket {k : ℕ} (q : Index) (hq : q.val.primeFactors.card = k + 1) :
+    supportLayer k :=
+  ⟨packet q - (supportSpace k).starProjection (packet q),
+    (supportSpace (k + 1)).sub_mem (packet_mem_supportSpace q hq.le)
+      (supportSpace_mono (Nat.le_succ k) ((supportSpace k).starProjection_apply_mem _)),
+    (supportSpace k).sub_starProjection_mem_orthogonal _⟩
+
+/-- On a divisibility antichain in one new layer the Möbius coordinates separate
+the orthogonal packet residuals, after passing to the closed preceding stage. -/
+theorem layerPacket_independent {ι : Type*} {k : ℕ} (q : ι → Index)
+    (hcard : ∀ i, (q i).val.primeFactors.card = k + 1)
+    (hdiv : Pairwise fun i j => ¬ (q i).val ∣ (q j).val) :
+    LinearIndependent ℝ (fun i => layerPacket (q i) (hcard i)) := by
+  classical
+  apply linearIndependent_iff'.2
+  intro F c hc i hi
+  let f := (supportCoordinate (q i)).toLinearMap.comp (supportLayer k).subtype
+  have hsum := congrArg f hc
+  simp only [map_sum, map_smul, smul_eq_mul, map_zero] at hsum
+  have hlarge : k < (q i).val.primeFactors.card := (hcard i) ▸ Nat.lt_succ_self k
+  have hdiag : f (layerPacket (q i) (hcard i)) = -((q i).val : ℝ) :=
+    supportCoordinate_residual (q i) hlarge
+  have hoff {j : ι} (hij : i ≠ j) : f (layerPacket (q j) (hcard j)) = 0 := by
+    change supportCoordinate (q i)
+      (packet (q j) - (supportSpace k).starProjection (packet (q j))) = 0
+    rw [map_sub, show supportCoordinate (q i) ((supportSpace k).starProjection (packet (q j))) = 0
+        from supportSpace_le_coordinate_ker (q i) hlarge
+          ((supportSpace k).starProjection_apply_mem _), sub_zero]
+    change mobiusDifferenceCLM (q i).val (ramanujanPacketHilbert (q j).val) = 0
+    rw [mobiusDifferenceCLM_ramanujanPacketHilbert _ _ (q i).property.1
+      (Nat.zero_lt_one.trans (q j).property.1), if_neg (hdiv hij)]
+  rw [Finset.sum_eq_single_of_mem i hi (fun j _ hji => by rw [hoff hji.symm, mul_zero]),
+    hdiag] at hsum
+  exact (mul_eq_zero.mp hsum).resolve_right
+    (neg_ne_zero.mpr (Nat.cast_ne_zero.mpr (Nat.zero_lt_one.trans (q i).property.1).ne'))
+
+/-- Each positive-index layer contains an infinite independent family. Multiplying
+a fixed support by distinct fresh primes produces the required antichain. -/
+theorem supportLayer_infiniteDimensional (k : ℕ) (hk : 1 ≤ k) :
+    ¬ FiniteDimensional ℝ (supportLayer k) := by
+  classical
+  obtain ⟨d, hd, hdcard⟩ := exists_nat_support_card k
+  let p (i : ℕ) := Nat.nth Nat.Prime (d + 1 + i)
+  have hmono := Nat.nth_strictMono (p := Nat.Prime) Nat.infinite_setOfPred_prime
+  have hp (i : ℕ) : (p i).Prime := Nat.nth_mem_of_infinite Nat.infinite_setOfPred_prime _
+  have hf (i : ℕ) : p i ∉ d.primeFactors := by
+    have hle : d + 1 + i ≤ p i := hmono.id_le _
+    exact fun h => by have := Nat.le_of_mem_primeFactors h; omega
+  have hcard (i : ℕ) : (p i * d).primeFactors.card = k + 1 := by
+    rw [Nat.primeFactors_mul (hp i).ne_zero hd, (hp i).primeFactors,
+      Finset.singleton_union, Finset.card_insert_of_notMem (hf i), hdcard]
+  let q (i : ℕ) : Index := ⟨p i * d,
+    (hp i).one_lt.trans_le (Nat.le_mul_of_pos_right _ (Nat.pos_of_ne_zero hd)),
+    fun h => by have := isPrimePow_iff_card_primeFactors_eq_one.mp h; rw [hcard] at this; omega⟩
+  have hdiv : Pairwise fun i j => ¬ (q i).val ∣ (q j).val := by
+    intro i j hij hdvd
+    have he := (Nat.prime_dvd_prime_iff_eq (hp i) (hp j)).mp
+      (Nat.dvd_of_mul_dvd_mul_right (Nat.pos_of_ne_zero hd) hdvd)
+    exact hij (Nat.add_left_cancel (hmono.injective he))
+  intro hfin
+  letI : FiniteDimensional ℝ (supportLayer k) := hfin
+  exact Module.Finite.not_linearIndependent_of_infinite _
+    (layerPacket_independent q hcard hdiv)
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis

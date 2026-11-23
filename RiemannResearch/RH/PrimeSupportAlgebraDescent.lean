@@ -2,6 +2,7 @@ import RiemannResearch.CategoryTheory.SquarefreeResidueCRT
 import RiemannResearch.RH.CenteredMeanLongExact
 import RiemannResearch.RH.MixedConductorPrimeSupport
 import RiemannResearch.RH.MixedConductorSquareZero
+import RiemannResearch.RH.MixedConductorBimodule
 import RiemannResearch.RH.PrimeSupportParityDescent
 import RiemannResearch.RH.QRamanujanContrastGram
 import Mathlib.Algebra.Category.AlgCat.Basic
@@ -59,6 +60,71 @@ theorem supportIdeal_sq (n : ℕ) : supportIdeal n ^ 2 = ⊥ := by
   simp only [pow_two, eq_bot_iff, Ideal.mul_le, Ideal.mem_bot]
   exact fun _ hx _ hy =>
     mul_eq_zero_of_mem (supportIdeal_le_mixed n hx) (supportIdeal_le_mixed n hy)
+
+/-- The scalar by which a class in the support quotient acts on the physical mixed space. -/
+def supportScalar (n : ℕ) : (closedSpace ⧸ supportIdeal n) →ₐ[ℝ] ℝ :=
+  quotientEquiv.toAlgHom.comp (Ideal.Quotient.factorₐ ℝ (supportIdeal_le_mixed n))
+
+theorem continuous_supportScalar (n : ℕ) : Continuous (supportScalar n) :=
+  (QuotientRing.isOpenQuotientMap_mk (supportIdeal n)).isQuotientMap.continuous_iff.2
+    legalPacketMean.continuous
+
+scoped instance supportLeftModule (n : ℕ) : Module (closedSpace ⧸ supportIdeal n) mixedClosure :=
+  Module.compHom mixedClosure (supportScalar n).toRingHom
+
+scoped instance supportRightModule (n : ℕ) :
+    Module (closedSpace ⧸ supportIdeal n)ᵐᵒᵖ mixedClosure :=
+  Module.compHom mixedClosure
+    ((supportScalar n).toRingHom.fromOpposite fun _ _ => mul_comm _ _)
+
+scoped instance supportActionsCommute (n : ℕ) :
+    SMulCommClass (closedSpace ⧸ supportIdeal n) (closedSpace ⧸ supportIdeal n)ᵐᵒᵖ mixedClosure :=
+  ⟨fun x y m => smul_comm (supportScalar n x) (supportScalar n y.unop) m⟩
+
+scoped instance supportLeftContinuous (n : ℕ) :
+    ContinuousSMul (closedSpace ⧸ supportIdeal n) mixedClosure :=
+  ⟨((continuous_supportScalar n).comp continuous_fst).smul continuous_snd⟩
+
+scoped instance supportRightContinuous (n : ℕ) :
+    ContinuousSMul (closedSpace ⧸ supportIdeal n)ᵐᵒᵖ mixedClosure :=
+  ⟨(((continuous_supportScalar n).comp MulOpposite.continuous_unop).comp continuous_fst).smul
+    continuous_snd⟩
+
+/-- Passing from a legal representative to its class preserves left and right multiplication. -/
+theorem supportActions_mk (n : ℕ) (v : closedSpace) (m : mixedClosure) :
+    Ideal.Quotient.mk (supportIdeal n) v • m = v • m ∧
+    MulOpposite.op (Ideal.Quotient.mk (supportIdeal n) v) • m = MulOpposite.op v • m :=
+  ⟨rfl, rfl⟩
+
+/-- The two actions agree along every arrow in the support tower and at its mixed quotient. -/
+theorem supportActions_transition {n k : ℕ} (h : n ≤ k) (q : closedSpace ⧸ supportIdeal n)
+    (m : mixedClosure) :
+    (Ideal.Quotient.factorₐ ℝ (supportIdeal_mono h) q) • m = q • m ∧
+    MulOpposite.op (Ideal.Quotient.factorₐ ℝ (supportIdeal_mono h) q) • m =
+      MulOpposite.op q • m ∧
+    (Ideal.Quotient.factorₐ ℝ (supportIdeal_le_mixed n) q) • m = q • m ∧
+    MulOpposite.op (Ideal.Quotient.factorₐ ℝ (supportIdeal_le_mixed n) q) • m =
+      MulOpposite.op q • m := by
+  obtain ⟨v, rfl⟩ := Ideal.Quotient.mk_surjective q
+  rw [Ideal.Quotient.factorₐ_apply_mk, Ideal.Quotient.factorₐ_apply_mk]
+  have hn := supportActions_mk n v m
+  have hk := supportActions_mk k v m
+  have hm := mixedQuotient_actions v m
+  exact ⟨hk.1.trans hn.1.symm, hk.2.trans hn.2.symm,
+    hm.1.trans hn.1.symm, hm.2.trans hn.2.symm⟩
+
+/-- The annihilator at a support stage is the kernel of its map to the mixed quotient. -/
+theorem supportActions_annihilator (n : ℕ) (q : closedSpace ⧸ supportIdeal n) :
+    (∀ m : mixedClosure, q • m = 0) ↔
+      Ideal.Quotient.factorₐ ℝ (supportIdeal_le_mixed n) q = 0 := by
+  obtain ⟨v, rfl⟩ := Ideal.Quotient.mk_surjective q
+  change (∀ m : mixedClosure, v • m = 0) ↔ Ideal.Quotient.mk mixedIdeal v = 0
+  rw [mixedLeft_annihilator, Ideal.Quotient.eq_zero_iff_mem]
+
+theorem supportSpace_stable_actions {n : ℕ} {m : mixedClosure} (hm : m ∈ supportSpace n)
+    (v : closedSpace) : v • m ∈ supportSpace n ∧ MulOpposite.op v • m ∈ supportSpace n :=
+  ⟨(supportSpace n).smul_mem (legalPacketMean v) hm,
+    (supportSpace n).smul_mem (legalPacketMean v) hm⟩
 
 section
 variable {A : Type} [CommRing A] [Algebra ℝ A]

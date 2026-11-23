@@ -34,6 +34,39 @@ Inclusion gives $\Phi:Z/M\simeq H/V$, $\Phi([z]_M)=[z]_V$. Its inverse sends $[h
 
 ## Descent through the support quotients
 
+### The mixed bimodule and the category of the splitting
+
+For $v\in V$ and $m\in M$ the two actions are
+$v\star m=C(v)m=m\star v$. Lean equips the original Hilbert subspace $M$ with
+commuting continuous left $V$ and right $V$ actions. They factor through
+$V/I_s$ at every stage and through $V/M$. Both actions are compatible with the
+tower transitions. The annihilator of $M$ in $V$ is exactly $M$, since the
+nonzero packet $J_6$ detects the scalar $C(v)$. At stage $s$ the annihilator is
+the kernel of $V/I_s\to V/M$. These computations use the module idealization
+product of Anderson and Winders. [Square-zero algebra](RH/MixedConductorSquareZero.lean) · [Bimodule and annihilator](RH/MixedConductorBimodule.lean) · [Stage actions](RH/PrimeSupportAlgebraDescent.lean) · [Anderson and Winders (2009)](https://doi.org/10.1216/JCA-2009-1-1-3)
+
+The regular $V$-module sequence $0\to M\to V\to V/M\to0$ is exact. Every
+$V$-linear map $s:V/M\to V$ takes values in $M$. Indeed $m\star s(q)=s(mq)=0$
+for every $m\in M$, so $s(q)$ belongs to the annihilator. In particular there is
+no $V$-linear section. The continuous real-linear section of the mean and the
+unital real-algebra section of its scalar quotient are the screened lift $t\mapsto tu$.
+
+| Property of the earlier construction | Lean declarations |
+|---|---|
+| The mixed ideal on its original Hilbert subspace, both actions and their annihilators | `mixedIdealModuleEquiv`, `legalMixedInclusion_left`, `legalMixedInclusion_right`, `mixedQuotient_actions`, `mixedLeft_annihilator`, `mixedRight_annihilator` |
+| Exactness and failure of regular-module splitting | `regularMean_shortExact`, `quotientLinearMap_mem_mixedIdeal`, `regularMean_no_linear_section` |
+| Stage actions, transition compatibility, and annihilator | `supportActions_mk`, `supportActions_transition`, `supportActions_annihilator` |
+| Infinite dimension of each $D_k$ for $k\ge1$ and its section geometry | `layerPacket_independent`, `supportLayer_infiniteDimensional`, `layerSection_graph`, `layerSection_graph_properties`, `isometry_layerSection_iff` |
+| Bounded quotient equivalence, closed centering range, and split tail | `boundaryTargetContinuousEquivLegalQuotient`, `centerLegal_range`, `centerLegal_range_isClosed`, `cokernelMean_comp_section` |
+| Orthogonal models for $Z/M$, $H/V$, and $H/T(V)$ | `defectLine_sup_common`, `residualLine_sup_common`, `constantLine_sup_common`, `legalOrthogonalProjection_defect_add`, `toCenterCokernel_defect_add` |
+
+The last three orthogonal models share $U=Z\cap V^\perp$. On their distinguished
+vectors the quotient comparison sends $u-\mathbf1$ to $-(\mathbf1-P_V\mathbf1)$.
+The arrow to $H/T(V)$ sends $t(u-\mathbf1)+w$ to the class of $w$ for $w\in U$.
+Consequently the squared norm at the unit is $E/(1-E)$ before transport and $E$
+in $H/V$. [Ambient quotient geometry](RH/CenteredMeanAmbientGeometry.lean)
+
+
 In coordinates $v=m+tu$, the screened multiplication is $(m,t)(m',t')=(tm'+t'm,tt')$. Its unit is $u$, and $M$ is a closed maximal ideal with $M^2=0$ and $V/M\simeq\mathbb R$ as algebras. The correspondence between real subspaces of $M$ and ideals inside $M$ is an order isomorphism and preserves closedness. Replacing $u$ by $u+m_0$ conjugates the multiplication by the shear $v\mapsto v+C(v)m_0$, fixes $M$ pointwise, and preserves the quotient class of the boundary.
 
 For the CRT presentation, let $d_1,\ldots,d_j$ be the maximal prime-power factors of a mixed conductor $k$. Möbius inversion gives $r_k-\sum_i r_{d_i}=\sum_{q\mid k,\;\omega(q)\ge2}J_q$. The coefficient of $J_k$ is one, so induction on divisors gives the same mixed span from CRT carries and from packets. For squarefree $q$, the Ramanujan sum on the CRT product is $\prod_{p\mid q}(p\,\mathbf1_{p\mid n}-1)$. Pure prime powers survive screening as $(\log p)u$.

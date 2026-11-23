@@ -142,4 +142,64 @@ theorem successiveLayerBoundary_ne_zero (k : ℕ) (hk : 1 ≤ k) :
   have he := DFunLike.congr_fun h (⟨m, hm⟩ : supportLayer k)
   exact (Submodule.mem_bot ℝ).mpr (congrArg Subtype.val he)
 
+private def layerGraphCoefficient (k : ℕ)
+    (s : supportLayer k →L[ℝ] supportSpace (k + 1)) : supportLayer k →L[ℝ] supportSpace k :=
+  ((supportSpace k).orthogonalProjectionOnto.comp (supportSpace (k + 1)).subtypeL).comp s
+
+private theorem layerParts_add (k : ℕ) (x : supportSpace (k + 1)) :
+    supportStageInclusion k (supportStageRetraction k x) +
+      supportLayerSection k (supportLayerQuotient k x) = x := by
+  apply Subtype.ext
+  exact RiemannResearch.Analysis.NestedOrthogonalDecomposition.projection_split_of_mem
+    (supportSpace_mono (Nat.le_succ k)) x.property
+
+/-- Every bounded section of the layer projection is the graph of one and only one
+bounded map into the preceding stage. -/
+theorem layerSection_graph (k : ℕ) (s : supportLayer k →L[ℝ] supportSpace (k + 1))
+    (hs : ∀ z, supportLayerQuotient k (s z) = z) :
+    ∃! A : supportLayer k →L[ℝ] supportSpace k, ∀ z,
+      s z = supportStageInclusion k (A z) + supportLayerSection k z := by
+  have he (z : supportLayer k) : s z =
+      supportStageInclusion k (layerGraphCoefficient k s z) + supportLayerSection k z := by
+    have h := (layerParts_add k (s z)).symm
+    rw [hs z] at h
+    exact h
+  refine ⟨layerGraphCoefficient k s, he, ?_⟩
+  intro B hB
+  apply ContinuousLinearMap.ext
+  intro z
+  have e : supportStageInclusion k (B z) = supportStageInclusion k (layerGraphCoefficient k s z) :=
+    add_right_cancel ((hB z).symm.trans (he z))
+  have h := congrArg (supportStageRetraction k) e
+  exact (retraction_inclusion k (B z)).symm.trans (h.trans (retraction_inclusion k _))
+
+/-- Each graph is a section, with an exact squared norm for its lift of a layer vector. -/
+theorem layerSection_graph_properties (k : ℕ) (A : supportLayer k →L[ℝ] supportSpace k)
+    (z : supportLayer k) :
+    supportLayerQuotient k (supportStageInclusion k (A z) + supportLayerSection k z) = z ∧
+    ‖supportStageInclusion k (A z) + supportLayerSection k z‖^2 = ‖z‖^2 + ‖A z‖^2 := by
+  constructor
+  · rw [map_add, quotient_inclusion, quotient_section, zero_add]
+  · change ‖((A z : supportSpace k) : mixedClosure) + (z : mixedClosure)‖^2 = _
+    rw [norm_add_sq_real, z.property.2 _ (A z).property]
+    change ‖A z‖^2 + 2 * 0 + ‖z‖^2 = _
+    ring
+
+theorem isometry_layerSection_iff (k : ℕ) (s : supportLayer k →L[ℝ] supportSpace (k + 1))
+    (hs : ∀ z, supportLayerQuotient k (s z) = z) :
+    Isometry s ↔ ∀ z, s z = supportLayerSection k z := by
+  obtain ⟨A, hA, _⟩ := layerSection_graph k s hs
+  constructor
+  · intro hi z
+    have hn : ‖s z‖ = ‖z‖ := by simpa using hi.dist_eq z 0
+    have hsq := (layerSection_graph_properties k A z).2
+    rw [← hA, hn] at hsq
+    have hz : A z = 0 := norm_eq_zero.mp (by nlinarith only [hsq, norm_nonneg (A z)])
+    rw [hA, hz, map_zero, zero_add]
+  · intro h
+    apply isometry_iff_dist_eq.mpr
+    intro x y
+    rw [h x, h y]
+    rfl
+
 end RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis
