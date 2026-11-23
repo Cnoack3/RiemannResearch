@@ -1,3 +1,4 @@
+import RiemannResearch.Analysis.FiniteCoordinateCompletion
 import RiemannResearch.CategoryTheory.AtomCarryPresentation
 import RiemannResearch.CategoryTheory.FiniteFamilyCRT
 import RiemannResearch.CategoryTheory.FunctorCRT
@@ -6,14 +7,31 @@ import RiemannResearch.CategoryTheory.OverlapEqualizerCRT
 import RiemannResearch.CategoryTheory.QuotientMatchingCRT
 import RiemannResearch.CategoryTheory.RegularCategoryCRT
 import RiemannResearch.CategoryTheory.SquarefreeResidueCRT
+import RiemannResearch.NumberTheory.ProfiniteCRTUniversal
+import RiemannResearch.RH.AlgebraicSupportColimit
+import RiemannResearch.RH.CenteredMeanAmbientGeometry
+import RiemannResearch.RH.CenteredMeanFiniteDescent
+import RiemannResearch.RH.CenteredMeanStageSnake
+import RiemannResearch.RH.ConductorReconstructionEnergy
+import RiemannResearch.RH.ConductorTowerLimit
 import RiemannResearch.RH.FiniteAtomCarryFunctor
+import RiemannResearch.RH.HausdorffSupportColimit
 import RiemannResearch.RH.MeanSectionStructure
+import RiemannResearch.RH.MixedConductorPolarizedParseval
 import RiemannResearch.RH.MixedConductorSplitExact
+import RiemannResearch.RH.MixedConductorSupportSnake
+import RiemannResearch.RH.MixedParityCarry
 import RiemannResearch.RH.PrimeSupportAlgebraDescent
+import RiemannResearch.RH.QInfiniteSquarefreeCarry
+import RiemannResearch.RH.SiteGramStrictStages
+import RiemannResearch.RH.ZetaTwoAffineHeadTower
 
 /-!
 # Category theory in the RiemannResearch RH development
 
-Import this module for the finite CRT and its natural squarefree residue diagram,
-the atom/carry functors, the Pareto mean sequences, and their algebra tower.
+The inverse conductor towers have projections to finite residue rings. The
+prime-support quotients have forward maps with algebraic and Hausdorff
+descent. This interface also exports the finite CRT presentations and their
+refinements, infinite carry expansions, affine head tower, screened algebra
+and bimodule, the layer and ambient snakes, and the finite Gram criteria.
 -/

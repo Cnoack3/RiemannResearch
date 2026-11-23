@@ -129,7 +129,7 @@ theorem supportSpace_stable_actions {n : ℕ} {m : mixedClosure} (hm : m ∈ sup
 section
 variable {A : Type} [CommRing A] [Algebra ℝ A]
 
-private def idealTower (I : ℕ → Ideal A) (hI : Monotone I) : ℕ ⥤ AlgCat ℝ where
+def idealTower (I : ℕ → Ideal A) (hI : Monotone I) : ℕ ⥤ AlgCat ℝ where
   obj n := AlgCat.of ℝ (A ⧸ I n)
   map f := AlgCat.ofHom (Ideal.Quotient.factorₐ ℝ (hI (leOfHom f)))
   map_id n := by
@@ -143,7 +143,7 @@ private def idealTower (I : ℕ → Ideal A) (hI : Monotone I) : ℕ ⥤ AlgCat 
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective q
     rfl
 
-private def idealCocone (I : ℕ → Ideal A) (hI : Monotone I) (J : Ideal A)
+def idealCocone (I : ℕ → Ideal A) (hI : Monotone I) (J : Ideal A)
     (hJ : ∀ n, I n ≤ J) : Limits.Cocone (idealTower I hI) where
   pt := AlgCat.of ℝ (A ⧸ J)
   ι := {

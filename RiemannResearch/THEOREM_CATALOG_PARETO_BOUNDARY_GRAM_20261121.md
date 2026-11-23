@@ -34,6 +34,27 @@ Inclusion gives $\Phi:Z/M\simeq H/V$, $\Phi([z]_M)=[z]_V$. Its inverse sends $[h
 
 ## Descent through the support quotients
 
+For any linear subspace $S\subseteq M$, take the mean rows
+$0\to M/S\to V/S\to\mathbb R\to0$ and
+$0\to Z/S\to H/S\to\mathbb R\to0$. Both split as real modules.
+Write $T_S$ for the induced centering map. The stage diagram has its own
+snake map $\partial_S(t)=t[[u-\mathbf1]_S]_{M/S}$. Under the third
+isomorphism $(Z/S)/(M/S)\cong Z/M$ it becomes $\partial$. The same
+identification holds along every transition $S\subseteq S'\subseteq M$.
+The endpoint identifications $\ker T_S\cong V\cap\mathbb R\mathbf1$ and
+$(H/S)/T_S(V/S)\cong H/T(V)$ intertwine the adjacent maps. These are the
+statements of `Stage.supportDiagramTransformation`, `Stage.splittings_natural`,
+`Stage.connectingTransformation`, `Stage.longSequence_exact`, `Stage.longSequence_comparison`,
+`Stage.connecting_natural` and `Stage.connecting_one_eq_zero_iff`. [Stage snake](RH/CenteredMeanStageSnake.lean)
+
+Let $J=\bigcup_s I_s$, where $I_s$ is the ideal of the closed support stage.
+In real algebras the colimit of $V/I_s$ is $V/J$. Its canonical surjection
+to $V/M\cong\mathbb R$ has kernel $M/J=\overline{\{0\}}$.
+The union is dense in $M$. Each stage is a proper closed subspace of the
+complete mixed space, so Baire's theorem supplies an element of $M$ outside
+every stage. In Hausdorff real topological modules the colimit of the
+ambient quotients $H/I_s$ is $H/M$. [Algebraic colimit and kernel](RH/AlgebraicSupportColimit.lean) · [Hausdorff colimit](RH/HausdorffSupportColimit.lean)
+
 ### The mixed bimodule and the category of the splitting
 
 For $v\in V$ and $m\in M$ the two actions are
