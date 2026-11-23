@@ -7,6 +7,10 @@ distinct prime factors is a different filtration. Let $u$ be the screened mean-o
 vector, $r=1-P_V1$, and $d=\|\partial\|^2=\|u\|^2-1$ for the centered mean snake
 boundary. All norms and projections are in the original Pareto geometry.
 
+## The digamma recurrence and the unit section
+
+Every coordinate of the screened mean section is a limit of finite digamma Gram solves. At each stage the jump expression for its squared residual contains the transported snake boundary and a squared approximation error. Polarizing two legal quotient distances gives a certified first-site interval. [Derivation and certificate](DIGAMMA_SCREENED_MEAN_SECTION.md) · [Lean theorems](RH/CenteredMeanDigammaSection.lean)
+
 ## Strict descent and the conductor-six orbit
 
 Every finite mixed-conductor deficit strictly exceeds the limiting ambient boundary energy. Infinitely many one-step gains are positive. A ternary digit gives a squared-error lower bound of $49/1000$ for the entire closed dilation orbit of $J_6$. A rational trial in the full window through conductor 120 has squared error less than $39/1000$. The arithmetic period transform detects each finite fit and gives its leading nonzero moment. [Proofs and exact finite certificate](MIXED_DILATION_DESCENT.md) · [Strict descent](RH/MixedConductorStrictDescent.lean) · [Ternary digit witness](RH/TernaryMixedOrbitObstruction.lean)
