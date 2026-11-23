@@ -1,3 +1,7 @@
+import RiemannResearch.RH.CenteredMeanLongExact
+import RiemannResearch.RH.CenteredMeanQuotients
+import RiemannResearch.RH.CenteredMeanSnake
+import RiemannResearch.RH.MixedConductorSquareZero
 import RiemannResearch.RH.PrimeSupportAlgebraDescent
 import Mathlib.CategoryTheory.Limits.IsLimit
 import Mathlib.Topology.Baire.CompleteMetrizable
@@ -8,7 +12,8 @@ import Mathlib.Topology.Baire.Lemmas
 
 The algebraic colimit kills the supremum of the finite-stage ideals. Taking its
 Hausdorff quotient kills the closure of that ideal, which is the whole mixed
-ideal. The comparison to the screened scalar quotient is canonical.
+ideal. Pulling the ambient snake back along the comparison identifies exactly
+which algebraic classes can witness vanishing on the separated scalar line.
 -/
 
 noncomputable section
@@ -208,5 +213,54 @@ theorem supportAlgebraCocone_not_isColimit :
     exact ConcreteCategory.congr_hom (h.fac algebraicSupportCocone 0)
       (Ideal.Quotient.mk (supportIdeal 0) v)
   exact Function.LeftInverse.injective hleft
+
+section Boundary
+open CenteredMeanSnake
+
+/-- The ambient connecting map on the ordinary algebra colimit of the support quotients. -/
+def algebraicSupportBoundary : (closedSpace ⧸ algebraicSupportIdeal) →ₗ[ℝ] BoundaryTarget :=
+  quotientBoundary.comp supportSeparation.toLinearMap
+
+/-- Every stage boundary is the pullback along its algebraic colimit leg. -/
+theorem algebraicSupportBoundary_stage (n : ℕ) (q : closedSpace ⧸ supportIdeal n) :
+    algebraicSupportBoundary (Ideal.Quotient.factorₐ ℝ (supportIdeal_le_algebraic n) q) =
+      stageMeanBoundary n q := by
+  obtain ⟨v, rfl⟩ := Ideal.Quotient.mk_surjective q
+  rfl
+
+theorem algebraicSupportBoundary_continuous : Continuous algebraicSupportBoundary :=
+  (boundary.continuous.comp (quotientHomeomorph.continuous_toFun.comp
+    supportSeparation_continuous)).congr fun q => (quotientBoundary_apply (supportSeparation q)).symm
+
+/-- Once separated, the source is a scalar line. A class with nonzero separated
+image can be killed by the boundary only if the entire boundary vanishes. -/
+theorem algebraicSupportBoundary_eq_zero_iff (q : closedSpace ⧸ algebraicSupportIdeal) :
+    algebraicSupportBoundary q = 0 ↔ supportSeparation q = 0 ∨ boundary = 0 := by
+  have hunit : mixedInMeanZero.mkQ defect = 0 ↔ boundary = 0 := by
+    simpa only [boundary_apply, one_smul] using
+      (boundary_one_eq_zero_iff_one_mem.trans boundary_eq_zero_iff_one_mem.symm)
+  have hscalar : quotientEquiv (supportSeparation q) = 0 ↔ supportSeparation q = 0 := by simp
+  change quotientBoundary (supportSeparation q) = 0 ↔ _
+  rw [quotientBoundary_apply, boundary_apply, smul_eq_zero, hscalar, hunit]
+
+/-- The comparison kernel is the closure of zero. Strict enlargement in the
+kernel of the pulled-back boundary is equivalent to ambient boundary vanishing. -/
+theorem supportSeparation_ker_lt_boundary_ker_iff :
+    supportSeparation.toLinearMap.ker < algebraicSupportBoundary.ker ↔ boundary = 0 := by
+  have hle : supportSeparation.toLinearMap.ker ≤ algebraicSupportBoundary.ker :=
+    fun q hq => (algebraicSupportBoundary_eq_zero_iff q).2 (Or.inl hq)
+  constructor
+  · intro h
+    by_contra hb
+    exact h.not_ge (fun q hq => ((algebraicSupportBoundary_eq_zero_iff q).1 hq).resolve_right hb)
+  · intro hb
+    refine lt_of_le_of_ne hle fun he => ?_
+    have hunit : (1 : closedSpace ⧸ algebraicSupportIdeal) ∈ algebraicSupportBoundary.ker :=
+      (algebraicSupportBoundary_eq_zero_iff _).2 (Or.inr hb)
+    rw [← he] at hunit
+    change supportSeparation 1 = 0 at hunit
+    exact one_ne_zero ((map_one supportSeparation).symm.trans hunit)
+
+end Boundary
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis

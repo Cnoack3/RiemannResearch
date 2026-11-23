@@ -1,8 +1,11 @@
 import Mathlib.Algebra.Homology.ExactSequence
 import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 import Mathlib.Algebra.Module.SnakeLemma
+import Mathlib.Analysis.Normed.Group.Quotient
 import Mathlib.CategoryTheory.Category.Preorder
+import Mathlib.Topology.Algebra.Module.Basic
 import RiemannResearch.RH.CenteredMeanLongExact
+import RiemannResearch.RH.CenteredMeanSnake
 import RiemannResearch.RH.MixedConductorPrimeSupport
 import RiemannResearch.RH.PrimeSupportAlgebraDescent
 
@@ -231,11 +234,15 @@ theorem connecting_on_lift (v : closedSpace) :
   · rfl
   · rfl
 
-/-- Cancellation of the same stage denominator from the ambient snake target. -/
-def targetEquiv : Target S ≃ₗ[ℝ] BoundaryTarget :=
-  Submodule.quotientQuotientEquivQuotient (zeroDen S) mixedInMeanZero (by
+/-- The third isomorphism preserves the quotient seminorm for every mixed denominator. -/
+def targetIsometryEquiv : Target S ≃ₗᵢ[ℝ] BoundaryTarget :=
+  Submodule.quotientQuotientLIEQuotient (zeroDen S) mixedInMeanZero (by
     rintro _ ⟨m, _, rfl⟩
     exact m.property)
+
+/-- Cancellation of the same stage denominator from the ambient snake target. -/
+def targetEquiv : Target S ≃ₗ[ℝ] BoundaryTarget :=
+  (targetIsometryEquiv S).toLinearEquiv
 
 theorem targetEquiv_connecting (a : ℝ) : targetEquiv S (connecting S a) = boundary a := by
   have h (v : closedSpace) :
@@ -243,6 +250,14 @@ theorem targetEquiv_connecting (a : ℝ) : targetEquiv S (connecting S a) = boun
     rw [connecting_on_lift, boundary_of_lift]
     rfl
   simpa only [legalPacketMean_screenedMeanSection] using h (screenedMeanSection a)
+
+/-- Every stage measures exactly the ambient defect, even at a nonclosed denominator. -/
+theorem norm_connecting (a : ℝ) :
+    ‖connecting S a‖ = |a| * ‖normalizedScreenedTwo - hilbertOne‖ := by
+  calc
+    _ = ‖targetIsometryEquiv S (connecting S a)‖ := ((targetIsometryEquiv S).norm_map _).symm
+    _ = ‖boundary a‖ := congrArg (fun z : BoundaryTarget => ‖z‖) (targetEquiv_connecting S a)
+    _ = _ := by rw [boundary_apply, norm_smul, Real.norm_eq_abs, norm_defect_class]
 
 /-- The unit at any quotient stage detects exactly the ambient membership problem. -/
 theorem connecting_one_eq_zero_iff :
@@ -286,11 +301,57 @@ theorem targetEquiv_transition (h : S ≤ T) (q : Target S) :
   obtain ⟨x, rfl⟩ := (zeroDen S).mkQ_surjective z
   rfl
 
+/-- The representative-preserving transition is transport along the two quotient isometries. -/
+theorem targetTransition_eq_isometric_transport (h : S ≤ T) (q : Target S) :
+    targetTransition h q = (targetIsometryEquiv T).symm (targetIsometryEquiv S q) := by
+  apply (targetIsometryEquiv T).injective
+  rw [LinearIsometryEquiv.apply_symm_apply]
+  exact targetEquiv_transition h q
+
 /-- Throughout the prime-support filtration, centering gives the original defect class. -/
 theorem support_connecting (n : ℕ) (a : ℝ) :
     targetEquiv (supportSpace n) (connecting (supportSpace n) a) =
       a • mixedInMeanZero.mkQ defect :=
   (targetEquiv_connecting _ a).trans (boundary_apply a)
+
+/-- At the support union, the remaining mixed subspace of the intermediate
+ambient mean quotient is exactly its closure of zero. -/
+theorem mixedImage_supportUnion_eq_closure_zero :
+    (mixedImage (⨆ n, supportSpace n) : Set (meanZero ⧸ zeroDen (⨆ n, supportSpace n))) =
+      closure ({0} : Set _) := by
+  let U : Submodule ℝ mixedClosure := ⨆ n, supportSpace n
+  let D := zeroDen U
+  have hDM : D ≤ mixedInMeanZero := by
+    rintro _ ⟨m, _, rfl⟩
+    exact m.property
+  have hD : D.topologicalClosure = mixedInMeanZero := by
+    apply le_antisymm (Submodule.topologicalClosure_minimal _ hDM mixedInMeanZero_closed)
+    let K := D.topologicalClosure.comap mixedInclusion.toLinearMap
+    have hK : IsClosed (K : Set mixedClosure) :=
+      (isClosed_closure : IsClosed (closure (D : Set meanZero))).preimage mixedInclusion.continuous
+    have hUK : U ≤ K := fun m hm => Submodule.le_topologicalClosure D ⟨m, hm, rfl⟩
+    have hd := Submodule.topologicalClosure_minimal _ hUK hK
+    rw [show U.topologicalClosure = ⊤ from supportSpace_dense] at hd
+    intro z hz
+    exact hd (show (⟨z.val, hz⟩ : mixedClosure) ∈ ⊤ from trivial)
+  have hp : D.mkQ ⁻¹' ({0} : Set (meanZero ⧸ D)) = (D : Set meanZero) := by
+    ext z
+    exact Submodule.Quotient.mk_eq_zero D
+  have hc := D.isOpenMap_mkQ.preimage_closure_eq_closure_preimage
+    D.isOpenQuotientMap_mkQ.continuous ({0} : Set (meanZero ⧸ D))
+  rw [hp] at hc
+  change D.mkQ ⁻¹' closure ({0} : Set (meanZero ⧸ D)) = (D.topologicalClosure : Set meanZero) at hc
+  rw [hD] at hc
+  ext q
+  obtain ⟨z, rfl⟩ := D.mkQ_surjective q
+  calc
+    D.mkQ z ∈ mixedImage U ↔ (mixedImage U).mkQ (D.mkQ z) = 0 :=
+      (Submodule.Quotient.mk_eq_zero _).symm
+    _ ↔ (targetEquiv U) ((mixedImage U).mkQ (D.mkQ z)) = (targetEquiv U) 0 :=
+      (targetEquiv U).injective.eq_iff.symm
+    _ ↔ mixedInMeanZero.mkQ z = 0 := by rw [map_zero]; rfl
+    _ ↔ z ∈ mixedInMeanZero := Submodule.Quotient.mk_eq_zero _
+    _ ↔ D.mkQ z ∈ closure ({0} : Set _) := (Set.ext_iff.mp hc z).symm
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake.Stage
 

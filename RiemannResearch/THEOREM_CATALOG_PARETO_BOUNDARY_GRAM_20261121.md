@@ -61,6 +61,8 @@ complete mixed space, so Baire's theorem supplies an element of $M$ outside
 every stage. In Hausdorff real topological modules the colimit of the
 ambient quotients $H/I_s$ is $H/M$. [Algebraic colimit and kernel](RH/AlgebraicSupportColimit.lean) · [Hausdorff colimit](RH/HausdorffSupportColimit.lean)
 
+The maps on the snake targets are surjective linear isometries, including the map from the support union to its closure. In the intermediate ambient quotient $Z/U$, the image $M/U$ is exactly the closure of zero. Write $B$ for the pullback of the scalar snake along $\pi:V/U\to V/M$. The new kernel identity is $\ker\pi\subsetneq\ker B\iff\partial=0$. The scalar image of a witness must be nonzero. The cofinal finite Gram bound remains open. [Dependency diagram, section types, and Lean statements](SUPPORT_COLIMIT_BOUNDARY_AUDIT.md)
+
 ### The mixed bimodule and the category of the splitting
 
 For $v\in V$ and $m\in M$ the two actions are
