@@ -105,6 +105,71 @@ theorem sectionCoordinate_tendsto (k : ℕ) :
   simpa only [Function.comp_def, anchoredEvaluationCLM_apply, sectionCoordinate_eq,
     packetUnitMeanLimit_eq_screened] using h
 
+/-- A single lower bound that occurs cofinally on longer finite prefixes. -/
+def cofinalPrefixLowerBound : Prop :=
+  ∃ C : ℝ, ∀ K : ℕ, ∃ N : ℕ, K ≤ N ∧
+    ∀ k : ℕ, 0 < k → k ≤ K → C ≤ sectionCoordinate (N + 1) k
+
+/-- If the screened section is nonconstant, every proposed lower bound is
+permanently violated on some later finite prefix. -/
+theorem eventual_prefix_failure_of_screened_ne_one
+    (hne : normalizedScreenedTwo ≠ hilbertOne) (C : ℝ) (K₀ : ℕ) :
+    ∃ K : ℕ, K₀ ≤ K ∧ ∀ N : ℕ, K ≤ N →
+      ∃ k : ℕ, 0 < k ∧ k ≤ K ∧ sectionCoordinate (N + 1) k < C := by
+  obtain ⟨k, hk, hbad⟩ :=
+    (screenedTwo_unbounded_both_sides_of_ne_one hne (-C)).2
+  have hbad' : hilbertSequence normalizedScreenedTwo k < C := by linarith
+  have ht := sectionCoordinate_tendsto k
+  have hev : ∀ᶠ N : ℕ in atTop, sectionCoordinate (N + 1) k < C :=
+    ht.eventually (Iio_mem_nhds hbad')
+  obtain ⟨N₀, hN₀⟩ := eventually_atTop.1 hev
+  let K := max K₀ (max k N₀)
+  refine ⟨K, le_max_left _ _, fun N hKN => ⟨k, hk, ?_, hN₀ N ?_⟩⟩
+  · dsimp only [K]
+    omega
+  · dsimp only [K] at hKN
+    omega
+
+/-- The cofinal prefix condition is exactly the assertion that the screened
+section is the ambient constant. -/
+theorem cofinalPrefixLowerBound_iff_screened_eq_one :
+    cofinalPrefixLowerBound ↔ normalizedScreenedTwo = hilbertOne := by
+  constructor
+  · rintro ⟨C, hC⟩
+    by_contra hne
+    obtain ⟨K, -, hfail⟩ := eventual_prefix_failure_of_screened_ne_one hne C 0
+    obtain ⟨N, hKN, hall⟩ := hC K
+    obtain ⟨k, hk, hkK, hbad⟩ := hfail N hKN
+    exact (not_lt_of_ge (hall k hk hkK)) hbad
+  · intro hu
+    refine ⟨0, fun K => ?_⟩
+    have hpoint (k : ℕ) (hk : k ∈ Finset.Icc 1 K) :
+        ∀ᶠ N : ℕ in atTop, 0 ≤ sectionCoordinate (N + 1) k := by
+      have hkpos : 0 < k := (Finset.mem_Icc.mp hk).1
+      have ht := sectionCoordinate_tendsto k
+      have hlim : hilbertSequence normalizedScreenedTwo k = 1 := by
+        rw [hu, hilbertOne_sequence]
+        simp [zeroAnchor, hkpos.ne']
+      rw [hlim] at ht
+      exact (ht.eventually (Ioi_mem_nhds (by norm_num : (0 : ℝ) < 1))).mono
+        (fun _ h => h.le)
+    have hall : ∀ᶠ N : ℕ in atTop,
+        ∀ k ∈ Finset.Icc 1 K, 0 ≤ sectionCoordinate (N + 1) k := by
+      rw [Finset.eventually_all]
+      intro k hk
+      exact hpoint k hk
+    obtain ⟨N, hN⟩ := eventually_atTop.1 hall
+    refine ⟨max K N, le_max_left _ _, fun k hk hkK => ?_⟩
+    exact hN (max K N) (le_max_right _ _) k (Finset.mem_Icc.mpr ⟨hk, hkK⟩)
+
+/-- A cofinal common lower bound for the finite digamma sections proves RH. -/
+theorem riemannHypothesis_of_cofinalPrefixLowerBound
+    (h : cofinalPrefixLowerBound) : RiemannHypothesis := by
+  have hu := cofinalPrefixLowerBound_iff_screened_eq_one.mp h
+  apply CenteredMeanSnake.riemannHypothesis_of_boundary_eq_zero
+  rw [CenteredMeanSnake.boundary_eq_zero_iff_one_mem, ← hu]
+  exact screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure
+
 /-- The reciprocal arithmetic mass gives the squared norm of the same lift. -/
 theorem reciprocal_jump_mass_tendsto :
     Tendsto (fun n => (dotProduct (meanVector (n + 1))

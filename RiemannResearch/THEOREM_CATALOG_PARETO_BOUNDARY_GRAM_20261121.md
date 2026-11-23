@@ -9,7 +9,7 @@ boundary. All norms and projections are in the original Pareto geometry.
 
 ## The digamma recurrence and the unit section
 
-Every coordinate of the screened mean section is a limit of finite digamma Gram solves. At each stage the jump expression for its squared residual contains the transported snake boundary and a squared approximation error. Polarizing two legal quotient distances gives a certified first-site interval. [Derivation and certificate](DIGAMMA_SCREENED_MEAN_SECTION.md) · [Lean theorems](RH/CenteredMeanDigammaSection.lean)
+Every coordinate of the screened mean section is a limit of finite digamma Gram solves. At each stage the jump expression for its squared residual contains the transported snake boundary and a squared approximation error. Polarizing two legal quotient distances gives a certified first-site interval. A cofinal common lower bound on expanding finite prefixes is equivalent to the screened section being the constant. After adjoining the balanced two-prime vector, finite mixed cross entries are signed lower bounds for the full cross entry. [Derivation and certificates](DIGAMMA_SCREENED_MEAN_SECTION.md) · [Digamma theorems](RH/CenteredMeanDigammaSection.lean) · [Polarized cross bound](RH/MixedConductorPolarizedParseval.lean)
 
 ## Strict descent and the conductor-six orbit
 

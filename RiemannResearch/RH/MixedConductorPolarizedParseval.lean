@@ -319,6 +319,72 @@ theorem balancedTwoThree_mixed_inner :
   field_simp [(Real.log_pos (by norm_num : (1 : ℝ) < 2)).ne',
     show Real.sqrt 3 ≠ 0 by positivity] <;> ring
 
+/-- Once the balanced two-prime vector is included, the finite projected cross
+entry is a genuine lower bound for the full mixed cross entry. -/
+theorem subspace_two_three_cross_le_of_balanced_mem
+    (S : Submodule ℝ mixedClosure) [S.HasOrthogonalProjection]
+    (hB : balancedTwoThree ∈ S) :
+    let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)
+    let y := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)
+    inner ℝ (S.starProjection x) (S.starProjection y) ≤ inner ℝ x y := by
+  let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)
+  let y := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)
+  let px := S.starProjection x
+  let py := S.starProjection y
+  have hfix : S.starProjection balancedTwoThree = balancedTwoThree := by
+    have hdmem : balancedTwoThree - S.starProjection balancedTwoThree ∈ S :=
+      S.sub_mem hB (S.starProjection_apply_mem _)
+    have hdorth := S.sub_starProjection_mem_orthogonal balancedTwoThree
+    have hz := (S.mem_orthogonal _).mp hdorth
+      (balancedTwoThree - S.starProjection balancedTwoThree) hdmem
+    exact (sub_eq_zero.mp (inner_self_eq_zero.mp hz)).symm
+  have hrel : Real.log 2 • (y - py) = Real.log 3 • (x - px) := by
+    change S.starProjection (Real.log 3 • x - Real.log 2 • y) =
+      Real.log 3 • x - Real.log 2 • y at hfix
+    rw [map_sub, map_smul, map_smul] at hfix
+    simp only [smul_sub]
+    apply (sub_eq_sub_iff_add_eq_add).2
+    have he := (sub_eq_sub_iff_add_eq_add).1 hfix
+    simpa only [px, py, add_comm] using he
+  have hrel_inner := congrArg (fun z : mixedClosure => inner ℝ (x - px) z) hrel
+  simp only [real_inner_smul_right] at hrel_inner
+  have hnonneg : 0 ≤ inner ℝ (x - px) (y - py) := by
+    rw [real_inner_self_eq_norm_sq] at hrel_inner
+    have ha := Real.log_pos (by norm_num : (1 : ℝ) < 2)
+    have hb := Real.log_pos (by norm_num : (1 : ℝ) < 3)
+    have hrhs : 0 ≤ Real.log 3 * ‖x - px‖ ^ 2 :=
+      mul_nonneg hb.le (sq_nonneg _)
+    have hprod : 0 ≤ Real.log 2 * inner ℝ (x - px) (y - py) := hrel_inner.symm ▸ hrhs
+    exact nonneg_of_mul_nonneg_left (by simpa only [mul_comm] using hprod) ha
+  have hxr : x - px ∈ Sᗮ := S.sub_starProjection_mem_orthogonal x
+  have hyr : y - py ∈ Sᗮ := S.sub_starProjection_mem_orthogonal y
+  have hxpy : inner ℝ (x - px) py = 0 := by
+    rw [real_inner_comm]
+    exact (S.mem_orthogonal _).mp hxr py (S.starProjection_apply_mem y)
+  have hpxy : inner ℝ px (y - py) = 0 :=
+    (S.mem_orthogonal _).mp hyr px (S.starProjection_apply_mem x)
+  have hx : x = px + (x - px) := by abel
+  have hy : y = py + (y - py) := by abel
+  dsimp only
+  change inner ℝ px py ≤ inner ℝ x y
+  rw [hx, hy, inner_add_left, inner_add_right, inner_add_right, hxpy, hpxy]
+  simp only [add_zero, zero_add]
+  exact le_add_of_nonneg_right hnonneg
+
+/-- A finite-dimensional certificate may be checked after adjoining the
+balanced vector; reaching the elementary target then proves RH. -/
+theorem riemannHypothesis_of_balanced_subspace_cross
+    (S : Submodule ℝ mixedClosure) [S.HasOrthogonalProjection]
+    (hB : balancedTwoThree ∈ S)
+    (h : Real.log 2 + Real.log 3 / 2 - Real.pi / (3 * Real.sqrt 3) -
+        Real.log 2 * Real.log 3 ≤
+      inner ℝ
+        (S.starProjection (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)))
+        (S.starProjection (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)))) :
+    RiemannHypothesis := by
+  apply riemannHypothesis_of_two_three_projected_covariance
+  exact h.trans (subspace_two_three_cross_le_of_balanced_mem S hB)
+
 /-- A completed square for the entire parity projection, with its exact one-dimensional
 contribution and its full orthogonal remainder. -/
 theorem parity_projection_split_along_two_three :

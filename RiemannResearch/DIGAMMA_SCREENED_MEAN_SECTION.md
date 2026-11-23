@@ -70,6 +70,26 @@ $$
 The remaining arithmetic inequality is $\langle P_MJ_2,P_MJ_3\rangle_P\ge a+b/2-c-ab$.
 It would force the squared norm on the right to vanish.
 
+The cross term is not monotone under arbitrary enlargements of a finite mixed
+space. There is a canonical repair. Adjoin
+$$
+B=bP_MJ_2-aP_MJ_3=bJ_2-aJ_3\in M.
+$$
+If $S\subseteq M$ is closed and contains $B$, put
+$x=P_MJ_2$, $y=P_MJ_3$, $x_S=P_Sx$, and $y_S=P_Sy$.
+The residual relation is
+$$
+a(y-y_S)=b(x-x_S).
+$$
+Its cross term is nonnegative, so orthogonality gives
+$$
+\langle x_S,y_S\rangle_P\le\langle x,y\rangle_P.
+$$
+Consequently, a finite-dimensional $B$-adjoined space whose projected cross
+entry reaches $a+b/2-c-ab$ would prove RH. Lean checks this signed lower-bound
+mechanism in the declaration `subspace_two_three_cross_le_of_balanced_mem`.
+
+
 ## An unconditional enclosure for the first coordinate
 
 Let $Q=I-P_V$ and $z_k=\mathbf1_{\{k\}}/P(k)-\mathbf1$.
@@ -126,6 +146,25 @@ than $97^2$. The trial below gives $v(9856)=-29691/250000$ and
 $\|g\|_\infty\le1822720525829/4000040000000000$. Hence $p_{11}(9856)<-1/20$.
 Dividing by $m_{11}\in(0,1]$ preserves the upper bound. The sign of the limiting
 coordinate $u(9856)$ remains undetermined by this calculation.
+
+## The cofinal prefix condition is exact
+
+The finite negative value above does not rule out a cofinal one-sided bound.
+Define the arithmetic condition
+$$
+\exists C\in\mathbb R\ \forall K\ \exists N\ge K\ \forall\,1\le k\le K,
+\qquad U_N(k)\ge C.
+$$
+Lean proves that this condition is equivalent to $u=\mathbf1$. The forward
+direction takes a cofinal subsequence and uses coordinate convergence. For the
+converse, convergence to $1$ is uniform on each fixed finite set.
+
+The negation has a useful exact form. If $u\ne\mathbf1$, then for every $C$
+and every starting cutoff $K_0$, there is $K\ge K_0$ such that every $N\ge K$
+has some $1\le k\le K$ with $U_N(k)<C$. Thus an unconditional common lower
+bound on cofinally many expanding prefixes would prove RH, while any nonzero
+ambient snake forces permanent finite-prefix failures.
+
 
 ## Exact rational certificate
 
