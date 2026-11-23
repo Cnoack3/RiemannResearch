@@ -613,6 +613,8 @@ import RiemannResearch.RH.CenteredMeanLongExact
 import RiemannResearch.RH.CenteredMeanAmbientGeometry
 import RiemannResearch.RH.CenteredMeanRHCriteria
 import RiemannResearch.RH.CenteredMeanFiniteDescent
+import RiemannResearch.RH.MixedConductorStrictDescent
+import RiemannResearch.RH.TernaryMixedOrbitObstruction
 import RiemannResearch.RH.SiteGramStrictStages
 import RiemannResearch.RH.MixedOrthogonalMean
 import RiemannResearch.RH.MixedConductorHilbertBasis
