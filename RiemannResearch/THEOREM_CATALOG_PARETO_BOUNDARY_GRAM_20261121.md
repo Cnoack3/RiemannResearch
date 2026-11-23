@@ -137,6 +137,28 @@ F_n=-b^\top c_n+(2-\sqrt2)(1-\lambda^\top c_n).
 $$
 For every support stage $s$, its unit has zero ambient boundary if and only if for every $\varepsilon>0$ and every $N$ some $n\ge N$ satisfies $F_n\ge1-\varepsilon$. Equivalently, $\limsup_n F_n\ge1$. The determinant form follows by multiplying by the positive raw Gram determinant and applying the rank-one determinant identity. The one-solve form removes the determinants from the arithmetic obligation. The forward implication from this cofinal condition to RH is checked without a converse hypothesis. The repository theorem expressing the reverse implication from RH names the Báez–Duarte natural-approximation implication explicitly.
 
+### A quadratic allowance in the same Gram solve
+
+Let $e_n=1-\lambda^\top c_n$ and $b_n=1+\mu^\top c_n$, where $\mu_i$ is the Möbius value at conductor $i+2$. These quantities converge to the residual energy $E=\|r\|^2$ and first-site value $b=r(1)$. Set
+\[
+ L=\log 2-\tfrac12,\qquad K=\tfrac12(2-5\sqrt2/6)^2,\qquad
+ Q(e,b)=2e^2-eb^2-(2e-b)^2,\qquad
+ \kappa=\frac{(2-\sqrt2)^2+K/L}{2\sqrt2}.
+\]
+
+**Established.** Removing the first site and the dyadic direction from $r$, then pairing the remainder with parity off the first site, gives $LQ(E,b)>KE^3$ whenever $E>0$. In particular $b>(2-\sqrt2)E+\kappa E^2$ and $\kappa>1/2$. The finite identity retains the signed defect $d_n=\langle r_n,D_2P_n\mathbf1\rangle$. For $W_n=2e_n(r_n-b_n\delta_1)-\langle r_n,D_2r_n\rangle D_2r_n$ it reads
+\[
+ \|W_n\|^2=2e_n\{Q(e_n,b_n)+2(2e_n-b_n)d_n-d_n^2\}.
+\]
+
+**Conditional research reduction.** The unit at every support stage has zero centered boundary exactly when, for every $\varepsilon>0$ and every $N$, some $n\ge N$ satisfies
+\[
+ b_n\le (2-\sqrt2)e_n+\kappa e_n^2+\varepsilon.
+\]
+The corresponding cubic test is $LQ(e_n,b_n)\le Ke_n^3+\varepsilon$ with the same quantifiers. Either condition implies RH. **Open.** Establish either upper bound at arbitrarily late cutoffs for every positive tolerance. [Lean declarations](RH/CenteredMeanDyadicGram.lean)
+
+### Finite certificates for the linear bound
+
 The rational interval calculations below include all Pareto sites. Wolfram digamma evaluations give the same signs. The exact interval computation below groups each pair of packets by its own period. For each residue it bounds the complete tail, encloses the Gram matrix and mean vector entrywise, and propagates those bounds through a single rational matrix inverse. For a residue progression of period $p$ whose first omitted term is $t$, the omitted mass lies between $1/(pt)$ and $1/[t(t+1)]+1/[p(t+1)]$. The script encloses the pairwise Gram entries with these full tails. Writing $G=A+\Delta$, $|\Delta|\le U$ entrywise and $|\lambda-\lambda_0|\le e$, it checks $\beta=\||A^{-1}|U\|_\infty<1$. The rational midpoint solve $c_0=A^{-1}\lambda_0$ then satisfies $\|c-c_0\|_\infty\le\||A^{-1}|(e+U|c_0|)\|_\infty/(1-\beta)$. This inequality follows by subtracting the two normal equations and bounding $\Delta(c-c_0)$ componentwise. Here $n$ counts packets, so stage 4 uses conductors 2 through 5.
 
 | Stage $n$ | Lower bound for $F_n$ | Upper bound for $F_n$ |
