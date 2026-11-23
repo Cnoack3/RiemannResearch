@@ -79,9 +79,9 @@ private theorem signed_covariance :
   rw [sum_support (fun d z => (rows.map (fun t => pairTerm d z t.1 t.2)).sum)]
   decide +kernel
 
-/-- Upper bound on the squared distance from the constant to the closed residue span. -/
-theorem limitEnergy_le_conductor_241_covariance :
-    limitEnergy ≤ (2093945167971946997 : ℝ)/238620217000000000000 := by
+/-- The signed covariance trial controls the actual Gram energy at its own cutoff. -/
+theorem energy_le_conductor_241_covariance :
+    energy 240 ≤ (2093945167971946997 : ℝ)/238620217000000000000 := by
   let c := fun d => (coefficient d : ℝ)
   have hmZ : (∑ d ∈ support, coefficient d*((d : ℤ)-1)) = 2015268 := by
     rw [sum_support (fun d z => z*((d : ℤ)-1))]
@@ -99,14 +99,28 @@ theorem limitEnergy_le_conductor_241_covariance :
   have hg : RawTrialTail.gcdEnergy support c = 5241591082916 := by
     simpa [RawTrialTail.gcdEnergy, pairTerm, c] using
       congrArg (fun z : ℤ => (z : ℝ)) signed_covariance
-  have hs (d : ℕ) (hd : d ∈ support) : 2 ≤ d := by
+  have hs (d : ℕ) (hd : d ∈ support) : 2 ≤ d ∧ d ≤ 241 := by
     obtain ⟨t, ht, rfl⟩ := List.mem_map.mp (List.mem_toFinset.mp hd)
-    exact (rows_range t ht).1
-  have h := RawTrialTail.limitEnergy_le_of_head support c 1000000 _ 65536 (by norm_num) hs raw_head
+    exact rows_range t ht
+  have hmem (d : ℕ) (hd : d ∈ support) : rawResidueAtom (d-2) ∈ finiteSpace 240 := by
+    apply (finiteSpace 240).smul_mem
+    apply Submodule.subset_span
+    have hd' := hs d hd
+    exact ⟨⟨d-2, by omega⟩, rfl⟩
+  have h := RawTrialTail.projection_error_le_of_head (finiteSpace 240) support c
+    1000000 _ 65536 (by norm_num) (fun d hd => (hs d hd).1) hmem raw_head
+  change energy 240 ≤ _ at h
   unfold RawTrialTail.uniformSquare RawTrialTail.discrepancy at h
   rw [hm, ha, hg] at h
   norm_num at h ⊢
   exact h
+
+/-- Upper bound on the squared distance from the constant to the closed residue span. -/
+theorem limitEnergy_le_conductor_241_covariance :
+    limitEnergy ≤ (2093945167971946997 : ℝ)/238620217000000000000 := by
+  refine le_trans ?_ energy_le_conductor_241_covariance
+  rw [energy_eq_limit_add]
+  exact le_add_of_nonneg_right (sq_nonneg _)
 
 /-- Squared error of the normalized screened parity vector in the full Pareto norm. -/
 theorem screenedTwo_squared_distance_le_covariance :

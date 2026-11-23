@@ -43,59 +43,75 @@ theorem remove_firstPoint_norm_sq (f : ThresholdHilbert) :
     paretoPoint_zero_norm_sq, inner_smul_right, paretoPoint_zero_inner]
   ring
 
-/-- The finite cross-scale identity uses the original optimal projection.
-The dilated lower-stage projection belongs to the doubled upper stage. -/
+/-- Once the upper cutoff contains the dilation of the lower projection,
+both residuals can be paired through their first-site error. -/
+theorem residual_inner_doubleDilation_of_le (k n : ℕ) (hn : doubleStage k ≤ n) :
+    inner ℝ (projectionResidual n)
+        (doubleDilation (projectionResidual k)) =
+      2 * energy n - hilbertSequence (projectionResidual n) 1 := by
+  have hlegal := doubleDilation_mem_double
+    ((finiteSpace k).starProjection_apply_mem hilbertOne)
+  have horth := projectionResidual_inner_mem n _
+    (walkSpan_mono residueAtom id hn hlegal)
+  change inner ℝ (projectionResidual n)
+    (doubleDilation (projection k)) = 0 at horth
+  have h := congrArg (fun f => inner ℝ (projectionResidual n) f)
+    firstPoint_eq_dilation_difference
+  rw [paretoPoint_zero_inner, inner_sub_right, inner_smul_right,
+    projectionResidual_inner_one] at h
+  change (1 / 2 : ℝ) * hilbertSequence (projectionResidual n) 1 =
+    energy n - (1 / 2 : ℝ) *
+      inner ℝ (projectionResidual n) (doubleDilation hilbertOne) at h
+  rw [show projectionResidual k = hilbertOne - projection k from rfl,
+    map_sub, inner_sub_right, horth, sub_zero]
+  linarith
+
+/-- The cross-scale identity at the first admissible upper stage. -/
 theorem residual_doubleStage_inner_doubleDilation (n : ℕ) :
     inner ℝ (projectionResidual (doubleStage n))
         (doubleDilation (projectionResidual n)) =
       2 * energy (doubleStage n) -
-        hilbertSequence (projectionResidual (doubleStage n)) 1 := by
-  have hlegal := doubleDilation_mem_double
-    ((finiteSpace n).starProjection_apply_mem hilbertOne)
-  have horth := projectionResidual_inner_mem (doubleStage n) _ hlegal
-  change inner ℝ (projectionResidual (doubleStage n))
-    (doubleDilation (projection n)) = 0 at horth
-  have h := congrArg (fun f => inner ℝ (projectionResidual (doubleStage n)) f)
-    firstPoint_eq_dilation_difference
-  rw [paretoPoint_zero_inner, inner_sub_right, inner_smul_right,
-    projectionResidual_inner_one] at h
-  change (1 / 2 : ℝ) * hilbertSequence (projectionResidual (doubleStage n)) 1 =
-    energy (doubleStage n) - (1 / 2 : ℝ) *
-      inner ℝ (projectionResidual (doubleStage n)) (doubleDilation hilbertOne) at h
-  rw [show projectionResidual n = hilbertOne - projection n from rfl,
-    map_sub, inner_sub_right, horth, sub_zero]
-  linarith
+        hilbertSequence (projectionResidual (doubleStage n)) 1 :=
+  residual_inner_doubleDilation_of_le n (doubleStage n) le_rfl
 
-/-- Sharpened finite Gram inequality after removing the first site from
-the upper residual. This is unconditional and uses the full Hilbert norm. -/
-theorem finite_endpoint_gram (n : ℕ) :
-    (energy (doubleStage n) -
-        hilbertSequence (projectionResidual (doubleStage n)) 1 / 2)^2 ≤
-      (energy n / 2) * (energy (doubleStage n) -
-        (hilbertSequence (projectionResidual (doubleStage n)) 1)^2 / 2) := by
-  let a := hilbertSequence (projectionResidual (doubleStage n)) 1
-  let r := projectionResidual (doubleStage n)
-  let v := doubleDilation (projectionResidual n)
+/-- Removing the first site from the upper residual sharpens the cross-scale
+Gram inequality for every admissible pair of cutoffs. -/
+theorem finite_endpoint_gram_of_le (k n : ℕ) (hn : doubleStage k ≤ n) :
+    (energy n -
+        hilbertSequence (projectionResidual n) 1 / 2)^2 ≤
+      (energy k / 2) * (energy n -
+        (hilbertSequence (projectionResidual n) 1)^2 / 2) := by
+  let a := hilbertSequence (projectionResidual n) 1
+  let r := projectionResidual n
+  let v := doubleDilation (projectionResidual k)
   have hip : inner ℝ (paretoPointHilbert 0) v = 0 := by
     rw [real_inner_comm]
-    exact doubleDilation_inner_firstPoint (projectionResidual n)
-  have hpair : inner ℝ r v = 2 * energy (doubleStage n) - a :=
-    residual_doubleStage_inner_doubleDilation n
-  have hnorm : ‖v‖ ^ 2 = 2 * energy n := by
-    change ‖hilbertDilation 2 (by decide) (projectionResidual n)‖ ^ 2 = _
+    exact doubleDilation_inner_firstPoint (projectionResidual k)
+  have hpair : inner ℝ r v = 2 * energy n - a :=
+    residual_inner_doubleDilation_of_le k n hn
+  have hnorm : ‖v‖ ^ 2 = 2 * energy k := by
+    change ‖hilbertDilation 2 (by decide) (projectionResidual k)‖ ^ 2 = _
     calc
-      _ = 2 * ‖projectionResidual n‖ ^ 2 := by
-        simpa using hilbertDilation_norm_sq 2 (by decide) (projectionResidual n)
+      _ = 2 * ‖projectionResidual k‖ ^ 2 := by
+        simpa using hilbertDilation_norm_sq 2 (by decide) (projectionResidual k)
       _ = _ := rfl
   have hremove : ‖r - a • paretoPointHilbert 0‖ ^ 2 =
-      energy (doubleStage n) - a^2 / 2 := remove_firstPoint_norm_sq r
+      energy n - a^2 / 2 := remove_firstPoint_norm_sq r
   have hcs := RiemannResearch.Analysis.CorrelationCorrection.inner_sq_le
     (r - a • paretoPointHilbert 0) v
   rw [inner_sub_left, real_inner_smul_left, hip, mul_zero, sub_zero,
     hpair, hremove, hnorm] at hcs
-  change (energy (doubleStage n) - a / 2)^2 ≤
-    (energy n / 2) * (energy (doubleStage n) - a^2 / 2)
+  change (energy n - a / 2)^2 ≤
+    (energy k / 2) * (energy n - a^2 / 2)
   nlinarith
+
+/-- The endpoint Gram inequality at the first admissible upper stage. -/
+theorem finite_endpoint_gram (n : ℕ) :
+    (energy (doubleStage n) -
+        hilbertSequence (projectionResidual (doubleStage n)) 1 / 2)^2 ≤
+      (energy n / 2) * (energy (doubleStage n) -
+        (hilbertSequence (projectionResidual (doubleStage n)) 1)^2 / 2) :=
+  finite_endpoint_gram_of_le n (doubleStage n) le_rfl
 
 theorem finite_endpoint_energy_le_one (n : ℕ) : energy n ≤ 1 := by
   have hz : energy 0 = 1 := by

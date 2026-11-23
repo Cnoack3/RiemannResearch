@@ -157,6 +157,12 @@ Let $e_n=1-\lambda^\top c_n$ and $b_n=1+\mu^\top c_n$, where $\mu_i$ is the Möb
 \]
 The corresponding cubic test is $LQ(e_n,b_n)\le Ke_n^3+\varepsilon$ with the same quantifiers. Either condition implies RH. **Open.** Establish either upper bound at arbitrarily late cutoffs for every positive tolerance. [Lean declarations](RH/CenteredMeanDyadicGram.lean)
 
+For the actual Gram solves, the conductor-241 covariance trial gives $e_{240}\le 2093945167971946997/238620217000000000000$. If $n\ge 2k+1$, orthogonality gives $2e_n-b_n=\langle r_n,D r_k\rangle_P$ for the scaled dyadic dilation $D$. Removing the first site before Cauchy–Schwarz gives
+\[
+ (2e_n-b_n)^2\le 2e_k(e_n-b_n^2/2).
+\]
+Consequently $b_n-(2-\sqrt2)e_n-\kappa e_n^2\le 2\sqrt2\,e_k$. Taking $k=240$ proves the quadratic upper bound with tolerance $1/40$ at every $n\ge481$. The proof supplies $n=\max(N,481)$ for any requested cutoff $N$. The estimate at arbitrarily small positive tolerances remains open. [Gram bound](RH/CenteredMeanGramUpperBound.lean) · [Trial certificate](RH/ParetoConductor241Covariance.lean)
+
 ### Finite certificates for the linear bound
 
 The rational interval calculations below include all Pareto sites. Wolfram digamma evaluations give the same signs. The exact interval computation below groups each pair of packets by its own period. For each residue it bounds the complete tail, encloses the Gram matrix and mean vector entrywise, and propagates those bounds through a single rational matrix inverse. For a residue progression of period $p$ whose first omitted term is $t$, the omitted mass lies between $1/(pt)$ and $1/[t(t+1)]+1/[p(t+1)]$. The script encloses the pairwise Gram entries with these full tails. Writing $G=A+\Delta$, $|\Delta|\le U$ entrywise and $|\lambda-\lambda_0|\le e$, it checks $\beta=\||A^{-1}|U\|_\infty<1$. The rational midpoint solve $c_0=A^{-1}\lambda_0$ then satisfies $\|c-c_0\|_\infty\le\||A^{-1}|(e+U|c_0|)\|_\infty/(1-\beta)$. This inequality follows by subtracting the two normal equations and bounding $\Delta(c-c_0)$ componentwise. Here $n$ counts packets, so stage 4 uses conductors 2 through 5.

@@ -184,26 +184,24 @@ theorem weighted_tail_prefix (s : Finset ℕ) (c : ℕ → ℝ) (C : ℝ)
 
 open CoefficientStabilization
 
-/-- A finite raw-residue head and the CRT tail together control the true
-closed-space distance. The unscaled integer loss is divided by the scale
-squared only at the end. -/
-theorem limitEnergy_le_of_head (s : Finset ℕ) (c : ℕ → ℝ) (C H : ℝ)
+/-- A checked head and the periodic tail bound the projection error in any
+subspace containing the conductors of the trial. -/
+theorem projection_error_le_of_head (S : Submodule ℝ ThresholdHilbert)
+    [S.HasOrthogonalProjection] (s : Finset ℕ) (c : ℕ → ℝ) (C H : ℝ)
     (T : ℕ) (hC : 0 < C) (hs : ∀ d ∈ s, 2 ≤ d)
+    (hmem : ∀ d ∈ s, rawResidueAtom (d-2) ∈ S)
     (hhead : (∑ j ∈ Finset.range T, positiveWeight (j + 1) * (error s c C (j + 1)) ^ 2) ≤ H) :
-    limitEnergy ≤ (H + uniformSquare s c C / ((T:ℝ)+1) +
-      discrepancy s c C / (((T:ℝ)+1)*((T:ℝ)+2))) / C^2 := by
+    ‖hilbertOne - S.starProjection hilbertOne‖^2 ≤
+      (H + uniformSquare s c C / ((T:ℝ)+1) +
+        discrepancy s c C / (((T:ℝ)+1)*((T:ℝ)+2))) / C^2 := by
   let v := ∑ d ∈ s, c d • rawResidueAtom (d-2)
   let r := C • hilbertOne - v
-  have hv : v ∈ closedSpace := by
-    apply closedSpace.sum_mem
-    intro d hd
-    exact closedSpace.smul_mem _ (closedSpace.smul_mem _
-      (RiemannResearch.RH.RamanujanMultipleCapacityLimits.residueAtom_mem_closedSpace (d-2)))
-  have hdist := Metric.infDist_le_dist_of_mem (x := hilbertOne) (closedSpace.smul_mem C⁻¹ hv)
-  rw [closedSpace.infDist_eq_norm_sub_starProjection,dist_eq_norm] at hdist
+  have hv : v ∈ S := S.sum_mem (fun d hd => S.smul_mem _ (hmem d hd))
+  have hdist := Metric.infDist_le_dist_of_mem (x := hilbertOne) (S.smul_mem C⁻¹ hv)
+  rw [S.infDist_eq_norm_sub_starProjection, dist_eq_norm] at hdist
   have hres : r = C • (hilbertOne-C⁻¹ • v) := by
     simp [r,smul_sub,smul_smul,hC.ne']
-  have hmin : limitEnergy * C^2 ≤ ‖r‖^2 := by
+  have hmin : ‖hilbertOne - S.starProjection hilbertOne‖^2 * C^2 ≤ ‖r‖^2 := by
     rw [hres,norm_smul,Real.norm_eq_abs,abs_of_pos hC,mul_pow,mul_comm (C^2)]
     exact mul_le_mul_of_nonneg_right ((sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mpr hdist)
       (sq_nonneg C)
@@ -246,5 +244,17 @@ theorem limitEnergy_le_of_head (s : Finset ℕ) (c : ℕ → ℝ) (C H : ℝ)
   convert h using 1
   simp only [positiveWeight,Nat.cast_succ]
   ring
+
+/-- A finite raw-residue head and the CRT tail together control the true
+closed-space distance. The unscaled integer loss is divided by the scale
+squared only at the end. -/
+theorem limitEnergy_le_of_head (s : Finset ℕ) (c : ℕ → ℝ) (C H : ℝ)
+    (T : ℕ) (hC : 0 < C) (hs : ∀ d ∈ s, 2 ≤ d)
+    (hhead : (∑ j ∈ Finset.range T, positiveWeight (j + 1) * (error s c C (j + 1)) ^ 2) ≤ H) :
+    limitEnergy ≤ (H + uniformSquare s c C / ((T:ℝ)+1) +
+      discrepancy s c C / (((T:ℝ)+1)*((T:ℝ)+2))) / C^2 := by
+  exact projection_error_le_of_head closedSpace s c C H T hC hs (fun d _ =>
+    closedSpace.smul_mem _
+      (RiemannResearch.RH.RamanujanMultipleCapacityLimits.residueAtom_mem_closedSpace (d-2))) hhead
 
 end RiemannResearch.RH.Pareto.RawTrialTail
