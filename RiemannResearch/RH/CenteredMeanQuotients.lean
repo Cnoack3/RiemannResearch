@@ -324,4 +324,21 @@ theorem boundary_eq_zero_iff_mixedClosure_eq_one_orthogonal :
   boundary_eq_zero_iff_one_mem.trans
     (closedSpace_eq_top_iff_one_mem.symm.trans closedSpace_eq_top_iff_mixedClosure_eq_one_orthogonal)
 
+/-- In the inclusion diagram the cokernel arrow following the connecting map is the
+representative-preserving map from the ambient mean-zero quotient to the legal quotient. -/
+theorem exact_inclusionConnecting_quotientEquiv :
+    Function.Exact inclusionConnecting boundaryTargetEquivLegalQuotient.toLinearMap := by
+  unfold inclusionConnecting
+  apply SnakeLemma.exact_δ_left (π₂ := closedSpace.mkQ)
+    (hπ₂ := LinearMap.exact_subtype_mkQ closedSpace)
+  · exact LinearMap.ext fun z => boundaryTargetEquivLegalQuotient_mk z
+  · exact mixedInMeanZero.mkQ_surjective
+
+/-- The final scalar cokernel in the inclusion diagram is the quotient by the range of
+the identity. Exactness at the preceding cokernel uses surjectivity of the quotient equivalence. -/
+theorem exact_inclusionQuotientEquiv_final :
+    Function.Exact boundaryTargetEquivLegalQuotient.toLinearMap
+      (0 : (ThresholdHilbert ⧸ closedSpace) →ₗ[ℝ] (ℝ ⧸ (LinearMap.id : ℝ →ₗ[ℝ] ℝ).range)) :=
+  (LinearMap.exact_zero_iff_surjective _ _).2 boundaryTargetEquivLegalQuotient.surjective
+
 end RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake

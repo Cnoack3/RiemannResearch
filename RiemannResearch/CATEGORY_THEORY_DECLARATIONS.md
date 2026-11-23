@@ -1,6 +1,6 @@
 # Category theory and the Pareto boundary in Lean
 
-The declaration-by-declaration inventory below the reconstruction table covers 49 modules, 782 public named declarations, 84 private or local declarations, and 5 further anonymous instances. The first two sections contain the abstract categorical constructions and the Pareto diagrams. The third section includes their Hilbert-space, arithmetic, and other applications.
+The declaration-by-declaration inventory below the reconstruction table covers 49 modules, 790 public named declarations, 86 private or local declarations, and 5 further anonymous instances. The first two sections contain the abstract categorical constructions and the Pareto diagrams. The third section includes their Hilbert-space, arithmetic, and other applications.
 
 Each entry links to its declaration in this revision. Names are relative to the displayed namespace. The fields of structures and classes appear beside their declarations. Imported mathlib declarations and automatically generated recursors are outside the index.
 
@@ -18,7 +18,7 @@ The historical reference is [the November 20 Pacific revision](https://github.co
 | Screened algebra and mixed bimodule | Square-zero ideal, commuting continuous left and right actions, annihilator, quotient algebra and section changes. The real-linear mean has a section. The regular-module quotient has no module-linear section. | [Multiplication](RH/MixedConductorSquareZero.lean), [module actions](RH/MixedConductorBimodule.lean) |
 | Support layers | Strict filtration, orthogonal layer projections and Parseval. For the two layer diagrams, truncation induces zero and inclusion induces the identity. | [Filtration](RH/MixedConductorPrimeSupport.lean), [polarized Parseval](RH/MixedConductorPolarizedParseval.lean), [layer snakes](RH/MixedConductorSupportSnake.lean) |
 | Forward quotient towers | Ordinary real-algebra colimit by the union of ideals, canonical surjection to the closed-ideal quotient, nonzero kernel equal to the closure of zero. The ambient Hilbert quotient is a colimit in Hausdorff topological modules. | [Algebraic colimit](RH/AlgebraicSupportColimit.lean), [Hausdorff colimit](RH/HausdorffSupportColimit.lean), [algebra descent](RH/PrimeSupportAlgebraDescent.lean) |
-| Centered mean snake | Both split rows, original connecting map, full exact sequence, quotienting both rows by any mixed submodule, naturality of both rows, their splittings and their connecting maps, and comparison of all interior arrows | [Original diagram](RH/CenteredMeanSnake.lean), [ambient sequence](RH/CenteredMeanLongExact.lean), [stage sequences](RH/CenteredMeanStageSnake.lean) |
+| Mean snakes | Both split rows, the zero connecting map for ordinary inclusion, the defect class for centering, full exact sequence, quotienting both rows by any mixed submodule, naturality of both rows, their splittings and their connecting maps, and comparison of all interior arrows | [Original diagram](RH/CenteredMeanSnake.lean), [ambient sequence](RH/CenteredMeanLongExact.lean), [stage sequences](RH/CenteredMeanStageSnake.lean) |
 | Finite arithmetic and infinite descent | Finite Gram solves, strict signed tests and the condition for arbitrarily late contractions of the quotient norm. Vanishing at infinite depth is the remaining arithmetic obligation. | [Finite solves](RH/CenteredMeanFiniteDescent.lean), [certified signs](RH/SiteGramStrictStages.lean), [contraction criterion](RH/PrimeSupportParityDescent.lean) |
 
 ## Abstract category theory and CRT
@@ -320,6 +320,8 @@ Namespace `RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake`
 - theorem [one_orthogonal_le_mixedClosure_iff_one_mem](RH/CenteredMeanQuotients.lean#L302)
 - theorem [closedSpace_eq_top_iff_mixedClosure_eq_one_orthogonal](RH/CenteredMeanQuotients.lean#L312)
 - theorem [boundary_eq_zero_iff_mixedClosure_eq_one_orthogonal](RH/CenteredMeanQuotients.lean#L322)
+- theorem [exact_inclusionConnecting_quotientEquiv](RH/CenteredMeanQuotients.lean#L329)
+- theorem [exact_inclusionQuotientEquiv_final](RH/CenteredMeanQuotients.lean#L339)
 
 ### CenteredMeanSnake
 
@@ -390,6 +392,14 @@ Namespace `RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake`
 - theorem [boundary_eq_zero_iff_naturalApproximation](RH/CenteredMeanSnake.lean#L418)
 - theorem [riemannHypothesis_of_boundary_eq_zero](RH/CenteredMeanSnake.lean#L422)
 - theorem [boundary_injective_iff_not_riemannHypothesis](RH/CenteredMeanSnake.lean#L426)
+- private theorem [inclusion_left_square](RH/CenteredMeanSnake.lean#L435)
+- private theorem [inclusion_right_square](RH/CenteredMeanSnake.lean#L440)
+- def [inclusionDiagram](RH/CenteredMeanSnake.lean#L447)
+- def [inclusionConnecting](RH/CenteredMeanSnake.lean#L461)
+- theorem [inclusionConnecting_eq_zero](RH/CenteredMeanSnake.lean#L471)
+- def [meanSectionDifference](RH/CenteredMeanSnake.lean#L478)
+- theorem [meanSectionDifference_coe](RH/CenteredMeanSnake.lean#L481)
+- theorem [boundary_eq_quotient_meanSectionDifference](RH/CenteredMeanSnake.lean#L488)
 
 ### FiniteAtomCarryCRT
 

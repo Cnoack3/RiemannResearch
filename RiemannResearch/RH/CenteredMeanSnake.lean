@@ -431,4 +431,70 @@ theorem boundary_injective_iff_not_riemannHypothesis
       fun h => BaezDuarte.naturalApproximation_iff_one_mem.mp (hBD h)⟩
   exact boundary_injective_iff.trans hm.not
 
+/-- The inclusions of the mixed and legal spaces commute with the kernel inclusions. -/
+private theorem inclusion_left_square :
+    meanZero.subtype.comp mixedInclusion.toLinearMap =
+      closedSpace.subtype.comp legalMixedInclusion.toLinearMap :=
+  LinearMap.ext fun _ => rfl
+
+private theorem inclusion_right_square :
+    hilbertMeanContinuous.toLinearMap.comp closedSpace.subtype =
+      (LinearMap.id : ℝ →ₗ[ℝ] ℝ).comp legalPacketMean.toLinearMap :=
+  LinearMap.ext mean_legal
+
+open CategoryTheory in
+/-- Ordinary inclusion of the legal mean sequence into the ambient mean sequence. -/
+def inclusionDiagram : legalMeanComplex ⟶ ambientMeanComplex where
+  τ₁ := TopModuleCat.ofHom mixedInclusion
+  τ₂ := TopModuleCat.ofHom closedSpace.subtypeL
+  τ₃ := TopModuleCat.ofHom (ContinuousLinearMap.id ℝ ℝ)
+  comm₁₂ := by
+    apply ConcreteCategory.hom_ext
+    intro m
+    exact DFunLike.congr_fun inclusion_left_square m
+  comm₂₃ := by
+    apply ConcreteCategory.hom_ext
+    intro v
+    exact DFunLike.congr_fun inclusion_right_square v
+
+/-- In the inclusion diagram the domain of the module snake is the kernel of the scalar identity. -/
+def inclusionConnecting : (LinearMap.id : ℝ →ₗ[ℝ] ℝ).ker →ₗ[ℝ] BoundaryTarget :=
+  SnakeLemma.δ mixedInclusion.toLinearMap closedSpace.subtype (LinearMap.id : ℝ →ₗ[ℝ] ℝ)
+    legalMixedInclusion.toLinearMap legalPacketMean.toLinearMap legal_row_exact
+    meanZero.subtype hilbertMeanContinuous.toLinearMap ambient_row_exact
+    inclusion_left_square inclusion_right_square
+    screenedMeanSection (funext legalPacketMean_screenedMeanSection)
+    centerToKernel (funext fun z => Subtype.ext (center_fixes z.property))
+    (LinearMap.id : ℝ →ₗ[ℝ] ℝ).ker.subtype (LinearMap.exact_subtype_ker_map _)
+    mixedInMeanZero.mkQ quotient_exact
+
+theorem inclusionConnecting_eq_zero : inclusionConnecting = 0 := by
+  apply LinearMap.ext
+  intro a
+  have ha : a = 0 := Subtype.ext (show a.val = 0 from a.property)
+  exact (congrArg inclusionConnecting ha).trans (map_zero inclusionConnecting)
+
+/-- The difference between the screened legal lift in the ambient space and the constant lift. -/
+def meanSectionDifference : ℝ →L[ℝ] meanZero :=
+  (center.codRestrict meanZero center_mem).comp (closedSpace.subtypeL.comp screenedMeanSection)
+
+theorem meanSectionDifference_coe (a : ℝ) :
+    (meanSectionDifference a : ThresholdHilbert) =
+      (screenedMeanSection a : ThresholdHilbert) - a • hilbertOne := by
+  change center ((screenedMeanSection a : closedSpace) : ThresholdHilbert) = _
+  rw [center_apply, mean_legal, legalPacketMean_screenedMeanSection]
+
+/-- Passing the difference of lifts to the mixed quotient gives the centered snake. -/
+theorem boundary_eq_quotient_meanSectionDifference :
+    boundary = mixedInMeanZero.mkQL.comp meanSectionDifference := by
+  apply ContinuousLinearMap.ext
+  intro a
+  change boundary a = mixedInMeanZero.mkQ (meanSectionDifference a)
+  have h := boundary_of_lift (screenedMeanSection a)
+  rw [legalPacketMean_screenedMeanSection] at h
+  refine h.trans (congrArg mixedInMeanZero.mkQ (Subtype.ext ?_))
+  change center ((screenedMeanSection a : closedSpace) : ThresholdHilbert) =
+    (meanSectionDifference a : ThresholdHilbert)
+  rw [meanSectionDifference_coe, center_apply, mean_legal, legalPacketMean_screenedMeanSection]
+
 end RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake

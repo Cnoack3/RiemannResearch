@@ -42,6 +42,8 @@ A lift $v$ of $t$ gives $\partial(t)=[v-t\mathbf1]_M=t[\Delta]_M$. Changing the 
 
 Inclusion gives $\Phi:Z/M\simeq H/V$, $\Phi([z]_M)=[z]_V$. Its inverse sends $[h]_V$ to $[h-\mu_P(h)u]_M$. The identity $v-C(v)u=P_Mv\in M$ makes the inverse independent of representative. Under this equivalence, $\Phi\partial(t)=-t[\mathbf1]_V$. With $E=\|\mathbf1-P_V\mathbf1\|^2$, the two distinguished squared norms are $\|\partial(1)\|^2=E/(1-E)$ and $\|\Phi\partial(1)\|^2=E$. The internal quotient $(V\cap Z)/M$ is zero at every stage of the argument. Vanishing of the ambient class is equivalent to $u=\mathbf1$ and implies RH. If $\mathbf1\in V$, differences of scaled dilations of $\mathbf1$ give every point mass, so $V=H$, $M=Z$, and the entire ambient quotient vanishes.
 
+For ordinary inclusion $j:V\hookrightarrow H$, the same rows have right vertical map $\mathrm{id}_{\mathbb R}$ because $\mu_Pj=C$. Its snake boundary has domain $\ker(\mathrm{id}_{\mathbb R})=0$. The next arrow is $\Phi$, giving the exact sequence $0\to Z/M\xrightarrow{\Phi}H/V\to0$. For the centered map $T=j-(t\mapsto t\mathbf1)C$, the right vertical map is zero and $\partial(t)$ is the class of the difference between the two sections, $tu-t\mathbf1$. Thus $\Phi^{-1}([\mathbf1]_V)=-\partial(1)$. [Both diagrams and the difference of sections](RH/CenteredMeanSnake.lean) · [Inclusion cokernels](RH/CenteredMeanQuotients.lean)
+
 ## Descent through the support quotients
 
 For any linear subspace $S\subseteq M$, take the mean rows
