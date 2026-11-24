@@ -85,10 +85,74 @@ Its cross term is nonnegative, so orthogonality gives
 $$
 \langle x_S,y_S\rangle_P\le\langle x,y\rangle_P.
 $$
-Consequently, a finite-dimensional $B$-adjoined space whose projected cross
-entry reaches $a+b/2-c-ab$ would prove RH. Lean checks this signed lower-bound
-mechanism in the declaration `subspace_two_three_cross_le_of_balanced_mem`.
+Put $C=a+b/2-c-ab$ and $d=\|u-\mathbf1\|_P^2$. Retaining both
+remainders strengthens the lower bound to the exact identity
+$$
+a(C-\langle x_S,y_S\rangle_P)=a^2b\,d+b\|x-x_S\|_P^2.
+$$
+This is `subspace_two_three_target_deficit_exact`; its projection-error
+component is `subspace_two_three_cross_gap_exact`.
 
+There is a strict obstruction to reaching the target in one finite legal
+dictionary. Suppose, explicitly, that every vector of $S$ and $J_2$ lie in
+one finite residue span. If $x\in S$, then $au=J_2-x$ would lie in that
+finite span, contradicting `normalizedScreenedTwo_not_mem_finiteSpace`.
+Thus $\|x-x_S\|_P^2>0$, and $\langle x_S,y_S\rangle_P<C$,
+even if $d=0$. The formal declaration is
+`finite_subspace_two_three_cross_lt_target` in
+`RH/MixedConductorGramZeroFree.lean`. Finite dimensionality alone is not the
+hypothesis: the explicit bounded legal support condition is required.
+
+Accordingly the existing conditional theorem
+`riemannHypothesis_of_balanced_subspace_cross` cannot be supplied by
+such a finite legal dictionary. A cofinal bound with arbitrarily small
+positive deficit is required. If $S_B$ increases with dense union in $M$
+and always contains $B$, Hilbert projection convergence gives
+$\|x-P_{S_B}x\|_P\to0$, hence
+$C-\langle P_{S_B}x,P_{S_B}y\rangle_P\to ab\,d$.
+Obtaining a zero limit remains the open arithmetic provider; assuming it
+would assume boundary vanishing in equivalent form. No sum/limit
+interchange is used in the finite identity.
+
+
+### Relation to the original captured energy and next arithmetic provider
+
+For the original normalized residues $g_q=r_q/q$, put
+$V_N=\mathrm{span}\{g_2,\ldots,g_N\}$ and
+$Q_N=\|P_{V_N}\mathbf1\|_P^2=b_N^\top G_N^{-1}b_N$.
+The finite packet and residue spans agree. Increasing-projection convergence
+gives $Q_N\to1-E$, where $E=\|\mathbf1-P_V\mathbf1\|_P^2$.
+The established boundary normalization is $d=E/(1-E)$, so
+$\lim_N Q_N=(1+d)^{-1}$. Thus $d=0$ advances precisely the original target.
+The RH-facing consumer is
+CenteredMeanSnake.riemannHypothesis_of_boundary_eq_zero; its converse
+is not used.
+
+Take the specific finite spaces
+$S_L=\mathrm{span}\{B,J_q:2\le q\le L,\ q\text{ mixed}\}$ in $M$.
+These have bounded legal support and dense increasing union in $M$.
+For any independent basis $(w_i)$ of $S_L$, write
+$H_L(i,j)=\langle w_i,w_j\rangle_P$ and
+$h_{p,L}(i)=\langle J_p,w_i\rangle_P$ for $p=2,3$.
+Their complete signed cross entry is exactly
+$h_{2,L}^\top H_L^{-1}h_{3,L}$.
+The next provider to seek is an arithmetic bound
+$$
+C-h_{2,L}^\top H_L^{-1}h_{3,L}\le\delta_L,\qquad \delta_L\to0.
+$$
+The required quantifiers are: for every $\varepsilon>0$ there is $L_0$
+such that every $L\ge L_0$ has cross entry at least $C-\varepsilon$.
+No such bound is proved here. By the exact identity and projection
+convergence it is equivalent to $d=0$, so it cannot be assumed as an
+independent positivity or approximation premise. Positive definiteness
+of $H_L$ alone does not control this signed cross entry.
+
+The new finite identities and obstruction assume neither RH, target
+convergence, coefficient convergence, nor a tail estimate. Projection
+convergence is used only for a dense increasing union and does not
+identify its limiting deficit with zero. The route is repaired by
+seeking arbitrarily small positive deficits; an exact one-shot finite
+legal certificate is ruled out, not merely numerically unsuccessful.
 
 ## An unconditional enclosure for the first coordinate
 

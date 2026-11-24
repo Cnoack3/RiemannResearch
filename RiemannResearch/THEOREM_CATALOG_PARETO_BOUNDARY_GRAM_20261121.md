@@ -11,6 +11,31 @@ boundary. All norms and projections are in the original Pareto geometry.
 
 Every coordinate of the screened mean section is a limit of finite digamma Gram solves. At each stage the jump expression for its squared residual contains the transported snake boundary and a squared approximation error. Polarizing two legal quotient distances gives a certified first-site interval. A cofinal common lower bound on expanding finite prefixes is equivalent to the screened section being the constant. After adjoining the balanced two-prime vector, finite mixed cross entries are signed lower bounds for the full cross entry. [Derivation and certificates](DIGAMMA_SCREENED_MEAN_SECTION.md) · [Digamma theorems](RH/CenteredMeanDigammaSection.lean) · [Polarized cross bound](RH/MixedConductorPolarizedParseval.lean)
 
+## Exact two-prime deficit and strict finite-certificate obstruction
+
+The declarations `subspace_two_three_cross_gap_exact` and
+`subspace_two_three_target_deficit_exact` in
+`RH/MixedConductorPolarizedParseval.lean` retain the full finite projection
+error and the ambient squared boundary. For $a=\log2$, $b=\log3$,
+$C=a+b/2-\pi/(3\sqrt3)-ab$, $x=P_MJ_2$, $y=P_MJ_3$, every
+orthogonally projected $S\subseteq M$ containing $bx-ay$ satisfies
+$a(C-\langle P_Sx,P_Sy\rangle)=a^2b d+b\|x-P_Sx\|^2$.
+
+The declarations `two_mixed_projection_not_mem_subspace` and
+`finite_subspace_two_three_cross_lt_target` in
+`RH/MixedConductorGramZeroFree.lean` show strict inequality below $C$
+whenever all of $S$ and $J_2$ belong to one finite legal residue span.
+This rules out an exact one-shot finite legal certificate, including in
+the zero-boundary case. It does not assert strictness for every
+finite-dimensional subspace of $M$.
+
+**Open provider:** prove a cofinal arithmetic lower bound reaching $C$
+with arbitrarily small positive error. The finite identities and
+obstruction have no RH hypothesis; the cofinal target estimate remains
+unproved. The existing RH implication is still a conditional research
+reduction. No numerical evidence is used.
+[Derivation and remaining obligation](DIGAMMA_SCREENED_MEAN_SECTION.md)
+
 ## Strict descent and the conductor-six orbit
 
 Every finite mixed-conductor deficit strictly exceeds the limiting ambient boundary energy. Infinitely many one-step gains are positive. A ternary digit gives a squared-error lower bound of $49/1000$ for the entire closed dilation orbit of $J_6$. A rational trial in the full window through conductor 120 has squared error less than $39/1000$. The arithmetic period transform detects each finite fit and gives its leading nonzero moment. [Proofs and exact finite certificate](MIXED_DILATION_DESCENT.md) · [Strict descent](RH/MixedConductorStrictDescent.lean) · [Ternary digit witness](RH/TernaryMixedOrbitObstruction.lean)

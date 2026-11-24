@@ -319,14 +319,15 @@ theorem balancedTwoThree_mixed_inner :
   field_simp [(Real.log_pos (by norm_num : (1 : ℝ) < 2)).ne',
     show Real.sqrt 3 ≠ 0 by positivity] <;> ring
 
-/-- Once the balanced two-prime vector is included, the finite projected cross
-entry is a genuine lower bound for the full mixed cross entry. -/
-theorem subspace_two_three_cross_le_of_balanced_mem
+/-- Exact signed cross-entry error after adjoining the balanced vector. -/
+theorem subspace_two_three_cross_gap_exact
     (S : Submodule ℝ mixedClosure) [S.HasOrthogonalProjection]
     (hB : balancedTwoThree ∈ S) :
     let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)
     let y := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)
-    inner ℝ (S.starProjection x) (S.starProjection y) ≤ inner ℝ x y := by
+    Real.log 2 * (inner ℝ x y -
+      inner ℝ (S.starProjection x) (S.starProjection y)) =
+        Real.log 3 * ‖x - S.starProjection x‖ ^ 2 := by
   let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)
   let y := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)
   let px := S.starProjection x
@@ -348,14 +349,7 @@ theorem subspace_two_three_cross_le_of_balanced_mem
     simpa only [px, py, add_comm] using he
   have hrel_inner := congrArg (fun z : mixedClosure => inner ℝ (x - px) z) hrel
   simp only [real_inner_smul_right] at hrel_inner
-  have hnonneg : 0 ≤ inner ℝ (x - px) (y - py) := by
-    rw [real_inner_self_eq_norm_sq] at hrel_inner
-    have ha := Real.log_pos (by norm_num : (1 : ℝ) < 2)
-    have hb := Real.log_pos (by norm_num : (1 : ℝ) < 3)
-    have hrhs : 0 ≤ Real.log 3 * ‖x - px‖ ^ 2 :=
-      mul_nonneg hb.le (sq_nonneg _)
-    have hprod : 0 ≤ Real.log 2 * inner ℝ (x - px) (y - py) := hrel_inner.symm ▸ hrhs
-    exact nonneg_of_mul_nonneg_left (by simpa only [mul_comm] using hprod) ha
+  rw [real_inner_self_eq_norm_sq] at hrel_inner
   have hxr : x - px ∈ Sᗮ := S.sub_starProjection_mem_orthogonal x
   have hyr : y - py ∈ Sᗮ := S.sub_starProjection_mem_orthogonal y
   have hxpy : inner ℝ (x - px) py = 0 := by
@@ -363,13 +357,56 @@ theorem subspace_two_three_cross_le_of_balanced_mem
     exact (S.mem_orthogonal _).mp hxr py (S.starProjection_apply_mem y)
   have hpxy : inner ℝ px (y - py) = 0 :=
     (S.mem_orthogonal _).mp hyr px (S.starProjection_apply_mem x)
-  have hx : x = px + (x - px) := by abel
-  have hy : y = py + (y - py) := by abel
-  dsimp only
-  change inner ℝ px py ≤ inner ℝ x y
-  rw [hx, hy, inner_add_left, inner_add_right, inner_add_right, hxpy, hpxy]
-  simp only [add_zero, zero_add]
-  exact le_add_of_nonneg_right hnonneg
+  have hsplit : inner ℝ x y = inner ℝ px py + inner ℝ (x - px) (y - py) := by
+    have hx : x = px + (x - px) := by abel
+    have hy : y = py + (y - py) := by abel
+    calc
+      _ = inner ℝ (px + (x - px)) (py + (y - py)) := congrArg₂ (inner ℝ) hx hy
+      _ = _ := by
+        rw [inner_add_left, inner_add_right, inner_add_right, hxpy, hpxy]
+        ring
+  change Real.log 2 * (inner ℝ x y - inner ℝ px py) =
+    Real.log 3 * ‖x - px‖ ^ 2
+  rw [hsplit]
+  convert hrel_inner using 1 <;> ring
+
+/-- Exact elementary target deficit, retaining the ambient boundary and the
+finite projection remainder. No vanishing hypothesis is used. -/
+theorem subspace_two_three_target_deficit_exact
+    (S : Submodule ℝ mixedClosure) [S.HasOrthogonalProjection]
+    (hB : balancedTwoThree ∈ S) :
+    let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)
+    let y := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)
+    Real.log 2 * (Real.log 2 + Real.log 3 / 2 - Real.pi / (3 * Real.sqrt 3) -
+        Real.log 2 * Real.log 3 - inner ℝ (S.starProjection x) (S.starProjection y)) =
+      (Real.log 2)^2 * Real.log 3 * ‖CenteredMeanSnake.boundary‖^2 +
+        Real.log 3 * ‖x - S.starProjection x‖^2 := by
+  have h := subspace_two_three_cross_gap_exact S hB
+  have hb := two_three_projected_covariance_gap
+  dsimp only at h ⊢
+  change Real.log 2 + Real.log 3 / 2 - Real.pi / (3 * Real.sqrt 3) -
+    Real.log 2 * Real.log 3 -
+    inner ℝ (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2))
+      (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)) =
+        Real.log 2 * Real.log 3 * ‖CenteredMeanSnake.boundary‖^2 at hb
+  have hb' := congrArg (fun t : ℝ => Real.log 2 * t) hb
+  nlinarith only [h, hb']
+/-- Once the balanced two-prime vector is included, the finite projected cross
+entry is a genuine lower bound for the full mixed cross entry. -/
+theorem subspace_two_three_cross_le_of_balanced_mem
+    (S : Submodule ℝ mixedClosure) [S.HasOrthogonalProjection]
+    (hB : balancedTwoThree ∈ S) :
+    let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)
+    let y := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)
+    inner ℝ (S.starProjection x) (S.starProjection y) ≤ inner ℝ x y := by
+  have h := subspace_two_three_cross_gap_exact S hB
+  dsimp only at h ⊢
+  have ha := Real.log_pos (by norm_num : (1 : ℝ) < 2)
+  have hb := Real.log_pos (by norm_num : (1 : ℝ) < 3)
+  have hn := mul_nonneg hb.le (sq_nonneg ‖mixedClosure.orthogonalProjectionOnto
+    (ramanujanPacketHilbert 2) - S.starProjection
+      (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2))‖)
+  nlinarith only [h, ha, hn]
 
 /-- A finite-dimensional certificate may be checked after adjoining the
 balanced vector; reaching the elementary target then proves RH. -/

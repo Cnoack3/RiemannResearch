@@ -1,4 +1,5 @@
 import RiemannResearch.RH.MixedConductorGramBoundary
+import RiemannResearch.RH.MixedConductorPolarizedParseval
 import RiemannResearch.RH.ScreenedParityOneSided
 import RiemannResearch.RH.ParetoMobiusHeadInterpolation
 import RiemannResearch.RH.CanonicalResidualGramMinimum
@@ -28,6 +29,60 @@ theorem normalizedScreenedTwo_not_mem_finiteSpace (n : ℕ) :
   have hu := normalizedScreenedTwo_eq_one_of_oneSidedBound (Or.inr
     ⟨_, fun k _ => (le_abs_self _).trans (finiteSpace_sequence_abs_le n _ hfin k)⟩)
   exact hilbertOne_not_mem_finiteSpace n (hu ▸ hfin)
+
+
+/-- Bounded legal support rules out exact containment of the mixed parity projection. -/
+theorem two_mixed_projection_not_mem_subspace
+    (S : Submodule ℝ mixedClosure) (n : ℕ)
+    (hfinite : ∀ v ∈ S, (v : ThresholdHilbert) ∈ CoefficientStabilization.finiteSpace n)
+    (htwo : ramanujanPacketHilbert 2 ∈ CoefficientStabilization.finiteSpace n) :
+    mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2) ∉ S := by
+  intro hx
+  have hxfin := hfinite _ hx
+  have he := fullScreening_packet_eq_mangoldt_smul 2 (by norm_num)
+  rw [ArithmeticFunction.vonMangoldt_apply_prime Nat.prime_two] at he
+  norm_num only [Nat.cast_ofNat] at he
+  change ramanujanPacketHilbert 2 - mixedClosure.starProjection (ramanujanPacketHilbert 2) =
+    Real.log 2 • normalizedScreenedTwo at he
+  have hs : Real.log 2 • normalizedScreenedTwo ∈ CoefficientStabilization.finiteSpace n :=
+    he ▸ (CoefficientStabilization.finiteSpace n).sub_mem htwo hxfin
+  have hu := (CoefficientStabilization.finiteSpace n).smul_mem (Real.log 2)⁻¹ hs
+  have ha := (Real.log_pos (by norm_num : (1 : ℝ) < 2)).ne'
+  rw [smul_smul, inv_mul_cancel₀ ha, one_smul] at hu
+  exact PacketGramBoundary.normalizedScreenedTwo_not_mem_finiteSpace n hu
+
+/-- A balanced subspace supported in a finite legal span stays strictly below
+the elementary two-prime target, including when the ambient boundary vanishes. -/
+theorem finite_subspace_two_three_cross_lt_target
+    (S : Submodule ℝ mixedClosure) [S.HasOrthogonalProjection]
+    (hB : balancedTwoThree ∈ S) (n : ℕ)
+    (hfinite : ∀ v ∈ S, (v : ThresholdHilbert) ∈ CoefficientStabilization.finiteSpace n)
+    (htwo : ramanujanPacketHilbert 2 ∈ CoefficientStabilization.finiteSpace n) :
+    inner ℝ
+      (S.starProjection (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)))
+      (S.starProjection (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3))) <
+      Real.log 2 + Real.log 3 / 2 - Real.pi / (3 * Real.sqrt 3) -
+        Real.log 2 * Real.log 3 := by
+  let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)
+  have hne : x - S.starProjection x ≠ 0 := by
+    intro hz
+    have hx : x ∈ S := by
+      rw [sub_eq_zero] at hz
+      exact hz ▸ S.starProjection_apply_mem x
+    exact two_mixed_projection_not_mem_subspace S n hfinite htwo hx
+  have hr : 0 < ‖x - S.starProjection x‖ ^ 2 :=
+    sq_pos_of_pos (norm_pos_iff.mpr hne)
+  have hb := Real.log_pos (by norm_num : (1 : ℝ) < 3)
+  have hpos := mul_pos hb hr
+  have hnonneg : 0 ≤ (Real.log 2)^2 * Real.log 3 * ‖CenteredMeanSnake.boundary‖^2 :=
+    mul_nonneg (mul_nonneg (sq_nonneg _) hb.le) (sq_nonneg _)
+  have h := subspace_two_three_target_deficit_exact S hB
+  dsimp only at h
+  change 0 < Real.log 3 * ‖mixedClosure.orthogonalProjectionOnto
+    (ramanujanPacketHilbert 2) - S.starProjection
+      (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2))‖^2 at hpos
+  have ha := Real.log_pos (by norm_num : (1 : ℝ) < 2)
+  nlinarith only [h, hpos, hnonneg, ha]
 
 /-- The two constructions of the limiting minimum-norm mean-one packet agree. -/
 theorem packetUnitMeanLimit_eq_screened :
