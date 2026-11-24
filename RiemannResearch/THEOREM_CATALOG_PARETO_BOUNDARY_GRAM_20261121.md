@@ -91,6 +91,37 @@ Inclusion gives $\Phi:Z/M\simeq H/V$, $\Phi([z]_M)=[z]_V$. Its inverse sends $[h
 
 For ordinary inclusion $j:V\hookrightarrow H$, the same rows have right vertical map $\mathrm{id}_{\mathbb R}$ because $\mu_Pj=C$. Its snake boundary has domain $\ker(\mathrm{id}_{\mathbb R})=0$. The next arrow is $\Phi$, giving the exact sequence $0\to Z/M\xrightarrow{\Phi}H/V\to0$. For the centered map $T=j-(t\mapsto t\mathbf1)C$, the right vertical map is zero and $\partial(t)$ is the class of the difference between the two sections, $tu-t\mathbf1$. Thus $\Phi^{-1}([\mathbf1]_V)=-\partial(1)$. [Both diagrams and the difference of sections](RH/CenteredMeanSnake.lean) · [Inclusion cokernels](RH/CenteredMeanQuotients.lean)
 
+## Norm distortion of the inclusion quotient
+
+Let $d=\|\Delta\|^2$, $E=\|\mathbf1-P_V\mathbf1\|^2$ and $W=Z\cap V^\perp$.
+The constant has $P_M\mathbf1=0$ and
+$P_{V\cap M^\perp}\mathbf1=P_V\mathbf1-P_M\mathbf1=P_V\mathbf1=(1-E)u$.
+Its residual is $r=\mathbf1-(1-E)u$. For $z\in Z$ the projection difference
+is $P_Vz-P_Mz=\langle z,\Delta\rangle u/(1+d)$.
+
+Each class in $Z/M$ has an orthogonal representative $t\Delta+w$ with $w\in W$.
+Its image has orthogonal representative $-tr+w$. Their squared norms are
+$t^2d+\|w\|^2$ and $t^2E+\|w\|^2$, respectively. Every $z\in Z$ satisfies
+
+$$
+\|\Phi([z]_M)\|^2=\|[z]_M\|^2-
+  \frac{\langle z,\Delta\rangle^2}{1+d}.
+$$
+
+The defect line has norm multiplier $\sqrt{1-E}$. For $d>0$ the inverse
+attains its operator norm $\sqrt{1+d}$ on $\Phi([\Delta]_M)$. For $d=0$
+the Pareto density criterion gives $V=H$ and $M=Z$, so the inverse has norm
+zero. The isometry of $\Phi$ is equivalent to $E=0$. Composing it with the
+isometry from any support-stage target gives exactly the same criterion.
+[Projection and quotient norm theorems](RH/CenteredMeanQuotientNorm.lean)
+
+The ordinary inclusion snake gives the quotient equivalence by exactness.
+The centered snake sends $1$ to the class of $\Delta$. The stage boundary
+at $1$ has norm $\sqrt d$ for every mixed denominator by `Stage.norm_connecting`.
+In the square-zero algebra, agreement of the legal and ambient products on $J_2,J_3$ is itself
+equivalent to $u=\mathbf1$. Proving $E=0$ remains open.
+[Product defect and the two-packet criterion](RH/CenteredMeanRHCriteria.lean)
+
 ## Descent through the support quotients
 
 For any linear subspace $S\subseteq M$, take the mean rows

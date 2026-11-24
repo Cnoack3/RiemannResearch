@@ -612,6 +612,7 @@ import RiemannResearch.RH.CenteredMeanSnake
 import RiemannResearch.RH.CenteredMeanQuotients
 import RiemannResearch.RH.CenteredMeanLongExact
 import RiemannResearch.RH.CenteredMeanAmbientGeometry
+import RiemannResearch.RH.CenteredMeanQuotientNorm
 import RiemannResearch.RH.CenteredMeanRHCriteria
 import RiemannResearch.RH.CenteredMeanFiniteDescent
 import RiemannResearch.RH.CenteredMeanDyadicGram
