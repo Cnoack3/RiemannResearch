@@ -62,6 +62,22 @@ theorem paritySum_coordinate (N n : ℕ) :
   rw [← hsum, ← floorParity]
   ring
 
+/-- At cutoff `N`, the parity sum already has its limiting value at every site
+through `N`. -/
+theorem paritySum_exact (N n : ℕ) (hn : n ≤ N) :
+    hilbertSequence (paritySum N) n =
+      hilbertSequence (hilbertOne - hilbertDilation 2 (by decide) hilbertOne) n := by
+  have hcanonical (k : ℕ) (hk : k ≤ N) :
+      hilbertSequence (canonicalMobiusHilbert N) k = hilbertSequence hilbertOne k := by
+    rcases Nat.eq_zero_or_pos k with rfl | hpos
+    · simp only [hilbertSequence_zero]
+    · simp [canonicalMobiusHilbert_exact N k hpos hk, hilbertOne_sequence, zeroAnchor, hpos.ne']
+  have hdiv : n / (N+1) = 0 := Nat.div_eq_of_lt (by omega)
+  simp only [paritySum, hilbertSequence_add, hilbertSequence_sub, hilbertSequence_smul,
+    hilbertDilation_sequence, Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, dilation,
+    hdiv, hilbertSequence_zero, mul_zero, add_zero]
+  rw [hcanonical n hn, hcanonical (n / 2) ((Nat.div_le_self n 2).trans hn)]
+
 private theorem canonical_error_L1 :
     Tendsto (fun N => hilbertL1Norm (hilbertOne - canonicalMobiusHilbert N)) atTop (𝓝 0) := by
   let e (N : ℕ) := hilbertOne - canonicalMobiusHilbert N
@@ -207,15 +223,11 @@ theorem bounded_probe_interchange (f : ThresholdHilbert) {B : ℝ}
   change Tendsto (fun N => inner ℝ f (paritySum N)) atTop (𝓝 (inner ℝ f h))
   simpa only [inner_sub_right, sub_sub_cancel, sub_zero] using hx
 
-/-- The full signed error in the pairing with the screened mean section.
-The Möbius reciprocal sum tends to zero. The term involving the limiting
-projection residual is independent of the cutoff. -/
-theorem screened_interchange_error (N : ℕ) :
+/-- The screened pairing at a finite cutoff is a fixed multiple of the
+ordinary reciprocal Möbius sum. -/
+theorem screened_pairing (N : ℕ) :
     let u := PrimePowerSchur.normalizedScreenedTwo
-    let E := CoefficientStabilization.limitEnergy
-    (1-E) * inner ℝ u ((hilbertOne - hilbertDilation 2 (by decide) hilbertOne) - paritySum N) =
-      E - hilbertSequence CoefficientStabilization.limitResidual 1 -
-        Real.log 2 * mobiusReciprocalSum N := by
+    inner ℝ u (paritySum N) = mobiusReciprocalSum N * (Real.log 2 * ‖u‖^2) := by
   dsimp only
   let u := PrimePowerSchur.normalizedScreenedTwo
   have hpar : inner ℝ (ramanujanPacketHilbert 2) u = Real.log 2 * ‖u‖^2 := by
@@ -228,19 +240,82 @@ theorem screened_interchange_error (N : ℕ) :
     change inner ℝ (ramanujanPacketHilbert 2) PrimePowerSchur.normalizedScreenedTwo = _
     dsimp only [u]
     linarith only [hh]
-  have hsum : inner ℝ u (paritySum N) = mobiusReciprocalSum N * (Real.log 2 * ‖u‖^2) := by
-    rw [real_inner_comm, paritySum, inner_add_left, inner_sub_left, real_inner_smul_left]
-    dsimp only [u]
-    rw [PrimePowerSchur.inner_dilation_screenedTwo
-        (CoefficientStabilization.canonicalMobiusHilbert_mem_closedSpace N),
-      PrimePowerSchur.inner_dilation_screenedTwo
-        (PrimePowerSchur.packet_mem_closedSpace 2 (by decide)),
-      sub_self, zero_add, hpar]
+  change inner ℝ u (paritySum N) = mobiusReciprocalSum N * (Real.log 2 * ‖u‖^2)
+  rw [real_inner_comm, paritySum, inner_add_left, inner_sub_left, real_inner_smul_left]
+  dsimp only [u]
+  rw [PrimePowerSchur.inner_dilation_screenedTwo
+      (CoefficientStabilization.canonicalMobiusHilbert_mem_closedSpace N),
+    PrimePowerSchur.inner_dilation_screenedTwo
+      (PrimePowerSchur.packet_mem_closedSpace 2 (by decide)),
+    sub_self, zero_add, hpar]
+
+/-- The full signed error in the pairing with the screened mean section.
+The Möbius reciprocal sum tends to zero. The term involving the limiting
+projection residual is independent of the cutoff. -/
+theorem screened_interchange_error (N : ℕ) :
+    let u := PrimePowerSchur.normalizedScreenedTwo
+    let E := CoefficientStabilization.limitEnergy
+    (1-E) * inner ℝ u ((hilbertOne - hilbertDilation 2 (by decide) hilbertOne) - paritySum N) =
+      E - hilbertSequence CoefficientStabilization.limitResidual 1 -
+        Real.log 2 * mobiusReciprocalSum N := by
+  dsimp only
   have he := PrimePowerSchur.normalizedScreenedTwo_energy_product
   have hr := PrimePowerSchur.limitResidual_at_pos_eq_screenedTwo 1 (by decide)
-  rw [inner_sub_right, contrast_pairing, PrimePowerSchur.normalizedScreenedTwo_mean, hsum]
-  dsimp only [u] at *
+  rw [inner_sub_right, contrast_pairing, PrimePowerSchur.normalizedScreenedTwo_mean,
+    screened_pairing]
   nlinarith only [hr, congrArg (fun t : ℝ => t * (Real.log 2 * mobiusReciprocalSum N)) he]
+
+/-- Pair the screened section with each finite sum, then let the cutoff tend
+to infinity. The prime number theorem gives zero in this order. -/
+theorem screened_pairing_tendsto_zero :
+    Tendsto (fun N => inner ℝ PrimePowerSchur.normalizedScreenedTwo (paritySum N))
+      atTop (𝓝 0) := by
+  simpa only [screened_pairing, zero_mul] using
+    (mobiusReciprocalSum_tendsto_zero.mul_const
+      (Real.log 2 * ‖PrimePowerSchur.normalizedScreenedTwo‖^2))
+
+/-- The difference between pairing the coordinate limit and taking the
+limit of the finite pairings is the exact first-site defect. -/
+theorem screened_error_tendsto_firstSite :
+    let u := PrimePowerSchur.normalizedScreenedTwo
+    let h := hilbertOne - hilbertDilation 2 (by decide) hilbertOne
+    Tendsto (fun N => inner ℝ u (h - paritySum N)) atTop (𝓝 (hilbertSequence u 1 - 1)) := by
+  dsimp only
+  let u := PrimePowerSchur.normalizedScreenedTwo
+  let h := hilbertOne - hilbertDilation 2 (by decide) hilbertOne
+  change Tendsto (fun N => inner ℝ u (h - paritySum N)) atTop (𝓝 (hilbertSequence u 1 - 1))
+  have hcontrast : inner ℝ u h - 0 = hilbertSequence u 1 - 1 := by
+    rw [sub_zero, contrast_pairing, PrimePowerSchur.normalizedScreenedTwo_mean]
+  rw [← hcontrast]
+  simpa only [inner_sub_right] using
+    (tendsto_const_nhds (x := inner ℝ u h)).sub screened_pairing_tendsto_zero
+
+/-- The whole signed pairing error is carried by sites strictly past the
+cutoff. Its limit there is the first-site defect of the screened section. -/
+theorem screened_tail_error_tendsto :
+    let u := PrimePowerSchur.normalizedScreenedTwo
+    let h := hilbertOne - hilbertDilation 2 (by decide) hilbertOne
+    Tendsto (fun N => ∑' j : ℕ, positiveWeight (j+N+1) *
+      (hilbertSequence u (j+N+1) * hilbertSequence (h - paritySum N) (j+N+1)))
+      atTop (𝓝 (hilbertSequence u 1 - 1)) := by
+  let u := PrimePowerSchur.normalizedScreenedTwo
+  let h := hilbertOne - hilbertDilation 2 (by decide) hilbertOne
+  apply screened_error_tendsto_firstSite.congr
+  intro N
+  have hhead : (∑ k ∈ Finset.range (N+1),
+      positiveWeight k * (hilbertSequence u k * hilbertSequence (h - paritySum N) k)) = 0 := by
+    apply Finset.sum_eq_zero
+    intro k hk
+    have hkN : k ≤ N := by have := Finset.mem_range.mp hk; omega
+    rw [hilbertSequence_sub, Pi.sub_apply, paritySum_exact N k hkN]
+    simp only [h, sub_self, mul_zero]
+  have hsplit := (weighted_product_summable_of_square (hilbertSequence_square_summable u)
+    (hilbertSequence_square_summable (h - paritySum N))).sum_add_tsum_nat_add (N+1)
+  rw [hhead, zero_add] at hsplit
+  rw [hilbert_inner_weighted]
+  change (∑' k, positiveWeight k *
+    (hilbertSequence u k * hilbertSequence (h - paritySum N) k)) = _
+  simpa only [Nat.add_assoc] using hsplit.symm
 
 end MobiusParityInterchange
 end RiemannResearch.RH.Pareto

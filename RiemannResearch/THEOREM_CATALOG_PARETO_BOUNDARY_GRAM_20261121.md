@@ -42,7 +42,13 @@ $$
 (1-E)\langle u,h-S_N\rangle_P
 =E-r(1)-(\log 2)\sum_{d=1}^N\frac{\mu(d)}d .
 $$
-The prime number theorem makes the reciprocal sum tend to zero.
+The prime number theorem gives $\lim_N\langle u,S_N\rangle_P=0$.
+At every positive site $k\le N$, $S_N(k)=h(k)$. The signed error is therefore
+supported on $k>N$, and its exact limit is
+$$
+\lim_{N\to\infty}\sum_{k>N}\frac{u(k)(h(k)-S_N(k))}{k(k+1)}
+=u(1)-1=\frac{E-r(1)}{1-E}.
+$$
 The assertion $r(1)=E$ required for interchange against $u$ remains open.
 
 [Exact identities and bounded-probe theorem](RH/MobiusParityInterchange.lean)
