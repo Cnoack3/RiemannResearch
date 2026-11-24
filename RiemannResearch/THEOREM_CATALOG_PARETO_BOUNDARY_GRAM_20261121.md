@@ -7,6 +7,28 @@ distinct prime factors is a different filtration. Let $u$ be the screened mean-o
 vector, $r=1-P_V1$, and $d=\|\partial\|^2=\|u\|^2-1$ for the centered mean snake
 boundary. All norms and projections are in the original Pareto geometry.
 
+## The screened line and physical dilation
+
+For the mean-one screened generator $u$, let $b=u(1)$ and let $F=D_2/2$ for the
+physical scaled dilation. Forward dilation preserves the pairing of legal vectors
+with $u$. Consequently $D_m^*u-u$ is perpendicular to the legal space and
+$\|D_m^*u\|^2=\|u\|^2+\|D_m^*u-u\|^2$ at every positive integer scale.
+
+At the first physical site the exact identity is
+$$
+\|u\|^2-b^2=2\|(I-F)(u-b\mathbf1_H)\|^2.
+$$
+In particular the deficit is at least
+$(\sqrt2-1)^2\|u-\mathbf1_H\|^2$. Equality of the two ambient lines follows
+from either $b^2\ge\|u\|^2$ or
+$\|D_2^*u\|^2+\|D_3^*u\|^2\le2\|u\|^2$. Both converses hold.
+
+**Open.** Prove either of these one-sided estimates for the actual screened
+generator. Its unit mean gives $1\le\|u\|^2$. The exact identity gives
+$b^2\le\|u\|^2$.
+
+[Lean declarations](RH/ScreenedMeanDilationTests.lean)
+
 ## The digamma recurrence and the unit section
 
 Every coordinate of the screened mean section is a limit of finite digamma Gram solves. At each stage the jump expression for its squared residual contains the transported snake boundary and a squared approximation error. Polarizing two legal quotient distances gives a certified first-site interval. A cofinal common lower bound on expanding finite prefixes is equivalent to the screened section being the constant. After adjoining the balanced two-prime vector, finite mixed cross entries are signed lower bounds for the full cross entry. [Derivation and certificates](DIGAMMA_SCREENED_MEAN_SECTION.md) · [Digamma theorems](RH/CenteredMeanDigammaSection.lean) · [Polarized cross bound](RH/MixedConductorPolarizedParseval.lean)
