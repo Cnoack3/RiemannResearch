@@ -29,6 +29,24 @@ $b^2\le\|u\|^2$.
 
 [Lean declarations](RH/ScreenedMeanDilationTests.lean)
 
+## Conditional interchange of the Möbius parity sums
+
+Let $K_d(n)=\lfloor n/d\rfloor\bmod 2$, $S_N=\sum_{d\le N}\mu(d)K_d$ with
+positive indices, and $h=2\delta_1-\mathbf1_H$. The natural sums converge
+to $h$ in $L^1(P)$. Every bounded physical probe $f$ therefore satisfies
+$\langle f,S_N\rangle_P\to f(1)-\langle f,\mathbf1_H\rangle_P$.
+
+For the actual screened section $u$, write $r=\mathbf1_H-P_V\mathbf1_H$
+and $E=\|r\|_P^2$. The signed error at every cutoff satisfies
+$$
+(1-E)\langle u,h-S_N\rangle_P
+=E-r(1)-(\log 2)\sum_{d=1}^N\frac{\mu(d)}d .
+$$
+The prime number theorem makes the reciprocal sum tend to zero.
+The assertion $r(1)=E$ required for interchange against $u$ remains open.
+
+[Exact identities and bounded-probe theorem](RH/MobiusParityInterchange.lean)
+
 ## The digamma recurrence and the unit section
 
 Every coordinate of the screened mean section is a limit of finite digamma Gram solves. At each stage the jump expression for its squared residual contains the transported snake boundary and a squared approximation error. Polarizing two legal quotient distances gives a certified first-site interval. A cofinal common lower bound on expanding finite prefixes is equivalent to the screened section being the constant. After adjoining the balanced two-prime vector, finite mixed cross entries are signed lower bounds for the full cross entry. [Derivation and certificates](DIGAMMA_SCREENED_MEAN_SECTION.md) · [Digamma theorems](RH/CenteredMeanDigammaSection.lean) · [Polarized cross bound](RH/MixedConductorPolarizedParseval.lean)
