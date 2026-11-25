@@ -174,15 +174,16 @@ theorem eventually_mesoscopic_interior_rows {H : ℝ → ℝ} (hRvM : Cumulative
   rw [hid']
   exact hfinal.le
 
-/-- The exact sum over all interior and boundary rows gives the mesoscopic
-limit at physical widths tending to infinity with H/T tending to zero. -/
-theorem positiveGapMass_mesoscopic_tendsto_of_cumulativeRvM
-    (hRvM : CumulativeRvM) {H : ℝ → ℝ} (hH : Tendsto H atTop atTop)
-    (hHT : Tendsto (fun T => H T / T) atTop (𝓝 0)) :
-    Tendsto (fun T => positiveGapMass T (H T * unfoldingScale T) /
-      (H T * unfoldingScale T)) atTop (𝓝 1) := by
+/-- A uniformly bounded actual-occurrence statistic whose interior values
+tend uniformly to one has normalized real mean tending to one. The two
+discarded boundary strips are charged to the measured cumulative counts. -/
+theorem ordinateRowMean_tendsto_of_interior {f : (T : ℝ) → Copies T → ℝ}
+    (hglobal : ∃ B : ℝ, 0 ≤ B ∧ ∀ᶠ T : ℝ in atTop, ∀ i : Copies T, |f T i-1| ≤ B+1)
+    (hinterior : ∀ {δ ε : ℝ}, 0 < δ → 0 < ε → ∀ᶠ T : ℝ in atTop, ∀ i : Copies T,
+      δ*T ≤ copyOrdinate T i → copyOrdinate T i ≤ (1-δ)*T → |f T i-1| ≤ ε) :
+    Tendsto (fun T : ℝ => (∑ i : Copies T, f T i)/unfoldedCutoff T) atTop (𝓝 1) := by
   classical
-  obtain ⟨B,hB,hbound⟩ := eventually_all_rows_bounded H hH hHT
+  obtain ⟨B,hB,hbound⟩ := hglobal
   apply Metric.tendsto_nhds.mpr
   intro η hη
   let δ := min (1/4 : ℝ) (η / (16 * (B+1)))
@@ -200,8 +201,7 @@ theorem positiveGapMass_mesoscopic_tendsto_of_cumulativeRvM
     (scaledHeightCount_tendsto (show 0 ≤ 1-δ by linarith))
   have hed := hedge.eventually (gt_mem_nhds (show δ+1-(1-δ) < 3*δ by linarith))
   have hclose := Metric.tendsto_nhds.mp hN ε hε
-  filter_upwards [hed,hclose,eventually_mesoscopic_interior_rows hRvM hH hHT hδ hε,
-    hbound, eventually_gt_atTop (1 : ℝ), hH.eventually_gt_atTop 0] with T he hc hi hb hT hH₀
+  filter_upwards [hed,hclose,hinterior hδ hε,hbound,eventually_gt_atTop (1:ℝ)] with T he hc hi hb hT
   let D := unfoldedCutoff T
   let N := (Ncount 0 T : ℝ)
   have hD : 0 < D := div_pos (mul_pos (zero_lt_one.trans hT) (Real.log_pos hT)) (by positivity)
@@ -228,21 +228,20 @@ theorem positiveGapMass_mesoscopic_tendsto_of_cumulativeRvM
     change (if (1-δ)*T < t i then (1 : ℝ) else 0) = 1 - (if t i ≤ (1-δ)*T then 1 else 0)
     by_cases h : t i ≤ (1-δ)*T <;> simp [h,lt_iff_not_ge]
   have hsingle (i : Copies T) :
-      |mesoscopicRow T (H T) i - 1| ≤ ε + (B+1)*(l i + r i) := by
-    have hall : |mesoscopicRow T (H T) i - 1| ≤ B+1 :=
-      abs_le.mpr ⟨by linarith only [(hb i).1,hB], by linarith only [(hb i).2]⟩
+      |f T i - 1| ≤ ε + (B+1)*(l i + r i) := by
+    have hall := hb i
     by_cases h₁ : t i ≤ δ*T <;> by_cases h₂ : (1-δ)*T < t i
     · simp [l,r,h₁,h₂]; linarith only [hall,hε,hB]
     · simp [l,r,h₁,h₂]; linarith only [hall,hε]
     · simp [l,r,h₁,h₂]; linarith only [hall,hε]
     · simpa only [l,r,if_neg h₁,if_neg h₂,zero_add,mul_zero,add_zero] using
         hi i (le_of_not_ge h₁) (le_of_not_gt h₂)
-  have hS : |(∑ i : Copies T, mesoscopicRow T (H T) i) - N| ≤
+  have hS : |(∑ i : Copies T, f T i) - N| ≤
       N*ε + (B+1)*((Ncount 0 (δ*T) : ℝ) + N - (Ncount 0 ((1-δ)*T) : ℝ)) := by
     have ho : (∑ _i : Copies T, (1 : ℝ)) = N := by
       simp only [Finset.sum_const,Finset.card_univ,card_copies,nsmul_eq_mul,mul_one,N]
-    have hnum : (∑ i : Copies T, mesoscopicRow T (H T) i) - N =
-        ∑ i : Copies T, (mesoscopicRow T (H T) i - 1) := by
+    have hnum : (∑ i : Copies T, f T i) - N =
+        ∑ i : Copies T, (f T i - 1) := by
       rw [Finset.sum_sub_distrib, ho]
     rw [hnum]
     apply (Finset.abs_sum_le_sum_abs _ _).trans
@@ -254,9 +253,8 @@ theorem positiveGapMass_mesoscopic_tendsto_of_cumulativeRvM
     rw [sub_div,add_div]
     exact he.le
   have hnormalized :
-      |positiveGapMass T (H T*unfoldingScale T) / (H T*unfoldingScale T) - N/D| ≤
-        2*ε + (B+1)*(3*δ) := by
-    rw [row_identity hT hH₀, ← sub_div, abs_div,abs_of_pos hD]
+      |(∑ i : Copies T, f T i)/D - N/D| ≤ 2*ε + (B+1)*(3*δ) := by
+    rw [← sub_div, abs_div,abs_of_pos hD]
     apply (div_le_div_of_nonneg_right hS hD.le).trans
     calc
       _ = N/D * ε + (B+1)*(((Ncount 0 (δ*T) : ℝ)+ N - (Ncount 0 ((1-δ)*T) : ℝ))/D) := by ring
@@ -265,6 +263,23 @@ theorem positiveGapMass_mesoscopic_tendsto_of_cumulativeRvM
   rw [Real.dist_eq]
   apply (abs_sub_le _ (N/D) _).trans_lt
   nlinarith only [hnormalized,hc,hδB,hεη,hη]
+
+/-- The exact sum over all interior and boundary rows gives the mesoscopic
+limit at physical widths tending to infinity with H/T tending to zero. -/
+theorem positiveGapMass_mesoscopic_tendsto_of_cumulativeRvM
+    (hRvM : CumulativeRvM) {H : ℝ → ℝ} (hH : Tendsto H atTop atTop)
+    (hHT : Tendsto (fun T => H T / T) atTop (𝓝 0)) :
+    Tendsto (fun T => positiveGapMass T (H T * unfoldingScale T) /
+      (H T * unfoldingScale T)) atTop (𝓝 1) := by
+  obtain ⟨B,hB,hbounds⟩ := eventually_all_rows_bounded H hH hHT
+  have hglobal : ∀ᶠ T : ℝ in atTop, ∀ i : Copies T, |mesoscopicRow T (H T) i-1| ≤ B+1 := by
+    filter_upwards [hbounds] with T ht i
+    exact abs_le.mpr ⟨by linarith only [(ht i).1,hB],by linarith only [(ht i).2]⟩
+  have h := ordinateRowMean_tendsto_of_interior ⟨B,hB,hglobal⟩
+    (fun hδ hε => eventually_mesoscopic_interior_rows hRvM hH hHT hδ hε)
+  apply h.congr'
+  filter_upwards [eventually_gt_atTop (1:ℝ),hH.eventually_gt_atTop 0] with T hT hHT
+  exact (row_identity hT hHT).symm
 
 /-- The full count of strictly positive gaps is the sum of actual counting
 increments starting at each zero occurrence. -/

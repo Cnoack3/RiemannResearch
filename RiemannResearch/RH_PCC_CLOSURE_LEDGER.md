@@ -96,6 +96,22 @@ At every fixed upper height T > 1, the right derivative at width zero equals the
 
 At every fixed 0 < α < 1, the normalized third-signal residual tends to zero if and only if the sharp complex-zero form factor tends to α. At any fixed α > 0, its plateau at one is equivalent to a limit of 1−α for the signed third-signal and prime off-diagonal expression. At arbitrarily high fixed frequencies a cofinal logarithmic upper bound for that signed expression is equivalent to RH. The actual cofinal bound, the spectral residual limit, and the positive-gap ordinate law remain separate obligations. [MontgomeryFixedFrequencyResidual](Analysis/MontgomeryFixedFrequencyResidual.lean)
 
+## Unconditional fixed-width lower bounds
+
+For the actual positive-gap statistic, $P(T,2)>1/6$ eventually and $\liminf_{T\to\infty}P(T,3/2)\ge 1/1371$. Partitioning the unfolded interval into width-$R$ cells and counting distinct ordinates yields the general lower bound $k\kappa-k(k+1)/(2R)$ for every integer $k\ge0$ and every proved asymptotic distinct-ordinate fraction $\kappa$. The endpoint estimates use the repository’s Montgomery–Taylor fraction. Matching upper bounds and the sine-kernel values at each fixed width remain open. [Microscopic gap packing](Analysis/MontgomeryMicroscopicGapPacking.lean)
+
+## The integrated macroscopic gap profile
+
+After removing the full equal-ordinate contribution, the normalized physical triangle at width $cT$ converges uniformly to $c^2-c^3/3$ on $0\le c\le1$. The same profile holds for the full triangle when its normalized collision count vanishes. [Macroscopic triangle](Analysis/MontgomeryMacroscopicTriangle.lean)
+
+## The signed count discrepancy at the actual ordinates
+
+For every eventually positive width $R=o(D(T))$, the average smooth count increment divided by $R$ tends to one. This includes shrinking widths. Positive-gap PCC is equivalent to convergence of the average signed Riemann–von Mangoldt count-error increment at each positive rational $q$ to the sine-kernel mass minus $q$. The averages run over actual zero occurrences and use the clipped observation windows. Their signed limits remain open. [Sampled count error](Analysis/MontgomerySampledCountError.lean)
+
+## The uniform macroscopic density model
+
+Writing $D=T\log T/(2\pi)$, the difference between $P(T,cD)/D$ and the integrated smooth density model is at most $C/T$, uniformly in $c\ge0$ at large height. On $0\le c\le1$ the smooth model is a quadratic polynomial in $1/\log T$. Its last coefficient is bounded in absolute value by a constant times $c$. [Macroscopic gap density model](Analysis/MontgomeryMacroscopicGapModel.lean)
+
 ## Actual macroscopic pair counts
 
 Put D(T) = T log T/(2π) and let P(T,r) be the normalized strict positive-gap count. Uniformly over 0 ≤ c ≤ 1, P(T,cD(T))/D(T) tends to c−c²/2. The proof counts actual positive zero occurrences with multiplicity, using their uniform rescaled cumulative height distribution. This establishes the macroscopic pair law. Positive-gap PCC asks for the sine-kernel law at fixed unfolded widths. [MontgomeryMacroscopicGap](Analysis/MontgomeryMacroscopicGap.lean)
