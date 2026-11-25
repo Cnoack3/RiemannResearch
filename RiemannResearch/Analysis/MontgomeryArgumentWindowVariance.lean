@@ -260,22 +260,23 @@ def RationalPureArgumentWidthAverages : Prop :=
     Tendsto (fun T : ℝ => ∫ r in (a : ℝ)..(b : ℝ),
       pureArgumentWidthMoment T r - (sineWindowEnergy r - r ^ 2)) atTop (𝓝 0)
 
-/-- Uniform cost of removing the exact gamma drift from the microscopic
-argument moment. The signed mixed term costs O(1/T), and the square of
-the drift costs O(1/log² T). -/
-theorem eventually_fullArgumentWidthMoment_sub_pure_le {B : ℝ} (hB : 0 ≤ B) :
+/-- Width-sensitive gamma correction for the microscopic argument moment. The
+signed cross term costs O(r/T) and the squared drift costs O(r²/log² T). -/
+theorem eventually_fullArgumentWidthMoment_sub_pure_le_width {B : ℝ} (hB : 0 ≤ B) :
     ∃ K C : ℝ, 0 ≤ K ∧ 0 ≤ C ∧ ∀ᶠ T : ℝ in atTop, ∀ r ∈ Icc 0 B,
       |fullArgumentWidthMoment T r - pureArgumentWidthMoment T r| ≤
-        2 * K / T + C / (Real.log T) ^ 2 := by
-  obtain ⟨K, hK, hk⟩ := eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le hB
-  obtain ⟨C, hC, hc⟩ := microscopicGammaDrift_mean_sq_bound B hB
+        2 * (r * K) / T + C * r ^ 2 / (Real.log T) ^ 2 := by
+  obtain ⟨K, hK, hk⟩ := eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le_width_mul hB
+  obtain ⟨C, hC, hc⟩ := microscopicGammaDrift_mean_sq_le
   refine ⟨K, C, hK, hC, ?_⟩
-  filter_upwards [hk, hc, eventually_gt_atTop (0 : ℝ)] with T hcross hdrift hT
+  filter_upwards [hk, eventually_gt_atTop (1 : ℝ),
+    Real.tendsto_log_atTop.eventually_ge_atTop (B * (2 * Real.pi))] with T hcross hT1 hlog
+  have hT := zero_lt_one.trans hT1
   intro r hr
   let h := r / (Real.log T / (2 * Real.pi))
   let x := fun t : ℝ => discrepancy (t + h) - discrepancy t
   let d := microscopicGammaDrift T r
-  have hmix : |∫ t in (0 : ℝ)..T, x t * d t| ≤ K := by
+  have hmix : |∫ t in (0 : ℝ)..T, x t * d t| ≤ r * K := by
     simpa only [x, d, microscopicGammaDrift, h, smoothCount_sub] using
       hcross r r hr.1 hr.2 (by simpa only [abs_of_nonneg hr.1] using hr.2)
   have hdpos : 0 ≤ ∫ t in (0 : ℝ)..T, d t ^ 2 :=
@@ -286,11 +287,28 @@ theorem eventually_fullArgumentWidthMoment_sub_pure_le {B : ℝ} (hB : 0 ≤ B) 
   calc
     _ ≤ (|2 * (∫ t in (0 : ℝ)..T, x t * d t)| + |∫ t in (0 : ℝ)..T, d t ^ 2|) / T :=
       div_le_div_of_nonneg_right (abs_add_le _ _) hT.le
-    _ ≤ (2 * K) / T + (∫ t in (0 : ℝ)..T, d t ^ 2) / T := by
+    _ ≤ (2 * (r * K)) / T + (∫ t in (0 : ℝ)..T, d t ^ 2) / T := by
       rw [abs_mul, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2), abs_of_nonneg hdpos, add_div]
       exact add_le_add (div_le_div_of_nonneg_right
         (mul_le_mul_of_nonneg_left hmix (by norm_num)) hT.le) le_rfl
-    _ ≤ _ := add_le_add le_rfl (hdrift r hr)
+    _ ≤ _ := add_le_add le_rfl (hc T r hT1 hr.1
+      (hr.2.trans ((le_div_iff₀ (by positivity : 0 < 2 * Real.pi)).2 hlog)))
+
+/-- Uniform cost of removing the exact gamma drift from the microscopic
+argument moment. The signed mixed term costs O(1/T), and the square of
+the drift costs O(1/log² T). -/
+theorem eventually_fullArgumentWidthMoment_sub_pure_le {B : ℝ} (hB : 0 ≤ B) :
+    ∃ K C : ℝ, 0 ≤ K ∧ 0 ≤ C ∧ ∀ᶠ T : ℝ in atTop, ∀ r ∈ Icc 0 B,
+      |fullArgumentWidthMoment T r - pureArgumentWidthMoment T r| ≤
+        2 * K / T + C / (Real.log T) ^ 2 := by
+  obtain ⟨K, C, hK, hC, he⟩ := eventually_fullArgumentWidthMoment_sub_pure_le_width hB
+  refine ⟨B * K, C * B ^ 2, mul_nonneg hB hK, mul_nonneg hC (sq_nonneg _), ?_⟩
+  filter_upwards [he, eventually_gt_atTop (0 : ℝ)] with T hT ht r hr
+  refine (hT r hr).trans (add_le_add ?_ ?_)
+  · exact div_le_div_of_nonneg_right
+      (mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right hr.2 hK) (by norm_num)) ht.le
+  · exact div_le_div_of_nonneg_right
+      (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hr.1 hr.2 2) hC) (sq_nonneg _)
 
 private theorem full_sub_pure_vanishes_uniformly (B : ℝ) (hB : 0 ≤ B) :
     ∃ e : ℝ → ℝ, Tendsto e atTop (𝓝 0) ∧ ∀ᶠ T : ℝ in atTop, ∀ r ∈ Icc 0 B,

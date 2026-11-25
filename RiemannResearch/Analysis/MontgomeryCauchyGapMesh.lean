@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
 
+import RiemannResearch.Analysis.ActualZeroCountNormalization
 import RiemannResearch.Analysis.MontgomeryGapPrescribedMesh
 import RiemannResearch.Analysis.MontgomeryLocalMass
 import Mathlib.Algebra.Order.Floor.Semiring
+import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
@@ -20,8 +22,8 @@ mesh without a short-window second-moment premise.
 -/
 
 noncomputable section
-open Filter Zeta23
-open scoped BigOperators
+open Filter MeasureTheory Zeta23
+open scoped BigOperators Topology
 
 namespace RiemannResearch.Analysis.MontgomeryPositiveGap
 open ActualZeroOrdinate MontgomeryPoisson MontgomeryLocalMass
@@ -133,5 +135,71 @@ theorem exists_cofinal_cauchyGapMesh_critical_line_iff_RH :
   · intro h H
     let T := max H H₀
     exact ⟨T, le_max_left _ _, (hH₀ T (le_max_right _ _)).mpr (h T)⟩
+
+/-- A finite mesh misses only the left-endpoint quadrature remainder. Its
+normalized contribution is bounded by twice the endpoint gap mass per cell. -/
+theorem sampled_gap_deficit_sub_bounds {T R : ℝ} {n : ℕ}
+    (hT : 1 < T) (hR : 0 < R) (hn : 0 < n) :
+    0 ≤ sampledIntegratedGapDeficit T R n - integratedGapDeficit T R ∧
+      sampledIntegratedGapDeficit T R n - integratedGapDeficit T R ≤
+        (2 / (n : ℝ)) * (positiveGapMass T R - positiveGapMass T 0) := by
+  have ha := integral_sub_gapMeshSum_bounds (positiveGapMass_mono hT) hR.le hn
+  unfold sampledIntegratedGapDeficit integratedGapDeficit
+  rw [show (2 / R) * ((∫ u in (0 : ℝ)..R, sineGapMass u) -
+      gapMeshSum (positiveGapMass T) R n) - (2 / R) *
+      ((∫ u in (0 : ℝ)..R, sineGapMass u) - ∫ u in (0 : ℝ)..R, positiveGapMass T u) =
+    (2 / R) * ((∫ u in (0 : ℝ)..R, positiveGapMass T u) - gapMeshSum (positiveGapMass T) R n)
+    by ring]
+  refine ⟨mul_nonneg (by positivity) ha.1, ?_⟩
+  apply (mul_le_mul_of_nonneg_left ha.2 (show 0 ≤ 2 / R by positivity)).trans_eq
+  field_simp [hR.ne', (Nat.cast_pos.mpr hn : 0 < (n : ℝ)).ne']
+
+/-- The actual finite gap-count mesh asymptotically reproduces the integrated
+deficit whenever its cell count grows faster than the Cauchy logarithmic row
+bound. No estimate for the limiting two-point statistic is used. -/
+theorem sampled_gap_deficit_sub_tendsto_zero {R : ℝ} (hR : 0 < R) (n : ℝ → ℕ)
+    (hn : ∀ᶠ T in atTop, 0 < n T)
+    (hrate : Tendsto (fun T : ℝ => Real.log (T + 3) / (n T : ℝ)) atTop (𝓝 0)) :
+    Tendsto (fun T : ℝ => sampledIntegratedGapDeficit T R (n T) - integratedGapDeficit T R)
+      atTop (𝓝 0) := by
+  obtain ⟨C, hC, hbound⟩ := exists_eventually_positiveGapMass_mul_mainTerm_le
+  have ht := tendsto_count_div_mainTerm.mul hrate
+  have upper := ht.const_mul (2 * C)
+  simp only [mul_zero] at upper
+  apply squeeze_zero' _ _ upper
+  · filter_upwards [eventually_gt_atTop (1 : ℝ), hn] with T hT hnT
+    exact (sampled_gap_deficit_sub_bounds hT hR hnT).1
+  · filter_upwards [eventually_gt_atTop (1 : ℝ), hn, hbound R] with T hT hnT hb
+    let D := T * Real.log T / (2 * Real.pi)
+    have hD : 0 < D := div_pos (mul_pos (zero_lt_one.trans hT) (Real.log_pos hT)) (by positivity)
+    have hc : positiveGapMass T R ≤ C * (Ncount 0 T : ℝ) * Real.log (T+3) / D :=
+      (le_div_iff₀ hD).mpr (by rw [mul_comm _ D]; exact hb)
+    have hpos : 0 ≤ 2 / (n T : ℝ) := by positivity
+    calc
+      _ ≤ _ := (sampled_gap_deficit_sub_bounds hT hR hnT).2
+      _ ≤ (2 / (n T : ℝ)) * (C * (Ncount 0 T : ℝ) * Real.log (T+3) / D) :=
+        mul_le_mul_of_nonneg_left ((sub_le_self _ (positiveGapMass_nonneg hT 0)).trans hc) hpos
+      _ = _ := by dsimp only [D]; ring
+
+/-- A mesh with an explicit logarithm-squared sample count. -/
+def logSquareGapMesh (T : ℝ) : ℕ := ⌈(Real.log (T + 3)) ^ 2⌉₊ + 1
+
+theorem log_div_logSquareGapMesh_tendsto_zero :
+    Tendsto (fun T : ℝ => Real.log (T + 3) / (logSquareGapMesh T : ℝ)) atTop (𝓝 0) := by
+  have ht : Tendsto (fun T : ℝ => T + 3) atTop atTop :=
+    tendsto_atTop_add_const_right atTop 3 tendsto_id
+  have hlog := Real.tendsto_log_atTop.comp ht
+  have hinv := tendsto_inv_atTop_zero.comp hlog
+  change Tendsto (fun T : ℝ => (Real.log (T+3))⁻¹) atTop (𝓝 0) at hinv
+  apply squeeze_zero' _ _ hinv
+  · filter_upwards [eventually_gt_atTop (1 : ℝ)] with T hT
+    exact div_nonneg (Real.log_nonneg (by linarith)) (Nat.cast_nonneg _)
+  · filter_upwards [eventually_gt_atTop (1 : ℝ)] with T hT
+    have hl : 0 < Real.log (T+3) := Real.log_pos (by linarith)
+    have hn : 0 < (logSquareGapMesh T : ℝ) := Nat.cast_pos.mpr (Nat.succ_pos _)
+    have hs : (Real.log (T+3)) ^ 2 ≤ (logSquareGapMesh T : ℝ) :=
+      (Nat.le_ceil _).trans (by unfold logSquareGapMesh; push_cast; linarith)
+    rw [inv_eq_one_div, div_le_div_iff₀ hn hl]
+    simpa only [← sq, one_mul] using hs
 
 end RiemannResearch.Analysis.MontgomeryPositiveGap

@@ -213,14 +213,14 @@ def normalizedWindowClipError (T R lam : ℝ) : ℝ :=
     (∫ t in (0 : ℝ)..T, ((Ncount t (t + R / (Real.log T / (2 * Real.pi))) : ℝ) -
       lam) ^ 2)) / T
 
-/-- Uniform microscopic clipping rate on bounded sets of widths and centers.
-The finite-height estimate already includes the square of the local count. -/
-theorem eventually_normalizedWindowClipError_le {B : ℝ} (hB : 0 ≤ B) :
+/-- The height-cutoff clipping rate retains a factor of the unfolded width,
+uniformly down to arbitrarily small widths and for bounded centers. -/
+theorem eventually_normalizedWindowClipError_le_width_mul {B : ℝ} (hB : 0 ≤ B) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ T : ℝ in atTop, ∀ R lam : ℝ, 0 ≤ R → R ≤ B → |lam| ≤ B →
-      |normalizedWindowClipError T R lam| ≤ C * (Real.log T / T) := by
+      |normalizedWindowClipError T R lam| ≤ R * (C * (Real.log T / T)) := by
   obtain ⟨A, hA, hclip⟩ := exists_actualCenteredMoment_clip_error_le
   let K := 2 * A + B
-  refine ⟨K ^ 2 * (2 * Real.pi * B), by positivity, ?_⟩
+  refine ⟨K ^ 2 * (2 * Real.pi), by positivity, ?_⟩
   filter_upwards [eventually_ge_atTop (3 : ℝ),
     Real.tendsto_log_atTop.eventually_ge_atTop (max 1 (2 * Real.pi * B))] with T hT hL
   intro R lam hR hRB hlam
@@ -249,22 +249,32 @@ theorem eventually_normalizedWindowClipError_le {B : ℝ} (hB : 0 ≤ B) :
     nlinarith only [h1, h2, hlam]
   have hspos : 0 ≤ A * Real.log (T + 3) + |lam| :=
     add_nonneg (mul_nonneg (by linarith) (Real.log_nonneg (by linarith))) (abs_nonneg _)
-  have hw : h ≤ (2 * Real.pi * B) / Real.log T := by
+  have hw : h = (2 * Real.pi * R) / Real.log T := by
     dsimp [h]
-    rw [div_div_eq_mul_div]
-    apply div_le_div_of_nonneg_right _ hLp.le
-    rw [mul_comm (2 * Real.pi) B]
-    exact mul_le_mul_of_nonneg_right hRB (by positivity)
+    rw [div_div_eq_mul_div, mul_comm R]
   unfold normalizedWindowClipError
   rw [abs_div, abs_of_pos hTp]
   apply (div_le_iff₀ hTp).2
   calc
     _ ≤ (A * Real.log (T + 3) + |lam|) ^ 2 * h := hclip T h lam hh hh1 (by linarith)
-    _ ≤ (K * Real.log T) ^ 2 * ((2 * Real.pi * B) / Real.log T) :=
-      mul_le_mul (pow_le_pow_left₀ hspos hsum 2) hw hh (sq_nonneg _)
-    _ = K ^ 2 * (2 * Real.pi * B) * (Real.log T / T) * T := by
+    _ ≤ (K * Real.log T) ^ 2 * ((2 * Real.pi * R) / Real.log T) :=
+      (mul_le_mul_of_nonneg_right (pow_le_pow_left₀ hspos hsum 2) hh).trans_eq (by rw [hw])
+    _ = R * (K ^ 2 * (2 * Real.pi) * (Real.log T / T)) * T := by
       field_simp [hLp.ne', hTp.ne']
       <;> ring
+
+/-- Uniform microscopic clipping rate on bounded sets of widths and centers.
+The finite-height estimate already includes the square of the local count. -/
+theorem eventually_normalizedWindowClipError_le {B : ℝ} (hB : 0 ≤ B) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ T : ℝ in atTop, ∀ R lam : ℝ, 0 ≤ R → R ≤ B → |lam| ≤ B →
+      |normalizedWindowClipError T R lam| ≤ C * (Real.log T / T) := by
+  obtain ⟨C, hC, he⟩ := eventually_normalizedWindowClipError_le_width_mul hB
+  refine ⟨B * C, mul_nonneg hB hC, ?_⟩
+  filter_upwards [he, eventually_gt_atTop (1 : ℝ)] with T hT ht R lam hR hRB hlam
+  have hn : 0 ≤ C * (Real.log T / T) :=
+    mul_nonneg hC (div_nonneg (Real.log_pos ht).le (zero_lt_one.trans ht).le)
+  exact (hT R lam hR hRB hlam).trans
+    ((mul_le_mul_of_nonneg_right hRB hn).trans_eq (by ring))
 
 /-- At fixed unfolded width, centering at the limiting mean gives a
 vanishing normalized clipped-to-full second-moment error. -/

@@ -58,9 +58,9 @@ def SelbergSixteenth : Prop := ∃ D : ℝ, 0 ≤ D ∧ ∀ᶠ U : ℝ in atTop,
   IntervalIntegrable (fun t => |residual U t| ^ 16) volume U (2 * U) ∧
   (∫ t in U..2 * U, |residual U t| ^ 16) ≤ D * U
 
-theorem shortPrimePrimitive_of_sixteenth (hr : CumulativeRvM) (hs : SelbergSixteenth) :
+theorem shortPrimePrimitive_of_sixteenth (hs : SelbergSixteenth) :
     ShortPrimePrimitive := by
-  obtain ⟨C, hC, hR⟩ := hr
+  obtain ⟨C, hC, hR⟩ := actual_cumulativeRvM
   obtain ⟨T, hT⟩ := eventually_atTop.1 hR
   obtain ⟨D, hD, hS⟩ := hs
   refine ⟨4 * C + 5 + D, by positivity, ?_⟩
@@ -360,15 +360,15 @@ theorem uniform_test_bound (P : Finset ℕ) (hs : UniformSelbergDensity (1 / 4))
 
 theorem sharp_wasserstein_nu (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
     (hs : UniformSelbergDensity (1 / 4)) (hsel : SelbergSixteenth)
-    (hr : CumulativeRvM) (hj : PositivePrimeTorusJackson) :
+    (hj : PositivePrimeTorusJackson) :
     ∃ c C : ℝ, 0 < c ∧ 0 < C ∧ ∀ᶠ U : ℝ in atTop,
       c / Real.log U ≤ wassersteinOne P (mu P U) (nu P) ∧
       wassersteinOne P (mu P U) (nu P) ≤ C / Real.log U := by
   obtain ⟨K, hK, hub⟩ := uniform_test_bound P hs
-    (shortPrimePrimitive_of_sixteenth hr hsel) (tensorJackson_of_degree P (hj P hP))
+    (shortPrimePrimitive_of_sixteenth hsel) (tensorJackson_of_degree P (hj P hP))
   let κ : ℝ := 3 / 4 - Real.log 2
   have hk : 0 < κ := by dsimp [κ]; linarith [Real.log_two_lt_d9]
-  have hbias := (tendsto_order.1 (height_mean_limit P hr)).1 (κ / 2) (show κ / 2 < κ by linarith)
+  have hbias := (tendsto_order.1 (height_mean_limit P)).1 (κ / 2) (show κ / 2 < κ by linarith)
   refine ⟨κ / 2, K, by positivity, hK, ?_⟩
   filter_upwards [hub, hbias, eventually_gt_atTop (1 : ℝ)] with U hU he hu
   have hl := Real.log_pos hu
@@ -390,22 +390,22 @@ theorem sharp_wasserstein_nu (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
 definitionally equal. -/
 theorem sharp_wasserstein_product (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
     (hs : UniformSelbergDensity (1 / 4)) (hsel : SelbergSixteenth)
-    (hr : CumulativeRvM) (hj : PositivePrimeTorusJackson) :
+    (hj : PositivePrimeTorusJackson) :
     ∃ c C : ℝ, 0 < c ∧ 0 < C ∧ ∀ᶠ U : ℝ in atTop,
       c / Real.log U ≤ wassersteinOne P (mu P U)
         ((Measure.dirac (1 / 2 : ℝ)).prod (unif.prod (haar P))) ∧
       wassersteinOne P (mu P U) ((Measure.dirac (1 / 2 : ℝ)).prod (unif.prod (haar P)))
         ≤ C / Real.log U :=
-  sharp_wasserstein_nu P hP hs hsel hr hj
+  sharp_wasserstein_nu P hP hs hsel hj
 
 /-- The same two-sided estimate using the infimum over transport plans. -/
 theorem sharp_transport_product (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
     (hs : UniformSelbergDensity (1 / 4)) (hsel : SelbergSixteenth)
-    (hr : CumulativeRvM) (hj : PositivePrimeTorusJackson) (hkr : CompactKR) :
+    (hj : PositivePrimeTorusJackson) (hkr : CompactKR) :
     ∃ c C : ℝ, 0 < c ∧ 0 < C ∧ ∀ᶠ U : ℝ in atTop,
       c / Real.log U ≤ transportOne P (mu P U) (nu P) ∧
       transportOne P (mu P U) (nu P) ≤ C / Real.log U := by
-  obtain ⟨c, C, hc, hC, h⟩ := sharp_wasserstein_nu P hP hs hsel hr hj
+  obtain ⟨c, C, hc, hC, h⟩ := sharp_wasserstein_nu P hP hs hsel hj
   obtain ⟨a, b, ha, hb, hm⟩ := dyadic_mass_bounds
   refine ⟨c, C, hc, hC, ?_⟩
   filter_upwards [h, hm, eventually_gt_atTop (1 : ℝ)] with U hU hm hu

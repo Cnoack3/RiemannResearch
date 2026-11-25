@@ -197,17 +197,17 @@ theorem exists_abs_integral_discrepancy_increment_mul_gammaDrift_le :
   · linarith only [ha, hh1, le_abs_self lam, hplus]
   · nlinarith only [(abs_le.mp hupper).2, neg_abs_le lam]
 
-/-- On a compact range of unfolded widths and centers the signed cross
-term is bounded uniformly in height before division by height. -/
-theorem eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le {B : ℝ} (hB : 0 ≤ B) :
+/-- The signed cross term is bounded by a constant times the unfolded width,
+uniformly in height and for bounded widths and centers. -/
+theorem eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le_width_mul {B : ℝ} (hB : 0 ≤ B) :
     ∃ K : ℝ, 0 ≤ K ∧ ∀ᶠ T : ℝ in atTop, ∀ R lam : ℝ, 0 ≤ R → R ≤ B → |lam| ≤ B →
       let h := R / (Real.log T / (2 * Real.pi))
       |∫ t in (0 : ℝ)..T, (discrepancy (t + h) - discrepancy t) *
-        ((∫ u in t..t + h, mu u) - lam)| ≤ K := by
+        ((∫ u in t..t + h, mu u) - lam)| ≤ R * K := by
   obtain ⟨C, hC, hc⟩ := exists_abs_integral_discrepancy_increment_mul_gammaDrift_le
   let P := 2 * Real.pi * B
   have hP : 0 ≤ P := by dsimp [P]; positivity
-  refine ⟨12 * C * P * (1 + B + 2 * P * C), by positivity, ?_⟩
+  refine ⟨12 * C * (2 * Real.pi) * (1 + B + 2 * P * C), by positivity, ?_⟩
   filter_upwards [eventually_ge_atTop (4 : ℝ),
     Real.tendsto_log_atTop.eventually_ge_atTop (max 1 P)] with T hT hlog
   intro R lam hR hRB hlam
@@ -227,22 +227,35 @@ theorem eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le {B : ℝ
       _ = _ := by rw [Real.log_pow]; norm_num
   have hlog4 : Real.log (T + 4) ≤ 2 * Real.log T :=
     (Real.log_le_log (by linarith) (by linarith)).trans hlog5
-  have hleft : 4 * h * (C * (1 + Real.log (T + 5))) ≤ 12 * C * P := by
+  have hleft : 4 * h * (C * (1 + Real.log (T + 5))) ≤ 12 * C * (2 * Real.pi * R) := by
     calc
       _ ≤ 4 * h * (C * (3 * Real.log T)) := by gcongr <;> linarith
       _ = 12 * C * (h * Real.log T) := by ring
-      _ ≤ _ := mul_le_mul_of_nonneg_left hhP (by positivity)
+      _ = _ := by rw [hprod]
   have hright : 1 + |lam| + h * C * Real.log (T + 4) ≤ 1 + B + 2 * P * C := by
     apply add_le_add (add_le_add le_rfl hlam)
     calc h * C * Real.log (T + 4) ≤ h * C * (2 * Real.log T) :=
           mul_le_mul_of_nonneg_left hlog4 (mul_nonneg hnn hC.le)
       _ = 2 * (h * Real.log T) * C := by ring
       _ ≤ 2 * P * C := by gcongr
-  exact (hc T h lam (by linarith) hnn hh1).trans
+  have he := (hc T h lam (by linarith) hnn hh1).trans
     (mul_le_mul hleft hright
       (by
         have hpos := Real.log_nonneg (show 1 ≤ T + 4 by linarith)
         positivity) (by positivity))
+  exact he.trans_eq (by ring)
+
+/-- On a compact range of unfolded widths and centers the signed cross
+term is bounded uniformly in height before division by height. -/
+theorem eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le {B : ℝ} (hB : 0 ≤ B) :
+    ∃ K : ℝ, 0 ≤ K ∧ ∀ᶠ T : ℝ in atTop, ∀ R lam : ℝ, 0 ≤ R → R ≤ B → |lam| ≤ B →
+      let h := R / (Real.log T / (2 * Real.pi))
+      |∫ t in (0 : ℝ)..T, (discrepancy (t + h) - discrepancy t) *
+        ((∫ u in t..t + h, mu u) - lam)| ≤ K := by
+  obtain ⟨K, hK, he⟩ := eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le_width_mul hB
+  refine ⟨B * K, mul_nonneg hB hK, ?_⟩
+  filter_upwards [he] with T hT R lam hR hRB hlam
+  exact (hT R lam hR hRB hlam).trans (mul_le_mul_of_nonneg_right hRB hK)
 
 end ActualZeroDiscrepancy
 end RiemannResearch.Analysis

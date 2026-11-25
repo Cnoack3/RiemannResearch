@@ -290,7 +290,7 @@ For distinct real frequencies with individual nearest-neighbor gaps \(\delta_j\)
 
 At positive integer frequency \(n\), the smallest gap to all other integer logarithms is \(\log(1+1/n)\). For \(q\ge1\), the derivative of \(\log q-2(q-1)/(q+1)\) is \((q-1)^2/[q(q+1)^2]\). Applying the inequality to \(q=1+1/n\) shows \(\delta_n^{-1}\le n+1/2\). The offset is asymptotically tight since \(1/\log(1+1/n)=n+1/2+O(1/n)\). Consequently the infinite mean-square remainder for coefficients \(a_n\), assuming \(\sum |a_n|<\infty\) and \(\sum n|a_n|^2<\infty\), is bounded by \(2C\sum(n+1/2)|a_n|^2\). Taking \(C=13\) uses an existing repository proof and gives a coefficient \(39\) after the coarser replacement \(n+1/2\le3n/2\). The older spacing estimate \(1/(2n)\) produced \(52\) in this normalization. Keeping the support restricted to prime powers can lower spacing costs further.
 
-For \(a_n=r_n(x)\Lambda(n)/\sqrt n\), the finite-to-infinite reduction uses \(n|a_n|^2\le (2/e)x^2\Lambda(n)/n^{3/2}\). Indeed \(\log n/\sqrt n\le2/e\), by applying \(\log t\le t-1\) at \(t=\sqrt n/e\). The majorant is summable. The checked repository version gives \(|M_2-TD(x)|\le (78/e)x^2\sum_{n\ge2}\Lambda(n)n^{-3/2}\) uniformly in \(T\). This is enough to deduce the centered transition from a scalar prime-diagonal PNT input. The sharper published \(O(x\log(2x))\) error and the prime-power spacing refinement matter on broader support.
+For \(a_n=r_n(x)\Lambda(n)/\sqrt n\), the finite-to-infinite reduction uses \(n|a_n|^2\le (2/e)x^2\Lambda(n)/n^{3/2}\). Indeed \(\log n/\sqrt n\le2/e\), by applying \(\log t\le t-1\) at \(t=\sqrt n/e\). The majorant is summable. The checked repository version gives \(|M_2-TD(x)|\le (78/e)x^2\sum_{n\ge2}\Lambda(n)n^{-3/2}\) uniformly in \(T\). This is enough to deduce the centered transition from a scalar prime-diagonal PNT input. The following weighted-diagonal argument improves this to \(O(x\log(2x))\) on the full arithmetic cutoff range.
 
 The scalar diagonal PNT also recovers the global \(O(x\log(2x))\) arithmetic mean-value error without separately estimating the summatory function of \(\Lambda^2\). Write \(p_n(y)=\Lambda(n)r_n(y)/\sqrt n\). For \(y\ge\max(x,n)\), \(|p_n(y)|^2=\Lambda(n)^2n/y^2\). Consequently
 \[
@@ -304,6 +304,18 @@ For \(n\ge x\) there is equality. For \(n\le x\) the right side is \(\Lambda(n)^
  \le 3x(\log x+1+C).
 \]
 The factor \(3\) is attained by the single-frequency majorization at \(n=x\). The mean-value bound then applies with whichever admissible Hilbert constant is supplied. Additional prime-power spacing information can sharpen this further.
+
+The Lean declarations `weighted_primeWeight_sq_add_surplus`,
+`weighted_primeWeight_sum_le_of_diagonal`, and `primeMeanSquare_error_le_linear_log`
+formalize the coefficient identity, its summed bound, and the mean-value estimate.
+`primeSignalMeanSquareSource_unconditional` supplies the arithmetic premise in the
+BGSTB transition. For every fixed \(0<\alpha<1\),
+`primeSignalEnergy_tendsto_subunit` yields
+\[
+   \frac{M_2(T,T^\alpha)}{T\log T}\longrightarrow \alpha.
+\]
+The complex pair sum retains its signed cutoff residual, and transfer to ordinate
+pairs also requires horizontal control. [Lean source](../Analysis/MontgomeryPrimeMeanSquare.lean)
 
 ## Direct numerical check of the raw normalization
 

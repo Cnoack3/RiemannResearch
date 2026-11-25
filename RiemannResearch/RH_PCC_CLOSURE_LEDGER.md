@@ -38,3 +38,35 @@ At every cutoff the sum of squared screened pairing errors over the adjacent-dil
 ## Quantified finite tail test for the centered boundary
 
 `boundary_zero_iff_cofinal_finiteSectionTailCost` requires one finite C, arbitrarily large physical cutoffs N, and for each such N arbitrarily late Gram cutoffs B with N times the finite cost at most C. The cost is the screened squared displacement computed from packet mass minus the explicit weighted first-N-site loss. The declarations compute its limit at fixed N and prove the equivalence. The uniform two-cutoff inequality remains open. [CenteredMeanGramTail](RH/CenteredMeanGramTail.lean) and [CenteredMeanQuotientTail](RH/CenteredMeanQuotientTail.lean)
+
+## The actual prime mean square below the transition
+
+`primeSignalMeanSquareSource_unconditional` supplies the previously assumed prime off-diagonal estimate using a bound of order x log x for the full prime-power sum. At x = T^α for every fixed 0 < α < 1, the normalized actual prime-signal energy tends to α. The zero-side residual and the microscopic positive-gap law are further analytic obligations. [MontgomeryPrimeMeanSquare](Analysis/MontgomeryPrimeMeanSquare.lean)
+
+## Rational secants, quadrature and the equal-ordinate correction
+
+Three finite width averages bound the signed pointwise gap error. A grid of order (log T)² suffices for integrating the actual positive-gap statistic at each fixed rational width. The rational sampled deficit must still tend to zero. The infimum of the normalized bare zeta argument variance over widths in (0,1] recovers the equal-ordinate mass asymptotically, with no simplicity hypothesis. The resulting fixed rational-width variance criteria have no explicit collision input. [Window pair correlation](Analysis/MontgomeryWindowPairCorrelation.lean), [gap quadrature](Analysis/MontgomeryCauchyGapMesh.lean) and [argument slope](Analysis/MontgomeryArgumentSlope.lean)
+
+## Actual cumulative zero counts
+
+`smoothCount_main_variation` bounds the signed integrated gamma remainder between u and v by C(1/u−1/v) for 1 ≤ u ≤ v. Together with the repository’s unconditional Backlund discrepancy this proves `actual_cumulativeRvM`. The dyadic height bias and scaled height mean now use the theorem directly. The sharp Wasserstein declarations retain their separate horizontal and approximation hypotheses. [Height laws](Analysis/DyadicZeroWassersteinLaws.lean) and [Wasserstein estimates](Analysis/DyadicZeroWasserstein.lean)
+
+## Horizontal comparison for the completed zeta function
+
+The multiplicity-weighted paired Hadamard product gives weak horizontal norm monotonicity of xi under RH. Conversely, horizontal comparison on every line to the right of the critical line would exclude a right-hand zero by countability. The full comparison property remains to be proved without RH. Its completed-zeta prefactors are retained exactly for applications to shifted quotients. [XiHorizontalComparison](Analysis/XiHorizontalComparison.lean)
+
+## Changing the order of the Gram and height cutoffs
+
+With the Gram fit fixed, the scaled physical tail tends to its period mean, at least the reciprocal of the period. The signed change in tail cost when the Gram fit is updated is exact. These declarations provide both an obstruction to exchanging cutoffs without an estimate and finite expressions for testing that estimate. A common cofinal estimate for the updated solves is still required. [CenteredMeanPeriodicGramTail](RH/CenteredMeanPeriodicGramTail.lean)
+
+## The right derivative of the bare argument variance
+
+At every fixed upper height T > 1, the right derivative at width zero equals the normalized count of all pairs sharing an ordinate. Multiplicity of a zero is retained throughout. The near-zero variance inequality in `cofinal_pureArgument_fixedHeight_iff_RH` is equivalent to RH when required at arbitrarily large T. Its cofinal inequality and the positive rational-width limits required for PCC remain distinct open inputs. [MontgomeryFixedHeightArgumentSlope](Analysis/MontgomeryFixedHeightArgumentSlope.lean)
+
+## A signed complex-zero criterion for RH
+
+At every fixed 0 < α < 1, the normalized third-signal residual tends to zero if and only if the sharp complex-zero form factor tends to α. At any fixed α > 0, its plateau at one is equivalent to a limit of 1−α for the signed third-signal and prime off-diagonal expression. At arbitrarily high fixed frequencies a cofinal logarithmic upper bound for that signed expression is equivalent to RH. The actual cofinal bound, the spectral residual limit, and the positive-gap ordinate law remain separate obligations. [MontgomeryFixedFrequencyResidual](Analysis/MontgomeryFixedFrequencyResidual.lean)
+
+## Actual macroscopic pair counts
+
+Put D(T) = T log T/(2π) and let P(T,r) be the normalized strict positive-gap count. Uniformly over 0 ≤ c ≤ 1, P(T,cD(T))/D(T) tends to c−c²/2. The proof counts actual positive zero occurrences with multiplicity, using their uniform rescaled cumulative height distribution. This establishes the macroscopic pair law. Positive-gap PCC asks for the sine-kernel law at fixed unfolded widths. [MontgomeryMacroscopicGap](Analysis/MontgomeryMacroscopicGap.lean)

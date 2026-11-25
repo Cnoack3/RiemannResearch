@@ -177,12 +177,18 @@ theorem primeDiagonalBound_of_asymptotic (h : PrimeDiagonalAsymptotic) : PrimeDi
   apply abs_le.mpr
   constructor <;> linarith [Real.log_le_log hxp hxX]
 
+/-- The weighted prime coefficients are summable at every fixed positive cutoff. -/
+theorem summable_weighted_primeWeight_sq {x : ℝ} (hx : 0 < x) :
+    Summable (fun n : ℕ => (n : ℝ) * (primeWeight x n)^2) :=
+  Summable.of_nonneg_of_le (fun _ => by positivity) (weighted_primeWeight_le hx)
+    (summable_mangoldtThreeHalves.mul_left _)
+
 set_option maxHeartbeats 600000 in
-/-- The off-diagonal part of the actual infinite prime signal costs
-O(x²) uniformly in T. This is o(T) at every bounded transition shift. -/
-theorem primeMeanSquare_error_le_quadratic {x T : ℝ} (hx : 0 < x) (hT : 0 ≤ T) :
-    |primeSignalEnergy T x-T*primeDiagonal x| ≤
-      ((78/Real.exp 1)*∑' n : ℕ, mangoldtThreeHalves n)*x^2 := by
+/-- Montgomery–Vaughan controls the signed infinite-series error by the
+weighted coefficient square sum, uniformly in the length of the interval. -/
+theorem primeMeanSquare_error_le_weighted_sum {x T : ℝ} (hx : 0 < x) (hT : 0 ≤ T) :
+    |primeSignalEnergy T x - T * primeDiagonal x| ≤
+      39 * ∑' n : ℕ, (n : ℝ) * (primeWeight x n)^2 := by
   let a := fun n : ℕ => (primeWeight x n : ℂ)
   have hn (n : ℕ) : ‖a n‖ = primeWeight x n := by
     simp [a,Complex.norm_real,Real.norm_eq_abs,abs_of_nonneg (primeWeight_nonneg hx n)]
@@ -191,10 +197,7 @@ theorem primeMeanSquare_error_le_quadratic {x T : ℝ} (hx : 0 < x) (hT : 0 ≤ 
     intro n
     simpa only [hn] using primeWeight_le_mangoldtThreeHalves hx n
   have hw : Summable (fun n : ℕ => (n:ℝ)*‖a n‖^2) := by
-    apply Summable.of_nonneg_of_le (fun n => by positivity) _
-      (summable_mangoldtThreeHalves.mul_left ((2/Real.exp 1)*x^2))
-    intro n
-    simpa only [hn] using weighted_primeWeight_le hx n
+    simpa only [hn] using summable_weighted_primeWeight_sq hx
   have h := DirichletMeanSquare.infinite_log_mean_square_le
     (fun n : ℕ => a (n+1)) ((summable_nat_add_iff 1).mpr ha)
     ((summable_nat_add_iff 1).mpr hw) hT
@@ -215,16 +218,22 @@ theorem primeMeanSquare_error_le_quadratic {x T : ℝ} (hx : 0 < x) (hT : 0 ≤ 
     have he := hdiag.tsum_eq_zero_add
     simpa only [ha0,norm_zero,zero_pow (by norm_num : (2:ℕ) ≠ 0),zero_add,hn,primeDiagonal]
       using he.symm
-  have hwm : (∑' n : ℕ, ((n+1:ℕ):ℝ)*‖a (n+1)‖^2) ≤
-      ((2/Real.exp 1)*x^2)*∑' n : ℕ, mangoldtThreeHalves n := by
-    have he := hw.tsum_eq_zero_add
-    simp only [Nat.cast_zero,zero_mul,zero_add] at he
-    rw [← he,← tsum_mul_left]
-    apply hw.tsum_le_tsum _ (summable_mangoldtThreeHalves.mul_left ((2/Real.exp 1)*x^2))
-    intro n
-    simpa only [hn] using weighted_primeWeight_le hx n
-  simp_rw [hsum,hd] at h
-  exact h.trans ((mul_le_mul_of_nonneg_left hwm (by norm_num)).trans_eq (by ring))
+  have hwm := hw.tsum_eq_zero_add
+  simp only [Nat.cast_zero, zero_mul, zero_add, hn] at hwm
+  simp_rw [hsum, hd] at h
+  simp only [hn, ← hwm] at h
+  exact h
+
+/-- The off-diagonal part of the actual infinite prime signal costs
+O(x²) uniformly in T. This is o(T) at every bounded transition shift. -/
+theorem primeMeanSquare_error_le_quadratic {x T : ℝ} (hx : 0 < x) (hT : 0 ≤ T) :
+    |primeSignalEnergy T x-T*primeDiagonal x| ≤
+      ((78/Real.exp 1)*∑' n : ℕ, mangoldtThreeHalves n)*x^2 := by
+  have hwm := (summable_weighted_primeWeight_sq hx).tsum_le_tsum (weighted_primeWeight_le hx)
+    (summable_mangoldtThreeHalves.mul_left _)
+  rw [tsum_mul_left] at hwm
+  exact (primeMeanSquare_error_le_weighted_sum hx hT).trans
+    ((mul_le_mul_of_nonneg_left hwm (by norm_num : (0 : ℝ) ≤ 39)).trans_eq (by ring))
 
 /-- The uniform transition at second order requires only the prime diagonal
 estimate and the positive-cutoff third signal on the analytic side. -/

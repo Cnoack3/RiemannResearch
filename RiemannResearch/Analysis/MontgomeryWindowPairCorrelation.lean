@@ -3,6 +3,7 @@ Copyright (c) 2026 RiemannResearch contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: RiemannResearch contributors
 -/
+import RiemannResearch.Analysis.MontgomeryCauchyGapMesh
 import RiemannResearch.Analysis.MontgomeryGapBand
 import RiemannResearch.Analysis.MontgomeryIntegratedGapDensity
 import RiemannResearch.Analysis.MontgomeryGapMesh
@@ -518,5 +519,103 @@ theorem positiveGapPCC_iff_rationalIntegratedGapDeficit :
       have hh := (gap_band_bounds (positiveGapMass_mono hT) hab.le).1.trans_lt ht
       exact (positiveGapMass_mono hT hxa.le).trans_lt
         (lt_of_mul_lt_mul_left hh (sub_nonneg.mpr hab.le))
+
+/-- Oriented finite-height secants of the weighted integrated deficit bound
+the signed pointwise gap discrepancy. Subtracting the measured equal-ordinate
+term before taking secants cancels it exactly. -/
+theorem gap_error_mul_bounds_of_integrated_deficit {T R h : ℝ}
+    (hT : 1 < T) (hh : 0 < h) (hR : h < R) :
+    let d := fun u => u * integratedGapDeficit T u
+    let error := positiveGapMass T R - sineGapMass R
+    d (R - h) - d R - h ^ 2 ≤ 2 * h * error ∧
+      2 * h * error ≤ d R - d (R + h) + h ^ 2 := by
+  let C := (actualCollision T : ℝ) / (T * Real.log T / (2 * Real.pi))
+  let G := sineGapMass R
+  let P := positiveGapMass T R
+  have hE (x : ℝ) (hx : 0 < x) :
+      unfoldedWindowEnergy T x =
+        sineWindowEnergy x + x * (C - 1) - x * integratedGapDeficit T x := by
+    have he := unfoldedWindowEnergy_sub_sine_eq_collision_sub_deficit hT hx
+    dsimp only [C]
+    nlinarith only [he]
+  have hL := (unfoldedWindowEnergy_secant_bounds hT (sub_nonneg.mpr hR.le)
+    (show R - h < R by linarith)).2
+  have hU := (unfoldedWindowEnergy_secant_bounds hT (hh.trans hR).le
+    (show R < R + h by linarith)).1
+  rw [show R - (R - h) = h by ring] at hL
+  rw [show R + h - R = h by ring] at hU
+  have hl := (div_le_iff₀ hh).mp hL
+  have hu := (le_div_iff₀ hh).mp hU
+  change unfoldedWindowEnergy T R - unfoldedWindowEnergy T (R - h) ≤ (C + 2 * P) * h at hl
+  change (C + 2 * P) * h ≤ unfoldedWindowEnergy T (R + h) - unfoldedWindowEnergy T R at hu
+  rw [hE R (hh.trans hR), hE (R-h) (sub_pos.mpr hR)] at hl
+  rw [hE R (hh.trans hR), hE (R+h) (by linarith)] at hu
+  have hm := sineWindowEnergy_adjacent_secants R h hh
+  change (1 + 2 * G - h) * h ≤ _ ∧ _ ≤ (1 + 2 * G + h) * h at hm
+  dsimp only
+  change _ ≤ 2 * h * (P - G) ∧ 2 * h * (P - G) ≤ _
+  exact ⟨by nlinarith only [hl, hm.1], by nlinarith only [hu, hm.2]⟩
+
+/-- Three measurements at positive widths give a pointwise certificate for
+the actual positive gaps, with explicit error amplification. -/
+theorem gap_error_le_of_three_integrated_deficits {T R h ε : ℝ}
+    (hT : 1 < T) (hh : 0 < h) (hR : h < R)
+    (hl : |integratedGapDeficit T (R - h)| ≤ ε)
+    (hm : |integratedGapDeficit T R| ≤ ε)
+    (hu : |integratedGapDeficit T (R + h)| ≤ ε) :
+    |positiveGapMass T R - sineGapMass R| ≤ h / 2 + (2 * R + h) * ε / (2 * h) := by
+  have hb := gap_error_mul_bounds_of_integrated_deficit hT hh hR
+  dsimp only at hb
+  have h₀ := hh.trans hR
+  have hε := (abs_nonneg _).trans hm
+  have l := mul_le_mul_of_nonneg_left (abs_le.mp hl).1 (sub_nonneg.mpr hR.le)
+  have m₂ := mul_le_mul_of_nonneg_left (abs_le.mp hm).2 h₀.le
+  have u := mul_le_mul_of_nonneg_left (abs_le.mp hu).1 (add_nonneg h₀.le hh.le)
+  rw [show h / 2 + (2 * R + h) * ε / (2 * h) =
+    (h ^ 2 + (2 * R + h) * ε) / (2 * h) by field_simp [hh.ne']]
+  apply abs_le.mpr
+  have hh₂ : 0 < 2 * h := by positivity
+  constructor
+  · rw [← neg_div]
+    apply (div_le_iff₀ hh₂).mpr
+    nlinarith only [hb.1, l, m₂, mul_nonneg hh.le hε]
+  · apply (le_div_iff₀ hh₂).mpr
+    nlinarith only [hb.2, u, m₂]
+
+/-- The choice of spacing minimizing the three-width bound gives a
+square-root error rate for the positive-gap distribution at each width. -/
+theorem gap_error_le_sqrt_of_three_integrated_deficits {T R ε : ℝ}
+    (hT : 1 < T) (hε : 0 < ε) (hR : 2 * ε < R)
+    (hl : |integratedGapDeficit T (R - Real.sqrt (2 * R * ε))| ≤ ε)
+    (hm : |integratedGapDeficit T R| ≤ ε)
+    (hu : |integratedGapDeficit T (R + Real.sqrt (2 * R * ε))| ≤ ε) :
+    |positiveGapMass T R - sineGapMass R| ≤ Real.sqrt (2 * R * ε) + ε / 2 := by
+  have hR₀ : 0 < R := by linarith
+  have hp : 0 < 2 * R * ε := by positivity
+  have hs := Real.sq_sqrt hp.le
+  have hh := Real.sqrt_pos.mpr hp
+  have hlR : Real.sqrt (2 * R * ε) < R := by
+    nlinarith only [hs, mul_lt_mul_of_pos_left hR hR₀, hR₀, hh]
+  apply (gap_error_le_of_three_integrated_deficits hT hh hlR hl hm hu).trans_eq
+  field_simp [hh.ne']
+  nlinarith only [hs]
+
+/-- An explicitly prescribed finite sampling of the actual gap distribution
+detects PCC. At each fixed rational width only a logarithm-squared number of
+samples is needed to replace the complete integral. -/
+theorem positiveGapPCC_iff_logSquareSampledGapDeficit :
+    PositiveGapPCC ↔ ∀ q : ℚ, 0 < q →
+      Tendsto (fun T : ℝ => sampledIntegratedGapDeficit T q (logSquareGapMesh T))
+        atTop (𝓝 0) := by
+  rw [positiveGapPCC_iff_rationalIntegratedGapDeficit]
+  have hdiff (q : ℚ) (hq : 0 < q) :=
+    sampled_gap_deficit_sub_tendsto_zero (by exact_mod_cast hq : (0 : ℝ) < q)
+      logSquareGapMesh (Eventually.of_forall fun _ => Nat.succ_pos _)
+      log_div_logSquareGapMesh_tendsto_zero
+  constructor
+  · intro hg q hq
+    simpa only [sub_add_cancel, zero_add] using (hdiff q hq).add (hg q hq)
+  · intro hs q hq
+    simpa only [sub_sub_cancel, sub_zero] using (hs q hq).sub (hdiff q hq)
 
 end RiemannResearch.Analysis.MontgomeryPositiveGap

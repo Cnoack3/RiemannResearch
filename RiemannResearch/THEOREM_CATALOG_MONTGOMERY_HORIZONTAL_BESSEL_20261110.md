@@ -117,7 +117,10 @@ analytic diagonal.
 | Obligation | Status |
 |---|---|
 | Lean proof of `BGSTBPositiveCutoffEstimate` for the actual complex pair sum | Open in Lean. The authors prove it unconditionally for $(0,T]$ in §3, equation (3.5) of v3, equation (3.3) of v1/v2. The zero-box and strong density hypotheses concern other results. |
-| Explicit-formula pair-sum identification (3.4), uniform prime mean square $M_2$, and the explicit-formula remainder $A_3$ | Open components for an internal proof of BGSTB (3.5). |
+| Uniform prime mean square $M_2$ | [`primeSignalMeanSquareSource_unconditional`](Analysis/MontgomeryPrimeMeanSquare.lean) discharges the $O(T+x\log(2x))$ arithmetic premise. The stronger prime-power spacing bound $O(x\log\log(4x))$ against the exact diagonal remains open in Lean. |
+| Explicit-formula pair-sum identification (3.4) and the corresponding residual $A_3$ | Open components for an internal proof of BGSTB (3.5). |
+| Fixed subunit frequencies of the complex form factor | [`sharpFormFactor_subunit_iff_thirdSignalResidual`](Analysis/MontgomeryFixedFrequencyResidual.lean) identifies the necessary and sufficient limit $R_3(T,T^\alpha)/(T\log T)\to0$ for every fixed $0<\alpha<1$. The domain-specific cutoff input `PositiveCutoffThirdSignalSource` implies this limit. The raw-ordinate transfer additionally uses the vanishing actual horizontal budget. |
+| Fixed frequencies above one and the RH return | [`sharpFormFactor_tendsto_one_iff_normalizedThirdAndPrimeOffDiagonal`](Analysis/MontgomeryFixedFrequencyResidual.lean) identifies the exact signed target $1-\alpha$. [`riemannHypothesis_iff_cofinalThirdAndPrimeOffDiagonalLogUpper`](Analysis/MontgomeryFixedFrequencyResidual.lean) equates RH with a one-sided logarithmic upper bound for that correction on cofinal heights at arbitrarily large fixed frequencies. Its actual upper bound remains open. |
 | `ShortWindowSecondMomentUpper` for the actual cutoff | Open in Lean. The independent analytic input follows from the published GLSS short-interval moment and boundary estimates. |
 | `RawFormFactorTestLimit` or cofinal one-sided Fejér upper tests | Open for the actual raw ordinates. |
 | `PositiveGapPCC` | Open for strict positive gaps in the actual zero multiset. |

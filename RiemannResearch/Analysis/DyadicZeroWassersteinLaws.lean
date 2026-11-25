@@ -1,3 +1,6 @@
+import RiemannResearch.Analysis.ActualZeroDiscrepancy
+import RiemannResearch.RH.WeilExplicitFormula.GammaFacts.Complete
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import RiemannResearch.Analysis.DyadicZeroWassersteinFourier
 import RiemannResearch.Analysis.ActualZeroDisplacementMoments
 import RiemannResearch.Analysis.ActualZeroAbelPairing
@@ -18,7 +21,7 @@ left-open and right-closed. The Wasserstein distance is written in its
 Kantorovich--Rubinstein dual form with the sum metric, using anchored tests.
 For large positive U both measures are probabilities with compact support.
 
-The cumulative Riemann--von Mangoldt estimate below is the classical estimate
+The integrated gamma remainder and Backlund discrepancy below prove the classical cumulative Riemann--von Mangoldt estimate used
 in Brent, Platt and Trudgian, Math. Comp. 90 (2021), 2923--2935, §2,
 https://doi.org/10.1090/mcom/3652 . Right endpoint convention changes cost
 O(log T) by the unit-window count. The horizontal input is Selberg's density
@@ -323,6 +326,94 @@ theorem countMain_deriv {t : ℝ} (ht : 0 < t) : HasDerivAt countMain (slope t) 
   convert h using 1 <;>
     first | rfl | (try dsimp [countMain, slope, id]; field_simp [ht.ne', Real.pi_ne_zero] <;> ring)
 
+section
+open ActualZeroDiscrepancy
+
+/-- Signed variation of the gamma remainder, on every interval above one. -/
+theorem smoothCount_main_variation :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ u v : ℝ, 1 ≤ u → u ≤ v →
+      |(smoothCount v - countMain v) - (smoothCount u - countMain u)| ≤
+        C * (u⁻¹ - v⁻¹) := by
+  obtain ⟨c, hc⟩ := gammaFacts.stirling
+  let C := |c|
+  have hC : 0 ≤ C := abs_nonneg _
+  let F := fun t => smoothCount t - countMain t
+  have hμ := RvM.mu_continuous gammaFacts
+  have hd (t : ℝ) (ht : 1 ≤ t) : HasDerivAt F (Zeta23.mu t - slope t) t :=
+    (intervalIntegral.integral_hasDerivAt_right (hμ.intervalIntegrable 0 t)
+      hμ.stronglyMeasurable.stronglyMeasurableAtFilter hμ.continuousAt).sub
+        (countMain_deriv (by linarith))
+  have hb (t : ℝ) (ht : 1 ≤ t) : |Zeta23.mu t - slope t| ≤ C / t^2 := by
+    have ht0 : 0 ≤ t := by linarith
+    have h := hc t (by simpa only [abs_of_nonneg ht0] using ht)
+    rw [abs_of_nonneg ht0] at h
+    simpa only [slope, div_eq_mul_inv, one_mul, mul_comm] using
+      h.trans (div_le_div_of_nonneg_right (le_abs_self c) (sq_nonneg t))
+  have hanti (a : ℝ) (ha : |a| ≤ 1) :
+      AntitoneOn (fun t => a * F t + C * t⁻¹) (Ici 1) := by
+    have hd' (t : ℝ) (ht : 1 ≤ t) : HasDerivAt (fun t => a * F t + C * t⁻¹)
+        (a * (Zeta23.mu t - slope t) + C * (-(t ^ 2)⁻¹)) t :=
+      ((hd t ht).const_mul a).add ((hasDerivAt_inv (show t ≠ 0 by linarith)).const_mul C)
+    apply antitoneOn_of_deriv_nonpos (convex_Ici 1)
+    · intro t ht
+      exact (hd' t ht).continuousAt.continuousWithinAt
+    · intro t ht
+      exact (hd' t (interior_subset ht)).differentiableAt.differentiableWithinAt
+    · intro t ht
+      have h1 : 1 ≤ t := interior_subset ht
+      rw [(hd' t h1).deriv]
+      have h : a * (Zeta23.mu t - slope t) ≤ C / t^2 :=
+        (le_abs_self (a * (Zeta23.mu t - slope t))).trans (by
+          rw [abs_mul]
+          exact (mul_le_mul_of_nonneg_right ha (abs_nonneg _)).trans
+            (by simpa using hb t h1))
+      simpa only [mul_neg, div_eq_mul_inv, ← sub_eq_add_neg, sub_nonpos] using h
+  refine ⟨C, hC, fun u v hu huv => ?_⟩
+  have hh := hanti 1 (by norm_num) hu (hu.trans huv) huv
+  have hl := hanti (-1) (by norm_num) hu (hu.trans huv) huv
+  dsimp only [F] at hh hl
+  apply abs_le.mpr
+  constructor <;> linarith
+
+/-- Actual zeta zeros counted with analytic multiplicity satisfy the global
+cumulative Riemann–von Mangoldt estimate used by the dyadic height laws. -/
+theorem actual_cumulativeRvM : CumulativeRvM := by
+  obtain ⟨A, hA, ha⟩ := exists_abs_discrepancy_le_log
+  obtain ⟨C, hC, hc⟩ := smoothCount_main_variation
+  let B := C + |smoothCount 1 - countMain 1|
+  have hB : 0 ≤ B := add_nonneg hC (abs_nonneg _)
+  refine ⟨3*A+B, by linarith, ?_⟩
+  filter_upwards [eventually_ge_atTop (4 : ℝ)] with t ht
+  have ht₀ : 0 < t := by linarith
+  have hlog : 1 ≤ Real.log t := by
+    have h4 : Real.log 4 = 2 * Real.log 2 := by
+      rw [show (4 : ℝ) = 2 * 2 by norm_num, Real.log_mul (by norm_num) (by norm_num)]
+      ring
+    linarith only [Real.log_two_gt_d9, Real.log_le_log (by norm_num : (0 : ℝ) < 4) ht, h4]
+  have hlog' : Real.log (t+4) ≤ 2 * Real.log t := by
+    have h := Real.log_le_log (by linarith : 0 < t+4) (by nlinarith : t+4 ≤ t*t)
+    simpa only [Real.log_mul ht₀.ne' ht₀.ne', two_mul] using h
+  have hvar := hc 1 t le_rfl (by linarith)
+  have hsm : |smoothCount t - countMain t| ≤ B := by
+    have hh := abs_add_le ((smoothCount t - countMain t) - (smoothCount 1 - countMain 1))
+      (smoothCount 1 - countMain 1)
+    rw [sub_add_cancel] at hh
+    have hle : C * (1⁻¹ - t⁻¹) ≤ C := by
+      rw [inv_one, mul_sub, mul_one]
+      exact sub_le_self _ (mul_nonneg hC (inv_nonneg.mpr ht₀.le))
+    exact hh.trans (add_le_add (hvar.trans hle) le_rfl)
+  have hd : countError t = discrepancy t + (smoothCount t - countMain t) := by
+    unfold countError discrepancy
+    ring
+  rw [hd]
+  apply (abs_add_le _ _).trans
+  have hD := ha t ht₀.le
+  have hm := mul_le_mul_of_nonneg_left hlog' hA.le
+  have hB' := mul_le_mul_of_nonneg_left hlog hB
+  nlinarith [mul_le_mul_of_nonneg_left hlog hA.le]
+
+end
+
 theorem slope_continuous {U : ℝ} (hu : 0 < U) : ContinuousOn slope (Icc U (2 * U)) := by
   intro t ht
   have hpos : 0 < t / (2 * Real.pi) := div_pos (hu.trans_le ht.1) (by positivity)
@@ -361,11 +452,11 @@ theorem height_main_integral {U : ℝ} (hu : 0 < U) :
 
 /-- The signed bias before count-normalization, with the classical O(log U)
 endpoint error. -/
-theorem height_bias (hr : CumulativeRvM) :
+theorem height_bias :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ U : ℝ in atTop,
       |massSum U (fun ρ => height U ρ.im - 1 / 2) -
          U * (3 / 4 - Real.log 2) / (2 * Real.pi)| ≤ C * Real.log U := by
-  obtain ⟨C, hC, h⟩ := hr
+  obtain ⟨C, hC, h⟩ := actual_cumulativeRvM
   obtain ⟨T, hT⟩ := eventually_atTop.1 h
   refine ⟨6 * C, by positivity, ?_⟩
   filter_upwards [eventually_ge_atTop T, eventually_ge_atTop (2 : ℝ)] with U hut hu
@@ -433,12 +524,12 @@ theorem dyadic_mass_limit :
     exact h'.trans_lt (mul_lt_mul_of_pos_right hqb (mul_pos (by linarith) (Real.log_pos hu)))
 
 /-- First-order signed height bias in the normalized probability measure. -/
-theorem height_mean_limit (P : Finset ℕ) (hr : CumulativeRvM) :
+theorem height_mean_limit (P : Finset ℕ) :
     Tendsto (fun U : ℝ => Real.log U * ((∫ x : Space P, x.2.1 ∂mu P U) - 1 / 2))
       atTop (𝓝 (3 / 4 - Real.log 2)) := by
   let k := (3 / 4 - Real.log 2) / (2 * Real.pi)
   let h := fun U => massSum U (fun ρ => height U ρ.im - 1 / 2)
-  obtain ⟨B, hB, hb⟩ := height_bias hr
+  obtain ⟨B, hB, hb⟩ := height_bias
   have herr : Tendsto (fun U : ℝ => h U / U - k) atTop (𝓝 0) := by
     apply squeeze_zero_norm' (a := fun U : ℝ => (B * Real.log U) / U)
     · filter_upwards [hb, eventually_gt_atTop (1 : ℝ)] with U he hu

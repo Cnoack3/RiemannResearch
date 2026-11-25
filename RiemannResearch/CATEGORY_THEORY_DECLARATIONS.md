@@ -1,10 +1,21 @@
 # Category theory and the Pareto boundary in Lean
 
-The declaration-by-declaration inventory below the reconstruction table covers 49 modules, 790 public named declarations, 86 private or local declarations, and 5 further anonymous instances. The first two sections contain the abstract categorical constructions and the Pareto diagrams. The third section includes their Hilbert-space, arithmetic, and other applications.
+The November reconstruction inventory below the reconstruction table covers 49 modules, 790 public named declarations, 86 private or local declarations, and 5 further anonymous instances. The first two sections contain the abstract categorical constructions and the Pareto diagrams. The third section includes their Hilbert-space, arithmetic, and other applications.
 
 Each entry links to its declaration in this revision. Names are relative to the displayed namespace. The fields of structures and classes appear beside their declarations. Imported mathlib declarations and automatically generated recursors are outside the index.
 
 The underlying Hilbert quotient tower and its algebra quotients have separate Hausdorff descent theorems. The complete mean snake sequence, its pullback to each stage, and the squarefree residue product are indexed here. [Hilbert tower](RH/PrimeSupportParityDescent.lean) · [Algebra tower](RH/PrimeSupportAlgebraDescent.lean) · [Exact sequence](RH/CenteredMeanLongExact.lean) · [Arithmetic criteria](RH/CenteredMeanRHCriteria.lean). The [Gram boundary research note](THEOREM_CATALOG_PARETO_BOUNDARY_GRAM_20261121.md) records the exact arithmetic tests and their outstanding hypotheses.
+
+## November 24 additions to the centered boundary declarations
+
+The first two rows use the namespace `RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake`. The last two use its `DigammaSection` namespace. The full set is available through [CategoryTheory.All](CategoryTheory/All.lean).
+
+| Module | Selected declarations | Mathematical content |
+| --- | --- | --- |
+| [CenteredMeanQuotientNorm](RH/CenteredMeanQuotientNorm.lean) | [`centeredCoordinateClass`](RH/CenteredMeanQuotientNorm.lean#L284), [`coordinate_quotient_norm_loss`](RH/CenteredMeanQuotientNorm.lean#L289), [`hasSum_coordinate_quotient_norm_loss`](RH/CenteredMeanQuotientNorm.lean#L306), [`boundary_zero_iff_coordinate_norms`](RH/CenteredMeanQuotientNorm.lean#L321) | The exact coordinate norm losses sum to the limiting energy. |
+| [CenteredMeanQuotientTail](RH/CenteredMeanQuotientTail.lean) | [`coordinateLossTail`](RH/CenteredMeanQuotientTail.lean#L30), [`residualTailEnergy_eq_coordinateLossTail`](RH/CenteredMeanQuotientTail.lean#L61), [`boundary_zero_iff_frequently_bounded_coordinateLossTail`](RH/CenteredMeanQuotientTail.lean#L102), [`exists_riemannHypothesis_of_stretched_coordinateLossTail`](RH/CenteredMeanQuotientTail.lean#L128) | The physical residual tail gives a necessary and sufficient cofinal test for a zero boundary. |
+| [CenteredMeanGramTail](RH/CenteredMeanGramTail.lean) | [`finiteSectionShell_one_solve`](RH/CenteredMeanGramTail.lean#L34), [`finiteSectionShell_variance_partition`](RH/CenteredMeanGramTail.lean#L67), [`finiteSectionTailCost`](RH/CenteredMeanGramTail.lean#L142), [`finiteSectionTailCost_tendsto`](RH/CenteredMeanGramTail.lean#L155), [`boundary_zero_iff_cofinal_finiteSectionTailCost`](RH/CenteredMeanGramTail.lean#L175) | At each physical cutoff the finite Gram tail tends to the limiting tail. The cofinal test requires a common bound. |
+| [CenteredMeanPeriodicGramTail](RH/CenteredMeanPeriodicGramTail.lean) | [`sectionPeriodMean`](RH/CenteredMeanPeriodicGramTail.lean#L27), [`sectionPeriodMean_lower`](RH/CenteredMeanPeriodicGramTail.lean#L49), [`finiteSectionTailCost_period_error`](RH/CenteredMeanPeriodicGramTail.lean#L62), [`scaled_finiteSectionTailCost_tendsto_periodMean`](RH/CenteredMeanPeriodicGramTail.lean#L106), [`later_finiteSectionTailCost_identity`](RH/CenteredMeanPeriodicGramTail.lean#L132) | At fixed Gram cutoff the scaled physical tail converges to a strictly positive period mean. Moving to a later Gram solve has an exact signed cost. |
 
 ## Reconstructing the November 20 category theory
 

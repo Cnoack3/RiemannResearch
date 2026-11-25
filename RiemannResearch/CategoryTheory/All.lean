@@ -16,6 +16,7 @@ import RiemannResearch.RH.MixedPrimeCorrelationSeries
 import RiemannResearch.RH.TernaryMixedOrbitObstruction
 import RiemannResearch.RH.CenteredMeanStageSnake
 import RiemannResearch.RH.CenteredMeanDigammaSection
+import RiemannResearch.RH.CenteredMeanPeriodicGramTail
 import RiemannResearch.RH.ConductorReconstructionEnergy
 import RiemannResearch.RH.ConductorTowerLimit
 import RiemannResearch.RH.FiniteAtomCarryFunctor

@@ -99,6 +99,8 @@ import RiemannResearch.Analysis.MontgomeryPrimeDiagonalScalar
 import RiemannResearch.Analysis.MontgomeryPrimeDiagonalTail
 import RiemannResearch.Analysis.MontgomeryPrimeDiagonalPrefix
 import RiemannResearch.Analysis.MontgomeryPrimeDiagonalAsymptotic
+import RiemannResearch.Analysis.MontgomeryPrimeMeanSquare
+import RiemannResearch.Analysis.MontgomeryFixedFrequencyResidual
 import RiemannResearch.Analysis.ActualDistinctOrdinateGram
 import RiemannResearch.Analysis.ActualDistinctOrdinateProportion
 import RiemannResearch.Analysis.MontgomeryInfiniteDirichletMeanSquare
@@ -639,6 +641,7 @@ import RiemannResearch.RH.HausdorffSupportColimit
 import RiemannResearch.RH.CenteredMeanStageSnake
 import RiemannResearch.RH.CenteredMeanDigammaSection
 import RiemannResearch.RH.CenteredMeanGramTail
+import RiemannResearch.RH.CenteredMeanPeriodicGramTail
 import RiemannResearch.RH.ConductorTowerLimit
 import RiemannResearch.RH.MixedConductorPolarizedParseval
 import RiemannResearch.RH.MixedConductorGramBoundary
@@ -2673,6 +2676,7 @@ import RiemannResearch.Analysis.LiCriterionImport.Lc.LiCriterion.RHBridge
 import RiemannResearch.Analysis.LiCriterionImport.Lc.LiCriterion.ReverseDirection
 import RiemannResearch.Analysis.LiCriterionImport.Lc.LiCriterion.XiGrowth
 import RiemannResearch.Analysis.LiCriterionImport.Lc.LiCriterion.XiOrderBridge
+import RiemannResearch.Analysis.XiHorizontalComparison
 import RiemannResearch.Analysis.LiCriterionImport.Lc.XiZeros
 import RiemannResearch.Analysis.UnboundedOperatorImport.Operator.AdjointClosure
 import RiemannResearch.Analysis.UnboundedOperatorImport.Operator.Closable
@@ -4774,6 +4778,7 @@ import RiemannResearch.Analysis.MontgomeryFourierShoulder
 import RiemannResearch.Analysis.MontgomeryExtendedFourierShoulder
 import RiemannResearch.Analysis.MontgomeryFejerGapTail
 import RiemannResearch.Analysis.MontgomeryPositiveGapDensity
+import RiemannResearch.Analysis.MontgomeryMacroscopicGap
 import RiemannResearch.Analysis.MontgomeryIntegratedGapDensity
 import RiemannResearch.Analysis.MontgomeryGapMesh
 import RiemannResearch.Analysis.MontgomeryGapPrescribedMesh
@@ -4785,6 +4790,8 @@ import RiemannResearch.Analysis.MontgomeryWindowFourierVariance
 import RiemannResearch.Analysis.ActualZeroWindowCrossTerm
 import RiemannResearch.Analysis.MicroscopicGammaDrift
 import RiemannResearch.Analysis.MontgomeryArgumentWindowVariance
+import RiemannResearch.Analysis.MontgomeryArgumentSlope
+import RiemannResearch.Analysis.MontgomeryFixedHeightArgumentSlope
 import RiemannResearch.Analysis.ZeroDPPFactorialWidthContrast
 import RiemannResearch.Analysis.ZeroDPPCollisionLoss
 import RiemannResearch.Analysis.ZeroDPPDistinctWindowMoment
