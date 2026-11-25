@@ -122,6 +122,20 @@ Definitions:
 The last theorem has an explicit substantive hypothesis. No unconditional
 vanishing of the defect, equality u = e, or unconditional RH result is supplied.
 
+## Ambient Cauchy–Schwarz equality
+
+In `RiemannResearch.RH.MixedCaptureLegalTrials`, let $e=\mathbf 1_H$ and $p=P_V e$.
+The mean normalization and Cauchy–Schwarz give $1=\langle e,u\rangle\leq\|e\|\,\|u\|=\|u\|$.
+The theorem `normalizedScreenedTwo_ambient_cauchySchwarz_gap` computes the exact remainder
+$$
+ (\|e\|\,\|u\|)^2-\langle e,u\rangle^2=\|u-e\|^2.
+$$
+The theorem `normalizedScreenedTwo_ambient_cauchySchwarz_eq_iff` gives
+$\langle e,u\rangle=\|e\|\,\|u\|\iff u=e\ \land\ e=p$.
+The implication `riemannHypothesis_of_ambient_cauchySchwarz_eq` then gives RH.
+
+**Open.** Prove that the ambient Cauchy–Schwarz gap vanishes for the normalized screened packet.
+
 ## Stage lifts, dilation Gram matrices, and the unit norm
 
 The module `RiemannResearch.RH.CenteredMeanUnitNorm` uses the actual centered snake for every mixed denominator, including each prime-support stage. The finite determinant tests use the complete Pareto Gram matrix. Its conductor cutoff is independent of the choice of stage in the snake.

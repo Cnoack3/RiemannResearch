@@ -40,10 +40,45 @@ theorem normalizedScreenedTwo_norm_sq :
   field_simp [hden] at he ⊢
   nlinarith
 
+/-- The squared Cauchy–Schwarz gap against the ambient constant is the squared
+distance from the normalized screened packet to that constant. -/
+theorem normalizedScreenedTwo_ambient_cauchySchwarz_gap :
+    (‖hilbertOne‖ * ‖normalizedScreenedTwo‖) ^ 2 -
+        (inner ℝ hilbertOne normalizedScreenedTwo) ^ 2 =
+      ‖normalizedScreenedTwo - hilbertOne‖ ^ 2 := by
+  rw [mul_pow, hilbertOne_norm_sq, real_inner_comm normalizedScreenedTwo hilbertOne,
+    norm_sub_sq_real, normalizedScreenedTwo_mean, hilbertOne_norm_sq]
+  ring
+
 theorem one_le_norm_normalizedScreenedTwo : 1 ≤ ‖normalizedScreenedTwo‖ := by
   have hOne : ‖hilbertOne‖ = 1 := by nlinarith [hilbertOne_norm_sq, norm_nonneg hilbertOne]
-  simpa only [normalizedScreenedTwo_mean, hOne, mul_one] using
-    real_inner_le_norm normalizedScreenedTwo hilbertOne
+  calc
+    1 = inner ℝ hilbertOne normalizedScreenedTwo :=
+      normalizedScreenedTwo_mean.symm.trans (real_inner_comm _ _)
+    _ ≤ ‖hilbertOne‖ * ‖normalizedScreenedTwo‖ := real_inner_le_norm _ _
+    _ = ‖normalizedScreenedTwo‖ := by rw [hOne, one_mul]
+
+/-- Equality in ambient Cauchy–Schwarz holds exactly when the screened packet,
+the ambient constant, and its projection onto the legal closure coincide. -/
+theorem normalizedScreenedTwo_ambient_cauchySchwarz_eq_iff :
+    inner ℝ hilbertOne normalizedScreenedTwo = ‖hilbertOne‖ * ‖normalizedScreenedTwo‖ ↔
+      normalizedScreenedTwo = hilbertOne ∧ hilbertOne = limitProjection := by
+  constructor
+  · intro h
+    have hgap := normalizedScreenedTwo_ambient_cauchySchwarz_gap
+    rw [← h, sub_self] at hgap
+    have hu : normalizedScreenedTwo = hilbertOne := by
+      simpa only [pow_two, mul_eq_zero, or_self, norm_eq_zero, sub_eq_zero] using hgap.symm
+    exact ⟨hu, hu.symm.trans (normalizedScreenedTwo_eq_limitProjection_iff.mpr hu)⟩
+  · rintro ⟨hu, _⟩
+    rw [hu, real_inner_self_eq_norm_sq, pow_two]
+
+/-- Attaining the ambient Cauchy–Schwarz bound suffices for RH. -/
+theorem riemannHypothesis_of_ambient_cauchySchwarz_eq
+    (h : inner ℝ hilbertOne normalizedScreenedTwo = ‖hilbertOne‖ * ‖normalizedScreenedTwo‖) :
+    RiemannHypothesis :=
+  riemannHypothesis_of_normalizedScreenedTwo
+    (normalizedScreenedTwo_ambient_cauchySchwarz_eq_iff.mp h).1
 
 theorem normalizedScreenedTwo_norm_eq_one_iff :
     ‖normalizedScreenedTwo‖ = 1 ↔ limitEnergy = 0 := by
