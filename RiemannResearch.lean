@@ -770,6 +770,11 @@ import RiemannResearch.RH.PhysicalHeadStageAlgebra
 import RiemannResearch.RH.PhysicalHeadStageAlgebraComparison
 import RiemannResearch.RH.PhysicalHeadAlgebraSnake
 import RiemannResearch.RH.PhysicalHeadPacketSquare
+import RiemannResearch.RH.PhysicalHeadProductSnake
+import RiemannResearch.RH.PhysicalHeadInfiniteBoundary
+import RiemannResearch.RH.PhysicalHeadLayerIsometry
+import RiemannResearch.RH.PhysicalHeadSequenceCokernel
+import RiemannResearch.RH.PhysicalHeadBoundaryCoordinates
 import RiemannResearch.RH.ZetaTwoAffineHeadTower
 import RiemannResearch.RH.QDensityImageReconstruction
 import RiemannResearch.RH.SquarefreeAffineReciprocal

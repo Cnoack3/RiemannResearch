@@ -24,3 +24,13 @@ Let `fiber N` be the legal mean-one vectors that equal one at physical sites 1 t
 - [PhysicalHeadPacketSquare.lean](RH/PhysicalHeadPacketSquare.lean) gives a finite mixed witness in each positive stage. Its physical pointwise square has positive Pareto mean and zero head, so it lies outside the stage.
 
 **Open.** Prove ordinary multiplicativity at every adjacent physical-head stage. Transporting the section gives a unital embedding at every stage unconditionally.
+
+## The infinite physical-head snake
+
+- [PhysicalHeadProductSnake.lean](RH/PhysicalHeadProductSnake.lean) constructs the Mathlib connecting map for the product of the additive stage rows. With the differential given by the next entry minus the current entry, `productSnake_one` gives the class of the adjacent displacements. `stageCokernelEquiv` computes the legal-stage cokernel by quotienting the mixed cokernel by the span of this one class.
+- [PhysicalHeadInfiniteBoundary.lean](RH/PhysicalHeadInfiniteBoundary.lean) proves that this class vanishes exactly under RH and exactly when the adjacent squared quotient norms are summable. Its finite squared norms telescope. They are sublinear in the cutoff and diverge when the class is nonzero.
+- [PhysicalHeadLayerIsometry.lean](RH/PhysicalHeadLayerIsometry.lean) normalizes the successive physical directions to a Hilbert basis. Its coefficient isometry identifies the mixed space with scalar ℓ², and the stage kernels with the corresponding coordinate tails. `headLayer_hasSum` gives Parseval in the full Pareto norm.
+- [PhysicalHeadSequenceCokernel.lean](RH/PhysicalHeadSequenceCokernel.lean) identifies the product cokernel with unrestricted physical sequences modulo the sequences of actual mixed vectors. The original centered quotient embeds into this cokernel and its boundary maps to the product boundary.
+- [PhysicalHeadBoundaryCoordinates.lean](RH/PhysicalHeadBoundaryCoordinates.lean) identifies the same cokernel with unrestricted sequences modulo ℓ². `layerCokernel_boundary` sends the connecting class at one to the signed layer coefficients. `constant_layers_survive` shows that putting one unit in each layer gives a nonzero class even in the legal-stage cokernel. The arithmetic carry has vanishing Cesàro mean square, whereas the all-ones sequence has mean square one. `parity_capture_iff_summable_signedCarry` identifies the parity-capture endpoint with square summability.
+
+**Open.** Prove square summability of this particular signed carry sequence. Equivalently, bound the partial sums of its squared coefficients uniformly over all physical cutoffs.
