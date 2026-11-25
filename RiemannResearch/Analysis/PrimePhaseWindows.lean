@@ -154,24 +154,24 @@ def dyadicPrimeCosineMean (p : ℕ) (T : ℝ) : ℝ :=
   (realSum (2 * T) (fun ρ => Real.cos (Real.log p * ρ.im)) -
     realSum T (fun ρ => Real.cos (Real.log p * ρ.im))) / (Ncount T (2 * T) : ℝ)
 
-/-- The first cosine Fourier coefficient at a fixed prime determines the
-signed leading bias in its count-normalized dyadic mean. -/
-theorem tendsto_log_mul_dyadicPrimeCosineMean {p : ℕ} (hp : p.Prime) :
-    Tendsto (fun T : ℝ => Real.log T * dyadicPrimeCosineMean p T)
-      atTop (𝓝 (-Real.log p / Real.sqrt p)) := by
-  let A := fun T : ℝ => ordinateSum T (Real.log p)
-  let J : ℝ := -Real.log p / (2 * Real.pi * Real.sqrt p)
-  have hJ : rationalFMZMain p 1 = (J : ℂ) := by
-    have h := PrimePhaseTorus.rationalFMZMain_prime_pow hp (r := 1) (by decide)
-    simp only [pow_one] at h
-    rw [h]
+/-- Each fixed positive harmonic of one prime has a dyadic cosine bias.
+The numerator is the Mangoldt weight of the prime power, hence is independent of k. -/
+theorem tendsto_log_mul_dyadicPrimePowerCosineMean {p k : ℕ} (hp : p.Prime) (hk : 0 < k) :
+    Tendsto (fun T : ℝ => Real.log T * dyadicPrimeCosineMean (p ^ k) T)
+      atTop (𝓝 (-Real.log p / (Real.sqrt p) ^ k)) := by
+  have hpow : IsPrimePow (p ^ k) := ⟨p, k, hp.prime, hk, rfl⟩
+  let A := fun T : ℝ => ordinateSum T (Real.log (p ^ k : ℕ))
+  let J : ℝ := -Real.log p / (2 * Real.pi * (Real.sqrt p) ^ k)
+  have hJ : rationalFMZMain (p ^ k) 1 = (J : ℂ) := by
+    rw [PrimePhaseTorus.rationalFMZMain_prime_pow hp hk]
     dsimp [J]
     push_cast
+    simp only [div_eq_mul_inv, mul_inv, inv_pow]
     ring
   have hs : Tendsto (fun T : ℝ => A T / (T : ℂ)) atTop (𝓝 (J : ℂ)) := by
-    simpa only [A, centeredRationalOrdinate, if_neg hp.one_lt.ne', sub_zero,
+    simpa only [A, centeredRationalOrdinate, if_neg hpow.one_lt.ne', sub_zero,
       Nat.cast_one, div_one, hJ] using
-      tendsto_centeredRationalOrdinate_div hp.pos (by decide : 1 ≤ 1)
+      tendsto_centeredRationalOrdinate_div hpow.one_lt.le (by decide : 1 ≤ 1)
   have hw := centered_scaled_window_limit A (fun _ => 0) 0 (J : ℂ) (by simpa using hs)
     2 (by norm_num)
   norm_num at hw
@@ -182,9 +182,9 @@ theorem tendsto_log_mul_dyadicPrimeCosineMean {p : ℕ} (hp : p.Prime) :
     (RvM.riemannVonMangoldt gammaFacts)
   simp only [zetaZeroConfig_N] at hcount
   have hratio := hr.div hcount (by positivity : (1 : ℝ) / (2 * Real.pi) ≠ 0)
-  have hcoeff : J / (1 / (2 * Real.pi)) = -Real.log p / Real.sqrt p := by
+  have hcoeff : J / (1 / (2 * Real.pi)) = -Real.log p / (Real.sqrt p) ^ k := by
     dsimp [J]
-    field_simp [Real.pi_ne_zero, (Real.sqrt_pos.2 (Nat.cast_pos.mpr hp.pos)).ne']
+    field_simp [Real.pi_ne_zero, (Real.sqrt_pos.2 (Nat.cast_pos.mpr hp.pos)).ne'] <;> ring
   rw [hcoeff] at hratio
   have hcos (t u : ℝ) : (ordinateSum t u).re = realSum t (fun ρ => Real.cos (u * ρ.im)) := by
     simp [ordinateSum, sum, realSum, ZeroOrdinate.phase, Complex.re_sum,
@@ -194,6 +194,13 @@ theorem tendsto_log_mul_dyadicPrimeCosineMean {p : ℕ} (hp : p.Prime) :
   simp only [Pi.div_apply, A, dyadicPrimeCosineMean, Complex.sub_re, hcos]
   rw [div_div_eq_mul_div, div_mul_eq_mul_div]
   field_simp [hT.ne']
+
+/-- The first cosine Fourier coefficient at a fixed prime determines the
+signed leading bias in its count-normalized dyadic mean. -/
+theorem tendsto_log_mul_dyadicPrimeCosineMean {p : ℕ} (hp : p.Prime) :
+    Tendsto (fun T : ℝ => Real.log T * dyadicPrimeCosineMean p T)
+      atTop (𝓝 (-Real.log p / Real.sqrt p)) := by
+  simpa only [pow_one] using tendsto_log_mul_dyadicPrimePowerCosineMean hp (k := 1) (by decide)
 
 /-- The raw prime cosine mean satisfies an inverse logarithmic power bound
 exactly up to and including exponent one. -/

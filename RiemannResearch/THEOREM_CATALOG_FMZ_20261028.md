@@ -9,6 +9,15 @@ sum of the two real distances and the unit-period circle distances.
   empirical mean horizontal displacement plus c/log U for every
   c < 3/4 − log 2, with no analytic premise. The height-only consequence
   follows for every fixed finite P, including the empty set.
+- **Established prime-dependent lower bounds.** The first cosine and finite
+  Fejér witnesses give `primeCosine_le_liminf_scaled_wasserstein` and
+  `primeTent_le_liminf_scaled_wasserstein` for the Lipschitz-dual distance.
+  The tent coefficient sums its positive odd harmonics. Theorem
+  `isGreatest_prime_marginal_pairing` computes the corresponding signed
+  marginal norm. The prime-cutoff asymptotic in
+  `primeTentConstant_realCutoff_asymptotic` has leading coefficient 4/π²
+  on the square-root scale. The height, degree and prime-cutoff limits are
+  taken in that order. These declarations concern one zero occurrence.
 - **Conditional research reduction.** `sharp_wasserstein_of_firstMoments`
   uses the actual dyadic first absolute horizontal moment, the first
   absolute short-prime residual moment, and a trace approximation only

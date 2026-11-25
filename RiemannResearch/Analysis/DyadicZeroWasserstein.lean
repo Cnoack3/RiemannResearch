@@ -389,7 +389,7 @@ theorem uniform_test_bound (P : Finset ℕ) (hs : UniformSelbergDensity (1 / 4))
   uniform_test_bound_of_firstMoment P (horizontal_sum hs) hshort hj
 
 /-- Compact support bounds every anchored Lipschitz integral by a common constant. -/
-private theorem anchored_integral_bound (P : Finset ℕ) (μ : Measure (Space P))
+theorem anchored_integral_bound (P : Finset ℕ) (μ : Measure (Space P))
     [IsProbabilityMeasure μ] (hc : CompactProbabilitySupport μ) :
     ∃ C : ℝ, ∀ f : C(Space P, ℝ), Admissible P f → |∫ x, f x ∂μ| ≤ C := by
   obtain ⟨K, hK, hm⟩ := hc
