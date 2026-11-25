@@ -1,5 +1,32 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## Excess in the Selberg transition window (25 November 2026)
+
+[ActualSelbergExcessProfiles.lean](Analysis/ActualSelbergExcessProfiles.lean)
+works with the actual multiplicity-weighted excess in every height window
+ending at T. Write L = log T, u = (α − 1/2)L and w = (3/2)log L.
+
+- `ingham_tangent_remainder` gives the exact negative quadratic remainder
+  after linearizing the Ingham exponent at α. `exists_ingham_tangent_logExcess`
+  integrates the resulting exponential and retains its upper-endpoint term.
+- `UniformLogLossDensity.window_excess` converts a count bound with log
+  power 1+e into an excess bound with log power e and the same slope.
+  `exists_interpolated_ingham_logExcess` gives e = 3a/2 for every
+  0 < a ≤ 4/3 from the checked total count and Ingham. At a = 1/4 the
+  loss in the excess is L^(3/8).
+- `exists_split_ingham_logExcess` allows any split threshold.
+  `exists_ingham_logExcess_crossover` bounds W/T by an absolute constant
+  times 1+w−u below w and exp(−4(u−w)/3) above w.
+
+**Conditional research reduction.** Given the one-log count supplied in
+ordinary mathematics by Baluyot, Theorem 1.2.1 and §3.6,
+`ConreyBaluyotDensityHypothesis.window_excess_saving` bounds
+exp(bu) W/T by D_a exp(−(a−b)U) for u ≥ U, b ≤ a and 0 < a < 8/7.
+For the quarter slope every saving exponent strictly below 25/28 is
+available. **Open in Lean.** Supply the formal analytic provider for the
+published near-line estimate. The endpoint a = 8/7 with one logarithm and
+an unbounded family of slopes are separate claims.
+
 ## Strip decay and explicit collision coefficient (16 November 2026)
 
 Analysis/DampedGammaStripBounds.lean proves arbitrary-order damped Gamma
