@@ -29,7 +29,8 @@ Reflect the height evenly onto the circle of period two and convolve there
 too. Evenness and mass one preserve the height integral on [0,1]. The resulting
 trace is smooth. Positive convolution preserves its Lipschitz bound.
 `tensorJackson_of_degree` verifies the degree choice for each large height.
-Classical positive approximation at arbitrary degree is an explicit premise.
+The first-moment entry only requires approximation at the chosen height for one P.
+Classical positive approximation at arbitrary degree supplies this input.
 The summation over the resulting modes and outside primes is proved below.
 -/
 
@@ -58,12 +59,18 @@ def SelbergSixteenth : Prop := ∃ D : ℝ, 0 ≤ D ∧ ∀ᶠ U : ℝ in atTop,
   IntervalIntegrable (fun t => |residual U t| ^ 16) volume U (2 * U) ∧
   (∫ t in U..2 * U, |residual U t| ^ 16) ≤ D * U
 
-theorem shortPrimePrimitive_of_sixteenth (hs : SelbergSixteenth) :
+/-- Only the normalized first absolute moment of the counting residual is needed. -/
+def DyadicPrimitiveFirstMoment : Prop :=
+  ∃ D : ℝ, 0 ≤ D ∧ ∀ᶠ U : ℝ in atTop,
+    (∫ t in U..2 * U, |residual U t|) ≤ D * U
+
+/-- Riemann–von Mangoldt controls both endpoints; the average alone suffices. -/
+theorem shortPrimePrimitive_of_firstMoment (hs : DyadicPrimitiveFirstMoment) :
     ShortPrimePrimitive := by
   obtain ⟨C, hC, hR⟩ := actual_cumulativeRvM
   obtain ⟨T, hT⟩ := eventually_atTop.1 hR
   obtain ⟨D, hD, hS⟩ := hs
-  refine ⟨4 * C + 5 + D, by positivity, ?_⟩
+  refine ⟨4 * C + 4 + D, by positivity, ?_⟩
   filter_upwards [eventually_ge_atTop T, eventually_ge_atTop (2 : ℝ), hS] with U hut hu hsu
   have hul : U ≤ 2 * U := by linarith
   have hx : (bandwidth U : ℝ) ≤ 2 * U := by
@@ -102,6 +109,14 @@ theorem shortPrimePrimitive_of_sixteenth (hs : SelbergSixteenth) :
     rw [hres]
     apply (abs_add_le _ _).trans
     linarith
+  linarith [hend U ⟨le_rfl, hul⟩, hend (2 * U) ⟨hul, le_rfl⟩]
+
+theorem primitiveFirstMoment_of_sixteenth (hs : SelbergSixteenth) :
+    DyadicPrimitiveFirstMoment := by
+  obtain ⟨D, hD, hS⟩ := hs
+  refine ⟨1 + D, by positivity, ?_⟩
+  filter_upwards [eventually_ge_atTop (2 : ℝ), hS] with U hu hsu
+  have hul : U ≤ 2 * U := by linarith
   have hi : (∫ t in U..2 * U, |residual U t|) ≤ U + D * U := by
     have h := intervalIntegral.integral_mono_on hul hsu.1
       (intervalIntegrable_const.add hsu.2.1) (g := fun t => 1 + |residual U t| ^ 16) (by
@@ -115,7 +130,11 @@ theorem shortPrimePrimitive_of_sixteenth (hs : SelbergSixteenth) :
       intervalIntegral.integral_const] at h
     simp only [smul_eq_mul, mul_one] at h
     linarith [hsu.2.2]
-  linarith [hend U ⟨le_rfl, hul⟩, hend (2 * U) ⟨hul, le_rfl⟩]
+  linarith
+
+theorem shortPrimePrimitive_of_sixteenth (hs : SelbergSixteenth) :
+    ShortPrimePrimitive :=
+  shortPrimePrimitive_of_firstMoment (primitiveFirstMoment_of_sixteenth hs)
 
 /-- Positive torus smoothing of the centered critical-line slice, independent
 of any zero-counting measure. Exact zero frequency is retained. -/
@@ -299,14 +318,19 @@ theorem trace_sum_bound {P : Finset ℕ} {U A C : ℝ} (b : FourierTrace P U A)
   have ha4 := abs_le.mp hprime'
   exact abs_le.mpr ⟨by nlinarith, by nlinarith⟩
 
+/-- Total absolute horizontal displacement of the actual dyadic zero copies. -/
+def DyadicHorizontalFirstMoment : Prop :=
+  ∃ D : ℝ, 0 ≤ D ∧ ∀ᶠ U : ℝ in atTop,
+    massSum U (fun ρ => |ρ.re - 1 / 2|) ≤ D * U
+
 /-- Uniform control before taking the Kantorovich--Rubinstein supremum. -/
-theorem uniform_test_bound (P : Finset ℕ) (hs : UniformSelbergDensity (1 / 4))
+theorem uniform_test_bound_of_firstMoment (P : Finset ℕ) (hs : DyadicHorizontalFirstMoment)
     (hshort : ShortPrimePrimitive) (hj : TensorJackson P) :
     ∃ K : ℝ, 0 < K ∧ ∀ᶠ U : ℝ in atTop, ∀ f : C(Space P, ℝ), Admissible P f →
       |(∫ x, f x ∂mu P U) - ∫ x, f x ∂nu P| ≤ K / Real.log U := by
   obtain ⟨A, hA, hj⟩ := hj
   obtain ⟨C, hC, hshort⟩ := hshort
-  obtain ⟨D, hD, hh⟩ := horizontal_sum hs
+  obtain ⟨D, hD, hh⟩ := hs
   obtain ⟨c, B, hc, hB, hm⟩ := dyadic_mass_bounds
   let K := A * (C + (1 + |Real.log (2 * Real.pi)|) * 16 + 1 + (∑ p ∈ P, |primeWeight p|) + 2)
   have hK : 0 ≤ K := by dsimp [K]; positivity
@@ -358,33 +382,138 @@ theorem uniform_test_bound (P : Finset ℕ) (hs : UniformSelbergDensity (1 / 4))
     _ ≤ (D + K) * U / (c * U * Real.log U) + A / Real.log U := add_le_add hgain le_rfl
     _ = (A + (D + K) / c) / Real.log U := by field_simp [hc.ne', hl.ne', up.ne'] <;> ring
 
+theorem uniform_test_bound (P : Finset ℕ) (hs : UniformSelbergDensity (1 / 4))
+    (hshort : ShortPrimePrimitive) (hj : TensorJackson P) :
+    ∃ K : ℝ, 0 < K ∧ ∀ᶠ U : ℝ in atTop, ∀ f : C(Space P, ℝ), Admissible P f →
+      |(∫ x, f x ∂mu P U) - ∫ x, f x ∂nu P| ≤ K / Real.log U :=
+  uniform_test_bound_of_firstMoment P (horizontal_sum hs) hshort hj
+
+/-- Compact support bounds every anchored Lipschitz integral by a common constant. -/
+private theorem anchored_integral_bound (P : Finset ℕ) (μ : Measure (Space P))
+    [IsProbabilityMeasure μ] (hc : CompactProbabilitySupport μ) :
+    ∃ C : ℝ, ∀ f : C(Space P, ℝ), Admissible P f → |∫ x, f x ∂μ| ≤ C := by
+  obtain ⟨K, hK, hm⟩ := hc
+  let a : Space P := (1/2, 0, 0)
+  have hcont : Continuous (fun x : Space P => cost P x a) := by
+    unfold cost
+    fun_prop
+  obtain ⟨M, hM⟩ := hK.bddAbove_image hcont.continuousOn
+  have hfull : ∀ᵐ x ∂μ, x ∈ K := ae_iff.mpr ((prob_compl_eq_zero_iff hK.measurableSet).2 hm)
+  refine ⟨M, ?_⟩
+  intro f hf
+  have hb : ∀ᵐ x ∂μ, ‖f x‖ ≤ M := by
+    filter_upwards [hfull] with x hx
+    have h0 : f a = 0 := hf.1
+    simpa only [Real.norm_eq_abs, h0, sub_zero] using
+      (hf.2 x a).trans (hM ⟨x, hx, rfl⟩)
+  simpa [Real.norm_eq_abs, Measure.real] using norm_integral_le_of_norm_le_const hb
+
+/-- With the sum cost, every unit of horizontal displacement can be added
+  to the height witness. The lower bound uses no analytic hypothesis. -/
+theorem eventually_horizontal_add_height_lower (P : Finset ℕ) {c : ℝ}
+    (hc : c < 3 / 4 - Real.log 2) :
+    ∀ᶠ U : ℝ in atTop,
+      massSum U (fun ρ => |ρ.re - 1 / 2|) / mass U + c / Real.log U ≤
+        wassersteinOne P (mu P U) (nu P) := by
+  obtain ⟨a, b, ha, hb, hm⟩ := dyadic_mass_bounds
+  have hh := (tendsto_order.1 (height_mean_limit P)).1 c hc
+  filter_upwards [hm, hh, eventually_gt_atTop (1 : ℝ)] with U hm hh hU
+  have hL : 0 < Real.log U := Real.log_pos hU
+  have hpos : 0 < mass U := lt_of_lt_of_le (by positivity) hm.1
+  have hn : 0 < Ncount U (2*U) := by unfold mass at hpos; exact_mod_cast hpos
+  let _ := mu_probability P hn
+  obtain ⟨A,hA⟩ := anchored_integral_bound P _ (mu_compact P hn)
+  obtain ⟨B,hB⟩ := anchored_integral_bound P _ (nu_compact P)
+  have hbb : BddAbove (differences P (mu P U) (nu P)) := by
+    refine ⟨A+B,?_⟩
+    rintro _ ⟨g,hg,rfl⟩
+    exact (abs_sub _ _).trans (add_le_add (hA g hg) (hB g hg))
+  let g : C(Space P, ℝ) := ⟨fun x => x.2.1, continuous_fst.comp continuous_snd⟩
+  let f : C(Space P, ℝ) := ⟨fun x => |x.1 - 1 / 2| + x.2.1, by fun_prop⟩
+  have had : Admissible P f := by
+    constructor
+    · simp [f]
+    · intro x y
+      change |(|x.1 - 1 / 2| + x.2.1) - (|y.1 - 1 / 2| + y.2.1)| ≤ _
+      rw [show (|x.1 - 1 / 2| + x.2.1) - (|y.1 - 1 / 2| + y.2.1) =
+        (|x.1 - 1 / 2| - |y.1 - 1 / 2|) + (x.2.1-y.2.1) by ring]
+      apply (abs_add_le _ _).trans
+      have hab := abs_abs_sub_abs_le_abs_sub (x.1 - 1 / 2) (y.1 - 1 / 2)
+      rw [show (x.1 - 1 / 2) - (y.1 - 1 / 2) = x.1-y.1 by ring] at hab
+      unfold cost
+      linarith only [hab, Finset.sum_nonneg (s := Finset.univ)
+        (fun (p : P) _ => dist_nonneg (x := x.2.2 p) (y := y.2.2 p))]
+  have target : (∫ x, f x ∂nu P) = 1 / 2 := by
+    rw [← integral_nu_height P]
+    simp only [nu, Measure.dirac_prod]
+    rw [integral_map (by fun_prop) f.continuous.aestronglyMeasurable,
+        integral_map (by fun_prop) (by fun_prop)]
+    simp [f]
+  have empirical : (∫ x, f x ∂mu P U) =
+      massSum U (fun ρ => |ρ.re - 1/2|) / mass U + ∫ x, g x ∂mu P U := by
+    rw [integral_mu, integral_mu]
+    simp [massSum, coord, f, g, Finset.sum_add_distrib, add_div]
+  have hmem : |(∫ x, f x ∂mu P U) - ∫ x, f x ∂nu P| ∈ differences P (mu P U) (nu P) :=
+    ⟨f, had, rfl⟩
+  apply le_trans _ (le_csSup hbb hmem)
+  rw [target, empirical]
+  apply le_trans _ (le_abs_self _)
+  have he : c / Real.log U ≤ (∫ x, g x ∂mu P U) - 1 / 2 :=
+    (div_le_iff₀ hL).2 (by
+      change c ≤ ((∫ x : Space P, x.2.1 ∂mu P U) - 1 / 2) * Real.log U
+      simpa only [mul_comm (Real.log U)] using hh.le)
+  linarith only [he]
+
+/-- The height bias alone gives an unconditional lower bound in every dimension. -/
+theorem eventually_height_lower_wasserstein (P : Finset ℕ) {c : ℝ}
+    (hc : c < 3 / 4 - Real.log 2) :
+    ∀ᶠ U : ℝ in atTop, c / Real.log U ≤ wassersteinOne P (mu P U) (nu P) := by
+  filter_upwards [eventually_horizontal_add_height_lower P hc] with U h
+  exact le_trans (le_add_of_nonneg_left (by unfold massSum mass; positivity)) h
+
+/-- For a fixed P, two first absolute moments and direct approximation at the
+actual bandwidth imply the sharp product law. -/
+theorem sharp_wasserstein_of_firstMoments (P : Finset ℕ)
+    (hh : DyadicHorizontalFirstMoment) (hr : DyadicPrimitiveFirstMoment) (hj : TensorJackson P) :
+    ∃ c C : ℝ, 0 < c ∧ 0 < C ∧ ∀ᶠ U : ℝ in atTop,
+      c / Real.log U ≤ wassersteinOne P (mu P U) (nu P) ∧
+      wassersteinOne P (mu P U) (nu P) ≤ C / Real.log U := by
+  obtain ⟨K,hK,hb⟩ := uniform_test_bound_of_firstMoment P hh
+    (shortPrimePrimitive_of_firstMoment hr) hj
+  let c : ℝ := (3 / 4 - Real.log 2)/2
+  have hk : 0 < 3 / 4 - Real.log 2 := by linarith [Real.log_two_lt_d9]
+  have hlow := eventually_height_lower_wasserstein P (c := c) (by dsimp [c]; linarith)
+  refine ⟨c,K,by dsimp [c]; positivity,hK,?_⟩
+  filter_upwards [hlow,hb] with U hU hb
+  let f : C(Space P, ℝ) := ⟨fun x => x.2.1, continuous_fst.comp continuous_snd⟩
+  have hmem : |(∫ x, f x ∂mu P U) - ∫ x, f x ∂nu P| ∈ differences P (mu P U) (nu P) :=
+    ⟨f, height_test P, rfl⟩
+  refine ⟨hU, csSup_le ⟨_, hmem⟩ ?_⟩
+  · rintro _ ⟨g,hg,rfl⟩
+    exact hb g hg
+
+/-- Equality between the two costs only along the actual dyadic sequence is
+sufficient for the transport statement. -/
+theorem sharp_transport_of_firstMoments (P : Finset ℕ)
+    (hh : DyadicHorizontalFirstMoment) (hr : DyadicPrimitiveFirstMoment) (hj : TensorJackson P)
+    (hk : ∀ᶠ U : ℝ in atTop, transportOne P (mu P U) (nu P) =
+      wassersteinOne P (mu P U) (nu P)) :
+    ∃ c C : ℝ, 0 < c ∧ 0 < C ∧ ∀ᶠ U : ℝ in atTop,
+      c / Real.log U ≤ transportOne P (mu P U) (nu P) ∧
+      transportOne P (mu P U) (nu P) ≤ C / Real.log U := by
+  obtain ⟨c,C,hc,hC,hb⟩ := sharp_wasserstein_of_firstMoments P hh hr hj
+  refine ⟨c,C,hc,hC,?_⟩
+  filter_upwards [hb,hk] with U h e
+  rwa [e]
+
 theorem sharp_wasserstein_nu (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
     (hs : UniformSelbergDensity (1 / 4)) (hsel : SelbergSixteenth)
     (hj : PositivePrimeTorusJackson) :
     ∃ c C : ℝ, 0 < c ∧ 0 < C ∧ ∀ᶠ U : ℝ in atTop,
       c / Real.log U ≤ wassersteinOne P (mu P U) (nu P) ∧
-      wassersteinOne P (mu P U) (nu P) ≤ C / Real.log U := by
-  obtain ⟨K, hK, hub⟩ := uniform_test_bound P hs
-    (shortPrimePrimitive_of_sixteenth hsel) (tensorJackson_of_degree P (hj P hP))
-  let κ : ℝ := 3 / 4 - Real.log 2
-  have hk : 0 < κ := by dsimp [κ]; linarith [Real.log_two_lt_d9]
-  have hbias := (tendsto_order.1 (height_mean_limit P)).1 (κ / 2) (show κ / 2 < κ by linarith)
-  refine ⟨κ / 2, K, by positivity, hK, ?_⟩
-  filter_upwards [hub, hbias, eventually_gt_atTop (1 : ℝ)] with U hU he hu
-  have hl := Real.log_pos hu
-  let f : C(Space P, ℝ) := ⟨fun x => x.2.1, continuous_fst.comp continuous_snd⟩
-  have hset : |(∫ x, f x ∂mu P U) - ∫ x, f x ∂nu P| ∈ differences P (mu P U) (nu P) :=
-    ⟨f, height_test P, rfl⟩
-  have hupp (r : ℝ) (h : r ∈ differences P (mu P U) (nu P)) : r ≤ K / Real.log U := by
-    obtain ⟨g, hg, rfl⟩ := h
-    exact hU g hg
-  have hbb : BddAbove (differences P (mu P U) (nu P)) := ⟨_, hupp⟩
-  refine ⟨?_, csSup_le ⟨_, hset⟩ hupp⟩
-  apply le_trans _ (le_csSup hbb hset)
-  change κ / 2 / Real.log U ≤ |(∫ x : Space P, x.2.1 ∂mu P U) - ∫ x : Space P, x.2.1 ∂nu P|
-  rw [integral_nu_height]
-  apply le_trans _ (le_abs_self _)
-  exact (div_le_iff₀ hl).2 (by simpa only [mul_comm (Real.log U) _] using he.le)
+      wassersteinOne P (mu P U) (nu P) ≤ C / Real.log U :=
+  sharp_wasserstein_of_firstMoments P (horizontal_sum hs) (primitiveFirstMoment_of_sixteenth hsel)
+    (tensorJackson_of_degree P (hj P hP))
 
 /-- Product notation for the same target. The two requested conclusions are
 definitionally equal. -/
@@ -414,5 +543,13 @@ theorem sharp_transport_product (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
   have hp' : 0 < Ncount U (2 * U) := by unfold mass at hp; exact_mod_cast hp
   rw [hkr P _ _ (mu_probability P hp') inferInstance (mu_compact P hp') (nu_compact P)]
   exact hU
+
+#print axioms shortPrimePrimitive_of_firstMoment
+#print axioms primitiveFirstMoment_of_sixteenth
+#print axioms uniform_test_bound_of_firstMoment
+#print axioms eventually_horizontal_add_height_lower
+#print axioms eventually_height_lower_wasserstein
+#print axioms sharp_wasserstein_of_firstMoments
+#print axioms sharp_transport_of_firstMoments
 
 end RiemannResearch.Analysis.DyadicZeroWasserstein

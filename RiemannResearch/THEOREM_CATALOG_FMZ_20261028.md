@@ -1,5 +1,26 @@
 # Quantitative FMZ and product-test cancellation: theorem catalog supplement
 
+## Sharp dyadic Wasserstein bounds from first moments (25 November 2026)
+
+[DyadicZeroWasserstein.lean](Analysis/DyadicZeroWasserstein.lean) uses the
+sum of the two real distances and the unit-period circle distances.
+
+- **Established.** `eventually_horizontal_add_height_lower` gives the full
+  empirical mean horizontal displacement plus c/log U for every
+  c < 3/4 − log 2, with no analytic premise. The height-only consequence
+  follows for every fixed finite P, including the empty set.
+- **Conditional research reduction.** `sharp_wasserstein_of_firstMoments`
+  uses the actual dyadic first absolute horizontal moment, the first
+  absolute short-prime residual moment, and a trace approximation only
+  for the selected P. The transport variant adds eventual duality for the
+  actual two measures. The older entry points specialize these declarations.
+- **Open in Lean.** Construct the two first-moment providers and fixed-P
+  Jackson traces. For the coupling form, formalize compact duality or
+  provide the actual-pair equality. The classical proofs, the independent
+  rational Landau route, the explicit prime-dependent lower constant, and
+  the exact empty-P centered limit are in the
+  [Wasserstein proof](WASSERSTEIN_DYADIC_FIRST_MOMENTS_20261125.md).
+
 ## Unconditional logarithmic Wiener endpoint and global pair differences
 
 In `Analysis/ActualPrimeTorusFMZInterpolation.lean`, `eventually_centeredRationalOrdinate_logWeight` bounds every signed rational-mode remainder by a single height-independent multiple of `w(1 + log w)`. Here `w = 1 + |log n + log m|`. The proof combines the linear and quadratic interpolated estimates. `tendsto_rational_fourier_series_of_logWeight` and `tendsto_centered_fourierSeries_div_poisson_of_logWeight` give unconditional signed FMZ convergence under this weighted first moment. On the finite prime torus the height is exactly `1 + Σ |k_p| log p`. On one prime, coefficients `2^(-j)/j^3` at frequencies `2^j` satisfy the new summability test and fail every previously stated `1+ε` moment.
