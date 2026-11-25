@@ -88,6 +88,22 @@ The multiplicity-weighted paired Hadamard product gives weak horizontal norm mon
 
 With the Gram fit fixed, the scaled physical tail tends to its period mean, at least the reciprocal of the period. The signed change in tail cost when the Gram fit is updated is exact. These declarations provide both an obstruction to exchanging cutoffs without an estimate and finite expressions for testing that estimate. A common cofinal estimate for the updated solves is still required. [CenteredMeanPeriodicGramTail](RH/CenteredMeanPeriodicGramTail.lean)
 
+## A cubic bound for the actual parity determinant
+
+For $k\ge1$ and $n\ge2k+1$, the two-stage parity Gram determinant lies between zero and $4(\log 2-1/2)e_k^3$, where $e_k$ is the energy of the lower-stage residual. The bound holds for every admissible later solve. To force the determinant to zero along this bound one still needs arbitrarily small lower-stage energies. [Cubic determinant bound](RH/DyadicParityTwoStageGram.lean)
+
+## A 99-percent centered parity certificate
+
+Every legal cutoff $n\ge61{,}695$ captures at least 99 percent of the centered parity source’s complete squared norm. For its limiting squared fitting error $d_y^2$ and the limiting unit energy $E$, Lean proves $(44/125)^2E\le d_y^2\le (56/125)^2E$. An upper coefficient strictly below $(44/125)^2$ would force $E=0$ and close the RH route. The certified upper coefficient is $(56/125)^2$. [Centered parity dilation and Gram capacity](RH/CenteredParityDilationCapacity.lean)
+
+## A zero-free criterion from the head-preserving mean capacity
+
+If the zeta function vanishes at $s$ with $\Re(s)>1/2$ and $s\ne1$, the complete normalized head-tail mean capacity satisfies $(K+1)q_K\le 1-(2\Re(s)-1)/|s|^2$ for every cutoff $K$. Thus showing that $(K+1)q_K$ comes arbitrarily close to one from below would establish RH. The finite head-preserving repair bound and the zero-imposed deficit are proved. Saturation is open. [Mellin obstruction to capacity saturation](RH/LegalTailMeanCapacityMellin.lean)
+
+## A dyadic range of later Gram solves
+
+For $B\le A\le 2^j$ at the explicit physical cutoff $N=2^{2(qj)^{11}}$, with $bq\ge4$ and $b>0$, the damped drift is at most $200e^{-j}$ times the actual reciprocal packet-mass gain from $B$ to $A$. The complete base cost has the corresponding bound in terms of the earlier reciprocal mass. This controls a growing range of solves. The categorical closure criterion still requires control at arbitrarily late cutoffs for suitable physical heads. [Dyadic drift](RH/CenteredMeanDyadicDrift.lean)
+
 ## The right derivative of the bare argument variance
 
 At every fixed upper height T > 1, the right derivative at width zero equals the normalized count of all pairs sharing an ordinate. Multiplicity of a zero is retained throughout. The near-zero variance inequality in `cofinal_pureArgument_fixedHeight_iff_RH` is equivalent to RH when required at arbitrarily large T. Its cofinal inequality and the positive rational-width limits required for PCC remain distinct open inputs. [MontgomeryFixedHeightArgumentSlope](Analysis/MontgomeryFixedHeightArgumentSlope.lean)

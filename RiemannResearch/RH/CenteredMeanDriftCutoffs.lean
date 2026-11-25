@@ -86,6 +86,27 @@ private theorem scaled_bound (s x C : ℝ) (N : ℕ) (hs : 0 ≤ s) (hx : 0 ≤ 
   have hn : (N : ℝ) * x ≤ C := by linarith only [hm, hx]
   linarith only [mul_le_mul_of_nonneg_left hn hs]
 
+/-- The scaled later-solve cost retains its actual reciprocal-mass gain. -/
+theorem finiteSectionTailDrift_scaled_le_cutoffGain (b : ℝ) (B A N : ℕ) (hBA : B ≤ A) :
+    (N : ℝ) * sectionTailDamping b N * finiteSectionTailDrift B A N ≤
+      sectionTailDamping b N * gramCutoffAmplification A *
+        ((packetMass (B + 1))⁻¹ - (packetMass (A + 1))⁻¹) := by
+  have hd : 0 ≤ finiteSectionTailDrift B A N := by
+    rw [finiteSectionTailDrift_eq B A N hBA]
+    exact sq_nonneg _
+  have h := (finiteSectionTailDrift_le_cutoffGain B A N hBA).trans (min_le_right _ _)
+  simpa only [mul_assoc] using scaled_bound (sectionTailDamping b N) _ _ N (Real.exp_pos _).le hd h
+
+/-- The stretched scaled base cost is controlled by a polynomial and the
+single exact base mass, independently of its period. -/
+theorem finiteSectionTailCost_scaled_le_cutoffMass (b : ℝ) (B N : ℕ) :
+    (N : ℝ) * sectionTailDamping b N * finiteSectionTailCost B N ≤
+      sectionTailDamping b N * (2 + 2 * gramCutoffAmplification B * (packetMass (B + 1))⁻¹) := by
+  have hd : 0 ≤ finiteSectionTailCost B N := by rw [finiteSectionTailCost_eq]; positivity
+  exact scaled_bound (sectionTailDamping b N) _ _ N (Real.exp_pos _).le hd
+    (finiteSectionTailCost_le_cutoffMass B N)
+
+
 /-- Fix any finite later-solve horizon `F(B)`, any physical lower cutoff, and any
 positive tolerance at each base solve. A moving physical schedule makes the base
 cost and all changes through that horizon fit the tolerance simultaneously.

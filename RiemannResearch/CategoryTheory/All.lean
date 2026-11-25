@@ -24,6 +24,10 @@ import RiemannResearch.RH.CenteredMeanProgressionGramTail
 import RiemannResearch.RH.CenteredMeanDriftWindows
 import RiemannResearch.RH.CenteredMeanDriftCutoffs
 import RiemannResearch.RH.DyadicParityTwoStageGram
+import RiemannResearch.RH.CenteredMeanDyadicDrift
+import RiemannResearch.RH.LegalTailMeanCapacityMellin
+import RiemannResearch.RH.LegalTailMeanCapacity
+import RiemannResearch.RH.CenteredParityDilationCapacity
 import RiemannResearch.RH.ConductorReconstructionEnergy
 import RiemannResearch.RH.ConductorTowerLimit
 import RiemannResearch.RH.FiniteAtomCarryFunctor

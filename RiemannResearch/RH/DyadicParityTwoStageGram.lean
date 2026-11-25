@@ -197,6 +197,47 @@ theorem twoStageParityGramDefect_nonneg (k n : ℕ) (hk : 1 ≤ k) (hn : doubleS
     0 ≤ twoStageParityGramDefect k n :=
   sub_nonneg.mpr (finite_two_stage_projected_parity_gram k n hk hn)
 
+/-- Every true two-stage determinant is bounded by the cube of the lower
+physical energy, uniformly over all admissible upper stages. -/
+theorem twoStageParityGramDefect_le_cubic (k n : ℕ) (hk : 1 ≤ k) (hn : doubleStage k ≤ n) :
+    twoStageParityGramDefect k n ≤ 4*(Real.log 2-1/2)*(energy k)^3 := by
+  let K := energy k
+  let e := energy n
+  let b := hilbertSequence (projectionResidual n) 1
+  let B := finiteAdjointParityResidual k
+  let L := Real.log 2-1/2
+  let G := 2*K*e-K*b^2-(2*e-b)^2
+  have hb : (firstSiteGramCoordinates n).2 = b := by
+    rw [firstSiteGramCoordinates_eq]; dsimp only [b,projectionResidual]
+    rw [hilbertSequence_sub,hilbertOne_sequence]; norm_num [zeroAnchor]
+  have hf (j : ℕ) : (firstSiteGramCoordinates j).1 = energy j :=
+    congrArg Prod.fst (firstSiteGramCoordinates_eq j)
+  have h0 : 0 ≤ K := sq_nonneg _
+  have h1 : 0 ≤ 1-K := by
+    have h := energy_antitone hk
+    rw [ProjectionSchur.energy_one] at h
+    dsimp only [K]; linarith only [h,Real.log_pos (by norm_num : (1:ℝ)<2)]
+  have he : e ≤ K := energy_antitone (by dsimp [doubleStage] at hn; omega)
+  have hL : 0 ≤ L := by dsimp only [L]; linarith only [Real.log_two_gt_d9]
+  have hKG : 0 ≤ K*G := by
+    have h := finite_endpoint_remainder_norm_sq k n hn
+    change ‖endpointGramRemainder k n‖^2 = 2*K*G at h
+    nlinarith only [h,sq_nonneg ‖endpointGramRemainder k n‖]
+  have hG : G ≤ 2*K^2 := by
+    dsimp only [G]
+    nlinarith only [mul_nonneg h0 (sub_nonneg.mpr he),mul_nonneg h0 (sq_nonneg b),sq_nonneg (2*e-b)]
+  have hW : 2*(1-K)*L-(2*L-B)^2 ≤ 2*L := by
+    nlinarith only [mul_nonneg h0 hL,sq_nonneg (2*L-B)]
+  unfold twoStageParityGramDefect
+  rw [hb,hf,hf]
+  change K*G*(2*(1-K)*L-(2*L-B)^2)-(1-K)*(K*b+(2*e-b)*B)^2 ≤ 4*L*K^3
+  calc
+    _ ≤ K*G*(2*(1-K)*L-(2*L-B)^2) := sub_le_self _ (mul_nonneg h1 (sq_nonneg _))
+    _ ≤ K*G*(2*L) := mul_le_mul_of_nonneg_left hW hKG
+    _ ≤ K*(2*K^2)*(2*L) :=
+      mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hG h0) (by positivity)
+    _ = _ := by ring
+
 open Filter
 open scoped Topology LegalMeanAlgebra
 open MixedConductorBasis
