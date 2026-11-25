@@ -154,13 +154,11 @@ theorem eventually_real_row_moment (h : FujiiMicroscopicRowMoments) (p : ℝ) (h
 
 
 open scoped Classical in
-/-- Every strict exponent below the Conrey--Baluyot threshold is available
-for the signed normalized deletion error. The error includes both ordered
-cross terms and the exceptional self-pairs. The pointwise test-function
-bound is explicit. Each occurrence is a separate summation index. -/
-theorem eventually_signed_deletion_le
-    (hDensity : ConreyBaluyotDensityHypothesis) (hRows : FujiiMicroscopicRowMoments)
-    {θ κ A : ℝ} (hθ : 0 < θ) (hκ : 0 ≤ κ) (hgap : κ < 1 - 7 * θ / 4) (hA : 0 ≤ A) :
+/-- One uniform Selberg slope `a` suffices for each deletion exponent below
+`1 - 2*θ/a`. The test and exceptional set may vary with height. -/
+theorem eventually_signed_deletion_le_of_uniformSelbergDensity
+    {a : ℝ} (ha : 0 < a) (hDensity : UniformSelbergDensity a) (hRows : FujiiMicroscopicRowMoments)
+    {θ κ A : ℝ} (hθ : 0 < θ) (hκ : 0 ≤ κ) (hgap : κ < 1 - 2 * θ / a) (hA : 0 ≤ A) :
     ∃ B : ℝ, 0 ≤ B ∧ ∀ᶠ T : ℝ in atTop, ∀ (E : Finset (Copies T))
       (F : Copies T × Copies T → ℂ),
       (∀ e ∈ incident Finset.univ E, ‖F e‖ ≤ A *
@@ -170,11 +168,19 @@ theorem eventually_signed_deletion_le
         (∑ e ∈ (Finset.univ \ E) ×ˢ (Finset.univ \ E), F e)‖ ≤
           B * ((E.card : ℝ) / (Ncount 0 T : ℝ)) ^ κ := by
   classical
-  obtain ⟨p, q, r, t, hp, hq, hrt, hcrit, hκ'⟩ := exists_removal_exponents hθ hκ hgap
+  let θ' := (8 / 7) * θ / a
+  have hθ' : 0 < θ' := by dsimp [θ']; positivity
+  have hgap' : κ < 1 - 7 * θ' / 4 := by
+    rw [show 7 * θ' / 4 = 2 * θ / a by dsimp [θ']; ring]
+    exact hgap
+  obtain ⟨p, q, r, t, hp, hq, hrt, hcrit, hκ'⟩ :=
+    exists_removal_exponents hθ' hκ hgap'
   let b := 2 * p * θ * r
   have hb : 0 < b := mul_pos (mul_pos (mul_pos (by norm_num) (by linarith)) hθ) hrt.pos
-  obtain ⟨a, hba, ha⟩ := exists_between hcrit
-  obtain ⟨C, T₀, hC, hT₀, hD⟩ := hDensity a (hb.trans hba) ha
+  have hba : b < a := by
+    rw [show 2 * p * θ' * r = ((8 / 7) * b) / a by dsimp [b, θ']; ring] at hcrit
+    linarith only [(div_lt_iff₀ ha).mp hcrit]
+  obtain ⟨C, T₀, hC, hT₀, hD⟩ := hDensity
   obtain ⟨Q, hQ, hQt⟩ := eventually_real_row_moment hRows q hq.le
   obtain ⟨R, hR, hRt⟩ := eventually_real_row_moment hRows t hrt.symm.lt.le
   let c : ℝ := 1 / (16 * Real.pi)
@@ -224,6 +230,32 @@ theorem eventually_signed_deletion_le
   change A * ((2 * δ ^ u * Q ^ q⁻¹) ^ v * H) ≤ B * δ ^ κ
   rw [hpow, show A * (((2 * Q ^ q⁻¹) ^ v * δ ^ (u*v)) * H) = B * δ ^ (u*v) by dsimp [B]; ring]
   exact mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_ge hδ0 hδ1 hκ'.le) hB
+
+open scoped Classical in
+/-- Every strict exponent below the Conrey--Baluyot threshold is available
+for the signed normalized deletion error. The error includes both ordered
+cross terms and the exceptional self-pairs. The pointwise test-function
+bound is explicit. Each occurrence is a separate summation index. -/
+theorem eventually_signed_deletion_le
+    (hDensity : ConreyBaluyotDensityHypothesis) (hRows : FujiiMicroscopicRowMoments)
+    {θ κ A : ℝ} (hθ : 0 < θ) (hκ : 0 ≤ κ) (hgap : κ < 1 - 7 * θ / 4) (hA : 0 ≤ A) :
+    ∃ B : ℝ, 0 ≤ B ∧ ∀ᶠ T : ℝ in atTop, ∀ (E : Finset (Copies T))
+      (F : Copies T × Copies T → ℂ),
+      (∀ e ∈ incident Finset.univ E, ‖F e‖ ≤ A *
+        (((Ncount 0 T : ℝ)⁻¹ * gapWeight T e.1 e.2) *
+        Real.exp (θ * (mark T e.1 + mark T e.2)))) →
+      ‖(∑ e ∈ (Finset.univ : Finset (Copies T)) ×ˢ Finset.univ, F e) -
+        (∑ e ∈ (Finset.univ \ E) ×ˢ (Finset.univ \ E), F e)‖ ≤
+          B * ((E.card : ℝ) / (Ncount 0 T : ℝ)) ^ κ := by
+  have hz : 0 < 1 - κ := by linarith only [hgap, hθ]
+  have hb : 2 * θ / (1 - κ) < 8 / 7 :=
+    (div_lt_iff₀ hz).mpr (by linarith only [hgap])
+  obtain ⟨a, hlo, hhi⟩ := exists_between hb
+  have ha : 0 < a := (div_pos (by positivity) hz).trans hlo
+  have h' : 2 * θ / a < 1 - κ := (div_lt_iff₀ ha).mpr
+    (by simpa only [mul_comm] using (div_lt_iff₀ hz).mp hlo)
+  exact eventually_signed_deletion_le_of_uniformSelbergDensity ha (hDensity a ha hhi)
+    hRows hθ hκ (by linarith only [h']) hA
 
 open scoped Classical in
 /-- Uniform removal of zero copies outside a microscopic strip. For any fixed
