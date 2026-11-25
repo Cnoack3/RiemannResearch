@@ -341,6 +341,8 @@ The actual gamma heat kernel is absolutely integrable in frequency and positive 
 
 At every fixed $0\le\alpha<1$, the squared incoming resolvent error integrated on $[0,T]$ and divided by $T\log T$ tends to zero. The outgoing estimate is also unconditional. The contribution of both ends of the finite observation interval is therefore controlled on the subunit scale. [Incoming limit](Analysis/MontgomeryResolventBoundaryLimit.lean) and [outgoing estimate](Analysis/MontgomeryFiniteResolventSignal.lean)
 
+The sum of the nonnegative outgoing energy excess and incoming squared error, divided by $T\log T$, is at most $K e^u\log T/T$ for a single constant $K$, all $T\ge5$, and all physical log frequencies $u\ge0$. Thus both normalized errors tend to zero uniformly on $0\le u\le U(T)$ whenever $e^{U(T)}\log T/T\to0$. At the moving endpoint $U(T)=\log T-2\log\log T$, the bound is $K/\log T$. The signed arithmetic statistic and the form factor at the unit edge remain separate obligations. [Moving-band cutoff theorem](Analysis/MontgomeryResolventBoundaryLimit.lean)
+
 ## The fixed-width logarithmic drift after subtracting the signed argument
 
 Write $D(T)=T\log T/(2\pi)$ and $S(t)=N(0,t)-\mathrm{smoothCount}(t)$ for the upper-inclusive counting discrepancy. The statistic $A(T,R)$ sums $S(\min\{T,\gamma+2\pi R/\log T\})-S(\gamma)$ over the actual ordinate occurrences $0<\gamma\le T$ with multiplicity and divides by $D(T)$. For every width that is eventually bounded below by a positive constant and satisfies $R=o(D(T))$,
