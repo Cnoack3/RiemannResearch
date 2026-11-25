@@ -234,8 +234,8 @@ def ReconstructionCesaroTarget : Prop :=
     ∃ c : ℝ, 0 < c ∧ ∀ᶠ N : ℕ in atTop,
       c * (N : ℝ) ^ (2 * ρ.re - 1) ≤ reconstructionCesaroEnergy N)
 
-/-- OPEN Laguerre moment-matching variance obstruction, retaining the actual
-arithmetic coefficient integrals and the exact zero-dependent geometric ratio. -/
+/-- Laguerre moment-matching variance obstruction for the arithmetic coefficient integrals.
+`RamanujanLaguerre.laguerreMatchingVariance` proves it in `RH.LaguerreMatchingVariance`. -/
 def LaguerreMatchingVarianceTarget : Prop :=
   ∀ ρ : ℂ, riemannZeta ρ = 0 → (1 / 2 : ℝ) < ρ.re → ρ.re < 1 →
     ∀ k : ℕ, ∀ f : ThresholdHilbert, FiniteResidueLegal f →

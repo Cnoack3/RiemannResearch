@@ -145,7 +145,8 @@ private theorem prime_multiple_norm_le {p q : ℕ} (hp : p.Prime) (hq : 1 < q) (
   change ‖x-f‖ ^ 2 ≤ 4 * (p : ℝ) * ‖f‖ ^ 2
   nlinarith only [hs, he, sq_nonneg (‖x‖ - ‖f‖), mul_nonneg (sub_nonneg.mpr hp1) (sq_nonneg ‖f‖)]
 
-private theorem prime_multiple_norm_lower {p q : ℕ} (hp : p.Prime) (hp4 : 4 ≤ p)
+/-- Lower energy bound for a prime-multiple packet relative to its base. -/
+theorem prime_multiple_norm_lower {p q : ℕ} (hp : p.Prime) (hp4 : 4 ≤ p)
     (hq : 1 < q) (hlt : q < p) :
     (p : ℝ) * ‖ramanujanPacketHilbert q‖^2 ≤ 4 * ‖ramanujanPacketHilbert (p * q)‖^2 := by
   let f := ramanujanPacketHilbert q

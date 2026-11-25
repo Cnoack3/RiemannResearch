@@ -134,6 +134,16 @@ The module `RiemannResearch.RH.CenteredMeanUnitNorm` uses the actual centered sn
 
 **Open.** Construct a finite extension satisfying that inequality for every nonempty starting dictionary. The five proved declarations give identities and equivalences. They leave this arithmetic existence statement, ‖u‖ ≤ 1, and RH open.
 
+## Prime multiples and Laguerre interpolation
+
+For the complete Pareto Gram optimizer at a finite stage, adjoining a mixed packet removes its squared correlation divided by its squared norm. Further refitting removes exactly the squared displacement from the corrected lift to the new optimizer. The correction preserves every Fekete pairing against a mixed-orthogonal vector. The module `RiemannResearch.RH.PrimeMultipleGramRepair` proves that each optimizer detects some mixed packet. On its large prime multiples the one-packet gain has leading term equal to the base gain divided by the prime, with an absolutely summable remainder. These gains have the same initial optimizer. For the first dictionary, `first_gram_excess_fiftyfold` proves a strict fiftyfold reduction of the complete excess by the dictionary through conductor 241.
+
+The Pareto Hilbert space has a norm-preserving Laguerre realization with Parseval's identity. A squarefree packet with d distinct primes first appears in coordinate d−1, with nonzero diagonal coefficient. The modules `PrimeSupportLaguerreSeparation` and `PrimeSupportLaguerreInterpolation` use this triangular structure to separate closed spans by prime support and solve every finite prefix exactly. Solvability holds even in the dilation orbit of a single prime.
+
+`RiemannResearch.RH.LaguerreMatchingVariance` proves the historical target `LaguerreMatchingVarianceTarget`. If a legal vector agrees with the unit constant in its first N coordinates and ρ is a right zero, its squared error is at least (1−r²)/r^(2N), where r = |1−1/ρ|. This applies to the complete closed legal space. At the explicit Mellin resonance of a fixed prime the same bound holds without a zero hypothesis.
+
+`riemannHypothesis_iff_cofinal_subexponential_laguerre_prefixes` proves that RH is equivalent to the following statement. For each real a > 1 there is a C such that, at arbitrarily large depths k, a finite legal lift exactly matches coordinates 0 through k with complete squared norm at most C a^k. The conductor cutoff may depend on a and k. `stage_lift_and_unit_norm_iff_cofinal_prefixes` identifies this same condition with the unique centered-snake unit lift at every mixed stage and with the physical bound ‖u‖ ≤ 1. Constructing lifts at this growth rate in the unrestricted dictionary remains open.
+
 ## Verification record
 
 The managed checkpoint receipt is the source of truth for the final publication
