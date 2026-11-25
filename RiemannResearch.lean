@@ -765,6 +765,7 @@ import RiemannResearch.RH.SquarefreeAffineReciprocal
 import RiemannResearch.RH.QDensityOperatorDecomposition
 import RiemannResearch.RH.MixedReciprocalDensity
 import RiemannResearch.RH.MixedPacketDensityTests
+import RiemannResearch.RH.SemiprimeFekete
 import RiemannResearch.RH.MixedCaptureZeroPair
 import RiemannResearch.RH.MixedParityProjectionDPP
 import RiemannResearch.RH.MixedParityCaptureFifteen

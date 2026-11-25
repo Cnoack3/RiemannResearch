@@ -44,6 +44,24 @@ positive physical coordinates. Write `D f(n) = f(n)/n`.
 large consecutive-prime products, or establish vanishing of the projected
 density images in the complete Pareto norm.
 
+### Fekete slopes for the signed pairings
+
+Let $s_j=\zeta(2)\langle d,BJ_{p_jp_{j+1}}\rangle_P$ and let $U_N$ be the supremum of the sums of
+$N$ successive terms over all starting indices. The new declarations use the full
+Pareto norm. [Lean module](RH/SemiprimeFekete.lean)
+
+| Declaration | Result |
+|---|---|
+| `upperBlock_subadditive`, `upperBlock_fekete_eq` | $U_{m+n}\le U_m+U_n$ and $\inf_{N\ge1}U_N/N=-\lVert d\rVert_P^2$. |
+| `block_error_le`, `energy_le_of_nonnegative_block` | A nonnegative sum on any block of length $N>0$ gives $\lVert d\rVert_P^2\le((2/N)\sum_{j<N}1/\sqrt{p_j})^2$, with primes indexed from zero. |
+| `riemannHypothesis_iff_frequently_nonnegative_block` | RH is equivalent to existence of nonnegative block sums at arbitrarily large lengths. |
+| `semiprime_pairing_eq_residue_defect` | For $F(a)=\langle d,Dr_a\rangle_P$, the signed pairing is exactly $F(pq)-F(p)-F(q)$. |
+| `eventually_power_subadditive_zero_rate` | For every sufficiently large base the exponent sequence is subadditive with Fekete slope zero. Its unnormalized limit is $\lVert d\rVert_P^2$. |
+| `riemannHypothesis_iff_frequently_residue_doubling` | At any single fixed base $a>1$, RH is equivalent to $F(a^{2k})\ge2F(a^k)$ at arbitrarily large exponents. |
+
+**Open arithmetic obligation.** Prove the nonnegative sums on arbitrarily long actual
+blocks, or the doubling inequalities at arbitrarily large exponents on one fixed tower.
+
 ## Notation and scope
 
 For physical n >= 1:
