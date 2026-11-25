@@ -10,6 +10,14 @@ Initial source audit at `cdb1db95f32f9e40123f12a1df359bae704c9d8f`. A theorem wi
 | Actual zero ordinates | [MontgomeryWindowVarianceCriterion](Analysis/MontgomeryWindowVarianceCriterion.lean), `positiveGapPCC_of_rationalTriangleWidthAverages` | Prove the specified triangle width-average limit for the actual zeta-zero occurrences on every rational interval in the theorem. |
 | Determinantal comparison | [ZeroDPPProjectionBridge](Analysis/ZeroDPPProjectionBridge.lean) | Verify the actual limiting projected statistic and control any omitted-pair contribution under this route's hypotheses. |
 
+## Published Lean verification
+
+| Commit | Declarations covered | Full aggregate build |
+| --- | --- | --- |
+| [c8988b5](https://github.com/Cnoack3/RiemannResearch/commit/c8988b5e085580c3ebf2e9bfd07934d46785d4b6) | Iterated projection–Möbius limits and the rational integrated PCC criterion | [BuildBuddy](https://app.buildbuddy.io/invocation/a78051c1-4fae-4b5d-934c-70ac77591f60) |
+| [c6df6d2](https://github.com/Cnoack3/RiemannResearch/commit/c6df6d2947b0a3f46c5a34e0b5c09a7c6e7ede6d) | Natural-cell energy, quotient norm losses, finite Gram bounds and collision-corrected argument variance | [BuildBuddy](https://app.buildbuddy.io/invocation/a1d2560f-77b2-4338-b7b6-ef41eaabe697) |
+| [190a82e](https://github.com/Cnoack3/RiemannResearch/commit/190a82ec60c50b4a252875bd331c4a7703835c2f) | Direct cumulative zero counts, macroscopic pair limits, the prime mean square, horizontal xi comparison and finite Gram cutoff order | [BuildBuddy](https://app.buildbuddy.io/invocation/350ffbd8-6e25-4271-92c0-c068b4693150) |
+
 ## Projection and Möbius cutoff order
 
 For the complete signed pairing C(M,N) of the projection residual at M with the canonical Möbius residual at N, each fixed row tends to zero, while every column tends to the same limiting energy E. In fact C(M,N) equals the finite energy E_M whenever N ≤ M. Agreement of these two iterated limits is equivalent to membership of the constant in the closed legal space. The unconditional calculations leave E undetermined. See [CanonicalMobiusProjectionLimits](RH/CanonicalMobiusProjectionLimits.lean).
