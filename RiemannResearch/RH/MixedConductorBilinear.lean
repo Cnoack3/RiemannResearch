@@ -161,24 +161,40 @@ theorem pairing_eq_fekete_rate
     · exact hLclosed
   exact hle hv
 
+/-- Every arithmetic base greater than one computes the legal pairing. -/
+theorem pairing_eq_fekete_rate_at_base {h v : ThresholdHilbert}
+    (hh : h ∈ mixedClosureᗮ) (hv : v ∈ closedSpace) {a : ℕ} (ha : 1 < a) :
+    inner ℝ h v =
+      (RiemannResearch.NumberTheory.powerRate (residuePairing h) a / Real.log (a : ℝ)) *
+        inner ℝ v hilbertOne := by
+  obtain ⟨c, hc⟩ := residuePairing_eq_log hh
+  have htwo := RiemannResearch.NumberTheory.powerRate_div_log_eq_of_log hc
+    (by decide : 1 < 2)
+  have hbase := RiemannResearch.NumberTheory.powerRate_div_log_eq_of_log hc ha
+  have hchange : RiemannResearch.NumberTheory.powerRate (residuePairing h) 2 / Real.log 2 =
+      RiemannResearch.NumberTheory.powerRate (residuePairing h) a / Real.log (a : ℝ) :=
+    htwo.trans hbase.symm
+  rw [pairing_eq_fekete_rate hh hv, hchange]
+
+/-- The coefficient functional can be read from the residue powers of any base. -/
+theorem mixedPacketCoefficient_eq_fekete_rate (h : mixedClosureᗮ) {a : ℕ} (ha : 1 < a) :
+    mixedPacketCoefficient h =
+      RiemannResearch.NumberTheory.powerRate (residuePairing h.val) a / Real.log (a : ℝ) := by
+  change inner ℝ normalizedScreenedTwo h.val = _
+  rw [real_inner_comm]
+  have hu := screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure
+  simpa only [normalizedScreenedTwo_mean, mul_one] using pairing_eq_fekete_rate_at_base h.property hu ha
+
 /-- Evaluation at the legal mean-one seed identifies the arithmetic
 Fekete coefficient with the Riesz coefficient of the rank-one form. -/
 theorem pairing_factorization_of_rigidity
     {h v : ThresholdHilbert} (hh : h ∈ mixedClosureᗮ) (hv : v ∈ closedSpace) :
     inner ℝ h v =
       inner ℝ normalizedScreenedTwo h * inner ℝ v hilbertOne := by
-  let c := RiemannResearch.NumberTheory.powerRate (residuePairing h) 2 / Real.log 2
-  have hu_mem : normalizedScreenedTwo ∈ closedSpace :=
-    screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure
-  have hu : inner ℝ h normalizedScreenedTwo = c := by
-    have hu' : inner ℝ h normalizedScreenedTwo =
-        c * inner ℝ normalizedScreenedTwo hilbertOne := pairing_eq_fekete_rate hh hu_mem
-    simpa only [normalizedScreenedTwo_mean, mul_one] using hu'
-  have huc : inner ℝ normalizedScreenedTwo h = c :=
-    (real_inner_comm _ _).trans hu
-  have hv' : inner ℝ h v = c * inner ℝ v hilbertOne := pairing_eq_fekete_rate hh hv
-  rw [← huc] at hv'
-  exact hv'
+  have hc := mixedPacketCoefficient_eq_fekete_rate (⟨h, hh⟩ : mixedClosureᗮ) (by decide : 1 < 2)
+  change inner ℝ normalizedScreenedTwo h =
+    RiemannResearch.NumberTheory.powerRate (residuePairing h) 2 / Real.log 2 at hc
+  rw [pairing_eq_fekete_rate hh hv, hc]
 
 /-- Dividing the rank-one pairing at the screened seed by its squared norm
 recovers the Pareto mean of every legal vector. -/
@@ -268,6 +284,56 @@ theorem screening_factorization :
     rw [hpair]
     ring
   exact sub_eq_zero.mp (inner_self_eq_zero.mp he)
+
+/-- The legal screening factorization, obtained from the Fekete pairing,
+sends every positive power of a prime to its logarithm times the screened seed. -/
+theorem fekete_screened_prime_pow {p k : ℕ} (hp : p.Prime) (hk : k ≠ 0) :
+    fullScreening (ramanujanPacketHilbert (p ^ k)) =
+      Real.log (p : ℝ) • normalizedScreenedTwo := by
+  let v : closedSpace :=
+    ⟨ramanujanPacketHilbert (p ^ k), packet_mem_closedSpace _ (Nat.one_lt_pow hk hp.one_lt)⟩
+  have h := DFunLike.congr_fun screening_factorization v
+  change fullScreening (ramanujanPacketHilbert (p ^ k)) =
+    inner ℝ (ramanujanPacketHilbert (p ^ k)) hilbertOne • normalizedScreenedTwo at h
+  rwa [hilbert_inner_one, hilbertSequence_ramanujanPacketHilbert, paretoMean_ramanujanPacket,
+    ArithmeticFunction.vonMangoldt_apply_pow hk, ArithmeticFunction.vonMangoldt_apply_prime hp] at h
+
+/-- Dividing by the prime's logarithm gives the same screened vector at every exponent. -/
+theorem fekete_normalized_screened_prime_pow {p k : ℕ} (hp : p.Prime) (hk : k ≠ 0) :
+    (Real.log (p : ℝ))⁻¹ • fullScreening (ramanujanPacketHilbert (p ^ k)) =
+      normalizedScreenedTwo := by
+  have hp' : (1 : ℝ) < (p : ℝ) := by exact_mod_cast hp.one_lt
+  rw [fekete_screened_prime_pow hp hk, smul_smul,
+    inv_mul_cancel₀ (Real.log_pos hp').ne', one_smul]
+
+/-- The normalized screened prime-power packets still form this singleton after
+discarding all first powers. Conductor four supplies a witness to the reverse inclusion. -/
+theorem fekete_normalized_screened_prime_pow_set :
+    {x : ThresholdHilbert | ∃ p k : ℕ, p.Prime ∧ 2 ≤ k ∧
+      (Real.log (p : ℝ))⁻¹ • fullScreening (ramanujanPacketHilbert (p ^ k)) = x} =
+        {normalizedScreenedTwo} := by
+  ext x
+  constructor
+  · rintro ⟨p, k, hp, hk, rfl⟩
+    exact Set.mem_singleton_iff.mpr (fekete_normalized_screened_prime_pow hp (by omega))
+  · intro hx
+    rw [Set.mem_singleton_iff.mp hx]
+    exact ⟨2, 2, Nat.prime_two, le_rfl, fekete_normalized_screened_prime_pow Nat.prime_two
+      (by decide : (2 : ℕ) ≠ 0)⟩
+
+/-- The packet at every positive prime power pairs to the rate at its prime base. -/
+theorem prime_pow_packet_pairing_eq_powerRate {h : ThresholdHilbert}
+    (hh : h ∈ mixedClosureᗮ) {p k : ℕ} (hp : p.Prime) (hk : k ≠ 0) :
+    inner ℝ (ramanujanPacketHilbert (p ^ k)) h =
+      RiemannResearch.NumberTheory.powerRate (residuePairing h) p := by
+  rw [← fullScreening_inner_right_of_orthogonal _ _ hh, fekete_screened_prime_pow hp hk,
+    real_inner_smul_left]
+  have hc := mixedPacketCoefficient_eq_fekete_rate (⟨h, hh⟩ : mixedClosureᗮ) hp.one_lt
+  change inner ℝ normalizedScreenedTwo h =
+    RiemannResearch.NumberTheory.powerRate (residuePairing h) p / Real.log (p : ℝ) at hc
+  have hp' : (1 : ℝ) < (p : ℝ) := by exact_mod_cast hp.one_lt
+  rw [mul_comm]
+  exact (eq_div_iff (Real.log_pos hp').ne').mp hc
 
 /-- The right radical is exactly M, so no nonzero legal quotient class is invisible. -/
 theorem legalPairing_right_radical (v : closedSpace) :

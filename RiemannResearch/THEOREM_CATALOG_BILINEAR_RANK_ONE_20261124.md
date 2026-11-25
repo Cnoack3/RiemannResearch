@@ -60,6 +60,31 @@ limiting energy, density of V in H, or the Riemann Hypothesis.
 - `legalPairing_left_radical`: a vector h in M orthogonal pairs to zero with
   every v in V exactly when h belongs to V orthogonal.
 
+## Fekete slopes and screened prime powers
+
+In `RiemannResearch.NumberTheory.FeketePowerSlope`, `lowerIncrement_fekete`
+identifies the limiting normalized lower increment with its supremum over
+positive lengths. The upper limit is the corresponding infimum. The two
+limits use their respective boundedness hypotheses.
+
+`tendsto_powerRate` gives exponent convergence for a subadditive exponent
+sequence whose normalized values are bounded below. Under these hypotheses
+`powerRate_pow` gives the positive-power reindexing law. With coprime
+additivity and the same hypotheses on each of two positive coprime bases,
+`powerRate_mul_of_coprime` gives the sum of their rates at the product base.
+For logarithmically rigid functions `pow_div_exponent_of_log` gives the
+exact ratio at every positive exponent, and `powerRate_div_log_eq_of_log`
+recovers the common coefficient at every base greater than one.
+
+For the residue pairing of a vector h in M orthogonal,
+`mixedPacketCoefficient_eq_fekete_rate` and `pairing_eq_fekete_rate_at_base`
+identify that coefficient with R(h) and give the legal pairing at any base.
+`prime_pow_packet_pairing_eq_powerRate` identifies the pairing with every
+positive prime-power packet with the rate at the prime base itself.
+`fekete_screened_prime_pow` gives S(J_(p^k)) = (log p) u.
+`fekete_normalized_screened_prime_pow_set` gives the literal singleton {u}
+for normalized screened packets with k ≥ 2. Conductor four realizes u.
+
 ## Exact symmetric defect form
 
 Definitions:
