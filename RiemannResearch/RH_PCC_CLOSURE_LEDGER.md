@@ -18,6 +18,8 @@ Initial source audit at `cdb1db95f32f9e40123f12a1df359bae704c9d8f`. A theorem wi
 | Signed argument at the actual zero ordinates | [MontgomerySampledArgumentError](Analysis/MontgomerySampledArgumentError.lean), `positiveGapPCC_iff_rationalSampledArgumentIncrement` | Prove the specified signed expectation tends to $\mathrm{sineGapMass}(q)-q$ for every positive rational width $q$. The gamma comparison is uniform for $T\ge3$ and all $R>0$. At fixed $q$, the smooth logarithmic drift is proved after subtracting that exact signed increment. |
 | Centered parity error | [CenteredParityDilationCapacity](RH/CenteredParityDilationCapacity.lean), `centeredParity_limit_error_comparison` | Show the limiting squared parity error is bounded above by a coefficient strictly smaller than $(44/125)^2$ times the limiting unit energy. The present upper coefficient is $(56/125)^2$. |
 
+The [remaining formalization handoff](RH_PCC_REMAINING_FORMALIZATION.md) gives the Fekete coefficient, open estimates and retained source drafts.
+
 ## Published Lean verification
 
 | Commit | Declarations covered | Full aggregate build |
@@ -41,12 +43,6 @@ Initial source audit at `cdb1db95f32f9e40123f12a1df359bae704c9d8f`. A theorem wi
 Write $P(T,R)$ for the normalized count of strictly positive gaps and $D(T)$ for the unfolded cutoff. For every $R(T)\to\infty$ with $R(T)=o(D(T))$, the actual ratio $P(T,R(T))/R(T)$ eventually exceeds $2/9$. This includes $R(T)=\log\log T$. At fixed width $3/2$, the lower limit of the number of distinct base heights with a strict forward neighbor, divided by $D(T)$, is at least $1/1371$. The same bound holds in the backward direction. [Moving packing](Analysis/MontgomeryMovingGapPacking.lean) and [distinct neighbors](Analysis/MontgomeryMicroscopicNeighborDensity.lean)
 
 The actual primitive satisfies $\int_0^2 P(T,R)\,dR>1/3$ eventually. Its exact translated-window formula includes two nonnegative terms, one from integer window counts and one from multiplicities at distinct heights. The full physical triangle energy, including equal-height multiplicities, satisfies $D(T)^{-2}E_T(cT)\to c^2-c^3/3$ uniformly for $0\le c\le1$. On unit height intervals the outer measure of the exceptional forward cutoffs is at most $K b$ for $0\le b\le1$ and every sufficiently large initial height. The fixed positive-width sine-kernel limit remains open. [Integrated packing](Analysis/MontgomeryDistinctWindowPacking.lean), [physical triangle](Analysis/MontgomeryPhysicalTriangleLaw.lean), and [cutoff measure](Analysis/MontgomeryCutoffBoundaryMeasure.lean)
-
-## Actual pair counts at moving and fixed widths
-
-Write $P(T,R)$ for the normalized count of strictly positive gaps and $D(T)$ for the unfolded cutoff. For every $R(T)\to\infty$ with $R(T)=o(D(T))$, the actual ratio $P(T,R(T))/R(T)$ eventually exceeds $2/9$. This includes $R(T)=\log\log T$. At fixed width $3/2$, the lower limit of the number of distinct base heights with a strict forward neighbor, divided by $D(T)$, is at least $1/1371$. The same bound holds in the backward direction. [Moving packing](Analysis/MontgomeryMovingGapPacking.lean) and [distinct neighbors](Analysis/MontgomeryMicroscopicNeighborDensity.lean)
-
-The actual primitive satisfies $\int_0^2 P(T,R)\,dR>1/3$ eventually. Its exact translated-window formula includes two nonnegative terms, one from integer window counts and one from multiplicities at distinct heights. The full physical triangle energy, including equal-height multiplicities, satisfies $D(T)^{-2}E_T(cT)\to c^2-c^3/3$ uniformly for $0\le c\le1$. On unit height intervals the outer measure of the exceptional forward cutoffs is at most $K b$ in the range of the cutoff theorem. The fixed positive-width sine-kernel limit remains open. [Integrated packing](Analysis/MontgomeryDistinctWindowPacking.lean), [physical triangle](Analysis/MontgomeryPhysicalTriangleLaw.lean), and [cutoff measure](Analysis/MontgomeryCutoffBoundaryMeasure.lean)
 
 ## Projection and Möbius cutoff order
 

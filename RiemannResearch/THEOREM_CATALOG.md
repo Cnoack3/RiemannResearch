@@ -8,6 +8,8 @@ The full positive-remainder density provider is now named `positiveResidueDensit
 
 ## RH and Montgomery positive-gap closure declarations
 
+The mixed-orthogonal/legal bilinear form uses the dyadic Fekete infimum as its scalar. Its value at the mean-one seed recovers the rank-one coefficient. The positive defect coefficient vanishes exactly when the screened seed equals the ambient constant. [Fekete slopes](NumberTheory/FeketePowerSlope.lean) · [Bilinear factorization](RH/MixedConductorBilinear.lean) · [Remaining formalization](RH_PCC_REMAINING_FORMALIZATION.md)
+
 The [closure ledger](RH_PCC_CLOSURE_LEDGER.md) links the exact declarations and the open estimates for each route.
 
 | Area | Lean declaration | What it establishes |

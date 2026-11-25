@@ -150,6 +150,8 @@ import RiemannResearch.Analysis.MontgomeryResolventPrimeTerms
 import RiemannResearch.Analysis.MontgomeryIncomingResolvent
 import RiemannResearch.Analysis.MontgomeryIncomingEnergy
 import RiemannResearch.Analysis.MontgomeryResolventBoundaryLimit
+import RiemannResearch.Analysis.MontgomeryResolventGammaMixture
+import RiemannResearch.Analysis.MontgomeryResolventGammaCentering
 import RiemannResearch.Analysis.MontgomeryCenteredLogMeanSquare
 import RiemannResearch.Analysis.MontgomeryCentralDifference
 import RiemannResearch.Analysis.MontgomeryRawSecondOrderTransition
@@ -615,6 +617,7 @@ import RiemannResearch.RH.MixedConductorDilation
 import RiemannResearch.RH.MixedConductorCovariance
 import RiemannResearch.RH.ResidueConductorVariation
 import RiemannResearch.RH.MixedConductorRankOne
+import RiemannResearch.NumberTheory.FeketePowerSlope
 import RiemannResearch.RH.MixedConductorBilinear
 import RiemannResearch.RH.ParetoPrimePowerCovariance
 import RiemannResearch.RH.ScreenedMeanDilationTests

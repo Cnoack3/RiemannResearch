@@ -1,3 +1,4 @@
+import RiemannResearch.NumberTheory.FeketePowerSlope
 import RiemannResearch.RH.CenteredMeanSnake
 import RiemannResearch.RH.IntegratedRamanujanHilbert
 import RiemannResearch.RH.MixedConductorCovariance
@@ -107,13 +108,16 @@ private theorem rawResidueAtom_inner_one_log (i : ℕ) :
     funext (rawResidueAtom_sequence i)
   rw [hs, paretoMean_residue (i + 2) (by omega)]
 
-/-- Arithmetic rigidity and closed-span continuity give the bilinear
-factorization, before invoking a geometric rank-one conclusion. -/
-theorem pairing_factorization_of_rigidity
+/-- The exponent Fekete slope at two computes the coefficient of the
+mixed-orthogonal/legal pairing from the residue pairings alone. -/
+theorem pairing_eq_fekete_rate
     {h v : ThresholdHilbert} (hh : h ∈ mixedClosureᗮ) (hv : v ∈ closedSpace) :
     inner ℝ h v =
-      inner ℝ normalizedScreenedTwo h * inner ℝ v hilbertOne := by
-  obtain ⟨c, hc⟩ := residuePairing_eq_log hh
+      (RiemannResearch.NumberTheory.powerRate (residuePairing h) 2 / Real.log 2) *
+        inner ℝ v hilbertOne := by
+  let c := RiemannResearch.NumberTheory.powerRate (residuePairing h) 2 / Real.log 2
+  have hc : ∀ n : ℕ, 0 < n → residuePairing h n = c * Real.log (n : ℝ) :=
+    RiemannResearch.NumberTheory.log_normalization_by_powerRate (residuePairing_eq_log hh)
   let L : Submodule ℝ ThresholdHilbert :=
     { carrier := {x | inner ℝ h x = c * inner ℝ x hilbertOne}
       zero_mem' := by simp
@@ -154,15 +158,24 @@ theorem pairing_factorization_of_rigidity
                 inner ℝ (residueAtom i) hilbertOne) := by rw [hm]
             _ = _ := by ring
     · exact hLclosed
+  exact hle hv
+
+/-- Evaluation at the legal mean-one seed identifies the arithmetic
+Fekete coefficient with the Riesz coefficient of the rank-one form. -/
+theorem pairing_factorization_of_rigidity
+    {h v : ThresholdHilbert} (hh : h ∈ mixedClosureᗮ) (hv : v ∈ closedSpace) :
+    inner ℝ h v =
+      inner ℝ normalizedScreenedTwo h * inner ℝ v hilbertOne := by
+  let c := RiemannResearch.NumberTheory.powerRate (residuePairing h) 2 / Real.log 2
   have hu_mem : normalizedScreenedTwo ∈ closedSpace :=
     screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure
   have hu : inner ℝ h normalizedScreenedTwo = c := by
     have hu' : inner ℝ h normalizedScreenedTwo =
-        c * inner ℝ normalizedScreenedTwo hilbertOne := hle hu_mem
+        c * inner ℝ normalizedScreenedTwo hilbertOne := pairing_eq_fekete_rate hh hu_mem
     simpa only [normalizedScreenedTwo_mean, mul_one] using hu'
   have huc : inner ℝ normalizedScreenedTwo h = c :=
     (real_inner_comm _ _).trans hu
-  have hv' : inner ℝ h v = c * inner ℝ v hilbertOne := hle hv
+  have hv' : inner ℝ h v = c * inner ℝ v hilbertOne := pairing_eq_fekete_rate hh hv
   rw [← huc] at hv'
   exact hv'
 
