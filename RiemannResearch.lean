@@ -42,6 +42,7 @@ import RiemannResearch.Analysis.FiniteSizeBiasedRealPowers
 import RiemannResearch.Analysis.ActualPolynomialHorizontalMoment
 import RiemannResearch.Analysis.ActualSelbergEndpointMesh
 import RiemannResearch.Analysis.ActualSelbergExcessProfiles
+import RiemannResearch.Analysis.ActualDyadicInghamDetector
 import RiemannResearch.Analysis.ActualSchurHorizontalCorrection
 import RiemannResearch.Analysis.ActualSizeBiasedDisplacement
 import RiemannResearch.Analysis.ActualBuiUpperTriangle

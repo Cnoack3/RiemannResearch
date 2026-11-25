@@ -1,5 +1,26 @@
 # Published Selberg range and real-order mollifier arithmetic
 
+## The one-logarithm dyadic Ingham detector (25 November 2026)
+
+The [dyadic proof](INGHAM_DYADIC_ONE_LOG_20261125.md) derives rStation 184,
+Theorem 1 for H = S, from Baluyot's published fourth moment, direct inverse
+coefficient estimates, smoothed Perron inversion and Littlewood's lemma.
+For q = 3(1−σ)/(2−σ) the classical uniform upper bound is
+S^q log S · [1+2(1−σ)log S]^(q−1), with analytic multiplicity and β ≥ σ.
+
+[ActualDyadicInghamDetector.lean](Analysis/ActualDyadicInghamDetector.lean)
+proves `dyadicInghamCutoff_balance`, `dyadicInghamCutoff_refined` and
+`dyadicIngham_threshold_shift` without a density hypothesis.
+`dyadicInghamOneLog_of_detectorExcess` is a **conditional research reduction**.
+Its conclusion is the existing `DyadicInghamOneLog`, which already implies
+`UniformSelbergDensity (4/3)` by dyadic assembly.
+
+- **Open in Lean.** Supply the uniform detector excess on a regular interior
+  line from the flat mollified fourth moment, inverse energy, smoothed Perron
+  split and Littlewood cap estimates.
+- **Open in Lean.** Supply cap absorption on nonempty windows from the
+  Vinogradov–Korobov zero-free region. The refined count is a paper result.
+
 ## Excess in the Selberg transition window (25 November 2026)
 
 [ActualSelbergExcessProfiles.lean](Analysis/ActualSelbergExcessProfiles.lean)
