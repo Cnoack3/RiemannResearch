@@ -1,6 +1,7 @@
 import RiemannResearch.NumberTheory.FeketePowerSlope
 import RiemannResearch.RH.CenteredMeanSnake
 import RiemannResearch.RH.IntegratedRamanujanHilbert
+import RiemannResearch.RH.MixedCaptureLegalTrials
 import RiemannResearch.RH.MixedConductorCovariance
 import RiemannResearch.RH.MixedConductorRankOne
 import RiemannResearch.RH.MobiusCoefficientStabilization
@@ -178,6 +179,27 @@ theorem pairing_factorization_of_rigidity
   have hv' : inner ℝ h v = c * inner ℝ v hilbertOne := pairing_eq_fekete_rate hh hv
   rw [← huc] at hv'
   exact hv'
+
+/-- Dividing the rank-one pairing at the screened seed by its squared norm
+recovers the Pareto mean of every legal vector. -/
+theorem inner_screenedTwo_div_norm_sq {v : ThresholdHilbert} (hv : v ∈ closedSpace) :
+    inner ℝ v normalizedScreenedTwo / ‖normalizedScreenedTwo‖ ^ 2 =
+      inner ℝ v hilbertOne := by
+  have hu : normalizedScreenedTwo ∈ mixedClosureᗮ :=
+    (Submodule.starProjection_apply_eq_zero_iff _).mp mixed_starProjection_screenedTwo
+  have hpos : 0 < ‖normalizedScreenedTwo‖ := zero_lt_one.trans_le one_le_norm_normalizedScreenedTwo
+  apply (div_eq_iff (sq_pos_of_pos hpos).ne').2
+  calc
+    inner ℝ v normalizedScreenedTwo = inner ℝ normalizedScreenedTwo v := real_inner_comm _ _
+    _ = inner ℝ v hilbertOne * ‖normalizedScreenedTwo‖ ^ 2 := by
+      simpa only [real_inner_self_eq_norm_sq, mul_comm] using
+        pairing_factorization_of_rigidity hu hv
+
+/-- The projected constant represents the ambient Pareto mean on the legal space. -/
+theorem inner_limitProjection_eq_inner_one {v : ThresholdHilbert} (hv : v ∈ closedSpace) :
+    inner ℝ v limitProjection = inner ℝ v hilbertOne := by
+  rw [limitProjection_eq_inv_norm_sq_smul_screenedTwo, real_inner_smul_right]
+  simpa only [div_eq_mul_inv, mul_comm] using inner_screenedTwo_div_norm_sq hv
 
 /-- The genuine pairing equals the outer product R ⊗ C as a continuous
 bilinear map with its two distinct domains retained. -/
