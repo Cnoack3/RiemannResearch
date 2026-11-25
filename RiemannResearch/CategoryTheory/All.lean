@@ -14,6 +14,8 @@ import RiemannResearch.RH.CenteredMeanMellinDescent
 import RiemannResearch.RH.CenteredMeanMellinCharacters
 import RiemannResearch.RH.CenteredMeanFiniteDescent
 import RiemannResearch.RH.MixedConductorStrictDescent
+import RiemannResearch.RH.CenteredMeanLateSolveBarrier
+import RiemannResearch.RH.CenteredMeanBurnolStageBarrier
 import RiemannResearch.RH.MixedPrimeCorrelationSeries
 import RiemannResearch.RH.TernaryMixedOrbitObstruction
 import RiemannResearch.RH.CenteredMeanStageSnake

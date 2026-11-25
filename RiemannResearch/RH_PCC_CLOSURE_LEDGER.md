@@ -76,6 +76,26 @@ At every cutoff the sum of squared screened pairing errors over the adjacent-dil
 
 Three finite width averages bound the signed pointwise gap error. A grid of order (log T)² suffices for integrating the actual positive-gap statistic at each fixed rational width. The rational sampled deficit must still tend to zero. The infimum of the normalized bare zeta argument variance over widths in (0,1] recovers the equal-ordinate mass asymptotically, with no simplicity hypothesis. The resulting fixed rational-width variance criteria have no explicit collision input. [Window pair correlation](Analysis/MontgomeryWindowPairCorrelation.lean), [gap quadrature](Analysis/MontgomeryCauchyGapMesh.lean) and [argument slope](Analysis/MontgomeryArgumentSlope.lean)
 
+## A signed zeta-argument criterion at the actual zeros
+
+At every positive width $R$ the difference between the sampled count error and the sampled zeta-argument increment is at most $KR/D(T)$, uniformly for $T\ge3$. Consequently positive-gap PCC is equivalent to the averaged signed argument increment tending to $\mathrm{sineGapMass}(q)-q$ at each positive rational width $q$. The gamma comparison is unconditional. The signed argument limits on the actual zero ordinates remain open. [Signed argument increments](Analysis/MontgomerySampledArgumentError.lean)
+
+## Two logarithmic correction terms in the pair counts
+
+The actual normalized gap counts have a uniform expansion on the complete macroscopic range $0\le c\le1$, with explicit coefficients at orders $1/\log T$ and $1/(\log T)^2$ and absolute error at most $C/T$. If $R/(\log T)^2\to\infty$ and $R/D(T)\to0$, then $\log T\,[P(T,R)/R-(1-R/(2D(T)))]\to-2(1+\log(2\pi))$. At fixed width the signed-argument criterion still requires its own limit. [Actual pair-count expansions](Analysis/MontgomeryMacroscopicGapLaws.lean)
+
+## The cost of one sufficiently late Gram solve
+
+For $B\le A$ and $N\le A+1$, the later Gram solve contains the canonical Möbius exact head. The complete signed residual identity then bounds its packet-mass loss by the actual damped cost at $B$ together with the drift from $B$ to $A$. One uniformly bounded cost along a cofinal sequence of physical heads and sufficiently late solves would imply RH. Proving that bound for the actual solves remains open. [Finite late-solve barrier](RH/CenteredMeanLateSolveBarrier.lean)
+
+## The polynomial-cutoff obstruction on the late-solve route
+
+Assume Burnol’s `ContinuousCutoffLowerBound`. At the same damping exponent used by the one-late-solve RH criterion, every polynomially bounded choice of a later dictionary $A$ with $N\le A+1$ forces the scaled sum of the base cost and drift to diverge. This includes $A=N$. Thus under the stated continuous bound, a successful late-solve schedule would have to exceed every polynomial cutoff bound. Formalizing the continuous lower envelope in Lean and exhibiting a successful schedule are separate open steps. [Burnol late-solve obstruction](RH/CenteredMeanBurnolStageBarrier.lean)
+
+## Translation error at clipped observation windows
+
+A backward-shifted count error bounded by $\eta$ has its weighted integral bounded by $\eta$ times the sum of the density’s $L^1$ translation difference and the omitted upper-strip mass. The formula assumes that the error vanishes at the lower endpoint and retains both clipping contributions. It supports the smooth-drift comparison at fixed and shrinking widths. [Clipped translation estimate](Analysis/MontgomeryClippedDensityTranslation.lean)
+
 ## Actual cumulative zero counts
 
 `smoothCount_main_variation` bounds the signed integrated gamma remainder between u and v by C(1/u−1/v) for 1 ≤ u ≤ v. Together with the repository’s unconditional Backlund discrepancy this proves `actual_cumulativeRvM`. The dyadic height bias and scaled height mean now use the theorem directly. The sharp Wasserstein declarations retain their separate horizontal and approximation hypotheses. [Height laws](Analysis/DyadicZeroWassersteinLaws.lean) and [Wasserstein estimates](Analysis/DyadicZeroWasserstein.lean)
