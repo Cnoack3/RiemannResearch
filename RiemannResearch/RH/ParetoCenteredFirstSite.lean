@@ -1,5 +1,6 @@
 import RiemannResearch.RH.ParetoParityAdjointCriterion
 import RiemannResearch.RH.ParetoFirstPointHeadObstruction
+import RiemannResearch.RH.LocalizedMellinObstruction
 import RiemannResearch.RH.ParetoMellinDilation
 import RiemannResearch.RH.RiemannHypothesisRightHalfStrip
 
@@ -12,41 +13,79 @@ closure. Its Mellin symbol detects every zero in the open right half-strip.
 noncomputable section
 namespace RiemannResearch.RH.Pareto.CoefficientStabilization
 
+/-- The Mellin transform of a difference of two normalized threshold steps
+is explicit at every point in the continuity half-plane. -/
+theorem thresholdContrast_mellin (m k : ℕ) (hm : 0 < m) (hk : 0 < k)
+    (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) :
+    paretoMellin (hilbertDilation m hm hilbertOne - hilbertDilation k hk hilbertOne) s =
+      ((m : ℂ) ^ (1-s) - (k : ℂ) ^ (1-s)) / s := by
+  change paretoMellinContinuous s hs (_ - _) = _
+  rw [map_sub]
+  change paretoMellin (hilbertDilation m hm hilbertOne) s -
+    paretoMellin (hilbertDilation k hk hilbertOne) s = _
+  rw [paretoMellin_dilation, paretoMellin_dilation, paretoMellin_one s hs]
+  ring
+
+/-- Each actual zeta zero in the evaluation half-plane gives a complete
+power lower bound for every legal fit matching the threshold contrast on
+all physical sites strictly below L. -/
+theorem thresholdContrast_exact_head_error_lower (m k : ℕ) (hm : 0 < m) (hk : 0 < k)
+    (L : ℕ) (hL : 1 ≤ L) {v : ThresholdHilbert} (hv : v ∈ closedSpace)
+    (hhead : ∀ j, 0 < j → j < L → hilbertSequence v j =
+      hilbertSequence (hilbertDilation m hm hilbertOne - hilbertDilation k hk hilbertOne) j)
+    (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) (hs1 : s ≠ 1) (hz : riemannZeta s = 0) :
+    (2*s.re-1) * ‖((m : ℂ)^(1-s) - (k : ℂ)^(1-s))/s‖^2 * (L : ℝ)^(2*s.re-1) ≤
+      ‖hilbertDilation m hm hilbertOne - hilbertDilation k hk hilbertOne - v‖^2 := by
+  let z := hilbertDilation m hm hilbertOne - hilbertDilation k hk hilbertOne
+  have hvz := paretoMellin_zero_on_legalClosure_of_zeta {a : ℕ | 0 < a}
+    (fun _ ha => ha) s hs hs1 hz (closedSpace_le_legalClosure hv)
+  have heval : paretoMellin (z-v) s = ((m : ℂ)^(1-s) - (k : ℂ)^(1-s))/s := by
+    change paretoMellinContinuous s hs (z-v) = _
+    rw [map_sub]
+    change paretoMellin z s - paretoMellin v s = _
+    rw [hvz, sub_zero]
+    exact thresholdContrast_mellin m k hm hk s hs
+  have hzero j (hj : 0 < j) (hjL : j < L) : hilbertSequence (z-v) j = 0 := by
+    rw [hilbertSequence_sub, Pi.sub_apply, hhead j hj hjL, sub_self]
+  simpa only [heval] using mellin_zero_head_lower (z-v) L hL hzero s hs
+
+/-- Distinct positive thresholds have a nonzero difference symbol to the left
+of the line Re(s)=1, away from the pole at zero. -/
+theorem thresholdContrast_symbol_ne_zero (m k : ℕ) (hm : 0 < m) (hmk : m < k)
+    (s : ℂ) (hs0 : s ≠ 0) (hlt : s.re < 1) :
+    ((m : ℂ) ^ (1-s) - (k : ℂ) ^ (1-s)) / s ≠ 0 := by
+  intro hz
+  have he := sub_eq_zero.mp ((div_eq_zero_iff.mp hz).resolve_right hs0)
+  have hnorm := congrArg norm he
+  have hmR : 0 < (m : ℝ) := by exact_mod_cast hm
+  rw [Complex.norm_natCast_cpow_of_pos hm, Complex.norm_natCast_cpow_of_pos (hm.trans hmk)] at hnorm
+  exact (ne_of_lt (Real.rpow_lt_rpow hmR.le (by exact_mod_cast hmk)
+    (by simpa only [Complex.sub_re, Complex.one_re] using sub_pos.mpr hlt))) hnorm
+
+/-- Every two distinct positive thresholds have a contrast that detects every
+point in the open right half-strip. Thus membership of just one such contrast
+in the legal closure implies RH. -/
+theorem riemannHypothesis_of_thresholdContrast_mem (m k : ℕ) (hm : 0 < m) (hmk : m < k)
+    (hb : hilbertDilation m hm hilbertOne -
+      hilbertDilation k (hm.trans hmk) hilbertOne ∈ closedSpace) :
+    RiemannHypothesis := by
+  apply RiemannResearch.RH.riemannHypothesis_iff_right_half_strip_zero_free.mpr
+  intro s hs hlt hz
+  have hs0 : s ≠ 0 := by intro he; norm_num [he] at hs
+  have hs1 : s ≠ 1 := by intro he; norm_num [he] at hlt
+  have hv := paretoMellin_zero_on_legalClosure_of_zeta {n : ℕ | 0 < n}
+    (fun _ hn => hn) s hs hs1 hz (closedSpace_le_legalClosure hb)
+  rw [thresholdContrast_mellin m k hm (hm.trans hmk) s hs] at hv
+  exact thresholdContrast_symbol_ne_zero m k hm hmk s hs0 hlt hv
+
 /-- Saturating the one-site mean-zero interpolation budget gives the vector with
 physical values 1,-1,-1,... in the closed legal span. Its Mellin symbol rules
 out every zero in the open right half-strip. -/
 theorem riemannHypothesis_of_centered_firstSite_mem
     (hb : hilbertOne - hilbertDilation 2 (by decide) hilbertOne ∈ closedSpace) :
-    RiemannHypothesis := by
-  apply RiemannResearch.RH.riemannHypothesis_iff_right_half_strip_zero_free.mpr
-  intro s hs hlt hz
-  have hs0 : s ≠ 0 := by
-    intro he
-    norm_num [he] at hs
-  have hs1 : s ≠ 1 := by
-    intro he
-    norm_num [he] at hlt
-  have hv := paretoMellin_zero_on_legalClosure_of_zeta {n : ℕ | 0 < n}
-    (fun _ hn => hn) s hs hs1 hz (closedSpace_le_legalClosure hb)
-  change paretoMellinContinuous s hs
-    (hilbertOne - hilbertDilation 2 (by decide) hilbertOne) = 0 at hv
-  rw [map_sub] at hv
-  change paretoMellin hilbertOne s -
-    paretoMellin (hilbertDilation 2 (by decide) hilbertOne) s = 0 at hv
-  rw [paretoMellin_dilation, paretoMellin_one s hs] at hv
-  have heq : (1 - (2 : ℂ) ^ (1 - s)) * (1 / s) = 0 := by
-    calc
-      _ = 1 / s - (2 : ℂ) ^ (1 - s) * (1 / s) := by ring
-      _ = 0 := by simpa using hv
-  have hpow : (2 : ℂ) ^ (1 - s) = 1 :=
-    (sub_eq_zero.mp ((mul_eq_zero.mp heq).resolve_right (one_div_ne_zero hs0))).symm
-  have hnorm : 1 < ‖(2 : ℂ) ^ (1 - s)‖ := by
-    change 1 < ‖((2 : ℝ) : ℂ) ^ (1 - s)‖
-    rw [Complex.norm_cpow_eq_rpow_re_of_pos (by norm_num : (0 : ℝ) < 2)]
-    simp only [Complex.sub_re, Complex.one_re]
-    exact Real.one_lt_rpow (by norm_num) (by linarith)
-  rw [hpow, norm_one] at hnorm
-  exact (lt_irrefl (1 : ℝ)) hnorm
+    RiemannHypothesis :=
+  riemannHypothesis_of_thresholdContrast_mem 1 2 (by decide) (by decide)
+    (by simpa only [hilbertDilation_one] using hb)
 
 end RiemannResearch.RH.Pareto.CoefficientStabilization
 
