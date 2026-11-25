@@ -170,6 +170,14 @@ For every real $y$, the absolutely integrable heat mixture $\int_0^\infty 2e^{-v
 
 Subtracting the logarithmic main term from the actual gamma contribution leaves a variation uniformly bounded in the frequency and ordinate. The bound uses the repository’s vertical gamma estimates with the explicit-formula normalization. The integrated gamma identity is required to connect this estimate to the nonsmooth Weil test. [Centered resolvent gamma term](Analysis/MontgomeryResolventGamma.lean)
 
+## The bilinear defect at the screened mean-one seed
+
+The concurrent mixed-conductor development proves that for all legal $v,w$,
+\[
+  \operatorname{defectForm}(v,w)=\|u-\mathbf1\|^2 C(v)C(w),
+\]
+where $u$ is the normalized screened seed and $C$ is the legal mean. Evaluating at $v=w=u$ returns exactly $\|u-\mathbf1\|^2$. Thus the unconditional factorization and its nonnegative coefficient are available. The input still required by `riemannHypothesis_of_defectForm_vanishes` is the vanishing of that coefficient. [Bilinear declarations](RH/MixedConductorBilinear.lean) and [published commit](https://github.com/Cnoack3/RiemannResearch/commit/2928be2c0b97e62900d730d9f71aef4c63a44067)
+
 ## A signed complex-zero criterion for RH
 
 At every fixed 0 < α < 1, the normalized third-signal residual tends to zero if and only if the sharp complex-zero form factor tends to α. At any fixed α > 0, its plateau at one is equivalent to a limit of 1−α for the signed third-signal and prime off-diagonal expression. At arbitrarily high fixed frequencies a cofinal logarithmic upper bound for that signed expression is equivalent to RH. The actual cofinal bound, the spectral residual limit, and the positive-gap ordinate law remain separate obligations. [MontgomeryFixedFrequencyResidual](Analysis/MontgomeryFixedFrequencyResidual.lean)
