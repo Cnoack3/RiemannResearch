@@ -136,6 +136,14 @@ With the base solve and physical cutoff fixed, the omitted drift tends to zero f
 
 For every real $a,u$, write $m$ for the order of zeta at $1/2+ia$. At height $a+\varepsilon u$ the quotient of zeta by its horizontally shifted value converges to $(iu/(1+iu))^m$ as $\varepsilon\downarrow0$. At a simple zero the rescaled squared defect is $1/[(1+u^2)(1/4+a^2)]$. This is an unconditional local limit. A global upper estimate on the natural finite truncation for small damping remains necessary for the prescribed Báez-Duarte fits. [Critical damping profile](RH/ParetoShiftedZetaZeroProfile.lean)
 
+## Absolute damping and the complete natural tail
+
+For $d>1/2$, the full angular energy of the finite natural Möbius tail is at most $[N^{1/2-d}/(d-1/2)]^2[\log(2\pi)-\gamma]$ at every cutoff $N\ge1$. It therefore tends to zero unconditionally at each such fixed damping. This supplies the interval of absolute convergence for the squarefree approximation argument. The estimate degenerates at $d=1/2$ and does not provide the small-damping coefficient schedule. [Complete natural-tail estimate](RH/BalazardDeRotonAbsoluteTail.lean)
+
+## Contributions from a finite set of simple critical-line zeros
+
+Every finite set $S$ of distinct simple critical ordinates gives $\liminf_{\varepsilon\downarrow0}J_\varepsilon/\varepsilon\ge\sum_{a\in S}\pi/(1/4+a^2)$ whenever the full defect is eventually integrable. The previously verified RH estimate supplies this integrability. The proof sums disjoint damping windows before letting their rescaled radii grow. It leaves the contribution from outside the selected windows undetermined. [Finite simple-zero lower bound](RH/ParetoShiftedZetaFiniteLower.lean)
+
 ## The contribution of a simple zero to the damping budget
 
 At a simple critical zero of ordinate $a$, the energy of the shifted quotient defect in $[a-L\varepsilon,a+L\varepsilon]$, divided by $\varepsilon$, tends to $2\arctan(L)/(1/4+a^2)$ for every $L\ge0$. This local formula is unconditional. Under RH the full-line energy $J_\varepsilon$ satisfies $J_\varepsilon>b\varepsilon$ eventually for every $b<\pi/(1/4+a^2)$. The repository’s existence theorem for simple critical zeros therefore gives a positive linear lower bound alongside the proved limit $J_\varepsilon\to0$. On the natural truncation route the missing estimate concerns the separate finite polynomial tail. [Damping windows](RH/ParetoShiftedZetaSimpleWindow.lean) and [full-line lower bound](RH/ParetoShiftedZetaSimpleLower.lean)
