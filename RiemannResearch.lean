@@ -195,6 +195,8 @@ import RiemannResearch.RH.FiniteCarryRamanujanDictionary
 import RiemannResearch.RH.UniversalCarryRamanujanSynthesis
 import RiemannResearch.RH.FullConductorRamanujanTransform
 import RiemannResearch.RH.PhysicalPrimePowerCarryProjection
+import RiemannResearch.RH.CanonicalCarryClosure
+import RiemannResearch.RH.CanonicalCarryGram
 import RiemannResearch.RH.PhysicalCarryGram
 import RiemannResearch.RH.MixedCanonicalCarryCapture
 import RiemannResearch.RH.MixedParityCarry

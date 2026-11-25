@@ -4,6 +4,12 @@ Source agenda: user-provided categorical CRT note, section 14 and the Stage 3 ha
 
 The single Lean import `RiemannResearch.CategoryTheory.All` exposes the repository’s categorical CRT declarations and the split exact sequence of the Pareto legal mean.
 
+## Completion of the canonical mixed-carry dictionary
+
+- [CanonicalCarryClosure](RH/CanonicalCarryClosure.lean) proves `rawClosure_eq_fullClosure` for every Hilbert-valued atom sequence tending to zero. The proof uses the actual CRT row at the product of a prime power with a common auxiliary prime. Its applications `physical_rawCarry_closures` and `no_physical_prime_retraction` identify the closed raw-carry span and rule out a continuous selector fixing the conductor-two atom under both the Pareto and zeta-two weights. For every odd prime `t`, `two_prime_oblique_amplification_sq` proves a squared amplification factor at least `t(t-1)/8` on the conductor-`2t` atom. The closed graph is the product of the closed atom span and the closed prime-power span (`selectorGraph_closure_eq_product`).
+- [CanonicalCarryGram](RH/CanonicalCarryGram.lean) gives the signed logarithmic unit observations, exact finite Moore–Penrose costs, their supremum, and strong convergence of the finite minimizers. `riemannHypothesis_iff_rawUnitGramCost_saturates` identifies the open target as saturation of these unit costs at one. Their boundedness is unconditional.
+- The [companion note](CANONICAL_CARRY_COMPLETION_20261125.md) describes the finite presentation, limit constructions, explicit approximants and target obstructions, with separate references for machine-checked results and arguments in the note.
+
 ## Exact finite results
 
 - `NumberTheory/PrimePowerCRTDecomposition.lean`, namespace `PrimePowerCRT`: maximal prime-power moduli, pairwise coprimality, factorization, canonical inverse bounds, the simultaneous modular certificate, its exact integer/reciprocal charge, and `atom_reconstruction` for every positive conductor.

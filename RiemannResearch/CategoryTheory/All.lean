@@ -31,6 +31,8 @@ import RiemannResearch.RH.LegalTailMeanCapacityMellin
 import RiemannResearch.RH.LegalTailMeanCapacity
 import RiemannResearch.RH.CenteredParityDilationCapacity
 import RiemannResearch.RH.ConductorReconstructionEnergy
+import RiemannResearch.RH.CanonicalCarryClosure
+import RiemannResearch.RH.CanonicalCarryGram
 import RiemannResearch.RH.ConductorTowerLimit
 import RiemannResearch.RH.FiniteAtomCarryFunctor
 import RiemannResearch.RH.HausdorffSupportColimit
