@@ -431,6 +431,22 @@ theorem productBlockWeight_le_total (k n : ℕ) : productBlockWeight k n ≤ pro
     ((Nat.nth_strictMono Nat.infinite_setOfPred_prime).monotone (Nat.le_add_left j k))
     ((Nat.nth_strictMono Nat.infinite_setOfPred_prime).monotone (by omega : j + 1 ≤ k + j + 1)))
 
+/-- The restored block average has a uniform squared error envelope, independent
+of its starting prime.  This is the quantitative form of the fact that these
+blocks are centered at the residual energy, rather than at zero. -/
+theorem correctedBlock_normalized_error_sq_le {k n : ℕ} (hn : 0 < n) :
+    (correctedBlock k n / (n : ℝ) - ‖limitResidual‖ ^ 2) ^ 2 ≤
+      (‖limitResidual‖ ^ 2 * productWeightTotal) / (n : ℝ) ^ 2 := by
+  have hn0 : (n : ℝ) ≠ 0 := (Nat.cast_ne_zero.mpr hn.ne')
+  calc
+    _ = (((n : ℝ) * ‖limitResidual‖ ^ 2 - correctedBlock k n) ^ 2) /
+        (n : ℝ) ^ 2 := by field_simp; ring
+    _ ≤ (‖limitResidual‖ ^ 2 * productBlockWeight k n) / (n : ℝ) ^ 2 :=
+      div_le_div_of_nonneg_right (correctedBlock_error_sq_le k n) (sq_nonneg _)
+    _ ≤ _ := div_le_div_of_nonneg_right
+      (mul_le_mul_of_nonneg_left (productBlockWeight_le_total k n) (sq_nonneg _))
+      (sq_nonneg _)
+
 theorem adjacent_product_errors_summable :
     Summable (fun j : ℕ => |‖limitResidual‖ ^ 2 - reciprocalResiduePairing (P j * P (j + 1))|) := by
   apply summable_of_sum_range_le (fun _ => abs_nonneg _)
@@ -470,6 +486,25 @@ theorem energy_le_of_correctedBlock_nonpos {k n : ℕ} (hn : 0 < n) (hs : correc
   have hW : 0 ≤ productBlockWeight k n := by unfold productBlockWeight; positivity
   apply energy_times_sq_le_of_sign (Nat.cast_nonneg n) hW (neg_nonneg.mpr hs)
   simpa only [sub_eq_add_neg, add_comm] using correctedBlock_error_sq_le k n
+
+/-- If the residual is nonzero, all sufficiently long restored semiprime blocks
+are strictly positive, uniformly in the starting prime.  Thus absolute
+summability of the individual errors cannot itself supply the nonpositive
+blocks needed by the RH certificate. -/
+theorem eventually_forall_correctedBlock_pos_of_residual_ne_zero
+    (hd : limitResidual ≠ 0) :
+    ∀ᶠ n : ℕ in atTop, ∀ k : ℕ, 0 < correctedBlock k n := by
+  have hE : 0 < ‖limitResidual‖ ^ 2 := sq_pos_of_pos (norm_pos_iff.mpr hd)
+  have ht : Tendsto (fun n : ℕ => productWeightTotal / (n : ℝ) ^ 2) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop
+      ((tendsto_pow_atTop (by decide : 2 ≠ 0)).comp tendsto_natCast_atTop_atTop)
+  filter_upwards [eventually_ge_atTop 1, ht.eventually (Iio_mem_nhds hE)] with n hn hsmall
+  intro k
+  by_contra hnot
+  have hnonpos : correctedBlock k n ≤ 0 := le_of_not_gt hnot
+  have hb := (energy_le_of_correctedBlock_nonpos (by omega : 0 < n) hnonpos).trans
+    (div_le_div_of_nonneg_right (productBlockWeight_le_total k n) (sq_nonneg _))
+  exact (not_lt_of_ge hb) hsmall
 
 theorem riemannHypothesis_iff_frequently_correctedBlock_nonpos :
     RiemannHypothesis ↔ ∃ᶠ n : ℕ in atTop, ∃ k : ℕ, correctedBlock k n ≤ 0 := by
@@ -584,6 +619,18 @@ depends on axioms: [propext, Classical.choice, Quot.sound] -/
 depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms energy_le_of_correctedBlock_nonpos
+
+/-- info:
+'RiemannResearch.RH.Pareto.PrimePowerSchur.SemiprimeFekete.correctedBlock_normalized_error_sq_le'
+depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms correctedBlock_normalized_error_sq_le
+
+/-- info:
+'RiemannResearch.RH.Pareto.PrimePowerSchur.SemiprimeFekete.eventually_forall_correctedBlock_pos_of_residual_ne_zero'
+depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms eventually_forall_correctedBlock_pos_of_residual_ne_zero
 
 /-- info:
 'RiemannResearch.RH.Pareto.PrimePowerSchur.SemiprimeFekete.riemannHypothesis_iff_frequently_correctedBlock_nonpos'

@@ -146,6 +146,10 @@ The integral is strictly less than 1 because \(\lfloor x\rfloor^2/x^4<x^{-2}\) a
 
 ## Formalization and sources
 
-The companion [Lean module](RH/SemiprimeBlockRemainders.lean) proves finite norm and sign estimates, absolute summability at the prime products, the corrected-block RH equivalence, and bounded total variation on power towers. The [original Fekete module](RH/SemiprimeFekete.lean) supplies the identification with the density transform of the signed packet and the infimum theorem. The [Mellin obstruction](RH/ResidueDivisorZeroExclusion.lean) supplies the lower bound for each right zero. The explicit Rosser comparison and the tail-localized refinements above are written proofs.
+The companion [Lean module](RH/SemiprimeBlockRemainders.lean) proves finite norm and sign estimates, absolute summability at the prime products, the corrected-block RH equivalence, the uniform squared envelope
+\[
+\left(B_{k,n}/n-E\right)^2\le \frac{E C_0^2}{n^2},
+\]
+and the resulting obstruction: if \(d\ne0\), then all sufficiently long corrected blocks are strictly positive, uniformly in \(k\). It also proves bounded total variation on power towers. The [original Fekete module](RH/SemiprimeFekete.lean) supplies the identification with the density transform of the signed packet and the infimum theorem. The [Mellin obstruction](RH/ResidueDivisorZeroExclusion.lean) supplies the lower bound for each right zero. The explicit Rosser comparison and the tail-localized refinements above are written proofs.
 
 [Báez-Duarte, *A strengthening of the Nyman–Beurling criterion for the Riemann hypothesis*](https://arxiv.org/abs/math/0202141) · [Axler, *New estimates for the nth prime number*](https://arxiv.org/abs/1706.03651)
