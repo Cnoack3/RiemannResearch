@@ -726,6 +726,7 @@ import RiemannResearch.RH.ScreenedPrimePowerTelescope
 import RiemannResearch.RH.MixedConductorCaptureGains
 import RiemannResearch.RH.CenteredParityFiniteTrials
 import RiemannResearch.RH.MixedCaptureLegalTrials
+import RiemannResearch.RH.ScreenedTwoProjectionScalar
 import RiemannResearch.RH.ParetoParityNormBounds
 import RiemannResearch.RH.ParetoParityAdjointCriterion
 import RiemannResearch.RH.ParetoParityAdjointSix

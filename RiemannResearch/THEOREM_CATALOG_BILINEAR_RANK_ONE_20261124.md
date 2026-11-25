@@ -136,6 +136,13 @@ The implication `riemannHypothesis_of_ambient_cauchySchwarz_eq` then gives RH.
 
 **Open.** Prove that the ambient Cauchy–Schwarz gap vanishes for the normalized screened packet.
 
+## Projected Cauchy–Schwarz equality
+
+In `RiemannResearch.RH.ScreenedTwoProjectionScalar`, let $p=P_V\mathbf 1_H$.
+`limitProjection_normalizedScreenedTwo_cauchySchwarz_eq` gives $|\langle p,u\rangle|=\|p\|\,\|u\|=1$.
+`normalizedScreenedTwo_eq_norm_sq_smul_limitProjection` gives $u=\|u\|^2p$.
+For any $c$ with $u=cp$, `normalizedScreenedTwo_projection_scalar` pairs the equation with $p$ and $u$ to give $1=c\|p\|^2$ and $c=1/\|p\|^2=\|u\|^2>0$.
+
 ## Stage lifts, dilation Gram matrices, and the unit norm
 
 The module `RiemannResearch.RH.CenteredMeanUnitNorm` uses the actual centered snake for every mixed denominator, including each prime-support stage. The finite determinant tests use the complete Pareto Gram matrix. Its conductor cutoff is independent of the choice of stage in the snake.
