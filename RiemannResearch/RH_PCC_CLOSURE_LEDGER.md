@@ -108,6 +108,30 @@ For $B\le A\le 2^j$ at the explicit physical cutoff $N=2^{2(qj)^{11}}$, with $bq
 
 At every fixed upper height T > 1, the right derivative at width zero equals the normalized count of all pairs sharing an ordinate. Multiplicity of a zero is retained throughout. The near-zero variance inequality in `cofinal_pureArgument_fixedHeight_iff_RH` is equivalent to RH when required at arbitrarily large T. Its cofinal inequality and the positive rational-width limits required for PCC remain distinct open inputs. [MontgomeryFixedHeightArgumentSlope](Analysis/MontgomeryFixedHeightArgumentSlope.lean)
 
+## The two prime weights and the pole contribution
+
+At every nonnegative frequency $u$, the shifted Weil test produces the exact forward prime weight and the backward weight $\Lambda(n)/(e^u n^{3/2})$, including the common phase. The combined contribution at the two poles has modulus at most $16e^{u/2}/(1+t^2)$. To derive the complex-zero form factor, the integrated explicit formula must also pass through the gamma and prime sums and control both height boundaries. [Prime and pole terms](Analysis/MontgomeryResolventPrimeTerms.lean)
+
+## Zeros outside the finite observation interval
+
+For $0\le t\le T$, $T\ge5$ and $u\ge0$, the difference between the full zero resolvent and the finite signal has modulus at most $C e^{u/2}\log(2T+4)((1+t)^{-1}+(1+T-t)^{-1})$. The estimate includes the multiplicities of all zeros beyond either end of the interval. Its integrated contribution and the remaining terms in the shifted explicit formula determine whether the full complex-zero energy has its subunit-frequency limit. [Incoming zero resolvent](Analysis/MontgomeryIncomingResolvent.lean)
+
+## The shifted Gaussian in the actual explicit formula
+
+Each translated, modulated Gaussian of positive heat time is an admissible Weil test. Its Fourier transform at every nontrivial zero has the exact complex exponential heat factor used in the resolvent integral. The actual explicit formula therefore applies at each heat time. Integrating the prime and gamma terms through that formula is a further step. [Shifted Gaussian Weil formula](Analysis/MontgomeryResolventHeatFamily.lean)
+
+## Energy contributed by incoming zeros
+
+The squared difference between the all-zero resolvent and the finite resolvent is integrable on $[0,T]$. Its full integral is at most $Ce^u\log^2(2T+4)$ for $T\ge5$ and $u\ge0$. This controls incoming zeros at every fixed subunit frequency. [Incoming energy](Analysis/MontgomeryIncomingEnergy.lean)
+
+## The spatial heat mixture
+
+For every real $y$, the absolutely integrable heat mixture $\int_0^\infty 2e^{-v}H_v(y)\,dv$ equals $e^{-|y|}$. This identifies the spatial kernel in the resolvent test, including its value at the cusp. [Cauchy heat mixture](Analysis/MontgomeryHeatKernelMixture.lean)
+
+## The centered gamma contribution
+
+Subtracting the logarithmic main term from the actual gamma contribution leaves a variation uniformly bounded in the frequency and ordinate. The bound uses the repository’s vertical gamma estimates with the explicit-formula normalization. The integrated gamma identity is required to connect this estimate to the nonsmooth Weil test. [Centered resolvent gamma term](Analysis/MontgomeryResolventGamma.lean)
+
 ## A signed complex-zero criterion for RH
 
 At every fixed 0 < α < 1, the normalized third-signal residual tends to zero if and only if the sharp complex-zero form factor tends to α. At any fixed α > 0, its plateau at one is equivalent to a limit of 1−α for the signed third-signal and prime off-diagonal expression. At arbitrarily high fixed frequencies a cofinal logarithmic upper bound for that signed expression is equivalent to RH. The actual cofinal bound, the spectral residual limit, and the positive-gap ordinate law remain separate obligations. [MontgomeryFixedFrequencyResidual](Analysis/MontgomeryFixedFrequencyResidual.lean)
