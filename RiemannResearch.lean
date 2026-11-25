@@ -764,6 +764,7 @@ import RiemannResearch.RH.QDensityImageReconstruction
 import RiemannResearch.RH.SquarefreeAffineReciprocal
 import RiemannResearch.RH.QDensityOperatorDecomposition
 import RiemannResearch.RH.MixedReciprocalDensity
+import RiemannResearch.RH.MixedPacketDensityTests
 import RiemannResearch.RH.MixedCaptureZeroPair
 import RiemannResearch.RH.MixedParityProjectionDPP
 import RiemannResearch.RH.MixedParityCaptureFifteen

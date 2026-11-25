@@ -20,6 +20,30 @@ and zero variance iff full unaugmented density. Actual zero variance remains
 Open. A uniform positive gap for C C* is equivalent to finite-dimensionality
 of the Q complement; that gap also remains Open.
 
+## Mixed Pareto density tests
+
+For the original Pareto inner product let `d = 1 - P_V 1`, and let `u`
+be the mean-one generator of the orthogonal complement of `M` in `V`.
+The density multiplier acts by `B f(n) = (1 + 1/n) f(n) / ζ(2)` on
+positive physical coordinates. Write `D f(n) = f(n)/n`.
+[Lean module](RH/MixedPacketDensityTests.lean)
+
+| Declaration | Established statement |
+|---|---|
+| `riemannHypothesis_iff_union_eq_univ` | The literal set union V ∪ B(V) equals the ambient Pareto space iff RH holds. Augmented density is unconditional. |
+| `projected_mixed_dense` | For every closed subspace S containing M, projecting B(M) orthogonally off S has dense image in S⊥. |
+| `screened_eq_one_iff_mixed_density_pairings` | u = 1 iff their Pareto pairings with every BJ_q agree for q ≥ 2 having at least two distinct prime factors. |
+| `semiprime_packet_sequence`, `semiprime_reciprocal_error_sq_le` | For distinct primes p,q, J_pq = r_pq − r_p − r_q, and the full squared Pareto norm of 1 + D J_pq is at most 4/min(p,q). |
+| `projected_density_eq`, `projected_error_sq_le` | Projection off a subspace containing J_pq removes the identity component of B. The projected error has the same upper bound. |
+| `residual_pairing_identity`, `residual_energy_le_of_nonnegative_pairing` | ‖d‖² + ζ(2)⟨d,BJ_pq⟩ = ⟨d,1 + D J_pq⟩. A nonnegative pairing at one pair gives ‖d‖² ≤ 4/min(p,q). |
+| `consecutive_projection_limits`, `residual_pairing_tendsto` | For products of consecutive primes, projecting −ζ(2)BJ_pq off M gives limit 1, and projecting off V gives limit d. Pairing with d gives limit ‖d‖². |
+| `riemannHypothesis_iff_consecutive_leakage_tendsto_zero` | RH iff the projections of these BJ_pq onto V⊥ converge to zero. |
+| `riemannHypothesis_iff_frequently_nonnegative_pairing` | RH iff ⟨d,BJ_pq⟩ is nonnegative at arbitrarily large consecutive-prime products. Both directions use the existing Pareto closure criterion. |
+
+**Open arithmetic obligation.** Establish the nonnegative signs at arbitrarily
+large consecutive-prime products, or establish vanishing of the projected
+density images in the complete Pareto norm.
+
 ## Notation and scope
 
 For physical n >= 1:
