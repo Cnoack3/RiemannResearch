@@ -344,3 +344,134 @@ theorem tendsto_centeredRationalOrdinate_div {n m : ℕ} (hn : 1 ≤ n) (hm : 1 
   exact squeeze_zero_norm' (hb.mono (fun _ ht => ht n m hn hm)) h
 
 end RiemannResearch.Analysis.ActualZeroOrdinate
+
+namespace RiemannResearch.Analysis.ActualZeroOrdinate
+
+/-- Ordered pairs of different zero occurrences. Two copies at the same
+ordinate have phase one and stay in this sum. -/
+noncomputable def distinctCopyDifferenceMode (T u : ℝ) : ℂ := by
+  classical
+  exact ∑ i : Copies T, ∑ j : Copies T,
+    if i = j then 0 else ZeroOrdinate.phase (copyOrdinate T i - copyOrdinate T j) u
+
+/-- Removing literal self-pairs subtracts exactly the actual zero count. -/
+theorem distinctCopyDifferenceMode_eq (T u : ℝ) :
+    distinctCopyDifferenceMode T u =
+      ordinateSum T u * star (ordinateSum T u) - (Ncount 0 T : ℂ) := by
+  classical
+  let f := fun i : Copies T => ZeroOrdinate.phase (copyOrdinate T i) u
+  have hf : ∑ i : Copies T, f i = ordinateSum T u := by
+    rw [ordinateSum, sum_eq_copies]
+    apply Finset.sum_congr rfl
+    intro i _
+    simp only [f, copyOrdinate, ZeroOrdinate.phase, mul_comm (i.1.1.im) u]
+  have hstar : (∑ j : Copies T, star (f j)) = star (∑ j : Copies T, f j) := by simp
+  have hpair (i j : Copies T) :
+      (if i = j then 0 else ZeroOrdinate.phase (copyOrdinate T i - copyOrdinate T j) u) =
+        f i * star (f j) - (if i = j then 1 else 0) := by
+    rw [← ZeroOrdinate.phase_sub]
+    by_cases hij : i = j
+    · subst j; simp
+    · simp [hij]
+  have hd (i : Copies T) : (∑ j : Copies T, if i = j then (1 : ℂ) else 0) = 1 := by simp
+  unfold distinctCopyDifferenceMode
+  simp only [hpair, Finset.sum_sub_distrib, hd, ← Finset.mul_sum, ← Finset.sum_mul,
+    hstar, hf, Finset.sum_const, Finset.card_univ, card_copies, nsmul_eq_mul, mul_one]
+
+private theorem heightSquared_selfPair_tendsto :
+    Tendsto (fun T : ℝ => (Ncount 0 T : ℂ) / (T : ℂ)^2) atTop (𝓝 0) := by
+  obtain ⟨C,hC,hb⟩ := exists_count_le_height_log
+  have hzero : Tendsto (fun T : ℝ => C * (Real.log (T+3) / T)) atTop (𝓝 0) := by
+    simpa using (shifted_log_pow_div_self_tendsto_zero 1).const_mul C
+  have hr : Tendsto (fun T : ℝ => (Ncount 0 T : ℝ)/T^2) atTop (𝓝 0) := by
+    apply squeeze_zero'
+      (Eventually.of_forall fun T => div_nonneg (Nat.cast_nonneg _) (sq_nonneg _)) _ hzero
+    filter_upwards [eventually_ge_atTop (9:ℝ)] with T hT
+    have ht : 0 < T := by linarith
+    have hlog := Real.log_le_log ht (show T ≤ T+3 by linarith)
+    calc
+      _ ≤ (C*T*Real.log T)/T^2 := div_le_div_of_nonneg_right (hb T hT) (sq_nonneg _)
+      _ = C * (Real.log T/T) := by field_simp [ht.ne']
+      _ ≤ _ := mul_le_mul_of_nonneg_left (div_le_div_of_nonneg_right hlog ht.le) hC.le
+  simpa [Function.comp_def] using (Complex.continuous_ofReal.continuousAt.tendsto.comp hr)
+
+/-- A height-normalized single-mode limit determines the factorial
+pair-difference coefficient at its squared normalization. -/
+theorem distinctCopyDifferenceMode_div_sq_of_limit {u : ℝ} {z : ℂ}
+    (h : Tendsto (fun T : ℝ => ordinateSum T u / (T : ℂ)) atTop (𝓝 z)) :
+    Tendsto (fun T : ℝ => distinctCopyDifferenceMode T u / (T : ℂ)^2)
+      atTop (𝓝 (z * star z)) := by
+  have hp := (h.mul h.star).sub heightSquared_selfPair_tendsto
+  simp only [sub_zero] at hp
+  apply hp.congr'
+  filter_upwards [eventually_gt_atTop (0:ℝ)] with T hT
+  have hTc : (T:ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hT.ne'
+  rw [distinctCopyDifferenceMode_eq]
+  simp
+  field_simp [hTc]
+
+/-- Every nonconstant rational logarithmic mode has the exact squared
+arithmetic FMZ coefficient for ordered pairs of distinct occurrences. -/
+theorem tendsto_distinctCopyDifferenceMode_rational {n m : ℕ}
+    (hn : 1 ≤ n) (hm : 1 ≤ m) (hne : n ≠ m) :
+    Tendsto (fun T : ℝ => distinctCopyDifferenceMode T (Real.log ((n:ℝ)/m)) / (T:ℂ)^2)
+      atTop (𝓝 (rationalFMZMain n m * star (rationalFMZMain n m))) :=
+  distinctCopyDifferenceMode_div_sq_of_limit (by
+    simpa [centeredRationalOrdinate, hne] using tendsto_centeredRationalOrdinate_div hn hm)
+
+/-- Every positive logarithmic frequency outside the integer resonances
+has zero height-squared factorial pair coefficient. -/
+theorem tendsto_distinctCopyDifferenceMode_nonresonant {u : ℝ} (hu : 0 < u)
+    (hn : ∀ k : ℕ, u ≠ Real.log k) :
+    Tendsto (fun T : ℝ => distinctCopyDifferenceMode T u / (T:ℂ)^2)
+      atTop (𝓝 0) := by
+  have he := fixed_ordinate_remainder_isBigO_horizontalLogRate hu
+    (tendsto_landau_div_of_nonresonance hu hn)
+  have h : Tendsto (fun T : ℝ => ordinateSum T u / (T:ℂ)) atTop (𝓝 0) := by
+    simpa only [sub_zero] using he.trans_tendsto horizontalLogRate_tendsto_zero
+  simpa using distinctCopyDifferenceMode_div_sq_of_limit h
+
+end RiemannResearch.Analysis.ActualZeroOrdinate
+
+namespace RiemannResearch.Analysis.ActualZeroOrdinate
+
+/-- A one-point error E transfers to a factorial pair error at most
+E(2‖z‖+E), plus the explicit contribution of the removed self-pairs. -/
+theorem distinctCopyDifferenceMode_error_bound (T u : ℝ) (hT : 0 < T) (z : ℂ) :
+    let a := ordinateSum T u / (T : ℂ)
+    ‖distinctCopyDifferenceMode T u / (T : ℂ)^2 - z * star z‖ ≤
+      ‖a-z‖ * (2*‖z‖ + ‖a-z‖) + (Ncount 0 T : ℝ)/T^2 := by
+  let a := ordinateSum T u / (T : ℂ)
+  change _ ≤ ‖a-z‖ * (2*‖z‖ + ‖a-z‖) + _
+  have hTc := Complex.ofReal_ne_zero.mpr hT.ne'
+  have he : distinctCopyDifferenceMode T u / (T : ℂ)^2 - z * star z =
+      ((a-z) * star a + z * star (a-z)) - (Ncount 0 T : ℂ) / (T : ℂ)^2 := by
+    rw [distinctCopyDifferenceMode_eq, star_sub]
+    dsimp only [a]
+    simp
+    field_simp [hTc]
+    <;> ring
+  have ha : ‖a‖ ≤ ‖a-z‖ + ‖z‖ := by
+    simpa only [sub_add_cancel] using norm_add_le (a-z) z
+  have hdiag : ‖(Ncount 0 T : ℂ) / (T : ℂ)^2‖ = (Ncount 0 T : ℝ)/T^2 := by
+    simp [norm_pow, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hT]
+  rw [he]
+  refine (norm_sub_le _ _).trans ?_
+  rw [hdiag]
+  refine add_le_add ?_ le_rfl
+  refine (norm_add_le _ _).trans ?_
+  simp only [norm_mul, norm_star]
+  nlinarith only [mul_le_mul_of_nonneg_left ha (norm_nonneg (a-z))]
+
+end RiemannResearch.Analysis.ActualZeroOrdinate
+
+namespace RiemannResearch.Analysis.ActualZeroOrdinate
+
+/--
+info: 'RiemannResearch.Analysis.ActualZeroOrdinate.tendsto_distinctCopyDifferenceMode_rational' depends on axioms:
+[propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms tendsto_distinctCopyDifferenceMode_rational
+
+end RiemannResearch.Analysis.ActualZeroOrdinate
