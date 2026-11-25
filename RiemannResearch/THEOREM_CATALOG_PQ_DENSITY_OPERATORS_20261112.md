@@ -4,6 +4,39 @@ Date: 2026-11-12 (user-facing date).
 Source: user-provided correction reserving B for dQ/dP.
 Base examined: 8b94e4c6fcadf811881e42aa2999f5c099b643c4.
 
+## Change of measure on the infinite prime-support tower
+
+[PrimeSupportMeasureChange.lean](RH/PrimeSupportMeasureChange.lean) compares the
+same physical packet spaces under the Pareto and zeta-two probabilities.
+`physicalSupportTowerIso` intertwines the quotient transitions.
+`physicalQuotient_subspace` restricts the comparison to legal and centered rows.
+`weighted_layer_parseval` transports the Pareto expansion by the density isometry.
+[QPhysicalQuotientMetric.lean](RH/QPhysicalQuotientMetric.lean) reconstructs each
+Pareto projection by a Q Neumann series with operator norm at most one half.
+`q_neumann_screened_parity_tendsto` recovers the physical sequence of the
+screened Pareto vector along the infinite support filtration.
+`physical_layer_roundtrip` identifies the two perpendicular representatives of
+each successive quotient.
+`physical_quotient_energy_balance` retains both the reciprocal energy and the
+difference between the two optimal representatives at every closed denominator.
+
+In the native Q tower, `q_layer_energy_hasSum` gives the exact infinite sum
+with the terminal quotient norm. For the packet `qParity`, the total available
+energy is `(3/4) * ((log 2)⁻¹ - 1)^2 + 1/4`.
+`riemannHypothesis_iff_q_parity_descent` and
+`riemannHypothesis_iff_q_layer_saturation` identify RH with disappearance of
+the terminal residual and with exhaustion of this energy. Proving the
+arithmetic saturation is open.
+
+[PhysicalHeadQuotientMeasureChange.lean](RH/PhysicalHeadQuotientMeasureChange.lean)
+proves `productSnake_zero_iff_qRelative_summable` and
+`q_head_summable_iff_support_saturation`. These identify the same endpoint
+with summability of the adjacent physical-head quotient energies computed under Q.
+`qArithmeticPrefix_unique` and `qMinimumPrefix_tendsto` transport the signed
+digamma quotient data and reconstruct the actual Pareto projection of parity
+by least-norm representatives under Q. The finite relative-snake comparison
+retains the change in optimal representative at all pairs of head depths.
+
 ## Seven-agenda continuation
 
 The follow-up [seven-agenda catalog](THEOREM_CATALOG_PQ_SEVEN_AGENDAS_20261112.md)

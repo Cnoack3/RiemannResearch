@@ -668,6 +668,9 @@ import RiemannResearch.RH.MixedConductorSupportSnake
 import RiemannResearch.RH.PrimeSupportCokernel
 import RiemannResearch.RH.PrimeSupportParityQuotient
 import RiemannResearch.RH.PrimeSupportParityDescent
+import RiemannResearch.RH.QPhysicalQuotientMetric
+import RiemannResearch.RH.PrimeSupportMeasureChange
+import RiemannResearch.RH.PhysicalHeadQuotientMeasureChange
 import RiemannResearch.RH.PrimeSupportAlgebraDescent
 import RiemannResearch.RH.AlgebraicSupportColimit
 import RiemannResearch.RH.HausdorffSupportColimit
