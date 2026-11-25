@@ -100,6 +100,22 @@ For B ≤ A, the complete drift also equals a finite sum over residue classes in
 
 With the base solve and physical cutoff fixed, the omitted drift tends to zero for every later-solve window length tending to infinity. The closure criterion therefore permits arbitrarily slowly growing windows, still with one common constant for cofinally many base solves and, for each such base, cofinally late updates. `riemannHypothesis_of_bounded_driftWindows` applies this same bound directly to Mathlib’s RH statement. [CenteredMeanDriftWindows](RH/CenteredMeanDriftWindows.lean)
 
+## The damping scale at an individual critical-line zero
+
+For every real $a,u$, write $m$ for the order of zeta at $1/2+ia$. At height $a+\varepsilon u$ the quotient of zeta by its horizontally shifted value converges to $(iu/(1+iu))^m$ as $\varepsilon\downarrow0$. At a simple zero the rescaled squared defect is $1/[(1+u^2)(1/4+a^2)]$. This is an unconditional local limit. A global upper estimate on the natural finite truncation for small damping remains necessary for the prescribed Báez-Duarte fits. [Critical damping profile](RH/ParetoShiftedZetaZeroProfile.lean)
+
+## The contribution of a simple zero to the damping budget
+
+At a simple critical zero of ordinate $a$, the energy of the shifted quotient defect in $[a-L\varepsilon,a+L\varepsilon]$, divided by $\varepsilon$, tends to $2\arctan(L)/(1/4+a^2)$ for every $L\ge0$. This local formula is unconditional. Under RH the full-line energy $J_\varepsilon$ satisfies $J_\varepsilon>b\varepsilon$ eventually for every $b<\pi/(1/4+a^2)$. The repository’s existence theorem for simple critical zeros therefore gives a positive linear lower bound alongside the proved limit $J_\varepsilon\to0$. On the natural truncation route the missing estimate concerns the separate finite polynomial tail. [Damping windows](RH/ParetoShiftedZetaSimpleWindow.lean) and [full-line lower bound](RH/ParetoShiftedZetaSimpleLower.lean)
+
+## The logarithmic derivative inside the right half-strip
+
+Under RH, for each $0<\eta\le1/2$ there is a constant $C_\eta$ such that $|\zeta'/\zeta(\sigma+it)|\le C_\eta\log|t|$ uniformly on $1/2+\eta\le\sigma\le3/2$ and $|t|\ge2$. This uses the repository’s translated-disk estimate after its finite zero sum vanishes. It gives height-uniform control away from the critical line for the complex damping parameter in the approximation problem. Convergence or closure of the small-damping squarefree approximants requires a further argument. [Interior logarithmic derivative](Analysis/RHInteriorLogDerivative.lean)
+
+## Complex perturbations of the damping parameter
+
+The holomorphic representative of $1/\zeta$ has a zero of derivative one at $s=1$. Its analyticity at every $\Re s>1/2$ is equivalent to RH. Under RH the change in zeta modulus across an interior displacement $v$ is bounded by a factor $(2|t|)^{C_\eta\|v\|}$. Around every real damping center $0<d\le3/4$, there is a complex disc of shifts on which the actual critical-line quotient is bounded by $K(2|t|)^{13/32}$ for $|t|\ge3$. The exponent below one half permits square-integrable domination after division by the critical-line variable. Passing from these analytic bounds to membership in the closed squarefree residue space requires the actual annihilator or truncation argument. [Reciprocal zeta](Analysis/AnalyticReciprocalZeta.lean), [variation along segments](Analysis/RHInteriorZetaVariation.lean) and [complex damping bound](RH/ParetoComplexDampingNeighborhood.lean)
+
 ## Uniform zero counts down to height zero
 
 For D(T) = T log T/(2π), the cumulative height distribution satisfies

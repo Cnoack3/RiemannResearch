@@ -29,9 +29,9 @@ private theorem norm_arch_factor (a t : ℝ) :
   rw [Complex.Gammaℝ_def, norm_mul, Complex.norm_cpow_eq_rpow_re_of_pos Real.pi_pos, hre, hv]
 
 /-- Under RH, the critical-line shifted quotient has a uniform explicit
-majorant above height one for every shift in (0,1/4]. -/
-theorem shiftedZetaQuotient_high_le (hRH : RiemannHypothesis) {ε t : ℝ}
-    (hε : 0 < ε) (hε₁ : ε ≤ 1/4) (ht : 1 ≤ |t|) :
+majorant above height one for every shift in (0,1]. -/
+theorem shiftedZetaQuotient_high_le_up_to_one (hRH : RiemannHypothesis) {ε t : ℝ}
+    (hε : 0 < ε) (hε₁ : ε ≤ 1) (ht : 1 ≤ |t|) :
     ‖shiftedZetaQuotient ε t‖ ≤ (1 + ε) * Real.pi ^ (-(ε / 2)) *
       (Real.exp (10 * ε / t ^ 2) * (|t| / 2) ^ (ε / 2)) := by
   let s := criticalPoint t
@@ -45,9 +45,16 @@ theorem shiftedZetaQuotient_high_le (hRH : RiemannHypothesis) {ε t : ℝ}
   have hv' : s = (((1/2 : ℝ) : ℂ) + (t : ℂ) * I) := by simp [s, criticalPoint]
   have hi : s.im = w.im := by simp [w]
   have hsw : s.re ≤ w.re := by rw [hs, hw]; linarith
-  have hw1 : w ≠ 1 := fun h => by have := congrArg Complex.re h; rw [hw, Complex.one_re] at this; linarith
-  have hz := (riemannHypothesis_iff_right_half_strip_zero_free.mp hRH) w (by rw [hw]; linarith)
-    (by rw [hw]; linarith)
+  have hw1 : w ≠ 1 := fun h => by
+    have hv₀ := congrArg Complex.im h
+    have him : w.im = t := by simp [w,s,criticalPoint]
+    rw [him,Complex.one_im] at hv₀
+    rw [hv₀,abs_zero] at ht
+    linarith
+  have hz : riemannZeta w ≠ 0 := by
+    rcases lt_or_ge w.re 1 with hr | hr
+    · exact riemannHypothesis_iff_right_half_strip_zero_free.mp hRH w (by rw [hw]; linarith) hr
+    · exact riemannZeta_ne_zero_of_one_le_re hr
   have hg : 0 < ‖Complex.Gammaℝ s‖ :=
     norm_pos_iff.mpr (Complex.Gammaℝ_ne_zero_of_re_pos (by rw [hs]; norm_num))
   have hsn : 0 < ‖s‖ := norm_pos_iff.mpr (criticalPoint_ne_zero t)
@@ -88,6 +95,14 @@ theorem shiftedZetaQuotient_high_le (hRH : RiemannHypothesis) {ε t : ℝ}
     field_simp [hsn.ne', hsm.ne', hg.ne']
     linarith only [hCmp]
   exact hratio.trans ((mul_le_mul hP hA (div_nonneg (norm_nonneg _) hg.le) (by linarith)).trans_eq (by ring))
+
+/-- Under RH, the critical-line shifted quotient has a uniform explicit
+majorant above height one for every shift in (0,1/4]. -/
+theorem shiftedZetaQuotient_high_le (hRH : RiemannHypothesis) {ε t : ℝ}
+    (hε : 0 < ε) (hε₁ : ε ≤ 1/4) (ht : 1 ≤ |t|) :
+    ‖shiftedZetaQuotient ε t‖ ≤ (1 + ε) * Real.pi ^ (-(ε / 2)) *
+      (Real.exp (10 * ε / t ^ 2) * (|t| / 2) ^ (ε / 2)) :=
+  shiftedZetaQuotient_high_le_up_to_one hRH hε (by linarith) ht
 
 /-- The elementary quadratic factors in xi have no term linear in the
 horizontal shift on the critical line. -/
