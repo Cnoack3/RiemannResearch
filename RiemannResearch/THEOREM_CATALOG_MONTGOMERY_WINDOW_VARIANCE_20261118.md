@@ -1,5 +1,27 @@
 # Fixed-width Montgomery variance
 
+## Signed prime-probe width averages
+
+For the convention \(2/R\) on initial widths, the averaged prime statistic has
+limit \(1+\alpha D_\Lambda\) whenever \(R\to\infty\) and
+\(R/(\log T)^2\to\alpha<\infty\). At supercritical widths its ratio to
+\(R/(\log T)^2\) tends to \(D_\Lambda\). Both statements are unconditional
+arithmetic theorems in [MontgomeryPrimeProbeCesaro](Analysis/MontgomeryPrimeProbeCesaro.lean).
+
+[MontgomerySignedCesaroTrace](Analysis/MontgomerySignedCesaroTrace.lean) preserves
+every equal-ordinate pair in the collision mass and keeps the signed smooth drift.
+Its fixed positive-rational width-average criterion is equivalent to ordinary
+positive-gap PCC. Its compact-width transfer holds uniformly down to zero.
+At all growing submacroscopic widths, after subtracting the exact clipping
+parabola, the trace–gap difference divided by \(R/\log T\) tends to
+\(2(1+\log(2\pi))\). The critical dyadic contrast follows from the
+compensated sampled-argument input at both widths.
+
+The [companion proof](RIEMANN_SIGNED_PRIME_PROBE_CESARO_20261125.md) derives the
+growing-width actual-zero input from the oriented triangle decomposition and
+published argument-function bounds. Those analytic estimates remain external
+to the signed Cesàro Lean transfer. Fixed positive-gap PCC remains open.
+
 ## Kernel-checked reductions
 
 - `MontgomeryWindowVarianceCriterion.lean` proves
