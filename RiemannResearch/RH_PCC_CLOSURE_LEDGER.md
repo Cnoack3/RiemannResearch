@@ -21,6 +21,7 @@ Initial source audit at `cdb1db95f32f9e40123f12a1df359bae704c9d8f`. A theorem wi
 | [c8988b5](https://github.com/Cnoack3/RiemannResearch/commit/c8988b5e085580c3ebf2e9bfd07934d46785d4b6) | Iterated projection–Möbius limits and the rational integrated PCC criterion | [BuildBuddy](https://app.buildbuddy.io/invocation/a78051c1-4fae-4b5d-934c-70ac77591f60) |
 | [c6df6d2](https://github.com/Cnoack3/RiemannResearch/commit/c6df6d2947b0a3f46c5a34e0b5c09a7c6e7ede6d) | Natural-cell energy, quotient norm losses, finite Gram bounds and collision-corrected argument variance | [BuildBuddy](https://app.buildbuddy.io/invocation/a1d2560f-77b2-4338-b7b6-ef41eaabe697) |
 | [190a82e](https://github.com/Cnoack3/RiemannResearch/commit/190a82ec60c50b4a252875bd331c4a7703835c2f) | Direct cumulative zero counts, macroscopic pair limits, the prime mean square, horizontal xi comparison and finite Gram cutoff order | [BuildBuddy](https://app.buildbuddy.io/invocation/350ffbd8-6e25-4271-92c0-c068b4693150) |
+| [4d4b787](https://github.com/Cnoack3/RiemannResearch/commit/4d4b787b0b3f8b5347788940d51c4362b43edd6a) | Actual mesoscopic pair counts, categorical Mellin characters, legal Gram bounds, shifted zeta and reciprocal-charge limits | [BuildBuddy](https://app.buildbuddy.io/invocation/7edbb01f-4cf5-4ea2-beae-1ad4d37f0ac0) |
 
 ## Projection and Möbius cutoff order
 
@@ -156,3 +157,15 @@ The normalized evaluations at the right zeros are linearly independent complex-v
 ## The finite resolvent outside the height interval
 
 The full real pair sum for the finite zero cutoff has an exact nonnegative excess over the integral of its squared resolvent on $[0,T]$. For every $u\ge0$ the excess is at most $C e^u\log^2(T+3)$. At $u=\alpha\log T$ with fixed $0\le\alpha<1$, it vanishes after division by $T\log T$. The passage from this finite signal to the full contour formula must still account for zeros outside the cutoff contributing inside $[0,T]$. The signed functional-equation remainder on the line of real part $-1/2$ is controlled separately. [Finite resolvent](Analysis/MontgomeryFiniteResolventSignal.lean) and [left contour](Analysis/MontgomeryLeftContour.lean)
+
+## Cutoffs that remove endpoint clipping
+
+Every sufficiently high physical interval of length one contains a cutoff with an empty forward band of a common positive unfolded width. At these cutoffs, all shorter forward windows have zero clipping error. For any prescribed width with $D(T)r(T)\to0$, the bare argument statistic admits a decomposition into the actual same-ordinate count and the strict positive-gap primitive with an absolute error tending to zero on the pair-count scale. Both the signed microscopic average and the cofinal collision bound for RH remain open. [Gap-free cutoffs](Analysis/MontgomeryGapFreeCutoffs.lean)
+
+## The actual Weil test and its heat representation
+
+For every real frequency and height, the zero-side transform of the modulated exponential test is absolutely summable over all nontrivial zeta zeros with multiplicity. The heat-parameter integral equals the actual zero sum. To obtain the subunit-frequency complex-zero form factor from this identity, the prime and gamma integrals must also be identified and the finite height boundary controlled. Fixed-width positive-gap PCC requires further estimates. [Resolvent Weil test](Analysis/MontgomeryResolventWeilTest.lean)
+
+## The logarithmic correction to macroscopic gap counts
+
+At each fixed fraction $0\le c\le1$, the actual normalized count has an explicit next coefficient: $\log T\,[P(T,cD)/D-c+c^2/2]$ converges to `macroscopicGapSecondCoefficient c`. At full width the coefficient is $-1-\log(2\pi)$. The actual equal-ordinate collision term divided by $D^2$ still tends to zero after multiplication by $\log T$. The logarithmic correction concerns widths proportional to $D$; the sine-kernel limit at fixed positive widths remains open. [Macroscopic second term](Analysis/MontgomeryMacroscopicGapSecondTerm.lean)
