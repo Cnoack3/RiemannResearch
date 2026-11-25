@@ -2196,6 +2196,12 @@ import RiemannResearch.RH.ParetoShiftedZetaSimpleLower
 import RiemannResearch.RH.ParetoShiftedZetaFiniteLower
 import RiemannResearch.RH.ParetoShiftedZetaBudget
 import RiemannResearch.RH.ParetoComplexDampingNeighborhood
+import RiemannResearch.RH.ParetoDampingTraceMajorant
+import RiemannResearch.RH.ParetoDampedTraceTest
+import RiemannResearch.RH.ParetoDampedTraceLimit
+import RiemannResearch.RH.ParetoDampingAbsoluteSeed
+import RiemannResearch.RH.ParetoSquarefreeDampingConverse
+import RiemannResearch.RH.CenteredMeanSquarefreeConverse
 import RiemannResearch.RH.BalazardDeRotonBiasUnderRH
 import RiemannResearch.RH.BalazardDeRotonChargeLimit
 import RiemannResearch.RH.BalazardDeRotonNaturalTail
@@ -4249,6 +4255,7 @@ import RiemannResearch.RH.PrimePowerReturnBoundary
 import RiemannResearch.RH.PrimeSquarePartialSummation
 import RiemannResearch.RH.SignedWeilCorrelation
 import RiemannResearch.Analysis.RemoteLaplaceTail
+import RiemannResearch.Analysis.DominatedHolomorphicTest
 import RiemannResearch.LinearAlgebra.NullChannelTail
 import RiemannResearch.RH.ArithmeticConductorCommonZeros
 import RiemannResearch.RH.NymanConductorArithmetic
