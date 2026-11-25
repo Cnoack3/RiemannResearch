@@ -9,3 +9,11 @@ Initial source audit at `cdb1db95f32f9e40123f12a1df359bae704c9d8f`. A theorem wi
 | Screened Möbius parity test | [MobiusParityInterchange](RH/MobiusParityInterchange.lean), `screened_pairing_tendsto_zero`, `screened_tail_error_tendsto` | The actual moving tail tends to the first physical value of the screened section minus one. Vanishing of this tail would determine that coordinate. Equality of the entire screened section with the constant requires a further argument. |
 | Actual zero ordinates | [MontgomeryWindowVarianceCriterion](Analysis/MontgomeryWindowVarianceCriterion.lean), `positiveGapPCC_of_rationalTriangleWidthAverages` | Prove the specified triangle width-average limit for the actual zeta-zero occurrences on every rational interval in the theorem. |
 | Determinantal comparison | [ZeroDPPProjectionBridge](Analysis/ZeroDPPProjectionBridge.lean) | Verify the actual limiting projected statistic and control any omitted-pair contribution under this route's hypotheses. |
+
+## Projection and Möbius cutoff order
+
+For the complete signed pairing C(M,N) of the projection residual at M with the canonical Möbius residual at N, each fixed row tends to zero, while every column tends to the same limiting energy E. In fact C(M,N) equals the finite energy E_M whenever N ≤ M. Agreement of these two iterated limits is equivalent to membership of the constant in the closed legal space. The unconditional calculations leave E undetermined. See [CanonicalMobiusProjectionLimits](RH/CanonicalMobiusProjectionLimits.lean).
+
+## Collision-corrected pair correlation
+
+[MontgomeryWindowPairCorrelation](Analysis/MontgomeryWindowPairCorrelation.lean) proves `positiveGapPCC_iff_rationalIntegratedGapDeficit`. Exact subtraction of all equal-ordinate mass gives a criterion on every positive rational width. A proof that the resulting actual integrated deficits tend to zero is still needed.

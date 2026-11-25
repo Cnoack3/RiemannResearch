@@ -2044,6 +2044,7 @@ import RiemannResearch.RH.ExactHeadTailMoment
 import RiemannResearch.RH.ExactHeadCRTExample
 import RiemannResearch.RH.CanonicalMobiusErrorEnergy
 import RiemannResearch.RH.CanonicalMobiusCovarianceDecay
+import RiemannResearch.RH.CanonicalMobiusProjectionLimits
 import RiemannResearch.RH.CanonicalMobiusMovingCovariance
 import RiemannResearch.RH.CanonicalMobiusMovingCutoff
 import RiemannResearch.RH.QCanonicalMovingCovariance

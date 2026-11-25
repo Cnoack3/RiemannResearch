@@ -422,4 +422,101 @@ theorem sineWindowMoment_iff_positiveGapPCC (hGLSS : ShortWindowSecondMomentUppe
     SineWindowMoment ↔ PositiveGapPCC :=
   ⟨positiveGapPCC_of_sineWindowMoment, fun h => sineWindowMoment_of_positiveGapPCC h hGLSS⟩
 
+/-- The measured equal-ordinate atom and the signed positive-gap deficit give
+the complete error in the physical window moment at each positive width. -/
+theorem unfoldedWindowEnergy_sub_sine_eq_collision_sub_deficit {T R : ℝ}
+    (hT : 1 < T) (hR : 0 < R) :
+    unfoldedWindowEnergy T R - sineWindowEnergy R =
+      R * ((actualCollision T : ℝ) / (T * Real.log T / (2 * Real.pi)) -
+        1 - integratedGapDeficit T R) := by
+  rw [unfoldedWindowEnergy, physicalTriangle_eq_collision_add_positive_gaps hT hR.le,
+    sineWindowEnergy, integratedGapDeficit]
+  field_simp [hR.ne'] <;> ring
+
+/-- Monotonicity bounds a band integral between its endpoint masses.
+These comparisons also apply to the sine-model cumulative gap mass. -/
+private theorem gap_band_bounds {f : ℝ → ℝ} (hf : Monotone f) {a b : ℝ} (hab : a ≤ b) :
+    (b - a) * f a ≤ ∫ u in a..b, f u ∧
+      (∫ u in a..b, f u) ≤ (b - a) * f b := by
+  have hl := intervalIntegral.integral_mono_on (μ := volume) hab
+    (f := fun _ : ℝ => f a) intervalIntegrable_const hf.intervalIntegrable
+    (fun u hu => hf hu.1)
+  have hr := intervalIntegral.integral_mono_on (μ := volume) hab
+    hf.intervalIntegrable (g := fun _ : ℝ => f b) intervalIntegrable_const
+    (fun u hu => hf hu.2)
+  simpa only [intervalIntegral.integral_const, smul_eq_mul] using And.intro hl hr
+
+/-- Positive-gap PCC is equivalent to a countable family of collision-subtracted
+triangle limits. The normalization removes the exact equal-ordinate count at every
+height, so both implications hold without a large-window second-moment premise. -/
+theorem positiveGapPCC_iff_rationalIntegratedGapDeficit :
+    PositiveGapPCC ↔ ∀ q : ℚ, 0 < q →
+      Tendsto (fun T : ℝ => integratedGapDeficit T q) atTop (𝓝 0) := by
+  constructor
+  · intro h q hq
+    have hlim := (tendsto_const_nhds (x := ∫ u in (0 : ℝ)..(q : ℝ), sineGapMass u)).sub
+      (tendsto_integrated_gap_of_PCC h (by exact_mod_cast hq : 0 < (q : ℝ)))
+    simpa [integratedGapDeficit] using hlim.const_mul (2 / (q : ℝ))
+  · intro h
+    have hprimitive (q : ℚ) (hq : 0 < q) :
+        Tendsto (fun T : ℝ => ∫ u in (0 : ℝ)..(q : ℝ), positiveGapMass T u) atTop
+          (𝓝 (∫ u in (0 : ℝ)..(q : ℝ), sineGapMass u)) := by
+      have hn : (q : ℝ) ≠ 0 := by exact_mod_cast hq.ne'
+      have hlim := (tendsto_const_nhds (x := ∫ u in (0 : ℝ)..(q : ℝ), sineGapMass u)).sub
+        ((h q hq).const_mul ((q : ℝ) / 2))
+      simp only [mul_zero, sub_zero] at hlim
+      apply hlim.congr' (Eventually.of_forall fun T => ?_)
+      dsimp [integratedGapDeficit]
+      field_simp [hn] <;> ring
+    have band (a b : ℚ) (ha : 0 < a) (hb : 0 < b) :
+        Tendsto (fun T : ℝ => ∫ u in (a : ℝ)..(b : ℝ), positiveGapMass T u) atTop
+          (𝓝 (∫ u in (a : ℝ)..(b : ℝ), sineGapMass u)) := by
+      have hadd {f : ℝ → ℝ} (hf : Monotone f) :
+          (∫ u in (0 : ℝ)..(b : ℝ), f u) - (∫ u in (0 : ℝ)..(a : ℝ), f u) =
+            ∫ u in (a : ℝ)..(b : ℝ), f u := by
+        have hi := intervalIntegral.integral_add_adjacent_intervals (μ := volume)
+          (f := f) (a := 0) (b := (a : ℝ)) (c := (b : ℝ))
+          hf.intervalIntegrable hf.intervalIntegrable
+        linarith only [hi]
+      have hlim := (hprimitive b hb).sub (hprimitive a ha)
+      rw [hadd sineGapMass_mono] at hlim
+      apply hlim.congr'
+      filter_upwards [eventually_gt_atTop (1 : ℝ)] with T hT
+      exact hadd (positiveGapMass_mono hT)
+    apply positiveGapPCC_of_pointwise
+    intro x hx
+    apply tendsto_order.2
+    constructor
+    · intro l hl
+      obtain ⟨a, ha, hax⟩ := exists_rat_btwn
+        (show max 0 (x - (sineGapMass x - l)) < x from max_lt hx (by linarith))
+      obtain ⟨b, hab, hbx⟩ := exists_rat_btwn hax
+      have ha₀ : 0 < (a : ℝ) := lt_of_le_of_lt (le_max_left _ _) ha
+      have hb₀ : 0 < (b : ℝ) := ha₀.trans hab
+      have hla : l < sineGapMass (a : ℝ) := by
+        linarith only [(sineGapMass_increment_bounds hax.le).2,
+          lt_of_le_of_lt (le_max_right _ _) ha]
+      have hstrict := (mul_lt_mul_of_pos_left hla (sub_pos.mpr hab)).trans_le
+        (gap_band_bounds sineGapMass_mono hab.le).1
+      filter_upwards [(band a b (by exact_mod_cast ha₀) (by exact_mod_cast hb₀)).eventually
+        (lt_mem_nhds hstrict), eventually_gt_atTop (1 : ℝ)] with T ht hT
+      have hh := ht.trans_le (gap_band_bounds (positiveGapMass_mono hT) hab.le).2
+      exact (lt_of_mul_lt_mul_left hh (sub_nonneg.mpr hab.le)).trans_le
+        (positiveGapMass_mono hT hbx.le)
+    · intro l hl
+      obtain ⟨b, hxb, hb⟩ := exists_rat_btwn
+        (show x < x + (l - sineGapMass x) by linarith)
+      obtain ⟨a, hxa, hab⟩ := exists_rat_btwn hxb
+      have ha₀ : 0 < (a : ℝ) := hx.trans hxa
+      have hb₀ : 0 < (b : ℝ) := ha₀.trans hab
+      have hbl : sineGapMass (b : ℝ) < l := by
+        linarith only [(sineGapMass_increment_bounds hxb.le).2, hb]
+      have hstrict := (gap_band_bounds sineGapMass_mono hab.le).2.trans_lt
+        (mul_lt_mul_of_pos_left hbl (sub_pos.mpr hab))
+      filter_upwards [(band a b (by exact_mod_cast ha₀) (by exact_mod_cast hb₀)).eventually
+        (gt_mem_nhds hstrict), eventually_gt_atTop (1 : ℝ)] with T ht hT
+      have hh := (gap_band_bounds (positiveGapMass_mono hT) hab.le).1.trans_lt ht
+      exact (positiveGapMass_mono hT hxa.le).trans_lt
+        (lt_of_mul_lt_mul_left hh (sub_nonneg.mpr hab.le))
+
 end RiemannResearch.Analysis.MontgomeryPositiveGap
