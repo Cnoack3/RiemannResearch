@@ -54,7 +54,19 @@ The stronger repository predicate `FullOrdinateIntervalUpper` adds $\mathbf1_{a=
 
 ## Sharp range and the quadratic transition
 
-The quadratic threshold and its limiting coefficient are proved on paper below. Lean verifies the summable Mertens envelope, a squared-increment estimate on each block, a Fourier translation estimate, and the first-atom lower bound. A Lean proof of the full quadratic profile still requires the uniform tail estimate (1), the diagonal limit, and the bound on the signed mixed term. [Mertens envelope](Analysis/MontgomeryCenteredMertens.lean) · [Block increments](Analysis/MontgomeryPrimeProbeBlockIncrement.lean) · [Fourier translation](Analysis/MontgomeryPrimeProbeTranslation.lean) · [First atom](Analysis/MontgomeryPrimeProbeAtomTest.lean)
+Lean proves the sharp threshold and both transition profiles. In angular frequency $t=2\pi u/L$, the formal proof truncates the log cutoff at $Y=\min(L,B^{1/4})$, with $B=2\pi q/L$. The strong PNT bounds the discarded Fourier amplitude by $O(B^{-1/4})$. The repository's weighted Montgomery–Vaughan theorem bounds the finite polynomial's mean-square error before division by $B$ by $52Y(Y+\log 4+4)$. Lean also proves uniform Fourier-tail decay for all larger cutoffs and all angular bands $B\ge1$, and recovers the finite diagonal at each fixed log cutoff $M\ge1$. The prime–continuum cross term is an exact sine-integral test of the centered Mertens measure. The translation argument below gives a second derivation of the diagonal limit. [Uniform Fourier diagonal](Analysis/MontgomeryPrimeProbeQuadraticFourier.lean) · [Mixed kernel](Analysis/MontgomeryPrimeProbeMixedKernel.lean) · [Sharp moving-width theorems](Analysis/MontgomeryPrimeProbeSharpWidths.lean)
+
+| Conclusion | Lean declaration in `MontgomeryPrimeTrace` |
+| --- | --- |
+| Uniform Cesàro decay of the discarded Fourier tail | `primeLogDiscrepancy_uniform_fourier_tail` |
+| Prime expression for $D$ and strict positivity | `primeProbeDiagonal_eq_tsum_primes`, `primeProbeDiagonal_pos` |
+| $\lvert H_T(q)-E_d(T,q)\rvert\ll 1/L$ uniformly in $q\ge0$ | `primeProbe_mixed_error_uniform` |
+| $E_d(T,q)/(q/L^2)\to D$ when $q/L\to\infty$ | `primeProbeFourierErrorEnergy_superlog` |
+| $H_T(q)/(q/L^2)\to D$ when $q/L\to\infty$ | `primeProbeEnergyExcess_superlog` |
+| $H_T(q)\to\alpha D$ when $q/L^2\to\alpha>0$ | `primeProbeEnergyExcess_critical` |
+| $H_T(q)\to0$ iff $q/L^2\to0$ for eventually nonnegative widths | `primeProbeEnergyExcess_tendsto_zero_iff` |
+| Critical-width target for the signed ordinate increment | `movingPrimeProbeTrace_critical_iff` |
+
 
 Define the signed measure on log coordinates by
 $$

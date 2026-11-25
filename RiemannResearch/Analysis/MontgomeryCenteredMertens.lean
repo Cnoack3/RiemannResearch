@@ -295,4 +295,73 @@ theorem logMertensRemainder_summable_envelope :
     exact (h y hy).trans (div_le_div_of_nonneg_left hD.le (by positivity)
       (pow_le_pow_left₀ (by positivity) (by linarith : 1 + (j : ℝ) ≤ 1 + y) 2))
 
+
+/-- A common inverse-power majorant for every point and for the integral on a log tail.
+The factor `z^5` lets the angular frequency grow as `z^4`. -/
+theorem logMertensRemainder_fifth_tail :
+    ∃ K > (0 : ℝ), ∀ {z L : ℝ}, 1 ≤ z → z ≤ L →
+      |logMertensRemainder L| ≤ K / z^5 ∧
+      (∫ y in z..L, |logMertensRemainder y|) ≤ K / z^5 := by
+  obtain ⟨a, ha, C, hC, hr⟩ := logMertensRemainder_stretched
+  let k : ℝ := (Nat.factorial 12 : ℝ) / a^12
+  let K : ℝ := 2*C*k
+  have hk : 0 < k := by dsimp [k]; positivity
+  have hK : 0 < K := by dsimp [K]; positivity
+  refine ⟨K, hK, fun {z L} hz hzL => ?_⟩
+  have hz0 : 0 < z := by linarith
+  have major {y : ℝ} (hy : z ≤ y) :
+      |logMertensRemainder y| ≤ (K/z^5) * invSqProfile y := by
+    have hy0 : 0 ≤ y := by linarith
+    have he := Real.pow_div_factorial_le_exp (a*Real.sqrt y) (by positivity) 12
+    have hs : Real.sqrt y ^ 12 = y^6 := by
+      rw [show (12 : ℕ) = 2*6 by decide, pow_mul, Real.sq_sqrt hy0]
+    rw [mul_pow, hs] at he
+    have hy6 : y^6 ≤ k * Real.exp (a*Real.sqrt y) := by
+      dsimp [k]
+      have hf : (0:ℝ) < (Nat.factorial 12 : ℝ) := by positivity
+      have he' := (div_le_iff₀ hf).1 he
+      field_simp [ha.ne']
+      linarith
+    have hzy : z^5 * (1+y) ≤ 2*y^6 := calc
+      _ ≤ y^5 * (2*y) := mul_le_mul (pow_le_pow_left₀ hz0.le hy 5)
+        (by linarith) (by linarith) (by positivity)
+      _ = _ := by ring
+    have hprod : z^5 * (1+y) * Real.exp (-a*Real.sqrt y) ≤ 2*k := by
+      rw [neg_mul, Real.exp_neg, ← div_eq_mul_inv]
+      exact (div_le_iff₀ (Real.exp_pos _)).2 (by linarith)
+    refine (hr y hy0).trans ?_
+    dsimp [invSqProfile, K]
+    rw [← div_eq_mul_inv]
+    have h1 : 0 < 1+y := by linarith
+    field_simp [h1.ne', hz0.ne']
+    rw [neg_mul] at hprod
+    nlinarith only [hprod]
+  constructor
+  · refine (major hzL).trans (mul_le_of_le_one_right (by positivity) ?_)
+    dsimp [invSqProfile]
+    exact inv_le_one_of_one_le₀ (by nlinarith [sq_nonneg L])
+  · rw [intervalIntegral.integral_of_le hzL]
+    have hj := (integrableOn_logMertensRemainder.mono_set
+      (show Ioc z L ⊆ Ioi 0 from fun _ hx => hz0.trans hx.1)).abs
+    have hi : IntegrableOn (fun y => (K/z^5)*invSqProfile y) (Ioi z) :=
+      (invSqProfile_integrable hz0.le).const_mul (K/z^5)
+    calc
+      _ ≤ ∫ y in Ioc z L, (K/z^5)*invSqProfile y := by
+        apply integral_mono_ae hj (hi.mono_set Ioc_subset_Ioi_self)
+        filter_upwards [ae_restrict_mem measurableSet_Ioc] with y hy
+        exact major hy.1.le
+      _ ≤ ∫ y in Ioi z, (K/z^5)*invSqProfile y :=
+        setIntegral_mono_set hi (Eventually.of_forall fun y => by dsimp [invSqProfile]; positivity)
+          (Eventually.of_forall fun _ h => h.1)
+      _ ≤ _ := by
+        rw [integral_const_mul, invSqProfile_integral hz0.le]
+        apply mul_le_of_le_one_right (by positivity)
+        exact inv_le_one_of_one_le₀ (by linarith)
+
+/--
+info: 'RiemannResearch.Analysis.MontgomeryPrimeTrace.logMertensRemainder_fifth_tail' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms logMertensRemainder_fifth_tail
+
 end RiemannResearch.Analysis.MontgomeryPrimeTrace
