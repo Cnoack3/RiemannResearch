@@ -62,6 +62,24 @@ Pareto norm. [Lean module](RH/SemiprimeFekete.lean)
 **Open arithmetic obligation.** Prove the nonnegative sums on arbitrarily long actual
 blocks, or the doubling inequalities at arbitrarily large exponents on one fixed tower.
 
+### Finite sign bounds and corrected semiprime blocks
+
+Write \(E=\|1-P_V1\|^2\), \(p_0=2\), and \(q_j=p_jp_{j+1}\).
+For a block starting at \(k\) of length \(n>0\), put \(D=\sum_{j<n}(2j+1)/p_{k+j}\)
+and \(M=\sum_{j<n}(2j+1)/q_{k+j}\). [Lean module](RH/SemiprimeBlockRemainders.lean)
+and [proof with explicit constants](SEMIPRIME_BLOCK_REMAINDERS_20261125.md).
+
+| Declaration | Result |
+|---|---|
+| `residueDefect_centered`, `rightZero_bound_of_residueDefect_nonneg` | For \(1\le a\le b\), a favorable defect implies \(E\le1/a+3/b\), and this bounds the Mellin obstruction of each right zero. |
+| `block_error_sq_le_odd_weights`, `energy_le_of_nonnegative_signed_block` | The original signed block \(S\) satisfies \((S+nE)^2\le4ED\). In particular \(S\ge0\) implies \(E\le4D/n^2\). |
+| `productBlock_abs_error_sq_le`, `adjacent_product_errors_summable` | The product errors are absolutely summable. The squared sum of absolute errors on the block is at most \(EM\). |
+| `energy_le_of_correctedBlock_nonpos`, `riemannHypothesis_iff_frequently_correctedBlock_nonpos` | For \(B=\sum_{j<n}R(q_{k+j})\), the sign \(B\le0\) gives \(E\le M/n^2\). RH is equivalent to such blocks at arbitrarily large lengths. |
+| `doubling_sign_energy_le`, `power_residue_variation_sq_le` | A favorable doubling at \(a^k\) gives \(E\le4/a^k\). The squared finite variation on the power tail is at most \(E/a^k\). |
+
+The explicit uniform inequality \(M<37/25\) and the little-oh remainder for Fekete's infimum
+are derived in the written proof. A favorable sign for the actual residual at unbounded scale remains open.
+
 ## Notation and scope
 
 For physical n >= 1:
