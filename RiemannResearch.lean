@@ -611,6 +611,7 @@ import RiemannResearch.RH.MixedConductorDilation
 import RiemannResearch.RH.MixedConductorCovariance
 import RiemannResearch.RH.ResidueConductorVariation
 import RiemannResearch.RH.MixedConductorRankOne
+import RiemannResearch.RH.MixedConductorBilinear
 import RiemannResearch.RH.ParetoPrimePowerCovariance
 import RiemannResearch.RH.ScreenedMeanDilationTests
 import RiemannResearch.RH.MobiusParityInterchange
