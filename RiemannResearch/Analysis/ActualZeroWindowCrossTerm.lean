@@ -155,14 +155,12 @@ theorem abs_integral_discrepancy_increment_mul_gammaDrift_le {T h lam M B : ℝ}
       (hg (a := 0) (b := t) (mem_Ici.mpr le_rfl) (mem_Ici.mpr ht.1) ht.1)
   · exact (hg (a := t) (b := T) (mem_Ici.mpr ht.1) (mem_Ici.mpr hT) ht.2).trans hhi
 
-/-- A uniform finite - height mixed - term bound at every width at most one.
-The only height dependence outside the microscopic width is logarithmic.
-The exact weight retains the chosen center. -/
-theorem exists_abs_integral_discrepancy_increment_mul_gammaDrift_le :
+/-- Both endpoint contributions retain the physical width or the chosen center. -/
+theorem exists_abs_integral_discrepancy_increment_mul_gammaDrift_le_width :
     ∃ C : ℝ, 0 < C ∧ ∀ T h lam : ℝ, 1 ≤ T → 0 ≤ h → h ≤ 1 →
       |∫ t in (0 : ℝ)..T, (discrepancy (t + h) - discrepancy t) *
         ((∫ u in t..t + h, mu u) - lam)| ≤
-        4 * h * (C * (1 + Real.log (T + 5))) * (1 + |lam| + h * C * Real.log (T + 4)) := by
+        4 * h * (C * (1 + Real.log (T + 5))) * (h + |lam| + h * C * Real.log (T + 4)) := by
   obtain ⟨A, hA, hD⟩ := exists_abs_discrepancy_le_log
   obtain ⟨K, hK, hk⟩ := RvM.mu_le_log gammaFacts
   let C := max A K
@@ -194,12 +192,27 @@ theorem exists_abs_integral_discrepancy_increment_mul_gammaDrift_le :
     exact (hD t ht.1).trans (mul_le_mul hAC
       (add_le_add le_rfl (Real.log_le_log (by linarith [ht.1]) (by linarith [ht.2])))
       (by linarith [Real.log_nonneg (show 1 ≤ t + 4 by linarith [ht.1])]) hC.le)
-  · linarith only [ha, hh1, le_abs_self lam, hplus]
-  · nlinarith only [(abs_le.mp hupper).2, neg_abs_le lam]
+  · linarith only [ha, le_abs_self lam, hplus]
+  · nlinarith only [(abs_le.mp hupper).2, neg_abs_le lam, hh]
+
+/-- A uniform finite - height mixed - term bound at every width at most one.
+The only height dependence outside the microscopic width is logarithmic.
+The exact weight retains the chosen center. -/
+theorem exists_abs_integral_discrepancy_increment_mul_gammaDrift_le :
+    ∃ C : ℝ, 0 < C ∧ ∀ T h lam : ℝ, 1 ≤ T → 0 ≤ h → h ≤ 1 →
+      |∫ t in (0 : ℝ)..T, (discrepancy (t + h) - discrepancy t) *
+        ((∫ u in t..t + h, mu u) - lam)| ≤
+        4 * h * (C * (1 + Real.log (T + 5))) * (1 + |lam| + h * C * Real.log (T + 4)) := by
+  obtain ⟨C, hC, he⟩ := exists_abs_integral_discrepancy_increment_mul_gammaDrift_le_width
+  refine ⟨C, hC, fun T h lam hT hh hh₁ => (he T h lam hT hh hh₁).trans ?_⟩
+  have hlog : 0 ≤ Real.log (T + 5) := Real.log_nonneg (by linarith)
+  apply mul_le_mul_of_nonneg_left _ (by positivity)
+  linarith only [hh₁]
 
 /-- The signed cross term is bounded by a constant times the unfolded width,
 uniformly in height and for bounded widths and centers. -/
-theorem eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le_width_mul {B : ℝ} (hB : 0 ≤ B) :
+theorem eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le_width_mul
+    {B : ℝ} (hB : 0 ≤ B) :
     ∃ K : ℝ, 0 ≤ K ∧ ∀ᶠ T : ℝ in atTop, ∀ R lam : ℝ, 0 ≤ R → R ≤ B → |lam| ≤ B →
       let h := R / (Real.log T / (2 * Real.pi))
       |∫ t in (0 : ℝ)..T, (discrepancy (t + h) - discrepancy t) *
@@ -219,8 +232,9 @@ theorem eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le_width_mu
   have hprod : h * Real.log T = 2 * Real.pi * R := by
     dsimp [h]
     field_simp [hp.ne', Real.pi_ne_zero]
-    <;> ring
-  have hhP : h * Real.log T ≤ P := by rw [hprod]; exact mul_le_mul_of_nonneg_left hRB (by positivity)
+  have hhP : h * Real.log T ≤ P := by
+    rw [hprod]
+    exact mul_le_mul_of_nonneg_left hRB (by positivity)
   have hh1 : h ≤ 1 := (le_of_mul_le_mul_right ((hhP.trans hPL).trans_eq (one_mul _).symm) hp)
   have hlog5 : Real.log (T + 5) ≤ 2 * Real.log T := by
     calc Real.log (T + 5) ≤ Real.log (T ^ 2) := Real.log_le_log (by linarith) (by nlinarith)
@@ -229,7 +243,7 @@ theorem eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le_width_mu
     (Real.log_le_log (by linarith) (by linarith)).trans hlog5
   have hleft : 4 * h * (C * (1 + Real.log (T + 5))) ≤ 12 * C * (2 * Real.pi * R) := by
     calc
-      _ ≤ 4 * h * (C * (3 * Real.log T)) := by gcongr <;> linarith
+      _ ≤ 4 * h * (C * (3 * Real.log T)) := by gcongr; linarith
       _ = 12 * C * (h * Real.log T) := by ring
       _ = _ := by rw [hprod]
   have hright : 1 + |lam| + h * C * Real.log (T + 4) ≤ 1 + B + 2 * P * C := by
@@ -256,6 +270,57 @@ theorem eventually_abs_integral_discrepancy_increment_mul_gammaDrift_le {B : ℝ
   refine ⟨B * K, mul_nonneg hB hK, ?_⟩
   filter_upwards [he] with T hT R lam hR hRB hlam
   exact (hT R lam hR hRB hlam).trans (mul_le_mul_of_nonneg_right hRB hK)
+
+/-- Centering at the unfolded width gives two factors of that width in
+the signed gamma cross term, uniformly in height on the unit width interval. -/
+theorem eventually_centered_discrepancy_gamma_cross_le_width_sq :
+    ∃ K : ℝ, 0 ≤ K ∧ ∀ᶠ T : ℝ in atTop, ∀ R ∈ Icc (0 : ℝ) 1,
+      let h := R / (Real.log T / (2 * Real.pi))
+      |∫ t in (0 : ℝ)..T, (discrepancy (t + h) - discrepancy t) *
+        ((∫ u in t..t + h, mu u) - R)| ≤ K * R ^ 2 := by
+  obtain ⟨C,hC,he⟩ := exists_abs_integral_discrepancy_increment_mul_gammaDrift_le_width
+  let P := 2 * Real.pi
+  have hP : 0 < P := by dsimp [P]; positivity
+  refine ⟨12 * C * P * (P + 1 + 2 * P * C), by positivity, ?_⟩
+  filter_upwards [eventually_ge_atTop (4 : ℝ),
+    Real.tendsto_log_atTop.eventually_ge_atTop (max 1 P)] with T hT hlog R hr
+  let h := R / (Real.log T / P)
+  have ht : 0 < T := by linarith
+  have hlog₁ : 1 ≤ Real.log T := (le_max_left _ _).trans hlog
+  have hlogP : P ≤ Real.log T := (le_max_right _ _).trans hlog
+  have hlogPos : 0 < Real.log T := by linarith
+  have hh : 0 ≤ h := div_nonneg hr.1 (div_nonneg hlogPos.le hP.le)
+  have hhL : h * Real.log T = P * R := by
+    dsimp [h]
+    field_simp [hlogPos.ne',hP.ne']
+  have hhP : h ≤ P * R := by
+    calc h ≤ h * Real.log T := by simpa using mul_le_mul_of_nonneg_left hlog₁ hh
+         _ = _ := hhL
+  have hh₁ : h ≤ 1 := by
+    apply (div_le_iff₀ (div_pos hlogPos hP)).2
+    simp only [one_mul]
+    exact (le_div_iff₀ hP).2 ((mul_le_mul_of_nonneg_right hr.2 hP.le).trans
+      (by simpa using hlogP))
+  have hlog₅ : Real.log (T+5) ≤ 2 * Real.log T := by
+    calc Real.log (T+5) ≤ Real.log (T^2) := Real.log_le_log (by linarith) (by nlinarith)
+         _ = _ := by rw [Real.log_pow]; norm_num
+  have hlog₄ : Real.log (T+4) ≤ 2 * Real.log T :=
+    (Real.log_le_log (by linarith) (by linarith)).trans hlog₅
+  have hl : 4 * h * (C * (1 + Real.log (T+5))) ≤ 12 * C * P * R := by
+    calc _ ≤ 4 * h * (C * (3 * Real.log T)) := by gcongr; linarith
+         _ = 12 * C * (h * Real.log T) := by ring
+         _ = _ := by rw [hhL]; ring
+  have hrhs : h + |R| + h * C * Real.log (T+4) ≤ (P + 1 + 2 * P * C) * R := by
+    rw [abs_of_nonneg hr.1]
+    have hup := mul_le_mul_of_nonneg_left hlog₄ (mul_nonneg hh hC.le)
+    have heq : h * C * (2 * Real.log T) = 2 * P * C * R := by
+      calc _ = 2 * C * (h * Real.log T) := by ring
+           _ = _ := by rw [hhL]; ring
+    linarith only [hhP,hup,heq,show (P + 1 + 2 * P * C) * R =
+      P * R + R + 2 * P * C * R by ring]
+  have hpos : 0 ≤ Real.log (T+4) := Real.log_nonneg (by linarith)
+  apply (he T h R (by linarith) hh hh₁).trans
+  exact (mul_le_mul hl hrhs (by positivity) (mul_nonneg (by positivity) hr.1)).trans_eq (by ring)
 
 end ActualZeroDiscrepancy
 end RiemannResearch.Analysis

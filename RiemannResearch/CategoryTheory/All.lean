@@ -10,6 +10,8 @@ import RiemannResearch.CategoryTheory.SquarefreeResidueCRT
 import RiemannResearch.NumberTheory.ProfiniteCRTUniversal
 import RiemannResearch.RH.AlgebraicSupportColimit
 import RiemannResearch.RH.CenteredMeanAmbientGeometry
+import RiemannResearch.RH.CenteredMeanMellinDescent
+import RiemannResearch.RH.CenteredMeanMellinCharacters
 import RiemannResearch.RH.CenteredMeanFiniteDescent
 import RiemannResearch.RH.MixedConductorStrictDescent
 import RiemannResearch.RH.MixedPrimeCorrelationSeries
@@ -17,12 +19,16 @@ import RiemannResearch.RH.TernaryMixedOrbitObstruction
 import RiemannResearch.RH.CenteredMeanStageSnake
 import RiemannResearch.RH.CenteredMeanDigammaSection
 import RiemannResearch.RH.CenteredMeanPeriodicGramTail
+import RiemannResearch.RH.CenteredMeanMovingGramTail
+import RiemannResearch.RH.CenteredMeanProgressionGramTail
+import RiemannResearch.RH.CenteredMeanDriftWindows
 import RiemannResearch.RH.ConductorReconstructionEnergy
 import RiemannResearch.RH.ConductorTowerLimit
 import RiemannResearch.RH.FiniteAtomCarryFunctor
 import RiemannResearch.RH.HausdorffSupportColimit
 import RiemannResearch.RH.MeanSectionStructure
 import RiemannResearch.RH.MixedConductorPolarizedParseval
+import RiemannResearch.RH.MixedConductorL1Closure
 import RiemannResearch.RH.MixedConductorSplitExact
 import RiemannResearch.RH.MixedConductorSupportSnake
 import RiemannResearch.RH.MixedParityCarry

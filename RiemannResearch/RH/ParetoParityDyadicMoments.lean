@@ -1,4 +1,5 @@
 import RiemannResearch.RH.ParetoParityAdjointCriterion
+import RiemannResearch.RH.FiniteEndpointGram
 import Mathlib.NumberTheory.ZetaValues
 
 /-! # Moments of the physical dyadic parity adjoint
@@ -95,6 +96,54 @@ theorem dyadicMomentProfile_second :
   calc
     _ = 1 - 4 * (Real.pi^2 / 8) + 4 := hh.tsum_eq
     _ = _ := by ring
+
+/-- The first two moments of the reciprocal profile determine the squared
+norm of the uncentered adjoint parity packet exactly. -/
+theorem parityAdjointPacket_norm_sq :
+    ‖parityAdjointPacket‖^2 = 2*Real.log 2 - Real.pi^2/8 := by
+  have hmean := dyadicMomentProfile_mean
+  rw [dyadicMomentProfile,inner_sub_left,real_inner_smul_left,
+    real_inner_self_eq_norm_sq,hilbertOne_norm_sq] at hmean
+  have hnorm := dyadicMomentProfile_second
+  rw [dyadicMomentProfile,norm_sub_sq_real,hilbertOne_norm_sq,norm_smul,
+    Real.norm_eq_abs,abs_of_nonneg (by norm_num : (0:ℝ) ≤ 2),mul_pow,
+    real_inner_smul_right] at hnorm
+  linarith only [hmean, hnorm, real_inner_comm hilbertOne parityAdjointPacket]
+
+/-- Subtracting any doubled ambient vector from parity off the first site
+has an explicit positive cost. Equality is attained at one half of the
+adjoint parity packet. -/
+theorem parity_off_first_site_dyadic_distance (v : ThresholdHilbert) :
+    ‖(ramanujanPacketHilbert 2 - paretoPointHilbert 0) - doubleDilation v‖^2 =
+      Real.pi^2/16 - 1/2 + 2*‖v - (1/2 : ℝ) • parityAdjointPacket‖^2 := by
+  have hfirst : hilbertSequence (ramanujanPacketHilbert 2) 1 = 1 := by
+    rw [hilbertSequence_ramanujanPacketHilbert, ramanujanPacket_prime_eq_residue 2 Nat.prime_two]
+    norm_num [residue]
+  have hq : ‖ramanujanPacketHilbert 2 - paretoPointHilbert 0‖^2 = Real.log 2-1/2 := by
+    simpa only [hfirst,one_smul,one_pow,ramanujanPacketHilbert_two_norm_sq] using
+      remove_firstPoint_norm_sq (ramanujanPacketHilbert 2)
+  have hd : ‖doubleDilation v‖^2 = 2*‖v‖^2 := by
+    rw [← real_inner_self_eq_norm_sq, doubleDilation_inner, real_inner_self_eq_norm_sq]
+  have hp : inner ℝ (paretoPointHilbert 0) (doubleDilation v) = 0 :=
+    (real_inner_comm ..).trans (doubleDilation_inner_firstPoint _)
+  have hqv : inner ℝ (ramanujanPacketHilbert 2 - paretoPointHilbert 0) (doubleDilation v) =
+      inner ℝ v parityAdjointPacket := by
+    rw [inner_sub_left,hp,sub_zero,real_inner_comm]
+    exact (ContinuousLinearMap.adjoint_inner_right (hilbertDilationContinuous 2 (by decide))
+      v (ramanujanPacketHilbert 2)).symm
+  rw [norm_sub_sq_real, hq,hd,hqv,norm_sub_sq_real,norm_smul,Real.norm_eq_abs,
+    abs_of_nonneg (by norm_num : (0:ℝ) ≤ 1/2),mul_pow,parityAdjointPacket_norm_sq,
+    real_inner_smul_right]
+  ring
+
+/-- The exact dyadic cost floor is positive, uniformly over the full ambient space. -/
+theorem parity_off_first_site_dyadic_floor (v : ThresholdHilbert) :
+    0 < Real.pi^2/16 - 1/2 ∧ Real.pi^2/16 - 1/2 ≤
+      ‖(ramanujanPacketHilbert 2 - paretoPointHilbert 0) - doubleDilation v‖^2 := by
+  constructor
+  · nlinarith only [mul_self_lt_mul_self (by norm_num : (0:ℝ) ≤ 3) Real.pi_gt_three]
+  · rw [parity_off_first_site_dyadic_distance]
+    linarith only [sq_nonneg ‖v - (1/2 : ℝ) • parityAdjointPacket‖]
 
 /-- The ambient projection to any isometric image can be computed by pulling
 the input back by the adjoint, projecting, and applying the isometry. -/

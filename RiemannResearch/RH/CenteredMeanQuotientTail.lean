@@ -125,13 +125,17 @@ open RiemannResearch.Analysis in
 /-- At one positive exponent the Möbius energy estimate permits a stretched
 factor of slack in the cofinal tail budget. Both the exponent and this implication
 are unconditional. An actual cofinal upper bound remains an arithmetic input. -/
-theorem exists_riemannHypothesis_of_stretched_coordinateLossTail :
+theorem exists_boundary_zero_of_stretched_coordinateLossTail :
     ∃ b : ℝ, 0 < b ∧ ∀ C : ℝ,
       (∃ᶠ N : ℕ in atTop, (N : ℝ) * Real.exp (-b * logProductPower (1 / 11)
-        (6 + Real.log (N : ℝ))) * coordinateLossTail N ≤ C) → RiemannHypothesis := by
-  obtain ⟨b, hb, hRH⟩ := exists_riemannHypothesis_of_frequently_bounded_stretched_residual_tail
-  refine ⟨b, hb, fun C hC => hRH (2 * limitEnergy ^ 2 +
-    2 * (1 - limitEnergy) ^ 2 * (1 + ‖defect‖ ^ 2) * C) ?_⟩
+        (6 + Real.log (N : ℝ))) * coordinateLossTail N ≤ C) → boundary = 0 := by
+  obtain ⟨b, hb, hz⟩ := exists_annihilator_inner_one_eq_zero_of_frequently_bounded_stretched_tail
+  refine ⟨b, hb, fun C hC => ?_⟩
+  apply boundary_eq_zero_iff_one_mem.mpr
+  apply limitEnergy_zero_iff_mem.mp
+  rw [← limitResidual_inner_one]
+  apply hz limitResidual limitResidual_mem_orthogonal
+    (2 * limitEnergy ^ 2 + 2 * (1 - limitEnergy) ^ 2 * (1 + ‖defect‖ ^ 2) * C)
   apply (hC.and_eventually (eventually_ge_atTop (1 : ℕ))).mono
   rintro N ⟨hN, hNpos⟩
   let w := Real.exp (-b * logProductPower (1 / 11) (6 + Real.log (N : ℝ)))
@@ -151,5 +155,14 @@ theorem exists_riemannHypothesis_of_stretched_coordinateLossTail :
   change w * ((N : ℝ) * residualTailEnergy N) ≤
     w * (2 * limitEnergy ^ 2 + A * ((N : ℝ) * coordinateLossTail N)) at h
   linarith only [h, hconst, hvar]
+
+open RiemannResearch.Analysis in
+/-- The stretched loss-tail budget implies Mathlib's RH without a converse assumption. -/
+theorem exists_riemannHypothesis_of_stretched_coordinateLossTail :
+    ∃ b : ℝ, 0 < b ∧ ∀ C : ℝ,
+      (∃ᶠ N : ℕ in atTop, (N : ℝ) * Real.exp (-b * logProductPower (1 / 11)
+        (6 + Real.log (N : ℝ))) * coordinateLossTail N ≤ C) → RiemannHypothesis := by
+  obtain ⟨b, hb, hz⟩ := exists_boundary_zero_of_stretched_coordinateLossTail
+  exact ⟨b, hb, fun C h => riemannHypothesis_of_boundary_eq_zero (hz C h)⟩
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake

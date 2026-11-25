@@ -7,6 +7,7 @@ import RiemannResearch.RH.MixedCaptureLegalTrials
 import RiemannResearch.RH.MixedConductorRankOne
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.Analysis.Normed.Group.Quotient
+import Mathlib.CategoryTheory.ConcreteCategory.EpiMono
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
@@ -142,6 +143,53 @@ private theorem exists_mixed_defect_common (z : meanZero) :
   obtain ⟨v, hv, w, hw, he⟩ := Submodule.mem_sup.mp h
   obtain ⟨t, rfl⟩ := Submodule.mem_span_singleton.mp hv
   exact ⟨m, hm, t, ⟨w, hw⟩, congrArg (m + ·) (Subtype.ext he.symm)⟩
+
+/-- The scalar boundary spans its target exactly when the ambient legal
+annihilator has no nonzero mean-zero vector. -/
+theorem boundary_surjective_iff_common_eq_bot :
+    Function.Surjective boundary ↔ commonMeanOrthogonal = ⊥ := by
+  constructor
+  · intro hs
+    apply le_antisymm _ bot_le
+    intro x hx
+    let w : commonMeanOrthogonal := ⟨x, hx⟩
+    let wZ : meanZero := ⟨w.val, w.property.1⟩
+    obtain ⟨t, ht⟩ := hs (mixedInMeanZero.mkQ wZ)
+    have hq : mixedInMeanZero.mkQ ((-t) • defect + wZ) = 0 := by
+      rw [map_add, map_smul, neg_smul, ← boundary_apply, ht, neg_add_cancel]
+    have h := (quotient_norms_defect_add (-t) w).1
+    change ‖mixedInMeanZero.mkQ ((-t) • defect + wZ)‖ ^ 2 =
+      (-t)^2 * ‖defect‖^2 + ‖x‖^2 at h
+    rw [hq, norm_zero, zero_pow (by decide : 2 ≠ 0)] at h
+    exact (Submodule.mem_bot ℝ).mpr (norm_eq_zero.mp (sq_eq_zero_iff.mp (by
+      linarith only [h, mul_nonneg (sq_nonneg (-t)) (sq_nonneg ‖defect‖), sq_nonneg ‖x‖])))
+  · intro hc q
+    obtain ⟨z, rfl⟩ := mixedInMeanZero.mkQ_surjective q
+    obtain ⟨m, hm, t, w, rfl⟩ := exists_mixed_defect_common z
+    have hw : w.val ∈ (⊥ : Submodule ℝ ThresholdHilbert) := hc.le w.property
+    have hwZ : (⟨w.val, w.property.1⟩ : meanZero) = 0 := Subtype.ext ((Submodule.mem_bot ℝ).mp hw)
+    have hmQ : mixedInMeanZero.mkQ m = 0 := (Submodule.Quotient.mk_eq_zero _).mpr hm
+    exact ⟨t, by rw [hwZ, add_zero, map_add, hmQ, zero_add, map_smul, boundary_apply]⟩
+
+/-- Testing the quotient by the scalar image converts the categorical epi
+condition into the same ambient orthogonality criterion. -/
+theorem boundary_epi_iff_common_eq_bot :
+    CategoryTheory.Epi (TopModuleCat.ofHom boundary) ↔ commonMeanOrthogonal = ⊥ := by
+  rw [← boundary_surjective_iff_common_eq_bot]
+  constructor
+  · intro h
+    let := h
+    let S := boundary.toLinearMap.range
+    have hq : TopModuleCat.ofHom S.mkQL =
+        TopModuleCat.ofHom (0 : BoundaryTarget →L[ℝ] (BoundaryTarget ⧸ S)) := by
+      apply (CategoryTheory.cancel_epi (TopModuleCat.ofHom boundary)).mp
+      apply CategoryTheory.ConcreteCategory.hom_ext
+      intro a
+      change S.mkQ (boundary a) = 0
+      exact (Submodule.Quotient.mk_eq_zero S).mpr ⟨a, rfl⟩
+    intro q
+    exact (Submodule.Quotient.mk_eq_zero S).mp (CategoryTheory.ConcreteCategory.congr_hom hq q)
+  · exact CategoryTheory.ConcreteCategory.epi_of_surjective (TopModuleCat.ofHom boundary)
 
 /-- For an arbitrary representative the first term is its quotient norm squared.
 Pairing with the defect is invariant under changing the representative by a mixed vector. -/

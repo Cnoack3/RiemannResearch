@@ -261,7 +261,6 @@ theorem eventually_normalizedWindowClipError_le_width_mul {B : ℝ} (hB : 0 ≤ 
       (mul_le_mul_of_nonneg_right (pow_le_pow_left₀ hspos hsum 2) hh).trans_eq (by rw [hw])
     _ = R * (K ^ 2 * (2 * Real.pi) * (Real.log T / T)) * T := by
       field_simp [hLp.ne', hTp.ne']
-      <;> ring
 
 /-- Uniform microscopic clipping rate on bounded sets of widths and centers.
 The finite-height estimate already includes the square of the local count. -/
@@ -301,5 +300,31 @@ theorem integral_normalizedWindowClipError_tendsto {a b : ℝ} (ha : 0 ≤ a) (h
   rw [uIoc_of_le hab] at hr
   have hr0 := ha.trans hr.1.le
   simpa only [Real.norm_eq_abs] using hT r r hr0 hr.2 (by simpa only [abs_of_nonneg hr0] using hr.2)
+
+/-- When the center is at most one half, enlarging an integer window count
+increases its squared deviation. The upper cutoff contribution then has
+a definite sign, even if a new zero enters above the observation height. -/
+theorem normalizedWindowClipError_nonpos_of_center_le_half {T R c : ℝ}
+    (hT : 1 < T) (hR : 0 ≤ R) (hhT : R / (Real.log T / (2 * Real.pi)) ≤ T)
+    (hc : c ≤ 1 / 2) : normalizedWindowClipError T R c ≤ 0 := by
+  let h := R / (Real.log T / (2 * Real.pi))
+  have ht := zero_lt_one.trans hT
+  have hh : 0 ≤ h := div_nonneg hR (div_nonneg (Real.log_pos hT).le (by positivity))
+  have hsq {m n : ℕ} (hmn : m ≤ n) : ((m : ℝ) - c)^2 ≤ ((n : ℝ) - c)^2 := by
+    rcases eq_or_lt_of_le hmn with he | he
+    · rw [he]
+    · have h₁ : (1 : ℝ) ≤ n := by exact_mod_cast (show 1 ≤ n by omega)
+      have hle : (m : ℝ) ≤ n := by exact_mod_cast hmn
+      have hp := mul_nonneg (sub_nonneg.mpr hle)
+        (show 0 ≤ (n : ℝ) + m - 2*c by linarith only [h₁,(Nat.cast_nonneg m : 0 ≤ (m : ℝ)),hc])
+      nlinarith only [hp]
+  unfold normalizedWindowClipError
+  apply div_nonpos_of_nonpos_of_nonneg _ ht.le
+  rw [actualCenteredMoment_clip_error_eq hh hhT]
+  have hi := intervalIntegral.integral_nonneg (μ := volume) (show T-h ≤ T by linarith)
+    (f := fun t : ℝ => -(((Ncount t T : ℝ) - c)^2 - ((Ncount t (t+h) : ℝ) - c)^2))
+    (fun t ht' => neg_nonneg.mpr (sub_nonpos.mpr
+      (hsq (Ncount_mono le_rfl (show T ≤ t+h by linarith only [ht'.1])))))
+  simpa only [intervalIntegral.integral_neg, neg_nonneg] using hi
 
 end RiemannResearch.Analysis.ActualZeroWindowVariance

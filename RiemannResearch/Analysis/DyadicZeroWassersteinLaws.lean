@@ -1,3 +1,4 @@
+import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 import RiemannResearch.Analysis.ActualZeroDiscrepancy
 import RiemannResearch.RH.WeilExplicitFormula.GammaFacts.Complete
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
@@ -413,6 +414,74 @@ theorem actual_cumulativeRvM : CumulativeRvM := by
   nlinarith [mul_le_mul_of_nonneg_left hlog hA.le]
 
 end
+
+theorem countMain_continuous : Continuous countMain := by
+  have h : Continuous (fun t : ℝ => t/(2*Real.pi)) := continuous_id.div_const _
+  have hc := (Real.continuous_mul_log.comp h).sub h
+  convert hc using 1
+  ext t
+  dsimp [countMain, Function.comp_def]
+  ring
+
+/-- One constant controls the error simultaneously for every ordinate in
+[0,T], including the small ordinates outside the eventual counting estimate. -/
+theorem eventually_uniform_countError :
+    ∃ K : ℝ, 0 ≤ K ∧ ∀ᶠ T : ℝ in atTop, ∀ t ∈ Icc (0:ℝ) T,
+      |countError t| ≤ K * Real.log T := by
+  obtain ⟨C, hC, hc⟩ := actual_cumulativeRvM
+  obtain ⟨U, hu⟩ := eventually_atTop.mp hc
+  let V := max 1 U
+  have hv : 0 ≤ V := zero_le_one.trans (le_max_left _ _)
+  obtain ⟨v, hv₀, hm⟩ := isCompact_Icc.exists_isMaxOn (Set.nonempty_Icc.mpr hv) countMain_continuous.abs.continuousOn
+  let A : ℝ := (Ncount 0 V : ℝ) + |countMain v|
+  have hA : 0 ≤ A := by dsimp [A]; positivity
+  refine ⟨max A C, le_max_of_le_left hA, ?_⟩
+  filter_upwards [Real.tendsto_log_atTop.eventually_ge_atTop 1] with T hT t ht
+  by_cases htV : t ≤ V
+  · have hn : (Ncount 0 t : ℝ) ≤ Ncount 0 V := by exact_mod_cast Ncount_mono (a := 0) le_rfl htV
+    have ha := hm (show t ∈ Icc (0:ℝ) V from ⟨ht.1,htV⟩)
+    have hbound : |countError t| ≤ A := by
+      change |(Ncount 0 t : ℝ) - countMain t| ≤ _
+      have h := abs_sub (Ncount 0 t : ℝ) (countMain t)
+      rw [abs_of_nonneg (show 0 ≤ (Ncount 0 t : ℝ) by positivity)] at h
+      exact h.trans (add_le_add hn ha)
+    exact hbound.trans ((le_max_left A C).trans (le_mul_of_one_le_right (le_max_of_le_left hA) hT))
+  · have htv : V < t := lt_of_not_ge htV
+    have h := hu t ((le_max_right 1 U).trans htv.le)
+    have hl := Real.log_le_log (hv.trans_lt htv) ht.2
+    exact h.trans ((mul_le_mul_of_nonneg_left hl hC).trans
+      (mul_le_mul_of_nonneg_right (le_max_right _ _) (by linarith)))
+
+/-- Uniform Riemann–von Mangoldt expansion of the normalized cumulative
+height count. The error after its explicit logarithmic correction is O(1/T)
+over the full closed unit interval. -/
+theorem eventually_uniform_scaled_count_error :
+    ∃ K : ℝ, 0 ≤ K ∧ ∀ᶠ T : ℝ in atTop, ∀ x ∈ Icc (0:ℝ) 1,
+      |(Ncount 0 (x*T) : ℝ) / (T * Real.log T / (2*Real.pi)) -
+        (x + x*(Real.log x - Real.log (2*Real.pi) - 1)/Real.log T)| ≤ K/T := by
+  obtain ⟨C,hC,h⟩ := eventually_uniform_countError
+  refine ⟨2*Real.pi*C, by positivity, ?_⟩
+  filter_upwards [h,eventually_gt_atTop (1:ℝ)] with T ht hT x hx
+  have hTp : 0 < T := zero_lt_one.trans hT
+  have hL := Real.log_pos hT
+  have hpi : 0 < 2*Real.pi := by positivity
+  let D := T * Real.log T / (2*Real.pi)
+  have hD : 0 < D := div_pos (mul_pos hTp hL) hpi
+  have hmain : countMain (x*T)/D =
+      x+x*(Real.log x-Real.log (2*Real.pi)-1)/Real.log T := by
+    by_cases hxz : x = 0
+    · simp [hxz,countMain]
+    · unfold countMain D
+      rw [Real.log_div (mul_ne_zero hxz hTp.ne') hpi.ne', Real.log_mul hxz hTp.ne']
+      field_simp [hTp.ne',hL.ne',Real.pi_ne_zero]
+      ring
+  change |(Ncount 0 (x*T) : ℝ) / D - _| ≤ _
+  rw [←hmain, ← sub_div, abs_div, abs_of_pos hD]
+  have hu := ht (x*T) (show x*T ∈ Icc (0:ℝ) T from
+    ⟨mul_nonneg hx.1 hTp.le, mul_le_of_le_one_left hTp.le hx.2⟩)
+  apply (div_le_div_of_nonneg_right hu hD.le).trans_eq
+  dsimp [D]
+  field_simp [hTp.ne', hL.ne', Real.pi_ne_zero]
 
 theorem slope_continuous {U : ℝ} (hu : 0 < U) : ContinuousOn slope (Icc U (2 * U)) := by
   intro t ht

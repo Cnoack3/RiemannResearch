@@ -2,7 +2,17 @@
 
 ## RH and Montgomery positive-gap closure declarations
 
-The [closure ledger](RH_PCC_CLOSURE_LEDGER.md) records the cutoff-order theorem, the categorical coordinate norm losses, the finite Gram bounds and the collision-corrected PCC criteria, with their source modules and remaining mathematical inputs.
+The [closure ledger](RH_PCC_CLOSURE_LEDGER.md) links the exact declarations and the open estimates for each route.
+
+| Area | Lean declaration | What it establishes |
+| --- | --- | --- |
+| Category theory | [CenteredMeanMovingGramTail](RH/CenteredMeanMovingGramTail.lean) | The centered unit boundary vanishes exactly when a common scaled drift bound holds for the two moving Gram cutoffs. |
+| Nyman–Beurling | [damped_fits_tendsto_iff_correctedTail](RH/BalazardDeRotonBiasUnderRH.lean) | Under RH the complete shifted-zeta bias tends to zero. The corrected tail energy decides convergence along each cutoff schedule. |
+| Horizontal zero distribution | [riemannHypothesis_iff_horizontal_xi_comparison](Analysis/XiHorizontalComparison.lean) | Weak horizontal norm comparison for the completed zeta function on the right half of the strip is equivalent to RH. |
+| Zero counts | [eventually_uniform_scaled_count_error](Analysis/DyadicZeroWassersteinLaws.lean) | The actual rescaled cumulative zero count has a uniform second term down to height zero with remainder bounded by a constant times 1/T. |
+| Macroscopic pair correlation | [MontgomeryMacroscopicGap](Analysis/MontgomeryMacroscopicGap.lean) | The strict positive-gap pair law tends to the uniform-height triangular law over all macroscopic widths. |
+| Mesoscopic pair correlation | [positiveGapMass_mesoscopic_tendsto](Analysis/MontgomeryMesoscopicGapCount.lean) | For widths R growing faster than log T and slower than the unfolded cutoff D, the actual multiplicity-weighted count divided by R tends to one. |
+| Microscopic pair correlation | [positiveGapPCC_iff_rationalIntegratedGapDeficit](Analysis/MontgomeryWindowPairCorrelation.lean) | The fixed-width conjecture is equivalent to decay of the actual integrated deficit at every positive rational width. |
 
 ## Absolute Hilbert convergence of squarefree CRT carry paths
 

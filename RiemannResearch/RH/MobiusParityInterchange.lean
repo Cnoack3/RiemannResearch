@@ -125,15 +125,6 @@ private theorem L1_dilation (m : ℕ) (hm : 0 < m) (f : ThresholdHilbert) :
   rw [hilbertL1Norm_eq_inner_abs, habs, hilbert_inner_one, hilbertDilation_mean,
     ← hilbert_inner_one, ← hilbertL1Norm_eq_inner_abs]
 
-private theorem L1_smul (a : ℝ) (f : ThresholdHilbert) :
-    hilbertL1Norm (a • f) = |a| * hilbertL1Norm f := by
-  unfold hilbertL1Norm
-  rw [← tsum_mul_left]
-  apply tsum_congr
-  intro k
-  simp only [hilbertSequence_smul, Pi.smul_apply, smul_eq_mul, abs_mul]
-  ring
-
 private theorem L1_sub (f g : ThresholdHilbert) :
     hilbertL1Norm (f-g) ≤ hilbertL1Norm f + hilbertL1Norm g := by
   have h := hilbertL1Norm_sub_le (f-g) f
@@ -163,7 +154,7 @@ theorem paritySum_L1_interchange :
       abel
     rw [hid]
     apply (L1_sub _ _).trans
-    rw [L1_smul, L1_dilation]
+    rw [hilbertL1Norm_smul, L1_dilation]
     apply add_le_add _ le_rfl
     have hh := L1_sub (e N) (hilbertDilation 2 (by decide) (e N))
     have hd := L1_dilation 2 (by decide) (e N)

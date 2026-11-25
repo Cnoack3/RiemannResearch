@@ -32,7 +32,8 @@ private theorem unfoldedCutoff_pos {T : ℝ} (hT : 1 < T) : 0 < unfoldedCutoff T
 /-- Cumulative height count in unfolded-cutoff normalization. -/
 def scaledHeightCount (T x : ℝ) : ℝ := (Ncount 0 (x * T) : ℝ) / unfoldedCutoff T
 
-private theorem scaledHeightCount_mono {T : ℝ} (hT : 1 < T) : Monotone (scaledHeightCount T) := by
+/-- The measured cumulative height count is monotone at each positive unfolded cutoff. -/
+theorem scaledHeightCount_mono {T : ℝ} (hT : 1 < T) : Monotone (scaledHeightCount T) := by
   intro x y h
   apply div_le_div_of_nonneg_right _ (unfoldedCutoff_pos hT).le
   have hn := Ncount_mono (a := 0) le_rfl (mul_le_mul_of_nonneg_right h (zero_le_one.trans hT.le))
@@ -188,7 +189,8 @@ theorem positiveGapMass_scaled_eq_height_rows {T c : ℝ} (hT : 1 < T) (hc : 0 �
   · have hh' : t i / T < t j / T := lt_of_not_ge hh
     simp [heightStep,hh,hh']
 
-private theorem clipped_row_integral {T c : ℝ} (hT : 1 < T) (hc : 0 ≤ c) :
+/-- The mean length of a row clipped at the upper height is the integrated cumulative count. -/
+theorem clipped_row_integral {T c : ℝ} (hT : 1 < T) (hc : 0 ≤ c) :
     (∑ i : Copies T, (min 1 (copyOrdinate T i / T + c) - copyOrdinate T i / T)) /
       unfoldedCutoff T = ∫ x in (1-c)..1, scaledHeightCount T x := by
   classical

@@ -2,6 +2,26 @@
 
 Date: 19 October 2026 UTC (18 October in the user's timezone).
 
+## November 24 Lean update
+
+Under RH the full first weighted quotient energy tends to zero as the positive
+damping tends to zero. The proof covers the entire critical line. It combines
+the paired xi product, a quantitative gamma-ratio bound at large height, local
+control around the critical zeros, and dominated convergence.
+[Global quotient bound and energy](ParetoShiftedZetaBudget.lean)
+
+For every sufficiently small positive damping, the bias and every corrected
+truncation tail belong to L². Along any prescribed cutoff schedule, convergence
+of the physical fits is equivalent under RH to decay of the corrected tail
+energy. This leaves a single analytic input for the RH-to-approximation direction.
+The paper's linear-in-damping rate for the first budget and the small-damping
+truncation estimate remain open in Lean. The previously open reciprocal-cell
+identification is now exact.
+[Corrected tail equivalence](BalazardDeRotonBiasUnderRH.lean) and
+[natural cell energy](BaezDuarteNaturalCellTransfer.lean)
+
+On a divergent cutoff schedule the full energy of the charge correction also tends to zero unconditionally. Its exact value is the squared charge modulus times the fractional-part Mellin energy. Thus under RH only the continuous natural reciprocal-zeta truncation estimate is needed for convergence of the actual discrete fits. [Charge limit](BalazardDeRotonChargeLimit.lean) and [natural tail equivalence](BalazardDeRotonNaturalTail.lean)
+
 ## Source and scope
 
 The attached `swe.pdf` is the 20-page paper by Michel Balazard and Anne de

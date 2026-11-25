@@ -88,29 +88,44 @@ open RiemannResearch.RH
 
 namespace RiemannResearch.RH.QComplementZeroDimension
 
+/-- Nonreal right zeros occur with their distinct conjugates, and the
+positive real strip has no zeta zeros. Thus at most one right zero is
+equivalent to RH. -/
+theorem riemannHypothesis_iff_subsingleton_rightZero : RiemannHypothesis ↔ Subsingleton RightZero := by
+  constructor
+  · intro h
+    refine ⟨fun u _ => False.elim ?_⟩
+    exact riemannHypothesis_iff_right_half_strip_zero_free.mp h u
+      u.property.1 u.property.2.1 u.property.2.2
+  · intro h
+    apply riemannHypothesis_iff_right_half_strip_zero_free.mpr
+    intro s hs h1 hz
+    have hreal : s.im ≠ 0 := by
+      intro hi
+      have he : (s.re : ℂ) = s := Complex.ext (by simp) (by simpa using hi.symm)
+      exact (riemannZeta_ofReal_ne_zero s.re (by linarith) (by linarith)) (he.symm ▸ hz)
+    have hdiff : s ≠ conj s := by
+      intro he
+      have hi := congrArg Complex.im he
+      simp only [Complex.conj_im] at hi
+      exact hreal (by linarith)
+    let u : RightZero := ⟨s, hs, h1, hz⟩
+    let v : RightZero := ⟨conj s, by simpa using hs, by simpa using h1,
+      by simp [riemannZeta_conj, hz]⟩
+    exact hdiff (congrArg Subtype.val (h.elim u v))
+
 theorem rh_of_finrank_le_one [FiniteDimensional ℝ W] (hdim : Module.finrank ℝ W ≤ 1) :
     RiemannHypothesis := by
-  apply riemannHypothesis_iff_right_half_strip_zero_free.mpr
-  intro s hs h1 hz
-  have hreal : s.im ≠ 0 := by
-    intro hi
-    have he : (s.re : ℂ) = s := Complex.ext (by simp) (by simpa using hi.symm)
-    exact (riemannZeta_ofReal_ne_zero s.re (by linarith) (by linarith)) (he.symm ▸ hz)
-  have hdiff : s ≠ conj s := by
-    intro he
-    have hi := congrArg Complex.im he
-    simp only [Complex.conj_im] at hi
-    exact hreal (by linarith)
-  let u : RightZero := ⟨s, hs, h1, hz⟩
-  let v : RightZero := ⟨conj s, by simpa using hs, by simpa using h1,
-    by simp [riemannZeta_conj, hz]⟩
+  apply riemannHypothesis_iff_subsingleton_rightZero.mpr
+  refine ⟨fun u v => ?_⟩
+  by_contra hne
   let f : Bool → RightZero := fun b => if b then v else u
   have hf : Function.Injective f := by
     intro a b he
     cases a <;> cases b
     · rfl
-    · exact False.elim (hdiff (congrArg Subtype.val he))
-    · exact False.elim (hdiff (congrArg Subtype.val he.symm))
+    · exact False.elim (hne he)
+    · exact False.elim (hne he.symm)
     · rfl
   have h := rightZero_family_card_le_finrank f hf
   norm_num at h

@@ -1,5 +1,6 @@
 import RiemannResearch.RH.ThresholdHilbertMean
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 /-!
 # The full Pareto L1 norm on the sequence Hilbert space
 
@@ -113,6 +114,25 @@ theorem hilbertL1Norm_sub_le (f g : ThresholdHilbert) :
     (hilbertL1Norm_summable (f - g))
   rw [(hilbertL1Norm_summable f).tsum_sub (hilbertL1Norm_summable g)] at hb
   exact hb
+
+theorem hilbertL1Norm_smul (a : ℝ) (f : ThresholdHilbert) :
+    hilbertL1Norm (a • f) = |a| * hilbertL1Norm f := by
+  unfold hilbertL1Norm
+  rw [← tsum_mul_left]
+  apply tsum_congr
+  intro k
+  simp only [hilbertSequence_smul, Pi.smul_apply, smul_eq_mul, abs_mul]
+  ring
+
+@[simp] theorem hilbertL1Norm_zero : hilbertL1Norm (0 : ThresholdHilbert) = 0 :=
+  le_antisymm (by simpa only [norm_zero] using hilbertL1Norm_le_norm (0 : ThresholdHilbert))
+    (hilbertL1Norm_nonneg _)
+
+theorem hilbertL1Norm_add_le (x y : ThresholdHilbert) :
+    hilbertL1Norm (x+y) ≤ hilbertL1Norm x + hilbertL1Norm y := by
+  have h := hilbertL1Norm_sub_le (x+y) x
+  rw [add_sub_cancel_left] at h
+  linarith only [h]
 
 theorem hilbertL1Norm_abs_sub_le (f g : ThresholdHilbert) :
     |hilbertL1Norm f - hilbertL1Norm g| ≤ hilbertL1Norm (f - g) := by
