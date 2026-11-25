@@ -651,6 +651,7 @@ import RiemannResearch.RH.CenteredMeanPeriodicGramTail
 import RiemannResearch.RH.CenteredMeanMovingGramTail
 import RiemannResearch.RH.CenteredMeanProgressionGramTail
 import RiemannResearch.RH.CenteredMeanDriftWindows
+import RiemannResearch.RH.CenteredMeanDriftCutoffs
 import RiemannResearch.RH.ConductorTowerLimit
 import RiemannResearch.RH.MixedConductorPolarizedParseval
 import RiemannResearch.RH.MixedConductorGramBoundary
@@ -713,6 +714,7 @@ import RiemannResearch.RH.ParetoParityAdjointCriterion
 import RiemannResearch.RH.ParetoParityAdjointSix
 import RiemannResearch.RH.DyadicParityGramRow
 import RiemannResearch.RH.DyadicParityGramCapacity
+import RiemannResearch.RH.DyadicParityTwoStageGram
 import RiemannResearch.RH.CenteredMeanParityGramSix
 import RiemannResearch.RH.ParetoParityAdjointHeads
 import RiemannResearch.RH.ParetoCenteredFirstSite
@@ -735,6 +737,7 @@ import RiemannResearch.RH.ParetoParityMobiusLifts
 import RiemannResearch.RH.ParetoParityConsecutiveHeads
 import RiemannResearch.RH.ParetoParityHeadInverse
 import RiemannResearch.RH.ParetoMixedCenteredParityHeads
+import RiemannResearch.RH.LegalTailMeanCapacity
 import RiemannResearch.RH.ParetoAffineHeadTower
 import RiemannResearch.RH.ZetaTwoAffineHeadTower
 import RiemannResearch.RH.QDensityImageReconstruction

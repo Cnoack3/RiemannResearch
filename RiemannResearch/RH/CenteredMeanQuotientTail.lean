@@ -36,7 +36,7 @@ theorem coordinateLossTail_eq (N : ℕ) :
   simp only [coordinateLossTail, coordinate_quotient_norm_loss, tsum_div_const, hilbert_norm_sq]
   <;> rfl
 
-private theorem tailShift_one_norm_sq (N : ℕ) :
+theorem tailShift_one_norm_sq (N : ℕ) :
     ‖hilbertTailShift hilbertOne N‖ ^ 2 = 1 / ((N : ℝ) + 1) := by
   have hv (n : ℕ) : (hilbertOne n) ^ 2 = paretoWeight n := by
     simpa only [positiveWeight_succ, hilbertOne_sequence, zeroAnchor, Nat.succ_ne_zero,

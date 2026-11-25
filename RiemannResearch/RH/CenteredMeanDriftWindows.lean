@@ -37,7 +37,7 @@ theorem finiteSectionDriftWindow_partition (B A N H : ℕ) (hBA : B ≤ A) :
     real_inner_self_eq_norm_sq, hilbertShellPairing_weighted, positiveWeight_succ,
     hilbertSequence_sub, Pi.sub_apply, sectionCoordinate_eq, pow_two] using h
 
-private theorem tail_norm_sq_eq_complement (f : ThresholdHilbert) (N : ℕ) :
+theorem tail_norm_sq_eq_complement (f : ThresholdHilbert) (N : ℕ) :
     ‖hilbertTailShift f N‖ ^ 2 = ‖f - compactHead N f‖ ^ 2 := by
   have h := compactHead_pythagoras N f
   simp only [compactHead_norm_sq_eq_physical_sum, hilbertGibbsPhysical_square] at h

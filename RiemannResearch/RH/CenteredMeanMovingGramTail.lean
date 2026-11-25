@@ -71,7 +71,7 @@ theorem finiteSectionTailDrift_tendsto_of_boundary_zero (B N : ℕ) (hb : bounda
 def sectionTailDamping (b : ℝ) (N : ℕ) : ℝ :=
   Real.exp (-b * logProductPower (1 / 11) (6 + Real.log (N : ℝ)))
 
-private theorem sectionTailDamping_tendsto (b : ℝ) (hb : 0 < b) :
+theorem sectionTailDamping_tendsto (b : ℝ) (hb : 0 < b) :
     Tendsto (sectionTailDamping b) atTop (𝓝 0) := by
   have hL : Tendsto (fun N : ℕ => 6 + Real.log (N : ℝ)) atTop atTop :=
     tendsto_atTop_add_const_left atTop 6

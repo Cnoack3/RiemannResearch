@@ -8,6 +8,9 @@ import RiemannResearch.RH.ThresholdHilbertL1
 import RiemannResearch.RH.ThresholdInterpolationCompleteness
 import RiemannResearch.RH.ParetoTailAverages
 import RiemannResearch.RH.ParetoGibbsTailBasis
+import RiemannResearch.RH.ParetoAnnihilatorTail
+import RiemannResearch.RH.ParetoCenteredFirstSite
+import RiemannResearch.RH.ScreenedParityOneSided
 import RiemannResearch.RH.CenteredMeanSnake
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
@@ -318,10 +321,15 @@ def adjacentContrast (n N : ℕ) : ThresholdHilbert :=
   hilbertDilation (n+1) (by omega) (canonicalMobiusHilbert N) -
     hilbertDilation (n+2) (by omega) (canonicalMobiusHilbert N)
 
-/-- The adjacent contrast equals the corresponding Pareto wavelet on the
-whole initial interval through the Möbius cutoff. -/
-theorem adjacentContrast_exact (n N k : ℕ) (hk : k ≤ N) :
+/-- Dilating the canonical exact head gives a full initial interval growing
+linearly in the smaller of the two dilation scales. -/
+theorem adjacentContrast_exact_scaled (n N k : ℕ) (hk : k < (n + 1) * (N + 1)) :
     hilbertSequence (adjacentContrast n N) k = hilbertSequence (tailBasisHilbert n) k := by
+  have hdiv₁ : k / (n+1) < N+1 := (Nat.div_lt_iff_lt_mul (by omega)).mpr (by
+    simpa only [Nat.mul_comm (N+1) (n+1)] using hk)
+  have hdiv₂ : k / (n+2) < N+1 := (Nat.div_lt_iff_lt_mul (by omega)).mpr (by
+    have hle := Nat.mul_le_mul_right (N+1) (show n+1 ≤ n+2 by omega)
+    simpa only [Nat.mul_comm (N+1) (n+2)] using hk.trans_le hle)
   have head (j : ℕ) (hj : j ≤ N) :
       hilbertSequence (canonicalMobiusHilbert N) j = hilbertSequence hilbertOne j := by
     rcases Nat.eq_zero_or_pos j with rfl | hp
@@ -330,7 +338,13 @@ theorem adjacentContrast_exact (n N k : ℕ) (hk : k ≤ N) :
       simp [zeroAnchor, hp.ne']
   simp only [adjacentContrast, tailBasisHilbert_eq_dilation_one, hilbertSequence_sub, Pi.sub_apply,
     hilbertDilation_sequence, dilation]
-  rw [head _ ((Nat.div_le_self ..).trans hk), head _ ((Nat.div_le_self ..).trans hk)]
+  rw [head _ (by omega : k / (n+1) ≤ N), head _ (by omega : k / (n+2) ≤ N)]
+
+/-- The initial interval through the Möbius cutoff works at every scale. -/
+theorem adjacentContrast_exact (n N k : ℕ) (hk : k ≤ N) :
+    hilbertSequence (adjacentContrast n N) k = hilbertSequence (tailBasisHilbert n) k := by
+  apply adjacentContrast_exact_scaled
+  exact (Nat.lt_succ_of_le hk).trans_le (Nat.le_mul_of_pos_left _ (by omega))
 
 /-- Complete L¹ error, uniformly over the adjacent scales. -/
 theorem adjacentContrast_L1_le (n N : ℕ) :
@@ -426,6 +440,220 @@ theorem adjacentContrast_screened_error_parseval (N : ℕ) :
   rw [norm_sub_sq_real, PrimePowerSchur.normalizedScreenedTwo_mean, hilbertOne_norm_sq] at hd
   dsimp only [u] at hsum
   linarith only [hsum, hd]
+
+
+/-- Ignoring any fixed number of adjacent contrasts leaves a complete test
+for the screened section. A vector with eventually vanishing wavelet
+coefficients is eventually constant in physical coordinates. For this
+section, even a one-sided physical bound forces equality with one. -/
+theorem adjacentContrast_eventual_interchange_iff_screened :
+    (∀ᶠ n : ℕ in atTop, Tendsto
+      (fun N => inner ℝ (adjacentContrast n N) PrimePowerSchur.normalizedScreenedTwo)
+      atTop (𝓝 (inner ℝ (tailBasisHilbert n) PrimePowerSchur.normalizedScreenedTwo))) ↔
+      PrimePowerSchur.normalizedScreenedTwo = hilbertOne := by
+  constructor
+  · intro h
+    let u := PrimePowerSchur.normalizedScreenedTwo
+    obtain ⟨K, hK⟩ := eventually_atTop.mp h
+    have hdiff (n : ℕ) (hn : K ≤ n) : tailAverage u n = tailAverage u (n+1) := by
+      apply sub_eq_zero.mp
+      rw [tailAverage_sub_succ, real_inner_comm]
+      apply tendsto_nhds_unique (hK n hn)
+      simpa only [u, adjacentContrast_screened] using
+        (tendsto_const_nhds : Tendsto (fun _ : ℕ => (0 : ℝ)) atTop (𝓝 0))
+    have hc (n : ℕ) (hn : K ≤ n) : tailAverage u n = tailAverage u K := by
+      induction n, hn using Nat.le_induction with
+      | base => rfl
+      | succ n hn ih => exact (hdiff n hn).symm.trans ih
+    have he : Tendsto (fun n : ℕ => hilbertSequence u (n+1)) atTop (𝓝 (tailAverage u K)) := by
+      apply tendsto_const_nhds.congr'
+      filter_upwards [eventually_ge_atTop K] with n hn
+      rw [← hilbertGibbsPhysical_eq, hardyCoordinates_reconstruction,
+        hardyCoordinates_partial_sum, hardyCoordinates_succ, hdiff n hn, sub_self, mul_zero,
+        zero_sub, neg_neg]
+      exact (hc (n+1) (by omega)).symm
+    rw [← Nat.cofinite_eq_atTop] at he
+    obtain ⟨B, hB⟩ := he.bddAbove_range_of_cofinite
+    apply PrimePowerSchur.normalizedScreenedTwo_eq_one_of_oneSidedBound
+    refine Or.inr ⟨B, ?_⟩
+    intro k hk
+    cases k with
+    | zero => omega
+    | succ n => exact hB (Set.mem_range_self n)
+  · intro h
+    exact Eventually.of_forall (adjacentContrast_interchange_iff_screened.mpr h)
+
+
+/-- Absolute summability of the signed Haar defects, together with a
+one-sided bound on their linearly weighted positive peaks, suffices.
+These regularity conditions follow whenever the screened section is one. -/
+theorem screened_eq_one_iff_adjacent_regular :
+    PrimePowerSchur.normalizedScreenedTwo = hilbertOne ↔
+      Summable (fun n : ℕ => |inner ℝ PrimePowerSchur.normalizedScreenedTwo (tailBasisHilbert n)|) ∧
+      (∃ C : ℝ, ∀ n : ℕ,
+        ((n : ℝ)+1) * inner ℝ PrimePowerSchur.normalizedScreenedTwo (tailBasisHilbert n) ≤ C) := by
+  let u := PrimePowerSchur.normalizedScreenedTwo
+  let a (n : ℕ) := inner ℝ u (tailBasisHilbert n)
+  constructor
+  · intro hu
+    have hz (n : ℕ) : inner ℝ PrimePowerSchur.normalizedScreenedTwo (tailBasisHilbert n) = 0 := by
+      rw [hu, real_inner_comm, tailBasis_inner_one]
+    simp only [hz, abs_zero, mul_zero, summable_zero, true_and]
+    exact ⟨0, fun _ => le_rfl⟩
+  · rintro ⟨hs, C, hC⟩
+    have htel (n : ℕ) : tailAverage u n = 1 - ∑ j ∈ Finset.range n, a j := by
+      induction n with
+      | zero => simp only [tailAverage_zero, u, PrimePowerSchur.normalizedScreenedTwo_mean,
+          Finset.range_zero, Finset.sum_empty, sub_zero]
+      | succ n ih =>
+        have h : tailAverage u n - tailAverage u (n+1) = a n := tailAverage_sub_succ u n
+        rw [Finset.sum_range_succ, ← sub_sub, ← ih, ← h]
+        ring
+    apply PrimePowerSchur.normalizedScreenedTwo_eq_one_of_oneSidedBound
+    refine Or.inr ⟨C + 1 + ∑' n, |a n|, ?_⟩
+    intro k hk
+    cases k with
+    | zero => omega
+    | succ n =>
+      change hilbertSequence u (n+1) ≤ _
+      rw [← hilbertGibbsPhysical_eq, hardyCoordinates_reconstruction,
+        hardyCoordinates_partial_sum, hardyCoordinates_succ, tailAverage_sub_succ, sub_neg_eq_add,
+        htel]
+      have hb : -(∑ j ∈ Finset.range n, a j) ≤ ∑' j, |a j| :=
+        (neg_le_abs _).trans ((Finset.abs_sum_le_sum_abs _ _).trans
+          (hs.sum_le_tsum _ (fun i _ => abs_nonneg _)))
+      linarith only [hC n, hb]
+
+
+/-- Interchange of a screened pairing on every positive integer dilation of
+a probe with formal limit `1 - U_p 1`. -/
+def screenedDilationInterchange (p : ℕ) (hp : 0 < p) (G : ℕ → ThresholdHilbert) : Prop :=
+  ∀ (m : ℕ) (hm : 0 < m),
+    Tendsto (fun N => inner ℝ (hilbertDilation m hm (G N)) PrimePowerSchur.normalizedScreenedTwo)
+      atTop (𝓝 (inner ℝ (hilbertDilation m hm (hilbertOne - hilbertDilation p hp hilbertOne))
+        PrimePowerSchur.normalizedScreenedTwo))
+
+/-- A zero screened limit for a sequence of legal probes with formal limit
+`1 - U_p 1` interchanges on its whole dilation orbit exactly when the
+ambient adjoint at `p` fixes the screened section. -/
+theorem dilationOrbit_interchange_iff_adjoint_fixed (p : ℕ) (hp : 0 < p)
+    (G : ℕ → ThresholdHilbert) (hG : ∀ N, G N ∈ CoefficientStabilization.closedSpace)
+    (hzero : Tendsto (fun N => inner ℝ (G N) PrimePowerSchur.normalizedScreenedTwo) atTop (𝓝 0)) :
+    screenedDilationInterchange p hp G ↔
+      hilbertDilationAdjoint p hp PrimePowerSchur.normalizedScreenedTwo =
+        PrimePowerSchur.normalizedScreenedTwo := by
+  let u := PrimePowerSchur.normalizedScreenedTwo
+  have hz (m : ℕ) (hm : 0 < m) :
+      Tendsto (fun N => inner ℝ (hilbertDilation m hm (G N)) u) atTop (𝓝 0) := by
+    apply hzero.congr
+    intro N
+    exact (PrimePowerSchur.inner_dilation_screenedTwo (hG N) m hm).symm
+  have hid (m : ℕ) (hm : 0 < m) :
+      inner ℝ (hilbertDilation m hm (hilbertOne - hilbertDilation p hp hilbertOne)) u =
+        inner ℝ (u - hilbertDilationAdjoint p hp u) (hilbertDilation m hm hilbertOne) := by
+    have hcomm : hilbertDilation m hm (hilbertDilation p hp hilbertOne) =
+        hilbertDilation p hp (hilbertDilation m hm hilbertOne) := by
+      simp only [hilbertDilation_comp, Nat.mul_comm m p]
+    change inner ℝ (hilbertDilationContinuous m hm
+      (hilbertOne - hilbertDilation p hp hilbertOne)) u = _
+    rw [map_sub, hilbertDilationContinuous_apply, hilbertDilationContinuous_apply,
+      inner_sub_left, hcomm, ← real_inner_comm (u - _) _, inner_sub_right]
+    change _ = inner ℝ (hilbertDilation m hm hilbertOne) u -
+      inner ℝ (hilbertDilation m hm hilbertOne) ((hilbertDilationContinuous p hp).adjoint u)
+    rw [ContinuousLinearMap.adjoint_inner_right, hilbertDilationContinuous_apply]
+  constructor
+  · intro h
+    apply Eq.symm
+    apply sub_eq_zero.mp
+    apply CoefficientStabilization.eq_zero_of_inner_dilation_one_eq_zero
+    intro m hm
+    rw [← hid m hm]
+    exact tendsto_nhds_unique (h m hm) (hz m hm)
+  · intro h m hm
+    have hh : inner ℝ (hilbertDilation m hm
+        (hilbertOne - hilbertDilation p hp hilbertOne)) u = 0 := by
+      rw [hid, show hilbertDilationAdjoint p hp u = u from h, sub_self, inner_zero_left]
+    change Tendsto _ atTop (𝓝 (inner ℝ (hilbertDilation m hm
+      (hilbertOne - hilbertDilation p hp hilbertOne)) u))
+    rw [hh]
+    exact hz m hm
+
+/-- For the actual parity sums, testing all dilates is exactly the dyadic
+adjoint equation. -/
+theorem paritySum_dilation_interchange_iff :
+    screenedDilationInterchange 2 (by decide) paritySum ↔
+      hilbertDilationAdjoint 2 (by decide) PrimePowerSchur.normalizedScreenedTwo =
+        PrimePowerSchur.normalizedScreenedTwo := by
+  apply dilationOrbit_interchange_iff_adjoint_fixed
+  · intro N
+    unfold paritySum
+    apply CoefficientStabilization.closedSpace.add_mem
+    · exact CoefficientStabilization.closedSpace.sub_mem
+        (CoefficientStabilization.canonicalMobiusHilbert_mem_closedSpace N)
+        (CoefficientStabilization.closedSpace_dilation
+          (CoefficientStabilization.canonicalMobiusHilbert_mem_closedSpace N) 2 (by decide))
+    · exact CoefficientStabilization.closedSpace.smul_mem _
+        (CoefficientStabilization.closedSpace_dilation
+          (PrimePowerSchur.packet_mem_closedSpace 2 (by decide)) (N+1) (by omega))
+  · simpa only [real_inner_comm] using screened_pairing_tendsto_zero
+
+
+/-- Once the entire dyadic parity orbit interchanges, one scalar upper bound
+on the triadic adjoint norm supplies the remaining equation at three. -/
+theorem paritySum_interchange_and_triadic_bound_iff_screened :
+    (screenedDilationInterchange 2 (by decide) paritySum ∧
+      ‖hilbertDilationAdjoint 3 (by decide) PrimePowerSchur.normalizedScreenedTwo‖^2 ≤
+        ‖PrimePowerSchur.normalizedScreenedTwo‖^2) ↔
+      PrimePowerSchur.normalizedScreenedTwo = hilbertOne := by
+  rw [paritySum_dilation_interchange_iff]
+  constructor
+  · rintro ⟨h2, h3⟩
+    apply PrimePowerSchur.one_mem_closedSpace_iff_normalizedScreenedTwo.mp
+    apply PrimePowerSchur.CenteredMeanSnake.screenedLine_eq_one_line_iff_one_mem.mp
+    apply PrimePowerSchur.screenedLine_eq_one_line_iff_two_three_adjoint_norms.mpr
+    rw [h2, two_mul]
+    exact add_le_add le_rfl h3
+  · intro h
+    rw [h, hilbertDilationAdjoint_one, hilbertDilationAdjoint_one]
+    exact ⟨rfl, le_rfl⟩
+
+
+/-- An actual right-half-strip zero forces a power-sized squared Hilbert
+error at each fixed adjacent pair, through the full dilated exact head. -/
+theorem adjacentContrast_mellin_power_lower (n N : ℕ) (s : ℂ)
+    (hs : (1 / 2 : ℝ) < s.re) (hs1 : s ≠ 1) (hz : riemannZeta s = 0) :
+    (2 * s.re - 1) * ‖(((n+1 : ℕ) : ℂ) ^ (1-s) - ((n+2 : ℕ) : ℂ) ^ (1-s)) / s‖ ^ 2 *
+      (((n+1)*(N+1) : ℕ) : ℝ) ^ (2 * s.re - 1) ≤
+        ‖tailBasisHilbert n - adjacentContrast n N‖ ^ 2 := by
+  have hf : adjacentContrast n N ∈ CoefficientStabilization.closedSpace :=
+    CoefficientStabilization.closedSpace.sub_mem
+      (CoefficientStabilization.closedSpace_dilation
+        (CoefficientStabilization.canonicalMobiusHilbert_mem_closedSpace N) _ (by omega))
+      (CoefficientStabilization.closedSpace_dilation
+        (CoefficientStabilization.canonicalMobiusHilbert_mem_closedSpace N) _ (by omega))
+  rw [tailBasisHilbert_eq_dilation_one]
+  apply CoefficientStabilization.thresholdContrast_exact_head_error_lower _ _ _ _ _
+    (Nat.mul_pos (Nat.succ_pos _) (Nat.succ_pos _)) hf _ s hs hs1 hz
+  intro j _ hj
+  rw [← tailBasisHilbert_eq_dilation_one]
+  exact adjacentContrast_exact_scaled n N j hj
+
+/-- A single fixed adjacent pair suffices: its complete squared errors need
+only beat every positive power budget along some cutoffs. -/
+theorem riemannHypothesis_of_adjacentContrast_subpower (n : ℕ)
+    (h : ∀ a ε : ℝ, 0 < a → 0 < ε → ∃ N : ℕ,
+      ‖tailBasisHilbert n - adjacentContrast n N‖^2 < ε * (((n+1)*(N+1) : ℕ) : ℝ)^a) :
+    RiemannHypothesis := by
+  apply RiemannResearch.RH.riemannHypothesis_iff_right_half_strip_zero_free.mpr
+  intro s hs hlt hz
+  have hs0 : s ≠ 0 := by intro he; norm_num [he] at hs
+  have hs1 : s ≠ 1 := by intro he; norm_num [he] at hlt
+  have hpow : 0 < 2*s.re-1 := by linarith
+  have hsym := CoefficientStabilization.thresholdContrast_symbol_ne_zero
+    (n+1) (n+2) (Nat.succ_pos _) (Nat.lt_succ_self _) s hs0 hlt
+  have hcoef := mul_pos hpow (pow_pos (norm_pos_iff.mpr hsym) 2)
+  obtain ⟨N, hN⟩ := h _ _ hpow hcoef
+  exact (not_lt_of_ge (adjacentContrast_mellin_power_lower n N s hs hs1 hz)) hN
 
 end MobiusParityInterchange
 end RiemannResearch.RH.Pareto

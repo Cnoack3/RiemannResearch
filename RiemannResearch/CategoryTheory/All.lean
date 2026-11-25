@@ -22,6 +22,8 @@ import RiemannResearch.RH.CenteredMeanPeriodicGramTail
 import RiemannResearch.RH.CenteredMeanMovingGramTail
 import RiemannResearch.RH.CenteredMeanProgressionGramTail
 import RiemannResearch.RH.CenteredMeanDriftWindows
+import RiemannResearch.RH.CenteredMeanDriftCutoffs
+import RiemannResearch.RH.DyadicParityTwoStageGram
 import RiemannResearch.RH.ConductorReconstructionEnergy
 import RiemannResearch.RH.ConductorTowerLimit
 import RiemannResearch.RH.FiniteAtomCarryFunctor

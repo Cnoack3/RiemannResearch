@@ -36,6 +36,22 @@ For the complete signed pairing C(M,N) of the projection residual at M with the 
 - `hasSum_coordinate_quotient_norm_loss` identifies the sum of the nonnegative coordinate losses with E. By `boundary_zero_iff_coordinate_norms`, preservation of each centered coordinate norm is equivalent to vanishing of the boundary. A proof of norm preservation for the actual quotient map would close this route. [CenteredMeanQuotientNorm](RH/CenteredMeanQuotientNorm.lean)
 - `finite_endpoint_remainder_norm_sq` and `finite_endpoint_root_interval` keep the full remainder for two finite projection stages. `parityAdjointPacket_first_site_coupling` ties the signed adjoint pairing to the limiting energy and first physical residual. The finite identities leave the cofinal upper estimate open. [FiniteEndpointGram](RH/FiniteEndpointGram.lean) and [ParetoParityAdjointCriterion](RH/ParetoParityAdjointCriterion.lean)
 
+## Signed parity at two finite Gram cutoffs
+
+The pairing of the actual upper Gram residual with the doubled lower-stage residual has an exact signed expression. Projecting the parity observation off all doubled lower-stage vectors gives a computable nonnegative determinant. Along $n=2k+1$ its limit yields a cofinal determinant test for the categorical unit and a direct sufficient condition for RH. To apply that condition one must attain every prescribed positive tolerance. [Two-stage parity Gram test](RH/DyadicParityTwoStageGram.lean)
+
+## Uniform drift through a finite range of Gram solves
+
+For $B\le A$, the complete drift outside cutoff $N$ is bounded both by the reciprocal packet-mass gain and by that gain multiplied by a cubic polynomial in $A$ divided by $N+1$. For any prescribed finite range of later Gram solves one can choose a physical cutoff schedule that makes its scaled drift small uniformly on that range. The RH criterion still requires a bound as the actual later solves grow beyond the proved finite ranges. [Gram cutoff estimates](RH/CenteredMeanDriftCutoffs.lean)
+
+## Dilation tests of the screened representative
+
+Interchange along the dyadic dilation orbit is equivalent to invariance of the screened representative under the adjoint of dilation by two. That invariance together with the triadic nonincrease condition characterizes the constant representative. Eventual interchange along the adjacent threshold differences also characterizes it. For any fixed adjacent pair a hypothetical right zero imposes a power lower bound on exact-head errors. The simultaneous dyadic and triadic conditions, and the subpower errors needed to exclude a right zero, remain open. [Dilation tests](RH/MobiusParityInterchange.lean)
+
+## Cost of repairing the mean without disturbing a fitted head
+
+The least complete squared Hilbert error with the mean constraint is attained. The conductor-241 certificate bounds it by $1009/1000$ times the least squared error over legal adjustments with zero head, uniformly in the physical cutoff and the residual. If $q_K$ is the resulting tail capacity, its normalized value satisfies $1-E\le (K+1)q_K\le1$, with $E$ the limiting legal energy. The finite factor quantifies the cost of imposing the mean. Establishing arbitrarily small legal errors, or the required saturation theorem on the spectral route, remains open. [Legal tail mean capacity](RH/LegalTailMeanCapacity.lean)
+
 ## Natural-dilation cell energy
 
 `naturalError_eq_continuumCorrection` identifies the finite natural-dilation error with the complete reciprocal-cell integral. `naturalError_eq_charge_quadratic` gives its signed quadratic in the exterior coefficient charge. `naturalError_insert_one_minimum` attains the minimum over conductor-one coefficients explicitly. The transfer from complete natural error to centered squared error has a factor strictly smaller than 6/5. This resolves the finite natural-error identification left open in the October cell-energy note. The remaining density step is to make the actual errors arbitrarily small. [BaezDuarteNaturalCellTransfer](RH/BaezDuarteNaturalCellTransfer.lean)
