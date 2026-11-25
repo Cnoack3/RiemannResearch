@@ -34,3 +34,9 @@ Let `fiber N` be the legal mean-one vectors that equal one at physical sites 1 t
 - [PhysicalHeadBoundaryCoordinates.lean](RH/PhysicalHeadBoundaryCoordinates.lean) identifies the same cokernel with unrestricted sequences modulo ℓ². `layerCokernel_boundary` sends the connecting class at one to the signed layer coefficients. `constant_layers_survive` shows that putting one unit in each layer gives a nonzero class even in the legal-stage cokernel. The arithmetic carry has vanishing Cesàro mean square, whereas the all-ones sequence has mean square one. `parity_capture_iff_summable_signedCarry` identifies the parity-capture endpoint with square summability.
 
 **Open.** Prove square summability of this particular signed carry sequence. Equivalently, bound the partial sums of its squared coefficients uniformly over all physical cutoffs.
+
+## Computing mixed parity capture
+
+[MixedParityDigammaParseval.lean](RH/MixedParityDigammaParseval.lean) gives the signed scalar recursion `digammaRow`. Every row uses rational digamma nodes and earlier mixed conductors. `parity_projection_norm` computes the unnormalized Pareto norm of the mixed projection of J₂ as the square root of a convergent series. `physical_head_coefficient` gives the orthogonal change of coordinates to the physical-head basis. `first_digamma_term` and `second_digamma_term` give the initial contributions in conductor order.
+
+**Open.** Identify the value of the convergent energy series with log 2 − (log 2)². Convergence of the capture series holds unconditionally.
