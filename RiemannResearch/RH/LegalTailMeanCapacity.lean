@@ -70,7 +70,7 @@ instance legalHeadKernel_complete (K : ℕ) : CompleteSpace (legalHeadKernel K) 
 def legalTailMeanCapacity (K : ℕ) : ℝ :=
   ‖(legalHeadKernel K).starProjection (paretoTail K)‖ ^ 2
 
-private theorem tail_eq_mean_of_head_zero {K : ℕ} {f : ThresholdHilbert}
+theorem tail_eq_mean_of_head_zero {K : ℕ} {f : ThresholdHilbert}
     (hf : headMap K f = 0) : inner ℝ (paretoTail K) f = inner ℝ hilbertOne f := by
   rw [← real_inner_comm (paretoTail K) f, paretoTail_inner, ← real_inner_comm hilbertOne f]
   have he : paretoHeadMean K f = 0 := by
