@@ -614,6 +614,7 @@ import RiemannResearch.RH.CenteredMeanQuotients
 import RiemannResearch.RH.CenteredMeanLongExact
 import RiemannResearch.RH.CenteredMeanAmbientGeometry
 import RiemannResearch.RH.CenteredMeanQuotientNorm
+import RiemannResearch.RH.CenteredMeanQuotientTail
 import RiemannResearch.RH.CenteredMeanRHCriteria
 import RiemannResearch.RH.CenteredMeanFiniteDescent
 import RiemannResearch.RH.CenteredMeanDyadicGram
@@ -637,6 +638,7 @@ import RiemannResearch.RH.AlgebraicSupportColimit
 import RiemannResearch.RH.HausdorffSupportColimit
 import RiemannResearch.RH.CenteredMeanStageSnake
 import RiemannResearch.RH.CenteredMeanDigammaSection
+import RiemannResearch.RH.CenteredMeanGramTail
 import RiemannResearch.RH.ConductorTowerLimit
 import RiemannResearch.RH.MixedConductorPolarizedParseval
 import RiemannResearch.RH.MixedConductorGramBoundary
@@ -4069,6 +4071,7 @@ import RiemannResearch.RH.ParetoUniformLaw
 import RiemannResearch.RH.ParetoNymanNorm
 import RiemannResearch.RH.BaezDuarteCenteredBridge
 import RiemannResearch.RH.BaezDuarteNaturalApproximation
+import RiemannResearch.RH.BaezDuarteNaturalCellTransfer
 import RiemannResearch.RH.ParetoPacketGreenGram
 import RiemannResearch.RH.ParetoCRTGramTransfer
 import RiemannResearch.Analysis.SubpowerTailObstruction

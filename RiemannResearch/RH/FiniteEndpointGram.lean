@@ -105,6 +105,60 @@ theorem finite_endpoint_gram_of_le (k n : ℕ) (hn : doubleStage k ≤ n) :
     (energy k / 2) * (energy n - a^2 / 2)
   nlinarith
 
+/-- The part of the upper residual left after its first site and the dyadic
+direction from a lower stage are removed. The scaling avoids division at zero. -/
+def endpointGramRemainder (k n : ℕ) : ThresholdHilbert :=
+  (2 * energy k) • (projectionResidual n -
+    hilbertSequence (projectionResidual n) 1 • paretoPointHilbert 0) -
+    (2 * energy n - hilbertSequence (projectionResidual n) 1) •
+      doubleDilation (projectionResidual k)
+
+/-- The full two-stage Gram slack is the squared norm of the scaled
+orthogonal remainder. This identity keeps the signed first-site coordinate. -/
+theorem finite_endpoint_remainder_norm_sq (k n : ℕ) (hn : doubleStage k ≤ n) :
+    let E := energy k
+    let e := energy n
+    let b := hilbertSequence (projectionResidual n) 1
+    ‖endpointGramRemainder k n‖^2 = 2*E*(2*E*e - E*b^2 - (2*e-b)^2) := by
+  dsimp only
+  let b := hilbertSequence (projectionResidual n) 1
+  let x := projectionResidual n - b • paretoPointHilbert 0
+  let y := doubleDilation (projectionResidual k)
+  have hxx : ‖x‖^2 = energy n - b^2/2 := remove_firstPoint_norm_sq _
+  have hyy : ‖y‖^2 = 2 * energy k := by
+    change ‖hilbertDilation 2 (by decide) (projectionResidual k)‖^2 = 2 * ‖projectionResidual k‖^2
+    simpa using hilbertDilation_norm_sq 2 (by decide) (projectionResidual k)
+  have hxy : inner ℝ x y = 2*energy n - b := by
+    have hpy : inner ℝ (paretoPointHilbert 0) y = 0 :=
+      (real_inner_comm ..).trans (doubleDilation_inner_firstPoint _)
+    rw [show x = projectionResidual n - b • paretoPointHilbert 0 from rfl,
+      inner_sub_left, real_inner_smul_left, hpy, mul_zero, sub_zero]
+    exact residual_inner_doubleDilation_of_le k n hn
+  change ‖(2*energy k) • x - (2*energy n-b) • y‖^2 = _
+  rw [norm_sub_sq_real, norm_smul, norm_smul, Real.norm_eq_abs, Real.norm_eq_abs,
+    mul_pow, mul_pow, sq_abs, sq_abs, hxx, hyy, real_inner_smul_left,
+    real_inner_smul_right, hxy]
+  dsimp only [b]
+  ring
+
+/-- Solving the complete quadratic gives both signed endpoints, using the
+actual energies at the two cutoffs. -/
+theorem finite_endpoint_root_interval (k n : ℕ) (hn : doubleStage k ≤ n) :
+    let E := energy k
+    let e := energy n
+    let b := hilbertSequence (projectionResidual n) 1
+    |(1+E)*b - 2*e| ≤ Real.sqrt (2*E*e*(1+E-2*e)) := by
+  dsimp only
+  apply Real.abs_le_sqrt
+  let E := energy k
+  let e := energy n
+  let b := hilbertSequence (projectionResidual n) 1
+  have hg := finite_endpoint_gram_of_le k n hn
+  change (e-b/2)^2 ≤ E/2*(e-b^2/2) at hg
+  have hp : 0 ≤ 1 + E := by have hE : 0 ≤ E := sq_nonneg _; linarith
+  change ((1+E)*b - 2*e)^2 ≤ 2*E*e*(1+E-2*e)
+  nlinarith only [mul_le_mul_of_nonneg_left hg hp]
+
 /-- The endpoint Gram inequality at the first admissible upper stage. -/
 theorem finite_endpoint_gram (n : ℕ) :
     (energy (doubleStage n) -

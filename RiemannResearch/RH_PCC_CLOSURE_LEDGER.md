@@ -17,3 +17,24 @@ For the complete signed pairing C(M,N) of the projection residual at M with the 
 ## Collision-corrected pair correlation
 
 [MontgomeryWindowPairCorrelation](Analysis/MontgomeryWindowPairCorrelation.lean) proves `positiveGapPCC_iff_rationalIntegratedGapDeficit`. Exact subtraction of all equal-ordinate mass gives a criterion on every positive rational width. A proof that the resulting actual integrated deficits tend to zero is still needed.
+
+## Centered quotient and finite Gram systems
+
+- `hasSum_coordinate_quotient_norm_loss` identifies the sum of the nonnegative coordinate losses with E. By `boundary_zero_iff_coordinate_norms`, preservation of each centered coordinate norm is equivalent to vanishing of the boundary. A proof of norm preservation for the actual quotient map would close this route. [CenteredMeanQuotientNorm](RH/CenteredMeanQuotientNorm.lean)
+- `finite_endpoint_remainder_norm_sq` and `finite_endpoint_root_interval` keep the full remainder for two finite projection stages. `parityAdjointPacket_first_site_coupling` ties the signed adjoint pairing to the limiting energy and first physical residual. The finite identities leave the cofinal upper estimate open. [FiniteEndpointGram](RH/FiniteEndpointGram.lean) and [ParetoParityAdjointCriterion](RH/ParetoParityAdjointCriterion.lean)
+
+## Natural-dilation cell energy
+
+`naturalError_eq_continuumCorrection` identifies the finite natural-dilation error with the complete reciprocal-cell integral. `naturalError_eq_charge_quadratic` gives its signed quadratic in the exterior coefficient charge. `naturalError_insert_one_minimum` attains the minimum over conductor-one coefficients explicitly. The transfer from complete natural error to centered squared error has a factor strictly smaller than 6/5. This resolves the finite natural-error identification left open in the October cell-energy note. The remaining density step is to make the actual errors arbitrarily small. [BaezDuarteNaturalCellTransfer](RH/BaezDuarteNaturalCellTransfer.lean)
+
+## Bare argument increment criterion
+
+`positiveGapPCC_iff_collisionCorrectedPureArgument` identifies positive-gap PCC with the rational-width limits of the zeta argument increment mean square after subtracting the sine-model variance and measured equal-ordinate excess. The comparison between the triangle energy and this mean square is unconditional. A provider for the stated mean-square asymptotic is still needed. [MontgomeryArgumentWindowVariance](Analysis/MontgomeryArgumentWindowVariance.lean)
+
+## Adjacent dilations of the Möbius approximants
+
+At every cutoff the sum of squared screened pairing errors over the adjacent-dilation tail basis is exactly E/(1−E). The approximants have exact heads, and their physical L¹ errors converge to zero uniformly in the moving scale. Interchange for the screened probe on the entire basis is equivalent to the screened section being the ambient constant. The L¹ convergence alone does not prove that interchange. [MobiusParityInterchange](RH/MobiusParityInterchange.lean)
+
+## Quantified finite tail test for the centered boundary
+
+`boundary_zero_iff_cofinal_finiteSectionTailCost` requires one finite C, arbitrarily large physical cutoffs N, and for each such N arbitrarily late Gram cutoffs B with N times the finite cost at most C. The cost is the screened squared displacement computed from packet mass minus the explicit weighted first-N-site loss. The declarations compute its limit at fixed N and prove the equivalence. The uniform two-cutoff inequality remains open. [CenteredMeanGramTail](RH/CenteredMeanGramTail.lean) and [CenteredMeanQuotientTail](RH/CenteredMeanQuotientTail.lean)

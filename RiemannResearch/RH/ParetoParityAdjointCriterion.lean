@@ -184,6 +184,77 @@ theorem parityAdjointPacket_residual_dilation_series :
   intro j
   rw [hilbertTail, real_inner_smul_right, real_inner_smul_right, limitResidual_inner_dilation_one]
 
+/-- Each individual tail pairing keeps the exact scale of the dilation norm. -/
+theorem abs_residual_inner_tail_le_div_sqrt (m : ℕ) (hm : 0 < m) :
+    |inner ℝ limitResidual (hilbertTail m hm)| ≤ limitEnergy / Real.sqrt (m:ℝ) := by
+  have hm' : 0 < (m:ℝ) := by exact_mod_cast hm
+  have hs := Real.sqrt_pos.mpr hm'
+  have hc : (1/(m:ℝ))*Real.sqrt (m:ℝ) = 1/Real.sqrt (m:ℝ) := by
+    field_simp [hm'.ne', hs.ne']
+    nlinarith only [Real.sq_sqrt hm'.le]
+  rw [hilbertTail,real_inner_smul_right,limitResidual_inner_dilation_one,← real_inner_smul_right]
+  apply (abs_real_inner_le_norm _ _).trans_eq
+  rw [norm_smul,Real.norm_eq_abs,abs_of_nonneg (by positivity),hilbertDilation_norm]
+  change ‖limitResidual‖ * (1/(m:ℝ)*(Real.sqrt (m:ℝ)*‖limitResidual‖)) =
+    ‖limitResidual‖^2 / Real.sqrt (m:ℝ)
+  calc
+    _ = ((1/(m:ℝ))*Real.sqrt (m:ℝ))*‖limitResidual‖^2 := by ring
+    _ = _ := by rw [hc]; ring
+
+/-- Removing the dyadic term from the adjoint parity series couples its
+pairing to the signed first coordinate. All remaining scales are at least
+three, and their total jump mass is at most one tenth. -/
+theorem parityAdjointPacket_first_site_coupling :
+    |inner ℝ limitResidual parityAdjointPacket - 2*limitEnergy/5 +
+      hilbertSequence limitResidual 1 / 30| ≤ limitEnergy / (10*Real.sqrt 3) := by
+  let r := limitResidual
+  let E := limitEnergy
+  let b := hilbertSequence r 1
+  let a (j : ℕ) := parityAdjointIncrement j
+  let t (j : ℕ) := inner ℝ r (hilbertTail (j+2) (by omega))
+  have he : 0 ≤ E := sq_nonneg _
+  have ha0 : a 0 = 1/15 := by norm_num [a,parityAdjointIncrement_eq]
+  have ht0 : t 0 = E - b/2 := by
+    dsimp only [t, r, E, b]
+    rw [hilbertTail, real_inner_smul_right, limitResidual_inner_dilation_one]
+    norm_num only [Nat.zero_add, Nat.cast_ofNat]
+    linarith only [firstCoordinate_energy_identity]
+  have hmass (N : ℕ) : ∑ j ∈ Finset.range N, a (j+1) ≤ 1/10 := by
+    have hh := sum_increments (N+1)
+    change (∑ j ∈ Finset.range (N+1), a j) = profile (N+1+1)-1/3 at hh
+    rw [Finset.sum_range_succ', ha0] at hh
+    linarith only [hh, profile_le_half (N+1+1)]
+  have hsum (N : ℕ) : |∑ j ∈ Finset.range N, a (j+1)*t (j+1)| ≤ E / (10*Real.sqrt 3) := by
+    calc
+      _ ≤ ∑ j ∈ Finset.range N, |a (j+1)*t (j+1)| := Finset.abs_sum_le_sum_abs _ _
+      _ ≤ ∑ j ∈ Finset.range N, a (j+1) * (E / Real.sqrt 3) := by
+        apply Finset.sum_le_sum
+        intro j hj
+        rw [abs_mul, abs_of_nonneg (increment_nonneg (j+1))]
+        apply mul_le_mul_of_nonneg_left _ (increment_nonneg (j+1))
+        apply (abs_residual_inner_tail_le_div_sqrt (j+1+2) (by omega)).trans
+        exact div_le_div_of_nonneg_left he (Real.sqrt_pos.mpr (by norm_num))
+          (Real.sqrt_le_sqrt (by exact_mod_cast (show 3 ≤ j+1+2 by omega)))
+      _ ≤ (1/10)*(E / Real.sqrt 3) := by
+        rw [← Finset.sum_mul]
+        exact mul_le_mul_of_nonneg_right (hmass N) (div_nonneg he (Real.sqrt_nonneg _))
+      _ = _ := by ring
+  have ht : Tendsto partialPacket atTop (𝓝 parityAdjointPacket) := by
+    rw [parityAdjointPacket_expansion]
+    exact tendsto_const_nhds.add summable_tailTerm.hasSum.tendsto_sum_nat
+  have hlim := (innerSL ℝ r).continuous.continuousAt.tendsto.comp ht
+  have hfinal := ((hlim.sub_const (2*E/5)).add_const (b/30)).abs
+  apply le_of_tendsto hfinal
+  filter_upwards [eventually_ge_atTop 1] with N hN
+  obtain ⟨j, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : N ≠ 0)
+  change |inner ℝ r (partialPacket (j+1)) - 2*E/5 + b/30| ≤ _
+  rw [partialPacket,inner_add_right,real_inner_smul_right,inner_sum]
+  simp only [tailTerm,real_inner_smul_right]
+  change |(1/3:ℝ)*inner ℝ r hilbertOne +
+    (∑ i ∈ Finset.range (j+1), a i * t i) - 2*E/5 + b/30| ≤ _
+  rw [Finset.sum_range_succ', ha0, ht0, show inner ℝ r hilbertOne = E from limitResidual_inner_one]
+  convert hsum j using 2 <;> ring
+
 /-- A one-sided test at the adjoint parity packet detects every positive residual. -/
 theorem parityAdjointPacket_residual_bounds :
     limitEnergy/6 ≤ inner ℝ limitResidual parityAdjointPacket ∧

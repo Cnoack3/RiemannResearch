@@ -279,4 +279,56 @@ theorem stage_comparison_isometry_iff (S : Submodule ℝ mixedClosure) :
   · intro hd
     exact (quotient_isometry_iff_defect_zero.mpr hd).comp (Stage.targetIsometryEquiv S).isometry
 
+/-- The quotient class of the centered unit vector at physical site `n + 1`.
+The ambient Hilbert space already incorporates the square root of the Pareto weight. -/
+def centeredCoordinateClass (n : ℕ) : BoundaryTarget :=
+  mixedInMeanZero.mkQ ⟨center (lp.single 2 n 1), center_mem _⟩
+
+/-- The local squared norm loss equals the squared weighted coordinate of the
+defect divided by the squared norm of the screened mean-one section. -/
+theorem coordinate_quotient_norm_loss (n : ℕ) :
+    ‖centeredCoordinateClass n‖ ^ 2 - ‖Φ (centeredCoordinateClass n)‖ ^ 2 =
+      (defect.val n) ^ 2 / (1 + ‖defect‖ ^ 2) := by
+  let e : ThresholdHilbert := lp.single 2 n 1
+  let z : meanZero := ⟨center e, center_mem e⟩
+  have hi : inner ℝ z defect = defect.val n := by
+    change inner ℝ (center e) defect.val = _
+    rw [center_apply, inner_sub_left, real_inner_smul_left,
+      show inner ℝ hilbertOne defect.val = 0 from defect.property, mul_zero, sub_zero]
+    simp [e, lp.inner_single_left, RCLike.inner_apply]
+  have h := quotient_mk_norm_loss z
+  rw [hi] at h
+  change ‖mixedInMeanZero.mkQ z‖ ^ 2 - ‖Φ (mixedInMeanZero.mkQ z)‖ ^ 2 = _
+  linarith only [h]
+
+/-- Parseval resolves the energy of the ambient snake into the nonnegative
+squared quotient-norm losses of individual centered coordinate classes. -/
+theorem hasSum_coordinate_quotient_norm_loss :
+    HasSum (fun n : ℕ => ‖centeredCoordinateClass n‖ ^ 2 -
+      ‖Φ (centeredCoordinateClass n)‖ ^ 2) limitEnergy := by
+  simp only [coordinate_quotient_norm_loss]
+  have hs : HasSum (fun n : ℕ => (defect.val n) ^ 2) (‖defect‖ ^ 2) := by
+    change HasSum (fun n : ℕ => (defect.val n) ^ 2) (‖defect.val‖ ^ 2)
+    rw [hilbert_norm_sq]
+    exact (hilbert_coordinate_square_summable defect.val).hasSum
+  have he : ‖defect‖ ^ 2 / (1 + ‖defect‖ ^ 2) = limitEnergy :=
+    (div_eq_iff (by positivity)).mpr energy_mul_one_add_defect.symm
+  rw [← he]
+  exact hs.div_const _
+
+/-- It suffices to test the inclusion-induced quotient equivalence on the
+centered coordinate classes. Each equality concerns one positive physical site. -/
+theorem boundary_zero_iff_coordinate_norms :
+    boundary = 0 ↔ ∀ n : ℕ, ‖Φ (centeredCoordinateClass n)‖ = ‖centeredCoordinateClass n‖ := by
+  constructor
+  · intro hb
+    have hd := defect_zero_iff_one_mem.mpr (boundary_eq_zero_iff_one_mem.mp hb)
+    exact fun n => (AddMonoidHomClass.isometry_iff_norm Φ).mp
+      (quotient_isometry_iff_defect_zero.mpr hd) (centeredCoordinateClass n)
+  · intro h
+    have hs := hasSum_coordinate_quotient_norm_loss
+    simp only [h, sub_self] at hs
+    exact boundary_eq_zero_iff_one_mem.mpr (limitEnergy_zero_iff_mem.mp
+      (hs.unique (hasSum_zero : HasSum (fun _ : ℕ => (0 : ℝ)) 0)))
+
 end RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake

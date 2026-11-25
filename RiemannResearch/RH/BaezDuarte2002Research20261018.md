@@ -228,3 +228,7 @@ The next practical formalization step is the complete cell-partition bridge.
 The next mathematical RH step is a signed arithmetic estimate controlling
 both the variance/head term and the infinite tail; positive damping or CRT
 alone does not supply it.
+
+## Subsequent Lean result
+
+[BaezDuarteNaturalCellTransfer](BaezDuarteNaturalCellTransfer.lean) identifies the full natural error with the reciprocal-cell integral, proves the signed charge quadratic, and gives an attained minimum over the conductor-one coefficient. Its centered-to-natural squared-error factor is strictly less than 6/5. Arbitrarily small actual approximation errors remain the analytic input needed for RH.

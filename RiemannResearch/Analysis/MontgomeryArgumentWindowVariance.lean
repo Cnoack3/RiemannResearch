@@ -367,4 +367,52 @@ theorem positiveGapPCC_of_pureArgumentHalfWidthContrasts
   rw [hzero]
   ring
 
+/-- At every fixed nonnegative width the actual triangle and the microscopic
+square of the bare count-discrepancy increment differ asymptotically by the
+square of the width. -/
+theorem unfoldedWindowEnergy_sub_sq_sub_pureArgument_tendsto {r : ℝ} (hr : 0 ≤ r) :
+    Tendsto (fun T : ℝ => unfoldedWindowEnergy T r - r ^ 2 - pureArgumentWidthMoment T r)
+      atTop (𝓝 0) := by
+  obtain ⟨c, hc, hfull⟩ := exists_window_sub_argument_bound hr
+  obtain ⟨e, he, hpure⟩ := full_sub_pure_vanishes_uniformly r hr
+  apply squeeze_zero_norm' _ (by simpa using hc.add he)
+  filter_upwards [hfull, hpure] with T hF hP
+  rw [Real.norm_eq_abs, show unfoldedWindowEnergy T r - r ^ 2 - pureArgumentWidthMoment T r =
+    (unfoldedWindowEnergy T r - r ^ 2 - fullArgumentWidthMoment T r) +
+      (fullArgumentWidthMoment T r - pureArgumentWidthMoment T r) by ring]
+  exact (abs_add_le _ _).trans (add_le_add (hF r ⟨hr, le_rfl⟩) (hP r ⟨hr, le_rfl⟩))
+
+/-- For the bare argument variance the correct centering for strictly positive
+gaps includes the exact equal-ordinate excess. Convergence at positive rational
+widths is both necessary and sufficient for ordinate PCC. -/
+theorem positiveGapPCC_iff_collisionCorrectedPureArgument :
+    PositiveGapPCC ↔ ∀ q : ℚ, 0 < q → Tendsto (fun T : ℝ =>
+      pureArgumentWidthMoment T q - (sineWindowEnergy q - (q : ℝ) ^ 2) -
+        (q : ℝ) * ((actualCollision T : ℝ) / (T * Real.log T / (2 * Real.pi)) - 1))
+          atTop (𝓝 0) := by
+  let A := fun (T r : ℝ) => pureArgumentWidthMoment T r - (sineWindowEnergy r - r ^ 2) -
+    r * ((actualCollision T : ℝ) / (T * Real.log T / (2 * Real.pi)) - 1)
+  change PositiveGapPCC ↔ ∀ q : ℚ, 0 < q → Tendsto (fun T : ℝ => A T q) atTop (𝓝 0)
+  have bridge {r : ℝ} (hr : 0 < r) :
+      Tendsto (fun T : ℝ => A T r + r * integratedGapDeficit T r) atTop (𝓝 0) := by
+    have hlim := (unfoldedWindowEnergy_sub_sq_sub_pureArgument_tendsto hr.le).neg
+    rw [neg_zero] at hlim
+    apply hlim.congr'
+    filter_upwards [eventually_gt_atTop (1 : ℝ)] with T hT
+    dsimp [A]
+    linarith only [unfoldedWindowEnergy_sub_sine_eq_collision_sub_deficit hT hr,
+      show r * ((actualCollision T : ℝ) / (T * Real.log T / (2 * Real.pi)) -
+          1 - integratedGapDeficit T r) =
+        r * ((actualCollision T : ℝ) / (T * Real.log T / (2 * Real.pi)) - 1) -
+          r * integratedGapDeficit T r by ring]
+  rw [positiveGapPCC_iff_rationalIntegratedGapDeficit]
+  constructor
+  · intro h q hq
+    have hr : 0 < (q : ℝ) := by exact_mod_cast hq
+    simpa using (bridge hr).sub ((h q hq).const_mul (q : ℝ))
+  · intro h q hq
+    have hr : 0 < (q : ℝ) := by exact_mod_cast hq
+    have hlim := ((bridge hr).sub (h q hq)).div_const (q : ℝ)
+    simpa [hr.ne', add_sub_cancel_left, mul_comm] using hlim
+
 end RiemannResearch.Analysis.MontgomeryPositiveGap

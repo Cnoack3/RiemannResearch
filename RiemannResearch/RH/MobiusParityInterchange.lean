@@ -5,6 +5,10 @@ import RiemannResearch.RH.ParetoSignedSchurRemainder
 import RiemannResearch.RH.ScreenedParityPhysicalBounds
 import RiemannResearch.RH.MobiusResidualFirstCoordinate
 import RiemannResearch.RH.ThresholdHilbertL1
+import RiemannResearch.RH.ThresholdInterpolationCompleteness
+import RiemannResearch.RH.ParetoTailAverages
+import RiemannResearch.RH.ParetoGibbsTailBasis
+import RiemannResearch.RH.CenteredMeanSnake
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
@@ -316,6 +320,121 @@ theorem screened_tail_error_tendsto :
   change (∑' k, positiveWeight k *
     (hilbertSequence u k * hilbertSequence (h - paritySum N) k)) = _
   simpa only [Nat.add_assoc] using hsplit.symm
+
+
+/-- Apply two consecutive dilations to the same natural Möbius approximant. -/
+def adjacentContrast (n N : ℕ) : ThresholdHilbert :=
+  hilbertDilation (n+1) (by omega) (canonicalMobiusHilbert N) -
+    hilbertDilation (n+2) (by omega) (canonicalMobiusHilbert N)
+
+/-- The adjacent contrast equals the corresponding Pareto wavelet on the
+whole initial interval through the Möbius cutoff. -/
+theorem adjacentContrast_exact (n N k : ℕ) (hk : k ≤ N) :
+    hilbertSequence (adjacentContrast n N) k = hilbertSequence (tailBasisHilbert n) k := by
+  have head (j : ℕ) (hj : j ≤ N) :
+      hilbertSequence (canonicalMobiusHilbert N) j = hilbertSequence hilbertOne j := by
+    rcases Nat.eq_zero_or_pos j with rfl | hp
+    · simp
+    · rw [canonicalMobiusHilbert_exact N j hp hj, hilbertOne_sequence]
+      simp [zeroAnchor, hp.ne']
+  simp only [adjacentContrast, tailBasisHilbert_eq_dilation_one, hilbertSequence_sub, Pi.sub_apply,
+    hilbertDilation_sequence, dilation]
+  rw [head _ ((Nat.div_le_self ..).trans hk), head _ ((Nat.div_le_self ..).trans hk)]
+
+/-- Complete L¹ error, uniformly over the adjacent scales. -/
+theorem adjacentContrast_L1_le (n N : ℕ) :
+    hilbertL1Norm (tailBasisHilbert n - adjacentContrast n N) ≤
+      2 * hilbertL1Norm (hilbertOne - canonicalMobiusHilbert N) := by
+  let e := hilbertOne - canonicalMobiusHilbert N
+  have hid : tailBasisHilbert n - adjacentContrast n N =
+      hilbertDilation (n+1) (by omega) e - hilbertDilation (n+2) (by omega) e := by
+    rw [tailBasisHilbert_eq_dilation_one, adjacentContrast]
+    change _ = hilbertDilationContinuous (n+1) (by omega) (hilbertOne - canonicalMobiusHilbert N) -
+      hilbertDilationContinuous (n+2) (by omega) (hilbertOne - canonicalMobiusHilbert N)
+    simp only [map_sub, hilbertDilationContinuous_apply]
+    abel
+  rw [hid]
+  calc
+    _ ≤ hilbertL1Norm (hilbertDilation (n+1) (by omega) e) +
+          hilbertL1Norm (hilbertDilation (n+2) (by omega) e) := L1_sub _ _
+    _ = _ := by rw [L1_dilation, L1_dilation, two_mul]
+
+/-- The scale may depend arbitrarily on the cutoff in the L¹ estimate. -/
+theorem adjacentContrast_L1_tendsto (m : ℕ → ℕ) :
+    Tendsto (fun N => hilbertL1Norm (tailBasisHilbert (m N) - adjacentContrast (m N) N))
+      atTop (𝓝 0) :=
+  squeeze_zero (fun _ => hilbertL1Norm_nonneg _) (fun N => adjacentContrast_L1_le (m N) N)
+    (by simpa only [mul_zero] using canonical_error_L1.const_mul 2)
+
+/-- At each finite cutoff the entire signed contrast has zero screened pairing. -/
+theorem adjacentContrast_screened (n N : ℕ) :
+    inner ℝ (adjacentContrast n N) PrimePowerSchur.normalizedScreenedTwo = 0 := by
+  rw [adjacentContrast, inner_sub_left,
+    PrimePowerSchur.inner_dilation_screenedTwo
+      (CoefficientStabilization.canonicalMobiusHilbert_mem_closedSpace N),
+    PrimePowerSchur.inner_dilation_screenedTwo
+      (CoefficientStabilization.canonicalMobiusHilbert_mem_closedSpace N), sub_self]
+
+/-- Interchanging the screened pairing with every consecutive-dilation limit
+is equivalent to equality of the screened unit and the ambient constant. -/
+theorem adjacentContrast_interchange_iff_screened :
+    (∀ n : ℕ, Tendsto
+      (fun N => inner ℝ (adjacentContrast n N) PrimePowerSchur.normalizedScreenedTwo)
+      atTop (𝓝 (inner ℝ (tailBasisHilbert n) PrimePowerSchur.normalizedScreenedTwo))) ↔
+      PrimePowerSchur.normalizedScreenedTwo = hilbertOne := by
+  constructor
+  · intro h
+    apply sub_eq_zero.mp
+    apply tailBasis_total
+    · rw [inner_sub_left, PrimePowerSchur.normalizedScreenedTwo_mean,
+        real_inner_self_eq_norm_sq, hilbertOne_norm_sq, sub_self]
+    · intro n
+      have hzero : inner ℝ (tailBasisHilbert n) PrimePowerSchur.normalizedScreenedTwo = 0 := by
+        apply tendsto_nhds_unique (h n)
+        simpa only [adjacentContrast_screened] using
+          (tendsto_const_nhds : Tendsto (fun _ : ℕ => (0 : ℝ)) atTop (𝓝 0))
+      rw [real_inner_comm, inner_sub_right, hzero, tailBasis_inner_one, sub_self]
+  · intro hu n
+    rw [show inner ℝ (tailBasisHilbert n) PrimePowerSchur.normalizedScreenedTwo = 0 by
+      rw [hu, tailBasis_inner_one]]
+    simpa only [adjacentContrast_screened] using
+      (tendsto_const_nhds : Tendsto (fun _ : ℕ => (0 : ℝ)) atTop (𝓝 0))
+
+/-- The simultaneous screened interchange closes the centered snake boundary. -/
+theorem riemannHypothesis_of_adjacentContrast_interchange
+    (h : ∀ n : ℕ, Tendsto
+      (fun N => inner ℝ (adjacentContrast n N) PrimePowerSchur.normalizedScreenedTwo)
+      atTop (𝓝 (inner ℝ (tailBasisHilbert n) PrimePowerSchur.normalizedScreenedTwo))) :
+    RiemannHypothesis :=
+  PrimePowerSchur.CenteredMeanSnake.riemannHypothesis_of_boundary_eq_zero
+    (PrimePowerSchur.CenteredMeanSnake.boundary_eq_zero_iff_screened.mpr
+      (adjacentContrast_interchange_iff_screened.mp h))
+
+
+/-- Each cutoff has the same total squared screened interchange error. The
+constant coordinate is accounted for by the normalization of the section. -/
+theorem adjacentContrast_screened_error_parseval (N : ℕ) :
+    ∑' n : ℕ, (inner ℝ (tailBasisHilbert n - adjacentContrast n N)
+      PrimePowerSchur.normalizedScreenedTwo)^2 =
+        CoefficientStabilization.limitEnergy / (1 - CoefficientStabilization.limitEnergy) := by
+  let u := PrimePowerSchur.normalizedScreenedTwo
+  have hs := fullTailBasis.hasSum_inner_mul_inner u u
+  have hzero : inner ℝ u (fullTailBasis 0) * inner ℝ (fullTailBasis 0) u = 1 := by
+    have h₁ : inner ℝ u hilbertOne = 1 := PrimePowerSchur.normalizedScreenedTwo_mean
+    have h₂ : inner ℝ hilbertOne u = 1 := (real_inner_comm _ _).trans h₁
+    simp only [fullTailBasis_apply, fullTailFamily, inner_neg_right, inner_neg_left, h₁, h₂]
+    norm_num
+  have hsucc (n : ℕ) : inner ℝ u (fullTailBasis (n+1)) * inner ℝ (fullTailBasis (n+1)) u =
+      (inner ℝ (tailBasisHilbert n - adjacentContrast n N) u)^2 := by
+    simp only [fullTailBasis_apply, fullTailFamily, inner_sub_left, u, adjacentContrast_screened,
+      sub_zero, pow_two, real_inner_comm PrimePowerSchur.normalizedScreenedTwo (tailBasisHilbert n)]
+  have hsum := hs.tsum_eq
+  rw [hs.summable.tsum_eq_zero_add, hzero, real_inner_self_eq_norm_sq] at hsum
+  simp_rw [hsucc] at hsum
+  have hd := PrimePowerSchur.normalizedScreenedTwo_error_sq_eq_limitEnergy
+  rw [norm_sub_sq_real, PrimePowerSchur.normalizedScreenedTwo_mean, hilbertOne_norm_sq] at hd
+  dsimp only [u] at hsum
+  linarith only [hsum, hd]
 
 end MobiusParityInterchange
 end RiemannResearch.RH.Pareto

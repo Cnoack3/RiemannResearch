@@ -1,5 +1,9 @@
 # Theorem catalog
 
+## RH and Montgomery positive-gap closure declarations
+
+The [closure ledger](RH_PCC_CLOSURE_LEDGER.md) records the cutoff-order theorem, the categorical coordinate norm losses, the finite Gram bounds and the collision-corrected PCC criteria, with their source modules and remaining mathematical inputs.
+
 ## Absolute Hilbert convergence of squarefree CRT carry paths
 
 - `RH/QInfiniteSquarefreeCarry.qCarry_telescope` gives the exact finite

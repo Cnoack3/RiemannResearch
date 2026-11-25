@@ -21,9 +21,9 @@ no mathematical priority is claimed.
 The actual first cell moment is identified by an interval integral.
 The scalar and infinite weighted energy comparisons are unconditional
 given the displayed ordinary positivity and summability hypotheses.
-The global change of variables and partition identifying this model with
-`BaezDuarte.naturalError` is not formalized here; see the research record
-`BaezDuarte2002Research20261018.md`. In particular no RH estimate is assumed.
+The global reciprocal substitution for `BaezDuarte.naturalError` and the
+resulting sharp ambient transfer factor are proved in
+`BaezDuarteNaturalCellTransfer.lean` using the complete continuum cell energy.
 -/
 
 namespace RiemannResearch.RH.BaezDuarteCellEnergy
