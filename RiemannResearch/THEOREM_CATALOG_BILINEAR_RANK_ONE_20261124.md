@@ -143,6 +143,10 @@ In `RiemannResearch.RH.ScreenedTwoProjectionScalar`, let $p=P_V\mathbf 1_H$.
 `normalizedScreenedTwo_eq_norm_sq_smul_limitProjection` gives $u=\|u\|^2p$.
 For any $c$ with $u=cp$, `normalizedScreenedTwo_projection_scalar` pairs the equation with $p$ and $u$ to give $1=c\|p\|^2$ and $c=1/\|p\|^2=\|u\|^2>0$.
 
+The residual $d=\mathbf 1_H-p$ satisfies $\langle d,u\rangle=0$ and $\langle d,p\rangle=0$. `limitResidual_inner_limitProjection` obtains the second identity by cancelling the positive scalar in the first.
+For $c=1/\|p\|^2$, `scaled_limitProjection_abs_inner_one` gives $|\langle\mathbf 1_H,cp\rangle|=1$, and `scaled_limitProjection_ambient_norm_product` computes the ambient norm product as $\sqrt c$. `scaled_limitProjection_pairing_bounds` gives both inequalities $|\langle\mathbf 1_H,cp\rangle|\leq 1\leq\sqrt c$.
+`scaled_limitProjection_ambient_equality_iff` proves that the pairing attains the ambient norm product exactly when $c=1$, equivalently $u=\mathbf 1_H=p$.
+
 ## Stage lifts, dilation Gram matrices, and the unit norm
 
 The module `RiemannResearch.RH.CenteredMeanUnitNorm` uses the actual centered snake for every mixed denominator, including each prime-support stage. The finite determinant tests use the complete Pareto Gram matrix. Its conductor cutoff is independent of the choice of stage in the snake.
