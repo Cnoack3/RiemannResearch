@@ -173,6 +173,13 @@ private theorem mixed_parity_coefficient (q : Index) :
   rw [inner_sub_right, sub_eq_zero] at h
   exact h.symm
 
+/-- The signed digamma rows synthesize the projected packet in the complete Pareto norm. -/
+theorem hasSum_parity_modes :
+    HasSum (fun q : Index => digammaRow q 2 • basis q)
+      (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)) := by
+  simpa only [mixed_parity_coefficient] using
+    basis.hasSum_repr (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2))
+
 /-- A convergent series of nonnegative terms for the unnormalized mixed projection energy of J₂. -/
 theorem hasSum_parity_energy :
     HasSum (fun q : Index => (digammaRow q 2) ^ 2)

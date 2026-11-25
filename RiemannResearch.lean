@@ -788,6 +788,7 @@ import RiemannResearch.RH.PhysicalHeadLayerIsometry
 import RiemannResearch.RH.PhysicalHeadSequenceCokernel
 import RiemannResearch.RH.PhysicalHeadBoundaryCoordinates
 import RiemannResearch.RH.MixedParityDigammaParseval
+import RiemannResearch.RH.MixedParityQuotientDescent
 import RiemannResearch.RH.ZetaTwoAffineHeadTower
 import RiemannResearch.RH.QDensityImageReconstruction
 import RiemannResearch.RH.SquarefreeAffineReciprocal

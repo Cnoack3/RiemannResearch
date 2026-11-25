@@ -40,3 +40,15 @@ Let `fiber N` be the legal mean-one vectors that equal one at physical sites 1 t
 [MixedParityDigammaParseval.lean](RH/MixedParityDigammaParseval.lean) gives the signed scalar recursion `digammaRow`. Every row uses rational digamma nodes and earlier mixed conductors. `parity_projection_norm` computes the unnormalized Pareto norm of the mixed projection of J₂ as the square root of a convergent series. `physical_head_coefficient` gives the orthogonal change of coordinates to the physical-head basis. `first_digamma_term` and `second_digamma_term` give the initial contributions in conductor order.
 
 **Open.** Identify the value of the convergent energy series with log 2 − (log 2)². Convergence of the capture series holds unconditionally.
+
+## The mixed parity vector in the physical quotient tower
+
+[MixedParityQuotientDescent.lean](RH/MixedParityQuotientDescent.lean) reconstructs the unnormalized mixed projection of J₂. The declaration `parity_site_hasSum` computes every positive site from the finite signed conductor recursions. The minimum-norm head representatives commute with restriction by `parityLayerPrefix_compatible`. Their unique mixed lift is the projection by `parityLayerPrefix_unique`, and `parityLayerPrefix_tendsto` gives convergence in Pareto norm. The identity `parityLayerPrefix_error` retains the full squared truncation error. All these statements are unconditional.
+
+For the first \(N\) positive sites, let \(E_N:M\to\mathbb R^N\) evaluate the head and let \(y_N\) collect the signed digamma site sums. The quotient is \(M/\ker E_N\). Finite mixed interpolation makes \(E_N\) surjective, so \(S_N=E_NE_N^*\) is positive definite. Its minimum-norm representative and squared cost are
+
+\[
+v_N=E_N^*S_N^{-1}y_N,\qquad \|v_N\|_P^2=y_N^\top S_N^{-1}y_N.
+\]
+
+Indeed, \(E_Nv_N=y_N\) and \(v_N\perp\ker E_N\). If \(B_{iq}\) is `paritySiteRow q (i-1)` at positive site \(i\), expansion of the evaluation representers in the conductor basis gives \((S_N)_{ij}=\sum_q B_{iq}B_{jq}\). The theorem `parityLayerCoefficient_from_site` gives the equivalent one-site forward substitution in the physical basis.
