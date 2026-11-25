@@ -765,6 +765,10 @@ import RiemannResearch.RH.PhysicalHeadSnakeSections
 import RiemannResearch.RH.PhysicalHeadSectionGrowth
 import RiemannResearch.RH.PhysicalHeadSectionLog
 import RiemannResearch.RH.PhysicalHeadFiniteMinimum
+import RiemannResearch.RH.PhysicalHeadStageAlgebra
+import RiemannResearch.RH.PhysicalHeadStageAlgebraComparison
+import RiemannResearch.RH.PhysicalHeadAlgebraSnake
+import RiemannResearch.RH.PhysicalHeadPacketSquare
 import RiemannResearch.RH.ZetaTwoAffineHeadTower
 import RiemannResearch.RH.QDensityImageReconstruction
 import RiemannResearch.RH.SquarefreeAffineReciprocal
