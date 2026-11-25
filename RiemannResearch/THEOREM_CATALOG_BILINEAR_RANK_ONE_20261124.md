@@ -122,6 +122,18 @@ Definitions:
 The last theorem has an explicit substantive hypothesis. No unconditional
 vanishing of the defect, equality u = e, or unconditional RH result is supplied.
 
+## Stage lifts, dilation Gram matrices, and the unit norm
+
+The module `RiemannResearch.RH.CenteredMeanUnitNorm` uses the actual centered snake for every mixed denominator, including each prime-support stage. The finite determinant tests use the complete Pareto Gram matrix. Its conductor cutoff is independent of the choice of stage in the snake.
+
+- `stage_polarization_defect` computes the bilinear defect of two legal vectors by subtracting the squared boundary norms of the sum and difference of their means.
+- `screened_power_dilation_gram` gives the exact nested dilation pairing at every positive integer base. At base p and exponents i ≤ j its value is p^i times the squared norm of u.
+- `screened_norm_sq_gram_cut` characterizes the lower cut of the squared norm. A scalar t belongs to the cut exactly when every finite determinant det(G_n − t Λ_n Λ_nᵀ) is nonnegative.
+- `stage_lift_unit_norm_tfae` identifies injectivity of the outgoing cokernel map, existence of a unique kernel lift of 1, the bound ‖u‖ ≤ 1, the equality u = 1, and RH. The proof chases exactness on both sides of the connecting map.
+- `unit_norm_iff_finite_gram_halving` characterizes the unit bound by a finite extension problem. Write a_n = Λ_nᵀ G_n⁻¹ Λ_n for n ≥ 1. For each such n there must be an m with det(G_m − ((1 + 1/a_n)/2) Λ_m Λ_mᵀ) < 0. The determinant identity turns this sign into 1/a_m − 1 < (1/a_n − 1)/2. Its strictness forces m > n by monotonicity of a_n.
+
+**Open.** Construct a finite extension satisfying that inequality for every nonempty starting dictionary. The five proved declarations give identities and equivalences. They leave this arithmetic existence statement, ‖u‖ ≤ 1, and RH open.
+
 ## Verification record
 
 The managed checkpoint receipt is the source of truth for the final publication

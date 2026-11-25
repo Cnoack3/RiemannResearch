@@ -2212,6 +2212,7 @@ import RiemannResearch.RH.ParetoDampedTraceLimit
 import RiemannResearch.RH.ParetoDampingAbsoluteSeed
 import RiemannResearch.RH.ParetoSquarefreeDampingConverse
 import RiemannResearch.RH.CenteredMeanSquarefreeConverse
+import RiemannResearch.RH.CenteredMeanUnitNorm
 import RiemannResearch.RH.BalazardDeRotonBiasUnderRH
 import RiemannResearch.RH.BalazardDeRotonChargeLimit
 import RiemannResearch.RH.BalazardDeRotonNaturalTail
