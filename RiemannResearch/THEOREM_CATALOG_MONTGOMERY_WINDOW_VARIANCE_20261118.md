@@ -1,5 +1,14 @@
 # Fixed-width Montgomery variance
 
+## Consecutive occurrences and the signed Selberg trace
+
+[MontgomeryAdjacentWindowFloor](Analysis/MontgomeryAdjacentWindowFloor.lean) gives the exact chronological triangle decomposition and an eventual variance floor from the actual small-gap proportion. Equal ordinates retain their triangle weight. Its positive specialization at unit width uses the scoped compact-deletion estimate.
+
+[MontgomeryOrdinateSineTrace](Analysis/MontgomeryOrdinateSineTrace.lean) computes the exact single-ordinate integral against a finite weighted sine polynomial.
+
+The [fixed-width Selberg trace proof](RIEMANN_MICROSCOPIC_SELBERG_TRACE_20261125.md) derives the actual mixed covariance and the remaining analytic limit.
+
+
 ## Signed prime-probe width averages
 
 For the convention \(2/R\) on initial widths, the averaged prime statistic has
