@@ -759,6 +759,11 @@ import RiemannResearch.RH.LegalTailMeanCapacityDilation
 import RiemannResearch.RH.LegalTailMeanCapacityConjugate
 import RiemannResearch.RH.LegalTailNymanMesh
 import RiemannResearch.RH.ParetoAffineHeadTower
+import RiemannResearch.RH.PhysicalHeadMixedInterpolation
+import RiemannResearch.RH.PhysicalHeadSnakeSections
+import RiemannResearch.RH.PhysicalHeadSectionGrowth
+import RiemannResearch.RH.PhysicalHeadSectionLog
+import RiemannResearch.RH.PhysicalHeadFiniteMinimum
 import RiemannResearch.RH.ZetaTwoAffineHeadTower
 import RiemannResearch.RH.QDensityImageReconstruction
 import RiemannResearch.RH.SquarefreeAffineReciprocal
