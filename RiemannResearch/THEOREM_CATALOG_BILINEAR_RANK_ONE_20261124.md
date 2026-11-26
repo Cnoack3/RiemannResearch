@@ -195,6 +195,24 @@ E_Q[Bu | O] / E_Q[B | O], with denominator 4 log(2)/3.
 
 [Density-weighted odd conditional unit](CategoryTheory/OddConditionalUnit.lean) · [Odd-part and doubled moments](CategoryTheory/OddPartUnit.lean) · [Valuation covariance](CategoryTheory/PrimeValuationCovariance.lean)
 
+## Character computation of the screened Pareto norm
+
+The Fourier expansion on every physical gcd class gives the complete digamma Gram.
+**character_section_energy** computes the screened scalar from its mixed Gram–Schmidt rows.
+**upper_eq_section_add_tail** identifies the exact omitted energy, and **upper_tendsto**
+proves convergence of the finite upper bounds. **six_ten_upper** gives the two-packet case.
+
+**powerGram** and **rough_mode_split** evaluate pure Dirichlet-power Grams and the rough
+cofactor mean of a divisibility-character mode. **mixedMinimum_error** bounds the change
+in the full mixed minimum after replacing the Pareto weight by a Dirichlet polynomial.
+Its absolute error bound is $(1000/961)9^{-k}$. **upper_of_dirichlet_trial**
+gives the corresponding bound for a supplied mixed trial.
+
+**Open.** Construct finite mixed upper certificates below $1+\varepsilon$ for
+every $\varepsilon>0$. **rh_iff_character_certificates** proves the equivalence with RH.
+
+[Derivation and rational two-packet certificate](CategoryTheory/ParetoCharacterScreenedEnergy.md)
+
 ## Verification record
 
 The managed checkpoint receipt is the source of truth for the final publication
