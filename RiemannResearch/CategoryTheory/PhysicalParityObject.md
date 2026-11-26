@@ -173,6 +173,14 @@ Define the retained carry of a legal vector by \(\operatorname{Carry}_P(v)=\epsi
  \|m+au\|_Q^2=\|m+at\|_Q^2+a^2\|u_Q\|_Q^2,\qquad \langle m,u\rangle_Q=\langle m,t\rangle_Q .
 \]
 
+If the carry is required to stay \(\mathbb Ru\) and the split is required to be orthogonal in native \(Q\), the CRT summand is determined uniquely. For \(t=u-u_Q\) set
+\[
+ C_{u,Q}=V\cap u^{\perp_Q}
+ =\left\{m-\frac{\langle m,t\rangle_Q}{\|u\|_Q^2}\,u:m\in M\right\},
+ \qquad V=C_{u,Q}\oplus^{\perp_Q}\mathbb Ru .
+\]
+Indeed the native coefficient of \(m+au\) on the fixed line is \(a+\langle m,t\rangle_Q/\|u\|_Q^2\). Its kernel is precisely the displayed graph. Taking \(m=t\) proves \(C_{u,Q}\ne M\), and \(C_{u,Q}\cap M=M\cap t^{\perp_Q}\). The corrected CRT carries give an explicit dictionary for this new summand. Remove from each \(K_d\) its native \(Q\)-projection onto \(\mathbb Ru\). These adjusted vectors span \(C_{u,Q}\) after closure because the displayed bounded graph map is onto and the \(K_d\) span \(M\) after closure. At least one \(K_d\) needs a nonzero adjustment, since \(t\in M\) is nonzero. The scalar in the original quotient \(V/M\) is always \(\epsilon(v)\).
+
 For a mixed conductor \(d\), put \(q_p=p^{v_p(d)}\) and let \(c_{d,p}\) be the canonical inverse of \(d/q_p\) modulo \(q_p\). The actual raw floor carry \(C_d=\sum_{p\mid d}c_{d,p}g_{q_p}-g_d\) therefore has explicit scalar
 \[
  a_d=\epsilon(C_d)
