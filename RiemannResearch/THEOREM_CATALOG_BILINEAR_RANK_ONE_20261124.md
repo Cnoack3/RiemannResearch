@@ -169,6 +169,26 @@ The Pareto Hilbert space has a norm-preserving Laguerre realization with Parseva
 
 `riemannHypothesis_iff_cofinal_subexponential_laguerre_prefixes` proves that RH is equivalent to the following statement. For each real a > 1 there is a C such that, at arbitrarily large depths k, a finite legal lift exactly matches coordinates 0 through k with complete squared norm at most C a^k. The conductor cutoff may depend on a and k. `stage_lift_and_unit_norm_iff_cofinal_prefixes` identifies this same condition with the unique centered-snake unit lift at every mixed stage and with the physical bound ‖u‖ ≤ 1. Constructing lifts at this growth rate in the unrestricted dictionary remains open.
 
+## The odd conditional unit with the full density dP/dQ
+
+In `OddConditionalUnit`, B denotes dP/dQ on physical Q sequences. It is the inverse
+of the repository multiplier dQ/dP. Write O for the odd event and u for the physical
+Pareto screened section. Its B-weighted odd conditional mean is
+E_Q[Bu | O] / E_Q[B | O], with denominator 4 log(2)/3.
+
+- `rh_iff_B_odd_moment` identifies RH with E_Q[Bu | O] = 4 log(2)/3.
+- `OddPartUnit` removes the odd conditioning. `oddPartQMean_eq_nativeOddMean` evaluates any Q Hilbert observable at the odd part of N. `rh_iff_oddPart_B_moment` and `rh_iff_doubled_B_moment` give unconditional tests at the odd part and at 2N. `doubled_B_deficit` gives the doubled moment's exact gap from 4(1 − log 2).
+- `rh_iff_densityOddMean_unit` gives the normalized unit test. `densityOddMean_excess` identifies its excess with the full pairing ⟨u−1,B(u−1)⟩ under Q.
+- `density_trial_error` decomposes the B-weighted error of every physical mixed trial into this excess and its squared distance to the optimal fit.
+- `density_target_energy` evaluates the full weighted target energy as (log 2)⁻¹ − 1. `rh_iff_density_prime_residual` tests the native prime-stage residuals with the B-weighted norm.
+- `PrimeValuationCovariance.conditional_weighted_moment` is the conditional change-of-law normal equation on each valuation cutoff.
+- `density_cofactor_period60_digamma` computes each full-density cofactor class mass by a shifted rational-argument digamma difference.
+- `density_packet_period_gram`, `finite_density_covariance_energy`, and `density_parity_error_split` give the complete signed progression Gram, the quadratic form of the omitted part, and the observed/omitted loss for centered parity.
+
+**Open.** Establish the weighted odd conditional equality, equivalently zero terminal mixed approximation error.
+
+[Density-weighted odd conditional unit](CategoryTheory/OddConditionalUnit.lean) · [Odd-part and doubled moments](CategoryTheory/OddPartUnit.lean) · [Valuation covariance](CategoryTheory/PrimeValuationCovariance.lean)
+
 ## Verification record
 
 The managed checkpoint receipt is the source of truth for the final publication
