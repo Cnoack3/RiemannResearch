@@ -15,8 +15,9 @@ Write \(S_K=V\cap\ker H_K\), \(t_K=\mathbf 1_{\{j>K\}}\), \(v_K=P_{S_K}t_K\), \(
 | RH at any fixed stage or at the supremum, and a conditional contraction criterion | `normalizedLegalTailMeanCapacity_eq_one_iff_RH`, `normalizedLegalTailMeanCapacity_iSup_eq_one_iff_RH`, `riemannHypothesis_of_tailCapacity_relative_gain` |
 | Complete squared norm under the scaled reciprocal-cell map, anchored rational generators, and the converse for finite legal fits | `scaled_reciprocalFloor_norm_sq`, `realGenerator_eq_neg_divisorAnchor`, `rational_residue_pair_mem_legalHeadKernel`, `rational_residue_pair_scaled_mean`, `legal_zero_head_exists_nyman_mesh` |
 | Uniform conjugate-zero obstruction for a nonreal right zero | `legalTailMeanCapacity_conjugate_zero_gap` |
+| Finite distinct-zero product obstruction at every stage and at the stage supremum | `legalTailMeanCapacity_finite_zero_product_gap`, `normalizedLegalTailMeanCapacity_iSup_le_finite_zero_product` |
 
-[Capacity and dilation](RH/LegalTailMeanCapacityDilation.lean) · [Nyman mesh](RH/LegalTailNymanMesh.lean) · [Conjugate-zero bound](RH/LegalTailMeanCapacityConjugate.lean)
+[Capacity and dilation](RH/LegalTailMeanCapacityDilation.lean) · [Nyman mesh](RH/LegalTailNymanMesh.lean) · [Conjugate-zero bound](RH/LegalTailMeanCapacityConjugate.lean) · [Finite zero-product bound](RH/LegalTailMeanCapacityZeroProduct.lean)
 
 ## What coprime directions measure
 
@@ -60,6 +61,16 @@ A model explains why the projection and dilation laws cannot by themselves furni
  \mathbf1_{(0,1/N]}(x)\left[1-\frac{2\sigma-1}{\sigma}(Nx)^{\sigma-1}\right].
 \]
 Indeed it pairs to zero with the restricted constraint and differs from the tail by a multiple of that constraint on its support. Substitution \(y=Nx\) gives \(C_{N-1}=(1-\sigma)^2/\sigma^2<1\) at every scale. All transported optimizers agree, including along coprime directions. The legal mean has a one-dimensional complement to its kernel. This is an exact Hilbert-space counterexample to a purely geometric relative-gain argument. The project's arithmetic legal space must supply the additional input.
+
+## Finite distinct-zero product obstruction in Lean
+
+For a finite type \\(ι\\) and an injective family \\(z:ι\\to\\mathbb C\\) with \\(\\Re z_i>1/2\\), \\(z_i\\ne1\\), and \\(\\zeta(z_i)=0\\), the new theorem proves at every stage
+\\[
+ C_K\\le\\prod_{i\\inι}\\left|\\frac{z_i-1}{z_i}\\right|^2.
+\\]
+The proof rescales the complete inverse-Cauchy Mellin kernel to the physical tail. Pointwise cancellation preserves its optimized charge, change of variables multiplies its energy by \\(K+1\\), and the zero physical head localizes Cauchy--Schwarz. No diagonal approximation or numerical Gram solve is used.
+
+This is stronger than the single-zero and conjugate-pair bounds, but it is not Burnol's projection equality. Injectivity records each distinct zero once. Burnol's scalar product counts analytic multiplicity, so repeated-zero factors require confluent Cauchy kernels carrying Mellin derivative jets. The continuous endpoint also still requires a formal proof that the factorial union of the transported legal spans closes to the real Nyman space.
 
 ## Continuous endpoint derived using published analysis
 

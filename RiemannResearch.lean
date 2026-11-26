@@ -774,6 +774,7 @@ import RiemannResearch.RH.LegalTailMeanCapacity
 import RiemannResearch.RH.LegalTailMeanCapacityMellin
 import RiemannResearch.RH.LegalTailMeanCapacityDilation
 import RiemannResearch.RH.LegalTailMeanCapacityConjugate
+import RiemannResearch.RH.LegalTailMeanCapacityZeroProduct
 import RiemannResearch.RH.LegalTailNymanMesh
 import RiemannResearch.RH.ParetoAffineHeadTower
 import RiemannResearch.RH.PhysicalHeadMixedInterpolation
