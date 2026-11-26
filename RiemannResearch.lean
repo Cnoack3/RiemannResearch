@@ -118,6 +118,8 @@ import RiemannResearch.Analysis.ActualConsecutiveModerateGaps
 import RiemannResearch.Analysis.ActualGramTwoNeighborIsolation
 import RiemannResearch.Analysis.MontgomeryMesoscopicGramTransfer
 import RiemannResearch.Analysis.MontgomeryMesoscopicUnitSlope
+import RiemannResearch.Analysis.MontgomeryTranslatedGapDensity
+import RiemannResearch.Analysis.RationalLandauInghamTangent
 import RiemannResearch.RH.RationalZeroFreeDisks
 import RiemannResearch.RH.XiLogDerivativeDisk
 import RiemannResearch.Analysis.ActualSmallGapRarity

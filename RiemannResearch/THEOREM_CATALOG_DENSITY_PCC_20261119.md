@@ -18,6 +18,16 @@ Write \(L=\log T\), \(D_T=TL/(2\pi)\), \(P_T(q)\) for the normalized count of ga
 
 Sources for the complex-zero frequency range and the physical short-window method are [BGSTB, equation (3.5)](https://arxiv.org/abs/2501.14545) and [Goldston–Lee–Schettler–Suriajaya, §2](https://arxiv.org/abs/2503.15449). The Conrey–Baluyot and Fujii inputs for exceptional copies are stated in [Lamzouri, §2](https://arxiv.org/abs/2611.14486).
 
+## Rational Landau estimates and prime-orbit characters
+
+The curved Ingham estimate controls the signed horizontal Taylor remainder at every real phase $|u|\le(4/3)\log T$, including the endpoint. With $L=\log T$, retaining $J$ nonconstant even moments gives height-normalized error $O_k(L^{-k})$ when $2(J+1)\ge(k+4)(1+(4/3)\sqrt L)\log L$. For $u=\log(n/m)$ in the joint rational Landau band $\log n+3u/2\le\theta L$, $\theta<1$, the remaining horizontal error is $O(L^4(3/10)^{2(J+1)})$. The prime-orbit character identity relates the reconstructed amplitude to the unweighted cosine sum over all ordered zero pairs. [Landau comparison and prime-orbit test](Analysis/RationalLandauInghamTangent.lean)
+
+The constant in the horizontal estimate is uniform in the precision order $k$. Taking $k\log L\ge 2L$ with the displayed Taylor order gives error $O(1/T)$ for the pair cosine sum divided by $N(T)$, uniformly over all finite prime-orbit characters in the phase range. Evaluating the reconstructed signed sum and obtaining the fixed-width sine law remain open. [Pair-count normalization](Analysis/RationalLandauInghamTangent.lean)
+
+## Translation averages of positive gaps
+
+If $\log T=o(R)$, $R=o(T\log T)$ and $0<w=o(R)$, the actual mass in $(s,s+w]$, averaged over $0\le s\le R$ and divided by $w$, tends to one. This includes shrinking widths. At a fixed positive rational width $q$, the average up to $R=(\log T)^2$ tends to $q$. Ordinary positive-gap PCC is equivalent to the assertion that moving the left endpoint from this translation average back to zero costs $\int_0^q\operatorname{sinc}^2(\pi u)\,du$ in the limit. This last estimate is open. [Finite identity, averaged law and equivalence](Analysis/MontgomeryTranslatedGapDensity.lean)
+
 ## Finite-law sharpness
 
 With mass $e^{-Az}/z$ at $z\ge 1$ and all other mass at zero, the tilted first moments are at most one for every $a\le A$, and $q/[m\log(1/m)]=1/A$. At $A=8/7$ this attains the actual-zero upper coefficient for the abstract class of tilt inputs. [`two_atom_reciprocal_sharp`](Analysis/FiniteSizeBiasedSharpness.lean)
