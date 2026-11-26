@@ -53,6 +53,7 @@ import RiemannResearch.Analysis.CompactMatchingQuotient
 import RiemannResearch.Analysis.ResidualCorrelationCost
 import RiemannResearch.Analysis.WeakCompactConstraints
 import RiemannResearch.CategoryTheory.PhysicalParityObject
+import RiemannResearch.CategoryTheory.QPrimeParsevalTower
 import RiemannResearch.GroupTheory.AddSubgroupCRT
 import RiemannResearch.LinearAlgebra.CRTReconstructionObstructions
 import RiemannResearch.LinearAlgebra.WeightedQuotientDefectRank

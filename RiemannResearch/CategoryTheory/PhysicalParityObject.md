@@ -233,6 +233,140 @@ The exact native deficit has an especially simple form. Put \(A_0=Z_2(Z_2-1)\) a
 \]
 Thus an upper bound on the native parity deficit is an upper bound on the defect of the native mean representer in the physical legal space.
 
+## The Parseval prime tower in the native \(Q\) metric
+
+### One new prime at a time
+
+Use \(Q(n)=1/(\zeta(2)n^2)\), \(n=1,2,\ldots\), and the physical mixed packets \(J_d=\sum_{e\mid d}\mu(d/e)r_e\), with \(r_e(n)=n\bmod e\). Write \(\omega(d)\) for the number of distinct prime factors. For an integer cutoff \(B\ge0\) set
+\[
+ M_B=\overline{\operatorname{span}}^{\,Q}
+  \{J_d:\omega(d)\ge2,\ \text{every prime dividing }d\text{ is at most }B\},\qquad
+ \Pi_B=P_{M_B}^Q.
+\]
+All powers of an admitted prime are allowed. \(M_0=M_1=M_2=0\). \(M_3\) is the closed span of \(J_{2^a3^b}\) for \(a,b\ge1\). At \(5\), the arriving conductors have a positive power of \(5\) and a positive power of either \(2\) or \(3\), or both. Composite cutoffs leave the stage fixed. Every mixed conductor enters at its largest prime, so the closed union is the full physical mixed space \(M\). The earlier prime-support filtration orders packets by the *number* of different prime factors. The present filtration orders them by their *largest* prime. [Largest-prime construction](QPrimeParsevalTower.lean) · [Number-of-prime-factors construction](../RH/PrimeSupportMeasureChange.lean)
+
+For a prime \(p\), let \(E_p=M_p\cap M_{p-1}^{\perp_Q}\) and set \(D_p=\Pi_p-\Pi_{p-1}\). Nested orthogonal projections commute and their product is \(\Pi_{p-1}\), so \(D_p=P^Q_{E_p}\). For every \(p\) the split short exact row
+\[
+ 0\longrightarrow M_{p-1}\longrightarrow M_p
+ \xrightarrow{D_p} E_p\longrightarrow0
+\]
+has the inclusion of \(E_p\) as its isometric section. The Hilbert quotient \(M_p/M_{p-1}\) is isometric to \(E_p\). More explicitly, \(E_p\) is the closed span of \((I-\Pi_{p-1})J_d\) for mixed \(d\) whose largest prime is \(p\). Indeed these vectors belong to \(E_p\), and applying \(I-\Pi_{p-1}\) to the dense span in \(M_p\) sends the old generators to zero and the arriving ones to these vectors.
+
+Each odd prime introduces infinitely many independent directions. For a fixed positive \(d>1\) define the continuous finite-coordinate functional
+\[
+ L_d(x)=\sum_{e\mid d}\mu(d/e)\,[x(e)-x(e-1)],\qquad x(0)=0 .
+\]
+Taking first differences of the residue functions gives \(L_d(J_c)=-d\,\mu(c/d)\) if \(d\mid c\), and zero otherwise. For \(d=2^a p\) and \(p\) odd, \(L_d\) kills \(M_{p-1}\), and \(L_d((I-\Pi_{p-1})J_d)=-d\). In a purported finite linear dependence among these screened rows, take the largest exponent with nonzero coefficient. Its functional kills all the smaller rows and evaluates to \(-2^ap\) on that row. Thus the layer is infinite dimensional. This argument uses continuous coordinate functionals and remains valid after closure. [Physical Möbius-coordinate identity](../RH/IntegratedRamanujanHilbert.lean) · [Native arrival and projection](QPrimeParsevalTower.lean)
+
+### Exact vector and energy reconstruction
+
+For \(f\in H_Q=L^2(Q)\), define \(e_p(f)=\|D_p f\|_Q^2\) and \(r_B(f)=\|f-\Pi_Bf\|_Q^2=\|[f]_{H_Q/M_B}\|_Q^2\). The finite identity and its strong limit give
+\[
+ \Pi_B f=\sum_{p\le B}D_p f,\qquad
+ r_B(f)+\sum_{p\le B}e_p(f)=\|f\|_Q^2,\qquad
+ r_{p-1}(f)-r_p(f)=e_p(f).
+\]
+\[
+ P_M^Q f=\sum_p D_p f\quad\text{in }Q\text{ norm},\qquad
+ \sum_p e_p(f)=\|f\|_Q^2-\|[f]_{H_Q/M}\|_Q^2 .
+\]
+The finite vector identity telescopes, and the layers are pairwise \(Q\)-orthogonal. Density of the union gives \(\Pi_B f\to P_M^Qf\). In particular the omitted energy is exactly \(\sum_{p>B}e_p(f)=\|P_M^Qf-\Pi_B f\|_Q^2\). Consequently each physical coordinate satisfies
+\[
+ |(P_M^Q f)(n)-(\Pi_B f)(n)|^2
+ \le \zeta(2)n^2\sum_{p>B}e_p(f),
+\]
+since the single site \(n\) contributes \(Q(n)|x(n)|^2\) to the complete norm. Polarization gives the bilinear identity
+\[
+ \sum_p\langle D_p f,D_p g\rangle_Q=\langle P_M^Qf,P_M^Qg\rangle_Q .
+\]
+The series converges absolutely by Cauchy–Schwarz on the two energy sums. The formal declarations use \(k=p-1\), with zero increments when \(k+1\) is composite. [Finite Parseval, terminal quotient and signed vector reconstruction](QPrimeParsevalTower.lean)
+
+Let \(\epsilon(v)=\langle v,\mathbf1\rangle_P\), \(u=(I-P_M^P)J_2/\log2\), and \(u_Q=(I-P_M^Q)u\). For a legal \(v\in V\), the terminal residual is \(\epsilon(v)u_Q\). Hence
+\[
+ v=\epsilon(v)u_Q+\sum_pD_pv,\qquad
+ \boxed{\|v\|_Q^2=|\epsilon(v)|^2\|u_Q\|_Q^2+\sum_p e_p(v).}
+\]
+This is an onto Hilbert isometry \(V\to\mathbb R\oplus\widehat{\bigoplus}_p E_p\) upon using \(\epsilon(v)\|u_Q\|_Q\) as the scalar coordinate. The inverse sends \((a,(y_p)_p)\) to \(au_Q/\|u_Q\|_Q+\sum_p y_p\). The corresponding finite legal approximation uses \(V_B=\mathbb Ru_Q\oplus^{\perp_Q}M_B\). On legal input it equals \(\epsilon(v)u_Q+\Pi_Bv\). The carry is present before the first mixed prime layer. In particular the coprime Fekete formula gives \(\epsilon(J_{p^a})=\log p\) for every \(a\ge1\). Thus each prime power has the same native carry direction and the exact expansion \(J_{p^a}=(\log p)u_Q+\sum_{\ell}D_\ell J_{p^a}\). [Native carry](PhysicalParityObject.lean) · [Legal Parseval theorem](QPrimeParsevalTower.lean)
+
+For the unnormalized parity packet, \(\sum_pD_pJ_2=J_2-(\log2)u_Q\). If the desired output is the actual Pareto projection, write \(t=u-u_Q\in M\). This gives
+\[
+ P_M^P J_2=\sum_p D_p\bigl(J_2-(\log2)t\bigr).
+\]
+There is also a direct computation using the native stage projections. At each cutoff, with \(R(n)=1/(n+1)\), the Pareto fit equals \(\sum_{j\ge0}(\Pi_BR)^j\Pi_B(I-R)J_2\). The feedback norm is at most \(1/2\), uniformly in \(B\). These fits converge in both equivalent physical norms to \(P_M^P J_2\) because the Pareto closures of the same increasing physical stages also exhaust \(M\). [Pareto reweighting and Neumann reconstruction](../RH/QPhysicalQuotientMetric.lean)
+
+### Holding the Pareto carry line fixed
+
+Let \(U=\mathbb Ru\), \(A=I-P_U^Q\), and \(C_B=\overline{\operatorname{span}}^Q\{AJ_d:J_d\text{ enters by }B\}\). The corrected CRT carries \(K_d\) produce the same stages when \(AK_d\) is used. The cutoff sets are divisor-closed, so the finite divisor-sum and Möbius-inverse formulas transfer their spans in both directions. Write \(C=V\cap U^{\perp_Q}\). On \(M\), \(A\) is a bounded bijection onto \(C\), with bounded inverse. For \(m,n\in M\), \(t=u-u_Q\),
+\[
+ \langle Am,An\rangle_Q
+ =\langle m,n\rangle_Q-\frac{\langle m,t\rangle_Q\langle n,t\rangle_Q}{\|u\|_Q^2},\qquad
+ \|Am\|_Q^2\ge\frac{\|u_Q\|_Q^2}{\|u\|_Q^2}\,\|m\|_Q^2 .
+\]
+Surjectivity follows by writing \(v\in C\) as \(v=m+\epsilon(v)u\) and applying \(A\). Consequently \(C_B=A M_B\), and the closed union is \(C\). Denote \(D_p^{(u)}=P_{C_p}^Q-P_{C_{p-1}}^Q\). The rank-one change of Gram form requires orthogonalizing in these image stages. For \(v\in V\), the fixed-carry tower is
+\[
+ v=\frac{\langle v,u\rangle_Q}{\|u\|_Q^2}u+\sum_pD_p^{(u)}v,\qquad
+ \|v\|_Q^2=\frac{|\langle v,u\rangle_Q|^2}{\|u\|_Q^2}
+           +\sum_p\|D_p^{(u)}v\|_Q^2 .
+\]
+The Lean tower is parametrized by a bounded map on the mixed dictionary. Its identity specialization gives \(M\), and its \(\texttt{removeCarry}\) specialization proves exactly the terminal space \(V\cap U^{\perp_Q}\). [Fixed-carry terminal space and common tower](QPrimeParsevalTower.lean) · [Corrected CRT carry dictionary](../RH/MixedCanonicalCarryCapture.lean)
+
+### The RH endpoint of the mixed tower
+
+Set \(h=J_2/\log2-\mathbf1\), where \(J_2=\mathbf1_{\rm odd}\). Then \([h]_{H_Q/M}=[u-\mathbf1]_{H_Q/M}\). Its vanishing is equivalent to \(u=\mathbf1\), since \(u-\mathbf1\in M^{\perp_P}\), and hence to RH. As \(Q(n\text{ odd})=3/4\), the native largest-prime endpoint is
+\[
+ \boxed{\mathrm{RH}\iff \lim_{B\to\infty}r_B(h)=0
+ \iff\sum_p e_p(h)=\frac34\big((\log2)^{-1}-1\big)^2+\frac14.}
+\]
+The right-hand side is about \(0.396984174421\). The amount still missing at any cutoff is exactly the sum of the remaining prime-layer energies plus the terminal quotient squared norm. [Kernel-checked centered parity capture](QPrimeParsevalTower.lean)
+
+For the uncentered input the native mean-representer criterion established above gives a second exact endpoint,
+\[
+ \mathrm{RH}\iff\sum_p e_p(J_2)
+  =\frac34-\frac{(\log2)^2}{\zeta(2)(\zeta(2)-1)}.
+\]
+This follows by substituting \(f=J_2\) in vector Parseval and using the preceding dilation proof for the native mean representer.
+
+### Computing finite prime stages
+
+For a finite computation at a prime cutoff \(p\), choose \(L=\operatorname{lcm}(1,\ldots,p)\) and all mixed divisors \(d\mid L\). These windows are nested. Every mixed conductor eventually divides a period. At fixed \(p\) their span is a subspace of \(M_p\). A finite-window increment may also admit higher powers of primes already seen. Compute the complete native Gram by folding the sum over one period,
+\[
+ w_L(a)=\frac1{\zeta(2)}\sum_{k\ge0}\frac1{(a+kL)^2},\quad
+ G_{de}=\sum_{a=1}^Lw_L(a)J_d(a)J_e(a),\quad
+ b_d=\sum_{a=1}^Lw_L(a)h(a)J_d(a).
+\]
+For the even periods below \(h\) has that period. For a general input use \(b_d=\langle f,J_d\rangle_Q\) with its own physical values. The independent mixed rows have positive definite Gram. The fit is \(\sum_d (G^{-1}b)_d J_d\) and the captured squared norm is \(b^\mathsf TG^{-1}b\). If \(C\) is the old-to-new Gram and \(H\) is the new-to-new Gram, the exact increment is
+\[
+ r^\mathsf T(H-C^\mathsf T G^{-1}C)^{-1}r,\qquad
+ r=b_{\rm new}-C^\mathsf T G^{-1}b_{\rm old}.
+\]
+This follows by subtracting the old fits from the new rows before forming their Gram. The fixed-carry windows use \(AJ_d\) and the rank-one Gram correction above.
+
+| Prime cutoff | Common period | Mixed rows | Captured energy of \(h\) | Increment | Residual energy |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| \(2\) | \(2\) | \(0\) | \(0\) | \(0\) | \(0.396984174\) |
+| \(3\) | \(6\) | \(1\) | \(0.068355970\) | \(0.068355970\) | \(0.328628205\) |
+| \(5\) | \(60\) | \(7\) | \(0.127927574\) | \(0.059571604\) | \(0.269056601\) |
+| \(7\) | \(420\) | \(18\) | \(0.195036343\) | \(0.067108769\) | \(0.201947832\) |
+
+The decimals are rounded evaluations of the displayed finite Gram formula. Running `python q_prime_parseval.py 2 3 5 7` reproduces the table with `mpmath` and `sympy`. The `stage_fit` function also returns all signed coefficients. [Finite tower calculator](QPrimeParsevalCalculator.md) At period six the only mixed row is \(J_6=(-1,0,2,3,2,0)\) in the site order \(1,\ldots,6\). Its fitted coefficient on \(h\) is approximately \(-0.208323167\). The energy of this single-row stage is \(\langle h,J_6\rangle_Q^2/\|J_6\|_Q^2\). It is a lower bound for the full prime-\(3\) capture, which includes unbounded powers of \(2\) and \(3\). The finite-period tower converges to the same mixed projection by cofinality. [Complete period weights](../RH/ZetaTwoPolygammaResidues.lean) · [Independent physical packet rows](../RH/MixedConductorHilbertBasis.lean)
+
+### The ambient prime-valuation tower
+
+There is also a tower on the whole probability space which requires no mixed-packet projection. Under \(Q\) the valuations \(\nu_p(N)\) are independent, and \(Q(\nu_p\ge k)=p^{-2k}\). This follows from \(Q(d\mid N)=d^{-2}\) and the product of divisibility probabilities at coprime moduli. For a finite set \(S\) of primes, let \(\mathcal F_S=\sigma(\nu_p:p\in S)\), \(a_S(n)=\prod_{p\in S}p^{\nu_p(n)}\), \(P_S=\prod_{p\in S}p\). Its conditional projection is
+\[
+ \mathbb E_Q[f\mid\mathcal F_S](n)=
+ \frac{\sum_{(m,P_S)=1} f(a_S(n)m)/m^2}
+      {\zeta(2)\prod_{p\in S}(1-p^{-2})}.
+\]
+This is direct conditioning on all positive sites with the same selected valuations. For \(r=p^{-2}\) define
+\[
+ H_{p,k}=\frac{\mathbf1_{p^{k+1}\mid N}-r\,\mathbf1_{p^k\mid N}}
+                {\sqrt{r^{k+1}(1-r)}}\quad(k\ge0).
+\]
+Each such wavelet is mean zero and has norm one. Later wavelets have mean zero on the tail on which an earlier wavelet is constant, so they are orthogonal. Their spans with the constant contain every valuation-tail indicator by the displayed recurrence. Products \(\psi_m=\prod_{p^a\parallel m} H_{p,a-1}\), with \(\psi_1=\mathbf1\), form an orthonormal basis of \(H_Q\). Indeed finite-coordinate cylinder functions are dense because all valuations determine the positive integer. Grouping the basis coefficients by the largest prime dividing \(m\) yields the conditional-expectation martingale Parseval tower. These \(\psi_m\) are the repository's Jordan-normalized divisor wavelets. The declarations `valuation_reconstruction` and `valuation_parseval` group the signed vectors and squared coefficients by this largest prime, with the constant in block zero. [Ambient prime grouping](QPrimeParsevalTower.lean) · [Full arithmetic Hilbert basis](../RH/QDivisorHilbertBasis.lean) · [Prime-power factorization](../RH/QDivisorWaveletFactorization.lean) · [The zeta probability law](https://www.sciencedirect.com/science/article/pii/0022314X70900181)
+
+For example \(J_2=\tfrac34\mathbf1-\tfrac{\sqrt3}{4}\psi_2\). The ambient tower therefore captures the centered parity input after revealing \(\nu_2\), unconditionally. The mixed tower is still zero at \(2\), and its capture of the same input at infinity is equivalent to RH. At the prime-\(3\) stage, the physical sites \(1\) and \(5\) have the same \(2\)- and \(3\)-valuations, while \(J_6(1)=-1\) and \(J_6(5)=2\).
+
 ## Universal lifting and the physical norm of a section
 
 For the inclusion \(i:M\to V\), the mean \(C:V\to\mathbb R\), the section \(s(a)=au\) and the retraction \(p(v)=v-s(Cv)=P_M^Pv\), the split identities are
@@ -484,7 +618,7 @@ The physical discrepancy equals \(Z\|f\|_Q^2-\|If\|_P^2=\sum_{n\ge1}|f(n)|^2/[n^
 
 ## Coverage of the original categorical development
 
-Import `RiemannResearch.CategoryTheory.All` to use the original declaration names. The replay takes that interface as its sole project import. It resolves each recorded name in its owning module and namespace and rechecks its stored type and body. The chronological groups through `91f07fd` contain 3,000 declaration entries from 168 modules. The physical quotient descent at `e684cf2` brings this to 3,024 entries from 169 modules. The continuation records 153 further entries from seven source revisions and three theorems on the physical parity object, bringing the initial physical replay to 3,180 entries. The native carry extension adds eleven declarations, giving 3,191 entries. These counts include definitions and structure projections as well as theorems. [Public imports](All.lean) · [Chronological replay with owners and names](HistoricalRebuild.lean)
+Import `RiemannResearch.CategoryTheory.All` to use the original declaration names. The replay takes that interface as its sole project import. It resolves each recorded name in its owning module and namespace and rechecks its stored type and body. The chronological groups through `91f07fd` contain 3,000 declaration entries from 168 modules. The physical quotient descent at `e684cf2` brings this to 3,024 entries from 169 modules. The continuation records 153 further entries from seven source revisions and three theorems on the physical parity object, bringing the initial physical replay to 3,180 entries. The native carry extension adds eleven declarations, giving 3,191 entries. The native largest-prime tower contributes 44 further entries for a total of 3,235. These counts include definitions and structure projections as well as theorems. [Public imports](All.lean) · [Chronological replay with owners and names](HistoricalRebuild.lean)
 
 | Construction | Consequence retained in the public interface | Lean source |
 |---|---|---|
