@@ -147,6 +147,8 @@ if __name__ == "__main__":
     main()
 ```
 
+For arbitrary periodic packets, the [character tower calculation](ValuationCharacterTower.md) gives the complete signed ambient layer Gram and the period-ten and period-thirty examples.
+
 ## Symbolic period-six projection
 
 Evaluate this Wolfram Language listing to obtain the period-six Gram, signed moment, signed projection coefficient, and captured energy. The output also checks the three one-prime wavelet inner products and the ambient parity energy. The CRT calculation gives each later prime energy for the period-six row and checks its full symbolic Parseval identity. In the symbolic answer, `rho` denotes the quadratic Dirichlet value divided by Riemann zeta at two, and `lambda` denotes the natural logarithm of two.

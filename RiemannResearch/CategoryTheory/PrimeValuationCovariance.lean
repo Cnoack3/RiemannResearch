@@ -1,4 +1,5 @@
 import RiemannResearch.CategoryTheory.OddConditionalUnit
+import RiemannResearch.Analysis.NestedOrthogonalDecomposition
 import RiemannResearch.RH.PrimeValuationIndependence
 import RiemannResearch.RH.ParetoCoordinateEvaluation
 import RiemannResearch.RH.QParetoEquivalence
@@ -262,6 +263,167 @@ theorem density_packet_period_gram (cutoff L d e : ℕ) (hL : 0 < L) (hd : d ∣
   rw [← density_gram_split, densityInner_eq_pareto, paretoEquiv.apply_symm_apply,
     paretoEquiv.apply_symm_apply]
   exact ramanujanPacketHilbert_inner_eq_crt d e L hL hd he
+
+/-- Exactly the integers with smooth part s: divide by s and the cofactor
+has no prime divisor through the cutoff. -/
+theorem sameFibre_iff_rough_multiple (b : ℕ) (s n : ℕ+)
+    (hs : ∀ p ∈ (s : ℕ).primeFactors, p ≤ b) :
+    sameFibre b s n ↔ ∃ z : ℕ+, (n : ℕ) = (s : ℕ)*(z : ℕ) ∧
+      ∀ p : ℕ, p.Prime → p ≤ b → ¬ p ∣ (z : ℕ) := by
+  constructor
+  · intro h
+    have hd : (s : ℕ) ∣ (n : ℕ) := by
+      apply (Nat.factorization_le_iff_dvd s.pos.ne' n.pos.ne').1
+      intro p
+      by_cases hp : p ∈ (s : ℕ).primeFactors
+      · exact (h p (Nat.prime_of_mem_primeFactors hp) (hs p hp)).le
+      · have hz : (s : ℕ).factorization p = 0 := by
+          by_contra hne
+          exact hp (Finsupp.mem_support_iff.mpr hne)
+        simp [hz]
+    obtain ⟨k, hk⟩ := hd
+    have hk0 : k ≠ 0 := by
+      intro h0
+      apply n.pos.ne'
+      simpa only [h0, mul_zero] using hk
+    refine ⟨⟨k, Nat.pos_of_ne_zero hk0⟩, hk, ?_⟩
+    intro p hp hb hpk
+    have he := h p hp hb
+    change (s : ℕ).factorization p = (n : ℕ).factorization p at he
+    rw [hk, Nat.factorization_mul s.pos.ne' hk0, Finsupp.add_apply] at he
+    have hpos := (hp.dvd_iff_one_le_factorization hk0).1 hpk
+    omega
+  · rintro ⟨z, hz, hr⟩ p hp hb
+    change (s : ℕ).factorization p = (n : ℕ).factorization p
+    rw [hz, Nat.factorization_mul s.pos.ne' z.pos.ne', Finsupp.add_apply,
+      Nat.factorization_eq_zero_of_not_dvd (hr p hp hb), add_zero]
+
+/-- The indicator of the exact valuation fibre, zero at the Hilbert-space
+dummy coordinate zero. -/
+def fibreMark (b : ℕ) (s : ℕ+) (k : ℕ) : ℝ := by
+  classical
+  exact if h : 0 < k then if sameFibre b s ⟨k, h⟩ then 1 else 0 else 0
+
+/-- The actual ambient Hilbert projection is the normalized physical Q mass
+sum on each fibre. Every positive site lies on a fibre of positive mass. -/
+theorem observed_fibre_mean (b : ℕ) (s : ℕ+) (x : QHilbert) :
+    qSequence ((observed b).starProjection x) s =
+      (∑' k, positiveQWeight k * fibreMark b s k * qSequence x k) /
+      (∑' k, positiveQWeight k * fibreMark b s k) := by
+  classical
+  let f := fibreMark b s
+  have hf (i : ℕ+) : f i = if sameFibre b s i then 1 else 0 := by
+    rcases i with ⟨k, hk⟩
+    by_cases h : sameFibre b s ⟨k, hk⟩ <;> simp [f, fibreMark, hk, h]
+  have hf0 : f 0 = 0 := by simp [f, fibreMark]
+  have hsumm := boundedQ_square_summable f 1 zero_le_one (fun k => by
+    simp only [f, fibreMark]
+    split_ifs <;> norm_num)
+  let e := encodeQ f hsumm
+  have he : qSequence e = f := qSequence_encodeQ _ _ hf0
+  have hObs : e ∈ observed b := by
+    apply (mem_observed _ _).2
+    intro i j hij
+    have hiff : sameFibre b s i ↔ sameFibre b s j := by
+      constructor
+      · intro h p hp hb
+        exact (h p hp hb).trans (hij p hp hb)
+      · intro h p hp hb
+        exact (h p hp hb).trans (hij p hp hb).symm
+    rw [he, hf i, hf j, if_congr hiff rfl rfl]
+  let y := (observed b).starProjection x
+  have hy := (mem_observed b y).1 ((observed b).starProjection_apply_mem x)
+  have hv (k : ℕ) : positiveQWeight k * f k * qSequence y k =
+      positiveQWeight k * f k * qSequence y s := by
+    rcases k with _ | k
+    · rw [hf0, mul_zero, zero_mul, zero_mul]
+    · let i : ℕ+ := ⟨k+1, Nat.succ_pos _⟩
+      change positiveQWeight i * f i * qSequence y i =
+        positiveQWeight i * f i * qSequence y s
+      rw [hf i]
+      split_ifs with h
+      · rw [hy s i h]
+      · simp
+  have hinner : inner ℝ e x = inner ℝ e y := by
+    have ho : inner ℝ e (x-y) = 0 :=
+      (observed b).sub_starProjection_mem_orthogonal x e hObs
+    rwa [inner_sub_right, sub_eq_zero] at ho
+  have hsum : Summable (fun k => positiveQWeight k * f k) := by
+    apply Summable.of_nonneg_of_le _ _ positiveQWeight_summable
+    · intro k
+      simp only [f, fibreMark]
+      split_ifs <;> simp [positiveQWeight_nonneg]
+    · intro k
+      simp only [f, fibreMark]
+      split_ifs <;> simp [positiveQWeight_nonneg]
+  have hpos : 0 < ∑' k, positiveQWeight k * f k := by
+    refine hsum.tsum_pos ?_ (s : ℕ) ?_
+    · intro k
+      simp only [f, fibreMark]
+      split_ifs <;> simp [positiveQWeight_nonneg]
+    · have hself : sameFibre b s s := fun _ _ _ => rfl
+      rw [hf s, if_pos hself, mul_one]
+      unfold positiveQWeight
+      have hz := zetaTwo_pos
+      have hs : 0 < (s : ℝ) := by exact_mod_cast s.pos
+      positivity
+  rw [qInner_weighted, qInner_weighted, he] at hinner
+  simp only [hv, tsum_mul_right] at hinner
+  apply (eq_div_iff hpos.ne').2
+  rw [mul_comm]
+  exact hinner.symm
+
+theorem observed_mono : Monotone observed := by
+  intro a b hab x hx
+  apply (mem_observed b x).2
+  intro i j hij
+  exact (mem_observed a x).1 hx i j (fun p hp ha => hij p hp (ha.trans hab))
+
+private theorem nested_residual_gram {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {U V : Submodule ℝ E} [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (hUV : U ≤ V) (x y : E) :
+    inner ℝ (x-U.starProjection x) (y-U.starProjection y) -
+      inner ℝ (x-V.starProjection x) (y-V.starProjection y) =
+      inner ℝ (V.starProjection x-U.starProjection x) (V.starProjection y-U.starProjection y) := by
+  have h := projection_gram U (V.starProjection x) (V.starProjection y)
+  simp only [RiemannResearch.Analysis.NestedOrthogonalDecomposition.nested_projection_apply
+    hUV] at h
+  linarith only [h, projection_gram U x y, projection_gram V x y]
+
+/-- The difference of two signed omitted covariances is the Gram entry of the
+actual ambient valuation layer. This applies to two different packet inputs. -/
+theorem covariance_layer {a b : ℕ} (hab : a ≤ b) (x y : QHilbert) :
+    covariance a x y - covariance b x y =
+      inner ℝ ((observed b).starProjection x - (observed a).starProjection x)
+        ((observed b).starProjection y - (observed a).starProjection y) :=
+  nested_residual_gram (observed_mono hab) x y
+
+/-- The same polarized layer after refitting in the Pareto metric. -/
+theorem density_covariance_layer {a b : ℕ} (hab : a ≤ b) (x y : QHilbert) :
+    densityCovariance a x y - densityCovariance b x y =
+      densityInner (densityProjection b x - densityProjection a x)
+        (densityProjection b y - densityProjection a y) := by
+  simp only [densityCovariance, densityInner_eq_pareto, map_sub, densityProjection_apply]
+  have h : densityObserved a ≤ densityObserved b := Submodule.comap_mono (observed_mono hab)
+  exact nested_residual_gram h _ _
+
+/-- Joint Pareto mass of smooth part s and one rough residue r mod m, when m
+contains every revealed prime and r is a unit there. The identity for the
+progression itself holds for every positive r up to m. -/
+theorem smooth_cofactor_progression_digamma (s m r : ℕ) (hs : 0 < s) (hm : 0 < m)
+    (hr : 0 < r) (hrm : r ≤ m) :
+    progressionWeight (s*m) (s*r) = 1 / ((s : ℝ)*(m : ℝ)) *
+      ((Complex.digamma ((((r : ℝ)+(s : ℝ)⁻¹)/(m : ℝ) : ℝ) : ℂ)).re -
+        (Complex.digamma (((r : ℝ)/(m : ℝ) : ℝ) : ℂ)).re) := by
+  rw [progressionWeight_eq_digamma (s*m) (s*r) (Nat.mul_pos hs hm)
+    (Nat.mul_pos hs hr) (Nat.mul_le_mul_left s hrm)]
+  simp only [Nat.cast_mul]
+  have hs' : (s : ℝ) ≠ 0 := by exact_mod_cast hs.ne'
+  have hm' : (m : ℝ) ≠ 0 := by exact_mod_cast hm.ne'
+  have h₁ : ((s : ℝ)*(r : ℝ)+1)/((s : ℝ)*(m : ℝ)) =
+      ((r : ℝ)+(s : ℝ)⁻¹)/(m : ℝ) := by field_simp
+  have h₀ : ((s : ℝ)*(r : ℝ))/((s : ℝ)*(m : ℝ)) = (r : ℝ)/(m : ℝ) := by field_simp
+  rw [h₁, h₀]
 
 theorem finite_density_covariance_energy {ι : Type*} (s : Finset ι)
     (cutoff : ℕ) (c : ι → ℝ) (x : ι → QHilbert) :

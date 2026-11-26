@@ -200,6 +200,8 @@ import RiemannResearch.CategoryTheory.QPrimeParsevalTower
 import RiemannResearch.CategoryTheory.OddConditionalUnit
 import RiemannResearch.CategoryTheory.OddPartUnit
 import RiemannResearch.CategoryTheory.PrimeValuationCovariance
+import RiemannResearch.CategoryTheory.ValuationCharacterGram
+import RiemannResearch.CategoryTheory.ValuationCharacterExamples
 import RiemannResearch.CategoryTheory.AtomCarryPresentation
 import RiemannResearch.RH.ResidueAtomIndependence
 import RiemannResearch.RH.FiniteAtomCarryCRT

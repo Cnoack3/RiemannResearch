@@ -185,6 +185,12 @@ E_Q[Bu | O] / E_Q[B | O], with denominator 4 log(2)/3.
 - `density_cofactor_period60_digamma` computes each full-density cofactor class mass by a shifted rational-argument digamma difference.
 - `density_packet_period_gram`, `finite_density_covariance_energy`, and `density_parity_error_split` give the complete signed progression Gram, the quadratic form of the omitted part, and the observed/omitted loss for centered parity.
 
+- `observed_fibre_mean` computes the physical Q projection on each fibre. `sameFibre_iff_rough_multiple` identifies its smooth-times-rough parametrization. `physical_fibre_moment` and `cutoff_hasProd` evaluate their inverse-square character moments.
+- `unitProfile_covariance` evaluates the polarized covariance for arbitrary complex unit profiles. `covariance_layer` and `density_covariance_layer` give the actual ambient Hilbert layer difference in each metric.
+- `ten_fibres` and `thirty_fibres` verify all gcd rows of the integrated CRT packets. `smooth_cofactor_progression_digamma` evaluates the joint Pareto cofactor progression at arbitrary positive step and scale.
+
+[Character calculation, examples and mixed-projection comparison](CategoryTheory/ValuationCharacterTower.md)
+
 **Open.** Establish the weighted odd conditional equality, equivalently zero terminal mixed approximation error.
 
 [Density-weighted odd conditional unit](CategoryTheory/OddConditionalUnit.lean) · [Odd-part and doubled moments](CategoryTheory/OddPartUnit.lean) · [Valuation covariance](CategoryTheory/PrimeValuationCovariance.lean)
