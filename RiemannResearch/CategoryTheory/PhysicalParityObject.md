@@ -312,7 +312,7 @@ The Lean tower is parametrized by a bounded map on the mixed dictionary. Its ide
 
 ### The RH endpoint of the mixed tower
 
-Set \(h=J_2/\log2-\mathbf1\), where \(J_2=\mathbf1_{\rm odd}\). Then \([h]_{H_Q/M}=[u-\mathbf1]_{H_Q/M}\). Its vanishing is equivalent to \(u=\mathbf1\), since \(u-\mathbf1\in M^{\perp_P}\), and hence to RH. As \(Q(n\text{ odd})=3/4\), the native largest-prime endpoint is
+Set \(h=J_2/\log2-\mathbf1\), where \(J_2=\mathbf1_{\rm odd}\). Its Pareto mean is zero and its native \(Q\) mean is \(3/(4\log2)-1\). Then \([h]_{H_Q/M}=[u-\mathbf1]_{H_Q/M}\). Its vanishing is equivalent to \(u=\mathbf1\), since \(u-\mathbf1\in M^{\perp_P}\), and hence to RH. As \(Q(n\text{ odd})=3/4\), the native largest-prime endpoint is
 \[
  \boxed{\mathrm{RH}\iff \lim_{B\to\infty}r_B(h)=0
  \iff\sum_p e_p(h)=\frac34\big((\log2)^{-1}-1\big)^2+\frac14.}
@@ -348,7 +348,47 @@ This follows by subtracting the old fits from the new rows before forming their 
 | \(5\) | \(60\) | \(7\) | \(0.127927574\) | \(0.059571604\) | \(0.269056601\) |
 | \(7\) | \(420\) | \(18\) | \(0.195036343\) | \(0.067108769\) | \(0.201947832\) |
 
-The decimals are rounded evaluations of the displayed finite Gram formula. Running `python q_prime_parseval.py 2 3 5 7` reproduces the table with `mpmath` and `sympy`. The `stage_fit` function also returns all signed coefficients. [Finite tower calculator](QPrimeParsevalCalculator.md) At period six the only mixed row is \(J_6=(-1,0,2,3,2,0)\) in the site order \(1,\ldots,6\). Its fitted coefficient on \(h\) is approximately \(-0.208323167\). The energy of this single-row stage is \(\langle h,J_6\rangle_Q^2/\|J_6\|_Q^2\). It is a lower bound for the full prime-\(3\) capture, which includes unbounded powers of \(2\) and \(3\). The finite-period tower converges to the same mixed projection by cofinality. [Complete period weights](../RH/ZetaTwoPolygammaResidues.lean) · [Independent physical packet rows](../RH/MixedConductorHilbertBasis.lean)
+The decimals are rounded evaluations of the displayed finite Gram formula. Running `python q_prime_parseval.py 2 3 5 7` reproduces the table with `mpmath` and `sympy`. The `stage_fit` function also returns all signed coefficients. [Finite tower calculator](QPrimeParsevalCalculator.md)
+
+At period six the only mixed row is \(J_6=(-1,0,2,3,2,0)\) in the site order \(1,\ldots,6\). Its fitted coefficient on \(h\) is approximately \(-0.208323167\). The energy of this single-row stage is \(\langle h,J_6\rangle_Q^2/\|J_6\|_Q^2\). It is a lower bound for the full prime-\(3\) capture, which includes unbounded powers of \(2\) and \(3\). The finite-period tower converges to the same mixed projection by cofinality. [Complete period weights](../RH/ZetaTwoPolygammaResidues.lean) · [Independent physical packet rows](../RH/MixedConductorHilbertBasis.lean)
+
+The complete period weights also have a character formula. For a residue \(a\), put \(g=\gcd(a,L)\), \(m=L/g\), and \(t=a/g\). Summing character orthogonality on the invertible classes modulo \(m\) gives
+\[
+ w_L(a)=\frac{1}{\zeta(2)g^2\varphi(m)}
+   \sum_{\chi\bmod m}\overline{\chi(t)}\,L(2,\chi).
+\]
+Here the sum includes imprimitive characters, and the term for \(m=1\) uses \(L(2,\mathbf1)=\zeta(2)\). Indeed the positive sites in class \(a\) are exactly \(gn\) with \(n\equiv t\pmod m\). The formula expresses every finite Gram entry and signed moment for periodic input as a finite combination of Dirichlet values. [Character orthogonality](https://dlmf.nist.gov/27.8.E6) · [Dirichlet series definition](https://dlmf.nist.gov/25.15)
+
+For period six write \(\rho=L(2,\chi_{-3})/\zeta(2)\) and \(\lambda=\log2\), where \(\chi_{-3}\) takes the values \(1,-1,0\) at \(1,2,0\pmod 3\). The two odd coprime classes have total mass \(2/3\) and signed difference \(5\rho/4\). The even coprime classes have total mass \(2/9\) and reversed signed difference \(w_6(4)-w_6(2)=-\rho/4\), since \(\chi_{-3}(2)=-1\). The remaining masses are \(1/12\) and \(1/36\). Multiplying the six weights by the signed row and its square gives the symbolic Wolfram calculation
+\[
+ G_6=\|J_6\|_Q^2=3(1-\rho),\qquad
+ b_6=\langle h,J_6\rangle_Q
+ =\frac{12-20\lambda-45\rho+54\lambda\rho}{24\lambda}.
+\]
+Thus \(P_{\mathbb R J_6}^Qh=(b_6/G_6)J_6\) and the captured energy is \(b_6^2/G_6\). The signed coefficient is \(-0.20832316671634772225\) and the energy is \(0.06835596972765048001\), rounded. The Wolfram kernel simplified both formulas and independently compared all six weights to their Hurwitz zeta series to within \(10^{-55}\). [Reproducible Wolfram calculation](QPrimeParsevalCalculator.md#symbolic-period-six-projection)
+
+To compute the actual layer at a fixed prime \(p\), let \(L_{p,j}=(\prod_{\ell\le p}\ell)^j\), where the product is over primes. Write \(F_{p,j}=\operatorname{span}\{J_d:d\mid L_{p,j},\ \omega(d)\ge2\}\) and \(c_{p,j}(f)=\|P_{F_{p,j}}^Q f\|_Q^2\). Every generator of \(M_p\) belongs to some \(F_{p,j}\). Thus \(c_{p,j}(f)\uparrow\|\Pi_p f\|_Q^2\), and for a prime \(p>2\) with preceding prime \(p^-\),
+\[
+ e_p(f)=\lim_{j\to\infty}\bigl(c_{p,j}(f)-c_{p^-,j}(f)\bigr).
+\]
+This formula isolates one prime while all admitted exponents grow. For \(p=3\) the predecessors have mixed energy zero. Periods \(6,36,216,1296\) give respectively \(1,4,9,16\) mixed rows and captured energies \(0.068355970,0.091899916,0.099138736,0.101499876\) for \(h\). Each complete finite Gram value is a lower bound for the full first layer. Run `python q_prime_parseval.py 3 --exponent 4` for the last value.
+
+The period-1296 calculation gives a strict rational certificate for the full first layer. Let \(m=10^{-6}\sum_{d}c_dJ_d\), with the sixteen integers in the calculator. As \(m\in M_3\) and \(M_2=0\), the exact variational identity is
+\[
+ e_3(h)=2\langle h,m\rangle_Q-\|m\|_Q^2+\|\Pi_3 h-m\|_Q^2.
+\]
+Put \(\tau=10149/100000\). To certify the signed trial excess, set \(b_a=2h(a)m(a)-m(a)^2-\tau\) for \(1\le a\le L=1296\). With \(s=64\), integrate the decreasing function \((a+Lx)^{-2}\) from \(s\) to infinity. This gives
+\[
+ 0\le \sum_{k\ge0}(a+kL)^{-2}
+  -\sum_{k<s}(a+kL)^{-2}-\frac{1}{L(a+sL)}
+ \le\frac{1}{(a+sL)^2}.
+\]
+For \(\log2=2\sum_{k\ge0}3^{-(2k+1)}/(2k+1)\), the first twelve terms have a positive remainder at most \(\frac{2}{25\cdot3^{25}}\frac98\). These two bounds enclose every signed summand with rational arithmetic. The floor of \(10^{12}\) times the resulting lower bound for \(\sum_a b_a\sum_{k\ge0}(a+kL)^{-2}\) is \(16130543\), and the rational remainder above that integer is positive. Consequently
+\[
+ \boxed{e_3(h)>\frac{10149}{100000}
+       +\frac{16130543}{10^{12}\zeta(2)}.}
+\]
+The exact arithmetic and the trial coefficients are available via `python q_prime_parseval.py --certify-first-layer`. [Prime-3 certificate](QPrimeParsevalCalculator.md)
 
 ### The ambient prime-valuation tower
 
