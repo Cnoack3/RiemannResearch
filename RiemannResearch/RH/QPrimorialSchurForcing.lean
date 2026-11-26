@@ -117,6 +117,57 @@ theorem selfForcing_le_forcingUpper (n : ℕ) :
   linarith
 
 
+/-- The stage Gram image of a carry vector can be removed from the Q correction
+before estimating the Schur self-forcing. -/
+def carryAdjusted (n : ℕ) (z : QHilbert) : QHilbert :=
+  correction n - (z - (primorialStage n).starProjection (B z))
+
+theorem selfForcing_le_carryAdjusted (n : ℕ) {z : QHilbert} (hz : z ∈ carryStage n) :
+    selfForcing n ≤ (2000 / 1017 : ℝ) * zetaTwo * ‖carryAdjusted n z‖ ^ 2 := by
+  let s := schurLift n (primeComponent n)
+  have hs : s ∈ primorialStage n :=
+    schurLift_mem n ((primeStage n).starProjection_apply_mem _)
+  have hproj (u : QHilbert) :
+      inner ℝ s ((primorialStage n).starProjection u) = inner ℝ s u := by
+    have h := Submodule.inner_right_of_mem_orthogonal hs
+      (Submodule.sub_starProjection_mem_orthogonal (K := primorialStage n) u)
+    rw [inner_sub_right] at h
+    exact (sub_eq_zero.mp h).symm
+  have ho := Submodule.inner_right_of_mem_orthogonal
+    ((toPareto_mem_paretoCarryStage_iff n z).mpr hz) (schurLift_orthogonal n (primeComponent n))
+  change inner ℝ (toPareto z) (toPareto s) = 0 at ho
+  rw [real_inner_comm, pareto_inner_identity] at ho
+  have horth := (mul_eq_zero.mp ho).resolve_left zetaTwo_pos.ne'
+  have he : selfForcing n = zetaTwo * inner ℝ s (carryAdjusted n z) := by
+    unfold carryAdjusted correction
+    rw [inner_sub_right, inner_sub_right, hproj, hproj, horth, sub_zero]
+    rfl
+  have hlegal : s ∈ ZetaTwoOptimizerStage.closure := by
+    rw [QSquarefreeCapacity.optimizer_closure_eq_squarefree_closure]
+    exact qSquarefreeCRTSpan.le_topologicalClosure (primorialStage_le_squarefreeSpan n hs)
+  have hb := QSquarefreeDisplacementEnergy.B_inner_le_four_site_983_2000
+    (QSquarefreeBoundary.fourSiteFunctional_zero_on_closure hlegal)
+  have hm := pareto_inner_identity s s
+  rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq] at hm
+  have hF : selfForcing n = ‖toPareto s‖ ^ 2 := selfForcing_exact n
+  have hcoer : (1017 / 2000 : ℝ) * zetaTwo * ‖s‖ ^ 2 ≤ selfForcing n := by
+    nlinarith only [hm, hF, mul_le_mul_of_nonneg_left hb zetaTwo_pos.le]
+  have hsq := sq_nonneg ‖carryAdjusted n z - (1017 / 2000 : ℝ) • s‖
+  have hsymm : inner ℝ (carryAdjusted n z) s = inner ℝ s (carryAdjusted n z) :=
+    real_inner_comm _ _
+  rw [norm_sub_sq_real, real_inner_smul_right, hsymm,
+    norm_smul, Real.norm_eq_abs, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 1017 / 2000)] at hsq
+  nlinarith only [mul_nonneg zetaTwo_pos.le hsq, hcoer, he]
+
+/-- Cofinal smallness modulo the Gram images of the carry spaces suffices for RH. -/
+theorem riemannHypothesis_of_cofinal_carryAdjusted
+    (h : ∀ ε : ℝ, 0 < ε → ∃ᶠ n in atTop, ∃ z ∈ carryStage n,
+      (2000 / 1017 : ℝ) * zetaTwo * ‖carryAdjusted n z‖ ^ 2 ≤ ε) :
+    RiemannHypothesis := by
+  apply riemannHypothesis_of_cofinal_selfForcing
+  intro ε hε
+  exact (h ε hε).mono fun n ⟨z, hz, he⟩ => (selfForcing_le_carryAdjusted n hz).trans he
+
 /-- The Q-only forcing gives a direct finite bound for the limiting error. -/
 theorem limiting_pError_cube_le_forcing (n : ℕ) :
     (‖toPareto QSquarefreeDisplacementRigidity.pResidual‖ ^ 2)^3 ≤

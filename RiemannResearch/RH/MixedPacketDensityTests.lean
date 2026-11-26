@@ -425,6 +425,28 @@ theorem riemannHypothesis_iff_frequently_nonnegative_pairing :
     obtain ⟨j, hj, hj'⟩ := (hf.and_eventually ht).exists
     exact (not_lt_of_ge (mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr zetaTwo_pos.le) hj)) hj'
 
+/-- Any prescribed subsequence tending to infinity detects RH, even when the
+normalized lower sign test is allowed a nonnegative error tending to zero. -/
+theorem riemannHypothesis_iff_frequently_pairing_with_tolerance
+    {k : ℕ → ℕ} (hk : Tendsto k atTop atTop) {ε : ℕ → ℝ}
+    (hε0 : ∀ᶠ j in atTop, 0 ≤ ε j) (hε : Tendsto ε atTop (𝓝 0)) :
+    RiemannHypothesis ↔ ∃ᶠ j in atTop,
+      -zetaTwo * inner ℝ limitResidual (densityP (consecutivePacket (k j))) ≤ ε j := by
+  rw [rh_iff_residual_zero]
+  constructor
+  · intro hd
+    apply Filter.Eventually.frequently
+    filter_upwards [hε0] with j hj
+    simpa only [hd, inner_zero_left, mul_zero] using hj
+  · intro hf
+    by_contra hd
+    have hpos : 0 < ‖limitResidual‖ ^ 2 := sq_pos_of_pos (norm_pos_iff.mpr hd)
+    have hlim : Tendsto (fun j => -zetaTwo * inner ℝ limitResidual
+        (densityP (consecutivePacket (k j))) - ε j) atTop (𝓝 (‖limitResidual‖ ^ 2)) := by
+      simpa only [Function.comp_def, sub_zero] using (residual_pairing_tendsto.comp hk).sub hε
+    obtain ⟨j, hj, hbad⟩ := (hf.and_eventually (hlim.eventually (Ioi_mem_nhds hpos))).exists
+    exact (not_lt_of_ge hj) (sub_pos.mp hbad)
+
 #print axioms riemannHypothesis_iff_union_eq_univ
 #print axioms residual_energy_le_of_nonnegative_pairing
 #print axioms projected_mixed_dense
@@ -433,5 +455,6 @@ theorem riemannHypothesis_iff_frequently_nonnegative_pairing :
 #print axioms consecutive_projection_limits
 #print axioms riemannHypothesis_iff_consecutive_leakage_tendsto_zero
 #print axioms riemannHypothesis_iff_frequently_nonnegative_pairing
+#print axioms riemannHypothesis_iff_frequently_pairing_with_tolerance
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur.MixedPacketDensity

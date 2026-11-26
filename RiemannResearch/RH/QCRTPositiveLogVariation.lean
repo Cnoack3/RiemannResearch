@@ -101,4 +101,52 @@ theorem riemannHypothesis_of_positive_relative_variation
     (fun M : ℕ => ((M + 2 : ℕ) : ℝ)) canonicalEnergy cutoff_tendsto_atTop
     canonicalEnergy_pos hrelative
 
+
+/-- A zero forces growth of the upward variation even if only the selected
+cutoffs are observed. The logarithmic factor in the energy floor contributes
+an additive log-log term. -/
+theorem sampled_logVariation_floor (M : ℕ → ℕ) (hM : Tendsto M atTop atTop)
+    (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) (hslt : s.re < 1) (hz : riemannZeta s = 0) :
+    ∃ b : ℝ, ∀ᶠ j : ℕ in atTop,
+      (2 * s.re - 1) * Real.log ((M j + 2 : ℕ) : ℝ) +
+        Real.log (Real.log ((M j + 2 : ℕ) : ℝ)) + b ≤
+      Real.positiveVariation (fun i => Real.log (1 + canonicalEnergy (M i))) j := by
+  obtain ⟨c, hc, hfloor⟩ := canonical_norm_sq_log_power_floor s hs hslt hz
+  refine ⟨Real.log c - Real.log (1 + canonicalEnergy (M 0)), ?_⟩
+  filter_upwards [hM.eventually hfloor] with j hj
+  let X : ℝ := ((M j + 2 : ℕ) : ℝ)
+  have hX : 1 < X := by
+    dsimp only [X]
+    exact_mod_cast (show 1 < M j + 2 by omega)
+  have hXp : 0 < X := zero_lt_one.trans hX
+  have hL := Real.log_pos hX
+  have hp := Real.rpow_pos_of_pos hXp (2 * s.re - 1)
+  have he : c * X ^ (2 * s.re - 1) * Real.log X ≤ 1 + canonicalEnergy (M j) :=
+    hj.trans (by unfold canonicalEnergy; linarith)
+  have hlog := Real.log_le_log (mul_pos (mul_pos hc hp) hL) he
+  rw [Real.log_mul (mul_pos hc hp).ne' hL.ne', Real.log_mul hc.ne' hp.ne',
+    Real.log_rpow hXp] at hlog
+  have hv := Real.le_initial_add_positiveVariation
+    (fun i => Real.log (1 + canonicalEnergy (M i))) j
+  change (2 * s.re - 1) * Real.log X + Real.log (Real.log X) +
+    (Real.log c - Real.log (1 + canonicalEnergy (M 0))) ≤ _
+  linarith only [hlog, hv]
+
+/-- Only cofinally small positive variation along one unbounded schedule of
+actual cutoffs is needed. Positive variations inside skipped blocks are free. -/
+theorem riemannHypothesis_of_cofinal_sampled_logVariation (M : ℕ → ℕ)
+    (hM : Tendsto M atTop atTop)
+    (hsmall : ∀ a : ℝ, 0 < a → ∀ N : ℕ, ∃ j ≥ N,
+      Real.positiveVariation (fun i => Real.log (1 + canonicalEnergy (M i))) j <
+        a * Real.log ((M j + 2 : ℕ) : ℝ)) : RiemannHypothesis := by
+  apply RiemannResearch.RH.riemannHypothesis_iff_right_half_strip_zero_free.mpr
+  intro s hs hslt hz
+  obtain ⟨b, hb⟩ := sampled_logVariation_floor M hM s hs hslt hz
+  have hlog : Tendsto (fun j => Real.log (Real.log ((M j + 2 : ℕ) : ℝ))) atTop atTop :=
+    Real.tendsto_log_atTop.comp (Real.tendsto_log_atTop.comp (cutoff_tendsto_atTop.comp hM))
+  obtain ⟨N, hN⟩ := eventually_atTop.mp (hb.and (hlog.eventually (eventually_ge_atTop (-b))))
+  obtain ⟨j, hj, hsmallj⟩ := hsmall (2 * s.re - 1) (by linarith) N
+  obtain ⟨hlo, hconst⟩ := hN j hj
+  linarith only [hlo, hconst, hsmallj]
+
 end RiemannResearch.RH.QCRTPositiveLogVariation

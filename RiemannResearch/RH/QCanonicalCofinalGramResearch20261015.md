@@ -179,6 +179,103 @@ cofinal_signed_correction_tendsto_zero,
 cofinal_signed_energy_discrepancy_tendsto_zero,
 signedBlock_correction_le_trace.
 
+
+## Full candidates, residuals, and the CRT collocation family
+
+For the full Möbius candidates \(f_N=1-r_N\), let
+\(g_j=\sum_i a_{j,i} f_{n_{j,i}}\) and \(c_j=\sum_i a_{j,i}\).
+With the bounded absolute coefficient masses and cofinal indices above,
+the triangle inequality applied to the linear correction vector gives
+\[
+ \left|\sqrt{R(g_j)}-|c_j|\sqrt{\zeta(2)-1}\right|
+ \le \sqrt{R\!\left(\sum_i a_{j,i}r_{n_{j,i}}\right)}
+ \longrightarrow 0.
+\]
+Here \(R(1)=\zeta(2)-1\) follows from the complete metric identity and
+the two probability normalizations. Since \(c_j\) is bounded, subtracting
+squares gives \(R(g_j)-c_j^2(\zeta(2)-1)\to0\). In particular, an affine
+average of the full candidates has limiting discrepancy \(\zeta(2)-1\).
+The Lean declaration `cofinal_uncentered_discrepancy` treats
+\(c_j\to c\), including this affine case.
+
+The actual CRT collocation lifts \(F_L\) have a distinct positive lower
+bound. The following paper argument applies to every cofinal sequence of
+even periods, including \(L=\operatorname{lcm}(1,\ldots,M+2)\).
+Write \(z=\zeta(2)\), \(Q_n=1/(zn^2)\), \(F_0=0\),
+\(d=\|\Delta F_L\|_Q\) with \((\Delta F_L)_n=F_n-F_{n-1}\), and
+\[
+ D=R(F_L)=\sum_{n\ge1}\frac{F_n^2}{n^2(n+1)},\qquad
+ A=\frac{2\sqrt{z-1}}{z},\qquad t=A\sqrt D.
+\]
+In physical coordinates the unilateral right shift is \(SF_n=F_{n-1}\).
+Its norm defect is
+\[
+ K=\|F_L\|_Q^2-\|SF_L\|_Q^2=\sum_{n\ge1}(Q_n-Q_{n+1})F_n^2.
+\]
+The ratio of \(Q_n-Q_{n+1}\) to \(1/(n^2(n+1))\) equals
+\((2n+1)/(z(n+1))\), between \(3/(2z)\) and \(2/z\).
+`QCRTFiniteCollocation.canonical_difference_energy` gives
+\(\|\Delta F_L-h_L\|_Q^2+K=\|h_L\|_Q^2=1-L^{-2}\),
+where \(h_L=1-\mathbf1_{L\mid n}\). In particular
+\(D\le(2z/3)(1-L^{-2})\).
+Expanding the same identity gives \(d^2+K=2\langle h_L,\Delta F_L\rangle_Q\).
+
+For all indices together, or for any subset of them, Cauchy–Schwarz gives
+\[
+ \sum_n (Q_n-Q_{n+1})|F_n|
+ \le\frac{2}{z}\sum_n\frac{|F_n|}{n^2(n+1)}
+ \le t ,
+ \qquad \sum_{n\ge1}\frac1{n^2(n+1)}=z-1.
+\]
+Abel summation gives
+\(\langle1,\Delta F_L\rangle_Q=\sum_n(Q_n-Q_{n+1})F_n\),
+since each fixed-period \(F_L\) is bounded. The divisor indicator has
+\(Q\)-norm \(1/L\), so the energy identity and \(K\ge0\) give
+\[
+ d^2\le 2t+2d/L.
+\]
+The divisor moments at 1 and 2 from
+`QCRTFiniteCollocation.canonical_divisor_moment` imply
+\[
+ \tfrac12+L^{-2}
+ =\sum_{n\ {\rm odd}}Q_nF_n-\sum_{n\ {\rm even}}Q_nF_n
+ =\sum_{n\ {\rm odd}}(Q_n-Q_{n+1})F_n
+    -\sum_{n\ {\rm even}}Q_n(\Delta F_L)_n
+ \le t+\tfrac12d.
+\]
+The last coefficient uses \(Q(2\mid n)=1/4\). Hence
+\(d\le L^{-1}+\sqrt{L^{-2}+2t}\). Passing to a subsequence along which
+\(t\) approaches its lower limit \(\tau\) gives
+\(1/2\le\tau+\sqrt{2\tau}/2\), or
+\(\tau\ge(3-\sqrt5)/4\). We conclude
+\[
+ \boxed{\displaystyle
+  \liminf_{\substack{L\to\infty\\2\mid L}} R(F_L)
+  \ \ge\ \frac{\zeta(2)^2(3-\sqrt5)^2}{64(\zeta(2)-1)} >0 .}
+\]
+Thus even singleton averages of uncentered CRT lifts have a discrepancy
+bounded away from zero. The upper bound above controls the metric discrepancy,
+while the complete norm of the lift also includes its Pareto energy.
+The obstruction extends to whole signed blocks. Suppose the periods in a
+block \(f=\sum_i a_iF_{L_i}\) are even and \(\sum_i|a_i|\le B\).
+Each \(\|\Delta F_{L_i}\|_Q\le2\) by its difference-energy identity, hence
+\(\|\Delta f\|_Q\le2B\). Its parity moment equals
+\(P_f=\frac12\sum_i a_i+\sum_i a_i/L_i^2\). In the odd-even pairing above,
+truncate the derivative sum on the even sites at \(K\ge1\).
+Through \(K\) its absolute value is at most \(\sum_{n\le K}Q_n|f_n|\),
+since each physical site enters once with coefficient at most \(Q_n\).
+The tail is at most \(2B/\sqrt{zK}\) by the inverse-square tail bound. Thus
+\[
+ |P_f|\le (A+C_K)\sqrt{R(f)}+\frac{2B}{\sqrt{zK}},\qquad
+ C_K=z^{-1}\sqrt{\sum_{n\le K}(n+1)/n^2}.
+\]
+For cofinal periods and coefficient masses tending to \(c\ne0\), the
+second term in \(P_f\) tends to zero. Fixing \(K>16B^2/(zc^2)\) yields
+\(\liminf_j\sqrt{R(f_j)}\ge (|c|/2-2B/\sqrt{zK})/(A+C_K)>0\).
+This includes all affine signed averages with bounded absolute coefficient
+mass along the actual LCM stages. In the other direction the triangle
+inequality gives \(R(f)\le(2z/3)(\sum_i|a_i|\sqrt{1-L_i^{-2}})^2\).
+
 ## Stronger explicit arithmetic rate
 
 The full checked stretched Mertens provider yields constants \(b>0\),

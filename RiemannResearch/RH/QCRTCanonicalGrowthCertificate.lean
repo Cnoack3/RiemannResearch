@@ -126,6 +126,45 @@ theorem canonical_prediction_error_eq_response
         ((canonical M hM : QHilbert) - canonical L hL) - predictor L M z := by abel
     _ = _ := by rw [he, add_sub_cancel_left]
 
+/-- Subtracting the signed residual-column pairing leaves exactly the
+complete squared prediction error. All column pairings use the candidate. -/
+theorem canonical_signed_column_remainder
+    (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M) (hLM : L ∣ M)
+    (z : Old L ⊕ New L M → ℝ) :
+    let f := (canonical L hL : QHilbert) + predictor L M z
+    let ρ := testResidual L M hL z
+    let w := responseColumn (collocationInverse L M) (joinedFamily L M)
+    ‖(canonical M hM : QHilbert)‖ ^ 2 - ‖f‖ ^ 2 -
+      2 * (∑ i, ρ i * inner ℝ f (w i)) =
+        ‖response (collocationInverse L M) (joinedFamily L M) ρ‖ ^ 2 := by
+  dsimp only
+  have he := canonical_prediction_error_eq_response L M hL hM hLM z
+  have hs := sub_eq_iff_eq_add.mp he
+  rw [add_comm] at hs
+  rw [hs, norm_add_sq_real]
+  have hp (f : QHilbert) :
+      inner ℝ f (response (collocationInverse L M) (joinedFamily L M) (testResidual L M hL z)) =
+      ∑ i, testResidual L M hL z i * inner ℝ f
+        (responseColumn (collocationInverse L M) (joinedFamily L M) i) := by
+    rw [response_expansion]
+    simp only [inner_sum, real_inner_smul_right]
+  rw [hp]
+  ring
+
+/-- A two-sided certificate with squared radius as its interval width. -/
+theorem canonical_signed_column_interval
+    (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M) (hLM : L ∣ M)
+    (z : Old L ⊕ New L M → ℝ) :
+    let f := (canonical L hL : QHilbert) + predictor L M z
+    let ρ := testResidual L M hL z
+    let w := responseColumn (collocationInverse L M) (joinedFamily L M)
+    ‖(canonical M hM : QHilbert)‖ ^ 2 - ‖f‖ ^ 2 -
+      2 * (∑ i, ρ i * inner ℝ f (w i)) ∈ Set.Icc 0 (errorRadius L M hL z ^ 2) := by
+  dsimp only
+  rw [canonical_signed_column_remainder L M hL hM hLM z]
+  exact ⟨sq_nonneg _, pow_le_pow_left₀ (norm_nonneg _)
+    (response_norm_le (collocationInverse L M) (joinedFamily L M) (testResidual L M hL z)) 2⟩
+
 theorem canonical_prediction_error_le_radius
     (L M : ℕ) (hL : 2 ≤ L) (hM : 2 ≤ M) (hLM : L ∣ M)
     (z : Old L ⊕ New L M → ℝ) :

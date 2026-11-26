@@ -274,4 +274,49 @@ theorem growing_testDiscrepancy_tendsto_zero (f : ℕ → QHilbert)
   have ht := (Real.continuous_sqrt.tendsto (0 : ℝ)).comp hs
   simpa only [Function.comp_def, Real.sqrt_sq_eq_abs, Real.sqrt_zero, Real.norm_eq_abs] using ht
 
+
+/-- A cofinal affine block of the full Möbius candidates has the constant
+metric charge of its coefficient mass. The residual block loses its charge
+by the bounded-l1 comparison. -/
+theorem cofinal_uncentered_discrepancy
+    (n H : ℕ → ℕ) (κ : (j : ℕ) → Fin (n j) → ℕ)
+    (a : (j : ℕ) → Fin (n j) → ℝ) (hH : Tendsto H atTop atTop)
+    (hκ : ∀ j i, H j ≤ κ j i) (C : ℝ) (hC : 0 ≤ C)
+    (ha : ∀ j, ∑ i, |a j i| ≤ C) (c : ℝ)
+    (hc : Tendsto (fun j => ∑ i, a j i) atTop (𝓝 c)) :
+    Tendsto (fun j =>
+      let f := ∑ i, a j i • QCanonicalMovingCovariance.canonical (κ j i)
+      zetaTwo * ‖f‖ ^ 2 - ‖toPareto f‖ ^ 2) atTop (𝓝 ((zetaTwo - 1) * c ^ 2)) := by
+  let r (j : ℕ) := signedBlock (n j) (κ j) (a j)
+  have hr2 : Tendsto (fun j => metricCorrection (r j)) atTop (𝓝 0) :=
+    cofinal_signed_correction_tendsto_zero n H κ a hH hκ C hC ha
+  have hr : Tendsto (fun j => correctionVector (r j)) atTop (𝓝 0) := by
+    apply tendsto_zero_iff_norm_tendsto_zero.mpr
+    have hs := (Real.continuous_sqrt.tendsto (0 : ℝ)).comp hr2
+    simpa only [Function.comp_def, ← correctionVector_norm_sq, Real.sqrt_sq (norm_nonneg _),
+      Real.sqrt_zero] using hs
+  have hconst : Tendsto (fun _ : ℕ => correctionVector qOne) atTop
+      (𝓝 (correctionVector qOne)) := tendsto_const_nhds
+  have hvec : Tendsto (fun j => (∑ i, a j i) • correctionVector qOne -
+      correctionVector (r j)) atTop (𝓝 (c • correctionVector qOne)) := by
+    simpa only [sub_zero] using (hc.smul hconst).sub hr
+  have hone := norm_identity qOne
+  rw [qOne_norm_sq, toPareto_qOne, hilbertOne_norm_sq, mul_one] at hone
+  have hsynth (j : ℕ) :
+      ∑ i, a j i • QCanonicalMovingCovariance.canonical (κ j i) =
+        (∑ i, a j i) • qOne - r j := by
+    simp only [r, signedBlock, QCanonicalMovingCovariance.residual, smul_sub,
+      Finset.sum_sub_distrib, Finset.sum_smul, sub_sub_cancel]
+  have hcq : metricCorrection qOne = zetaTwo - 1 := by linarith only [hone]
+  have hlim : ‖c • correctionVector qOne‖ ^ 2 = (zetaTwo - 1) * c ^ 2 := by
+    rw [norm_smul, mul_pow, Real.norm_eq_abs, sq_abs, correctionVector_norm_sq, hcq]
+    ring
+  have h := hvec.norm.pow 2
+  rw [hlim] at h
+  convert h using 1
+  funext j
+  dsimp only
+  rw [norm_identity, add_sub_cancel_left, ← correctionVector_norm_sq,
+    hsynth, map_sub, map_smul]
+
 end RiemannResearch.RH.QCanonicalCofinalGram
