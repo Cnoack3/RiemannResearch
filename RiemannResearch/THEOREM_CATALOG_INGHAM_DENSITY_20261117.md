@@ -267,7 +267,9 @@ equivalent provider
 Here \(D\ge0\) and the height threshold are uniform, with
 \(\alpha\in[1/2,1]\). Recovering the count uses the existing shift
 \(1/(a\log T)\), with the lower count cutoff raised to \(A+1/a\).
-The excess estimate on this moving window remains open.
+Baluyot's Theorem 1.2.1 gives the corresponding arithmetic estimate on paper,
+since its exponent in these coordinates is twice the mollifier-length
+parameter. An unconditional Lean proof of this arithmetic input remains open.
 
 At the arithmetic level the actual Gaussian moment is the signed residue
 sum plus the signed vertical integral minus the pole correction, including
@@ -283,6 +285,38 @@ retains the cancellation between the two arithmetic contributions.
 [Pole estimate](Analysis/ConreyBaluyotGaussianPoleReduction.lean)
 · [Exact signed splitting and conditional density theorem](Analysis/ConreyBaluyotRayMellinSeparation.lean)
 · [Baluyot, Chapter 3, Lemma 3.1.6 and equation (3.4.61)](https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320)
+
+## Additive moving-line error in the strip
+
+For fixed \(\delta>0\), write \(F_X(s)=\zeta(s)\sum_{n\le X}\mu(n)n^{-s}-1\)
+and \(\beta=1+\delta/\log X\). The translated second-moment theorem
+`exists_actual_moving_right_error_moment_add_log` bounds the integral over
+\([H,T]\) by \(C_\delta((T-H)/X+\log X)\).
+Averaging the affine majorant at \(U=Ta\sqrt v\) against \(e^{-v}dv\)
+gives the right Gaussian endpoint
+\[
+ C_\delta\bigl(\log X+\Gamma(3/2)Ta/X\bigr).
+\]
+The declaration `exists_actual_gabriel_right_endpoint_add_log` proves this
+bound and integrability on the complete positive ray.
+The declaration `exists_actual_gabriel_sharp_window_add_log` transfers it
+to every \(0\le\theta\le1\), \(p=4/(3-\theta)\), and damping \(b>0\)
+with right scale \(a=1/(T\sqrt{2b})\). In particular the length term
+in the right boundary budget is free of a multiplicative \(\log X\).
+[Strip and endpoint proofs](Analysis/ActualInghamGabrielSharp.lean)
+
+For a literature proof with explicit dependence on \(\delta\), put
+\(c_X(n)=\sum_{d\mid n,\ d\le X}\mu(d)\). De la Bretèche, Dress and
+Tenenbaum prove \(\sum_{n\le y}c_X(n)^2\ll y\), uniformly in \(X,y\).
+Partial summation on \(n>X\) at \(s=2\beta\) and \(s=2\beta-1\), followed
+by the Montgomery–Vaughan mean-value theorem, bounds the interval moment by
+\[
+ \ll e^{-2\delta}\bigl((T-H)/X+1+(\log X)/(2\delta)\bigr)
+\]
+with an absolute implied constant, also for real cutoffs \(X\ge2\).
+This dependence on \(\delta\) is a paper refinement.
+[Divisor-sum estimate, (1.5)](https://tenenb.perso.math.cnrs.fr/PPP/Sxz.pdf)
+· [Dirichlet mean-value estimate, Lemma 10](https://arxiv.org/html/2507.15184v2)
 
 ## Verification
 
