@@ -407,6 +407,54 @@ Each such wavelet is mean zero and has norm one. Later wavelets have mean zero o
 
 For example \(J_2=\tfrac34\mathbf1-\tfrac{\sqrt3}{4}\psi_2\). The ambient tower therefore captures the centered parity input after revealing \(\nu_2\), unconditionally. The mixed tower is still zero at \(2\), and its capture of the same input at infinity is equivalent to RH. At the prime-\(3\) stage, the physical sites \(1\) and \(5\) have the same \(2\)- and \(3\)-valuations, while \(J_6(1)=-1\) and \(J_6(5)=2\).
 
+### Exact ambient prime energies of the mixed CRT packet at period six
+
+Independence determines each ambient prime layer of the corrected CRT carry \(K_6=J_6\). Write \(a=\nu_2(N)\), \(b=\nu_3(N)\), \(Z=N/(2^a3^b)\), and \(X=\chi_{-3}(Z)\). The cofactor \(Z\) is independent of \(a,b\) and has the \(Q\)-law conditioned on coprimality to \(6\). Since \(X\) has values \(1,-1\), its mean is
+\[
+ \eta=\mathbb E_Q X=\frac{w_6(1)-w_6(5)}{w_6(1)+w_6(5)}=\frac{15\rho}{8}.
+\]
+The pointwise CRT row gives the four possible formulas
+\[
+ J_6(N)=
+ \begin{cases}
+ \tfrac12-\tfrac32 X,&a=b=0,\\
+ 2,&a=0,\ b>0,\\
+ \tfrac32(1+(-1)^aX),&a>0,\ b=0,\\
+ 0,&a>0,\ b>0.
+ \end{cases}
+\]
+For \(B\ge3\) set \(\mathcal F_B=\sigma(\nu_p:p\le B)\), with \(p\) prime. Each prime \(\ell>3\) with \(\ell\equiv1\pmod3\) acts trivially on \(X\). A prime \(\ell\equiv2\pmod3\) supplies the independent factor \((-1)^{\nu_\ell}\), whose mean is \((\ell^2-1)/(\ell^2+1)\) by the geometric series. Put
+\[
+ t_B=\prod_{\substack{\ell>B,\ \ell\ {\rm prime}\\\ell\equiv2\pmod3}}
+        \frac{\ell^2-1}{\ell^2+1},\qquad t_3=\eta.
+\]
+The product converges, is strictly positive, and tends to one as \(B\to\infty\), by convergence of \(\sum_p p^{-2}\). At each site \(N\), finitely many valuations are positive. Independence and bounded convergence therefore give the conditional mean of \(X\) as the product of its known signs through \(B\), multiplied by \(t_B\). Its conditional variance is \(1-t_B^2\). The CRT coefficient of \(X\) has squared magnitude \(9/4\) precisely on \(b=0\), an event of probability \(8/9\). Hence the full omitted ambient energy is exactly
+\[
+ \boxed{\|J_6-\mathbb E_Q[J_6\mid\mathcal F_B]\|_Q^2=2(1-t_B^2).}
+\]
+For an actual prime \(p>3\), the adjacent difference gives the individual ambient energy
+\[
+ e_p^{\rm amb}(J_6)=
+ \begin{cases}
+ 0,&p\equiv1\pmod3,\\
+ \displaystyle\frac{8p^2}{(p^2+1)^2}\,t_p^2,&p\equiv2\pmod3 .
+ \end{cases}
+\]
+In particular prime \(5\) contributes \(25\eta^2/72>0\) and prime \(7\) contributes zero. In the mixed tower \(J_6\in M_3\), so its entire mixed energy enters at \(3\).
+
+The initial ambient blocks also have closed forms. Given \(a\), the conditional mean of \(J_6\) is \(2/3-4\eta/3\) for \(a=0\), \(4(1-\eta)/3\) for odd \(a\), and \(4(1+\eta)/3\) for positive even \(a\). These cases have probabilities \(3/4,1/5,1/20\). Their variance gives \(e_2^{\rm amb}\). On revealing \(b\), the Bernoulli variance between \(b=0\) and \(b>0\) gives \(e_3^{\rm amb}\). In terms of the constant coefficient \(m_0\) the results are
+\[
+ m_0=\frac56-\frac65\eta,\qquad
+ e_2^{\rm amb}=\frac1{12}+\frac{2\eta}{15}+\frac{76\eta^2}{225},\qquad
+ e_3^{\rm amb}=\frac29+\frac{4\eta}{15}+\frac{2\eta^2}{9}.
+\]
+Wolfram simplified the positive-prime increment and verified the exact sum
+\[
+ m_0^2+e_2^{\rm amb}+e_3^{\rm amb}+2(1-\eta^2)
+   =3-\frac85\eta=3(1-\rho)=\|J_6\|_Q^2 .
+\]
+[Symbolic valuation and CRT calculation](QPrimeParsevalCalculator.md#symbolic-period-six-projection)
+
 ## Universal lifting and the physical norm of a section
 
 For the inclusion \(i:M\to V\), the mean \(C:V\to\mathbb R\), the section \(s(a)=au\) and the retraction \(p(v)=v-s(Cv)=P_M^Pv\), the split identities are

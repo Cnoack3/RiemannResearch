@@ -149,7 +149,7 @@ if __name__ == "__main__":
 
 ## Symbolic period-six projection
 
-Evaluate this Wolfram Language listing to obtain the period-six Gram, signed moment, signed projection coefficient, and captured energy. The output also checks the three one-prime wavelet inner products and the ambient parity energy. In the symbolic answer, `rho` denotes the quadratic Dirichlet value divided by Riemann zeta at two, and `lambda` denotes the natural logarithm of two.
+Evaluate this Wolfram Language listing to obtain the period-six Gram, signed moment, signed projection coefficient, and captured energy. The output also checks the three one-prime wavelet inner products and the ambient parity energy. The CRT calculation gives each later prime energy for the period-six row and checks its full symbolic Parseval identity. In the symbolic answer, `rho` denotes the quadratic Dirichlet value divided by Riemann zeta at two, and `lambda` denotes the natural logarithm of two.
 
 ```wolfram
 (* Native Q mixed fit on period six. rho denotes L(2,chi_-3)/Zeta[2]. *)
@@ -174,6 +174,23 @@ NativeQPrimeTower`qWaveletChecks[r_, k_, j_] := FullSimplify[{
     Sqrt[r^(k+1) (1-r) r^(j+1) (1-r)]
 }, Assumptions -> 0 < r < 1 && j > k >= 0];
 
+(* Complete ambient prime energies of the CRT row J6. eta is the mean of the unit sign. *)
+NativeQPrimeTower`qSixAmbient[eta_, prime_, tailMean_] := Module[
+  {probs, atTwo, mean, two, three, tail, factor},
+  probs = {3/4, 1/5, 1/20};
+  atTwo = {2/3 - 4 eta/3, 4 (1-eta)/3, 4 (1+eta)/3};
+  mean = Factor[probs . atTwo];
+  two = Expand[probs . (atTwo^2) - mean^2];
+  three = Expand[(2/9) ((4/5) (1+eta)^2 + (1/5) (1-eta)^2)];
+  tail = 2 (1-eta^2);
+  factor = Factor[Sum[(1-1/prime^2) (-1/prime^2)^k, {k, 0, Infinity},
+    Assumptions -> prime > 1]];
+  <|"Mean" -> mean, "Prime2Energy" -> two, "Prime3Energy" -> three,
+    "TailAfter3" -> tail, "SignedGeometricFactor" -> factor,
+    "EnergyForPrime2Mod3" -> Factor[2 tailMean^2 (1-factor^2)],
+    "ParsevalDifference" -> Expand[mean^2+two+three+tail-(3-8 eta/5)]|>
+];
+
 NativeQPrimeTower`results = Module[{rhoN, direct, fitN, target, parity},
   rhoN = (N[Zeta[2, 1/3], 75] - N[Zeta[2, 2/3], 75])/(9 N[Zeta[2], 75]);
   direct = Table[N[Zeta[2, a/6], 70]/(36 N[Zeta[2], 70]), {a, 6}];
@@ -183,6 +200,7 @@ NativeQPrimeTower`results = Module[{rhoN, direct, fitN, target, parity},
   <|"SymbolicMixedFit" -> NativeQPrimeTower`qSixFit[NativeQPrimeTower`rho, NativeQPrimeTower`lambda],
     "PeriodSixWeightAgreement" -> (Max[Abs[direct - fitN["Weights"]]] < 10^-55),
     "NumericalFit" -> N[{fitN["SignedCoefficient"], fitN["CapturedEnergy"]}, 28],
+    "AmbientCRTRow" -> NativeQPrimeTower`qSixAmbient[NativeQPrimeTower`eta, NativeQPrimeTower`prime, NativeQPrimeTower`tailMean],
     "ValuationWaveletMeanNormSqCross" -> NativeQPrimeTower`qWaveletChecks[NativeQPrimeTower`r, NativeQPrimeTower`k, NativeQPrimeTower`j],
     "OddIndicatorConstantAndPrimeTwoMode" -> parity,
     "AmbientParityEnergyMinusTarget" ->
