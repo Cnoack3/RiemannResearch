@@ -1,5 +1,21 @@
 # Fixed-width Montgomery variance
 
+## Occurrence ranks, distinct ordinates and simple zero representatives
+
+For a height cutoff \(T>1\), let \(L=\log T/(2\pi)\), \(D=TL\), and order the \(N(T)\) occurrences by ordinate, with their analytic multiplicities. The positive-gap count uses \(0<L(\gamma_j-\gamma_i)\le q\) and the same denominator \(D\) throughout.
+
+| Checked result | Scope |
+| --- | --- |
+| [Rank cover](Analysis/MicroscopicRankCover.lean), [exponential tail](Analysis/MicroscopicRankTail.lean), [count-to-square-tail transfer](Analysis/MicroscopicCountTail.lean) | The finite covering inequality charges pairs with more than \(J\) index steps to crowded windows. A bounded translated third moment at width \(2q\) gives an inverse-rank estimate. An exponential exceedance bound at that width gives an exponential rank estimate. The published count estimates furnishing these inputs are discussed in the [analytic note](RIEMANN_MICROSCOPIC_SELBERG_TRACE_20261125.md#truncating-positive-pairs-by-index-distance). |
+| [Deletion](Analysis/MicroscopicRankDeletion.lean), [triangle budget](Analysis/ZeroDPPRankVacancy.lean), [prime vacancy](Analysis/MicroscopicPrimeVacancy.lean) | If \(d_T=(N(T)-\#\{\gamma\})/D\), the loss on \(I=[a,b]\) is at least \((b^2-a^2)d_T\), including distinct occurrences at the same height. The logarithmic upper bound \(O_I(d_T\log(e/d_T))\) uses the corresponding exponential translated count estimate. |
+| [Finite-index PCC criterion](Analysis/MontgomeryFiniteIndexGap.lean) | With bounded translated third moments at twice every positive rational width, PCC is equivalent to vanishing of the iterated error of the finite-rank aggregate. First take the height limsup at fixed rank cutoff, then send the cutoff to infinity. |
+| [Reciprocal logarithmic derivative](Analysis/ReciprocalLogDerivOrder.lean) and [squarefree ξ companion](Analysis/SquarefreeXiCompanion.lean) | At each nontrivial zero of multiplicity \(m\), the reciprocal logarithmic derivative has a simple zero with derivative \(1/m\). The inverse slopes recover the exact multiplicity-weighted pair statistic. The separate entire genus-one product has the same zero set as ξ and has simple zeros at those locations. The original ζ multiplicities are retained. |
+| [Finite correction](Analysis/MicroscopicPositiveGapProjection.lean) and [distinct-ordinate law](Analysis/MicroscopicDistinctGapCriterion.lean) | At each positive gap between ordinates \(u<v\), the difference between the occurrence weight and distinct-ordinate weight is \(M_uM_v-1\). The strict positive sine law for distinct ordinates is equivalent to ordinary PCC under the short-window second-moment upper estimate and bounded translated third moments at \(q+2\) for every positive rational \(q\). |
+| [First consecutive gap](Analysis/MicroscopicFirstGapVacancy.lean) | An exact finite identity restores the zero gaps lost by the strict rank-one count. A positive lower proportion of strictly positive consecutive gaps at width \(0.784782678\) requires vanishing prime vacancy and the scoped Lamzouri compact-deletion input. |
+| [Actual and distinct lower bounds](Analysis/DistinctGapNumeric.lean) | The actual positive-gap mass and its distinct-ordinate counterpart both eventually exceed \(7/1200\) at \(q=3/2\), with the same height normalization. For either direction, the normalized number of distinct base ordinates with a neighbor in range also eventually exceeds \(7/1200\). |
+
+The open arithmetic conclusions are the vanishing of the actual vacancy fraction and the fixed-positive-width sine limit. The order-one constructions alone establish neither conclusion.
+
 ## Consecutive occurrences and the signed Selberg trace
 
 [MontgomeryAdjacentWindowFloor](Analysis/MontgomeryAdjacentWindowFloor.lean) gives the exact chronological triangle decomposition and an eventual variance floor from the actual small-gap proportion. Equal ordinates retain their triangle weight. Its positive specialization at unit width uses the scoped compact-deletion estimate.
