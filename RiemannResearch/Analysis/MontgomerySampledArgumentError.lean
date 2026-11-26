@@ -1,4 +1,5 @@
 import RiemannResearch.Analysis.MontgomerySampledCountError
+import RiemannResearch.Analysis.ActualZeroBandCount
 import RiemannResearch.Analysis.MontgomeryLocalMass
 import Mathlib.Algebra.Order.Chebyshev
 
@@ -106,6 +107,45 @@ private theorem gammaMain_remainder_weighted {v : ℝ} (hv : 0 < v) :
       _ ≤ _ := by
         dsimp only [K]
         nlinarith only [mul_nonneg (mul_nonneg hC hgap) (MontgomeryLocalMass.cauchyWeight_nonneg t)]
+
+/-- At fixed unfolded width the exact gamma drift converges uniformly to
+that width in the bulk of the actual ordinate occurrences. -/
+theorem eventually_gamma_increment_interior {R δ ε : ℝ}
+    (hR : 0 < R) (hδ : 0 < δ) (hε : 0 < ε) :
+    ∀ᶠ T : ℝ in atTop, ∀ i : Copies T, δ*T ≤ copyOrdinate T i →
+      copyOrdinate T i ≤ (1-δ)*T →
+      |smoothCount (min T (copyOrdinate T i + R/unfoldingScale T)) -
+        smoothCount (copyOrdinate T i) - R| ≤ ε := by
+  obtain ⟨v,hv,hmin⟩ := exists_ordinate_floor
+  obtain ⟨K,hK,hbound⟩ := exists_gammaMain_remainder_Lipschitz hv
+  have hs : Tendsto unfoldingScale atTop atTop :=
+    Real.tendsto_log_atTop.atTop_div_const (by positivity)
+  have hlim : Tendsto (fun T : ℝ => R / unfoldingScale T) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop hs
+  have hlim' := hlim.const_mul K
+  rw [mul_zero] at hlim'
+  filter_upwards [eventually_countMain_increment_interior hR hδ (half_pos hε),
+    hlim'.eventually_lt_const (half_pos hε), eventually_gt_atTop (1 : ℝ)]
+    with T hb hsmall hT i hl hu
+  let t := copyOrdinate T i
+  let u := min T (t + R / unfoldingScale T)
+  have hpos : 0 < unfoldingScale T := div_pos (Real.log_pos hT) (by positivity)
+  have htu : t ≤ u := le_min (mem_cutoff.mp i.1.property).2.2
+    (le_add_of_nonneg_right (div_pos hR hpos).le)
+  have hdiff : u-t ≤ R / unfoldingScale T := by
+    dsimp only [u]
+    linarith only [min_le_right T (t + R / unfoldingScale T)]
+  have hg := (hbound t u (hmin T i) htu).trans (mul_le_mul_of_nonneg_left hdiff hK)
+  have hm := hb i hl hu
+  change |countMain u - countMain t - R| ≤ ε/2 at hm
+  change |smoothCount u-smoothCount t-R| ≤ ε
+  calc
+    _ = |(gammaMainRemainder u-gammaMainRemainder t) +
+          (countMain u-countMain t-R)| := by unfold gammaMainRemainder; congr 1; ring
+    _ ≤ |gammaMainRemainder u-gammaMainRemainder t| +
+          |countMain u-countMain t-R| := abs_add_le _ _
+    _ ≤ ε := by linarith
+
 
 /-- Signed zero-count argument increments with the exact smooth gamma count
 subtracted, averaged over the actual base ordinate occurrences. -/
@@ -251,6 +291,109 @@ theorem positiveGapMass_div_width_tendsto_of_sampledArgumentEnergy {R : ℝ → 
   apply tendsto_zero_iff_norm_tendsto_zero.mpr
   simpa only [Function.comp_def,Real.sqrt_sq_eq_abs,Real.sqrt_zero,Real.norm_eq_abs] using
     (Real.continuous_sqrt.continuousAt (x:=0)).tendsto.comp hs
+
+/-- The right endpoint continues past the observation height. Base ordinates still
+run over exactly the same multiplicity copies in the positive cutoff. -/
+def unclippedSampledArgumentIncrement (T R : ℝ) : ℝ :=
+  (∑ i : Copies T,
+    (discrepancy (copyOrdinate T i + R / unfoldingScale T) - discrepancy (copyOrdinate T i))) /
+    unfoldedCutoff T
+
+/-- The cutoff affects at most one unit band when the physical width is at most one.
+The estimate is uniform in this width and includes ordinates at the observation height. -/
+theorem exists_sampledArgument_clip_bound :
+    ∃ C : ℝ, 0 < C ∧ ∀ T R : ℝ, 9 ≤ T → 1 ≤ Real.log T →
+      0 ≤ R / unfoldingScale T → R / unfoldingScale T ≤ 1 →
+      |sampledArgumentIncrement T R - unclippedSampledArgumentIncrement T R| ≤
+        C * (Real.log T / T) := by
+  classical
+  obtain ⟨A, hA, harg⟩ := exists_abs_discrepancy_le_log
+  obtain ⟨B, hB, hband⟩ := ActualZeroBandCount.exists_band_count_bound
+  refine ⟨24 * Real.pi * A * B, by positivity, ?_⟩
+  intro T R hT hL hH₀ hH₁
+  let H := R / unfoldingScale T
+  let t : Copies T → ℝ := copyOrdinate T
+  let d (i : Copies T) := discrepancy (min T (t i + H)) - discrepancy (t i + H)
+  have hT₀ : 0 < T := by linarith
+  have hL₀ : 0 < Real.log T := by linarith
+  have hD : 0 < unfoldedCutoff T :=
+    div_pos (mul_pos hT₀ hL₀) (by positivity)
+  have hH : 0 ≤ H := hH₀
+  have hH' : H ≤ 1 := hH₁
+  have hbudget (u : ℝ) (hu : 0 ≤ u) (hv : u ≤ T + 1) :
+      |discrepancy u| ≤ 3 * A * Real.log T := by
+    have hx : u + 4 ≤ T*T := by nlinarith [sq_nonneg (T - 1)]
+    have hlog := Real.log_le_log (by positivity : 0 < u + 4) hx
+    rw [Real.log_mul hT₀.ne' hT₀.ne'] at hlog
+    calc
+      _ ≤ A * (1 + Real.log (u + 4)) := harg u hu
+      _ ≤ A * (3 * Real.log T) := mul_le_mul_of_nonneg_left (by linarith) hA.le
+      _ = _ := by ring
+  have hd (i : Copies T) : |d i| ≤ (6 * A * Real.log T) *
+      (if T - 1 < t i then (1 : ℝ) else 0) := by
+    have ht₀ : 0 < t i := (mem_cutoff.mp i.1.property).2.1
+    have ht : t i ≤ T := (mem_cutoff.mp i.1.property).2.2
+    by_cases hi : T - 1 < t i
+    · rw [if_pos hi, mul_one]
+      have he : 0 ≤ min T (t i + H) := le_min hT₀.le (by linarith)
+      have he' : min T (t i + H) ≤ T + 1 :=
+        (min_le_left _ _).trans (by linarith)
+      have ha := hbudget _ he he'
+      have hb := hbudget (t i + H) (by linarith) (by linarith)
+      exact (abs_sub _ _).trans (by linarith only [ha, hb])
+    · have he : t i + H ≤ T := by linarith [le_of_not_gt hi]
+      simp [d, min_eq_right he, hi]
+  have hs : |∑ i : Copies T, d i| ≤ 12 * A * B * (Real.log T)^2 := by
+    calc
+      _ ≤ ∑ i : Copies T, |d i| := Finset.abs_sum_le_sum_abs _ _
+      _ ≤ ∑ i : Copies T, (6 * A * Real.log T) *
+          (if T - 1 < t i then (1 : ℝ) else 0) := Finset.sum_le_sum (fun i _ => hd i)
+      _ = (6 * A * Real.log T) *
+          (((Finset.univ : Finset (Copies T)).filter (fun i => T - 1 < t i)).card : ℝ) := by
+        rw [← Finset.mul_sum, Finset.sum_boole]
+      _ ≤ (6 * A * Real.log T) * (Ncount (T-1) T : ℝ) :=
+        mul_le_mul_of_nonneg_left (ActualZeroBandCount.copy_band_card_le T (T-1)) (by positivity)
+      _ ≤ (6 * A * Real.log T) * (B * (1+1) * Real.log T) :=
+        mul_le_mul_of_nonneg_left (hband T 1 hT zero_le_one (by linarith)) (by positivity)
+      _ = _ := by ring
+  have he : sampledArgumentIncrement T R - unclippedSampledArgumentIncrement T R =
+      (∑ i : Copies T, d i) / unfoldedCutoff T := by
+    unfold sampledArgumentIncrement sampledHeightIncrement unclippedSampledArgumentIncrement
+    rw [← sub_div, ← Finset.sum_sub_distrib]
+    congr 1
+    apply Finset.sum_congr rfl
+    intro i _
+    dsimp [d, t, H]
+    ring
+  rw [he, abs_div, abs_of_pos hD]
+  calc
+    _ ≤ 12 * A * B * (Real.log T)^2 / unfoldedCutoff T :=
+      div_le_div_of_nonneg_right hs hD.le
+    _ = _ := by
+      unfold unfoldedCutoff
+      field_simp [hT₀.ne', hL₀.ne', Real.pi_ne_zero] <;> ring
+
+/-- The two sampling conventions have the same signed limit for every moving
+width that eventually lies in the physical unit interval. -/
+theorem sampledArgument_clip_difference_tendsto {R : ℝ → ℝ}
+    (hR₀ : ∀ᶠ T : ℝ in atTop, 0 ≤ R T / unfoldingScale T)
+    (hR₁ : ∀ᶠ T : ℝ in atTop, R T / unfoldingScale T ≤ 1) :
+    Tendsto (fun T => sampledArgumentIncrement T (R T) - unclippedSampledArgumentIncrement T (R T))
+      atTop (𝓝 0) := by
+  obtain ⟨C, _, h⟩ := exists_sampledArgument_clip_bound
+  have hlog : Tendsto (fun T : ℝ => Real.log T / T) atTop (𝓝 0) :=
+    Real.isLittleO_log_id_atTop.tendsto_div_nhds_zero
+  have hu : Tendsto (fun T : ℝ => C * (Real.log T / T)) atTop (𝓝 0) := by
+    simpa only [mul_zero] using hlog.const_mul C
+  apply tendsto_zero_iff_norm_tendsto_zero.mpr
+  apply squeeze_zero' (Eventually.of_forall (fun _ => norm_nonneg _)) _ hu
+  filter_upwards [eventually_ge_atTop (9 : ℝ),
+    Real.tendsto_log_atTop.eventually (eventually_ge_atTop (1 : ℝ)), hR₀, hR₁] with T hT hL h₀ h₁
+  simpa only [Real.norm_eq_abs] using h T (R T) hT hL h₀ h₁
+
+/-- info: 'RiemannResearch.Analysis.MontgomeryPositiveGap.sampledArgument_clip_difference_tendsto' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms sampledArgument_clip_difference_tendsto
 
 /-- Positive rational widths suffice for the actual signed argument test. -/
 theorem positiveGapPCC_iff_rationalSampledArgumentIncrement :

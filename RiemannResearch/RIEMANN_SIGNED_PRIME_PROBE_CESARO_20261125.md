@@ -225,6 +225,136 @@ The reverse triangle inequality in \(L^2(dt/T)\) further gives, for \(0<q<1/2\),
 \]
 At \(q=1/4\) the combined residual has lower bound \(1/8\), and the squared remainder alone has lower bound \((2-\sqrt3)/8\). These bounds concern fixed microscopic intervals of the actual zeros and use no conjecture.
 
+## Microscopic Fourier characters and a modular count criterion
+
+Write \(L=\log T\), \(D=TL/(2\pi)\), \(h=2\pi q/L\) and \(t_i=\gamma_i\).
+For each zero occurrence set \(v_i=\min(T,t_i+h)\),
+\(K_i=N(t_i,v_i]\), and \(G_i=\mathrm{smoothCount}(v_i)-\mathrm{smoothCount}(t_i)\).
+All occurrences at the base height are excluded from \(K_i\). Every occurrence
+at the upper endpoint is included.
+
+### What the circle map sees
+
+The exact sampled discrepancy increment is \(K_i-G_i\). At every integer
+frequency \(k\), its character is exactly \(\exp(-2\pi i kG_i)\).
+For fixed \(q>0\) the empirical distribution modulo one therefore converges
+to the point mass at \(-q\bmod 1\). On \(\delta T\le t_i\le(1-\delta)T\)
+the clipped gamma increment tends uniformly to \(q\), by Stirling's estimate
+for the derivative of the gamma main term. Riemann–von Mangoldt gives
+asymptotic mass \(2\delta\) for the discarded strips when \(0<\delta<1/2\).
+The characters have modulus one, so taking \(\delta\downarrow0\) proves
+convergence even in mean chordal distance. The modular identity erases
+\(K_i\) exactly, including unusually large neighbor counts.
+
+For an ordinate character \(f_u(t)=\exp(iut)\) use the same clipping and set
+\(A_T^{f_u}=D^{-1}\sum_i(f_u(v_i)-f_u(t_i))\). For \(u=\log(n/m)\), let
+\(M(n,m)\) denote the repository's centered rational FMZ main term. Then
+\[
+ L^2 A_T^{f_u}(q)\ \longrightarrow\ 4\pi^2 i q u\,M(n,m).
+\]
+Indeed the raw sum differs from
+\((e^{iuh}-1)\sum_i e^{iu t_i}\) by at most
+\(|u|h\,N(T-h,T]\). The raw difference is bounded for fixed \(u,q\).
+Multiply the centered rational FMZ limit by \(L(e^{iuh}-1)\to2\pi iqu\).
+At \(u=0\) the increment vanishes identically. For \(n>1,\ m=1\),
+the limit becomes \(-2\pi i q\,(\log n)\Lambda(n)/\sqrt n\).
+
+For a moving finite Fourier test \(f_T(t)=\sum_j c_j e^{iu_jt}\) one has
+\[
+ |A_T^{f_T}(q)|\le {N(0,T]\over D}\,{2\pi q\over L}
+                         \sum_j |c_j|\,|u_j|.
+\]
+Consequently any such family with sampled error
+\(A_T^{f_T}(q)-A_T(q)\to0\) that recovers the proposed nonzero sine deficit
+must satisfy
+\[
+ \liminf_{T\to\infty}L^{-1}\sum_j|c_j|\,|u_j|
+ \ \ge\ {1\over 2\pi q}\int_0^q
+                   \left({\sin\pi x\over\pi x}\right)^2 dx .
+\]
+This gives a quantitative restriction on direct approximation by one-point
+FMZ tests. The upper and lower ends of the observation interval are the same
+in this inequality as in the signed pair statistic.
+
+For the original real-valued discrepancy, removing the upper clipping changes
+\(A_T(q)\) by \(O(\log T/T)\), uniformly whenever \(0\le h\le1\).
+Only the last physical unit interval contributes, with \(O(\log T)\) base
+occurrences. The all-heights discrepancy estimate bounds the change of
+each row by \(O(\log T)\); division by \(D\) gives the claim.
+
+### A single harmonic retaining the neighbor count
+
+For integer \(m\ge2\) define
+\[
+ H_{T,m}(q)=\frac{m}{2\pi D}\sum_i\sin(2\pi K_i/m),\qquad
+ U_{3,T}(q)=D^{-1}\sum_i K_i^3 .
+\]
+Only the first character of the integer count modulo \(m\) is used. The
+following signed error bound is valid at finite height:
+\[
+ 0\le P_T(q)-H_{T,m}(q)
+       \le \frac{2\pi^2}{3m^2}U_{3,T}(q).
+\]
+It follows by summing \(x-x^3/6\le\sin x\le x\) for \(x=2\pi K_i/m\).
+A second-moment form gives the upper bound
+\(\pi D^{-1}\sum_i K_i^2/m\).
+At each fixed \(q\) the third moment is uniformly bounded for all sufficiently
+large \(T\). Every neighbor counted by \(K_i\) has Cauchy weight at least
+\(1/(1+(2\pi q)^2)\). Apply Lamzouri, Lemma 2.3, with moment exponent 3
+and \(N(T)/D\to1\). This last published analytic input is external to the
+Lean finite inequality.
+
+It follows that for *any* preassigned integer-valued \(m(T)\to\infty\), however
+slowly, ordinary positive-gap PCC is equivalent to
+\[
+ \lim_{T\to\infty}H_{T,m(T)}(q)
+ =q-\int_0^q\left(\frac{\sin \pi x}{\pi x}\right)^2dx
+ \quad\text{for every positive rational }q .
+\]
+For the explicit integer modulus \((1+N(T))^2\), the elementary estimates
+\(K_i\le N(T)\) and \(\sum_i K_i^3\le N(T)^4\) alone yield a uniform
+error \(\le 2\pi^2/(3D)\) for every positive width. The limiting value of
+the signed modular statistic on the actual zero occurrences remains open.
+To express the same test on one fixed orbit, let \(\alpha\) be irrational
+and \(z_\alpha(t)=e^{2\pi i\alpha N(0,t]}\). Choose integers \(r_j,a_j\)
+such that \(\epsilon_j=r_j\alpha-a_j\ne0\) tends to zero, for instance by
+continued fractions. For each row,
+\[
+ z_\alpha(v_i)^{r_j}\overline{z_\alpha(t_i)^{r_j}}
+    =e^{2\pi i\epsilon_j K_i}.
+\]
+The imaginary part divided by \(2\pi\epsilon_j\) has the same error bound
+with \(1/m^2\) replaced by \(\epsilon_j^2\), since \(\sin(x)/x\) is even.
+Orbit density supplies the frequencies. To obtain the conjecture one must
+compute the linear coefficient of the signed return statistic at those
+frequencies. Mere convergence of the unscaled character to one holds for
+every bounded first moment and leaves that coefficient undetermined.
+
+The fixed orbit can also be applied directly to the real discrepancy. Set
+\(w_\alpha(t)=e^{2\pi i\alpha S_*(t)}\) and
+\[
+ Z_{i,j}=w_\alpha(v_i)^{r_j}\overline{w_\alpha(t_i)^{r_j}}\,e^{2\pi i a_j G_i}.
+\]
+The integer \(a_jK_i\) drops out, so \(Z_{i,j}=e^{2\pi i\epsilon_j(K_i-G_i)}\)
+exactly. The gamma density on \([0,T]\) is \(O(1+\log T)\), hence
+\(\max_i|G_i|=O_q(1)\). The same third-moment argument gives the signed
+error estimate
+\[
+ \left|A_T(q)-\frac{1}{2\pi\epsilon_j D}\sum_i\Im Z_{i,j}\right|
+ \le \frac{(2\pi\epsilon_j)^2}{6D}\sum_i |K_i-G_i|^3
+ \ll_q \epsilon_j^2 .
+\]
+Thus along *any* \(j=j(T)\to\infty\) the linear term at the return frequencies
+would have to be \(-\int_0^q\mathrm{sinc}^2(\pi x)\,dx\). This last display
+uses the paper's convention \(\mathrm{sinc}(v)=\sin(v)/v\).
+
+Fujii's shifted-argument estimate bounds the normalized sampled shift by a
+constant. The sine coefficient requires an asymptotic at fixed unfolded width.
+
+[Ford–Meng–Zaharescu, one-point modular sampling](https://arxiv.org/abs/1511.06814) ·
+[Lamzouri, Lemma 2.3](https://arxiv.org/html/2611.14486v1#S2) ·
+[Fujii, pp. 85–86, right-continuous argument and shifted discrete bound](https://rikkyo.repo.nii.ac.jp/record/8721/files/AA00610867_53-01_05.pdf)
+
 ## Verification scope
 
 The finite prime kernel, fixed-width limit and pointwise moving-width arithmetic used above have Lean proofs in the linked repository modules. The unconditional use of Fujii's and Selberg's second moments, the oriented measure identity with its uniform endpoint estimates, and the microscopic equivalence with conventional argument variance are proved here as mathematical deductions. The two companion modules treat the averaged prime estimate and the signed transfer for the actual normalized statistics. The signed transfer retains the centered actual-zero estimate as an explicit hypothesis. The classical estimates furnishing it above are external analytic inputs to Lean.

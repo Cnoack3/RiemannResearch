@@ -1,5 +1,23 @@
 # Quantitative FMZ and product-test cancellation: theorem catalog supplement
 
+## Microscopic sampling of Fourier modes and increment characters
+
+[ActualZeroMicroscopicFMZ](Analysis/ActualZeroMicroscopicFMZ.lean) proves the
+scaled clipped increment limit for every fixed rational logarithmic ordinate
+frequency. The finite Fourier bound quantifies the first absolute frequency
+moment needed for a nonvanishing sampled increment.
+
+[MontgomerySampledModularTrace](Analysis/MontgomerySampledModularTrace.lean)
+proves mean concentration of each discrepancy character at the character of
+the negative width. The same module proves that one sine harmonic of the
+forward integer count at modulus `(Ncount 0 T + 1)^2` recovers the ordinary
+positive-gap mass to within `(2π)^2/(6D)`, uniformly over positive widths.
+The sine-kernel limit of this harmonic is open. The error for subunit physical
+widths when the upper clipping is removed is bounded in
+[MontgomerySampledArgumentError](Analysis/MontgomerySampledArgumentError.lean).
+The [signed-probe note](RIEMANN_SIGNED_PRIME_PROBE_CESARO_20261125.md#microscopic-fourier-characters-and-a-modular-count-criterion)
+gives the slowly growing modulus refinement using the published third row moment.
+
 ## Sharp dyadic Wasserstein bounds from first moments (25 November 2026)
 
 [DyadicZeroWasserstein.lean](Analysis/DyadicZeroWasserstein.lean) uses the

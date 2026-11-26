@@ -2161,6 +2161,9 @@ import RiemannResearch.Analysis.ActualPrimeTorusFMZSeries
 import RiemannResearch.Analysis.ActualPrimeTorusFMZPoisson
 import RiemannResearch.Analysis.ActualPrimeTorusFMZ
 import RiemannResearch.Analysis.ActualZeroLoglogRate
+import RiemannResearch.Analysis.ActualZeroMicroscopicFMZ
+import RiemannResearch.Analysis.FirstHarmonicCounts
+import RiemannResearch.Analysis.MontgomerySampledModularTrace
 import RiemannResearch.RH.HorizontalEnergyCriterion
 import RiemannResearch.Analysis.ActualFixedFrequencyLandau
 import RiemannResearch.Analysis.ActualOrdinateAngularLaw

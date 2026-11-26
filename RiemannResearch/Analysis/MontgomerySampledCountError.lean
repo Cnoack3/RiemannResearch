@@ -141,6 +141,37 @@ private theorem eventually_smooth_interior {H : ℝ → ℝ}
   rw [hrow, ← div_self hlog.ne', ← sub_div, abs_div, abs_of_pos hlog]
   exact (div_le_div_of_nonneg_right hbound hlog.le).trans hεT.le
 
+/-- On every fixed bulk range the elementary clipped drift converges uniformly
+to the fixed unfolded width at actual ordinate occurrences. -/
+theorem eventually_countMain_increment_interior {R δ ε : ℝ}
+    (hR : 0 < R) (hδ : 0 < δ) (hε : 0 < ε) :
+    ∀ᶠ T : ℝ in atTop, ∀ i : Copies T, δ*T ≤ copyOrdinate T i →
+      copyOrdinate T i ≤ (1-δ)*T →
+      |countMain (min T (copyOrdinate T i + R/unfoldingScale T)) -
+        countMain (copyOrdinate T i) - R| ≤ ε := by
+  let H := fun T : ℝ => R / unfoldingScale T
+  have hs : Tendsto unfoldingScale atTop atTop :=
+    Real.tendsto_log_atTop.atTop_div_const (by positivity)
+  have h₀ : Tendsto H atTop (𝓝 0) := tendsto_const_nhds.div_atTop hs
+  have hHT : Tendsto (fun T : ℝ => H T / T) atTop (𝓝 0) :=
+    h₀.div_atTop tendsto_id
+  have hH : ∀ᶠ T : ℝ in atTop, 0 < H T := by
+    filter_upwards [eventually_gt_atTop (1 : ℝ)] with T hT
+    exact div_pos hR (scale_pos hT)
+  filter_upwards [eventually_smooth_interior hH hHT hδ (div_pos hε hR),
+    eventually_gt_atTop (1 : ℝ)] with T hb hT i hl hu
+  have he : H T * unfoldingScale T = R := div_mul_cancel₀ _ (scale_pos hT).ne'
+  have h := hb i hl hu
+  dsimp only [smoothRow] at h
+  rw [he] at h
+  have heq (d : ℝ) : |d / R - 1| = |d-R| / R := by
+    calc
+      _ = |(d-R)/R| := by congr 1; field_simp [hR.ne'] <;> ring
+      _ = _ := by rw [abs_div, abs_of_pos hR]
+  rw [heq] at h
+  simpa only [div_mul_cancel₀ _ hR.ne'] using mul_le_mul_of_nonneg_right h hR.le
+
+
 /-- On all moving positive widths occupying a vanishing fraction of the
 cutoff, the smooth increments sampled at actual occurrences contribute
 one per unfolded width, including fixed and shrinking widths. -/
