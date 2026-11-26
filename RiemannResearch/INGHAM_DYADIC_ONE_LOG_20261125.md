@@ -130,6 +130,54 @@ At the right edge \(K=4\), the gap and divisor majorant give \(|F(4+it)|\ll S^{-
 
 The shift from \(u\) to \(d\) costs a constant since \(|E'|\leq3\), \(|d-u|\leq1/L\), \(B_u\geq B_d\), and the derivative of \(px/\kappa(x)\) is bounded on \([0,1/2]\). Hence the change of power on \(B_d\leq1+L\) costs at most \((1+L)^{O(1/L)}\). Finally, if the target count is positive, the Vinogradov–Korobov zero-free region gives \(1-\sigma\gg L^{-2/3}(\log L)^{-1/3}\). Since \(E(d)\geq2(1-\sigma)\) and \(pd/\kappa(d)\leq1\), even the refined main factor \(S^{E(d)} B_d^{-pd/\kappa(d)}\) dominates \(L\). If the count is zero the conclusions hold directly. Multiplication by \(2L\) proves (1) and (2), uniformly through both ends of the range.
 
+## Uniform cumulative refinement on the closed half-strip
+
+Write \(q=3(1-\sigma)/(2-\sigma)\), \(L=\log T\), and
+\(N(\sigma,T)=\#\{\rho:0<\Im\rho\le T,\ \Re\rho\ge\sigma\}\) with
+multiplicity. Combining (2) with the known right-strip estimates yields
+\[
+ N(\sigma,T)\ll (T\log T)^q
+ \qquad(T\ge2,\quad 1/2\le\sigma\le1)
+\]
+with one absolute constant. For \(1/2\le\sigma\le15/16\), one has
+\(q\ge3/17\) and \(2(1-\sigma)\ge1/8\). Since \(0\le q\le1\), the
+logarithmic factor in (2) is at most \(8(\log S)^q\).
+The dyadic windows \(S=T/2^j\) therefore sum with geometric constant
+at most \(1/(1-2^{-3/17})\). The finitely many zeros below the starting
+height are absorbed uniformly.
+
+For \(15/16\le\sigma\le1\), put \(h=1-\sigma\). Chourasiya and
+Simonič, equation (119) and Table 4, give
+\(N(\sigma,T)\ll T^{8h/3}L^5+L^2\) at large \(T\), uniformly here.
+The exponent gap satisfies
+\[
+ q-8h/3=h\bigl(3/(1+h)-8/3\bigr)\ge 8h/51.
+\]
+If the count is positive, Vinogradov–Korobov gives
+\(hL\gg(L/\log L)^{1/3}\), so \(T^{q-8h/3}\) absorbs every fixed
+power of \(L\) uniformly. This gives the stronger \(N(\sigma,T)\ll T^q\)
+on this right strip. Compact heights are absorbed by increasing the
+constant. This cumulative result is a paper corollary of (2) and the
+two cited right-strip theorems.
+[Chourasiya–Simonič, equation (119)](https://arxiv.org/html/2507.15184v2)
+· [Mossinghoff–Trudgian–Yang, Theorem 1.1](https://arxiv.org/abs/2212.06867)
+
+## An equivalent integrated target without a separate cap condition
+
+Let \(W_S(v)=\sum_{S<\gamma\le2S}m_\rho(\beta-v)_+\).
+The one-log dyadic count implies
+\[
+ W_S(v)\le (C/3)(2-v)^2(S^{q(v)}-1).
+\]
+Indeed \(W_S(v)=\int_v^1 N_+(s;S,2S)\,ds\), and the substitution
+\(z=q(s)\) has \(|ds/dz|=(2-s)^2/3\le(2-v)^2/3\).
+Conversely assume \(W_S(v)\ll S^{q(v)}-1\) uniformly. For
+\((\sigma-1/2)\log S\ge1\), put \(v=\sigma-1/\log S\). Each counted
+zero contributes at least \(1/\log S\), and
+\(S^{q(v)}\le e^3 S^{q(\sigma)}\) since \(|q'|\le3\). At smaller
+displacements use the total count and \(S\le e^3 S^{q(\sigma)}\).
+This proves equivalence and retains the terminal value zero at \(v=1\).
+
 ## Consequence and formal status
 
 The inequality \(E(d)\leq1-4d/3\) and dyadic summation give the global one-logarithm Selberg bound of slope \(4/3\). The linear exponent is at least \(1/3\), so the dyadic series is uniformly geometric. This is one finite slope. The repository criterion for RH requires arbitrarily large slopes.

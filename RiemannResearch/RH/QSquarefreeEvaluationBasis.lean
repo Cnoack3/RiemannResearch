@@ -371,6 +371,47 @@ theorem movingCorrection_sq_le_complete_screened_diagonal (N n : ℕ) :
   exact (movingCorrection_sq_le_coefficient_diagonal N n).trans
     (mul_le_mul_of_nonneg_right (by linarith) (reconstructionDiagonal_nonneg N n))
 
+/-- Complete screening controls every signed finite combination of physical sites.
+The squared norm on the right retains the cross terms between their evaluation
+rows, including cancellation for differences of coordinates. -/
+theorem movingCorrection_sum_sq_le_complete_screened (N : ℕ) (sites : Finset ℕ)
+    (c : ℕ → ℝ) :
+    (∑ n ∈ sites, c n * qSequence (movingCorrection N) n) ^ 2 ≤
+      (error N - completeScreeningGain N) *
+        ∑ i : Fin (N + 1),
+          (∑ n ∈ sites, c n * (qSequence (orderedVector N i) n / ((i.val : ℝ) + 2))) ^ 2 := by
+  classical
+  let a (i : Fin (N + 1)) := ((i.val : ℝ) + 2) * inner ℝ (movingCorrection N) (orderedVector N i)
+  let v (i : Fin (N + 1)) :=
+    ∑ n ∈ sites, c n * (qSequence (orderedVector N i) n / ((i.val : ℝ) + 2))
+  have hs : (∑ n ∈ sites, c n * qSequence (movingCorrection N) n) = ∑ i, a i * v i := by
+    calc
+      _ = ∑ n ∈ sites, ∑ i : Fin (N + 1),
+          c n * (inner ℝ (movingCorrection N) (orderedVector N i) *
+            qSequence (orderedVector N i) n) := by
+        apply Finset.sum_congr rfl
+        intro n hn
+        rw [movingCorrection_physical_synthesis, Finset.mul_sum]
+      _ = ∑ i : Fin (N + 1), ∑ n ∈ sites,
+          c n * (inner ℝ (movingCorrection N) (orderedVector N i) *
+            qSequence (orderedVector N i) n) := Finset.sum_comm
+      _ = _ := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        dsimp only [v]
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro n hn
+        dsimp only [a]
+        have hw : (i.val : ℝ) + 2 ≠ 0 := ne_of_gt (by positivity)
+        field_simp [hw] <;> ring
+  have ha : (∑ i, (a i) ^ 2) ≤ error N - completeScreeningGain N := by
+    simpa only [a, mul_pow] using
+      (le_sub_iff_add_le.mpr (movingCorrection_weighted_coefficients_complete_screened N))
+  rw [hs]
+  exact (Finset.sum_mul_sq_le_sq_mul_sq Finset.univ a v).trans
+    (mul_le_mul_of_nonneg_right ha (Finset.sum_nonneg fun _ _ => sq_nonneg _))
+
 /-- A finite cutoff realizes the complete screened product to any positive tolerance.
 This supplies cutoff selection, not the still-open uniform arithmetic product bound. -/
 theorem exists_screening_cutoff (N n L : ℕ) (η : ℝ) (hη : 0 < η) :

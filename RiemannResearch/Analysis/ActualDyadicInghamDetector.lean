@@ -76,6 +76,43 @@ theorem dyadicInghamCutoff_refined {S B v : ℝ} (hS : 0 < S) (hB : 0 < B)
       Real.rpow_sub hS, Real.rpow_one]
     field_simp [hS.ne']
 
+/-- On a fixed strip separated from one by η, the refined right-hand side
+is bounded uniformly by a constant times the single curved power (S log S)^q.
+For example η = 1/16 gives the explicit constant eight. -/
+theorem dyadicInghamRefined_le_log_power {S σ η : ℝ} (hS : 1 < S) (hη : 0 < η)
+    (hσ : σ ∈ Icc (1/2 : ℝ) (1-η)) :
+    let q := 3*(1-σ)/(2-σ)
+    S ^ q * Real.log S * (1+2*(1-σ)*Real.log S) ^ (q-1) ≤
+      (2*η)⁻¹ * (S*Real.log S) ^ q := by
+  let q := 3*(1-σ)/(2-σ)
+  let L := Real.log S
+  change S ^ q * L * (1+2*(1-σ)*L) ^ (q-1) ≤ (2*η)⁻¹ * (S*L) ^ q
+  have hpos : 0 < S := zero_lt_one.trans hS
+  have hL : 0 < L := Real.log_pos hS
+  have hd : 0 < 2-σ := by linarith [hσ.2]
+  have hq0 : 0 ≤ q := div_nonneg (by linarith [hσ.2]) hd.le
+  have hq1 : q ≤ 1 := (div_le_iff₀ hd).2 (by linarith [hσ.1])
+  have hbase : (2*η)*L ≤ 1+2*(1-σ)*L := by
+    have h := mul_le_mul_of_nonneg_right (show 2*η ≤ 2*(1-σ) by linarith [hσ.2]) hL.le
+    linarith only [h]
+  have hpower := Real.rpow_le_rpow_of_nonpos (mul_pos (mul_pos two_pos hη) hL)
+    hbase (sub_nonpos.mpr hq1)
+  have hfactor : (2*η) ^ (q-1) ≤ (2*η)⁻¹ := by
+    rw [← Real.rpow_neg_one]
+    exact Real.rpow_le_rpow_of_exponent_ge (mul_pos two_pos hη)
+      (by linarith [hσ.1, hσ.2]) (by linarith only [hq0])
+  have hmerge : L ^ (q-1) * L = L ^ q := by
+    rw [← Real.rpow_add_one hL.ne', sub_add_cancel]
+  calc
+    _ ≤ S ^ q * L * ((2*η)*L) ^ (q-1) :=
+      mul_le_mul_of_nonneg_left hpower (mul_nonneg (Real.rpow_nonneg hpos.le _) hL.le)
+    _ = (2*η) ^ (q-1) * (S*L) ^ q := by
+      rw [Real.mul_rpow (mul_nonneg (by norm_num) hη.le) hL.le, Real.mul_rpow hpos.le hL.le,
+        ← hmerge]
+      ring
+    _ ≤ (2*η)⁻¹ * (S*L) ^ q :=
+      mul_le_mul_of_nonneg_right hfactor (Real.rpow_nonneg (mul_nonneg hpos.le hL.le) _)
+
 /-- Moving the counting threshold left by h costs at most S^(3h). -/
 theorem dyadicIngham_threshold_shift {S v σ : ℝ} (hS : 1 ≤ S)
     (hv : v ≤ σ) (hσ : σ ≤ 1) :
@@ -179,6 +216,7 @@ theorem dyadicInghamOneLog_of_detectorExcess
 
 #print axioms dyadicInghamCutoff_balance
 #print axioms dyadicInghamCutoff_refined
+#print axioms dyadicInghamRefined_le_log_power
 #print axioms dyadicIngham_threshold_shift
 #print axioms dyadicInghamOneLog_of_detectorExcess
 

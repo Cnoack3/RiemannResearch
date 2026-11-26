@@ -110,6 +110,31 @@ theorem horizontalEnergy_le_capped_exponential {T F M q d : ℝ}
       congr 1
       ring_nf
 
+/-- Finite-endpoint correction to the height-normalized horizontal energy.
+The upper endpoint of the displacement interval is exactly one half. -/
+theorem horizontalEnergy_div_height_le_finite_selberg
+    (T C a : ℝ) (hT : 1 < T) (hC : 0 ≤ C) (ha : 0 < a)
+    (hD : SelbergDensityBound T C a) :
+    horizontalEnergy T / T ≤ (4 * C / (a ^ 2 * Real.log T)) *
+      (1 - (1 + a * Real.log T / 2) * Real.exp (-(a * Real.log T) / 2)) := by
+  let M := 2 * C * T * Real.log T
+  let q := a * Real.log T
+  have hT0 := zero_lt_one.trans hT
+  have hL := Real.log_pos hT
+  have htail (t : ℝ) (ht : t ∈ Icc (0 : ℝ) (1 / 2)) :
+      strictTail T t ≤ M * Real.exp (-q * t) := by
+    simpa only [M, q, mul_assoc] using strictTail_of_selbergDensity T C a t hT0 ht hD
+  have hF : strictTail T 0 ≤ M := by
+    simpa using htail 0 (by norm_num)
+  have h := horizontalEnergy_le_capped_exponential (T := T) (F := M) (M := M)
+    (q := q) (d := 0) hF (by dsimp [M]; positivity) (mul_pos ha hL)
+    (by norm_num) (by simp) htail
+  simp only [zero_pow (by decide : (2 : ℕ) ≠ 0), mul_zero, zero_add,
+    add_zero, Real.exp_zero, one_mul] at h
+  apply (div_le_div_of_nonneg_right h hT0.le).trans_eq
+  dsimp only [M, q]
+  field_simp [hT0.ne', ha.ne', hL.ne'] <;> ring
+
 /-- At the analytic crossing d=log(M/F)/q the rescaled bound has a closed
 polynomial numerator. It can be immediately applied with q=a log T. -/
 theorem horizontalEnergy_log_crossing {T F M q : ℝ}
