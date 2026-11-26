@@ -171,17 +171,17 @@ import RiemannResearch.RH.PhysicalHeadBoundaryCoordinates
 import RiemannResearch.RH.MixedParityDigammaParseval
 import RiemannResearch.RH.CanonicalCarryClosure
 import RiemannResearch.RH.CanonicalCarryGram
+import RiemannResearch.RH.MixedParityQuotientDescent
 
 /-!
 # Chronological reconstruction of the categorical RH development
 
 This module rechecks the authored declarations in the categorical CRT, carry,
 quotient, section, and boundary development and its indexed applications.
-The inventory is pinned to `91f07fdffb60bc8a9b820800dbfa3ef33b14278d` on the RH branch.
-Each commit heading gives the first recorded occurrence of the following
-source declarations. Among files introduced together, historical imports order
-the modules and path order breaks independent ties. Declarations within each
-file follow their source order at introduction.
+The original inventory uses `91f07fdffb60bc8a9b820800dbfa3ef33b14278d`.
+The final entry adds the physical quotient descent at `e684cf2b1d15c084044dff7d3e15cb406bac2ad6`.
+Each heading gives the first recorded occurrence. Historical imports order modules
+within a commit, paths break ties, and declarations follow their original source order.
 
 The Lean kernel checks the current stored proof or defining term against its
 type in the imported dependency environment. Each check uses a temporary
@@ -4093,3 +4093,34 @@ end RiemannResearch.CategoryTheory.Rebuild
     rawUnitGramCost_iSup,
     riemannHypothesis_iff_rawUnitGramCost_saturates,
     rawUnitGram_minimizers_tendsto]
+
+-- 2026-11-25 | e684cf2b1d15c084044dff7d3e15cb406bac2ad6 | Reconstruct the mixed parity projection by infinite physical quotient descent
+#recheck_categorical RiemannResearch.RH.MixedParityDigammaParseval
+  in RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis.DigammaParseval [
+    hasSum_parity_modes]
+
+#recheck_categorical RiemannResearch.RH.MixedParityQuotientDescent
+  in RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis.DigammaParseval [
+    projectedParity,
+    parityLayerCoefficient,
+    parityLayerPrefix,
+    physicalKernelInMixed,
+    headLayer_eq_inner,
+    inner_parityLayerPrefix,
+    parityLayerPrefix_quotient,
+    parityLayerPrefix_unique,
+    hasSum_parityLayerProjection,
+    parityLayerPrefix_tendsto,
+    paritySiteRow,
+    mixedSite,
+    paritySiteRow_eq,
+    parity_site_hasSum,
+    physicalQuotientRestriction,
+    parityLayerPrefix_compatible,
+    parityLayerPrefix_site,
+    parityLayerCoefficient_from_site,
+    parityLayerCoefficient_eq_ambient,
+    parityLayerPrefix_norm_sq,
+    parityLayerPrefix_lift_cost,
+    parityLayerPrefix_error,
+    parityLayerPrefix_unique_minimum]

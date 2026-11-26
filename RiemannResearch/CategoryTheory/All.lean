@@ -43,6 +43,7 @@ import RiemannResearch.RH.MixedConductorL1Closure
 import RiemannResearch.RH.MixedConductorSplitExact
 import RiemannResearch.RH.MixedConductorSupportSnake
 import RiemannResearch.RH.MixedParityCarry
+import RiemannResearch.RH.MixedParityQuotientDescent
 import RiemannResearch.RH.PrimeSupportAlgebraDescent
 import RiemannResearch.RH.QInfiniteSquarefreeCarry
 import RiemannResearch.RH.SiteGramStrictStages
@@ -57,4 +58,6 @@ prime-support quotients have forward maps with algebraic and Hausdorff
 descent. This interface also exports the finite CRT presentations and their
 refinements, infinite carry expansions, affine head tower, screened algebra
 and bimodule, the layer and ambient snakes, and the finite Gram criteria.
+The physical quotient tower reconstructs the mixed projection of parity from
+its compatible minimum-norm representatives.
 -/
