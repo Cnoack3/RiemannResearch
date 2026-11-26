@@ -295,4 +295,37 @@ info: 'RiemannResearch.Analysis.ActualZeroOrdinate.eventually_primeOrbit_gap_cou
 #guard_msgs (whitespace := lax) in
 #print axioms eventually_primeOrbit_gap_count_precision
 
+/-- For finite real linear combinations of prime-orbit characters, the horizontal
+reconstruction costs at most the sum of the absolute coefficients times `C/T`.
+The test, its support, and its Taylor order may be chosen at each height. -/
+theorem eventually_weighted_primeOrbit_gap_count_precision {ι : Type*} :
+    ∃ C : ℝ, 0 < C ∧ ∀ᶠ T : ℝ in atTop,
+      ∀ (s : Finset ι) (c : ι → ℝ) (P : ι → Finset ℕ) (a : ι → ℕ → ℤ) (J k : ℕ),
+        let u := fun b => PrimePhaseTorus.primeFrequency (P b) (a b)
+        let L := Real.log T
+        (∀ b ∈ s, |u b| ≤ (4/3)*L) → 2*L ≤ (k:ℝ)*Real.log L →
+        ((k:ℝ)+4)*(1+(4/3)*Real.sqrt L)*Real.log L ≤ 2*((J:ℝ)+1) →
+        |∑ b ∈ s, c b * (((∑ i : Copies T, ∑ j : Copies T,
+            Real.cos ((copyOrdinate T i - copyOrdinate T j) * u b)) -
+            ‖reconstructedOrdinateSum T (u b) J‖^2) / (Zeta23.Ncount 0 T : ℝ))| ≤
+          (∑ b ∈ s, |c b|) * (C/T) := by
+  obtain ⟨C, hC, hsingle⟩ := eventually_primeOrbit_gap_count_precision
+  refine ⟨C, hC, ?_⟩
+  filter_upwards [hsingle] with T hT
+  intro s c P a J k
+  dsimp only
+  intro hband hk hJ
+  apply (Finset.abs_sum_le_sum_abs _ _).trans
+  rw [Finset.sum_mul]
+  apply Finset.sum_le_sum
+  intro b hb
+  rw [abs_mul]
+  exact mul_le_mul_of_nonneg_left (hT (P b) (a b) J k (hband b hb) hk hJ) (abs_nonneg _)
+
+/--
+info: 'RiemannResearch.Analysis.ActualZeroOrdinate.eventually_weighted_primeOrbit_gap_count_precision' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms eventually_weighted_primeOrbit_gap_count_precision
+
 end RiemannResearch.Analysis.ActualZeroOrdinate

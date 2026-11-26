@@ -28,6 +28,8 @@ Here $1-E>0$. Proving $E=0$, or equivalently $u=\mathbf 1$, would settle the amb
 
 ## Actual positive-gap pair correlation
 
+The current PCC handoff gives the finite prime-energy residual, its quantifiers, and the arithmetic range of the Landau and prime-orbit transfer. [What remains to prove unconditional positive-gap PCC](PCC_REMAINING_PROOF.md)
+
 Let $A(T,q)$ be the signed increment of the counting discrepancy over forward windows of unfolded width $q$, clipped at $T$, averaged over actual zero occurrences with multiplicity and divided by $D(T)=T\log T/(2\pi)$. The exact open limit is
 $$
 \forall q\in\mathbb Q_{>0},\qquad

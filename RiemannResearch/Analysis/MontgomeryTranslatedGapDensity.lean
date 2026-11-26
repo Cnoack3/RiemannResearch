@@ -1,4 +1,5 @@
 import RiemannResearch.Analysis.MontgomeryOrdinateWindowPolarization
+import RiemannResearch.Analysis.MontgomeryPrimeProbeEnergy
 
 /-!
 # Translation averages of positive zeta-zero gaps
@@ -134,5 +135,29 @@ info: 'RiemannResearch.Analysis.MontgomeryPositiveGap.positiveGapPCC_iff_transla
 -/
 #guard_msgs (whitespace := lax) in
 #print axioms positiveGapPCC_iff_translationDeficit
+
+/-- Ordinary positive-gap PCC holds exactly when the measured loss from
+anchoring at a zero agrees asymptotically with the finite prime-probe energy
+at each fixed positive rational width. -/
+theorem positiveGapPCC_iff_translationDeficit_primeEnergy :
+    PositiveGapPCC ↔ ∀ q : ℚ, 0 < q → Tendsto (fun T : ℝ =>
+      rightSmoothedOrdinateCount T q (Real.log T ^ 2) - positiveGapMass T q -
+        MontgomeryPrimeTrace.primeProbeEnergy T q) atTop (𝓝 0) := by
+  rw [positiveGapPCC_iff_translationDeficit]
+  constructor
+  · intro h q hq
+    have hprime := MontgomeryPrimeTrace.primeProbeEnergy_tendsto
+      (q := (q : ℝ)) (by exact_mod_cast hq.le)
+    simpa only [sub_self] using (h q hq).sub hprime
+  · intro h q hq
+    have hprime := MontgomeryPrimeTrace.primeProbeEnergy_tendsto
+      (q := (q : ℝ)) (by exact_mod_cast hq.le)
+    simpa only [sub_add_cancel, zero_add] using (h q hq).add hprime
+
+/--
+info: 'RiemannResearch.Analysis.MontgomeryPositiveGap.positiveGapPCC_iff_translationDeficit_primeEnergy' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms positiveGapPCC_iff_translationDeficit_primeEnergy
 
 end RiemannResearch.Analysis.MontgomeryPositiveGap
