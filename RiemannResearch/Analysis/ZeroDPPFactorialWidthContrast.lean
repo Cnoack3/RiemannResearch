@@ -140,4 +140,61 @@ theorem factorialHalfWidthContrasts_iff_prime_sampled :
     obtain ⟨x, hx, hx'⟩ := (he.and h).exists
     have hfun : sampledFactorialWindowMoment x = unfoldedFactorialWindowMoment := funext fun T => funext (hx T)
     rwa [hfun] at hx'
+
+/-- At each positive width the actual second factorial moment tends to the
+integrated strict-gap mass of the sine law whenever the sine window moments
+hold. All distinct copies sharing an ordinate enter the finite statistic. -/
+theorem unfoldedFactorialWindowMoment_tendsto (hs : SineWindowMoment) {b : ℝ}
+    (hb : 0 < b) :
+    Tendsto (fun T : ℝ => unfoldedFactorialWindowMoment T b) atTop
+      (𝓝 (2 * ∫ u in (0 : ℝ)..b, sineGapMass u)) := by
+  have h := (hs b hb).sub (unfoldedWindowMean_tendsto b)
+  rw [sineWindowEnergy, add_sub_cancel_left] at h
+  apply h.congr'
+  filter_upwards [eventually_triangle_eq_mean_add_windowLatticeExcess b] with T ht
+  rw [ht b ⟨hb.le, le_rfl⟩, add_sub_cancel_left] <;> rfl
+
+/-- At a sufficiently fine fixed subdivision, the small-window factorial
+moment absorbs the quadratic loss of Cauchy–Schwarz in the number of cells.
+The sine pair density is continuous and vanishes at the origin. -/
+theorem exists_scaled_factorialWindowMoment_lt (hs : SineWindowMoment) {Q ε : ℝ}
+    (hQ : 0 < Q) (hε : 0 < ε) :
+    ∃ k : ℕ, 0 < k ∧ ∀ᶠ T : ℝ in atTop,
+      4*(k : ℝ)^2 * unfoldedFactorialWindowMoment T (Q/k) < ε := by
+  let η := ε / (16 * Q^2)
+  have hη : 0 < η := by dsimp [η]; positivity
+  let f : ℝ → ℝ := fun x => 1 - Real.sinc (Real.pi * x)^2
+  have hf : Continuous f := by dsimp [f]; fun_prop
+  have hf0 : f 0 = 0 := by simp [f]
+  obtain ⟨r, hr, hball⟩ := Metric.continuousAt_iff.mp (hf.continuousAt (x := 0)) η hη
+  obtain ⟨k, hk⟩ := exists_nat_gt (Q/r)
+  have hk' : (0 : ℝ) < k := (div_pos hQ hr).trans hk
+  let b := Q / (k : ℝ)
+  have hb : 0 < b := div_pos hQ hk'
+  have hbr : b < r := (div_lt_iff₀ hk').2 (by simpa [mul_comm] using (div_lt_iff₀ hr).1 hk)
+  have hfu (x : ℝ) (hx : x ∈ Icc 0 b) : f x ≤ η := by
+    have hx' : dist x 0 < r := by simpa [Real.dist_eq, abs_of_nonneg hx.1] using hx.2.trans_lt hbr
+    have h := hball hx'
+    rw [hf0, Real.dist_eq, sub_zero] at h
+    exact (le_abs_self _).trans h.le
+  have hG (u : ℝ) (hu : u ∈ Icc 0 b) : sineGapMass u ≤ b*η := by
+    have hi := intervalIntegral.integral_mono_on (μ := volume) hu.1
+      (hf.intervalIntegrable 0 u) (intervalIntegrable_const (c := η))
+      (fun x hx => hfu x ⟨hx.1,hx.2.trans hu.2⟩)
+    calc
+      sineGapMass u ≤ u * η := by
+        simpa only [sineGapMass, f, intervalIntegral.integral_const, sub_zero, smul_eq_mul] using hi
+      _ ≤ b * η := mul_le_mul_of_nonneg_right hu.2 hη.le
+  have hi := intervalIntegral.integral_mono_on (μ := volume) hb.le
+    sineGapMass_mono.intervalIntegrable (intervalIntegrable_const (c := b*η)) hG
+  simp only [intervalIntegral.integral_const, sub_zero, smul_eq_mul] at hi
+  have hlim := (unfoldedFactorialWindowMoment_tendsto hs hb).const_mul (4*(k : ℝ)^2)
+  refine ⟨k, by exact_mod_cast hk', hlim.eventually_lt_const ?_⟩
+  calc
+    4*(k : ℝ)^2 * (2 * ∫ u in (0 : ℝ)..b, sineGapMass u)
+        ≤ 4*(k : ℝ)^2 * (2*(b*(b*η))) :=
+      mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hi (by norm_num)) (by positivity)
+    _ = ε/2 := by dsimp [b, η]; field_simp [hk'.ne', hQ.ne'] <;> ring
+    _ < ε := by linarith
+
 end RiemannResearch.Analysis.ZeroDPPCorrelation

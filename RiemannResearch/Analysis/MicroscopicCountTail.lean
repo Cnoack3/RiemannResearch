@@ -1,5 +1,6 @@
 import RiemannResearch.Analysis.ZeroDPPRankVacancy
 import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.MeasureTheory.Group.Measure
 
 /-!
 # From count exceedances to the truncated second moment
@@ -221,5 +222,135 @@ theorem boundedTranslatedFourthMoment_of_countTail {b : ℝ} (hexp : ExpTranslat
 theorem expTranslatedSquareTail_of_exceedances {b : ℝ} (h : ExpTranslatedCountTail b) :
     ExpTranslatedSquareTail b :=
   expTranslatedSquareTail_of_countTail (boundedTranslatedFourthMoment_of_countTail h) h
+
+/-- The clipped count is monotone in the physical width, at every origin. -/
+theorem actualWindowCount_mono_width (T t : ℝ) {h k : ℝ} (hh : h ≤ k) :
+    actualWindowCount T h t ≤ actualWindowCount T k t := by
+  unfold actualWindowCount windowCount
+  apply Finset.sum_le_sum
+  intro i _
+  let x := i.1.1.im
+  change windowPulse T h x t ≤ windowPulse T k x t
+  by_cases h₁ : t ∈ Ioc (max 0 (x-h)) (min T x)
+  · have h₂ : t ∈ Ioc (max 0 (x-k)) (min T x) := by
+      simp only [mem_Ioc, max_lt_iff, le_min_iff] at h₁ ⊢
+      exact ⟨⟨h₁.1.1, by linarith only [hh, h₁.1.2]⟩, h₁.2⟩
+    simp [windowPulse, pulse, Set.indicator, h₁, h₂]
+  · unfold windowPulse pulse Set.indicator
+    rw [if_neg h₁]
+    split_ifs <;> norm_num
+
+/-- Subdivision of the clipped window. Equal endpoints are assigned according
+to the half-open pulse convention. Origins outside the observation window
+are allowed on both sides of the inequality. -/
+theorem actualWindowCount_double_le (T t : ℝ) {h : ℝ} (hh : 0 ≤ h) :
+    actualWindowCount T (h+h) t ≤ actualWindowCount T h t + actualWindowCount T h (t+h) := by
+  unfold actualWindowCount windowCount
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_le_sum
+  intro i _
+  let x := i.1.1.im
+  have hx : x ≤ T := (mem_cutoff.mp i.1.2).2.2
+  have cover : t ∈ Ioc (max 0 (x-(h+h))) (min T x) →
+      t ∈ Ioc (max 0 (x-h)) (min T x) ∨ t+h ∈ Ioc (max 0 (x-h)) (min T x) := by
+    simp only [mem_Ioc, max_lt_iff, le_min_iff]
+    rintro ⟨⟨ht,hu⟩, hT, hv⟩
+    by_cases hp : x-h < t
+    · exact Or.inl ⟨⟨ht, hp⟩, hT, hv⟩
+    · exact Or.inr ⟨⟨by linarith only [ht,hh], by linarith only [hu]⟩,
+        by linarith only [hx,le_of_not_gt hp], by linarith only [le_of_not_gt hp]⟩
+  change windowPulse T (h+h) x t ≤ windowPulse T h x t + windowPulse T h x (t+h)
+  unfold windowPulse pulse Set.indicator
+  split_ifs <;> norm_num <;> tauto
+
+theorem expTranslatedCountTail_mono {a b : ℝ} (hab : a ≤ b) (hb : ExpTranslatedCountTail b) :
+    ExpTranslatedCountTail a := by
+  obtain ⟨A,c,hA,hc,h⟩ := hb
+  refine ⟨A,c,hA,hc,?_⟩
+  filter_upwards [h,eventually_gt_atTop (1 : ℝ)] with T hT ht
+  intro J
+  let L := Real.log T / (2*Real.pi)
+  have hL : 0 < L := div_pos (Real.log_pos ht) (by positivity)
+  have hsub : {t : ℝ | (J : ℝ) < actualWindowCount T (a/L) t} ⊆
+      {t : ℝ | (J : ℝ) < actualWindowCount T (b/L) t} := fun t hmem =>
+    lt_of_lt_of_le hmem (actualWindowCount_mono_width T t (div_le_div_of_nonneg_right hab hL.le))
+  exact (div_le_div_of_nonneg_right
+    (measureReal_mono hsub (count_exceedance_ne_top T (b/L) J)) (zero_lt_one.trans ht).le).trans
+    (hT J)
+
+/-- Doubling the width of the translated count costs at most a factor two
+in the exponential rate. All integer thresholds share one height cutoff. -/
+theorem expTranslatedCountTail_double {b : ℝ} (hb : 0 ≤ b) (he : ExpTranslatedCountTail b) :
+    ExpTranslatedCountTail (2*b) := by
+  obtain ⟨A,c,hA,hc,htail⟩ := he
+  refine ⟨2*A*Real.exp c,c/2,by positivity,by positivity,?_⟩
+  filter_upwards [htail, eventually_gt_atTop (1 : ℝ)] with T hT ht
+  intro J
+  let h := b / (Real.log T / (2*Real.pi))
+  let j := J/2
+  let S := {t : ℝ | (j : ℝ) < actualWindowCount T h t}
+  let U := {t : ℝ | (J : ℝ) < actualWindowCount T (h+h) t}
+  let V := (fun t : ℝ => t+h) ⁻¹' S
+  have hphys : 0 ≤ h := div_nonneg hb (div_nonneg (Real.log_pos ht).le (by positivity))
+  have hjA : (2 : ℝ) * (j : ℝ) ≤ (J : ℝ) := by
+    exact_mod_cast (show 2*j ≤ J by dsimp [j]; omega)
+  have hjB : (J : ℝ) ≤ 2*((j : ℝ)+1) := by
+    exact_mod_cast (show J ≤ 2*(j+1) by dsimp [j]; omega)
+  have hcover : U ⊆ S ∪ V := by
+    intro t hmem
+    rw [Set.mem_union]
+    by_cases h₁ : t ∈ S
+    · exact Or.inl h₁
+    by_cases h₂ : t ∈ V
+    · exact Or.inr h₂
+    have hleft : actualWindowCount T h t ≤ (j : ℝ) := le_of_not_gt h₁
+    have hright : actualWindowCount T h (t+h) ≤ (j : ℝ) := le_of_not_gt h₂
+    change (J : ℝ) < actualWindowCount T (h+h) t at hmem
+    exfalso
+    linarith only [actualWindowCount_double_le T t hphys, hleft, hright, hmem, hjA]
+  have hshift : volume V = volume S := measure_preimage_add_right volume h S
+  have hS : volume S ≠ ⊤ := count_exceedance_ne_top T h j
+  have hU : volume (S ∪ V) ≠ ⊤ := (measure_union_lt_top hS.lt_top (by rw [hshift]; exact hS.lt_top)).ne
+  have hmass := (measureReal_mono (μ := volume) hcover hU).trans (measureReal_union_le S V)
+  have hV : volume.real V = volume.real S := congrArg ENNReal.toReal hshift
+  rw [hV] at hmass
+  have hd : (2*b)/(Real.log T/(2*Real.pi)) = h+h := by dsimp [h]; ring
+  rw [hd]
+  change volume.real U/T ≤ _
+  calc
+    volume.real U / T ≤ (volume.real S + volume.real S) / T :=
+      div_le_div_of_nonneg_right hmass (zero_lt_one.trans ht).le
+    _ = 2*(volume.real S/T) := by ring
+    _ ≤ 2*A*Real.exp (-c*(j:ℝ)) := by
+      rw [mul_assoc]
+      exact mul_le_mul_of_nonneg_left (hT j) (by norm_num)
+    _ ≤ (2*A*Real.exp c)*Real.exp (-(c/2)*(J:ℝ)) := by
+      rw [mul_assoc (2*A), ← Real.exp_add]
+      apply mul_le_mul_of_nonneg_left _ (mul_nonneg (by norm_num) hA)
+      apply Real.exp_le_exp.mpr
+      nlinarith only [mul_nonneg hc.le (sub_nonneg.mpr hjB)]
+
+/-- A single positive reference width suffices for every fixed unfolded width. -/
+theorem expTranslatedCountTail_all_widths_iff {b : ℝ} (hb : 0 < b) :
+    (∀ q : ℝ, 0 ≤ q → ExpTranslatedCountTail q) ↔ ExpTranslatedCountTail b := by
+  refine ⟨fun h => h b hb.le, ?_⟩
+  intro he q _
+  have hpow (n : ℕ) : ExpTranslatedCountTail ((2 : ℝ)^n*b) := by
+    induction n with
+    | zero => simpa using he
+    | succ n ih =>
+      have h := expTranslatedCountTail_double (mul_nonneg (by positivity) hb.le) ih
+      rw [pow_succ, show (2 : ℝ)^n*2*b = 2*((2 : ℝ)^n*b) by ring]
+      exact h
+  obtain ⟨n, hn⟩ := exists_nat_gt (q/b)
+  have hbound (m : ℕ) : (m : ℝ)+1 ≤ (2 : ℝ)^m := by
+    induction m with
+    | zero => simp
+    | succ m ih =>
+      rw [Nat.cast_succ, pow_succ]
+      linarith only [ih, Nat.cast_nonneg (α := ℝ) m]
+  apply expTranslatedCountTail_mono _ (hpow n)
+  exact ((div_lt_iff₀ hb).mp hn).le.trans
+    (mul_le_mul_of_nonneg_right ((le_add_of_nonneg_right zero_le_one).trans (hbound n)) hb.le)
 
 end RiemannResearch.Analysis.MicroscopicCountTail
