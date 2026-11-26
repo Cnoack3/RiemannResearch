@@ -133,4 +133,78 @@ theorem riemannHypothesis_of_normalized_dyadic_excess
     exact le_max_left _ _
   have ha := hm0 m hm
   nlinarith
+
+/-- Energy of the complete dense squarefree optimizer on a dyadic head. -/
+def dyadicEnergy (m : ℕ) : ℝ := stageEnergy denseSchedule (2 ^ m)
+
+/-- Positive excess after subtracting all certified loss squares on a block.
+The interval identity identifies the numerator with the net stage increment. -/
+def netDyadicExcess (B : ℝ) (m : ℕ) : ℝ :=
+  max (dyadicEnergy (m + 1) - dyadicEnergy m - B) 0 / (1 + dyadicEnergy m)
+
+theorem netDyadicExcess_le_trial (B : ℝ) (t : ∀ i, addedConductors i → ℝ) (m : ℕ) :
+    netDyadicExcess B m ≤ normalizedDyadicExcess t B m := by
+  have hp : 2 ^ m ≤ (2 : ℕ) ^ (m + 1) := by rw [pow_succ]; omega
+  have h := dense_energy_le_interval_certificate t _ _ hp
+  have hn : dyadicEnergy (m + 1) - dyadicEnergy m - B ≤
+      (∑ i ∈ Finset.Ico (2 ^ m) (2 ^ (m + 1)), fullCertificate t i) - B := by
+    unfold dyadicEnergy
+    linarith only [h]
+  have he : 0 ≤ dyadicEnergy m := sq_nonneg _
+  exact div_le_div_of_nonneg_right (max_le_max hn le_rfl) (by linarith : 0 ≤ 1 + dyadicEnergy m)
+
+/-- Sparse large excesses enter through the product of their actual
+multipliers. The additive baseline is charged once per dyadic block. -/
+theorem dyadic_energy_le_net_product (B : ℝ) (hB : 0 ≤ B) (n : ℕ) :
+    1 + dyadicEnergy n ≤ (1 + dyadicEnergy 0 + (n : ℝ) * B) *
+      ∏ i ∈ Finset.range n, (1 + netDyadicExcess B i) := by
+  have hE (i : ℕ) : 0 ≤ dyadicEnergy i := sq_nonneg _
+  have hpos (i : ℕ) : 0 < 1 + dyadicEnergy i := by linarith [hE i]
+  have hx (i : ℕ) : 0 ≤ netDyadicExcess B i :=
+    div_nonneg (le_max_right _ _) (hpos i).le
+  have hp (i : ℕ) : 1 ≤ ∏ j ∈ Finset.range i, (1 + netDyadicExcess B j) := by
+    induction i with
+    | zero => simp
+    | succ i ih =>
+      rw [Finset.prod_range_succ]
+      nlinarith only [ih, hx i, mul_nonneg (sub_nonneg.mpr ih) (hx i)]
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    have he : dyadicEnergy (n + 1) - dyadicEnergy n - B ≤
+        netDyadicExcess B n * (1 + dyadicEnergy n) := by
+      rw [netDyadicExcess, div_mul_cancel₀ _ (hpos n).ne']
+      exact le_max_left _ _
+    have hstep : 1 + dyadicEnergy (n + 1) ≤
+        (1 + dyadicEnergy n) * (1 + netDyadicExcess B n) + B := by
+      nlinarith only [he]
+    have hmul := mul_le_mul_of_nonneg_right ih (show 0 ≤ 1 + netDyadicExcess B n by linarith [hx n])
+    have hbase := mul_nonneg hB (sub_nonneg.mpr (hp (n + 1)))
+    rw [Finset.prod_range_succ] at hbase ⊢
+    push_cast
+    nlinarith only [hstep, hmul, hbase]
+
+/-- Subpolynomial cumulative multiplicative excess on one cofinal
+subsequence of dyadic blocks suffices for RH. -/
+theorem riemannHypothesis_of_cofinal_net_product
+    (B : ℝ) (hB : 0 ≤ B) (s : ℕ → ℕ) (hs : Tendsto s atTop atTop)
+    (hsmall : Tendsto (fun j =>
+      Real.log ((1 + dyadicEnergy 0 + (s j : ℝ) * B) *
+        ∏ i ∈ Finset.range (s j), (1 + netDyadicExcess B i)) /
+        Real.log ((2 ^ (s j) + 2 : ℕ) : ℝ)) atTop (𝓝 0)) :
+    RiemannHypothesis := by
+  have hpow : Tendsto (fun j : ℕ => (2 : ℕ) ^ j) atTop atTop :=
+    tendsto_pow_atTop_atTop_of_one_lt (by norm_num)
+  apply QCRTOptimizerGrowth.riemannHypothesis_of_cofinal_subpolynomial_stageEnergy
+    (fun j => 2 ^ (s j)) (hpow.comp hs)
+  have hE (j : ℕ) : 0 ≤ dyadicEnergy (s j) := sq_nonneg _
+  have hD (j : ℕ) : 0 ≤ Real.log ((2 ^ (s j) + 2 : ℕ) : ℝ) := by
+    apply Real.log_nonneg
+    exact_mod_cast (show 1 ≤ (2 : ℕ) ^ (s j) + 2 from Nat.succ_le_succ (Nat.zero_le _))
+  exact squeeze_zero (fun j => div_nonneg (Real.log_nonneg (by linarith [hE j] :
+      1 ≤ 1 + dyadicEnergy (s j))) (hD j))
+    (fun j => div_le_div_of_nonneg_right (Real.log_le_log
+      (by linarith [hE j] : 0 < 1 + dyadicEnergy (s j))
+      (dyadic_energy_le_net_product B hB (s j))) (hD j)) hsmall
+
 end RiemannResearch.RH.QCRTDyadicBudget

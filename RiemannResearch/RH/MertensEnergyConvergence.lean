@@ -56,6 +56,24 @@ theorem offDiagonal_tendsto_of_hasFiniteEnergy (ε : ℝ) (hε : 0 < ε)
   rw [diagonal, diagonalEnergy_eq_weighted_square_prefix] at he
   linarith
 
+/-- At any positive damping with finite energy, the grouped signed increments
+are absolutely summable. The signed limit thus has finite total variation. -/
+theorem summable_abs_offDiagonal_rows (ε : ℝ) (hε : 0 < ε) (hE : HasFiniteEnergy ε) :
+    Summable (fun n => |weight ε n * (mertensPrefix (n+1)^2 -
+      cumulative (fun i => mobiusCoefficients i^2) (n+1))|) := by
+  apply Summable.of_nonneg_of_le (fun _ => abs_nonneg _) _
+    (hE.add (summable_diagonal_integrand ε hε))
+  intro n
+  have h₁ := mul_nonneg (weight_pos ε n).le (sq_nonneg (mertensPrefix (n+1)))
+  have h₂ : 0 ≤ weight ε n * cumulative (fun i => mobiusCoefficients i^2) (n+1) :=
+    mul_nonneg (weight_pos ε n).le (Finset.sum_nonneg (fun i _ => sq_nonneg _))
+  change |weight ε n * (mertensPrefix (n+1)^2 -
+    cumulative (fun i => mobiusCoefficients i^2) (n+1))| ≤
+    weight ε n * mertensPrefix (n+1)^2 +
+      weight ε n * cumulative (fun i => mobiusCoefficients i^2) (n+1)
+  rw [mul_sub]
+  exact abs_le.mpr ⟨by linarith only [h₁], by linarith only [h₂]⟩
+
 /-- Bounded signed energy can be strengthened to actual convergence. -/
 theorem hasFiniteEnergy_iff_offDiagonal_converges (ε : ℝ) (hε : 0 < ε) :
     HasFiniteEnergy ε ↔ ∃ L : ℝ, Tendsto (offDiagonal ε) atTop (𝓝 L) := by

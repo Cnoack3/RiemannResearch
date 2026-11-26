@@ -164,21 +164,52 @@ theorem basis_functional_recurrence (q : Index) (F : mixedClosure →ₗ[ℝ] �
   rw [mul_comm]
   linarith only [he]
 
-private theorem mixed_parity_coefficient (q : Index) :
-    basis.repr (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)) q =
-      digammaRow q 2 := by
-  rw [digammaRow_eq_modePair q 2 (by decide), HilbertBasis.repr_apply_apply]
-  have h := mixedClosure.sub_starProjection_mem_orthogonal (ramanujanPacketHilbert 2)
+/-- The signed arithmetic row is the Fourier coefficient of the full projected packet. -/
+theorem packet_row_coefficient (q : Index) (a : ℕ) (ha : 0 < a) :
+    basis.repr (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert a)) q =
+      digammaRow q a := by
+  rw [digammaRow_eq_modePair q a ha, HilbertBasis.repr_apply_apply]
+  have h := mixedClosure.sub_starProjection_mem_orthogonal (ramanujanPacketHilbert a)
     (basis q : ThresholdHilbert) (basis q).property
   rw [inner_sub_right, sub_eq_zero] at h
   exact h.symm
+
+/-- Signed reconstruction holds in Pareto norm for every positive conductor. -/
+theorem hasSum_packet_modes (a : ℕ) (ha : 0 < a) :
+    HasSum (fun q : Index => digammaRow q a • basis q)
+      (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert a)) := by
+  simpa only [packet_row_coefficient _ a ha] using
+    basis.hasSum_repr (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert a))
+
+/-- The same rows give the mixed covariance of any two projected packets. -/
+theorem packet_row_covariance (a b : ℕ) (ha : 0 < a) (hb : 0 < b) :
+    (∑' q : Index, digammaRow q a * digammaRow q b) =
+      inner ℝ (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert a))
+        (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert b)) := by
+  let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert a)
+  let y := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert b)
+  have hx (q : Index) : inner ℝ (basis q) x = digammaRow q a := by
+    simpa only [x, HilbertBasis.repr_apply_apply] using packet_row_coefficient q a ha
+  have hy (q : Index) : inner ℝ (basis q) y = digammaRow q b := by
+    simpa only [y, HilbertBasis.repr_apply_apply] using packet_row_coefficient q b hb
+  calc
+    _ = ∑' q : Index, inner ℝ x (basis q) * inner ℝ (basis q) y := by
+      apply tsum_congr
+      intro q
+      rw [hy, ← hx]
+      exact congrArg (fun t : ℝ => t * digammaRow q b) (real_inner_comm ..)
+    _ = _ := basis.tsum_inner_mul_inner x y
+
+private theorem mixed_parity_coefficient (q : Index) :
+    basis.repr (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)) q =
+      digammaRow q 2 :=
+  packet_row_coefficient q 2 (by decide)
 
 /-- The signed digamma rows synthesize the projected packet in the complete Pareto norm. -/
 theorem hasSum_parity_modes :
     HasSum (fun q : Index => digammaRow q 2 • basis q)
       (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)) := by
-  simpa only [mixed_parity_coefficient] using
-    basis.hasSum_repr (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2))
+  exact hasSum_packet_modes 2 (by decide)
 
 /-- A convergent series of nonnegative terms for the unnormalized mixed projection energy of J₂. -/
 theorem hasSum_parity_energy :
@@ -204,7 +235,7 @@ theorem physical_head_coefficient (n : ℕ) :
         ∑' q : Index, inner ℝ (AffineHeadTower.unitHeadDirection n) (basis q) * digammaRow q 2 := by
   let m := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)
   have hp (q : Index) : inner ℝ (basis q) m = digammaRow q 2 := by
-    simpa only [HilbertBasis.repr_apply_apply] using mixed_parity_coefficient q
+    simpa only [HilbertBasis.repr_apply_apply] using packet_row_coefficient q 2 (by decide)
   rw [AffineHeadTower.headLayerIsometry, HilbertBasis.repr_apply_apply,
     AffineHeadTower.physicalHeadBasis_apply]
   simpa only [hp] using (basis.tsum_inner_mul_inner (AffineHeadTower.unitHeadDirection n) m).symm

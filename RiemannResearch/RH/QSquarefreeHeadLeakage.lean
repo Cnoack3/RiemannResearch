@@ -249,4 +249,52 @@ theorem compensated_block_le_quadratic (N H M : ℕ) (hHM : H ≤ M) :
     (mul_le_mul_of_nonneg_left
       (add_le_add hB (div_le_div_of_nonneg_right hR (by positivity))) (by positivity))
 
+open QAnnihilatorTailEscape QSquarefreeSmoothedProjection QSquarefreeCorrectionKernel
+open RiemannResearch.Analysis.ResidualizedProjectionKernel
+
+/-- Every site in a common-head block uses the same two projected tail vectors. -/
+theorem shortHead_remainder_eq_projected_tails (N H n : ℕ) :
+    qSequence (movingCorrection N) n - response N H n =
+      qSequence ((stage N).starProjection (B (tail H (residual N)))) n -
+        (1 / ((n : ℝ) + 1)) *
+          qSequence ((stage N).starProjection (tail H (residual N))) n := by
+  let a : ℝ := 1 / ((n : ℝ) + 1)
+  have he (v : QHilbert) : inner ℝ v (kernel N n) =
+      qSequence ((stage N).starProjection v) n := by
+    change inner ℝ v ((stage N).starProjection (evaluation n)) = _
+    rw [← projection_inner, inner_evaluation]
+  rw [movingCorrection_eq_centered_pairing N n a, response_eq_head_pairing]
+  change inner ℝ (residual N) (B (kernel N n) - a • kernel N n) -
+    inner ℝ (residual N) (finiteHead H (B (kernel N n) - a • kernel N n)) = _
+  rw [← finiteHead_inner, ← inner_sub_left]
+  change inner ℝ (tail H (residual N)) (B (kernel N n) - a • kernel N n) = _
+  rw [inner_sub_right, real_inner_smul_right, ← B_symmetric, he, he]
+
+/-- Joint block control charges the two reusable inputs once for the whole block. -/
+theorem shortHead_remainder_block_sq_le (N H M : ℕ) :
+    (∑ i ∈ Finset.range M, (qSequence (movingCorrection N) (M + i + 1) -
+      response N H (M + i + 1)) ^ 2) ≤
+      8 * zetaTwo * (M : ℝ) ^ 2 *
+        (‖B (tail H (residual N))‖ ^ 2 +
+          ‖tail H (residual N)‖ ^ 2 / ((M : ℝ) + 2) ^ 2) := by
+  let T := tail H (residual N)
+  let P := (stage N).starProjection
+  have hp (x : QHilbert) : ‖P x‖ ^ 2 ≤ ‖x‖ ^ 2 := by
+    have h := (stage N).starProjection.le_opNorm x
+    have g := mul_le_mul_of_nonneg_right (Submodule.starProjection_norm_le (stage N)) (norm_nonneg x)
+    have hnorm : ‖P x‖ ≤ ‖x‖ := h.trans (by simpa only [one_mul] using g)
+    exact pow_le_pow_left₀ (norm_nonneg _) hnorm 2
+  calc
+    _ = ∑ i ∈ Finset.range M, (qSequence (P (B T)) (M + i + 1) -
+          (1 / (((M + i : ℕ) : ℝ) + 2)) * qSequence (P T) (M + i + 1)) ^ 2 := by
+      apply Finset.sum_congr rfl
+      intro i _
+      rw [shortHead_remainder_eq_projected_tails]
+      dsimp only [P, T]
+      norm_num only [Nat.cast_add, Nat.cast_one] <;> ring
+    _ ≤ _ := (affine_block_sq_le (P (B T)) (P T) M).trans
+      (mul_le_mul_of_nonneg_left
+        (add_le_add (hp (B T)) (div_le_div_of_nonneg_right (hp T) (sq_nonneg _)))
+        (by positivity [zetaTwo_pos]))
+
 end RiemannResearch.RH.QSquarefreeHeadLeakage

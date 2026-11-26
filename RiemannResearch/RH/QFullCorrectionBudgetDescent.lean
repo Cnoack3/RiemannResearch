@@ -263,4 +263,39 @@ theorem summable_reciprocal_budgets_of_not_riemannHypothesis
   by_contra h
   exact hRH (riemannHypothesis_of_reciprocal_budgets σ hσ K hK hb h)
 
+
+/-- Multiplying the exact one-step loss factors retains finite termination. -/
+theorem energy_le_product_of_correction_budgets
+    (σ : ℕ → ℕ) (hσ : Monotone σ) (K : ℕ → ℝ) (hK : ∀ i, 0 < K i)
+    (hb : ∀ i, CorrectionBudget (σ i) (σ (i + 1)) (K i)) (n : ℕ) :
+    energy (σ n) ≤ energy (σ 0) *
+      ∏ i ∈ Finset.range n, max (1 - 1 / K i) 0 := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    have h := (correctionBudget_iff_loss (hσ (Nat.le_succ n)) (hK n)).mp (hb n)
+    have he : 0 ≤ energy (σ n) := sq_nonneg _
+    have hstep : energy (σ (n + 1)) ≤ energy (σ n) * (1 - 1 / K n) := by
+      linarith only [h]
+    rw [Finset.prod_range_succ, ← mul_assoc]
+    exact (hstep.trans (mul_le_mul_of_nonneg_left (le_max_left _ _) he)).trans
+      (mul_le_mul_of_nonneg_right ih (le_max_right _ _))
+
+/-- A positive limiting residual bounds every cumulative reciprocal budget
+by the logarithm of the initial-to-limiting energy ratio. -/
+theorem reciprocal_sum_le_log_energy_ratio
+    (σ : ℕ → ℕ) (hσ : Monotone σ) (K : ℕ → ℝ) (hK : ∀ i, 0 < K i)
+    (hb : ∀ i, CorrectionBudget (σ i) (σ (i + 1)) (K i))
+    (hδ : 0 < ‖qOne - closure.starProjection qOne‖ ^ 2) (n : ℕ) :
+    (∑ i ∈ Finset.range n, 1 / K i) ≤
+      Real.log (energy (σ 0) / ‖qOne - closure.starProjection qOne‖ ^ 2) := by
+  let A := ∑ i ∈ Finset.range n, 1 / K i
+  have hl := (energy_lower_bound (σ n)).trans (energy_le_exp_neg_reciprocal_sum σ hσ K hK hb n)
+  change ‖qOne - closure.starProjection qOne‖ ^ 2 ≤ energy (σ 0) * Real.exp (-A) at hl
+  rw [Real.exp_neg, ← div_eq_mul_inv] at hl
+  have h := (le_div_iff₀ (Real.exp_pos A)).mp hl
+  have hu : Real.exp A ≤ energy (σ 0) / ‖qOne - closure.starProjection qOne‖ ^ 2 :=
+    (le_div_iff₀ hδ).mpr (by linarith only [h])
+  simpa only [Real.log_exp] using Real.log_le_log (Real.exp_pos A) hu
+
 end RiemannResearch.RH.QFullCorrectionBudgetDescent

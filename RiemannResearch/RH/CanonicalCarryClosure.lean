@@ -254,6 +254,36 @@ private theorem row_scalar (a t : ℕ) (ha : 0 < a) (ht : 0 < t) :
   have ht' : (t : ℝ) ≠ 0 := by exact_mod_cast ht.ne'
   field_simp
 
+/-- Two raw carries cancel their common auxiliary atom. The remaining four
+terms give a complete norm error certificate for approximating one prime power. -/
+theorem two_carry_approximation_error (g : ℕ → H) (a b : PrimePowerConductor)
+    {t : ℕ} (ht : t.Prime) (hat : a.val < t) (hbt : b.val < t)
+    (ha : t ≡ 1 [MOD a.val]) (hb : t ≡ 1 [MOD b.val]) :
+    ‖rowWeight b.val t • canonicalVector g (a.val * t) -
+      rowWeight a.val t • canonicalVector g (b.val * t) - g a.val‖ ≤
+      |rowWeight b.val t - 1| * ‖g a.val‖ + |rowWeight a.val t| * ‖g b.val‖ +
+      |rowWeight b.val t| * ‖g (a.val * t)‖ + |rowWeight a.val t| * ‖g (b.val * t)‖ := by
+  have hrow (c : PrimePowerConductor) (hct : c.val < t) (hm : t ≡ 1 [MOD c.val]) :
+      canonicalVector g (c.val * t) = g c.val +
+        (rowWeight c.val t * (t : ℝ)) • g t - g (c.val * t) := by
+    obtain ⟨p, k, hp, hk, he⟩ := (primePowerConductor_iff c.val).mp c.property
+    have hcoeff := (div_eq_iff (by exact_mod_cast ht.ne_zero : (t : ℝ) ≠ 0)).mp
+      (row_scalar c.val t (Nat.zero_lt_of_lt c.property.1) ht.pos)
+    rw [(canonicalVector_pair_eq g hp hk he ht hct hm).2, hcoeff]
+  let A := (rowWeight b.val t - 1) • g a.val
+  let B := rowWeight a.val t • g b.val
+  let C := rowWeight b.val t • g (a.val * t)
+  let D := rowWeight a.val t • g (b.val * t)
+  have he : rowWeight b.val t • canonicalVector g (a.val * t) -
+      rowWeight a.val t • canonicalVector g (b.val * t) - g a.val = A - B - C + D := by
+    rw [hrow a hat ha, hrow b hbt hb]
+    dsimp only [A, B, C, D]
+    module
+  rw [he]
+  have h : ‖A - B - C + D‖ ≤ ‖A‖ + ‖B‖ + ‖C‖ + ‖D‖ := by
+    linarith only [norm_add_le (A - B - C) D, norm_sub_le (A - B) C, norm_sub_le A B]
+  simpa only [A, B, C, D, norm_smul, Real.norm_eq_abs] using h
+
 /-- With a common auxiliary prime, the two scaled rows cancel its atom exactly. -/
 theorem common_prime_balanced_rows (g : ℕ → H) (a b : PrimePowerConductor) :
     ∃ t : ℕ → ℕ, Tendsto t atTop atTop ∧ ∀ n,
@@ -356,6 +386,46 @@ theorem no_physical_prime_retraction :
     no_continuous_carry_retraction qResidue
       (rawClosure_eq_fullClosure qResidue (qResidue_tendsto_zero id tendsto_id))
       qResidue_two_ne_zero⟩
+
+open Pareto.CoefficientStabilization in
+/-- The mixed coefficient row sees precisely the matching raw carry. -/
+theorem mixed_coefficient_rawCarry (d m : MixedConductor) :
+    coefficientCLM d.val (canonicalVector pAtom m.val) =
+      -(if d = m then (1 : ℝ) else 0) := by
+  classical
+  have hatom (k : ℕ) (hk : 0 < k) :
+      coefficientCLM d.val (pAtom k) = if d.val = k then 1 else 0 := by
+    rw [pAtom, dif_pos hk, coefficient_normalizedResidue _ _ d.property.1 hk]
+  rw [canonicalVector, map_sub, map_sum]
+  have hz (p : ℕ) (hp : p ∈ m.val.primeFactors) :
+      coefficientCLM d.val ((RiemannResearch.NumberTheory.PrimePowerCRT.coefficient m.val p : ℝ) •
+        pAtom (modulus m.val p)) = 0 := by
+    have hne : d.val ≠ modulus m.val p := by
+      intro he
+      apply d.property.2
+      rw [he]
+      exact (modulus_is_power hp).2
+    rw [map_smul, hatom _ (modulus_pos _ _), if_neg hne, smul_zero]
+  rw [Finset.sum_eq_zero hz, zero_sub, hatom _ (Nat.zero_lt_of_lt m.property.1)]
+  simp only [Subtype.ext_iff]
+
+open Pareto.CoefficientStabilization in
+/-- Omitting any single mixed raw carry excludes it from the closure of all the others. -/
+theorem rawCarry_not_mem_other_closure (d : MixedConductor) :
+    canonicalVector pAtom d.val ∉ (Submodule.span ℝ (Set.range
+      (fun m : {m : MixedConductor // m ≠ d} => canonicalVector pAtom m.val.val))).topologicalClosure := by
+  intro h
+  have hk : (Submodule.span ℝ (Set.range
+      (fun m : {m : MixedConductor // m ≠ d} => canonicalVector pAtom m.val.val))).topologicalClosure ≤
+      (coefficientCLM d.val).ker := by
+    apply Submodule.topologicalClosure_minimal _ _ (coefficientCLM d.val).isClosed_ker
+    apply Submodule.span_le.mpr
+    rintro _ ⟨m, rfl⟩
+    change coefficientCLM d.val (canonicalVector pAtom m.val.val) = 0
+    simp only [mixed_coefficient_rawCarry, if_neg (Ne.symm m.property), neg_zero]
+  have hz : coefficientCLM d.val (canonicalVector pAtom d.val) = 0 := hk h
+  rw [mixed_coefficient_rawCarry, if_pos rfl] at hz
+  norm_num at hz
 
 theorem riemannHypothesis_iff_one_mem_canonicalCarryClosure :
     RiemannHypothesis ↔ Pareto.hilbertOne ∈ rawClosure pAtom := by

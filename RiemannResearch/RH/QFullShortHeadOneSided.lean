@@ -205,4 +205,58 @@ theorem riemannHypothesis_of_frequent_oneSided_fixed_anchor
     R hnest hcofinal H hH 1 (by norm_num) ε C hε
   simpa only [residueAnchor, Nat.mod_one, zero_add] using hSchur
 
+/-- The zero-index evaluation is the zero functional. At a fixed positive head,
+these normalized sums therefore converge to the two actual displacement charges. -/
+def shortSchurHarmonicSide (R : ℕ → ℕ+) (j H X : ℕ) (ε : ℝ) : ℝ :=
+  ∑ n ∈ Finset.range (X + 1), max (ε * (shortSchur R j H n 0 / zetaTwo)) 0 / (n : ℝ)
+
+theorem shortSchurHarmonicSide_tendsto
+    (R : ℕ → ℕ+) (hnest : ∀ i j, i ≤ j → (R i : ℕ) ∣ (R j : ℕ))
+    (hcofinal : ∀ q : ℕ, 1 < q → ∃ j, q ∣ (R j : ℕ))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop) (X : ℕ) (ε : ℝ) :
+    Tendsto (fun j => shortSchurHarmonicSide R j (H j) X ε) atTop
+      (𝓝 (harmonicSide ε X)) := by
+  unfold shortSchurHarmonicSide harmonicSide
+  apply tendsto_finsetSum
+  intro n _
+  have ht := (shortSchur_tendsto R hnest hcofinal H hH n 0).div_const zetaTwo
+  have hnorm : Tendsto (fun j => shortSchur R j (H j) n 0 / zetaTwo) atTop
+      (𝓝 (qSequence displacement n)) := by
+    have hc : zetaTwo * (qSequence displacement n - qSequence displacement 0) /
+        zetaTwo = qSequence displacement n := by
+      rw [qSequence_zero, sub_zero]
+      field_simp [zetaTwo_pos.ne'] <;> ring
+    rwa [hc] at ht
+  exact (((hnorm.const_mul ε).max tendsto_const_nhds).div_const (n : ℝ))
+
+/-- Both the orientation and the good stages may depend on the harmonic head.
+Only a cofinal set of heads needs a polylogarithmic signed aggregate. -/
+theorem qResidual_zero_iff_cofinal_shortSchurHarmonic
+    (R : ℕ → ℕ+) (hnest : ∀ i j, i ≤ j → (R i : ℕ) ∣ (R j : ℕ))
+    (hcofinal : ∀ q : ℕ, 1 < q → ∃ j, q ∣ (R j : ℕ))
+    (H : ℕ → ℕ) (hH : Tendsto H atTop atTop) :
+    qResidual = 0 ↔ ∃ B C : ℝ, 0 ≤ B ∧ 0 ≤ C ∧ ∃ᶠ X : ℕ in atTop,
+      ∃ᶠ j : ℕ in atTop,
+        min (shortSchurHarmonicSide R j (H j) X 1)
+          (shortSchurHarmonicSide R j (H j) X (-1)) ≤ C * (Real.log (X : ℝ)) ^ B := by
+  have hlim (X : ℕ) : Tendsto (fun j =>
+      min (shortSchurHarmonicSide R j (H j) X 1)
+        (shortSchurHarmonicSide R j (H j) X (-1))) atTop (𝓝 (minimumHarmonicPrefix X)) :=
+    (shortSchurHarmonicSide_tendsto R hnest hcofinal H hH X 1).min
+      (shortSchurHarmonicSide_tendsto R hnest hcofinal H hH X (-1))
+  constructor
+  · intro hr
+    refine ⟨0, 1, le_rfl, zero_le_one, (Eventually.of_forall ?_).frequently⟩
+    intro X
+    have h := hlim X
+    have hz : minimumHarmonicPrefix X = 0 := by
+      simp [minimumHarmonicPrefix, harmonicSide, displacement_eq_zero_of_qResidual_eq_zero hr,
+        show qSequence (0 : QHilbert) = 0 from map_zero qSequenceLinear]
+    rw [hz] at h
+    simpa only [Real.rpow_zero, mul_one] using
+      ((h.eventually_lt_const zero_lt_one).mono fun _ hlt => hlt.le).frequently
+  · rintro ⟨B, C, hB, hC, hgood⟩
+    exact qResidual_zero_of_cofinal_harmonic_polylog B C hB hC
+      (hgood.mono fun X hX => le_of_tendsto_of_frequently (hlim X) hX)
+
 end RiemannResearch.RH.QFullShortHeadOneSided

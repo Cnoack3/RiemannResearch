@@ -457,6 +457,52 @@ theorem adjacent_product_errors_summable :
   simpa only [zero_add, Real.sqrt_sq (Finset.sum_nonneg (fun _ _ => abs_nonneg _))] using
     Real.sqrt_le_sqrt h
 
+/-- The entire unnormalized error tends to zero at late starting primes,
+uniformly over every block length, including growing lengths. -/
+theorem correctedBlock_late_start_uniform (η : ℝ) (hη : 0 < η) :
+    ∀ᶠ k : ℕ in atTop, ∀ n : ℕ,
+      |(n : ℝ) * ‖limitResidual‖ ^ 2 - correctedBlock k n| < η := by
+  let e (j : ℕ) := ‖limitResidual‖ ^ 2 - reciprocalResiduePairing (P j * P (j+1))
+  have hs : Summable e := by
+    apply summable_norm_iff.mp
+    simpa only [e, Real.norm_eq_abs] using adjacent_product_errors_summable
+  obtain ⟨K, hK⟩ := Metric.cauchySeq_iff.mp hs.hasSum.tendsto_sum_nat.cauchySeq η hη
+  filter_upwards [eventually_ge_atTop K] with k hk
+  intro n
+  have h := hK (k+n) (by omega) k hk
+  rw [Real.dist_eq, Finset.sum_range_add, add_sub_cancel_left] at h
+  simpa only [e, correctedBlock, Finset.sum_sub_distrib, Finset.sum_const,
+    Finset.card_range, nsmul_eq_mul] using h
+
+/-- Any positive lengths at late starting primes detect RH with a vanishing
+per-term tolerance, even if all lengths are one. -/
+theorem riemannHypothesis_iff_late_start_tolerant_blocks
+    (len : ℕ → ℕ) (hlen : ∀ᶠ k in atTop, 0 < len k)
+    (η : ℕ → ℝ) (hη : Tendsto η atTop (𝓝 0)) (hη₀ : ∀ᶠ k in atTop, 0 ≤ η k) :
+    RiemannHypothesis ↔ ∃ᶠ k : ℕ in atTop, correctedBlock k (len k) ≤ (len k : ℝ) * η k := by
+  have heq : RiemannHypothesis ↔ limitResidual = 0 :=
+    (riemannHypothesis_iff_naturalApproximation.trans
+      BaezDuarte.naturalApproximation_iff_one_mem).trans
+      (limitResidual_zero_iff_energy_zero.trans limitEnergy_zero_iff_mem).symm
+  rw [heq]
+  constructor
+  · intro hd
+    apply Filter.Eventually.frequently
+    filter_upwards [hη₀] with k hk
+    simpa [correctedBlock, reciprocalResiduePairing, hd] using
+      (mul_nonneg (Nat.cast_nonneg (α := ℝ) (len k)) hk)
+  · intro hsign
+    by_contra hd
+    have hE : 0 < ‖limitResidual‖ ^ 2 := sq_pos_of_pos (norm_pos_iff.mpr hd)
+    have hh := correctedBlock_late_start_uniform _ (half_pos hE)
+    obtain ⟨k, hk, hn, ht, herr⟩ :=
+      (hsign.and_eventually (hlen.and ((hη.eventually (gt_mem_nhds (half_pos hE))).and hh))).exists
+    have h1 : (1 : ℝ) ≤ len k := by exact_mod_cast hn
+    have hb : ‖limitResidual‖ ^ 2 ≤ (len k : ℝ) * ‖limitResidual‖ ^ 2 := by
+      simpa only [one_mul] using mul_le_mul_of_nonneg_right h1 hE.le
+    have hp := mul_lt_mul_of_pos_left ht (Nat.cast_pos.mpr hn : (0 : ℝ) < len k)
+    nlinarith only [(abs_lt.mp (herr (len k))).2, hk, hp, hb]
+
 /-! ## Sign certificates for the residual energy -/
 
 private theorem energy_times_sq_le_of_sign {n W z : ℝ} (hn : 0 ≤ n) (hW : 0 ≤ W) (hz : 0 ≤ z)

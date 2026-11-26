@@ -11,6 +11,8 @@ import RiemannResearch.RH.QSquarefreeSmoothedProjection
 import RiemannResearch.RH.QHilbertConvergence
 import RiemannResearch.RH.ZetaTwoOptimizerStage
 import RiemannResearch.RH.QSquarefreeCapacity
+import RiemannResearch.RH.ParetoSquarefreeDampingConverse
+import RiemannResearch.RH.ZetaTwoCRTSquarefreeConverse
 import Mathlib.Analysis.Asymptotics.Lemmas
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
@@ -113,5 +115,61 @@ theorem moving_head_energy_uniform_subprofile
       weightedHeadEnergy k H (movingCorrection N) ≤ ε * polylogTailProfile k H :=
   weightedHeadEnergy_uniform_subprofile k movingCorrection correction
     movingCorrection_tendsto ε hε
+
+/-- A common bound only needs one stage N ≥ H for each test head H. -/
+theorem residual_zero_of_joint_head_budget (k : ℕ) (C : ℝ)
+    (hb : ∀ H : ℕ, ∃ N ≥ H, weightedHeadEnergy k H (movingCorrection N) ≤ C) :
+    limitingResidual = 0 := by
+  choose F hF hbF using hb
+  have htop : Tendsto F atTop atTop := tendsto_atTop.2 fun h =>
+    (eventually_ge_atTop h).mono fun n hn => hn.trans (hF n)
+  obtain ⟨hs, ht⟩ := weightedEnergy_summable_of_frequently_moving_head_bound k
+    (fun n => movingCorrection (F n)) correction (movingCorrection_tendsto.comp htop)
+    id tendsto_id C (Eventually.of_forall hbF).frequently
+  apply (residual_zero_iff_correction_frequently_bounded_log_scaled_tail k).mpr
+  refine ⟨((k : ℝ) + 6)^k * C, (Eventually.of_forall ?_).frequently⟩
+  intro H
+  have h₁ := mul_le_mul_of_nonneg_right
+    (logWeight_le_polylogTailProfile k H) (sq_nonneg ‖tail H correction‖)
+  have h₂ := mul_le_mul_of_nonneg_left
+    ((profile_mul_tail_energy_le k H correction hs).trans ht)
+    (pow_nonneg (by positivity : (0 : ℝ) ≤ (k : ℝ) + 6) k)
+  nlinarith only [h₁, h₂]
+
+/-- Independent positive bounded budgets may shrink arbitrarily fast with the
+head. The same witnessing stage works simultaneously for every weight index. -/
+theorem riemannHypothesis_iff_simultaneous_head_budgets (b : ℕ → ℝ)
+    (hb : ∀ H, 0 < b H) (hbound : ∃ C : ℝ, ∀ H, b H ≤ C) :
+    RiemannHypothesis ↔ ∀ H : ℕ, ∃ N ≥ H, ∀ k : ℕ,
+      weightedHeadEnergy k H (movingCorrection N) ≤ b H := by
+  constructor
+  · intro hRH
+    have hm : qOne ∈ ZetaTwoOptimizerStage.closure := by
+      rw [QSquarefreeCapacity.optimizer_closure_eq_squarefree_closure]
+      exact qSquarefreeClosure_iff_paretoSquarefreeClosure.mpr
+        (Pareto.ResidueMellin.hilbertOne_mem_squarefreeClosure_of_riemannHypothesis hRH)
+    have hr : limitingResidual = 0 :=
+      sub_eq_zero.mpr (Submodule.starProjection_eq_self_iff.mpr hm).symm
+    have hu : Tendsto movingCorrection atTop (𝓝 0) := by
+      simpa only [correction, hr, map_zero] using movingCorrection_tendsto
+    intro H
+    have hp : Tendsto (fun N => (H : ℝ) * ‖movingCorrection N‖ ^ 2) atTop (𝓝 0) := by
+      simpa only [norm_zero, zero_pow (by decide : (2 : ℕ) ≠ 0), mul_zero] using
+        (hu.norm.pow 2).const_mul (H : ℝ)
+    obtain ⟨N, hN, hsmall⟩ := ((eventually_ge_atTop H).and
+      (hp.eventually (Iio_mem_nhds (hb H)))).exists
+    refine ⟨N, hN, fun k => ?_⟩
+    exact (weightedHeadEnergy_le_profile_norm_sq k H (movingCorrection N)).trans
+      ((mul_le_mul_of_nonneg_right ((polylogTailProfile_le_logWeight k H).trans
+        (logWeight_le_nat k H)) (sq_nonneg _)).trans hsmall.le)
+  · intro h
+    obtain ⟨C, hC⟩ := hbound
+    have hr := residual_zero_of_joint_head_budget 0 C (fun H => by
+      obtain ⟨N, hN, hE⟩ := h H
+      exact ⟨N, hN, (hE 0).trans (hC H)⟩)
+    have hm : qOne ∈ ZetaTwoOptimizerStage.closure :=
+      Submodule.starProjection_eq_self_iff.mp (sub_eq_zero.mp hr).symm
+    exact QSquarefreeCapacity.riemannHypothesis_of_capacity_tendsto
+      (QSquarefreeCapacity.capacity_tendsto_iff_optimizer_closure.mpr hm)
 
 end RiemannResearch.RH.QSquarefreeMovingHeadEnergy

@@ -112,6 +112,27 @@ theorem reconstruction_iff_stage_cost (u : ℕ → H) (b : ℕ → ℝ)
   · rintro ⟨x, hx, _, _⟩
     exact ⟨x, hx⟩
 
+/-- A fixed squared-norm budget needs to hold at only cofinally many
+running LCM stages. The same budget is attained by a global representer. -/
+theorem bounded_solution_iff_frequently_stageCost (u : ℕ → H) (b : ℕ → ℝ)
+    (hu : ∀ F : Finset ℕ, LinearIndependent ℝ (fun i : F => u i))
+    {C : ℝ} (hC : 0 ≤ C) :
+    (∃ x : H, ‖x‖ ^ 2 ≤ C ∧ IsSolution u b x) ↔
+      ∃ᶠ N : ℕ in atTop, ENNReal.ofReal (gramCost u b (stage N)) ≤ ENNReal.ofReal C := by
+  rw [bounded_solution_sq_iff_finite u b hC]
+  constructor
+  · intro h
+    apply Filter.Eventually.frequently
+    apply Filter.Eventually.of_forall
+    intro N
+    rw [← finiteOptimum_eq_gramCost u b _ (hu _)]
+    exact (finiteOptimum_le_ofReal_iff u b (stage N) hC).mpr (h (stage N))
+  · intro h F
+    obtain ⟨N, hcost, hsub⟩ := (h.and_eventually (stage_tendsto.eventually
+      (eventually_ge_atTop F))).exists
+    rw [← finiteOptimum_eq_gramCost u b _ (hu _)] at hcost
+    exact (finiteOptimum_le_ofReal_iff u b F hC).mp ((finiteOptimum_mono u b hsub).trans hcost)
+
 def qAtom (i : ℕ) : QHilbert := qResidue (i + 2)
 
 theorem p_finite_independent (F : Finset ℕ) :
