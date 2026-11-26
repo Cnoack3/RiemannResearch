@@ -14,6 +14,12 @@ Let `fiber N` be the legal mean-one vectors that equal one at physical sites 1 t
 - [PhysicalHeadSectionGrowth.lean](RH/PhysicalHeadSectionGrowth.lean) proves that RH gives κ(N) = 1 for every N. A right zero ρ with real part σ forces κ(N)² ≥ 1 + (2σ−1)(N+1)^(2σ−1)/|ρ|².
 - [PhysicalHeadSectionLog.lean](RH/PhysicalHeadSectionLog.lean) proves `parity_cofinalLogSections_iff_rh`. For the normalized parity seed g = J₂/log 2, RH is equivalent to existence of cutoffs Nⱼ → ∞ and finite mixed corrections mⱼ with g+mⱼ in the unit-head fiber and log‖g+mⱼ‖/log(Nⱼ+1) → 0.
 
+[PhysicalHeadParityMinimum.lean](RH/PhysicalHeadParityMinimum.lean) constructs the unique mixed correction minimizing the full norm of J₂ / log 2 plus the correction in the window B = 2(N+1)². `WindowMinimum` gives every feasible competitor’s exact squared excess. `window_crt_coordinates` represents the same physical correction in atom and carry coordinates under the CRT involution at the common period B!.
+
+[PhysicalHeadWeakLimit.lean](RH/PhysicalHeadWeakLimit.lean) proves weak convergence from exact heads and an eventual bound on the full squared norms. For the specified finite-window minimizers, the conditional theorem `nymanBeurling_of_bounded_parity_minima` places the ambient unit in the legal space, identifies the screened section with it, gives the orthogonal mixed and constant splitting, and implies RH. A cofinal uniform bound for these minima is open.
+
+One fixed anchored period L for corrections to the parity seed only permits unit heads of length N < 2L. For varying periods, `exists_expensive_periodic_parity_sections` gives feasible corrections whose full section norms exceed any prescribed sequence. This concerns the set of feasible competitors. The minimizing norm is computed by the separate finite-window projection.
+
 **Open.** Construct such a cofinal family with subpolynomial complete Pareto norm unconditionally. The finite interpolation theorem controls the head and the conductor window. The growth criterion concerns the norm on the entire positive axis.
 
 ## Algebras of the physical-head sections

@@ -781,6 +781,8 @@ import RiemannResearch.RH.PhysicalHeadSnakeSections
 import RiemannResearch.RH.PhysicalHeadSectionGrowth
 import RiemannResearch.RH.PhysicalHeadSectionLog
 import RiemannResearch.RH.PhysicalHeadFiniteMinimum
+import RiemannResearch.RH.PhysicalHeadParityMinimum
+import RiemannResearch.RH.PhysicalHeadWeakLimit
 import RiemannResearch.RH.PhysicalHeadStageAlgebra
 import RiemannResearch.RH.PhysicalHeadStageAlgebraComparison
 import RiemannResearch.RH.PhysicalHeadAlgebraSnake
