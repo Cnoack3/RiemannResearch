@@ -4211,3 +4211,18 @@ end RiemannResearch.CategoryTheory.Rebuild
     mean_rows_homology_zero,
     physical_conditions_tfae,
     rawGram_iff_correctedCarryCapture]
+
+-- Native Q representatives of the legal Pareto carry class.
+#recheck_categorical RiemannResearch.CategoryTheory.PhysicalParityObject
+  in RiemannResearch.CategoryTheory.PhysicalParityObject [
+    carryMeanQ,
+    transportedCarry,
+    nativeCarry,
+    transportedCarry_mean,
+    nativeCarry_data,
+    nativeCarry_screen,
+    nativeCarry_normal_line,
+    mixed_orthogonal_both_eq_zero,
+    nativeCarry_ne_transportedCarry,
+    native_minus_pareto_fit,
+    nativeCarry_packet]

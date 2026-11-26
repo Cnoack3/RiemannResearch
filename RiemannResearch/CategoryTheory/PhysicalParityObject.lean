@@ -6,6 +6,7 @@ import RiemannResearch.RH.PhysicalHeadQuotientMeasureChange
 import RiemannResearch.RH.ScreenedSectionDescent
 import RiemannResearch.RH.CanonicalCarryGram
 import RiemannResearch.RH.MixedCanonicalCarryCapture
+import RiemannResearch.RH.MixedReciprocalDensity
 
 /-!
 # The physical parity object in the categorical reconstruction
@@ -106,5 +107,133 @@ theorem rawGram_iff_correctedCarryCapture :
   rw [correctedCarry_capture_tendsto_iff, ← CanonicalCarryClosure.physical_rawCarry_closures.1]
   exact CanonicalCarryClosure.riemannHypothesis_iff_rawUnitGramCost_saturates.symm.trans
     CanonicalCarryClosure.riemannHypothesis_iff_one_mem_canonicalCarryClosure
+
+open RiemannResearch.RH.ZetaTwoHilbert RiemannResearch.RH.QParetoEquivalence
+open RiemannResearch.RH.QPhysicalQuotientMetric
+open MeasureChange (qMixed)
+
+/-- The scalar of a physical carry is its transported Pareto mean. -/
+def carryMeanQ (v : QHilbert) : ℝ := inner ℝ (paretoEquiv v) hilbertOne
+
+/-- The physical sequence of the Pareto mean-one section. -/
+def transportedCarry : QHilbert := paretoEquiv.symm normalizedScreenedTwo
+
+/-- The native Q orthogonal representative of the same scalar class. -/
+def nativeCarry : QHilbert := transportedCarry - qMixed.starProjection transportedCarry
+
+theorem transportedCarry_mean : carryMeanQ transportedCarry = 1 := by
+  simpa only [carryMeanQ, transportedCarry, paretoEquiv.apply_symm_apply] using
+    normalizedScreenedTwo_mean
+
+theorem nativeCarry_data :
+    nativeCarry ∈ physicalSpace closedSpace ∧ nativeCarry ∈ qMixedᗮ ∧
+      carryMeanQ nativeCarry = 1 := by
+  have hp : paretoEquiv (qMixed.starProjection transportedCarry) ∈ mixedClosure :=
+    qMixed.starProjection_apply_mem transportedCarry
+  have hpu := (mem_mixedClosure_iff_mem_closedSpace_and_mean_zero _).mp hp
+  have hu := screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure
+  refine ⟨?_, qMixed.sub_starProjection_mem_orthogonal _, ?_⟩
+  · change paretoEquiv (transportedCarry - qMixed.starProjection transportedCarry) ∈ closedSpace
+    rw [map_sub, transportedCarry, paretoEquiv.apply_symm_apply]
+    exact closedSpace.sub_mem hu hpu.1
+  · change inner ℝ (paretoEquiv (transportedCarry - qMixed.starProjection transportedCarry))
+      hilbertOne = 1
+    rw [map_sub, inner_sub_left, hpu.2, sub_zero]
+    exact transportedCarry_mean
+
+/-- Screen any legal physical input in native Q using its Pareto carry scalar. -/
+theorem nativeCarry_screen {v : QHilbert} (hv : v ∈ physicalSpace closedSpace) :
+    v - qMixed.starProjection v = carryMeanQ v • nativeCarry := by
+  have h := nativeCarry_data
+  have hm : v - carryMeanQ v • nativeCarry ∈ qMixed := by
+    change paretoEquiv (v - carryMeanQ v • nativeCarry) ∈ mixedClosure
+    apply (mem_mixedClosure_iff_mem_closedSpace_and_mean_zero _).2
+    rw [map_sub, map_smul]
+    refine ⟨closedSpace.sub_mem hv (closedSpace.smul_mem _ h.1), ?_⟩
+    rw [inner_sub_left, real_inner_smul_left]
+    change carryMeanQ v - carryMeanQ v * carryMeanQ nativeCarry = 0
+    rw [h.2.2, mul_one, sub_self]
+  have he := qMixed.starProjection_eq_self_iff.mpr hm
+  rw [map_sub, map_smul,
+    qMixed.starProjection_apply_eq_zero_iff.mpr h.2.1, smul_zero, sub_zero] at he
+  rw [he]
+  abel
+
+/-- The native Q normal line inside the legal physical space. -/
+theorem nativeCarry_normal_line :
+    physicalSpace closedSpace ⊓ qMixedᗮ = Submodule.span ℝ {nativeCarry} := by
+  apply le_antisymm
+  · intro v hv
+    obtain ⟨hlegal, horth⟩ := hv
+    have he := nativeCarry_screen hlegal
+    rw [qMixed.starProjection_apply_eq_zero_iff.mpr horth, sub_zero] at he
+    exact Submodule.mem_span_singleton.mpr ⟨carryMeanQ v, he.symm⟩
+  · apply Submodule.span_le.mpr
+    rintro v (rfl : v = nativeCarry)
+    exact ⟨nativeCarry_data.1, nativeCarry_data.2.1⟩
+
+/-- Only the zero physical vector can be orthogonal to the mixed dictionary in both metrics. -/
+theorem mixed_orthogonal_both_eq_zero {v : QHilbert}
+    (hp : paretoEquiv v ∈ mixedClosureᗮ) (hq : v ∈ qMixedᗮ) : v = 0 := by
+  let F := (innerSL ℝ (paretoEquiv v)).comp paretoEquiv.toContinuousLinearMap
+  have hm : MixedReciprocalDensity.mixed ≤ F.ker := by
+    intro m hm'
+    change inner ℝ (paretoEquiv v) (paretoEquiv m) = 0
+    exact (real_inner_comm _ _).trans (hp _ hm')
+  have hb : MixedReciprocalDensity.mixed.map QDensityMetric.B.toLinearMap ≤ F.ker := by
+    rintro _ ⟨m, hm', rfl⟩
+    change inner ℝ (paretoEquiv v) (paretoEquiv (QDensityMetric.B m)) = 0
+    simp only [paretoEquiv_apply]
+    rw [← QDensityMetricInverse.q_inner_density]
+    exact (real_inner_comm _ _).trans (hq m hm')
+  have ht := Submodule.topologicalClosure_minimal _ (sup_le hm hb) F.isClosed_ker
+  rw [MixedReciprocalDensity.mixed_augmented_dense] at ht
+  have hz : inner ℝ (paretoEquiv v) (paretoEquiv v) = 0 :=
+    ht (show v ∈ (⊤ : Submodule ℝ QHilbert) from trivial)
+  have h := (inner_self_eq_zero (𝕜 := ℝ)).mp hz
+  exact paretoEquiv.injective (h.trans paretoEquiv.map_zero.symm)
+
+/-- The two mean-one representatives genuinely differ on the same physical sites. -/
+theorem nativeCarry_ne_transportedCarry : nativeCarry ≠ transportedCarry := by
+  intro he
+  have hp : paretoEquiv transportedCarry ∈ mixedClosureᗮ := by
+    rw [transportedCarry, paretoEquiv.apply_symm_apply, normalizedScreenedTwo,
+      ← fullScreening_packet]
+    exact mixedClosure.orthogonal.smul_mem _ (fullScreening_mem_orthogonal _)
+  have hq := nativeCarry_data.2.1
+  rw [he] at hq
+  have hz := mixed_orthogonal_both_eq_zero hp hq
+  have hmean := transportedCarry_mean
+  rw [hz, carryMeanQ, map_zero, inner_zero_left] at hmean
+  exact zero_ne_one hmean
+
+/-- The entire physical change in the mixed fit on legal inputs has rank one. -/
+theorem native_minus_pareto_fit {v : QHilbert} (hv : v ∈ physicalSpace closedSpace) :
+    qMixed.starProjection v - paretoEquiv.symm (mixedClosure.starProjection (paretoEquiv v)) =
+      carryMeanQ v • (transportedCarry - nativeCarry) := by
+  have h := fullScreening_eq_mean_smul (show paretoEquiv v ∈ closedSpace from hv)
+  change paretoEquiv v - mixedClosure.starProjection (paretoEquiv v) =
+    carryMeanQ v • normalizedScreenedTwo at h
+  have hp := congrArg (fun x => paretoEquiv.symm x) h
+  simp only [map_sub, map_smul, paretoEquiv.symm_apply_apply] at hp
+  change v - paretoEquiv.symm (mixedClosure.starProjection (paretoEquiv v)) =
+    carryMeanQ v • transportedCarry at hp
+  rw [smul_sub, ← hp, ← nativeCarry_screen hv]
+  abel
+
+/-- Every actual packet has its von Mangoldt scalar on the native Q carry line. -/
+theorem nativeCarry_packet (q : ℕ) (hq : 1 < q) :
+    let x := paretoEquiv.symm (ramanujanPacketHilbert q)
+    x - qMixed.starProjection x = ArithmeticFunction.vonMangoldt q • nativeCarry := by
+  let x := paretoEquiv.symm (ramanujanPacketHilbert q)
+  have hv : x ∈ physicalSpace closedSpace := by
+    change paretoEquiv (paretoEquiv.symm (ramanujanPacketHilbert q)) ∈ closedSpace
+    rw [paretoEquiv.apply_symm_apply]
+    exact packet_mem_closedSpace q hq
+  have hm : carryMeanQ x = ArithmeticFunction.vonMangoldt q := by
+    change inner ℝ (paretoEquiv (paretoEquiv.symm (ramanujanPacketHilbert q))) hilbertOne = _
+    rw [paretoEquiv.apply_symm_apply, hilbert_inner_one,
+      hilbertSequence_ramanujanPacketHilbert, paretoMean_ramanujanPacket]
+  exact (nativeCarry_screen hv).trans (congrArg (fun a : ℝ => a • nativeCarry) hm)
 
 end RiemannResearch.CategoryTheory.PhysicalParityObject

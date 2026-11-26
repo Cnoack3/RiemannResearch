@@ -112,6 +112,119 @@ On \(H\) the centered screening \(D_0x=Sx-C(x)\mathbf1_H\) is the orthogonal pro
 \]
 On \(V\times V\) this equals \(\|u-\mathbf1_H\|_P^2 C(v)C(w)\). Testing \(v=w=u\) shows that the restricted form vanishes exactly under RH. Equivalently \(\beta(h,v)=C(h)C(v)\) for all \(h\in M^{\perp_P},v\in V\). Both predicates are equivalent to \(u=\mathbf1_H\). The checked forward implication from RH to legal membership uses the squarefree damping converse. [Defect and mean-product tests](../RH/MixedConductorBilinear.lean) · [Checked approximation converse](../RH/CenteredMeanSquarefreeConverse.lean)
 
+## From the Pareto rank-one splitting to the native \(Q\) carry
+
+### Fekete rates of the mean-bearing packets
+
+Throughout this chapter \(r_k(n)=n\bmod k\), \(g_k=r_k/k\), \(J_d=\sum_{k\mid d}\mu(d/k)r_k\), \(\epsilon(v)=\langle v,\mathbf1\rangle_P\), \(\lambda=\log2\), and \(Z_2=\zeta(2)\). The legal space \(V\) is the closed span of the \(r_k\), and \(M\) is the closed span of packets with at least two distinct prime factors. Each physical site has positive mass in both metrics. We use the same symbols for vectors with the same physical coordinates.
+
+Take \(h\in M^{\perp_P}\) and let \(f_h(k)=\langle r_k,h\rangle_P\). Since \(r_k=\sum_{d\mid k}J_d\), every mixed divisor contribution vanishes against \(h\). Thus \(f_h(ab)=f_h(a)+f_h(b)\) for coprime \(a,b\). The conductor variation theorem also gives
+\[
+ \lim_{N\to\infty}\frac1N\sum_{j=N}^{2N-1}|f_h(j+1)-f_h(j)|=0 .
+\]
+Together these facts imply \(f_h(k)=c_h\log k\) by dyadic additive rigidity. For \(a>1\), the coprime Fekete power rate is consequently exact,
+\[
+ \inf_{\ell\ge1}\frac{f_h(a^\ell)}{\ell}=
+ \lim_{\ell\to\infty}\frac{f_h(a^\ell)}{\ell}=c_h\log a,\qquad
+ c_h=\langle u,h\rangle_P,\qquad
+ u=\frac{(I-P_M^P)J_2}{\lambda}.
+\]
+Here \(J_2=r_2\). Fekete's subadditivity hypotheses hold because the exponent sequence is linear. The dyadic theorem is the separate ingredient identifying a *single* slope across different primes. Möbius inversion gives \(\langle J_d,h\rangle_P=c_h\Lambda(d)\). At \(h=\mathbf1\) the scalar is one, hence the mean-bearing packets are the prime powers and \(\epsilon(J_{p^j})=\log p\). Testing against every \(h\in M^{\perp_P}\) and extending from the packet span yields
+\[
+ (I-P_M^P)v=\epsilon(v)u,\qquad
+ V=M\oplus^{\perp_P}\mathbb Ru,\qquad \epsilon(u)=1 .
+\]
+In particular \((I-P_M^P)J_{p^j}=(\log p)u\) for every prime power, and \(M=V\cap\ker\epsilon\). [Coprime Fekete slopes](../NumberTheory/FeketePowerSlope.lean) · [Dyadic rigidity](../NumberTheory/DyadicAdditiveRigidity.lean) · [Screening of every legal vector](../RH/MixedConductorRankOne.lean)
+
+### Two normal equations for the same physical dictionary
+
+Write \(P_n=1/(n(n+1))\), \(Q_n=1/(Z_2 n^2)\), \(R_n=1/(n+1)\) and \(W_n=P_n/Q_n=Z_2(1-R_n)\). When used as a vector, \(W\) means \(W\mathbf1\). The same physical mean satisfies
+\[
+ \epsilon(v)=\langle v,W\rangle_Q,\qquad
+ \langle v,w\rangle_P=\langle v,Ww\rangle_Q.
+\]
+Let \(\Pi=P_M^Q\). The Pareto fit \(p=P_M^Px\) is characterized by \(p\in M\) and \(\Pi W(x-p)=0\). It can be calculated entirely in \(Q\):
+\[
+ p=\sum_{j\ge0}(\Pi R)^j\Pi(I-R)x,\qquad \|\Pi R\|_{Q\to Q}\le\tfrac12 .
+\]
+In particular, if \(p=P_M^P J_2\), the original endpoint asks whether \(\langle p,Wp\rangle_Q=\lambda-\lambda^2\); equivalently \(\langle u,Wu\rangle_Q=1\).
+
+Define the native mean-one representative \(u_Q=(I-\Pi)u=(I-\Pi)J_2/\lambda\). For \(v\in V\), apply \(I-\Pi\) to \(v-\epsilon(v)u\in M\). This proves
+\[
+ V=M\oplus^{\perp_Q}\mathbb Ru_Q,\qquad
+ V\cap M^{\perp_Q}=\mathbb Ru_Q,\qquad
+ M=V\cap W^{\perp_Q},\qquad
+ V^{\perp_Q}=M^{\perp_Q}\cap u^{\perp_Q}.
+\]
+The transported Pareto orthogonality reads \(\langle m,Wu\rangle_Q=0\) for \(m\in M\). Equivalently \(V=(W V^{\perp_P})^{\perp_Q}\). The square-root-density isometry \(v\mapsto\sqrt W\,v\) gives \(\sqrt W\,V=(\sqrt W\,M)\oplus^{\perp_Q}\mathbb R(\sqrt W\,u)\) when transforming the entire space and the dictionary.
+
+The two native and Pareto representatives genuinely differ on the physical sites. If \(h\) is perpendicular to \(M\) in both metrics, it is \(P\)-perpendicular to \(M\) and to \(W^{-1}M\). The closed span of \(M+W^{-1}M\) is the full physical Hilbert space by mixed reciprocal density, so \(h=0\). Since \(\epsilon(u)=1\), the mixed vector \(t=\Pi u=u-u_Q\) is nonzero. The exact comparison on every legal vector is
+\[
+ P_M^Q v-P_M^Pv=\epsilon(v)t,\qquad
+ \|t\|_Q^2=\|u\|_Q^2-\|u_Q\|_Q^2>0,\qquad
+ t=\sum_{j\ge0}(\Pi R)^j\Pi R u_Q.
+\]
+The last formula follows from \(\Pi(I-R)(u_Q+t)=0\). Thus reconstruction of the Pareto projection on *all* of \(V\) requires only the native \(Q\) projection and a single mixed correction. [Native normal line and strict metric difference](PhysicalParityObject.lean) · [Physical metric reconstruction](../RH/QPhysicalQuotientMetric.lean) · [Mixed reciprocal density](../RH/MixedReciprocalDensity.lean)
+
+### CRT synthesis with carry line \(\mathbb Ru\)
+
+Define the retained carry of a legal vector by \(\operatorname{Carry}_P(v)=\epsilon(v)u\). Its mixed coordinate is \(v-\epsilon(v)u\). The corresponding native \(Q\) coordinates are \((v-\epsilon(v)u_Q,\epsilon(v)u_Q)\). Changing the representative takes \((m,a)\) in the Pareto coordinates to \((m+at,a)\) in the native coordinates, with \(t=u-u_Q\). It fixes the scalar quotient \(V/M\) and holds for every legal vector. In particular, keeping the physical carry line \(\mathbb Ru\) gives the exact native cost and cross term
+\[
+ \|m+au\|_Q^2=\|m+at\|_Q^2+a^2\|u_Q\|_Q^2,\qquad \langle m,u\rangle_Q=\langle m,t\rangle_Q .
+\]
+
+For a mixed conductor \(d\), put \(q_p=p^{v_p(d)}\) and let \(c_{d,p}\) be the canonical inverse of \(d/q_p\) modulo \(q_p\). The actual raw floor carry \(C_d=\sum_{p\mid d}c_{d,p}g_{q_p}-g_d\) therefore has explicit scalar
+\[
+ a_d=\epsilon(C_d)
+     =\sum_{p\mid d}c_{d,p}\frac{\log q_p}{q_p}-\frac{\log d}{d}
+     =\sum_{p\mid d}(\log q_p)\left(\frac{c_{d,p}}{q_p}-\frac1d\right)>0 .
+\]
+Indeed the least positive CRT inverse is at least one and \(q_p<d\). Thus every individual mixed-conductor raw carry already generates the one-dimensional quotient. Its retained component is \(a_d u\) in Pareto and \(a_d u_Q\) in native \(Q\), with mixed remainder in both cases. The full raw carries have closed span \(V\). The packet-corrected carries \(K_d=\sum_{e\mid d,\ e\ {\rm mixed}}J_e\) have zero scalar and closed span \(M\). The atom–carry involution \((x,y)\mapsto(x+U_Ly,-y)\) preserves the scalar of the physical synthesis. Applying the two linear split maps to the synthesis preserves its mixed vector and retained carry for each chosen metric.
+
+At period six the inverses are \(1,2\), so \(C_6=g_2+2g_3-g_6\) gives \(a_6=(\log2)/3+(\log3)/2\). Consequently its quotient coordinate is \(a_6\), whereas the corrected \(K_6=J_6=r_6-r_2-r_3\) has quotient coordinate zero. [Canonical floor carries](../RH/FiniteAtomCarryCRT.lean) · [Raw closure](../RH/CanonicalCarryClosure.lean) · [Corrected carries and Möbius inversion](../RH/MixedCanonicalCarryCapture.lean)
+
+### An explicit native \(Q\) endpoint for the uncentered parity packet
+
+Let \(w_V=P_V^Q W\). For \(v\in V\), \(\langle v,w_V\rangle_Q=\epsilon(v)\). This functional is nonzero because \(\epsilon(u)=1\). Its unique minimum-norm mean-one vector is \(w_V/\|w_V\|_Q^2\), giving the exact formula
+\[
+ u_Q=\frac{P_V^QW}{\|P_V^QW\|_Q^2},\qquad
+ \|W\|_Q^2=Z_2\sum_{n\ge1}\frac1{(n+1)^2}=Z_2(Z_2-1).
+\]
+In this discrete space \(W\in V\) is equivalent to \(\mathbf1\in V\). To see the reverse implication as well, let \(T_k v(n)=v(\lfloor n/k\rfloor)\) with \(v(0)=0\). The legal space is invariant under \(T_k\). For a physical generator this follows directly from \(T_k r_d=(r_{kd}-r_k)/k\). Also \(\|T_kv\|_P^2=\|v\|_P^2/k\), by telescoping the site weights over \(kj\le n<k(j+1)\). Define
+\[
+ L=\sum_{k\ge1}P_k T_k=\tfrac12(I+B),\qquad
+ B=2\sum_{k\ge2}P_k T_k,\qquad
+ \|B\|_{P\to P}\le 2\sum_{k\ge2}\frac{P_k}{\sqrt{k}}\le\frac1{\sqrt2}<1.
+\]
+The operator series converge in norm. Both \(L\) and \(L^{-1}=2\sum_{j\ge0}(-B)^j\) preserve closed \(V\). Sitewise \(L\mathbf1(n)=\sum_{k\le n}P_k=n/(n+1)=W_n/Z_2\). This proves the equivalence. The next conclusions are mathematical consequences of the displayed dilation argument and the repository's legal-membership criterion:
+\[
+\begin{aligned}
+\mathrm{RH}
+&\iff W\in V
+ \iff \|u_Q\|_Q^2=\frac{1}{Z_2(Z_2-1)}
+ \iff u_Q(n)=\frac{n}{(n+1)(Z_2-1)}\quad(\forall n\ge1)\\
+&\iff
+ \|P_M^Q J_2\|_Q^2=\frac{3}{4}-\frac{(\log2)^2}{Z_2(Z_2-1)} .
+\end{aligned}
+\]
+The corresponding perpendicular-space criterion is \(\mathrm{RH}\iff V=M\oplus^{\perp_Q}\mathbb R W\), since \(W\in M^{\perp_Q}\) holds at every stage of the argument. For the norm criterion use Pythagoras on \(W=w_V+(W-w_V)\). For the explicit profile, equality of the vectors implies \(W\in V\) because \(u_Q\in V\). For the last equality use \(P_M^Q J_2=J_2-\lambda u_Q\) and \(Q(n\text{ odd})=3/4\). This endpoint uses the *native* projection of the *unnormalized* \(J_2\). The known Pareto projection of the same packet has the distinct endpoint \(\log2-(\log2)^2\). [Legal-membership converse](../RH/CenteredMeanSquarefreeConverse.lean) · [Exact dilation law](../RH/ThresholdHilbertDilation.lean) · [Native parity energies](../RH/PrimeSupportMeasureChange.lean)
+
+The proof also works directly in native \(Q\). On each block,
+\(\sum_{n=kj}^{k(j+1)-1}n^{-2}\le 1/(kj^2)\), so \(\|T_k\|_{Q\to Q}\le k^{-1/2}\). In particular, writing \(\rho=2\sum_{k\ge2}P_k/\sqrt{k}<1\), the same inverse gives a quantitative comparison of distances to \(V\):
+\[
+ \frac{Z_2}2(1-\rho)\operatorname{dist}_Q(\mathbf1,V)
+ \le\operatorname{dist}_Q(W,V)
+ \le\frac{Z_2}2(1+\rho)\operatorname{dist}_Q(\mathbf1,V).
+\]
+Indeed \(L\) induces an invertible operator on \(H_Q/V\), with inverse norm at most \(2/(1-\rho)\).
+
+The exact native deficit has an especially simple form. Put \(A_0=Z_2(Z_2-1)\) and \(d=\operatorname{dist}_Q(W,V)\). Since \(A_0-d^2=\|P_V^QW\|_Q^2>0\),
+\[
+ \left(\frac{3}{4}-\frac{\lambda^2}{A_0}\right)-\|P_M^Q J_2\|_Q^2
+ =\frac{\lambda^2 d^2}{A_0(A_0-d^2)} .
+\]
+Thus an upper bound on the native parity deficit is an upper bound on the defect of the native mean representer in the physical legal space.
+
 ## Universal lifting and the physical norm of a section
 
 For the inclusion \(i:M\to V\), the mean \(C:V\to\mathbb R\), the section \(s(a)=au\) and the retraction \(p(v)=v-s(Cv)=P_M^Pv\), the split identities are
@@ -363,7 +476,7 @@ The physical discrepancy equals \(Z\|f\|_Q^2-\|If\|_P^2=\sum_{n\ge1}|f(n)|^2/[n^
 
 ## Coverage of the original categorical development
 
-Import `RiemannResearch.CategoryTheory.All` to use the original declaration names. The replay takes that interface as its sole project import. It resolves each recorded name in its owning module and namespace and rechecks its stored type and body. The chronological groups through `91f07fd` contain 3,000 declaration entries from 168 modules. The physical quotient descent at `e684cf2` brings this to 3,024 entries from 169 modules. The continuation records 153 further entries from seven source revisions and three theorems on the physical parity object, bringing the replay to 3,180 entries. These counts include definitions and structure projections as well as theorems. [Public imports](All.lean) · [Chronological replay with owners and names](HistoricalRebuild.lean)
+Import `RiemannResearch.CategoryTheory.All` to use the original declaration names. The replay takes that interface as its sole project import. It resolves each recorded name in its owning module and namespace and rechecks its stored type and body. The chronological groups through `91f07fd` contain 3,000 declaration entries from 168 modules. The physical quotient descent at `e684cf2` brings this to 3,024 entries from 169 modules. The continuation records 153 further entries from seven source revisions and three theorems on the physical parity object, bringing the initial physical replay to 3,180 entries. The native carry extension adds eleven declarations, giving 3,191 entries. These counts include definitions and structure projections as well as theorems. [Public imports](All.lean) · [Chronological replay with owners and names](HistoricalRebuild.lean)
 
 | Construction | Consequence retained in the public interface | Lean source |
 |---|---|---|
