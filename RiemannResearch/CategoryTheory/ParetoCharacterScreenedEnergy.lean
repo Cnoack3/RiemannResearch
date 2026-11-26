@@ -6,6 +6,8 @@ import RiemannResearch.RH.ScreenedSectionDescent
 The Gram matrices use the complete digamma progression mass. The signed
 character sums are evaluated before taking any products or squared norms.
 The missing mixed modes give the exact remainder for each finite upper bound.
+For the signed two-prime pairing, a finite character section plus the
+Cauchy--Schwarz allowance for its exact residual gives a rigorous RH certificate.
 -/
 
 noncomputable section
@@ -43,6 +45,131 @@ theorem characterRow_eq (q : Index) : ∀ a : ℕ, 0 < a → characterRow q a = 
       ih r.val (show r.val < q from Finset.mem_Iio.mp r.property) k hk
     rw [characterRow, digammaRow]
     simp only [characterGram_eq _ _ hq ha, characterGram_eq _ _ hq hq, hp _ _ hq, hp _ _ ha]
+
+/-- Finite orthogonal section computed from the character-Cholesky rows. -/
+def partialSection (s : Finset Index) (a : ℕ) : mixedClosure :=
+  ∑ q ∈ s, characterRow q a • basis q
+
+/-- Signed finite cross pairing.  Its summands must not be discarded. -/
+def crossPartial (s : Finset Index) (a b : ℕ) : ℝ :=
+  ∑ q ∈ s, characterRow q a * characterRow q b
+
+/-- Captured energy of one packet in a finite character section. -/
+def energyPartial (s : Finset Index) (a : ℕ) : ℝ :=
+  ∑ q ∈ s, (characterRow q a)^2
+
+private theorem basis_inner_partialSection (s : Finset Index) (a : ℕ) (q : Index) :
+    inner ℝ (basis q : mixedClosure) (partialSection s a : mixedClosure) =
+      if q ∈ s then characterRow q a else 0 := by
+  rw [partialSection, inner_sum]
+  have ho := orthonormal_iff_ite.mp basis.orthonormal
+  simp_rw [real_inner_smul_right, ho]
+  simp
+
+theorem partialSection_inner (s : Finset Index) (a b : ℕ) :
+    inner ℝ (partialSection s a : mixedClosure) (partialSection s b : mixedClosure) =
+      crossPartial s a b := by
+  rw [partialSection, sum_inner, crossPartial]
+  apply Finset.sum_congr rfl
+  intro q hq
+  rw [real_inner_smul_left, basis_inner_partialSection s b q, if_pos hq]
+
+theorem partialSection_norm_sq (s : Finset Index) (a : ℕ) :
+    ‖partialSection s a‖^2 = energyPartial s a := by
+  rw [← real_inner_self_eq_norm_sq, partialSection_inner, energyPartial, crossPartial]
+  apply Finset.sum_congr rfl
+  intro q _
+  ring
+
+theorem basis_inner_packetProjection (q : Index) (a : ℕ) (ha : 0 < a) :
+    inner ℝ (basis q : mixedClosure)
+      (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert a)) =
+        characterRow q a := by
+  rw [← HilbertBasis.repr_apply_apply, packet_row_coefficient q a ha]
+  exact (characterRow_eq q a ha).symm
+
+theorem packetProjection_inner_partialSection (s : Finset Index)
+    (a b : ℕ) (ha : 0 < a) :
+    inner ℝ (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert a))
+      (partialSection s b) = crossPartial s a b := by
+  rw [partialSection, inner_sum, crossPartial]
+  apply Finset.sum_congr rfl
+  intro q _
+  rw [real_inner_smul_right, real_inner_comm,
+    basis_inner_packetProjection q a ha]
+  ring
+
+theorem crossPartial_comm (s : Finset Index) (a b : ℕ) :
+    crossPartial s a b = crossPartial s b a := by
+  unfold crossPartial
+  apply Finset.sum_congr rfl
+  intro q _
+  ring
+
+/-- The complete signed character series is the desired reverse mixed pairing. -/
+theorem character_cross_series :
+    (∑' q : Index, characterRow q 2 * characterRow q 3) =
+      inner ℝ (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2))
+        (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)) := by
+  rw [← packet_row_covariance 2 3 (by decide) (by decide)]
+  apply tsum_congr
+  intro q
+  rw [characterRow_eq q 2 (by decide), characterRow_eq q 3 (by decide)]
+
+/-- Exact signed remainder after any finite family of character modes. -/
+theorem packetProjection_cross_eq_partial_add_remainder (s : Finset Index) :
+    let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)
+    let y := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)
+    inner ℝ x y = crossPartial s 2 3 +
+      inner ℝ (x - partialSection s 2) (y - partialSection s 3) := by
+  dsimp only
+  have hy :
+      inner ℝ (partialSection s 2)
+        (mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)) =
+          crossPartial s 2 3 := by
+    rw [real_inner_comm, packetProjection_inner_partialSection s 3 2 (by decide),
+      crossPartial_comm s 3 2]
+  rw [inner_sub_left, inner_sub_right, inner_sub_right,
+    packetProjection_inner_partialSection s 2 3 (by decide),
+    hy, partialSection_inner]
+  ring
+
+/-- Exact residual energy of a finite character section. -/
+theorem packetProjection_residual_norm_sq (s : Finset Index) (a : ℕ) (ha : 0 < a) :
+    let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert a)
+    ‖x - partialSection s a‖^2 = ‖x‖^2 - energyPartial s a := by
+  dsimp only
+  rw [norm_sub_sq_real, packetProjection_inner_partialSection s a a ha,
+    partialSection_norm_sq, crossPartial, energyPartial]
+  ring
+
+/-- A finite signed character calculation proves RH once its captured cross
+pairing dominates the exact two-prime target plus the Cauchy allowance for the
+two residual tails.  In particular, a positive or nearly sufficient partial
+sum is not by itself a certificate: the signed remainder is retained. -/
+theorem riemannHypothesis_of_character_cross_certificate (s : Finset Index)
+    (h :
+      Real.log 2 + Real.log 3 / 2 - Real.pi / (3 * Real.sqrt 3) -
+          Real.log 2 * Real.log 3 +
+          ‖mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2) -
+              partialSection s 2‖ *
+            ‖mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3) -
+              partialSection s 3‖ ≤
+        crossPartial s 2 3) :
+    RiemannHypothesis := by
+  let x := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 2)
+  let y := mixedClosure.orthogonalProjectionOnto (ramanujanPacketHilbert 3)
+  let r₂ := x - partialSection s 2
+  let r₃ := y - partialSection s 3
+  have hcs := abs_real_inner_le_norm r₂ r₃
+  have hlow : -(‖r₂‖ * ‖r₃‖) ≤ inner ℝ r₂ r₃ :=
+    (neg_le_neg hcs).trans (neg_abs_le _)
+  have hsplit := packetProjection_cross_eq_partial_add_remainder s
+  apply riemannHypothesis_of_two_three_projected_covariance
+  change Real.log 2 + Real.log 3 / 2 - Real.pi / (3 * Real.sqrt 3) -
+      Real.log 2 * Real.log 3 ≤ inner ℝ x y
+  dsimp only [x, y, r₂, r₃] at hlow h
+  linarith
 
 def capturedMode (q : Index) : ℝ := (characterRow q 2)^2
 
@@ -133,5 +260,9 @@ theorem rh_iff_character_certificates :
       linarith
     obtain ⟨s,hs⟩ := h _ hp
     linarith [(certified_interval s).2]
+
+#print axioms character_cross_series
+#print axioms packetProjection_cross_eq_partial_add_remainder
+#print axioms riemannHypothesis_of_character_cross_certificate
 
 end RiemannResearch.CategoryTheory.ParetoCharacterScreenedEnergy
