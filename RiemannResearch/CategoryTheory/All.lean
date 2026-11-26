@@ -49,6 +49,59 @@ import RiemannResearch.RH.QInfiniteSquarefreeCarry
 import RiemannResearch.RH.SiteGramStrictStages
 import RiemannResearch.RH.ZetaTwoAffineHeadTower
 import RiemannResearch.RH.CenteredMeanTwoSeedConverse
+import RiemannResearch.Analysis.CompactMatchingQuotient
+import RiemannResearch.Analysis.ResidualCorrelationCost
+import RiemannResearch.Analysis.WeakCompactConstraints
+import RiemannResearch.CategoryTheory.PhysicalParityObject
+import RiemannResearch.GroupTheory.AddSubgroupCRT
+import RiemannResearch.LinearAlgebra.CRTReconstructionObstructions
+import RiemannResearch.LinearAlgebra.WeightedQuotientDefectRank
+import RiemannResearch.LinearAlgebra.WeightedQuotientHilbert
+import RiemannResearch.NumberTheory.InfiniteCRTObstruction
+import RiemannResearch.NumberTheory.SquarefreeCumulantLimit
+import RiemannResearch.RH.ArithmeticResidueMomentEnergy
+import RiemannResearch.RH.CenteredMeanGramUpperBound
+import RiemannResearch.RH.CenteredParityFiniteTrials
+import RiemannResearch.RH.CertifiedCarryComposition
+import RiemannResearch.RH.ExactHeadPhysicalReturn
+import RiemannResearch.RH.FullConductorRamanujanTransform
+import RiemannResearch.RH.LegalTailMeanCapacityDilation
+import RiemannResearch.RH.LegalTailMeanCapacityZeroProduct
+import RiemannResearch.RH.MertensEnergyConvergence
+import RiemannResearch.RH.MertensEnergyEndpoint
+import RiemannResearch.RH.MixedConductorAbsoluteBoundary
+import RiemannResearch.RH.MixedConductorBlockSplitting
+import RiemannResearch.RH.MixedPacketDensityTests
+import RiemannResearch.RH.MixedParityCofinalSubpower
+import RiemannResearch.RH.MixedParityProjectionDPP
+import RiemannResearch.RH.MixedParitySupportBounds
+import RiemannResearch.RH.PhysicalCarryGram
+import RiemannResearch.RH.PhysicalHeadBoundaryCoordinates
+import RiemannResearch.RH.PhysicalHeadPacketSquare
+import RiemannResearch.RH.PhysicalHeadQuotientMeasureChange
+import RiemannResearch.RH.PhysicalHeadResidualLift
+import RiemannResearch.RH.PhysicalHeadSectionLog
+import RiemannResearch.RH.PhysicalHeadWeakLimit
+import RiemannResearch.RH.PrimeMultipleGramRepair
+import RiemannResearch.RH.QCRTCanonicalGrowthCertificate
+import RiemannResearch.RH.QCRTDyadicBudget
+import RiemannResearch.RH.QCRTPositiveLogVariation
+import RiemannResearch.RH.QCanonicalCofinalGram
+import RiemannResearch.RH.QFullCorrectionBudgetDescent
+import RiemannResearch.RH.QFullDisplacementFiniteHeads
+import RiemannResearch.RH.QFullReciprocalRepairCriterion
+import RiemannResearch.RH.QFullShortHeadOneSided
+import RiemannResearch.RH.QPrimorialSchurForcing
+import RiemannResearch.RH.QReciprocalFullMinimizer
+import RiemannResearch.RH.QSquarefreeEvaluationBasis
+import RiemannResearch.RH.QSquarefreeHeadLeakage
+import RiemannResearch.RH.QSquarefreeMovingHeadEnergy
+import RiemannResearch.RH.QSquarefreeShortHeadYoung
+import RiemannResearch.RH.QWeightedResidueMaps
+import RiemannResearch.RH.ScreenedSectionDescent
+import RiemannResearch.RH.SemiprimeBlockRemainders
+import RiemannResearch.RH.SquarefreeMobiusProjection
+import RiemannResearch.Topology.CompactConstraintGluing
 
 /-!
 # Category theory in the RiemannResearch RH development
@@ -59,5 +112,8 @@ descent. This interface also exports the finite CRT presentations and their
 refinements, infinite carry expansions, affine head tower, screened algebra
 and bimodule, the layer and ambient snakes, and the finite Gram criteria.
 The physical quotient tower reconstructs the mixed projection of parity from
-its compatible minimum-norm representatives.
+its compatible minimum-norm representatives. The public interface exports the
+original declaration owners together with the subsequent measure-transfer,
+carry, response, and homology results. HistoricalRebuild replays those
+proofs and definitions using this interface as its only project import.
 -/

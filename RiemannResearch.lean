@@ -193,6 +193,7 @@ import RiemannResearch.RH.RamanujanFiniteIdentities
 import RiemannResearch.NumberTheory.PrimePowerCRTDecomposition
 import RiemannResearch.CategoryTheory.All
 import RiemannResearch.CategoryTheory.HistoricalRebuild
+import RiemannResearch.CategoryTheory.PhysicalParityObject
 import RiemannResearch.CategoryTheory.AtomCarryPresentation
 import RiemannResearch.RH.ResidueAtomIndependence
 import RiemannResearch.RH.FiniteAtomCarryCRT

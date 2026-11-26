@@ -1,177 +1,7 @@
 import Lean.Elab.Command
 import Lean.AddDecl
 import Lean.Util.ReplaceExpr
-import RiemannResearch.GroupTheory.AddSubgroupCRT
-import RiemannResearch.LinearAlgebra.WeightedFiniteQuotient
-import RiemannResearch.LinearAlgebra.WeightedQuotientDefectRank
-import RiemannResearch.Analysis.ContinuousBiorthogonalDeletion
-import RiemannResearch.RH.PhysicalHeadResidualLift
-import RiemannResearch.NumberTheory.GeneralizedCRTDescentTargets
-import RiemannResearch.RH.MobiusCoefficientStabilization
-import RiemannResearch.LinearAlgebra.WeightedQuotientHilbert
-import RiemannResearch.RH.NaturalMobiusSourceLimits
-import RiemannResearch.NumberTheory.SquarefreeCumulantPair
-import RiemannResearch.NumberTheory.SquarefreeCumulantTower
-import RiemannResearch.NumberTheory.SquarefreeCumulantLimit
-import RiemannResearch.RH.SquarefreeMobiusProjection
-import RiemannResearch.RH.QConductorCoefficientMass
-import RiemannResearch.RH.QSimultaneousCRT
-import RiemannResearch.Analysis.FiniteWeightedPushforward
-import RiemannResearch.Analysis.FiniteWeightedRefinement
-import RiemannResearch.RH.QWeightedResidueMaps
-import RiemannResearch.NumberTheory.PrimeResidueTopology
-import RiemannResearch.NumberTheory.FiniteGeneralizedCRT
-import RiemannResearch.NumberTheory.ProfiniteGeneralizedCRT
-import RiemannResearch.NumberTheory.ProfiniteCRT
-import RiemannResearch.RH.MixedConductorRankOne
-import RiemannResearch.RH.QFullDivisorProjection
-import RiemannResearch.RH.QInfiniteSquarefreeCarry
-import RiemannResearch.NumberTheory.ProfiniteCRTUniversal
-import RiemannResearch.RH.QDisplacementProfiniteContinuity
-import RiemannResearch.Analysis.ResidualCorrectionCost
-import RiemannResearch.Logic.EquivalenceRelationCRT
-import RiemannResearch.RH.QFullResidualCorrectionCost
-import RiemannResearch.Topology.CompactConstraintGluing
-import RiemannResearch.Analysis.CompactConstraintEnergy
-import RiemannResearch.Analysis.FiniteCoordinateCompletion
-import RiemannResearch.Analysis.FiniteMoorePenrose
-import RiemannResearch.Analysis.HilbertConstraintReconstruction
-import RiemannResearch.Analysis.ResidualCorrelationCost
-import RiemannResearch.CategoryTheory.FiniteFamilyCRT
-import RiemannResearch.CategoryTheory.LocalFamilyCRT
-import RiemannResearch.LinearAlgebra.CRTReconstructionObstructions
-import RiemannResearch.NumberTheory.InfiniteCRTObstruction
-import RiemannResearch.Analysis.CompactMatchingQuotient
-import RiemannResearch.Analysis.FiniteSingularGramReconstruction
-import RiemannResearch.Analysis.WeakCompactConstraints
-import RiemannResearch.CategoryTheory.FunctorCRT
-import RiemannResearch.CategoryTheory.QuotientMatchingCRT
-import RiemannResearch.Analysis.HilbertConstraintEnergy
-import RiemannResearch.CategoryTheory.OverlapEqualizerCRT
-import RiemannResearch.CategoryTheory.RegularCategoryCRT
-import RiemannResearch.RH.QFullCorrectionBudgetDescent
-import RiemannResearch.RH.PrimePowerPacketSummation
-import RiemannResearch.RH.ScreenedPrimePowerTelescope
-import RiemannResearch.RH.MixedConductorCaptureGains
-import RiemannResearch.CategoryTheory.AtomCarryPresentation
-import RiemannResearch.NumberTheory.PrimePowerCRTDecomposition
-import RiemannResearch.RH.RamanujanFiniteIdentities
-import RiemannResearch.RH.ResidueAtomIndependence
-import RiemannResearch.RH.CRTCarryRamanujanCoordinates
-import RiemannResearch.RH.FiniteAtomCarryCRT
-import RiemannResearch.RH.MixedParityProjectionDPP
-import RiemannResearch.RH.FullConductorRamanujanTransform
-import RiemannResearch.RH.UniversalAtomCarryPresentation
-import RiemannResearch.RH.AllCertifiedCarrySpan
-import RiemannResearch.RH.CertifiedCarryComposition
-import RiemannResearch.RH.FiniteCarryRamanujanDictionary
-import RiemannResearch.RH.UniversalCarryRamanujanSynthesis
-import RiemannResearch.RH.ArithmeticResidueMomentEnergy
-import RiemannResearch.RH.ConductorReconstructionEnergy
-import RiemannResearch.RH.ConductorTowerCompletions
-import RiemannResearch.RH.FiniteAtomCarryRefinement
-import RiemannResearch.RH.PhysicalCarryGram
-import RiemannResearch.RH.PhysicalPrimePowerCarryProjection
-import RiemannResearch.RH.QFullDisplacementFiniteHeads
-import RiemannResearch.RH.MixedCanonicalCarryCapture
-import RiemannResearch.RH.MixedParityCarry
-import RiemannResearch.RH.MixedParityCofinalSubpower
-import RiemannResearch.RH.MixedConductorContractiveSection
-import RiemannResearch.RH.MixedConductorMetricLifting
-import RiemannResearch.RH.MeanSectionStructure
-import RiemannResearch.RH.EveryMeanSectionDecomposition
-import RiemannResearch.RH.MixedConductorSplitExact
-import RiemannResearch.RH.FiniteAtomCarryFunctor
 import RiemannResearch.CategoryTheory.All
-import RiemannResearch.RH.MixedConductorSquareZero
-import RiemannResearch.RH.MixedConductorMetricCokernel
-import RiemannResearch.RH.MixedConductorHilbertBasis
-import RiemannResearch.RH.MixedConductorBlockSplitting
-import RiemannResearch.RH.MixedConductorPrimeSupport
-import RiemannResearch.RH.CenteredMeanSnake
-import RiemannResearch.RH.CenteredMeanQuotients
-import RiemannResearch.RH.MixedParitySupportBounds
-import RiemannResearch.RH.MixedConductorGlobalParseval
-import RiemannResearch.RH.MixedConductorSupportSnake
-import RiemannResearch.RH.PrimeSupportCokernel
-import RiemannResearch.RH.PrimeSupportParityQuotient
-import RiemannResearch.RH.PrimeSupportParityDescent
-import RiemannResearch.RH.MixedConductorPolarizedParseval
-import RiemannResearch.RH.MixedConductorGramBoundary
-import RiemannResearch.RH.MixedConductorGramZeroFree
-import RiemannResearch.RH.MixedConductorProjectedGram
-import RiemannResearch.RH.MixedConductorAbsoluteBoundary
-import RiemannResearch.RH.MixedConductorGramSites
-import RiemannResearch.RH.MixedOrthogonalMean
-import RiemannResearch.CategoryTheory.SquarefreeResidueCRT
-import RiemannResearch.RH.CenteredMeanLongExact
-import RiemannResearch.RH.PrimeSupportAlgebraDescent
-import RiemannResearch.RH.CenteredMeanRHCriteria
-import RiemannResearch.RH.ParetoAffineHeadTower
-import RiemannResearch.RH.ZetaTwoAffineHeadTower
-import RiemannResearch.RH.CenteredParityFiniteTrials
-import RiemannResearch.RH.CenteredMeanFiniteDescent
-import RiemannResearch.RH.SiteGramStrictStages
-import RiemannResearch.RH.CenteredMeanAmbientGeometry
-import RiemannResearch.RH.MixedConductorBimodule
-import RiemannResearch.RH.ConductorTowerLimit
-import RiemannResearch.RH.HausdorffSupportColimit
-import RiemannResearch.RH.AlgebraicSupportColimit
-import RiemannResearch.RH.CenteredMeanStageSnake
-import RiemannResearch.RH.MixedConductorStrictDescent
-import RiemannResearch.RH.TernaryMixedOrbitObstruction
-import RiemannResearch.RH.MixedPrimeCorrelationSeries
-import RiemannResearch.RH.CenteredMeanDigammaSection
-import RiemannResearch.RH.CenteredMeanDyadicGram
-import RiemannResearch.RH.CenteredMeanGramUpperBound
-import RiemannResearch.RH.ScreenedMeanDilationTests
-import RiemannResearch.RH.CenteredMeanQuotientNorm
-import RiemannResearch.RH.CenteredMeanQuotientTail
-import RiemannResearch.RH.CenteredMeanGramTail
-import RiemannResearch.RH.CenteredMeanPeriodicGramTail
-import RiemannResearch.RH.CenteredMeanMellinDescent
-import RiemannResearch.RH.CenteredMeanMovingGramTail
-import RiemannResearch.RH.CenteredMeanDriftWindows
-import RiemannResearch.RH.CenteredMeanMellinCharacters
-import RiemannResearch.RH.CenteredMeanProgressionGramTail
-import RiemannResearch.RH.DyadicParityGramRow
-import RiemannResearch.RH.MixedConductorL1Closure
-import RiemannResearch.RH.CenteredMeanParityGramSix
-import RiemannResearch.RH.DyadicParityGramCapacity
-import RiemannResearch.RH.DyadicParityTwoStageGram
-import RiemannResearch.RH.LegalTailMeanCapacity
-import RiemannResearch.RH.CenteredMeanDriftCutoffs
-import RiemannResearch.RH.CenteredParityDilationCapacity
-import RiemannResearch.RH.LegalTailMeanCapacityMellin
-import RiemannResearch.RH.CenteredMeanDyadicDrift
-import RiemannResearch.RH.CenteredMeanLateSolveBarrier
-import RiemannResearch.RH.CenteredMeanBurnolStageBarrier
-import RiemannResearch.RH.MixedConductorBilinear
-import RiemannResearch.RH.CenteredMeanSquarefreeConverse
-import RiemannResearch.RH.CenteredMeanTwoSeedConverse
-import RiemannResearch.RH.LegalTailMeanCapacityConjugate
-import RiemannResearch.RH.LegalTailMeanCapacityDilation
-import RiemannResearch.RH.CenteredMeanUnitNorm
-import RiemannResearch.RH.PrimeMultipleGramRepair
-import RiemannResearch.RH.MixedPacketDensityTests
-import RiemannResearch.RH.PhysicalHeadMixedInterpolation
-import RiemannResearch.RH.PhysicalHeadSnakeSections
-import RiemannResearch.RH.PhysicalHeadSectionGrowth
-import RiemannResearch.RH.PhysicalHeadFiniteMinimum
-import RiemannResearch.RH.PhysicalHeadSectionLog
-import RiemannResearch.RH.PhysicalHeadPacketSquare
-import RiemannResearch.RH.PhysicalHeadStageAlgebra
-import RiemannResearch.RH.PhysicalHeadStageAlgebraComparison
-import RiemannResearch.RH.PhysicalHeadAlgebraSnake
-import RiemannResearch.RH.PhysicalHeadLayerIsometry
-import RiemannResearch.RH.PhysicalHeadProductSnake
-import RiemannResearch.RH.PhysicalHeadInfiniteBoundary
-import RiemannResearch.RH.PhysicalHeadSequenceCokernel
-import RiemannResearch.RH.PhysicalHeadBoundaryCoordinates
-import RiemannResearch.RH.MixedParityDigammaParseval
-import RiemannResearch.RH.CanonicalCarryClosure
-import RiemannResearch.RH.CanonicalCarryGram
-import RiemannResearch.RH.MixedParityQuotientDescent
 
 /-!
 # Chronological reconstruction of the categorical RH development
@@ -179,7 +9,10 @@ import RiemannResearch.RH.MixedParityQuotientDescent
 This module rechecks the authored declarations in the categorical CRT, carry,
 quotient, section, and boundary development and its indexed applications.
 The original inventory uses `91f07fdffb60bc8a9b820800dbfa3ef33b14278d`.
-The final entry adds the physical quotient descent at `e684cf2b1d15c084044dff7d3e15cb406bac2ad6`.
+The physical quotient descent is recorded at `e684cf2b1d15c084044dff7d3e15cb406bac2ad6`.
+The continuation covers the measure-change towers and the published carry, energy,
+and response results through `a5d75855e153c520c8f89b07652e62147620b7dc`.
+The public categorical entry point supplies every project dependency used by the replay.
 Each heading gives the first recorded occurrence. Historical imports order modules
 within a commit, paths break ties, and declarations follow their original source order.
 
@@ -4124,3 +3957,257 @@ end RiemannResearch.CategoryTheory.Rebuild
     parityLayerPrefix_lift_cost,
     parityLayerPrefix_error,
     parityLayerPrefix_unique_minimum]
+
+-- 2026-11-25 | c96f0beb2020bc38729f455026fd27c416f262a5 | Transport the infinite Pareto towers and mixed parity quotient descent to the zeta-two measure
+#recheck_categorical RiemannResearch.RH.PhysicalHeadQuotientMeasureChange
+  in RiemannResearch.RH.Pareto.PrimePowerSchur.PhysicalHeadStageAlgebra.MeasureChange [
+    qHeadKernel,
+    qProjectedParity,
+    qArithmeticPrefix,
+    qArithmeticPrefix_class,
+    qArithmeticPrefix_compatible,
+    qHeadKernel_iInf,
+    qArithmeticPrefix_unique,
+    qArithmeticPrefix_tendsto,
+    qMinimumPrefix,
+    qMinimumPrefix_eq_projection,
+    qMinimumPrefix_tendsto,
+    qMinimumPrefix_energy,
+    qRelativeClass,
+    pRelative_norm_sq,
+    qRelative_norm_sq_comparison,
+    qRelative_energy_balance,
+    productSnake_zero_iff_qRelative_summable,
+    q_head_summable_iff_support_saturation]
+
+#recheck_categorical RiemannResearch.RH.PrimeSupportMeasureChange
+  in RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis.MeasureChange [
+    physicalQuotient_natural,
+    weighted_layer_parseval,
+    qStage,
+    qMixed,
+    qStage_mono,
+    physicalSupportTowerIso,
+    qStage_le_mixed,
+    qStage_zero,
+    qStage_dense,
+    qStage_projection_tendsto,
+    qLayer,
+    qLayer_projection_difference,
+    qStage_zero_projection,
+    qLayer_reconstruction,
+    q_quotient_step,
+    q_quotient_parseval,
+    tendsto_q_quotient_norm_sq,
+    q_layer_energy_hasSum,
+    paretoStage_projection_tendsto,
+    q_neumann_screened_parity_tendsto,
+    centeredParity,
+    qParity,
+    weighted_parity_quotient_tendsto,
+    q_parity_descends,
+    q_terminal_parity_zero_iff_rh,
+    riemannHypothesis_iff_q_parity_descent,
+    qParity_eq_odd,
+    qParity_norm_sq,
+    riemannHypothesis_iff_q_layer_saturation]
+
+#recheck_categorical RiemannResearch.RH.QPhysicalQuotientMetric
+  in RiemannResearch.RH.QPhysicalQuotientMetric [
+    physicalSpace,
+    physicalQuotientEquiv,
+    physicalQuotientEquiv_mk,
+    physicalQuotient_subspace,
+    quotient_norm,
+    quotient_norm_le,
+    physical_quotient_norm_sq_comparison,
+    physical_quotient_energy_balance,
+    weightedSpace,
+    weighted_projection,
+    weighted_quotient_norm,
+    physical_layer_roundtrip,
+    feedback,
+    feedback_norm_le,
+    physical_projection_neumann]
+
+
+-- 2026-11-26 | 28d7f1198f797122781ec15fdc96fdb9fb5d58e7 | Verify the screened mean section and its cofinal Pareto tail variance criterion
+#recheck_categorical RiemannResearch.RH.ScreenedSectionDescent
+  in RiemannResearch.RH.Pareto.PrimePowerSchur.ScreenedSectionDescent [
+    supportResidual,
+    supportResidual_split,
+    supportResidual_tendsto_section,
+    supportResidual_error,
+    unit_inner_iff_boundary,
+    inner_self_eq_one_iff_support_contraction,
+    tailVariance,
+    tailVariance_one,
+    exactHead_tail_pairing,
+    patch_tailVariance_bound,
+    inner_self_eq_one_iff_cofinal_tailVariance,
+    digamma_section_energy,
+    digamma_saturation_iff_cofinal_tailVariance,
+    inner_self_eq_one_iff_rh]
+
+
+-- 2026-11-26 | 29febb7375b104e3ba8229be4f13a7ccf0ad7d87 | Prove the finite-window parity minimum and the bounded weak-limit step for Nyman–Beurling
+#recheck_categorical RiemannResearch.RH.PhysicalHeadParityMinimum
+  in RiemannResearch.RH.Pareto.PrimePowerSchur.PhysicalHeadParityMinimum [
+    paritySeed,
+    paritySeed_mem_mean,
+    quadraticWindow,
+    parityCorrectionHead,
+    WindowMinimum,
+    existsUnique_windowMinimum,
+    parityMinimum_existsUnique,
+    optimalParityCorrection,
+    optimalParityCorrection_spec,
+    optimalParityCorrection_carry_cost,
+    optimalParityCorrection_unit_head,
+    window_sequence_mem_atomSpan,
+    window_crt_coordinates]
+
+#recheck_categorical RiemannResearch.RH.PhysicalHeadWeakLimit
+  in RiemannResearch.RH.Pareto.PrimePowerSchur.PhysicalHeadWeakLimit [
+    changeUnit_through_seed,
+    screened_mixed_error_sq,
+    bounded_sections_innerWeak,
+    nymanBeurling_of_bounded_sections,
+    nymanBeurling_of_bounded_parity_corrections,
+    nymanBeurling_of_bounded_parity_minima,
+    mixed_window_periodic,
+    exact_head_lt_period,
+    parity_section_periodic,
+    parity_head_lt_twice_correction_period,
+    arbitrarily_expensive_exact_head,
+    exists_expensive_periodic_parity_sections]
+
+
+-- 2026-11-26 | 9035f1735c2c082394d2d72f642b165ef971e026 | Prove finite zero-product bounds for legal tail capacity
+#recheck_categorical RiemannResearch.RH.LegalTailMeanCapacityZeroProduct
+  in RiemannResearch.RH.Pareto [
+    finiteMellinKernel_scaled_energy,
+    scaled_finite_charge_le]
+
+#recheck_categorical RiemannResearch.RH.LegalTailMeanCapacityZeroProduct
+  in RiemannResearch.RH.Pareto.PrimePowerSchur [
+    legalTailMeanCapacity_finite_zero_product_gap,
+    normalizedLegalTailMeanCapacity_iSup_le_finite_zero_product]
+
+
+-- 2026-11-26 | 32551c8a539b77694ca895f4c51d1bc35ca9326e | Sharpen dyadic density, finite horizontal energy, screened coordinates and exact return cutoffs
+#recheck_categorical RiemannResearch.RH.ExactHeadPhysicalReturn
+  in RiemannResearch.RH.ExactHeadPhysicalReturn [
+    lowerDivisorSignal,
+    grid_eq_upper_add_lower,
+    physicalSignal_with_lower_classes,
+    gcd_eq_label_before_return,
+    atom_one_before_return,
+    atom_two_at_first_return,
+    physicalSignal_eq_activatedMoment_before_return,
+    all_physicalSignal_eq_activatedMoment_iff]
+
+#recheck_categorical RiemannResearch.RH.QSquarefreeEvaluationBasis
+  in RiemannResearch.RH.QSquarefreeEvaluationBasis [
+    movingCorrection_sum_sq_le_complete_screened]
+
+
+-- 2026-11-26 | c5b102bd6cc147e947188f250d6a8c4f15d78910 | Sharpen CRT response, variation, cofinal metric and reciprocal RH certificates
+#recheck_categorical RiemannResearch.RH.MixedPacketDensityTests
+  in RiemannResearch.RH.Pareto.PrimePowerSchur.MixedPacketDensity [
+    riemannHypothesis_iff_frequently_pairing_with_tolerance]
+
+#recheck_categorical RiemannResearch.RH.QCRTCanonicalGrowthCertificate
+  in RiemannResearch.RH.QCRTCanonicalGrowthCertificate [
+    canonical_signed_column_remainder,
+    canonical_signed_column_interval]
+
+#recheck_categorical RiemannResearch.RH.QCRTPositiveLogVariation
+  in RiemannResearch.RH.QCRTPositiveLogVariation [
+    sampled_logVariation_floor,
+    riemannHypothesis_of_cofinal_sampled_logVariation]
+
+#recheck_categorical RiemannResearch.RH.QCanonicalCofinalGram
+  in RiemannResearch.RH.QCanonicalCofinalGram [
+    cofinal_uncentered_discrepancy]
+
+#recheck_categorical RiemannResearch.RH.QFullReciprocalRepairCriterion
+  in RiemannResearch.RH.QFullReciprocalHeadTail [
+    repair_tail_pairing_eq,
+    repair_tail_pairing_tendsto,
+    scaled_repair_tail_pairing_error_le,
+    riemannHypothesis_iff_frequently_nonneg_repair_tail]
+
+#recheck_categorical RiemannResearch.RH.QPrimorialSchurForcing
+  in RiemannResearch.RH.QPrimorialSchurForcing [
+    carryAdjusted,
+    selfForcing_le_carryAdjusted,
+    riemannHypothesis_of_cofinal_carryAdjusted]
+
+#recheck_categorical RiemannResearch.RH.QReciprocalFullMinimizer
+  in RiemannResearch.RH.QReciprocalFullMinimizer [
+    fullValue_le_mertens_envelope,
+    fullValue_eventual_vk_of_leeLeong]
+
+
+-- 2026-11-26 | a5d75855e153c520c8f89b07652e62147620b7dc | Strengthen carry reconstruction, signed energy budgets and localized RH criteria
+#recheck_categorical RiemannResearch.RH.CanonicalCarryClosure
+  in RiemannResearch.RH.CanonicalCarryClosure [
+    two_carry_approximation_error,
+    mixed_coefficient_rawCarry,
+    rawCarry_not_mem_other_closure]
+
+#recheck_categorical RiemannResearch.RH.ConductorReconstructionEnergy
+  in RiemannResearch.RH.ConductorReconstructionEnergy [
+    bounded_solution_iff_frequently_stageCost]
+
+#recheck_categorical RiemannResearch.RH.MertensEnergyConvergence
+  in RiemannResearch.RH.MertensWeightedEnergy [
+    summable_abs_offDiagonal_rows]
+
+#recheck_categorical RiemannResearch.RH.MixedParityDigammaParseval
+  in RiemannResearch.RH.Pareto.PrimePowerSchur.MixedConductorBasis.DigammaParseval [
+    packet_row_coefficient,
+    hasSum_packet_modes,
+    packet_row_covariance]
+
+#recheck_categorical RiemannResearch.RH.QCRTDyadicBudget
+  in RiemannResearch.RH.QCRTDyadicBudget [
+    dyadicEnergy,
+    netDyadicExcess,
+    netDyadicExcess_le_trial,
+    dyadic_energy_le_net_product,
+    riemannHypothesis_of_cofinal_net_product]
+
+#recheck_categorical RiemannResearch.RH.QFullCorrectionBudgetDescent
+  in RiemannResearch.RH.QFullCorrectionBudgetDescent [
+    energy_le_product_of_correction_budgets,
+    reciprocal_sum_le_log_energy_ratio]
+
+#recheck_categorical RiemannResearch.RH.QFullShortHeadOneSided
+  in RiemannResearch.RH.QFullShortHeadOneSided [
+    shortSchurHarmonicSide,
+    shortSchurHarmonicSide_tendsto,
+    qResidual_zero_iff_cofinal_shortSchurHarmonic]
+
+#recheck_categorical RiemannResearch.RH.QSquarefreeHeadLeakage
+  in RiemannResearch.RH.QSquarefreeHeadLeakage [
+    shortHead_remainder_eq_projected_tails,
+    shortHead_remainder_block_sq_le]
+
+#recheck_categorical RiemannResearch.RH.QSquarefreeMovingHeadEnergy
+  in RiemannResearch.RH.QSquarefreeMovingHeadEnergy [
+    residual_zero_of_joint_head_budget,
+    riemannHypothesis_iff_simultaneous_head_budgets]
+
+#recheck_categorical RiemannResearch.RH.SemiprimeBlockRemainders
+  in RiemannResearch.RH.Pareto.PrimePowerSchur.SemiprimeFekete [
+    correctedBlock_late_start_uniform,
+    riemannHypothesis_iff_late_start_tolerant_blocks]
+
+-- Check the packaged physical object and its composite equivalence in the public interface.
+#recheck_categorical RiemannResearch.CategoryTheory.PhysicalParityObject
+  in RiemannResearch.CategoryTheory.PhysicalParityObject [
+    mean_rows_homology_zero,
+    physical_conditions_tfae,
+    rawGram_iff_correctedCarryCapture]
