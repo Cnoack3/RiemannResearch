@@ -2,6 +2,8 @@
 
 [Infinite compact FMZ tests, signed Haar energies and recovery of physical gap atoms](THEOREM_CATALOG_COMPACT_FMZ_FOURIER.md)
 
+[Infinite consecutive prime ratios, dense orbits and Borel recovery of gap laws](THEOREM_CATALOG_CONSECUTIVE_PRIME_RATIO_LAW.md)
+
 [Prime bulk kernel, legal Pareto determinants and the absolute collision test](THEOREM_CATALOG_PRIME_BULK_KERNEL_TRANSFER.md)
 
 [Mellin sine kernels, three-prime reconstruction, global simplicity and Pareto absorption](THEOREM_CATALOG_MELLIN_PRIME_ORBIT_TRANSFER.md)
