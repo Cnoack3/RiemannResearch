@@ -2,6 +2,10 @@
 
 **One signed limit remains open.** At each fixed positive rational width, the loss in pair mass from starting a gap interval at an actual zero instead of averaging its starting offset must agree, up to $o(1)$, with a finite prime-power energy. Lean proves that this statement is necessary and sufficient for ordinary positive-gap PCC. The limit is the hypothesis to supply to the reverse implication. The underlying single-character Landau estimate and translation limit are in [verified commit 6fe8e2ca](https://github.com/Cnoack3/RiemannResearch/commit/6fe8e2ca2b2dbc4d7ba0a6f95b55145bf9aa5cf6).
 
+## A conditional route through continuous spectra
+
+An intensity-one continuous convolution-DPP subsequential limit of the complete unfolded zeros must be the sine process. Fujii’s short-window number-variance estimate gives the required lower-slope bound for that same limit. For ordinary PCC, a convolution representation of the second factorial measure of every physical subsequential limit suffices. Establishing this representation remains open. [Sharp spectral rigidity and projection audit](CONTINUOUS_DPP_SPECTRAL_RIGIDITY.md)
+
 ## The exact proof obligation
 
 Put $L=\log T$ and $D_T=TL/(2\pi)$, for $T>1$. Index the nontrivial zeros with $0<\gamma_i\le T$ by occurrence, repeating each complex zero according to its analytic multiplicity. Define

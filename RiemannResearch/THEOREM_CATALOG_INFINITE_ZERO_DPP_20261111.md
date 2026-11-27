@@ -3,6 +3,14 @@
 Research note: [FMZ_Infinite_Zero_DPP_20261111.md](FMZ_Infinite_Zero_DPP_20261111.md).
 Starting revision: 8d91c2e44fa978205f4d8b4a59a636398f4bca9d.
 
+## Continuous spectra and unfolded local limits
+
+* **Established multiplier theorem.** `spectral_rigidity_of_liminf_lt_two` identifies the interval multiplier, Fourier phase and sine pair density. `sine_pair_of_log_window_bound` gives the normalized window-energy criterion.
+* **Conditional zeta application.** Fujii's external number-variance bound supplies the slope condition for a complete physical convolution-DPP limit. The convolution two-point representation for every physical subsequential limit remains **Open**.
+* **Deletion.** `variance_add_bias_sq_le_deletions` and `second_moment_eq_sq_of_common_limit` distinguish local conditional fluctuations from the randomness of the translation center.
+
+[Proof, declarations and source audit](CONTINUOUS_DPP_SPECTRAL_RIGIDITY.md)
+
 ## Established finite and infinite constructions
 
 * Probability/DeterminantalPairTransfer.lean:
