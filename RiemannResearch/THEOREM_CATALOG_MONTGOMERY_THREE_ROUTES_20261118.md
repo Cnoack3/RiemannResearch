@@ -77,6 +77,16 @@ Lean proves that convergence of these integer-power Gaussian moments to those of
 
 The stationary $a=1/3$ example also has number variance $\pi^{-2}\log R+O(1)$. For $m$ consecutive sites, projection Parseval gives $\operatorname{Var}N_m=2\sum_{k<m,\,k\ge1}k|K(k)|^2+2m\sum_{k\ge m}|K(k)|^2$ with $K(k)=\sin(\pi k/3)/(\pi k)$ for $k\ne0$. The tail is bounded and $\sin^2(\pi k/3)$ has period three and mean $1/2$. Random translation changes the number of sites in an interval by at most one and adds bounded variance. This calculation uses the discrete sine process of Lagarias and Rodgers, Theorem 4.1. It tests the inference from a bounded Fourier band and the leading number variance, without making a claim about which model describes zeta zeros.
 
+## Simplicity and singleton ordinates
+
+Write $S_c(T)$ for the number of simple zeros on the critical line and $U(T)$ for the number of heights in $(0,T]$ occupied by exactly one occurrence in the entire critical strip. Both proportions use the full count $N(T)$ with analytic multiplicity. Lean proves
+\[
+3S_c(T)\le N(T)+2U(T).
+\]
+A simple critical zero at a shared height has an off-line zero there, and reflection gives a second distinct off-line zero at that height. Thus an eventual lower bound $a$ for $S_c(T)/N(T)$ gives the lower bound $(3a-1)/2$ for $U(T)/N(T)$. Applying the unconditional literature bounds gives a lower limiting proportion above $50.875\%$ from Lamzouri and above $51.025\%$ from Knausgård. The numerical analytic inputs are external to these Lean declarations. [Finite and asymptotic Lean transfer](Analysis/ActualZeroCollisionDensity.lean) · [Lamzouri, Theorem 1.1](https://arxiv.org/abs/2609.02882) · [Knausgård, Theorem 1.3](https://arxiv.org/abs/2610.08965)
+
+The strong density input in Theorem 3 of the 61.7% paper asks for $N(\sigma,T)=o(T^{2(1-\sigma)})$ on its indicated strip. For $q=3(1-\sigma)/(2-\sigma)$, Lean computes $q-2(1-\sigma)=(1-\sigma)(2\sigma-1)/(2-\sigma)>0$ throughout $1/2<\sigma<1$. At $L=\log T>1$ and $\sigma=1/2+1/(2L)$ the paper's scale is exactly $T/e$ and the ratio of the Ingham height power to this scale is $\exp((L-1)/(3L-1))\to e^{1/3}$. The logarithmic losses make the majorant larger still. This leaves the endpoint little-$o$ and the uniform strip hypothesis open. The unconditional simplicity route in Lamzouri uses the paper's restricted pair formula (Lemma 5) and a Hilbert-space inequality. [Lean exponent comparison](Analysis/ActualInghamLittlewoodDensity.lean) · [Baluyot, Goldston, Suriajaya and Turnage-Butterbaugh](https://arxiv.org/abs/2306.04799)
+
 ## Exceptional-pair estimates
 
 - `MontgomeryExceptionalPairs.pair_dirichlet_identity` retains the complete nonnegative square in the symmetric-kernel Cauchy bound. `pair_exp_moment_add_defect_le` uses the multiplicative Hölder budget for the companion horizontal and crowding moments. `norm_signed_deletion_le_with_defect` carries this square into the finite signed deletion estimate.
