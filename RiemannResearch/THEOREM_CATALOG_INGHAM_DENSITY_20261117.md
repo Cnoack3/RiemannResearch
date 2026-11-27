@@ -1,5 +1,13 @@
 # Ingham's density bound for the actual zeta zeros
 
+## Selberg slope two and the moving endpoint of the 61.7% paper
+
+Let \(L=\log T\) and \(\sigma_0=1/2+1/(2L)\). In the arXiv version of Baluyot–Goldston–Suriajaya–Turnage-Butterbaugh, Theorem 3 assumes a uniform little-\(o\) bound for the inclusive, multiplicity-weighted count starting at \(\sigma_0\). For scaled displacement \(d\), the exact comparison power is \(T^{2(1-(1/2+d/L))}=T e^{-2d}\). At \(d=1/2\) the power is \(T/e\).
+
+- **Conditional research reduction.** Under the strip hypothesis with any fixed upper cutoff \(b>1/2\), the endpoint count is \(o(T/e)\), \(o(N(T)/L)\), and \(o(N(T)/e)\). The unconditional Riemann–von Mangoldt lower bound gives the changes of normalization. A signed pair remainder of size \(o(TL)\), as in the paper's (6.3) for Lemma 7, likewise has size \(o(N(T)/e)\). The latter declaration takes the pair-remainder estimate as its premise. [Endpoint identities and normalizations](Analysis/ActualBGSTBDensity.lean) · [Theorem 3 and Lemma 7](https://arxiv.org/abs/2306.04799)
+- **Conditional research reduction.** With a fixed overlap \(b>25/32\), the short-strip hypothesis and the three named far-strip inputs imply uniform \(o(T^{2(1-\sigma)})\) through \(\sigma=1\). The total count on \([1/2,\sigma_0]\) then gives \(\mathrm{UniformSelbergDensity}(2)\) on the entire closed half strip, with one logarithm. **Open** as Lean providers are the moving-strip hypothesis, `TaoBourgainFarDensityHypothesis`, `HuxleyDensityHypothesis`, and `BellottiKorobovVinogradovCount`. [Far-strip proof](Analysis/ActualSelbergSlopeTwo.lean)
+- **Conditional research reduction.** The thin box in Theorem 2 at all sufficiently large heights gives the full moving-strip estimate and slope two by itself. For \(\sigma_0\le\sigma\le3/4\) all contributing zeros have height at most \(T^{3/8}\). For \(\sigma\ge3/4\), testing the box at each zero's own height leaves a fixed finite head whose largest real part is strictly below one. **Open** is the thin-box hypothesis for actual zeros. [Thin-box proof](Analysis/ActualBGSTBThinBox.lean)
+
 ## Curved Ingham slopes and the one-logarithm Selberg transition
 
 Write \(L=\log T\), \(\ell=\log L\), \(d=\sigma-1/2\), and \(r(d)=4d/(3-2d)\). Counts include each analytic zero occurrence with real part at least \(\sigma\). The actual density input is \(\ll T^{1-r(d)}L^{3-r(d)}\).
