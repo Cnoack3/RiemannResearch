@@ -1,5 +1,7 @@
 # Theorem catalog
 
+[Infinite compact FMZ tests, signed Haar energies and recovery of physical gap atoms](THEOREM_CATALOG_COMPACT_FMZ_FOURIER.md)
+
 [Prime bulk kernel, legal Pareto determinants and the absolute collision test](THEOREM_CATALOG_PRIME_BULK_KERNEL_TRANSFER.md)
 
 [Mellin sine kernels, three-prime reconstruction, global simplicity and Pareto absorption](THEOREM_CATALOG_MELLIN_PRIME_ORBIT_TRANSFER.md)
