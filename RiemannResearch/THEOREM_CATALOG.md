@@ -1,6 +1,6 @@
 # Theorem catalog
 
-[Fourth-order GUE window tests imply ordinary PCC](THEOREM_CATALOG_FOUR_POINT_PCC.md)
+[Fourth-order GUE window tests imply ordinary PCC](THEOREM_CATALOG_FOUR_POINT_PCC.md) · [GLSS comparisons for all, simple and simple critical zeros](THEOREM_CATALOG_FOUR_POINT_PCC.md#the-three-glss-counts)
 
 [Strict microscopic zero pairs, local unfolding and the Dyson covariance](THEOREM_CATALOG_MICROSCOPIC_PAIR_COVARIANCE.md)
 

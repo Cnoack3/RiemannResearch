@@ -38,3 +38,15 @@ Finally \(X^2=X+(X)_2\). The intensity and the recovered pair mean give the sine
 The Lean application quantifies over a comparison law and specifies its intensity, normalized fourth-factorial bound, local pair mean and integrability. The sine determinantal process satisfies these conditions by its correlation formulas. The arithmetic hypotheses on the actual ordinates are the two fourth-order limits and a bounded local fourth factorial moment. Full fourth-order convergence gives all three. The verified implication `boundedLocalFourthFactorial_of_fujii` also obtains the local bound from Fujii’s fixed-width moment estimate. The required limits for the actual zeros remain open here. A bound on the raw fourth moment alone supplies no four-point correlations. In particular \(X^4=(X)_4+6(X)_3+7(X)_2+X\).
 
 [Arias de Reyna and Rodgers, GUE correlation hypothesis and Fujii's count bounds](https://arxiv.org/abs/2311.13441) · [Soshnikov, determinantal point fields](https://arxiv.org/abs/math/0002099)
+
+## The three GLSS counts
+
+Write \(N=N(T)\) for the total number of zero occurrences in \((0,T]\), \(N_s\) for the number of simple zeros at all real parts, and \(N_0^s\) for the number of simple critical-line zeros. The checked bijection in `simpleZeroCount_eq_card_copies` identifies ordinary simple zeros with their unique occurrence labels. Let \(H_T(\gamma)\) count every occurrence at a given ordinate and sum over distinct ordinates. For every real cutoff,
+\[
+2N-\sum_{\gamma}H_T(\gamma)^2\;\le\;N_0^s\;\le\;N_s\;\le\;N.
+\]
+The first inequality uses signed integer subtraction. An off-line zero has a reflected companion, while a multiple zero contributes at least two labels at its ordinate. Thus a singleton ordinate carries a simple critical-line zero. [Finite comparison and singleton proof](Analysis/GLSSZeroCounts.lean)
+
+`glss_counts_of_horizontal_multiplicity` proves that \(\sum_\gamma H_T(\gamma)^2\sim N\) implies \(N_0^s\sim N\) and \(N_s\sim N\). Under `FourPointWindowTests`, `glss_counts_of_four_point_windows` gives ordinary positive-gap PCC and all three asymptotic equivalences with the actual \(N(T)\) denominator. This route has no separate Fujii hypothesis. The fourth-order zeta limits remain open.
+
+For ordinary positive-gap PCC by itself, the paper uses Fujii's unconditional second-moment estimate. The Lean theorem `fujiiArgumentIncrementUpper_of_prop_two` specializes equation (5.6) to \(U=R/L_T\), with \(L_T=\log T/(2\pi)\), for the actual count discrepancy. The resulting logarithmic bound implies the required one-sided triangle bound in `shortWindowUpper_of_fujiiArgumentIncrement`. The combination with PCC is `glss_counts_of_positiveGapPCC`. **Open formalization obligation:** a proof of the Fujii estimate for the zeta discrepancy without an analytic hypothesis. [Goldston, Lee, Schettler and Suriajaya, §§5, 7–8](https://arxiv.org/html/2503.15449v4#S5)
