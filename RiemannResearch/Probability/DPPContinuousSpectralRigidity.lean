@@ -2,6 +2,7 @@ import RiemannResearch.Probability.DPPSpectralMultiplier
 import RiemannResearch.Probability.DPPAveragedVariation
 import RiemannResearch.Probability.DPPBinaryInterval
 import RiemannResearch.Probability.DPPIntervalSpectrum
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 /-!
 # Sharp spectral rigidity for continuous convolution determinantal kernels
@@ -68,5 +69,87 @@ info: 'RiemannResearch.DPPSpectral.spectral_rigidity_of_liminf_lt_two' depends o
 -/
 #guard_msgs (whitespace := lax) in
 #print axioms spectral_rigidity_of_liminf_lt_two
+
+/-- The regular structure factor of any translate of the unit band, at every frequency. -/
+theorem structureFactor_of_interval_ae {f : ℝ → ℝ} {a : ℝ}
+    (hf : f =ᵐ[volume] (Ioo a (a + 1)).indicator (1 : ℝ → ℝ)) (h : ℝ) :
+    structureFactor f h = min |h| 1 := by
+  have he : f =ᵐ[volume] intervalMultiplier a := by
+    filter_upwards [hf, (Ioo_ae_eq_Ioc (μ := volume) (a := a) (b := a + 1))] with t ht he
+    change (t ∈ Ioo a (a + 1)) = (t ∈ Ioc a (a + 1)) at he
+    simp [ht, intervalMultiplier, Set.indicator, he]
+  have hshift : (fun t => f (t + h)) =ᵐ[volume] (fun t => intervalMultiplier a (t + h)) :=
+    (measurePreserving_add_right volume h).quasiMeasurePreserving.ae he
+  unfold structureFactor
+  rw [integral_congr_ae (show (fun t => f t * f (t + h)) =ᵐ[volume]
+    (fun t => intervalMultiplier a t * intervalMultiplier a (t + h)) from
+      he.mul hshift), intervalMultiplier_overlap]
+  by_cases hh : |h| ≤ 1
+  · rw [max_eq_left (sub_nonneg.mpr hh), min_eq_left hh]
+    ring
+  · rw [max_eq_right (sub_nonpos.mpr (le_of_not_ge hh)), min_eq_right (le_of_not_ge hh), sub_zero]
+
+/-- In the unit-band case the right slope exists, including in the extended-real
+normalization used in the rigidity theorem. -/
+theorem structureFactor_rightSlope_of_interval_ae {f : ℝ → ℝ} {a : ℝ}
+    (hf : f =ᵐ[volume] (Ioo a (a + 1)).indicator (1 : ℝ → ℝ)) :
+    Tendsto (fun h => ENNReal.ofReal (structureFactor f h / h)) (𝓝[>] 0) (𝓝 1) := by
+  apply tendsto_const_nhds.congr'
+  filter_upwards [self_mem_nhdsWithin,
+    mem_nhdsWithin_of_mem_nhds (Iio_mem_nhds (show (0 : ℝ) < 1 by norm_num))] with h hp h1
+  change 0 < h at hp
+  change h < 1 at h1
+  simp [structureFactor_of_interval_ae hf, abs_of_pos hp, min_eq_left h1.le, hp.ne']
+
+/-- There are no intermediate lower slopes below the two-component threshold. -/
+theorem structureFactor_liminf_lt_two_iff_eq_one {f : ℝ → ℝ} (hf : Integrable f)
+    (hb : ∀ᵐ t, 0 ≤ f t ∧ f t ≤ 1) (hm : (∫ t, f t) = 1) :
+    (liminf (fun h => ENNReal.ofReal (structureFactor f h / h)) (𝓝[>] 0) < ENNReal.ofReal 2) ↔
+      liminf (fun h => ENNReal.ofReal (structureFactor f h / h)) (𝓝[>] 0) = 1 := by
+  constructor
+  · intro hs
+    obtain ⟨a, ha, _⟩ := spectral_rigidity_of_liminf_lt_two hf hb hm hs
+    exact (structureFactor_rightSlope_of_interval_ae ha).liminf_eq
+  · intro hs
+    rw [hs]
+    norm_num
+
+/-- For a convolution DPP the strict lower-slope test identifies every finite
+correlation determinant. This algebraic statement evaluates the candidate
+kernel; the DPP law of a physical process is a separate hypothesis. -/
+theorem sine_det_of_liminf_lt_two {f : ℝ → ℝ} (hf : Integrable f)
+    (hb : ∀ᵐ t, 0 ≤ f t ∧ f t ≤ 1) (hm : (∫ t, f t) = 1)
+    (hs : liminf (fun h => ENNReal.ofReal (structureFactor f h / h)) (𝓝[>] 0) < ENNReal.ofReal 2)
+    {ι : Type*} [Fintype ι] [DecidableEq ι] (x : ι → ℝ) :
+    Matrix.det (fun i j => 𝓕 (fun t ↦ (f t : ℂ)) (-(x i - x j))) =
+      Matrix.det (fun i j => (Real.sinc (Real.pi * (x i - x j)) : ℂ)) := by
+  obtain ⟨a, _, hkernel⟩ := spectral_rigidity_of_liminf_lt_two hf hb hm hs
+  let θ (i : ι) : ℂ := ((2 * Real.pi * x i * (a + 1 / 2) : ℝ) : ℂ) * Complex.I
+  let K : Matrix ι ι ℂ := fun i j => (Real.sinc (Real.pi * (x i - x j)) : ℂ)
+  have hmatrix : (fun i j => 𝓕 (fun t ↦ (f t : ℂ)) (-(x i - x j))) =
+      Matrix.of (fun i j => Complex.exp (θ i) *
+        (Matrix.of (fun k l => Complex.exp (-θ l) * K k l)) i j) := by
+    funext i j
+    rw [(hkernel (x i - x j)).1]
+    change _ = Complex.exp (θ i) * (Complex.exp (-θ j) * K i j)
+    rw [← mul_assoc, ← Complex.exp_add]
+    apply congrArg (fun z : ℂ => Complex.exp z * K i j)
+    dsimp only [θ]
+    push_cast
+    ring
+  rw [hmatrix, Matrix.det_mul_column, Matrix.det_mul_row, ← mul_assoc, ← Finset.prod_mul_distrib]
+  simp only [← Complex.exp_add, add_neg_cancel, Complex.exp_zero, Finset.prod_const_one, one_mul] <;> rfl
+
+/--
+info: 'RiemannResearch.DPPSpectral.structureFactor_liminf_lt_two_iff_eq_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms structureFactor_liminf_lt_two_iff_eq_one
+
+/--
+info: 'RiemannResearch.DPPSpectral.sine_det_of_liminf_lt_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms sine_det_of_liminf_lt_two
 
 end RiemannResearch.DPPSpectral

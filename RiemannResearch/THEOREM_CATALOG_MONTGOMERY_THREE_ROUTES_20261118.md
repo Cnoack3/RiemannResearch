@@ -18,6 +18,20 @@ Base revision: b9c9139d88001b782cc75481365633c36f43d948.
 The short-window input is Goldston, Lee, Schettler and Suriajaya, Mathematika 72 (2026), e70127, Propositions 1–2, https://doi.org/10.1112/mtk.70127.
 The complex form-factor normalization follows Baluyot, Goldston, Suriajaya and Turnage-Butterbaugh, Acta Arith. 214 (2024), 357–376, https://doi.org/10.4064/aa230612-20-3, corrected for the positive cutoff in https://arxiv.org/html/2501.14545v3#S3.E5.
 
+## Ingham-band tests and the regular structure factor
+
+The frequency bound `|u| ≤ (4/3) log T` in A24 controls the difference of two count-normalized prime-orbit statistics. For a height-dependent finite test with absolute coefficient sum `o(T)` and admissible Taylor orders, `PrimeOrbitBandTest.tendsto_ordinate_sub_reconstructed` gives convergence of that difference to zero. Both statistics retain equal-ordinate pairs and analytic multiplicity.
+
+**Conditional research reduction.** Choose positive unfolded probes $h_j$ tending to zero and a height sequence $T_n$ tending to infinity. At each fixed probe, use the same centering for the complete zero test and its reconstruction. If the first tends to the regular value $S(h_j)$ and the second has limiting upper bound $c h_j$ for all sufficiently large $j$, `liminf_le_of_centered_reconstruction` gives right lower slope at most $c$. The upper estimate may have any fixed $c<2$, including the triangular coefficient one.
+
+| Statement | Scope |
+| --- | --- |
+| `structureFactor_liminf_lt_two_iff_eq_one` and `sine_det_of_liminf_lt_two` | For an integrable unit-mass multiplier between zero and one, lower slope below two forces ordinary right slope one, the full profile `min(abs h, 1)`, and the sine determinant at every finite order. |
+| `interval_of_signedArithmeticCorrection_steps` | For the ordinary Cauchy-weighted form factor identified with this spectrum on the same heights, signed residual limits bounded above by $d h_j$ with fixed $d<1$ give a unit interval multiplier. |
+| `signedArithmeticCorrection_four_thirds` | At the separately identified frequency $4/3$, a unit interval forces the signed arithmetic correction to tend to $-1/3$. |
+
+**Open for the actual zeros.** Construct admissible probes that identify the centered full-occurrence statistic with the regular spectrum of each physical subsequential limit, and prove the arithmetic upper bound for their reconstructed values. Ordinary PCC via rigidity also needs the convolution two-point representation for each limit. A process-level determinantal representation would identify its higher correlations. [Lean transfer and residuals](Analysis/MontgomeryOrbitStructureFactor.lean) · [Spectral rigidity](Probability/DPPContinuousSpectralRigidity.lean)
+
 ## Exceptional-pair estimates
 
 - `MontgomeryExceptionalPairs.pair_dirichlet_identity` retains the complete nonnegative square in the symmetric-kernel Cauchy bound. `pair_exp_moment_add_defect_le` uses the multiplicative Hölder budget for the companion horizontal and crowding moments. `norm_signed_deletion_le_with_defect` carries this square into the finite signed deletion estimate.

@@ -94,6 +94,27 @@ theorem structureFactor_nonneg {f : ℝ → ℝ} (hf : Integrable f)
   simp only [structureFactor, add_zero]
   linarith
 
+/-- A nonnegative convolution multiplier gives a regular structure factor at most one. -/
+theorem structureFactor_le_one {f : ℝ → ℝ} (hf : ∀ᵐ t, 0 ≤ f t) (h : ℝ) :
+    structureFactor f h ≤ 1 := by
+  unfold structureFactor
+  apply sub_le_self
+  apply integral_nonneg_of_ae
+  filter_upwards [hf, translate_ae hf h] with t ht hh
+  exact mul_nonneg ht hh
+
+/-- A single sequence of positive steps controls the right lower slope. -/
+theorem rightSlope_liminf_le_of_steps {S : ℝ → ℝ} {h : ℕ → ℝ} {c : ℝ}
+    (hp : ∀ j, 0 < h j) (hz : Tendsto h atTop (𝓝 0))
+    (hu : ∀ᶠ j in atTop, S (h j) ≤ c * h j) :
+    liminf (fun x => ENNReal.ofReal (S x / x)) (𝓝[>] 0) ≤ ENNReal.ofReal c := by
+  have hright : Tendsto h atTop (𝓝[>] 0) :=
+    tendsto_nhdsWithin_iff.mpr ⟨hz, Eventually.of_forall hp⟩
+  apply liminf_le_of_frequently_le'
+  by_contra hn
+  obtain ⟨j, hj, hn'⟩ := (hu.and (hright.eventually (not_frequently.mp hn))).exists
+  exact hn' (ENNReal.ofReal_le_ofReal ((div_le_iff₀ (hp j)).mpr hj))
+
 /-- A strict right-hand slope threshold supplies an entire favorable sequence.
 Using the extended nonnegative reals makes a diverging positive slope have
 liminf infinity. For a nonnegative structure factor the truncation in
