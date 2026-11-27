@@ -86,6 +86,7 @@ import RiemannResearch.Analysis.SelbergDensityProfileSharpness
 import RiemannResearch.RH.XiTaylorCoefficientRadius
 import RiemannResearch.Analysis.ActualBellottiCriticalWeight
 import RiemannResearch.Analysis.ActualInghamCriticalTilt
+import RiemannResearch.Analysis.ActualInghamSlopeFrontier
 import RiemannResearch.Analysis.MontgomeryCenteredFourthEnergy
 import RiemannResearch.Analysis.MontgomeryCentralComparison
 import RiemannResearch.Analysis.MontgomeryReflectedJetDomination
@@ -1772,6 +1773,7 @@ import RiemannResearch.Analysis.ActualInghamSharpEndpoint
 import RiemannResearch.Analysis.ActualInghamSharpRightMoment
 import RiemannResearch.Analysis.ActualMobiusLCMTransport
 import RiemannResearch.Analysis.ActualSelbergTransitionWindow
+import RiemannResearch.Analysis.ActualSelbergCurvedFrontier
 import RiemannResearch.Analysis.ActualZeroLogExcessIntegral
 import RiemannResearch.Analysis.ActualSelbergNearExcessCriterion
 import RiemannResearch.Analysis.ConreyBaluyotGaussianPoleReduction
@@ -5227,6 +5229,8 @@ import RiemannResearch.Probability.CompactMomentConvergence
 import RiemannResearch.Analysis.InfiniteTorusCharacters
 import RiemannResearch.Analysis.CompactGaugeOrbitLaw
 import RiemannResearch.Analysis.ActualInfinitePrimeTorus
+import RiemannResearch.Analysis.InfiniteDiagonalFMZ
+import RiemannResearch.Analysis.ActualPrimeChronologicalHaar
 import RiemannResearch.Analysis.PrimePowerEvaluation
 import RiemannResearch.Analysis.CoherentFock
 import RiemannResearch.Analysis.LogEulerFeature

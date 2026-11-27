@@ -1,5 +1,19 @@
 # Ingham's density bound for the actual zeta zeros
 
+## Curved Ingham slopes and the one-logarithm Selberg transition
+
+Write \(L=\log T\), \(\ell=\log L\), \(d=\sigma-1/2\), and \(r(d)=4d/(3-2d)\). Counts include each analytic zero occurrence with real part at least \(\sigma\). The actual density input is \(\ll T^{1-r(d)}L^{3-r(d)}\).
+
+- `ingham_low_price`, `ingham_middle_price`, and `ingham_high_price` give the least intercept \(b\) for \(a d\le r(d)+b\) throughout \(0\le d\le1/2\). It is zero for \(a\le4/3\), \(3a/2+2-2\sqrt{3a}\) for \(4/3\le a\le3\), and \(a/2-1\) for \(a\ge3\). `exists_ingham_priced_density` retains the complete factor \(\exp((L+\ell)(b-ad))\).
+- `eventually_ingham_substrip_one_log` gives \(N(1/2+d,T)\ll T^{1-ad}L\) on \(d_0\le d\le1/2\) for every fixed \(0<d_0\le1/2\) and \(a<4/(3-2d_0)\).
+- `tendsto_tilted_moment_loglog_window` gives \(T^{-1}\sum_{\rho} |\beta-1/2|^{p+1}\exp(v_T|\beta-1/2|)\to0\) if \(p\ge7\), \(0\le c<(4/3)\sqrt{p-6}\), and eventually \(0\le v_T\le(4/3)L+c\sqrt{L\ell}\).
+- `ingham_one_log_iff_transition_displacement` gives the exact comparison of the Ingham majorant with \(T^{1-ad}L\) at \(T>e,\ a>0\). The comparison holds precisely when \(2aLd^2+((4-3a)L+8\ell)d-6\ell\ge0\). `exists_actual_selberg_above_transition` transfers this to actual counts with an absolute constant. For any fixed \(M\), `uniformSelbergDensity_iff_exact_transition` reduces the global slope to the band \(M/L<d<d_T(a)\), where \(d_T(a)\) is the positive root.
+- At the fixed abscissa \(\sigma=5/6\), `one_log_five_sixths_of_far_density` gives every \(a<21/10\) from the repository's `TaoBourgainFarDensityHypothesis`. The published table gives \(q=3/10\) there. **Open in Lean** is a provider for the fixed-abscissa literature estimate. [Zero-density exponent table](https://teorth.github.io/expdb/blueprint/zero-density-chapter.html)
+
+- **Conditional research reduction.** `dyadic_one_log_curved_density` gives \(N(\sigma,T)\ll_\eta T^{\max(\eta,3(1-\sigma)/(2-\sigma))}L\) for every fixed \(\eta>0\). `dyadic_one_log_moving_selberg` yields the full-strip one-log slope \(4/3+c/\sqrt L\) with prefactor \(\exp(9c^2/32)\). `dyadic_one_log_priced_density` retains the exact height price and one logarithm wherever the resulting height exponent is at least a fixed positive number. `dyadic_one_log_tilted_moment_loglog` gives the same growing critical tilt for \(p\ge3\) and \(c<(4/3)\sqrt{p-2}\). **Open in Lean** is a provider for `DyadicInghamOneLog`. The dyadic case of rStation Paper 184, Theorem 1, supplies the written input. The detector and zero-free-cap formalizations keep their analytic hypotheses explicit. In the detector's Hölder step the exponents are 4 for the mollified zeta factor and 2 for the finite inverse on an actual dyadic height interval. To reach slope 3/2 by this same step, one sufficient replacement is a uniform sixth moment for the mollified factor. Another is a uniform moment of order 12/5 for the finite inverse together with the existing fourth moment. Either replacement must hold with the detector's coefficient-gap construction.
+
+[Ingham slopes and moments](Analysis/ActualInghamSlopeFrontier.lean) · [Actual Selberg transition](Analysis/ActualSelbergCurvedFrontier.lean) · [Chourasiya and Simonič, Theorem 1](https://arxiv.org/abs/2507.15184) · [Dyadic fourth-moment input](https://rstation.ai/problems/riemann_hypothesis/papers/184/v1)
+
 The declaration `RiemannResearch.Analysis.ActualZeroOrdinate.inghamDensityBound`
 in [ActualInghamDensityBound.lean](Analysis/ActualInghamDensityBound.lean) proves
 the uniform, inclusive, multiplicity-weighted statement

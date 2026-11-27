@@ -1,5 +1,20 @@
 # Quantitative FMZ and product-test cancellation: theorem catalog supplement
 
+## Actual chronological prime pairs and countable diagonal Haar Parseval
+
+Let \(z(t)=(p^{it})_{p\ {\rm prime}}\), let \(H\) be normalized Haar on the full product of prime circles, and let \(\Delta(z)=(z,z)\). `primeHaar_translation` identifies translation invariance of the one-point limit. `tendsto_chronologicalPairAverage` gives, for every continuous \(F\) and nonnegative integer lag \(k=o(\log T)\),
+\[
+  \frac1{N(T)}\sum_{j<N(T)-k}F(z(\gamma_j),z(\gamma_{j+k}))
+    \longrightarrow \int F\,d(\Delta_*H).
+\]
+Indices start at zero. The finite range contains genuine pairs, repeats each ordinate according to its zero occurrences, and omits terminal pairs. The average of the unscaled height differences is at most \(kT/N(T)\).
+
+On the diagonal, two prime words concatenate into one. Frequencies are indexed after this restriction, so equal restricted characters are grouped. `diagonalHaar_parseval` constructs the unconditionally convergent \(L^2(\Delta_*H)\) sum from square-summable coefficients and identifies its squared norm. `diagonal_centered_sample` connects its multiplier to the actual signed zero sample. `eventually_diagonal_fmz_fractional` transfers the uniform fractional FMZ rates to square sums with unrestricted prime supports.
+
+For the reduced word rational \(n_i/m_i\), put \(W_i=1+\log n_i+\log m_i\). `tendsto_diagonal_fmz_L2` proves strong convergence of the translated remainder to zero under \(\sum_i |a_i|^2[W_i(1+\log W_i)]^2<\infty\). `tendsto_diagonal_fmz_L2_of_one_log` gives the pure weight \(W_i\) from `UniformSelbergDensity (1/4)`. **Conditional research reduction in Lean.** A formal provider for that one-log count is open. Baluyot's published slope range includes \(1/4\), and `tendsto_diagonal_fmz_L2_of_dyadic` supplies the alternative implication from `DyadicInghamOneLog`.
+
+[Infinite diagonal Fourier estimates](Analysis/InfiniteDiagonalFMZ.lean) · [Chronological prime pairs](Analysis/ActualPrimeChronologicalHaar.lean) · [Ford, Meng and Zaharescu](https://arxiv.org/abs/1511.06814) · [Baluyot, Theorem 1.2.1](https://urresearch.rochester.edu/fileDownloadForInstitutionalItem.action?itemFileId=183460&itemId=33320)
+
 ## Haar mean-square error for translated FMZ tests
 
 For a finite prime set $P$, let $r_T(k)$ be the actual character sampling error after subtracting the Haar term at count normalization and the signed prime-density term at height normalization. For distinct restricted modes $k_i|_P$, translating a Fourier polynomial by $z$ multiplies its $i$-th coefficient by $\chi_{k_i}(z)$. Its exact Haar mean-square error is $\sum_i |a_i|^2|r_T(k_i)|^2$. For $0\le s\le2$ the unconditional bound is
