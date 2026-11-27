@@ -1,5 +1,7 @@
 # Theorem catalog
 
+[Fourth-order GUE window tests imply ordinary PCC](THEOREM_CATALOG_FOUR_POINT_PCC.md)
+
 [Strict microscopic zero pairs, local unfolding and the Dyson covariance](THEOREM_CATALOG_MICROSCOPIC_PAIR_COVARIANCE.md)
 
 [Infinite compact FMZ tests, signed Haar energies and recovery of physical gap atoms](THEOREM_CATALOG_COMPACT_FMZ_FOURIER.md)
