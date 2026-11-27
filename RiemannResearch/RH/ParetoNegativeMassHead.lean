@@ -110,4 +110,29 @@ theorem negativeMassHead_truncation_upper (N : ℕ) (f : ThresholdHilbert) :
   rw [ht] at h hb
   linarith [negativeMassHead_tail_identity N f]
 
+/-- All positive sites have positive mass, so zero total negative mass is a pointwise sign test. -/
+theorem negativeMass_eq_zero_iff (f : ThresholdHilbert) :
+    hilbertNegativeMass f = 0 ↔ ∀ n : ℕ, 0 < n → 0 ≤ hilbertSequence f n := by
+  constructor
+  · intro hz n hn
+    obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn.ne'
+    by_contra! hneg
+    have hp : 0 < paretoWeight k * max (-hilbertSequence f (k+1)) 0 :=
+      mul_pos (paretoWeight_pos k) ((neg_pos.mpr hneg).trans_le (le_max_left _ _))
+    have hsite : paretoWeight k * max (-hilbertSequence f (k+1)) 0 ≤
+        negativeMassHead (k+1) f := by
+      rw [negativeMassHead_eq_sum]
+      exact Finset.single_le_sum (f := fun j => paretoWeight j * max (-hilbertSequence f (j+1)) 0)
+        (fun j _ => mul_nonneg (paretoWeight_pos j).le (le_max_right _ _))
+        (Finset.mem_range.mpr (Nat.lt_succ_self k))
+    have hh := hp.trans_le (hsite.trans (negativeMassHead_le (k+1) f))
+    rw [hz] at hh
+    exact lt_irrefl _ hh
+  · intro h
+    have hz (n : ℕ) : max (-hilbertSequence f n) 0 = 0 := by
+      cases n with
+      | zero => simp
+      | succ n => exact max_eq_right (neg_nonpos.mpr (h _ (Nat.succ_pos _)))
+    simp only [hilbertNegativeMass, hz, mul_zero, tsum_zero]
+
 end RiemannResearch.RH.Pareto

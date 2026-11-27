@@ -96,6 +96,22 @@ packet pairing divided by $\log p$. **defect_fekete_rate_zero_iff_screened** and
 **defect_fekete_rate_zero_iff_rh** identify vanishing at one fixed base with
 $g=\mathbf 1_H$ and with RH. Whether this slope vanishes remains open.
 
+## Choice of the legal mean section and a finite sign test
+
+**contractive_legal_section_iff_rh** proves the equivalence for the unscaled
+legal mean. **trial_negativeMassHead_tendsto** identifies the limit of finite
+Pareto negative-part sums of the mixed projections along any growing physical
+head. **trial_negativeMassHead_zero_iff_rh** and
+**rh_iff_frequently_nonnegative_at_each_site** give two finite-data criteria.
+**screened_first_four_positive** certifies the first four sites unconditionally.
+An external exact rational certificate shows that cutoff 10 gives a nonnegative
+packet and cutoff 12 gives a negative value even inside its first twelve sites.
+
+**Open.** Prove the finite head negative masses tend to zero, or establish
+arbitrarily late nonnegative values at each fixed positive site.
+
+[Proofs, numerical evidence and rational certificate](RH/ScreenedParityNegativeMass.md)
+
 ## Exact symmetric defect form
 
 Definitions:
