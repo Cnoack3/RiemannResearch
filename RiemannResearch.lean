@@ -2,6 +2,7 @@ import RiemannResearch.Analysis.DPPNumberVarianceRigidity
 import RiemannResearch.Probability.DPPAveragedVariation
 import RiemannResearch.Probability.DPPBinaryInterval
 import RiemannResearch.Probability.DPPContinuousSpectralRigidity
+import RiemannResearch.Probability.DPPThinTriangleRigidity
 import RiemannResearch.Probability.DPPDeletionVariance
 import RiemannResearch.Probability.DPPIntervalSpectrum
 import RiemannResearch.Probability.DPPSpectralMultiplier
@@ -5232,6 +5233,7 @@ import RiemannResearch.Analysis.ActualInfinitePrimeTorus
 import RiemannResearch.Analysis.InfiniteDiagonalFMZ
 import RiemannResearch.Analysis.ActualPrimeChronologicalHaar
 import RiemannResearch.Analysis.ActualThreePrimeAdjacentGaps
+import RiemannResearch.Analysis.ThreePrimeGapParseval
 import RiemannResearch.Analysis.PrimePowerEvaluation
 import RiemannResearch.Analysis.CoherentFock
 import RiemannResearch.Analysis.LogEulerFeature

@@ -1,5 +1,13 @@
 # Infinite zero-ordinate FMZ DPP and pair-transfer catalog
 
+## Triangular overlap on a vanishing sequence
+
+For the covariogram \(O_f(h)=\int f(t)f(t+h)\,dt\) of an integrable unit-mass multiplier with \(0\le f\le1\), `structureFactor_rightSlope_of_lower_triangle` proves that the whole right-hand limit of \((1-O_f(h))/h\) is one if \(O_f(h_n)\ge1-(1+\delta)h_n\) along positive \(h_n\to0\) with fixed \(\delta<1\). `structureFactor_liminf_of_triangle_error` treats \(O_f(h_n)=1-h_n+o(h_n)\). The existing rigidity theorem then identifies the translated unit interval and every finite sine determinant.
+
+**Open for the zero process.** Applying the result requires a convolution DPP representation for the physical unfolded ordinates and the identified covariogram estimate along a vanishing sequence. The Ingham bound controls horizontal zero counts.
+
+[Thin triangular overlap](Probability/DPPThinTriangleRigidity.lean) · [Spectral determinant rigidity](Probability/DPPContinuousSpectralRigidity.lean)
+
 Research note: [FMZ_Infinite_Zero_DPP_20261111.md](FMZ_Infinite_Zero_DPP_20261111.md).
 Starting revision: 8d91c2e44fa978205f4d8b4a59a636398f4bca9d.
 

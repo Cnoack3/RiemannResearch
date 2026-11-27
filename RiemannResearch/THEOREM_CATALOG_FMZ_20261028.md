@@ -1,5 +1,20 @@
 # Quantitative FMZ and product-test cancellation: theorem catalog supplement
 
+## Parseval for two adjacent unfolded gaps
+
+For a consecutive prime triple, put \(U=z_q/z_p\) and \(V=z_r/z_q\). The outer prime exponents of \(U^kV^\ell\) are \(-k\) and \(\ell\). Distinct pairs give orthogonal Haar characters. All mixed Haar moments vanish except at \((0,0)\). A common translation of the three chronological ordinates leaves each resonant mode unchanged.
+
+- `threePrime_gap_parseval` constructs the countable Haar series with square-summable coefficients and computes its squared norm. `threePrime_gap_reconstruction_L2` bounds the squared mean error by \(((\log 2)T/N(T))^2\sum_i |a_i|^2\) for distinct rounded integer order pairs. Repeated pairs must be grouped before orthogonality can be applied.
+- `threePrime_gap_physical_plancherel` proves the physical-space smoothing estimate on every finite-dimensional real Euclidean space. For the empirical measure of neighboring unfolded gaps, use test frequencies \((-2\pi t_1,-2\pi t_2)\). The inverse Fourier transform of the multiplier error times the Fourier transform of a smoothing function \(f\) has norm at most \((\log 2)T\|f\|_2/N(T)\). All frequency pairs are admitted.
+- `unfoldedAdjacentGapTransform_lipschitz` gives the actual characteristic function a Lipschitz constant \(T\log T/(2\pi N(T))\) in the sum of the two frequency displacements. This tends to one. To identify a proposed continuous characteristic function, it suffices to determine the rounded arithmetic limits on rational frequency pairs for one fixed consecutive prime triple, for instance \(2,3,5\). The empirical mass is \((N(T)-2)_+/N(T)\to1\).
+- **Written consequence for simplicity.** If the first gap marginal has a weak limit with no atom at zero, the fraction of exact zero gaps tends to zero by the closed-set upper bound. At a repeated height with \(m\ge2\) copies, \(m\le2(m-1)\), and \(m-1\) internal gaps vanish. Every exceptional copy (off-line or multiple) has a companion at its height by `exceptional_has_companion`. Deleting the last internal gap in the two-gap sample costs at most one occurrence. The proportion of simple critical-line zeros therefore tends to one.
+
+A finite-height example shows what the fixed-word Haar limits can determine. Take the arithmetic grid \(\gamma_j=2\pi j/\log T\) up to \(T\). For each fixed nonzero word frequency \(\lambda\), the normalized geometric sum is \(O_\lambda(T^{-1})\), so the one-point prime phases have the same Haar limit. At any fixed index lag the two phases approach the common diagonal. Every unfolded gap on this grid equals one. This example concerns leading fixed-word equidistribution. Zeta-specific moving estimates carry additional arithmetic information.
+
+**Open.** The moving-order arithmetic correlation at the actual zero occurrences has to be evaluated. The neighboring gaps seen from a typical point of the sine process and its factorial pair density are distinct statistics. Full ordinary positive-gap PCC requires control of all ranks with sufficient tail control.
+
+[Three-prime gap Parseval and Plancherel](Analysis/ThreePrimeGapParseval.lean) · [Actual rounded correlation](Analysis/ActualThreePrimeAdjacentGaps.lean) · [Companion of every exceptional zero copy](Analysis/ActualZeroCollisionDensity.lean)
+
 ## Three consecutive primes and two neighboring zero gaps
 
 For actual chronological zero copies \(\gamma_j\), put \(g_j=\gamma_{j+1}-\gamma_j\), \(X_j=(\log T)g_j/(2\pi)\), and \(N=N(T)\). All sums use \(j<N-2\) and normalization \(1/N\), so the two terminal incomplete triples are omitted.
