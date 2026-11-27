@@ -737,6 +737,9 @@ import RiemannResearch.RH.CompositePacketClosure
 import RiemannResearch.RH.OtherPrimePacketClosure
 import RiemannResearch.RH.PacketReflectionTower
 import RiemannResearch.RH.PacketReflectionRelation
+import RiemannResearch.RH.MixedDifferenceDensity
+import RiemannResearch.RH.PacketReflectionQuotients
+import RiemannResearch.RH.PacketReflectionHeadDescent
 import RiemannResearch.RH.MixedPacketReflectionLimits
 import RiemannResearch.RH.PacketPeriodObstruction
 import RiemannResearch.RH.MixedConductorSpanCriterion

@@ -254,7 +254,9 @@ For trials supported on twice an odd conductor, `oddDoubleTrial_completeError_lo
 
 **Open.** Prove that the second coordinates of the mixed reflection graph belong to the legal space. Its vertical fibre makes this equivalent to RH.
 
-[Exact energies and graph proof](RH/CRTCharacterReflection.md)
+The graph splits as $M\oplus\mathbb R\mathbf1$. The legal pullback fits into a short exact sequence over $M\cap S^{-1}(V+\mathbb R\mathbf1)$. Its intrinsic finite residual quotients have joint kernel equal to the pullback. The complete conductor quotient energies satisfy an exact projection increment identity and a cofinal block contraction criterion. The anchored differences of mixed vectors are dense in $H$, so the reflection obstruction has dense range in $H/V$. The Hausdorff cokernel vanishes unconditionally.
+
+[Exact energies and graph proof](RH/CRTCharacterReflection.md) · [Exact sequences and quotient descent](RH/ReflectionGraphDescent.md)
 
 ## Verification record
 
