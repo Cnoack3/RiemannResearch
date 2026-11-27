@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.NestedOrthogonalDecomposition
+import RiemannResearch.RH.CenteredMeanQuotients
 import RiemannResearch.RH.MixedConductorBilinear
 import RiemannResearch.RH.MixedConductorRankOne
 import RiemannResearch.RH.MixedOrthogonalMean
@@ -10,6 +12,11 @@ Source: the user's argument testing the residue slope on the mean-zero vector
 `g - 1`, where `g = normalizedScreenedTwo`. Logarithmic rigidity fixes the
 same normalized slope at each base and exponent. Its value on this test
 vector is the squared norm of the defect. Its vanishing is equivalent to RH.
+
+The Hilbert vector `normalizedScreenedTwo` is the projection of the conductor-two packet off
+the mixed subspace, divided by `Real.log 2`. It has Pareto mean one. The Fekete pairing on
+legal test vectors evaluates the legal projection of an ambient mixed-orthogonal vector.
+Restricting to legal inputs gives the screened line and its orthogonal complement inside `V`.
 -/
 
 noncomputable section
@@ -19,6 +26,57 @@ namespace RiemannResearch.RH.Pareto.PrimePowerSchur.ScreenedFeketeDefect
 open CoefficientStabilization
 open RiemannResearch.NumberTheory (powerRate pow_div_exponent_of_log powerRate_eq_of_log)
 
+/-- The Fekete pairing determines the projection of an ambient mixed-orthogonal vector into
+the legal Hilbert space, at every base greater than one. -/
+theorem legal_projection_eq_fekete_rate {h : ThresholdHilbert} (hh : h ∈ mixedClosureᗮ)
+    {a : ℕ} (ha : 1 < a) :
+    closedSpace.starProjection h =
+      (powerRate (residuePairing h) a / Real.log (a : ℝ)) • limitProjection := by
+  apply Submodule.eq_starProjection_of_mem_orthogonal
+  · exact closedSpace.smul_mem _ (closedSpace.starProjection_apply_mem hilbertOne)
+  · intro v hv
+    have hmean : inner ℝ v limitProjection = inner ℝ v hilbertOne :=
+      CenteredMeanSnake.inner_projectedOne (⟨v, hv⟩ : closedSpace)
+    have hpair : inner ℝ v h =
+        (powerRate (residuePairing h) a / Real.log (a : ℝ)) * inner ℝ v hilbertOne :=
+      (real_inner_comm _ _).trans (Bilinear.pairing_eq_fekete_rate_at_base hh hv ha)
+    rw [inner_sub_right, real_inner_smul_right, hmean, hpair, sub_self]
+
+/-- In the mean-one normalization, the coefficient of the orthogonal projection onto the
+screened line includes the reciprocal squared norm of its generator. -/
+theorem legal_projection_eq_screened_coefficient {h : ThresholdHilbert} (hh : h ∈ mixedClosureᗮ) :
+    closedSpace.starProjection h =
+      (inner ℝ normalizedScreenedTwo h / ‖normalizedScreenedTwo‖ ^ 2) • normalizedScreenedTwo := by
+  apply Submodule.eq_starProjection_of_mem_orthogonal
+  · exact closedSpace.smul_mem _
+      (screenedPrimeClosure_le_closedSpace normalizedScreenedTwo_mem_screenedPrimeClosure)
+  · intro v hv
+    have hpair : inner ℝ v h = inner ℝ normalizedScreenedTwo h * inner ℝ v hilbertOne :=
+      (real_inner_comm _ _).trans (Bilinear.pairing_factorization_of_rigidity hh hv)
+    rw [inner_sub_right, real_inner_smul_right, hpair, ← Bilinear.inner_screenedTwo_div_norm_sq hv]
+    ring
+
+/-- On the intersection with the legal space the projection fixes the vector. Its coordinate
+on the screened line is therefore its Pareto mean. -/
+theorem legal_mixedOrthogonal_eq_mean_smul {v : ThresholdHilbert}
+    (hv : v ∈ closedSpace ⊓ mixedClosureᗮ) :
+    v = inner ℝ v hilbertOne • normalizedScreenedTwo := by
+  have hp := legal_projection_eq_screened_coefficient hv.2
+  rwa [closedSpace.starProjection_eq_self_iff.mpr hv.1, real_inner_comm v normalizedScreenedTwo,
+    Bilinear.inner_screenedTwo_div_norm_sq hv.1] at hp
+
+/-- The subspace identity obtained by restricting the Fekete pairing to legal vectors. -/
+theorem legal_inf_mixedOrthogonal_eq_screenedLine :
+    closedSpace ⊓ mixedClosureᗮ = Submodule.span ℝ {normalizedScreenedTwo} := by
+  apply le_antisymm
+  · intro v hv
+    exact Submodule.mem_span_singleton.mpr
+      ⟨inner ℝ v hilbertOne, (legal_mixedOrthogonal_eq_mean_smul hv).symm⟩
+  · apply Submodule.span_le.mpr
+    apply Set.singleton_subset_iff.mpr
+    rw [← screenedPrimeClosure_eq_inf_orthogonal]
+    exact normalizedScreenedTwo_mem_screenedPrimeClosure
+
 /-- The screened packet is the unique mean-one legal vector orthogonal to the mixed packets. -/
 theorem mean_one_legal_orthogonal_set :
     {v : ThresholdHilbert | v ∈ closedSpace ∧ v ∈ mixedClosureᗮ ∧
@@ -27,14 +85,50 @@ theorem mean_one_legal_orthogonal_set :
   change (_ ∧ _ ∧ _) ↔ v = normalizedScreenedTwo
   constructor
   · rintro ⟨hv, ho, hm⟩
-    have hs := fullScreening_eq_mean_smul hv
-    change v - mixedClosure.starProjection v = _ at hs
-    simpa only [(Submodule.starProjection_apply_eq_zero_iff _).mpr ho, sub_zero, hm,
-      one_smul] using hs
+    simpa only [hm, one_smul] using legal_mixedOrthogonal_eq_mean_smul ⟨hv, ho⟩
   · rintro rfl
     have hg := normalizedScreenedTwo_mem_screenedPrimeClosure
     rw [screenedPrimeClosure_eq_inf_orthogonal] at hg
     exact ⟨hg.1, hg.2, normalizedScreenedTwo_mean⟩
+
+/-- The two submodules are mutual orthogonal complements in the subtype `closedSpace`,
+and form a direct sum there. -/
+theorem legal_mixed_screened_complements :
+    (mixedClosure.comap closedSpace.subtype)ᗮ = Submodule.span ℝ {screenedMeanSection 1} ∧
+    IsCompl (mixedClosure.comap closedSpace.subtype)
+      (Submodule.span ℝ {screenedMeanSection 1}) := by
+  rw [← CenteredMeanSnake.screenedMeanSection_one_orthogonal_eq_mixed]
+  exact ⟨by simp only [Submodule.orthogonal_orthogonal], (Submodule.isCompl_orthogonal _).symm⟩
+
+/-- An ambient vector perpendicular to both the mixed space and the screened line
+is exactly a vector perpendicular to the whole legal space. -/
+theorem mixedOrthogonal_inf_screenedOrthogonal :
+    mixedClosureᗮ ⊓ (Submodule.span ℝ {normalizedScreenedTwo})ᗮ = closedSpaceᗮ := by
+  rw [Submodule.inf_orthogonal, CenteredMeanSnake.legal_mixed_screened_orthogonal_sum.1]
+
+/-- In the ambient Hilbert space the perpendicular to the screened line consists of the
+mixed component and the component orthogonal to the legal space. -/
+theorem screenedOrthogonal_eq_mixed_sup_legalOrthogonal :
+    (Submodule.span ℝ {normalizedScreenedTwo})ᗮ = mixedClosure ⊔ closedSpaceᗮ := by
+  have hle := Submodule.orthogonal_le CenteredMeanSnake.legal_mixed_screened_orthogonal_sum.2
+  rw [Submodule.orthogonal_orthogonal] at hle
+  calc
+    _ = mixedClosure ⊔ ((Submodule.span ℝ {normalizedScreenedTwo})ᗮ ⊓ mixedClosureᗮ) :=
+      (RiemannResearch.Analysis.NestedOrthogonalDecomposition.prime_sup_carry hle).symm
+    _ = _ := by rw [inf_comm _ mixedClosureᗮ, mixedOrthogonal_inf_screenedOrthogonal]
+
+/-- Pythagoras on the ambient mixed complement retains the entire legal-orthogonal remainder. -/
+theorem ambient_mixedOrthogonal_norm_split {h : ThresholdHilbert} (hh : h ∈ mixedClosureᗮ) :
+    ‖h‖ ^ 2 = (inner ℝ normalizedScreenedTwo h) ^ 2 / ‖normalizedScreenedTwo‖ ^ 2 +
+      ‖closedSpaceᗮ.starProjection h‖ ^ 2 := by
+  have hn : ‖normalizedScreenedTwo‖ ≠ 0 :=
+    (zero_lt_one.trans_le one_le_norm_normalizedScreenedTwo).ne'
+  calc
+    ‖h‖ ^ 2 = ‖closedSpace.starProjection h‖ ^ 2 + ‖closedSpaceᗮ.starProjection h‖ ^ 2 :=
+      Submodule.norm_sq_eq_add_norm_sq_starProjection h closedSpace
+    _ = _ := by
+      rw [legal_projection_eq_screened_coefficient hh, norm_smul, Real.norm_eq_abs, mul_pow, sq_abs]
+      field_simp [hn]
 
 /-- At any base greater than one the normalized Fekete infimum on the defect
 is its exact squared norm. The test vector is already known to have zero mean. -/
