@@ -1,5 +1,15 @@
 # Quantitative FMZ and product-test cancellation: theorem catalog supplement
 
+## Three consecutive primes and two neighboring zero gaps
+
+For actual chronological zero copies \(\gamma_j\), put \(g_j=\gamma_{j+1}-\gamma_j\), \(X_j=(\log T)g_j/(2\pi)\), and \(N=N(T)\). All sums use \(j<N-2\) and normalization \(1/N\), so the two terminal incomplete triples are omitted.
+
+For any ordered primes \(p<q<r\), the fixed off-diagonal sample \(p^{i\gamma_j}q^{-2i\gamma_{j+1}}r^{i\gamma_{j+2}}\) averages to zero at count normalization. Its total frequency is \(\log(pr/q^2)\). At height normalization the same conclusion follows from `VanishingCutoffGapEnergy`. Fujii's unconditional second-moment bound gives this input in ordinary mathematics. **Open in Lean** is its analytic provider.
+
+The resonant prime character with orders \(k,l\) is exactly \(\exp(i k\log(q/p)g_j+i l\log(r/q)g_{j+1})\). Fixed orders have limiting average one. For a prescribed unfolded frequency pair \((\xi,\eta)\), take \(k,l\) to be the nearest integers to \(\xi\log T/(2\pi\log(q/p))\) and \(\eta\log T/(2\pi\log(r/q))\). The prime average differs from \(N^{-1}\sum_{j<N-2}e^{i(\xi X_j+\eta X_{j+1})}\) by at most \(T\log(r/p)/(2N)\). Bertrand's theorem bounds this by \((\log 2)T/N\) uniformly in the consecutive triple, including primes and frequencies moving with height. Finite trigonometric tests inherit the bound times the sum of the absolute coefficients. The limiting microscopic values of these moving three-prime correlations are open.
+
+[Three-prime reconstruction](Analysis/ActualThreePrimeAdjacentGaps.lean) · [Fujii's consecutive-gap moments](https://www.jstage.jst.go.jp/article/pjab1945/51/10/51_10_741/_pdf)
+
 ## Actual chronological prime pairs and countable diagonal Haar Parseval
 
 Let \(z(t)=(p^{it})_{p\ {\rm prime}}\), let \(H\) be normalized Haar on the full product of prime circles, and let \(\Delta(z)=(z,z)\). `primeHaar_translation` identifies translation invariance of the one-point limit. `tendsto_chronologicalPairAverage` gives, for every continuous \(F\) and nonnegative integer lag \(k=o(\log T)\),

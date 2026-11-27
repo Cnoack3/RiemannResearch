@@ -5231,6 +5231,7 @@ import RiemannResearch.Analysis.CompactGaugeOrbitLaw
 import RiemannResearch.Analysis.ActualInfinitePrimeTorus
 import RiemannResearch.Analysis.InfiniteDiagonalFMZ
 import RiemannResearch.Analysis.ActualPrimeChronologicalHaar
+import RiemannResearch.Analysis.ActualThreePrimeAdjacentGaps
 import RiemannResearch.Analysis.PrimePowerEvaluation
 import RiemannResearch.Analysis.CoherentFock
 import RiemannResearch.Analysis.LogEulerFeature
