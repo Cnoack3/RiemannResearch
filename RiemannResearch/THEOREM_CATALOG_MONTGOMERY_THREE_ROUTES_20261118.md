@@ -79,6 +79,20 @@ The stationary $a=1/3$ example also has number variance $\pi^{-2}\log R+O(1)$. F
 
 ## Simplicity and singleton ordinates
 
+The one-sided Gaussian criterion uses ordered pairs of distinct occurrence labels. With $L=\log T/(2\pi)$, write $G_a(T)=N(T)^{-1}\sum_{i\ne j}\exp(-a L^2(\gamma_i-\gamma_j)^2)$ and take height limits in $[0,\infty]$. The following statements use the actual occurrence count, including multiplicities. Since the physical moment decreases with precision, one positive integer $n$ per tolerance suffices when the bound holds at every sufficiently large height. The threshold may depend on $n$ and the tolerance. This is `gaussian_liminf_eq_zero_iff_one_precision`.
+
+| Scope | Lean declaration | Result |
+|---|---|---|
+| Exact finite decomposition | `gaussianFactorialMoment_split` | $G_a$ equals the normalized ordered tie count plus the Gaussian sum over unequal ordinates. The tie numerator is $\sum_\gamma m_\gamma(m_\gamma-1)$. |
+| Conditional research reduction | `density_one_of_gaussian_liminf` | $\liminf_{n\to\infty}\limsup_{T\to\infty}G_n(T)=0$ implies $S_c(T)/N(T)\to1$ and $U(T)/N(T)\to1$. |
+| Sine model | `sine_gaussian_moment_le` | At every $a>0$, the whole-line sine factorial Gaussian integral is at most $\pi^{5/2}/(6a^{3/2})$. |
+| Actual near collisions | `nearCollisionPairCount_le_gaussian` | The closed window $|L(\gamma_i-\gamma_j)|\le\delta$ has normalized count at most $e^{a\delta^2}G_a(T)$. At $\delta=1/\sqrt a$, a one-sided sine-model upper estimate gives height limsup at most $e\pi^{5/2}\delta^3/6$. |
+| Signed reconstruction | `gaussian_liminf_eq_zero_iff_reconstructed_upper` | For every $\epsilon>0$ and every $k$, one can equivalently ask for a fixed $n\ge\max(1,k)$ with $\int w_n Q_T<1+\epsilon$ at every sufficiently large height. The finite comparison error is at most $3/T$. |
+
+**Open arithmetic estimate.** The eventual one-sided bound on $\int w_n Q_T$ at cofinal precisions remains open. Three-prime Euclidean Plancherel controls the reconstruction error for two chronological gaps. A cluster of $m$ coincident labels contributes $m-1$ adjacent ties and $m(m-1)$ ordered factorial ties. The signed Landau comparison transfers an estimate for the reconstructed power to the actual statistic. On a fixed band $[-B,B]$, the weight mass is at most $2B\sqrt{\pi/n}$, which tends to zero. The Ingham density bounds concern horizontal displacement and allow multiplicities on the critical line. These estimates supply neither a cofinal power bound nor a proof of simplicity at every height, RH, or full PCC.
+
+[Collision and simplicity proofs](Analysis/GaussianOrdinateSimplicity.lean) · [Exact sine-model bound](Analysis/SineGaussianMoment.lean) · [Gaussian reconstruction and fixed-band mass](Analysis/GaussianGapReconstruction.lean) · [Three-prime Plancherel](Analysis/ThreePrimeGapParseval.lean) · [Ingham density](Analysis/ActualInghamSharpDensity.lean)
+
 Write $S_c(T)$ for the number of simple zeros on the critical line and $U(T)$ for the number of heights in $(0,T]$ occupied by exactly one occurrence in the entire critical strip. Both proportions use the full count $N(T)$ with analytic multiplicity. Lean proves
 \[
 3S_c(T)\le N(T)+2U(T).
