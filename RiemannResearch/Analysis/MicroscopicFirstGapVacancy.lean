@@ -1,4 +1,5 @@
 import RiemannResearch.Analysis.MontgomeryFiniteIndexGap
+import RiemannResearch.Analysis.ActualConsecutiveGapCriterion
 import RiemannResearch.Analysis.MicroscopicPrimeVacancy
 import RiemannResearch.Analysis.LamzouriGap285OriginalReplay
 import RiemannResearch.Analysis.MontgomeryAdjacentWindowFloor
@@ -60,6 +61,52 @@ private theorem cutoff_support (T : ℝ) :
     obtain ⟨i,hi,he⟩ := List.mem_iff_getElem.mp (mem_chronologicalList.mpr ⟨c,rfl⟩)
     exact Finset.mem_image.mpr
       ⟨i, Finset.mem_range.mpr (by simpa using hi), (cutoffOrdinate_eq_get hi).trans he⟩
+
+/-- The chronological interior gaps tie once for every occurrence beyond the
+first at each occupied height. This also holds for an empty cutoff. -/
+theorem support_card_add_zeroInteriorGapCount (T : ℝ) :
+    (actualOrdinateSupport T).card + zeroInteriorGapCount T = Ncount 0 T := by
+  classical
+  have ht := support_add_ties (cutoffOrdinate T) (cutoffOrdinate_monotone T) (Ncount 0 T)
+  rw [cutoff_support] at ht
+  have hz : (zeroInteriorGapCount T : ℝ) =
+      ∑ i ∈ Finset.range (Ncount 0 T - 1),
+        if cutoffOrdinate T (i + 1) = cutoffOrdinate T i then (1 : ℝ) else 0 := by
+    simp only [zeroInteriorGapCount, cutoffGap, sub_eq_zero]
+    rw [Finset.sum_boole]
+  rw [← hz] at ht
+  exact_mod_cast ht
+
+/-- The all-pairs diagonal consists of the self-pairs, twice the tied
+neighbor count, and an explicit remainder from heights of multiplicity at least three. -/
+theorem actualCollision_eq_count_add_twice_ties_add_remainder (T : ℝ) :
+    (actualCollision T : ℤ) = (Ncount 0 T : ℤ) + 2 * (zeroInteriorGapCount T : ℤ) +
+      ∑ τ ∈ actualOrdinateSupport T,
+        ((actualOrdinateMultiplicity T τ : ℤ) - 1) *
+          ((actualOrdinateMultiplicity T τ : ℤ) - 2) := by
+  let S := actualOrdinateSupport T
+  let H := fun τ => (actualOrdinateMultiplicity T τ : ℤ)
+  have count : (Ncount 0 T : ℤ) = ∑ τ ∈ S, H τ := by
+    dsimp only [S, H]
+    exact_mod_cast actualCount_eq_sum_ordinateMultiplicity T
+  have collision : (actualCollision T : ℤ) = ∑ τ ∈ S, (H τ) ^ 2 := by
+    dsimp only [S, H]
+    exact_mod_cast actualCollision_eq_sum_multiplicity_sq T
+  have ties : (S.card : ℤ) + (zeroInteriorGapCount T : ℤ) = (Ncount 0 T : ℤ) := by
+    dsimp only [S]
+    exact_mod_cast support_card_add_zeroInteriorGapCount T
+  have expand : (∑ τ ∈ S, (H τ) ^ 2) =
+      3 * (∑ τ ∈ S, H τ) - 2 * (S.card : ℤ) + ∑ τ ∈ S, (H τ - 1) * (H τ - 2) := by
+    calc
+      _ = ∑ τ ∈ S, (3 * H τ - 2 + (H τ - 1) * (H τ - 2)) := by
+        exact Finset.sum_congr rfl (fun τ _ => by ring)
+      _ = _ := by
+        simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib, ← Finset.mul_sum,
+          Finset.sum_const, nsmul_eq_mul]
+        ring
+  rw [← count, ← collision] at expand
+  change (actualCollision T : ℤ) = _ + ∑ τ ∈ S, (H τ - 1) * (H τ - 2)
+  omega
 
 private theorem drop_last_guard (n : ℕ) (w : ℕ → ℝ) :
     (∑ i ∈ Finset.range n, if i+1 < n then w i else 0) = ∑ i ∈ Finset.range (n-1), w i := by

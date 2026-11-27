@@ -31,6 +31,12 @@ Every such certificate requires $n^2>N_T^2/(N_T+2)$. Every fixed window eventual
 
 Lean files: [TorusCollisionReconstruction](Analysis/TorusCollisionReconstruction.lean), [TwoPrimeCompactCollision](Analysis/TwoPrimeCompactCollision.lean), [TwoPrimeGapAtoms](Analysis/TwoPrimeGapAtoms.lean).
 
+## Consecutive gaps and all-pairs power
+
+[HomometricConsecutiveGaps](Analysis/HomometricConsecutiveGaps.lean) proves that two sorted lists with the same size, first point, last point, and Fourier power at every real frequency can have different adjacent counts. In [Bloom’s example](https://doi.org/10.1016/0097-3165(77)90013-9), the width-four counts are three and four. A second pair of nine-occurrence lists has three and two tied neighbors. The declaration `sum_difference_power` proves the common-power identity for sums and differences of any two finite real samples.
+
+For actual zeta zeros, let $H(\tau)$ count the occurrences at an occupied height, $C=\sum_\tau H(\tau)^2$, and $Z$ count the tied consecutive pairs. [MicroscopicFirstGapVacancy](Analysis/MicroscopicFirstGapVacancy.lean) proves $Z=N-\#\{\tau\}$ and the finite identity $C=N+2Z+\sum_\tau(H(\tau)-1)(H(\tau)-2)$. In particular $C=N+o(N)$ suffices for $Z=o(N)$. The three-prime adjacent transform uses the chronological indices $j,j+1,j+2$ in its input.
+
 ## Signed Haar energy at the PCC scale
 
 Let $D_T=T\log T/(2\pi)$ and let $f$ be real, smooth, even and compactly supported. The Fourier transform uses $e^{-2\pi i v x}$. Three-prime words on $2,3,5$ give a positive mesh $h_T<T^{-3}$ for all sufficiently large $T$. For each $k\in\mathbb Z$, put

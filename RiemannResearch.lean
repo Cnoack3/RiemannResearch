@@ -5304,6 +5304,7 @@ import RiemannResearch.Analysis.InfiniteDiagonalFMZ
 import RiemannResearch.Analysis.ActualPrimeChronologicalHaar
 import RiemannResearch.Analysis.ActualThreePrimeAdjacentGaps
 import RiemannResearch.Analysis.ThreePrimeGapParseval
+import RiemannResearch.Analysis.HomometricConsecutiveGaps
 import RiemannResearch.Analysis.PrimePowerEvaluation
 import RiemannResearch.Analysis.CoherentFock
 import RiemannResearch.Analysis.LogEulerFeature
