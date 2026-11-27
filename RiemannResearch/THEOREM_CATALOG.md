@@ -1,5 +1,9 @@
 # Theorem catalog
 
+## Finite character cutoffs and their exhaustive limit
+
+`finite_character_cross_certificate_impossible` proves strict failure of the two-prime Cauchy–Schwarz test for every finite mode set. `characterCrossShortfall_ge_multiplesMass` gives its positive common-period lower bound. `characterCrossShortfall_tendsto_zero_iff_rh` identifies the exhaustive limit criterion. The decreasing finite diagonal bound is `diagonalShortfallUpper`. Its convergence to zero remains open. [Lean declarations](CategoryTheory/ParetoCharacterCrossShortfall.lean) · [Certificate and proof](CHARACTER_CROSS_CERTIFICATE_20261126.md)
+
 ## Current providers for the dated approximation criteria
 
 The November squarefree criterion supplies the argument `hBaezDuarte : RiemannHypothesis → BaezDuarte.NaturalApproximation` used by the older Pareto and Q equivalences below. Compose `riemannHypothesis_iff_naturalApproximation.mp` with `naturalApproximation_iff_centeredApproximation.mp` for the centered provider. Composition with `naturalApproximation_iff_one_mem.mp` and `closedSpace_eq_top_iff_one_mem.mpr` gives density of the full Pareto residue space under RH. Earlier dated entries that list these implications as open record the verification status at that date. Unconditional density and convergence of the prescribed small-damping Möbius fits remain open. [Squarefree and natural criteria](RH/CenteredMeanSquarefreeConverse.lean) · [Natural and centered comparison](RH/BaezDuarteNaturalApproximation.lean) · [Full residue density](RH/ResidueClosureDensity.lean)

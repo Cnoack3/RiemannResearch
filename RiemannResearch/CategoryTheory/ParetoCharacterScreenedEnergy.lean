@@ -6,8 +6,9 @@ import RiemannResearch.RH.ScreenedSectionDescent
 The Gram matrices use the complete digamma progression mass. The signed
 character sums are evaluated before taking any products or squared norms.
 The missing mixed modes give the exact remainder for each finite upper bound.
-For the signed two-prime pairing, a finite character section plus the
-Cauchy--Schwarz allowance for its exact residual gives a rigorous RH certificate.
+The Cauchy–Schwarz allowance for the exact two-prime residual gives a formal
+RH implication. Its hypothesis fails for every finite section, as proved in
+`ParetoCharacterCrossShortfall`.
 -/
 
 noncomputable section

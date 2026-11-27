@@ -65,16 +65,37 @@ for the unconditional norm-only estimate. The first character mode is also not
 decisive. It contributes positively to the cross pairing, whereas the complete
 target is negative.
 
-## Exact remaining hypotheses
+## Strict finite obstruction
 
-Either of the following would close this route:
+Write $a=\log 2$, $b=\log 3$, $u=\mathrm{normalizedScreenedTwo}$, and
+$r_j=P_MJ_j-X_j(s)$. The shortfall in the displayed certificate is
+$$
+D_s=T_{23}+\|r_2\|\|r_3\|-C_s(2,3)
+=ab(\|u\|^2-1)+\|r_2\|\|r_3\|+\langle r_2,r_3\rangle.
+$$
+Take a common multiple $L$ of $2$, $3$, and the raw conductors occurring
+through each selected Gram–Schmidt mode. This includes non-prefix selections.
+On $A=\{L,2L,\ldots\}$, the residuals equal $-au$ and $-bu$. Reflecting
+$r_3$ on $A$ preserves its norm. Cauchy–Schwarz applied to the reflection,
+followed by weighted Cauchy–Schwarz using $\mathbb E_P u=1$, gives
+$$
+D_s\ge ab\bigl(\mathbb E_P[(1+2\mathbf1_A)u^2]-1\bigr)
+\ge ab\,\frac{2P(A)}{3-2P(A)}>0.
+$$
+The theorem `finite_character_cross_certificate_impossible` gives the strict reverse of the original finite inequality.
 
-1. Exhibit one finite (s) satisfying the Lean theorem's displayed Cauchy
-   certificate.
-2. Prove a sharper lower bound on the residual cross term than the product of
-   the two residual norms.
-3. Prove directly that the full signed series
-   (sum_q c_q(2)c_q(3)) is at least (T_{23}).
+## Exhaustive towers
+
+The residuals converge to zero in Pareto norm as the mode sets exhaust the
+basis. Hence $D_s\to ab(\|u\|^2-1)$. A symbolic upper bound using finite
+character Grams is
+$$
+D_s\le B_s=\sum_{j\in\{2,3\}}
+\left(G_{jj}-\sum_{q\in s}c_q(j)^2-(\log j)^2\right).
+$$
+The bounds $B_s$ decrease to $(a^2+b^2)(\|u\|^2-1)$. The open arithmetic
+step is to prove a vanishing upper bound along an exhaustive tower. The
+finite obstruction alone supplies no uniform positive lower bound.
 
 The original mean-ladder alternative remains valid: one uniform constant (C)
 such that for every (K) some (Nge K) obeys (U_N(k)ge C) for every
