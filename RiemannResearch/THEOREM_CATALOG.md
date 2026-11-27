@@ -1,5 +1,7 @@
 # Theorem catalog
 
+[Mellin sine kernels, three-prime reconstruction, global simplicity and Pareto absorption](THEOREM_CATALOG_MELLIN_PRIME_ORBIT_TRANSFER.md)
+
 ## Finite character cutoffs and their exhaustive limit
 
 `finite_character_cross_certificate_impossible` proves strict failure of the two-prime Cauchy–Schwarz test for every finite mode set. `characterCrossShortfall_ge_multiplesMass` gives its positive common-period lower bound. `characterCrossShortfall_tendsto_zero_iff_rh` identifies the exhaustive limit criterion. The decreasing finite diagonal bound is `diagonalShortfallUpper`. Its convergence to zero remains open. [Lean declarations](CategoryTheory/ParetoCharacterCrossShortfall.lean) · [Certificate and proof](CHARACTER_CROSS_CERTIFICATE_20261126.md)
