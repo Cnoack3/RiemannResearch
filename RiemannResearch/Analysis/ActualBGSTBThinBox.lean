@@ -7,6 +7,7 @@ import RiemannResearch.Analysis.ActualBGSTBDensity
 import RiemannResearch.Analysis.ActualZeroCountUpper
 import RiemannResearch.Analysis.ActualZeroDensityWindow
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Topology.Order.LeftRight
 
 /-!
 # Strong zero density and exact Selberg slope two under the BGSTB thin box
@@ -27,6 +28,136 @@ real heights. The strict horizontal boundary matters for the inclusive count. -/
 def BGSTBThinBox : Prop :=
   ∀ᶠ T : ℝ in atTop, ∀ ρ ∈ cutoff T, T ^ (3 / 8 : ℝ) < ρ.im →
     |ρ.re - 1 / 2| < 1 / (2 * Real.log T)
+
+
+/-- A closed lower edge, imposed at every sufficiently large real height,
+is equivalent to the open two-sided box of BGSTB Theorem 2. For a zero
+in the open lower height window one can increase T slightly, giving a
+strictly smaller horizontal width. Reflection supplies the other edge. -/
+theorem bgstbThinBox_iff_eventually_closed_lower :
+    BGSTBThinBox ↔ ∀ᶠ T : ℝ in atTop, ∀ ρ ∈ cutoff T, T ^ (3 / 8 : ℝ) < ρ.im →
+      1 / 2 - 1 / (2 * Real.log T) ≤ ρ.re := by
+  constructor
+  · intro h
+    filter_upwards [h] with T hT
+    intro ρ hρ hγ
+    linarith only [(abs_lt.mp (hT ρ hρ hγ)).1]
+  · intro h
+    obtain ⟨U, hU⟩ := eventually_atTop.1 h
+    filter_upwards [eventually_ge_atTop U, eventually_gt_atTop (1 : ℝ)] with T hUT hT
+    intro ρ hρ hγ
+    have hc : ContinuousAt (fun t : ℝ => t ^ (3 / 8 : ℝ)) T := by fun_prop (disch := positivity)
+    have he : ∀ᶠ t : ℝ in 𝓝 T, t ^ (3 / 8 : ℝ) < ρ.im := hc.tendsto.eventually (gt_mem_nhds hγ)
+    obtain ⟨t, hTt, htγ⟩ := he.exists_gt
+    obtain ⟨hz, hip, hiT⟩ := mem_cutoff.mp hρ
+    have hmem : ρ ∈ cutoff t := mem_cutoff.mpr ⟨hz, hip, hiT.trans hTt.le⟩
+    have hleft := hU t (hUT.trans hTt.le) ρ hmem htγ
+    have hright := hU t (hUT.trans hTt.le) (reflect ρ) (reflect_mem hmem)
+      (by simpa only [reflect_im] using htγ)
+    rw [reflect_re] at hright
+    have hlog := Real.log_lt_log (zero_lt_one.trans hT) hTt
+    have hwidth : 1 / (2 * Real.log t) < 1 / (2 * Real.log T) :=
+      one_div_lt_one_div_of_lt (mul_pos (by norm_num) (Real.log_pos hT))
+        (by linarith only [hlog])
+    exact abs_lt.mpr ⟨by linarith, by linarith⟩
+
+
+/-- An inclusive left cutoff keeps the complement of the strictly right
+tail. This identity includes zeros lying at either of the two boundaries. -/
+theorem rightInclusiveCount_left_add_rightStrictTail (T d : ℝ) :
+    rightInclusiveCount T (1 / 2 - d) + rightStrictTail T d = (Ncount 0 T : ℝ) := by
+  let f := fun ρ : ℂ => if 1 / 2 - d ≤ ρ.re then (1 : ℝ) else 0
+  change realSum T f + realSum T (fun ρ => if 1 / 2 + d < ρ.re then 1 else 0) = _
+  rw [← realSum_reflect T f, ← realSum_add, ← realSum_one T]
+  congr 1
+  funext ρ
+  dsimp only [f]
+  rw [reflect_re]
+  by_cases h : 1 / 2 + d < ρ.re
+  · rw [if_neg (show ¬ (1 / 2 - d ≤ 1 - ρ.re) by linarith), if_pos h, zero_add]
+  · rw [if_pos (show 1 / 2 - d ≤ 1 - ρ.re by linarith), if_neg h, add_zero]
+
+
+/-- Under Theorem 3's density hypothesis, an inclusive cutoff on the
+left side retains the total count up to o(N(T)/e). -/
+theorem bgstb_left_cutoff_deficit_isLittleO_count_div_exp {b : ℝ} (hb : 1 / 2 < b)
+    (h : BGSTBStripDensity b) :
+    (fun T : ℝ => (Ncount 0 T : ℝ) - rightInclusiveCount T (1 / 2 - 1 / (2 * Real.log T)))
+      =o[atTop] (fun T : ℝ => (Ncount 0 T : ℝ) / Real.exp 1) := by
+  apply Asymptotics.IsBigO.trans_isLittleO _ (bgstb_endpoint_isLittleO_count_div_exp hb h)
+  apply Asymptotics.IsBigO.of_bound'
+  filter_upwards with T
+  let d := 1 / (2 * Real.log T)
+  have he := rightInclusiveCount_left_add_rightStrictTail T d
+  have hn := sub_nonneg.mpr (rightInclusiveCount_le_count T (1 / 2 - d))
+  have hp := rightInclusiveCount_nonneg T (1 / 2 + d)
+  change ‖(Ncount 0 T : ℝ) - rightInclusiveCount T (1 / 2 - d)‖ ≤
+    ‖rightInclusiveCount T (1 / 2 + d)‖
+  rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_nonneg hn, abs_of_nonneg hp]
+  linarith only [he, rightStrictTail_le_inclusive T d]
+
+/-- Count both boundary lines among the exceptions. Under Theorem 2
+every such occurrence belongs to the initial height segment. -/
+theorem bgstb_outside_count_le_initial_of_thinBox (h : BGSTBThinBox) :
+    ∀ᶠ T : ℝ in atTop,
+      realSum T (fun ρ => if 1 / (2 * Real.log T) ≤ |ρ.re - 1 / 2| then 1 else 0) ≤
+        (Ncount 0 (T ^ (3 / 8 : ℝ)) : ℝ) := by
+  classical
+  filter_upwards [h, eventually_gt_atTop (1 : ℝ)] with T hh hT
+  let H := T ^ (3 / 8 : ℝ)
+  have hHT : H ≤ T := Real.rpow_le_self_of_one_le hT.le (by norm_num)
+  have hf : (cutoff T).filter (fun ρ => ρ.im ≤ H) = cutoff H := by
+    ext ρ
+    simp only [Finset.mem_filter, mem_cutoff]
+    grind
+  calc
+    _ ≤ realSum T (fun ρ => if ρ.im ≤ H then 1 else 0) := by
+      apply realSum_mono
+      intro ρ hρ
+      by_cases hz : ρ.im ≤ H
+      · rw [if_pos hz]
+        split <;> norm_num
+      · rw [if_neg hz, if_neg (hh ρ hρ (lt_of_not_ge hz)).not_ge]
+    _ = _ := by
+      rw [realSum, count_eq_sum]
+      simp_rw [mul_ite, mul_one, mul_zero]
+      rw [← Finset.sum_filter, hf, Nat.cast_sum]
+
+
+/-- Positive half-width makes the two closed exceptional tails disjoint.
+Reflection identifies their counts including multiplicity and boundary atoms. -/
+theorem closed_displacement_count_eq_twice_right (T : ℝ) {d : ℝ} (hd : 0 < d) :
+    realSum T (fun ρ => if d ≤ |ρ.re - 1 / 2| then 1 else 0) =
+      2 * rightInclusiveCount T (1 / 2 + d) := by
+  let f := fun ρ : ℂ => if 1 / 2 + d ≤ ρ.re then (1 : ℝ) else 0
+  change _ = 2 * realSum T f
+  calc
+    _ = realSum T (fun ρ => f ρ + f (reflect ρ)) := ?_
+    _ = _ := by rw [realSum_add, realSum_reflect, two_mul]
+  congr 1
+  funext ρ
+  dsimp only [f]
+  rw [reflect_re]
+  by_cases hr : 1 / 2 + d ≤ ρ.re
+  · have hl : ¬ 1 / 2 + d ≤ 1 - ρ.re := by linarith
+    have ha : d ≤ |ρ.re - 1 / 2| := by linarith only [hr, le_abs_self (ρ.re - 1 / 2)]
+    rw [if_pos ha, if_pos hr, if_neg hl, add_zero]
+  · by_cases hl : 1 / 2 + d ≤ 1 - ρ.re
+    · have ha : d ≤ |ρ.re - 1 / 2| := by linarith only [hl, neg_le_abs (ρ.re - 1 / 2)]
+      rw [if_pos ha, if_neg hr, if_pos hl, zero_add]
+    · have ha : |ρ.re - 1 / 2| < d := abs_lt.mpr ⟨by linarith, by linarith⟩
+      rw [if_neg ha.not_ge, if_neg hr, if_neg hl, add_zero]
+
+/-- Under the density assumption of Theorem 3, the total number of
+occurrences outside the open box is little-o of T/e, counting both edges. -/
+theorem bgstb_outside_isLittleO_height_div_exp {b : ℝ} (hb : 1 / 2 < b)
+    (h : BGSTBStripDensity b) :
+    (fun T : ℝ => realSum T (fun ρ => if 1 / (2 * Real.log T) ≤ |ρ.re - 1 / 2| then 1 else 0))
+      =o[atTop] (fun T : ℝ => T / Real.exp 1) := by
+  apply ((bgstb_endpoint_isLittleO_height_div_exp hb h).const_mul_left 2).congr' _ .rfl
+  filter_upwards [eventually_gt_atTop (1 : ℝ)] with T hT
+  exact (closed_displacement_count_eq_twice_right T
+    (one_div_pos.mpr (mul_pos (by norm_num) (Real.log_pos hT)))).symm
 
 private theorem count_eq_of_empty_upper_window {H T σ : ℝ} (hHT : H ≤ T)
     (h : ∀ ρ ∈ cutoff T, H < ρ.im → ρ.re < σ) :
