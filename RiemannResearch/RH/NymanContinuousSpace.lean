@@ -1,4 +1,9 @@
 import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Function.UniformIntegrable
+import Mathlib.Topology.Algebra.Order.Archimedean
+import Mathlib.Topology.Algebra.Order.Floor
+import Mathlib.Topology.MetricSpace.Bounded
+import Mathlib.Topology.Sequences
 import Mathlib.MeasureTheory.Function.Floor
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
@@ -64,6 +69,99 @@ theorem generator_ae (α : ℝ) :
     (generator α : ℝ → ℂ) =ᵐ[intervalMeasure] generatorFunction α :=
   MemLp.coeFn_toLp _
 
+/-- Away from the countable family of floor jumps, convergence of dilation
+parameters gives pointwise convergence of the corresponding generators. -/
+theorem generatorFunction_ae_tendsto
+    {a : ℕ → ℝ} {α : ℝ} (hα : α ≠ 0)
+    (ha : Filter.Tendsto a Filter.atTop (nhds α)) :
+    ∀ᵐ t ∂intervalMeasure,
+      Filter.Tendsto (fun n => generatorFunction (a n) t) Filter.atTop
+        (nhds (generatorFunction α t)) := by
+  have hinj : Function.Injective (fun t : ℝ => α / t) :=
+    (Equiv.divLeft₀ α hα).injective
+  have hcount :
+      ((fun t : ℝ => α / t) ⁻¹' Set.range (fun z : ℤ => (z : ℝ))).Countable :=
+    (Set.countable_range (fun z : ℤ => (z : ℝ))).preimage hinj
+  filter_upwards [hcount.ae_notMem intervalMeasure] with t ht
+  have hne : α / t ≠ (Int.floor (α / t) : ℝ) := by
+    intro h
+    exact ht ⟨Int.floor (α / t), h.symm⟩
+  have hdiv : ContinuousAt (fun b : ℝ => b / t) α := by fun_prop
+  have hfract : ContinuousAt (fun b : ℝ => Int.fract (b / t)) α := by
+    simpa only [Function.comp_def] using
+      (ContinuousAt.comp (f := fun b : ℝ => b / t) (g := Int.fract)
+        (continuousAt_fract (x := α / t) hne) hdiv)
+  have hreal : ContinuousAt (fun b : ℝ => realGenerator b t) α := by
+    exact hfract.sub (continuousAt_id.mul continuousAt_const)
+  have hcast : ContinuousAt (fun x : ℝ => (x : ℂ)) (realGenerator α t) :=
+    Complex.continuous_ofReal.continuousAt
+  have hc : ContinuousAt (fun b : ℝ => generatorFunction b t) α := by
+    simpa only [Function.comp_def, generatorFunction] using
+      (ContinuousAt.comp (f := fun b : ℝ => realGenerator b t)
+        (g := fun x : ℝ => (x : ℂ)) hcast hreal)
+  exact hc.tendsto.comp ha
+
+/-- A uniformly bounded sequence of dilation parameters gives a uniformly
+integrable family of continuous Nyman generators. -/
+theorem generatorFunction_unifIntegrable_of_abs_le
+    {a : ℕ → ℝ} {C : ℝ} (ha : ∀ n, |a n| ≤ C) :
+    UnifIntegrable (fun n => generatorFunction (a n)) 2 intervalMeasure := by
+  have hC : 0 ≤ C := le_trans (abs_nonneg (a 0)) (ha 0)
+  apply (uniformIntegrable_of (p := (2 : ENNReal)) (by norm_num) (by norm_num)
+    (fun n => (generatorFunction_measurable (a n)).aestronglyMeasurable) ?_).unifIntegrable
+  intro ε hε
+  let R : NNReal := ⟨C + 2, by positivity⟩
+  refine ⟨R, fun n => ?_⟩
+  have hzero :
+      {x | R ≤ ‖generatorFunction (a n) x‖₊}.indicator
+        (generatorFunction (a n)) = 0 := by
+    funext x
+    rw [Set.indicator_of_notMem]
+    · rfl
+    · change ¬ R ≤ ‖generatorFunction (a n) x‖₊
+      apply not_le_of_gt
+      apply NNReal.coe_lt_coe.mp
+      change ‖generatorFunction (a n) x‖ < C + 2
+      calc
+        ‖generatorFunction (a n) x‖ ≤ 1 + |a n| :=
+          generatorFunction_norm_le (a n) x
+        _ ≤ 1 + C := by linarith [ha n]
+        _ < C + 2 := by linarith
+  rw [hzero, eLpNorm_zero]
+  exact bot_le
+
+/-- The actual L² generator depends continuously on every nonzero dilation
+parameter. This is the dominated-convergence step needed to pass from rational
+meshes to Burnol's full continuous parameter family. -/
+theorem tendsto_generator {a : ℕ → ℝ} {α : ℝ} (hα : α ≠ 0)
+    (ha : Filter.Tendsto a Filter.atTop (nhds α)) :
+    Filter.Tendsto (fun n => generator (a n)) Filter.atTop (nhds (generator α)) := by
+  obtain ⟨C, hC⟩ := (Metric.isBounded_range_of_tendsto a ha).exists_norm_le
+  have habs : ∀ n, |a n| ≤ C := by
+    intro n
+    simpa only [Real.norm_eq_abs] using hC (a n) ⟨n, rfl⟩
+  have hnorm :
+      Filter.Tendsto
+        (fun n => eLpNorm (generatorFunction (a n) - generatorFunction α)
+          2 intervalMeasure)
+        Filter.atTop (nhds 0) :=
+    tendsto_Lp_finite_of_tendsto_ae (p := (2 : ENNReal)) (by norm_num) (by norm_num)
+      (fun n => (generatorFunction_measurable (a n)).aestronglyMeasurable)
+      (generatorFunction_memLp α)
+      (generatorFunction_unifIntegrable_of_abs_le habs)
+      (generatorFunction_ae_tendsto hα ha)
+  exact (Lp.tendsto_Lp_iff_tendsto_eLpNorm''
+    (fun n => generatorFunction (a n))
+    (fun n => generatorFunction_memLp (a n))
+    (generatorFunction α) (generatorFunction_memLp α)).2 hnorm
+
+theorem continuousAt_generator {α : ℝ} (hα : α ≠ 0) :
+    ContinuousAt generator α := by
+  show Filter.Tendsto generator (nhds α) (nhds (generator α))
+  rw [tendsto_nhds_iff_seq_tendsto]
+  intro a ha
+  simpa only [Function.comp_def] using tendsto_generator hα ha
+
 def unitVector : Hilbert := (memLp_const (1 : ℂ)).toLp (fun _ : ℝ => (1 : ℂ))
 
 theorem unitVector_ae :
@@ -85,6 +183,42 @@ theorem generator_mem_closedSpace {α : ℝ} (hα : α ∈ Ioo (0 : ℝ) 1) :
 
 theorem closedSpace_isClosed : IsClosed (closedSpace : Set Hilbert) :=
   Submodule.isClosed_topologicalClosure _
+
+/-- Rational dilation parameters in the open unit interval. -/
+def rationalParameters : Set ℝ :=
+  (fun q : ℚ => (q : ℝ)) '' ((fun q : ℚ => (q : ℝ)) ⁻¹' Ioo (0 : ℝ) 1)
+
+/-- The closed span generated using rational parameters only. -/
+def rationalClosedSpace : Submodule ℂ Hilbert :=
+  (Submodule.span ℂ (generator '' rationalParameters)).topologicalClosure
+
+theorem generator_mem_rationalClosedSpace {α : ℝ} (hα : α ∈ Ioo (0 : ℝ) 1) :
+    generator α ∈ rationalClosedSpace := by
+  have hcl : α ∈ closure rationalParameters :=
+    Rat.denseRange_cast.subset_closure_image_preimage_of_isOpen isOpen_Ioo hα
+  have himg : generator α ∈ closure (generator '' rationalParameters) :=
+    mem_closure_image (continuousAt_generator (ne_of_gt hα.1)) hcl
+  exact (closure_minimal
+    (fun x hx => (Submodule.le_topologicalClosure _)
+      (Submodule.subset_span hx))
+    (Submodule.isClosed_topologicalClosure _)) himg
+
+/-- Burnol's full continuous Nyman space is already generated densely by the
+rational dilation parameters in the open unit interval. -/
+theorem rationalClosedSpace_eq_closedSpace :
+    rationalClosedSpace = closedSpace := by
+  apply le_antisymm
+  · apply Submodule.topologicalClosure_minimal
+    · apply Submodule.span_le.2
+      rintro x ⟨α, hα, rfl⟩
+      rcases hα with ⟨q, hq, rfl⟩
+      exact generator_mem_closedSpace hq
+    · exact closedSpace_isClosed
+  · apply Submodule.topologicalClosure_minimal
+    · apply Submodule.span_le.2
+      rintro x ⟨α, rfl⟩
+      exact generator_mem_rationalClosedSpace α.property
+    · exact Submodule.isClosed_topologicalClosure _
 
 /-- The unnormalized dilation identity, valid pointwise including Lean's totalized zero. -/
 theorem realGenerator_dilation (α lam t : ℝ) :
