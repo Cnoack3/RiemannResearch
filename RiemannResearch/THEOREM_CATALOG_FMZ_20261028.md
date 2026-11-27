@@ -1,5 +1,18 @@
 # Quantitative FMZ and product-test cancellation: theorem catalog supplement
 
+## Haar mean-square error for translated FMZ tests
+
+For a finite prime set $P$, let $r_T(k)$ be the actual character sampling error after subtracting the Haar term at count normalization and the signed prime-density term at height normalization. For distinct restricted modes $k_i|_P$, translating a Fourier polynomial by $z$ multiplies its $i$-th coefficient by $\chi_{k_i}(z)$. Its exact Haar mean-square error is $\sum_i |a_i|^2|r_T(k_i)|^2$. For $0\le s\le2$ the unconditional bound is
+
+$
+K^2\left(\frac{(\log\log T)^s}{(\log T)^{s-1}}\right)^2
+\sum_i |a_i|^2 W_P(k_i)^{2s},
+\qquad
+W_P(k)=1+\sum_{p\in P}|k_p|\log p.
+$
+
+One constant and one eventual height work for all finite prime sets, mode families and $s$. For $s>1$, moving families have vanishing mean-square error whenever the displayed rate squared times the weighted coefficient square sum tends to zero. Haar averaging over the prime torus and averaging the center of unfolded zero counts are different operations. [Lean proof](Analysis/ActualPrimeTorusFMZTranslation.lean) · [Ford, Meng and Zaharescu](https://doi.org/10.1112/blms.12001)
+
 ## Microscopic sampling of Fourier modes and increment characters
 
 [ActualZeroMicroscopicFMZ](Analysis/ActualZeroMicroscopicFMZ.lean) proves the

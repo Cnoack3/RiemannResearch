@@ -32,6 +32,51 @@ The frequency bound `|u| ≤ (4/3) log T` in A24 controls the difference of two 
 
 **Open for the actual zeros.** Construct admissible probes that identify the centered full-occurrence statistic with the regular spectrum of each physical subsequential limit, and prove the arithmetic upper bound for their reconstructed values. Ordinary PCC via rigidity also needs the convolution two-point representation for each limit. A process-level determinantal representation would identify its higher correlations. [Lean transfer and residuals](Analysis/MontgomeryOrbitStructureFactor.lean) · [Spectral rigidity](Probability/DPPContinuousSpectralRigidity.lean)
 
+## Fourier reconstruction of the full factorial statistic
+
+Write $N=N(0,T]$, $L=\log T/(2\pi)$ and $A_T(u)=\sum_p e^{iu\gamma_p}$ over labeled occurrences. Write $R_{T,J}(u)$ for the reflected Landau sum with the signed even horizontal Taylor moments of orders $2,\ldots,2J$ subtracted. The exact remainder identity is $A_T-R_{T,J}=\mathrm{horizontalTaylorError}$. With $b\ge0$ choose
+
+$
+J(T,u,b)=\left\lceil\frac{\log(N+1)+|u|+1+b}{2\log 2}\right\rceil_+.
+$
+
+For every real frequency, the absolute amplitude error is at most $e^{-b}$ and the difference of the count-normalized squared amplitudes is at most $3e^{-b}$. For a finite family with total absolute coefficient mass at most $M$, adding $\log(1+M)$ to the order budget gives total error at most $3e^{-b}$. On every fixed band $|u|\le B\log T$, the order above is $O_B(\log T)$ when $b=\log T$. These bounds use strip support and retain all the signed moments. [Finite-height Lean bounds](Analysis/MontgomeryGapReconstruction.lean)
+
+For a real integrable weight $w$, put $g(x)=\int w(h)\cos(2\pi hx)\,dh$ and $Q_T(h)=|R_{T,J(T,h\log T,\log T)}(h\log T)|^2/N$. At $T>1$ with $N>0$, the full reduced factorial statistic satisfies
+
+$
+\left|\frac1N\sum_{p\ne q}g\bigl(L(\gamma_p-\gamma_q)\bigr)
+-\left(\int w(h)Q_T(h)\,dh-g(0)\right)\right|
+\le \frac3T\|w\|_1 .
+$
+
+The test is prescribed independently of the ordinates. Only identical labels are removed. The estimate holds over the full frequency line, including frequencies past the Ingham tangent. Lean proves the Borel measurability of the order-dependent reconstruction, its integrability against $w$, and equivalence of the two height limits. [Factorial Fourier tests](Analysis/MontgomeryReconstructedGapTests.lean)
+
+**Open arithmetic limit.** For every real even Schwartz $w$, the sine prediction for the complete reconstructed spectrum is
+
+$
+\int w(h)Q_T(h)\,dh\;\longrightarrow\;
+w(0)+\int w(h)\min(|h|,1)\,dh .
+$
+
+The first term is the forward intensity atom. Fourier inversion of the unit interval gives the triangular transform of its squared sinc. Subtraction of $g(0)$ therefore gives the sine factorial density. These tests contain every smooth compactly supported even gap observable, by taking its Fourier transform. This formulation asks for the arithmetic evaluation of signed reconstructed powers. The finite-height comparison above discharges the transfer of physical test values. Passage from this statistic to stationary local limits uses fixed-window moment control. [Arias de Reyna and Rodgers](https://arxiv.org/abs/2311.13441) · [Fujii's moment estimate in Goldston, Lee, Schettler and Suriajaya, §5](https://arxiv.org/html/2503.15449v4#S5)
+
+**Countable arithmetic input.** It suffices to test the positive integer Gaussians $g_n(x)=e^{-nx^2}$, $n\ge1$. Their Fourier weights are $w_n(h)=\sqrt{\pi/n}\,e^{-\pi^2 h^2/n}$, each of mass one, so the factorial comparison error is at most $3/T$ for every $n$. The sine target for the factorial statistic is
+
+$
+ m_n=\sqrt{\frac{\pi}{n}}
+       +\frac{\sqrt n}{\pi^{3/2}}(1-e^{-\pi^2/n})
+       -\operatorname{erf}\!\left(\frac{\pi}{\sqrt n}\right).
+$
+
+Indeed, integrate $w_n(h)\min(|h|,1)$ on $0<h<1$ and $h>1$, double the result, add $w_n(0)$ and subtract $g_n(0)=1$. Thus the single remaining family of arithmetic targets is $\int w_n Q_T\to1+m_n$. The Gaussian transform and the displayed elementary integral evaluation are analytic deductions.
+
+Lean proves that convergence of these integer-power Gaussian moments to those of the sine measure gives convergence of every continuous compactly supported even test against the actual ordered distinct-label gap measure. The comparison with the sine measure and the Gaussian integrability of both measures are explicit in the application. To see how the countable family controls tails, put $z=e^{-x^2}$. Weierstrass approximation yields a polynomial $P$ with $|g(x)-zP(z)|\le\varepsilon z$ on the whole line. Convergence of the first Gaussian moment bounds this error uniformly in height. Equal-ordinate mass is visible since $g_n(0)=1$. [Relative Gaussian approximation and moment convergence](Analysis/GaussianGapTests.lean) · [Actual sine criterion](Analysis/MontgomeryReconstructedGapTests.lean)
+
+**Fixed-band obstruction.** For every finite $B\ge0$, the lattice choice $a=1/(B+2)$ leaves the central Fourier tent unchanged and has no noncentral reciprocal atom on $[-B,B]$. Its positive-gap mass up to $a/2$ is zero, whereas the sine mass is positive. Lagarias and Rodgers give point processes with agreement at every order for this bandwidth. An independent uniform common translation gives a stationary version and preserves the pair displacements. For example, $a=1/3$ works through $B=2$, hence throughout $4/3$. [Lean pair calculation](Analysis/MontgomeryLatticeSineComparison.lean) · [Lagarias and Rodgers, Theorem 1.8(i)](https://arxiv.org/abs/1907.03391)
+
+The stationary $a=1/3$ example also has number variance $\pi^{-2}\log R+O(1)$. For $m$ consecutive sites, projection Parseval gives $\operatorname{Var}N_m=2\sum_{k<m,\,k\ge1}k|K(k)|^2+2m\sum_{k\ge m}|K(k)|^2$ with $K(k)=\sin(\pi k/3)/(\pi k)$ for $k\ne0$. The tail is bounded and $\sin^2(\pi k/3)$ has period three and mean $1/2$. Random translation changes the number of sites in an interval by at most one and adds bounded variance. This calculation uses the discrete sine process of Lagarias and Rodgers, Theorem 4.1. It tests the inference from a bounded Fourier band and the leading number variance, without making a claim about which model describes zeta zeros.
+
 ## Exceptional-pair estimates
 
 - `MontgomeryExceptionalPairs.pair_dirichlet_identity` retains the complete nonnegative square in the symmetric-kernel Cauchy bound. `pair_exp_moment_add_defect_le` uses the multiplicative Hölder budget for the companion horizontal and crowding moments. `norm_signed_deletion_le_with_defect` carries this square into the finite signed deletion estimate.

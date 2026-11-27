@@ -196,6 +196,35 @@ theorem periodized_tent_eq_in_band {a ξ : ℝ} (ha : 0 < a) (hξ : |ξ| < 1 / a
   · intro m hm
     exact alias_tent_zero ha hξ hm
 
+/-- Any prescribed finite bandwidth admits a lattice pair law with the
+same reciprocal comb and central tent on that band and a missing positive
+gap interval. Lagarias and Rodgers, Theorem 1.8(i), gives the corresponding
+point process and its all-order band-limited agreement:
+https://arxiv.org/abs/1907.03391. Here the Fourier and gap claims are
+proved directly for the pair formula. -/
+theorem finite_band_lattice_gap_obstruction {B : ℝ} (hB : 0 ≤ B) :
+    ∃ a q : ℝ, 0 < a ∧ a ≤ 1 ∧ 0 < q ∧
+      (∀ ξ : ℝ, |ξ| ≤ B →
+        (∑' m : ℤ, max (1 - |ξ - (m : ℝ) / a|) 0) = max (1 - |ξ|) 0 ∧
+        ∀ m : ℤ, m ≠ 0 → ξ ≠ (m : ℝ) / a) ∧
+      latticeGapMass a q = 0 ∧ 0 < sineGapMass q := by
+  let a := (B + 2)⁻¹
+  have hpos : 0 < B + 2 := by linarith
+  have ha : 0 < a := inv_pos.mpr hpos
+  have ha1 : a ≤ 1 := by
+    dsimp [a]
+    rw [← one_div, div_le_one hpos]
+    linarith
+  have hband : B < 1 / a - 1 := by
+    dsimp [a]
+    simp only [one_div, inv_inv]
+    linarith
+  refine ⟨a, a / 2, ha, ha1, by positivity, ?_,
+    latticeGapMass_below_spacing ha (by linarith), sineGapMass_strictly_pos (by positivity)⟩
+  intro ξ hξ
+  exact ⟨periodized_tent_eq_in_band ha (hξ.trans_lt hband),
+    fun _ hm => reciprocal_comb_off_band ha (hξ.trans_lt hband) hm⟩
+
 /-- Twice the discrepancy of the integrated positive-gap counts, before width normalization. -/
 def integratedError (a Q : ℝ) : ℝ :=
   2 * ∫ x in (0 : ℝ)..Q, latticeGapMass a x - sineGapMass x
