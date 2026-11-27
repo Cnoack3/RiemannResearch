@@ -240,6 +240,22 @@ every $\varepsilon>0$. **rh_iff_character_certificates** proves the equivalence 
 
 [Derivation and rational two-packet certificate](CategoryTheory/ParetoCharacterScreenedEnergy.md)
 
+## Mixed packet reflection and prime-power deletion
+
+For every dictionary retaining all mixed conductors, `selectedPacketClosure_dichotomy` classifies its complete Pareto closure by the presence of a single prime power. `otherPrimePacketClosure_eq_closedSpace` specializes to deletion of one prime's pure powers.
+
+The fixed-support reflection tower has an exact weighted shift energy. Its closed mixed graph comprises the pairs $(x,y)$ for which $x$ belongs to the mixed closure and $y+Sx$ is constant, where $S$ is the anchored backward shift. The fibre above zero consists of all constants.
+
+`ramanujanPacket_gcd_dirichlet_product` evaluates each gcd fibre from the reduced unit profile, retaining the finite Euler product. `packet_primitive_character_product` proves the full primitive coefficient, including the zero branches for nonsquarefree or noncoprime inflation. `primitive_unit_packet_coefficient` and `twelve_unitCoefficient` evaluate the primitive case and the repeated-prime example. `valuationCharacterCovariance_eq` factors the signed covariance of the newly revealed prime using its exact geometric law.
+
+The physical inverse-square projection has a complete Euler product at every cutoff. `observed_mode_at_site` covers every positive site. `full_mode_gram` and `observed_mode_gram` give the two signed Gram entries for arbitrary shifted characters. The conductor-six diagonal, conductor-ten diagonal and their signed cross term are evaluated in the three packet covariance modules. For $p>5$, `six_ten_prime_layer_zero` proves that the signed cross increment is zero if $p$ is congruent to one modulo three or five.
+
+For trials supported on twice an odd conductor, `oddDoubleTrial_completeError_lower` proves the period-independent squared-error lower bounds $1/6$ in the Pareto norm and $1/(4\zeta(2))$ in the inverse-square norm. `rh_iff_reflectedRow_legalDistance_zero` gives the legal-distance criterion for reflected rows at twice a growing odd prime.
+
+**Open.** Prove that the second coordinates of the mixed reflection graph belong to the legal space. Its vertical fibre makes this equivalent to RH.
+
+[Exact energies and graph proof](RH/CRTCharacterReflection.md)
+
 ## Verification record
 
 The managed checkpoint receipt is the source of truth for the final publication

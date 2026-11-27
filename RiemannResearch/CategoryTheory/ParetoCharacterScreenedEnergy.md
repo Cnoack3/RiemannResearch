@@ -127,4 +127,6 @@ if __name__ == "__main__":
     main()
 ~~~
 
-The Lean proof of the scalar series uses direct finite Fourier coefficients. The closed primitive-conductor product in equation (2) of the supplied note is an optional reduction of these coefficients. The decimal cutoff matrices and the specialized Euler-product simplifications in equation (7) retain their symbolic and numerical status.
+The proof of the screened scalar series uses direct finite Fourier coefficients. The theorem `packet_primitive_character_product` also evaluates each nonprincipal induced coefficient by the two finite products in equation (2), with its squarefree and coprimality conditions. The displayed decimals illustrate the complete-norm identities.
+
+[Primitive character coefficient](PacketPrimitiveCharacterProduct.lean) · [Mixed reflection and the remaining RH endpoint](../RH/CRTCharacterReflection.md)
