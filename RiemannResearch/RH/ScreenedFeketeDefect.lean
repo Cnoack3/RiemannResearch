@@ -1,4 +1,6 @@
 import RiemannResearch.RH.MixedConductorBilinear
+import RiemannResearch.RH.MixedConductorRankOne
+import RiemannResearch.RH.MixedOrthogonalMean
 import RiemannResearch.RH.ScreenedSectionDescent
 
 /-!
@@ -81,5 +83,39 @@ theorem defect_fekete_rate_zero_iff_rh {a : ℕ} (ha : 1 < a) :
   rw [defect_fekete_rate_eq_norm_sq ha, ← CenteredMeanSnake.boundary_norm,
     CenteredMeanSnake.boundary_norm_sq, sub_eq_zero, ← real_inner_self_eq_norm_sq]
   exact ScreenedSectionDescent.inner_self_eq_one_iff_rh
+
+/-- The canonical mean-one generator spans the entire ambient mixed complement exactly under RH. -/
+theorem ambient_mixedOrthogonal_eq_screenedLine_iff_rh :
+    mixedClosureᗮ = Submodule.span ℝ {normalizedScreenedTwo} ↔ RiemannHypothesis := by
+  constructor
+  · intro hspan
+    have hone := one_mem_mixedClosure_orthogonal
+    rw [hspan, ← screenedPrimeClosure_eq_span_two] at hone
+    exact riemannHypothesis_of_normalizedScreenedTwo
+      (one_mem_closedSpace_iff_normalizedScreenedTwo.mp (screenedPrimeClosure_le_closedSpace hone))
+  · intro hrh
+    have htwo : 1 < (2 : ℕ) := by decide
+    have hseed := (defect_fekete_rate_zero_iff_screened htwo).mp
+      ((defect_fekete_rate_zero_iff_rh htwo).mpr hrh)
+    rw [hseed]
+    exact mixedOrthogonal_eq_span_one_iff_one_mem.mpr
+      (one_mem_closedSpace_iff_normalizedScreenedTwo.mpr hseed)
+
+/-- Allowing any legal generator for the ambient complement gives the same criterion. -/
+theorem ambient_mixedOrthogonal_has_legal_generator_iff_rh :
+    (∃ g : ThresholdHilbert, g ∈ closedSpace ⊓ mixedClosureᗮ ∧
+      mixedClosureᗮ = Submodule.span ℝ {g}) ↔ RiemannHypothesis := by
+  constructor
+  · rintro ⟨g, hg, hspan⟩
+    have hle : Submodule.span ℝ {g} ≤ closedSpace :=
+      Submodule.span_le.mpr (Set.singleton_subset_iff.mpr hg.1)
+    have hone := one_mem_mixedClosure_orthogonal
+    rw [hspan] at hone
+    exact riemannHypothesis_of_normalizedScreenedTwo
+      (one_mem_closedSpace_iff_normalizedScreenedTwo.mp (hle hone))
+  · intro hrh
+    refine ⟨normalizedScreenedTwo, ?_, ambient_mixedOrthogonal_eq_screenedLine_iff_rh.mpr hrh⟩
+    rw [← screenedPrimeClosure_eq_inf_orthogonal]
+    exact normalizedScreenedTwo_mem_screenedPrimeClosure
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur.ScreenedFeketeDefect
