@@ -85,6 +85,17 @@ positive prime-power packet with the rate at the prime base itself.
 `fekete_normalized_screened_prime_pow_set` gives the literal singleton {u}
 for normalized screened packets with k ≥ 2. Conductor four realizes u.
 
+The [screened defect slope](RH/ScreenedFeketeDefect.lean) tests these identities
+on $h=g-\mathbf 1_H$, with $g$ the normalized screened packet.
+**mean_one_legal_orthogonal_set** identifies $g$ as the unique mean-one vector
+in $V\cap M^{\perp_P}$. At each integer base $a>1$,
+**defect_fekete_rate_eq_norm_sq** evaluates the normalized exponent infimum
+as $\|h\|_P^2$. **defect_residue_power_eq_norm_sq** gives this value at each
+positive exponent. **defect_prime_power_packet_eq_norm_sq** gives the corresponding
+packet pairing divided by $\log p$. **defect_fekete_rate_zero_iff_screened** and
+**defect_fekete_rate_zero_iff_rh** identify vanishing at one fixed base with
+$g=\mathbf 1_H$ and with RH. Whether this slope vanishes remains open.
+
 ## Exact symmetric defect form
 
 Definitions:
