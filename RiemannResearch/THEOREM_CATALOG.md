@@ -1,5 +1,7 @@
 # Theorem catalog
 
+[Strict microscopic zero pairs, local unfolding and the Dyson covariance](THEOREM_CATALOG_MICROSCOPIC_PAIR_COVARIANCE.md)
+
 [Infinite compact FMZ tests, signed Haar energies and recovery of physical gap atoms](THEOREM_CATALOG_COMPACT_FMZ_FOURIER.md)
 
 [Infinite consecutive prime ratios, dense orbits and Borel recovery of gap laws](THEOREM_CATALOG_CONSECUTIVE_PRIME_RATIO_LAW.md)

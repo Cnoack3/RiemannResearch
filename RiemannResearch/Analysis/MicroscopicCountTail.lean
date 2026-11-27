@@ -33,13 +33,13 @@ def ExpTranslatedCountTail (b : ℝ) : Prop :=
     volume.real {t : ℝ | (J : ℝ) < actualWindowCount T
       (b / (Real.log T / (2 * Real.pi))) t} / T ≤ A * Real.exp (-c * (J : ℝ))
 
-private theorem actual_count_measurable (T h : ℝ) : Measurable (actualWindowCount T h) := by
+theorem actual_count_measurable (T h : ℝ) : Measurable (actualWindowCount T h) := by
   unfold actualWindowCount windowCount
   apply Finset.measurable_sum
   intro i _
   exact measurable_const.indicator measurableSet_Ioc
 
-private theorem actual_fourth_integrable (T h : ℝ) :
+theorem actual_fourth_integrable (T h : ℝ) :
     Integrable (fun t : ℝ => (actualWindowCount T h t)^4) := by
   let K := actualWindowCount T h
   let B : ℝ := Fintype.card (Copies T)
