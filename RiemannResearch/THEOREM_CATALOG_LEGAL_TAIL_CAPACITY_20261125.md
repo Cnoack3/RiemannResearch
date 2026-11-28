@@ -132,3 +132,15 @@ The completed-stage identification and scalar comparison are now proved.
 The weak-* atom has mass \(1-C_*\). Proving its vanishing still requires
 arithmetic input. Burnol's zero-product evaluation of the continuous
 projection norm remains a separate analytic obligation in Lean.
+
+## Gaussian repulsion and fixed windows
+
+| Result | Owning declaration |
+| --- | --- |
+| Exact split of the horizontal diagonal and multiplicity-sensitive reflection bound | `actualCollision_eq_rootDiagonal_add`, `reflected_pair_le_distinctRootCollision` |
+| Full Gaussian mass on distinct complex roots and the quarter-pair reconstruction error | `distinctRootGaussianMass_eq_sum`, `reconstructedDistinctRoot_quarter_error` |
+| Prescribed bandwidth, signed Landau integral, and exact integer recovery | `distinctRootGaussianPrecision_bounds`, `calibratedSineRootExcess_eq_landau_integral`, `calibratedSineRootExcess_round` |
+| Equivalence to every fixed legal window and the paired obstruction from one right zero | `fixedBlock_liminf_zero_iff_calibrated_sine_excess`, `right_zero_forces_fixed_block_and_sine_excess` |
+
+The remaining comparison is \(S_T<1\) at cofinal heights in absolute ordered
+pairs. The finite tests permit arbitrary analytic multiplicity on the line.

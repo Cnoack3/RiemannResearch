@@ -118,3 +118,33 @@ positive functional \(\nu_m\) on \(C([0,1],\mathbb R)\).
 The equivalence with RH is `fixedBlock_liminf_zero_iff_RH`. The upper
 bound above still permits a positive limiting deficit. The continuous
 multiplicity-sensitive Hardy projection product also remains open in Lean.
+
+## GUE comparison in absolute ordered pairs
+
+Let \(M=N(0,T)\), let \(m_\rho\) be analytic multiplicity, and let \(D_T\)
+count ordered pairs of occurrences of different complex roots at the same
+ordinate. The full horizontal diagonal is \(\sum_{\rho}m_\rho^2+D_T\).
+At the bandwidth in `distinctRootGaussianPrecision`, define \(S_T\) by
+subtracting the analytic diagonal and \(M G(a)\) from the full reconstructed
+Gaussian power in count units, where
+\[
+G(a)=\int_{\mathbb R}e^{-a x^2}\bigl(1-\operatorname{sinc}^2(\pi x)\bigr)\,dx .
+\]
+The capacity and Gaussian comparison theorems use the original occurrence
+labels, including analytic repeats. The deterministic bandwidth uses \(M\)
+and the least positive unfolded gap capped at one. At that bandwidth each of
+the unequal-height contribution and \(M G(a)\) lies in \([0,1/8]\).
+The signed reconstruction costs at most \(1/4\), so \(|S_T-D_T|\le3/8\)
+and \(\lfloor S_T+1/2\rfloor=D_T\). The signed integral is recorded in
+`calibratedSineRootExcess_eq_landau_integral`.
+
+For one right zero \(\rho=\beta+i\gamma\) of positive height, put
+\(d_\rho=(2\beta-1)/|\rho|^2\). Every legal scale satisfies
+\(B_m(N)\ge d_\rho/8\) as soon as \(N+1\ge64/d_\rho\). Every nonempty
+cutoff \(T>1\) containing that zero satisfies \(S_T\ge2m_\rho^2-3/8\).
+
+**Open arithmetic estimate.** Prove \(S_T<1\) for arbitrarily large \(T\).
+The checked equivalence is `fixedBlock_liminf_zero_iff_calibrated_sine_excess`.
+The GUE two-point law supplies the model term \(G(a)\). A bounded number of
+ordered collisions has vanishing weight after division by \(M\), whereas
+this estimate is in absolute ordered pairs.
