@@ -2,6 +2,38 @@
 
 Compact Orbit identifies “ZMF” with Ford–Meng–Zaharescu (FMZ). Its diagonal Parseval result groups equal prime characters before taking the Haar norm. This development also applies Parseval to the actual rounded Fourier amplitudes of the zero occurrences. Two different limits enter the calculation.
 
+## Completeness of the ordinate probes in the legal Pareto space
+
+In the real Pareto space with mass $P(n)=1/[n(n+1)]$ at $n\ge1$, write
+$c_\gamma(n)=\cos(\gamma\log n)$ and $e_m=\mathbf1_{\{m\}}$. Each of the
+following averages counts the analytic copies of every positive zeta zero.
+The module [ParetoOrdinateCosineCompleteness](RH/ParetoOrdinateCosineCompleteness.lean)
+proves the strong limit
+$$
+R_{T,m}=\frac1{N(T)}\sum_{0<\gamma\le T}c_\gamma(m)c_\gamma
+\longrightarrow d_m e_m,
+\qquad d_1=1,\quad d_m=\tfrac12\quad(m>1).
+$$
+The Lean index for physical site $m$ is $m-1$. Fixed-frequency cancellation
+gives the limit at each site by the cosine product formula. The summable
+Pareto weights promote these limits to convergence in Hilbert norm.
+Selberg density at slope two suffices for the fixed-strip hypothesis of
+`recovery_tendsto_of_fixedStrip`. The actual normalized displacement moment
+also supplies that hypothesis unconditionally.
+
+- `actualRow_span_dense` gives completeness of the cosine probes in the
+  ambient Pareto space. `projected_actualRow_span` gives completeness of
+  their orthogonal projections in the closed legal space $V$.
+- `first_recovery_landau_error_of_selberg_two` bounds the physical coordinate
+  error between $R_{T,1}(n)$ and $\Re L_T(\log n)/N(T)$ by
+  $2CT(\log n)^2/[3N(T)\log T]$ for $1\le n\le T$, assuming the project's
+  slope-two density bound at height $T$ with constant $C$.
+- `rh_iff_first_recovery_defect` gives
+  $\mathrm{RH}\iff\|(I-P_V)R_{T,1}\|_P\to0$. Its limit as a vector always
+  exists and equals $(I-P_V)e_1$. Proving this vector vanishes remains open.
+  At a critical-line zero the finite arithmetic Mellin kernel has a zero row
+  by `MellinFrequency.kernel_row_zero_of_zeta_zero`.
+
 ## Exact inversion at a fixed height using primes 2 and 3
 
 For the finite occurrence sample at height $T$, put $Z_T(u)=\sum_j e^{iu\gamma_j}$ and $N_T=\#\{j\}$. The map $t\mapsto(e^{it\log 2},e^{it\log 3})$ is injective. With $n=M+1$, $W_n=\{0,\ldots,n-1\}^2$, and $\omega_a=a_1\log2+a_2\log3$, define
