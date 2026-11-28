@@ -4,8 +4,11 @@ import Mathlib.Topology.Algebra.Order.Archimedean
 import Mathlib.Topology.Algebra.Order.Floor
 import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.Topology.Sequences
+import Mathlib.Algebra.Order.Ring.Unbundled.Rat
+import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.MeasureTheory.Function.Floor
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+import Mathlib.Tactic.FieldSimp
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
@@ -267,5 +270,88 @@ theorem exists_closedSpace_dilatedGenerator {α lam : ℝ}
   simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul] at hsub hsm
   rw [hsub, hsm, hprod, hgen]
   exact (generatorFunction_dilation α lam t).symm
+
+/-- Rational parameters occurring at physical scale `m`: every element has
+the form `m / d` for an integer denominator strictly larger than `m`. -/
+def scaleMeshParameters (m : ℕ) : Set ℝ :=
+  {α | ∃ d : ℕ, m < d ∧ α = (m : ℝ) / d}
+
+/-- The union of the rational parameter meshes along the positive factorial
+scales. The index `n` uses scale `(n + 1)!`, so zero never occurs. -/
+def factorialMeshParameters : Set ℝ :=
+  {α | ∃ n : ℕ, α ∈ scaleMeshParameters (n + 1).factorial}
+
+/-- Every rational parameter in `(0,1)` appears at a factorial physical scale,
+and every factorial-mesh parameter is rational and lies in `(0,1)`. -/
+theorem factorialMeshParameters_eq_rationalParameters :
+    factorialMeshParameters = rationalParameters := by
+  ext α
+  constructor
+  · rintro ⟨n, d, hmd, rfl⟩
+    let q : ℚ := ((n + 1).factorial : ℚ) / d
+    have hm : 0 < (n + 1).factorial := Nat.factorial_pos _
+    have hd : 0 < d := hm.trans hmd
+    have hqQ : (0 : ℚ) < q ∧ q < 1 := by
+      dsimp [q]
+      exact ⟨div_pos (by exact_mod_cast hm) (by exact_mod_cast hd),
+        (div_lt_one (by exact_mod_cast hd)).2 (by exact_mod_cast hmd)⟩
+    refine ⟨q, ?_, ?_⟩
+    · change (0 : ℝ) < (q : ℝ) ∧ (q : ℝ) < 1
+      exact_mod_cast hqQ
+    · change ((q : ℚ) : ℝ) = ((n + 1).factorial : ℝ) / d
+      norm_num [q]
+  · rintro ⟨q, hq, rfl⟩
+    change (0 : ℝ) < (q : ℝ) ∧ (q : ℝ) < 1 at hq
+    have hqQ : (0 : ℚ) < q ∧ q < 1 := by
+      exact_mod_cast hq
+    have hnumZ : 0 < q.num := Rat.num_pos.mpr hqQ.1
+    let a : ℕ := q.num.natAbs
+    have ha : 0 < a := Int.natAbs_pos.mpr (ne_of_gt hnumZ)
+    let m : ℕ := (a + 1).factorial
+    have ham : a ∣ m := Nat.dvd_factorial ha (Nat.le_succ a)
+    let k : ℕ := m / a
+    have hmk : a * k = m := Nat.mul_div_cancel' ham
+    let d : ℕ := q.den * k
+    have hk : 0 < k := by
+      have hm : 0 < m := Nat.factorial_pos _
+      have hak : 0 < a * k := by simpa only [hmk] using hm
+      exact pos_of_mul_pos_right hak (Nat.zero_le a)
+    have hnum_eq : (a : ℤ) = q.num := by
+      exact Int.natAbs_of_nonneg (le_of_lt hnumZ)
+    have hnumdenQ : (q.num : ℚ) < q.den := by
+      apply (div_lt_one (by positivity)).mp
+      rw [Rat.num_div_den]
+      exact hqQ.2
+    rw [← hnum_eq] at hnumdenQ
+    have hab : a < q.den := by
+      exact_mod_cast hnumdenQ
+    have hmd : m < d := by
+      dsimp [d]
+      calc
+        m = a * k := hmk.symm
+        _ < q.den * k := (Nat.mul_lt_mul_right hk).2 hab
+    refine ⟨a, d, ?_, ?_⟩
+    · simpa only [m] using hmd
+    · change (q : ℝ) = ((a + 1).factorial : ℝ) / d
+      rw [Rat.cast_def]
+      have hnumR : (q.num : ℝ) = a := by exact_mod_cast hnum_eq.symm
+      have hmR : (m : ℝ) = (a : ℝ) * k := by exact_mod_cast hmk.symm
+      have hdR : (d : ℝ) = (q.den : ℝ) * k := by simp [d]
+      rw [hnumR, show ((a + 1).factorial : ℝ) = (m : ℝ) by rfl, hmR, hdR]
+      field_simp
+
+/-- Closed span of all continuous generators visible on positive factorial
+physical scales. -/
+def factorialMeshClosedSpace : Submodule ℂ Hilbert :=
+  (Submodule.span ℂ (generator '' factorialMeshParameters)).topologicalClosure
+
+/-- The factorial rescaled rational meshes have the full continuous Nyman
+closed span. This is the cofinal parameter-space identification; identifying
+the completed discrete legal kernels with these mesh spaces is a separate
+operator-level statement. -/
+theorem factorialMeshClosedSpace_eq_closedSpace :
+    factorialMeshClosedSpace = closedSpace := by
+  rw [factorialMeshClosedSpace, factorialMeshParameters_eq_rationalParameters]
+  exact rationalClosedSpace_eq_closedSpace
 
 end RiemannResearch.RH.Burnol.ContinuousNyman

@@ -37,3 +37,30 @@ the rescaled discrete identification: prove that the cofinal (equivalently,
 factorial) union of the transported legal zero-head stages has closed span equal
 to the rational Nyman span.  After that, one still needs either Burnol's genuine
 multiplicity-sensitive zero-product projection equality in Lean (confluent
+Mellin derivative jets for repeated zeros), or an independent arithmetic
+rational/coprime witness estimate forcing the limiting deficit to vanish.
+No unconditional positive relative gain is currently proved, and saturation
+remains open.
+
+## Factorial rescaling update (2026-11-28)
+
+The factorial parameter-space identification is now kernel checked:
+
+- `scaleMeshParameters m` is the exact set of ratios `m / d` with `m < d`;
+- `factorialMeshParameters_eq_rationalParameters` proves that the union of
+  these meshes at scales `(n + 1)!` is exactly the rational part of `(0,1)`;
+- `factorialMeshClosedSpace_eq_closedSpace` proves that the closed span of
+  their continuous generators is Burnol's full continuous Nyman space.
+
+For a reduced rational `a / b` in `(0,1)`, the proof takes a factorial
+`m` divisible by `a`, sets `d = b * (m / a)`, and verifies exactly that
+`m / d = a / b` and `m < d`. Wolfram independently simplified both
+identities under `0 < a < b` and `a ∣ m`.
+
+This closes the cofinal parameter-space span. It does **not** yet construct an
+isometric linear transport from the completed discrete legal head kernel onto
+the corresponding continuous mesh space. The finite dictionary in
+`LegalTailNymanMesh.lean` supplies both algebraic directions, but continuity
+and surjectivity on the completed stage remain the operator-level obligation.
+The multiplicity-sensitive Burnol projection equality and a quantitative
+arithmetic estimate excluding a positive limiting deficit also remain open.

@@ -99,3 +99,22 @@ A noncircular quantitative consequence follows from the published verification h
  =\frac{4(1+\log T)}{T}.
 \]
 This fixed positive error bound uses external theorems and the paper-level transfer. Proving saturation still requires excluding all right zeros beyond the certified height, or a separate arithmetic approximation theorem. [Platt and Trudgian](https://arxiv.org/abs/2004.09765) · [Hasanalizade, Shen and Wong, Corollary 1.2](https://arxiv.org/abs/2107.06506)
+## Factorial rational-mesh closure (2026-11-28)
+
+The continuous Nyman module now contains the exact cofinal parameter theorem.
+The set of ratios `(n + 1)! / d` with `d > (n + 1)!`, over all `n`, is
+exactly the rational subset of `(0,1)`. Consequently its generator closed
+span equals Burnol's full continuous Nyman space.
+
+| Result | Owning declaration |
+| --- | --- |
+| Factorial mesh parameters equal all rational parameters in `(0,1)` | `factorialMeshParameters_eq_rationalParameters` |
+| Factorial rational-mesh closed span equals the continuous Nyman space | `factorialMeshClosedSpace_eq_closedSpace` |
+
+[Continuous Nyman space](RH/NymanContinuousSpace.lean)
+
+This is the parameter-space closure. The isometric operator identifying each
+completed discrete legal zero-head kernel with its continuous mesh space is
+still open. Burnol's multiplicity-sensitive projection equality and an
+unconditional arithmetic gain excluding a positive limiting deficit also
+remain open.
