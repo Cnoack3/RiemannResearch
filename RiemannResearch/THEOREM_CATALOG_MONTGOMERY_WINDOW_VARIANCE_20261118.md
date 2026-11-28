@@ -1,5 +1,11 @@
 # Fixed-width Montgomery variance
 
+## GLSS argument increments at rational widths
+
+[Fixed-width argument variance and Gaussian calibration](Analysis/GLSSArgumentVarianceCalibration.lean) proves that the sine variance for the actual count-discrepancy increment at every positive rational width is equivalent to positive-gap PCC together with the GLSS count asymptotics. The forward deduction from these variance limits requires no additional Fujii estimate. Given the upper estimate in GLSS Proposition 2, the same variance limits characterize PCC alone.
+
+The finite-height theorem `reconstructedCollisionMass_error` bounds the error in recovering the entire equal-ordinate count per occurrence from the infimum of reconstructed Gaussian powers by `3 / T`. The resulting error in the GLSS triangle identity scales by the width times the actual count divided by the main term. **Open** — evaluating the collision-corrected argument variance to its sine value at every fixed positive rational width. Fujii's logarithmic upper estimate leaves this limit undetermined.
+
 ## Occurrence ranks, distinct ordinates and simple zero representatives
 
 For a height cutoff \(T>1\), let \(L=\log T/(2\pi)\), \(D=TL\), and order the \(N(T)\) occurrences by ordinate, with their analytic multiplicities. The positive-gap count uses \(0<L(\gamma_j-\gamma_i)\le q\) and the same denominator \(D\) throughout.
