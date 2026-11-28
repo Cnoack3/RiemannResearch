@@ -51,6 +51,23 @@ The actual-zero declarations `bandwidth_necessary_for_actualTriangular_certifica
 and `eventually_log_band_fails_certificate` are in
 [ActualZeroTriangularIntegral](Analysis/ActualZeroTriangularIntegral.lean).
 
+## Selberg comparison on a triangular Fourier window
+
+[ActualSelbergTriangularComparison](Analysis/ActualSelbergTriangularComparison.lean)
+proves `selberg_two_triangular_trace_error` for the same zero occurrences
+as the collision certificate. Write $Z_T$ for the ordinate sum and $L_T$
+for the centered Landau sum. For $0\le R\le\log T$, the Selberg density
+bound with slope two and constant $C$ at height $T$ implies
+$$
+\int_{-1}^{1}(1-|x|)
+ \left|\frac{Z_T(Rx)-L_T(Rx)}{T}\right|^2\,dx
+ \le \frac{4C^2R^4}{135(\log T)^2}.
+$$
+The triangular fourth moment is exactly $1/15$. The density premise is
+explicit. At a radius proportional to $\log T$, this upper bound is of
+order $(\log T)^2$ for fixed $C>0$. The strict upper certificate for every
+projected ordinate to be simple remains open.
+
 ## Consecutive gaps and all-pairs power
 
 [HomometricConsecutiveGaps](Analysis/HomometricConsecutiveGaps.lean) proves that two sorted lists with the same size, first point, last point, and Fourier power at every real frequency can have different adjacent counts. In [Bloom’s example](https://doi.org/10.1016/0097-3165(77)90013-9), the width-four counts are three and four. A second pair of nine-occurrence lists has three and two tied neighbors. The declaration `sum_difference_power` proves the common-power identity for sums and differences of any two finite real samples.
