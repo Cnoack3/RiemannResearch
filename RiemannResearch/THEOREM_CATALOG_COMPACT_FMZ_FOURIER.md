@@ -43,7 +43,8 @@ zero occurrences, divided by $N(T)^2$. Under the actual-ordinate sine second
 moment, the number of pairs with $|(\gamma-\gamma')\log T/(2\pi)|\le q$,
 divided by $N(T)$, tends to $1+2\int_0^q(1-\operatorname{sinc}(\pi u)^2)\,du$
 for every fixed $q>0$, with $\operatorname{sinc}(x)=\sin(x)/x$.
-Their contribution to $E_T$ tends to zero. The sum over the complementary
+At the squared-count normalization the fixed-window contribution to $E_T$
+tends to zero unconditionally by the local zero-count bound below. The sum over the complementary
 pairs tends to $(1-K_V(1,1))/2$, where $K_V$ is the discrete legal projection
 on normalized Pareto atoms.
 
@@ -53,7 +54,7 @@ continued by zero for $n>K$. Under Selberg density at exponent two with
 constant $C$ at height $T$, the squared norm of the difference is at most
 $24[2CT/(3N(T)\log T)]^2+1/(K+1)$ for each integer $K\le T$ and $N(T)>0$,
 $T>1$. Under uniform slope two, taking $K=\lfloor T\rfloor$ gives the same
-limiting squared projection error. Under both hypotheses this equals the
+limiting squared projection error. This also equals the
 limit of the sum outside each fixed unfolded window. RH is equivalent to
 $K_V(1,1)=1$. This diagonal value remains to be established.
 
@@ -66,9 +67,25 @@ Consequently the normalized Landau traces on $n\le T$ have absolute value at
 most $2n^{1/4}$, with square summable against the Pareto weights. Fixed
 integer-log Landau limits then give strong convergence to $e_1$. The
 limiting squared error formula follows unconditionally from these project
-theorems. Equating it with the distant zero-pair sum uses the actual-ordinate
-sine second moment. Selberg density at slope two supplies the finite-height
+theorems. The weak-star result identifies it with the distant zero-pair sum
+unconditionally. Selberg density at slope two supplies the finite-height
 comparison displayed above.
+
+## Weak-star limits in the unfolded gap variable
+
+[ParetoOrdinateGapWeakStar](RH/ParetoOrdinateGapWeakStar.lean) represents the
+original ordered pairs as signed measures on the one-point compactification
+of the gap line. For weights of absolute value at most one, division by
+$N(T)^2$ places all the measures in the weak-star compact dual unit ball.
+At each fixed unfolded width the unconditional Cauchy row bound gives
+$O(N(T)\log(T+3))$ pairs. Consequently, if the total signed mass tends to
+$d$, the whole weak-star limit is $d\delta_\infty$. For the legal residual
+pairs at any cofinal finite rank, $d=(1-K_V(1,1))/2$. The separated
+quarter intervals contribute $(1-K_V(1,1))/32$ at infinity. A zero $s$ with
+$\Re s>1/2$ forces $d\ge(2\Re s-1)|(1-2^{-s})/s|^2>0$, so the signed sum
+outside each fixed window has the same positive lower bound. RH is equivalent
+to a nonpositive liminf for this signed sum at any one fixed width. Absolute
+tightness of the residual pair tails would also force RH. This tail estimate is open.
 
 ## Dyadic dilation and the physical first-site marginal
 

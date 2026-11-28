@@ -16,7 +16,8 @@ open scoped BigOperators Topology
 namespace RiemannResearch.RH.Pareto.OrdinateCosine
 open CoefficientStabilization RiemannResearch.Analysis
 
-private theorem moving_residual_tendsto {F : ℝ → ThresholdHilbert} {v : ThresholdHilbert}
+/-- Cofinal finite residual projections preserve the limit of a strongly convergent estimator. -/
+theorem moving_residual_tendsto {F : ℝ → ThresholdHilbert} {v : ThresholdHilbert}
     (hF : Tendsto F atTop (𝓝 v)) {rank : ℝ → ℕ} (hr : Tendsto rank atTop atTop) :
     Tendsto (fun T => (finiteSpace (rank T))ᗮ.starProjection (F T)) atTop
       (𝓝 (closedSpaceᗮ.starProjection v)) := by
