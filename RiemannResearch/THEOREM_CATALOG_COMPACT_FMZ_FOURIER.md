@@ -57,6 +57,19 @@ limiting squared projection error. Under both hypotheses this equals the
 limit of the sum outside each fixed unfolded window. RH is equivalent to
 $K_V(1,1)=1$. This diagonal value remains to be established.
 
+[ParetoOrdinateInghamRecovery](RH/ParetoOrdinateInghamRecovery.lean) gives a
+second proof of the strong Landau limit on the same integer head. For the
+Ingham rate $I(d)=4d/(3-2d)$ the least $b$ satisfying $2d\le I(d)+b$ on
+$0\le d\le1/2$ is $5-2\sqrt6$. Taking $b=1/8$ bounds the count at
+$\sigma=3/4$ strongly enough that $T^{1/4}N(3/4,T)\le N(T)$ eventually.
+Consequently the normalized Landau traces on $n\le T$ have absolute value at
+most $2n^{1/4}$, with square summable against the Pareto weights. Fixed
+integer-log Landau limits then give strong convergence to $e_1$. The
+limiting squared error formula follows unconditionally from these project
+theorems. Equating it with the distant zero-pair sum uses the actual-ordinate
+sine second moment. Selberg density at slope two supplies the finite-height
+comparison displayed above.
+
 ## Exact inversion at a fixed height using primes 2 and 3
 
 For the finite occurrence sample at height $T$, put $Z_T(u)=\sum_j e^{iu\gamma_j}$ and $N_T=\#\{j\}$. The map $t\mapsto(e^{it\log 2},e^{it\log 3})$ is injective. With $n=M+1$, $W_n=\{0,\ldots,n-1\}^2$, and $\omega_a=a_1\log2+a_2\log3$, define
