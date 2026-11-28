@@ -88,9 +88,62 @@ theorem digammaDiagonalNegativeMass_zero_iff_rh :
       RiemannHypothesis := by
   simpa only using digammaNegativeMassHead_zero_iff_rh (fun n : ℕ => n) tendsto_id
 
+/-- Every coordinate in the triangular head of the normalized finite section
+at stage n + 1 is nonnegative.  This deliberately makes no assertion about
+coordinates beyond n; the known stage-11 negative coordinate at 9856 is
+therefore retained. -/
+def diagonalHeadNonnegative (n : ℕ) : Prop :=
+  ∀ k : ℕ, 0 < k → k ≤ n → 0 ≤ sectionCoordinate (n + 1) k
+
+/-- Vanishing of the finite diagonal negative mass is exactly coordinatewise
+nonnegativity on the corresponding triangular head. -/
+theorem digammaDiagonalNegativeMass_eq_zero_iff (n : ℕ) :
+    digammaNegativeMassHead n n = 0 ↔ diagonalHeadNonnegative n := by
+  constructor
+  · intro hz k hk hkN
+    obtain ⟨j, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hk.ne'
+    have hj : j ∈ Finset.range n := Finset.mem_range.mpr (by omega)
+    have hterm :
+        paretoWeight j * max (-sectionCoordinate (n + 1) (j + 1)) 0 ≤
+          digammaNegativeMassHead n n := by
+      rw [digammaNegativeMassHead]
+      exact Finset.single_le_sum
+        (f := fun i : ℕ =>
+          paretoWeight i * max (-sectionCoordinate (n + 1) (i + 1)) (0 : ℝ))
+        (fun i _ => mul_nonneg (paretoWeight_pos i).le (le_max_right _ _)) hj
+    rw [hz] at hterm
+    have hm : max (-sectionCoordinate (n + 1) (j + 1)) 0 = 0 := by
+      have he : paretoWeight j * max (-sectionCoordinate (n + 1) (j + 1)) 0 = 0 :=
+        le_antisymm hterm (mul_nonneg (paretoWeight_pos j).le (le_max_right _ _))
+      exact (mul_eq_zero.mp he).resolve_left (paretoWeight_pos j).ne'
+    rw [max_eq_right_iff] at hm
+    exact neg_nonpos.mp hm
+  · intro h
+    rw [digammaNegativeMassHead]
+    apply Finset.sum_eq_zero
+    intro j hj
+    have hjN : j + 1 ≤ n := by
+      have := Finset.mem_range.mp hj
+      omega
+    rw [max_eq_right (neg_nonpos.mpr (h (j + 1) (by omega) hjN)), mul_zero]
+
+/-- The still-open finite arithmetic sign statement on all diagonal heads
+would imply the standard Riemann Hypothesis predicate. -/
+theorem riemannHypothesis_of_diagonalHeadNonnegative
+    (h : ∀ n : ℕ, diagonalHeadNonnegative n) :
+    RiemannHypothesis := by
+  apply digammaDiagonalNegativeMass_zero_iff_rh.mp
+  have hz : (fun n => digammaNegativeMassHead n n) = fun _ => 0 := by
+    funext n
+    exact (digammaDiagonalNegativeMass_eq_zero_iff n).mpr (h n)
+  rw [hz]
+  exact tendsto_const_nhds
+
 #print axioms digammaNegativeMassHead_eq
 #print axioms digammaNegativeMassHead_tendsto
 #print axioms digammaNegativeMassHead_zero_iff_rh
 #print axioms digammaDiagonalNegativeMass_zero_iff_rh
+#print axioms digammaDiagonalNegativeMass_eq_zero_iff
+#print axioms riemannHypothesis_of_diagonalHeadNonnegative
 
 end RiemannResearch.RH.Pareto.PrimePowerSchur.CenteredMeanSnake.DigammaSection

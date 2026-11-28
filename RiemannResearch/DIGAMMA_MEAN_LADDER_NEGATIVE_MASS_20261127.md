@@ -77,3 +77,46 @@ It does not by itself refute the diagonal-head limit, because that coordinate
 lies outside the head (kle11). Any attempt to enlarge the head to a complete
 period must include its signed contribution rather than replace it by a
 positivity assertion.
+
+## Diagonal-head sign reduction (2026-11-28)
+
+Define `diagonalHeadNonnegative n` by
+
+\[
+  U_n(k) \ge 0 \qquad (1 \le k \le n).
+\]
+
+Because every Pareto weight is strictly positive, Lean now proves the exact
+finite equivalence
+
+\[
+  D_{n,n}=0
+  \quad\Longleftrightarrow\quad
+  \text{`diagonalHeadNonnegative n`}.
+\]
+
+This is `digammaDiagonalNegativeMass_eq_zero_iff`. Combining it with the
+previous diagonal negative-mass criterion gives the audited conditional
+theorem `riemannHypothesis_of_diagonalHeadNonnegative`:
+
+\[
+  \bigl(\forall n\;\forall k,\;1\le k\le n\Rightarrow U_n(k)\ge0\bigr)
+  \quad\Longrightarrow\quad \mathrm{RH}.
+\]
+
+An independent high-precision Wolfram computation using the divisor--Möbius
+packet formula, the digamma progression weights, and inverse Gram solves found
+`D_{n,n}=0` for every `1 <= n <= 50`. The smallest tested coordinate was
+approximately `0.3645657594` at stage `n=37`, so the observed sign is not a
+roundoff-scale zero. This is external evidence only, not a proof.
+
+The universal finite sign statement is the new exact arithmetic obstruction.
+A promising but unproved route is to identify a total-positivity or M-matrix
+property for the inverse digamma Gram system after restriction to the
+triangular head. A generic norm or tail-energy estimate is insufficient: it
+returns to the already RH-equivalent endpoint defect rather than controlling
+each finite head coordinate.
+
+The negative stage-11 coordinate at `k=9856` remains essential: it rules out
+global positivity of a finite section but does not contradict diagonal-head
+positivity, since `9856 > 11`.
