@@ -1,3 +1,5 @@
+import RiemannResearch.Analysis.GaussianCollisionOuterBand
+import RiemannResearch.Analysis.GaussianCollisionTranslatedBand
 import RiemannResearch.Analysis.GaussianCollisionFiniteBand
 import RiemannResearch.Analysis.GaussianCollisionBandwidth
 import RiemannResearch.Analysis.GaussianAbsoluteCollision

@@ -315,6 +315,60 @@ Every integer cell is included; $\widehat f$ need not have compact frequency sup
 
 Lean files: [RoundedFourierCellParseval](Analysis/RoundedFourierCellParseval.lean), [MontgomerySignedHaarCriterion](Analysis/MontgomerySignedHaarCriterion.lean), [MontgomeryRationalPlateau](Analysis/MontgomeryRationalPlateau.lean), [MontgomeryRationalHaarEnvelope](Analysis/MontgomeryRationalHaarEnvelope.lean), [RoundedFourierZeroCell](Analysis/RoundedFourierZeroCell.lean), [MontgomeryNonconstantHaarCriterion](Analysis/MontgomeryNonconstantHaarCriterion.lean).
 
+## Translated Gaussians and the absolute collision threshold
+
+Let \(N=N(T)>0\), \(d_{ij}=(\log T)(\gamma_i-\gamma_j)/(2\pi)\), and
+\(P_s=\int_{\mathbb R}|Z_T(h\log T)|^2w_a(h-s)\,dh\) for \(a>0\), where
+\(Z_T(u)=\sum_i e^{iu\gamma_i}\) uses every original occurrence. The translated
+Gaussian transform gives the exact deficit
+\[
+P_0-P_s=\sum_{i,j}e^{-a d_{ij}^2}
+  \bigl(1-\cos(2\pi s d_{ij})\bigr).
+\]
+For \(B\ge0\), the true power outside \([-B,B]\) is bounded by
+\(2e^{-\pi^2B^2/a}P_B\le 2e^{-\pi^2B^2/a}P_0\).
+The signed reconstructed integral over the band differs from the true band
+power by at most \(1/4\) in ordered-pair units. Choosing
+\[
+B_\star^2=\frac{a}{\pi^2}\log\frac{8(N+2)}3
+\]
+makes a reconstructed integral below \(N+1\) imply \(P_0=C+U<N+2\)
+at the same precision. Both an off-line reflected pair and a multiple
+critical zero would have \(C\ge N+2\).
+
+For every sufficiently high pass the width-two packing bound gives
+\(4a>\log((T\log T/(2\pi))/12)\). The cofinal strict upper bound remains
+open. The equivalence with RH and simplicity is proved in
+[GaussianCollisionTranslatedBand](Analysis/GaussianCollisionTranslatedBand.lean).
+The classical Fourier input is the transform of a translated Gaussian.
+[Equation (21.7.5)](https://books.physics.oregonstate.edu/GMM/ftransex.html)
+
+For any prescribed inner radius \(H=H(T)\ge0\), a local zero-count estimate
+bounds the central part of the **signed reconstructed** integral. There is an
+absolute \(K>0\) such that at every sufficiently large height its contribution
+over \(|h|\le H\) is at most \(D_T(H)/\sqrt a\), where
+\[
+D_T(H)=\pi e^{H^2}\bigl(KN\log(T+3)+1/4\bigr).
+\]
+At reference precision \(\pi^2\), the physical Gaussian on each pair is
+dominated by \(4/(4+(\gamma_i-\gamma_j)^2)\) once \(\log T\ge1\).
+The local zero count bounds the sum of this Cauchy kernel for each occurrence.
+This argument includes all multiplicities.
+
+Choose a positive integer \(a\) with \(H\le B_\star\) and
+\(D_T(H)/\sqrt a\le1/4\). The remaining cofinal condition is that for some
+such \(a\) the reconstructed integral over \(H<|h|\le B_\star\) is strictly
+less than \(N+3/4\). This condition is equivalent to RH together with
+simplicity of all nontrivial zeros. With \(L=\log T\), the inverse-logarithmic
+Taylor precision theorem reaches \(|u|\le4L/3\) for \(u=hL\). Its geometric
+comparison extends to \(4L/3+\sqrt L\). Taking \(H(T)=4/3+1/\sqrt L\)
+puts the entire remaining integral beyond that comparison frequency.
+For rational \(u=\log(n/m)>0\), the numerator condition
+\(\log n+3u/2\le\theta L\) implies \(u\le2\theta L/5\), since
+\(\log n\ge u\). The outer integral upper bound remains open.
+[GaussianCollisionOuterBand](Analysis/GaussianCollisionOuterBand.lean) ·
+[RationalLandauInghamTangent](Analysis/RationalLandauInghamTangent.lean)
+
 ## What FMZ supplies at fixed frequencies
 
 At fixed nonzero rational frequencies, the squared FMZ main terms yield an unconditional collision-subtracted all-pair series on the $T^2$ scale under the module's weighted summability hypothesis. A fixed prime-power cosine mode even tends to positive infinity after division by $D_T$. The mixed balanced three-prime ratio words have zero arithmetic main term when nontrivial. In the active mesh, the nonzero order $k$ is the balanced rational word with prime exponents $(-ka,k(a-b),kb)$. Its prime-power main term vanishes exactly. Writing $r_{T,k}$ for the actual one-ordinate FMZ residual in its height normalization gives $Z_T(kh_T)=T r_{T,k}$ for $k\ne0$ and $Z_T(0)=N_T$. The physical signed test can consequently be expressed at its original scale using
