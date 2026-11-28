@@ -87,6 +87,27 @@ outside each fixed window has the same positive lower bound. RH is equivalent
 to a nonpositive liminf for this signed sum at any one fixed width. Absolute
 tightness of the residual pair tails would also force RH. This tail estimate is open.
 
+## Condition (iv) and the frequency of zero first spacings
+
+For the original zero occurrences, let $A_T$ count tied adjacent pairs
+strictly inside the cutoff and let $D_T$ be the number of occupied heights.
+Then $A_T+D_T=N(T)$. Each block of $m\ge2$ occurrences contributes $m-1$
+ties, so at most $2A_T$ occurrences lie in nonsingleton blocks. Under the
+first marginal of Arias de Reyna–Rodgers condition (iv), Portmanteau at
+$\{0\}$ gives $A_T/N(T)\to0$. Hence singleton ordinates and simple critical
+zeros both have limiting occurrence proportion one. For a Borel set $S_T$
+containing zero, even one exceptional zero forces its empirical first-gap
+mass to be at least $1/N(T)$ at every later nonempty cutoff. A strict upper
+bound below $1/N(T)$ on cofinal cutoffs would prove RH and simplicity. This
+unnormalized estimate is open. Vanishing of $A_T$ at cofinal cutoffs is
+equivalent to RH together with analytic simplicity at all nontrivial zeros.
+The sine Palm expected count in $(0,r]$ is
+at most $\pi^2r^3/9$. A one-sided upper comparison of the actual first-gap
+mass in $[0,r_T]$ with this pair integral, accurate to $o(1/N(T))$ at cofinal
+cutoffs, suffices when $N(T)r_T^3\to a$ and $\pi^2 a/9<1$.
+[Lean proof](Analysis/ActualFirstGapMarginal.lean).
+[Theorem 2(iv) and Section 5.2](https://arxiv.org/abs/2311.13441).
+
 ## Dyadic dilation and the physical first-site marginal
 
 [MellinDilationFirstSite](RH/MellinDilationFirstSite.lean) proves that normalized
