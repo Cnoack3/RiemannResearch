@@ -108,6 +108,64 @@ cutoffs, suffices when $N(T)r_T^3\to a$ and $\pi^2 a/9<1$.
 [Lean proof](Analysis/ActualFirstGapMarginal.lean).
 [Theorem 2(iv) and Section 5.2](https://arxiv.org/abs/2311.13441).
 
+## Absolute Gaussian recovery and the two-prime Fejér certificate
+
+Write $N=N(T)>0$, $C=\sum_\gamma m(\gamma)^2$, $E=C-N$, and $L=\log T/(2\pi)$.
+Every original positive ordinate occurrence keeps its multiplicity. With $a>0$,
+$U=\sum_{\gamma_i\ne\gamma_j}\exp(-aL^2(\gamma_i-\gamma_j)^2)$ sums ordered pairs.
+The reconstructed power $R(a,T,b)$ satisfies
+$|E+U-N(R-1)|\le3N\exp(-b)$ for every $b\ge0$. At $b=\log(12N)$ put
+$S=N(R-1)$. A strict upper bound $S<1$ forces $E<5/4$, hence $E=0$ by parity.
+Conversely $E=0$ gives such an upper bound at a sufficiently large positive integer
+precision. Existence at arbitrarily large cutoffs is equivalent to RH and analytic
+simplicity of every nontrivial zero. The cofinal upper bound is **open**.
+[Absolute certificate and global equivalence](Analysis/GaussianAbsoluteCollision.lean).
+
+If $\delta>0$ bounds the unfolded separation of every pair of different ordinates
+from below, $U\le N^2 e^{-a\delta^2}$. Thus $a\ge\log(4N^2)/\delta^2$ gives
+$U\le1/4$, $|S-E|\le1/2$, and the exact integer decoder
+$E=2\lfloor(S+1)/2\rfloor$. If there are no positive gaps, $U=0$.
+For an attained positive gap $d$, its two orientations force
+$a d^2>\log(8/5)$ whenever the certificate passes.
+The actual width-two packing bound also gives $4a>\log(2W/15)$ at every sufficiently
+large passing cutoff, with $W=T\log T/(2\pi)$. These are necessary bounds.
+The minimum-gap formula is sufficient and its uniform arithmetic control is open.
+
+At physical frequency $u=h\log T$ the signed amplitude is
+$\mathcal L_T(u)-\sum_{j=1}^{J}u^{2j}H_{2j,T}(u)/(2j)!$, where
+$H_{2j,T}(u)=\sum_\rho e^{iu\gamma}(\beta-\tfrac12)^{2j}$ with multiplicities.
+The exact integrand retains the signed cross term with the reflected Landau sum
+and the square of the whole horizontal correction. The verified choice is
+$J=\lceil(\log(N+1)+|h|\log T+1+b)/(2\log 2)\rceil$.
+One order at $B\log T$ suffices on $|h|\le B$. The full integral uses all real
+frequencies. Its Gaussian weight has standard deviation $\sqrt a/(\sqrt2\pi)$
+in $h$. In the proved tangent band $|u|\le(4/3)\log T$, the Fourier weight is at
+most $(8/3)\sqrt{\pi/a}$. This tends to zero along passing cutoffs.
+The uniform rational prime main term has the additional numerator and frequency
+restrictions in [RationalLandauMovingBand](Analysis/RationalLandauMovingBand.lean).
+
+The full integral can also be certified on a finite interval. At
+$B^2=(2a/\pi^2)\log(4\sqrt2\,(N+1)^2)$, discarded absolute power is between
+zero and $1/4$. Integrating the signed squared amplitude over $[-B,B]$ and
+subtracting $N$ gives the band excess $S_B$. At a nonempty cutoff $T>1$,
+existence of a positive integer precision with $S_B<1$ is equivalent to $C=N$.
+Under the same separation precision, $|S_B-E|\le 1/2$ and
+$E=2\lfloor(S_B+1)/2\rfloor$. The discarded power and the unequal-height mass enter
+with opposite signs. Every Taylor order used in the integral is bounded by the order at $B\log T$.
+The remaining arithmetic estimate is the strict bound $S_B<1$ along cofinal cutoffs.
+[Finite Fourier band and cofinal equivalence](Analysis/GaussianCollisionFiniteBand.lean).
+
+The two-prime Fejér test uses a finite rectangle of rational words in $2$ and $3$.
+At each nonempty height above one, existence of a Gaussian test $S<1$ is equivalent
+to existence of a Fejér test $F_M<N+2$. Its zero word forces
+$N^2<(N+2)(M+1)^2$. Signed Landau reconstruction gives $1/4$ absolute error
+for the entire Fejér average as well, uniformly in $M$. Existence of a signed
+reconstructed Fejér value below $N+7/4$ is likewise equivalent to $C=N$. Increasing Taylor order
+reduces reconstruction error. A cofinal upper estimate for either actual power
+requires additional arithmetic control.
+[Frequency and precision estimates](Analysis/GaussianCollisionBandwidth.lean).
+[Two-prime Fejér certificate](Analysis/TwoPrimeCompactCollision.lean).
+
 ## Fluctuations after subtracting the actual occurrence mean
 
 Let $q=(I-P_V)e_1$ for the physical first-site indicator and let

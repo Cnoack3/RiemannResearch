@@ -105,22 +105,35 @@ theorem gaussianFrequencyWeight_band_mass_le {a B : ℝ} (ha : 0 < a) (hB : 0 �
         exact mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr this) (sq_nonneg y)))
     _ = _ := by rw [intervalIntegral.integral_const, smul_eq_mul]; ring
 
+/-- Integrated signed Landau power with an independently selectable reconstruction allowance. -/
+def reconstructedGaussianPowerWithAllowance (a T b : ℝ) : ℝ :=
+  ∫ h : ℝ, reconstructedGapSpectrum T (2 * Real.pi * h * (Real.log T / (2 * Real.pi))) b *
+    gaussianFrequencyWeight a h
+
 /-- The integrated signed Landau reconstruction, with its occurrence diagonal retained. -/
 def reconstructedGaussianPower (a T : ℝ) : ℝ :=
-  ∫ h : ℝ, reconstructedGapSpectrum T (2 * Real.pi * h * (Real.log T / (2 * Real.pi)))
-    (Real.log T) * gaussianFrequencyWeight a h
+  reconstructedGaussianPowerWithAllowance a T (Real.log T)
+
+/-- The unit Fourier mass gives the same error for all positive Gaussian precisions. -/
+theorem gaussianFactorialMoment_reconstruction_with_allowance {a T b : ℝ}
+    (ha : 0 < a) (hb : 0 ≤ b) (hN : 0 < Ncount 0 T) :
+    |gaussianFactorialMoment a T - (reconstructedGaussianPowerWithAllowance a T b - 1)| ≤
+      3 * Real.exp (-b) := by
+  obtain ⟨hi, hm, hw⟩ := gaussianFrequencyWeight_spec ha
+  have h := reconstructed_factorial_cosine_gap_test T (Real.log T / (2 * Real.pi)) b hb hN hi
+  rw [factorialCosineGapTest] at h
+  simp_rw [hw] at h
+  rw [hm] at h
+  simpa only [gaussianFactorialMoment_eq_sum, reconstructedGaussianPowerWithAllowance, mul_one,
+    zero_pow (by decide : 2 ≠ 0), mul_zero, Real.exp_zero] using h
 
 /-- The same error bound works for every positive Gaussian precision. -/
 theorem gaussianFactorialMoment_reconstruction {T a : ℝ} (hT : 1 < T) (hN : 0 < Ncount 0 T)
     (ha : 0 < a) :
     |gaussianFactorialMoment a T - (reconstructedGaussianPower a T - 1)| ≤ 3 / T := by
-  obtain ⟨hi, hm, hw⟩ := gaussianFrequencyWeight_spec ha
-  have h := reconstructed_factorial_cosine_gap_test T (Real.log T / (2 * Real.pi))
-    (Real.log T) (Real.log_pos hT).le hN hi
-  rw [factorialCosineGapTest] at h
-  simp_rw [hw] at h
-  rw [hm, Real.exp_neg, Real.exp_log (zero_lt_one.trans hT)] at h
-  simpa [gaussianFactorialMoment_eq_sum, reconstructedGaussianPower, div_eq_mul_inv] using h
+  have h := gaussianFactorialMoment_reconstruction_with_allowance ha (Real.log_pos hT).le hN
+  simpa only [reconstructedGaussianPower, Real.exp_neg, Real.exp_log (zero_lt_one.trans hT),
+    div_eq_mul_inv] using h
 
 private theorem eventually_gaussian_reconstruction_close {a ε : ℝ} (ha : 0 < a) (hε : 0 < ε) :
     ∀ᶠ T : ℝ in atTop,
