@@ -108,6 +108,37 @@ cutoffs, suffices when $N(T)r_T^3\to a$ and $\pi^2 a/9<1$.
 [Lean proof](Analysis/ActualFirstGapMarginal.lean).
 [Theorem 2(iv) and Section 5.2](https://arxiv.org/abs/2311.13441).
 
+## Fluctuations after subtracting the actual occurrence mean
+
+Let $q=(I-P_V)e_1$ for the physical first-site indicator and let
+$Y_\gamma=\langle c_\gamma,q\rangle_P$. Center $Y_\gamma$ by its mean over
+all original zero occurrences at each cutoff. For every integer $k\ge2$ its
+covariance with $\cos(\gamma\log k)$ tends to
+$\frac12\langle e_k,q\rangle_P$. Finite Cauchy–Schwarz bounds the square of
+every such covariance by the empirical variance. If that variance tends to
+zero along any unbounded cutoff sequence, all coordinates of $q$ after
+the first vanish. The legal conductor-two residue has first value $1/2$,
+so its orthogonality to $q$ eliminates the first coordinate as well.
+Thus vanishing of this unscaled centered variance is equivalent to RH.
+If RH fails, a fixed cosine covariance bounds this variance away from zero
+at all sufficiently large cutoffs, and the standardized observations have
+uniformly bounded support. Vanishing of the actual variance remains open. [Lean proof](RH/ParetoOrdinateCenteredFluctuations.lean).
+
+For the limiting law itself, put $a_m=P(m)q(m)$ and choose independent
+uniform phases $U_p$ on the unit circle for the primes. Set
+$Z_m=\prod_{p\mid m}U_p^{v_p(m)}$. At a uniformly sampled original
+occurrence, $Y_\gamma-\overline Y_T$ converges in distribution to
+$\sum_{m\ge2} a_m\operatorname{Re} Z_m$. Indeed, every nontrivial
+character of a finite vector $(\exp(i\gamma\log p))_p$ has frequency
+$\log r\ne0$ for a positive rational $r\ne1$. Fixed-frequency ordinate
+equidistribution and Weyl's criterion give joint Haar measure on each
+finite prime torus. Cauchy–Schwarz gives $\sum_m |a_m|\le\|q\|_P$, so the
+tails of the cosine series are uniformly small, and the first coefficient
+is removed by centering in the limit. Haar character orthogonality then gives
+$\lim_T\operatorname{Var}_T(Y)=\tfrac12\sum_{m\ge2}a_m^2$. This derivation
+uses the fixed-frequency theorem described by
+[Ford and Zaharescu, Section 1](https://arxiv.org/abs/math/0405459).
+
 ## Dyadic dilation and the physical first-site marginal
 
 [MellinDilationFirstSite](RH/MellinDilationFirstSite.lean) proves that normalized

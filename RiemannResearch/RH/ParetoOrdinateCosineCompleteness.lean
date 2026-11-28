@@ -284,6 +284,17 @@ theorem first_recovery_tendsto :
     Tendsto (fun T => recovery T 0) atTop (𝓝 (paretoPointHilbert 0)) := by
   simpa [diagonalMass] using recovery_tendsto_of_fixedStrip actual_concentration 0
 
+/-- Strong coordinate recovery on the original occurrence sample at all fixed sites. -/
+theorem recovery_tendsto (k : ℕ) :
+    Tendsto (fun T => recovery T k) atTop (𝓝 (diagonalMass k • paretoPointHilbert k)) :=
+  recovery_tendsto_of_fixedStrip actual_concentration k
+
+/-- A fixed nonzero cosine frequency has zero occurrence mean. -/
+theorem occurrence_cosine_mean_tendsto {u : ℝ} (hu : u ≠ 0) :
+    Tendsto (fun T : ℝ => (∑ c : Copies T, Real.cos (u * c.1.1.im)) / (Ncount 0 T : ℝ))
+      atTop (𝓝 0) := by
+  simpa only [cosineMean, if_neg hu] using cosineMean_tendsto actual_concentration u
+
 private theorem recovery_mem (T : ℝ) (q : ℕ) :
     recovery T q ∈ Submodule.span ℝ (Set.range actualRow) := by
   apply Submodule.smul_mem
