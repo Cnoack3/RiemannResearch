@@ -70,6 +70,37 @@ theorems. Equating it with the distant zero-pair sum uses the actual-ordinate
 sine second moment. Selberg density at slope two supplies the finite-height
 comparison displayed above.
 
+## Dyadic dilation and the physical first-site marginal
+
+[MellinDilationFirstSite](RH/MellinDilationFirstSite.lean) proves that normalized
+dyadic dilation multiplies each critical-line Mellin feature by the phase
+$2^{-it}$. The correlation determinants agree at every finite rank on the
+same frequency tuple, including repeated frequencies. Every dyadically
+dilated legal vector vanishes at site $1$. For the original legal space,
+the one-conductor marginal is $1/(2\log 2)$ and the exact two-conductor
+marginal is approximately $0.7245114070$. Both give lower bounds for
+$K_V(1,1)$. Determinant data alone cannot recover this physical evaluation.
+
+## A separated pair of height intervals suffices for the first-site criterion
+
+[ParetoOrdinateHeightBands](RH/ParetoOrdinateHeightBands.lean) uses the original
+multiplicity labels in two intervals $(aT,bT]$ and $(cT,dT]$. Dividing their
+signed residual Gram sum by $N(T)^2$ gives the unconditional limit
+$(b-a)(d-c)(1-K_V(1,1))/2$ for fixed positive endpoints in $(0,1]$.
+The intervals $(T/4,T/2]$ and $(3T/4,T]$ give $(1-K_V(1,1))/32$.
+RH is equivalent to this statistic falling below each positive tolerance at
+arbitrarily large heights. The centered Landau estimators give the same
+limit by Ingham recovery. Selberg density at exponent two at the band endpoints
+bounds the finite-height change of estimator.
+
+[ParetoOrdinateFiniteBands](RH/ParetoOrdinateFiniteBands.lean) proves the same
+limit for finite legal ranks increasing at any rate. The two band load vectors
+paired through the inverse residue Gram matrix tend to $K_V(1,1)/32$.
+Reaching $1/32$ is equivalent to RH. In particular, `rh_iff_landau_finite_band`
+expresses RH as a nonpositive liminf with the legal rank and each Landau head
+cut off at the integer part of its height. A single right-half-strip zero
+forces a persistent positive lower bound here. The liminf estimate is open.
+
 ## Exact inversion at a fixed height using primes 2 and 3
 
 For the finite occurrence sample at height $T$, put $Z_T(u)=\sum_j e^{iu\gamma_j}$ and $N_T=\#\{j\}$. The map $t\mapsto(e^{it\log 2},e^{it\log 3})$ is injective. With $n=M+1$, $W_n=\{0,\ldots,n-1\}^2$, and $\omega_a=a_1\log2+a_2\log3$, define
