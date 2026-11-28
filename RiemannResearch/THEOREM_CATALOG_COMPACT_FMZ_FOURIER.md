@@ -34,6 +34,29 @@ also supplies that hypothesis unconditionally.
   At a critical-line zero the finite arithmetic Mellin kernel has a zero row
   by `MellinFrequency.kernel_row_zero_of_zeta_zero`.
 
+## GUE and Selberg density in the squared legal projection error
+
+Write $b_T=R_{T,1}$, $r_\gamma=(I-P_V)c_\gamma$ and $E_T=\|(I-P_V)b_T\|_P^2$.
+[ParetoOrdinatePairError](RH/ParetoOrdinatePairError.lean) proves that $E_T$
+is the signed sum of $\langle r_\gamma,r_{\gamma'}\rangle_P$ over all ordered
+zero occurrences, divided by $N(T)^2$. Under the actual-ordinate sine second
+moment, the number of pairs with $|(\gamma-\gamma')\log T/(2\pi)|\le q$,
+divided by $N(T)$, tends to $1+2\int_0^q(1-\operatorname{sinc}(\pi u)^2)\,du$
+for every fixed $q>0$, with $\operatorname{sinc}(x)=\sin(x)/x$.
+Their contribution to $E_T$ tends to zero. The sum over the complementary
+pairs tends to $(1-K_V(1,1))/2$, where $K_V$ is the discrete legal projection
+on normalized Pareto atoms.
+
+[ParetoOrdinateLandauRecovery](RH/ParetoOrdinateLandauRecovery.lean) compares
+$b_T$ with the real centered Landau trace divided by $N(T)$ on $1\le n\le K$,
+continued by zero for $n>K$. Under Selberg density at exponent two with
+constant $C$ at height $T$, the squared norm of the difference is at most
+$24[2CT/(3N(T)\log T)]^2+1/(K+1)$ for each integer $K\le T$ and $N(T)>0$,
+$T>1$. Under uniform slope two, taking $K=\lfloor T\rfloor$ gives the same
+limiting squared projection error. Under both hypotheses this equals the
+limit of the sum outside each fixed unfolded window. RH is equivalent to
+$K_V(1,1)=1$. This diagonal value remains to be established.
+
 ## Exact inversion at a fixed height using primes 2 and 3
 
 For the finite occurrence sample at height $T$, put $Z_T(u)=\sum_j e^{iu\gamma_j}$ and $N_T=\#\{j\}$. The map $t\mapsto(e^{it\log 2},e^{it\log 3})$ is injective. With $n=M+1$, $W_n=\{0,\ldots,n-1\}^2$, and $\omega_a=a_1\log2+a_2\log3$, define

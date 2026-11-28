@@ -174,6 +174,13 @@ def recovery (T : ℝ) (q : ℕ) : ThresholdHilbert :=
   (Ncount 0 T : ℝ)⁻¹ • ∑ c : Copies T,
     Real.cos (siteFrequency q * c.1.1.im) • cosineRow c.1.1.im
 
+/-- The unprojected first-site estimator is the equal-weight mean over all copies. -/
+theorem recovery_zero_eq_mean (T : ℝ) :
+    recovery T 0 = (Ncount 0 T : ℝ)⁻¹ • ∑ c : Copies T, cosineRow c.1.1.im := by
+  change (Ncount 0 T : ℝ)⁻¹ • (∑ c : Copies T,
+    Real.cos (Real.log ((0 + 1 : ℕ) : ℝ) * c.1.1.im) • cosineRow c.1.1.im) = _
+  simp
+
 private theorem recovery_apply (T : ℝ) (q i : ℕ) :
     recovery T q i = Real.sqrt (paretoWeight i) * cosineMatrix T q i := by
   simp only [recovery, cosineMatrix, lp.coeFn_smul, lp.coeFn_sum,
@@ -182,6 +189,15 @@ private theorem recovery_apply (T : ℝ) (q i : ℕ) :
   apply Finset.sum_congr rfl
   intro c _
   ring
+
+theorem first_recovery_physical_abs_le_one (T : ℝ) (i : ℕ) :
+    |hilbertGibbsPhysical (recovery T 0) i| ≤ 1 := by
+  have hs : Real.sqrt (paretoWeight i) ≠ 0 := (Real.sqrt_pos.mpr (paretoWeight_pos i)).ne'
+  have hp : hilbertGibbsPhysical (recovery T 0) i = cosineMatrix T 0 i := by
+    rw [hilbertGibbsPhysical, recovery_apply]
+    field_simp [hs]
+  rw [hp]
+  exact cosineMatrix_abs_le_one T 0 i
 
 /-- At the first recovered site, Selberg density at exponent two bounds the
 difference from the count-normalized Landau trace at each integer logarithm
@@ -264,6 +280,10 @@ private theorem actual_concentration : FixedStripConcentration := by
   simpa only [show 1+1 = (2 : ℕ) by decide, displacementMoment_two] using
     tendsto_displacementMoment 1
 
+theorem first_recovery_tendsto :
+    Tendsto (fun T => recovery T 0) atTop (𝓝 (paretoPointHilbert 0)) := by
+  simpa [diagonalMass] using recovery_tendsto_of_fixedStrip actual_concentration 0
+
 private theorem recovery_mem (T : ℝ) (q : ℕ) :
     recovery T q ∈ Submodule.span ℝ (Set.range actualRow) := by
   apply Submodule.smul_mem
@@ -328,8 +348,7 @@ legal projection error. The finite averages use precisely the same ordinates. -/
 theorem rh_iff_first_recovery_defect :
     RiemannHypothesis ↔ Tendsto
       (fun T => recovery T 0 - closedSpace.starProjection (recovery T 0)) atTop (𝓝 0) := by
-  have hr : Tendsto (fun T => recovery T 0) atTop (𝓝 (paretoPointHilbert 0)) := by
-    simpa [diagonalMass] using recovery_tendsto_of_fixedStrip actual_concentration 0
+  have hr := first_recovery_tendsto
   have hd := hr.sub (closedSpace.starProjection.continuous.continuousAt.tendsto.comp hr)
   have hRH : RiemannHypothesis ↔ paretoPointHilbert 0 ∈ closedSpace :=
     (PrimePowerSchur.CenteredMeanSnake.riemannHypothesis_iff_naturalApproximation.trans
