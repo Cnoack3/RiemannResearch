@@ -3,6 +3,7 @@ import RiemannResearch.Analysis.GaussianCollisionTranslatedBand
 import RiemannResearch.Analysis.GaussianCollisionFiniteBand
 import RiemannResearch.Analysis.GaussianCollisionBandwidth
 import RiemannResearch.Analysis.GaussianAbsoluteCollision
+import RiemannResearch.RH.ParetoOrdinateVarianceBounds
 import RiemannResearch.RH.ParetoOrdinateCenteredFluctuations
 import RiemannResearch.Analysis.ActualFirstGapMarginal
 import RiemannResearch.RH.ParetoOrdinateGapWeakStar

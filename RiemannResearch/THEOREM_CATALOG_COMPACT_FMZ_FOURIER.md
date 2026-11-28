@@ -197,6 +197,44 @@ $\lim_T\operatorname{Var}_T(Y)=\tfrac12\sum_{m\ge2}a_m^2$. This derivation
 uses the fixed-frequency theorem described by
 [Ford and Zaharescu, Section 1](https://arxiv.org/abs/math/0405459).
 
+The exact limit is formalized in
+[ParetoOrdinateVarianceBounds](RH/ParetoOrdinateVarianceBounds.lean).
+For any Pareto vector $v$, `rowObservationVariance_tendsto` gives
+$\sigma^2(v)=\tfrac12\sum_{m\ge2}(P(m)v(m))^2$. For the first-site
+residual put $\delta=\|q\|_P^2$. Its first coefficient is $\delta$, and
+the signed sum of the other odd coefficients is $-\delta$. The exact tail
+mass $1/(M+1)$ and finite Cauchy–Schwarz give
+$$
+\delta^3/32\ \le\ \sigma^2(q)\ \le\ \delta/12 .
+$$
+Consequently a limiting variance at most $\varepsilon$ gives
+$\delta^3\le32\varepsilon$. A zero $s$ with $\Re s>1/2$ forces
+$$
+\sigma^2(q)\ \ge\ \frac1{32}
+\left((2\Re s-1)\frac{|1-2^{-s}|^2}{|s|^2}\right)^3 .
+$$
+Here the normalized Mellin vacancy is $2\delta$.
+
+Write $q_r=(I-P_{V_r})e_1$. At every height the variance difference
+between $q_r$ and $q$ is at most
+$(\|q_r\|+\|q\|)\sqrt{\|q_r\|^2-\delta}$. In particular every cofinal rank
+schedule gives the same limit. For a physical Fourier head through $M$,
+put $C_T(u)=N(T)^{-1}\sum_\gamma\cos(u\gamma)$, counting multiplicities,
+and $a_m=P(m)q_r(m)$. The head variance is the quadratic form with entries
+$$
+\tfrac12[C_T(\log(m/n))+C_T(\log(mn))]
+       - C_T(\log m)C_T(\log n).
+$$
+The absolute error from replacing the full variance by this head is at most
+$4\|q_r\|^2/\sqrt{M+1}$, uniformly in $T$. These estimates allow independent
+choices of cofinal ranks, heights and physical cutoffs. Fixed-frequency FMZ
+limits evaluate the quadratic form for fixed coefficients. The open arithmetic
+estimate is a vanishing upper bound for the signed form along cofinal finite
+residuals. The critical-line Mellin kernel identity
+`MellinFrequency.kernel_row_zero_of_zeta_zero`
+concerns Mellin evaluations of legal atoms. Its zero row supplies no such upper
+bound for the cosine observations.
+
 ## Dyadic dilation and the physical first-site marginal
 
 [MellinDilationFirstSite](RH/MellinDilationFirstSite.lean) proves that normalized
