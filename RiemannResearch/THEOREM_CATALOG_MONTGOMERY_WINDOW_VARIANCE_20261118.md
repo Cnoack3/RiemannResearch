@@ -6,6 +6,8 @@
 
 The finite-height theorem `reconstructedCollisionMass_error` bounds the error in recovering the entire equal-ordinate count per occurrence from the infimum of reconstructed Gaussian powers by `3 / T`. The resulting error in the GLSS triangle identity scales by the width times the actual count divided by the main term. **Open** — evaluating the collision-corrected argument variance to its sine value at every fixed positive rational width. Fujii's logarithmic upper estimate leaves this limit undetermined.
 
+For the density conclusion of GLSS Part I, Theorem 2, `glss_counts_iff_height_dependent_gaussian_upper` proves that horizontal multiplicity asymptotics and the two GLSS count conclusions together are equivalent to finding one positive integer Gaussian precision per sufficiently large height with reconstructed power below one plus any prescribed tolerance. `simpleCritical_deficit_le_gaussianPower` gives the corresponding finite-height bound for the fraction of occurrences that are off the critical line or nonsimple. **Open** — establishing that one-sided bound for the actual zeta zeros.
+
 ## Occurrence ranks, distinct ordinates and simple zero representatives
 
 For a height cutoff \(T>1\), let \(L=\log T/(2\pi)\), \(D=TL\), and order the \(N(T)\) occurrences by ordinate, with their analytic multiplicities. The positive-gap count uses \(0<L(\gamma_j-\gamma_i)\le q\) and the same denominator \(D\) throughout.

@@ -92,6 +92,111 @@ theorem unequalGaussian_tendsto_zero_at_fixed_height {T : ℝ} (hT : 1 < T) :
   have ht := tendsto_finsetSum (Finset.univ : Finset (Copies T)) (fun i _ => hs i)
   simpa [unequalOrdinateGaussianMoment, f, d] using ht.div_const (Ncount 0 T : ℝ)
 
+/-- Gaussian power is the full horizontal collision count per occurrence
+plus the unequal-height moment, up to the signed reconstruction error. -/
+theorem gaussianPower_collision_split_error {T a : ℝ} (hT : 1 < T) (hN : 0 < Ncount 0 T)
+    (ha : 0 < a) :
+    |(actualCollision T : ℝ) / (Ncount 0 T : ℝ) + unequalOrdinateGaussianMoment a T -
+      reconstructedGaussianPower a T| ≤ 3 / T := by
+  have hn : (Ncount 0 T : ℝ) ≠ 0 := by exact_mod_cast hN.ne'
+  have h := gaussianFactorialMoment_reconstruction hT hN ha
+  rw [gaussianFactorialMoment_split] at h
+  simpa only [actualCollision, occurrenceCollision_eq_card_add_excess, card_copies, Nat.cast_add,
+    add_div, div_self hn, show ∀ x y z : ℝ, 1 + x + y - z = x + y - (z-1) from
+      fun x y z => by ring] using h
+
+private theorem collision_le_gaussianPower_error {T a : ℝ} (hT : 1 < T)
+    (hN : 0 < Ncount 0 T) (ha : 0 < a) :
+    (actualCollision T : ℝ) / (Ncount 0 T : ℝ) ≤ reconstructedGaussianPower a T + 3 / T := by
+  have hu : 0 ≤ unequalOrdinateGaussianMoment a T := by
+    unfold unequalOrdinateGaussianMoment
+    apply div_nonneg _ (Nat.cast_nonneg _)
+    exact Finset.sum_nonneg fun i _ => Finset.sum_nonneg fun j _ => by split <;> positivity
+  linarith only [hu, (abs_le.mp (gaussianPower_collision_split_error hT hN ha)).2]
+
+/-- GLSS Part I, Theorem 2, with a finite-height upper bound for the proportion
+of occurrences failing either simplicity or critical-line membership. -/
+theorem simpleCritical_deficit_le_gaussianPower {T a : ℝ} (hT : 1 < T)
+    (hN : 0 < Ncount 0 T) (ha : 0 < a) :
+    1 - (simpleCriticalCount T : ℝ) / (Ncount 0 T : ℝ) ≤
+      reconstructedGaussianPower a T - 1 + 3 / T := by
+  have hn : 0 < (Ncount 0 T : ℝ) := by exact_mod_cast hN
+  have hb : 2 * (Ncount 0 T : ℝ) ≤ (simpleCriticalCount T : ℝ) + (actualCollision T : ℝ) := by
+    exact_mod_cast twice_count_le_simpleCriticalCount_add_collision T
+  have h := div_le_div_of_nonneg_right hb hn.le
+  rw [add_div, mul_div_cancel_right₀ _ hn.ne'] at h
+  linarith only [h, collision_le_gaussianPower_error hT hN ha]
+
+/-- The GLSS horizontal multiplicity hypothesis and its simple-critical
+conclusions are equivalent to an eventual upper bound at just one Gaussian
+precision per height. The precision may depend on both height and tolerance.
+No convergence of positive-gap counts is used. -/
+theorem glss_counts_iff_height_dependent_gaussian_upper :
+    GLSSCountAsymptotics ↔ ∀ ε : ℝ, 0 < ε → ∀ᶠ T : ℝ in atTop,
+      ∃ k : ℕ, reconstructedGaussianPower ((k : ℝ)+1) T < 1 + ε := by
+  let c := fun T : ℝ => (actualCollision T : ℝ) / (Ncount 0 T : ℝ)
+  have hciff : GLSSCountAsymptotics ↔ Tendsto c atTop (𝓝 1) := by
+    have hn : ∀ᶠ T : ℝ in atTop, (Ncount 0 T : ℝ) ≠ 0 :=
+      eventually_count_pos.mono fun T hT => by exact_mod_cast hT.ne'
+    have he := isEquivalent_iff_tendsto_one
+      (u := fun T : ℝ => (actualCollision T : ℝ)) hn
+    constructor
+    · intro hg
+      apply he.mp
+      simpa only [actualCollision_eq_sum_multiplicity_sq, Nat.cast_sum, Nat.cast_pow] using hg.horizontal
+    · intro h
+      apply glss_counts_of_horizontal_multiplicity
+      simpa only [actualCollision_eq_sum_multiplicity_sq, Nat.cast_sum, Nat.cast_pow] using he.mpr h
+  rw [hciff]
+  have close (δ : ℝ) (hδ : 0 < δ) : ∀ᶠ T : ℝ in atTop, 3/T < δ := by
+    filter_upwards [eventually_gt_atTop (max 1 (3/δ))] with T hT
+    have h1 := (le_max_left _ _).trans_lt hT
+    apply (div_lt_iff₀ (zero_lt_one.trans h1)).2
+    linarith only [(div_lt_iff₀ hδ).1 ((le_max_right _ _).trans_lt hT)]
+  constructor
+  · intro h ε hε
+    have hδ : 0 < ε/3 := by positivity
+    filter_upwards [eventually_gt_atTop (1 : ℝ), eventually_count_pos, close _ hδ,
+      h.eventually_lt_const (show 1 < 1 + ε/3 by linarith)] with T hT hN herr hC
+    obtain ⟨k, hk⟩ := ((unequalGaussian_tendsto_zero_at_fixed_height hT).eventually_lt_const hδ).exists
+    refine ⟨k, ?_⟩
+    have hp := (abs_le.mp (gaussianPower_collision_split_error hT hN
+      (show 0 < (k : ℝ)+1 by positivity))).1
+    change (actualCollision T : ℝ)/(Ncount 0 T : ℝ) < 1 + ε/3 at hC
+    linarith only [hp, hk, herr, hC]
+  · intro h
+    apply tendsto_order.2
+    constructor
+    · intro b hb
+      filter_upwards [eventually_count_pos] with T hN
+      have hCN : Ncount 0 T ≤ actualCollision T := by
+        rw [actualCollision_eq_count_add_excess T]
+        omega
+      have hn : 0 < (Ncount 0 T : ℝ) := by exact_mod_cast hN
+      apply hb.trans_le
+      apply (le_div_iff₀ hn).2
+      simpa only [one_mul] using (show (Ncount 0 T : ℝ) ≤ (actualCollision T : ℝ) by exact_mod_cast hCN)
+    · intro b hb
+      let δ := (b-1)/2
+      have hδ : 0 < δ := half_pos (sub_pos.mpr hb)
+      filter_upwards [h δ hδ, close δ hδ, eventually_count_pos, eventually_gt_atTop (1 : ℝ)]
+        with T ⟨k, hk⟩ herr hN hT
+      have hp := collision_le_gaussianPower_error hT hN (show 0 < (k : ℝ)+1 by positivity)
+      dsimp [δ] at hk herr
+      dsimp [c]
+      linarith only [hp, hk, herr]
+
+/-- The joint density-one conclusion, with analytic multiplicities in the
+denominator and a single height-dependent Gaussian upper test as input. -/
+theorem simpleCritical_density_of_height_dependent_gaussian_upper
+    (h : ∀ ε : ℝ, 0 < ε → ∀ᶠ T : ℝ in atTop,
+      ∃ k : ℕ, reconstructedGaussianPower ((k : ℝ)+1) T < 1 + ε) :
+    Tendsto (fun T : ℝ => (simpleCriticalCount T : ℝ)/(Ncount 0 T : ℝ)) atTop (𝓝 1) := by
+  have hn : ∀ᶠ T : ℝ in atTop, (Ncount 0 T : ℝ) ≠ 0 :=
+    eventually_count_pos.mono fun T hT => by exact_mod_cast hT.ne'
+  exact (isEquivalent_iff_tendsto_one hn).mp
+    (glss_counts_iff_height_dependent_gaussian_upper.mpr h).simpleCritical
+
 /-- The infimum of the reconstructed Gaussian power over positive integer
 precisions estimates the GLSS collision count per actual occurrence. -/
 def reconstructedCollisionMass (T : ℝ) : ℝ :=
@@ -102,29 +207,20 @@ theorem reconstructedCollisionMass_error {T : ℝ} (hT : 1 < T) (hN : 0 < Ncount
   let c := (actualCollision T : ℝ) / (Ncount 0 T : ℝ)
   let v (k : ℕ) := reconstructedGaussianPower ((k : ℝ)+1) T
   let u (k : ℕ) := unequalOrdinateGaussianMoment ((k : ℝ)+1) T
-  have hn : (Ncount 0 T : ℝ) ≠ 0 := by exact_mod_cast hN.ne'
-  have hc : c = 1 + (occurrenceExcess (copyOrdinate T) : ℝ) / (Ncount 0 T : ℝ) := by
-    simp only [c, actualCollision, occurrenceCollision_eq_card_add_excess, card_copies,
-      Nat.cast_add, add_div, div_self hn]
-  have hpair (k : ℕ) : c + u k - 3/T ≤ v k ∧ v k ≤ c + u k + 3/T := by
-    have h := abs_le.mp (gaussianFactorialMoment_reconstruction hT hN
-      (show 0 < (k : ℝ)+1 by positivity))
-    rw [gaussianFactorialMoment_split] at h
-    rw [hc]
-    dsimp only [u, v]
-    constructor <;> linarith only [h.1, h.2]
+  have hpair (k : ℕ) : v k ≤ c + u k + 3/T := by
+    have h := (abs_le.mp (gaussianPower_collision_split_error hT hN
+      (show 0 < (k : ℝ)+1 by positivity))).1
+    dsimp only [c, u, v]
+    linarith only [h]
   have hlo (k : ℕ) : c - 3/T ≤ v k := by
-    have hp : 0 ≤ u k := by
-      unfold u unequalOrdinateGaussianMoment
-      apply div_nonneg _ (Nat.cast_nonneg _)
-      exact Finset.sum_nonneg fun i _ => Finset.sum_nonneg fun j _ => by split <;> positivity
-    linarith only [hp, (hpair k).1]
+    exact sub_le_iff_le_add.mpr (collision_le_gaussianPower_error hT hN
+      (show 0 < (k : ℝ)+1 by positivity))
   have hb : BddBelow (Set.range v) := ⟨c-3/T, by rintro _ ⟨k, rfl⟩; exact hlo k⟩
   have hl := le_csInf (Set.range_nonempty v) (by rintro _ ⟨k, rfl⟩; exact hlo k)
   have hu : Tendsto u atTop (𝓝 0) := unequalGaussian_tendsto_zero_at_fixed_height hT
   have ht : Tendsto (fun k => c + u k + 3/T) atTop (𝓝 (c + 3/T)) := by
     simpa only [add_zero] using ((tendsto_const_nhds (x := c)).add hu).add_const (3/T)
-  have hhi := ge_of_tendsto' ht (fun k => (csInf_le hb (Set.mem_range_self k)).trans (hpair k).2)
+  have hhi := ge_of_tendsto' ht (fun k => (csInf_le hb (Set.mem_range_self k)).trans (hpair k))
   change |sInf (Set.range v) - c| ≤ 3/T
   exact abs_le.mpr ⟨by linarith only [hl], by linarith only [hhi]⟩
 
@@ -209,5 +305,13 @@ theorem positiveGapPCC_iff_reconstructedCollisionVariance :
 /-- info: 'RiemannResearch.Analysis.MontgomeryPositiveGap.positiveGapPCC_iff_reconstructedCollisionVariance' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms positiveGapPCC_iff_reconstructedCollisionVariance
+
+/-- info: 'RiemannResearch.Analysis.MontgomeryPositiveGap.glss_counts_iff_height_dependent_gaussian_upper' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms glss_counts_iff_height_dependent_gaussian_upper
+
+/-- info: 'RiemannResearch.Analysis.MontgomeryPositiveGap.simpleCritical_density_of_height_dependent_gaussian_upper' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms simpleCritical_density_of_height_dependent_gaussian_upper
 
 end RiemannResearch.Analysis.MontgomeryPositiveGap
