@@ -14,6 +14,64 @@ open MontgomeryPositiveGap MicroscopicPositiveGapProjection ZeroDPPVacancyDensit
 def DistinctPositiveGapLaw : Prop :=
   ∀ q : ℚ, 0 < q → Tendsto (fun T : ℝ => distinctPositiveMass T q) atTop (𝓝 (sineGapMass q))
 
+/-- Given the sine law on distinct zeta ordinates, ordinary PCC holds exactly
+when the normalized excess from multiplicity weights vanishes at each positive
+rational width. -/
+theorem positiveGapPCC_iff_multiplicityCorrection_of_distinctLaw (hd : DistinctPositiveGapLaw) :
+    PositiveGapPCC ↔ ∀ q : ℚ, 0 < q →
+      Tendsto (fun T : ℝ => multiplicityCorrection T q) atTop (𝓝 0) := by
+  constructor
+  · intro hp q hq
+    have ha := positiveGapPCC_iff_rationalWidthLimits.mp hp q hq
+    simpa only [positiveMass_eq_distinct_add_correction, add_sub_cancel_left, sub_self] using
+      ha.sub (hd q hq)
+  · intro hc
+    apply positiveGapPCC_iff_rationalWidthLimits.mpr
+    intro q hq
+    exact (actual_tendsto_iff_distinct_of_correction (hc q hq)).mpr (hd q hq)
+
+/-- If every occupied height has one occurrence on all sufficiently large
+cutoffs, the distinct-height sine law gives ordinary positive-gap PCC. -/
+theorem positiveGapPCC_of_distinctLaw_of_singletonOrdinates (hd : DistinctPositiveGapLaw)
+    (hm : ∀ᶠ T : ℝ in atTop, ∀ y ∈ actualOrdinateSupport T, actualOrdinateMultiplicity T y = 1) :
+    PositiveGapPCC := by
+  apply (positiveGapPCC_iff_multiplicityCorrection_of_distinctLaw hd).mpr
+  intro q _
+  apply tendsto_const_nhds.congr'
+  filter_upwards [hm] with T hT
+  symm
+  unfold multiplicityCorrection
+  have hz : (∑ a ∈ actualOrdinateSupport T, ∑ b ∈ actualOrdinateSupport T,
+      ((actualOrdinateMultiplicity T a : ℝ) * actualOrdinateMultiplicity T b - 1) *
+        gapIndicator T q a b) = 0 := by
+    apply Finset.sum_eq_zero
+    intro a ha
+    apply Finset.sum_eq_zero
+    intro b hb
+    simp [hT a ha, hT b hb]
+  rw [hz, zero_div]
+
+/-- Density-one simple critical zeros with bounded translated third moments
+also suffice to transfer the distinct-height law. -/
+theorem positiveGapPCC_of_distinctLaw_of_simpleCriticalDensity (hd : DistinctPositiveGapLaw)
+    (hs : Tendsto (fun T : ℝ => (simpleCriticalCount T : ℝ) / (Ncount 0 T : ℝ)) atTop (𝓝 1))
+    (h3 : ∀ q : ℚ, 0 < q → BoundedTranslatedThirdMoment ((q : ℝ) + 2)) : PositiveGapPCC := by
+  apply (positiveGapPCC_iff_multiplicityCorrection_of_distinctLaw hd).mpr
+  intro q hq
+  exact correction_tendsto_of_simpleDensity (by exact_mod_cast hq) (h3 q hq) hs
+
+/-- info: 'RiemannResearch.Analysis.DistinctOrdinatePCC.positiveGapPCC_iff_multiplicityCorrection_of_distinctLaw' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms positiveGapPCC_iff_multiplicityCorrection_of_distinctLaw
+
+/-- info: 'RiemannResearch.Analysis.DistinctOrdinatePCC.positiveGapPCC_of_distinctLaw_of_singletonOrdinates' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms positiveGapPCC_of_distinctLaw_of_singletonOrdinates
+
+/-- info: 'RiemannResearch.Analysis.DistinctOrdinatePCC.positiveGapPCC_of_distinctLaw_of_simpleCriticalDensity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms positiveGapPCC_of_distinctLaw_of_simpleCriticalDensity
+
 /-- Rational widths need only exhibit the affine floor of the sine model. -/
 def RationalDistinctAffineLower : Prop :=
   ∀ q : ℚ, 0 < q → ∀ η : ℝ, 0 < η → ∀ᶠ T : ℝ in atTop,
