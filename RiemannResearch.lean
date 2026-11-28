@@ -904,6 +904,15 @@ import RiemannResearch.RH.LegalTailMeanCapacityDilation
 import RiemannResearch.RH.LegalTailMeanCapacityConjugate
 import RiemannResearch.RH.LegalTailMeanCapacityZeroProduct
 import RiemannResearch.RH.LegalTailNymanMesh
+import RiemannResearch.RH.LegalTailResidual
+import RiemannResearch.RH.LegalTailEnergyWeakStar
+import RiemannResearch.RH.LegalTailBlockOvershoot
+import RiemannResearch.RH.LegalTailTriangularMesh
+import RiemannResearch.RH.LegalTailReciprocalCell
+import RiemannResearch.RH.LegalTailCompletedMesh
+import RiemannResearch.RH.LegalTailOptimizerLimit
+import RiemannResearch.RH.LegalTailNymanProjection
+import RiemannResearch.RH.LegalTailTwoGeneratorBenchmark
 import RiemannResearch.RH.ParetoAffineHeadTower
 import RiemannResearch.RH.PhysicalHeadMixedInterpolation
 import RiemannResearch.RH.PhysicalHeadSnakeSections

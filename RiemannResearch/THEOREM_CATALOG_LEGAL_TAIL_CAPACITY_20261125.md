@@ -113,8 +113,22 @@ span equals Burnol's full continuous Nyman space.
 
 [Continuous Nyman space](RH/NymanContinuousSpace.lean)
 
-This is the parameter-space closure. The isometric operator identifying each
-completed discrete legal zero-head kernel with its continuous mesh space is
-still open. Burnol's multiplicity-sensitive projection equality and an
-unconditional arithmetic gain excluding a positive limiting deficit also
-remain open.
+The completed-stage identification and scalar comparison are now proved.
+
+## Physical and rescaled limits, 2026-11-28
+
+| Result | Owning declaration |
+| --- | --- |
+| Compact weak-* ball, exact test-error bound, boundary atom, and vanishing criterion | `physicalTailEnergy_weakStar_compact`, `physicalTailEnergy_test_error`, `physicalTailEnergy_weakStar_tendsto`, `physicalTailEnergy_weakStar_zero_iff_RH` |
+| Coefficients on the physical triangular hat mesh | `physicalTailEnergy_hat_vanish`, `physicalTailEnergy_first_hat_pair`, `physicalTailEnergy_first_interior_hat_bound` |
+| Finite triangular rational rows with simultaneous legal realizations | `triangularMeshRow_subset_factorial`, `triangularMeshRow_legal_witness`, `iUnion_triangularMeshRow_eq_rational` |
+| Ambient reciprocal-cell isometry, completed legal range, stage projection norm | `reciprocalCellIsometry`, `legalCellIsometry_range`, `normalizedLegalTailMeanCapacity_eq_realMeshProjection` |
+| Exact strong error and common-coordinate residual density estimate | `commonTailOptimizer_gain`, `commonTailOptimizer_strong_limit`, `commonTailResidual_energy_variation` |
+| Capacity supremum as the projection energy of one in the full complex Nyman space | `normalizedLegalTailMeanCapacity_iSup_eq_nymanProjection` |
+| Actual block averages, residue cancellations, and signed dyadic correlation | `tailBlockResidual_coordinate`, `tailBlockResidual_residue_cancellation`, `tailBlockResidual_first_identity` |
+| Linear and quadratic overshoot floors, effective finite witness, and the fixed-window criterion | `tailBlockOvershoot_linear_lower`, `tailBlockOvershoot_quadratic_lower`, `tailBlockOvershoot_exists_block`, `fixedBlock_liminf_zero_iff_RH` |
+| Exact two-generator trial energy available at every scale | `twoGeneratorMesh_energy`, `twoGeneratorMesh_le_normalizedCapacity` |
+
+The weak-* atom has mass \(1-C_*\). Proving its vanishing still requires
+arithmetic input. Burnol's zero-product evaluation of the continuous
+projection norm remains a separate analytic obligation in Lean.
