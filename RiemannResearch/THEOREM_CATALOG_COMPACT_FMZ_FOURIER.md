@@ -31,6 +31,26 @@ Every such certificate requires $n^2>N_T^2/(N_T+2)$. Every fixed window eventual
 
 Lean files: [TorusCollisionReconstruction](Analysis/TorusCollisionReconstruction.lean), [TwoPrimeCompactCollision](Analysis/TwoPrimeCompactCollision.lean), [TwoPrimeGapAtoms](Analysis/TwoPrimeGapAtoms.lean).
 
+## Bandwidth required for the triangular Fourier certificate
+
+Write $F_T(R)$ for the triangular average of $|Z_T(u)|^2$ over
+$[-R,R]$ with weight $(1-|u|/R)/R$. If $N_T\ge 6$, a certificate
+$F_T(R)<N_T+2$ requires
+$$
+  R>\frac{N_T^2}{2T(N_T+2)}.
+$$
+For fixed $0<c<1/(4\pi)$, every positive bandwidth $R\le c\log T$
+therefore fails the certificate at all sufficiently large heights. This
+bound follows from the contribution of frequencies near zero and applies
+even when the ordinates are simple. The upper bound $F_T(R)<N_T+2$ at
+arbitrarily large $T$ remains open.
+
+The generic bound is `triangularBandEnergy_coherent_lower` in
+[OrdinateTriangularIntegral](Analysis/OrdinateTriangularIntegral.lean).
+The actual-zero declarations `bandwidth_necessary_for_actualTriangular_certificate`
+and `eventually_log_band_fails_certificate` are in
+[ActualZeroTriangularIntegral](Analysis/ActualZeroTriangularIntegral.lean).
+
 ## Consecutive gaps and all-pairs power
 
 [HomometricConsecutiveGaps](Analysis/HomometricConsecutiveGaps.lean) proves that two sorted lists with the same size, first point, last point, and Fourier power at every real frequency can have different adjacent counts. In [Bloom’s example](https://doi.org/10.1016/0097-3165(77)90013-9), the width-four counts are three and four. A second pair of nine-occurrence lists has three and two tied neighbors. The declaration `sum_difference_power` proves the common-power identity for sums and differences of any two finite real samples.

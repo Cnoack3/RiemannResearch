@@ -1,4 +1,5 @@
 import RiemannResearch.Analysis.OrdinateCollisionCertificate
+import Mathlib.Analysis.Real.Pi.Bounds
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
@@ -179,5 +180,63 @@ theorem triangularBandEnergy_eq_sincEnergy (frequency : ι → ℝ) {R : ℝ} (h
       intro j hj
       exact triangular_cos_transform hR (frequency i - frequency j)
     _ = sincEnergy frequency R := rfl
+
+/-- The near-zero part of a triangular Fourier average has coherent contributions
+from every ordered pair in a sample of diameter at most D. -/
+theorem triangularBandEnergy_coherent_lower {ι : Type*} [Fintype ι]
+    (f : ι → ℝ) {R a D : ℝ} (hR : 0 < R) (ha : 0 ≤ a)
+    (hband : a ≤ R / 2) (hD : 0 ≤ D) (hscale : D * a ≤ 1)
+    (hdiam : ∀ i j, |f i - f j| ≤ D) :
+    a * (Fintype.card ι : ℝ) ^ 2 / (2 * R) ≤ triangularBandEnergy f R := by
+  let W : ℝ → ℝ := fun u =>
+    (1 - |u| / R) * Complex.normSq (occurrenceAmplitude f u)
+  have hw : Continuous W := by
+    dsimp [W]
+    simp_rw [occurrenceAmplitude_normSq]
+    fun_prop
+  have hwpos : ∀ u ∈ Set.Icc (-R) R, 0 ≤ W u := by
+    intro u hu
+    have habs : |u| ≤ R := abs_le.mpr hu
+    exact mul_nonneg (sub_nonneg.mpr ((div_le_one hR).mpr habs))
+      (Complex.normSq_nonneg _)
+  have hcore : ∀ u ∈ Set.Icc (-a) a, (Fintype.card ι : ℝ) ^ 2 / 4 ≤ W u := by
+    intro u hu
+    have habs : |u| ≤ a := abs_le.mpr hu
+    have hcos (i j : ι) : (1 / 2 : ℝ) ≤ Real.cos ((f i - f j) * u) := by
+      have hz : |(f i - f j) * u| ≤ 1 := by
+        rw [abs_mul]
+        exact (mul_le_mul (hdiam i j) habs (abs_nonneg _) hD).trans hscale
+      have hc := Real.cos_le_cos_of_nonneg_of_le_pi (abs_nonneg ((f i - f j) * u))
+        (show Real.pi / 3 ≤ Real.pi by linarith [Real.pi_pos])
+        (show |(f i - f j) * u| ≤ Real.pi / 3 by linarith [Real.pi_gt_three])
+      simpa only [Real.cos_pi_div_three, Real.cos_abs] using hc
+    have hs : (Fintype.card ι : ℝ) ^ 2 / 2 ≤ Complex.normSq (occurrenceAmplitude f u) := by
+      rw [occurrenceAmplitude_normSq]
+      calc
+        _ = ∑ i : ι, ∑ j : ι, (1 / 2 : ℝ) := by
+          simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+          ring
+        _ ≤ _ := Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ => hcos i j
+    have hweight : (1 / 2 : ℝ) ≤ 1 - |u| / R := by
+      have := (div_le_iff₀ hR).mpr (show |u| ≤ (1 / 2 : ℝ) * R by linarith)
+      linarith
+    calc
+      _ = (1 / 2 : ℝ) * ((Fintype.card ι : ℝ) ^ 2 / 2) := by ring
+      _ ≤ W u := mul_le_mul hweight hs (by positivity) (by linarith)
+  have hsub := intervalIntegral.integral_mono_interval (μ := volume)
+    (show -R ≤ -a by linarith) (show -a ≤ a by linarith) (show a ≤ R by linarith)
+    ((MeasureTheory.ae_restrict_iff' measurableSet_Ioc).2 (Filter.Eventually.of_forall
+      (fun u hu => hwpos u ⟨hu.1.le, hu.2⟩)))
+    (hw.intervalIntegrable (-R) R)
+  have hc := intervalIntegral.integral_mono_on (μ := volume) (show -a ≤ a by linarith)
+    (intervalIntegrable_const) (hw.intervalIntegrable (-a) a) hcore
+  rw [intervalIntegral.integral_const] at hc
+  change _ ≤ (1 / R) * ∫ u in (-R)..R, W u
+  have hh := hc.trans hsub
+  simp only [smul_eq_mul] at hh
+  calc
+    _ = (a * (Fintype.card ι : ℝ) ^ 2 / 2) / R := by ring
+    _ ≤ (∫ u in (-R)..R, W u) / R := div_le_div_of_nonneg_right (by linarith only [hh]) hR.le
+    _ = _ := by ring
 
 end RiemannResearch.Analysis.OrdinateCollisionCertificate
