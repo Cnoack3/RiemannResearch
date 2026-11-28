@@ -912,6 +912,8 @@ import RiemannResearch.RH.LegalTailReciprocalCell
 import RiemannResearch.RH.LegalTailCompletedMesh
 import RiemannResearch.RH.LegalTailOptimizerLimit
 import RiemannResearch.RH.LegalTailNymanProjection
+import RiemannResearch.Analysis.ZeroCountReciprocalSquareTail
+import RiemannResearch.RH.LegalTailAtomNumericalBound
 import RiemannResearch.RH.LegalTailTwoGeneratorBenchmark
 import RiemannResearch.Analysis.GaussianDistinctRootCollision
 import RiemannResearch.Analysis.GaussianDistinctRootPrecision

@@ -133,6 +133,27 @@ The weak-* atom has mass \(1-C_*\). Proving its vanishing still requires
 arithmetic input. Burnol's zero-product evaluation of the continuous
 projection norm remains a separate analytic obligation in Lean.
 
+## Numerical upper bound for the limiting weak-* atom
+
+Write `B(H) = (log(H/(2π)) + 1)/(2πH) + (2 log H + 1/2)/H²`.
+
+| Result | Lean declaration |
+| --- | --- |
+| Exact finite Abel identity for the multiplicity-weighted reciprocal squares | `finite_ordinate_abel_identity` |
+| Finite positive-ordinate tail sum bounded by `B(H)` from the two-sided count discrepancy | `finite_ordinate_reciprocal_sq_le` |
+| Injection of both signs of the right-hand zeros into positive-height zeros, preserving multiplicities | `positiveRepresentative_injective`, `positiveRepresentative_data` |
+| Strict rational comparison `B(3000000000000) < 3/2000000000000` | `reciprocalSquareTailBound_three_trillion_lt` |
+
+**Conditional research reduction.** `legalTailAtom_lt_three_halves_trillionths_of_published_inputs` proves $0 \le 1-C_* < 3/2000000000000$ from the three published inputs below. The weak-* limit is $(1-C_*)\delta_0$. Each input remains open as a Lean provider.
+
+| Open Lean provider | Published result |
+| --- | --- |
+| Squared projection norm of the unit vector in the continuous Nyman space equals the multiplicity-weighted squared zero product | [Burnol, Theorem 1.2](https://arxiv.org/abs/math/9910055) |
+| Every nontrivial zero of positive height through `3 × 10^12` lies on the critical line | [Platt and Trudgian, Theorem 1](https://doi.org/10.1112/blms.12460) |
+| Explicit two-sided count discrepancy on the integration range | [Hasanalizade, Shen and Wong, Corollary 1.2](https://arxiv.org/abs/2107.06506) |
+
+[Positive-ordinate tail estimate](Analysis/ZeroCountReciprocalSquareTail.lean) · [Limiting capacity bound](RH/LegalTailAtomNumericalBound.lean)
+
 ## Gaussian repulsion and fixed windows
 
 | Result | Owning declaration |
